@@ -1,0 +1,43 @@
+# 2-space indentation REQUIRED — the kit's hook parses this file line-by-line.
+schema_version: 1
+enforcement: strict          # chuẩn thiết lập kho 29/10
+gap_probe: advisory          # mặc định của kit; nâng `required` khi đội đã quen
+recheck: strict              # kho mới, không có báo cáo cũ
+# Chưa khai ui_standards_skill / ds_skill / design / design_floor: chưa có màn — làm cùng màn đầu tiên (tầng 5).
+executors:
+  test:
+    core: "npm test -w @quy-hang/core"            # suy từ: packages/core/package.json
+    api: "npm test -w @quy-hang/api"              # suy từ: packages/api/package.json
+    connect: "npm test -w @quy-hang/connect"      # suy từ: packages/connect/package.json
+    isolation: "npm run db:migrate && npm run db:test"   # suy từ: package.json, ci.yml job isolation — cần DATABASE_URL (AGENTS.md)
+  script:
+    hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
+    # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
+    # trỏ bản cài (tìm bằng feature-loop/scripts/resolve-plugin.mjs --plugin acceptance-gate). Không ghi đường cache.
+    product_map: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/product-map.mjs\" --root . --check"
+risk_tiers:
+  t1_skip_globs:
+    - "docs/**"                     # tài liệu sản phẩm, kiến trúc, ADR
+    - "AGENTS.md"                   # hướng dẫn agent
+    - "CLAUDE.md"
+    - "CONTEXT.md"                  # từ vựng nhãn ↔ code
+    - "README.md"
+    - ".claude/rules/**"            # luật theo đường dẫn cho agent
+    - ".github/workflows/ci.yml"    # workflow chứa job gate — ĐÍCH DANH, không .github/** (GUIDE §5.3 bước 3)
+    # Bản đồ sản phẩm — máy sinh, commit cùng chữ ký (ADR 0007). Chỉ an toàn vì CI chạy product_map --check.
+    - "PRODUCT-MAP.md"
+  t3_paths:
+    - "packages/db/**"                        # migration, luật cách ly theo dòng (bất biến 1)
+    - "packages/core/src/data-classes.ts"     # trần lớp dữ liệu, source không rời công ty (bất biến 2)
+    - "packages/core/src/agreements.ts"       # mọi kết nối là một thoả thuận
+    - "packages/connect/**"                   # khuôn dữ liệu cấp vào từ Invest
+    - ".claude/settings.json"                 # quyền cấm và hook của agent
+    - ".claude/hooks/**"
+    - ".githooks/**"                          # chặn commit main, gitleaks
+signoff:
+  required_for: [T2, T3]
+  approvers: ["Manh Phan"]   # suy từ: git config user.name — thông tin, cổng không cưỡng chế
+dev_server:
+  start: "npm run dev"                 # suy từ: package.json, .claude/launch.json
+  url: "http://localhost:3460"         # suy từ: apps/web/package.json (next dev -p 3460)
+# capture: bỏ — chưa có bằng chứng giao diện.

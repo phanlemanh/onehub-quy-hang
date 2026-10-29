@@ -74,11 +74,56 @@ jobs:
           curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz -C "$HOME/bin" gitleaks
           "$HOME/bin/gitleaks" git --redact --no-banner --log-level warn .
 
+  # Cổng nghiệm thu của Acceptance-Gate Kit (GUIDE §5.3): chạy từ bản kit ghim tag, không chép tệp kit vào kho.
+  # Nâng kit = đổi KIT_TAG bằng một PR có chủ đích mỗi mốc; tệp này nằm trong t1_skip_globs nên PR đó không đỏ T1-escape.
+  gate:
+    name: gate
+    runs-on: ubuntu-latest
+    env:
+      KIT_TAG: v2.35.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # cần lịch sử để kiểm verified_commit, chữ ký và diff của PR
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Lấy kit theo tag (ngoài cây kho)
+        run: |
+          git init -q "$RUNNER_TEMP/kit"
+          git -C "$RUNNER_TEMP/kit" fetch -q --depth 1 https://github.com/phanlemanh/acceptance-gate-kit "refs/tags/$KIT_TAG"
+          git -C "$RUNNER_TEMP/kit" checkout -q FETCH_HEAD
+          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"
+      - name: pre-merge-check
+        run: |
+          # PR: soi diff với nhánh đích, T1-escape bật. Push lên main: không có tiền đề PR → HEAD~1 + --no-t1-escape
+          # (ref trần, không $(rev-parse): ref hỏng thì cổng exit 2 to tiếng thay vì suy biến im lặng).
+          if [ -n "${GITHUB_BASE_REF:-}" ]; then
+            args=(--base "origin/$GITHUB_BASE_REF")
+          else
+            args=(--base HEAD~1 --no-t1-escape)
+          fi
+          # set +e: bash -e của Actions sẽ huỷ phép gán khi cổng thoát khác 0, mất cả dòng giải thích.
+          set +e
+          out="$(bash "$CLAUDE_PLUGIN_ROOT/scripts/pre-merge-check.sh" . "${args[@]}" 2>&1)"; st=$?
+          set -e
+          printf '%s\n' "$out"
+          # Cổng thoát 0 mà không có dòng sổ luật = không luật nào chạy (sai thư mục, sai bản kit) → đỏ.
+          if [ "$st" -eq 0 ] \
+             && ! grep -qE '^enforcement[[:space:]]*:[[:space:]]*off[[:space:]]*(#.*)?$' _acceptance/config.yaml \
+             && ! printf '%s\n' "$out" | grep -q '^pre-merge-check: rules ran='; then
+            echo "cổng thoát 0 mà KHÔNG chạy luật nào — kiểm lại đường dẫn kho và bản kit"
+            exit 1
+          fi
+          exit $st
+      - name: product-map --check
+        run: node "$CLAUDE_PLUGIN_ROOT/scripts/product-map.mjs" --root . --check
+
   # Check bắt buộc duy nhất của bảo vệ nhánh: xanh khi và chỉ khi mọi job trên xanh.
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [check, isolation, secrets]
+    needs: [check, isolation, secrets, gate]
     runs-on: ubuntu-latest
     steps:
       - name: Mọi job phải xanh
