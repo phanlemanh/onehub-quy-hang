@@ -133,6 +133,26 @@
       ]
     },
     {
+      "ma": "53",
+      "cau_giao": "Người trong sàn mở Quỹ hàng và thấy đúng vỏ theo thiết bị và vai: trên máy tính thanh trên, cột nhà và cột góc nhìn; trên điện thoại bốn tab dưới; telesales chỉ Hôm nay và «+ Lead»",
+      "vai": "Người trong sàn",
+      "tieu_chi": 10,
+      "vi_sao": "Mạnh 30/10: chọn vỏ và IA trên kho ReUI trước khi mở phiên làm màn (ADR-0002); hàng đổi khung giữ cả khu nên dựng một lần, trước màn đầu tiên",
+      "hang": "T2",
+      "slug": "vo-ung-dung",
+      "bat_khi": "Năm vai mẫu × hai bề rộng đúng bảng nhà và nút của Tham chiếu §9; gõ mã căn mở hồ sơ; trang khách và đăng nhập không có vỏ; sáng và tối đều đọc được",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [],
+      "dung_tren": [
+        "4",
+        "7"
+      ],
+      "vung": [
+        "apps/web/src/components/shell/**"
+      ]
+    },
+    {
       "ma": "8",
       "cau_giao": "Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện",
       "vai": "nen",
@@ -272,7 +292,7 @@
       "du_lieu": "gia",
       "dung_tren": [
         "1",
-        "4",
+        "53",
         "5",
         "13"
       ],
@@ -488,7 +508,8 @@
       "dung_tren": [
         "5",
         "9",
-        "11"
+        "11",
+        "53"
       ],
       "slug": "o-nhan-lead",
       "nhom": "dong-vao",
@@ -656,7 +677,8 @@
       "hang": "T2",
       "dung_tren": [
         "13",
-        "23"
+        "23",
+        "53"
       ],
       "slug": "bang-hang-dang-the",
       "nhom": "dau-khach",
@@ -780,7 +802,8 @@
       "hang": "T2",
       "dung_tren": [
         "13",
-        "26"
+        "26",
+        "53"
       ],
       "slug": "tab-toi",
       "nhom": "dau-khach",

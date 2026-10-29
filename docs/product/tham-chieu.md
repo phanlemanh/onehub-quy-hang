@@ -175,10 +175,30 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 
 ## 9. Điều hướng
 
-- **Máy tính**: cột trái theo vai — Hôm nay · Bảng hàng (góc nhìn đã lưu bên dưới) · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị). Thanh trên: chọn dự án · ô «Gõ mã căn» · + Lead · Nhập Excel · Phát hàng.
-- **Điện thoại**: bốn tab — Hôm nay · Bảng hàng · Gửi · Tôi. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
-- **Telesales**: không cột trái, không ô gõ mã căn. Máy tính: Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
-- **Trang khách**: một link công khai, không đăng nhập.
+Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002); khối của từng màn ở `docs/design/vo-va-ia.md`.
+
+- **Một địa chỉ cho một thứ; màn tự đổi theo thiết bị và vai.** Bảng hàng trên máy tính là bảng kiểu Sheet, trên điện thoại là thẻ; Hôm nay của đầu chủ là hàng đợi, của đầu khách là dòng phản ứng của khách. Link mở trên máy nào cũng đúng chỗ. Một người nhiều vai thấy hợp các nhà của mọi vai.
+- **Máy tính** — ba tầng:
+  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn dự án · ô «Gõ mã căn» ở giữa · + Lead · Nhập Excel · Phát hàng · chuông báo · tài khoản.
+  - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị, ở đáy).
+  - **Ưu tiên bề ngang cho đầu chủ**: cột thứ hai mặc định gập ở Bảng hàng, Hôm nay và hồ sơ căn, chỉ còn cột biểu tượng mảnh; góc nhìn đã lưu vẫn một chạm ở nút «Góc nhìn» đầu thanh công cụ của bảng. Ai mở thì máy nhớ theo người.
+  - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay không có cột thứ hai.
+  - Hồ sơ căn mở thành cột phải cạnh bảng, bảng vẫn dùng được; mở toàn màn khi cần.
+- **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
+- **Telesales**: không cột nhà, không ô gõ mã căn. Máy tính: thanh trên chỉ có Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
+- **Mở app vào Hôm nay**; người chỉ giữ vai quản trị vào Cài đặt sàn.
+- **Trang khách và đăng nhập không có vỏ.** Trang khách là một link công khai, không đăng nhập, mang tên sàn và người gửi.
+
+| Nhà và nút | Telesales | Đầu chủ | Đầu khách | Trưởng nhóm | Quản trị sàn |
+| --- | --- | --- | --- | --- | --- |
+| Hôm nay | Có | Có | Có | Có | — |
+| Bảng hàng | — | Có | Có | Có | — |
+| Đã gửi (điện thoại: Gửi) | — | — | Có | Có, cả nhóm | — |
+| Đội | — | — | — | Có | — |
+| Cài đặt sàn | — | — | — | — | Có |
+| + Lead | Có | Có | — | Có | — |
+| Nhập Excel | — | Có | — | — | Có |
+| Phát hàng | — | Có | — | Có | — |
 
 Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng — có hàng gì, ở đâu? · Đã gửi — khách đang phản ứng ra sao? · Đội — đội đang chạy thế nào? · Cài đặt sàn — sàn gọi tên và chạy theo luật nào?
 
@@ -278,6 +298,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 29/10 | Mười chỗ mở về lead, cuộc gọi, giá, trang khách theo phác thảo, làm **mặc định dựng sẵn của sàn**, sàn chỉnh được; dựng bằng dữ liệu mẫu, chỉnh khi có người dùng thật (Mạnh: «sự linh hoạt là quan trọng… khi có người dùng thật sẽ tinh chỉnh dần») | Mục 7, mục 13 |
 | 29/10 | Phác ba màn còn thiếu của bản đầu trước khi cắt: M6 Hôm nay của đầu khách, TN1 Hôm nay của trưởng nhóm, S6 Mẫu và người dùng | Mục 10 · canvas bản 23 |
 | 29/10 | Bật lộ trình trong kho; bản đầu cắt thành hàng ở `docs/plan/lo-trinh.json`. Để sau: ngưỡng số đo (đặt ở Cổng Đáng của từng hàng, trước hai tuần thử), câu hỏi phỏng vấn (ngoài kho), xin dẫn xem (chờ phỏng vấn), hoa hồng và ghi công Platform (ngoài bản đầu), bốn điểm nền (hỏi ở vòng làm nền) | Mục 13 · lộ trình |
+| 30/10 | Vỏ và IA chọn trên kho ReUI, không tự thiết kế: máy tính `app-shell-8` (cột nhà + cột góc nhìn + thanh trên có gõ mã căn), điện thoại bốn tab dưới ghép từ thành phần; một địa chỉ một thứ, màn đổi theo thiết bị và vai; nguyên tắc «chọn trên kho trước, tự viết sau cùng» cho mọi màn — ADR-0002 | Mục 9 · `docs/design/vo-va-ia.md` |
 
 ## 13. Chỗ cần chốt
 
