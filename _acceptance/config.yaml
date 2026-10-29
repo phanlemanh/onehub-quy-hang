@@ -26,6 +26,7 @@ risk_tiers:
     - ".github/workflows/ci.yml"    # workflow chứa job gate — ĐÍCH DANH, không .github/** (GUIDE §5.3 bước 3)
     # Bản đồ sản phẩm — máy sinh, commit cùng chữ ký (ADR 0007). Chỉ an toàn vì CI chạy product_map --check.
     - "PRODUCT-MAP.md"
+    - "LO-TRINH.html"
   t3_paths:
     - "packages/db/**"                        # migration, luật cách ly theo dòng (bất biến 1)
     - "packages/core/src/data-classes.ts"     # trần lớp dữ liệu, source không rời công ty (bất biến 2)
@@ -41,5 +42,7 @@ dev_server:
   start: "npm run dev"                 # suy từ: package.json, .claude/launch.json
   url: "http://localhost:3460"         # suy từ: apps/web/package.json (next dev -p 3460)
 # capture: bỏ — chưa có bằng chứng giao diện.
+lo_trinh:
+  tep: docs/plan/lo-trinh.json
 tri_thuc:
   noi: docs/tri-thuc   # gốc tri thức trong kho; kho riêng tư nên tài liệu thô nằm trong kho (không khai cong_khai, không kho riêng)

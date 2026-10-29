@@ -7,6 +7,7 @@ Mỗi loại thông tin ở đúng một chỗ. Khi hai nơi nói khác nhau, n�
 | Điều đang đúng của sản phẩm: vai, đối tượng, trạng thái, quyền, luật, màn và ưu tiên, sổ quyết định, chỗ cần chốt, thuật ngữ | [`product/tham-chieu.md`](product/tham-chieu.md) | Đọc trước khi đề xuất việc mới; không hỏi lại điều đã chốt ở §12 |
 | Kiến trúc kho, API, kết nối, stack, thứ tự dựng | [`architecture/kien-truc-repo-va-stack.md`](architecture/kien-truc-repo-va-stack.md) | Điều đã chốt có ADR đi kèm |
 | Quyết định kiến trúc | [`adr/`](adr/) | Gốc: ADR-0017 của onehub-invest |
+| Việc phát triển: hàng, chờ điều kiện, thứ tự | [`plan/lo-trinh.json`](plan/lo-trinh.json) · trang [`LO-TRINH.html`](../LO-TRINH.html) | Thêm việc bằng `/acceptance-gate:cat-luot`, mở vòng bằng `/feature-loop:feature-loop <mã>`; bản phạm vi của từng đợt nằm cạnh |
 | Từ vựng: nhãn trên màn ↔ tên code | [`../CONTEXT.md`](../CONTEXT.md) | Nhãn mới thêm cùng commit |
 | Luật cho agent, lệnh | [`../AGENTS.md`](../AGENTS.md) | |
 | Lý do, phỏng vấn, lịch sử chỉnh (28–29/10) | [`product/ghi-chep/`](product/ghi-chep/) | Lưu vết, không sửa |

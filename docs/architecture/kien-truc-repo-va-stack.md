@@ -209,8 +209,8 @@ Ghi nhận thiết bị theo vai làm các giới hạn này nhẹ đi: việc c
 ## 10. Chỗ cần chốt kỹ thuật
 
 - [x] Tên kho và tạo kho riêng tư — đã tạo 29/10: `phanlemanh/onehub-quy-hang`, có khung, CI hai check (kiểm tra chung, cách ly giữa công ty) và bảo vệ nhánh main.
-- [ ] Cách đăng nhập bản đầu. Đề xuất: email kèm link đăng nhập và Google cho đội thử; thêm số điện thoại + mã OTP khi có sàn ngoài, vì môi giới quen số điện thoại hơn email.
+- [ ] Cách đăng nhập bản đầu. Đề xuất: email kèm link đăng nhập và Google cho đội thử; thêm số điện thoại + mã OTP khi có sàn ngoài, vì môi giới quen số điện thoại hơn email. Mạnh 29/10: để sau, hỏi ở vòng đăng nhập theo sàn.
 - [ ] Bộ đồng bộ: dùng dịch vụ có sẵn (thêm một hạ tầng, có phí) hay tự làm mỏng. Quyết sau bài thử (b).
-- [ ] Tên miền trang khách: chung một tên miền, tên và logo sàn trên trang (đề xuất); tên miền riêng của sàn để sau.
-- [ ] Khung toà do sàn nhập Excel có góp về Invest không. Đề xuất: không ở bản đầu.
+- [ ] Tên miền trang khách: chung một tên miền, tên và logo sàn trên trang (đề xuất); tên miền riêng của sàn để sau. Mạnh 29/10: để sau, hỏi ở vòng trang khách.
+- [x] Khung toà do sàn nhập Excel có góp về Invest không — không ở bản đầu: chiều Quỹ hàng → Invest đang tắt (ADR-0017 §6).
 - [x] ADR trong kho onehub-invest cho chỗ đứng và đường cấp dữ liệu một chiều — đã viết: ADR-0017, PR #167 chờ merge.
