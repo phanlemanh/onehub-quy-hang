@@ -44,7 +44,9 @@ docs/adr/         quyết định kiến trúc của kho này
   đặc trưng Việt Nam mới được đặt tên riêng.
 - **TypeScript chặt** ở mọi gói. Code, API, tên bảng tiếng Anh; comment nghiệp vụ và chữ UI tiếng Việt, nhãn lấy từ
   `CONTEXT.md`.
-- **UI** theo ReUI trên shadcn/ui, giống onehub-invest — cài khi dựng màn đầu tiên.
+- **UI: chọn trên kho ReUI trước, tự viết sau cùng.** Mỗi ô của màn đi thang dùng lại ở `.claude/rules/giao-dien.md`
+  (khối đã chọn → khối ReUI khác → ví dụ `c-*` → thành phần → ghép → tự viết); chuyển thể chỉ đổi dữ liệu, chữ, prop.
+  Vỏ, IA và khối đích từng màn: `docs/design/vo-va-ia.md` (ADR-0002). Style `base-nova`, icon lucide, như onehub-invest.
 - **Git**: `main` có bảo vệ nhánh, vào main chỉ qua PR có check xanh. Commit theo Conventional Commits.
 
 ## Rào của kho
