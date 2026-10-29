@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-edits.sh",
+            "command": "\"$(git rev-parse --show-toplevel 2>/dev/null || echo \"$CLAUDE_PROJECT_DIR\")\"/.claude/hooks/guard-edits.sh",
             "timeout": 10
           }
         ]
@@ -43,11 +43,25 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/typecheck-changed.sh",
+            "command": "\"$(git rev-parse --show-toplevel 2>/dev/null || echo \"$CLAUDE_PROJECT_DIR\")\"/.claude/hooks/typecheck-changed.sh",
             "timeout": 180
           }
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "acceptance-gate-kit": {
+      "source": {
+        "source": "github",
+        "repo": "phanlemanh/acceptance-gate-kit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "acceptance-gate@acceptance-gate-kit": true,
+    "feature-loop@acceptance-gate-kit": true,
+    "diagram-design@acceptance-gate-kit": true,
+    "superpowers@claude-plugins-official": true
   }
 }
