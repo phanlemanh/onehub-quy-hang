@@ -1,0 +1,13 @@
+#!/bin/bash
+# Trước mỗi push — bản nhẹ của CI: kiểm kiểu và lint. Test, build, cách ly chạy đủ trên CI.
+set -uo pipefail
+root=$(git rev-parse --show-toplevel)
+cd "$root" || exit 1
+
+if [ ! -d node_modules ]; then
+  echo "Bỏ qua kiểm trước push: chưa cài node_modules (npm install). CI vẫn kiểm đủ." >&2
+  exit 0
+fi
+
+npm run --silent typecheck || { echo "Chặn push: lỗi kiểu (npm run typecheck)." >&2; exit 1; }
+npm run --silent lint || { echo "Chặn push: lỗi lint (npm run lint)." >&2; exit 1; }

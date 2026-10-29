@@ -9,16 +9,24 @@
     "node": ">=24"
   },
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "dev": "npm run dev -w @quy-hang/web",
     "build": "npm run build -w @quy-hang/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
     "test": "npm run test --workspaces --if-present",
+    "test:hooks": "bash .claude/hooks/tests/run.sh",
     "db:migrate": "npm run migrate -w @quy-hang/db",
     "db:test": "npm run test:isolation -w @quy-hang/db"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@types/node": "^24",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
+    "globals": "^17.13.0",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.72.1"
   }
 }
