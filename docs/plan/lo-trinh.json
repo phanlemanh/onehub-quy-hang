@@ -3,7 +3,1118 @@
   "ten": "Lộ trình onehub-quy-hang",
   "ghi_chu": "Thêm việc bằng skill cắt lượt (/acceptance-gate:cat-luot), hoặc viết hàng theo khuôn skills/acceptance/references/lo-trinh-template.json của gói acceptance-gate; mở vòng bằng /feature-loop:feature-loop <mã>.",
   "moc": [],
-  "hang": [],
-  "chan_troi": [],
+  "hang": [
+    {
+      "ma": "1",
+      "cau_giao": "Lưới bảng hàng 5.000 dòng × 20 cột cuộn, sửa trên ô và dán 500 ô từ Excel mà không giật trên máy tính văn phòng",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Kiến trúc §9 bước 1: chọn lưới ReUI hay lưới vẽ canvas trước khi dựng bảng hàng",
+      "hang": "T2",
+      "slug": "bai-thu-luoi-5000-dong",
+      "bat_khi": "Trên dữ liệu sinh 5.000 dòng: cuộn và gõ không tụt khung hình thấy được, dán 500 ô xong dưới một giây; kết luận chọn lưới ghi thành ADR",
+      "nhom": "bai-thu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "B1"
+      ],
+      "vung": [
+        "apps/web/src/app/spikes/luoi/**"
+      ]
+    },
+    {
+      "ma": "2",
+      "cau_giao": "Bộ đồng bộ đưa đúng phần mỗi người được thấy xuống máy, rút mạng năm phút rồi nối lại không mất thay đổi nào",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Kiến trúc §9 bước 1: chọn bộ đồng bộ (PowerSync, ElectricSQL hay tự làm mỏng) trước khi dựng phần nhanh tức thì",
+      "hang": "T3",
+      "slug": "bai-thu-dong-bo-mat-mang",
+      "bat_khi": "Hai sàn mẫu, ba vai: không dòng nào của sàn kia và không số chủ của đầu chủ khác xuống máy; sau năm phút mất mạng mọi thay đổi lên máy chủ đúng thứ tự; ADR chọn bộ đồng bộ",
+      "nhom": "bai-thu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "B2"
+      ],
+      "vung": [
+        "apps/web/src/lib/sync/**"
+      ]
+    },
+    {
+      "ma": "3",
+      "cau_giao": "Link trang khách dán vào Zalo hiện ảnh xem trước, và lượt Zalo tự lấy ảnh không bị tính là khách mở",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Kiến trúc §9 bước 1: trang khách và luồng Gửi đứng trên hành vi thật của Zalo",
+      "hang": "T2",
+      "slug": "bai-thu-zalo",
+      "bat_khi": "Thử với Zalo thật trên Android và iPhone: ảnh xem trước hiện, lượt tự lấy không vào số mở; chia sẻ ảnh + tin từ web trên iPhone mở được bảng chia sẻ; kéo ảnh từ Zalo trên máy tính vào trình duyệt được",
+      "nhom": "bai-thu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "B3"
+      ],
+      "vung": [
+        "apps/web/src/app/s/**"
+      ]
+    },
+    {
+      "ma": "4",
+      "cau_giao": "Kho có bộ chuẩn giao diện trước màn sản phẩm đầu tiên: thành phần ReUI, skill giao diện của kho, lint giao diện có mức nợ, sàn thiết kế M1",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Chuẩn thiết lập kho tầng 5: dựng cùng màn đầu tiên thì nợ bằng 0",
+      "hang": "T2",
+      "slug": "tang-5-giao-dien",
+      "bat_khi": "Mức nợ lint giao diện bằng 0 và CI chặn tăng; sàn thiết kế M1 chặn mã màu thô; cấu hình cổng khai skill giao diện",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N1"
+      ],
+      "vung": [
+        "apps/web/src/components/ui/**",
+        ".agents/skills/**"
+      ]
+    },
+    {
+      "ma": "5",
+      "cau_giao": "Bộ dữ liệu mẫu của một sàn thử — một dự án căn hộ, hai mẫu file bảng hàng Excel, lead và chủ nhà giả — sinh từ khuôn của bảng hàng thật, mọi bản ghi mang nhãn mẫu",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Mạnh 29/10: dựng tính năng bằng dữ liệu mẫu, có người dùng thật thì chỉnh dần; dự án thử chọn sau",
+      "hang": "T3",
+      "du_lieu": "sinh-gia",
+      "slug": "du-lieu-mau-san-thu",
+      "bat_khi": "Sinh lại hai lần ra cùng dữ liệu; không tên hay số điện thoại thật; mọi bản ghi mang nhãn mẫu và xoá được một lần",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [],
+      "vung": [
+        "packages/db/seed/**"
+      ]
+    },
+    {
+      "ma": "6",
+      "cau_giao": "Người trong sàn đăng nhập và vào đúng vùng dữ liệu của sàn mình; chưa gắn sàn thì không thấy gì",
+      "vai": "Người trong sàn",
+      "tieu_chi": 9,
+      "vi_sao": "Kiến trúc §9 bước 2; cách đăng nhập hỏi lại ở vòng này (Mạnh 29/10)",
+      "hang": "T3",
+      "slug": "dang-nhap-theo-san",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N2"
+      ],
+      "vung": [
+        "apps/web/src/app/(auth)/**",
+        "packages/api/src/auth/**"
+      ]
+    },
+    {
+      "ma": "7",
+      "cau_giao": "Quản trị sàn mời người vào sàn, đặt vai và khu phụ trách; một người giữ được nhiều vai",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 9,
+      "vi_sao": "Màn S6 · Người dùng; tách khỏi đăng nhập vì là lớp quyền",
+      "hang": "T3",
+      "dung_tren": [
+        "6"
+      ],
+      "slug": "moi-nguoi-vai-khu",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N3"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/users/**"
+      ]
+    },
+    {
+      "ma": "8",
+      "cau_giao": "Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện",
+      "vai": "nen",
+      "tieu_chi": 10,
+      "vi_sao": "Tham chiếu §4–§5, luật 8, 15, 16; một đường ghi cho mọi bề mặt",
+      "hang": "T3",
+      "dung_tren": [
+        "6"
+      ],
+      "slug": "loi-hang-va-su-kien",
+      "bat_khi": "Không đường ghi nào ngoài API; độ tươi và mức đủ tính lại đúng trên bộ ca kiểm; bảng mới có luật cách ly và ca trong bộ kiểm cách ly",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N4"
+      ],
+      "vung": [
+        "packages/core/src/listing/**",
+        "packages/api/src/listings/**"
+      ]
+    },
+    {
+      "ma": "9",
+      "cau_giao": "Đầu chủ gõ mã căn và thấy thuộc tính căn tự điền theo cách đọc mã của dự án; mã chưa có trong danh mục thì báo rõ",
+      "vai": "Đầu chủ",
+      "tieu_chi": 9,
+      "vi_sao": "Tham chiếu §1: gõ mã căn là đủ thông tin; danh mục và dự án thử hỏi lại ở vòng này (Mạnh 29/10)",
+      "hang": "T3",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "5",
+        "8"
+      ],
+      "slug": "danh-muc-go-ma-can",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N5"
+      ],
+      "vung": [
+        "packages/core/src/catalog/**",
+        "packages/api/src/catalog/**"
+      ]
+    },
+    {
+      "ma": "10",
+      "cau_giao": "Gói danh mục Invest đẩy sang theo khuôn phiên bản 1 được nhận vào vùng danh mục dùng chung khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt bị từ chối",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "ADR-0017 §5; khuôn đang ở phiên bản 0",
+      "hang": "T3",
+      "dung_tren": [
+        "9"
+      ],
+      "slug": "nhan-danh-muc-invest",
+      "bat_khi": "Gói đúng khuôn nạp được và chạy lại không nhân đôi; khoá lạ bị từ chối; tắt thoả thuận thì dừng nhận ngay",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N6"
+      ],
+      "vung": [
+        "packages/connect/src/**"
+      ]
+    },
+    {
+      "ma": "11",
+      "cau_giao": "Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Tham chiếu §6 lớp trường; bất biến 2",
+      "hang": "T3",
+      "dung_tren": [
+        "8"
+      ],
+      "slug": "lop-truong-nguon",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N7"
+      ],
+      "vung": [
+        "packages/core/src/access/**",
+        "packages/api/src/owners/**"
+      ]
+    },
+    {
+      "ma": "12",
+      "cau_giao": "Đầu chủ để lead và hàng chưa khoá nguồn ở «Chỉ tôi»; hàng lên «Toàn sàn» thì cả sàn mới thấy",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Tham chiếu §6 trục 1",
+      "hang": "T3",
+      "dung_tren": [
+        "8"
+      ],
+      "slug": "truc-ai-thay-hang",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N8"
+      ],
+      "vung": [
+        "packages/core/src/visibility/**"
+      ]
+    },
+    {
+      "ma": "13",
+      "cau_giao": "Bảng hàng và hồ sơ đọc từ kho trên máy nên lọc, cuộn, mở hồ sơ không chờ mạng; sửa ghi trên máy trước, rớt mạng vài phút không mất thay đổi",
+      "vai": "nen",
+      "tieu_chi": 10,
+      "vi_sao": "Tham chiếu luật 30–31; đứng trên kết luận của bài thử đồng bộ",
+      "hang": "T3",
+      "dung_tren": [
+        "2",
+        "11",
+        "12"
+      ],
+      "slug": "nhanh-tuc-thi",
+      "bat_khi": "Mở hồ sơ không chờ mạng; rút mạng năm phút, sửa 20 ô, nối lại thì đủ 20 sự kiện lên máy chủ; thanh trên luôn nói đang ở đâu; hai người cùng sửa thì báo, «Đã bán» và «Đã cọc» thắng",
+      "nhom": "nen",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "N9"
+      ],
+      "vung": [
+        "apps/web/src/lib/sync/**"
+      ]
+    },
+    {
+      "ma": "14",
+      "cau_giao": "Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (2); chỗ người dùng so với Sheet đầu tiên",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "1",
+        "4",
+        "5",
+        "13"
+      ],
+      "slug": "bang-hang-kieu-sheet",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D1"
+      ],
+      "vung": [
+        "apps/web/src/app/inventory/**"
+      ]
+    },
+    {
+      "ma": "15",
+      "cau_giao": "Đầu chủ sửa giá, phí, trạng thái ngay trên ô; giá luôn kèm điều kiện phí, máy nói lại «Hiểu là…», sửa là vừa xác nhận với chủ nhà, hoàn tác được",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (2b); luật 6–10",
+      "hang": "T2",
+      "dung_tren": [
+        "14"
+      ],
+      "slug": "sua-tren-o",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D2"
+      ],
+      "vung": [
+        "apps/web/src/app/inventory/cell-edit/**",
+        "packages/core/src/pricing/**"
+      ]
+    },
+    {
+      "ma": "16",
+      "cau_giao": "Đầu chủ chọn nhiều căn rồi đổi trạng thái, đổi đầu chủ hay đánh dấu đã gọi cho tất cả trong một lần",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Tham chiếu §11 giữ tươi: sửa hàng loạt",
+      "hang": "T2",
+      "dung_tren": [
+        "15"
+      ],
+      "slug": "sua-hang-loat",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D3"
+      ],
+      "vung": [
+        "apps/web/src/app/inventory/bulk/**"
+      ]
+    },
+    {
+      "ma": "17",
+      "cau_giao": "Đầu chủ chọn một căn và thấy cột hồ sơ cạnh bảng: thuộc tính tự điền, lần rao, lịch sử giá và trạng thái ai sửa khi nào; thấy thuộc tính sai thì bấm «Báo sai thông tin căn»",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (2); luật 3: một căn một hồ sơ",
+      "hang": "T2",
+      "dung_tren": [
+        "14"
+      ],
+      "slug": "cot-ho-so-can",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D4",
+        "D5"
+      ],
+      "vung": [
+        "apps/web/src/app/units/**"
+      ]
+    },
+    {
+      "ma": "18",
+      "cau_giao": "Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (M5, 2); Tham chiếu §2: đường chính nhận ảnh là máy tính",
+      "hang": "T3",
+      "dung_tren": [
+        "11",
+        "17"
+      ],
+      "slug": "anh-can-ba-ngan",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D6"
+      ],
+      "vung": [
+        "apps/web/src/app/units/photos/**",
+        "packages/core/src/photos/**"
+      ]
+    },
+    {
+      "ma": "19",
+      "cau_giao": "Đầu chủ che một vùng trên ảnh trước khi gửi; ra ngoài là bản nhẹ, bản gốc giữ lại",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Luật 29",
+      "hang": "T2",
+      "dung_tren": [
+        "18"
+      ],
+      "slug": "che-vung-anh",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D7"
+      ],
+      "vung": [
+        "apps/web/src/app/units/photos/redact/**"
+      ]
+    },
+    {
+      "ma": "20",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ, ghép cột lẫn giá trị vào trường chuẩn, xem trước sẽ ghi gì rồi mới nhập; không cột nào bị bỏ mất",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (N1, N2); luật 11",
+      "hang": "T3",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "5",
+        "9",
+        "11",
+        "15"
+      ],
+      "slug": "nhap-excel-ghep-cot",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D8"
+      ],
+      "vung": [
+        "apps/web/src/app/imports/**"
+      ]
+    },
+    {
+      "ma": "21",
+      "cau_giao": "Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước; ngày xác nhận lấy theo file, hoàn tác được cả lần nhập",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Luật 11; tách khỏi hàng 20 cho vừa cỡ",
+      "hang": "T2",
+      "dung_tren": [
+        "20"
+      ],
+      "slug": "nhap-excel-nho-mau",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D9"
+      ],
+      "vung": [
+        "apps/web/src/app/imports/templates/**"
+      ]
+    },
+    {
+      "ma": "22",
+      "cau_giao": "Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình — lead mới, cần gọi lại, nên gọi ép giá, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng đợi, ghi kết quả gọi một chạm",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (1); luật 18; hàng đợi «Xin dẫn xem» chờ điều kiện",
+      "hang": "T2",
+      "dung_tren": [
+        "15",
+        "17"
+      ],
+      "slug": "hom-nay-dau-chu",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D10"
+      ],
+      "vung": [
+        "apps/web/src/app/today/**"
+      ]
+    },
+    {
+      "ma": "23",
+      "cau_giao": "Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ thiếu",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Luật 17: không qua người duyệt",
+      "hang": "T2",
+      "dung_tren": [
+        "12",
+        "18"
+      ],
+      "slug": "san-sang-ban",
+      "nhom": "dau-chu",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "D11"
+      ],
+      "vung": [
+        "apps/web/src/app/units/ready/**",
+        "packages/core/src/readiness/**"
+      ]
+    },
+    {
+      "ma": "24",
+      "cau_giao": "Telesales nhập lead đủ năm mục trên máy tính và thấy ngay kết quả kiểm trùng: không trùng, đã có đầu chủ, hay căn đã có hàng mở",
+      "vai": "Telesales",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (L1–L3); luật 19–21",
+      "hang": "T3",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "5",
+        "9",
+        "11"
+      ],
+      "slug": "o-nhan-lead",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L1"
+      ],
+      "vung": [
+        "apps/web/src/app/leads/**",
+        "packages/core/src/dedupe/**"
+      ]
+    },
+    {
+      "ma": "25",
+      "cau_giao": "Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Luật 20; mặc định của sàn, chỉnh ở S3 (Mạnh 29/10)",
+      "hang": "T2",
+      "dung_tren": [
+        "24"
+      ],
+      "slug": "chia-lead-va-han",
+      "bat_khi": "Mười lead thử về đúng người theo toà, bỏ qua người nghỉ; báo quá hạn đến trong sai số một phút",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L2"
+      ],
+      "vung": [
+        "packages/core/src/routing/**",
+        "packages/api/src/jobs/**"
+      ]
+    },
+    {
+      "ma": "26",
+      "cau_giao": "Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Kiến trúc §5: Web Push; hướng dẫn cài lên màn hình chính cho iPhone",
+      "hang": "T2",
+      "dung_tren": [
+        "22",
+        "25"
+      ],
+      "slug": "thong-bao-lead",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L3"
+      ],
+      "vung": [
+        "apps/web/src/lib/push/**"
+      ]
+    },
+    {
+      "ma": "27",
+      "cau_giao": "Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng",
+      "vai": "Telesales",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P0 (L1 cột phải, L5)",
+      "hang": "T2",
+      "dung_tren": [
+        "25"
+      ],
+      "slug": "lead-bon-nac",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L4"
+      ],
+      "vung": [
+        "apps/web/src/app/leads/mine/**"
+      ]
+    },
+    {
+      "ma": "28",
+      "cau_giao": "Đầu chủ mở chế độ cuộc gọi của một lead trên máy tính: thẻ lead so giá với toà, danh sách hỏi chọn bằng phím, tính giá bao phí ↔ về tay; ghi xong thì mức đủ tự tính lại",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (KD1); luật 12–14, 16",
+      "hang": "T2",
+      "dung_tren": [
+        "22",
+        "24"
+      ],
+      "slug": "cuoc-goi-khai-thac",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L5"
+      ],
+      "vung": [
+        "apps/web/src/app/units/call/**"
+      ]
+    },
+    {
+      "ma": "29",
+      "cau_giao": "Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá",
+      "vai": "Đầu chủ",
+      "tieu_chi": 9,
+      "vi_sao": "Màn P0 (KD2)",
+      "hang": "T2",
+      "dung_tren": [
+        "28"
+      ],
+      "slug": "goi-ep-gia-dot-hai",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L6"
+      ],
+      "vung": [
+        "apps/web/src/app/units/call/push/**"
+      ]
+    },
+    {
+      "ma": "30",
+      "cau_giao": "Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Mức tối thiểu chốt 29/10; tổng đài là một loại kết nối, để sau",
+      "hang": "T2",
+      "dung_tren": [
+        "26",
+        "28"
+      ],
+      "slug": "goi-tu-may-tinh",
+      "nhom": "dong-vao",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L7"
+      ],
+      "vung": [
+        "apps/web/src/app/units/call/dial/**"
+      ]
+    },
+    {
+      "ma": "31",
+      "cau_giao": "Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Bất biến 4; luật 23–24; kiểm bắt buộc trước phát hành",
+      "hang": "T3",
+      "dung_tren": [
+        "11"
+      ],
+      "slug": "luat-an-va-kiem-ro-ri",
+      "bat_khi": "Bộ kiểm rò rỉ chạy trong CI và đỏ khi cố tình thêm một trường nội bộ; gửi khách riêng không có mã căn",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K1"
+      ],
+      "vung": [
+        "packages/core/src/redaction/**"
+      ]
+    },
+    {
+      "ma": "32",
+      "cau_giao": "Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn",
+      "vai": "Đầu khách",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P0 (M4)",
+      "hang": "T2",
+      "dung_tren": [
+        "13",
+        "23"
+      ],
+      "slug": "bang-hang-dang-the",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K2"
+      ],
+      "vung": [
+        "apps/web/src/app/inventory/cards/**"
+      ]
+    },
+    {
+      "ma": "33",
+      "cau_giao": "Đầu khách mở hồ sơ căn trên điện thoại và thấy giá, ảnh gửi được, lần xác nhận gần nhất; phần chủ nhà thay bằng «Liên hệ đầu chủ»",
+      "vai": "Đầu khách",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P0 (M3, vẽ cho đầu chủ); quyền là lớp phủ trên cùng một màn",
+      "hang": "T2",
+      "dung_tren": [
+        "17",
+        "32"
+      ],
+      "slug": "ho-so-can-dien-thoai",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K3"
+      ],
+      "vung": [
+        "apps/web/src/app/units/mobile/**"
+      ]
+    },
+    {
+      "ma": "34",
+      "cau_giao": "Đầu khách chọn căn, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với link, ảnh và tin soạn sẵn; người tự bấm gửi trong Zalo",
+      "vai": "Đầu khách",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (G1–G3); bất biến 3",
+      "hang": "T2",
+      "dung_tren": [
+        "3",
+        "31",
+        "32"
+      ],
+      "slug": "luong-gui",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K4"
+      ],
+      "vung": [
+        "apps/web/src/app/shares/new/**"
+      ]
+    },
+    {
+      "ma": "35",
+      "cau_giao": "Khách mở link từ Zalo và thấy bộ căn mang tên sàn, giá sống kèm «giá xác nhận X ngày trước», căn đã cọc tự mờ, chạm «Quan tâm» được",
+      "vai": "Khách",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (T1–T3); mặc định chốt 29/10",
+      "hang": "T2",
+      "dung_tren": [
+        "34"
+      ],
+      "slug": "trang-khach-rieng",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K5"
+      ],
+      "vung": [
+        "apps/web/src/app/s/**"
+      ]
+    },
+    {
+      "ma": "36",
+      "cau_giao": "Đầu khách mở Đã gửi và thấy từng link: lượt khách mở, căn được quan tâm, căn vừa đổi kèm «Gợi ý căn thay»; tắt được link",
+      "vai": "Đầu khách",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P0 (G4); link không tự hết hạn ở bản đầu (29/10)",
+      "hang": "T2",
+      "dung_tren": [
+        "35"
+      ],
+      "slug": "da-gui",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K6"
+      ],
+      "vung": [
+        "apps/web/src/app/shares/**"
+      ]
+    },
+    {
+      "ma": "37",
+      "cau_giao": "Đầu khách mở Hôm nay trên điện thoại và thấy khách vừa phản ứng, căn đã gửi vừa đổi, căn mới lên bảng khớp các bộ đã gửi",
+      "vai": "Đầu khách",
+      "tieu_chi": 9,
+      "vi_sao": "Màn P0 (M6, phác 29/10); mục lịch xem chờ điều kiện",
+      "hang": "T2",
+      "dung_tren": [
+        "36"
+      ],
+      "slug": "hom-nay-dau-khach",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K7"
+      ],
+      "vung": [
+        "apps/web/src/app/today/buyer/**"
+      ]
+    },
+    {
+      "ma": "38",
+      "cau_giao": "Người dùng điện thoại cài Quỹ hàng lên màn hình chính, bật thông báo; đăng xuất hay báo mất máy thì dữ liệu trên máy bị xoá sạch",
+      "vai": "Người dùng điện thoại",
+      "tieu_chi": 8,
+      "vi_sao": "Luật 32; Kiến trúc §7",
+      "hang": "T2",
+      "dung_tren": [
+        "13",
+        "26"
+      ],
+      "slug": "tab-toi",
+      "nhom": "dau-khach",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "K9"
+      ],
+      "vung": [
+        "apps/web/src/app/me/**"
+      ]
+    },
+    {
+      "ma": "39",
+      "cau_giao": "Đầu chủ mở Hôm nay trên điện thoại, gọi lại một chạm và ghi kết quả bằng một tay",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (M1)",
+      "hang": "T2",
+      "dung_tren": [
+        "22",
+        "38"
+      ],
+      "slug": "hom-nay-dau-chu-dien-thoai",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P1"
+      ],
+      "vung": [
+        "apps/web/src/app/today/mobile/**"
+      ]
+    },
+    {
+      "ma": "40",
+      "cau_giao": "Đầu chủ đổi giá hoặc trạng thái nhanh trên điện thoại sau cuộc gọi, theo đúng luật sửa giá",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (M2)",
+      "hang": "T2",
+      "dung_tren": [
+        "33",
+        "39"
+      ],
+      "slug": "doi-gia-nhanh",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P2"
+      ],
+      "vung": [
+        "apps/web/src/app/units/mobile/quick-edit/**"
+      ]
+    },
+    {
+      "ma": "41",
+      "cau_giao": "Đầu chủ chụp ảnh khi đi xem nhà ngay trên điện thoại và ảnh vào đúng ngăn của căn, tải lên ở nền",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (M5)",
+      "hang": "T2",
+      "dung_tren": [
+        "18",
+        "33"
+      ],
+      "slug": "chup-anh-dien-thoai",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P3"
+      ],
+      "vung": [
+        "apps/web/src/app/units/mobile/photos/**"
+      ]
+    },
+    {
+      "ma": "42",
+      "cau_giao": "Trưởng nhóm mở Hôm nay và thấy lead quá hạn để chia lại, hàng cũ theo từng đầu chủ, và ngoại lệ máy không tự quyết được",
+      "vai": "Trưởng nhóm",
+      "tieu_chi": 9,
+      "vi_sao": "Màn P1 (TN1, phác 29/10)",
+      "hang": "T2",
+      "dung_tren": [
+        "22",
+        "25"
+      ],
+      "slug": "hom-nay-truong-nhom",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P5"
+      ],
+      "vung": [
+        "apps/web/src/app/today/lead/**"
+      ]
+    },
+    {
+      "ma": "43",
+      "cau_giao": "Đầu chủ phát góc nhìn đang lọc ra ảnh, PDF hay Excel theo mẫu, kèm bài chép theo kênh; không cột nội bộ nào ra ngoài",
+      "vai": "Đầu chủ",
+      "tieu_chi": 9,
+      "vi_sao": "Màn P1 (D)",
+      "hang": "T2",
+      "dung_tren": [
+        "14",
+        "31"
+      ],
+      "slug": "phat-hang",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P6"
+      ],
+      "vung": [
+        "apps/web/src/app/exports/**"
+      ]
+    },
+    {
+      "ma": "44",
+      "cau_giao": "Môi giới sàn khác mở link bảng hàng và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; tải Excel hay ảnh bảng hàng được",
+      "vai": "Môi giới sàn khác",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (T4); mức chia là mặc định của sàn, sửa theo bộ, sàn ẩn được (29/10)",
+      "hang": "T2",
+      "dung_tren": [
+        "35"
+      ],
+      "slug": "trang-nhom-moi-gioi",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P7"
+      ],
+      "vung": [
+        "apps/web/src/app/s/broker/**"
+      ]
+    },
+    {
+      "ma": "45",
+      "cau_giao": "Quản trị sàn đổi tên hiển thị của trường chuẩn và thêm giá trị riêng neo vào giá trị chuẩn; cùng một căn hiện đúng ở bảng hàng, đội khác và trang khách",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 9,
+      "vi_sao": "Màn P1 (S1); bản đầu chạy bằng mặc định dựng sẵn tới khi có màn này",
+      "hang": "T2",
+      "dung_tren": [
+        "7",
+        "8"
+      ],
+      "slug": "cach-goi-rieng",
+      "nhom": "cai-dat",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P8"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/labels/**"
+      ]
+    },
+    {
+      "ma": "46",
+      "cau_giao": "Quản trị sàn thêm nhãn trạng thái riêng như «Giữ chỗ», bắt buộc neo vào một trong sáu trạng thái chuẩn và nhận luật, màu của trạng thái đó",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (S2); luật «sàn thêm nhãn, không thêm nghĩa»",
+      "hang": "T2",
+      "dung_tren": [
+        "45"
+      ],
+      "slug": "trang-thai-rieng",
+      "nhom": "cai-dat",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P9"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/statuses/**"
+      ]
+    },
+    {
+      "ma": "47",
+      "cau_giao": "Quản trị sàn tạo trường riêng kiểu có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở bảng hàng, lọc được, không ra trang khách",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 10,
+      "vi_sao": "Màn P1 (S5); chốt 29/10 trường riêng mức tối thiểu",
+      "hang": "T3",
+      "dung_tren": [
+        "31",
+        "45"
+      ],
+      "slug": "truong-rieng-toi-thieu",
+      "nhom": "cai-dat",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P10"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/fields/**"
+      ]
+    },
+    {
+      "ma": "48",
+      "cau_giao": "Quản trị sàn đổi cách chia lead, hạn nhận và hạn gọi, ngưỡng hai hàng đợi của Hôm nay; đổi chỉ áp cho lead mới",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (S3)",
+      "hang": "T2",
+      "dung_tren": [
+        "7",
+        "25"
+      ],
+      "slug": "luat-chia-lead",
+      "nhom": "cai-dat",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P11"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/lead-routing/**"
+      ]
+    },
+    {
+      "ma": "49",
+      "cau_giao": "Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn; giá đã lưu giữ nguyên kèm ngày tính",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (S4); luật 13",
+      "hang": "T2",
+      "dung_tren": [
+        "28"
+      ],
+      "slug": "thue-phi",
+      "nhom": "cai-dat",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P12"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/fees/**"
+      ]
+    },
+    {
+      "ma": "50",
+      "cau_giao": "Quản trị sàn xem và sửa mẫu file nhập đã nhớ, mẫu bảng hàng và mẫu bài theo kênh",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 9,
+      "vi_sao": "Màn P1 (S6, phác 29/10)",
+      "hang": "T2",
+      "dung_tren": [
+        "21",
+        "43"
+      ],
+      "slug": "mau-nhap-va-bai",
+      "nhom": "cai-dat",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "P13"
+      ],
+      "vung": [
+        "apps/web/src/app/settings/templates/**"
+      ]
+    },
+    {
+      "ma": "51",
+      "cau_giao": "Telesales nhập lead trên điện thoại: thiếu một mục thì chưa gửi được, gửi xong theo dõi được bốn nấc",
+      "vai": "Telesales",
+      "tieu_chi": 8,
+      "vi_sao": "Màn P1 (L4, L5)",
+      "hang": "T2",
+      "dung_tren": [
+        "27"
+      ],
+      "slug": "lead-dien-thoai",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "L9"
+      ],
+      "vung": [
+        "apps/web/src/app/leads/mobile/**"
+      ]
+    },
+    {
+      "ma": "52",
+      "cau_giao": "Số đo của hai tuần thử đọc được từ sự kiện của sàn thử: tỉ lệ xác nhận, mức đủ, mã tự điền, lead đến cuộc gọi đầu, lần phát, lượt mở, thao tác theo thiết bị và vai, lần mất mạng trên điện thoại",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Tham chiếu §11; ngưỡng đặt ở Cổng Đáng của từng hàng, trước hai tuần thử (Mạnh 29/10)",
+      "hang": "T2",
+      "dung_tren": [
+        "8",
+        "13"
+      ],
+      "slug": "so-do-hai-tuan-thu",
+      "bat_khi": "Mỗi số đo ở Tham chiếu §11, trừ «số ngày Sheet cũ không được sửa», ra từ một truy vấn trên sự kiện, chạy trên dữ liệu mẫu",
+      "nhom": "con-lai",
+      "dot": "ban-dau-2910",
+      "phu": [
+        "M1"
+      ],
+      "vung": [
+        "packages/core/src/metrics/**"
+      ]
+    }
+  ],
+  "chan_troi": [
+    {
+      "ma": "H1",
+      "dot": "ban-dau-2910",
+      "cau_giao": "Đầu khách xin dẫn khách xem một căn, đầu chủ hẹn với chủ nhà rồi xác nhận lại, không lộ số chủ",
+      "ly_do": "Cách đầu khách xin dẫn xem hôm nay, ai cầm chìa khoá chưa biết — chờ buổi phỏng vấn (Mạnh 29/10: để sau)",
+      "phu": [
+        "K8"
+      ],
+      "mo_lai_khi": "Có câu trả lời phỏng vấn về xin dẫn xem và lịch xem"
+    },
+    {
+      "ma": "H2",
+      "dot": "ban-dau-2910",
+      "cau_giao": "Đầu chủ thấy trên thẻ lead tin rao công khai đã khớp căn, giá và ngày đăng",
+      "ly_do": "Tin rao đến từ Invest; Invest chưa đẩy gói theo khuôn phiên bản 1. Bản đầu so giá bằng bảng hàng của chính sàn",
+      "phu": [
+        "L8"
+      ],
+      "mo_lai_khi": "Invest đẩy gói tin rao công khai theo khuôn phiên bản 1 và hàng 10 đã giao"
+    },
+    {
+      "ma": "H3",
+      "dot": "ban-dau-2910",
+      "cau_giao": "Đầu chủ chia sẻ ảnh từ Zalo trên điện thoại thẳng vào ngăn ảnh của căn",
+      "ly_do": "Tham chiếu §2: đường phụ — đường chính là kéo dán trên máy tính; web trên iPhone không nhận chia sẻ",
+      "phu": [
+        "P4"
+      ],
+      "mo_lai_khi": "Bài thử Zalo (hàng 3) hoặc hai tuần thử cho thấy đầu chủ cần nhận ảnh trên điện thoại"
+    }
+  ],
   "da_bac": []
 }
