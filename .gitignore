@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# Bí mật và dữ liệu thật không bao giờ vào kho
+.env
+.env.*
+!.env.example
+*.har

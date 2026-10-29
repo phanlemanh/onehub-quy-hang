@@ -1,0 +1,23 @@
+{
+  "name": "@quy-hang/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3460",
+    "build": "next build",
+    "start": "next start -p 3460",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@quy-hang/api": "*",
+    "@quy-hang/core": "*",
+    "hono": "^4.6.0",
+    "next": "16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19"
+  }
+}

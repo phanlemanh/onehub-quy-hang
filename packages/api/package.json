@@ -1,0 +1,19 @@
+{
+  "name": "@quy-hang/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "node --import tsx --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^0.18.0",
+    "@quy-hang/core": "*",
+    "hono": "^4.6.0",
+    "zod": "^3.23.0"
+  }
+}
