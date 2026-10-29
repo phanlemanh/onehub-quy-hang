@@ -5,6 +5,10 @@ giữ tươi, phát cho đầu khách và khách qua link sống. Gốc quyết 
 kho này: `docs/adr/0001-khoi-diem.md`. Từ vựng (nhãn UI ↔ tên code): `CONTEXT.md`.
 Làm việc với người dùng bằng **tiếng Việt**.
 
+**Điều đang đúng của sản phẩm: `docs/product/tham-chieu.md`** — đọc trước khi đề xuất việc mới; không hỏi lại điều đã
+chốt ở §12 «Sổ quyết định». Kiến trúc và stack: `docs/architecture/kien-truc-repo-va-stack.md`. Bảng «mỗi loại thông
+tin một chỗ»: `docs/README.md`. Làm xong một việc làm đổi điều đang đúng → sửa Tham chiếu trong cùng PR.
+
 ## Bản đồ kho
 
 ```

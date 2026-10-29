@@ -6,6 +6,7 @@ cho đầu khách và khách bằng link sống. Thay cho Google Sheet và nhóm
 - Kho riêng tư, không có bản công khai.
 - Quyết định gốc: ADR-0017 của `onehub-invest`. Khởi điểm của kho: [`docs/adr/0001-khoi-diem.md`](docs/adr/0001-khoi-diem.md).
 - Hướng dẫn cho agent và lệnh: [`AGENTS.md`](AGENTS.md). Từ vựng: [`CONTEXT.md`](CONTEXT.md).
+- Tài liệu sản phẩm và kiến trúc: [`docs/README.md`](docs/README.md) — bắt đầu từ [Tham chiếu](docs/product/tham-chieu.md).
 
 Trạng thái: khung. Chưa có màn hình; ba bài thử kỹ thuật (lưới 5.000 dòng, bộ đồng bộ khi mất mạng, ảnh xem trước của
 link trên Zalo) chạy trước khi viết sản phẩm.
