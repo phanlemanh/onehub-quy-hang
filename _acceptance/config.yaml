@@ -44,3 +44,5 @@ dev_server:
 # capture: bỏ — chưa có bằng chứng giao diện.
 lo_trinh:
   tep: docs/plan/lo-trinh.json
+tri_thuc:
+  noi: docs/tri-thuc   # gốc tri thức trong kho; kho riêng tư nên tài liệu thô nằm trong kho (không khai cong_khai, không kho riêng)
