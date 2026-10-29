@@ -181,7 +181,8 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 - **Máy tính** — ba tầng:
   - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn dự án · ô «Gõ mã căn» ở giữa · + Lead · Nhập Excel · Phát hàng · chuông báo · tài khoản.
   - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị, ở đáy).
-  - Cột thứ hai theo nhà, gập được để bảng rộng hết màn: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay không có cột thứ hai.
+  - **Ưu tiên bề ngang cho đầu chủ**: cột thứ hai mặc định gập ở Bảng hàng, Hôm nay và hồ sơ căn, chỉ còn cột biểu tượng mảnh; góc nhìn đã lưu vẫn một chạm ở nút «Góc nhìn» đầu thanh công cụ của bảng. Ai mở thì máy nhớ theo người.
+  - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay không có cột thứ hai.
   - Hồ sơ căn mở thành cột phải cạnh bảng, bảng vẫn dùng được; mở toàn màn khi cần.
 - **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
 - **Telesales**: không cột nhà, không ô gõ mã căn. Máy tính: thanh trên chỉ có Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.

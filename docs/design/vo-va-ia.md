@@ -26,7 +26,7 @@ bộ chọn dạng đường dẫn, ô tìm ⌘K, nút tạo, chuông.
 | Cột biểu tượng | Hôm nay · Bảng hàng · Đã gửi · Đội · Cài đặt sàn (ở đáy) — theo bảng vai ở Tham chiếu §9 |
 | Cột thứ hai theo nhà (`INNER_NAV`) | Bảng hàng: góc nhìn của đội, của tôi, «+ Lưu góc nhìn» · Đã gửi: Link đã gửi, Lịch xem · Cài đặt sàn: các mục cài đặt · Hôm nay: không có cột |
 | Thẻ chân cột (`footer`) | Bảng hàng: độ tươi (tỉ lệ căn xác nhận trong N ngày). Nhà khác: bỏ |
-| Gập cột thứ hai | Gập để bảng hàng rộng hết màn; nhớ theo người |
+| Gập cột thứ hai (tay nắm ở mép cột, đã thử trên bản xem trước 30/10) | **Mặc định gập ở Bảng hàng, Hôm nay và hồ sơ căn** — chỉ còn cột biểu tượng mảnh, bảng ăn gần hết bề ngang. Góc nhìn đã lưu vẫn một chạm: nút «Góc nhìn ▾» đầu thanh công cụ của bảng. Mở ở Đã gửi và Cài đặt sàn (ít cột, cần danh mục). Người mở hay gập thì nhớ theo người, theo nhà |
 
 Vì sao khối này: nó là vỏ duy nhất trong 36 vỏ có đủ ba thứ §9 đòi — bộ chọn sàn/dự án trên thanh trên, ô gõ ở giữa,
 và cột thứ hai đổi theo nhà (chỗ của góc nhìn đã lưu thay các tab của Sheet). Nền sáng, viền mảnh, không trang trí; có
