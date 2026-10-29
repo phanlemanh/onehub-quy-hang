@@ -23,14 +23,21 @@ expect_exit "cho tạo migration mới" 0 "$(guard packages/db/migrations/999_ch
 expect_exit "chặn ghi .env.local" 2 "$(guard apps/web/.env.local)"
 expect_exit "cho sửa .env.example" 0 "$(guard .env.example)"
 expect_exit "cho sửa mã thường" 0 "$(guard packages/core/src/index.ts)"
+# Phiên trong worktree: CLAUDE_PROJECT_DIR trỏ kho chính, không phải gốc chứa tệp. Rào vẫn phải chặn.
+khac=$(mktemp -d)
+guard_wt() { jq -n --arg f "$root/$1" '{tool_input:{file_path:$f}}' | CLAUDE_PROJECT_DIR="$khac" .claude/hooks/guard-edits.sh 2>/dev/null; echo $?; }
+expect_exit "chặn sửa migration khi thư mục dự án trỏ chỗ khác (worktree)" 2 "$(guard_wt packages/db/migrations/001_nen_cong_ty.sql)"
+expect_exit "cho tạo migration mới trong thư mục chưa có (worktree)" 0 "$(guard_wt packages/db/migrations/moi/999_chua_co.sql)"
 
 echo "typecheck-changed"
 tmp="packages/core/src/__tu_kiem_loi_kieu.ts"
-trap 'rm -f "$root/$tmp"' EXIT
+trap 'rm -f "$root/$tmp"; rm -rf "$khac"' EXIT
 echo 'export const x: number = "không phải số";' >"$tmp"
 out=$(echo '{}' | CLAUDE_PROJECT_DIR="$root" .claude/hooks/typecheck-changed.sh 2>&1); rc=$?
 expect_exit "chặn kết thúc lượt khi tệp vừa đổi có lỗi kiểu" 2 "$rc"
 grep -q "__tu_kiem_loi_kieu.ts" <<<"$out" && pass "báo đúng tệp lỗi" || bad "báo đúng tệp lỗi"
+rc=$( cd "$khac" && jq -n --arg c "$root" '{cwd:$c}' | CLAUDE_PROJECT_DIR="$khac" "$root/.claude/hooks/typecheck-changed.sh" >/dev/null 2>&1; echo $?)
+expect_exit "chặn theo cwd của phiên khi thư mục dự án trỏ chỗ khác (worktree)" 2 "$rc"
 rc=$(echo '{"stop_hook_active":true}' | CLAUDE_PROJECT_DIR="$root" .claude/hooks/typecheck-changed.sh >/dev/null 2>&1; echo $?)
 expect_exit "lần dừng thứ hai cho qua" 0 "$rc"
 rm -f "$tmp"

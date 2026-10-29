@@ -8,8 +8,11 @@ set -uo pipefail
 input=$(cat)
 [ "$(jq -r '.stop_hook_active // false' <<<"$input")" = "true" ] && exit 0
 
-root="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null)}"
-cd "$root" || exit 0
+# Gốc lấy theo cwd của phiên (Claude Code gửi trong JSON), không theo CLAUDE_PROJECT_DIR: trong worktree biến đó
+# trỏ kho chính, diff ở đó rỗng và rào luôn cho qua.
+cwd=$(jq -r '.cwd // empty' <<<"$input")
+root=$(git -C "${cwd:-.}" rev-parse --show-toplevel 2>/dev/null)
+cd "${root:-${CLAUDE_PROJECT_DIR:-.}}" || exit 0
 
 changed=$( { git diff --name-only HEAD 2>/dev/null; git ls-files --others --exclude-standard 2>/dev/null; } \
   | grep -E '\.(ts|tsx|mts|mjs)$' | sort -u)

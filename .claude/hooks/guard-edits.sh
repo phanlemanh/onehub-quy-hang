@@ -9,8 +9,18 @@ input=$(cat)
 file=$(jq -r '.tool_input.file_path // .tool_input.notebook_path // empty' <<<"$input")
 [ -z "$file" ] && exit 0
 
-root="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null)}"
-rel="${file#"$root"/}"
+# Gốc lấy theo git của CHÍNH tệp, không theo CLAUDE_PROJECT_DIR: trong worktree (.claude/worktrees/…) biến đó trỏ
+# kho chính, đường dẫn tệp không khớp mẫu và rào cho qua. Tệp mới có thể nằm trong thư mục chưa có → leo lên tới
+# thư mục tồn tại gần nhất.
+dir=$(dirname "$file")
+while [ ! -d "$dir" ] && [ "$dir" != "/" ]; do dir=$(dirname "$dir"); done
+root=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)
+if [ -n "$root" ]; then
+  # --show-prefix trả đường dẫn đã chuẩn hoá theo gốc, tránh lệch /tmp ↔ /private/tmp của macOS.
+  rel="$(git -C "$dir" rev-parse --show-prefix)${file#"$dir"/}"
+else
+  rel="$file"
+fi
 
 case "$rel" in
   packages/db/migrations/*.sql)
