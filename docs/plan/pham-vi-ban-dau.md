@@ -1,13 +1,13 @@
 # Bản phạm vi — bản đầu của Quỹ hàng
 
-Gom từ Tham chiếu §10 (màn P0 rồi P1) và §11 (bản đầu), theo thứ tự dựng ở Kiến trúc §9, sau lượt rà 29/10
+Nguồn: trang tri thức của đợt (lượt rà 29/10, kèm tài liệu thô). Gom từ Tham chiếu §10 (màn P0 rồi P1) và §11 (bản đầu), theo thứ tự dựng ở Kiến trúc §9, sau lượt rà 29/10
 (sổ quyết định 29/10). Việc của người không nằm ở đây — xem «Ra khỏi kho» ở mô tả PR cắt lượt.
 
 <!-- <<<PHAM-VI-MA -->
 ```
 dot: ban-dau-2910
 dang: chuoi
-nguon: Tham chiếu §10–§11 và Kiến trúc §9 trong kho, rà với Mạnh ngày 29/10
+nguon: wiki/dot/ban-dau-2910.md#867b6192ae2581fd453691e740592f736dda4cbc
 
 - `B1` — bài thử lưới bảng hàng 5.000 dòng × 20 cột, sửa trên ô, dán 500 ô
 - `B2` — bài thử bộ đồng bộ với luật cách ly và lớp trường, rút mạng năm phút rồi nối lại
