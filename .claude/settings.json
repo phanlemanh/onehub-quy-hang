@@ -50,6 +50,13 @@
       }
     ]
   },
+  "enabledPlugins": {
+    "acceptance-gate@acceptance-gate-kit": true,
+    "feature-loop@acceptance-gate-kit": true,
+    "diagram-design@acceptance-gate-kit": true,
+    "superpowers@claude-plugins-official": true,
+    "road-map@acceptance-gate-kit": true
+  },
   "extraKnownMarketplaces": {
     "acceptance-gate-kit": {
       "source": {
@@ -57,11 +64,5 @@
         "repo": "phanlemanh/acceptance-gate-kit"
       }
     }
-  },
-  "enabledPlugins": {
-    "acceptance-gate@acceptance-gate-kit": true,
-    "feature-loop@acceptance-gate-kit": true,
-    "diagram-design@acceptance-gate-kit": true,
-    "superpowers@claude-plugins-official": true
   }
 }
