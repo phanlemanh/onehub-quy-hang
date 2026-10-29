@@ -1,0 +1,21 @@
+#!/bin/bash
+# Trước mỗi commit — hai rào, cả hai nằm trong kho (nối bằng `npm install` → script prepare):
+#   1. Không commit thẳng trên main: vào main chỉ qua PR (AGENTS.md, mục Git).
+#   2. Quét bí mật trên phần đã stage bằng gitleaks; thiếu gitleaks thì chặn, không lặng lẽ bỏ qua.
+set -uo pipefail
+
+branch=$(git symbolic-ref --short -q HEAD || true)
+if [ "$branch" = "main" ]; then
+  echo "Chặn: không commit thẳng trên main — tạo nhánh rồi mở PR." >&2
+  exit 1
+fi
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "Chặn: chưa cài gitleaks (macOS: brew install gitleaks) — không commit khi chưa quét được bí mật." >&2
+  exit 1
+fi
+
+if ! gitleaks git --pre-commit --staged --redact --no-banner --log-level warn; then
+  echo "Chặn: gitleaks thấy thứ giống bí mật trong phần đã stage. Bỏ nó khỏi commit; khoá thật để ở .env.local." >&2
+  exit 1
+fi

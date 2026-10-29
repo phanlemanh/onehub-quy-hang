@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  GITLEAKS_VERSION: 8.30.1
+
 jobs:
   check:
     name: check
@@ -18,9 +21,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Cài gitleaks (bài tự kiểm của hook pre-commit cần nó)
+        run: |
+          mkdir -p "$HOME/bin"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz -C "$HOME/bin" gitleaks
+          echo "$HOME/bin" >> "$GITHUB_PATH"
       - run: npm ci
       - run: npm run typecheck
+      - run: npm run lint
       - run: npm test
+      - run: npm run test:hooks
       - run: npm run build
 
   # «Công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành (ADR-0001 §3).
@@ -49,3 +59,28 @@ jobs:
       - run: npm ci
       - run: npm run db:migrate
       - run: npm run db:test
+
+  # Quét bí mật trên toàn bộ lịch sử — lưới thứ hai sau hook pre-commit trên máy.
+  secrets:
+    name: secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        run: |
+          mkdir -p "$HOME/bin"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz -C "$HOME/bin" gitleaks
+          "$HOME/bin/gitleaks" git --redact --no-banner --log-level warn .
+
+  # Check bắt buộc duy nhất của bảo vệ nhánh: xanh khi và chỉ khi mọi job trên xanh.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [check, isolation, secrets]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mọi job phải xanh
+        run: |
+          echo '${{ toJSON(needs) }}' | jq -e 'to_entries | all(.value.result == "success")'

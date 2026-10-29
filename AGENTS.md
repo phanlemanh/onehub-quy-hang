@@ -47,11 +47,21 @@ docs/adr/         quyết định kiến trúc của kho này
 - **UI** theo ReUI trên shadcn/ui, giống onehub-invest — cài khi dựng màn đầu tiên.
 - **Git**: `main` có bảo vệ nhánh, vào main chỉ qua PR có check xanh. Commit theo Conventional Commits.
 
+## Rào của kho
+
+- **Hook git** `.githooks/` (nối khi `npm install`): `pre-commit` chặn commit trên `main` và quét bí mật bằng gitleaks
+  (cần `brew install gitleaks`); `pre-push` chạy kiểm kiểu + lint. Không dùng `--no-verify` — quyền của Claude Code cấm.
+- **Claude Code** `.claude/`: hook chặn sửa migration đã commit và ghi `.env*`; hook cuối lượt kiểm kiểu + lint tệp vừa
+  đổi; luật theo đường dẫn ở `.claude/rules/`; skill `/verify`, `/new-migration`. Cài đặt nạp lúc mở phiên — đổi
+  `.claude/settings.json` thì mở phiên mới.
+- **CI**: check bắt buộc duy nhất là `ci-ok`, xanh khi `check`, `isolation`, `secrets` cùng xanh.
+- Mỗi rào có bài tự kiểm: `npm run test:hooks` phải ra `TỔNG: ĐẠT`.
+
 ## Lệnh
 
 ```bash
 npm install
-npm run typecheck && npm test && npm run build
+npm run typecheck && npm run lint && npm test && npm run test:hooks && npm run build
 
 # Postgres local cho bộ kiểm cách ly (dự án riêng, cổng 5544)
 docker run --rm -d --name quy-hang-db -e POSTGRES_PASSWORD=quyhang -p 5544:5432 postgres:16
