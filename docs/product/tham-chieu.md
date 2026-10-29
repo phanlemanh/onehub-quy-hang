@@ -1,0 +1,338 @@
+# Quỹ hàng: tài liệu tham chiếu
+
+> **Nguồn chính từ 29/10/2026.** Sửa ở đây, qua PR. Tài liệu thiết kế trên claude.ai ([liên kết](https://claude.ai/artifact/B12d9FDirVB9vEA8gSChLe)) giữ để đọc lại và bình luận, không còn là bản hiện hành. Chữ «tab này» bên dưới nghĩa là tệp này.
+
+Bản 29/10. Tab này ghi **điều đang đúng** của sản phẩm, gom từ bốn tab làm việc và 41 màn phác thảo. Lý do, ghi chép phỏng vấn và lịch sử chỉnh nằm ở các ghi chép làm việc trong [`ghi-chep/`](ghi-chep/). Khi tab này và một tab làm việc nói khác nhau, tab này thắng. Mỗi điều ghi rõ **Đã chốt** (kèm ngày) hay **Đề xuất**.
+
+Phác thảo: [Phác thảo UX quỹ hàng](https://claude.ai/artifact/VESE23ChnX6oSC3X73Bzwf) · Kỹ thuật: [Kiến trúc repo và stack](../architecture/kien-truc-repo-va-stack.md)
+
+## 1. Sản phẩm trong một trang
+
+- **Quỹ hàng** là ứng dụng quản lý hàng cho sàn môi giới: nhận lead chủ nhà, biến thành căn sẵn sàng bán, giữ tươi, rồi phát cho đầu khách và khách.
+- **Việc thật**: khi khách hỏi, tìm ra căn khớp và gửi được trong vài phút, trước khi khách hỏi người khác — mà không để lộ nguồn chủ nhà.
+- **Thay cho** Google Sheet và nhóm Zalo. Thắng Sheet ở năm chỗ: gõ mã căn là đủ thông tin; giá luôn kèm điều kiện phí; độ tươi tự tính; gửi khách bằng link sống; nguồn chủ nhà được giữ kín ngay trong sàn.
+- **Chỗ đứng** — Đã chốt 29/10: ứng dụng riêng thuộc phía cung của OneHub Platform, đọc dữ liệu từ OneHub Invest một chiều; không phải cổng thứ ba của Invest.
+- **Người dùng đầu tiên**: chính đội, một dự án căn hộ thứ cấp.
+- **Bản đầu xong khi** một đội bỏ hẳn Google Sheet cho một dự án trong hai tuần và không muốn quay lại.
+
+**Kiểu sản phẩm** — Đã chốt 29/10 (ADR-0017): Quỹ hàng là SaaS cho ngành bất động sản, linh hoạt theo công ty và theo kết nối. Kiến trúc dựng cơ chế; mỗi kết nối với Invest, Platform hay công ty khác là một thoả thuận bật / tắt, chỉ mở được tới trần của từng lớp dữ liệu. Trần là bất biến: thông tin chủ nhà không bao giờ rời công ty. Chi tiết: [Kiến trúc repo và stack](../architecture/kien-truc-repo-va-stack.md), mục 0.
+
+## 2. Vai và thiết bị
+
+Ghi nhận 29/10: **đầu chủ làm việc trên máy tính; đầu khách xem bảng hàng trên điện thoại.** Đây là căn cứ chia nguồn lực ở mục 10 và ở thứ tự dựng.
+
+| Vai | Việc | Thiết bị chính | Trên thiết bị kia | Không thấy |
+| --- | --- | --- | --- | --- |
+| Telesales | Gọi lọc chủ nhà, nhập lead | Máy tính (đề xuất, chưa hỏi) | Điện thoại: nhập lead, theo dõi bốn nấc | Bảng hàng, căn của người khác |
+| Đầu chủ | Biến lead thành hàng, giữ tươi, ép giá, cho dẫn xem | **Máy tính** | Điện thoại: nhận báo lead, ghi kết quả gọi, đổi giá nhanh, chụp ảnh khi đi xem | Chủ nhà của đầu chủ khác |
+| Đầu khách | Tìm căn, gửi khách, dẫn xem | **Điện thoại** | Máy tính: lọc và gửi khi ngồi văn phòng | Chủ nhà, số chủ, giá đáy, ảnh sổ |
+| Trưởng nhóm | Chia lead, xem phễu, xử lý ngoại lệ, bàn giao | Máy tính | Điện thoại: báo lead quá hạn | — (thấy như đầu chủ, cho cả nhóm) |
+| Quản trị sàn | Cấu hình sàn | Chỉ máy tính | — | Không tự thấy chủ nhà |
+| Khách / môi giới sàn khác | Xem hàng được gửi | Điện thoại (khách riêng) · máy tính (nhóm môi giới) | — | Mọi phần nội bộ |
+
+Một người giữ được nhiều vai (đầu chủ kiêm đầu khách là thường); môi giới một mình là sàn một người.
+
+**Ưu tiên nguồn lực theo thiết bị** — Đề xuất:
+
+- **Máy tính là bàn làm việc của đầu chủ — làm sâu nhất.** Bảng hàng sửa trên ô, Hôm nay, hồ sơ căn, màn cuộc gọi, nhập Excel, phát hàng, cài đặt. Đây là chỗ người dùng so với Sheet đầu tiên và tốn công nhất.
+- **Điện thoại là bảng hàng của đầu khách — nhanh, đọc là chính.** Bảng hàng dạng thẻ, hồ sơ căn không có phần chủ nhà, Hôm nay của đầu khách, luồng Gửi, Đã gửi. Gần như không sửa dữ liệu.
+- **Điện thoại của đầu chủ chỉ là bản mang theo**: báo lead, kết quả gọi một chạm, đổi giá nhanh, ảnh. Màn cuộc gọi trên máy tính (KD1, KD2) là bản chính; bốn màn cuộc gọi trên điện thoại (K1–K4) lùi thành dự phòng.
+- **Trang khách luôn điện thoại trước**, vì khách mở từ Zalo.
+
+Ghi nhận này đổi bốn chỗ:
+
+- **Ngoại tuyến trên điện thoại** (đã chốt 28/10: chỉ ở mobile, đo trước khi làm) nay chủ yếu là **đọc**: đầu khách ở hầm toà, căn mẫu vẫn xem được bảng hàng, hồ sơ và ảnh gửi được. Phần ghi ngoại tuyến thu lại còn kết quả gọi và đổi giá của đầu chủ khi đi ngoài.
+- **«Đầu chủ gọi bằng máy nào»** còn lại nửa sau: máy tính biết đang có cuộc gọi bằng cách nào — bấm Gọi để điện thoại quay số, hay nối tổng đài.
+- **Nhận ảnh từ Zalo**: đường chính là kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn; chia sẻ từ Zalo trên điện thoại là đường phụ.
+- **Màn còn thiếu quan trọng nhất là Hôm nay của đầu khách trên điện thoại**, xếp trước Đã gửi trên máy tính.
+
+## 3. Dây chuyền và các cửa
+
+Telesales tìm chủ nhà → đầu chủ biến cuộc gọi thành căn sẵn sàng bán → bảng hàng chung của sàn → đầu khách đem đi bán → khách.
+
+- **Ba cửa vào, một đích**: lead (telesales nhập hoặc đầu chủ tự nhập) · nhập Excel · nhận căn từ tin đã thu (Sau). Cả ba qua cùng một bước kiểm trùng theo căn và theo chủ nhà.
+- **Ba cửa ra**: Gửi (link, ảnh + tin) · Phát hàng (bảng hàng ra ảnh, PDF, Excel) · Đăng Platform (Sau). Cùng một bộ luật ẩn, cùng ghi công.
+- **Hai hệ thống nối vào, đều một chiều**. Invest → Quỹ hàng: danh mục căn, số thị trường tổng hợp, tin rao công khai để đối chiếu; không số AirDNA, không danh mục S08 nguyên văn. Quỹ hàng → Platform: chỉ căn đầu chủ chọn đăng, đủ mức thông tin, đã bỏ phần nội bộ.
+
+Hai kết nối trên là thoả thuận đang bật, không phải dây cứng: Invest đẩy vào, Platform nhận hàng ra và đưa khách về. Chiều giá chốt về Invest đang tắt; bật là quyết định kinh doanh có điều khoản với sàn.
+
+## 4. Đối tượng
+
+| Đối tượng | Là gì | Thuộc ai | Luật |
+| --- | --- | --- | --- |
+| Danh mục: dự án → toà / phân khu → trục / dãy → căn | Vật thể; thuộc tính tự điền từ mã | Dùng chung mọi sàn | Khoá; sai thì «Báo sai thông tin căn» |
+| Hàng | Lần chào bán của sàn trên một căn. Lead là hàng ở nấc đầu, có thể mới biết toà | Sàn | Mỗi sàn tối đa một hàng đang mở trên một căn — gốc của kiểm trùng |
+| Chủ nhà | Tên, số, các căn của người đó, giá đáy từng nói | Đầu chủ giữ + trưởng nhóm | Một chủ nhiều căn → một đầu chủ |
+| Sự kiện | Nhập lead, gọi, xác nhận, đổi giá, đổi trạng thái, nhập file, gửi, mở số chủ | Sàn | Chỉ thêm, không sửa; ghi người và vai lúc làm |
+| Ảnh | Ba ngăn: gửi được · tự có từ mã · nội bộ | Căn trong sàn; lần rao chọn ảnh | Ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy |
+| Lịch xem | Đầu khách xin dẫn khách xem, đầu chủ hẹn với chủ / người thuê | Sàn | Không lộ số chủ cho đầu khách |
+| Lần gửi | Một link (một căn hoặc bộ căn), gửi cho ai, lượt mở, lượt quan tâm | Người gửi | Chỗ ghi công |
+| Góc nhìn | Bộ lọc + cột + cách xem đã lưu | Người hoặc cả đội | Thay các tab của Sheet |
+| Tin rao ngoài | Tin công khai Invest thu được, đã khớp căn | Chỉ đọc, chỉ đầu chủ thấy | Đối chiếu, không phát ra |
+| Cấu hình sàn | Cách gọi riêng, trường riêng, trạng thái riêng, luật chia lead, thuế phí, mẫu | Sàn | Mọi thay đổi vào nhật ký, không sửa số đã lưu |
+
+**Căn và lần rao tách theo nhịp đổi.** Thuộc tính căn (diện tích, phòng ngủ, hướng, vị trí tách từ mã) gần như không đổi. Phần của lần rao (giá + điều kiện phí, nội thất, pháp lý, tài chính, tình trạng sử dụng, đầu chủ, mức hiển thị, ghi chú) đổi hằng tuần. Độ tươi, mức đủ thông tin và lịch sử trả giá đều tính từ sự kiện, không ai phải điền.
+
+## 5. Vòng đời của hàng
+
+Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
+
+| Trạng thái chuẩn | Nhãn mặc định | Vào khi | Trên bảng hàng chung |
+| --- | --- | --- | --- |
+| Chưa đủ để rao | Lead mới · Đang khai thác | Telesales hoặc đầu chủ nhập | Không |
+| Đang bán | Còn hàng | Bấm «Sẵn sàng bán», qua điều kiện máy kiểm | Có |
+| Đang giao dịch | Đã cọc · Giữ chỗ (riêng sàn) | Có cọc hoặc giữ chỗ | Có, không gửi mới được |
+| Đã bán | Đã bán | Sàn mình chốt; bắt buộc giá chốt | Không; vào lịch sử |
+| Tạm ngừng | Tạm ngừng bán | Chủ tạm dừng, đang sửa nhà… | Không |
+| Ngừng hẳn | Ngừng — chủ đã bán nơi khác · chủ đổi ý · không liên lạc được | Kết quả gọi; bắt buộc lý do | Không |
+
+- **Một bộ kết quả gọi ở mọi màn**: Còn / giữ giá · Đổi (hạ) giá · Đã cọc / bán… · Không nghe máy. «Đã cọc / bán…» hỏi tiếp: cọc, sàn mình bán (giá chốt), hay chủ bán nơi khác (Ngừng).
+- **Đổi trạng thái không xoá dữ liệu**: căn đã bán giữ giá chốt và ngày bán — nguồn giá giao dịch thật.
+- **Sàn thêm nhãn, không thêm nghĩa**: «Giữ chỗ» phải neo vào một trạng thái chuẩn và nhận luật, màu của trạng thái đó; không có trạng thái thứ bảy.
+- Tên tiếng Anh của từng trạng thái tra lại bản từ điển RESO đang dùng trước khi chốt.
+
+## 6. Quyền
+
+- **Trục 1 — ai trong sàn thấy hàng**: Chỉ tôi → Nhóm → Toàn sàn. Lead và hàng chưa khoá nguồn mặc định «Chỉ tôi»; «Sẵn sàng bán» đưa lên «Toàn sàn».
+- **Trục 2 — hàng ra ngoài bằng cửa nào**: không ra · gửi tay (link, ảnh + tin, bảng hàng) · đăng Platform.
+- **Lớp trường, phủ cả hai trục**: chủ nhà, số điện thoại, giá đáy, ảnh sổ chỉ đầu chủ giữ căn và trưởng nhóm thấy; không bao giờ ra ngoài sàn. Mỗi lần mở số chủ là một sự kiện.
+- **Quyền cấu hình tách khỏi quyền xem nguồn**: quản trị sàn không tự động thấy chủ nhà.
+- **Quyền là lớp phủ trên cùng một màn**: đầu khách mở đúng hồ sơ căn đó, phần chủ nhà thay bằng «Xin dẫn xem» và «Liên hệ đầu chủ».
+- **Nhiều sàn trên một nền** — Đã chốt 28/10: mỗi sàn một vùng riêng; chỉ danh mục là dùng chung. Hệ thống biết hai sàn cùng giữ một căn nhưng không cho bên này thấy hàng bên kia. Cách ly đặt ở kho dữ liệu; kiểm thử «sàn này không thấy gì của sàn kia» là cổng bắt buộc trước mỗi lần phát hành.
+
+## 7. Mỗi sàn một cách gọi, dữ liệu một chuẩn
+
+Đã chốt 28/10 (ba lớp) và 29/10 (trường riêng mức tối thiểu vào bản đầu).
+
+| Lớp | Gồm | Ai đổi | Ví dụ |
+| --- | --- | --- | --- |
+| Lõi chuẩn | Căn, lần rao, giá + điều kiện phí, trạng thái chuẩn, sự kiện — theo RESO | Chỉ đội sản phẩm | Diện tích, hướng, «Đang giao dịch» |
+| Cách gọi riêng | Tên hiển thị của trường chuẩn; giá trị riêng neo vào giá trị chuẩn; bộ nhớ ghép cột Excel | Quản trị sàn | «Phí CN» là điều kiện phí; «BP» là Bao phí |
+| Trường riêng | Trường thật sự mới. Bản đầu: «có / không» và «chọn một»; chữ, số, ngày để sau | Quản trị sàn | «Căn góc» |
+
+- **Ba câu hỏi theo thứ tự** trước khi thêm gì: cùng nghĩa khác tên → đổi tên; cùng trường khác giá trị → thêm giá trị riêng neo vào chuẩn; thật sự mới → trường riêng. Máy dò trùng nghĩa trước khi tạo trường riêng.
+- **Trường riêng ở lại trong sàn**: hiện ở bảng hàng và hồ sơ, lọc và lưu góc nhìn được, nhập Excel ghép vào được; không lên trang khách, không vào số liệu thị trường, không lên Platform; kèm khi phát hàng cho đội khác thì bật từng trường.
+- **Không làm, có chủ ý**: không đối tượng mới, không công thức, không bố cục tự dựng.
+
+## 8. Luật sản phẩm
+
+**Xem và tìm**
+
+1. Vị trí bất khả xâm phạm: toà, tầng, trục không đổi chỗ; lọc trên bản vị trí là tô sáng, không giấu.
+2. Cách xem chính theo loại hàng: thứ cấp là danh sách, sơ cấp là lưới.
+3. Dày như Sheet; một căn một hồ sơ — cuộc gọi, ảnh, đổi giá, lịch xem là phần hay chế độ của hồ sơ, không có trang thứ hai.
+4. Bộ lọc và căn đang chọn đi theo người khi đổi cách xem hay sang Gửi, Phát hàng.
+5. Dùng đúng chữ của nghề; chữ trên màn là «đầu chủ», không «người giữ».
+
+**Sửa và nhập**
+
+6. Chỉ sửa trên ô phần của lần rao; thuộc tính căn khoá. Sửa trên ô chỉ có ở danh sách trên máy tính; điện thoại dùng nút kết quả gọi và màn sửa nhanh.
+7. Giá luôn đi cùng điều kiện phí; máy nói lại «Hiểu là…»; đổi quá khoảng 20% thì hỏi lại.
+8. Không có nút Lưu; mỗi lần sửa là một sự kiện, hoàn tác được.
+9. Sửa giá hay trạng thái mặc định tính là vừa xác nhận với chủ nhà — Đã chốt 28/10.
+10. Hai người cùng sửa một căn thì báo, không âm thầm ghi đè; «Đã bán» và «Đã cọc» thắng ngay.
+11. Nhập Excel ghép cả cột lẫn giá trị, nhớ mẫu file, xem trước rồi mới ghi, không bỏ mất cột nào, hoàn tác được cả lần nhập; ngày xác nhận lấy theo file.
+
+**Giá**
+
+12. So giá luôn quy về giá chủ nhận về tay; không so giá bao phí với giá không bao phí.
+13. Mỗi giá bao phí mang kèm định nghĩa bao phí của sàn lúc tính; đổi tỉ lệ chỉ áp cho lần tính mới.
+14. Máy đưa sự thật, không đề xuất mức giá nên ép.
+
+**Độ tươi, mức đủ, hàng đợi**
+
+15. Độ tươi là ngày xác nhận gần nhất với chủ nhà; căn nhạt dần theo tuổi.
+16. Mức đủ thông tin tự tính, và chính là danh sách hỏi của màn cuộc gọi.
+17. «Sẵn sàng bán» một chạm: máy kiểm giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; không qua người duyệt.
+18. Chỉ Hôm nay được đẩy việc; mỗi căn nằm ở đúng một hàng đợi (ép giá thắng gọi lại). Mặc định: cần gọi lại sau 14 ngày chưa xác nhận; nên gọi ép giá sau 10 ngày (sàn chỉnh trong 7–14).
+
+**Lead**
+
+19. Năm mục bắt buộc: số chủ nhà, căn hoặc toà, nhu cầu, giá kèm điều kiện phí, thời gian muốn ra hàng.
+20. Kiểm trùng lúc nhập: chủ nhà đã có đầu chủ thì về người đó; căn đã có hàng mở thì thành tin bổ sung; còn lại chia theo luật của sàn, hạn nhận 15 phút rồi báo trưởng nhóm.
+21. Telesales thấy kết quả của lead, không thấy hàng.
+
+**Gửi và trang khách**
+
+22. Người luôn là người bấm gửi: hệ thống không gửi hộ, không đăng vào nhóm, không tự trả lời.
+23. Mọi cửa ra dùng chung một bộ luật ẩn; thêm cửa mới là nối vào bộ luật đó.
+24. Gửi khách riêng ẩn mã căn, chỉ hiện toà + tầng cao / thấp; gửi nhóm môi giới hiện đủ mã — Đã chốt 28/10.
+25. Chỉ căn còn hàng mới gửi được; quá 14 ngày chưa xác nhận thì nhắc gọi trước. Gửi cần mạng — không gửi bảng giá cũ.
+26. Trang khách mang tên sàn, nói lời khách hiểu, giá và trạng thái sống; căn đã cọc tự mờ đi.
+
+**Ảnh**
+
+27. Ảnh thuộc căn, lần rao chọn ảnh hiện; nhãn «Ảnh thật · ngày chụp» hoặc «Ảnh mẫu»; ảnh tin rao của người khác không vào ngăn gửi được.
+28. Ảnh sổ, giấy tờ lưu ở ngăn nội bộ, chỉ đầu chủ giữ căn và trưởng nhóm xem — Đã chốt 28/10.
+29. Che một vùng trước khi gửi; gửi bản nhẹ, giữ bản gốc.
+
+**Nhanh và ngoại tuyến** — Đã chốt 28/10
+
+30. Nhanh tức thì từ bản đầu: dữ liệu giữ sẵn trên máy, ghi trên máy trước, gửi lên sau.
+31. Ngoại tuyến thật chỉ ở điện thoại, đo trước khi làm; luôn nói rõ đang ở đâu; đụng nhau thì hỏi.
+32. Mang theo ít: điện thoại giữ căn của mình, Hôm nay và góc nhìn đã ghim; số chủ chỉ của căn mình giữ; đăng xuất hay báo mất máy thì xoá sạch.
+
+## 9. Điều hướng
+
+- **Máy tính**: cột trái theo vai — Hôm nay · Bảng hàng (góc nhìn đã lưu bên dưới) · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị). Thanh trên: chọn dự án · ô «Gõ mã căn» · + Lead · Nhập Excel · Phát hàng.
+- **Điện thoại**: bốn tab — Hôm nay · Bảng hàng · Gửi · Tôi. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
+- **Telesales**: không cột trái, không ô gõ mã căn. Máy tính: Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
+- **Trang khách**: một link công khai, không đăng nhập.
+
+Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng — có hàng gì, ở đâu? · Đã gửi — khách đang phản ứng ra sao? · Đội — đội đang chạy thế nào? · Cài đặt sàn — sàn gọi tên và chạy theo luật nào?
+
+| Đường dẫn | Màn |
+| --- | --- |
+| /today | Hôm nay |
+| /inventory · ?view=list · ?view=position · ?unit=\<mã> | Bảng hàng: danh sách, vị trí, kèm hồ sơ căn đang mở |
+| /inventory/views/\<id> | Góc nhìn đã lưu |
+| /units/\<mã> · /units/\<mã>/call | Hồ sơ căn toàn màn · chế độ cuộc gọi |
+| /leads/new | Ô nhận lead |
+| /imports/new · /imports/\<id> | Nhập Excel |
+| /shares · /shares/new | Đã gửi · luồng Gửi |
+| /viewings | Lịch xem |
+| /exports/new | Phát hàng |
+| /team | Đội |
+| /settings/labels · /fields · /statuses · /lead-routing · /fees · /templates | Cài đặt sàn |
+| /s/\<mã link> | Trang khách |
+
+## 10. Danh mục màn và ưu tiên
+
+**P0** dựng trước, đủ để chạy hai tuần thử · **P1** cùng bản đầu, dựng sau · **P2** sau hoặc dự phòng. Mã phác thảo theo tên bảng trên canvas; phương án ban đầu A, B, C giữ để lưu vết.
+
+| Nhà | Màn | Vai · thiết bị | Phác thảo | Giai đoạn | Ưu tiên |
+| --- | --- | --- | --- | --- | --- |
+| Hôm nay | Hàng đợi của đầu chủ | Đầu chủ · máy tính | 1 | Bản đầu | P0 |
+| Hôm nay | Hôm nay của đầu khách: căn mới lên bảng, căn đã gửi vừa đổi, khách vừa mở hay quan tâm, lịch xem | Đầu khách · điện thoại | **chưa phác** | Bản đầu | P0 |
+| Hôm nay | Lead đã nhập và bốn nấc | Telesales · cả hai | L1 (cột phải), L5 | Bản đầu | P0 |
+| Hôm nay | Hàng đợi của đầu chủ, bản mang theo | Đầu chủ · điện thoại | M1 | Bản đầu | P1 |
+| Hôm nay | Lead quá hạn, hàng cũ theo người, ngoại lệ | Trưởng nhóm · máy tính | chưa phác | Bản đầu | P1 |
+| Bảng hàng | Bảng kiểu Sheet, sửa trên ô | Đầu chủ · máy tính | 2, 2b | Bản đầu | P0 |
+| Bảng hàng | Bảng hàng dạng thẻ, lọc theo nhu cầu khách | Đầu khách · điện thoại | M4 | Bản đầu | P0 |
+| Bảng hàng | Vị trí: lưới toà | Máy tính | 3 | Sau | P2 |
+| Bảng hàng | Vị trí: bản đồ lô thấp tầng | Máy tính | chưa phác | Sau | P2 |
+| Hồ sơ căn | Cột hồ sơ, ảnh | Đầu chủ · máy tính | 2, M5 | Bản đầu | P0 |
+| Hồ sơ căn | Màn hồ sơ; với đầu khách phần chủ nhà thay bằng «Xin dẫn xem» | Đầu khách · điện thoại | M3 (vẽ cho đầu chủ) | Bản đầu | P0 |
+| Hồ sơ căn | Chế độ cuộc gọi: khai thác, ép giá | Đầu chủ · máy tính | KD1, KD2 | Bản đầu | P0 |
+| Hồ sơ căn | Đổi giá / trạng thái nhanh | Đầu chủ · điện thoại | M2 | Bản đầu | P1 |
+| Hồ sơ căn | Chế độ cuộc gọi trên điện thoại | Đầu chủ · điện thoại | K1–K4 | Dự phòng | P2 |
+| Cửa vào | Ô nhận lead | Telesales · máy tính | L1–L3 | Bản đầu | P0 |
+| Cửa vào | Ô nhận lead | Telesales · điện thoại | L4, L5 | Bản đầu | P1 |
+| Cửa vào | Nhập Excel: ghép cột, xem trước | Đầu chủ, quản trị · máy tính | N1, N2 | Bản đầu | P0 |
+| Cửa ra | Gửi: chọn → xem trước → chia sẻ → theo dõi | Đầu khách · điện thoại | G1–G4 | Bản đầu | P0 |
+| Cửa ra | Trang khách: khách riêng | Khách · điện thoại | T1–T3 | Bản đầu | P0 |
+| Cửa ra | Trang khách: nhóm môi giới | Môi giới sàn khác · máy tính | T4 | Bản đầu | P1 |
+| Cửa ra | Phát hàng | Đầu chủ, trưởng nhóm · máy tính | D | Bản đầu | P1 |
+| Đã gửi | Link đã gửi, lượt mở, quan tâm | Đầu khách · điện thoại | G4 | Bản đầu | P0 |
+| Đã gửi | Xin dẫn xem, lịch xem | Đầu khách ↔ đầu chủ | chưa phác, chờ phỏng vấn | Bản đầu | P1 |
+| Đã gửi | Bản máy tính | Máy tính | chưa phác | Bản đầu | P2 |
+| Đội | Phễu, hàng theo người, bàn giao | Trưởng nhóm · máy tính | chưa phác | Sau | P2 |
+| Cài đặt sàn | Cách gọi riêng, trạng thái, trường riêng, luật chia lead, thuế phí | Quản trị · máy tính | S1–S5 | Bản đầu | P1 — bản đầu chạy bằng mặc định dựng sẵn |
+| Cài đặt sàn | Mẫu file nhập, mẫu bảng hàng và bài, người dùng | Quản trị · máy tính | chưa phác | Bản đầu | P1 |
+| Bộ gõ | Chèn bài + link khi đang chat | Đầu khách · điện thoại | — | Sau | — |
+
+## 11. Bản đầu
+
+**Có**, xếp theo một vòng việc trong ngày:
+
+- **Vào**: ô nhận lead năm mục, kiểm trùng, chia lead theo toà kèm thông báo; nhập file bảng hàng cũ; gõ mã căn là tự điền.
+- **Khai thác**: thẻ lead mức nhẹ (giá so toà, chủ còn căn nào), màn cuộc gọi có danh sách hỏi, máy tính giá bao phí ↔ giá về tay, ảnh căn ba ngăn, «Sẵn sàng bán» một chạm.
+- **Giữ tươi**: hàng đợi gọi lại và ép giá, kết quả gọi một chạm, lịch sử trả giá, sửa hàng loạt, trạng thái có tên và lịch sử, mức đủ tự tính.
+- **Tìm**: bảng kiểu Sheet, lọc mọi cột, góc nhìn đã lưu, nhóm theo toà rồi loại căn, cột hồ sơ; bảng hàng dạng thẻ trên điện thoại.
+- **Phát**: luồng Gửi, trang khách hai cách hiện, link sống, phát bảng hàng, chép bài theo mẫu kênh.
+- **Sàn và đội**: tách sàn, vai và quyền theo khu, lớp trường, lịch sử ai sửa gì; cách gọi riêng, trạng thái riêng, trường riêng tối thiểu, luật chia lead, thuế phí.
+
+**Cố ý không làm ở bản đầu**: tự đăng hay tự trả lời Zalo · quản lý khách mua đầy đủ · bản vị trí (lưới, bản đồ lô) · máy đọc chữ (bóc tin rao, tách nhãn ghi chú) · đồng bộ lên Platform · hoa hồng, hợp đồng, thanh toán · ngoại tuyến thật (đo trước) · bộ gõ.
+
+**Đo trong hai tuần thử** (ngưỡng đặt trước khi bắt đầu):
+
+| Số đo | Trả lời |
+| --- | --- |
+| Số ngày Sheet cũ không được sửa | Đội đã chuyển hẳn chưa? |
+| Tỉ lệ căn xác nhận trong N ngày; tỉ lệ căn ở mức đủ cao nhất | Hàng có tươi và đầy hơn không? |
+| Tỉ lệ mã căn tự điền được | Danh mục đủ phủ dự án chưa? |
+| Thời gian khách hỏi → gửi được căn | Việc thật có nhanh hơn không? |
+| Thời gian lead → cuộc gọi đầu; số ngày lead → Sẵn sàng bán; số lead trùng bị chặn | Dòng vào có chạy không? |
+| Số căn gọi ép giá đợt hai | Hàng ngộp có được chăm không? |
+| Số lần phát bảng hàng; số link khách mở, số lượt quan tâm | Hàng có được phát ra từ đây không? |
+| Tỉ lệ thao tác trên máy tính / điện thoại theo vai | Ghi nhận thiết bị theo vai có đúng không? |
+| Số lần mất mạng và thao tác lúc mất mạng trên điện thoại | Có cần ngoại tuyến thật không? |
+
+## 12. Sổ quyết định
+
+| Ngày | Quyết định | Chi tiết ở |
+| --- | --- | --- |
+| 23/10 | Gom vào, không phát ra: hệ thống không đăng hộ lên kênh khác; người luôn bấm gửi | Ghi nhớ |
+| 28/10 | Mở app vào Hôm nay; làm việc ở bảng kiểu Sheet; lưới là một cách xem trong bảng | Desktop app |
+| 28/10 | Sửa giá hay trạng thái mặc định là vừa xác nhận với chủ nhà | Desktop app |
+| 28/10 | Gửi khách riêng ẩn mã căn; gửi nhóm môi giới hiện mã | Desktop app |
+| 28/10 | Cho lưu ảnh sổ và giấy tờ ở ngăn nội bộ | Desktop app |
+| 28/10 | Ba lớp dữ liệu; tách sàn từ bản đầu | Desktop app |
+| 28/10 | Hai mức: nhanh tức thì từ bản đầu; ngoại tuyến thật chỉ điện thoại, đo trước | Desktop app |
+| 28/10 | Tài khoản các sàn và quỹ hàng chạy trên máy chủ; dữ liệu đi kèm hợp đồng và điều khoản | Desktop app |
+| 29/10 | Quỹ hàng là ứng dụng riêng phía cung Platform, đọc Invest một chiều | Kiến trúc thông tin §2 |
+| 29/10 | Trường riêng mức tối thiểu vào bản đầu | Kiến trúc thông tin §13 |
+| 29/10 | Ghi nhận: đầu chủ làm trên máy tính, đầu khách xem trên điện thoại — căn cứ ưu tiên | Mục 2 tab này |
+| 29/10 | Quỹ hàng là SaaS: cơ chế ở kiến trúc, mỗi kết nối là một thoả thuận bật / tắt trong trần của lớp dữ liệu; kho riêng tư, cơ sở dữ liệu riêng; một API cho mọi bề mặt; Invest cấp dữ liệu một chiều — ADR-0017 | Kiến trúc repo và stack §0, §2–§4 |
+
+## 13. Chỗ cần chốt
+
+**Lead và cuộc gọi**
+
+- [ ] Hạn nhận lead 15 phút có hợp không. Sàn chỉnh được ở Cài đặt sàn.
+- [ ] Telesales còn thấy số chủ nhà sau khi gửi không. Đề xuất: không, theo lớp trường.
+- [ ] Khi trùng căn, cho «Bỏ lead này» hay bắt buộc gửi tin bổ sung.
+- [ ] Máy tính biết đang có cuộc gọi bằng cách nào. Đề xuất mức tối thiểu: bấm Gọi trên máy tính để điện thoại quay số.
+
+**Giá và phí**
+
+- [ ] «Bao phí» mặc định gồm cả lệ phí trước bạ không. Phác thảo: có, cả ba khoản.
+- [ ] Phí môi giới 1% là luật sàn hay thoả thuận từng căn. Phác thảo: mặc định của sàn, đầu chủ sửa từng căn.
+
+**Trang khách**
+
+- [ ] Hiện «giá xác nhận X ngày trước» cho khách. Đề xuất: hiện.
+- [ ] Mức chia hoa hồng trên trang nhóm môi giới đặt theo sàn hay theo từng bộ; có sàn nào không muốn công khai.
+- [ ] Người gửi tắt được link không; link có tự hết hạn không (ví dụ sau 30 ngày).
+- [ ] Giữ «Quan tâm» hay chỉ đếm lượt mở.
+
+**Dữ liệu và phạm vi**
+
+- [ ] Dự án dùng thử đầu tiên. Đề xuất: dự án đội đang giữ nhiều hàng nhất.
+- [ ] Danh mục căn dùng ra ngoài lấy từ đâu: dựng từ bảng hàng sàn nhập, hay mua có quyền dùng ra ngoài.
+- [ ] Ngưỡng của các cổng làm tiếp / đổi hướng trong lộ trình.
+- [ ] Luật chia hoa hồng, ghi công của Platform.
+- [ ] Tên tiếng Anh của sáu trạng thái theo RESO.
+
+**Hỏi ở buổi phỏng vấn sau**
+
+- [ ] Đầu khách xin dẫn xem thế nào hôm nay, mất bao lâu, ai cầm chìa khoá.
+- [ ] Telesales đang dùng công cụ gì, có chịu nhập thẳng vào Quỹ hàng không; lead marketing đến từ đâu.
+- [ ] Đầu khách có lúc nào cần số chủ nhà; khi đó ai mở hộ.
+- [ ] Ngưỡng ngày ép giá có khác theo loại căn, mức giá không.
+- [ ] Hai chỗ bị gạch trong ghi chép (trùng chủ nhà; telesales ghi sơ sài) đã hết đau, hay gạch vì lý do khác.
+
+## 14. Thuật ngữ
+
+| Chữ trên màn | Nghĩa | Không dùng |
+| --- | --- | --- |
+| Quỹ hàng | Tên ứng dụng | Tên nhà trong app |
+| Sàn | Công ty dùng Quỹ hàng; mỗi sàn một vùng dữ liệu riêng | — |
+| Bảng hàng | Tập hàng của sàn; tên nhà trên máy tính và tab trên điện thoại | «Quỹ hàng» cho nhà này |
+| Hàng | Một lần chào bán của sàn trên một căn | «Tin» (tin là của Invest) |
+| Lead | Hàng ở nấc đầu, từ telesales hoặc đầu chủ tự nhập | — |
+| Đầu chủ | Người giữ nguồn chủ nhà của căn | «Người giữ» |
+| Đầu khách | Người đem căn đi bán cho khách | — |
+| Bao phí / Không bao phí | Giá đã / chưa gồm thuế thu nhập cá nhân, lệ phí trước bạ và phí môi giới, theo định nghĩa của sàn | Trên trang khách: «đã / chưa gồm phí chuyển nhượng» |
+| Giá về tay | Số chủ nhà nhận sau thuế phí | — |
+| Giá chào | Giá đưa cho khách | — |
+| Giá đáy | Mức thấp nhất chủ từng nói; nội bộ | — |
+| Sẵn sàng bán | Nút đưa hàng lên bảng sau khi máy kiểm đủ điều kiện | «Duyệt» |
+| Độ tươi | Tuổi của lần xác nhận gần nhất với chủ nhà | — |
+| Mức đủ thông tin | Phần đã có trong danh sách hỏi | — |
+| Hàng đợi | Lead mới · Cần gọi lại · Nên gọi ép giá · Xin dẫn xem · Thiếu thông tin · Mới đổi | — |
+| Góc nhìn | Bộ lọc + cột + cách xem đã lưu | «Tab» |
+| Lần gửi · Đã gửi | Một link đã gửi · nhà theo dõi các link | — |
+| Trang khách · Link sống | Trang công khai từ link; giá và trạng thái theo bảng hàng | — |
+| Phát hàng | Xuất bảng hàng ra ảnh, PDF, Excel | — |
+| Cách gọi riêng · Trường riêng | Tên của sàn trên trường chuẩn · trường mới của sàn | — |
