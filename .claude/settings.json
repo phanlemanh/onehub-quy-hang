@@ -62,6 +62,7 @@
     "acceptance-gate@acceptance-gate-kit": true,
     "feature-loop@acceptance-gate-kit": true,
     "diagram-design@acceptance-gate-kit": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "tri-thuc@acceptance-gate-kit": true
   }
 }

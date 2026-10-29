@@ -41,3 +41,5 @@ dev_server:
   start: "npm run dev"                 # suy từ: package.json, .claude/launch.json
   url: "http://localhost:3460"         # suy từ: apps/web/package.json (next dev -p 3460)
 # capture: bỏ — chưa có bằng chứng giao diện.
+tri_thuc:
+  noi: docs/tri-thuc   # gốc tri thức trong kho; kho riêng tư nên tài liệu thô nằm trong kho (không khai cong_khai, không kho riêng)
