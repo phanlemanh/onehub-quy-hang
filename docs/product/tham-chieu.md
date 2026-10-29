@@ -89,7 +89,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 - **Một bộ kết quả gọi ở mọi màn**: Còn / giữ giá · Đổi (hạ) giá · Đã cọc / bán… · Không nghe máy. «Đã cọc / bán…» hỏi tiếp: cọc, sàn mình bán (giá chốt), hay chủ bán nơi khác (Ngừng).
 - **Đổi trạng thái không xoá dữ liệu**: căn đã bán giữ giá chốt và ngày bán — nguồn giá giao dịch thật.
 - **Sàn thêm nhãn, không thêm nghĩa**: «Giữ chỗ» phải neo vào một trạng thái chuẩn và nhận luật, màu của trạng thái đó; không có trạng thái thứ bảy.
-- Tên tiếng Anh của từng trạng thái tra lại bản từ điển RESO đang dùng trước khi chốt.
+- Tên tiếng Anh theo RESO `StandardStatus` — máy điền 29/10, chốt khi viết lõi: Chưa đủ để rao `Incomplete` · Đang bán `Active` · Đang giao dịch `Pending` · Đã bán `Closed` · Tạm ngừng `Hold` · Ngừng hẳn `Withdrawn`.
 
 ## 6. Quyền
 
@@ -113,6 +113,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 - **Ba câu hỏi theo thứ tự** trước khi thêm gì: cùng nghĩa khác tên → đổi tên; cùng trường khác giá trị → thêm giá trị riêng neo vào chuẩn; thật sự mới → trường riêng. Máy dò trùng nghĩa trước khi tạo trường riêng.
 - **Trường riêng ở lại trong sàn**: hiện ở bảng hàng và hồ sơ, lọc và lưu góc nhìn được, nhập Excel ghép vào được; không lên trang khách, không vào số liệu thị trường, không lên Platform; kèm khi phát hàng cho đội khác thì bật từng trường.
 - **Không làm, có chủ ý**: không đối tượng mới, không công thức, không bố cục tự dựng.
+- **Con số và lựa chọn trong tab này là mặc định dựng sẵn** — Đã chốt 29/10: hạn, ngưỡng, tỉ lệ, cách hiện trên trang khách là mặc định của sàn, sàn chỉnh được ở Cài đặt sàn; chỉ bất biến (mục 1, mục 6) là không mở. Tính năng dựng và thử bằng dữ liệu mẫu có nhãn; có người dùng thật thì chỉnh dần.
 
 ## 8. Luật sản phẩm
 
@@ -149,7 +150,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 **Lead**
 
 19. Năm mục bắt buộc: số chủ nhà, căn hoặc toà, nhu cầu, giá kèm điều kiện phí, thời gian muốn ra hàng.
-20. Kiểm trùng lúc nhập: chủ nhà đã có đầu chủ thì về người đó; căn đã có hàng mở thì thành tin bổ sung; còn lại chia theo luật của sàn, hạn nhận 15 phút rồi báo trưởng nhóm.
+20. Kiểm trùng lúc nhập: chủ nhà đã có đầu chủ thì về người đó; căn đã có hàng mở thì thành tin bổ sung (vẫn cho «Bỏ lead này», có ghi lại); còn lại chia theo luật của sàn. Hạn nhận 15 phút, hạn gọi lần đầu 30 phút; quá hạn thì báo trưởng nhóm. Cả hai là mặc định, sàn chỉnh ở Cài đặt sàn.
 21. Telesales thấy kết quả của lead, không thấy hàng.
 
 **Gửi và trang khách**
@@ -203,10 +204,10 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Nhà | Màn | Vai · thiết bị | Phác thảo | Giai đoạn | Ưu tiên |
 | --- | --- | --- | --- | --- | --- |
 | Hôm nay | Hàng đợi của đầu chủ | Đầu chủ · máy tính | 1 | Bản đầu | P0 |
-| Hôm nay | Hôm nay của đầu khách: căn mới lên bảng, căn đã gửi vừa đổi, khách vừa mở hay quan tâm, lịch xem | Đầu khách · điện thoại | **chưa phác** | Bản đầu | P0 |
+| Hôm nay | Hôm nay của đầu khách: căn mới lên bảng, căn đã gửi vừa đổi, khách vừa mở hay quan tâm, lịch xem | Đầu khách · điện thoại | M6 | Bản đầu | P0 |
 | Hôm nay | Lead đã nhập và bốn nấc | Telesales · cả hai | L1 (cột phải), L5 | Bản đầu | P0 |
 | Hôm nay | Hàng đợi của đầu chủ, bản mang theo | Đầu chủ · điện thoại | M1 | Bản đầu | P1 |
-| Hôm nay | Lead quá hạn, hàng cũ theo người, ngoại lệ | Trưởng nhóm · máy tính | chưa phác | Bản đầu | P1 |
+| Hôm nay | Lead quá hạn, hàng cũ theo người, ngoại lệ | Trưởng nhóm · máy tính | TN1 | Bản đầu | P1 |
 | Bảng hàng | Bảng kiểu Sheet, sửa trên ô | Đầu chủ · máy tính | 2, 2b | Bản đầu | P0 |
 | Bảng hàng | Bảng hàng dạng thẻ, lọc theo nhu cầu khách | Đầu khách · điện thoại | M4 | Bản đầu | P0 |
 | Bảng hàng | Vị trí: lưới toà | Máy tính | 3 | Sau | P2 |
@@ -228,7 +229,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Đã gửi | Bản máy tính | Máy tính | chưa phác | Bản đầu | P2 |
 | Đội | Phễu, hàng theo người, bàn giao | Trưởng nhóm · máy tính | chưa phác | Sau | P2 |
 | Cài đặt sàn | Cách gọi riêng, trạng thái, trường riêng, luật chia lead, thuế phí | Quản trị · máy tính | S1–S5 | Bản đầu | P1 — bản đầu chạy bằng mặc định dựng sẵn |
-| Cài đặt sàn | Mẫu file nhập, mẫu bảng hàng và bài, người dùng | Quản trị · máy tính | chưa phác | Bản đầu | P1 |
+| Cài đặt sàn | Mẫu file nhập, mẫu bảng hàng và bài, người dùng | Quản trị · máy tính | S6 | Bản đầu | P1 |
 | Bộ gõ | Chèn bài + link khi đang chat | Đầu khách · điện thoại | — | Sau | — |
 
 ## 11. Bản đầu
@@ -274,42 +275,47 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 29/10 | Trường riêng mức tối thiểu vào bản đầu | Kiến trúc thông tin §13 |
 | 29/10 | Ghi nhận: đầu chủ làm trên máy tính, đầu khách xem trên điện thoại — căn cứ ưu tiên | Mục 2 tab này |
 | 29/10 | Quỹ hàng là SaaS: cơ chế ở kiến trúc, mỗi kết nối là một thoả thuận bật / tắt trong trần của lớp dữ liệu; kho riêng tư, cơ sở dữ liệu riêng; một API cho mọi bề mặt; Invest cấp dữ liệu một chiều — ADR-0017 | Kiến trúc repo và stack §0, §2–§4 |
+| 29/10 | Mười chỗ mở về lead, cuộc gọi, giá, trang khách theo phác thảo, làm **mặc định dựng sẵn của sàn**, sàn chỉnh được; dựng bằng dữ liệu mẫu, chỉnh khi có người dùng thật (Mạnh: «sự linh hoạt là quan trọng… khi có người dùng thật sẽ tinh chỉnh dần») | Mục 7, mục 13 |
+| 29/10 | Phác ba màn còn thiếu của bản đầu trước khi cắt: M6 Hôm nay của đầu khách, TN1 Hôm nay của trưởng nhóm, S6 Mẫu và người dùng | Mục 10 · canvas bản 23 |
+| 29/10 | Bật lộ trình trong kho; bản đầu cắt thành hàng ở `docs/plan/lo-trinh.json`. Để sau: ngưỡng số đo (đặt ở Cổng Đáng của từng hàng, trước hai tuần thử), câu hỏi phỏng vấn (ngoài kho), xin dẫn xem (chờ phỏng vấn), hoa hồng và ghi công Platform (ngoài bản đầu), bốn điểm nền (hỏi ở vòng làm nền) | Mục 13 · lộ trình |
 
 ## 13. Chỗ cần chốt
 
 **Lead và cuộc gọi**
 
-- [ ] Hạn nhận lead 15 phút có hợp không. Sàn chỉnh được ở Cài đặt sàn.
-- [ ] Telesales còn thấy số chủ nhà sau khi gửi không. Đề xuất: không, theo lớp trường.
-- [ ] Khi trùng căn, cho «Bỏ lead này» hay bắt buộc gửi tin bổ sung.
-- [ ] Máy tính biết đang có cuộc gọi bằng cách nào. Đề xuất mức tối thiểu: bấm Gọi trên máy tính để điện thoại quay số.
+Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã chốt làm **mặc định dựng sẵn của sàn** (mục 7, sổ 29/10); chỗ «để sau» ghi rõ nơi sẽ hỏi lại.
+
+- [x] Hạn nhận lead 15 phút — chốt 29/10, kèm hạn gọi lần đầu 30 phút như phác thảo (1, K1); sàn chỉnh ở S3.
+- [x] Telesales còn thấy số chủ nhà sau khi gửi không — chốt 29/10: không, theo lớp trường.
+- [x] Khi trùng căn — chốt 29/10: mặc định gửi tin bổ sung, vẫn cho «Bỏ lead này» và ghi lại (L3).
+- [x] Máy tính biết đang có cuộc gọi bằng cách nào — chốt 29/10 mức tối thiểu: bấm Gọi trên máy tính mở chế độ cuộc gọi và điện thoại quay số; nối tổng đài là một loại kết nối, để sau.
 
 **Giá và phí**
 
-- [ ] «Bao phí» mặc định gồm cả lệ phí trước bạ không. Phác thảo: có, cả ba khoản.
-- [ ] Phí môi giới 1% là luật sàn hay thoả thuận từng căn. Phác thảo: mặc định của sàn, đầu chủ sửa từng căn.
+- [x] «Bao phí» mặc định gồm cả ba khoản (thuế thu nhập cá nhân, lệ phí trước bạ, phí môi giới) — chốt 29/10; sàn đổi ở S4.
+- [x] Phí môi giới 1% — chốt 29/10: mặc định của sàn, đầu chủ sửa từng căn.
 
 **Trang khách**
 
-- [ ] Hiện «giá xác nhận X ngày trước» cho khách. Đề xuất: hiện.
-- [ ] Mức chia hoa hồng trên trang nhóm môi giới đặt theo sàn hay theo từng bộ; có sàn nào không muốn công khai.
-- [ ] Người gửi tắt được link không; link có tự hết hạn không (ví dụ sau 30 ngày).
-- [ ] Giữ «Quan tâm» hay chỉ đếm lượt mở.
+- [x] Hiện «giá xác nhận X ngày trước» cho khách — chốt 29/10: hiện.
+- [x] Mức chia trên trang nhóm môi giới — chốt 29/10: mặc định của sàn, sửa theo bộ, sàn ẩn được.
+- [x] Người gửi tắt được link — chốt 29/10: tắt được; link không tự hết hạn ở bản đầu.
+- [x] Giữ «Quan tâm» — chốt 29/10: giữ.
 
 **Dữ liệu và phạm vi**
 
-- [ ] Dự án dùng thử đầu tiên. Đề xuất: dự án đội đang giữ nhiều hàng nhất.
-- [ ] Danh mục căn dùng ra ngoài lấy từ đâu: dựng từ bảng hàng sàn nhập, hay mua có quyền dùng ra ngoài.
-- [ ] Ngưỡng của các cổng làm tiếp / đổi hướng trong lộ trình.
-- [ ] Luật chia hoa hồng, ghi công của Platform.
-- [ ] Tên tiếng Anh của sáu trạng thái theo RESO.
+- [ ] Dự án dùng thử đầu tiên — để sau, hỏi ở vòng nạp danh mục; tới đó dựng bằng dữ liệu mẫu có nhãn. Đề xuất: dự án đội đang giữ nhiều hàng nhất.
+- [ ] Danh mục căn dùng ra ngoài lấy từ đâu — để sau, hỏi ở vòng nạp danh mục. Đề xuất: bảng hàng sàn thử nhập cộng phần danh mục Invest không đến từ S08; mua quyền khi có sàn ngoài.
+- [ ] Ngưỡng của các cổng làm tiếp / đổi hướng và ngưỡng số đo ở mục 11 — để sau: đặt ở Cổng Đáng của hàng mà số đo đo, trước hai tuần thử.
+- [ ] Luật chia hoa hồng, ghi công của Platform — để sau, ngoài bản đầu; bản đầu chỉ bảo đảm mỗi sự kiện ghi người và vai.
+- [x] Tên tiếng Anh của sáu trạng thái theo RESO — máy điền 29/10 (mục 5), chốt khi viết lõi.
 
-**Hỏi ở buổi phỏng vấn sau**
+**Hỏi ở buổi phỏng vấn sau** — để sau, việc của người, ngoài kho; màn dùng mặc định đã ghi tới khi có câu trả lời.
 
-- [ ] Đầu khách xin dẫn xem thế nào hôm nay, mất bao lâu, ai cầm chìa khoá.
+- [ ] Đầu khách xin dẫn xem thế nào hôm nay, mất bao lâu, ai cầm chìa khoá. Xin dẫn xem và lịch xem chờ câu này.
 - [ ] Telesales đang dùng công cụ gì, có chịu nhập thẳng vào Quỹ hàng không; lead marketing đến từ đâu.
-- [ ] Đầu khách có lúc nào cần số chủ nhà; khi đó ai mở hộ.
-- [ ] Ngưỡng ngày ép giá có khác theo loại căn, mức giá không.
+- [ ] Đầu khách có lúc nào cần số chủ nhà; khi đó ai mở hộ. Tới khi có câu trả lời: không, đầu khách bấm «Liên hệ đầu chủ».
+- [ ] Ngưỡng ngày ép giá có khác theo loại căn, mức giá không. Tới khi có câu trả lời: 10 ngày, sàn chỉnh trong 7–14.
 - [ ] Hai chỗ bị gạch trong ghi chép (trùng chủ nhà; telesales ghi sơ sài) đã hết đau, hay gạch vì lý do khác.
 
 ## 14. Thuật ngữ
