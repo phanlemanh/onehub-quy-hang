@@ -3,5 +3,4 @@
 3. [POST] http://localhost:3473/ghi => [204] No Content
 4. [POST] http://localhost:3473/ghi => [204] No Content
 5. [POST] http://localhost:3473/ghi => [204] No Content
-6. [POST] http://localhost:3473/ghi => [204] No Content--- console (error) ---
-[ERROR] Failed to load resource: 404 http://localhost:3473/favicon.ico (static, note-only)
+6. [POST] http://localhost:3473/ghi => [204] No Content

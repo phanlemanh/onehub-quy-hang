@@ -5,7 +5,7 @@ slug: bai-thu-zalo
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, cli]
-status: implemented
+status: verified
 design_doc: _acceptance/bai-thu-zalo/design.md
 approved_by:
 approved_at:
