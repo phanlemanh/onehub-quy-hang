@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 375e30d691b3f8aaa375f98cd7017dc26e6a225c
-human_signoff:
+human_signoff: Manh Phan 2026-10-30
 ---
 
 # Evidence Report: bai-thu-zalo

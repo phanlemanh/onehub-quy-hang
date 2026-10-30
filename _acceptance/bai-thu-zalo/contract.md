@@ -5,7 +5,7 @@ slug: bai-thu-zalo
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, cli]
-status: verified
+status: signed-off
 design_doc: _acceptance/bai-thu-zalo/design.md
 approved_by:
 approved_at:
@@ -83,3 +83,16 @@ Quét bằng morphological-scan (preset test-matrix) — chi tiết trong `desig
 
 - Mã thử nằm trong `_acceptance/bai-thu-zalo/thu/` theo luật đợt 5; không thành mã sản phẩm.
 - Phiên với Zalo thật cần chủ kho cầm điện thoại: gom thành một yêu cầu `can-nguoi` (luật đợt 16).
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
+  - Ngoài-1: Khi đường hầm nối muộn quá 45 giây, lệnh chạy thử có thể in một dòng «link công khai đã đóng» gây khó hiểu.
+  - Ngoài-2: Một ca kiểm còn dùng số điện thoại dạng số thật thay vì số mẫu 0900 000 0xx.
+  - Ngoài-3: Máy chủ thử nhận dữ liệu trang báo về lỏng hơn các đường khác; nhật ký cần được xem lại trước khi đưa vào kho.
+  - Ngoài-4: Phần lời của ket-qua.md kể hai lượt «Gửi link + tin» là từ iPhone, trong khi nhật ký ghi từ trình duyệt máy tính; bảng số vẫn đúng.
+  - Ngoài-5: Cùng chỗ lệch trên: chưa có lượt «Gửi link + tin» nào đo trên iPhone, điều «iPhone chỉ nhận link» chỉ dựa vào lời chủ kho.
+  - Ngoài-6: Câu trả lời «Zalo nhận tin» trên trang chia sẻ không gắn với từng cách gửi, nên không tách được cách nào làm mất tin.
+  - Ngoài-7: Bài kiểm loại lượt của máy rút danh sách từ chính mã, nên bỏ bớt một loại máy khỏi danh sách sẽ không làm bài kiểm đỏ.
+  - Ngoài-8: Bài kiểm đếm so phép tính với chính nó, không bắt được lỗi ở bước lập bảng.
+  - Ngoài-10: Một ca kiểm dựng dòng nhật ký bằng tay thay vì qua máy chủ thật.
+  - Ngoài-11: Bài kiểm «nhật ký sạch không có băm IP» thiếu đối chứng dương rằng bản thô có khoá đó.
+  - Ngoài-12: Luật kết luận vế 3 (chia sẻ iPhone) chỉ có ca đạt, chưa có ca không đạt.
+  - Ngoài-13: Lời báo «không mở được đường hầm» chưa có bài kiểm đo đầu ra.
