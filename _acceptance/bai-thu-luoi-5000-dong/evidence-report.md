@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 5408d49d5cfd72f8b98337ffd8e1a2170534db5d
+verified_commit: b0d5f7cf8e4ed6a1b7f8802ec74f59446a6e5bb7
 human_signoff: Manh Phan 2026-10-30
 ---
 
@@ -201,3 +201,7 @@ none — không có eval nào chạy nhiều lần (mọi eval có runs là 1, v
 
 Round 1: E3, E4, E5, E6, E10 BLOCKED — lệnh do-lai.mjs thoát với lỗi vì máy chủ ở cổng 3462 không chạy lúc đo (kết nối bị từ chối), chưa có số đo. E1, E2, E7, E8 và bảy lệnh suite đều đạt; E9 chờ người chốt. Trả về để chạy lại do-lai.mjs trên cổng riêng.
 Round 2: E1 đến E6, E8, E10 và bảy lệnh suite đều đạt trên commit 5408d49d. Lệnh đo lại dùng cổng riêng, thước cuộn chứng tới dòng 5.000, ba thước đo cùng máy đo hợp lệ ở cả ba lượt. E7 mang sang từ round 1 (phần thay đổi không chạm đường dẫn của eval). E9 giữ đề xuất PASS, chờ người chốt.
+
+### Re-pin lần 1 — 2026-10-30, do gộp nhánh chính vào nhánh PR sau chữ ký
+run_id: repin-20261030T152506Z-40882
+sha: b0d5f7cf8e4ed6a1b7f8802ec74f59446a6e5bb7 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E8, E9 · AC không có chốt máy: AC-7
