@@ -72,3 +72,46 @@ export function cookieOf(res: Response): string {
     .map((c) => c.split(";")[0])
     .join("; ");
 }
+
+/** Câu chạm bảng của công ty ở schema public. */
+const PUBLIC_TABLE = /\b(companies|company_members|agreements)\b/i;
+export type QueryRecord = { sql: string; currentUser: string };
+
+/**
+ * Pool bọc ghi lại mọi câu chạm bảng public kèm vai đang chạy (current_user đọc ngay trước câu, trên cùng kết nối).
+ * Dùng thay appPool khi dựng API để khẳng định 100% truy vấn chạy bằng quy_hang_app (AC-8, E8b).
+ */
+export function recordingPool(pool: pg.Pool): { pool: pg.Pool; records: QueryRecord[] } {
+  const records: QueryRecord[] = [];
+  // Bọc bằng Proxy, không gán đè lên kết nối: kết nối của pool được tái dùng, gán đè thì câu ngoài phép đo cũng bị ghi.
+  const wrapClient = (client: pg.PoolClient): pg.PoolClient => {
+    const raw = client.query.bind(client) as (...a: unknown[]) => Promise<pg.QueryResult>;
+    const query = async (...args: unknown[]) => {
+      const sql = typeof args[0] === "string" ? args[0] : String((args[0] as { text?: string })?.text ?? "");
+      if (PUBLIC_TABLE.test(sql)) {
+        const who = await raw("select current_user as u");
+        records.push({ sql, currentUser: String(who.rows[0]?.u) });
+      }
+      return raw(...args);
+    };
+    return new Proxy(client, {
+      get(target, prop) {
+        if (prop === "query") return query;
+        const v = Reflect.get(target, prop) as unknown;
+        return typeof v === "function" ? (v as (...a: unknown[]) => unknown).bind(target) : v;
+      },
+    });
+  };
+  const wrapped = {
+    connect: async () => wrapClient(await pool.connect()),
+    query: async (sql: string, params?: unknown[]) => {
+      const client = wrapClient(await pool.connect());
+      try {
+        return await client.query(sql, params);
+      } finally {
+        client.release();
+      }
+    },
+  };
+  return { pool: wrapped as unknown as pg.Pool, records };
+}
