@@ -1,31 +1,24 @@
-# E7 network (origin http://localhost:3477)
-FAILED = abort co chu y cua buoc 3 (route.abort /ghi,/day,/keo), khong phai loi may chu.
-3. [POST] http://localhost:3477/ghi => [204] No Content
-4. [POST] http://localhost:3477/ghi => [204] No Content
+# E7 network (origin http://localhost:3477). FAILED ERR_INTERNET_DISCONNECTED = abort co chu y cua buoc 3 (route.abort /ghi,/keo,/day), khong phai loi may chu. Console: favicon 404 = static, chi note.
+3. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
+4. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
 5. [POST] http://localhost:3477/ghi => [204] No Content
 6. [POST] http://localhost:3477/ghi => [204] No Content
-7. [POST] http://localhost:3477/ghi => [204] No Content
-8. [POST] http://localhost:3477/ghi => [204] No Content
-9. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
-12. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
-13. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
-14. [POST] http://localhost:3477/ghi => [204] No Content
-15. [POST] http://localhost:3477/ghi => [204] No Content
-16. [POST] http://localhost:3477/ghi => [204] No Content
-17. [POST] http://localhost:3477/day => [200] OK
-18. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
-21. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
-24. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
-25. [POST] http://localhost:3477/ghi => [204] No Content
-26. [POST] http://localhost:3477/ghi => [204] No Content
-27. [POST] http://localhost:3477/day => [200] OK
-28. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
-31. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
-34. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
-35. [POST] http://localhost:3477/ghi => [204] No Content
-36. [POST] http://localhost:3477/ghi => [204] No Content
-37. [POST] http://localhost:3477/ghi => [204] No Content
-38. [POST] http://localhost:3477/day => [200] OK
-39. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
+7. [POST] http://localhost:3477/day => [200] OK
+8. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
+11. [GET] http://localhost:3477/keo?nguoi=a1&sau=0
+14. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
+15. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
+16. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
+17. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
+18. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
+19. [POST] http://localhost:3477/ghi => [FAILED] net::ERR_INTERNET_DISCONNECTED
+22. [POST] http://localhost:3477/ghi => [204] No Content
+23. [POST] http://localhost:3477/ghi => [204] No Content
+24. [POST] http://localhost:3477/day
+27. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
+30. [POST] http://localhost:3477/ghi => [204] No Content
+31. [POST] http://localhost:3477/ghi => [204] No Content
+32. [POST] http://localhost:3477/day => [200] OK
+33. [GET] http://localhost:3477/keo?nguoi=a1&sau=0 => [200] OK
 
 Note: 12 static requests not shown, run with "static" option to see them.
