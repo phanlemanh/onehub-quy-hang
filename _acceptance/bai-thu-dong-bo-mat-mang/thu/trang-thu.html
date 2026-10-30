@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mẫu · thử đồng bộ</title>
+<style>
+body{font:16px/1.5 system-ui,sans-serif;margin:0;padding:16px;max-width:640px;color:#1a1a1a;background:#fafafa}
+.nhan{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:#ffe9a8}
+button{font:inherit;padding:10px 14px;margin:4px 4px 4px 0;border-radius:8px;border:1px solid #888;background:#fff}
+button[aria-pressed=true]{background:#1a1a1a;color:#fff}
+#trang-thai{font-weight:600;padding:8px 12px;border-radius:8px;margin:8px 0}
+.co{background:#dff5e1}.mat{background:#fde2e1}
+table{width:100%;border-collapse:collapse;margin-top:8px}td,th{border-bottom:1px solid #ddd;padding:6px 4px;text-align:left;font-size:14px}
+.ghi{font-size:13px;color:#444;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<span class="nhan">Mẫu · bài thử đồng bộ</span>
+<h1>Thử đồng bộ khi mất mạng</h1>
+<p>Chọn vai:</p>
+<div id="vai"></div>
+<div id="trang-thai" class="co">Có mạng</div>
+<p><b id="so-cho">0</b> thay đổi đang chờ đẩy lên máy chủ · mốc kéo về: <span id="moc">0</span></p>
+<table><thead><tr><th>Căn</th><th>Giá (triệu)</th><th>Số chủ</th><th></th></tr></thead><tbody id="bang"></tbody></table>
+<p class="ghi" id="ket"></p>
+<script type="module">
+import { taoHangDoi } from '/hang-doi.mjs';
+const VAI = { a1: 'Đầu chủ A1', a2: 'Đầu chủ A2', tnA: 'Trưởng nhóm A', b1: 'Đầu chủ B1' };
+const $ = (id) => document.getElementById(id);
+let nguoi = localStorage.getItem('thu-nguoi') || '';
+let moc = 0;
+let coMang = navigator.onLine;
+let dangDay = false;
+const khoaHang = () => `thu-hang-doi-${nguoi}`;
+const khoaMang = () => `thu-mang-${nguoi}`;
+let hd = null;
+
+function ghiSuKien(du) {
+  // Sự kiện mạng ghi ngay vào máy; gửi khi có mạng (mất mạng thì không gửi được).
+  const ds = JSON.parse(localStorage.getItem(khoaMang()) || '[]');
+  ds.push({ ...du, nguoi, client_id: hd?.clientId(), luc_may: new Date().toISOString() });
+  localStorage.setItem(khoaMang(), JSON.stringify(ds));
+}
+async function guiSuKien() {
+  const ds = JSON.parse(localStorage.getItem(khoaMang()) || '[]');
+  while (ds.length) {
+    await fetch('/ghi', { method: 'POST', body: JSON.stringify({ loai: 'mang', ...ds[0] }) });
+    ds.shift();
+    localStorage.setItem(khoaMang(), JSON.stringify(ds));
+  }
+}
+function veTrangThai() {
+  $('trang-thai').textContent = coMang ? 'Có mạng' : 'Mất mạng — thay đổi được giữ trên máy';
+  $('trang-thai').className = coMang ? 'co' : 'mat';
+  $('so-cho').textContent = hd ? hd.soCho() : 0;
+  $('moc').textContent = moc;
+}
+async function keo() {
+  const r = await fetch(`/keo?nguoi=${encodeURIComponent(nguoi)}&sau=0`);
+  const kq = await r.json();
+  moc = kq.seq_moi;
+  const soChu = new Map(kq.contacts.map((c) => [c.listing_id, c.phone]));
+  const choTheoCan = new Map(hd.cho().map((o) => [o.listing_id, o.price]));
+  $('bang').innerHTML = '';
+  for (const l of kq.listings) {
+    const tr = document.createElement('tr');
+    const gia = choTheoCan.get(l.id) ?? l.price;
+    tr.innerHTML = `<td>${l.unit_code}</td><td>${gia}${choTheoCan.has(l.id) ? ' (chờ)' : ''}</td><td>${soChu.get(l.id) ?? '—'}</td><td><button data-can="${l.id}" data-gia="${gia}">+10</button></td>`;
+    $('bang').appendChild(tr);
+  }
+  $('bang').querySelectorAll('button').forEach((b) => (b.onclick = () => doiGia(b.dataset.can, Number(b.dataset.gia) + 10)));
+  veTrangThai();
+}
+function doiGia(can, gia) {
+  hd.them(can, gia);
+  const nut = document.querySelector(`button[data-can="${can}"]`);
+  if (nut) {
+    nut.dataset.gia = gia;
+    nut.closest('tr').children[1].textContent = `${gia} (chờ)`;
+  }
+  veTrangThai();
+  if (coMang) dongBo();
+}
+async function dongBo() {
+  if (dangDay || !hd) return;
+  dangDay = true;
+  try {
+    await guiSuKien();
+    const tl = await hd.day();
+    const tc = tl.ket_qua.filter((k) => k.trang_thai === 'bi-tu-choi');
+    if (tc.length) $('ket').textContent = `Bị từ chối: ${tc.map((k) => k.ly_do).join('; ')}`;
+    await keo();
+  } catch (e) {
+    $('ket').textContent = `Chưa đẩy được (${e.message}) — sẽ thử lại khi có mạng.`;
+  } finally {
+    dangDay = false;
+    veTrangThai();
+  }
+}
+function chonVai(id) {
+  nguoi = id;
+  localStorage.setItem('thu-nguoi', id);
+  hd = taoHangDoi({
+    clientId: `may-${id}-${Math.random().toString(36).slice(2, 8)}`,
+    gui: async (ops) => {
+      const r = await fetch('/day', { method: 'POST', body: JSON.stringify({ nguoi, client_id: hd.clientId(), ops }) });
+      if (!r.ok) throw new Error(`máy chủ trả ${r.status}`);
+      return r.json();
+    },
+    luu: (tt) => localStorage.setItem(khoaHang(), JSON.stringify(tt)),
+    nap: () => JSON.parse(localStorage.getItem(khoaHang()) || 'null'),
+  });
+  document.querySelectorAll('#vai button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.vai === id)));
+  if (coMang) dongBo();
+  else veTrangThai();
+}
+for (const [id, ten] of Object.entries(VAI)) {
+  const b = document.createElement('button');
+  b.textContent = ten;
+  b.dataset.vai = id;
+  b.onclick = () => chonVai(id);
+  $('vai').appendChild(b);
+}
+window.addEventListener('offline', () => {
+  coMang = false;
+  ghiSuKien({ trang_thai: 'tat', so_cho: hd?.soCho() ?? 0 });
+  veTrangThai();
+});
+window.addEventListener('online', () => {
+  coMang = true;
+  ghiSuKien({ trang_thai: 'bat', so_cho: hd?.soCho() ?? 0 });
+  dongBo();
+});
+setInterval(() => { if (coMang && hd && hd.soCho() > 0) dongBo(); }, 5000);
+if (nguoi && VAI[nguoi]) chonVai(nguoi);
+veTrangThai();
+</script>
+</body>
+</html>
