@@ -1,0 +1,106 @@
+schema_version: 1
+feature_slug: loi-hang-va-su-kien
+# Ba lệnh máy: `executors.test.core` (kiểm thử thuần của packages/core), `executors.test.api` (kiểm thử không cần Postgres
+# của packages/api) và `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần Postgres). exit 0 của lệnh chung
+# KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`:
+# có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok: «lệnh đổi hàng: mỗi lệnh ghi đúng một sự kiện và bản tính trong cùng giao dịch» — tạo hàng rồi ba lệnh (đổi trường, đổi giá, xác nhận) cho seq 1..4 liên tiếp, actor_user_id và actor_roles của người gửi, bản tính sau mỗi lệnh khớp hàm gấp; và «lệnh bị từ chối không ghi gì» — đối chứng dương cùng hàng: một lệnh hợp lệ tăng số sự kiện thêm 1, rồi một lệnh sai (loại lạ) trả 400 và số sự kiện, version, bản tính giữ nguyên. Chiều đỏ: lệnh ghi hai sự kiện, bỏ ghi bản tính, hay lệnh sai vẫn để lại sự kiện → ca đỏ nêu số sự kiện thấy được."
+    paths: [packages/api/src/listings/**, packages/core/src/listing/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «sự kiện: không sửa, không xoá được, kể cả chủ bảng» có mặt và ok — đối chứng dương: quy_hang_app thêm được một sự kiện; rồi update và delete trên listing_events bằng quy_hang_app bị từ chối (thiếu quyền), bằng kết nối chủ bị trigger từ chối, và đếm lại dòng không đổi. Chiều đỏ: gỡ trigger hay cấp update → ca đỏ nêu câu lệnh đã chạy được."
+    paths: [packages/db/migrations/**, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «đường ghi hàng chỉ ở packages/api/src/listings» có mặt và ok — quét mọi tệp .ts/.tsx/.mjs/.sql dưới packages/*/src, packages/db/scripts, packages/db/migrations và apps/web/src tìm câu insert/update/delete vào listings hay listing_events, cả dạng bộ dựng câu (insertInto/update/deleteFrom với tên bảng); chỉ tệp dưới packages/api/src/listings/ được có, riêng migration chỉ được tạo bảng, luật và trigger chặn sửa; kèm đối chứng dương trên CÙNG hàm quét: hai văn bản cấy — `insert into listing_events` và `insertInto(\"listings\")` — ngoài thư mục ấy đều bị bắt và thông điệp nêu tệp. Chiều đỏ: thêm một câu ghi ở chỗ khác → ca đỏ nêu tệp và dòng."
+    paths: [packages/api/src/**, packages/core/src/**, packages/connect/src/**, packages/db/scripts/**, packages/db/migrations/**, apps/web/src/**]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cơ sở dữ liệu: không hàm hay trigger nào ghi vào bảng hàng, bảng sự kiện» có mặt và ok — liệt mọi hàm (pg_proc, schema public và app) có thân chứa insert/update/delete vào listings hay listing_events, so với danh sách viết trước (rỗng); đối chứng dương: trong giao dịch huỷ ngay, tạo một hàm ghi vào listing_events thì phép liệt bắt được tên hàm. Chiều đỏ: một migration thêm hàm ghi thẳng → ca đỏ nêu tên hàm."
+    paths: [packages/db/migrations/**, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «chuyển trạng thái: ma trận 36 cặp viết trước» có mặt và ok — ma trận 6×6 viết tay trong tệp kiểm thử (không sinh từ hàm đang kiểm), so từng cặp nhận/từ chối, đúng 36 lần so; ca «không có trạng thái thứ bảy» — giá trị ngoài sáu trạng thái (cả nhãn tiếng Việt) bị từ chối. Chiều đỏ: mở một cặp ngoài bảng → ca đỏ nêu cặp."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đổi trạng thái: thiếu điều kiện trả 400 và không ghi» có mặt và ok — vào Closed thiếu giá chốt, vào Withdrawn thiếu lý do, vào Active thiếu từng điều kiện (giá kèm điều kiện phí, pháp lý, tình trạng sử dụng — ba ca riêng), mỗi ca 400 với mã lỗi nêu điều thiếu và số sự kiện không đổi; đối chứng dương cùng hàng: đủ điều kiện thì vào Active được; và ca «hàng đã bán giữ giá chốt và ngày bán» — sau Closed, GET trả đúng giá chốt và ngày. Chiều đỏ: một điều kiện không còn kiểm → ca đỏ nêu điều."
+    paths: [packages/api/src/listings/**, packages/core/src/listing/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «điều kiện vào trạng thái» có mặt và ok — bảng ca viết trước: Closed thiếu/có giá chốt, Withdrawn thiếu lý do / lý do ngoài ba lý do / lý do hợp lệ, Active thiếu từng điều kiện / đủ; mỗi ca so đúng danh sách điều thiếu trả về. Chiều đỏ: bỏ một điều kiện → ca đỏ nêu ca."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «độ tươi trên bộ ca kiểm» có mặt và ok — bộ ca viết trước, mỗi ca một dãy sự kiện và ngày «hôm nay» cố định, so ngày xác nhận và tuổi (ngày) đúng từng ca, gồm: chỉ tạo hàng → chưa xác nhận; đổi giá → xác nhận; đổi trạng thái → xác nhận; «Còn / giữ giá» → xác nhận; đổi giá có tắt cờ → không xác nhận; đổi trường lần rao → không xác nhận; nhiều xác nhận → lấy gần nhất. Chiều đỏ: tính sai một ca → ca đỏ nêu tên ca, ngày mong và ngày thấy."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mức đủ trên bộ ca kiểm» có mặt và ok — bộ ca viết trước: không mục nào (0/5, thiếu đủ năm), từng mục một, đủ năm (5/5, không thiếu), giá thiếu điều kiện phí tính là thiếu giá, mục bị xoá trắng bằng lệnh sau tính lại là thiếu; so phần đã có và danh sách thiếu đúng thứ tự năm mục. Chiều đỏ: tính sai một ca → ca đỏ nêu tên ca."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «gấp lại: xoá trắng bảng hàng rồi gấp từ sự kiện ra đúng bảng cũ» có mặt và ok — dựng ít nhất ba hàng qua API với lệnh đủ năm loại sự kiện, chụp bảng hàng với danh sách cột lấy từ information_schema của bảng listings (không lấy từ đầu ra hàm gấp) và đòi mỗi cột có giá trị gấp tương ứng, xoá bảng hàng bằng kết nối chủ, gấp lại từ listing_events bằng foldListing của packages/core, so từng hàng từng cột; đối chứng dương: sửa tay một cột của một hàng trước khi so thì phép so đỏ nêu cột. Chiều đỏ: bảng hàng có cột không tính từ sự kiện → ca đỏ nêu cột."
+    paths: [packages/api/src/listings/**, packages/core/src/listing/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ba ca có mặt và ok: «phiên bản cũ trả 409 version-conflict, không ghi» (đối chứng: cùng lệnh với phiên bản đúng thì ghi); «Đã cọc và Đã bán thắng ngay dù phiên bản cũ» (sang Pending với phiên bản cũ được ghi; sang Closed có giá chốt với phiên bản cũ được ghi); «hai lệnh đồng thời không cùng seq» (hai giao dịch song song trên một hàng, cả hai dùng phiên bản đúng lúc bắt đầu: đúng một thành công, một 409, seq không trùng); «hai lệnh thắng ngay đồng thời không cùng seq» (sang Pending và sang Closed cùng phiên bản cũ, song song: seq không trùng, trạng thái cuối theo thứ tự ghi được bảng chuyển nhận); «thắng ngay vẫn xét bảng chuyển» (hàng đã Withdrawn, lệnh Closed với phiên bản cũ trả 400 mã chuyển trạng thái, không ghi); bảng sự kiện có ràng buộc duy nhất trên (company_id, listing_id, seq). Chiều đỏ: bỏ khoá theo hàng → ca đồng thời đỏ nêu seq trùng."
+    paths: [packages/api/src/listings/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; các ca có mặt và ok: bộ cách ly «mọi bảng dữ liệu đều bật và ép luật theo dòng» (gồm listings, listing_events); «hàng: sàn A không đọc, không ghi hàng và sự kiện của sàn B» (đối chứng: A đọc, ghi được của chính mình bằng cùng câu); «lệnh vào mã hàng của sàn B qua API trả 404, sàn B không đổi»; «payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ chối» — với mỗi loại sự kiện, một khoá lạ ở cấp đầu và một khoá lạ lồng trong khối con đều trả 400, không ghi; danh sách khoá source (chủ nhà, số chủ, giá đáy, ảnh sổ) viết trước, mỗi khoá thử ở cấp đầu và lồng; đối chứng: payload cùng hình không có khoá ấy được ghi. Chiều đỏ: tắt luật theo dòng hay nới khuôn chặt → ca đỏ nêu bảng hoặc khoá."
+    paths: [packages/db/migrations/**, packages/db/tests/**, packages/api/src/listings/**, packages/core/src/listing/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
