@@ -4,19 +4,30 @@ enforcement: strict          # chuẩn thiết lập kho 29/10
 gap_probe: advisory          # mặc định của kit; nâng `required` khi đội đã quen
 recheck: strict              # kho mới, không có báo cáo cũ
 # Chưa khai ui_standards_skill / ds_skill / design / design_floor: chưa có màn — làm cùng màn đầu tiên (tầng 5).
+# tang-5-giao-dien (30/10): đã khai feature_loop.ui_standards_skill, design.surface_globs (bậc M1), executors.design.floor.
 executors:
   test:
     core: "npm test -w @quy-hang/core"            # suy từ: packages/core/package.json
     api: "npm test -w @quy-hang/api"              # suy từ: packages/api/package.json
     connect: "npm test -w @quy-hang/connect"      # suy từ: packages/connect/package.json
     isolation: "npm run db:migrate && npm run db:test"   # suy từ: package.json, ci.yml job isolation — cần DATABASE_URL (AGENTS.md)
+    ui_lint: "npm test -w @quy-hang/ui-lint"      # tang-5-giao-dien: mười luật quy-hang-ui, mức nợ, kiểm chuẩn, phạm vi cấu hình
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
     # trỏ bản cài (tìm bằng feature-loop/scripts/resolve-plugin.mjs --plugin acceptance-gate). Không ghi đường cache.
     product_map: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/product-map.mjs\" --root . --check"
     bai_thu_zalo: "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\""   # mã thử hàng 3 (luật đợt 5) — duyệt ở yêu cầu T-3
+    typecheck: "npm run typecheck"                # tang-5-giao-dien
+    lint: "npm run lint"                          # eslint + directive trần + mức nợ giao diện + kiểm chuẩn — job check của CI
+    build: "npm run build"
+    giao_dien: "node packages/ui-lint/kiem-chuan.mjs"   # trạng thái cây của bộ chuẩn giao diện
+    san_m1: "CLAUDE_PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" node packages/ui-lint/thu-san.mjs"   # bài thử sàn M1 — kit từ CLAUDE_PLUGIN_ROOT, vắng thì từ sổ plugin đã cài
+  ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
+  design:
+    floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
 feature_loop:
+  ui_standards_skill: quy-hang-ui   # tang-5-giao-dien: .agents/skills/quy-hang-ui (nạp qua .claude/skills/quy-hang-ui)
   # Bộ kiểm chạy ở đường nền S1 và lượt S4 của mọi hàng (giám sát đợt nen-dau 30/10). Không gồm
   # test.isolation (cần Postgres riêng từng dãy — luật 2 của đợt và job isolation của CI vẫn gác) và
   # script.product_map (cần CLAUDE_PLUGIN_ROOT).
@@ -25,6 +36,13 @@ feature_loop:
     - executors.test.api
     - executors.test.connect
     - executors.script.hooks
+    - executors.test.ui_lint
+    - executors.script.typecheck
+    - executors.script.lint
+design:
+  surface_globs:                  # bậc M1 của design-floor (tang-5-giao-dien)
+    - "apps/web/src/app/**"
+    - "apps/web/src/components/**"
 risk_tiers:
   t1_skip_globs:
     - "docs/**"                     # tài liệu sản phẩm, kiến trúc, ADR

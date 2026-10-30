@@ -1,0 +1,97 @@
+schema_version: 1
+feature_slug: tang-5-giao-dien
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; in «chuẩn giao diện: đạt». Chiều đỏ (test của gói, E6): bản sao components.json đổi style sang radix-nova → exit 1, thông điệp «components.json: style» ; xoá components/reui/frame.tsx → exit 1, thông điệp «thiếu thành phần: frame»"
+    paths: [apps/web/components.json, "apps/web/src/components/**", packages/ui-lint/kiem-chuan.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi workspace"
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.build
+    expected: "exit 0; next build hoàn tất, route / có trong bảng route"
+    paths: ["apps/web/**", package.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Chạy máy chủ dev của dãy: PORT 3462 (npm run dev -w @quy-hang/web -- -p 3462)"
+      - "Mở http://localhost:3462/ ở khổ 1280x800 → chụp evidence/E4-sang.png"
+      - "Thêm lớp dark vào document.documentElement → chụp evidence/E4-toi.png"
+      - "Ở mỗi chế độ: lấy màu chữ của tiêu đề «Quỹ hàng» và NỀN HIỆU DỤNG = màu nền của tổ tiên gần nhất có nền không trong suốt (alpha > 0, lên tới body/html) bằng getComputedStyle; tính tỉ lệ tương phản WCAG; ghi cả bốn màu và hai tỉ lệ vào observed"
+      - "Đối chứng đỏ: tắt mọi stylesheet của trang (document.styleSheets[i].disabled = true), lặp phép đo ở cả hai chế độ, ghi vào observed"
+      - "Bật lại stylesheet, mở ở khổ 375x812 → chụp evidence/E4-dien-thoai.png; ghi document.documentElement.scrollWidth và clientWidth"
+    expected: "Cả ba khung thấy Frame có tiêu đề «Quỹ hàng», Badge «Đang dựng», nút «Kiểm API»; tương phản tiêu đề/nền hiệu dụng >= 4.5 ở cả sáng lẫn tối; nền hiệu dụng sáng khác tối; ở 375px scrollWidth <= clientWidth. Đối chứng đỏ: khi tắt stylesheet, nền hiệu dụng KHÔNG đổi giữa hai chế độ (vế «nền đổi» trượt) — chứng phép đo phân biệt được trang có và không có token."
+    paths: ["apps/web/src/app/**", "apps/web/src/components/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; dòng «skill: quy-hang-ui, reui — symlink đúng» và «catalog khớp N thành phần». Chiều đỏ (test của gói, E6): bản sao thêm components/ui/x.tsx không liệt trong catalog.md → exit 1, thông điệp «catalog.md thiếu: x»; symlink .claude/skills/reui trỏ sai → exit 1, thông điệp «symlink»"
+    paths: [".agents/skills/**", ".claude/skills/quy-hang-ui", ".claude/skills/reui", "apps/web/src/components/**", packages/ui-lint/kiem-chuan.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ma trận viết trước: mười luật (no-raw-table, no-raw-controls, no-native-dialogs, no-raw-palette, no-hardcoded-color, no-arbitrary-text-size, no-banned-motion, no-aschild, no-emoji-icons, require-disable-reason) — test index assert ĐÚNG mười tên này và mỗi luật một tệp test có ca valid lẫn invalid với messageId ghim; ca cấu hình (ESLint calculateConfigForFile trên eslint.config.mjs thật): mười luật quy-hang-ui/* mức 2 cho apps/web/src/app/page.tsx, vắng cho apps/web/src/components/ui/button.tsx và components/reui/frame.tsx; muc-no.mjs: fixture suppressions SINH bằng eslint --suppress-rule quy-hang-ui/no-raw-palette trên tệp vi phạm thật → «1/0», thoát 1, thông điệp gọi tên luật; cùng kho xoá suppressions → «0/0», thoát 0; trần 1 khi nhánh chính 0 → thoát 1 «trần chỉ được giảm»; nhánh chính chưa có tệp trần → thoát 0 «đặt trần lần đầu»; không có ref nhánh chính và không fetch được: CI=true → thoát 1 «không so được trần», không CI → thoát 0 kèm cảnh báo; eslint-disable có lý do → «ngoại lệ có lý do: 1», thoát 0; check-bare-disables và kiem-chuan: lành → 0, phá → 1 + thông điệp ghim"
+    paths: ["packages/ui-lint/**", eslint.config.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; stdout có «mức nợ giao diện: 0/0» và «chuẩn giao diện: đạt». Chiều đỏ ở E6 (cùng các script, trên fixture)"
+    paths: ["apps/web/src/**", "packages/ui-lint/**", eslint.config.mjs, package.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; dòng «cấu hình cổng: ui_standards_skill=quy-hang-ui, design.surface_globs, executors.design.floor, executors.test.ui_lint». Chiều đỏ ở E6: bản sao config thiếu ui_standards_skill → exit 1, thông điệp «ui_standards_skill»"
+    paths: [_acceptance/config.yaml, packages/ui-lint/kiem-chuan.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.san_m1
+    expected: "exit 0; in «bậc: M1 · sàn: hex → 2, token → 0». Kho thử tạm (git init trong thư mục tạm hệ thống) chép NGUYÊN _acceptance/config.yaml thật, commit mốc trên main rồi commit chạm apps/web/src/app/thu.tsx: có #ff0000 → design-floor-s4.mjs --base main mã 2; cùng tệp đổi thành bg-primary → mã 0. Kit tìm qua CLAUDE_PLUGIN_ROOT; vắng → thoát 2 «thiếu CLAUDE_PLUGIN_ROOT»"
+    paths: [_acceptance/config.yaml, packages/ui-lint/thu-san.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; dòng «CI: job check chạy npm run lint». Chiều đỏ ở E6: bản sao ci.yml bỏ bước npm run lint khỏi job check → exit 1, thông điệp «job check thiếu npm run lint»"
+    paths: [.github/workflows/ci.yml, packages/ui-lint/kiem-chuan.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-5
+    executor: judgment
+    question: "Skill quy-hang-ui có nêu thứ tự thẩm quyền (bất biến AGENTS.md → skill reui → quy-hang-ui), trỏ thang dùng lại ở .claude/rules/giao-dien.md và bản đồ khối đích ở docs/design/vo-va-ia.md thay vì chép lại, nêu luật lint quy-hang-ui và mức nợ, và không mâu thuẫn bốn bất biến của AGENTS.md (nhất là: phần nội bộ không ra trang khách, ẩn ở lõi chứ không ở giao diện) không?"
+    inputs: [.agents/skills/quy-hang-ui/SKILL.md, .agents/skills/quy-hang-ui/catalog.md, AGENTS.md, .claude/rules/giao-dien.md, docs/design/vo-va-ia.md, _acceptance/tang-5-giao-dien/contract.md]
+    paths: [".agents/skills/quy-hang-ui/**"]
+    evidence_required: [judged_by, verdict, rationale]

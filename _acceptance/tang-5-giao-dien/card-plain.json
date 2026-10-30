@@ -1,0 +1,35 @@
+{
+  "feature_plain": "Trước khi màn đầu tiên ra đời, kho có sẵn bộ chuẩn giao diện: thành phần ReUI đúng style, một skill dạy agent cách dựng màn của Quỹ hàng, lint giao diện mà CI chặn khi nợ tăng, và sàn thiết kế chặn mã màu thô.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cài bộ thành phần nền của ReUI (nút, nhãn trạng thái, ô nhập, khung Frame…) đúng style base-nova, nền trung tính, icon lucide — như Invest."},
+    {"id": "AC-2", "p": "Sẽ để app vẫn biên dịch và dựng bản phát hành xanh sau khi cài thành phần."},
+    {"id": "AC-3", "p": "Sẽ dựng lại trang giữ chỗ bằng thành phần vừa cài; chữ đọc rõ trên nền ở cả chế độ sáng lẫn tối, không tràn ngang trên điện thoại."},
+    {"id": "AC-4", "p": "Sẽ có skill giao diện của kho (quy-hang-ui) và skill ReUI chính chủ mà agent nạp được; danh mục thành phần của skill luôn khớp thứ đã cài, CI bắt khi lệch."},
+    {"id": "AC-5", "p": "Sẽ viết skill như một lớp mỏng: nêu ai thắng khi luật vênh, trỏ thang dùng lại và bản đồ khối đích thay vì chép lại, không trái bốn bất biến (người ký đọc nội dung)."},
+    {"id": "AC-6", "p": "Sẽ có mười luật lint giao diện (cấm bảng tự dựng, màu cứng, chuyển động lạ…) áp cho mã giao diện của app, trừ thành phần cài nguyên bản; mỗi luật có ca bắt và ca không bắt oan."},
+    {"id": "AC-7", "p": "Sẽ đặt mức nợ giao diện bằng 0 và để CI đỏ khi nợ tăng hoặc khi ai đó nâng trần nợ; PR đầu tiên đặt trần không bị chặn oan."},
+    {"id": "AC-8", "p": "Sẽ khai vào cấu hình cổng: skill giao diện, vùng tệp giao diện, sàn thiết kế bậc M1 — sàn chặn mã màu thô trên tệp giao diện mà một vòng chạm."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG dựng vỏ ứng dụng và khối Pro — để hàng 53, cần khoá ReUI do chủ kho đặt."},
+    {"id": "OOS-2", "p": "KHÔNG làm bộ token và danh mục thành phần máy-đọc (sàn bậc M2) — sau khi có màn thật."},
+    {"id": "OOS-3", "p": "KHÔNG bật cổng chấm khả năng tiếp cận tự động — chưa có màn để chấm."},
+    {"id": "OOS-4", "p": "KHÔNG làm công tắc sáng/tối — việc của vỏ."},
+    {"id": "OOS-5", "p": "KHÔNG đưa sàn thiết kế của kit vào CI — nó cần bản kit; mã màu cứng vẫn bị lint chặn ở CI."},
+    {"id": "OOS-6", "p": "KHÔNG đổi quy trình CI — mọi chặn đi qua bước lint đã có."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đã phủ đủ năm phần của bộ chuẩn mà hàng giao (thành phần, skill, lint + nợ, sàn, cấu hình cổng), đối chiếu với bộ chuẩn Invest đang chạy."},
+    {"i": 1, "p": "Mỗi phần được đo theo năm kiểu: có mặt đúng khuôn, chạy được, bắt vi phạm, không bắt oan, CI mang nó."},
+    {"i": 2, "p": "Tám tiêu chí phủ các ô có nghĩa của hai trục, kể cả CI bắt skill lệch thành phần (AC-4)."},
+    {"i": 3, "p": "Hoãn: đưa sàn thiết kế của kit vào CI — cần bản kit; lint vẫn chặn mã màu cứng ở CI."},
+    {"i": 4, "p": "Bỏ: thành phần không có gì để chặn."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Phản biện chỉ ra lý do hoãn đưa bước kiểm skill vào CI là sai (vẫn nối được qua bước lint) — đã sửa: bước kiểm skill nay chạy ở CI."},
+    {"i": 1, "p": "Phản biện chỉ ra định nghĩa «nợ» là lựa chọn giá trị mà máy đã tự quyết — đã chuyển thành câu Hỏi-1 cho người ký."},
+    {"i": 2, "p": "Bài thử sàn thiết kế thiếu mô tả và có nguy cơ đo trên cấu hình viết tay — đã khai rõ: chép cấu hình thật, so với mốc, dừng có tên khi thiếu bản kit."},
+    {"i": 3, "p": "Lời «CI chặn» thiếu thước và có thể đỏ oan trên CI (bản sao nông không thấy nhánh chính) — đã thêm phép đo đọc bước CI, ca nhánh chính vắng, và mẫu nợ sinh bằng chính công cụ lint."},
+    {"i": 4, "p": "Phép đo «chữ đọc được» đo sai nền — đã đổi sang tương phản ≥ 4.5 trên nền thật ở cả hai chế độ, kèm ca đối chứng đỏ."}
+  ]
+}
