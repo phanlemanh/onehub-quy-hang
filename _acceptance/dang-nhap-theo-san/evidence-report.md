@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: acb0ce2e9f17a30d38a236c5d49c8a2f54af4232
+verified_commit: 711c1b5d851e0f3faae75ba5180e713f7e30e723
 human_signoff:
 ---
 
@@ -32,154 +32,179 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-dang-nhap-theo-san-E1-r1
+  run_id: minted-dang-nhap-theo-san-E1-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E2
-  run_id: minted-dang-nhap-theo-san-E2-r1
+  run_id: minted-dang-nhap-theo-san-E2-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E3
-  run_id: minted-dang-nhap-theo-san-E3-r1
+  run_id: minted-dang-nhap-theo-san-E3-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E4
-  run_id: minted-dang-nhap-theo-san-E4-r1
+  run_id: minted-dang-nhap-theo-san-E4-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E5
-  run_id: minted-dang-nhap-theo-san-E5-r1
+  run_id: minted-dang-nhap-theo-san-E5-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E6
-  run_id: minted-dang-nhap-theo-san-E6-r1
+  run_id: minted-dang-nhap-theo-san-E6-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E7
-  run_id: minted-dang-nhap-theo-san-E7-r1
+  run_id: minted-dang-nhap-theo-san-E7-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E8
-  run_id: minted-dang-nhap-theo-san-E8-r1
+  run_id: minted-dang-nhap-theo-san-E8-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.api
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm test -w @quy-hang/api
-    ℹ duration_ms 60446.995667
+    ℹ duration_ms 60495.6455
 
 - eval: E8b
-  run_id: minted-dang-nhap-theo-san-E8b-r1
+  run_id: minted-dang-nhap-theo-san-E8b-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E9
   run_id: minted-dang-nhap-theo-san-E9-r1
+  carried_from_round: 1
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
   verified_at: 2026-10-30T06:00:48Z
   output: |
-    cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E10
-  run_id: minted-dang-nhap-theo-san-E10-r1
+  run_id: minted-dang-nhap-theo-san-E10-r2
   exit_code: 0
   baseline: n-a
   verifier: config:dev_server.start
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   screenshot: evidence/E10-step1.png
   observed: |
-    Đã mở từng khung bằng Read, đủ mười một khung khớp thứ tự Expected: step1 /dang-nhap có «Đăng nhập Quỹ hàng», ô Email, nút «Gửi mã»; step2 «Đã gửi mã tới e10-mot-san@example.test», ô «Mã 6 số»; step3 dòng «Mã không đúng. Thử lại.» dưới ô; step4 và step5 «Bạn đang làm ở sàn [Sàn mẫu E10-A]» (đã đăng nhập vào /dang-nhap thì bị đưa về /); step6 lại form Email sau Đăng xuất.
-    step7 «Chọn sàn làm việc» với hai nút [Sàn mẫu E10-A], [Sàn mẫu E10-B]; step8 «Bạn đang làm ở sàn [Sàn mẫu E10-B]»; step9 «Chưa thuộc sàn nào» kèm lời nhờ quản trị sàn mời; step10 «Mã đã hết hạn hoặc sai quá số lần. Gửi lại mã.» với nút «Gửi lại mã» và «Đổi email»; step11 «Bạn đang làm ở sàn [Sàn mẫu E10-A]».
-    Chữ tiếng Việt; tên sàn do máy chủ trả (không có trong mã nguồn web); giao diện thô mặc định, không mâu thuẫn Expected.
+    Đã mở và đọc từng frame trong 11 tệp. Mọi frame là card ReUI căn giữa, chữ tiếng Việt, và đều khớp Expected.
+    step1: card «Đăng nhập Quỹ hàng», ô Email trống, nút «Gửi mã». Khớp ST-dang-nhap-email.
+    step2: dòng «Đã gửi mã tới e10-mot-san@example.test», ô «Mã 6 số», nút «Vào» và «Đổi email». Khớp ST-dang-nhap-ma.
+    step3: ô nhập 000000 viền đỏ, dòng đỏ «Mã không đúng. Thử lại.». Khớp ST-dang-nhap-ma-sai.
+    step4: card «Quỹ hàng», dòng «Bạn đang làm ở sàn [Sàn mẫu E10-A]», nút «Đăng xuất». Chụp sau khi tải lại trang. Khớp ST-trang-dau-co-san.
+    step5: giống step4, cùng tên sàn A, nằm ở trang /. Khớp ST-trang-dau-co-san.
+    step6: quay về form «Đăng nhập Quỹ hàng» với ô Email trống. Khớp ST-dang-nhap-email.
+    step7: card «Chọn sàn làm việc» liệt hai nút [Sàn mẫu E10-A] và [Sàn mẫu E10-B] cùng «Đăng xuất». Khớp ST-chon-san-danh-sach.
+    step8: «Bạn đang làm ở sàn [Sàn mẫu E10-B]». Khớp ST-trang-dau-co-san (tên B).
+    step9: tiêu đề «Chưa thuộc sàn nào», nội dung «Tài khoản e10-chua-gan@example.test chưa thuộc sàn nào. Nhờ quản trị sàn mời bạn.», nút «Đăng xuất». Khớp ST-chua-gan-san-trong.
+    step10: ô nhập 379510 viền đỏ, dòng đỏ «Mã đã hết hạn hoặc sai quá số lần. Gửi lại mã.», nút «Gửi lại mã» và «Đổi email». Khớp ST-dang-nhap-ma-het.
+    step11: «Bạn đang làm ở sàn [Sàn mẫu E10-A]» với mã mới. Khớp ST-trang-dau-co-san.
+    Tên sàn trong các frame là tên máy chủ trả (dữ liệu E10 dựng riêng, không có trong mã nguồn web).
   network_observed: clean
 
 - eval: E11
-  run_id: minted-dang-nhap-theo-san-E11-r1
+  run_id: minted-dang-nhap-theo-san-E11-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 423.503042
+    ℹ duration_ms 463.177709
 
 - eval: E12
-  run_id: minted-dang-nhap-theo-san-E12-r1
+  run_id: minted-dang-nhap-theo-san-E12-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.api
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
   output: |
     cmd: npm test -w @quy-hang/api
-    ℹ duration_ms 60446.995667
+    ℹ duration_ms 60495.6455
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-dang-nhap-theo-san-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-dang-nhap-theo-san-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-dang-nhap-theo-san-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-dang-nhap-theo-san-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
 
 - cmd: npm run test:hooks
-  run_id: minted-dang-nhap-theo-san-SUITE-test_hooks-r1
+  run_id: minted-dang-nhap-theo-san-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-10-30T06:00:48Z
+  verified_at: 2026-10-30T07:36:35Z
+
+- cmd: npm test -w @quy-hang/ui-lint
+  run_id: minted-dang-nhap-theo-san-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  exit_code: 0
+  verified_at: 2026-10-30T07:36:35Z
+
+- cmd: npm run typecheck
+  run_id: minted-dang-nhap-theo-san-SUITE-typecheck-r2
+  exit_code: 0
+  verified_at: 2026-10-30T07:36:35Z
+
+- cmd: npm run lint
+  run_id: minted-dang-nhap-theo-san-SUITE-lint-r2
+  exit_code: 0
+  verified_at: 2026-10-30T07:36:35Z
 
 ## Known limits
 
@@ -202,3 +227,4 @@ none — mọi eval đều chạy một lần, xác định, đạt trọn; khô
 ## Iterations
 
 Round 1: mọi eval (E1-E12, kể cả E8b) đạt, không eval nào đỏ. Không cần quay lại triển khai.
+Round 2: sau khi merge main vào nhánh (màn đăng nhập dựng lại bằng thành phần chuẩn), chạy lại E1-E8, E8b, E10, E11, E12 và sáu lệnh suite, tất cả đạt; E9 mang sang từ round 1 vì delta không chạm paths của eval. Không cần quay lại triển khai.
