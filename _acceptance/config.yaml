@@ -15,6 +15,7 @@ executors:
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
     # trỏ bản cài (tìm bằng feature-loop/scripts/resolve-plugin.mjs --plugin acceptance-gate). Không ghi đường cache.
     product_map: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/product-map.mjs\" --root . --check"
+    bai_thu_zalo: "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\""   # mã thử hàng 3 (luật đợt 5) — duyệt ở yêu cầu T-3
 feature_loop:
   # Bộ kiểm chạy ở đường nền S1 và lượt S4 của mọi hàng (giám sát đợt nen-dau 30/10). Không gồm
   # test.isolation (cần Postgres riêng từng dãy — luật 2 của đợt và job isolation của CI vẫn gác) và
