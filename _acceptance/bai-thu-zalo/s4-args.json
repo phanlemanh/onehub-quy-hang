@@ -1,0 +1,349 @@
+{
+  "generated_at": "2026-10-30T06:09:05Z",
+  "generated_sha": "e2041d863170dd88a5f4b344647d8c85538104f5",
+  "mainBranchInfo": {
+    "branch": "main",
+    "source": "remote"
+  },
+  "slug": "bai-thu-zalo",
+  "round": 1,
+  "riskTier": "T2",
+  "evals": [
+    {
+      "id": "E1",
+      "criterion": "AC-1",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-1 thẻ Open Graph» xanh trên trang gọi không JS (host thường và host sau đường hầm); ca phá thử bỏ og:image trong bản sao HTML phải đỏ với thông điệp «thiếu og:image»\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E2",
+      "criterion": "AC-2",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-2 ảnh xem trước» xanh: chữ ký PNG, IHDR 1200×630, content-type image/png, cỡ dưới 300 KB; ca phá thử đổi cỡ trong IHDR phải đỏ với thông điệp «cỡ ảnh khác 1200×630»\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E3",
+      "criterion": "AC-3",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-3 tải mà không báo thì không mở» xanh qua máy chủ thật: tải trang + tải ảnh với UA trình duyệt, không báo → mở = 0; một lượt báo → 1; hai lượt báo cùng phiên → 1; hai phiên → 2\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E4",
+      "criterion": "AC-4",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-4 lượt báo của máy bị loại» xanh: ma trận viết trước mọi mẫu của lớp máy (bot, crawler, spider, preview, facebookexternalhit, curl, wget, python-, node-fetch, headless, đầu prefetch) → bị loại kèm lý do, và đối chứng UA Safari iPhone, Chrome Android, trình duyệt trong Zalo → tính; mỗi lượt tải trang có ua và lop trong nhật ký\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E5",
+      "criterion": "AC-7",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-7 một lệnh» xanh: chạy chay.mjs --khong-ham ở cổng trống → in link /s/A, /s/I, /s/K, /chia-se, /keo-anh; nhật ký dưới .acceptance-runs/ và tom-tat.json không chứa IP thô — gồm 127.0.0.1, ::1 và 203.0.113.7 gửi qua x-forwarded-for, cf-connecting-ip (ca phá thử ghi đầu x-forwarded-for vào bản sao nhật ký phải đỏ với thông điệp «có IP thô»); SIGINT → tom-tat.json có bảng đếm; ca chọn đường hầm: có cloudflared → cloudflared, không có → ssh localhost.run, không có cả hai → lời báo «không mở được đường hầm»\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E6",
+      "criterion": "AC-8",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-8 chỉ dữ liệu mẫu» xanh: HTML của /s/<mã>, /chia-se, /keo-anh có nhãn «Mẫu», không khớp mẫu số điện thoại Việt Nam, không chữ «giá đáy», «chủ nhà», «sổ»; ca phá thử chèn 0912 345 678 vào bản sao phải đỏ với thông điệp «có số điện thoại»\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E7",
+      "criterion": "AC-5",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-5 nhánh chia sẻ» xanh: hàm chọn cách chia sẻ trả «tep» khi canShare({files}) đúng, «link» khi chỉ có share, «khong-ho-tro» khi không có share; POST /ghi với kết cục chia-se ghi đúng một dòng nhật ký\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E8",
+      "criterion": "AC-6",
+      "expected": "\"ảnh thả vào hiện trên trang; thả chữ thì báo «không có tệp ảnh»; trang chia sẻ hiện nút và cách chia sẻ; nút «Gửi ảnh + tin» gọi share với 1 tệp image/png kèm tin; nhật ký có đúng hai sự kiện nhan-anh và bốn sự kiện chia-se mang bốn kết cục\"",
+      "executor": "ui-check",
+      "expectedExit": 0,
+      "steps": [
+        "Chạy máy chủ thử trên máy: node _acceptance/bai-thu-zalo/thu/chay.mjs --khong-ham --cong 3473 (ghi PID, dừng bằng kill <PID> khi xong)",
+        "Mở http://localhost:3473/keo-anh → chụp evidence/E8-step1.png (ô thả trống, nhãn «Mẫu»)",
+        "Trong trang, dựng DataTransfer chứa một File PNG nhỏ rồi phát sự kiện drop lên ô thả → chụp evidence/E8-step2.png: ảnh hiện, dòng ghi kiểu image/png và cỡ",
+        "Phát sự kiện drop chỉ mang text/plain → chụp evidence/E8-step3.png: dòng «không có tệp ảnh» kèm kiểu text/plain",
+        "Mở http://localhost:3473/chia-se trong khổ điện thoại → chụp evidence/E8-step4.png: nút «Gửi ảnh + tin» và dòng cho biết cách chia sẻ trình duyệt này dùng",
+        "Trên /chia-se, thay navigator.canShare bằng bản giả trả true và navigator.share bằng bản giả ghi đối số; bấm «Gửi ảnh + tin» bốn lần, bản giả lần lượt: trả xong, ném AbortError, ném TypeError; lần bốn xoá navigator.share → chụp evidence/E8-step5.png sau lần cuối; đối số lần một có files gồm 1 tệp image/png và có text",
+        "Gọi GET http://localhost:3473/dem?nhat-ky=1 → hai sự kiện nhan-anh (một có tệp, một «không có tệp ảnh») và bốn sự kiện chia-se với ket_cuc da-gui, huy, loi, khong-ho-tro"
+      ],
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "screenshot"
+      ]
+    },
+    {
+      "id": "E9",
+      "criterion": "AC-9",
+      "cmd": "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\"",
+      "expected": "\"exit 0; ca «AC-9 luật kết luận» xanh: nhật ký dựng bằng máy chủ thật (gọi HTTP đủ ma trận: K chỉ tải trang + ảnh; K tải mà có báo mở; A, I có báo mở; báo mở của UA máy; quan-sat từng câu; chia-se bốn kết cục; nhan-anh có và không tệp) → bảng đếm của tom-tat.mjs bằng /dem của máy chủ, và kết luận từng vế đúng bảng viết trước (vế 2 đỏ khi K mở = 1 hoặc K không có lượt tải nào); ca «AC-9 kết quả khớp nhật ký» xanh: phần giữa hai mốc <!-- dem --> của ket-qua.md bằng đúng đầu ra tom-tat.mjs trên nhat-ky-zalo.jsonl, tệp này không có khoá ip_bam và không khớp mẫu IPv4/IPv6; ca phá thử sửa một số trong bản sao ket-qua.md phải đỏ với thông điệp «bảng đếm lệch nhật ký», ca chèn 203.0.113.7 vào bản sao nhật ký phải đỏ với «có IP thô»\"",
+      "executor": "script",
+      "expectedExit": 0,
+      "paths": [
+        "_acceptance/bai-thu-zalo/thu/**",
+        "_acceptance/bai-thu-zalo/ket-qua.md",
+        "_acceptance/bai-thu-zalo/nhat-ky-zalo.jsonl"
+      ],
+      "evidence_required": [
+        "run_id",
+        "exit_code",
+        "verifier",
+        "verified_at",
+        "output"
+      ],
+      "ref": "config:executors.script.bai_thu_zalo"
+    },
+    {
+      "id": "E10",
+      "criterion": "AC-10",
+      "question": "\"ADR của bài thử có ở trạng thái «đề xuất» (không tự chốt), và với đủ bốn việc — cách đếm lượt mở, thẻ và cỡ ảnh xem trước, cách chia sẻ trên iPhone, cách nhận ảnh từ Zalo máy tính — có nêu khuyến nghị, lối khác và giá, mỗi điều trỏ đúng số có trong ket-qua.md không? Vế nào ket-qua.md kết luận không đạt thì ADR có nêu các đường đi vòng để chủ kho chọn không? ADR có giữ bất biến «người luôn là người bấm gửi» của AGENTS.md không?\"",
+      "executor": "judgment",
+      "expectedExit": 0,
+      "inputs": [
+        "/Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/friendly-almeida-89141b/_acceptance/bai-thu-zalo/ket-qua.md",
+        "/Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/friendly-almeida-89141b/docs/adr/0003-bai-thu-zalo.md",
+        "/Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/friendly-almeida-89141b/_acceptance/bai-thu-zalo/opportunity.md",
+        "/Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/friendly-almeida-89141b/AGENTS.md"
+      ],
+      "evidence_required": [
+        "judged_by",
+        "verdict",
+        "rationale"
+      ]
+    }
+  ],
+  "suiteCommands": [
+    "npm test -w @quy-hang/core",
+    "npm test -w @quy-hang/api",
+    "npm test -w @quy-hang/connect",
+    "npm run test:hooks"
+  ],
+  "diffBase": "42691a0ec7a18d8659ed43758395a1500c877959",
+  "repoRoot": "/Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/friendly-almeida-89141b",
+  "personasPath": "/Users/manhphan/.claude/plugins/cache/acceptance-gate-kit/acceptance-gate/2.35.0/skills/acceptance/references/judge-personas.md",
+  "templatePath": "/Users/manhphan/.claude/plugins/cache/acceptance-gate-kit/acceptance-gate/2.35.0/skills/acceptance/references/evidence-report-template.md",
+  "toolKillRule": "# TOOL-KILL-RULE — lệnh bị công cụ ngắt KHÔNG phải lệnh fail\n\n**Nguồn duy nhất** của luật «hết giờ không phải trượt» cho MỌI đường chạy lệnh\nkiểm của kit. Hai đường tiêu thụ, cùng đọc khối marker dưới đây, không chép tay:\n\n- **Vòng lặp tính năng** (plugin feature-loop): skill `feature-loop` đọc file này\n  (resolve qua `resolve-plugin.mjs --require skills/acceptance/references/tool-kill-rule.md`)\n  và truyền NGUYÊN VĂN vào `args.toolKillRule` của workflow\n  `acceptance-verify.js`; workflow rút khối marker và nội suy vào prompt của mọi\n  agent chạy lệnh (machine · ui-check · baseline). Thiếu args hoặc không rút\n  được marker → workflow trả BLOCKED có tên, không chạy không luật.\n- **Đường VERIFY độc lập** (skill `acceptance` Phase 3): phiên điều phối chép khối\n  marker VERBATIM vào prompt của phiên tươi VERIFY, cùng nếp «Network truth».\n\nVì sao có luật: verifier chạy lệnh qua Bash tool có trần thời gian mặc định\n(~120 s) NGẮN hơn nhiều suite; lệnh bị công cụ giết trả exit code CỦA CÔNG CỤ,\nkhông phải của lệnh (vấp thật release-2-2-0 S4 r5: suite 108 s đơn lẻ, dưới tải\nbị giết ở 118 s → REJECT giả 4 eval). Nhận diện là việc AGENT (nó thấy tool\nresult thật); phần máy chỉ phòng thủ trên field cấu trúc `killedByTool` —\nKHÔNG grep nội dung output trong engine (chuỗi tổng kết là của suite từng repo).\n\nLệnh dài hơn trần 600 s của công cụ thì KHÔNG bị giết: công cụ **đẩy nó sang\nnền** và nó chạy tiếp. Tệp đầu ra nền trống tới phút chót, vì khung bọc lệnh của\nkit chỉ in khi lệnh xong — đọc trống thành «bị giết» là đúng sự cố crm 07/10/2026\n(hồ sơ `lenh-dai-chay-rieng`: hai lượt BLOCKED giả). Dòng «chuyển sang nền» trong\nkhối dưới là lối LỜI cho mọi lệnh. Lối MÁY: eval khai `long_running: <phút>`\ntrong `evals.yaml` thì lượt chấm feature-loop tự chạy lệnh nền, ghi nhật ký ở\n`.acceptance-runs/<slug>/s4-lenh-dai/` và chờ bằng lệnh nó sinh ra\n(`eval-executors.md`, mục `long_running`).\n\n<!-- <<<TOOL-KILL-RULE -->\nTRAN THOI GIAN CONG CU: khi goi Bash chay lenh, LUON dat tham so timeout >= 600000 (ms) — tran mac dinh cua cong cu (~120s) NGAN hon nhieu suite; lenh vuot tran se bi CONG CU giet va exit code luc do la cua cong cu, KHONG phai cua lenh. Neu lenh van bi cong cu dung (tool result bao timeout/killed, hoac output bi CAT giua chung truoc dong tong ket cuoi cua lenh) → DO KHONG PHAI ket qua that: khai cannotRun=true + killedByTool=true + reason \"bi cong cu giet o <so giay> giay\" kem dau hieu (timeout tool / output cat). TUYET DOI khong bao exitCode nhu the lenh tu fail va khong doan PASS/FAIL tu output cut.\nDAU RA DAI: harness co the CAT DAU RA RA TEP (\"Output too large … saved to <tep>\") va chi hien doan DAU — do KHONG phai bi cong cu giet: doc DUOI tep do (tail) de lay dong tong ket va ma thoat; chi khai killedByTool khi tool result bao timeout/killed that.\nCHUYEN SANG NEN KHONG PHAI BI GIET: tool result bao lenh chua xong trong timeout va da duoc CHUYEN SANG NEN (\"moved to the background\", kem ID + tep dau ra) → lenh VAN DANG CHAY: KHONG khai killedByTool, KHONG ket luan tu tep dau ra luc do. Tep dau ra nen TRONG la binh thuong — khung boc lenh chi in duoi dau ra + dong __EXIT=<n> khi lenh XONG. Cho bang lenh Bash co gioi han (moi lan goi ≤ 100 giay, duoi tran mac dinh 120 giay cua cong cu; vd vong lap kiem tep do co dong __EXIT= chua, sleep vai giay, het 100 giay thi thoat) va goi lai toi khi tep co dong __EXIT=<n> → doc ma tu dong do nhu binh thuong. Tong thoi gian cho toi da = so phut eval khai o long_running (vang thi 30 phut), tinh tu luc chay lenh; qua ma chua co dong __EXIT → cannotRun=true + reason \"lenh chay qua <so> phut chua xong — khai long_running: <phut> cho eval trong evals.yaml\" (KHONG killedByTool), va dung tac vu nen neu cong cu cho phep.\n<!-- TOOL-KILL-RULE>>> -->\n\n## Hồ sơ cho lượt bị ngắt (đường độc lập)\n\nPhiên tươi VERIFY gặp lệnh bị công cụ ngắt thì:\n\n- dòng run-log của eval đó: `\"exit_code\": null, \"killed_by_tool\": true` (không\n  ghi mã thoát của công cụ như mã thoát của lệnh);\n- verdict báo cáo `BLOCKED`, `reason: bi cong cu giet o <so giay> giay — <eval ids>`\n  (kèm dấu hiệu: timeout tool / output cắt trước dòng tổng kết); `failed_evals`\n  rỗng — người đọc hồ sơ thấy đây là sự cố hạ tầng, chữa bằng chạy lại với trần\n  công cụ đủ dài, không phải sửa sản phẩm.\n\nLệnh bị đẩy sang nền rồi QUÁ trần chờ (`long_running`, vắng thì 30 phút) cũng\nlà sự cố hạ tầng chứ không phải lệnh hỏng: dòng run-log `\"exit_code\": null`,\n`\"cannot_run\": true` (KHÔNG `killed_by_tool` — công cụ không giết nó), verdict\n`BLOCKED`, reason gọi tên việc cần làm (khai `long_running: <phút>` cho eval).\n",
+  "contractPath": "/Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/friendly-almeida-89141b/_acceptance/bai-thu-zalo/contract.md",
+  "invokedAt": "2026-10-30T06:09:05Z",
+  "invokedSha": "e2041d863170dd88a5f4b344647d8c85538104f5",
+  "vungVat": [
+    "_acceptance/bai-thu-zalo/card-plain.json",
+    "_acceptance/bai-thu-zalo/card.html",
+    "_acceptance/bai-thu-zalo/evals.yaml",
+    "_acceptance/bai-thu-zalo/ket-qua.md",
+    "_acceptance/bai-thu-zalo/nhat-ky-zalo.jsonl",
+    "_acceptance/bai-thu-zalo/thu/anh.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/dem.mjs",
+    "_acceptance/bai-thu-zalo/thu/ket-qua.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/kiem-chung.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.test.mjs",
+    "_acceptance/config.yaml"
+  ],
+  "ngoaiVatGlobs": [
+    "docs/**",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTEXT.md",
+    "README.md",
+    ".claude/rules/**",
+    ".github/workflows/ci.yml",
+    "PRODUCT-MAP.md",
+    "LO-TRINH.html",
+    "_acceptance/*/**/*.md",
+    "_acceptance/*/**/*.jsonl"
+  ],
+  "ngoaiVatFiles": [
+    "LO-TRINH.html",
+    "PRODUCT-MAP.md",
+    "_acceptance/bai-thu-zalo/contract.md",
+    "_acceptance/bai-thu-zalo/decisions.jsonl",
+    "_acceptance/bai-thu-zalo/design.md",
+    "_acceptance/bai-thu-zalo/gap-probe.md",
+    "_acceptance/bai-thu-zalo/plan.md",
+    "docs/adr/0003-bai-thu-zalo.md"
+  ],
+  "diffFiles": [
+    "LO-TRINH.html",
+    "PRODUCT-MAP.md",
+    "_acceptance/bai-thu-zalo/card-plain.json",
+    "_acceptance/bai-thu-zalo/card.html",
+    "_acceptance/bai-thu-zalo/contract.md",
+    "_acceptance/bai-thu-zalo/decisions.jsonl",
+    "_acceptance/bai-thu-zalo/design.md",
+    "_acceptance/bai-thu-zalo/evals.yaml",
+    "_acceptance/bai-thu-zalo/gap-probe.md",
+    "_acceptance/bai-thu-zalo/ket-qua.md",
+    "_acceptance/bai-thu-zalo/nhat-ky-zalo.jsonl",
+    "_acceptance/bai-thu-zalo/plan.md",
+    "_acceptance/bai-thu-zalo/thu/anh.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/dem.mjs",
+    "_acceptance/bai-thu-zalo/thu/ket-qua.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/kiem-chung.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.test.mjs",
+    "_acceptance/config.yaml",
+    "docs/adr/0003-bai-thu-zalo.md"
+  ],
+  "fileDoTrongDiff": [
+    "_acceptance/bai-thu-zalo/card-plain.json",
+    "_acceptance/bai-thu-zalo/card.html",
+    "_acceptance/bai-thu-zalo/evals.yaml",
+    "_acceptance/bai-thu-zalo/ket-qua.md",
+    "_acceptance/bai-thu-zalo/nhat-ky-zalo.jsonl",
+    "_acceptance/bai-thu-zalo/thu/anh.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/dem.mjs",
+    "_acceptance/bai-thu-zalo/thu/ket-qua.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/kiem-chung.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.test.mjs",
+    "_acceptance/config.yaml"
+  ],
+  "coverageFiles": [
+    "_acceptance/bai-thu-zalo/ket-qua.md",
+    "_acceptance/bai-thu-zalo/nhat-ky-zalo.jsonl",
+    "_acceptance/bai-thu-zalo/thu/anh.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.mjs",
+    "_acceptance/bai-thu-zalo/thu/chay.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/dem.mjs",
+    "_acceptance/bai-thu-zalo/thu/ket-qua.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/kiem-chung.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.mjs",
+    "_acceptance/bai-thu-zalo/thu/may-chu.test.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.mjs",
+    "_acceptance/bai-thu-zalo/thu/tom-tat.test.mjs"
+  ],
+  "coEvalPaths": true,
+  "evalsHash": "1a9b96cb0253835ea0bc37b2fdc97482b94d229def5fa8cf1d211ecdda2d9304",
+  "runBaseline": true,
+  "thuocChup": {
+    "sha": "e2041d863170dd88a5f4b344647d8c85538104f5",
+    "n": 10,
+    "digest": "37af099eca738235977f42718e9d38c33181dc56ca1590945cbf51ad0aaf4d95",
+    "tep": {
+      "_acceptance/bai-thu-zalo/evals.yaml": "1a9b96cb0253835ea0bc37b2fdc97482b94d229def5fa8cf1d211ecdda2d9304",
+      "_acceptance/bai-thu-zalo/thu/chay.test.mjs": "06b3b980d6b001fe4e02d268042c3b80045b6054864d9900101f33e4199120e7",
+      "_acceptance/bai-thu-zalo/thu/ket-qua.test.mjs": "744cbd6be3939fd24ad813b0e69078dea30f7cbd2506daea581a9b5cc1b76f55",
+      "_acceptance/bai-thu-zalo/thu/may-chu.test.mjs": "d12d0caaece25912c68689185264fd9d5d44b324755130714a7c408dd973789d",
+      "_acceptance/bai-thu-zalo/thu/tom-tat.test.mjs": "ae341bd14e7bd86739997495e1e48d784f4ea79b868a2f5306b7ad09f7fac718",
+      "_acceptance/config.yaml": "5f203ace5aaf237112a5afab1dc6aebb709ed4169817a36a01dcc766855a2d6d",
+      "packages/api/src/app.test.ts": "f887396da21c4471b1c7eb4d07f1ab3da3c247c71fa40b08265a7168b9d73f70",
+      "packages/connect/src/catalog-feed.test.ts": "593a0acfcbd4f94eda525978c801d3279c0480735a454326612402630c13038c",
+      "packages/core/src/agreements.test.ts": "394963dfd97abfe7708001f9c5adfa208e87c7642b56a6b37dd7f873c1763ff1",
+      "packages/db/tests/isolation.test.mjs": "c2fd2c46cac8c1f9472b6bb0e8255b0e65bcd0275eb396ee70feec5706cce6e9"
+    }
+  },
+  "cayChup": {
+    "sha": "e2041d863170dd88a5f4b344647d8c85538104f5",
+    "ban": {},
+    "chuaTheoDoi": []
+  }
+}
