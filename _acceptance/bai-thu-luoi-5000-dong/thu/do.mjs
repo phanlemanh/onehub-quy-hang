@@ -4,6 +4,8 @@
 //
 //   node do.mjs --url http://localhost:3462 --nm <gốc nhánh thử> --moc-bench <ms> [--cham 1|phim] [--luot 3]
 // In JSON: { che, luot: [{ may, cuon, go, dan }…], trung_vi: { cuon, go, dan }, danh_gia }.
+// Các hàm truyền cho page.evaluate chạy trong trình duyệt, nên dùng biến toàn cục của trình duyệt:
+/* global window, document, requestAnimationFrame */
 import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 import { danhGia, hieuChuanHopLe, phanVi, thuocCuon, trungVi } from "./nguong.mjs";
