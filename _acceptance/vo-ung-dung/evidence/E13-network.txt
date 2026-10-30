@@ -1,0 +1,4 @@
+Playwright context rieng, origin http://localhost:3462
+response >=400 / requestfailed: (none)
+console error: (none)
+app traffic: POST /api/v1/auth/sign-in/email-otp 200; GET /login, /shares 200

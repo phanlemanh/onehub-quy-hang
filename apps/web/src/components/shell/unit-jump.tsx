@@ -86,10 +86,18 @@ export function UnitJumpDialog({
   }
 
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange} title="Gõ mã căn" description="Gõ mã căn hoặc tên nhà">
-      <Command shouldFilter={false}>
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Gõ mã căn"
+      description="Gõ mã căn hoặc tên nhà"
+      showCloseButton
+      // Điện thoại: hộp gõ chiếm toàn màn (thiết kế vỏ điện thoại); máy tính giữ hộp nổi của khối.
+      className="max-md:inset-0 max-md:h-svh max-md:max-w-none max-md:translate-x-0 max-md:rounded-none! max-md:ring-0"
+    >
+      <Command shouldFilter={false} className="max-md:h-full">
         <CommandInput placeholder="Gõ mã căn hoặc tên nhà" value={text} onValueChange={setText} />
-        <CommandList>
+        <CommandList className="max-md:max-h-none max-md:flex-1">
           <CommandEmpty>Gõ mã căn, rồi Enter</CommandEmpty>
           {target && !matchedHome && (
             <CommandGroup heading="Mã căn">

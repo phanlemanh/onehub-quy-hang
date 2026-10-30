@@ -1,0 +1,14 @@
+--- doi chung dau-chu ---
+200 GET http://localhost:3462/login
+console.error Failed to load resource: the server responded with a status of 404 (Not Found)
+200 POST http://localhost:3462/api/v1/auth/email-otp/send-verification-otp
+200 POST http://localhost:3462/api/v1/auth/sign-in/email-otp
+200 GET http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6
+200 GET http://localhost:3462/?_rsc=q3mOO9BClNZHexY7
+FAILED http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 net::ERR_ABORTED
+FAILED http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 net::ERR_ABORTED
+200 GET http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr
+200 GET http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+200 GET http://localhost:3462/today

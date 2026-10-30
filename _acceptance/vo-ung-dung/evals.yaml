@@ -112,7 +112,7 @@ evals:
       - "DỰNG G. Khổ 1440x900, đăng nhập người mẫu nhiều vai (mọi vai). Với mỗi mục trên cột nhà và cột thứ hai và nút thanh trên dẫn đường (+ Lead, Nhập Excel, Phát hàng): bấm → ghi địa chỉ, mã trạng thái HTTP của trang, chữ trong Empty"
       - "Khổ 375x812, người mẫu Telesales và Trưởng nhóm: bấm từng tab → ghi như trên"
       - "Chụp evidence/E9-giu-cho.png ở /team và evidence/E9-nguoi-dung.png ở /settings/users"
-    expected: "Mọi lối trả 200, nằm trong vỏ; trang chưa có màn hiện Frame + Empty nói «dựng ở hàng N»; /settings/users vẫn hiện danh sách người như hàng 7."
+    expected: "Mọi lối trả 200, nằm trong vỏ; trang chưa có màn hiện Frame + Empty nói màn đó dựng ở mục nào của lộ trình («Dựng ở mục N…»; chữ «mục» thay «hàng» theo rà từ vựng 31/10 vì «Hàng» là một lần chào bán), hoặc «Chưa xếp mục nào trong lộ trình» với nhà lộ trình chưa có mục (Đội, Lịch xem); /settings/users vẫn hiện danh sách người như hàng 7."
     paths: ["apps/web/src/app/**", "apps/web/src/components/shell/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -135,7 +135,7 @@ evals:
   - id: E12
     criterion: AC-9
     executor: script
-    cmd: config:executors.design.floor
+    cmd: config:executors.script.design_floor
     expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
     paths: ["apps/web/src/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

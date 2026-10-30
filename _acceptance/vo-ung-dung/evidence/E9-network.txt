@@ -1,0 +1,5 @@
+E9 network (Playwright, ghi theo tung lan bam; app origin http://localhost:3462). Khong co request app nao >= 400.
+Tat ca RSC/navigation: 200 (/today /inventory /shares /team /settings->/settings/users /leads/new /imports/new /exports/new /viewings /settings/{users,labels,fields,statuses,lead-routing,fees,templates} /me).
+Mobile telesales: /today /leads/new /me = 200. truong-nhom: /today /inventory /shares /me = 200.
+curl SSR 3 vai: moi cho 200 tru /settings = 307 -> /settings/users.
+Ghi chu: Next dev overlay (nextjs-portal) che nut Cai dat san o cot nha -> an bang script khi bam; trinh duyet chia se voi verifier khac nen co lan bam bi gian doan, da chay lai.

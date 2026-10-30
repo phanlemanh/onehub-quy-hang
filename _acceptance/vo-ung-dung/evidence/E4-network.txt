@@ -1,0 +1,4 @@
+E4 network (playwright run_code, origin http://localhost:3462, G server pid 69395 shared, not started/stopped by verifier)
+Survey run: 200 GET /today, /inventory, /shares, /settings/users; console errors: none; failed requests: none
+Settings run: 307 GET /settings -> 200 /settings/users; 200 GET /settings/labels?_rsc; 200 GET /settings/users?_rsc; console errors: none; failed requests: none
+Memory run: only document navigations, no failed requests observed (not instrumented separately)

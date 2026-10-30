@@ -1,0 +1,5 @@
+E8 network (app origin http://localhost:3462), Playwright response/requestfailed/console listeners
+All document and API responses: 200 (or 307 redirects for /). POST /api/v1/auth/email-otp/send-verification-otp 200, POST /api/v1/auth/sign-in/email-otp 200.
+"FAILED ...?_rsc=" entries: Next prefetch requests aborted when the page redirected (/ -> /today, /select-company, /settings) - navigation cancellation, not server errors; each has a 200 twin.
+Console errors: none captured. Third-party traffic: none.
+Note: first login attempts hit 429 on send-verification-otp (per-email rate limit shared by concurrent verifiers); retried with other mau account.

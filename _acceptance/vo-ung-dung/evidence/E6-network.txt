@@ -1,0 +1,8 @@
+Driver: playwright (isolated browser context). App origin http://localhost:3462 (174 requests seen).
+Responses >=400 on app origin: none.
+Console errors: none.
+requestfailed (net::ERR_ABORTED, RSC prefetch aborted by client navigation; note-only, not connection error):
+  GET http://localhost:3462/inventory?_rsc=GOBkkwysRk6B8UGl
+  GET http://localhost:3462/settings/users?_rsc=ajwF0_iUZCtQqhYa
+  GET http://localhost:3462/me?_rsc=JkkP6ETziIiRBuqs
+Third-party: none.
