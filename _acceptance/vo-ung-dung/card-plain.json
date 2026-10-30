@@ -1,0 +1,38 @@
+{
+  "feature_plain": "Người trong sàn mở Quỹ hàng là thấy ngay khung làm việc hợp với vai mình và với máy đang cầm: máy tính có thanh trên, cột nhà và cột góc nhìn; điện thoại có tab dưới; telesales chỉ thấy Hôm nay và «+ Lead».",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ có một bảng duy nhất quyết mỗi vai thấy nhà nào, nút nào, mở app vào đâu — đúng bảng vai của Tham chiếu §9; người nhiều vai thấy hợp các nhà."},
+    {"id": "AC-2", "p": "Sẽ cho bốn vai trên máy tính thấy thanh trên (Gõ mã căn, nút theo vai, chuông, menu tài khoản) và cột nhà đúng vai; ai thuộc hai sàn thì đổi sàn ngay trên thanh và mọi màn chuyển theo."},
+    {"id": "AC-3", "p": "Sẽ có cột thứ hai đổi theo nhà (góc nhìn ở Bảng hàng, Link đã gửi và Lịch xem ở Đã gửi, mục cài đặt), gập sẵn ở Bảng hàng và Hôm nay, và nhớ người mở hay gập ở từng nhà."},
+    {"id": "AC-6", "p": "Sẽ cho gõ mã căn (⌘K hoặc /) để mở thẳng hồ sơ căn, hoặc gõ tên nhà để nhảy tới nhà đó."},
+    {"id": "AC-7", "p": "Sẽ mở app vào Hôm nay (người chỉ quản trị vào Cài đặt sàn); màn đăng nhập, chọn sàn và trang khách không có khung."},
+    {"id": "AC-9", "p": "Sẽ đọc rõ ở cả sáng lẫn tối, hai khổ, và qua đủ kiểm kiểu, lint giao diện, sàn thiết kế."},
+    {"id": "AC-10", "p": "Sẽ ghi lại vào tài liệu: khối vỏ đã chuyển thể, thanh tab dưới tự ghép, và mọi địa chỉ mới (Tôi, Lead, hồ sơ căn) vào bảng §9."}
+  ],
+  "wont_do": [
+    {"id": "AC-4", "p": "Sẽ KHÔNG cho telesales thấy cột nhà hay ô gõ mã căn: máy tính chỉ Hôm nay và «+ Lead», điện thoại chỉ Hôm nay · Lead · Tôi."},
+    {"id": "AC-5", "p": "Sẽ KHÔNG có cột nhà, Đội, Cài đặt sàn, Nhập Excel, Phát hàng trên điện thoại — chỉ thanh trên mảnh và tab dưới theo vai (người chỉ quản trị theo Hỏi-2)."},
+    {"id": "AC-8", "p": "Sẽ KHÔNG có lối nào dẫn vào trang trống 404: nhà chưa có màn hiện một trang báo «dựng ở hàng N», màn Người dùng vẫn chạy như cũ."},
+    {"id": "OOS-1", "p": "Không làm nội dung các nhà — mỗi nhà là việc của hàng màn của nó."},
+    {"id": "OOS-2", "p": "Không chặn quyền vào trang theo vai — khung chỉ không hiện lối; trang tự chặn ở hàng của nó."},
+    {"id": "OOS-3", "p": "Không có bộ chọn dự án — kho chưa có danh mục dự án; hiện khi kết nối danh mục về."},
+    {"id": "OOS-4", "p": "Không lưu góc nhìn, không tính độ tươi, chưa có nguồn thông báo — các ô đó hiện trống."},
+    {"id": "OOS-5", "p": "Không đổi tên đường màn đăng nhập — việc của dãy Q."}
+  ],
+  "scope_plain": "Hàng này dựng khung; các nhà bên trong là trang giữ chỗ cho tới hàng màn của chúng.",
+  "coverage_plain": [
+    {"i": 0, "p": "Trục vai: đủ năm vai, người nhiều vai, người hai sàn — so với bảng vai của Tham chiếu §9."},
+    {"i": 1, "p": "Trục khổ: máy tính 1440 và điện thoại 375 — một mã, hai khung theo bề rộng."},
+    {"i": 2, "p": "Trục vùng khung: thanh trên, cột nhà, cột thứ hai, tab dưới, gõ mã căn, chỗ không khung, trang giữ chỗ, sáng/tối."},
+    {"i": 3, "p": "Lõi phủ: bảng vai (AC-1), máy tính (AC-2, AC-4), điện thoại (AC-4, AC-5), cột thứ hai (AC-3), gõ mã căn (AC-6), không khung (AC-7), giữ chỗ (AC-8), sáng/tối (AC-9), tài liệu (AC-10)."},
+    {"i": 4, "p": "Để sau: bộ chọn dự án, dữ liệu thật cho góc nhìn, độ tươi, thông báo, khổ máy tính bảng riêng."},
+    {"i": 5, "p": "Không bao giờ: địa chỉ riêng cho điện thoại."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Nặng: lý do bỏ bước xem hình trước chỉ đúng cho khung máy tính (đã bấm thử khối gốc); khung điện thoại tự ghép chưa ai xem — đã tách thành Hỏi-4 cho anh."},
+    {"i": 1, "p": "Lựa chọn cho người chỉ quản trị trên điện thoại chưa có bài nhìn nào kiểm — đã thêm vào tiêu chí điện thoại và bài nhìn, cùng mục nối ngưỡng với bài đo."},
+    {"i": 2, "p": "Bài chấm tài liệu hỏi danh sách mà người chấm không có trong tay — đã ghi danh sách địa chỉ và mục chốt vào câu hỏi và hợp đồng."},
+    {"i": 3, "p": "Bài thử «nhớ theo nhà» so với Hôm nay vốn không có cột, nên không bắt được lỗi — đã đổi sang so Bảng hàng với Đã gửi và thêm bước đổi người."},
+    {"i": 4, "p": "Đổi sàn có thể chỉ đổi chữ trên thanh mà máy chủ vẫn ở sàn cũ — đã thêm bước tải lại và xem danh sách người của sàn mới."}
+  ]
+}
