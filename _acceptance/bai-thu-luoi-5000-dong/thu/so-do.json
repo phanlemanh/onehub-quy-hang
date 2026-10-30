@@ -1,0 +1,181 @@
+{
+  "tag": "thu/bai-thu-luoi-5000-dong-v1",
+  "sha": "98735f182194d4c3520632bb9818eb235722e798",
+  "trang": {
+    "dong": 5000,
+    "cot": 20,
+    "mau": "MAU-00001"
+  },
+  "may": {
+    "hieu_chuan_hop_le": true,
+    "loadavg": "{ 5.92 5.49 5.62 }"
+  },
+  "thuong": {
+    "reui": {
+      "cuon": {
+        "p95": 33.30000000000109,
+        "ti_le_cham": 0.0013908205841446453,
+        "toi_cuoi": true
+      },
+      "go": {
+        "p95": 16.80000001192093,
+        "gia_tri_dung": true
+      },
+      "dan": {
+        "ms": 54.099999994039536,
+        "o_mau_dung": true
+      },
+      "dat": true,
+      "truot": [],
+      "chi_tiet": [],
+      "luot": [
+        {
+          "may": {
+            "rongP95": 16.700000000000045,
+            "benchMs": 86,
+            "hop_le": true,
+            "ly_do": []
+          },
+          "cuon": {
+            "so_khung": 719,
+            "p95": 33.299999999999955,
+            "ti_le_cham": 0.0013908205841446453,
+            "phu_callback": {
+              "so_khung": 719,
+              "p95": 40.29999999701977,
+              "ti_le_cham": 0.0027816411682892906
+            },
+            "toi_cuoi": true,
+            "quang_duong": 1,
+            "dong_cuoi": "MAU-05000"
+          },
+          "go": {
+            "so_phim": 30,
+            "p95": 17.100000008940697,
+            "gia_tri_dung": true
+          },
+          "dan": {
+            "ms": 54.099999994039536,
+            "o_mau_dung": true
+          }
+        },
+        {
+          "may": {
+            "rongP95": 16.700000000000045,
+            "benchMs": 87.5,
+            "hop_le": true,
+            "ly_do": []
+          },
+          "cuon": {
+            "so_khung": 719,
+            "p95": 33.30000000000109,
+            "ti_le_cham": 0,
+            "phu_callback": {
+              "so_khung": 719,
+              "p95": 41,
+              "ti_le_cham": 0.0013908205841446453
+            },
+            "toi_cuoi": true,
+            "quang_duong": 1,
+            "dong_cuoi": "MAU-05000"
+          },
+          "go": {
+            "so_phim": 30,
+            "p95": 15.5,
+            "gia_tri_dung": true
+          },
+          "dan": {
+            "ms": 52.79999999701977,
+            "o_mau_dung": true
+          }
+        },
+        {
+          "may": {
+            "rongP95": 16.700000000000045,
+            "benchMs": 85.79999999701977,
+            "hop_le": true,
+            "ly_do": []
+          },
+          "cuon": {
+            "so_khung": 719,
+            "p95": 33.399999999999636,
+            "ti_le_cham": 0.0013908205841446453,
+            "phu_callback": {
+              "so_khung": 719,
+              "p95": 42.1000000089407,
+              "ti_le_cham": 0.012517385257301807
+            },
+            "toi_cuoi": true,
+            "quang_duong": 1,
+            "dong_cuoi": "MAU-05000"
+          },
+          "go": {
+            "so_phim": 30,
+            "p95": 16.80000001192093,
+            "gia_tri_dung": true
+          },
+          "dan": {
+            "ms": 69.79999999701977,
+            "o_mau_dung": true
+          }
+        }
+      ]
+    }
+  },
+  "glide": null,
+  "cham": {
+    "dat": false,
+    "truot": [
+      "cuon",
+      "go",
+      "dan"
+    ],
+    "chi_tiet": [
+      "cuon: p95 100 ms (≤ 33.4), khung chậm 0.9334719334719335 (≤ 0.01), tới dòng 5.000 true",
+      "go: p95 124.09999999403954 ms (≤ 50), giá trị đúng true",
+      "dan: 1377.4000000059605 ms (≤ 1000), ô mẫu đúng true"
+    ],
+    "trung_vi": {
+      "cuon": {
+        "p95": 100,
+        "ti_le_cham": 0.9334719334719335,
+        "toi_cuoi": true
+      },
+      "go": {
+        "p95": 124.09999999403954,
+        "gia_tri_dung": true
+      },
+      "dan": {
+        "ms": 1377.4000000059605,
+        "o_mau_dung": true
+      }
+    }
+  },
+  "cham_phim": {
+    "dat": false,
+    "truot": [
+      "go"
+    ],
+    "chi_tiet": [
+      "go: p95 84.29999999701977 ms (≤ 50), giá trị đúng true"
+    ],
+    "trung_vi": {
+      "cuon": {
+        "p95": 33.399999999999636,
+        "ti_le_cham": 0.0013908205841446453,
+        "toi_cuoi": true
+      },
+      "go": {
+        "p95": 84.29999999701977,
+        "gia_tri_dung": true
+      },
+      "dan": {
+        "ms": 135.8999999910593,
+        "o_mau_dung": true
+      }
+    }
+  },
+  "chon": "reui",
+  "ok": true,
+  "loi": []
+}

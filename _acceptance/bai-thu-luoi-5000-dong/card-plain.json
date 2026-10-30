@@ -1,0 +1,111 @@
+{
+  "feature_plain": "Trước khi dựng bảng hàng, đo xem lưới ReUI có cuộn, gõ và dán 500 ô từ Excel mượt trên 5.000 dòng không; không đạt thì đo lưới vẽ canvas, và ghi lựa chọn thành ADR.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ dựng một trang thử (trên nhánh thử) với lưới ReUI 5.000 dòng × 20 cột dữ liệu mẫu, chọn ô, sửa trên ô và dán từ clipboard."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ đo cuộn hết 5.000 dòng trên máy văn phòng mô phỏng; đạt khi giữ được 30 khung/giây và gần như không có khung giật."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ đo độ trễ khi gõ vào ô, tính từ lúc phím xảy ra; đạt khi dưới 50 ms."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ đo dán khối 25 × 20 ô như chép từ Excel; đạt khi xong dưới một giây và các ô mẫu đúng giá trị."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ chứng máy đo phân biệt được lưới mượt với lưới giật bằng một bản cố ý làm chậm trên cùng trang."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ để ai cũng chạy lại được bài đo từ main bằng một lệnh, có hiệu chuẩn tải máy để nhiễu không thành kết luận."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ ghi lựa chọn lưới thành ADR-0004 kèm số đo, cấu hình đo, hệ quả cho hàng dựng bảng hàng và giới hạn của phép đo."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ giữ main sạch mã thử: PR chỉ mang hồ sơ và ADR."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ đo thêm lưới canvas Glide bằng cùng máy đo nếu lưới ReUI trượt bất kỳ thước nào."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG dựng bảng hàng thật và khối Pro của nó — để hàng 14–16."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG đo lọc, nhóm, sắp xếp, ghim cột."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG dùng dữ liệu thật hay nạp từ máy chủ."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG đo lưới canvas khi lưới ReUI đã đạt."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG đưa trang thử, thư viện điều khiển trình duyệt hay cờ kiểu chặt vào main; máy đo một lệnh thì có vào main, nằm trong hồ sơ của bài thử."
+    }
+  ],
+  "coverage_plain": [
+    {
+      "i": 0,
+      "p": "Phủ đủ ba thao tác mà ngưỡng nêu: cuộn, gõ sửa ô, dán khối từ Excel."
+    },
+    {
+      "i": 1,
+      "p": "Mỗi thao tác có số đo, đối chứng đỏ, đo lại được, và kết luận ghi thành ADR."
+    },
+    {
+      "i": 2,
+      "p": "Chín tiêu chí phủ các ô có nghĩa, kể cả giữ main sạch mã thử."
+    },
+    {
+      "i": 3,
+      "p": "Lưới canvas chỉ đo khi lưới ReUI trượt, đúng luật của kiến trúc."
+    },
+    {
+      "i": 4,
+      "p": "Hoãn: đo trên máy văn phòng thật — làm ở hai tuần thử."
+    },
+    {
+      "i": 5,
+      "p": "Bỏ: đo trên điện thoại — bảng hàng điện thoại là dạng thẻ, không dùng lưới."
+    }
+  ],
+  "gap_probe_plain": [
+    {
+      "i": 0,
+      "p": "Ngưỡng số quyết luôn lưới cho bảng hàng nên chuyển thành câu Hỏi-1 cho người ký."
+    },
+    {
+      "i": 1,
+      "p": "Nhánh thử được ghim bằng tag để bài đo luôn dựng lại được."
+    },
+    {
+      "i": 2,
+      "p": "Hợp đồng giờ có hai nhánh kết quả: lưới ReUI đạt, hoặc trượt thì đo lưới canvas — không đặt sẵn đáp án."
+    },
+    {
+      "i": 3,
+      "p": "Mốc đo tính từ lúc phím xảy ra, có bản đối chứng riêng để chứng mốc đặt đúng; thêm bước nhìn dán."
+    },
+    {
+      "i": 4,
+      "p": "Mỗi lượt đo có hiệu chuẩn tải máy; lượt máy bận bị loại và đo lại."
+    }
+  ]
+}

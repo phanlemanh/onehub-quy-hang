@@ -147,7 +147,7 @@ Hai chiều với Platform là đúng thiết kế: hàng đi ra, khách đi và
 | Ngôn ngữ | TypeScript chế độ chặt, khắp nơi | Luật chung của các kho; một ngôn ngữ cho web, việc nền và vỏ app | Đã dùng |
 | Web app | Next.js 16 + React 19 | Cùng Invest và CRM; trang khách cần dựng ở máy chủ để Zalo hiện ảnh xem trước | Đã dùng |
 | Giao diện | Tailwind 4 + shadcn/ui + ReUI | Chuẩn giao diện và luật ReUI đã có | Đã dùng |
-| Lưới bảng hàng | Lưới dữ liệu ReUI (TanStack Table + Virtual) | Đã có trong Invest; sửa trên ô và phím như Sheet phải làm thêm | **Thử trước**: 5.000 dòng × 20 cột, dán 500 ô. Không đạt thì đổi sang lưới vẽ canvas (Glide Data Grid) |
+| Lưới bảng hàng | Lưới dữ liệu ReUI (TanStack Table + Virtual) | Đã có trong Invest; sửa trên ô và phím như Sheet phải làm thêm | **Thử trước**: 5.000 dòng × 20 cột, dán 500 ô. Không đạt thì đổi sang lưới vẽ canvas (Glide Data Grid). **Đã thử 30/10: đạt cả ba thước, giữ ReUI** (ADR-0004) |
 | Lõi nghiệp vụ | Mã TypeScript thuần + zod | Một bộ luật cho mọi bề mặt; kiểm được bằng test không cần giao diện | — |
 | Cơ sở dữ liệu | Postgres trên Supabase, dự án riêng, vùng Singapore | Cùng nhà cung cấp; tách dự án để số chủ nhà không chung kho với Invest; gần Việt Nam | Đã dùng |
 | Truy cập dữ liệu | SQL thuần + migration đánh số, như Invest | Luật cách ly viết bằng SQL; quen tay | Đã dùng |
