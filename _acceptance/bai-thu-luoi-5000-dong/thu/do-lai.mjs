@@ -16,7 +16,8 @@ const a = process.argv.slice(2);
 const CONG = a.includes("--cong") ? a[a.indexOf("--cong") + 1] : "3462";
 const cfg = JSON.parse(readFileSync(join(THU, "nhanh-thu.json"), "utf8"));
 const CHAY = join(GOC, ".acceptance-runs", "bai-thu-luoi-5000-dong");
-const WT = join(CHAY, "do-lai");
+// --chi-trang có worktree riêng: lượt chấm chạy nó song song với lượt đo đủ, chung thư mục build thì đua nhau.
+const WT = join(CHAY, a.includes("--chi-trang") ? "do-lai-trang" : "do-lai");
 mkdirSync(CHAY, { recursive: true });
 
 const sh = (cmd, args, cwd = GOC) => execFileSync(cmd, args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 64 * 1024 * 1024 });
