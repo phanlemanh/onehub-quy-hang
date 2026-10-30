@@ -54,10 +54,10 @@ Máy soạn nháp theo khuyến nghị; người đổi ở cổng thì máy so�
 - Không tự đăng ký (Hỏi-4): `disableSignUp`; email chưa có tài khoản không sinh mã, không gọi bộ gửi.
 - Trả lời «đã gửi mã» như nhau dù email đã có tài khoản hay chưa — không dò được ai đang dùng Quỹ hàng.
 - Mỗi email xin mã tối đa **5 lần trong 15 phút** (hằng của mã); lần thứ sáu trả 429 trước khi sinh mã. Đếm ở bảng
-  `auth.otp_requests` (email, lúc) — chạy nhiều máy chủ vẫn đúng, không đếm trong bộ nhớ. Đếm cả email lạ, để 429
+  `identity.otp_requests` (email, lúc) — chạy nhiều máy chủ vẫn đúng, không đếm trong bộ nhớ. Đếm cả email lạ, để 429
   không thành đường dò.
 - Bộ gửi là tham số bắt buộc ở `NODE_ENV=production`: thiếu thì `createApi` ném lỗi «thiếu bộ gửi mã đăng nhập».
-- Bảng của better-auth (`user`, `session`, `account`, `verification`) nằm ở **schema `auth`** do chủ bảng giữ; vai
+- Bảng của better-auth (`user`, `session`, `account`, `verification`) nằm ở **schema `identity`** do chủ bảng giữ; vai
   `quy_hang_app` **không có quyền gì** trên schema này. Danh tính không thuộc một công ty nên không mang luật theo dòng
   theo công ty — thay vào đó vai của API không với tới được. Kết nối của better-auth là kết nối chủ, chỉ dùng cho danh tính.
 

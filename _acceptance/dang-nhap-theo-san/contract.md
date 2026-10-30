@@ -42,7 +42,7 @@ Source input: `docs/plan/lo-trinh.json` hàng 6 · `_acceptance/dang-nhap-theo-s
   When mở một trang của app (trừ `/dang-nhap`), Then trang chuyển về `/dang-nhap`.
 - AC-7: Given cơ sở dữ liệu đã áp mọi migration, When chạy bộ kiểm cách ly, Then: bảng thành viên sàn bật và ép luật
   theo dòng; vai `quy_hang_app` không đọc được thành viên hay tên của sàn mình không thuộc, không thêm được thành viên,
-  và không có quyền gì trên schema `auth` của tài khoản và phiên.
+  và không có quyền gì trên schema `identity` của tài khoản và phiên.
 - AC-8: Given API đang chạy các luồng của AC-3, AC-4, AC-5 và luồng trọn của AC-10, When ghi lại mọi truy vấn chạm
   bảng ở schema `public` kèm vai đang chạy, Then 100% chạy bằng vai `quy_hang_app` trong giao dịch do đúng một hàm của
   `packages/api` mở (hàm đặt `app.user_id` và `app.company_id`, sàn được phép trống); Given mã nguồn `packages/api/src`,

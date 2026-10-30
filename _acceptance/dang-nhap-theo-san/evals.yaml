@@ -57,7 +57,7 @@ evals:
     criterion: AC-7
     executor: test
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca cách ly mới xanh: company_members bật và ép luật theo dòng (ca «mọi bảng dữ liệu» phủ) · người U thuộc A thấy thành viên A, không thấy thành viên B · U thuộc A và B, chưa đặt sàn: thấy hai dòng của chính mình và tên A, B, không thấy C · quy_hang_app thêm thành viên bị từ chối · quy_hang_app đọc auth.user bị từ chối (permission denied). Chiều đỏ (lượt phá ở S3): bỏ luật theo dòng hay cấp quyền auth trong bản sao → ca đỏ nêu bảng."
+    expected: "exit 0; ca cách ly mới xanh: company_members bật và ép luật theo dòng (ca «mọi bảng dữ liệu» phủ) · người U thuộc A thấy thành viên A, không thấy thành viên B · U thuộc A và B, chưa đặt sàn: thấy hai dòng của chính mình và tên A, B, không thấy C · quy_hang_app thêm thành viên bị từ chối · quy_hang_app đọc identity.user bị từ chối (permission denied). Chiều đỏ (lượt phá ở S3): bỏ luật theo dòng hay cấp quyền auth trong bản sao → ca đỏ nêu bảng."
     paths: [packages/db/migrations/**, packages/db/tests/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
