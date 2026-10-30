@@ -101,7 +101,7 @@ evals:
       - "Đăng nhập e10-hai-san@example.test → thấy /chon-san liệt hai tên sàn → chụp evidence/E10-step7.png; bấm [Sàn mẫu E10-B] → / thấy «Bạn đang làm ở sàn [Sàn mẫu E10-B]» → chụp evidence/E10-step8.png; Đăng xuất"
       - "Đăng nhập e10-chua-gan@example.test bằng mã đúng → thấy «chưa thuộc sàn nào» → chụp evidence/E10-step9.png; Đăng xuất"
       - "Xin mã cho e10-mot-san@example.test, nhập sai ba lần, lần thứ tư nhập mã đúng → thấy «Mã đã hết hạn hoặc sai quá số lần» + nút «Gửi lại mã» → chụp evidence/E10-step10.png; bấm «Gửi lại mã», nhập mã mới → vào / → chụp evidence/E10-step11.png"
-    expected: "Mười một khung khớp lần lượt ST-dang-nhap-email, ST-dang-nhap-ma, ST-dang-nhap-ma-sai, ST-trang-dau-co-san, ST-trang-dau-co-san, ST-dang-nhap-email, ST-chon-san-danh-sach, ST-trang-dau-co-san (tên B), ST-chua-gan-san-trong, ST-dang-nhap-ma-het, ST-trang-dau-co-san; tên sàn là tên máy chủ trả (đặt riêng cho E10, không có trong mã nguồn web); chữ tiếng Việt; không lỗi mạng tới app ngoài 4xx đã khai của mã sai."
+    expected: "Mười một khung khớp lần lượt ST-dang-nhap-email, ST-dang-nhap-ma, ST-dang-nhap-ma-sai, ST-trang-dau-co-san, ST-trang-dau-co-san, ST-dang-nhap-email, ST-chon-san-danh-sach, ST-trang-dau-co-san (tên B), ST-chua-gan-san-trong, ST-dang-nhap-ma-het, ST-trang-dau-co-san; tên sàn là tên máy chủ trả (đặt riêng cho E10, không có trong mã nguồn web); chữ tiếng Việt; không lỗi mạng tới app ngoài 4xx đã khai: 400 của mã sai, 403 của mã nhập sau ba lần sai."
     paths: [apps/web/src/**, packages/api/src/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 

@@ -4,8 +4,26 @@
     {
       "name": "web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3460
+    },
+    {
+      "name": "web-q",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "DATABASE_URL=postgres://postgres:quyhang@localhost:5545/postgres",
+        "BETTER_AUTH_SECRET=dev-q-chuoi-thu-khong-dung-o-ban-that",
+        "BETTER_AUTH_URL=http://localhost:3461",
+        "npm",
+        "run",
+        "dev:q",
+        "-w",
+        "@quy-hang/web"
+      ],
+      "port": 3461
     }
   ]
 }
