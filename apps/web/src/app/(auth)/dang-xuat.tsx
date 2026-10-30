@@ -11,7 +11,7 @@ export function DangXuat() {
       variant="outline"
       onClick={async () => {
         await fetch("/api/v1/auth/sign-out", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
-        router.replace("/dang-nhap");
+        router.replace("/login");
         router.refresh();
       }}
     >

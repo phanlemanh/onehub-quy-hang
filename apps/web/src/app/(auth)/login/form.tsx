@@ -7,12 +7,12 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 type Buoc = "email" | "ma";
-type Loi = "" | "ma-sai" | "ma-het" | "qua-nhieu" | "khac";
+type Loi = "" | "invalid-code" | "code-expired" | "too-many-requests" | "khac";
 
 const CHU_LOI: Record<Exclude<Loi, "">, string> = {
-  "ma-sai": "Mã không đúng. Thử lại.",
-  "ma-het": "Mã đã hết hạn hoặc sai quá số lần. Gửi lại mã.",
-  "qua-nhieu": "Bạn đã xin mã quá nhiều lần. Thử lại sau 15 phút.",
+  "invalid-code": "Mã không đúng. Thử lại.",
+  "code-expired": "Mã đã hết hạn hoặc sai quá số lần. Gửi lại mã.",
+  "too-many-requests": "Bạn đã xin mã quá nhiều lần. Thử lại sau 15 phút.",
   khac: "Có lỗi, thử lại sau ít phút.",
 };
 
@@ -32,7 +32,7 @@ export function FormDangNhap() {
     setLoi("");
     try {
       const res = await post("/email-otp/send-verification-otp", { email: email.trim(), type: "sign-in" });
-      if (res.status === 429) return setLoi("qua-nhieu");
+      if (res.status === 429) return setLoi("too-many-requests");
       if (!res.ok) return setLoi("khac");
       setMa("");
       setBuoc("ma");
@@ -55,7 +55,7 @@ export function FormDangNhap() {
         return;
       }
       const code = ((await res.json().catch(() => ({}))) as { code?: string }).code;
-      setLoi(code === "INVALID_OTP" ? "ma-sai" : code === "OTP_EXPIRED" || code === "TOO_MANY_ATTEMPTS" ? "ma-het" : "khac");
+      setLoi(code === "INVALID_OTP" ? "invalid-code" : code === "OTP_EXPIRED" || code === "TOO_MANY_ATTEMPTS" ? "code-expired" : "khac");
     } finally {
       setDangGui(false);
     }
@@ -101,7 +101,7 @@ export function FormDangNhap() {
         {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
       </Field>
       <div className="flex flex-wrap gap-2">
-        {loi === "ma-het" ? (
+        {loi === "code-expired" ? (
           <Button type="button" disabled={dangGui} onClick={() => void guiMa()}>
             Gửi lại mã
           </Button>
