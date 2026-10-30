@@ -127,13 +127,30 @@ window.addEventListener('offline', () => {
   ghiSuKien({ trang_thai: 'tat', so_cho: hd?.soCho() ?? 0 });
   veTrangThai();
 });
-window.addEventListener('online', () => {
+function coMangLai(ghiChu) {
+  if (coMang) return;
   coMang = true;
-  ghiSuKien({ trang_thai: 'bat', so_cho: hd?.soCho() ?? 0 });
+  ghiSuKien({ trang_thai: 'bat', so_cho: hd?.soCho() ?? 0, ghi_chu: ghiChu });
   dongBo();
+}
+window.addEventListener('online', () => coMangLai('sự kiện online'));
+// iPhone có thể không báo «online» khi người rời Safari để tắt chế độ máy bay (phiên thật 30/10) — kiểm thêm khi quay
+// lại trang và định kỳ.
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && navigator.onLine) coMangLai('quay lại trang');
 });
-setInterval(() => { if (coMang && hd && hd.soCho() > 0) dongBo(); }, 5000);
-if (nguoi && VAI[nguoi]) chonVai(nguoi);
+setInterval(() => {
+  if (!coMang && navigator.onLine) coMangLai('kiểm định kỳ');
+  else if (coMang && hd && hd.soCho() > 0) dongBo();
+}, 5000);
+if (nguoi && VAI[nguoi]) {
+  // Tải lại trang sau khi mất mạng: sự kiện mạng cuối còn trên máy là «tat» thì ghi «bat» trước khi đẩy.
+  const ds = JSON.parse(localStorage.getItem(`thu-mang-${nguoi}`) || '[]');
+  const conMat = ds.length > 0 && ds[ds.length - 1].trang_thai === 'tat';
+  if (conMat) coMang = false;
+  chonVai(nguoi);
+  if (conMat && navigator.onLine) coMangLai('nạp lại trang khi đã có mạng');
+}
 veTrangThai();
 </script>
 </body>
