@@ -1,40 +1,124 @@
 {
   "feature_plain": "Người trong sàn đăng nhập bằng email và mã 6 số, rồi chỉ thấy dữ liệu của đúng sàn mình; người chưa được gắn vào sàn nào thì không thấy gì.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ gửi mã 6 số cho email đã có tài khoản, không gửi gì cho email lạ, trả lời giống hệt nhau ở hai ca để không ai dò được ai đang dùng Quỹ hàng, và chặn ở lần xin mã thứ sáu trong 15 phút."},
-    {"id": "AC-2", "p": "Sẽ cho vào khi nhập đúng mã trong 5 phút; mã sai, mã quá hạn, hay nhập lần thứ tư sau ba lần sai thì không vào được."},
-    {"id": "AC-3", "p": "Sẽ đưa người chỉ thuộc một sàn thẳng vào sàn đó, đọc dữ liệu dưới luật cách ly của chính sàn ấy, không phải chọn gì."},
-    {"id": "AC-5", "p": "Sẽ hỏi người thuộc nhiều sàn chọn sàn làm việc, chỉ cho chọn sàn mình là thành viên, và thôi cho vào sàn ngay khi người bị bỏ khỏi sàn đó."},
-    {"id": "AC-6", "p": "Sẽ đưa người chưa đăng nhập hay vừa đăng xuất về màn đăng nhập, và từ chối mọi lời gọi dữ liệu của họ."},
-    {"id": "AC-7", "p": "Sẽ để chính cơ sở dữ liệu chặn: không thấy danh sách thành viên hay tên của sàn mình không thuộc, không tự thêm mình vào sàn, không chạm được kho tài khoản và phiên."},
-    {"id": "AC-8", "p": "Sẽ cho mọi lần đọc dữ liệu của sàn đi qua đúng một cửa mang mã sàn và vai hạn chế; máy đếm khi chạy và soát mã nguồn để không có cửa thứ hai."},
-    {"id": "AC-9", "p": "Sẽ có công cụ cho đội vận hành mở sàn mới và gắn email đầu tiên; chạy lại không tạo trùng, cùng email với sàn khác thì người thuộc hai sàn."},
-    {"id": "AC-10", "p": "Sẽ cho người đi trọn luồng trên trình duyệt — xin mã, gõ sai, gõ đúng, chọn sàn, gửi lại mã, đăng xuất — mỗi bước hiện đúng chữ tiếng Việt và tên sàn lấy từ máy chủ."},
-    {"id": "AC-11", "p": "Sẽ từ chối chạy bản thật khi chưa khai cách gửi email, thay vì lặng lẽ ghi mã đăng nhập của mọi người vào nhật ký máy chủ."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ gửi mã 6 số cho email đã có tài khoản, không gửi gì cho email lạ, trả lời giống hệt nhau ở hai ca để không ai dò được ai đang dùng Quỹ hàng, và chặn ở lần xin mã thứ sáu trong 15 phút."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ cho vào khi nhập đúng mã trong 5 phút; mã sai, mã quá hạn, hay nhập lần thứ tư sau ba lần sai thì không vào được."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ đưa người chỉ thuộc một sàn thẳng vào sàn đó, đọc dữ liệu dưới luật cách ly của chính sàn ấy, không phải chọn gì."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ hỏi người thuộc nhiều sàn chọn sàn làm việc, chỉ cho chọn sàn mình là thành viên, và thôi cho vào sàn ngay khi người bị bỏ khỏi sàn đó."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ đưa người chưa đăng nhập hay vừa đăng xuất về màn đăng nhập, và từ chối mọi lời gọi dữ liệu của họ."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ để chính cơ sở dữ liệu chặn: không thấy danh sách thành viên hay tên của sàn mình không thuộc, không tự thêm mình vào sàn, không chạm được kho tài khoản và phiên."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ cho mọi lần đọc dữ liệu của sàn đi qua đúng một cửa mang mã sàn và vai hạn chế; máy đếm khi chạy và soát mã nguồn để không có cửa thứ hai."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ có công cụ cho đội vận hành mở sàn mới và gắn email đầu tiên; chạy lại không tạo trùng, cùng email với sàn khác thì người thuộc hai sàn."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ cho người đi trọn luồng trên trình duyệt — xin mã, gõ sai, gõ đúng, chọn sàn, gửi lại mã, đăng xuất — mỗi bước hiện đúng chữ tiếng Việt và tên sàn lấy từ máy chủ."
+    },
+    {
+      "id": "AC-11",
+      "p": "Sẽ từ chối chạy bản thật khi chưa khai cách gửi email, thay vì lặng lẽ ghi mã đăng nhập của mọi người vào nhật ký máy chủ."
+    }
   ],
   "wont_do": [
-    {"id": "AC-4", "p": "Sẽ KHÔNG cho người chưa gắn sàn thấy dòng dữ liệu nào của bất kỳ sàn nào — chỉ thấy màn «chưa thuộc sàn nào, nhờ quản trị sàn mời»."},
-    {"id": "OOS-1", "p": "KHÔNG làm mời người, đặt vai, khu phụ trách — để hàng 7."},
-    {"id": "OOS-2", "p": "KHÔNG làm bộ chọn sàn trong khung app — để hàng vỏ ứng dụng; hàng này chỉ có màn chọn sàn giữa trang."},
-    {"id": "OOS-3", "p": "KHÔNG gửi email thật — bản này in mã ra nhật ký máy dev; chọn dịch vụ email để hàng nơi chạy."},
-    {"id": "OOS-4", "p": "KHÔNG làm đăng nhập bằng Google hay số điện thoại — theo câu trả lời Hỏi-1."},
-    {"id": "OOS-5", "p": "KHÔNG làm quyền hỗ trợ có hạn cho đội vận hành vào dữ liệu một sàn — hàng riêng."},
-    {"id": "OOS-6", "p": "KHÔNG dựng màn đăng nhập bằng khối giao diện chuẩn auth-15 ở hàng này — theo câu trả lời Hỏi-3."}
+    {
+      "id": "AC-4",
+      "p": "Sẽ KHÔNG cho người chưa gắn sàn thấy dòng dữ liệu nào của bất kỳ sàn nào — chỉ thấy màn «chưa thuộc sàn nào, nhờ quản trị sàn mời»."
+    },
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG làm mời người, đặt vai, khu phụ trách — để hàng 7."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG làm bộ chọn sàn trong khung app — để hàng vỏ ứng dụng; hàng này chỉ có màn chọn sàn giữa trang."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG gửi email thật — bản này in mã ra nhật ký máy dev; chọn dịch vụ email để hàng nơi chạy."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG làm đăng nhập bằng Google hay số điện thoại — theo câu trả lời Hỏi-1."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG làm quyền hỗ trợ có hạn cho đội vận hành vào dữ liệu một sàn — hàng riêng."
+    },
+    {
+      "id": "OOS-6",
+      "p": "KHÔNG dựng màn đăng nhập bằng khối giao diện chuẩn auth-15 ở hàng này — theo câu trả lời Hỏi-3."
+    }
   ],
   "scope_plain": "Sáu phần cố ý để ngoài hàng này, mỗi phần đã có hàng khác hoặc chờ một câu trả lời trên thẻ:",
   "coverage_plain": [
-    {"i": 0, "p": "Mọi tình trạng của một người đã phủ: chưa đăng nhập (AC-6), không sàn (AC-4), một sàn (AC-3), nhiều sàn chưa chọn, đã chọn, bị bỏ khỏi sàn (AC-5) — đối chiếu với «một người nhiều vai» của Tham chiếu."},
-    {"i": 1, "p": "Mọi bước đăng nhập đã phủ: xin mã có tài khoản, email lạ, xin quá số lần (AC-1); mã đúng, sai, hết hạn, sai quá ba lần (AC-2); gửi lại mã và đăng xuất (AC-10, AC-6)."},
-    {"i": 2, "p": "Hai môi trường đã phủ: máy dev in mã ra nhật ký (AC-10), bản thật thiếu cách gửi email thì không chạy (AC-11)."},
-    {"i": 3, "p": "Bốn lớp chặn đã phủ: API (AC-3 tới AC-6), cơ sở dữ liệu (AC-7), một cửa truy vấn (AC-8), màn (AC-6, AC-10) — vì bất biến cách ly đặt ở kho dữ liệu, không ở màn."},
-    {"i": 4, "p": "Ai tạo tài khoản và sàn: đội vận hành (AC-9) làm ở hàng này; quản trị sàn mời để hàng 7; người lạ tự đăng ký và tự vào sàn thì không có."},
-    {"i": 5, "p": "Kênh nhận mã: email làm ở hàng này (AC-1); số điện thoại và Google chờ câu trả lời Hỏi-1 — trục này chưa đối chiếu được tới khi chốt."}
+    {
+      "i": 0,
+      "p": "Mọi tình trạng của một người đã phủ: chưa đăng nhập (AC-6), không sàn (AC-4), một sàn (AC-3), nhiều sàn chưa chọn, đã chọn, bị bỏ khỏi sàn (AC-5) — đối chiếu với «một người nhiều vai» của Tham chiếu."
+    },
+    {
+      "i": 1,
+      "p": "Mọi bước đăng nhập đã phủ: xin mã có tài khoản, email lạ, xin quá số lần (AC-1); mã đúng, sai, hết hạn, sai quá ba lần (AC-2); gửi lại mã và đăng xuất (AC-10, AC-6)."
+    },
+    {
+      "i": 2,
+      "p": "Hai môi trường đã phủ: máy dev in mã ra nhật ký (AC-10), bản thật thiếu cách gửi email thì không chạy (AC-11)."
+    },
+    {
+      "i": 3,
+      "p": "Bốn lớp chặn đã phủ: API (AC-3 tới AC-6), cơ sở dữ liệu (AC-7), một cửa truy vấn (AC-8), màn (AC-6, AC-10) — vì bất biến cách ly đặt ở kho dữ liệu, không ở màn."
+    },
+    {
+      "i": 4,
+      "p": "Ai tạo tài khoản và sàn: đội vận hành (AC-9) làm ở hàng này; quản trị sàn mời để hàng 7; người lạ tự đăng ký và tự vào sàn thì không có."
+    },
+    {
+      "i": 5,
+      "p": "Kênh nhận mã: email làm ở hàng này (AC-1); số điện thoại và Google chờ câu trả lời Hỏi-1 — trục này chưa đối chiếu được tới khi chốt."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Chuyện người lạ có được tự tạo tài khoản là chính sách ai được vào, máy không được tự quyết — đã đưa lên thẻ thành Hỏi-4, khuyến nghị tắt tự đăng ký."},
-    {"i": 1, "p": "Chín phép đo dùng chung một lệnh vốn đã xanh từ trước, nên «xanh» không chứng được ca đăng nhập nào thật sự chạy — đã sửa: mỗi phép đo đòi danh sách tên ca chạy và đối chiếu từng tên, bộ test đăng nhập báo lỗi khi thiếu cơ sở dữ liệu thay vì lặng lẽ bỏ qua."},
-    {"i": 2, "p": "Lời hứa «mọi lần đọc đi một cửa» trước chỉ đo vị trí dòng mã, không đo vai đang chạy — đã sửa: thêm phép đo khi chạy đếm 100% truy vấn mang vai hạn chế, và dời công cụ vận hành ra khỏi phần API."},
-    {"i": 3, "p": "Màn chọn sàn, màn hết mã kèm nút gửi lại, và việc mở lại màn đăng nhập khi đã vào chưa có phép đo trên trình duyệt — đã thêm cả ba vào luồng chụp màn."},
-    {"i": 4, "p": "Hai lỗ an ninh chưa có tiêu chí: bản thật thiếu cách gửi email thì mã lọt vào nhật ký, và xin mã lặp để đoán không bị chặn — đã thêm tiêu chí chặn bản thật (AC-11) và giới hạn 5 lần xin mã trong 15 phút (AC-1)."}
+    {
+      "i": 0,
+      "p": "Chuyện người lạ có được tự tạo tài khoản là chính sách ai được vào, máy không được tự quyết — đã đưa lên thẻ thành Hỏi-4, khuyến nghị tắt tự đăng ký."
+    },
+    {
+      "i": 1,
+      "p": "Chín phép đo dùng chung một lệnh vốn đã xanh từ trước, nên «xanh» không chứng được ca đăng nhập nào thật sự chạy — đã sửa: mỗi phép đo đòi danh sách tên ca chạy và đối chiếu từng tên, bộ test đăng nhập báo lỗi khi thiếu cơ sở dữ liệu thay vì lặng lẽ bỏ qua."
+    },
+    {
+      "i": 2,
+      "p": "Lời hứa «mọi lần đọc đi một cửa» trước chỉ đo vị trí dòng mã, không đo vai đang chạy — đã sửa: thêm phép đo khi chạy đếm 100% truy vấn mang vai hạn chế, và dời công cụ vận hành ra khỏi phần API."
+    },
+    {
+      "i": 3,
+      "p": "Màn chọn sàn, màn hết mã kèm nút gửi lại, và việc mở lại màn đăng nhập khi đã vào chưa có phép đo trên trình duyệt — đã thêm cả ba vào luồng chụp màn."
+    },
+    {
+      "i": 4,
+      "p": "Hai lỗ an ninh chưa có tiêu chí: bản thật thiếu cách gửi email thì mã lọt vào nhật ký, và xin mã lặp để đoán không bị chặn — đã thêm tiêu chí chặn bản thật (AC-11) và giới hạn 5 lần xin mã trong 15 phút (AC-1)."
+    }
   ]
 }
