@@ -5,7 +5,7 @@ slug: dang-nhap-theo-san
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-30-dang-nhap-theo-san-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T02:25:02Z
@@ -100,3 +100,20 @@ Quét morphological-scan, preset entity-feature, cho thực thể «người đ�
   Không nới bất biến nào; (2), (3), (4) không chạm.
 - Dãy Q chạy dev ở cổng 3461, Postgres 5545 (`quy-hang-db-Q`).
 - Test cần Postgres của API chạy trong `npm run db:test` (job `isolation` của CI) — xem bản thiết kế, mục «Đường chạy test».
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
+  - Ngoài-2: Khi phiên đã hết hạn hoặc người dùng vừa bị bỏ khỏi sàn, bấm chọn sàn không có phản ứng và không có thông báo nào.
+  - Ngoài-3: Nếu việc đăng xuất bị từ chối, người dùng vẫn bị đưa về trang đăng nhập rồi vào lại ứng dụng mà không có báo lỗi.
+  - Ngoài-4: Khi mất mạng lúc xin mã hoặc nhập mã, nút quay về trạng thái ban đầu mà không có thông báo lỗi.
+  - Ngoài-5: Bộ soát vòng 2 đọc ảnh E10 đã commit từ vòng 1; ảnh vòng 2 chụp trên màn mới đã commit ở a183367.
+  - Ngoài-8: Nếu gửi nhiều lời xin mã cùng một lúc, một email có thể nhận nhiều hơn 5 mã trong 15 phút.
+  - Ngoài-9: Một khoá và chuỗi kết nối của môi trường thử nằm trong tệp cấu hình dev dùng chung của kho.
+  - Ngoài-11: Gửi nhiều lời xin mã song song cho cùng một email có thể qua mặt mức tối đa 5 lần trong 15 phút.
+  - Ngoài-12: Khi máy chủ hay cơ sở dữ liệu gặp sự cố, người đang đăng nhập bị đưa về màn đăng nhập thay vì thấy báo lỗi.
+  - Ngoài-13: Chọn sàn không thành công (vừa bị bỏ khỏi sàn, mất mạng) thì bấm tên sàn không có phản ứng.
+  - Ngoài-14: Mất mạng lúc bấm «Gửi mã» hoặc «Vào» thì nút sáng lại mà không có thông báo.
+  - Ngoài-16: Công cụ mở sàn gọi ngoài giao dịch thì báo lỗi, lỗi ấy có thể che nguyên nhân gốc.
+  - Ngoài-17: Người dùng hằng ngày vẫn bị đăng xuất sau đúng 7 ngày kể từ lần đăng nhập.
+  - Ngoài-18: Ba ca «không mở phiên» chỉ kiểm khác 200, chưa ghim loại lỗi máy chủ trả.
+  - Ngoài-19: Đối chứng đỏ của bộ quét một cửa chỉ cắm một trong bốn dạng vi phạm.
+  - Ngoài-20: Bài kiểm cách ly chưa chứng minh người trong sàn thấy đủ mọi thành viên khác của sàn mình.
+  - Ngoài-21: Bộ ghi truy vấn thời chạy chỉ biết ba bảng gõ cứng; bảng mới phải thêm tay.
