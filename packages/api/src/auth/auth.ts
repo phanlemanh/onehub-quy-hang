@@ -11,6 +11,7 @@ import {
 } from "./constants";
 import { allowOtpRequest } from "./otp-limit";
 import { devSender, type OtpSender } from "./sender";
+import { OTP_RATE_LIMITED } from "../errors";
 
 export type CreateAuthOptions = {
   /** Kết nối chủ, search_path = identity — chỉ cho danh tính, không bao giờ chạm bảng của công ty. */
@@ -50,7 +51,7 @@ export function createAuth(o: CreateAuthOptions) {
         if (ctx.path !== "/email-otp/send-verification-otp") return;
         const email = typeof ctx.body?.email === "string" ? ctx.body.email : "";
         if (!(await allowOtpRequest(o.identityPool, email))) {
-          throw new APIError("TOO_MANY_REQUESTS", { code: "xin-ma-qua-nhieu", message: "xin-ma-qua-nhieu" });
+          throw new APIError("TOO_MANY_REQUESTS", { code: OTP_RATE_LIMITED, message: OTP_RATE_LIMITED });
         }
       }),
     },

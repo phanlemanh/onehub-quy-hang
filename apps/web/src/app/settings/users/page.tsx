@@ -12,11 +12,11 @@ export const dynamic = "force-dynamic";
 export default async function NguoiDung() {
   const cookie = (await headers()).get("cookie") ?? "";
   const me = await readMe(cookie);
-  if (!me) redirect("/dang-nhap");
-  if (me.companies.length === 0) redirect("/chua-gan-san");
-  if (!me.activeCompany) redirect("/chon-san");
+  if (!me) redirect("/login");
+  if (me.companies.length === 0) redirect("/no-company");
+  if (!me.activeCompany) redirect("/select-company");
   const api = getApi();
-  const res = await api.request("http://quy-hang.local/api/v1/san/thanh-vien", { headers: { cookie } });
+  const res = await api.request("http://quy-hang.local/api/v1/company/members", { headers: { cookie } });
   return (
     <main className="flex min-h-svh justify-center bg-background p-4">
       <Frame className="w-full max-w-3xl">
@@ -30,7 +30,7 @@ export default async function NguoiDung() {
           ) : (
             <QuanNguoi
               thanhVien={(await res.json()) as ThanhVien[]}
-              khu={(await (await api.request("http://quy-hang.local/api/v1/san/khu", { headers: { cookie } })).json()) as Khu[]}
+              khu={(await (await api.request("http://quy-hang.local/api/v1/company/zones", { headers: { cookie } })).json()) as Khu[]}
               toi={me.user.id}
             />
           )}
