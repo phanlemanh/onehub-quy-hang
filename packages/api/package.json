@@ -8,12 +8,18 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
-    "test": "node --import tsx --test \"src/**/*.test.ts\""
+    "test": "node --import tsx --test \"src/**/*.test.ts\"",
+    "test:db": "node --env-file-if-exists=../../.env.local --import tsx --test --test-reporter=spec \"test-db/**/*.test.ts\""
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.18.0",
     "@quy-hang/core": "*",
+    "better-auth": "^1.7.14",
     "hono": "^4.6.0",
+    "pg": "^8.23.1",
     "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
   }
 }

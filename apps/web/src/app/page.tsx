@@ -1,28 +1,28 @@
-import Link from "next/link";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Frame, FrameDescription, FrameFooter, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
+import { Frame, FrameDescription, FrameFooter, FrameHeader, FrameTitle } from "@/components/reui/frame";
+import { readMe } from "@/lib/api";
 
-// Trang giữ chỗ cho tới vỏ ứng dụng (hàng 53) — dựng bằng thành phần đã cài để bộ chuẩn giao diện chạy thật.
-export default function Home() {
+import { DangXuat } from "./(auth)/dang-xuat";
+
+export const dynamic = "force-dynamic";
+
+// Trang đầu tạm: cho thấy đang ở sàn nào tới khi vỏ (hàng 53) và Hôm nay thay.
+export default async function Home() {
+  const me = await readMe((await headers()).get("cookie") ?? "");
+  if (!me) redirect("/dang-nhap");
+  if (me.companies.length === 0) redirect("/chua-gan-san");
+  if (!me.activeCompany) redirect("/chon-san");
   return (
     <main className="flex min-h-svh items-center justify-center bg-background p-4">
       <Frame className="w-full max-w-md">
         <FrameHeader>
           <FrameTitle>Quỹ hàng</FrameTitle>
-          <FrameDescription>Bàn làm việc của sàn đang được dựng.</FrameDescription>
+          <FrameDescription>Bạn đang làm ở sàn {me.activeCompany.name}</FrameDescription>
         </FrameHeader>
-        <FramePanel className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary">Đang dựng</Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">Máy chủ API đã chạy; màn đầu tiên dựng trên bộ chuẩn giao diện của kho.</p>
-        </FramePanel>
         <FrameFooter>
-          <Button variant="outline" nativeButton={false} render={<Link href="/api/v1/health" prefetch={false} />}>
-            Kiểm API
-          </Button>
+          <DangXuat />
         </FrameFooter>
       </Frame>
     </main>
