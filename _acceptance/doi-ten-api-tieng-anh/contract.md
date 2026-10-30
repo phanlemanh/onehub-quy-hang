@@ -5,8 +5,10 @@ slug: doi-ten-api-tieng-anh
 owner: omre.cnsp4@onemount.com
 risk_tier: T2
 surfaces: [api, ui]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-10-31-doi-ten-api-tieng-anh-design.md
+approved_by: Manh Phan
+approved_at: 2026-10-30T22:14:35Z
 ---
 
 # Acceptance Contract: doi-ten-api-tieng-anh
