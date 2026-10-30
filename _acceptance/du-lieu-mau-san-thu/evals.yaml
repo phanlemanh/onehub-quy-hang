@@ -1,0 +1,66 @@
+schema_version: 1
+feature_slug: du-lieu-mau-san-thu
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-1 tất định» xanh: chạy sinh.mjs trong hai tiến trình node riêng ra hai thư mục tạm → SHA-256 của du-lieu-mau.json, mau-a.xlsx, mau-b.xlsx bằng nhau giữa hai lần VÀ bằng tệp đã commit ở packages/db/seed/mau/; sinh.mjs --kiem thoát 0; đối chứng: hạt giống khác → du-lieu-mau.json khác; phá thử sửa một byte bản sao tệp trong kho → sinh.mjs --kiem trên bản sao thoát 1 với «lệch tệp trong kho»"
+    paths: ["packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-2 không dữ liệu thật» xanh trên ba nguồn: bộ dữ liệu, mọi chuỗi và ô số của hai tệp xlsx (đọc bằng zipfile của Python), và các dòng cơ sở dữ liệu do lệnh nạp tạo — lấy bằng chênh lệch ảnh chụp năm bảng (companies, identity.user, company_members, company_zones, member_zones) trước và sau khi nạp, không lọc theo nhãn, chạy trên cơ sở dữ liệu chưa có dòng đối chứng của E8; luật: mọi trường điện thoại (chủ nhà, lead, cột điện thoại của từng mẫu tìm theo tiêu đề) khớp ^0900 000 0\\d\\d$, quét rộng mọi chuỗi bắt dãy 10 chữ số mở đầu bằng 0 (bỏ khoảng trắng, chấm) và mọi ô số ở cột điện thoại; mọi chuỗi dạng email kết thúc @mau.quy-hang.test; mọi tên người và tên sàn mở đầu «[Mẫu]»; đối chứng dương: đếm số điện thoại > 0, email > 0, tên > 0, và ô giá ≥ 1e9 của mẫu B KHÔNG bị đếm là số điện thoại; phá thử trong bản sao: chèn «0912 345 678» vào một trường ghi chú → đỏ «số không đúng dạng mẫu», ghi số 912345678 dạng ô số vào cột điện thoại của bản sao mau-b.xlsx → đỏ «số không đúng dạng mẫu», chèn «ten@gmail.com» vào một trường không phải email và vào một ô của bản sao mau-b.xlsx → đỏ «email không thuộc miền mẫu», chèn «Nguyễn Văn A» vào trường tên → đỏ «tên không mang nhãn mẫu»"
+    paths: ["packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-3 nhãn mẫu» xanh: ma trận viết trước chín loại bản ghi (sàn, người, căn, chủ nhà, hàng, lead, dòng mẫu A, dòng mẫu B, dòng cơ sở dữ liệu — dòng cơ sở dữ liệu lấy bằng chênh lệch ảnh chụp năm bảng trước và sau khi nạp, không lọc theo nhãn) — với từng loại: số bản ghi mang nhãn bằng đúng số bản ghi của loại đó và số ấy > 0; phá thử xoá nhãn một bản ghi mỗi loại trong bản sao → đỏ «thiếu nhãn mẫu: <loại>» đúng tên loại; phá thử bản sao bộ nạp chèn thêm một người email @vi-du.test vào sàn thử → đỏ «thiếu nhãn mẫu: dòng cơ sở dữ liệu»"
+    paths: ["packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-4 khuôn danh mục» xanh: CatalogFeed.parse của packages/connect nhận danh mục mẫu; 180 mã căn duy nhất; với MỌI căn, toà, tầng, trục tách từ mã căn bằng đúng buildingName, floor, stack của căn; phá thử thêm khoá lạ vào bản sao → CatalogFeed từ chối; đổi tầng một căn trong bản sao → đỏ «mã căn lệch thuộc tính»"
+    paths: ["packages/db/seed/**", "packages/connect/src/catalog-feed.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-5 luật Tham chiếu» xanh: tập trạng thái của hàng bằng đúng sáu trạng thái chuẩn {Incomplete, Active, Pending, Closed, Hold, Withdrawn}; mỗi căn tối đa một hàng ở trạng thái mở (Incomplete, Active, Pending, Hold); mọi căn của mỗi chủ nhà cùng một đầu chủ; có ≥ 1 lead trên căn đã có hàng mở và ≥ 1 lead mang số của chủ nhà đã có; phá thử trong bản sao: thêm hàng mở thứ hai trên một căn → đỏ «căn có hai hàng mở», đổi đầu chủ một căn của chủ nhiều căn → đỏ «một chủ hai đầu chủ», bỏ một trạng thái → đỏ «thiếu trạng thái»"
+    paths: ["packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-6 hai mẫu file» xanh: đọc mau-a.xlsx và mau-b.xlsx bằng zipfile + xml.etree của Python (không dùng mã của xlsx.mjs) → mỗi tệp đúng 40 dòng dữ liệu, mỗi dòng ứng một hàng mẫu qua mã căn, và với MỌI dòng × MỌI cột, giá trị ô bằng giá trị chiếu từ hàng đó theo cách ghi của mẫu (giá tỷ/đồng, BP/KBP hay Đã gồm phí/Chưa gồm phí, nhãn trạng thái); tiêu đề hai mẫu khác nhau, thứ tự cột khác nhau; chữ có dấu tiếng Việt đọc ra nguyên vẹn; phá thử sửa một ô giá trong bản sao tệp → đỏ «ô lệch hàng mẫu» kèm mã căn"
+    paths: ["packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-7 nạp» xanh trên Postgres dãy T đã áp migration: trước khi nạp xoá mọi dòng mẫu và đếm 0 (để phép đếm đo đúng đầu ra của lệnh nạp, không đo dữ liệu có sẵn); chạy nap.mjs --nap như tiến trình con → có đúng một sàn «[Mẫu] Sàn thử», sáu tài khoản @mau.quy-hang.test, vai từng người bằng ma trận viết trước, hai khu «Toà A», «Toà B», đầu chủ 1 phụ trách Toà A, đầu chủ 2 phụ trách Toà B; chạy --nap lần hai → số dòng từng bảng và nội dung (tên, vai, khu) không đổi; phá thử: nạp vào bản sao ma trận vai sai một vai → đỏ «vai lệch: <người>»"
+    paths: ["packages/db/seed/**", "packages/db/migrations/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    expected: "exit 0; ca «AC-8 xoá một lần» xanh: đã nạp mẫu, cùng một sàn khác «[Tên sàn] đối chứng» có một quản trị email doi-chung@vi-du.test tạo qua mo-san.mjs; chạy nap.mjs --xoa một lần → đếm 0 dòng mẫu ở companies, identity.user, company_members, company_zones, member_zones; sàn đối chứng, tài khoản và vai của nó còn nguyên; nạp lại → nội dung bằng đúng lần nạp đầu; phá thử: bản sao lệnh xoá bỏ điều kiện miền email → bài kiểm đỏ «xoá ngoài nhãn mẫu» vì tài khoản đối chứng mất"
+    paths: ["packages/db/seed/**", "packages/db/scripts/mo-san.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
