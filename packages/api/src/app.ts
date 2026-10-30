@@ -7,6 +7,7 @@ import type { Auth } from "./auth/auth";
 import { resolveCompany } from "./auth/company";
 import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "./auth/constants";
 import { withCompany } from "./db";
+import { registerMemberRoutes } from "./thanh-vien";
 
 /**
  * API có phiên bản cho mọi bề mặt và mọi hệ thống ngoài (ADR-0017 §4). Mọi thay đổi dữ liệu sẽ là một lệnh qua đây —
@@ -18,6 +19,8 @@ const BASE = `/api/${API_VERSION}`;
 export type ApiDeps = {
   /** Kết nối tới bảng của công ty — chỉ dùng qua withCompany (vai quy_hang_app). */
   appPool: pg.Pool;
+  /** Kết nối danh tính (search_path = identity) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email. */
+  identityPool: pg.Pool;
   auth: Auth;
 };
 
@@ -30,7 +33,7 @@ const Health = z
   })
   .openapi("Health");
 
-const Company = z.object({ id: z.string(), name: z.string() }).openapi("Company");
+const Company = z.object({ id: z.string(), name: z.string(), roles: z.array(z.string()).optional() }).openapi("Company");
 const Me = z
   .object({
     user: z.object({ id: z.string(), email: z.string() }),
@@ -41,7 +44,8 @@ const Me = z
 const ApiError = z.object({ error: z.string() }).openapi("ApiError");
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
 
-export function createApi({ appPool, auth }: ApiDeps) {
+export function createApi(deps: ApiDeps) {
+  const { appPool, auth } = deps;
   const api = new OpenAPIHono();
 
   api.openapi(
@@ -128,6 +132,8 @@ export function createApi({ appPool, auth }: ApiDeps) {
       return c.json(row, 200);
     },
   );
+
+  registerMemberRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",

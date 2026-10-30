@@ -1,0 +1,106 @@
+schema_version: 1
+feature_slug: moi-nguoi-vai-khu
+# Test cần Postgres chạy trong `npm run db:test` (bộ kiểm cách ly + packages/api/test-db). exit 0 của lệnh chung
+# KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong
+# `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mời: email chưa có tài khoản vào thẳng sàn với hai vai» có mặt và ok — quản trị mời, người được mời xin mã, nhập mã, /me trả sàn A và roles [listing_agent, buyer_agent]. Chiều đỏ: /me thiếu sàn hay sai vai → ca đỏ nêu vai thấy được."
+    paths: [packages/api/src/**, packages/db/migrations/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ba ca có mặt và ok: «mời: người ở sàn B vào thêm sàn A, vẫn một tài khoản» (đếm identity.user theo email = 1, /me liệt cả A và B) · «mời: email đã là thành viên trả 409 da-la-thanh-vien, không đổi gì» (số thành viên A không đổi) · «mời: email mới và email đã có tài khoản trả cùng mã và cùng hình dạng thân» (quản trị không dò được email nào đã có tài khoản; so status + tập khoá của thân). Chiều đỏ: tài khoản trùng, mời trùng thành công, hay hai ca trả khác nhau → đỏ nêu ca."
+    paths: [packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ba ca có mặt và ok: «vai: năm giá trị nhận, giá trị lạ API trả 400» (ma trận đủ năm vai + một vai lạ) · «vai: cơ sở dữ liệu từ chối giá trị lạ» (insert/update roles có vai lạ → lỗi ràng buộc nêu tên ràng buộc) · «vai: đổi vai có hiệu lực ở lời gọi kế» (/me trước và sau khác nhau đúng phần đổi). Chiều đỏ: vai lạ lọt vào → đỏ."
+    paths: [packages/api/src/**, packages/db/migrations/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ba ca có mặt và ok: «khu: tạo và giao khu, thành viên mang đúng khu» · «khu: tên trùng trong một sàn bị từ chối» · «khu: giao khu của sàn B bị từ chối ở API (400) và ở cơ sở dữ liệu (khoá ngoại)». Chiều đỏ: khu sàn khác giao được → đỏ nêu mã khu."
+    paths: [packages/api/src/**, packages/db/migrations/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok: «bỏ khỏi sàn: lời gọi kế không vào A, khu ở A mất theo» — người bị bỏ dùng lại cookie phiên và cookie qh_san=A đã chọn từ trước: trước khi bỏ /san trả A (đối chứng), sau DELETE /san trả 403 chua-gan-san (hoặc 409 khi còn sàn khác) và không trả A; member_zones của họ ở A = 0 dòng · «gỡ vai quản trị: phiên cũ mất quyền ghi ngay» — quản trị bị gỡ vai dùng phiên cũ gọi POST /san/thanh-vien: trước khi gỡ 201 (đối chứng), sau khi gỡ 403 can-quan-tri. Chiều đỏ: còn vào A, còn khu, hay còn quyền mời → đỏ nêu đường."
+    paths: [packages/api/src/**, packages/db/migrations/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok: «không phải quản trị: năm đường quản người trả 403 can-quan-tri» (ma trận đủ năm đường: GET thành viên, POST thành viên, PATCH, DELETE, POST khu; GET khu vẫn đọc được; kèm đối chứng quản trị cùng năm đường trả 2xx) · «không phải quản trị: cơ sở dữ liệu từ chối ghi thành viên, khu, khu phụ trách» (vai quy_hang_app, app.user_id người thường → lỗi luật theo dòng). Chiều đỏ: một đường trả 2xx cho người thường → đỏ nêu đường."
+    paths: [packages/api/src/**, packages/db/migrations/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; năm ca có mặt và ok: «quản trị cuối: bỏ khỏi sàn bị từ chối 409 can-mot-quan-tri» · «quản trị cuối: gỡ vai quản trị bị từ chối 409 can-mot-quan-tri» · «hai quản trị: gỡ một người được» · «quản trị cuối: cơ sở dữ liệu từ chối trực tiếp» (vai quy_hang_app, app.user_id của quản trị, xoá / gỡ vai quản trị cuối → lỗi nêu tên trigger) · «hai quản trị gỡ nhau cùng lúc: đúng một giao dịch thành công, sàn còn ≥ 1 quản trị» (hai kết nối đồng thời). Chiều đỏ: sàn mất hết quản trị → đỏ nêu số quản trị còn lại."
+    paths: [packages/api/src/**, packages/db/migrations/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca cách ly mới có mặt và ok: company_zones và member_zones bật và ép luật theo dòng (ca «mọi bảng dữ liệu» phủ) · quản trị A đặt sàn A không đọc được khu, khu phụ trách của B, không ghi được thành viên, khu của B. Chiều đỏ (lượt phá ở S3): bỏ luật theo dòng của một bảng mới → ca đỏ nêu bảng."
+    paths: [packages/db/migrations/**, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mở sàn: người đầu tiên mang vai quản trị sàn» có mặt và ok. Chiều đỏ: roles không chứa company_admin → đỏ."
+    paths: [packages/db/scripts/**, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Dựng dữ liệu: `npm run van-hanh:mo-san -w @quy-hang/db -- --ten '[Sàn mẫu E10-ND]' --email e10-quan-tri@example.test` (quản trị); thêm e10-thuong@example.test vào sàn đó với vai buyer_agent bằng kết nối chủ"
+      - "Chạy dev bằng cấu hình `web-q` của `.claude/launch.json` (preview_start name web-q, cổng 3461); đọc mã từ nhật ký máy chủ `[ma-dang-nhap] <email> <mã>`"
+      - "Đăng nhập e10-quan-tri@example.test, mở http://localhost:3461/settings/users → thấy danh sách có chính mình mang vai quản trị → chụp evidence/E10-step1.png"
+      - "Thêm khu «[Toà mẫu A]» → khu hiện trong danh sách khu → chụp evidence/E10-step2.png"
+      - "Mở form mời, nhập e10-moi@example.test, chọn vai Đầu chủ + Đầu khách và khu [Toà mẫu A] → chụp form trước khi bấm «Mời» evidence/E10-step3a.png; bấm «Mời» → người mới hiện trong danh sách với hai vai và một khu; tải lại trang vẫn thấy → chụp evidence/E10-step3.png"
+      - "Mời lại e10-moi@example.test → thấy «Email này đã là thành viên của sàn.» → chụp evidence/E10-step4.png"
+      - "Mở form sửa của e10-moi → chụp form có nút «Lưu» evidence/E10-step5a.png; đổi vai thành Trưởng nhóm, lưu, tải lại → thấy vai mới → chụp evidence/E10-step5.png"
+      - "Bấm bỏ e10-moi → thấy hộp «Bỏ e10-moi@example.test khỏi sàn?» → chụp evidence/E10-step6a.png; bấm huỷ → người vẫn còn; bấm bỏ lần nữa và xác nhận → không còn trong danh sách sau khi tải lại → chụp evidence/E10-step6.png"
+      - "Thử bỏ chính e10-quan-tri (quản trị cuối) → thấy «Sàn cần ít nhất một quản trị.» → chụp evidence/E10-step7.png"
+      - "Đăng xuất, đăng nhập e10-thuong@example.test, mở /settings/users → thấy «Chỉ quản trị sàn xem được trang này.» → chụp evidence/E10-step8.png"
+    expected: "Mười một khung khớp: step1 ST-nguoi-dung-danh-sach · step2 ST-nguoi-dung-khu · step3a ST-nguoi-dung-moi · step3 ST-nguoi-dung-danh-sach (người mới, hai vai, một khu) · step4 ST-nguoi-dung-da-la-thanh-vien · step5a ST-nguoi-dung-sua · step5 ST-nguoi-dung-danh-sach (vai mới) · step6a ST-nguoi-dung-bo · step6 ST-nguoi-dung-danh-sach (không còn người bị bỏ) · step7 ST-nguoi-dung-can-mot-quan-tri · step8 ST-nguoi-dung-khong-quyen; danh sách là dữ liệu máy chủ (còn sau tải lại); chữ tiếng Việt; không lỗi mạng tới app ngoài 4xx đã khai: 409 của mời trùng và quản trị cuối, 403 của người không phải quản trị."
+    paths: [apps/web/src/app/settings/**, packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-10
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «luồng quản người qua HTTP» có mặt và ok — tạo khu tên riêng của ca, mời email riêng của ca với hai vai và khu ấy, GET danh sách trả đúng email, vai, tên khu; sửa vai; bỏ; GET không còn email. Chiều đỏ: danh sách lệch dữ liệu đã ghi → đỏ nêu trường lệch."
+    paths: [packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
