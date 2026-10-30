@@ -327,23 +327,33 @@ test("AC-2 không dữ liệu thật", async () => {
   const p3 = banSao(d);
   p3.chuNha[0].ten = "Nguyễn Văn A";
   assert.ok(coLoi(kiemDuLieuThat(p3).loi, "tên không mang nhãn mẫu"));
-  // Ma trận dấu nối viết trước: mỗi dấu một ca. Số thật nối bằng dấu đó phải đỏ; số mẫu nối bằng chính dấu đó phải
-  // được đếm và không đỏ (đối chứng dương cùng dấu).
-  const DAU_NOI = [" ", ".", "-", "–", "—", "/", "\t", "\u00a0", "\u202f", " - ", ") "];
+  // Ma trận dạng viết viết trước, số giả 0999 999 999 (không phải số mẫu): mọi dạng phải đỏ. Bất biến kiểm: không
+  // chuỗi nào chứa đủ chữ số của một số điện thoại mà qua lặng (không đỏ, không được đếm là số mẫu).
+  const DAU_NOI = [" ", ".", "-", "–", "—", "/", "\t", "\u00a0", "\u202f", " - ", ") ", ",", ";", ":", "    ", " -- ", "\n"];
   for (const dau of DAU_NOI) {
-    const that = quetChuoi(`Gọi ${["0912", "345", "678"].join(dau)} nhé`);
-    assert.ok(coLoi(that.loi, "số không đúng dạng mẫu"), `số thật nối bằng ${JSON.stringify(dau)}`);
+    const that = quetChuoi(`Gọi ${["0999", "999", "999"].join(dau)} nhé`);
+    assert.ok(coLoi(that.loi, "số không đúng dạng mẫu"), `số giả nối bằng ${JSON.stringify(dau)}`);
     const mau = quetChuoi(`Gọi ${["0900", "000", "001"].join(dau)} nhé`);
-    assert.deepEqual(mau.loi, [], `số mẫu nối bằng ${JSON.stringify(dau)}`);
-    assert.equal(mau.so, 1, `số mẫu nối bằng ${JSON.stringify(dau)} phải được đếm`);
+    assert.ok(mau.loi.length > 0 || mau.so === 1, `số mẫu nối bằng ${JSON.stringify(dau)} qua lặng`);
   }
-  assert.ok(coLoi(quetChuoi("(091) 234 5678").loi, "số không đúng dạng mẫu"), "ngoặc đầu số");
-  // Số dính liền chữ số khác, hai số liền nhau, dạng +84: bộ quét không được bỏ lọt.
-  for (const ghiChu of ["0912345678 0987654321", "0912 345 678 2 phòng", "+84 912 345 678", "Gọi 0900 000 001 hoặc +84912345678"]) {
-    const p = banSao(d);
-    p.hang[0].ghiChu = ghiChu;
-    assert.ok(coLoi(kiemDuLieuThat(p).loi, "số không đúng dạng mẫu"), ghiChu);
-  }
+  for (const s of [
+    "０９９９９９９９９９",
+    "٠٩٩٩٩٩٩٩٩٩",
+    "999,999,999",
+    "(099) 999 9999",
+    "0999 lần 999 rồi 999",
+    "0999999999 0999999998",
+    "0999 999 999 2 phòng",
+    "+84 999 999 999",
+    "Gọi 0900 000 001 hoặc +84999999999",
+    "0900 000 0011",
+  ])
+    assert.ok(coLoi(quetChuoi(s).loi, "số không đúng dạng mẫu"), s);
+  // Đối chứng dương: chỗ được phép có chữ số không đỏ; số mẫu đúng dạng được đếm.
+  for (const s of ["2026-10-30T00:00:00+07:00", "urn:onehub:upi:mau:A-12.05", "Xem nhà sau 18 giờ", "[Mẫu] Chủ nhà 30", "Diện tích (m²)"])
+    assert.deepEqual(quetChuoi(s).loi, [], s);
+  assert.equal(quetChuoi("0900 000 001, 0900 000 002").so, 2);
+  assert.deepEqual(quetChuoi("0900 000 001, 0900 000 002").loi, []);
 
   // Phá thử trên bản sao mau-b.xlsx.
   const pB1 = thayO(tepB, refCot(MAU_B, "Số điện thoại chủ nhà", 2), oSo(refCot(MAU_B, "Số điện thoại chủ nhà", 2), 912345678));

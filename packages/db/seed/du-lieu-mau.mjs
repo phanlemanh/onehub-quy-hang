@@ -177,29 +177,34 @@ export function sinhDuLieuMau({ hatGiong = HAT_GIONG } = {}) {
 // ——— Hàm kiểm ————————————————————————————————————————————————————————————————————————————————
 
 const SO_DUNG_MAU = /^0900 000 0\d\d$/;
-// Dấu nối giữa các nhóm số: bất kỳ ký tự nào không phải chữ cái, chữ số hay «: , ;», tối đa ba ký tự liền nhau —
-// khoảng trắng mọi loại (cả không ngắt, tab), chấm, gạch mọi loại, «/», ngoặc. Không liệt kê từng dấu, để dạng viết
-// mới không lọt. «:» vẫn ngắt để giờ trong mốc ISO không ghép thành một dãy số dài.
-const DAY_SO = /\+?\d(?:[^\p{L}\d:,;]{0,3}\d)*/gu;
+// Bộ quét số theo danh sách cho phép: sau chuẩn hoá NFKC (chữ số toàn khổ thành chữ số thường, khoảng trắng không
+// ngắt thành khoảng trắng), bỏ các chỗ được phép có chữ số — số mẫu đúng dạng, mốc giờ ISO, mã căn — rồi đếm mọi
+// chữ số còn lại của chuỗi. Còn từ 9 chữ số trở lên thì đỏ: số điện thoại nào cũng có ít nhất 9 chữ số, viết cách
+// nào cũng vậy, nên bộ quét không phải đoán dấu nối.
+const SO_MAU = /(?<!\p{Nd})0900 000 0\d\d(?!\p{Nd})/gu;
+const CHO_PHEP = [
+  /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})/g, // mốc giờ ISO
+  /(?<![\p{L}\p{Nd}])[A-Z]-\d{2}\.\d{2}(?!\p{Nd})/gu, // mã căn A-12.05
+];
+const NGUONG_CHU_SO = 9;
 const EMAIL = /[^\s@<>"',;()]+@[^\s@<>"',;()]+/g;
 
 /**
- * Quét một chuỗi tìm dữ liệu thật. Số: gom mọi dãy chữ số nối bằng dấu nối (xem DAY_SO), kể cả tiền tố +; dãy nào
- * từ 9 chữ số trở lên mà không đúng một số 0900 000 0xx thì bị bắt — số dính liền chữ số khác, hai số liền nhau, hay
- * dạng +84 đều lộ ra vì độ dài lệch. Email phải thuộc miền mẫu.
+ * Quét một chuỗi tìm dữ liệu thật. Số: ngoài số mẫu 0900 000 0xx và các mã cho phép, chuỗi còn từ 9 chữ số trở lên
+ * thì bị bắt. Email phải thuộc miền mẫu.
  * @returns {{ loi: string[], so: number, email: number }}
  */
 export function quetChuoi(chuoi, noi = "") {
   const loi = [];
-  let so = 0;
+  const goc = String(chuoi).normalize("NFKC");
+  let con = goc;
+  const so = [...con.matchAll(SO_MAU)].length;
+  con = con.replace(SO_MAU, " ");
+  for (const re of CHO_PHEP) con = con.replace(re, " ");
+  const chuSo = con.match(/\p{Nd}/gu)?.length ?? 0;
+  if (chuSo >= NGUONG_CHU_SO) loi.push(`số không đúng dạng mẫu: ${noi} «${String(chuoi).slice(0, 80)}» (${chuSo} chữ số ngoài số mẫu)`);
   let email = 0;
-  for (const m of String(chuoi).matchAll(DAY_SO)) {
-    const tron = m[0].replace(/[^\d+]/g, "");
-    if (tron.replace("+", "").length < 9) continue;
-    if (/^09000000\d\d$/.test(tron)) so++;
-    else loi.push(`số không đúng dạng mẫu: ${noi} «${m[0]}»`);
-  }
-  for (const m of String(chuoi).matchAll(EMAIL)) {
+  for (const m of goc.matchAll(EMAIL)) {
     email++;
     if (!m[0].toLowerCase().endsWith(`@${MIEN_EMAIL}`)) loi.push(`email không thuộc miền mẫu: ${noi} «${m[0]}»`);
   }
