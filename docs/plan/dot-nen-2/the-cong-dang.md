@@ -1,6 +1,9 @@
 # Thẻ Cổng Đáng — năm hàng đợt nen-2
 
-Một lần ngồi, năm quyết định: mỗi hàng có đáng dựng không. Ô quyết để `___` — máy không điền. Mỗi hàng nhận một trong
+**Đã quyết** — Manh Phan, 30/10, nguyên văn: «11 build · 12 build · 9 build · 13 build · 10 park». Đã chép vào ô cơ
+hội từng hàng; hàng 10 gác nên đã gỡ khỏi `hang-viec.json` của gói, dãy D chỉ làm hàng 9.
+
+Một lần ngồi, năm quyết định: mỗi hàng có đáng dựng không. Cột «Quyết» chép đúng chữ người gõ — máy không tự điền. Mỗi hàng nhận một trong
 bốn chữ: `build` (dựng) · `iterate` (làm lại ý trước khi dựng) · `park` (gác, chưa làm) · `kill` (bỏ).
 
 Cả năm là hàng T3 (chạm cơ sở dữ liệu, trần lớp dữ liệu, thoả thuận hoặc khuôn cấp vào), nên Cổng Phạm vi và Cổng
@@ -10,11 +13,11 @@ Hàng không `build` thì không vào đợt; hàng đứng sau nó cũng không
 
 | # | Hàng | Người dùng được gì | Đứng trên | Dãy | Quyết |
 |---|---|---|---|---|---|
-| 11 | Lớp trường nguồn | Đầu chủ giữ căn thấy chủ nhà, số điện thoại, giá đáy của căn mình; người khác cùng sàn mở hồ sơ thì không thấy; mỗi lần mở số chủ được ghi lại | 8 | N | `___` |
-| 12 | Trục ai thấy hàng | Lead và hàng chưa khoá nguồn để «Chỉ tôi»; lên «Toàn sàn» thì cả sàn mới thấy | 8 | A | `___` |
-| 9 | Gõ mã căn | Đầu chủ gõ mã căn, thuộc tính căn tự điền theo cách đọc mã của dự án; mã chưa có thì báo rõ | 5, 8 | D | `___` |
-| 13 | Nhanh tức thì | Bảng hàng và hồ sơ mở, lọc, cuộn không chờ mạng; sửa ghi trên máy trước, rớt mạng vài phút không mất thay đổi | 2, 11, 12 | N | `___` |
-| 10 | Nhận danh mục Invest | Danh mục dự án từ OneHub Invest tự vào khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt thì bị từ chối | 9 | D | `___` |
+| 11 | Lớp trường nguồn | Đầu chủ giữ căn thấy chủ nhà, số điện thoại, giá đáy của căn mình; người khác cùng sàn mở hồ sơ thì không thấy; mỗi lần mở số chủ được ghi lại | 8 | N | `build` |
+| 12 | Trục ai thấy hàng | Lead và hàng chưa khoá nguồn để «Chỉ tôi»; lên «Toàn sàn» thì cả sàn mới thấy | 8 | A | `build` |
+| 9 | Gõ mã căn | Đầu chủ gõ mã căn, thuộc tính căn tự điền theo cách đọc mã của dự án; mã chưa có thì báo rõ | 5, 8 | D | `build` |
+| 13 | Nhanh tức thì | Bảng hàng và hồ sơ mở, lọc, cuộn không chờ mạng; sửa ghi trên máy trước, rớt mạng vài phút không mất thay đổi | 2, 11, 12 | N | `build` |
+| 10 | Nhận danh mục Invest | Danh mục dự án từ OneHub Invest tự vào khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt thì bị từ chối | 9 | D | `park` |
 
 Thứ tự trong bảng là thứ tự ưu tiên khi các dãy tranh lượt chấm (đường găng).
 

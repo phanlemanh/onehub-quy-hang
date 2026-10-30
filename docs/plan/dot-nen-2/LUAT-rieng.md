@@ -1,7 +1,7 @@
 ## Luật riêng của kho onehub-quy-hang (chép vào LUAT.md của đợt nen-2)
 
 Đợt thứ hai của kho. Luật 1–16 giữ nguyên ý của đợt nen-dau, chỉ đổi cổng và tên dãy ở luật 7; luật 17 trở đi là của
-năm hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp bảo vệ hay đứng trên kết luận của đợt trước.
+bốn hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp bảo vệ hay đứng trên kết luận của đợt trước.
 
 1. Bốn bất biến của `AGENTS.md` (cách ly giữa công ty, chủ nhà không rời công ty, người bấm gửi, phần nội bộ không ra
    trang khách) không hàng nào nới. Hàng T3 đọc lại chúng trước Cổng Phạm vi và hợp đồng nêu bất biến nào nó chạm.
@@ -36,13 +36,10 @@ năm hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp bảo 
     các bước cần làm, để chủ kho làm trong một lần ngồi.
 17. Dãy X là dãy neo: giữ ba hàng của đợt nen-dau (2, 5, 8) để `sau` của đợt này chặn đúng. Dãy X nghỉ, không mở
     chip, không ai ghi danh vào. Hàng neo đã ký Cổng Đáng ở đợt trước; đổi chúng là việc của đợt nen-dau.
-18. Hàng 10 chạm `packages/connect/**` và gần như chắc chạm `packages/core/src/agreements.ts` (tệp bảo vệ, T3): gửi
-    `cham-tep` cho `agreements.ts` ngay ở S1, trước khi viết. Khuôn nhận vẫn `.strict()`; không mở cửa cho Invest gọi
-    vào, không đọc cơ sở dữ liệu của Invest.
-19. Hàng 11 chạm lớp `source` (bất biến 2). Trần `never_leaves_company` ở `packages/core/src/data-classes.ts` và ràng
+18. Hàng 11 chạm lớp `source` (bất biến 2). Trần `never_leaves_company` ở `packages/core/src/data-classes.ts` và ràng
     buộc của cơ sở dữ liệu không nới; cần đổi `data-classes.ts` thì gửi `cham-tep` ở S1. Ẩn ở lõi và API, không ẩn ở
     giao diện.
-20. Hàng 13 đứng trên ADR chọn bộ đồng bộ của hàng 2: đọc ADR ấy trước S1, không đổi bộ đồng bộ đã chọn trong hàng
+19. Hàng 13 đứng trên ADR chọn bộ đồng bộ của hàng 2: đọc ADR ấy trước S1, không đổi bộ đồng bộ đã chọn trong hàng
     này. Thấy ADR không đủ cho hàng 13 thì gửi `can-nguoi`, không tự chọn lại.
-21. Hàng 11 và 12 chạy song song ở hai dãy, cùng đứng trên hàng 8 và cùng có thể thêm migration hay sửa bộ kiểm cách ly
+20. Hàng 11 và 12 chạy song song ở hai dãy, cùng đứng trên hàng 8 và cùng có thể thêm migration hay sửa bộ kiểm cách ly
     `packages/db/tests/isolation.test.mjs`: luật 3 về số migration và luật 12 về chỉ thêm dòng áp cho cả bộ kiểm.

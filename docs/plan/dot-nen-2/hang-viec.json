@@ -1,6 +1,6 @@
 {
  "dot": "nen-2",
- "muc_tieu": "Dựng phần lõi của hàng có quyền: gõ mã căn ra thuộc tính, nhận danh mục Invest qua thoả thuận, thông tin chủ nhà chỉ người giữ căn thấy, trục «Chỉ tôi» / «Toàn sàn», và bảng hàng đọc từ máy không chờ mạng",
+ "muc_tieu": "Dựng phần lõi của hàng có quyền: gõ mã căn ra thuộc tính, thông tin chủ nhà chỉ người giữ căn thấy, trục «Chỉ tôi» / «Toàn sàn», và bảng hàng đọc từ máy không chờ mạng",
  "day": [
   {
    "id": "N",
@@ -88,21 +88,6 @@
     "2",
     "11",
     "12"
-   ]
-  },
-  {
-   "ma": "10",
-   "tep": "docs/plan/lo-trinh.json",
-   "slug": "nhan-danh-muc-invest",
-   "day": "D",
-   "uu_tien": 4,
-   "s4": "local",
-   "ranh_gioi": [
-    "packages/connect/src/**",
-    "_acceptance/nhan-danh-muc-invest/**"
-   ],
-   "sau": [
-    "9"
    ]
   },
   {
