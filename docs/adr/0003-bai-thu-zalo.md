@@ -28,10 +28,13 @@ Số đo: máy của Zalo lấy trang với UA `WhatsApp/2`, lấy ảnh với U
 
 ### 2. Thẻ và ảnh xem trước
 
-Số đo: trang dựng ở máy chủ có đủ `og:title`, `og:description`, `og:image` (URL tuyệt đối), `og:url`, `og:type`,
-`twitter:card`, ảnh PNG 1200×630 dưới 300 KB. Zalo Android và Zalo iPhone đều hiện thẻ đủ link · ảnh · mô tả. Chủ kho
-khai: «Card bao gồm: Link · Ảnh · Mô tả: Mẫu căn - Toà....Tên sàn». Zalo Web không dựng thẻ cho link gửi từ web, với mọi
-tên miền.
+Cấu hình của máy chủ thử (không phải số đo — đọc ở `_acceptance/bai-thu-zalo/thu/may-chu.mjs` và `thu/anh.mjs`, bài
+kiểm AC-1, AC-2 giữ): trang dựng ở máy chủ có đủ `og:title`, `og:description`, `og:image` (URL tuyệt đối), `og:url`,
+`og:type`, `twitter:card`; ảnh PNG 1200×630 dưới 300 KB.
+
+Số đo (`ket-qua.md`): với cấu hình ấy, vế 1 đạt — «có ảnh» bấm từ Android 1 lần, từ iPhone 1 lần, máy Zalo đã tải ảnh của
+A-6819 1 lượt, của I-6819 2 lượt. Chủ kho khai: «Card bao gồm: Link · Ảnh · Mô tả: Mẫu căn - Toà....Tên sàn». Zalo Web
+không dựng thẻ cho link gửi từ web, với mọi tên miền (0 lượt ghé).
 
 - **Khuyến nghị:** trang khách thật giữ đúng bộ thẻ và cỡ ảnh này, ảnh sinh theo bộ căn ở máy chủ. Hàng dựng trang khách
   trên Next.js chạy lại một phiên điện thoại ngắn (một link, hai máy) để xác nhận thẻ ra giống máy chủ thử.
@@ -42,16 +45,21 @@ tên miền.
 
 ### 3. Chia sẻ trên iPhone
 
-Số đo: Safari iPhone mở được bảng chia sẻ; «Gửi ảnh + tin» và «Gửi chỉ ảnh» trả «đã gửi», Zalo có trong bảng, nhận ảnh
-và nhận tin. Chủ kho khai: «Gửi ảnh + Tin qua iphone đúng. Gửi chỉ ảnh -> Đúng. Gửi link + tin -> Bên iphone chỉ là
-link». Bấm lần hai khi bảng còn mở thì trình duyệt báo lỗi.
+Số đo (`ket-qua.md`): Safari iPhone mở được bảng chia sẻ; «Gửi ảnh + tin» và «Gửi chỉ ảnh» trả «đã gửi» (2 lượt gửi kèm
+tệp); câu trả lời «Zalo có trong bảng», «Zalo nhận ảnh», «Zalo nhận tin» đều «có». Chủ kho khai: «Gửi ảnh + Tin qua
+iphone đúng. Gửi chỉ ảnh -> Đúng. Gửi link + tin -> Bên iphone chỉ là link». Nhật ký không có lượt «Gửi link + tin» nào
+từ iPhone: hai lượt «link + tin» trả «đã gửi» và lỗi bấm lần hai (`InvalidStateError`, rồi `AbortError`) đều mang UA
+trình duyệt máy tính (Safari macOS) — điều về «link + tin» trên iPhone chỉ dựa vào lời chủ kho khai.
 
 - **Khuyến nghị:** luồng Gửi trên điện thoại chia sẻ **ảnh căn + tin**, đặt link trang khách trong phần tin. Khoá nút
   Gửi tới khi bảng chia sẻ đóng.
-- **Lối khác:** chia sẻ link + tin như lệnh chia sẻ thường. Giá: Zalo iPhone chỉ nhận link, mất phần tin.
-- **Còn mở:** ghi «Đã gửi» theo kết quả bảng chia sẻ trả về hay theo lúc người bấm. Bài thử có lượt trả «người huỷ» ở
-  trình duyệt UA máy tính mà không rõ người có gửi hay không — chủ kho chọn; khuyến nghị theo kết quả trả về, kèm nút
-  «Đã gửi» để người tự đánh dấu khi bảng báo huỷ.
+- **Giá của khuyến nghị:** người phải chờ bảng chia sẻ đóng mới gửi tiếp được; mỗi lần gửi tải một ảnh (dưới 300 KB) về
+  máy trước khi mở bảng.
+- **Lối khác:** chia sẻ link + tin như lệnh chia sẻ thường. Giá: theo lời chủ kho, Zalo iPhone chỉ nhận link, mất phần
+  tin — cần đo lại trên iPhone trước khi dựa vào.
+- **Còn mở:** ghi «Đã gửi» theo kết quả bảng chia sẻ trả về hay theo lúc người bấm. Ở trình duyệt UA máy tính, bảng trả
+  «người huỷ» sau một lần bấm trùng — chủ kho chọn; khuyến nghị theo kết quả trả về, kèm nút «Đã gửi» để người tự đánh
+  dấu khi bảng báo huỷ.
 
 ### 4. Nhận ảnh từ Zalo trên máy tính
 

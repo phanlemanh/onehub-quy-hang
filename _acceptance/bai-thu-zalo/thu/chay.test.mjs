@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, test } from 'node:test';
-import { chonHam, GOC_KHO } from './chay.mjs';
+import { chonHam, GOC_KHO, taoBoDocHam } from './chay.mjs';
 import { kiemNhatKyKhongIp } from './kiem-chung.mjs';
 
 const CHAY = path.join(path.dirname(fileURLToPath(import.meta.url)), 'chay.mjs');
@@ -15,6 +15,20 @@ describe('AC-7 chọn đường hầm', () => {
     assert.equal(chonHam(() => true), 'cloudflared');
     assert.equal(chonHam((t) => t === 'ssh'), 'ssh');
     assert.equal(chonHam(() => false), null);
+  });
+});
+
+describe('AC-7 đọc đường hầm', () => {
+  test('localhost.run: bỏ qua link quản trị trong lời chào, nhận lhr.life', () => {
+    const doc = taoBoDocHam('ssh');
+    assert.equal(doc('To set up and manage custom domains go to https://admin.localhost.run/\n'), null);
+    assert.equal(doc('abcd1234.lhr.life tunneled with tls termination, https://abcd1234.lhr.life\n'), 'https://abcd1234.lhr.life');
+  });
+  test('cloudflared: có URL mà chưa nối tới edge → chưa sống; có dòng nối → sống', () => {
+    const doc = taoBoDocHam('cloudflared');
+    assert.equal(doc('|  https://vi-du-mau.trycloudflare.com  |\n'), null);
+    assert.equal(doc('ERR Failed to dial a quic connection error="timeout: no recent network activity"\n'), null);
+    assert.equal(doc('INF Registered tunnel connection connIndex=0 location=sin01\n'), 'https://vi-du-mau.trycloudflare.com');
   });
 });
 

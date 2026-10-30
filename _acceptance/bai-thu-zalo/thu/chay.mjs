@@ -21,21 +21,46 @@ export function chonHam(coLenh) {
 
 const coLenhThat = (ten) => spawnSync('sh', ['-c', `command -v ${ten}`], { stdio: 'ignore' }).status === 0;
 
+/**
+ * Bộ đọc đầu ra của đường hầm: trả URL công khai chỉ khi đường hầm đã nối thật.
+ * - cloudflared in URL trước khi nối tới edge; mạng chặn cổng 7844 thì nó in URL rồi thử lại mãi — phải chờ thêm dòng
+ *   «Registered tunnel connection».
+ * - localhost.run in lời chào có https://admin.localhost.run trước dòng URL; chỉ nhận tên miền đường hầm lhr.life.
+ */
+export function taoBoDocHam(loai) {
+  let url = null;
+  let daNoi = loai !== 'cloudflared';
+  const mau = loai === 'cloudflared' ? /https:\/\/[a-z0-9-]+\.trycloudflare\.com/ : /https:\/\/[a-z0-9-]+\.lhr\.life/;
+  return (manh) => {
+    const chu = String(manh);
+    url ??= chu.match(mau)?.[0] ?? null;
+    if (/Registered tunnel connection/.test(chu)) daNoi = true;
+    return url && daNoi ? url : null;
+  };
+}
+
 function moHam(loai, cong) {
-  const [lenh, doiSo, mau] =
+  const [lenh, doiSo] =
     loai === 'cloudflared'
-      ? ['cloudflared', ['tunnel', '--no-autoupdate', '--url', `http://localhost:${cong}`], /https:\/\/[a-z0-9-]+\.trycloudflare\.com/]
-      : ['ssh', ['-o', 'StrictHostKeyChecking=accept-new', '-o', 'ServerAliveInterval=30', '-R', `80:localhost:${cong}`, 'nokey@localhost.run'],
-          /https:\/\/[a-z0-9-]+\.(?:lhr\.life|localhost\.run)/];
+      ? ['cloudflared', ['tunnel', '--no-autoupdate', '--url', `http://localhost:${cong}`]]
+      : ['ssh', ['-o', 'StrictHostKeyChecking=accept-new', '-o', 'ServerAliveInterval=30', '-R', `80:localhost:${cong}`, 'nokey@localhost.run']];
   const tt = spawn(lenh, doiSo, { stdio: ['ignore', 'pipe', 'pipe'] });
+  const doc = taoBoDocHam(loai);
+  let daSong = false;
   const url = new Promise((ok) => {
-    const doc = (c) => {
-      const m = String(c).match(mau);
-      if (m) ok(m[0]);
+    const nhan = (c) => {
+      const u = doc(c);
+      if (u && !daSong) {
+        daSong = true;
+        ok(u);
+      }
     };
-    tt.stdout.on('data', doc);
-    tt.stderr.on('data', doc);
-    tt.on('exit', () => ok(null));
+    tt.stdout.on('data', nhan);
+    tt.stderr.on('data', nhan);
+    tt.on('exit', () => {
+      if (daSong) console.log(`\nđường hầm ${loai} đã đóng — link công khai không còn sống; chạy lại lệnh để có link mới`);
+      ok(null);
+    });
     setTimeout(() => ok(null), 45_000);
   });
   return { tt, url };
@@ -106,7 +131,7 @@ export async function chay(argv = process.argv.slice(2), { coLenh = coLenhThat }
       ham = moHam(loai, cong);
       const url = await ham.url;
       if (url) goc = url;
-      else console.log(`không mở được đường hầm qua ${loai} — chạy lại, hoặc cài cloudflared`);
+      else console.log(`không mở được đường hầm qua ${loai} trong 45 giây (mạng có thể chặn) — link chỉ chạy trên máy này; thử mạng khác (điểm phát điện thoại)`);
     }
   }
   inBuoc(goc, ma);
