@@ -4,7 +4,8 @@ feature_slug: vo-ung-dung
 #   docker run --rm -d --name quy-hang-db-G -e POSTGRES_PASSWORD=quyhang -p 5546:5432 postgres:16 (đã chạy thì bỏ qua)
 #   export DATABASE_URL=postgres://postgres:quyhang@localhost:5546/postgres && npm run db:migrate
 #   node _acceptance/vo-ung-dung/thu/vai-mau.mjs  → in bảng email ↔ vai (người mẫu, *@example.test)
-#   máy chủ dev cấu hình `web-g` của .claude/launch.json (cổng 3462); đăng nhập bằng email, đọc mã ở nhật ký máy chủ
+#   máy chủ dev cấu hình `web-g` của .claude/launch.json (cổng 3462), nhật ký ở .acceptance-runs/vo-ung-dung/web-g.log;
+#   đăng nhập bằng email, đọc mã ở nhật ký đó (grep theo email)
 #   «[ma-dang-nhap] <email> <mã>»
 evals:
   - id: E1
