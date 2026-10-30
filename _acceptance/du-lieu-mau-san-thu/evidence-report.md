@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b6914738c16bc4bda5ebb436f9d46256d7108c26
+verified_commit: 5acbf62a3dfcb375f0fe03208fce7ade1939041f
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -164,3 +164,7 @@ none — mọi eval chạy một lần, tất định, không có phương sai.
 
 Round 1-3: các lượt trước đã sửa bộ quét dữ liệu mẫu (xem commit a5ec300, 6dc9eec, b691473 và hồ sơ lượt 2, lượt 3); lượt 3 dừng ở trần 3 lượt.
 Round 4: E1-E8 đều xanh, bảy lệnh suite xanh; baseline không đo được do hạ tầng.
+
+### Re-pin lần 1 — 2026-10-30, do hoá cũ do gộp nhánh chính (PR #17)
+run_id: repin-20261030T233550Z-16813
+sha: 5acbf62a3dfcb375f0fe03208fce7ade1939041f · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng
