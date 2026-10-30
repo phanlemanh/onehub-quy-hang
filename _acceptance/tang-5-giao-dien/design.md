@@ -104,7 +104,8 @@ khai đủ khoá. Cặp hai chiều trong test của gói (cây lành → xanh; 
 
 `design-floor-bac.mjs` khi đó in M1; `design-floor-s4.mjs` chặn hex thô trên tệp giao diện mà vòng chạm.
 
-`executors.script.san_m1` = `node packages/ui-lint/thu-san.mjs` — bài thử sàn trên kho thật lẫn kho tạm:
+`executors.script.san_m1` = `node packages/ui-lint/thu-san.mjs` (biến `CLAUDE_PLUGIN_ROOT` vắng thì lệnh cấu hình đặt nó từ
+`packages/ui-lint/tim-kit.mjs` — đọc sổ plugin đã cài, không đoán thư mục cache) — bài thử sàn trên kho thật lẫn kho tạm:
 1. Tìm kit: `CLAUDE_PLUGIN_ROOT` (như `product_map`); vắng hay thiếu `scripts/design-floor-s4.mjs` → thoát 2 «thiếu
    CLAUDE_PLUGIN_ROOT» — DỪNG-lỗi có tên, không đoán đường cache.
 2. Chạy `design-floor-bac.mjs --root <kho> --json` trên kho thật → phải ra `M1`.
