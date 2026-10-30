@@ -91,6 +91,7 @@ chính, phần còn lại ghép.
 | Luồng Gửi | Thẻ `product-grid-2` có `Checkbox` → thanh đáy dính đếm căn đã chọn → `Drawer` toàn màn xem trước chính trang khách → nút mở bảng chia sẻ của máy. Không tích hợp gửi tin |
 | Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ |
 | Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu |
+| Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 7 — tự viết tối giản ở hàng 6 vì ReUI chưa cài; chuyển thể `auth-15` và Frame + `Item` sau khi hàng 4 gộp (ADR-0003) |
 
 ## 4. Tránh
 

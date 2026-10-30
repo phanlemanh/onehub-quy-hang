@@ -299,6 +299,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 29/10 | Phác ba màn còn thiếu của bản đầu trước khi cắt: M6 Hôm nay của đầu khách, TN1 Hôm nay của trưởng nhóm, S6 Mẫu và người dùng | Mục 10 · canvas bản 23 |
 | 29/10 | Bật lộ trình trong kho; bản đầu cắt thành hàng ở `docs/plan/lo-trinh.json`. Để sau: ngưỡng số đo (đặt ở Cổng Đáng của từng hàng, trước hai tuần thử), câu hỏi phỏng vấn (ngoài kho), xin dẫn xem (chờ phỏng vấn), hoa hồng và ghi công Platform (ngoài bản đầu), bốn điểm nền (hỏi ở vòng làm nền) | Mục 13 · lộ trình |
 | 30/10 | Vỏ và IA chọn trên kho ReUI, không tự thiết kế: máy tính `app-shell-8` (cột nhà + cột góc nhìn + thanh trên có gõ mã căn), điện thoại bốn tab dưới ghép từ thành phần; một địa chỉ một thứ, màn đổi theo thiết bị và vai; nguyên tắc «chọn trên kho trước, tự viết sau cùng» cho mọi màn — ADR-0002 | Mục 9 · `docs/design/vo-va-ia.md` |
+| 30/10 | Đăng nhập theo sàn: email + mã 6 số qua email; chỉ tài khoản đã được mở hay mời mới nhận mã; thành viên sàn là bảng của Quỹ hàng, không dùng phần tổ chức của better-auth; người nhiều sàn chọn sàn, chưa gắn sàn thì không thấy gì — ADR-0003 | Mục 6 · Kiến trúc §5, §10 |
 
 ## 13. Chỗ cần chốt
 
