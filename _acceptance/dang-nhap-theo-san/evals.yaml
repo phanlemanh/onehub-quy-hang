@@ -91,7 +91,7 @@ evals:
     layer: ui-observed
     steps:
       - "Dựng dữ liệu: Postgres dãy Q (5545) đã áp migration; `npm run van-hanh:mo-san -w @quy-hang/db -- --ten '[Sàn mẫu E10-A]' --email e10-mot-san@example.test`; chạy thêm với `--ten '[Sàn mẫu E10-A]'` và `--ten '[Sàn mẫu E10-B]'` cho e10-hai-san@example.test; tạo tài khoản e10-chua-gan@example.test rồi bỏ khỏi sàn (hoặc chèn thẳng tài khoản không thành viên bằng kết nối chủ)"
-      - "Chạy dev ở cổng 3461 (luật 7 của đợt) với DATABASE_URL dãy Q, ghi nhật ký ra tệp để đọc mã `[ma-dang-nhap]`"
+      - "Chạy dev bằng cấu hình `web-q` của `.claude/launch.json` (preview_start name web-q — cổng 3461, Postgres dãy Q, luật 7 của đợt); đọc mã từ nhật ký máy chủ, dòng `[ma-dang-nhap] <email> <mã>`"
       - "Mở http://localhost:3461/ → phải chuyển về /dang-nhap → chụp evidence/E10-step1.png"
       - "Nhập e10-mot-san@example.test, Gửi mã → thấy «Đã gửi mã tới …» → chụp evidence/E10-step2.png"
       - "Nhập 000000 (sai) → thấy «Mã không đúng. Thử lại.» → chụp evidence/E10-step3.png"
