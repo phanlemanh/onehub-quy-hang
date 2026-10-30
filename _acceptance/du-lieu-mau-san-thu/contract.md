@@ -5,7 +5,7 @@ slug: du-lieu-mau-san-thu
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [cli, db]
-status: approved
+status: implemented
 approved_by: Manh Phan
 approved_at: 2026-10-31
 design_doc: _acceptance/du-lieu-mau-san-thu/design.md
