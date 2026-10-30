@@ -22,6 +22,7 @@ executors:
     build: "npm run build"
     giao_dien: "node packages/ui-lint/kiem-chuan.mjs"   # trạng thái cây của bộ chuẩn giao diện
     san_m1: "CLAUDE_PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" node packages/ui-lint/thu-san.mjs"   # bài thử sàn M1 — kit từ CLAUDE_PLUGIN_ROOT, vắng thì từ sổ plugin đã cài
+  ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
 feature_loop:

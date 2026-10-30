@@ -5,7 +5,7 @@ slug: tang-5-giao-dien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, config, ci]
-status: verified
+status: signed-off
 design_doc: _acceptance/tang-5-giao-dien/design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T02:27:06Z
@@ -89,3 +89,10 @@ Quét bằng morphological-scan (preset tự dựng — không khớp preset có
 - Ba tệp ngoài ranh giới (`package-lock.json`, `eslint.config.mjs`, `_acceptance/config.yaml`) được giám sát duyệt ở yêu
   cầu G-1 (30/10): lock chỉ sinh bằng `npm install`; config chỉ THÊM dòng.
 - Bộ luật chuyển từ `onehub-invest/app/eslint-plugin-onehub-ui` (cùng chủ kho), đổi tên plugin `quy-hang-ui`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
+  - Ngoài-1: Bài tự kiểm của phép đếm nợ chưa chứng việc bỏ qua thư mục thành phần chính chủ; ai sửa danh sách thư mục bị bỏ qua thì nợ có thể bị đếm sai mà bài kiểm vẫn xanh.
+  - Ngoài-2: Bài tự kiểm cấu hình lint chưa phủ thư mục ví dụ đã chuyển thể; nếu thư mục đó vô tình bị miễn luật thì không ai báo.
+  - Ngoài-3: Một dòng tắt kiểm tra không ghi lý do có thể lọt nếu cùng dòng có đường dẫn hay địa chỉ web; người duyệt PR vẫn thấy dòng đó.
+  - Ngoài-4: Tệp trần nợ bị sửa hỏng hay mất con số thì cổng chặn tăng nợ có thể cho qua mà không báo.
+  - Ngoài-5: Một số lỗi khai thiếu trong cấu hình giao diện chưa có bài thử riêng bắt được.
+  - Ngoài-6: Bài thử việc tự tìm bộ công cụ nghiệm thu dùng dữ liệu viết tay, chưa chạy trên sổ cài thật.
