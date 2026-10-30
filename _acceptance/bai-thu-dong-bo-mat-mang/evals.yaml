@@ -88,5 +88,5 @@ evals:
     criterion: AC-10
     executor: judgment
     question: "ADR của bài thử có ở trạng thái «đề xuất» (không tự chốt), so đủ ba lối (tự làm mỏng, PowerSync, ElectricSQL) theo cách ly, hàng đợi ghi và chi phí vận hành, mỗi điều ghi rõ là số đo trỏ ket-qua.md hay hiểu biết từ tài liệu công bố (chưa đo), và nêu khuyến nghị, lối khác, giá không? Lối được khuyến nghị có giữ bất biến cách ly giữa công ty và thông tin chủ nhà không rời công ty của AGENTS.md không?"
-    inputs: [_acceptance/bai-thu-dong-bo-mat-mang/ket-qua.md, docs/adr/0004-bai-thu-dong-bo.md, _acceptance/bai-thu-dong-bo-mat-mang/opportunity.md, AGENTS.md]
+    inputs: [_acceptance/bai-thu-dong-bo-mat-mang/ket-qua.md, docs/adr/0006-bai-thu-dong-bo.md, _acceptance/bai-thu-dong-bo-mat-mang/opportunity.md, AGENTS.md]
     evidence_required: [judged_by, verdict, rationale]

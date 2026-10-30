@@ -130,12 +130,12 @@ human_signoff: Manh Phan 2026-10-30
 - eval: E10
   judged_by: judge panel (domain-correctness, operational-feasibility, spec-alignment)
   verdict: PASS
-  rationale: ADR-0004 ghi «đề xuất — chờ chủ kho chốt», so ba lối theo cách ly, số chủ, hàng đợi ghi và vận hành, mỗi ô gắn nhãn Đo hoặc Chưa đo. Ba lens cùng thấy khuyến nghị, lối khác và giá của từng lối được nêu đủ; vế mất mạng trên thiết bị được ghi thẳng là chưa đo.
+  rationale: ADR-0006 (số cũ 0004) ghi «đề xuất — chờ chủ kho chốt», so ba lối theo cách ly, số chủ, hàng đợi ghi và vận hành, mỗi ô gắn nhãn Đo hoặc Chưa đo. Ba lens cùng thấy khuyến nghị, lối khác và giá của từng lối được nêu đủ; vế mất mạng trên thiết bị được ghi thẳng là chưa đo.
   human_override:  # chi nguoi ghi
 
   Panel đề xuất (human_override để trống cho người quyết ở Cổng 2):
-  - domain-correctness: PASS — ADR-0004 ghi «đề xuất — chờ chủ kho chốt». Bảng so ba lối theo cách ly, số chủ, hàng đợi ghi, kho trên máy và vận hành, mỗi ô gắn nhãn Đo (trỏ ket-qua.md) hoặc Chưa đo (tài liệu/suy luận). Lối được khuyến nghị giữ bất biến 1–2 ở một chỗ là luật theo dòng của Postgres, và ket-qua.md ghi 34 ca máy xanh, gồm cả ca phá thử (tắt luật theo dòng thì lộ dòng sàn khác). ADR cũng nói rõ vế mất mạng trên thiết bị chưa đo được.
-  - operational-feasibility: PASS — ADR-0004 so đủ ba lối (tự làm mỏng, PowerSync, ElectricSQL) theo cách ly, hàng đợi ghi và vận hành. Mục «Bốn việc cần chốt» nêu khuyến nghị, lối khác và giá. Số đo máy gồm 34 ca xanh, vai `quy_hang_app` không vượt luật, tắt luật thì lộ dòng, và số chủ không đi qua sổ thay đổi. ADR nói thẳng vế mất mạng trên thiết bị chưa đo và vế 1 của phiên thật không đạt, nên không nói quá.
+  - domain-correctness: PASS — ADR-0006 (số cũ 0004) ghi «đề xuất — chờ chủ kho chốt». Bảng so ba lối theo cách ly, số chủ, hàng đợi ghi, kho trên máy và vận hành, mỗi ô gắn nhãn Đo (trỏ ket-qua.md) hoặc Chưa đo (tài liệu/suy luận). Lối được khuyến nghị giữ bất biến 1–2 ở một chỗ là luật theo dòng của Postgres, và ket-qua.md ghi 34 ca máy xanh, gồm cả ca phá thử (tắt luật theo dòng thì lộ dòng sàn khác). ADR cũng nói rõ vế mất mạng trên thiết bị chưa đo được.
+  - operational-feasibility: PASS — ADR-0006 (số cũ 0004) so đủ ba lối (tự làm mỏng, PowerSync, ElectricSQL) theo cách ly, hàng đợi ghi và vận hành. Mục «Bốn việc cần chốt» nêu khuyến nghị, lối khác và giá. Số đo máy gồm 34 ca xanh, vai `quy_hang_app` không vượt luật, tắt luật thì lộ dòng, và số chủ không đi qua sổ thay đổi. ADR nói thẳng vế mất mạng trên thiết bị chưa đo và vế 1 của phiên thật không đạt, nên không nói quá.
   - spec-alignment: PASS — Bảng so ba lối mang nhãn Đo / Chưa đo (tài liệu) / Chưa đo (suy luận). Mục «Bốn việc cần chốt» nêu khuyến nghị tự làm mỏng, lối khác PowerSync và giá của cả hai. Lối được khuyến nghị giữ bất biến 1–2 của AGENTS.md: luật theo dòng của Postgres đo bằng 34 ca máy, số chủ có luật riêng và không đi qua sổ thay đổi.
 
 ### Lệnh suite (hồi quy)

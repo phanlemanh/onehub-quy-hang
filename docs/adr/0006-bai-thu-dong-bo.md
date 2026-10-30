@@ -1,4 +1,4 @@
-# ADR-0004: Chọn bộ đồng bộ — kết quả bài thử mất mạng
+# ADR-0006: Chọn bộ đồng bộ — kết quả bài thử mất mạng
 
 Ngày: 2026-10-30 · Trạng thái: **đề xuất — chờ chủ kho chốt** · Liên quan: ADR-0001 mục «Chưa chốt» (bộ đồng bộ),
 Kiến trúc §1 «Nhanh tức thì, ghi trên máy trước», §9 bước 1 (b), §10 · Số đo: `_acceptance/bai-thu-dong-bo-mat-mang/ket-qua.md`
