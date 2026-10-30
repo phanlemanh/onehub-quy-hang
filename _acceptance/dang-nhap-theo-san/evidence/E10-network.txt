@@ -1,0 +1,69 @@
+# E10 network truth (playwright, origin http://localhost:3461, api_base /api/v1)
+## requests since last navigation (static incl.)
+1. [GET] http://localhost:3461/dang-nhap => [307] Temporary Redirect
+2. [GET] http://localhost:3461/ => [200] OK
+3. [GET] http://localhost:3461/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js => [200] OK
+4. [GET] http://localhost:3461/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js => [200] OK
+5. [GET] http://localhost:3461/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js => [200] OK
+6. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js => [200] OK
+7. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js => [200] OK
+8. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js => [200] OK
+9. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js => [200] OK
+10. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js => [200] OK
+11. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js => [200] OK
+12. [GET] http://localhost:3461/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js => [200] OK
+13. [GET] http://localhost:3461/_next/static/chunks/apps_web_1anvha4rlo79g._.js => [200] OK
+14. [GET] http://localhost:3461/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js => [200] OK
+15. [GET] http://localhost:3461/_next/static/chunks/apps_web_219uq1sj0q91c._.js => [200] OK
+16. [GET] http://localhost:3461/_next/static/chunks/node_modules_next_dist_20wefz_f1k6jn._.js => [200] OK
+17. [GET] http://localhost:3461/_next/static/chunks/_1dze84l2c099k._.js => [200] OK
+18. [GET] http://localhost:3461/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js => [200] OK
+19. [POST] http://localhost:3461/api/v1/auth/sign-out => [200] OK
+20. [GET] http://localhost:3461/dang-nhap?_rsc=2Md0sTUZcnjCijMr => [200] OK
+21. [GET] http://localhost:3461/_next/static/chunks/_0hpyib4m1xd62._.js => [200] OK
+22. [GET] http://localhost:3461/dang-nhap?_rsc=0I14qit8GTY8r3Mk => [200] OK
+23. [GET] http://localhost:3461/_next/static/chunks/_0hpyib4m1xd62._.js => [304] Not Modified
+24. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+25. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [200] OK
+26. [GET] http://localhost:3461/?_rsc=aTcg21bvfaPruLii => [200] OK
+27. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+28. [GET] http://localhost:3461/chon-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+29. [GET] http://localhost:3461/chon-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+30. [GET] http://localhost:3461/_next/static/chunks/_0wp2ao6yduc_9._.js => [200] OK
+31. [GET] http://localhost:3461/_next/static/chunks/_0wp2ao6yduc_9._.js => [304] Not Modified
+32. [POST] http://localhost:3461/api/v1/me/san => [200] OK
+33. [GET] http://localhost:3461/?_rsc=E7Gy37_LWEYjPFaS => [200] OK
+34. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+35. [POST] http://localhost:3461/api/v1/auth/sign-out => [200] OK
+36. [GET] http://localhost:3461/dang-nhap?_rsc=quKR1j806_QLXr01 => [200] OK
+37. [GET] http://localhost:3461/dang-nhap?_rsc=0I14qit8GTY8r3Mk => [200] OK
+38. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+39. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [200] OK
+40. [GET] http://localhost:3461/?_rsc=aTcg21bvfaPruLii => [200] OK
+41. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+42. [GET] http://localhost:3461/chua-gan-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+43. [GET] http://localhost:3461/chua-gan-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+44. [GET] http://localhost:3461/__nextjs_font/geist-latin.woff2 => [200] OK
+45. [POST] http://localhost:3461/api/v1/auth/sign-out => [200] OK
+46. [GET] http://localhost:3461/dang-nhap?_rsc=NtONTD0cuo7vxqDz => [200] OK
+47. [GET] http://localhost:3461/dang-nhap?_rsc=0I14qit8GTY8r3Mk => [200] OK
+48. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+49. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+50. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+51. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+52. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [403] FORBIDDEN
+53. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+54. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [200] OK
+55. [GET] http://localhost:3461/?_rsc=aTcg21bvfaPruLii => [200] OK
+56. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+## console errors (session)
+Total messages: 8 (Errors: 4, Warnings: 0)
+Returning 6 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3461/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (BAD_REQUEST) @ http://localhost:3461/api/v1/auth/sign-in/email-otp:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (BAD_REQUEST) @ http://localhost:3461/api/v1/auth/sign-in/email-otp:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (BAD_REQUEST) @ http://localhost:3461/api/v1/auth/sign-in/email-otp:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (BAD_REQUEST) @ http://localhost:3461/api/v1/auth/sign-in/email-otp:0
+[ERROR] Failed to load resource: the server responded with a status of 403 (FORBIDDEN) @ http://localhost:3461/api/v1/auth/sign-in/email-otp:0
+## ghi chu: step3 (000000) 400 xay ra truoc lan tai trang o step4 nen khong nam trong danh sach tren; 400 tong = 1 (step3) + 3 (step10) ; 403 = 1 (step10). favicon.ico 404 = static asset, chi note.
