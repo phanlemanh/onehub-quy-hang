@@ -45,21 +45,29 @@ export function khoangMatMang(dong) {
       if (ds[i].trang_thai === 'tat' && ds[i + 1].trang_thai === 'bat') {
         const tu = Date.parse(ds[i].luc_may);
         const den = Date.parse(ds[i + 1].luc_may);
-        ra.push({ nguoi, tu: ds[i].luc_may, den: ds[i + 1].luc_may, giay: Math.round((den - tu) / 1000) });
+        // `ms` để so ngưỡng (không làm tròn); `giay` chỉ để hiện. `so_cho` = số thao tác máy còn giữ lúc nối lại.
+        ra.push({ nguoi, tu: ds[i].luc_may, den: ds[i + 1].luc_may, ms: den - tu, giay: Math.round((den - tu) / 1000), so_cho: ds[i + 1].so_cho ?? 0 });
       }
     }
   }
   return ra;
 }
 
-/** Thao tác tạo trong khoảng mất mạng và kết cục của chúng ở máy chủ. */
+/**
+ * Thao tác tạo trong khoảng mất mạng, mỗi thao tác một kết cục cuối ở máy chủ: đã áp (kể cả «đã áp trước» khi gửi lại)
+ * thắng; chưa từng áp thì giữ kết cục sau cùng (bị từ chối, lỗi) — không loại thao tác nào.
+ */
 function thaoTacTrong(dong, k) {
   const tu = Date.parse(k.tu);
   const den = Date.parse(k.den);
-  return dong
-    .filter((d) => d.loai === 'day' && d.nguoi === k.nguoi)
-    .flatMap((d) => d.ket_qua ?? [])
-    .filter((o) => o.tao_luc && Date.parse(o.tao_luc) >= tu && Date.parse(o.tao_luc) <= den);
+  const theoMa = new Map();
+  for (const o of dong.filter((d) => d.loai === 'day' && d.nguoi === k.nguoi).flatMap((d) => d.ket_qua ?? [])) {
+    if (!o.tao_luc || Date.parse(o.tao_luc) < tu || Date.parse(o.tao_luc) > den) continue;
+    const cu = theoMa.get(o.op_id);
+    const daAp = o.trang_thai === 'da-ap' || o.trang_thai === 'da-ap-truoc';
+    if (!cu || (daAp && cu.trang_thai !== 'da-ap')) theoMa.set(o.op_id, daAp ? { ...o, trang_thai: 'da-ap' } : o);
+  }
+  return [...theoMa.values()];
 }
 
 export function dungThuTu(ops) {
@@ -73,23 +81,25 @@ export function dungThuTu(ops) {
 
 /** Kết luận theo luật viết trước (contract AC-9). */
 export function ketLuan(dong) {
-  const keo = dong.filter((d) => d.loai === 'keo' && NGUOI[d.nguoi]);
+  // Mọi lần kéo vào vế 1, kể cả phiên không đặt sàn hay người lạ; chỉ đếm vai bằng người có trong ma trận.
+  const keo = dong.filter((d) => d.loai === 'keo');
   const ban = keo.map((d) => ({ d, ...keoSach(d) }));
-  const vaiDaKeo = new Set(keo.map((d) => d.nguoi));
+  const vaiDaKeo = new Set(keo.filter((d) => NGUOI[d.nguoi]).map((d) => d.nguoi));
   const duBaVai = (vaiDaKeo.has('a1') || vaiDaKeo.has('a2')) && vaiDaKeo.has('tnA') && vaiDaKeo.has('b1');
   const v1 = keo.length > 0 && duBaVai && ban.every((b) => b.sach);
   const loiV1 = ban.find((b) => !b.sach)?.ly_do ?? (duBaVai ? null : 'chưa đủ ba vai (đầu chủ A, trưởng nhóm A, đầu chủ B) kéo về');
 
   const khoang = khoangMatMang(dong).map((k) => {
     const ops = thaoTacTrong(dong, k);
-    return { ...k, so_thao_tac: ops.length, dung_thu_tu: ops.length > 0 && dungThuTu(ops) };
+    // Máy còn giữ N thao tác lúc nối lại mà máy chủ thấy ít hơn N thì có thao tác chưa bao giờ lên.
+    return { ...k, so_thao_tac: ops.length, du: ops.length >= k.so_cho, dung_thu_tu: ops.length > 0 && dungThuTu(ops) };
   });
-  const v2 = khoang.some((k) => k.giay * 1000 >= NAM_PHUT_MS && k.so_thao_tac > 0 && k.dung_thu_tu);
+  const v2 = khoang.some((k) => k.ms >= NAM_PHUT_MS && k.so_thao_tac > 0 && k.du && k.dung_thu_tu);
   return [
     { ve: 1, ten: 'Mỗi người chỉ nhận đúng phần của mình (sàn và số chủ)', dat: v1,
       so: `${keo.length} lần kéo, vai đã kéo: ${[...vaiDaKeo].join(', ') || '—'}${loiV1 ? ` · ${loiV1}` : ''}` },
     { ve: 2, ten: 'Mất mạng ≥ 5 phút rồi nối lại: mọi thay đổi lên đúng thứ tự', dat: v2,
-      so: khoang.map((k) => `${k.nguoi}: mất ${k.giay} giây, ${k.so_thao_tac} thao tác, ${k.dung_thu_tu ? 'đúng thứ tự' : 'không đạt thứ tự'}`).join('; ') || 'không có khoảng mất mạng' },
+      so: khoang.map((k) => `${k.nguoi}: mất ${k.giay} giây, ${k.so_thao_tac} thao tác${k.du ? '' : ` (máy còn giữ ${k.so_cho} lúc nối lại)`}, ${k.dung_thu_tu ? 'đúng thứ tự' : 'không đạt thứ tự'}`).join('; ') || 'không có khoảng mất mạng' },
   ];
 }
 

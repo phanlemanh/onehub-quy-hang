@@ -77,7 +77,8 @@ describe('AC-2 số chủ theo vai', () => {
     });
   }
   test('A1 đổi giá căn có số chủ rồi A2 kéo → không thấy số của A1', async () => {
-    await day('a1', [opMoi(1, 'A-01', 3300)]);
+    const tl = await day('a1', [opMoi(1, 'A-01', 3300)]);
+    assert.equal(tl.ket_qua[0].trang_thai, 'da-ap', 'lần ghi của A1 phải được áp thì ca mới thử dòng thay đổi trên căn có số chủ');
     kiemSoChu('a2', await keoVe('a2'));
   });
   test('phá thử: chèn số chủ của A1 vào dữ liệu A2 → đỏ «lộ số chủ»', async () => {
@@ -96,6 +97,7 @@ describe('AC-3 cách ly ở cơ sở dữ liệu', () => {
   test('hàm kéo không lọc theo sàn vẫn chỉ trả dòng sàn của phiên', async () => {
     const kq = await trongPhien(pool, 'b1', (c) => keo(c, 0));
     kiemKeoTheoSan('b1', kq);
+    assert.ok(kq.listings.length >= 1 && kq.contacts.length >= 1, 'đối chứng dương: hàm kéo phải trả dòng của sàn B');
   });
   test('phá thử: tắt luật theo dòng của ba bảng trong giao dịch → đỏ «lộ dòng sàn khác»', async () => {
     const c = await pool.connect();
@@ -141,6 +143,22 @@ describe('AC-4 hàng đợi khi mất mạng', () => {
     assert.equal(hd2.soCho(), 0);
     const can = (await keoVe('a2')).listings.find((l) => l.id === 'A-03');
     assert.equal(can.price, 2850);
+  });
+  test('một thao tác lỗi giữa lô → dừng phần sau, gửi lại vẫn áp đúng thứ tự', async () => {
+    let hong = true;
+    const hd = taoHangDoi({
+      clientId: 'kiem-ac4-loi',
+      // Lần đầu thao tác 2 mang giá không phải số → máy chủ báo lỗi; lần sau gửi giá đúng.
+      gui: async (ops) => day('a2', ops.map((o) => (hong && o.client_seq === 2 ? { ...o, price: 'khong-phai-so' } : o))),
+    });
+    for (const g of [2910, 2920, 2930]) hd.them('A-03', g);
+    const lan1 = await hd.day();
+    assert.deepEqual(lan1.ket_qua.map((k) => k.trang_thai), ['da-ap', 'loi'], 'thao tác lỗi phải dừng lô, không áp thao tác 3');
+    assert.deepEqual(hd.cho().map((o) => o.client_seq), [2, 3]);
+    hong = false;
+    const lan2 = await hd.day();
+    assert.equal(kiemThuTu([...lan1.ket_qua, ...lan2.ket_qua]), 3);
+    assert.equal((await keoVe('a2')).listings.find((l) => l.id === 'A-03').price, 2930);
   });
   test('phá thử: đảo thứ tự seq trong bản sao kết quả → đỏ «sai thứ tự»', () => {
     const ketQua = [1, 2, 3].map((i) => ({ client_seq: i, trang_thai: 'da-ap', seq: 10 - i }));
@@ -189,25 +207,31 @@ describe('AC-6 ghi sai sàn bị từ chối', () => {
 describe('AC-9 luật kết luận', () => {
   const T0 = Date.parse('2026-10-30T03:00:00Z');
   const lucGiay = (giay) => new Date(T0 + giay * 1000).toISOString();
-  const ghiMang = (nguoi, trang_thai, giay) =>
-    fetch(`${goc}/ghi`, { method: 'POST', body: JSON.stringify({ loai: 'mang', nguoi, trang_thai, luc_may: lucGiay(giay) }) });
+  const ghiMang = (nguoi, trang_thai, giay, so_cho) =>
+    fetch(`${goc}/ghi`, { method: 'POST', body: JSON.stringify({ loai: 'mang', nguoi, trang_thai, luc_may: lucGiay(giay), so_cho }) });
 
-  /** Dựng một phiên bằng máy chủ thật: ba vai kéo về, mất mạng `giay` giây với `soOp` thao tác. */
-  async function phien({ giay, soOp, dao = false, keoLo = null }) {
+  /**
+   * Dựng một phiên bằng máy chủ thật: ba vai kéo về, mất mạng `giay` giây với `soOp` thao tác.
+   * `canOp(i)` chọn căn của thao tác i; `soCho` là số máy còn giữ lúc nối lại; `khongSan` thêm một lần kéo không đặt sàn;
+   * `sua(dong)` sửa bản sao nhật ký máy chủ đã ghi (phá thử dựa trên dòng thật, không nặn tay).
+   */
+  async function phien({ giay, soOp, dao = false, canOp = () => 'A-01', soCho, khongSan = false, sua = null }) {
     const tu = nhatKy.dong.length;
     for (const n of ['a1', 'tnA', 'b1']) await keoVe(n);
-    await ghiMang('a1', 'tat', 0);
-    const ops = Array.from({ length: soOp }, (_, i) => opMoi(i + 1, 'A-01', 3400 + i, lucGiay(30 + i)));
-    await ghiMang('a1', 'bat', giay);
+    if (khongSan) await keoVe('');
+    await ghiMang('a1', 'tat', 0, 0);
+    const ops = Array.from({ length: soOp }, (_, i) => opMoi(i + 1, canOp(i), 3400 + i, lucGiay(30 + i)));
+    await ghiMang('a1', 'bat', giay, soCho ?? soOp);
     if (soOp) await day('a1', ops);
     const dong = lamSach(nhatKy.dong.slice(tu));
     if (dao) {
       const d = dong.find((x) => x.loai === 'day');
       d.ket_qua = d.ket_qua.map((k, i, a) => ({ ...k, seq: a[a.length - 1 - i].seq }));
     }
-    if (keoLo) dong.push(keoLo);
+    if (sua) sua(dong);
     return dong;
   }
+  const keoCua = (dong, nguoi) => dong.find((x) => x.loai === 'keo' && x.nguoi === nguoi);
 
   test('mất mạng 6 phút, 3 thao tác đúng thứ tự, ba vai sạch → hai vế đạt', async () => {
     const kl = ketLuan(await phien({ giay: 360, soOp: 3 }));
@@ -222,16 +246,48 @@ describe('AC-9 luật kết luận', () => {
   test('không thao tác nào trong khoảng mất mạng → vế 2 không đạt', async () => {
     assert.equal(ketLuan(await phien({ giay: 360, soOp: 0 }))[1].dat, false);
   });
-  test('một lần kéo chứa dòng sàn khác → vế 1 không đạt «lộ trong phiên thật»', async () => {
-    const lo = { loai: 'keo', nguoi: 'b1', current_user: 'quy_hang_app', cong_ty_nhan: [SAN_B, SAN_A], so_chu_nhan: [...soChuDuocThay('b1')] };
-    const kl = ketLuan(await phien({ giay: 360, soOp: 3, keoLo: lo }));
-    assert.equal(kl[0].dat, false);
-    assert.match(kl[0].so, /lộ trong phiên thật/);
+  test('mất mạng 299,5 giây → vế 2 không đạt (không làm tròn lên 5 phút); đúng 300 giây → đạt', async () => {
+    assert.equal(ketLuan(await phien({ giay: 299.5, soOp: 3 }))[1].dat, false);
+    assert.equal(ketLuan(await phien({ giay: 300, soOp: 3 }))[1].dat, true);
   });
-  test('bảng kết quả có hai vế và mọi lần kéo', async () => {
-    const bang = bangKetQua(await phien({ giay: 360, soOp: 2 }));
+  test('một thao tác trong khoảng mất mạng bị từ chối → vế 2 không đạt', async () => {
+    const dong = await phien({ giay: 360, soOp: 3, canOp: (i) => (i === 2 ? 'B-01' : 'A-01') });
+    assert.equal(dong.find((x) => x.loai === 'day').ket_qua[2].trang_thai, 'bi-tu-choi');
+    const kl = ketLuan(dong);
+    assert.equal(kl[1].dat, false);
+    assert.match(kl[1].so, /3 thao tác, không đạt thứ tự/);
+  });
+  test('máy còn giữ 5 thao tác lúc nối lại mà máy chủ chỉ thấy 3 → vế 2 không đạt', async () => {
+    const kl = ketLuan(await phien({ giay: 360, soOp: 3, soCho: 5 }));
+    assert.equal(kl[1].dat, false);
+    assert.match(kl[1].so, /máy còn giữ 5 lúc nối lại/);
+  });
+  test('một lần kéo chứa dòng sàn khác → vế 1 không đạt «lộ trong phiên thật: dòng sàn khác»', async () => {
+    const kl = ketLuan(await phien({ giay: 360, soOp: 3, sua: (dong) => keoCua(dong, 'b1').cong_ty_nhan.push(SAN_A) }));
+    assert.equal(kl[0].dat, false);
+    assert.match(kl[0].so, /lộ trong phiên thật: dòng sàn khác/);
+  });
+  test('một lần kéo có số chủ ngoài ma trận vai → vế 1 không đạt «lộ trong phiên thật: số chủ ngoài ma trận vai»', async () => {
+    const soA2 = [...soChuDuocThay('a2')][0];
+    const kl = ketLuan(await phien({ giay: 360, soOp: 3, sua: (dong) => keoCua(dong, 'a1').so_chu_nhan.push(soA2) }));
+    assert.equal(kl[0].dat, false);
+    assert.match(kl[0].so, /lộ trong phiên thật: số chủ ngoài ma trận vai/);
+  });
+  test('lần kéo không đặt sàn: sạch thì vế 1 vẫn đạt; mang dòng sàn A thì vế 1 không đạt', async () => {
+    assert.equal(ketLuan(await phien({ giay: 360, soOp: 3, khongSan: true }))[0].dat, true);
+    const kl = ketLuan(await phien({ giay: 360, soOp: 3, khongSan: true, sua: (dong) => keoCua(dong, '').cong_ty_nhan.push(SAN_A) }));
+    assert.equal(kl[0].dat, false);
+    assert.match(kl[0].so, /phiên không đặt sàn/);
+  });
+  test('bảng kết quả có hai vế đạt và đúng một hàng cho mỗi lần kéo trong nhật ký', async () => {
+    const dong = await phien({ giay: 360, soOp: 2, khongSan: true });
+    const bang = bangKetQua(dong);
     assert.match(bang, /\| 1 \| .* \| đạt \|/);
     assert.match(bang, /\| 2 \| .* \| đạt \|/);
+    const muc = bang.split('### Các lần kéo về')[1].split('###')[0];
+    const hang = muc.split('\n').filter((l) => l.startsWith('| ') && !l.startsWith('| Người') && !l.startsWith('| ---'));
+    assert.equal(hang.length, dong.filter((x) => x.loai === 'keo').length);
+    assert.equal(hang.length, 4);
   });
 });
 
@@ -251,9 +307,18 @@ describe('AC-8 một lệnh', () => {
         });
         tt.on('exit', (m) => loi(new Error(`lệnh thoát sớm ${m}: ${ra}`)));
       });
-      assert.match(ra, /2 sàn, 4 người, 6 căn/);
       assert.match(ra, /\/thu/);
       const cong = ra.match(/http:\/\/localhost:(\d+)/)[1];
+      // Đếm dữ liệu mẫu lệnh vừa áp (không đọc câu lệnh in ra): 2 sàn, 6 căn, 6 số chủ; 4 người mẫu mỗi người kéo được phần mình.
+      const dem = (await pool.query(
+        'select (select count(distinct company_id) from thu_dong_bo.listings) as san, (select count(*) from thu_dong_bo.listings) as can, (select count(*) from thu_dong_bo.owner_contacts) as so_chu',
+      )).rows[0];
+      assert.deepEqual({ san: Number(dem.san), can: Number(dem.can), so_chu: Number(dem.so_chu) }, { san: 2, can: 6, so_chu: 6 });
+      for (const n of Object.keys(NGUOI)) {
+        const kq = await (await fetch(`http://127.0.0.1:${cong}/keo?nguoi=${n}&sau=0`)).json();
+        assert.ok(kq.listings.length >= 1 && kq.listings.every((l) => l.company_id === NGUOI[n].san), `${n} phải kéo được căn sàn mình qua lệnh một-lệnh`);
+      }
+      assert.equal(Object.keys(NGUOI).length, 4);
       await fetch(`http://127.0.0.1:${cong}/keo?nguoi=a1&sau=0`, { headers: { 'x-forwarded-for': '203.0.113.7' } });
       const thoat = new Promise((ok) => tt.on('exit', ok));
       tt.kill('SIGINT');

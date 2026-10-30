@@ -10,7 +10,7 @@ Phạm vi, chủ kho chọn dựng bộ tự làm mỏng và đo nó; PowerSync 
 sàn, ba vai, không dòng sàn kia và không số chủ của đầu chủ khác xuống máy; mất mạng năm phút rồi nối lại mọi thay đổi
 lên đúng thứ tự.
 
-Đã đo (`ket-qua.md`): 28 ca máy trên Postgres có luật theo dòng đều xanh — cách ly sàn và số chủ đến từ cơ sở dữ liệu,
+Đã đo (`ket-qua.md`): 34 ca máy trên Postgres có luật theo dòng đều xanh — cách ly sàn và số chủ đến từ cơ sở dữ liệu,
 hàng đợi giữ và áp đúng thứ tự, gửi lại không trùng, ghi sai sàn bị từ chối. Phiên điện thoại thật: một lần kéo sạch,
 iPhone giữ 5 thay đổi qua hơn 15 phút mất mạng; vế mất mạng **chưa đo được** trên thiết bị (đường hầm mất vì iPhone vừa
 là máy thử vừa là điểm phát) — chủ kho quyết đo lại khi dựng tính năng thật.
@@ -20,13 +20,16 @@ ADR này chỉ **đề xuất**; chủ kho chốt. Bất biến 1 (cách ly gi�
 
 ## So ba lối
 
+Mỗi ô mang một nhãn: **Đo** = số đo của bài thử, trỏ `ket-qua.md`; **Chưa đo (tài liệu)** = hiểu biết từ tài liệu công
+bố của bên làm, bài thử không dựng lối đó; **Chưa đo (suy luận)** = suy từ thiết kế của bài thử, chưa có số.
+
 | | Tự làm mỏng | PowerSync | ElectricSQL |
 | --- | --- | --- | --- |
-| Cách ly sàn | **Đo**: luật theo dòng của Postgres, một chỗ; kéo chạy bằng vai `quy_hang_app` không vượt luật | **Chưa đo** (tài liệu): đọc nhật ký sao chép, cách ly viết lại bằng sync rules/bucket theo tham số trong JWT | **Chưa đo** (tài liệu): đọc nhật ký sao chép, cách ly là điều kiện `where` của shape, máy chủ proxy phải tự gắn |
-| Số chủ theo vai | **Đo**: luật riêng của bảng số chủ; số chủ không đi qua sổ thay đổi | Chưa đo: phải có bucket riêng theo người; sai tham số là lộ | Chưa đo: shape riêng theo người, cùng rủi ro |
-| Hàng đợi ghi khi mất mạng | **Đo bằng máy**: giữ thứ tự, nạp lại còn đủ, áp đúng thứ tự, không trùng; **thiết bị: giữ qua 15 phút, nối lại chưa đo** | Có sẵn hàng đợi tải lên; ghi vẫn qua API của mình | Không có hàng đợi ghi — tự làm như bộ mỏng |
-| Kho trên máy | localStorage trong bài thử; bản thật cần IndexedDB | SQLite trên máy (WASM), truy vấn cục bộ mạnh | Không có — tự làm |
-| Vận hành | Không thêm dịch vụ; tự giữ kênh thời gian thực (Supabase) | Thêm dịch vụ PowerSync + kho bucket, có phí | Thêm dịch vụ Electric |
+| Cách ly sàn | **Đo** (ket-qua.md): luật theo dòng của Postgres, một chỗ; kéo chạy bằng vai `quy_hang_app` không vượt luật | **Chưa đo (tài liệu)**: đọc nhật ký sao chép, cách ly viết lại bằng sync rules/bucket theo tham số trong JWT | **Chưa đo (tài liệu)**: đọc nhật ký sao chép, cách ly là điều kiện `where` của shape, máy chủ proxy phải tự gắn |
+| Số chủ theo vai | **Đo** (ket-qua.md): luật riêng của bảng số chủ; số chủ không đi qua sổ thay đổi | **Chưa đo (tài liệu)**: phải có bucket riêng theo người; sai tham số là lộ | **Chưa đo (tài liệu)**: shape riêng theo người, cùng rủi ro |
+| Hàng đợi ghi khi mất mạng | **Đo bằng máy** (ket-qua.md): giữ thứ tự, nạp lại còn đủ, áp đúng thứ tự, thao tác lỗi dừng phần sau của lô, không trùng; **thiết bị: giữ qua 15 phút, nối lại chưa đo** | **Chưa đo (tài liệu)**: có sẵn hàng đợi tải lên; ghi vẫn qua API của mình | **Chưa đo (tài liệu)**: không có hàng đợi ghi — tự làm như bộ mỏng |
+| Kho trên máy | **Đo** (ket-qua.md): localStorage trong bài thử giữ hàng đợi qua tải lại; **Chưa đo (suy luận)**: bản thật cần IndexedDB | **Chưa đo (tài liệu)**: SQLite trên máy (WASM), truy vấn cục bộ mạnh | **Chưa đo (tài liệu)**: không có — tự làm |
+| Vận hành | **Chưa đo (suy luận)**: không thêm dịch vụ; tự giữ kênh thời gian thực (Supabase) | **Chưa đo (tài liệu)**: thêm dịch vụ PowerSync + kho bucket, có phí | **Chưa đo (tài liệu)**: thêm dịch vụ Electric |
 
 ## Bốn việc cần chốt
 

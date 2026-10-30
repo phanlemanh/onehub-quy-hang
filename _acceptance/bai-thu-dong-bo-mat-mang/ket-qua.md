@@ -4,10 +4,11 @@ Lần chạy: `thu-2026-10-30T07-55-14-429Z` (giám sát khởi chạy, cổng 3
 iPhone). Thiết bị thử: iPhone iOS 18.7, Safari. Bảng dưới do `thu/tom-tat.mjs` tính từ `nhat-ky-dong-bo.jsonl` (bản
 sạch, không băm IP), không chép tay.
 
-Bằng chứng máy (bài kiểm `thu/dong-bo.test.mjs`, Postgres dãy T có luật theo dòng): 28 ca xanh — bốn vai mẫu kéo về chỉ
+Bằng chứng máy (bài kiểm `thu/dong-bo.test.mjs`, Postgres dãy T có luật theo dòng): 34 ca xanh — bốn vai mẫu kéo về chỉ
 dòng sàn mình; tập số chủ bằng đúng ma trận vai, quét toàn văn; truy vấn chạy bằng vai `quy_hang_app` không vượt luật
 theo dòng; tắt luật theo dòng thì lộ dòng sàn khác (phá thử đỏ); hàng đợi giữ 5 thao tác khi mất mạng, nạp lại còn đủ,
-nối lại thì áp đúng thứ tự; gửi lại không trùng; ghi sai sàn bị từ chối.
+nối lại thì áp đúng thứ tự, thao tác lỗi dừng phần sau của lô; gửi lại không trùng; ghi sai sàn bị từ chối. Luật kết
+luận đếm cả thao tác bị từ chối hay chưa lên, mọi lần kéo (kể cả phiên không đặt sàn), và so ngưỡng 5 phút trên mili giây.
 
 ## Kết luận phiên thật theo luật viết trước
 

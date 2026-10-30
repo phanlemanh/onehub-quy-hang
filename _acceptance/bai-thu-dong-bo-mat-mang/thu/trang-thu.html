@@ -45,7 +45,9 @@ function ghiSuKien(du) {
 async function guiSuKien() {
   const ds = JSON.parse(localStorage.getItem(khoaMang()) || '[]');
   while (ds.length) {
-    await fetch('/ghi', { method: 'POST', body: JSON.stringify({ loai: 'mang', ...ds[0] }) });
+    // Đường hầm còn sống mà máy chủ gốc mất vẫn trả HTTP (502/530): chỉ xoá sự kiện khi máy chủ nhận thật.
+    const r = await fetch('/ghi', { method: 'POST', body: JSON.stringify({ loai: 'mang', ...ds[0] }) });
+    if (!r.ok) throw new Error(`ghi sự kiện mạng lỗi ${r.status}`);
     ds.shift();
     localStorage.setItem(khoaMang(), JSON.stringify(ds));
   }

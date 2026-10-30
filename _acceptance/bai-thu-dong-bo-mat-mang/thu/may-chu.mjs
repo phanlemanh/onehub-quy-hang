@@ -93,22 +93,27 @@ export async function keo(c, sau) {
   };
 }
 
-/** Áp một lô theo client_seq; `cat` giả lập lô bị cắt giữa chừng (chỉ xử lý n thao tác đầu). */
+/**
+ * Áp một lô theo client_seq; `cat` giả lập lô bị cắt giữa chừng (chỉ xử lý n thao tác đầu).
+ * Một thao tác lỗi thì dừng cả phần sau của lô: phần sau còn trong hàng đợi của máy và lên lại đúng thứ tự.
+ * Mọi kết cục mang tao_luc để luật kết luận đếm được cả thao tác không áp.
+ */
 export async function apLo(c, nguoiId, clientId, ops, cat = Infinity) {
   const lo = [...ops].sort((a, b) => a.client_seq - b.client_seq).slice(0, cat);
   const ketQua = [];
   for (const op of lo) {
+    const goc = { op_id: op.op_id, client_seq: op.client_seq, tao_luc: op.tao_luc ?? null };
     await c.query('savepoint op');
     try {
       const cu = await c.query('select seq from thu_dong_bo.applied_ops where op_id = $1', [op.op_id]);
       if (cu.rowCount) {
-        ketQua.push({ op_id: op.op_id, client_seq: op.client_seq, trang_thai: 'da-ap-truoc', seq: Number(cu.rows[0].seq) });
+        ketQua.push({ ...goc, trang_thai: 'da-ap-truoc', seq: Number(cu.rows[0].seq) });
         await c.query('release savepoint op');
         continue;
       }
       const sua = await c.query('update thu_dong_bo.listings set price = $2 where id = $1 returning company_id', [op.listing_id, op.price]);
       if (sua.rowCount === 0) {
-        ketQua.push({ op_id: op.op_id, client_seq: op.client_seq, trang_thai: 'bi-tu-choi', ly_do: 'căn không thuộc sàn của phiên' });
+        ketQua.push({ ...goc, trang_thai: 'bi-tu-choi', ly_do: 'căn không thuộc sàn của phiên' });
         await c.query('rollback to savepoint op');
         continue;
       }
@@ -123,10 +128,11 @@ export async function apLo(c, nguoiId, clientId, ops, cat = Infinity) {
       );
       await c.query('insert into thu_dong_bo.applied_ops (op_id, company_id, seq) values ($1, app.current_company_id(), $2)', [op.op_id, seq]);
       await c.query('release savepoint op');
-      ketQua.push({ op_id: op.op_id, client_seq: op.client_seq, trang_thai: 'da-ap', seq, tao_luc: op.tao_luc ?? null });
+      ketQua.push({ ...goc, trang_thai: 'da-ap', seq });
     } catch (e) {
       await c.query('rollback to savepoint op');
-      ketQua.push({ op_id: op.op_id, client_seq: op.client_seq, trang_thai: 'loi', ly_do: e.message });
+      ketQua.push({ ...goc, trang_thai: 'loi', ly_do: e.message });
+      break;
     }
   }
   return ketQua;
