@@ -1,4 +1,4 @@
-// Hằng của đăng nhập bằng mã email (ADR-0003). Ghi thành hằng để test kiểm đúng số, không dựa vào mặc định thư viện.
+// Hằng của đăng nhập bằng mã email (ADR-0005). Ghi thành hằng để test kiểm đúng số, không dựa vào mặc định thư viện.
 export const OTP_LENGTH = 6;
 export const OTP_EXPIRES_SEC = 300;
 export const OTP_ALLOWED_ATTEMPTS = 3;

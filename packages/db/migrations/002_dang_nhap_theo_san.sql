@@ -1,4 +1,4 @@
--- 002_dang_nhap_theo_san.sql · Danh tính và thành viên sàn: người đăng nhập vào đúng sàn mình (ADR-0003, hàng 6).
+-- 002_dang_nhap_theo_san.sql · Danh tính và thành viên sàn: người đăng nhập vào đúng sàn mình (ADR-0005, hàng 6).
 -- Danh tính (tài khoản, phiên, mã) ở schema `identity` do chủ giữ — vai API không với tới. Thành viên sàn ở `public`
 -- như mọi bảng của công ty, mang luật theo dòng và ca trong packages/db/tests/isolation.test.mjs.
 

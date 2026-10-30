@@ -1,4 +1,4 @@
-# ADR-0003: Đăng nhập theo sàn
+# ADR-0005: Đăng nhập theo sàn
 
 Ngày: 2026-10-30 · Trạng thái: **accepted** (Manh Phan duyệt Cổng Phạm vi hồ sơ `dang-nhap-theo-san` 30/10, cả bốn
 khuyến nghị; duyệt kế hoạch cùng ngày kèm tên schema `identity`) · Liên quan: ADR-0001 mục «Chưa chốt», Kiến trúc §5 và
@@ -27,7 +27,7 @@ Còn thiếu đoạn nối người → phiên → sàn đang làm → giao dị
 5. **Sàn đang làm chọn ở API mỗi lời gọi**: sàn trong cookie `qh_san` nếu người còn là thành viên, không thì sàn duy
    nhất; nhiều sàn chưa chọn → 409 `chon-san`; không sàn → 403 `chua-gan-san`. Mọi truy vấn bảng của công ty đi qua
    một hàm `withCompany` đặt vai `quy_hang_app`, `app.user_id`, `app.company_id`.
-6. **Màn đăng nhập tạm tự viết** tối giản; chuyển thể khối ReUI `auth-15` sau khi hàng 4 (chuẩn giao diện) gộp.
+6. **Màn đăng nhập ghép từ thành phần đã cài** (`Frame`, `Field`, `Input`, `Button` — hàng 4 gộp trước khi hàng 6 gộp); chuyển thể khối ReUI `auth-15` là việc riêng.
 7. **Bản thật thiếu bộ gửi email thì không khởi động** — không bao giờ rơi về bộ gửi dev in mã ra nhật ký.
 
 ## Hệ quả

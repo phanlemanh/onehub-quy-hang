@@ -155,13 +155,13 @@ Luật: `revoke all on schema identity from public`; không grant gì cho `quy_h
 ### Task 6: Tài liệu điều đang đúng — independent: true
 
 **Files:**
-- Create: `docs/adr/0003-dang-nhap-theo-san.md` — chốt bốn câu Hỏi-1..4 (Manh Phan, Cổng Phạm vi 30/10) + schema `identity`.
+- Create: `docs/adr/0005-dang-nhap-theo-san.md` — chốt bốn câu Hỏi-1..4 (Manh Phan, Cổng Phạm vi 30/10) + schema `identity`.
 - Modify: `docs/architecture/kien-truc-repo-va-stack.md` §5 dòng Đăng nhập, §10 ô «Cách đăng nhập bản đầu» → trỏ ADR-0003 (sửa dòng của chính mục này, không dòng của người khác).
 - Modify: `docs/product/tham-chieu.md` — §12 thêm một dòng sổ 30/10 (chỉ thêm dòng).
 - Modify: `docs/design/vo-va-ia.md` — thêm dòng «Chỗ hở»: màn đăng nhập/chọn sàn tạm tự viết tới khi chuyển thể `auth-15` (luật giao diện bậc 7).
 - Modify: `CONTEXT.md` — thêm dòng «Thành viên sàn | `company_member` | …», «Sàn đang làm | `active company` (cookie `qh_san`) | …», «Mã đăng nhập | `otp` | …» (chỉ thêm).
 - [ ] **Step 1:** Viết; `npm run test:hooks` vẫn `TỔNG: ĐẠT`.
-- [ ] **Step 2: Commit** `docs: ADR-0003 đăng nhập theo sàn, cập nhật tham chiếu`.
+- [ ] **Step 2: Commit** `docs: ADR-0005 đăng nhập theo sàn, cập nhật tham chiếu`.
 
 ## Thứ tự
 

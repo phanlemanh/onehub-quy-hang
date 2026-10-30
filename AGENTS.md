@@ -17,6 +17,8 @@ packages/core     luật nghiệp vụ thuần: lớp dữ liệu và trần, th
 packages/api      API có phiên bản /api/v1 (Hono + OpenAPI): đường ghi duy nhất, đọc cho bên ngoài
 packages/connect  loại kết nối và khuôn dữ liệu cấp vào; kết nối đầu tiên: danh mục từ OneHub Invest
 packages/db       migration đánh số, luật cách ly theo dòng, bộ kiểm cách ly
+packages/ui-lint  luật lint giao diện quy-hang-ui, mức nợ giao diện (trần 0), kiểm chuẩn — chạy trong npm run lint
+.agents/skills/   skill giao diện quy-hang-ui và skill reui (nạp qua symlink ở .claude/skills/)
 docs/adr/         quyết định kiến trúc của kho này
 ```
 

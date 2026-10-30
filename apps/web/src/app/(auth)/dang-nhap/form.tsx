@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { nut, o } from "../khung";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 type Buoc = "email" | "ma";
 type Loi = "" | "ma-sai" | "ma-het" | "qua-nhieu" | "khac";
@@ -62,58 +64,62 @@ export function FormDangNhap() {
   if (buoc === "email") {
     return (
       <form
+        className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
           void guiMa();
         }}
       >
-        <label htmlFor="email">Email</label>
-        <input id="email" type="email" required autoComplete="email" autoFocus value={email} onChange={(e) => setEmail(e.target.value)} style={o} />
-        {loi && <p role="alert">{CHU_LOI[loi]}</p>}
-        <button type="submit" disabled={dangGui} style={nut}>
+        <Field data-invalid={loi ? true : undefined}>
+          <FieldLabel htmlFor="email">Email</FieldLabel>
+          <Input id="email" type="email" required autoComplete="email" autoFocus value={email} onChange={(e) => setEmail(e.target.value)} />
+          {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
+        </Field>
+        <Button type="submit" disabled={dangGui}>
           {dangGui ? "Đang gửi…" : "Gửi mã"}
-        </button>
+        </Button>
       </form>
     );
   }
 
   return (
-    <form onSubmit={vao}>
-      <p>Đã gửi mã tới {email.trim()}</p>
-      <label htmlFor="ma">Mã 6 số</label>
-      <input
-        id="ma"
-        autoFocus
-        required
-        inputMode="numeric"
-        autoComplete="one-time-code"
-        pattern="\d{6}"
-        maxLength={6}
-        value={ma}
-        onChange={(e) => setMa(e.target.value.replace(/\D/g, ""))}
-        style={o}
-      />
-      {loi && <p role="alert">{CHU_LOI[loi]}</p>}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+    <form className="flex flex-col gap-4" onSubmit={vao}>
+      <p className="text-sm text-muted-foreground">Đã gửi mã tới {email.trim()}</p>
+      <Field data-invalid={loi ? true : undefined}>
+        <FieldLabel htmlFor="ma">Mã 6 số</FieldLabel>
+        <Input
+          id="ma"
+          autoFocus
+          required
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          pattern="\d{6}"
+          maxLength={6}
+          value={ma}
+          onChange={(e) => setMa(e.target.value.replace(/\D/g, ""))}
+        />
+        {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
+      </Field>
+      <div className="flex flex-wrap gap-2">
         {loi === "ma-het" ? (
-          <button type="button" disabled={dangGui} style={nut} onClick={() => void guiMa()}>
+          <Button type="button" disabled={dangGui} onClick={() => void guiMa()}>
             Gửi lại mã
-          </button>
+          </Button>
         ) : (
-          <button type="submit" disabled={dangGui} style={nut}>
+          <Button type="submit" disabled={dangGui}>
             {dangGui ? "Đang vào…" : "Vào"}
-          </button>
+          </Button>
         )}
-        <button
+        <Button
           type="button"
-          style={nut}
+          variant="outline"
           onClick={() => {
             setBuoc("email");
             setLoi("");
           }}
         >
           Đổi email
-        </button>
+        </Button>
       </div>
     </form>
   );

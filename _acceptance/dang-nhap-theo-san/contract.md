@@ -5,7 +5,7 @@ slug: dang-nhap-theo-san
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: verified
+status: implemented
 design_doc: docs/superpowers/specs/2026-10-30-dang-nhap-theo-san-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T02:25:02Z

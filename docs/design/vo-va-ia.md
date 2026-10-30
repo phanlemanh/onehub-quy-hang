@@ -91,7 +91,7 @@ chính, phần còn lại ghép.
 | Luồng Gửi | Thẻ `product-grid-2` có `Checkbox` → thanh đáy dính đếm căn đã chọn → `Drawer` toàn màn xem trước chính trang khách → nút mở bảng chia sẻ của máy. Không tích hợp gửi tin |
 | Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ |
 | Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu |
-| Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 7 — tự viết tối giản ở hàng 6 vì ReUI chưa cài; chuyển thể `auth-15` và Frame + `Item` sau khi hàng 4 gộp (ADR-0003) |
+| Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 6 — ghép `Frame` + `Field` + `Input` + `Button` ở hàng 6; chuyển thể khối `auth-15` là việc riêng (ADR-0005) |
 
 ## 4. Tránh
 
@@ -111,3 +111,8 @@ chính, phần còn lại ghép.
   `radio-group`, `toggle-group`, `tabs`, `item`, `separator`, `scroll-area`, `tooltip`, `skeleton`, `empty`, `avatar`,
   `progress`, `kbd`, `calendar`, `breadcrumb`, `sonner`.
 - npm: `@tanstack/react-table`, `@tanstack/react-virtual`, `date-fns`, `next-themes`.
+- Đã cài 30/10 (hàng 4, hồ sơ `tang-5-giao-dien`): mọi mục shadcn ở trên và ReUI `frame`, `badge`, `alert`, `timeline`,
+  `stepper`, `sortable`, `number-field` — danh mục sống ở `.agents/skills/quy-hang-ui/catalog.md`. Chưa cài: `data-grid`,
+  `filters`, `cascader`, `event-calendar`, `use-file-upload` (mã ReUI nguyên bản đỏ `noUncheckedIndexedAccess` của kho —
+  hàng đầu tiên cần chúng quyết nới cờ cho `apps/web` hay chuyển thể bản cài); `use-copy-to-clipboard` không có trên kho
+  ReUI; `@tanstack/*`, `date-fns` cài cùng khối cần chúng.

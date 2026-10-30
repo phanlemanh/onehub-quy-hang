@@ -13,7 +13,7 @@
     "dev": "npm run dev -w @quy-hang/web",
     "build": "npm run build -w @quy-hang/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "lint": "eslint .",
+    "lint": "eslint . && node packages/ui-lint/check-bare-disables.mjs && node packages/ui-lint/muc-no.mjs && node packages/ui-lint/kiem-chuan.mjs",
     "test": "npm run test --workspaces --if-present",
     "test:hooks": "bash .claude/hooks/tests/run.sh",
     "db:migrate": "npm run migrate -w @quy-hang/db",

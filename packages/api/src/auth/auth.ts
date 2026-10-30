@@ -22,7 +22,7 @@ export type CreateAuthOptions = {
 };
 
 /**
- * Danh tính của Quỹ hàng (ADR-0003): email + mã 6 số, không tự đăng ký — chỉ tài khoản đã được mở mới nhận mã.
+ * Danh tính của Quỹ hàng (ADR-0005): email + mã 6 số, không tự đăng ký — chỉ tài khoản đã được mở mới nhận mã.
  * Sàn đang làm không nằm ở đây: thành viên sàn là bảng company_members của Quỹ hàng.
  */
 export function createAuth(o: CreateAuthOptions) {

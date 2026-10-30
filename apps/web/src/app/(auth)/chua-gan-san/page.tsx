@@ -12,7 +12,7 @@ export default async function ChuaGanSan() {
   if (me.companies.length > 0) redirect("/");
   return (
     <Khung title="Chưa thuộc sàn nào">
-      <p>Tài khoản {me.user.email} chưa thuộc sàn nào. Nhờ quản trị sàn mời bạn.</p>
+      <p className="text-sm">Tài khoản {me.user.email} chưa thuộc sàn nào. Nhờ quản trị sàn mời bạn.</p>
       <DangXuat />
     </Khung>
   );
