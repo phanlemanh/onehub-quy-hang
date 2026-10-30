@@ -1,5 +1,6 @@
 // Công cụ vận hành mở sàn (Kiến trúc §0: mở công ty mới là việc của đội vận hành, không phải của API).
-// Tạo sàn theo tên và tài khoản theo email nếu chưa có, rồi gắn email làm thành viên. Chạy lại không tạo trùng.
+// Tạo sàn theo tên và tài khoản theo email nếu chưa có, rồi gắn email làm thành viên mang vai quản trị sàn. Chạy lại
+// không tạo trùng.
 // Chạy bằng tay trên kết nối chủ (vai bỏ qua luật theo dòng); không đường HTTP nào gọi tới tệp này.
 //   npm run van-hanh:mo-san -w @quy-hang/db -- --ten "[Tên sàn]" --email <email>
 import { pathToFileURL } from "node:url";
@@ -31,8 +32,12 @@ export async function moSan(client, { ten, email }) {
       [mail],
     );
     const userId = (await client.query('select id from identity."user" where email = $1', [mail])).rows[0].id;
+    // Người được đội vận hành gắn vào sàn là quản trị sàn (hàng 7): từ đó quản trị tự mời người khác.
     await client.query(
-      "insert into company_members (company_id, user_id) values ($1, $2) on conflict do nothing",
+      `insert into company_members (company_id, user_id, roles) values ($1, $2, '{company_admin}')
+       on conflict (company_id, user_id) do update
+         set roles = company_members.roles || '{company_admin}'::text[]
+         where not ('company_admin' = any (company_members.roles))`,
       [companyId, userId],
     );
     await client.query("release savepoint mo_san");

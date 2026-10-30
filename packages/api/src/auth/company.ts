@@ -1,7 +1,7 @@
 import type pg from "pg";
 import { withCompany } from "../db";
 
-export type CompanyRef = { id: string; name: string };
+export type CompanyRef = { id: string; name: string; roles: string[] };
 export type ActiveCompany = {
   companies: CompanyRef[];
   active: CompanyRef | null;
@@ -15,7 +15,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function listCompanies(pool: pg.Pool, userId: string): Promise<CompanyRef[]> {
   return withCompany(pool, { userId, companyId: null }, async (c) => {
     const { rows } = await c.query<CompanyRef>(
-      `select c.id, c.name from companies c
+      `select c.id, c.name, m.roles from companies c
        join company_members m on m.company_id = c.id and m.user_id = app.current_user_id()
        order by c.name, c.id`,
     );

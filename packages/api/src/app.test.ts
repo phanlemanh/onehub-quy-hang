@@ -8,6 +8,7 @@ import { createAuth } from "./auth/auth";
 const pool = new pg.Pool();
 const api = createApi({
   appPool: pool,
+  identityPool: pool,
   auth: createAuth({ identityPool: pool, secret: "s".repeat(40), baseURL: "http://localhost:3461", sender: async () => {} }),
 });
 
