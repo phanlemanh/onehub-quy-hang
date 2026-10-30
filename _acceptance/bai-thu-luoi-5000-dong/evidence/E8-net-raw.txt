@@ -1,0 +1,16 @@
+1. [GET] http://localhost:3462/spikes/luoi => [200] OK
+2. [GET] http://localhost:3462/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 => [200] OK
+3. [GET] http://localhost:3462/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 => [200] OK
+4. [GET] http://localhost:3462/_next/static/chunks/2yopwsco0w9-h.css => [200] OK
+5. [GET] http://localhost:3462/_next/static/chunks/0e3u80z1rd_2e.css => [200] OK
+6. [GET] http://localhost:3462/_next/static/chunks/1x6obpmlu1_c2.js => [200] OK
+7. [GET] http://localhost:3462/_next/static/chunks/1ck5_ln1cvkm7.js => [200] OK
+8. [GET] http://localhost:3462/_next/static/chunks/2xy-idvhb--vh.js => [200] OK
+9. [GET] http://localhost:3462/_next/static/chunks/3i7bb4yv5vlj-.js => [200] OK
+10. [GET] http://localhost:3462/_next/static/chunks/turbopack-3-ry682tkyiqk.js => [200] OK
+11. [GET] http://localhost:3462/_next/static/chunks/0l7u2tb5ba8lu.js => [200] OK
+12. [GET] http://localhost:3462/_next/static/chunks/10tffwt6lg-kz.js => [200] OK
+13. [GET] http://localhost:3462/_next/static/chunks/2wrt5fz18y3pr.js => [200] OK
+14. [GET] http://localhost:3462/_next/static/chunks/1dz-cbek2kohj.js => [200] OK
+15. [GET] http://localhost:3462/_next/static/chunks/3gn0hst1fvvta.js => [200] OK
+16. [GET] http://localhost:3462/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 => [200] OK

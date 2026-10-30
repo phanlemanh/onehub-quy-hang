@@ -12,12 +12,17 @@ executors:
     connect: "npm test -w @quy-hang/connect"      # suy từ: packages/connect/package.json
     isolation: "npm run db:migrate && npm run db:test"   # suy từ: package.json, ci.yml job isolation — cần DATABASE_URL (AGENTS.md)
     ui_lint: "npm test -w @quy-hang/ui-lint"      # tang-5-giao-dien: mười luật quy-hang-ui, mức nợ, kiểm chuẩn, phạm vi cấu hình
+    luoi_nguong: "node --test \"_acceptance/bai-thu-luoi-5000-dong/thu/*.test.mjs\""   # bai-thu-luoi-5000-dong: ngưỡng, kết luận, main sạch
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
     # trỏ bản cài (tìm bằng feature-loop/scripts/resolve-plugin.mjs --plugin acceptance-gate). Không ghi đường cache.
     product_map: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/product-map.mjs\" --root . --check"
     bai_thu_zalo: "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\""   # mã thử hàng 3 (luật đợt 5) — duyệt ở yêu cầu T-3
+    bai_thu_dong_bo: "node --test \"_acceptance/bai-thu-dong-bo-mat-mang/thu/*.test.mjs\""   # mã thử hàng 2 (luật đợt 5), cần DATABASE_URL tới Postgres dãy — duyệt ở yêu cầu T-6
+    luoi_do_lai: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs"   # bai-thu-luoi-5000-dong: dựng nhánh thử từ tag, đo, so ngưỡng — cổng riêng 3468
+    luoi_trang: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs --chi-trang --cong 3466"   # cổng và worktree riêng: chạy song song với luoi_do_lai khi chấm
+    luoi_main_sach: "node _acceptance/bai-thu-luoi-5000-dong/thu/main-sach.mjs"
     typecheck: "npm run typecheck"                # tang-5-giao-dien
     lint: "npm run lint"                          # eslint + directive trần + mức nợ giao diện + kiểm chuẩn — job check của CI
     build: "npm run build"
