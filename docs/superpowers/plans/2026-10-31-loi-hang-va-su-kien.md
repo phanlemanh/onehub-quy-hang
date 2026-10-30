@@ -9,6 +9,35 @@ Ràng buộc chung:
 - Lõi hàng xuất qua lối con `@quy-hang/core/listing` — không sửa `packages/core/src/index.ts` (dãy G đang làm tệp ấy).
 - Mọi phép đo mới đi kèm cặp hai chiều trên cùng fixture: vật lành xanh, phá vật thì đỏ với thông điệp ghim.
 
+## Tên trong code — rà với `CONTEXT.md` và Tham chiếu §7 (RESO-first)
+
+Tham chiếu §7: lõi chuẩn (căn, lần rao, giá + điều kiện phí, trạng thái chuẩn, sự kiện) đặt tên theo RESO.
+
+| Nhãn | Code | Nguồn |
+|---|---|---|
+| Hàng | `listing` | `CONTEXT.md` (đề xuất → chốt ở hàng này) |
+| Sự kiện của hàng | `listing_event` | mới |
+| Trạng thái chuẩn | `StandardStatus` (`Incomplete` · `Active` · `Pending` · `Closed` · `Hold` · `Withdrawn`) | RESO, Tham chiếu §5 |
+| Toà · Mã căn | `BuildingName` · `UnitNumber` | RESO |
+| Giá | `ListPrice` | RESO |
+| Điều kiện phí (Bao phí / Không bao phí) | `fee_inclusion` | đặc trưng Việt Nam; `CONTEXT.md` «Bao phí / Không bao phí» |
+| Nội thất | `Furnished` | RESO |
+| Pháp lý | `legal_status` | đặc trưng Việt Nam |
+| Tài chính | `financing` | đặc trưng Việt Nam (vay, cầm cố — không trùng nghĩa RESO `ListingTerms`) |
+| Tình trạng sử dụng | `OccupantType` | RESO |
+| Giá chốt · Ngày bán | `ClosePrice` · `CloseDate` | RESO |
+| Lý do ngừng | `withdrawn_reason` | mới (ba lý do của Tham chiếu §5) |
+| Độ tươi | `freshness` (`last_confirmed_at`, `age_days`) | mới |
+| Mức đủ thông tin | `completeness` (`filled`, `total`, `missing`) | mới |
+| Phiên bản | `version` | mới |
+
+Cột Postgres viết snake_case của tên trên (`list_price`, `close_price`, `close_date`, `occupant_type`…); khoá payload và
+JSON của API viết camelCase như các đường đã có (`listPrice`, `closePrice`…).
+
+Điểm phân biệt giữ đúng chữ: AC-5 kiểm **có giá kèm điều kiện phí** — không phải «giá về tay». Tính giá về tay (luật 12,
+13: quy về tiền chủ nhận theo định nghĩa bao phí của sàn) là phần «tính giá» của lõi, làm ở hàng sau; khi có, điều kiện
+«Sẵn sàng bán» đổi sang giá về tay đúng như luật 17.
+
 ## Task 1 — Trạng thái và điều kiện (lõi thuần)
 
 - **Files:** `packages/core/src/listing/status.ts`, `packages/core/src/listing/status.test.ts`, `packages/core/package.json`
@@ -34,8 +63,8 @@ Ràng buộc chung:
 
 - **Files:** `packages/db/migrations/004_loi_hang_va_su_kien.sql` (tạo mới bằng `/new-migration`),
   `packages/db/tests/isolation.test.mjs` (thêm ca).
-- `listings` (bản tính: `company_id`, `id`, `building_name`, `unit_number`, `status`, `fields` jsonb, `closing_price`,
-  `closed_at`, `last_confirmed_at`, `version`, `created_at`) và `listing_events` (chỉ thêm, unique `(company_id,
+- `listings` (bản tính: `company_id`, `id`, `building_name`, `unit_number`, `standard_status`, các cột lần rao theo bảng
+  tên ở trên, `close_price`, `close_date`, `withdrawn_reason`, `last_confirmed_at`, `version`, `created_at`) và `listing_events` (chỉ thêm, unique `(company_id,
   listing_id, seq)`, khoá ngoại đôi giữ cùng sàn); cả hai `enable` + `force row level security`; grant tối thiểu; trigger
   từ chối `update`/`delete` trên `listing_events` cho mọi vai.
 - Ca mới: sự kiện không sửa xoá được (E2); không hàm nào ghi vào hai bảng, đối chứng dương trong giao dịch huỷ (E3b);
@@ -74,7 +103,11 @@ Ràng buộc chung:
 ## Task 7 — Tài liệu
 
 - **Files:** `docs/adr/0008-loi-hang-va-su-kien.md`, `docs/product/tham-chieu.md` (thêm một dòng §12; §5 thêm một dòng
-  bảng chuyển — chỉ thêm dòng).
+  bảng chuyển — chỉ thêm dòng), `CONTEXT.md`.
+- `CONTEXT.md` theo luật của chính tệp («khái niệm mới: thêm dòng ở đây cùng commit với nhãn mới»): thêm dòng cho Sự kiện
+  của hàng, Trạng thái chuẩn, Độ tươi, Mức đủ thông tin, Giá chốt, Lý do ngừng, Phiên bản — chỉ thêm dòng (luật 12 của
+  đợt). Dòng «Hàng · `listing` *(đề xuất)*» cần sửa thành đã chốt — sửa dòng có sẵn nên gửi yêu cầu `cham-tep` cho giám
+  sát trước; chưa được trả lời thì để nguyên, ghi ADR-0008 là nơi chốt.
 - **Phục vụ:** ghi điều đang đúng (AGENTS.md). **independent: true**
 
 ## Thứ tự
