@@ -1,13 +1,41 @@
-== network (playwright, non-static) ==
-24. [DELETE] http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9 => [409] Conflict
+== dev server log (E10 run, app API calls) ==
+ POST /api/v1/auth/sign-out 200 in 528ms (next.js: 469ms, application-code: 59ms)
+ POST /api/v1/auth/email-otp/send-verification-otp 200 in 14ms (next.js: 1.9ms, application-code: 12ms)
+ POST /api/v1/auth/sign-in/email-otp 200 in 23ms (next.js: 2ms, application-code: 21ms)
+ POST /api/v1/san/khu 201 in 29ms (next.js: 2ms, application-code: 27ms)
+ POST /api/v1/san/thanh-vien 201 in 30ms (next.js: 2ms, application-code: 28ms)
+ POST /api/v1/san/thanh-vien 409 in 37ms (next.js: 1.9ms, application-code: 35ms)
+ PATCH /api/v1/san/thanh-vien/5f64a968-4a21-44d4-911f-ea62711e6e0e 200 in 28ms (next.js: 1.5ms, application-code: 26ms)
+ DELETE /api/v1/san/thanh-vien/5f64a968-4a21-44d4-911f-ea62711e6e0e 204 in 30ms (next.js: 1.7ms, application-code: 28ms)
+ DELETE /api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9 409 in 31ms (next.js: 1.9ms, application-code: 29ms)
+ POST /api/v1/auth/sign-out 200 in 20ms (next.js: 1.6ms, application-code: 18ms)
+ POST /api/v1/auth/email-otp/send-verification-otp 200 in 11ms (next.js: 1.6ms, application-code: 10ms)
+ POST /api/v1/auth/sign-in/email-otp 200 in 20ms (next.js: 1.7ms, application-code: 19ms)
 
-Note: 23 static requests not shown, run with "static" option to see them.
-== console errors ==
-404 /favicon.ico (static, note-only)
-409 POST /api/v1/san/thanh-vien (moi trung - da khai)
-409 DELETE /api/v1/san/thanh-vien/<id> (quan tri cuoi - da khai)
-step8 (thuong): trang SSR hien thong bao, khong co fetch 403 nao quan sat duoc
-== server log non-2xx ==
- POST /api/v1/san/thanh-vien 409 in 22ms (next.js: 1.5ms, application-code: 20ms)
- DELETE /api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9 409 in 27ms (next.js: 1.8ms, application-code: 25ms)
- POST /api/auth/sign-out 404 in 100ms (next.js: 89ms, application-code: 11ms)
+== browser admin ==
+25. [DELETE] http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9 => [409] Conflict
+
+Note: 24 static requests not shown, run with "static" option to see them.== browser thuong ==
+
+Note: 24 static requests not shown, run with "static" option to see them.== console errors (all, incl. older session noise: 404 /api/auth/sign-out and HMR websocket refused from earlier sessions) ==
+Total messages: 2 (Errors: 0, Warnings: 0)
+Returning 18 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3461/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3461/api/auth/sign-out:0
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9:0

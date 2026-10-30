@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 584346ea1e1af21b272b305ec8d23e11750f9e53
+verified_commit: 68f621bf2af3eed9559dc8b2ad92a2e4f8c3ead3
 human_signoff:
 ---
 
@@ -30,74 +30,74 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-moi-nguoi-vai-khu-E1-r1
+  run_id: minted-moi-nguoi-vai-khu-E1-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E2
-  run_id: minted-moi-nguoi-vai-khu-E2-r1
+  run_id: minted-moi-nguoi-vai-khu-E2-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E3
-  run_id: minted-moi-nguoi-vai-khu-E3-r1
+  run_id: minted-moi-nguoi-vai-khu-E3-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E4
-  run_id: minted-moi-nguoi-vai-khu-E4-r1
+  run_id: minted-moi-nguoi-vai-khu-E4-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E5
-  run_id: minted-moi-nguoi-vai-khu-E5-r1
+  run_id: minted-moi-nguoi-vai-khu-E5-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E6
-  run_id: minted-moi-nguoi-vai-khu-E6-r1
+  run_id: minted-moi-nguoi-vai-khu-E6-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E7
-  run_id: minted-moi-nguoi-vai-khu-E7-r1
+  run_id: minted-moi-nguoi-vai-khu-E7-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 - eval: E8
   run_id: minted-moi-nguoi-vai-khu-E8-r1
@@ -105,9 +105,9 @@ human_signoff:
   baseline: n-a
   verifier: config:executors.test.isolation
   verified_at: 2026-10-30T11:13:03Z
+  carried_from_round: 1
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E9
   run_id: minted-moi-nguoi-vai-khu-E9-r1
@@ -115,67 +115,79 @@ human_signoff:
   baseline: n-a
   verifier: config:executors.test.isolation
   verified_at: 2026-10-30T11:13:03Z
+  carried_from_round: 1
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E10
-  run_id: minted-moi-nguoi-vai-khu-E10-r1
+  run_id: minted-moi-nguoi-vai-khu-E10-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
-  verified_at: 2026-10-30T11:13:03Z
+  verifier: config:executors.ui-check
+  verified_at: 2026-10-30T15:10:05Z
   screenshot: evidence/E10-step1.png
   observed: |
-    step1: tieu de «Người dùng / Người của sàn [Sàn mẫu E10-ND]», muc Thanh vien co e10-quan-tri@example.test (chip Quản trị sàn, nut Sửa/Rời sàn) va e10-thuong (Đầu khách, Sửa/Bỏ); muc Khu rong. step2: chip khu [Toà mẫu A] duoi tieu de Khu. step3a: form Mời mo, email e10-moi@example.test, tick Đầu chủ + Đầu khách, tick khu [Toà mẫu A], nut Mời/Huỷ. step3: danh sach co e10-moi voi chip Đầu chủ, Đầu khách, [Toà mẫu A] (sau tai lai). step4: o email do, chu do «Email này đã là thành viên của sàn.», danh sach khong doi. step5a: khung «Sửa e10-moi@example.test» voi Vai/Khu phu trach da tick va nut Lưu, Huỷ. step5: e10-moi chi con chip Trưởng nhóm + [Toà mẫu A]. step6a: hop thoai mo mo nen «Bỏ e10-moi@example.test khỏi sàn?» voi Huỷ / Bỏ khỏi sàn. step6: danh sach chi con quan tri va thuong, khu van con. step7: hop «Bỏ e10-quan-tri@example.test khỏi sàn?» kem dong do «Sàn cần ít nhất một quản trị.». step8: chi tieu de va dong «Chỉ quản trị sàn xem được trang này.» khong co danh sach. Tat ca tieng Viet, khop Expected.
+    All 11 frames opened with Read and match the expected wording.
+    step1: «Người dùng / Người của sàn [Sàn mẫu E10-ND]»; two members, e10-quan-tri with «Quản trị sàn» and e10-thuong with «Đầu khách»; buttons Sửa and Rời sàn / Bỏ; the Khu section is empty with a «Tên khu» field.
+    step2: the Khu list now shows the chip [Toà mẫu A] above «Tên khu».
+    step3a: the open form has Email e10-moi@example.test; Vai with Đầu chủ and Đầu khách ticked; Khu phụ trách with [Toà mẫu A] ticked; buttons «Mời» and «Huỷ».
+    step3: after a reload the list has e10-moi first with chips «Đầu chủ», «Đầu khách» and «[Toà mẫu A]», above e10-quan-tri and e10-thuong.
+    step4: the Email field is red with «Email này đã là thành viên của sàn.»; the form is open with Đầu chủ ticked; the list still shows e10-moi.
+    step5a: the panel «Sửa e10-moi@example.test» has Vai (Đầu chủ and Đầu khách ticked), Khu phụ trách ([Toà mẫu A] ticked) and the buttons «Lưu» and «Huỷ».
+    step5: after saving and reloading, e10-moi shows «Trưởng nhóm» and «[Toà mẫu A]».
+    step6a: the modal «Bỏ e10-moi@example.test khỏi sàn?» with the text «Người này không vào được sàn nữa; khu phụ trách của họ ở sàn mất theo.» and the buttons «Huỷ» and «Bỏ khỏi sàn».
+    step6: after confirming and reloading, only e10-quan-tri and e10-thuong remain; the Khu list still has [Toà mẫu A].
+    step7: the modal «Bỏ e10-quan-tri@example.test khỏi sàn?» with the red text «Sàn cần ít nhất một quản trị.»
+    step8: the header and the single line «Chỉ quản trị sàn xem được trang này.»; no member list.
+    No contradictions with Expected.
   network_observed: clean
 
 - eval: E11
-  run_id: minted-moi-nguoi-vai-khu-E11-r1
+  run_id: minted-moi-nguoi-vai-khu-E11-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 951.434709
+    ℹ duration_ms 1015.901416
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 - cmd: npm run test:hooks
-  run_id: minted-moi-nguoi-vai-khu-SUITE-test_hooks-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 - cmd: npm run typecheck
-  run_id: minted-moi-nguoi-vai-khu-SUITE-typecheck-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 - cmd: npm run lint
-  run_id: minted-moi-nguoi-vai-khu-SUITE-lint-r1
+  run_id: minted-moi-nguoi-vai-khu-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-10-30T11:13:03Z
+  verified_at: 2026-10-30T15:10:05Z
 
 ## Known limits
 
@@ -185,10 +197,10 @@ human_signoff:
 
 baseline: BLOCKED ha tang — lenh baseline khong chay dong nao (cong cu tu choi loi goi, hoac khong ghi duoc tep kich ban) — cong cu tra: «<\tool_use_error>Error: No such tool available: Write. Write is not among the tools available here. Continue with the tools you have.<\/tool_use_error>»
 
-none — khong do duoc o round nay do baseline bi chan ha tang; khong eval nao duoc xac dinh la khong-phan-biet.
-
 Baseline khong do:
 - npm run db:migrate && npm run db:test: BLOCKED ha tang baseline: lenh baseline khong chay dong nao (cong cu tu choi loi goi, hoac khong ghi duoc tep kich ban) — cong cu tra: «<\tool_use_error>Error: No such tool available: Write. Write is not among the tools available here. Continue with the tools you have.<\/tool_use_error>»
+
+Danh sach eval khong-phan-biet: khong do duoc o round nay (baseline khong chay). Judge panels: khong co eval judgment nao, nen khong co hoi dong.
 
 ## Variance
 
@@ -196,4 +208,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E1-E11 all passed; no failed evals. Returned for Gate 2 review.
+Round 1: moi eval xanh; mot finding trong hop dong (AC-4) ve quan tri tu go vai khong luu dung khu.
+Round 2: sua o commit 68f621b (quan tri tu go vai van luu dung khu phu trach); E1-E7, E10, E11 chay lai xanh; E8 va E9 mang tu round 1.

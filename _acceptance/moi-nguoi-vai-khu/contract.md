@@ -5,7 +5,7 @@ slug: moi-nguoi-vai-khu
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-10-30-moi-nguoi-vai-khu-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T08:20:00Z
