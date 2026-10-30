@@ -108,3 +108,78 @@ test("mọi bảng dữ liệu đều bật và ép luật theo dòng", { skip }
     await client.end();
   }
 });
+
+// ---- Thành viên sàn và danh tính (002_dang_nhap_theo_san) ----
+const COMPANY_C = "00000000-0000-4000-8000-00000000000c";
+const USER_1 = "u-iso-1"; // thuộc A
+const USER_2 = "u-iso-2"; // thuộc A và B
+
+/** Dựng ba sàn, hai người và thành viên bằng vai chủ, rồi chuyển sang vai của API với người và sàn đã cho. */
+async function asUser(userId, companyId, fn) {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    await client.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]'), ($3, '[Sàn C]')", [
+      COMPANY_A,
+      COMPANY_B,
+      COMPANY_C,
+    ]);
+    await client.query(
+      `insert into identity."user" (id, name, email, "emailVerified")
+       values ($1, '[Tên]', 'iso-1@example.test', true), ($2, '[Tên]', 'iso-2@example.test', true)`,
+      [USER_1, USER_2],
+    );
+    await client.query(
+      "insert into company_members (company_id, user_id) values ($1, $3), ($1, $4), ($2, $4)",
+      [COMPANY_A, COMPANY_B, USER_1, USER_2],
+    );
+    await client.query("set local role quy_hang_app");
+    if (userId) await client.query("select set_config('app.user_id', $1, true)", [userId]);
+    if (companyId) await client.query("select set_config('app.company_id', $1, true)", [companyId]);
+    return await fn(client);
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+}
+
+test("thành viên: U1 ở sàn A thấy thành viên A, không thấy thành viên B", { skip }, async () => {
+  await asUser(USER_1, COMPANY_A, async (c) => {
+    const { rows } = await c.query("select distinct company_id from company_members order by company_id");
+    assert.deepEqual(rows.map((r) => r.company_id), [COMPANY_A]);
+  });
+});
+
+test("thành viên: U2 chưa đặt sàn thấy hai dòng của mình và tên A, B, không thấy C", { skip }, async () => {
+  await asUser(USER_2, null, async (c) => {
+    const members = await c.query("select company_id from company_members order by company_id");
+    assert.deepEqual(members.rows.map((r) => r.company_id), [COMPANY_A, COMPANY_B]);
+    const companies = await c.query("select id from companies order by id");
+    assert.deepEqual(companies.rows.map((r) => r.id), [COMPANY_A, COMPANY_B]);
+  });
+});
+
+test("thành viên: không đặt người, không đặt sàn thì rỗng", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    assert.equal((await c.query("select * from company_members")).rowCount, 0);
+    assert.equal((await c.query("select * from companies")).rowCount, 0);
+  });
+});
+
+test("thành viên: quy_hang_app không thêm được thành viên", { skip }, async () => {
+  await asUser(USER_1, COMPANY_A, async (c) => {
+    await expectError(
+      c,
+      "insert into company_members (company_id, user_id) values ($1, $2)",
+      [COMPANY_C, USER_1],
+      /permission denied for table company_members/,
+    );
+  });
+});
+
+test("danh tính: quy_hang_app không đọc được identity.user", { skip }, async () => {
+  await asUser(USER_1, COMPANY_A, async (c) => {
+    await expectError(c, 'select * from identity."user"', [], /permission denied for schema identity/);
+  });
+});
