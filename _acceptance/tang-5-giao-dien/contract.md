@@ -5,10 +5,10 @@ slug: tang-5-giao-dien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, config, ci]
-status: draft
+status: approved
 design_doc: _acceptance/tang-5-giao-dien/design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-10-30T02:27:06Z
 ---
 
 # Acceptance Contract: tang-5-giao-dien
