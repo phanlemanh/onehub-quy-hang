@@ -5,7 +5,9 @@ slug: vo-ung-dung
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, docs]
-status: draft
+status: approved
+approved_by: Manh Phan
+approved_at: 2026-10-31
 design_doc: _acceptance/vo-ung-dung/design.md
 ---
 
@@ -95,5 +97,7 @@ Quét bằng morphological-scan (preset test-matrix, rút gọn), ba trục:
   `*@example.test`, dựng bằng `_acceptance/vo-ung-dung/thu/vai-mau.mjs` trên Postgres của dãy G (5546).
 - Danh sách cài thêm của hàng (S3 cập nhật nếu cài thêm): khối `app-shell-8` và các phụ thuộc nó kéo theo chưa có trên
   đĩa — `@reui/rating`, shadcn `card`.
-- Chốt ở Cổng Phạm vi (điền khi duyệt): Hỏi-2 — tab điện thoại của người chỉ Quản trị sàn; Hỏi-3 — ai có ô gõ mã căn.
-  §9 ghi lại đúng hai điều này trong cùng PR.
+- Chốt ở Cổng Phạm vi 2026-10-31 (duyệt theo khuyến nghị): Hỏi-1 — nhớ cột thứ hai bằng cookie theo người và nhà;
+  Hỏi-2 — người chỉ Quản trị sàn trên điện thoại thấy hai tab «Cài đặt sàn · Tôi»; Hỏi-3 — ô gõ mã căn chỉ ở vai có
+  Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm); Hỏi-4 — vỏ điện thoại duyệt bằng chữ, hình đầu tiên xem ở Cổng Bằng
+  chứng. §9 ghi lại Hỏi-2 và Hỏi-3 trong cùng PR.
