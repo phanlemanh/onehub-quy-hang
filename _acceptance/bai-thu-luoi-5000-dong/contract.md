@@ -5,7 +5,7 @@ slug: bai-thu-luoi-5000-dong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, docs]
-status: verified
+status: signed-off
 design_doc: _acceptance/bai-thu-luoi-5000-dong/design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T07:42:47Z
@@ -92,3 +92,22 @@ Máy dịch câu «không tụt khung hình thấy được» thành số; các 
 ## Notes
 
 - Máy văn phòng mô phỏng bằng giảm tốc CPU 4× của DevTools; không mô phỏng GPU yếu.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
+  - Ngoài-1: Nếu bản dựng thử lỗi hoặc trả trang lỗi, lệnh đo lại có thể treo mãi thay vì báo không dựng được, người chấm phải tự ngắt.
+  - Ngoài-2: Nếu có một máy chủ cũ còn sót trên cổng đo, lệnh đo lại có thể đo nhầm máy chủ đó mà không báo gì, nên số đo có thể không phải của bản vừa dựng.
+  - Ngoài-4: Khi người chấm làm theo bước nhìn giao diện, họ có thể tranh cổng với máy chủ dev và nhìn nhầm hoặc tắt nhầm máy chủ.
+  - Ngoài-5: Nếu trang thử trả lỗi, lệnh đo lại có thể quay mãi mà không bao giờ báo không dựng được.
+  - Ngoài-6: Nếu còn máy chủ sót từ lượt trước, lệnh đo lại có thể đo nhầm nó và cho số không phải của bản vừa dựng.
+  - Ngoài-8: Bài kiểm chưa bảo vệ được khâu máy đo tính ra việc đã cuộn tới dòng cuối, nên nếu khâu đó hỏng sau này có thể không ai phát hiện.
+  - Ngoài-9: Bài đo lặp lại chỉ chạy được trên máy Mac; người chạy trên Linux hay máy chủ CI sẽ đợi đo xong rồi nhận lỗi mà không có kết quả.
+  - Ngoài-10: Nếu máy đang có một máy chủ khác chạy sẵn ở cổng đó, bài đo lại có thể đo nhầm máy chủ ấy rồi báo lưới không đạt, thay vì báo không dựng được.
+  - Ngoài-11: Khi cài hoặc dựng nhánh thử hỏng, bài đo lại báo giống như lưới trượt, nên người đọc có thể hiểu nhầm lưới có vấn đề.
+  - Ngoài-12: Thẻ người ký đọc nói là công cụ đo không vào main, trong khi thực tế máy đo có vào main; người ký có thể hiểu sai phạm vi.
+  - Ngoài-13: Nếu một lượt dán bị hỏng hoặc quá chậm, kết luận có thể vẫn báo đạt hoặc trượt tuỳ lượt hỏng ở thứ tự nào, nên một lượt xấu có thể bị che.
+  - Ngoài-14: Nếu lần chạy trước bị ngắt giữa chừng, máy chủ cũ còn nằm lại và lần chạy sau có thể đo nhầm bản dựng cũ mà vẫn in kết quả như bình thường.
+  - Ngoài-15: Nếu lưới báo lỗi trong lúc cuộn, gõ hay dán, lỗi đó không hiện trong kết quả cuối và lưới vẫn có thể được ghi là đạt.
+  - Ngoài-16: Khi cài hoặc dựng nhánh thử hỏng, bài đo báo giống như lưới trượt, người đọc khó phân biệt hai trường hợp.
+  - Ngoài-17: Nếu ai gọi máy đo trực tiếp mà thiếu mốc so sánh, bước kiểm tải máy luôn qua và không cảnh báo, nên một máy đang bận vẫn có thể cho số đo trông hợp lệ.
+  - Ngoài-18: Người chấm làm theo hướng dẫn xem bằng mắt sẽ không tìm thấy thư mục bản dựng và phải tự đoán thư mục đúng.
+  - Ngoài-19: Phép kiểm góc cuối của lô dán chỉ xác nhận giá trị có hiện đâu đó, chưa chắc nằm đúng ô nên lỗi lệch dòng hoặc cột ở cuối lô có thể lọt.
+  - Ngoài-20: Máy chỉ xác nhận trang tự khai có 5.000 dòng và 20 cột, chưa đếm trực tiếp trên lưới đã hiện; nếu lưới ẩn cột thì máy không phát hiện.

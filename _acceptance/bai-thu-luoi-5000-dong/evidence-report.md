@@ -7,7 +7,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 5408d49d5cfd72f8b98337ffd8e1a2170534db5d
-human_signoff:
+human_signoff: Manh Phan 2026-10-30
 ---
 
 # Evidence Report: bai-thu-luoi-5000-dong
