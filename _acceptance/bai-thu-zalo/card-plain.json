@@ -1,21 +1,3 @@
 {
-  "feature_plain": "Thử với Zalo thật xem link trang khách có hiện ảnh xem trước, lượt Zalo tự đọc link có bị đếm nhầm là khách mở, iPhone có gửi được ảnh + tin sang Zalo, và kéo ảnh từ Zalo máy tính vào trình duyệt có được — để chọn cách làm trang khách trên số đo thật.",
-  "will_do": [
-    {"id":"AC-1","p":"Sẽ trả trang mẫu đã có sẵn tiêu đề, mô tả và ảnh xem trước cho Zalo đọc, không cần chạy mã trên máy khách."},
-    {"id":"AC-2","p":"Sẽ trả ảnh xem trước đúng cỡ 1200×630, nhẹ dưới 300 KB."},
-    {"id":"AC-3","p":"Sẽ chỉ đếm một lượt mở khi trang thật sự chạy trên máy người; Zalo đọc link để dựng xem trước thì không đếm."},
-    {"id":"AC-5","p":"Sẽ có trang thử gửi ảnh + tin qua bảng chia sẻ của điện thoại, ghi lại gửi được, người huỷ, lỗi hay máy không hỗ trợ."},
-    {"id":"AC-6","p":"Sẽ có trang thử nhận ảnh kéo hoặc dán từ Zalo máy tính, ghi lại máy nhận được gì."},
-    {"id":"AC-7","p":"Sẽ chạy cả bài thử bằng một lệnh, mở link công khai tạm thời và in sẵn các bước cho người thử."},
-    {"id":"AC-9","p":"Sẽ ghi kết quả đạt hay không từng vế bằng số máy tính ra từ nhật ký, không chép tay."},
-    {"id":"AC-10","p":"Sẽ viết một quyết định kiến trúc ở dạng đề xuất cho trang khách, mỗi lựa chọn kèm khuyến nghị, lối khác và giá."}
-  ],
-  "wont_do": [
-    {"id":"AC-4","p":"Sẽ KHÔNG đếm lượt mở đến từ máy đọc tự động hay tải trước của trình duyệt."},
-    {"id":"AC-8","p":"Sẽ KHÔNG có dữ liệu thật trên trang thử: chỉ dữ liệu mẫu có nhãn, không số điện thoại, không thông tin chủ nhà."},
-    {"id":"OOS-1","p":"KHÔNG dựng trang khách thật — việc đó ở hàng dựng sau khi chốt quyết định kiến trúc."},
-    {"id":"OOS-2","p":"KHÔNG thử chia sẻ trên Android, xem trước trên Zalo máy tính hay web đã cài trên iPhone ở lượt này."},
-    {"id":"OOS-3","p":"KHÔNG đăng nhập, đọc hay gửi tin Zalo, không Zalo OA."},
-    {"id":"OOS-4","p":"KHÔNG tự chốt cách làm trang khách — chủ kho chốt sau khi đọc kết quả."}
-  ]
+  "feature_plain": "Bài thử với Zalo thật đã xong: link trang khách hiện ảnh xem trước trên Zalo Android và iPhone, lượt Zalo tự đọc link không bị đếm là khách mở, iPhone gửi được ảnh + tin sang Zalo; riêng nhận ảnh từ Zalo trên máy tính chưa đo được — quyết định kiến trúc đề xuất nêu đường đi vòng để chủ kho chọn."
 }
