@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6dc9eec5c5d817d435de347c3167d4bef4dd1fa8
+verified_commit: b6914738c16bc4bda5ebb436f9d46256d7108c26
 human_signoff:
 ---
 
@@ -27,121 +27,121 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-du-lieu-mau-san-thu-E1-r3
+  run_id: minted-du-lieu-mau-san-thu-E1-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E2
-  run_id: minted-du-lieu-mau-san-thu-E2-r3
+  run_id: minted-du-lieu-mau-san-thu-E2-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E3
-  run_id: minted-du-lieu-mau-san-thu-E3-r3
+  run_id: minted-du-lieu-mau-san-thu-E3-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E4
-  run_id: minted-du-lieu-mau-san-thu-E4-r3
+  run_id: minted-du-lieu-mau-san-thu-E4-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E5
-  run_id: minted-du-lieu-mau-san-thu-E5-r3
+  run_id: minted-du-lieu-mau-san-thu-E5-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E6
-  run_id: minted-du-lieu-mau-san-thu-E6-r3
+  run_id: minted-du-lieu-mau-san-thu-E6-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E7
-  run_id: minted-du-lieu-mau-san-thu-E7-r3
+  run_id: minted-du-lieu-mau-san-thu-E7-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 - eval: E8
-  run_id: minted-du-lieu-mau-san-thu-E8-r3
+  run_id: minted-du-lieu-mau-san-thu-E8-r4
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.du_lieu_mau
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
   output: |
-    cmd: node --test "packages/db/seed/*.test.mjs"
-    ℹ duration_ms 1265.836584
+    node --test "packages/db/seed/*.test.mjs" — bộ kiểm dữ liệu mẫu xanh
+    ℹ duration_ms 1244.392792
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_core-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_core-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_api-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_api-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_connect-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_connect-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 - cmd: npm run test:hooks
-  run_id: minted-du-lieu-mau-san-thu-SUITE-test_hooks-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-test_hooks-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_ui_lint-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-npm_test_w_quy_hang_ui_lint-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 - cmd: npm run typecheck
-  run_id: minted-du-lieu-mau-san-thu-SUITE-typecheck-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-typecheck-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 - cmd: npm run lint
-  run_id: minted-du-lieu-mau-san-thu-SUITE-lint-r3
+  run_id: minted-du-lieu-mau-san-thu-SUITE-lint-r4
   exit_code: 0
-  verified_at: 2026-10-30T23:18:04Z
+  verified_at: 2026-10-30T23:25:20Z
 
 ## Known limits
 
@@ -151,17 +151,16 @@ human_signoff:
 
 baseline: BLOCKED ha tang — lenh baseline khong chay dong nao (cong cu tu choi loi goi, hoac khong ghi duoc tep kich ban) — cong cu tra: «<\tool_use_error>Error: No such tool available: Write. Write is not among the tools available here. Continue with the tools you have.<\/tool_use_error>»
 
+Không đo được eval nào không-phân-biệt ở round này (baseline bị chặn hạ tầng); mọi field baseline ghi n-a.
+
 Baseline khong do:
 - node --test "packages/db/seed/*.test.mjs": BLOCKED ha tang baseline: lenh baseline khong chay dong nao (cong cu tu choi loi goi, hoac khong ghi duoc tep kich ban) — cong cu tra: «<\tool_use_error>Error: No such tool available: Write. Write is not among the tools available here. Continue with the tools you have.<\/tool_use_error>»
 
-none — moi eval feature deu red tren baseline (co phan biet)
-
 ## Variance
 
-none — every multi-run eval is uniform
+none — mọi eval chạy một lần, tất định, không có phương sai.
 
 ## Iterations
 
-Round 1: lượt chấm 1 — bộ quét dữ liệu mẫu bỏ lọt số dính liền và dạng +84; đã sửa, trả về triển khai.
-Round 2: lượt chấm 2 — bộ quét còn bỏ lọt một số dấu nối giữa các nhóm số; đã sửa ở commit 6dc9eec, trả về triển khai.
-Round 3: tất cả tám eval và bảy lệnh suite xanh; verdict PASS.
+Round 1-3: các lượt trước đã sửa bộ quét dữ liệu mẫu (xem commit a5ec300, 6dc9eec, b691473 và hồ sơ lượt 2, lượt 3); lượt 3 dừng ở trần 3 lượt.
+Round 4: E1-E8 đều xanh, bảy lệnh suite xanh; baseline không đo được do hạ tầng.

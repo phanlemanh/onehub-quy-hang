@@ -1,28 +1,28 @@
-# Review findings: du-lieu-mau-san-thu (round 3)
+# Review findings: du-lieu-mau-san-thu (round 4)
 
 ## Trong hợp đồng
 
-- **Bộ quét số vẫn để lọt số thật nối bằng dấu phẩy, dấu hai chấm, từ 4 khoảng trắng trở lên, hoặc viết bằng chữ số toàn khổ**
-  AC: AC-2
-  file: `packages/db/seed/du-lieu-mau.mjs:183`
-  severity: medium
-  source: conventions
-  detail: Comment của DAY_SO viết «Không liệt kê từng dấu, để dạng viết mới không lọt», nhưng lớp ký tự `[^\p{L}\d:,;]{0,3}` vẫn loại `, ; :` và chỉ cho tối đa 3 ký tự nối, còn `\d` (kể cả khi có cờ u) chỉ nhận chữ số ASCII. Đã chạy thử quetChuoi: "0912,345,678" → 0 lỗi, "0912:345:678" → 0 lỗi, "0912    345 678" (4 khoảng trắng) → 0 lỗi, "０９１２３４５６７８" → 0 lỗi. Trong khi đó "0912 345 678" → 1 lỗi. Mỗi nhóm số đứng riêng đều ngắn hơn 9 chữ số nên bị bỏ qua. Đây là rào cho bất biến «dữ liệu cá nhân thật không vào kho», nên lời hứa trong comment rộng hơn những gì code thật sự bắt được. Ma trận DAU_NOI ở test (dòng 332) chỉ thử các dấu đã được nhận, không có ca nào chứng minh dấu bị loại trừ vẫn an toàn. Cần làm một trong hai: thu hẹp comment cho đúng phạm vi, hoặc thêm ca đỏ cho các dạng kể trên và xử lý (ví dụ chuẩn hoá NFKC trước khi quét; chỉ ngắt ở «:» khi hai bên là giờ:phút).
-  rationale: AC-2 đòi chèn một số khác dạng vào bản sao thì bài quét đỏ; số thật nối bằng dấu phẩy hay hai chấm lại qua mặt được bộ quét.
-
-- **A real phone number written with commas between its digit groups passes the scanner with no error**
-  AC: AC-2
-  file: `packages/db/seed/du-lieu-mau.mjs:183`
-  severity: medium
-  source: bugs
-  detail: The new DAY_SO regex is /\+?\d(?:[^\p{L}\d:,;]{0,3}\d)*/gu. It treats ',' and ';' as breaks, the same as ':'. A real number grouped with commas is therefore split into short runs of fewer than 9 digits each, and every run is skipped by the `length < 9` check. I ran quetChuoi to confirm: "0912,345,678" and "0912 , 345 678" both return loi=[] and so=0, meaning no error and nothing counted. The same happens with "912,345,678", which is what a phone number looks like after Excel drops the leading 0 and applies thousands separators. Runs of more than 3 separator characters also slip through: "0912 -- 345 -- 678" returns loi=[]. This contradicts what the change says it does ('Không liệt kê từng dấu, để dạng viết mới không lọt'). The new DAU_NOI test matrix does not include ',' or ';', so the gap is not caught. Commas are excluded so that lists like "0900 000 001, 0900 000 002" are not merged into one run, but that list case does not need it: a merged run of two numbers is already flagged as an error because its length is off. Excluding commas buys nothing and lets real data through.
-  rationale: Số thật nhóm bằng dấu phẩy không làm bài quét đỏ, trái với AC-2 về việc chèn số khác dạng thì bài quét phải đỏ.
+(không có)
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Test thêm số có dạng số di động Việt Nam thật, trái luật dữ liệu cá nhân**
+- **Bộ quét số mới cộng dồn chữ số của cả chuỗi, nên một ghi chú thường có nhiều con số nhỏ bị báo là số điện thoại**
+  Người dùng thấy gì: Nếu sau này ai thêm vào dữ liệu mẫu một ghi chú dài có nhiều con số nhỏ (giá, diện tích, tầng), bài kiểm có thể báo nhầm là có số điện thoại sai dạng. Dữ liệu hiện tại không bị ảnh hưởng, người làm chỉ phải rút gọn ghi chú hoặc chỉnh bộ quét.
+  Căn cứ: Hậu quả nhẹ: chỉ gây báo đỏ giả cho đội dựng, không làm mất hay lộ dữ liệu, dữ liệu hiện nay vẫn xanh và người làm tự gỡ được ngay khi gặp.
+  file: `packages/db/seed/du-lieu-mau.mjs`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 4: assertion âm tính một mình, đối chứng dương của ma trận dấu nối bị thay bằng phép «hoặc»**
+  Người dùng thấy gì: Bài kiểm các kiểu dấu nối trong số điện thoại mẫu hiện chưa bắt được trường hợp bộ quét báo nhầm số mẫu hợp lệ viết bằng dấu nối lạ. Nếu bộ quét sau này quá khắt khe, bài kiểm vẫn xanh nên đội có thể không biết.
+  Căn cứ: Hậu quả nhẹ: chỉ là lỗ hổng trong độ chặt của bài kiểm, không ảnh hưởng dữ liệu hay người dùng, và bổ sung thêm ca thử sau này rất rẻ.
+  file: `packages/db/seed/du-lieu-mau.test.mjs`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Test thêm số có dạng số di động Việt Nam thật, trái luật dữ liệu cá nhân (r3 · tệp đã đổi)**
   Người dùng thấy gì: Bài thử dùng vài dãy số trông như số di động thật để chứng minh bộ quét báo đỏ. Có rất ít khả năng trùng một thuê bao thật và không số nào hiện ra cho khách hay người dùng.
   Căn cứ: Hậu quả nhẹ: chỉ nằm trong bài thử nội bộ, không lộ ra ngoài, không mất dữ liệu; đổi sang dãy số giả thì rẻ nhưng lợi ích rất nhỏ.
   file: `packages/db/seed/du-lieu-mau.test.mjs`
