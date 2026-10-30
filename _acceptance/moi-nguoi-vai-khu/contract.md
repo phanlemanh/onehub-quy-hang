@@ -5,7 +5,7 @@ slug: moi-nguoi-vai-khu
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-30-moi-nguoi-vai-khu-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T08:20:00Z
@@ -90,3 +90,15 @@ Quét morphological-scan, preset entity-feature, cho thực thể «thành viên
 - Bất biến chạm: (1) cách ly giữa công ty — hai bảng mới mang luật theo dòng, khoá ngoại giữ khu cùng sàn. Không nới bất
   biến nào; (2), (3), (4) không chạm.
 - Dãy Q chạy dev ở cổng 3461 (`web-q`), Postgres 5545.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
+  - Ngoài-1: Ca kiểm «tự gỡ vai quản trị và bỏ hết khu» chưa đối chứng rằng khu cũ đã được giao trước đó; người dùng không thấy khác biệt.
+  - Ngoài-2: Chọn trùng một khu trong cùng một lần lưu thì quản trị gặp lỗi chung và lần lưu đó không ghi; chọn lại là lưu được.
+  - Ngoài-3: Mã khu sai hình dạng gửi thẳng vào API trả lỗi chung thay vì báo khu không hợp lệ; không dữ liệu nào bị ghi sai.
+  - Ngoài-4: Lời mời bị từ chối giữa chừng vẫn để lại một tài khoản chưa thuộc sàn nào; mời lại vẫn chạy bình thường.
+  - Ngoài-5: Phiên hết hạn hay máy chủ lỗi đúng lúc mở màn Người dùng thì trang sập thay vì báo lỗi; tải lại hay đăng nhập lại là dùng tiếp.
+  - Ngoài-6: Cùng lỗi với Ngoài-3, do một tác tử soát khác ghi — mã khu sai hình dạng trả lỗi chung.
+  - Ngoài-7: Ca kiểm người thường không bỏ được thành viên chưa có đối chứng quản trị bỏ được và chưa ghim lý do chặn.
+  - Ngoài-8: Ca kiểm email viết hoa có khoảng trắng tự làm sạch trước khi gửi, nên chưa thử đầu vào thô.
+  - Ngoài-9: Ca kiểm «mời email mới và email đã có tài khoản trả giống nhau» chưa xác nhận cả hai lời mời đều thành công.
+  - Ngoài-10: Phép kiểm cách ly «không sửa được dòng của sàn khác» chưa có đối chứng cùng câu lệnh sửa được dòng của sàn mình.
+  - Ngoài-11: Ca kiểm khu của sàn khác hứa đo cả API lẫn cơ sở dữ liệu nhưng chỉ đo API; tầng cơ sở dữ liệu đã đo ở bộ cách ly.
