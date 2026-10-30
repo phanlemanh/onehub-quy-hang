@@ -105,6 +105,8 @@ test("nhiều sàn: chưa chọn 409, chọn B, chọn C không thuộc 403, coo
     assert.deepEqual([first.id, second.id], [a.companyId, b.companyId]);
   });
   await t.test("bỏ khỏi B sau khi chọn: lời gọi kế không vào B", async () => {
+    // Từ hàng 7 sàn phải còn một quản trị: dựng thêm quản trị cho B trước khi bỏ người này.
+    await openCompany(`[Sàn ${RUN} B2]`, mail("qt-b2"));
     await appPool.query("delete from company_members where company_id = $1 and user_id = (select id from identity.\"user\" where email = $2)", [
       b.companyId,
       email,
