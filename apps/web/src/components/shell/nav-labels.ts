@@ -1,4 +1,4 @@
-import type { Action, Home, Tab } from "@quy-hang/core";
+import { type Action, type Home, HOME_LABEL as HOME_NAME, type Tab } from "@quy-hang/core";
 import {
   BellIcon,
   CalendarCheckIcon,
@@ -14,20 +14,20 @@ import {
 } from "lucide-react";
 
 // Nhãn nhà, tab và nút trên vỏ — lấy theo Tham chiếu §9 và CONTEXT.md.
-export const HOME_LABEL: Record<Home, { label: string; icon: LucideIcon }> = {
-  today: { label: "Hôm nay", icon: CalendarCheckIcon },
-  inventory: { label: "Bảng hàng", icon: LayoutGridIcon },
-  shares: { label: "Đã gửi", icon: SendIcon },
-  team: { label: "Đội", icon: UsersIcon },
-  settings: { label: "Cài đặt sàn", icon: SettingsIcon },
+export const HOME_ITEM: Record<Home, { label: string; icon: LucideIcon }> = {
+  today: { label: HOME_NAME.today, icon: CalendarCheckIcon },
+  inventory: { label: HOME_NAME.inventory, icon: LayoutGridIcon },
+  shares: { label: HOME_NAME.shares, icon: SendIcon },
+  team: { label: HOME_NAME.team, icon: UsersIcon },
+  settings: { label: HOME_NAME.settings, icon: SettingsIcon },
 };
 
 export const TAB_LABEL: Record<Tab, { label: string; icon: LucideIcon }> = {
-  today: HOME_LABEL.today,
-  inventory: HOME_LABEL.inventory,
+  today: HOME_ITEM.today,
+  inventory: HOME_ITEM.inventory,
   send: { label: "Gửi", icon: SendIcon },
   lead: { label: "Lead", icon: PhoneIncomingIcon },
-  settings: HOME_LABEL.settings,
+  settings: HOME_ITEM.settings,
   me: { label: "Tôi", icon: UserIcon },
 };
 

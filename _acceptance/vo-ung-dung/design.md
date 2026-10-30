@@ -38,7 +38,7 @@ Nguồn đã chốt, không bàn lại: ADR-0002, `docs/design/vo-va-ia.md` mụ
   của nhà (điểm ra: nhà khác, hồ sơ căn qua gõ mã căn, đăng xuất)
 - Biên: người một sàn không thấy bộ chọn sàn; telesales không có cột nhà và ô gõ mã căn; chỉ quản trị trên điện thoại
   (Hỏi-2); nhà chưa có màn hiện giữ chỗ
-- Lỗi & quay lại: phiên hết → về `/dang-nhap`; chưa gắn sàn → `/chua-gan-san`; chưa chọn sàn → `/chon-san`; mã căn
+- Lỗi & quay lại: phiên hết → về `/login`; chưa gắn sàn → `/no-company`; chưa chọn sàn → `/select-company`; mã căn
   không có → hồ sơ căn giữ chỗ nói chưa có dữ liệu, nút quay lại Bảng hàng
 
 ### 2. Kiểm kê màn

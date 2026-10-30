@@ -95,8 +95,8 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG G. Chưa đăng nhập: mở http://localhost:3462/dang-nhap và /s/MAU-LINK → chụp evidence/E8-dang-nhap.png, evidence/E8-trang-khach.png; ghi có phần tử nav của vỏ (data-slot hoặc role=navigation của vỏ) không"
-      - "Đăng nhập người mẫu hai sàn chưa chọn sàn → ở /chon-san chụp evidence/E8-chon-san.png; ghi như trên"
+      - "DỰNG G. Chưa đăng nhập: mở http://localhost:3462/login và /s/MAU-LINK → chụp evidence/E8-dang-nhap.png, evidence/E8-trang-khach.png; ghi có phần tử nav của vỏ (data-slot hoặc role=navigation của vỏ) không"
+      - "Đăng nhập người mẫu hai sàn chưa chọn sàn → ở /select-company chụp evidence/E8-chon-san.png; ghi như trên"
       - "Đăng nhập Đầu chủ → mở / → ghi địa chỉ cuối; đăng nhập người chỉ Quản trị sàn → mở / → ghi địa chỉ cuối"
       - "Đối chứng: ở /today của Đầu chủ ghi có phần tử nav của vỏ"
     expected: "Đăng nhập, chọn sàn, trang khách: không thanh trên, cột nhà hay tab dưới của vỏ. Đầu chủ: / → /today; chỉ Quản trị sàn: / → /settings/…. Đối chứng: /today có nav của vỏ."

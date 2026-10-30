@@ -34,13 +34,23 @@ bản tối. Đã so: `app-shell-36` (Invest Ops dùng — một cột, không c
 không có cột theo nhà), `app-shell-14` (có thanh cách xem nhưng thừa so với bảng hàng), `app-shell-15`/`-9`/`-6` (thanh
 tối, nặng).
 
+**Đã chuyển thể (hàng 53, 31/10)** — tệp ở `apps/web/src/components/shell/`, thư mục cài `components/blocks/` không giữ.
+Đổi so với khối: Org → bộ chọn Sàn (một sàn thì chỉ hiện tên), bỏ App và Env; chưa có bộ chọn Dự án (kho chưa có danh
+mục dự án — hiện khi kết nối danh mục về); ô tìm → «Gõ mã căn» (`command`, ⌘K và `/`, chỉ vai có Bảng hàng); «Create» →
+các nút + Lead · Nhập Excel · Phát hàng theo vai; menu tài khoản rời chân cột lên thanh trên (tên sàn, Tôi, sáng/tối,
+đăng xuất); ngăn thông báo trống tới khi có nguồn; tay nắm cột thứ hai và nút tìm dùng `Button` của kho thay thẻ
+`<button>` trần; nhà, tab và nút đọc `navigationFor` của `packages/core`. Cột thứ hai nhớ mở/gập bằng cookie `qh_cot2`
+theo người, sàn đang làm và nhà. Danh mục: `.agents/skills/quy-hang-ui/catalog.md` «Khối đã chuyển thể».
+
 ### Điện thoại — ghép, không có khối
 
 ReUI không có vỏ thanh tab dưới (đã tìm cả block lẫn ví dụ). Dưới `md`, vỏ `app-shell-8` ẩn cột, thay bằng:
 
 - Thanh trên mảnh: tên nhà · nút gõ mã căn (mở `CommandDialog` toàn màn) · chuông.
-- Thanh tab dưới cố định: bốn `Button` `variant="ghost"` dẫn đường (`nativeButton={false} render={<Link/>}`), biểu tượng
-  lucide trên chữ, `aria-current` cho tab đang mở — Hôm nay · Bảng hàng · Gửi · Tôi; telesales: Hôm nay · Lead · Tôi.
+- Thanh tab dưới cố định: `Link` dẫn đường, biểu tượng lucide trên chữ `text-xs`, `aria-current="page"` cho tab đang mở
+  (tab đang mở chỉ đậm chữ và biểu tượng — chủ kho gật trên bản bấm được 31/10) — Hôm nay · Bảng hàng · Gửi · Tôi theo
+  vai; telesales: Hôm nay · Lead · Tôi; người chỉ quản trị sàn: Cài đặt sàn · Tôi. Không dùng `Button` vì tab cần cao
+  hơn cỡ nút của style (luật ReUI cấm ép `h-*` lên `Button`).
 - Ngăn và hộp thoại trên điện thoại là `Drawer` từ đáy.
 
 Đây là bậc 6 của thang (ghép từ thành phần) — ghi ở «Chỗ hở».

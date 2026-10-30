@@ -103,3 +103,69 @@ export function navigationFor(roles: readonly string[]): Navigation {
     unitJump: hasBoard,
   };
 }
+
+/** Tên nhà trên màn — nhãn của CONTEXT.md; ô gõ mã căn khớp chữ gõ với tên này. */
+export const HOME_LABEL: Record<Home, string> = {
+  today: "Hôm nay",
+  inventory: "Bảng hàng",
+  shares: "Đã gửi",
+  team: "Đội",
+  settings: "Cài đặt sàn",
+};
+
+/** Nhà mà một đường thuộc về — để vỏ biết đang ở nhà nào. Hồ sơ căn thuộc Bảng hàng, Lịch xem thuộc Đã gửi. */
+export function homeOfPath(path: string): Home | null {
+  const first = `/${path.split("/")[1] ?? ""}`;
+  if (first === "/today") return "today";
+  if (first === "/inventory" || first === "/units") return "inventory";
+  if (first === "/shares" || first === "/viewings") return "shares";
+  if (first === "/team") return "team";
+  if (first === "/settings") return "settings";
+  return null;
+}
+
+/**
+ * Cột thứ hai của từng nhà trên máy tính (§9): `false` = có cột, mặc định gập; `true` = có cột, mặc định mở.
+ * Nhà vắng trong bảng (Hôm nay, Đội) không có cột thứ hai. Hồ sơ căn mặc định gập như Bảng hàng.
+ */
+export const SECOND_COLUMN_OPEN_BY_DEFAULT: Partial<Record<Home, boolean>> = {
+  inventory: false,
+  shares: true,
+  settings: true,
+};
+
+/** Khoá nhớ cột thứ hai mở hay gập — theo người, sàn đang làm và nhà (Hỏi-1). */
+export function secondColumnKey(userId: string, companyId: string, home: Home): string {
+  return `${userId}:${companyId}:${home}`;
+}
+
+/** Cột thứ hai của nhà có mở không: người đã chọn thì theo người, chưa thì theo mặc định. */
+export function isSecondColumnOpen(home: Home, remembered: boolean | undefined): boolean {
+  const byDefault = SECOND_COLUMN_OPEN_BY_DEFAULT[home];
+  if (byDefault === undefined) return false;
+  return remembered ?? byDefault;
+}
+
+function fold(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Ô «Gõ mã căn»: chữ khớp tên một nhà của người (không phân biệt dấu, hoa thường) → đường của nhà đó; còn lại là
+ * mã căn → /units/<mã>. Chuỗi rỗng → null.
+ */
+export function resolveJump(text: string, homes: readonly Home[]): string | null {
+  const typed = text.trim();
+  if (!typed) return null;
+  const key = fold(typed);
+  const home = homes.find((h) => fold(HOME_LABEL[h]) === key);
+  if (home) return HOME_PATH[home];
+  return `/units/${encodeURIComponent(typed)}`;
+}
