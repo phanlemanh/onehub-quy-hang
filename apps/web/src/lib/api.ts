@@ -18,21 +18,22 @@ export function getApi(): Api {
   if (cached) return cached;
   const url = need("DATABASE_URL");
   const env = process.env.NODE_ENV;
+  const identityPool = new pg.Pool({ connectionString: url, options: "-c search_path=identity" });
   const auth = createAuth({
-    identityPool: new pg.Pool({ connectionString: url, options: "-c search_path=identity" }),
+    identityPool,
     secret: need("BETTER_AUTH_SECRET"),
     baseURL: need("BETTER_AUTH_URL"),
     sender: env === "production" ? undefined : devSender,
     env,
   });
-  cached = createApi({ appPool: new pg.Pool({ connectionString: url }), auth });
+  cached = createApi({ appPool: new pg.Pool({ connectionString: url }), identityPool, auth });
   return cached;
 }
 
 export type Me = {
   user: { id: string; email: string };
-  companies: { id: string; name: string }[];
-  activeCompany: { id: string; name: string } | null;
+  companies: { id: string; name: string; roles: string[] }[];
+  activeCompany: { id: string; name: string; roles: string[] } | null;
 };
 
 /** Đọc người đang đăng nhập cho trang dựng ở máy chủ; null khi chưa đăng nhập hay phiên đã hết. */

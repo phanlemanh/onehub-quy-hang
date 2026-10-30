@@ -5,6 +5,7 @@ import { createApi } from "../src/app";
 import {
   appPool,
   BASE_URL,
+  identityPool,
   cleanup,
   cookieOf,
   createLoneUser,
@@ -19,7 +20,7 @@ after(cleanup);
 
 const rec = recordingPool(appPool);
 const { auth, sent } = makeAuth();
-const app = createApi({ appPool: rec.pool, auth });
+const app = createApi({ appPool: rec.pool, identityPool, auth });
 
 const req = (path: string, cookie = "", init: RequestInit = {}) =>
   app.request(`${BASE_URL}${path}`, {
