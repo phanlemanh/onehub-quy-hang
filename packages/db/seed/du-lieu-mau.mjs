@@ -177,13 +177,16 @@ export function sinhDuLieuMau({ hatGiong = HAT_GIONG } = {}) {
 // ——— Hàm kiểm ————————————————————————————————————————————————————————————————————————————————
 
 const SO_DUNG_MAU = /^0900 000 0\d\d$/;
-const DAY_SO = /\+?\d[\d .\-()]*\d/g;
+// Dấu nối giữa các nhóm số: bất kỳ ký tự nào không phải chữ cái, chữ số hay «: , ;», tối đa ba ký tự liền nhau —
+// khoảng trắng mọi loại (cả không ngắt, tab), chấm, gạch mọi loại, «/», ngoặc. Không liệt kê từng dấu, để dạng viết
+// mới không lọt. «:» vẫn ngắt để giờ trong mốc ISO không ghép thành một dãy số dài.
+const DAY_SO = /\+?\d(?:[^\p{L}\d:,;]{0,3}\d)*/gu;
 const EMAIL = /[^\s@<>"',;()]+@[^\s@<>"',;()]+/g;
 
 /**
- * Quét một chuỗi tìm dữ liệu thật. Số: gom mọi dãy chữ số nối bằng khoảng trắng, chấm, gạch, ngoặc (kể cả tiền tố +);
- * dãy nào từ 9 chữ số trở lên mà không đúng một số 0900 000 0xx thì bị bắt — số dính liền chữ số khác, hai số liền
- * nhau, hay dạng +84 đều lộ ra vì độ dài lệch. Email phải thuộc miền mẫu.
+ * Quét một chuỗi tìm dữ liệu thật. Số: gom mọi dãy chữ số nối bằng dấu nối (xem DAY_SO), kể cả tiền tố +; dãy nào
+ * từ 9 chữ số trở lên mà không đúng một số 0900 000 0xx thì bị bắt — số dính liền chữ số khác, hai số liền nhau, hay
+ * dạng +84 đều lộ ra vì độ dài lệch. Email phải thuộc miền mẫu.
  * @returns {{ loi: string[], so: number, email: number }}
  */
 export function quetChuoi(chuoi, noi = "") {
