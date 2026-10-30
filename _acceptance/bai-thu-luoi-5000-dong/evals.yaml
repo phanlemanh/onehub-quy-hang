@@ -1,0 +1,88 @@
+schema_version: 1
+feature_slug: bai-thu-luoi-5000-dong
+evals:
+  - id: E1
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.luoi_nguong
+    expected: "exit 0; test hai chiều của thu/nguong.mjs trên cùng bộ số: số đạt (p95 cuộn 20 ms, khung chậm 0%, gõ 30 ms, dán 400 ms) → đạt; từng thước bị đẩy qua ngưỡng (p95 cuộn 40 ms · khung chậm 2% · gõ 80 ms · dán 1.500 ms · ô mẫu sai) → trượt, thông điệp gọi đúng tên thước; hiệu chuẩn không hợp lệ (trang rỗng 25 ms) → lượt bị loại; main-sach.mjs: danh sách có apps/web/src/app/spikes/luoi/page.tsx → trượt gọi tên tệp, danh sách chỉ có _acceptance/ và docs/ → đạt"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/nguong.mjs", "_acceptance/bai-thu-luoi-5000-dong/thu/*.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.luoi_trang
+    expected: "exit 0; JSON có trang.dong = 5000, trang.cot = 20, trang.mau bắt đầu «MAU-», sha dựng khớp tag trong thu/nhanh-thu.json — không phụ thuộc lưới có đạt ngưỡng hay không"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.luoi_do_lai
+    expected: "exit 0; JSON chon = lưới được chọn; thuong[chon].cuon: p95 ≤ 33,4 và ti_le_cham ≤ 0,01 (trung vị ba lượt); may.hieu_chuan_hop_le = true ở cả ba lượt"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.luoi_do_lai
+    expected: "exit 0; JSON thuong[chon].go: p95 ≤ 50 (mốc đầu = event.timeStamp) và gia_tri_dung = true; may.hieu_chuan_hop_le = true ở cả ba lượt"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.luoi_do_lai
+    expected: "exit 0; JSON thuong[chon].dan: ms ≤ 1000 và o_mau_dung = true (góc đầu, giữa, góc cuối sau khi cuộn tới); may.hieu_chuan_hop_le = true ở cả ba lượt"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.luoi_do_lai
+    expected: "exit 0; JSON cham.dat = false và cham.truot liệt cả ba thước «cuon», «go», «dan»; cham_phim.truot có «go» — đối chứng đỏ trên cùng trang, cùng máy đo, cùng mốc"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.luoi_main_sach
+    expected: "exit 0; «main sạch mã thử: 0 tệp apps/web/** hay package-lock.json trong diff». Chiều đỏ ở E1: hàm kiểm nhận danh sách có apps/web/src/app/spikes/luoi/page.tsx → trượt, gọi tên tệp"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/main-sach.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Dựng nhánh thử ở sha ghim như do-lai.mjs (hoặc dùng worktree nó để lại ở .acceptance-runs/bai-thu-luoi-5000-dong/nhanh-thu), chạy next start -p 3462"
+      - "Mở http://localhost:3462/spikes/luoi khổ 1366×768 → chụp evidence/E8-dau.png"
+      - "Cuộn xuống cuối → chụp evidence/E8-cuoi.png, ghi mã căn dòng cuối"
+      - "Chọn một ô, gõ «thu» rồi Enter → chụp evidence/E8-sua.png"
+      - "Ghi 3 × 3 ô TSV «A1…C3» vào clipboard, chọn một ô, Ctrl/Cmd+V → chụp evidence/E8-dan.png"
+    expected: "Khung đầu thấy lưới có tiêu đề cột và dòng MAU-00001; khung cuối thấy MAU-05000; khung sửa thấy ô mang «thu»; khung dán thấy khối 3 × 3 mang A1…C3. Không có lỗi trên bảng điều khiển."
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.luoi_do_lai
+    expected: "exit 0; JSON: reui đạt cả ba thước và glide = null (AC-9 không áp), HOẶC reui trượt ít nhất một thước và glide có đủ số ba thước đo cùng máy đo"
+    paths: ["_acceptance/bai-thu-luoi-5000-dong/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: judgment
+    question: "ADR-0004 có nêu số đo ba lượt của cả ba thước, cấu hình máy đo (khổ, giảm tốc CPU, trình duyệt), sha nhánh thử, lựa chọn đúng theo luật của Kiến trúc §8 (ReUI đạt thì chọn ReUI, trượt thì Glide), hệ quả cho hàng dựng bảng hàng về cờ noUncheckedIndexedAccess, và giới hạn của phép đo (không mô phỏng GPU, máy làm việc có tải) không? Số trong ADR có khớp số trong tệp so-do.json không?"
+    inputs: [docs/adr/0004-luoi-bang-hang.md, _acceptance/bai-thu-luoi-5000-dong/thu/so-do.json, _acceptance/bai-thu-luoi-5000-dong/thu/nhanh-thu.json, docs/architecture/kien-truc-repo-va-stack.md, _acceptance/bai-thu-luoi-5000-dong/contract.md]
+    paths: [docs/adr/0004-luoi-bang-hang.md]
+    evidence_required: [judged_by, verdict, rationale]

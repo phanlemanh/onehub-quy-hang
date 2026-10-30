@@ -1,0 +1,5 @@
+E8 verifier doc lap — driver: Playwright MCP (nhanh-thu sha 98735f18, next start -p 3462, 1366x768)
+Console (sau lan tai thu hai, toan phien): 0 error, 0 warning.
+Console (lan tai dau tien): 1 error — GET /favicon.ico 404 (static asset, chi note, khong fail).
+Network (app-origin http://localhost:3462): 16 request, tat ca 200 OK: /spikes/luoi, 3 woff2, 2 css, 10 js chunk. Khong co fetch/XHR toi /api.
+Third-party: khong co.
