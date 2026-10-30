@@ -16,7 +16,7 @@ Bộ dữ liệu giả để dựng và thử tính năng trước khi có ngư�
 node packages/db/seed/sinh.mjs            # sinh lại ba tệp trong mau/ (cùng hạt giống ra cùng từng byte)
 node packages/db/seed/sinh.mjs --kiem     # so tệp trong kho với đầu ra sinh lại; lệch thì thoát 1
 
-# Chỉ trên Postgres của dãy hay của máy — kho chưa có môi trường thật.
+# Chỉ trên Postgres của dãy hay của máy — kho chưa có môi trường thật. Vắng DATABASE_URL thì lấy từ .env.local ở gốc kho.
 DATABASE_URL=postgres://postgres:quyhang@localhost:5544/postgres node packages/db/seed/nap.mjs --nap
 DATABASE_URL=postgres://postgres:quyhang@localhost:5544/postgres node packages/db/seed/nap.mjs --xoa
 ```

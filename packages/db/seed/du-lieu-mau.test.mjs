@@ -327,6 +327,12 @@ test("AC-2 không dữ liệu thật", async () => {
   const p3 = banSao(d);
   p3.chuNha[0].ten = "Nguyễn Văn A";
   assert.ok(coLoi(kiemDuLieuThat(p3).loi, "tên không mang nhãn mẫu"));
+  // Số dính liền chữ số khác, hai số liền nhau, dạng +84: bộ quét không được bỏ lọt.
+  for (const ghiChu of ["0912345678 0987654321", "0912 345 678 2 phòng", "+84 912 345 678", "Gọi 0900 000 001 hoặc +84912345678"]) {
+    const p = banSao(d);
+    p.hang[0].ghiChu = ghiChu;
+    assert.ok(coLoi(kiemDuLieuThat(p).loi, "số không đúng dạng mẫu"), ghiChu);
+  }
 
   // Phá thử trên bản sao mau-b.xlsx.
   const pB1 = thayO(tepB, refCot(MAU_B, "Số điện thoại chủ nhà", 2), oSo(refCot(MAU_B, "Số điện thoại chủ nhà", 2), 912345678));
@@ -413,6 +419,12 @@ test("AC-4 khuôn danh mục", () => {
   const p2 = banSao(d.danhMuc);
   p2.projects[0].buildings[1].units[40].floor += 1;
   assert.ok(coLoi(kiemKhuonDanhMuc(p2, CatalogFeed).loi, "mã căn lệch thuộc tính"));
+  const p3 = banSao(d.danhMuc);
+  p3.projects[0].buildings[1].units[12].stack = "07";
+  assert.ok(kiemKhuonDanhMuc(p3, CatalogFeed).loi.includes(`mã căn lệch thuộc tính: ${p3.projects[0].buildings[1].units[12].unitNumber}`), "lệch trục");
+  const p4 = banSao(d.danhMuc);
+  p4.projects[0].buildings[1].units[30].unitNumber = p4.projects[0].buildings[1].units[30].unitNumber.replace(/^B/, "C");
+  assert.ok(kiemKhuonDanhMuc(p4, CatalogFeed).loi.includes(`mã căn lệch thuộc tính: ${p4.projects[0].buildings[1].units[30].unitNumber}`), "lệch toà");
 });
 
 test("AC-5 luật Tham chiếu", () => {
@@ -436,6 +448,14 @@ test("AC-5 luật Tham chiếu", () => {
   const p3 = banSao(d);
   for (const x of p3.hang) if (x.trangThai === "Withdrawn") x.trangThai = "Closed";
   assert.ok(coLoi(kiemLuatThamChieu(p3).loi, "thiếu trạng thái"));
+
+  const p4 = banSao(d);
+  for (const l of p4.lead) l.maCan = null;
+  assert.ok(kiemLuatThamChieu(p4).loi.includes("thiếu lead trên căn đã có hàng mở"));
+  const p5 = banSao(d);
+  const soChu = new Set(p5.chuNha.map((c) => c.soDienThoai));
+  for (const l of p5.lead) if (soChu.has(l.soDienThoai)) l.soDienThoai = "0900 000 099";
+  assert.ok(kiemLuatThamChieu(p5).loi.includes("thiếu lead mang số của chủ nhà đã có"));
 });
 
 // Kỳ vọng từng cột viết riêng ở bài kiểm, không lấy từ mau-file.mjs.

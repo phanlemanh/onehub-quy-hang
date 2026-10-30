@@ -63,8 +63,16 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     console.error("Cách dùng: node packages/db/seed/nap.mjs --nap | --xoa");
     process.exit(2);
   }
+  // Như npm run van-hanh:mo-san: lấy DATABASE_URL từ .env.local ở gốc kho khi biến chưa đặt.
   if (!process.env.DATABASE_URL) {
-    console.error("Thiếu DATABASE_URL — xem .env.example.");
+    try {
+      process.loadEnvFile(path.join(THU_MUC_MAU, "../../../../.env.local"));
+    } catch {
+      // không có .env.local — báo thiếu ngay dưới
+    }
+  }
+  if (!process.env.DATABASE_URL) {
+    console.error("Thiếu DATABASE_URL — đặt trong .env.local ở gốc kho (xem .env.example) hoặc export trước khi chạy.");
     process.exit(1);
   }
   const client = new pg.Client({ connectionString: process.env.DATABASE_URL });

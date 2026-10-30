@@ -177,12 +177,13 @@ export function sinhDuLieuMau({ hatGiong = HAT_GIONG } = {}) {
 // ——— Hàm kiểm ————————————————————————————————————————————————————————————————————————————————
 
 const SO_DUNG_MAU = /^0900 000 0\d\d$/;
-const DAY_SO = /\d[\d .]{7,}\d/g;
+const DAY_SO = /\+?\d[\d .\-()]*\d/g;
 const EMAIL = /[^\s@<>"',;()]+@[^\s@<>"',;()]+/g;
 
 /**
- * Quét một chuỗi tìm dữ liệu thật. Số: mọi dãy ≥ 9 chữ số (bỏ khoảng trắng, chấm) dài 10 mở đầu bằng 0 phải là
- * 0900 000 0xx; dãy 9 chữ số mở đầu bằng 3, 5, 7, 8, 9 (số di động bỏ số 0) cũng bị bắt. Email phải thuộc miền mẫu.
+ * Quét một chuỗi tìm dữ liệu thật. Số: gom mọi dãy chữ số nối bằng khoảng trắng, chấm, gạch, ngoặc (kể cả tiền tố +);
+ * dãy nào từ 9 chữ số trở lên mà không đúng một số 0900 000 0xx thì bị bắt — số dính liền chữ số khác, hai số liền
+ * nhau, hay dạng +84 đều lộ ra vì độ dài lệch. Email phải thuộc miền mẫu.
  * @returns {{ loi: string[], so: number, email: number }}
  */
 export function quetChuoi(chuoi, noi = "") {
@@ -190,13 +191,10 @@ export function quetChuoi(chuoi, noi = "") {
   let so = 0;
   let email = 0;
   for (const m of String(chuoi).matchAll(DAY_SO)) {
-    const tron = m[0].replace(/[ .]/g, "");
-    if (tron.length === 10 && tron.startsWith("0")) {
-      so++;
-      if (!/^09000000\d\d$/.test(tron)) loi.push(`số không đúng dạng mẫu: ${noi} «${m[0]}»`);
-    } else if (tron.length === 9 && /^[35789]/.test(tron)) {
-      loi.push(`số không đúng dạng mẫu: ${noi} «${m[0]}»`);
-    }
+    const tron = m[0].replace(/[^\d+]/g, "");
+    if (tron.replace("+", "").length < 9) continue;
+    if (/^09000000\d\d$/.test(tron)) so++;
+    else loi.push(`số không đúng dạng mẫu: ${noi} «${m[0]}»`);
   }
   for (const m of String(chuoi).matchAll(EMAIL)) {
     email++;
