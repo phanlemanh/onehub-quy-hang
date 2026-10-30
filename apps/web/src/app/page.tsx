@@ -11,9 +11,9 @@ export const dynamic = "force-dynamic";
 // Trang đầu tạm: cho thấy đang ở sàn nào tới khi vỏ (hàng 53) và Hôm nay thay.
 export default async function Home() {
   const me = await readMe((await headers()).get("cookie") ?? "");
-  if (!me) redirect("/dang-nhap");
-  if (me.companies.length === 0) redirect("/chua-gan-san");
-  if (!me.activeCompany) redirect("/chon-san");
+  if (!me) redirect("/login");
+  if (me.companies.length === 0) redirect("/no-company");
+  if (!me.activeCompany) redirect("/select-company");
   return (
     <main className="flex min-h-svh items-center justify-center bg-background p-4">
       <Frame className="w-full max-w-md">

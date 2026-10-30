@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { createApi } from "../src/app";
 import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { API_ERRORS } from "../src/errors";
 
 after(cleanup);
 
@@ -34,7 +35,7 @@ async function sanMoi(ten: string) {
   const s = await openCompany(`[Sàn ${RUN} ${ten}]`, email);
   return { ...s, email, cookie: vao(await login(email), s.companyId) };
 }
-const moi = (cookie: string, body: unknown) => send("POST", "/api/v1/san/thanh-vien", body, cookie);
+const moi = (cookie: string, body: unknown) => send("POST", "/api/v1/company/members", body, cookie);
 
 test("mời: email chưa có tài khoản vào thẳng sàn với hai vai", async () => {
   const a = await sanMoi("m1");
@@ -55,14 +56,14 @@ test("mời: người ở sàn B vào thêm sàn A, vẫn một tài khoản", a
   assert.deepEqual(ids, [a.companyId, b.companyId].sort());
 });
 
-test("mời: email đã là thành viên trả 409 da-la-thanh-vien, không đổi gì", async () => {
+test("mời: email đã là thành viên trả 409 already-member, không đổi gì", async () => {
   const a = await sanMoi("m3");
   const email = mail("moi-3");
   await moi(a.cookie, { email, roles: ["telesales"] });
   const truoc = await appPool.query("select count(*)::int n from company_members where company_id = $1", [a.companyId]);
   const res = await moi(a.cookie, { email, roles: ["team_lead"] });
   assert.equal(res.status, 409);
-  assert.deepEqual(await res.json(), { error: "da-la-thanh-vien" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.alreadyMember.code });
   const sau = await appPool.query("select count(*)::int n from company_members where company_id = $1", [a.companyId]);
   assert.equal(sau.rows[0].n, truoc.rows[0].n);
 });
@@ -84,12 +85,12 @@ test("mời: email viết hoa có khoảng trắng gắn vào cùng tài khoản
   assert.equal(n.rows[0].n, 1);
 });
 
-test("mời: danh sách vai rỗng trả 400 can-it-nhat-mot-vai, không tạo tài khoản", async () => {
+test("mời: danh sách vai rỗng trả 400 role-required, không tạo tài khoản", async () => {
   const a = await sanMoi("m6");
   const email = mail("moi-6");
   const res = await moi(a.cookie, { email, roles: [] });
   assert.equal(res.status, 400);
-  assert.deepEqual(await res.json(), { error: "can-it-nhat-mot-vai" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.roleRequired.code });
   assert.equal((await identityPool.query('select 1 from identity."user" where email = $1', [email])).rowCount, 0);
 });
 
@@ -100,7 +101,7 @@ test("vai: năm giá trị nhận, giá trị lạ API trả 400", async () => {
   }
   const res = await moi(a.cookie, { email: mail("vai-la"), roles: ["giam_doc"] });
   assert.equal(res.status, 400);
-  assert.deepEqual(await res.json(), { error: "vai-khong-hop-le" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.invalidRole.code });
 });
 
 test("vai: đổi vai có hiệu lực ở lời gọi kế", async () => {
@@ -109,47 +110,47 @@ test("vai: đổi vai có hiệu lực ở lời gọi kế", async () => {
   const { userId } = (await (await moi(a.cookie, { email, roles: ["telesales"] })).json()) as { userId: string };
   const ck = await login(email);
   assert.deepEqual((await me(ck)).activeCompany?.roles, ["telesales"]);
-  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${userId}`, { roles: ["team_lead", "buyer_agent"] }, a.cookie)).status, 200);
+  assert.equal((await send("PATCH", `/api/v1/company/members/${userId}`, { roles: ["team_lead", "buyer_agent"] }, a.cookie)).status, 200);
   assert.deepEqual((await me(ck)).activeCompany?.roles, ["team_lead", "buyer_agent"]);
 });
 
 test("khu: tạo và giao khu, thành viên mang đúng khu", async () => {
   const a = await sanMoi("k1");
-  const khu = (await (await send("POST", "/api/v1/san/khu", { name: `[Toà ${RUN} K1]` }, a.cookie)).json()) as { id: string; name: string };
+  const khu = (await (await send("POST", "/api/v1/company/zones", { name: `[Toà ${RUN} K1]` }, a.cookie)).json()) as { id: string; name: string };
   const email = mail("khu-1");
   await moi(a.cookie, { email, roles: ["listing_agent"], zoneIds: [khu.id] });
-  const ds = (await (await req("/api/v1/san/thanh-vien", a.cookie)).json()) as { email: string; zones: { id: string }[] }[];
+  const ds = (await (await req("/api/v1/company/members", a.cookie)).json()) as { email: string; zones: { id: string }[] }[];
   assert.deepEqual(ds.find((m) => m.email === email)?.zones.map((z) => z.id), [khu.id]);
 });
 
 test("khu: tên trùng trong một sàn bị từ chối", async () => {
   const a = await sanMoi("k2");
-  assert.equal((await send("POST", "/api/v1/san/khu", { name: "[Toà trùng]" }, a.cookie)).status, 201);
-  const res = await send("POST", "/api/v1/san/khu", { name: "[Toà trùng]" }, a.cookie);
+  assert.equal((await send("POST", "/api/v1/company/zones", { name: "[Toà trùng]" }, a.cookie)).status, 201);
+  const res = await send("POST", "/api/v1/company/zones", { name: "[Toà trùng]" }, a.cookie);
   assert.equal(res.status, 409);
-  assert.deepEqual(await res.json(), { error: "khu-trung-ten" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.zoneNameTaken.code });
 });
 
 test("khu: giao khu của sàn B bị từ chối ở API (400) và ở cơ sở dữ liệu (khoá ngoại)", async () => {
   const a = await sanMoi("k3a");
   const b = await sanMoi("k3b");
-  const khuB = (await (await send("POST", "/api/v1/san/khu", { name: "[Toà B]" }, b.cookie)).json()) as { id: string };
+  const khuB = (await (await send("POST", "/api/v1/company/zones", { name: "[Toà B]" }, b.cookie)).json()) as { id: string };
   const res = await moi(a.cookie, { email: mail("khu-3"), roles: ["telesales"], zoneIds: [khuB.id] });
   assert.equal(res.status, 400);
-  assert.deepEqual(await res.json(), { error: "khu-khong-thuoc-san" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.invalidZone.code });
 });
 
 test("bỏ khỏi sàn: lời gọi kế không vào A, khu ở A mất theo", async () => {
   const a = await sanMoi("b1");
-  const khu = (await (await send("POST", "/api/v1/san/khu", { name: "[Toà bỏ]" }, a.cookie)).json()) as { id: string };
+  const khu = (await (await send("POST", "/api/v1/company/zones", { name: "[Toà bỏ]" }, a.cookie)).json()) as { id: string };
   const email = mail("bo-1");
   const { userId } = (await (await moi(a.cookie, { email, roles: ["buyer_agent"], zoneIds: [khu.id] })).json()) as { userId: string };
   const ck = vao(await login(email), a.companyId);
-  assert.equal(((await (await req("/api/v1/san", ck)).json()) as { id: string }).id, a.companyId, "đối chứng: trước khi bỏ vào được A");
-  assert.equal((await send("DELETE", `/api/v1/san/thanh-vien/${userId}`, {}, a.cookie)).status, 204);
-  const sau = await req("/api/v1/san", ck);
+  assert.equal(((await (await req("/api/v1/company", ck)).json()) as { id: string }).id, a.companyId, "đối chứng: trước khi bỏ vào được A");
+  assert.equal((await send("DELETE", `/api/v1/company/members/${userId}`, {}, a.cookie)).status, 204);
+  const sau = await req("/api/v1/company", ck);
   assert.equal(sau.status, 403);
-  assert.deepEqual(await sau.json(), { error: "chua-gan-san" });
+  assert.deepEqual(await sau.json(), { error: API_ERRORS.noCompany.code });
   assert.equal((await appPool.query("select 1 from member_zones where company_id = $1 and user_id = $2", [a.companyId, userId])).rowCount, 0);
 });
 
@@ -159,70 +160,70 @@ test("gỡ vai quản trị: phiên cũ mất quyền ghi ngay", async () => {
   const { userId } = (await (await moi(a.cookie, { email, roles: ["company_admin"] })).json()) as { userId: string };
   const ck = vao(await login(email), a.companyId);
   assert.equal((await moi(ck, { email: mail("g1-truoc"), roles: ["telesales"] })).status, 201, "đối chứng: trước khi gỡ mời được");
-  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${userId}`, { roles: ["buyer_agent"] }, a.cookie)).status, 200);
+  assert.equal((await send("PATCH", `/api/v1/company/members/${userId}`, { roles: ["buyer_agent"] }, a.cookie)).status, 200);
   const sau = await moi(ck, { email: mail("g1-sau"), roles: ["telesales"] });
   assert.equal(sau.status, 403);
-  assert.deepEqual(await sau.json(), { error: "can-quan-tri" });
+  assert.deepEqual(await sau.json(), { error: API_ERRORS.adminRequired.code });
 });
 
-test("không phải quản trị: năm đường quản người trả 403 can-quan-tri", async () => {
+test("không phải quản trị: năm đường quản người trả 403 admin-required", async () => {
   const a = await sanMoi("q1");
   const email = mail("thuong-1");
   const { userId } = (await (await moi(a.cookie, { email, roles: ["buyer_agent"] })).json()) as { userId: string };
   const ck = vao(await login(email), a.companyId);
   const duong = (cookie: string) => [
-    () => req("/api/v1/san/thanh-vien", cookie),
+    () => req("/api/v1/company/members", cookie),
     () => moi(cookie, { email: mail(`q1-${cookie === ck ? "t" : "a"}`), roles: ["telesales"] }),
-    () => send("PATCH", `/api/v1/san/thanh-vien/${userId}`, { roles: ["buyer_agent"] }, cookie),
-    () => send("POST", "/api/v1/san/khu", { name: `[Toà q1 ${cookie === ck ? "t" : "a"}]` }, cookie),
+    () => send("PATCH", `/api/v1/company/members/${userId}`, { roles: ["buyer_agent"] }, cookie),
+    () => send("POST", "/api/v1/company/zones", { name: `[Toà q1 ${cookie === ck ? "t" : "a"}]` }, cookie),
   ];
   for (const [i, goi] of duong(ck).entries()) {
     const res = await goi();
     assert.equal(res.status, 403, `đường ${i}`);
-    assert.deepEqual(await res.json(), { error: "can-quan-tri" });
+    assert.deepEqual(await res.json(), { error: API_ERRORS.adminRequired.code });
   }
-  const xoa = await send("DELETE", `/api/v1/san/thanh-vien/${a.userId}`, {}, ck);
+  const xoa = await send("DELETE", `/api/v1/company/members/${a.userId}`, {}, ck);
   assert.equal(xoa.status, 403, "DELETE");
-  assert.equal((await req("/api/v1/san/khu", ck)).status, 200, "GET khu vẫn đọc được");
+  assert.equal((await req("/api/v1/company/zones", ck)).status, 200, "GET khu vẫn đọc được");
   for (const [i, goi] of duong(a.cookie).entries()) assert.ok((await goi()).status < 300, `đối chứng quản trị: đường ${i}`);
 });
 
-test("quản trị cuối: bỏ khỏi sàn bị từ chối 409 can-mot-quan-tri", async () => {
+test("quản trị cuối: bỏ khỏi sàn bị từ chối 409 last-admin", async () => {
   const a = await sanMoi("c1");
-  const res = await send("DELETE", `/api/v1/san/thanh-vien/${a.userId}`, {}, a.cookie);
+  const res = await send("DELETE", `/api/v1/company/members/${a.userId}`, {}, a.cookie);
   assert.equal(res.status, 409);
-  assert.deepEqual(await res.json(), { error: "can-mot-quan-tri" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.lastAdmin.code });
 });
 
-test("quản trị cuối: gỡ vai quản trị bị từ chối 409 can-mot-quan-tri", async () => {
+test("quản trị cuối: gỡ vai quản trị bị từ chối 409 last-admin", async () => {
   const a = await sanMoi("c2");
-  const res = await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["buyer_agent"] }, a.cookie);
+  const res = await send("PATCH", `/api/v1/company/members/${a.userId}`, { roles: ["buyer_agent"] }, a.cookie);
   assert.equal(res.status, 409);
-  assert.deepEqual(await res.json(), { error: "can-mot-quan-tri" });
+  assert.deepEqual(await res.json(), { error: API_ERRORS.lastAdmin.code });
 });
 
 test("hai quản trị: gỡ một người được", async () => {
   const a = await sanMoi("c3");
   await moi(a.cookie, { email: mail("qt-c3-2"), roles: ["company_admin"] });
-  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["team_lead"] }, a.cookie)).status, 200);
+  assert.equal((await send("PATCH", `/api/v1/company/members/${a.userId}`, { roles: ["team_lead"] }, a.cookie)).status, 200);
 });
 
 test("hai quản trị: tự gỡ vai quản trị cùng lúc đổi khu, khu mang đúng các khu đã chọn", async () => {
   const a = await sanMoi("c4");
   await moi(a.cookie, { email: mail("qt-c4-2"), roles: ["company_admin"] });
   const tao = async (t: string) =>
-    ((await (await send("POST", "/api/v1/san/khu", { name: `[Toà ${RUN} C4 ${t}]` }, a.cookie)).json()) as { id: string }).id;
+    ((await (await send("POST", "/api/v1/company/zones", { name: `[Toà ${RUN} C4 ${t}]` }, a.cookie)).json()) as { id: string }).id;
   const [k1, k2] = [await tao("1"), await tao("2")];
   const khuCua = async (cookie: string) =>
-    ((await (await req("/api/v1/san/thanh-vien", cookie)).json()) as { userId: string; zones: { id: string }[] }[])
+    ((await (await req("/api/v1/company/members", cookie)).json()) as { userId: string; zones: { id: string }[] }[])
       .find((m) => m.userId === a.userId)
       ?.zones.map((z) => z.id)
       .sort();
   // Đối chứng: còn quản trị thì giao khu được.
-  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { zoneIds: [k1] }, a.cookie)).status, 200);
+  assert.equal((await send("PATCH", `/api/v1/company/members/${a.userId}`, { zoneIds: [k1] }, a.cookie)).status, 200);
   assert.deepEqual(await khuCua(a.cookie), [k1], "đối chứng: chưa giao được khu k1");
   // Tự gỡ vai quản trị và đổi khu trong cùng một lần lưu.
-  const r = await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["team_lead"], zoneIds: [k2] }, a.cookie);
+  const r = await send("PATCH", `/api/v1/company/members/${a.userId}`, { roles: ["team_lead"], zoneIds: [k2] }, a.cookie);
   assert.equal(r.status, 200, `tự gỡ vai kèm đổi khu trả ${r.status}`);
   const qt2 = vao(await login(mail("qt-c4-2")), a.companyId);
   assert.deepEqual(await khuCua(qt2), [k2], "khu sau khi tự gỡ vai không phải các khu đã chọn");
@@ -231,26 +232,26 @@ test("hai quản trị: tự gỡ vai quản trị cùng lúc đổi khu, khu ma
 test("hai quản trị: tự gỡ vai quản trị và bỏ hết khu, không còn khu cũ", async () => {
   const a = await sanMoi("c5");
   await moi(a.cookie, { email: mail("qt-c5-2"), roles: ["company_admin"] });
-  const k = ((await (await send("POST", "/api/v1/san/khu", { name: `[Toà ${RUN} C5]` }, a.cookie)).json()) as { id: string }).id;
-  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { zoneIds: [k] }, a.cookie)).status, 200);
-  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["team_lead"], zoneIds: [] }, a.cookie)).status, 200);
+  const k = ((await (await send("POST", "/api/v1/company/zones", { name: `[Toà ${RUN} C5]` }, a.cookie)).json()) as { id: string }).id;
+  assert.equal((await send("PATCH", `/api/v1/company/members/${a.userId}`, { zoneIds: [k] }, a.cookie)).status, 200);
+  assert.equal((await send("PATCH", `/api/v1/company/members/${a.userId}`, { roles: ["team_lead"], zoneIds: [] }, a.cookie)).status, 200);
   const qt2 = vao(await login(mail("qt-c5-2")), a.companyId);
-  const ds = (await (await req("/api/v1/san/thanh-vien", qt2)).json()) as { userId: string; zones: { id: string }[] }[];
+  const ds = (await (await req("/api/v1/company/members", qt2)).json()) as { userId: string; zones: { id: string }[] }[];
   assert.deepEqual(ds.find((m) => m.userId === a.userId)?.zones, [], "khu cũ vẫn còn sau khi bỏ hết khu");
 });
 
 test("luồng quản người qua HTTP", async () => {
   const a = await sanMoi("l1");
   const tenKhu = `[Toà ${RUN} luồng]`;
-  const khu = (await (await send("POST", "/api/v1/san/khu", { name: tenKhu }, a.cookie)).json()) as { id: string };
+  const khu = (await (await send("POST", "/api/v1/company/zones", { name: tenKhu }, a.cookie)).json()) as { id: string };
   const email = mail("luong");
   const { userId } = (await (await moi(a.cookie, { email, roles: ["listing_agent", "buyer_agent"], zoneIds: [khu.id] })).json()) as { userId: string };
   type M = { email: string; roles: string[]; zones: { name: string }[] };
-  const tim = async () => ((await (await req("/api/v1/san/thanh-vien", a.cookie)).json()) as M[]).find((m) => m.email === email);
+  const tim = async () => ((await (await req("/api/v1/company/members", a.cookie)).json()) as M[]).find((m) => m.email === email);
   const m = await tim();
   assert.deepEqual({ roles: m?.roles, khu: m?.zones.map((z) => z.name) }, { roles: ["listing_agent", "buyer_agent"], khu: [tenKhu] });
-  await send("PATCH", `/api/v1/san/thanh-vien/${userId}`, { roles: ["team_lead"] }, a.cookie);
+  await send("PATCH", `/api/v1/company/members/${userId}`, { roles: ["team_lead"] }, a.cookie);
   assert.deepEqual((await tim())?.roles, ["team_lead"]);
-  await send("DELETE", `/api/v1/san/thanh-vien/${userId}`, {}, a.cookie);
+  await send("DELETE", `/api/v1/company/members/${userId}`, {}, a.cookie);
   assert.equal(await tim(), undefined, "vẫn còn trong danh sách sau khi bỏ");
 });

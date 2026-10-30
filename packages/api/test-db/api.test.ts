@@ -1,4 +1,4 @@
-// Sàn đang làm và đường /me, /san qua app Hono (AC-3, AC-4, AC-5, AC-6, AC-8 thời chạy, AC-10 nửa máy).
+// Sàn đang làm và đường /me, /company qua app Hono (AC-3, AC-4, AC-5, AC-6, AC-8 thời chạy, AC-10 nửa máy).
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { createApi } from "../src/app";
@@ -15,6 +15,7 @@ import {
   recordingPool,
   RUN,
 } from "./helpers";
+import { API_ERRORS } from "../src/errors";
 
 after(cleanup);
 
@@ -41,26 +42,40 @@ async function login(email: string): Promise<string> {
 }
 const withSan = (cookie: string, companyId: string) => `${cookie}; qh_san=${companyId}`;
 
-test("một sàn: /san trả sàn A", async () => {
+test("một sàn: /company trả sàn A", async () => {
   const email = mail("a1");
   const a = await openCompany(`[Sàn ${RUN} A1]`, email);
   const cookie = await login(email);
-  const res = await req("/api/v1/san", cookie);
+  const res = await req("/api/v1/company", cookie);
   assert.equal(res.status, 200);
   assert.deepEqual(await res.json(), { id: a.companyId, name: `[Sàn ${RUN} A1]` });
   const read = rec.records.filter((r) => /from companies where id = app\.current_company_id\(\)/.test(r.sql));
   assert.ok(read.length > 0 && read.every((r) => r.currentUser === "quy_hang_app"), JSON.stringify(read));
 });
 
-test("chưa gắn sàn: /san 403 chua-gan-san, /me sàn rỗng", async () => {
+test("đường cũ trả 404", async () => {
+  const email = mail("cu");
+  const a = await openCompany(`[Sàn ${RUN} Cũ]`, email);
+  const cookie = withSan(await login(email), a.companyId);
+  assert.equal((await req("/api/v1/company", cookie)).status, 200, "đối chứng: cùng phiên vào được đường mới");
+  const cu = [
+    await req("/api/v1/san", cookie),
+    await req("/api/v1/san/thanh-vien", cookie),
+    await req("/api/v1/san/khu", cookie),
+    await post("/api/v1/me/san", { companyId: a.companyId }, cookie),
+  ];
+  for (const [i, res] of cu.entries()) assert.equal(res.status, 404, `đường cũ thứ ${i + 1} còn phục vụ (${res.status})`);
+});
+
+test("chưa gắn sàn: /company 403 no-company, /me sàn rỗng", async () => {
   await openCompany(`[Sàn ${RUN} khác]`, mail("nguoi-khac"));
   const email = mail("le");
   await createLoneUser(email);
   const cookie = await login(email);
-  const san = await req("/api/v1/san", cookie);
+  const san = await req("/api/v1/company", cookie);
   assert.equal(san.status, 403);
   const body = await san.text();
-  assert.deepEqual(JSON.parse(body), { error: "chua-gan-san" });
+  assert.deepEqual(JSON.parse(body), { error: API_ERRORS.noCompany.code });
   assert.doesNotMatch(body, new RegExp(RUN));
   const me = (await (await req("/api/v1/me", cookie)).json()) as { companies: unknown[]; activeCompany: unknown };
   assert.deepEqual(me.companies, []);
@@ -74,35 +89,35 @@ test("nhiều sàn: chưa chọn 409, chọn B, chọn C không thuộc 403, coo
   const c = await openCompany(`[Sàn ${RUN} C2]`, mail("chu-c"));
   const cookie = await login(email);
 
-  await t.test("nhiều sàn chưa chọn: /san 409 chon-san", async () => {
-    const res = await req("/api/v1/san", cookie);
+  await t.test("nhiều sàn chưa chọn: /company 409 select-company", async () => {
+    const res = await req("/api/v1/company", cookie);
     assert.equal(res.status, 409);
-    assert.deepEqual(await res.json(), { error: "chon-san" });
+    assert.deepEqual(await res.json(), { error: API_ERRORS.selectCompany.code });
   });
-  await t.test("chọn B: /san trả B", async () => {
-    const pick = await post("/api/v1/me/san", { companyId: b.companyId }, cookie);
+  await t.test("chọn B: /company trả B", async () => {
+    const pick = await post("/api/v1/me/company", { companyId: b.companyId }, cookie);
     assert.equal(pick.status, 200);
     assert.match(pick.headers.get("set-cookie") ?? "", new RegExp(`qh_san=${b.companyId}`));
-    const res = await req("/api/v1/san", withSan(cookie, b.companyId));
+    const res = await req("/api/v1/company", withSan(cookie, b.companyId));
     assert.equal(((await res.json()) as { id: string }).id, b.companyId);
   });
-  await t.test("chọn C không thuộc: 403, /san không trả C", async () => {
-    const pick = await post("/api/v1/me/san", { companyId: c.companyId }, cookie);
+  await t.test("chọn C không thuộc: 403, /company không trả C", async () => {
+    const pick = await post("/api/v1/me/company", { companyId: c.companyId }, cookie);
     assert.equal(pick.status, 403);
-    assert.deepEqual(await pick.json(), { error: "khong-thuoc-san" });
+    assert.deepEqual(await pick.json(), { error: API_ERRORS.notAMember.code });
     assert.equal(pick.headers.get("set-cookie"), null);
   });
   await t.test("cookie qh_san giả mã C: không vào C", async () => {
-    const res = await req("/api/v1/san", withSan(cookie, c.companyId));
+    const res = await req("/api/v1/company", withSan(cookie, c.companyId));
     assert.equal(res.status, 409, "vào sàn không thuộc qua cookie giả");
   });
   await t.test("cookie qh_san không phải uuid: coi như chưa chọn", async () => {
-    const res = await req("/api/v1/san", withSan(cookie, "khong-phai-uuid'; drop table companies;--"));
+    const res = await req("/api/v1/company", withSan(cookie, "khong-phai-uuid'; drop table companies;--"));
     assert.equal(res.status, 409);
   });
   await t.test("đổi sàn giữa hai lời gọi: lời gọi sau theo sàn mới", async () => {
-    const first = (await (await req("/api/v1/san", withSan(cookie, a.companyId))).json()) as { id: string };
-    const second = (await (await req("/api/v1/san", withSan(cookie, b.companyId))).json()) as { id: string };
+    const first = (await (await req("/api/v1/company", withSan(cookie, a.companyId))).json()) as { id: string };
+    const second = (await (await req("/api/v1/company", withSan(cookie, b.companyId))).json()) as { id: string };
     assert.deepEqual([first.id, second.id], [a.companyId, b.companyId]);
   });
   await t.test("bỏ khỏi B sau khi chọn: lời gọi kế không vào B", async () => {
@@ -112,16 +127,16 @@ test("nhiều sàn: chưa chọn 409, chọn B, chọn C không thuộc 403, coo
       b.companyId,
       email,
     ]);
-    const res = await req("/api/v1/san", withSan(cookie, b.companyId));
+    const res = await req("/api/v1/company", withSan(cookie, b.companyId));
     assert.equal(res.status, 200);
     assert.equal(((await res.json()) as { id: string }).id, a.companyId, "vẫn vào B sau khi bị bỏ");
   });
 });
 
-test("chưa đăng nhập: /me, /san, POST /me/san đều 401", async () => {
-  for (const res of [await req("/api/v1/me"), await req("/api/v1/san"), await post("/api/v1/me/san", { companyId: "x" })]) {
+test("chưa đăng nhập: /me, /company, POST /me/company đều 401", async () => {
+  for (const res of [await req("/api/v1/me"), await req("/api/v1/company"), await post("/api/v1/me/company", { companyId: "x" })]) {
     assert.equal(res.status, 401);
-    assert.deepEqual(await res.json(), { error: "chua-dang-nhap" });
+    assert.deepEqual(await res.json(), { error: API_ERRORS.unauthenticated.code });
   }
 });
 
@@ -140,7 +155,7 @@ test("luồng trọn qua HTTP", async () => {
   const email = mail("e11");
   await openCompany(name, email);
   const cookie = await login(email);
-  const san = (await (await req("/api/v1/san", cookie)).json()) as { name: string };
+  const san = (await (await req("/api/v1/company", cookie)).json()) as { name: string };
   assert.equal(san.name, name, `tên trả «${san.name}» khác tên ca dựng «${name}»`);
   assert.equal((await post("/api/v1/auth/sign-out", {}, cookie)).status, 200);
   assert.equal((await req("/api/v1/me", cookie)).status, 401);

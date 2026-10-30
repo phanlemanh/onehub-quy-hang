@@ -1,12 +1,13 @@
 import type pg from "pg";
 import { withCompany } from "../db";
+import { API_ERRORS } from "../errors";
 
 export type CompanyRef = { id: string; name: string; roles: string[] };
 export type ActiveCompany = {
   companies: CompanyRef[];
   active: CompanyRef | null;
   /** Vì sao chưa có sàn đang làm: không thuộc sàn nào, hay thuộc nhiều sàn mà chưa chọn. */
-  reason: "chua-gan-san" | "chon-san" | null;
+  reason: typeof API_ERRORS.noCompany.code | typeof API_ERRORS.selectCompany.code | null;
 };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -29,9 +30,9 @@ export function listCompanies(pool: pg.Pool, userId: string): Promise<CompanyRef
  */
 export async function resolveCompany(pool: pg.Pool, userId: string, chosen: string | undefined): Promise<ActiveCompany> {
   const companies = await listCompanies(pool, userId);
-  if (companies.length === 0) return { companies, active: null, reason: "chua-gan-san" };
+  if (companies.length === 0) return { companies, active: null, reason: API_ERRORS.noCompany.code };
   const picked = chosen && UUID.test(chosen) ? companies.find((c) => c.id === chosen) : undefined;
   if (picked) return { companies, active: picked, reason: null };
   if (companies.length === 1) return { companies, active: companies[0]!, reason: null };
-  return { companies, active: null, reason: "chon-san" };
+  return { companies, active: null, reason: API_ERRORS.selectCompany.code };
 }
