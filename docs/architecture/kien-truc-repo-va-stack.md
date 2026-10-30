@@ -153,7 +153,7 @@ Hai chiều với Platform là đúng thiết kế: hàng đi ra, khách đi và
 | Truy cập dữ liệu | SQL thuần + migration đánh số, như Invest | Luật cách ly viết bằng SQL; quen tay | Đã dùng |
 | Cách ly và lớp trường | Luật theo dòng theo mã sàn; chủ nhà ở bảng riêng; mở số qua một hàm duy nhất có ghi sự kiện | Biến «sàn này không thấy gì của sàn kia» và «số chủ chỉ đầu chủ thấy» thành luật của kho dữ liệu, không trông vào màn hình | Đã chốt dùng luật theo dòng (28/10) |
 | Đăng nhập | better-auth chỉ giữ danh tính (email + mã 6 số); thành viên sàn là bảng của Quỹ hàng có luật theo dòng | CRM đang dùng better-auth; vai và «một người nhiều vai, có khu» không vừa khuôn tổ chức của thư viện | Đã chốt 30/10 — [ADR-0005](../adr/0005-dang-nhap-theo-san.md) |
-| Đồng bộ và kho trên máy | Ghi: lệnh qua API, máy chủ kiểm quyền và luật rồi ghi sự kiện. Đọc: bộ đồng bộ đưa đúng phần người đó được thấy xuống kho trên máy | Đáp ứng ghi trên máy trước, đụng nhau thì hỏi, mang theo ít | **Thử trước**: PowerSync là ứng viên chính, ElectricSQL là phụ. Không đạt thì tự làm mỏng: kho trình duyệt + hàng đợi ghi + kênh thời gian thực của Supabase |
+| Đồng bộ và kho trên máy | Ghi: lệnh qua API, máy chủ kiểm quyền và luật rồi ghi sự kiện. Đọc: bộ đồng bộ đưa đúng phần người đó được thấy xuống kho trên máy | Đáp ứng ghi trên máy trước, đụng nhau thì hỏi, mang theo ít | **Tự làm mỏng** (chốt 30/10, [ADR-0006](../adr/0006-bai-thu-dong-bo.md)): kéo qua API dưới luật theo dòng, kho IndexedDB gắn người dùng + hàng đợi ghi có khoá chống trùng, kênh thời gian thực của Supabase chỉ báo «có thay đổi, kéo về». PowerSync, ElectricSQL đã so bằng tài liệu, chưa đo |
 | Ảnh | Supabase Storage, hai vùng; sinh bản thu nhỏ khi tải lên | Gửi bản nhẹ, giữ bản gốc; ngăn nội bộ chỉ mở bằng link ngắn hạn | Đã dùng (nhà cung cấp) |
 | Việc nền | Bảng việc trong Postgres + lịch chạy mỗi phút của Vercel | Hạn lead 15 phút, hàng đợi hằng đêm, ảnh thu nhỏ, nạp nguồn cấp — không thêm hạ tầng | Mẫu đang chạy ở CRM |
 | Thông báo | Web Push (máy tính, Android, iPhone khi đã cài lên màn hình chính) + trong app | Báo lead tức thì | Thử trên iPhone |
@@ -210,7 +210,7 @@ Ghi nhận thiết bị theo vai làm các giới hạn này nhẹ đi: việc c
 
 - [x] Tên kho và tạo kho riêng tư — đã tạo 29/10: `phanlemanh/onehub-quy-hang`, có khung, CI hai check (kiểm tra chung, cách ly giữa công ty) và bảo vệ nhánh main.
 - [x] Cách đăng nhập bản đầu — chốt 30/10 ([ADR-0005](../adr/0005-dang-nhap-theo-san.md)): email + mã 6 số qua email; số điện thoại + OTP và Google để sau.
-- [ ] Bộ đồng bộ: dùng dịch vụ có sẵn (thêm một hạ tầng, có phí) hay tự làm mỏng. Quyết sau bài thử (b).
+- [x] Bộ đồng bộ — chốt 30/10 ([ADR-0006](../adr/0006-bai-thu-dong-bo.md)): tự làm mỏng; vế mất mạng năm phút đo lại trên thiết bị ở hàng dựng phần đồng bộ.
 - [ ] Tên miền trang khách: chung một tên miền, tên và logo sàn trên trang (đề xuất); tên miền riêng của sàn để sau. Mạnh 29/10: để sau, hỏi ở vòng trang khách.
 - [x] Khung toà do sàn nhập Excel có góp về Invest không — không ở bản đầu: chiều Quỹ hàng → Invest đang tắt (ADR-0017 §6).
 - [x] ADR trong kho onehub-invest cho chỗ đứng và đường cấp dữ liệu một chiều — đã viết: ADR-0017, PR #167 chờ merge.
