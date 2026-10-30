@@ -1,0 +1,126 @@
+{
+ "dot": "nen-dau",
+ "muc_tieu": "Dựng nền của Quỹ hàng trước màn đầu tiên: đăng nhập và quyền theo sàn, một đường ghi cho mọi thay đổi, chuẩn giao diện và vỏ ứng dụng; trả lời ba câu hỏi kiến trúc — lưới 5.000 dòng, đồng bộ khi mất mạng, link trong Zalo",
+ "day": [
+  {
+   "id": "Q",
+   "worktree": "/CHUA-CO-WORKTREE/Q",
+   "link": ""
+  },
+  {
+   "id": "G",
+   "worktree": "/CHUA-CO-WORKTREE/G",
+   "link": ""
+  },
+  {
+   "id": "T",
+   "worktree": "/CHUA-CO-WORKTREE/T",
+   "link": ""
+  }
+ ],
+ "hang": [
+  {
+   "ma": "6",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "dang-nhap-theo-san",
+   "day": "Q",
+   "uu_tien": 0,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/dang-nhap-theo-san/**"
+   ]
+  },
+  {
+   "ma": "4",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "tang-5-giao-dien",
+   "day": "G",
+   "uu_tien": 1,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/tang-5-giao-dien/**"
+   ]
+  },
+  {
+   "ma": "3",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bai-thu-zalo",
+   "day": "T",
+   "uu_tien": 2,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/bai-thu-zalo/**"
+   ]
+  },
+  {
+   "ma": "7",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "moi-nguoi-vai-khu",
+   "day": "Q",
+   "uu_tien": 3,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/moi-nguoi-vai-khu/**"
+   ]
+  },
+  {
+   "ma": "1",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bai-thu-luoi-5000-dong",
+   "day": "G",
+   "uu_tien": 4,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/bai-thu-luoi-5000-dong/**"
+   ]
+  },
+  {
+   "ma": "2",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bai-thu-dong-bo-mat-mang",
+   "day": "T",
+   "uu_tien": 5,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/bai-thu-dong-bo-mat-mang/**"
+   ]
+  },
+  {
+   "ma": "8",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "loi-hang-va-su-kien",
+   "day": "Q",
+   "uu_tien": 6,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/loi-hang-va-su-kien/**"
+   ]
+  },
+  {
+   "ma": "53",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "vo-ung-dung",
+   "day": "G",
+   "uu_tien": 7,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/vo-ung-dung/**"
+   ],
+   "sau": [
+    "7"
+   ]
+  },
+  {
+   "ma": "5",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "du-lieu-mau-san-thu",
+   "day": "T",
+   "uu_tien": 8,
+   "s4": "local",
+   "ranh_gioi": [
+    "_acceptance/du-lieu-mau-san-thu/**"
+   ]
+  }
+ ],
+ "ngoai_hang_merge": []
+}
