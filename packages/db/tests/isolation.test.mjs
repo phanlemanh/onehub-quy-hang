@@ -173,7 +173,8 @@ test("thành viên: quy_hang_app không thêm được thành viên", { skip }, 
       c,
       "insert into company_members (company_id, user_id) values ($1, $2)",
       [COMPANY_C, USER_1],
-      /permission denied for table company_members/,
+      // Từ 003 vai API có quyền ghi bảng, nhưng luật theo dòng chỉ cho quản trị của sàn đang làm (USER_1 không phải).
+      /row-level security/,
     );
   });
 });
@@ -181,5 +182,165 @@ test("thành viên: quy_hang_app không thêm được thành viên", { skip }, 
 test("danh tính: quy_hang_app không đọc được identity.user", { skip }, async () => {
   await asUser(USER_1, COMPANY_A, async (c) => {
     await expectError(c, 'select * from identity."user"', [], /permission denied for schema identity/);
+  });
+});
+
+// ---- Vai, khu và khu phụ trách (003_moi_nguoi_vai_khu) ----
+const ZONE_A = "00000000-0000-4000-8000-0000000000a1";
+const ZONE_B = "00000000-0000-4000-8000-0000000000b1";
+const UA = "u-vk-qt-a"; // quản trị A
+const UN = "u-vk-thuong"; // thuộc A, vai đầu khách
+const UB = "u-vk-qt-b"; // quản trị B
+
+/** Dựng hai sàn, ba người, khu và khu phụ trách bằng vai chủ, rồi chuyển sang vai API với người và sàn đã cho. */
+async function asRole(userId, companyId, fn) {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    await client.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    await client.query(
+      `insert into identity."user" (id, name, email, "emailVerified") values
+         ($1, '[Tên]', 'vk-a@example.test', true), ($2, '[Tên]', 'vk-n@example.test', true), ($3, '[Tên]', 'vk-b@example.test', true)`,
+      [UA, UN, UB],
+    );
+    await client.query(
+      `insert into company_members (company_id, user_id, roles) values
+         ($1, $3, '{company_admin}'), ($1, $4, '{buyer_agent}'), ($2, $5, '{company_admin}')`,
+      [COMPANY_A, COMPANY_B, UA, UN, UB],
+    );
+    await client.query("insert into company_zones (id, company_id, name) values ($1, $2, '[Toà A]'), ($3, $4, '[Toà B]')", [
+      ZONE_A,
+      COMPANY_A,
+      ZONE_B,
+      COMPANY_B,
+    ]);
+    await client.query("insert into member_zones (company_id, user_id, zone_id) values ($1, $2, $3), ($4, $5, $6)", [
+      COMPANY_A,
+      UN,
+      ZONE_A,
+      COMPANY_B,
+      UB,
+      ZONE_B,
+    ]);
+    await client.query("set local role quy_hang_app");
+    await client.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [userId, companyId]);
+    return await fn(client);
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+}
+
+test("khu: khu và khu phụ trách ép luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relname, c.relrowsecurity and c.relforcerowsecurity as ep
+       from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname in ('company_zones', 'member_zones') order by c.relname`,
+    );
+    assert.deepEqual(rows, [
+      { relname: "company_zones", ep: true },
+      { relname: "member_zones", ep: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("khu: quản trị A không đọc khu, khu phụ trách của B", { skip }, async () => {
+  await asRole(UA, COMPANY_A, async (c) => {
+    assert.deepEqual((await c.query("select id from company_zones")).rows.map((r) => r.id), [ZONE_A]);
+    assert.deepEqual((await c.query("select distinct company_id from member_zones")).rows.map((r) => r.company_id), [COMPANY_A]);
+  });
+});
+
+test("quản trị A không ghi thành viên, khu của B", { skip }, async () => {
+  await asRole(UA, COMPANY_A, async (c) => {
+    await expectError(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{buyer_agent}')", [COMPANY_B, UA], /row-level security/);
+    await expectError(c, "insert into company_zones (company_id, name) values ($1, '[Toà lạ]')", [COMPANY_B], /row-level security/);
+    assert.equal((await c.query("update company_members set roles = '{telesales}' where company_id = $1", [COMPANY_B])).rowCount, 0);
+    assert.equal((await c.query("delete from company_members where company_id = $1", [COMPANY_B])).rowCount, 0);
+  });
+});
+
+test("vai: cơ sở dữ liệu từ chối giá trị lạ", { skip }, async () => {
+  await asRole(UA, COMPANY_A, async (c) => {
+    await expectError(c, "update company_members set roles = '{giam_doc}' where user_id = $1", [UN], /company_members_roles_valid/);
+  });
+});
+
+test("không phải quản trị: cơ sở dữ liệu từ chối ghi thành viên, khu, khu phụ trách", { skip }, async () => {
+  await asRole(UN, COMPANY_A, async (c) => {
+    await expectError(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{buyer_agent}')", [COMPANY_A, UB], /row-level security/);
+    assert.equal((await c.query("update company_members set roles = '{company_admin}' where user_id = $1", [UN])).rowCount, 0, "người thường tự gắn vai quản trị");
+    assert.equal((await c.query("delete from company_members where user_id = $1", [UA])).rowCount, 0);
+    await expectError(c, "insert into company_zones (company_id, name) values ($1, '[Toà mới]')", [COMPANY_A], /row-level security/);
+    await expectError(c, "insert into member_zones (company_id, user_id, zone_id) values ($1, $2, $3)", [COMPANY_A, UA, ZONE_A], /row-level security/);
+    assert.equal((await c.query("delete from member_zones where user_id = $1", [UN])).rowCount, 0);
+  });
+});
+
+test("khu: giao khu của sàn B bị khoá ngoại từ chối", { skip }, async () => {
+  await asRole(UA, COMPANY_A, async (c) => {
+    await expectError(c, "insert into member_zones (company_id, user_id, zone_id) values ($1, $2, $3)", [COMPANY_A, UN, ZONE_B], /member_zones_zone_fkey|foreign key/);
+  });
+});
+
+test("quản trị cuối: cơ sở dữ liệu từ chối trực tiếp", { skip }, async () => {
+  await asRole(UA, COMPANY_A, async (c) => {
+    await expectError(c, "delete from company_members where user_id = $1", [UA], /sàn cần ít nhất một quản trị/);
+    await expectError(c, "update company_members set roles = '{buyer_agent}' where user_id = $1", [UA], /sàn cần ít nhất một quản trị/);
+  });
+});
+
+test("hai quản trị gỡ nhau cùng lúc: đúng một giao dịch thành công", { skip }, async () => {
+  const co = "00000000-0000-4000-8000-0000000000d1";
+  const [x, y] = ["u-vk-dong-x", "u-vk-dong-y"];
+  const owner = new pg.Client({ connectionString: url });
+  const a = new pg.Client({ connectionString: url });
+  const b = new pg.Client({ connectionString: url });
+  await Promise.all([owner.connect(), a.connect(), b.connect()]);
+  try {
+    await owner.query("insert into companies (id, name) values ($1, '[Sàn đồng thời]')", [co]);
+    await owner.query(
+      `insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', 'vk-x@example.test', true), ($2, '[Tên]', 'vk-y@example.test', true)`,
+      [x, y],
+    );
+    await owner.query("insert into company_members (company_id, user_id, roles) values ($1, $2, '{company_admin}'), ($1, $3, '{company_admin}')", [co, x, y]);
+    await a.query("begin");
+    await b.query("begin");
+    await a.query("delete from company_members where company_id = $1 and user_id = $2", [co, x]);
+    const bXong = b.query("delete from company_members where company_id = $1 and user_id = $2", [co, y]).then(
+      () => "ok",
+      (e) => e.message,
+    );
+    // Cho giao dịch sau kịp chạy hết (không có khoá) hoặc kịp đứng chờ khoá (có khoá) TRƯỚC khi giao dịch đầu commit —
+    // không có quãng chờ này, thứ tự hai lệnh phụ thuộc mạng và ca xanh cả khi trigger thiếu khoá.
+    await new Promise((r) => setTimeout(r, 300));
+    await a.query("commit");
+    const kq = await bXong;
+    await b.query(kq === "ok" ? "commit" : "rollback");
+    assert.match(kq, /sàn cần ít nhất một quản trị/, "giao dịch thứ hai cũng gỡ được");
+    const con = await owner.query("select count(*)::int n from company_members where company_id = $1 and 'company_admin' = any(roles)", [co]);
+    assert.equal(con.rows[0].n, 1);
+  } finally {
+    await a.query("rollback").catch(() => {});
+    await b.query("rollback").catch(() => {});
+    await a.end();
+    await b.end();
+    await owner.query("delete from companies where id = $1", [co]).catch(() => {});
+    await owner.query("delete from identity.\"user\" where id in ($1, $2)", [x, y]).catch(() => {});
+    await owner.end();
+  }
+});
+
+test("dọn sàn: xoá sàn kéo theo thành viên không bị trigger chặn", { skip }, async () => {
+  await asRole(UA, COMPANY_A, async (c) => {
+    await c.query("reset role");
+    const del = await c.query("delete from companies where id = $1", [COMPANY_A]);
+    assert.equal(del.rowCount, 1);
   });
 });
