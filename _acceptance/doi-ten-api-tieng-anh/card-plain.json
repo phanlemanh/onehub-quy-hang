@@ -1,0 +1,28 @@
+{"feature_plain":"Bên gọi API và người đọc mã thấy mọi đường, mã lỗi và đường màn đăng nhập bằng tiếng Anh như luật kho đòi; người dùng thấy đúng các màn và câu chữ tiếng Việt như hôm nay.",
+"will_do":[
+{"id":"AC-1","p":"Sẽ phục vụ các đường của sàn đang làm ở đường tiếng Anh (/company, /company/members, /company/zones, /me/company), cùng phương thức, mã và thân như cũ."},
+{"id":"AC-2","p":"Sẽ trả «không có» (404) cho bốn đường API tiếng Việt cũ, không chuyển hướng."},
+{"id":"AC-3","p":"Sẽ trả mười ba mã lỗi tiếng Anh (no-company, admin-required, already-member, last-admin…) với đúng mã HTTP cũ."},
+{"id":"AC-5","p":"Sẽ đưa người dùng qua /login, /select-company, /no-company thay ba đường màn tiếng Việt; đường màn cũ trả 404 khi đã đăng nhập."},
+{"id":"AC-6","p":"Sẽ giữ màn Người dùng báo đúng câu tiếng Việt cũ khi mời trùng hay bỏ quản trị cuối."},
+{"id":"AC-7","p":"Sẽ giữ mọi chữ người thấy trên bốn màn là tiếng Việt, không lộ mã hay đường tiếng Anh."},
+{"id":"AC-8","p":"Sẽ ghi quyết định vào ADR-0007, nối từ ADR-0005, và một dòng ở Tham chiếu §12."}],
+"wont_do":[
+{"id":"AC-4","p":"Sẽ KHÔNG còn chuỗi đường hay mã lỗi tiếng Việt cũ nào trong mã API và web; mã lỗi chỉ sống ở một chỗ."},
+{"id":"OOS-1","p":"KHÔNG đổi tên cookie ghi sàn đang làm — đổi thì mọi người phải chọn lại sàn."},
+{"id":"OOS-2","p":"KHÔNG đổi tên tệp mã tiếng Việt ở hàng này — chờ anh chốt ở Hỏi-1."},
+{"id":"OOS-3","p":"KHÔNG đổi thẻ nhật ký in mã đăng nhập lúc chạy thử — bài chấm của các hàng đã ký đọc thẻ này."},
+{"id":"OOS-4","p":"KHÔNG giữ hay chuyển hướng đường cũ — chưa có bản thật nào chạy nên chưa ai dùng đường cũ."},
+{"id":"OOS-5","p":"KHÔNG sửa kiểm thử của cơ sở dữ liệu — chúng không gọi đường API."}],
+"scope_plain":"Năm thứ dưới đây cố ý để ngoài hàng này:",
+"coverage_plain":[
+{"i":0,"p":"Loại tên: đường API (AC-1, AC-2), mã lỗi (AC-3), đường màn (AC-5), mã nội bộ màn đăng nhập (AC-4); cookie, tên tệp, thẻ nhật ký cố ý giữ."},
+{"i":1,"p":"Ai đọc tên: bên gọi API (AC-1 đến AC-3), màn của bàn làm việc (AC-5, AC-6), người đọc tài liệu (AC-8), người dùng thấy chữ (AC-7)."},
+{"i":2,"p":"Còn sót: đường cũ còn chạy (AC-2), chuỗi cũ còn trong mã (AC-4), mã lỗi ở hai nơi (AC-4)."},
+{"i":3,"p":"Không đổi hành vi: mã HTTP và thân trả về (AC-1, AC-3), quyền (các ca quyền của AC-3), chữ trên màn (AC-6, AC-7)."}],
+"gap_probe_plain":[
+{"i":0,"p":"Lý do bỏ đường cũ trích nhầm câu về gửi email — đã thay bằng lý do đúng: chưa bản thật nào từng chạy nên không ai gọi đường cũ."},
+{"i":1,"p":"Lý do giữ tên tệp tiếng Việt không đứng được — đã tách thành câu hỏi Hỏi-1 cho anh; cookie và thẻ nhật ký giữ lý do riêng."},
+{"i":2,"p":"Lý do gom mã lỗi về một chỗ tự dựa vào chính tiêu chí — đã thay bằng lý do độc lập: màn web vốn đã dùng gói API."},
+{"i":3,"p":"Bài chấm luồng đăng nhập mở đường cũ ở trạng thái phiên không rõ và không có tệp mạng làm chứng — đã ghim trạng thái và đòi tệp mạng; phần đòi đo thêm phía API bị bác vì màn chuyển hướng theo danh sách sàn, không theo mã lỗi."},
+{"i":4,"p":"Bài đo bản OpenAPI chỉ so đường, không so phương thức — đã đổi sang so đủ mười cặp phương thức và đường viết trước."}]}
