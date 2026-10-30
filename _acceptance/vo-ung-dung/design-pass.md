@@ -12,7 +12,7 @@ ds_skill: quy-hang-ui
 states: [telesales, dau-chu, dau-khach, truong-nhom, chi-quan-tri, nhieu-vai, ho-so-can, go-ma-can]
 breakpoints: [mobile-375]
 themes: [light, dark]
-patched: 2
+patched: 4
 deferred: 1
 ---
 # design-pass — vo-ung-dung
@@ -42,6 +42,8 @@ chủ kho đã bấm thử bản xem trước).
 | ho-so-can MAU-A1205 | mobile-375 | dark | evidence/design-pass/ho-so-can--mobile-375--dark.png |
 | go-ma-can (Đầu chủ gõ «mau-a1205») | mobile-375 | light | evidence/design-pass/go-ma-can--mobile-375--light.png |
 | go-ma-can (Đầu chủ gõ «mau-a1205») | mobile-375 | dark | evidence/design-pass/go-ma-can--mobile-375--dark.png |
+| tổng quan 8 màn | mobile-375 | light | evidence/design-pass/tong-quan--mobile-375--light.png |
+| tổng quan 8 màn | mobile-375 | dark | evidence/design-pass/tong-quan--mobile-375--dark.png |
 
 ## Cảnh ngữ-cảnh
 
@@ -52,6 +54,10 @@ chủ kho đã bấm thử bản xem trước).
 ### Nhóm 1 — vá-được-trong-từ-vựng-token (đã vá tại chỗ)
 
 - Ô gõ mã căn sập khi mở (thiếu khung `Command` quanh ô nhập) — đã bọc, mở và gõ được.
+- Rà chữ trên vỏ với CONTEXT.md: mười nhãn của vỏ (Nhà, Hôm nay, Đã gửi · Gửi, Đội, Cài đặt sàn, Tôi, Gõ mã căn, Hồ sơ
+  căn, Nhập Excel, Phát hàng) có ở Tham chiếu §9 nhưng chưa có dòng trong từ vựng — đã thêm, kèm tên code.
+- Trang giữ chỗ viết «dựng ở hàng N của lộ trình», trong khi «Hàng» ở từ vựng là một lần chào bán — đã đổi thành
+  «mục N»; trang lạc đường thôi lấy «Quỹ hàng» làm tiêu đề (từ vựng cấm dùng tên app cho một nhà).
 - Tab dưới bỏ `Button` ép chiều cao (luật ReUI cấm `h-*` trên Button) — dùng `Link` có `aria-current`, chữ `text-xs`.
 
 ### Nhóm 2 — đòi-đổi-DS/component (chờ Gate 1)
