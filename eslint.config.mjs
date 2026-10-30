@@ -17,10 +17,16 @@ const scope = (configs, files) => configs.map((c) => ({ ...c, files }));
 
 export default defineConfig([
   globalIgnores(["**/node_modules/**", "**/.next/**", "**/dist/**", "**/next-env.d.ts"]),
+  // Mã ReUI cài nguyên bản bằng shadcn CLI: không sửa tay, nên không lint (như onehub-invest). components/ui vẫn
+  // chạy luật Next; chỉ luật quy-hang-ui bỏ qua nó (dưới).
+  globalIgnores(["apps/web/src/components/reui/**"]),
   ...scope(nextVitals, [WEB]),
   ...scope(nextTs, [WEB]),
   { files: [WEB], settings: { next: { rootDir: "apps/web" } } },
   { files: [WEB_SRC], ignores: VENDOR, plugins: { "quy-hang-ui": quyHangUi }, rules: UI_RULES },
+  // Hook cài nguyên bản cùng sidebar của shadcn: đặt state trong effect để đọc bề rộng lần đầu. Sửa tay thì mất đường
+  // cập nhật — chỉ tắt đúng luật này cho đúng tệp này.
+  { files: ["apps/web/src/hooks/use-mobile.ts"], rules: { "react-hooks/set-state-in-effect": "off" } },
   ...scope(tseslint.configs.recommended, ["packages/**/*.ts"]),
   {
     files: ["**/*.mjs"],

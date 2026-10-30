@@ -22,3 +22,5 @@ Vỏ, IA và khối đích của từng màn: `docs/design/vo-va-ia.md` (ADR-000
 - **Style `base-nova`** (Base UI), icon `lucide`, nền neutral — như onehub-invest. Lỗi TS kiểu `render does not exist`
   là đang cài nhầm biến thể Radix.
 - Chọn khối mới cho một màn → sửa cột «Khối đích» và bảng khối đã chuyển thể trong cùng PR.
+- Skill giao diện của kho: `quy-hang-ui` (`.agents/skills/quy-hang-ui/`, nạp sau skill `reui`) — thứ tự thẩm quyền, lint
+  `quy-hang-ui` và mức nợ, sàn thiết kế M1, danh mục thành phần đã cài. `npm run lint` đỏ khi nợ giao diện vượt trần 0.

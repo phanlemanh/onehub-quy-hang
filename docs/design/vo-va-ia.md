@@ -110,3 +110,8 @@ chính, phần còn lại ghép.
   `radio-group`, `toggle-group`, `tabs`, `item`, `separator`, `scroll-area`, `tooltip`, `skeleton`, `empty`, `avatar`,
   `progress`, `kbd`, `calendar`, `breadcrumb`, `sonner`.
 - npm: `@tanstack/react-table`, `@tanstack/react-virtual`, `date-fns`, `next-themes`.
+- Đã cài 30/10 (hàng 4, hồ sơ `tang-5-giao-dien`): mọi mục shadcn ở trên và ReUI `frame`, `badge`, `alert`, `timeline`,
+  `stepper`, `sortable`, `number-field` — danh mục sống ở `.agents/skills/quy-hang-ui/catalog.md`. Chưa cài: `data-grid`,
+  `filters`, `cascader`, `event-calendar`, `use-file-upload` (mã ReUI nguyên bản đỏ `noUncheckedIndexedAccess` của kho —
+  hàng đầu tiên cần chúng quyết nới cờ cho `apps/web` hay chuyển thể bản cài); `use-copy-to-clipboard` không có trên kho
+  ReUI; `@tanstack/*`, `date-fns` cài cùng khối cần chúng.
