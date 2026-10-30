@@ -13,7 +13,7 @@ states: [telesales, dau-chu, dau-khach, truong-nhom, chi-quan-tri, nhieu-vai, ho
 breakpoints: [mobile-375]
 themes: [light, dark]
 patched: 4
-deferred: 1
+deferred: 0
 ---
 # design-pass — vo-ung-dung
 
@@ -62,5 +62,9 @@ chủ kho đã bấm thử bản xem trước).
 
 ### Nhóm 2 — đòi-đổi-DS/component (chờ Gate 1)
 
-- Tab đang mở chỉ khác bằng độ đậm của chữ và icon (foreground so với muted-foreground); không có vạch hay nền. Muốn
-  dấu rõ hơn (vạch trên tab, nền nhạt) là thêm một mẫu tab dưới cho kho — chờ chủ kho nói có cần không.
+- (Đã đóng 31/10) Tab đang mở chỉ khác bằng độ đậm của chữ và icon, không vạch hay nền — chủ kho «Gật khung»,
+  giữ như hiện tại, không thêm mẫu tab mới.
+
+## Kết phiên
+
+Chủ kho gật khung vỏ điện thoại ngày 2026-10-31 (yêu cầu G-7). Vòng đi tiếp S2.
