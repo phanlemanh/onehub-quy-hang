@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: be93b7303744d6cbf3bf3fcbf31d47c11df8d589
+verified_commit: 2e5db7fecc2d1e7fcab8ec8283ff9f5f428ab375
 human_signoff: Manh Phan 2026-10-30
 ---
 
@@ -130,12 +130,12 @@ human_signoff: Manh Phan 2026-10-30
 - eval: E10
   judged_by: judge panel (domain-correctness, operational-feasibility, spec-alignment)
   verdict: PASS
-  rationale: ADR-0004 ghi «đề xuất — chờ chủ kho chốt», so ba lối theo cách ly, số chủ, hàng đợi ghi và vận hành, mỗi ô gắn nhãn Đo hoặc Chưa đo. Ba lens cùng thấy khuyến nghị, lối khác và giá của từng lối được nêu đủ; vế mất mạng trên thiết bị được ghi thẳng là chưa đo.
+  rationale: ADR-0006 (số cũ 0004) ghi «đề xuất — chờ chủ kho chốt», so ba lối theo cách ly, số chủ, hàng đợi ghi và vận hành, mỗi ô gắn nhãn Đo hoặc Chưa đo. Ba lens cùng thấy khuyến nghị, lối khác và giá của từng lối được nêu đủ; vế mất mạng trên thiết bị được ghi thẳng là chưa đo.
   human_override:  # chi nguoi ghi
 
   Panel đề xuất (human_override để trống cho người quyết ở Cổng 2):
-  - domain-correctness: PASS — ADR-0004 ghi «đề xuất — chờ chủ kho chốt». Bảng so ba lối theo cách ly, số chủ, hàng đợi ghi, kho trên máy và vận hành, mỗi ô gắn nhãn Đo (trỏ ket-qua.md) hoặc Chưa đo (tài liệu/suy luận). Lối được khuyến nghị giữ bất biến 1–2 ở một chỗ là luật theo dòng của Postgres, và ket-qua.md ghi 34 ca máy xanh, gồm cả ca phá thử (tắt luật theo dòng thì lộ dòng sàn khác). ADR cũng nói rõ vế mất mạng trên thiết bị chưa đo được.
-  - operational-feasibility: PASS — ADR-0004 so đủ ba lối (tự làm mỏng, PowerSync, ElectricSQL) theo cách ly, hàng đợi ghi và vận hành. Mục «Bốn việc cần chốt» nêu khuyến nghị, lối khác và giá. Số đo máy gồm 34 ca xanh, vai `quy_hang_app` không vượt luật, tắt luật thì lộ dòng, và số chủ không đi qua sổ thay đổi. ADR nói thẳng vế mất mạng trên thiết bị chưa đo và vế 1 của phiên thật không đạt, nên không nói quá.
+  - domain-correctness: PASS — ADR-0006 (số cũ 0004) ghi «đề xuất — chờ chủ kho chốt». Bảng so ba lối theo cách ly, số chủ, hàng đợi ghi, kho trên máy và vận hành, mỗi ô gắn nhãn Đo (trỏ ket-qua.md) hoặc Chưa đo (tài liệu/suy luận). Lối được khuyến nghị giữ bất biến 1–2 ở một chỗ là luật theo dòng của Postgres, và ket-qua.md ghi 34 ca máy xanh, gồm cả ca phá thử (tắt luật theo dòng thì lộ dòng sàn khác). ADR cũng nói rõ vế mất mạng trên thiết bị chưa đo được.
+  - operational-feasibility: PASS — ADR-0006 (số cũ 0004) so đủ ba lối (tự làm mỏng, PowerSync, ElectricSQL) theo cách ly, hàng đợi ghi và vận hành. Mục «Bốn việc cần chốt» nêu khuyến nghị, lối khác và giá. Số đo máy gồm 34 ca xanh, vai `quy_hang_app` không vượt luật, tắt luật thì lộ dòng, và số chủ không đi qua sổ thay đổi. ADR nói thẳng vế mất mạng trên thiết bị chưa đo và vế 1 của phiên thật không đạt, nên không nói quá.
   - spec-alignment: PASS — Bảng so ba lối mang nhãn Đo / Chưa đo (tài liệu) / Chưa đo (suy luận). Mục «Bốn việc cần chốt» nêu khuyến nghị tự làm mỏng, lối khác PowerSync và giá của cả hai. Lối được khuyến nghị giữ bất biến 1–2 của AGENTS.md: luật theo dòng của Postgres đo bằng 34 ca máy, số chủ có luật riêng và không đi qua sổ thay đổi.
 
 ### Lệnh suite (hồi quy)
@@ -196,3 +196,7 @@ none — every multi-run eval is uniform
 
 Round 1: lịch sử round 1 không được truyền vào bước soạn này; xem run-log.jsonl và review-findings của round đó.
 Round 2: E1–E9 chạy xanh trên commit đã ghim, E10 do panel đề xuất PASS; chờ người ký ở Cổng 2.
+
+### Re-pin lần 1 — 2026-10-30, do đổi số ADR 0004 → 0006 và gộp nhánh chính
+run_id: repin-20261030T165400Z-79655
+sha: 2e5db7fecc2d1e7fcab8ec8283ff9f5f428ab375 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E7, E10 (E10 không khai paths) · AC không có chốt máy: AC-7, AC-10

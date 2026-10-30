@@ -1,6 +1,6 @@
-# ADR-0004: Chọn bộ đồng bộ — kết quả bài thử mất mạng
+# ADR-0006: Chọn bộ đồng bộ — kết quả bài thử mất mạng
 
-Ngày: 2026-10-30 · Trạng thái: **đề xuất — chờ chủ kho chốt** · Liên quan: ADR-0001 mục «Chưa chốt» (bộ đồng bộ),
+Ngày: 2026-10-30 · Trạng thái: **chấp nhận — giám sát đợt nen-dau chốt theo ủy quyền của chủ kho, 2026-10-30** · Liên quan: ADR-0001 mục «Chưa chốt» (bộ đồng bộ),
 Kiến trúc §1 «Nhanh tức thì, ghi trên máy trước», §9 bước 1 (b), §10 · Số đo: `_acceptance/bai-thu-dong-bo-mat-mang/ket-qua.md`
 
 ## Bối cảnh
@@ -32,6 +32,13 @@ bố của bên làm, bài thử không dựng lối đó; **Chưa đo (suy lu�
 | Vận hành | **Chưa đo (suy luận)**: không thêm dịch vụ; tự giữ kênh thời gian thực (Supabase) | **Chưa đo (tài liệu)**: thêm dịch vụ PowerSync + kho bucket, có phí | **Chưa đo (tài liệu)**: thêm dịch vụ Electric |
 
 ## Bốn việc cần chốt
+
+Đã chốt 2026-10-30 (giám sát đợt nen-dau, theo ủy quyền của chủ kho), cả bốn theo khuyến nghị:
+
+1. Bộ đồng bộ: tự làm mỏng.
+2. Phát hiện «có mạng lại»: kiểm khi quay lại trang và thử đẩy định kỳ, không dựa riêng vào sự kiện trình duyệt.
+3. Nơi lưu hàng đợi: IndexedDB gắn với người dùng, app chạy trên một tên miền cố định.
+4. Đo lại vế mất mạng: lối (a), đo ở hàng dựng phần đồng bộ.
 
 ### 1. Bộ đồng bộ
 

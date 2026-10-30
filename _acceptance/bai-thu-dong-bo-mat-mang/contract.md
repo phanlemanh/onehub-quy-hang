@@ -82,6 +82,7 @@ Quét bằng morphological-scan (preset test-matrix) — chi tiết trong `desig
 - Lộ trình ghi hàng này T3; máy suy T2 vì bài thử không chạm `packages/db/**` hay lõi.
 - Phiên mất mạng thật cần chủ kho cầm điện thoại: gom thành một yêu cầu `can-nguoi` (luật đợt 16); mạng công ty chặn
   đường hầm — chạy trên điểm phát điện thoại.
+- ADR của bài thử đổi số 0004 → 0006 ngày 30/10 vì trùng số với ADR lưới bảng hàng: `docs/adr/0006-bai-thu-dong-bo.md`.
 - Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
   - Ngoài-1: một thay đổi cứ bị lỗi thì các thay đổi sau không lên máy chủ và trang thử không báo gì, chỉ thấy số chờ đứng yên.
   - Ngoài-2: chạy bài kiểm mà quên khai cơ sở dữ liệu thì nó dựng lại bảng mẫu trên Postgres cổng 5547.
