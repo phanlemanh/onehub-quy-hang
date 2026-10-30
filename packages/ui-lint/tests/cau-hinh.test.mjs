@@ -20,6 +20,10 @@ describe("eslint.config.mjs áp luật quy-hang-ui", () => {
     assert.equal(MUOI.length, 10);
     for (const r of MUOI) assert.equal(got[r]?.[0], 2, `${r} phải mức error (2) cho page.tsx`);
   });
+  it("khối đã chuyển thể (components/blocks) chịu đủ mười luật", async () => {
+    const got = await luatGiaoDien("apps/web/src/components/blocks/khoi.tsx");
+    for (const r of MUOI) assert.equal(got[r]?.[0], 2, `${r} phải mức error cho components/blocks`);
+  });
   for (const vendor of ["apps/web/src/components/ui/button.tsx", "apps/web/src/components/reui/frame.tsx"]) {
     it(`thành phần cài nguyên bản không bị quét: ${vendor}`, async () => {
       assert.deepEqual(await luatGiaoDien(vendor), {});

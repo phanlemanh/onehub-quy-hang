@@ -15,13 +15,14 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { VENDOR_DIRS } from "./lib/vendor.mjs";
 
 const PREFIX = "quy-hang-ui/";
 const TRAN_TEP = "packages/ui-lint/muc-no.json";
 const DIRECTIVE = /^\s*eslint-disable(?:-next-line|-line)?(?=\s|$)/;
 const SEPARATOR = /\s-{2,}\s/;
 const COMMENT = /\/\/([^\n]*)|\/\*([\s\S]*?)\*\//g;
-const VENDOR = ["ui", "reui", "blocks", "examples"].map((d) => join("components", d) + sep);
+const VENDOR = VENDOR_DIRS.map((d) => join("components", d) + sep);
 
 /** Nợ theo luật từ nội dung eslint-suppressions.json: { "<luật>": tổng count }. */
 export function noTheoLuat(suppressions) {

@@ -92,6 +92,15 @@ describe("muc-no.mjs trên kho thử (nợ sinh bằng eslint --suppress-rule)",
     rmSync(join(root, "apps/web/src/app/ngoai-le.tsx"));
   });
 
+  it("ngoại lệ có lý do trong khối đã chuyển thể (components/blocks) cũng được đếm; ui/reui thì không", () => {
+    write(root, "apps/web/src/components/blocks/khoi.tsx", "// eslint-disable-next-line quy-hang-ui/no-raw-table -- bảng in\nexport const a = 1;\n");
+    write(root, "apps/web/src/components/ui/vendor.tsx", "// eslint-disable-next-line quy-hang-ui/no-raw-table -- vendor\nexport const a = 1;\n");
+    const r = run(root);
+    assert.match(r.stdout, /ngoại lệ có lý do: 1/);
+    rmSync(join(root, "apps/web/src/components/blocks/khoi.tsx"));
+    rmSync(join(root, "apps/web/src/components/ui/vendor.tsx"));
+  });
+
   it("nâng trần cao hơn nhánh chính → thoát 1 «trần chỉ được giảm»", () => {
     write(root, "packages/ui-lint/muc-no.json", '{ "tran": 1 }\n');
     const r = run(root);

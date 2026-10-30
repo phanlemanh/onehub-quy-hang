@@ -7,13 +7,14 @@
 //   (a) `eslint-disable` / `eslint-disable-line` / `eslint-disable-next-line` TRẦN, không nêu luật nào;
 //   (b) directive nêu `quy-hang-ui/require-disable-reason` mà thiếu ` -- <lý do>`.
 //
-// Phạm vi: <app>/src/**/*.{ts,tsx}, trừ src/components/{ui,reui,blocks,examples}/** (vendor). <app> là đối số đầu;
+// Phạm vi: <app>/src/**/*.{ts,tsx}, trừ thư mục vendor của lib/vendor.mjs (components/ui, components/reui). <app> là đối số đầu;
 // vắng thì suy từ vị trí script: packages/ui-lint/../../apps/web.
 // Thoát 0 và im lặng khi sạch; thoát 1 và in `file:dòng: thông báo` khi có vi phạm.
 
 import { readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { VENDOR_DIRS } from "./lib/vendor.mjs";
 
 // Cùng quy ước với luật require-disable-reason.
 const DIRECTIVE = /^\s*eslint-disable(?:-next-line|-line)?(?=\s|$)/;
@@ -49,7 +50,7 @@ export function findBareDisables(fileText) {
   return found;
 }
 
-const VENDOR = ["ui", "reui", "blocks", "examples"].map((d) => join("components", d) + sep);
+const VENDOR = VENDOR_DIRS.map((d) => join("components", d) + sep);
 
 function* walk(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {

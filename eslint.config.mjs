@@ -5,13 +5,14 @@ import nextTs from "eslint-config-next/typescript";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import quyHangUi from "./packages/ui-lint/index.mjs";
+import { VENDOR_DIRS } from "./packages/ui-lint/lib/vendor.mjs";
 
 // Một cấu hình cho cả kho: luật Next.js cho apps/web, luật TypeScript cho các gói, luật JS cho script .mjs.
 // Luật giao diện quy-hang-ui (packages/ui-lint, chuyển từ onehub-invest) áp mức error cho mã giao diện của app, trừ
 // thành phần cài nguyên bản bằng shadcn CLI (components/ui, components/reui) — không sửa tay, không bị luật quét.
 const WEB = "apps/web/**/*.{ts,tsx}";
 const WEB_SRC = "apps/web/src/**/*.{ts,tsx}";
-const VENDOR = ["apps/web/src/components/ui/**", "apps/web/src/components/reui/**"];
+const VENDOR = VENDOR_DIRS.map((d) => `apps/web/src/components/${d}/**`);
 const UI_RULES = Object.fromEntries(Object.keys(quyHangUi.rules).map((r) => [`quy-hang-ui/${r}`, "error"]));
 const scope = (configs, files) => configs.map((c) => ({ ...c, files }));
 

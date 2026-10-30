@@ -73,12 +73,13 @@ describe("quét src/ và CLI", () => {
   // Vendor bị bỏ qua dù có directive trần.
   write("src/components/ui/button.tsx", "/* eslint-disable */\n");
   write("src/components/reui/x.tsx", "// eslint-disable-line\n");
-  write("src/components/blocks/y.tsx", "// eslint-disable-line\n");
+  // Khối và ví dụ đã chuyển thể bị sửa tay nên chịu luật (lib/vendor.mjs) — directive trần ở đó phải bị bắt.
+  write("src/components/blocks/y.tsx", "/* eslint-disable */\n");
   write("src/components/examples/z.tsx", "// eslint-disable-line\n");
 
-  it("scanSrc chỉ báo file ngoài vendor", () => {
+  it("scanSrc báo mọi tệp ngoài ui/reui, kể cả blocks và examples", () => {
     const got = scanSrc(root).map((v) => `${v.file}:${v.line}`).sort();
-    assert.deepEqual(got, ["src/app/bad.tsx:2", "src/lib/bad2.ts:1"]);
+    assert.deepEqual(got, ["src/app/bad.tsx:2", "src/components/blocks/y.tsx:1", "src/components/examples/z.tsx:1", "src/lib/bad2.ts:1"]);
   });
 
   it("CLI: thoát 1 và in file:dòng khi có vi phạm; thoát 0, không in gì khi sạch", () => {
@@ -90,6 +91,8 @@ describe("quét src/ và CLI", () => {
 
     rmSync(join(root, "src/app/bad.tsx"));
     rmSync(join(root, "src/lib/bad2.ts"));
+    rmSync(join(root, "src/components/blocks/y.tsx"));
+    rmSync(join(root, "src/components/examples/z.tsx"));
     const clean = spawnSync("node", [SCRIPT, root], { encoding: "utf8" });
     assert.equal(clean.status, 0);
     assert.equal(clean.stdout, "");
