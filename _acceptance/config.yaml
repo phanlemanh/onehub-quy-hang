@@ -81,3 +81,6 @@ tri_thuc:
   noi: docs/tri-thuc   # gốc tri thức trong kho; kho riêng tư nên tài liệu thô nằm trong kho (không khai cong_khai, không kho riêng)
 dieu_phoi:
   goi_dot: docs/plan/dot-{ten}   # gói đợt Điều phối – Thợ; mở bằng /dieu-phoi:mo-dot <tên> (Mạnh 30/10)
+design_pass:
+  proto_route: http://localhost:3460/proto/{slug}
+  ds_skill: quy-hang-ui

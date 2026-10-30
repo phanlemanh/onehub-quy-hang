@@ -6,7 +6,9 @@ const SESSION_COOKIES = ["qh.session_token", "__Secure-qh.session_token"];
 
 export function proxy(request: NextRequest) {
   const hasSession = SESSION_COOKIES.some((name) => request.cookies.has(name));
-  if (!hasSession && request.nextUrl.pathname !== "/dang-nhap") {
+  // Bản mẫu design-pass chỉ chạy ở máy dev, không đọc dữ liệu thật — không đòi phiên.
+  const isDevProto = process.env.NODE_ENV !== "production" && request.nextUrl.pathname.startsWith("/proto/");
+  if (!hasSession && !isDevProto && request.nextUrl.pathname !== "/dang-nhap") {
     return NextResponse.redirect(new URL("/dang-nhap", request.url));
   }
   return NextResponse.next();
