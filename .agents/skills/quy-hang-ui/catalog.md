@@ -57,6 +57,7 @@ dòng.
 | sortable | reui | `npx shadcn@latest add @reui/sortable` | kéo sắp xếp (trạng thái của sàn) |
 | stepper | reui | `npx shadcn@latest add @reui/stepper` | các bước của luồng |
 | timeline | reui | `npx shadcn@latest add @reui/timeline` | lịch sử giá, trạng thái |
+| data-grid | reui | `npx shadcn@latest add @reui/data-grid` | lưới bảng hàng — chỉ trên nhánh thử của bài thử lưới |
 
 Chưa cài — mã ReUI nguyên bản đỏ kiểu chặt của kho (`noUncheckedIndexedAccess` ở `tsconfig.base.json`): `data-grid`,
 `filters`, `cascader`, `event-calendar`, hook `use-file-upload`. Hàng đầu tiên cần chúng quyết: nới cờ cho `apps/web` hay
