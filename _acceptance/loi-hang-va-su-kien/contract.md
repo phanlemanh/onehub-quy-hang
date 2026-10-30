@@ -87,6 +87,7 @@ Quét morphological-scan, preset entity-feature, cho thực thể «hàng và s�
 - Chủ nhà, số chủ, giá đáy, mở số — hàng chủ nhà (bảng riêng có luật chặt hơn).
 - Kiểm trùng «một hàng đang mở trên một căn» — hàng dòng vào.
 - Quyền theo vai và trục «Chỉ tôi → Nhóm → Toàn sàn» — làm cùng màn bảng hàng (theo Hỏi-2).
+- Gán đầu chủ cho hàng — đi cùng hàng chủ nhà, vì đầu chủ gắn với nguồn chủ nhà (chủ kho chọn 31/10, sau Cổng Phạm vi).
 - Hoàn tác, nhãn trạng thái riêng của sàn, ảnh, lịch sử trả giá trên màn, gắn mã căn danh mục, mọi màn.
 
 > Out of scope = scope-truth (Gate 1 duyệt mục này). Rationale/trade-off từng mục → 1 entry `descope` trong `decisions.jsonl`.
