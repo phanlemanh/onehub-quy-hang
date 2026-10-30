@@ -1,0 +1,13 @@
+== network (playwright, non-static) ==
+24. [DELETE] http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9 => [409] Conflict
+
+Note: 23 static requests not shown, run with "static" option to see them.
+== console errors ==
+404 /favicon.ico (static, note-only)
+409 POST /api/v1/san/thanh-vien (moi trung - da khai)
+409 DELETE /api/v1/san/thanh-vien/<id> (quan tri cuoi - da khai)
+step8 (thuong): trang SSR hien thong bao, khong co fetch 403 nao quan sat duoc
+== server log non-2xx ==
+ POST /api/v1/san/thanh-vien 409 in 22ms (next.js: 1.5ms, application-code: 20ms)
+ DELETE /api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9 409 in 27ms (next.js: 1.8ms, application-code: 25ms)
+ POST /api/auth/sign-out 404 in 100ms (next.js: 89ms, application-code: 11ms)

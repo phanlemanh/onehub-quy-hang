@@ -207,6 +207,38 @@ test("hai quản trị: gỡ một người được", async () => {
   assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["team_lead"] }, a.cookie)).status, 200);
 });
 
+test("hai quản trị: tự gỡ vai quản trị cùng lúc đổi khu, khu mang đúng các khu đã chọn", async () => {
+  const a = await sanMoi("c4");
+  await moi(a.cookie, { email: mail("qt-c4-2"), roles: ["company_admin"] });
+  const tao = async (t: string) =>
+    ((await (await send("POST", "/api/v1/san/khu", { name: `[Toà ${RUN} C4 ${t}]` }, a.cookie)).json()) as { id: string }).id;
+  const [k1, k2] = [await tao("1"), await tao("2")];
+  const khuCua = async (cookie: string) =>
+    ((await (await req("/api/v1/san/thanh-vien", cookie)).json()) as { userId: string; zones: { id: string }[] }[])
+      .find((m) => m.userId === a.userId)
+      ?.zones.map((z) => z.id)
+      .sort();
+  // Đối chứng: còn quản trị thì giao khu được.
+  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { zoneIds: [k1] }, a.cookie)).status, 200);
+  assert.deepEqual(await khuCua(a.cookie), [k1], "đối chứng: chưa giao được khu k1");
+  // Tự gỡ vai quản trị và đổi khu trong cùng một lần lưu.
+  const r = await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["team_lead"], zoneIds: [k2] }, a.cookie);
+  assert.equal(r.status, 200, `tự gỡ vai kèm đổi khu trả ${r.status}`);
+  const qt2 = vao(await login(mail("qt-c4-2")), a.companyId);
+  assert.deepEqual(await khuCua(qt2), [k2], "khu sau khi tự gỡ vai không phải các khu đã chọn");
+});
+
+test("hai quản trị: tự gỡ vai quản trị và bỏ hết khu, không còn khu cũ", async () => {
+  const a = await sanMoi("c5");
+  await moi(a.cookie, { email: mail("qt-c5-2"), roles: ["company_admin"] });
+  const k = ((await (await send("POST", "/api/v1/san/khu", { name: `[Toà ${RUN} C5]` }, a.cookie)).json()) as { id: string }).id;
+  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { zoneIds: [k] }, a.cookie)).status, 200);
+  assert.equal((await send("PATCH", `/api/v1/san/thanh-vien/${a.userId}`, { roles: ["team_lead"], zoneIds: [] }, a.cookie)).status, 200);
+  const qt2 = vao(await login(mail("qt-c5-2")), a.companyId);
+  const ds = (await (await req("/api/v1/san/thanh-vien", qt2)).json()) as { userId: string; zones: { id: string }[] }[];
+  assert.deepEqual(ds.find((m) => m.userId === a.userId)?.zones, [], "khu cũ vẫn còn sau khi bỏ hết khu");
+});
+
 test("luồng quản người qua HTTP", async () => {
   const a = await sanMoi("l1");
   const tenKhu = `[Toà ${RUN} luồng]`;

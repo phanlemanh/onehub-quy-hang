@@ -162,10 +162,12 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
         const co = await withCompany(appPool, q, async (tx) => {
           const m = await tx.query("select 1 from company_members where company_id = app.current_company_id() and user_id = $1", [userId]);
           if (!m.rowCount) return false;
+          // Đặt khu trước khi đổi vai: luật ghi member_zones hỏi quyền quản trị của người gọi trong cùng giao dịch,
+          // nên quản trị tự gỡ vai mình mà đổi vai trước thì lần ghi khu bị chặn hoặc xoá khu lặng lẽ không ăn.
+          if (zoneIds) await datKhu(tx, userId, zoneIds);
           if (roles) {
             await tx.query("update company_members set roles = $2 where company_id = app.current_company_id() and user_id = $1", [userId, roles]);
           }
-          if (zoneIds) await datKhu(tx, userId, zoneIds);
           return true;
         });
         return co ? c.json({ userId }, 200) : c.json({ error: "khong-thay" }, 404);
