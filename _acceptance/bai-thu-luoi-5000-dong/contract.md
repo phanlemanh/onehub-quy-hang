@@ -5,7 +5,7 @@ slug: bai-thu-luoi-5000-dong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, docs]
-status: approved
+status: implemented
 design_doc: _acceptance/bai-thu-luoi-5000-dong/design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T07:42:47Z

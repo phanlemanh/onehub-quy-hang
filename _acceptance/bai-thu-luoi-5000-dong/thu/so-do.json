@@ -1,0 +1,172 @@
+{
+  "tag": "thu/bai-thu-luoi-5000-dong-v1",
+  "sha": "98735f182194d4c3520632bb9818eb235722e798",
+  "trang": {
+    "dong": 5000,
+    "cot": 20,
+    "mau": "MAU-00001"
+  },
+  "may": {
+    "hieu_chuan_hop_le": true,
+    "loadavg": "{ 14.40 6.44 4.90 }"
+  },
+  "thuong": {
+    "reui": {
+      "cuon": {
+        "p95": 16.800000000000182,
+        "ti_le_cham": 0.0013908205841446453
+      },
+      "go": {
+        "p95": 16.799999997019768,
+        "gia_tri_dung": true
+      },
+      "dan": {
+        "ms": 54.20000000298023,
+        "o_mau_dung": true
+      },
+      "dat": true,
+      "truot": [],
+      "chi_tiet": [],
+      "luot": [
+        {
+          "may": {
+            "rongP95": 16.799999999999955,
+            "benchMs": 87.70000000298023,
+            "hop_le": true,
+            "ly_do": []
+          },
+          "cuon": {
+            "so_khung": 719,
+            "p95": 33.29999999999927,
+            "ti_le_cham": 0.0013908205841446453,
+            "phu_callback": {
+              "so_khung": 719,
+              "p95": 39.70000000298023,
+              "ti_le_cham": 0.0013908205841446453
+            },
+            "toi_cuoi": true
+          },
+          "go": {
+            "so_phim": 30,
+            "p95": 16.799999997019768,
+            "gia_tri_dung": true
+          },
+          "dan": {
+            "ms": 54.20000000298023,
+            "o_mau_dung": true
+          }
+        },
+        {
+          "may": {
+            "rongP95": 16.799999999999955,
+            "benchMs": 84,
+            "hop_le": true,
+            "ly_do": []
+          },
+          "cuon": {
+            "so_khung": 719,
+            "p95": 16.800000000000182,
+            "ti_le_cham": 0,
+            "phu_callback": {
+              "so_khung": 719,
+              "p95": 39.3999999910593,
+              "ti_le_cham": 0.0013908205841446453
+            },
+            "toi_cuoi": true
+          },
+          "go": {
+            "so_phim": 30,
+            "p95": 15.799999997019768,
+            "gia_tri_dung": true
+          },
+          "dan": {
+            "ms": 55.29999999701977,
+            "o_mau_dung": true
+          }
+        },
+        {
+          "may": {
+            "rongP95": 16.799999999999955,
+            "benchMs": 84.59999999403954,
+            "hop_le": true,
+            "ly_do": []
+          },
+          "cuon": {
+            "so_khung": 719,
+            "p95": 16.800000000000182,
+            "ti_le_cham": 0.0013908205841446453,
+            "phu_callback": {
+              "so_khung": 719,
+              "p95": 39.29999999701977,
+              "ti_le_cham": 0.0013908205841446453
+            },
+            "toi_cuoi": true
+          },
+          "go": {
+            "so_phim": 30,
+            "p95": 16.799999997019768,
+            "gia_tri_dung": true
+          },
+          "dan": {
+            "ms": 53,
+            "o_mau_dung": true
+          }
+        }
+      ]
+    }
+  },
+  "glide": null,
+  "cham": {
+    "dat": false,
+    "truot": [
+      "cuon",
+      "go",
+      "dan"
+    ],
+    "chi_tiet": [
+      "cuon: p95 100 ms (≤ 33.4), khung chậm 0.9313929313929314 (≤ 0.01)",
+      "go: p95 124.70000000298023 ms (≤ 50), giá trị đúng true",
+      "dan: 1378.0999999940395 ms (≤ 1000), ô mẫu đúng true"
+    ],
+    "trung_vi": {
+      "cuon": {
+        "p95": 100,
+        "ti_le_cham": 0.9313929313929314
+      },
+      "go": {
+        "p95": 124.70000000298023,
+        "gia_tri_dung": true
+      },
+      "dan": {
+        "ms": 1378.0999999940395,
+        "o_mau_dung": true
+      }
+    }
+  },
+  "cham_phim": {
+    "dat": false,
+    "truot": [
+      "go"
+    ],
+    "chi_tiet": [
+      "go: p95 83.90000000596046 ms (≤ 50), giá trị đúng true"
+    ],
+    "trung_vi": {
+      "cuon": {
+        "p95": 33.29999999999927,
+        "ti_le_cham": 0.0013908205841446453
+      },
+      "go": {
+        "p95": 83.90000000596046,
+        "gia_tri_dung": true
+      },
+      "dan": {
+        "ms": 143,
+        "o_mau_dung": true
+      }
+    }
+  },
+  "chon": "reui",
+  "ok": true,
+  "loi": []
+}

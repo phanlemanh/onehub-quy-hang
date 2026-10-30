@@ -1,0 +1,7 @@
+{
+  "nhanh": "thu/bai-thu-luoi-5000-dong",
+  "tag": "thu/bai-thu-luoi-5000-dong-v1",
+  "sha": "98735f182194d4c3520632bb9818eb235722e798",
+  "moc_bench_ms": 86,
+  "ghi_chu": "Mốc bài đo JS (ms, CPU giảm tốc 4×) đo ở S3 ngày 30/10 trên máy làm việc của dãy G; hiệu chuẩn loại lượt chậm hơn 1,2× mốc."
+}
