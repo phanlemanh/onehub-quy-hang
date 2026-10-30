@@ -5,7 +5,7 @@ slug: du-lieu-mau-san-thu
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [cli, db]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-10-31
 design_doc: _acceptance/du-lieu-mau-san-thu/design.md
@@ -80,3 +80,10 @@ Quét bằng tay theo bốn trục — bảng ở `design.md` mục «Không gia
   `package-lock.json`.
 - Tiêu đề cột của hai mẫu file là tiêu đề soạn từ Tham chiếu, chưa từ file thật (T-10); có file thật thì sinh lại. Mở bằng Excel thật không có thước máy — máy đọc lại bằng thư viện chuẩn của Python, ảnh tiêu đề trình ở Cổng Bằng chứng.
 - Dòng lệnh chạy bài kiểm `executors.script.du_lieu_mau` thêm vào `_acceptance/config.yaml` theo yêu cầu T-9 (giám sát duyệt).
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Bộ quét số điện thoại đếm chữ số trên cả chuỗi, nên một ghi chú dài có nhiều con số nhỏ có thể bị báo nhầm là số điện thoại.
+  - Ngoài-2: Bài kiểm chưa bắt được trường hợp bộ quét báo nhầm một số mẫu hợp lệ viết bằng dấu nối khác khoảng trắng.
+  - Ngoài-4: Ca kiểm cho số nối bằng gạch và ngoặc từng thiếu; ma trận dấu nối ở lượt 4 đã có.
+  - Ngoài-5: Lệnh nạp từng không tự đọc .env.local; đã sửa ở lượt 1.
+  - Ngoài-6: Hai luật lead từng thiếu phá thử; đã thêm ở lượt 1.
+  - Ngoài-7: Lệch toà và lệch trục của căn từng thiếu phá thử; đã thêm ở lượt 1.
