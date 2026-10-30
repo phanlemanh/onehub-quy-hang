@@ -97,7 +97,9 @@ Quét bằng morphological-scan (preset test-matrix, rút gọn), ba trục:
   `*@example.test`, dựng bằng `_acceptance/vo-ung-dung/thu/vai-mau.mjs` trên Postgres của dãy G (5546).
 - Danh sách cài thêm của hàng (S3 cập nhật nếu cài thêm): khối `app-shell-8` và các phụ thuộc nó kéo theo chưa có trên
   đĩa — `@reui/rating`, shadcn `card`.
-- Chốt ở Cổng Phạm vi 2026-10-31 (duyệt theo khuyến nghị): Hỏi-1 — nhớ cột thứ hai bằng cookie theo người và nhà;
-  Hỏi-2 — người chỉ Quản trị sàn trên điện thoại thấy hai tab «Cài đặt sàn · Tôi»; Hỏi-3 — ô gõ mã căn chỉ ở vai có
-  Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm); Hỏi-4 — vỏ điện thoại duyệt bằng chữ, hình đầu tiên xem ở Cổng Bằng
-  chứng. §9 ghi lại Hỏi-2 và Hỏi-3 trong cùng PR.
+- Chốt ở Cổng Phạm vi 2026-10-31, nguyên văn chủ kho: «vo-ung-dung: Duyệt · Hỏi-1 cookie theo người và sàn · Hỏi-2
+  hai tab Cài đặt sàn · Tôi · Hỏi-3 chỉ vai có Bảng hàng · Hỏi-4 dựng bản bấm được trước». Cách đọc: Hỏi-1 — cookie
+  khoá theo người, sàn đang làm và nhà (AC-3 vẫn nhớ từng nhà); Hỏi-2 — người chỉ Quản trị sàn trên điện thoại thấy
+  hai tab «Cài đặt sàn · Tôi»; Hỏi-3 — ô gõ mã căn chỉ ở Đầu chủ, Đầu khách, Trưởng nhóm; Hỏi-4 — dựng bản bấm được
+  của vỏ điện thoại trước (design-pass), chủ kho xem gói ảnh rồi mới làm phần còn lại. §9 ghi lại Hỏi-2 và Hỏi-3
+  trong cùng PR.
