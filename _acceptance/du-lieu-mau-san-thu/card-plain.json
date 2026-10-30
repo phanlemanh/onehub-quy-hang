@@ -1,0 +1,33 @@
+{
+  "feature_plain": "Một lệnh dựng sàn thử bằng dữ liệu giả — một dự án căn hộ hai toà, người mẫu đủ năm vai, chủ nhà và lead giả, hai file bảng hàng Excel mẫu — chạy lại ra đúng dữ liệu cũ, xoá bằng một lệnh chỉ mất dữ liệu mẫu.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ sinh ra đúng cùng dữ liệu và cùng hai file Excel mỗi lần chạy lại, khớp bản đã lưu trong kho."},
+    {"id": "AC-2", "p": "Sẽ chỉ dùng số điện thoại dạng 0900 000 0xx, email miền thử và tên mở đầu «[Mẫu]» — ở dữ liệu, file Excel và cơ sở dữ liệu."},
+    {"id": "AC-3", "p": "Sẽ gắn nhãn mẫu cho mọi bản ghi, đếm đủ từng loại: sàn, người, căn, chủ nhà, hàng, lead, dòng file và dòng cơ sở dữ liệu."},
+    {"id": "AC-5", "p": "Sẽ phủ đủ sáu trạng thái của hàng, mỗi căn tối đa một hàng mở, một chủ nhà một đầu chủ, và có lead trùng để thử kiểm trùng."},
+    {"id": "AC-6", "p": "Sẽ có hai file Excel khác kiểu (Sheet đầu chủ viết tắt, file đầy đủ) mà mỗi ô đọc lại đúng giá trị của hàng mẫu."},
+    {"id": "AC-7", "p": "Sẽ nạp sàn thử, sáu người mẫu đúng vai, hai khu là hai toà; nạp lại không sinh trùng."},
+    {"id": "AC-8", "p": "Sẽ xoá sạch dữ liệu mẫu bằng một lệnh mà sàn và tài khoản khác không mất gì; nạp lại cho đúng như lần đầu."}
+  ],
+  "wont_do": [
+    {"id": "AC-4", "p": "Chặn danh mục sai khuôn: dự án → toà → căn phải qua khuôn danh mục của kho, mã căn duy nhất và khớp tầng, trục, toà."},
+    {"id": "OOS-1", "p": "Sẽ KHÔNG tạo bảng hàng, lead, chủ nhà trong cơ sở dữ liệu — các hàng 8, 9–10, 11, 24 nạp từ tệp dữ liệu mẫu khi dựng bảng."},
+    {"id": "OOS-2", "p": "Sẽ KHÔNG có ảnh mẫu, tin rao ngoài hay số liệu thị trường."},
+    {"id": "OOS-3", "p": "Sẽ KHÔNG chọn dự án thật cho sàn thử — chủ kho chọn sau."},
+    {"id": "OOS-4", "p": "Sẽ KHÔNG có chặn riêng cho môi trường thật khi xoá — kho chưa có môi trường thật."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Mọi loại bản ghi đều được quét số điện thoại, tên và nhãn mẫu — AC-2 (không dữ liệu thật), AC-3 (nhãn mẫu)."},
+    {"i": 1, "p": "Ba ngưỡng của ô cơ hội mỗi ngưỡng có tiêu chí riêng — AC-1 (tất định), AC-2, AC-3, AC-8 (xoá một lần)."},
+    {"i": 2, "p": "Luật của danh mục, trạng thái, một hàng mở, một chủ một đầu chủ và lead trùng — AC-4 (khuôn danh mục), AC-5 (luật Tham chiếu)."},
+    {"i": 3, "p": "Hai đích: tệp trong kho và cơ sở dữ liệu — AC-1, AC-6 (hai file Excel), AC-7 (nạp), AC-8."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Bộ dò số điện thoại có thể nhầm giá bằng đồng là số điện thoại — đã sửa: dò theo cột điện thoại, quét rộng chỉ bắt số 10 chữ số mở đầu 0, và kiểm ô giá không bị nhầm."},
+    {"i": 1, "p": "Kiểm dòng cơ sở dữ liệu bằng chính nhãn thì luôn xanh — đã sửa: lấy dòng do lệnh nạp tạo bằng so trước/sau, rồi mới kiểm nhãn; thêm ca chèn người không mang nhãn."},
+    {"i": 2, "p": "Không có thước máy nào chứng file mở được bằng Excel thật — hoãn: Cổng Bằng chứng trình ảnh tiêu đề, chủ kho mở thử một lần."},
+    {"i": 3, "p": "Ngưỡng chết chưa có hạn chót — chủ kho quyết ở Hỏi-3."},
+    {"i": 4, "p": "Phần email chưa có ca chèn email lạ — đã sửa: chèn email lạ vào ghi chú và vào một ô file Excel thì bài quét phải đỏ."}
+  ],
+  "analyst_plain": ""
+}
