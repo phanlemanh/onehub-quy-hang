@@ -12,8 +12,8 @@ import { kiemThuTu, taoHangDoi } from './hang-doi.mjs';
 import { apDuLieuMau, keo, taoMayChu, taoNhatKy, trongPhien } from './may-chu.mjs';
 import { bangKetQua, ketLuan, lamSach } from './tom-tat.mjs';
 
-const URL_DB = process.env.DATABASE_URL;
-if (!URL_DB) throw new Error('bài kiểm đồng bộ cần DATABASE_URL tới Postgres của dãy (đã áp 001_nen_cong_ty.sql)');
+// Vắng DATABASE_URL (lượt chấm chạy trong vỏ mới) thì lùi về Postgres dãy T — luật 7 của đợt nen-dau: T → 5547.
+const URL_DB = process.env.DATABASE_URL ?? 'postgres://postgres:quyhang@localhost:5547/postgres';
 
 let pool;
 let may;
@@ -242,7 +242,7 @@ describe('AC-8 một lệnh', () => {
     const thuMuc = mkdtempSync(path.join(goc0, 'kiem-'));
     try {
       const chay = path.join(path.dirname(fileURLToPath(import.meta.url)), 'chay.mjs');
-      const tt = spawn(process.execPath, [chay, '--khong-ham', '--cong', '0', '--thu-muc', thuMuc], { stdio: ['ignore', 'pipe', 'pipe'], env: process.env });
+      const tt = spawn(process.execPath, [chay, '--khong-ham', '--cong', '0', '--thu-muc', thuMuc], { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, DATABASE_URL: URL_DB } });
       let ra = '';
       await new Promise((ok, loi) => {
         tt.stdout.on('data', (c) => {
