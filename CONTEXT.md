@@ -21,3 +21,6 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Thoả thuận | `agreement` | Cho phép một loại kết nối chảy theo một chiều, cho các lớp dữ liệu, trong một thời hạn | «Tích hợp» |
 | Kết nối | `connection_kind` | Loại đường nối: nguồn danh mục, kênh đăng, nguồn lead, bảng tính, hợp tác giữa công ty, API của công ty | — |
 | Lớp dữ liệu | `data_class` | Nhóm trường cùng một trần; thoả thuận chỉ mở tới trần | — |
+| Thành viên sàn | `company_member` | Một người thuộc một sàn; một người thuộc được nhiều sàn | — |
+| Sàn đang làm | `active company` (cookie `qh_san`) | Sàn mà mọi lời gọi của người đang chạy trong đó; người nhiều sàn chọn ở màn Chọn sàn | — |
+| Mã đăng nhập | `otp` | Mã 6 số gửi qua email để đăng nhập | «Mật khẩu» |

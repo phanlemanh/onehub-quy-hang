@@ -1,0 +1,63 @@
+# E10 network truth — chay lai 2026-10-30 14:42:14; driver playwright, may chu web-q cong 3461
+## console errors (playwright, ca phien)
+[ERROR] 404 http://localhost:3461/favicon.ico  (static asset - chi note)
+[ERROR] 400 POST /api/v1/auth/sign-in/email-otp  (ma 000000 sai, buoc 3)
+[ERROR] 400 POST /api/v1/auth/sign-in/email-otp  (sai lan 1, buoc 11)
+[ERROR] 400 POST /api/v1/auth/sign-in/email-otp  (sai lan 2, buoc 11)
+[ERROR] 400 POST /api/v1/auth/sign-in/email-otp  (sai lan 3, buoc 11)
+[ERROR] 403 POST /api/v1/auth/sign-in/email-otp  (lan 4 nhap ma dung sau 3 lan sai, buoc 11)
+## playwright network (non-static)
+24. [POST] http://localhost:3461/api/v1/auth/sign-out => [200] OK
+25. [GET] http://localhost:3461/dang-nhap?_rsc=2Md0sTUZcnjCijMr => [200] OK
+28. [GET] http://localhost:3461/dang-nhap?_rsc=0I14qit8GTY8r3Mk => [200] OK
+31. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+32. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [200] OK
+33. [GET] http://localhost:3461/?_rsc=aTcg21bvfaPruLii => [200] OK
+34. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+35. [GET] http://localhost:3461/chon-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+36. [GET] http://localhost:3461/chon-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+39. [POST] http://localhost:3461/api/v1/me/san => [200] OK
+40. [GET] http://localhost:3461/?_rsc=E7Gy37_LWEYjPFaS => [200] OK
+41. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+42. [POST] http://localhost:3461/api/v1/auth/sign-out => [200] OK
+43. [GET] http://localhost:3461/dang-nhap?_rsc=quKR1j806_QLXr01 => [200] OK
+44. [GET] http://localhost:3461/dang-nhap?_rsc=0I14qit8GTY8r3Mk => [200] OK
+45. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+46. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [200] OK
+47. [GET] http://localhost:3461/?_rsc=aTcg21bvfaPruLii => [200] OK
+48. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+49. [GET] http://localhost:3461/chua-gan-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+50. [GET] http://localhost:3461/chua-gan-san?_rsc=2Md0sTUZcnjCijMr => [200] OK
+52. [POST] http://localhost:3461/api/v1/auth/sign-out => [200] OK
+53. [GET] http://localhost:3461/dang-nhap?_rsc=NtONTD0cuo7vxqDz => [200] OK
+54. [GET] http://localhost:3461/dang-nhap?_rsc=0I14qit8GTY8r3Mk => [200] OK
+55. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+56. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+57. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+58. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+59. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [403] FORBIDDEN
+60. [POST] http://localhost:3461/api/v1/auth/email-otp/send-verification-otp => [200] OK
+61. [POST] http://localhost:3461/api/v1/auth/sign-in/email-otp => [200] OK
+62. [GET] http://localhost:3461/?_rsc=aTcg21bvfaPruLii => [200] OK
+63. [GET] http://localhost:3461/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+
+Note: 30 static requests not shown, run with "static" option to see them.## nhat ky may chu /api/ (preview_logs)
+POST /api/v1/auth/email-otp/send-verification-otp 200
+POST /api/v1/auth/sign-in/email-otp 400
+POST /api/v1/auth/sign-in/email-otp 200
+POST /api/v1/auth/sign-out 200
+POST /api/v1/auth/email-otp/send-verification-otp 200
+POST /api/v1/auth/sign-in/email-otp 200
+POST /api/v1/me/san 200
+POST /api/v1/auth/sign-out 200
+POST /api/v1/auth/email-otp/send-verification-otp 200
+POST /api/v1/auth/sign-in/email-otp 200
+POST /api/v1/auth/sign-out 200
+POST /api/v1/auth/email-otp/send-verification-otp 200
+POST /api/v1/auth/sign-in/email-otp 400
+POST /api/v1/auth/sign-in/email-otp 400
+POST /api/v1/auth/sign-in/email-otp 400
+POST /api/v1/auth/sign-in/email-otp 403
+POST /api/v1/auth/email-otp/send-verification-otp 200
+POST /api/v1/auth/sign-in/email-otp 200
+Ket luan: moi 4xx app = 400 (4 lan, ma sai) + 403 (1 lan) — dung nhu expected khai; khong 5xx; khong connection error.

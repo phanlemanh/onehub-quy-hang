@@ -152,7 +152,7 @@ Hai chiều với Platform là đúng thiết kế: hàng đi ra, khách đi và
 | Cơ sở dữ liệu | Postgres trên Supabase, dự án riêng, vùng Singapore | Cùng nhà cung cấp; tách dự án để số chủ nhà không chung kho với Invest; gần Việt Nam | Đã dùng |
 | Truy cập dữ liệu | SQL thuần + migration đánh số, như Invest | Luật cách ly viết bằng SQL; quen tay | Đã dùng |
 | Cách ly và lớp trường | Luật theo dòng theo mã sàn; chủ nhà ở bảng riêng; mở số qua một hàm duy nhất có ghi sự kiện | Biến «sàn này không thấy gì của sàn kia» và «số chủ chỉ đầu chủ thấy» thành luật của kho dữ liệu, không trông vào màn hình | Đã chốt dùng luật theo dòng (28/10) |
-| Đăng nhập | better-auth, phần tổ chức: mỗi sàn một tổ chức, vai, lời mời | CRM đang dùng; hỗ trợ nhiều tổ chức — đúng phần CRM đã tắt | Đã dùng; cách đăng nhập cần chốt |
+| Đăng nhập | better-auth chỉ giữ danh tính (email + mã 6 số); thành viên sàn là bảng của Quỹ hàng có luật theo dòng | CRM đang dùng better-auth; vai và «một người nhiều vai, có khu» không vừa khuôn tổ chức của thư viện | Đã chốt 30/10 — [ADR-0005](../adr/0005-dang-nhap-theo-san.md) |
 | Đồng bộ và kho trên máy | Ghi: lệnh qua API, máy chủ kiểm quyền và luật rồi ghi sự kiện. Đọc: bộ đồng bộ đưa đúng phần người đó được thấy xuống kho trên máy | Đáp ứng ghi trên máy trước, đụng nhau thì hỏi, mang theo ít | **Thử trước**: PowerSync là ứng viên chính, ElectricSQL là phụ. Không đạt thì tự làm mỏng: kho trình duyệt + hàng đợi ghi + kênh thời gian thực của Supabase |
 | Ảnh | Supabase Storage, hai vùng; sinh bản thu nhỏ khi tải lên | Gửi bản nhẹ, giữ bản gốc; ngăn nội bộ chỉ mở bằng link ngắn hạn | Đã dùng (nhà cung cấp) |
 | Việc nền | Bảng việc trong Postgres + lịch chạy mỗi phút của Vercel | Hạn lead 15 phút, hàng đợi hằng đêm, ảnh thu nhỏ, nạp nguồn cấp — không thêm hạ tầng | Mẫu đang chạy ở CRM |
@@ -209,7 +209,7 @@ Ghi nhận thiết bị theo vai làm các giới hạn này nhẹ đi: việc c
 ## 10. Chỗ cần chốt kỹ thuật
 
 - [x] Tên kho và tạo kho riêng tư — đã tạo 29/10: `phanlemanh/onehub-quy-hang`, có khung, CI hai check (kiểm tra chung, cách ly giữa công ty) và bảo vệ nhánh main.
-- [ ] Cách đăng nhập bản đầu. Đề xuất: email kèm link đăng nhập và Google cho đội thử; thêm số điện thoại + mã OTP khi có sàn ngoài, vì môi giới quen số điện thoại hơn email. Mạnh 29/10: để sau, hỏi ở vòng đăng nhập theo sàn.
+- [x] Cách đăng nhập bản đầu — chốt 30/10 ([ADR-0005](../adr/0005-dang-nhap-theo-san.md)): email + mã 6 số qua email; số điện thoại + OTP và Google để sau.
 - [ ] Bộ đồng bộ: dùng dịch vụ có sẵn (thêm một hạ tầng, có phí) hay tự làm mỏng. Quyết sau bài thử (b).
 - [ ] Tên miền trang khách: chung một tên miền, tên và logo sàn trên trang (đề xuất); tên miền riêng của sàn để sau. Mạnh 29/10: để sau, hỏi ở vòng trang khách.
 - [x] Khung toà do sàn nhập Excel có góp về Invest không — không ở bản đầu: chiều Quỹ hàng → Invest đang tắt (ADR-0017 §6).
