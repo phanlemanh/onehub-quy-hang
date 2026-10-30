@@ -15,7 +15,7 @@ export function DanhSachSan({ companies }: { companies: { id: string; name: stri
           size="lg"
           className="justify-start"
           onClick={async () => {
-            const res = await fetch("/api/v1/me/san", {
+            const res = await fetch("/api/v1/me/company", {
               method: "POST",
               headers: { "content-type": "application/json" },
               body: JSON.stringify({ companyId: c.id }),

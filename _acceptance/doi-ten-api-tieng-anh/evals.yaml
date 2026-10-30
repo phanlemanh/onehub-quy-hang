@@ -1,0 +1,110 @@
+schema_version: 1
+feature_slug: doi-ten-api-tieng-anh
+# Hai lệnh máy: `executors.test.api` (kiểm thử không cần Postgres của packages/api) và `executors.test.isolation`
+# (bộ cách ly + packages/api/test-db, cần Postgres). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng
+# reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «OpenAPI liệt đúng bộ đường tiếng Anh» có mặt và ok — tập cặp (phương thức, đường) của /api/v1/openapi.json BẰNG đúng ma trận mười cặp viết trước {GET /api/v1/health, GET /api/v1/me, POST /api/v1/me/company, GET /api/v1/company, GET /api/v1/company/members, POST /api/v1/company/members, PATCH /api/v1/company/members/{userId}, DELETE /api/v1/company/members/{userId}, GET /api/v1/company/zones, POST /api/v1/company/zones} (so tập, không so có-mặt). Chiều đỏ: thêm, bớt, giữ đường cũ hay đổi một phương thức → ca đỏ nêu cặp thừa/thiếu."
+    paths: [packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đường cũ trả 404» có mặt và ok — với phiên hợp lệ và sàn đã chọn: GET /api/v1/san, GET /api/v1/san/thanh-vien, GET /api/v1/san/khu, POST /api/v1/me/san đều trả 404; đối chứng cùng phiên: GET /api/v1/company trả 200. Chiều đỏ: đường cũ còn phục vụ → ca đỏ nêu đường."
+    paths: [packages/api/src/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; mọi ca của packages/api/test-db và bộ cách ly có mặt và ok, gọi đường mới và so mã lỗi qua hằng API_ERRORS — gồm các ca của hàng 6 và 7 (chưa gắn sàn → no-company 403, nhiều sàn chưa chọn → select-company 409, không phải quản trị → admin-required 403, mời trùng → already-member 409, quản trị cuối → last-admin 409, khu sàn khác → invalid-zone 400, vai lạ → invalid-role 400, vai rỗng → role-required 400, tên khu trùng → zone-name-taken 409, không thấy → not-found 404). Số ca không giảm so với main trước hàng này. Chiều đỏ: một đường trả mã cũ → ca đỏ nêu mã thấy được."
+    paths: [packages/api/src/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «API_ERRORS khớp bảng đổi tên» có mặt và ok — hằng có ĐÚNG mười ba mục, mỗi mục đúng mã tiếng Anh và mã HTTP theo bảng của bản thiết kế (ma trận viết trước, so từng mục), mã nào cũng khớp /^[a-z]+(-[a-z]+)*$/. Chiều đỏ: đổi một mã hay mã HTTP → ca đỏ nêu mục."
+    paths: [packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «không còn tên tiếng Việt cũ trong mã nguồn» có mặt và ok — quét mọi tệp .ts/.tsx dưới packages/api/src và apps/web/src (trừ chính tệp kiểm thử chứa danh sách), danh sách đóng 13 mã lỗi cũ + 4 đường API cũ + 3 đường màn cũ + 3 mã nội bộ form đăng nhập, không chuỗi nào còn; kèm đối chứng dương trên CÙNG hàm quét: một văn bản cấy chuỗi `chua-gan-san` bị bắt và thông điệp nêu chuỗi. Ca «màn đọc mã lỗi từ API_ERRORS» có mặt và ok. Chiều đỏ: cấy lại một chuỗi cũ vào mã → ca đỏ nêu tệp và chuỗi."
+    paths: [packages/api/src/**, apps/web/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Dựng dữ liệu: `npm run van-hanh:mo-san -w @quy-hang/db -- --ten '[Sàn mẫu DT-A]' --email dt-quan-tri@example.test`, rồi mở thêm `[Sàn mẫu DT-B]` cho cùng email; mở `[Sàn mẫu DT-C]` cho dt-mot-san@example.test; tạo tài khoản dt-khong-san@example.test không thuộc sàn nào bằng kết nối chủ"
+      - "Chạy dev bằng cấu hình `web-q` của `.claude/launch.json` (cổng 3461); đọc mã từ nhật ký máy chủ `[ma-dang-nhap] <email> <mã>`"
+      - "Chưa đăng nhập, mở http://localhost:3461/settings/users → bị đưa về /login → chụp evidence/E5-step1.png (thanh địa chỉ thấy /login)"
+      - "Bật ghi nhật ký mạng của trình duyệt. Đăng nhập dt-quan-tri@example.test → tới /select-company với hai sàn → chụp evidence/E5-step2.png; chọn [Sàn mẫu DT-A] → tới trang chủ → chụp evidence/E5-step3.png; ghi các lời gọi /api/v1/** của trình duyệt từ lúc đăng nhập tới đây vào evidence/E5-network.txt"
+      - "Vẫn đăng nhập dt-quan-tri và đã chọn sàn, mở http://localhost:3461/dang-nhap, /chon-san, /chua-gan-san → mỗi đường thấy trang 404 của app → chụp evidence/E5-step4.png (một trong ba) và ghi mã HTTP của cả ba vào cuối evidence/E5-network.txt"
+      - "Đăng xuất → về /login → chụp evidence/E5-step5.png"
+      - "Đăng nhập dt-khong-san@example.test → tới /no-company → chụp evidence/E5-step6.png"
+    expected: "Sáu khung khớp: step1 ST-login-email ở /login · step2 ST-select-company ở /select-company · step3 trang chủ · step4 trang 404 khi đã đăng nhập · step5 /login sau đăng xuất · step6 ST-no-company ở /no-company. evidence/E5-network.txt có đối chứng dương — lời gọi POST /api/v1/me/company trả 200 lúc chọn sàn — và không dòng nào tới /api/v1/san hay /api/v1/me/san; ba đường màn cũ ghi 404. (Lời gọi phía máy chủ của trang không hiện trên trình duyệt; phần ấy do E1–E3 đo.)"
+    paths: [apps/web/src/**, packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot, network]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Dùng dữ liệu của E5; đăng nhập dt-mot-san@example.test (quản trị duy nhất của [Sàn mẫu DT-C]) ở http://localhost:3461/login"
+      - "Mở /settings/users → danh sách có chính mình → chụp evidence/E6-step1.png"
+      - "Mời dt-moi@example.test với vai Đầu chủ → người mới hiện trong danh sách; mời lại đúng email ấy → thấy «Email này đã là thành viên của sàn.» → chụp evidence/E6-step2.png"
+      - "Thử bỏ chính mình (quản trị cuối) → thấy «Sàn cần ít nhất một quản trị.» → chụp evidence/E6-step3.png"
+      - "Ghi các lời gọi API của màn vào evidence/E6-network.txt"
+    expected: "Ba khung khớp: step1 ST-nguoi-dung-danh-sach · step2 ST-users-loi-ma-moi (câu tiếng Việt, không lộ mã already-member) · step3 câu «Sàn cần ít nhất một quản trị.»; nhật ký mạng: danh sách, khu, mời, bỏ đi tới /api/v1/company/members và /api/v1/company/zones, hai lỗi trả 409 với mã already-member và last-admin; không lời gọi nào tới /api/v1/san."
+    paths: [apps/web/src/app/settings/**, packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok: «mời: email đã là thành viên trả 409 already-member, không đổi gì» và «quản trị cuối: bỏ khỏi sàn bị từ chối 409 last-admin» — gọi /api/v1/company/members. Chiều đỏ: mã khác → ca đỏ nêu mã."
+    paths: [packages/api/src/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: judgment
+    inputs:
+      - apps/web/src/app/(auth)/login/page.tsx
+      - apps/web/src/app/(auth)/login/form.tsx
+      - apps/web/src/app/(auth)/select-company/page.tsx
+      - apps/web/src/app/(auth)/select-company/danh-sach.tsx
+      - apps/web/src/app/(auth)/no-company/page.tsx
+      - apps/web/src/app/settings/users/quan-nguoi.tsx
+    question: "Trong sáu tệp màn này, mọi chuỗi người dùng nhìn thấy (tiêu đề, nhãn, nút, câu báo lỗi) có còn là tiếng Việt không, và có chỗ nào đưa thẳng một mã lỗi hay đường tiếng Anh ra chữ trên màn (ví dụ in `error` của API thay vì câu tiếng Việt) không?"
+    expected: "Mọi chuỗi người thấy là tiếng Việt; mã lỗi tiếng Anh chỉ dùng làm khoá tra câu tiếng Việt, không hiện ra chữ; không đường tiếng Anh nào hiện ra chữ."
+    evidence_required: [run_id, verifier, verified_at, rationale]
+
+  - id: E8
+    criterion: AC-8
+    executor: judgment
+    inputs:
+      - docs/adr/0007-api-tieng-anh.md
+      - docs/adr/0005-dang-nhap-theo-san.md
+      - docs/product/tham-chieu.md
+    question: "ADR-0007 có nêu bảng đổi tên đường API, mã lỗi, đường màn, lý do đổi, và ba thứ cố ý giữ (cookie qh_san, tên tệp tiếng Việt, thẻ nhật ký mã dev) không; ADR-0005 có dòng trỏ sang ADR-0007 cho phần mã lỗi không; Tham chiếu §12 «Sổ quyết định» có dòng ghi quyết định này không?"
+    expected: "Cả ba có: ADR-0007 đủ bảng + lý do + ba thứ giữ; ADR-0005 trỏ ADR-0007; Tham chiếu §12 có dòng."
+    evidence_required: [run_id, verifier, verified_at, rationale]

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ChuaGanSan() {
   const me = await readMe((await headers()).get("cookie") ?? "");
-  if (!me) redirect("/dang-nhap");
+  if (!me) redirect("/login");
   if (me.companies.length > 0) redirect("/");
   return (
     <Khung title="Chưa thuộc sàn nào">

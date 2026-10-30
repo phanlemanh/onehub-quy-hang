@@ -1,15 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 // Kiểm lạc quan: chưa có cookie phiên thì về màn đăng nhập. Phiên thật kiểm ở máy chủ (API, trang dựng ở máy chủ) —
-// cookie còn mà phiên đã hết thì trang tự đưa về /dang-nhap.
+// cookie còn mà phiên đã hết thì trang tự đưa về /login.
 const SESSION_COOKIES = ["qh.session_token", "__Secure-qh.session_token"];
 
 export function proxy(request: NextRequest) {
   const hasSession = SESSION_COOKIES.some((name) => request.cookies.has(name));
-  // Bản mẫu design-pass chỉ chạy ở máy dev, không đọc dữ liệu thật — không đòi phiên.
-  const isDevProto = process.env.NODE_ENV !== "production" && request.nextUrl.pathname.startsWith("/proto/");
-  if (!hasSession && !isDevProto && request.nextUrl.pathname !== "/dang-nhap") {
-    return NextResponse.redirect(new URL("/dang-nhap", request.url));
+  if (!hasSession && request.nextUrl.pathname !== "/login") {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
   return NextResponse.next();
 }

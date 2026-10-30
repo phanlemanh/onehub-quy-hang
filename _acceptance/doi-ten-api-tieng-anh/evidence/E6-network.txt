@@ -1,0 +1,9 @@
+E6 network (browser, /settings/users, dang nhap dt-mot-san@example.test) — playwright browser_network_requests, non-static
+25. [POST] http://localhost:3461/api/v1/company/members => [201] Created   (moi dt-moi@example.test, vai Dau chu)
+26. [GET]  http://localhost:3461/settings/users?_rsc=CRD1XJjlbM-GJsws => [200] OK  (router refresh sau moi)
+27. [POST] http://localhost:3461/api/v1/company/members => [409] Conflict  body {"error":"already-member"}
+28. [DELETE] http://localhost:3461/api/v1/company/members/ffe52965-6dc4-4d52-b5d1-8cc510eab753 => [409] Conflict  body {"error":"last-admin"}
+Khong co request nao toi /api/v1/san.
+Danh sach va khu: goi trong tien trinh may chu (apps/web/src/app/settings/users/page.tsx dong 19 va 33: api.request(".../api/v1/company/members" va ".../company/zones")) — khong hien tren nhat ky trinh duyet.
+Console errors: favicon.ico 404 (static, note-only); 409 /company/members; 409 DELETE /company/members/<id> (hai loi 409 dung expected).
+Server log (/private/tmp/claude-501/e5-server.log): POST members 201, POST members 409, DELETE members 409.

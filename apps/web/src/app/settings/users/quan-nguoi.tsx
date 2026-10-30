@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
+import { API_ERRORS, type ApiErrorCode } from "@quy-hang/api/errors";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,15 +26,19 @@ import { nhanVai, VAI } from "@/lib/vai";
 export type Khu = { id: string; name: string };
 export type ThanhVien = { userId: string; email: string; roles: string[]; zones: Khu[] };
 
-const CHU: Record<string, string> = {
-  "da-la-thanh-vien": "Email này đã là thành viên của sàn.",
-  "can-mot-quan-tri": "Sàn cần ít nhất một quản trị.",
-  "can-it-nhat-mot-vai": "Chọn ít nhất một vai.",
-  "khu-trung-ten": "Tên khu này đã có.",
+// Mã lỗi của API chỉ là khoá tra câu báo — không bao giờ hiện ra chữ.
+const CHU: Partial<Record<ApiErrorCode, string>> = {
+  [API_ERRORS.alreadyMember.code]: "Email này đã là thành viên của sàn.",
+  [API_ERRORS.lastAdmin.code]: "Sàn cần ít nhất một quản trị.",
+  [API_ERRORS.roleRequired.code]: "Chọn ít nhất một vai.",
+  [API_ERRORS.zoneNameTaken.code]: "Tên khu này đã có.",
 };
 const goi = (method: string, path: string, body?: unknown) =>
-  fetch(`/api/v1/san${path}`, { method, headers: { "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
-const loiCua = async (res: Response) => CHU[((await res.json().catch(() => ({}))) as { error?: string }).error ?? ""] ?? "Có lỗi, thử lại.";
+  fetch(`/api/v1/company${path}`, { method, headers: { "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+const loiCua = async (res: Response) => {
+  const ma = ((await res.json().catch(() => ({}))) as { error?: ApiErrorCode }).error;
+  return (ma && CHU[ma]) || "Có lỗi, thử lại.";
+};
 
 /** Chọn nhiều bằng Checkbox — dùng cho vai và khu. */
 function ChonNhieu({ ten, cac, chon, doi }: { ten: string; cac: { ma: string; nhan: string }[]; chon: string[]; doi: (x: string[]) => void }) {
@@ -78,7 +84,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
   async function moi(e: FormEvent) {
     e.preventDefault();
     setLoiMoi("");
-    const res = await goi("POST", "/thanh-vien", { email: email.trim(), roles: vai, zoneIds: khuChon });
+    const res = await goi("POST", "/members", { email: email.trim(), roles: vai, zoneIds: khuChon });
     if (!res.ok) return setLoiMoi(await loiCua(res));
     setEmail("");
     setVai([]);
@@ -90,14 +96,14 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
     e.preventDefault();
     if (!sua) return;
     setLoiSua("");
-    const res = await goi("PATCH", `/thanh-vien/${sua.userId}`, { roles: suaVai, zoneIds: suaKhu });
+    const res = await goi("PATCH", `/members/${sua.userId}`, { roles: suaVai, zoneIds: suaKhu });
     if (!res.ok) return setLoiSua(await loiCua(res));
     setSua(null);
     lamMoi();
   }
   async function xacNhanBo() {
     if (!bo) return;
-    const res = await goi("DELETE", `/thanh-vien/${bo.userId}`);
+    const res = await goi("DELETE", `/members/${bo.userId}`);
     if (!res.ok) return setLoiBo(await loiCua(res));
     setBo(null);
     lamMoi();
@@ -105,7 +111,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
   async function themKhu(e: FormEvent) {
     e.preventDefault();
     setLoiKhu("");
-    const res = await goi("POST", "/khu", { name: tenKhu.trim() });
+    const res = await goi("POST", "/zones", { name: tenKhu.trim() });
     if (!res.ok) return setLoiKhu(await loiCua(res));
     setTenKhu("");
     lamMoi();
