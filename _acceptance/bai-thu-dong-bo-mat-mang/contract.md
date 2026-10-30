@@ -5,7 +5,7 @@ slug: bai-thu-dong-bo-mat-mang
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, cli]
-status: verified
+status: signed-off
 design_doc: _acceptance/bai-thu-dong-bo-mat-mang/design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30
@@ -82,3 +82,9 @@ Quét bằng morphological-scan (preset test-matrix) — chi tiết trong `desig
 - Lộ trình ghi hàng này T3; máy suy T2 vì bài thử không chạm `packages/db/**` hay lõi.
 - Phiên mất mạng thật cần chủ kho cầm điện thoại: gom thành một yêu cầu `can-nguoi` (luật đợt 16); mạng công ty chặn
   đường hầm — chạy trên điểm phát điện thoại.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-30:
+  - Ngoài-1: một thay đổi cứ bị lỗi thì các thay đổi sau không lên máy chủ và trang thử không báo gì, chỉ thấy số chờ đứng yên.
+  - Ngoài-2: chạy bài kiểm mà quên khai cơ sở dữ liệu thì nó dựng lại bảng mẫu trên Postgres cổng 5547.
+  - Ngoài-3: ai có link của phiên thử đều xem được nhật ký có số chủ mẫu của mọi vai.
+  - Trong hợp đồng (AC-9): luật kết luận so số thay đổi máy còn giữ lúc nối lại với số tạo trong lúc mất mạng, nên có thể chấm không đạt oan khi có thay đổi tạo ngay trước lúc máy báo mất mạng.
+  - Trong hợp đồng (AC-8): ca kiểm lệnh một-lệnh đếm dữ liệu mẫu đã có sẵn, nên chưa chứng minh lệnh tự dựng mẫu.

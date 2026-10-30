@@ -1,21 +1,4 @@
 {
-  "feature_plain": "Dựng thử một bộ đồng bộ để biết: mỗi người chỉ nhận đúng phần mình được thấy (không lộ dữ liệu sàn khác, không lộ số chủ của đầu chủ khác), và mất mạng năm phút rồi nối lại thì mọi thay đổi lên máy chủ đủ và đúng thứ tự — rồi đề xuất nên dùng bộ đồng bộ nào.",
-  "will_do": [
-    {"id":"AC-1","p":"Sẽ chỉ đưa xuống máy mỗi người dữ liệu của sàn mình; phiên chưa xác định sàn nhận về rỗng."},
-    {"id":"AC-2","p":"Sẽ chỉ đưa số chủ cho đầu chủ đang giữ căn và trưởng nhóm, xét trên toàn bộ dữ liệu xuống máy."},
-    {"id":"AC-3","p":"Sẽ để cơ sở dữ liệu tự chặn dữ liệu sàn khác, không trông vào máy chủ nhớ lọc."},
-    {"id":"AC-4","p":"Sẽ giữ mọi thay đổi trên máy khi mất mạng, kể cả khi tải lại trang, và đẩy lên đúng thứ tự khi có mạng."},
-    {"id":"AC-7","p":"Sẽ có trang thử trên điện thoại hiện trạng thái mạng và số thay đổi đang chờ đẩy."},
-    {"id":"AC-8","p":"Sẽ chạy cả bài thử bằng một lệnh, kèm dữ liệu mẫu hai sàn và các bước cho người thử."},
-    {"id":"AC-9","p":"Sẽ ghi kết quả đạt hay không bằng số máy tính ra từ nhật ký phiên thật, theo luật viết trước."},
-    {"id":"AC-10","p":"Sẽ viết quyết định kiến trúc dạng đề xuất so ba lối: tự làm mỏng, PowerSync, ElectricSQL."}
-  ],
-  "wont_do": [
-    {"id":"AC-5","p":"Sẽ KHÔNG áp một thay đổi hai lần khi mạng chập chờn, và không bỏ sót thay đổi chưa được xác nhận."},
-    {"id":"AC-6","p":"Chặn mọi thay đổi nhắm vào căn của sàn khác, và báo lý do về máy."},
-    {"id":"OOS-1","p":"KHÔNG dựng PowerSync hay ElectricSQL để đo ở lượt này — quyết định kiến trúc ghi rõ «chưa đo»."},
-    {"id":"OOS-2","p":"KHÔNG xử hai người cùng sửa một căn lúc mất mạng, không đồng bộ ảnh, không xoá dữ liệu trên máy khi đăng xuất."},
-    {"id":"OOS-3","p":"KHÔNG viết mã sản phẩm cho phần đồng bộ — đó là việc của hàng dựng sau khi chốt."},
-    {"id":"OOS-4","p":"KHÔNG tự chốt bộ đồng bộ — chủ kho chốt."}
-  ]
+  "feature_plain": "Bài thử bộ đồng bộ: mỗi người chỉ nhận đúng căn và số chủ của mình về máy, mất mạng thì thay đổi được giữ trên máy rồi lên đủ và đúng thứ tự khi có mạng lại — kết quả đưa vào đề xuất chọn bộ đồng bộ.",
+  "analyst_plain": ""
 }
