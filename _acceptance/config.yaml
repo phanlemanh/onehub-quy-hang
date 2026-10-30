@@ -19,7 +19,7 @@ executors:
     # trỏ bản cài (tìm bằng feature-loop/scripts/resolve-plugin.mjs --plugin acceptance-gate). Không ghi đường cache.
     product_map: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/product-map.mjs\" --root . --check"
     bai_thu_zalo: "node --test \"_acceptance/bai-thu-zalo/thu/*.test.mjs\""   # mã thử hàng 3 (luật đợt 5) — duyệt ở yêu cầu T-3
-    luoi_do_lai: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs"   # bai-thu-luoi-5000-dong: dựng nhánh thử từ tag, đo, so ngưỡng — cổng 3462
+    luoi_do_lai: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs"   # bai-thu-luoi-5000-dong: dựng nhánh thử từ tag, đo, so ngưỡng — cổng riêng 3468
     luoi_trang: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs --chi-trang --cong 3466"   # cổng và worktree riêng: chạy song song với luoi_do_lai khi chấm
     luoi_main_sach: "node _acceptance/bai-thu-luoi-5000-dong/thu/main-sach.mjs"
     typecheck: "npm run typecheck"                # tang-5-giao-dien

@@ -13,7 +13,8 @@ import { ketLuan } from "./nguong.mjs";
 const THU = dirname(fileURLToPath(import.meta.url));
 const GOC = execFileSync("git", ["-C", THU, "rev-parse", "--show-toplevel"], { encoding: "utf8" }).trim();
 const a = process.argv.slice(2);
-const CONG = a.includes("--cong") ? a[a.indexOf("--cong") + 1] : "3462";
+// Cổng riêng của lệnh đo (không phải 3462 — cổng ấy là máy chủ dev của dãy và của bài nhìn giao diện; lượt chấm 1 đụng nhau).
+const CONG = a.includes("--cong") ? a[a.indexOf("--cong") + 1] : "3468";
 const cfg = JSON.parse(readFileSync(join(THU, "nhanh-thu.json"), "utf8"));
 const CHAY = join(GOC, ".acceptance-runs", "bai-thu-luoi-5000-dong");
 // --chi-trang có worktree riêng: lượt chấm chạy nó song song với lượt đo đủ, chung thư mục build thì đua nhau.
@@ -46,8 +47,12 @@ if (shaWt !== sha) {
   if (existsSync(WT)) sh("git", ["worktree", "remove", "--force", WT]);
   sh("git", ["worktree", "add", "-q", "--detach", WT, sha]);
 }
-if (!existsSync(join(WT, "node_modules", "playwright-core"))) sh("npm", ["ci", "--no-audit", "--no-fund"], WT);
-sh("npm", ["run", "build", "-w", "@quy-hang/web"], WT);
+try {
+  if (!existsSync(join(WT, "node_modules", "playwright-core"))) sh("npm", ["ci", "--no-audit", "--no-fund"], WT);
+  sh("npm", ["run", "build", "-w", "@quy-hang/web"], WT);
+} catch (e) {
+  dung(2, `không dựng được nhánh thử: ${String(e.stderr || e.message).slice(-400)}`);
+}
 
 // 3. Máy chủ của chính lệnh này — ghi PID, dừng đúng PID đó (luật 8 của đợt).
 const may = spawn("npx", ["next", "start", "-p", CONG], { cwd: join(WT, "apps", "web"), stdio: "ignore", detached: true });
@@ -59,11 +64,14 @@ const dungMay = () => {
   }
 };
 process.on("exit", dungMay);
+let mayChet = null;
+may.on("exit", (ma) => (mayChet = ma));
 const url = `http://localhost:${CONG}`;
 for (let i = 0; ; i++) {
+  if (mayChet !== null) dung(2, `máy chủ nhánh thử thoát mã ${mayChet} trước khi lên (cổng ${CONG} bị chiếm?)`);
   try {
-    await fetch(`${url}/spikes/luoi`);
-    break;
+    const res = await fetch(`${url}/spikes/luoi`);
+    if (res.ok && mayChet === null) break;
   } catch {
     if (i > 120) dung(2, `máy chủ nhánh thử không lên ở cổng ${CONG}`);
     await new Promise((r) => setTimeout(r, 500));
@@ -74,7 +82,12 @@ const doMot = (che) => {
   const args = [join(THU, "do.mjs"), "--url", url, "--nm", WT, "--moc-bench", String(cfg.moc_bench_ms)];
   if (che === "trang") args.push("--chi-trang");
   else if (che) args.push("--cham", che);
-  return JSON.parse(execFileSync("node", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+  if (mayChet !== null) dung(2, `máy chủ nhánh thử đã thoát (mã ${mayChet}) giữa lượt đo`);
+  try {
+    return JSON.parse(execFileSync("node", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+  } catch (e) {
+    dung(2, `máy đo lỗi ở chế độ «${che || "thuong"}»: ${String(e.stderr || e.message).slice(-400)}`);
+  }
 };
 
 const ra = { tag: cfg.tag, sha };

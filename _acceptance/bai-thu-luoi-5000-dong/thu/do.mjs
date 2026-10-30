@@ -69,10 +69,19 @@ const khungCuon = (page) =>
 async function doCuon(page) {
   const k = await khungCuon(page);
   await page.mouse.move(k.x, k.y);
+  // Vị trí cuộn THẬT theo từng khung (không chấm theo số lệnh cuộn đã phát): ghi scrollTop mỗi khung trong lúc đo.
   await page.evaluate(() => {
     window.__do.khung = [];
     window.__do.khungCb = [];
+    window.__do.viTri = [];
     window.__do.ghiKhung = true;
+    const el = document.querySelector("[data-do-cuon]");
+    const ghi = () => {
+      if (!window.__do.ghiKhung) return;
+      window.__do.viTri.push(el.scrollTop);
+      requestAnimationFrame(ghi);
+    };
+    requestAnimationFrame(ghi);
   });
   const BUOC = 240;
   for (let i = 0; i < BUOC; i++) {
@@ -85,10 +94,19 @@ async function doCuon(page) {
   });
   const cuoi = await page.evaluate(() => {
     const el = document.querySelector("[data-do-cuon]");
-    return el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+    const v = window.__do.viTri;
+    const xa = el.scrollHeight - el.clientHeight;
+    // Mã căn của dòng cuối đang hiện — chứng lưới đã vẽ tới dòng 5.000, không chỉ khung cuộn chạm đáy.
+    const dongCuoi = [...document.querySelectorAll("tbody tr")].map((tr) => tr.querySelector("td")?.innerText.trim()).filter(Boolean).pop();
+    return {
+      toi: el.scrollTop >= xa - 2 && dongCuoi === "MAU-05000",
+      quang_duong: xa > 0 ? (Math.max(...v) - Math.min(...v)) / xa : 0,
+      so_mau_vi_tri: v.length,
+      dong_cuoi: dongCuoi,
+    };
   });
   // Số phụ (không vào ngưỡng): nhịp lúc callback khung chạy, gồm cả việc xử lý đầu vào trong khung.
-  return { ...thuocCuon(khung), phu_callback: thuocCuon(khungCb), toi_cuoi: cuoi };
+  return { ...thuocCuon(khung), phu_callback: thuocCuon(khungCb), toi_cuoi: cuoi.toi, quang_duong: cuoi.quang_duong, dong_cuoi: cuoi.dong_cuoi };
 }
 
 const veDau = (page) =>
@@ -178,7 +196,11 @@ await browser.close();
 
 const tv = (f) => trungVi(luot.map(f));
 const trung_vi = {
-  cuon: { p95: tv((l) => l.cuon.p95), ti_le_cham: tv((l) => l.cuon.ti_le_cham) },
+  cuon: {
+    p95: tv((l) => l.cuon.p95),
+    ti_le_cham: tv((l) => l.cuon.ti_le_cham),
+    toi_cuoi: luot.every((l) => l.cuon.toi_cuoi && l.cuon.quang_duong >= 0.99),
+  },
   go: { p95: tv((l) => l.go.p95), gia_tri_dung: luot.every((l) => l.go.gia_tri_dung) },
   dan: { ms: tv((l) => l.dan.ms), o_mau_dung: luot.every((l) => l.dan.o_mau_dung) },
 };

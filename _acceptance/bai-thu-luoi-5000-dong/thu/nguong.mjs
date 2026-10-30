@@ -43,9 +43,9 @@ export function hieuChuanHopLe({ rongP95, benchMs, mocBenchMs }) {
 export function danhGia({ cuon, go, dan }) {
   const truot = [];
   const chi_tiet = [];
-  if (!(cuon?.p95 <= NGUONG.cuonP95) || !(cuon?.ti_le_cham <= NGUONG.tiLeChamToiDa)) {
+  if (!(cuon?.p95 <= NGUONG.cuonP95) || !(cuon?.ti_le_cham <= NGUONG.tiLeChamToiDa) || cuon?.toi_cuoi !== true) {
     truot.push("cuon");
-    chi_tiet.push(`cuon: p95 ${cuon?.p95} ms (≤ ${NGUONG.cuonP95}), khung chậm ${cuon?.ti_le_cham} (≤ ${NGUONG.tiLeChamToiDa})`);
+    chi_tiet.push(`cuon: p95 ${cuon?.p95} ms (≤ ${NGUONG.cuonP95}), khung chậm ${cuon?.ti_le_cham} (≤ ${NGUONG.tiLeChamToiDa}), tới dòng 5.000 ${cuon?.toi_cuoi}`);
   }
   if (!(go?.p95 <= NGUONG.goP95) || go?.gia_tri_dung !== true) {
     truot.push("go");

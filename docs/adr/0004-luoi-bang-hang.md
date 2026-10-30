@@ -25,21 +25,25 @@ dòng × 20 cột và dán 500 ô; không đạt thì đổi sang lưới vẽ c
   thước; `?cham=phim` (bận 80 ms trong hàm nghe phím chạy trước lưới) phải làm thước gõ trượt.
 - **Đo lại**: `node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs` dựng lại nhánh thử từ tag, build, đo, so ngưỡng.
 
-## Số đo (lượt `do-lai` ngày 30/10, loadavg 14,4 / 6,4 / 4,9 — hiệu chuẩn hợp lệ cả ba lượt)
+## Số đo (lượt `do-lai` ngày 30/10, loadavg 5,9 / 5,5 / 5,6 — hiệu chuẩn hợp lệ cả ba lượt)
 
 | Thước | Ngưỡng | Lượt 1 | Lượt 2 | Lượt 3 | Trung vị | Kết quả |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| Cuộn — p95 khoảng cách khung | ≤ 33,4 ms | 33,3 | 16,8 | 16,8 | 16,8 ms | đạt |
+| Cuộn — p95 khoảng cách khung | ≤ 33,4 ms | 33,3 | 33,3 | 33,4 | 33,3 ms | đạt, **sát ngưỡng** |
 | Cuộn — khung > 50 ms | ≤ 1% | 0,14% | 0% | 0,14% | 0,14% | đạt |
-| Gõ — p95 | ≤ 50 ms | 16,8 | 15,8 | 16,8 | 16,8 ms | đạt |
-| Dán 500 ô | ≤ 1.000 ms | 54 | 55 | 53 | 54 ms | đạt, ô mẫu đúng |
+| Cuộn — tới dòng 5.000 | phải tới | MAU-05000 | MAU-05000 | MAU-05000 | — | đạt (quãng đường 100%) |
+| Gõ — p95 | ≤ 50 ms | 17,1 | 15,5 | 16,8 | 16,8 ms | đạt |
+| Dán 500 ô | ≤ 1.000 ms | 54 | 53 | 70 | 54 ms | đạt, ô mẫu đúng |
 
-Đối chứng đỏ: `?cham=1` → cuộn p95 100 ms (93% khung chậm), gõ 125 ms, dán 1.378 ms — trượt cả ba; `?cham=phim` → gõ
+Đối chứng đỏ: `?cham=1` → cuộn p95 100 ms (93% khung chậm), gõ 124 ms, dán 1.377 ms — trượt cả ba; `?cham=phim` → gõ
 84 ms — trượt. Máy đo phân biệt được lưới mượt với lưới giật, và mốc đầu của thước gõ đặt đúng chỗ.
 
-Số phụ, không vào ngưỡng: nhịp lúc callback khung thật sự chạy (gồm việc xử lý đầu vào trong khung) có p95 39–40 ms ở
-cả ba lượt — tức dưới giảm tốc 4×, mỗi khung có lúc làm việc quá 33 ms mà vẫn không làm rơi khung thấy được. Đây là độ dự
-trữ mỏng: lượt 1 đã có p95 khung chạm 33,3 ms.
+Khoảng cách khung lượng tử theo nhịp màn hình (16,7 · 33,3 · 50 ms): p95 = 33,3 ms nghĩa là hơn 5% khung đi ở nhịp
+30 khung/giây dưới giảm tốc 4×, nhưng gần như không khung nào rơi xuống 50 ms. Lượt đo trước trong ngày (máy bận hơn)
+có p95 16,8 ms ở hai lượt — độ biến thiên giữa các lượt đo là thật.
+
+Số phụ, không vào ngưỡng: nhịp lúc callback khung thật sự chạy (gồm việc xử lý đầu vào trong khung) có p95 40–42 ms ở
+cả ba lượt — tức dưới giảm tốc 4×, mỗi khung có lúc làm việc quá 33 ms. Đây là **độ dự trữ mỏng**.
 
 ## Quyết định
 
@@ -54,8 +58,9 @@ Glide Data Grid (`glide: null` trong số đo).
   (mất đường cập nhật nguyên bản từ ReUI). Quyết ở Cổng Phạm vi của hàng đó.
 - **Khối đích giữ nguyên** (`data-grid-editing-6` trong `docs/design/vo-va-ia.md`) — khối Pro dựng trên chính thành phần
   đã đo.
-- **Độ dự trữ cuộn mỏng**: bảng hàng thật có thêm ô màu, nhóm dòng, cột ghim. Hàng dựng bảng hàng chạy lại máy đo này
-  trên màn thật trước Cổng Bằng chứng; nếu cuộn trượt ngưỡng thì mở lại câu hỏi Glide.
+- **Độ dự trữ cuộn mỏng** — thước cuộn đạt đúng ở mép ngưỡng (33,3 ms so với 33,4 ms). Bảng hàng thật có thêm ô màu,
+  nhóm dòng, cột ghim. Hàng dựng bảng hàng chạy lại máy đo này trên màn thật trước Cổng Bằng chứng; cuộn trượt ngưỡng
+  thì mở lại câu hỏi Glide.
 
 ## Giới hạn của phép đo
 

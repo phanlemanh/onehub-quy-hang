@@ -5,7 +5,7 @@ import { danhGia, hieuChuanHopLe, ketLuan, thuocCuon } from "./nguong.mjs";
 import { mainSach } from "./main-sach.mjs";
 
 const LANH = {
-  cuon: { p95: 20, ti_le_cham: 0 },
+  cuon: { p95: 20, ti_le_cham: 0, toi_cuoi: true },
   go: { p95: 30, gia_tri_dung: true },
   dan: { ms: 400, o_mau_dung: true },
 };
@@ -16,6 +16,7 @@ describe("danhGia", () => {
   for (const [ten, k, v] of [
     ["p95 cuộn 40 ms", "cuon", { p95: 40 }],
     ["khung chậm 2%", "cuon", { ti_le_cham: 0.02 }],
+    ["không cuộn tới dòng 5.000 (khung đều mà nội dung đứng yên)", "cuon", { toi_cuoi: false }],
     ["gõ 80 ms", "go", { p95: 80 }],
     ["gõ sai giá trị", "go", { gia_tri_dung: false }],
     ["dán 1.500 ms", "dan", { ms: 1500 }],
@@ -28,7 +29,7 @@ describe("danhGia", () => {
       assert.match(r.chi_tiet.join(" "), new RegExp(`^${k}:|; ${k}:|${k}:`));
     });
   }
-  it("thiếu số đo (NaN) → trượt, không đạt lặng", () => assert.equal(danhGia({ cuon: { p95: Number.NaN, ti_le_cham: 0 }, go: LANH.go, dan: LANH.dan }).dat, false));
+  it("thiếu số đo (NaN) → trượt, không đạt lặng", () => assert.equal(danhGia({ cuon: { p95: Number.NaN, ti_le_cham: 0, toi_cuoi: true }, go: LANH.go, dan: LANH.dan }).dat, false));
 });
 
 describe("thuocCuon", () => {
