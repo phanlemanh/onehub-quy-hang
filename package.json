@@ -17,7 +17,7 @@
     "test": "npm run test --workspaces --if-present",
     "test:hooks": "bash .claude/hooks/tests/run.sh",
     "db:migrate": "npm run migrate -w @quy-hang/db",
-    "db:test": "npm run test:isolation -w @quy-hang/db"
+    "db:test": "npm run test:isolation -w @quy-hang/db && npm run test:db -w @quy-hang/api"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

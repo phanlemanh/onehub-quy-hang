@@ -1,8 +1,7 @@
-import { api } from "@quy-hang/api";
-import { handle } from "hono/vercel";
+import { getApi } from "@/lib/api";
 
 // Mọi đường /api/v1/** đi vào cùng một app Hono ở packages/api — app web không tự viết route API riêng.
-const handler = handle(api);
+const handler = (req: Request) => getApi().fetch(req);
 
 export const GET = handler;
 export const POST = handler;

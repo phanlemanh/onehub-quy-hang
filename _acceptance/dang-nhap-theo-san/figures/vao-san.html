@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vào sàn sau khi đăng nhập</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1280px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+    }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Luồng quyết định · Đăng nhập theo sàn</p>
+    <h1>Vào sàn: từ lúc mở app đến truy vấn dưới luật theo dòng</h1>
+
+    <svg viewBox="0 0 1280 636" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Luồng từ đăng nhập đến chọn sàn đang làm và truy vấn dưới luật theo dòng">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Ranh Hỏi-2 : danh tính | thành viên sàn -->
+      <line x1="540" y1="44" x2="540" y2="156" stroke="#636b80" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="532" y="36" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.14em">DANH TÍNH</text>
+      <text x="548" y="36" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">THÀNH VIÊN SÀN</text>
+
+      <!-- Arrows (drawn first, behind nodes) -->
+      <line x1="200" y1="96" x2="260" y2="96" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="480" y1="96" x2="600" y2="96" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="720" y1="140" x2="720" y2="192" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- D1: 0 sàn (trái) -->
+      <line x1="620" y1="248" x2="500" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- D1: nhiều sàn (phải) -->
+      <line x1="820" y1="248" x2="940" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- D1: 1 sàn (xuống) -->
+      <line x1="720" y1="304" x2="720" y2="403" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- D2: chưa chọn (lên) -->
+      <line x1="1040" y1="192" x2="1040" y2="124" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- D2: cookie là sàn mình (xuống rồi rẽ trái về điểm hợp) -->
+      <path d="M1040 304 V400 Q1040 408 1032 408 H726" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Điểm hợp → withCompany -->
+      <line x1="720" y1="412" x2="720" y2="464" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- withCompany → Postgres -->
+      <line x1="880" y1="496" x2="960" y2="496" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Arrow labels (mask + 8–10px gap above/beside the stroke) -->
+      <rect x="540" y="222" width="40" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="560" y="234" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">0 SÀN</text>
+
+      <rect x="846" y="222" width="68" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="880" y="234" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NHIỀU SÀN</text>
+
+      <rect x="728" y="340" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="752" y="352" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">1 SÀN</text>
+
+      <rect x="1048" y="152" width="44" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="1070" y="164" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+
+      <rect x="1048" y="340" width="28" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="1062" y="352" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+
+      <rect x="890" y="470" width="60" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="920" y="482" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TRUY VẤN</text>
+
+      <!-- Điểm hợp: sàn đang làm -->
+      <circle cx="720" cy="408" r="4" fill="#2d3142"/>
+      <text x="708" y="412" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">SÀN ĐANG LÀM</text>
+
+      <!-- Start oval -->
+      <rect x="40" y="68" width="160" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="40" y="68" width="160" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="120" y="100" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Người mở app</text>
+
+      <!-- A: better-auth — danh tính -->
+      <rect x="260" y="52" width="220" height="88" rx="6" fill="#f5f5f5"/>
+      <rect x="260" y="52" width="220" height="88" rx="6" fill="rgba(46,90,168,0.07)" stroke="#2e5aa8" stroke-width="1.2"/>
+      <rect x="268" y="60" width="152" height="16" rx="2" fill="transparent" stroke="rgba(46,90,168,0.50)" stroke-width="0.8"/>
+      <text x="344" y="72" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">BETTER-AUTH · DANH TÍNH</text>
+      <text x="370" y="98" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đăng nhập, có phiên</text>
+      <text x="370" y="114" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">email → mã 6 số</text>
+      <text x="370" y="128" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">schema auth</text>
+
+      <!-- B: Quỹ hàng — company_members (focal) -->
+      <rect x="600" y="52" width="240" height="88" rx="6" fill="#f5f5f5"/>
+      <rect x="600" y="52" width="240" height="88" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <rect x="608" y="60" width="164" height="16" rx="2" fill="transparent" stroke="rgba(235,108,54,0.55)" stroke-width="0.8"/>
+      <text x="690" y="72" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">QUỸ HÀNG · THÀNH VIÊN SÀN</text>
+      <text x="720" y="98" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đọc danh sách sàn của người</text>
+      <text x="720" y="114" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">company_members · luật theo dòng</text>
+      <text x="720" y="128" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">giao dịch có app.user_id</text>
+
+      <!-- D1: người thuộc mấy sàn -->
+      <polygon points="720,192 820,248 720,304 620,248" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="720" y="246" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Người thuộc</text>
+      <text x="720" y="260" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">mấy sàn?</text>
+
+      <!-- D2: cookie qh_san -->
+      <polygon points="1040,192 1140,248 1040,304 940,248" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="1040" y="246" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cookie qh_san</text>
+      <text x="1040" y="260" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">là sàn của mình?</text>
+
+      <!-- End: 403 chưa gắn sàn -->
+      <rect x="280" y="220" width="220" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="280" y="220" width="220" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="390" y="244" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Màn Chưa gắn sàn</text>
+      <text x="390" y="260" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">403 chua-gan-san</text>
+
+      <!-- End: 409 chọn sàn -->
+      <rect x="920" y="68" width="240" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="920" y="68" width="240" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="1040" y="92" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Màn Chọn sàn</text>
+      <text x="1040" y="108" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">409 chon-san</text>
+
+      <!-- withCompany -->
+      <rect x="560" y="464" width="320" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="560" y="464" width="320" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="720" y="490" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đặt vai và sàn cho giao dịch</text>
+      <text x="720" y="508" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">withCompany: role quy_hang_app + app.company_id</text>
+
+      <!-- Postgres -->
+      <rect x="960" y="464" width="240" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="960" y="464" width="240" height="64" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="1080" y="490" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Postgres</text>
+      <text x="1080" y="508" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">luật theo dòng theo app.company_id</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="568" x2="1240" y2="568" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="40" y="588" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.18em">CHÚ GIẢI</text>
+
+      <rect x="40" y="598" width="24" height="12" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="72" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Điểm đầu, điểm cuối (màn)</text>
+
+      <rect x="236" y="598" width="24" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="268" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Bước</text>
+
+      <polygon points="320,604 332,598 344,604 332,610" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="352" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Rẽ nhánh</text>
+
+      <rect x="436" y="598" width="24" height="12" rx="2" fill="rgba(46,90,168,0.07)" stroke="#2e5aa8" stroke-width="1.2"/>
+      <text x="468" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">better-auth: danh tính (schema auth)</text>
+
+      <rect x="676" y="598" width="24" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="708" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Quỹ hàng: company_members (luật theo dòng)</text>
+
+      <line x1="948" y1="604" x2="972" y2="604" stroke="#636b80" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="980" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Ranh Hỏi-2</text>
+
+      <rect x="1064" y="598" width="24" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="1096" y="608" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Cơ sở dữ liệu</text>
+    </svg>
+  </div>
+</body>
+</html>
