@@ -5,7 +5,7 @@ slug: doi-ten-api-tieng-anh
 owner: omre.cnsp4@onemount.com
 risk_tier: T2
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-doi-ten-api-tieng-anh-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T22:14:35Z
@@ -80,3 +80,6 @@ Quét morphological-scan, preset entity-feature, cho thực thể «tên tiếng
 - Không chạm bất biến nào: (1) cách ly — luật theo dòng không đổi; (2) chủ nhà — không chạm lớp `source`; (3), (4) không
   chạm.
 - Dãy Q chạy dev ở cổng 3461 (`web-q`), Postgres 5545.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Một đường API tiếng Việt cũ viết lại theo dạng ít gặp có thể lọt bài quét tự động; hôm nay không đường cũ nào còn phục vụ.
+  - Ngoài-2: Nếu ai dựng lại thư mục của một màn cũ, địa chỉ cũ sống lại mà bài quét tự động không báo; hôm nay ba địa chỉ cũ trả trang không tồn tại.
