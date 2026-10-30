@@ -1,6 +1,6 @@
 # Kế hoạch thi công: dữ liệu mẫu của sàn thử
 
-Hồ sơ `_acceptance/du-lieu-mau-san-thu/` (T3, Cổng Phạm vi duyệt 2026-10-31). Kế hoạch đặt trong hồ sơ, không ở
+Hồ sơ `_acceptance/du-lieu-mau-san-thu/` (T3, Cổng Phạm vi duyệt 2026-10-31; Gate 1.5 duyệt kế hoạch: Manh Phan 2026-10-31). Kế hoạch đặt trong hồ sơ, không ở
 `docs/superpowers/plans/`, vì ranh giới của hàng chỉ gồm `_acceptance/du-lieu-mau-san-thu/**` và `packages/db/seed/**`.
 
 **Mục tiêu:** một lệnh sinh bộ dữ liệu mẫu tất định và hai file bảng hàng Excel; một lệnh nạp và xoá phần ghi được vào
