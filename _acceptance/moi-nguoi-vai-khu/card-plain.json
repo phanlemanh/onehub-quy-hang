@@ -1,0 +1,39 @@
+{
+  "feature_plain": "Quản trị sàn tự mời người vào sàn bằng email, đặt cho họ một hay nhiều trong năm vai và giao khu phụ trách, sửa hay bỏ người khỏi sàn — thay cho việc nhờ đội vận hành.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cho người được mời đăng nhập bằng mã là vào thẳng sàn với đúng các vai quản trị đã đặt — không có bước nhận lời mời."},
+    {"id": "AC-2", "p": "Sẽ gắn người đang ở sàn khác vào thêm sàn này mà vẫn một tài khoản, từ chối mời trùng người đã ở sàn, và trả lời giống nhau dù email đã có tài khoản hay chưa để không ai dò được."},
+    {"id": "AC-3", "p": "Sẽ chỉ nhận năm vai chuẩn (telesales, đầu chủ, đầu khách, trưởng nhóm, quản trị sàn), cho một người giữ nhiều vai, và đổi vai có hiệu lực ngay lời gọi kế."},
+    {"id": "AC-4", "p": "Sẽ cho quản trị tạo khu theo tên và giao khu cho người; không trùng tên trong một sàn, không giao được khu của sàn khác."},
+    {"id": "AC-5", "p": "Sẽ cắt quyền ngay khi bị bỏ hay bị gỡ vai: người bị bỏ không vào lại sàn dù dùng phiên cũ, quản trị bị gỡ vai mất quyền quản người ngay."},
+    {"id": "AC-6", "p": "Sẽ chặn người không phải quản trị ở mọi thao tác quản người — chặn cả ở cơ sở dữ liệu, không chỉ ở màn."},
+    {"id": "AC-8", "p": "Sẽ để cơ sở dữ liệu giữ cách ly: quản trị sàn này không đọc, không ghi được người, khu của sàn khác."},
+    {"id": "AC-9", "p": "Sẽ cho người đầu tiên của sàn do đội vận hành mở mang vai quản trị sàn."}
+  ],
+  "wont_do": [
+    {"id": "AC-7", "p": "Chặn mọi cách làm sàn mất hết quản trị — bỏ hay gỡ vai quản trị cuối bị từ chối, kể cả ghi thẳng vào cơ sở dữ liệu hay hai quản trị gỡ nhau cùng lúc."},
+    {"id": "AC-10", "p": "Sẽ có màn Người dùng cho quản trị đi trọn: xem, thêm khu, mời, mời trùng, sửa vai, hộp xác nhận bỏ người, quản trị cuối; người không phải quản trị thấy lời chặn."},
+    {"id": "OOS-1", "p": "KHÔNG gửi email mời — chưa có email thật; quản trị tự báo người được mời."},
+    {"id": "OOS-2", "p": "KHÔNG làm quyền chi tiết của từng vai ở từng màn — làm cùng màn đó."},
+    {"id": "OOS-3", "p": "KHÔNG làm lịch sử ai sửa gì — theo sự kiện của hàng 8."},
+    {"id": "OOS-4", "p": "KHÔNG gắn khu vào toà của danh mục — hàng nạp danh mục."},
+    {"id": "OOS-5", "p": "KHÔNG làm màn Đội của trưởng nhóm và nhãn riêng của người."},
+    {"id": "OOS-6", "p": "KHÔNG dùng khối Pro cho màn Người dùng ở hàng này — theo Hỏi-5."}
+  ],
+  "scope_plain": "Sáu phần để ngoài hàng này, mỗi phần đã có hàng khác hoặc chờ một câu trả lời trên thẻ:",
+  "coverage_plain": [
+    {"i": 0, "p": "Mọi thao tác quản người đã phủ: mời (AC-1, AC-2), xem (AC-6, AC-10), sửa vai (AC-3), giao và tạo khu (AC-4), bỏ người (AC-5, AC-7)."},
+    {"i": 1, "p": "Mọi loại người được mời đã phủ: chưa có tài khoản (AC-1), đang ở sàn khác (AC-2), đã ở sàn này (AC-2)."},
+    {"i": 2, "p": "Vai đã phủ: năm vai, nhiều vai một người, vai lạ (AC-3), quản trị cuối cùng (AC-7) — đối chiếu bảng năm vai của Tham chiếu."},
+    {"i": 3, "p": "Người thao tác đã phủ: quản trị (AC-1 tới AC-5), người thường (AC-6), sàn khác (AC-8) — theo bất biến cách ly."},
+    {"i": 4, "p": "Chặn ở ba lớp: API, cơ sở dữ liệu và màn."},
+    {"i": 5, "p": "Khu: tên sàn tự đặt làm ở hàng này (AC-4); gắn toà danh mục để sau — trục này chờ câu trả lời Hỏi-2."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Chuyện quản trị được tạo tài khoản và kéo người ở sàn khác vào là chính sách ai được vào, máy không được tự quyết — đã đưa lên thẻ thành Hỏi-4; thêm phép đo để quản trị không dò được ai đã có tài khoản."},
+    {"i": 1, "p": "Bỏ khối Pro không phải đường chết vì anh thêm khoá được — đã đưa lên thẻ thành Hỏi-5, khuyến nghị ghép bây giờ."},
+    {"i": 2, "p": "Chưa đo việc người bị bỏ hay bị gỡ vai dùng lại phiên cũ — đã thêm hai ca có đối chứng trước và sau."},
+    {"i": 3, "p": "Chặn quản trị cuối chưa đo ở cơ sở dữ liệu và khi hai người gỡ nhau cùng lúc — đã thêm ca ghi thẳng và ca đồng thời, thiết kế thêm khoá theo sàn."},
+    {"i": 4, "p": "Màn chưa có khung chụp cho form mời, form sửa và hộp xác nhận bỏ người — đã thêm ba khung và bước bấm huỷ."}
+  ]
+}
