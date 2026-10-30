@@ -63,3 +63,14 @@ test("mở sàn: email viết hoa có khoảng trắng gắn vào cùng tài kho
     assert.deepEqual(await counts(c, "mo-san-3@example.test"), { companies: 1, users: 1, members: 1 });
   });
 });
+
+test("mở sàn: người đầu tiên mang vai quản trị sàn", { skip }, async () => {
+  await inTx(async (c) => {
+    const { companyId, userId } = await moSan(c, { ten: "[Sàn mở 4]", email: "mo-san-4@example.test" });
+    const { rows } = await c.query("select roles from company_members where company_id = $1 and user_id = $2", [companyId, userId]);
+    assert.deepEqual(rows[0]?.roles, ["company_admin"]);
+    await moSan(c, { ten: "[Sàn mở 4]", email: "mo-san-4@example.test" });
+    const lai = await c.query("select roles from company_members where company_id = $1 and user_id = $2", [companyId, userId]);
+    assert.deepEqual(lai.rows[0]?.roles, ["company_admin"], "chạy lại làm lặp vai");
+  });
+});

@@ -1,0 +1,21 @@
+Total messages: 2 (Errors: 0, Warnings: 0)
+Returning 18 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3461/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3461/api/auth/sign-out:0
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3461/_next/hmr?id=IjlyBd6wjjjs1G745q3ZJ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3461/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3461/api/v1/san/thanh-vien/ee4e6e6e-823d-49c8-a21b-23f33f29d8b9:0

@@ -24,3 +24,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Thành viên sàn | `company_member` | Một người thuộc một sàn; một người thuộc được nhiều sàn | — |
 | Sàn đang làm | `active company` (cookie `qh_san`) | Sàn mà mọi lời gọi của người đang chạy trong đó; người nhiều sàn chọn ở màn Chọn sàn | — |
 | Mã đăng nhập | `otp` | Mã 6 số gửi qua email để đăng nhập | «Mật khẩu» |
+| Vai | `role` | Một trong năm: Telesales `telesales`, Đầu chủ `listing_agent`, Đầu khách `buyer_agent`, Trưởng nhóm `team_lead`, Quản trị sàn `company_admin`; một người giữ được nhiều vai | — |
+| Quản trị sàn | `company_admin` | Vai cấu hình sàn và quản người; không tự thấy chủ nhà | — |
+| Khu | `zone` | Toà hay phân khu do sàn tự đặt tên; gắn danh mục sau | — |
+| Khu phụ trách | `member_zone` | Khu một người trong sàn phụ trách | — |
