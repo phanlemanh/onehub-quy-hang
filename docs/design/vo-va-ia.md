@@ -92,6 +92,7 @@ chính, phần còn lại ghép.
 | Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ |
 | Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu |
 | Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 6 — ghép `Frame` + `Field` + `Input` + `Button` ở hàng 6; chuyển thể khối `auth-15` là việc riêng (ADR-0005) |
+| Người dùng (Cài đặt sàn, tạm) | Bậc 6 — ghép `Frame` + `Item` + `Badge` + `Field` + `Checkbox` + `AlertDialog` ở hàng 7; khối Pro `solution-users-8` khi có khoá ReUI (ADR-0006) |
 
 ## 4. Tránh
 
