@@ -7,8 +7,8 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 1d4d798f69ada6a4637aeb6c283f559ac027d6ac
-human_signoff: Manh Phan 2026-10-31
+verified_commit: 79997fd7970c443f6931c414bfda8b9a5f333c81
+human_signoff:
 ---
 
 # Evidence Report: lop-truong-nguon
@@ -36,9 +36,9 @@ human_signoff: Manh Phan 2026-10-31
   baseline: n-a
   verifier: config:executors.test.core
   verified_at: 2026-10-31T06:18:30Z
+  carried_from_round: 2
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 72.242791
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E2
   run_id: minted-lop-truong-nguon-E2-r2
@@ -46,9 +46,9 @@ human_signoff: Manh Phan 2026-10-31
   baseline: n-a
   verifier: config:executors.test.core
   verified_at: 2026-10-31T06:18:30Z
+  carried_from_round: 2
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 72.242791
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E3
   run_id: minted-lop-truong-nguon-E3-r2
@@ -56,69 +56,59 @@ human_signoff: Manh Phan 2026-10-31
   baseline: n-a
   verifier: config:executors.test.core
   verified_at: 2026-10-31T06:18:30Z
+  carried_from_round: 2
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 72.242791
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E4
-  run_id: minted-lop-truong-nguon-E4-r2
+  run_id: minted-lop-truong-nguon-E4-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
   output: |
     lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 72.242791
+    ℹ duration_ms 77.365417
 
 - eval: E4b
-  run_id: minted-lop-truong-nguon-E4b-r2
+  run_id: minted-lop-truong-nguon-E4b-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
   output: |
     lệnh: npm run db:migrate && npm run db:test
-    ℹ duration_ms 1810.671083
+    ℹ duration_ms 1918.298834
 
 - eval: E5
-  run_id: minted-lop-truong-nguon-E5-r2
+  run_id: minted-lop-truong-nguon-E5-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
   output: |
     lệnh: npm run db:migrate && npm run db:test
-    ℹ duration_ms 1810.671083
+    ℹ duration_ms 1918.298834
 
 - eval: E6
-  run_id: minted-lop-truong-nguon-E6-r2
+  run_id: minted-lop-truong-nguon-E6-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
   output: |
     lệnh: npm run db:migrate && npm run db:test
-    ℹ duration_ms 1810.671083
-
-- eval: E10
-  run_id: minted-lop-truong-nguon-E10-r2
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:18:30Z
-  output: |
-    lệnh: npm run db:migrate && npm run db:test
-    ℹ duration_ms 1810.671083
+    ℹ duration_ms 1918.298834
 
 - eval: E7
-  run_id: minted-lop-truong-nguon-E7-r1
+  run_id: minted-lop-truong-nguon-E7-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:10:56Z
-  carried_from_round: 1
+  verified_at: 2026-10-31T08:39:59Z
   output: |
-    carry-forward từ round 1 — delta không chạm paths của eval
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 1918.298834
 
 - eval: E8
   run_id: minted-lop-truong-nguon-E8-r1
@@ -128,59 +118,69 @@ human_signoff: Manh Phan 2026-10-31
   verified_at: 2026-10-31T06:10:56Z
   carried_from_round: 1
   output: |
-    carry-forward từ round 1 — delta không chạm paths của eval
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E9
-  run_id: minted-lop-truong-nguon-E9-r1
+  run_id: minted-lop-truong-nguon-E9-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:10:56Z
-  carried_from_round: 1
+  verified_at: 2026-10-31T08:39:59Z
   output: |
-    carry-forward từ round 1 — delta không chạm paths của eval
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 1918.298834
 
 - eval: E9b
-  run_id: minted-lop-truong-nguon-E9b-r1
+  run_id: minted-lop-truong-nguon-E9b-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-10-31T06:10:56Z
-  carried_from_round: 1
+  verified_at: 2026-10-31T08:39:59Z
   output: |
-    carry-forward từ round 1 — delta không chạm paths của eval
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 1918.298834
+
+- eval: E10
+  run_id: minted-lop-truong-nguon-E10-r3
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-10-31T08:39:59Z
+  output: |
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 1918.298834
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-lop-truong-nguon-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-lop-truong-nguon-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-lop-truong-nguon-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-lop-truong-nguon-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
 
 - cmd: npm run test:hooks
-  run_id: minted-lop-truong-nguon-SUITE-test_hooks-r2
+  run_id: minted-lop-truong-nguon-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-lop-truong-nguon-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-lop-truong-nguon-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
 
 - cmd: npm run typecheck
-  run_id: minted-lop-truong-nguon-SUITE-typecheck-r2
+  run_id: minted-lop-truong-nguon-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
 
 - cmd: npm run lint
-  run_id: minted-lop-truong-nguon-SUITE-lint-r2
+  run_id: minted-lop-truong-nguon-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-10-31T06:18:30Z
+  verified_at: 2026-10-31T08:39:59Z
 
 ## Known limits
 
@@ -205,3 +205,5 @@ none — every multi-run eval is uniform (mọi eval chạy một lần, xác đ
 
 Round 1: mọi eval và mọi lệnh suite đều xanh; không eval nào hỏng. Verdict PASS, kèm một phát hiện trong hợp đồng ở AC-3 (phép đo bản trả không mang số không thể đỏ).
 Round 2: sửa phép đo AC-3 ở commit 1d4d798 (ca bản trả không mang số dù bản ghi có số); chạy lại E1-E4, E4b, E5, E6, E10 và sáu lệnh suite, tất cả xanh; E7, E8, E9, E9b mang sang từ round 1 vì delta không chạm paths của chúng. Verdict PASS.
+Round 3: commit 79997fd thu hẹp lời gọi chủ nhà theo trục ai thấy hàng (Chỉ tôi của người khác trả 404); chạy lại E4, E4b, E5, E6, E7, E9, E9b, E10 và sáu lệnh suite, tất cả xanh; E1, E2, E3 mang sang từ round 2 và E8 từ round 1 vì delta không chạm paths của chúng. Verdict PASS, kèm một phát hiện ngoài hợp đồng về chữ trên thẻ người ký (xem review-findings.md).
+
