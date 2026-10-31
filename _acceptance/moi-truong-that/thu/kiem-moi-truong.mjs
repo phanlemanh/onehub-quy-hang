@@ -3,7 +3,6 @@
 //   SUPABASE_URL              https://<ref>.supabase.co
 //   SUPABASE_PUBLISHABLE_KEY  khoá công khai của dự án
 //   APP_URL                   gốc app, vd https://quyhang.onehub.center (chỉ cho --suc-khoe)
-//   VERCEL_BYPASS             (tuỳ) mã vượt bảo vệ khi APP_URL là bản xem trước có Vercel Authentication
 // Mặc định: cơ sở dữ liệu + Data API. --suc-khoe: chỉ /api/v1/health phải trả 200.
 import { readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -28,8 +27,7 @@ const can = (n) => {
 
 if (process.argv.includes("--suc-khoe")) {
   const app = can("APP_URL");
-  const bypass = process.env.VERCEL_BYPASS;
-  const res = await fetch(`${app}/api/v1/health`, { headers: bypass ? { "x-vercel-protection-bypass": bypass } : {} });
+  const res = await fetch(`${app}/api/v1/health`);
   dat(res.status === 200, `GET /api/v1/health trả 200 (nhận ${res.status})`);
 } else {
   const url = can("DATABASE_URL");
