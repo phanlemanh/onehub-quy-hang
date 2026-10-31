@@ -5,7 +5,10 @@
  */
 import type { Role } from "../navigation";
 
-/** Hạn mặc định của luật 20: 15 phút nhận, 30 phút gọi lần đầu. */
+/**
+ * Mặc định của sàn — hạn của luật 20: 15 phút nhận, 30 phút gọi lần đầu. Chỗ khai duy nhất; SQL và lối API không
+ * chép lại con số.
+ */
 export const DEFAULT_LEAD_DEADLINES = { acceptMinutes: 15, firstCallMinutes: 30 } as const;
 export type LeadDeadlines = { acceptMinutes: number; firstCallMinutes: number };
 
