@@ -124,3 +124,12 @@ Quét bằng morphological-scan (preset entity-feature, rút gọn), bốn trụ
 - Ngoài-7 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Gõ khoảng bằng chữ như «5 đến 10» vào ô lọc số thì ô báo đỏ và không lọc được, dù chữ hướng dẫn cho trình đọc màn hình có gợi ý cách gõ này. Gõ «5-10» vẫn dùng được. — `apps/web/src/app/(app)/inventory/bieu-thuc-so.ts`
 - Ngoài-8 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm nói là đảm bảo căn chưa có giá nằm cuối khi sắp theo giá, nhưng thực tế không kiểm điều đó, nên nếu sau này thứ tự này hỏng thì bài kiểm vẫn xanh. Người dùng hiện chưa gặp lỗi nào. — `apps/web/src/app/(app)/inventory/loc.test.ts`
 - Ngoài-9 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm chứng minh góc nhìn của sàn này không lộ sang sàn khác có một phần đối chứng không thật nên có thể không bắt được lỗi nếu phần tách theo sàn bị bỏ đi. Hiện người dùng chưa gặp lỗi lộ góc nhìn. — `apps/web/src/app/(app)/inventory/goc-nhin.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Chạy nhiều bài nhìn cùng lúc mà bước dựng dữ liệu mẫu kéo quá 15 phút thì hai lần dựng có thể chồng nhau.
+  - Ngoài-3: Phím End và Ctrl/Cmd + mũi tên phải đưa ô chọn sang cột ngoài màn hình mà bảng không cuộn theo.
+  - Ngoài-4: Bài kiểm ba ô lọc chỉ chép vài căn đầu rồi kết luận cho cả danh sách.
+  - Ngoài-5: Mục ghim / bỏ ghim cột trên menu tiêu đề chưa có tác dụng.
+  - Ngoài-6: Góc nhìn lưu hỏng mà không báo khi trình duyệt không ghi được bộ nhớ trên máy.
+  - Ngoài-7: Ô lọc số chưa hiểu khoảng gõ bằng chữ «5 đến 10»; gõ «5-10» vẫn dùng được.
+  - Ngoài-8: Bài kiểm «căn chưa có giá nằm cuối khi sắp theo giá» không thật sự kiểm thứ tự ấy.
+  - Ngoài-9: Đối chứng của bài kiểm tách góc nhìn theo sàn chưa thật, có thể không bắt được lỗi lộ góc nhìn.
