@@ -149,7 +149,7 @@ Chi phí ước bằng cỡ dữ liệu, chưa đo token thật (máy phiên nà
 
 ## Hệ quả
 
-- Lộ trình: đợt `nhap-du-lieu-3110`, hàng 61–68 và mục chờ H4; hàng 20, 21 thành mục chờ «thay bằng». Bộ thử và chế độ tất định (61) đi trước tác tử (65).
+- Lộ trình: đợt `nhap-du-lieu-3110`, hàng 64–71 và mục chờ H4; hàng 20, 21 thành mục chờ «thay bằng». Bộ thử và chế độ tất định (64) đi trước tác tử (68).
 - Lõi: thực đơn phép biến đổi nhập, bộ phân loại cột, bộ dựng hồ sơ cột ở `packages/core/src/import/` — dùng chung trình
   duyệt và máy chủ. `CONNECTION_KINDS` thêm `ai_processing`.
 - ADR-0008 đổi: thêm `voided`, `confirmedAt` theo file, mỗi sự kiện mang `import_id` khi do lần nhập tạo.

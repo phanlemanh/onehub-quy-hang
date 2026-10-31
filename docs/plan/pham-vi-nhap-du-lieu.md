@@ -30,7 +30,7 @@ nguon: wiki/dot/nhap-du-lieu-3110.md#071467f2c9f6b260c323903bbb9b5253349afd32
 
 ## Hàng
 
-Số hàng trong lộ trình: ND1 → 61, ND2 → 62, ND3 → 63, ND4 → 64, ND5 → 65, ND6 → 66, ND7 → 67, ND8 → 68. ND5, ND6, ND8
+Số hàng trong lộ trình: ND1 → 64, ND2 → 65, ND3 → 66, ND4 → 67, ND5 → 68, ND6 → 69, ND7 → 70, ND8 → 71 (61–63 đã dùng ở gói đợt kế, PR #35). ND5, ND6, ND8
 là hàng thật; Cổng Đáng của chúng đọc số đo của ND1 (ND7 cho ND8) và quyết làm hay gác, như hàng 10 đã gác. Hàng 20, 21
 chuyển thành mục chờ điều kiện của đợt ban-dau-2910, ghi «thay bằng» để phủ D8, D9 vẫn đứng một chỗ.
 

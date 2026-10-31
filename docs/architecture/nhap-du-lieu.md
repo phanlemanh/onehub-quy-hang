@@ -1,7 +1,7 @@
 # Nhập dữ liệu
 
 > **Đã chốt 31/10** theo [ADR-0011](../adr/0011-nhap-du-lieu-tac-tu.md). Hàng lộ trình: đợt `nhap-du-lieu-3110`, hàng
-> 61–68 ([bản phạm vi](../plan/pham-vi-nhap-du-lieu.md)).
+> 64–71 ([bản phạm vi](../plan/pham-vi-nhap-du-lieu.md)).
 
 Bản 31/10. Cửa vào thứ hai trong «Ba cửa vào, một đích» (Tham chiếu §3): đầu chủ hay quản trị sàn đưa bảng hàng cũ — file
 Excel (xlsx, xls), csv, Google Sheets đã tải về — vào Quỹ hàng. Đây là lần đầu dữ liệu của một sàn chạm hệ thống: nhập
