@@ -2,7 +2,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { apTrenMay } from "./ap-tren-may";
-import { locDanhSach, moHoSo } from "./doc";
+import { moHoSo } from "./doc";
+import { taoBoDongBo } from "./dong-bo";
 import { taoKhoBoNho } from "./kho";
 import { keoVe, LoiKeo } from "./keo";
 import { canDangBan, canMau, suKien, NGAY } from "./mau.test-helpers";
@@ -26,16 +27,19 @@ test("đọc không chờ mạng: lọc, mở hồ sơ, dựng lại từ kho", 
   const kho = taoKhoBoNho("u-x", new Map());
   await kho.write("san", { ...nganTrong(), listings: c.map((x) => x.view), history: { a2: c[1]!.events }, lastPullAt: NGAY, lastAttempt: "ok" });
   const mang = mangHong();
+  // Đọc qua đúng bộ đồng bộ màn sẽ dùng, nối vào hàm gọi mạng có đếm.
   const doc = async () => {
-    const n = await kho.read("san");
+    const bd = taoBoDongBo({ goi: mang.goi, kho, me: { userId: "u-x", roles: [] }, companyId: "san", nhip: false });
+    await bd.napKho();
     return {
-      dangBan: locDanhSach(n, { trangThai: ["Active"] }).map((l) => l.id).sort(),
-      toaB: locDanhSach(n, { toa: ["[Toà B]"] }).map((l) => l.id).sort(),
-      daMo: moHoSo(n, "a2"),
-      chuaMo: moHoSo(n, "b1"),
+      bd,
+      dangBan: bd.danhSach({ trangThai: ["Active"] }).map((l) => l.id).sort(),
+      toaB: bd.danhSach({ toa: ["[Toà B]"] }).map((l) => l.id).sort(),
+      daMo: bd.hoSo("a2"),
+      chuaMo: bd.hoSo("b1"),
     };
   };
-  const lan1 = await doc();
+  const { bd, ...lan1 } = await doc();
   assert.deepEqual(lan1.dangBan, ["a2", "b2", "b3"]);
   assert.deepEqual(lan1.toaB, ["b1", "b2", "b3"]);
   assert.equal(lan1.daMo!.lichSu.length, 4);
@@ -43,11 +47,13 @@ test("đọc không chờ mạng: lọc, mở hồ sơ, dựng lại từ kho", 
   assert.deepEqual(lan1.chuaMo!.lichSu, []);
   assert.equal(mang.dem(), 0, "đọc đã đi qua mạng");
   // Dựng lại từ cùng kho (như tải lại trang): cùng kết quả.
-  assert.deepEqual(await doc(), lan1);
+  const { bd: _bd2, ...lan2 } = await doc();
+  assert.deepEqual(lan2, lan1);
   assert.equal(mang.dem(), 0);
-  // Đối chứng dương: chủ động kéo thì bộ đếm ghi nhận lời gọi.
-  await assert.rejects(keoVe(mang.goi, await kho.read("san"), NGAY));
-  assert.equal(mang.dem(), 1);
+  // Đối chứng dương: chủ động kéo qua CÙNG bộ đồng bộ thì bộ đếm ghi nhận lời gọi.
+  await bd.thuNgay();
+  assert.ok(mang.dem() >= 1, "bộ đếm không nối vào đường gọi của bộ đồng bộ");
+  void _bd2;
 });
 
 test("kéo về khi còn thao tác chờ: bản trên máy giữ giá vừa sửa", async () => {

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { taoBoDongBo } from "./dong-bo";
 import { taoKhoBoNho } from "./kho";
+import { nganTrong } from "./types";
 import { dongHoGia, mayChuGia, xa } from "./may-chu-gia.test-helpers";
 
 const ME = { userId: "u-x", roles: ["listing_agent"] };
@@ -102,4 +103,34 @@ test("biết có mạng lại không cần sự kiện trình duyệt", async ()
   await dh.tien(1_000);
   assert.equal(thu() - t2, 1, "yên 30 giây: một lần kéo");
   bd.dung();
+});
+
+test("đăng xuất giữa lượt đang gửi: kho đã xoá không bị ghi lại", async () => {
+  const mc = mayChuGia({ userId: ME.userId });
+  mc.tao("h", "[Toà A]");
+  let tha!: () => void;
+  const cho = new Promise<void>((r) => (tha = r));
+  let giu = false;
+  const goi: typeof mc.goi = async (...a) => {
+    if (giu) await cho;
+    return mc.goi(...a);
+  };
+  const kho = taoKhoBoNho("u-x", new Map());
+  const bd = taoBoDongBo({ goi, kho, me: ME, companyId: "s", nhip: false, taoMa });
+  await bd.khoiDong();
+  await bd.sua("h", "details_changed", { furnished: "full" });
+  await xa();
+  await bd.sua("h", "details_changed", { furnished: "basic" });
+  giu = true;
+  const lo = bd.thuNgay(); // lượt đang bay, treo ở lời gọi
+  const dx = (async () => {
+    await bd.dongHan();
+    await kho.wipe();
+  })();
+  await xa();
+  tha();
+  await dx;
+  await lo;
+  await xa();
+  assert.deepEqual(await kho.read("s"), nganTrong(), "kho bị dựng lại sau khi xoá");
 });

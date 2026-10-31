@@ -46,7 +46,7 @@ export async function doiChieu(
   );
   if (cua) return { dc: { kq: "da-ap-truoc", seq: cua.seq }, view: view as ListingView, events };
   const cuoi = events[events.length - 1]!;
-  const server = { value: view as ListingView, byUserId: cuoi.actorUserId, at: cuoi.occurredAt };
+  const server = { value: view as ListingView, byUserId: cuoi.actorUserId, byRoles: cuoi.actorRoles, at: cuoi.occurredAt };
   const thang = [...events].reverse().find((e) => e.seq > op.expectedVersion && e.type === "status_changed" && (e.payload.to === "Pending" || e.payload.to === "Closed"));
   if (thang && thang.actorUserId !== me.userId && view.standardStatus === thang.payload.to) {
     return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: thang.payload.to === "Pending" ? "da-coc" : "da-ban", server } }, view: view as ListingView, events };

@@ -12,7 +12,11 @@ function mo(userId: string): Promise<IDBDatabase> {
   return new Promise((ok, loi) => {
     const r = indexedDB.open(tenCoSo(userId), 1);
     r.onupgradeneeded = () => r.result.createObjectStore(NGAN);
-    r.onsuccess = () => ok(r.result);
+    r.onsuccess = () => {
+      // Tab khác xoá kho (đăng xuất): đóng kết nối này để lệnh xoá không bị chặn.
+      r.result.onversionchange = () => r.result.close();
+      ok(r.result);
+    };
     r.onerror = () => loi(r.error);
   });
 }
@@ -41,8 +45,8 @@ export function taoKhoIndexedDb(userId: string): LocalStore {
       db = null;
       await new Promise<void>((ok, loi) => {
         const r = indexedDB.deleteDatabase(tenCoSo(userId));
+        // Bị chặn (tab khác còn mở) thì chờ tới khi tab ấy đóng kết nối — không báo xong khi kho chưa xoá.
         r.onsuccess = () => ok();
-        r.onblocked = () => ok();
         r.onerror = () => loi(r.error);
       });
     },

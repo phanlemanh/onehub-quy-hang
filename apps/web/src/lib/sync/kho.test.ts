@@ -42,3 +42,8 @@ test("kho: mỗi sàn một ngăn", async () => {
   assert.equal((await k.read("san-1")).queue.length, 1);
   assert.deepEqual(await k.read("san-2"), nganTrong());
 });
+
+test("đăng xuất: thay đổi ở cần xem cũng được đếm", () => {
+  const n: Ngan = { ...day(1), review: [{ listingId: "k", kind: "dung-nhau", mine: [op(7), op(8)] }] };
+  assert.deepEqual(canHoiKhiDangXuat([n]), { hoi: true, n: 3 });
+});

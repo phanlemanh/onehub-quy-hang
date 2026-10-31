@@ -23,8 +23,15 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
   let dem: Ngan = nganTrong();
   let dangGui = 0;
   let dangChay: Promise<void> | null = null;
+  /** Đã khép hẳn (đăng xuất): không ghi gì vào kho nữa, kể cả lượt đang bay. */
+  let khep = false;
+  let phienBan = 0;
+  let nhip: ReturnType<typeof taoNhip> | null = null;
   const nghe = new Set<() => void>();
-  const bao = () => nghe.forEach((f) => f());
+  const bao = () => {
+    phienBan++;
+    nghe.forEach((f) => f());
+  };
   const nay = () => new Date(dongHo.now()).toISOString();
 
   async function doc(cid = companyId) {
@@ -33,6 +40,7 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
     return n;
   }
   async function ghi(cid: string, n: Ngan) {
+    if (khep) return;
     await o.kho.write(cid, n);
     if (cid === companyId) {
       dem = n;
@@ -41,6 +49,7 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
   }
   /** Sửa ngăn mới nhất trong kho bằng `f` — đọc lại ngay trước khi ghi. */
   async function doi(cid: string, f: (n: Ngan) => Ngan) {
+    if (khep) return;
     await ghi(cid, f(await o.kho.read(cid)));
   }
 
@@ -86,11 +95,22 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
     return dangChay;
   }
 
-  const nhip = o.nhip === false ? null : taoNhip({ dongHo, thu: thuNgay, coCho: () => dem.queue.length > 0 || dem.lastAttempt === "mang" });
+  /** Nhịp thử chạy từ `khoiDong` tới `dung`; dừng rồi khởi động lại được (React chạy hiệu ứng hai lần ở bản dev). */
+  function batNhip() {
+    if (o.nhip === false || nhip || khep) return;
+    nhip = taoNhip({ dongHo, thu: thuNgay, coCho: () => dem.queue.length > 0 || dem.lastAttempt === "mang" });
+  }
 
   return {
     /** Nạp kho lên bản đệm và thử gửi/kéo ngay. */
+    /** Nạp kho lên bản đệm — không lời gọi mạng. */
+    async napKho() {
+      await doc();
+      bao();
+    },
+    /** Nạp kho, bật nhịp và thử gửi/kéo ngay. */
     async khoiDong() {
+      batNhip();
       await doc();
       bao();
       await thuNgay();
@@ -104,19 +124,17 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
       return kq;
     },
     danhSach: (loc?: BoLoc) => locDanhSach(dem, loc),
-    hoSo(id: string) {
-      const h = moHoSo(dem, id);
-      // Mở hồ sơ không chờ mạng; lịch sử kéo ở nền để lần sau có sẵn.
-      void (async () => {
-        try {
-          const cid = companyId;
-          const m = await keoLichSu(o.goi, await o.kho.read(cid), id);
-          await doi(cid, (n) => ({ ...n, history: { ...n.history, [id]: m.history[id] ?? [] }, listings: m.listings }));
-        } catch {
-          /* mất mạng: hồ sơ vẫn đọc từ kho */
-        }
-      })();
-      return h;
+    /** Mở hồ sơ: đọc từ bản đệm, không lời gọi mạng. */
+    hoSo: (id: string) => moHoSo(dem, id),
+    /** Kéo lịch sử một căn ở nền để lần mở sau có sẵn; mất mạng thì thôi, hồ sơ vẫn đọc từ kho. */
+    async taiLichSu(id: string) {
+      try {
+        const cid = companyId;
+        const m = await keoLichSu(o.goi, await o.kho.read(cid), id);
+        await doi(cid, (n) => ({ ...n, history: { ...n.history, [id]: m.history[id] ?? [] }, listings: m.listings }));
+      } catch {
+        /* mất mạng hay lỗi kéo: giữ bản trên máy */
+      }
     },
     chiBao: () => suyChiBao(dem, dangGui),
     canXem: () => dem.review,
@@ -144,10 +162,21 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
       bao();
       void thuNgay();
     },
+    phienBan: () => phienBan,
+    /** Đăng xuất: khép hẳn — không lượt nào ghi vào kho nữa — và chờ lượt đang bay xong, rồi mới xoá kho. */
+    async dongHan() {
+      khep = true;
+      nhip?.dung();
+      nhip = null;
+      await dangChay?.catch(() => undefined);
+    },
     dangKy(f: () => void) {
       nghe.add(f);
       return () => nghe.delete(f);
     },
-    dung: () => nhip?.dung(),
+    dung() {
+      nhip?.dung();
+      nhip = null;
+    },
   };
 }

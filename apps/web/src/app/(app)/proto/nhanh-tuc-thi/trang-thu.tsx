@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useDanhSachHang, useHoSoHang, useSuaHang } from "@/lib/sync/react";
+import { useBoDongBo, useDanhSachHang, useHoSoHang, useSuaHang } from "@/lib/sync/react";
 import type { ListingView } from "@/lib/sync/types";
 
 function LichSu({ id }: { id: string }) {
@@ -37,6 +37,10 @@ function Dong({ l }: { l: ListingView }) {
   const [gia, setGia] = useState("");
   const [loi, setLoi] = useState<string | null>(null);
   const [moLichSu, setMoLichSu] = useState(false);
+  const { nhapLai, daDienLai } = useBoDongBo();
+  const lai = nhapLai[l.id];
+  // «Sửa lại» ở bảng Cần xem: giá của tôi về lại ô để sửa rồi Enter gửi lại.
+  const giaHien = gia !== "" ? gia : typeof lai?.listPrice === "number" ? String(lai.listPrice) : "";
   const ghi = async (type: "price_changed" | "status_changed", payload: Record<string, unknown>) => {
     const kq = await sua(l.id, type, payload);
     setLoi(kq.ok ? null : JSON.stringify(kq.loi));
@@ -55,12 +59,13 @@ function Dong({ l }: { l: ListingView }) {
           inputMode="numeric"
           placeholder="Giá mới"
           aria-label={`Giá mới của ${l.unitNumber ?? l.id}`}
-          value={gia}
+          value={giaHien}
           onChange={(e) => setGia(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key !== "Enter" || !gia) return;
-            void ghi("price_changed", { listPrice: Number(gia), feeInclusion: l.feeInclusion ?? "excluded" });
+            if (e.key !== "Enter" || !giaHien) return;
+            void ghi("price_changed", { listPrice: Number(giaHien), feeInclusion: l.feeInclusion ?? "excluded" });
             setGia("");
+            if (lai) daDienLai(l.id);
           }}
         />
         <Select value={l.standardStatus} onValueChange={(v) => v && v !== l.standardStatus && void ghi("status_changed", kemTheo(v as StandardStatus, l))}>
@@ -79,6 +84,7 @@ function Dong({ l }: { l: ListingView }) {
           Lịch sử
         </Button>
       </div>
+      {typeof lai?.to === "string" && <p className="text-sm text-muted-foreground">Sửa lại: trạng thái {lai.to} — chọn lại ở ô trạng thái</p>}
       {loi && <p className="text-sm text-destructive">{loi}</p>}
       {moLichSu && <LichSu id={l.id} />}
     </div>

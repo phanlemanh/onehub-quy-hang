@@ -28,7 +28,7 @@ export type NeedsReview = {
   listingId: string;
   kind: "dung-nhau" | "da-coc" | "da-ban" | "tu-choi";
   mine: PendingOp[];
-  server?: { value: ListingView; byUserId: string; at: string };
+  server?: { value: ListingView; byUserId: string; byRoles: string[]; at: string };
   reason?: string;
 };
 

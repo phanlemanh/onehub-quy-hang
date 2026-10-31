@@ -22,8 +22,8 @@ export function suyChiBao(n: Ngan, dangGui: number): ChiBao {
   return { nhan: `Đã đồng bộ · ${gio(n.lastPullAt)}`, loai: "xong" };
 }
 
-/** Đăng xuất: còn thay đổi chờ ở bất kỳ ngăn nào thì hỏi, nói tổng số (AC-10). */
+/** Đăng xuất: còn thay đổi chưa lên máy chủ ở bất kỳ ngăn nào — trong hàng đợi hay nằm ở «cần xem» — thì hỏi, nói tổng số (AC-10). */
 export function canHoiKhiDangXuat(ngan: Ngan[]): { hoi: boolean; n: number } {
-  const n = ngan.reduce((t, x) => t + x.queue.length, 0);
+  const n = ngan.reduce((t, x) => t + x.queue.length + x.review.reduce((m, r) => m + r.mine.length, 0), 0);
   return { hoi: n > 0, n };
 }

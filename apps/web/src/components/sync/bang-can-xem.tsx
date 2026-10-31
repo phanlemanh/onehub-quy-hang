@@ -9,6 +9,10 @@ import type { NeedsReview } from "@/lib/sync/types";
 const tien = (v: unknown) => (typeof v === "number" ? `${(v / 1_000_000).toLocaleString("vi-VN")} triệu` : "—");
 const gio = (iso: string) => new Date(iso).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
 
+const VAI: Record<string, string> = { listing_agent: "Đầu chủ", buyer_agent: "Đầu khách", team_lead: "Trưởng nhóm", company_admin: "Quản trị sàn", telesales: "Telesales" };
+/** Người sửa nói bằng vai: danh sách tên chỉ quản trị sàn đọc được. */
+const nguoiSua = (vai: string[] = []) => (vai.length ? vai.map((v) => VAI[v] ?? v).join(", ") : "Người khác");
+
 function giaTriCuaToi(r: NeedsReview) {
   return r.mine
     .map((o) => (o.type === "price_changed" ? `giá ${tien(o.payload.listPrice)}` : o.type === "status_changed" ? `trạng thái ${String(o.payload.to)}` : JSON.stringify(o.payload)))
@@ -16,7 +20,7 @@ function giaTriCuaToi(r: NeedsReview) {
 }
 
 function MotCan({ r }: { r: NeedsReview }) {
-  const { bd } = useBoDongBo();
+  const { bd, suaLai } = useBoDongBo();
   const can = r.server?.value ?? bd.danhSach().find((l) => l.id === r.listingId);
   return (
     <div className="flex flex-col gap-2 border-b py-3 last:border-b-0">
@@ -27,7 +31,7 @@ function MotCan({ r }: { r: NeedsReview }) {
       {r.kind === "da-ban" && <p className="text-sm text-destructive">Căn đã bán</p>}
       {r.server && (
         <p className="text-sm text-muted-foreground">
-          Bản mới: giá {tien(r.server.value.listPrice)} · trạng thái {r.server.value.standardStatus} — người khác sửa lúc {gio(r.server.at)}
+          Bản mới: giá {tien(r.server.value.listPrice)} · trạng thái {r.server.value.standardStatus} — {nguoiSua(r.server.byRoles)} sửa lúc {gio(r.server.at)}
         </p>
       )}
       <p className="text-sm">Của tôi: {giaTriCuaToi(r)}</p>
@@ -36,7 +40,7 @@ function MotCan({ r }: { r: NeedsReview }) {
         {r.kind === "tu-choi" ? (
           <>
             {r.reason !== "căn không còn đọc được" && (
-              <Button size="sm" variant="outline" onClick={() => void bd.suaLai(r.listingId)}>
+              <Button size="sm" variant="outline" onClick={() => void suaLai(r.listingId)}>
                 Sửa lại
               </Button>
             )}
