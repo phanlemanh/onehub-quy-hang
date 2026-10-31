@@ -54,7 +54,7 @@ evals:
     criterion: AC-8
     executor: script
     cmd: config:executors.script.suc_khoe_that
-    expected: "exit 0; «ĐẠT GET /api/v1/health trả 200» — chỉ chạy được sau khi khoá Resend có trong Vercel và bộ gửi đã deploy"
+    expected: "exit 0; «ĐẠT GET /api/v1/health trả 200» — APP_URL là bản xem trước của nhánh, VERCEL_BYPASS là mã vượt bảo vệ của bản xem trước"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E9

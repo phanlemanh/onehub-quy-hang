@@ -5,9 +5,9 @@ slug: moi-truong-that
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, ci, config, docs]
-status: draft
-approved_by:
-approved_at:
+status: implemented
+approved_by: Manh Phan
+approved_at: 2026-10-31T01:16:33Z
 ---
 
 # Acceptance Contract: moi-truong-that
@@ -40,8 +40,8 @@ Source input: giao việc của phiên giám sát đợt nen-dau (31/10) · kế
 - AC-7: Given CI, When push lên main, Then job `deploy` chờ check, isolation, secrets, gate xanh, áp migration rồi chạy bộ
   kiểm cách ly trên cơ sở dữ liệu thật, xanh mới gọi deploy hook; job không nằm trong ci-ok; main tắt tự deploy, hàm
   ghim sin1.
-- AC-8: Given môi trường thật có khoá Resend và bộ gửi đã deploy, When gọi `https://quyhang.onehub.center/api/v1/health`,
-  Then trả 200.
+- AC-8: Given bản deploy của nhánh này trên Vercel (bản xem trước, cùng biến môi trường với bản thật, có khoá Resend), When gọi
+  `/api/v1/health`, Then trả 200 — bản thật sau khi gộp do job deploy kiểm.
 - AC-9: Given kho ở commit này, When quét bí mật trên toàn lịch sử, Then không có chuỗi kết nối, mật khẩu hay khoá nào;
   `.env.example` chỉ có tên biến.
 - AC-10: Given ADR-0009, Kiến trúc §10 và Tham chiếu §12, When đọc cùng điều đã dựng, Then ba chỗ nói cùng một điều về
