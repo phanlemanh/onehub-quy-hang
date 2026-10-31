@@ -6,7 +6,7 @@ nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/web/src/app/settings/[se
 mau_dang_chay: { tep: "apps/web/src/app/(app)/today/page.tsx", duong: "/today", trang_thai: [mac-dinh] }
 khe_bat_buoc: [path]
 cam_ngoai_khuon: [Frame, Empty, EmptyHeader, Card]
-ngoai_le: []
+ngoai_le: [{ tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", ly_do: "Trang thử ẩn của bộ đồng bộ (hàng 13, Hỏi-3): không có lối vào trong điều hướng, đo vế mất mạng trên thiết bị; gỡ khi Bảng hàng thật ra (hàng 14)." }]
 luat: [KH-tt-noi-muc, KH-tt-roi-nhom]
 ---
 # Trang tạm

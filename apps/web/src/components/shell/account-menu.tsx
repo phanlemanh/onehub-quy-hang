@@ -9,6 +9,7 @@ import { useSyncExternalStore } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useBoDongBo } from "@/lib/sync/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,6 +66,7 @@ function ThemeSegmentedToggle() {
 
 export function AccountMenu({ email, companyName }: { email: string; companyName: string }) {
   const router = useRouter();
+  const { dangXuat } = useBoDongBo();
   const initials = email.slice(0, 2).toUpperCase();
 
   return (
@@ -103,6 +105,8 @@ export function AccountMenu({ email, companyName }: { email: string; companyName
 
           <DropdownMenuItem
             onClick={async () => {
+              // Còn thay đổi chưa gửi thì hỏi; đăng xuất luôn xoá kho trên máy của người này (luật 32).
+              if (!(await dangXuat())) return;
               await fetch("/api/v1/auth/sign-out", {
                 method: "POST",
                 headers: { "content-type": "application/json" },

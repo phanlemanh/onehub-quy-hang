@@ -13,9 +13,8 @@ const ROOT = join(PKG, "..", "..");
 const SCRIPT = join(PKG, "kiem-chuan.mjs");
 const TEP = [
   "apps/web/components.json",
-  "apps/web/src/components/ui",
-  "apps/web/src/components/reui",
-  "apps/web/src/app/page.tsx",
+  "apps/web/src",
+  "design/patterns",
   ".agents/skills/quy-hang-ui",
   ".agents/skills/reui",
   "_acceptance/config.yaml",

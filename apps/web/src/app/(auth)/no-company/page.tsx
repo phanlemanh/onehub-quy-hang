@@ -13,7 +13,7 @@ export default async function ChuaGanSan() {
   return (
     <Khung title="Chưa thuộc sàn nào">
       <p className="text-sm">Tài khoản {me.user.email} chưa thuộc sàn nào. Nhờ quản trị sàn mời bạn.</p>
-      <DangXuat />
+      <DangXuat userId={me.user.id} />
     </Khung>
   );
 }

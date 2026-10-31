@@ -1,0 +1,101 @@
+Total messages: 17 (Errors: 13, Warnings: 0)
+Returning 98 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3464/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3464/api/v1/listings/bcdafd9f-6cb1-464a-b4fb-f3c940dbfe27/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3464/api/v1/listings/1b10ba21-45d3-4552-9b85-20349eea3c99/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3464/api/v1/listings/44f2bb58-3b9f-467d-84d9-9ce320bfa1d9/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3464/api/v1/listings/fa05bac5-0d2e-4d0b-85e9-640922f6a68b/events:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3464/api/v1/listings/1b10ba21-45d3-4552-9b85-20349eea3c99/events:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3464/api/v1/listings/44f2bb58-3b9f-467d-84d9-9ce320bfa1d9/events:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3464/api/v1/listings/bcdafd9f-6cb1-464a-b4fb-f3c940dbfe27/events:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3464/api/v1/listings/fa05bac5-0d2e-4d0b-85e9-640922f6a68b/events:0
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/api/v1/listings:0
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/api/v1/listings:0
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/api/v1/listings:0
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=NEC9H9-Jj-KjCTwohNdoG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Fetch API cannot load chrome-error://chromewebdata/api/v1/listings. URL scheme "chrome-error" is not supported. @ :0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3464/api/v1/listings/11d91c38-96a4-4875-95d7-21c7cc612394/events:0
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/api/v1/listings:0
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3464/_next/hmr?id=SXgnAfrFwy-02jbXeW8Hv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3464/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: the server responded with a status of 400 (Bad Request) @ http://localhost:3460/api/v1/listings:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (Bad Request) @ http://localhost:3460/api/v1/listings:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (Bad Request) @ http://localhost:3460/api/v1/listings:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3460/api/v1/listings/551ca463-b944-447e-a6d6-79418baef026/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3460/api/v1/listings/7e0d4332-cfd6-4199-ba08-49d91627dd9d/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3460/api/v1/listings/95738dc5-674d-4653-bc6e-c7d696302c0b/events:0
+[ERROR] WebSocket connection to 'ws://localhost:3460/_next/hmr?id=Ef-9NkNyqzy5_d9JbPwcq' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3460/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3460/_next/hmr?id=Ef-9NkNyqzy5_d9JbPwcq' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3460/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3460/_next/hmr?id=Ef-9NkNyqzy5_d9JbPwcq' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3460/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3460/_next/hmr?id=Ef-9NkNyqzy5_d9JbPwcq' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3460/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3460/_next/hmr?id=Ef-9NkNyqzy5_d9JbPwcq' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3460/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3462/api/v1/listings/752ffe8e-b363-4019-a21c-37b1c4ee025c/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3462/api/v1/listings/752ffe8e-b363-4019-a21c-37b1c4ee025c/events:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3462/api/v1/listings/752ffe8e-b363-4019-a21c-37b1c4ee025c/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0
+[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3462/api/v1/listings/255cd68b-3131-464a-b104-049246add294/events:0

@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // Kiểm trạng thái cây của bộ chuẩn giao diện (hồ sơ tang-5-giao-dien) — chạy cuối `npm run lint`, nên job `check` của
 // CI bắt khi bộ chuẩn lệch: style thành phần, thành phần nền, hai skill và symlink, danh mục khớp đĩa, cấu hình cổng,
-// và chính job `check` còn chạy `npm run lint`.
+// chính job `check` còn chạy `npm run lint`, và bản đồ khuôn design/patterns/ (hàng 59): đọc được, mọi màn của nhóm
+// dựng qua khuôn.
 //
 //   node packages/ui-lint/kiem-chuan.mjs [--root <kho>]      0 đạt · 1 lệch (mỗi chỗ lệch một dòng stderr)
 import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { docBanDo, kiemCay } from "./lib/ban-do.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -109,6 +111,15 @@ function kiemCi(root, loi, dong) {
   dong.push("CI: job check chạy npm run lint");
 }
 
+function kiemBanDo(root, loi, dong) {
+  const bd = docBanDo(root);
+  const cay = kiemCay(root, bd);
+  const lech = Object.values(cay).flatMap((r) => r.lech);
+  for (const l of bd.loi) loi.push(`khuôn: ${l}`);
+  for (const l of lech) loi.push(`khuôn: ${l.tep}: ${l.nhom} — ${l.dieu}`);
+  dong.push(`khuôn: ${bd.nhom.length} nhóm · ${bd.loi.length} lỗi đọc · ${lech.length} lệch`);
+}
+
 export function kiemChuan(root) {
   const loi = [];
   const dong = [];
@@ -118,6 +129,7 @@ export function kiemChuan(root) {
   kiemCatalog(root, loi, dong);
   kiemCauHinh(root, loi, dong);
   kiemCi(root, loi, dong);
+  kiemBanDo(root, loi, dong);
   return { loi, dong: loi.length ? [] : [...dong, "chuẩn giao diện: đạt"] };
 }
 
