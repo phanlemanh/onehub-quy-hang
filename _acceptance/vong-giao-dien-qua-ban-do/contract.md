@@ -8,7 +8,7 @@ surfaces: [ci, ui]
 status: approved
 design_doc: docs/superpowers/specs/2026-10-31-vong-giao-dien-qua-ban-do-design.md
 approved_by: Manh Phan
-approved_at: 2026-10-31T13:05:00Z
+approved_at: 2026-10-31T12:52:33Z
 ---
 
 # Acceptance Contract: vong-giao-dien-qua-ban-do
@@ -46,8 +46,8 @@ Source input: `docs/plan/lo-trinh.json` hàng 60 · `_acceptance/vong-giao-dien-
   nêu `design/patterns/`; When thêm `design/patterns/bang-hang.md` hợp lệ có khuôn phủ tệp ấy, Then thoát 0; trang chỉ
   chuyển hướng (không trả JSX, như `app/page.tsx`) không bị báo.
 - AC-5: Given `ban-do-khuon.mjs --base <ref>` và `kiem-chuan.mjs`, When vòng chỉ thêm một màn ngoài bản đồ (không tệp nhóm
-  nào đổi), Then `--base` thoát 1 nêu tệp ấy — không in «không tệp nào của nhóm đổi» — và `kiem-chuan` thoát 1 với dòng
-  «khuôn: 4 nhóm · 0 lỗi đọc · 1 lệch»; When cây thật, Then `kiem-chuan` vẫn in «khuôn: 4 nhóm · 0 lỗi đọc · 0 lệch» và
+  nào đổi), Then `--base` thoát 1 nêu tệp ấy — không in «không tệp nào của nhóm đổi» — và `kiem-chuan` thoát 1 với đúng một dòng
+  lỗi `khuôn: <tệp>: ngoai-ban-do — …`; When cây thật, Then `kiem-chuan` vẫn in «khuôn: 4 nhóm · 0 lỗi đọc · 0 lệch» và
   `ban-do-khuon.mjs` thoát 0.
 - AC-6: Given một kho thử có bốn commit trên `<ref>` — commit 1 thêm trang Cài đặt gốc `<main>` (lệch), commit 2 sửa thành
   `MucCaiDat`, commit 3 thêm một màn ngoài bản đồ rồi commit 4 thêm mục bản đồ cho nó — và sổ `docs/design/lech-lot.md` có

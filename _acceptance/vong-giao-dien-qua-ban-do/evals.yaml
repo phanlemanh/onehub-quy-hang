@@ -52,7 +52,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.ui_lint
-    expected: "exit 0; kho git tạm từ cây lành làm <ref>: thêm (app)/bao-cao/page.tsx trả JSX chưa git add, đồng thời trang-tam.md loại nó khỏi nhan_dien (commit sửa bản đồ) → ban-do-khuon.mjs --base <ref> mã 1, stderr nêu (app)/bao-cao/page.tsx với «ngoai-ban-do», stdout KHÔNG chứa «không tệp nào của nhóm đổi»; kiem-chuan.mjs --root <kho tạm> mã 1, stdout có dòng đúng «khuôn: 4 nhóm · 0 lỗi đọc · 1 lệch». Đối chứng cùng kho trước khi thêm trang: --base mã 0 và kiem-chuan in đúng «khuôn: 4 nhóm · 0 lỗi đọc · 0 lệch». Ca thêm: tệp mới chỉ dưới docs/ → --base vẫn «khuôn: không tệp nào của nhóm đổi», mã 0."
+    expected: "exit 0; kho git tạm từ cây lành làm <ref>: thêm (app)/bao-cao/page.tsx trả JSX chưa git add, đồng thời trang-tam.md loại nó khỏi nhan_dien (commit sửa bản đồ) → ban-do-khuon.mjs --base <ref> mã 1, stderr nêu (app)/bao-cao/page.tsx với «ngoai-ban-do», stdout KHÔNG chứa «không tệp nào của nhóm đổi»; kiem-chuan.mjs --root <kho tạm> mã 1, stderr có đúng một dòng bắt đầu «khuôn: » và dòng ấy bằng «khuôn: (app)/bao-cao/page.tsx đầy đủ: ngoai-ban-do — màn chưa thuộc nhóm nào …» (kiem-chuan đỏ thì không in dòng tóm tắt). Đối chứng cùng kho trước khi thêm trang: --base mã 0 và kiem-chuan in đúng «khuôn: 4 nhóm · 0 lỗi đọc · 0 lệch». Ca thêm: tệp mới chỉ dưới docs/ → --base vẫn «khuôn: không tệp nào của nhóm đổi», mã 0."
     paths: ["packages/ui-lint/ban-do-khuon.mjs", "packages/ui-lint/kiem-chuan.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
   - id: E5b

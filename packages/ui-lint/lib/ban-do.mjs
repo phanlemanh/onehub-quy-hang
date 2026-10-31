@@ -436,3 +436,38 @@ export function nhomCuaTep(banDo, tep) {
     (g) => !g.hong && g.khuonTep && tep !== g.khuonTep && !g.ngoaiLe.has(tep) && g.data.nhan_dien.some((gl) => globRegex(gl).test(tep)),
   );
 }
+
+// ---------- màn ngoài bản đồ (hàng 60) ----------
+
+/** Nhóm giả mang các lệch «màn chưa thuộc nhóm nào»; không phải tệp trong design/patterns. */
+export const NHOM_NGOAI = "ngoai-ban-do";
+export const MAN_GLOB = `${GOC_WEB}/app/**/page.tsx`;
+
+/**
+ * Màn đầu của một nhóm mới phải tạo mục bản đồ trong chính vòng ấy (vo-va-ia.md §2 «Nhóm mới»). Mọi `page.tsx` dưới
+ * `apps/web/src/app` có thành phần xuất mặc định trả JSX mà không khớp `nhan_dien` hay ngoại lệ của nhóm đơn vị màn nào
+ * là một lệch `{ tep, nhom: "ngoai-ban-do", dieu, dong }`. Trang chỉ chuyển hướng (không trả JSX) không phải màn.
+ */
+export function manNgoaiBanDo(root, banDo) {
+  const phu = new Set();
+  for (const g of banDo.nhom.filter((g) => !g.hong && g.donVi === "man")) {
+    for (const t of g.khop ?? []) phu.add(t);
+    for (const t of g.ngoaiLe ?? []) phu.add(t);
+  }
+  const lech = [];
+  for (const tep of khopGlob(root, [MAN_GLOB])) {
+    if (phu.has(tep)) continue;
+    const sf = docMa(root, tep);
+    const fn = sf.statements.find((s) => ts.isFunctionDeclaration(s) && coXuat(s) && coMacDinh(s));
+    if (!fn) continue;
+    const jsx = cacReturn(fn).flatMap(cacGoc).filter((e) => ts.isJsxElement(e) || ts.isJsxSelfClosingElement(e) || ts.isJsxFragment(e));
+    if (!jsx.length) continue;
+    lech.push({
+      tep,
+      nhom: NHOM_NGOAI,
+      dieu: `màn chưa thuộc nhóm nào — vòng dựng màn đầu của nhóm mới tạo ${THU_MUC_BAN_DO}/<nhóm>.md và khuôn (docs/design/vo-va-ia.md §2 «Nhóm mới»)`,
+      dong: sf.getLineAndCharacterOfPosition(fn.getStart()).line + 1,
+    });
+  }
+  return lech;
+}
