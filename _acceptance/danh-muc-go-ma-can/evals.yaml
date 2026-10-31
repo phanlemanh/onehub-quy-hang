@@ -1,0 +1,105 @@
+schema_version: 1
+feature_slug: danh-muc-go-ma-can
+# Ba lệnh máy: `executors.test.core` (kiểm thử thuần của packages/core), `executors.test.api` (kiểm thử không cần Postgres
+# của packages/api) và `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy D,
+# cổng 5553). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu
+# từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «tra mã chuẩn: found đủ mười thuộc tính theo danh mục» có mặt và ok — fixture danh mục nhỏ viết tay trong tệp kiểm thử (hai toà, vài căn, giá trị khác nhau từng trường), tra `A-12.06` ra status found và deepEqual đúng mười trường viết trước (projectKey, projectName, buildingName, unitNumber, upi, floor, stack, livingArea, bedroomsTotal, directionFaces) của căn ấy; đối chứng âm cùng fixture: tra `A-12.05` ra căn khác (upi khác). Chiều đỏ: hàm trả thuộc tính của căn kề hay thiếu một trường → ca đỏ nêu trường lệch."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «biến thể viết: mọi kiểu viết ra cùng căn và cùng mã chuẩn» có mặt và ok — danh sách biến thể viết tay (ít nhất: `a-12.06`, `  A-12.06 `, `A.12.06`, `A/12/06`, `A_12_06`, `A 12 06`, `A1206`, `a 12 6`, `A-12-6`) mỗi chuỗi một lần so, số lần so bằng số phần tử danh sách; mỗi chuỗi ra found với unitNumber `A-12.06` và cùng upi; đối chứng: `A126` (viết liền mà trục thiếu chữ số) KHÔNG ra `A-12.06`. Chiều đỏ: bỏ một bước chuẩn hoá → ca đỏ nêu đúng chuỗi biến thể hỏng."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «đọc được mà ngoài danh mục: not_in_catalog, không thuộc tính nào» có mặt và ok — `C-01.01`, `A-16.01`, `A-01.07` (và một biến thể `a1601`) mỗi chuỗi ra status not_in_catalog, mang mã chuẩn đã đọc (`C-01.01`, `A-16.01`, `A-01.07`, `A-16.01`), và đối tượng kết quả không có khoá nào trong mười trường thuộc tính (kiểm bằng giao tập khoá rỗng, không chỉ kiểm vắng `livingArea`); đối chứng dương cùng fixture: `A-15.01` có trong danh mục ra found. Chiều đỏ: hàm lấy căn gần nhất cho mã ngoài danh mục → ca đỏ nêu mã và trường bị điền."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «không đọc được: unreadable kèm mẫu mã từng dự án» có mặt và ok — `''`, `   `, `XYZ`, `A-12`, `A-12.06.01`, `12.06` mỗi chuỗi ra status unreadable, kết quả mang danh sách mẫu gồm `{ projectKey: 'mau-du-an-thu', example: 'A-12.06' }` và không khoá thuộc tính nào; đối chứng dương: `A-12.06` cùng fixture không ra unreadable. Chiều đỏ: hàm nhận `A-12` thành tầng 1 trục 2 → ca đỏ nêu chuỗi."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «cách đọc dự án mẫu khớp 180/180 căn danh mục mẫu» có mặt và ok — đọc gói danh mục mẫu thật (`packages/db/seed/mau/du-lieu-mau.json`, khoá danhMuc, đường suy từ vị trí tệp kiểm thử, không hằng gốc kho), đếm số căn bằng 180 TRƯỚC khi đối chiếu, gọi checkRuleAgainstProject và đòi danh sách lệch rỗng; đối chứng âm trên bản sao danh mục: đổi floor của một căn thành 14 thì danh sách lệch có đúng căn ấy, thông điệp nêu mã căn và trường `floor`. Ca «dự án thứ hai chỉ cần một dòng cách đọc» có mặt và ok — fixture dự án thứ hai mã kiểu `T1-0805` (toà hai ký tự, viết liền), thêm một dòng UnitCodeRule trong tệp kiểm thử, tra `t1 08 05` ra found đúng căn; cùng fixture không có dòng cách đọc thì chỉ `T1-0805` đúng chữ (sau chữ hoa) ra found, `t1 08 05` ra unreadable. Chiều đỏ: hàm đọc gắn cứng khuôn dự án mẫu → ca dự án thứ hai đỏ."
+    paths: [packages/core/src/catalog/**, packages/db/seed/mau/du-lieu-mau.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «trường danh mục trống trả null, không lấy từ căn khác» có mặt và ok — fixture: căn `A-03.02` có livingArea, bedroomsTotal, directionFaces null; căn `A-02.02` và `A-04.02` cùng trục có đủ giá trị; tra `A-03.02` ra found với ba trường ấy === null (từng trường một lần so), các trường còn lại đúng; đối chứng dương: tra `A-02.02` ra giá trị thật. Chiều đỏ: hàm lấp bằng căn cùng trục → ca đỏ nêu trường và giá trị bị lấp."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mã khớp hai dự án: ambiguous, không chọn hộ» có mặt và ok — fixture hai dự án cùng có căn `A-01.01` (cùng cách đọc), tra không chọn dự án ra status ambiguous với đúng hai ứng viên (hai projectKey khác nhau, sắp theo projectKey); chọn dự án thứ nhất ra found đúng căn của dự án ấy; chọn dự án thứ hai ra căn của dự án thứ hai; đối chứng: mã chỉ có ở một dự án (`A-01.02`) tra không chọn dự án ra found, không ambiguous. Ca «dự án không có trong danh mục» có mặt và ok — lõi báo dự án lạ bằng kết cục riêng mà API ánh xạ thành 404."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «danh mục: dự án lạ trả 404 not-found» trong packages/api/test-db/catalog có mặt và ok — thành viên sàn gọi `/api/v1/catalog/units/A-12.06?project=khong-co` nhận 404 thân `{ error: 'not-found' }`; đối chứng dương cùng phiên: `?project=mau-du-an-thu` nhận 200 found. Chiều đỏ: dự án lạ lặng lẽ tra mọi dự án → ca đỏ nêu status nhận được."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «danh mục: cổng vào 401/403/409» và «danh mục: mọi vai đọc được» trong packages/api/test-db/catalog có mặt và ok — không cookie: 401 unauthenticated; người đăng nhập chưa thuộc sàn: 403 no-company; người thuộc hai sàn không cookie qh_san: 409 select-company, rồi đối chứng dương cùng người kèm qh_san: 200; năm người mỗi người đúng một vai (telesales, listing_agent, buyer_agent, team_lead, company_admin) mỗi người một lần gọi `/api/v1/catalog/units/a1206` nhận 200 status found unitNumber `A-12.06` — năm lần so cho năm vai viết trước. Chiều đỏ: chặn một vai hay bỏ kiểm phiên → ca đỏ nêu vai và status."
+    paths: [packages/api/src/catalog/**, packages/api/src/app.ts, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «OpenAPI liệt đúng bộ đường tiếng Anh» có mặt và ok với danh sách muốn có thêm `GET /api/v1/catalog/units/{code}` (không thừa, không thiếu); ca «danh mục: chưa đăng nhập trả 401» trong packages/api/src/catalog có mặt và ok — gọi không cookie nhận 401 thân `{ error: 'unauthenticated' }`. Chiều đỏ: gỡ dòng đăng ký đường → ca OpenAPI đỏ nêu đường thiếu."
+    paths: [packages/api/src/catalog/**, packages/api/src/app.ts, packages/api/src/app.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «danh mục: thân trả về chỉ mang khoá cho phép» trong packages/api/test-db/catalog có mặt và ok — đường đăng ký bằng registerCatalogRoutes với danh mục fixture hai dự án cùng có căn `A-01.01` (tiêm qua tham số danh mục, mỗi căn fixture mang thêm một khoá lạ `ghiChuNoiBo` để thử rò), một thành viên sàn gọi qua HTTP đủ bốn kết cục — found `A-01.02?project=<dự án 1>`, not_in_catalog `A-16.01`, unreadable `XYZ`, ambiguous `A-01.01` — gom mọi khoá ở mọi cấp của từng thân JSON và deepEqual với tập cho phép viết trước trong tệp kiểm thử: khoá bao của kết cục ấy cộng UNIT_ATTRIBUTE_FIELDS nhập từ @quy-hang/core (không chép tay); từng trường của UNIT_ATTRIBUTE_FIELDS tra ra lớp `catalog` và CEILING `external`. Đối chứng âm của bộ gom khoá trên CÙNG hàm so: một thân cấy `{ status: 'ambiguous', candidates: [{ ...thuộc tính hợp lệ, ownerName: '[Tên]' }] }` bị bắt và thông điệp nêu `ownerName`. Ca «danh mục mẫu: thân không mang khoá nào của chủ nhà mẫu» — với gói mẫu mặc định, found `A-12.06` cũng qua cùng phép so tập. Chiều đỏ: trả nguyên bản ghi danh mục (khoá `ghiChuNoiBo` lọt ra) → ca đỏ nêu khoá."
+    paths: [packages/api/src/catalog/**, packages/core/src/catalog/**, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «đo tỉ lệ tự điền trên dữ liệu mẫu: 47 mã, 100%, chưa có đúng, điền đoán 0» trong packages/api/src/catalog có mặt và ok — tệp kiểm thử tự dựng bảng đáp án, không gọi hàm đọc mã: 40 hàng lấy UPI gói ghi ở từng hàng; 7 lead có mã lấy căn danh mục có buildingKey bằng `toa` và unitNumber bằng `maCan` đúng chữ; ghim tổng bằng 47 trước khi đo; năm kiểu viết lại áp lên mỗi mã là danh sách hàm biến đổi viết tay trong tệp kiểm thử (chữ thường, bỏ dấu phân cách, dấu cách thay dấu phân cách, `/` thay dấu phân cách, bỏ số 0 đầu của trục khi có dấu phân cách) — 47 × 6 = 282 lần tra; gọi đúng hàm đo mà lệnh `do-ti-le.ts` dùng với bảng đáp án ấy; hàm trả found đúng 282/282 (so UPI), bộ ngoài danh mục viết trước (`C-01.01`, `A-16.01`, `A-01.07`, `B-00.01`) ra not_in_catalog hết, số điền đoán (kết quả không phải found mà mang khoá thuộc tính) = 0, và dòng in nêu ba con số. Hai đối chứng âm cùng hàm: (a) danh mục bỏ căn của hàng H-01 thì tỉ lệ < 100% và mã `A-01.03` nằm trong danh sách hụt; (b) dòng cách đọc tráo tầng và trục trong mẫu dựng mã chuẩn thì tỉ lệ < 100%. Chiều đỏ: hàm đo đếm found mà không so UPI → ca (b) đỏ."
+    paths: [packages/api/src/catalog/**, packages/core/src/catalog/**, packages/db/seed/mau/du-lieu-mau.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

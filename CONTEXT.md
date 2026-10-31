@@ -45,3 +45,5 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Hồ sơ căn | `/units/<mã>` | Toàn bộ thông tin của một căn; trên máy tính mở thành cột phải cạnh Bảng hàng | — |
 | Nhập Excel | `import` | Nút đưa hàng vào từ bảng tính | — |
 | Phát hàng | `export` | Nút đưa hàng ra ngoài sàn | — |
+| Chủ nhà (của hàng) | `listing_owner` | Tên, số, giá đáy của chủ nhà một hàng; lớp `source`, chỉ đầu chủ giữ căn và trưởng nhóm thấy (ADR-0010) | «Người bán» |
+| Mở số chủ | `owner_phone_reveal` | Lần bấm xem số đầy đủ của chủ nhà; mỗi lần là một sự kiện ghi người, vai, lúc | «Xem số» |
