@@ -8,7 +8,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Quỹ hàng | — | Tên ứng dụng | Tên một nhà trong app |
 | Sàn | `company` | Công ty dùng Quỹ hàng; mỗi sàn một vùng dữ liệu riêng | — |
 | Bảng hàng | `inventory` *(đề xuất)* | Tập hàng của sàn; nhà trên máy tính, tab trên điện thoại | «Quỹ hàng» cho nhà này |
-| Hàng | `listing` *(đề xuất, RESO `Property`)* | Một lần chào bán của sàn trên một căn | «Tin» (tin là của Invest) |
+| Hàng | `listing` *(RESO `Property`)* | Một lần chào bán của sàn trên một căn | «Tin» (tin là của Invest) |
 | Căn | `unit` *(đề xuất)* | Vật thể trong danh mục: dự án → toà → trục → căn | — |
 | Lead | `lead` *(đề xuất)* | Hàng ở nấc đầu, từ telesales hoặc đầu chủ tự nhập | — |
 | Đầu chủ | `listing_agent` *(đề xuất, RESO `ListAgent`)* | Người giữ nguồn chủ nhà của căn | «Người giữ» |
