@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 5cc9200511140e505e7114698f075d7a02b0068d
+verified_commit: 5ab68d4795634d279ea608af1d4046dd55323554
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -255,3 +255,7 @@ none — every multi-run eval is uniform
 Round 1: E1, E2 đạt lần đầu (mang sang các vòng sau).
 Round 2: E11 không đạt — lint quét nhầm tệp nháp của máy. Trả về triển khai.
 Round 3: E11 và sáu lệnh suite chạy lại, đều xanh; các eval còn lại mang từ vòng trước. Verdict PASS.
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp nhánh chính (hàng du-lieu-mau-san-thu)
+run_id: repin-20261031T010429Z-28178
+sha: 5ab68d4795634d279ea608af1d4046dd55323554 · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · ngoài làn máy: E3, E4, E5, E6, E7, E8, E9, E13, E14 · AC không có chốt máy: AC-2, AC-3, AC-4, AC-5, AC-7, AC-8, AC-10
