@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { TAB_LABEL } from "./nav-labels";
+import { ChiBaoDongBo } from "@/components/sync/chi-bao-dong-bo";
 import { Notifications } from "./notifications";
 
 // Vỏ điện thoại (dưới md): thanh trên mảnh — tên nhà · gõ mã căn · chuông — và thanh tab dưới cố định theo vai.
@@ -33,6 +34,7 @@ export function MobileHeader({
           <SearchIcon />
         </Button>
       )}
+      <ChiBaoDongBo gon />
       <Notifications />
     </header>
   );

@@ -58,12 +58,14 @@ const BANG = {
     theoKhuon: [`${W}/app/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/settings/[section]/page.tsx`, `${W}/app/settings/page.tsx`],
   },
-  "trang-tam": { theoKhuon: [...TRANG_TAM, `${W}/app/settings/[section]/page.tsx`], ngoaiLe: [] },
+  "trang-tam": { theoKhuon: [...TRANG_TAM, `${W}/app/settings/[section]/page.tsx`], ngoaiLe: [`${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`] },
 };
 const NHAN_DIEN_TRANG_THAI = [
   ...TRANG_TAM.slice(0, 3),
   `${W}/app/(app)/layout.tsx`,
   ...TRANG_TAM.slice(3),
+  // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
+  ...["page.tsx", "trang-thu.tsx"].map((p) => `${W}/app/(app)/proto/nhanh-tuc-thi/${p}`),
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -249,7 +251,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
-      "trang-tam: 11 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 11 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-thai: 5 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);

@@ -43,6 +43,10 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Tôi | `me` | Tab tài khoản trên điện thoại | — |
 | Gõ mã căn | `unitJump` | Ô mở thẳng hồ sơ căn hoặc nhảy tới nhà bằng bàn phím; chỉ vai có Bảng hàng | — |
 | Hồ sơ căn | `/units/<mã>` | Toàn bộ thông tin của một căn; trên máy tính mở thành cột phải cạnh Bảng hàng | — |
+| Kho trên máy | `LocalStore` | Bản hàng, lịch sử căn đã mở và thay đổi chờ gửi giữ trên thiết bị của một người, theo từng sàn; đăng xuất là xoá | «Bộ nhớ đệm» |
+| Thay đổi chờ gửi | `PendingOp` | Một lần sửa đã ghi trên máy, chưa được máy chủ nhận | «Bản nháp» |
+| Cần xem | `needsReview` | Căn có thay đổi chờ mà máy chủ không nhận (hai người cùng sửa, căn đã cọc/đã bán, bị từ chối); người chọn lối | «Xung đột» trên màn |
+| Chỉ báo đồng bộ | `SyncIndicator` | Chữ trên thanh trên nói đang ở đâu: Đã đồng bộ, Đang gửi, Mất mạng, Cần xem | Chỉ màu không chữ |
 | Nhập Excel | `import` | Nút đưa hàng vào từ bảng tính | — |
 | Phát hàng | `export` | Nút đưa hàng ra ngoài sàn | — |
 | Chủ nhà (của hàng) | `listing_owner` | Tên, số, giá đáy của chủ nhà một hàng; lớp `source`, chỉ đầu chủ giữ căn và trưởng nhóm thấy (ADR-0010) | «Người bán» |

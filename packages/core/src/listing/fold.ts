@@ -45,30 +45,38 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
     lastConfirmedAt: null,
     version: 0,
   };
-  for (const e of ds) {
-    const p = e.payload;
-    switch (e.type) {
-      case "details_changed":
-        for (const [k, v] of Object.entries(p)) s[k as DetailField] = (v as string | null) ?? null;
-        break;
-      case "price_changed":
-        s.listPrice = p.listPrice as number;
-        s.feeInclusion = p.feeInclusion as string;
-        break;
-      case "status_changed":
-        s.standardStatus = p.to as StandardStatus;
-        // Đổi trạng thái không xoá dữ liệu: hàng đã bán giữ giá chốt và ngày bán (Tham chiếu §5).
-        if (p.to === "Closed") {
-          s.closePrice = p.closePrice as number;
-          s.closeDate = (p.closeDate as string | undefined) ?? e.occurredAt.slice(0, 10);
-        }
-        if (p.to === "Withdrawn") s.withdrawnReason = p.withdrawnReason as string;
-        break;
-      default:
-        break;
-    }
-    if (e.confirmedWithOwner && (!s.lastConfirmedAt || e.occurredAt > s.lastConfirmedAt)) s.lastConfirmedAt = e.occurredAt;
-    s.version = e.seq;
+  return ds.reduce(stepListing, s);
+}
+
+/**
+ * Một bước gấp: trạng thái sau khi áp thêm một sự kiện. Thuần — trả bản mới, không đổi đầu vào. `foldListing` là chuỗi các
+ * bước này; bộ đồng bộ trên máy dùng nó để gấp sự kiện tạm lên bản kéo về (hàng 13) mà không chép luật gấp.
+ */
+export function stepListing(state: ListingState, e: ListingEvent): ListingState {
+  const s: ListingState = { ...state };
+  const p = e.payload;
+  switch (e.type) {
+    case "details_changed":
+      for (const [k, v] of Object.entries(p)) s[k as DetailField] = (v as string | null) ?? null;
+      break;
+    case "price_changed":
+      s.listPrice = p.listPrice as number;
+      s.feeInclusion = p.feeInclusion as string;
+      break;
+    case "status_changed":
+      s.standardStatus = p.to as StandardStatus;
+      // Đổi trạng thái không xoá dữ liệu: hàng đã bán giữ giá chốt và ngày bán (Tham chiếu §5).
+      if (p.to === "Closed") {
+        s.closePrice = p.closePrice as number;
+        s.closeDate = (p.closeDate as string | undefined) ?? e.occurredAt.slice(0, 10);
+      }
+      if (p.to === "Withdrawn") s.withdrawnReason = p.withdrawnReason as string;
+      break;
+    default:
+      break;
   }
+  if (e.confirmedWithOwner && (!s.lastConfirmedAt || e.occurredAt > s.lastConfirmedAt)) s.lastConfirmedAt = e.occurredAt;
+  s.version = e.seq;
   return s;
 }
+
