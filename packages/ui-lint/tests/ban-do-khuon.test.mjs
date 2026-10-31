@@ -175,6 +175,17 @@ describe("E3 — nhóm đơn vị màn: mọi màn hiện có dựng khuôn ở 
       sua(d, USERS, "</MucCaiDat>", "</Frame>");
       assert.deepEqual(lechCua(d), [`${USERS}: cai-dat-san — gốc là <Frame>, phải là <MucCaiDat> (khuôn của nhóm cai-dat-san)`]);
     }));
+  it("lệnh trả có điều kiện: nhánh <main min-h-svh> của `a ? b : c` → lệch dù nhánh kia đúng khuôn", () =>
+    voi((d) => {
+      sua(d, USERS, "return (\n    <MucCaiDat", 'return cookie === "y" ? (\n    <main className="min-h-svh">x</main>\n  ) : (\n    <MucCaiDat');
+      assert.deepEqual(lechCua(d), [`${USERS}: cai-dat-san — gốc là <main>, phải là <MucCaiDat> (khuôn của nhóm cai-dat-san)`]);
+    }));
+  it("lệnh trả `a && <Frame/>` ở gốc → lệch nêu Frame", () =>
+    voi((d) => {
+      sua(d, USERS, 'if (!me) redirect("/login");', 'if (!me) redirect("/login");\n  if (cookie === "y") return cookie && <Frame />;');
+      sua(d, USERS, 'import { TrangThai } from "@/components/trang-thai";', 'import { TrangThai } from "@/components/trang-thai";\nimport { Frame } from "@/components/reui/frame";');
+      assert.deepEqual(lechCua(d), [`${USERS}: cai-dat-san — gốc là <Frame>, phải là <MucCaiDat> (khuôn của nhóm cai-dat-san)`]);
+    }));
   it("Đăng nhập nhập Khung cùng tên từ tệp khác → lệch nói tệp nhập sai", () =>
     voi((d) => {
       writeFileSync(join(d, W, "app/(auth)/login/khung-gia.tsx"), "export function Khung({ title, children }: { title: string; children: unknown }) {\n  return null;\n}\n");

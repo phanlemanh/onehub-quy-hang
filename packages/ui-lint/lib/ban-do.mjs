@@ -235,6 +235,16 @@ const boNgoac = (e) => {
   return e;
 };
 
+const NOI_LOGIC = [ts.SyntaxKind.AmpersandAmpersandToken, ts.SyntaxKind.BarBarToken, ts.SyntaxKind.QuestionQuestionToken];
+
+/** Mọi biểu thức có thể là gốc của một `return`: đi vào cả hai nhánh của `a ? b : c` và vế phải của `&&`, `||`, `??`. */
+function cacGoc(e) {
+  e = boNgoac(e);
+  if (ts.isConditionalExpression(e)) return [...cacGoc(e.whenTrue), ...cacGoc(e.whenFalse)];
+  if (ts.isBinaryExpression(e) && NOI_LOGIC.includes(e.operatorToken.kind)) return [...cacGoc(e.left), ...cacGoc(e.right)];
+  return [e];
+}
+
 // ---------- đọc bản đồ ----------
 
 function kiemKieu(ten, kieu, v, loi) {
@@ -361,7 +371,7 @@ export function kiemCay(root, banDo) {
           lech(tep, "không có thành phần xuất mặc định (export default function)");
           continue;
         }
-        const jsx = cacReturn(fn).map(boNgoac).filter((e) => ts.isJsxElement(e) || ts.isJsxSelfClosingElement(e) || ts.isJsxFragment(e));
+        const jsx = cacReturn(fn).flatMap(cacGoc).filter((e) => ts.isJsxElement(e) || ts.isJsxSelfClosingElement(e) || ts.isJsxFragment(e));
         if (!jsx.length) {
           lech(tep, `không trả JSX — tệp không dựng màn thì khai ngoại lệ có lý do`);
           continue;
