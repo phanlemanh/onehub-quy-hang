@@ -394,7 +394,7 @@ test("AC-3 nhãn mẫu", async () => {
   const pha = {
     sàn: (x) => delete x.san.nhan,
     người: (x) => delete x.nguoi[2].nhan,
-    căn: (x) => (x.danhMuc.projects[0].buildings[1].units[7].upi = "urn:onehub:upi:B-02.02"),
+    căn: (x) => (x.danhMuc.subdivisions[0].buildings[1].units[7].upi = "urn:onehub:upi:B-02.02"),
     "chủ nhà": (x) => delete x.chuNha[4].nhan,
     hàng: (x) => delete x.hang[9].nhan,
     lead: (x) => delete x.lead[3].nhan,
@@ -434,18 +434,18 @@ test("AC-4 khuôn danh mục", () => {
   assert.ok(CatalogFeed.safeParse(d.danhMuc).success);
 
   const p1 = banSao(d.danhMuc);
-  p1.projects[0].buildings[0].units[0].nhan = NHAN;
+  p1.subdivisions[0].buildings[0].units[0].nhan = NHAN;
   assert.equal(CatalogFeed.safeParse(p1).success, false, "khuôn phải từ chối khoá lạ");
   assert.ok(coLoi(kiemKhuonDanhMuc(p1, CatalogFeed).loi, "khuôn danh mục từ chối"));
   const p2 = banSao(d.danhMuc);
-  p2.projects[0].buildings[1].units[40].floor += 1;
+  p2.subdivisions[0].buildings[1].units[40].floor += 1;
   assert.ok(coLoi(kiemKhuonDanhMuc(p2, CatalogFeed).loi, "mã căn lệch thuộc tính"));
   const p3 = banSao(d.danhMuc);
-  p3.projects[0].buildings[1].units[12].stack = "07";
-  assert.ok(kiemKhuonDanhMuc(p3, CatalogFeed).loi.includes(`mã căn lệch thuộc tính: ${p3.projects[0].buildings[1].units[12].unitNumber}`), "lệch trục");
+  p3.subdivisions[0].buildings[1].units[12].stack = "07";
+  assert.ok(kiemKhuonDanhMuc(p3, CatalogFeed).loi.includes(`mã căn lệch thuộc tính: ${p3.subdivisions[0].buildings[1].units[12].unitNumber}`), "lệch trục");
   const p4 = banSao(d.danhMuc);
-  p4.projects[0].buildings[1].units[30].unitNumber = p4.projects[0].buildings[1].units[30].unitNumber.replace(/^B/, "C");
-  assert.ok(kiemKhuonDanhMuc(p4, CatalogFeed).loi.includes(`mã căn lệch thuộc tính: ${p4.projects[0].buildings[1].units[30].unitNumber}`), "lệch toà");
+  p4.subdivisions[0].buildings[1].units[30].unitNumber = p4.subdivisions[0].buildings[1].units[30].unitNumber.replace(/^B/, "C");
+  assert.ok(kiemKhuonDanhMuc(p4, CatalogFeed).loi.includes(`mã căn lệch thuộc tính: ${p4.subdivisions[0].buildings[1].units[30].unitNumber}`), "lệch toà");
 });
 
 test("AC-5 luật Tham chiếu", () => {
@@ -483,7 +483,7 @@ test("AC-5 luật Tham chiếu", () => {
 const TT_DU = { Incomplete: "Chưa đủ để rao", Active: "Đang bán", Pending: "Đang giao dịch", Closed: "Đã bán", Hold: "Tạm ngừng", Withdrawn: "Ngừng hẳn" };
 const TT_TAT = { Incomplete: "Chưa đủ", Active: "Đang bán", Pending: "Đang GD", Closed: "Đã bán", Hold: "Tạm ngừng", Withdrawn: "Ngừng" };
 function kyVong(d) {
-  const can = new Map(d.danhMuc.projects[0].buildings.flatMap((b) => b.units.map((u) => [u.unitNumber, { ...u, toa: b.buildingName }])));
+  const can = new Map(d.danhMuc.subdivisions[0].buildings.flatMap((b) => b.units.map((u) => [u.unitNumber, { ...u, toa: b.buildingName }])));
   const chu = new Map(d.chuNha.map((x) => [x.ma, x]));
   const ten = new Map(d.nguoi.map((x) => [x.khoa, x.ten]));
   const chung = (h) => ({

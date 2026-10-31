@@ -23,7 +23,7 @@ const TRANG_THAI_TAT = {
 
 /** Ngữ cảnh chiếu: tra căn, chủ nhà, người theo mã. */
 export function taoNguCanh(d) {
-  const can = new Map(d.danhMuc.projects.flatMap((p) => p.buildings.flatMap((b) => b.units.map((u) => [u.unitNumber, { ...u, toa: b.buildingName, duAn: p.projectName }]))));
+  const can = new Map(d.danhMuc.subdivisions.flatMap((p) => p.buildings.flatMap((b) => b.units.map((u) => [u.unitNumber, { ...u, toa: b.buildingName, duAn: p.subdivisionName }]))));
   const chu = new Map(d.chuNha.map((c) => [c.ma, c]));
   const nguoi = new Map(d.nguoi.map((n) => [n.khoa, n]));
   return { can: (h) => can.get(h.maCan), chu: (h) => chu.get(h.chuNha), nguoi: (h) => nguoi.get(h.dauChu) };

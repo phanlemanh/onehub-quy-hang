@@ -1,0 +1,8 @@
+{
+  "feature_plain": "Danh mục thôi gọi «dự án»: khu chứa căn gọi theo chuẩn RESO, mỗi căn biết mình là loại hình gì, và hệ thống chặn căn mang thông tin không đúng loại hình.",
+  "decisions": [
+    {"id": "E10", "q": "CONTEXT và Tham chiếu đã gọi khu chứa căn đúng nhãn «Khu» anh chọn chưa?", "why": "Hội đồng ba người chấm đều đề xuất đạt: nhãn khớp lựa chọn ở sổ, chữ «dự án» còn lại chỉ ở lịch sử và tên mẫu."},
+    {"id": "E11", "q": "ADR-0016 và màn Người dùng đã theo đúng ba lựa chọn của anh chưa?", "why": "Vòng 1 trượt vì màn còn chữ «Khu»; vòng 2 đã đổi hết sang «Vùng», hội đồng đề xuất đạt."}
+  ],
+  "analyst_plain": "Các phép đo mới là ca kiểm viết cho tính năng; máy đã phá thử từng ca (để sót tên cũ, quên loại hình, bỏ chặn sai loại, đất có tầng, nhận tham số cũ) và ca đỏ đúng chỗ."
+}
