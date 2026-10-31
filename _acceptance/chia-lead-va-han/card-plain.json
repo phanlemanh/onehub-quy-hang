@@ -1,0 +1,44 @@
+{
+  "feature_plain": "Lead không trùng tự về một đầu chủ phụ trách toà trong vòng một phút, bỏ qua người đang nghỉ; lead quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm có lời báo trong app.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ chọn người nhận theo thứ tự cố định: người đã giữ chủ nhà này trước, rồi đầu chủ phụ trách toà đang đi làm và lâu chưa được chia nhất (AC-1, luật chọn người)."},
+    {"id": "AC-2", "p": "Sẽ coi lead quá hạn đúng ở phút thứ 15 chưa nhận và phút thứ 30 chưa gọi — 14 phút 59 giây chưa báo (AC-2, luật hạn)."},
+    {"id": "AC-3", "p": "Sẽ đưa mười lead thử của bộ mẫu về đúng người đã ghi trước theo toà, kể cả khi một người nghỉ giữa chừng (AC-3, mười lead thử)."},
+    {"id": "AC-5", "p": "Sẽ báo trưởng nhóm đúng một lần cho mỗi loại quá hạn, ở lần chạy đầu tiên sau khi đến hạn; lead đã nhận, đã gọi hay lead căn trùng không bị báo (AC-5, báo đúng lúc)."},
+    {"id": "AC-6", "p": "Sẽ cho đầu chủ của lead bấm nhận và ghi đã gọi lần đầu; một người được đánh dấu nghỉ bởi chính họ, trưởng nhóm hay quản trị sàn (AC-6, ai làm gì)."},
+    {"id": "AC-7", "p": "Sẽ cho trưởng nhóm xem danh sách lời báo mới nhất trước và giao tay một lead cho đầu chủ khác — hạn tính lại từ lúc giao (AC-7, việc của trưởng nhóm)."},
+    {"id": "AC-8", "p": "Sẽ chỉ chạy lượt chia và xét hạn khi bên gọi có khoá bí mật; hai lượt chạy cùng lúc không chia một lead hai lần, không báo trùng (AC-8, lượt chạy nền)."},
+    {"id": "AC-9", "p": "Sẽ giữ mọi thứ của sàn này kín với sàn khác, và không lời báo nào mang số điện thoại chủ nhà (AC-9, cách ly và giữ số)."},
+    {"id": "AC-10", "p": "Sẽ đưa lead cùng số chủ nhà về cùng một đầu chủ, kể cả khi lead sau ở toà khác (AC-10, cùng chủ cùng người)."}
+  ],
+  "wont_do": [
+    {"id": "AC-4", "p": "Sẽ KHÔNG đưa lead cho người không phụ trách toà khi cả toà không ai nhận được — lead chờ, trưởng nhóm được báo «chưa chia được» một lần, người về làm thì nhận ngay lượt sau (AC-4, lúc không ai nhận)."},
+    {"id": "OOS-1", "p": "Không đưa thông báo lên điện thoại, máy tính ở việc này — đầu chủ nhận thông báo ở hàng 26; phần của trưởng nhóm chờ anh chốt ở Hỏi-6."},
+    {"id": "OOS-2", "p": "Không dựng màn nào — nút nhận ở Hôm nay của đầu chủ (hàng 22), bốn nấc lead cho telesales (hàng 27), ghi cuộc gọi (hàng 28), Hôm nay của trưởng nhóm (hàng 42)."},
+    {"id": "OOS-3", "p": "Không làm phần sàn tự chỉnh luật chia và hai hạn — chạy bằng mặc định 15 và 30 phút tới hàng Cài đặt sàn."},
+    {"id": "OOS-4", "p": "Không tự bật lượt chạy mỗi phút trên bản thật — đó là việc vận hành sau khi gộp, theo lựa chọn ở Hỏi-1."},
+    {"id": "OOS-5", "p": "Không tự giao lại lead của người vừa nghỉ hay lead quá hạn — trưởng nhóm giao tay sau lời báo."},
+    {"id": "OOS-6", "p": "Không chia theo số lead đang cầm, theo ca hay theo giờ — để luật của sàn ở bản sau."},
+    {"id": "OOS-7", "p": "Không biến lead thành căn khi đầu chủ nhận — việc của hồ sơ căn và Hôm nay."},
+    {"id": "OOS-8", "p": "Không có danh sách ai đang nghỉ trên màn người dùng — việc của Cài đặt sàn."}
+  ],
+  "scope_plain": "Việc này dựng phần máy chia và canh hạn; mọi màn, thông báo lên máy và cấu hình riêng của sàn để cho các hàng sau.",
+  "coverage_plain": [
+    {"i": 0, "p": "Ai nhận lead: người đã giữ chủ nhà này, người phụ trách toà, không ai, hay trưởng nhóm giao tay — mỗi ngả có tiêu chí riêng (AC-1, AC-3, AC-4, AC-7, AC-10)."},
+    {"i": 1, "p": "Tình trạng người: đang làm, nghỉ, đi làm lại, thôi làm đầu chủ, vào sàn trước hay sau — đủ khi bảng chọn người có từng dòng (AC-1, AC-3, AC-4)."},
+    {"i": 2, "p": "Khớp khu với toà: cùng tên, khác hoa thường hay khoảng trắng, không khu nào khớp (AC-1, AC-3, AC-4)."},
+    {"i": 3, "p": "Thời gian: một giây trước hạn và đúng hạn, hạn nhận và hạn gọi, đã nhận hay đã gọi, giao lại, chạy lại — đủ khi mỗi mốc có một dòng ghi trước (AC-2, AC-5, AC-7, AC-8)."},
+    {"i": 4, "p": "Kết quả lúc nhập: lead không trùng được chia và tính hạn, lead chủ trùng tính hạn, lead căn trùng không chia và không hạn (AC-3 tới AC-5, AC-7)."},
+    {"i": 5, "p": "Ai được làm gì: đầu chủ của lead, đầu chủ khác, trưởng nhóm, quản trị, telesales, người chưa đăng nhập (AC-6, AC-7)."},
+    {"i": 6, "p": "Cách ly và giữ số: sàn khác không chạm được gì, số chủ không ra lời báo, gọi thẳng vào kho dữ liệu cũng bị chặn (AC-9)."},
+    {"i": 7, "p": "Lượt chạy nền: thiếu khoá, sai khoá, máy chủ chưa đặt khoá, đúng khoá, hai lượt chạy cùng lúc (AC-8)."},
+    {"i": 8, "p": "Hai lớp đo: luật thuần đo bằng bảng ca, phần kho dữ liệu và API đo trên Postgres thật (AC-1, AC-2; AC-3 tới AC-10)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy đã bỏ việc đưa lời báo quá hạn lên điện thoại trưởng nhóm bằng một câu chỉ nói về đầu chủ — thực ra không hàng nào nhận phần này. Đã đổi thành câu hỏi cho anh (Hỏi-6); màn của trưởng nhóm gắn vào hàng 42."},
+    {"i": 1, "p": "Máy đã tự chốt luật chia đều theo vòng khi một toà có nhiều đầu chủ, mà đây là chuyện thu nhập của đầu chủ. Đã đổi thành câu hỏi cho anh (Hỏi-5); việc so tên khu với tên toà để máy quyết vì chưa có chỗ gắn khu với danh mục."},
+    {"i": 2, "p": "Trưởng nhóm chưa giao lại được lead chủ trùng đang quá hạn, và chưa có ca đo lead căn trùng không bị báo. Đã sửa: giao lại nhận cả lead chủ trùng, thêm ca đo cho các tình huống này."},
+    {"i": 3, "p": "Ngưỡng «trong một phút» chỉ đo được khi lượt chạy mỗi phút đã bật trên bản thật. Đã ghi thành điều kiện trước phiên thử kèm câu kiểm, và ghi rõ số «lead tới cuộc gọi đầu» chưa có dữ liệu tới khi có màn ghi gọi."},
+    {"i": 4, "p": "Phép kiểm «không lộ số chủ» dò sai dạng số và thiếu đối chứng. Đã sửa: bỏ ký tự không phải số trước khi dò, đòi có ít nhất một lời báo, ghim mã lỗi khi gọi khác sàn."}
+  ]
+}

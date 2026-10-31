@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhịp chia và hạn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1160px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 0.35rem;
+    }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Sơ đồ luồng ba làn · Hỏi-1, Hỏi-2, Hỏi-3 · AC-1, AC-2, AC-3, AC-4, AC-5, AC-7, AC-8, AC-10</p>
+    <h1>Nhịp chia lead và hạn</h1>
+    <p class="subtitle">Mỗi phút một nhịp: lead chờ chia được chia trước, rồi lead đã về người được xét hạn 15 phút nhận, 30 phút gọi.</p>
+
+    <svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ncvh-title ncvh-desc">
+      <title id="ncvh-title">Nhịp chia lead và hạn</title>
+      <desc id="ncvh-desc">Làn Nhịp mỗi phút: bên gọi mỗi phút (Hỏi-1) gọi lối việc nền có khoá, mỗi sàn có việc chạy một giao dịch dưới luật theo dòng. Làn Chia: lead không trùng chờ chia, cũ trước; nếu đầu chủ của lead trước cùng số còn làm thì về người ấy; nếu không, đầu chủ phụ trách toà không nghỉ thì về người lâu chưa được chia nhất; nếu không, lead chờ, trưởng nhóm được báo chưa chia được một lần, nhịp sau thử lại. Làn Hạn: lead đã về người, quá 15 phút chưa nhận thì báo trưởng nhóm, quá 30 phút chưa gọi lần đầu thì báo trưởng nhóm.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <rect width="1120" height="800" fill="#f5f5f5"/>
+
+      <!-- ===== Làn ===== -->
+      <line x1="32" y1="24" x2="1088" y2="24" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <line x1="32" y1="168" x2="1088" y2="168" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <line x1="32" y1="456" x2="1088" y2="456" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <line x1="32" y1="648" x2="1088" y2="648" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <line x1="152" y1="24" x2="152" y2="648" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+
+      <text x="44" y="100" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.14em">NHỊP MỖI PHÚT</text>
+      <text x="44" y="316" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHIA</text>
+      <text x="44" y="556" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.14em">HẠN</text>
+
+      <!-- ===== Mũi tên (vẽ trước, nằm dưới nút) ===== -->
+      <!-- Làn Nhịp -->
+      <line x1="496" y1="92" x2="534" y2="92" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="776" y1="92" x2="814" y2="92" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Nhịp → Chia: chia trước -->
+      <path d="M936,124 V188 Q936,196 928,196 H296 Q288,196 288,204 V218" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Làn Chia -->
+      <line x1="400" y1="252" x2="462" y2="252" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="704" y1="252" x2="766" y2="252" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="584" y1="296" x2="584" y2="334" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="704" y1="380" x2="766" y2="380" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="464" y1="380" x2="402" y2="380" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Lead chờ → thử lại ở nhịp sau -->
+      <line x1="288" y1="328" x2="288" y2="286" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+      <!-- Hai lối về người gộp lại → Hạn -->
+      <path d="M1008,252 H1040 Q1048,252 1048,260 V380" fill="none" stroke="#4f5d75" stroke-width="1.2"/>
+      <line x1="1008" y1="380" x2="1048" y2="380" stroke="#4f5d75" stroke-width="1.2"/>
+      <path d="M1048,380 V480 Q1048,488 1040,488 H316 Q308,488 308,496 V510" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <circle cx="1048" cy="380" r="4" fill="#2d3142"/>
+
+      <!-- Làn Hạn -->
+      <line x1="440" y1="556" x2="502" y2="556" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="760" y1="556" x2="822" y2="556" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- ===== Nhãn mũi tên (mặt nạ cách nét 6–10px) ===== -->
+      <rect x="380" y="172" width="80" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="420" y="184" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CHIA TRƯỚC</text>
+
+      <rect x="724" y="228" width="24" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="736" y="240" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+      <rect x="596" y="306" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="620" y="318" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+      <rect x="724" y="356" width="24" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="736" y="368" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+      <rect x="408" y="356" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="432" y="368" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+      <rect x="296" y="300" width="64" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="328" y="312" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NHỊP SAU</text>
+
+      <rect x="636" y="464" width="88" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="680" y="476" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RỒI XÉT HẠN</text>
+
+      <!-- ===== Nút: làn Nhịp mỗi phút ===== -->
+      <!-- Trọng tâm: bên gọi mỗi phút (Hỏi-1) -->
+      <rect x="176" y="48" width="320" height="88" rx="6" fill="#f5f5f5"/>
+      <rect x="176" y="48" width="320" height="88" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <rect x="184" y="56" width="44" height="16" rx="2" fill="transparent" stroke="rgba(186,69,19,0.50)" stroke-width="0.8"/>
+      <text x="206" y="68" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-1</text>
+      <text x="336" y="92" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bên gọi mỗi phút</text>
+      <text x="336" y="110" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">pg_cron Supabase — khuyến nghị</text>
+      <text x="336" y="126" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">kiểm lúc mở app · Vercel Pro</text>
+
+      <!-- Lối việc nền -->
+      <rect x="536" y="60" width="240" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="536" y="60" width="240" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="656" y="88" fill="#2d3142" font-size="11" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">POST /api/v1/jobs/lead-tick</text>
+      <text x="656" y="106" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">có khoá</text>
+
+      <!-- Mỗi sàn một giao dịch -->
+      <rect x="816" y="60" width="240" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="816" y="60" width="240" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="936" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mỗi sàn có việc</text>
+      <text x="936" y="106" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">một giao dịch dưới luật theo dòng</text>
+
+      <!-- ===== Nút: làn Chia ===== -->
+      <!-- Lead chờ chia -->
+      <rect x="176" y="220" width="224" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="176" y="220" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="288" y="248" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lead không trùng chờ chia</text>
+      <text x="288" y="266" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">cũ trước</text>
+
+      <!-- Rẽ 1: người của lead trước cùng số -->
+      <polygon points="584,208 704,252 584,296 464,252" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="584" y="250" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đầu chủ của lead trước</text>
+      <text x="584" y="264" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">cùng số còn làm?</text>
+
+      <!-- Về người ấy -->
+      <rect x="768" y="224" width="240" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="768" y="224" width="240" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="888" y="256" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Về người ấy</text>
+
+      <!-- Rẽ 2: đầu chủ phụ trách toà -->
+      <polygon points="584,336 704,380 584,424 464,380" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="584" y="378" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đầu chủ phụ trách toà,</text>
+      <text x="584" y="392" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">không nghỉ?</text>
+
+      <!-- Về người lâu chưa được chia nhất -->
+      <rect x="768" y="352" width="240" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="768" y="352" width="240" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="888" y="376" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Về người lâu chưa được chia nhất</text>
+      <text x="888" y="394" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">hoà: vào sàn trước</text>
+
+      <!-- Lead chờ, báo trưởng nhóm (Hỏi-2) -->
+      <rect x="176" y="328" width="224" height="104" rx="6" fill="#f5f5f5"/>
+      <rect x="176" y="328" width="224" height="104" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <rect x="184" y="336" width="44" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+      <text x="206" y="348" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-2</text>
+      <text x="288" y="376" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lead chờ</text>
+      <text x="288" y="394" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">trưởng nhóm được báo</text>
+      <text x="288" y="408" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">«chưa chia được» một lần</text>
+      <text x="288" y="422" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">nhịp sau thử lại</text>
+
+      <!-- ===== Nút: làn Hạn ===== -->
+      <!-- Lead đã về người (Hỏi-3) -->
+      <rect x="176" y="512" width="264" height="88" rx="6" fill="#f5f5f5"/>
+      <rect x="176" y="512" width="264" height="88" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="184" y="520" width="44" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+      <text x="206" y="532" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-3</text>
+      <text x="308" y="560" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lead đã về người</text>
+      <text x="308" y="578" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">được chia, hay chủ trùng lúc nhập</text>
+
+      <!-- Quá 15 phút chưa nhận -->
+      <rect x="504" y="524" width="256" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="504" y="524" width="256" height="64" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="632" y="552" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Quá 15 phút chưa nhận</text>
+      <text x="632" y="570" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">→ báo trưởng nhóm</text>
+
+      <!-- Quá 30 phút chưa gọi lần đầu -->
+      <rect x="824" y="524" width="256" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="824" y="524" width="256" height="64" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="952" y="552" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Quá 30 phút chưa gọi lần đầu</text>
+      <text x="952" y="570" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">→ báo trưởng nhóm</text>
+
+      <!-- Nhãn phụ của làn Hạn: ngoặc dưới hai hạn -->
+      <path d="M504,600 V608 H1080 V600" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="792" y="628" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">mỗi loại một lời mỗi lần giao · trưởng nhóm giao lại thì mốc bắt đầu lại</text>
+
+      <!-- ===== Nhãn chung ===== -->
+      <rect x="32" y="672" width="1056" height="40" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+      <text x="44" y="696" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.14em">MỌI LỜI BÁO</text>
+      <text x="176" y="696" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif">Lời báo chỉ trong app cho trưởng nhóm — không số chủ, không gửi tin (thông báo lên máy: hàng 26)</text>
+
+      <!-- ===== Chú giải ===== -->
+      <line x1="32" y1="736" x2="1088" y2="736" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="32" y="756" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+
+      <rect x="32" y="772" width="16" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="56" y="782" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Bước</text>
+
+      <polygon points="116,770 126,778 116,786 106,778" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="136" y="782" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Rẽ nhánh</text>
+
+      <rect x="212" y="772" width="16" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="236" y="782" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Có lời báo cho trưởng nhóm</text>
+
+      <rect x="384" y="772" width="16" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="408" y="782" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Bên gọi mỗi phút — chờ chốt, có thể tốn tiền</text>
+
+      <rect x="628" y="770" width="44" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+      <text x="650" y="782" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-n</text>
+      <text x="680" y="782" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">câu chủ kho chốt ở Cổng Phạm vi</text>
+
+      <line x1="864" y1="778" x2="892" y2="778" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="900" y="782" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Thử lại ở nhịp sau</text>
+    </svg>
+  </main>
+</body>
+</html>

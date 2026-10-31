@@ -1,0 +1,95 @@
+schema_version: 1
+feature_slug: chia-lead-va-han
+# Lệnh máy: `executors.test.core` (kiểm thuần packages/core) và `executors.test.isolation` (bộ cách ly + packages/api/test-db,
+# cần DATABASE_URL tới Postgres dãy L, cổng 5563). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter
+# liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Người và
+# lead trong ca lấy từ bộ mẫu hàng 5 (luật 4 của đợt); số chủ là số mẫu `0900 000 0xx`. Đồng hồ của nhịp do bộ kiểm truyền
+# (`runLeadTick(pool, now)`), không sửa dòng trong bảng.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/routing/routing.test.ts ca «chia: bảng chọn người viết trước» có mặt và ok — bảng ca viết tay, mỗi dòng một tập ứng viên và người được chọn bằng deepEqual, đếm số lần so bằng đúng số dòng bảng; các dòng phủ: người của lead cùng số thắng người phụ trách toà; người của lead cùng số đang nghỉ hay đã mất vai đầu chủ thì về người phụ trách toà; người nghỉ bị bỏ qua; số thứ tự chia nhỏ nhất thắng, chưa nhận lần nào đứng đầu; hoà thì người vào sàn trước; telesales hay trưởng nhóm có khu trùng toà không được chọn; không ai đủ điều kiện ra không chọn kèm lý do; ca «chia: khu khớp toà không phân hoa thường, khoảng trắng» có mặt và ok — ' toà  a ', 'TOÀ A', 'Toà A' (dạng dựng sẵn và dạng tổ hợp Unicode) khớp 'Toà A', 'Toà B' không khớp. Chiều đỏ: bỏ lọc người nghỉ → dòng người nghỉ đỏ nêu tên dòng."
+    paths: [packages/core/src/routing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hạn: bảng mốc viết trước» có mặt và ok — bảng viết tay các mốc 14:59, 15:00, 29:59, 30:00 từ mốc hạn, mỗi dòng (đã nhận?, đã gọi?, đã báo loại nào) so danh sách loại báo đến hạn bằng deepEqual, đếm đúng số dòng; có dòng đã nhận ở 15:00 ra không 'accept_overdue'; dòng đã báo 'accept_overdue' ở 30:00 chỉ ra 'first_call_overdue'; ca «hạn: mặc định 15 và 30 phút» khẳng định DEFAULT_LEAD_DEADLINES deepEqual { acceptMinutes: 15, firstCallMinutes: 30 }. Chiều đỏ: so bằng lớn hơn thay vì lớn hơn hoặc bằng → dòng 15:00 đỏ."
+    paths: [packages/core/src/routing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/routing.test.ts ca «chia: mười lead của bộ mẫu về đúng người, bỏ người nghỉ» có mặt và ok — sàn thử có đầu chủ 1 (Toà A), đầu chủ 2 (Toà B, quản trị thêm Toà A qua lối người dùng), telesales, trưởng nhóm của bộ mẫu; telesales nhập L-03..L-09 qua POST /api/v1/leads (mỗi lead 201, outcome 'new'), một nhịp, đầu chủ 1 đánh dấu nghỉ qua PUT .../leave, nhập L-10..L-12, một nhịp; đọc thẳng bảng bằng kết nối chủ: người nhận của từng lead deepEqual bảng viết trước (L-03 dc1, L-04 dc2, L-05 dc2, L-06 dc1, L-07 dc2, L-08 dc1, L-09 dc2, L-10 dc2, L-11 dc2, L-12 dc2), mười dòng có routed_at bằng mốc của nhịp ngay sau lúc nhập; ca «chia: đi làm lại thì nhận tiếp» — đầu chủ 1 bỏ nghỉ, lead Toà A kế tiếp về đầu chủ 1. Chiều đỏ: bỏ lọc người nghỉ ở hàm ứng viên → L-10 về đầu chủ 1, ca đỏ nêu L-10."
+    paths: [packages/core/src/routing/**, packages/api/src/routing/**, packages/api/src/jobs/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «chưa chia được: lead chờ và trưởng nhóm được báo một lần» có mặt và ok — lead Toà B khi đầu chủ duy nhất phụ trách Toà B nghỉ: ba nhịp liền, lead vẫn không người nhận, bảng lead_alerts có đúng 1 dòng kind 'unrouted' cho lead ấy, GET /api/v1/lead-alerts của trưởng nhóm có dòng ấy với tên đầu chủ null; ca «chưa chia được: toà không ai phụ trách» — lead toà không khu nào khớp: 1 dòng 'unrouted'; ca «chưa chia được: người về thì nhịp kế chia» — bỏ nghỉ, một nhịp, lead về người ấy. Chiều đỏ: bỏ khoá duy nhất của lời báo → ba dòng 'unrouted', ca đỏ nêu số đếm."
+    paths: [packages/core/src/routing/**, packages/api/src/routing/**, packages/api/src/jobs/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hạn: báo đúng nhịp và một lần» có mặt và ok — lead chia ở nhịp T; nhịp T+14:59 không lời báo; nhịp T+15:00 đúng 1 'accept_overdue'; nhịp T+29:59 không 'first_call_overdue'; nhịp T+30:00 đúng 1 'first_call_overdue'; chạy lại T+30:00 vẫn mỗi loại 1 dòng; ca «hạn: đã nhận, đã gọi thì không báo» — đầu chủ nhận trước T+15:00: không 'accept_overdue' ở T+15:00, vẫn 'first_call_overdue' ở T+30:00; lead khác ghi gọi trước T+30:00: không lời báo nào; ca «hạn: lead chủ trùng tính từ lúc nhập» — lead khớp chủ trùng (đầu chủ đặt chủ nhà mang số ấy trên một hàng của bộ mẫu qua lối ghi thật) có 'accept_overdue' ở nhịp created_at+15:00 mà không qua chia; ca «hạn: lead căn trùng không tính» — một lead căn trùng chưa bỏ và một lead căn trùng đã bỏ (căn trên hàng mở của bộ mẫu nạp qua lối ghi thật) qua các nhịp created_at+15:00 và +30:00: 0 lời báo cho cả hai, trong khi lead đối chứng không trùng cùng nhịp có lời báo. Chiều đỏ: tính mốc hạn từ created_at cho lead được chia muộn → nhịp T+14:59 có báo, ca đỏ."
+    paths: [packages/core/src/routing/**, packages/api/src/routing/**, packages/api/src/jobs/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận và gọi: chỉ đầu chủ của lead» có mặt và ok — bảng ca viết trước: đầu chủ của lead accept 200 rồi lần hai 409; đầu chủ khác, trưởng nhóm, telesales accept 404; first-call của đầu chủ lead chưa nhận 200 và đọc thẳng bảng thấy accepted_at và first_called_at đều có; first-call lần hai 409; không cookie 401; ca «nghỉ: ai đánh dấu được» — chính người 200, trưởng nhóm 200, quản trị 200, đầu chủ khác 403, telesales 403, mã người không thuộc sàn 404, không cookie 401; đọc thẳng member_availability thấy on_leave và changed_by đúng người gọi. Chiều đỏ: bỏ điều kiện người nhận trong app.accept_lead → dòng trưởng nhóm 404 đỏ."
+    paths: [packages/api/src/routing/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trưởng nhóm: danh sách báo» có mặt và ok — sau hai lời báo khác loại, GET /api/v1/lead-alerts của trưởng nhóm 200, dòng mới nhất đứng đầu, mỗi dòng có kind, buildingName, unitNumber, agentName, raisedAt; đầu chủ, telesales, quản trị 403; ca «trưởng nhóm: giao lại đặt hạn mới» — giao lead đã chia sang đầu chủ khác 200: đọc thẳng bảng thấy người nhận mới, routed_at mới, accepted_at và first_called_at null; nhịp ở mốc mới + 15:00 có 'accept_overdue' mới cho mốc ấy (deadline_from khác dòng cũ); ca «trưởng nhóm: chia tay lead chờ chia» — lead Toà B khi đầu chủ Toà B nghỉ (chưa có người), trưởng nhóm giao cho đầu chủ 1: 200, đọc thẳng bảng thấy người nhận, routed_at, routed_seq có giá trị; nhịp ở routed_at + 15:00 có 'accept_overdue'; ca «trưởng nhóm: giao lại lead chủ trùng» — lead chủ trùng về đầu chủ đang nghỉ, giao sang đầu chủ khác 200, mốc hạn mới; giao cho telesales 400; giao lead căn trùng 400; đầu chủ gọi assign 403. Chiều đỏ: không xoá accepted_at khi giao lại → không có báo mới, ca đỏ."
+    paths: [packages/api/src/routing/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhịp: khoá của lối việc nền» có mặt và ok — POST /api/v1/jobs/lead-tick không header 401, sai khoá 401, api dựng không jobSecret 503, đúng khoá 200 với thân có routed và alerts là số; ca «nhịp: hai nhịp cùng lúc không chia hai lần» — năm lead chờ chia, Promise.all hai runLeadTick cùng mốc: mỗi lead đúng một người nhận, tổng routed của hai nhịp bằng 5, đếm lead_alerts không dòng trùng. Chiều đỏ: bỏ điều kiện «chưa có người nhận» trong app.route_lead → tổng routed lớn hơn 5, ca đỏ."
+    paths: [packages/api/src/jobs/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs các ca của hàng 25 có mặt và ok — dưới ngữ cảnh sàn B: app.route_lead, app.accept_lead, app.mark_first_call, app.reassign_lead trên lead của A không đổi dòng nào (đọc lại bằng kết nối chủ), app.lead_routing_queue, app.lead_routing_candidates, app.lead_deadline_facts không trả dòng nào của A; select từ lead_alerts và member_availability của A ra 0 dòng; vai quy_hang_app update/delete trên leads và lead_alerts bị từ chối quyền; app.lead_job_companies trả đúng một cột company_id; trong packages/api/test-db/routing.test.ts ca «cách ly: người của B không chạm lead của A» — accept, first-call, assign, leave của B trên A ra 404; mỗi hàm gọi khác sàn ghim kết quả (route_lead trả false; accept_lead, mark_first_call, reassign_lead ném đúng mã P0002) và có lời gọi đối chứng cùng tham số dưới ngữ cảnh A đổi đúng một dòng; ca «rò: không số chủ» — thân GET /lead-alerts có ít nhất một lời báo và thân kết quả nhịp có routed khác 0 (đối chứng dương); bỏ mọi ký tự không phải chữ số khỏi hai thân rồi tìm từng số chủ của ca ở dạng 10 chữ số — không thấy số nào. Chiều đỏ: bỏ lọc sàn trong app.lead_routing_queue → ca hàng đợi của B đỏ."
+    paths: [packages/db/migrations/011_chia_lead_va_han.sql, packages/db/tests/isolation.test.mjs, packages/api/src/routing/**, packages/api/src/jobs/**, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cùng số: sau nhịp thành chủ trùng» có mặt và ok — lead L-04 (Toà A) chia cho đầu chủ 1; telesales nhập lead cùng số ở Toà B: 201, outcome 'owner_has_agent', người nhận đầu chủ 1; ca «cùng số: cùng nhịp về cùng người» — hai lead cùng số, một Toà A một Toà B, nhập trước một nhịp: cả hai về cùng một đầu chủ; ca «cùng số: người cũ nghỉ thì chia thường» — đầu chủ của lead trước nghỉ, lead cùng số còn chờ chia về đầu chủ phụ trách toà của nó; ca «cùng số: nhập sau nhịp khi người cũ nghỉ» — lead cùng số nhập sau khi người cũ nghỉ: 201, outcome 'owner_has_agent', người nhận là người cũ (đang nghỉ) như kiểm trùng của hàng 24; trưởng nhóm giao lại được (200). Chiều đỏ: bỏ cột prior_agent khỏi hàng đợi → lead Toà B về đầu chủ 2, ca đỏ."
+    paths: [packages/core/src/routing/**, packages/api/src/jobs/**, packages/db/migrations/011_chia_lead_va_han.sql, packages/api/test-db/routing.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
