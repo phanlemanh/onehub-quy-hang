@@ -26,7 +26,9 @@ Source input: `docs/plan/lo-trinh.json` hàng 10 · `_acceptance/nhan-danh-muc-i
 - AC-1: Given một gói danh mục mẫu viết theo khuôn phiên bản 1 (khu `subdivisionKey`/`subdivisionName`, toà
   `buildingKey`/`buildingName`, căn `unitNumber`, loại hình `propertyType`/`propertySubType`, UPI `urn:onehub:upi:…`,
   có cả một căn hộ và một nhà phố mang `lotSizeArea`, `storiesTotal`), When đọc gói bằng khuôn, Then gói hợp lệ và đọc
-  ra đúng số khu, toà, căn cùng mọi trường đã viết; số phiên bản khuôn là 1.
+  ra đúng số khu, toà, căn cùng mọi trường đã viết; số phiên bản khuôn là 1; danh mục mẫu của lõi bọc thành gói v1 cũng
+  hợp lệ; gói có cặp loại hình không có trong bảng của lõi hoặc căn mang trường loại hình không dùng bị chính khuôn từ
+  chối, nêu đường tới căn và tên trường.
 - AC-2: Given gói đúng khuôn mà thêm một khoá lạ ở một cấp (gốc, khu, toà, căn — kể cả khoá mang tên chủ nhà như
   `ownerPhone`), When đọc gói, Then gói bị từ chối, lỗi nêu đúng đường khoá ở đúng cấp ấy; cùng gói bỏ khoá lạ thì hợp lệ.
 - AC-3: Given gói mang `schemaVersion` khác 1 (0, 2, vắng) hoặc có hai căn trùng UPI, When đọc gói, Then gói bị từ chối
@@ -35,17 +37,20 @@ Source input: `docs/plan/lo-trinh.json` hàng 10 · `_acceptance/nhan-danh-muc-i
   sàn gửi gói đúng khuôn tới `POST /api/v1/catalog/feeds`, Then API trả 200 với số khu, toà, căn đã nhận, và vùng danh
   mục dùng chung có đúng các căn ấy với đúng thuộc tính. (cross-layer)
 - AC-5: Given gói của AC-4 đã nhận, When gửi lại đúng gói ấy, Then số dòng của vùng dùng chung không đổi (không nhân
-  đôi) và API báo 0 căn mới; gửi gói đổi diện tích một căn thì đúng căn ấy cập nhật, các căn khác giữ nguyên. (cross-layer)
+  đôi) và API báo 0 căn mới; gửi gói đổi diện tích một căn thì API báo 1 căn cập nhật, 0 căn mới, đúng căn ấy cập nhật,
+  các căn khác giữ nguyên. (cross-layer)
 - AC-6: Given thoả thuận của sàn tạm dừng, đã kết thúc, hết hạn, chưa tới ngày hiệu lực, thiếu lớp `catalog`, khác loại
   (`lead_source` đang bật có lớp `catalog`), chiều ra (`catalog_source` `outbound`), hoặc sàn không có thoả thuận nào,
   hoặc sàn có thoả thuận đang bật mà không nằm trong danh sách tin, When gửi gói đúng khuôn, Then API trả 403 `agreement-inactive` và không một dòng nào của vùng
-  dùng chung được ghi; bật lại thoả thuận thì cùng gói được nhận. (cross-layer)
+  dùng chung (bảng khu lẫn bảng căn) được ghi — kể cả khi thoả thuận đổi trạng thái giữa lúc cửa nhận kiểm và lúc ghi;
+  bật lại thoả thuận thì cùng gói được nhận. (cross-layer)
 - AC-7: Given gói sai khuôn (AC-2, AC-3) hoặc sai loại hình (cặp `Residential/Land` không có trong bảng loại hình của
   lõi, căn hộ mang `lotSizeArea`), When gửi tới cửa nhận dù thoả thuận đang bật, Then API trả 422 `invalid-feed` kèm
   danh sách đường khoá lỗi (với lỗi loại hình: đường tới căn và tên trường) và không một dòng nào được ghi — kể cả khi
   lỗi nằm ở căn cuối gói. (cross-layer)
 - AC-8: Given vai `quy_hang_app` dưới luật theo dòng, When một sàn ghi thẳng vào vùng dùng chung mà thoả thuận nó
-  trỏ tới không hợp lệ (không có, tạm dừng, hết hạn, chưa tới ngày hiệu lực, thiếu lớp `catalog`, khác loại, chiều ra),
+  trỏ tới không hợp lệ (không có, tạm dừng, đã kết thúc, hết hạn, chưa tới ngày hiệu lực, thiếu lớp `catalog`, khác
+  loại, chiều ra, thuộc một công ty khác),
   hoặc có thoả thuận tự tạo đang bật mà không nằm trong danh sách tin, hoặc xoá một dòng, hay tự thêm mình vào danh
   sách tin, Then cơ sở dữ liệu từ chối bằng lỗi quyền (SQLSTATE `42501`), còn cùng câu lệnh với sàn được tin có thoả
   thuận hợp lệ thì thành công; mọi sàn (và lời gọi chưa đặt sàn) đọc được vùng dùng chung; ba bảng mới bật và ép luật
@@ -94,6 +99,8 @@ ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts]
   chung». Luật theo dòng vẫn bật và ép: đọc chung là chủ ý, ghi chỉ qua công ty được tin có thoả thuận đang bật, không
   ai xoá; dữ liệu của sàn (hàng, chủ nhà, lead) không có cột nào ở vùng này. Ca kiểm AC-8 chứng sàn thường không ghi
   được.
+- AC-1 (vế luật loại hình trong khuôn) viết theo khuyến nghị của Hỏi-5; chủ kho chọn lối kia thì vế ấy chuyển sang
+  AC-7 (cửa nhận kiểm), không thêm tiêu chí. Hỏi-4 không đổi tiêu chí nào — chỉ đổi chỗ đặt điều kiện loại.
 - Hàng này nâng số phiên bản khuôn cấp vào 0 → 1, xử hàng 72 Ngoài-4 (đổi tên khoá chưa nâng số) và Ngoài-5 (khuôn
   chưa chở trường nhà thấp tầng, đất).
 - Yêu cầu D-4: chạm tệp ngoài vùng của hàng (migration, đường API, ADR, Tham chiếu).

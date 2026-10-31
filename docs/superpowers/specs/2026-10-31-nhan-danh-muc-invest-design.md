@@ -27,11 +27,13 @@ gói danh mục theo khuôn phiên bản 1 đi vào một **vùng danh mục dù
      đang bật, trong hiệu lực, có lớp `catalog` — chặn ở cơ sở dữ liệu, không chỉ ở API. Vì sao cần danh sách: luật theo dòng của
      `agreements` cho mọi sàn tự tạo thoả thuận của mình, nên «có thoả thuận» một mình để một sàn ghi đè danh mục của
      mọi sàn.
-  3. Cửa nhận: `POST /api/v1/catalog/feeds` — quản trị sàn của công ty giữ thoả thuận gửi gói; API kiểm khuôn, kiểm
-     loại hình từng căn bằng bảng loại hình của lõi (`catalogFieldErrors`), chọn thoả thuận **đúng loại `catalog_source`
-     và chiều `inbound`** rồi mới hỏi `mayFlow(agreement, "catalog")` — `mayFlow` không xét loại, và với chiều vào nó
-     trả ok cho mọi loại có lớp `catalog`, nên một thoả thuận `lead_source` hay `company_api` có lớp ấy sẽ lọt nếu chỉ
-     hỏi `mayFlow` (phản biện P0). Rồi ghi một giao dịch, upsert theo UPI và khoá khu.
+  3. Cửa nhận: `POST /api/v1/catalog/feeds` — quản trị sàn của công ty giữ thoả thuận gửi gói; API kiểm khuôn (khuôn
+     đã gồm luật loại hình), rồi kiểm thoả thuận **đúng loại `catalog_source` và chiều `inbound`**, đang bật, trong hiệu
+     lực, có lớp `catalog`. `mayFlow` hôm nay không xét loại, và với chiều vào nó trả ok cho mọi loại có lớp `catalog`
+     (phản biện P0) — chỗ đặt điều kiện loại là **Hỏi-4** (máy khuyên: lõi thoả thuận nhận loại mong đợi, một chỗ cho
+     mọi cửa). Rồi ghi một giao dịch, upsert theo UPI và khoá khu. Mốc «bây giờ» để xét hiệu lực lấy từ cơ sở dữ liệu
+     trong cùng giao dịch (`now()`), để cửa nhận và luật theo dòng không lệch nhau ở sát mốc; nếu cơ sở dữ liệu vẫn từ
+     chối giữa giao dịch (lỗi quyền 42501), giao dịch lùi trọn và đường trả 403 `agreement-inactive`, không 500.
   4. Chạy lại cùng gói không nhân đôi; gói đổi thuộc tính một căn thì căn ấy cập nhật.
 - Không làm: đổi đường tra (`GET /catalog/units`) sang đọc vùng dùng chung (Hỏi-3); khoá máy cho Invest tự đẩy (Hỏi-2); số thị trường,
   tin rao (khuôn v1 chỉ mang danh mục); phía Invest đẩy gói thật (luật đợt 22: ngoài kho).
@@ -45,9 +47,11 @@ gói danh mục theo khuôn phiên bản 1 đi vào một **vùng danh mục dù
   livingArea, bedroomsTotal, directionFaces, propertyType, propertySubType, lotSizeArea?, storiesTotal?,
   frontageLength?, accessRoadWidth? }] }] }] }` — đúng hình `CatalogData` của lõi sau hàng 72. Hàm
   `parseCatalogFeed(raw)` trả `{ ok, feed }` hoặc `{ ok: false, errors: [{ path, message }] }` — đường khoá chỉ đúng
-  chỗ hỏng. UPI trùng trong một gói là lỗi khuôn (không đoán căn nào thắng). `packages/connect` không phụ thuộc lõi
-  (thêm phụ thuộc là đổi `package-lock.json`), nên cặp loại hình và trường theo loại do API kiểm bằng lõi ngay sau khuôn,
-  cùng một lỗi 422 với đường khoá của căn.
+  chỗ hỏng. UPI trùng trong một gói là lỗi khuôn (không đoán căn nào thắng). **Luật loại hình nằm trong khuôn**: cặp
+  `propertyType/propertySubType` phải có trong bảng loại hình của lõi và căn không mang trường mà loại hình không dùng —
+  khuôn gọi `unitFieldErrors` của lõi (`packages/connect` thêm phụ thuộc `@quy-hang/core`; đổi `package-lock.json`, xin
+  chạm tệp qua giám sát). Như vậy bên đẩy kiểm gói bằng chính khuôn là biết gói có được nhận không — khuôn công bố là
+  toàn bộ luật nhận về hình dạng; luật còn lại nằm ngoài khuôn chỉ là thoả thuận và danh sách tin, ADR-0015 ghi rõ.
 - **Bảng** (`010_danh_muc_dung_chung.sql`): `catalog_subdivisions (subdivision_key pk, subdivision_name, provider,
   complex_name, measured_at, agreement_id, updated_at)`, `catalog_units (upi pk, subdivision_key fk, building_key,
   building_name, unit_number, stack, floor, living_area, bedrooms_total, direction_faces, property_type,
@@ -56,13 +60,15 @@ gói danh mục theo khuôn phiên bản 1 đi vào một **vùng danh mục dù
   63 Ngoài-1). Luật theo dòng: `select using (true)` cho
   `quy_hang_app`; `insert`/`update` với `check` qua hàm `app.catalog_source_active(agreement_id)` (công ty đang đặt có
   trong `catalog_trusted_companies`; thoả thuận thuộc công ty ấy, đúng loại `catalog_source`, `inbound`, `active`,
-  trong hiệu lực, có `catalog`). Không cấp `delete`. `catalog_trusted_companies (company_id pk)` bật luật theo dòng, vai app chỉ
+  trong hiệu lực theo `now()`, có `catalog`). Câu sửa: bộ lọc dòng `using (true)` cho mọi dòng, điều kiện chỉ kiểm ở
+  dòng mới (`with check`) — sửa với thoả thuận không hợp lệ ra lỗi quyền 42501, không lặng lẽ 0 dòng. Không cấp `delete`. `catalog_trusted_companies (company_id pk)` bật luật theo dòng, vai app chỉ
   `select`; thêm công ty là việc của chủ bảng (vận hành), không qua API.
 - **Đường** (`packages/api/src/catalog/feeds.ts`): vào như mọi đường (phiên → sàn đang làm), vai quản trị sàn (Hỏi-2);
   sàn không có trong danh sách tin hoặc không có thoả thuận đang bật → 403 `agreement-inactive`; khuôn sai → 422 `invalid-feed` kèm danh sách đường
   khoá; ghi trong một giao dịch dưới `withCompany`; trả số khu, toà, căn đã nhận và số căn mới / cập nhật.
-- **Không sửa `agreements.ts`**: `mayFlow` đã cho chiều vào khi thoả thuận còn hiệu lực và có lớp; phần loại và chiều
-  do API và hàm của cơ sở dữ liệu kiểm thêm.
+- **Điều kiện loại thoả thuận** (Hỏi-4): máy khuyên thêm loại mong đợi vào lõi thoả thuận (`agreements.ts`, xin chạm
+  tệp) để mọi cửa vào sau — nguồn lead, API công ty — hỏi cùng một hàm và không lọt lỗ khác loại; lối kia là kiểm loại
+  riêng ở từng cửa, không chạm lõi. Hàm của cơ sở dữ liệu kiểm loại trong cả hai lối.
 - **Mặc định của sàn**: hàng này không đặt con số mặc định nào của sàn (hiệu lực và lớp do thoả thuận mang). Nếu lúc
   dựng cần một trần (vd cỡ gói tối đa), khai một hằng có tên trong lõi với chú thích «mặc định của sàn», không rải
   trong thân hàm hay SQL (luật thường trực của giám sát, 31/10).
