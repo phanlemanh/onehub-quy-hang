@@ -30,6 +30,11 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Quản trị sàn | `company_admin` | Vai cấu hình sàn và quản người; không tự thấy chủ nhà | — |
 | Vùng | `zone` | Toà hay phân khu do sàn tự đặt tên để chia việc; gắn danh mục sau | «Khu» (khu là khu chứa căn) |
 | Vùng phụ trách | `member_zone` | Vùng một người trong sàn phụ trách | «Khu phụ trách» |
+| Cách chia | `routing_strategy` | Cách sàn chọn người nhận lead không trùng, từ thực đơn: theo vùng lần lượt, lần lượt toàn sàn, theo vùng ít lead đang mở, kho chung, trưởng nhóm chia tay | «Luật chia» |
+| Kho chung | `open_pool` | Cách chia để lead chờ, đầu chủ phụ trách toà tự bấm nhận | — |
+| Lead đang mở | `open_leads` | Lead đã về một đầu chủ, chưa bỏ, chưa ghi gọi lần đầu — thước đo tải khi chia | — |
+| Lời báo | `lead_alert` | Báo cho người đọc báo của sàn: chưa chia được, quá hạn nhận, quá hạn gọi | «Cảnh báo» |
+| Cấu hình của sàn | `company_settings` | Lựa chọn và con số sàn chỉnh được, mỗi khoá một dòng; khoá vắng là mặc định | «Cài đặt» cho dữ liệu |
 | Sự kiện của hàng | `listing_event` | Một lần thay đổi của hàng: tạo, đổi phần lần rao, đổi giá, đổi trạng thái, xác nhận với chủ nhà; chỉ thêm, ghi người và vai lúc làm (ADR-0008) | — |
 | Trạng thái chuẩn | `StandardStatus` (RESO) | Một trong sáu: Chưa đủ để rao `Incomplete`, Đang bán `Active`, Đang giao dịch `Pending`, Đã bán `Closed`, Tạm ngừng `Hold`, Ngừng hẳn `Withdrawn`; nhãn riêng của sàn neo vào đây | Trạng thái thứ bảy |
 | Độ tươi | `freshness` | Tuổi của lần xác nhận gần nhất với chủ nhà, tính từ sự kiện | — |
