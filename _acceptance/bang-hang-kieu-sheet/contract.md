@@ -5,7 +5,7 @@ slug: bang-hang-kieu-sheet
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, docs]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-10-31
 design_doc: _acceptance/bang-hang-kieu-sheet/design.md
@@ -116,3 +116,11 @@ Quét bằng morphological-scan (preset entity-feature, rút gọn), bốn trụ
   `_acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs` trên Postgres dãy B (5561); hàng mẫu không có pháp lý và tình trạng
   sử dụng mà Đang bán bắt buộc nên điền «[Mẫu] …». Hai sàn phụ: «[Mẫu] Sàn trống» (trạng thái trống, người hai sàn) và
   «[Mẫu] Sàn đo cuộn» — 5.000 hàng của AC-9 nhân từ 40 hàng ấy, mã mang hậu tố mẫu.
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Người dùng Bảng hàng không bị ảnh hưởng. Chỉ khi người nghiệm thu chạy nhiều bài nhìn cùng lúc và bước dựng dữ liệu mẫu kéo rất lâu thì hai lần dựng có thể chạy chồng nhau, làm dữ liệu thử lộn xộn và phải chạy lại. — `_acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs`
+- Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Trên Bảng hàng, khi bấm phím End hoặc Ctrl/Cmd+Mũi tên phải để nhảy tới cột cuối, ô được chọn nằm ở cột đang ngoài màn hình và bảng không tự cuộn theo. Người dùng không thấy mình đang chọn ô nào, phải tự cuộn ngang bằng chuột. Bấm từng mũi tên một cột vẫn chạy bình thường. — `apps/web/src/app/(app)/inventory/bang-hang.tsx`
+- Ngoài-4 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi kiểm tay ba ô lọc cùng lúc, người kiểm chỉ ghi lại vài căn đầu rồi kết luận cho cả danh sách, nên một căn lọt sai ở cuối danh sách có thể không bị phát hiện. Bảng hàng của người dùng không đổi; chỉ độ chặt của bài kiểm yếu hơn lời hứa. — `_acceptance/bang-hang-kieu-sheet/evals.yaml`
+- Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Trên menu của tiêu đề cột vẫn có mục ghim cột sang trái hoặc phải, nhưng bấm vào thì không có gì xảy ra. Hai cột Toà và Mã căn vẫn luôn được giữ cố định như thiết kế. — `apps/web/src/app/(app)/inventory/bang-hang.tsx`
+- Ngoài-6 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu trình duyệt không cho ghi (bộ nhớ đầy hoặc chế độ riêng tư cũ), góc nhìn vừa lưu có vẻ đã lưu nhưng khi mở lại báo không có trên máy này, và người dùng không được báo là lưu hỏng. Lưu đè và đổi tên cũng mất theo cách đó. — `apps/web/src/app/(app)/inventory/goc-nhin-react.ts`
+- Ngoài-7 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Gõ khoảng bằng chữ như «5 đến 10» vào ô lọc số thì ô báo đỏ và không lọc được, dù chữ hướng dẫn cho trình đọc màn hình có gợi ý cách gõ này. Gõ «5-10» vẫn dùng được. — `apps/web/src/app/(app)/inventory/bieu-thuc-so.ts`
+- Ngoài-8 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm nói là đảm bảo căn chưa có giá nằm cuối khi sắp theo giá, nhưng thực tế không kiểm điều đó, nên nếu sau này thứ tự này hỏng thì bài kiểm vẫn xanh. Người dùng hiện chưa gặp lỗi nào. — `apps/web/src/app/(app)/inventory/loc.test.ts`
+- Ngoài-9 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm chứng minh góc nhìn của sàn này không lộ sang sàn khác có một phần đối chứng không thật nên có thể không bắt được lỗi nếu phần tách theo sàn bị bỏ đi. Hiện người dùng chưa gặp lỗi lộ góc nhìn. — `apps/web/src/app/(app)/inventory/goc-nhin.test.ts`
