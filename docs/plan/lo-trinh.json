@@ -1777,7 +1777,7 @@
       "mo_lai_khi": "Hai tuần thử cho thấy bước tải về là vướng, hoặc sàn ngoài đội dùng Google Sheets là chính"
     },
     {
-      "ma": "LH11",
+      "ma": "H5",
       "dot": "moi-loai-hinh-3110",
       "cau_giao": "Gói danh mục Invest mang khu thấp tầng có dãy và lô, và loại hình từng căn",
       "ly_do": "Invest chưa có danh bạ thấp tầng; hàng 10 dựng khuôn phiên bản 1 với propertySubType theo ADR-0016 quyết định 9, phần thấp tầng chưa có bên cấp",
@@ -1787,7 +1787,7 @@
       "mo_lai_khi": "Invest khai danh bạ thấp tầng trong khuôn phiên bản 1 và hàng 10 đã giao"
     },
     {
-      "ma": "LH12",
+      "ma": "H6",
       "dot": "moi-loai-hinh-3110",
       "cau_giao": "Đầu chủ ghi số thửa, tờ bản đồ của căn và lead trùng thửa bị bắt dù địa chỉ viết khác",
       "ly_do": "Khoá địa chỉ cộng kiểm theo chủ nhà đủ cho bản đầu; số thửa đọc từ sổ, thêm là thêm một trường lớp nguồn (bất biến 2)",
@@ -1797,7 +1797,7 @@
       "mo_lai_khi": "Hai tuần thử hay sàn thứ hai cho thấy lead trùng lọt qua khoá địa chỉ"
     },
     {
-      "ma": "LH13",
+      "ma": "H7",
       "dot": "moi-loai-hinh-3110",
       "cau_giao": "Sàn rao bán văn phòng, mặt bằng, hay cho thuê căn, với bộ trường và luật giá riêng",
       "ly_do": "Chưa sàn nào trong ghi chép bán hàng thương mại hay cho thuê; giá thuê theo tháng đổi luật giá và độ tươi",

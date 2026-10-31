@@ -60,8 +60,8 @@ tầng (Hỏi-4 của ADR-0016), 72, 73, 74, 76, 77, 79, 80 thành điều kiệ
 
 ## Chờ điều kiện
 
-- `LH11` — Invest chưa có danh bạ thấp tầng; mở lại khi Invest khai danh bạ thấp tầng trong khuôn phiên bản 1 và hàng 10
+- `LH11` → mục chờ H5 — Invest chưa có danh bạ thấp tầng; mở lại khi Invest khai danh bạ thấp tầng trong khuôn phiên bản 1 và hàng 10
   đã giao.
-- `LH12` — khoá địa chỉ cộng kiểm theo chủ nhà là đủ cho bản đầu; số thửa nằm trên sổ, thêm là thêm một trường lớp nguồn.
+- `LH12` → mục chờ H6 — khoá địa chỉ cộng kiểm theo chủ nhà là đủ cho bản đầu; số thửa nằm trên sổ, thêm là thêm một trường lớp nguồn.
   Mở lại khi hai tuần thử hay sàn thứ hai cho thấy trùng lọt qua khoá địa chỉ.
-- `LH13` — chưa sàn nào trong ghi chép bán hàng thương mại hay cho thuê. Mở lại khi có sàn dùng thử cần.
+- `LH13` → mục chờ H7 — chưa sàn nào trong ghi chép bán hàng thương mại hay cho thuê. Mở lại khi có sàn dùng thử cần.
