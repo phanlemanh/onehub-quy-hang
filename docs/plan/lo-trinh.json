@@ -1231,6 +1231,54 @@
       ]
     },
     {
+      "ma": "83",
+      "cau_giao": "Mọi lựa chọn khối của kho có một dòng máy đọc: khối đã chuyển thể ở danh mục giao diện kèm archetype, nhóm đang dùng, ảnh chuẩn, phiên bản ReUI, ngày và người duyệt; chỗ ghép hay tự viết ở «Chỗ hở» kèm điều đã tra trên ReUI, lý do và hạn xem lại — thiếu một ô thì npm run lint đỏ gọi đúng dòng",
+      "vai": "nen",
+      "tieu_chi": 10,
+      "vi_sao": "ADR-0019 quyết định 3, 4: hàng 24 rơi xuống ghép không để vết, bốn chỗ tạm chờ khoá Pro khi khoá đã có; «trong kho» chưa tra được theo khối (catalog.md một dòng trên main)",
+      "hang": "T2",
+      "dung_tren": [
+        "60"
+      ],
+      "bat_khi": "Tiêm một khối đã chuyển thể thiếu dòng danh mục → đỏ gọi tên khối; tiêm một dòng «Chỗ hở» thiếu hạn xem lại → đỏ gọi tên dòng; hai khối đã có và 13 dòng «Chỗ hở» điền ngược xanh; dòng có hạn đã tới in cảnh báo có tên, không đỏ; chỉ sửa docs ngoài hai bảng ấy → im",
+      "slug": "vet-chon-khoi",
+      "nhom": "nen",
+      "dot": "cong-chon-khoi-0111",
+      "phu": [
+        "CK2",
+        "CK3"
+      ],
+      "vung": [
+        "packages/ui-lint/**",
+        ".agents/skills/quy-hang-ui/**",
+        "docs/design/vo-va-ia.md"
+      ]
+    },
+    {
+      "ma": "84",
+      "cau_giao": "Chủ sản phẩm duyệt Cổng Phạm vi của một vòng chạm ô chưa có khuôn và thấy trang so ba lối — Trong kho, ReUI, Vẽ mới — cùng khổ 1440 và 375, mỗi lối một câu đánh đổi, lời khuyên của máy ghim trên trang; vòng chỉ đi khuôn sẵn thì không có trang ấy",
+      "vai": "Chủ sản phẩm",
+      "tieu_chi": 9,
+      "vi_sao": "ADR-0019 quyết định 1, 2: bước phân kỳ của design-pass luôn bị bỏ khi khối đích đã chốt, và ảnh đối chiếu màn đầu nhóm mới so với chính nó — đúng lúc chọn khối thì không có vật để duyệt",
+      "hang": "T2",
+      "dung_tren": [
+        "83"
+      ],
+      "bat_khi": "Vòng thử có màn đầu nhóm mới: trang ba lối dựng đủ ba cột cùng khổ, cột không có ứng viên ghi «không có» kèm điều đã tra; design-pass ghi skipped → đỏ; vòng chỉ điền khe nhóm có sẵn → không có trang, không đỏ",
+      "slug": "the-ba-loi",
+      "nhom": "nen",
+      "dot": "cong-chon-khoi-0111",
+      "phu": [
+        "CK1"
+      ],
+      "vung": [
+        "packages/ui-lint/**",
+        ".agents/skills/quy-hang-ui/**",
+        ".claude/rules/giao-dien.md",
+        "docs/design/vo-va-ia.md"
+      ]
+    },
+    {
       "ma": "45",
       "cau_giao": "Quản trị sàn đổi tên hiển thị của trường chuẩn và thêm giá trị riêng neo vào giá trị chuẩn; cùng một căn hiện đúng ở bảng hàng, đội khác và trang khách",
       "vai": "Quản trị sàn",
@@ -1938,6 +1986,16 @@
         "CH13"
       ],
       "mo_lai_khi": "Bộ thử hàng 64 cho thấy ghép tất định trường riêng hụt ngưỡng và chủ kho mở thêm lớp cho thoả thuận AI"
+    },
+    {
+      "ma": "H16",
+      "dot": "cong-chon-khoi-0111",
+      "cau_giao": "Đăng nhập, ô nhận lead, trống · lỗi · báo và người dùng dựng bằng khối Pro đã chọn thay chỗ ghép tạm",
+      "ly_do": "Bốn màn khác nhau, mỗi màn một vòng và một nhóm khuôn; phạm vi từng chỗ chỉ biết khi luật vẽ mới (hàng 83) chấm lại điều đã tra và hạn xem lại của từng dòng",
+      "phu": [
+        "CK4"
+      ],
+      "mo_lai_khi": "Hàng 83 ký: mỗi dòng «Chỗ hở» có hạn đã tới thành một hàng theo màn"
     }
   ],
   "da_bac": []
