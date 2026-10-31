@@ -1,8 +1,10 @@
-# Bản phạm vi — nhập dữ liệu có tác tử (31/10) — ĐỀ XUẤT
+# Bản phạm vi — nhập dữ liệu có tác tử và chuẩn hoá ở mọi cửa vào (31/10)
 
 Nguồn: [ADR-0011](../adr/0011-nhap-du-lieu-tac-tu.md) (trạng thái «đề xuất») và [Nhập dữ liệu](../architecture/nhap-du-lieu.md).
-Chủ kho 31/10: nâng nhập dữ liệu thành giai đoạn trọng tâm, có tác tử AI dùng mô hình mạnh. **Chưa duyệt** — chủ kho
-duyệt ADR-0011 thì chạy `/acceptance-gate:cat-luot` trên bản này; phiên thiết kế không sửa `lo-trinh.json`.
+Chủ kho 31/10: nâng nhập dữ liệu thành giai đoạn trọng tâm, có tác tử AI dùng mô hình mạnh. Trang tri thức của đợt:
+`docs/tri-thuc/wiki/dot/nhap-du-lieu-3110.md`.
+
+Chủ sản phẩm duyệt bản phạm vi này ngày 31/10: «Duyệt hướng này» (chuẩn hoá ở mọi cửa vào), rồi «Duyệt, cắt lượt».
 
 Thay hàng **20** `nhap-excel-ghep-cot` (phủ `D8`) và **21** `nhap-excel-nho-mau` (phủ `D9`). Lý do tách: hàng 20 hiện
 gộp đọc file, ghép, xem trước, kiểm trùng và ghi trong một vòng T3; thêm tác tử, cửa chặn dữ liệu cá nhân và hoàn tác bằng
@@ -12,7 +14,7 @@ sự kiện bù thì quá cỡ một vòng, và luật «đo trước khi dựng
 ```
 dot: nhap-du-lieu-3110
 dang: chuoi
-nguon: docs/adr/0011-nhap-du-lieu-tac-tu.md
+nguon: wiki/dot/nhap-du-lieu-3110.md#071467f2c9f6b260c323903bbb9b5253349afd32
 
 - `ND1` — lõi nhập tất định và bộ thử: phân loại cột, thực đơn phép biến đổi, áp kế hoạch, file bẩn có đáp án, số nền không AI
 - `ND2` — đầu chủ thả file, xem trước từng ô, kiểm trùng, ghi qua lệnh; ngày xác nhận theo file
@@ -22,10 +24,15 @@ nguon: docs/adr/0011-nhap-du-lieu-tac-tu.md
 - `ND6` — ô lạ còn lại có đề xuất của máy, người chọn
 - `ND7` — mọi cửa gõ tay gợi giá trị chuẩn, lựa chọn của người thành từ điển của sàn; sức khoẻ dữ liệu
 - `ND8` — máy dọn từ điển định kỳ: gom giá trị chưa khớp, đề xuất neo vào chuẩn, quản trị sàn duyệt
+- `ND9` — chọn file Google Sheets ngay trong Quỹ hàng và nhập lại một chạm
 ```
 <!-- PHAM-VI-MA>>> -->
 
-## Hàng đề xuất
+## Hàng
+
+Số hàng trong lộ trình: ND1 → 61, ND2 → 62, ND3 → 63, ND4 → 64, ND5 → 65, ND6 → 66, ND7 → 67, ND8 → 68. ND5, ND6, ND8
+là hàng thật; Cổng Đáng của chúng đọc số đo của ND1 (ND7 cho ND8) và quyết làm hay gác, như hàng 10 đã gác. Hàng 20, 21
+chuyển thành mục chờ điều kiện của đợt ban-dau-2910, ghi «thay bằng» để phủ D8, D9 vẫn đứng một chỗ.
 
 | Mã | Câu giao (người dùng thấy gì) | Vai | Hạng | Đứng trên | Vùng | Bật khi |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -46,14 +53,15 @@ Hàng chờ điều kiện:
 
 | Mã | Câu giao | Lý do chờ | Mở lại khi |
 | --- | --- | --- | --- |
-| H4 `nhap-google-sheets` | Đầu chủ chọn file Google Sheets ngay trong Quỹ hàng (Picker, quyền `drive.file`) và nhập lại một chạm | Bản đầu nhận file tải về là đủ; Picker cần dự án Google Cloud, màn đồng ý OAuth | Hai tuần thử cho thấy bước tải về là vướng, hoặc sàn ngoài đội dùng Sheets là chính |
+| H4 `nhap-google-sheets` (ND9) | Đầu chủ chọn file Google Sheets ngay trong Quỹ hàng (Picker, quyền `drive.file`) và nhập lại một chạm | Bản đầu nhận file tải về là đủ; Picker cần dự án Google Cloud, màn đồng ý OAuth | Hai tuần thử cho thấy bước tải về là vướng, hoặc sàn ngoài đội dùng Sheets là chính |
 
 Sửa kèm:
 
 - Hàng **50** `mau-nhap-va-bai`: `dung_tren` đổi `21` → `ND4`.
 - Hàng **45** `cach-goi-rieng` và ND4 cùng dùng từ điển giá trị của sàn: hàng nào vào trước tạo bảng, hàng sau dùng lại —
   ghi vào ô cơ hội của cả hai.
-- Hàng **52** `so-do-hai-tuan-thu`: thêm số đo «tỉ lệ ô cần người mỗi lần nhập» và «chi phí AI mỗi sàn».
+- Hàng **52** `so-do-hai-tuan-thu`: thêm số đo «tỉ lệ ô cần người mỗi lần nhập» và «chi phí AI mỗi sàn» — ghi ở ô cơ hội
+  khi mở Cổng Đáng của hàng 52, không sửa câu giao.
 
 ## Phủ
 
