@@ -800,3 +800,26 @@ test("lead: vai API không đọc được cột số, không sửa, không xoá
     await expectError(c, "delete from leads where id = $1", [LEAD_B], /permission denied/);
   });
 });
+
+test("lead: khoá mã căn giữ chữ và số, bỏ dấu, viết hoa", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const BANG = [
+      ["A-12.06", "A1206"],
+      ["a 12.06", "A1206"],
+      ["A.12-06", "A1206"],
+      ["B-12.06", "B1206"],
+      ["  ", null],
+      [null, null],
+    ];
+    let dem = 0;
+    for (const [vao, ra] of BANG) {
+      assert.equal((await client.query("select app.unit_key($1) k", [vao])).rows[0].k, ra, String(vao));
+      dem++;
+    }
+    assert.equal(dem, 6);
+  } finally {
+    await client.end();
+  }
+});

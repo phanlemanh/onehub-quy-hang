@@ -21,7 +21,8 @@ trước thì 24 đổi số migration lên sau 008 và so `owner_phone_hash`.
 - Nội dung: bảng `leads` (năm mục, `owner_phone`, `outcome`, `matched_agent_user_id`, `matched_listing_id`, `created_by`,
   `created_at`, `discarded_by`, `discarded_at`), `enable` + `force row level security`; đọc: cùng sàn và (người nhập, đầu
   chủ được khớp, hay trưởng nhóm); thêm: cùng sàn, `created_by` là người đang làm; grant đọc mọi cột trừ `owner_phone`, không
-  grant sửa/xoá. `app.unit_key(text)` chuẩn hoá mã căn (bỏ ký tự không phải chữ số, viết hoa). `app.lead_dedupe_facts(p_phone,
+  grant sửa/xoá. `app.unit_key(text)` chuẩn hoá mã căn: giữ chữ và số, bỏ mọi ký tự khác (dấu cách, gạch, chấm), viết hoa — `A-12.06` và
+  `B-12.06` là hai khoá; mã đã đi qua cách đọc mã của danh mục (hàng 9) ở màn, hàm chỉ đỡ dữ liệu cũ gõ tay. `app.lead_dedupe_facts(p_phone,
   p_building, p_unit, p_open_statuses)` security definer trong sàn đang làm → (hàng mở trên căn + đầu chủ của hàng, đầu chủ của
   chủ nhà từ `listing_owners` hay lead trước đã về đầu chủ chưa bỏ). `app.discard_lead(p_lead)` security definer: đúng người
   nhập, đúng căn trùng, chưa bỏ — mã lỗi riêng cho từng ca. Ràng buộc kiểm: số `^0[0-9]{9}$`, kết quả một trong ba, căn trùng
