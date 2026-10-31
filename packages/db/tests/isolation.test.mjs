@@ -1,6 +1,7 @@
 // Bộ kiểm cách ly: «công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành.
 // Chạy trên Postgres thật đã áp migration. Mỗi ca trong một giao dịch rồi rollback, không để lại dữ liệu.
 import assert from "node:assert/strict";
+import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import pg from "pg";
@@ -477,6 +478,10 @@ const BANG_XEM_NGUON = JSON.parse(
   readFileSync(new URL("../../core/src/access/bang-xem-nguon.json", import.meta.url), "utf8"),
 );
 const SO_MAU = "0900000012";
+// Hàng 62 (migration 008): số chủ chỉ ở dạng bản mã `0x01 ‖ nonce ‖ thẻ ‖ thân` (39 byte) và dấu vết 32 byte. Bộ kiểm cách ly
+// không có khoá nên dùng bản mã đúng khuôn sinh ngẫu nhiên; khứ hồi thật đo ở packages/api (ma-hoa.test.ts, test-db).
+const BAN_MA_MAU = Buffer.concat([Buffer.from([1]), randomBytes(38)]);
+const DAU_VET_MAU = randomBytes(32);
 const U_DC = "u-ng-dau-chu"; // đầu chủ giữ các hàng «không giữ» của ma trận
 const U_TN_A = "u-ng-truong-nhom-a";
 const U_DC_B = "u-ng-dau-chu-b";
@@ -514,8 +519,8 @@ async function withNguon(fn) {
         [san, id, giu],
       );
       await client.query(
-        "insert into listing_owners (company_id, listing_id, owner_name, owner_phone, floor_price, updated_by) values ($1, $2, '[Tên]', $3, 3200000000, $4)",
-        [san, id, SO_MAU, giu],
+        "insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, floor_price, updated_by) values ($1, $2, '[Tên]', $3, $4, 3200000000, $5)",
+        [san, id, BAN_MA_MAU, DAU_VET_MAU, giu],
       );
     }
     await client.query("set local role quy_hang_app");
@@ -569,7 +574,7 @@ test("lớp nguồn ở cơ sở dữ liệu: bảng 12 ô của AC-2 dưới va
       if (o.thay) {
         assert.equal((await c.query("select owner_name from listing_owners where listing_id = $1", [hang])).rowCount, 1, o.o);
         await expectError(c, "select owner_phone from listing_owners where listing_id = $1", [hang], /permission denied/);
-        assert.equal((await c.query("select app.reveal_owner_phone($1) so", [hang])).rows[0].so, SO_MAU, o.o);
+        assert.deepEqual((await c.query("select app.reveal_owner_phone($1) so", [hang])).rows[0].so, BAN_MA_MAU, o.o);
         assert.equal(await demMoSo(c, hang), truoc + 1, `ô «${o.o}»: mở số phải ghi đúng một sự kiện`);
       } else {
         assert.equal((await c.query("select owner_name from listing_owners where listing_id = $1", [hang])).rowCount, 0, o.o);
@@ -634,7 +639,7 @@ test("lớp nguồn: sàn A không đọc, không ghi đầu chủ, chủ nhà, 
     // Đối chứng dương: trưởng nhóm A đọc, mở số được trên hàng của A.
     assert.equal((await c.query("select 1 from listing_owners where listing_id = $1", [hangO(1)])).rowCount, 1);
     assert.equal((await c.query("select 1 from listing_agent_assignments where listing_id = $1", [hangO(1)])).rowCount, 1);
-    assert.equal((await c.query("select app.reveal_owner_phone($1) so", [hangO(1)])).rows[0].so, SO_MAU);
+    assert.deepEqual((await c.query("select app.reveal_owner_phone($1) so", [hangO(1)])).rows[0].so, BAN_MA_MAU);
     // Hàng của B.
     const truoc = await demMoSo(c, LISTING_NB);
     await lamNguoi(c, U_TN_A);
@@ -660,6 +665,81 @@ test("lớp nguồn: sàn A không đọc, không ghi đầu chủ, chủ nhà, 
 });
 
 // ---- Hai sàn cùng tên (hàng 56, mo-san-trung-ten): người sàn mới không đọc được dòng nào của sàn cũ ----
+const CHEN_CHU = (cot) =>
+  `insert into listing_owners (company_id, listing_id, owner_name, ${cot}, updated_by) values ($1, $2, '[Tên]', $3, $4)`;
+
+test("số chủ: cơ sở dữ liệu từ chối số rõ ở mọi vai", { skip }, async () => {
+  await withNguon(async (c) => {
+    // Vai API (đầu chủ giữ hàng ô 0, hàng đã có chủ nhà): sửa số rõ bị từ chối; vai chủ: chèn và sửa số rõ bị từ chối.
+    const hang = hangO(0);
+    await lamNguoi(c, nguoiO(0));
+    await c.query("savepoint sp");
+    await expectError(c, "update listing_owners set owner_phone = $2 where listing_id = $1", [hang, SO_MAU], /listing_owners_phone_chi_ban_ma/);
+    await c.query("rollback to savepoint sp");
+    await c.query("reset role");
+    await expectError(c, "update listing_owners set owner_phone = $2 where listing_id = $1", [hang, SO_MAU], /listing_owners_phone_chi_ban_ma/);
+    await c.query("delete from listing_owners where listing_id = $1", [hang]);
+    await expectError(c, CHEN_CHU("owner_phone"), [COMPANY_A, hang, SO_MAU, U_DC], /listing_owners_phone_chi_ban_ma/);
+    // Đối chứng dương: cùng hàng, số ở dạng bản mã đúng khuôn thì chèn được.
+    const ok = await c.query(
+      "insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, updated_by) values ($1, $2, '[Tên]', $3, $4, $5)",
+      [COMPANY_A, hang, BAN_MA_MAU, DAU_VET_MAU, U_DC],
+    );
+    assert.equal(ok.rowCount, 1);
+    assert.equal((await c.query("select has_phone from listing_owners where listing_id = $1", [hang])).rows[0].has_phone, true);
+  });
+});
+
+test("số chủ: bản mã sai khuôn bị từ chối", { skip }, async () => {
+  await withNguon(async (c) => {
+    await c.query("reset role");
+    const hang = hangO(0);
+    const sai = [
+      ["byte đầu 0x02", Buffer.concat([Buffer.from([2]), randomBytes(38)]), DAU_VET_MAU, /listing_owners_phone_enc_khuon/],
+      ["bản mã 20 byte", Buffer.concat([Buffer.from([1]), randomBytes(19)]), DAU_VET_MAU, /listing_owners_phone_enc_khuon/],
+      ["dấu vết 16 byte", BAN_MA_MAU, randomBytes(16), /listing_owners_phone_hash_khuon/],
+      ["bản mã không dấu vết", BAN_MA_MAU, null, /listing_owners_phone_cap/],
+    ];
+    for (const [ten, enc, hash, loi] of sai) {
+      await c.query("savepoint sp");
+      await expectError(c, "update listing_owners set owner_phone_enc = $2, owner_phone_hash = $3 where listing_id = $1", [hang, enc, hash], loi);
+      await c.query("rollback to savepoint sp");
+      assert.ok(ten);
+    }
+  });
+});
+
+test("số chủ: vai API không đọc ba cột số", { skip }, async () => {
+  await withNguon(async (c) => {
+    const hang = hangO(0);
+    await lamNguoi(c, nguoiO(0));
+    for (const cot of ["owner_phone", "owner_phone_enc", "owner_phone_hash"]) {
+      await c.query("savepoint sp");
+      await expectError(c, `select ${cot} from listing_owners where listing_id = $1`, [hang], /permission denied/);
+      await c.query("rollback to savepoint sp");
+    }
+    // Đối chứng dương: cờ «có số» đọc được.
+    assert.equal((await c.query("select has_phone from listing_owners where listing_id = $1", [hang])).rows[0].has_phone, true);
+  });
+});
+
+test("lược đồ: mọi cột chữ tên chứa phone bị ràng buộc is null", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    assert.deepEqual((await client.query("select cot from app.cot_so_ro_chua_chan()")).rows, [], "cột số dạng chữ không bị chặn");
+    // Đối chứng âm cùng hàm quét: một bảng cấy cột số dạng chữ phải bị gọi tên.
+    await client.query("create table public.x_quet (x_phone text, x_phone_enc bytea)");
+    assert.deepEqual((await client.query("select cot from app.cot_so_ro_chua_chan()")).rows, [{ cot: "public.x_quet.x_phone" }]);
+    await client.query("alter table public.x_quet add constraint x_quet_chan check (x_phone is null)");
+    assert.deepEqual((await client.query("select cot from app.cot_so_ro_chua_chan()")).rows, []);
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+});
+
 test("sàn trùng tên: người sàn mới không đọc được dòng nào của sàn cũ", { skip }, async () => {
   const { moSan } = await import("../scripts/mo-san.mjs");
   const client = new pg.Client({ connectionString: url });
@@ -744,9 +824,9 @@ async function withLeadB(fn) {
     await c.query("update listings set unit_number = 'A-02.06' where id = $1", [LISTING_NB]);
     await c.query(
       `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion,
-                          desired_listing_time, owner_phone, outcome, matched_agent_user_id, matched_listing_id)
-       values ($1, $2, $3, '[Toà]', 'A-02.06', 'sale', 3200000000, 'included', 'now', $4, 'unit_has_open_listing', $3, $5)`,
-      [LEAD_B, COMPANY_B, U_DC_B, SO_MAU, LISTING_NB],
+                          desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id)
+       values ($1, $2, $3, '[Toà]', 'A-02.06', 'sale', 3200000000, 'included', 'now', $4, $5, 'unit_has_open_listing', $3, $6)`,
+      [LEAD_B, COMPANY_B, U_DC_B, BAN_MA_MAU, DAU_VET_MAU, LISTING_NB],
     );
     await c.query("set local role quy_hang_app");
     return fn(c);
@@ -768,12 +848,13 @@ test("lead: sàn A không thấy dữ kiện, lead của sàn B và không ghi �
   await withLeadB(async (c) => {
     // Đối chứng dương: ở sàn B cùng số, cùng căn ra đủ hai dữ kiện.
     await lamNguoi(c, U_DC_B, COMPANY_B);
-    const b = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'a 02.06', $2)", [SO_MAU, MO])).rows[0];
+    // Hàng 62 (migration 009): hàm dữ kiện nhận dấu vết; bộ dựng dùng chung một dấu vết mẫu cho chủ nhà và lead.
+    const b = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'a 02.06', $2)", [DAU_VET_MAU, MO])).rows[0];
     assert.deepEqual(b, { open_listing_id: LISTING_NB, open_listing_agent: U_DC_B, owner_agent: U_DC_B });
     assert.equal((await c.query("select 1 from leads where id = $1", [LEAD_B])).rowCount, 1);
     // Sàn A: cùng số, cùng toà, cùng căn — không dữ kiện nào của B.
     await lamNguoi(c, U_TN_A);
-    const a = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'A-02.06', $2)", [SO_MAU, MO])).rows[0];
+    const a = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'A-02.06', $2)", [DAU_VET_MAU, MO])).rows[0];
     assert.equal(a.open_listing_id, null, "sàn A thấy hàng mở của sàn B");
     // Số mẫu cũng là chủ nhà của mọi hàng sàn A (withNguon) — dữ kiện chủ phải là đầu chủ của A, không phải của B.
     assert.notEqual(a.owner_agent, U_DC_B, "sàn A thấy đầu chủ của sàn B");
@@ -781,9 +862,9 @@ test("lead: sàn A không thấy dữ kiện, lead của sàn B và không ghi �
     await expectError(
       c,
       `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
-                          owner_phone, outcome)
-       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, 'new')`,
-      [COMPANY_B, U_TN_A, SO_MAU],
+                          owner_phone_enc, owner_phone_hash, outcome)
+       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, $4, 'new')`,
+      [COMPANY_B, U_TN_A, BAN_MA_MAU, DAU_VET_MAU],
       /row-level security/,
     );
     await expectError(c, "select app.discard_lead($1)", [LEAD_B], /không có lead này/);
@@ -798,6 +879,46 @@ test("lead: vai API không đọc được cột số, không sửa, không xoá
     await expectError(c, "select owner_phone from leads where id = $1", [LEAD_B], /permission denied/);
     await expectError(c, "update leads set outcome = 'new' where id = $1", [LEAD_B], /permission denied/);
     await expectError(c, "delete from leads where id = $1", [LEAD_B], /permission denied/);
+  });
+});
+
+const CHEN_LEAD = (cot) =>
+  `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time, ${cot}, outcome)
+   values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, $4, 'new')`;
+
+test("số chủ của lead: cơ sở dữ liệu từ chối số rõ, vai API không đọc ba cột", { skip }, async () => {
+  await withLeadB(async (c) => {
+    await lamNguoi(c, U_DC_B, COMPANY_B);
+    for (const cot of ["owner_phone", "owner_phone_enc", "owner_phone_hash"]) {
+      await c.query("savepoint sp");
+      await expectError(c, `select ${cot} from leads where id = $1`, [LEAD_B], /permission denied/);
+      await c.query("rollback to savepoint sp");
+    }
+    // Vai API (telesales vai đầu chủ của B) chèn lead số rõ: ràng buộc từ chối.
+    await c.query("savepoint sp");
+    await expectError(c, CHEN_LEAD("owner_phone, owner_phone_hash"), [COMPANY_B, U_DC_B, SO_MAU, DAU_VET_MAU], /leads_phone_chi_ban_ma|leads_phone_cap/);
+    await c.query("rollback to savepoint sp");
+    await c.query("reset role");
+    await expectError(c, "update leads set owner_phone = $2 where id = $1", [LEAD_B, SO_MAU], /leads_phone_chi_ban_ma/);
+    // Đối chứng dương: bản mã đúng khuôn chèn được.
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, U_DC_B, COMPANY_B);
+    assert.equal((await c.query(CHEN_LEAD("owner_phone_enc, owner_phone_hash"), [COMPANY_B, U_DC_B, BAN_MA_MAU, DAU_VET_MAU])).rowCount, 1);
+  });
+});
+
+test("số chủ của lead: lead không số bị từ chối", { skip }, async () => {
+  await withLeadB(async (c) => {
+    await c.query("reset role");
+    await expectError(
+      c,
+      `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time, outcome)
+       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', 'new')`,
+      [COMPANY_B, U_DC_B],
+      /leads_phone_co_so/,
+    );
+    // Đối chứng dương: cùng câu, có bản mã và dấu vết thì chèn được.
+    assert.equal((await c.query(CHEN_LEAD("owner_phone_enc, owner_phone_hash"), [COMPANY_B, U_DC_B, BAN_MA_MAU, DAU_VET_MAU])).rowCount, 1);
   });
 });
 

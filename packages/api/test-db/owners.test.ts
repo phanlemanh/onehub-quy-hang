@@ -90,8 +90,12 @@ test("đặt chủ nhà: đầu chủ đặt trên hàng chưa có đầu chủ 
   assert.equal(res.status, 200, await res.clone().text());
   const gan = await appPool.query("select seq, user_id, assigned_by from listing_agent_assignments where listing_id = $1", [h]);
   assert.deepEqual(gan.rows, [{ seq: 1, user_id: a.dauChu.userId, assigned_by: a.dauChu.userId }]);
-  const chu = await appPool.query("select owner_name, owner_phone, floor_price::float8 gia from listing_owners where listing_id = $1", [h]);
-  assert.deepEqual(chu.rows, [{ owner_name: TEN, owner_phone: SO, gia: GIA_DAY }]);
+  // Hàng 62: số chủ chỉ ở dạng bản mã 39 byte và dấu vết 32 byte; cột số rõ luôn rỗng.
+  const chu = await appPool.query(
+    "select owner_name, owner_phone, octet_length(owner_phone_enc) ban_ma, octet_length(owner_phone_hash) dau_vet, floor_price::float8 gia from listing_owners where listing_id = $1",
+    [h],
+  );
+  assert.deepEqual(chu.rows, [{ owner_name: TEN, owner_phone: null, ban_ma: 39, dau_vet: 32, gia: GIA_DAY }]);
 });
 
 test("đặt chủ nhà sai khuôn trả 400 và không lưu gì", async () => {
