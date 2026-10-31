@@ -5,7 +5,7 @@ slug: danh-muc-go-ma-can
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-danh-muc-go-ma-can-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T03:44:49Z
@@ -105,3 +105,7 @@ BedroomsTotal, DirectionFaces]; nhập tin tự điền từ hồ sơ có sẵn 
   Cổng Phạm vi. Hỏi-3 (bản thật phục vụ danh mục mẫu tới hàng 10) và Hỏi-4 (hạng T2 hay T3) — từ phản biện context sạch,
   chờ chủ kho.
 - Dãy D chạy dev ở cổng 3473, Postgres 5553 (`quy-hang-db-D`).
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Tính năng gõ mã căn hiện vẫn tự điền đúng và vẫn báo đúng khi mã không có trong danh mục. Chỉ có bài kiểm tự canh con số tỉ lệ có thể mất khả năng phát hiện lỗi nếu sau này bộ danh mục mẫu bị đổi, và khi đó nó vẫn báo xanh. — `packages/api/src/catalog/catalog.test.ts`
+- Ngoài-2 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Người dùng gõ mã căn vẫn nhận kết quả đúng như hiện nay. Bài kiểm kèm theo có một kẽ hở nhỏ: nếu cách đọc mã đổi trong tương lai, nó có thể báo xanh dù không còn phân biệt được lỗi đếm sai. — `packages/api/src/catalog/catalog.test.ts`
+- Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Dữ liệu chủ nhà mẫu (không phải dữ liệu thật) nằm trong phần chương trình chạy trên máy chủ, nhưng không hiện ra cho người dùng hay trang khách. Chỉ có ghi chú trong mã nói sai về điều này. — `packages/api/src/catalog/sample.ts`
+- Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Công cụ đo tỉ lệ tự điền có thể báo 100% dù bỏ qua vài mã không có trong danh mục, nếu sau này dữ liệu mẫu bị đổi. Người dùng cuối không gặp điều này, chỉ ảnh hưởng độ tin của con số báo cáo. — `packages/api/src/catalog/do-ti-le.ts`
