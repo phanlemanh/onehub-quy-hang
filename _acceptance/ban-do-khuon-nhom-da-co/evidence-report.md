@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 2c07e3bea5b5beba413030ae238d82915bef0cef
+verified_commit: fd94791ed834a3e4b1e4ff3b13cf931c7081919e
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -190,3 +190,7 @@ none — every multi-run eval is uniform
 
 Round 1: mọi eval đạt; một phát hiện trong hợp đồng (bộ kiểm trang bỏ qua lệnh trả có điều kiện nên gốc sai có thể lọt, AC-3) → trả về sửa.
 Round 2: sửa bộ kiểm khuôn đi vào lệnh trả có điều kiện (commit 2c07e3b); E1-E5 và sáu lệnh suite chạy lại và đạt; E6, E6b, E7 giữ nguyên từ round 1 (delta không chạm paths); E8 panel giữ đề xuất PASS.
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp nhánh chính sau lượt chấm
+run_id: repin-20261031T104724Z-46837
+sha: fd94791ed834a3e4b1e4ff3b13cf931c7081919e · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng · ngoài làn máy: E6, E7, E8 (E8 không khai paths) · AC không có chốt máy: AC-7, AC-8
