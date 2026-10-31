@@ -20,6 +20,8 @@ nguon: docs/adr/0011-nhap-du-lieu-tac-tu.md
 - `ND4` — nhập lại cùng mẫu thì máy ghép sẵn: mẫu file và từ điển giá trị của sàn
 - `ND5` — tác tử lập kế hoạch sau thoả thuận Xử lý bằng AI, cửa chặn nguồn, sổ và trần chi phí
 - `ND6` — ô lạ còn lại có đề xuất của máy, người chọn
+- `ND7` — mọi cửa gõ tay gợi giá trị chuẩn, lựa chọn của người thành từ điển của sàn; sức khoẻ dữ liệu
+- `ND8` — máy dọn từ điển định kỳ: gom giá trị chưa khớp, đề xuất neo vào chuẩn, quản trị sàn duyệt
 ```
 <!-- PHAM-VI-MA>>> -->
 
@@ -33,6 +35,12 @@ nguon: docs/adr/0011-nhap-du-lieu-tac-tu.md
 | ND4 `nhap-nho-mau` | Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước, kể cả cách gọi riêng của sàn | Đầu chủ | T2 | ND2 | `packages/core/src/import/memory/**`, `apps/web/src/app/imports/templates/**`, migration | File cùng mẫu lần hai: 0 ô hỏi lại điều đã trả lời; tỉ lệ hỏi người ≤ 2% |
 | ND5 `nhap-tac-tu-ke-hoach` (chỉ mở khi số nền ND1 hụt ngưỡng) | Quản trị sàn bật «Xử lý bằng AI»; đầu chủ thả file mẫu lạ và máy ghép gần hết, mỗi đề xuất kèm lý do; tắt hay hết trần thì vẫn nhập như ND2 | Đầu chủ, Quản trị sàn | T3 | ND1, ND2 | `packages/api/src/imports/ai/**`, `packages/core/src/agreements.ts`, migration | Rò nguồn ra AI = 0 (kiểm bắt buộc); vượt số nền của ND1 ở ghép cột và hỏi người, lỗi lọt không tăng; chi phí ≤ 1,5 USD một lần nhập mẫu mới |
 | ND6 `nhap-o-la` | Ô máy không đọc được (giá dải, «thu về 4.2», trạng thái lạ) có đề xuất kèm lý do; đầu chủ chọn một chạm | Đầu chủ | T2 | ND5 | `packages/api/src/imports/ai/**` | Lỗi được sửa ≥ 80% trên bộ thử; không ô nào ghi khi người chưa chọn |
+
+| ND7 `chuan-hoa-moi-cua` | Đầu chủ, telesales gõ «dong nam», «bp», «Đang gd» ở bất kỳ ô nào và máy gợi giá trị chuẩn; lựa chọn thành đề xuất từ điển, quản trị sàn duyệt; Cài đặt sàn có sức khoẻ dữ liệu một chạm ra danh sách căn cần sửa | Đầu chủ, Quản trị sàn | T2 | ND1, ND4, 15, 45 | `packages/core/src/import/normalize/**`, `apps/web/src/app/settings/labels/**` | Cùng một giá trị lạ, lần hai không hỏi lại; không giá trị đã lưu nào đổi ngoài sự kiện có người |
+| ND8 `don-tu-dien-dinh-ky` (chỉ mở khi số đo ND7 cho thấy giá trị lạ dồn quá sức duyệt tay) | Quản trị sàn nhận mỗi tuần một danh sách đề xuất neo giá trị lạ vào chuẩn, kèm lý do, duyệt một chạm | Quản trị sàn | T2 | ND5, ND7 | `packages/api/src/imports/ai/**` | Rò nguồn ra AI = 0; ≥ 80% đề xuất được duyệt trên bộ thử |
+
+ND1 đổi tầm: bộ đọc và từ điển của nó là **bộ chuẩn hoá dùng chung** cho mọi cửa vào (Nhập dữ liệu §12), không riêng lần
+nhập — hàng 15, 24 dùng lại khi tới lượt.
 
 Hàng chờ điều kiện:
 

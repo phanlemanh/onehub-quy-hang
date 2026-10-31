@@ -288,7 +288,40 @@ Chạy hai chế độ trên cùng bộ: **tất định** (không AI — số n
 - **Sự cố**: máy chủ chặn một gói vì dò thấy dữ liệu cá nhân → không gửi, ghi sự cố (không ghi giá trị), báo đội; bộ dò
   ở trình duyệt có lỗ thì sửa ở lõi, thêm ca vào bộ thử `ban-nguon-giau`.
 
-## 12. Để cho người dựng
+## 12. Chuẩn hoá ở mọi cửa vào, không chỉ lúc nhập file
+
+Câu của chủ kho 31/10: dữ liệu gõ tay hằng ngày cũng sai chính tả, viết tắt mỗi sàn một kiểu — chuẩn hoá có phải chỉ việc
+của lần nhập? **Không.** Lần nhập file chỉ là cửa đổ nhiều nhất một lúc; ô nhận lead (hàng 24), sửa trên ô (15), sửa hàng
+loạt (16), API cho công cụ của sàn đều đưa chữ tay vào mỗi ngày. Dọn sau thì tốn gấp nhiều lần và luôn chậm hơn chỗ bẩn
+mới. Nên chuẩn hoá là **một lớp của lõi, mọi cửa vào gọi cùng một bộ**, và lần nhập là người dùng đầu tiên của nó.
+
+**Mỗi loại trường một cách — phần lớn không cần AI:**
+
+| Loại trường | Ví dụ | Cách chuẩn hoá | AI? |
+| --- | --- | --- | --- |
+| Lấy từ danh mục | Toà, tầng, diện tích, phòng ngủ, hướng | **Không cho gõ**: gõ mã căn là tự điền và khoá (hàng 9). Mã gõ kiểu nào cũng đọc được | Không |
+| Tập đóng | Trạng thái, điều kiện phí, nội thất, pháp lý, tình trạng sử dụng | Chọn, không gõ chữ tự do. Gõ thì so với giá trị chuẩn + **từ điển của sàn** (cách gọi riêng, hàng 45): bỏ dấu, viết hoa, khoảng trắng, khoảng cách chữ nhỏ → «Ý bạn là "Đông Nam"?» | Không |
+| Có cấu trúc | Giá, diện tích, ngày, số điện thoại | Bộ đọc của thực đơn §4 (cùng mã với lần nhập), luôn nói lại «Hiểu là…» (luật 7) | Không |
+| Tên người (lớp nguồn) | Tên chủ nhà | Chỉ việc chắc: chuẩn Unicode, khoảng trắng, viết hoa đầu chữ; nhận ra cùng người bằng số điện thoại, không bằng tên | **Không bao giờ** |
+| Chữ tự do | Ghi chú | Giữ nguyên văn. Tách nhãn từ ghi chú là «máy đọc chữ», đã cố ý để sau bản đầu; ghi chú hay chứa tên, số chủ nên đòi cùng lớp che như §3 | Sau, nếu đo thấy đáng |
+
+**Vòng học của sàn** — bộ chuẩn hoá giỏi dần mà vẫn tất định:
+
+1. Người gõ một giá trị lạ ở cửa nào cũng vậy → máy gợi giá trị chuẩn gần nhất; người chọn.
+2. Lựa chọn ấy thành **đề xuất từ điển** của sàn (`company_value_aliases`, §8); quản trị sàn duyệt hàng loạt ở Cài đặt sàn
+   (hoặc bật «tự nhận khi ba người cùng chọn»). Từ lần sau, giá trị đó chuẩn hoá thẳng, không hỏi.
+3. **AI chỉ ở hai chỗ**: lập kế hoạch lần nhập (§5) và **dọn từ điển định kỳ** — gom các giá trị chưa khớp của tuần (chỉ
+   lớp `catalog`, `shareable_listing`, đã qua bộ phân loại §3), đề xuất neo vào giá trị chuẩn kèm lý do; quản trị sàn duyệt.
+   Việc này không ai ngồi chờ nên hợp Batch API (rẻ 50%); dữ liệu gửi không có gì cá nhân nên mức lưu 29 ngày của Batch
+   không chạm bất biến.
+4. **Sức khoẻ dữ liệu của sàn**: đếm giá trị nằm ngoài chuẩn theo trường; một chạm mở bảng hàng lọc đúng các căn ấy để sửa
+   hàng loạt (hàng 16) — mỗi lần sửa là một sự kiện, hoàn tác được. Không có «dọn tự động» lặng lẽ: dữ liệu đã lưu chỉ đổi
+   qua sự kiện có người.
+
+**Giữa các sàn**: từ điển của sàn là cấu hình của sàn, ở lại trong sàn. Từ điển dựng sẵn của sản phẩm (`BP`, `KBP`, `ĐN`…)
+do đội sản phẩm viết và mở rộng; học từ nhiều sàn chỉ khi có thoả thuận và chỉ ở dạng tổng hợp — quyết định riêng, sau.
+
+## 13. Để cho người dựng
 
 - Thư viện đọc file (SheetJS hay exceljs): chọn theo đọc được xls cũ, csv nhiều mã hoá, màu ô và gạch ngang, chạy trong
   luồng phụ, giấy phép.

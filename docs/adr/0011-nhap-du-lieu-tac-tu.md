@@ -111,6 +111,11 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
     - **Nhập file không phải một kết nối**: người trong sàn đưa dữ liệu của sàn vào, như gõ tay — không cần thoả thuận.
       Loại kết nối `spreadsheet` có sẵn dành cho bảng tính nối sống (Kiến trúc §0) và hàng Google Sheets sau.
       `ai_processing` thêm vào `CONNECTION_KINDS` **và** ràng buộc `kind` của bảng thoả thuận (migration mới).
+12. **Chuẩn hoá là một lớp của lõi cho mọi cửa vào, không riêng lần nhập** (chủ kho hỏi 31/10 về lỗi chính tả, viết tắt
+    khi gõ tay): trường danh mục không cho gõ (tự điền từ mã căn); trường tập đóng chọn hoặc so với giá trị chuẩn và từ điển
+    của sàn; trường có cấu trúc qua cùng bộ đọc của lần nhập. Lựa chọn của người thành đề xuất từ điển, quản trị sàn duyệt.
+    AI chỉ thêm ở việc dọn từ điển định kỳ (Batch API, chỉ lớp được mở). Dữ liệu đã lưu chỉ đổi qua sự kiện có người — không
+    dọn tự động lặng lẽ. Chi tiết: [Nhập dữ liệu §12](../architecture/nhap-du-lieu.md#12-chuẩn-hoá-ở-mọi-cửa-vào-không-chỉ-lúc-nhập-file).
 
 ## Các lối đã so
 
@@ -132,6 +137,9 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
 | Học theo sàn | **A. Mẫu + từ điển ở cơ sở dữ liệu của sàn** — chọn | Tất định, rẻ dần, đi theo sàn trên mọi máy | Thêm hai bảng có luật theo dòng | Migration |
 | | B. Đưa lần nhập cũ vào lời nhắc | Không bảng mới | Mỗi lần trả tiền đọc lại; không tất định | Tăng theo thời gian |
 | | C. Lưu trên máy người nhập | Không đụng máy chủ | Người khác trong sàn không dùng được; mất khi đăng xuất | 0 |
+| Chuẩn hoá chữ gõ tay hằng ngày | A. Tác tử AI soát mỗi lần sửa | Bắt được nhiều kiểu | Chậm từng ô (trái «nhanh tức thì»), tốn tiền theo lần gõ, không tất định | Theo lần gõ |
+| | **B. Một bộ chuẩn hoá ở lõi + từ điển của sàn học từ lựa chọn của người; AI chỉ dọn từ điển định kỳ** — chọn | Tức thì, tất định, rẻ; sàn giỏi dần | Giá trị lạ lần đầu phải hỏi người | ~0; Batch rẻ 50% |
+| | C. Dọn định kỳ trên dữ liệu đã lưu | Không đụng màn gõ | Bẩn vào trước rồi mới dọn; sửa lặng lẽ trái sự kiện có người | Theo lần dọn |
 | Hoàn tác | **A. Sự kiện bù + `voided`** — chọn | Chỉ thêm, hoàn tác cả sau khi ghi | Đổi khuôn sự kiện (T3) | Một hàng T3 |
 | | B. Chỉ huỷ trước khi chốt | Không đổi lõi | Sai phát hiện sau khi nhập thì không gỡ được — trái luật 11 | 0 |
 | | C. Xoá hàng | Gọn | Trái ADR-0008 (trigger chặn xoá) | — |
