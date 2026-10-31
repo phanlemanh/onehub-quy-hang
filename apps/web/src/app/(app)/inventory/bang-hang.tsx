@@ -60,6 +60,9 @@ const TABLE_LAYOUT = {
   columnsPinnable: true,
 } as const;
 
+// Chỉ vẽ cột đang thấy (17 cột, màn 1366 thấy ~9): mỗi khung cuộn dựng ít ô hơn — máy đo E11.
+const COT_AO = { enabled: true } as const;
+
 const TABLE_CLASS_NAMES = {
   edgeCell: "first:ps-4 last:pe-4",
   base: "[&_tfoot_td]:bg-card [&_tfoot_td]:sticky [&_tfoot_td]:bottom-0 [&_tfoot_td]:z-30 [&_tfoot_td]:border-b",
@@ -180,11 +183,21 @@ function useDanhSachTrenMay() {
   const { bd } = useBoDongBo();
   const dangKy = useCallback((f: () => void) => bd.dangKy(f), [bd]);
   const phienBan = useSyncExternalStore(dangKy, bd.phienBan, () => 0);
-  return useMemo(() => {
+  const n = useMemo(() => {
     void phienBan;
-    const n = bd.ngan();
-    return { hang: bd.danhSach(), daKeo: n.listings !== null, loiMang: n.lastAttempt === "mang", thuLai: () => void bd.thuNgay() };
+    return bd.ngan();
   }, [bd, phienBan]);
+  // Kho báo đổi cả khi chỉ trạng thái gửi đổi: dựng lại 5.000 dòng chỉ khi danh sách hay hàng chờ thật sự đổi (máy đo E11).
+  const { listings, queue, lastAttempt } = n;
+  const hang = useMemo(() => {
+    void listings;
+    void queue;
+    return bd.danhSach();
+  }, [bd, listings, queue]);
+  return useMemo(
+    () => ({ hang, daKeo: listings !== null, loiMang: lastAttempt === "mang", thuLai: () => void bd.thuNgay() }),
+    [bd, hang, listings, lastAttempt],
+  );
 }
 
 function DangTai() {
@@ -312,7 +325,7 @@ export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string
   const table = useTable(tableOptions, selectGridState);
 
   const virtualizerOptions = useMemo(
-    () => ({ observeElementRect, observeElementOffset, scrollToFn: elementScroll, getItemKey: (_i: number, r: Row<Feat, DongLuoi>) => r.id }),
+    () => ({ observeElementRect, observeElementOffset, scrollToFn: elementScroll, useFlushSync: false, getItemKey: (_i: number, r: Row<Feat, DongLuoi>) => r.id }),
     [],
   );
 
@@ -416,7 +429,7 @@ export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string
         <Separator />
         <DataGridContainer>
           <DataGridScrollArea className="h-[calc(100svh-13rem)] min-h-96">
-            <DataGridTableVirtual estimateSize={ROW_HEIGHT.px} overscan={6} virtualizerOptions={virtualizerOptions} footerContent={footer} />
+            <DataGridTableVirtual estimateSize={ROW_HEIGHT.px} overscan={3} virtualizerOptions={virtualizerOptions} columnVirtualizerOptions={COT_AO} footerContent={footer} />
           </DataGridScrollArea>
           <DataGridCellSelection />
         </DataGridContainer>
