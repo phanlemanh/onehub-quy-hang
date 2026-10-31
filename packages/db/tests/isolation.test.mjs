@@ -1120,6 +1120,7 @@ test("chia lead: hàm đọc và bảng mới của sàn B không trả dòng n�
     }
     await lamNguoi(c, TN_A, COMPANY_A);
     assert.ok((await c.query("select 1 from lead_alerts where company_id = $1", [COMPANY_A])).rowCount > 0, "lead_alerts dưới A rỗng");
+    assert.ok((await c.query("select * from app.lead_alert_list()")).rowCount > 0, "danh sách báo dưới A rỗng");
     // Dưới B.
     await lamNguoi(c, NG_B, COMPANY_B);
     const ids = (rows) => rows.map((r) => r.lead_id);
@@ -1128,6 +1129,7 @@ test("chia lead: hàm đọc và bảng mới của sàn B không trả dòng n�
     assert.deepEqual(ids((await c.query("select * from app.lead_deadline_facts()")).rows).filter((x) => idA.includes(x)), []);
     assert.deepEqual(ids((await c.query("select * from app.lead_pool()")).rows).filter((x) => idA.includes(x)), []);
     assert.deepEqual((await c.query("select * from app.lead_routing_settings_rows()")).rows, []);
+    assert.deepEqual(ids((await c.query("select * from app.lead_alert_list()")).rows).filter((x) => idA.includes(x)), []);
     assert.equal((await c.query("select app.lead_alerts_to_admin() v")).rows[0].v, false, "B mang cấu hình người đọc báo của A");
     for (const bang of ["company_settings", "lead_alerts", "member_availability"]) {
       assert.equal((await c.query(`select 1 from ${bang} where company_id = $1`, [COMPANY_A])).rowCount, 0, `${bang} của A lộ sang B`);
