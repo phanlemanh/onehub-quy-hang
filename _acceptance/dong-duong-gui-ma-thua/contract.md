@@ -5,7 +5,7 @@ slug: dong-duong-gui-ma-thua
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-dong-duong-gui-ma-thua-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31
@@ -72,3 +72,8 @@ _acceptance/dang-nhap-theo-san/decisions.jsonl]. Chân ngành: danh sách đư�
 
 - Vùng của hàng: `packages/api/src/auth/**` (vùng gốc) cộng `packages/api/test-db/dong-duong-gui-ma/**` (kiểm trên
   Postgres thật) và hai tệp thiết kế, kế hoạch — khai thêm ở Cổng Phạm vi.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Hồ sơ chấm gọi tên ca kiểm của E3 khác tên thật; người dùng không thấy gì.
+  - Ngoài-2: Mã lỗi «kiểu mã không được phép» nằm ở hằng đăng nhập, chưa ở chỗ mã lỗi chung.
+  - Ngoài-3: Cùng lệch tên ca E3 như Ngoài-1, do bộ soi khác báo.
+  - Ngoài-4: Một phép dò của lưới chống đường mới đo nhầm chỗ; lối gửi mã ấy vẫn bị phép kiểm khác chặn.
