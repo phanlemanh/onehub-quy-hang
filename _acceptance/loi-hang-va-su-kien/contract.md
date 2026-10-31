@@ -5,7 +5,7 @@ slug: loi-hang-va-su-kien
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-loi-hang-va-su-kien-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T23:09:39Z
@@ -97,3 +97,5 @@ Quét morphological-scan, preset entity-feature, cho thực thể «hàng và s�
 - Bất biến chạm: (1) cách ly — hai bảng mới mang luật theo dòng và ca trong bộ kiểm cách ly; (2) chủ nhà — hai bảng
   không chứa lớp `source`, payload mang khoá `source` bị từ chối; (3), (4) không chạm.
 - Dãy Q chạy dev ở cổng 3461 (`web-q`), Postgres 5545.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Cơ sở dữ liệu chưa tự chặn một dãy lịch sử không thuộc hàng nào; hiện chỉ đường ghi duy nhất của hệ thống giữ quy tắc này, người dùng không gặp.

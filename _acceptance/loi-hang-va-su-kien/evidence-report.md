@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: ca23d6a738158be5caf25e6dbe1182b2f7c05e1e
-human_signoff:
+human_signoff: Manh Phan 2026-10-31
 ---
 
 # Evidence Report: loi-hang-va-su-kien
