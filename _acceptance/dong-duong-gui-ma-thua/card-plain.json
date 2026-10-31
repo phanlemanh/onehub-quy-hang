@@ -1,0 +1,11 @@
+{
+  "feature_plain": "Người lạ không còn dội được mã đăng nhập vào hộp thư thành viên sàn: mọi đường xin mã chung một giới hạn 5 lần mỗi 15 phút, các đường quên mật khẩu và đổi email của thư viện đăng nhập bị đóng.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ trả «xin mã quá nhiều» ở lần thứ sáu trong 15 phút trên mọi đường gửi mã còn mở, và không gửi thêm thư."},
+    {"id":"AC-2","p":"Sẽ đếm chung mọi kiểu mã (đăng nhập, xác minh email, quên mật khẩu) vào cùng một giới hạn cho mỗi email."},
+    {"id":"AC-3","p":"Sẽ trả «không có» cho ba đường quên / đặt lại mật khẩu và hai đường đổi email, không gửi thư, không đốt lượt xin mã."},
+    {"id":"AC-4","p":"Sẽ có bài kiểm đỏ ngay khi nâng thư viện đăng nhập mà xuất hiện một đường hay một lối gửi mã chưa được xếp loại."},
+    {"id":"AC-5","p":"Sẽ giữ nguyên đăng nhập hôm nay: xin mã, nhập đúng mã là vào; email lạ vẫn không nhận mã."}
+  ],
+  "scope_plain": "Những việc cố ý để ngoài lần này:"
+}
