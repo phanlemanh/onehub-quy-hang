@@ -5,8 +5,10 @@ slug: nang-kit-2-36-0
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [ci, config]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-10-31-nang-kit-2-36-0-design.md
+approved_by: Manh Phan
+approved_at: 2026-10-31T02:43:10Z
 ---
 
 # Acceptance Contract: nang-kit-2-36-0
