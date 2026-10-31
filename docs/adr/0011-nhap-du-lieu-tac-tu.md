@@ -1,6 +1,6 @@
 # ADR-0011: Nhập dữ liệu — tác tử lập kế hoạch, mã thực thi, nguồn không rời công ty
 
-Ngày: 2026-10-31 · Trạng thái: **đề xuất** (chờ chủ kho; phiên thiết kế, chưa có mã) · Liên quan: Tham chiếu §3 «Ba cửa
+Ngày: 2026-10-31 · Trạng thái: **đề xuất** (chờ chủ kho; phiên thiết kế, chưa có mã) — riêng quyết định 12 **đã duyệt** 31/10 (Manh Phan: «Duyệt hướng này») · Liên quan: Tham chiếu §3 «Ba cửa
 vào, một đích», §4, §6, §7, luật 11; Kiến trúc §5 «Nhập Excel», §8; bất biến 2; ADR-0008 (một đường ghi, sự kiện chỉ
 thêm), ADR-0009 (Vercel, Supabase Singapore), ADR-0010 (lớp nguồn); hàng 5, 9, 20, 21, 45, 50 của lộ trình. Chi tiết:
 [Nhập dữ liệu](../architecture/nhap-du-lieu.md) · đề xuất hàng: [Bản phạm vi nhập dữ liệu](../plan/pham-vi-nhap-du-lieu.md)
@@ -111,7 +111,7 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
     - **Nhập file không phải một kết nối**: người trong sàn đưa dữ liệu của sàn vào, như gõ tay — không cần thoả thuận.
       Loại kết nối `spreadsheet` có sẵn dành cho bảng tính nối sống (Kiến trúc §0) và hàng Google Sheets sau.
       `ai_processing` thêm vào `CONNECTION_KINDS` **và** ràng buộc `kind` của bảng thoả thuận (migration mới).
-12. **Chuẩn hoá là một lớp của lõi cho mọi cửa vào, không riêng lần nhập** (chủ kho hỏi 31/10 về lỗi chính tả, viết tắt
+12. **Đã duyệt 31/10.** **Chuẩn hoá là một lớp của lõi cho mọi cửa vào, không riêng lần nhập** (chủ kho hỏi 31/10 về lỗi chính tả, viết tắt
     khi gõ tay): trường danh mục không cho gõ (tự điền từ mã căn); trường tập đóng chọn hoặc so với giá trị chuẩn và từ điển
     của sàn; trường có cấu trúc qua cùng bộ đọc của lần nhập. Lựa chọn của người thành đề xuất từ điển, quản trị sàn duyệt.
     AI chỉ thêm ở việc dọn từ điển định kỳ (Batch API, chỉ lớp được mở). Dữ liệu đã lưu chỉ đổi qua sự kiện có người — không
