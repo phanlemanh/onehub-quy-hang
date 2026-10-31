@@ -1,0 +1,38 @@
+{
+  "feature_plain": "Đầu chủ gõ mã căn viết kiểu nào cũng được và nhận ngay diện tích, phòng ngủ, hướng, toà, tầng, trục của căn từ danh mục; mã danh mục chưa có thì được báo thẳng, không có số đoán.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ trả đủ mười thuộc tính của căn khi gõ đúng mã chuẩn, lấy nguyên từ danh mục."},
+    {"id": "AC-2", "p": "Sẽ nhận cùng một căn dù gõ chữ thường, thừa dấu cách, dấu gạch hay chấm khác, viết liền hay thiếu số 0."},
+    {"id": "AC-5", "p": "Sẽ đọc đúng cả 180 căn của dự án mẫu, và thêm dự án mới chỉ cần khai cách đọc mã của dự án ấy."},
+    {"id": "AC-6", "p": "Sẽ để trống ô nào danh mục chưa có, không mượn số của căn bên cạnh."},
+    {"id": "AC-8", "p": "Sẽ cho mọi người trong sàn tra mã, ở mọi vai; người chưa đăng nhập hay chưa chọn sàn bị chặn."},
+    {"id": "AC-9", "p": "Sẽ chỉ trả thông tin danh mục của căn — không giá, không chủ nhà, không ghi chú nội bộ."},
+    {"id": "AC-10", "p": "Sẽ có một lệnh đo in tỉ lệ mã tự điền đúng trên dữ liệu mẫu: 47 mã sàn đã gõ, 100%, không số đoán."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG điền gì khi mã đọc được mà danh mục chưa có — chỉ báo «chưa có trong danh mục»."},
+    {"id": "AC-4", "p": "Sẽ KHÔNG đoán khi chuỗi gõ không đúng cách đọc của dự án nào — báo kèm mẫu mã đúng."},
+    {"id": "AC-7", "p": "Sẽ KHÔNG chọn hộ khi một mã trùng ở hai dự án — liệt cả hai để người chọn."},
+    {"id": "OOS-1", "p": "Chưa có kho danh mục thật dùng chung cho mọi sàn, chưa nhận danh mục từ Invest — để hàng 10."},
+    {"id": "OOS-2", "p": "Chưa có màn: ô «Gõ mã căn» trên vỏ ứng dụng và form lead nối vào sau, cùng màn hồ sơ căn."},
+    {"id": "OOS-3", "p": "Hàng trong bảng hàng chưa gắn vào căn danh mục — vẫn gắn bằng chữ toà và mã căn."},
+    {"id": "OOS-4", "p": "Chưa gợi ý mã gần đúng, chưa có nút báo sai thông tin căn, chưa đọc mã nhà phố hay lô thấp tầng."},
+    {"id": "OOS-5", "p": "Chưa đo tỉ lệ tự điền trên mã thật của hai tuần thử — lệnh đo hiện chỉ đọc dữ liệu mẫu."}
+  ],
+  "scope_plain": "Hàng này chỉ dựng phần lõi đọc mã và đường tra; danh mục thật, màn và nối vào bảng hàng đi ở các hàng sau.",
+  "coverage_plain": [
+    {"i": 0, "p": "Kiểu gõ: mã chuẩn (AC-1 điền đủ), viết khác cách (AC-2 cùng căn), đọc được mà chưa có (AC-3 báo rõ), không đọc được (AC-4 báo kèm mẫu) — thước là mã trong hai file Excel mẫu và lead mẫu; danh sách kiểu viết là giả định, chờ mã thật."},
+    {"i": 1, "p": "Danh mục: một dự án (AC-1, AC-5 đọc hết 180 căn), hai dự án trùng mã (AC-7 không chọn hộ), dự án chưa khai cách đọc chỉ khớp đúng chữ, ô danh mục trống (AC-6 để trống)."},
+    {"i": 2, "p": "Người tra: chưa đăng nhập, chưa có sàn, nhiều sàn chưa chọn bị chặn; năm vai trong sàn đều tra được (AC-8)."},
+    {"i": 3, "p": "Dữ liệu trả ra: chỉ thông tin danh mục (AC-9) và tỉ lệ tự điền trên dữ liệu mẫu (AC-10 lệnh đo)."},
+    {"i": 4, "p": "Để sau: gợi ý mã gần đúng, báo sai thông tin căn, nối ô gõ mã trên màn, gắn hàng vào căn danh mục, mã nhà phố, kho danh mục thật (hàng 10)."},
+    {"i": 5, "p": "Không bao giờ: đoán thông tin căn khi danh mục thiếu."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy đã tự quyết cho bản thật dùng danh mục mẫu mà chưa hỏi anh — nếu hai tuần thử bắt đầu trước hàng 10, đầu chủ gõ mã thật sẽ không ra gì. Đã đưa lên thành Hỏi-3."},
+    {"i": 1, "p": "Máy tự hạ việc này từ hạng T3 (lộ trình ghi) xuống T2 — tức bỏ bước anh duyệt kế hoạch. Đã đưa lên thành Hỏi-4."},
+    {"i": 2, "p": "Phép kiểm «chỉ trả thông tin danh mục» chưa thử ca trùng mã hai dự án và chỉ dò vài khoá cấm — đã sửa: thử đủ bốn ca, so cả tập khoá trả ra với danh sách cho phép."},
+    {"i": 3, "p": "Phép đo tỉ lệ tự điền có thể tự chấm cho chính nó 100% — đã sửa: đáp án dựng độc lập từ dữ liệu mẫu, ghim 47 mã, thêm ca cố tình đọc sai phải ra dưới 100%."},
+    {"i": 4, "p": "Hợp đồng hứa lệnh đo chạy được trên mã thật hai tuần thử mà không ai bảo đảm — đã bỏ lời hứa, chuyển sang việc để sau."}
+  ]
+}
