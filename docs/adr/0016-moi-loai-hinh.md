@@ -1,6 +1,6 @@
 # ADR-0016: Mọi loại hình bất động sản — loại hình RESO, khu, địa chỉ chuẩn, kiểm trùng theo địa chỉ
 
-Ngày: 2026-10-31 · Trạng thái: **đề xuất** (Hỏi-4 đã quyết 31/10; Hỏi-1..3 chờ chủ kho ở Cổng Phạm vi của hàng 72) · Liên
+Ngày: 2026-10-31 · Trạng thái: **chấp nhận** (Hỏi-4 đã quyết 31/10; Hỏi-1..3 chủ kho duyệt theo khuyến nghị ở Cổng Phạm vi hàng 72, 31/10) · Liên
 quan: Tham chiếu §1, §3, §4, §6, §7, luật 19–20, 24; bất biến 1, 2, 4; ADR-0006 (khu phụ trách), ADR-0007 (đổi tên API),
 ADR-0008 (sự kiện của hàng), ADR-0010 (lớp nguồn), ADR-0011 (nhập dữ liệu); hàng 9, 10, 14, 17, 24, 31, 35, 63, 64, 65
 của lộ trình · đề xuất hàng: [Bản phạm vi mọi loại hình](../plan/pham-vi-moi-loai-hinh.md)
@@ -137,6 +137,9 @@ Bản đồ lô (Tham chiếu §10, P2, «Sau»); hàng thương mại (văn ph�
 - Tham chiếu §4 (dòng «Danh mục»), §9 («chọn dự án»), luật 19 và CONTEXT đổi khi hàng 72 và 76 gộp.
 
 ## Hỏi chủ kho (Cổng Phạm vi hàng 72)
+
+Đã quyết 31/10: chủ kho «duyệt» Cổng Phạm vi hàng 72 với Hỏi-1..3 theo khuyến nghị — khu chứa căn là «Khu», khu chia
+việc của sàn thành «Vùng», «Vùng phụ trách»; đất bốn mục ở mức đủ; khách riêng thấy tên đường và xã của nhà ngoài khu.
 
 - **Hỏi-1 — nhãn của khu trên màn.** Khuyến nghị: «Khu» cho `SubdivisionName`, và đổi nhãn khu phụ trách của ADR-0006
   thành «Vùng phụ trách» (code `zone` giữ nguyên) — khu chứa căn hiện ở mọi màn (thanh trên, bảng hàng nhóm theo khu, ô

@@ -76,10 +76,10 @@ export function sinhDuLieuMau({ hatGiong = HAT_GIONG } = {}) {
     schemaVersion: 0,
     provider: "[Mẫu] Nguồn danh mục thử",
     measuredAt: "2026-10-30T00:00:00+07:00",
-    projects: [
+    subdivisions: [
       {
-        projectKey: "mau-du-an-thu",
-        projectName: "[Mẫu] Dự án căn hộ thử",
+        subdivisionKey: "mau-du-an-thu",
+        subdivisionName: "[Mẫu] Dự án căn hộ thử",
         complexName: null,
         buildings: TOA.map((toa) => ({
           buildingKey: toa,
@@ -97,13 +97,15 @@ export function sinhDuLieuMau({ hatGiong = HAT_GIONG } = {}) {
               livingArea: t.dt,
               bedroomsTotal: t.pn,
               directionFaces: t.huong,
+              propertyType: "Residential",
+              propertySubType: "Condominium",
             };
           }),
         })),
       },
     ],
   };
-  const moiCan = danhMuc.projects[0].buildings.flatMap((b) => b.units);
+  const moiCan = danhMuc.subdivisions[0].buildings.flatMap((b) => b.units);
 
   // 40 căn khác nhau; 30 chủ nhà, mười chủ đầu có hai căn. Đầu chủ theo toà của căn đầu tiên của chủ —
   // một chủ nhiều căn thì một đầu chủ (Tham chiếu §4).
@@ -253,7 +255,7 @@ export function kiemNhan(d) {
   const loai = {
     sàn: [[d.san], (x) => x.nhan === NHAN && x.ten.startsWith(TIEN_TO_TEN)],
     người: [d.nguoi, (x) => x.nhan === NHAN],
-    căn: [d.danhMuc.projects.flatMap((p) => p.buildings.flatMap((b) => b.units)), (x) => x.upi.startsWith(TIEN_TO_UPI)],
+    căn: [d.danhMuc.subdivisions.flatMap((p) => p.buildings.flatMap((b) => b.units)), (x) => x.upi.startsWith(TIEN_TO_UPI)],
     "chủ nhà": [d.chuNha, (x) => x.nhan === NHAN],
     hàng: [d.hang, (x) => x.nhan === NHAN],
     lead: [d.lead, (x) => x.nhan === NHAN],
@@ -283,7 +285,7 @@ export function kiemKhuonDanhMuc(danhMuc, CatalogFeed) {
   if (!kq.success) loi.push(`khuôn danh mục từ chối: ${String(kq.error).slice(0, 200)}`);
   const thay = new Set();
   let tong = 0;
-  for (const p of danhMuc.projects ?? [])
+  for (const p of danhMuc.subdivisions ?? [])
     for (const b of p.buildings ?? [])
       for (const u of b.units ?? []) {
         tong++;

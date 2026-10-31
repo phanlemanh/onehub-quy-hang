@@ -99,7 +99,7 @@ D (hàng 72, PR #45):
    2. **Chọn một trong thực đơn chiến lược dựng sẵn** (`enum`) khi các sàn khác nhau ở hình của luật, không chỉ ở con
       số. **Ca mẫu số một: chia lead** — chủ kho 1/11 (giám sát chuyển): «phân phối lead nó gần như là chuẩn của nhiều
       hệ thống CRM, và chính chủ sàn cũng chưa chắc cách nào là tốt nhất… nên cứng là không triển khai được». Thực đơn
-      cố định năm chiến lược: theo khu + vòng lần lượt (mặc định, hàng 25 AC-1) · vòng toàn sàn · theo tải · kho chung
+      cố định năm chiến lược: theo vùng phụ trách + lần lượt (mặc định, hàng 25 AC-1) · vòng toàn sàn · theo tải · kho chung
       tự nhận · trưởng nhóm chia tay; cùng hạn nhận, hạn gọi và cách báo quá hạn (sổ #1–#3a). Hai lối **luôn chạy**, chiến
       lược nào cũng vậy: luật chủ trùng (chủ nhà đã có đầu chủ thì về người đó, luật 20) và lối trưởng nhóm giao lại từng
       lead (hàng 25 AC-7). Mỗi chiến lược là một hàm thuần ở lõi có bộ ca riêng; thêm chiến lược thứ sáu là thêm một hàm
