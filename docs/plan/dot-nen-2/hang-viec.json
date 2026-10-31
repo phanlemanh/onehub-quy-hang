@@ -1,0 +1,125 @@
+{
+ "dot": "nen-2",
+ "muc_tieu": "Dựng phần lõi của hàng có quyền: gõ mã căn ra thuộc tính, thông tin chủ nhà chỉ người giữ căn thấy, trục «Chỉ tôi» / «Toàn sàn», và bảng hàng đọc từ máy không chờ mạng",
+ "day": [
+  {
+   "id": "N",
+   "worktree": "/CHUA-CO-WORKTREE/N",
+   "link": ""
+  },
+  {
+   "id": "A",
+   "worktree": "/CHUA-CO-WORKTREE/A",
+   "link": ""
+  },
+  {
+   "id": "D",
+   "worktree": "/CHUA-CO-WORKTREE/D",
+   "link": ""
+  },
+  {
+   "id": "X",
+   "worktree": "/CHUA-CO-WORKTREE/X",
+   "link": "",
+   "nghi": true
+  }
+ ],
+ "hang": [
+  {
+   "ma": "11",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lop-truong-nguon",
+   "day": "N",
+   "uu_tien": 0,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/access/**",
+    "packages/api/src/owners/**",
+    "_acceptance/lop-truong-nguon/**"
+   ],
+   "sau": [
+    "8"
+   ]
+  },
+  {
+   "ma": "12",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "truc-ai-thay-hang",
+   "day": "A",
+   "uu_tien": 1,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/visibility/**",
+    "_acceptance/truc-ai-thay-hang/**"
+   ],
+   "sau": [
+    "8"
+   ]
+  },
+  {
+   "ma": "9",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "danh-muc-go-ma-can",
+   "day": "D",
+   "uu_tien": 2,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/catalog/**",
+    "packages/api/src/catalog/**",
+    "_acceptance/danh-muc-go-ma-can/**"
+   ],
+   "sau": [
+    "5",
+    "8"
+   ]
+  },
+  {
+   "ma": "13",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhanh-tuc-thi",
+   "day": "N",
+   "uu_tien": 3,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/lib/sync/**",
+    "_acceptance/nhanh-tuc-thi/**"
+   ],
+   "sau": [
+    "2",
+    "11",
+    "12"
+   ]
+  },
+  {
+   "ma": "8",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "loi-hang-va-su-kien",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/loi-hang-va-su-kien/**"
+   ]
+  },
+  {
+   "ma": "5",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "du-lieu-mau-san-thu",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/du-lieu-mau-san-thu/**"
+   ]
+  },
+  {
+   "ma": "2",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bai-thu-dong-bo-mat-mang",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/bai-thu-dong-bo-mat-mang/**"
+   ]
+  }
+ ],
+ "ngoai_hang_merge": []
+}

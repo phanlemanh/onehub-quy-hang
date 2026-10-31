@@ -153,6 +153,29 @@
       ]
     },
     {
+      "ma": "54",
+      "cau_giao": "Đường API, mã lỗi và đường màn đăng nhập mang tên tiếng Anh; hành vi, mã HTTP và chữ trên màn giữ nguyên",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Hàng phát sinh của dãy Q đợt nen-dau (chủ kho «Đổi sau hàng 7», 30/10); luật kho: code và API tiếng Anh, chữ UI tiếng Việt; ADR-0007. Đã giao ở PR #17",
+      "hang": "T2",
+      "slug": "doi-ten-api-tieng-anh",
+      "dung_tren": [
+        "7"
+      ],
+      "bat_khi": "Đường cũ trả 404; mười ba mã lỗi mới nằm ở một hằng của gói API; quét mã không còn tên cũ nào trong danh sách đóng",
+      "nhom": "nen",
+      "dot": "nen-dau",
+      "phu": [
+        "ND1"
+      ],
+      "vung": [
+        "packages/api/src/auth/**",
+        "apps/web/src/app/(auth)/**",
+        "apps/web/src/app/settings/users/**"
+      ]
+    },
+    {
       "ma": "8",
       "cau_giao": "Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện",
       "vai": "nen",
@@ -1104,6 +1127,70 @@
       ],
       "vung": [
         "packages/core/src/metrics/**"
+      ]
+    },
+    {
+      "ma": "55",
+      "cau_giao": "Mọi đường gửi mã đăng nhập đi qua cùng giới hạn 5 lần xin mã trong 15 phút cho mỗi email; đường quên mật khẩu của plugin không còn phục vụ",
+      "vai": "nen",
+      "tieu_chi": 5,
+      "vi_sao": "Cổng Bằng chứng hàng 6: Ngoài-6 và Ngoài-10 «mở hợp đồng mới» (chủ kho 30/10) — người lạ dội email mã vào hộp thư thành viên sàn, mã qua đường thừa không đăng nhập được",
+      "hang": "T3",
+      "slug": "dong-duong-gui-ma-thua",
+      "dung_tren": [
+        "6"
+      ],
+      "bat_khi": "Lời xin mã thứ sáu trong 15 phút bị từ chối ở mọi đường gửi mã của plugin; các đường quên mật khẩu trả 404 và không gửi email",
+      "nhom": "nen",
+      "dot": "nen-dau",
+      "phu": [
+        "ND2"
+      ],
+      "vung": [
+        "packages/api/src/auth/**"
+      ]
+    },
+    {
+      "ma": "56",
+      "cau_giao": "Mở sàn cho công ty mới trùng tên với sàn đang chạy thì được một sàn riêng; người của sàn mới không thấy dữ liệu sàn cũ",
+      "vai": "nen",
+      "tieu_chi": 5,
+      "vi_sao": "Cổng Bằng chứng hàng 6: Ngoài-7 và Ngoài-15 «mở hợp đồng mới» (chủ kho 30/10) — công cụ mở sàn tìm sàn theo tên nên gộp lặng người mới vào sàn cũ; chạm bất biến 1 (cách ly giữa công ty)",
+      "hang": "T3",
+      "slug": "mo-san-trung-ten",
+      "dung_tren": [
+        "6"
+      ],
+      "bat_khi": "Mở hai sàn cùng tên ra hai sàn khác mã; bộ kiểm cách ly có ca người sàn mới không đọc được dòng nào của sàn cũ",
+      "nhom": "nen",
+      "dot": "nen-dau",
+      "phu": [
+        "ND3"
+      ],
+      "vung": [
+        "packages/db/scripts/mo-san.mjs",
+        "packages/db/scripts/mo-san.d.mts"
+      ]
+    },
+    {
+      "ma": "57",
+      "cau_giao": "Lệnh chốt bán với ngày bán không có thật (như 30 tháng 2) bị từ chối với lỗi nêu đúng trường ngày bán, không phải lỗi hệ thống",
+      "vai": "nen",
+      "tieu_chi": 3,
+      "vi_sao": "Cổng Bằng chứng hàng 8: Ngoài-2 «mở hợp đồng mới» (chủ kho 31/10) — ngày không có thật qua kiểm payload rồi cơ sở dữ liệu trả 500; không ghi nửa chừng, sửa rẻ",
+      "hang": "T2",
+      "slug": "bao-ro-ngay-ban-sai",
+      "dung_tren": [
+        "8"
+      ],
+      "bat_khi": "Ngày bán không có thật trả 400 invalid-payload nêu trường ngày bán; không có sự kiện nào được ghi",
+      "nhom": "nen",
+      "dot": "nen-dau",
+      "phu": [
+        "ND4"
+      ],
+      "vung": [
+        "packages/core/src/listing/**"
       ]
     },
     {
