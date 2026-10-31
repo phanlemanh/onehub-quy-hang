@@ -8,7 +8,7 @@ surfaces: [api]
 status: approved
 design_doc: docs/superpowers/specs/2026-10-31-can-trung-ma-hai-toa-design.md
 approved_by: Manh Phan
-approved_at: 2026-10-31T14:30:51Z
+approved_at: 2026-10-31T14:21:09Z
 ---
 
 # Acceptance Contract: can-trung-ma-hai-toa
