@@ -1,44 +1,144 @@
 {
   "feature_plain": "Telesales nhập một lead đủ năm mục trên máy tính, bấm gửi là thấy ngay lead có trùng không: không trùng, chủ nhà đã có đầu chủ, hay căn đã có hàng đang mở.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ chỉ nhận lead đủ năm mục (số chủ, căn hoặc toà, nhu cầu, giá kèm điều kiện phí, thời gian muốn ra hàng); thiếu mục nào thì báo đúng mục ấy, số viết kiểu gì cũng được nhận."},
-    {"id": "AC-2", "p": "Sẽ ra đúng một trong ba kết quả; khi căn đã có hàng mở và chủ cũng đã có đầu chủ thì căn trùng thắng."},
-    {"id": "AC-3", "p": "Sẽ báo «căn đã có hàng mở» kèm đúng đầu chủ của hàng ấy; căn đã bán hay ngừng hẳn thì không tính, mã căn gõ khác dạng vẫn nhận ra."},
-    {"id": "AC-4", "p": "Sẽ đưa lead về đúng đầu chủ đang giữ chủ nhà mang số ấy, kể cả khi số viết +84, và kể cả khi lead trước cùng số đã về một đầu chủ."},
-    {"id": "AC-5", "p": "Sẽ ghi lead không khớp số hay căn nào (kể cả lead chỉ biết toà) là «không trùng», chưa ai nhận, chờ chia ở bước sau."},
-    {"id": "AC-6", "p": "Sẽ không bao giờ so trùng với dữ liệu của sàn khác, và người sàn khác không đọc được lead của sàn mình."},
-    {"id": "AC-7", "p": "Sẽ chỉ cho telesales thấy kết quả, tên đầu chủ nhận và những gì họ đã nhập — không thấy hàng, không thấy lại số chủ, không mở được lead người khác."},
-    {"id": "AC-8", "p": "Sẽ cho người nhập bấm «Bỏ lead này» ở lead căn trùng, đúng một lần, có ghi người và lúc bỏ, dòng lead không mất."},
-    {"id": "AC-9", "p": "Sẽ chỉ cho telesales, đầu chủ, trưởng nhóm gửi lead; đầu khách và quản trị sàn bị từ chối, không lưu gì."},
-    {"id": "AC-10", "p": "Sẽ cho telesales một màn năm ô với dòng «Hiểu là…» của giá, lỗi dưới đúng ô, nút khoá lúc đang kiểm, kết quả hiện ngay dưới, ô trống lại cho lead kế, mất mạng thì giữ chữ đã gõ."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ chỉ nhận lead đủ năm mục (số chủ, căn hoặc toà, nhu cầu, giá kèm điều kiện phí, thời gian muốn ra hàng); thiếu mục nào thì báo đúng mục ấy, số viết kiểu gì cũng được nhận."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ ra đúng một trong ba kết quả; khi căn đã có hàng mở và chủ cũng đã có đầu chủ thì căn trùng thắng."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ báo «căn đã có hàng mở» kèm đúng đầu chủ của hàng ấy; căn đã bán hay ngừng hẳn thì không tính, mã căn gõ khác dạng vẫn nhận ra."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ đưa lead về đúng đầu chủ đang giữ chủ nhà mang số ấy, kể cả khi số viết +84, và kể cả khi lead trước cùng số đã về một đầu chủ."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ ghi lead không khớp số hay căn nào (kể cả lead chỉ biết toà) là «không trùng», chưa ai nhận, chờ chia ở bước sau."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ không bao giờ so trùng với dữ liệu của sàn khác, và người sàn khác không đọc được lead của sàn mình."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ chỉ cho telesales thấy kết quả, tên đầu chủ nhận và những gì họ đã nhập — không thấy hàng, không thấy lại số chủ, không mở được lead người khác."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ cho người nhập bấm «Bỏ lead này» ở lead căn trùng, đúng một lần, có ghi người và lúc bỏ, dòng lead không mất."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ chỉ cho telesales, đầu chủ, trưởng nhóm gửi lead; đầu khách và quản trị sàn bị từ chối, không lưu gì."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ cho telesales một màn năm ô với dòng «Hiểu là…» của giá, lỗi dưới đúng ô, nút khoá lúc đang kiểm, kết quả hiện ngay dưới, ô trống lại cho lead kế, mất mạng thì giữ chữ đã gõ."
+    }
   ],
   "scope_plain": "Những việc dưới đây để cho hàng khác của lộ trình, không làm ở vòng này:",
   "wont_do": [
-    {"id": "OOS-1", "p": "Chia lead theo luật của sàn, hạn 15 / 30 phút và báo trưởng nhóm — hàng 25."},
-    {"id": "OOS-2", "p": "Thông báo lead cho đầu chủ — hàng 26."},
-    {"id": "OOS-3", "p": "Danh sách lead đã nhập với bốn nấc và «Sửa số và gửi lại» — hàng 27."},
-    {"id": "OOS-4", "p": "Biến lead thành hàng khi đầu chủ nhận, và hiện tin bổ sung trong hồ sơ căn — hàng 25, 22, 17."},
-    {"id": "OOS-5", "p": "Lead trùng số với một lead khác còn đang chờ chia — để hàng 25 (Hỏi-5)."},
-    {"id": "OOS-6", "p": "Ô nhận lead trên điện thoại — ưu tiên P1."},
-    {"id": "OOS-7", "p": "Mã hoá số chủ của lead — hàng 62."},
-    {"id": "OOS-8", "p": "Kiểm trùng ở nhập Excel và các cửa vào khác — hàng 64–71 dùng lại luật này."},
-    {"id": "OOS-9", "p": "Gửi lead khi đang mất mạng."}
+    {
+      "id": "OOS-1",
+      "p": "Chia lead theo luật của sàn, hạn 15 / 30 phút và báo trưởng nhóm — hàng 25."
+    },
+    {
+      "id": "OOS-2",
+      "p": "Thông báo lead cho đầu chủ — hàng 26."
+    },
+    {
+      "id": "OOS-3",
+      "p": "Danh sách lead đã nhập với bốn nấc và «Sửa số và gửi lại» — hàng 27."
+    },
+    {
+      "id": "OOS-4",
+      "p": "Biến lead thành hàng khi đầu chủ nhận, và hiện tin bổ sung trong hồ sơ căn — hàng 25, 22, 17."
+    },
+    {
+      "id": "OOS-5",
+      "p": "Lead trùng số với một lead khác còn đang chờ chia — để hàng 25 (Hỏi-5)."
+    },
+    {
+      "id": "OOS-6",
+      "p": "Ô nhận lead trên điện thoại — ưu tiên P1."
+    },
+    {
+      "id": "OOS-7",
+      "p": "Mã hoá số chủ của lead — hàng 62."
+    },
+    {
+      "id": "OOS-8",
+      "p": "Kiểm trùng ở nhập Excel và các cửa vào khác — hàng 64–71 dùng lại luật này."
+    },
+    {
+      "id": "OOS-9",
+      "p": "Gửi lead khi đang mất mạng."
+    },
+    {
+      "id": "OOS-10",
+      "p": "Lead nhà phố, nhà ngoài dự án — để một hàng mới của lộ trình (Hỏi-6)."
+    }
   ],
   "coverage_plain": [
-    {"i": 0, "p": "Đủ ba kết quả và ca cả hai cùng trùng (AC-2, AC-3, AC-4, AC-5)."},
-    {"i": 1, "p": "Khớp căn: chỉ biết toà, căn trên hàng mở, căn đã bán hay ngừng, mã gõ khác dạng (AC-3, AC-5); căn ghi tay lệch tên toà để việc chuẩn hoá sau."},
-    {"i": 2, "p": "Khớp số: không có, đã có đầu chủ, viết khác dạng, lead trước đã về người, lead trước đã bỏ (AC-4, AC-8); lead trước còn chờ chia để hàng 25."},
-    {"i": 3, "p": "Cùng sàn và sàn khác (AC-6)."},
-    {"i": 4, "p": "Năm vai người nhập và người chưa đăng nhập (AC-9)."},
-    {"i": 5, "p": "Mọi đường có thể lộ hàng hay số chủ: bản trả cho telesales, đọc thẳng cột số, lead người khác, sàn khác (AC-6, AC-7)."},
-    {"i": 6, "p": "Ba lớp: luật thuần, cơ sở dữ liệu cùng lối API, và màn (AC-1..AC-10)."},
-    {"i": 7, "p": "Tám trạng thái của màn đều có cách chấm trên bản đang chạy (AC-10)."}
+    {
+      "i": 0,
+      "p": "Đủ ba kết quả và ca cả hai cùng trùng (AC-2, AC-3, AC-4, AC-5)."
+    },
+    {
+      "i": 1,
+      "p": "Khớp căn: chỉ biết toà, căn trên hàng mở, căn đã bán hay ngừng, mã gõ khác dạng (AC-3, AC-5); căn ghi tay lệch tên toà để việc chuẩn hoá sau."
+    },
+    {
+      "i": 2,
+      "p": "Khớp số: không có, đã có đầu chủ, viết khác dạng, lead trước đã về người, lead trước đã bỏ (AC-4, AC-8); lead trước còn chờ chia để hàng 25."
+    },
+    {
+      "i": 3,
+      "p": "Cùng sàn và sàn khác (AC-6)."
+    },
+    {
+      "i": 4,
+      "p": "Năm vai người nhập và người chưa đăng nhập (AC-9)."
+    },
+    {
+      "i": 5,
+      "p": "Mọi đường có thể lộ hàng hay số chủ: bản trả cho telesales, đọc thẳng cột số, lead người khác, sàn khác (AC-6, AC-7)."
+    },
+    {
+      "i": 6,
+      "p": "Ba lớp: luật thuần, cơ sở dữ liệu cùng lối API, và màn (AC-1..AC-10)."
+    },
+    {
+      "i": 7,
+      "p": "Tám trạng thái của màn đều có cách chấm trên bản đang chạy (AC-10)."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Máy đã tự quyết rằng lead trùng một lead đang chờ chia thì ra «không trùng», mà căn cứ trích không đủ quyết — nay thành câu Hỏi-5 cho anh, số đo ghi rõ chưa đếm loại này."},
-    {"i": 1, "p": "Máy đã tự quyết lead là bản ghi riêng thay vì hàng ở nấc đầu, trong khi còn một lối khác sống — nay thành câu Hỏi-4 cho anh, kèm việc sửa câu Tham chiếu §4."},
-    {"i": 2, "p": "Căn cứ về vai nhập lead chỉ trích một dòng — đã ghi lại bằng cả bảng nút theo vai đã ký ở hàng 53 (quản trị sàn chỉ có Nhập Excel)."},
-    {"i": 3, "p": "Bài chấm màn chưa đo nút khoá lúc gửi, ô trống lại sau gửi, mã căn ngoài danh mục — đã thêm cả bốn vế vào tiêu chí và bài chấm."},
-    {"i": 4, "p": "Bốn tiêu chí đi qua máy chủ thiếu nhãn xuyên lớp, một tiêu chí dùng cụm chưa định nghĩa — đã gắn nhãn và viết lại cho đo được."}
+    {
+      "i": 0,
+      "p": "Máy đã tự quyết rằng lead trùng một lead đang chờ chia thì ra «không trùng», mà căn cứ trích không đủ quyết — nay thành câu Hỏi-5 cho anh, số đo ghi rõ chưa đếm loại này."
+    },
+    {
+      "i": 1,
+      "p": "Máy đã tự quyết lead là bản ghi riêng thay vì hàng ở nấc đầu, trong khi còn một lối khác sống — nay thành câu Hỏi-4 cho anh, kèm việc sửa câu Tham chiếu §4."
+    },
+    {
+      "i": 2,
+      "p": "Căn cứ về vai nhập lead chỉ trích một dòng — đã ghi lại bằng cả bảng nút theo vai đã ký ở hàng 53 (quản trị sàn chỉ có Nhập Excel)."
+    },
+    {
+      "i": 3,
+      "p": "Bài chấm màn chưa đo nút khoá lúc gửi, ô trống lại sau gửi, mã căn ngoài danh mục — đã thêm cả bốn vế vào tiêu chí và bài chấm."
+    },
+    {
+      "i": 4,
+      "p": "Bốn tiêu chí đi qua máy chủ thiếu nhãn xuyên lớp, một tiêu chí dùng cụm chưa định nghĩa — đã gắn nhãn và viết lại cho đo được."
+    }
   ]
 }

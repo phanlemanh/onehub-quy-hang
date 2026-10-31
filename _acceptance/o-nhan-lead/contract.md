@@ -17,7 +17,7 @@ Hàng 24 của lộ trình (dãy L, đợt `dau-chu-dong-vao`), đứng trên h�
 nguồn), 53 (vỏ). Màn P0 «Ô nhận lead · Telesales · máy tính» (Tham chiếu §10, L1–L3); luật 19–21 (Tham chiếu §8). Hàng
 dựng cửa vào và phép kiểm trùng: bảng `leads` mới (migration 007), dữ kiện kiểm trùng ở cơ sở dữ liệu, luật quyết kết quả
 ở `packages/core/src/dedupe/`, lối API `/api/v1/leads`, màn `/leads/new`. Chia lead, hạn và báo trưởng nhóm là hàng 25.
-Năm câu Hỏi-1..5 soạn theo khuyến nghị; chủ kho chốt ở Cổng Phạm vi.
+Sáu câu Hỏi-1..6 soạn theo khuyến nghị; chủ kho chốt ở Cổng Phạm vi.
 
 Source input: `docs/plan/lo-trinh.json` hàng 24 · `_acceptance/o-nhan-lead/opportunity.md` · thiết kế
 `docs/superpowers/specs/2026-10-31-o-nhan-lead-design.md`
@@ -99,6 +99,7 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead l
 - Mã hoá số chủ trong `leads` — hàng 62 (migration 008).
 - Kiểm trùng ở nhập Excel và các cửa vào khác — hàng 64–71 (ADR-0011) dùng lại lõi này.
 - Gửi lead khi mất mạng.
+- Lead nhà phố, nhà ngoài dự án (không có trong danh mục) — hàng mới của lộ trình (Hỏi-6).
 
 > Out of scope = scope-truth (Gate 1 duyệt mục này). Rationale/trade-off từng mục → 1 entry `descope` trong `decisions.jsonl`.
 

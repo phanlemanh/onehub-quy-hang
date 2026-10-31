@@ -188,5 +188,8 @@ Căn cứ: một biểu mẫu năm ô và một kết quả — luồng hiển n
 - **Hỏi-5 — lead trùng số với một lead khác đang chờ chia.** Khuyến nghị: giữ ba kết quả của luật 20 (ra «Không trùng»),
   hàng 25 chia lead cùng số cho cùng người; số đo «lead trùng bị chặn» chưa đếm loại này tới hàng 25. Lối khác: thêm kết
   quả thứ tư «Trùng lead đang chờ chia» — giá: một chữ trên màn, một ca kiểm, một dạng cho hàng 25 và 27.
+- **Hỏi-6 — nhà phố, nhà ngoài dự án.** Khuyến nghị: hàng 24 chỉ nhận căn thuộc dự án trong danh mục; nhà ngoài dự án là
+  hàng mới (đối tượng theo địa chỉ, kiểm trùng theo địa chỉ chuẩn hoá). Lối khác: thêm ô «địa chỉ» ngay ở hàng 24, kiểm
+  trùng chỉ theo số chủ — giá: lead ấy chưa thành hàng được vì hàng bắt buộc có toà.
 - **Hỏi-3 — telesales có thấy tên đầu chủ nhận lead không.** Khuyến nghị: thấy tên (đầu chủ là người trong sàn; telesales
   biết lead đi đâu để hỏi lại). Lối khác: chỉ thấy loại kết quả — giá: telesales phải hỏi trưởng nhóm.
