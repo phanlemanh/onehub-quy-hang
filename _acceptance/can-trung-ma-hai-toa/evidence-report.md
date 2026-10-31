@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3954d3e5a4eb1bad70ad82e887f5d92c8dbdbbd5
+verified_commit: 592f45b576c6dde1ff642b1ed49c9a201acab4da
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -165,3 +165,7 @@ none — every multi-run eval is uniform
 
 Round 1: mọi eval xanh, không eval nào hỏng; các eval ghi baseline green cần người soát ở Cổng 2 (xem Analyst).
 
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp main sau chữ ký
+run_id: repin-20261031T145639Z-55526
+sha: 592f45b576c6dde1ff642b1ed49c9a201acab4da · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng
