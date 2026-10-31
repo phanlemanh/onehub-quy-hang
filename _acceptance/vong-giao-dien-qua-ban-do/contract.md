@@ -5,7 +5,7 @@ slug: vong-giao-dien-qua-ban-do
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-10-31-vong-giao-dien-qua-ban-do-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T12:52:33Z
@@ -110,3 +110,10 @@ QK4 [SUY-TỪ-REPO: docs/plan/pham-vi-ban-do-khuon-3110.md], bản đồ hàng 5
 - Bất biến chạm: không — hàng thêm công cụ kiểm và tài liệu; không bảng, không API, không màn.
 - Dãy A: dev 3472, Postgres 5552 (`quy-hang-db-A`).
 - Giới hạn khai (AC-6): lần răng bắt trước khi commit (lint trong trình soạn, hook cuối lượt) không đếm được.
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu nhật ký của một vòng bị hỏng một dòng, báo cáo số đo của vòng có thể ghi thiếu giờ máy hoặc lượt gọi người mà không cảnh báo. — `packages/ui-lint/so-do-vong.mjs`
+- Ngoài-2 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi một trang cũ đang chỉ chuyển hướng được sửa thành có giao diện thật, kiểm tra theo vòng có thể gọi nhầm là nợ cũ và cho qua. Kiểm tra toàn cây chạy khi lint vẫn báo đỏ. — `packages/ui-lint/ban-do-khuon.mjs`
+- Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Một trang mới viết theo kiểu khai báo khác có thể không bị kiểm tra là màn nằm ngoài bản đồ, nên qua mà không ai nhắc tạo nhóm và khuôn. — `packages/ui-lint/lib/ban-do.mjs`
+- Ngoài-4 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu một vòng trước đã sinh kế hoạch rồi sau đó không còn chạm màn, trang đối chiếu có thể vẫn hiện các cặp ảnh cũ không còn thuộc vòng. — `packages/ui-lint/doi-chieu.mjs`
+- Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm tự động của danh sách màn mẫu có thể vẫn xanh dù bản đồ mất một nhóm, nên sự cố kiểu đó có thể không bị bắt sớm. — `packages/ui-lint/tests/doi-chieu.test.mjs`
+- Ngoài-7 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bộ kiểm hồ sơ chỉ phát hiện khi kế hoạch thiếu nhóm, còn nhóm thừa hay đã bị xoá khỏi bản đồ vẫn được cho qua. — `_acceptance/vong-giao-dien-qua-ban-do/thu/kiem-ho-so.mjs`
+- Ngoài-8 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bộ kiểm hồ sơ chấp nhận mốc so sánh của số đo là bất kỳ điểm nào trước đó, nên số đo có thể tính trên khoảng rộng hơn vòng thật mà không bị báo. — `_acceptance/vong-giao-dien-qua-ban-do/thu/kiem-ho-so.mjs`
