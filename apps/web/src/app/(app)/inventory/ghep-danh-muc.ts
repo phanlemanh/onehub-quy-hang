@@ -22,7 +22,7 @@ export type ChiMucDanhMuc = Map<string, CatalogUnitData>;
 
 export function chiMuc(catalog: CatalogData | null): ChiMucDanhMuc {
   const m: ChiMucDanhMuc = new Map();
-  for (const p of catalog?.projects ?? []) for (const b of p.buildings) for (const u of b.units) m.set(khoa(b.buildingName, u.unitNumber), u);
+  for (const p of catalog?.subdivisions ?? []) for (const b of p.buildings) for (const u of b.units) m.set(khoa(b.buildingName, u.unitNumber), u);
   return m;
 }
 

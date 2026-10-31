@@ -22,12 +22,14 @@ const can = (unitNumber: string, upi: string) => ({
   livingArea: 60,
   bedroomsTotal: 2,
   directionFaces: "Đông",
+  propertyType: "Residential",
+  propertySubType: "Condominium",
   ghiChuNoiBo: "[Mẫu] không được ra ngoài",
 });
 const HAI_DU_AN = {
-  projects: [
-    { projectKey: "mau-du-an-thu", projectName: "[Mẫu] Dự án căn hộ thử", complexName: null, buildings: [{ buildingKey: "A", buildingName: "Toà A", units: [can("A-01.01", "urn:onehub:upi:thu:1:A-01.01"), can("A-01.02", "urn:onehub:upi:thu:1:A-01.02")] }] },
-    { projectKey: "du-an-hai", projectName: "[Mẫu] Dự án thứ hai", complexName: null, buildings: [{ buildingKey: "A", buildingName: "Toà A", units: [can("A-01.01", "urn:onehub:upi:thu:2:A-01.01")] }] },
+  subdivisions: [
+    { subdivisionKey: "mau-du-an-thu", subdivisionName: "[Mẫu] Dự án căn hộ thử", complexName: null, buildings: [{ buildingKey: "A", buildingName: "Toà A", units: [can("A-01.01", "urn:onehub:upi:thu:1:A-01.01"), can("A-01.02", "urn:onehub:upi:thu:1:A-01.02")] }] },
+    { subdivisionKey: "du-an-hai", subdivisionName: "[Mẫu] Dự án thứ hai", complexName: null, buildings: [{ buildingKey: "A", buildingName: "Toà A", units: [can("A-01.01", "urn:onehub:upi:thu:2:A-01.01")] }] },
   ],
 } as unknown as CatalogData;
 const appHai = new OpenAPIHono();
@@ -102,10 +104,10 @@ test("danh mục: mọi vai đọc được", async () => {
 
 test("danh mục: dự án lạ trả 404 not-found", async () => {
   const qt = await sanMoi("404");
-  const la = await goi(app, "/api/v1/catalog/units/A-12.06?project=khong-co", qt.cookie);
+  const la = await goi(app, "/api/v1/catalog/units/A-12.06?subdivision=khong-co", qt.cookie);
   assert.equal(la.status, 404);
   assert.deepEqual(await la.json(), { error: "not-found" });
-  const dung = await goi(app, "/api/v1/catalog/units/A-12.06?project=mau-du-an-thu", qt.cookie);
+  const dung = await goi(app, "/api/v1/catalog/units/A-12.06?subdivision=mau-du-an-thu", qt.cookie);
   assert.equal(dung.status, 200);
   assert.equal(((await dung.json()) as { status: string }).status, "found");
 });
@@ -124,8 +126,8 @@ function moiKhoa(v: unknown, out = new Set<string>()): Set<string> {
 /** Tập khoá cho phép của từng kết cục, viết trước: khoá bao cộng mười trường thuộc tính khi kết cục mang căn. */
 const BAO: Record<string, string[]> = {
   found: ["status", "unit"],
-  not_in_catalog: ["status", "read", "projectKey", "unitNumber"],
-  unreadable: ["status", "input", "examples", "projectKey", "projectName", "example"],
+  not_in_catalog: ["status", "read", "subdivisionKey", "unitNumber"],
+  unreadable: ["status", "input", "examples", "subdivisionKey", "subdivisionName", "example"],
   ambiguous: ["status", "candidates"],
 };
 function soKhoa(body: { status: string }): void {
@@ -143,7 +145,7 @@ test("danh mục: thân trả về chỉ mang khoá cho phép", async () => {
   }
   const qt = await sanMoi("khoa");
   const CA: [string, string][] = [
-    ["/api/v1/catalog/units/A-01.02?project=mau-du-an-thu", "found"],
+    ["/api/v1/catalog/units/A-01.02?subdivision=mau-du-an-thu", "found"],
     ["/api/v1/catalog/units/A-16.01", "not_in_catalog"],
     ["/api/v1/catalog/units/XYZ", "unreadable"],
     ["/api/v1/catalog/units/A-01.01", "ambiguous"],
@@ -156,7 +158,7 @@ test("danh mục: thân trả về chỉ mang khoá cho phép", async () => {
     soKhoa(body);
   }
   // Đối chứng âm trên cùng hàm so: một khoá lạ bất kỳ trong ứng viên bị bắt và gọi tên.
-  const cay = { status: "ambiguous", candidates: [{ projectKey: "x", projectName: "x", buildingName: "x", unitNumber: "x", upi: "x", floor: 1, stack: "01", livingArea: 1, bedroomsTotal: 1, directionFaces: "x", ownerName: "[Tên]" }] };
+  const cay = { status: "ambiguous", candidates: [{ subdivisionKey: "x", subdivisionName: "x", buildingName: "x", unitNumber: "x", upi: "x", floor: 1, stack: "01", livingArea: 1, bedroomsTotal: 1, directionFaces: "x", ownerName: "[Tên]" }] };
   assert.throws(() => soKhoa(cay), /ownerName/);
 });
 
@@ -165,4 +167,32 @@ test("danh mục mẫu: thân không mang khoá nào của chủ nhà mẫu", as
   const res = await goi(app, "/api/v1/catalog/units/A-12.06", qt.cookie);
   assert.equal(res.status, 200);
   soKhoa((await res.json()) as { status: string });
+});
+
+test("danh mục: tham số project cũ bị từ chối 400", async () => {
+  const qt = await sanMoi("ten-cu");
+  const cu = await goi(app, "/api/v1/catalog/units/A-12.06?project=mau-du-an-thu", qt.cookie);
+  assert.equal(cu.status, 400, `tham số tên cũ: nhận ${cu.status}`);
+  assert.notEqual(((await cu.json()) as { status?: string }).status, "found");
+  const khong = await goi(app, "/api/v1/catalog/units/A-12.06", qt.cookie);
+  assert.equal(khong.status, 200, "đối chứng: không tham số");
+  assert.equal(((await khong.json()) as { status: string }).status, "found");
+});
+
+/** Mười hai khoá của một căn tra ra — viết tay ở đây, không lấy từ hằng của lõi (hàng 72). */
+const MUOI_HAI = [
+  "subdivisionKey", "subdivisionName", "buildingName", "unitNumber", "upi", "floor", "stack", "livingArea",
+  "bedroomsTotal", "directionFaces", "propertyType", "propertySubType",
+];
+test("loại hình: thân found qua API mang đúng mười hai khoá viết trước", async () => {
+  const qt = await sanMoi("loai-hinh");
+  const res = await goi(app, "/api/v1/catalog/units/A-12.06", qt.cookie);
+  assert.equal(res.status, 200);
+  const body = (await res.json()) as { status: string; unit: Record<string, unknown> };
+  assert.equal(body.status, "found");
+  const thua = Object.keys(body.unit).filter((k) => !MUOI_HAI.includes(k));
+  assert.deepEqual(thua, [], `khoá thừa: ${thua.join(", ")}`);
+  assert.deepEqual(Object.keys(body.unit).sort(), [...MUOI_HAI].sort());
+  assert.equal(body.unit.propertyType, "Residential");
+  assert.equal(body.unit.propertySubType, "Condominium");
 });

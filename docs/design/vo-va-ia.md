@@ -144,6 +144,7 @@ lọc, cột hiện, sắp xếp, cách nhóm thành góc nhìn **trên máy the
 | Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ |
 | Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu |
 | Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 6 — ghép `Frame` + `Field` + `Input` + `Button` ở hàng 6; chuyển thể khối `auth-15` là việc riêng (ADR-0005) |
+| Ô nhận lead (hàng 24) | Bậc 6 — ghép `Frame` (khuôn `KhungLead`) + `Field` + `Input` + `Select` + `ToggleGroup` + `Button`, kết quả kiểm trùng qua `TrangThai`, hỏi lại «Bỏ lead này» bằng `AlertDialog`; khối Pro `form-2` chuyển thể vào chính `apps/web/src/app/(app)/leads/new/o-lead.tsx` khi có khoá ReUI. Cột phải `list-11` là hàng 27 |
 | Trống · lỗi · báo (`TrangThai`) | Bậc 6 — ghép `Empty` + `Alert` đã cài thành khuôn `apps/web/src/components/trang-thai.tsx` (hàng 58); khối đích `empty-state-*` là khối Pro, chuyển thể vào chính tệp ấy khi có khoá ReUI |
 | Người dùng (Cài đặt sàn, tạm) | Bậc 6 — ghép `Frame` + `Item` + `Badge` + `Field` + `Checkbox` + `AlertDialog` ở hàng 7; khối Pro `solution-users-8` khi có khoá ReUI (ADR-0006) |
 

@@ -19,7 +19,7 @@ export type KetQuaDo = {
   dong: string;
 };
 
-const THUOC_TINH = new Set<string>(UNIT_ATTRIBUTE_FIELDS.filter((f) => f !== "projectKey" && f !== "projectName" && f !== "unitNumber"));
+const THUOC_TINH = new Set<string>(UNIT_ATTRIBUTE_FIELDS.filter((f) => f !== "subdivisionKey" && f !== "subdivisionName" && f !== "unitNumber"));
 function coThuocTinh(v: unknown): boolean {
   if (Array.isArray(v)) return v.some(coThuocTinh);
   if (v && typeof v === "object") return Object.entries(v).some(([k, x]) => THUOC_TINH.has(k) || coThuocTinh(x));
@@ -74,7 +74,7 @@ export function dapAnMau(): DapAn[] {
   const goc: DapAn[] = SAMPLE_PACK.hang.map((h) => ({ input: h.maCan, upi: h.upi }));
   for (const l of SAMPLE_PACK.lead) {
     if (!l.maCan) continue;
-    const can = danhMuc.projects.flatMap((p) => p.buildings).filter((b) => b.buildingKey === l.toa).flatMap((b) => b.units).find((u) => u.unitNumber === l.maCan);
+    const can = danhMuc.subdivisions.flatMap((p) => p.buildings).filter((b) => b.buildingKey === l.toa).flatMap((b) => b.units).find((u) => u.unitNumber === l.maCan);
     if (can) goc.push({ input: l.maCan, upi: can.upi });
   }
   return goc.flatMap((a) => [a, ...KIEU_VIET.map((f) => ({ input: f(a.input), upi: a.upi }))]);

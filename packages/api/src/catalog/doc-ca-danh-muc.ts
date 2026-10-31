@@ -28,10 +28,10 @@ const Unit = z.object({
 });
 const Catalog = z
   .object({
-    projects: z.array(
+    subdivisions: z.array(
       z.object({
-        projectKey: z.string(),
-        projectName: z.string(),
+        subdivisionKey: z.string(),
+        subdivisionName: z.string(),
         complexName: z.string().nullable(),
         buildings: z.array(z.object({ buildingKey: z.string(), buildingName: z.string(), units: z.array(Unit) })),
       }),
@@ -42,9 +42,9 @@ const Catalog = z
 /** Chép đúng khuôn danh mục — khoá lạ trong gói đưa vào không lọt ra thân trả. */
 function chepKhuon(catalog: CatalogData): z.infer<typeof Catalog> {
   return {
-    projects: catalog.projects.map((p) => ({
-      projectKey: p.projectKey,
-      projectName: p.projectName,
+    subdivisions: catalog.subdivisions.map((p) => ({
+      subdivisionKey: p.subdivisionKey,
+      subdivisionName: p.subdivisionName,
       complexName: p.complexName,
       buildings: p.buildings.map((b) => ({
         buildingKey: b.buildingKey,
@@ -79,7 +79,7 @@ export function registerCatalogReadAll(api: OpenAPIHono, { appPool, auth }: ApiD
     createRoute({
       method: "get",
       path: PATH,
-      summary: "Cả danh mục dự án → toà → căn, chỉ lớp danh mục",
+      summary: "Cả danh mục khu → toà → căn, chỉ lớp danh mục",
       responses: {
         200: { description: "Danh mục", content: { "application/json": { schema: Catalog } } },
         401: err("Chưa đăng nhập"),

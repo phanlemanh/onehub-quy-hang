@@ -22,11 +22,13 @@ const can = (unitNumber: string, upi: string) => ({
   livingArea: 60,
   bedroomsTotal: 2,
   directionFaces: "Đông",
+  propertyType: "Residential",
+  propertySubType: "Condominium",
   ghiChuNoiBo: "[Mẫu] không được ra ngoài",
 });
 const TRUNG = {
-  projectKey: "mau-trung-ma",
-  projectName: "[Mẫu] Dự án trùng mã",
+  subdivisionKey: "mau-trung-ma",
+  subdivisionName: "[Mẫu] Dự án trùng mã",
   complexName: null,
   buildings: [
     { buildingKey: "A1", buildingName: "[Mẫu] Toà A1", units: [can("1206", "urn:onehub:upi:thu:trung:A1-1206")] },
@@ -34,15 +36,15 @@ const TRUNG = {
   ],
 };
 const MAU = {
-  projectKey: "mau-du-an-thu",
-  projectName: "[Mẫu] Dự án căn hộ thử",
+  subdivisionKey: "mau-du-an-thu",
+  subdivisionName: "[Mẫu] Dự án căn hộ thử",
   complexName: null,
   buildings: [{ buildingKey: "A", buildingName: "Toà A", units: [can("A-12.06", "urn:onehub:upi:thu:A-12.06")] }],
 };
 const appTrung = new OpenAPIHono();
-registerCatalogRoutes(appTrung, deps, { projects: [TRUNG] } as unknown as CatalogData);
+registerCatalogRoutes(appTrung, deps, { subdivisions: [TRUNG] } as unknown as CatalogData);
 const appHai = new OpenAPIHono();
-registerCatalogRoutes(appHai, deps, { projects: [TRUNG, MAU] } as unknown as CatalogData);
+registerCatalogRoutes(appHai, deps, { subdivisions: [TRUNG, MAU] } as unknown as CatalogData);
 
 type Goi = { request: (u: string, i?: RequestInit) => Response | Promise<Response> };
 const goi = (a: Goi, path: string, cookie: string) =>
@@ -95,7 +97,7 @@ test("toà lạ qua API: 404 not-found", async () => {
   assert.equal(la.status, 404, `toà lạ: nhận ${la.status}`);
   assert.deepEqual(await la.json(), { error: "not-found" });
 
-  const duAnKhac = await goi(appHai, "/api/v1/catalog/units/A-12.06?project=mau-trung-ma&building=A", cookie);
+  const duAnKhac = await goi(appHai, "/api/v1/catalog/units/A-12.06?subdivision=mau-trung-ma&building=A", cookie);
   assert.equal(duAnKhac.status, 404, `toà của dự án khác: nhận ${duAnKhac.status}`);
   assert.deepEqual(await duAnKhac.json(), { error: "not-found" });
 

@@ -26,10 +26,10 @@ const khongPhien = { api: { getSession: async () => null } } as unknown as Auth;
 
 /** Danh mục đưa vào — dựng tay, có một khoá lạ chèn thêm để chứng thân trả không chở khoá ngoài khuôn. */
 const DANH_MUC = {
-  projects: [
+  subdivisions: [
     {
-      projectKey: "mau",
-      projectName: "[Mẫu] Dự án",
+      subdivisionKey: "mau",
+      subdivisionName: "[Mẫu] Khu",
       complexName: null,
       buildings: [
         {
@@ -54,7 +54,7 @@ function api(auth: Auth, san: string[]) {
 
 /** Khoá được phép ở từng tầng của khuôn danh mục — viết tay, không rút từ mã đang đo. */
 const KHOA_DUOC = new Set([
-  "projects", "projectKey", "projectName", "complexName", "buildings", "buildingKey", "buildingName", "units",
+  "subdivisions", "subdivisionKey", "subdivisionName", "complexName", "buildings", "buildingKey", "buildingName", "units",
   "upi", "unitNumber", "stack", "floor", "livingArea", "bedroomsTotal", "directionFaces",
 ]);
 function khoaLa(v: unknown, ra: string[] = []): string[] {
@@ -72,7 +72,7 @@ test("đọc cả danh mục: thành viên một sàn nhận đúng danh mục, 
   assert.equal(res.status, 200);
   const than = (await res.json()) as CatalogData;
   assert.deepEqual(khoaLa(than), [], "thân trả có khoá ngoài khuôn danh mục");
-  const u = than.projects[0]?.buildings[0]?.units ?? [];
+  const u = than.subdivisions[0]?.buildings[0]?.units ?? [];
   assert.equal(u.length, 2);
   assert.deepEqual(Object.keys(u[0] ?? {}).sort(), ["bedroomsTotal", "directionFaces", "floor", "livingArea", "stack", "unitNumber", "upi"]);
   assert.deepEqual(u[0], { upi: "urn:mau:A-01.01", unitNumber: "A-01.01", stack: "01", floor: 1, livingArea: 54.2, bedroomsTotal: 1, directionFaces: "Đông Nam" });

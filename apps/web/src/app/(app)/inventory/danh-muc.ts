@@ -12,7 +12,7 @@ const khoa = (san: string) => `qh:danh-muc:v1:${san}`;
 function docBanGiu(san: string): CatalogData | null {
   try {
     const v = JSON.parse(window.localStorage.getItem(khoa(san)) ?? "null") as CatalogData | null;
-    return v && Array.isArray(v.projects) ? v : null;
+    return v && Array.isArray(v.subdivisions) ? v : null;
   } catch {
     return null;
   }

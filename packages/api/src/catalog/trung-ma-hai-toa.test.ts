@@ -4,11 +4,11 @@ import { test } from "node:test";
 import type { CatalogData } from "@quy-hang/core";
 import { measureAutofill } from "./do-ti-le";
 
-const can = (unitNumber: string, upi: string) => ({ upi, unitNumber, stack: null, floor: null, livingArea: 60, bedroomsTotal: 2, directionFaces: "Đông" });
+const can = (unitNumber: string, upi: string) => ({ upi, unitNumber, stack: null, floor: null, livingArea: 60, bedroomsTotal: 2, directionFaces: "Đông", propertyType: "Residential", propertySubType: "Condominium" });
 const A1 = { buildingKey: "A1", buildingName: "[Mẫu] Toà A1", units: [can("1206", "upi:A1-1206"), can("0801", "upi:A1-0801")] };
 const A2 = { buildingKey: "A2", buildingName: "[Mẫu] Toà A2", units: [can("1206", "upi:A2-1206")] };
 const danhMuc = (buildings: (typeof A1)[]): CatalogData => ({
-  projects: [{ projectKey: "mau-trung-ma", projectName: "[Mẫu] Dự án trùng mã", complexName: null, buildings }],
+  subdivisions: [{ subdivisionKey: "mau-trung-ma", subdivisionName: "[Mẫu] Dự án trùng mã", complexName: null, buildings }],
 });
 const DAP_AN = [
   { input: "1206", upi: "upi:A1-1206" },

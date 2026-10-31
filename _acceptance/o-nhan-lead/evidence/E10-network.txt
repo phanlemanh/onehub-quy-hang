@@ -1,0 +1,17 @@
+E10 network (chay lai doc lap 2026-10-31 ~22:35-22:40, driver playwright, phien moi sau dang xuat/dang nhap lai telesales)
+Trang SSR+API tren origin http://localhost:3483 (dev_server.url la :3460; chay dung may chu dev :3483 cua DUNG L - ngoai scope da khai => unscoped-partial)
+Trang thu 2 (sau Slow 3G): 
+ GET /api/v1/health 200
+ GET /api/v1/listings 200
+ GET /api/v1/catalog/units/B-07.05 200
+ POST /api/v1/leads 201 (khong trung 083)
+ GET /api/v1/catalog/units/B-07.04 200
+ POST /api/v1/leads 201 (chu trung)
+ GET /api/v1/catalog/units/A-02.06 200
+ POST /api/v1/leads 201 (can trung)
+ GET /api/v1/listings 200
+ POST /api/v1/leads/<id>/discard 200
+ GET /api/v1/catalog/units/B-07.05 200
+ POST /api/v1/leads FAILED net::ERR_INTERNET_DISCONNECTED (CO CHU Y: chan chu dong o buoc 10 theo steps, expected khai dung)
+Trang thu 1 (dung cho buoc 2-6; da dong): buoc 6 POST /api/v1/leads duoi Slow 3G (latency 2000ms, 50KB/s) tra Alert "Khong trung" => thanh cong.
+Console: 1 [ERROR] Failed to load resource net::ERR_INTERNET_DISCONNECTED /api/v1/leads (do chan chu dong buoc 10); khong loi nao khac.

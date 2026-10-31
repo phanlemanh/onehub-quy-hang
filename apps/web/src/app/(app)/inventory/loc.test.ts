@@ -17,7 +17,7 @@ const goi = JSON.parse(readFileSync(fileURLToPath(new URL("../../../../../../pac
   hang: HangMau[];
 };
 const idx = chiMuc(goi.danhMuc);
-const toaCua = new Map(goi.danhMuc.projects.flatMap((p) => p.buildings.flatMap((b) => b.units.map((u) => [u.unitNumber, b.buildingName] as const))));
+const toaCua = new Map(goi.danhMuc.subdivisions.flatMap((p) => p.buildings.flatMap((b) => b.units.map((u) => [u.unitNumber, b.buildingName] as const))));
 
 /** Dòng bảng dựng từ hàng mẫu — trường ngoài gói mẫu điền theo chỉ số để mọi cột có giá trị khác nhau. */
 const DONG: DongBang[] = goi.hang.map((h, i) => {

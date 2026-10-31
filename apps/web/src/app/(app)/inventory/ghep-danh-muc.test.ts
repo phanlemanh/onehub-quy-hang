@@ -11,15 +11,15 @@ const goi = JSON.parse(readFileSync(fileURLToPath(new URL("../../../../../../pac
   danhMuc: CatalogData;
 };
 const dm = goi.danhMuc;
-const toaA = dm.projects[0]!.buildings.find((b) => b.buildingName === "Toà A")!;
+const toaA = dm.subdivisions[0]!.buildings.find((b) => b.buildingName === "Toà A")!;
 const can1PN = toaA.units.find((u) => u.bedroomsTotal === 1)!;
 
 /** Bản sao danh mục: thêm một studio ở Toà A, và Toà B có một căn trùng mã với căn 1PN của Toà A nhưng khác thuộc tính. */
 const STUDIO = { upi: "urn:mau:studio", unitNumber: "A-99.01", stack: "01", floor: 99, livingArea: 30, bedroomsTotal: 0, directionFaces: "Bắc" };
 const TRUNG = { ...can1PN, upi: "urn:mau:trung", floor: 42, livingArea: 120, bedroomsTotal: 3, directionFaces: "Tây" };
-const ban = structuredClone(dm) as unknown as { projects: { buildings: { buildingName: string; units: unknown[] }[] }[] };
-ban.projects[0]!.buildings.find((b) => b.buildingName === "Toà A")!.units.push(STUDIO);
-ban.projects[0]!.buildings.find((b) => b.buildingName === "Toà B")!.units.push(TRUNG);
+const ban = structuredClone(dm) as unknown as { subdivisions: { buildings: { buildingName: string; units: unknown[] }[] }[] };
+ban.subdivisions[0]!.buildings.find((b) => b.buildingName === "Toà A")!.units.push(STUDIO);
+ban.subdivisions[0]!.buildings.find((b) => b.buildingName === "Toà B")!.units.push(TRUNG);
 const idx = chiMuc(ban as unknown as CatalogData);
 
 // Ma trận viết trước: bốn ca × bốn trường.

@@ -160,7 +160,7 @@ async function goi(cookie, method, p, body) {
 // 4. Nạp hàng mẫu.
 const goi_mau = JSON.parse(readFileSync(path.join(GOC, "packages/db/seed/mau/du-lieu-mau.json"), "utf8"));
 const toaCua = new Map();
-for (const p of goi_mau.danhMuc.projects) for (const b of p.buildings) for (const u of b.units) toaCua.set(u.unitNumber, b.buildingName);
+for (const p of goi_mau.danhMuc.subdivisions) for (const b of p.buildings) for (const u of b.units) toaCua.set(u.unitNumber, b.buildingName);
 const PHI = { bao_phi: "included", khong_bao_phi: "excluded" };
 
 async function napMot(cookie, h, maCan, i) {
