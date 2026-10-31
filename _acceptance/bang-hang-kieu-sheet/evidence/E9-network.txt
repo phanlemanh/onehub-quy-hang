@@ -1,10 +1,210 @@
-E9 network truth (driver: Playwright MCP, isolated context; origin http://localhost:3491 = next start, ban build; dev 3481 bi bao HMR reload loop do nhieu verifier song song)
-Pre-record (page load, truoc khi bat ghi): GET /api/v1/catalog x2, GET /api/v1/listings  -> catalog da chay trong phien (OK)
-Recording window (buoc 2 -> 4, gom go 123/Delete/dan 9, loc Trang thai, doi Nhom, sap Gia, chon vung + Ctrl+C):
-  GET /api/v1/listings (x2, chu ky keo dinh ky ~30s, roi vao giua; khong phai do loc/nhom/sap)
-  Khong co yeu cau POST/PUT/PATCH/DELETE nao. Khong co yeu cau do loc/nhom/sap phat sinh.
-Step 6 (offline emulation, loc 2PN + doi Nhom): 0 yeu cau.
-Step 7 literal: page.reload() offline -> net::ERR_INTERNET_DISCONNECTED (chrome-error://chromewebdata); repo khong co service worker. GET /inventory x2 bi that bai (khong co tai lieu).
-Step 7 thay the (online, nhung /api/v1/** bi abort): GET /api/v1/catalog, GET /api/v1/listings that bai (co chu y); trang van dung ban giu.
-Step 8: tuong tu, GET /api/v1/catalog, GET /api/v1/listings bi abort (co chu y).
-Console/failed ngoai y muon: khong co loi app-origin ngoai cac abort chu dong.
+# E9 — nhật ký mạng CDP (Network.* + console lỗi), kèm mốc MARK; giờ UTC
+18:28:36.627 MARK      B1-bat-dau
+18:28:36.632 req GET /inventory Document
+18:28:36.709 res GET /inventory
+18:28:36.715 req GET /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 Font
+18:28:36.716 req GET /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 Font
+18:28:36.716 req GET /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css Stylesheet
+18:28:36.716 req GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js Script
+18:28:36.716 req GET /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js Script
+18:28:36.716 req GET /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js Script
+18:28:36.716 req GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js Script
+18:28:36.716 req GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js Script
+18:28:36.716 req GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js Script
+18:28:36.716 req GET /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js Script
+18:28:36.717 req GET /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js Script
+18:28:36.717 req GET /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js Script
+18:28:36.717 req GET /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js Script
+18:28:36.717 req GET /_next/static/chunks/apps_web_1anvha4rlo79g._.js Script
+18:28:36.718 req GET /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js Script
+18:28:36.718 req GET /_next/static/chunks/apps_web_1bj9ps6apokuo._.js Script
+18:28:36.718 req GET /_next/static/chunks/node_modules_1nc4crjayg17u._.js Script
+18:28:36.718 req GET /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js Script
+18:28:36.719 req GET /_next/static/chunks/_1bcd8ew_b6u6l._.js Script
+18:28:36.719 req GET /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js Script
+18:28:36.721 req GET /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js Script
+18:28:36.723 req GET /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js Script
+18:28:36.724 req GET /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js Script
+18:28:36.727 req GET /_next/static/chunks/node_modules_16ircntwozn6b._.js Script
+18:28:36.730 req GET /_next/static/chunks/apps_web_src_1u6krmu9-mgzx._.js Script
+18:28:36.731 req GET /_next/static/chunks/node_modules_1vmy1-g19zm7z._.js Script
+18:28:36.741 res GET /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2
+18:28:36.741 res GET /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2
+18:28:36.742 res GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js
+18:28:36.743 res GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js
+18:28:36.743 res GET /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js
+18:28:36.743 res GET /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css
+18:28:36.744 res GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js
+18:28:36.744 res GET /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js
+18:28:36.745 res GET /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js
+18:28:36.752 req GET /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 Font
+18:28:36.767 res GET /_next/static/chunks/apps_web_1anvha4rlo79g._.js
+18:28:36.771 res GET /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js
+18:28:36.774 res GET /_next/static/chunks/apps_web_1bj9ps6apokuo._.js
+18:28:36.775 res GET /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js
+18:28:36.777 res GET /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js
+18:28:36.777 res GET /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js
+18:28:36.779 res GET /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js
+18:28:36.780 res GET /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2
+18:28:36.781 res GET /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js
+18:28:36.782 res GET /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js
+18:28:36.782 res GET /_next/static/chunks/_1bcd8ew_b6u6l._.js
+18:28:36.782 res GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js
+18:28:36.803 req GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js Script
+18:28:36.804 res GET /_next/static/chunks/node_modules_1nc4crjayg17u._.js
+18:28:36.805 res GET /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js
+18:28:36.805 res GET /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js
+18:28:36.806 res GET /_next/static/chunks/node_modules_16ircntwozn6b._.js
+18:28:36.806 res GET /_next/static/chunks/apps_web_src_1u6krmu9-mgzx._.js
+18:28:36.807 res GET /_next/static/chunks/node_modules_1vmy1-g19zm7z._.js
+18:28:36.809 res GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js
+18:28:36.845 req GET /favicon.ico Other
+18:28:36.851 res GET /favicon.ico
+18:28:36.901 req GET /api/v1/catalog Fetch
+18:28:36.901 req GET /api/v1/catalog Fetch
+18:28:36.904 res GET /api/v1/catalog
+18:28:36.913 res GET /api/v1/catalog
+18:28:36.935 req GET /api/v1/listings Fetch
+18:28:36.948 res GET /api/v1/listings
+18:28:40.004 req GET /api/v1/me Fetch
+18:28:40.016 res GET /api/v1/me
+18:28:40.017 MARK      B2-BAT-GHI-MANG
+18:28:40.028 req GET /api/v1/listings Fetch
+18:28:40.044 res GET /api/v1/listings
+18:28:42.436 MARK      B3-loc-nhom-sap
+18:28:46.489 MARK      B4-chep
+18:28:48.211 MARK      B6-MAT-MANG
+18:28:51.803 MARK      B7-chan-api
+18:28:51.805 req GET /inventory Document
+18:28:51.805 req GET /api/v1/listings Fetch
+18:28:51.805 fail GET /api/v1/listings   inspector
+18:28:51.862 res GET /inventory
+18:28:51.927 req GET /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 Font
+18:28:51.927 res GET /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2
+18:28:51.928 req GET /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 Font
+18:28:51.930 res GET /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2
+18:28:51.932 req GET /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css Stylesheet
+18:28:51.932 req GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js Script
+18:28:51.932 req GET /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js Script
+18:28:51.933 req GET /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js Script
+18:28:51.933 req GET /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js Script
+18:28:51.933 req GET /_next/static/chunks/apps_web_1anvha4rlo79g._.js Script
+18:28:51.933 req GET /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js Script
+18:28:51.934 req GET /_next/static/chunks/apps_web_1bj9ps6apokuo._.js Script
+18:28:51.934 req GET /_next/static/chunks/node_modules_1nc4crjayg17u._.js Script
+18:28:51.934 req GET /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js Script
+18:28:51.934 req GET /_next/static/chunks/_1bcd8ew_b6u6l._.js Script
+18:28:51.934 req GET /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js Script
+18:28:51.934 req GET /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js Script
+18:28:51.935 req GET /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js Script
+18:28:51.935 req GET /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js Script
+18:28:51.936 req GET /_next/static/chunks/node_modules_16ircntwozn6b._.js Script
+18:28:51.938 req GET /_next/static/chunks/apps_web_src_1u6krmu9-mgzx._.js Script
+18:28:51.940 req GET /_next/static/chunks/node_modules_1vmy1-g19zm7z._.js Script
+18:28:51.940 res GET /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css
+18:28:51.941 res GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js
+18:28:51.941 res GET /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js
+18:28:51.942 req GET /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 Font
+18:28:51.942 res GET /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2
+18:28:51.942 res GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js
+18:28:51.942 res GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js
+18:28:51.943 res GET /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js
+18:28:51.943 res GET /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js
+18:28:51.943 res GET /_next/static/chunks/apps_web_1anvha4rlo79g._.js
+18:28:51.943 res GET /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js
+18:28:51.943 res GET /_next/static/chunks/apps_web_1bj9ps6apokuo._.js
+18:28:51.944 res GET /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js
+18:28:51.944 res GET /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js
+18:28:51.945 res GET /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js
+18:28:51.945 res GET /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js
+18:28:51.948 res GET /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js
+18:28:51.949 res GET /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js
+18:28:51.949 res GET /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js
+18:28:51.949 res GET /_next/static/chunks/_1bcd8ew_b6u6l._.js
+18:28:51.949 res GET /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js
+18:28:51.949 res GET /_next/static/chunks/node_modules_1nc4crjayg17u._.js
+18:28:51.950 res GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js
+18:28:51.950 res GET /_next/static/chunks/node_modules_16ircntwozn6b._.js
+18:28:51.954 req GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js Script
+18:28:51.955 res GET /_next/static/chunks/apps_web_src_1u6krmu9-mgzx._.js
+18:28:51.956 res GET /_next/static/chunks/node_modules_1vmy1-g19zm7z._.js
+18:28:51.958 res GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js
+18:28:52.012 req GET /api/v1/catalog Fetch
+18:28:52.012 fail GET /api/v1/catalog   inspector
+18:28:52.012 req GET /api/v1/catalog Fetch
+18:28:52.012 fail GET /api/v1/catalog   inspector
+18:28:52.186 req GET /api/v1/listings Fetch
+18:28:52.186 fail GET /api/v1/listings   inspector
+18:28:55.879 req GET /api/v1/listings Fetch
+18:28:55.879 fail GET /api/v1/listings   inspector
+18:28:59.149 MARK      B8-doi-chung
+18:28:59.151 req GET /inventory Document
+18:28:59.213 res GET /inventory
+18:28:59.219 req GET /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 Font
+18:28:59.220 res GET /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2
+18:28:59.220 req GET /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 Font
+18:28:59.220 res GET /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2
+18:28:59.220 req GET /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css Stylesheet
+18:28:59.221 req GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js Script
+18:28:59.221 req GET /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js Script
+18:28:59.221 req GET /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js Script
+18:28:59.221 req GET /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js Script
+18:28:59.222 req GET /_next/static/chunks/apps_web_1anvha4rlo79g._.js Script
+18:28:59.222 req GET /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js Script
+18:28:59.222 req GET /_next/static/chunks/apps_web_1bj9ps6apokuo._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_1nc4crjayg17u._.js Script
+18:28:59.222 req GET /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js Script
+18:28:59.222 req GET /_next/static/chunks/_1bcd8ew_b6u6l._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_16ircntwozn6b._.js Script
+18:28:59.222 req GET /_next/static/chunks/apps_web_src_1u6krmu9-mgzx._.js Script
+18:28:59.222 req GET /_next/static/chunks/node_modules_1vmy1-g19zm7z._.js Script
+18:28:59.222 res GET /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css
+18:28:59.223 res GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js
+18:28:59.229 req GET /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 Font
+18:28:59.230 res GET /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2
+18:28:59.230 res GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js
+18:28:59.231 res GET /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js
+18:28:59.231 res GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js
+18:28:59.232 res GET /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js
+18:28:59.232 res GET /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js
+18:28:59.232 res GET /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js
+18:28:59.233 res GET /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js
+18:28:59.233 res GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js
+18:28:59.234 res GET /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js
+18:28:59.235 res GET /_next/static/chunks/apps_web_1anvha4rlo79g._.js
+18:28:59.235 res GET /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js
+18:28:59.235 res GET /_next/static/chunks/apps_web_1bj9ps6apokuo._.js
+18:28:59.235 res GET /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js
+18:28:59.236 res GET /_next/static/chunks/node_modules_1nc4crjayg17u._.js
+18:28:59.236 res GET /_next/static/chunks/_1bcd8ew_b6u6l._.js
+18:28:59.237 req GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js Script
+18:28:59.237 res GET /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js
+18:28:59.237 res GET /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js
+18:28:59.237 res GET /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js
+18:28:59.237 res GET /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js
+18:28:59.238 res GET /_next/static/chunks/node_modules_16ircntwozn6b._.js
+18:28:59.238 res GET /_next/static/chunks/apps_web_src_1u6krmu9-mgzx._.js
+18:28:59.238 res GET /_next/static/chunks/node_modules_1vmy1-g19zm7z._.js
+18:28:59.240 res GET /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js
+18:28:59.285 req GET /api/v1/catalog Fetch
+18:28:59.285 fail GET /api/v1/catalog   inspector
+18:28:59.285 req GET /api/v1/catalog Fetch
+18:28:59.285 fail GET /api/v1/catalog   inspector
+18:28:59.456 req GET /api/v1/listings Fetch
+18:28:59.456 fail GET /api/v1/listings   inspector

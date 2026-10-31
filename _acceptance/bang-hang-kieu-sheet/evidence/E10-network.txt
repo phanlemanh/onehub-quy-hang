@@ -1,27 +1,55 @@
-E10 network (CDP Network.* events, chrome headless, origin http://localhost:3481; config dev_server.url = http://localhost:3460 -> origin ngoai scope da khai)
+# E10 network (CDP Network.* của lượt chạy)
+## ok (461)
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/listings
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/listings
+[dang-tai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-sáng] 200 http://localhost:3481/api/v1/listings
+[loi-sáng] 200 http://localhost:3481/api/v1/catalog
+[loi-sáng] 200 http://localhost:3481/api/v1/catalog
+[loi-sáng] 200 http://localhost:3481/api/v1/listings
+[loi-sáng] 200 http://localhost:3481/api/v1/listings
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/listings
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/listings
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/listings
+[dang-tai-tối] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-tối] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-tối] 200 http://localhost:3481/api/v1/listings
+[loi-tối] 200 http://localhost:3481/api/v1/catalog
+[loi-tối] 200 http://localhost:3481/api/v1/catalog
+[loi-tối] 200 http://localhost:3481/api/v1/listings
+[loi-tối] 200 http://localhost:3481/api/v1/listings
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/listings
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/listings
+## thất bại / >=400 (13)
+[trong-sáng] 404 http://localhost:3481/favicon.ico
+[loi-sáng] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-sáng] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-sáng] FAILED net::ERR_ABORTED http://localhost:3481/inventory blocked=
+[loi-sáng] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-sáng] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-sáng] FAILED  http://localhost:3481/api/v1/listings blocked=inspector
+[loi-tối] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-tối] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-tối] FAILED net::ERR_ABORTED http://localhost:3481/inventory blocked=
+[loi-tối] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-tối] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-tối] FAILED  http://localhost:3481/api/v1/listings blocked=inspector
+## console errors (0)
 
-== loi-toi (chan */api/v1/listings*, */api/v1/catalog* co chu y; sau do bo chan + bam Thu lai) ==
-REQ Document GET http://localhost:3481/inventory
-RES 200 Document http://localhost:3481/inventory
-REQ Fetch GET http://localhost:3481/api/v1/catalog
-FAIL  blocked=inspector 76856.68
-REQ Fetch GET http://localhost:3481/api/v1/catalog
-FAIL  blocked=inspector 76856.69
-REQ Fetch GET http://localhost:3481/api/v1/listings
-FAIL  blocked=inspector 76856.70
-REQ Fetch GET http://localhost:3481/api/v1/listings
-RES 200 Fetch http://localhost:3481/api/v1/listings
-
-== loi-sang (chan */api/v1/listings*, */api/v1/catalog* co chu y; sau do bo chan + bam Thu lai) ==
-REQ Document GET http://localhost:3481/inventory
-RES 200 Document http://localhost:3481/inventory
-REQ Fetch GET http://localhost:3481/api/v1/catalog
-FAIL  blocked=inspector 93992.68
-REQ Fetch GET http://localhost:3481/api/v1/catalog
-FAIL  blocked=inspector 93992.69
-REQ Fetch GET http://localhost:3481/api/v1/listings
-FAIL  blocked=inspector 93992.70
-REQ Fetch GET http://localhost:3481/api/v1/listings
-RES 200 Fetch http://localhost:3481/api/v1/listings
-
-Ghi chu: offline nguyen van + tai lai -> chrome-error://chromewebdata ERR_INTERNET_DISCONNECTED (tai lieu khong tai duoc khi offline that); thay bang chan rieng duong API du lieu.

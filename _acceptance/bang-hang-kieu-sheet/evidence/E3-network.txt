@@ -1,21 +1,4 @@
-31. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-32. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-33. [GET] http://localhost:3481/api/v1/listings => [200] OK
-64. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-65. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-66. [GET] http://localhost:3481/api/v1/listings => [200] OK
-97. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-98. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-99. [GET] http://localhost:3481/api/v1/listings => [200] OK
-130. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-131. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-132. [GET] http://localhost:3481/api/v1/listings => [200] OK
-163. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-164. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-165. [GET] http://localhost:3481/api/v1/listings => [200] OK
-166. [GET] http://localhost:3481/api/v1/listings => [FAILED] net::ERR_CONNECTION_REFUSED
-
-Note: 150 static requests not shown, run with "static" option to see them.
---- console errors (all) ---
-[ERROR] 404 http://localhost:3481/favicon.ico (static, note-only)
-[ERROR] net::ERR_CONNECTION_REFUSED http://localhost:3481/api/v1/listings (may chu dev 3481 chet giua chung luc ~23:08, khong phai do verifier tat; verifier chay lai dung-b.mjs de dung lai)
+dau-chu-1: [{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/catalog","s":200}]
+dau-chu-1 console/err: n/a (CDP listener not attached; resource timing only)
+dau-chu-2: [{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/listings","s":200}]
+dau-chu-2 console/err: n/a (CDP listener not attached; resource timing only)

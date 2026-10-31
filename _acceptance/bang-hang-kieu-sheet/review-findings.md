@@ -1,19 +1,28 @@
-# Review findings: bang-hang-kieu-sheet (round 2)
+# Review findings: bang-hang-kieu-sheet (round 3)
 
 ## Trong hợp đồng
+
+Không có.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hình dạng 5: E5 tuyên quét cả lớp «mọi mã căn còn lại» nhưng chỉ chép một mẫu, tối đa 3 căn**
+- **Turning on column windowing breaks End and Ctrl/Cmd+ArrowRight: focus moves to an off-screen column and the view does not scroll to it**
+  Người dùng thấy gì: Trên Bảng hàng, khi bấm phím End hoặc Ctrl/Cmd+Mũi tên phải để nhảy tới cột cuối, ô được chọn nằm ở cột đang ngoài màn hình và bảng không tự cuộn theo. Người dùng không thấy mình đang chọn ô nào, phải tự cuộn ngang bằng chuột. Bấm từng mũi tên một cột vẫn chạy bình thường.
+  Căn cứ: Nhẹ vì không mất hay sai dữ liệu, chỉ là phím tắt nhảy cuối hàng không kéo màn theo; người dùng tự cuộn ngang hoặc bấm từng mũi tên là xong, và màn này chỉ để đọc, chưa sửa trên ô.
+  file: `apps/web/src/app/(app)/inventory/bang-hang.tsx`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 5: E5 tuyên quét cả lớp «mọi mã căn còn lại» nhưng chỉ chép một mẫu, tối đa 3 căn (r2)**
   Người dùng thấy gì: Khi kiểm tay ba ô lọc cùng lúc, người kiểm chỉ ghi lại vài căn đầu rồi kết luận cho cả danh sách, nên một căn lọt sai ở cuối danh sách có thể không bị phát hiện. Bảng hàng của người dùng không đổi; chỉ độ chặt của bài kiểm yếu hơn lời hứa.
   Căn cứ: Hậu quả nhẹ vì chỉ làm bài kiểm tay lỏng hơn chứ không làm người dùng mất hay sai dữ liệu, và có thể siết lại bất cứ lúc nào bằng cách sửa lời bài kiểm với chi phí rất thấp.
   file: `_acceptance/bang-hang-kieu-sheet/evals.yaml`
   severity: medium
   Đề xuất: known-limits
 
-- **Ghim/Bỏ ghim cột trên menu tiêu đề cột không làm gì: trạng thái ghim bị cố định, không có hàm nhận thay đổi (r1)**
+- **Ghim/Bỏ ghim cột trên menu tiêu đề cột không làm gì: trạng thái ghim bị cố định, không có hàm nhận thay đổi (r1 · tệp đã đổi)**
   Người dùng thấy gì: Trên menu của tiêu đề cột vẫn có mục ghim cột sang trái hoặc phải, nhưng bấm vào thì không có gì xảy ra. Hai cột Toà và Mã căn vẫn luôn được giữ cố định như thiết kế.
   Căn cứ: Nhẹ: không mất dữ liệu, chỉ là một lựa chọn trên menu bấm không có tác dụng, và hai cột quan trọng vẫn ghim sẵn nên việc xem bảng không bị cản.
   file: `apps/web/src/app/(app)/inventory/bang-hang.tsx`
