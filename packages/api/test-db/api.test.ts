@@ -122,7 +122,9 @@ test("nhiều sàn: chưa chọn 409, chọn B, chọn C không thuộc 403, coo
   });
   await t.test("bỏ khỏi B sau khi chọn: lời gọi kế không vào B", async () => {
     // Từ hàng 7 sàn phải còn một quản trị: dựng thêm quản trị cho B trước khi bỏ người này.
-    await openCompany(`[Sàn ${RUN} B2]`, mail("qt-b2"));
+    // Thêm thẳng vào B (vai chủ): mở sàn cùng tên nay ra sàn riêng, không gộp vào B (hàng 56).
+    const qt2 = await openCompany(`[Sàn ${RUN} B2 qt2]`, mail("qt-b2"));
+    await appPool.query("insert into company_members (company_id, user_id, roles) values ($1, $2, '{company_admin}')", [b.companyId, qt2.userId]);
     await appPool.query("delete from company_members where company_id = $1 and user_id = (select id from identity.\"user\" where email = $2)", [
       b.companyId,
       email,
