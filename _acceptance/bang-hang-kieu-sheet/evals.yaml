@@ -63,10 +63,10 @@ evals:
     steps:
       - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở /inventory."
       - "Mở hàng lọc theo cột → chụp evidence/E5-hang-loc.png; ghi mỗi cột hiện có ô lọc không và kiểu ô (chữ, chọn, số)"
-      - "Đặt Trạng thái = Đang bán → ghi dòng tổng; gõ «<=5» vào ô lọc Giá, Enter → ghi dòng tổng; thêm Mã căn chứa «a-1» → ghi dòng tổng và 3 mã căn đầu → chụp evidence/E5-ba-loc.png"
+      - "Đặt Trạng thái = Đang bán → ghi dòng tổng; gõ «<=5» vào ô lọc Giá, Enter → ghi dòng tổng; thêm Mã căn chứa «a-1» → ghi dòng tổng và mọi mã căn còn lại (tối đa 3) → chụp evidence/E5-ba-loc.png"
       - "Bấm Xoá lọc → ghi dòng tổng"
       - "Đặt Mã căn chứa «zzz» → chụp evidence/E5-loc-rong.png; ghi chữ hiện ra"
-    expected: "Mười sáu cột hiện đều có ô lọc, kiểu đúng: chọn cho Toà, Loại căn, Trạng thái, Phí, Ai thấy, Xác nhận; số cho Diện tích, Tầng, Giá, Mức đủ; chữ cho các cột còn lại. Mỗi lần thêm ô lọc dòng tổng giảm hoặc giữ, không tăng; ba mã căn đầu chứa «a-1» và đều Đang bán, giá ≤ 5 tỷ. Xoá lọc trả «N / N căn». «zzz» hiện «Không căn nào khớp bộ lọc» kèm nút Xoá lọc."
+    expected: "Mười sáu cột hiện đều có ô lọc, kiểu đúng: chọn cho Toà, Loại căn, Trạng thái, Phí, Ai thấy; số cho Diện tích, Tầng, Giá, Xác nhận (số ngày từ lần xác nhận), Mức đủ; chữ cho các cột còn lại. Mỗi lần thêm ô lọc dòng tổng giảm hoặc giữ, không tăng; sau ba ô lọc còn ít nhất một căn và mọi mã căn còn lại chứa «a-1», đều Đang bán, giá ≤ 5 tỷ. Xoá lọc trả «N / N căn». «zzz» hiện «Không căn nào khớp bộ lọc» kèm nút Xoá lọc."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -122,9 +122,9 @@ evals:
       - "Chọn vùng 2×3 ô → Ctrl/Cmd+C → đọc clipboard (navigator.clipboard.readText trong trang) → ghi văn bản"
       - "Đọc kho trên máy: số thao tác chờ (IndexedDB của bộ đồng bộ, hàng đợi của sàn đang làm) → ghi"
       - "Tắt mạng (DevTools offline) → lọc Loại căn = 2PN, đổi Nhóm → chụp evidence/E9-mat-mang.png; ghi dòng tổng và các nhóm loại căn"
-      - "Vẫn offline: tải lại /inventory, đặt Nhóm = Toà → Loại căn → ghi tên các nhóm loại căn của Toà A (so với lúc có mạng)"
-      - "Đối chứng: xoá khoá qh:danh-muc:v1:* trong localStorage, vẫn offline tải lại → ghi tên các nhóm loại căn"
-    expected: "Giá trị ô không đổi; trong suốt phiên ghi không yêu cầu nào có phương thức khác GET hay HEAD; lọc, nhóm, sắp không phát sinh yêu cầu nào (ngoài lượt kéo định kỳ GET /api/v1/listings nếu rơi vào giữa — ghi rõ nếu có); hàng đợi thao tác chờ 0; clipboard là 2 dòng × 3 ô tách bằng tab đúng giá trị đang hiện. Mất mạng: lọc và nhóm vẫn chạy; sau khi tải lại trang lúc offline các nhóm loại căn của Toà A trùng tên với lúc có mạng; đối chứng xoá bản danh mục đã giữ thì mọi căn rơi vào «Chưa rõ» (chứng bản giữ là bền, không chỉ trong bộ nhớ trang). Đối chứng: trước khi tắt mạng có ít nhất một GET /api/v1/catalog đã chạy trong phiên (danh mục được giữ từ đó)."
+      - "Bật lại mạng nhưng chặn mọi yêu cầu tới /api/v1/* (DevTools chặn yêu cầu theo mẫu, hay Network.setBlockedURLs) — trang vẫn tải được, API thì không, như mất mạng sau khi mở trang (kho không có service worker nên tải lại khi offline hẳn là trang lỗi của trình duyệt, ngoài phạm vi hàng 14); tải lại /inventory, đặt Nhóm = Toà → Loại căn → ghi tên các nhóm loại căn của Toà A (so với lúc có mạng)"
+      - "Đối chứng: xoá khoá qh:danh-muc:v1:* trong localStorage, vẫn chặn /api/v1/*, tải lại → ghi tên các nhóm loại căn"
+    expected: "Giá trị ô không đổi; trong suốt phiên ghi không yêu cầu nào có phương thức khác GET hay HEAD; lọc, nhóm, sắp không phát sinh yêu cầu nào (ngoài lượt kéo định kỳ GET /api/v1/listings nếu rơi vào giữa — ghi rõ nếu có); hàng đợi thao tác chờ 0; clipboard là 2 dòng × 3 ô tách bằng tab đúng giá trị đang hiện. Mất mạng: lọc và nhóm vẫn chạy; sau khi tải lại trang lúc API bị chặn các nhóm loại căn của Toà A trùng tên với lúc có mạng; đối chứng xoá bản danh mục đã giữ thì mọi căn rơi vào «Chưa rõ» (chứng bản giữ là bền, không chỉ trong bộ nhớ trang). Đối chứng: trước khi tắt mạng có ít nhất một GET /api/v1/catalog đã chạy trong phiên (danh mục được giữ từ đó)."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -146,7 +146,7 @@ evals:
   - id: E11
     criterion: AC-9
     executor: script
-    cmd: "node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"
+    cmd: node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs
     expected: "exit 0; in bảng ba lượt hợp lệ (hiệu chuẩn đạt) và trung vị: p95 khoảng cách khung ≤ 33,4 ms, khung > 50 ms ≤ 1%, cuộn tới căn cuối của 5.000 hàng; lượt đối chứng tiêm việc bận 60 ms mỗi khung (cùng máy đo) trượt ngưỡng p95 — thiếu đối chứng trượt thì exit 1 «máy đo không phân biệt được». Lệnh tự build và bật bản build ở cổng 3491 (giám sát cấp, B-6), đo bản build như ADR-0004, tắt đúng PID khi xong; số ghi vào .acceptance-runs/bang-hang-kieu-sheet/so-do-cuon.json."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**", "_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -178,7 +178,7 @@ evals:
   - id: E15
     criterion: AC-10
     executor: judgment
-    question: "Trong bốn tệp: (1) bang-hang.md là mục bản đồ khuôn đủ chín khoá frontmatter (nhom, doi_tuong, khuon, nhan_dien, mau_dang_chay, khe_bat_buoc, cam_ngoai_khuon, ngoai_le, luat) với mau_dang_chay trỏ trang /inventory và có ít nhất một luật KH- mô tả khuôn; (2) vo-va-ia.md ghi data-grid-editing-6 là khối đã chuyển thể cho Bảng hàng kèm đổi gì (chỉ đọc ở hàng 14, nhóm Toà → Loại căn, góc nhìn trên máy); (3) catalog.md có dòng cho khối data-grid-editing-6 và cho các thành phần cài thêm mà mục Notes của contract.md liệt kê; (4) tham-chieu.md §12 có một dòng ngày 31/10 nói Bảng hàng đọc, lọc mọi cột, nhóm Toà → Loại căn, góc nhìn lưu trên máy theo người và sàn, góc nhìn của đội để sau — cả bốn đúng không?"
+    question: "Trong bốn tệp: (1) bang-hang.md là mục bản đồ khuôn đủ chín khoá frontmatter (nhom, doi_tuong, khuon, nhan_dien, mau_dang_chay, khe_bat_buoc, cam_ngoai_khuon, ngoai_le, luat) với mau_dang_chay trỏ trang /inventory và có ít nhất một luật KH- mô tả khuôn; (2) vo-va-ia.md ghi data-grid-editing-6 là khối đã chuyển thể cho Bảng hàng kèm đổi gì (chỉ đọc ở hàng 14, nhóm Toà → Loại căn, góc nhìn trên máy); (3) catalog.md có dòng cho khối data-grid-editing-6 (bảng «Khối đã chuyển thể») và dòng cho thành phần data-grid (bảng «Thành phần đã cài») — hàng 14 chỉ cài thêm đúng thư mục data-grid dưới components/reui, các thành phần ui khối kéo theo đã có sẵn, cascader của khối không cài (mục Notes của contract.md); (4) tham-chieu.md §12 có một dòng ngày 31/10 nói Bảng hàng đọc, lọc mọi cột, nhóm Toà → Loại căn, góc nhìn lưu trên máy theo người và sàn, góc nhìn của đội để sau — cả bốn đúng không?"
     inputs: [design/patterns/bang-hang.md, docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/catalog.md, docs/product/tham-chieu.md, _acceptance/bang-hang-kieu-sheet/contract.md]
     paths: ["design/patterns/bang-hang.md", "docs/design/vo-va-ia.md", ".agents/skills/quy-hang-ui/catalog.md", "docs/product/tham-chieu.md"]
     evidence_required: [judged_by, verdict, rationale]

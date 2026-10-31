@@ -1,0 +1,2 @@
+E5 network: driver = Chrome headless qua CDP (thu/cdp.mjs), khong doc duoc danh sach network -> n-a (driver).
+Phu: ban build next start cong 3491 (do ban dev 3481 bi vong tai lai HMR do nhieu trinh duyet cung dung); nhat ky may chu: /private/tmp/claude-501/e5-3491.log

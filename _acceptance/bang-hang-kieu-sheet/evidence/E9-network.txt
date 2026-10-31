@@ -1,0 +1,10 @@
+E9 network truth (driver: Playwright MCP, isolated context; origin http://localhost:3491 = next start, ban build; dev 3481 bi bao HMR reload loop do nhieu verifier song song)
+Pre-record (page load, truoc khi bat ghi): GET /api/v1/catalog x2, GET /api/v1/listings  -> catalog da chay trong phien (OK)
+Recording window (buoc 2 -> 4, gom go 123/Delete/dan 9, loc Trang thai, doi Nhom, sap Gia, chon vung + Ctrl+C):
+  GET /api/v1/listings (x2, chu ky keo dinh ky ~30s, roi vao giua; khong phai do loc/nhom/sap)
+  Khong co yeu cau POST/PUT/PATCH/DELETE nao. Khong co yeu cau do loc/nhom/sap phat sinh.
+Step 6 (offline emulation, loc 2PN + doi Nhom): 0 yeu cau.
+Step 7 literal: page.reload() offline -> net::ERR_INTERNET_DISCONNECTED (chrome-error://chromewebdata); repo khong co service worker. GET /inventory x2 bi that bai (khong co tai lieu).
+Step 7 thay the (online, nhung /api/v1/** bi abort): GET /api/v1/catalog, GET /api/v1/listings that bai (co chu y); trang van dung ban giu.
+Step 8: tuong tu, GET /api/v1/catalog, GET /api/v1/listings bi abort (co chu y).
+Console/failed ngoai y muon: khong co loi app-origin ngoai cac abort chu dong.

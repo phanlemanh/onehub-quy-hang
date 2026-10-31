@@ -1,0 +1,2 @@
+origin app: http://localhost:3481
+{"net":[["/api/v1/catalog",200],["/api/v1/catalog",200],["/api/v1/listings",200],["/api/v1/listings",200]],"con":[],"res":["http://localhost:3481/api/v1/catalog fetch","http://localhost:3481/api/v1/catalog fetch","http://localhost:3481/api/v1/listings fetch","http://localhost:3481/api/v1/listings fetch"]}
