@@ -5,7 +5,7 @@ slug: dong-duong-gui-ma-thua
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-10-31-dong-duong-gui-ma-thua-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31
