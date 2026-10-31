@@ -4,10 +4,12 @@ import { canRead, factsFromEvents } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { loadEvents } from "../listings/store";
+import { dauVetSo, giaiMaSo, maHoaSo, nguCanhChuNha, type KhoaSoChu } from "./ma-hoa";
 
 /**
  * Chủ nhà của hàng (hàng 11, ADR-0010). Mọi câu chạy trong giao dịch của `withCompany` bằng vai `quy_hang_app`: luật theo
  * dòng của migration 006 chặn lần nữa sau luật của lõi. Số chủ không bao giờ đọc ở đây — chỉ qua `app.reveal_owner_phone`.
+ * Số chủ chỉ vào cơ sở dữ liệu ở dạng bản mã và dấu vết (hàng 62, migration 008): mã hoá trước khi ghi, giải sau khi mở.
  */
 
 export type Refusal = { error: ApiErrorEntry; details?: PayloadError[] };
@@ -19,6 +21,11 @@ const ve = (error: ApiErrorEntry, details?: PayloadError[]): Refusal => ({ error
 async function khoaHang(tx: pg.PoolClient, listingId: string): Promise<boolean> {
   const r = await tx.query("select 1 from listings where company_id = app.current_company_id() and id = $1 for update", [listingId]);
   return (r.rowCount ?? 0) > 0;
+}
+
+async function sanDangLam(tx: pg.PoolClient): Promise<string> {
+  const { rows } = await tx.query<{ c: string }>("select app.current_company_id() c");
+  return rows[0]!.c;
 }
 
 async function nguoiXem(tx: pg.PoolClient): Promise<Viewer> {
@@ -64,8 +71,8 @@ export async function getOwner(tx: pg.PoolClient, listingId: string): Promise<Ow
   return docChuNha(tx, listingId, viewer, agent);
 }
 
-/** Ghi lại trọn chủ nhà. Hàng chưa ai giữ: người có vai Đầu chủ thành đầu chủ giữ căn (Hỏi-3). */
-export async function putOwner(tx: pg.PoolClient, listingId: string, payload: unknown): Promise<OwnerView | Refusal> {
+/** Ghi lại trọn chủ nhà. Hàng chưa ai giữ: người có vai Đầu chủ thành đầu chủ giữ căn (Hỏi-3). Số ghi ở dạng bản mã. */
+export async function putOwner(tx: pg.PoolClient, listingId: string, payload: unknown, khoa: KhoaSoChu): Promise<OwnerView | Refusal> {
   const viewer = await moHang(tx, listingId);
   if (!viewer) return ve(API_ERRORS.notFound);
   const v = validateOwnerInput(payload);
@@ -81,35 +88,45 @@ export async function putOwner(tx: pg.PoolClient, listingId: string, payload: un
   } else if (!canSeeSource(viewer, agent)) {
     return ve(API_ERRORS.listingAgentRequired);
   }
-  const giaTri = [listingId, v.value.ownerName, v.value.ownerPhone ?? null, v.value.floorPrice ?? null];
+  const so = v.value.ownerPhone;
+  const san = await sanDangLam(tx);
+  const banMa = so === undefined ? null : maHoaSo(so, nguCanhChuNha(san, listingId), khoa);
+  const dauVet = so === undefined ? null : dauVetSo(so, san, khoa);
+  const giaTri = [listingId, v.value.ownerName, banMa, dauVet, v.value.floorPrice ?? null];
   const sua = await tx.query(
-    `update listing_owners set owner_name = $2, owner_phone = $3, floor_price = $4, updated_by = app.current_user_id(), updated_at = now()
+    `update listing_owners set owner_name = $2, owner_phone = null, owner_phone_enc = $3, owner_phone_hash = $4, floor_price = $5,
+       updated_by = app.current_user_id(), updated_at = now()
      where listing_id = $1`,
     giaTri,
   );
   if (!sua.rowCount) {
     await tx.query(
-      `insert into listing_owners (company_id, listing_id, owner_name, owner_phone, floor_price, updated_by)
-       values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id())`,
+      `insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, floor_price, updated_by)
+       values (app.current_company_id(), $1, $2, $3, $4, $5, app.current_user_id())`,
       giaTri,
     );
   }
   return docChuNha(tx, listingId, viewer, agent);
 }
 
-/** Mở số chủ qua cửa duy nhất của cơ sở dữ liệu — hàm ghi một sự kiện rồi mới trả số. */
-export async function revealPhone(tx: pg.PoolClient, listingId: string): Promise<{ ownerPhone: string } | Refusal> {
+/**
+ * Mở số chủ qua cửa duy nhất của cơ sở dữ liệu — hàm ghi một sự kiện rồi trả bản mã; API giải bằng khoá. Bản mã không
+ * giải được (chép từ dòng khác, bị sửa, khoá khác) thì ném: giao dịch huỷ, không còn sự kiện mở số, không số nào ra.
+ */
+export async function revealPhone(tx: pg.PoolClient, listingId: string, khoa: KhoaSoChu): Promise<{ ownerPhone: string } | Refusal> {
   if (!(await moHang(tx, listingId))) return ve(API_ERRORS.notFound);
   await tx.query("savepoint mo_so");
+  let banMa: Buffer;
   try {
-    const { rows } = await tx.query<{ so: string }>("select app.reveal_owner_phone($1) as so", [listingId]);
-    return { ownerPhone: rows[0]!.so };
+    const { rows } = await tx.query<{ ban_ma: Buffer }>("select app.reveal_owner_phone($1) as ban_ma", [listingId]);
+    banMa = rows[0]!.ban_ma;
   } catch (e) {
     const code = (e as { code?: string }).code;
     if (code !== "42501" && code !== "P0002") throw e;
     await tx.query("rollback to savepoint mo_so");
     return ve(code === "42501" ? API_ERRORS.listingAgentRequired : API_ERRORS.ownerNotSet);
   }
+  return { ownerPhone: giaiMaSo(banMa, nguCanhChuNha(await sanDangLam(tx), listingId), khoa) };
 }
 
 /** Trưởng nhóm gán, gán lại đầu chủ giữ căn: thêm một dòng gán, dòng cũ giữ nguyên. */

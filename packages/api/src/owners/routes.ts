@@ -7,6 +7,7 @@ import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { khoaSoChu } from "./khoa";
 import { assignAgent, getOwner, isRefusal, putOwner, revealPhone, type Refusal } from "./store";
 
 /** Chủ nhà của hàng, mở số, gán đầu chủ (hàng 11, ADR-0010). Ẩn ở lõi và cơ sở dữ liệu, không ở giao diện. */
@@ -33,6 +34,9 @@ const OwnerView = z.union([
 ]);
 
 export function registerOwnerRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps) {
+  // Khoá số chủ đọc một lần lúc dựng: bản thật thiếu khoá thì ném ở đây, API không dựng (hàng 62, ADR-0013).
+  const khoa = khoaSoChu();
+
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
     const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
     if (!user) return API_ERRORS.unauthenticated;
@@ -65,11 +69,11 @@ export function registerOwnerRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
   );
   api.openapi(
     createRoute({ method: "put", path: `${BASE}/owner`, summary: "Ghi chủ nhà; hàng chưa ai giữ thì đầu chủ ghi đầu tiên giữ căn", request: { ...params, ...json(z.record(z.unknown())) }, responses: { 200: ok("Chủ nhà", OwnerView), ...loi } }),
-    (c) => chay(c, (tx, id) => putOwner(tx, id, c.req.valid("json"))) as never,
+    (c) => chay(c, (tx, id) => putOwner(tx, id, c.req.valid("json"), khoa)) as never,
   );
   api.openapi(
     createRoute({ method: "post", path: `${BASE}/owner/phone-reveal`, summary: "Mở số chủ — mỗi lần là một sự kiện", request: params, responses: { 200: ok("Số chủ", z.object({ ownerPhone: z.string() })), ...loi } }),
-    (c) => chay(c, (tx, id) => revealPhone(tx, id)) as never,
+    (c) => chay(c, (tx, id) => revealPhone(tx, id, khoa)) as never,
   );
   api.openapi(
     createRoute({ method: "put", path: `${BASE}/listing-agent`, summary: "Trưởng nhóm gán, gán lại đầu chủ giữ căn", request: { ...params, ...json(z.record(z.unknown())) }, responses: { 200: ok("Đầu chủ giữ căn", z.object({ listingAgentUserId: z.string() })), ...loi } }),
