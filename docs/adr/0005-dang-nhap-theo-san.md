@@ -45,3 +45,13 @@ dời về «bây giờ + 30 ngày», làm mới tối đa mỗi ngày một l�
 `SESSION_EXPIRES_SEC`, `SESSION_UPDATE_AGE_SEC` ở `packages/api/src/auth/constants.ts`. Cookie trình duyệt trượt theo
 ở bước chặn đầu của bàn làm việc (`apps/web/src/proxy.ts`): mỗi lần mở trang, nó hỏi phiên trong tiến trình và chép
 nguyên văn `Set-Cookie` của better-auth. Chưa có trần tuyệt đối — phiên dùng hằng ngày sống tới khi đăng xuất.
+
+## Bổ sung 31/10 — đường gửi mã
+
+Chủ kho mở hồ sơ `dong-duong-gui-ma-thua` ở Cổng Bằng chứng hàng 6 (Ngoài-6, Ngoài-10) và duyệt Cổng Phạm vi ngày 31/10
+(Hỏi-1: chặn hẳn kiểu mã khác đăng nhập). Đường xin mã chỉ phát mã đăng nhập: xin mã kiểu «xác minh email» hay «quên mật
+khẩu» trả 400 `code-type-not-allowed`, không gửi thư, không tính vào giới hạn. Giới hạn 5 lần trong 15 phút gác mọi
+đường gửi mã còn mở (`OTP_SEND_PATHS`), cùng một bộ đếm theo email. Năm đường không dùng tới của plugin mã email trả 404:
+ba đường quên và đặt lại mật khẩu (kho không có mật khẩu), hai đường đổi email (chưa có đổi email) — `AUTH_DISABLED_PATHS`.
+Hằng ở `packages/api/src/auth/constants.ts`; bảng xếp loại mọi đường của plugin ở `packages/api/src/auth/duong-gui-ma.ca.ts`
+— nâng better-auth mà có đường hay lối gửi mã chưa xếp loại thì bài kiểm đỏ.

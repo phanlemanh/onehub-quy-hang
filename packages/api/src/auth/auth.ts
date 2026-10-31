@@ -4,10 +4,14 @@ import { emailOTP } from "better-auth/plugins";
 import type pg from "pg";
 import {
   AUTH_BASE_PATH,
+  AUTH_DISABLED_PATHS,
   COOKIE_PREFIX,
   OTP_ALLOWED_ATTEMPTS,
   OTP_EXPIRES_SEC,
+  OTP_ALLOWED_TYPE,
   OTP_LENGTH,
+  OTP_SEND_PATHS,
+  OTP_TYPE_NOT_ALLOWED,
   SESSION_EXPIRES_SEC,
   SESSION_UPDATE_AGE_SEC,
 } from "./constants";
@@ -36,6 +40,7 @@ export function createAuth(o: CreateAuthOptions) {
     secret: o.secret,
     baseURL: o.baseURL,
     basePath: AUTH_BASE_PATH,
+    disabledPaths: AUTH_DISABLED_PATHS,
     advanced: { cookiePrefix: COOKIE_PREFIX },
     session: { expiresIn: SESSION_EXPIRES_SEC, updateAge: SESSION_UPDATE_AGE_SEC },
     emailAndPassword: { enabled: false },
@@ -51,7 +56,11 @@ export function createAuth(o: CreateAuthOptions) {
     ],
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
-        if (ctx.path !== "/email-otp/send-verification-otp") return;
+        if (!OTP_SEND_PATHS.includes(ctx.path)) return;
+        // Kiểu mã khác đăng nhập bị từ chối trước khi đếm: không gửi thư, không đốt lượt xin mã.
+        if (ctx.body?.type !== OTP_ALLOWED_TYPE) {
+          throw new APIError("BAD_REQUEST", { code: OTP_TYPE_NOT_ALLOWED, message: OTP_TYPE_NOT_ALLOWED });
+        }
         const email = typeof ctx.body?.email === "string" ? ctx.body.email : "";
         if (!(await allowOtpRequest(o.identityPool, email))) {
           throw new APIError("TOO_MANY_REQUESTS", { code: OTP_RATE_LIMITED, message: OTP_RATE_LIMITED });

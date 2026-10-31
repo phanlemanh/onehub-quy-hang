@@ -1,0 +1,50 @@
+schema_version: 1
+feature_slug: dong-duong-gui-ma-thua
+# Hai lệnh máy: `executors.test.api` (kiểm thử không cần Postgres của packages/api, gồm src/auth/*.test.ts) và
+# `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy X, cổng 5554). exit 0
+# của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu
+# trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «mọi đường gửi mã còn phục vụ: lần thứ sáu trả 429, không gửi» có mặt và ok trong packages/api/test-db/dong-duong-gui-ma/dong-duong-gui-ma.test.ts — duyệt TOÀN BỘ OTP_SEND_PATHS (đếm số đường đã thử bằng độ dài hằng), với mỗi đường dùng một email riêng: 5 lần xin đầu nhận mã (đếm bộ gửi bằng 5, lần thứ năm nhận mã), lần sáu status 429 và thân mang code too-many-code-requests (dựng từ hằng OTP_RATE_LIMITED, không chép chữ), bộ gửi vẫn 5. Chiều đỏ: bỏ hook giới hạn trong bản sao → ca đỏ «lần 6 nhận 200» nêu tên đường; hook so một đường cứng thay vì tập → ca lưới E4 «hook gác theo OTP_SEND_PATHS» đỏ."
+    paths: [packages/api/src/auth/**, packages/api/test-db/dong-duong-gui-ma/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «kiểu mã khác đăng nhập: 400, không gửi, không đếm» có mặt và ok — ma trận viết trước hai kiểu [email-verification, forget-password], mỗi kiểu gọi 3 lần với email có tài khoản: status 400 và thân mang code code-type-not-allowed (dựng từ hằng OTP_TYPE_NOT_ALLOWED, không chép chữ), bộ gửi nhận 0 mã, số dòng identity.otp_requests của email trước và sau bằng nhau; số lần gọi đếm bằng 2×3. Đối chứng dương cùng email ngay sau đó: 5 lần kiểu sign-in đều 200 và nhận đủ 5 mã, lần sáu 429. Chiều đỏ: bỏ vế chặn kiểu trong bản sao → ca đỏ «email-verification trả 200, bộ gửi nhận mã»."
+    paths: [packages/api/src/auth/**, packages/api/test-db/dong-duong-gui-ma/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «đường quên mật khẩu: 404, không gửi, không đếm» có mặt và ok — danh sách đường lấy từ nhãn «đã tắt» của chính bảng phân loại mà E4 đối chiếu với endpoints bản cài (nên tên đường là đường thật của plugin, không gõ tay), đủ năm đường, mỗi đường gọi 10 lần với email có tài khoản: mọi lần status 404, bộ gửi nhận 0 mã, số dòng identity.otp_requests của email trước và sau bằng nhau; đối chứng dương cùng email ngay sau đó: đường xin mã chính vẫn 200 và nhận mã (chứng đường đếm không bị đốt). Chiều đỏ: bỏ disabledPaths trong bản sao → ca đỏ «request-password-reset trả 200, bộ gửi nhận mã»."
+    paths: [packages/api/src/auth/**, packages/api/test-db/dong-duong-gui-ma/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «mọi đường của plugin mã email có đúng một nhãn» có mặt và ok trong packages/api/src/auth/ — đọc endpoints của plugin id email-otp từ auth.options.plugins của một bản createAuth thật (không gõ tay danh sách đường), bảng phân loại viết tay map path → nhãn; assert: tập path bản cài = tập khoá bảng (đếm phần tử) (thiếu hay thừa đều đỏ, thông điệp gọi tên path), mỗi path nhãn «gửi mã, có giới hạn» thuộc OTP_SEND_PATHS, mỗi path nhãn «đã tắt» thuộc disabledPaths của auth.options, và OTP_SEND_PATHS cùng disabledPaths không giao nhau. Ca «hook gác theo OTP_SEND_PATHS» có mặt và ok — gọi bộ xử lý của hook before (auth.options.hooks.before) với ctx giả cho từng đường trong OTP_SEND_PATHS và một đường không gửi mã; chỉ đường trong tập chạm bộ đếm (đếm lời gọi bộ đếm bằng một hàm thay thế). Ca «không lối gửi mã ngoài đường» có mặt và ok — số hook after của plugin email-otp bằng số ghim, matcher của nó trả false cho /sign-up/email, options của plugin không bật overrideDefaultEmailVerification và sendVerificationOnSignUp, auth.options.emailVerification?.sendVerificationEmail vắng; mỗi điều một assert có thông điệp. Chiều đỏ: xoá một dòng bảng trong bản sao → ca đỏ gọi tên path chưa phân loại."
+    paths: [packages/api/src/auth/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; các ca cũ của packages/api/test-db/auth.test.ts có mặt và ok: «xin mã: email có tài khoản nhận đúng một mã 6 chữ số», «xin mã: email lạ không nhận mã nào», «xin mã: trả lời như nhau dù email có tài khoản hay chưa», «nhập mã: đúng mã mở phiên», «xin mã: lần thứ sáu trong 15 phút trả 429, lần thứ năm vẫn nhận mã»."
+    paths: [packages/api/src/auth/**, packages/api/test-db/auth.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
