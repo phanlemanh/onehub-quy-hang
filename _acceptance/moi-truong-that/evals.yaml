@@ -1,0 +1,78 @@
+schema_version: 1
+feature_slug: moi-truong-that
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.moi_truong_that
+    expected: "exit 0; dòng «ĐẠT kết nối tới vùng ap-southeast-1»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.moi_truong_that
+    expected: "exit 0; «ĐẠT mọi migration của kho đã ghi sổ», «ĐẠT hai hàm … khoá search_path», «ĐẠT companies có đúng một luật đọc»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.cach_ly_that
+    expected: "exit 0; mọi ca của isolation.test.mjs pass, 0 fail — DATABASE_URL trỏ cơ sở dữ liệu thật"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.moi_truong_that
+    expected: "exit 0; mọi dòng «REST … bị từ chối», «GraphQL không lộ bảng nào», «anon, authenticated, service_role không có quyền trên bảng nào»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.moi_truong_that
+    expected: "exit 0; «quy_hang_app không superuser, không bypassrls», «mọi bảng của công ty bật và ép luật theo dòng», «chỉ sàn mẫu»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «resend: …» và «thư mã: …» của sender.test.ts pass; should-NOT-fire: thông báo lỗi gửi KHÔNG chứa mã, bản thật thiếu bộ gửi KHÔNG dựng (production.test.ts)"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.kiem_ci
+    expected: "exit 0; tám dòng ĐẠT, «KẾT: ĐẠT»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.suc_khoe_xem_truoc
+    expected: "exit 0; «ĐẠT GET /api/v1/health trả 200» — in JSON {\"ok\":true,…}; APP_URL là bản xem trước của nhánh ở commit được chấm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.hooks
+    expected: "exit 0; «TỔNG: ĐẠT» (gồm bài tự kiểm của gitleaks ở pre-commit); job secrets của CI quét toàn lịch sử"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: judgment
+    question: "ADR-0009, Kiến trúc §10 và Tham chiếu §12 có nói cùng một điều về nơi chạy, vùng, cách áp migration, cách giữ khoá và giới hạn còn lại không — và có khớp với job deploy trong ci.yml, vercel.json, nen-du-an.sql không?"
+    inputs:
+      - docs/adr/0009-moi-truong-that.md
+      - docs/architecture/kien-truc-repo-va-stack.md
+      - docs/product/tham-chieu.md
+      - .github/workflows/ci.yml
+      - apps/web/vercel.json
+      - packages/db/supabase/nen-du-an.sql
+    evidence_required: [judged_by, verdict, rationale]

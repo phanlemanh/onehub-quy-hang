@@ -1,4 +1,4 @@
-import { createApi, createAuth, devSender } from "@quy-hang/api";
+import { createApi, createAuth, devSender, resendSender, type OtpSender } from "@quy-hang/api";
 import pg from "pg";
 
 type Api = ReturnType<typeof createApi>;
@@ -12,18 +12,25 @@ function need(name: string): string {
 
 /**
  * App API dựng lười ở lời gọi đầu — không ở lúc nạp mô-đun, để `next build` chạy được khi không có cơ sở dữ liệu.
- * Bản thật chưa có bộ gửi email: createAuth ném «thiếu bộ gửi mã đăng nhập» thay vì in mã ra nhật ký (AC-11).
+ * Có RESEND_API_KEY thì gửi mã qua Resend (ADR-0009); bản thật thiếu khoá thì createAuth ném «thiếu bộ gửi mã đăng nhập»
+ * thay vì in mã ra nhật ký (AC-11).
  */
 export function getApi(): Api {
   if (cached) return cached;
   const url = need("DATABASE_URL");
   const env = process.env.NODE_ENV;
+  const key = process.env.RESEND_API_KEY;
+  const sender: OtpSender | undefined = key
+    ? resendSender({ apiKey: key, from: need("MAIL_FROM") })
+    : env === "production"
+      ? undefined
+      : devSender;
   const identityPool = new pg.Pool({ connectionString: url, options: "-c search_path=identity" });
   const auth = createAuth({
     identityPool,
     secret: need("BETTER_AUTH_SECRET"),
     baseURL: need("BETTER_AUTH_URL"),
-    sender: env === "production" ? undefined : devSender,
+    sender,
     env,
   });
   cached = createApi({ appPool: new pg.Pool({ connectionString: url }), identityPool, auth });
