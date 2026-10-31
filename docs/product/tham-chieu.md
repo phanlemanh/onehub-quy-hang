@@ -90,6 +90,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 - **Đổi trạng thái không xoá dữ liệu**: căn đã bán giữ giá chốt và ngày bán — nguồn giá giao dịch thật.
 - **Sàn thêm nhãn, không thêm nghĩa**: «Giữ chỗ» phải neo vào một trạng thái chuẩn và nhận luật, màu của trạng thái đó; không có trạng thái thứ bảy.
 - Tên tiếng Anh theo RESO `StandardStatus` — máy điền 29/10, chốt khi viết lõi: Chưa đủ để rao `Incomplete` · Đang bán `Active` · Đang giao dịch `Pending` · Đã bán `Closed` · Tạm ngừng `Hold` · Ngừng hẳn `Withdrawn`.
+- Bảng chuyển — Đã chốt 30/10 (ADR-0008): Chưa đủ để rao → Đang bán · Tạm ngừng · Ngừng hẳn; Đang bán → Đang giao dịch · Đã bán · Tạm ngừng · Ngừng hẳn; Đang giao dịch → Đang bán (khách bỏ cọc) · Đã bán · Ngừng hẳn; Tạm ngừng → Đang bán · Ngừng hẳn; Đã bán và Ngừng hẳn là nấc cuối — mở lại là hàng mới.
 
 ## 6. Quyền
 
@@ -311,6 +312,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 30/10 | Đăng nhập theo sàn: email + mã 6 số qua email; chỉ tài khoản đã được mở hay mời mới nhận mã; thành viên sàn là bảng của Quỹ hàng, không dùng phần tổ chức của better-auth; người nhiều sàn chọn sàn, chưa gắn sàn thì không thấy gì — ADR-0005 | Mục 6 · Kiến trúc §5, §10 |
 | 30/10 | Quản trị sàn mời người vào sàn ngay (tạo tài khoản khi chưa có, không lộ ai đã có), đặt một hay nhiều trong năm vai, giao khu do sàn tự đặt tên; chỉ quản trị xem và sửa người; sàn luôn còn một quản trị — ADR-0006 | Mục 2, 6 · Cài đặt sàn S6 |
 | 31/10 | Đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh (`/company`, `no-company`, `/login`…), cùng hành vi và chữ trên màn; đường cũ trả 404; giữ cookie sàn, tên tệp mã (dọn riêng) và thẻ nhật ký mã dev — ADR-0007 | `docs/adr/0007-api-tieng-anh.md` |
+| 31/10 | Lõi hàng: mọi thay đổi của hàng đi qua một lệnh API thành sự kiện chỉ thêm; bảng hàng là bản tính lại được từ sự kiện; sáu trạng thái chuẩn với bảng chuyển 12 lối, Đã bán và Ngừng hẳn là nấc cuối; vào Đang bán cần giá kèm điều kiện phí, pháp lý, tình trạng sử dụng (ảnh thật thêm khi có kho ảnh); mức đủ năm mục ngang nhau; mọi thành viên sàn gửi được lệnh ở bản này — ADR-0008 | Mục 4, 5 · `docs/adr/0008-loi-hang-va-su-kien.md` |
 | 31/10 | Vỏ ứng dụng: khối `app-shell-8` chuyển thể cho máy tính, tab dưới ghép cho điện thoại (chủ kho gật trên bản bấm được); nhà và nút theo vai đọc một bảng ở `packages/core`; người chỉ quản trị có tab Cài đặt sàn trên điện thoại; ô Gõ mã căn chỉ vai có Bảng hàng; cột thứ hai nhớ theo người, sàn, nhà | Mục 9 · `docs/design/vo-va-ia.md` |
 | 31/10 | Môi trường chạy thật: Supabase dự án riêng vùng Singapore (vai chủ riêng, Data API công khai không thấy bảng nào), Vercel ở Singapore trên tên miền cố định `quyhang.onehub.center`, mã đăng nhập gửi qua Resend; gộp main thì áp migration và chạy bộ kiểm cách ly trên cơ sở dữ liệu thật rồi mới deploy; chỉ dữ liệu mẫu tới khi pháp lý rà — ADR-0009 | Kiến trúc §10 · `docs/adr/0009-moi-truong-that.md` |
 
