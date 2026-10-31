@@ -170,6 +170,7 @@ test("stepListing gấp từng bước bằng foldListing", () => {
   // foldListing là chuỗi các bước: cùng dãy cho cùng kết quả cuối.
   assert.deepEqual(foldListing(ds), s);
   assert.equal(so, 5);
+});
 
 // Hàng 57: ngày bán không có thật bị từ chối ở kiểm payload, không xuống tới cơ sở dữ liệu.
 const CHOT = (closeDate: unknown) => ({ to: "Closed", closePrice: 3_200_000_000, closeDate });
