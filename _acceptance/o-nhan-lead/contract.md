@@ -99,7 +99,8 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead l
 - Mã hoá số chủ trong `leads` — hàng 62 (migration 008).
 - Kiểm trùng ở nhập Excel và các cửa vào khác — hàng 64–71 (ADR-0011) dùng lại lõi này.
 - Gửi lead khi mất mạng.
-- Lead nhà phố, nhà ngoài dự án (không có trong danh mục) — hàng mới của lộ trình (Hỏi-6).
+- Lead loại hình khác căn hộ trong dự án (RESO `PropertySubType` khác Condominium: nhà phố, nhà riêng…) — hàng mới của
+  lộ trình (Hỏi-6).
 
 > Out of scope = scope-truth (Gate 1 duyệt mục này). Rationale/trade-off từng mục → 1 entry `descope` trong `decisions.jsonl`.
 

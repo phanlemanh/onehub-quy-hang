@@ -188,8 +188,11 @@ Căn cứ: một biểu mẫu năm ô và một kết quả — luồng hiển n
 - **Hỏi-5 — lead trùng số với một lead khác đang chờ chia.** Khuyến nghị: giữ ba kết quả của luật 20 (ra «Không trùng»),
   hàng 25 chia lead cùng số cho cùng người; số đo «lead trùng bị chặn» chưa đếm loại này tới hàng 25. Lối khác: thêm kết
   quả thứ tư «Trùng lead đang chờ chia» — giá: một chữ trên màn, một ca kiểm, một dạng cho hàng 25 và 27.
-- **Hỏi-6 — nhà phố, nhà ngoài dự án.** Khuyến nghị: hàng 24 chỉ nhận căn thuộc dự án trong danh mục; nhà ngoài dự án là
-  hàng mới (đối tượng theo địa chỉ, kiểm trùng theo địa chỉ chuẩn hoá). Lối khác: thêm ô «địa chỉ» ngay ở hàng 24, kiểm
-  trùng chỉ theo số chủ — giá: lead ấy chưa thành hàng được vì hàng bắt buộc có toà.
+- **Hỏi-6 — loại hình bất động sản.** RESO tách loại hình bằng `PropertyType` (Residential, ResidentialLease, Land,
+  CommercialSale…) và `PropertySubType` (Condominium, Townhouse, SingleFamilyResidence…); RESO không có thực thể «dự án» —
+  gần nhất là `SubdivisionName` — nên «dự án» là đặc trưng Việt Nam, đặt tên riêng (`projectName`). Khuyến nghị: hàng 24
+  chỉ nhận căn hộ (Residential · Condominium) trong dự án có danh mục; nhà phố, nhà riêng và loại hình khác là hàng mới, kèm
+  trường loại hình ở lõi hàng và kiểm trùng theo địa chỉ chuẩn hoá. Lối khác: thêm ô loại hình và địa chỉ ngay ở hàng 24,
+  kiểm trùng nhà ngoài dự án chỉ theo số chủ — giá: lead ấy chưa thành hàng được vì hàng bắt buộc có toà.
 - **Hỏi-3 — telesales có thấy tên đầu chủ nhận lead không.** Khuyến nghị: thấy tên (đầu chủ là người trong sàn; telesales
   biết lead đi đâu để hỏi lại). Lối khác: chỉ thấy loại kết quả — giá: telesales phải hỏi trưởng nhóm.
