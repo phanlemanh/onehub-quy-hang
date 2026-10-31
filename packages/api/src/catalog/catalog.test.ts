@@ -74,4 +74,17 @@ test("đo tỉ lệ tự điền trên dữ liệu mẫu: 47 mã, 100%, chưa c�
   const trao = [{ ...UNIT_CODE_RULES[0]!, template: "{b}-{s}.{f}" }];
   const b = measureAutofill(goi.danhMuc, tatCa, NGOAI, trao);
   assert.ok(b.dung < b.tong, `cách đọc tráo tầng/trục mà vẫn ${b.dong}`);
+
+  // Đối chứng (b'): chỉ mã tầng ≤ 6 khác trục — đọc tráo vẫn ra một căn CÓ trong danh mục (found) nhưng là căn khác, nên
+  // mọi mã phải hụt vì sai UPI. Hàm đo đếm found mà bỏ so UPI thì `dung` bằng cỡ tập này và ca đỏ.
+  const tachMa = (m: string) => m.match(/^([A-Z])-(\d{2})\.(\d{2})$/)!;
+  const nhoTang = goc.filter((x) => {
+    const [, , f, s] = tachMa(x.input);
+    return Number(f) <= 6 && f !== s;
+  });
+  assert.ok(nhoTang.length > 0, "dữ liệu mẫu phải có mã tầng ≤ 6 khác trục");
+  const tapNho = nhoTang.flatMap((a) => [a, ...VIET_LAI.map((f) => ({ input: f(a.input), upi: a.upi }))]);
+  const bNho = measureAutofill(goi.danhMuc, tapNho, NGOAI, trao);
+  assert.equal(bNho.dung, 0, `đọc tráo ra căn khác mà vẫn tính đúng: ${bNho.dong}`);
+  assert.equal(bNho.hut.length, tapNho.length);
 });
