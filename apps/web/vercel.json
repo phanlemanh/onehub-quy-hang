@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && npm ci --include=dev",
+  "regions": ["sin1"],
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
+}
