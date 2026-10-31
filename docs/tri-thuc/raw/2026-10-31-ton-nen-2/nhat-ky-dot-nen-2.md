@@ -1,0 +1,43 @@
+## Nhật ký
+- 2026-10-31T12:50:02.036Z Hàng 13 gộp (PR #33). Ba việc mở hợp đồng mới từ hàng 13 cần cắt lượt (phải xong trước hai tuần thử): (1) 5xx/401 → cần xem thay vì gửi lại (gui.ts); (2) kéo về báo «Mất mạng» cho mọi lỗi — cần trạng thái chỉ báo mới (dong-bo.ts); (3) căn đang cần xem: thao tác mới kẹt / «Giữ của tôi» đảo thứ tự (xu-ly-can-xem.ts, ap-tren-may.ts). Dãy N hết hàng.
+- 2026-10-31T12:45:46.823Z dong-duong-gui-ma-thua khai thêm vùng ở Cổng Phạm vi: docs/adr/0005-dang-nhap-theo-san.md, docs/product/tham-chieu.md
+- 2026-10-31T12:43:38.057Z vong-giao-dien-qua-ban-do khai thêm vùng ở Cổng Phạm vi: packages/ui-lint/**, design/patterns/**, .agents/skills/quy-hang-ui/**, _acceptance/config.yaml, .claude/launch.json
+- 2026-10-31T12:36:59.070Z Giám sát GS (local_dd3856aa) ở 94% ngữ cảnh, sắp tự nén. Trạng thái: 59 đã gộp; N chờ ghim lại + gộp PR #33 (đã ký); A làm 60; X chờ chủ kho duyệt lại Cổng Phạm vi hàng 55 (X-3110-8); D hết hàng. Việc chờ cắt lượt: 7 mục mở-hợp-đồng-mới của hàng 13, mã hoá số chủ, căn trùng mã hai toà (hàng 10), mở lại hàng 10.
+- 2026-10-31T12:28:07.317Z Chủ kho 31/10 ký hàng 59 và hàng 13 (chuyển nguyên văn cho D, N); hàng 55: «sửa: Hỏi-1 = chặn hẳn bằng lỗi 400» (chuyển cho X). Hàng 13 có 7 mục «mở hợp đồng mới» — đưa vào lộ trình ở lần cắt lượt kế, ba lỗi hành vi (Giữ của tôi đảo thứ tự; 5xx/401 → cần xem; báo Mất mạng sai) phải xong trước hai tuần thử.
+- 2026-10-31T12:18:35.705Z dong-duong-gui-ma-thua khai thêm vùng ở Cổng Phạm vi: packages/api/test-db/dong-duong-gui-ma/**, docs/superpowers/specs/2026-10-31-dong-duong-gui-ma-thua-design.md, docs/superpowers/plans/2026-10-31-dong-duong-gui-ma-thua.md
+- 2026-10-31T11:12:32.895Z rang-giu-khuon khai thêm vùng ở Cổng Phạm vi: .agents/skills/quy-hang-ui/SKILL.md, docs/design/vo-va-ia.md
+- 2026-10-31T09:11:53.812Z Luật thường trực của giám sát nen-2: mọi dãy được vẽ lại PRODUCT-MAP.md và LO-TRINH.html bằng product-map.mjs (máy, không sửa tay) trong PR của mình — không cần xin cham-tep (luật 11).
+- 2026-10-31T09:11:47.035Z nhanh-tuc-thi khai thêm vùng ở Cổng Phạm vi: apps/web/src/components/sync/**, apps/web/src/components/shell/**, apps/web/src/app/(app)/proto/nhanh-tuc-thi/**, packages/core/src/listing/fold.ts, packages/core/src/listing/listing.test.ts
+- 2026-10-31T08:59:02.921Z bao-ro-ngay-ban-sai khai thêm vùng ở Cổng Phạm vi: packages/api/test-db/ngay-ban/**, docs/superpowers/specs/2026-10-31-bao-ro-ngay-ban-sai-design.md, docs/superpowers/plans/2026-10-31-bao-ro-ngay-ban-sai.md
+- 2026-10-31T08:55:07.055Z ghi danh X → /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/silly-mestorf-c5c716 (thay /CHUA-CO-WORKTREE/X)
+- 2026-10-31T08:52:17.111Z ban-do-khuon-nhom-da-co khai thêm vùng ở Cổng Phạm vi: apps/web/src/components/shell/notifications.tsx, apps/web/src/components/trang-thai.tsx, packages/ui-lint/lib/ban-do.mjs, packages/ui-lint/ban-do-khuon.mjs, packages/ui-lint/tests/ban-do-khuon.test.mjs, docs/design/vo-va-ia.md, .claude/launch.json
+- 2026-10-31T08:50:23.108Z Chủ kho 31/10 nguyên văn «build 57 55 56 · dãy X»: Cổng Đáng ở PR #28; thêm 57, 55, 56 vào dãy X (thứ tự 57→55→56), gỡ nghỉ dãy X. Cổng dãy X: dev 3474 / Postgres 5554, container quy-hang-db-X.
+- 2026-10-31T08:50:23.039Z cho X chạy lại
+- 2026-10-31T08:50:22.994Z thêm việc 56 cho X
+- 2026-10-31T08:50:22.945Z thêm việc 55 cho X — sau phien-dang-nhap-30-ngay (trùng tệp)
+- 2026-10-31T08:50:22.898Z thêm việc 57 cho X
+- 2026-10-31T08:45:38.832Z phien-dang-nhap-30-ngay khai thêm vùng ở Cổng Phạm vi: apps/web/src/proxy.ts
+- 2026-10-31T08:43:18.423Z phien-dang-nhap-30-ngay chờ 9, 11 gộp trước (trùng tệp)
+- 2026-10-31T08:43:15.397Z phien-dang-nhap-30-ngay khai thêm vùng ở Cổng Phạm vi: packages/api/test-db/**, docs/adr/**, docs/product/**
+- 2026-10-31T08:42:20.534Z Chủ kho 31/10 nguyên văn «phiên đăng nhập: 30 ngày»: thêm việc phien-dang-nhap-30-ngay vào dãy A (đang rảnh, 60 còn chờ 59) — đổi thời hạn phiên better-auth 7 → 30 ngày, trượt theo ngày dùng; T2.
+- 2026-10-31T08:42:20.487Z thêm việc phien-dang-nhap-30-ngay cho A
+- 2026-10-31T06:05:15.618Z Chủ kho 31/10 nguyên văn «Bạn tạo .env.local đi»: giám sát tạo .env.local (một dòng DATABASE_URL tới Postgres thử của dãy, cổng 5551/5552/5553, mật khẩu thử của AGENTS.md) ở worktree N, A, D bằng shell — chỉ theo lệnh trực tiếp ấy; git bỏ qua tệp. Đợt sau: dựng .env.local khi mở worktree dãy.
+- 2026-10-31T04:34:28.276Z Luật đặt tên phiên: phiên nào chờ chủ kho thì tiêu đề bắt đầu «⏳ CHỜ ANH: <việc>» (chủ kho yêu cầu 31/10); đổi lại tên thường khi hết chờ.
+- 2026-10-31T03:44:32.319Z Việc ghi lộ trình sau: mã hoá số chủ nhà (tách từ Hỏi-1 hàng 11) phải xong trước khi có dữ liệu thật; hàng 10 (nhận danh mục Invest, đang park) phải mở lại trước hai tuần thử thật (Hỏi-3 hàng 9).
+- 2026-10-31T03:31:54.066Z danh-muc-go-ma-can khai thêm vùng ở Cổng Phạm vi: packages/api/test-db/catalog/**
+- 2026-10-31T03:31:32.289Z Chủ kho 31/10 nguyên văn: «build ban-do-khuon-nhom-da-co rang-giu-khuon vong-giao-dien-qua-ban-do · xếp: 58, 59 đầu dãy D, 60 sau 12 ở dãy A». Cổng Đáng ghi ở PR #24; thêm 58, 59 vào D (đẩy lên trước 9 — 9 đang làm dở nên chạy xong trước), 60 vào A sau 12 và chờ 59 gộp (dung_tren).
+- 2026-10-31T03:31:32.223Z rang-giu-khuon chờ 58 gộp trước (trùng tệp)
+- 2026-10-31T03:31:32.221Z vong-giao-dien-qua-ban-do chờ 59, 12 gộp trước (trùng tệp)
+- 2026-10-31T03:31:21.202Z đẩy 59 lên trước 9
+- 2026-10-31T03:31:21.158Z đẩy 58 lên trước 9
+- 2026-10-31T03:31:15.711Z thêm việc 60 cho A
+- 2026-10-31T03:31:15.664Z thêm việc 59 cho D
+- 2026-10-31T03:31:15.617Z thêm việc 58 cho D
+- 2026-10-31T03:29:25.480Z truc-ai-thay-hang khai thêm vùng ở Cổng Phạm vi: packages/api/src/listings/**, packages/api/test-db/visibility.test.ts, packages/core/package.json, docs/product/tham-chieu.md, docs/superpowers/specs/2026-10-31-truc-ai-thay-hang-design.md, docs/superpowers/plans/2026-10-31-truc-ai-thay-hang.md
+- 2026-10-31T03:26:59.057Z Giám sát giữ chỗ số ADR nen-2: N=0010, A=0011, D=0012. Tệp dùng chung app.ts/errors.ts/tham-chieu.md/CONTEXT.md: chỉ thêm dòng, gộp giữ cả hai bên.
+- 2026-10-31T03:25:27.289Z Giám sát giữ chỗ số migration nen-2: N=006 (lop-truong-nguon), A=007 (truc-ai-thay-hang), D=008 (danh-muc-go-ma-can) nếu hàng cần; kiểm lại trên origin/main trước khi gộp.
+- 2026-10-31T03:24:05.578Z ghi danh D → /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/danh-muc-go-ma-can-defccb (thay /CHUA-CO-WORKTREE/D)
+- 2026-10-31T03:23:55.435Z ghi danh A → /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/truc-ai-thay-hang-c8c618 (thay /CHUA-CO-WORKTREE/A)
+- 2026-10-31T03:23:50.352Z ghi danh N → /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/lop-truong-nguon-e1f563 (thay /CHUA-CO-WORKTREE/N)
+- 2026-10-31T03:08:13.827Z pha nhap → dang-chay — Duyệt, có, điều phối toàn quyền sắp gộp và gộp
+
