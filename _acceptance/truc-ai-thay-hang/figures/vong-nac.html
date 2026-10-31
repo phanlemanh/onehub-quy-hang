@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vòng nấc · Sơ đồ trạng thái</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+
+    .frame { max-width: 1200px; width: 100%; }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--color-ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .sub {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Sơ đồ trạng thái · truc-ai-thay-hang · Hỏi-1</p>
+    <h1>Vòng nấc: ai thấy hàng theo từng trạng thái</h1>
+    <p class="sub">Hỏi-1 — hàng đã lên «Toàn sàn» rồi rời Đang bán: giữ hay hạ. Nấc tính từ dãy sự kiện, không cột. AC-1 · AC-3 · AC-6.</p>
+
+    <svg viewBox="0 0 1000 592" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Sáu trạng thái của hàng xếp trong hai vùng Chỉ tôi và Toàn sàn">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- ===== Vùng (làn nấc) ===== -->
+      <!-- Vùng Chỉ tôi -->
+      <rect x="24" y="72" width="320" height="432" rx="8" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="40" y="100" font-family="'Geist', sans-serif" font-size="12"><tspan fill="#2d3142" font-weight="600">Chỉ tôi</tspan><tspan fill="#4f5d75" dx="6">· chỉ người tạo đọc</tspan></text>
+      <text x="40" y="116" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">Private</text>
+
+      <!-- Vùng Toàn sàn -->
+      <rect x="376" y="72" width="600" height="432" rx="8" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="392" y="100" font-family="'Geist', sans-serif" font-size="12"><tspan fill="#2d3142" font-weight="600">Toàn sàn</tspan><tspan fill="#4f5d75" dx="6">· cả sàn đọc</tspan></text>
+      <text x="392" y="116" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">Company</text>
+
+      <!-- ===== Chuyển trạng thái (vẽ trước hộp) ===== -->
+      <!-- Bắt đầu → Chưa đủ để rao -->
+      <line x1="54" y1="316" x2="80" y2="316" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Chưa đủ để rao → Tạm ngừng (Chỉ tôi) -->
+      <line x1="180" y1="276" x2="180" y2="228" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Chưa đủ để rao → Ngừng hẳn (Chỉ tôi) -->
+      <line x1="180" y1="356" x2="180" y2="404" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Chưa đủ để rao → Đang bán: lên Toàn sàn (focal) -->
+      <line x1="280" y1="316" x2="512" y2="316" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+
+      <!-- Đang bán → bốn trạng thái sau, giữ Toàn sàn -->
+      <path d="M 712 292 H 732 Q 740 292 740 284 V 192 Q 740 184 748 184 H 792" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 712 308 H 756 Q 764 308 764 300 V 280 Q 764 272 772 272 H 792" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 712 324 H 756 Q 764 324 764 332 V 352 Q 764 360 772 360 H 792" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 712 340 H 732 Q 740 340 740 348 V 440 Q 740 448 748 448 H 792" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Lối khác (không chọn): Tạm ngừng đã từng Đang bán → hạ về vùng Chỉ tôi -->
+      <path d="M 968 184 H 980 Q 988 184 988 176 V 48 Q 988 40 980 40 H 248 Q 240 40 240 48 V 92" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+      <!-- ===== Nhãn chuyển (mặt nạ giấy, cách đường 8px) ===== -->
+      <rect x="192" y="244" width="68" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="196" y="256" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">vẫn Chỉ tôi</text>
+
+      <rect x="192" y="372" width="68" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="196" y="384" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">vẫn Chỉ tôi</text>
+
+      <rect x="400" y="280" width="88" height="28" rx="2" fill="#f5f5f5"/>
+      <text x="444" y="292" fill="#ba4513" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">Sẵn sàng bán</text>
+      <text x="444" y="304" fill="#ba4513" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">lên Toàn sàn</text>
+
+      <rect x="724" y="128" width="200" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="728" y="140" fill="#ba4513" font-size="9" font-weight="500" font-family="'Geist Mono', monospace">giữ Toàn sàn (Hỏi-1, khuyến nghị)</text>
+
+      <rect x="496" y="16" width="208" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="600" y="28" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">lối khác: hạ về Chỉ tôi — không chọn</text>
+
+      <!-- ===== Trạng thái ===== -->
+      <!-- Bắt đầu -->
+      <circle cx="48" cy="316" r="6" fill="#2d3142"/>
+
+      <!-- Chưa đủ để rao -->
+      <rect x="80" y="276" width="200" height="80" rx="8" fill="#f5f5f5"/>
+      <rect x="80" y="276" width="200" height="80" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="88" y="280" width="36" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="106" y="292" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-1</text>
+      <text x="180" y="320" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chưa đủ để rao</text>
+      <text x="180" y="336" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Incomplete · lúc tạo</text>
+
+      <!-- Tạm ngừng — Chỉ tôi -->
+      <rect x="80" y="164" width="200" height="64" rx="8" fill="#f5f5f5"/>
+      <rect x="80" y="164" width="200" height="64" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="180" y="196" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tạm ngừng</text>
+      <text x="180" y="212" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Hold · chưa từng Đang bán</text>
+
+      <!-- Ngừng hẳn — Chỉ tôi -->
+      <rect x="80" y="404" width="200" height="64" rx="8" fill="#f5f5f5"/>
+      <rect x="80" y="404" width="200" height="64" rx="8" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="180" y="436" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ngừng hẳn</text>
+      <text x="180" y="452" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Withdrawn · chưa từng Đang bán</text>
+
+      <!-- Đang bán -->
+      <rect x="512" y="276" width="200" height="80" rx="8" fill="#f5f5f5"/>
+      <rect x="512" y="276" width="200" height="80" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <rect x="520" y="280" width="36" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="538" y="292" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-3</text>
+      <text x="612" y="320" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đang bán</text>
+      <text x="612" y="336" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Active · lần đầu tới đây</text>
+
+      <!-- Tạm ngừng — Toàn sàn -->
+      <rect x="792" y="152" width="176" height="64" rx="8" fill="#f5f5f5"/>
+      <rect x="792" y="152" width="176" height="64" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="800" y="156" width="36" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="818" y="168" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-6</text>
+      <text x="880" y="188" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tạm ngừng</text>
+      <text x="880" y="204" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Hold · đã từng Đang bán</text>
+
+      <!-- Đang giao dịch -->
+      <rect x="792" y="240" width="176" height="64" rx="8" fill="#f5f5f5"/>
+      <rect x="792" y="240" width="176" height="64" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="880" y="276" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đang giao dịch</text>
+      <text x="880" y="292" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Pending</text>
+
+      <!-- Đã bán -->
+      <rect x="792" y="328" width="176" height="64" rx="8" fill="#f5f5f5"/>
+      <rect x="792" y="328" width="176" height="64" rx="8" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="880" y="364" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đã bán</text>
+      <text x="880" y="380" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Closed</text>
+
+      <!-- Ngừng hẳn — Toàn sàn -->
+      <rect x="792" y="416" width="176" height="64" rx="8" fill="#f5f5f5"/>
+      <rect x="792" y="416" width="176" height="64" rx="8" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="880" y="452" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ngừng hẳn</text>
+      <text x="880" y="468" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Withdrawn · đã từng Đang bán</text>
+
+      <!-- ===== Chú giải ===== -->
+      <line x1="24" y1="528" x2="976" y2="528" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="24" y="556" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+
+      <line x1="112" y1="552" x2="144" y2="552" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="152" y="556" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">chuyển trạng thái</text>
+
+      <line x1="288" y1="552" x2="320" y2="552" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="328" y="556" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">lần đầu Đang bán — lên Toàn sàn</text>
+
+      <line x1="532" y1="552" x2="564" y2="552" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <text x="572" y="556" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">lối khác của Hỏi-1, không chọn</text>
+
+      <text x="112" y="576" fill="#636b80" font-size="9" font-family="'Geist Mono', monospace">Lược hai lối quay lại Đang bán (từ Tạm ngừng, từ Đang giao dịch): cả hai nằm trong Toàn sàn, không đổi nấc.</text>
+    </svg>
+  </div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+{
+  "feature_plain": "Lead và hàng chưa sẵn sàng bán chỉ người tạo xem được; hàng vừa Đang bán là cả sàn thấy, và giữ thế kể cả khi tạm ngừng — sàn khác thì không bao giờ thấy.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ tính đúng nấc của hàng từ lịch sử: chưa từng Đang bán là «Chỉ tôi», đã từng Đang bán là «Toàn sàn» — đo trên bảng ca viết trước."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ cho người tạo xem hàng ở cả hai nấc, người khác chỉ xem được hàng «Toàn sàn» — vai trong sàn không đổi điều này."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ ẩn lead «Chỉ tôi» khỏi danh sách hàng của người khác, và hiện ngay khi người tạo bấm «Sẵn sàng bán»."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ trả «không có hàng này» khi người khác mở thẳng mã của một lead «Chỉ tôi» — y như mã không tồn tại."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ chặn người khác đổi giá hay trạng thái lead «Chỉ tôi», không ghi gì và không để lộ hàng có thật; lên «Toàn sàn» thì ai trong sàn cũng ghi được (Hỏi-2)."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ giữ hàng ở «Toàn sàn» khi nó tạm ngừng hay rời Đang bán — cả sàn vẫn thấy (Hỏi-1)."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ không bao giờ cho sàn khác thấy hàng, kể cả khi hàng đã lên «Toàn sàn»."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ không cho quản trị sàn hay trưởng nhóm xem lead «Chỉ tôi» của người khác."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ giữ luật «ai thấy» ở đúng một chỗ: nấc trong danh sách khớp nấc tính lại từ lịch sử của từng hàng."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ báo đỏ ngay khi có thêm một cửa đọc hay sửa hàng mà chưa qua luật «ai thấy»."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "OOS-1",
+      "p": "Chưa có nấc «Nhóm»: trưởng nhóm chưa thấy lead của nhóm trước khi hàng lên «Toàn sàn»."
+    },
+    {
+      "id": "OOS-2",
+      "p": "Chưa có nút đổi nấc bằng tay — muốn cả sàn thấy thì bấm «Sẵn sàng bán»."
+    },
+    {
+      "id": "OOS-3",
+      "p": "Chưa gán đầu chủ hay chuyển lead từ telesales sang đầu chủ — «người tạo» là người xem được."
+    },
+    {
+      "id": "OOS-4",
+      "p": "Chặn ở máy chủ và lõi, chưa chặn thêm một lớp trong cơ sở dữ liệu."
+    },
+    {
+      "id": "OOS-5",
+      "p": "Không đụng việc gửi hàng ra ngoài, phần chủ nhà, hay màn nào."
+    }
+  ],
+  "scope_plain": "Những gì hàng này cố ý để sau:",
+  "coverage_plain": [
+    {
+      "i": 0,
+      "p": "Hai nấc «Chỉ tôi» và «Toàn sàn» đều có ca kiểm (AC-1, AC-3..AC-6); «Nhóm» để sau."
+    },
+    {
+      "i": 1,
+      "p": "Mọi lúc hàng đổi nấc đều có ca: lúc tạo, lần đầu Đang bán (kể cả qua Tạm ngừng rồi mới bán), và sau khi rời Đang bán (AC-1, AC-6, AC-9)."
+    },
+    {
+      "i": 2,
+      "p": "Mọi kiểu người xem đều có ca: người tạo, người khác cùng sàn, quản trị và trưởng nhóm, người sàn khác (AC-2..AC-8)."
+    },
+    {
+      "i": 3,
+      "p": "Mọi thao tác trên hàng đều qua luật: xem danh sách, mở một hàng, đổi hàng, tạo hàng, và cửa mới sẽ bị bắt (AC-3..AC-5, AC-10)."
+    },
+    {
+      "i": 4,
+      "p": "Luật nằm ở lõi và máy chủ, có ca chứng hai lối tính ra cùng một nấc (AC-9); lớp cơ sở dữ liệu không làm ở hàng này."
+    }
+  ],
+  "gap_probe_plain": [
+    {
+      "i": 0,
+      "p": "Chuyện ai được sửa hàng «Toàn sàn» của người khác là quyết định của anh, máy đã lỡ tự chốt — nay thành Hỏi-2 trên thẻ này."
+    },
+    {
+      "i": 1,
+      "p": "Lý do bỏ «đổi nấc bằng tay» trước đó trích sai căn cứ — đã ghi lại lý do thật: việc ấy nằm ngoài vùng tệp của hàng."
+    },
+    {
+      "i": 2,
+      "p": "Lời hứa «không để lộ hàng có thật» trước chỉ đo ở một chỗ — nay đo ở cả đọc, sửa, sàn khác và vai cao bằng cách so nguyên câu trả lời."
+    },
+    {
+      "i": 3,
+      "p": "Chưa có gì chặn một cửa mới làm lộ hàng — đã thêm AC-10 đọc danh sách cửa thật của máy chủ."
+    },
+    {
+      "i": 4,
+      "p": "Bảng ca thiếu đường hàng qua Tạm ngừng rồi mới Đang bán — đã thêm đường đó và mọi lối ra vào Đang bán."
+    }
+  ]
+}
