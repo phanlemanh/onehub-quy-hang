@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 79997fd7970c443f6931c414bfda8b9a5f333c81
+verified_commit: b81d4fc22fd6f7d2dd178df1c5c8467e37f0c043
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -207,3 +207,7 @@ Round 1: mọi eval và mọi lệnh suite đều xanh; không eval nào hỏng.
 Round 2: sửa phép đo AC-3 ở commit 1d4d798 (ca bản trả không mang số dù bản ghi có số); chạy lại E1-E4, E4b, E5, E6, E10 và sáu lệnh suite, tất cả xanh; E7, E8, E9, E9b mang sang từ round 1 vì delta không chạm paths của chúng. Verdict PASS.
 Round 3: commit 79997fd thu hẹp lời gọi chủ nhà theo trục ai thấy hàng (Chỉ tôi của người khác trả 404); chạy lại E4, E4b, E5, E6, E7, E9, E9b, E10 và sáu lệnh suite, tất cả xanh; E1, E2, E3 mang sang từ round 2 và E8 từ round 1 vì delta không chạm paths của chúng. Verdict PASS, kèm một phát hiện ngoài hợp đồng về chữ trên thẻ người ký (xem review-findings.md).
 
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp nhánh chính (PR #27) sau chữ ký
+run_id: repin-20261031T085258Z-68351
+sha: b81d4fc22fd6f7d2dd178df1c5c8467e37f0c043 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng
