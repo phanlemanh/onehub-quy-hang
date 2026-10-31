@@ -59,6 +59,7 @@ bản. Mười một luật — mỗi luật nói chỗ dùng thay:
 | `no-emoji-icons` | emoji làm icon | icon lucide |
 | `require-disable-reason` | `eslint-disable` luật giao diện không kèm lý do | `// eslint-disable-next-line quy-hang-ui/<luật> -- <lý do>` |
 | `ban-do-khuon` | tệp thuộc một nhóm của `design/patterns/` nhập khối cấm của nhóm (so theo tên gốc); bản đồ đọc lỗi | khuôn của nhóm (`Khung`, `MucCaiDat`, `Placeholder`, `TrangThai`); sửa bản đồ |
+| màn ngoài bản đồ (bài quét khuôn, không phải luật ESLint) | `page.tsx` trả JSX mà không thuộc nhóm đơn vị màn nào của `design/patterns/` | thêm mục bản đồ `design/patterns/<nhóm>.md` và khuôn trong cùng vòng |
 
 **Mức nợ** = số vi phạm luật `quy-hang-ui/*` bị cho qua hàng loạt (`eslint --suppress-*`, ghi ở
 `eslint-suppressions.json`). Trần ở `packages/ui-lint/muc-no.json` bằng **0** và chỉ được giảm so với nhánh chính;
@@ -69,6 +70,21 @@ Không dùng `--suppress-*` để làm xanh lint.
 **Bản đồ khuôn** (`design/patterns/`, hàng 58–59): luật `ban-do-khuon` chặn nhập khối cấm lúc viết; bước kiểm chuẩn
 cuối `npm run lint` chạy thêm bài quét khuôn (gốc khuôn, khe bắt buộc, trạng thái trần) và in
 `khuôn: <n> nhóm · <k> lỗi đọc · <m> lệch`. Chấm theo vòng: `node packages/ui-lint/ban-do-khuon.mjs --base <ref>`.
+
+## Vòng giao diện qua bản đồ khuôn
+
+Luật và lý do ở `docs/design/vo-va-ia.md` §2 «Nhóm mới», «Đối chiếu», «Số đo»; ở đây là thứ tự làm.
+
+1. **Xếp nhóm trước khi dựng.** Màn thuộc nhóm nào của `design/patterns/`? Mở và đọc tệp màn mẫu
+   (`mau_dang_chay.tep`) của nhóm trước khi viết dòng nào; dựng qua khuôn, điền khe.
+2. **Nhóm mới thì tạo mục bản đồ ngay trong vòng ấy:** `design/patterns/<nhóm>.md` đủ chín khoá (khuôn, màn mẫu, khe,
+   khối cấm, ngoại lệ có lý do, luật) và tệp khuôn, theo khối đích ở `vo-va-ia.md` §2. Màn thật dưới `(app)` thì rời
+   `nhan_dien` trang tạm cùng PR. Không dựng khuôn cho nhóm chưa có màn.
+3. **Thiết kế (`design-pass`):** `doi-chieu.mjs --base <nhánh chính> --slug <slug>` → chụp từng cặp màn mới · màn mẫu
+   ở 1440 và 375 → `doi-chieu.mjs --dung <slug>` → gửi `doi-chieu/index.html` kèm thẻ Cổng Phạm vi trước khi ký.
+4. **Chấm:** `ban-do-khuon.mjs --base <nhánh chính>` (0 lệch mới, gồm màn ngoài bản đồ) và
+   `so-do-vong.mjs --slug <slug> --base <nhánh chính> --write`.
+5. **Sau gộp:** chủ sản phẩm thấy lệch khi dùng → một dòng trong `docs/design/lech-lot.md`.
 
 ## Sàn thiết kế
 
