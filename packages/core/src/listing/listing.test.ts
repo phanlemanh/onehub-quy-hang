@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { completeness } from "./completeness";
-import { confirmsWithOwner, validatePayload, type EventType, type ListingEvent } from "./events";
+import { confirmsWithOwner, NGAY_KHONG_CO_THAT, NGAY_SAI_DANG, validatePayload, type EventType, type ListingEvent } from "./events";
 import { foldListing } from "./fold";
 import { freshness } from "./freshness";
+import { NGAY_CO_THAT, NGAY_KHONG_CO_THAT_CA, NGAY_SAI_DANG_CA } from "./ngay-ca.fixture";
 
 /** Dựng dãy sự kiện như API dựng: cờ xác nhận theo luật mặc định, trừ khi lệnh tắt. */
 function day(buoc: [EventType, Record<string, unknown>, string, boolean?][]): ListingEvent[] {
@@ -127,4 +128,35 @@ test("payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ ch
   }
   assert.equal(so, 5 * KHOA_CHU_NHA.length * 2, "số lần thử phải bằng ma trận viết trước");
   assert.deepEqual(validatePayload("deleted", {}).map((e) => e.path), ["type"], "loại sự kiện lạ");
+});
+
+// Hàng 57: ngày bán không có thật bị từ chối ở kiểm payload, không xuống tới cơ sở dữ liệu.
+const CHOT = (closeDate: unknown) => ({ to: "Closed", closePrice: 3_200_000_000, closeDate });
+
+test("ngày không có thật: một lỗi ở closeDate", () => {
+  assert.deepEqual(validatePayload("status_changed", { to: "Closed", closePrice: 3_200_000_000 }), [], "đối chứng: không có ngày bán thì qua");
+  let so = 0;
+  for (const d of NGAY_KHONG_CO_THAT_CA) {
+    assert.deepEqual(validatePayload("status_changed", CHOT(d)), [{ path: "closeDate", reason: NGAY_KHONG_CO_THAT }], `ngày ${d} phải bị từ chối`);
+    so++;
+  }
+  assert.equal(so, NGAY_KHONG_CO_THAT_CA.length, "số lần thử phải bằng ma trận viết trước");
+});
+
+test("sai dạng ngày: lỗi dạng ở closeDate", () => {
+  let so = 0;
+  for (const d of NGAY_SAI_DANG_CA) {
+    assert.deepEqual(validatePayload("status_changed", CHOT(d)), [{ path: "closeDate", reason: NGAY_SAI_DANG }], `giá trị ${JSON.stringify(d)}`);
+    so++;
+  }
+  assert.equal(so, NGAY_SAI_DANG_CA.length, "số lần thử phải bằng ma trận viết trước");
+});
+
+test("ngày có thật: không lỗi", () => {
+  let so = 0;
+  for (const d of NGAY_CO_THAT) {
+    assert.deepEqual(validatePayload("status_changed", CHOT(d)), [], `ngày ${d} phải qua`);
+    so++;
+  }
+  assert.equal(so, NGAY_CO_THAT.length, "số lần thử phải bằng ma trận viết trước");
 });
