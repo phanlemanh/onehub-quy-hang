@@ -5,7 +5,7 @@ slug: moi-truong-that
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, ci, config, docs]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-10-31T01:16:33Z
 ---
