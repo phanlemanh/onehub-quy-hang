@@ -60,13 +60,17 @@ export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
     createRoute({
       method: "get",
       path: `${BASE}/{code}`,
-      summary: "Tra mã căn trong danh mục — found, not_in_catalog, unreadable hay ambiguous",
-      request: { params: z.object({ code: z.string() }), query: z.object({ project: z.string().optional() }) },
+      summary: "Tra mã căn trong danh mục — found, not_in_catalog, unreadable hay ambiguous (nhiều căn)",
+      request: {
+        params: z.object({ code: z.string() }),
+        // `building`: tên toà hoặc khoá toà của một ứng viên «nhiều căn» — chọn đúng một căn khi mã trùng ở hai toà (hàng 63).
+        query: z.object({ project: z.string().optional(), building: z.string().optional() }),
+      },
       responses: {
         200: { description: "Kết quả tra", content: { "application/json": { schema: Lookup } } },
         401: err("Chưa đăng nhập"),
         403: err("Chưa gắn sàn"),
-        404: err("Dự án không có trong danh mục"),
+        404: err("Dự án hoặc toà không có trong danh mục"),
         409: err("Thuộc nhiều sàn, chưa chọn"),
       },
     }),
@@ -74,9 +78,9 @@ export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const loi = await vao(c);
       if (loi) return tra(c, loi);
       const { code } = c.req.valid("param");
-      const { project } = c.req.valid("query");
-      const kq = lookupUnit(index, code, project);
-      if (kq.status === "unknown_project") return tra(c, API_ERRORS.notFound);
+      const { project, building } = c.req.valid("query");
+      const kq = lookupUnit(index, code, project, building);
+      if (kq.status === "unknown_project" || kq.status === "unknown_building") return tra(c, API_ERRORS.notFound);
       return c.json(kq, 200);
     },
   );
