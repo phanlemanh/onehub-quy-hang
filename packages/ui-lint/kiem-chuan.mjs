@@ -8,7 +8,7 @@
 import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { docBanDo, kiemCay } from "./lib/ban-do.mjs";
+import { docBanDo, kiemCay, manNgoaiBanDo } from "./lib/ban-do.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -114,7 +114,7 @@ function kiemCi(root, loi, dong) {
 function kiemBanDo(root, loi, dong) {
   const bd = docBanDo(root);
   const cay = kiemCay(root, bd);
-  const lech = Object.values(cay).flatMap((r) => r.lech);
+  const lech = [...Object.values(cay).flatMap((r) => r.lech), ...manNgoaiBanDo(root, bd)];
   for (const l of bd.loi) loi.push(`khuôn: ${l}`);
   for (const l of lech) loi.push(`khuôn: ${l.tep}: ${l.nhom} — ${l.dieu}`);
   dong.push(`khuôn: ${bd.nhom.length} nhóm · ${bd.loi.length} lỗi đọc · ${lech.length} lệch`);

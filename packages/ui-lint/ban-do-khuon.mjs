@@ -9,7 +9,7 @@ import { execFileSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { docBanDo, dongTomTat, kiemCay } from "./lib/ban-do.mjs";
+import { docBanDo, dongTomTat, kiemCay, MAN_GLOB, globRegex, manNgoaiBanDo, NHOM_NGOAI } from "./lib/ban-do.mjs";
 
 const args = process.argv.slice(2);
 const i = args.indexOf("--root");
@@ -17,7 +17,8 @@ const root = resolve(i >= 0 ? args[i + 1] : join(dirname(fileURLToPath(import.me
 
 const banDo = docBanDo(root);
 const cay = kiemCay(root, banDo);
-const lech = Object.values(cay).flatMap((r) => r.lech);
+const ngoai = manNgoaiBanDo(root, banDo);
+const lech = [...Object.values(cay).flatMap((r) => r.lech), ...ngoai];
 
 const b = args.indexOf("--base");
 if (b >= 0) {
@@ -33,7 +34,10 @@ if (b >= 0) {
       for (let i = 0; i < Number(m[2] ?? 1); i++) out.add(Number(m[1]) + i);
     return out;
   };
+  const laMan = globRegex(MAN_GLOB);
   const tepNhom = new Set(Object.values(cay).flatMap((r) => [...r.nhanDien, ...r.ngoaiLe]).filter((t) => doi.has(t)));
+  // Màn đổi mà nằm ngoài mọi nhóm cũng là tệp vòng chạm (hàng 60) — không để vòng ấy rơi vào lối «không tệp nào đổi».
+  for (const t of doi) if (laMan.test(t) && ngoai.some((l) => l.tep === t)) tepNhom.add(t);
   const doiBanDo = [...doi].some((t) => t.startsWith("design/patterns/"));
   if (!tepNhom.size && !doiBanDo) {
     console.log("khuôn: không tệp nào của nhóm đổi");
@@ -58,7 +62,7 @@ if (args.includes("--json")) {
   const nhom = Object.fromEntries(
     Object.entries(cay).map(([n, r]) => [n, { don_vi: r.donVi, theo_khuon: r.theoKhuon.length, ngoai_le: r.ngoaiLe.length, lech: r.lech.length }]),
   );
-  console.log(JSON.stringify({ nhom, loi_doc: banDo.loi, lech }, null, 2));
+  console.log(JSON.stringify({ nhom, [NHOM_NGOAI]: ngoai.length, loi_doc: banDo.loi, lech }, null, 2));
 } else {
   for (const [n, r] of Object.entries(cay)) console.log(dongTomTat(n, r));
   for (const l of banDo.loi) console.error(`${l}`);
