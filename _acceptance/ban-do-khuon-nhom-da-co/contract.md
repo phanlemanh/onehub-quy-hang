@@ -5,7 +5,7 @@ slug: ban-do-khuon-nhom-da-co
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-ban-do-khuon-nhom-da-co-design.md
 approved_by:
 approved_at:
@@ -111,3 +111,8 @@ kề: shadcn `Empty`, ReUI `Alert`]. Đủ-để-bắt-đầu: lệch lọt đ�
 - Timebox: ô cơ hội để «…»; hàng chạy trong đợt nen-2 (hạn 600 phút từ lúc dãy D nhận việc).
 - `don_vi` là khoá thêm ngoài §11.3 cho nhóm trạng thái (thiết kế, mục «Hai cách kiểm») — điểm báo về kit.
 - Dãy D chạy dev ở cổng 3473, Postgres 5553 (`quy-hang-db-D`).
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Công cụ kiểm khuôn hoạt động đúng, chỉ có một dòng ghi chú cho người sửa code sau này mô tả sai phạm vi kiểm. Người dùng cuối không thấy gì khác. — `packages/ui-lint/lib/ban-do.mjs`
+- Ngoài-2 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Trong một kiểu viết rất hiếm, công cụ kiểm khuôn có thể báo lệch dù màn thật vẫn dựng đúng khuôn. Không có màn nào bị hỏng, chỉ có người viết code gặp một cảnh báo thừa. — `packages/ui-lint/lib/ban-do.mjs`
+- Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Công cụ kiểm khuôn mới có bài thử cho hai trong bốn kiểu viết điều kiện; nếu sau này ai làm hỏng phần xử lý kiểu còn lại thì bài thử vẫn xanh. Màn hiện có không bị ảnh hưởng. — `packages/ui-lint/tests/ban-do-khuon.test.mjs`
+- Ngoài-4 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Một người viết màn mới nếu đổi tên khối báo trống khi nhập, hoặc viết vai báo lỗi theo kiểu khác, thì bộ kiểm không bắt được và màn có thể hiện khối báo sai kiểu mà không ai hay. — `packages/ui-lint/lib/ban-do.mjs`
+- Ngoài-6 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi tải danh sách người dùng của sàn gặp lỗi khác ngoài việc không có quyền (mất mạng, máy chủ lỗi), màn có thể hiện hỏng hoặc trống thay vì báo «tải thất bại». — `apps/web/src/app/settings/users/page.tsx`
