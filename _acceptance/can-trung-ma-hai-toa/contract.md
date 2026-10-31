@@ -5,7 +5,7 @@ slug: can-trung-ma-hai-toa
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-10-31-can-trung-ma-hai-toa-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T14:21:09Z
@@ -86,3 +86,4 @@ tại chỗ trên hợp đồng hàng 9 (trục đã có) [SUY-TỪ-REPO: _accep
   «nhiều căn» trong tỉ lệ §11) — chờ chủ kho ở Cổng Phạm vi; hợp đồng soạn theo khuyến nghị.
 - Yêu cầu D-1 (máy duyệt): thêm tệp `packages/api/test-db/catalog/trung-ma-hai-toa.test.ts` và một dòng §12 ở
   `docs/product/tham-chieu.md`.
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu một dự án có hai toà trùng tên nhưng khác mã toà, việc chọn một toà vẫn có thể ra «nhiều căn» thay vì đúng một căn. Người dùng phải tự phân biệt hai căn, nhưng không bị điền nhầm lặng lẽ. — `packages/core/src/catalog/lookup.ts`
