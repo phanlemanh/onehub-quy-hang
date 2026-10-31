@@ -944,3 +944,231 @@ test("lead: khoá mã căn giữ chữ và số, bỏ dấu, viết hoa", { skip
     await client.end();
   }
 });
+
+// ---- Chia lead và hạn (011_chia_lead_va_han, hàng 25: AC-9) ----
+const DC_A = "u-cl-dau-chu-a";
+const TN_A = "u-cl-truong-nhom-a";
+const QT_A = "u-cl-quan-tri-a";
+const NG_B = "u-cl-nguoi-b"; // sàn B: đầu chủ, trưởng nhóm, quản trị — đủ vai để mọi hàm qua cổng vai
+const ZONE_CL_A = "00000000-0000-4000-8000-0000000004a1";
+const L_CHUA_DAU = "00000000-0000-4000-8000-0000000004a2"; // lead A chưa đóng dấu
+const L_CHO = "00000000-0000-4000-8000-0000000004a3"; // lead A đã đóng dấu, chờ chia
+const L_VE = "00000000-0000-4000-8000-0000000004a4"; // lead A đã về DC_A
+const L_KHO = "00000000-0000-4000-8000-0000000004a5"; // lead A ở kho chung
+const L_B = "00000000-0000-4000-8000-0000000004b1"; // lead B chờ chia
+
+/** Sàn A có đầu chủ phụ trách «Toà A», trưởng nhóm, quản trị, bốn lead, một dòng cấu hình, một người nghỉ, một lời báo;
+ * sàn B có một người đủ vai và một lead. Dựng bằng vai chủ rồi chuyển sang vai API. */
+async function withChia(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [DC_A, COMPANY_A, ["listing_agent"]],
+      [TN_A, COMPANY_A, ["team_lead"]],
+      [QT_A, COMPANY_A, ["company_admin"]],
+      [NG_B, COMPANY_B, ["listing_agent", "team_lead", "company_admin"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    await c.query("insert into company_zones (id, company_id, name) values ($1, $2, 'Toà A')", [ZONE_CL_A, COMPANY_A]);
+    await c.query("insert into member_zones (company_id, user_id, zone_id) values ($1, $2, $3)", [COMPANY_A, DC_A, ZONE_CL_A]);
+    const lead = (id, san, them = "") =>
+      c.query(
+        `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
+                            owner_phone_enc, owner_phone_hash, outcome ${them ? ", " + them.split("=")[0] : ""})
+         values ($1, $2, $3, 'Toà A', 'sale', 1, 'included', 'now', $4, $5, 'new' ${them ? ", " + them.split("=")[1] : ""})`,
+        [id, san, san === COMPANY_A ? TN_A : NG_B, Buffer.concat([Buffer.from([1]), randomBytes(38)]), randomBytes(32)],
+      );
+    await lead(L_CHUA_DAU, COMPANY_A);
+    await lead(L_CHO, COMPANY_A, "routing_strategy, accept_minutes, first_call_minutes='zone_round_robin', 15, 30");
+    await lead(L_KHO, COMPANY_A, "routing_strategy, accept_minutes, first_call_minutes='open_pool', 15, 30");
+    await lead(L_B, COMPANY_B, "routing_strategy, accept_minutes, first_call_minutes='zone_round_robin', 15, 30");
+    await lead(
+      L_VE,
+      COMPANY_A,
+      `routing_strategy, accept_minutes, first_call_minutes, matched_agent_user_id, routed_at, routed_seq='zone_round_robin', 15, 30, '${DC_A}', now(), nextval('app.lead_routing_seq')`,
+    );
+    await c.query(
+      "insert into company_settings (company_id, key, value, updated_by) values ($1, 'lead_routing.alert_to', '\"team_lead_and_admin\"', $2)",
+      [COMPANY_A, QT_A],
+    );
+    await c.query("insert into member_availability (company_id, user_id, on_leave, changed_by) values ($1, $2, false, $2)", [COMPANY_A, DC_A]);
+    await c.query(
+      "insert into lead_alerts (company_id, lead_id, kind, agent_user_id, deadline_from, raised_at) values ($1, $2, 'accept_overdue', $3, now(), now())",
+      [COMPANY_A, L_VE, DC_A],
+    );
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+/** Đọc bằng vai chủ rồi trở lại vai API với người và sàn đã cho. */
+async function docChu(c, sql, params, quayVe) {
+  await c.query("reset role");
+  const r = (await c.query(sql, params)).rows;
+  await c.query("set local role quy_hang_app");
+  await lamNguoi(c, quayVe[0], quayVe[1]);
+  return r;
+}
+const dongLead = (c, id, quayVe) =>
+  docChu(
+    c,
+    "select matched_agent_user_id, routing_strategy, accepted_at, first_called_at, reassign_count from leads where id = $1",
+    [id],
+    quayVe,
+  ).then((r) => r[0]);
+const demBao = (c, quayVe) => docChu(c, "select count(*)::int n from lead_alerts where company_id = $1", [COMPANY_A], quayVe).then((r) => r[0].n);
+
+test("chia lead: ba bảng mới nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select relname, relrowsecurity r, relforcerowsecurity f from pg_class
+       where relname in ('company_settings', 'member_availability', 'lead_alerts') order by relname`,
+    );
+    assert.deepEqual(rows, [
+      { relname: "company_settings", r: true, f: true },
+      { relname: "lead_alerts", r: true, f: true },
+      { relname: "member_availability", r: true, f: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("chia lead: hàm ghi của sàn B không đổi lead nào của sàn A, cùng lời gọi dưới A đổi đúng một dòng", { skip }, async () => {
+  await withChia(async (c) => {
+    // Mỗi ca: [tên, người A, lời gọi, đọc lại, kết quả mong dưới B (mã lỗi hay giá trị)]
+    const ca = [
+      ["stamp_leads", TN_A, "select app.stamp_leads('manual', 5, 10) v", L_CHUA_DAU, { tra: 0 }],
+      ["route_lead", TN_A, `select app.route_lead('${L_CHO}', '${DC_A}', now()) v`, L_CHO, { tra: false }],
+      ["claim_lead", DC_A, `select app.claim_lead('${L_KHO}') v`, L_KHO, { loi: /không có lead kho chung này/ }],
+      ["accept_lead", DC_A, `select app.accept_lead('${L_VE}') v`, L_VE, { loi: /không có lead này của người gọi/ }],
+      ["reassign_lead", TN_A, `select app.reassign_lead('${L_VE}', '${DC_A}') v`, L_VE, { loi: /không có lead này/ }],
+      ["mark_first_call", DC_A, `select app.mark_first_call('${L_VE}') v`, L_VE, { loi: /không có lead này của người gọi/ }],
+    ];
+    let so = 0;
+    for (const [ten, nguoiA, sql, id, mong] of ca) {
+      // Dưới sàn B, cùng mã người của A (không thuộc B) và người đủ vai của B: dòng của A không đổi.
+      for (const ai of [nguoiA, NG_B]) {
+        await lamNguoi(c, ai, COMPANY_B);
+        const truoc = await dongLead(c, id, [ai, COMPANY_B]);
+        if (mong.loi && ai === NG_B) await expectError(c, sql, [], mong.loi);
+        else {
+          await c.query("savepoint sp");
+          const r = await c.query(sql).then((x) => x.rows[0].v, (e) => e);
+          await c.query("rollback to savepoint sp");
+          if (mong.loi) assert.ok(r instanceof Error, `${ten}: B gọi được`);
+          else assert.equal(r, mong.tra, `${ten} dưới B`);
+        }
+        assert.deepEqual(await dongLead(c, id, [ai, COMPANY_B]), truoc, `${ten}: dòng của A đổi dưới B`);
+      }
+      // Đối chứng dương: cùng lời gọi dưới A đổi dòng ấy.
+      await lamNguoi(c, nguoiA, COMPANY_A);
+      const truoc = await dongLead(c, id, [nguoiA, COMPANY_A]);
+      await c.query(sql);
+      assert.notDeepEqual(await dongLead(c, id, [nguoiA, COMPANY_A]), truoc, `${ten}: đối chứng dưới A không đổi gì`);
+      so++;
+    }
+    assert.equal(so, ca.length);
+    // raise_lead_alert: B không chèn được lời báo cho lead của A; dưới A chèn đúng một dòng.
+    await lamNguoi(c, NG_B, COMPANY_B);
+    const truoc = await demBao(c, [NG_B, COMPANY_B]);
+    assert.equal((await c.query("select app.raise_lead_alert($1, 'unrouted', now(), now()) v", [L_CHO])).rows[0].v, false);
+    assert.equal(await demBao(c, [NG_B, COMPANY_B]), truoc, "B chèn được lời báo cho lead của A");
+    await lamNguoi(c, TN_A, COMPANY_A);
+    const l2 = "00000000-0000-4000-8000-0000000004a6";
+    await c.query("reset role");
+    await c.query(
+      `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
+                          owner_phone_enc, owner_phone_hash, outcome, routing_strategy, accept_minutes, first_call_minutes)
+       values ($1, $2, $3, 'Toà A', 'sale', 1, 'included', 'now', $4, $5, 'new', 'manual', 15, 30)`,
+      [l2, COMPANY_A, TN_A, Buffer.concat([Buffer.from([1]), randomBytes(38)]), randomBytes(32)],
+    );
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, TN_A, COMPANY_A);
+    assert.equal((await c.query("select app.raise_lead_alert($1, 'unrouted', now(), now()) v", [l2])).rows[0].v, true);
+    assert.equal(await demBao(c, [TN_A, COMPANY_A]), truoc + 1, "đối chứng: dưới A không chèn đúng một dòng");
+  });
+});
+
+test("chia lead: hàm đọc và bảng mới của sàn B không trả dòng nào của sàn A", { skip }, async () => {
+  await withChia(async (c) => {
+    const idA = [L_CHUA_DAU, L_CHO, L_VE, L_KHO];
+    const nguoiA = [DC_A, TN_A, QT_A];
+    // Đối chứng dương dưới A: mỗi hàm và bảng có dòng.
+    await lamNguoi(c, DC_A, COMPANY_A);
+    const a = {
+      queue: (await c.query("select * from app.lead_routing_queue()")).rows,
+      cand: (await c.query("select * from app.lead_routing_candidates()")).rows,
+      facts: (await c.query("select * from app.lead_deadline_facts()")).rows,
+      pool: (await c.query("select * from app.lead_pool()")).rows,
+      settings: (await c.query("select * from app.lead_routing_settings_rows()")).rows,
+      admin: (await c.query("select app.lead_alerts_to_admin() v")).rows[0].v,
+    };
+    assert.ok(a.queue.length && a.cand.length && a.facts.length && a.pool.length && a.settings.length, "đối chứng dưới A rỗng");
+    assert.equal(a.admin, true);
+    for (const bang of ["company_settings", "member_availability"]) {
+      assert.ok((await c.query(`select 1 from ${bang} where company_id = $1`, [COMPANY_A])).rowCount > 0, `${bang} dưới A rỗng`);
+    }
+    await lamNguoi(c, TN_A, COMPANY_A);
+    assert.ok((await c.query("select 1 from lead_alerts where company_id = $1", [COMPANY_A])).rowCount > 0, "lead_alerts dưới A rỗng");
+    // Dưới B.
+    await lamNguoi(c, NG_B, COMPANY_B);
+    const ids = (rows) => rows.map((r) => r.lead_id);
+    assert.deepEqual(ids((await c.query("select * from app.lead_routing_queue()")).rows).filter((x) => idA.includes(x)), []);
+    assert.deepEqual((await c.query("select * from app.lead_routing_candidates()")).rows.map((r) => r.user_id).filter((x) => nguoiA.includes(x)), []);
+    assert.deepEqual(ids((await c.query("select * from app.lead_deadline_facts()")).rows).filter((x) => idA.includes(x)), []);
+    assert.deepEqual(ids((await c.query("select * from app.lead_pool()")).rows).filter((x) => idA.includes(x)), []);
+    assert.deepEqual((await c.query("select * from app.lead_routing_settings_rows()")).rows, []);
+    assert.equal((await c.query("select app.lead_alerts_to_admin() v")).rows[0].v, false, "B mang cấu hình người đọc báo của A");
+    for (const bang of ["company_settings", "lead_alerts", "member_availability"]) {
+      assert.equal((await c.query(`select 1 from ${bang} where company_id = $1`, [COMPANY_A])).rowCount, 0, `${bang} của A lộ sang B`);
+    }
+    await expectError(
+      c,
+      "insert into company_settings (company_id, key, value, updated_by) values ($1, 'lead_routing.strategy', '\"manual\"', $2)",
+      [COMPANY_A, NG_B],
+      /row-level security/,
+    );
+    // Đối chứng dương: quản trị B ghi được cấu hình của chính B.
+    assert.equal(
+      (await c.query(
+        "insert into company_settings (company_id, key, value, updated_by) values ($1, 'lead_routing.strategy', '\"manual\"', $2)",
+        [COMPANY_B, NG_B],
+      )).rowCount,
+      1,
+    );
+    for (const sql of [
+      "update leads set routing_strategy = 'manual' where id = $1",
+      "delete from leads where id = $1",
+      "update lead_alerts set kind = 'unrouted' where lead_id = $1",
+      "delete from lead_alerts where lead_id = $1",
+    ]) {
+      await expectError(c, sql, [L_B], /permission denied/);
+    }
+    const f = await c.query("select * from app.lead_job_companies()");
+    assert.deepEqual(f.fields.map((x) => x.name), ["company_id"]);
+  });
+});
+
+test("chia lead: cấu hình chỉ quản trị sàn ghi được, ghi đúng tên người đổi", { skip }, async () => {
+  await withChia(async (c) => {
+    const chen = "insert into company_settings (company_id, key, value, updated_by) values ($1, 'lead_routing.accept_minutes', '5', $2)";
+    for (const ai of [DC_A, TN_A]) {
+      await lamNguoi(c, ai, COMPANY_A);
+      await expectError(c, chen, [COMPANY_A, ai], /row-level security/);
+    }
+    await lamNguoi(c, QT_A, COMPANY_A);
+    await expectError(c, chen, [COMPANY_A, TN_A], /row-level security/);
+    await expectError(c, "insert into company_settings (company_id, key, value, updated_by) values ($1, 'Lead Routing', '1', $2)", [COMPANY_A, QT_A], /company_settings_key_check/);
+    assert.equal((await c.query(chen, [COMPANY_A, QT_A])).rowCount, 1);
+  });
+});
