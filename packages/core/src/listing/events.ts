@@ -1,0 +1,93 @@
+/**
+ * Sự kiện của hàng — chỉ thêm, không sửa (Tham chiếu §4). Mỗi loại một khuôn payload CHẶT: khoá lạ ở bất kỳ cấp nào bị
+ * từ chối, nên thông tin chủ nhà (lớp `source`) không có đường vào bảng sự kiện (bất biến 2, AC-10).
+ */
+import { isStandardStatus, WITHDRAWN_REASONS } from "./status";
+
+export const EVENT_TYPES = ["created", "details_changed", "price_changed", "status_changed", "owner_confirmed"] as const;
+export type EventType = (typeof EVENT_TYPES)[number];
+
+export const FEE_INCLUSIONS = ["included", "excluded"] as const;
+
+/** Bốn phần của lần rao ngoài giá — chữ tự do của sàn, xoá trắng bằng `null`. */
+export const DETAIL_FIELDS = ["furnished", "legalStatus", "financing", "occupantType"] as const;
+export type DetailField = (typeof DETAIL_FIELDS)[number];
+
+/** Khoá thuộc lớp `source` — tên hay gặp; khuôn chặt đã từ chối mọi khoá lạ, danh sách này để báo lỗi gọi đúng tên. */
+export const SOURCE_KEYS = ["ownerName", "ownerPhone", "floorPrice", "titleDeedPhoto"] as const;
+
+type Kiem = (v: unknown) => string | null;
+const chu: Kiem = (v) => (typeof v === "string" && v.trim().length > 0 && v.length <= 200 ? null : "cần chữ, 1–200 ký tự");
+const chuHayXoa: Kiem = (v) => (v === null ? null : chu(v));
+const tien: Kiem = (v) => (typeof v === "number" && Number.isSafeInteger(v) && v > 0 ? null : "cần số đồng nguyên dương");
+const ngay: Kiem = (v) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) ? null : "cần ngày YYYY-MM-DD");
+const motTrong = (ds: readonly string[]): Kiem => (v) => (typeof v === "string" && ds.includes(v) ? null : `cần một trong: ${ds.join(", ")}`);
+
+/** Khuôn từng loại: khoá → [bắt buộc, cách kiểm]. */
+const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
+  created: { buildingName: [true, chu], unitNumber: [false, chu] },
+  details_changed: Object.fromEntries(DETAIL_FIELDS.map((k) => [k, [false, chuHayXoa]])),
+  price_changed: { listPrice: [true, tien], feeInclusion: [true, motTrong(FEE_INCLUSIONS)] },
+  status_changed: {
+    to: [true, (v) => (isStandardStatus(v) ? null : "cần trạng thái chuẩn")],
+    closePrice: [false, tien],
+    closeDate: [false, ngay],
+    withdrawnReason: [false, motTrong(WITHDRAWN_REASONS)],
+  },
+  owner_confirmed: {},
+};
+
+export type PayloadError = { path: string; reason: string };
+
+function khoaLong(v: unknown, path: string, out: PayloadError[]) {
+  if (v && typeof v === "object") {
+    for (const k of Object.keys(v)) out.push({ path: `${path}.${k}`, reason: "khoá lạ" });
+  }
+}
+
+/** Kiểm payload theo khuôn chặt của loại sự kiện. Rỗng là hợp lệ. */
+export function validatePayload(type: unknown, payload: unknown): PayloadError[] {
+  if (typeof type !== "string" || !(EVENT_TYPES as readonly string[]).includes(type)) return [{ path: "type", reason: "loại sự kiện lạ" }];
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return [{ path: "payload", reason: "cần một đối tượng" }];
+  const khuon = KHUON[type as EventType];
+  const out: PayloadError[] = [];
+  for (const [k, v] of Object.entries(payload)) {
+    const luat = khuon[k];
+    if (!luat) {
+      out.push({ path: k, reason: (SOURCE_KEYS as readonly string[]).includes(k) ? "thông tin chủ nhà không vào hàng" : "khoá lạ" });
+      khoaLong(v, k, out);
+      continue;
+    }
+    if (v !== null && typeof v === "object") {
+      out.push({ path: k, reason: "không nhận khối lồng" });
+      khoaLong(v, k, out);
+      continue;
+    }
+    const loi = luat[1](v);
+    if (loi) out.push({ path: k, reason: loi });
+  }
+  for (const [k, [batBuoc]] of Object.entries(khuon)) if (batBuoc && !(k in payload)) out.push({ path: k, reason: "thiếu" });
+  if (type === "details_changed" && Object.keys(payload).length === 0) out.push({ path: "payload", reason: "không có phần nào đổi" });
+  return out;
+}
+
+/**
+ * Lần sửa này có tính là vừa xác nhận với chủ nhà không (luật 9, luật 15): đổi giá, đổi trạng thái mặc định có;
+ * «Còn / giữ giá» luôn có; đổi phần khác của lần rao và tạo hàng thì không. Người gửi lệnh tắt được ở hai loại đầu.
+ */
+export function confirmsWithOwner(type: EventType, requested?: boolean): boolean {
+  if (type === "owner_confirmed") return true;
+  if (type === "price_changed" || type === "status_changed") return requested ?? true;
+  return false;
+}
+
+export type ListingEvent = {
+  seq: number;
+  type: EventType;
+  payload: Record<string, unknown>;
+  actorUserId: string;
+  actorRoles: string[];
+  confirmedWithOwner: boolean;
+  /** ISO 8601. */
+  occurredAt: string;
+};

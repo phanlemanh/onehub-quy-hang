@@ -5,7 +5,7 @@ slug: loi-hang-va-su-kien
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, db]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-10-31-loi-hang-va-su-kien-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-30T23:09:39Z
