@@ -1,6 +1,6 @@
 # ADR-0016: Mọi loại hình bất động sản — loại hình RESO, khu, địa chỉ chuẩn, kiểm trùng theo địa chỉ
 
-Ngày: 2026-10-31 · Trạng thái: **đề xuất** (chờ chủ kho duyệt ở Cổng Phạm vi của hàng 72; Hỏi-1..4 cuối tệp) · Liên
+Ngày: 2026-10-31 · Trạng thái: **đề xuất** (Hỏi-4 đã quyết 31/10; Hỏi-1..3 chờ chủ kho ở Cổng Phạm vi của hàng 72) · Liên
 quan: Tham chiếu §1, §3, §4, §6, §7, luật 19–20, 24; bất biến 1, 2, 4; ADR-0006 (khu phụ trách), ADR-0007 (đổi tên API),
 ADR-0008 (sự kiện của hàng), ADR-0010 (lớp nguồn), ADR-0011 (nhập dữ liệu); hàng 9, 10, 14, 17, 24, 31, 35, 63, 64, 65
 của lộ trình · đề xuất hàng: [Bản phạm vi mọi loại hình](../plan/pham-vi-moi-loai-hinh.md)
@@ -145,6 +145,7 @@ Bản đồ lô (Tham chiếu §10, P2, «Sau»); hàng thương mại (văn ph�
 - **Hỏi-2 — mức đủ của đất.** Khuyến nghị bốn mục (bỏ «nội thất»).
 - **Hỏi-3 — khách riêng thấy gì với nhà ngoài khu.** Khuyến nghị tên đường và xã, không số nhà, không hẻm, không toạ độ;
   sàn chỉnh được như mọi mặc định (§7).
-- **Hỏi-4 — hai tuần thử có cần loại hình khác không.** Khuyến nghị không: hai tuần thử giữ một khu căn hộ (§1); chín hàng
+- **Hỏi-4 — hai tuần thử có cần loại hình khác không. Đã quyết 31/10: không** — chủ kho «Duyệt theo khuyến nghị» cho
+  dòng giám sát trình «Hỏi-4: không, hai tuần thử giữ khu căn hộ». Khuyến nghị đã trình: hai tuần thử giữ một khu căn hộ (§1); chín hàng
   này chặn sàn thứ hai. Nếu khu thử có cả thấp tầng, bảy hàng 72, 73, 74, 76, 77, 79, 80 thành điều kiện của hai tuần
   thử (75 và 78 chỉ cần cho nhà ngoài khu và file thấp tầng).
