@@ -1276,6 +1276,77 @@
       "cau_giao": "Phiên đăng nhập giữ 30 ngày thay vì 7, vẫn trượt theo ngày dùng",
       "slug": "phien-dang-nhap-30-ngay",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-10-31"
+    },
+    {
+      "ma": "61",
+      "cau_giao": "Đầu chủ sửa căn lúc máy chủ trục trặc ngắn hay hết phiên thì thay đổi tự gửi lại khi máy chủ trả lời được, chỉ báo đồng bộ nói đúng vì sao chưa gửi, và căn đang ở Cần xem sửa tiếp hay xử lý không kẹt, không đảo thứ tự hai lần sửa",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Ba hành vi chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng hàng 13 (Ngoài-3/13/25, Ngoài-4, Ngoài-6/16): không mất dữ liệu ngầm nhưng người dùng phải xử lý tay việc lẽ ra tự lành, hoặc bị chỉ báo nói sai; phải xong trước hai tuần thử",
+      "hang": "T2",
+      "slug": "dong-bo-tu-lanh",
+      "bat_khi": "Máy chủ giả trả 5xx hay 401 rồi hồi: thao tác ở lại hàng đợi và lên máy chủ đúng thứ tự, không căn nào vào Cần xem; 4xx khác vẫn vào Cần xem như cũ; chỉ báo phân biệt mất mạng, hết phiên, bị từ chối và lỗi kho trên máy; sửa căn đang Cần xem rồi «Giữ của tôi», «Lấy bản mới» hay «Bỏ thay đổi» không để thao tác kẹt và giá cuối là lần sửa sau cùng",
+      "nhom": "dong-bo",
+      "dot": "ton-nen-2",
+      "phu": [
+        "H13-N3",
+        "H13-N13",
+        "H13-N25",
+        "H13-N4",
+        "H13-N6",
+        "H13-N16"
+      ],
+      "dung_tren": [
+        "13"
+      ],
+      "vung": [
+        "apps/web/src/lib/sync/**",
+        "apps/web/src/components/sync/**"
+      ]
+    },
+    {
+      "ma": "62",
+      "cau_giao": "Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Hỏi-1 của hàng 11 tách mã hoá số chủ sang hàng sau; chủ kho đặt điều kiện phải xong trước khi có dữ liệu thật (ADR-0009, ADR-0010, bất biến 2)",
+      "hang": "T3",
+      "slug": "ma-hoa-so-chu",
+      "bat_khi": "Trên Postgres thử: mọi dòng số chủ là bản mã, truy vấn thẳng bằng vai chủ bảng không thấy chữ số nào của số gốc; «Mở số» trả đúng số và vẫn ghi một sự kiện mỗi lần; thiếu khoá thì máy chủ không khởi động thay vì ghi số rõ; dữ liệu mẫu đã có được mã hoá lại bằng một lệnh chạy lại không đổi kết quả; bộ kiểm cách ly xanh",
+      "nhom": "nguon",
+      "dot": "ton-nen-2",
+      "phu": [
+        "H11-H1"
+      ],
+      "dung_tren": [
+        "11"
+      ],
+      "vung": [
+        "packages/api/src/owners/**",
+        "packages/core/src/access/**"
+      ]
+    },
+    {
+      "ma": "63",
+      "cau_giao": "Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác",
+      "vai": "Đầu chủ",
+      "tieu_chi": 6,
+      "vi_sao": "Ngoài-4 của hàng 9, chủ kho chọn «mở hợp đồng mới» và xử cùng lúc nạp danh mục thật: danh mục mẫu không có ca này, danh mục thật thì có thể có",
+      "hang": "T2",
+      "slug": "can-trung-ma-hai-toa",
+      "bat_khi": "Danh mục thử có hai toà cùng mã căn: tra trả «nhiều căn» kèm cả hai toà, không trả một căn; mã kèm tên toà ra đúng một căn; mọi ca của hàng 9 vẫn xanh",
+      "nhom": "danh-muc",
+      "dot": "ton-nen-2",
+      "phu": [
+        "H9-N4"
+      ],
+      "dung_tren": [
+        "9"
+      ],
+      "vung": [
+        "packages/core/src/catalog/**",
+        "packages/api/src/catalog/**"
+      ]
     }
   ],
   "chan_troi": [
