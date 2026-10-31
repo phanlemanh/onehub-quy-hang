@@ -30,7 +30,7 @@ const loi = {
 const Lead = z.object({ id: z.string(), outcome: z.string() }).passthrough();
 
 /** Tên toà của danh mục mẫu (hàng 5) — chọn «chỉ biết toà». Danh mục thật thay ở hàng 10. */
-const TOA = [...new Set(SAMPLE_CATALOG.projects.flatMap((p) => p.buildings.map((b) => b.buildingName)))].sort();
+const TOA = [...new Set(SAMPLE_CATALOG.subdivisions.flatMap((p) => p.buildings.map((b) => b.buildingName)))].sort();
 
 async function tenNguoi(identityPool: pg.Pool, userId: string | null): Promise<string | null> {
   if (!userId) return null;

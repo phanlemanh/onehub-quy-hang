@@ -47,8 +47,8 @@ async function sanMoi(ten: string, vaiCan: Record<string, string[]>) {
 type HangMau = { ma: string; maCan: string; trangThai: string; gia: number; dieuKienPhi: string; dauChu: string; chuNha: string };
 type ChuMau = { ma: string; ten: string; soDienThoai: string };
 type LeadMau = { ma: string; soDienThoai: string; toa: string; maCan: string | null };
-const PACK = SAMPLE_PACK as unknown as { hang: HangMau[]; chuNha: ChuMau[]; lead: LeadMau[]; danhMuc: { projects: { buildings: { buildingKey: string; buildingName: string }[] }[] } };
-const TOA = Object.fromEntries(PACK.danhMuc.projects.flatMap((p) => p.buildings.map((b) => [b.buildingKey, b.buildingName])));
+const PACK = SAMPLE_PACK as unknown as { hang: HangMau[]; chuNha: ChuMau[]; lead: LeadMau[]; danhMuc: { subdivisions: { buildings: { buildingKey: string; buildingName: string }[] }[] } };
+const TOA = Object.fromEntries(PACK.danhMuc.subdivisions.flatMap((p) => p.buildings.map((b) => [b.buildingKey, b.buildingName])));
 const toaCua = (maCan: string) => TOA[maCan[0]!]!;
 const hangMau = (ma: string) => PACK.hang.find((h) => h.ma === ma)!;
 const chuMau = (ma: string) => PACK.chuNha.find((c) => c.ma === ma)!;
