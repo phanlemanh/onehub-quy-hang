@@ -5,14 +5,14 @@ import plugin from "../index.mjs";
 const TEN = [
   "no-raw-table", "no-raw-controls", "no-native-dialogs", "no-raw-palette",
   "no-hardcoded-color", "no-arbitrary-text-size", "no-banned-motion",
-  "no-aschild", "no-emoji-icons", "require-disable-reason",
+  "no-aschild", "no-emoji-icons", "require-disable-reason", "ban-do-khuon",
 ];
 
 describe("plugin quy-hang-ui", () => {
-  it("có tên và đủ mười luật hợp đồng", () => {
+  it("có tên và đủ mười một luật hợp đồng", () => {
     assert.equal(plugin.meta.name, "quy-hang-ui");
     for (const name of TEN) assert.ok(plugin.rules[name], `thiếu luật ${name}`);
-    assert.deepEqual(Object.keys(plugin.rules).sort(), [...TEN].sort(), "plugin phải có ĐÚNG mười luật hợp đồng");
+    assert.deepEqual(Object.keys(plugin.rules).sort(), [...TEN].sort(), "plugin phải có ĐÚNG mười một luật hợp đồng");
   });
   it("mỗi luật có meta chuẩn", () => {
     for (const name of TEN) {

@@ -1,5 +1,6 @@
 // Plugin ESLint quy-hang-ui: làm "tự vẽ tay UI" phát hiện được bằng máy (chuẩn ReUI + shadcn base-nova).
-// Chuyển từ eslint-plugin-onehub-ui của onehub-invest (cùng chủ kho); đổi tên plugin, giữ nguyên mười luật.
+// Chuyển từ eslint-plugin-onehub-ui của onehub-invest (cùng chủ kho); đổi tên plugin, giữ nguyên mười luật; luật
+// thứ mười một `ban-do-khuon` (hàng 59) giữ bản đồ khuôn design/patterns/.
 import noRawTable from "./rules/no-raw-table.mjs";
 import noRawControls from "./rules/no-raw-controls.mjs";
 import noNativeDialogs from "./rules/no-native-dialogs.mjs";
@@ -10,6 +11,7 @@ import noBannedMotion from "./rules/no-banned-motion.mjs";
 import noAsChild from "./rules/no-aschild.mjs";
 import noEmojiIcons from "./rules/no-emoji-icons.mjs";
 import requireDisableReason from "./rules/require-disable-reason.mjs";
+import banDoKhuon from "./rules/ban-do-khuon.mjs";
 
 export default {
   meta: { name: "quy-hang-ui" },
@@ -24,5 +26,6 @@ export default {
     "no-aschild": noAsChild,
     "no-emoji-icons": noEmojiIcons,
     "require-disable-reason": requireDisableReason,
+    "ban-do-khuon": banDoKhuon,
   },
 };
