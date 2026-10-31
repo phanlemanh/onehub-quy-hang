@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 69ae270fe5ec56e7ff0526c3aad91873832eb7e3
-human_signoff:
+human_signoff: Manh Phan 2026-10-31
 ---
 
 # Evidence Report: o-nhan-lead
@@ -134,7 +134,7 @@ human_signoff:
   run_id: E10-verify-20261031-2240
   exit_code: 0
   baseline: n-a
-  verifier: ui-check:E10
+  verifier: config:executors.ui-check
   verified_at: 2026-10-31T15:32:24Z
   screenshot: evidence/E10-step2.png
   observed: |

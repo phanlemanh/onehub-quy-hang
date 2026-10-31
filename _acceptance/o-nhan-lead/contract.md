@@ -5,7 +5,7 @@ slug: o-nhan-lead
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-o-nhan-lead-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T14:44:53Z
@@ -114,3 +114,10 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead l
   không chạm, bản của telesales dựng ở lõi.
 - Không sửa `packages/core/src/data-classes.ts` hay `agreements.ts`: lớp `source` và trần đã có.
 - Dãy L chạy Postgres 5563 (container `quy-hang-db-L`), dev 3483. Migration số 007 và ADR-0012 do giám sát giữ chỗ.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-3: Hết phiên, mất quyền nhập lead hay đổi sàn ở tab khác thì màn vẫn báo «kiểm mạng», người dùng không biết lý do thật.
+  - Ngoài-4: Ca hiếm không tìm được tên đầu chủ, thông báo chủ trùng hiện chữ «null» thay tên.
+  - Ngoài-5: Tên đầu chủ có thể hiện bằng email thay tên thật, nhất là tài khoản được mời.
+  - Ngoài-7: Bấm «Bỏ lead này» mà lỗi thì hộp đóng lại, không báo gì.
+  - Ngoài-8: Mọi phản hồi khác 201/400 hiện như lỗi mạng; vài ca 400 gửi xong mà không hiện lỗi.
+  - Ngoài-9: Đổi toà sau khi mã căn đã đọc thì lead có thể mang mã căn của toà cũ; bấm gửi lúc đang tra có thể làm form tự điền lại.
