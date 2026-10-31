@@ -505,47 +505,196 @@
       ]
     },
     {
-      "ma": "20",
-      "cau_giao": "Đầu chủ thả file bảng hàng cũ, ghép cột lẫn giá trị vào trường chuẩn, xem trước sẽ ghi gì rồi mới nhập; không cột nào bị bỏ mất",
-      "vai": "Đầu chủ",
+      "ma": "64",
+      "cau_giao": "Lõi đọc một bảng hàng bẩn và nói được từng cột là gì, từng ô ra giá trị chuẩn nào hay vì sao không đọc được — không cần AI — trên bộ file thử có đáp án",
+      "vai": "nen",
       "tieu_chi": 10,
-      "vi_sao": "Màn P0 (N1, N2); luật 11",
-      "hang": "T3",
+      "vi_sao": "ADR-0011 quyết định 1, 7, 12: chế độ tất định là nền và chế độ dự phòng; bộ chuẩn hoá dùng chung cho mọi cửa vào; số nền quyết hàng tác tử",
+      "hang": "T2",
       "du_lieu": "gia",
       "dung_tren": [
         "5",
-        "9",
-        "11",
-        "15"
+        "9"
       ],
-      "slug": "nhap-excel-ghep-cot",
-      "nhom": "dau-chu",
-      "dot": "ban-dau-2910",
+      "slug": "nhap-loi-tat-dinh",
+      "bat_khi": "Hai file mẫu ghép cột 100%; số nền của độ đúng ghép cột, lỗi được sửa, lỗi lọt, tỉ lệ hỏi người trên file bẩn ghi vào hồ sơ; hồ sơ cột dựng ra không chứa giá trị nguồn hay dữ liệu cá nhân nào trên file nguồn giấu",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
       "phu": [
-        "D8"
+        "ND1"
       ],
       "vung": [
-        "apps/web/src/app/imports/**"
+        "packages/core/src/import/**",
+        "packages/core/test/import/**"
       ]
     },
     {
-      "ma": "21",
-      "cau_giao": "Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước; ngày xác nhận lấy theo file, hoàn tác được cả lần nhập",
+      "ma": "65",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file",
       "vai": "Đầu chủ",
-      "tieu_chi": 8,
-      "vi_sao": "Luật 11; tách khỏi hàng 20 cho vừa cỡ",
-      "hang": "T2",
+      "tieu_chi": 11,
+      "vi_sao": "Màn P0 N1, N2; luật 11; ADR-0011 quyết định 5, 8, 11. 11 tiêu chí vì xem trước và ghi không tách được mà giữ nghĩa «xem trước rồi mới ghi»",
+      "hang": "T3",
+      "du_lieu": "gia",
       "dung_tren": [
-        "20"
+        "64",
+        "5",
+        "8",
+        "9",
+        "11",
+        "12",
+        "15"
       ],
-      "slug": "nhap-excel-nho-mau",
-      "nhom": "dau-chu",
-      "dot": "ban-dau-2910",
+      "slug": "nhap-excel-xem-truoc-ghi",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
       "phu": [
-        "D9"
+        "ND2"
       ],
       "vung": [
+        "apps/web/src/app/imports/**",
+        "packages/api/src/imports/**"
+      ]
+    },
+    {
+      "ma": "66",
+      "cau_giao": "Đầu chủ hoàn tác cả một lần nhập; căn đã có người sửa sau đó được liệt kê, không bị gỡ",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Luật 11; ADR-0011 quyết định 8: sự kiện bù và voided, đổi khuôn sự kiện của ADR-0008",
+      "hang": "T3",
+      "dung_tren": [
+        "65"
+      ],
+      "slug": "nhap-hoan-tac",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
+      "phu": [
+        "ND3"
+      ],
+      "vung": [
+        "packages/core/src/listing/**",
+        "packages/api/src/imports/undo/**"
+      ]
+    },
+    {
+      "ma": "67",
+      "cau_giao": "Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước, kể cả cách gọi riêng của sàn",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Luật 11 «nhớ mẫu file»; ADR-0011 quyết định 6",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "65",
+        "5"
+      ],
+      "slug": "nhap-nho-mau",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
+      "phu": [
+        "ND4"
+      ],
+      "vung": [
+        "packages/core/src/import/memory/**",
         "apps/web/src/app/imports/templates/**"
+      ]
+    },
+    {
+      "ma": "68",
+      "cau_giao": "Đầu chủ thả file mẫu lạ khi sàn đã bật «Xử lý bằng AI» và thấy máy ghép gần hết, mỗi đề xuất kèm lý do; tắt hay hết trần thì vẫn nhập như không có AI",
+      "vai": "Đầu chủ",
+      "tieu_chi": 11,
+      "vi_sao": "ADR-0011 quyết định 2–5, 10. Cổng Đáng đọc số nền của hàng 64: nền đạt mọi ngưỡng thì gác hàng này. 11 tiêu chí vì cửa chặn nguồn và tác tử không tách được mà giữ nghĩa «nguồn không rời công ty»",
+      "hang": "T3",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "64",
+        "65",
+        "5"
+      ],
+      "slug": "nhap-tac-tu-ke-hoach",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
+      "phu": [
+        "ND5"
+      ],
+      "vung": [
+        "packages/api/src/imports/ai/**",
+        "packages/core/src/agreements.ts"
+      ]
+    },
+    {
+      "ma": "69",
+      "cau_giao": "Đầu chủ thấy ô máy không đọc được — giá dải, «thu về 4.2», trạng thái lạ — có đề xuất kèm lý do và chọn một chạm",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "ADR-0011 §5 «ô lạ còn lại»; đo Haiku 5.5 cho việc này",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "68",
+        "5"
+      ],
+      "slug": "nhap-o-la",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
+      "phu": [
+        "ND6"
+      ],
+      "vung": [
+        "packages/api/src/imports/ai/cells/**",
+        "apps/web/src/app/imports/cells/**"
+      ]
+    },
+    {
+      "ma": "70",
+      "cau_giao": "Đầu chủ gõ «dong nam», «bp», «Đang gd» ở ô bất kỳ và thấy máy gợi giá trị chuẩn; lựa chọn thành đề xuất từ điển của sàn; quản trị sàn duyệt và xem sức khoẻ dữ liệu",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Chủ kho 31/10 «Duyệt hướng này» — ADR-0011 quyết định 12: chuẩn hoá ở mọi cửa vào",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "64",
+        "67",
+        "15",
+        "45",
+        "5"
+      ],
+      "slug": "chuan-hoa-moi-cua",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
+      "phu": [
+        "ND7"
+      ],
+      "vung": [
+        "packages/core/src/import/normalize/**",
+        "apps/web/src/app/settings/labels/**"
+      ]
+    },
+    {
+      "ma": "71",
+      "cau_giao": "Quản trị sàn nhận mỗi tuần một danh sách đề xuất neo giá trị lạ vào giá trị chuẩn, kèm lý do, duyệt một chạm",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 8,
+      "vi_sao": "ADR-0011 quyết định 12 «AI chỉ dọn từ điển định kỳ». Cổng Đáng đọc số đo của hàng 70: giá trị lạ không dồn quá sức duyệt tay thì gác",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "68",
+        "70",
+        "5"
+      ],
+      "slug": "don-tu-dien-dinh-ky",
+      "nhom": "nhap-du-lieu",
+      "dot": "nhap-du-lieu-3110",
+      "phu": [
+        "ND8"
+      ],
+      "vung": [
+        "packages/api/src/imports/ai/aliases/**",
+        "apps/web/src/app/settings/labels/suggestions/**"
       ]
     },
     {
@@ -1145,7 +1294,7 @@
       "vi_sao": "Màn P1 (S6, phác 29/10)",
       "hang": "T2",
       "dung_tren": [
-        "21",
+        "67",
         "43"
       ],
       "slug": "mau-nhap-va-bai",
@@ -1308,6 +1457,36 @@
         "P4"
       ],
       "mo_lai_khi": "Bài thử Zalo (hàng 3) hoặc hai tuần thử cho thấy đầu chủ cần nhận ảnh trên điện thoại"
+    },
+    {
+      "ma": "20",
+      "dot": "ban-dau-2910",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ, ghép cột lẫn giá trị vào trường chuẩn, xem trước sẽ ghi gì rồi mới nhập; không cột nào bị bỏ mất",
+      "ly_do": "Thay bằng đợt nhap-du-lieu-3110 (ADR-0011, chủ kho duyệt 31/10): hàng 64 và 65",
+      "phu": [
+        "D8"
+      ],
+      "mo_lai_khi": "Không mở lại — làm qua hàng 64, 65"
+    },
+    {
+      "ma": "21",
+      "dot": "ban-dau-2910",
+      "cau_giao": "Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước; ngày xác nhận lấy theo file, hoàn tác được cả lần nhập",
+      "ly_do": "Thay bằng đợt nhap-du-lieu-3110 (ADR-0011): nhớ mẫu ở hàng 67, ngày xác nhận theo file ở hàng 65, hoàn tác ở hàng 66",
+      "phu": [
+        "D9"
+      ],
+      "mo_lai_khi": "Không mở lại — làm qua hàng 65, 66, 67"
+    },
+    {
+      "ma": "H4",
+      "dot": "nhap-du-lieu-3110",
+      "cau_giao": "Đầu chủ chọn file Google Sheets ngay trong Quỹ hàng (Picker, quyền drive.file) và nhập lại một chạm",
+      "ly_do": "Bản đầu nhận file tải về là đủ; Picker cần dự án Google Cloud, màn đồng ý OAuth (ADR-0011 quyết định 9)",
+      "phu": [
+        "ND9"
+      ],
+      "mo_lai_khi": "Hai tuần thử cho thấy bước tải về là vướng, hoặc sàn ngoài đội dùng Google Sheets là chính"
     }
   ],
   "da_bac": []
