@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 9979a9bccd1f237a30d54acf0458b88f2f57a72f
+verified_commit: bd7c126cf94bdde23a29983626842ffe09a70543
 human_signoff:
 ---
 
@@ -201,3 +201,7 @@ none — every multi-run eval is uniform
 ## Iterations
 
 Round 1: mọi eval máy đều đạt; E9 (phán đoán) chờ người chốt ở Cổng 2. Verdict PENDING-JUDGMENT.
+
+### Re-pin lần 1 — 2026-10-31, do gộp main sau PR #21 (môi trường thật)
+run_id: repin-20261031T014806Z-94455
+sha: bd7c126cf94bdde23a29983626842ffe09a70543 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E9 (E9 không khai paths) · AC không có chốt máy: AC-9
