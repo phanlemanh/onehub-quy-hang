@@ -322,6 +322,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 31/10 | Trục ai thấy hàng, hai nấc: lead và hàng chưa từng Đang bán ở «Chỉ tôi» — chỉ người tạo đọc và sửa được, người khác (cả quản trị sàn, trưởng nhóm) nhận «không có hàng này»; lần đầu «Sẵn sàng bán» thì lên «Toàn sàn» và giữ nấc ấy cả khi tạm ngừng hay rời Đang bán; hàng «Toàn sàn» mọi thành viên sàn sửa được như hàng 8. Nấc tính từ sự kiện, chặn ở lõi và API (chưa ở cơ sở dữ liệu); «Nhóm» và đổi nấc bằng tay để sau | Mục 6 · `_acceptance/truc-ai-thay-hang/` |
 | 31/10 | Phiên đăng nhập 30 ngày, trượt theo ngày dùng: dùng lại sau hơn một ngày thì hạn dời ra đủ 30 ngày (tối đa mỗi ngày một lần), cả cookie trình duyệt khi mở trang; bỏ không 30 ngày thì xin mã lại; chưa có trần tuyệt đối | ADR-0005 «Bổ sung 31/10» · `_acceptance/phien-dang-nhap-30-ngay/` |
 | 31/10 | Mã đăng nhập chỉ phát qua một đường: xin mã kiểu khác đăng nhập bị từ chối (400), giới hạn 5 lần / 15 phút gác mọi đường gửi mã còn mở cho mỗi email; đường quên, đặt lại mật khẩu và đổi email của thư viện đăng nhập trả 404, không gửi thư, không đốt lượt | ADR-0005 «Bổ sung 31/10 — đường gửi mã» · `_acceptance/dong-duong-gui-ma-thua/` |
+| 31/10 | Mở sàn trùng tên: công ty mới trùng tên một sàn đang chạy được sàn riêng, không bao giờ bị gắn vào sàn cũ; chạy lại công cụ chỉ khi email đã là quản trị một sàn cùng tên, công cụ báo «sàn mới» hay «chạy lại». Người chỉ vào được sàn mình là thành viên nhờ lớp API; cơ sở dữ liệu tự kiểm thành viên khi đặt sàn là hàng sau | `_acceptance/mo-san-trung-ten/` |
 
 ## 13. Chỗ cần chốt
 

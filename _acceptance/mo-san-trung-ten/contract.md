@@ -52,10 +52,10 @@ tenant theo mã, không theo tên].
 
 - Trục tên × email: tên mới | tên trùng + email mới (AC-1, AC-3) | tên trùng + email là quản trị = chạy lại, cả khi có nhiều sàn cùng tên (AC-2) | tên trùng + email chỉ là thành viên thường = sàn mới (AC-2) | tên khác +
   email cũ (ca cũ của mo-san.test.mjs, giữ) [thước CE: bảng companies, company_members]
-- Trục cách ly: người mới đặt sàn mới (AC-4) | người mới đặt sàn cũ (AC-4) | quản trị cũ đặt sàn cũ — đối chứng (AC-4) [thước CE: luật theo dòng
+- Trục cách ly: người mới đặt sàn mới (AC-4) | người mới không là thành viên sàn cũ (AC-4) | quản trị cũ đặt sàn cũ — đối chứng (AC-4) [thước CE: luật theo dòng
   `app.current_company_id()` trên mọi bảng có `company_id`]
 - Trục người vận hành thấy gì: dòng báo trùng tên | dòng báo chạy lại (AC-5)
-- Later: gộp/dọn sàn đã lỡ gộp người; ràng buộc duy nhất cho tên.
+- Later: gộp/dọn sàn đã lỡ gộp người; ràng buộc duy nhất cho tên; cơ sở dữ liệu tự kiểm thành viên khi đặt sàn (hàng mới, chủ kho 31/10).
 - Never: tìm sàn theo tên (lối gây lỗi).
 
 ## Out of scope
@@ -69,3 +69,5 @@ tenant theo mã, không theo tên].
 - Vùng của hàng: `packages/db/scripts/mo-san.mjs`, `packages/db/scripts/mo-san.d.mts` (vùng gốc) cộng
   `packages/db/tests/mo-san.test.mjs`, `packages/db/tests/isolation.test.mjs` (chỉ thêm ca, luật 20 của đợt) và hai tệp
   thiết kế, kế hoạch — khai thêm ở Cổng Phạm vi.
+- AC-4 sửa ở S3 theo lời chủ kho 31/10 (sổ `d-…` mang `supersedes` d-4): vế «người mới đặt sàn cũ» không phải điều cơ sở dữ
+  liệu hứa — chỗ chặn là API; kiểm thành viên ở cơ sở dữ liệu là hàng mới.

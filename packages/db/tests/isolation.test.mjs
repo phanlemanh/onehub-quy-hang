@@ -658,3 +658,77 @@ test("lớp nguồn: sàn A không đọc, không ghi đầu chủ, chủ nhà, 
     assert.equal(await demMoSo(c, LISTING_NB), truoc, "sự kiện mở số của B không đổi");
   });
 });
+
+// ---- Hai sàn cùng tên (hàng 56, mo-san-trung-ten): người sàn mới không đọc được dòng nào của sàn cũ ----
+test("sàn trùng tên: người sàn mới không đọc được dòng nào của sàn cũ", { skip }, async () => {
+  const { moSan } = await import("../scripts/mo-san.mjs");
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    const nhan = Math.random().toString(36).slice(2, 8);
+    const ten = `[Sàn trùng iso ${nhan}]`;
+    // Mở bằng công cụ thật, không chèn tay bảng sàn.
+    const cu = await moSan(client, { ten, email: `iso-cu-${nhan}@example.test` });
+    const moi = await moSan(client, { ten, email: `iso-moi-${nhan}@example.test` });
+    assert.notEqual(moi.companyId, cu.companyId, "hai sàn trùng tên cùng mã");
+    // Mỗi sàn một hàng (sự kiện created + bản tính), dựng bằng vai chủ.
+    for (const [san, nguoi] of [[cu.companyId, cu.userId], [moi.companyId, moi.userId]]) {
+      const hang = (await client.query("select gen_random_uuid() id")).rows[0].id;
+      await client.query(
+        `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+         values ($1, $2, 1, 'created', '{"buildingName":"[Toà]"}', $3, '{listing_agent}', false)`,
+        [san, hang, nguoi],
+      );
+      await client.query(
+        "insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, '[Toà]', 'Incomplete', 1)",
+        [hang, san],
+      );
+    }
+    // Danh sách bảng có cột company_id rút từ cơ sở dữ liệu; chỉ bảng sàn cũ thật sự có dòng mới tính là đã xét.
+    const bang = (
+      await client.query(
+        `select table_name from information_schema.columns
+         where table_schema = 'public' and column_name = 'company_id' order by table_name`,
+      )
+    ).rows.map((r) => r.table_name);
+    const daXet = [];
+    const rong = [];
+    for (const t of bang) {
+      const n = Number((await client.query(`select count(*) n from public."${t}" where company_id = $1`, [cu.companyId])).rows[0].n);
+      (n > 0 ? daXet : rong).push(t);
+    }
+    assert.equal(daXet.length + rong.length, bang.length, "số bảng đã xét phải bằng danh sách rút ra");
+    for (const t of ["company_members", "listings", "listing_events"]) assert.ok(daXet.includes(t), `bảng ${t} không có dòng của sàn cũ để xét`);
+
+    await client.query("set local role quy_hang_app");
+    const dat = async (nguoi, san) => {
+      await client.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [nguoi, san]);
+    };
+    // Đối chứng dương: quản trị sàn cũ đặt sàn cũ thấy dòng của sàn cũ.
+    await dat(cu.userId, cu.companyId);
+    assert.equal((await client.query("select 1 from companies where id = $1", [cu.companyId])).rowCount, 1, "quản trị cũ không thấy sàn của mình");
+    assert.ok((await client.query("select 1 from company_members where company_id = $1", [cu.companyId])).rowCount > 0, "quản trị cũ không thấy thành viên sàn mình");
+    await dat(moi.userId, moi.companyId);
+    for (const t of daXet) {
+      const n = (await client.query(`select 1 from public."${t}" where company_id = $1`, [cu.companyId])).rowCount;
+      assert.equal(n, 0, `người sàn mới đọc được ${n} dòng của sàn cũ ở bảng ${t}`);
+    }
+    assert.equal((await client.query("select 1 from companies where id = $1", [cu.companyId])).rowCount, 0, "người sàn mới thấy sàn cũ");
+    // Người chỉ đặt được sàn mình là thành viên: API chọn sàn trong danh sách thành viên (packages/api/src/auth/company.ts).
+    // Luật theo dòng tin sàn đang đặt — kiểm thành viên ở cơ sở dữ liệu là hàng mới (chủ kho 31/10).
+    await client.query("reset role");
+    const thanhVienCu = (await client.query("select 1 from company_members where company_id = $1 and user_id = $2", [cu.companyId, moi.userId])).rowCount;
+    assert.equal(thanhVienCu, 0, "người mới là thành viên sàn cũ");
+    const sanChonDuoc = (
+      await client.query(
+        "select c.id from companies c join company_members m on m.company_id = c.id and m.user_id = $1 order by c.id",
+        [moi.userId],
+      )
+    ).rows.map((r) => r.id);
+    assert.deepEqual(sanChonDuoc, [moi.companyId], "đường chọn sàn của API chọn được sàn khác sàn mới");
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+});
