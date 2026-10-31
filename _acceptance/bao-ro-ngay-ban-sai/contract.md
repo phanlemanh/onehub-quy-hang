@@ -5,7 +5,7 @@ slug: bao-ro-ngay-ban-sai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-10-31-bao-ro-ngay-ban-sai-design.md
 approved_by:
 approved_at:
@@ -74,3 +74,4 @@ chiếu §5 «căn đã bán giữ giá chốt và ngày bán» [SUY-TỪ-REPO: 
 - Vùng của hàng: `packages/core/src/listing/**` (vùng gốc ở `hang-viec.json`) cộng `packages/api/test-db/ngay-ban/**` (tệp
   kiểm trên Postgres thật) và hai tệp thiết kế, kế hoạch — khai thêm ở Cổng Phạm vi (sổ `d-20261031T085832Z-4`). Mã API
   (`packages/api/src/**`) chỉ được đọc, không sửa.
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Ngày bán không có thật vẫn bị từ chối đúng với thông báo nêu đúng ô ngày bán, người dùng không thấy gì khác. Chỉ có tài liệu nghiệm thu gọi tên danh sách ngày sai chưa khớp với bản thật, nên người chấm sau này có thể hiểu nhầm là hồ sơ trượt. — `_acceptance/bao-ro-ngay-ban-sai/evals.yaml`
