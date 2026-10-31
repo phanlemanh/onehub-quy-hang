@@ -5,7 +5,7 @@ slug: phien-dang-nhap-30-ngay
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: machine-cleared
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-phien-dang-nhap-30-ngay-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T09:30:00Z
