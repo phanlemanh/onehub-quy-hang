@@ -45,7 +45,7 @@ cuộc gọi hàng 28, Hôm nay của trưởng nhóm hàng 42), không làm Cà
   - `app.lead_job_companies()` — mã các sàn có lead chờ chia hay lead còn hạn mở; chỉ trả mã, không dữ liệu nào khác.
     Đây là hàm duy nhất không đọc sàn đang làm: nhịp chạy không có sàn.
 - Số chủ không ra khỏi hàm nào và không hàm nào đọc số dạng chữ: lead cùng số nhận ra bằng dấu vết `owner_phone_hash`
-  (HMAC theo sàn của hàng 62, migration 008), hàm chỉ trả mã người và mã lead. Vì vậy 011 đứng sau 008: phần cơ sở dữ
+  (HMAC theo sàn của hàng 62, migration 009 cho bảng leads), hàm chỉ trả mã người và mã lead. Vì vậy 011 đứng sau 009: phần cơ sở dữ
   liệu của hàng 25 dựng và đo khi 62 đã gộp vào nhánh chính (giám sát 31/10: 62 gộp trước 25).
 
 ## 3. Lõi (`packages/core/src/routing/`)

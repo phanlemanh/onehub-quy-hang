@@ -2,8 +2,8 @@
 -- Cơ sở dữ liệu chở dữ kiện và ghi mốc; luật chọn người và xét hạn ở packages/core (routing). Người nhận của lead đã chia
 -- ghi vào cột có sẵn matched_agent_user_id — nghĩa nay là «đầu chủ lead đã về», khớp chủ trùng lúc nhập hay được chia —
 -- nên vế «lead trước cùng số» của app.lead_dedupe_facts, luật đọc leads và bản của telesales không đổi.
--- Đứng sau 008 (hàng 62, ADR-0013): lead cùng số nhận ra bằng dấu vết owner_phone_hash (HMAC theo sàn), không đọc số
--- dạng chữ — sau 008 cột owner_phone luôn null và không hàm nào của cơ sở dữ liệu nhận số chủ dạng chữ.
+-- Đứng sau 008 và 009 (hàng 62, ADR-0013; 009 thêm dấu vết số cho bảng leads): lead cùng số nhận ra bằng dấu vết owner_phone_hash (HMAC theo sàn), không đọc số
+-- dạng chữ — sau 62 cột owner_phone luôn null và không hàm nào của cơ sở dữ liệu nhận số chủ dạng chữ.
 
 -- ---- Mốc của lead ----
 alter table leads
