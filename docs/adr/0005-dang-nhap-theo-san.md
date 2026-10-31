@@ -35,3 +35,4 @@ Còn thiếu đoạn nối người → phiên → sàn đang làm → giao dị
 - Gửi email thật (nhà cung cấp, tên miền gửi) là việc của hàng nơi chạy; tới đó bản thật không chạy được.
 - Test cần Postgres của API ở `packages/api/test-db/`, chạy trong `npm run db:test` — job `isolation` của CI chạy chúng.
 - Hàng 7 thêm quyền ghi `company_members` cho vai API cùng vai, khu, lời mời bằng migration mới.
+- Mã lỗi và đường của mục 5 (`chon-san`, `chua-gan-san`, `/me/san`…) đổi sang tiếng Anh ở ADR-0007.

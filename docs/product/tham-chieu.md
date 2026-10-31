@@ -90,6 +90,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 - **Đổi trạng thái không xoá dữ liệu**: căn đã bán giữ giá chốt và ngày bán — nguồn giá giao dịch thật.
 - **Sàn thêm nhãn, không thêm nghĩa**: «Giữ chỗ» phải neo vào một trạng thái chuẩn và nhận luật, màu của trạng thái đó; không có trạng thái thứ bảy.
 - Tên tiếng Anh theo RESO `StandardStatus` — máy điền 29/10, chốt khi viết lõi: Chưa đủ để rao `Incomplete` · Đang bán `Active` · Đang giao dịch `Pending` · Đã bán `Closed` · Tạm ngừng `Hold` · Ngừng hẳn `Withdrawn`.
+- Bảng chuyển — Đã chốt 30/10 (ADR-0008): Chưa đủ để rao → Đang bán · Tạm ngừng · Ngừng hẳn; Đang bán → Đang giao dịch · Đã bán · Tạm ngừng · Ngừng hẳn; Đang giao dịch → Đang bán (khách bỏ cọc) · Đã bán · Ngừng hẳn; Tạm ngừng → Đang bán · Ngừng hẳn; Đã bán và Ngừng hẳn là nấc cuối — mở lại là hàng mới.
 
 ## 6. Quyền
 
@@ -187,6 +188,10 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 - **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
 - **Telesales**: không cột nhà, không ô gõ mã căn. Máy tính: thanh trên chỉ có Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
 - **Mở app vào Hôm nay**; người chỉ giữ vai quản trị vào Cài đặt sàn.
+- **Người chỉ giữ vai Quản trị sàn trên điện thoại** có hai tab Cài đặt sàn · Tôi — ngoại lệ của dòng điện thoại, vì
+  không có nhà nào khác (chốt ở Cổng Phạm vi vỏ ứng dụng, 31/10).
+- **Ô «Gõ mã căn» chỉ ở vai có Bảng hàng** (Đầu chủ, Đầu khách, Trưởng nhóm); Telesales và người chỉ quản trị sàn không
+  có (chốt 31/10). Cột thứ hai mở hay gập được nhớ theo người, sàn đang làm và nhà.
 - **Trang khách và đăng nhập không có vỏ.** Trang khách là một link công khai, không đăng nhập, mang tên sàn và người gửi.
 
 | Nhà và nút | Telesales | Đầu chủ | Đầu khách | Trưởng nhóm | Quản trị sàn |
@@ -215,6 +220,8 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | /exports/new | Phát hàng |
 | /team | Đội |
 | /settings/labels · /fields · /statuses · /lead-routing · /fees · /templates | Cài đặt sàn |
+| /settings · /settings/users | Cài đặt sàn (mở vào Người dùng) · Người dùng |
+| /me | Tôi (tab điện thoại; menu tài khoản trên máy tính) |
 | /s/\<mã link> | Trang khách |
 
 ## 10. Danh mục màn và ưu tiên
@@ -299,10 +306,14 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 29/10 | Phác ba màn còn thiếu của bản đầu trước khi cắt: M6 Hôm nay của đầu khách, TN1 Hôm nay của trưởng nhóm, S6 Mẫu và người dùng | Mục 10 · canvas bản 23 |
 | 29/10 | Bật lộ trình trong kho; bản đầu cắt thành hàng ở `docs/plan/lo-trinh.json`. Để sau: ngưỡng số đo (đặt ở Cổng Đáng của từng hàng, trước hai tuần thử), câu hỏi phỏng vấn (ngoài kho), xin dẫn xem (chờ phỏng vấn), hoa hồng và ghi công Platform (ngoài bản đầu), bốn điểm nền (hỏi ở vòng làm nền) | Mục 13 · lộ trình |
 | 30/10 | Lưới bảng hàng là lưới dữ liệu ReUI: bài thử 5.000 dòng × 20 cột trên máy văn phòng mô phỏng đạt cả ba thước (cuộn p95 33,3 ms — sát ngưỡng 33,4, gõ 16,8 ms, dán 500 ô 54 ms) — không đổi sang lưới canvas; bảng hàng đo lại trên màn thật | ADR-0004 · `_acceptance/bai-thu-luoi-5000-dong/` |
+| 30/10 | Bộ đồng bộ tự làm mỏng: kéo qua API dưới luật theo dòng, hàng đợi ghi trong IndexedDB gắn người dùng trên một tên miền cố định, «có mạng lại» kiểm khi quay lại trang và thử đẩy định kỳ; bài thử đo được cách ly sàn và số chủ bằng máy, vế mất mạng năm phút đo lại trên thiết bị ở hàng dựng phần đồng bộ — giám sát đợt nen-dau chốt theo ủy quyền của chủ kho | ADR-0006 · `_acceptance/bai-thu-dong-bo-mat-mang/` |
 | 30/10 | Bộ chuẩn giao diện có trước màn đầu tiên: thành phần ReUI base-nova, skill `quy-hang-ui`, lint giao diện mức nợ 0 mà CI chặn tăng (nợ = vi phạm bị cho qua hàng loạt; ngoại lệ ghi tay kèm lý do đếm riêng, không chặn), sàn thiết kế M1 — hồ sơ `tang-5-giao-dien` | `.agents/skills/quy-hang-ui/` · `packages/ui-lint` |
 | 30/10 | Vỏ và IA chọn trên kho ReUI, không tự thiết kế: máy tính `app-shell-8` (cột nhà + cột góc nhìn + thanh trên có gõ mã căn), điện thoại bốn tab dưới ghép từ thành phần; một địa chỉ một thứ, màn đổi theo thiết bị và vai; nguyên tắc «chọn trên kho trước, tự viết sau cùng» cho mọi màn — ADR-0002 | Mục 9 · `docs/design/vo-va-ia.md` |
 | 30/10 | Đăng nhập theo sàn: email + mã 6 số qua email; chỉ tài khoản đã được mở hay mời mới nhận mã; thành viên sàn là bảng của Quỹ hàng, không dùng phần tổ chức của better-auth; người nhiều sàn chọn sàn, chưa gắn sàn thì không thấy gì — ADR-0005 | Mục 6 · Kiến trúc §5, §10 |
 | 30/10 | Quản trị sàn mời người vào sàn ngay (tạo tài khoản khi chưa có, không lộ ai đã có), đặt một hay nhiều trong năm vai, giao khu do sàn tự đặt tên; chỉ quản trị xem và sửa người; sàn luôn còn một quản trị — ADR-0006 | Mục 2, 6 · Cài đặt sàn S6 |
+| 31/10 | Đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh (`/company`, `no-company`, `/login`…), cùng hành vi và chữ trên màn; đường cũ trả 404; giữ cookie sàn, tên tệp mã (dọn riêng) và thẻ nhật ký mã dev — ADR-0007 | `docs/adr/0007-api-tieng-anh.md` |
+| 31/10 | Lõi hàng: mọi thay đổi của hàng đi qua một lệnh API thành sự kiện chỉ thêm; bảng hàng là bản tính lại được từ sự kiện; sáu trạng thái chuẩn với bảng chuyển 12 lối, Đã bán và Ngừng hẳn là nấc cuối; vào Đang bán cần giá kèm điều kiện phí, pháp lý, tình trạng sử dụng (ảnh thật thêm khi có kho ảnh); mức đủ năm mục ngang nhau; mọi thành viên sàn gửi được lệnh ở bản này — ADR-0008 | Mục 4, 5 · `docs/adr/0008-loi-hang-va-su-kien.md` |
+| 31/10 | Vỏ ứng dụng: khối `app-shell-8` chuyển thể cho máy tính, tab dưới ghép cho điện thoại (chủ kho gật trên bản bấm được); nhà và nút theo vai đọc một bảng ở `packages/core`; người chỉ quản trị có tab Cài đặt sàn trên điện thoại; ô Gõ mã căn chỉ vai có Bảng hàng; cột thứ hai nhớ theo người, sàn, nhà | Mục 9 · `docs/design/vo-va-ia.md` |
 
 ## 13. Chỗ cần chốt
 

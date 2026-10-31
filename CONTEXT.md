@@ -28,3 +28,20 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Quản trị sàn | `company_admin` | Vai cấu hình sàn và quản người; không tự thấy chủ nhà | — |
 | Khu | `zone` | Toà hay phân khu do sàn tự đặt tên; gắn danh mục sau | — |
 | Khu phụ trách | `member_zone` | Khu một người trong sàn phụ trách | — |
+| Sự kiện của hàng | `listing_event` | Một lần thay đổi của hàng: tạo, đổi phần lần rao, đổi giá, đổi trạng thái, xác nhận với chủ nhà; chỉ thêm, ghi người và vai lúc làm (ADR-0008) | — |
+| Trạng thái chuẩn | `StandardStatus` (RESO) | Một trong sáu: Chưa đủ để rao `Incomplete`, Đang bán `Active`, Đang giao dịch `Pending`, Đã bán `Closed`, Tạm ngừng `Hold`, Ngừng hẳn `Withdrawn`; nhãn riêng của sàn neo vào đây | Trạng thái thứ bảy |
+| Độ tươi | `freshness` | Tuổi của lần xác nhận gần nhất với chủ nhà, tính từ sự kiện | — |
+| Mức đủ thông tin | `completeness` | Phần đã có trên năm mục của danh sách hỏi: giá kèm điều kiện phí, nội thất, pháp lý, tài chính, tình trạng sử dụng | — |
+| Giá chốt · Ngày bán | `ClosePrice` · `CloseDate` (RESO) | Giá và ngày sàn mình bán; bắt buộc khi vào Đã bán, giữ lại sau đó | — |
+| Lý do ngừng | `withdrawn_reason` | Chủ đã bán nơi khác · chủ đổi ý · không liên lạc được; bắt buộc khi vào Ngừng hẳn | — |
+| Phiên bản (của hàng) | `version` | Số sự kiện đã ghi của hàng; lệnh mang phiên bản cũ bị báo «đã có người sửa trước» | — |
+| Nhà | `Home` (`packages/core` navigation) | Một chỗ làm việc trả lời một câu (Tham chiếu §9); cột biểu tượng trên máy tính, tab dưới trên điện thoại | — |
+| Hôm nay | `today` | Nhà mở đầu: giờ làm gì | — |
+| Đã gửi · Gửi | `shares` | Link đã gửi và lịch xem; trên điện thoại là tab Gửi, gồm cả nút gửi mới | — |
+| Đội | `team` | Nhà của trưởng nhóm: đội đang chạy thế nào | — |
+| Cài đặt sàn | `settings` | Nhà của quản trị sàn: sàn gọi tên và chạy theo luật nào | — |
+| Tôi | `me` | Tab tài khoản trên điện thoại | — |
+| Gõ mã căn | `unitJump` | Ô mở thẳng hồ sơ căn hoặc nhảy tới nhà bằng bàn phím; chỉ vai có Bảng hàng | — |
+| Hồ sơ căn | `/units/<mã>` | Toàn bộ thông tin của một căn; trên máy tính mở thành cột phải cạnh Bảng hàng | — |
+| Nhập Excel | `import` | Nút đưa hàng vào từ bảng tính | — |
+| Phát hàng | `export` | Nút đưa hàng ra ngoài sàn | — |

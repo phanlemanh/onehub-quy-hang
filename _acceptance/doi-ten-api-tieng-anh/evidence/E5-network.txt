@@ -1,0 +1,10 @@
+# E5 network (trinh duyet, /api/v1/**) - dt-quan-tri@example.test
+POST /api/v1/auth/email-otp/send-verification-otp 200   (gui ma o buoc email; listener gan sau lan dau, ghi lai tu ket qua script dau)
+POST /api/v1/auth/sign-in/email-otp 200
+POST /api/v1/me/company 200        (doi chung duong: chon [San mau DT-A])
+# khong dong nao toi /api/v1/san hay /api/v1/me/san
+# Ma HTTP ba duong man cu khi da dang nhap va da chon san:
+GET /dang-nhap 404
+GET /chon-san 404
+GET /chua-gan-san 404
+# console: 1 error luc tai /login (xem ben duoi)

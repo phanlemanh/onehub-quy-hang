@@ -20,9 +20,31 @@ test("health trả về phiên bản API", async () => {
   assert.equal(body.apiVersion, "v1");
 });
 
-test("mô tả OpenAPI có đường health, me, san", async () => {
+test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
   const res = await api.request("/api/v1/openapi.json");
   assert.equal(res.status, 200);
-  const doc = (await res.json()) as { paths: Record<string, unknown> };
-  for (const p of ["/api/v1/health", "/api/v1/me", "/api/v1/me/san", "/api/v1/san"]) assert.ok(doc.paths[p], p);
+  const doc = (await res.json()) as { paths: Record<string, Record<string, unknown>> };
+  const thay = Object.entries(doc.paths)
+    .flatMap(([p, ops]) => Object.keys(ops).map((m) => `${m.toUpperCase()} ${p}`))
+    .sort();
+  const muon = [
+    "GET /api/v1/health",
+    "GET /api/v1/me",
+    "POST /api/v1/me/company",
+    "GET /api/v1/company",
+    "GET /api/v1/company/members",
+    "POST /api/v1/company/members",
+    "PATCH /api/v1/company/members/{userId}",
+    "DELETE /api/v1/company/members/{userId}",
+    "GET /api/v1/company/zones",
+    "POST /api/v1/company/zones",
+    // Hàng 8 (ADR-0008).
+    "POST /api/v1/listings",
+    "GET /api/v1/listings",
+    "GET /api/v1/listings/{listingId}",
+    "POST /api/v1/listings/{listingId}/events",
+  ].sort();
+  const thua = thay.filter((x) => !muon.includes(x));
+  const thieu = muon.filter((x) => !thay.includes(x));
+  assert.deepEqual({ thua, thieu }, { thua: [], thieu: [] });
 });

@@ -344,3 +344,128 @@ test("dọn sàn: xoá sàn kéo theo thành viên không bị trigger chặn", 
     assert.equal(del.rowCount, 1);
   });
 });
+
+// ---- Hàng và sự kiện của hàng (004_loi_hang_va_su_kien, ADR-0008) ----
+const LISTING_A = "00000000-0000-4000-8000-0000000000a1";
+const LISTING_B = "00000000-0000-4000-8000-0000000000b1";
+
+/** Dựng hai sàn, một hàng mỗi sàn (sự kiện created + bản tính) bằng vai chủ, rồi sang vai API với U1 ở sàn đã cho. */
+async function withListings(companyId, fn) {
+  return asUser(null, null, async (c) => {
+    await c.query("reset role");
+    await c.query(
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $3, 1, 'created', '{"buildingName":"[Toà A]"}', $5, '{listing_agent}', false),
+              ($2, $4, 1, 'created', '{"buildingName":"[Toà B]"}', $6, '{listing_agent}', false)`,
+      [COMPANY_A, COMPANY_B, LISTING_A, LISTING_B, USER_1, USER_2],
+    );
+    await c.query(
+      `insert into listings (id, company_id, building_name, standard_status, version)
+       values ($1, $3, '[Toà A]', 'Incomplete', 1), ($2, $4, '[Toà B]', 'Incomplete', 1)`,
+      [LISTING_A, LISTING_B, COMPANY_A, COMPANY_B],
+    );
+    await c.query("set local role quy_hang_app");
+    await c.query("select set_config('app.user_id', $1, true)", [USER_1]);
+    if (companyId) await c.query("select set_config('app.company_id', $1, true)", [companyId]);
+    return fn(c);
+  });
+}
+
+test("hàng: hai bảng mới nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relname, c.relrowsecurity and c.relforcerowsecurity as ep from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname in ('listings', 'listing_events') order by c.relname`,
+    );
+    assert.deepEqual(rows, [{ relname: "listing_events", ep: true }, { relname: "listings", ep: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("hàng: sàn A không đọc, không ghi hàng và sự kiện của sàn B", { skip }, async () => {
+  await withListings(COMPANY_A, async (c) => {
+    // Đối chứng: cùng câu trên hàng của chính A thì đọc và ghi được.
+    assert.deepEqual((await c.query("select id from listings")).rows.map((r) => r.id), [LISTING_A]);
+    assert.deepEqual((await c.query("select listing_id from listing_events")).rows.map((r) => r.listing_id), [LISTING_A]);
+    assert.equal((await c.query("update listings set furnished = 'full' where id = $1", [LISTING_A])).rowCount, 1);
+    await c.query(
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $2, 2, 'owner_confirmed', '{}', $3, '{listing_agent}', true)`,
+      [COMPANY_A, LISTING_A, USER_1],
+    );
+    // Hàng của B: không thấy, sửa không trúng dòng nào, ghi sự kiện bị luật từ chối.
+    assert.equal((await c.query("select 1 from listings where id = $1", [LISTING_B])).rowCount, 0);
+    assert.equal((await c.query("update listings set furnished = 'full' where id = $1", [LISTING_B])).rowCount, 0);
+    await expectError(
+      c,
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $2, 2, 'owner_confirmed', '{}', $3, '{listing_agent}', true)`,
+      [COMPANY_B, LISTING_B, USER_1],
+      /row-level security/,
+    );
+    await expectError(
+      c,
+      "insert into listings (id, company_id, building_name, standard_status, version) values (gen_random_uuid(), $1, '[Toà]', 'Incomplete', 1)",
+      [COMPANY_B],
+      /row-level security/,
+    );
+  });
+});
+
+test("hàng: sự kiện ghi đúng tên người đang làm", { skip }, async () => {
+  await withListings(COMPANY_A, async (c) => {
+    await expectError(
+      c,
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $2, 2, 'owner_confirmed', '{}', $3, '{listing_agent}', true)`,
+      [COMPANY_A, LISTING_A, USER_2],
+      /row-level security/,
+    );
+  });
+});
+
+test("sự kiện: không sửa, không xoá được, kể cả chủ bảng", { skip }, async () => {
+  await withListings(COMPANY_A, async (c) => {
+    // Đối chứng dương: vai API thêm được sự kiện.
+    await c.query(
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $2, 2, 'owner_confirmed', '{}', $3, '{listing_agent}', true)`,
+      [COMPANY_A, LISTING_A, USER_1],
+    );
+    await expectError(c, "update listing_events set payload = '{}' where listing_id = $1", [LISTING_A], /permission denied/);
+    await expectError(c, "delete from listing_events where listing_id = $1", [LISTING_A], /permission denied/);
+    await c.query("reset role");
+    await expectError(c, "update listing_events set confirmed_with_owner = false where listing_id = $1", [LISTING_A], /chỉ thêm/);
+    await expectError(c, "delete from listing_events where listing_id = $1", [LISTING_A], /chỉ thêm/);
+    await expectError(c, "truncate listing_events", [], /chỉ thêm/);
+    const n = await c.query("select count(*)::int n from listing_events where listing_id = $1", [LISTING_A]);
+    assert.equal(n.rows[0].n, 2, "số sự kiện phải giữ nguyên");
+  });
+});
+
+/** Hàm trong cơ sở dữ liệu có thân ghi vào bảng hàng hay bảng sự kiện. */
+const HAM_GHI_HANG = `select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+  where n.nspname in ('public', 'app')
+    and p.prosrc ~* '(insert\\s+into|update|delete\\s+from)\\s+(public\\.)?(listings|listing_events)\\M'
+  order by p.proname`;
+
+test("cơ sở dữ liệu: không hàm hay trigger nào ghi vào bảng hàng, bảng sự kiện", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    assert.deepEqual((await client.query(HAM_GHI_HANG)).rows.map((r) => r.proname), [], "hàm ghi thẳng vào hàng");
+    // Đối chứng dương: một hàm ghi vào listing_events (dựng trong giao dịch rồi huỷ) phải bị phép liệt bắt.
+    await client.query("begin");
+    await client.query(
+      "create function public.ghi_len_hang() returns void language sql as $$ insert into listing_events (company_id) values (null) $$",
+    );
+    assert.deepEqual((await client.query(HAM_GHI_HANG)).rows.map((r) => r.proname), ["ghi_len_hang"], "phép liệt không bắt hàm cấy");
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+});

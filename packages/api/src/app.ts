@@ -7,6 +7,8 @@ import type { Auth } from "./auth/auth";
 import { resolveCompany } from "./auth/company";
 import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "./auth/constants";
 import { withCompany } from "./db";
+import { API_ERRORS } from "./errors";
+import { registerListingRoutes } from "./listings/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 
 /**
@@ -76,7 +78,7 @@ export function createApi(deps: ApiDeps) {
     }),
     async (c) => {
       const user = await viewer(c);
-      if (!user) return c.json({ error: "chua-dang-nhap" }, 401);
+      if (!user) return c.json({ error: API_ERRORS.unauthenticated.code }, API_ERRORS.unauthenticated.status);
       const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
       return c.json({ user: { id: user.id, email: user.email }, companies: r.companies, activeCompany: r.active }, 200);
     },
@@ -85,7 +87,7 @@ export function createApi(deps: ApiDeps) {
   api.openapi(
     createRoute({
       method: "post",
-      path: `${BASE}/me/san`,
+      path: `${BASE}/me/company`,
       summary: "Đổi sàn đang làm — chỉ nhận sàn người là thành viên",
       request: { body: { content: { "application/json": { schema: z.object({ companyId: z.string() }) } } } },
       responses: {
@@ -96,10 +98,10 @@ export function createApi(deps: ApiDeps) {
     }),
     async (c) => {
       const user = await viewer(c);
-      if (!user) return c.json({ error: "chua-dang-nhap" }, 401);
+      if (!user) return c.json({ error: API_ERRORS.unauthenticated.code }, API_ERRORS.unauthenticated.status);
       const { companyId } = c.req.valid("json");
       const r = await resolveCompany(appPool, user.id, companyId);
-      if (r.active?.id !== companyId) return c.json({ error: "khong-thuoc-san" }, 403);
+      if (r.active?.id !== companyId) return c.json({ error: API_ERRORS.notAMember.code }, API_ERRORS.notAMember.status);
       setCookie(c, ACTIVE_COMPANY_COOKIE, companyId, { path: "/", httpOnly: true, sameSite: "Lax", secure: c.req.url.startsWith("https:") });
       return c.json(r.active, 200);
     },
@@ -108,7 +110,7 @@ export function createApi(deps: ApiDeps) {
   api.openapi(
     createRoute({
       method: "get",
-      path: `${BASE}/san`,
+      path: `${BASE}/company`,
       summary: "Sàn đang làm, đọc dưới luật theo dòng — đường dữ liệu mẫu cho mọi đường sau",
       responses: {
         200: { description: "Sàn", content: { "application/json": { schema: Company } } },
@@ -119,21 +121,24 @@ export function createApi(deps: ApiDeps) {
     }),
     async (c) => {
       const user = await viewer(c);
-      if (!user) return c.json({ error: "chua-dang-nhap" }, 401);
+      if (!user) return c.json({ error: API_ERRORS.unauthenticated.code }, API_ERRORS.unauthenticated.status);
       const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
-      if (!r.active) return r.reason === "chon-san" ? c.json({ error: "chon-san" }, 409) : c.json({ error: "chua-gan-san" }, 403);
+      if (!r.active) return r.reason === API_ERRORS.selectCompany.code
+        ? c.json({ error: API_ERRORS.selectCompany.code }, API_ERRORS.selectCompany.status)
+        : c.json({ error: API_ERRORS.noCompany.code }, API_ERRORS.noCompany.status);
       const row = await withCompany(appPool, { userId: user.id, companyId: r.active.id }, async (tx) => {
         const { rows } = await tx.query<{ id: string; name: string }>(
           "select id, name from companies where id = app.current_company_id()",
         );
         return rows[0];
       });
-      if (!row) return c.json({ error: "chua-gan-san" }, 403);
+      if (!row) return c.json({ error: API_ERRORS.noCompany.code }, API_ERRORS.noCompany.status);
       return c.json(row, 200);
     },
   );
 
   registerMemberRoutes(api, deps);
+  registerListingRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",

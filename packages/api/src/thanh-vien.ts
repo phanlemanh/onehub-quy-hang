@@ -6,11 +6,12 @@ import { emailsOf, ensureAccount } from "./auth/accounts";
 import { resolveCompany } from "./auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "./auth/constants";
 import { withCompany } from "./db";
+import { API_ERRORS, type ApiErrorEntry } from "./errors";
 
 /** Năm vai của Tham chiếu §2 (ADR-0006). Cơ sở dữ liệu giữ cùng danh sách ở ràng buộc company_members_roles_valid. */
 export const ROLES = ["telesales", "listing_agent", "buyer_agent", "team_lead", "company_admin"] as const;
 
-const BASE = "/api/v1/san";
+const BASE = "/api/v1/company";
 const ApiError = z.object({ error: z.string() });
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
 const ok = (description: string, schema: z.ZodTypeAny) => ({ description, content: { "application/json": { schema } } });
@@ -27,26 +28,26 @@ const loi = {
 };
 
 type Ctx = { userId: string; companyId: string };
-type Loi = { status: 400 | 403 | 404 | 409; error: string };
+type Loi = ApiErrorEntry;
 
 /** Lỗi Postgres → mã lỗi của API. Luật theo dòng và trigger là lưới cuối; API kiểm trước để trả mã rõ. */
 function loiPg(e: unknown): Loi | null {
   const x = e as { code?: string; constraint?: string };
-  if (x.code === "P0001" && x.constraint === "can_mot_quan_tri") return { status: 409, error: "can-mot-quan-tri" };
-  if (x.code === "23514") return { status: 400, error: "vai-khong-hop-le" };
-  if (x.code === "23503") return { status: 400, error: "khu-khong-thuoc-san" };
-  if (x.code === "23505" && x.constraint === "company_zones_name_unique") return { status: 409, error: "khu-trung-ten" };
-  if (x.code === "42501") return { status: 403, error: "can-quan-tri" };
+  if (x.code === "P0001" && x.constraint === "can_mot_quan_tri") return API_ERRORS.lastAdmin;
+  if (x.code === "23514") return API_ERRORS.invalidRole;
+  if (x.code === "23503") return API_ERRORS.invalidZone;
+  if (x.code === "23505" && x.constraint === "company_zones_name_unique") return API_ERRORS.zoneNameTaken;
+  if (x.code === "42501") return API_ERRORS.adminRequired;
   return null;
 }
 
 export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, auth }: ApiDeps) {
   /** Người, sàn đang làm và có là quản trị không — đọc lại mỗi lời gọi, không lưu trong phiên. */
-  async function vao(c: Context): Promise<{ ctx: Ctx; admin: boolean } | Loi | { status: 401; error: string }> {
+  async function vao(c: Context): Promise<{ ctx: Ctx; admin: boolean } | Loi> {
     const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
-    if (!user) return { status: 401, error: "chua-dang-nhap" };
+    if (!user) return API_ERRORS.unauthenticated;
     const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
-    if (!r.active) return r.reason === "chon-san" ? { status: 409, error: "chon-san" } : { status: 403, error: "chua-gan-san" };
+    if (!r.active) return r.reason === API_ERRORS.selectCompany.code ? API_ERRORS.selectCompany : API_ERRORS.noCompany;
     const ctx = { userId: user.id, companyId: r.active.id };
     const admin = await withCompany(appPool, ctx, async (tx) => {
       const { rows } = await tx.query<{ a: boolean }>("select app.current_user_is_admin() as a");
@@ -54,11 +55,11 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
     });
     return { ctx, admin };
   }
-  const tra = (c: Context, l: { status: number; error: string }) => c.json({ error: l.error }, l.status as 400);
+  const tra = (c: Context, l: Loi) => c.json({ error: l.code }, l.status as 400);
   const quanTri = async (c: Context) => {
     const v = await vao(c);
     if ("status" in v) return v;
-    if (!v.admin) return { status: 403 as const, error: "can-quan-tri" };
+    if (!v.admin) return API_ERRORS.adminRequired;
     return v.ctx;
   };
 
@@ -77,7 +78,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
   api.openapi(
     createRoute({
       method: "get",
-      path: `${BASE}/thanh-vien`,
+      path: `${BASE}/members`,
       summary: "Người của sàn đang làm — chỉ quản trị sàn",
       responses: { 200: ok("Người", z.array(Member)), ...loi },
     }),
@@ -107,7 +108,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
   api.openapi(
     createRoute({
       method: "post",
-      path: `${BASE}/thanh-vien`,
+      path: `${BASE}/members`,
       summary: "Mời người vào sàn — vào ngay, tạo tài khoản khi chưa có (ADR-0006)",
       request: json(z.object({ email: z.string().email(), roles: z.array(z.string()), zoneIds: z.array(z.string()).default([]) })),
       responses: { 201: ok("Đã mời", z.object({ userId: z.string() })), ...loi },
@@ -116,9 +117,9 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
       const q = await quanTri(c);
       if ("status" in q) return tra(c, q);
       const { email, roles, zoneIds } = c.req.valid("json");
-      if (roles.length === 0) return c.json({ error: "can-it-nhat-mot-vai" }, 400);
-      if (!vaiHopLe(roles)) return c.json({ error: "vai-khong-hop-le" }, 400);
-      if (!uuidHopLe(zoneIds)) return c.json({ error: "khu-khong-thuoc-san" }, 400);
+      if (roles.length === 0) return tra(c, API_ERRORS.roleRequired);
+      if (!vaiHopLe(roles)) return tra(c, API_ERRORS.invalidRole);
+      if (!uuidHopLe(zoneIds)) return tra(c, API_ERRORS.invalidZone);
       const userId = await ensureAccount(identityPool, email);
       try {
         const kq = await withCompany(appPool, q, async (tx) => {
@@ -131,7 +132,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
           await datKhu(tx, userId, zoneIds);
           return "ok";
         });
-        if (kq === "trung") return c.json({ error: "da-la-thanh-vien" }, 409);
+        if (kq === "trung") return tra(c, API_ERRORS.alreadyMember);
         // Câu trả lời như nhau dù email đã có tài khoản hay chưa: quản trị không dò được ai đang dùng Quỹ hàng.
         return c.json({ userId }, 201);
       } catch (e) {
@@ -145,7 +146,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
   api.openapi(
     createRoute({
       method: "patch",
-      path: `${BASE}/thanh-vien/{userId}`,
+      path: `${BASE}/members/{userId}`,
       summary: "Đổi vai, khu phụ trách của một người",
       request: { params: z.object({ userId: z.string() }), ...json(z.object({ roles: z.array(z.string()).optional(), zoneIds: z.array(z.string()).optional() })) },
       responses: { 200: ok("Đã đổi", z.object({ userId: z.string() })), ...loi },
@@ -155,9 +156,9 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
       if ("status" in q) return tra(c, q);
       const { userId } = c.req.valid("param");
       const { roles, zoneIds } = c.req.valid("json");
-      if (roles && roles.length === 0) return c.json({ error: "can-it-nhat-mot-vai" }, 400);
-      if (roles && !vaiHopLe(roles)) return c.json({ error: "vai-khong-hop-le" }, 400);
-      if (zoneIds && !uuidHopLe(zoneIds)) return c.json({ error: "khu-khong-thuoc-san" }, 400);
+      if (roles && roles.length === 0) return tra(c, API_ERRORS.roleRequired);
+      if (roles && !vaiHopLe(roles)) return tra(c, API_ERRORS.invalidRole);
+      if (zoneIds && !uuidHopLe(zoneIds)) return tra(c, API_ERRORS.invalidZone);
       try {
         const co = await withCompany(appPool, q, async (tx) => {
           const m = await tx.query("select 1 from company_members where company_id = app.current_company_id() and user_id = $1", [userId]);
@@ -170,7 +171,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
           }
           return true;
         });
-        return co ? c.json({ userId }, 200) : c.json({ error: "khong-thay" }, 404);
+        return co ? c.json({ userId }, 200) : tra(c, API_ERRORS.notFound);
       } catch (e) {
         const l = loiPg(e);
         if (l) return tra(c, l);
@@ -182,7 +183,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
   api.openapi(
     createRoute({
       method: "delete",
-      path: `${BASE}/thanh-vien/{userId}`,
+      path: `${BASE}/members/{userId}`,
       summary: "Bỏ một người khỏi sàn — khu phụ trách của họ ở sàn mất theo",
       request: { params: z.object({ userId: z.string() }) },
       responses: { 204: { description: "Đã bỏ" }, ...loi },
@@ -195,7 +196,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
         const n = await withCompany(appPool, q, async (tx) =>
           (await tx.query("delete from company_members where company_id = app.current_company_id() and user_id = $1", [userId])).rowCount,
         );
-        return n ? c.body(null, 204) : c.json({ error: "khong-thay" }, 404);
+        return n ? c.body(null, 204) : tra(c, API_ERRORS.notFound);
       } catch (e) {
         const l = loiPg(e);
         if (l) return tra(c, l);
@@ -207,7 +208,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
   api.openapi(
     createRoute({
       method: "get",
-      path: `${BASE}/khu`,
+      path: `${BASE}/zones`,
       summary: "Khu của sàn đang làm",
       responses: { 200: ok("Khu", z.array(Zone)), ...loi },
     }),
@@ -224,7 +225,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
   api.openapi(
     createRoute({
       method: "post",
-      path: `${BASE}/khu`,
+      path: `${BASE}/zones`,
       summary: "Tạo khu theo tên — chỉ quản trị sàn",
       request: json(z.object({ name: z.string() })),
       responses: { 201: ok("Đã tạo", Zone), ...loi },
@@ -233,7 +234,7 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
       const q = await quanTri(c);
       if ("status" in q) return tra(c, q);
       const name = c.req.valid("json").name.trim();
-      if (!name) return c.json({ error: "ten-khu-rong" }, 400);
+      if (!name) return tra(c, API_ERRORS.zoneNameRequired);
       try {
         const row = await withCompany(appPool, q, async (tx) =>
           (await tx.query<{ id: string; name: string }>("insert into company_zones (company_id, name) values (app.current_company_id(), $1) returning id, name", [name])).rows[0],

@@ -1,0 +1,3 @@
+Nguon: Playwright (Chrome headless) loc fetch/xhr/4xx+ toi localhost:3462, console error/warning, requestfailed. Dang nhap truong-nhom-2@example.test.
+console.error Failed to load resource: the server responded with a status of 404 (Not Found)
+Chi tiet: console.error 404 = http://localhost:3462/favicon.ico (static asset, chi ghi chu). Khong co fetch/xhr toi app origin trong tap bat duoc.

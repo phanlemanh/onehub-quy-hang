@@ -1,0 +1,31 @@
+/**
+ * Mã lỗi của API — một chỗ duy nhất (ADR-0007). Thân lỗi luôn là `{ "error": <code> }` với đúng mã HTTP ở đây; màn đọc
+ * kiểu `ApiErrorCode` để tra câu báo tiếng Việt, không in mã ra chữ.
+ */
+export const API_ERRORS = {
+  unauthenticated: { code: "unauthenticated", status: 401 },
+  notAMember: { code: "not-a-member", status: 403 },
+  noCompany: { code: "no-company", status: 403 },
+  adminRequired: { code: "admin-required", status: 403 },
+  selectCompany: { code: "select-company", status: 409 },
+  alreadyMember: { code: "already-member", status: 409 },
+  lastAdmin: { code: "last-admin", status: 409 },
+  zoneNameTaken: { code: "zone-name-taken", status: 409 },
+  invalidRole: { code: "invalid-role", status: 400 },
+  roleRequired: { code: "role-required", status: 400 },
+  invalidZone: { code: "invalid-zone", status: 400 },
+  zoneNameRequired: { code: "zone-name-required", status: 400 },
+  notFound: { code: "not-found", status: 404 },
+  // Hàng và sự kiện (ADR-0008).
+  versionConflict: { code: "version-conflict", status: 409 },
+  invalidTransition: { code: "invalid-transition", status: 400 },
+  missingRequirement: { code: "missing-requirement", status: 400 },
+  invalidPayload: { code: "invalid-payload", status: 400 },
+} as const;
+
+export type ApiErrorKey = keyof typeof API_ERRORS;
+export type ApiErrorCode = (typeof API_ERRORS)[ApiErrorKey]["code"];
+export type ApiErrorEntry = (typeof API_ERRORS)[ApiErrorKey];
+
+/** Mã giới hạn xin mã đăng nhập — do better-auth trả (thân `{ code, message }`, 429), không qua thân lỗi chung ở trên. */
+export const OTP_RATE_LIMITED = "too-many-code-requests";

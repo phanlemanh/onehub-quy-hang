@@ -17,6 +17,7 @@ dòng.
 | button-group | ui | kèm khi cài thành phần khác | nhóm nút (đi cùng input-group) |
 | button | ui | `npx shadcn@latest add button` | mọi nút; dẫn đường bằng `render={<Link/>}` + `nativeButton={false}` |
 | calendar | ui | `npx shadcn@latest add calendar` | chọn ngày |
+| card | ui | kèm `@reui/app-shell-8` | khung của trang khách; màn vận hành dùng Frame |
 | checkbox | ui | `npx shadcn@latest add checkbox` | tích chọn |
 | combobox | ui | `npx shadcn@latest add combobox` | chọn có gõ tìm |
 | command | ui | `npx shadcn@latest add command` | ô «Gõ mã căn» (⌘K) |
@@ -54,6 +55,7 @@ dòng.
 | frame | reui | `npx shadcn@latest add @reui/frame` | họ khung của màn vận hành |
 | icon-stack | reui | kèm `@reui/timeline` | chồng biểu tượng (đi cùng timeline) |
 | number-field | reui | `npx shadcn@latest add @reui/number-field` | ô số (giá, diện tích) |
+| rating | reui | kèm `@reui/app-shell-8` | chấm sao (chưa dùng; khối kéo theo) |
 | sortable | reui | `npx shadcn@latest add @reui/sortable` | kéo sắp xếp (trạng thái của sàn) |
 | stepper | reui | `npx shadcn@latest add @reui/stepper` | các bước của luồng |
 | timeline | reui | `npx shadcn@latest add @reui/timeline` | lịch sử giá, trạng thái |
@@ -64,7 +66,9 @@ chuyển thể bản cài cho qua kiểu chặt. `use-copy-to-clipboard` không 
 
 ## Khối đã chuyển thể
 
-Khối ReUI đã cài và chuyển thể cho một màn của Quỹ hàng. Chưa có — màn đầu tiên (vỏ, hàng 53) thêm dòng đầu.
+Khối ReUI đã cài và chuyển thể cho một màn của Quỹ hàng. Thư mục cài `components/blocks/` không giữ lại: tệp chuyển
+thể nằm ở chỗ dùng.
 
 | Khối gốc | Tệp đang dùng | Màn | Đã đổi gì khi chuyển thể |
 | --- | --- | --- | --- |
+| `@reui/app-shell-8` | `apps/web/src/components/shell/` (`app-shell.tsx`, `home-rail.tsx`, `second-column.tsx`, `account-menu.tsx`, `company-switcher.tsx`, `notifications.tsx`, `unit-jump.tsx`) | Vỏ máy tính mọi màn sau đăng nhập (hàng 53, ADR-0002) | Org → bộ chọn Sàn (chỉ hiện khi hơn một sàn), bỏ App/Env; ô tìm ⌘K → «Gõ mã căn» (cmdk, chỉ vai có Bảng hàng); Create → nút + Lead · Nhập Excel · Phát hàng theo vai; cột biểu tượng và cột thứ hai đọc `navigationFor` của `packages/core`, Cài đặt sàn ở đáy; menu tài khoản chuyển lên thanh trên (tên sàn, Tôi, sáng/tối, đăng xuất); ngăn thông báo trống; tay nắm và nút tìm dùng `Button` thay thẻ `<button>` trần; nhớ cột thứ hai bằng cookie `qh_cot2` theo người, sàn, nhà |

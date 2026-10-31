@@ -1,0 +1,2 @@
+Telesales (isolated ctx e5-telesales): all app-origin requests 200/304/307; only API: send-otp 200, sign-in/email-otp 200, get-session 200. No failures, no console errors captured.
+Dau chu (isolated ctx e5-dauchu): send-otp 200, sign-in/email-otp 400 x2 (my OTP guesses collided with other graders sharing the dev server and the same emails; harness noise, not app fault), send-otp 200, sign-in/email-otp 200, GET / 307 -> /today 200, get-session 200.
