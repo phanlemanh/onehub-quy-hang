@@ -57,6 +57,18 @@ test("bản trả cho người thấy: tên, giá đáy, cờ có số, không s
   for (const so of [SO, "0900 000 012", "+84900000012", "012"]) assert.ok(!chuoi.includes(so), `lộ «${so}»`);
 });
 
+test("bản trả không mang số dù bản ghi đọc lên có số", () => {
+  // Bản ghi cấy số như một dòng đọc nhầm cả cột số: hàm dựng bản trả phải chọn trường, không chép cả bản ghi.
+  const coSo = { ...REC, ownerPhone: SO } as OwnerRecord;
+  for (const [ai, viewer] of [
+    ["đầu chủ giữ căn", { userId: NGUOI, roles: ["listing_agent"] }],
+    ["đầu khách", { userId: KHAC, roles: ["buyer_agent"] }],
+  ] as const) {
+    const chuoi = JSON.stringify(ownerView(coSo, { userId: viewer.userId, roles: [...viewer.roles] }));
+    for (const so of ["ownerPhone", SO, "0900 000 012", "+84900000012"]) assert.ok(!chuoi.includes(so), `${ai}: lộ «${so}»`);
+  }
+});
+
 test("bản trả cho người không thấy: không khoá, không giá trị nguồn ở mọi cấp", () => {
   const v = ownerView(REC, { userId: KHAC, roles: ["buyer_agent"] });
   assert.deepEqual(v, { visible: false, listingAgentUserId: NGUOI });
