@@ -5,6 +5,9 @@ export const OTP_ALLOWED_ATTEMPTS = 3;
 /** Mỗi email xin mã tối đa chừng này lần trong cửa sổ; lần kế trả 429. Đếm cả email lạ để 429 không thành đường dò. */
 export const OTP_REQUEST_LIMIT = 5;
 export const OTP_REQUEST_WINDOW_MIN = 15;
+/** Phiên sống 30 ngày, trượt theo ngày dùng: dùng lại sau hơn một ngày thì hạn dời về «bây giờ + 30 ngày». */
+export const SESSION_EXPIRES_SEC = 30 * 24 * 60 * 60;
+export const SESSION_UPDATE_AGE_SEC = 24 * 60 * 60;
 
 export const AUTH_BASE_PATH = "/api/v1/auth";
 /** Cookie phiên là `qh.session_token` (bản https: `__Secure-qh.session_token`). */
