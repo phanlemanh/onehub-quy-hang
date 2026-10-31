@@ -5,8 +5,10 @@ slug: can-trung-ma-hai-toa
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-10-31-can-trung-ma-hai-toa-design.md
+approved_by: Manh Phan
+approved_at: 2026-10-31T14:30:51Z
 ---
 
 # Acceptance Contract: can-trung-ma-hai-toa
