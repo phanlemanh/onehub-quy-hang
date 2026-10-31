@@ -94,3 +94,6 @@ bằng đếm ô máy].
 
 - Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu bộ nhớ trên máy bị lỗi đúng lúc người dùng bấm «Giữ của tôi», «Lấy bản mới» hay «Bỏ thay đổi», sẽ không có gì xảy ra và không có lời báo nào. Với «Sửa lại», bảng đóng lại như đã xong dù căn vẫn nằm trong Cần xem và chưa được gửi. — `apps/web/src/lib/sync/dong-bo.ts`
 - Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm tra cho trường hợp máy chủ từ chối chuyển trạng thái chỉ so lý do với chính chuỗi nó tự dựng, nên nếu khuôn lỗi thật đổi đi thì bài kiểm tra vẫn xanh. Người dùng hiện không gặp lỗi nào. — `apps/web/src/lib/sync/tu-lanh.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: bộ nhớ trên máy lỗi đúng lúc bấm một lối ở Cần xem thì không có lời báo; «Sửa lại» đóng bảng như đã xong dù căn vẫn ở Cần xem.
+  - Ngoài-3: ca kiểm từ chối 400 tự dựng câu lý do rồi so với chính nó, nên khuôn lỗi thật đổi thì ca vẫn xanh.
