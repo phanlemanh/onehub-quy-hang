@@ -23,9 +23,10 @@ Source input: `docs/plan/lo-trinh.json` hàng 10 · `_acceptance/nhan-danh-muc-i
 
 ## Criteria
 
-- AC-1: Given một gói danh mục mẫu viết theo khuôn phiên bản 1 (khu `subdivisionName`, toà `buildingName`, căn
-  `unitNumber`, loại hình `propertyType`/`propertySubType`, UPI `urn:onehub:upi:…`), When đọc gói bằng khuôn, Then gói
-  hợp lệ và đọc ra đúng số khu, toà, căn cùng mọi trường đã viết.
+- AC-1: Given một gói danh mục mẫu viết theo khuôn phiên bản 1 (khu `subdivisionKey`/`subdivisionName`, toà
+  `buildingKey`/`buildingName`, căn `unitNumber`, loại hình `propertyType`/`propertySubType`, UPI `urn:onehub:upi:…`,
+  có cả một căn hộ và một nhà phố mang `lotSizeArea`, `storiesTotal`), When đọc gói bằng khuôn, Then gói hợp lệ và đọc
+  ra đúng số khu, toà, căn cùng mọi trường đã viết; số phiên bản khuôn là 1.
 - AC-2: Given gói đúng khuôn mà thêm một khoá lạ ở một cấp (gốc, khu, toà, căn — kể cả khoá mang tên chủ nhà như
   `ownerPhone`), When đọc gói, Then gói bị từ chối, lỗi nêu đúng đường khoá ở đúng cấp ấy; cùng gói bỏ khoá lạ thì hợp lệ.
 - AC-3: Given gói mang `schemaVersion` khác 1 (0, 2, vắng) hoặc có hai căn trùng UPI, When đọc gói, Then gói bị từ chối
@@ -35,30 +36,37 @@ Source input: `docs/plan/lo-trinh.json` hàng 10 · `_acceptance/nhan-danh-muc-i
   mục dùng chung có đúng các căn ấy với đúng thuộc tính. (cross-layer)
 - AC-5: Given gói của AC-4 đã nhận, When gửi lại đúng gói ấy, Then số dòng của vùng dùng chung không đổi (không nhân
   đôi) và API báo 0 căn mới; gửi gói đổi diện tích một căn thì đúng căn ấy cập nhật, các căn khác giữ nguyên. (cross-layer)
-- AC-6: Given thoả thuận của sàn tạm dừng, đã kết thúc, hết hạn, chưa tới ngày hiệu lực, thiếu lớp `catalog`, hoặc sàn
-  không có thoả thuận nào, hoặc sàn có thoả thuận đang bật mà không nằm trong danh sách tin, When gửi gói đúng khuôn, Then API trả 403 `agreement-inactive` và không một dòng nào của vùng
+- AC-6: Given thoả thuận của sàn tạm dừng, đã kết thúc, hết hạn, chưa tới ngày hiệu lực, thiếu lớp `catalog`, khác loại
+  (`lead_source` đang bật có lớp `catalog`), chiều ra (`catalog_source` `outbound`), hoặc sàn không có thoả thuận nào,
+  hoặc sàn có thoả thuận đang bật mà không nằm trong danh sách tin, When gửi gói đúng khuôn, Then API trả 403 `agreement-inactive` và không một dòng nào của vùng
   dùng chung được ghi; bật lại thoả thuận thì cùng gói được nhận. (cross-layer)
-- AC-7: Given gói sai khuôn (AC-2, AC-3), When gửi tới cửa nhận dù thoả thuận đang bật, Then API trả 422 `invalid-feed`
-  kèm danh sách đường khoá lỗi và không một dòng nào được ghi — kể cả khi lỗi nằm ở căn cuối gói. (cross-layer)
-- AC-8: Given vai `quy_hang_app` dưới luật theo dòng, When một sàn không có thoả thuận đang bật — hoặc có thoả thuận tự
-  tạo mà không nằm trong danh sách tin — ghi thẳng vào vùng dùng chung, xoá một dòng, hay tự thêm mình vào danh sách
-  tin, Then cơ sở dữ liệu từ chối; mọi sàn (và lời gọi chưa đặt sàn) đọc được vùng dùng chung; ba
-  bảng mới bật và ép luật theo dòng.
+- AC-7: Given gói sai khuôn (AC-2, AC-3) hoặc sai loại hình (cặp `Residential/Land` không có trong bảng loại hình của
+  lõi, căn hộ mang `lotSizeArea`), When gửi tới cửa nhận dù thoả thuận đang bật, Then API trả 422 `invalid-feed` kèm
+  danh sách đường khoá lỗi (với lỗi loại hình: đường tới căn và tên trường) và không một dòng nào được ghi — kể cả khi
+  lỗi nằm ở căn cuối gói. (cross-layer)
+- AC-8: Given vai `quy_hang_app` dưới luật theo dòng, When một sàn ghi thẳng vào vùng dùng chung mà thoả thuận nó
+  trỏ tới không hợp lệ (không có, tạm dừng, hết hạn, chưa tới ngày hiệu lực, thiếu lớp `catalog`, khác loại, chiều ra),
+  hoặc có thoả thuận tự tạo đang bật mà không nằm trong danh sách tin, hoặc xoá một dòng, hay tự thêm mình vào danh
+  sách tin, Then cơ sở dữ liệu từ chối bằng lỗi quyền (SQLSTATE `42501`), còn cùng câu lệnh với sàn được tin có thoả
+  thuận hợp lệ thì thành công; mọi sàn (và lời gọi chưa đặt sàn) đọc được vùng dùng chung; ba bảng mới bật và ép luật
+  theo dòng (đọc thẳng cờ của từng bảng, không chỉ qua ca quét chung).
 - AC-9: Given đường nhận, When gọi chưa đăng nhập, chưa thuộc sàn, hoặc bằng vai không phải quản trị sàn, Then lần lượt
-  401 `unauthenticated`, 403 `no-company`, 403 `admin-required`; đường có trong OpenAPI; mọi ca của hàng 9 và hàng 63
-  (lõi, API, Postgres) vẫn xanh.
+  401 `unauthenticated`, 403 `no-company`, 403 `admin-required`; đường có trong OpenAPI; mọi ca của hàng 9, hàng 63 và
+  hàng 72 (lõi, API, Postgres) vẫn xanh.
+- AC-10: Given vùng dùng chung sau migration, When đọc tập cột của bảng khu và bảng căn, Then đúng bằng danh sách
+  viết trước trong ca kiểm — không cột nào của lớp khác `catalog` (không chủ nhà, giá, số điện thoại, ảnh).
 
 ## Coverage
 
 Quét theo khuôn entity-feature của morphological-scan cho thực thể «một gói danh mục đi qua cửa nhận», làm tại chỗ trên
 ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts].
 
-- Trục khuôn: đúng (AC-1) | khoá lạ từng cấp (AC-2) | phiên bản sai, UPI trùng (AC-3) [thước CE: RESO DD 2.1 —
+- Trục khuôn: đúng (AC-1) | khoá lạ từng cấp (AC-2) | phiên bản sai, UPI trùng (AC-3) | loại hình sai (AC-7) [thước CE: RESO DD 2.1 —
   SubdivisionName, BuildingName, UnitNumber, PropertyType, PropertySubType]
-- Trục thoả thuận: đang bật và được tin (AC-4) | đang bật mà không được tin (AC-6, AC-8) | tạm dừng, kết thúc, hết hạn, chưa hiệu lực, thiếu lớp, không có (AC-6) | bật lại
-  (AC-6) [thước CE: `mayFlow` của `packages/core/src/agreements.ts`]
+- Trục thoả thuận: đang bật và được tin (AC-4) | đang bật mà không được tin (AC-6, AC-8) | tạm dừng, kết thúc, hết hạn,
+  chưa hiệu lực, thiếu lớp, khác loại, chiều ra, không có (AC-6, AC-8) | bật lại (AC-6) [thước CE: `mayFlow` của `packages/core/src/agreements.ts`]
 - Trục lặp: gói lần đầu (AC-4) | gửi lại y nguyên (AC-5) | gửi lại có thay đổi (AC-5)
-- Trục lớp chặn: lõi khuôn (AC-1…AC-3) | API (AC-4…AC-7, AC-9) | cơ sở dữ liệu (AC-8)
+- Trục lớp chặn: lõi khuôn (AC-1…AC-3) | API (AC-4…AC-7, AC-9) | cơ sở dữ liệu (AC-8, AC-10)
 - Trục người gọi: chưa đăng nhập · chưa có sàn · không phải quản trị · quản trị (AC-9, AC-4)
 - Later: khoá máy cho Invest tự đẩy; số thị trường và tin rao trong khuôn; đường tra đọc vùng dùng chung; gói cũ hơn
   gói đã nhận (theo mốc đo); xoá căn không còn trong gói.
@@ -73,7 +81,6 @@ ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts]
 ## Out of scope
 
 - Đường tra mã căn đọc vùng dùng chung thay danh mục mẫu (Hỏi-3) — hàng kế.
-- Đổi tên `projectKey`/`projectName` ở lõi tra theo RESO — hàng phát sinh riêng (giám sát, 31/10).
 - Khoá máy cho Invest tự đẩy không qua phiên người (Hỏi-2).
 - Số thị trường, tin rao công khai, mặt bằng theo trục trong khuôn.
 - Phía Invest đẩy gói thật (luật đợt 22: việc ngoài kho).
@@ -87,4 +94,6 @@ ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts]
   chung». Luật theo dòng vẫn bật và ép: đọc chung là chủ ý, ghi chỉ qua công ty được tin có thoả thuận đang bật, không
   ai xoá; dữ liệu của sàn (hàng, chủ nhà, lead) không có cột nào ở vùng này. Ca kiểm AC-8 chứng sàn thường không ghi
   được.
+- Hàng này nâng số phiên bản khuôn cấp vào 0 → 1, xử hàng 72 Ngoài-4 (đổi tên khoá chưa nâng số) và Ngoài-5 (khuôn
+  chưa chở trường nhà thấp tầng, đất).
 - Yêu cầu D-4: chạm tệp ngoài vùng của hàng (migration, đường API, ADR, Tham chiếu).
