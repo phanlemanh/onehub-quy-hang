@@ -5,7 +5,7 @@ slug: ban-do-khuon-nhom-da-co
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-ban-do-khuon-nhom-da-co-design.md
 approved_by:
 approved_at:
@@ -116,3 +116,11 @@ kề: shadcn `Empty`, ReUI `Alert`]. Đủ-để-bắt-đầu: lệch lọt đ�
 - Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Công cụ kiểm khuôn mới có bài thử cho hai trong bốn kiểu viết điều kiện; nếu sau này ai làm hỏng phần xử lý kiểu còn lại thì bài thử vẫn xanh. Màn hiện có không bị ảnh hưởng. — `packages/ui-lint/tests/ban-do-khuon.test.mjs`
 - Ngoài-4 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Một người viết màn mới nếu đổi tên khối báo trống khi nhập, hoặc viết vai báo lỗi theo kiểu khác, thì bộ kiểm không bắt được và màn có thể hiện khối báo sai kiểu mà không ai hay. — `packages/ui-lint/lib/ban-do.mjs`
 - Ngoài-6 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi tải danh sách người dùng của sàn gặp lỗi khác ngoài việc không có quyền (mất mạng, máy chủ lỗi), màn có thể hiện hỏng hoặc trống thay vì báo «tải thất bại». — `apps/web/src/app/settings/users/page.tsx`
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Chú thích trong bộ kiểm khuôn mô tả sai phạm vi kiểm điều kiện; bộ kiểm vẫn chạy đúng.
+  - Ngoài-2: Kiểu viết hiếm «<X/> && <khuôn/>» bị báo lệch thừa dù màn dựng đúng khuôn.
+  - Ngoài-3: Bài kiểm chỉ có ca cho hai trong bốn kiểu viết điều kiện (thiếu || và ??).
+  - Ngoài-4: Bộ kiểm trạng thái không bắt khối báo nhập đổi tên hay role viết trong ngoặc nhọn.
+  - Ngoài-6: Trang Người dùng chỉ xử lỗi 403; lỗi tải khác hiện hỏng thay vì báo tải thất bại.
+- Ngoài-5 (mở hợp đồng mới, chủ kho quyết 2026-10-31): khối cấm khai cho ba nhóm màn chưa bị chặn — làm cùng răng giữ khuôn
+  ở hàng 59.
