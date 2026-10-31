@@ -397,7 +397,7 @@
         "D1"
       ],
       "vung": [
-        "apps/web/src/app/inventory/**"
+        "apps/web/src/app/(app)/inventory/**"
       ]
     },
     {
@@ -417,7 +417,7 @@
         "D2"
       ],
       "vung": [
-        "apps/web/src/app/inventory/cell-edit/**",
+        "apps/web/src/app/(app)/inventory/cell-edit/**",
         "packages/core/src/pricing/**"
       ]
     },
@@ -438,7 +438,7 @@
         "D3"
       ],
       "vung": [
-        "apps/web/src/app/inventory/bulk/**"
+        "apps/web/src/app/(app)/inventory/bulk/**"
       ]
     },
     {
@@ -459,7 +459,7 @@
         "D5"
       ],
       "vung": [
-        "apps/web/src/app/units/**"
+        "apps/web/src/app/(app)/units/**"
       ]
     },
     {
@@ -480,7 +480,7 @@
         "D6"
       ],
       "vung": [
-        "apps/web/src/app/units/photos/**",
+        "apps/web/src/app/(app)/units/photos/**",
         "packages/core/src/photos/**"
       ]
     },
@@ -501,7 +501,7 @@
         "D7"
       ],
       "vung": [
-        "apps/web/src/app/units/photos/redact/**"
+        "apps/web/src/app/(app)/units/photos/redact/**"
       ]
     },
     {
@@ -525,7 +525,7 @@
         "D8"
       ],
       "vung": [
-        "apps/web/src/app/imports/**"
+        "apps/web/src/app/(app)/imports/**"
       ]
     },
     {
@@ -545,7 +545,7 @@
         "D9"
       ],
       "vung": [
-        "apps/web/src/app/imports/templates/**"
+        "apps/web/src/app/(app)/imports/templates/**"
       ]
     },
     {
@@ -566,7 +566,7 @@
         "D10"
       ],
       "vung": [
-        "apps/web/src/app/today/**"
+        "apps/web/src/app/(app)/today/**"
       ]
     },
     {
@@ -587,7 +587,7 @@
         "D11"
       ],
       "vung": [
-        "apps/web/src/app/units/ready/**",
+        "apps/web/src/app/(app)/units/ready/**",
         "packages/core/src/readiness/**"
       ]
     },
@@ -612,7 +612,7 @@
         "L1"
       ],
       "vung": [
-        "apps/web/src/app/leads/**",
+        "apps/web/src/app/(app)/leads/**",
         "packages/core/src/dedupe/**"
       ]
     },
@@ -676,7 +676,7 @@
         "L4"
       ],
       "vung": [
-        "apps/web/src/app/leads/mine/**"
+        "apps/web/src/app/(app)/leads/mine/**"
       ]
     },
     {
@@ -697,7 +697,7 @@
         "L5"
       ],
       "vung": [
-        "apps/web/src/app/units/call/**"
+        "apps/web/src/app/(app)/units/call/**"
       ]
     },
     {
@@ -717,7 +717,7 @@
         "L6"
       ],
       "vung": [
-        "apps/web/src/app/units/call/push/**"
+        "apps/web/src/app/(app)/units/call/push/**"
       ]
     },
     {
@@ -738,7 +738,7 @@
         "L7"
       ],
       "vung": [
-        "apps/web/src/app/units/call/dial/**"
+        "apps/web/src/app/(app)/units/call/dial/**"
       ]
     },
     {
