@@ -1,5 +1,8 @@
 # ADR-0006: Vai, khu phụ trách và lời mời vào sàn
 
+> **Trùng số.** Số 0006 cũng là [ADR bộ đồng bộ](0006-bai-thu-dong-bo.md) (đổi số từ 0004 tối 30/10). Gọi theo tên:
+> **ADR-0006 vai, khu**.
+
 Ngày: 2026-10-30 · Trạng thái: **accepted** (Manh Phan duyệt Cổng Phạm vi hồ sơ `moi-nguoi-vai-khu` 30/10, cả năm
 khuyến nghị) · Liên quan: ADR-0005 (đăng nhập theo sàn), Tham chiếu §2, §6, §9, hàng 7 của lộ trình
 
