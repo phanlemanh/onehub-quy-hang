@@ -5,7 +5,7 @@ slug: nang-kit-2-36-0
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-nang-kit-2-36-0-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T02:43:10Z
@@ -85,8 +85,10 @@ Quét morphological-scan, preset entity-feature, cho thực thể «nấc setup 
 
 - Không chạm bất biến nào của AGENTS.md: không mã sản phẩm, không cơ sở dữ liệu, không lớp `source`.
 - Thứ tự gộp sau khi đợt `nen-dau` đóng: PR #21 → PR này (gộp lại nhánh chính trước) → PR #15.
-- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
-  - Ngoài-2: Hàng của việc nâng kit trên trang lộ trình nằm ngoài mọi nhóm và đợt, mã là chữ thay vì số kế tiếp.
-  - Ngoài-4: Đổi cấu hình cổng nghiệm thu không bị cổng gộp nâng hạng hay đòi chữ ký riêng; chỉ người duyệt PR canh.
-  - Ngoài-5: Nếu công cụ định tuyến máy hỏng ở hồ sơ T2, bài đo của vòng vẫn có thể báo xanh.
-  - Ngoài-6: Chạy bài đo của vòng lúc còn thay đổi chưa commit có thể cho kết quả xanh trên hai bản khác nhau của kho.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31 (số mục theo lượt chấm 2):
+  - Ngoài-1: Nhánh đối chứng của bài đo định tuyến máy còn lỏng — máy xếp sai hồ sơ T2 thì bài đo vẫn có thể báo xanh.
+  - Ngoài-2: Đổi cấu hình cổng nghiệm thu không bị cổng gộp nâng hạng hay đòi chữ ký riêng; chỉ người duyệt PR canh.
+  - Ngoài-3: Hàng của việc nâng kit trên trang lộ trình nằm ngoài mọi nhóm và đợt, mã là chữ thay vì số kế tiếp.
+  - Ngoài-5: Cổng gộp bỏ qua tệp hồ sơ khi xếp hạng, nên sửa cấu hình nghiệm thu không bị đòi hồ sơ hạng cao nhất.
+  - Ngoài-6: Nếu công cụ định tuyến máy hỏng ở hồ sơ T2, bài đo của vòng vẫn có thể báo xanh.
+  - Ngoài-7: Chạy bài đo của vòng lúc còn thay đổi chưa commit có thể cho kết quả xanh trên hai bản khác nhau của kho.

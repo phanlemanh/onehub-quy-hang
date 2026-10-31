@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 feature_slug: nang-kit-2-36-0
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 39dd1267fdc66a468cffff29c8c16302a4c478e0
-human_signoff:
+human_signoff: Manh Phan 2026-10-31
 ---
 
 # Evidence Report: nang-kit-2-36-0
@@ -154,7 +154,7 @@ human_signoff:
     - domain-correctness: PASS — AGENTS.md (dòng 64–70) nói driver `tep-sinh` cho PRODUCT-MAP.md và LO-TRINH.html, bật khi `npm install` qua `prepare`, và job gate lấy kit theo `KIT_TAG` (đang `v2.36.0`). Cả ba khớp `prepare` trong package.json, hai dòng `merge=tep-sinh` trong .gitattributes và `KIT_TAG: v2.36.0` ở ci.yml dòng 83. Dòng §12 ngày 31/10 (dòng 316) ghi các nấc đã bật khớp khoá thật `gap_probe: required`, `lo_trinh.chan: true`, `ngoai_n_tu_dinh_tuyen: true` và `.gitattributes` trong `t3_paths`. Các nấc chưa bật khớp mục 3 «Không bật» của bản thiết kế, mỗi nấc kèm lý do ngắn.
     - operational-feasibility: PASS — AGENTS.md (dòng 68-70) và dòng 64-65 khớp `package.json` dòng 12, `.gitattributes` và `ci.yml` dòng 83. Dòng §12 ngày 31/10 (tham-chieu.md dòng 316) khớp các khoá `gap_probe: required`, `lo_trinh.chan: true`, `ngoai_n_tu_dinh_tuyen: true` trong config.yaml, và bốn nấc chưa bật kèm lý do khớp mục 3 «Không bật» của bản thiết kế. Bản thiết kế còn liệt kê vài nấc khác (như `capture.ui` và các khoá tinh chỉnh làn ghim lại) mà dòng §12 không nhắc; câu hỏi không đòi liệt kê đủ nên không coi là lệch.
     - spec-alignment: PASS — AGENTS.md (dòng 64-70) nói driver `tep-sinh` bật ở mỗi bản clone qua `npm install` (script `prepare`) và job gate lấy kit theo `KIT_TAG` (đang `v2.36.0`); khớp `package.json`, `.gitattributes` và `ci.yml`. Dòng §12 ngày 31/10 ghi kit 2.36.0, gộp không dừng ở tệp sinh, phản biện bắt buộc, chặn việc ngoài lộ trình, máy tự định tuyến mục ngoài hợp đồng, rồi bốn nấc chưa bật kèm lý do ngắn; khớp `config.yaml` và mục «Không bật» ở mục 3 của bản thiết kế.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-10-31
 
 ### Lệnh suite (hồi quy)
 
