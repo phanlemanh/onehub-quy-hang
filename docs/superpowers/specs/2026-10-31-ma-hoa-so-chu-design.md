@@ -113,6 +113,24 @@ hỏng thì Postgres in «Failing row contains (…số…)»; nay dòng chỉ c
 | không có | người thấy nguồn | 404 `owner-not-set` | 0 |
 | chép từ dòng khác / bị sửa / khoá khác | người thấy nguồn | 500 chung, không số | 0 (giao dịch huỷ) |
 
+## 8. Bảng lead (hàng 24 gộp trước — mở lại Cổng Phạm vi, AC-11, AC-12)
+
+Giám sát chốt hàng 24 (PR #44) gộp trước 62. Migration 007 của hàng 24 tạo `leads.owner_phone text not null` và
+`app.lead_dedupe_facts(p_phone text, …)` so số rõ với `listing_owners.owner_phone` và `leads.owner_phone`. Migration 008
+(chưa lên main nên còn sửa được) thêm:
+
+- `leads.owner_phone_enc`, `leads.owner_phone_hash` — cùng khuôn và ràng buộc như chủ nhà; ngữ cảnh bản mã
+  `leads:<company_id>:<lead_id>`. `owner_phone` bỏ `not null`, thêm `leads_phone_chi_ban_ma check (owner_phone is null)`
+  NOT VALID; index `leads_owner_phone_idx` thay bằng index trên `(company_id, owner_phone_hash)`. Vai API ghi được hai
+  cột, không đọc được.
+- `app.lead_dedupe_facts(p_phone_hash bytea, p_building text, p_unit text, p_open_statuses text[])` — drop bản cũ, so
+  `owner_phone_hash` của chủ nhà và của lead trước. Không hàm nào của cơ sở dữ liệu còn nhận số chủ dạng chữ.
+- `createLead` (`packages/api/src/leads/store.ts`) mã hoá số và tính dấu vết theo sàn trước khi gọi hàm dữ kiện và ghi
+  lead; khoá đọc một lần ở `registerLeadRoutes` như ở chủ nhà.
+- Lệnh mã hoá lại phủ thêm bảng `leads` (`daMaHoaLead`), validate `leads_phone_chi_ban_ma`.
+- Lead chưa có cửa mở số: số của lead chưa ai đọc lại được (chốt 29/10 của hàng 24 — telesales không thấy lại số). Ngữ
+  cảnh bản mã đặt sẵn cho hàng sau cần mở.
+
 ## Đặc tả UX
 
 Bỏ — hàng không có màn (sổ quyết định).

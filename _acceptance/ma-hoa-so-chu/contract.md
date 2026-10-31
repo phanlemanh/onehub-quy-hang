@@ -5,10 +5,8 @@ slug: ma-hoa-so-chu
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: draft
 design_doc: docs/superpowers/specs/2026-10-31-ma-hoa-so-chu-design.md
-approved_by: Manh Phan
-approved_at: 2026-10-31T14:28:42Z
 ---
 
 # Acceptance Contract: ma-hoa-so-chu
@@ -102,6 +100,23 @@ Then ADR nêu: cách sinh khoá (một lệnh trong khối mã, đầu ra qua đ
 Production; Preview theo Hỏi-1; bản ngoài Vercel theo Hỏi-3), mất khoá thì mất mọi số chủ, cách chạy lệnh mã hoá lại và đếm trước khi chạy, việc xoá cột `owner_phone` là
 hàng sau; `.env.example` có dòng `OWNER_PHONE_KEY=` không giá trị; Tham chiếu có dòng sổ quyết định trỏ ADR-0013.
 
+**AC-11 — Số chủ của lead cũng chỉ ở dạng bản mã.** (cross-layer)
+Given cơ sở dữ liệu đã áp migration 007 (bảng `leads` của hàng 24) và 008; một telesales của sàn
+When nhập lead qua `POST /api/v1/leads` với số mẫu; và (trong một giao dịch hoàn lại) có dòng lead cũ mang số rõ rồi
+chạy lệnh mã hoá lại
+Then dòng `leads` có `owner_phone` null, `owner_phone_enc` (ngữ cảnh `leads:<company_id>:<lead_id>`, giải ra đúng số)
+và `owner_phone_hash` có giá trị; đọc dòng lead bằng vai chủ dưới dạng chữ không thấy số ở bốn dạng; vai API không đọc
+được ba cột số của lead; chèn hay sửa `leads.owner_phone` khác null bị từ chối nêu tên ràng buộc
+`leads_phone_chi_ban_ma`; lệnh mã hoá lại chuyển dòng lead số rõ sang bản mã và dấu vết, validate ràng buộc ấy, chạy
+lại không đổi byte; bản trả cho telesales vẫn không mang số.
+
+**AC-12 — Kiểm trùng lúc nhập lead so dấu vết, không so số.** (cross-layer)
+Given chủ nhà mang số mẫu trên một hàng đã có đầu chủ, và một lead trước cùng số đã về một đầu chủ
+When telesales nhập lead mang số ấy (viết `0900 000 0xx` hay `+84…`); và nhập lead cùng số ở sàn khác
+Then kết quả kiểm trùng giữ đúng luật của hàng 24 (lead về đầu chủ giữ chủ nhà, `+84` vẫn khớp); hàm
+`app.lead_dedupe_facts` nhận dấu vết (`bytea`) thay cho số — không còn hàm nào của cơ sở dữ liệu nhận số chủ dạng chữ;
+lead ở sàn khác không khớp chủ nhà của sàn này.
+
 ## Coverage
 
 Quét không gian bằng `morphological-scan` (preset risk-premortem). Chân sản phẩm: `[SUY-TỪ-REPO:
@@ -119,6 +134,8 @@ pháp lý trước dữ liệu thật (ADR-0009 §10), không phải của hàng
 - Trục C — khoá và bản mã: khoá đúng (AC-1) | thiếu khoá production (AC-4) | thiếu khoá dev (AC-4) | khoá sai dạng
   (AC-4) | khoá khác (AC-2) | bản mã bị sửa (AC-2, AC-8) | bản mã chép sang dòng khác (AC-2, AC-8) | dấu vết so trùng
   (AC-3).
+- Trục A thêm: bảng lead của hàng 24 (gộp trước 62 theo lệnh giám sát) — ghi qua API và dòng cũ (AC-11); trục C thêm:
+  dấu vết so trùng lead với chủ nhà và lead với lead (AC-12).
 - Later: xoay khoá (byte phiên bản đặt sẵn) · xoá cột `owner_phone` · hàm kiểm trùng so dấu vết (hàng 24 / kiểm trùng).
 - Never: mã hoá trong cơ sở dữ liệu bằng pgcrypto — khoá phải đi vào phiên cơ sở dữ liệu, trái ADR-0009 §9.
 - `[GIẢ ĐỊNH]` chờ gạch: cột số điện thoại ở mọi bảng đều có `phone` trong tên (quy ước RESO-first; quét AC-5 dựa trên
@@ -136,6 +153,8 @@ Ngưỡng SỐNG của `opportunity.md`, từng vế:
   tệp, chờ các hàng dựng bảng), nên «dữ liệu đã có» là dòng ghi qua API của hàng 11; AC-9 cấy đúng dạng dòng ấy.
 - «bộ kiểm cách ly xanh» — mã thoát `npm run db:migrate && npm run db:test` trên Postgres dãy G · AC-5.
 
+- Vế lead của ngưỡng «mọi dòng số chủ là bản mã» — quét dòng lead bằng vai chủ · AC-11.
+
 ## Out of scope
 
 - Xoá cột `owner_phone` — migration của hàng sau, sau khi cơ sở dữ liệu thật đã chạy lệnh mã hoá lại.
@@ -147,6 +166,9 @@ Ngưỡng SỐNG của `opportunity.md`, từng vế:
 
 ## Notes
 
+- **Hàng 24 đã gộp trước (giám sát chốt 31/10, PR #44 vào main 16:08Z)** — nhánh «24 gộp trước» dưới đây áp dụng:
+  AC-11, AC-12 thêm qua Cổng Phạm vi lại; migration 008 chuyển `leads.owner_phone` và đổi `app.lead_dedupe_facts`;
+  sửa `packages/api/src/leads/{store,routes}.ts` và `packages/api/test-db/leads.test.ts` (yêu cầu chạm tệp G-3).
 - **Thứ tự gộp với hàng 24 (ô nhận lead, dãy L — migration 007 thêm `leads.owner_phone` và hàm
   `app.lead_dedupe_facts` so số dạng chữ rõ).** 62 gộp trước: hàng 24 phải dùng đường mã hoá của 62 — cột
   `owner_phone_enc bytea` + `owner_phone_hash bytea`, `maHoaSo(so, "leads:<company_id>:<lead_id>")`,

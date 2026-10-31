@@ -91,3 +91,20 @@ evals:
     paths: [docs/adr/0013-ma-hoa-so-chu.md, .env.example, docs/product/tham-chieu.md]
     evidence_required: [run_id, verdict, judges]
 
+  - id: E11
+    criterion: AC-11
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mã hoá số chủ: lead chỉ để lại bản mã» (test-db/ma-hoa-so-chu.test.ts) có mặt và ok — sau POST /api/v1/leads với '0900 000 051': leads.owner_phone null, owner_phone_enc 39 byte bắt đầu 0x01 giải bằng khoá dev với ngữ cảnh 'leads:<sàn>:<lead>' ra '0900000051', owner_phone_hash bằng dauVetSo của số ấy; quét chữ dòng lead (row::text + encode hex/base64/escape) bằng vai chủ không chứa bốn dạng, kèm đối chứng dương cùng hàm quét; thân trả cho telesales không chứa số; ca «mã hoá lại: lead số rõ thành bản mã» ok — trong giao dịch hoàn lại tạm gỡ leads_phone_chi_ban_ma, cấy một lead số rõ '0900000052', maHoaLai báo daMaHoaLead 1, owner_phone null, giải ra đúng số, convalidated của leads_phone_chi_ban_ma = true, lần hai báo 0 và bản mã giữ nguyên byte; bộ cách ly có ca «số chủ của lead: cơ sở dữ liệu từ chối số rõ, vai API không đọc ba cột» — chèn/sửa leads.owner_phone khác null lỗi nêu 'leads_phone_chi_ban_ma' (đối chứng dương: chèn bản mã đúng khuôn được), vai API 'permission denied' trên owner_phone, owner_phone_enc, owner_phone_hash. Chiều đỏ: ghi số rõ vào lead hay bỏ ràng buộc → ca đỏ."
+    paths: [packages/api/src/leads/**, packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-12
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; các ca kiểm trùng của hàng 24 trong test-db/leads.test.ts vẫn có mặt và ok, đích danh «chủ trùng: lead L-02 về đầu chủ giữ chủ nhà CN-01» và «chủ trùng: số viết +84 vẫn khớp»; ca «mã hoá số chủ: kiểm trùng lead so dấu vết» (test-db/ma-hoa-so-chu.test.ts) ok — lead thứ hai cùng số với lead trước đã về đầu chủ thì về đúng đầu chủ ấy; lead cùng số ở sàn khác ra 'new' (đối chứng: cùng sàn ra 'owner_has_agent'); truy pg_proc: app.lead_dedupe_facts có tham số đầu kiểu bytea, và không hàm nào ở schema app có tham số tên chứa 'phone' kiểu text. Chiều đỏ: so số rõ hay bỏ sàn khỏi dấu vết → ca đỏ."
+    paths: [packages/api/src/leads/**, packages/api/src/owners/ma-hoa.ts, packages/api/test-db/leads.test.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
