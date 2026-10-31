@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hỏi-2 so trùng số</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1100px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 0.35rem;
+    }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Cây quyết định · Hỏi-2 · AC-3</p>
+    <h1>So trùng số chủ bằng gì khi số đã mã hoá?</h1>
+    <p class="subtitle">Ô nhận lead (hàng 24) cần biết số chủ của lead đã có ở chủ nhà hay lead khác chưa. Số trong bảng là bản mã, nên phải chọn cách so.</p>
+    <svg viewBox="0 0 1000 456" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Hỏi-2 so trùng số</title>
+      <desc id="d">Gốc: ô nhận lead so số chủ của lead với chủ nhà và lead khác bằng gì khi số đã mã hoá. Nhánh 1, máy khuyên: dấu vết có khoá theo sàn, cột riêng cạnh bản mã, không thử ngược được khi thiếu khoá, không thư viện mới, đổi lại lộ hai dòng trùng số cho người đọc thẳng bảng. Nhánh 2: mã hoá tất định, lộ trùng như nhánh 1, cần thư viện mới, một khoá gánh cả giấu và so. Nhánh 3: giải mã hết ở máy chủ API để so, không lộ trùng trong bảng, chậm theo số dòng, mọi số của sàn đi qua bộ nhớ máy chủ API mỗi lần nhận lead.</desc>
+      <defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+      <rect width="1000" height="456" fill="#f5f5f5"/>
+<line x1="500" y1="104" x2="500" y2="132" stroke="#4f5d75" stroke-width="1"/>
+<path d="M 164 160 L 164 140 Q 164 132 172 132 L 828 132 Q 836 132 836 140 L 836 160" fill="none" stroke="#4f5d75" stroke-width="1"/>
+
+<line x1="164" y1="220" x2="164" y2="240" stroke="#4f5d75" stroke-width="1"/>
+<line x1="500" y1="132" x2="500" y2="160" stroke="#4f5d75" stroke-width="1"/>
+
+<line x1="500" y1="220" x2="500" y2="240" stroke="#4f5d75" stroke-width="1"/>
+
+<line x1="836" y1="220" x2="836" y2="240" stroke="#4f5d75" stroke-width="1"/>
+<rect x="260" y="32" width="480" height="72" rx="6" fill="#f5f5f5"/><rect x="260" y="32" width="480" height="72" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="500" y="60" fill="#2d3142" font-size="13" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ô nhận lead so số chủ với chủ nhà và lead khác bằng gì?</text>
+<text x="500" y="78" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">số đã mã hoá · hàng 24</text>
+<rect x="16" y="160" width="296" height="60" rx="6" fill="#f5f5f5"/><rect x="16" y="160" width="296" height="60" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="28" y="178" fill="#ba4513" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">NHÁNH 1 · MÁY KHUYÊN</text>
+<text x="164" y="200" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dấu vết có khoá theo sàn</text>
+<text x="164" y="214" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">cột riêng cạnh bản mã</text>
+<rect x="16" y="240" width="296" height="144" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.20)" stroke-width="1"/>
+<text x="32" y="264" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐƯỢC</text>
+<text x="32" y="284" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Thiếu khoá thì không thử ngược ra số</text>
+<text x="32" y="300" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Không thêm thư viện mới</text>
+<text x="32" y="328" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐỔI LẠI</text>
+<text x="32" y="348" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Người đọc thẳng bảng thấy được</text>
+<text x="32" y="364" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· hai dòng trùng số</text>
+<rect x="352" y="160" width="296" height="60" rx="6" fill="#f5f5f5"/><rect x="352" y="160" width="296" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="364" y="178" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">NHÁNH 2</text>
+<text x="500" y="200" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mã hoá tất định</text>
+<text x="500" y="214" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">cùng số → cùng bản mã</text>
+<rect x="352" y="240" width="296" height="144" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.20)" stroke-width="1"/>
+<text x="368" y="264" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐƯỢC</text>
+<text x="368" y="284" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· So thẳng trên bản mã</text>
+<text x="368" y="312" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐỔI LẠI</text>
+<text x="368" y="332" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Lộ trùng như nhánh 1</text>
+<text x="368" y="348" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Cần thư viện mới</text>
+<text x="368" y="364" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Một khoá gánh cả giấu và so</text>
+<rect x="688" y="160" width="296" height="60" rx="6" fill="#f5f5f5"/><rect x="688" y="160" width="296" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="700" y="178" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">NHÁNH 3</text>
+<text x="836" y="200" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Giải mã hết để so</text>
+<text x="836" y="214" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">ở máy chủ API</text>
+<rect x="688" y="240" width="296" height="144" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.20)" stroke-width="1"/>
+<text x="704" y="264" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐƯỢC</text>
+<text x="704" y="284" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Bảng không lộ dòng nào trùng</text>
+<text x="704" y="312" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐỔI LẠI</text>
+<text x="704" y="332" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Chậm dần theo số dòng</text>
+<text x="704" y="348" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· Mọi số của sàn đi qua bộ nhớ</text>
+<text x="704" y="364" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">· máy chủ API mỗi lần nhận lead</text>
+<line x1="32" y1="408" x2="968" y2="408" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="32" y="432" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">CHÚ GIẢI</text>
+<rect x="112" y="420" width="28" height="16" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="148" y="432" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="start">Nhánh máy khuyên</text>
+<rect x="272" y="420" width="28" height="16" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="308" y="432" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="start">Nhánh khác</text>
+<text x="408" y="432" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="start"></text>
+    </svg>
+  </main>
+</body>
+</html>
