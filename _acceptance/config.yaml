@@ -24,6 +24,12 @@ executors:
     luoi_trang: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs --chi-trang --cong 3466"   # cổng và worktree riêng: chạy song song với luoi_do_lai khi chấm
     luoi_main_sach: "node _acceptance/bai-thu-luoi-5000-dong/thu/main-sach.mjs"
     du_lieu_mau: "node --test \"packages/db/seed/*.test.mjs\""   # du-lieu-mau-san-thu: sinh tất định, không dữ liệu thật, nhãn mẫu, nạp và xoá — cần DATABASE_URL tới Postgres dãy (duyệt ở yêu cầu T-9)
+    # moi-truong-that (ADR-0009): kiểm môi trường thật từ bên ngoài, chỉ đọc. Cần DATABASE_URL vai chủ tới Supabase thật,
+    # SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY (moi_truong_that); APP_URL (suc_khoe_that). Không chạy trong suite_keys.
+    moi_truong_that: "node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"
+    suc_khoe_that: "node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs --suc-khoe"
+    cach_ly_that: "npm run test:isolation -w @quy-hang/db"   # moi-truong-that: chỉ bộ kiểm cách ly (mỗi ca rollback) — DATABASE_URL trỏ cơ sở dữ liệu thật
+    kiem_ci: "node _acceptance/moi-truong-that/thu/kiem-ci.mjs"   # moi-truong-that AC-7: job deploy và vercel.json
     typecheck: "npm run typecheck"                # tang-5-giao-dien
     lint: "npm run lint"                          # eslint + directive trần + mức nợ giao diện + kiểm chuẩn — job check của CI
     build: "npm run build"
