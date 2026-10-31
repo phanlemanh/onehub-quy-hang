@@ -1,7 +1,7 @@
 ---
 loai: dot
-ma: [CK1, CK2, CK3, CK4]
-nguon: [raw/2026-11-01-cong-chon-khoi/phien-01-11.md, raw/2026-11-01-cong-chon-khoi/cong-chon-khoi-hien-trang.md]
+ma: [CK1, CK2, CK3, CK4, CK5]
+nguon: [raw/2026-11-01-cong-chon-khoi/phien-01-11.md, raw/2026-11-01-cong-chon-khoi/cong-chon-khoi-hien-trang.md, raw/2026-11-01-cong-chon-khoi-b/phien-01-11-b.md]
 cap_nhat: 2026-11-01
 ---
 # Đợt cong-chon-khoi-0111 — cổng chọn khối giao diện
