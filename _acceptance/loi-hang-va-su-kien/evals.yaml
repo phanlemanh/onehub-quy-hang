@@ -28,6 +28,7 @@ evals:
     cmd: config:executors.test.api
     expected: "exit 0; ca «đường ghi hàng chỉ ở packages/api/src/listings» có mặt và ok — quét mọi tệp .ts/.tsx/.mjs/.sql dưới packages/*/src, packages/db/scripts, packages/db/migrations và apps/web/src tìm câu insert/update/delete vào listings hay listing_events, cả dạng bộ dựng câu (insertInto/update/deleteFrom với tên bảng); chỉ tệp dưới packages/api/src/listings/ được có, riêng migration chỉ được tạo bảng, luật và trigger chặn sửa; kèm đối chứng dương trên CÙNG hàm quét: hai văn bản cấy — `insert into listing_events` và `insertInto(\"listings\")` — ngoài thư mục ấy đều bị bắt và thông điệp nêu tệp. Chiều đỏ: thêm một câu ghi ở chỗ khác → ca đỏ nêu tệp và dòng."
     paths: [packages/api/src/**, packages/core/src/**, packages/connect/src/**, packages/db/scripts/**, packages/db/migrations/**, apps/web/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3b
     criterion: AC-3
@@ -35,7 +36,6 @@ evals:
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «cơ sở dữ liệu: không hàm hay trigger nào ghi vào bảng hàng, bảng sự kiện» có mặt và ok — liệt mọi hàm (pg_proc, schema public và app) có thân chứa insert/update/delete vào listings hay listing_events, so với danh sách viết trước (rỗng); đối chứng dương: trong giao dịch huỷ ngay, tạo một hàm ghi vào listing_events thì phép liệt bắt được tên hàm. Chiều đỏ: một migration thêm hàm ghi thẳng → ca đỏ nêu tên hàm."
     paths: [packages/db/migrations/**, packages/db/tests/**]
-    evidence_required: [run_id, exit_code, verifier, verified_at, output]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
