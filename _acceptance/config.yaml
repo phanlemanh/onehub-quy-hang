@@ -38,6 +38,7 @@ executors:
     san_m1: "CLAUDE_PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" node packages/ui-lint/thu-san.mjs"   # bài thử sàn M1 — kit từ CLAUDE_PLUGIN_ROOT, vắng thì từ sổ plugin đã cài
     design_floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # vo-ung-dung: như design.floor, kit vắng CLAUDE_PLUGIN_ROOT thì tìm như san_m1 (lượt chấm không có biến này)
     nang_kit: "node --test \"_acceptance/nang-kit-2-36-0/thu/*.test.mjs\""   # nang-kit-2-36-0: mỗi nấc kit một cặp hai chiều; kit từ CLAUDE_PLUGIN_ROOT, vắng thì tim-kit.mjs
+    ho_so_vong_giao_dien: "node _acceptance/vong-giao-dien-qua-ban-do/thu/kiem-ho-so.mjs && node --test \"_acceptance/vong-giao-dien-qua-ban-do/thu/*.test.mjs\""   # vong-giao-dien-qua-ban-do E9: hồ sơ tự áp số đo và trang đối chiếu, cặp hai chiều
     product_map_kit: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/product-map.mjs\" --root . --check"   # như product_map, chạy được ở lượt chấm (không có CLAUDE_PLUGIN_ROOT)
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:

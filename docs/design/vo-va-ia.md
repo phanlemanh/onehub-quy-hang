@@ -68,6 +68,33 @@ nhập khối cấm lúc viết và bài quét chạy trong `npm run lint` (hàn
 màn nào, archetype gì, khối đích nào và vì sao; bản đồ giữ **khuôn máy giữ**. Nhóm chưa có màn (bảng hàng, hồ sơ căn,
 Hôm nay…) chưa có tệp — khuôn của nhóm sinh ra cùng màn đầu tiên của nhóm.
 
+**Nhóm mới** (hàng 60). Màn đầu tiên của một archetype chưa có trong bản đồ (bắt đầu từ Bảng hàng, hàng 14) tạo mục bản
+đồ `design/patterns/<nhóm>.md` và khuôn ngay trong vòng ấy, theo khối đích ở bảng dưới; vòng sau của nhóm chỉ điền khe.
+Bài quét khuôn giữ luật này: mọi `apps/web/src/app/**/page.tsx` trả JSX mà không thuộc nhóm đơn vị màn nào là lệch
+«màn ngoài bản đồ» (nhóm `ngoai-ban-do`) — đỏ ở `npm run lint` và ở chấm theo vòng cho tới khi có mục bản đồ. Trang chỉ
+chuyển hướng (không trả JSX) không phải màn. Đường đi của màn thật đầu tiên dưới `(app)`: trang tạm đỏ (gốc không phải
+`Placeholder`) → rời `nhan_dien` trang tạm (`KH-tt-roi-nhom`) → màn ngoài bản đồ đỏ → thêm mục bản đồ và khuôn → xanh.
+
+**Đối chiếu** (hàng 60). Trước khi dựng, xếp màn vào nhóm và mở tệp màn mẫu (`mau_dang_chay.tep`) của nhóm — chép mẫu
+đang chạy, không chép mã gần nhất. Vòng chạm màn của một nhóm chụp màn mới cạnh màn mẫu, cùng trạng thái
+(`mau_dang_chay.trang_thai`), ở khổ 1440 và 375:
+
+1. `node packages/ui-lint/doi-chieu.mjs --base <nhánh chính> --slug <slug>` — kế hoạch cặp ảnh và tên tệp ảnh, ghi
+   `_acceptance/<slug>/doi-chieu/ke-hoach.json`.
+2. Phiên `design-pass` (trình duyệt trong app) chụp từng cặp vào `_acceptance/<slug>/doi-chieu/`.
+3. `node packages/ui-lint/doi-chieu.mjs --dung <slug>` — ghép `doi-chieu/index.html`; thiếu ảnh thì đỏ.
+4. Gửi `doi-chieu/index.html` kèm thẻ Cổng Phạm vi **trước khi ký** — chủ sản phẩm đọc màn mới cạnh màn mẫu ở cổng
+   sẵn có, không thêm lượt gọi người. Kit chưa tự in ảnh lên thẻ (mục chờ KH2, KH3 của kit).
+
+`doi-chieu.mjs --mau --slug <slug>` lập kế hoạch cho riêng màn mẫu của mọi nhóm — dùng khi cần chứng màn mẫu chạy được.
+
+**Số đo** (hàng 60). Ở bước chấm, vòng chạm giao diện chạy
+`node packages/ui-lint/so-do-vong.mjs --slug <slug> --base <nhánh chính> --write` — ghi `_acceptance/<slug>/khuon-so-do.json`:
+số tệp theo khuôn, số lần răng khuôn bắt trên các commit của vòng (cận dưới: lần bắt trước khi commit không đếm), số
+lệch lọt, giờ máy, token và lượt gọi người. Lệch chủ sản phẩm thấy khi dùng mà lưới đã cho qua ghi một dòng vào
+[`docs/design/lech-lot.md`](lech-lot.md). `--bao` soạn một dòng báo; máy đăng nó lên kênh liên máy của kit (issue #308
+của acceptance-gate-kit) sau mỗi ba vòng giao diện đã gộp (chủ sản phẩm duyệt 31/10, Hỏi-1 hàng 60).
+
 Mã phác thảo theo Tham chiếu §10; hàng là mã hàng của lộ trình. «Phủ»: trọn = khối là cả màn; vùng = khối là vùng
 chính, phần còn lại ghép.
 

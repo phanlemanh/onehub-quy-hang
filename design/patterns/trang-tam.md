@@ -23,5 +23,6 @@ Nhà hay mục đã có địa chỉ trong vỏ mà chưa có màn: trang trả 
 
 - **KH-tt-noi-muc** — Trang tạm nói màn dựng ở mục nào của lộ trình (`docs/plan/lo-trinh.json`, trường `ma`); địa chỉ
   chưa xếp mục thì nói «Chưa xếp mục nào trong lộ trình».
-- **KH-tt-roi-nhom** — Dựng màn thật ở một địa chỉ của nhóm thì cùng PR đó đưa tệp ra khỏi `nhan_dien` (hay thêm mục bản
-  đồ của nhóm mới), và bỏ dòng của nó trong bảng `PLACEHOLDER`.
+- **KH-tt-roi-nhom** — Dựng màn thật ở một địa chỉ của nhóm thì cùng PR đó đưa tệp ra khỏi `nhan_dien`, thêm mục bản đồ
+  của nhóm màn ấy (màn đầu của nhóm mới tạo mục và khuôn — `docs/design/vo-va-ia.md` §2 «Nhóm mới»; tệp rời nhóm mà
+  chưa có mục thì bài quét báo «màn ngoài bản đồ»), và bỏ dòng của nó trong bảng `PLACEHOLDER`.

@@ -34,11 +34,10 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG A (đầu tệp). Chạy node packages/ui-lint/doi-chieu.mjs --mau --slug vong-giao-dien-qua-ban-do, đọc _acceptance/vong-giao-dien-qua-ban-do/doi-chieu/ke-hoach.json."
-      - "Đăng nhập quan-tri@example.test, chọn Sàn mẫu A. Với từng mục kế hoạch ở khổ 1440x900 rồi 375x812, giao diện sáng: mở đường màn mẫu trong đúng trạng thái và chụp vào _acceptance/vong-giao-dien-qua-ban-do/doi-chieu/<anh_mau>. Trạng thái: cai-dat-san mac-dinh = /settings/users của quan-tri@; khong-quyen = /settings/users của dau-chu@; loi = Sửa dòng chính quan-tri@ ở Sàn mẫu có một quản trị rồi Lưu (hay Rời sàn) để hiện khối báo đỏ — dùng hai-san@ ở Sàn mẫu B nếu Sàn mẫu A có hơn một quản trị; xac-thuc mac-dinh = /login đã đăng xuất; loi = /login gõ mã sai; trang-tam mac-dinh = /today; trang-thai trong = /today rồi mở chuông."
-      - "Với mỗi ảnh ghi: đường thật trên thanh địa chỉ, tiêu đề hay chữ chính của màn, có trang lỗi Next (chữ «Application error» hay «404») không."
-      - "Chạy node packages/ui-lint/doi-chieu.mjs --dung vong-giao-dien-qua-ban-do, ghi mã thoát và dòng stdout."
-    expected: "Mọi mục kế hoạch có ảnh; mỗi ảnh là đúng màn mẫu của nhóm trong đúng trạng thái đã khai (Người dùng: danh sách người · khối báo «Chỉ quản trị sàn xem được trang này.» · khối báo đỏ «Sàn cần ít nhất một quản trị.»; đăng nhập: ô email · báo mã sai; Hôm nay: trang tạm nói mục lộ trình; chuông: ngăn thông báo trống); không ảnh nào là trang lỗi; --dung thoát 0."
+      - "DỰNG A (đầu tệp). Đọc kế hoạch đã commit _acceptance/vong-giao-dien-qua-ban-do/doi-chieu/ke-hoach.json (KHÔNG chạy doi-chieu.mjs — lệnh ghi vào cây hồ sơ)."
+      - "Đăng nhập quan-tri@example.test, chọn Sàn mẫu A. Với từng mục kế hoạch ở khổ 1440x900 rồi 375x812, giao diện sáng: mở đường màn mẫu trong đúng trạng thái và chụp vào _acceptance/vong-giao-dien-qua-ban-do/evidence/E3-<anh_mau> (chỉ ghi dưới evidence/). Trạng thái: cai-dat-san mac-dinh = /settings/users của quan-tri@; khong-quyen = /settings/users của dau-chu@; loi = hai-san@ ở Sàn mẫu B (quản trị duy nhất) Sửa chính mình bỏ Quản trị rồi Lưu để hiện khối báo đỏ; xac-thuc mac-dinh = /login đã đăng xuất; loi = /login gõ mã sai; trang-tam mac-dinh = /today; trang-thai trong = /today rồi mở chuông."
+      - "Với mỗi ảnh ghi: đường thật trên thanh địa chỉ, tiêu đề hay chữ chính của màn, có trang lỗi Next (chữ «Application error» hay «404») không; mở ảnh cùng tên trong doi-chieu/ (do vòng chụp ở bước dựng) và ghi hai ảnh có cùng màn, cùng trạng thái không."
+    expected: "Mọi mục kế hoạch có ảnh; mỗi ảnh là đúng màn mẫu của nhóm trong đúng trạng thái đã khai và cùng màn, cùng trạng thái với ảnh cùng tên trong doi-chieu/ (Người dùng: danh sách người · khối báo «Chỉ quản trị sàn xem được trang này.» · khối báo đỏ «Sàn cần ít nhất một quản trị.»; đăng nhập: ô email · báo mã sai; Hôm nay: trang tạm nói mục lộ trình; chuông: ngăn thông báo trống); không ảnh nào là trang lỗi."
     paths: ["design/patterns/**", "packages/ui-lint/doi-chieu.mjs", "apps/web/src/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
   - id: E4

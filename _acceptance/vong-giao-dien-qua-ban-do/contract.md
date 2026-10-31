@@ -64,9 +64,10 @@ Source input: `docs/plan/lo-trinh.json` hàng 60 · `_acceptance/vong-giao-dien-
   bản đồ và khuôn trong chính vòng ấy; ba lệnh (`doi-chieu`, `ban-do-khuon`, `so-do-vong`) chạy ở bước nào; lệch lọt ghi
   ở đâu; vòng chạm màn phải gửi `doi-chieu/index.html` có ảnh màn mới kèm thẻ Cổng Phạm vi trước khi ký; bảng luật của
   skill có dòng «màn ngoài bản đồ». (judgment)
-- AC-9: Given hồ sơ của chính vòng này, When bước chấm xong, Then hồ sơ có `khuon-so-do.json` do `so-do-vong.mjs --write`
-  ghi (vòng không đổi màn: `tep_theo_khuon` rỗng, `rang_bat` theo commit của vòng) và `doi-chieu/` mang kế hoạch màn mẫu
-  của bốn nhóm cùng trang ghép ảnh màn mẫu chụp ở AC-3.
+- AC-9: Given hồ sơ của chính vòng này, When tới bước chấm, Then hồ sơ đã commit `khuon-so-do.json` do
+  `so-do-vong.mjs --write` ghi (vòng không đổi màn: `tep_theo_khuon` rỗng, `rang_bat` theo commit của vòng) và
+  `doi-chieu/` mang kế hoạch màn mẫu của bốn nhóm cùng trang ghép ảnh màn mẫu chụp ở bước dựng; AC-3 chụp lại vào
+  `evidence/` để đối chiếu.
 
 ## Coverage
 
