@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Số điện thoại chủ nhà được cất ở dạng mã hoá: chỉ nút «Mở số» của người được thấy mới ra số; ai đọc thẳng cơ sở dữ liệu hay bản sao lưu chỉ thấy chuỗi vô nghĩa.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cất số chủ dưới dạng bản mã; giải ra đúng số, và cùng một số ghi hai lần cho hai bản mã khác nhau."},
+    {"id": "AC-2", "p": "Sẽ chỉ giải được bản mã ở đúng căn, đúng sàn, đúng khoá; bản mã bị sửa một byte là hỏng, và lỗi không bao giờ in ra số."},
+    {"id": "AC-6", "p": "Sẽ để lại trong cơ sở dữ liệu chỉ bản mã khi đầu chủ ghi chủ nhà; đọc thẳng ba bảng liên quan không thấy số dưới dạng nào."},
+    {"id": "AC-7", "p": "Sẽ giữ nút «Mở số» như cũ: người được thấy nhận đúng số, mỗi lần bấm ghi một dòng lịch sử."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG cần số để kiểm trùng: so «dấu vết» theo sàn — cùng số cùng sàn thì khớp, khác sàn thì không nối được."},
+    {"id": "AC-4", "p": "Sẽ KHÔNG chạy bản thật khi thiếu khoá: máy chủ không dựng API thay vì ghi số rõ."},
+    {"id": "AC-5", "p": "Chặn số rõ ngay ở cơ sở dữ liệu, ở mọi vai và mọi bảng — bảng mới nào (kể cả bảng lead) lưu số dạng chữ là bộ kiểm báo đỏ."},
+    {"id": "AC-8", "p": "Sẽ KHÔNG ra số khi bản mã bị chép sang căn khác hay bị sửa, và không ghi lịch sử mở số cho lần ấy."},
+    {"id": "AC-9", "p": "Sẽ KHÔNG để sót số cũ: một lệnh chuyển dòng cũ sang bản mã, chạy lại không đổi gì, và từ chối chạy khi thiếu khoá thật."},
+    {"id": "OOS-1", "p": "KHÔNG xoá cột số cũ ở việc này — xoá sau khi cơ sở dữ liệu thật đã chạy lệnh mã hoá lại."},
+    {"id": "OOS-2", "p": "KHÔNG làm đổi khoá định kỳ — đã chừa chỗ, lệnh đổi khoá để sau."},
+    {"id": "OOS-3", "p": "KHÔNG dựng hàm kiểm trùng — đó là việc của ô nhận lead (hàng 24) và hàng kiểm trùng."},
+    {"id": "OOS-4", "p": "KHÔNG tự đặt khoá thật hay chạy trên dữ liệu thật — anh làm theo hướng dẫn gửi sau khi gộp."},
+    {"id": "OOS-5", "p": "KHÔNG đụng số chủ trên máy, ảnh sổ hay màn nào."}
+  ],
+  "scope_plain": "Những việc cố ý để ngoài lần này:",
+  "coverage_plain": [
+    {"i": 0, "p": "Số đi vào bằng mọi đường đều thành bản mã: ghi qua app (AC-6), dòng cũ (AC-9), chèn thẳng vào cơ sở dữ liệu (AC-5), bảng mới của việc khác (AC-5)."},
+    {"i": 1, "p": "Số đi ra chỉ qua «Mở số» cho đúng người (AC-7); đọc thẳng bảng, bản sao lưu, thông báo lỗi và nhật ký đều không thấy số (AC-2, AC-4, AC-5, AC-6, AC-8, AC-9)."},
+    {"i": 2, "p": "Mọi trạng thái của khoá và bản mã đều có kết cục đã định: đủ khoá, thiếu khoá ở bản thật, thiếu khoá ở máy dev, khoá sai, bản mã bị sửa hay bị chép (AC-1 đến AC-4, AC-8)."},
+    {"i": 3, "p": "Để sau: đổi khoá định kỳ, xoá cột số cũ, hàm kiểm trùng."},
+    {"i": 4, "p": "Không bao giờ: mã hoá bên trong cơ sở dữ liệu — khoá sẽ phải vào cơ sở dữ liệu."},
+    {"i": 5, "p": "Giả định chờ anh gạch: mọi cột số điện thoại đều có chữ «phone» trong tên; cột đặt tên khác (ví dụ «mobile») sẽ lọt phép quét."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Lệnh mã hoá lại có thể lặng lẽ dùng khoá dev nếu máy thiếu khoá thật — vừa mất số vừa lộ số. Đã sửa: lệnh từ chối chạy khi thiếu khoá, và có ca đo."},
+    {"i": 1, "p": "Chỗ giữ bản khoá ngoài Vercel và rủi ro mất khoá là việc anh quyết, máy đã lỡ tự chọn. Đã sửa: thành câu hỏi Hỏi-3; hai căn cứ trích lệch đã viết lại."},
+    {"i": 2, "p": "Ngưỡng nói «dữ liệu mẫu đã có» nhưng ca đo dùng dòng viết tay. Đã kiểm: bộ dữ liệu mẫu chưa nạp chủ nhà vào cơ sở dữ liệu; đã ghi rõ trong hợp đồng."},
+    {"i": 3, "p": "Sau khi mã hoá lại, ca đo tự giải mã chứ chưa bấm «Mở số» thật. Đã sửa: đo qua đúng nút «Mở số» của app."},
+    {"i": 4, "p": "Lệnh sinh khoá trong tài liệu chưa được chạy thử — viết sai định dạng là bản thật không lên. Đã sửa: ca đo chạy đúng lệnh trong tài liệu."}
+  ]
+}
