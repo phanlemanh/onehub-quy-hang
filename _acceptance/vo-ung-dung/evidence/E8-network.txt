@@ -1,0 +1,4 @@
+E8 network (Playwright, origin http://localhost:3462)
+App-scope: GET /login 200; GET /s/MAU-LINK 307 -> /login 200 (route /s chua co trong apps/web/src/app); POST send-verification-otp 200 x4; POST sign-in/email-otp 200 x3 (login hai-san, dau-chu, quan-tri, dau-chu); GET / 307 -> /select-company 200 | /today 200 | /settings 307 -> /settings/users 200.
+Console errors: (1) WebSocket HMR ws://127.0.0.1:3462/_next/hmr ERR_INVALID_HTTP_RESPONSE (dev tooling, note only); (2) one 404 "Failed to load resource" (static, favicon-class, note only).
+No 5xx, no 4xx on app XHR/fetch.

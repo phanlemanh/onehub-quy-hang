@@ -1,0 +1,11 @@
+29. [GET] http://localhost:3462/today => [200] OK
+30. [GET] http://localhost:3462/today?_rsc=GOBkkwysRk6B8UGl => [200] OK
+31. [GET] http://localhost:3462/today?_rsc=8z--w8SfR-FCLwqU => [200] OK
+32. [GET] http://localhost:3462/inventory => [200] OK
+33. [GET] http://localhost:3462/inventory?_rsc=GOBkkwysRk6B8UGl => [200] OK
+34. [GET] http://localhost:3462/shares => [200] OK
+35. [GET] http://localhost:3462/shares?_rsc=EpsVYRCCROET-7bJ => [200] OK
+36. [GET] http://localhost:3462/me => [200] OK
+37. [GET] http://localhost:3462/me?_rsc=UQjhYh4467KTjsyq => [200] OK
+
+Note: 28 static requests not shown, run with "static" option to see them.
