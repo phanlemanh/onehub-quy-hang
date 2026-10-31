@@ -1,10 +1,15 @@
-# Review findings: khu-va-loai-hinh (round 2)
-
 ## Trong hợp đồng
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
+
+- **Tham chiếu còn gọi chia quyền theo «khu», trong khi nghĩa này đã đổi tên thành «Vùng»**
+  Người dùng thấy gì: Một dòng trong tài liệu sản phẩm vẫn viết «quyền theo khu» trong khi từ đúng nay là «vùng». Người đọc tài liệu có thể hiểu nhầm là chia quyền theo khu chứa căn, nhưng màn hình và dữ liệu của người dùng không bị ảnh hưởng.
+  Căn cứ: Chỉ là một chữ lệch trong tài liệu nội bộ, không mất dữ liệu và không ảnh hưởng người dùng cuối; sửa lại sau rất rẻ và dễ.
+  file: `docs/product/tham-chieu.md`
+  severity: low
+  Đề xuất: known-limits
 
 - **OpenAPI schema Unit thiếu propertyType/propertySubType — hợp đồng API /api/v1 lệch với thân trả về thật (r1)**
   Người dùng thấy gì: Tài liệu mô tả API cho bên ngoài chưa nhắc đến loại hình của căn, dù dữ liệu trả về thật đã có. Người viết tích hợp dựa vào tài liệu sẽ không thấy hai thông tin này.
@@ -13,7 +18,7 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: medium
   Đề xuất: known-limits
 
-- **Màn Cài đặt sàn → Người dùng mới đổi nhãn một nửa: phần quản lý vùng (zone) vẫn ghi «Khu», chữ CONTEXT giờ cấm (r1 · tệp đã đổi)**
+- **Màn Cài đặt sàn → Người dùng mới đổi nhãn một nửa: phần quản lý vùng (zone) vẫn ghi «Khu», chữ CONTEXT giờ cấm (r1)**
   Người dùng thấy gì: Trên màn Cài đặt sàn, phần Người dùng vừa gọi là «Vùng phụ trách» vừa còn mục tên «Khu» cho cùng một thứ. Người dùng có thể thấy rối chữ nhưng chức năng không hỏng.
   Căn cứ: Chỉ là lệch chữ trên màn, không mất hay lộ dữ liệu, người dùng vẫn làm được việc; sửa sau rẻ vì chỉ đổi vài nhãn.
   file: `apps/web/src/app/settings/users/quan-nguoi.tsx`
