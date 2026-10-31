@@ -19,7 +19,7 @@ evals:
     executor: test
     cmd: config:executors.test.isolation
     layer: backend-effect
-    expected: "exit 0; ca «các kiểu mã dùng chung một bộ đếm» có mặt và ok — xin mã xen kẽ sign-in, email-verification, forget-password trên đường xin mã chính tới tổng 5 lần (đều 200), rồi lần sáu ở MỖI kiểu (ba lần gọi) đều 429 và bộ gửi không tăng; số lần gọi đếm bằng danh sách viết trước. Chiều đỏ: hook chỉ gác type sign-in → ca đỏ nêu kiểu lọt."
+    expected: "exit 0; ca «kiểu mã khác đăng nhập: 400, không gửi, không đếm» có mặt và ok — ma trận viết trước hai kiểu [email-verification, forget-password], mỗi kiểu gọi 3 lần với email có tài khoản: status 400 và thân mang code code-type-not-allowed (dựng từ hằng OTP_TYPE_NOT_ALLOWED, không chép chữ), bộ gửi nhận 0 mã, số dòng identity.otp_requests của email trước và sau bằng nhau; số lần gọi đếm bằng 2×3. Đối chứng dương cùng email ngay sau đó: 5 lần kiểu sign-in đều 200 và nhận đủ 5 mã, lần sáu 429. Chiều đỏ: bỏ vế chặn kiểu trong bản sao → ca đỏ «email-verification trả 200, bộ gửi nhận mã»."
     paths: [packages/api/src/auth/**, packages/api/test-db/dong-duong-gui-ma/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

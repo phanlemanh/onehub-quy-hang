@@ -30,9 +30,9 @@ Source input: `docs/plan/lo-trinh.json` hàng 55 · `_acceptance/dong-duong-gui-
 - AC-1: Given một email có tài khoản đã xin 5 mã trong 15 phút ở đường xin mã đăng nhập, When xin mã lần thứ sáu ở bất
   kỳ đường gửi mã nào còn phục vụ của plugin, Then trả 429 `too-many-code-requests` và bộ gửi không nhận mã nào thêm;
   đối chứng: lần thứ năm vẫn nhận mã. (cross-layer)
-- AC-2: Given một email đã xin mã xen kẽ ở các kiểu mã của đường xin mã chính (đăng nhập, xác minh email, quên mật
-  khẩu), When tổng số lần xin trong 15 phút chạm 5, Then lần kế ở bất kỳ kiểu nào trả 429 — các kiểu dùng chung một bộ
-  đếm theo email. (cross-layer)
+- AC-2: Given email có tài khoản, When xin mã ở đường xin mã chính với kiểu mã «xác minh email» hay «quên mật khẩu»,
+  Then trả 400 `code-type-not-allowed`, bộ gửi không nhận mã và không dòng xin mã nào được ghi; đối chứng trên cùng
+  email ngay sau đó: kiểu «đăng nhập» vẫn nhận mã, và vẫn đủ 5 lần xin trước khi bị 429. (cross-layer)
 - AC-3: Given email có tài khoản, When gọi từng đường nhãn «đã tắt» — ba đường quên / đặt lại mật khẩu
   (`/email-otp/request-password-reset`, `/forget-password/email-otp`, `/email-otp/reset-password`) và hai đường đổi email
   (`/email-otp/request-email-change`, `/email-otp/change-email`), Then mỗi đường trả 404, bộ gửi không nhận mã nào và
@@ -55,10 +55,10 @@ _acceptance/dang-nhap-theo-san/decisions.jsonl]. Chân ngành: danh sách đư�
 
 - Trục đường: xin mã chính (AC-1, AC-2, AC-5) | quên mật khẩu hai đường + đặt lại mật khẩu (AC-3) | đổi email (AC-3,
   AC-4) | đường tương lai khi nâng thư viện (AC-4) [thước CE: endpoints của plugin trong bản cài]
-- Trục kiểu mã: sign-in | email-verification | forget-password (AC-2)
-- Trục kết cục: gửi mã | 429 không gửi | 404 không gửi, không đếm (AC-1, AC-3) [thước CE: bộ gửi bắt mã + bảng
+- Trục kiểu mã: sign-in nhận (AC-1, AC-5) | email-verification, forget-password bị chặn 400 (AC-2)
+- Trục kết cục: gửi mã | 429 không gửi | 400 không gửi, không đếm | 404 không gửi, không đếm (AC-1, AC-2, AC-3) [thước CE: bộ gửi bắt mã + bảng
   `identity.otp_requests`]
-- Later: giới hạn theo địa chỉ IP; chặn kiểu mã khác «sign-in» (nếu chủ kho chọn ở Hỏi-1).
+- Later: giới hạn theo địa chỉ IP.
 - Never: chặn ở bộ gửi (sổ quyết định — lối loại).
 
 ## Out of scope

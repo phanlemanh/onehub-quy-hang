@@ -37,13 +37,18 @@ mã, và mã ấy không đăng nhập được (kho không có mật khẩu —
    email lõi (`overrideDefaultEmailVerification`, `sendVerificationOnSignUp`, `emailVerification.sendVerificationEmail`
    đều vắng). Nâng better-auth mà plugin thêm đường hay hook chưa phân loại → bài kiểm đỏ, gọi tên.
 
+4. **Đường xin mã chính chỉ nhận kiểu mã đăng nhập** (chủ kho chọn ở Cổng Phạm vi, Hỏi-1). Hook `before` của
+   `/email-otp/send-verification-otp` từ chối mọi `type` khác `sign-in` (`email-verification`, `forget-password`) bằng
+   lỗi 400 mã `code-type-not-allowed` (hằng `OTP_TYPE_NOT_ALLOWED` ở `auth/constants.ts`), TRƯỚC khi đếm — không gửi
+   thư, không đốt lượt xin mã. Căn cứ: thư nào cũng mang tiêu đề «mã đăng nhập», mã kiểu khác gây nhầm.
+
 Lối khác đã loại: chặn ở bộ gửi (`sendVerificationOTP`) — bộ gửi chạy có thể sau khi trả lời, không trả được 429 cho
 người gọi, và mã đã được tạo, lưu.
 
 ## Không làm
 
 - Không đổi số 5 lần / 15 phút hay cách đếm (ADR-0005).
-- Không bật đổi email (hai đường đổi email bị tắt như trên); không chặn kiểu mã khác «sign-in» trên đường xin mã chính (câu Hỏi-1 ở Cổng Phạm vi).
+- Không bật đổi email (hai đường đổi email bị tắt như trên).
 - Không thêm giới hạn theo địa chỉ IP.
 
 ## Đặc tả UX
