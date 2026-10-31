@@ -1,26 +1,81 @@
 {
   "feature_plain": "Quỹ hàng có chỗ chạy thật ở Singapore, trên tên miền cố định quyhang.onehub.center, để đội thử và để đo lại phần mất mạng.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ đặt cơ sở dữ liệu ở Singapore, dự án riêng — không chung với Invest."},
-    {"id": "AC-2", "p": "Sẽ áp đủ các bản đổi cấu trúc dữ liệu của kho lên môi trường thật."},
-    {"id": "AC-3", "p": "Sẽ chạy bộ kiểm «sàn này không thấy sàn kia» ngay trên dữ liệu thật, xanh hết, không để lại dòng nào."},
-    {"id": "AC-4", "p": "Sẽ chặn mọi lối đọc dữ liệu bằng khoá công khai của Supabase — không bảng nào trả dòng nào."},
-    {"id": "AC-6", "p": "Sẽ gửi mã đăng nhập 6 số qua email thật, hạn 5 phút; gửi hỏng thì báo lỗi mà không lộ mã."},
-    {"id": "AC-7", "p": "Sẽ chỉ đưa code mới lên sau khi cấu trúc dữ liệu đã đổi xong và bộ kiểm cách ly trên dữ liệu thật xanh."},
-    {"id": "AC-8", "p": "Sẽ trả lời «còn sống» ở quyhang.onehub.center — chờ anh tạo khoá gửi email."},
-    {"id": "AC-10", "p": "Sẽ giữ quyết định nơi chạy ở một ADR, khớp với Kiến trúc và Tham chiếu."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ đặt cơ sở dữ liệu ở Singapore, dự án riêng — không chung với Invest."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ áp đủ các bản đổi cấu trúc dữ liệu của kho lên môi trường thật."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ chạy bộ kiểm «sàn này không thấy sàn kia» ngay trên dữ liệu thật, xanh hết, không để lại dòng nào."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ chặn mọi lối đọc dữ liệu bằng khoá công khai của Supabase — không bảng nào trả dòng nào."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ gửi mã đăng nhập 6 số qua email thật, hạn 5 phút; gửi hỏng thì báo lỗi mà không lộ mã."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ chỉ đưa code mới lên sau khi cấu trúc dữ liệu đã đổi xong và bộ kiểm cách ly trên dữ liệu thật xanh."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ trả lời «còn sống» ở quyhang.onehub.center — chờ anh tạo khoá gửi email."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ giữ quyết định nơi chạy ở một ADR, khớp với Kiến trúc và Tham chiếu."
+    }
   ],
   "wont_do": [
-    {"id": "AC-5", "p": "Chặn vai của API vượt luật theo dòng; chỉ có sàn mẫu trên môi trường này."},
-    {"id": "AC-9", "p": "Sẽ KHÔNG để mật khẩu, chuỗi kết nối hay khoá nào vào kho."},
-    {"id": "OOS-1", "p": "Không xác minh tên miền gửi và tạo khoá Resend — việc của anh trên tài khoản Resend."},
-    {"id": "OOS-2", "p": "Chưa sinh khoá mã hoá số chủ nhà — chưa có gì dùng tới."},
-    {"id": "OOS-3", "p": "Chưa tách dữ liệu cho bản xem trước, chưa nâng gói Vercel, chưa ghim chứng chỉ — ghi ở ADR."},
-    {"id": "OOS-4", "p": "Không có dữ liệu cá nhân thật tới khi người pháp lý rà."},
-    {"id": "OOS-5", "p": "Chưa đo lại phần mất mạng — hàng làm đồng bộ đo trên tên miền này."}
+    {
+      "id": "AC-5",
+      "p": "Chặn vai của API vượt luật theo dòng; chỉ có sàn mẫu trên môi trường này."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ KHÔNG để mật khẩu, chuỗi kết nối hay khoá nào vào kho."
+    },
+    {
+      "id": "OOS-1",
+      "p": "Không xác minh tên miền gửi và tạo khoá Resend — việc của anh trên tài khoản Resend."
+    },
+    {
+      "id": "OOS-2",
+      "p": "Chưa sinh khoá mã hoá số chủ nhà — chưa có gì dùng tới."
+    },
+    {
+      "id": "OOS-3",
+      "p": "Chưa tách dữ liệu cho bản xem trước, chưa nâng gói Vercel, chưa ghim chứng chỉ — ghi ở ADR."
+    },
+    {
+      "id": "OOS-4",
+      "p": "Không có dữ liệu cá nhân thật tới khi người pháp lý rà."
+    },
+    {
+      "id": "OOS-5",
+      "p": "Chưa đo lại phần mất mạng — hàng làm đồng bộ đo trên tên miền này."
+    }
   ],
   "scope_plain": "Đặt ngoài vòng này:",
   "coverage_plain": [
-    {"i": 0, "p": "Phủ bốn mặt của một môi trường: nơi chạy (AC-1, AC-7, AC-8), lối vào dữ liệu (AC-3–AC-5), đường thay đổi (AC-2, AC-7), bí mật và tài liệu (AC-6, AC-9, AC-10); mỗi điều không-được-xảy-ra có một phép kiểm riêng."}
+    {
+      "i": 0,
+      "p": "Phủ bốn mặt của một môi trường: nơi chạy (AC-1, AC-7, AC-8), lối vào dữ liệu (AC-3–AC-5), đường thay đổi (AC-2, AC-7), bí mật và tài liệu (AC-6, AC-9, AC-10); mỗi điều không-được-xảy-ra có một phép kiểm riêng."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "E10",
+      "q": "ADR, Kiến trúc và Tham chiếu có nói cùng một điều về nơi chạy?",
+      "why": "Bên chấm kín thấy khớp về nơi chạy, vùng, đường áp migration, chỗ giữ khoá; chỉ thiếu hai giới hạn (Resend chưa gửi được, bản xem trước chưa đăng nhập được) — đã bổ sung vào cả hai tài liệu sau lượt chấm."
+    }
   ]
 }

@@ -1,0 +1,186 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hồ sơ · moi-truong-that</title>
+<style>
+:root{--bg:#faf9f6;--card:#fff;--bd:#e6e4de;--ink:#1f1f1d;--mut:#6c6a64;--hint:#9a988f}
+*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.5;font-size:15px}
+.wrap{max-width:920px;margin:0 auto;padding:24px 20px 64px}
+h1{font-size:20px;margin:0 0 2px}h2{font-size:15px;margin:30px 0 10px;letter-spacing:.02em}
+.sub{font-size:13px;color:var(--mut)}
+.badge{display:inline-block;font-size:12px;font-weight:600;padding:3px 11px;border-radius:999px;vertical-align:middle}
+.pass{background:#E1F5EE;color:#085041}.pend{background:#FAEEDA;color:#633806}.rej{background:#FAECE7;color:#712B13}.neutral{background:#f1efe8;color:#444441}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--mut);margin-top:6px}
+.meta b{color:var(--ink);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--bd)}th{color:var(--mut);font-weight:600;font-size:12px}
+td a{color:#185FA5;text-decoration:none}.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.eval{scroll-margin-top:14px}.eval h3{font-size:14px;margin:0 0 4px}.eval .crit{font-size:13px;color:var(--mut);margin:0 0 8px}
+pre.out{background:#1f1f1d;color:#e8e6df;border-radius:8px;padding:11px 13px;overflow:auto;max-height:280px;font-size:12px;margin:8px 0}
+.kv{font-size:12px;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0}.kv b{color:var(--ink)}
+.shot img{display:block;max-width:100%;border:1px solid var(--bd);border-radius:8px}
+.slide{position:relative}.slide .frame{position:absolute;inset:0;opacity:0;transition:opacity .35s}.slide .frame:first-child{position:relative}.slide .frame.on{opacity:1}
+.slidebar{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--mut);margin-top:6px}
+.btn{font-size:12px;padding:4px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;cursor:pointer}
+.ov{background:#FAEEDA;color:#633806;border-radius:7px;padding:6px 10px;font-size:12px;display:inline-block}
+.ovok{background:#E1F5EE;color:#085041}
+.note{font-size:13px;color:var(--mut)}.flag{font-size:13px;border-radius:8px;padding:8px 11px;margin:6px 0}
+.fred{background:#FAECE7;color:#712B13}.fok{background:#E1F5EE;color:#085041}
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--bd);font-size:12px;color:var(--hint)}
+ul.ck{list-style:none;padding:0;margin:0}ul.ck li{padding:5px 0;font-size:14px}ul.ck input{margin-right:8px}
+.tl{border-left:2px solid var(--bd);padding-left:14px;margin:0}.tl li{font-size:13px;margin:0 0 6px;list-style:none}
+.dai{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 8px}
+.o{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 11px;min-width:0}
+.o .hoi{font-size:11px;color:var(--mut);text-transform:none;letter-spacing:.02em}
+.o .tra{font-size:13px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.vang{color:var(--hint);font-style:italic}
+.chu-kho{font-size:12px;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 10px}.chu-kho b{color:var(--ink)}
+details.muc{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin:0 0 10px;padding:0 14px}
+details.muc>summary{cursor:pointer;font-weight:600;font-size:14px;padding:11px 0}
+details.muc[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:10px}
+details.muc .noi{padding:0 0 12px;font-size:13px}
+.loc{display:flex;gap:6px;margin:0 0 8px}.loc .btn[aria-pressed="true"]{background:#1f1f1d;color:#fff}
+.tl li[hidden]{display:none}
+@media (max-width:720px){.dai{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>Môi trường chạy thật — Supabase dự án riêng và Vercel vùng Singapore, migration áp qua CI trước khi deploy, mã đăng nhập gửi qua Resend</h1><div class="sub">Trang hồ sơ · <span class="mono">moi-truong-that</span> · tier T3</div>
+<section class="dai" aria-label="Hồ sơ trong một phút"><div class="o" data-o="da_giao" data-nguon="contract.md"><div class="hoi">Đã giao gì</div><div class="tra">Môi trường chạy thật — Supabase dự án riêng và Vercel vùng Singapore, migration áp qua CI trước khi deploy, mã đăng nhập gửi qua Resend</div></div><div class="o" data-o="vi_sao" data-nguon="contract.md"><div class="hoi">Vì sao</div><div class="tra">Dựng nơi chạy thật cho Quỹ hàng theo Kiến trúc §5 và ADR-0001 «chưa tạo dự án»: cần cho đo lại vế mất mạng trên tên miền thật (ADR-0006), gửi mã đăng nhập bằng email thật (ADR-0005) và hai tuần thử với đội (Kiến trúc §9 bước 7)…</div></div><div class="o" data-o="trang_thai" data-nguon="contract.md"><div class="hoi">Trạng thái</div><div class="tra">Đang làm</div></div><div class="o" data-o="ngay" data-nguon="contract.md"><div class="hoi">Ngày</div><div class="tra">2026-10-31</div></div><div class="o" data-o="production" data-nguon="decisions.jsonl"><div class="hoi">Đã lên production chưa</div><div class="tra">chưa ghi quan sát production</div></div><div class="o" data-o="do_gi" data-nguon="opportunity.md"><div class="hoi">Sẽ đo gì, khi nào</div><div class="tra"><span class="vang">chưa có — opportunity.md</span></div></div><div class="o" data-o="ket_qua" data-nguon="uat-session.md"><div class="hoi">Kết quả</div><div class="tra">chưa đo</div></div><div class="o" data-o="chua_lam" data-nguon="contract.md"><div class="hoi">Chưa làm gì</div><div class="tra">5 mục để ngoài phạm vi · 6 giới hạn đã biết</div></div><div class="o" data-o="ai_quyet" data-nguon="contract.md"><div class="hoi">Ai quyết</div><div class="tra">Cổng Phạm vi: Manh Phan · Cổng Bằng chứng: chưa ký</div></div></section>
+<div class="chu-kho" data-chu-kho><span data-k="tieu_chi">Tiêu chí <b>10</b></span><span data-k="phep_do">Phép đo <b>10</b></span><span data-k="luot_cham">Lượt chấm <b><span class="vang">chưa có — usage-report.md</span></b></span><span data-k="token">Token <b><span class="vang">chưa có — usage-report.md</span></b></span><span data-k="quyet_dinh_may">Quyết định máy <b>2</b></span><span data-k="quyet_dinh_nguoi">người <b>0</b></span><span data-k="ma">Mã <b>0422d55</b></span></div>
+<details class="muc" id="vi-sao"><summary>Vì sao làm</summary><div class="noi"><p>Dựng nơi chạy thật cho Quỹ hàng theo Kiến trúc §5 và ADR-0001 «chưa tạo dự án»: cần cho đo lại vế mất mạng trên tên miền thật (ADR-0006), gửi mã đăng nhập bằng email thật (ADR-0005) và hai tuần thử với đội (Kiến trúc §9 bước 7). Hạ tầng đã dựng theo kế hoạch chủ kho duyệt 31/10 («tạo»; «domain mua trong vercel nên bạn tự setup luôn») — làm trước, hợp đồng viết sau từ đúng điều đã dựng và đo; Cổng 1 duyệt hợp đồng này cùng lúc với Cổng 2. Quyết định: ADR-0009.</p></div></details>
+<details class="muc" id="da-hua"><summary>Đã hứa</summary><div class="noi"><ol class="hua"><li data-ac="AC-1"><b>AC-1</b> — Given dự án Supabase `quy-hang`, When kết nối bằng chuỗi của môi trường thật, Then máy chủ ở vùng ap-southeast-1</li><li data-ac="AC-2"><b>AC-2</b> — Given kho ở commit này, When so sổ migration của môi trường thật với `packages/db/migrations/`, Then mọi tệp đã</li><li data-ac="AC-3"><b>AC-3</b> — Given cơ sở dữ liệu thật, When chạy bộ kiểm cách ly `packages/db/tests/isolation.test.mjs` trên nó, Then mọi ca</li><li data-ac="AC-4"><b>AC-4</b> — Given khoá công khai của dự án Supabase, When gọi REST trên mọi bảng của Quỹ hàng và gọi GraphQL, Then mọi lời gọi</li><li data-ac="AC-5"><b>AC-5</b> — Given cơ sở dữ liệu thật, When đọc vai và bảng, Then `quy_hang_app` không superuser, không bypassrls; mọi bảng của</li><li data-ac="AC-6"><b>AC-6</b> — Given bộ gửi Resend, When gửi mã đăng nhập, Then gửi đúng một thư tới đúng người với mã và hạn 5 phút; lỗi gửi</li><li data-ac="AC-7"><b>AC-7</b> — Given CI, When push lên main, Then job `deploy` chờ check, isolation, secrets, gate xanh, áp migration rồi chạy bộ</li><li data-ac="AC-8"><b>AC-8</b> — Given bản deploy của nhánh này trên Vercel (bản xem trước, cùng biến môi trường với bản thật, có khoá Resend), When gọi</li><li data-ac="AC-9"><b>AC-9</b> — Given kho ở commit này, When quét bí mật trên toàn lịch sử, Then không có chuỗi kết nối, mật khẩu hay khoá nào;</li><li data-ac="AC-10"><b>AC-10</b> — Given ADR-0009, Kiến trúc §10 và Tham chiếu §12, When đọc cùng điều đã dựng, Then ba chỗ nói cùng một điều về</li></ol></div></details>
+<details class="muc" id="thiet-ke"><summary>Thiết kế</summary><div class="noi"><p class="vang">hợp đồng không khai design_doc</p></div></details>
+<details class="muc" id="quyet-dinh"><summary>Quyết định</summary><div class="noi"><div class="loc" role="group" aria-label="Lọc quyết định"><button class="btn" data-loc="tat-ca" aria-pressed="true">Tất cả 2</button><button class="btn" data-loc="may" aria-pressed="false">Máy 2</button><button class="btn" data-loc="nguoi" aria-pressed="false">Người 0</button></div><ol class="tl" data-dong-thoi-gian><li data-loai="may" data-id="d-20261031T011633Z-1"><b>2026-10-31</b> · Máy · approval · S2 — Cổng Phạm vi duyệt: Manh Phan gõ «/acceptance-gate:approve moi-truong-that duyệt» ở phiên giám sát đợt nen-dau, giám sát chuyển nguyên văn sang phiên dựng<div class="note">Chủ kho trả lời ở phiên giám sát; phiên dựng ghi theo lời chuyển nguyên văn.</div></li><li data-loai="may" data-id="d-20261031T011633Z-2"><b>2026-10-31</b> · Máy · revisit · S2 — AC-8 đổi từ tên miền chính sang bản xem trước của nhánh: tên miền chính chỉ có bộ gửi sau khi gộp, mà gộp cần bằng chứng PASS — vòng tròn không khép<div class="note">Bản xem trước dùng cùng biến môi trường và cùng cơ sở dữ liệu với bản thật; bản thật sau gộp do job deploy kiểm.</div></li></ol></div></details>
+<details class="muc" id="bang-chung"><summary>Bằng chứng</summary><div class="noi">
+<div class="card" style="margin-top:12px"><span class="badge pend">PENDING-JUDGMENT</span>
+<div class="meta"><span>Verified by: <b>grader subagent (fresh context, verify phase, round 2) — Claude Opus 5.5</b></span><span>Human signoff: <b>CHƯA ký</b></span><span>enforcement: <b>strict</b></span></div></div>
+<h2>Các eval</h2><div class="card" style="padding:4px 8px"><table><thead><tr><th>Eval</th><th>Tiêu chí</th><th>Loại</th><th>Verdict</th><th>run_id</th><th>verified_at</th></tr></thead><tbody>
+<tr><td><a href="#E1">E1</a></td><td>AC-1</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E1-20261031T012854Z</td><td class="mono">2026-10-31T01:28:54Z</td></tr>
+<tr><td><a href="#E2">E2</a></td><td>AC-2</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E2-20261031T012857Z</td><td class="mono">2026-10-31T01:28:57Z</td></tr>
+<tr><td><a href="#E3">E3</a></td><td>AC-3</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E3-20261031T012929Z</td><td class="mono">2026-10-31T01:29:29Z</td></tr>
+<tr><td><a href="#E4">E4</a></td><td>AC-4</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E4-20261031T012900Z</td><td class="mono">2026-10-31T01:29:00Z</td></tr>
+<tr><td><a href="#E5">E5</a></td><td>AC-5</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E5-20261031T012902Z</td><td class="mono">2026-10-31T01:29:02Z</td></tr>
+<tr><td><a href="#E6">E6</a></td><td>AC-6</td><td>test</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E6-20261031T013000Z</td><td class="mono">2026-10-31T01:30:00Z</td></tr>
+<tr><td><a href="#E7">E7</a></td><td>AC-7</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E7-20261031T013101Z</td><td class="mono">2026-10-31T01:31:01Z</td></tr>
+<tr><td><a href="#E8">E8</a></td><td>AC-8</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E8-20261031T013210Z</td><td class="mono">2026-10-31T01:32:10Z</td></tr>
+<tr><td><a href="#E9">E9</a></td><td>AC-9</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">moi-truong-that-r2-E9-20261031T013101Z</td><td class="mono">2026-10-31T01:31:01Z</td></tr>
+<tr><td><a href="#E10">E10</a></td><td>AC-10</td><td>judgment</td><td><span class="badge pend">UNCERTAIN</span></td><td class="mono">—</td><td class="mono">—</td></tr>
+</tbody></table></div>
+<h2>Chi tiết từng eval</h2>
+<div class="card eval" id="E1"><h3><span class="badge pass">PASS</span> &nbsp;E1 · script</h3><p class="crit">AC-1: Given dự án Supabase `quy-hang`, When kết nối bằng chuỗi của môi trường thật, Then máy chủ ở vùng ap-southeast-1</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E1-20261031T012854Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.moi_truong_that</b></span><span>verified_at <b>2026-10-31T01:28:54Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">ĐẠT kết nối tới vùng ap-southeast-1
+sổ migration: 5 tệp; kho: 5; chưa ghi sổ: không
+...
+KẾT: ĐẠT
+(kiểm thêm ở lượt 1, không đổi: chuỗi kết nối mang mã dự án kcpiamqdangrapfmkiig = SUPABASE_URL của dự án
+quy-hang — không phải one-invest. Script chỉ kiểm vùng trong tên máy chủ.)</pre>
+</div>
+<div class="card eval" id="E2"><h3><span class="badge pass">PASS</span> &nbsp;E2 · script</h3><p class="crit">AC-2: Given kho ở commit này, When so sổ migration của môi trường thật với `packages/db/migrations/`, Then mọi tệp đã</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E2-20261031T012857Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.moi_truong_that</b></span><span>verified_at <b>2026-10-31T01:28:57Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">sổ migration: 5 tệp; kho: 5; chưa ghi sổ: không
+ĐẠT mọi migration của kho đã ghi sổ (005 chờ job deploy)
+ĐẠT hai hàm của luật theo dòng khoá search_path
+ĐẠT companies có đúng một luật đọc (companies_read)
+KẾT: ĐẠT
+(ghi chú người chấm: 001–005 đều đã ghi sổ — mạnh hơn chữ của AC-2 «trừ đúng tệp 005». Nhãn «005 chờ job
+deploy» của script đã cũ; xem Known limits.)</pre>
+</div>
+<div class="card eval" id="E3"><h3><span class="badge pass">PASS</span> &nbsp;E3 · script</h3><p class="crit">AC-3: Given cơ sở dữ liệu thật, When chạy bộ kiểm cách ly `packages/db/tests/isolation.test.mjs` trên nó, Then mọi ca</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E3-20261031T012929Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.cach_ly_that</b></span><span>verified_at <b>2026-10-31T01:29:29Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">✔ cơ sở dữ liệu: không hàm hay trigger nào ghi vào bảng hàng, bảng sự kiện
+✔ mở sàn: người đầu tiên mang vai quản trị sàn
+ℹ tests 29
+ℹ pass 29
+ℹ fail 0
+(DATABASE_URL trỏ cơ sở dữ liệu Supabase thật; .env.local không có. Đếm dòng mọi bảng public và identity trước
+và sau lượt chạy, chỉ đọc — trùng nhau: companies 1, company_members 1, agreements 0, company_zones 0,
+member_zones 0, listings 0, listing_events 0, schema_migrations 5, identity.user 1, identity.verification 1,
+identity.otp_requests 1, identity.session 0, identity.account 0 — không để lại dòng nào)</pre>
+</div>
+<div class="card eval" id="E4"><h3><span class="badge pass">PASS</span> &nbsp;E4 · script</h3><p class="crit">AC-4: Given khoá công khai của dự án Supabase, When gọi REST trên mọi bảng của Quỹ hàng và gọi GraphQL, Then mọi lời gọi</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E4-20261031T012900Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.moi_truong_that</b></span><span>verified_at <b>2026-10-31T01:29:00Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">ĐẠT anon, authenticated, service_role không có quyền trên bảng nào
+ĐẠT REST companies bị từ chối với khoá công khai (401)
+ĐẠT REST company_members bị từ chối với khoá công khai (401)
+ĐẠT REST agreements bị từ chối với khoá công khai (401)
+ĐẠT REST company_zones bị từ chối với khoá công khai (401)
+ĐẠT REST member_zones bị từ chối với khoá công khai (401)
+ĐẠT REST schema_migrations bị từ chối với khoá công khai (401)
+ĐẠT GraphQL không lộ bảng nào
+KẾT: ĐẠT
+(kiểm thêm của người chấm: danh sách REST của script viết cứng 6 bảng, thiếu hai bảng mới của 004. Gọi tay
+REST listings và listing_events với khoá công khai: cả hai 401, thân là lỗi 42501, không trả dòng nào. Phần
+kiểm quyền ba vai quét mọi bảng nên đã gồm hai bảng này.)</pre>
+</div>
+<div class="card eval" id="E5"><h3><span class="badge pass">PASS</span> &nbsp;E5 · script</h3><p class="crit">AC-5: Given cơ sở dữ liệu thật, When đọc vai và bảng, Then `quy_hang_app` không superuser, không bypassrls; mọi bảng của</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E5-20261031T012902Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.moi_truong_that</b></span><span>verified_at <b>2026-10-31T01:29:02Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">ĐẠT mọi bảng của công ty bật và ép luật theo dòng (7 bảng)
+ĐẠT quy_hang_app không superuser, không bypassrls
+ĐẠT quy_hang_owner không superuser
+ĐẠT chỉ sàn mẫu (1 sàn)
+KẾT: ĐẠT</pre>
+</div>
+<div class="card eval" id="E6"><h3><span class="badge pass">PASS</span> &nbsp;E6 · test</h3><p class="crit">AC-6: Given bộ gửi Resend, When gửi mã đăng nhập, Then gửi đúng một thư tới đúng người với mã và hạn 5 phút; lỗi gửi</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E6-20261031T013000Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.test.api</b></span><span>verified_at <b>2026-10-31T01:30:00Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">✔ dựng: production thiếu bộ gửi ném lỗi
+✔ dựng: production có bộ gửi dựng được
+✔ thư mã: tiêu đề và thân có mã, hạn 5 phút
+✔ resend: gửi một thư tới đúng người, đúng người gửi, khoá ở header
+✔ resend: lỗi gửi ném ra, thông báo không chứa mã
+ℹ tests 14
+ℹ pass 14
+ℹ fail 0</pre>
+</div>
+<div class="card eval" id="E7"><h3><span class="badge pass">PASS</span> &nbsp;E7 · script</h3><p class="crit">AC-7: Given CI, When push lên main, Then job `deploy` chờ check, isolation, secrets, gate xanh, áp migration rồi chạy bộ</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E7-20261031T013101Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.kiem_ci</b></span><span>verified_at <b>2026-10-31T01:31:01Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">ĐẠT chỉ chạy khi push main
+ĐẠT chờ check, isolation, secrets, gate
+ĐẠT bí mật ở environment production
+ĐẠT thứ tự: migration → bộ kiểm cách ly → deploy hook
+ĐẠT không chạy test API (ghi dữ liệu) trên cơ sở dữ liệu thật
+ĐẠT deploy không nằm trong ci-ok
+ĐẠT vercel.json tắt tự deploy main
+ĐẠT vercel.json ghim vùng sin1
+KẾT: ĐẠT</pre>
+</div>
+<div class="card eval" id="E8"><h3><span class="badge pass">PASS</span> &nbsp;E8 · script</h3><p class="crit">AC-8: Given bản deploy của nhánh này trên Vercel (bản xem trước, cùng biến môi trường với bản thật, có khoá Resend), When gọi</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E8-20261031T013210Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.suc_khoe_xem_truoc</b></span><span>verified_at <b>2026-10-31T01:32:10Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">Vercel CLI 65.9.0
+! This request bypasses Deployment Protection, so its response doesn&#39;t show whether the URL is public.
+{&quot;ok&quot;:true,&quot;service&quot;:&quot;quy-hang&quot;,&quot;apiVersion&quot;:&quot;v1&quot;,&quot;dataClasses&quot;:[&quot;catalog&quot;,&quot;shareable_listing&quot;,&quot;company_internal&quot;,&quot;custom_field&quot;,&quot;source&quot;,&quot;transaction&quot;,&quot;behavior&quot;]}
+(lệnh `vercel curl … -- -fsS` không in dòng «ĐẠT GET /api/v1/health trả 200» mà `expected` nêu; curl -f chỉ kết
+thúc sạch khi mã HTTP là 2xx, thân trả {&quot;ok&quot;:true} — đạt về nội dung. Kiểm thêm bằng `vercel inspect` và API
+deployments, chỉ đọc: dpl_8gWGmU2WT2hEsdFcLnPG1sehFLrk, target preview, READY, githubCommitSha
+0422d55bf395ad94fa32bc3b14add3730f26d2a9 = verified_commit, nhánh claude/moi-truong-that, vùng sin1)</pre>
+</div>
+<div class="card eval" id="E9"><h3><span class="badge pass">PASS</span> &nbsp;E9 · script</h3><p class="crit">AC-9: Given kho ở commit này, When quét bí mật trên toàn lịch sử, Then không có chuỗi kết nối, mật khẩu hay khoá nào;</p>
+<div class="kv"><span>run_id <b>moi-truong-that-r2-E9-20261031T013101Z</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.hooks</b></span><span>verified_at <b>2026-10-31T01:31:01Z</b></span><span>baseline <b>n-a</b></span></div>
+<pre class="out">pre-commit
+  ĐẠT  chặn commit trên main
+  ĐẠT  chặn bí mật đã stage
+  ĐẠT  cho commit sạch trên nhánh
+TỔNG: ĐẠT
+(kiểm thêm: job secrets của ci.yml checkout fetch-depth 0 rồi `gitleaks git` — quét toàn lịch sử; chạy
+gitleaks git cục bộ: 166 commits scanned, no leaks found)</pre>
+</div>
+<div class="card eval" id="E10"><h3><span class="badge pend">UNCERTAIN</span> &nbsp;E10 · judgment</h3><p class="crit">AC-10: Given ADR-0009, Kiến trúc §10 và Tham chiếu §12, When đọc cùng điều đã dựng, Then ba chỗ nói cùng một điều về</p>
+<div class="kv"><span>judged_by <b>judge-subagent (fresh context, feature-loop:cham-doc, blind — chỉ nhận contract, sáu tệp inputs và câu hỏi)</b></span></div>
+<p class="note"><b>Phán đoán:</b> Ba chỗ nói cùng một điều và khớp ci.yml, vercel.json, nen-du-an.sql về nơi chạy, vùng, cách áp migration và cách giữ khoá (lượt này §10 và §12 đã nêu bí mật chỉ ở Vercel Sensitive và secret GitHub, khoá số chủ nhà chưa sinh). Riêng giới hạn còn lại thì chưa cùng: Kiến trúc §10 ghi «Còn mở (ADR-0009 Hệ quả):» như danh sách đủ nhưng chỉ kể 3 trong 5 mục của Hệ quả, Tham chiếu §12 cũng kể đúng 3 mục đó; cả hai bỏ «Resend trả 403 tới khi tên miền gửi được xác minh» (nên câu «mã đăng nhập gửi qua Resend» đọc như đã chạy) và «bản xem trước chưa đăng nhập được». Judge cũng nêu ADR dòng 50 «001–005 áp đủ» lệch với chữ AC-2 «005 chưa ghi sổ» — đo lượt này cho thấy ADR đúng với thực tế, chữ của hợp đồng mới là chỗ cũ.</p>
+<div class="ov">human_override: CHƯA điền (việc của bạn ở Gate 2)</div>
+</div>
+<h2>Eval không phân biệt (Analyst)</h2><div class="flag fred">Baseline khong do: lượt chấm độc lập này không chạy làn baseline trên diffBase. E1, E2, E4, E5, E7 trỏ tới script
+`_acceptance/moi-truong-that/thu/*.mjs` chưa có ở diffBase (eval mới); E3, E8 đo môi trường thật, không có bản «trước
+tính năng»; E6, E9 là bộ test của kho — chưa đo trên diffBase.
+Non-discriminating evals: chưa xác định được (baseline n-a). E9 (test:hooks) và phần cũ của E3 nhiều khả năng xanh cả
+trên main — đóng vai hàng rào hồi quy.</div>
+<h2>Vòng verify</h2><ul class="tl"><li>Round 1 (e8ebe9d): E1–E9 đạt; E10 UNCERTAIN (judge riêng) — Kiến trúc §10 và Tham chiếu §12 không nói về cách giữ</li><li>khoá và giới hạn còn lại. T3 chờ người ký mọi mục judgment.</li><li>Round 2 (0422d55, sau gộp main có 004, áp 004+005 lên cơ sở dữ liệu thật, sửa hai tài liệu): E1–E9 đạt (cách ly</li><li>29/29 trên cơ sở dữ liệu thật, 5/5 migration đã ghi sổ, bản xem trước đúng commit); E10 vẫn UNCERTAIN — cách giữ</li><li>khoá nay đã khớp, còn danh sách giới hạn ở §10 và §12 thiếu hai mục của ADR-0009 Hệ quả (Resend 403, bản xem trước</li><li>chưa đăng nhập được). T3 chờ người ký.</li></ul>
+</div></details>
+<details class="muc" id="tai-nguyen"><summary>Tài nguyên</summary><div class="noi"><span class="vang">chưa có — usage-report.md</span></div></details>
+<details class="muc" id="gioi-han"><summary>Giới hạn và ngoài hợp đồng</summary><div class="noi"><ul data-gioi-han><li data-loai="ngoai">Xác minh tên miền gửi ở Resend và tạo khoá `RESEND_API_KEY` — việc của chủ kho trên tài khoản Resend; AC-8 chờ việc này.</li><li data-loai="ngoai">Khoá mã hoá số chủ nhà — chưa sinh vì chưa có mã dùng (ADR-0009 §9).</li><li data-loai="ngoai">Tách cơ sở dữ liệu cho bản xem trước; nâng gói Vercel; ghim chứng chỉ Supabase — ghi ở Hệ quả của ADR-0009.</li><li data-loai="ngoai">Dữ liệu cá nhân thật — không vào môi trường này tới khi pháp lý rà (Kiến trúc §8).</li><li data-loai="ngoai">Đo lại vế mất mạng của ADR-0006 — hàng dựng phần đồng bộ làm trên tên miền này.</li><li data-loai="gioi-han">Gửi mã thật qua Resend hiện trả 403: tên miền gửi onehub.center chưa xác minh ở Resend (ngoài phạm vi, OOS-1 — việc của chủ kho trên tài khoản Resend). E6 chỉ chứng minh bộ gửi đúng trên bộ gửi giả, không chứng minh thư tới hộp thư thật.</li><li data-loai="gioi-han">Khi gửi hỏng, người dùng vẫn thấy «đã gửi» — đúng thiết kế (ADR-0005 §4, không để lộ tài khoản nào tồn tại); hỏng chỉ thấy được trong nhật ký.</li><li data-loai="gioi-han">AC-8 đo trên bản xem trước của commit này; sức khoẻ bản thật sau khi gộp do job deploy kiểm, chưa đo ở lượt này.</li><li data-loai="gioi-han">Bản xem trước chưa đăng nhập được (BETTER_AUTH_URL trỏ tên miền chính — ADR-0009 Hệ quả); E8 chỉ đo health.</li><li data-loai="gioi-han">AC-2: 004 và 005 đã áp và ghi sổ tay trước khi gộp, nên lần chạy đầu của job deploy sau gộp sẽ không áp migration nào mới — đường «CI áp migration lên cơ sở dữ liệu thật» (AC-7) mới được kiểm trên cấu hình (E7), chưa thấy chạy thật với một migration chưa áp. Chữ AC-2 «trừ đúng tệp 005» và nhãn «005 chờ job deploy» của script đã cũ; điều đo được mạnh hơn (5/5 đã ghi sổ).</li><li data-loai="gioi-han">E4: danh sách REST của script viết cứng 6 bảng, không tự gồm bảng mới (listings, listing_events của 004). Lượt này người chấm gọi tay hai bảng đó (đều 401); bảng thêm về sau sẽ không được REST-kiểm nếu script không đổi (phần kiểm quyền ba vai vẫn quét mọi bảng).</li></ul></div></details>
+<details class="muc" id="giao"><summary>Giao</summary><div class="noi"><div class="kv" data-giao><span>Mã đã chấm <b class="mono">0422d55bf395ad94fa32bc3b14add3730f26d2a9</b></span><span>Ngày ký <b>—</b></span><span>Cổng Phạm vi: Manh Phan · Cổng Bằng chứng: chưa ký</span><span data-pr>chưa gộp</span></div><p class="note">chưa ghi quan sát production</p></div></details>
+<details class="muc" id="gia-tri"><summary>Giá trị</summary><div class="noi"><span class="vang">chưa có — opportunity.md</span></div></details>
+<div class="foot">Trang trình bày · KHÔNG quyết — <span class="mono">evidence-report.md</span> + hook là nguồn-sự-thật. Sinh từ run đã verify; ảnh/output gắn run_id.</div>
+<script>
+document.querySelectorAll('[data-loc]').forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-loc');document.querySelectorAll('[data-loc]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});document.querySelectorAll('[data-dong-thoi-gian] li').forEach(function(li){li.hidden=!(v==='tat-ca'||li.getAttribute('data-loai')===v);});});});
+document.querySelectorAll('.slide').forEach(function(s){var fr=s.querySelectorAll('.frame');if(fr.length<2)return;var i=0;fr[0].classList.add('on');var adv=function(){fr[i].classList.remove('on');i=(i+1)%fr.length;fr[i].classList.add('on');};s._t=setInterval(adv,1600);var bar=s.nextElementSibling,b=bar?bar.querySelector('[data-toggle]'):null;if(b)b.addEventListener('click',function(){if(s._t){clearInterval(s._t);s._t=null;b.textContent='▶ Chạy';}else{s._t=setInterval(adv,1600);b.textContent='⏸ Tạm dừng';}});});
+</script>
+</div></body></html>
