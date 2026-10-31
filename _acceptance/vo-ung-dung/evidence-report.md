@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 5cc9200511140e505e7114698f075d7a02b0068d
-human_signoff:
+human_signoff: Manh Phan 2026-10-31
 ---
 
 # Evidence Report: vo-ung-dung
@@ -65,7 +65,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E3-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -80,7 +80,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E4-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -94,7 +94,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E5-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -108,7 +108,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E6-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -121,7 +121,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E7-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -134,7 +134,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E8-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -147,7 +147,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E9-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
@@ -178,7 +178,7 @@ Vòng 3 chạy lại E11 (lint) và sáu lệnh suite. Các eval còn lại mang
   run_id: minted-vo-ung-dung-E13-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-10-30T23:57:15Z
   carried_from_round: 2
   # carry-forward tu round 2 — delta khong cham paths cua eval
