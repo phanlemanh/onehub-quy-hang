@@ -14,7 +14,7 @@ Bản 29/10 · **Đã chốt 29/10 (ADR-0017): chỗ đứng, kho riêng, nguyê
 | --- | --- | --- | --- |
 | Bất biến | Cách ly giữa công ty; thông tin chủ nhà không rời công ty; người luôn bấm gửi, không tự động hoá Zalo cá nhân; phần nội bộ không ra trang khách | Không ai — đổi là đổi sản phẩm | Không đổi; có bộ kiểm bắt buộc |
 | Kiến trúc (cơ chế) | Lõi nghiệp vụ ngành, ba lớp dữ liệu, API, hộp thư sự kiện, loại kết nối, thoả thuận, lớp dữ liệu | Đội sản phẩm | Code + ADR |
-| Cấu hình công ty | Cách gọi riêng, trạng thái riêng, trường riêng, luật chia lead, thuế phí, vai, mẫu | Quản trị công ty | Cài đặt sàn |
+| Cấu hình công ty | Cách gọi riêng, trạng thái riêng, trường riêng, luật chia lead, thuế phí, vai, mẫu — khai ở [Sổ điểm biến thiên](so-diem-bien-thien.md) (ADR-0018, chốt 01/11) | Quản trị công ty | Cài đặt sàn |
 | Thoả thuận kết nối (chính sách) | Bật kết nối nào, chiều nào, lớp dữ liệu nào, hiệu lực từ bao giờ đến bao giờ | Người có thẩm quyền của hai bên | Bật / tắt thoả thuận, có nhật ký |
 | Vận hành | Mở công ty mới, gói dịch vụ, hợp đồng, hỗ trợ, thanh toán | Đội vận hành OneHub | Công cụ vận hành, không chạm dữ liệu của công ty |
 
