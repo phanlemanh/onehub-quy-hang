@@ -1,0 +1,93 @@
+schema_version: 1
+feature_slug: truc-ai-thay-hang
+# Hai lệnh máy: `executors.test.core` (kiểm thử thuần của packages/core) và `executors.test.isolation` (bộ cách ly +
+# packages/api/test-db, cần Postgres của dãy — DATABASE_URL tới cổng 5552). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi
+# `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không
+# «# SKIP»/«# TODO». Ca API mở hai sàn, mời thành viên qua POST /api/v1/company/members, gọi API thật.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «nấc: bảng dãy sự kiện viết trước» có mặt và ok — bảng viết tay trong tệp kiểm thử (không sinh từ hàm đang kiểm), mỗi dòng một dãy sự kiện, cột lối ADR-0008 nó phủ, và nấc mong: vừa tạo, có giá và điều kiện, Incomplete→Hold, Incomplete→Withdrawn, Incomplete→Hold→Withdrawn ra Private; Incomplete→Active, Incomplete→Hold→Active, Active→Pending, Active→Pending→Active, Active→Pending→Closed, Active→Closed, Active→Hold, Active→Withdrawn, Active→Hold→Active ra Company — mọi lối vào hay ra khỏi Active của bảng 12 lối có ít nhất một dòng; số lần so bằng số dòng bảng; ca «nấc: chỉ hai giá trị» — VISIBILITY_LEVELS đúng [Private, Company]. Chiều đỏ: đổi luật thành «đang Active mới Company» → ca đỏ nêu dòng Active→Hold; luật «có lối Incomplete→Active» → ca đỏ nêu dòng Incomplete→Hold→Active."
+    paths: [packages/core/src/visibility/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «quyền đọc: ma trận người xem × nấc viết trước» có mặt và ok — bốn ô viết tay (người tạo/Private đọc, người tạo/Company đọc, người khác/Company đọc, người khác/Private không), đúng bốn lần so; ca «quyền đọc: vai không đổi kết quả» — cùng ô «người khác/Private» với vai company_admin, team_lead vẫn không. Chiều đỏ: cho company_admin đọc Private → ca đỏ nêu vai."
+    paths: [packages/core/src/visibility/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «danh sách: Chỉ tôi chỉ người tạo thấy, lên Toàn sàn thì cả sàn thấy» có mặt và ok — X tạo hàng: thân trả về của POST có visibility Private; danh sách của X có hàng với visibility Private (đối chứng dương), danh sách của Y không có; X đưa hàng vào Active: danh sách của Y có hàng với visibility Company. Chiều đỏ: bỏ lọc ở GET /listings → ca đỏ nêu «danh sách của Y lộ hàng Chỉ tôi»."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đọc một hàng: Chỉ tôi của người khác trả 404 như hàng không có» có mặt và ok — X đọc được hàng của mình (200, đối chứng dương); Y đọc hàng Chỉ tôi của X trả 404 với thân đúng bằng thân khi đọc một mã ngẫu nhiên không có; sau khi lên Toàn sàn Y đọc được (200) và có events. Chiều đỏ: bỏ chặn ở GET /listings/{id} → ca đỏ nêu mã trạng thái Y nhận được."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «lệnh vào hàng Chỉ tôi của người khác trả 404, không ghi» có mặt và ok — Y gửi ba lệnh vào hàng Chỉ tôi của X: lệnh hợp lệ đúng phiên bản, lệnh sai phiên bản, lệnh sai khuôn; mỗi lệnh 404 với thân deepEqual thân của cùng lệnh gửi vào một mã ngẫu nhiên không có (so riêng từng loại), số sự kiện và bản tính không đổi; đối chứng dương cùng hàng: lệnh hợp lệ của X ghi được (200); sau khi lên Toàn sàn, lệnh hợp lệ của Y ghi được (200). Chiều đỏ: chặn sau bước xét phiên bản → lệnh sai phiên bản của Y trả 409, ca đỏ nêu mã."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đã lên Toàn sàn thì giữ: tạm ngừng vẫn cả sàn thấy» có mặt và ok — hàng của X vào Active rồi Hold; danh sách của Y có hàng với visibility Company và standardStatus Hold, đọc mã trả 200. Chiều đỏ: luật «đang Active mới Company» → ca đỏ nêu «Y mất hàng sau Hold»."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «sàn khác không thấy hàng ở cả hai nấc» có mặt và ok — Z của sàn B: danh sách không có hàng của X và đọc mã trả 404 với thân deepEqual thân khi đọc mã ngẫu nhiên không có, khi hàng ở Chỉ tôi và lại sau khi hàng lên Toàn sàn; đối chứng dương: Y cùng sàn A thấy hàng sau khi lên. Chiều đỏ: lọc theo nấc mà bỏ cách ly sàn → ca đỏ nêu «sàn B thấy hàng sàn A»."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «vai không mở Chỉ tôi: quản trị sàn, trưởng nhóm» có mặt và ok — X là thành viên thường tạo hàng; người mở sàn (company_admin) và một người mời với vai team_lead: danh sách không có hàng, đọc mã và gửi lệnh đều 404 với thân deepEqual thân của cùng lời gọi vào mã ngẫu nhiên không có, số sự kiện không đổi; đối chứng dương: X đọc được. Chiều đỏ: cho company_admin qua → ca đỏ nêu vai."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nấc của danh sách khớp nấc gấp từ sự kiện» có mặt và ok — X tạo năm hàng đi năm đường (chỉ tạo; tạo→Hold; tạo→Active; tạo→Active→Hold; tạo→Hold→Active); với từng hàng, visibility trong danh sách của X bằng visibilityOf(factsFromEvents(events của hàng đọc từ GET một hàng)), và bảng mong viết trước [Private, Private, Company, Company, Company] khớp cả hai lối, đúng năm lần so mỗi lối. Chiều đỏ: câu SQL lọc sẵn theo trạng thái hiện tại → ca đỏ nêu hàng tạo→Active→Hold."
+    paths: [packages/api/src/listings/**, packages/core/src/visibility/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mọi đường chạm hàng nằm trong bảng bốn đường» có mặt và ok — đọc GET /api/v1/openapi.json của chính app, liệt mọi cặp (phương thức, đường) có chữ listings trong đường hoặc tham số listingId, so deepEqual với bảng viết trước bốn cặp (post /api/v1/listings, get /api/v1/listings, get /api/v1/listings/{listingId}, post /api/v1/listings/{listingId}/events); đối chứng dương trên CÙNG hàm liệt: tài liệu cấy thêm đường get /api/v1/listings/{listingId}/history bị bắt và thông điệp nêu đường ấy. Chiều đỏ: thêm một đường hàng mới → ca đỏ nêu đường."
+    paths: [packages/api/src/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

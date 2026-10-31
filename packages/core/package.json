@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./listing": "./src/listing/index.ts",
-    "./access": "./src/access/index.ts"
+    "./access": "./src/access/index.ts",
+    "./visibility": "./src/visibility/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
