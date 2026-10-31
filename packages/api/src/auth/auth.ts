@@ -8,6 +8,8 @@ import {
   OTP_ALLOWED_ATTEMPTS,
   OTP_EXPIRES_SEC,
   OTP_LENGTH,
+  SESSION_EXPIRES_SEC,
+  SESSION_UPDATE_AGE_SEC,
 } from "./constants";
 import { allowOtpRequest } from "./otp-limit";
 import { devSender, type OtpSender } from "./sender";
@@ -35,6 +37,7 @@ export function createAuth(o: CreateAuthOptions) {
     baseURL: o.baseURL,
     basePath: AUTH_BASE_PATH,
     advanced: { cookiePrefix: COOKIE_PREFIX },
+    session: { expiresIn: SESSION_EXPIRES_SEC, updateAge: SESSION_UPDATE_AGE_SEC },
     emailAndPassword: { enabled: false },
     plugins: [
       emailOTP({

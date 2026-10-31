@@ -1270,6 +1270,12 @@
       "slug": "nang-kit-2-36-0",
       "hang": "T3",
       "vi_sao": "Đợt nen-2 mở bằng kit 2.36.0; chủ kho giao dùng mọi nấc có căn cứ (31/10). Thêm cùng PR bật chặn lộ trình."
+    },
+    {
+      "ma": "phien-dang-nhap-30-ngay",
+      "cau_giao": "Phiên đăng nhập giữ 30 ngày thay vì 7, vẫn trượt theo ngày dùng",
+      "slug": "phien-dang-nhap-30-ngay",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-10-31"
     }
   ],
   "chan_troi": [
