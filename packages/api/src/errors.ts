@@ -16,6 +16,11 @@ export const API_ERRORS = {
   invalidZone: { code: "invalid-zone", status: 400 },
   zoneNameRequired: { code: "zone-name-required", status: 400 },
   notFound: { code: "not-found", status: 404 },
+  // Hàng và sự kiện (ADR-0008).
+  versionConflict: { code: "version-conflict", status: 409 },
+  invalidTransition: { code: "invalid-transition", status: 400 },
+  missingRequirement: { code: "missing-requirement", status: 400 },
+  invalidPayload: { code: "invalid-payload", status: 400 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

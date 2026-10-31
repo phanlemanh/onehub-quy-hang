@@ -38,6 +38,11 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "DELETE /api/v1/company/members/{userId}",
     "GET /api/v1/company/zones",
     "POST /api/v1/company/zones",
+    // Hàng 8 (ADR-0008).
+    "POST /api/v1/listings",
+    "GET /api/v1/listings",
+    "GET /api/v1/listings/{listingId}",
+    "POST /api/v1/listings/{listingId}/events",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
