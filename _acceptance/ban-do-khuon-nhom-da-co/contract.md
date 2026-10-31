@@ -5,7 +5,7 @@ slug: ban-do-khuon-nhom-da-co
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-10-31-ban-do-khuon-nhom-da-co-design.md
 approved_by:
 approved_at:
