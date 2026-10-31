@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 feature_slug: ma-hoa-so-chu
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6733c5e2492813356c8d96a6ee1e08bb72bfc32a
-human_signoff:
+verified_commit: 52f8fd34f2945c59386d94611480f16b96090c86
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: ma-hoa-so-chu
@@ -149,7 +149,7 @@ human_signoff:
     - domain-correctness: PASS — ADR-0013 đủ cả năm ý: lệnh `openssl rand -base64 32` (không có giá trị khoá nào trong tệp), đặt ở Vercel Production Sensitive (Preview không nhận, theo Hỏi-1) và cất bản ở trình quản lý mật khẩu ngoài máy, mất khoá thì mất mọi số chủ, đếm cả listing_owners lẫn leads rồi chạy ma-hoa-lai.ts ngay sau migration 008/009, xoá cột owner_phone là migration hàng sau. `.env.example` dòng 17 là `OWNER_PHONE_KEY=` rỗng, và tham-chieu.md dòng 329 là dòng sổ 31/10 về mã hoá số chủ trỏ ADR-0013.
     - operational-feasibility: PASS — ADR-0013 nêu đủ năm ý. Đó là lệnh `openssl rand -base64 32` không kèm giá trị khoá, Vercel Production, Preview không nhận khoá, bản cất ở trình quản lý mật khẩu, và mất khoá thì mất mọi số chủ. Nó cũng nêu việc đếm ở cả `listing_owners` và `leads` rồi chạy lệnh mã hoá lại ngay sau migration 008/009, và việc xoá `owner_phone` là hàng sau. `.env.example` có dòng `OWNER_PHONE_KEY=` rỗng. Sổ quyết định tham-chieu.md có dòng 31/10 về mã hoá số chủ, trỏ ADR-0013.
     - spec-alignment: PASS — ADR-0013 nêu đủ cả năm ý: lệnh `openssl rand -base64 32`, đặt khoá ở Vercel Production (Preview không nhận, theo Hỏi-1) và cất một bản ngoài máy, mất khoá là mất mọi số chủ, đếm dòng số rõ ở cả `listing_owners` và `leads` rồi chạy lệnh mã hoá lại ngay sau migration 008/009, và xoá cột `owner_phone` là hàng sau. `.env.example` dòng 17 là `OWNER_PHONE_KEY=` rỗng, không có giá trị khoá nào. Sổ quyết định §12 của tham-chieu.md có dòng 31/10 (dòng 329) nói số chủ đã mã hoá và trỏ ADR-0013.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-01 — Đạt
 
 ### Lệnh suite (hồi quy)
 
@@ -203,3 +203,7 @@ none — every multi-run eval is uniform
 
 Round 1: có hồ sơ cũ, lịch sử không được truyền xuống round này.
 Round 2: mọi eval máy xanh; E10 là mục judgment, đề xuất PASS, chờ người chốt nên verdict là PENDING-JUDGMENT.
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp main (hàng 72) trước chữ ký
+run_id: repin-20261031T230034Z-37455
+sha: 52f8fd34f2945c59386d94611480f16b96090c86 · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · ngoài làn máy: E10 · diff chạm vật đo ngoài làn máy: E10 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-10
