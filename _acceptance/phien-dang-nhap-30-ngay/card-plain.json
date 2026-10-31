@@ -1,0 +1,30 @@
+{
+  "feature_plain": "Đăng nhập một lần dùng được 30 ngày thay vì 7; dùng mỗi ngày thì hạn tự dời ra, kể cả cookie trên trình duyệt.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ đặt phiên 30 ngày ngay lúc nhập đúng mã — cả cookie trình duyệt lẫn bản ghi ở máy chủ."},
+    {"id":"AC-2","p":"Sẽ dời hạn về đủ 30 ngày khi phiên được dùng lại sau hơn một ngày."},
+    {"id":"AC-3","p":"Sẽ KHÔNG ghi lại phiên ở mỗi lần dùng trong cùng ngày — mỗi ngày dời hạn tối đa một lần."},
+    {"id":"AC-4","p":"Sẽ coi phiên bỏ không quá 30 ngày là đã đăng xuất — phải xin mã lại."},
+    {"id":"AC-5","p":"Sẽ làm cookie trình duyệt dời hạn theo mỗi lần mở trang, giữ nguyên mức an toàn của cookie, đúng cả trên bản thật https."},
+    {"id":"AC-6","p":"Sẽ ghi 30 ngày và nhịp một ngày thành số cố định trong mã, không dựa vào mặc định của thư viện."},
+    {"id":"AC-7","p":"Sẽ ghi quyết định vào ADR-0005 và sổ quyết định của Tham chiếu, số khớp với mã."}
+  ],
+  "wont_do": [
+    {"id":"OOS-1","p":"KHÔNG có ô «ghi nhớ đăng nhập» hay hạn khác nhau theo thiết bị."},
+    {"id":"OOS-2","p":"KHÔNG đặt trần bắt đăng nhập lại sau N ngày dù dùng hằng ngày (đổi được nếu Hỏi-1 chọn lối khác)."},
+    {"id":"OOS-3","p":"KHÔNG có đăng xuất mọi thiết bị hay danh sách phiên đang mở."},
+    {"id":"OOS-4","p":"KHÔNG dời cookie khi chỉ gọi API mà không mở trang nào."}
+  ],
+  "coverage_plain": [
+    {"i":0,"p":"Hạn nằm ở hai nơi — bản ghi máy chủ (AC-1, AC-2, AC-3, AC-5) và cookie trình duyệt (AC-1, AC-2, AC-5)."},
+    {"i":1,"p":"Tuổi phiên lúc dùng lại: trong ngày (AC-3, AC-5), hơn một ngày (AC-2, AC-5), quá 30 ngày (AC-4)."},
+    {"i":2,"p":"Lối vào: đăng nhập (AC-1), đọc phiên qua API (AC-2–AC-4), mở trang (AC-5); chỉ gọi API không mở trang thì để ngoài."}
+  ],
+  "gap_probe_plain": [
+    {"i":0,"p":"Chữ chủ kho chỉ là «30 ngày»; trượt theo ngày dùng hay hết hẳn sau 30 ngày là chính sách anh chốt — đã đưa thành Hỏi-1."},
+    {"i":1,"p":"Bản thật chạy https dùng tên cookie khác; đã thêm ca kiểm bản https."},
+    {"i":2,"p":"Kiểm cũ chỉ thấy cookie có mặt; nay so đúng token và đủ HttpOnly, SameSite, Path, Secure."},
+    {"i":3,"p":"Sổ chưa nêu lối gọi phiên từ trình duyệt; đã ghi vì sao lối ấy không trượt được."},
+    {"i":4,"p":"Tiêu chí «không ghi mỗi lần gọi» nay đo trên bản ghi thật ở cơ sở dữ liệu."}
+  ]
+}
