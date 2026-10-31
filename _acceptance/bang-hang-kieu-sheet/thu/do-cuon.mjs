@@ -2,11 +2,19 @@
 // hàng, nhóm Toà → Loại căn, cột Toà và Mã căn ghim. Chrome không đầu 1366×768, CPU giảm tốc 4×, ba lượt hợp lệ lấy trung
 // vị; mỗi lượt hiệu chuẩn trước trên trang rỗng (p95 khung ≤ 17,5 ms, không thì đo lại, tối đa 3 lần). Đối chứng đỏ
 // trên cùng máy đo: tiêm việc bận 60 ms mỗi khung — phải trượt ngưỡng p95, không thì máy đo không phân biệt được.
-//   node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs   cần: dung-b.mjs --nhan 5000 (bản dev, giữ phiên), rồi
-//   npm run build -w @quy-hang/web và dung-b.mjs --build — đo bản build như ADR-0004, không đo bản dev.
-import { writeFileSync } from "node:fs";
+//   node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs [--khong-build]   cần dung-b.mjs --nhan 5000 đã chạy (bản dev,
+//   giữ phiên). Lệnh tự build, bật bản build ở 3491, đo, rồi tắt — đo bản build như ADR-0004, không đo bản dev.
+import { execFileSync, spawn } from "node:child_process";
+import { openSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { GOC, cookieCua, moChrome } from "./cdp.mjs";
+import { fileURLToPath } from "node:url";
+
+// Bản build riêng ở cổng 3491 (giám sát cấp cho lượt chấm, B-6) — bản dev ở 3481 phục vụ bài nhìn cùng lúc.
+const CONG_BUILD = 3491;
+process.env.QH_B_URL = `http://localhost:${CONG_BUILD}`;
+const { GOC, cookieCua, moChrome } = await import("./cdp.mjs");
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+const URL_BUILD = process.env.QH_B_URL;
 
 const NGUONG = { p95: 33.4, cham: 0.01 };
 const SO_HANG = 5000;
@@ -18,6 +26,39 @@ const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const p95 = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length * 0.95)] ?? Infinity;
 const trungVi = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
+// Build rồi bật next start; tắt đúng PID đã ghi khi xong (luật đợt 8).
+if (!process.argv.includes("--khong-build")) execFileSync("npm", ["run", "build", "-w", "@quy-hang/web"], { cwd: ROOT, stdio: ["ignore", "ignore", "inherit"] });
+const nhatKy = openSync(path.join(ROOT, ".acceptance-runs/bang-hang-kieu-sheet/web-build.log"), "a");
+const mayChu = spawn(path.join(ROOT, "node_modules/.bin/next"), ["start", "-p", String(CONG_BUILD), "apps/web"], {
+  cwd: ROOT,
+  env: {
+    ...process.env,
+    DATABASE_URL: "postgres://postgres:quyhang@localhost:5561/postgres",
+    BETTER_AUTH_SECRET: "dev-b-chuoi-thu-khong-dung-o-ban-that",
+    BETTER_AUTH_URL: URL_BUILD,
+    // Bản build đòi bộ gửi mã: khoá giả, không lời xin mã nào tới đây — phiên dùng lại từ bản dev.
+    RESEND_API_KEY: "khoa-gia-ban-build-khong-gui",
+    MAIL_FROM: "khong-gui@mau.quy-hang.test",
+  },
+  stdio: ["ignore", nhatKy, nhatKy],
+});
+const tatMayChu = () => {
+  try {
+    process.kill(mayChu.pid);
+  } catch {
+    // đã thoát
+  }
+};
+process.on("exit", tatMayChu);
+for (let i = 0; ; i++) {
+  try {
+    if ((await fetch(`${URL_BUILD}/api/v1/health`)).ok) break;
+  } catch {
+    // chưa lên
+  }
+  if (i > 120) throw new Error("bản build không lên ở cổng 3491");
+  await ngu(1000);
+}
 const cookie = await cookieCua("do-cuon@mau.quy-hang.test", { chiPhienGiu: true });
 const chrome = await moChrome();
 

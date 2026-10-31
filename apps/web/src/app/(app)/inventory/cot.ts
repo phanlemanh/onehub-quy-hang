@@ -64,6 +64,9 @@ export const WITHDRAWN_LABEL: Record<string, string> = {
 export const CHUA_RO = "Chưa rõ";
 
 const TY = 1_000_000_000;
+// Dựng một lần: `toLocaleString` dựng bộ định dạng mỗi lần gọi — đắt khi cuộn 5.000 dòng (máy đo E11).
+const SO_2 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 });
+const SO_NGUYEN = new Intl.NumberFormat("vi-VN");
 
 export const COT: readonly Cot[] = [
   { id: "buildingName", label: "Toà", kind: "chon", size: 110, filterHint: "Mọi toà" },
@@ -95,8 +98,8 @@ export const COT_MAC_DINH: readonly CotId[] = COT.map((c) => c.id).filter((id) =
 /** «4,65 tỷ» · «950 triệu» · «—». */
 export function dinhDangGia(dong: number | null): string {
   if (dong === null) return "—";
-  if (dong >= TY) return `${(dong / TY).toLocaleString("vi-VN", { maximumFractionDigits: 2 })} tỷ`;
-  return `${Math.round(dong / 1_000_000).toLocaleString("vi-VN")} triệu`;
+  if (dong >= TY) return `${SO_2.format(dong / TY)} tỷ`;
+  return `${SO_NGUYEN.format(Math.round(dong / 1_000_000))} triệu`;
 }
 
 /** Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. */
@@ -116,7 +119,7 @@ export function chuCuaO(d: DongBang, id: CotId): string {
     case "closePrice":
       return dinhDangGia(v as number);
     case "livingArea":
-      return `${(v as number).toLocaleString("vi-VN")} m²`;
+      return `${SO_2.format(v as number)} m²`;
     case "confirmedAgeDays":
       return v === 0 ? "Hôm nay" : `${v} ngày trước`;
     case "completeness":

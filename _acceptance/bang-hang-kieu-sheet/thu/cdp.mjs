@@ -8,7 +8,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const GOC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
-export const URL_GOC = "http://localhost:3481";
+// Bản dev của dãy B ở 3481 (luật đợt 7); máy đo cuộn đặt QH_B_URL tới bản build ở 3491 (giám sát cấp, yêu cầu B-6).
+export const URL_GOC = process.env.QH_B_URL ?? "http://localhost:3481";
 const LOG = path.join(GOC, ".acceptance-runs/bang-hang-kieu-sheet/web-b.log");
 const CHROME = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));

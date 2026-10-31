@@ -1,5 +1,5 @@
 {
-  "ngay": "2026-10-31T15:01:00.331Z",
+  "ngay": "2026-10-31T15:56:33.998Z",
   "nguong": {
     "p95": 33.4,
     "cham": 0.01
@@ -9,11 +9,11 @@
   "cpu": 4,
   "luot": [
     {
-      "hieu_chuan_p95": 16.8,
+      "hieu_chuan_p95": 16.7,
       "hop_le": true,
       "p95": 33.4,
-      "ty_le_cham": 0.0155,
-      "so_khung": 323,
+      "ty_le_cham": 0.0125,
+      "so_khung": 321,
       "dong_cuoi_thay": 5000
     },
     {
@@ -25,20 +25,20 @@
       "dong_cuoi_thay": 5000
     },
     {
-      "hieu_chuan_p95": 16.8,
+      "hieu_chuan_p95": 16.7,
       "hop_le": true,
       "p95": 33.4,
       "ty_le_cham": 0.0062,
-      "so_khung": 324,
+      "so_khung": 325,
       "dong_cuoi_thay": 5000
     }
   ],
   "doi_chung": {
     "hieu_chuan_p95": 16.7,
     "hop_le": true,
-    "p95": 133.3,
-    "ty_le_cham": 0.9381,
-    "so_khung": 97,
+    "p95": 116.7,
+    "ty_le_cham": 0.9495,
+    "so_khung": 99,
     "dong_cuoi_thay": 5000
   },
   "trung_vi": {

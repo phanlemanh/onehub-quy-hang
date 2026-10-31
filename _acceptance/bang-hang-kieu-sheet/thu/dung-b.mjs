@@ -11,6 +11,7 @@ import { existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from "no
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { cookieCua } from "./cdp.mjs";
 
 const GOC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const CHAY = path.join(GOC, ".acceptance-runs/bang-hang-kieu-sheet");
@@ -119,32 +120,9 @@ if (a.build) {
 }
 
 // 3. Đăng nhập bằng mã đọc từ nhật ký máy chủ dev.
+/** Phiên của một người mẫu — dùng lại phiên đã giữ của cdp.mjs (mỗi email chỉ xin được 5 mã trong 15 phút). */
 async function dangNhap(email) {
-  const maCua = () => readFileSync(LOG, "utf8").split("\n").filter((l) => l.includes(`[ma-dang-nhap] ${email} `));
-  const truoc = maCua().length;
-  await fetch(`${URL_GOC}/api/v1/auth/email-otp/send-verification-otp`, {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: URL_GOC },
-    body: JSON.stringify({ email, type: "sign-in" }),
-  });
-  let ma = null;
-  for (let i = 0; !ma && i < 30; i++) {
-    await ngu(300);
-    const dong = maCua();
-    ma = dong.length > truoc ? (dong.at(-1)?.split(" ").at(-1) ?? null) : null;
-  }
-  if (!ma) throw new Error(`không thấy mã đăng nhập của ${email} trong ${LOG}`);
-  const r = await fetch(`${URL_GOC}/api/v1/auth/sign-in/email-otp`, {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: URL_GOC },
-    body: JSON.stringify({ email, otp: ma }),
-  });
-  if (r.status !== 200) throw new Error(`đăng nhập ${email}: ${r.status}`);
-  const ck = r.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
-  // Người thuộc nhiều sàn: chọn Sàn thử (cookie qh_san) — lời gọi hàng chạy trong sàn đang làm.
-  const me = await (await fetch(`${URL_GOC}/api/v1/me`, { headers: { cookie: ck } })).json();
-  if (me.companies.length < 2) return ck;
-  return `${ck}; qh_san=${me.companies.find((c) => c.name === "[Mẫu] Sàn thử").id}`;
+  return (await cookieCua(email)).join("; ");
 }
 
 async function goi(cookie, method, p, body) {
