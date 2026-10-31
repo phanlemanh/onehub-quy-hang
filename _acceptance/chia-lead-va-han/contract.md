@@ -131,6 +131,8 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead s
   đang làm, trừ hàm liệt sàn của nhịp chỉ trả mã sàn (AC-9); (2) chủ nhà — so số chỉ trong cơ sở dữ liệu, vai API vẫn không
   đọc `leads.owner_phone`, không lời báo nào mang số (AC-9); (3) người bấm gửi — lời báo chỉ ở trong app, không gửi tin;
   (4) phần nội bộ không ra trang khách — không chạm.
+- Đứng sau hàng 62 (migration 008, ADR-0013): lead cùng số nhận ra bằng dấu vết `owner_phone_hash`, không hàm nào của
+  hàng đọc hay nhận số dạng chữ (AC-12 của 62). Phần cơ sở dữ liệu và API dựng, đo sau khi 62 gộp vào nhánh chính.
 - Không sửa `packages/api/src/leads/**` (dãy G sửa cho hàng 62) và không đổi thân `app.lead_dedupe_facts`: người nhận của
   lead đã chia ghi vào `matched_agent_user_id` (ADR-0017).
 - Dãy L chạy Postgres 5563 (container `quy-hang-db-L`), dev 3483. Migration 011 và ADR-0017 do giám sát giữ chỗ (L-8).

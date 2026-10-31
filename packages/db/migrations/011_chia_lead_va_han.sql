@@ -2,6 +2,8 @@
 -- Cơ sở dữ liệu chở dữ kiện và ghi mốc; luật chọn người và xét hạn ở packages/core (routing). Người nhận của lead đã chia
 -- ghi vào cột có sẵn matched_agent_user_id — nghĩa nay là «đầu chủ lead đã về», khớp chủ trùng lúc nhập hay được chia —
 -- nên vế «lead trước cùng số» của app.lead_dedupe_facts, luật đọc leads và bản của telesales không đổi.
+-- Đứng sau 008 (hàng 62, ADR-0013): lead cùng số nhận ra bằng dấu vết owner_phone_hash (HMAC theo sàn), không đọc số
+-- dạng chữ — sau 008 cột owner_phone luôn null và không hàm nào của cơ sở dữ liệu nhận số chủ dạng chữ.
 
 -- ---- Mốc của lead ----
 alter table leads
@@ -99,7 +101,8 @@ create or replace function app.lead_job_companies() returns table (company_id uu
 revoke all on function app.lead_job_companies() from public;
 grant execute on function app.lead_job_companies() to quy_hang_app;
 
--- Lead chờ chia, cũ trước. owner_group: mã lead cũ nhất cùng số trong sàn — nhịp gom lead cùng số mà không thấy số.
+-- Lead chờ chia, cũ trước. owner_group: mã lead cũ nhất cùng dấu vết số trong sàn — nhịp gom lead cùng số mà không thấy
+-- số. So dấu vết với dấu vết (hàng 62); lead không có dấu vết thì không gom, không có người của lead trước.
 -- prior_agent: đầu chủ của lead trước cùng số đã về người, chưa bỏ.
 create or replace function app.lead_routing_queue()
   returns table (lead_id uuid, building_name text, created_at timestamptz, owner_group uuid, prior_agent text)
@@ -107,10 +110,10 @@ create or replace function app.lead_routing_queue()
   as $$
     select l.id, l.building_name, l.created_at,
            (select g.id from public.leads g
-            where g.company_id = l.company_id and g.owner_phone = l.owner_phone
+            where g.company_id = l.company_id and g.owner_phone_hash = l.owner_phone_hash
             order by g.created_at, g.id limit 1),
            (select p.matched_agent_user_id from public.leads p
-            where p.company_id = l.company_id and p.owner_phone = l.owner_phone and p.id <> l.id
+            where p.company_id = l.company_id and p.owner_phone_hash = l.owner_phone_hash and p.id <> l.id
               and p.matched_agent_user_id is not null and p.discarded_at is null
             order by coalesce(p.routed_at, p.created_at) desc, p.id limit 1)
     from public.leads l
