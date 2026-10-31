@@ -1,5 +1,6 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 import { completeness, foldListing, freshness, type ListingState } from "@quy-hang/core/listing";
+import { canRead, factsFromEvents, visibilityOf, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "../app";
@@ -7,9 +8,12 @@ import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
-import { applyCommand, createListing, isRefusal, loadEvents, STATE_COLUMNS, type Ctx, type Refusal } from "./store";
+import { applyCommand, createListing, FACTS_SQL, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
 
-/** Hàng và lệnh đổi hàng (ADR-0008). Mọi thành viên của sàn đang làm gửi được lệnh (Hỏi-2). */
+/**
+ * Hàng và lệnh đổi hàng (ADR-0008). Trục ai thấy hàng (hàng 12): hàng «Chỉ tôi» chỉ người tạo đọc và gửi lệnh được, người
+ * khác nhận 404 như hàng không có; hàng «Toàn sàn» mọi thành viên của sàn đang làm đọc và gửi lệnh được (Hỏi-2).
+ */
 const BASE = "/api/v1/listings";
 
 const ApiError = z.object({
@@ -39,12 +43,13 @@ const Command = z
   .strict();
 
 const homNay = () => new Date().toISOString().slice(0, 10);
-/** Hàng như API trả: bản tính + độ tươi, mức đủ tính lúc đọc (phụ thuộc «hôm nay»). */
-const view = (id: string, s: ListingState) => ({
+/** Hàng như API trả: bản tính + độ tươi, mức đủ tính lúc đọc (phụ thuộc «hôm nay») + nấc của trục ai thấy hàng. */
+const view = (id: string, s: ListingState, facts: VisibilityFacts) => ({
   id,
   ...s,
   freshness: freshness(s.lastConfirmedAt, homNay()),
   completeness: completeness(s),
+  visibility: visibilityOf(facts),
 });
 
 export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps) {
@@ -71,7 +76,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
       const kq = await withCompany(appPool, ctx, (tx) => createListing(tx, c.req.valid("json")));
-      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state), 201);
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts), 201);
     },
   );
 
@@ -90,14 +95,14 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if (!/^[0-9a-f-]{36}$/i.test(listingId)) return tra(c, API_ERRORS.notFound);
       // Bị từ chối thì huỷ cả giao dịch: không sự kiện nào, bản tính không đổi.
       const kq = await withCompany(appPool, ctx, async (tx) => {
-        const r = await applyCommand(tx, listingId, c.req.valid("json"));
+        const r = await applyCommand(tx, await viewerOf(tx, ctx.userId), listingId, c.req.valid("json"));
         if (isRefusal(r)) throw r;
         return r;
       }).catch((e: unknown) => {
         if (e && typeof e === "object" && "error" in e) return e as Refusal;
         throw e;
       });
-      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state), 200);
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts), 200);
     },
   );
 
@@ -114,11 +119,17 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const ds = await withCompany(appPool, ctx, async (tx) => {
         // Đọc bản tính bằng đúng tên cột của STATE_COLUMNS; số và ngày về đúng kiểu của bản tính.
         const cot = Object.entries(STATE_COLUMNS).map(([k, col]) => `${col === "list_price" || col === "close_price" ? `${col}::float8` : col === "close_date" ? `${col}::text` : col} as "${k}"`);
-        const { rows } = await tx.query(`select id, ${cot.join(", ")} from listings where company_id = app.current_company_id() order by id`);
-        return rows.map((r: Record<string, unknown>) => {
-          const { id, ...s } = r;
+        const { rows } = await tx.query(
+          `select l.id, ${cot.join(", ")}, ${FACTS_SQL.creatorUserId} as "creatorUserId", ${FACTS_SQL.statusesReached} as "statusesReached"
+           from listings l where l.company_id = app.current_company_id() order by l.id`,
+        );
+        const nguoiXem = await viewerOf(tx, ctx.userId);
+        return rows.flatMap((r: Record<string, unknown>) => {
+          const { id, creatorUserId, statusesReached, ...s } = r;
+          const facts: VisibilityFacts = { creatorUserId: String(creatorUserId), statusesReached: statusesReached as string[] };
+          if (!canRead(nguoiXem, facts)) return [];
           const st = { ...s, lastConfirmedAt: s.lastConfirmedAt instanceof Date ? s.lastConfirmedAt.toISOString() : null } as ListingState;
-          return view(String(id), st);
+          return [view(String(id), st, facts)];
         });
       });
       return c.json(ds, 200);
@@ -138,9 +149,12 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if ("code" in ctx) return tra(c, ctx);
       const { listingId } = c.req.valid("param");
       if (!/^[0-9a-f-]{36}$/i.test(listingId)) return tra(c, API_ERRORS.notFound);
-      const events = await withCompany(appPool, ctx, (tx) => loadEvents(tx, listingId));
-      if (!events.length) return tra(c, API_ERRORS.notFound);
-      return c.json({ ...view(listingId, foldListing(events)), events }, 200);
+      const kq = await withCompany(appPool, ctx, async (tx) => ({ events: await loadEvents(tx, listingId), nguoiXem: await viewerOf(tx, ctx.userId) }));
+      if (!kq.events.length) return tra(c, API_ERRORS.notFound);
+      const facts = factsFromEvents(kq.events);
+      // «Chỉ tôi» của người khác: cùng câu trả lời với hàng không có (AC-4).
+      if (!canRead(kq.nguoiXem, facts)) return tra(c, API_ERRORS.notFound);
+      return c.json({ ...view(listingId, foldListing(kq.events), facts), events: kq.events }, 200);
     },
   );
 }
