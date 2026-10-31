@@ -49,6 +49,7 @@ evals:
   - id: E6
     criterion: AC-6
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mã hoá số chủ: ghi qua API chỉ để lại bản mã» có mặt và ok — sau PUT với '0900 000 012': owner_phone null, owner_phone_enc dài 39 byte bắt đầu 0x01, owner_phone_hash 32 byte; quét chữ của mọi dòng ba bảng (listing_owners, owner_phone_reveals, listing_events của hàng) đọc bằng vai chủ — row::text cộng encode(...,'hex'|'base64'|'escape') từng cột bytea — không chứa bốn dạng của số; đối chứng dương cùng hàm quét: cấy chuỗi '0900000012' vào văn bản quét thì hàm báo dạng bị bắt; GET owner trả hasPhone true, không khoá ownerPhone. Chiều đỏ: ghi số rõ hay bản mã thiếu → ca đỏ."
     paths: [packages/api/src/owners/**, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql]
@@ -57,6 +58,7 @@ evals:
   - id: E7
     criterion: AC-7
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca của hàng 11 «mở số: đúng số, mỗi lần một sự kiện» (owners.test.ts) vẫn có mặt và ok — bốn lần mở trả {ownerPhone:'0900000012'}, owner_phone_reveals tăng đúng 4, người không thấy nguồn 403 'listing-agent-required' và 0 dòng; ca «mã hoá số chủ: hàm mở số trả bản mã, không trả số» ok — vai API gọi thẳng app.reveal_owner_phone nhận Buffer bắt đầu 0x01, không phải chuỗi số; trong bộ cách ly, các ca mở số đổi sang so Buffer bản mã đã chèn. Chiều đỏ: hàm trả số hay bỏ ghi sự kiện → ca đỏ."
     paths: [packages/api/src/owners/**, packages/api/test-db/owners.test.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/tests/isolation.test.mjs]
@@ -65,6 +67,7 @@ evals:
   - id: E8
     criterion: AC-8
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mã hoá số chủ: bản mã chép sang hàng khác hay bị sửa không ra số» có mặt và ok — hai hàng A ('0900000021'), B ('0900000022'); vai chủ chép owner_phone_enc của A sang B → mở số B trả mã ≥ 400 khác 200, thân không chứa bốn dạng của số A hay B, owner_phone_reveals của B không đổi; đổi một byte bản mã của B → cùng kết cục; đối chứng dương: khôi phục bản mã gốc của B → mở số ra '0900000022'. Chiều đỏ: bỏ AAD → ca đỏ «mở số B ra số A»."
     paths: [packages/api/src/owners/**, packages/api/test-db/ma-hoa-so-chu.test.ts]
@@ -73,6 +76,7 @@ evals:
   - id: E9
     criterion: AC-9
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mã hoá lại: số rõ thành bản mã, chạy lại không đổi byte» có mặt và ok — trong giao dịch hoàn lại: tạm gỡ ràng buộc, cấy ba dòng số rõ ở hai sàn ('0900000031..33'), dựng lại ràng buộc NOT VALID; maHoaLai lần một báo 3, mọi dòng owner_phone null, có bản mã và dấu vết, pg_constraint.convalidated = true; ca dùng một sàn thử thật (người thấy nguồn đăng nhập) nên sau commit-mô-phỏng của giao dịch ca, mở số từng dòng qua POST …/owner/phone-reveal của API ra đúng số của dòng, owner_phone_reveals tăng đúng 3 (nếu ca chọn giao dịch hoàn lại thì gọi đường API trong cùng client giao dịch — cách nào cũng phải qua revealPhone của API, không tự dựng ngữ cảnh rồi giải mã); lần hai báo 0, bản mã và dấu vết bằng từng byte so với sau lần một; ca «mã hoá lại: lệnh dòng lệnh chạy hai lần» ok — spawn node --import tsx packages/api/van-hanh/ma-hoa-lai.ts hai lần, mã thoát 0 cả hai, stdout+stderr không chứa bốn dạng của mọi số mẫu và không chứa khoá; ca «mã hoá lại: thiếu khoá hay khoá dev thì từ chối, không chạm dòng» ok — spawn lệnh ba lần (không OWNER_PHONE_KEY · khoá sai dạng · khoá dev), mỗi lần mã thoát khác 0, stderr khớp /OWNER_PHONE_KEY/ (thông điệp ghim), đếm owner_phone is not null trước và sau bằng nhau; đối chứng dương cùng ca: khoá thử hợp lệ → mã thoát 0. Chiều đỏ: mã hoá lại dòng đã có bản mã hay quên validate → ca đỏ nêu vế."
     paths: [packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql]
