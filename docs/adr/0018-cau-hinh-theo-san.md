@@ -1,6 +1,6 @@
 # ADR-0018: Cấu hình theo sàn — khai báo có rào
 
-Ngày: 2026-11-01 · Trạng thái: **đề xuất** (Hỏi-1..3 chờ chủ kho) · Liên quan: Tham chiếu §4 «Cấu hình sàn», §7, §8 luật
+Ngày: 2026-11-01 · Trạng thái: **đề xuất** (Hỏi-2 đã quyết 1/11; Hỏi-1, Hỏi-3 chờ chủ kho) · Liên quan: Tham chiếu §4 «Cấu hình sàn», §7, §8 luật
 7, 13, 17, 18, 20, 24, 25, §12, §13; Kiến trúc §0, §1; bất biến 1–4; ADR-0008 (một đường ghi, sự kiện chỉ thêm), ADR-0010
 (lớp nguồn), ADR-0011 (nhập dữ liệu, từ điển của sàn), ADR-0016 (bộ trường theo loại hình); hàng 22, 23, 25, 31, 44–50,
 67–71 của lộ trình · sổ: [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md) · đề xuất hàng:
@@ -33,7 +33,7 @@ D (hàng 72, PR #45):
   2c0a7cf đã ghi «chỗ khai duy nhất; SQL và lối API không chép lại con số»), ngưỡng ép giá 10 ngày (hàng 22 sắp dựng),
   điều kiện Sẵn sàng bán (hàng 23 sắp dựng). Sáu hàng Cài đặt sàn 45–50 (P1) sẽ phải gom lại; không hàng nào của 45–50
   đứng trên một chỗ khai chung.
-- **Kiểm kê**: 27 điểm mở hay đề xuất, 5 ứng viên chưa mở, 19 điều khoá — từng dòng kèm nguồn ở
+- **Kiểm kê**: 28 điểm mở hay đề xuất, 5 ứng viên chưa mở, 19 điều khoá — từng dòng kèm nguồn ở
   [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md). 3 điểm đã có trong mã hay nhánh, đều khai một chỗ, chưa
   đọc theo sàn.
 - **Hàng 25 đã cho thấy hình**: lõi giữ luật và mặc định, cơ sở dữ liệu chở dữ kiện, SQL không chứa con số (migration
@@ -81,7 +81,7 @@ D (hàng 72, PR #45):
      | C. Bảng có kiểu, một cột mỗi điểm | Cơ sở dữ liệu kiểm kiểu, khoảng | Mỗi điểm mới là một migration T3; cột thưa dần theo số điểm; không có lịch sử nếu không thêm bảng |
      | D. EAV có kiểu (`value_int`, `value_text`…) | Kiểu ở cơ sở dữ liệu mà không cần cột mới | Hai nơi giữ kiểu (cột nào và sổ); đọc phải ghép; lợi ích của C mà không đủ chặt |
 
-   - Khuyến nghị (A). Căn cứ: 21 trong 27 điểm là giá trị đơn nhỏ (sổ, mục «Đếm»); điểm nào cơ sở dữ liệu phải tự giữ
+   - Khuyến nghị (A). Căn cứ: 22 trong 28 điểm là giá trị đơn nhỏ (sổ, mục «Đếm»); điểm nào cơ sở dữ liệu phải tự giữ
      luật thì đã đi đường riêng — trần lớp ở ràng buộc, quyền nguồn ở `app.can_see_source` — không qua cấu hình.
 4. **Hiệu lực khai theo từng điểm.** `tính lại`: đọc lúc tính, áp ngay cho mọi thứ (ngưỡng hàng đợi, cách hiện trang
    khách). `mới`: đối tượng ghi lại số cấu hình lúc tạo — lead mang hạn của lúc chia, giá bao phí mang định nghĩa và tỉ
@@ -92,10 +92,14 @@ D (hàng 72, PR #45):
    - Khuyến nghị (A).
 5. **Luật nghiệp vụ: tham số có kiểu trước; luật dựng sẵn chọn một khi sàn khác hình; bảng quyết định chỉ khi có số đo.**
    Ba bậc, mở bậc sau chỉ khi bậc trước hụt:
-   1. **Tham số** (số, có / không, tập con) cho mọi điểm của phần A sổ — đủ cho 21 giá trị đơn.
-   2. **Chọn một luật dựng sẵn** (`enum`) khi các sàn khác nhau ở hình của luật, không chỉ ở con số: `lead.routingRule`
-      bản đầu một giá trị — cùng chủ trước, rồi đầu chủ phụ trách toà lâu chưa được chia nhất (hàng 25 AC-1). Luật thứ
-      hai (chia đều, theo tải, theo ca) là một hàm mới ở lõi, có bộ ca riêng, thêm vào `enum`.
+   1. **Tham số** (số, có / không, tập con) cho mọi điểm của phần A sổ — đủ cho 22 giá trị đơn.
+   2. **Chọn một trong thực đơn chiến lược dựng sẵn** (`enum`) khi các sàn khác nhau ở hình của luật, không chỉ ở con
+      số. **Ca mẫu số một: chia lead** — chủ kho 1/11 (giám sát chuyển): «phân phối lead nó gần như là chuẩn của nhiều
+      hệ thống CRM, và chính chủ sàn cũng chưa chắc cách nào là tốt nhất… nên cứng là không triển khai được». Thực đơn
+      cố định năm chiến lược: theo khu + vòng lần lượt (mặc định, hàng 25 AC-1) · vòng toàn sàn · theo tải · kho chung
+      tự nhận · trưởng nhóm chia tay; cùng hạn nhận, hạn gọi và cách báo quá hạn (sổ #1–#3a). «Cùng chủ về cùng đầu
+      chủ» đứng trước mọi chiến lược (luật 20). Mỗi chiến lược là một hàm thuần ở lõi có bộ ca riêng; thêm chiến lược thứ
+      sáu là thêm một hàm và một giá trị `enum`, không phải sàn tự viết. Hàng 25 dựng thực đơn, hàng 48 dựng màn.
    3. **Bảng quyết định** ở một điểm đã biết: dữ kiện cố định của điểm ấy (khu, toà, loại hình, khoảng giá, nhu cầu…),
       phép so cố định (`=`, `∈`, `<`, `≤`, `giữa`), khớp dòng đầu, dòng cuối luôn là «mọi trường hợp» = mặc định, kết quả
       phải nằm trong khoảng của sổ. Không ngôn ngữ kịch bản, không biểu thức tự viết. Chưa mở ở bản đầu (mục chờ CH6).
@@ -103,9 +107,10 @@ D (hàng 72, PR #45):
      luật sàn viết là một chương trình máy chấm không chứng được trước (mục 6), trợ lý AI và người dựng phải đọc luật
      của từng sàn mới biết hệ thống làm gì, và trái «không công thức» của §7. (C) chỉ tham số, không bao giờ luật — sàn
      thứ hai chia lead khác hình thì không chiều được.
-   - Khuyến nghị (A) theo ba bậc. Căn cứ: hàng 25 Hỏi-5 — luật chia lead là chuyện thu nhập, chủ kho quyết từng luật,
-     không phải máy cho sàn tự viết; bảng 12 ô `bang-xem-nguon.json` cho thấy bảng quyết định của mình chạy được và
-     chấm được khi cần.
+   - Khuyến nghị (A) theo ba bậc. Căn cứ: lời chủ kho 1/11 — chia lead phải chọn được, nhưng từ thực đơn mà các hệ
+     thống CRM đã dùng, không phải luật sàn tự viết; hàng 25 Hỏi-5 — chia lead là chuyện thu nhập của đầu chủ, mỗi
+     chiến lược cần chủ kho duyệt và có bộ ca; bảng 12 ô `bang-xem-nguon.json` cho thấy bảng quyết định của mình chạy
+     được và chấm được khi cần.
 6. **Máy chấm chứng minh hành vi khi cấu hình đổi** — điều kiện cho mọi hàng thêm hay đọc một điểm:
    - **Hai điểm và hai biên**: mỗi điểm mở có ca ở mặc định, ở một giá trị khác trong khoảng, ở hai biên của khoảng;
      giá trị ngoài khoảng → 400 nêu khoá. Hàm luật nhận cấu hình làm tham số (quyết định 2) nên ca là ca thuần của lõi.
@@ -177,8 +182,9 @@ Giữ hướng «khai báo có rào» và sáu ý của giám sát; năm chỗ k
    2 (nguồn chỉ thấy trên hàng mình đọc được — Tham chiếu §12 dòng 31/10 «Lớp trường nguồn»); «Nhóm» còn chưa có. Mở lại khi có hàng «Nhóm».
 2. **«Thuế phí» không cần bảng quyết định**: tỉ lệ thuế, lệ phí do luật đặt, là số; «bao phí» là tập con của ba khoản —
    tham số có kiểu đủ (sổ #8–#11).
-3. **Chia lead bản đầu là chọn một luật dựng sẵn, không bảng quyết định** — hàng 25 Hỏi-5: chia lead là chuyện thu nhập,
-   chủ kho chốt từng luật; bảng quyết định chờ sàn thứ hai khác hình luật (CH6).
+3. **Chia lead là thực đơn chiến lược cố định, không bảng quyết định** — chủ kho 1/11: cứng là không triển khai được,
+   nhưng chiến lược lấy từ chuẩn của các hệ thống CRM (năm chiến lược, quyết định 5); bảng quyết định chờ sàn thật cần
+   điều kiện mà thực đơn không nói được (CH6).
 4. **Thêm cột «ghi đè dưới sàn»**: Tham chiếu §13 đã có hai chỗ không phải cấu hình sàn — đầu chủ sửa phí môi giới từng
    căn, người gửi sửa mức chia từng bộ. Không tách ra thì sẽ có người làm «cấu hình theo căn».
 5. **Sổ khai cả điều khoá** (19 dòng): trợ lý AI, người dựng và quản trị sàn đọc một chỗ là biết điều gì không mở — đỡ
@@ -195,6 +201,8 @@ Một chỗ thêm: hàng nền không chặn các dãy đang chạy. Hàng 25 đ
   `routing/index.ts` đọc mặc định từ sổ.
 - Cơ sở dữ liệu: `company_config_events`, `company_config` — luật theo dòng, ca cách ly; số migration giữ chỗ lúc mở
   hàng 82 (luật 24 của gói đợt). Hạn lead ghi vào lead lúc chia (cột mới trên bảng của hàng 25, migration sau 011).
+  Hàng 25 (dãy L) dựng thực đơn chia lead và có thể đặt chỗ lưu cấu hình chia lead trước hàng 82: khoá giữ tên `lead.*`
+  của sổ, hàng 81 đưa chúng vào sổ chung, hàng 82 chuyển giá trị sang `company_config` mà không đổi khoá.
 - API: `GET /api/v1/company/config`, `PUT /api/v1/company/config/{key}` — đường ghi duy nhất của cấu hình.
 - Từ nay **hàng thêm một con số hay lựa chọn của sàn khai điểm ấy vào sổ** (tài liệu và mã) trong cùng PR; Cổng Phạm vi
   hỏi «điểm này đã ở sổ chưa».
@@ -205,13 +213,13 @@ Một chỗ thêm: hàng nền không chặn các dãy đang chạy. Hàng 25 đ
 - **Hỏi-1 — luật mở một điểm.** Khuyến nghị: một điểm sàn chỉnh được khi Tham chiếu đã chốt là mặc định, hoặc hai sàn
   thật cần hai giá trị khác nhau; không làm đối tượng tự tạo, công thức, luồng tự vẽ, kịch bản cho tới khi có số đo từ
   hai sàn thật (quyết định 7). Lối khác: mở rộng như Salesforce ngay từ bản đầu — trái §7 và Kiến trúc §0 đã chốt.
-- **Hỏi-2 — chia lead ở Cài đặt sàn bản đầu.** Khuyến nghị: chọn một trong các luật dựng sẵn, bản đầu một luật (cùng chủ,
-  rồi theo toà lâu chưa chia nhất); luật thứ hai và bảng quyết định chờ sàn thật (quyết định 5). Lối khác: dựng bảng
-  quyết định ngay ở hàng 48.
+- **Hỏi-2 — chia lead. Đã quyết 1/11**: chủ kho (giám sát chuyển) — «phân phối lead nó gần như là chuẩn của nhiều hệ
+  thống CRM, và chính chủ sàn cũng chưa chắc cách nào là tốt nhất… nên cứng là không triển khai được». Theo đó: thực
+  đơn năm chiến lược cố định, hạn nhận, hạn gọi, cách báo quá hạn sàn chọn được (sổ #1–#3a); bảng quyết định chờ (CH6).
 - **Hỏi-3 — cách lưu.** Khuyến nghị: sổ ở mã + bảng khoá–giá trị có sự kiện, sàn chưa đổi thì đi theo mặc định của sản
   phẩm (quyết định 1, 3). Lối khác: bảng có kiểu một cột mỗi điểm — mỗi điểm mới một migration T3.
 
-Duyệt theo khuyến nghị cả ba thì hàng 81 mở được ngay, không chờ dãy nào.
+Duyệt theo khuyến nghị Hỏi-1 và Hỏi-3 thì hàng 81 mở được ngay, không chờ dãy nào.
 
 ## Nguồn đã kiểm (01/11/2026)
 

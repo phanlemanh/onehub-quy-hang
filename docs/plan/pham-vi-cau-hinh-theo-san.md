@@ -55,8 +55,9 @@ chặn Cài đặt sàn 45–50.
 
 ## Chờ điều kiện
 
-- H8 (CH6) — chưa sàn thứ hai khác hình luật; mở lại khi Cổng Phạm vi hàng 48 hay một sàn thật cần luật chia thứ hai,
-  hay một điểm có hai sàn thật khác hình luật.
+- H8 (CH6) — chia lead đã là thực đơn năm chiến lược (hàng 25 dựng, hàng 48 màn; chủ kho 1/11); bảng quyết định mở lại
+  khi sàn thật cần điều kiện mà thực đơn không nói được (chiến lược khác theo loại hình, khoảng giá), hay một điểm khác
+  có hai sàn thật khác hình luật.
 - H9 (CH7) — mở lại khi hai sàn thật xin điều kiện Sẵn sàng bán khác nhau.
 - H10 (CH8) — Tham chiếu §13 «hỏi ở buổi phỏng vấn sau»; mở lại khi phỏng vấn trả lời có.
 - H11 (CH9) — Tham chiếu §7 «để sau»; mở lại khi hai sàn thật xin.

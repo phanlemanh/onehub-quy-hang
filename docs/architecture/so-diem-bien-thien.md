@@ -31,7 +31,8 @@ phép», là đề xuất của phiên này, chốt ở Cổng Phạm vi của h
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `lead.acceptDeadlineMinutes` | Hạn nhận lead | `int` phút | 15 | 5–120 | Quản trị sàn | — | mới | company_internal | Mở | Tham chiếu luật 20, §13 (chốt 29/10); `DEFAULT_LEAD_DEADLINES` ở `packages/core/src/routing/index.ts` (nhánh hàng 25) | 48 |
 | 2 | `lead.firstCallDeadlineMinutes` | Hạn gọi lần đầu | `int` phút | 30 | 10–240, không nhỏ hơn #1 | Quản trị sàn | — | mới | company_internal | Mở | Như #1 | 48 |
-| 3 | `lead.routingRule` | Cách chia lead không trùng | `enum{building_least_recent}` | `building_least_recent` — cùng chủ trước, rồi đầu chủ phụ trách toà lâu chưa được chia nhất | Chỉ các luật dựng sẵn; bản đầu một luật | Quản trị sàn | Trưởng nhóm giao tay từng lead (hàng 25 AC-7) | mới | company_internal | Mở | Luật 20 «chia theo luật của sàn»; hàng 25 AC-1, Hỏi-5 (chia đều là chuyện thu nhập của đầu chủ) | 48 |
+| 3 | `lead.routingStrategy` | Cách chia lead không trùng | `enum{zone_round_robin, company_round_robin, least_loaded, open_pool, manual}` | `zone_round_robin` — theo khu phụ trách, vòng lần lượt (lâu chưa được chia nhất) | Năm chiến lược của thực đơn; «cùng chủ về cùng đầu chủ» luôn đứng trước | Quản trị sàn | Trưởng nhóm giao tay từng lead (hàng 25 AC-7) | mới | company_internal | Mở | Luật 20 «chia theo luật của sàn»; chủ kho 1/11 «cứng là không triển khai được» (giám sát chuyển); hàng 25 AC-1, Hỏi-5 | 25 (thực đơn), 48 (màn) |
+| 3a | `lead.overdueAlert` | Cách báo lead quá hạn | `set{team_lead, company_admin}` người nhận; kênh theo hàng 26 | `{team_lead}`, trong app | tập con khác rỗng | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 20 «quá hạn thì báo trưởng nhóm»; chủ kho 1/11 | 25, 48 |
 
 ### A2. Độ tươi, hàng đợi, nhắc trước khi gửi — luật 18, 25, hàng 22, 48
 
@@ -94,7 +95,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | --- | --- | --- | --- | --- |
 | 28 | Sàn thêm điều kiện riêng cho «Sẵn sàng bán» (chỉ thêm, không bớt của lõi) | Chưa sàn nào hỏi; điều kiện tối thiểu là ý nghĩa của «Đang bán» trên trang khách | Hai sàn thật xin điều kiện khác nhau | CH7 |
 | 29 | Ngưỡng ép giá khác theo loại căn hay mức giá | §13 «Hỏi ở buổi phỏng vấn sau» | Phỏng vấn trả lời có | CH8 |
-| 30 | Luật chia lead thứ hai (chia đều, theo tải, theo ca) — và bảng quyết định nếu hình luật khác nhau | Hàng 25 Hỏi-5: chuyện thu nhập của đầu chủ; chưa có sàn thứ hai | Cổng Phạm vi hàng 48 hay sàn thật thứ hai cần luật khác | CH6 |
+| 30 | Bảng quyết định cho chia lead (chiến lược khác theo loại hình, khoảng giá, nhu cầu) và chiến lược thứ sáu (theo ca, theo giờ) | Thực đơn năm chiến lược (#3) chưa được sàn thật dùng | Sàn thật cần điều kiện mà thực đơn không nói được | CH6 |
 | 31 | Trường riêng kiểu chữ, số, ngày | §7 «để sau» | Hai sàn thật xin | CH9 |
 | 32 | Sao cấu hình của một sàn mẫu cho sàn mới | Mới có một sàn | Đội vận hành mở sàn thứ hai thật | CH11 |
 
@@ -124,12 +125,13 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 
 ## Đếm
 
-- **27 điểm** ở phần A: 25 «Mở» (Tham chiếu hay ADR đã chốt là mặc định của sàn), 2 «Đề xuất» (#14, #20). Cột
-  «Khoảng» của cả 27 là đề xuất của phiên này, chốt ở Cổng Phạm vi của hàng màn. 6 trong 27 là đối tượng cấu hình có
-  bảng riêng (`map`: #19, #21, #22, #25, #26, #27); 21 là giá trị đơn.
+- **28 điểm** ở phần A (#1–#27 và #3a): 26 «Mở» (Tham chiếu, ADR hay lời chủ kho đã chốt là mặc định của sàn), 2
+  «Đề xuất» (#14, #20). Cột «Khoảng» là đề xuất của phiên này, chốt ở Cổng Phạm vi của hàng màn. 6 trong 28 là đối tượng
+  cấu hình có bảng riêng (`map`: #19, #21, #22, #25, #26, #27); 22 là giá trị đơn.
 - **Đã có trong mã hay nhánh**: 3 điểm (#1, #2 ở nhánh hàng 25; #4 ở `main`) — đều khai một chỗ, chưa đọc theo sàn.
+  Hàng 25 (dãy L) đang sửa hợp đồng theo thực đơn chia lead của #3, #3a (1/11); khoá nó đặt khớp tên `lead.*` ở đây.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G), điều kiện K7 (hàng 23, dãy H) — chưa có nhánh mã lúc kiểm.
 - **5 ứng viên** ở phần B, **19 điều khoá** ở phần C.
-- Theo màn: hàng 48 nhận 5 điểm (#1–#5), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
+- Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào.

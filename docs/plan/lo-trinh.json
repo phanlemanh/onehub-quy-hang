@@ -1862,12 +1862,12 @@
     {
       "ma": "H8",
       "dot": "cau-hinh-theo-san-0111",
-      "cau_giao": "Quản trị sàn đặt luật chia lead hay ngưỡng bằng một bảng quyết định — dữ kiện và phép so cố định, khớp dòng đầu, dòng cuối là mặc định",
-      "ly_do": "Bản đầu một luật chia dựng sẵn; chia lead là chuyện thu nhập của đầu chủ (hàng 25 Hỏi-5), chưa có sàn thứ hai khác hình luật — ADR-0018 quyết định 5",
+      "cau_giao": "Quản trị sàn đặt chiến lược chia lead hay một ngưỡng bằng một bảng quyết định — dữ kiện và phép so cố định, khớp dòng đầu, dòng cuối là mặc định",
+      "ly_do": "Chia lead đã là thực đơn năm chiến lược sàn chọn (chủ kho 1/11; hàng 25 dựng, hàng 48 màn); chưa sàn thật nào cần điều kiện mà thực đơn không nói được — ADR-0018 quyết định 5",
       "phu": [
         "CH6"
       ],
-      "mo_lai_khi": "Cổng Phạm vi hàng 48 hay một sàn thật cần luật chia thứ hai, hoặc một điểm có hai sàn thật khác hình luật"
+      "mo_lai_khi": "Sàn thật cần chiến lược chia khác theo loại hình, khoảng giá hay nhu cầu, hoặc một điểm có hai sàn thật khác hình luật"
     },
     {
       "ma": "H9",
