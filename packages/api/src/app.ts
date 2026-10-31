@@ -9,6 +9,7 @@ import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "./auth/constants";
 import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
+import { registerCatalogRoutes } from "./catalog/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 
 /**
@@ -139,6 +140,7 @@ export function createApi(deps: ApiDeps) {
 
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
+  registerCatalogRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",
