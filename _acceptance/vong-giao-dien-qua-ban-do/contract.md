@@ -5,7 +5,7 @@ slug: vong-giao-dien-qua-ban-do
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-vong-giao-dien-qua-ban-do-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T12:52:33Z
@@ -117,3 +117,11 @@ QK4 [SUY-TỪ-REPO: docs/plan/pham-vi-ban-do-khuon-3110.md], bản đồ hàng 5
 - Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm tự động của danh sách màn mẫu có thể vẫn xanh dù bản đồ mất một nhóm, nên sự cố kiểu đó có thể không bị bắt sớm. — `packages/ui-lint/tests/doi-chieu.test.mjs`
 - Ngoài-7 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bộ kiểm hồ sơ chỉ phát hiện khi kế hoạch thiếu nhóm, còn nhóm thừa hay đã bị xoá khỏi bản đồ vẫn được cho qua. — `_acceptance/vong-giao-dien-qua-ban-do/thu/kiem-ho-so.mjs`
 - Ngoài-8 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bộ kiểm hồ sơ chấp nhận mốc so sánh của số đo là bất kỳ điểm nào trước đó, nên số đo có thể tính trên khoảng rộng hơn vòng thật mà không bị báo. — `_acceptance/vong-giao-dien-qua-ban-do/thu/kiem-ho-so.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Nhật ký vòng hỏng một dòng thì số đo có thể thiếu giờ máy hay lượt gọi người mà không cảnh báo.
+  - Ngoài-2: Trang chỉ chuyển hướng sửa thành có giao diện mà dòng khai hàm không đổi thì chấm theo vòng có thể xếp nhầm là nợ cũ; lint toàn cây vẫn đỏ.
+  - Ngoài-3: Trang mới viết bằng dạng xuất mặc định khác «export default function» không bị kiểm là màn ngoài bản đồ.
+  - Ngoài-4: Vòng không còn chạm màn thì kế hoạch và trang đối chiếu cũ của lần chạy trước không bị xoá.
+  - Ngoài-5: Bài kiểm danh sách màn mẫu không ghim bốn nhóm viết trước, nên bản đồ mất một nhóm vẫn có thể xanh.
+  - Ngoài-7: Bộ kiểm hồ sơ chỉ bắt kế hoạch thiếu nhóm, không bắt nhóm thừa.
+  - Ngoài-8: Bộ kiểm hồ sơ nhận mốc số đo là bất kỳ tổ tiên nào, không ghim đúng điểm rẽ nhánh.
