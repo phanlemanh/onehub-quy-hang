@@ -5,7 +5,7 @@ slug: lop-truong-nguon
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-lop-truong-nguon-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T03:44:46Z
@@ -128,3 +128,10 @@ Quét morphological-scan, preset entity-feature, cho thực thể «hồ sơ ch�
   ở lõi.
 - Không sửa `packages/core/src/data-classes.ts`: lớp `source` và trần đã có.
 - Dãy N chạy Postgres 5551 (container `quy-hang-db-N`), dev 3471.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Kết quả trả về của bốn lời gọi chủ nhà không được máy đối chiếu với khuôn đã công bố, nên một lần sửa sau làm lệch khuôn sẽ không bị báo sớm.
+  - Ngoài-2: Luật trưởng nhóm gán đầu chủ nằm ở lớp API chứ chưa ở lõi; thêm màn hay kênh gán khác sẽ phải viết lại luật này.
+  - Ngoài-3: Khi nhiều người cùng mở hồ sơ chủ nhà của một căn, các lần xem phải chờ nhau và chờ cả lúc căn đang được cập nhật.
+  - Ngoài-4: Nếu cấu hình quyền của hệ thống hỏng, người đáng được mở số sẽ thấy báo «không có quyền» thay vì báo lỗi hệ thống.
+  - Ngoài-5: Gọi thẳng bằng mã căn sai dạng đặc biệt nhận lỗi máy chủ thay vì «không tìm thấy»; người dùng qua màn hình không gặp.
+  - Ngoài-6: Bài kiểm danh sách căn không lộ chủ nhà vẫn xanh nếu danh sách trả về trống.

@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 1d4d798f69ada6a4637aeb6c283f559ac027d6ac
-human_signoff:
+human_signoff: Manh Phan 2026-10-31
 ---
 
 # Evidence Report: lop-truong-nguon
