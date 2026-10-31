@@ -119,6 +119,35 @@ jobs:
       - name: product-map --check
         run: node "$CLAUDE_PLUGIN_ROOT/scripts/product-map.mjs" --root . --check
 
+  # Môi trường thật (ADR-0009): sau khi gộp main, áp migration lên Supabase rồi chạy lại bộ kiểm cách ly NGAY TRÊN cơ
+  # sở dữ liệu thật; chỉ khi cả hai xanh mới gọi deploy hook của Vercel — main tắt tự deploy (apps/web/vercel.json), nên
+  # code mới không bao giờ chạy trên schema cũ. Chỉ chạy khi push main: không nằm trong ci-ok (trên PR job này bỏ qua).
+  deploy:
+    name: deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [check, isolation, secrets, gate]
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run db:migrate
+      # Chỉ bộ kiểm cách ly (mỗi ca rollback, không để lại dữ liệu); test API ghi và xoá dữ liệu nên chỉ chạy ở job isolation.
+      - run: npm run test:isolation -w @quy-hang/db
+      - name: Deploy bản main lên Vercel
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: curl -fsS -X POST "$HOOK" > /dev/null
+
   # Check bắt buộc duy nhất của bảo vệ nhánh: xanh khi và chỉ khi mọi job trên xanh.
   ci-ok:
     name: ci-ok

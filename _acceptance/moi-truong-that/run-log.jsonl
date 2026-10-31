@@ -1,0 +1,18 @@
+{"ts":"2026-10-31T01:20:11Z","round":1,"evalId":"E1","run_id":"moi-truong-that-E1-20261031T012011Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:20:19Z","round":1,"evalId":"E2","run_id":"moi-truong-that-E2-20261031T012019Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:20:21Z","round":1,"evalId":"E4","run_id":"moi-truong-that-E4-20261031T012021Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:20:22Z","round":1,"evalId":"E5","run_id":"moi-truong-that-E5-20261031T012022Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:20:34Z","round":1,"evalId":"E3","run_id":"moi-truong-that-E3-20261031T012034Z","exit_code":0,"cmd":"npm run test:isolation -w @quy-hang/db"}
+{"ts":"2026-10-31T01:21:07Z","round":1,"evalId":"E6","run_id":"moi-truong-that-E6-20261031T012107Z","exit_code":0,"cmd":"npm test -w @quy-hang/api"}
+{"ts":"2026-10-31T01:22:15Z","round":1,"evalId":"E7","run_id":"moi-truong-that-E7-20261031T012215Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-ci.mjs"}
+{"ts":"2026-10-31T01:22:15Z","round":1,"evalId":"E8","run_id":"moi-truong-that-E8-20261031T012215Z","exit_code":0,"cmd":"cd \"$VERCEL_LINK_DIR\" && npx -y vercel@latest curl /api/v1/health --deployment \"$APP_URL\" -- -fsS"}
+{"ts":"2026-10-31T01:22:32Z","round":1,"evalId":"E9","run_id":"moi-truong-that-E9-20261031T012232Z","exit_code":0,"cmd":"npm run test:hooks"}
+{"ts":"2026-10-31T01:28:54Z","round":2,"evalId":"E1","run_id":"moi-truong-that-r2-E1-20261031T012854Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:28:57Z","round":2,"evalId":"E2","run_id":"moi-truong-that-r2-E2-20261031T012857Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:29:00Z","round":2,"evalId":"E4","run_id":"moi-truong-that-r2-E4-20261031T012900Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:29:02Z","round":2,"evalId":"E5","run_id":"moi-truong-that-r2-E5-20261031T012902Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"}
+{"ts":"2026-10-31T01:29:29Z","round":2,"evalId":"E3","run_id":"moi-truong-that-r2-E3-20261031T012929Z","exit_code":0,"cmd":"npm run test:isolation -w @quy-hang/db"}
+{"ts":"2026-10-31T01:30:00Z","round":2,"evalId":"E6","run_id":"moi-truong-that-r2-E6-20261031T013000Z","exit_code":0,"cmd":"npm test -w @quy-hang/api"}
+{"ts":"2026-10-31T01:31:01Z","round":2,"evalId":"E7","run_id":"moi-truong-that-r2-E7-20261031T013101Z","exit_code":0,"cmd":"node _acceptance/moi-truong-that/thu/kiem-ci.mjs"}
+{"ts":"2026-10-31T01:31:01Z","round":2,"evalId":"E9","run_id":"moi-truong-that-r2-E9-20261031T013101Z","exit_code":0,"cmd":"npm run test:hooks"}
+{"ts":"2026-10-31T01:32:10Z","round":2,"evalId":"E8","run_id":"moi-truong-that-r2-E8-20261031T013210Z","exit_code":0,"cmd":"cd \"$VERCEL_LINK_DIR\" && npx -y vercel@latest curl /api/v1/health --deployment \"$APP_URL\" -- -fsS"}
