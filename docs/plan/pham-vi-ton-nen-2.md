@@ -26,6 +26,6 @@ nguon: wiki/dot/ton-nen-2.md#85a4e60f45b708157b5705b6b8bc702346d1ac99
 
 - Sáu mục của hàng 13 là ba hành vi (cùng lỗi phân loại 5xx/401 hiện ở ba vòng chấm) trong cùng vùng
   `apps/web/src/lib/sync/**` — cắt thành một hàng (61). Ba hành vi phải xong trước hai tuần thử.
-- `H11-H1` đứng trên hàng 11 (bảng chủ nhà, cửa «Mở số» duy nhất) — hàng 62, hạng T3 (migration, lớp `source`).
-- `H9-N4` đứng trên hàng 9 (tra mã căn) — hàng 63. Không đứng trên hàng 10: danh mục thật có thể đến qua hàng 10 hay qua
+- Mã hoá số chủ (`H11-H1`) đứng trên hàng 11 (bảng chủ nhà, cửa «Mở số» duy nhất) — hàng 62, hạng T3 (migration, lớp `source`).
+- Căn trùng mã (`H9-N4`) đứng trên hàng 9 (tra mã căn) — hàng 63. Không đứng trên hàng 10: danh mục thật có thể đến qua hàng 10 hay qua
   nhập tay, nên tra phải phân biệt hai toà trước cả hai đường.
