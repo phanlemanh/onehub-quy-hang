@@ -16,6 +16,14 @@
     {
       "id": "AC-7",
       "p": "Sẽ giữ nút «Mở số» như cũ: người được thấy nhận đúng số, mỗi lần bấm ghi một dòng lịch sử."
+    },
+    {
+      "id": "AC-11",
+      "p": "Sẽ cất số chủ của lead (ô nhận lead) cũng dưới dạng bản mã; lead cũ được mã hoá lại cùng lệnh, và lead không có số bị cơ sở dữ liệu từ chối."
+    },
+    {
+      "id": "AC-12",
+      "p": "Sẽ giữ đúng kết quả kiểm trùng khi nhập lead (về đúng đầu chủ đang giữ chủ nhà, số viết +84 vẫn khớp) bằng cách so dấu vết, không so số."
     }
   ],
   "wont_do": [
@@ -49,7 +57,7 @@
     },
     {
       "id": "OOS-3",
-      "p": "KHÔNG dựng hàm kiểm trùng — đó là việc của ô nhận lead (hàng 24) và hàng kiểm trùng."
+      "p": "KHÔNG làm kiểm trùng mở rộng ngoài ô nhận lead — việc của hàng kiểm trùng."
     },
     {
       "id": "OOS-4",
@@ -76,14 +84,18 @@
     },
     {
       "i": 3,
-      "p": "Để sau: đổi khoá định kỳ, xoá cột số cũ, hàm kiểm trùng."
+      "p": "Thêm bảng lead của ô nhận lead (vào main trước hàng này): số lead đi vào và đi qua kiểm trùng đều chỉ ở dạng bản mã và dấu vết (AC-11, AC-12)."
     },
     {
       "i": 4,
-      "p": "Không bao giờ: mã hoá bên trong cơ sở dữ liệu — khoá sẽ phải vào cơ sở dữ liệu."
+      "p": "Để sau: đổi khoá định kỳ, xoá cột số cũ, kiểm trùng mở rộng ngoài ô nhận lead."
     },
     {
       "i": 5,
+      "p": "Không bao giờ: mã hoá bên trong cơ sở dữ liệu — khoá sẽ phải vào cơ sở dữ liệu."
+    },
+    {
+      "i": 6,
       "p": "Giả định chờ anh gạch: mọi cột số điện thoại đều có chữ «phone» trong tên; cột đặt tên khác (ví dụ «mobile») sẽ lọt phép quét."
     }
   ],
@@ -107,13 +119,26 @@
     {
       "i": 4,
       "p": "Lệnh sinh khoá trong tài liệu chưa được chạy thử — viết sai định dạng là bản thật không lên. Đã sửa: ca đo chạy đúng lệnh trong tài liệu."
-    }
-  ],
-  "decisions": [
+    },
     {
-      "id": "E10",
-      "q": "Hướng dẫn khoá và mã hoá lại trong ADR đủ để người vận hành làm theo chưa?",
-      "why": "Hội đồng ba người chấm đề xuất ĐẠT: đủ năm ý, dòng biến rỗng, dòng sổ Tham chiếu có mặt."
+      "i": 5,
+      "p": "«Bỏ lead này» trên lead cũ còn số rõ sẽ lỗi cho tới khi chạy lệnh mã hoá lại. Đã sửa: ghi luật chạy mã hoá lại ngay sau khi nâng cơ sở dữ liệu, có ca đo."
+    },
+    {
+      "i": 6,
+      "p": "Bỏ bắt buộc số của lead mà không có chặn thay thì lead có thể mất số. Đã sửa: thêm ràng buộc lead phải có số, có ca đo."
+    },
+    {
+      "i": 7,
+      "p": "Bốn câu cũ còn nói hàm kiểm trùng là việc của hàng khác, trái với tiêu chí mới. Đã sửa cả bốn chỗ."
+    },
+    {
+      "i": 8,
+      "p": "Phép đo chưa bắt được trường hợp dấu vết quên trộn sàn. Đã sửa: đo hai lead cùng số ở hai sàn có dấu vết khác nhau."
+    },
+    {
+      "i": 9,
+      "p": "Hướng dẫn vận hành chỉ đếm số rõ ở chủ nhà. Đã sửa: đếm cả bảng lead, và ca dòng lệnh có cả lead."
     }
   ]
 }
