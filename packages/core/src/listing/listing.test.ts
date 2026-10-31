@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { completeness } from "./completeness";
-import { confirmsWithOwner, SOURCE_KEYS, validatePayload, type EventType, type ListingEvent } from "./events";
+import { confirmsWithOwner, validatePayload, type EventType, type ListingEvent } from "./events";
 import { foldListing } from "./fold";
 import { freshness } from "./freshness";
 
@@ -97,6 +97,9 @@ test("gấp: đã bán giữ giá chốt và ngày bán", () => {
 });
 
 test("payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ chối", () => {
+  // Viết trước — không lấy từ mã đang kiểm: bốn khoá lớp source của bất biến 2.
+  const KHOA_CHU_NHA = ["ownerName", "ownerPhone", "floorPrice", "titleDeedPhoto"];
+  let so = 0;
   const LANH: Record<EventType, Record<string, unknown>> = {
     created: { buildingName: "[Toà mẫu]", unitNumber: "A-1" },
     details_changed: { furnished: "full" },
@@ -110,14 +113,18 @@ test("payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ ch
     assert.ok(laDau.some((e) => e.path === "khoaLa"), `${type}: khoá lạ cấp đầu phải bị bắt`);
     const laLong = validatePayload(type, { ...p, khoi: { khoaLa: 1 } });
     assert.ok(laLong.some((e) => e.path === "khoi.khoaLa"), `${type}: khoá lạ lồng phải bị bắt`);
-    for (const k of SOURCE_KEYS) {
-      assert.ok(validatePayload(type, { ...p, [k]: "x" }).some((e) => e.path === k), `${type}: khoá ${k} cấp đầu`);
+    for (const k of KHOA_CHU_NHA) {
+      const dau = validatePayload(type, { ...p, [k]: "x" }).find((e) => e.path === k);
+      assert.equal(dau?.reason, "thông tin chủ nhà không vào hàng", `${type}: khoá ${k} cấp đầu`);
+      so++;
       const vaoTruong = Object.keys(p)[0] ?? "khoi";
       assert.ok(
         validatePayload(type, { ...p, [vaoTruong]: { [k]: "x" } }).some((e) => e.path === `${vaoTruong}.${k}`),
         `${type}: khoá ${k} lồng trong ${vaoTruong}`,
       );
+      so++;
     }
   }
+  assert.equal(so, 5 * KHOA_CHU_NHA.length * 2, "số lần thử phải bằng ma trận viết trước");
   assert.deepEqual(validatePayload("deleted", {}).map((e) => e.path), ["type"], "loại sự kiện lạ");
 });

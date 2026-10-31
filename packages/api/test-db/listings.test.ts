@@ -201,11 +201,19 @@ test("hai lệnh thắng ngay đồng thời không cùng seq", async () => {
   assert.ok(kq.every((r) => r.status === 200 || r.status === 400), kq.map((r) => r.status).join(","));
   const thanhCong = kq.filter((r) => r.status === 200).length;
   assert.ok(thanhCong >= 1, "ít nhất một lệnh thắng");
-  const { rows } = await appPool.query<{ seq: number }>("select seq from listing_events where listing_id = $1 order by seq", [h.id]);
-  assert.deepEqual(rows.map((r) => r.seq), Array.from({ length: 4 + thanhCong }, (_, k) => k + 1), "seq trùng hay hở");
+  const ev = await suKien(h.id);
+  assert.deepEqual(ev.map((e) => e.seq), Array.from({ length: 4 + thanhCong }, (_, k) => k + 1), "seq trùng hay hở");
+  // Quan hệ thứ tự ghi ↔ trạng thái: chuỗi trạng thái theo seq phải đi đúng bảng chuyển viết tay, và trạng thái cuối
+  // là «to» của sự kiện ghi sau cùng.
+  const NHAN = new Set(["Active>Pending", "Active>Closed", "Pending>Closed"]);
+  const chuoi = ["Active", ...ev.slice(4).map((e) => String(e.payload.to))];
+  for (let k = 1; k < chuoi.length; k++) assert.ok(NHAN.has(`${chuoi[k - 1]}>${chuoi[k]}`), `cặp ghi ${chuoi[k - 1]} → ${chuoi[k]} lọt bảng chuyển`);
   const cuoi = (await (await req(`/api/v1/listings/${h.id}`, a.cookie)).json()) as View;
-  assert.ok(["Pending", "Closed"].includes(cuoi.standardStatus), cuoi.standardStatus);
+  assert.equal(cuoi.standardStatus, chuoi.at(-1), "trạng thái cuối khác sự kiện ghi sau cùng");
+  // Lệnh bị từ chối phải là lệnh Pending đến sau Closed — lối duy nhất bảng chuyển chặn ở đây.
+  if (thanhCong === 1) assert.deepEqual(chuoi, ["Active", "Closed"], "chỉ một lệnh ghi thì đó phải là Closed, Pending bị chặn sau nó");
 });
+
 
 test("thắng ngay vẫn xét bảng chuyển", async () => {
   const a = await sanMoi("L9");
@@ -313,14 +321,46 @@ test("lệnh vào mã hàng của sàn B qua API trả 404, sàn B không đổi
 test("payload theo khuôn chặt qua API: khoá lạ và khoá chủ nhà bị từ chối", async () => {
   const a = await sanMoi("L13");
   const h = await taoHang(a.cookie);
-  for (const payload of [{ furnished: "full", ownerPhone: "0900 000 001" }, { furnished: { ownerName: "[Tên]" } }, { furnished: "full", khoaLa: 1 }]) {
-    const res = await lenh(a.cookie, h.id, { type: "details_changed", payload, expectedVersion: 1 });
-    assert.equal(res.status, 400, JSON.stringify(payload));
-    assert.equal(((await res.json()) as { error: string }).error, API_ERRORS.invalidPayload.code);
+  // Danh sách viết trước — không lấy từ mã đang kiểm. Bốn khoá lớp source của bất biến 2, thêm hai khoá lạ.
+  const KHOA_CHU_NHA = ["ownerName", "ownerPhone", "floorPrice", "titleDeedPhoto"];
+  const KHOA_LA = ["khoaLa", "ghiChuNoiBo"];
+  // Payload lành của từng loại, hợp lệ trên hàng ở nấc Chưa đủ để rao; trường để lồng khoá vào.
+  const LANH: [string, Record<string, unknown>, string][] = [
+    ["created", { buildingName: "[Toà]", unitNumber: "B-1" }, "buildingName"],
+    ["details_changed", { furnished: "full" }, "furnished"],
+    ["price_changed", { listPrice: 2_000_000_000, feeInclusion: "included" }, "feeInclusion"],
+    ["status_changed", { to: "Hold" }, "to"],
+    ["owner_confirmed", {}, "khoi"],
+  ];
+  const gui = (type: string, payload: Record<string, unknown>, v: number) =>
+    type === "created" ? send("POST", "/api/v1/listings", payload, a.cookie) : lenh(a.cookie, h.id, { type, payload, expectedVersion: v });
+  let v = 1;
+  let so = 0;
+  for (const [type, lanh, truong] of LANH) {
+    for (const k of [...KHOA_CHU_NHA, ...KHOA_LA]) {
+      const chuNha = KHOA_CHU_NHA.includes(k);
+      for (const [cap, payload, duong] of [
+        ["cấp đầu", { ...lanh, [k]: "x" }, k],
+        ["lồng", { ...lanh, [truong]: { [k]: "x" } }, `${truong}.${k}`],
+      ] as const) {
+        const n = await demSuKien(h.id);
+        const res = await gui(type, payload, v);
+        const than = (await res.json()) as { error: string; details?: { path: string; reason: string }[] };
+        const ten = `${type} · ${k} · ${cap}`;
+        assert.equal(res.status, 400, ten);
+        assert.equal(than.error, API_ERRORS.invalidPayload.code, ten);
+        const loi = than.details?.find((d) => d.path === duong);
+        assert.ok(loi, `${ten}: lỗi phải nêu đúng đường khoá ${duong}, thấy ${JSON.stringify(than.details)}`);
+        if (chuNha && cap === "cấp đầu") assert.equal(loi.reason, "thông tin chủ nhà không vào hàng", ten);
+        assert.equal(await demSuKien(h.id), n, `${ten}: không được ghi`);
+        so++;
+      }
+    }
+    // Đối chứng cùng hình: payload lành của loại này được ghi.
+    const ok = await gui(type, lanh, v);
+    assert.equal(ok.status, type === "created" ? 201 : 200, `đối chứng ${type}: ${await ok.clone().text()}`);
+    if (type !== "created") v++;
   }
-  const tao = await send("POST", "/api/v1/listings", { buildingName: "[Toà]", floorPrice: 1 }, a.cookie);
-  assert.equal(tao.status, 400, "tạo hàng mang giá đáy");
-  assert.equal(await demSuKien(h.id), 1, "không lệnh sai nào được ghi");
-  // Đối chứng: payload cùng hình không có khoá ấy được ghi.
-  assert.equal((await lenh(a.cookie, h.id, { type: "details_changed", payload: { furnished: "full" }, expectedVersion: 1 })).status, 200);
+  assert.equal(so, LANH.length * (KHOA_CHU_NHA.length + KHOA_LA.length) * 2, "số lần thử phải bằng ma trận viết trước");
 });
+
