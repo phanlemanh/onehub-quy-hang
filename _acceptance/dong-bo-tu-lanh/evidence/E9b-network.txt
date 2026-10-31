@@ -1,0 +1,62 @@
+24. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+25. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+55. [GET] http://localhost:3462/api/v1/listings => [200] OK
+56. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+57. [GET] http://localhost:3462/api/v1/listings => [503] Service Unavailable
+58. [GET] http://localhost:3462/api/v1/listings => [200] OK
+59. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+60. [GET] http://localhost:3462/api/v1/listings => [503] Service Unavailable
+61. [GET] http://localhost:3462/api/v1/listings => [200] OK
+62. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [503] Service Unavailable
+63. [GET] http://localhost:3462/api/v1/listings => [503] Service Unavailable
+64. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+65. [GET] http://localhost:3462/api/v1/listings => [200] OK
+66. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [401] Unauthorized
+67. [GET] http://localhost:3462/login?_rsc=iqHRvMhTWzRYJqW1 => [200] OK
+72. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+73. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+74. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+75. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+76. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+77. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+79. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+80. [GET] http://localhost:3462/api/v1/listings => [200] OK
+110. [GET] http://localhost:3462/api/v1/listings => [200] OK
+140. [GET] http://localhost:3462/api/v1/listings => [200] OK
+170. [GET] http://localhost:3462/api/v1/listings => [200] OK
+171. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [FAILED] net::ERR_INTERNET_DISCONNECTED
+201. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+202. [GET] http://localhost:3462/api/v1/listings => [200] OK
+203. [GET] http://localhost:3462/api/v1/listings => [200] OK
+204. [GET] http://localhost:3462/api/v1/listings => [200] OK
+205. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [FAILED] net::ERR_INTERNET_DISCONNECTED
+235. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+236. [GET] http://localhost:3462/api/v1/listings => [200] OK
+237. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [503] Service Unavailable
+238. [GET] http://localhost:3462/api/v1/listings => [503] Service Unavailable
+268. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+269. [GET] http://localhost:3462/api/v1/listings => [200] OK
+299. [GET] http://localhost:3462/api/v1/listings => [403] Forbidden
+329. [GET] http://localhost:3462/api/v1/listings => [200] OK
+359. [GET] http://localhost:3462/api/v1/listings => [200] OK
+360. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [401] Unauthorized
+361. [GET] http://localhost:3462/login?_rsc=iqHRvMhTWzRYJqW1 => [200] OK
+366. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+367. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+368. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+369. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+370. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+371. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+372. [POST] http://localhost:3462/api/v1/listings/447f225f-b3ef-4df8-827b-d22d8be6b18a/events => [200] OK
+373. [GET] http://localhost:3462/api/v1/listings => [200] OK
+403. [GET] http://localhost:3462/api/v1/listings => [200] OK
+404. [POST] http://localhost:3462/api/v1/listings/95fca173-8f72-4862-be34-7a3dba6b1f6d/events => [FAILED] net::ERR_INTERNET_DISCONNECTED
+405. [POST] http://localhost:3462/api/v1/listings/95fca173-8f72-4862-be34-7a3dba6b1f6d/events => [409] Conflict
+406. [GET] http://localhost:3462/api/v1/listings/95fca173-8f72-4862-be34-7a3dba6b1f6d => [200] OK
+407. [GET] http://localhost:3462/api/v1/listings => [200] OK
+408. [GET] http://localhost:3462/api/v1/listings => [200] OK
+409. [POST] http://localhost:3462/api/v1/listings/95fca173-8f72-4862-be34-7a3dba6b1f6d/events => [200] OK
+410. [GET] http://localhost:3462/api/v1/listings/95fca173-8f72-4862-be34-7a3dba6b1f6d => [200] OK
+411. [GET] http://localhost:3462/api/v1/listings => [200] OK
+
+Note: 351 static requests not shown, run with "static" option to see them.

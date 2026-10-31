@@ -5,7 +5,7 @@ slug: dong-bo-tu-lanh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-10-31-dong-bo-tu-lanh-design.md
 approved_by:
 approved_at:
@@ -91,3 +91,6 @@ bằng đếm ô máy].
 - Kênh thời gian thực; mở app khi mất mạng hẳn (như hàng 13).
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu bộ nhớ trên máy bị lỗi đúng lúc người dùng bấm «Giữ của tôi», «Lấy bản mới» hay «Bỏ thay đổi», sẽ không có gì xảy ra và không có lời báo nào. Với «Sửa lại», bảng đóng lại như đã xong dù căn vẫn nằm trong Cần xem và chưa được gửi. — `apps/web/src/lib/sync/dong-bo.ts`
+- Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Bài kiểm tra cho trường hợp máy chủ từ chối chuyển trạng thái chỉ so lý do với chính chuỗi nó tự dựng, nên nếu khuôn lỗi thật đổi đi thì bài kiểm tra vẫn xanh. Người dùng hiện không gặp lỗi nào. — `apps/web/src/lib/sync/tu-lanh.test.ts`
