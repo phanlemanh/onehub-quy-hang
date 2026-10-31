@@ -5,9 +5,9 @@ slug: bang-hang-kieu-sheet
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, docs]
-status: draft
-approved_by:
-approved_at:
+status: approved
+approved_by: Manh Phan
+approved_at: 2026-10-31
 design_doc: _acceptance/bang-hang-kieu-sheet/design.md
 ---
 
@@ -108,6 +108,8 @@ Quét bằng morphological-scan (preset entity-feature, rút gọn), bốn trụ
   `components/shell/placeholder.tsx`, `components/shell/second-column.tsx`. Cờ `noUncheckedIndexedAccess` (giám sát CHƯA duyệt nới cờ):
   bản cài `data-grid` nguyên bản đỏ đúng MỘT dòng (`data-grid-cell-selection.tsx:1387`); nháp theo khuyến nghị Hỏi-1 sửa
   dòng ấy (chú thích tại chỗ, ghi ở `catalog.md`), `cascader` của khối không cài vì Bảng hàng không dùng.
+- Chốt ở Cổng Phạm vi 2026-10-31, nguyên văn chủ kho: «bang-hang-kieu-sheet duyệt» — Hỏi-1 và Hỏi-2 theo khuyến nghị:
+  giữ cờ kiểu chặt, sửa một dòng bản cài; nhãn «nPN»/«Studio»/«Chưa rõ» và ba lựa chọn nhóm.
 - Hai câu chỉ người ở Cổng Phạm vi: Hỏi-1 (cờ kiểu chặt — sửa một dòng bản cài hay tắt cờ cho web), Hỏi-2 (nhãn loại
   căn «nPN»/«Studio»/«Chưa rõ» và ba lựa chọn nhóm). Nháp theo khuyến nghị của cả hai.
 - Dữ liệu cho bài nhìn: sàn và người của `packages/db/seed/nap.mjs --nap` (hàng 5) + 40 hàng mẫu nạp qua API bằng

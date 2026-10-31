@@ -7,11 +7,11 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>19 việc"]
+  GD --> B["Sắp mở vòng<br/>18 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>4 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>19 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
@@ -25,7 +25,6 @@ flowchart TD
 ## Sắp mở vòng
 
 - Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy (`anh-can-ba-ngan`)
-- Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn (`bang-hang-kieu-sheet`)
 - Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác (`can-trung-ma-hai-toa`)
 - Đầu chủ che một vùng trên ảnh trước khi gửi; ra ngoài là bản nhẹ, bản gốc giữ lại (`che-vung-anh`)
 - Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo (`chia-lead-va-han`)
@@ -43,6 +42,10 @@ flowchart TD
 - Đầu chủ chọn nhiều căn rồi đổi trạng thái, đổi đầu chủ hay đánh dấu đã gọi cho tất cả trong một lần (`sua-hang-loat`)
 - Đầu chủ sửa giá, phí, trạng thái ngay trên ô; giá luôn kèm điều kiện phí, máy nói lại «Hiểu là…», sửa là vừa xác nhận với chủ nhà, hoàn tác được (`sua-tren-o`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
+
+## Đang làm
+
+- Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn (`bang-hang-kieu-sheet`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
