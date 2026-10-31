@@ -14,7 +14,7 @@ export default async function ChonSan() {
   return (
     <Khung title="Chọn sàn làm việc">
       <DanhSachSan companies={me.companies} />
-      <DangXuat />
+      <DangXuat userId={me.user.id} />
     </Khung>
   );
 }

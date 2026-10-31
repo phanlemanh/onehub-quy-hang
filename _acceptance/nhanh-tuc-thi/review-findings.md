@@ -1,75 +1,124 @@
-# Review findings: nhanh-tuc-thi (round 1)
-
-Không có finder nào chết; review đầy đủ.
+# Review findings: nhanh-tuc-thi (round 2)
 
 ## Trong hợp đồng
 
-- **Sign-out can recreate the local store after it was wiped, if a send or fetch is still running**
+- **Đăng xuất ở màn chọn sàn và màn chưa có sàn không xoá kho trên máy**
   AC: AC-10
-  file: `apps/web/src/lib/sync/react.tsx:57`
+  file: `apps/web/src/app/(auth)/dang-xuat.tsx:13`
   severity: medium
-  detail: dangXuat calls `bd.dung()` and then `await kho.wipe()`. `dung()` only cancels the next scheduled timer. It does not wait for the `dangChay` run that is already in progress (mot(): send queue → fetch → doi()). kho-indexeddb.ts wipe() sets `db = null` and deletes the database, and `onblocked` resolves straight away. When the in-progress run reaches `o.kho.write`, `lay()` opens `quy-hang-sync:<user>` again and writes the whole section back: listings, history, queue. That breaks the rule that signing out wipes the user's store (rule 32, AC-10), and it is most likely to happen exactly when the user signs out with pending changes and a retry is running. The sync engine needs a stopped state that blocks further writes, and dangXuat should wait for the current run (or cancel it) before wipe.
-  rationale: AC-10 đòi «Vẫn đăng xuất» xoá sạch kho; lượt đồng bộ đang chạy ghi lại kho đã xoá là làm AC này hỏng.
   source: conventions
-
-- **«Sửa lại» bỏ mất giá trị người đã sửa: bảng Cần xem vứt giá trị trả về**
-  AC: AC-6
-  file: `apps/web/src/components/sync/bang-can-xem.tsx:39`
-  severity: high
-  detail: `bd.suaLai(id)` gỡ căn khỏi Cần xem và TRẢ VỀ `nhap` (gộp payload của tôi) để điền lại ô (xu-ly-can-xem.ts:30, dong-bo.ts:130-138). Nút gọi `void bd.suaLai(r.listingId)` nên giá trị trả về bị bỏ đi, không có ô nào được điền lại. Kết quả: bấm «Sửa lại» giống hệt «Bỏ thay đổi». Các thao tác của người dùng rời hàng Cần xem và mất hẳn, không báo gì.
-  rationale: AC-6 đòi «Sửa lại» trả giá trị của tôi về ô để sửa; nút hiện bỏ giá trị đi.
-  source: bugs
-
-- **Đăng xuất xoá kho trong lúc lô đồng bộ đang chạy: lô ghi lại và dựng lại kho đã xoá**
-  AC: AC-10
-  file: `apps/web/src/lib/sync/react.tsx:57`
-  severity: high
-  detail: `dangXuat` gọi `bd.dung()` (chỉ huỷ hẹn giờ) rồi `kho.wipe()` ngay, không đợi `dangChay`. Nếu một lượt `mot()` đang chờ mạng (lượt định kỳ, lượt khi quay lại trang, hay lượt sau `sua`), lúc lời gọi trả về nó gọi `doi` → `kho.write` → `lay()`. Vì `wipe` đã đặt `db=null`, `lay()` mở lại cơ sở dữ liệu `quy-hang-sync:<người>` và ghi lại ngăn đầy đủ (hàng, lịch sử, hàng đợi). Thế là vi phạm luật 32 «đăng xuất xoá cả kho». Thêm nữa, kho-indexeddb.ts:45 coi `onblocked` là xong (`ok()`). Khi tab khác còn mở kho (không có `onversionchange` để đóng), đăng xuất vẫn báo xong dù kho chưa xoá.
-  rationale: Kho dựng lại sau khi xoá làm AC-10 (xoá sạch kho khi đăng xuất) thất bại.
-  source: bugs
-
-- **Hỏi khi đăng xuất chỉ đếm hàng đợi, bỏ qua thay đổi đang nằm ở Cần xem**
-  AC: AC-10
-  file: `apps/web/src/lib/sync/trang-thai.ts:26`
-  severity: medium
-  detail: `canHoiKhiDangXuat` chỉ cộng `queue.length`. Khi máy chủ không nhận, các thao tác bị chuyển khỏi `queue` sang `review[].mine` (gui.ts:93-95), dù vẫn là thay đổi chưa lên máy chủ. Vì vậy một người chỉ còn thay đổi ở Cần xem bấm đăng xuất sẽ không được hỏi. `kho.wipe()` lặng lẽ xoá các thay đổi đó, trái với AC-10.
-  rationale: Thao tác chờ gồm cả thao tác ở «cần xem»; AC-10 đòi hỏi nói đúng n thay đổi chờ gửi.
-  source: bugs
-
-- **Hình dạng 4 — kiểm âm tính đứng một mình: «0 lời gọi mạng» đo trên bộ đếm không hề nối vào đường đọc**
-  AC: AC-2
-  file: `apps/web/src/lib/sync/doc.test.ts:44`
-  severity: high
-  detail: Ca «đọc không chờ mạng: lọc, mở hồ sơ, dựng lại từ kho» (E2/AC-2) tạo `mangHong()` ở dòng 28, nhưng hàm gọi mạng `mang.goi` không được đưa cho bất kỳ đường đọc nào. Các lần đọc chỉ gọi hàm thuần `locDanhSach(n, …)` và `moHoSo(n, …)` (dòng 32-35), mà hai hàm này không nhận hàm gọi mạng (doc.ts). Vì vậy `assert.equal(mang.dem(), 0)` ở dòng 44 và 47 luôn đúng theo cấu trúc: dù đường đọc thật có đi qua mạng, ca này vẫn xanh. Đối chứng dương ở dòng 49-50 gọi thẳng `keoVe(mang.goi, …)`. Nó chỉ chứng minh bộ đếm đếm được, không chạy lại các lần đọc đang kiểm, nên không phải đối chứng của cùng đường đi. Ngoài ra eval E2 hứa «dựng bộ đồng bộ mới từ CÙNG kho → các lần đọc cho cùng kết quả», nhưng ca này không dựng `taoBoDongBo` nào. «Dựng lại» ở dòng 46 chỉ gọi lại cùng hai hàm thuần trên cùng kho. Đường đọc thật của sản phẩm là `bd.danhSach()`/`bd.hoSo()` trong dong-bo.ts, và `hoSo` có phát lời gọi `keoLichSu(o.goi, …)` ở nền. Đường này không bị đo: thêm một lời gọi mạng có chờ vào `hoSo`/`danhSach` thì ca vẫn xanh. Chiều đỏ mà eval mô tả («đọc đi qua mạng → số đếm > 0») vì thế không thể xảy ra.
-  rationale: AC-2 đòi chứng minh đọc có 0 lời gọi mạng qua bộ đồng bộ; ca kiểm không đi qua đường đọc thật nên không chứng minh được AC này.
-  source: measurement
+  detail: Thay đổi này gắn việc xoá kho vào AccountMenu (dangXuat → bd.dongHan → kho.wipe) và ghi vào Tham chiếu §12 câu «đăng xuất hỏi khi còn thay đổi chờ và luôn xoá kho trên máy» (luật 32). Nhưng nút DangXuat ở (auth)/select-company và (auth)/no-company vẫn chỉ POST /auth/sign-out. Người có nhiều sàn đã có kho IndexedDB `quy-hang-sync:<userId>` (hàng, lịch sử, thay đổi chờ) có thể vào màn chọn sàn, ví dụ khi cookie sàn hết hoặc không hợp lệ, rồi đăng xuất từ đó. Kho trên máy vẫn còn, trái luật 32. Hai nút này nằm ngoài BoDongBoProvider nên cần một đường xoá theo userId, ví dụ indexedDB.deleteDatabase(tenCoSo(userId)), không đi qua hook.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Sending changes saves server data on the device without the owner-data check**
+- **Gửi hàng đợi ghi vào kho trên máy mà không qua lớp chặn thông tin chủ nhà**
+  Người dùng thấy gì: Khi máy chủ trả về dữ liệu sau lúc gửi thay đổi, máy không quét lại lần nữa xem có lẫn thông tin chủ nhà hay không. Hiện máy chủ không trả thông tin đó, nên người dùng chưa gặp gì.
+  Căn cứ: Chỉ là lớp bảo vệ dự phòng thứ hai, lớp chính ở phía máy chủ vẫn giữ nên chưa lộ dữ liệu; thêm sau rẻ và không cần gấp.
+  file: `apps/web/src/lib/sync/gui.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Bảng Cần xem hiện mã trạng thái RESO thô cho người dùng, không dùng nhãn trong CONTEXT.md**
+  Người dùng thấy gì: Trong bảng Cần xem, người dùng thấy trạng thái căn bằng chữ tiếng Anh như Active hay Pending thay vì nhãn tiếng Việt quen thuộc.
+  Căn cứ: Chỉ sai chữ hiển thị, không mất hay lộ dữ liệu, người dùng vẫn hiểu và thao tác được; sửa sau rất rẻ.
+  file: `apps/web/src/components/sync/bang-can-xem.tsx`
+  severity: low
+  Đề xuất: known-limits
+
+- **Lỗi tạm thời của máy chủ (401 hết phiên, 5xx) đẩy thao tác chờ ra khỏi hàng đợi thành «cần xem», và chỉ còn lối «Bỏ thay đổi»**
+  Người dùng thấy gì: Khi phiên hết hạn hoặc máy chủ trục trặc chốc lát, các thay đổi đang chờ gửi bị đẩy sang danh sách Cần xem và không tự gửi lại. Có căn chỉ còn cách bỏ thay đổi, người dùng mất công sửa lại.
+  Căn cứ: Gặp được trong lúc triển khai hay hết phiên và có thể làm người dùng bỏ mất thay đổi đã nhập, nên đáng làm thành việc riêng; nhưng không mất dữ liệu ngầm vì vẫn được báo.
+  file: `apps/web/src/lib/sync/gui.ts`
+  severity: high
+  Đề xuất: new-contract
+
+- **Kéo về thất bại vì 401/5xx hay vì bắt được dữ liệu nguồn bị nuốt và báo «Mất mạng»**
+  Người dùng thấy gì: Khi phiên hết hạn hoặc máy chủ lỗi, thanh trên vẫn ghi Mất mạng nên người dùng không biết nguyên nhân thật là phải đăng nhập lại.
+  Căn cứ: Chỉ báo sai nguyên nhân, người dùng tải lại hoặc đăng nhập lại là xử lý được và không mất dữ liệu; sửa cần thêm trạng thái mới nên để sau.
+  file: `apps/web/src/lib/sync/dong-bo.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **taiLichSu ghi đè cả danh sách hàng bằng bản chụp cũ, đè mất kết quả kéo về hay gửi chạy song song**
+  Người dùng thấy gì: Hiếm khi mở hồ sơ đúng lúc đang đồng bộ, danh sách có thể quay về bản cũ trong chốc lát, căn mới kéo về tạm biến mất cho tới lần kéo sau.
+  Căn cứ: Chỉ hiển thị cũ tạm thời, lần đồng bộ kế sẽ tự khôi phục, không mất thay đổi chờ gửi.
+  file: `apps/web/src/lib/sync/dong-bo.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Sửa một căn đang «cần xem» tạo thao tác kẹt trong hàng đợi; «Lấy bản mới» hay «Bỏ thay đổi» không bỏ nó**
+  Người dùng thấy gì: Nếu người dùng sửa tiếp một căn đang ở danh sách Cần xem, rồi chọn bỏ thay đổi hay lấy bản mới, thay đổi mới sửa vẫn còn trong hàng đợi và sẽ lại bị báo cần xem.
+  Căn cứ: Chỉ xảy ra khi sửa căn đang bị báo xung đột và gây thêm một vòng xử lý, không mất dữ liệu; nên xử lý bằng việc riêng.
+  file: `apps/web/src/lib/sync/ap-tren-may.ts`
+  severity: medium
+  Đề xuất: new-contract
+
+- **Hình dạng 5 — tuyên quét bảng nhưng bộ đếm suy từ chính bảng (đếm vô nghĩa, không phải ma trận viết trước)**
+  Người dùng thấy gì: Bài kiểm tự động chữ trên thanh trạng thái không bắt được trường hợp ai đó lỡ xoá một dòng trong bảng chữ; người dùng không thấy ngay.
+  Căn cứ: Chỉ làm bài kiểm lỏng hơn mong muốn, sản phẩm đang chạy đúng; bổ sung sau rẻ.
+  file: `apps/web/src/lib/sync/trang-thai.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 4 — kiểm âm tính một mình: phần thấy của Z và lần quét nguồn trên kho của Z không có đối chứng dương**
+  Người dùng thấy gì: Bài kiểm việc người ở sàn khác không thấy hàng của sàn này có thể vẫn xanh dù bộ đồng bộ của họ hỏng hẳn, nên bằng chứng yếu hơn mong muốn.
+  Căn cứ: Không ảnh hưởng người dùng, chỉ làm bằng chứng nghiệm thu yếu đi; thêm đối chứng sau rẻ.
+  file: `apps/web/src/lib/sync/test-db/dong-bo.db-test.mts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 3 — lời hứa là đẳng thức tập (deepEqual tập mã) nhưng ca chỉ kiểm có mặt/vắng mặt của hai mã**
+  Người dùng thấy gì: Bài kiểm ai thấy hàng nào chỉ xét hai căn mẫu, nên một căn lạ lọt vào kho sẽ không bị bắt tự động.
+  Căn cứ: Chỉ là bài kiểm chưa chặt, không có lỗi thật nào được chỉ ra cho người dùng; siết lại sau rẻ.
+  file: `apps/web/src/lib/sync/test-db/dong-bo.db-test.mts`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình dạng 5 — eval tuyên cả lớp từ chối (404, 400) × «Bỏ thay đổi» nhưng ca chỉ có một điểm**
+  Người dùng thấy gì: Việc bỏ thay đổi khi máy chủ từ chối vì dữ liệu sai chưa có bài kiểm tự động riêng, nên nếu hỏng sẽ khó bị phát hiện sớm.
+  Căn cứ: Chỉ thiếu bằng chứng kiểm thử cho một lối ít gặp, không phải lỗi người dùng đã gặp; bổ sung sau rẻ.
+  file: `apps/web/src/lib/sync/test-db/dong-bo.db-test.mts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 2 — thao tác chờ viết tay cấy thẳng vào kho thay vì do bộ ghi sinh ra**
+  Người dùng thấy gì: Bài kiểm trường hợp máy chủ từ chối dùng thay đổi chờ dựng sẵn thay vì sửa như người dùng thật, nên có thể bỏ sót lỗi ở đường sửa thật.
+  Căn cứ: Không ảnh hưởng người dùng trực tiếp, bản kiểm thuần đã phủ đường sửa thật; làm lại bản trên máy chủ thật sau cũng được.
+  file: `apps/web/src/lib/sync/test-db/dong-bo.db-test.mts`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình dạng 4 — kiểm xoá kho của B mà không có đối chứng dương rằng B từng có dữ liệu**
+  Người dùng thấy gì: Bài kiểm xoá dữ liệu của người thứ hai chưa chứng minh người đó từng có dữ liệu trước khi xoá, nhưng người dùng không bị ảnh hưởng.
+  Căn cứ: Người dùng không gặp gì, và phần xoá đã có đối chứng ở người khác trong cùng bài, nên không đáng mở việc.
+  file: `apps/web/src/lib/sync/kho.test.ts`
+  severity: low
+  Đề xuất: wont-fix
+
+- **Sending changes saves server data on the device without the owner-data check (r1 · tệp đã đổi)**
   Người dùng thấy gì: Lớp kiểm tra chống để lọt thông tin chủ nhà xuống máy chỉ chạy khi tải danh sách, chưa chạy ở bước gửi thay đổi. Hiện máy chủ không trả thông tin chủ nhà ở đường này nên chưa ai thấy hậu quả.
   Căn cứ: Chỉ là lớp bảo vệ thứ hai, chưa có dữ liệu nào lộ, và lớp thứ nhất ở máy chủ vẫn đang chặn.
   file: `apps/web/src/lib/sync/gui.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Lỗi kéo về nào cũng bị nuốt và báo là «Mất mạng», kể cả khi bắt được nguồn rò ra**
+- **Lỗi kéo về nào cũng bị nuốt và báo là «Mất mạng», kể cả khi bắt được nguồn rò ra (r1 · tệp đã đổi)**
   Người dùng thấy gì: Khi phiên hết hạn hoặc máy chủ lỗi, thanh trên vẫn ghi «Mất mạng» và người dùng không biết nguyên nhân thật. Ứng dụng cứ thử lại mãi.
   Căn cứ: Không mất dữ liệu, chỉ thông báo sai nguyên nhân; đăng nhập lại hoặc tải lại trang là gỡ được.
   file: `apps/web/src/lib/sync/dong-bo.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Máy chủ trả 5xx hay 401 bị coi là từ chối: thao tác rời hàng đợi sang Cần xem**
+- **Máy chủ trả 5xx hay 401 bị coi là từ chối: thao tác rời hàng đợi sang Cần xem (r1 · tệp đã đổi)**
   Người dùng thấy gì: Khi máy chủ đang lỗi tạm hoặc phiên hết hạn, thay đổi của người dùng bị đẩy sang «Cần xem» thay vì tự gửi lại sau. Có căn còn mất nút «Sửa lại».
   Căn cứ: Thay đổi không mất, người dùng vẫn giữ được ở Cần xem, nhưng phải xử lý tay một việc lẽ ra tự lành; sửa đụng tới cách phân loại lỗi nên nên tách việc riêng.
   file: `apps/web/src/lib/sync/gui.ts`
   severity: medium
   Đề xuất: new-contract
 
-- **`sua` lấy phiên bản kỳ vọng và số thứ tự ngoài bước đọc-rồi-ghi: hai lần sửa sát nhau dựa cùng phiên bản**
+- **`sua` lấy phiên bản kỳ vọng và số thứ tự ngoài bước đọc-rồi-ghi: hai lần sửa sát nhau dựa cùng phiên bản (r1 · tệp đã đổi)**
   Người dùng thấy gì: Bấm lưu hai ô rất sát nhau hoặc mở hai tab cùng lúc có thể khiến lần sửa thứ hai bị báo «đụng nhau» với chính mình. Người dùng phải xử lý ở bảng Cần xem.
   Căn cứ: Hiếm gặp, không mất dữ liệu vì thay đổi còn nằm ở Cần xem và người dùng chọn «Giữ của tôi» là xong.
   file: `apps/web/src/lib/sync/dong-bo.ts`

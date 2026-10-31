@@ -52,3 +52,12 @@ export function taoKhoIndexedDb(userId: string): LocalStore {
     },
   };
 }
+
+/** Xoá kho trên máy của một người mà không cần mở nó — dùng ở màn ngoài vỏ (chọn sàn, chưa có sàn). */
+export function xoaKhoCuaNguoi(userId: string): Promise<void> {
+  return new Promise((ok, loi) => {
+    const r = indexedDB.deleteDatabase(tenCoSo(userId));
+    r.onsuccess = () => ok();
+    r.onerror = () => loi(r.error);
+  });
+}

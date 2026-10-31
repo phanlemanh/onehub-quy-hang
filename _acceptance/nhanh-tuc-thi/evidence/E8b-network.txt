@@ -1,52 +1,20 @@
-# Nguon: nhat ky may chu dev cong 3462 (phia server) — driver Playwright, khong doc duoc network phia trinh duyet; loi cua cua so 1 do route.abort co chu dich (mat mang gia lap)
- 184 ⨯ unhandledRejection: ReferenceError: indexedDB is not defined
-  56  GET /api/v1/listings 200
-   6  POST /api/v1/listings/255cd68b-3131-464a-b104-049246add294/events 200
-   5  POST /api/v1/auth/email-otp/send-verification-otp 200
-   4  POST /api/v1/listings/ec0c5800-f033-455a-85cc-19ed3acdb47c/events 200
-   4  POST /api/v1/listings/b23d9d9c-1bae-48a3-90bc-b8e052a2b96b/events 200
-   4  POST /api/v1/listings/9ce27fc3-de80-42a8-b28f-b0b837c63d60/events 200
-   4  POST /api/v1/listings 400
+# Nguon: nhat ky may chu next dev --webpack cong 3462 (phia server, DB e8b rieng) — driver Playwright MCP, request toi /api/v1 bi route.abort/setOffline co chu dich o cua so 1 khong toi may chu nen khong co dong log
+  35  GET /api/v1/listings 200
+  17  POST /api/v1/listings/<id>/events 200
    4  POST /api/v1/listings 201
-   4  POST /api/v1/auth/sign-in/email-otp 200
-   2  GET /api/v1/health 200
-   1 [browser] ⨯ unhandledRejection: TypeError: Failed to fetch
-   1  POST /api/v1/listings/ec0c5800-f033-455a-85cc-19ed3acdb47c/events 400
-   1  POST /api/v1/listings/b23d9d9c-1bae-48a3-90bc-b8e052a2b96b/events 409
-   1  POST /api/v1/listings/255cd68b-3131-464a-b104-049246add294/events 409
-   1  POST /api/v1/auth/sign-out 200
-   1  GET /api/v1/listings/ec0c5800-f033-455a-85cc-19ed3acdb47c 200
-   1  GET /api/v1/listings/b23d9d9c-1bae-48a3-90bc-b8e052a2b96b 200
-   1  GET /api/v1/listings/255cd68b-3131-464a-b104-049246add294 200
+   3  POST /api/v1/auth/sign-in/email-otp 200
+   3  POST /api/v1/auth/email-otp/send-verification-otp 200
+   3  GET /api/v1/listings/<id> 200
+   2  POST /api/v1/listings/<id>/events 409
+   2  POST /api/v1/auth/sign-out 200
+   1  POST /api/v1/listings/<id>/events 400
+   1  POST /api/v1/auth/sign-out 403
+   1  GET /api/v1/me 401
 
-# Console trinh duyet (playwright):
-[   37128ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   37334ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   37547ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   37756ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   37955ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   38172ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   38387ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   38595ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   38800ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   39010ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   42100ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   54427ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3475/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc
-[   54434ms] [LOG] [HMR] connected @ http://localhost:3475/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
-[   54516ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   64199ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   64405ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   64622ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   64830ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   65031ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   65254ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   65462ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   65669ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   65892ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   66095ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3475/api/v1/listings/30bd2f66-e59a-4e8e-9069-ed481404fcb5/events:0
-[   84690ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3475/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
-[   84720ms] [LOG] [Fast Refresh] done in 130ms @ http://localhost:3475/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
-[  114988ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3475/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
-[  115063ms] [LOG] [Fast Refresh] done in 176ms @ http://localhost:3475/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
-[  181725ms] [ERROR] WebSocket connection to 'ws://localhost:3475/_next/hmr?id=PJKHCPrAiMeWzopkdMMYI' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3475/_next/static/chunks/nod
-[  182726ms] [ERROR] WebSocket connection to 'ws://localhost:3475/_next/hmr?id=PJKHCPrAiMeWzopkdMMYI' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3475/_next/static/chunks/nod
+# Loi/ban ghi khac trong nhat ky may chu:
+   1 [browser] ⨯ unhandledRejection: TypeError: Failed to fetch
+   2 ⨯ Error: The destination stream errored while writing data.
+
+# Console trinh duyet: [ERROR] net::ERR_INTERNET_DISCONNECTED / net::ERR_FAILED tu route.abort va setOffline(true) co chu dich (mat mang gia lap)
+# unhandledRejection TypeError: Failed to fetch tai account-menu.tsx:110 (fetch sign-out khi */api/v1/* dang bi chan co chu dich)
+# Ghi chu: 400/409 la tu choi may chu DUNG kich ban (versionConflict, Withdrawn->Closed, Withdrawn->Withdrawn truoc khi dung lai DB sach)

@@ -74,6 +74,9 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
       }));
       if (cid === companyId) dangGui = 0;
       if (kq.mang) return;
+      // Căn vừa gửi mà đã có lịch sử trên máy: kéo lại lịch sử để hồ sơ thấy đúng các sự kiện vừa lên.
+      const daGuiCan = new Set(dau.queue.filter((x) => xuLy.has(x.opId)).map((x) => x.listingId));
+      for (const id of daGuiCan) if (dau.history[id]) await taiLichSuCua(cid, id);
     }
     try {
       const keo = await keoVe(o.goi, await o.kho.read(cid), nay());
@@ -83,6 +86,20 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
     }
   }
   const pick = (h: Ngan["history"], keo: Ngan) => Object.fromEntries(Object.entries(h).filter(([id]) => keo.listings?.some((l) => l.id === id)));
+
+  async function taiLichSuCua(cid: string, id: string) {
+    try {
+      const m = await keoLichSu(o.goi, await o.kho.read(cid), id);
+      const moi = m.listings?.find((l) => l.id === id);
+      await doi(cid, (n) => ({
+        ...n,
+        history: { ...n.history, [id]: m.history[id] ?? [] },
+        listings: moi ? (n.listings ?? []).map((l) => (l.id === id ? moi : l)) : n.listings,
+      }));
+    } catch {
+      /* mất mạng hay lỗi kéo: giữ bản trên máy */
+    }
+  }
 
   /** Gửi rồi kéo ngay; lần gọi chồng lên lần đang chạy thì đợi lần ấy. */
   function thuNgay(): Promise<void> {
@@ -127,15 +144,7 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
     /** Mở hồ sơ: đọc từ bản đệm, không lời gọi mạng. */
     hoSo: (id: string) => moHoSo(dem, id),
     /** Kéo lịch sử một căn ở nền để lần mở sau có sẵn; mất mạng thì thôi, hồ sơ vẫn đọc từ kho. */
-    async taiLichSu(id: string) {
-      try {
-        const cid = companyId;
-        const m = await keoLichSu(o.goi, await o.kho.read(cid), id);
-        await doi(cid, (n) => ({ ...n, history: { ...n.history, [id]: m.history[id] ?? [] }, listings: m.listings }));
-      } catch {
-        /* mất mạng hay lỗi kéo: giữ bản trên máy */
-      }
-    },
+    taiLichSu: (id: string) => taiLichSuCua(companyId, id),
     chiBao: () => suyChiBao(dem, dangGui),
     canXem: () => dem.review,
     ngan: () => dem,

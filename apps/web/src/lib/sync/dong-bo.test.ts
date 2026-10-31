@@ -134,3 +134,19 @@ test("đăng xuất giữa lượt đang gửi: kho đã xoá không bị ghi l�
   await xa();
   assert.deepEqual(await kho.read("s"), nganTrong(), "kho bị dựng lại sau khi xoá");
 });
+
+test("sau khi gửi, lịch sử căn đã mở trên máy theo kịp máy chủ", async () => {
+  const mc = mayChuGia({ userId: ME.userId });
+  mc.tao("h", "[Toà A]");
+  const bd = taoBoDongBo({ goi: mc.goi, kho: taoKhoBoNho("u-x", new Map()), me: ME, companyId: "s", nhip: false, taoMa });
+  await bd.khoiDong();
+  await bd.taiLichSu("h");
+  assert.equal(bd.hoSo("h")!.lichSu.length, 1);
+  mc.datMatMang(true);
+  for (const f of ["a", "b", "c", "d"]) await bd.sua("h", "details_changed", { furnished: f });
+  await bd.thuNgay();
+  mc.datMatMang(false);
+  await bd.thuNgay();
+  assert.equal(mc.can.get("h")!.length, 5);
+  assert.equal(bd.hoSo("h")!.lichSu.length, 5, "lịch sử trên máy còn cũ sau khi gửi");
+});
