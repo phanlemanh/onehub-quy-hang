@@ -60,10 +60,13 @@ D (hàng 72, PR #45):
    - Khuyến nghị (A). Căn cứ: `freshness(lastConfirmedAt, today)` và hàm chọn người của hàng 25 đã nhận dữ kiện từ ngoài;
      bộ ca kiểm thuần chạy không cần Postgres.
 3. **Giá trị của sàn: bảng khoá–giá trị có sự kiện, sàn chưa đổi thì nhận mặc định.** Hai bảng, cả hai bật và ép luật
-   theo dòng theo `app.current_company_id()`:
-   - `company_config_events` — chỉ thêm (trigger chặn sửa, xoá như `listing_events`): sàn, khoá, giá trị `jsonb`, người,
-     vai, lúc. Mỗi lần đổi một dòng — đây là «mọi thay đổi vào nhật ký» của Tham chiếu §4.
-   - `company_config` — bản hiện hành (sàn, khoá, giá trị, phiên bản), ghi cùng giao dịch với sự kiện qua một lệnh API.
+   theo dòng theo `app.current_company_id()`. Khuôn theo cái hàng 25 (dãy L) đã đặt cho chia lead — đối chiếu 01/11:
+   - `company_settings` — bản hiện hành: `company_id`, `key` (chữ, dạng `<nhóm>.<khoá>`), `value` `jsonb`, `updated_by`,
+     `updated_at`, khoá chính (`company_id`, `key`); cả sàn đọc, chỉ quản trị sàn ghi. **Hàng 25 tạo bảng này**
+     (migration 011) cho bốn khoá `lead_routing.*`; hàng 82 mở nó cho mọi khoá của sổ.
+   - `company_settings_events` — **hàng 82 thêm**: chỉ thêm (trigger chặn sửa, xoá như `listing_events`): sàn, khoá, giá
+     trị, người, vai, lúc; ghi cùng giao dịch với `company_settings` qua một lệnh API. Mỗi lần đổi một dòng — đây là «mọi
+     thay đổi vào nhật ký» của Tham chiếu §4.
      **Không có dòng = mặc định của sổ**: sàn chưa chạm điểm nào thì đi theo mặc định dựng sẵn, kể cả khi sản phẩm đổi
      mặc định (đổi mặc định là sửa Tham chiếu và sổ, qua PR).
    - Lệnh API kiểm khoá có trong sổ, giá trị đúng khuôn và trong khoảng, vai được đổi; sai → 400 nêu đúng khoá. Cơ sở dữ
@@ -97,9 +100,12 @@ D (hàng 72, PR #45):
       số. **Ca mẫu số một: chia lead** — chủ kho 1/11 (giám sát chuyển): «phân phối lead nó gần như là chuẩn của nhiều
       hệ thống CRM, và chính chủ sàn cũng chưa chắc cách nào là tốt nhất… nên cứng là không triển khai được». Thực đơn
       cố định năm chiến lược: theo khu + vòng lần lượt (mặc định, hàng 25 AC-1) · vòng toàn sàn · theo tải · kho chung
-      tự nhận · trưởng nhóm chia tay; cùng hạn nhận, hạn gọi và cách báo quá hạn (sổ #1–#3a). «Cùng chủ về cùng đầu
-      chủ» đứng trước mọi chiến lược (luật 20). Mỗi chiến lược là một hàm thuần ở lõi có bộ ca riêng; thêm chiến lược thứ
-      sáu là thêm một hàm và một giá trị `enum`, không phải sàn tự viết. Hàng 25 dựng thực đơn, hàng 48 dựng màn.
+      tự nhận · trưởng nhóm chia tay; cùng hạn nhận, hạn gọi và cách báo quá hạn (sổ #1–#3a). Hai lối **luôn chạy**, chiến
+      lược nào cũng vậy: luật chủ trùng (chủ nhà đã có đầu chủ thì về người đó, luật 20) và lối trưởng nhóm giao lại từng
+      lead (hàng 25 AC-7). Mỗi chiến lược là một hàm thuần ở lõi có bộ ca riêng; thêm chiến lược thứ sáu là thêm một hàm
+      và một giá trị `enum`, không phải sàn tự viết. Hàng 25 dựng thực đơn, hàng 48 dựng màn.
+      Đây là **áp dụng có chủ đích của luật mở một điểm** (quyết định 7, Hỏi-1): Tham chiếu luật 20 đã chốt «chia theo
+      luật của sàn», cộng lời chủ kho 1/11 — không cần chờ hai sàn thật. Bảng quyết định tự do vẫn chờ số đo (bậc 3).
    3. **Bảng quyết định** ở một điểm đã biết: dữ kiện cố định của điểm ấy (khu, toà, loại hình, khoảng giá, nhu cầu…),
       phép so cố định (`=`, `∈`, `<`, `≤`, `giữa`), khớp dòng đầu, dòng cuối luôn là «mọi trường hợp» = mặc định, kết quả
       phải nằm trong khoảng của sổ. Không ngôn ngữ kịch bản, không biểu thức tự viết. Chưa mở ở bản đầu (mục chờ CH6).
@@ -199,11 +205,13 @@ Một chỗ thêm: hàng nền không chặn các dãy đang chạy. Hàng 25 đ
   đứng trước 45–50; `dung_tren` của 45, 46, 48, 49 thêm 82, của 47, 50 thêm 81; tám mục chờ điều kiện H8–H15 (CH6–CH13).
 - Lõi: `packages/core/src/config/` (sổ, giải cấu hình, khuôn); hàm luật nhận cấu hình làm tham số; `freshness.ts`,
   `routing/index.ts` đọc mặc định từ sổ.
-- Cơ sở dữ liệu: `company_config_events`, `company_config` — luật theo dòng, ca cách ly; số migration giữ chỗ lúc mở
+- Cơ sở dữ liệu: `company_settings` (hàng 25 tạo), `company_settings_events` (hàng 82 thêm) — luật theo dòng, ca cách ly; số migration giữ chỗ lúc mở
   hàng 82 (luật 24 của gói đợt). Hạn lead ghi vào lead lúc chia (cột mới trên bảng của hàng 25, migration sau 011).
-  Hàng 25 (dãy L) dựng thực đơn chia lead và có thể đặt chỗ lưu cấu hình chia lead trước hàng 82: khoá giữ tên `lead.*`
-  của sổ, hàng 81 đưa chúng vào sổ chung, hàng 82 chuyển giá trị sang `company_config` mà không đổi khoá.
-- API: `GET /api/v1/company/config`, `PUT /api/v1/company/config/{key}` — đường ghi duy nhất của cấu hình.
+  Hàng 25 (dãy L) dựng thực đơn chia lead, bảng `company_settings` và bốn khoá `lead_routing.*` với mặc định khai một chỗ
+  ở lõi (`DEFAULT_LEAD_ROUTING`) cùng hàm đọc, kiểm (`readLeadRoutingSettings`, `applyLeadRoutingPatch`); hàng 81 đưa
+  chúng vào sổ chung, hàng 82 thêm nhật ký sự kiện — không đổi khoá, không đổi bảng.
+- API: `GET /api/v1/company/settings`, `PUT /api/v1/company/settings/{key}` (hàng 82) bên cạnh nhóm
+  `/api/v1/company/settings/lead-routing` của hàng 25 — đường ghi duy nhất của cấu hình.
 - Từ nay **hàng thêm một con số hay lựa chọn của sàn khai điểm ấy vào sổ** (tài liệu và mã) trong cùng PR; Cổng Phạm vi
   hỏi «điểm này đã ở sổ chưa».
 - Tham chiếu §12 thêm một dòng «đề xuất»; đổi thành «đã chốt» khi chủ kho duyệt. `CONTEXT.md` thêm hai từ (đề xuất).

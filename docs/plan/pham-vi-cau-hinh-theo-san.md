@@ -47,8 +47,9 @@ chặn Cài đặt sàn 45–50.
 
 ## Phụ thuộc với đợt dau-chu-dong-vao đang chạy
 
-- **Hàng 25** (dãy L) khai hạn 15/30 ở `packages/core/src/routing/index.ts` — 81 đổi chỗ ấy thành đọc mặc định của sổ sau
-  khi 25 gộp; 82 thêm cột hạn trên lead bằng migration sau 011.
+- **Hàng 25** (dãy L) dựng thực đơn chia lead, bảng `company_settings` và bốn khoá `lead_routing.*` (mặc định ở
+  `packages/core/src/routing/index.ts`, `DEFAULT_LEAD_ROUTING`); lead mang dấu cách chia và hai hạn từ nhịp đầu. 81 đưa bốn
+  khoá vào sổ chung sau khi 25 gộp; 82 thêm nhật ký sự kiện và mở bảng cho mọi khoá — không đổi khoá, không đổi bảng.
 - **Hàng 22, 23** (dãy G, H) sắp dựng ngưỡng ép giá 10 ngày và điều kiện Sẵn sàng bán — nên khai một chỗ ở lõi như hàng
   25; 81 gom về sổ khi mở. Không hàng nào của đợt này sửa vùng mã của dãy đang chạy lúc cắt.
 - Vùng của 81 (`packages/core/src/config/**`) mới hoàn toàn; 82 thêm `packages/api/src/settings/**`.
