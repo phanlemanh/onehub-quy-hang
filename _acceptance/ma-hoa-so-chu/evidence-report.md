@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: d3957601687cf4280b58fd13853fc392482d2525
+verified_commit: 274b6a13bca93939e2dde1086d0c3473db64eb7a
 human_signoff:
 ---
 
@@ -176,3 +176,7 @@ none — every multi-run eval is uniform
 ## Iterations
 
 Round 1: mọi eval máy xanh (E1-E9); E10 là mục judgment chờ người chốt ở Cổng 2. Verdict PENDING-JUDGMENT.
+
+### Re-pin lần 1 — 2026-10-31, do gộp main (hàng 63, mọi loại hình) sau lượt chấm 1
+run_id: repin-20261031T154748Z-13473
+sha: 274b6a13bca93939e2dde1086d0c3473db64eb7a · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E10 · diff chạm vật đo ngoài làn máy: E10 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-10
