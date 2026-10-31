@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: abe2b20a25e860b088513c679938282eec9b2cd5
+verified_commit: cedbf3557ef9b22a86d6426d6635610c91eea51f
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -208,3 +208,7 @@ none — every multi-run eval is uniform
 
 Round 1: không eval máy nào đỏ, nhưng phản biện tìm ra lỗi mức cao trong hợp đồng AC-10 (đối chứng (b) của E10 chỉ kiểm tỉ lệ thấp hơn 100%, vẫn xanh khi bỏ phép so UPI). Trả về bước hiện thực để siết đối chứng.
 Round 2: E7b, E8, E9, E8b, E10 chạy lại và xanh; E1 đến E7 giữ từ round 1 (delta không chạm đường của chúng); sáu lệnh suite xanh. Phản biện còn hai mục thấp ngoài hợp đồng, ghi ở review-findings.md.
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp nhánh chính sau chữ ký
+run_id: repin-20261031T083816Z-37443
+sha: cedbf3557ef9b22a86d6426d6635610c91eea51f · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng
