@@ -68,6 +68,7 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
   const [thoiGian, setThoiGian] = useState<ListingTime | "">("");
   const [loi, setLoi] = useState<Record<string, string>>({});
   const [dangGui, setDangGui] = useState(false);
+  const dangGuiRef = useRef(false);
   const [ketQua, setKetQua] = useState<LeadResultView | null>(null);
   const [loiMang, setLoiMang] = useState(false);
 
@@ -109,25 +110,36 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
 
   async function gui(e: FormEvent) {
     e.preventDefault();
-    // Gõ mã căn rồi bấm gửi ngay: lượt tra lúc rời ô có thể chưa xong — tra ở đây và dùng kết quả trả về.
-    let toa = toaChon;
-    let can = canDoc;
-    if (maCan.trim() && !canDoc) {
-      const r = await docMa();
-      if (r) [toa, can] = [r.buildingName, r.unitNumber];
-    }
-    const than = thanLead(toa, can);
-    const kiem = validateLeadInput(than);
-    if (!kiem.ok) {
-      setLoi(Object.fromEntries(kiem.errors.map((x) => [x.path, LOI_CHU[x.path] ?? x.reason])));
-      return;
-    }
-    setLoi({});
-    setLoiMang(false);
-    setKetQua(null);
+    // Một lần gửi một lúc: khoá ngay từ lúc bấm, cả trong lượt tra mã bên dưới — bấm đúp không ra hai lead.
+    if (dangGuiRef.current) return;
+    dangGuiRef.current = true;
     setDangGui(true);
+    try {
+      // Gõ mã căn rồi bấm gửi ngay: lượt tra lúc rời ô có thể chưa xong — tra ở đây và dùng kết quả trả về.
+      let toa = toaChon;
+      let can = canDoc;
+      if (maCan.trim() && !canDoc) {
+        const r = await docMa();
+        if (r) [toa, can] = [r.buildingName, r.unitNumber];
+      }
+      const than = thanLead(toa, can);
+      const kiem = validateLeadInput(than);
+      if (!kiem.ok) {
+        setLoi(Object.fromEntries(kiem.errors.map((x) => [x.path, LOI_CHU[x.path] ?? x.reason])));
+        return;
+      }
+      setLoi({});
+      setLoiMang(false);
+      setKetQua(null);
+      await guiThan(than);
+    } finally {
+      dangGuiRef.current = false;
+      setDangGui(false);
+    }
+  }
+
+  async function guiThan(than: ReturnType<typeof thanLead>) {
     const r = await nguon.gui(than);
-    setDangGui(false);
     if (r.ok) {
       setKetQua(r.lead);
       setSo("");
