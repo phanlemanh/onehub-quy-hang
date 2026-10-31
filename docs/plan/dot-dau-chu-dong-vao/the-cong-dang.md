@@ -1,6 +1,9 @@
 # Thẻ Cổng Đáng — 19 hàng đợt dau-chu-dong-vao
 
-**Chờ quyết** — mở 31/10. Một lần ngồi, 19 quyết định: mỗi hàng có đáng dựng không. Cột «Quyết» chép đúng chữ người gõ
+**Đã quyết** — Manh Phan, 31/10, nguyên văn: «tất cả build» (19 hàng, gồm mở lại hàng 10). Đã chép vào ô cơ hội từng
+hàng (`decision: build`, `stage: decided`); ô hàng 10 thay quyết định `park` của 30/10.
+
+Mở 31/10. Một lần ngồi, 19 quyết định: mỗi hàng có đáng dựng không. Cột «Quyết» chép đúng chữ người gõ
 — máy không tự điền. Mỗi hàng nhận một trong bốn chữ: `build` (dựng) · `iterate` (làm lại ý trước khi dựng) · `park`
 (gác, chưa làm) · `kill` (bỏ).
 
@@ -29,25 +32,25 @@ Căn cứ đã kiểm 31/10:
 
 | # | Người dùng được gì | Đứng trên | Dãy | Hạng · giờ máy | Khuyến nghị — căn cứ | Quyết |
 |---|---|---|---|---|---|---|
-| 14 | Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn | 1, 53, 5, 13, 58, 59 | B | T2 · 1,29–5,09 h | `build` — P0 (Bảng kiểu Sheet, §10); mở khoá 15, 17 → đường găng; lưới đã chọn ở ADR-0004 | ___ |
-| 15 | Đầu chủ sửa giá, phí, trạng thái ngay trên ô; giá luôn kèm điều kiện phí, máy nói lại «Hiểu là…», sửa là vừa xác nhận với chủ nhà, hoàn tác được | 14 | B | T2 · 1,29–5,09 h | `build` — P0 (2b, §10); giữ tươi §11; 16, 20, 22 đứng trên nó | ___ |
-| 16 | Đầu chủ chọn nhiều căn rồi đổi trạng thái, đổi đầu chủ hay đánh dấu đã gọi cho tất cả trong một lần | 15 | B | T2 · 1,29–5,09 h | `build` — Bản đầu §11 «Giữ tươi: sửa hàng loạt»; không hàng nào chờ nó — xếp sau 15 trong dãy B | ___ |
-| 17 | Đầu chủ chọn một căn và thấy cột hồ sơ cạnh bảng: thuộc tính tự điền, lần rao, lịch sử giá và trạng thái ai sửa khi nào; thấy thuộc tính sai thì bấm… | 14 | H | T2 · 1,29–5,09 h | `build` — P0 (cột hồ sơ, §10); mở khoá 18, 22 | ___ |
-| 18 | Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy | 11, 17 | H | T3 · 3,84–12,47 h | `build` — P0 (M5 ảnh, §10); 19, 23 đứng trên; T3 — chạm ngăn nội bộ (luật 20) | ___ |
-| 19 | Đầu chủ che một vùng trên ảnh trước khi gửi; ra ngoài là bản nhẹ, bản gốc giữ lại | 18 | B | T2 · 1,29–5,09 h | `build` — Bản đầu §11; luật 29 che vùng trước khi ảnh ra ngoài — cần trước luồng Gửi (34) của đợt kế | ___ |
-| 22 | Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình — lead mới, cần gọi lại, nên gọi ép giá, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng… | 15, 17 | G | T2 · 1,29–5,09 h | `build` — P0 (Hôm nay, §10); trên đường găng, 26 và 28 chờ nó | ___ |
-| 23 | Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ… | 12, 18 | H | T2 · 1,29–5,09 h | `build` — Bản đầu §11 «Sẵn sàng bán một chạm»; bảng hàng thẻ của đầu khách (32) đứng trên nó | ___ |
-| 24 | Telesales nhập lead đủ năm mục trên máy tính và thấy ngay kết quả kiểm trùng: không trùng, đã có đầu chủ, hay căn đã có hàng mở | 5, 9, 11, 53 | L | T3 · 3,84–12,47 h | `build` — P0 (L1–L3, §10); mở chuỗi lead 25 → 26/27/28; T3 — kiểm trùng | ___ |
-| 25 | Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo | 24 | L | T2 · 1,29–5,09 h | `build` — Bản đầu §11 «chia lead theo toà kèm thông báo»; 26, 27 đứng trên | ___ |
-| 26 | Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay | 22, 25 | L | T2 · 1,29–5,09 h | `build` — Bản đầu §11; 30 và đợt kế (38 tab Tôi) đứng trên; cần chủ kho thử trên điện thoại (luật 16) | ___ |
-| 27 | Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng | 25 | L | T2 · 1,29–5,09 h | `build` — P0 (L1 cột phải, L5, §10) | ___ |
-| 28 | Đầu chủ mở chế độ cuộc gọi của một lead trên máy tính: thẻ lead so giá với toà, danh sách hỏi chọn bằng phím, tính giá bao phí ↔ về tay; ghi xong thì… | 22, 24 | G | T2 · 1,29–5,09 h | `build` — P0 (KD1, §10); 29, 30 đứng trên | ___ |
-| 29 | Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá | 28 | G | T2 · 1,29–5,09 h | `build` — P0 (KD2, §10); số đo «căn gọi ép giá đợt hai» của §11 | ___ |
-| 30 | Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà | 26, 28 | L | T2 · 1,29–5,09 h | `build` — Mức tối thiểu đã chốt 29/10 (tổng đài để sau); cần chủ kho thử quay số trên máy thật | ___ |
-| 61 | Đầu chủ sửa căn lúc máy chủ trục trặc ngắn hay hết phiên thì thay đổi tự gửi lại khi máy chủ trả lời được, chỉ báo đồng bộ nói đúng vì sao chưa gửi,… | 13 | H | T2 · 1,29–5,09 h | `build` — Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng hàng 13 và đặt điều kiện xong trước hai tuần thử | ___ |
-| 62 | Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra… | 11 | G | T3 · 3,84–12,47 h | `build` — Chủ kho đặt điều kiện «xong trước dữ liệu thật» ở Cổng Phạm vi hàng 11; T3 — chạm lớp source | ___ |
-| 63 | Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác | 9 | D | T2 · 1,29–5,09 h | `build` — Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng hàng 9; rẻ (6 tiêu chí), gỡ bẫy trước mọi đường danh mục thật | ___ |
-| 10 | Gói danh mục Invest đẩy sang theo khuôn phiên bản 1 được nhận vào vùng danh mục dùng chung khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt… | 9 | D | T3 · 7–10 h | `build` (mở lại) — xem mục riêng dưới bảng | ___ |
+| 14 | Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn | 1, 53, 5, 13, 58, 59 | B | T2 · 1,29–5,09 h | `build` — P0 (Bảng kiểu Sheet, §10); mở khoá 15, 17 → đường găng; lưới đã chọn ở ADR-0004 | `build` |
+| 15 | Đầu chủ sửa giá, phí, trạng thái ngay trên ô; giá luôn kèm điều kiện phí, máy nói lại «Hiểu là…», sửa là vừa xác nhận với chủ nhà, hoàn tác được | 14 | B | T2 · 1,29–5,09 h | `build` — P0 (2b, §10); giữ tươi §11; 16, 20, 22 đứng trên nó | `build` |
+| 16 | Đầu chủ chọn nhiều căn rồi đổi trạng thái, đổi đầu chủ hay đánh dấu đã gọi cho tất cả trong một lần | 15 | B | T2 · 1,29–5,09 h | `build` — Bản đầu §11 «Giữ tươi: sửa hàng loạt»; không hàng nào chờ nó — xếp sau 15 trong dãy B | `build` |
+| 17 | Đầu chủ chọn một căn và thấy cột hồ sơ cạnh bảng: thuộc tính tự điền, lần rao, lịch sử giá và trạng thái ai sửa khi nào; thấy thuộc tính sai thì bấm… | 14 | H | T2 · 1,29–5,09 h | `build` — P0 (cột hồ sơ, §10); mở khoá 18, 22 | `build` |
+| 18 | Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy | 11, 17 | H | T3 · 3,84–12,47 h | `build` — P0 (M5 ảnh, §10); 19, 23 đứng trên; T3 — chạm ngăn nội bộ (luật 20) | `build` |
+| 19 | Đầu chủ che một vùng trên ảnh trước khi gửi; ra ngoài là bản nhẹ, bản gốc giữ lại | 18 | B | T2 · 1,29–5,09 h | `build` — Bản đầu §11; luật 29 che vùng trước khi ảnh ra ngoài — cần trước luồng Gửi (34) của đợt kế | `build` |
+| 22 | Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình — lead mới, cần gọi lại, nên gọi ép giá, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng… | 15, 17 | G | T2 · 1,29–5,09 h | `build` — P0 (Hôm nay, §10); trên đường găng, 26 và 28 chờ nó | `build` |
+| 23 | Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ… | 12, 18 | H | T2 · 1,29–5,09 h | `build` — Bản đầu §11 «Sẵn sàng bán một chạm»; bảng hàng thẻ của đầu khách (32) đứng trên nó | `build` |
+| 24 | Telesales nhập lead đủ năm mục trên máy tính và thấy ngay kết quả kiểm trùng: không trùng, đã có đầu chủ, hay căn đã có hàng mở | 5, 9, 11, 53 | L | T3 · 3,84–12,47 h | `build` — P0 (L1–L3, §10); mở chuỗi lead 25 → 26/27/28; T3 — kiểm trùng | `build` |
+| 25 | Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo | 24 | L | T2 · 1,29–5,09 h | `build` — Bản đầu §11 «chia lead theo toà kèm thông báo»; 26, 27 đứng trên | `build` |
+| 26 | Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay | 22, 25 | L | T2 · 1,29–5,09 h | `build` — Bản đầu §11; 30 và đợt kế (38 tab Tôi) đứng trên; cần chủ kho thử trên điện thoại (luật 16) | `build` |
+| 27 | Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng | 25 | L | T2 · 1,29–5,09 h | `build` — P0 (L1 cột phải, L5, §10) | `build` |
+| 28 | Đầu chủ mở chế độ cuộc gọi của một lead trên máy tính: thẻ lead so giá với toà, danh sách hỏi chọn bằng phím, tính giá bao phí ↔ về tay; ghi xong thì… | 22, 24 | G | T2 · 1,29–5,09 h | `build` — P0 (KD1, §10); 29, 30 đứng trên | `build` |
+| 29 | Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá | 28 | G | T2 · 1,29–5,09 h | `build` — P0 (KD2, §10); số đo «căn gọi ép giá đợt hai» của §11 | `build` |
+| 30 | Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà | 26, 28 | L | T2 · 1,29–5,09 h | `build` — Mức tối thiểu đã chốt 29/10 (tổng đài để sau); cần chủ kho thử quay số trên máy thật | `build` |
+| 61 | Đầu chủ sửa căn lúc máy chủ trục trặc ngắn hay hết phiên thì thay đổi tự gửi lại khi máy chủ trả lời được, chỉ báo đồng bộ nói đúng vì sao chưa gửi,… | 13 | H | T2 · 1,29–5,09 h | `build` — Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng hàng 13 và đặt điều kiện xong trước hai tuần thử | `build` |
+| 62 | Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra… | 11 | G | T3 · 3,84–12,47 h | `build` — Chủ kho đặt điều kiện «xong trước dữ liệu thật» ở Cổng Phạm vi hàng 11; T3 — chạm lớp source | `build` |
+| 63 | Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác | 9 | D | T2 · 1,29–5,09 h | `build` — Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng hàng 9; rẻ (6 tiêu chí), gỡ bẫy trước mọi đường danh mục thật | `build` |
+| 10 | Gói danh mục Invest đẩy sang theo khuôn phiên bản 1 được nhận vào vùng danh mục dùng chung khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt… | 9 | D | T3 · 7–10 h | `build` (mở lại) — xem mục riêng dưới bảng | `build` |
 
 Thứ tự trong bảng là thứ tự số hàng; thứ tự ưu tiên khi các dãy tranh lượt chấm ở `README.md` (đường găng trước).
 

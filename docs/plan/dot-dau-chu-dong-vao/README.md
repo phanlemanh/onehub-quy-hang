@@ -14,7 +14,7 @@ hàng giữ nguyên trên lộ trình tới khi thiết kế ấy cắt lại. K
 
 ## Mở đợt
 
-1. Gói này và 19 ô cơ hội đã vào `main`; Cổng Đáng đã quyết ở `the-cong-dang.md`.
+1. Gói này và 19 ô cơ hội đã vào `main`; Cổng Đáng đã quyết ở `the-cong-dang.md` (Manh Phan 31/10: «tất cả build»).
 2. Đợt `nen-2` đã đóng (`/dieu-phoi:dong-dot`) — kit chỉ chạy một đợt mỗi lần.
 3. Mở từ một phiên mới ở checkout chính: `/dieu-phoi:mo-dot dau-chu-dong-vao`. Docker đang chạy.
 
