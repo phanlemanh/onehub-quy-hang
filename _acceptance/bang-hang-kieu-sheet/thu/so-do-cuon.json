@@ -1,0 +1,50 @@
+{
+  "ngay": "2026-10-31T15:01:00.331Z",
+  "nguong": {
+    "p95": 33.4,
+    "cham": 0.01
+  },
+  "so_hang": 5000,
+  "kho": "1366x768",
+  "cpu": 4,
+  "luot": [
+    {
+      "hieu_chuan_p95": 16.8,
+      "hop_le": true,
+      "p95": 33.4,
+      "ty_le_cham": 0.0155,
+      "so_khung": 323,
+      "dong_cuoi_thay": 5000
+    },
+    {
+      "hieu_chuan_p95": 16.8,
+      "hop_le": true,
+      "p95": 33.4,
+      "ty_le_cham": 0.0092,
+      "so_khung": 325,
+      "dong_cuoi_thay": 5000
+    },
+    {
+      "hieu_chuan_p95": 16.8,
+      "hop_le": true,
+      "p95": 33.4,
+      "ty_le_cham": 0.0062,
+      "so_khung": 324,
+      "dong_cuoi_thay": 5000
+    }
+  ],
+  "doi_chung": {
+    "hieu_chuan_p95": 16.7,
+    "hop_le": true,
+    "p95": 133.3,
+    "ty_le_cham": 0.9381,
+    "so_khung": 97,
+    "dong_cuoi_thay": 5000
+  },
+  "trung_vi": {
+    "p95": 33.4,
+    "ty_le_cham": 0.0092,
+    "dong_cuoi_thay": 5000
+  },
+  "ket_luan": "đạt"
+}
