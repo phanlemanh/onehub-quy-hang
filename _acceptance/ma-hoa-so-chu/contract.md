@@ -5,7 +5,7 @@ slug: ma-hoa-so-chu
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: docs/superpowers/specs/2026-10-31-ma-hoa-so-chu-design.md
@@ -187,3 +187,7 @@ Ngưỡng SỐNG của `opportunity.md`, từng vế:
 - Sửa ca có sẵn ngoài vùng (trả lời G-1 cho phép, khai ở đây cho chủ kho thấy): `packages/db/tests/isolation.test.mjs`
   ba ca đang chèn và đọc số rõ (quanh dòng 517, 572, 637) đổi sang bản mã; `packages/api/test-db/owners.test.ts` dòng
   93–94 đọc cột số rõ.
+
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-2: Đường ghi lead và đường ghi chủ nhà lấy khoá số chủ theo hai cách khác nhau; người dùng không thấy khác biệt, nhưng sửa một chỗ sau này dễ quên chỗ kia.
+  - Ngoài-3: Ở vai API, bài kiểm việc chặn số rõ của lead vẫn xanh nếu gỡ luật chặn chính, vì luật cặp bản mã–dấu vết chặn thay; số thật vẫn bị chặn, chỉ lưới đo ở đường này mỏng hơn.
