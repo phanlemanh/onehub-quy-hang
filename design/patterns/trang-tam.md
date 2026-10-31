@@ -1,0 +1,27 @@
+---
+nhom: trang-tam
+doi_tuong: [nha-chua-co-man, muc-chua-co-man]
+khuon: { ten: Placeholder, nhap: "@/components/shell/placeholder" }
+nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/web/src/app/settings/[section]/page.tsx"]
+mau_dang_chay: { tep: "apps/web/src/app/(app)/today/page.tsx", duong: "/today", trang_thai: [mac-dinh] }
+khe_bat_buoc: [path]
+cam_ngoai_khuon: [Frame, Empty, EmptyHeader, Card]
+ngoai_le: []
+luat: [KH-tt-noi-muc, KH-tt-roi-nhom]
+---
+# Trang tạm
+
+Nhà hay mục đã có địa chỉ trong vỏ mà chưa có màn: trang trả `<Placeholder path="…" />` ở gốc. Chữ của từng địa chỉ
+(tên, câu hỏi của màn, mục lộ trình dựng nó) nằm trong bảng `PLACEHOLDER` của khuôn, không viết ở trang.
+
+**Dùng khi** địa chỉ phải tồn tại để vỏ và điều hướng chạy được, còn màn thật xếp ở một mục lộ trình sau.
+**Không dùng** để che một màn dựng dở: màn đã có dữ liệu thật thì rời nhóm này.
+
+`nhan_dien` cố ý phủ mọi `page.tsx` dưới `(app)`: màn thật đầu tiên dựng ở đó làm bộ kiểm đỏ cho tới khi nó rời nhóm.
+
+## Luật
+
+- **KH-tt-noi-muc** — Trang tạm nói màn dựng ở mục nào của lộ trình (`docs/plan/lo-trinh.json`, trường `ma`); địa chỉ
+  chưa xếp mục thì nói «Chưa xếp mục nào trong lộ trình».
+- **KH-tt-roi-nhom** — Dựng màn thật ở một địa chỉ của nhóm thì cùng PR đó đưa tệp ra khỏi `nhan_dien` (hay thêm mục bản
+  đồ của nhóm mới), và bỏ dòng của nó trong bảng `PLACEHOLDER`.
