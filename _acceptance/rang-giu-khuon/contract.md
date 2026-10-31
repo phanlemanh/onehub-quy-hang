@@ -5,7 +5,7 @@ slug: rang-giu-khuon
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-rang-giu-khuon-design.md
 approved_by:
 approved_at:
@@ -86,3 +86,9 @@ theo vùng [NGÀNH cận kề: luật no-restricted-imports của ESLint].
 - Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu chỉ xoá một dòng làm màn thiếu phần bắt buộc, bước chấm theo vòng có thể coi đó là nợ cũ và vẫn xanh. Lần lint đầy đủ vẫn bắt được. — `packages/ui-lint/ban-do-khuon.mjs`
 - Ngoài-4 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi bản đồ khuôn đổi làm vài màn cũ lệch, bước chấm theo vòng không báo gì và ra xanh. Lần chạy lint đầy đủ vẫn báo đỏ. — `packages/ui-lint/ban-do-khuon.mjs`
 - Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Một số lệch do vòng hiện tại gây ra bị tính là nợ cũ nên bước chấm theo vòng vẫn xanh. Lint đầy đủ vẫn bắt được. — `packages/ui-lint/lib/ban-do.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Chỉ sửa bản đồ khuôn mà màn cũ thành lệch thì bước chấm theo vòng không báo; lint đầy đủ vẫn báo.
+  - Ngoài-2: Lệch cấp tệp (thiếu thành phần xuất mặc định, nhập khuôn sai kiểu) có thể bị chấm theo vòng xếp nhầm là nợ cũ.
+  - Ngoài-3: Chỉ xoá một dòng làm màn thiếu phần bắt buộc thì bước chấm theo vòng có thể coi là nợ cũ.
+  - Ngoài-4: Khi bản đồ đổi, lệch mới ở tệp không đổi bị bước chấm theo vòng bỏ qua; lint đầy đủ vẫn bắt.
+  - Ngoài-5: Lệch gán dòng 1 có thể bị xếp là nợ cũ ở bước chấm theo vòng.
