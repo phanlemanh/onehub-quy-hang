@@ -47,16 +47,17 @@ bước 7).
 
 ## Đã đo 31/10
 
-- Migration 001–003 áp đủ bằng `npm run db:migrate`; 005 áp tay bằng vai chủ trước khi gộp (chạy lại được).
+- Migration 001–005 áp đủ bằng `npm run db:migrate` (004 của lõi hàng gộp main trước PR này; 005 áp trước khi gộp — chạy lại được). Bộ kiểm cách ly sau 004: 29/29 trên cơ sở dữ liệu thật.
 - Bộ kiểm cách ly 24/24 và test API trên cơ sở dữ liệu 43/43 xanh **trên cơ sở dữ liệu thật**; sau chạy không còn dòng
   nào.
-- Supabase advisors: bảo mật 0 cảnh báo; hiệu năng còn hai mục INFO không thuộc luật theo dòng (`identity.otp_requests`
+- Supabase advisors (sau 004 và 005): bảo mật 0 cảnh báo; hiệu năng còn hai mục INFO không thuộc luật theo dòng (`identity.otp_requests`
   không khoá chính; số kết nối của Supabase Auth — app không dùng Supabase Auth).
 - Deploy `main` trên Vercel: build xanh; `/api/v1/health` trả 500 «thiếu bộ gửi mã đăng nhập» đúng ADR-0005 §7 tới khi
   bộ gửi Resend gộp và khoá có trong Vercel.
 
 ## Hệ quả
 
+- Thư mã đăng nhập: Resend trả 403 tới khi tên miền gửi `onehub.center` xác minh ở Resend; người xin mã vẫn nhận câu trả lời thành công (ADR-0005 §4 — không lộ ai có tài khoản), lỗi chỉ ở nhật ký.
 - Bản xem trước của nhánh dùng chung cơ sở dữ liệu thật. Trước khi có dữ liệu thật: tách cơ sở dữ liệu cho bản xem trước
   (nhánh Supabase hay dự án riêng) hoặc tắt bản xem trước.
 - Đội Vercel đang ở gói Hobby: lịch chạy chỉ một lần mỗi ngày và điều khoản là dùng phi thương mại. Việc nền mỗi phút
