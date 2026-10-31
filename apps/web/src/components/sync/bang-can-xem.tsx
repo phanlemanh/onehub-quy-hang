@@ -4,7 +4,8 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useBoDongBo, useCanXem } from "@/lib/sync/react";
-import type { NeedsReview } from "@/lib/sync/types";
+import type { NeedsReview, PendingOp } from "@/lib/sync/types";
+import { thaoTacGiu } from "@/lib/sync/xu-ly-can-xem";
 
 const tien = (v: unknown) => (typeof v === "number" ? `${(v / 1_000_000).toLocaleString("vi-VN")} triệu` : "—");
 const gio = (iso: string) => new Date(iso).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
@@ -13,8 +14,8 @@ const VAI: Record<string, string> = { listing_agent: "Đầu chủ", buyer_agent
 /** Người sửa nói bằng vai: danh sách tên chỉ quản trị sàn đọc được. */
 const nguoiSua = (vai: string[] = []) => (vai.length ? vai.map((v) => VAI[v] ?? v).join(", ") : "Người khác");
 
-function giaTriCuaToi(r: NeedsReview) {
-  return r.mine
+function giaTri(ops: PendingOp[]) {
+  return ops
     .map((o) => (o.type === "price_changed" ? `giá ${tien(o.payload.listPrice)}` : o.type === "status_changed" ? `trạng thái ${String(o.payload.to)}` : JSON.stringify(o.payload)))
     .join(" · ");
 }
@@ -22,6 +23,8 @@ function giaTriCuaToi(r: NeedsReview) {
 function MotCan({ r }: { r: NeedsReview }) {
   const { bd, suaLai } = useBoDongBo();
   const can = r.server?.value ?? bd.danhSach().find((l) => l.id === r.listingId);
+  // Hàng 61: thao tác sửa tiếp căn này đang giữ — gửi sau khi người chọn lối, luôn là lần sửa sau cùng.
+  const giu = thaoTacGiu(bd.ngan(), r.listingId);
   return (
     <div className="flex flex-col gap-2 border-b py-3 last:border-b-0">
       <p className="text-sm font-medium">
@@ -34,7 +37,8 @@ function MotCan({ r }: { r: NeedsReview }) {
           Bản mới: giá {tien(r.server.value.listPrice)} · trạng thái {r.server.value.standardStatus} — {nguoiSua(r.server.byRoles)} sửa lúc {gio(r.server.at)}
         </p>
       )}
-      <p className="text-sm">Của tôi: {giaTriCuaToi(r)}</p>
+      <p className="text-sm">Của tôi: {giaTri(r.mine)}</p>
+      {giu.length > 0 && <p className="text-sm">Sửa thêm sau đó: {giaTri(giu)} — gửi sau khi bạn chọn</p>}
       {r.reason && <p className="text-sm text-muted-foreground">Lý do: {r.reason}</p>}
       <div className="flex gap-2">
         {r.kind === "tu-choi" ? (

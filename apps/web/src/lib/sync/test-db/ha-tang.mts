@@ -65,21 +65,38 @@ export async function sanMoi(ten: string) {
 
 /**
  * Hàm gọi API cho bộ đồng bộ của một người, sàn theo `sanHienTai()` (như cookie sàn của trình duyệt). Công tắc: mất mạng
- * (ném lỗi trước khi gửi), mất phản hồi lần tới (gửi tới máy chủ rồi ném lỗi thay cho phản hồi).
+ * (ném lỗi trước khi gửi), mất phản hồi lần tới (gửi tới máy chủ rồi ném lỗi thay cho phản hồi). Hàng 61: bỏ phiên (gửi
+ * chỉ cookie sàn — API thật trả 401), và ghi rồi trả 503 lần tới (API thật ghi, phản hồi thay bằng 503).
  */
 export function goiCua(n: Nguoi, sanHienTai: () => string) {
   let matMang = false;
   let matPhanHoi = false;
+  let boPhien = false;
+  let tra503 = false;
   const goi: Goi = async (method, path, body) => {
     if (matMang) throw new Error("mất mạng");
+    if (boPhien) {
+      const r = await goiThang(method, path, body, `qh_san=${sanHienTai()}`);
+      return { status: r.status, body: await r.json().catch(() => null) };
+    }
     const r = await n.goi(method, path, body, sanHienTai());
     if (matPhanHoi && method === "POST") {
       matPhanHoi = false;
       throw new Error("mất phản hồi");
     }
+    if (tra503 && method === "POST") {
+      tra503 = false;
+      return { status: 503, body: null };
+    }
     return r;
   };
-  return { goi, matMang: (v: boolean) => void (matMang = v), matPhanHoiLanToi: () => void (matPhanHoi = true) };
+  return {
+    goi,
+    matMang: (v: boolean) => void (matMang = v),
+    matPhanHoiLanToi: () => void (matPhanHoi = true),
+    boPhien: (v: boolean) => void (boPhien = v),
+    ghiRoi503LanToi: () => void (tra503 = true),
+  };
 }
 
 export const demSuKien = async (listingId: string) =>

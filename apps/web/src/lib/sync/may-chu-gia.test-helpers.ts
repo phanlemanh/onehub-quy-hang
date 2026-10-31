@@ -1,5 +1,6 @@
 // Máy chủ giả cho ca kiểm thuần: giữ dãy sự kiện mỗi căn, áp đúng ba luật của API thật (phiên bản, «thắng ngay», bảng
 // chuyển trạng thái của lõi), có công tắc mất mạng và mất phản hồi. Bài kiểm trên API thật nằm ở test-db/.
+// Hàng 61: công tắc trả mã (401, 5xx, 4xx) theo phương thức và căn, ghi rồi trả 503, cấy khoá nguồn vào bản kéo.
 import { checkTransition, foldListing, WINS_IMMEDIATELY, type ListingEvent } from "@quy-hang/core/listing";
 import type { Goi } from "./types";
 
@@ -8,6 +9,14 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
   let matMang = false;
   const anDi = new Set(o.chiToiCuaNguoiKhac ?? []);
   let matPhanHoiLanToi = false;
+  let ghiRoi503LanToi = false;
+  let cayNguon = false;
+  /** Mã ép trả, khoá `<phương thức> <căn | ds | *>` — `ds` là danh sách, `*` mọi căn. */
+  const ma = new Map<string, { status: number; body: unknown }>();
+  const maCua = (method: string, id: string | undefined) => {
+    const c = id ?? "ds";
+    return ma.get(`${method} ${c}`) ?? ma.get(`* ${c}`) ?? (id ? (ma.get(`${method} *`) ?? ma.get("* *")) : ma.get("* *"));
+  };
   const goiQua: { method: string; path: string }[] = [];
   const view = (id: string) => ({ id, ...foldListing(can.get(id)!), visibility: "Company" as const });
   const ghi = (id: string, actorUserId: string, type: ListingEvent["type"], payload: Record<string, unknown>) => {
@@ -19,8 +28,10 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
     if (matMang) throw new Error("mất mạng");
     const m = path.match(/^\/api\/v1\/listings(?:\/([^/]+))?(\/events)?$/);
     const id = m?.[1];
+    const ep = maCua(method, id);
+    if (ep) return { status: ep.status, body: ep.body };
     const an = (x: string) => anDi.has(x);
-    if (method === "GET" && !id) return { status: 200, body: [...can.keys()].filter((x) => !an(x)).map(view) };
+    if (method === "GET" && !id) return { status: 200, body: [...can.keys()].filter((x) => !an(x)).map((x) => (cayNguon ? { ...view(x), ownerPhone: "0900 000 012" } : view(x))) };
     if (!id || !can.has(id) || an(id)) return { status: 404, body: { error: "not-found" } };
     if (method === "GET") return { status: 200, body: { ...view(id), events: can.get(id) } };
     const c = body as { type: ListingEvent["type"]; payload: Record<string, unknown>; expectedVersion: number };
@@ -35,6 +46,10 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
     if (matPhanHoiLanToi) {
       matPhanHoiLanToi = false;
       throw new Error("mất phản hồi");
+    }
+    if (ghiRoi503LanToi) {
+      ghiRoi503LanToi = false;
+      return { status: 503, body: null };
     }
     return { status: 200, body: view(id) };
   };
@@ -54,6 +69,18 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
     },
     matPhanHoiLanToi: () => {
       matPhanHoiLanToi = true;
+    },
+    /** Ép mã cho `<phương thức> <căn | ds | *>`; `null` gỡ. */
+    datMa: (khoa: string, status: number | null, body: unknown = { error: `ma-${status}` }) => {
+      if (status === null) ma.delete(khoa);
+      else ma.set(khoa, { status, body });
+    },
+    /** Lần POST tới: máy chủ ghi sự kiện rồi trả 503. */
+    ghiRoi503LanToi: () => {
+      ghiRoi503LanToi = true;
+    },
+    datCayNguon: (v: boolean) => {
+      cayNguon = v;
     },
   };
 }

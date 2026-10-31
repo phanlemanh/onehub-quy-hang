@@ -1,0 +1,116 @@
+schema_version: 1
+feature_slug: dong-bo-tu-lanh
+# Ca thuần ở `apps/web/src/lib/sync/tu-lanh.test.ts` (máy chủ giả có công tắc trả mã cho từng căn, kho bộ nhớ có công tắc
+# lỗi, đồng hồ giả) chạy bằng `executors.test.web`; ca trên API thật ở `apps/web/src/lib/sync/test-db/tu-lanh.db-test.mts`
+# chạy bằng `executors.test.web_db` (Postgres dãy H, cổng 5562). exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng
+# tên ca nêu trong `expected` trong `output` — có mặt, «ok», không «# SKIP»/«# TODO». Mỗi ca có chiều đỏ ghim: cùng kịch
+# bản với phân loại cũ (mọi mã khác 200 → Cần xem; mọi lỗi kéo → «Mất mạng») thì ca đỏ nêu căn, mã và chữ chỉ báo.
+#
+# DỰNG T (cho E9b): máy chủ dev của executors.ui-check (cổng 3462) trên Postgres dãy đã nạp dữ liệu mẫu
+# (executors.script.du_lieu_mau); đăng nhập người mẫu vai Đầu chủ của sàn mẫu; mở http://localhost:3462/proto/nhanh-tuc-thi.
+# Máy chủ trục trặc = công cụ trình duyệt GIẢ TRẢ 503 cho `*/api/v1/listings*` (chặn trả lời, không tới máy chủ). Hết phiên =
+# xoá cookie phiên trong trình duyệt (API thật trả 401). Kho lỗi = trong trang ghi đè IDBObjectStore.prototype.put ném lỗi.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «5xx: thao tác ở lại hàng đợi, căn khác vẫn lên, hồi thì tự gửi đúng thứ tự» có mặt và ok — máy chủ giả trả 503 cho mọi POST của H, 200 cho K; sau thuNgay: số sự kiện K +1, H +0 (assert số đếm), hàng đợi deepEqual hai thao tác của H theo clientSeq, canXem() deepEqual [], chiBao().nhan === «Máy chủ trục trặc · 2 thay đổi chờ gửi lại»; tắt công tắc 503, tiến đồng hồ 15 giây (nhịp bật, không gọi thuNgay tay): dãy payload sự kiện mới của H deepEqual [giá 1, giá 2] theo thứ tự, listPrice cuối = giá 2, hàng đợi rỗng, chỉ báo bắt đầu «Đã đồng bộ». Chiều đỏ: phân loại cũ → H vào Cần xem, ca đỏ nêu «H vào Cần xem với 503»."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «401: dừng cả lô, giữ hàng đợi, phiên hồi thì lên đủ» có mặt và ok — ba thao tác trên H, K; máy chủ giả trả 401 mọi lời gọi; sau thuNgay: số lời gọi POST = 1 (dừng cả lô — assert số đếm), hàng đợi giữ 3, canXem() [], chỉ báo === «Hết phiên · đăng nhập lại để gửi 3 thay đổi», ngan().lastAttempt === «phien»; tắt 401, thuNgay: sự kiện mới từng căn deepEqual dãy viết tay theo thứ tự, hàng đợi rỗng, chỉ báo «Đã đồng bộ». Chiều đỏ: 401 thành Cần xem hay chỉ báo «Mất mạng» → ca đỏ nêu chữ chỉ báo."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đối chiếu gặp 401/503: thao tác ở lại, không thành căn không còn đọc được» có mặt và ok — POST trả 409 và GET lịch sử trả 401 (rồi lặp với 503): hàng đợi giữ thao tác, canXem() deepEqual []; đối chứng dương cùng kịch bản với GET trả 404 → canXem có mục «tu-choi» lý do «căn không còn đọc được». Ca «503 sau khi đã ghi: gửi lại không thành sự kiện thứ hai» có mặt và ok — máy chủ giả ghi sự kiện rồi trả 503 một lần; thuNgay hai lần: số sự kiện của căn +1 đúng một (assert số đếm), hàng đợi rỗng, canXem() []."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «4xx khác vẫn vào Cần xem như hàng 13» có mặt và ok — bảng bốn hàng viết trước (400 chuyển trạng thái cấm · 403 thân {error: «listing-agent-required»} · 404 · 409 đụng nhau), mỗi hàng một căn mới; mỗi hàng assert nguyên cặp [loại, lý do] của mục Cần xem — 400 → [tu-choi, chuỗi reason mà checkTransition của lõi trả cho cùng chuyển trạng thái (rút từ lõi, không viết tay)] · 403 → [tu-choi, «listing-agent-required»] · 404 → [tu-choi, «căn không còn đọc được»] · 409 → [dung-nhau, undefined] — số assert bằng số hàng; hàng đợi rỗng. Các ca 4xx của hàng 13 trong `dong-bo.test.ts` vẫn ok trong cùng output. Chiều đỏ: một mã 4xx bị giữ lại hàng đợi → ca đỏ nêu mã."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «chỉ báo kéo về nói đúng nguyên nhân» có mặt và ok — kéo về một lần thành công; rồi năm lượt kéo viết trước (ném lỗi · 401 · 503 · bản kéo cấy ownerPhone · 403), mỗi lượt assert chiBao().nhan bằng đúng chuỗi của AC-5 (năm assert, bảng viết tay) và danh sách trên máy deepEqual danh sách sau lần kéo đầu; lượt thứ sáu thành công → chỉ báo bắt đầu «Đã đồng bộ». Ca «suyChiBao: bảng chữ theo thứ tự ưu tiên» có mặt và ok — mỗi trạng thái của bảng thiết kế (Cần xem · lỗi kho · đang gửi · mang/phien/may-chu có và không có hàng đợi · tu-choi) một assert, Cần xem thắng lỗi kho. Chiều đỏ: một lỗi kéo hiện «Mất mạng» → ca đỏ nêu lượt."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «kho lỗi: sửa trả lỗi kho, chỉ báo nói lỗi kho, kho hồi thì về bình thường» có mặt và ok — kho bộ nhớ bọc công tắc ném lỗi khi ghi; bd.sua trả { ok: false, loi: { kind: «kho» } } (không reject — assert bằng await không try), chỉ báo === «Lỗi kho trên máy · thay đổi chưa lưu được»; thuNgay khi kho lỗi resolve (không reject); tắt công tắc, sửa lại: ok true, hàng đợi 1, thuNgay → lên máy chủ, chỉ báo «Đã đồng bộ». Đối chứng: cùng kịch bản kho lành từ đầu không bao giờ hiện «Lỗi kho». Ca «kho lỗi giữa lượt nhịp: nhịp sống, kho hồi thì tự lên» có mặt và ok — nhịp bật, đồng hồ giả, một thao tác chờ, máy chủ giả có mạng; bật lỗi ghi kho; tiến 15 giây (không gọi thuNgay tay): không unhandled rejection (bộ nghe process «unhandledRejection» đếm 0), chỉ báo «Lỗi kho trên máy · …»; tắt lỗi, tiến 15 giây: số sự kiện căn +1 (assert số đếm), chỉ báo bắt đầu «Đã đồng bộ». Chiều đỏ: sua ném ra ngoài → ca đỏ nêu «sua ném lỗi kho»; nhịp chết → ca đỏ nêu «không lên sau khi kho hồi»."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «Cần xem sửa tiếp rồi Giữ của tôi: cũ trước mới sau, giá cuối là lần sau cùng» có mặt và ok — người khác sửa giá H khi tôi mất mạng và đã sửa giá 2 tỷ; có mạng: H vào Cần xem dung-nhau; tôi sửa giá H 3 tỷ; thuNgay: số sự kiện H trên máy chủ không đổi (thao tác 3 tỷ giữ lại — assert số đếm); giuCuaToi(H) rồi thuNgay: listPrice của hai sự kiện mới deepEqual [2 tỷ, 3 tỷ], listPrice cuối 3 tỷ, canXem() [], hàng đợi rỗng. Chiều đỏ: thứ tự cũ (mới trước cũ sau) → ca đỏ nêu «giá cuối 2 tỷ»."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web_db
+    expected: "exit 0; ca «Giữ của tôi trên API thật: cũ rồi mới, giá cuối lần sau cùng» có mặt và ok — trên API thật người khác (Trưởng nhóm cùng sàn) sửa giá căn H khi X mất mạng và đã sửa giá 2 tỷ; có mạng: H vào Cần xem dung-nhau; X sửa tiếp 3 tỷ; thuNgay: đếm sự kiện H bằng kết nối chủ không đổi; giuCuaToi rồi thuNgay: đếm +2, suKienMoi listPrice deepEqual [2 tỷ, 3 tỷ], canXem() []. Ca «ghi rồi trả 503 trên API thật: một sự kiện» có mặt và ok — hàm gọi chuyển yêu cầu tới API thật rồi thay phản hồi bằng 503 một lần; thuNgay hai lần: đếm +1 đúng một, hàng đợi rỗng, canXem() []."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «Cần xem sửa tiếp rồi Lấy bản mới / Bỏ thay đổi / Sửa lại: lần sửa sau cùng lên, không kẹt» có mặt và ok — ba lượt viết trước (Lấy bản mới trên dung-nhau · Bỏ thay đổi trên tu-choi · Sửa lại trên tu-choi), mỗi lượt căn mới; sau lối chọn và thuNgay: sự kiện mới của căn deepEqual đúng một sự kiện là lần sửa tiếp, listPrice cuối = lần sửa tiếp, hàng đợi rỗng, canXem() []; thuNgay lần nữa không đổi gì (không kẹt). Chiều đỏ: thao tác sửa tiếp nằm lại hàng đợi hay căn quay lại Cần xem → ca đỏ nêu lối."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web_db
+    expected: "exit 0; ca «hết phiên trên API thật: hàng đợi ở lại, đăng nhập lại thì lên đúng thứ tự» có mặt và ok — người X trên API thật; hai căn; X sửa ba ô khi hàm gọi gửi không kèm cookie phiên (API thật trả 401): đếm sự kiện bằng kết nối chủ +0, hàng đợi 3, canXem() [], chỉ báo «Hết phiên · đăng nhập lại để gửi 3 thay đổi»; hàm gọi kèm lại cookie, thuNgay: đếm +3, suKienMoi từng căn deepEqual dãy viết tay theo thứ tự, canXem() []. Ca «4xx thật vẫn vào Cần xem» các ca hàng 13 trong cùng output ok."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG T. Khổ 1440x900. Chờ chỉ báo «Đã đồng bộ · hh:mm». Giả trả 503 cho */api/v1/listings*; sửa giá căn đầu (+1 triệu) → chờ chỉ báo đổi → chụp evidence/E9b-may-chu.png; ghi chữ chỉ báo; mở bảng Cần xem nếu có (kỳ vọng không có). Bỏ giả trả; không bấm gì, chờ tối đa 60 giây → ghi chữ chỉ báo và giá căn đầu"
+      - "Xoá cookie phiên của trang (giữ cookie sàn). Sửa giá căn đầu (+1 triệu) → chờ chỉ báo đổi → chụp evidence/E9b-het-phien.png; ghi chữ chỉ báo và đích liên kết của nó (href). Bấm chỉ báo → đăng nhập lại cùng người mẫu → về trang thử, chờ tối đa 60 giây → chụp evidence/E9b-dang-nhap-lai.png; ghi chữ chỉ báo và giá căn đầu"
+      - "Chạy trong trang: IDBObjectStore.prototype.put = function () { throw new DOMException('thu', 'UnknownError') }. Sửa giá căn thứ hai → chụp evidence/E9b-kho.png; ghi chữ chỉ báo. Tải lại trang (khôi phục put) → ghi chữ chỉ báo"
+      - "Khổ 375x812, ma trận viết trước năm ô (mất mạng = chặn */api/v1/* · máy chủ trục trặc = giả trả 503 cho */api/v1/listings* · hết phiên = xoá cookie phiên · bị từ chối = giả trả 403 cho GET */api/v1/listings đúng đường danh sách · lỗi kho = ghi đè IDBObjectStore.prototype.put rồi sửa giá một căn); mỗi ô: dựng trạng thái, chờ chỉ báo đổi, chụp evidence/E9b-375-<ô>.png, ghi aria-label của chỉ báo, tên lớp svg biểu tượng (lucide-…), và với ô hết phiên ghi href; gỡ trạng thái và tải lại trước ô kế. Số dòng ghi = 5"
+      - "Khổ 375x812: tạo đụng nhau như E8b của hàng 13 (cửa sổ thứ hai người mẫu Trưởng nhóm sửa giá căn thứ ba; cửa sổ đầu chặn */api/v1/*, sửa giá căn thứ ba, bỏ chặn → chờ «1 căn cần xem»). Sửa tiếp giá căn thứ ba (giá X) → mở bảng Cần xem → chụp evidence/E9b-sua-them.png; ghi nội dung bảng. Bấm «Lấy bản mới» → chờ chỉ báo «Đã đồng bộ» → ghi giá căn thứ ba"
+    expected: "503: chỉ báo «Máy chủ trục trặc · 1 thay đổi chờ gửi lại», không có Cần xem; bỏ giả trả thì tự về «Đã đồng bộ» và giá căn đầu là giá đã sửa. Hết phiên: chỉ báo «Hết phiên · đăng nhập lại để gửi 1 thay đổi», là liên kết tới /login; đăng nhập lại thì về «Đã đồng bộ» và giá căn đầu là giá đã sửa lần hai. Kho lỗi: chỉ báo «Lỗi kho trên máy · thay đổi chưa lưu được»; tải lại thì hết. Sửa tiếp căn Cần xem: bảng có dòng «Sửa thêm sau đó: giá X» kèm «gửi sau khi bạn chọn»; sau «Lấy bản mới» giá căn thứ ba là X và chỉ báo «Đã đồng bộ». Ma trận 375: năm aria-label đúng năm chữ của bảng thiết kế (mất mạng · hết phiên · máy chủ trục trặc · bản tải về bị từ chối · lỗi kho), năm lớp biểu tượng đôi một khác nhau (cloud-off · log-in · server-crash · shield-alert · hard-drive-download), ô hết phiên href /login. Đối chứng: chỉ báo trước và sau mỗi bước khác nhau."
+    paths: [apps/web/src/lib/sync/**, apps/web/src/components/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0 — sàn M1: không mã màu thô trên tệp giao diện vòng chạm (`apps/web/src/components/sync/*.tsx`)."
+    paths: [apps/web/src/components/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
