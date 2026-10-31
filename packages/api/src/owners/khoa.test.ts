@@ -1,6 +1,9 @@
 // Khoá mã hoá số chủ (hàng 62: AC-4 — ADR-0013). Bản thật thiếu khoá thì API không dựng, không có đường ghi số rõ.
 import assert from "node:assert/strict";
+import { execSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, test } from "node:test";
 import pg from "pg";
 import { createApi } from "../app";
@@ -76,4 +79,15 @@ test("khoá: production có khoá hợp lệ thì dựng", () => {
   datMoiTruong("production", k);
   assert.doesNotThrow(() => createApi(deps()));
   assert.deepEqual(khoaSoChu().key, Buffer.from(k, "base64"));
+});
+
+test("khoá: lệnh sinh khoá ghi trong ADR-0013 cho khoá hợp lệ", () => {
+  const adr = readFileSync(fileURLToPath(new URL("../../../../docs/adr/0013-ma-hoa-so-chu.md", import.meta.url)), "utf8");
+  const khoi = /<!-- <<<SINH-KHOA -->\s*```bash\n([^\n]+)\n```\s*<!-- SINH-KHOA>>> -->/.exec(adr);
+  assert.ok(khoi, "ADR-0013 thiếu khối lệnh sinh khoá");
+  const sinh = (lenh: string) => execSync(lenh, { encoding: "utf8" }).trim();
+  const khoa = khoaSoChu({ NODE_ENV: "production", OWNER_PHONE_KEY: sinh(khoi[1]!) });
+  assert.equal(khoa.key.length, 32);
+  // Đối chứng âm cùng bộ đọc: khoá viết hex (64 ký tự) bị từ chối — ADR ghi sai lệnh thì bản thật không lên.
+  assert.throws(() => khoaSoChu({ NODE_ENV: "production", OWNER_PHONE_KEY: sinh("openssl rand -hex 32") }), /sai dạng/);
 });

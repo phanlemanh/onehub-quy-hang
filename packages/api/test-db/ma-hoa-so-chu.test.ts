@@ -148,7 +148,7 @@ async function cayDongSoRo(dong: [string, string][]) {
   }
 }
 const demSoRo = async () => (await appPool.query<{ n: number }>("select count(*)::int n from listing_owners where owner_phone is not null")).rows[0]!.n;
-const LENH = fileURLToPath(new URL("../src/owners/ma-hoa-lai.ts", import.meta.url));
+const LENH = fileURLToPath(new URL("../van-hanh/ma-hoa-lai.ts", import.meta.url));
 function chayLenh(khoa: string | undefined) {
   const env: NodeJS.ProcessEnv = { ...process.env };
   delete env.NODE_ENV;

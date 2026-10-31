@@ -139,7 +139,7 @@ bộ đo `_acceptance/ma-hoa-so-chu/evals.yaml`
 **Phục vụ:** E9 · **independent:** false (cần Task 1–4)
 
 **Files:**
-- Create: `packages/api/src/owners/ma-hoa-lai.ts`
+- Create: `packages/api/src/owners/ma-hoa-lai.ts` (lõi), `packages/api/van-hanh/ma-hoa-lai.ts` (dòng lệnh — G-2)
 - Modify: `packages/api/test-db/ma-hoa-so-chu.test.ts`
 
 **Interfaces:**

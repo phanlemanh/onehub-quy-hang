@@ -69,7 +69,7 @@ giữ nguyên) và bất biến 2 (lớp `source` — trần `never_leaves_compa
 
 ### 5. Mã hoá lại dữ liệu đã có
 
-`node --env-file-if-exists=.env.local --import tsx packages/api/src/owners/ma-hoa-lai.ts` — chạy bằng vai chủ
+`node --env-file-if-exists=.env.local --import tsx packages/api/van-hanh/ma-hoa-lai.ts` — chạy bằng vai chủ
 (`DATABASE_URL` của vai chủ, như migration) cùng khoá của môi trường đó. **Lệnh không bao giờ rơi về khoá dev**: thiếu
 `OWNER_PHONE_KEY`, khoá sai dạng hay khoá trùng khoá dev → thoát khác 0 trước khi chạm dòng nào, thông điệp nêu tên
 biến. Lý do: lệnh xoá số rõ trong cùng giao dịch; mã hoá nhầm bằng khoá dev công khai là mất số (API thật không giải

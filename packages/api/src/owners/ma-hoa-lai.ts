@@ -1,13 +1,9 @@
-import { pathToFileURL } from "node:url";
-import pg from "pg";
-import { khoaSoChu } from "./khoa";
+import type pg from "pg";
 import { dauVetSo, maHoaSo, nguCanhChuNha, type KhoaSoChu } from "./ma-hoa";
 
 /**
- * Mã hoá lại số chủ còn ở dạng chữ rõ (hàng 62, ADR-0013). Chạy bằng vai chủ (`DATABASE_URL` như migration) cùng khoá
- * thật của môi trường đó:
- *
- *   node --env-file-if-exists=.env.local --import tsx packages/api/src/owners/ma-hoa-lai.ts
+ * Mã hoá lại số chủ còn ở dạng chữ rõ (hàng 62, ADR-0013). Lệnh dòng lệnh chạy bằng vai chủ ở
+ * `packages/api/van-hanh/ma-hoa-lai.ts` (ngoài src: luật một cửa truy vấn cấm mở kết nối trong mã API).
  *
  * Không bao giờ rơi về khoá dev: lệnh xoá số rõ trong cùng giao dịch, mã hoá nhầm bằng khoá dev là mất số (API thật không
  * giải được) và lộ số (khoá dev công khai). Chạy lại không đổi gì — dòng đã có bản mã giữ nguyên từng byte. Đầu ra chỉ có
@@ -32,31 +28,4 @@ export async function maHoaLai(client: pg.ClientBase, khoa: KhoaSoChu): Promise<
   await client.query("alter table public.listing_owners validate constraint listing_owners_phone_chi_ban_ma");
   const tong = await client.query<{ n: number }>("select count(*)::int n from public.listing_owners where owner_phone_enc is not null");
   return { daMaHoa: rows.length, daCoBanMa: tong.rows[0]!.n - rows.length };
-}
-
-async function chay(): Promise<void> {
-  const khoa = khoaSoChu(process.env, { choPhepKhoaDev: false });
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("thiếu DATABASE_URL của vai chủ");
-  const client = new pg.Client({ connectionString: url });
-  await client.connect();
-  try {
-    await client.query("begin");
-    const kq = await maHoaLai(client, khoa);
-    await client.query("commit");
-    console.log(`đã mã hoá ${kq.daMaHoa} dòng, ${kq.daCoBanMa} dòng đã là bản mã`);
-  } catch (e) {
-    await client.query("rollback").catch(() => {});
-    throw e;
-  } finally {
-    await client.end();
-  }
-}
-
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  chay().catch((e: unknown) => {
-    // Chỉ thông điệp — không in đối tượng lỗi (chi tiết của Postgres có thể mang giá trị dòng).
-    console.error(`ma-hoa-lai: ${e instanceof Error ? e.message : "lỗi không rõ"}`);
-    process.exit(1);
-  });
 }
