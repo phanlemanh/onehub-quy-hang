@@ -39,6 +39,26 @@ if (a.tat) {
   process.exit(0);
 }
 
+// Khoá dựng: các bài nhìn của một lượt chấm chạy song song — cùng migrate, cùng nạp hàng mẫu (đọc rồi mới thêm) và cùng
+// bật máy chủ thì tranh cổng và nạp trùng (E8 lượt 3 trượt vì thế). Giữ khoá suốt bước dựng; thư mục khoá tạo nguyên
+// tử, khoá quá 15 phút coi là mồ côi.
+const KHOA = path.join(CHAY, "web-b.khoa");
+for (let i = 0; ; i++) {
+  try {
+    mkdirSync(KHOA);
+    break;
+  } catch {
+    try {
+      if (Date.now() - statSync(KHOA).mtimeMs > 15 * 60_000) rmSync(KHOA, { recursive: true, force: true });
+    } catch {
+      // khoá vừa được nhả giữa hai lệnh — thử lại ở vòng sau
+    }
+    if (i > 1200) throw new Error("chờ khoá dựng quá lâu");
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+}
+process.on("exit", () => rmSync(KHOA, { recursive: true, force: true }));
+
 const env = { ...process.env, DATABASE_URL };
 const chay = (cmd, args) => execFileSync(cmd, args, { cwd: GOC, env, stdio: ["ignore", "pipe", "inherit"] }).toString();
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -90,31 +110,7 @@ async function song() {
     return false;
   }
 }
-// Khoá bật máy chủ: các bài nhìn của một lượt chấm chạy song song, cùng thấy máy chủ chưa lên thì cùng bật và tranh
-// một cổng (E8 lượt 3 trượt vì thế). Thư mục khoá tạo nguyên tử; khoá quá 5 phút coi là mồ côi.
-const KHOA = path.join(CHAY, "web-b.khoa");
-async function giuKhoa() {
-  for (let i = 0; ; i++) {
-    try {
-      mkdirSync(KHOA);
-      return;
-    } catch {
-      try {
-        if (Date.now() - statSync(KHOA).mtimeMs > 5 * 60_000) rmSync(KHOA, { recursive: true, force: true });
-      } catch {}
-      if (i > 300) throw new Error("chờ khoá bật máy chủ quá lâu");
-      await ngu(1000);
-    }
-  }
-}
-if (!(await song())) {
-  await giuKhoa();
-  try {
-    if (!(await song())) await batMayChu();
-  } finally {
-    rmSync(KHOA, { recursive: true, force: true });
-  }
-}
+if (!(await song())) await batMayChu();
 async function batMayChu() {
   const out = openSync(LOG, "a");
   // --build: chạy bản đã build (`npm run build -w @quy-hang/web`) — máy đo cuộn đo bản này như ADR-0004, không đo bản dev.
