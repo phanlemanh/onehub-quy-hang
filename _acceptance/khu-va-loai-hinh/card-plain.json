@@ -1,0 +1,34 @@
+{
+  "feature_plain": "Danh mục thôi gọi «dự án»: khu chứa căn gọi theo chuẩn RESO, mỗi căn biết mình là căn hộ, nhà phố, biệt thự hay đất, và hệ thống biết mỗi loại dùng những trường nào.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ gọi khu chứa căn bằng một tên duy nhất ở mọi chỗ — mã, đường tra, dữ liệu mẫu, CONTEXT, Tham chiếu."},
+    {"id": "AC-2", "p": "Sẽ cho đường tra mã căn chọn khu bằng tên mới, và báo lỗi rõ khi ai còn gọi bằng tên cũ."},
+    {"id": "AC-3", "p": "Sẽ giữ nguyên mọi điều gõ mã căn đang làm đúng, kể cả tỉ lệ tự điền 282/282 trên dữ liệu mẫu."},
+    {"id": "AC-4", "p": "Sẽ cho 180 căn mẫu mang loại hình căn hộ theo chuẩn RESO."},
+    {"id": "AC-5", "p": "Sẽ cho kết quả tra mang thêm loại hình của căn, vẫn chỉ thông tin danh mục."},
+    {"id": "AC-6", "p": "Sẽ có một bảng nói bốn loại hình — căn hộ, nhà phố, biệt thự, đất — mỗi loại dùng trường nào."},
+    {"id": "AC-8", "p": "Sẽ sửa CONTEXT và Tham chiếu theo nhãn anh chọn ở Hỏi-1."},
+    {"id": "AC-9", "p": "Sẽ ghi lựa chọn của anh cho ba câu hỏi vào ADR-0016 và đổi nhãn khu phụ trách trên màn Người dùng nếu anh chọn khuyến nghị."}
+  ],
+  "wont_do": [
+    {"id": "AC-7", "p": "Chặn căn mang trường không thuộc loại hình của nó (đất có tầng, căn hộ có diện tích đất) — danh mục sai không lên được, kèm tên căn và trường."},
+    {"id": "OOS-1", "p": "Chưa đổi khuôn nhận gói Invest — hàng 10 dựng thẳng trên tên mới."},
+    {"id": "OOS-2", "p": "Chưa làm dãy · lô, địa chỉ chuẩn, nhà ngoài khu — hàng 73 tới 80."},
+    {"id": "OOS-3", "p": "Chưa làm mức đủ và luật ẩn theo loại hình — chỉ ghi lựa chọn của anh, làm ở hàng 76 và 80."},
+    {"id": "OOS-4", "p": "Chưa có cột loại hình trong cơ sở dữ liệu — danh mục chưa có bảng, hàng 10 dựng."},
+    {"id": "OOS-5", "p": "Chưa có trường bắt buộc khi Sẵn sàng bán theo loại hình — hàng 76."},
+    {"id": "OOS-6", "p": "Chưa chặn sai loại hình ở cơ sở dữ liệu — đi cùng bảng của hàng 10 và 76."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Tên mới được kiểm ở mã, dữ liệu mẫu, ca kiểm (AC-1, AC-3), tài liệu (AC-8, AC-9) và tham số cũ (AC-2)."},
+    {"i": 1, "p": "Loại hình được kiểm ở dữ liệu mẫu (AC-4), kết quả tra (AC-5), bảng bốn loại (AC-6) và căn sai loại (AC-7)."},
+    {"i": 2, "p": "Mọi ca của gõ mã căn trước đây chạy lại và phải xanh (AC-3)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Phép đo «không còn tên cũ» và ca kiểm «tên cũ bị từ chối» từng mâu thuẫn nhau — đã cho đúng một ca được nhắc tên cũ."},
+    {"i": 1, "p": "Phép đo mười hai trường từng so kết quả với chính nó — đã tách hai phép đo, so với danh sách viết tay."},
+    {"i": 2, "p": "CONTEXT, Tham chiếu và màn web từng nằm ngoài phép đo «không còn tên cũ» — đã đưa vào."},
+    {"i": 3, "p": "Hai phần còn lại của bảng loại hình chưa được ghi là để sau — đã ghi rõ là việc của hàng 76."},
+    {"i": 4, "p": "Phép đo tài liệu từng không biết anh chọn nhãn nào — đã cho đọc sổ quyết định."}
+  ]
+}
