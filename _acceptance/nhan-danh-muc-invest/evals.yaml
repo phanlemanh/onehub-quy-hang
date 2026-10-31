@@ -1,0 +1,91 @@
+schema_version: 1
+feature_slug: nhan-danh-muc-invest
+# Lệnh máy: `executors.test.connect` (khuôn ở packages/connect), `executors.test.isolation` (bộ cách ly của packages/db
+# + packages/api/test-db, cần DATABASE_URL tới Postgres dãy D, cổng 5565), `executors.test.core`, `executors.test.api`.
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên
+# ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khuôn v1: gói mẫu đúng khuôn đọc ra đủ khu, toà, căn» có mặt và ok — gói mẫu viết tay trong tệp kiểm (nhãn [Mẫu], hai khu, ba toà, mỗi căn đủ chín trường với giá trị khác nhau) qua parseCatalogFeed ra ok: true, đếm khu/toà/căn bằng số viết trước, và một căn chọn trước deepEqual đúng chín trường đã viết; ca đối chứng cùng gói: CATALOG_FEED_SCHEMA_VERSION === 1 và gói khuôn v0 (có projectKey, complexName) bị từ chối. Chiều đỏ: khuôn thiếu propertyType → ca đỏ nêu trường."
+    paths: [packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khuôn v1: khoá lạ ở từng cấp bị từ chối, nêu đúng đường khoá» có mặt và ok — ma trận viết trước bốn cấp × khoá lạ (gốc `extra`, khu `ownerName`, toà `note`, căn `ownerPhone`), mỗi phần tử một lần so, số lần so bằng 4: ok: false và errors có đúng một mục với path bằng đường viết trước (vd ['subdivisions',0,'buildings',1,'units',2]) và message nhắc tên khoá; đối chứng dương cùng gói không khoá lạ ra ok: true. Chiều đỏ: bỏ .strict() ở cấp căn → phần tử ownerPhone đỏ nêu cấp."
+    paths: [packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khuôn v1: phiên bản sai và UPI trùng bị từ chối» có mặt và ok — schemaVersion 0, 2 và vắng, mỗi giá trị một lần so, ra ok: false với lỗi ở path ['schemaVersion']; gói có hai căn cùng UPI ở hai toà ra ok: false với lỗi nêu UPI ấy; đối chứng: cùng gói đổi UPI căn thứ hai thì ok: true. Chiều đỏ: bỏ kiểm UPI trùng → ca đỏ nêu UPI."
+    paths: [packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/api/test-db/catalog/nhan-goi.test.ts` ca «nhận gói: thoả thuận đang bật, gói đúng khuôn vào vùng dùng chung» có mặt và ok — sàn thử nằm trong catalog_trusted_companies (chủ bảng thêm trong phần dựng ca) và có thoả thuận catalog_source inbound active có lớp catalog; quản trị sàn POST /api/v1/catalog/feeds gói mẫu v1 nhận 200 với số khu/toà/căn bằng số viết trước; đọc thẳng bảng catalog_units theo UPI của gói ra đúng thuộc tính từng căn (so theo UPI, không theo thứ tự). Chiều đỏ: đường trả 200 mà không ghi → ca đỏ nêu số dòng."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/connect/src/**, packages/db/migrations/010_danh_muc_dung_chung.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: gửi lại không nhân đôi, đổi một căn thì cập nhật đúng căn ấy» có mặt và ok — sau lần nhận đầu, đếm dòng catalog_units và catalog_subdivisions của provider thử; gửi lại y nguyên: số dòng bằng nhau, thân trả về báo 0 căn mới; gửi gói đổi livingArea của một căn: đúng căn ấy đổi giá trị, mọi căn khác giữ nguyên (so toàn bộ theo UPI). Chiều đỏ: ghi bằng insert không theo UPI → số dòng gấp đôi, ca đỏ nêu số."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/db/migrations/010_danh_muc_dung_chung.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: thoả thuận không đang bật thì 403 và không ghi dòng nào» có mặt và ok — ma trận viết trước bảy trạng thái (paused, ended, valid_until đã qua, valid_from chưa tới, data_classes thiếu catalog, không có thoả thuận, thoả thuận active mà sàn không nằm trong catalog_trusted_companies), mỗi phần tử một lần so, số lần so bằng 7: 403 thân { error: 'agreement-inactive' } và số dòng catalog_units của provider phần tử ấy bằng 0; đối chứng dương: bật lại (status active) thì cùng gói nhận 200. Chiều đỏ: đường chỉ kiểm status → phần tử hết hạn đỏ nêu trạng thái."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/db/migrations/010_danh_muc_dung_chung.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: gói sai khuôn thì 422 và không ghi dòng nào» có mặt và ok — với thoả thuận đang bật: gói có khoá lạ ở căn cuối cùng của toà cuối, và gói schemaVersion 0, mỗi gói nhận 422 thân { error: 'invalid-feed', errors: [...] } có đúng đường khoá viết trước; số dòng của provider thử trước và sau bằng nhau (0). Chiều đỏ: ghi từng căn trước khi kiểm hết → căn đầu đã vào, ca đỏ nêu số dòng."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/db/tests/danh-muc-dung-chung.test.mjs` các ca có mặt và ok: «danh mục dùng chung: sàn không có thoả thuận đang bật không ghi được» (insert và update bằng vai quy_hang_app với sàn đặt mà không có thoả thuận active bị cơ sở dữ liệu từ chối; đối chứng: cùng câu lệnh với sàn được tin có thoả thuận active thành công), «danh mục dùng chung: sàn tự tạo thoả thuận mà không được tin không ghi được» (sàn tự insert thoả thuận catalog_source active cho mình — được — rồi insert vào catalog_units bị từ chối), «danh mục dùng chung: không ai tự thêm mình vào danh sách tin» (insert vào catalog_trusted_companies bằng quy_hang_app bị từ chối), «danh mục dùng chung: không ai xoá được» (delete bị từ chối kể cả sàn được tin), «danh mục dùng chung: mọi sàn và lời gọi chưa đặt sàn đọc được» (sàn B không thoả thuận và lời gọi chưa đặt sàn đều select ra dòng sàn A đã nạp); và ca có sẵn «mọi bảng dữ liệu đều bật và ép luật theo dòng» vẫn ok với ba bảng mới. Chiều đỏ: policy insert dùng `with check (true)` → ca thứ nhất đỏ."
+    paths: [packages/db/migrations/010_danh_muc_dung_chung.sql, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: cổng vào 401/403 và OpenAPI» có mặt và ok — chưa đăng nhập 401 { error: 'unauthenticated' }, người không thuộc sàn 403 { error: 'no-company' }, vai đầu chủ của sàn có thoả thuận 403 { error: 'admin-required' }; đối chứng: quản trị cùng sàn 200; tài liệu OpenAPI có đường POST /api/v1/catalog/feeds. Và năm ca của hàng 9 trong `packages/api/test-db/catalog/catalog.test.ts` cùng ba ca của hàng 63 trong `packages/api/test-db/catalog/trung-ma-hai-toa.test.ts` vẫn có mặt và ok."
+    paths: [packages/api/src/**, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; mọi ca của hàng 9 trong `packages/core/src/catalog/catalog.test.ts` và của hàng 63 trong `packages/core/src/catalog/trung-ma-hai-toa.test.ts` vẫn có mặt và ok."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
