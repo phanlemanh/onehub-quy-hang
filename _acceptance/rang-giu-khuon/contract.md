@@ -5,7 +5,7 @@ slug: rang-giu-khuon
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci]
-status: machine-cleared
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-rang-giu-khuon-design.md
 approved_by:
 approved_at:
