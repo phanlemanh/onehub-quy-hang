@@ -1,0 +1,6 @@
+{
+  "feature_plain": "Kho chấm việc bằng cùng bản kit nghiệm thu 2.36.0 với máy dev, bật bốn nấc (gộp không dừng vô cớ, phản biện bắt buộc, việc mới phải thuộc lộ trình, máy tự định tuyến ở hồ sơ T2 sạch); đã bỏ việc xếp cấu hình nghiệm thu vào hạng T3 theo lựa chọn Ngoài-1 của lượt trước.",
+  "decisions": [
+    {"id":"E9","q":"Hướng dẫn kho và sổ quyết định sản phẩm đã ghi đúng các nấc bật và chưa bật?","why":"Ba người chấm cùng đề xuất đạt sau khi sửa: tài liệu khớp cấu hình thật, kể cả việc cấu hình nghiệm thu không còn tính là hạng cao nhất."}
+  ]
+}

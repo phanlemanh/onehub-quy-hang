@@ -1,7 +1,7 @@
 # 2-space indentation REQUIRED — the kit's hook parses this file line-by-line.
 schema_version: 1
 enforcement: strict          # chuẩn thiết lập kho 29/10
-gap_probe: advisory          # mặc định của kit; nâng `required` khi đội đã quen
+gap_probe: required          # nang-kit-2-36-0 (31/10): 10/10 hồ sơ T2/T3 đã có phản biện — đội đã quen
 recheck: strict              # kho mới, không có báo cáo cũ
 # Chưa khai ui_standards_skill / ds_skill / design / design_floor: chưa có màn — làm cùng màn đầu tiên (tầng 5).
 # tang-5-giao-dien (30/10): đã khai feature_loop.ui_standards_skill, design.surface_globs (bậc M1), executors.design.floor.
@@ -37,11 +37,16 @@ executors:
     giao_dien: "node packages/ui-lint/kiem-chuan.mjs"   # trạng thái cây của bộ chuẩn giao diện
     san_m1: "CLAUDE_PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" node packages/ui-lint/thu-san.mjs"   # bài thử sàn M1 — kit từ CLAUDE_PLUGIN_ROOT, vắng thì từ sổ plugin đã cài
     design_floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # vo-ung-dung: như design.floor, kit vắng CLAUDE_PLUGIN_ROOT thì tìm như san_m1 (lượt chấm không có biến này)
+    nang_kit: "node --test \"_acceptance/nang-kit-2-36-0/thu/*.test.mjs\""   # nang-kit-2-36-0: mỗi nấc kit một cặp hai chiều; kit từ CLAUDE_PLUGIN_ROOT, vắng thì tim-kit.mjs
+    product_map_kit: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/product-map.mjs\" --root . --check"   # như product_map, chạy được ở lượt chấm (không có CLAUDE_PLUGIN_ROOT)
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
 feature_loop:
   ui_standards_skill: quy-hang-ui   # tang-5-giao-dien: .agents/skills/quy-hang-ui (nạp qua .claude/skills/quy-hang-ui)
+  # nang-kit-2-36-0 (Mạnh duyệt 31/10, Hỏi-2): máy tự ghi định tuyến mục ngoài hợp đồng mà chính nó đề xuất known-limits/
+  # wont-fix, chỉ ở hồ sơ T2 · PASS · 0 UNCERTAIN; T3 và «mở hợp đồng mới» vẫn của người. Đảo một mục: lệnh in trên thẻ.
+  ngoai_n_tu_dinh_tuyen: true
   # Bộ kiểm chạy ở đường nền S1 và lượt S4 của mọi hàng (giám sát đợt nen-dau 30/10). Không gồm
   # test.isolation (cần Postgres riêng từng dãy — luật 2 của đợt và job isolation của CI vẫn gác) và
   # script.product_map (cần CLAUDE_PLUGIN_ROOT).
@@ -69,6 +74,8 @@ risk_tiers:
     # Bản đồ sản phẩm — máy sinh, commit cùng chữ ký (ADR 0007). Chỉ an toàn vì CI chạy product_map --check.
     - "PRODUCT-MAP.md"
     - "LO-TRINH.html"
+  # t3_paths không khai _acceptance/config.yaml: lưới gộp bỏ qua tệp hồ sơ trước khi đối chiếu, còn hầu hết vòng thêm lệnh
+  # kiểm vào tệp ấy — khai thì chặn nhầm định tuyến máy (nang-kit-2-36-0, Cổng Bằng chứng lượt 1, Ngoài-1).
   t3_paths:
     - "packages/db/**"                        # migration, luật cách ly theo dòng (bất biến 1)
     - "packages/core/src/data-classes.ts"     # trần lớp dữ liệu, source không rời công ty (bất biến 2)
@@ -77,6 +84,7 @@ risk_tiers:
     - ".claude/settings.json"                 # quyền cấm và hook của agent
     - ".claude/hooks/**"
     - ".githooks/**"                          # chặn commit main, gitleaks
+    - ".gitattributes"                        # nang-kit-2-36-0: driver gộp tệp sinh
 signoff:
   required_for: [T2, T3]
   approvers: ["Manh Phan"]   # suy từ: git config user.name — thông tin, cổng không cưỡng chế
@@ -86,6 +94,7 @@ dev_server:
 # capture: bỏ — chưa có bằng chứng giao diện.
 lo_trinh:
   tep: docs/plan/lo-trinh.json
+  chan: true   # nang-kit-2-36-0 (Mạnh duyệt 31/10, Hỏi-1): hồ sơ mới phải thuộc một hàng; mở bằng câu mô tả thì máy tự thêm hàng
 tri_thuc:
   noi: docs/tri-thuc   # gốc tri thức trong kho; kho riêng tư nên tài liệu thô nằm trong kho (không khai cong_khai, không kho riêng)
 dieu_phoi:
