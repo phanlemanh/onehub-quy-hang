@@ -1,33 +1,23 @@
+# Review findings — o-nhan-lead (round 3)
+
 ## Trong hợp đồng
 
-- **Gửi lead có thể chạy hai lần trong lúc chờ tra mã căn, vì cờ «đang gửi» chỉ bật sau lượt tra**
-  file: `apps/web/src/app/(app)/leads/new/o-lead.tsx:115`
-  severity: medium
-  AC: AC-10
-  detail: Trước thay đổi này, `gui()` gọi `setDangGui(true)` trước lần `await` đầu tiên, nên nút «Gửi lead» và các ô bị khoá ngay khi gửi. Giờ `gui()` chờ `await docMa()` (một lần gọi mạng tới /api/v1/catalog/units/...) trước `setDangGui(true)` ở dòng 128. Trong lúc chờ, nút submit và các ô vẫn bật: bấm lần nữa hay nhấn Enter lần nữa sẽ chạy `gui()` thứ hai, rồi cả hai cùng gọi `nguon.gui(than)`. Lối POST /api/v1/leads không chống gửi lặp (không có khoá idempotency, và migration 007 chỉ có `unique (company_id, id)`), nên sinh ra hai lead cho cùng một chủ nhà. Đây là lùi so với chống gửi đôi đã có. Cách sửa: bật `dangGui` (hoặc một ref chặn gửi lại) trước bước tra mã.
-  rationale: AC-10 đòi trong lúc gửi nút «Đang kiểm trùng…» khoá; ở đây nút vẫn bật suốt lượt tra mã sau khi bấm gửi nên AC-10 không đạt.
-  source: conventions
-
-- **Gửi lead không còn khoá trong lúc chờ tra mã, nên gửi hai lần tạo hai lead**
-  file: `apps/web/src/app/(app)/leads/new/o-lead.tsx:116`
-  severity: medium
-  AC: AC-10
-  detail: Bản sửa thêm `await docMa()` (một lượt gọi mạng `traMa`) TRƯỚC `setDangGui(true)` (dòng 128). Trước đây `gui` đặt dangGui ngay, trước lượt await đầu tiên. Giờ trong lúc chờ tra mã, nút «Gửi lead» và các ô vẫn mở (chúng chỉ bị khoá theo `dangGui`). Bấm đúp hay Enter hai lần thì `gui` chạy hai lần song song; mỗi lần tự tra mã rồi đều gọi `nguon.gui(than)`, tức hai lượt POST /api/v1/leads với cùng nội dung. Kết quả là hai bản ghi lead, và bản sau thường bị kiểm trùng xếp vào trùng với bản trước. Cách sửa: đặt dangGui (hoặc một cờ ref) trước lượt await tra mã, và thoát ngay nếu đang gửi.
-  rationale: AC-10 yêu cầu nút «Đang kiểm trùng…» khoá trong lúc gửi; lượt chờ tra mã diễn ra sau khi bấm mà nút chưa khoá nên gửi hai lần được.
-  source: bugs
+(không có finding nào)
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Lối «tra lúc gửi» bỏ qua khi còn căn của lần tra trước: sửa mã căn rồi nhấn Enter sẽ gửi căn cũ**
+(không có finding mới ở round này; các mục mang từ round trước do máy tự chèn)
+
+- **Lối «tra lúc gửi» bỏ qua khi còn căn của lần tra trước: sửa mã căn rồi nhấn Enter sẽ gửi căn cũ (r2 · tệp đã đổi)**
   Người dùng thấy gì: Nếu telesales tra xong một mã căn rồi sửa sang mã khác và bấm Enter ngay, lead có thể được gửi theo căn cũ trong khi ô vẫn hiện mã mới. Kết quả kiểm trùng khi đó tính theo căn sai.
   Căn cứ: Lead lưu sai căn và kết quả kiểm trùng sai nhưng chỉ xảy ra ở một thao tác hiếm; dữ liệu sai nằm lại trong lead và khó nhận ra sau khi ô đã được xoá, còn sửa thì rẻ.
   file: `apps/web/src/app/(app)/leads/new/o-lead.tsx`
   severity: medium
   Đề xuất: new-contract
 
-- **Đổi mã căn sau một lần tra thành công rồi bấm Enter thì lead gửi căn cũ**
+- **Đổi mã căn sau một lần tra thành công rồi bấm Enter thì lead gửi căn cũ (r2 · tệp đã đổi)**
   Người dùng thấy gì: Nếu telesales tra xong một căn rồi đổi mã và bấm Enter ngay, lead có thể gửi đi với căn và toà của lần tra trước. Sau khi gửi thành công ô được xoá nên người dùng không thấy dấu vết sai.
   Căn cứ: Lead mang căn và toà sai, người dùng không tự phát hiện được sau khi gửi; nhưng chỉ xảy ra khi sửa mã rồi bấm Enter ngay, và sửa thì rẻ.
   file: `apps/web/src/app/(app)/leads/new/o-lead.tsx`
@@ -90,5 +80,6 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: medium
   Đề xuất: new-contract
 
-Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
+## Chưa adversarial-verify (refuter chết)
 
+Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
