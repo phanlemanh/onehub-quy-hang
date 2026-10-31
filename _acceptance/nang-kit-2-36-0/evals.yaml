@@ -1,0 +1,114 @@
+schema_version: 1
+feature_slug: nang-kit-2-36-0
+# Bài đo của vòng: một tệp node:test `_acceptance/nang-kit-2-36-0/thu/nac.test.mjs`, chạy bằng `executors.script.nang_kit`
+# (kit từ CLAUDE_PLUGIN_ROOT, vắng thì từ sổ cài qua packages/ui-lint/tim-kit.mjs). exit 0 của lệnh chung KHÔNG đủ: mỗi
+# eval đòi `output` và người chấm đối chiếu tên ca nêu trong `expected` — có mặt, «ok», không «# SKIP»/«# TODO». Mọi ca
+# dựng trên bản sao tạm (worktree hay kho git tạm ngoài cây), không ghi vào cây kho.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «kit dùng để đo là 2.36.0» ok — gốc kit mà bài đo định vị (CLAUDE_PLUGIN_ROOT, vắng thì sổ cài) có .claude-plugin/plugin.json khai version 2.36.0; chiều đỏ: gốc giả khai 2.35.0 bị bắt, thông điệp nêu bản thấy được và đường gốc. Ca «CI lấy kit thẻ v2.36.0» ok — mọi tệp .github/workflows/*.yml có đúng một dòng KIT_TAG và nó là v2.36.0, không dòng nào chứa v2.35.0; chiều đỏ trên cùng hàm đọc: văn bản workflow cấy `KIT_TAG: v2.35.0` bị bắt, thông điệp nêu thẻ thấy được. Ca «lưới trước-gộp sạch với cấu hình mới» ok — worktree tạm ở HEAD bỏ thư mục hồ sơ của vòng, chạy pre-merge-check.sh của kit với --base origin/main --no-t1-escape: dòng cuối `pre-merge-check: clean`, không dòng VIOLATION; chiều đỏ cùng worktree: đặt `gap_probe: requird` → có dòng `VIOLATION [config]` nêu gap_probe."
+    paths: [.github/workflows/**, _acceptance/config.yaml, _acceptance/nang-kit-2-36-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.product_map_kit
+    expected: "exit 0; trên PR, nhật ký job gate của CI có dòng lấy kit `refs/tags/v2.36.0` (mã lượt chạy ghi ở Cổng Bằng chứng); lệnh này in «PRODUCT-MAP.md khớp hồ sơ xưởng.» và «LO-TRINH.html khớp tệp ý định và hồ sơ.» — cùng bước mà job gate của CI chạy, bằng kit 2.36.0."
+    paths: [PRODUCT-MAP.md, LO-TRINH.html, docs/plan/lo-trinh.json, _acceptance/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «không lệnh trỏ bộ đệm có số, không tệp kit chép vào kho» ok — quét _acceptance/config.yaml, .github/workflows/*, packages/ui-lint/*.mjs không khớp /acceptance-gate-kit\\/[a-z-]+\\/\\d+\\.\\d+\\.\\d+/ (bỏ dòng chú thích); và không tệp nào trong danh sách viết trước {scripts/pre-merge-check.sh, scripts/recheck-evidence.cjs, scripts/product-map.mjs, scripts/lo-trinh.mjs, lib/evidence-core.cjs, lib/gap-probe.cjs, lib/workspace-record.cjs} có ở gốc kho; chiều đỏ trên cùng hàm quét: văn bản cấy `…/acceptance-gate-kit/acceptance-gate/2.35.0/scripts/x.mjs` bị bắt, thông điệp nêu dòng."
+    paths: [_acceptance/config.yaml, .github/workflows/**, packages/ui-lint/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «gộp không dừng ở tệp sinh khi có driver» ok — kho git tạm ngoài cây, chép .gitattributes của kho (phải có đúng hai dòng `PRODUCT-MAP.md merge=tep-sinh` và `LO-TRINH.html merge=tep-sinh`), hai nhánh sửa khác nhau cùng dòng của PRODUCT-MAP.md; với `merge.tep-sinh.driver true` → `git merge` thoát 0, không đường nào ở trạng thái xung đột; chiều đỏ cùng kho, cùng hai nhánh, bỏ cấu hình driver → `git merge` thoát khác 0 và `git diff --name-only --diff-filter=U` liệt PRODUCT-MAP.md."
+    paths: [.gitattributes, _acceptance/nang-kit-2-36-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «npm install bật driver tep-sinh» ok — chạy đúng chuỗi script `prepare` của package.json trong kho git tạm: `git config merge.tep-sinh.driver` in `true` và `git config core.hooksPath` in `.githooks`; chiều đỏ: chuỗi `prepare` của nhánh chính trước vòng (`git config core.hooksPath .githooks || true`) chạy trong kho tạm khác → `merge.tep-sinh.driver` vắng."
+    paths: [package.json, _acceptance/nang-kit-2-36-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «gap-probe bắt buộc chặn hồ sơ thiếu phản biện» ok — config.yaml có đúng dòng `gap_probe: required`; worktree tạm ở HEAD, xoá _acceptance/nang-kit-2-36-0/gap-probe.md và commit, chạy pre-merge-check.sh --base origin/main → có dòng `VIOLATION [nang-kit-2-36-0]: chưa qua phản biện context sạch`; đối chứng: worktree HEAD nguyên → không dòng nào chứa `chưa qua phản biện context sạch`. Ca chạy khi hợp đồng đã ở implemented trở lên (luật chỉ xét hồ sơ đã làm xong); hợp đồng còn draft/approved → ca thất bại nêu trạng thái, không SKIP."
+    paths: [_acceptance/config.yaml, _acceptance/nang-kit-2-36-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «chặn lộ trình gọi tên hồ sơ mới ngoài lộ trình» ok — config.yaml có `chan: true` trong khối lo_trinh; worktree tạm ở HEAD, commit thêm `_acceptance/thu-ngoai-lo-trinh/opportunity.md` không ghi lo_trinh_ma và `_acceptance/thu-trong-lo-trinh/opportunity.md` ghi `lo_trinh_ma: 9`, chạy `node <kit>/lib/chan-lo-trinh.cjs --root <worktree> --base origin/main` → thoát 1, có đúng dòng `VIOLATION [thu-ngoai-lo-trinh]: hồ sơ mới không thuộc hàng lộ trình nào (lo_trinh.chan)`, không dòng nào nêu thu-trong-lo-trinh, nang-kit-2-36-0 hay doi-ten-api-tieng-anh; đối chứng: HEAD nguyên → thoát 0, không dòng VIOLATION."
+    paths: [_acceptance/config.yaml, docs/plan/lo-trinh.json, _acceptance/nang-kit-2-36-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «định tuyến máy đọc khoá bật» ok — config.yaml có `ngoai_n_tu_dinh_tuyen: true` dưới feature_loop; `node <kit>/scripts/dinh-tuyen-may.cjs --check --root . --slug doi-ten-api-tieng-anh` (hồ sơ T2) thoát 0 và không dòng nào bắt đầu `dinh-tuyen-may: tắt`; đối chứng cùng hồ sơ trên bản sao tạm có khoá đặt `false` → thoát 0, dòng `dinh-tuyen-may: tắt (feature_loop.ngoai_n_tu_dinh_tuyen vắng hoặc false)`. Ca «định tuyến máy không chạm hồ sơ T3» ok — cùng lệnh với `--slug nang-kit-2-36-0` (risk_tier T3) khi khoá bật: không dòng `tắt`, có dòng `không định tuyến` nêu hạng; và `risk_tiers.t3_paths` của config.yaml chứa `_acceptance/config.yaml` và `.gitattributes`."
+    paths: [_acceptance/config.yaml, _acceptance/nang-kit-2-36-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.nang_kit
+    expected: "exit 0; ca «lộ trình có hàng của vòng» ok — docs/plan/lo-trinh.json có đúng một hàng mang slug nang-kit-2-36-0."
+    paths: [docs/plan/lo-trinh.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.hooks
+    expected: "exit 0; dòng cuối in «TỔNG: ĐẠT»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8c
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0 — eslint, directive trần, mức nợ giao diện 0, kiểm chuẩn."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8d
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: judgment
+    inputs:
+      - AGENTS.md
+      - .github/workflows/ci.yml
+      - docs/product/tham-chieu.md
+      - _acceptance/config.yaml
+      - .gitattributes
+      - package.json
+      - docs/superpowers/specs/2026-10-31-nang-kit-2-36-0-design.md
+    question: "Mục «Rào của kho» trong AGENTS.md có nói driver gộp `tep-sinh` cho PRODUCT-MAP.md và LO-TRINH.html, rằng nó bật tự động khi `npm install` (khớp script `prepare` trong package.json và hai dòng của .gitattributes), và rằng job gate lấy kit theo KIT_TAG (khớp dòng KIT_TAG của ci.yml) không? Bảng §12 của docs/product/tham-chieu.md có một dòng ngày 31/10 ghi các nấc đã bật (bản kit 2.36.0, gộp không dừng ở tệp sinh, phản biện bắt buộc, chặn việc ngoài lộ trình, máy tự định tuyến mục ngoài hợp đồng) và các nấc cố ý chưa bật kèm lý do ngắn, khớp khoá thật trong _acceptance/config.yaml và mục 3 của bản thiết kế không?"
+    expected: "PASS khi cả ba vế đúng; FAIL nêu vế thiếu hay chỗ lệch giữa tài liệu và cấu hình."
+    evidence_required: [run_id, verdict, verified_at, judges]
