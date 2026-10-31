@@ -65,6 +65,14 @@ export function quetBoDem(ten, text) {
   const dong = text.split('\n').find((l) => !/^\s*(#|\/\/)/.test(l) && BO_DEM_SO.test(l));
   if (dong) throw new Error(`${ten}: lệnh trỏ bộ đệm có số — ${dong.trim()}`);
 }
+// t3_paths: .gitattributes là rào; tệp cấu hình nghiệm thu KHÔNG khai (Ngoài-1 lượt 1 — lưới gộp bỏ qua tệp hồ sơ, còn
+// khai thì mọi vòng thêm lệnh kiểm bị suy T3 và mất định tuyến máy).
+export function kiemT3(cfg) {
+  const t3 = cfg.match(/^ {2}t3_paths:\n((?: {4}(?:- .*|#.*)\n)+)/m)?.[1] ?? '';
+  const muc = t3.split('\n').filter((l) => /^ {4}- /.test(l)).map((l) => l.replace(/^ {4}- "?([^"\s]+)"?.*$/, '$1'));
+  if (!muc.includes('.gitattributes')) throw new Error('t3_paths thiếu .gitattributes');
+  if (muc.includes('_acceptance/config.yaml')) throw new Error('t3_paths khai _acceptance/config.yaml');
+}
 const TEP_KIT_CHEP = ['scripts/pre-merge-check.sh', 'scripts/recheck-evidence.cjs', 'scripts/product-map.mjs', 'scripts/lo-trinh.mjs', 'lib/evidence-core.cjs', 'lib/gap-probe.cjs', 'lib/workspace-record.cjs'];
 
 describe('AC-1 bản kit của CI và của bài đo', () => {
@@ -240,8 +248,9 @@ describe('AC-7 máy tự định tuyến mục ngoài hợp đồng', () => {
   });
 
   test('định tuyến máy không chạm hồ sơ T3', () => {
-    const t3 = doc(path.join(ROOT, '_acceptance/config.yaml')).match(/^ {2}t3_paths:\n((?: {4}- .*\n)+)/m)?.[1] ?? '';
-    for (const p of ['_acceptance/config.yaml', '.gitattributes']) assert.ok(t3.includes(`"${p}"`), `t3_paths thiếu ${p}`);
+    kiemT3(doc(path.join(ROOT, '_acceptance/config.yaml')));
+    const cay = '  t3_paths:\n    - ".gitattributes"\n    - "_acceptance/config.yaml"   # thử\n';
+    assert.throws(() => kiemT3(cay), /t3_paths khai _acceptance\/config\.yaml/);
     // Cùng một hồ sơ đã chấm PASS (doi-ten-api-tieng-anh), đưa về «verified» để qua các vế trước vế hạng;
     // chỉ khác nhau ở risk_tier.
     const hang = (tier) => voiWorktree((dir) => {

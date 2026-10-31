@@ -5,10 +5,8 @@ slug: nang-kit-2-36-0
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: draft
 design_doc: docs/superpowers/specs/2026-10-31-nang-kit-2-36-0-design.md
-approved_by: Manh Phan
-approved_at: 2026-10-31T01:30:56Z
 ---
 
 # Acceptance Contract: nang-kit-2-36-0
@@ -44,8 +42,9 @@ khối `GITATTR-TEP-SINH`, `NGOAI-N-TU-DINH-TUYEN` · ADR-0025 của kit · thi�
   bị gọi tên.
 - AC-7: Given `feature_loop.ngoai_n_tu_dinh_tuyen: true`, When bên ghi định tuyến máy kiểm một hồ sơ T2, Then nó đọc khoá
   là bật; cùng hồ sơ với khoá `false` thì nó báo tắt; và hồ sơ T3 (như chính hồ sơ này) không được máy định tuyến dù
-  khoá bật. Tệp cấu hình nghiệm thu và `.gitattributes` nằm trong `risk_tiers.t3_paths`, nên việc đổi rào sau này máy
-  cũng suy ra T3.
+  khoá bật. `.gitattributes` nằm trong `risk_tiers.t3_paths`; tệp cấu hình nghiệm thu thì KHÔNG (lưới gộp bỏ qua mọi tệp
+  hồ sơ trước khi đối chiếu, và hầu hết vòng đều thêm lệnh kiểm vào tệp ấy — khai thì chặn nhầm định tuyến máy, Cổng
+  Bằng chứng lượt 1, Ngoài-1).
 - AC-8: Given kho sau thay đổi, When chạy bộ kiểm của kho (`feature_loop.suite_keys`) và kiểm bản đồ bằng kit 2.36.0,
   Then mọi lệnh xanh, bài tự kiểm của rào in `TỔNG: ĐẠT`, `PRODUCT-MAP.md` và `LO-TRINH.html` khớp, và lộ trình có một
   hàng mang slug `nang-kit-2-36-0`.
@@ -84,3 +83,8 @@ Quét morphological-scan, preset entity-feature, cho thực thể «nấc setup 
 
 - Không chạm bất biến nào của AGENTS.md: không mã sản phẩm, không cơ sở dữ liệu, không lớp `source`.
 - Thứ tự gộp sau khi đợt `nen-dau` đóng: PR #21 → PR này (gộp lại nhánh chính trước) → PR #15.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-2: Hàng của việc nâng kit trên trang lộ trình nằm ngoài mọi nhóm và đợt, mã là chữ thay vì số kế tiếp.
+  - Ngoài-4: Đổi cấu hình cổng nghiệm thu không bị cổng gộp nâng hạng hay đòi chữ ký riêng; chỉ người duyệt PR canh.
+  - Ngoài-5: Nếu công cụ định tuyến máy hỏng ở hồ sơ T2, bài đo của vòng vẫn có thể báo xanh.
+  - Ngoài-6: Chạy bài đo của vòng lúc còn thay đổi chưa commit có thể cho kết quả xanh trên hai bản khác nhau của kho.

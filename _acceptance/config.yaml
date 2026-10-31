@@ -74,6 +74,8 @@ risk_tiers:
     # Bản đồ sản phẩm — máy sinh, commit cùng chữ ký (ADR 0007). Chỉ an toàn vì CI chạy product_map --check.
     - "PRODUCT-MAP.md"
     - "LO-TRINH.html"
+  # t3_paths không khai _acceptance/config.yaml: lưới gộp bỏ qua tệp hồ sơ trước khi đối chiếu, còn hầu hết vòng thêm lệnh
+  # kiểm vào tệp ấy — khai thì chặn nhầm định tuyến máy (nang-kit-2-36-0, Cổng Bằng chứng lượt 1, Ngoài-1).
   t3_paths:
     - "packages/db/**"                        # migration, luật cách ly theo dòng (bất biến 1)
     - "packages/core/src/data-classes.ts"     # trần lớp dữ liệu, source không rời công ty (bất biến 2)
@@ -82,7 +84,6 @@ risk_tiers:
     - ".claude/settings.json"                 # quyền cấm và hook của agent
     - ".claude/hooks/**"
     - ".githooks/**"                          # chặn commit main, gitleaks
-    - "_acceptance/config.yaml"               # nang-kit-2-36-0: luật của cổng nghiệm thu là rào (AGENTS.md)
     - ".gitattributes"                        # nang-kit-2-36-0: driver gộp tệp sinh
 signoff:
   required_for: [T2, T3]

@@ -58,7 +58,10 @@ với base của PR không bao giờ chấm lại nó.
    cùng hướng với đề xuất của máy (81 known-limits · 8 wont-fix · 5 new-contract trong các báo cáo). Máy chỉ tự ghi cho
    hồ sơ T2 · PASS · 0 UNCERTAIN, chỉ mục chính nó đề xuất known-limits/wont-fix; T3 và «mở hợp đồng mới» vẫn của người.
    Giá: chủ kho không còn được hỏi từng mục đó ở T2 — đảo bằng lệnh in sẵn ở thẻ.
-6. Thêm `_acceptance/config.yaml` và `.gitattributes` vào `risk_tiers.t3_paths`. Căn cứ: AGENTS.md xếp rào của kho vào
+6. Thêm `.gitattributes` vào `risk_tiers.t3_paths`. *(Bản đầu thêm cả `_acceptance/config.yaml`; lượt chấm 1 cho thấy lưới
+   gộp bỏ qua mọi tệp hồ sơ trước khi đối chiếu nên dòng ấy không chặn gì, còn hầu hết vòng đều thêm lệnh kiểm vào tệp
+   ấy nên sẽ bị suy T3 và mất định tuyến máy — chủ kho chọn bỏ dòng ở Cổng Bằng chứng, Ngoài-1. Đổi cấu hình nghiệm thu
+   chỉ được canh bằng việc chủ kho duyệt PR — giới hạn đã biết.)* Lý do ban đầu: Căn cứ: AGENTS.md xếp rào của kho vào
    T3, nhưng hôm nay máy suy T2 cho chính việc đổi rào này; khi máy tự định tuyến (mục 5) chỉ chạm hồ sơ T2, một việc
    đổi rào bị suy T2 sẽ lọt qua mà chủ kho không được hỏi (phản biện P1). Giá: việc đổi cấu hình nghiệm thu sau này đi
    T3 — thêm một lần duyệt kế hoạch.
