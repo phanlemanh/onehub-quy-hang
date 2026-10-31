@@ -1,13 +1,6 @@
-NETWORK (app-origin, non-static) + console errors, Playwright chromium, E7
-200 GET /today?_rsc=2Md0sTUZcnjCijMr
-200 GET /today?_rsc=2Md0sTUZcnjCijMr
-FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-200 GET /today
-200 GET /units/MAU-A1205?_rsc=GOBkkwysRk6B8UGl
-200 GET /today
-200 GET /inventory?_rsc=GOBkkwysRk6B8UGl
-200 GET /today
---- console errors ---
-console.error Failed to load resource: the server responded with a status of 404 (Not Found)
-console.error Failed to load resource: the server responded with a status of 429 (TOO_MANY_REQUESTS)
-console.error Failed to load resource: the server responded with a status of 429 (TOO_MANY_REQUESTS)
+E7 network (playwright, 2 lan chay). App-origin http://localhost:3462.
+API: 200 POST /api/v1/auth/email-otp/send-verification-otp; 200 POST /api/v1/auth/sign-in/email-otp
+Pages: 200 /login, /today, /units/MAU-A1205?_rsc, /inventory?_rsc
+FAILED net::ERR_ABORTED: /?_rsc=..., /today?_rsc=... (Next prefetch bi huy khi dieu huong; note-only)
+Console errors: none captured.
+No status >=500 / 4xx.

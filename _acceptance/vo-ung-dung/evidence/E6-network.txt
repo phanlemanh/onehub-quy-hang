@@ -1,8 +1,82 @@
-Driver: playwright (isolated browser context). App origin http://localhost:3462 (174 requests seen).
-Responses >=400 on app origin: none.
-Console errors: none.
-requestfailed (net::ERR_ABORTED, RSC prefetch aborted by client navigation; note-only, not connection error):
-  GET http://localhost:3462/inventory?_rsc=GOBkkwysRk6B8UGl
-  GET http://localhost:3462/settings/users?_rsc=ajwF0_iUZCtQqhYa
-  GET http://localhost:3462/me?_rsc=JkkP6ETziIiRBuqs
-Third-party: none.
+NETWORK (app-origin, non-_next)
+200 GET /login [dau-chu@example.test]
+200 POST /api/v1/auth/email-otp/send-verification-otp [dau-chu@example.test]
+200 POST /api/v1/auth/sign-in/email-otp [dau-chu@example.test]
+200 GET /?_rsc=qYT2Wy2QR8kXuUU6 [dau-chu@example.test]
+200 GET /?_rsc=q3mOO9BClNZHexY7 [dau-chu@example.test]
+FAILED http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 net::ERR_ABORTED
+FAILED http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 net::ERR_ABORTED
+200 GET /today?_rsc=2Md0sTUZcnjCijMr [dau-chu@example.test]
+200 GET /today?_rsc=2Md0sTUZcnjCijMr [dau-chu@example.test]
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+307 GET / [dau-chu@example.test]
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+200 GET /today [dau-chu@example.test]
+200 GET /login [dau-khach@example.test]
+200 POST /api/v1/auth/email-otp/send-verification-otp [dau-khach@example.test]
+200 POST /api/v1/auth/sign-in/email-otp [dau-khach@example.test]
+200 GET /?_rsc=qYT2Wy2QR8kXuUU6 [dau-khach@example.test]
+200 GET /?_rsc=q3mOO9BClNZHexY7 [dau-khach@example.test]
+FAILED http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 net::ERR_ABORTED
+FAILED http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 net::ERR_ABORTED
+200 GET /today?_rsc=2Md0sTUZcnjCijMr [dau-khach@example.test]
+200 GET /today?_rsc=2Md0sTUZcnjCijMr [dau-khach@example.test]
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+307 GET / [dau-khach@example.test]
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+200 GET /__nextjs_font/geist-latin.woff2 [dau-khach@example.test]
+200 GET /today [dau-khach@example.test]
+FAILED http://localhost:3462/_next/static/chunks/node_modules_%40base-ui_react_1-n5ysbovd1jk._.js net::ERR_ABORTED
+FAILED http://localhost:3462/_next/static/chunks/_19y_4l445tqez._.js net::ERR_ABORTED
+FAILED http://localhost:3462/_next/static/chunks/node_modules_1phbw5d6mid36._.js net::ERR_ABORTED
+FAILED http://localhost:3462/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js net::ERR_ABORTED
+FAILED http://localhost:3462/_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js net::ERR_ABORTED
+FAILED http://localhost:3462/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js net::ERR_ABORTED
+200 GET /__nextjs_font/geist-latin.woff2 [dau-khach@example.test]
+200 GET /inventory?_rsc=GOBkkwysRk6B8UGl [dau-khach@example.test]
+FAILED http://localhost:3462/inventory?_rsc=GOBkkwysRk6B8UGl net::ERR_ABORTED
+200 GET /inventory [dau-khach@example.test]
+200 GET /__nextjs_font/geist-latin.woff2 [dau-khach@example.test]
+200 GET /login [truong-nhom@example.test]
+200 POST /api/v1/auth/email-otp/send-verification-otp [truong-nhom@example.test]
+200 POST /api/v1/auth/sign-in/email-otp [truong-nhom@example.test]
+200 GET /?_rsc=qYT2Wy2QR8kXuUU6 [truong-nhom@example.test]
+200 GET /?_rsc=q3mOO9BClNZHexY7 [truong-nhom@example.test]
+FAILED http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 net::ERR_ABORTED
+FAILED http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 net::ERR_ABORTED
+200 GET /today?_rsc=2Md0sTUZcnjCijMr [truong-nhom@example.test]
+200 GET /today?_rsc=2Md0sTUZcnjCijMr [truong-nhom@example.test]
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+307 GET / [truong-nhom@example.test]
+FAILED http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+200 GET /today [truong-nhom@example.test]
+200 GET /login [quan-tri@example.test]
+200 POST /api/v1/auth/email-otp/send-verification-otp [quan-tri@example.test]
+200 POST /api/v1/auth/sign-in/email-otp [quan-tri@example.test]
+200 GET /?_rsc=qYT2Wy2QR8kXuUU6 [quan-tri@example.test]
+200 GET /?_rsc=q3mOO9BClNZHexY7 [quan-tri@example.test]
+FAILED http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 net::ERR_ABORTED
+FAILED http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 net::ERR_ABORTED
+200 GET /settings?_rsc=2Md0sTUZcnjCijMr [quan-tri@example.test]
+200 GET /settings?_rsc=2Md0sTUZcnjCijMr [quan-tri@example.test]
+307 GET / [quan-tri@example.test]
+FAILED http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+FAILED http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+307 GET /settings [quan-tri@example.test]
+200 GET /settings/users?_rsc=ajwF0_iUZCtQqhYa [quan-tri@example.test]
+200 GET /__nextjs_font/geist-latin.woff2 [quan-tri@example.test]
+200 GET /settings/users?_rsc=ajwF0_iUZCtQqhYa [quan-tri@example.test]
+200 GET /settings/users [quan-tri@example.test]
+FAILED http://localhost:3462/settings/users?_rsc=ajwF0_iUZCtQqhYa net::ERR_ABORTED
+FAILED http://localhost:3462/settings/users?_rsc=ajwF0_iUZCtQqhYa net::ERR_ABORTED
+200 GET /__nextjs_font/geist-latin.woff2 [quan-tri@example.test]
+200 GET /settings?_rsc=JkkP6ETziIiRBuqs [quan-tri@example.test]
+200 GET /settings/users?_rsc=ajwF0_iUZCtQqhYa [quan-tri@example.test]
+200 GET /settings/users?_rsc=ajwF0_iUZCtQqhYa [quan-tri@example.test]
+FAILED http://localhost:3462/settings/users?_rsc=ajwF0_iUZCtQqhYa net::ERR_ABORTED
+FAILED http://localhost:3462/settings/users?_rsc=ajwF0_iUZCtQqhYa net::ERR_ABORTED
+200 GET /me?_rsc=JkkP6ETziIiRBuqs [quan-tri@example.test]
+FAILED http://localhost:3462/me?_rsc=JkkP6ETziIiRBuqs net::ERR_ABORTED
+
+CONSOLE ERRORS
+[dau-chu@example.test] Failed to load resource: the server responded with a status of 404 (Not Found)

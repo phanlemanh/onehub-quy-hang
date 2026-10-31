@@ -1,5 +1,11 @@
-E9 network (Playwright, ghi theo tung lan bam; app origin http://localhost:3462). Khong co request app nao >= 400.
-Tat ca RSC/navigation: 200 (/today /inventory /shares /team /settings->/settings/users /leads/new /imports/new /exports/new /viewings /settings/{users,labels,fields,statuses,lead-routing,fees,templates} /me).
-Mobile telesales: /today /leads/new /me = 200. truong-nhom: /today /inventory /shares /me = 200.
-curl SSR 3 vai: moi cho 200 tru /settings = 307 -> /settings/users.
-Ghi chu: Next dev overlay (nextjs-portal) che nut Cai dat san o cot nha -> an bang script khi bam; trinh duyet chia se voi verifier khac nen co lan bam bi gian doan, da chay lai.
+29. [GET] http://localhost:3462/today => [200] OK
+30. [GET] http://localhost:3462/today?_rsc=GOBkkwysRk6B8UGl => [200] OK
+31. [GET] http://localhost:3462/today?_rsc=8z--w8SfR-FCLwqU => [200] OK
+32. [GET] http://localhost:3462/inventory => [200] OK
+33. [GET] http://localhost:3462/inventory?_rsc=GOBkkwysRk6B8UGl => [200] OK
+34. [GET] http://localhost:3462/shares => [200] OK
+35. [GET] http://localhost:3462/shares?_rsc=EpsVYRCCROET-7bJ => [200] OK
+36. [GET] http://localhost:3462/me => [200] OK
+37. [GET] http://localhost:3462/me?_rsc=UQjhYh4467KTjsyq => [200] OK
+
+Note: 28 static requests not shown, run with "static" option to see them.
