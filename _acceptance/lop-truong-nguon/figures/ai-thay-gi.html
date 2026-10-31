@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ai thấy gì của chủ nhà</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1100px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 0.35rem;
+    }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; }
+    svg { width: 100%; display: block; }
+    svg .grid { stroke: rgba(45,49,66,0.12); stroke-width: 0.8; }
+    svg .grid-strong { stroke: #bfc0c0; stroke-width: 1; }
+    svg .col-head { font-family: 'Geist Mono', monospace; font-size: 9px; font-weight: 500; fill: #4f5d75; letter-spacing: 0.14em; }
+    svg .col-head.first { fill: #636b80; }
+    svg .col-sub { font-family: 'Geist', sans-serif; font-size: 10px; fill: #636b80; }
+    svg .row-label { font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 600; fill: #2d3142; }
+    svg .row-sub { font-family: 'Geist', sans-serif; font-size: 10px; fill: #4f5d75; }
+    svg .chip-see { fill: #2d3142; }
+    svg .g-see { font-family: 'Geist', sans-serif; font-size: 10px; font-weight: 600; fill: #f5f5f5; }
+    svg .chip-reveal { fill: #ffffff; stroke: #2d3142; stroke-width: 1; }
+    svg .g-reveal { font-family: 'Geist', sans-serif; font-size: 10px; font-weight: 600; fill: #2d3142; }
+    svg .g-no { font-family: 'Geist', sans-serif; font-size: 10px; fill: #636b80; }
+    svg .note { font-family: 'Instrument Serif', 'Lora', serif; font-style: italic; font-size: 14px; fill: #ba4513; }
+    svg .legend-head { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #4f5d75; letter-spacing: 0.14em; }
+    svg .legend-text { font-family: 'Geist', sans-serif; font-size: 10px; fill: #4f5d75; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Ma trận · Hỏi-2 · AC-2, AC-3, AC-5, AC-6, AC-9</p>
+    <h1>Ai thấy gì của chủ nhà</h1>
+    <p class="subtitle">Bảy loại người xem × năm điều về chủ nhà của một căn. Phần không thấy bị bỏ ngay ở máy chủ, không chỉ che trên màn.</p>
+
+    <svg viewBox="0 0 1000 576" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="atg-title atg-desc">
+      <title id="atg-title">Ai thấy gì của chủ nhà</title>
+      <desc id="atg-desc">Đầu chủ giữ căn và trưởng nhóm thấy tên chủ nhà, giá đáy và biết căn có số, không thấy chữ số nào; số đầy đủ chỉ qua nút Mở số và mỗi lần đều được ghi. Đầu chủ khác, đầu khách, telesales, quản trị sàn chỉ biết ai giữ căn. Sàn khác không thấy cả căn.</desc>
+
+      <rect width="1000" height="576" fill="#f5f5f5"/>
+
+      <!-- Dải trọng tâm: dòng trưởng nhóm (Hỏi-2) -->
+      <rect x="28" y="168" width="944" height="48" rx="4" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+
+      <!-- Kẻ cột: 288 / 424 / 560 / 696 / 832, bước 136 -->
+      <line class="grid" x1="288" y1="76" x2="288" y2="456"/>
+      <line class="grid" x1="424" y1="76" x2="424" y2="408"/>
+      <line class="grid" x1="560" y1="76" x2="560" y2="408"/>
+      <line class="grid" x1="696" y1="76" x2="696" y2="408"/>
+      <line class="grid" x1="832" y1="76" x2="832" y2="408"/>
+      <!-- Kẻ dòng: đầu bảng tới 120, rồi bước 48 -->
+      <line class="grid" x1="32" y1="120" x2="968" y2="120"/>
+      <line class="grid" x1="32" y1="168" x2="968" y2="168"/>
+      <line class="grid-strong" x1="32" y1="216" x2="968" y2="216"/>
+      <line class="grid" x1="32" y1="264" x2="968" y2="264"/>
+      <line class="grid" x1="32" y1="312" x2="968" y2="312"/>
+      <line class="grid" x1="32" y1="360" x2="968" y2="360"/>
+      <line class="grid-strong" x1="32" y1="408" x2="968" y2="408"/>
+      <line class="grid" x1="32" y1="456" x2="968" y2="456"/>
+
+      <!-- Đầu cột -->
+      <text class="col-head first" x="32" y="92">NGƯỜI XEM</text>
+      <text class="col-head" x="356" y="92" text-anchor="middle">TÊN CHỦ NHÀ</text>
+      <text class="col-head" x="492" y="92" text-anchor="middle">GIÁ ĐÁY</text>
+      <text class="col-head" x="628" y="92" text-anchor="middle">BIẾT «CÓ SỐ»</text>
+      <text class="col-sub" x="628" y="108" text-anchor="middle">không thấy chữ số nào</text>
+      <text class="col-head" x="764" y="92" text-anchor="middle">SỐ ĐẦY ĐỦ</text>
+      <text class="col-sub" x="764" y="108" text-anchor="middle">mỗi lần mở được ghi</text>
+      <text class="col-head" x="900" y="92" text-anchor="middle">AI GIỮ CĂN</text>
+      <text class="col-sub" x="900" y="108" text-anchor="middle">để biết liên hệ ai</text>
+
+      <!-- 1 · Đầu chủ giữ căn (y 120) -->
+      <text class="row-label" x="40" y="142">Đầu chủ giữ căn</text>
+      <text class="row-sub" x="40" y="156">còn vai đầu chủ; mất vai thì thôi thấy</text>
+      <rect class="chip-see" x="332" y="134" width="48" height="20" rx="4"/><text class="g-see" x="356" y="148" text-anchor="middle">Thấy</text>
+      <rect class="chip-see" x="468" y="134" width="48" height="20" rx="4"/><text class="g-see" x="492" y="148" text-anchor="middle">Thấy</text>
+      <rect class="chip-see" x="604" y="134" width="48" height="20" rx="4"/><text class="g-see" x="628" y="148" text-anchor="middle">Thấy</text>
+      <rect class="chip-reveal" x="736" y="134" width="56" height="20" rx="4"/><text class="g-reveal" x="764" y="148" text-anchor="middle">Mở số</text>
+      <rect class="chip-see" x="876" y="134" width="48" height="20" rx="4"/><text class="g-see" x="900" y="148" text-anchor="middle">Thấy</text>
+
+      <!-- 2 · Trưởng nhóm (y 168) — trọng tâm Hỏi-2 -->
+      <text class="row-label" x="40" y="190">Trưởng nhóm</text>
+      <text class="row-sub" x="40" y="204">mọi căn của cả sàn, tới khi có nhóm</text>
+      <rect class="chip-see" x="332" y="182" width="48" height="20" rx="4"/><text class="g-see" x="356" y="196" text-anchor="middle">Thấy</text>
+      <rect class="chip-see" x="468" y="182" width="48" height="20" rx="4"/><text class="g-see" x="492" y="196" text-anchor="middle">Thấy</text>
+      <rect class="chip-see" x="604" y="182" width="48" height="20" rx="4"/><text class="g-see" x="628" y="196" text-anchor="middle">Thấy</text>
+      <rect class="chip-reveal" x="736" y="182" width="56" height="20" rx="4"/><text class="g-reveal" x="764" y="196" text-anchor="middle">Mở số</text>
+      <rect class="chip-see" x="876" y="182" width="48" height="20" rx="4"/><text class="g-see" x="900" y="196" text-anchor="middle">Thấy</text>
+
+      <!-- 3 · Đầu chủ khác (y 216) -->
+      <text class="row-label" x="40" y="238">Đầu chủ khác</text>
+      <text class="row-sub" x="40" y="252">cùng sàn, không giữ căn này</text>
+      <text class="g-no" x="356" y="244" text-anchor="middle">Không</text>
+      <text class="g-no" x="492" y="244" text-anchor="middle">Không</text>
+      <text class="g-no" x="628" y="244" text-anchor="middle">Không</text>
+      <text class="g-no" x="764" y="244" text-anchor="middle">Không</text>
+      <rect class="chip-see" x="876" y="230" width="48" height="20" rx="4"/><text class="g-see" x="900" y="244" text-anchor="middle">Thấy</text>
+
+      <!-- 4 · Đầu khách (y 264) -->
+      <text class="row-label" x="40" y="286">Đầu khách</text>
+      <text class="row-sub" x="40" y="300">cùng sàn</text>
+      <text class="g-no" x="356" y="292" text-anchor="middle">Không</text>
+      <text class="g-no" x="492" y="292" text-anchor="middle">Không</text>
+      <text class="g-no" x="628" y="292" text-anchor="middle">Không</text>
+      <text class="g-no" x="764" y="292" text-anchor="middle">Không</text>
+      <rect class="chip-see" x="876" y="278" width="48" height="20" rx="4"/><text class="g-see" x="900" y="292" text-anchor="middle">Thấy</text>
+
+      <!-- 5 · Telesales (y 312) -->
+      <text class="row-label" x="40" y="334">Telesales</text>
+      <text class="row-sub" x="40" y="348">cùng sàn</text>
+      <text class="g-no" x="356" y="340" text-anchor="middle">Không</text>
+      <text class="g-no" x="492" y="340" text-anchor="middle">Không</text>
+      <text class="g-no" x="628" y="340" text-anchor="middle">Không</text>
+      <text class="g-no" x="764" y="340" text-anchor="middle">Không</text>
+      <rect class="chip-see" x="876" y="326" width="48" height="20" rx="4"/><text class="g-see" x="900" y="340" text-anchor="middle">Thấy</text>
+
+      <!-- 6 · Quản trị sàn (y 360) -->
+      <text class="row-label" x="40" y="382">Quản trị sàn</text>
+      <text class="row-sub" x="40" y="396">không tự động thấy chủ nhà</text>
+      <text class="g-no" x="356" y="388" text-anchor="middle">Không</text>
+      <text class="g-no" x="492" y="388" text-anchor="middle">Không</text>
+      <text class="g-no" x="628" y="388" text-anchor="middle">Không</text>
+      <text class="g-no" x="764" y="388" text-anchor="middle">Không</text>
+      <rect class="chip-see" x="876" y="374" width="48" height="20" rx="4"/><text class="g-see" x="900" y="388" text-anchor="middle">Thấy</text>
+
+      <!-- 7 · Sàn khác (y 408) — gộp ô -->
+      <text class="row-label" x="40" y="430">Sàn khác</text>
+      <text class="row-sub" x="40" y="444">mọi vai</text>
+      <rect x="300" y="416" width="656" height="32" rx="4" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="628" y="436" fill="#4f5d75" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle">Không thấy cả căn — hỏi vào như hỏi một căn không có</text>
+
+      <!-- Chú thích Hỏi-2 -->
+      <text class="note" x="32" y="484">Dòng tô màu là Hỏi-2 — khuyến nghị: trưởng nhóm thấy chủ nhà của cả sàn tới khi có nhóm, để bàn giao và xử lý ngoại lệ.</text>
+      <text class="note" x="32" y="504">Lối khác: cả dòng thành «Không» — trưởng nhóm không bàn giao được, và khi có nhóm phải mở lại luật này.</text>
+
+      <!-- Chú giải -->
+      <line class="grid" x1="32" y1="528" x2="968" y2="528"/>
+      <text class="legend-head" x="32" y="552">CHÚ GIẢI</text>
+      <rect class="chip-see" x="120" y="538" width="48" height="20" rx="4"/><text class="g-see" x="144" y="552" text-anchor="middle">Thấy</text>
+      <text class="legend-text" x="176" y="552">Nhận khi mở hồ sơ căn</text>
+      <rect class="chip-reveal" x="340" y="538" width="56" height="20" rx="4"/><text class="g-reveal" x="368" y="552" text-anchor="middle">Mở số</text>
+      <text class="legend-text" x="404" y="552">Chỉ khi bấm «Mở số» — mỗi lần ghi ai mở, vai gì, lúc nào</text>
+      <text class="g-no" x="736" y="552" text-anchor="middle">Không</text>
+      <text class="legend-text" x="764" y="552">Không nhận — bỏ ngay ở máy chủ</text>
+    </svg>
+  </main>
+</body>
+</html>

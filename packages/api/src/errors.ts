@@ -21,6 +21,9 @@ export const API_ERRORS = {
   invalidTransition: { code: "invalid-transition", status: 400 },
   missingRequirement: { code: "missing-requirement", status: 400 },
   invalidPayload: { code: "invalid-payload", status: 400 },
+  // Lớp trường nguồn (ADR-0010).
+  listingAgentRequired: { code: "listing-agent-required", status: 403 },
+  ownerNotSet: { code: "owner-not-set", status: 404 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

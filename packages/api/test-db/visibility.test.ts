@@ -199,6 +199,22 @@ test("nấc của danh sách khớp nấc gấp từ sự kiện", async () => {
   assert.deepEqual([soDanhSach, soGap], [DUONG.length, DUONG.length]);
 });
 
+test("lời gọi chủ nhà vào hàng Chỉ tôi của người khác trả 404", async () => {
+  const h = await taoHang(X);
+  const CHU = { ownerName: "[Tên chủ mẫu]", ownerPhone: "0900 000 012" };
+  assert.equal((await send("PUT", `/api/v1/listings/${h.id}/owner`, CHU, X.cookie)).status, 200, "người tạo không đặt được chủ nhà");
+  for (const [m, duoi, body] of [
+    ["GET", "/owner", undefined],
+    ["PUT", "/owner", CHU],
+    ["POST", "/owner/phone-reveal", undefined],
+    ["PUT", "/listing-agent", { userId: randomUUID() }],
+  ] as const) {
+    const khongCo = await than(await send(m, `/api/v1/listings/${randomUUID()}${duoi}`, body, T.cookie));
+    assert.equal(khongCo.status, 404, `${m} ${duoi}: mã không có không trả 404`);
+    assert.deepEqual(await than(await send(m, `/api/v1/listings/${h.id}${duoi}`, body, T.cookie)), khongCo, `${m} ${duoi}: lộ hàng Chỉ tôi`);
+  }
+});
+
 /** Mọi cặp (phương thức, đường) của tài liệu OpenAPI chạm hàng: chữ listings trong đường hay tham số listingId. */
 function duongHang(doc: { paths: Record<string, Record<string, unknown>> }): string[] {
   return Object.entries(doc.paths)
@@ -216,6 +232,11 @@ test("mọi đường chạm hàng nằm trong bảng bốn đường", async ()
     "get /api/v1/listings/{listingId}",
     "post /api/v1/listings",
     "post /api/v1/listings/{listingId}/events",
+    // Bốn lời gọi chủ nhà của hàng 11 — ca «lời gọi chủ nhà vào hàng Chỉ tôi của người khác trả 404» dưới.
+    "get /api/v1/listings/{listingId}/owner",
+    "put /api/v1/listings/{listingId}/owner",
+    "post /api/v1/listings/{listingId}/owner/phone-reveal",
+    "put /api/v1/listings/{listingId}/listing-agent",
   ].sort();
   assert.deepEqual(duongHang(doc), BANG, "có đường chạm hàng ngoài bảng — thêm vào bảng kèm ca kiểm trục ai thấy hàng");
   // Đối chứng dương trên cùng hàm liệt: đường cấy thêm bị bắt.
