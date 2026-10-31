@@ -7,7 +7,7 @@
 // Dữ liệu: sàn và người của packages/db/seed (hàng 5) + hàng mẫu của mau/du-lieu-mau.json nạp QUA API (đường ghi duy
 // nhất). Hàng mẫu không có pháp lý và tình trạng sử dụng mà Đang bán bắt buộc: điền «[Mẫu] …» cho hàng cần.
 import { execFileSync, spawn } from "node:child_process";
-import { existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
@@ -90,7 +90,32 @@ async function song() {
     return false;
   }
 }
+// Khoá bật máy chủ: các bài nhìn của một lượt chấm chạy song song, cùng thấy máy chủ chưa lên thì cùng bật và tranh
+// một cổng (E8 lượt 3 trượt vì thế). Thư mục khoá tạo nguyên tử; khoá quá 5 phút coi là mồ côi.
+const KHOA = path.join(CHAY, "web-b.khoa");
+async function giuKhoa() {
+  for (let i = 0; ; i++) {
+    try {
+      mkdirSync(KHOA);
+      return;
+    } catch {
+      try {
+        if (Date.now() - statSync(KHOA).mtimeMs > 5 * 60_000) rmSync(KHOA, { recursive: true, force: true });
+      } catch {}
+      if (i > 300) throw new Error("chờ khoá bật máy chủ quá lâu");
+      await ngu(1000);
+    }
+  }
+}
 if (!(await song())) {
+  await giuKhoa();
+  try {
+    if (!(await song())) await batMayChu();
+  } finally {
+    rmSync(KHOA, { recursive: true, force: true });
+  }
+}
+async function batMayChu() {
   const out = openSync(LOG, "a");
   // --build: chạy bản đã build (`npm run build -w @quy-hang/web`) — máy đo cuộn đo bản này như ADR-0004, không đo bản dev.
   const p = spawn("npx", ["next", a.build ? "start" : "dev", "-p", String(CONG), "apps/web"], {
