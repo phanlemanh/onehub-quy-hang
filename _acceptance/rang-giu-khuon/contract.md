@@ -5,7 +5,7 @@ slug: rang-giu-khuon
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-10-31-rang-giu-khuon-design.md
 approved_by:
 approved_at:
@@ -81,3 +81,8 @@ theo vùng [NGÀNH cận kề: luật no-restricted-imports của ESLint].
 
 - Bất biến chạm: không — hàng chỉ thêm công cụ kiểm.
 - Dãy D: dev 3473, Postgres 5553 (`quy-hang-db-D`).
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi chỉ sửa luật của một nhóm màn, bước chấm theo vòng có thể báo xanh dù một số màn cũ nay đã lệch luật mới. Lần chạy lint đầy đủ vẫn báo đỏ ở đó. — `packages/ui-lint/ban-do-khuon.mjs`
+- Ngoài-2 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Một số kiểu lệch khuôn do chính vòng làm ra có thể bị gắn nhãn nợ cũ nên bước chấm theo vòng vẫn xanh. Lần chạy lint đầy đủ vẫn thấy lệch đó. — `packages/ui-lint/lib/ban-do.mjs`
+- Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Nếu chỉ xoá một dòng làm màn thiếu phần bắt buộc, bước chấm theo vòng có thể coi đó là nợ cũ và vẫn xanh. Lần lint đầy đủ vẫn bắt được. — `packages/ui-lint/ban-do-khuon.mjs`
+- Ngoài-4 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Khi bản đồ khuôn đổi làm vài màn cũ lệch, bước chấm theo vòng không báo gì và ra xanh. Lần chạy lint đầy đủ vẫn báo đỏ. — `packages/ui-lint/ban-do-khuon.mjs`
+- Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Một số lệch do vòng hiện tại gây ra bị tính là nợ cũ nên bước chấm theo vòng vẫn xanh. Lint đầy đủ vẫn bắt được. — `packages/ui-lint/lib/ban-do.mjs`
