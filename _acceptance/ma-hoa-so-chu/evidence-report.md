@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6733c5e2492813356c8d96a6ee1e08bb72bfc32a
+verified_commit: 52f8fd34f2945c59386d94611480f16b96090c86
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -203,3 +203,7 @@ none — every multi-run eval is uniform
 
 Round 1: có hồ sơ cũ, lịch sử không được truyền xuống round này.
 Round 2: mọi eval máy xanh; E10 là mục judgment, đề xuất PASS, chờ người chốt nên verdict là PENDING-JUDGMENT.
+
+### Re-pin lần 1 — 2026-10-31, do hoá cũ do gộp main (hàng 72) trước chữ ký
+run_id: repin-20261031T230034Z-37455
+sha: 52f8fd34f2945c59386d94611480f16b96090c86 · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · ngoài làn máy: E10 · diff chạm vật đo ngoài làn máy: E10 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-10
