@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: khu-va-loai-hinh
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 30f8dcca1077f22e5184f1a7d6e2e3ab605d4d71
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: khu-va-loai-hinh
@@ -163,7 +163,7 @@ Verdict tổng là PENDING-JUDGMENT vì hai mục judgment E10 và E11 chờ ng�
   - domain-correctness: PASS — Dòng gate1 (d-20261031T155648Z-18) chốt nhãn «Khu». CONTEXT.md dòng 13 gọi khu chứa căn là «Khu» kèm `subdivisionName` và chỉ để «Dự án» ở cột tránh dùng; dòng 14 có «Loại hình». Tham chiếu dòng 332 ghi quyết định đổi tên và loại hình; các chữ «dự án» còn lại ở dòng 318–332 là lịch sử §12. Chỉ đọc nguyên văn dòng 332; dòng 318–331 chỉ thấy khớp chữ qua tìm kiếm.
   - operational-feasibility: PASS — Nhãn «Khu» khớp lựa chọn ở dòng gate1; CONTEXT.md dòng 13–14 đúng RESO; mọi chữ «dự án» ở Tham chiếu nằm trong dòng lịch sử §12.
   - spec-alignment: PASS — Dòng gate1 ghi chủ kho chọn «Khu»; CONTEXT.md đặt «Dự án» ở cột tránh dùng; chữ «dự án» còn lại chỉ ở các dòng lịch sử §12 (318 là Supabase, 320 và 330 là dòng cũ, 331 là lời trích).
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-01 — Đạt
 
 - eval: E11
   judged_by: hội đồng judge (fresh context), đề xuất PASS
@@ -171,7 +171,7 @@ Verdict tổng là PENDING-JUDGMENT vì hai mục judgment E10 và E11 chờ ng�
   - domain-correctness: PASS — ADR-0016 ghi «chấp nhận» sau Cổng Phạm vi hàng 72 và lời chủ kho cho Hỏi-1..3 (Khu / Vùng phụ trách; đất bốn mục; khách riêng thấy tên đường và xã), khớp dòng gate1 d-...-18 do Manh Phan quyết. quan-nguoi.tsx dùng «Vùng phụ trách» ở dòng 137, 198 và «Vùng» ở dòng 213.
   - operational-feasibility: PASS — ADR-0016 khớp dòng sổ gate1 d-...-18 và các dòng S1 ở d-...-6, 7, 8; màn quan-nguoi.tsx dùng «Vùng phụ trách» ở dòng 137 và 198, nhãn «Vùng», «Tên vùng», đúng khuyến nghị Hỏi-1.
   - spec-alignment: PASS — ADR-0016 có mục «Đã quyết 31/10» cho Hỏi-1..3; dòng sổ gate1 d-20261031T155648Z-18 ghi đúng ba điều đó; quan-nguoi.tsx khớp Hỏi-1.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-01 — Đạt
 
 ## Known limits
 

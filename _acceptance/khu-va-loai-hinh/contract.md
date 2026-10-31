@@ -5,7 +5,7 @@ slug: khu-va-loai-hinh
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-khu-va-loai-hinh-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T15:23:10Z
@@ -83,3 +83,11 @@ Quét theo khuôn entity-feature của morphological-scan cho thực thể «khu
 
 - Dãy D chạy dev ở cổng 3485, Postgres 5565 (`quy-hang-db-D`). Yêu cầu D-7: chạm tệp ngoài vùng (ca kiểm Postgres của
   hàng 9 và 63, CONTEXT, Tham chiếu, ADR-0016, màn Cài đặt sàn → Người dùng).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Tham chiếu còn một chỗ gọi chia quyền theo «khu» thay vì «vùng» — chỉ lệch chữ trong tài liệu.
+  - Ngoài-2: Tài liệu API chưa mô tả loại hình của căn, dù dữ liệu tra trả về đã có.
+  - Ngoài-3: Màn Cài đặt sàn → Người dùng có thể còn chữ «Khu» cho vùng ở chỗ chưa đổi — chức năng không hỏng.
+  - Ngoài-4: Khuôn nhận danh mục đổi tên khoá mà chưa nâng số phiên bản; nâng khi dựng khuôn chính thức ở hàng 10.
+  - Ngoài-5: Khuôn nhận danh mục chưa chở được trường riêng của nhà phố, biệt thự và đất — hàng 10 làm tiếp.
+  - Ngoài-6: Mô tả API công khai thiếu hai trường loại hình, mã khách sinh từ tài liệu có thể bỏ sót chúng.
+  - Ngoài-7: Phép kiểm tên «dự án» cũ mới bắt vài dạng tên, có thể lọt một chỗ còn tên cũ.
