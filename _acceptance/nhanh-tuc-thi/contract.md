@@ -5,8 +5,10 @@ slug: nhanh-tuc-thi
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [ui, api]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-10-31-nhanh-tuc-thi-design.md
+approved_by: Manh Phan
+approved_at: 2026-10-31T09:30:00Z
 ---
 
 # Acceptance Contract: nhanh-tuc-thi
