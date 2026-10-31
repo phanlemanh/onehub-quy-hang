@@ -33,7 +33,7 @@ const goi = JSON.parse(readFileSync(fileURLToPath(new URL("../../../db/seed/mau/
 function dapAn(danhMuc: CatalogData): DapAn[] {
   const out: DapAn[] = goi.hang.map((h) => ({ input: h.maCan, upi: h.upi }));
   for (const l of goi.lead.filter((x) => x.maCan)) {
-    const toa = danhMuc.projects.flatMap((p) => p.buildings).find((b) => b.buildingKey === l.toa);
+    const toa = danhMuc.subdivisions.flatMap((p) => p.buildings).find((b) => b.buildingKey === l.toa);
     const can = toa?.units.find((u) => u.unitNumber === l.maCan);
     assert.ok(can, `lead ${l.ma}: không có căn ${l.toa} ${l.maCan} trong danh mục mẫu`);
     out.push({ input: l.maCan, upi: can.upi });
@@ -64,8 +64,8 @@ test("đo tỉ lệ tự điền trên dữ liệu mẫu: 47 mã, 100%, chưa c�
 
   // Đối chứng (a): danh mục bỏ căn của hàng H-01 thì hụt đúng mã ấy.
   const h01 = goi.hang.find((h) => h.ma === "H-01")!;
-  const thieu = structuredClone(goi.danhMuc) as CatalogData & { projects: { buildings: { units: { upi: string }[] }[] }[] };
-  for (const b of thieu.projects[0]!.buildings) b.units = b.units.filter((u) => u.upi !== h01.upi);
+  const thieu = structuredClone(goi.danhMuc) as CatalogData & { subdivisions: { buildings: { units: { upi: string }[] }[] }[] };
+  for (const b of thieu.subdivisions[0]!.buildings) b.units = b.units.filter((u) => u.upi !== h01.upi);
   const a = measureAutofill(thieu, tatCa, NGOAI);
   assert.ok(a.dung < a.tong, "bỏ một căn mà vẫn 100%");
   assert.ok(a.hut.some((h) => h.input === h01.maCan), `${h01.maCan} phải nằm trong danh sách hụt`);

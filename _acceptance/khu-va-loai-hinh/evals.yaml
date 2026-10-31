@@ -1,0 +1,103 @@
+schema_version: 1
+feature_slug: khu-va-loai-hinh
+# Lệnh máy: `executors.test.core`, `executors.test.api`, `executors.test.isolation` (packages/db/tests + packages/api/test-db,
+# cần DATABASE_URL tới Postgres dãy D, cổng 5565), `executors.script.du_lieu_mau` (kiểm dữ liệu mẫu, cần DATABASE_URL).
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên
+# ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «đổi tên khu: không còn tên dự án trong vùng danh mục» có mặt và ok (tệp packages/core/src/catalog/khu-va-loai-hinh.test.ts) — ca đọc từ đĩa mọi tệp .ts/.tsx/.mjs/.json/.md dưới sáu chỗ viết trước (packages/core/src/catalog, packages/api/src/catalog, packages/api/test-db/catalog, packages/db/seed, apps/web/src, và hai tệp CONTEXT.md, docs/product/tham-chieu.md; đường suy từ vị trí tệp kiểm, không hằng gốc kho), đếm số tệp đã đọc > 0 cho TỪNG chỗ, rồi đòi không tệp nào chứa `projectKey`, `projectName`, `\"projects\"`, `projects:` hay `?project=`, thông điệp nêu tệp và dòng; ngoại lệ viết trước đúng MỘT: thân ca «danh mục: tham số project cũ bị từ chối 400» trong packages/api/test-db/catalog/catalog.test.ts được chứa `?project=` và bộ quét đếm đúng 1 lần gặp ở đó (khác 1 là đỏ); tệp kiểm này tự loại chính nó; đối chứng: chuỗi `subdivisionKey` có ở ít nhất một tệp mỗi thư mục mã. Chiều đỏ: để sót một `projectKey` trong do-ti-le.ts → ca đỏ nêu tệp."
+    paths: [packages/core/src/catalog/**, packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/db/seed/**, apps/web/src/**, CONTEXT.md, docs/product/tham-chieu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/catalog/catalog.test.ts ca «danh mục: dự án lạ trả 404 not-found» (giữ tên ca của hàng 9) có mặt và ok với thân đổi: `?subdivision=khong-co` → 404 { error: 'not-found' }, `?subdivision=mau-du-an-thu` → 200 found; và ca mới «danh mục: tham số project cũ bị từ chối 400» có mặt và ok — `/A-12.06?project=mau-du-an-thu` bằng quản trị đã chọn sàn nhận 400, thân không có status found; đối chứng cùng người: không tham số nhận 200 found. Chiều đỏ: query không strict → ?project= ra 200, ca đỏ nêu mã nhận được."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; mọi ca của hàng 9 trong packages/core/src/catalog/catalog.test.ts và của hàng 63 trong packages/core/src/catalog/trung-ma-hai-toa.test.ts có mặt với đúng tên cũ («tra mã chuẩn: found đủ mười thuộc tính theo danh mục» … «mười trường ra đều thuộc lớp danh mục, trần ra ngoài được»; «trùng mã hai toà một dự án: ambiguous, không found» … «toà lạ: kết cục riêng, không thuộc tính») và ok."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «đo tỉ lệ tự điền trên dữ liệu mẫu: 47 mã, 100%, chưa có đúng, điền đoán 0» và «đo tỉ lệ: mã trùng hai toà là nhiều căn, không là điền đoán» có mặt, đúng tên cũ, ok — dòng in đúng chữ `tự điền đúng 282/282 (100%) · chưa có 4/4 · điền đoán 0`."
+    paths: [packages/api/src/catalog/**, packages/db/seed/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; năm ca của hàng 9 trong packages/api/test-db/catalog/catalog.test.ts và ba ca của hàng 63 trong packages/api/test-db/catalog/trung-ma-hai-toa.test.ts có mặt với đúng tên cũ và ok."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «loại hình: 180/180 căn mẫu là Residential / Condominium» có mặt và ok — đọc packages/db/seed/mau/du-lieu-mau.json từ đĩa (đường suy từ vị trí tệp kiểm), đếm căn bằng 180 TRƯỚC khi so, mỗi căn propertyType === 'Residential' và propertySubType === 'Condominium'; đối chứng âm trên bản sao: đổi một căn sang 'Townhouse' thì ca nêu đúng UPI căn ấy. Ca «dữ liệu mẫu sinh lại tất định» có mặt và ok — gọi hàm sinh của packages/db/seed hai lần, JSON.stringify hai kết quả bằng nhau và bằng nội dung tệp đã commit (so khoá danhMuc). Chiều đỏ: hàm sinh quên loại hình → 180 căn thiếu trường, ca đỏ nêu số."
+    paths: [packages/db/seed/**, packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «loại hình: căn tra ra mang đúng mười hai trường lớp danh mục» trong packages/core/src/catalog/khu-va-loai-hinh.test.ts có mặt và ok — UNIT_ATTRIBUTE_FIELDS deepEqual danh sách viết trong tệp kiểm mười hai phần tử (subdivisionKey, subdivisionName, buildingName, unitNumber, upi, floor, stack, livingArea, bedroomsTotal, directionFaces, propertyType, propertySubType), mỗi phần tử UNIT_ATTRIBUTE_CLASS là 'catalog' (so 12 lần), tra A-12.06 ra unit có Object.keys bằng đúng danh sách ấy và propertyType 'Residential'. Chiều đỏ: thêm một trường thứ mười ba → ca đỏ nêu khoá thừa."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/catalog/catalog.test.ts ca mới «loại hình: thân found qua API mang đúng mười hai khoá viết trước» có mặt và ok — quản trị đã chọn sàn gọi /api/v1/catalog/units/A-12.06, Object.keys(body.unit) đã sắp bằng danh sách mười hai tên VIẾT TRONG TỆP KIỂM (không lấy từ UNIT_ATTRIBUTE_FIELDS), propertyType 'Residential', propertySubType 'Condominium'; và ca của hàng 9 «danh mục: thân trả về chỉ mang khoá cho phép» vẫn ok. Chiều đỏ: thêm một khoá vào kết quả tra → ca mới đỏ nêu khoá thừa."
+    paths: [packages/core/src/catalog/**, packages/api/src/catalog/**, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «loại hình: bảng trường đúng bốn loại theo ADR-0016» có mặt và ok — ma trận viết trước trong tệp kiểm: Condominium (Residential) → {buildingName, floor, stack, livingArea, bedroomsTotal, directionFaces}; Townhouse (Residential) và Single Family Residence (Residential) → {lotSizeArea, livingArea, storiesTotal, frontageLength, bedroomsTotal, directionFaces, accessRoadWidth}; Unimproved Land (Land) → {lotSizeArea, frontageLength, accessRoadWidth}; Object.keys(PROPERTY_SUBTYPE_FIELDS) deepEqual đúng bốn khoá viết trước, mỗi khoá so propertyType và tập fields (4 lần so). Chiều đỏ: thêm `floor` vào đất → ca đỏ nêu loại hình."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «loại hình: lõi từ chối trường không thuộc loại hình» có mặt và ok — ma trận viết trước: đất có floor 3, căn hộ có lotSizeArea 80, nhà phố có stack '02', cặp Residential/Land; mỗi phần tử một lần so (4 lần), unitFieldErrors trả đúng một lỗi với field và subType viết trước; đối chứng dương: căn hộ đủ sáu trường, nhà phố có lotSizeArea và storiesTotal, đất chỉ có lotSizeArea — đều trả []; trường mang null không tính là lỗi. Ca «loại hình: danh mục có căn sai loại không dựng được chỉ mục» có mặt và ok — buildCatalogIndex trên bản sao danh mục mẫu có một căn mang lotSizeArea ném lỗi nêu UPI và tên trường; danh mục mẫu nguyên dựng được. Chiều đỏ: bỏ kiểm ở buildCatalogIndex → ca thứ hai đỏ."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-8
+    executor: judgment
+    inputs: [CONTEXT.md, docs/product/tham-chieu.md, _acceptance/khu-va-loai-hinh/decisions.jsonl]
+    question: "Đọc nhãn chủ kho chọn cho khu chứa căn ở dòng sổ Hỏi-1 (dòng gate1 nếu có, không thì khuyến nghị của dòng Hỏi-1 đã được dòng seal phê) và nêu nguyên văn nhãn ấy. Trong CONTEXT.md và Tham chiếu: khu chứa căn có được gọi bằng đúng nhãn ấy kèm tên code subdivisionName (RESO SubdivisionName), không còn «dự án» dùng làm tên khái niệm khu chứa căn (chữ «dự án» còn lại chỉ được ở chỗ trích lời, tên riêng mẫu như «[Mẫu] Dự án căn hộ thử», hay lịch sử sổ quyết định cũ); có dòng nói căn mang loại hình propertyType/propertySubType theo RESO; Tham chiếu §12 có dòng ghi quyết định đổi tên và loại hình ngày 31/10?"
+    expected: "PASS khi nhãn khớp lựa chọn ở sổ và cả ba vế đúng; FAIL nêu đúng dòng lệch nhãn hay còn gọi khu chứa căn là «dự án» như tên khái niệm."
+
+  - id: E11
+    criterion: AC-9
+    executor: judgment
+    inputs: [docs/adr/0016-moi-loai-hinh.md, apps/web/src/app/settings/users/quan-nguoi.tsx, _acceptance/khu-va-loai-hinh/decisions.jsonl]
+    question: "ADR-0016 có ghi trạng thái sau Cổng Phạm vi và câu trả lời của chủ kho cho Hỏi-1, Hỏi-2, Hỏi-3 khớp với dòng sổ gate1 hoặc dòng seal của decisions.jsonl; nhãn khu phụ trách trên màn Người dùng (quan-nguoi.tsx) theo đúng Hỏi-1 (khuyến nghị: «Vùng phụ trách»)?"
+    expected: "PASS khi ADR và màn khớp lựa chọn đã ghi; FAIL nêu chỗ lệch."
