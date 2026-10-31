@@ -2,3 +2,4 @@
 export * from "./types";
 export * from "./code-rule";
 export * from "./lookup";
+export * from "./property-type";

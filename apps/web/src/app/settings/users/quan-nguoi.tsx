@@ -134,7 +134,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             </Field>
             <ChonNhieu ten="Vai" cac={VAI} chon={vai} doi={setVai} />
             {cacKhu.length > 0 ? (
-              <ChonNhieu ten="Khu phụ trách" cac={cacKhu} chon={khuChon} doi={setKhuChon} />
+              <ChonNhieu ten="Vùng phụ trách" cac={cacKhu} chon={khuChon} doi={setKhuChon} />
             ) : (
               <p className="text-sm text-muted-foreground">Chưa có khu — thêm khu ở dưới.</p>
             )}
@@ -195,7 +195,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
           <form className="flex flex-col gap-3 rounded-lg border p-3" onSubmit={luu}>
             <p className="text-sm font-medium">Sửa {sua.email}</p>
             <ChonNhieu ten="Vai" cac={VAI} chon={suaVai} doi={setSuaVai} />
-            {cacKhu.length > 0 && <ChonNhieu ten="Khu phụ trách" cac={cacKhu} chon={suaKhu} doi={setSuaKhu} />}
+            {cacKhu.length > 0 && <ChonNhieu ten="Vùng phụ trách" cac={cacKhu} chon={suaKhu} doi={setSuaKhu} />}
             {loiSua && (
               <TrangThai kind="error" title={loiSua} />
             )}
@@ -234,7 +234,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Bỏ {bo?.email} khỏi sàn?</AlertDialogTitle>
-            <AlertDialogDescription>Người này không vào được sàn nữa; khu phụ trách của họ ở sàn mất theo.</AlertDialogDescription>
+            <AlertDialogDescription>Người này không vào được sàn nữa; vùng phụ trách của họ ở sàn mất theo.</AlertDialogDescription>
           </AlertDialogHeader>
           {loiBo && (
             <TrangThai kind="error" title={loiBo} />

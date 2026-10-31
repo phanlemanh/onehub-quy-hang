@@ -3,7 +3,7 @@
  * đổi hàm đọc. Mã viết liền như `A1206` chỉ tách được tầng và trục khi biết bề rộng trục của dự án.
  */
 export type UnitCodeRule = {
-  projectKey: string;
+  subdivisionKey: string;
   /** Mẫu mã đưa cho người gõ khi chuỗi không đọc được. */
   example: string;
   /** Biểu thức chính quy (không neo) cho phần toà, trên chuỗi đã chữ hoa. */
@@ -16,7 +16,7 @@ export type UnitCodeRule = {
 
 /** Dự án mẫu của hàng 5: Toà A/B, 15 tầng × 6 trục, mã `A-12.06`. Dự án thật thêm dòng khi nạp danh mục thật. */
 export const UNIT_CODE_RULES: readonly UnitCodeRule[] = [
-  { projectKey: "mau-du-an-thu", example: "A-12.06", buildingPattern: "[A-Z]", floorWidth: 2, stackWidth: 2, template: "{b}-{f}.{s}" },
+  { subdivisionKey: "mau-du-an-thu", example: "A-12.06", buildingPattern: "[A-Z]", floorWidth: 2, stackWidth: 2, template: "{b}-{f}.{s}" },
 ];
 
 export type UnitCodeParts = {

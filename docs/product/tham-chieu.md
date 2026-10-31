@@ -12,8 +12,8 @@ Phác thảo: [Phác thảo UX quỹ hàng](https://claude.ai/artifact/VESE23Chn
 - **Việc thật**: khi khách hỏi, tìm ra căn khớp và gửi được trong vài phút, trước khi khách hỏi người khác — mà không để lộ nguồn chủ nhà.
 - **Thay cho** Google Sheet và nhóm Zalo. Thắng Sheet ở năm chỗ: gõ mã căn là đủ thông tin; giá luôn kèm điều kiện phí; độ tươi tự tính; gửi khách bằng link sống; nguồn chủ nhà được giữ kín ngay trong sàn.
 - **Chỗ đứng** — Đã chốt 29/10: ứng dụng riêng thuộc phía cung của OneHub Platform, đọc dữ liệu từ OneHub Invest một chiều; không phải cổng thứ ba của Invest.
-- **Người dùng đầu tiên**: chính đội, một dự án căn hộ thứ cấp.
-- **Bản đầu xong khi** một đội bỏ hẳn Google Sheet cho một dự án trong hai tuần và không muốn quay lại.
+- **Người dùng đầu tiên**: chính đội, một khu căn hộ thứ cấp.
+- **Bản đầu xong khi** một đội bỏ hẳn Google Sheet cho một khu trong hai tuần và không muốn quay lại.
 
 **Kiểu sản phẩm** — Đã chốt 29/10 (ADR-0017): Quỹ hàng là SaaS cho ngành bất động sản, linh hoạt theo công ty và theo kết nối. Kiến trúc dựng cơ chế; mỗi kết nối với Invest, Platform hay công ty khác là một thoả thuận bật / tắt, chỉ mở được tới trần của từng lớp dữ liệu. Trần là bất biến: thông tin chủ nhà không bao giờ rời công ty. Chi tiết: [Kiến trúc repo và stack](../architecture/kien-truc-repo-va-stack.md), mục 0.
 
@@ -60,7 +60,7 @@ Hai kết nối trên là thoả thuận đang bật, không phải dây cứng:
 
 | Đối tượng | Là gì | Thuộc ai | Luật |
 | --- | --- | --- | --- |
-| Danh mục: dự án → toà / phân khu → trục / dãy → căn | Vật thể; thuộc tính tự điền từ mã | Dùng chung mọi sàn | Khoá; sai thì «Báo sai thông tin căn» |
+| Danh mục: khu (`SubdivisionName`) → toà / phân khu → trục / dãy → căn; căn mang loại hình RESO | Vật thể; thuộc tính tự điền từ mã | Dùng chung mọi sàn | Khoá; sai thì «Báo sai thông tin căn» |
 | Hàng | Lần chào bán của sàn trên một căn. Lead là hàng ở nấc đầu, có thể mới biết toà | Sàn | Mỗi sàn tối đa một hàng đang mở trên một căn — gốc của kiểm trùng |
 | Chủ nhà | Tên, số, các căn của người đó, giá đáy từng nói | Đầu chủ giữ + trưởng nhóm | Một chủ nhiều căn → một đầu chủ |
 | Sự kiện | Nhập lead, gọi, xác nhận, đổi giá, đổi trạng thái, nhập file, gửi, mở số chủ | Sàn | Chỉ thêm, không sửa; ghi người và vai lúc làm |
@@ -180,7 +180,7 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 
 - **Một địa chỉ cho một thứ; màn tự đổi theo thiết bị và vai.** Bảng hàng trên máy tính là bảng kiểu Sheet, trên điện thoại là thẻ; Hôm nay của đầu chủ là hàng đợi, của đầu khách là dòng phản ứng của khách. Link mở trên máy nào cũng đúng chỗ. Một người nhiều vai thấy hợp các nhà của mọi vai.
 - **Máy tính** — ba tầng:
-  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn dự án · ô «Gõ mã căn» ở giữa · + Lead · Nhập Excel · Phát hàng · chuông báo · tài khoản.
+  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · + Lead · Nhập Excel · Phát hàng · chuông báo · tài khoản.
   - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị, ở đáy).
   - **Ưu tiên bề ngang cho đầu chủ**: cột thứ hai mặc định gập ở Bảng hàng, Hôm nay và hồ sơ căn, chỉ còn cột biểu tượng mảnh; góc nhìn đã lưu vẫn một chạm ở nút «Góc nhìn» đầu thanh công cụ của bảng. Ai mở thì máy nhớ theo người.
   - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay không có cột thứ hai.
@@ -278,7 +278,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | --- | --- |
 | Số ngày Sheet cũ không được sửa | Đội đã chuyển hẳn chưa? |
 | Tỉ lệ căn xác nhận trong N ngày; tỉ lệ căn ở mức đủ cao nhất | Hàng có tươi và đầy hơn không? |
-| Tỉ lệ mã căn tự điền được | Danh mục đủ phủ dự án chưa? |
+| Tỉ lệ mã căn tự điền được | Danh mục đủ phủ khu chưa? |
 | Thời gian khách hỏi → gửi được căn | Việc thật có nhanh hơn không? |
 | Thời gian lead → cuộc gọi đầu; số ngày lead → Sẵn sàng bán; số lead trùng bị chặn | Dòng vào có chạy không? |
 | Số căn gọi ép giá đợt hai | Hàng ngộp có được chăm không? |
@@ -328,6 +328,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 31/10 | Nhập dữ liệu: tác tử Claude Opus 5.5 lập kế hoạch nhập từ hồ sơ cột (tiêu đề + giá trị của cột danh mục, giá, trạng thái), mã ở lõi áp lên mọi dòng, người xem trước từng ô rồi mới ghi qua lệnh; chủ nhà, số, giá đáy, tên người, ghi chú không bao giờ tới nhà cung cấp AI (che ở trình duyệt, máy chủ quét lại, kiểm bắt buộc); cửa ra AI là thoả thuận «Xử lý bằng AI» sàn bật / tắt, trần 10 USD/tháng/sàn; không AI vẫn nhập được và đo chế độ không AI trước — nền đạt ngưỡng thì gác hàng tác tử; Google Sheets bản đầu nhận file tải về; hoàn tác cả lần nhập bằng sự kiện bù; người nhập là đầu chủ và trưởng nhóm. Hàng 20, 21 thay bằng hàng 64–71 | ADR-0011 · `docs/architecture/nhap-du-lieu.md` |
 | 31/10 | Gõ mã căn trùng ở hai toà cùng dự án: không tự điền căn nào, liệt «nhiều căn» kèm tên từng toà để người chọn — như trùng ở hai dự án; chọn toà (theo tên hay ký hiệu toà) thì ra đúng một căn; toà không có trong dự án báo riêng. Trong tỉ lệ mã căn tự điền được, mã ra «nhiều căn» tính là hụt, không là điền đoán | Mục 4, 11 · `_acceptance/can-trung-ma-hai-toa/` |
 | 31/10 | Mọi loại hình bất động sản là nợ phải giải trước khi triển khai (chủ kho, Cổng Phạm vi hàng 24: «nếu không giải thì sẽ không thể triển khai được»); bỏ chữ «dự án», gọi theo RESO DD 2.1 — khu chứa căn `SubdivisionName`, toà `BuildingName`, căn `UnitNumber`, loại hình `PropertyType` / `PropertySubType`. Thiết kế đề xuất (loại hình ở căn, nhãn của sàn neo vào giá trị RESO; khu → toà → căn hay khu → dãy → lô; nhà ngoài khu định danh bằng địa chỉ chuẩn, là bản ghi của sàn; kiểm trùng theo khoá địa chỉ) chờ duyệt ở Cổng Phạm vi hàng 72; Hỏi-4 đã quyết: hai tuần thử giữ một khu căn hộ (chủ kho «Duyệt theo khuyến nghị»); hàng 72 build, dãy D làm trước hàng 10 | ADR-0016 (đề xuất) · `docs/plan/pham-vi-moi-loai-hinh.md` · hàng 72–80 |
+| 31/10 | Khu và loại hình: bỏ chữ «dự án» — khu chứa căn là «Khu» (RESO `SubdivisionName`, code `subdivisionKey` / `subdivisionName`, đường tra `?subdivision=`, tên cũ bị từ chối); khu chia việc của sàn đổi nhãn thành «Vùng», «Vùng phụ trách» (code `zone` giữ); mỗi căn mang loại hình RESO (`propertyType` / `propertySubType`), bốn loại: căn hộ, nhà phố, biệt thự, đất; loại hình nào dùng trường nào đọc từ một bảng của lõi, danh mục có căn mang trường sai loại hình không lên được. Đất có bốn mục ở mức đủ (bỏ «nội thất», hàng 76); khách riêng thấy tên đường và xã của nhà ngoài khu, không số nhà, hẻm, toạ độ (hàng 80) | Mục 4 · ADR-0016 · `_acceptance/khu-va-loai-hinh/` |
 
 ## 13. Chỗ cần chốt
 
@@ -354,7 +355,7 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 
 **Dữ liệu và phạm vi**
 
-- [ ] Dự án dùng thử đầu tiên — để sau, hỏi ở vòng nạp danh mục; tới đó dựng bằng dữ liệu mẫu có nhãn. Đề xuất: dự án đội đang giữ nhiều hàng nhất.
+- [ ] Khu dùng thử đầu tiên — để sau, hỏi ở vòng nạp danh mục; tới đó dựng bằng dữ liệu mẫu có nhãn. Đề xuất: khu đội đang giữ nhiều hàng nhất.
 - [ ] Danh mục căn dùng ra ngoài lấy từ đâu — để sau, hỏi ở vòng nạp danh mục. Đề xuất: bảng hàng sàn thử nhập cộng phần danh mục Invest không đến từ S08; mua quyền khi có sàn ngoài.
 - [ ] Ngưỡng của các cổng làm tiếp / đổi hướng và ngưỡng số đo ở mục 11 — để sau: đặt ở Cổng Đáng của hàng mà số đo đo, trước hai tuần thử.
 - [ ] Luật chia hoa hồng, ghi công của Platform — để sau, ngoài bản đầu; bản đầu chỉ bảo đảm mỗi sự kiện ghi người và vai.

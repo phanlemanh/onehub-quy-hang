@@ -5,8 +5,8 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { CEILING } from "../data-classes";
 import { UNIT_CODE_RULES, type UnitCodeRule } from "./code-rule";
-import { buildCatalogIndex, checkRuleAgainstProject, lookupUnit, UNIT_ATTRIBUTE_CLASS, UNIT_ATTRIBUTE_FIELDS } from "./lookup";
-import type { CatalogData, CatalogProjectData, CatalogUnitData } from "./types";
+import { buildCatalogIndex, checkRuleAgainstSubdivision, lookupUnit, UNIT_ATTRIBUTE_CLASS, UNIT_ATTRIBUTE_FIELDS } from "./lookup";
+import type { CatalogData, CatalogSubdivisionData, CatalogUnitData } from "./types";
 
 const can = (unitNumber: string, o: Partial<CatalogUnitData> = {}): CatalogUnitData => {
   const [, f, s] = /^[A-Z]-(\d{2})\.(\d{2})$/.exec(unitNumber) ?? [];
@@ -18,14 +18,16 @@ const can = (unitNumber: string, o: Partial<CatalogUnitData> = {}): CatalogUnitD
     livingArea: 60,
     bedroomsTotal: 2,
     directionFaces: "Đông",
+    propertyType: "Residential",
+    propertySubType: "Condominium",
     ...o,
   };
 };
 
 /** Fixture viết tay: giá trị khác nhau từng căn để bắt việc trả nhầm căn kề. */
-const DU_AN_MAU: CatalogProjectData = {
-  projectKey: "mau-du-an-thu",
-  projectName: "[Mẫu] Dự án căn hộ thử",
+const DU_AN_MAU: CatalogSubdivisionData = {
+  subdivisionKey: "mau-du-an-thu",
+  subdivisionName: "[Mẫu] Dự án căn hộ thử",
   complexName: null,
   buildings: [
     {
@@ -45,7 +47,7 @@ const DU_AN_MAU: CatalogProjectData = {
     { buildingKey: "B", buildingName: "Toà B", units: [can("B-01.01")] },
   ],
 };
-const MOT_DU_AN: CatalogData = { projects: [DU_AN_MAU] };
+const MOT_DU_AN: CatalogData = { subdivisions: [DU_AN_MAU] };
 const idx = buildCatalogIndex(MOT_DU_AN);
 const KHOA_THUOC_TINH = new Set<string>(UNIT_ATTRIBUTE_FIELDS);
 
@@ -60,14 +62,14 @@ function moiKhoa(v: unknown, out = new Set<string>()): Set<string> {
   }
   return out;
 }
-const giaoThuocTinh = (v: unknown) => [...moiKhoa(v)].filter((k) => KHOA_THUOC_TINH.has(k) && k !== "projectKey" && k !== "projectName" && k !== "unitNumber");
+const giaoThuocTinh = (v: unknown) => [...moiKhoa(v)].filter((k) => KHOA_THUOC_TINH.has(k) && k !== "subdivisionKey" && k !== "subdivisionName" && k !== "unitNumber");
 
 test("tra mã chuẩn: found đủ mười thuộc tính theo danh mục", () => {
   const kq = lookupUnit(idx, "A-12.06");
   assert.equal(kq.status, "found");
   assert.deepEqual(kq.status === "found" && kq.unit, {
-    projectKey: "mau-du-an-thu",
-    projectName: "[Mẫu] Dự án căn hộ thử",
+    subdivisionKey: "mau-du-an-thu",
+    subdivisionName: "[Mẫu] Dự án căn hộ thử",
     buildingName: "Toà A",
     unitNumber: "A-12.06",
     upi: "urn:onehub:upi:thu:A-12.06",
@@ -76,6 +78,8 @@ test("tra mã chuẩn: found đủ mười thuộc tính theo danh mục", () =>
     livingArea: 82.3,
     bedroomsTotal: 3,
     directionFaces: "Tây Nam",
+    propertyType: "Residential",
+    propertySubType: "Condominium",
   });
   assert.deepEqual(Object.keys(kq.status === "found" ? kq.unit : {}).sort(), [...UNIT_ATTRIBUTE_FIELDS].sort());
   // Đối chứng cùng fixture: căn kề là căn khác.
@@ -109,7 +113,7 @@ test("đọc được mà ngoài danh mục: not_in_catalog, không thuộc tín
   for (const [go, chuan] of CA) {
     const kq = lookupUnit(idx, go);
     assert.equal(kq.status, "not_in_catalog", `«${go}» phải là not_in_catalog`);
-    assert.deepEqual(kq.status === "not_in_catalog" && kq.read, [{ projectKey: "mau-du-an-thu", unitNumber: chuan }]);
+    assert.deepEqual(kq.status === "not_in_catalog" && kq.read, [{ subdivisionKey: "mau-du-an-thu", unitNumber: chuan }]);
     assert.deepEqual(giaoThuocTinh(kq), [], `«${go}» bị điền thuộc tính`);
   }
   assert.equal(lookupUnit(idx, "A-15.01").status, "found", "đối chứng: A-15.01 có trong danh mục");
@@ -120,7 +124,7 @@ test("không đọc được: unreadable kèm mẫu mã từng dự án", () => 
     const kq = lookupUnit(idx, go);
     assert.equal(kq.status, "unreadable", `«${go}» phải là unreadable`);
     assert.ok(
-      kq.status === "unreadable" && kq.examples.some((e) => e.projectKey === "mau-du-an-thu" && e.example === "A-12.06"),
+      kq.status === "unreadable" && kq.examples.some((e) => e.subdivisionKey === "mau-du-an-thu" && e.example === "A-12.06"),
       `«${go}» thiếu mẫu mã của dự án mẫu`,
     );
     assert.deepEqual(giaoThuocTinh(kq), [], `«${go}» bị điền thuộc tính`);
@@ -136,36 +140,36 @@ function goiMau(): CatalogData {
 
 test("cách đọc dự án mẫu khớp 180/180 căn danh mục mẫu", () => {
   const dm = goiMau();
-  const duAn = dm.projects.find((p) => p.projectKey === "mau-du-an-thu");
+  const duAn = dm.subdivisions.find((p) => p.subdivisionKey === "mau-du-an-thu");
   assert.ok(duAn, "gói mẫu thiếu dự án mau-du-an-thu");
   const soCan = duAn.buildings.reduce((n, b) => n + b.units.length, 0);
   assert.equal(soCan, 180, "danh mục mẫu phải có 180 căn");
-  const rule = UNIT_CODE_RULES.find((r) => r.projectKey === "mau-du-an-thu")!;
-  assert.deepEqual(checkRuleAgainstProject(rule, duAn), []);
+  const rule = UNIT_CODE_RULES.find((r) => r.subdivisionKey === "mau-du-an-thu")!;
+  assert.deepEqual(checkRuleAgainstSubdivision(rule, duAn), []);
   // Đối chứng âm trên bản sao: đổi tầng của một căn thì lệch đúng căn ấy.
-  const banSao = structuredClone(duAn) as CatalogProjectData & { buildings: { units: CatalogUnitData[] }[] };
+  const banSao = structuredClone(duAn) as CatalogSubdivisionData & { buildings: { units: CatalogUnitData[] }[] };
   banSao.buildings[0]!.units[0] = { ...banSao.buildings[0]!.units[0]!, floor: 14 };
-  const lech = checkRuleAgainstProject(rule, banSao);
+  const lech = checkRuleAgainstSubdivision(rule, banSao);
   assert.equal(lech.length, 1);
   assert.equal(`${lech[0]!.unitNumber}: ${lech[0]!.field}`, `${duAn.buildings[0]!.units[0]!.unitNumber}: floor`);
 });
 
 test("dự án thứ hai chỉ cần một dòng cách đọc", () => {
-  const duAnHai: CatalogProjectData = {
-    projectKey: "du-an-hai",
-    projectName: "[Mẫu] Dự án thứ hai",
+  const duAnHai: CatalogSubdivisionData = {
+    subdivisionKey: "du-an-hai",
+    subdivisionName: "[Mẫu] Dự án thứ hai",
     complexName: null,
     buildings: [{ buildingKey: "T1", buildingName: "Tháp 1", units: [{ ...can("A-08.05"), upi: "urn:onehub:upi:thu:T1-0805", unitNumber: "T1-0805", floor: 8, stack: "05" }] }],
   };
-  const dongMoi: UnitCodeRule = { projectKey: "du-an-hai", example: "T1-0805", buildingPattern: "[A-Z][0-9]", floorWidth: 2, stackWidth: 2, template: "{b}-{f}{s}" };
-  const voiDong = buildCatalogIndex({ projects: [DU_AN_MAU, duAnHai] }, [...UNIT_CODE_RULES, dongMoi]);
+  const dongMoi: UnitCodeRule = { subdivisionKey: "du-an-hai", example: "T1-0805", buildingPattern: "[A-Z][0-9]", floorWidth: 2, stackWidth: 2, template: "{b}-{f}{s}" };
+  const voiDong = buildCatalogIndex({ subdivisions: [DU_AN_MAU, duAnHai] }, [...UNIT_CODE_RULES, dongMoi]);
   for (const go of ["t1 08 05", "T10805", "t1-08.05"]) {
     const kq = lookupUnit(voiDong, go);
     assert.equal(kq.status === "found" && kq.unit.upi, "urn:onehub:upi:thu:T1-0805", `«${go}» không ra căn của dự án thứ hai`);
   }
-  assert.deepEqual(checkRuleAgainstProject(dongMoi, duAnHai), []);
+  assert.deepEqual(checkRuleAgainstSubdivision(dongMoi, duAnHai), []);
   // Không có dòng cách đọc: chỉ khớp đúng mã danh mục sau chữ hoa.
-  const khongDong = buildCatalogIndex({ projects: [DU_AN_MAU, duAnHai] });
+  const khongDong = buildCatalogIndex({ subdivisions: [DU_AN_MAU, duAnHai] });
   assert.equal(lookupUnit(khongDong, "t1-0805").status, "found");
   assert.equal(lookupUnit(khongDong, "t1 08 05").status, "unreadable");
 });
@@ -185,17 +189,17 @@ test("trường danh mục trống trả null, không lấy từ căn khác", ()
 });
 
 test("mã khớp hai dự án: ambiguous, không chọn hộ", () => {
-  const duAnHai: CatalogProjectData = {
-    projectKey: "du-an-hai",
-    projectName: "[Mẫu] Dự án thứ hai",
+  const duAnHai: CatalogSubdivisionData = {
+    subdivisionKey: "du-an-hai",
+    subdivisionName: "[Mẫu] Dự án thứ hai",
     complexName: null,
     buildings: [{ buildingKey: "A", buildingName: "Toà A", units: [{ ...can("A-01.01"), upi: "urn:onehub:upi:thu:hai:A-01.01" }] }],
   };
-  const rules = [...UNIT_CODE_RULES, { ...UNIT_CODE_RULES[0]!, projectKey: "du-an-hai" }];
-  const hai = buildCatalogIndex({ projects: [duAnHai, DU_AN_MAU] }, rules);
+  const rules = [...UNIT_CODE_RULES, { ...UNIT_CODE_RULES[0]!, subdivisionKey: "du-an-hai" }];
+  const hai = buildCatalogIndex({ subdivisions: [duAnHai, DU_AN_MAU] }, rules);
   const kq = lookupUnit(hai, "A-01.01");
   assert.equal(kq.status, "ambiguous");
-  assert.deepEqual(kq.status === "ambiguous" && kq.candidates.map((c) => [c.projectKey, c.upi]), [
+  assert.deepEqual(kq.status === "ambiguous" && kq.candidates.map((c) => [c.subdivisionKey, c.upi]), [
     ["du-an-hai", "urn:onehub:upi:thu:hai:A-01.01"],
     ["mau-du-an-thu", "urn:onehub:upi:thu:A-01.01"],
   ]);
@@ -207,7 +211,7 @@ test("mã khớp hai dự án: ambiguous, không chọn hộ", () => {
 });
 
 test("dự án không có trong danh mục", () => {
-  assert.deepEqual(lookupUnit(idx, "A-12.06", "khong-co"), { status: "unknown_project", projectKey: "khong-co" });
+  assert.deepEqual(lookupUnit(idx, "A-12.06", "khong-co"), { status: "unknown_subdivision", subdivisionKey: "khong-co" });
   assert.equal(lookupUnit(idx, "A-12.06", "mau-du-an-thu").status, "found");
 });
 
