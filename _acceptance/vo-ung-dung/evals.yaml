@@ -1,0 +1,161 @@
+schema_version: 1
+feature_slug: vo-ung-dung
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG G» trong steps):
+#   docker run --rm -d --name quy-hang-db-G -e POSTGRES_PASSWORD=quyhang -p 5546:5432 postgres:16 (đã chạy thì bỏ qua)
+#   export DATABASE_URL=postgres://postgres:quyhang@localhost:5546/postgres && npm run db:migrate
+#   node _acceptance/vo-ung-dung/thu/vai-mau.mjs  → in bảng email ↔ vai (người mẫu, *@example.test)
+#   máy chủ dev cấu hình `web-g` của .claude/launch.json (cổng 3462), nhật ký ở .acceptance-runs/vo-ung-dung/web-g.log;
+#   đăng nhập bằng email, đọc mã ở nhật ký đó (grep theo email)
+#   «[ma-dang-nhap] <email> <mã>»
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; navigation.test.ts có một ca cho từng vai trong năm vai so nhà cột, tab dưới, nút thanh trên, nhà mở đầu, có ô gõ mã căn với bảng chép từ Tham chiếu §9 (ma trận viết trước: 5 vai × 5 trường = 25 assert); ca nhiều vai (listing_agent + buyer_agent) ra hợp; ca chỉ company_admin mở vào /settings; ca mảng vai rỗng ra không nhà nào. Đối chứng đỏ trong cùng tệp: bảng giả thiếu «Phát hàng» của Trưởng nhóm → hàm so bảng báo lệch gọi tên vai và nút."
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/navigation.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; navigation.test.ts: chữ gõ «Bảng hàng», «bang hang», «hôm nay» ra địa chỉ nhà tương ứng; «A-12.05» ra /units/A-12.05 (mã được mã hoá URL); chuỗi rỗng hay chỉ khoảng trắng ra null; tên nhà vai không có (Telesales gõ «Đội») ra /units/<chữ> chứ không ra /team."
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/navigation.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G (đầu tệp). Khổ 1440x900."
+      - "Lần lượt đăng nhập bốn người mẫu Đầu chủ, Đầu khách, Trưởng nhóm, Quản trị sàn; mỗi người mở http://localhost:3462/ → chụp evidence/E3-<vai>.png; ghi vào observed: địa chỉ sau khi chuyển, danh sách nhãn trên cột biểu tượng (aria-label/tooltip), danh sách nút ở thanh trên, có ô «Gõ mã căn» hay không, có bộ chọn sàn hay không"
+      - "Mở menu tài khoản của Đầu chủ → chụp evidence/E3-menu.png; ghi các mục"
+      - "Đăng nhập người mẫu hai sàn (quản trị ở cả hai sàn mẫu, mỗi sàn có danh sách người khác nhau) → mở /settings/users, ghi danh sách email → thấy bộ chọn sàn → đổi sang sàn thứ hai → chụp evidence/E3-doi-san.png; ghi tên sàn trên thanh trước và sau"
+      - "Sau khi đổi: tải lại trang → ghi tên sàn trên thanh; mở /settings/users → ghi danh sách email"
+    expected: "Mỗi vai khớp đúng bảng Tham chiếu §9: Đầu chủ — cột Hôm nay·Bảng hàng; nút + Lead·Nhập Excel·Phát hàng. Đầu khách — Hôm nay·Bảng hàng·Đã gửi; không nút tạo nào. Trưởng nhóm — Hôm nay·Bảng hàng·Đã gửi·Đội; + Lead·Phát hàng. Quản trị sàn — chỉ Cài đặt sàn (ở đáy); Nhập Excel; mở vào /settings…. Ô Gõ mã căn có đúng khi bảng AC-1 cho vai đó có (theo Hỏi-3 đã chốt ở Cổng Phạm vi); menu tài khoản có tên sàn, sáng/tối, đăng xuất; bộ chọn sàn KHÔNG hiện ở bốn người một sàn và CÓ hiện ở người hai sàn; đổi xong tên sàn trên thanh đổi, tải lại vẫn là sàn mới, và danh sách người ở /settings/users là của sàn mới, khác danh sách trước khi đổi (đối chứng dương: hai sàn mẫu có người khác nhau). Đối chứng: hai vai khác nhau cho hai danh sách nhà khác nhau (phép đo phân biệt được vai)."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/**", "packages/core/src/navigation.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E4
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Khổ 1440x900. Đăng nhập người mẫu nhiều vai (Trưởng nhóm + Quản trị sàn)."
+      - "Mở lần lượt /today, /inventory, /shares, /settings/users → chụp evidence/E4-<nhà>.png; ghi cột thứ hai đang gập hay mở và các mục trong cột"
+      - "Viết trước bảng mong đợi rồi mới chạy: (1) ở /inventory mở cột bằng tay nắm → tải lại → mở; (2) mở /shares → vẫn mở theo mặc định; gập ở /shares → tải lại → gập; (3) mở /inventory → vẫn mở (nhớ theo nhà, không phải cờ chung); (4) đăng xuất, đăng nhập Trưởng nhóm mẫu khác trên cùng trình duyệt → /inventory gập (mặc định), /shares mở (mặc định) — nhớ theo người. Chụp evidence/E4-nho-<bước>.png từng bước; ghi trạng thái thật cạnh mong đợi"
+      - "Ở /settings bấm mục «Người dùng» trong cột thứ hai → thấy màn Người dùng của hàng 7 → chụp evidence/E4-nguoi-dung.png"
+    expected: "/today: không có cột thứ hai. /inventory: mặc định gập; khi mở có Góc nhìn của đội, Góc nhìn của tôi, «+ Lưu góc nhìn», chân cột Độ tươi. /shares: mở, có Link đã gửi, Lịch xem. /settings: mở, có các mục cài đặt gồm Người dùng. Bảng nhớ bốn bước khớp mong đợi từng ô: mở ở /inventory không kéo /shares, gập ở /shares không kéo /inventory, người khác trên cùng máy nhận mặc định. Đối chứng: trạng thái trước và sau mỗi thao tác khác nhau."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Đăng nhập người mẫu chỉ Telesales."
+      - "Khổ 1440x900: mở / → chụp evidence/E5-may-tinh.png; ghi có cột nhà không, có ô Gõ mã căn không, các mục trên thanh trên. Nhấn Meta+K, rồi Ctrl+K, rồi / → ghi có hộp nào mở không"
+      - "Khổ 375x812: mở / → chụp evidence/E5-dien-thoai.png; ghi nhãn các tab dưới"
+      - "Đối chứng: đăng nhập Đầu chủ ở khổ 1440x900, nhấn Meta+K → ghi hộp gõ mã căn có mở"
+    expected: "Máy tính: không cột nhà, không ô Gõ mã căn; thanh trên chỉ có Hôm nay và «+ Lead» (cùng chuông và menu tài khoản); ba phím không mở gì. Điện thoại: đúng ba tab Hôm nay · Lead · Tôi. Đối chứng Đầu chủ: Meta+K mở hộp — chứng phép thử phím có hiệu lực."
+    paths: ["apps/web/src/components/shell/**", "packages/core/src/navigation.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Khổ 375x812."
+      - "Lần lượt Đầu chủ, Đầu khách, Trưởng nhóm: mở / → chụp evidence/E6-<vai>.png; ghi: có cột nhà không, các mục thanh trên, nhãn tab dưới, tab nào mang aria-current=\"page\", document.documentElement.scrollWidth và clientWidth"
+      - "Đầu khách bấm tab Bảng hàng → ghi địa chỉ và aria-current; mở cùng địa chỉ ở khổ 1440x900 → chụp evidence/E6-cung-dia-chi.png"
+      - "Người chỉ Quản trị sàn: mở / → chụp evidence/E6-quan-tri.png; ghi nhãn tab dưới; bấm từng tab → ghi địa chỉ và trang có nằm trong vỏ"
+    expected: "Không cột nhà; thanh trên có tên nhà, nút gõ mã căn, chuông. Tab: Đầu chủ — Hôm nay · Bảng hàng · Tôi; Đầu khách — Hôm nay · Bảng hàng · Gửi · Tôi; Trưởng nhóm — Hôm nay · Bảng hàng · Gửi · Tôi; không Đội, Cài đặt sàn, Nhập Excel, Phát hàng. Tab đang mở mang aria-current=\"page\" và đổi khi bấm. scrollWidth <= clientWidth. Cùng địa chỉ /inventory mở vỏ máy tính ở khổ lớn. Người chỉ Quản trị sàn: đúng các tab theo Hỏi-2 đã chốt (khuyến nghị: Cài đặt sàn · Tôi), mỗi tab mở trang trong vỏ."
+    paths: ["apps/web/src/components/shell/**", "packages/core/src/navigation.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Khổ 1440x900, đăng nhập Đầu chủ, ở /today."
+      - "Nhấn Meta+K → chụp evidence/E7-hop.png; gõ «MAU-A1205» rồi Enter → ghi địa chỉ, chụp evidence/E7-ho-so.png"
+      - "Về /today, bấm vào vùng nội dung (không ở ô nhập), nhấn / → gõ «Bảng hàng» rồi Enter → ghi địa chỉ"
+      - "Nhấn Meta+K rồi Esc → ghi hộp đã đóng"
+      - "Khổ 375x812: bấm nút gõ mã căn trên thanh trên → chụp evidence/E7-dien-thoai.png"
+    expected: "Enter với mã → /units/MAU-A1205 và màn hồ sơ căn trong vỏ hiện «MAU-A1205»; gõ «Bảng hàng» → /inventory; Esc đóng hộp; trên điện thoại hộp gõ mở toàn màn."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Chưa đăng nhập: mở http://localhost:3462/login và /s/MAU-LINK → chụp evidence/E8-dang-nhap.png, evidence/E8-trang-khach.png; ghi có phần tử nav của vỏ (data-slot hoặc role=navigation của vỏ) không"
+      - "Đăng nhập người mẫu hai sàn chưa chọn sàn → ở /select-company chụp evidence/E8-chon-san.png; ghi như trên"
+      - "Đăng nhập Đầu chủ → mở / → ghi địa chỉ cuối; đăng nhập người chỉ Quản trị sàn → mở / → ghi địa chỉ cuối"
+      - "Đối chứng: ở /today của Đầu chủ ghi có phần tử nav của vỏ"
+    expected: "Đăng nhập, chọn sàn, trang khách: không thanh trên, cột nhà hay tab dưới của vỏ. Đầu chủ: / → /today; chỉ Quản trị sàn: / → /settings/…. Đối chứng: /today có nav của vỏ."
+    paths: ["apps/web/src/app/**", "apps/web/src/components/shell/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Khổ 1440x900, đăng nhập người mẫu nhiều vai (mọi vai). Với mỗi mục trên cột nhà và cột thứ hai và nút thanh trên dẫn đường (+ Lead, Nhập Excel, Phát hàng): bấm → ghi địa chỉ, mã trạng thái HTTP của trang, chữ trong Empty"
+      - "Khổ 375x812, người mẫu Telesales và Trưởng nhóm: bấm từng tab → ghi như trên"
+      - "Chụp evidence/E9-giu-cho.png ở /team và evidence/E9-nguoi-dung.png ở /settings/users"
+    expected: "Mọi lối trả 200, nằm trong vỏ; trang chưa có màn hiện Frame + Empty nói màn đó dựng ở mục nào của lộ trình («Dựng ở mục N…»; chữ «mục» thay «hàng» theo rà từ vựng 31/10 vì «Hàng» là một lần chào bán), hoặc «Chưa xếp mục nào trong lộ trình» với nhà lộ trình chưa có mục (Đội, Lịch xem); /settings/users vẫn hiện danh sách người như hàng 7."
+    paths: ["apps/web/src/app/**", "apps/web/src/components/shell/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    paths: ["apps/web/**", "packages/core/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; kiểm chuẩn không báo thành phần thiếu trong catalog.md"
+    paths: ["apps/web/**", ".agents/skills/quy-hang-ui/catalog.md"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG G. Đăng nhập Trưởng nhóm. Ở /shares khổ 1440x900 chế độ sáng → chụp evidence/E13-sang.png; đổi sang tối bằng menu tài khoản → chụp evidence/E13-toi.png; khổ 375x812 tối → chụp evidence/E13-dien-thoai-toi.png"
+      - "Ở mỗi chế độ: lấy màu chữ của nhãn mục đang mở ở cột thứ hai và nền hiệu dụng (tổ tiên gần nhất có nền alpha > 0) bằng getComputedStyle; tính tỉ lệ tương phản WCAG; ghi"
+      - "Đối chứng đỏ: tắt mọi stylesheet, đo lại ở cả hai chế độ, ghi"
+    expected: "Tương phản >= 4.5 ở sáng và tối; nền hiệu dụng sáng khác tối; tải lại giữ chế độ tối. Đối chứng: tắt stylesheet thì nền không đổi giữa hai chế độ."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E14
+    criterion: AC-10
+    executor: judgment
+    question: "Trong ba tệp tài liệu: (1) vo-va-ia.md có ghi app-shell-8 là khối đã chuyển thể cho vỏ máy tính kèm đổi gì (sàn thay Org, bỏ App/Env, Gõ mã căn, nút theo vai, cột thứ hai theo nhà) và giữ thanh tab dưới ở «Chỗ hở»; (2) catalog.md có dòng khối đã chuyển thể app-shell-8 và có dòng cho từng thành phần trong danh sách cài thêm mà mục Notes của contract.md liệt kê; (3) bảng đường dẫn của tham-chieu.md §9 có đủ các địa chỉ /today, /inventory, /shares, /team, /settings, /leads/new, /units/<mã>, /me; (4) §9 ghi hai điều Cổng Phạm vi đã chốt mà contract.md nêu ở mục Notes (tab điện thoại của người chỉ quản trị; ai có ô gõ mã căn), không mâu thuẫn bảng nhà và nút theo vai — cả bốn đúng không?"
+    inputs: [docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/catalog.md, docs/product/tham-chieu.md, _acceptance/vo-ung-dung/contract.md]
+    paths: ["docs/design/vo-va-ia.md", ".agents/skills/quy-hang-ui/catalog.md", "docs/product/tham-chieu.md"]
+    evidence_required: [judged_by, verdict, rationale]

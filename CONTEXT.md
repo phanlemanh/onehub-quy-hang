@@ -28,3 +28,13 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Quản trị sàn | `company_admin` | Vai cấu hình sàn và quản người; không tự thấy chủ nhà | — |
 | Khu | `zone` | Toà hay phân khu do sàn tự đặt tên; gắn danh mục sau | — |
 | Khu phụ trách | `member_zone` | Khu một người trong sàn phụ trách | — |
+| Nhà | `Home` (`packages/core` navigation) | Một chỗ làm việc trả lời một câu (Tham chiếu §9); cột biểu tượng trên máy tính, tab dưới trên điện thoại | — |
+| Hôm nay | `today` | Nhà mở đầu: giờ làm gì | — |
+| Đã gửi · Gửi | `shares` | Link đã gửi và lịch xem; trên điện thoại là tab Gửi, gồm cả nút gửi mới | — |
+| Đội | `team` | Nhà của trưởng nhóm: đội đang chạy thế nào | — |
+| Cài đặt sàn | `settings` | Nhà của quản trị sàn: sàn gọi tên và chạy theo luật nào | — |
+| Tôi | `me` | Tab tài khoản trên điện thoại | — |
+| Gõ mã căn | `unitJump` | Ô mở thẳng hồ sơ căn hoặc nhảy tới nhà bằng bàn phím; chỉ vai có Bảng hàng | — |
+| Hồ sơ căn | `/units/<mã>` | Toàn bộ thông tin của một căn; trên máy tính mở thành cột phải cạnh Bảng hàng | — |
+| Nhập Excel | `import` | Nút đưa hàng vào từ bảng tính | — |
+| Phát hàng | `export` | Nút đưa hàng ra ngoài sàn | — |

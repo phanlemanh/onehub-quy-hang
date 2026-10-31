@@ -187,6 +187,10 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 - **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
 - **Telesales**: không cột nhà, không ô gõ mã căn. Máy tính: thanh trên chỉ có Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
 - **Mở app vào Hôm nay**; người chỉ giữ vai quản trị vào Cài đặt sàn.
+- **Người chỉ giữ vai Quản trị sàn trên điện thoại** có hai tab Cài đặt sàn · Tôi — ngoại lệ của dòng điện thoại, vì
+  không có nhà nào khác (chốt ở Cổng Phạm vi vỏ ứng dụng, 31/10).
+- **Ô «Gõ mã căn» chỉ ở vai có Bảng hàng** (Đầu chủ, Đầu khách, Trưởng nhóm); Telesales và người chỉ quản trị sàn không
+  có (chốt 31/10). Cột thứ hai mở hay gập được nhớ theo người, sàn đang làm và nhà.
 - **Trang khách và đăng nhập không có vỏ.** Trang khách là một link công khai, không đăng nhập, mang tên sàn và người gửi.
 
 | Nhà và nút | Telesales | Đầu chủ | Đầu khách | Trưởng nhóm | Quản trị sàn |
@@ -215,6 +219,8 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | /exports/new | Phát hàng |
 | /team | Đội |
 | /settings/labels · /fields · /statuses · /lead-routing · /fees · /templates | Cài đặt sàn |
+| /settings · /settings/users | Cài đặt sàn (mở vào Người dùng) · Người dùng |
+| /me | Tôi (tab điện thoại; menu tài khoản trên máy tính) |
 | /s/\<mã link> | Trang khách |
 
 ## 10. Danh mục màn và ưu tiên
@@ -305,6 +311,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 30/10 | Đăng nhập theo sàn: email + mã 6 số qua email; chỉ tài khoản đã được mở hay mời mới nhận mã; thành viên sàn là bảng của Quỹ hàng, không dùng phần tổ chức của better-auth; người nhiều sàn chọn sàn, chưa gắn sàn thì không thấy gì — ADR-0005 | Mục 6 · Kiến trúc §5, §10 |
 | 30/10 | Quản trị sàn mời người vào sàn ngay (tạo tài khoản khi chưa có, không lộ ai đã có), đặt một hay nhiều trong năm vai, giao khu do sàn tự đặt tên; chỉ quản trị xem và sửa người; sàn luôn còn một quản trị — ADR-0006 | Mục 2, 6 · Cài đặt sàn S6 |
 | 31/10 | Đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh (`/company`, `no-company`, `/login`…), cùng hành vi và chữ trên màn; đường cũ trả 404; giữ cookie sàn, tên tệp mã (dọn riêng) và thẻ nhật ký mã dev — ADR-0007 | `docs/adr/0007-api-tieng-anh.md` |
+| 31/10 | Vỏ ứng dụng: khối `app-shell-8` chuyển thể cho máy tính, tab dưới ghép cho điện thoại (chủ kho gật trên bản bấm được); nhà và nút theo vai đọc một bảng ở `packages/core`; người chỉ quản trị có tab Cài đặt sàn trên điện thoại; ô Gõ mã căn chỉ vai có Bảng hàng; cột thứ hai nhớ theo người, sàn, nhà | Mục 9 · `docs/design/vo-va-ia.md` |
 
 ## 13. Chỗ cần chốt
 
