@@ -12,6 +12,8 @@ import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerLeadRoutes } from "./leads/routes";
+import { registerRoutingRoutes } from "./routing/routes";
+import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 
 /**
@@ -27,6 +29,8 @@ export type ApiDeps = {
   /** Kết nối danh tính (search_path = identity) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email. */
   identityPool: pg.Pool;
   auth: Auth;
+  /** Khoá của lối việc nền (`JOB_SECRET`); vắng thì lối ấy trả 503. Chủ kho đặt ở Vercel và Supabase (ADR-0017). */
+  jobSecret?: string;
 };
 
 const Health = z
@@ -145,6 +149,8 @@ export function createApi(deps: ApiDeps) {
   registerOwnerRoutes(api, deps);
   registerCatalogRoutes(api, deps);
   registerLeadRoutes(api, deps);
+  registerRoutingRoutes(api, deps);
+  registerJobRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",
