@@ -32,6 +32,12 @@ export type NeedsReview = {
   reason?: string;
 };
 
+/**
+ * Kết cục lượt gửi/kéo gần nhất (hàng 61): mất mạng (lời gọi ném lỗi) · hết phiên (401) · máy chủ trục trặc (5xx) · bản
+ * tải về bị từ chối (lưới chặn nguồn, 4xx khác khi kéo). Lỗi kho trên máy không ghi được vào kho nên không nằm ở đây.
+ */
+export type LanThu = "ok" | "mang" | "phien" | "may-chu" | "tu-choi";
+
 /** Ngăn của một sàn trong kho trên máy của một người. */
 export type Ngan = {
   /** `null` = chưa từng kéo về. */
@@ -40,7 +46,7 @@ export type Ngan = {
   queue: PendingOp[];
   review: NeedsReview[];
   lastPullAt: string | null;
-  lastAttempt: "ok" | "mang" | null;
+  lastAttempt: LanThu | null;
   nextSeq: number;
 };
 
