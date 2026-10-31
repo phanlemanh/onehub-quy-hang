@@ -5,7 +5,7 @@ slug: phien-dang-nhap-30-ngay
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-10-31-phien-dang-nhap-30-ngay-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T09:30:00Z
@@ -67,3 +67,4 @@ Bỏ quét hình thái — sổ quyết định, dòng «bỏ coverage-scan». T
 
 - Bất biến chạm: không bất biến nào — danh tính ở schema `identity`, không bảng công ty, không lớp `source`.
 - Dãy A chạy Postgres 5552 (`quy-hang-db-A`).
+- Ngoài-1 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Người dùng không thấy gì khác: đăng nhập 30 ngày vẫn chạy đúng. Chỉ là phần kiểm thử của lớp API đang dựa vào phần giao diện web, nên về sau dễ vỡ hoặc rối khi dựng lại môi trường. — `packages/api/test-db/session.test.ts`
