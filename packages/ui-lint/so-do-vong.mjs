@@ -135,8 +135,14 @@ if (args.includes("--write")) {
   writeFileSync(join(hs, "khuon-so-do.json"), JSON.stringify(ket, null, 2) + "\n");
 }
 console.log(`khuôn: ${ket.tep_theo_khuon.length} tệp theo khuôn · răng bắt ${ket.rang_bat} · lệch lọt ${ket.lech_lot}`);
-if (args.includes("--bao"))
+// Dòng báo cho kênh liên máy kit — kho kit công khai: CHỈ số (mã hàng lộ trình và số đo), không tên hồ sơ, không chữ
+// sản phẩm, không dữ liệu người dùng (chủ kho 31/10, Cổng Phạm vi hàng 60).
+if (args.includes("--bao")) {
+  const o = join(hs, "opportunity.md");
+  const ma = existsSync(o) ? (/^lo_trinh_ma:\s*(\d+)\s*$/m.exec(readFileSync(o, "utf8"))?.[1] ?? null) : null;
+  const so = (v) => (v === null || v === undefined ? "chưa đo" : v);
   console.log(
-    `quy-hang · ${slug} · khuôn ${ket.tep_theo_khuon.length} tệp · răng bắt ${ket.rang_bat} · lệch lọt ${ket.lech_lot} · ` +
-      `${kit ? `giờ máy ${kit.gio_may}` : "giờ máy chưa đo"} · gọi người ${luotGoiNguoi}`,
+    `quy-hang · hàng ${ma ?? "chưa xếp"} · khuôn ${ket.tep_theo_khuon.length} tệp · răng bắt ${ket.rang_bat} · lệch lọt ${ket.lech_lot} · ` +
+      `giờ máy ${so(kit?.gio_may)} · giờ chờ ${so(kit?.gio_cho)} · token ra ${so(kit?.token_ra)} · gọi người ${luotGoiNguoi}`,
   );
+}

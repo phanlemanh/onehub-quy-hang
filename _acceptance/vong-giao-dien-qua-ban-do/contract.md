@@ -57,7 +57,7 @@ Source input: `docs/plan/lo-trinh.json` hàng 60 · `_acceptance/vong-giao-dien-
 - AC-7: Given hồ sơ có dòng `gio-may` trong `run-log.jsonl` và sổ quyết định có dòng `seal` và dòng `gate2` có
   `decided_by`, When chạy `so-do-vong.mjs --write --bao`, Then `khuon-so-do.json` có khối `kit` chép đúng giờ máy, giờ chờ,
   tổng token ra, % hạn mức tuần và đếm lượt gọi người; stdout có đúng một dòng
-  `quy-hang · <slug> · khuôn <n> tệp · răng bắt <k> · lệch lọt <j> · giờ máy <g> · gọi người <p>`; hồ sơ thiếu `gio-may`
+  `quy-hang · hàng <mã lộ trình> · khuôn <n> tệp · răng bắt <k> · lệch lọt <j> · giờ máy <g> · giờ chờ <c> · token ra <t> · gọi người <p>` — chỉ số, không tên hồ sơ hay chữ sản phẩm (kho kit công khai); hồ sơ thiếu `gio-may`
   thì khối `kit` ghi `null` kèm lý do, không thoát lỗi.
 - AC-8: Given `docs/design/vo-va-ia.md`, skill `quy-hang-ui` và sổ `docs/design/lech-lot.md`, When một tác tử mới dựng
   màn đầu của một nhóm chưa có trong bản đồ, Then văn bản nói đủ: xếp nhóm và đọc màn mẫu trước khi dựng; nhóm mới tạo mục

@@ -137,6 +137,7 @@ describe("so-do-vong — số của kit và dòng báo (E7)", () => {
     { id: "d-3", type: "approach", stage: "gate1", decision: "không có decided_by" },
   ];
   const hoSo = (d, runLog) => {
+    ghi(d, `_acceptance/${SLUG}/opportunity.md`, "---\nslug: thu-so-do\nlo_trinh_ma: 60\n---\n");
     ghi(d, `_acceptance/${SLUG}/run-log.jsonl`, runLog.map((x) => JSON.stringify(x)).join("\n") + "\n");
     ghi(d, `_acceptance/${SLUG}/decisions.jsonl`, SO.map((x) => JSON.stringify(x)).join("\n") + "\n");
   };
@@ -149,7 +150,10 @@ describe("so-do-vong — số của kit và dòng báo (E7)", () => {
       const s = soDo(d);
       assert.deepEqual(s.kit, { gio_may: 1.5, gio_cho: 0.5, token_ra: 300, phan_tram_tuan: 31.2, luot_goi_nguoi: 2 });
       const bao = r.stdout.split("\n").filter((l) => l.startsWith("quy-hang · "));
-      assert.deepEqual(bao, [`quy-hang · ${SLUG} · khuôn 2 tệp · răng bắt 2 · lệch lọt 1 · giờ máy 1.5 · gọi người 2`]);
+      assert.deepEqual(bao, ["quy-hang · hàng 60 · khuôn 2 tệp · răng bắt 2 · lệch lọt 1 · giờ máy 1.5 · giờ chờ 0.5 · token ra 300 · gọi người 2"]);
+      // Kho kit công khai: dòng không mang tên hồ sơ hay chữ ngoài nhãn số.
+      assert.ok(!bao[0].includes(SLUG));
+      assert.match(bao[0], /^quy-hang( · [a-zà-ỹ ]+ [\d.]+(?: tệp)?)+$/u);
       const [, n, k, j] = /khuôn (\d+) tệp · răng bắt (\d+) · lệch lọt (\d+)/.exec(bao[0]).map(Number);
       assert.deepEqual([n, k, j], [s.tep_theo_khuon.length, s.rang_bat, s.lech_lot]);
     }));
@@ -162,7 +166,7 @@ describe("so-do-vong — số của kit và dòng báo (E7)", () => {
       const s = soDo(d);
       assert.equal(s.kit, null);
       assert.match(s.ly_do_kit, /gio-may/);
-      assert.ok(r.stdout.includes("giờ máy chưa đo · gọi người 2"), r.stdout);
+      assert.ok(r.stdout.includes("giờ máy chưa đo · giờ chờ chưa đo · token ra chưa đo · gọi người 2"), r.stdout);
     }));
 
   it("từ chối khi không đo được: <ref> không có → mã 2 nêu ref, không ghi tệp; đối chứng ref thật → mã 0", () =>

@@ -92,7 +92,7 @@ chuyển hướng (không trả JSX) không phải màn. Đường đi của mà
 `node packages/ui-lint/so-do-vong.mjs --slug <slug> --base <nhánh chính> --write` — ghi `_acceptance/<slug>/khuon-so-do.json`:
 số tệp theo khuôn, số lần răng khuôn bắt trên các commit của vòng (cận dưới: lần bắt trước khi commit không đếm), số
 lệch lọt, giờ máy, token và lượt gọi người. Lệch chủ sản phẩm thấy khi dùng mà lưới đã cho qua ghi một dòng vào
-[`docs/design/lech-lot.md`](lech-lot.md). `--bao` soạn một dòng báo; máy đăng nó lên kênh liên máy của kit (issue #308
+[`docs/design/lech-lot.md`](lech-lot.md). `--bao` soạn một dòng báo chỉ gồm số (kho kit công khai: không tên hồ sơ, không chữ sản phẩm, không dữ liệu người dùng); máy đăng nó lên kênh liên máy của kit (issue #308
 của acceptance-gate-kit) sau mỗi ba vòng giao diện đã gộp (chủ sản phẩm duyệt 31/10, Hỏi-1 hàng 60).
 
 Mã phác thảo theo Tham chiếu §10; hàng là mã hàng của lộ trình. «Phủ»: trọn = khối là cả màn; vùng = khối là vùng

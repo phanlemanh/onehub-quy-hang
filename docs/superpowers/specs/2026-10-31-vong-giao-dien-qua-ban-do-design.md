@@ -68,7 +68,7 @@ khuôn → xanh. Không có đường im nào giữa chừng.
 | `kit` | dòng `gio-may` cuối của `run-log.jsonl` (giờ máy, giờ chờ, token ra, % hạn mức tuần) + số lượt gọi người đếm từ sổ quyết định (dòng `seal` và dòng `gate1`/`gate2` có `decided_by`) |
 
 `--bao` in một dòng báo cho kênh liên máy kit (issue #308 của acceptance-gate-kit):
-`quy-hang · <slug> · khuôn <n> tệp · răng bắt <k> · lệch lọt <j> · giờ máy <g> · gọi người <p>`. Lệnh KHÔNG đăng — đăng là
+`quy-hang · hàng <mã lộ trình> · khuôn <n> tệp · răng bắt <k> · lệch lọt <j> · giờ máy <g> · giờ chờ <c> · token ra <t> · gọi người <p>` — chỉ số: kho kit công khai, nên không tên hồ sơ, không chữ sản phẩm, không dữ liệu người dùng (chủ kho ở Cổng Phạm vi). Lệnh KHÔNG đăng — đăng là
 việc ra ngoài kho (xem Hỏi-1).
 
 Răng bắt trên commit đo bằng cách dựng cây của từng commit vào thư mục tạm (`git worktree add --detach`) rồi chạy hàm kiểm
