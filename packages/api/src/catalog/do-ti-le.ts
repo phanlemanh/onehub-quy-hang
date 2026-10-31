@@ -14,6 +14,8 @@ export type KetQuaDo = {
   ngoaiTong: number;
   chuaCo: number;
   dienDoan: number;
+  /** Mã ra «nhiều căn» (ambiguous): hụt — ô không tự điền — nhưng không là điền đoán, vì kết quả chỉ liệt ứng viên. */
+  nhieuCan: number;
   dong: string;
 };
 
@@ -25,31 +27,34 @@ function coThuocTinh(v: unknown): boolean {
 }
 
 /**
- * Tra từng mã của bảng đáp án và bộ ngoài danh mục. Đúng = found với UPI trùng đáp án; điền đoán = kết quả không phải
- * found mà vẫn mang thuộc tính căn.
+ * Tra từng mã của bảng đáp án và bộ ngoài danh mục. Đúng = found với UPI trùng đáp án; nhiều căn = ambiguous, tính là hụt
+ * (hàng 63, Hỏi-2); điền đoán = kết quả không phải found, không phải nhiều căn, mà vẫn mang thuộc tính căn.
  */
 export function measureAutofill(catalog: CatalogData, answers: readonly DapAn[], outside: readonly string[], rules: readonly UnitCodeRule[] = UNIT_CODE_RULES): KetQuaDo {
   const index = buildCatalogIndex(catalog, rules);
   let dung = 0;
   let dienDoan = 0;
+  let nhieuCan = 0;
   const hut: DapAn[] = [];
   for (const a of answers) {
     const kq = lookupUnit(index, a.input);
     if (kq.status === "found" && kq.unit.upi === a.upi) dung++;
     else {
       hut.push(a);
-      if (kq.status !== "found" && coThuocTinh(kq)) dienDoan++;
+      if (kq.status === "ambiguous") nhieuCan++;
+      else if (kq.status !== "found" && coThuocTinh(kq)) dienDoan++;
     }
   }
   let chuaCo = 0;
   for (const s of outside) {
     const kq = lookupUnit(index, s);
     if (kq.status === "not_in_catalog") chuaCo++;
-    if (kq.status !== "found" && coThuocTinh(kq)) dienDoan++;
+    if (kq.status !== "found" && kq.status !== "ambiguous" && coThuocTinh(kq)) dienDoan++;
   }
   const tong = answers.length;
   const pct = tong ? Math.round((dung / tong) * 1000) / 10 : 0;
-  return { tong, dung, hut, ngoaiTong: outside.length, chuaCo, dienDoan, dong: `tự điền đúng ${dung}/${tong} (${pct}%) · chưa có ${chuaCo}/${outside.length} · điền đoán ${dienDoan}` };
+  const dong = `tự điền đúng ${dung}/${tong} (${pct}%) · chưa có ${chuaCo}/${outside.length} · điền đoán ${dienDoan}${nhieuCan ? ` · nhiều căn ${nhieuCan}` : ""}`;
+  return { tong, dung, hut, ngoaiTong: outside.length, chuaCo, dienDoan, nhieuCan, dong };
 }
 
 /** Năm kiểu viết lại của một mã chuẩn kiểu `A-12.06`. */

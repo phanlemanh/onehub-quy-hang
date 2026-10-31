@@ -1,0 +1,4 @@
+{
+  "feature_plain": "Đầu chủ gõ một mã căn có ở hai toà của cùng dự án thì thấy cả hai căn kèm tên toà để chọn, thay vì bị tự điền lặng lẽ thông tin của căn toà kia.",
+  "analyst_plain": "Các phép đo của vòng này là ca kiểm mới viết cho tính năng; máy đã phá thử từng ca (cho chỉ mục đè căn, bỏ lọc toà, bỏ báo toà lạ, đếm nhiều căn là điền đoán) và ca đỏ đúng chỗ trước khi chấm."
+}
