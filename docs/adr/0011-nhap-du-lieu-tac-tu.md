@@ -1,6 +1,6 @@
 # ADR-0011: Nhập dữ liệu — tác tử lập kế hoạch, mã thực thi, nguồn không rời công ty
 
-Ngày: 2026-10-31 · Trạng thái: **đề xuất** (chờ chủ kho; phiên thiết kế, chưa có mã) — riêng quyết định 12 **đã duyệt** 31/10 (Manh Phan: «Duyệt hướng này») · Liên quan: Tham chiếu §3 «Ba cửa
+Ngày: 2026-10-31 · Trạng thái: **accepted** (Manh Phan 31/10: «Duyệt hướng này» cho quyết định 12, rồi «Duyệt, cắt lượt» cho toàn ADR — khuyến nghị «ai được nhập» ở quyết định 11 theo đó là chốt) · Liên quan: Tham chiếu §3 «Ba cửa
 vào, một đích», §4, §6, §7, luật 11; Kiến trúc §5 «Nhập Excel», §8; bất biến 2; ADR-0008 (một đường ghi, sự kiện chỉ
 thêm), ADR-0009 (Vercel, Supabase Singapore), ADR-0010 (lớp nguồn); hàng 5, 9, 20, 21, 45, 50 của lộ trình. Chi tiết:
 [Nhập dữ liệu](../architecture/nhap-du-lieu.md) · đề xuất hàng: [Bản phạm vi nhập dữ liệu](../plan/pham-vi-nhap-du-lieu.md)
@@ -96,7 +96,7 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
     sàn chỉnh), hết trần thì về chế độ tất định và báo quản trị sàn; thêm trần chi tiêu ở không gian làm việc Anthropic cho
     toàn nền tảng.
 11. **Lần nhập theo luật của lõi, không đi đường tắt**:
-    - **Ai nhập** (chờ chủ kho — Tham chiếu §10 ghi «Đầu chủ, quản trị»): khuyến nghị **Đầu chủ và Trưởng nhóm**; Quản
+    - **Ai nhập**: **Đầu chủ và Trưởng nhóm** (Tham chiếu §10 sửa theo); Quản
       trị sàn chỉ quản mẫu file (S6). Căn cứ: ADR-0010 — quản trị sàn không thấy nguồn, nên không ghi được cột chủ nhà; hàng
       do quản trị nhập rơi vào «Chỉ tôi» của quản trị, không ai khác đọc được (hàng 12).
     - **Ai giữ căn**: người nhập là đầu chủ thì giữ căn. Trưởng nhóm nhập thì cột «Đầu chủ» của file được ghép tất định
@@ -111,7 +111,7 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
     - **Nhập file không phải một kết nối**: người trong sàn đưa dữ liệu của sàn vào, như gõ tay — không cần thoả thuận.
       Loại kết nối `spreadsheet` có sẵn dành cho bảng tính nối sống (Kiến trúc §0) và hàng Google Sheets sau.
       `ai_processing` thêm vào `CONNECTION_KINDS` **và** ràng buộc `kind` của bảng thoả thuận (migration mới).
-12. **Đã duyệt 31/10.** **Chuẩn hoá là một lớp của lõi cho mọi cửa vào, không riêng lần nhập** (chủ kho hỏi 31/10 về lỗi chính tả, viết tắt
+12. **Chuẩn hoá là một lớp của lõi cho mọi cửa vào, không riêng lần nhập** (chủ kho hỏi 31/10 về lỗi chính tả, viết tắt
     khi gõ tay): trường danh mục không cho gõ (tự điền từ mã căn); trường tập đóng chọn hoặc so với giá trị chuẩn và từ điển
     của sàn; trường có cấu trúc qua cùng bộ đọc của lần nhập. Lựa chọn của người thành đề xuất từ điển, quản trị sàn duyệt.
     AI chỉ thêm ở việc dọn từ điển định kỳ (Batch API, chỉ lớp được mở). Dữ liệu đã lưu chỉ đổi qua sự kiện có người — không
@@ -149,7 +149,7 @@ Chi phí ước bằng cỡ dữ liệu, chưa đo token thật (máy phiên nà
 
 ## Hệ quả
 
-- Lộ trình: hàng 20, 21 tách thành sáu hàng (bản phạm vi kèm theo); bộ thử và chế độ tất định đi trước tác tử.
+- Lộ trình: đợt `nhap-du-lieu-3110`, hàng 61–68 và mục chờ H4; hàng 20, 21 thành mục chờ «thay bằng». Bộ thử và chế độ tất định (61) đi trước tác tử (65).
 - Lõi: thực đơn phép biến đổi nhập, bộ phân loại cột, bộ dựng hồ sơ cột ở `packages/core/src/import/` — dùng chung trình
   duyệt và máy chủ. `CONNECTION_KINDS` thêm `ai_processing`.
 - ADR-0008 đổi: thêm `voided`, `confirmedAt` theo file, mỗi sự kiện mang `import_id` khi do lần nhập tạo.

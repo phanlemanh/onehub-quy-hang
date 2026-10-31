@@ -1,8 +1,7 @@
 # Nhập dữ liệu
 
-> **Đề xuất** theo [ADR-0011](../adr/0011-nhap-du-lieu-tac-tu.md), chưa chốt. Khi chốt, mục «Nhập Excel» ở
-> [Kiến trúc §5](kien-truc-repo-va-stack.md#5-stack) trỏ về đây. Hàng lộ trình đề xuất: [Bản phạm vi nhập dữ
-> liệu](../plan/pham-vi-nhap-du-lieu.md).
+> **Đã chốt 31/10** theo [ADR-0011](../adr/0011-nhap-du-lieu-tac-tu.md). Hàng lộ trình: đợt `nhap-du-lieu-3110`, hàng
+> 61–68 ([bản phạm vi](../plan/pham-vi-nhap-du-lieu.md)).
 
 Bản 31/10. Cửa vào thứ hai trong «Ba cửa vào, một đích» (Tham chiếu §3): đầu chủ hay quản trị sàn đưa bảng hàng cũ — file
 Excel (xlsx, xls), csv, Google Sheets đã tải về — vào Quỹ hàng. Đây là lần đầu dữ liệu của một sàn chạm hệ thống: nhập
