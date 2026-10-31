@@ -5,6 +5,8 @@ Nguồn: trang tri thức của đợt (`docs/tri-thuc/wiki/dot/ban-do-khuon-311
 về kiến trúc bản đồ khuôn cùng các hạng mục dự kiến sẽ thực hiện», rồi «Đồng ý, làm». Việc của người không nằm ở đây —
 xem «Ra khỏi kho» ở mô tả PR cắt lượt.
 
+Chủ sản phẩm duyệt bản phạm vi này ngày 31/10: «Duyệt, cắt lượt».
+
 Kho thứ nhất của bản đồ khuôn (crm) thử dạng sửa lệch đã có. Quỹ hàng thử dạng **khai trước khi lệch**. Đo 31/10 trên
 nhánh chính (`baea73e`): `docs/design/vo-va-ia.md` §2 đã là bản đồ khuôn bằng lời (màn → archetype → khối ReUI đích →
 phủ trọn/vùng); khoảng 15 `page.tsx`, phần lớn là trang tạm; vỏ ứng dụng (hàng 53) đã ký; các màn dày còn trên lộ trình
