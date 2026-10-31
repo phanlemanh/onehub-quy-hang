@@ -5,7 +5,7 @@ slug: bao-ro-ngay-ban-sai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: machine-cleared
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-bao-ro-ngay-ban-sai-design.md
 approved_by:
 approved_at:
