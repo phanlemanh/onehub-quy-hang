@@ -1,0 +1,14 @@
+[
+  { "o": "Đầu chủ · giữ căn", "vai": ["listing_agent"], "giu": true, "thay": true },
+  { "o": "Đầu chủ · không giữ", "vai": ["listing_agent"], "giu": false, "thay": false },
+  { "o": "Đầu khách (từng giữ, mất vai Đầu chủ) · giữ căn", "vai": ["buyer_agent"], "giu": true, "thay": false },
+  { "o": "Đầu khách · không giữ", "vai": ["buyer_agent"], "giu": false, "thay": false },
+  { "o": "Telesales · giữ căn", "vai": ["telesales"], "giu": true, "thay": false },
+  { "o": "Telesales · không giữ", "vai": ["telesales"], "giu": false, "thay": false },
+  { "o": "Trưởng nhóm · giữ căn", "vai": ["team_lead"], "giu": true, "thay": true },
+  { "o": "Trưởng nhóm · không giữ", "vai": ["team_lead"], "giu": false, "thay": true },
+  { "o": "Quản trị sàn · giữ căn", "vai": ["company_admin"], "giu": true, "thay": false },
+  { "o": "Quản trị sàn · không giữ", "vai": ["company_admin"], "giu": false, "thay": false },
+  { "o": "Quản trị sàn kiêm Đầu chủ · giữ căn", "vai": ["company_admin", "listing_agent"], "giu": true, "thay": true },
+  { "o": "Telesales kiêm Trưởng nhóm · không giữ", "vai": ["telesales", "team_lead"], "giu": false, "thay": true }
+]

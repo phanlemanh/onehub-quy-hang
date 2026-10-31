@@ -1,6 +1,7 @@
 // Bộ kiểm cách ly: «công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành.
 // Chạy trên Postgres thật đã áp migration. Mỗi ca trong một giao dịch rồi rollback, không để lại dữ liệu.
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import pg from "pg";
 
@@ -468,4 +469,192 @@ test("cơ sở dữ liệu: không hàm hay trigger nào ghi vào bảng hàng, 
     await client.query("rollback").catch(() => {});
     await client.end();
   }
+});
+
+// ---- Lớp trường nguồn (006_lop_truong_nguon, hàng 11: AC-2, AC-8, AC-9) ----
+// Bảng 12 ô của AC-2 là tệp dữ liệu viết tay của lõi — kiểm lõi và kiểm cơ sở dữ liệu nạp CÙNG một tệp.
+const BANG_XEM_NGUON = JSON.parse(
+  readFileSync(new URL("../../core/src/access/bang-xem-nguon.json", import.meta.url), "utf8"),
+);
+const SO_MAU = "0900000012";
+const U_DC = "u-ng-dau-chu"; // đầu chủ giữ các hàng «không giữ» của ma trận
+const U_TN_A = "u-ng-truong-nhom-a";
+const U_DC_B = "u-ng-dau-chu-b";
+const LISTING_NB = "00000000-0000-4000-8000-0000000002b1"; // hàng của sàn B có chủ nhà
+const nguoiO = (i) => `u-ng-o-${i}`;
+const hangO = (i) => `00000000-0000-4000-8000-0000000002${String(i).padStart(2, "0")}`;
+
+/** Dựng hai sàn, người theo từng ô của bảng, mỗi ô một hàng có chủ nhà — bằng vai chủ; rồi chuyển sang vai API ở sàn A. */
+async function withNguon(fn) {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    await client.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    const nguoi = [
+      [U_DC, COMPANY_A, ["listing_agent"]],
+      [U_TN_A, COMPANY_A, ["team_lead"]],
+      [U_DC_B, COMPANY_B, ["listing_agent"]],
+      ...BANG_XEM_NGUON.map((o, i) => [nguoiO(i), COMPANY_A, o.vai]),
+    ];
+    for (const [id, san, vai] of nguoi) {
+      await client.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await client.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    const hang = [...BANG_XEM_NGUON.map((o, i) => [hangO(i), COMPANY_A, o.giu ? nguoiO(i) : U_DC]), [LISTING_NB, COMPANY_B, U_DC_B]];
+    for (const [id, san, giu] of hang) {
+      await client.query(
+        `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+         values ($1, $2, 1, 'created', '{"buildingName":"[Toà]"}', $3, '{listing_agent}', false)`,
+        [san, id, giu],
+      );
+      await client.query("insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, '[Toà]', 'Incomplete', 1)", [id, san]);
+      await client.query(
+        "insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 1, $3, $3)",
+        [san, id, giu],
+      );
+      await client.query(
+        "insert into listing_owners (company_id, listing_id, owner_name, owner_phone, floor_price, updated_by) values ($1, $2, '[Tên]', $3, 3200000000, $4)",
+        [san, id, SO_MAU, giu],
+      );
+    }
+    await client.query("set local role quy_hang_app");
+    await client.query("select set_config('app.company_id', $1, true)", [COMPANY_A]);
+    return await fn(client);
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+}
+const lamNguoi = (c, userId, companyId = COMPANY_A) =>
+  c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [userId, companyId]);
+/** Đếm sự kiện mở số của một hàng bằng vai chủ, rồi trở lại vai API. */
+async function demMoSo(c, listingId) {
+  await c.query("reset role");
+  const n = (await c.query("select count(*)::int n from owner_phone_reveals where listing_id = $1", [listingId])).rows[0].n;
+  await c.query("set local role quy_hang_app");
+  return n;
+}
+
+test("lớp nguồn: ba bảng mới nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relname, c.relrowsecurity and c.relforcerowsecurity as ep from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname in ('listing_agent_assignments', 'listing_owners', 'owner_phone_reveals')
+       order by c.relname`,
+    );
+    assert.deepEqual(rows, [
+      { relname: "listing_agent_assignments", ep: true },
+      { relname: "listing_owners", ep: true },
+      { relname: "owner_phone_reveals", ep: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("lớp nguồn ở cơ sở dữ liệu: bảng 12 ô của AC-2 dưới vai quy_hang_app", { skip }, async () => {
+  await withNguon(async (c) => {
+    let soO = 0;
+    for (const [i, o] of BANG_XEM_NGUON.entries()) {
+      const hang = hangO(i);
+      await lamNguoi(c, nguoiO(i));
+      const thay = (await c.query("select app.can_see_source($1) t", [hang])).rows[0].t;
+      assert.equal(thay, o.thay, `ô «${o.o}»: can_see_source ra ${thay}, cần ${o.thay}`);
+      const truoc = await demMoSo(c, hang);
+      await lamNguoi(c, nguoiO(i));
+      if (o.thay) {
+        assert.equal((await c.query("select owner_name from listing_owners where listing_id = $1", [hang])).rowCount, 1, o.o);
+        await expectError(c, "select owner_phone from listing_owners where listing_id = $1", [hang], /permission denied/);
+        assert.equal((await c.query("select app.reveal_owner_phone($1) so", [hang])).rows[0].so, SO_MAU, o.o);
+        assert.equal(await demMoSo(c, hang), truoc + 1, `ô «${o.o}»: mở số phải ghi đúng một sự kiện`);
+      } else {
+        assert.equal((await c.query("select owner_name from listing_owners where listing_id = $1", [hang])).rowCount, 0, o.o);
+        assert.equal((await c.query("update listing_owners set floor_price = 1 where listing_id = $1", [hang])).rowCount, 0, o.o);
+        await expectError(
+          c,
+          "insert into listing_owners (company_id, listing_id, owner_name, updated_by) values ($1, $2, '[Tên]', $3)",
+          [COMPANY_A, hang, nguoiO(i)],
+          /row-level security/,
+        );
+        await expectError(c, "select app.reveal_owner_phone($1)", [hang], /không có quyền mở số chủ/);
+        assert.equal(await demMoSo(c, hang), truoc, `ô «${o.o}»: bị từ chối thì không ghi sự kiện`);
+      }
+      soO++;
+    }
+    assert.equal(soO, 12);
+  });
+});
+
+test("lớp nguồn: sự kiện mở số và bảng gán chỉ thêm", { skip }, async () => {
+  await withNguon(async (c) => {
+    const hang = hangO(0);
+    await lamNguoi(c, nguoiO(0));
+    await expectError(
+      c,
+      "insert into owner_phone_reveals (company_id, listing_id, actor_user_id, actor_roles) values ($1, $2, $3, '{listing_agent}')",
+      [COMPANY_A, hang, nguoiO(0)],
+      /permission denied/,
+    );
+    await c.query("select app.reveal_owner_phone($1)", [hang]);
+    for (const bang of ["owner_phone_reveals", "listing_agent_assignments"]) {
+      await expectError(c, `update ${bang} set listing_id = listing_id where listing_id = $1`, [hang], /permission denied/);
+      await expectError(c, `delete from ${bang} where listing_id = $1`, [hang], /permission denied/);
+    }
+    await c.query("reset role");
+    for (const bang of ["owner_phone_reveals", "listing_agent_assignments"]) {
+      await expectError(c, `update ${bang} set listing_id = listing_id where listing_id = $1`, [hang], /chỉ thêm/);
+      await expectError(c, `delete from ${bang} where listing_id = $1`, [hang], /chỉ thêm/);
+      await expectError(c, `truncate ${bang}`, [], /chỉ thêm/);
+    }
+    assert.equal((await c.query("select count(*)::int n from owner_phone_reveals where listing_id = $1", [hang])).rows[0].n, 1);
+    assert.equal((await c.query("select count(*)::int n from listing_agent_assignments where listing_id = $1", [hang])).rows[0].n, 1);
+  });
+});
+
+test("lớp nguồn: sự kiện của hàng mang khoá nguồn bị ràng buộc từ chối", { skip }, async () => {
+  await withNguon(async (c) => {
+    await c.query("reset role");
+    const cau = `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+                 values ($1, $2, 2, 'owner_confirmed', $3, $4, '{listing_agent}', true)`;
+    for (const khoa of ["ownerName", "ownerPhone", "floorPrice", "titleDeedPhoto"]) {
+      await expectError(c, cau, [COMPANY_A, hangO(0), JSON.stringify({ [khoa]: SO_MAU }), U_DC], /listing_events_no_source/);
+    }
+    // Đối chứng dương: cùng câu, payload rỗng thì thêm được.
+    assert.equal((await c.query(cau, [COMPANY_A, hangO(0), "{}", U_DC])).rowCount, 1);
+  });
+});
+
+test("lớp nguồn: sàn A không đọc, không ghi đầu chủ, chủ nhà, sự kiện mở số của sàn B", { skip }, async () => {
+  await withNguon(async (c) => {
+    await lamNguoi(c, U_TN_A);
+    // Đối chứng dương: trưởng nhóm A đọc, mở số được trên hàng của A.
+    assert.equal((await c.query("select 1 from listing_owners where listing_id = $1", [hangO(1)])).rowCount, 1);
+    assert.equal((await c.query("select 1 from listing_agent_assignments where listing_id = $1", [hangO(1)])).rowCount, 1);
+    assert.equal((await c.query("select app.reveal_owner_phone($1) so", [hangO(1)])).rows[0].so, SO_MAU);
+    // Hàng của B.
+    const truoc = await demMoSo(c, LISTING_NB);
+    await lamNguoi(c, U_TN_A);
+    for (const bang of ["listing_owners", "listing_agent_assignments", "owner_phone_reveals"]) {
+      assert.equal((await c.query(`select 1 from ${bang} where listing_id = $1`, [LISTING_NB])).rowCount, 0, bang);
+    }
+    assert.equal((await c.query("update listing_owners set floor_price = 1 where listing_id = $1", [LISTING_NB])).rowCount, 0);
+    await expectError(
+      c,
+      "insert into listing_owners (company_id, listing_id, owner_name, updated_by) values ($1, $2, '[Tên]', $3)",
+      [COMPANY_B, LISTING_NB, U_TN_A],
+      /row-level security/,
+    );
+    await expectError(
+      c,
+      "insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 2, $3, $3)",
+      [COMPANY_B, LISTING_NB, U_TN_A],
+      /row-level security/,
+    );
+    await expectError(c, "select app.reveal_owner_phone($1)", [LISTING_NB], /không có quyền mở số chủ/);
+    assert.equal(await demMoSo(c, LISTING_NB), truoc, "sự kiện mở số của B không đổi");
+  });
 });

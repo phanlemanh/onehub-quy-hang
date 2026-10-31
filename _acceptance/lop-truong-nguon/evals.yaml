@@ -1,0 +1,108 @@
+schema_version: 1
+feature_slug: lop-truong-nguon
+# Hai lệnh máy: `executors.test.core` (kiểm thử thuần của packages/core) và `executors.test.isolation` (bộ cách ly +
+# packages/api/test-db, cần DATABASE_URL tới Postgres dãy N, cổng 5551). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi
+# `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không
+# «# SKIP»/«# TODO». Số chủ trong mọi ca là số mẫu `0900 000 0xx`, tên `[Tên]`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «trường nguồn: đúng ba trường, lớp source, trần never_leaves_company» có mặt và ok — danh sách viết tay trong tệp kiểm (ownerName, ownerPhone, floorPrice) so bằng deepEqual với OWNER_FIELDS, mỗi trường so lớp với 'source' và CEILING với 'never_leaves_company', và mỗi trường có trong SOURCE_KEYS của lõi hàng; kèm ca đối chứng cùng hàm kiểm: một danh sách cấy thêm trường lớp company_internal bị hàm kiểm trả lỗi nêu tên trường. Chiều đỏ: thêm, bớt hay đổi lớp một trường → ca đỏ nêu tên trường."
+    paths: [packages/core/src/access/**, packages/core/src/data-classes.ts, packages/core/src/listing/events.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «xem nguồn: bảng 12 ô của AC-2 ở lõi» có mặt và ok — bảng 12 ô viết tay trong tệp kiểm (không sinh từ hàm đang kiểm), chép đúng bảng của hợp đồng: Đầu chủ giữ/không (thấy/không), Đầu khách giữ/không (không/không), Telesales (không/không), Trưởng nhóm (thấy/thấy), Quản trị sàn (không/không), Quản trị sàn kiêm Đầu chủ giữ căn (thấy), Telesales kiêm Trưởng nhóm không giữ (thấy); so canSeeSource từng ô và đếm số lần so bằng đúng 12 (assert số đếm). Bảng này đặt ở một tệp dữ liệu dùng chung mà bộ kiểm cách ly (E8) cũng nạp. Chiều đỏ: cho quản trị sàn thấy hay bỏ phép xét vai → ca đỏ nêu ô (vai, giữ/không)."
+    paths: [packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «bản trả cho người thấy: tên, giá đáy, cờ có số, không số» — so bằng deepEqual với đối tượng viết tay {visible:true, ownerName:'[Tên]', floorPrice, hasPhone:true} (số mẫu 0900 000 012) và quét chuỗi JSON không chứa dãy '012', '0900000012', '0900 000 012', '+84900000012'; ca «bản trả cho người không thấy: không khoá, không giá trị nguồn ở mọi cấp» — deepEqual với {visible:false, listingAgentUserId} và quét đệ quy mọi khoá so với SOURCE_KEYS, mọi giá trị so với tên, số, giá đáy mẫu; đối chứng dương cùng hàm quét: một đối tượng cấy {a:{ownerPhone:'0900000012'}} bị bắt và thông điệp nêu đường khoá 'a.ownerPhone'. Chiều đỏ: để lọt số hay một khoá nguồn → ca đỏ nêu đường khoá."
+    paths: [packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «khuôn chủ nhà: khoá lạ, số sai dạng, giá đáy sai bị từ chối» — bảng ca viết tay: khoá lạ cấp đầu và trong khối lồng, số 9 chữ số, số chứa chữ, giá đáy 0, âm, thập phân, chuỗi — mỗi ca nêu đúng đường khoá và lý do; đối chứng dương: '+84 900 000 012', '0900.000.012', '84900000012' đều chuẩn hoá về '0900000012'. Chiều đỏ: nới khuôn → ca đỏ nêu ca lọt."
+    paths: [packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đặt chủ nhà: đầu chủ đặt trên hàng chưa có đầu chủ thành đầu chủ giữ căn» có mặt và ok — PUT trả 200, đọc thẳng bảng bằng kết nối chủ thấy listing_agent_assignments có đúng một dòng ghi người gọi và listing_owners ghi tên, giá đáy, số '0900000012' đã chuẩn hoá; ca «đặt chủ nhà sai khuôn trả 400 và không lưu gì» — khoá lạ, số sai, giá đáy sai: 400 invalid-payload, đếm dòng hai bảng không đổi; ca «không có vai Đầu chủ thì 403 trên hàng chưa có đầu chủ» — đầu khách, quản trị sàn và trưởng nhóm không kiêm Đầu chủ PUT trên hàng chưa có đầu chủ: mỗi người 403 listing-agent-required, hai bảng không có dòng. Chiều đỏ: lưu khi khuôn sai hay để người không vai Đầu chủ thành đầu chủ → ca đỏ nêu bảng và số dòng."
+    paths: [packages/api/src/owners/**, packages/core/src/access/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đầu chủ giữ căn và trưởng nhóm đọc được tên, giá đáy, cờ có số» có mặt và ok — GET bởi đầu chủ giữ căn và bởi trưởng nhóm (không giữ căn) đều trả deepEqual {visible:true, ownerName:'[Tên]', floorPrice, hasPhone:true} và thân không chứa '0900000012', '0900 000 012', '012'; ca «chỉ người thấy nguồn sửa được chủ nhà» — trưởng nhóm PUT sửa giá đáy được (đọc lại thấy giá mới); đầu chủ khác, telesales, quản trị sàn PUT: mỗi người 403 và giá đáy đọc lại giữ nguyên (đúng 3 lần từ chối, có đếm). Chiều đỏ: trả số ở GET hay cho người không thấy sửa → ca đỏ nêu người và thân trả về."
+    paths: [packages/api/src/owners/**, packages/core/src/access/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «người không thấy nguồn: ba lời gọi không lộ trường nguồn» có mặt và ok — với từng người trong danh sách viết tay (đầu khách, đầu chủ khác, telesales, quản trị sàn) gọi GET /listings/{id}/owner, GET /listings/{id}, GET /listings: đúng 12 thân được quét (4 người × 3 lời gọi, có đếm), mỗi thân quét đệ quy không có khoá nguồn và chuỗi JSON không chứa '[Tên]' của chủ, số mẫu ở ba cách viết, giá đáy mẫu; lời gọi chủ nhà deepEqual {visible:false, listingAgentUserId:<đầu chủ>}; đối chứng dương cùng hàm quét trên thân của đầu chủ giữ căn: tên chủ bị bắt. Chiều đỏ: một lời gọi lộ một giá trị → ca đỏ nêu người, lời gọi, đường khoá."
+    paths: [packages/api/src/owners/**, packages/api/src/listings/**, packages/core/src/access/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mở số: n lời gọi thành đúng n sự kiện» có mặt và ok — đầu chủ giữ căn gọi 3 lần, trưởng nhóm 1 lần: mỗi lần trả {ownerPhone:'0900000012'}, đếm owner_phone_reveals bằng kết nối chủ trước và sau ra đúng +4, mỗi dòng đúng actor_user_id, actor_roles, occurred_at không rỗng; version của hàng đọc trước và sau bằng nhau; ca «mở số bị từ chối không ghi gì» — đầu khách và quản trị sàn: 403, đếm không đổi; hàng chưa có số: 404 owner-not-set, đếm không đổi. Chiều đỏ: mở số không ghi, ghi hai dòng, hay ghi khi bị từ chối → ca đỏ nêu số dòng."
+    paths: [packages/api/src/owners/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «lớp nguồn ở cơ sở dữ liệu: bảng 12 ô của AC-2 dưới vai quy_hang_app» có mặt và ok — nạp CÙNG tệp bảng của E2, với mỗi ô dựng người có đúng vai đó (và dòng gán khi ô «giữ căn»), set app.user_id rồi: so app.can_see_source với kết quả ô; ô «không»: select listing_owners 0 dòng, update trúng 0 dòng, insert bị /row-level security/, app.reveal_owner_phone bị /không có quyền mở số chủ/ và đếm owner_phone_reveals không đổi; ô «thấy»: select owner_name, floor_price ra 1 dòng, select owner_phone bị /permission denied/; đếm số ô đã chạy bằng đúng 12; ca «sự kiện mở số và bảng gán chỉ thêm» — quy_hang_app insert thẳng owner_phone_reveals bị /permission denied/; quy_hang_app update, delete trên owner_phone_reveals và listing_agent_assignments bị /permission denied/; kết nối chủ update, delete, truncate hai bảng bị /chỉ thêm/; đếm không đổi; ca «sự kiện của hàng mang khoá nguồn bị ràng buộc từ chối» — kết nối chủ insert listing_events với payload {ownerPhone:'0900000012'} bị /listing_events_no_source/, đối chứng dương: payload {} cùng câu thêm được. Chiều đỏ: hàm cơ sở dữ liệu bỏ phép xét vai, cấp select owner_phone hay gỡ ràng buộc → ca đỏ nêu ô hoặc câu đã chạy được."
+    paths: [packages/db/migrations/**, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «lớp nguồn: ba bảng mới nằm trong phép kiểm luật theo dòng» — deepEqual danh sách viết tay [listing_agent_assignments, listing_owners, owner_phone_reveals] với relrowsecurity và relforcerowsecurity đều đúng, và phép kiểm chung «mọi bảng dữ liệu đều bật và ép luật theo dòng» vẫn ok; ca «lớp nguồn: sàn A không đọc, không ghi đầu chủ, chủ nhà, sự kiện mở số của sàn B» — đối chứng dương trên hàng của A, rồi trên hàng của B (trưởng nhóm A): select 0 dòng, update 0 dòng, insert bị /row-level security/, app.reveal_owner_phone trên hàng B bị /không có quyền mở số chủ/ và đếm sự kiện của B bằng kết nối chủ không đổi. Chiều đỏ: một bảng thiếu luật hay hàm mở số không xét sàn → ca đỏ nêu bảng."
+    paths: [packages/db/migrations/**, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «sàn khác: mọi lời gọi chủ nhà vào hàng của sàn B trả 404» có mặt và ok — trưởng nhóm sàn A gọi GET owner, PUT owner, POST phone-reveal, PUT listing-agent vào mã hàng của sàn B: đúng 4 lời gọi, mỗi lời 404, và đếm ba bảng của B bằng kết nối chủ không đổi. Chiều đỏ: một lời gọi trả khác 404 → ca đỏ nêu lời gọi."
+    paths: [packages/api/src/owners/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trưởng nhóm gán lại đầu chủ: người mới thấy, người cũ hết thấy» có mặt và ok — trước gán: đầu chủ cũ GET visible:true, đầu chủ mới visible:false; trưởng nhóm PUT listing-agent cho đầu chủ mới: 200; sau gán: đầu chủ mới visible:true và mở số được, đầu chủ cũ visible:false và mở số 403; đếm listing_agent_assignments của hàng bằng kết nối chủ trước và sau ra đúng +1, dòng cũ giữ nguyên người cũ, dòng mới ghi người mới, người gán, lúc gán; ca «gán sai bị từ chối, không thêm dòng» — gán cho đầu khách (không vai Đầu chủ) và cho mã người ngoài sàn: 400; đầu chủ giữ căn tự gán cho người khác: 403; mỗi ca đếm dòng gán không đổi và GET của đầu chủ hiện tại vẫn visible:true. Chiều đỏ: gán cho người không vai Đầu chủ được, ghi đè dòng cũ, hay người cũ còn thấy → ca đỏ nêu người và số dòng."
+    paths: [packages/api/src/owners/**, packages/core/src/access/**, packages/db/migrations/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
