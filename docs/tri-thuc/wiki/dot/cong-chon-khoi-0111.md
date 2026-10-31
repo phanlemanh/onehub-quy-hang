@@ -21,6 +21,9 @@ vẽ mới, và danh mục khối của kho nâng thành chỗ tra «trong kho»
 - Bản đồ khuôn giữ nhất quán theo nhóm màn sau khi đã chọn; nó không trả lời khối nào đã dùng ở đâu — chỗ tra theo khối
   nên là danh mục khối đã có, không phải một sổ thứ ba.
 - Ràng buộc là tần suất gọi người: cổng đặt ở Cổng Phạm vi sẵn có, chỉ bật cho ô chưa có khuôn.
+- Nhu cầu của màn đã có ở câu giao và Tham chiếu (vai, thiết bị, màn); hồ sơ Cổng Đáng hiện chỉ là biên nhận quyết định,
+  ngưỡng để trống. Viết thêm phiếu nhu cầu là chép lại — nên trích. Thước chấm chung và dữ liệu ca xấu nhất là khuyến
+  nghị chưa có thực tế; chủ kho giữ cổng ba lối như đã gộp, đo vài vòng rồi mới quyết.
 
 ## Mã
 
@@ -28,3 +31,4 @@ vẽ mới, và danh mục khối của kho nâng thành chỗ tra «trong kho»
 - CK2 — luật khi nào được vẽ mới: đã tra gì, vì sao không đứng, hạn xem lại
 - CK3 — danh mục khối của kho thành chỗ tra «trong kho»
 - CK4 — trả bốn chỗ ghép tạm chờ khối Pro (chờ)
+- CK5 — trang ba lối mở bằng nhu cầu trích sẵn, chấm bằng một thước, dựng trên dữ liệu ca xấu nhất (chờ)
