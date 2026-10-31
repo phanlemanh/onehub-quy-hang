@@ -181,7 +181,7 @@ describe('AC-4 npm install bật driver', () => {
 
 describe('AC-5 phản biện bắt buộc', () => {
   test('gap-probe bắt buộc chặn hồ sơ thiếu phản biện', () => {
-    assert.match(doc(path.join(ROOT, '_acceptance/config.yaml')), /^gap_probe: required\s*$/m);
+    assert.match(doc(path.join(ROOT, '_acceptance/config.yaml')), /^gap_probe: required\s*(#.*)?$/m);
     const status = /^status:\s*(\S+)/m.exec(doc(path.join(ROOT, '_acceptance', SLUG, 'contract.md')))?.[1];
     assert.ok(['implemented', 'verified', 'machine-cleared', 'signed-off'].includes(status), `hợp đồng ở ${status} — luật phản biện chỉ xét hồ sơ đã làm xong`);
     const DONG = `VIOLATION [${SLUG}]: chưa qua phản biện context sạch`;
@@ -198,7 +198,7 @@ describe('AC-5 phản biện bắt buộc', () => {
 
 describe('AC-6 chặn việc ngoài lộ trình', () => {
   test('chặn lộ trình gọi tên hồ sơ mới ngoài lộ trình', () => {
-    assert.match(doc(path.join(ROOT, '_acceptance/config.yaml')), /^lo_trinh:\n(?: {2}.*\n)*? {2}chan: true\s*$/m);
+    assert.match(doc(path.join(ROOT, '_acceptance/config.yaml')), /^lo_trinh:\n(?: {2}.*\n)*? {2}chan: true\s*(#.*)?$/m);
     const chan = (dir) => chay('node', [path.join(KIT, 'lib/chan-lo-trinh.cjs'), '--root', dir, '--base', BASE], dir);
     voiWorktree((dir) => {
       for (const [ten, them] of [['thu-ngoai-lo-trinh', ''], ['thu-trong-lo-trinh', 'lo_trinh_ma: 9\n']]) {
@@ -225,7 +225,7 @@ describe('AC-7 máy tự định tuyến mục ngoài hợp đồng', () => {
   const TAT = 'dinh-tuyen-may: tắt (feature_loop.ngoai_n_tu_dinh_tuyen vắng hoặc false)';
 
   test('định tuyến máy đọc khoá bật', () => {
-    assert.match(doc(path.join(ROOT, '_acceptance/config.yaml')), /^feature_loop:\n(?:(?: {2}.*|\s*)\n)*? {2}ngoai_n_tu_dinh_tuyen: true\s*$/m);
+    assert.match(doc(path.join(ROOT, '_acceptance/config.yaml')), /^feature_loop:\n(?:(?: {2}.*|\s*)\n)*? {2}ngoai_n_tu_dinh_tuyen: true\s*(#.*)?$/m);
     const bat = dinhTuyen(ROOT, 'doi-ten-api-tieng-anh');
     assert.equal(bat.ma, 0, bat.out);
     assert.ok(!bat.out.split('\n').some((l) => l.startsWith('dinh-tuyen-may: tắt')), bat.out);
