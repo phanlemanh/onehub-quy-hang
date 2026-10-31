@@ -131,6 +131,7 @@ if (tv && tv.ty_le_cham > NGUONG.cham) loi.push(`khung > 50 ms ${tv.ty_le_cham} 
 if (tv && tv.dong_cuoi_thay < SO_HANG) loi.push(`cuộn không tới căn cuối: dòng cuối thấy ${tv.dong_cuoi_thay}/${SO_HANG}`);
 if (ket.doi_chung.p95 <= NGUONG.p95) loi.push(`máy đo không phân biệt được: đối chứng bận vẫn p95 ${ket.doi_chung.p95} ms`);
 ket.ket_luan = loi.length ? `trượt: ${loi.join("; ")}` : "đạt";
-writeFileSync(path.join(GOC, "_acceptance/bang-hang-kieu-sheet/thu/so-do-cuon.json"), JSON.stringify(ket, null, 2) + "\n");
+// Số đo ra .acceptance-runs — lượt chấm không được ghi vào cây của hồ sơ.
+writeFileSync(path.join(GOC, ".acceptance-runs/bang-hang-kieu-sheet/so-do-cuon.json"), JSON.stringify(ket, null, 2) + "\n");
 console.log(`trung vị: ${JSON.stringify(tv)} → ${ket.ket_luan}`);
 process.exit(loi.length ? 1 : 0);

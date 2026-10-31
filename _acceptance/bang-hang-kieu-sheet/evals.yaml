@@ -147,7 +147,7 @@ evals:
     criterion: AC-9
     executor: script
     cmd: "node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"
-    expected: "exit 0; in bảng ba lượt hợp lệ (hiệu chuẩn đạt) và trung vị: p95 khoảng cách khung ≤ 33,4 ms, khung > 50 ms ≤ 1%, cuộn tới căn cuối của 5.000 hàng; lượt đối chứng ?cham=1 (bận 60 ms mỗi khung, cùng máy đo) trượt ngưỡng p95 — thiếu đối chứng trượt thì exit 1 «máy đo không phân biệt được». Ghi số vào _acceptance/bang-hang-kieu-sheet/thu/so-do-cuon.json."
+    expected: "exit 0; in bảng ba lượt hợp lệ (hiệu chuẩn đạt) và trung vị: p95 khoảng cách khung ≤ 33,4 ms, khung > 50 ms ≤ 1%, cuộn tới căn cuối của 5.000 hàng; lượt đối chứng tiêm việc bận 60 ms mỗi khung (cùng máy đo) trượt ngưỡng p95 — thiếu đối chứng trượt thì exit 1 «máy đo không phân biệt được». Lệnh tự build và bật bản build ở cổng 3491 (giám sát cấp, B-6), đo bản build như ADR-0004, tắt đúng PID khi xong; số ghi vào .acceptance-runs/bang-hang-kieu-sheet/so-do-cuon.json."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**", "_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
