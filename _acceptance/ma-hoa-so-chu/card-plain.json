@@ -140,5 +140,12 @@
       "i": 9,
       "p": "Hướng dẫn vận hành chỉ đếm số rõ ở chủ nhà. Đã sửa: đếm cả bảng lead, và ca dòng lệnh có cả lead."
     }
+  ],
+  "decisions": [
+    {
+      "id": "E10",
+      "q": "Sổ tay khoá đủ để người vận hành tự làm, không cần hỏi lại?",
+      "why": "Ba máy chấm đều đề xuất đạt: hướng dẫn nói đủ năm việc — sinh khoá bằng một lệnh, đặt khoá ở đâu và cất bản ngoài máy, mất khoá là mất mọi số, đếm số còn để rõ ở cả bảng chủ nhà lẫn bảng lead rồi chạy lệnh mã hoá lại, và việc xoá cột cũ để hàng sau. Tệp mẫu chỉ có tên biến, không có khoá thật."
+    }
   ]
 }
