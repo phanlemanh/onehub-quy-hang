@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { completeness } from "./completeness";
 import { confirmsWithOwner, validatePayload, type EventType, type ListingEvent } from "./events";
-import { foldListing } from "./fold";
+import { foldListing, stepListing } from "./fold";
 import { freshness } from "./freshness";
 
 /** Dựng dãy sự kiện như API dựng: cờ xác nhận theo luật mặc định, trừ khi lệnh tắt. */
@@ -127,4 +127,46 @@ test("payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ ch
   }
   assert.equal(so, 5 * KHOA_CHU_NHA.length * 2, "số lần thử phải bằng ma trận viết trước");
   assert.deepEqual(validatePayload("deleted", {}).map((e) => e.path), ["type"], "loại sự kiện lạ");
+});
+
+test("stepListing gấp từng bước bằng foldListing", () => {
+  const sk = (seq: number, type: EventType, payload: Record<string, unknown>, ngay: string): ListingEvent => ({
+    seq, type, payload, actorUserId: "u-x", actorRoles: ["listing_agent"], confirmedWithOwner: type !== "created" && type !== "details_changed", occurredAt: `2026-10-${ngay}T08:00:00.000Z`,
+  });
+  // Dãy viết tay đi qua mọi loại sự kiện, kết ở Đã bán.
+  const ds: ListingEvent[] = [
+    sk(1, "created", { buildingName: "[Toà mẫu]", unitNumber: "A-1201" }, "01"),
+    sk(2, "price_changed", { listPrice: 3_500_000_000, feeInclusion: "excluded" }, "02"),
+    sk(3, "details_changed", { legalStatus: "pink_book", occupantType: "vacant" }, "03"),
+    sk(4, "status_changed", { to: "Active" }, "04"),
+    sk(5, "owner_confirmed", {}, "05"),
+    sk(6, "status_changed", { to: "Closed", closePrice: 3_400_000_000 }, "06"),
+  ];
+  // Kết quả mong đợi viết tay cho từng bước (không sinh từ hàm đang kiểm): giá, phí, pháp lý, người ở, trạng thái, giá chốt,
+  // ngày bán, lần xác nhận, phiên bản.
+  const MONG: [number | null, string | null, string | null, string | null, string, number | null, string | null, string | null, number][] = [
+    [3_500_000_000, "excluded", null, null, "Incomplete", null, null, "2026-10-02T08:00:00.000Z", 2],
+    [3_500_000_000, "excluded", "pink_book", "vacant", "Incomplete", null, null, "2026-10-02T08:00:00.000Z", 3],
+    [3_500_000_000, "excluded", "pink_book", "vacant", "Active", null, null, "2026-10-04T08:00:00.000Z", 4],
+    [3_500_000_000, "excluded", "pink_book", "vacant", "Active", null, null, "2026-10-05T08:00:00.000Z", 5],
+    [3_500_000_000, "excluded", "pink_book", "vacant", "Closed", 3_400_000_000, "2026-10-06", "2026-10-06T08:00:00.000Z", 6],
+  ];
+  let s = foldListing(ds.slice(0, 1));
+  let so = 0;
+  for (let k = 1; k < ds.length; k++) {
+    const chup = structuredClone(s);
+    const sau = stepListing(s, ds[k]!);
+    assert.deepEqual(s, chup, `bước ${k + 1}: đầu vào bị đổi`);
+    const t = sau;
+    assert.deepEqual(
+      [t.listPrice, t.feeInclusion, t.legalStatus, t.occupantType, t.standardStatus, t.closePrice, t.closeDate, t.lastConfirmedAt, t.version],
+      MONG[k - 1],
+      `bước ${k + 1} (${ds[k]!.type})`,
+    );
+    s = sau;
+    so++;
+  }
+  // foldListing là chuỗi các bước: cùng dãy cho cùng kết quả cuối.
+  assert.deepEqual(foldListing(ds), s);
+  assert.equal(so, 5);
 });
