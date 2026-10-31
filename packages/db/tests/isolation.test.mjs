@@ -732,3 +732,71 @@ test("sàn trùng tên: người sàn mới không đọc được dòng nào c�
     await client.end();
   }
 });
+
+// ---- Ô nhận lead (007_o_nhan_lead, hàng 24: AC-6, AC-7) ----
+const LEAD_B = "00000000-0000-4000-8000-0000000003b1";
+const MO = ["Incomplete", "Active", "Pending", "Hold"];
+
+/** Sàn B có hàng mở trên căn «A-02.06» của «[Toà]», chủ nhà mang số mẫu và một lead; người hỏi ở sàn A. */
+async function withLeadB(fn) {
+  return withNguon(async (c) => {
+    await c.query("reset role");
+    await c.query("update listings set unit_number = 'A-02.06' where id = $1", [LISTING_NB]);
+    await c.query(
+      `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion,
+                          desired_listing_time, owner_phone, outcome, matched_agent_user_id, matched_listing_id)
+       values ($1, $2, $3, '[Toà]', 'A-02.06', 'sale', 3200000000, 'included', 'now', $4, 'unit_has_open_listing', $3, $5)`,
+      [LEAD_B, COMPANY_B, U_DC_B, SO_MAU, LISTING_NB],
+    );
+    await c.query("set local role quy_hang_app");
+    return fn(c);
+  });
+}
+
+test("lead: bảng leads nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query("select relrowsecurity r, relforcerowsecurity f from pg_class where relname = 'leads'");
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("lead: sàn A không thấy dữ kiện, lead của sàn B và không ghi được lead đứng tên B", { skip }, async () => {
+  await withLeadB(async (c) => {
+    // Đối chứng dương: ở sàn B cùng số, cùng căn ra đủ hai dữ kiện.
+    await lamNguoi(c, U_DC_B, COMPANY_B);
+    const b = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'a 02.06', $2)", [SO_MAU, MO])).rows[0];
+    assert.deepEqual(b, { open_listing_id: LISTING_NB, open_listing_agent: U_DC_B, owner_agent: U_DC_B });
+    assert.equal((await c.query("select 1 from leads where id = $1", [LEAD_B])).rowCount, 1);
+    // Sàn A: cùng số, cùng toà, cùng căn — không dữ kiện nào của B.
+    await lamNguoi(c, U_TN_A);
+    const a = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'A-02.06', $2)", [SO_MAU, MO])).rows[0];
+    assert.equal(a.open_listing_id, null, "sàn A thấy hàng mở của sàn B");
+    // Số mẫu cũng là chủ nhà của mọi hàng sàn A (withNguon) — dữ kiện chủ phải là đầu chủ của A, không phải của B.
+    assert.notEqual(a.owner_agent, U_DC_B, "sàn A thấy đầu chủ của sàn B");
+    assert.equal((await c.query("select 1 from leads where id = $1", [LEAD_B])).rowCount, 0, "trưởng nhóm A đọc lead của B");
+    await expectError(
+      c,
+      `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
+                          owner_phone, outcome)
+       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, 'new')`,
+      [COMPANY_B, U_TN_A, SO_MAU],
+      /row-level security/,
+    );
+    await expectError(c, "select app.discard_lead($1)", [LEAD_B], /không có lead này/);
+  });
+});
+
+test("lead: vai API không đọc được cột số, không sửa, không xoá lead", { skip }, async () => {
+  await withLeadB(async (c) => {
+    await lamNguoi(c, U_DC_B, COMPANY_B);
+    // Đối chứng dương: cột kết quả đọc được.
+    assert.equal((await c.query("select outcome from leads where id = $1", [LEAD_B])).rows[0].outcome, "unit_has_open_listing");
+    await expectError(c, "select owner_phone from leads where id = $1", [LEAD_B], /permission denied/);
+    await expectError(c, "update leads set outcome = 'new' where id = $1", [LEAD_B], /permission denied/);
+    await expectError(c, "delete from leads where id = $1", [LEAD_B], /permission denied/);
+  });
+});

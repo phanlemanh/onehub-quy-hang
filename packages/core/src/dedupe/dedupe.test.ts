@@ -31,7 +31,8 @@ test("lead: năm mục đủ thì hợp lệ, số chuẩn hoá", () => {
     assert.equal(r.value.ownerPhone, "0900000031", so);
   }
   // Chỉ biết toà: căn tuỳ chọn.
-  const { unitNumber: _c, ...chiToa } = DU;
+  const chiToa: Record<string, unknown> = { ...DU };
+  delete chiToa.unitNumber;
   const r = validateLeadInput(chiToa);
   assert.ok(r.ok);
   assert.equal(r.value.unitNumber, undefined);
