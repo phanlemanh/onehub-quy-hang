@@ -30,7 +30,12 @@ function cho<T>(r: IDBRequest<T>): Promise<T> {
 
 export function taoKhoIndexedDb(userId: string): LocalStore {
   let db: Promise<IDBDatabase> | null = null;
-  const lay = () => (db ??= mo(userId));
+  // Mở hỏng thì lần sau mở lại, không giữ mãi lời hứa đã hỏng (hàng 61: kho hồi thì bộ đồng bộ tự về bình thường).
+  const lay = () =>
+    (db ??= mo(userId).catch((e: unknown) => {
+      db = null;
+      throw e;
+    }));
   return {
     async read(companyId) {
       const v = await cho((await lay()).transaction(NGAN).objectStore(NGAN).get(companyId));

@@ -1496,6 +1496,223 @@
         "packages/core/src/catalog/**",
         "packages/api/src/catalog/**"
       ]
+    },
+    {
+      "ma": "72",
+      "cau_giao": "Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Chủ kho 31/10: bỏ chữ «dự án», gọi theo RESO DD 2.1; ADR-0016 quyết định 1, 2, 8. Đi trước hàng 10 và 24 để không dựng thêm mã trên tên cũ",
+      "hang": "T3",
+      "slug": "khu-va-loai-hinh",
+      "bat_khi": "Không còn projectKey, projectName ở lõi, API, dữ liệu mẫu, Tham chiếu, CONTEXT; tra mã căn theo ?subdivision= ra đúng như hàng 9 và 63, ?project= bị từ chối; mọi căn mẫu mang Residential / Condominium; bảng trường theo loại hình có bốn loại và lõi từ chối trường không thuộc loại hình của căn",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH1",
+        "LH2"
+      ],
+      "dung_tren": [
+        "9",
+        "63"
+      ],
+      "vung": [
+        "packages/core/src/catalog/**",
+        "packages/api/src/catalog/**",
+        "packages/db/seed/**"
+      ]
+    },
+    {
+      "ma": "73",
+      "cau_giao": "Bộ dữ liệu mẫu thứ hai — một khu thấp tầng có dãy và lô nhà phố, biệt thự, đất; nhà và đất ngoài khu ở vài phường; một file bảng hàng thấp tầng bẩn có đáp án; lead và chủ nhà giả — sinh từ khuôn, mọi bản ghi mang nhãn mẫu",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Các hàng đo trên căn thấp tầng và căn ngoài khu cần dữ liệu giả có nhãn mà hàng 5 (một khu căn hộ) không có; phiên cắt tạo hàng này (cắt lượt bước 2b luật 5)",
+      "hang": "T3",
+      "du_lieu": "sinh-gia",
+      "slug": "du-lieu-mau-thap-tang",
+      "bat_khi": "Sinh lại hai lần ra cùng dữ liệu; tên đường là «Đường Mẫu N», số nhà sinh, tên tỉnh và xã từ danh mục đơn vị hành chính; không tên, số điện thoại hay địa chỉ thật; có đủ bốn loại hình, địa chỉ viết theo tên phường cũ và kiểu hẻm khác nhau kèm đáp án; mọi bản ghi mang nhãn mẫu và xoá được một lần",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [],
+      "dung_tren": [
+        "72",
+        "5"
+      ],
+      "vung": [
+        "packages/db/seed/**"
+      ]
+    },
+    {
+      "ma": "74",
+      "cau_giao": "Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được và thấy thuộc tính lô tự điền — khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền — như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "Ghi chép 28/10: thấp tầng mã theo khu · dãy · lô; ADR-0016 quyết định 3",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "slug": "go-ma-lo",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH3"
+      ],
+      "dung_tren": [
+        "72",
+        "73"
+      ],
+      "vung": [
+        "packages/core/src/catalog/**",
+        "packages/api/src/catalog/**"
+      ]
+    },
+    {
+      "ma": "75",
+      "cau_giao": "Lõi đọc một địa chỉ Việt Nam gõ kiểu nào cũng được ra địa chỉ chuẩn và khoá địa chỉ, đổi tên phường cũ ra phường mới, và nói thiếu phần nào khi không đọc chắc — không gọi dịch vụ ngoài",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "ADR-0016 quyết định 5: nhà ngoài khu định danh bằng địa chỉ; địa giới hai cấp từ 1/7/2025 nên bảng hàng cũ còn tên phường cũ",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "slug": "dia-chi-chuan",
+      "bat_khi": "Trên bộ địa chỉ thử có đáp án của hàng 73: mọi cách viết của cùng một nhà ra cùng một khoá; hai nhà khác nhau không bao giờ ra cùng khoá; tên phường cũ tách vào nhiều phường mới thì trả «cần người chọn», không đoán; danh mục đơn vị hành chính trong kho ghi nguồn và ngày; không lời gọi mạng nào",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH4"
+      ],
+      "dung_tren": [
+        "73"
+      ],
+      "vung": [
+        "packages/core/src/address/**"
+      ]
+    },
+    {
+      "ma": "76",
+      "cau_giao": "Hàng tạo được trên lô thấp tầng trong khu và trên nhà, đất ngoài khu định danh bằng địa chỉ chuẩn; căn ngoài khu là bản ghi của sàn, sàn khác không thấy, và hàng cũ gấp lại ra đúng như trước",
+      "vai": "nen",
+      "tieu_chi": 10,
+      "vi_sao": "Sự kiện created bắt buộc buildingName và cột building_name not null (ADR-0008, migration 004): nhà không có toà không tạo được hàng; ADR-0016 quyết định 3, 4",
+      "hang": "T3",
+      "slug": "can-ngoai-khu",
+      "bat_khi": "Tạo được hàng Townhouse, Single Family Residence, Unimproved Land qua lệnh API; căn ngoài khu cùng khoá địa chỉ trong một sàn là một căn; bảng căn ngoài khu bật và ép luật theo dòng, có ca trong bộ kiểm cách ly; xoá trắng bảng hàng rồi gấp lại từ sự kiện ra đúng bảng cũ, kể cả sự kiện cũ mang buildingName; payload mang khoá nguồn vẫn bị từ chối",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH5"
+      ],
+      "dung_tren": [
+        "72",
+        "75",
+        "8"
+      ],
+      "vung": [
+        "packages/core/src/listing/**",
+        "packages/api/src/listings/**",
+        "packages/core/src/property/**"
+      ]
+    },
+    {
+      "ma": "77",
+      "cau_giao": "Telesales nhập lead nhà phố, biệt thự hay đất — chọn loại hình, gõ mã lô hoặc địa chỉ — và thấy ngay kết quả kiểm trùng như căn hộ: không trùng, đã có đầu chủ, đã có hàng mở, hay có thể trùng cần chọn",
+      "vai": "Telesales",
+      "tieu_chi": 10,
+      "vi_sao": "Luật 19–20 cho mọi loại hình; ADR-0016 quyết định 6, 7. Mở rộng ô nhận lead và bộ kiểm trùng của hàng 24",
+      "hang": "T3",
+      "du_lieu": "gia",
+      "slug": "lead-moi-loai-hinh",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH6",
+        "LH7"
+      ],
+      "dung_tren": [
+        "24",
+        "73",
+        "74",
+        "76"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/leads/**",
+        "packages/core/src/dedupe/**"
+      ]
+    },
+    {
+      "ma": "78",
+      "cau_giao": "Đầu chủ thả file bảng hàng thấp tầng cũ và thấy máy đọc đúng cột loại hình, mã lô hoặc địa chỉ, diện tích đất, mặt tiền, số tầng, xem trước từng ô như file căn hộ; số nhà không bao giờ tới nhà cung cấp AI",
+      "vai": "Đầu chủ",
+      "tieu_chi": 9,
+      "vi_sao": "Bảng hàng thấp tầng của sàn thật (ghi chép 28/10); ADR-0016 quyết định 7, nối ADR-0011 quyết định 2",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "slug": "nhap-file-thap-tang",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH8"
+      ],
+      "dung_tren": [
+        "65",
+        "73",
+        "75",
+        "76"
+      ],
+      "vung": [
+        "packages/core/src/import/**",
+        "apps/web/src/app/imports/**"
+      ]
+    },
+    {
+      "ma": "79",
+      "cau_giao": "Đầu chủ mở bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và thấy cột, hồ sơ căn đúng trường của từng loại — không cột tầng, trục cho đất",
+      "vai": "Đầu chủ",
+      "tieu_chi": 9,
+      "vi_sao": "Ghi chép 28/10: loại hình quyết định bộ trường; ADR-0016 quyết định 2",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "slug": "bang-hang-theo-loai-hinh",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH9"
+      ],
+      "dung_tren": [
+        "14",
+        "17",
+        "73",
+        "76"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/inventory/**",
+        "apps/web/src/app/(app)/units/**"
+      ]
+    },
+    {
+      "ma": "80",
+      "cau_giao": "Khách mở link nhà phố hay lô đất gửi riêng và thấy tên đường, phường hay tên khu, không số nhà, mã lô hay ghim bản đồ; môi giới sàn khác mở trang nhóm thì thấy đủ địa chỉ",
+      "vai": "Khách",
+      "tieu_chi": 9,
+      "vi_sao": "Bất biến 4 và luật 24 cho mọi loại hình; ADR-0016 «Chỗ chạm bất biến». Luật ở lõi, không ở giao diện",
+      "hang": "T3",
+      "du_lieu": "gia",
+      "slug": "luat-an-theo-loai-hinh",
+      "nhom": "loai-hinh",
+      "dot": "moi-loai-hinh-3110",
+      "phu": [
+        "LH10"
+      ],
+      "dung_tren": [
+        "31",
+        "35",
+        "73",
+        "76"
+      ],
+      "vung": [
+        "packages/core/src/redaction/**",
+        "apps/web/src/app/s/**"
+      ]
     }
   ],
   "chan_troi": [
@@ -1558,6 +1775,36 @@
         "ND9"
       ],
       "mo_lai_khi": "Hai tuần thử cho thấy bước tải về là vướng, hoặc sàn ngoài đội dùng Google Sheets là chính"
+    },
+    {
+      "ma": "H5",
+      "dot": "moi-loai-hinh-3110",
+      "cau_giao": "Gói danh mục Invest mang khu thấp tầng có dãy và lô, và loại hình từng căn",
+      "ly_do": "Invest chưa có danh bạ thấp tầng; hàng 10 dựng khuôn phiên bản 1 với propertySubType theo ADR-0016 quyết định 9, phần thấp tầng chưa có bên cấp",
+      "phu": [
+        "LH11"
+      ],
+      "mo_lai_khi": "Invest khai danh bạ thấp tầng trong khuôn phiên bản 1 và hàng 10 đã giao"
+    },
+    {
+      "ma": "H6",
+      "dot": "moi-loai-hinh-3110",
+      "cau_giao": "Đầu chủ ghi số thửa, tờ bản đồ của căn và lead trùng thửa bị bắt dù địa chỉ viết khác",
+      "ly_do": "Khoá địa chỉ cộng kiểm theo chủ nhà đủ cho bản đầu; số thửa đọc từ sổ, thêm là thêm một trường lớp nguồn (bất biến 2)",
+      "phu": [
+        "LH12"
+      ],
+      "mo_lai_khi": "Hai tuần thử hay sàn thứ hai cho thấy lead trùng lọt qua khoá địa chỉ"
+    },
+    {
+      "ma": "H7",
+      "dot": "moi-loai-hinh-3110",
+      "cau_giao": "Sàn rao bán văn phòng, mặt bằng, hay cho thuê căn, với bộ trường và luật giá riêng",
+      "ly_do": "Chưa sàn nào trong ghi chép bán hàng thương mại hay cho thuê; giá thuê theo tháng đổi luật giá và độ tươi",
+      "phu": [
+        "LH13"
+      ],
+      "mo_lai_khi": "Có sàn dùng thử cần rao hàng thương mại hay cho thuê"
     }
   ],
   "da_bac": []

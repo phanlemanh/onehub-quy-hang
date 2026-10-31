@@ -14,7 +14,9 @@ import {
 } from "@quy-hang/core/listing";
 import type { ListingView, Ngan, PendingOp } from "./types";
 
-export type LoiTrenMay = { kind: "invalid-payload"; errors: PayloadError[] } | { kind: "invalid-transition"; reason: string } | { kind: "missing-requirement"; missing: Requirement[] } | { kind: "not-found" };
+export type LoiTrenMay = { kind: "invalid-payload"; errors: PayloadError[] } | { kind: "invalid-transition"; reason: string } | { kind: "missing-requirement"; missing: Requirement[] } | { kind: "not-found" }
+  /** Kho trên máy lỗi — lần sửa chưa lưu được (hàng 61). */
+  | { kind: "kho" };
 
 /** Sự kiện tạm mà thao tác chờ sẽ thành nếu máy chủ nhận. */
 export const suKienTam = (op: PendingOp, actorUserId = ""): ListingEvent => ({
