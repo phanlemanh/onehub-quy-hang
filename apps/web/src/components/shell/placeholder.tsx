@@ -1,9 +1,9 @@
 import { HammerIcon } from "lucide-react";
 
 import { Frame, FrameDescription, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { TrangThai } from "@/components/trang-thai";
 
-// Trang giữ chỗ của nhà chưa có màn: cho biết màn này dựng ở mục nào của lộ trình (docs/plan/lo-trinh.json, trường
+// Khuôn của nhóm `trang-tam` (design/patterns/trang-tam.md). Trang giữ chỗ của nhà chưa có màn: cho biết màn này dựng ở mục nào của lộ trình (docs/plan/lo-trinh.json, trường
 // `ma`). «Mục», không «hàng» — «Hàng» trong từ vựng là một lần chào bán căn.
 type Info = { title: string; question: string; rows: string };
 
@@ -44,17 +44,12 @@ export function Placeholder({ path }: { path: string }) {
           <FrameDescription>{p.question}</FrameDescription>
         </FrameHeader>
         <FramePanel>
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <HammerIcon />
-              </EmptyMedia>
-              <EmptyTitle>Màn này đang dựng</EmptyTitle>
-              <EmptyDescription>
-                {p.rows === "chưa xếp mục" ? "Chưa xếp mục nào trong lộ trình." : `Dựng ở ${p.rows} của lộ trình.`}
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
+          <TrangThai
+            kind="empty"
+            icon={HammerIcon}
+            title="Màn này đang dựng"
+            description={p.rows === "chưa xếp mục" ? "Chưa xếp mục nào trong lộ trình." : `Dựng ở ${p.rows} của lộ trình.`}
+          />
         </FramePanel>
       </Frame>
     </div>

@@ -1,0 +1,6 @@
+Total messages: 2 (Errors: 0, Warnings: 0)
+Returning 3 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3473/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3473/api/v1/company/members/1341ed60-7b80-474b-b916-7cf2c4cb4c4c:0
+[ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:3473/api/v1/company/members/1341ed60-7b80-474b-b916-7cf2c4cb4c4c:0

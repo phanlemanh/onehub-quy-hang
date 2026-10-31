@@ -1,0 +1,97 @@
+schema_version: 1
+feature_slug: ban-do-khuon-nhom-da-co
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG D» trong steps):
+#   docker run --rm -d --name quy-hang-db-D -e POSTGRES_PASSWORD=quyhang -p 5553:5432 postgres:16 (đã chạy thì bỏ qua)
+#   export DATABASE_URL=postgres://postgres:quyhang@localhost:5553/postgres && npm run db:migrate
+#   node _acceptance/vo-ung-dung/thu/vai-mau.mjs  → người mẫu *@example.test: quan-tri@ quản trị Sàn mẫu A; dau-chu@
+#   Đầu chủ Sàn mẫu A; hai-san@ quản trị cả Sàn mẫu A và Sàn mẫu B — ở Sàn mẫu B là quản trị DUY NHẤT
+#   máy chủ dev cấu hình `web-d` của .claude/launch.json (cổng 3473); đăng nhập bằng email, đọc mã trong nhật ký máy chủ
+#   dòng «[ma-dang-nhap] <email> <mã>»
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ban-do-khuon.test.mjs ca «bản đồ thật»: bộ đọc trên cây thật trả đúng bốn nhóm xac-thuc, cai-dat-san, trang-tam, trang-thai và 0 lỗi; ma trận viết trước 4 nhóm × 9 khoá §11.3 = 36 assert kiểu từng ô (mảng, đối tượng có trường con, chuỗi không rỗng); nhom bằng tên tệp. Đối chứng đỏ trong cùng tệp: bản sao xoá một tệp nhóm → danh sách nhóm thiếu đúng tên ấy."
+    paths: ["design/patterns/**", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/ban-do-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ban-do-khuon.test.mjs có một ca cho mỗi chỗ hỏng trong mười chỗ của AC-2, mỗi ca chép bản đồ thật sang thư mục tạm, làm hỏng ĐÚNG một chỗ, rồi ghim thông điệp lỗi chứa tên tệp và tên trường (vd «cai-dat-san.md: ngoai_le[0] thiếu ly_do», «trang-thai.md: cam_ngoai_khuon KhongCo không thành phần nào xuất»). Đối chứng dương trên CÙNG thư mục tạm trước khi phá: 0 lỗi — phép đo phân biệt được bản lành với bản hỏng."
+    paths: ["design/patterns/**", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/ban-do-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «cây thật, nhóm màn»: 0 lệch; bảng viết trước TÊN TỪNG TỆP theo khuôn và ngoại lệ mỗi nhóm — xac-thuc: (auth)/login, (auth)/no-company, (auth)/select-company; cai-dat-san: settings/users/page.tsx, ngoại lệ settings/page.tsx và settings/[section]/page.tsx; trang-tam: mười trang (app)/**/page.tsx (exports/new, imports/new, inventory, leads/new, me, shares, team, today, units/[code], viewings) và settings/[section]/page.tsx — so bằng deepEqual trên danh sách đã sắp. Ca đỏ trên bản sao cây (apps/web/src + design/patterns chép sang thư mục tạm): settings/users/page.tsx trả lại <main className=\"flex min-h-svh …\"> ở gốc như trước hàng này → một lệch nêu «main»; settings/users/page.tsx trả <Frame> ở gốc → đúng một lệch chứa «settings/users/page.tsx», «cai-dat-san», «MucCaiDat»; login/page.tsx nhập Khung từ tệp khác cùng tên → lệch nói tệp nhập sai; Khung thiếu title → lệch nói khe «title»; settings/[section]/page.tsx bỏ khỏi ngoai_le của cai-dat-san → lệch nói tệp thuộc hai nhóm. Mỗi ca đỏ chạy trên bản sao đã qua đối chứng dương (0 lệch) trước khi phá."
+    paths: ["design/patterns/**", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/ban-do-khuon.test.mjs", "apps/web/src/app/**", "apps/web/src/components/shell/placeholder.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «cây thật, trạng thái»: 0 lệch, danh sách tệp nhan_dien của trang-thai khớp bảng viết trước (deepEqual), và số chỗ dựng TrangThai bằng ĐÚNG 5 (chuông trống, trang tạm, lỗi Sửa và lỗi Rời sàn/Bỏ ở quan-nguoi.tsx, báo không quyền ở users/page.tsx) — đối chứng rằng bộ quét có thấy phần tử chứ không trả rỗng. Ca đỏ trên bản sao: đặt lại đúng dòng cũ <p role=\"alert\" className=\"text-sm text-destructive\">{loiSua}</p> vào quan-nguoi.tsx → lệch nêu tệp và «role=\"alert\"»; thêm <Empty> vào notifications.tsx ngoài TrangThai → lệch nêu «Empty»; TrangThai thiếu kind → lệch nêu khe «kind». Ca phải im (assert 0 lệch, ghim cả ba): FieldError role=\"alert\" trong login/form.tsx, CommandEmpty trong unit-jump.tsx, một tệp ngoài mọi nhan_dien chứa <p role=\"alert\">."
+    paths: ["design/patterns/**", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/ban-do-khuon.test.mjs", "apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca chạy lệnh thật bằng tiến trình con (spawnSync node packages/ui-lint/ban-do-khuon.mjs --root <cây>): cây thật → mã 0, stdout đúng bốn dòng khớp mẫu «<nhóm>: N tệp theo khuôn · k ngoại lệ · 0 lệch» với N, k bằng bảng của E3 (trang-thai: N là số chỗ dựng khuôn); bản sao có một lệch → mã 1 và một dòng «<tệp>: <nhóm> — …»; --json → JSON.parse được, số trong JSON bằng số trong dòng chữ. Đường tới lệnh suy từ vị trí tệp kiểm, không ghim gốc kho."
+    paths: ["packages/ui-lint/ban-do-khuon.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/ban-do-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG D (đầu tệp). Đăng nhập hai-san@example.test, chọn Sàn mẫu B."
+      - "Khổ 1440x900, giao diện sáng: mở /settings/users → chụp evidence/E6-1440.png; ghi số khung (data-slot=frame) trong vùng nội dung, document.querySelectorAll('main').length, có phần tử nào trong vỏ mang lớp min-h-svh không, tiêu đề, mô tả, danh sách email"
+      - "Bấm «Sửa» ở dòng hai-san@, bỏ chọn Quản trị sàn, chọn Đầu chủ, bấm Lưu → ghi mã trạng thái phản hồi của lời gọi PATCH/PUT thành viên (tab mạng hay read_network_requests) → chụp evidence/E6-loi-sua.png; ghi phần tử hiện lỗi: role, data-slot, chữ"
+      - "Đóng form Sửa, bấm «Rời sàn» ở dòng hai-san@, xác nhận → ghi mã trạng thái phản hồi → chụp evidence/E6-loi-roi.png; ghi phần tử hiện lỗi: role, data-slot, chữ"
+      - "Khổ 375x812, giao diện tối: mở /settings/users → chụp evidence/E6-375-toi.png; ghi body.scrollWidth và body.clientWidth"
+      - "Đăng xuất, đăng nhập dau-chu@example.test, mở /settings/users → chụp evidence/E6-khong-quyen.png; ghi chữ, role và data-slot của khối báo"
+    expected: "1440: đúng một khung trong vùng nội dung, không phần tử nào trong vỏ mang min-h-svh; tiêu đề «Người dùng», mô tả «Người của sàn Sàn mẫu B», danh sách có hai-san@ và dau-chu-san-b@. Sửa: phản hồi 409; một khối data-slot=alert, role=alert, chữ «Sàn cần ít nhất một quản trị.» Rời sàn: phản hồi 409; cùng khối và cùng chữ. 375 tối: scrollWidth bằng clientWidth, chữ đọc được. Đầu chủ: khối data-slot=alert, role=status, chữ «Chỉ quản trị sàn xem được trang này.» Ảnh mâu thuẫn mô tả là chưa đạt dù lệnh thoát 0."
+    paths: ["apps/web/src/app/settings/**", "apps/web/src/components/trang-thai.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; packages/api/test-db/members.test.ts tự dựng sàn riêng có đúng một quản trị và chạy hai ca có sẵn «quản trị cuối: bỏ khỏi sàn bị từ chối 409 last-admin» và «quản trị cuối: gỡ vai quản trị bị từ chối 409 last-admin» — thân {error: last-admin}, không đổi gì; đối chứng dương cùng tệp «hai quản trị: gỡ một người được». Hàng này không đổi API; eval chứng lời từ chối mà màn E6 hiện là lời API thật trả."
+    paths: ["packages/api/src/**", "packages/api/test-db/members.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG D. Ma trận viết trước 4 màn × 2 khổ × 2 giao diện = 16 ô, mỗi ô một ảnh evidence/E7-<màn>-<khổ>-<sáng|tối>.png: màn ∈ {login (sau khi gõ mã sai), chon-san, trang-tam (/today), chuong (ngăn thông báo mở trên /today)}; khổ ∈ {1440x900, 375x812}. Giao diện đổi bằng menu tài khoản khi đã đăng nhập; trước khi đăng nhập dùng emulate prefers-color-scheme."
+      - "login: gõ quan-tri@example.test, xin mã, gõ «000000» → ghi lỗi gắn dưới ô nào và chữ lỗi. chon-san: đăng nhập hai-san@example.test → /select-company → ghi tiêu đề và hai sàn. trang-tam: chọn Sàn mẫu A, mở /today → ghi tiêu đề, câu hỏi, dòng trống và mục lộ trình. chuong: bấm chuông → ghi dòng trống và câu dưới."
+      - "Mỗi ô ghi thêm: có tràn ngang không (scrollWidth > clientWidth), chữ có đọc được trên nền không."
+    expected: "Đủ 16 ảnh. login: khung giữa trang hẹp, lỗi mã sai gắn dưới ô mã (FieldError). chon-san: tiêu đề «Chọn sàn làm việc», đủ Sàn mẫu A và Sàn mẫu B. trang-tam: «Hôm nay», «Giờ làm gì?», «Màn này đang dựng», «Dựng ở mục 22 (máy tính), 39 (điện thoại) của lộ trình.» chuong: «Chưa có thông báo», «Lead mới, căn đổi giá và khách mở link sẽ báo ở đây.» Mọi chữ khớp đúng chữ trên — hàng này không đổi chữ; không ô nào tràn ngang; sáng và tối đều đọc được."
+    paths: ["apps/web/src/app/(auth)/**", "apps/web/src/components/shell/placeholder.tsx", "apps/web/src/components/shell/notifications.tsx", "apps/web/src/components/trang-thai.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-8
+    executor: judgment
+    inputs:
+      - design/patterns/xac-thuc.md
+      - design/patterns/cai-dat-san.md
+      - design/patterns/trang-tam.md
+      - design/patterns/trang-thai.md
+      - docs/design/vo-va-ia.md
+    question: "Đọc bốn tệp bản đồ khuôn và vo-va-ia.md như một tác tử sắp dựng một màn mới thuộc một trong bốn nhóm. (1) Mỗi tệp có nói rõ khi nào dùng khuôn và khi nào KHÔNG dùng không? (2) Mỗi mã trong khoá luat của frontmatter có đúng một câu luật trong thân, đọc là làm được không? (3) Mỗi ngoại lệ có lý do đủ để người đọc hiểu vì sao tệp ấy được miễn không? (4) vo-va-ia.md §2 có trỏ sang design/patterns và nói tệp nào giữ khuôn máy đọc, tệp nào giữ lời giải thích không? Trả PASS khi cả bốn đều có; FAIL nêu tệp và câu thiếu."
+    evidence_required: [run_id, exit_code, verifier, verified_at]
