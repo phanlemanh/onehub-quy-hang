@@ -3,10 +3,14 @@ import { navigationFor } from "@quy-hang/core";
 import { decideOutcome, OPEN_STATUSES, validateLeadInput, type LeadRecord, type Outcome } from "@quy-hang/core/dedupe";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { khoaSoChu } from "../owners/khoa";
+import { dauVetSo, maHoaSo, nguCanhLead } from "../owners/ma-hoa";
 
 /**
  * Đường ghi duy nhất của lead (hàng 24, ADR-0012). Một giao dịch: lấy hai dữ kiện kiểm trùng ở cơ sở dữ liệu → lõi quyết
  * kết quả → ghi lead. Số chủ đi vào bảng và vào hàm dữ kiện, không bao giờ ra khỏi đây.
+ * Hàng 62 (ADR-0013): số chỉ vào cơ sở dữ liệu ở dạng bản mã (ngữ cảnh `leads:<sàn>:<lead>`) và dấu vết theo sàn; hàm dữ
+ * kiện so dấu vết, không so số.
  */
 
 export type Refusal = { error: ApiErrorEntry; details?: { path: string; reason: string }[] };
@@ -58,9 +62,13 @@ export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<L
   const kiem = validateLeadInput(payload);
   if (!kiem.ok) return { error: API_ERRORS.invalidPayload, details: kiem.errors };
   const v = kiem.value;
+  const khoa = khoaSoChu();
+  const id = randomUUID();
+  const san = (await tx.query<{ c: string }>("select app.current_company_id() c")).rows[0]!.c;
+  const dauVet = dauVetSo(v.ownerPhone, san, khoa);
   const { rows } = await tx.query<{ open_listing_id: string | null; open_listing_agent: string | null; owner_agent: string | null }>(
     "select * from app.lead_dedupe_facts($1, $2, $3, $4)",
-    [v.ownerPhone, v.buildingName, v.unitNumber ?? null, OPEN_STATUSES],
+    [dauVet, v.buildingName, v.unitNumber ?? null, OPEN_STATUSES],
   );
   const f = rows[0]!;
   const quyet = decideOutcome({
@@ -69,18 +77,19 @@ export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<L
   });
   const ghi = await tx.query<LeadRow>(
     `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion,
-                        desired_listing_time, owner_phone, outcome, matched_agent_user_id, matched_listing_id)
-     values ($1, app.current_company_id(), app.current_user_id(), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                        desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id)
+     values ($1, app.current_company_id(), app.current_user_id(), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
      returning ${COT}`,
     [
-      randomUUID(),
+      id,
       v.buildingName,
       v.unitNumber ?? null,
       v.need,
       v.listPrice,
       v.feeInclusion,
       v.desiredListingTime,
-      v.ownerPhone,
+      maHoaSo(v.ownerPhone, nguCanhLead(san, id), khoa),
+      dauVet,
       quyet.outcome,
       quyet.agentUserId,
       quyet.listingId,

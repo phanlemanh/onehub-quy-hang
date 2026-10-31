@@ -52,7 +52,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mã hoá số chủ: ghi qua API chỉ để lại bản mã» có mặt và ok — sau PUT với '0900 000 012': owner_phone null, owner_phone_enc dài 39 byte bắt đầu 0x01, owner_phone_hash 32 byte; quét chữ của mọi dòng ba bảng (listing_owners, owner_phone_reveals, listing_events của hàng) đọc bằng vai chủ — row::text cộng encode(...,'hex'|'base64'|'escape') từng cột bytea — không chứa bốn dạng của số; đối chứng dương cùng hàm quét: cấy chuỗi '0900000012' vào văn bản quét thì hàm báo dạng bị bắt; GET owner trả hasPhone true, không khoá ownerPhone. Chiều đỏ: ghi số rõ hay bản mã thiếu → ca đỏ."
-    paths: [packages/api/src/owners/**, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql]
+    paths: [packages/api/src/owners/**, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E7
@@ -79,7 +79,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mã hoá lại: số rõ thành bản mã, chạy lại không đổi byte» có mặt và ok — trong giao dịch hoàn lại: tạm gỡ ràng buộc, cấy ba dòng số rõ ở hai sàn ('0900000031..33'), dựng lại ràng buộc NOT VALID; maHoaLai lần một báo 3, mọi dòng owner_phone null, có bản mã và dấu vết, pg_constraint.convalidated = true; ca dùng một sàn thử thật (người thấy nguồn đăng nhập) nên sau commit-mô-phỏng của giao dịch ca, mở số từng dòng qua POST …/owner/phone-reveal của API ra đúng số của dòng, owner_phone_reveals tăng đúng 3 (nếu ca chọn giao dịch hoàn lại thì gọi đường API trong cùng client giao dịch — cách nào cũng phải qua revealPhone của API, không tự dựng ngữ cảnh rồi giải mã); lần hai báo 0, bản mã và dấu vết bằng từng byte so với sau lần một; ca «mã hoá lại: lệnh dòng lệnh chạy hai lần» ok — spawn node --import tsx packages/api/van-hanh/ma-hoa-lai.ts hai lần, mã thoát 0 cả hai, stdout+stderr không chứa bốn dạng của mọi số mẫu và không chứa khoá; ca «mã hoá lại: thiếu khoá hay khoá dev thì từ chối, không chạm dòng» ok — spawn lệnh ba lần (không OWNER_PHONE_KEY · khoá sai dạng · khoá dev), mỗi lần mã thoát khác 0, stderr khớp /OWNER_PHONE_KEY/ (thông điệp ghim), đếm owner_phone is not null trước và sau bằng nhau; đối chứng dương cùng ca: khoá thử hợp lệ → mã thoát 0. Chiều đỏ: mã hoá lại dòng đã có bản mã hay quên validate → ca đỏ nêu vế."
-    paths: [packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql]
+    paths: [packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E10
@@ -97,7 +97,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mã hoá số chủ: lead chỉ để lại bản mã» (test-db/ma-hoa-so-chu.test.ts) có mặt và ok — sau POST /api/v1/leads với '0900 000 051': leads.owner_phone null, owner_phone_enc 39 byte bắt đầu 0x01 giải bằng khoá dev với ngữ cảnh 'leads:<sàn>:<lead>' ra '0900000051', owner_phone_hash bằng dauVetSo của số ấy; quét chữ dòng lead (row::text + encode hex/base64/escape) bằng vai chủ không chứa bốn dạng, kèm đối chứng dương cùng hàm quét; thân trả cho telesales không chứa số; ca «mã hoá lại: lead số rõ thành bản mã» ok — trong giao dịch hoàn lại tạm gỡ leads_phone_chi_ban_ma, cấy một lead số rõ '0900000052', maHoaLai báo daMaHoaLead 1, owner_phone null, giải ra đúng số, convalidated của leads_phone_chi_ban_ma = true, lần hai báo 0 và bản mã giữ nguyên byte; bộ cách ly có ca «số chủ của lead: cơ sở dữ liệu từ chối số rõ, vai API không đọc ba cột» — chèn/sửa leads.owner_phone khác null lỗi nêu 'leads_phone_chi_ban_ma' (đối chứng dương: chèn bản mã đúng khuôn được), vai API 'permission denied' trên owner_phone, owner_phone_enc, owner_phone_hash; ca «số chủ của lead: lead không số bị từ chối» — chèn lead cả ba cột số null lỗi nêu 'leads_phone_co_so' (đối chứng dương: bản mã đúng khuôn được); ca «mã hoá lại: bỏ lead cũ còn số rõ chỉ chạy được sau mã hoá lại» (test-db) — trong giao dịch hoàn lại cấy lead số rõ outcome unit_has_open_listing, app.discard_lead lỗi nêu 'leads_phone_chi_ban_ma', sau maHoaLai gọi lại thì thành công; ca dòng lệnh «mã hoá lại: lệnh dòng lệnh chạy hai lần» cấy thêm một lead số rõ trước lần một, lần một in 'đã mã hoá … 1 lead', stdout+stderr không chứa bốn dạng của số lead và khoá. Chiều đỏ: ghi số rõ vào lead hay bỏ ràng buộc → ca đỏ."
-    paths: [packages/api/src/leads/**, packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/tests/isolation.test.mjs]
+    paths: [packages/api/src/leads/**, packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql, packages/db/tests/isolation.test.mjs]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E12
@@ -106,5 +106,5 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; các ca kiểm trùng của hàng 24 trong test-db/leads.test.ts vẫn có mặt và ok, đích danh «chủ trùng: lead L-02 về đầu chủ giữ chủ nhà CN-01» và «chủ trùng: số viết +84 vẫn khớp»; ca «mã hoá số chủ: kiểm trùng lead so dấu vết» (test-db/ma-hoa-so-chu.test.ts) ok — lead thứ hai cùng số với lead trước đã về đầu chủ thì về đúng đầu chủ ấy; lead cùng số ở sàn khác ra 'new' (đối chứng: cùng sàn ra 'owner_has_agent'); truy pg_proc: app.lead_dedupe_facts có tham số đầu kiểu bytea, và không hàm nào ở schema app có tham số tên chứa 'phone' kiểu text; hai lead cùng số nhập ở hai sàn có owner_phone_hash khác nhau (đọc bằng vai chủ). Chiều đỏ: so số rõ → ca kiểm trùng đỏ; bỏ sàn khỏi dấu vết → ca hai sàn đỏ."
-    paths: [packages/api/src/leads/**, packages/api/src/owners/ma-hoa.ts, packages/api/test-db/leads.test.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql]
+    paths: [packages/api/src/leads/**, packages/api/src/owners/ma-hoa.ts, packages/api/test-db/leads.test.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

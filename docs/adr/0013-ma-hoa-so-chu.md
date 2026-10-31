@@ -33,9 +33,10 @@ bí mật chỉ ở Vercel và secret GitHub, không ở kho.
    của mọi nhánh trên cơ sở dữ liệu thật, thiếu khoá thì API của nó không dựng. Chủ kho sinh khoá ở máy mình và cất **một
    bản** trong trình quản lý mật khẩu của chủ kho — không ở kho, không ở tin nhắn, không ở máy tác tử. Khoá Sensitive của
    Vercel không đọc lại được, nên bản ngoài Vercel là bản duy nhất dùng được cho lệnh mã hoá lại.
-6. **Thứ tự gộp với hàng 24 (ô nhận lead).** 62 gộp trước: bảng lead dùng `owner_phone_enc` + `owner_phone_hash`, ngữ cảnh
-   `leads:<company_id>:<lead_id>`, hàm kiểm trùng so dấu vết. 24 gộp trước: một migration sau chuyển cột lead theo cùng
-   khuôn và đổi thân hàm kiểm trùng, kèm tiêu chí mới qua Cổng Phạm vi lại.
+6. **Số chủ của lead (hàng 24 gộp trước, migration 009).** `leads.owner_phone_enc` + `owner_phone_hash`, ngữ cảnh
+   `leads:<company_id>:<lead_id>`; `leads_phone_chi_ban_ma` (NOT VALID) chặn số rõ mới, `leads_phone_co_so` bắt lead phải
+   có số. `app.lead_dedupe_facts` nhận dấu vết (`bytea`) và so `owner_phone_hash` của chủ nhà và của lead trước — không
+   hàm nào của cơ sở dữ liệu còn nhận số chủ dạng chữ. Lead chưa có cửa mở số (telesales không thấy lại số, hàng 24).
 
 ## Vận hành
 
@@ -55,12 +56,14 @@ trong trình quản lý mật khẩu là phải hỏi lại số từ chủ nhà
 
 **Mã hoá lại dữ liệu đã có** (sau khi áp migration 008 lên cơ sở dữ liệu thật):
 
-1. Đếm trước — bằng vai chủ: `select count(*) from listing_owners where owner_phone is not null;`. Bằng 0 thì vẫn chạy
-   bước 2 một lần để validate ràng buộc.
+1. Đếm trước — bằng vai chủ, ở **cả hai bảng**: `select count(*) from listing_owners where owner_phone is not null;` và
+   `select count(*) from leads where owner_phone is not null;`. Bằng 0 thì vẫn chạy bước 2 một lần để validate ràng buộc.
+   Chạy **ngay sau khi áp migration 008, 009**: ràng buộc NOT VALID vẫn xét mọi lần sửa dòng, nên lead cũ còn số rõ không
+   «Bỏ lead» được tới khi chạy lệnh.
 2. Với `DATABASE_URL` của vai chủ và `OWNER_PHONE_KEY` thật trong môi trường (không ghi vào tệp):
    `node --import tsx packages/api/van-hanh/ma-hoa-lai.ts`. Lệnh từ chối chạy khi thiếu khoá, khoá sai dạng hay khoá
-   dev; in `đã mã hoá N dòng, M dòng đã là bản mã`. Chạy lại không đổi gì.
-3. Đếm lại: phải bằng 0.
+   dev; in `đã mã hoá N dòng, M dòng đã là bản mã, L lead`. Chạy lại không đổi gì.
+3. Đếm lại cả hai bảng: phải bằng 0.
 
 **Xoá cột `owner_phone`** là migration của hàng sau, sau khi cơ sở dữ liệu thật đã chạy bước trên.
 

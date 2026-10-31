@@ -101,7 +101,7 @@ Production; Preview theo Hỏi-1; bản ngoài Vercel theo Hỏi-3), mất khoá
 hàng sau; `.env.example` có dòng `OWNER_PHONE_KEY=` không giá trị; Tham chiếu có dòng sổ quyết định trỏ ADR-0013.
 
 **AC-11 — Số chủ của lead cũng chỉ ở dạng bản mã.** (cross-layer)
-Given cơ sở dữ liệu đã áp migration 007 (bảng `leads` của hàng 24) và 008; một telesales của sàn
+Given cơ sở dữ liệu đã áp migration 007 (bảng `leads` của hàng 24), 008 và 009; một người nhập lead của sàn
 When nhập lead qua `POST /api/v1/leads` với số mẫu; và (trong một giao dịch hoàn lại) có dòng lead cũ mang số rõ rồi
 chạy lệnh mã hoá lại
 Then dòng `leads` có `owner_phone` null, `owner_phone_enc` (ngữ cảnh `leads:<company_id>:<lead_id>`, giải ra đúng số)
@@ -170,7 +170,9 @@ Ngưỡng SỐNG của `opportunity.md`, từng vế:
 ## Notes
 
 - **Hàng 24 đã gộp trước (giám sát chốt 31/10, PR #44 vào main 16:08Z)** — nhánh «24 gộp trước» dưới đây áp dụng:
-  AC-11, AC-12 thêm qua Cổng Phạm vi lại; migration 008 chuyển `leads.owner_phone` và đổi `app.lead_dedupe_facts`;
+  AC-11, AC-12 thêm qua Cổng Phạm vi lại; **migration thứ hai `009_ma_hoa_so_lead.sql`** (giám sát cấp ở G-4 — hook kho
+  chặn sửa 008 đã commit; hàng 18 dời sang 012; 62 phải gộp trước hàng 25 vì 011 cần `leads.owner_phone_hash`) chuyển
+  `leads.owner_phone` và đổi `app.lead_dedupe_facts`;
   sửa `packages/api/src/leads/{store,routes}.ts` và `packages/api/test-db/leads.test.ts` (yêu cầu chạm tệp G-3).
 - **Thứ tự gộp với hàng 24 (ô nhận lead, dãy L — migration 007 thêm `leads.owner_phone` và hàm
   `app.lead_dedupe_facts` so số dạng chữ rõ).** 62 gộp trước: hàng 24 phải dùng đường mã hoá của 62 — cột

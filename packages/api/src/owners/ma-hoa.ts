@@ -17,6 +17,9 @@ const NHAN_DAU_VET = "quy-hang/owner-phone-hash/v1";
 /** Ngữ cảnh của bản mã chủ nhà: sàn và hàng của dòng `listing_owners`. */
 export const nguCanhChuNha = (companyId: string, listingId: string) => `listing_owners:${companyId}:${listingId}`;
 
+/** Ngữ cảnh của bản mã số chủ trên lead (hàng 24): sàn và mã lead. */
+export const nguCanhLead = (companyId: string, leadId: string) => `leads:${companyId}:${leadId}`;
+
 /** Mã hoá một số đã chuẩn hoá; mỗi lần một nonce mới. */
 export function maHoaSo(so: string, nguCanh: string, khoa: KhoaSoChu): Buffer {
   const nonce = randomBytes(NONCE);

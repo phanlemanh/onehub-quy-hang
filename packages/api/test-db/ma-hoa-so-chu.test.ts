@@ -2,13 +2,13 @@
 // Test chạy không có OWNER_PHONE_KEY nên API dùng khoá dev; lệnh mã hoá lại dòng lệnh luôn cần khoá tường minh.
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { after, test } from "node:test";
 import { createApi } from "../src/app";
 import { KHOA_DEV } from "../src/owners/khoa";
+import { dauVetSo, giaiMaSo, nguCanhLead, timDangSo } from "../src/owners/ma-hoa";
 import { maHoaLai } from "../src/owners/ma-hoa-lai";
-import { timDangSo } from "../src/owners/ma-hoa";
 import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
 
 after(cleanup);
@@ -54,6 +54,21 @@ async function hangCoSo(s: San, so: string): Promise<string> {
 const moSo = (id: string, s: San) => send("POST", `/api/v1/listings/${id}/owner/phone-reveal`, undefined, s.dauChu.cookie);
 const demMoSo = async (id: string) =>
   (await appPool.query<{ n: number }>("select count(*)::int n from owner_phone_reveals where listing_id = $1", [id])).rows[0]!.n;
+
+/** Nhập lead qua API bằng đầu chủ của sàn (vai Đầu chủ nhập được lead — hàng 53). */
+async function nhapLead(s: San, so: string, toa = "[Toà lead]", can?: string) {
+  const res = await send(
+    "POST",
+    "/api/v1/leads",
+    { ownerPhone: so, buildingName: toa, ...(can && { unitNumber: can }), need: "sale", listPrice: 3_200_000_000, feeInclusion: "included", desiredListingTime: "now" },
+    s.dauChu.cookie,
+  );
+  const than = await res.text();
+  assert.equal(res.status, 201, than);
+  return { than, ...(JSON.parse(than) as { id: string; outcome: string }) };
+}
+const docLead = async (id: string) =>
+  (await appPool.query("select t::text c, owner_phone, owner_phone_enc, owner_phone_hash, encode(owner_phone_enc, 'base64') b, encode(owner_phone_enc, 'escape') e from leads t where id = $1", [id])).rows[0];
 
 /** Chữ của mọi dòng ba bảng của hàng, đọc bằng vai chủ — row::text cùng hex, base64, escape của từng cột bytea. */
 async function chuCuaHang(id: string): Promise<string> {
@@ -133,7 +148,7 @@ test("mã hoá số chủ: bản mã chép sang hàng khác hay bị sửa khôn
 
 const RANG_BUOC = "listing_owners_phone_chi_ban_ma";
 /** Cấy dòng số rõ như dữ liệu trước migration 008: tạm gỡ ràng buộc, đặt số rõ, dựng lại NOT VALID. */
-async function cayDongSoRo(dong: [string, string][]) {
+async function cayDongSoRo(dong: [string, string][], lead: [string, string][] = []) {
   const c = await appPool.connect();
   try {
     await c.query("begin");
@@ -142,6 +157,13 @@ async function cayDongSoRo(dong: [string, string][]) {
       await c.query("update listing_owners set owner_phone = $2, owner_phone_enc = null, owner_phone_hash = null where listing_id = $1", [id, so]);
     }
     await c.query(`alter table listing_owners add constraint ${RANG_BUOC} check (owner_phone is null) not valid`);
+    if (lead.length) {
+      await c.query("alter table leads drop constraint leads_phone_chi_ban_ma");
+      for (const [id, so] of lead) {
+        await c.query("update leads set owner_phone = $2, owner_phone_enc = null, owner_phone_hash = null where id = $1", [id, so]);
+      }
+      await c.query("alter table leads add constraint leads_phone_chi_ban_ma check (owner_phone is null) not valid");
+    }
     await c.query("commit");
   } finally {
     c.release();
@@ -216,11 +238,112 @@ test("mã hoá lại: thiếu khoá hay khoá dev thì từ chối, không chạ
 
 test("mã hoá lại: lệnh dòng lệnh chạy hai lần", async () => {
   const khoa = randomBytes(32).toString("base64");
+  // Một lead cũ còn số rõ trước lần một — lệnh phủ cả bảng lead.
+  const l = await nhapLead(await SAN_A, "0900000053", "[Toà dòng lệnh]");
+  await cayDongSoRo([], [[l.id, "0900000053"]]);
   for (const lan of [1, 2]) {
     const r = chayLenh(khoa);
     assert.equal(r.ma, 0, `lần ${lan}: ${r.ra}`);
     assert.match(r.ra, /đã mã hoá 0 dòng/, `lần ${lan}`);
-    for (const so of [...SO_MAU_LAI, "0900000041"]) assert.equal(timDangSo(r.ra, so), null, `lần ${lan}: lộ số`);
+    assert.match(r.ra, lan === 1 ? /, 1 lead/ : /, 0 lead/, `lần ${lan}`);
+    for (const so of [...SO_MAU_LAI, "0900000041", "0900000053"]) assert.equal(timDangSo(r.ra, so), null, `lần ${lan}: lộ số`);
     assert.ok(!r.ra.includes(khoa), `lần ${lan}: lộ khoá`);
   }
+});
+
+test("mã hoá số chủ: lead chỉ để lại bản mã", async () => {
+  const a = await SAN_A;
+  const l = await nhapLead(a, "0900 000 051");
+  const d = await docLead(l.id);
+  assert.equal(d.owner_phone, null);
+  assert.equal(d.owner_phone_enc.length, 39);
+  assert.equal(d.owner_phone_enc[0], 1);
+  assert.equal(giaiMaSo(d.owner_phone_enc, nguCanhLead(a.companyId, l.id), KHOA_DEV), "0900000051");
+  assert.deepEqual(d.owner_phone_hash, dauVetSo("0900000051", a.companyId, KHOA_DEV));
+  const chu = [d.c, d.b, d.e].join("\n");
+  assert.equal(timDangSo(chu, "0900000051"), null, "đọc thẳng dòng lead thấy số");
+  assert.equal(timDangSo(`${chu}\n0900 000 051`, "0900000051"), "0900 000 051", "đối chứng dương cùng hàm quét");
+  assert.equal(timDangSo(l.than, "0900000051"), null, "bản trả cho người nhập mang số");
+});
+
+test("mã hoá lại: lead số rõ thành bản mã", async () => {
+  const a = await SAN_A;
+  const l = await nhapLead(a, "0900000052", "[Toà mã hoá lại]");
+  await cayDongSoRo([], [[l.id, "0900000052"]]);
+  const lan = async () => {
+    const c = await appPool.connect();
+    try {
+      await c.query("begin");
+      const kq = await maHoaLai(c, KHOA_DEV);
+      await c.query("commit");
+      return kq;
+    } finally {
+      c.release();
+    }
+  };
+  assert.equal((await lan()).daMaHoaLead, 1);
+  const sau1 = await docLead(l.id);
+  assert.equal(sau1.owner_phone, null);
+  assert.equal(giaiMaSo(sau1.owner_phone_enc, nguCanhLead(a.companyId, l.id), KHOA_DEV), "0900000052");
+  const hopLe = (await appPool.query("select convalidated v from pg_constraint where conname = 'leads_phone_chi_ban_ma'")).rows[0].v;
+  assert.equal(hopLe, true);
+  assert.equal((await lan()).daMaHoaLead, 0);
+  const sau2 = await docLead(l.id);
+  assert.deepEqual([sau2.owner_phone_enc, sau2.owner_phone_hash], [sau1.owner_phone_enc, sau1.owner_phone_hash], "lần hai giữ nguyên byte");
+});
+
+test("mã hoá lại: bỏ lead cũ còn số rõ chỉ chạy được sau mã hoá lại", async () => {
+  const a = await SAN_A;
+  const hang = await hangCoSo(a, "0900000099");
+  const c = await appPool.connect();
+  try {
+    await c.query("begin");
+    await c.query("alter table leads drop constraint leads_phone_chi_ban_ma");
+    const id = randomUUID();
+    await c.query(
+      `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion, desired_listing_time,
+                          owner_phone, outcome, matched_listing_id)
+       values ($1, $2, $3, '[Toà mẫu]', 'A-1201', 'sale', 1, 'included', 'now', '0900000054', 'unit_has_open_listing', $4)`,
+      [id, a.companyId, a.dauChu.userId, hang],
+    );
+    await c.query("alter table leads add constraint leads_phone_chi_ban_ma check (owner_phone is null) not valid");
+    const boLead = async () => {
+      await c.query("set local role quy_hang_app");
+      await c.query("select set_config('app.company_id', $1, true), set_config('app.user_id', $2, true)", [a.companyId, a.dauChu.userId]);
+      await c.query("select app.discard_lead($1)", [id]);
+      await c.query("reset role");
+    };
+    await c.query("savepoint sp");
+    await assert.rejects(boLead(), /leads_phone_chi_ban_ma/);
+    await c.query("rollback to savepoint sp");
+    await c.query("reset role");
+    await maHoaLai(c, KHOA_DEV);
+    await boLead();
+    assert.ok((await c.query("select discarded_at from leads where id = $1", [id])).rows[0].discarded_at instanceof Date);
+  } finally {
+    await c.query("rollback");
+    c.release();
+  }
+});
+
+test("mã hoá số chủ: kiểm trùng lead so dấu vết", async () => {
+  const [a, b] = [await SAN_A, await SAN_B];
+  await hangCoSo(a, "0900000061");
+  const la = await nhapLead(a, "+84900000061", "[Toà kiểm trùng]");
+  assert.equal(la.outcome, "owner_has_agent", "lead về đầu chủ giữ chủ nhà cùng số");
+  const lb = await nhapLead(b, "0900000061", "[Toà kiểm trùng]");
+  assert.equal(lb.outcome, "new", "sàn khác không khớp chủ nhà của sàn này");
+  const [ha, hb] = [(await docLead(la.id)).owner_phone_hash, (await docLead(lb.id)).owner_phone_hash];
+  assert.notDeepEqual(ha, hb, "hai sàn cùng số có dấu vết khác nhau");
+  const ham = await appPool.query(
+    `select p.proname, pg_get_function_identity_arguments(p.oid) args from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'app' and p.proname = 'lead_dedupe_facts'`,
+  );
+  assert.deepEqual(ham.rows.map((r) => r.args), ["p_phone_hash bytea, p_building text, p_unit text, p_open_statuses text[]"]);
+  const chuSo = await appPool.query(
+    `select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'app' and exists (
+       select 1 from unnest(p.proargnames, p.proargtypes::oid[]) as a(ten, kieu) where a.ten ilike '%phone%' and a.kieu = 'text'::regtype)`,
+  );
+  assert.deepEqual(chuSo.rows, [], "còn hàm nhận số chủ dạng chữ");
 });

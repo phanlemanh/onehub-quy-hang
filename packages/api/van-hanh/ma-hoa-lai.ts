@@ -21,7 +21,7 @@ async function chay(): Promise<void> {
     await client.query("begin");
     const kq = await maHoaLai(client, khoa);
     await client.query("commit");
-    console.log(`đã mã hoá ${kq.daMaHoa} dòng, ${kq.daCoBanMa} dòng đã là bản mã`);
+    console.log(`đã mã hoá ${kq.daMaHoa} dòng, ${kq.daCoBanMa} dòng đã là bản mã, ${kq.daMaHoaLead} lead`);
   } catch (e) {
     await client.query("rollback").catch(() => {});
     throw e;

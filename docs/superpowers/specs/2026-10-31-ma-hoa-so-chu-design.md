@@ -116,8 +116,8 @@ hỏng thì Postgres in «Failing row contains (…số…)»; nay dòng chỉ c
 ## 8. Bảng lead (hàng 24 gộp trước — mở lại Cổng Phạm vi, AC-11, AC-12)
 
 Giám sát chốt hàng 24 (PR #44) gộp trước 62. Migration 007 của hàng 24 tạo `leads.owner_phone text not null` và
-`app.lead_dedupe_facts(p_phone text, …)` so số rõ với `listing_owners.owner_phone` và `leads.owner_phone`. Migration 008
-(chưa lên main nên còn sửa được) thêm:
+`app.lead_dedupe_facts(p_phone text, …)` so số rõ với `listing_owners.owner_phone` và `leads.owner_phone`. Hook của kho
+chặn sửa 008 đã commit, nên phần lead là migration thứ hai `009_ma_hoa_so_lead.sql` (giám sát cấp, G-4):
 
 - `leads.owner_phone_enc`, `leads.owner_phone_hash` — cùng khuôn và ràng buộc như chủ nhà; ngữ cảnh bản mã
   `leads:<company_id>:<lead_id>`. `owner_phone` bỏ `not null`, thêm `leads_phone_chi_ban_ma check (owner_phone is null)`
@@ -126,7 +126,8 @@ Giám sát chốt hàng 24 (PR #44) gộp trước 62. Migration 007 của hàng
 - `app.lead_dedupe_facts(p_phone_hash bytea, p_building text, p_unit text, p_open_statuses text[])` — drop bản cũ, so
   `owner_phone_hash` của chủ nhà và của lead trước. Không hàm nào của cơ sở dữ liệu còn nhận số chủ dạng chữ.
 - `createLead` (`packages/api/src/leads/store.ts`) mã hoá số và tính dấu vết theo sàn trước khi gọi hàm dữ kiện và ghi
-  lead; khoá đọc một lần ở `registerLeadRoutes` như ở chủ nhà.
+  lead; chữ ký hàm giữ nguyên (hàng 25 cũng sửa tệp này), khoá đọc bằng `khoaSoChu()` trong hàm — bản thật thiếu khoá đã
+  bị chặn lúc dựng API ở đường chủ nhà.
 - Lệnh mã hoá lại phủ thêm bảng `leads` (`daMaHoaLead`), validate `leads_phone_chi_ban_ma`.
 - Lead phải có số: `leads_phone_co_so check (owner_phone is not null or owner_phone_enc is not null)` thay chỗ `not null`
   cũ (năm mục bắt buộc của hàng 24).

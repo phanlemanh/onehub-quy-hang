@@ -824,9 +824,9 @@ async function withLeadB(fn) {
     await c.query("update listings set unit_number = 'A-02.06' where id = $1", [LISTING_NB]);
     await c.query(
       `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion,
-                          desired_listing_time, owner_phone, outcome, matched_agent_user_id, matched_listing_id)
-       values ($1, $2, $3, '[Toà]', 'A-02.06', 'sale', 3200000000, 'included', 'now', $4, 'unit_has_open_listing', $3, $5)`,
-      [LEAD_B, COMPANY_B, U_DC_B, SO_MAU, LISTING_NB],
+                          desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id)
+       values ($1, $2, $3, '[Toà]', 'A-02.06', 'sale', 3200000000, 'included', 'now', $4, $5, 'unit_has_open_listing', $3, $6)`,
+      [LEAD_B, COMPANY_B, U_DC_B, BAN_MA_MAU, DAU_VET_MAU, LISTING_NB],
     );
     await c.query("set local role quy_hang_app");
     return fn(c);
@@ -848,12 +848,13 @@ test("lead: sàn A không thấy dữ kiện, lead của sàn B và không ghi �
   await withLeadB(async (c) => {
     // Đối chứng dương: ở sàn B cùng số, cùng căn ra đủ hai dữ kiện.
     await lamNguoi(c, U_DC_B, COMPANY_B);
-    const b = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'a 02.06', $2)", [SO_MAU, MO])).rows[0];
+    // Hàng 62 (migration 009): hàm dữ kiện nhận dấu vết; bộ dựng dùng chung một dấu vết mẫu cho chủ nhà và lead.
+    const b = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'a 02.06', $2)", [DAU_VET_MAU, MO])).rows[0];
     assert.deepEqual(b, { open_listing_id: LISTING_NB, open_listing_agent: U_DC_B, owner_agent: U_DC_B });
     assert.equal((await c.query("select 1 from leads where id = $1", [LEAD_B])).rowCount, 1);
     // Sàn A: cùng số, cùng toà, cùng căn — không dữ kiện nào của B.
     await lamNguoi(c, U_TN_A);
-    const a = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'A-02.06', $2)", [SO_MAU, MO])).rows[0];
+    const a = (await c.query("select * from app.lead_dedupe_facts($1, '[Toà]', 'A-02.06', $2)", [DAU_VET_MAU, MO])).rows[0];
     assert.equal(a.open_listing_id, null, "sàn A thấy hàng mở của sàn B");
     // Số mẫu cũng là chủ nhà của mọi hàng sàn A (withNguon) — dữ kiện chủ phải là đầu chủ của A, không phải của B.
     assert.notEqual(a.owner_agent, U_DC_B, "sàn A thấy đầu chủ của sàn B");
@@ -861,9 +862,9 @@ test("lead: sàn A không thấy dữ kiện, lead của sàn B và không ghi �
     await expectError(
       c,
       `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
-                          owner_phone, outcome)
-       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, 'new')`,
-      [COMPANY_B, U_TN_A, SO_MAU],
+                          owner_phone_enc, owner_phone_hash, outcome)
+       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, $4, 'new')`,
+      [COMPANY_B, U_TN_A, BAN_MA_MAU, DAU_VET_MAU],
       /row-level security/,
     );
     await expectError(c, "select app.discard_lead($1)", [LEAD_B], /không có lead này/);
@@ -878,6 +879,46 @@ test("lead: vai API không đọc được cột số, không sửa, không xoá
     await expectError(c, "select owner_phone from leads where id = $1", [LEAD_B], /permission denied/);
     await expectError(c, "update leads set outcome = 'new' where id = $1", [LEAD_B], /permission denied/);
     await expectError(c, "delete from leads where id = $1", [LEAD_B], /permission denied/);
+  });
+});
+
+const CHEN_LEAD = (cot) =>
+  `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time, ${cot}, outcome)
+   values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', $3, $4, 'new')`;
+
+test("số chủ của lead: cơ sở dữ liệu từ chối số rõ, vai API không đọc ba cột", { skip }, async () => {
+  await withLeadB(async (c) => {
+    await lamNguoi(c, U_DC_B, COMPANY_B);
+    for (const cot of ["owner_phone", "owner_phone_enc", "owner_phone_hash"]) {
+      await c.query("savepoint sp");
+      await expectError(c, `select ${cot} from leads where id = $1`, [LEAD_B], /permission denied/);
+      await c.query("rollback to savepoint sp");
+    }
+    // Vai API (telesales vai đầu chủ của B) chèn lead số rõ: ràng buộc từ chối.
+    await c.query("savepoint sp");
+    await expectError(c, CHEN_LEAD("owner_phone, owner_phone_hash"), [COMPANY_B, U_DC_B, SO_MAU, DAU_VET_MAU], /leads_phone_chi_ban_ma|leads_phone_cap/);
+    await c.query("rollback to savepoint sp");
+    await c.query("reset role");
+    await expectError(c, "update leads set owner_phone = $2 where id = $1", [LEAD_B, SO_MAU], /leads_phone_chi_ban_ma/);
+    // Đối chứng dương: bản mã đúng khuôn chèn được.
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, U_DC_B, COMPANY_B);
+    assert.equal((await c.query(CHEN_LEAD("owner_phone_enc, owner_phone_hash"), [COMPANY_B, U_DC_B, BAN_MA_MAU, DAU_VET_MAU])).rowCount, 1);
+  });
+});
+
+test("số chủ của lead: lead không số bị từ chối", { skip }, async () => {
+  await withLeadB(async (c) => {
+    await c.query("reset role");
+    await expectError(
+      c,
+      `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time, outcome)
+       values (gen_random_uuid(), $1, $2, '[Toà]', 'sale', 1, 'included', 'now', 'new')`,
+      [COMPANY_B, U_DC_B],
+      /leads_phone_co_so/,
+    );
+    // Đối chứng dương: cùng câu, có bản mã và dấu vết thì chèn được.
+    assert.equal((await c.query(CHEN_LEAD("owner_phone_enc, owner_phone_hash"), [COMPANY_B, U_DC_B, BAN_MA_MAU, DAU_VET_MAU])).rowCount, 1);
   });
 });
 

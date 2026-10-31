@@ -1,5 +1,5 @@
 import type pg from "pg";
-import { dauVetSo, maHoaSo, nguCanhChuNha, type KhoaSoChu } from "./ma-hoa";
+import { dauVetSo, maHoaSo, nguCanhChuNha, nguCanhLead, type KhoaSoChu } from "./ma-hoa";
 
 /**
  * Mã hoá lại số chủ còn ở dạng chữ rõ (hàng 62, ADR-0013). Lệnh dòng lệnh chạy bằng vai chủ ở
@@ -10,8 +10,14 @@ import { dauVetSo, maHoaSo, nguCanhChuNha, type KhoaSoChu } from "./ma-hoa";
  * số dòng, không số chủ, không khoá.
  */
 
-/** Phần lõi: bên gọi giữ giao dịch. Cuối cùng validate ràng buộc — từ đây cơ sở dữ liệu bảo đảm không còn số rõ. */
-export async function maHoaLai(client: pg.ClientBase, khoa: KhoaSoChu): Promise<{ daMaHoa: number; daCoBanMa: number }> {
+/**
+ * Phần lõi: bên gọi giữ giao dịch. Phủ chủ nhà và lead (hàng 24). Cuối cùng validate hai ràng buộc — từ đây cơ sở dữ liệu
+ * bảo đảm không còn số rõ ở hai bảng.
+ */
+export async function maHoaLai(
+  client: pg.ClientBase,
+  khoa: KhoaSoChu,
+): Promise<{ daMaHoa: number; daCoBanMa: number; daMaHoaLead: number }> {
   const cot = await client.query(
     "select 1 from information_schema.columns where table_schema = 'public' and table_name = 'listing_owners' and column_name = 'owner_phone_enc'",
   );
@@ -25,7 +31,17 @@ export async function maHoaLai(client: pg.ClientBase, khoa: KhoaSoChu): Promise<
       [r.company_id, r.listing_id, maHoaSo(r.owner_phone, nguCanhChuNha(r.company_id, r.listing_id), khoa), dauVetSo(r.owner_phone, r.company_id, khoa)],
     );
   }
+  const lead = await client.query<{ company_id: string; id: string; owner_phone: string }>(
+    "select company_id, id, owner_phone from public.leads where owner_phone is not null for update",
+  );
+  for (const r of lead.rows) {
+    await client.query(
+      "update public.leads set owner_phone = null, owner_phone_enc = $3, owner_phone_hash = $4 where company_id = $1 and id = $2",
+      [r.company_id, r.id, maHoaSo(r.owner_phone, nguCanhLead(r.company_id, r.id), khoa), dauVetSo(r.owner_phone, r.company_id, khoa)],
+    );
+  }
   await client.query("alter table public.listing_owners validate constraint listing_owners_phone_chi_ban_ma");
+  await client.query("alter table public.leads validate constraint leads_phone_chi_ban_ma");
   const tong = await client.query<{ n: number }>("select count(*)::int n from public.listing_owners where owner_phone_enc is not null");
-  return { daMaHoa: rows.length, daCoBanMa: tong.rows[0]!.n - rows.length };
+  return { daMaHoa: rows.length, daCoBanMa: tong.rows[0]!.n - rows.length, daMaHoaLead: lead.rows.length };
 }
