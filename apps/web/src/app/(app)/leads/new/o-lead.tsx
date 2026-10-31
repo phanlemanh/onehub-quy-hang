@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import {
   LISTING_TIME_LABELS,
@@ -79,25 +79,27 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
       return con;
     });
 
-  async function docMa() {
+  /** Tra mã căn trong danh mục (hàng 9); trả căn đọc được để bước gửi dùng ngay, không chờ state. */
+  async function docMa(): Promise<{ buildingName: string; unitNumber: string } | null> {
     setBaoMa(null);
     setCanDoc(null);
-    if (!maCan.trim()) return;
+    if (!maCan.trim()) return null;
     const r = await nguon.traMa(maCan.trim());
     if ("khong" in r) {
       setBaoMa(r.khong);
-      return;
+      return null;
     }
     setToaChon(r.buildingName);
     setCanDoc(r.unitNumber);
     sua("buildingName");
+    return r;
   }
 
-  function thanLead() {
+  function thanLead(toa: string, can: string | null) {
     return {
       ownerPhone: so,
-      ...(toaChon && { buildingName: toaChon }),
-      ...(canDoc && { unitNumber: canDoc }),
+      ...(toa && { buildingName: toa }),
+      ...(can && { unitNumber: can }),
       ...(need && { need }),
       ...(gia && { listPrice: soTien(gia) }),
       ...(phi && { feeInclusion: phi }),
@@ -107,7 +109,14 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
 
   async function gui(e: FormEvent) {
     e.preventDefault();
-    const than = thanLead();
+    // Gõ mã căn rồi bấm gửi ngay: lượt tra lúc rời ô có thể chưa xong — tra ở đây và dùng kết quả trả về.
+    let toa = toaChon;
+    let can = canDoc;
+    if (maCan.trim() && !canDoc) {
+      const r = await docMa();
+      if (r) [toa, can] = [r.buildingName, r.unitNumber];
+    }
+    const than = thanLead(toa, can);
     const kiem = validateLeadInput(than);
     if (!kiem.ok) {
       setLoi(Object.fromEntries(kiem.errors.map((x) => [x.path, LOI_CHU[x.path] ?? x.reason])));
@@ -129,10 +138,14 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
       setGia("");
       setPhi("");
       setThoiGian("");
-      soRef.current?.focus();
     } else if ("mang" in r) setLoiMang(true);
     else setLoi(Object.fromEntries(Object.entries(r.loi).map(([k, v]) => [k, LOI_CHU[k] ?? v])));
   }
+
+  // Gửi xong thì về ô số chủ cho lead kế — sau khi ô hết khoá, vì ô đang khoá không nhận tiêu điểm.
+  useEffect(() => {
+    if (ketQua && !dangGui) soRef.current?.focus();
+  }, [ketQua, dangGui]);
 
   async function boLead() {
     if (ketQua && (await nguon.bo(ketQua.id))) setKetQua({ ...ketQua, discarded: true });

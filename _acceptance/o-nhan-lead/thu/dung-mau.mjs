@@ -75,5 +75,5 @@ console.log("\nNgười mẫu (đăng nhập bằng email, mã ở nhật ký m�
 for (const n of d.nguoi) console.log(`  ${n.email.padEnd(32)} ${n.vai.join(", ")}`);
 console.log("\nBa ca của bài chấm màn:");
 console.log(`  căn trùng   số ${L01.soDienThoai} · mã căn ${L01.maCan}`);
-console.log(`  chủ trùng   số ${L02.soDienThoai} · mã căn B-09.08`);
-console.log("  không trùng số 0900 000 088 · mã căn B-09.09");
+console.log(`  chủ trùng   số ${L02.soDienThoai} · mã căn B-07.04`);
+console.log("  không trùng số 0900 000 088 · mã căn B-07.05 (số khác mỗi lần chấm: 0900 000 08x)");
