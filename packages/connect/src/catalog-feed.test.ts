@@ -6,10 +6,10 @@ const feed = {
   schemaVersion: 0,
   provider: "onehub-invest",
   measuredAt: "2026-10-29T08:00:00+07:00",
-  projects: [
+  subdivisions: [
     {
-      projectKey: "p-1",
-      projectName: "[Tên dự án]",
+      subdivisionKey: "p-1",
+      subdivisionName: "[Tên khu]",
       complexName: null,
       buildings: [
         {
@@ -24,6 +24,8 @@ const feed = {
               livingArea: 42.9,
               bedroomsTotal: 1,
               directionFaces: "Đông Nam",
+              propertyType: "Residential",
+              propertySubType: "Condominium",
             },
           ],
         },
@@ -38,7 +40,7 @@ test("gói đúng khuôn thì nhận", () => {
 
 test("khoá lạ bị từ chối — đường dẫn bài gốc không lọt vào được", () => {
   const withUrl = structuredClone(feed);
-  Object.assign(withUrl.projects[0]!.buildings[0]!.units[0]!, { sourceUrl: "https://example.com/tin/1" });
+  Object.assign(withUrl.subdivisions[0]!.buildings[0]!.units[0]!, { sourceUrl: "https://example.com/tin/1" });
   assert.equal(CatalogFeed.safeParse(withUrl).success, false);
 });
 
@@ -48,6 +50,6 @@ test("sai phiên bản khuôn thì từ chối cả gói", () => {
 
 test("UPI sai dạng thì từ chối", () => {
   const bad = structuredClone(feed);
-  bad.projects[0]!.buildings[0]!.units[0]!.upi = "A.2305";
+  bad.subdivisions[0]!.buildings[0]!.units[0]!.upi = "A.2305";
   assert.equal(CatalogFeed.safeParse(bad).success, false);
 });

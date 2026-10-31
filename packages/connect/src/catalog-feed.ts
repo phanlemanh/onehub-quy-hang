@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * Khuôn của loại kết nối «nguồn danh mục» (catalog_source), chiều vào.
  *
- * Bên cung cấp đầu tiên là OneHub Invest (ADR-0017 §5): dự án → toà → trục → căn từ danh bạ vật thể. Tên trường theo
+ * Bên cung cấp đầu tiên là OneHub Invest (ADR-0017 §5): khu → toà → trục → căn từ danh bạ vật thể. Tên trường theo
  * RESO DD 2.1 như ADR-0013/ADR-0016 của Invest: toà = BuildingName, phân khu = ComplexName, trục = extension Stack,
  * định danh căn = UPI kiểu `urn:onehub:upi`.
  *
@@ -26,6 +26,9 @@ export const CatalogUnit = z
     livingArea: z.number().positive().nullable(),
     bedroomsTotal: z.number().int().nonnegative().nullable(),
     directionFaces: z.string().min(1).nullable(),
+    // Loại hình RESO nguyên văn (hàng 72, ADR-0016 quyết định 1); cặp hợp lệ do lõi kiểm.
+    propertyType: z.string().min(1),
+    propertySubType: z.string().min(1),
   })
   .strict();
 
@@ -37,10 +40,10 @@ export const CatalogBuilding = z
   })
   .strict();
 
-export const CatalogProject = z
+export const CatalogSubdivision = z
   .object({
-    projectKey: z.string().min(1),
-    projectName: z.string().min(1),
+    subdivisionKey: z.string().min(1),
+    subdivisionName: z.string().min(1),
     complexName: z.string().min(1).nullable(),
     buildings: z.array(CatalogBuilding),
   })
@@ -52,7 +55,7 @@ export const CatalogFeed = z
     provider: z.string().min(1),
     /** Mốc đo của bên cung cấp, như ADR-0014: số cũ phải nhận ra được là cũ. */
     measuredAt: z.string().datetime({ offset: true }),
-    projects: z.array(CatalogProject),
+    subdivisions: z.array(CatalogSubdivision),
   })
   .strict();
 
