@@ -1,0 +1,36 @@
+{
+  "feature_plain": "Mỗi vòng sửa hay dựng màn sẽ có một trang đặt màn mới cạnh màn mẫu của nhóm, cùng khổ và cùng trạng thái; màn đầu tiên của một nhóm chưa có trong bản đồ khuôn bị chặn cho tới khi chính vòng ấy tạo mục bản đồ và khuôn; mỗi vòng giao diện ghi lại số đo gửi kit.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ liệt sẵn cặp ảnh cần chụp (màn mới · màn mẫu) cho mỗi màn vòng chạm, theo từng trạng thái và hai khổ 1440, 375 — kể cả màn mới chưa lưu vào git; vòng chỉ sửa tài liệu thì nói rõ là không có gì để chụp."},
+    {"id":"AC-2","p":"Sẽ ghép các cặp ảnh thành một trang, mỗi hàng màn mới đứng cạnh màn mẫu cùng cỡ; thiếu ảnh nào thì trang báo đỏ đúng ô ấy và lệnh không qua."},
+    {"id":"AC-3","p":"Sẽ chứng màn mẫu của cả bốn nhóm đang có (Người dùng, đăng nhập, Hôm nay, chuông) mở được ở đúng các trạng thái đã khai, ở hai khổ."},
+    {"id":"AC-4","p":"Sẽ chặn một màn thật không thuộc nhóm nào của bản đồ, nói tên màn và bảo tạo mục bản đồ; thêm mục bản đồ hợp lệ thì hết chặn; trang chỉ chuyển hướng không bị chặn."},
+    {"id":"AC-5","p":"Sẽ chặn cả ở bước chấm theo vòng và ở lint đầy đủ, kể cả khi vòng chỉ thêm đúng một màn mới ngoài bản đồ; cây hiện tại vẫn sạch."},
+    {"id":"AC-6","p":"Sẽ ghi cho mỗi vòng: số màn theo khuôn, số lần răng khuôn bắt được trên các commit của vòng, số lệch chủ sản phẩm thấy khi dùng."},
+    {"id":"AC-7","p":"Sẽ chép kèm giờ máy, giờ chờ, token, phần trăm hạn mức tuần và số lần gọi người, rồi soạn sẵn một dòng báo cho kit; vòng chưa đo giờ máy thì ghi rõ «chưa đo», không bịa số."},
+    {"id":"AC-8","p":"Sẽ viết luật cho người và tác tử: xếp nhóm và xem màn mẫu trước khi dựng, nhóm mới tạo mục bản đồ ngay trong vòng ấy, ba lệnh chạy ở bước nào, gửi trang ghép kèm thẻ cổng trước khi ký, lệch thấy khi dùng ghi ở đâu."},
+    {"id":"AC-9","p":"Sẽ tự áp lên chính vòng này: hồ sơ có số đo của vòng và trang ảnh màn mẫu của bốn nhóm."}
+  ],
+  "wont_do": [
+    {"id":"OOS-1","p":"KHÔNG dựng khuôn cho nhóm chưa có màn (Bảng hàng…) — khuôn sinh cùng màn đầu tiên, từ hàng 14."},
+    {"id":"OOS-2","p":"KHÔNG đưa bước chụp vào công cụ thiết kế của kit hay khối «Khuôn» trên thẻ cổng — việc của kit."},
+    {"id":"OOS-3","p":"KHÔNG tự chụp bằng trình duyệt chạy ngầm trong lệnh hay CI — ảnh do phiên có trình duyệt chụp."},
+    {"id":"OOS-4","p":"KHÔNG làm đường kiểm cho kho không phải React."}
+  ],
+  "scope_plain": "Bốn điều cố ý để ngoài vòng này:",
+  "coverage_plain": [
+    {"i":0,"p":"Bốn loại vòng đều có tiêu chí: chạm màn của nhóm (AC-1, AC-2), chỉ sửa tài liệu (AC-1, AC-5), dựng màn đầu nhóm mới (AC-4, AC-5), không chạm màn (AC-9)."},
+    {"i":1,"p":"Năm vật đều có tiêu chí: danh sách cặp ảnh, trang ghép, chặn màn ngoài bản đồ, số đo, luật bằng chữ."},
+    {"i":2,"p":"Mỗi chốt chặn có cả chiều xanh khi đủ, chiều đỏ có tên khi thiếu, và chiều im khi không liên quan."},
+    {"i":3,"p":"Số gửi kit có đủ ba số khuôn (theo khuôn, răng bắt, lệch lọt) và các số giờ máy của kit."},
+    {"i":4,"p":"Để sau: đăng báo lên kênh của kit (Hỏi-1), khối «Khuôn» trên thẻ cổng của kit."},
+    {"i":5,"p":"Không bao giờ: tự chụp bằng trình duyệt chạy ngầm trong CI."}
+  ],
+  "gap_probe_plain": [
+    {"i":0,"p":"P0 — Lựa chọn hai khổ và tập trạng thái đối chiếu thiếu căn cứ thật; đã tách thành hai lựa chọn có căn cứ (luật xem màn ở khổ máy tính và 375 của kho; trạng thái chỉ lấy đúng các trạng thái màn mẫu có)."},
+    {"i":1,"p":"P0 — Lý do đặt chốt chặn «màn ngoài bản đồ» vào bài quét sẵn có chưa đứng; đã ghi lại lý do thật và nói rõ giá: lint đầy đủ nay cũng đỏ khi có màn ngoài bản đồ."},
+    {"i":2,"p":"P1 — Ngưỡng «ảnh màn mới cạnh màn mẫu có ở cổng» chưa có đường đo; đã thêm luật buộc gửi trang ghép kèm thẻ cổng, và khai rằng lần đo đầu trên màn thật là hàng 14."},
+    {"i":3,"p":"P1 — Màn mới chưa lưu vào git có thể bị bỏ sót khỏi danh sách cặp ảnh; đã thêm ca kiểm cho nó."},
+    {"i":4,"p":"P2 — Hai bài kiểm số đo dùng chung một kho thử làm số kỳ vọng mâu thuẫn; đã tách kho và thêm kiểm dòng báo khớp số đã ghi."}
+  ]
+}
