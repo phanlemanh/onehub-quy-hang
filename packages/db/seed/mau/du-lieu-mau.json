@@ -1,0 +1,2537 @@
+{
+  "phienBan": 1,
+  "hatGiong": 20261030,
+  "nhan": "Mẫu",
+  "san": {
+    "ten": "[Mẫu] Sàn thử",
+    "nhan": "Mẫu"
+  },
+  "nguoi": [
+    {
+      "khoa": "telesales",
+      "ten": "[Mẫu] Telesales",
+      "vai": [
+        "telesales"
+      ],
+      "khu": [],
+      "email": "telesales@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    },
+    {
+      "khoa": "dau-chu-1",
+      "ten": "[Mẫu] Đầu chủ 1",
+      "vai": [
+        "listing_agent"
+      ],
+      "khu": [
+        "Toà A"
+      ],
+      "email": "dau-chu-1@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    },
+    {
+      "khoa": "dau-chu-2",
+      "ten": "[Mẫu] Đầu chủ 2",
+      "vai": [
+        "listing_agent"
+      ],
+      "khu": [
+        "Toà B"
+      ],
+      "email": "dau-chu-2@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    },
+    {
+      "khoa": "dau-khach",
+      "ten": "[Mẫu] Đầu khách",
+      "vai": [
+        "buyer_agent"
+      ],
+      "khu": [],
+      "email": "dau-khach@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    },
+    {
+      "khoa": "truong-nhom",
+      "ten": "[Mẫu] Trưởng nhóm",
+      "vai": [
+        "team_lead"
+      ],
+      "khu": [],
+      "email": "truong-nhom@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    },
+    {
+      "khoa": "quan-tri",
+      "ten": "[Mẫu] Quản trị sàn",
+      "vai": [
+        "company_admin"
+      ],
+      "khu": [],
+      "email": "quan-tri@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    }
+  ],
+  "khu": [
+    {
+      "ten": "Toà A",
+      "toa": "A",
+      "nhan": "Mẫu"
+    },
+    {
+      "ten": "Toà B",
+      "toa": "B",
+      "nhan": "Mẫu"
+    }
+  ],
+  "danhMuc": {
+    "schemaVersion": 0,
+    "provider": "[Mẫu] Nguồn danh mục thử",
+    "measuredAt": "2026-10-30T00:00:00+07:00",
+    "projects": [
+      {
+        "projectKey": "mau-du-an-thu",
+        "projectName": "[Mẫu] Dự án căn hộ thử",
+        "complexName": null,
+        "buildings": [
+          {
+            "buildingKey": "A",
+            "buildingName": "Toà A",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:A-01.01",
+                "unitNumber": "A-01.01",
+                "stack": "01",
+                "floor": 1,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-01.02",
+                "unitNumber": "A-01.02",
+                "stack": "02",
+                "floor": 1,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-01.03",
+                "unitNumber": "A-01.03",
+                "stack": "03",
+                "floor": 1,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-01.04",
+                "unitNumber": "A-01.04",
+                "stack": "04",
+                "floor": 1,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-01.05",
+                "unitNumber": "A-01.05",
+                "stack": "05",
+                "floor": 1,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-01.06",
+                "unitNumber": "A-01.06",
+                "stack": "06",
+                "floor": 1,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-02.01",
+                "unitNumber": "A-02.01",
+                "stack": "01",
+                "floor": 2,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-02.02",
+                "unitNumber": "A-02.02",
+                "stack": "02",
+                "floor": 2,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-02.03",
+                "unitNumber": "A-02.03",
+                "stack": "03",
+                "floor": 2,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-02.04",
+                "unitNumber": "A-02.04",
+                "stack": "04",
+                "floor": 2,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-02.05",
+                "unitNumber": "A-02.05",
+                "stack": "05",
+                "floor": 2,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-02.06",
+                "unitNumber": "A-02.06",
+                "stack": "06",
+                "floor": 2,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-03.01",
+                "unitNumber": "A-03.01",
+                "stack": "01",
+                "floor": 3,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-03.02",
+                "unitNumber": "A-03.02",
+                "stack": "02",
+                "floor": 3,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-03.03",
+                "unitNumber": "A-03.03",
+                "stack": "03",
+                "floor": 3,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-03.04",
+                "unitNumber": "A-03.04",
+                "stack": "04",
+                "floor": 3,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-03.05",
+                "unitNumber": "A-03.05",
+                "stack": "05",
+                "floor": 3,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-03.06",
+                "unitNumber": "A-03.06",
+                "stack": "06",
+                "floor": 3,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-04.01",
+                "unitNumber": "A-04.01",
+                "stack": "01",
+                "floor": 4,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-04.02",
+                "unitNumber": "A-04.02",
+                "stack": "02",
+                "floor": 4,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-04.03",
+                "unitNumber": "A-04.03",
+                "stack": "03",
+                "floor": 4,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-04.04",
+                "unitNumber": "A-04.04",
+                "stack": "04",
+                "floor": 4,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-04.05",
+                "unitNumber": "A-04.05",
+                "stack": "05",
+                "floor": 4,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-04.06",
+                "unitNumber": "A-04.06",
+                "stack": "06",
+                "floor": 4,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-05.01",
+                "unitNumber": "A-05.01",
+                "stack": "01",
+                "floor": 5,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-05.02",
+                "unitNumber": "A-05.02",
+                "stack": "02",
+                "floor": 5,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-05.03",
+                "unitNumber": "A-05.03",
+                "stack": "03",
+                "floor": 5,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-05.04",
+                "unitNumber": "A-05.04",
+                "stack": "04",
+                "floor": 5,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-05.05",
+                "unitNumber": "A-05.05",
+                "stack": "05",
+                "floor": 5,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-05.06",
+                "unitNumber": "A-05.06",
+                "stack": "06",
+                "floor": 5,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-06.01",
+                "unitNumber": "A-06.01",
+                "stack": "01",
+                "floor": 6,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-06.02",
+                "unitNumber": "A-06.02",
+                "stack": "02",
+                "floor": 6,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-06.03",
+                "unitNumber": "A-06.03",
+                "stack": "03",
+                "floor": 6,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-06.04",
+                "unitNumber": "A-06.04",
+                "stack": "04",
+                "floor": 6,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-06.05",
+                "unitNumber": "A-06.05",
+                "stack": "05",
+                "floor": 6,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-06.06",
+                "unitNumber": "A-06.06",
+                "stack": "06",
+                "floor": 6,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-07.01",
+                "unitNumber": "A-07.01",
+                "stack": "01",
+                "floor": 7,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-07.02",
+                "unitNumber": "A-07.02",
+                "stack": "02",
+                "floor": 7,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-07.03",
+                "unitNumber": "A-07.03",
+                "stack": "03",
+                "floor": 7,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-07.04",
+                "unitNumber": "A-07.04",
+                "stack": "04",
+                "floor": 7,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-07.05",
+                "unitNumber": "A-07.05",
+                "stack": "05",
+                "floor": 7,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-07.06",
+                "unitNumber": "A-07.06",
+                "stack": "06",
+                "floor": 7,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-08.01",
+                "unitNumber": "A-08.01",
+                "stack": "01",
+                "floor": 8,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-08.02",
+                "unitNumber": "A-08.02",
+                "stack": "02",
+                "floor": 8,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-08.03",
+                "unitNumber": "A-08.03",
+                "stack": "03",
+                "floor": 8,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-08.04",
+                "unitNumber": "A-08.04",
+                "stack": "04",
+                "floor": 8,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-08.05",
+                "unitNumber": "A-08.05",
+                "stack": "05",
+                "floor": 8,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-08.06",
+                "unitNumber": "A-08.06",
+                "stack": "06",
+                "floor": 8,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-09.01",
+                "unitNumber": "A-09.01",
+                "stack": "01",
+                "floor": 9,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-09.02",
+                "unitNumber": "A-09.02",
+                "stack": "02",
+                "floor": 9,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-09.03",
+                "unitNumber": "A-09.03",
+                "stack": "03",
+                "floor": 9,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-09.04",
+                "unitNumber": "A-09.04",
+                "stack": "04",
+                "floor": 9,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-09.05",
+                "unitNumber": "A-09.05",
+                "stack": "05",
+                "floor": 9,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-09.06",
+                "unitNumber": "A-09.06",
+                "stack": "06",
+                "floor": 9,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-10.01",
+                "unitNumber": "A-10.01",
+                "stack": "01",
+                "floor": 10,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-10.02",
+                "unitNumber": "A-10.02",
+                "stack": "02",
+                "floor": 10,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-10.03",
+                "unitNumber": "A-10.03",
+                "stack": "03",
+                "floor": 10,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-10.04",
+                "unitNumber": "A-10.04",
+                "stack": "04",
+                "floor": 10,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-10.05",
+                "unitNumber": "A-10.05",
+                "stack": "05",
+                "floor": 10,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-10.06",
+                "unitNumber": "A-10.06",
+                "stack": "06",
+                "floor": 10,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-11.01",
+                "unitNumber": "A-11.01",
+                "stack": "01",
+                "floor": 11,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-11.02",
+                "unitNumber": "A-11.02",
+                "stack": "02",
+                "floor": 11,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-11.03",
+                "unitNumber": "A-11.03",
+                "stack": "03",
+                "floor": 11,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-11.04",
+                "unitNumber": "A-11.04",
+                "stack": "04",
+                "floor": 11,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-11.05",
+                "unitNumber": "A-11.05",
+                "stack": "05",
+                "floor": 11,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-11.06",
+                "unitNumber": "A-11.06",
+                "stack": "06",
+                "floor": 11,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-12.01",
+                "unitNumber": "A-12.01",
+                "stack": "01",
+                "floor": 12,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-12.02",
+                "unitNumber": "A-12.02",
+                "stack": "02",
+                "floor": 12,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-12.03",
+                "unitNumber": "A-12.03",
+                "stack": "03",
+                "floor": 12,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-12.04",
+                "unitNumber": "A-12.04",
+                "stack": "04",
+                "floor": 12,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-12.05",
+                "unitNumber": "A-12.05",
+                "stack": "05",
+                "floor": 12,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-12.06",
+                "unitNumber": "A-12.06",
+                "stack": "06",
+                "floor": 12,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-13.01",
+                "unitNumber": "A-13.01",
+                "stack": "01",
+                "floor": 13,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-13.02",
+                "unitNumber": "A-13.02",
+                "stack": "02",
+                "floor": 13,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-13.03",
+                "unitNumber": "A-13.03",
+                "stack": "03",
+                "floor": 13,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-13.04",
+                "unitNumber": "A-13.04",
+                "stack": "04",
+                "floor": 13,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-13.05",
+                "unitNumber": "A-13.05",
+                "stack": "05",
+                "floor": 13,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-13.06",
+                "unitNumber": "A-13.06",
+                "stack": "06",
+                "floor": 13,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-14.01",
+                "unitNumber": "A-14.01",
+                "stack": "01",
+                "floor": 14,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-14.02",
+                "unitNumber": "A-14.02",
+                "stack": "02",
+                "floor": 14,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-14.03",
+                "unitNumber": "A-14.03",
+                "stack": "03",
+                "floor": 14,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-14.04",
+                "unitNumber": "A-14.04",
+                "stack": "04",
+                "floor": 14,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-14.05",
+                "unitNumber": "A-14.05",
+                "stack": "05",
+                "floor": 14,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-14.06",
+                "unitNumber": "A-14.06",
+                "stack": "06",
+                "floor": 14,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-15.01",
+                "unitNumber": "A-15.01",
+                "stack": "01",
+                "floor": 15,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-15.02",
+                "unitNumber": "A-15.02",
+                "stack": "02",
+                "floor": 15,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-15.03",
+                "unitNumber": "A-15.03",
+                "stack": "03",
+                "floor": 15,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-15.04",
+                "unitNumber": "A-15.04",
+                "stack": "04",
+                "floor": 15,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-15.05",
+                "unitNumber": "A-15.05",
+                "stack": "05",
+                "floor": 15,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:A-15.06",
+                "unitNumber": "A-15.06",
+                "stack": "06",
+                "floor": 15,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              }
+            ]
+          },
+          {
+            "buildingKey": "B",
+            "buildingName": "Toà B",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:B-01.01",
+                "unitNumber": "B-01.01",
+                "stack": "01",
+                "floor": 1,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-01.02",
+                "unitNumber": "B-01.02",
+                "stack": "02",
+                "floor": 1,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-01.03",
+                "unitNumber": "B-01.03",
+                "stack": "03",
+                "floor": 1,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-01.04",
+                "unitNumber": "B-01.04",
+                "stack": "04",
+                "floor": 1,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-01.05",
+                "unitNumber": "B-01.05",
+                "stack": "05",
+                "floor": 1,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-01.06",
+                "unitNumber": "B-01.06",
+                "stack": "06",
+                "floor": 1,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-02.01",
+                "unitNumber": "B-02.01",
+                "stack": "01",
+                "floor": 2,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-02.02",
+                "unitNumber": "B-02.02",
+                "stack": "02",
+                "floor": 2,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-02.03",
+                "unitNumber": "B-02.03",
+                "stack": "03",
+                "floor": 2,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-02.04",
+                "unitNumber": "B-02.04",
+                "stack": "04",
+                "floor": 2,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-02.05",
+                "unitNumber": "B-02.05",
+                "stack": "05",
+                "floor": 2,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-02.06",
+                "unitNumber": "B-02.06",
+                "stack": "06",
+                "floor": 2,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-03.01",
+                "unitNumber": "B-03.01",
+                "stack": "01",
+                "floor": 3,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-03.02",
+                "unitNumber": "B-03.02",
+                "stack": "02",
+                "floor": 3,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-03.03",
+                "unitNumber": "B-03.03",
+                "stack": "03",
+                "floor": 3,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-03.04",
+                "unitNumber": "B-03.04",
+                "stack": "04",
+                "floor": 3,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-03.05",
+                "unitNumber": "B-03.05",
+                "stack": "05",
+                "floor": 3,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-03.06",
+                "unitNumber": "B-03.06",
+                "stack": "06",
+                "floor": 3,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-04.01",
+                "unitNumber": "B-04.01",
+                "stack": "01",
+                "floor": 4,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-04.02",
+                "unitNumber": "B-04.02",
+                "stack": "02",
+                "floor": 4,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-04.03",
+                "unitNumber": "B-04.03",
+                "stack": "03",
+                "floor": 4,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-04.04",
+                "unitNumber": "B-04.04",
+                "stack": "04",
+                "floor": 4,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-04.05",
+                "unitNumber": "B-04.05",
+                "stack": "05",
+                "floor": 4,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-04.06",
+                "unitNumber": "B-04.06",
+                "stack": "06",
+                "floor": 4,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-05.01",
+                "unitNumber": "B-05.01",
+                "stack": "01",
+                "floor": 5,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-05.02",
+                "unitNumber": "B-05.02",
+                "stack": "02",
+                "floor": 5,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-05.03",
+                "unitNumber": "B-05.03",
+                "stack": "03",
+                "floor": 5,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-05.04",
+                "unitNumber": "B-05.04",
+                "stack": "04",
+                "floor": 5,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-05.05",
+                "unitNumber": "B-05.05",
+                "stack": "05",
+                "floor": 5,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-05.06",
+                "unitNumber": "B-05.06",
+                "stack": "06",
+                "floor": 5,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-06.01",
+                "unitNumber": "B-06.01",
+                "stack": "01",
+                "floor": 6,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-06.02",
+                "unitNumber": "B-06.02",
+                "stack": "02",
+                "floor": 6,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-06.03",
+                "unitNumber": "B-06.03",
+                "stack": "03",
+                "floor": 6,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-06.04",
+                "unitNumber": "B-06.04",
+                "stack": "04",
+                "floor": 6,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-06.05",
+                "unitNumber": "B-06.05",
+                "stack": "05",
+                "floor": 6,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-06.06",
+                "unitNumber": "B-06.06",
+                "stack": "06",
+                "floor": 6,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-07.01",
+                "unitNumber": "B-07.01",
+                "stack": "01",
+                "floor": 7,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-07.02",
+                "unitNumber": "B-07.02",
+                "stack": "02",
+                "floor": 7,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-07.03",
+                "unitNumber": "B-07.03",
+                "stack": "03",
+                "floor": 7,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-07.04",
+                "unitNumber": "B-07.04",
+                "stack": "04",
+                "floor": 7,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-07.05",
+                "unitNumber": "B-07.05",
+                "stack": "05",
+                "floor": 7,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-07.06",
+                "unitNumber": "B-07.06",
+                "stack": "06",
+                "floor": 7,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-08.01",
+                "unitNumber": "B-08.01",
+                "stack": "01",
+                "floor": 8,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-08.02",
+                "unitNumber": "B-08.02",
+                "stack": "02",
+                "floor": 8,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-08.03",
+                "unitNumber": "B-08.03",
+                "stack": "03",
+                "floor": 8,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-08.04",
+                "unitNumber": "B-08.04",
+                "stack": "04",
+                "floor": 8,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-08.05",
+                "unitNumber": "B-08.05",
+                "stack": "05",
+                "floor": 8,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-08.06",
+                "unitNumber": "B-08.06",
+                "stack": "06",
+                "floor": 8,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-09.01",
+                "unitNumber": "B-09.01",
+                "stack": "01",
+                "floor": 9,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-09.02",
+                "unitNumber": "B-09.02",
+                "stack": "02",
+                "floor": 9,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-09.03",
+                "unitNumber": "B-09.03",
+                "stack": "03",
+                "floor": 9,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-09.04",
+                "unitNumber": "B-09.04",
+                "stack": "04",
+                "floor": 9,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-09.05",
+                "unitNumber": "B-09.05",
+                "stack": "05",
+                "floor": 9,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-09.06",
+                "unitNumber": "B-09.06",
+                "stack": "06",
+                "floor": 9,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-10.01",
+                "unitNumber": "B-10.01",
+                "stack": "01",
+                "floor": 10,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-10.02",
+                "unitNumber": "B-10.02",
+                "stack": "02",
+                "floor": 10,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-10.03",
+                "unitNumber": "B-10.03",
+                "stack": "03",
+                "floor": 10,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-10.04",
+                "unitNumber": "B-10.04",
+                "stack": "04",
+                "floor": 10,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-10.05",
+                "unitNumber": "B-10.05",
+                "stack": "05",
+                "floor": 10,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-10.06",
+                "unitNumber": "B-10.06",
+                "stack": "06",
+                "floor": 10,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-11.01",
+                "unitNumber": "B-11.01",
+                "stack": "01",
+                "floor": 11,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-11.02",
+                "unitNumber": "B-11.02",
+                "stack": "02",
+                "floor": 11,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-11.03",
+                "unitNumber": "B-11.03",
+                "stack": "03",
+                "floor": 11,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-11.04",
+                "unitNumber": "B-11.04",
+                "stack": "04",
+                "floor": 11,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-11.05",
+                "unitNumber": "B-11.05",
+                "stack": "05",
+                "floor": 11,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-11.06",
+                "unitNumber": "B-11.06",
+                "stack": "06",
+                "floor": 11,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-12.01",
+                "unitNumber": "B-12.01",
+                "stack": "01",
+                "floor": 12,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-12.02",
+                "unitNumber": "B-12.02",
+                "stack": "02",
+                "floor": 12,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-12.03",
+                "unitNumber": "B-12.03",
+                "stack": "03",
+                "floor": 12,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-12.04",
+                "unitNumber": "B-12.04",
+                "stack": "04",
+                "floor": 12,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-12.05",
+                "unitNumber": "B-12.05",
+                "stack": "05",
+                "floor": 12,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-12.06",
+                "unitNumber": "B-12.06",
+                "stack": "06",
+                "floor": 12,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-13.01",
+                "unitNumber": "B-13.01",
+                "stack": "01",
+                "floor": 13,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-13.02",
+                "unitNumber": "B-13.02",
+                "stack": "02",
+                "floor": 13,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-13.03",
+                "unitNumber": "B-13.03",
+                "stack": "03",
+                "floor": 13,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-13.04",
+                "unitNumber": "B-13.04",
+                "stack": "04",
+                "floor": 13,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-13.05",
+                "unitNumber": "B-13.05",
+                "stack": "05",
+                "floor": 13,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-13.06",
+                "unitNumber": "B-13.06",
+                "stack": "06",
+                "floor": 13,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-14.01",
+                "unitNumber": "B-14.01",
+                "stack": "01",
+                "floor": 14,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-14.02",
+                "unitNumber": "B-14.02",
+                "stack": "02",
+                "floor": 14,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-14.03",
+                "unitNumber": "B-14.03",
+                "stack": "03",
+                "floor": 14,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-14.04",
+                "unitNumber": "B-14.04",
+                "stack": "04",
+                "floor": 14,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-14.05",
+                "unitNumber": "B-14.05",
+                "stack": "05",
+                "floor": 14,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-14.06",
+                "unitNumber": "B-14.06",
+                "stack": "06",
+                "floor": 14,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-15.01",
+                "unitNumber": "B-15.01",
+                "stack": "01",
+                "floor": 15,
+                "livingArea": 54.2,
+                "bedroomsTotal": 1,
+                "directionFaces": "Đông Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-15.02",
+                "unitNumber": "B-15.02",
+                "stack": "02",
+                "floor": 15,
+                "livingArea": 68.5,
+                "bedroomsTotal": 2,
+                "directionFaces": "Đông Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-15.03",
+                "unitNumber": "B-15.03",
+                "stack": "03",
+                "floor": 15,
+                "livingArea": 75,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Bắc"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-15.04",
+                "unitNumber": "B-15.04",
+                "stack": "04",
+                "floor": 15,
+                "livingArea": 82.3,
+                "bedroomsTotal": 2,
+                "directionFaces": "Tây Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-15.05",
+                "unitNumber": "B-15.05",
+                "stack": "05",
+                "floor": 15,
+                "livingArea": 96.8,
+                "bedroomsTotal": 3,
+                "directionFaces": "Nam"
+              },
+              {
+                "upi": "urn:onehub:upi:mau:B-15.06",
+                "unitNumber": "B-15.06",
+                "stack": "06",
+                "floor": 15,
+                "livingArea": 110.4,
+                "bedroomsTotal": 3,
+                "directionFaces": "Bắc"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "chuNha": [
+    {
+      "ma": "CN-01",
+      "ten": "[Mẫu] Chủ nhà 01",
+      "soDienThoai": "0900 000 001",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-02",
+      "ten": "[Mẫu] Chủ nhà 02",
+      "soDienThoai": "0900 000 002",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-03",
+      "ten": "[Mẫu] Chủ nhà 03",
+      "soDienThoai": "0900 000 003",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-04",
+      "ten": "[Mẫu] Chủ nhà 04",
+      "soDienThoai": "0900 000 004",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-05",
+      "ten": "[Mẫu] Chủ nhà 05",
+      "soDienThoai": "0900 000 005",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-06",
+      "ten": "[Mẫu] Chủ nhà 06",
+      "soDienThoai": "0900 000 006",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-07",
+      "ten": "[Mẫu] Chủ nhà 07",
+      "soDienThoai": "0900 000 007",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-08",
+      "ten": "[Mẫu] Chủ nhà 08",
+      "soDienThoai": "0900 000 008",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-09",
+      "ten": "[Mẫu] Chủ nhà 09",
+      "soDienThoai": "0900 000 009",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-10",
+      "ten": "[Mẫu] Chủ nhà 10",
+      "soDienThoai": "0900 000 010",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-11",
+      "ten": "[Mẫu] Chủ nhà 11",
+      "soDienThoai": "0900 000 011",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-12",
+      "ten": "[Mẫu] Chủ nhà 12",
+      "soDienThoai": "0900 000 012",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-13",
+      "ten": "[Mẫu] Chủ nhà 13",
+      "soDienThoai": "0900 000 013",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-14",
+      "ten": "[Mẫu] Chủ nhà 14",
+      "soDienThoai": "0900 000 014",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-15",
+      "ten": "[Mẫu] Chủ nhà 15",
+      "soDienThoai": "0900 000 015",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-16",
+      "ten": "[Mẫu] Chủ nhà 16",
+      "soDienThoai": "0900 000 016",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-17",
+      "ten": "[Mẫu] Chủ nhà 17",
+      "soDienThoai": "0900 000 017",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-18",
+      "ten": "[Mẫu] Chủ nhà 18",
+      "soDienThoai": "0900 000 018",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-19",
+      "ten": "[Mẫu] Chủ nhà 19",
+      "soDienThoai": "0900 000 019",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-20",
+      "ten": "[Mẫu] Chủ nhà 20",
+      "soDienThoai": "0900 000 020",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-21",
+      "ten": "[Mẫu] Chủ nhà 21",
+      "soDienThoai": "0900 000 021",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-22",
+      "ten": "[Mẫu] Chủ nhà 22",
+      "soDienThoai": "0900 000 022",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-23",
+      "ten": "[Mẫu] Chủ nhà 23",
+      "soDienThoai": "0900 000 023",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-24",
+      "ten": "[Mẫu] Chủ nhà 24",
+      "soDienThoai": "0900 000 024",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-25",
+      "ten": "[Mẫu] Chủ nhà 25",
+      "soDienThoai": "0900 000 025",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-26",
+      "ten": "[Mẫu] Chủ nhà 26",
+      "soDienThoai": "0900 000 026",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-27",
+      "ten": "[Mẫu] Chủ nhà 27",
+      "soDienThoai": "0900 000 027",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-28",
+      "ten": "[Mẫu] Chủ nhà 28",
+      "soDienThoai": "0900 000 028",
+      "dauChu": "dau-chu-2",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-29",
+      "ten": "[Mẫu] Chủ nhà 29",
+      "soDienThoai": "0900 000 029",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CN-30",
+      "ten": "[Mẫu] Chủ nhà 30",
+      "soDienThoai": "0900 000 030",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    }
+  ],
+  "hang": [
+    {
+      "ma": "H-01",
+      "maCan": "A-01.03",
+      "upi": "urn:onehub:upi:mau:A-01.03",
+      "trangThai": "Closed",
+      "gia": 4650000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-08",
+      "ghiChu": "Xem nhà sau 18 giờ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-02",
+      "maCan": "A-01.05",
+      "upi": "urn:onehub:upi:mau:A-01.05",
+      "trangThai": "Withdrawn",
+      "gia": 6390000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-06",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-03",
+      "maCan": "A-02.04",
+      "upi": "urn:onehub:upi:mau:A-02.04",
+      "trangThai": "Closed",
+      "gia": 5930000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-24",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-04",
+      "maCan": "A-02.06",
+      "upi": "urn:onehub:upi:mau:A-02.06",
+      "trangThai": "Incomplete",
+      "gia": 5960000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-26",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-05",
+      "maCan": "A-03.04",
+      "upi": "urn:onehub:upi:mau:A-03.04",
+      "trangThai": "Withdrawn",
+      "gia": 6170000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-27",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-06",
+      "maCan": "A-03.05",
+      "upi": "urn:onehub:upi:mau:A-03.05",
+      "trangThai": "Incomplete",
+      "gia": 6390000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-01",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-07",
+      "maCan": "A-04.06",
+      "upi": "urn:onehub:upi:mau:A-04.06",
+      "trangThai": "Active",
+      "gia": 8060000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-11",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-08",
+      "maCan": "A-05.03",
+      "upi": "urn:onehub:upi:mau:A-05.03",
+      "trangThai": "Closed",
+      "gia": 3830000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-04",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-09",
+      "maCan": "A-06.03",
+      "upi": "urn:onehub:upi:mau:A-06.03",
+      "trangThai": "Active",
+      "gia": 5550000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-21",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-10",
+      "maCan": "A-06.04",
+      "upi": "urn:onehub:upi:mau:A-06.04",
+      "trangThai": "Hold",
+      "gia": 4940000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-20",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-11",
+      "maCan": "A-08.03",
+      "upi": "urn:onehub:upi:mau:A-08.03",
+      "trangThai": "Active",
+      "gia": 4950000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-03",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-12",
+      "maCan": "A-08.05",
+      "upi": "urn:onehub:upi:mau:A-08.05",
+      "trangThai": "Incomplete",
+      "gia": 4360000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-13",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-13",
+      "maCan": "A-10.05",
+      "upi": "urn:onehub:upi:mau:A-10.05",
+      "trangThai": "Active",
+      "gia": 6970000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-03",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-14",
+      "maCan": "A-11.01",
+      "upi": "urn:onehub:upi:mau:A-11.01",
+      "trangThai": "Withdrawn",
+      "gia": 3140000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-30",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-15",
+      "maCan": "A-11.02",
+      "upi": "urn:onehub:upi:mau:A-11.02",
+      "trangThai": "Active",
+      "gia": 3080000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-18",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-16",
+      "maCan": "A-12.05",
+      "upi": "urn:onehub:upi:mau:A-12.05",
+      "trangThai": "Incomplete",
+      "gia": 5900000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-09",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-17",
+      "maCan": "A-13.01",
+      "upi": "urn:onehub:upi:mau:A-13.01",
+      "trangThai": "Active",
+      "gia": 3090000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-02",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-18",
+      "maCan": "A-13.03",
+      "upi": "urn:onehub:upi:mau:A-13.03",
+      "trangThai": "Pending",
+      "gia": 3900000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-12",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-19",
+      "maCan": "A-15.04",
+      "upi": "urn:onehub:upi:mau:A-15.04",
+      "trangThai": "Pending",
+      "gia": 4200000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-29",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-20",
+      "maCan": "A-15.05",
+      "upi": "urn:onehub:upi:mau:A-15.05",
+      "trangThai": "Incomplete",
+      "gia": 4360000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-10",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-21",
+      "maCan": "B-01.04",
+      "upi": "urn:onehub:upi:mau:B-01.04",
+      "trangThai": "Hold",
+      "gia": 4530000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-01",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-22",
+      "maCan": "B-01.05",
+      "upi": "urn:onehub:upi:mau:B-01.05",
+      "trangThai": "Closed",
+      "gia": 6390000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-09",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-23",
+      "maCan": "B-03.04",
+      "upi": "urn:onehub:upi:mau:B-03.04",
+      "trangThai": "Active",
+      "gia": 5350000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-07",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-24",
+      "maCan": "B-04.01",
+      "upi": "urn:onehub:upi:mau:B-04.01",
+      "trangThai": "Incomplete",
+      "gia": 3850000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-22",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-25",
+      "maCan": "B-06.02",
+      "upi": "urn:onehub:upi:mau:B-06.02",
+      "trangThai": "Withdrawn",
+      "gia": 4800000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-02",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-26",
+      "maCan": "B-08.02",
+      "upi": "urn:onehub:upi:mau:B-08.02",
+      "trangThai": "Active",
+      "gia": 3360000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-10",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-27",
+      "maCan": "B-08.04",
+      "upi": "urn:onehub:upi:mau:B-08.04",
+      "trangThai": "Pending",
+      "gia": 4530000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-23",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-28",
+      "maCan": "B-08.06",
+      "upi": "urn:onehub:upi:mau:B-08.06",
+      "trangThai": "Closed",
+      "gia": 5410000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-06",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-29",
+      "maCan": "B-09.01",
+      "upi": "urn:onehub:upi:mau:B-09.01",
+      "trangThai": "Hold",
+      "gia": 2820000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-05",
+      "ghiChu": "Xem nhà sau 18 giờ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-30",
+      "maCan": "B-10.01",
+      "upi": "urn:onehub:upi:mau:B-10.01",
+      "trangThai": "Pending",
+      "gia": 2440000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-05",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-31",
+      "maCan": "B-12.01",
+      "upi": "urn:onehub:upi:mau:B-12.01",
+      "trangThai": "Hold",
+      "gia": 3470000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-17",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-32",
+      "maCan": "B-12.02",
+      "upi": "urn:onehub:upi:mau:B-12.02",
+      "trangThai": "Withdrawn",
+      "gia": 3630000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-28",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-33",
+      "maCan": "B-13.01",
+      "upi": "urn:onehub:upi:mau:B-13.01",
+      "trangThai": "Hold",
+      "gia": 3580000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-25",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-34",
+      "maCan": "B-13.02",
+      "upi": "urn:onehub:upi:mau:B-13.02",
+      "trangThai": "Active",
+      "gia": 3560000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-19",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-35",
+      "maCan": "B-14.02",
+      "upi": "urn:onehub:upi:mau:B-14.02",
+      "trangThai": "Pending",
+      "gia": 4380000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-15",
+      "ghiChu": "Nội thất cơ bản",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-36",
+      "maCan": "B-14.04",
+      "upi": "urn:onehub:upi:mau:B-14.04",
+      "trangThai": "Active",
+      "gia": 4610000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-04",
+      "ghiChu": "Xem nhà sau 18 giờ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-37",
+      "maCan": "B-14.05",
+      "upi": "urn:onehub:upi:mau:B-14.05",
+      "trangThai": "Active",
+      "gia": 4360000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-07",
+      "ghiChu": "Có sổ hồng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-38",
+      "maCan": "B-14.06",
+      "upi": "urn:onehub:upi:mau:B-14.06",
+      "trangThai": "Active",
+      "gia": 6400000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-14",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-39",
+      "maCan": "B-15.01",
+      "upi": "urn:onehub:upi:mau:B-15.01",
+      "trangThai": "Active",
+      "gia": 3360000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CN-08",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "H-40",
+      "maCan": "B-15.05",
+      "upi": "urn:onehub:upi:mau:B-15.05",
+      "trangThai": "Active",
+      "gia": 6580000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-2",
+      "chuNha": "CN-16",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    }
+  ],
+  "lead": [
+    {
+      "ma": "L-01",
+      "ten": "[Mẫu] Chủ nhà mới 01",
+      "soDienThoai": "0900 000 031",
+      "toa": "A",
+      "maCan": "A-02.06",
+      "ghiChu": "Trùng căn đang có hàng mở",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-02",
+      "ten": "[Mẫu] Chủ nhà mới 02",
+      "soDienThoai": "0900 000 001",
+      "toa": "A",
+      "maCan": "A-12.06",
+      "ghiChu": "Trùng số chủ nhà đã có",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-03",
+      "ten": "[Mẫu] Chủ nhà mới 03",
+      "soDienThoai": "0900 000 033",
+      "toa": "A",
+      "maCan": "A-09.05",
+      "ghiChu": "Gọi qua tổng đài, đã biết căn",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-04",
+      "ten": "[Mẫu] Chủ nhà mới 04",
+      "soDienThoai": "0900 000 034",
+      "toa": "A",
+      "maCan": null,
+      "ghiChu": "Mới biết toà",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-05",
+      "ten": "[Mẫu] Chủ nhà mới 05",
+      "soDienThoai": "0900 000 035",
+      "toa": "B",
+      "maCan": null,
+      "ghiChu": "Mới biết toà",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-06",
+      "ten": "[Mẫu] Chủ nhà mới 06",
+      "soDienThoai": "0900 000 036",
+      "toa": "A",
+      "maCan": "A-05.06",
+      "ghiChu": "Gọi qua tổng đài, đã biết căn",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-07",
+      "ten": "[Mẫu] Chủ nhà mới 07",
+      "soDienThoai": "0900 000 037",
+      "toa": "A",
+      "maCan": null,
+      "ghiChu": "Mới biết toà",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-08",
+      "ten": "[Mẫu] Chủ nhà mới 08",
+      "soDienThoai": "0900 000 038",
+      "toa": "A",
+      "maCan": "A-04.03",
+      "ghiChu": "Gọi qua tổng đài, đã biết căn",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-09",
+      "ten": "[Mẫu] Chủ nhà mới 09",
+      "soDienThoai": "0900 000 039",
+      "toa": "B",
+      "maCan": null,
+      "ghiChu": "Mới biết toà",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-10",
+      "ten": "[Mẫu] Chủ nhà mới 10",
+      "soDienThoai": "0900 000 040",
+      "toa": "A",
+      "maCan": null,
+      "ghiChu": "Mới biết toà",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-11",
+      "ten": "[Mẫu] Chủ nhà mới 11",
+      "soDienThoai": "0900 000 041",
+      "toa": "A",
+      "maCan": "A-07.05",
+      "ghiChu": "Gọi qua tổng đài, đã biết căn",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "L-12",
+      "ten": "[Mẫu] Chủ nhà mới 12",
+      "soDienThoai": "0900 000 042",
+      "toa": "A",
+      "maCan": "A-13.04",
+      "ghiChu": "Gọi qua tổng đài, đã biết căn",
+      "nhan": "Mẫu"
+    }
+  ]
+}
