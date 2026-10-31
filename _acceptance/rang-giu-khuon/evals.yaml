@@ -1,0 +1,59 @@
+schema_version: 1
+feature_slug: rang-giu-khuon
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; rang-giu-khuon.test.mjs chạy ESLint thật (lớp ESLint, cấu hình chỉ bật quy-hang-ui/ban-do-khuon) trên bản sao design/patterns + apps/web/src trong thư mục tạm. Đối chứng dương trước: bản sao lành 0 lỗi luật. Ma trận viết trước 4 ca × (số lỗi, dòng, thông điệp): settings/thu/page.tsx nhập Frame → 1 lỗi ở dòng nhập, thông điệp chứa «settings/thu/page.tsx», «Frame», «cai-dat-san», «MucCaiDat», «design/patterns/cai-dat-san.md»; (auth)/login/page.tsx nhập Card → nhóm xac-thuc, khuôn Khung; (app)/today/page.tsx nhập Empty → trang-tam, Placeholder; settings/users/quan-nguoi.tsx nhập Alert → trang-thai, TrangThai."
+    paths: ["packages/ui-lint/rules/ban-do-khuon.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/index.mjs", "packages/ui-lint/tests/rang-giu-khuon.test.mjs", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; cùng tệp kiểm: bốn ca phải im, mỗi ca assert 0 lỗi luật ban-do-khuon và assert tệp ấy thật sự được lint (results[0].filePath): settings/khung.tsx (tệp khuôn tự nhập Frame); settings/page.tsx sửa cho nhập Frame (ngoại lệ đã khai của cai-dat-san, ngoài nhan_dien của trang-tam); components/shell/app-shell.tsx nhập Frame (ngoài mọi nhóm màn, Frame không cấm ở trang-thai); (auth)/login/page.tsx nhập Button (khối không cấm). Đối chứng: settings/page.tsx nhập Empty → 1 lỗi nhóm trang-thai — chứng ca ngoại lệ im vì đúng nhóm, không vì luật tắt ở tệp ấy."
+    paths: ["packages/ui-lint/rules/ban-do-khuon.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/rang-giu-khuon.test.mjs", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca `import { Frame as F } from \"@/components/reui/frame\"` trong settings/thu/page.tsx → đúng 1 lỗi, thông điệp chứa «Frame» (tên gốc), không chứa « F »; đối chứng: cùng tệp nhập `{ Badge as F }` → 0 lỗi."
+    paths: ["packages/ui-lint/rules/ban-do-khuon.mjs", "packages/ui-lint/tests/rang-giu-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; bản sao xoá ly_do của ngoại lệ đầu ở cai-dat-san.md: ESLint trên (app)/today/page.tsx (không lệch gì) báo 1 lỗi luật ban-do-khuon chứa «cai-dat-san.md: ngoai_le[0] thiếu ly_do»; kiem-chuan.mjs --root <bản sao> thoát 1 và stderr chứa cùng chuỗi. Đối chứng dương cùng bản sao trước khi phá: ESLint 0 lỗi luật, kiem-chuan thoát 0 (bản sao mang đủ tệp kiem-chuan cần)."
+    paths: ["packages/ui-lint/rules/ban-do-khuon.mjs", "packages/ui-lint/kiem-chuan.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/rang-giu-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; kiem-chuan.mjs --root <bản sao lành> thoát 0 và stdout có dòng đúng «khuôn: 4 nhóm · 0 lỗi đọc · 0 lệch»; bản sao Người dùng trả <main> ở gốc → thoát 1, stderr có dòng chứa «settings/users/page.tsx» và «cai-dat-san»."
+    paths: ["packages/ui-lint/kiem-chuan.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/rang-giu-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; bản sao là một kho git tạm (git init, commit cây lành), commit thêm nợ cũ (Người dùng trả <main> ở gốc) làm <ref>. Năm ca, mỗi ca từ <ref>: (a) chỉ sửa docs/x.md và _acceptance/y.md → --base <ref> thoát 0, stdout đúng «khuôn: không tệp nào của nhóm đổi», không nêu users/page.tsx; đối chứng: không --base cùng cây → thoát 1 nêu users/page.tsx; (b) sửa (auth)/no-company/page.tsx bỏ title → thoát 1, đúng một dòng lệch nêu no-company, không nêu users/page.tsx; (c) tạo settings/thu/page.tsx MỚI chưa git add, gốc <main> → thoát 1 nêu settings/thu/page.tsx; (d) sửa một dòng comment trong users/page.tsx (không chạm dòng gốc) → thoát 0, có dòng «nợ cũ» nêu users/page.tsx; đối chứng: sửa chính dòng <main> ấy → thoát 1; (e) xoá ly_do ở design/patterns/cai-dat-san.md → thoát 1 nêu «ngoai_le[0] thiếu ly_do»."
+    paths: ["packages/ui-lint/ban-do-khuon.mjs", "packages/ui-lint/lib/ban-do.mjs", "packages/ui-lint/tests/rang-giu-khuon.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; rang-giu-khuon.test.mjs ca «cấu hình thật»: ESLint với cwd = gốc kho thật và tệp eslint.config.mjs của kho: lintText một trang settings/thu/page.tsx nhập Frame (filePath ảo dưới apps/web/src) → đúng 1 thông điệp ruleId quy-hang-ui/ban-do-khuon, severity 2; calculateConfigForFile cho một tệp mỗi nhóm (login/page.tsx, users/page.tsx, today/page.tsx, quan-nguoi.tsx) trả luật ở mức 2; lint apps/web/src với noInlineConfig: true → 0 thông điệp quy-hang-ui/ban-do-khuon. Thêm: SKILL.md của quy-hang-ui có dòng bảng «| `ban-do-khuon` |»."
+    paths: ["packages/ui-lint/**", "eslint.config.mjs", "apps/web/src/**", ".agents/skills/quy-hang-ui/SKILL.md"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0 trên cây thật; đầu ra có «mức nợ giao diện: 0/» và dòng «khuôn: 4 nhóm · 0 lỗi đọc · 0 lệch» (bước kiem-chuan)."
+    paths: ["packages/ui-lint/**", "apps/web/src/**", "design/patterns/**", ".agents/skills/quy-hang-ui/SKILL.md"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]

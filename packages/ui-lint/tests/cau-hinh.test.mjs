@@ -15,12 +15,12 @@ const luatGiaoDien = async (rel) => {
 };
 
 describe("eslint.config.mjs áp luật quy-hang-ui", () => {
-  it("mã giao diện của app: đủ mười luật ở mức error", async () => {
+  it("mã giao diện của app: đủ mười một luật ở mức error", async () => {
     const got = await luatGiaoDien("apps/web/src/app/page.tsx");
-    assert.equal(MUOI.length, 10);
+    assert.equal(MUOI.length, 11);
     for (const r of MUOI) assert.equal(got[r]?.[0], 2, `${r} phải mức error (2) cho page.tsx`);
   });
-  it("khối đã chuyển thể (components/blocks) chịu đủ mười luật", async () => {
+  it("khối đã chuyển thể (components/blocks) chịu đủ mười một luật", async () => {
     const got = await luatGiaoDien("apps/web/src/components/blocks/khoi.tsx");
     for (const r of MUOI) assert.equal(got[r]?.[0], 2, `${r} phải mức error cho components/blocks`);
   });

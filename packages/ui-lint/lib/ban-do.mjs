@@ -203,7 +203,8 @@ function nguonNhap(root, sf, ten) {
   for (const s of sf.statements) {
     if (!ts.isImportDeclaration(s) || !s.importClause?.namedBindings || !ts.isNamedImports(s.importClause.namedBindings)) continue;
     for (const e of s.importClause.namedBindings.elements)
-      if (e.name.text === ten) return { spec: s.moduleSpecifier.text, tep: giaiNhap(root, s.moduleSpecifier.text, sf.fileName) };
+      if (e.name.text === ten)
+        return { spec: s.moduleSpecifier.text, tep: giaiNhap(root, s.moduleSpecifier.text, sf.fileName), dong: sf.getLineAndCharacterOfPosition(s.getStart()).line + 1 };
   }
   return null;
 }
@@ -355,38 +356,39 @@ export function kiemCay(root, banDo) {
     const khe = g.data.khe_bat_buoc;
     const nhom = g.data.nhom;
     const r = (ket[nhom] = { donVi: g.donVi, theoKhuon: [], ngoaiLe: [...g.ngoaiLe].sort(), nhanDien: g.khop, lech: [] });
-    const lech = (tep, dieu) => r.lech.push({ tep, nhom, dieu });
+    const lech = (tep, dieu, dong = null) => r.lech.push({ tep, nhom, dieu, dong });
     for (const tep of g.khop) {
       if (g.ngoaiLe.has(tep) || tep === g.khuonTep) continue;
       const sf = docMa(root, tep);
       const kiemNguon = () => {
         const n = nguonNhap(root, sf, ten);
-        if (!n) return lech(tep, `dùng <${ten}> mà không nhập từ tệp khuôn ${g.khuonTep}`), false;
-        if (n.tep !== g.khuonTep) return lech(tep, `nhập ${ten} từ «${n.spec}», không phải tệp khuôn ${g.khuonTep}`), false;
+        if (!n) return lech(tep, `dùng <${ten}> mà không nhập từ tệp khuôn ${g.khuonTep}`, 1), false;
+        if (n.tep !== g.khuonTep) return lech(tep, `nhập ${ten} từ «${n.spec}», không phải tệp khuôn ${g.khuonTep}`, n.dong), false;
         return true;
       };
       if (g.donVi === "man") {
         const fn = sf.statements.find((s) => ts.isFunctionDeclaration(s) && coXuat(s) && coMacDinh(s));
         if (!fn) {
-          lech(tep, "không có thành phần xuất mặc định (export default function)");
+          lech(tep, "không có thành phần xuất mặc định (export default function)", 1);
           continue;
         }
         const jsx = cacReturn(fn).flatMap(cacGoc).filter((e) => ts.isJsxElement(e) || ts.isJsxSelfClosingElement(e) || ts.isJsxFragment(e));
         if (!jsx.length) {
-          lech(tep, `không trả JSX — tệp không dựng màn thì khai ngoại lệ có lý do`);
+          lech(tep, `không trả JSX — tệp không dựng màn thì khai ngoại lệ có lý do`, sf.getLineAndCharacterOfPosition(fn.getStart()).line + 1);
           continue;
         }
         let dat = true;
         for (const e of jsx) {
           const the = ts.isJsxFragment(e) ? "<>" : tenThe(e);
+          const dongE = sf.getLineAndCharacterOfPosition(e.getStart()).line + 1;
           if (the !== ten) {
-            lech(tep, `gốc là <${the === "<>" ? "" : the}>, phải là <${ten}> (khuôn của nhóm ${nhom})`);
+            lech(tep, `gốc là <${the === "<>" ? "" : the}>, phải là <${ten}> (khuôn của nhóm ${nhom})`, dongE);
             dat = false;
             continue;
           }
           const thieu = thieuKhe(e, khe);
           if (thieu.length) {
-            lech(tep, `<${ten}> thiếu khe ${thieu.map((k) => `«${k}»`).join(", ")}`);
+            lech(tep, `<${ten}> thiếu khe ${thieu.map((k) => `«${k}»`).join(", ")}`, dongE);
             dat = false;
           }
         }
@@ -399,15 +401,15 @@ export function kiemCay(root, banDo) {
         if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
           const the = tenThe(n);
           const dong = sf.getLineAndCharacterOfPosition(n.getStart()).line + 1;
-          if (g.data.cam_ngoai_khuon.includes(the)) lech(tep, `dòng ${dong}: <${the}> dùng ngoài khuôn — dựng qua <${ten}>`);
+          if (g.data.cam_ngoai_khuon.includes(the)) lech(tep, `dòng ${dong}: <${the}> dùng ngoài khuôn — dựng qua <${ten}>`, dong);
           else if (the && /^[a-z]/.test(the)) {
             const role = thuocTinh(n).find((a) => ts.isJsxAttribute(a) && a.name.getText() === "role");
             const v = role?.initializer && ts.isStringLiteral(role.initializer) ? role.initializer.text : null;
-            if (v === "alert" || v === "status") lech(tep, `dòng ${dong}: thẻ <${the}> trần mang role="${v}" — dựng qua <${ten}>`);
+            if (v === "alert" || v === "status") lech(tep, `dòng ${dong}: thẻ <${the}> trần mang role="${v}" — dựng qua <${ten}>`, dong);
           } else if (the === ten) {
             if (daKiemNguon === null) daKiemNguon = kiemNguon();
             const thieu = thieuKhe(n, khe);
-            if (thieu.length) lech(tep, `dòng ${dong}: <${ten}> thiếu khe ${thieu.map((k) => `«${k}»`).join(", ")}`);
+            if (thieu.length) lech(tep, `dòng ${dong}: <${ten}> thiếu khe ${thieu.map((k) => `«${k}»`).join(", ")}`, dong);
             else if (daKiemNguon) r.theoKhuon.push(`${tep}:${dong}`);
           }
         }
@@ -423,4 +425,14 @@ export function kiemCay(root, banDo) {
 export function dongTomTat(nhom, r) {
   const loai = r.donVi === "phan-tu" ? "chỗ" : "tệp";
   return `${nhom}: ${r.theoKhuon.length} ${loai} theo khuôn · ${r.ngoaiLe.length} ngoại lệ · ${r.lech.length} lệch`;
+}
+
+/**
+ * Các nhóm mà một tệp (đường tương đối gốc kho) thuộc về theo `nhan_dien` — khớp theo mẫu, nên tệp chưa có trên đĩa
+ * (eslint lint chữ) vẫn xét được. Bỏ nhóm mà tệp là ngoại lệ hay chính là tệp khuôn của nhóm.
+ */
+export function nhomCuaTep(banDo, tep) {
+  return banDo.nhom.filter(
+    (g) => !g.hong && g.khuonTep && tep !== g.khuonTep && !g.ngoaiLe.has(tep) && g.data.nhan_dien.some((gl) => globRegex(gl).test(tep)),
+  );
 }
