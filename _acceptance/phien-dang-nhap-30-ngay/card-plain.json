@@ -1,0 +1,4 @@
+{
+  "feature_plain": "Đăng nhập một lần dùng được 30 ngày thay vì 7; dùng mỗi ngày thì hạn tự dời ra, kể cả cookie trên trình duyệt.",
+  "analyst_plain": "Các bài kiểm của việc này nằm chung trong bộ kiểm lớn của kho, nên bản trước khi sửa cũng xanh ở mức bộ kiểm; bằng chứng phân biệt là lượt phá-thử — mỗi kiểu phá (bỏ cấu hình, đổi nhịp, proxy không chép cookie, dò tên cookie cứng, dựng lại cookie thiếu thuộc tính, đổi số ngày) đều làm đúng ca tương ứng đỏ."
+}

@@ -36,3 +36,12 @@ Còn thiếu đoạn nối người → phiên → sàn đang làm → giao dị
 - Test cần Postgres của API ở `packages/api/test-db/`, chạy trong `npm run db:test` — job `isolation` của CI chạy chúng.
 - Hàng 7 thêm quyền ghi `company_members` cho vai API cùng vai, khu, lời mời bằng migration mới.
 - Mã lỗi và đường của mục 5 (`chon-san`, `chua-gan-san`, `/me/san`…) đổi sang tiếng Anh ở ADR-0007.
+
+## Bổ sung 31/10 — thời hạn phiên
+
+Chủ kho 31/10 nguyên văn «phiên đăng nhập: 30 ngày», duyệt Cổng Phạm vi hồ sơ `phien-dang-nhap-30-ngay` cùng ngày
+(Hỏi-1: trượt theo ngày dùng). Phiên đăng nhập sống 30 ngày và trượt theo ngày dùng: dùng lại sau hơn một ngày thì hạn
+dời về «bây giờ + 30 ngày», làm mới tối đa mỗi ngày một lần; bỏ không 30 ngày thì phải xin mã lại. Hai hằng
+`SESSION_EXPIRES_SEC`, `SESSION_UPDATE_AGE_SEC` ở `packages/api/src/auth/constants.ts`. Cookie trình duyệt trượt theo
+ở bước chặn đầu của bàn làm việc (`apps/web/src/proxy.ts`): mỗi lần mở trang, nó hỏi phiên trong tiến trình và chép
+nguyên văn `Set-Cookie` của better-auth. Chưa có trần tuyệt đối — phiên dùng hằng ngày sống tới khi đăng xuất.
