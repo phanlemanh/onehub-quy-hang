@@ -1,5 +1,35 @@
-import { Placeholder } from "@/components/shell/placeholder";
+import { navigationFor } from "@quy-hang/core";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <Placeholder path="/leads/new" />;
+import { TrangThai } from "@/components/trang-thai";
+import { getApi, readMe } from "@/lib/api";
+
+import { KhungLead } from "./khung";
+import { ONhanLead } from "./nguon-that";
+
+export const dynamic = "force-dynamic";
+
+// Ô nhận lead (L1–L3, hàng 24), dựng qua khuôn KhungLead (design/patterns/o-nhan-lead.md). Vai có nút «+ Lead» ở bảng
+// vai của lõi mới nhập được; API chặn lại cùng luật.
+export default async function Page() {
+  const cookie = (await headers()).get("cookie") ?? "";
+  const me = await readMe(cookie);
+  if (!me) redirect("/login");
+  if (me.companies.length === 0) redirect("/no-company");
+  if (!me.activeCompany) redirect("/select-company");
+  if (!navigationFor(me.activeCompany.roles).actions.includes("new_lead")) {
+    return (
+      <KhungLead>
+        <TrangThai kind="notice" title="Telesales, đầu chủ và trưởng nhóm nhập được lead." />
+      </KhungLead>
+    );
+  }
+  const res = await getApi().request("http://quy-hang.local/api/v1/leads/buildings", { headers: { cookie } });
+  const toa = res.ok ? ((await res.json()) as string[]) : [];
+  return (
+    <KhungLead>
+      <ONhanLead toa={toa} />
+    </KhungLead>
+  );
 }

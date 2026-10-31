@@ -1,0 +1,128 @@
+schema_version: 1
+feature_slug: o-nhan-lead
+# Lệnh máy: `executors.test.core` (kiểm thuần packages/core) và `executors.test.isolation` (bộ cách ly + packages/api/test-db,
+# cần DATABASE_URL tới Postgres dãy L, cổng 5563). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter
+# liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Số chủ
+# trong mọi ca là số mẫu `0900 000 0xx`, tên `[Tên]`; ca trùng lấy từ bộ mẫu hàng 5 (luật 4 của đợt).
+#
+# Dựng chung cho eval ui-check (gọi là «DỰNG L» trong steps):
+#   docker run --rm -d --name quy-hang-db-L -e POSTGRES_PASSWORD=quyhang -p 5563:5432 postgres:16 (đã chạy thì bỏ qua)
+#   export DATABASE_URL=postgres://postgres:quyhang@localhost:5563/postgres && npm run db:migrate
+#   node _acceptance/o-nhan-lead/thu/dung-mau.mjs → nạp sàn mẫu, hàng và chủ nhà của bộ mẫu, in bảng email ↔ vai và mã
+#     căn của ba ca (căn trùng, chủ trùng, không trùng)
+#   máy chủ dev: npm run dev -w @quy-hang/web -- -p 3483, nhật ký ở .acceptance-runs/o-nhan-lead/web-l.log; đăng nhập bằng
+#   email, đọc mã ở nhật ký đó (grep «[ma-dang-nhap] <email> <mã>»)
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «lead: năm mục đủ thì hợp lệ, số chuẩn hoá» có mặt và ok — một lead viết tay đủ năm mục ra deepEqual với giá trị chuẩn (số '0900000031'), và '+84 900 000 031', '0900.000.031', '84900000031' đều ra '0900000031'; ca «lead: thiếu hay sai từng mục nêu đúng khoá» — bảng ca viết trước, mỗi ca một mục (thiếu ownerPhone, số 9 chữ số, thiếu buildingName, buildingName rỗng, need lạ, listPrice 0, âm, thập phân, chuỗi, feeInclusion lạ, desiredListingTime lạ), đếm số ca bằng đúng số dòng bảng, mỗi ca so đúng path; ca «lead: khoá lạ bị từ chối» — khoá 'ownerName', 'floorPrice', 'foo' mỗi khoá một lỗi nêu tên khoá. Chiều đỏ: nới khuôn (bỏ kiểm need) → ca đỏ nêu ca lọt."
+    paths: [packages/core/src/dedupe/**, packages/core/src/access/owner-input.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kiểm trùng: bảng bốn ô của kết quả» có mặt và ok — bảng viết tay bốn ô (hàng mở có/không × đầu chủ có/không), mỗi ô so kết quả và người nhận bằng deepEqual, đếm đúng 4 lần so; ô hai dữ kiện cùng có ra căn trùng với đầu chủ của HÀNG (khác đầu chủ của chủ nhà trong fixture, để phân biệt). Chiều đỏ: đảo thứ tự ưu tiên → ca đỏ nêu ô (có hàng mở, có đầu chủ)."
+    paths: [packages/core/src/dedupe/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/leads.test.ts ca «căn trùng: lead L-01 của bộ mẫu về đầu chủ của hàng đang mở» có mặt và ok — sàn thử nạp hàng của bộ mẫu chứa căn của L-01 ở trạng thái mở cùng đầu chủ đã gán; POST /api/v1/leads với năm mục của L-01 trả 201, outcome 'unit_has_open_listing', tên đầu chủ đúng người đã gán; đọc thẳng bảng bằng kết nối chủ thấy dòng leads có matched_listing_id đúng mã hàng ấy; ca «căn trùng: hàng Đã bán hay Ngừng hẳn không tính» — cùng toà và căn với một hàng Closed của bộ mẫu và một hàng Withdrawn: mỗi lead outcome 'new' (đếm 2); ca «căn trùng: mã gõ khác dạng vẫn khớp» — mã căn của L-01 viết chữ thường, thêm dấu cách, chấm thay gạch: outcome 'unit_has_open_listing'. Chiều đỏ: tính cả hàng nấc cuối là mở → ca nấc cuối đỏ nêu trạng thái."
+    paths: [packages/api/src/leads/**, packages/core/src/dedupe/**, packages/db/migrations/007_o_nhan_lead.sql, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «chủ trùng: lead L-02 về đầu chủ giữ chủ nhà CN-01» có mặt và ok — sàn thử nạp hàng của CN-01 kèm chủ nhà (số của bộ mẫu) và gán đầu chủ của bộ mẫu; POST lead L-02 trên một căn không có hàng mở trả outcome 'owner_has_agent', tên đầu chủ đúng người giữ; ca «chủ trùng: số viết +84 vẫn khớp» — cùng số viết '+84 900 000 001': 'owner_has_agent'; ca «chủ trùng: lead trước đã về đầu chủ» — số mới chưa có ở chủ nhà nào, lead thứ nhất trên căn có hàng mở của đầu chủ X (outcome căn trùng), lead thứ hai cùng số trên căn khác không có hàng mở: outcome 'owner_has_agent' với X. Đối chứng: một số không có ở đâu cho 'new' trong cùng tệp. Chiều đỏ: bỏ vế số ở hàm dữ kiện → ca đỏ nêu số."
+    paths: [packages/api/src/leads/**, packages/core/src/dedupe/**, packages/db/migrations/007_o_nhan_lead.sql, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «không trùng: lead mẫu không khớp ra new và chờ chia» có mặt và ok — các lead L-03..L-12 của bộ mẫu không trùng số hay căn mở với phần đã nạp (tệp kiểm tự lọc ra danh sách ấy rồi assert số lượng ≥ 5, không rỗng) đều trả 'new', không tên đầu chủ, dòng leads có matched_agent_user_id null; ca «không trùng: chỉ biết toà» — lead không có căn mang số mới: 'new'. Chiều đỏ: hàm dữ kiện trả hàng bất kỳ của toà khi không có căn → ca chỉ-toà đỏ."
+    paths: [packages/api/src/leads/**, packages/core/src/dedupe/**, packages/db/migrations/007_o_nhan_lead.sql, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ca của bảng leads có mặt và ok — dưới vai quy_hang_app, sàn A không đọc dòng leads của sàn B và không thêm được dòng mang company_id sàn B; app.lead_dedupe_facts gọi ở sàn A với số và căn chỉ có ở sàn B trả không dữ kiện; ca tự bắt bảng quên bật luật vẫn xanh với bảng mới; và trong leads.test.ts ca «sàn khác: cùng số cùng căn vẫn không trùng» — POST ở sàn A trả 'new'. Chiều đỏ: bỏ điều kiện sàn trong hàm dữ kiện → ca đỏ nêu sàn."
+    paths: [packages/db/migrations/007_o_nhan_lead.sql, packages/db/tests/isolation.test.mjs, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «bản của telesales: không hàng, không số» có mặt và ok — leadResultView trên một lead viết tay mang matchedListingId và ownerPhone '0900000031' ra deepEqual với đối tượng viết tay (outcome, agentName, năm mục trừ số, createdAt, discarded) và quét đệ quy mọi khoá không gặp 'matchedListingId', 'listingId', 'ownerPhone' hay khoá nào của bản tính hàng (STATE_COLUMNS), mọi giá trị không chứa '0900000031', '0900 000 031', '031'; đối chứng dương cùng hàm quét: đối tượng cấy {a:{ownerPhone:'0900000031'}} bị bắt, thông điệp nêu 'a.ownerPhone'. Chiều đỏ: để lọt matchedListingId → ca đỏ nêu khoá."
+    paths: [packages/core/src/dedupe/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bản của telesales qua API không mang hàng hay số» có mặt và ok — thân POST (ba kết quả) và GET /api/v1/leads/{id} không chứa mã hàng khớp, không khoá nào của bản tính hàng, không '0900000031' hay '0900 000 031'; ca «vai API không đọc được cột số của lead» — dưới vai quy_hang_app `select owner_phone from leads` bị từ chối (permission denied), còn `select outcome from leads` đọc được (đối chứng dương); ca «lead người khác nhập trả 404» — đầu chủ khác và telesales khác GET lead của telesales A: 404 cùng thân với mã lead không có. Chiều đỏ: grant đọc cột số → ca đỏ."
+    paths: [packages/api/src/leads/**, packages/db/migrations/007_o_nhan_lead.sql, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bỏ lead: ghi người và lúc, dòng còn» có mặt và ok — lead căn trùng, người nhập POST discard trả 200; đọc thẳng bảng thấy dòng còn, discarded_by là người nhập, discarded_at có; lần hai 409; ca «bỏ lead: sai kết quả hay sai người» — lead 'new' bỏ trả 400; người khác bỏ lead căn trùng trả 404 và dòng không đổi (đếm 2 lần từ chối); ca «bỏ lead: không còn là đầu chủ của chủ nhà» — sau khi bỏ, lead mới cùng số trên căn không có hàng mở trả 'new' (đối chứng: trước khi bỏ cùng ca trả 'owner_has_agent'). Chiều đỏ: hàm bỏ cho người khác → ca đỏ nêu người."
+    paths: [packages/api/src/leads/**, packages/db/migrations/007_o_nhan_lead.sql, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «vai: ba vai nhập được, hai vai bị chặn» có mặt và ok — ma trận viết trước năm dòng (telesales 201, listing_agent 201, team_lead 201, buyer_agent 403, company_admin 403), đếm đúng 5 lần gọi; sau hai lần 403 số dòng leads của sàn không đổi; không cookie trả 401. Chiều đỏ: mở cho đầu khách → ca đỏ nêu vai."
+    paths: [packages/api/src/leads/**, packages/core/src/navigation.ts, packages/api/test-db/leads.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG L (đầu tệp). Khổ 1440x900. Đăng nhập người mẫu Telesales."
+      - "Bấm «+ Lead» ở thanh trên → ghi địa chỉ; chụp evidence/E10-trong.png; ghi nhãn năm ô và chữ nút gửi"
+      - "Bấm gửi khi để trống → chụp evidence/E10-thieu.png; ghi chữ lỗi dưới từng ô"
+      - "Gõ giá 3200000000, chọn «Bao phí» → ghi dòng «Hiểu là…»; đổi «Không bao phí» → ghi lại dòng ấy"
+      - "Gõ mã căn Z-99.99 rồi rời ô → ghi chữ báo dưới ô; chọn «Toà A» ở ô Toà → ghi ô Toà đã chọn"
+      - "Bật DevTools làm chậm mạng (Slow 3G), điền ca không trùng, bấm gửi → chụp ngay evidence/E10-dang-gui.png; ghi chữ nút và nút có khoá (disabled) không; tắt làm chậm"
+      - "Nhập ca không trùng theo bảng của dung-mau.mjs → chụp evidence/E10-khong-trung.png; ghi chữ Alert, có nút «Bỏ lead này» không, giá trị năm ô sau khi gửi, ô nào đang có tiêu điểm (document.activeElement)"
+      - "Nhập ca chủ trùng → chụp evidence/E10-co-dau-chu.png; ghi chữ Alert"
+      - "Nhập ca căn trùng → chụp evidence/E10-can-trung.png; ghi chữ Alert; bấm «Bỏ lead này» → ghi hộp hỏi lại → xác nhận → chụp evidence/E10-da-bo.png; ghi chữ Alert"
+      - "Điền đủ năm ô, chặn mạng tới /api/v1/leads (DevTools offline hay chặn URL) rồi gửi → chụp evidence/E10-loi.png; ghi chữ Alert và giá trị còn trong năm ô"
+    expected: "Năm ô mang nhãn Số chủ nhà · Căn hoặc toà · Nhu cầu · Giá · Thời gian muốn ra hàng (điều kiện phí cạnh giá); trống mà gửi thì có lỗi dưới mỗi ô bắt buộc và không có Alert kết quả. «Hiểu là…» nói 3,2 tỷ và đổi theo điều kiện phí. Mã ngoài danh mục: chữ báo dưới ô, chọn toà được. Đang gửi: nút «Đang kiểm trùng…» khoá. Sau khi gửi thành công: năm ô rỗng, tiêu điểm ở ô số chủ. Ba Alert theo bảng trạng thái của design doc: không trùng «Không trùng — lead chờ chia theo luật của sàn»; chủ trùng nêu tên đầu chủ của bộ mẫu; căn trùng nêu mã căn và tên đầu chủ, có nút «Bỏ lead này» — và hai Alert kia KHÔNG có nút ấy (đối chứng). Sau bỏ: «Đã bỏ lead này — có ghi lại». Lỗi mạng: Alert lỗi, năm ô còn nguyên giá trị đã gõ (đối chứng với năm ô rỗng sau gửi thành công). Không Alert nào hiện số chủ."
+    paths: ["apps/web/src/app/(app)/leads/**", "packages/api/src/leads/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

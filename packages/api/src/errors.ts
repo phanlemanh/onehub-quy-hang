@@ -24,6 +24,10 @@ export const API_ERRORS = {
   // Lớp trường nguồn (ADR-0010).
   listingAgentRequired: { code: "listing-agent-required", status: 403 },
   ownerNotSet: { code: "owner-not-set", status: 404 },
+  // Ô nhận lead (ADR-0012).
+  leadRoleRequired: { code: "lead-role-required", status: 403 },
+  notDuplicateUnit: { code: "not-duplicate-unit", status: 400 },
+  alreadyDiscarded: { code: "already-discarded", status: 409 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;
