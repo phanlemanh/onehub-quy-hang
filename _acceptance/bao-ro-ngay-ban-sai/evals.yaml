@@ -1,0 +1,41 @@
+schema_version: 1
+feature_slug: bao-ro-ngay-ban-sai
+# Hai lệnh máy: `executors.test.core` (kiểm thử thuần của packages/core) và `executors.test.isolation` (bộ cách ly +
+# packages/api/test-db, cần DATABASE_URL tới Postgres dãy X, cổng 5554). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi
+# `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không
+# «# SKIP»/«# TODO». Hai ma trận ngày sống ở MỘT tệp `packages/core/src/listing/ngay-ca.fixture.ts`, viết tay, không suy
+# từ hàm đang kiểm; lõi và test-db cùng nhập tệp ấy.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «ngày không có thật: một lỗi ở closeDate» có mặt và ok — duyệt ma trận NGAY_KHONG_CO_THAT (ít nhất 2025-02-29, 1900-02-29, 2026-02-30, 2026-02-31, 2026-04-31, 2026-06-31, 2026-09-31, 2026-11-31, 2026-01-00, 2026-01-32, 2026-00-10, 2026-13-01, 0000-01-01), mỗi phần tử một lần so, số lần so bằng độ dài ma trận (đếm và assert); payload {to: Closed, closePrice hợp lệ, closeDate} ra deepEqual [{path: 'closeDate', reason: <hằng lời «ngày không có thật» của lõi>}], thông điệp assert nêu ngày. Ca «sai dạng ngày: lỗi dạng ở closeDate» có mặt và ok — `2026-2-3`, `30/02/2026`, `''`, số 20260230 mỗi giá trị ra deepEqual [{path: 'closeDate', reason: <hằng lời «cần ngày YYYY-MM-DD» của lõi>}] (lời lấy từ hằng xuất ở events.ts, không chép chữ), thông điệp assert nêu giá trị đầu vào. Đối chứng dương cùng ca: payload không có closeDate ra []. Chiều đỏ: đưa hàm ngay về Date.parse → ca đỏ nêu ngày đầu tiên lọt (vd 2025-02-29)."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «ngày có thật: không lỗi» có mặt và ok — duyệt ma trận NGAY_CO_THAT (ít nhất 2024-02-29, 2000-02-29, 2026-01-31, 2026-02-28, 2026-03-31, 2026-04-30, 2026-05-31, 2026-06-30, 2026-07-31, 2026-08-31, 2026-09-30, 2026-10-31, 2026-11-30, 2026-12-31, 0001-01-01, 9999-12-31), mỗi phần tử một lần so, đếm bằng độ dài ma trận; payload chốt bán ra []. Chiều đỏ: hàm từ chối ngày nhuận (bỏ luật 400 hay luật 4) → ca đỏ nêu 2000-02-29 hay 2024-02-29."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «Postgres và lõi nhận cùng một tập ngày» có mặt và ok trong packages/api/test-db/ngay-ban/ngay-ban.test.ts — nhập NGAY_CO_THAT và NGAY_KHONG_CO_THAT từ cùng tệp ca của lõi (không chép), mỗi ngày một lần so (đếm bằng tổng hai ma trận), assert HAI vế cho từng ngày: (a) nhãn ma trận khớp Postgres — mỗi ngày NGAY_CO_THAT được `select $1::date` nhận, mỗi ngày NGAY_KHONG_CO_THAT bị từ chối với mã 22008 hoặc 22007 (không lỗi kết nối); (b) lõi nhận ⇔ Postgres nhận, thông điệp nêu ngày và phía nào nhận/từ chối. Chiều đỏ: đưa hàm ngay về Date.parse → ca đỏ ở vế (b), thông điệp nêu 2025-02-29 hay 2026-02-30 kèm «lõi nhận, Postgres từ chối»; thêm 2026-02-30 vào NGAY_CO_THAT trong bản sao → ca đỏ ở vế (a)."
+    paths: [packages/core/src/listing/**, packages/api/test-db/ngay-ban/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «chốt bán với ngày không có thật: 400 nêu closeDate, không ghi» có mặt và ok — hàng được đưa tới Active qua lệnh API; với mỗi ngày của NGAY_KHONG_CO_THAT: POST /api/v1/listings/{id}/events {type: status_changed, payload: {to: Closed, closePrice, closeDate}} trả status 400 và thân deepEqual {error: API_ERRORS.invalidPayload.code, details: [{path: 'closeDate', reason: <hằng lời «ngày không có thật» của lõi>]} — khuôn dựng từ hằng lỗi thật của API và hằng lời của lõi, không chép chữ; đếm listing_events của hàng và bản tính (to_jsonb hàng) trước và sau bằng nhau; đếm số lần gửi bằng độ dài ma trận. Đối chứng dương cùng hàng: chốt bán với 2024-02-29 trả 200, GET hàng ra standardStatus Closed và closeDate '2024-02-29', VÀ `select close_date::text` của bảng hàng ra '2024-02-29' (hai chỗ đọc). Chiều đỏ: đưa hàm ngay về Date.parse → ca đỏ với status 500 ở 2025-02-29."
+    paths: [packages/core/src/listing/**, packages/api/test-db/ngay-ban/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
