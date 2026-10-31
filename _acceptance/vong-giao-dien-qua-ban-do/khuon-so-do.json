@@ -1,0 +1,12 @@
+{
+  "slug": "vong-giao-dien-qua-ban-do",
+  "base": "2f0e71e911046985479a8fa81f269025a5913212",
+  "head": "eb1bbd33aa0c50797334b6a6b203cdf6b26993d8",
+  "tep_theo_khuon": [],
+  "rang_bat": 0,
+  "rang_bat_chi_tiet": [],
+  "lech_lot": 0,
+  "kit": null,
+  "ly_do_kit": "hồ sơ chưa có dòng gio-may trong _acceptance/vong-giao-dien-qua-ban-do/run-log.jsonl",
+  "gioi_han": "răng bắt trước khi commit (lint trong trình soạn, hook cuối lượt) không đếm"
+}
