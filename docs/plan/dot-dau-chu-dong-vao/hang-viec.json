@@ -1,6 +1,6 @@
 {
  "dot": "dau-chu-dong-vao",
- "muc_tieu": "Dựng các màn P0 của đầu chủ và dòng lead vào — Bảng hàng kiểu Sheet, hồ sơ căn và ảnh, nhập Excel, Hôm nay, ô nhận lead tới cuộc gọi — cùng ba việc phải xong trước hai tuần thử: đồng bộ tự lành, mã hoá số chủ, tra căn trùng mã",
+ "muc_tieu": "Dựng các màn P0 của đầu chủ và dòng lead vào — Bảng hàng kiểu Sheet, hồ sơ căn và ảnh, Hôm nay, ô nhận lead tới cuộc gọi — cùng ba việc phải xong trước hai tuần thử: đồng bộ tự lành, mã hoá số chủ, tra căn trùng mã",
  "day": [
   {
    "id": "B",
@@ -266,29 +266,11 @@
    ]
   },
   {
-   "ma": "20",
-   "tep": "docs/plan/lo-trinh.json",
-   "slug": "nhap-excel-ghep-cot",
-   "day": "B",
-   "uu_tien": 14,
-   "s4": "local",
-   "ranh_gioi": [
-    "apps/web/src/app/(app)/imports/**",
-    "_acceptance/nhap-excel-ghep-cot/**"
-   ],
-   "sau": [
-    "5",
-    "9",
-    "11",
-    "15"
-   ]
-  },
-  {
    "ma": "27",
    "tep": "docs/plan/lo-trinh.json",
    "slug": "lead-bon-nac",
    "day": "L",
-   "uu_tien": 15,
+   "uu_tien": 14,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/leads/mine/**",
@@ -303,7 +285,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "san-sang-ban",
    "day": "H",
-   "uu_tien": 16,
+   "uu_tien": 15,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/units/ready/**",
@@ -320,7 +302,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "sua-hang-loat",
    "day": "B",
-   "uu_tien": 17,
+   "uu_tien": 16,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/inventory/bulk/**",
@@ -334,8 +316,8 @@
    "ma": "19",
    "tep": "docs/plan/lo-trinh.json",
    "slug": "che-vung-anh",
-   "day": "H",
-   "uu_tien": 18,
+   "day": "B",
+   "uu_tien": 17,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/units/photos/redact/**",
@@ -346,26 +328,11 @@
    ]
   },
   {
-   "ma": "21",
-   "tep": "docs/plan/lo-trinh.json",
-   "slug": "nhap-excel-nho-mau",
-   "day": "B",
-   "uu_tien": 19,
-   "s4": "local",
-   "ranh_gioi": [
-    "apps/web/src/app/(app)/imports/templates/**",
-    "_acceptance/nhap-excel-nho-mau/**"
-   ],
-   "sau": [
-    "20"
-   ]
-  },
-  {
    "ma": "29",
    "tep": "docs/plan/lo-trinh.json",
    "slug": "goi-ep-gia-dot-hai",
    "day": "G",
-   "uu_tien": 20,
+   "uu_tien": 18,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/units/call/push/**",

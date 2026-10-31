@@ -11,7 +11,7 @@ hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp bảo vệ,
    trùng số thì đổi số của mình (migration chưa commit lên `main` thì chưa bất biến). Không trỏ tới bảng hay cột tạo
    ở migration có số lớn hơn.
 4. Dữ liệu cá nhân thật không vào kho, kể cả ca kiểm của hàng 62: `[Tên]`, `0900 000 0xx`, mọi bản ghi mang nhãn
-   mẫu. Ca kiểm dùng bộ dữ liệu mẫu của hàng 5, không tự sinh bộ riêng; hàng mang `du_lieu: gia` (14, 20, 24) đo trên
+   mẫu. Ca kiểm dùng bộ dữ liệu mẫu của hàng 5, không tự sinh bộ riêng; hàng mang `du_lieu: gia` (14, 24) đo trên
    bộ ấy.
 5. Đợt này không có bài thử. Mã dựng nằm trong vùng của hàng (`ranh_gioi` ở `hang-viec.json`); chạm ngoài vùng thì
    gửi yêu cầu `cham-tep` trước.
@@ -39,7 +39,7 @@ hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp bảo vệ,
 17. Dãy X là dãy neo: giữ chín hàng đã ký (1, 5, 9, 11, 12, 13, 53, 58, 59) để `sau` của đợt này chặn đúng. Dãy X
     nghỉ, không mở chip, không ai ghi danh vào.
 18. Bản đồ khuôn (hàng 58–60, `docs/design/vo-va-ia.md`): màn đầu tiên của một nhóm chưa có trong `design/patterns/`
-    — Bảng hàng (14), Hồ sơ căn (17), Nhập (20), Hôm nay (22), Ô nhận lead (24), Cuộc gọi (28) — tạo tệp nhóm
+    — Bảng hàng (14), Hồ sơ căn (17), Hôm nay (22), Ô nhận lead (24), Cuộc gọi (28) — tạo tệp nhóm
     `design/patterns/<nhóm>.md` và khuôn ngay trong vòng ấy, theo khối đích ở `vo-va-ia.md` §2; vòng sau của nhóm đi qua
     khuôn. Mỗi vòng chỉ thêm tệp nhóm của mình và khai nó ở Cổng Phạm vi; sửa tệp nhóm khác là `cham-tep`.
 19. Hàng 62 chạm lớp `source` (bất biến 2): trần `never_leaves_company` và ràng buộc của cơ sở dữ liệu không nới. Khoá
@@ -55,7 +55,7 @@ hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp bảo vệ,
     là việc ngoài kho, không phải tiêu chí của hàng. Hàng 63 xong trước hàng 10 trong dãy D.
 23. Hàng 24, 25 và 26 chạm việc chạy nền (chia lead, hạn 15/30 phút, thông báo): việc nền tốn tiền (dịch vụ hàng đợi,
     gói Vercel cao hơn) → `can-nguoi`. Thông báo chỉ báo, không gửi tin thay người (bất biến 3).
-24. Số migration và số ADR: giám sát giữ chỗ lúc mở đợt cho các hàng T3 có thể cần (18, 20, 24, 62, 10), tính trên
+24. Số migration và số ADR: giám sát giữ chỗ lúc mở đợt cho các hàng T3 có thể cần (18, 24, 62, 10), tính trên
     `origin/main` lúc ấy; luật 3 vẫn áp khi gộp.
 25. Phiên chờ chủ kho thì tiêu đề bắt đầu «⏳ CHỜ ANH: <việc>»; hết chờ thì đổi lại tên thường.
 26. Mọi dãy được vẽ lại `PRODUCT-MAP.md` và `LO-TRINH.html` bằng `product-map.mjs` trong PR của mình, không cần

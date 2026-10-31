@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TD
-  A["Đang cân nhắc cơ hội<br/>20 việc"] --> GD{"Cổng Đáng"}
+  A["Đang cân nhắc cơ hội<br/>18 việc"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>3 việc"]
   GD --> XL["Xếp lại sau<br/>1 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
@@ -37,8 +37,6 @@ flowchart TD
 - Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình — lead mới, cần gọi lại, nên gọi ép giá, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng đợi, ghi kết quả gọi một chạm (`hom-nay-dau-chu`)
 - Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
-- Đầu chủ thả file bảng hàng cũ, ghép cột lẫn giá trị vào trường chuẩn, xem trước sẽ ghi gì rồi mới nhập; không cột nào bị bỏ mất (`nhap-excel-ghep-cot`)
-- Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước; ngày xác nhận lấy theo file, hoàn tác được cả lần nhập (`nhap-excel-nho-mau`)
 - Telesales nhập lead đủ năm mục trên máy tính và thấy ngay kết quả kiểm trùng: không trùng, đã có đầu chủ, hay căn đã có hàng mở (`o-nhan-lead`)
 - Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ thiếu (`san-sang-ban`)
 - Đầu chủ chọn nhiều căn rồi đổi trạng thái, đổi đầu chủ hay đánh dấu đã gọi cho tất cả trong một lần (`sua-hang-loat`)
