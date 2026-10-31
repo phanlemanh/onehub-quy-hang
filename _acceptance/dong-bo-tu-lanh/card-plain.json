@@ -1,0 +1,4 @@
+{
+  "feature_plain": "Khi máy chủ trục trặc ngắn hay hết phiên, thay đổi của đầu chủ tự gửi lại khi máy chủ trả lời được thay vì rơi vào «Cần xem»; chỉ báo trên thanh trên nói đúng vì sao chưa gửi; sửa tiếp một căn đang «Cần xem» thì giá cuối luôn là lần sửa sau cùng.",
+  "analyst_plain": "Bản cũ không có các ca kiểm mới nên lệnh kiểm chung chạy xanh ở cả hai bản; máy đã thử riêng từng ca mới trên mã cũ và tám ca đỏ đúng chỗ, hai ca còn lại là lưới giữ hành vi cũ."
+}
