@@ -5,7 +5,7 @@ slug: lop-truong-nguon
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [api, db]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-lop-truong-nguon-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T03:44:46Z
