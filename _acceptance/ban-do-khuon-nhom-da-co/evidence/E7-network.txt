@@ -1,0 +1,6 @@
+E7 network truth. Origin duoc dung: http://localhost:3473 (cau hinh web-d: DB :5553, worktree danh-muc-go-ma-can-defccb). config dev_server.url = http://localhost:3460 (khac cong => unscoped-partial, chi ghi chu).
+Phien 375 sang/toi + 1440 sang (select-company -> chon San mau A -> /today -> mo chuong): moi XHR/fetch toi app: POST /api/v1/me/company 200; GET select-company/today/_rsc 200; static 200/304.
+Chi co requestfailed: GET ...?_rsc=... net::ERR_ABORTED (prefetch RSC bi huy khi dieu huong - khong phai loi may chu; moi cai da co dong 200 song song).
+Console error / pageerror trong 3 phien tren: khong co.
+Phien login (4 o): POST /api/v1/auth/email-otp/send-verification-otp 200; POST /api/v1/auth/sign-in/email-otp voi ma 000000 -> loi 4xx DUNG Y (ma sai la tinh huong cua eval; UI hien «Mã không đúng. Thử lại.»); console ghi 2 error resource 4xx tuong ung.
+Dang nhap hai-san@example.test thuc hien qua POST /api/v1/auth/sign-in/email-otp (ctx.request, ma doc tu nhat ky may chu) 200, khong qua form UI.

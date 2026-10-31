@@ -21,6 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { TrangThai } from "@/components/trang-thai";
 import { nhanVai, VAI } from "@/lib/vai";
 
 export type Khu = { id: string; name: string };
@@ -196,9 +197,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             <ChonNhieu ten="Vai" cac={VAI} chon={suaVai} doi={setSuaVai} />
             {cacKhu.length > 0 && <ChonNhieu ten="Khu phụ trách" cac={cacKhu} chon={suaKhu} doi={setSuaKhu} />}
             {loiSua && (
-              <p role="alert" className="text-sm text-destructive">
-                {loiSua}
-              </p>
+              <TrangThai kind="error" title={loiSua} />
             )}
             <div className="flex gap-2">
               <Button type="submit">Lưu</Button>
@@ -238,9 +237,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             <AlertDialogDescription>Người này không vào được sàn nữa; khu phụ trách của họ ở sàn mất theo.</AlertDialogDescription>
           </AlertDialogHeader>
           {loiBo && (
-            <p role="alert" className="text-sm text-destructive">
-              {loiBo}
-            </p>
+            <TrangThai kind="error" title={loiBo} />
           )}
           <AlertDialogFooter>
             <AlertDialogCancel>Huỷ</AlertDialogCancel>

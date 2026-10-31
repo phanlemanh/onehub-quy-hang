@@ -3,7 +3,6 @@
 import { BellIcon, XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import {
   Sheet,
   SheetClose,
@@ -13,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { TrangThai } from "@/components/trang-thai";
 
 // Chuông và ngăn thông báo — chuyển thể NotificationsDrawer của app-shell-8. Chưa có nguồn thông báo: ngăn trống.
 export function Notifications() {
@@ -31,15 +31,13 @@ export function Notifications() {
           </div>
           <SheetDescription className="sr-only">Thông báo của bạn trong sàn</SheetDescription>
         </SheetHeader>
-        <Empty className="flex-1">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <BellIcon />
-            </EmptyMedia>
-            <EmptyTitle>Chưa có thông báo</EmptyTitle>
-            <EmptyDescription>Lead mới, căn đổi giá và khách mở link sẽ báo ở đây.</EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <TrangThai
+          kind="empty"
+          icon={BellIcon}
+          title="Chưa có thông báo"
+          description="Lead mới, căn đổi giá và khách mở link sẽ báo ở đây."
+          className="flex-1"
+        />
       </SheetContent>
     </Sheet>
   );

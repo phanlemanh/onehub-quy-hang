@@ -1,0 +1,5 @@
+Nguon: playwright browser_network_requests (loc /api/) + read console (error), phien E6
+PATCH http://localhost:3473/api/v1/company/members/1341ed60-... => 409 Conflict (khai dung trong expected)
+DELETE http://localhost:3473/api/v1/company/members/1341ed60-... => 409 Conflict (khai dung trong expected)
+Khong co 5xx, khong loi ket noi. Khi dau-chu@ mo /settings/users: khong co request /api/ nao.
+Console error: 404 /favicon.ico (static, chi note); 2 x 409 o tren (do chinh hai thao tac).
