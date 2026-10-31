@@ -75,3 +75,28 @@ test("kết nối vào công ty (danh mục từ Invest) chảy khi thoả thu�
   assert.deepEqual(agreementErrors(a), []);
   assert.deepEqual(mayFlow(a, "catalog", { at }), { ok: true });
 });
+
+test("mayFlow: loại và chiều mong đợi", () => {
+  const lead = agreement({ kind: "lead_source", direction: "inbound", dataClasses: ["catalog"] });
+  const wrongKind = mayFlow(lead, "catalog", { at, kind: "catalog_source" });
+  assert.equal(wrongKind.ok, false, "thoả thuận lead_source phải bị chặn: không đúng loại");
+  assert.ok(!wrongKind.ok && wrongKind.reason.includes("không đúng loại"), "lý do phải nêu «không đúng loại»");
+
+  const outbound = agreement({ kind: "catalog_source", direction: "outbound", dataClasses: ["catalog"] });
+  const wrongDirection = mayFlow(outbound, "catalog", { at, direction: "inbound" });
+  assert.equal(wrongDirection.ok, false, "thoả thuận outbound phải bị chặn: không đúng chiều");
+  assert.ok(!wrongDirection.ok && wrongDirection.reason.includes("không đúng chiều"), "lý do phải nêu «không đúng chiều»");
+
+  const inbound = agreement({
+    kind: "catalog_source",
+    direction: "inbound",
+    counterparty: "onehub-invest",
+    dataClasses: ["catalog"],
+  });
+  assert.deepEqual(mayFlow(inbound, "catalog", { at, kind: "catalog_source", direction: "inbound" }), { ok: true });
+});
+
+test("mayFlow: lời gọi cũ không truyền loại giữ nguyên hành vi", () => {
+  const lead = agreement({ kind: "lead_source", direction: "inbound", dataClasses: ["catalog"] });
+  assert.deepEqual(mayFlow(lead, "catalog", { at }), { ok: true });
+});
