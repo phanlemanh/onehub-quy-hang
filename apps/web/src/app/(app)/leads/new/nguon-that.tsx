@@ -30,7 +30,7 @@ const nguon: NguonLead = {
     const kq = (await res.json()) as { status: string; unit?: { buildingName: string; unitNumber: string }; examples?: { example: string }[] };
     if (kq.status === "found" && kq.unit) return { buildingName: kq.unit.buildingName, unitNumber: kq.unit.unitNumber };
     if (kq.status === "not_in_catalog") return { khong: "Mã căn chưa có trong danh mục — chọn toà" };
-    if (kq.status === "ambiguous") return { khong: "Mã căn khớp nhiều dự án — chọn toà" };
+    if (kq.status === "ambiguous") return { khong: "Mã căn khớp nhiều khu — chọn toà" };
     return { khong: `Không đọc được mã — mẫu mã: ${kq.examples?.[0]?.example ?? "A-12.05"}` };
   },
 };
