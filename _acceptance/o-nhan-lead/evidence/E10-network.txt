@@ -1,14 +1,13 @@
-# E10 network (fetch/xhr) + console, driver playwright, origin http://localhost:3483 (app-scope)
-req GET  /api/v1/listings
-res 200  GET /api/v1/listings
-req GET  /api/v1/catalog/units/Z-99.99  -> 200
-req GET  /api/v1/catalog/units/B-09.09  -> 200 (x3)
-req POST /api/v1/leads (Slow 3G, khong trung) -> 201
-req POST /api/v1/leads (khong trung) -> 201
-GET /api/v1/catalog/units/B-09.08 -> 200 ; POST /api/v1/leads (chu trung) -> 201
-GET /api/v1/catalog/units/A-02.06 -> 200 ; POST /api/v1/leads (can trung) -> 201
-POST /api/v1/leads/eb417862-563c-4e03-8402-5f26595e1d5c/discard -> 200
-POST /api/v1/leads (CHU DONG chan boi page.route abort, step 10) -> FAIL net::ERR_INTERNET_DISCONNECTED  [co chu dich, expected cua eval]
-# console
-error: Failed to load resource: net::ERR_INTERNET_DISCONNECTED   (hau qua cua chan chu dich o step 10)
-# Ket luan: khong co 4xx/5xx; fail duy nhat la request bi chan chu dich theo steps.
+# E10 network truth (verifier doc lap) - server web-l :3483, log may chu
+## Console (playwright)
+6:[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3483/favicon.ico:0
+9:[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3483/api/v1/leads:0
+71:[ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ http://localhost:3483/api/v1/leads:0
+## Server access log (preview_logs, /api/v1)
+POST /api/v1/auth/email-otp/send-verification-otp 200; POST /api/v1/auth/sign-in/email-otp 200
+GET /api/v1/catalog/units/{Z-99.99,B-07.05,B-07.04,A-02.06} 200 (Z-99.99 = 200 voi body 'khong co' - ma ngoai danh muc)
+POST /api/v1/leads 201 x4 (slow3G/khong-trung/chu-trung/can-trung... + khong-trung step7 = 5 lan thanh cong, xem log)
+POST /api/v1/leads/<id>/discard 200
+GET /api/v1/listings 200 (nhieu)
+## Co y: step 10 chan POST /api/v1/leads bang route abort -> net::ERR_INTERNET_DISCONNECTED (dung theo eval, khong tinh la loi app)
+## Static: GET /favicon.ico 404 (note-only)
