@@ -1,0 +1,31 @@
+{
+  "feature_plain": "Đầu chủ gõ một mã căn có ở hai toà của cùng dự án thì thấy cả hai căn kèm tên toà để chọn, thay vì bị tự điền lặng lẽ thông tin của căn toà kia.",
+  "will_do": [
+    {"id": "AC-2", "p": "Sẽ liệt cả hai căn khi danh mục ghi nhầm một mã ở hai toà, không để căn nạp sau đè căn nạp trước."},
+    {"id": "AC-3", "p": "Sẽ ra đúng một căn khi người gõ mã kèm toà đã chọn — gọi toà theo tên hay theo ký hiệu, viết hoa thường thế nào cũng được."},
+    {"id": "AC-5", "p": "Sẽ cho màn sau này hỏi được «mã này, toà này» qua đường tra, chỉ trả thông tin danh mục như hôm nay."},
+    {"id": "AC-6", "p": "Sẽ giữ nguyên mọi điều gõ mã căn đang làm đúng, và con số tỉ lệ tự điền tách riêng các mã «nhiều căn»."}
+  ],
+  "wont_do": [
+    {"id": "AC-1", "p": "Sẽ KHÔNG tự điền một căn khi mã có ở hai toà — người luôn thấy cả hai và tự chọn."},
+    {"id": "AC-4", "p": "Chặn toà không có trong dự án: báo rõ toà lạ, không điền gì."},
+    {"id": "OOS-1", "p": "Chưa làm hộp chọn toà trên màn — đi cùng việc nối ô Gõ mã căn."},
+    {"id": "OOS-2", "p": "Chưa đọc tên toà gõ chung trong một chuỗi như «A1 1206» — chờ mã thật của danh mục thật."},
+    {"id": "OOS-3", "p": "Chưa nạp danh mục thật — việc của hàng nhận danh mục Invest."},
+    {"id": "OOS-4", "p": "Chưa báo lỗi khi danh mục nạp vào có mã trùng — cũng việc của hàng nhận danh mục."}
+  ],
+  "scope_plain": "Bốn việc để sau, đều gắn với màn hoặc với lúc nạp danh mục thật:",
+  "coverage_plain": [
+    {"i": 0, "p": "Ba kiểu trùng đều được thử: hai toà ở dự án không có luật đọc mã (AC-1), hai toà do danh mục ghi nhầm (AC-2), và trùng giữa hai dự án vẫn như cũ (AC-6)."},
+    {"i": 1, "p": "Mọi cách người chọn đều được thử: không chọn, chọn dự án, chọn toà theo tên hay ký hiệu (AC-3), toà lạ hay toà của dự án khác (AC-4)."},
+    {"i": 2, "p": "Thử ở cả lõi tra, đường tra có đăng nhập (AC-5) và lệnh đo tỉ lệ (AC-6)."},
+    {"i": 3, "p": "Mọi ca của việc gõ mã căn trước đây chạy lại và phải xanh (AC-6)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy từng ghi «trùng trong một dự án dùng chung kết cục nhiều căn» là đã có căn cứ, nhưng Tham chiếu chỉ chốt trùng giữa hai dự án — đã chuyển thành câu hỏi Hỏi-1 cho anh."},
+    {"i": 1, "p": "Máy từng tự chọn cách đếm mã «nhiều căn» trong tỉ lệ tự điền, mà ngưỡng của tỉ lệ ấy do người đặt — đã chuyển thành câu hỏi Hỏi-2 cho anh."},
+    {"i": 2, "p": "Ca «mã không có ở toà đã chọn» chưa nói rõ phải báo gì — đã chốt: báo «chưa có trong danh mục», không báo toà lạ."},
+    {"i": 3, "p": "Vế «chọn toà của dự án khác» chưa được thử qua đường tra thật — đã thêm ca thử báo lỗi và ca đối chứng ra đúng căn."},
+    {"i": 4, "p": "Hai phép đo đòi «không ai sửa ca cũ» mà lệnh của chúng không chứng được — đã bỏ vế ấy, việc soi sửa ca cũ thuộc phần đọc thay đổi của lượt chấm."}
+  ]
+}

@@ -1,0 +1,81 @@
+schema_version: 1
+feature_slug: can-trung-ma-hai-toa
+# Ba lệnh máy: `executors.test.core` (kiểm thuần của packages/core), `executors.test.api` (kiểm không cần Postgres của
+# packages/api) và `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy D,
+# cổng 5565). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu
+# từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «trùng mã hai toà một dự án: ambiguous, không found» có mặt và ok — fixture viết tay trong tệp kiểm thử: dự án `mau-trung-ma` KHÔNG có dòng cách đọc, toà `A1` «[Mẫu] Toà A1» và `A2` «[Mẫu] Toà A2» cùng có căn `1206` với upi, livingArea, directionFaces khác nhau; tra `1206` và `  1206 ` không chọn dự án, và chọn `mau-trung-ma`, mỗi lần ra status ambiguous với candidates.length === 2, tập buildingName = {«[Mẫu] Toà A1», «[Mẫu] Toà A2»}, và mỗi ứng viên deepEqual mười trường viết trước của chính căn toà mình (so theo upi, không theo vị trí); dựng lại chỉ mục với hai toà đảo thứ tự nạp thì danh sách ứng viên deepEqual danh sách lần đầu. Đối chứng dương cùng fixture: căn `0801` chỉ có ở toà A1 tra ra found đúng upi toà A1. Chiều đỏ: chỉ mục một-mã-một-căn (đè) → tra `1206` ra found với căn toà nạp sau, ca đỏ nêu status nhận được."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «dự án có cách đọc mà danh mục ghi trùng mã ở hai toà: ambiguous» có mặt và ok — fixture: dự án `mau-du-an-thu` (dòng cách đọc của UNIT_CODE_RULES) có toà A với căn `A-12.06` upi X và toà B ghi lỗi một căn mã `A-12.06` upi Y; tra `A-12.06` và `a1206` mỗi lần ra ambiguous với đúng hai ứng viên, tập upi = {X, Y}, tập buildingName = {Toà A, Toà B}. Đối chứng dương: `A-12.05` chỉ có ở toà A ra found. Chiều đỏ: nhánh có cách đọc vẫn lấy một căn từ chỉ mục → ca đỏ nêu status."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mã kèm toà ra đúng một căn» có mặt và ok — cùng fixture E1; danh sách cách gọi toà viết tay, mỗi phần tử một lần so: `[Mẫu] Toà A1`, `[mẫu] toà a1`, `  [Mẫu] Toà A1  `, `A1`, `a1` → found với upi căn `1206` toà A1; `[Mẫu] Toà A2`, `A2` → found với upi căn `1206` toà A2 (khác upi toà A1); số lần so bằng số phần tử. Đối chứng âm: `0801` (chỉ ở toà A1) tra kèm toà `A2` ra ĐÚNG status not_in_catalog (so bằng, ca đỏ nêu status nhận được), read = [{ projectKey: 'mau-trung-ma', unitNumber: '0801' }], và kết quả không mang upi căn `0801` toà A1. Chiều đỏ: bỏ lọc toà → `1206` kèm toà vẫn ra ambiguous, ca đỏ nêu cách gọi toà hỏng."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «toà lạ: kết cục riêng, không thuộc tính» có mặt và ok — cùng fixture E1 cộng dự án thứ hai `mau-du-an-thu` có toà `A`; tra `1206` kèm toà `Toà Z` ra status unknown_building; tra `A-12.06` chọn dự án `mau-trung-ma` kèm toà `A` (có thật nhưng ở dự án khác) ra unknown_building; kết quả không có khoá nào trong mười trường thuộc tính (giao tập khoá rỗng, kiểm đệ quy). Đối chứng dương: `A-12.06` kèm toà `A` không chọn dự án ra found. Chiều đỏ: toà lạ rơi về not_in_catalog/unreadable → ca đỏ nêu status nhận được."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong tệp `packages/api/test-db/catalog/trung-ma-hai-toa.test.ts` ba ca có mặt và ok: (1) «trùng mã hai toà qua API: ambiguous, chọn toà ra found» — app Hono có `registerCatalogRoutes` trên danh mục thử của E1 (viết tay trong tệp), quản trị sàn đã đăng nhập gọi `/api/v1/catalog/units/1206` nhận 200 status ambiguous hai ứng viên với tập buildingName đúng hai toà; gọi `?building=%5BM%E1%BA%ABu%5D%20To%C3%A0%20A1` nhận 200 found upi toà A1; `?building=A2` nhận found upi toà A2; (2) «toà lạ qua API: 404 not-found» — `?building=Toà Z` nhận 404 thân `{ error: 'not-found' }`; trên danh mục hai dự án (danh mục E1 cộng `mau-du-an-thu` toà `A` căn `A-12.06`) gọi `/A-12.06?project=mau-trung-ma&building=A` nhận 404 `{ error: 'not-found' }`, đối chứng dương `/A-12.06?building=A` nhận 200 found; (3) «thân trả về khi trùng mã chỉ mang khoá cho phép» — tập mọi khoá ở mọi cấp của thân ambiguous và found bằng đúng tập viết trước (khoá bao + mười trường UNIT_ATTRIBUTE_FIELDS), dù fixture mỗi căn mang thêm khoá lạ `ghiChuNoiBo`; và tài liệu OpenAPI của app có tham số query `building` ở đường `/api/v1/catalog/units/{code}`. Chiều đỏ: đường không chuyển `building` vào lõi → ca (1) đỏ nêu status ambiguous khi đòi found."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca của hàng 9 «đo tỉ lệ tự điền trên dữ liệu mẫu: 47 mã, 100%, chưa có đúng, điền đoán 0» vẫn có mặt và ok (dòng in đúng chữ `tự điền đúng 282/282 (100%) · chưa có 4/4 · điền đoán 0`); ca mới «đo tỉ lệ: mã trùng hai toà là nhiều căn, không là điền đoán» có mặt và ok — trên danh mục thử của E1 với bảng đáp án `1206`→upi toà A1 và `0801`→upi toà A1: tong 2, dung 1, nhieuCan 1, dienDoan 0, dòng in kết thúc bằng ` · nhiều căn 1`. Đối chứng: cùng danh mục bỏ toà A2 thì nhieuCan 0, dung 2, và dòng in không chứa «nhiều căn». Chiều đỏ: lệnh đếm ambiguous là điền đoán → dienDoan 1, ca đỏ nêu số."
+    paths: [packages/api/src/catalog/**, packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; mọi ca của hàng 9 trong `packages/core/src/catalog/catalog.test.ts` vẫn có mặt và ok, tên giữ nguyên: «tra mã chuẩn: found đủ mười thuộc tính theo danh mục», «biến thể viết: mọi kiểu viết ra cùng căn và cùng mã chuẩn», «đọc được mà ngoài danh mục: not_in_catalog, không thuộc tính nào», «không đọc được: unreadable kèm mẫu mã từng dự án», «cách đọc dự án mẫu khớp 180/180 căn danh mục mẫu», «dự án thứ hai chỉ cần một dòng cách đọc», «trường danh mục trống trả null, không lấy từ căn khác», «mã khớp hai dự án: ambiguous, không chọn hộ», «dự án không có trong danh mục», «mười trường ra đều thuộc lớp danh mục, trần ra ngoài được». Việc thân ca có bị sửa hay không thuộc phần soát diff của lượt chấm, không thuộc eval này."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; năm ca của hàng 9 trong `packages/api/test-db/catalog/catalog.test.ts` vẫn có mặt và ok: «danh mục: cổng vào 401/403/409», «danh mục: mọi vai đọc được», «danh mục: dự án lạ trả 404 not-found», «danh mục: thân trả về chỉ mang khoá cho phép», «danh mục mẫu: thân không mang khoá nào của chủ nhà mẫu». Việc tệp có bị sửa hay không thuộc phần soát diff của lượt chấm, không thuộc eval này."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/api/test-db/catalog/trung-ma-hai-toa.test.ts` ca «toà lạ qua API: 404 not-found» có mặt và ok — hai vế đều 404 thân `{ error: 'not-found' }`: `/1206?building=Toà Z` trên danh mục E1, và `/A-12.06?project=mau-trung-ma&building=A` trên danh mục hai dự án; đối chứng dương cùng danh mục: `/A-12.06?building=A` không chọn dự án nhận 200 status found. Chiều đỏ: đường bỏ qua dự án khi có toà → vế hai ra 200, ca đỏ nêu status HTTP nhận được."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
