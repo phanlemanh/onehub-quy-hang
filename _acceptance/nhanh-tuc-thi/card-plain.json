@@ -1,0 +1,125 @@
+{
+  "feature_plain": "Người trong sàn lọc, cuộn và mở hồ sơ căn từ dữ liệu giữ sẵn trên máy, sửa thì thấy ngay rồi máy tự gửi lên sau; rớt mạng vài phút không mất thay đổi, và thanh trên luôn nói đang ở đâu.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ chỉ đưa xuống máy mỗi người đúng những căn họ được xem, không kèm thông tin chủ nhà, và tách riêng theo sàn."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ cho lọc danh sách và mở hồ sơ căn khi mạng hỏng mà không chờ gì, kể cả sau khi tải lại trang."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ đổi ô ngay khi sửa và xếp thay đổi chờ gửi; sửa sai khuôn hay chuyển trạng thái không hợp lệ bị báo ngay, không xếp."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ giữ 20 thay đổi qua lúc mất mạng và tải lại trang, rồi gửi đủ 20, đúng thứ tự khi có mạng; đổi sang sàn khác thì thay đổi của sàn cũ chờ tới khi quay về."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ để «Đã cọc» và «Đã bán» thắng: của người khác lên trước thì thay đổi của tôi trên căn đó thành «cần xem»; của tôi thì lên ngay."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ nói trạng thái trên thanh trên ở cả máy tính lẫn điện thoại: đang tải, đã đồng bộ lúc nào, đang gửi bao nhiêu, mất mạng còn bao nhiêu chờ, bao nhiêu căn cần xem."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ hỏi trước khi đăng xuất nếu còn thay đổi chưa gửi, và luôn xoá sạch dữ liệu của người đó trên máy khi đăng xuất."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "AC-5",
+      "p": "Chặn ghi trùng: máy chủ đã nhận mà máy chưa biết thì gửi lại không thành lần thứ hai, kể cả «Đã cọc» và «Đã bán»."
+    },
+    {
+      "id": "AC-6",
+      "p": "Chặn ghi đè âm thầm: hai người cùng sửa hay máy chủ từ chối thì căn vào «cần xem» để người chọn «Giữ của tôi», «Lấy bản mới» hay «Bỏ thay đổi»; các căn khác vẫn gửi."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ KHÔNG chờ trình duyệt báo có mạng: máy tự thử gửi định kỳ và khi quay lại trang."
+    },
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG dựng màn Bảng hàng và Hồ sơ căn thật — các màn ấy ở việc riêng, dùng phần nền của việc này."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG làm kênh báo thay đổi tức thời — máy kéo bản mới 30 giây một lần."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG đưa số chủ hay thông tin chủ nhà xuống máy."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG cho mở app khi đã mất mạng từ trước — chỉ giữ được khi app đang mở."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG đổi máy chủ hay cơ sở dữ liệu: chống ghi trùng và kéo bản mới làm hết ở phía máy."
+    },
+    {
+      "id": "OOS-6",
+      "p": "KHÔNG làm báo mất máy để xoá từ xa."
+    }
+  ],
+  "scope_plain": "Việc này dựng phần nền giữ dữ liệu và thay đổi trên máy; màn bảng hàng thật và các phần nặng hơn để việc sau.",
+  "coverage_plain": [
+    {
+      "i": 0,
+      "p": "Ai xem căn: người tạo, người cùng sàn với căn đã mở cho cả sàn, người cùng sàn với căn «Chỉ tôi» của người khác, và sàn khác — AC-1, AC-3, AC-6, AC-7 phủ."
+    },
+    {
+      "i": 1,
+      "p": "Mạng: có mạng, mất mạng kể cả tải lại trang và đổi sàn, mất phản hồi sau khi máy chủ đã ghi, quay lại trang — AC-2, AC-4, AC-5, AC-9 phủ."
+    },
+    {
+      "i": 2,
+      "p": "Loại sửa: giá, chi tiết, trạng thái thường, «Đã cọc» và «Đã bán», sửa sai, sửa bị máy chủ từ chối — AC-3 tới AC-7 phủ."
+    },
+    {
+      "i": 3,
+      "p": "Người khác cùng lúc: không ai, sửa thường, đặt «Đã cọc» hay «Đã bán» — AC-4, AC-6, AC-7 phủ."
+    },
+    {
+      "i": 4,
+      "p": "Áp mọi ô: không thông tin chủ nhà trên máy (AC-1), thanh trên nói đúng (AC-8), đăng xuất xoá sạch (AC-10)."
+    },
+    {
+      "i": 5,
+      "p": "Để sau: kênh báo tức thời, kéo theo phần đổi, mở app khi mất mạng, số chủ trên máy."
+    },
+    {
+      "i": 6,
+      "p": "Không bao giờ ở việc này: một đường ghi riêng ngoài lệnh gửi lên máy chủ."
+    }
+  ],
+  "gap_probe_plain": [
+    {
+      "i": 0,
+      "p": "Phép thử trên trình duyệt từng đòi tải lại trang khi mất mạng hẳn — việc đã cố ý không làm; nay chỉ chặn đường tới máy chủ, trang vẫn tải, và đếm 0 lần gửi thành công."
+    },
+    {
+      "i": 1,
+      "p": "Máy từng tự bỏ bước xem giao diện trước khi duyệt với lý do sai «không có màn mới»; nay thành câu hỏi Hỏi-4 cho anh."
+    },
+    {
+      "i": 2,
+      "p": "Đăng xuất khi không còn gì chờ chưa chắc xoá dữ liệu trên máy; nay tiêu chí và phép thử đòi xoá ở cả hai lối, kiểm thẳng kho của trình duyệt."
+    },
+    {
+      "i": 3,
+      "p": "Căn bị máy chủ từ chối có thể kẹt mãi trong «cần xem» và che chữ «Mất mạng»; nay có lối «Bỏ thay đổi», «Sửa lại» và phép thử cho từng lối."
+    },
+    {
+      "i": 4,
+      "p": "Thay đổi chờ của sàn cũ có thể bị gửi nhầm khi đổi sàn; nay tiêu chí đòi chờ tới khi quay về và phép thử đếm."
+    }
+  ],
+  "decisions_plain": []
+}

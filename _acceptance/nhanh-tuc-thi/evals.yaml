@@ -1,0 +1,122 @@
+schema_version: 1
+feature_slug: nhanh-tuc-thi
+# Hai lệnh máy mới: `executors.test.web` (kiểm thử thuần của apps/web/src/lib/sync, kho bộ nhớ, mạng giả, đồng hồ giả)
+# và `executors.test.web_db` (bộ đồng bộ nói chuyện với API thật dựng trong tiến trình trên Postgres dãy N, cổng 5551).
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca
+# nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Tên chủ mẫu `[Tên]`, số `0900 000 0xx`.
+#
+# DỰNG T (cho hai eval ui-check): máy chủ dev của executors.ui-check (cổng 3462) trên Postgres dãy đã nạp dữ liệu mẫu
+# (executors.script.du_lieu_mau); đăng nhập người mẫu vai Đầu chủ của sàn mẫu; mở http://localhost:3462/proto/nhanh-tuc-thi.
+# Mất mạng = công cụ trình duyệt CHẶN mẫu `*/api/v1/*` (request blocking) — đúng định nghĩa của hợp đồng «mọi lời gọi tới
+# API thất bại vì mạng»; trang vẫn tải được (mở app khi mất mạng hẳn nằm ngoài phạm vi). Không tắt máy chủ.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web_db
+    expected: "exit 0; ca «kéo về: mỗi người đúng phần được thấy, không nguồn trên máy» có mặt và ok — dựng hai sàn qua API thật; X tạo căn «Chỉ tôi» và căn «Toàn sàn», đặt chủ nhà cho cả hai (tên [Tên chủ mẫu], số 0900 000 012, giá đáy); bộ đồng bộ của X, Y (cùng sàn), Z (sàn B) kéo về kho bộ nhớ; so bằng deepEqual tập mã căn trong kho với tập viết tay: X = {chỉ tôi, toàn sàn}, Y = {toàn sàn}, Z = {} (không căn nào của sàn A); findSourceLeaks quét mọi bản ghi trong ba kho với mẫu tên, số ba cách viết, giá đáy → []; đối chứng dương cùng hàm quét: một bản ghi cấy ownerPhone vào kho bị bắt và kéo về từ chối ghi bản ghi mang khoá nguồn; ca «kho tách theo sàn» — X đổi sang sàn thứ hai, kéo về: ngăn sàn A giữ nguyên, ngăn sàn thứ hai chỉ có căn của sàn đó. Chiều đỏ: bỏ lọc theo sàn hay chép trọn bản ghi có nguồn → ca đỏ nêu người và mã căn."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**, packages/core/src/visibility/**, packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đọc không chờ mạng: lọc, mở hồ sơ, dựng lại từ kho» có mặt và ok — kho bộ nhớ nạp sẵn bản kéo 6 căn (2 toà, 3 trạng thái) và lịch sử của 1 căn; hàm gọi mạng giả ném lỗi và đếm số lần gọi; lọc theo trạng thái và theo toà so bằng deepEqual với tập mã viết tay; mở căn đã mở → có lịch sử đúng số sự kiện; mở căn chưa mở → có trạng thái, lịch sử rỗng; số lần gọi mạng sau mọi lần đọc = 0 (assert số đếm); dựng bộ đồng bộ mới từ CÙNG kho → các lần đọc trên cho cùng kết quả. Đối chứng dương: cùng bộ đếm ghi nhận 1 lần gọi khi chủ động kéo. Chiều đỏ: đọc đi qua mạng → số đếm > 0, ca đỏ nêu lần đọc."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «ghi trên máy trước: đổi ngay, xếp hàng, nối chuỗi phiên bản» và ca «ghi sai bị từ chối ngay, không xếp hàng» có mặt và ok — căn phiên bản 3; sửa giá hợp lệ rồi sửa chi tiết: bản trên máy deepEqual bản gấp bằng foldListing của lõi trên cùng dãy sự kiện (không bằng hằng viết tay); hàng đợi có đúng 2 thao tác, mã thao tác khác nhau, phiên bản kỳ vọng [3, 4]; sửa giá sai khuôn và chuyển trạng thái lõi cấm (vd Incomplete → Closed): mỗi lần trả lỗi mang đường khoá/lý do của lõi, hàng đợi vẫn 2, bản trên máy không đổi (deepEqual trước/sau); ca lõi «stepListing gấp từng bước bằng foldListing» trong packages/core xanh. Chiều đỏ: xếp hàng khi khuôn sai hay bản trên máy đổi khi bị từ chối → ca đỏ nêu thao tác."
+    paths: [apps/web/src/lib/sync/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web_db
+    expected: "exit 0; ca «đổi sàn khi còn chờ: hàng đợi ở lại, về sàn thì lên» có mặt và ok — X có 3 thao tác chờ ở sàn A, đổi sang sàn B, có mạng, gửi: đếm sự kiện của ba căn sàn A bằng kết nối chủ +0 và không căn nào của A vào cần xem; một thao tác chờ ở sàn B vẫn lên (đối chứng dương); quay về A, gửi: +3 đúng thứ tự, hàng đợi A rỗng. Ca «mất mạng: 20 thay đổi trên năm căn lên đủ, đúng thứ tự» có mặt và ok — năm căn trên API thật; mạng giả đặt mất; sửa 20 ô (giá, chi tiết) theo một kịch bản viết tay; giữa chừng dựng bộ đồng bộ mới từ cùng kho; đặt có mạng, gửi; đếm sự kiện mới trên máy chủ bằng kết nối chủ = đúng 20 (assert số đếm); mỗi căn dãy (loại, nội dung) của sự kiện mới deepEqual dãy viết tay theo thứ tự đã sửa; hàng đợi rỗng; phiên bản trên máy = phiên bản máy chủ từng căn. Đối chứng: trong lúc mất mạng số sự kiện máy chủ không đổi. Chiều đỏ: mất một thao tác khi dựng lại, gửi sai thứ tự hay gửi trùng → ca đỏ nêu căn và số đếm."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG T. Khổ 1440x900. Chờ chỉ báo trên thanh trên ra «Đã đồng bộ · hh:mm» → chụp evidence/E4b-truoc.png; ghi chữ chỉ báo và số sự kiện trong lịch sử của năm căn đầu danh sách"
+      - "Chặn */api/v1/*. Sửa 20 ô trên năm căn đầu theo kịch bản: mỗi căn 4 lần đổi giá (giá cũ + 1, + 2, + 3, + 4 triệu). Sau ô thứ 10 tải lại trang (vẫn chặn); ghi số lời gọi /api/v1 thành công kể từ lúc chặn (đọc từ công cụ mạng của trình duyệt). Chụp evidence/E4b-mat-mang.png; ghi chữ chỉ báo và giá đang hiện của năm căn"
+      - "Bỏ chặn; không tải lại trang, không bấm gì; chờ tối đa 60 giây tới khi chỉ báo về «Đã đồng bộ» → chụp evidence/E4b-sau.png; ghi chữ chỉ báo, giá năm căn, số sự kiện trong lịch sử từng căn"
+    expected: "Lúc mất mạng chỉ báo «Mất mạng · 10 thay đổi chờ gửi» trước tải lại và «Mất mạng · 20 thay đổi chờ gửi» sau ô thứ 20; tải lại khi đang chặn vẫn hiện danh sách và giá đã sửa (kho IndexedDB giữ) với 0 lời gọi /api/v1 thành công. Có mạng lại: tự về «Đã đồng bộ» trong 60 giây không cần thao tác; mỗi căn có đúng 4 sự kiện mới so với ảnh trước (tổng 20), giá cuối = giá cũ + 4 triệu. Đối chứng: số sự kiện trước và sau khác nhau đúng 20."
+    paths: [apps/web/src/lib/sync/**, apps/web/src/components/sync/**, apps/web/src/components/shell/**, apps/web/src/app/(app)/proto/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «gửi lại sau khi mất phản hồi không thành sự kiện thứ hai» có mặt và ok — hàm gọi mạng giả chuyển lời gửi tới API thật rồi ném lỗi mạng thay cho phản hồi (máy chủ đã ghi, máy không biết); gửi lại; đếm sự kiện của căn bằng kết nối chủ = đúng +1 (không +2); thao tác rời hàng đợi với kết luận «đã áp trước»; lặp lại với «Đã cọc» (status_changed to Pending) và «Đã bán» (Closed kèm closePrice) — hai thao tác không qua phép kiểm phiên bản → mỗi lần vẫn đúng +1. Đối chứng: một thao tác cùng nội dung do NGƯỜI KHÁC ghi trước không được nhận là của mình (thành «cần xem»). Chiều đỏ: gửi lại mù → +2, ca đỏ nêu số đếm."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «đụng nhau: căn thành cần xem, căn khác vẫn lên», ca «máy chủ từ chối: cần xem kèm lý do» và ca «từ chối: Bỏ thay đổi trả căn về thường» có mặt và ok — X có thao tác chờ trên H và K; Y sửa giá H trước; X gửi: sự kiện trên K lên (đếm +1), H không có sự kiện của X (đếm chỉ +1 của Y); H trong danh sách cần xem mang giá của Y, người Y và giá của X; chọn «Giữ của tôi» → máy chủ có sự kiện của X ngay sau của Y, H rời cần xem; dựng lại tình huống, chọn «Lấy bản mới» → hàng đợi không còn thao tác của H, bản trên máy deepEqual bản máy chủ; ca từ chối: thao tác chuyển trạng thái thiếu điều kiện (Active thiếu giá) và thao tác trên căn «Chỉ tôi» của người khác (404) → mỗi căn vào cần xem kèm mã lỗi/lý do của máy chủ, đếm thao tác trước = thao tác đã lên + thao tác trong cần xem (không mất câm); với từng ca từ chối (404, 400) chọn «Bỏ thay đổi» → hàng đợi bớt đúng thao tác ấy, danh sách cần xem bớt căn ấy (đếm trước/sau), trạng thái chỉ báo suy ra không còn «cần xem»; ca 400 chọn «Sửa lại» → giá trị của tôi trả về dạng sửa, kiểm lại bằng lõi cho cùng lý do. Chiều đỏ: ghi đè giá của Y hay để K chờ theo H → ca đỏ nêu căn."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «Đã cọc của người khác thắng thay đổi chờ của tôi» và ca «Đã cọc của tôi lên dù phiên bản lệch» có mặt và ok — (1) X mất mạng, sửa giá H; Y đặt Đã cọc H; X có mạng: không sự kiện price_changed nào của X trên H (đếm), H trong cần xem với dấu đã cọc; (2) X có Đã cọc chờ trên H2, Y sửa giá H2; X có mạng: trạng thái H2 trên máy chủ = Pending, sự kiện của X có mặt; lặp (1) và (2) với Đã bán (Closed kèm closePrice). Chiều đỏ: giá của X ghi sau Đã cọc của Y, hay Đã cọc của X bị chặn vì phiên bản → ca đỏ nêu căn."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**, packages/core/src/listing/status.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «chỉ báo: bảng trạng thái → chữ» có mặt và ok — bảng viết tay trong tệp kiểm (không sinh từ hàm đang kiểm) với đúng các dòng: chưa có bản kéo → «Đang tải lần đầu»; 0 chờ, kéo cuối thành công lúc 10:42 → «Đã đồng bộ · 10:42»; đang gửi 3 → «Đang gửi 3 thay đổi»; lỗi mạng, 5 chờ → «Mất mạng · 5 thay đổi chờ gửi»; lỗi mạng, 0 chờ → «Mất mạng · đang xem bản trên máy»; 2 căn cần xem cộng lỗi mạng → «2 căn cần xem»; so từng dòng và đếm số dòng đã so bằng số dòng bảng. Chiều đỏ: cần xem không thắng mất mạng → ca đỏ nêu dòng."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG T. Khổ 1440x900: chụp thanh trên → evidence/E8b-may-tinh.png; ghi chữ chỉ báo và vị trí (thanh trên, cạnh chuông)"
+      - "Khổ 375x812: tải lại → chụp evidence/E8b-dien-thoai.png; ghi chỉ báo hiện gì, nhãn trợ năng của nó"
+      - "Khổ 1440x900: tạo đụng nhau — mở cửa sổ ẩn danh thứ hai đăng nhập người mẫu Trưởng nhóm, sửa giá căn đầu trên trang thử; ở cửa sổ đầu đặt ngoại tuyến, sửa giá cùng căn, bỏ ngoại tuyến; chờ chỉ báo đổi → chụp evidence/E8b-can-xem.png; bấm chỉ báo → chụp evidence/E8b-bang-can-xem.png; ghi nội dung bảng; bấm «Lấy bản mới» → ghi chỉ báo sau đó"
+      - "Tạo một thao tác bị từ chối: đổi trạng thái căn thứ hai sang «Đang bán» khi căn thiếu giá → chờ chỉ báo → mở bảng Cần xem → chụp evidence/E8b-tu-choi.png; bấm «Bỏ thay đổi» → ghi chỉ báo. Tạo một căn đã cọc: cửa sổ Trưởng nhóm đặt «Đã cọc» căn thứ ba, cửa sổ đầu chặn */api/v1/*, sửa giá căn đó, bỏ chặn → mở bảng → chụp evidence/E8b-da-coc.png; ghi chữ"
+      - "Chạy trong trang: (await indexedDB.databases()).map(d => d.name) → ghi danh sách (đối chứng dương: có cơ sở dữ liệu của người mẫu). Chặn */api/v1/*, sửa 2 ô; mở menu tài khoản → Đăng xuất → chụp evidence/E8b-dang-xuat.png; ghi chữ hộp thoại; bấm «Ở lại» → ghi chỉ báo; lại Đăng xuất → «Vẫn đăng xuất»; ghi lại danh sách indexedDB.databases(); bỏ chặn, đăng nhập lại cùng người → ghi chỉ báo và giá hai ô vừa sửa; đăng xuất lần nữa khi không còn gì chờ (không hỏi) → ghi lại danh sách indexedDB.databases()"
+    expected: "Máy tính: chỉ báo bằng chữ trên thanh trên, đọc được ở sáng và tối. Điện thoại: chỉ báo có mặt trên thanh trên, nhãn trợ năng mang chữ đầy đủ. Đụng nhau: chỉ báo «1 căn cần xem»; bảng Cần xem có căn, giá của người kia (tên, lúc) và giá của tôi, hai lối «Giữ của tôi», «Lấy bản mới»; chọn xong chỉ báo về «Đã đồng bộ». Đăng xuất: hộp thoại nói «Còn 2 thay đổi chưa gửi lên — đăng xuất sẽ xoá chúng khỏi máy»; «Ở lại» giữ «Mất mạng · 2 thay đổi chờ gửi»; sau «Vẫn đăng xuất» danh sách indexedDB.databases() không còn cơ sở dữ liệu của người mẫu; đăng nhập lại, hai ô mang giá máy chủ (không phải giá đã sửa) và chỉ báo «Đã đồng bộ»; đăng xuất khi 0 chờ không hỏi và cũng không còn cơ sở dữ liệu ấy. Từ chối: bảng nêu căn, thay đổi và lý do của lõi, có «Bỏ thay đổi»; bấm xong chỉ báo không còn «cần xem». Đã cọc: bảng nêu «Căn đã cọc». Đối chứng: chỉ báo trước và sau mỗi thao tác khác nhau."
+    paths: [apps/web/src/lib/sync/**, apps/web/src/components/sync/**, apps/web/src/components/shell/**, apps/web/src/app/(app)/proto/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «biết có mạng lại không cần sự kiện trình duyệt» có mặt và ok — đồng hồ giả, mạng giả mất, 1 thao tác chờ; không phát sự kiện online; tiến đồng hồ 14 giây → 0 lần thử thêm; tiến tới 15 giây → đúng 1 lần thử (đếm); đặt mạng có, tiến thêm 15 giây → thao tác lên, hàng đợi rỗng; phát «quay lại trang» → thử ngay (đếm +1, không chờ đồng hồ); hàng đợi rỗng và đang có mạng: tiến 29 giây → 0 lần kéo, 30 giây → 1 lần kéo. Chiều đỏ: chỉ dựa sự kiện online → không lần thử nào, ca đỏ nêu giây."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đăng xuất: hỏi đúng n, xoá sạch kho của người đó» có mặt và ok — kho bộ nhớ của ba người A, B, C trên cùng máy; A có 3 thao tác chờ; hàm cần-hỏi-khi-đăng-xuất của A trả {hoi: true, n: 3}, của B (0 chờ) trả {hoi: false}; đăng xuất A (sau xác nhận) → bản kéo, lịch sử, hàng đợi của A rỗng (deepEqual); đăng xuất B (không hỏi) → kho của B cũng rỗng; kho của C deepEqual trước khi xoá. Chiều đỏ: xoá cả kho của B hay bỏ hàng đợi của A → ca đỏ nêu ngăn."
+    paths: [apps/web/src/lib/sync/**, apps/web/src/components/shell/account-menu.tsx]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
