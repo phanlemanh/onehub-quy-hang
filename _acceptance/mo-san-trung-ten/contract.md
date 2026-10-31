@@ -5,7 +5,7 @@ slug: mo-san-trung-ten
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [cli]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-mo-san-trung-ten-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31
@@ -71,3 +71,6 @@ tenant theo mã, không theo tên].
   thiết kế, kế hoạch — khai thêm ở Cổng Phạm vi.
 - AC-4 sửa ở S3 theo lời chủ kho 31/10 (sổ `d-…` mang `supersedes` d-4): vế «người mới đặt sàn cũ» không phải điều cơ sở dữ
   liệu hứa — chỗ chặn là API; kiểm thành viên ở cơ sở dữ liệu là hàng mới.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-2: Ca cách ly gọi câu truy vấn tự viết là «đường chọn sàn của API»; đổi cách chọn sàn thật thì ca này không báo.
+  - Ngoài-4: Cùng giới hạn với Ngoài-2 — câu chọn sàn trong ca được chép tay, không gọi hàm chọn sàn thật.
