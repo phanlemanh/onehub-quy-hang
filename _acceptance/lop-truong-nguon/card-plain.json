@@ -1,5 +1,5 @@
 {
-  "feature_plain": "Chỉ đầu chủ giữ căn và trưởng nhóm thấy chủ nhà và giá đáy; số chủ chỉ hiện khi bấm «Mở số», và mỗi lần bấm được ghi lại — người khác trong sàn mở cùng hồ sơ chỉ biết ai giữ căn.",
+  "feature_plain": "Chỉ đầu chủ giữ căn và trưởng nhóm thấy chủ nhà và giá đáy — và chỉ trên căn họ được xem (căn «Chỉ tôi» của người khác coi như không có); số chủ chỉ hiện khi bấm «Mở số», mỗi lần bấm được ghi lại — người khác trong sàn mở cùng hồ sơ chỉ biết ai giữ căn.",
   "will_do": [
     {
       "id": "AC-1",
@@ -113,5 +113,5 @@
       "p": "Bảng ai-thấy-gì có ô vô nghĩa, chưa ghi kết quả từng ô, thiếu ca kiêm vai. Đã xử: bảng 12 ô có kết quả ngay trong hợp đồng, gồm hai ca kiêm vai."
     }
   ],
-  "analyst_plain": "Các phép kiểm cũng xanh khi chạy trên bản trước việc này, vì bản trước chưa có ca kiểm nào của việc này — không có nghĩa là ca kiểm yếu. Bằng chứng ca kiểm bắt được lỗi thật là các lần cố tình làm hỏng mã lúc viết (ví dụ cho quản trị sàn thấy chủ nhà, hay để lọt số vào hồ sơ trả về): lần nào ca tương ứng cũng đỏ."
+  "analyst_plain": ""
 }
