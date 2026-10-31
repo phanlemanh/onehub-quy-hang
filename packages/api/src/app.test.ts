@@ -47,6 +47,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "PUT /api/v1/listings/{listingId}/owner",
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
     "PUT /api/v1/listings/{listingId}/listing-agent",
+    "GET /api/v1/catalog/units/{code}",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
