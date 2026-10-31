@@ -1,14 +1,10 @@
-# Review findings: vo-ung-dung (round 2)
-
 ## Trong hợp đồng
-
-Không có finding nào map được vào AC ở round này.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hộp «Gõ mã căn» không chiếm toàn màn ở khổ 640–767px: sm:max-w-sm đè max-md:max-w-none, hộp 24rem dính mép trái**
+- **Hộp «Gõ mã căn» không chiếm toàn màn ở khổ 640–767px: sm:max-w-sm đè max-md:max-w-none, hộp 24rem dính mép trái (r2)**
   Người dùng thấy gì: Trên màn hình cỡ giữa (khoảng 640 đến 767 điểm ảnh, như điện thoại xoay ngang hoặc máy tính bảng nhỏ), hộp gõ mã căn hiện thành một cột hẹp dính mép trái thay vì phủ toàn màn. Vẫn gõ được mã và mở được căn, chỉ xấu và lệch so với thiết kế.
   Căn cứ: Chỉ lệch giao diện ở một dải khổ hẹp, không mất dữ liệu và vẫn dùng được; người dùng điện thoại đứng và máy tính không bị ảnh hưởng, nên ghi lại làm hạn chế đã biết và sửa khi làm khổ tablet.
   file: `apps/web/src/components/shell/unit-jump.tsx`
@@ -29,7 +25,7 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: low
   Đề xuất: known-limits
 
-- **design_pass.proto_route trỏ tới /proto/{slug>, nhưng ứng dụng web không có đường /proto (r1 · tệp đã đổi)**
+- **design_pass.proto_route trỏ tới /proto/{slug>, nhưng ứng dụng web không có đường /proto (r1)**
   Người dùng thấy gì: Cấu hình nghiệm thu trỏ tới một địa chỉ bản mẫu không tồn tại, nên nếu công cụ nghiệm thu mở nó sẽ gặp trang không tìm thấy. Người dùng cuối không bao giờ thấy điều này.
   Căn cứ: Chỉ ảnh hưởng quy trình nghiệm thu nội bộ, không chạm người dùng; ảnh chấm thật đã chụp từ trang thật nên không mất bằng chứng.
   file: `_acceptance/config.yaml`
@@ -49,5 +45,7 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   file: `apps/web/src/components/shell/company-switcher.tsx`
   severity: low
   Đề xuất: known-limits
+
+## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
