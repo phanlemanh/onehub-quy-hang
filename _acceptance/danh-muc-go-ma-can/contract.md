@@ -5,7 +5,7 @@ slug: danh-muc-go-ma-can
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-danh-muc-go-ma-can-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T03:44:49Z
@@ -109,3 +109,10 @@ BedroomsTotal, DirectionFaces]; nhập tin tự điền từ hồ sơ có sẵn 
 - Ngoài-2 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Người dùng gõ mã căn vẫn nhận kết quả đúng như hiện nay. Bài kiểm kèm theo có một kẽ hở nhỏ: nếu cách đọc mã đổi trong tương lai, nó có thể báo xanh dù không còn phân biệt được lỗi đếm sai. — `packages/api/src/catalog/catalog.test.ts`
 - Ngoài-3 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Dữ liệu chủ nhà mẫu (không phải dữ liệu thật) nằm trong phần chương trình chạy trên máy chủ, nhưng không hiện ra cho người dùng hay trang khách. Chỉ có ghi chú trong mã nói sai về điều này. — `packages/api/src/catalog/sample.ts`
 - Ngoài-5 (máy định tuyến 2026-10-31, đề xuất S4 known-limits): Công cụ đo tỉ lệ tự điền có thể báo 100% dù bỏ qua vài mã không có trong danh mục, nếu sau này dữ liệu mẫu bị đổi. Người dùng cuối không gặp điều này, chỉ ảnh hưởng độ tin của con số báo cáo. — `packages/api/src/catalog/do-ti-le.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Bài kiểm canh tỉ lệ tự điền có thể mất sức bắt lỗi mà vẫn xanh nếu bộ danh mục mẫu đổi.
+  - Ngoài-2: Đối chứng đọc tráo mã chưa tự kiểm tiền đề của nó, nên đổi cách đọc mã sau này có thể làm nó xanh oan.
+  - Ngoài-3: Phần chủ nhà mẫu (không phải dữ liệu thật) nằm trong bản chạy máy chủ, không ra người dùng; hàng 10 thay gói mẫu.
+  - Ngoài-5: Lệnh đo tỉ lệ có thể báo 100% dù bỏ qua mã không có trong danh mục, nếu dữ liệu mẫu đổi.
+- Ngoài-4 (mở hợp đồng mới, chủ kho quyết 2026-10-31): hai toà cùng dự án có căn trùng mã thì tra hiện ra căn của toà nạp
+  sau mà không báo — tách việc riêng, xử cùng hàng 10 (nạp danh mục thật).
