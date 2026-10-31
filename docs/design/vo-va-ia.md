@@ -61,6 +61,12 @@ Trang khách `/s/<mã>` (đầu trang tên sàn + người gửi, mảnh) · đ�
 
 ## 2. Bản đồ màn → khối đích
 
+**Bản đồ khuôn** (hàng 58, 31/10): nhóm màn đã có màn thật có tệp máy đọc ở [`design/patterns/`](../../design/patterns/)
+— `xac-thuc`, `cai-dat-san`, `trang-tam`, `trang-thai` — mỗi tệp khai khuôn, màn mẫu, khe bắt buộc, khối cấm và ngoại lệ có
+lý do; `node packages/ui-lint/ban-do-khuon.mjs` kiểm mọi màn của nhóm dựng qua khuôn. Bảng dưới giữ **lời giải thích**:
+màn nào, archetype gì, khối đích nào và vì sao; bản đồ giữ **khuôn máy giữ**. Nhóm chưa có màn (bảng hàng, hồ sơ căn,
+Hôm nay…) chưa có tệp — khuôn của nhóm sinh ra cùng màn đầu tiên của nhóm.
+
 Mã phác thảo theo Tham chiếu §10; hàng là mã hàng của lộ trình. «Phủ»: trọn = khối là cả màn; vùng = khối là vùng
 chính, phần còn lại ghép.
 
@@ -102,6 +108,7 @@ chính, phần còn lại ghép.
 | Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ |
 | Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu |
 | Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 6 — ghép `Frame` + `Field` + `Input` + `Button` ở hàng 6; chuyển thể khối `auth-15` là việc riêng (ADR-0005) |
+| Trống · lỗi · báo (`TrangThai`) | Bậc 6 — ghép `Empty` + `Alert` đã cài thành khuôn `apps/web/src/components/trang-thai.tsx` (hàng 58); khối đích `empty-state-*` là khối Pro, chuyển thể vào chính tệp ấy khi có khoá ReUI |
 | Người dùng (Cài đặt sàn, tạm) | Bậc 6 — ghép `Frame` + `Item` + `Badge` + `Field` + `Checkbox` + `AlertDialog` ở hàng 7; khối Pro `solution-users-8` khi có khoá ReUI (ADR-0006) |
 
 ## 4. Tránh

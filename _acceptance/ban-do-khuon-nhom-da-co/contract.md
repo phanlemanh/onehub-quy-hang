@@ -50,7 +50,7 @@ Source input: `docs/plan/lo-trinh.json` hàng 58 · `_acceptance/ban-do-khuon-nh
   `nhan_dien` không bị báo. Giới hạn khai: dòng chữ trần không mang `role` và không dùng khối cấm thì bộ quét không
   thấy.
 - AC-5: Given lệnh `node packages/ui-lint/ban-do-khuon.mjs`, When chạy trên cây thật, Then in đúng một dòng mỗi nhóm
-  `<nhóm>: N tệp theo khuôn · k ngoại lệ · 0 lệch` và thoát 0; trên bản sao có lệch thì thoát 1 và mỗi lệch một dòng
+  `<nhóm>: N tệp theo khuôn · k ngoại lệ · 0 lệch` (nhóm đơn vị phần tử đếm «chỗ» thay «tệp») và thoát 0; trên bản sao có lệch thì thoát 1 và mỗi lệch một dòng
   `<tệp>: <nhóm> — <điều lệch>`; `--json` in một đối tượng JSON đọc lại được có cùng số.
 - AC-6: Given người mẫu `hai-san@` ở Sàn mẫu B (sàn chỉ có một quản trị) và người mẫu `dau-chu@` không phải quản trị,
   When mở Cài đặt sàn → Người dùng ở khổ 1440 và 375, rồi `hai-san@` tự gỡ vai Quản trị của mình (Sửa → Lưu) và tự

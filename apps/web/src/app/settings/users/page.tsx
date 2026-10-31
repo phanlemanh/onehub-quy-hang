@@ -1,14 +1,16 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { Frame, FrameDescription, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
+import { TrangThai } from "@/components/trang-thai";
 import { getApi, readMe } from "@/lib/api";
 
+import { MucCaiDat } from "../khung";
 import { QuanNguoi, type Khu, type ThanhVien } from "./quan-nguoi";
 
 export const dynamic = "force-dynamic";
 
-// Cài đặt sàn → Người dùng (S6, hàng 7). Ghép từ thành phần đã cài; khối Pro `solution-users-8` để sau (ADR-0006).
+// Cài đặt sàn → Người dùng (S6, hàng 7), dựng qua khuôn MucCaiDat (design/patterns/cai-dat-san.md). Ghép từ thành phần
+// đã cài; khối Pro `solution-users-8` để sau (ADR-0006).
 export default async function NguoiDung() {
   const cookie = (await headers()).get("cookie") ?? "";
   const me = await readMe(cookie);
@@ -18,24 +20,16 @@ export default async function NguoiDung() {
   const api = getApi();
   const res = await api.request("http://quy-hang.local/api/v1/company/members", { headers: { cookie } });
   return (
-    <main className="flex min-h-svh justify-center bg-background p-4">
-      <Frame className="w-full max-w-3xl">
-        <FrameHeader>
-          <FrameTitle>Người dùng</FrameTitle>
-          <FrameDescription>Người của sàn {me.activeCompany.name}</FrameDescription>
-        </FrameHeader>
-        <FramePanel className="flex flex-col gap-6">
-          {res.status === 403 ? (
-            <p className="text-sm">Chỉ quản trị sàn xem được trang này.</p>
-          ) : (
-            <QuanNguoi
-              thanhVien={(await res.json()) as ThanhVien[]}
-              khu={(await (await api.request("http://quy-hang.local/api/v1/company/zones", { headers: { cookie } })).json()) as Khu[]}
-              toi={me.user.id}
-            />
-          )}
-        </FramePanel>
-      </Frame>
-    </main>
+    <MucCaiDat title="Người dùng" description={`Người của sàn ${me.activeCompany.name}`}>
+      {res.status === 403 ? (
+        <TrangThai kind="notice" title="Chỉ quản trị sàn xem được trang này." />
+      ) : (
+        <QuanNguoi
+          thanhVien={(await res.json()) as ThanhVien[]}
+          khu={(await (await api.request("http://quy-hang.local/api/v1/company/zones", { headers: { cookie } })).json()) as Khu[]}
+          toi={me.user.id}
+        />
+      )}
+    </MucCaiDat>
   );
 }
