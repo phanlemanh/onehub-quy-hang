@@ -35,6 +35,7 @@ executors:
     build: "npm run build"
     giao_dien: "node packages/ui-lint/kiem-chuan.mjs"   # trạng thái cây của bộ chuẩn giao diện
     san_m1: "CLAUDE_PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" node packages/ui-lint/thu-san.mjs"   # bài thử sàn M1 — kit từ CLAUDE_PLUGIN_ROOT, vắng thì từ sổ plugin đã cài
+    design_floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # vo-ung-dung: như design.floor, kit vắng CLAUDE_PLUGIN_ROOT thì tìm như san_m1 (lượt chấm không có biến này)
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
@@ -88,3 +89,6 @@ tri_thuc:
   noi: docs/tri-thuc   # gốc tri thức trong kho; kho riêng tư nên tài liệu thô nằm trong kho (không khai cong_khai, không kho riêng)
 dieu_phoi:
   goi_dot: docs/plan/dot-{ten}   # gói đợt Điều phối – Thợ; mở bằng /dieu-phoi:mo-dot <tên> (Mạnh 30/10)
+design_pass:
+  proto_route: http://localhost:3460/proto/{slug}
+  ds_skill: quy-hang-ui
