@@ -16,7 +16,9 @@ hàng sang hàng chủ nhà.
 1. **Ai thấy nguồn** — đầu chủ giữ căn còn vai Đầu chủ, và trưởng nhóm. Tới khi có nhóm, trưởng nhóm thấy chủ nhà của cả
    sàn (Hỏi-2). Quản trị sàn, đầu khách, telesales, đầu chủ khác không thấy. Luật nằm ở hai chỗ cùng nghĩa —
    `canSeeSource` (`packages/core/src/access`) và `app.can_see_source` (migration 006) — và được đo bằng CÙNG một bảng
-   12 ô viết tay (`packages/core/src/access/bang-xem-nguon.json`).
+   12 ô viết tay (`packages/core/src/access/bang-xem-nguon.json`). Nguồn chỉ thấy trên hàng người xem đọc được: hàng
+   «Chỉ tôi» của người khác (hàng 12) thì bốn lời gọi chủ nhà trả 404 như hàng không có — xét bằng `canRead` của lõi ở
+   API, cùng tầng với trục ai thấy hàng (chưa ở cơ sở dữ liệu).
 2. **Đầu chủ giữ căn** (Hỏi-3) — đầu chủ ghi chủ nhà đầu tiên cho hàng chưa có người giữ thì giữ căn; trưởng nhóm gán,
    gán lại; đầu chủ không tự chuyển căn; người không có vai Đầu chủ ghi chủ nhà trên hàng chưa có người giữ bị từ chối.
    Mỗi lần gán là một dòng chỉ thêm (`listing_agent_assignments`); người giữ là dòng mới nhất. Không thành sự kiện của

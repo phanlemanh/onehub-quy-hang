@@ -53,10 +53,25 @@ async function sanMoi(ten: string) {
     truongNhom: await them(["team_lead"], "tn"),
   };
 }
-const taoHang = async (cookie: string) => {
+/** Hàng «Chỉ tôi» mới của người tạo (hàng 12): chỉ người tạo đọc được. */
+const taoHangChiToi = async (cookie: string) => {
   const res = await send("POST", "/api/v1/listings", { buildingName: "[Toà mẫu]", unitNumber: "A-1201" }, cookie);
   assert.equal(res.status, 201);
-  return ((await res.json()) as { id: string }).id;
+  return (await res.json()) as { id: string; version: number };
+};
+/** Hàng đã lên «Toàn sàn» (lần đầu Đang bán), để mọi thành viên của sàn đọc được hàng — nguồn chỉ thấy trên hàng đọc được. */
+const taoHang = async (cookie: string) => {
+  let h = await taoHangChiToi(cookie);
+  for (const [type, payload] of [
+    ["price_changed", { listPrice: 3_500_000_000, feeInclusion: "excluded" }],
+    ["details_changed", { legalStatus: "pink_book", occupantType: "vacant" }],
+    ["status_changed", { to: "Active" }],
+  ] as const) {
+    const res = await send("POST", `/api/v1/listings/${h.id}/events`, { type, payload, expectedVersion: h.version }, cookie);
+    assert.equal(res.status, 200, `${type}: ${await res.clone().text()}`);
+    h = (await res.json()) as { id: string; version: number };
+  }
+  return h.id;
 };
 const chuNha = (id: string) => `/api/v1/listings/${id}/owner`;
 const moSo = (id: string) => `/api/v1/listings/${id}/owner/phone-reveal`;
@@ -254,6 +269,33 @@ test("gán sai bị từ chối, không thêm dòng", async () => {
     assert.equal(await dem("listing_agent_assignments", h), truoc);
     assert.equal((await json(await send("GET", chuNha(h), undefined, a.dauChu.cookie))).visible, true);
   }
+});
+
+test("hàng Chỉ tôi của người khác: bốn lời gọi chủ nhà trả 404 như hàng không có, không ghi", async () => {
+  const a = await SAN;
+  const h = (await taoHangChiToi(a.dauChu.cookie)).id;
+  // Đối chứng dương: người tạo vẫn đặt và đọc được chủ nhà của hàng mình.
+  assert.equal((await send("PUT", chuNha(h), CHU, a.dauChu.cookie)).status, 200);
+  assert.equal((await json(await send("GET", chuNha(h), undefined, a.dauChu.cookie))).visible, true);
+  const truoc = await Promise.all(["listing_owners", "listing_agent_assignments", "owner_phone_reveals"].map((t) => dem(t, h)));
+  const khongCo = "00000000-0000-4000-8000-000000000000";
+  let soLoi = 0;
+  for (const ai of [a.truongNhom, a.dauChuKhac, a.quanTri]) {
+    for (const [m, duong, body] of [
+      ["GET", chuNha, undefined],
+      ["PUT", chuNha, CHU],
+      ["POST", moSo, undefined],
+      ["PUT", ganDauChu, { userId: a.dauChuKhac.userId }],
+    ] as const) {
+      const res = await send(m, duong(h), body, ai.cookie);
+      const goc = await send(m, duong(khongCo), body, ai.cookie);
+      assert.equal(res.status, 404, `${m} ${duong(h)}`);
+      assert.deepEqual(await res.json(), await goc.json(), `${m}: khác câu trả lời của hàng không có`);
+      soLoi++;
+    }
+  }
+  assert.equal(soLoi, 12);
+  assert.deepEqual(await Promise.all(["listing_owners", "listing_agent_assignments", "owner_phone_reveals"].map((t) => dem(t, h))), truoc);
 });
 
 test("hai đầu chủ nhận cùng lúc: đúng một người giữ", async () => {

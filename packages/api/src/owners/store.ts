@@ -1,7 +1,9 @@
 import { canSeeSource, ownerView, validateOwnerInput, type OwnerView, type Viewer } from "@quy-hang/core/access";
 import type { PayloadError } from "@quy-hang/core/listing";
+import { canRead, factsFromEvents } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { loadEvents } from "../listings/store";
 
 /**
  * Chủ nhà của hàng (hàng 11, ADR-0010). Mọi câu chạy trong giao dịch của `withCompany` bằng vai `quy_hang_app`: luật theo
@@ -24,6 +26,17 @@ async function nguoiXem(tx: pg.PoolClient): Promise<Viewer> {
   return { userId: rows[0]!.u, roles: rows[0]!.r };
 }
 
+/**
+ * Khoá hàng rồi xét trục ai thấy hàng (hàng 12) bằng `canRead` của lõi: hàng không có, của sàn khác hay «Chỉ tôi» của
+ * người khác đều thành `null` — cùng một câu 404, xét trước khuôn và vai để mã lỗi không lộ hàng có thật. Nguồn chỉ thấy
+ * được trên hàng mình đọc được.
+ */
+async function moHang(tx: pg.PoolClient, listingId: string): Promise<Viewer | null> {
+  if (!(await khoaHang(tx, listingId))) return null;
+  const viewer = await nguoiXem(tx);
+  return canRead(viewer, factsFromEvents(await loadEvents(tx, listingId))) ? viewer : null;
+}
+
 /** Đầu chủ giữ căn: dòng gán mới nhất; chưa ai giữ → `null`. */
 async function dauChuGiu(tx: pg.PoolClient, listingId: string): Promise<string | null> {
   const { rows } = await tx.query<{ user_id: string }>(
@@ -44,8 +57,8 @@ async function docChuNha(tx: pg.PoolClient, listingId: string, viewer: Viewer, a
 }
 
 export async function getOwner(tx: pg.PoolClient, listingId: string): Promise<OwnerView | Refusal> {
-  if (!(await khoaHang(tx, listingId))) return ve(API_ERRORS.notFound);
-  const viewer = await nguoiXem(tx);
+  const viewer = await moHang(tx, listingId);
+  if (!viewer) return ve(API_ERRORS.notFound);
   const agent = await dauChuGiu(tx, listingId);
   if (!canSeeSource(viewer, agent)) return { visible: false, listingAgentUserId: agent };
   return docChuNha(tx, listingId, viewer, agent);
@@ -53,10 +66,10 @@ export async function getOwner(tx: pg.PoolClient, listingId: string): Promise<Ow
 
 /** Ghi lại trọn chủ nhà. Hàng chưa ai giữ: người có vai Đầu chủ thành đầu chủ giữ căn (Hỏi-3). */
 export async function putOwner(tx: pg.PoolClient, listingId: string, payload: unknown): Promise<OwnerView | Refusal> {
-  if (!(await khoaHang(tx, listingId))) return ve(API_ERRORS.notFound);
+  const viewer = await moHang(tx, listingId);
+  if (!viewer) return ve(API_ERRORS.notFound);
   const v = validateOwnerInput(payload);
   if (!v.ok) return ve(API_ERRORS.invalidPayload, v.errors);
-  const viewer = await nguoiXem(tx);
   let agent = await dauChuGiu(tx, listingId);
   if (agent === null) {
     if (!viewer.roles.includes("listing_agent")) return ve(API_ERRORS.listingAgentRequired);
@@ -86,7 +99,7 @@ export async function putOwner(tx: pg.PoolClient, listingId: string, payload: un
 
 /** Mở số chủ qua cửa duy nhất của cơ sở dữ liệu — hàm ghi một sự kiện rồi mới trả số. */
 export async function revealPhone(tx: pg.PoolClient, listingId: string): Promise<{ ownerPhone: string } | Refusal> {
-  if (!(await khoaHang(tx, listingId))) return ve(API_ERRORS.notFound);
+  if (!(await moHang(tx, listingId))) return ve(API_ERRORS.notFound);
   await tx.query("savepoint mo_so");
   try {
     const { rows } = await tx.query<{ so: string }>("select app.reveal_owner_phone($1) as so", [listingId]);
@@ -101,12 +114,12 @@ export async function revealPhone(tx: pg.PoolClient, listingId: string): Promise
 
 /** Trưởng nhóm gán, gán lại đầu chủ giữ căn: thêm một dòng gán, dòng cũ giữ nguyên. */
 export async function assignAgent(tx: pg.PoolClient, listingId: string, payload: unknown): Promise<{ listingAgentUserId: string } | Refusal> {
-  if (!(await khoaHang(tx, listingId))) return ve(API_ERRORS.notFound);
+  const viewer = await moHang(tx, listingId);
+  if (!viewer) return ve(API_ERRORS.notFound);
   const p = payload as Record<string, unknown> | null;
   if (!p || typeof p !== "object" || Array.isArray(p) || Object.keys(p).some((k) => k !== "userId") || typeof p.userId !== "string") {
     return ve(API_ERRORS.invalidPayload, [{ path: "userId", reason: "cần mã thành viên" }]);
   }
-  const viewer = await nguoiXem(tx);
   if (!viewer.roles.includes("team_lead")) return ve(API_ERRORS.listingAgentRequired);
   const { rows } = await tx.query<{ ok: boolean }>("select app.member_has_role($1, 'listing_agent') as ok", [p.userId]);
   if (!rows[0]?.ok) return ve(API_ERRORS.invalidPayload, [{ path: "userId", reason: "không phải đầu chủ của sàn" }]);
