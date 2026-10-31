@@ -16,7 +16,7 @@
     {"id": "OOS-1", "p": "Không đưa thông báo lên điện thoại, máy tính ở việc này — đầu chủ nhận thông báo ở hàng 26; phần của trưởng nhóm chờ anh chốt ở Hỏi-6."},
     {"id": "OOS-2", "p": "Không dựng màn nào — nút nhận ở Hôm nay của đầu chủ (hàng 22), bốn nấc lead cho telesales (hàng 27), ghi cuộc gọi (hàng 28), Hôm nay của trưởng nhóm (hàng 42)."},
     {"id": "OOS-3", "p": "Không làm phần sàn tự chỉnh luật chia và hai hạn — chạy bằng mặc định 15 và 30 phút tới hàng Cài đặt sàn."},
-    {"id": "OOS-4", "p": "Không tự bật lượt chạy mỗi phút trên bản thật — đó là việc vận hành sau khi gộp, theo lựa chọn ở Hỏi-1."},
+    {"id": "OOS-4", "p": "Không tự bật lượt chạy mỗi phút trên bản thật — sau khi gộp, anh tự đặt khoá bí mật ở Vercel và Supabase, bật hai tiện ích lịch có sẵn trong dự án Supabase (gói Pro đang dùng) theo hướng dẫn từng bước trong hồ sơ; máy và giám sát không đặt khoá."},
     {"id": "OOS-5", "p": "Không tự giao lại lead của người vừa nghỉ hay lead quá hạn — trưởng nhóm giao tay sau lời báo."},
     {"id": "OOS-6", "p": "Không chia theo số lead đang cầm, theo ca hay theo giờ — để luật của sàn ở bản sau."},
     {"id": "OOS-7", "p": "Không biến lead thành căn khi đầu chủ nhận — việc của hồ sơ căn và Hôm nay."},

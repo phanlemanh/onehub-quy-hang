@@ -113,7 +113,11 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead s
 - Màn: Hôm nay của đầu chủ có nút nhận (hàng 22), bốn nấc lead của telesales (hàng 27), màn cuộc gọi ghi gọi (hàng 28),
   Hôm nay của trưởng nhóm xem lead quá hạn và chia lại (hàng 42).
 - Cài đặt sàn chỉnh luật chia và hai hạn (`/settings/lead-routing`) — P1; hàng này chạy bằng mặc định dựng sẵn.
-- Bật nhịp mỗi phút trên bản thật (bật extension, đặt khoá ở Vercel) — việc vận hành sau gộp theo lời chốt Hỏi-1.
+- Bật nhịp mỗi phút trên bản thật — bước vận hành của chủ kho sau gộp, theo hướng dẫn ở ADR-0017 và lời chốt Hỏi-1:
+  chủ kho đặt khoá việc nền (`JOB_SECRET`, bí mật) ở Vercel và ở Supabase — giám sát và máy không đặt; bật hai extension
+  `pg_cron`, `pg_net` (dự án Supabase `quy-hang`, tổ chức gói Pro, có sẵn bản 1.6.4 và 0.20.4 mà chưa bật — đọc 31/10 qua
+  công cụ Supabase; Supabase Cron là module Postgres của dự án, docs: https://supabase.com/docs/guides/cron) rồi tạo
+  lịch mỗi phút gọi lối việc nền. Kho chỉ khai tên biến ở `.env.example`.
 - Tự giao lại lead của người vừa nghỉ, hay lead quá hạn — trưởng nhóm giao tay (AC-7).
 - Chia theo tải (số lead đang mở), theo ca làm, theo giờ — luật của sàn ở P1.
 - Lead thành hàng khi đầu chủ nhận — hàng 22/17.

@@ -88,7 +88,11 @@ lõi chọn người, ghi; rồi lấy dữ kiện hạn, lõi xét, ghi báo. C
 - **Hỏi-1 — nhịp mỗi phút trên bản thật** (tốn tiền, luật 23): (a) lịch `pg_cron` + `pg_net` của Supabase gói đang dùng
   gọi lối việc nền mỗi phút — không tốn thêm; (b) kiểm quá hạn lúc có người mở app — không tốn, nhưng không ai mở thì
   không ai được báo, trượt hạn «sai số một phút»; (c) lịch mỗi phút của Vercel Pro — tốn gói trả phí, đúng Kiến trúc §5.
-  Khuyến nghị (a). Mã của hàng không phụ thuộc bên gọi; bật lịch trên bản thật là việc vận hành sau gộp.
+  Khuyến nghị (a). Mã của hàng không phụ thuộc bên gọi; bật lịch trên bản thật là bước vận hành của chủ kho sau gộp.
+  Nguồn (đọc 31/10 qua công cụ Supabase): tổ chức «OneHub's Org» gói Pro; dự án `quy-hang` có sẵn `pg_cron` 1.6.4 và
+  `pg_net` 0.20.4, chưa bật; Supabase Cron chạy từ mỗi giây tới mỗi năm (https://supabase.com/docs/guides/cron).
+  Khoá `JOB_SECRET` là bí mật: chủ kho đặt ở Vercel (máy chủ kiểm) và ở Supabase (lịch gửi kèm) — giám sát và máy không
+  đặt. ADR-0017 ghi hướng dẫn từng bước cho chủ kho.
 - **Hỏi-2 — toà không có đầu chủ phụ trách** (hay mọi người đều nghỉ): khuyến nghị lead chờ, báo trưởng nhóm «chưa chia
   được», trưởng nhóm chia tay. Lối khác: chia cho mọi đầu chủ đang làm của sàn — lead không chờ, nhưng về người không
   biết toà.
