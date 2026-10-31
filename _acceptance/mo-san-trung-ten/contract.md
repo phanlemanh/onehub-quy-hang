@@ -5,7 +5,7 @@ slug: mo-san-trung-ten
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [cli]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-mo-san-trung-ten-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31
