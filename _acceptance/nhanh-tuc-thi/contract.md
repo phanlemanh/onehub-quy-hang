@@ -5,7 +5,7 @@ slug: nhanh-tuc-thi
 owner: omre.cnsp4@onemount.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-nhanh-tuc-thi-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T09:30:00Z
@@ -114,3 +114,21 @@ PowerSync, ElectricSQL].
 - Dãy N chạy Postgres 5551 (container `quy-hang-db-N`), dev 3471.
 - Bài kiểm web chạy bằng hai lệnh mới khai ở `_acceptance/config.yaml` (`executors.test.web`, `executors.test.web_db`) —
   xin chạm tệp ở giám sát.
+- Known limits — chọn ở Cổng Bằng chứng 2026-10-31:
+  - Ngoài-1: Máy chủ vốn không trả thông tin chủ nhà; nếu một ngày nó lỡ trả, đường gửi sẽ không có lớp chặn thứ hai như đường tải về. Hiện chưa thấy người dùng gặp gì.
+  - Ngoài-2: Trong bảng Cần xem, người dùng thấy tên trạng thái bằng tiếng Anh như «Pending» hay «Closed» thay vì «Đang giao dịch», «Đã bán».
+  - Ngoài-5: Đường gửi thay đổi không có lớp kiểm tra thứ hai chống thông tin chủ nhà như đường tải về; hiện người dùng chưa gặp vấn đề.
+  - Ngoài-7: Khi có lỗi bất ngờ (kho trên máy lỗi, máy chủ trả dữ liệu sai khuôn), thanh trên có thể vẫn báo «Đã đồng bộ» và người dùng không thấy gì.
+  - Ngoài-9: Bài kiểm đăng xuất giữa lúc đang gửi có thể xanh dù không thật sự thử tình huống đó, nên chưa chắc kho không bị ghi lại sau khi xoá.
+  - Ngoài-11: Khi máy chủ trả về dữ liệu sau lúc gửi thay đổi, máy không quét lại lần nữa xem có lẫn thông tin chủ nhà hay không. Hiện máy chủ không trả thông tin đó, nên người dùng chưa gặp gì.
+  - Ngoài-12: Trong bảng Cần xem, người dùng thấy trạng thái căn bằng chữ tiếng Anh như Active hay Pending thay vì nhãn tiếng Việt quen thuộc.
+  - Ngoài-14: Khi phiên hết hạn hoặc máy chủ lỗi, thanh trên vẫn ghi Mất mạng nên người dùng không biết nguyên nhân thật là phải đăng nhập lại.
+  - Ngoài-15: Hiếm khi mở hồ sơ đúng lúc đang đồng bộ, danh sách có thể quay về bản cũ trong chốc lát, căn mới kéo về tạm biến mất cho tới lần kéo sau.
+  - Ngoài-17: Bài kiểm tự động chữ trên thanh trạng thái không bắt được trường hợp ai đó lỡ xoá một dòng trong bảng chữ; người dùng không thấy ngay.
+  - Ngoài-18: Bài kiểm việc người ở sàn khác không thấy hàng của sàn này có thể vẫn xanh dù bộ đồng bộ của họ hỏng hẳn, nên bằng chứng yếu hơn mong muốn.
+  - Ngoài-19: Bài kiểm ai thấy hàng nào chỉ xét hai căn mẫu, nên một căn lạ lọt vào kho sẽ không bị bắt tự động.
+  - Ngoài-20: Việc bỏ thay đổi khi máy chủ từ chối vì dữ liệu sai chưa có bài kiểm tự động riêng, nên nếu hỏng sẽ khó bị phát hiện sớm.
+  - Ngoài-21: Bài kiểm trường hợp máy chủ từ chối dùng thay đổi chờ dựng sẵn thay vì sửa như người dùng thật, nên có thể bỏ sót lỗi ở đường sửa thật.
+  - Ngoài-23: Lớp kiểm tra chống để lọt thông tin chủ nhà xuống máy chỉ chạy khi tải danh sách, chưa chạy ở bước gửi thay đổi. Hiện máy chủ không trả thông tin chủ nhà ở đường này nên chưa ai thấy hậu quả.
+  - Ngoài-24: Khi phiên hết hạn hoặc máy chủ lỗi, thanh trên vẫn ghi «Mất mạng» và người dùng không biết nguyên nhân thật. Ứng dụng cứ thử lại mãi.
+  - Ngoài-26: Bấm lưu hai ô rất sát nhau hoặc mở hai tab cùng lúc có thể khiến lần sửa thứ hai bị báo «đụng nhau» với chính mình. Người dùng phải xử lý ở bảng Cần xem.
