@@ -122,6 +122,14 @@ chính, phần còn lại ghép.
 | Tôi (điện thoại) | — · 38 | Frame stack | `settings-3` | vùng | Hồ sơ, sàn, cài lên màn hình chính, thông báo, đăng xuất | — |
 | Trống · lỗi · báo | dùng chung | — | [`empty-state-1`](https://reui.io/preview/radix/empty-state-1), [`empty-state-2`](https://reui.io/preview/radix/empty-state-2), ngăn báo `sheet-7`, `sonner` | — | Bỏ hình minh hoạ nặng; biểu tượng lucide nhỏ | `empty-state-12` |
 
+**Đã chuyển thể (hàng 14, 31/10) — Bảng hàng, máy tính.** `data-grid-editing-6` cài nguyên bản, chuyển thể ở
+`apps/web/src/app/(app)/inventory/` (khuôn `KhungBangHang`, nhóm màn `design/patterns/bang-hang.md`). Đổi: dữ liệu từ kho
+trên máy (hàng 13) ghép thuộc tính căn từ danh mục; mười chín cột theo RESO, ba cột ẩn mặc định; hàng lọc theo cột giữ;
+**chỉ đọc** — bỏ sửa ô, dán, kéo điền, hoàn tác, đổi hàng loạt (hàng 15, 16); nhóm Toà → Loại căn theo cách của
+`data-grid-grouping-2` bằng dòng con của lưới, đổi được sang Toà hay Không nhóm; nút «Góc nhìn ▾» đầu thanh công cụ lưu bộ
+lọc, cột hiện, sắp xếp, cách nhóm thành góc nhìn **trên máy theo người và sàn** — góc nhìn của đội để một hàng sau. Dưới
+`md` là khối báo bảng thẻ của mục 32.
+
 ## 3. Chỗ hở — không có khối, ghép từ thành phần
 
 | Chỗ | Ghép |
@@ -158,7 +166,7 @@ chính, phần còn lại ghép.
   `progress`, `kbd`, `calendar`, `breadcrumb`, `sonner`.
 - npm: `@tanstack/react-table`, `@tanstack/react-virtual`, `date-fns`, `next-themes`.
 - Đã cài 30/10 (hàng 4, hồ sơ `tang-5-giao-dien`): mọi mục shadcn ở trên và ReUI `frame`, `badge`, `alert`, `timeline`,
-  `stepper`, `sortable`, `number-field` — danh mục sống ở `.agents/skills/quy-hang-ui/catalog.md`. Chưa cài: `data-grid`,
-  `filters`, `cascader`, `event-calendar`, `use-file-upload` (mã ReUI nguyên bản đỏ `noUncheckedIndexedAccess` của kho —
+  `stepper`, `sortable`, `number-field` — danh mục sống ở `.agents/skills/quy-hang-ui/catalog.md`. `data-grid` cài ở hàng 14 (một dòng bản cài sửa để
+  qua cờ kiểu chặt — Cổng Phạm vi hàng 14). Chưa cài: `filters`, `cascader`, `event-calendar`, `use-file-upload` (mã ReUI nguyên bản đỏ `noUncheckedIndexedAccess` của kho —
   hàng đầu tiên cần chúng quyết nới cờ cho `apps/web` hay chuyển thể bản cài); `use-copy-to-clipboard` không có trên kho
   ReUI; `@tanstack/*`, `date-fns` cài cùng khối cần chúng.
