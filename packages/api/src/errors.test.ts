@@ -23,8 +23,11 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     invalidTransition: ["invalid-transition", 400],
     missingRequirement: ["missing-requirement", 400],
     invalidPayload: ["invalid-payload", 400],
+    // Hàng 11 (ADR-0010).
+    listingAgentRequired: ["listing-agent-required", 403],
+    ownerNotSet: ["owner-not-set", 404],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 17);
+  assert.equal(Object.keys(API_ERRORS).length, 19);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);
