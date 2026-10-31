@@ -63,7 +63,8 @@ Trang khách `/s/<mã>` (đầu trang tên sàn + người gửi, mảnh) · đ�
 
 **Bản đồ khuôn** (hàng 58, 31/10): nhóm màn đã có màn thật có tệp máy đọc ở [`design/patterns/`](../../design/patterns/)
 — `xac-thuc`, `cai-dat-san`, `trang-tam`, `trang-thai` — mỗi tệp khai khuôn, màn mẫu, khe bắt buộc, khối cấm và ngoại lệ có
-lý do; `node packages/ui-lint/ban-do-khuon.mjs` kiểm mọi màn của nhóm dựng qua khuôn. Bảng dưới giữ **lời giải thích**:
+lý do; `node packages/ui-lint/ban-do-khuon.mjs` kiểm mọi màn của nhóm dựng qua khuôn; luật lint `quy-hang-ui/ban-do-khuon` chặn
+nhập khối cấm lúc viết và bài quét chạy trong `npm run lint` (hàng 59). Bảng dưới giữ **lời giải thích**:
 màn nào, archetype gì, khối đích nào và vì sao; bản đồ giữ **khuôn máy giữ**. Nhóm chưa có màn (bảng hàng, hồ sơ căn,
 Hôm nay…) chưa có tệp — khuôn của nhóm sinh ra cùng màn đầu tiên của nhóm.
 

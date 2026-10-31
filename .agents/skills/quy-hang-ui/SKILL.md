@@ -44,7 +44,7 @@ Hai tầng vênh nhau thì tầng trên thắng; ghi chỗ lệch vào phần b�
 ## Lint giao diện và mức nợ
 
 Bộ luật `quy-hang-ui` (`packages/ui-lint`) áp mức error cho `apps/web/src/**/*.{ts,tsx}`, trừ hai thư mục cài nguyên
-bản. Mười luật — mỗi luật nói chỗ dùng thay:
+bản. Mười một luật — mỗi luật nói chỗ dùng thay:
 
 | Luật | Cấm | Dùng thay |
 |---|---|---|
@@ -58,12 +58,17 @@ bản. Mười luật — mỗi luật nói chỗ dùng thay:
 | `no-aschild` | `asChild` (Radix) | prop `render` của Base UI |
 | `no-emoji-icons` | emoji làm icon | icon lucide |
 | `require-disable-reason` | `eslint-disable` luật giao diện không kèm lý do | `// eslint-disable-next-line quy-hang-ui/<luật> -- <lý do>` |
+| `ban-do-khuon` | tệp thuộc một nhóm của `design/patterns/` nhập khối cấm của nhóm (so theo tên gốc); bản đồ đọc lỗi | khuôn của nhóm (`Khung`, `MucCaiDat`, `Placeholder`, `TrangThai`); sửa bản đồ |
 
 **Mức nợ** = số vi phạm luật `quy-hang-ui/*` bị cho qua hàng loạt (`eslint --suppress-*`, ghi ở
 `eslint-suppressions.json`). Trần ở `packages/ui-lint/muc-no.json` bằng **0** và chỉ được giảm so với nhánh chính;
 `npm run lint` in `mức nợ giao diện: <n>/<trần>` và đỏ khi vượt — job `check` của CI chạy nó. Ngoại lệ thật ghi tay
 ngay tại chỗ kèm lý do: được đếm và in riêng («ngoại lệ có lý do: n»), không cộng vào nợ, người duyệt PR đọc lý do.
 Không dùng `--suppress-*` để làm xanh lint.
+
+**Bản đồ khuôn** (`design/patterns/`, hàng 58–59): luật `ban-do-khuon` chặn nhập khối cấm lúc viết; bước kiểm chuẩn
+cuối `npm run lint` chạy thêm bài quét khuôn (gốc khuôn, khe bắt buộc, trạng thái trần) và in
+`khuôn: <n> nhóm · <k> lỗi đọc · <m> lệch`. Chấm theo vòng: `node packages/ui-lint/ban-do-khuon.mjs --base <ref>`.
 
 ## Sàn thiết kế
 
