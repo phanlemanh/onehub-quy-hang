@@ -5,6 +5,7 @@
 //   node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs [--khong-build]   cần dung-b.mjs --nhan 5000 đã chạy (bản dev,
 //   giữ phiên). Lệnh tự build, bật bản build ở 3491, đo, rồi tắt — đo bản build như ADR-0004, không đo bản dev.
 import { execFileSync, spawn } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { openSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -38,6 +39,8 @@ const mayChu = spawn(path.join(ROOT, "node_modules/.bin/next"), ["start", "-p", 
     BETTER_AUTH_URL: URL_BUILD,
     // Bản build đòi bộ gửi mã: khoá giả, không lời xin mã nào tới đây — phiên dùng lại từ bản dev.
     RESEND_API_KEY: "khoa-gia-ban-build-khong-gui",
+    // Bản build đòi khoá mã hoá số chủ (hàng 62): khoá ngẫu nhiên mỗi lần đo — sàn đo cuộn không có số chủ nào.
+    OWNER_PHONE_KEY: randomBytes(32).toString("base64"),
     MAIL_FROM: "khong-gui@mau.quy-hang.test",
   },
   stdio: ["ignore", nhatKy, nhatKy],

@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: da3c19d2c215d85252d4d346096912d55a049c1e
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: bang-hang-kieu-sheet
@@ -174,7 +174,7 @@ Round 4. Chỉ E8 chạy lại ở round này; các eval còn lại mang sang t�
   run_id: minted-bang-hang-kieu-sheet-E11-r3
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.script
+  verifier: _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs
   verified_at: 2026-10-31T18:22:36Z
   carried_from_round: 3
   # carry-forward tu round 3 — delta khong cham paths cua eval
