@@ -1,6 +1,6 @@
 # ADR-0018: Cấu hình theo sàn — khai báo có rào
 
-Ngày: 2026-11-01 · Trạng thái: **đề xuất** (Hỏi-2 đã quyết 1/11; Hỏi-1, Hỏi-3 chờ chủ kho) · Liên quan: Tham chiếu §4 «Cấu hình sàn», §7, §8 luật
+Ngày: 2026-11-01 · Trạng thái: **accepted** (Manh Phan 01/11: «ADR-0018: duyệt Hỏi-1 và Hỏi-3 theo khuyến nghị, cắt lượt»; Hỏi-2 đã quyết 1/11 qua giám sát) · Liên quan: Tham chiếu §4 «Cấu hình sàn», §7, §8 luật
 7, 13, 17, 18, 20, 24, 25, §12, §13; Kiến trúc §0, §1; bất biến 1–4; ADR-0008 (một đường ghi, sự kiện chỉ thêm), ADR-0010
 (lớp nguồn), ADR-0011 (nhập dữ liệu, từ điển của sàn), ADR-0016 (bộ trường theo loại hình); hàng 22, 23, 25, 31, 44–50,
 67–71 của lộ trình · sổ: [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md) · đề xuất hàng:
@@ -40,7 +40,7 @@ D (hàng 72, PR #45):
   011 không có số phút nào). Thẻ Cổng Phạm vi của 25 tự sửa một lần máy «tự chốt luật chia đều theo vòng» thành câu hỏi
   cho chủ kho vì «đây là chuyện thu nhập của đầu chủ» — luật chia lead là phán xét của sàn, không phải tham số máy chọn.
 
-## Quyết định đề xuất
+## Quyết định
 
 1. **Một sổ điểm biến thiên ở lõi — dữ liệu, không mã rẽ nhánh.** `packages/core/src/config/` giữ một bảng: mỗi điểm
    một khoá, kiểu, mặc định, khoảng cho phép, vai được đổi, cấp ghi đè dưới sàn, hiệu lực (`mới` / `tính lại`), lớp dữ
@@ -214,20 +214,20 @@ Một chỗ thêm: hàng nền không chặn các dãy đang chạy. Hàng 25 đ
   `/api/v1/company/settings/lead-routing` của hàng 25 — đường ghi duy nhất của cấu hình.
 - Từ nay **hàng thêm một con số hay lựa chọn của sàn khai điểm ấy vào sổ** (tài liệu và mã) trong cùng PR; Cổng Phạm vi
   hỏi «điểm này đã ở sổ chưa».
-- Tham chiếu §12 thêm một dòng «đề xuất»; đổi thành «đã chốt» khi chủ kho duyệt. `CONTEXT.md` thêm hai từ (đề xuất).
+- Tham chiếu §12 thêm một dòng (đã chốt 01/11). `CONTEXT.md` thêm hai từ — tên code đánh *(đề xuất)* tới khi có trong mã.
 
 ## Hỏi chủ kho
 
-- **Hỏi-1 — luật mở một điểm.** Khuyến nghị: một điểm sàn chỉnh được khi Tham chiếu đã chốt là mặc định, hoặc hai sàn
+- **Hỏi-1 — luật mở một điểm. Đã quyết 01/11 theo khuyến nghị**: một điểm sàn chỉnh được khi Tham chiếu đã chốt là mặc định, hoặc hai sàn
   thật cần hai giá trị khác nhau; không làm đối tượng tự tạo, công thức, luồng tự vẽ, kịch bản cho tới khi có số đo từ
   hai sàn thật (quyết định 7). Lối khác: mở rộng như Salesforce ngay từ bản đầu — trái §7 và Kiến trúc §0 đã chốt.
 - **Hỏi-2 — chia lead. Đã quyết 1/11**: chủ kho (giám sát chuyển) — «phân phối lead nó gần như là chuẩn của nhiều hệ
   thống CRM, và chính chủ sàn cũng chưa chắc cách nào là tốt nhất… nên cứng là không triển khai được». Theo đó: thực
   đơn năm chiến lược cố định, hạn nhận, hạn gọi, cách báo quá hạn sàn chọn được (sổ #1–#3a); bảng quyết định chờ (CH6).
-- **Hỏi-3 — cách lưu.** Khuyến nghị: sổ ở mã + bảng khoá–giá trị có sự kiện, sàn chưa đổi thì đi theo mặc định của sản
+- **Hỏi-3 — cách lưu. Đã quyết 01/11 theo khuyến nghị**: sổ ở mã + bảng khoá–giá trị có sự kiện, sàn chưa đổi thì đi theo mặc định của sản
   phẩm (quyết định 1, 3). Lối khác: bảng có kiểu một cột mỗi điểm — mỗi điểm mới một migration T3.
 
-Duyệt theo khuyến nghị Hỏi-1 và Hỏi-3 thì hàng 81 mở được ngay, không chờ dãy nào.
+Ba câu đã quyết; hàng 81 mở được ngay, không chờ dãy nào.
 
 ## Nguồn đã kiểm (01/11/2026)
 

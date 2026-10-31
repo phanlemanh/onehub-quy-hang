@@ -1,6 +1,6 @@
 # Bản phạm vi — cấu hình theo sàn (01/11)
 
-Nguồn: [ADR-0018](../adr/0018-cau-hinh-theo-san.md) (trạng thái «đề xuất») · sổ:
+Nguồn: [ADR-0018](../adr/0018-cau-hinh-theo-san.md) (accepted 01/11 — chủ kho duyệt Hỏi-1, Hỏi-3 theo khuyến nghị và cắt lượt) · sổ:
 [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md). Chủ kho 31/10–1/11: Quỹ hàng phục vụ nhiều sàn với cách
 làm khác nhau, nên thiết kế như một công ty SaaS; chọn mở phiên thiết kế. Trang tri thức của đợt:
 `docs/tri-thuc/wiki/dot/cau-hinh-theo-san-0111.md`.

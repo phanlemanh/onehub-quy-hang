@@ -1,6 +1,6 @@
 # Sổ điểm biến thiên — mỗi chỗ sàn chỉnh được, khai một lần
 
-> **Đề xuất 01/11/2026** cùng [ADR-0018](../adr/0018-cau-hinh-theo-san.md). Khoá theo khuôn hàng 25 đã đặt:
+> **Đã chốt 01/11/2026** cùng [ADR-0018](../adr/0018-cau-hinh-theo-san.md). Khoá theo khuôn hàng 25 đã đặt:
 > `<nhóm>.<khoá>` chữ thường, gạch dưới; giá trị ở bảng `company_settings`. Đây là đầu vào cho sổ ở mã
 > (`packages/core/src/config/`, hàng 81): khi có sổ ở mã, bộ kiểm của lõi so hai bên — khoá có ở đây mà không có ở mã
 > (hay ngược lại) là đỏ. Thêm, bớt hay đổi một điểm là sửa bảng này trong cùng PR với mã.
