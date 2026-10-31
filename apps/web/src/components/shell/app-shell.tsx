@@ -24,6 +24,10 @@ import { SECOND_COLUMN_COOKIE } from "./cookie";
 import { HomeRail } from "./home-rail";
 import { MobileHeader, MobileTabBar } from "./mobile-shell";
 import { ACTION_LABEL } from "./nav-labels";
+import { BangCanXem } from "@/components/sync/bang-can-xem";
+import { ChiBaoDongBo } from "@/components/sync/chi-bao-dong-bo";
+import { HoiDangXuat } from "@/components/sync/hoi-dang-xuat";
+import { BoDongBoProvider } from "@/lib/sync/react";
 import { Notifications } from "./notifications";
 import { SecondColumn, SecondColumnToggle } from "./second-column";
 import { UnitJumpButton, UnitJumpDialog, useUnitJumpKeys } from "./unit-jump";
@@ -36,7 +40,7 @@ export type ShellUser = {
   userId: string;
   email: string;
   companies: { id: string; name: string }[];
-  activeCompany: { id: string; name: string };
+  activeCompany: { id: string; name: string; roles?: string[] };
 };
 
 function writeRemembered(key: string, open: boolean) {
@@ -121,6 +125,7 @@ function DesktopHeader({
             </Button>
           );
         })}
+        <ChiBaoDongBo />
         <Notifications />
         <AccountMenu email={user.email} companyName={user.activeCompany.name} />
       </div>
@@ -158,6 +163,12 @@ export function AppShell({
   }
 
   return (
+    <BoDongBoProvider
+      userId={user.userId}
+      companyId={user.activeCompany.id}
+      companyIds={user.companies.map((c) => c.id)}
+      roles={user.activeCompany.roles ?? []}
+    >
     <SidebarProvider
       className={cn(
         "h-svh",
@@ -188,6 +199,9 @@ export function AppShell({
       </SidebarInset>
 
       {nav.unitJump && <UnitJumpDialog open={jumpOpen} onOpenChange={setJumpOpen} homes={nav.homes} />}
+      <BangCanXem />
+      <HoiDangXuat />
     </SidebarProvider>
+    </BoDongBoProvider>
   );
 }

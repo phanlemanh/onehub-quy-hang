@@ -13,6 +13,8 @@ executors:
     isolation: "npm run db:migrate && npm run db:test"   # suy từ: package.json, ci.yml job isolation — cần DATABASE_URL (AGENTS.md)
     ui_lint: "npm test -w @quy-hang/ui-lint"      # tang-5-giao-dien: mười luật quy-hang-ui, mức nợ, kiểm chuẩn, phạm vi cấu hình
     luoi_nguong: "node --test \"_acceptance/bai-thu-luoi-5000-dong/thu/*.test.mjs\""   # bai-thu-luoi-5000-dong: ngưỡng, kết luận, main sạch
+    web: "npm test -w @quy-hang/web"               # nhanh-tuc-thi: bộ đồng bộ trên máy, kiểm thuần (N-14)
+    web_db: "npm run test:db -w @quy-hang/web"     # nhanh-tuc-thi: bộ đồng bộ nói với API thật trên Postgres dãy — cần DATABASE_URL (N-14)
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
