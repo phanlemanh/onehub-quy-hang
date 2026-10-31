@@ -1,0 +1,110 @@
+schema_version: 1
+feature_slug: ma-hoa-so-chu
+# Hai lệnh máy: `executors.test.api` (kiểm thuần của packages/api — ma-hoa.test.ts, khoa.test.ts, không cần Postgres) và
+# `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy G, cổng 5564).
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên
+# ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Số trong mọi ca là số mẫu `0900 000 0xx`, tên `[Tên]`;
+# khoá thử sinh trong ca, không ghi vào kho.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «mã hoá: khứ hồi ra đúng số, khuôn 0x01 ‖ nonce ‖ thẻ ‖ thân» có mặt và ok — giải mã bằng cùng khoá và ngữ cảnh ra '0900000012', byte đầu 0x01, độ dài 39; ca «mã hoá: hai lần ra hai bản mã khác» ok; ca «mã hoá: bản mã không mang số ở bốn dạng» ok — quét hex, base64, utf8 của bản mã với bốn dạng của số, kèm đối chứng dương cùng hàm quét: một Buffer cấy '0900000012' bị bắt và thông điệp nêu dạng bị bắt. Chiều đỏ: trả số thay bản mã hay dùng nonce cố định → ca đỏ nêu tên ca."
+    paths: [packages/api/src/owners/ma-hoa.ts, packages/api/src/owners/ma-hoa.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «mã hoá: sai ngữ cảnh, sai khoá, sửa một byte đều bị từ chối» có mặt và ok — bảng ca viết tay: ngữ cảnh hàng khác, ngữ cảnh sàn khác, khoá khác, đổi byte ở vị trí 0 (phiên bản), 1 (nonce), 13 (thẻ), 29 (thân) — số ca đếm được bằng đúng 7 (assert số đếm), mỗi ca giaiMaSo ném; thông điệp của mọi lỗi không chứa bốn dạng của số và không chứa khoá base64. Đối chứng dương cùng bảng: bản mã gốc với ngữ cảnh gốc giải ra số. Chiều đỏ: bỏ AAD hay không kiểm byte phiên bản → ca đỏ nêu ca lọt."
+    paths: [packages/api/src/owners/ma-hoa.ts, packages/api/src/owners/ma-hoa.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «dấu vết: cùng số cùng sàn bằng nhau, khác sàn hay khác số thì khác» có mặt và ok — bốn dạng của số qua normalizePhone của lõi rồi dauVetSo cho cùng một Buffer 32 byte; sàn khác → khác; số '0900000013' → khác; ca «dấu vết: không mang số, khoá con tách khỏi khoá mã hoá» ok — dấu vết khác HMAC-SHA256(khoá mã hoá, sàn‖số) tính trực tiếp trong ca, và quét hex/base64 không chứa bốn dạng. Chiều đỏ: dùng thẳng khoá mã hoá hay bỏ sàn khỏi HMAC → ca đỏ nêu vế."
+    paths: [packages/api/src/owners/ma-hoa.ts, packages/api/src/owners/ma-hoa.test.ts, packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «khoá: production thiếu khoá thì createApi ném» có mặt và ok — đặt NODE_ENV=production, xoá OWNER_PHONE_KEY, assert.throws(createApi(...)) với thông điệp khớp /OWNER_PHONE_KEY/ (thông điệp ghim); ca «khoá: production với khoá dev bị từ chối» ok; ca «khoá: sai dạng bị từ chối ở mọi môi trường» ok — bảng ca viết tay (không base64, 16 byte, 33 byte) × (production, development), số ca đếm = 6, thông điệp không chứa giá trị đã đưa; ca «khoá: dev thiếu khoá vẫn dựng và vẫn mã hoá» ok — đối chứng dương: createApi dựng được, khoaSoChu trả khoá dev, maHoaSo với khoá ấy ra bản mã khác số. ca «khoá: lệnh sinh khoá ghi trong ADR-0013 cho khoá hợp lệ» ok — ca rút lệnh từ khối mã đánh dấu trong docs/adr/0013-ma-hoa-so-chu.md (không gõ lại trong ca), chạy, đưa đầu ra vào khoaSoChu dưới NODE_ENV=production: không ném, khoá 32 byte; đối chứng âm cùng ca: đầu ra 'openssl rand -hex 32' bị từ chối. Mỗi ca khôi phục process.env sau khi chạy. Chiều đỏ: bỏ kiểm production → ca đỏ «không ném»."
+    paths: [packages/api/src/owners/khoa.ts, packages/api/src/owners/khoa.test.ts, packages/api/src/owners/routes.ts, packages/api/src/app.ts, docs/adr/0013-ma-hoa-so-chu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0 (migrate rồi bộ cách ly và test-db đều xanh — vế «bộ kiểm cách ly trọn bộ xanh»); ca «số chủ: cơ sở dữ liệu từ chối số rõ ở mọi vai» có mặt và ok — vai chủ và vai API chèn, sửa owner_phone khác null đều lỗi nêu 'listing_owners_phone_chi_ban_ma'; đối chứng dương cùng ca: chèn với owner_phone null và bản mã đúng khuôn thành công; ca «số chủ: bản mã sai khuôn bị từ chối» ok — byte đầu 0x02 và bản mã 20 byte lỗi; ca «số chủ: vai API không đọc ba cột số» ok — owner_phone, owner_phone_enc, owner_phone_hash đều 'permission denied', has_phone đọc được; ca «lược đồ: mọi cột chữ tên chứa phone bị ràng buộc is null» ok — truy information_schema và pg_constraint, danh sách vi phạm rỗng, kèm đối chứng âm cùng hàm quét trong giao dịch hoàn lại: cấy bảng tạm public.x_quet(x_phone text) → hàm quét trả đúng 'public.x_quet.x_phone'. Chiều đỏ: gỡ ràng buộc hay cấp lại quyền đọc cột → ca đỏ nêu tên."
+    paths: [packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mã hoá số chủ: ghi qua API chỉ để lại bản mã» có mặt và ok — sau PUT với '0900 000 012': owner_phone null, owner_phone_enc dài 39 byte bắt đầu 0x01, owner_phone_hash 32 byte; quét chữ của mọi dòng ba bảng (listing_owners, owner_phone_reveals, listing_events của hàng) đọc bằng vai chủ — row::text cộng encode(...,'hex'|'base64'|'escape') từng cột bytea — không chứa bốn dạng của số; đối chứng dương cùng hàm quét: cấy chuỗi '0900000012' vào văn bản quét thì hàm báo dạng bị bắt; GET owner trả hasPhone true, không khoá ownerPhone. Chiều đỏ: ghi số rõ hay bản mã thiếu → ca đỏ."
+    paths: [packages/api/src/owners/**, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca của hàng 11 «mở số: đúng số, mỗi lần một sự kiện» (owners.test.ts) vẫn có mặt và ok — bốn lần mở trả {ownerPhone:'0900000012'}, owner_phone_reveals tăng đúng 4, người không thấy nguồn 403 'listing-agent-required' và 0 dòng; ca «mã hoá số chủ: hàm mở số trả bản mã, không trả số» ok — vai API gọi thẳng app.reveal_owner_phone nhận Buffer bắt đầu 0x01, không phải chuỗi số; trong bộ cách ly, các ca mở số đổi sang so Buffer bản mã đã chèn. Chiều đỏ: hàm trả số hay bỏ ghi sự kiện → ca đỏ."
+    paths: [packages/api/src/owners/**, packages/api/test-db/owners.test.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mã hoá số chủ: bản mã chép sang hàng khác hay bị sửa không ra số» có mặt và ok — hai hàng A ('0900000021'), B ('0900000022'); vai chủ chép owner_phone_enc của A sang B → mở số B trả mã ≥ 400 khác 200, thân không chứa bốn dạng của số A hay B, owner_phone_reveals của B không đổi; đổi một byte bản mã của B → cùng kết cục; đối chứng dương: khôi phục bản mã gốc của B → mở số ra '0900000022'. Chiều đỏ: bỏ AAD → ca đỏ «mở số B ra số A»."
+    paths: [packages/api/src/owners/**, packages/api/test-db/ma-hoa-so-chu.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mã hoá lại: số rõ thành bản mã, chạy lại không đổi byte» có mặt và ok — trong giao dịch hoàn lại: tạm gỡ ràng buộc, cấy ba dòng số rõ ở hai sàn ('0900000031..33'), dựng lại ràng buộc NOT VALID; maHoaLai lần một báo 3, mọi dòng owner_phone null, có bản mã và dấu vết, pg_constraint.convalidated = true; ca dùng một sàn thử thật (người thấy nguồn đăng nhập) nên sau commit-mô-phỏng của giao dịch ca, mở số từng dòng qua POST …/owner/phone-reveal của API ra đúng số của dòng, owner_phone_reveals tăng đúng 3 (nếu ca chọn giao dịch hoàn lại thì gọi đường API trong cùng client giao dịch — cách nào cũng phải qua revealPhone của API, không tự dựng ngữ cảnh rồi giải mã); lần hai báo 0, bản mã và dấu vết bằng từng byte so với sau lần một; ca «mã hoá lại: lệnh dòng lệnh chạy hai lần» ok — spawn node --import tsx packages/api/van-hanh/ma-hoa-lai.ts hai lần, mã thoát 0 cả hai, stdout+stderr không chứa bốn dạng của mọi số mẫu và không chứa khoá; ca «mã hoá lại: thiếu khoá hay khoá dev thì từ chối, không chạm dòng» ok — spawn lệnh ba lần (không OWNER_PHONE_KEY · khoá sai dạng · khoá dev), mỗi lần mã thoát khác 0, stderr khớp /OWNER_PHONE_KEY/ (thông điệp ghim), đếm owner_phone is not null trước và sau bằng nhau; đối chứng dương cùng ca: khoá thử hợp lệ → mã thoát 0. Chiều đỏ: mã hoá lại dòng đã có bản mã hay quên validate → ca đỏ nêu vế."
+    paths: [packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: judgment
+    inputs: [docs/adr/0013-ma-hoa-so-chu.md, .env.example, docs/product/tham-chieu.md]
+    question: "Đọc ADR-0013 và .env.example. Một người vận hành chỉ có hai tệp này có làm được không: (1) sinh khoá OWNER_PHONE_KEY bằng một lệnh nêu trong ADR, không có giá trị khoá nào trong tệp; (2) biết đặt khoá ở đâu (Vercel Production; Preview theo quyết định Hỏi-1 ghi trong ADR) và cất bản ngoài máy; (3) biết mất khoá thì mất mọi số chủ; (4) biết đếm dòng số rõ ở CẢ hai bảng listing_owners và leads, rồi chạy lệnh mã hoá lại ngay sau khi áp migration trên cơ sở dữ liệu thật; (5) biết xoá cột owner_phone là hàng sau? .env.example có dòng 'OWNER_PHONE_KEY=' với giá trị rỗng không? Sổ quyết định (§12) của tham-chieu.md có một dòng ngày 31/10 nói số chủ đã mã hoá và trỏ ADR-0013 không? Trả PASS chỉ khi đủ cả năm ý, dòng biến rỗng và dòng sổ có mặt; FAIL nêu ý thiếu."
+    expected: "PASS — đủ năm ý, khoá không có giá trị trong tệp, dòng sổ Tham chiếu trỏ ADR-0013."
+    paths: [docs/adr/0013-ma-hoa-so-chu.md, .env.example, docs/product/tham-chieu.md]
+    evidence_required: [run_id, verdict, judges]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mã hoá số chủ: lead chỉ để lại bản mã» (test-db/ma-hoa-so-chu.test.ts) có mặt và ok — sau POST /api/v1/leads với '0900 000 051': leads.owner_phone null, owner_phone_enc 39 byte bắt đầu 0x01 giải bằng khoá dev với ngữ cảnh 'leads:<sàn>:<lead>' ra '0900000051', owner_phone_hash bằng dauVetSo của số ấy; quét chữ dòng lead (row::text + encode hex/base64/escape) bằng vai chủ không chứa bốn dạng, kèm đối chứng dương cùng hàm quét; thân trả cho telesales không chứa số; ca «mã hoá lại: lead số rõ thành bản mã» ok — trong giao dịch hoàn lại tạm gỡ leads_phone_chi_ban_ma, cấy một lead số rõ '0900000052', maHoaLai báo daMaHoaLead 1, owner_phone null, giải ra đúng số, convalidated của leads_phone_chi_ban_ma = true, lần hai báo 0 và bản mã giữ nguyên byte; bộ cách ly có ca «số chủ của lead: cơ sở dữ liệu từ chối số rõ, vai API không đọc ba cột» — chèn/sửa leads.owner_phone khác null lỗi nêu 'leads_phone_chi_ban_ma' (đối chứng dương: chèn bản mã đúng khuôn được), vai API 'permission denied' trên owner_phone, owner_phone_enc, owner_phone_hash; ca «số chủ của lead: lead không số bị từ chối» — chèn lead cả ba cột số null lỗi nêu 'leads_phone_co_so' (đối chứng dương: bản mã đúng khuôn được); ca «mã hoá lại: bỏ lead cũ còn số rõ chỉ chạy được sau mã hoá lại» (test-db) — trong giao dịch hoàn lại cấy lead số rõ outcome unit_has_open_listing, app.discard_lead lỗi nêu 'leads_phone_chi_ban_ma', sau maHoaLai gọi lại thì thành công; ca dòng lệnh «mã hoá lại: lệnh dòng lệnh chạy hai lần» cấy thêm một lead số rõ trước lần một, lần một in 'đã mã hoá … 1 lead', stdout+stderr không chứa bốn dạng của số lead và khoá. Chiều đỏ: ghi số rõ vào lead hay bỏ ràng buộc → ca đỏ."
+    paths: [packages/api/src/leads/**, packages/api/src/owners/**, packages/api/van-hanh/ma-hoa-lai.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-12
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; các ca kiểm trùng của hàng 24 trong test-db/leads.test.ts vẫn có mặt và ok, đích danh «chủ trùng: lead L-02 về đầu chủ giữ chủ nhà CN-01» và «chủ trùng: số viết +84 vẫn khớp»; ca «mã hoá số chủ: kiểm trùng lead so dấu vết» (test-db/ma-hoa-so-chu.test.ts) ok — lead thứ hai cùng số với lead trước đã về đầu chủ thì về đúng đầu chủ ấy; lead cùng số ở sàn khác ra 'new' (đối chứng: cùng sàn ra 'owner_has_agent'); truy pg_proc: app.lead_dedupe_facts có tham số đầu kiểu bytea, và không hàm nào ở schema app có tham số tên chứa 'phone' kiểu text; hai lead cùng số nhập ở hai sàn có owner_phone_hash khác nhau (đọc bằng vai chủ). Chiều đỏ: so số rõ → ca kiểm trùng đỏ; bỏ sàn khỏi dấu vết → ca hai sàn đỏ."
+    paths: [packages/api/src/leads/**, packages/api/src/owners/ma-hoa.ts, packages/api/test-db/leads.test.ts, packages/api/test-db/ma-hoa-so-chu.test.ts, packages/db/migrations/008_ma_hoa_so_chu.sql, packages/db/migrations/009_ma_hoa_so_lead.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

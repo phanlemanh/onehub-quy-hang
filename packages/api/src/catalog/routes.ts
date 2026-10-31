@@ -18,8 +18,8 @@ const ApiError = z.object({ error: z.string() });
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
 /** Mười thuộc tính căn — đúng `UNIT_ATTRIBUTE_FIELDS` của lõi, lớp danh mục. */
 const Unit = z.object({
-  projectKey: z.string(),
-  projectName: z.string(),
+  subdivisionKey: z.string(),
+  subdivisionName: z.string(),
   buildingName: z.string(),
   unitNumber: z.string(),
   upi: z.string(),
@@ -32,11 +32,11 @@ const Unit = z.object({
 const Lookup = z
   .union([
     z.object({ status: z.literal("found"), unit: Unit }),
-    z.object({ status: z.literal("not_in_catalog"), read: z.array(z.object({ projectKey: z.string(), unitNumber: z.string() })) }),
+    z.object({ status: z.literal("not_in_catalog"), read: z.array(z.object({ subdivisionKey: z.string(), unitNumber: z.string() })) }),
     z.object({
       status: z.literal("unreadable"),
       input: z.string(),
-      examples: z.array(z.object({ projectKey: z.string(), projectName: z.string(), example: z.string() })),
+      examples: z.array(z.object({ subdivisionKey: z.string(), subdivisionName: z.string(), example: z.string() })),
     }),
     z.object({ status: z.literal("ambiguous"), candidates: z.array(Unit) }),
   ])
@@ -64,7 +64,7 @@ export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       request: {
         params: z.object({ code: z.string() }),
         // `building`: tên toà hoặc khoá toà của một ứng viên «nhiều căn» — chọn đúng một căn khi mã trùng ở hai toà (hàng 63).
-        query: z.object({ project: z.string().optional(), building: z.string().optional() }),
+        query: z.object({ subdivision: z.string().optional(), building: z.string().optional() }).strict(),
       },
       responses: {
         200: { description: "Kết quả tra", content: { "application/json": { schema: Lookup } } },
@@ -78,9 +78,9 @@ export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const loi = await vao(c);
       if (loi) return tra(c, loi);
       const { code } = c.req.valid("param");
-      const { project, building } = c.req.valid("query");
-      const kq = lookupUnit(index, code, project, building);
-      if (kq.status === "unknown_project" || kq.status === "unknown_building") return tra(c, API_ERRORS.notFound);
+      const { subdivision, building } = c.req.valid("query");
+      const kq = lookupUnit(index, code, subdivision, building);
+      if (kq.status === "unknown_subdivision" || kq.status === "unknown_building") return tra(c, API_ERRORS.notFound);
       return c.json(kq, 200);
     },
   );

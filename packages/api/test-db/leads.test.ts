@@ -6,6 +6,9 @@ import { STATE_COLUMNS } from "../src/listings/store";
 import { createApi } from "../src/app";
 import { SAMPLE_PACK } from "../src/catalog/sample";
 import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { normalizePhone } from "@quy-hang/core/access";
+import { KHOA_DEV } from "../src/owners/khoa";
+import { dauVetSo } from "../src/owners/ma-hoa";
 
 after(cleanup);
 
@@ -47,8 +50,8 @@ async function sanMoi(ten: string, vaiCan: Record<string, string[]>) {
 type HangMau = { ma: string; maCan: string; trangThai: string; gia: number; dieuKienPhi: string; dauChu: string; chuNha: string };
 type ChuMau = { ma: string; ten: string; soDienThoai: string };
 type LeadMau = { ma: string; soDienThoai: string; toa: string; maCan: string | null };
-const PACK = SAMPLE_PACK as unknown as { hang: HangMau[]; chuNha: ChuMau[]; lead: LeadMau[]; danhMuc: { projects: { buildings: { buildingKey: string; buildingName: string }[] }[] } };
-const TOA = Object.fromEntries(PACK.danhMuc.projects.flatMap((p) => p.buildings.map((b) => [b.buildingKey, b.buildingName])));
+const PACK = SAMPLE_PACK as unknown as { hang: HangMau[]; chuNha: ChuMau[]; lead: LeadMau[]; danhMuc: { subdivisions: { buildings: { buildingKey: string; buildingName: string }[] }[] } };
+const TOA = Object.fromEntries(PACK.danhMuc.subdivisions.flatMap((p) => p.buildings.map((b) => [b.buildingKey, b.buildingName])));
 const toaCua = (maCan: string) => TOA[maCan[0]!]!;
 const hangMau = (ma: string) => PACK.hang.find((h) => h.ma === ma)!;
 const chuMau = (ma: string) => PACK.chuNha.find((c) => c.ma === ma)!;
@@ -267,7 +270,9 @@ async function dauChuCuaSo(so: string): Promise<string | null> {
     await c.query("begin");
     await c.query("set local role quy_hang_app");
     await c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [A.nguoi.ts!.userId, A.companyId]);
-    return (await c.query("select owner_agent from app.lead_dedupe_facts($1, 'Toà B', null, '{}')", [so.replace(/\s/g, "")])).rows[0].owner_agent;
+    // Hàng 62: hàm dữ kiện nhận dấu vết của số theo sàn (khoá dev của test), không nhận số.
+    const vet = dauVetSo(normalizePhone(so)!, A.companyId, KHOA_DEV);
+    return (await c.query("select owner_agent from app.lead_dedupe_facts($1, 'Toà B', null, '{}')", [vet])).rows[0].owner_agent;
   } finally {
     await c.query("rollback").catch(() => {});
     c.release();

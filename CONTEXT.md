@@ -9,7 +9,9 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Sàn | `company` | Công ty dùng Quỹ hàng; mỗi sàn một vùng dữ liệu riêng | — |
 | Bảng hàng | `inventory` *(đề xuất)* | Tập hàng của sàn; nhà trên máy tính, tab trên điện thoại | «Quỹ hàng» cho nhà này |
 | Hàng | `listing` *(RESO `Property`)* | Một lần chào bán của sàn trên một căn | «Tin» (tin là của Invest) |
-| Căn | `unit` *(đề xuất)* | Vật thể trong danh mục: dự án → toà → trục → căn | — |
+| Căn | `unit` *(đề xuất)* | Vật thể trong danh mục: khu → toà → trục → căn | — |
+| Khu | `subdivisionName`, `subdivisionKey` (RESO `SubdivisionName`) | Khu dân cư, khu đô thị hay khu của chủ đầu tư chứa căn; danh mục dùng chung | «Dự án» |
+| Loại hình | `propertyType` / `propertySubType` (RESO) | Loại của căn, giá trị RESO nguyên văn: căn hộ `Residential` / `Condominium`, nhà phố `Residential` / `Townhouse`, biệt thự `Residential` / `Single Family Residence`, đất `Land` / `Unimproved Land`; nhãn riêng của sàn («Shophouse», «Liền kề») neo vào đây; loại hình nào dùng trường nào đọc từ một bảng của lõi | Loại hình ngoài bốn cặp |
 | Lead | `lead` *(đề xuất)* | Hàng ở nấc đầu, từ telesales hoặc đầu chủ tự nhập | — |
 | Đầu chủ | `listing_agent` *(đề xuất, RESO `ListAgent`)* | Người giữ nguồn chủ nhà của căn | «Người giữ» |
 | Đầu khách | `buyer_agent` *(đề xuất, RESO `BuyerAgent`)* | Người đem căn đi bán cho khách | — |
@@ -26,8 +28,8 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Mã đăng nhập | `otp` | Mã 6 số gửi qua email để đăng nhập | «Mật khẩu» |
 | Vai | `role` | Một trong năm: Telesales `telesales`, Đầu chủ `listing_agent`, Đầu khách `buyer_agent`, Trưởng nhóm `team_lead`, Quản trị sàn `company_admin`; một người giữ được nhiều vai | — |
 | Quản trị sàn | `company_admin` | Vai cấu hình sàn và quản người; không tự thấy chủ nhà | — |
-| Khu | `zone` | Toà hay phân khu do sàn tự đặt tên; gắn danh mục sau | — |
-| Khu phụ trách | `member_zone` | Khu một người trong sàn phụ trách | — |
+| Vùng | `zone` | Toà hay phân khu do sàn tự đặt tên để chia việc; gắn danh mục sau | «Khu» (khu là khu chứa căn) |
+| Vùng phụ trách | `member_zone` | Vùng một người trong sàn phụ trách | «Khu phụ trách» |
 | Sự kiện của hàng | `listing_event` | Một lần thay đổi của hàng: tạo, đổi phần lần rao, đổi giá, đổi trạng thái, xác nhận với chủ nhà; chỉ thêm, ghi người và vai lúc làm (ADR-0008) | — |
 | Trạng thái chuẩn | `StandardStatus` (RESO) | Một trong sáu: Chưa đủ để rao `Incomplete`, Đang bán `Active`, Đang giao dịch `Pending`, Đã bán `Closed`, Tạm ngừng `Hold`, Ngừng hẳn `Withdrawn`; nhãn riêng của sàn neo vào đây | Trạng thái thứ bảy |
 | Độ tươi | `freshness` | Tuổi của lần xác nhận gần nhất với chủ nhà, tính từ sự kiện | — |
