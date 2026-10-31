@@ -5,7 +5,7 @@ slug: vong-giao-dien-qua-ban-do
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, ui]
-status: machine-cleared
+status: verified
 design_doc: docs/superpowers/specs/2026-10-31-vong-giao-dien-qua-ban-do-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T12:52:33Z
