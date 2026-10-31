@@ -306,6 +306,75 @@
       ]
     },
     {
+      "ma": "58",
+      "cau_giao": "Kho có bản đồ khuôn cho các nhóm màn đã có — Cài đặt sàn, Xác thực, trang tạm, trạng thái trống · lỗi · báo — và mỗi nhóm một khuôn có khe mà mọi màn của nhóm dựng qua",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Chủ sản phẩm 31/10 chọn Quỹ hàng làm kho thử bản đồ khuôn dạng «khai trước khi lệch»; vo-va-ia.md §2 đã là bản đồ bằng lời, cần thành vật máy giữ trước màn dày đầu tiên (hàng 14)",
+      "hang": "T2",
+      "slug": "ban-do-khuon-nhom-da-co",
+      "bat_khi": "Mỗi nhóm một tệp design/patterns/<nhóm>.md đủ trường theo finding kit §11.3 và đọc được bằng máy; ngoại lệ nào cũng có lý do; mọi màn hiện có của bốn nhóm dựng khuôn ở gốc",
+      "nhom": "nen",
+      "dot": "ban-do-khuon-3110",
+      "phu": [
+        "QK1"
+      ],
+      "dung_tren": [
+        "53",
+        "4"
+      ],
+      "vung": [
+        "design/patterns/**",
+        "apps/web/src/app/settings/**",
+        "apps/web/src/app/(auth)/**",
+        "apps/web/src/components/shell/placeholder.tsx"
+      ]
+    },
+    {
+      "ma": "59",
+      "cau_giao": "Một màn của nhóm dựng ngoài khuôn làm bài kiểm của kho đỏ và gọi đúng tên tệp cùng khối cấm; chỉ sửa tài liệu hay hồ sơ thì bài kiểm im",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Lời dặn không giữ được điểm chọn khuôn khi tác tử viết mã; răng rẻ trước đắt sau: lint cấm nhập theo vùng rồi bài quét cho phần còn lại",
+      "hang": "T2",
+      "slug": "rang-giu-khuon",
+      "bat_khi": "Tiêm một trang Cài đặt gọi thẳng khối cấm → đỏ, gọi đúng tên tệp và khối; chỉ sửa docs/ hay _acceptance/ → im; mọi màn hiện có xanh; ngoại lệ thiếu lý do → đỏ ở bước đọc bản đồ",
+      "nhom": "nen",
+      "dot": "ban-do-khuon-3110",
+      "phu": [
+        "QK2"
+      ],
+      "dung_tren": [
+        "58"
+      ],
+      "vung": [
+        "packages/ui-lint/**"
+      ]
+    },
+    {
+      "ma": "60",
+      "cau_giao": "Chủ sản phẩm duyệt một vòng giao diện và thấy màn mới đặt cạnh màn mẫu của nhóm, cùng khổ và cùng trạng thái; nhóm chưa có trong bản đồ thì chính vòng ấy tạo mục bản đồ và khuôn",
+      "vai": "Chủ sản phẩm",
+      "tieu_chi": 10,
+      "vi_sao": "Khuôn của một nhóm sinh ra cùng màn đầu tiên của nhóm (không dựng trước màn); số đo mỗi vòng giao diện là bằng chứng gửi kit cho các mục chờ KH-C1…KH-C5",
+      "hang": "T2",
+      "slug": "vong-giao-dien-qua-ban-do",
+      "bat_khi": "Ảnh màn mới cạnh màn mẫu có ở Cổng Phạm vi của vòng chạm giao diện; luật «màn đầu của nhóm mới tạo mục bản đồ» nằm trong vo-va-ia.md và skill quy-hang-ui; hồ sơ vòng ghi số tệp theo khuôn, số lần răng bắt, lệch lọt",
+      "nhom": "nen",
+      "dot": "ban-do-khuon-3110",
+      "phu": [
+        "QK3",
+        "QK4"
+      ],
+      "dung_tren": [
+        "59"
+      ],
+      "vung": [
+        "docs/design/**",
+        ".claude/skills/quy-hang-ui/**"
+      ]
+    },
+    {
       "ma": "14",
       "cau_giao": "Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn",
       "vai": "Đầu chủ",
@@ -317,7 +386,9 @@
         "1",
         "53",
         "5",
-        "13"
+        "13",
+        "58",
+        "59"
       ],
       "slug": "bang-hang-kieu-sheet",
       "nhom": "dau-chu",
