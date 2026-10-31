@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: ca23d6a738158be5caf25e6dbe1182b2f7c05e1e
+verified_commit: c94014ae23f47ede58a3b0b686903c6a213d0399
 human_signoff: Manh Phan 2026-10-31
 ---
 
@@ -199,3 +199,7 @@ none — every multi-run eval is uniform
 
 Round 1: lượt gốc, E2 và E3b xanh; lượt chấm nêu việc siết phép đo E9, E10 (commit ca23d6a). Returned to implementation.
 Round 2: E1, E3, E4, E5, E5b, E6, E7, E8, E9, E10 chạy lại và xanh; E2, E3b mang từ round 1 (delta không chạm paths của eval). Verdict PASS.
+
+### Re-pin lần 1 — 2026-10-31, do gộp nhánh chính (dữ liệu mẫu, vỏ ứng dụng) sau chữ ký
+run_id: repin-20261031T010958Z-20065
+sha: c94014ae23f47ede58a3b0b686903c6a213d0399 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng
