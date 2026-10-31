@@ -22,8 +22,8 @@ nhóm, lưu góc nhìn. Sửa trên ô là hàng 15, đổi hàng loạt là hà
    - Cột theo RESO và nhãn `CONTEXT.md`: Toà · Mã căn · Loại căn · Diện tích · Tầng · Hướng · Trạng thái · Giá · Phí ·
      Nội thất · Pháp lý · Tài chính · Tình trạng sử dụng · Xác nhận (độ tươi) · Mức đủ · Ai thấy; ẩn mặc định, bật trong
      menu cột: Giá chốt · Ngày bán · Lý do ngừng. Trạng thái bằng `Badge` biến thể `-light`; giá hiển thị «4,65 tỷ».
-   - **Hàng lọc theo cột** của khối giữ: mỗi cột một ô lọc đúng kiểu — chữ (chứa), chọn nhiều (Toà, Loại căn, Trạng thái,
-     Phí, Ai thấy, Xác nhận), số theo luật (Giá, Diện tích, Tầng, Mức đủ). Các ô lọc AND với nhau; nút «Xoá lọc».
+   - **Hàng lọc theo cột** của khối giữ: mỗi cột một ô lọc đúng kiểu — chữ (chứa), chọn một giá trị (Toà, Loại căn, Trạng thái, Phí, Ai
+     thấy), số theo luật (Giá theo tỷ, Diện tích, Tầng, Xác nhận theo số ngày, Mức đủ). Các ô lọc AND với nhau; nút «Xoá lọc».
    - **Nhóm**: điều khiển «Nhóm» trên thanh công cụ — Toà → Loại căn (mặc định) · Toà · Không nhóm. Hàng nhóm theo cách
      của `data-grid-grouping-2`: gập/mở, số căn của nhóm; nhóm con lồng trong nhóm toà. Dòng tổng ở chân bảng: số căn sau
      lọc trên tổng số căn.
