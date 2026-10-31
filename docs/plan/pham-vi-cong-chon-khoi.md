@@ -8,12 +8,13 @@ Nguồn: [ADR-0019](../adr/0019-cong-chon-khoi.md) (đề xuất 01/11 — chủ
 ```
 dot: cong-chon-khoi-0111
 dang: chuoi
-nguon: wiki/dot/cong-chon-khoi-0111.md#142b9ed8e16e67841d9536a7d4b43df2526e1513
+nguon: wiki/dot/cong-chon-khoi-0111.md#63e17c9393ef1f732823d3037cceab940ff9d2e2
 
 - `CK1` — vòng chạm ô chưa có khuôn trình trang so ba lối (trong kho · ReUI · vẽ mới) cùng khổ, lời khuyên ghim trên trang, gửi kèm thẻ Cổng Phạm vi; màn đi khuôn sẵn thì không có trang ấy
 - `CK2` — mỗi chỗ ghép hay tự viết ghi đã tra gì trên ReUI, vì sao không đứng, hạn xem lại; rơi bậc là một dòng quyết định của hồ sơ; thiếu thì bài kiểm đỏ
 - `CK3` — bảng khối đã chuyển thể của danh mục giao diện thành chỗ tra «trong kho»: archetype, nhóm đang dùng, ảnh chuẩn, phiên bản ReUI, ngày và người duyệt; khối cài mà thiếu dòng thì bài kiểm đỏ
 - `CK4` — trả bốn chỗ ghép tạm chờ khối Pro: đăng nhập, ô nhận lead, trống · lỗi · báo, người dùng
+- `CK5` — trang ba lối mở bằng nhu cầu trích từ câu giao và Tham chiếu (không phiếu mới), chấm ba lối bằng một thước chung, ảnh dựng trên dữ liệu mẫu ca xấu nhất
 ```
 <!-- PHAM-VI-MA>>> -->
 
@@ -25,6 +26,9 @@ nguon: wiki/dot/cong-chon-khoi-0111.md#142b9ed8e16e67841d9536a7d4b43df2526e1513
 | CK1 | 84 `the-ba-loi` | Chủ sản phẩm duyệt Cổng Phạm vi của vòng chạm ô chưa có khuôn trên trang ba lối cùng khổ | T2 | 83 |
 
 Mục chờ: **H16** (CK4) — mở lại khi hàng 83 ký: luật vẽ mới chấm bốn dòng tạm, mỗi dòng hết hạn thành một hàng theo màn.
+**H17** (CK5, thêm 01/11 sau khi PR #48 gộp) — khuyến nghị bổ sung chưa có thực tế; chủ kho giữ hàng 84 như đã gộp
+(«giữ như hàng 84 như cũ, nhưng hiểu đây là bổ sung khuyến nghị khi chưa có thực tế»). Mở lại khi vài vòng đầu đi trang
+ba lối cho thấy thiếu nó.
 
 ## Chi tiết cho vòng mở sau
 
