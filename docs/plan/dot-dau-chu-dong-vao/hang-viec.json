@@ -1,0 +1,437 @@
+{
+ "dot": "dau-chu-dong-vao",
+ "muc_tieu": "Dựng các màn P0 của đầu chủ và dòng lead vào — Bảng hàng kiểu Sheet, hồ sơ căn và ảnh, Hôm nay, ô nhận lead tới cuộc gọi — cùng ba việc phải xong trước hai tuần thử: đồng bộ tự lành, mã hoá số chủ, tra căn trùng mã",
+ "day": [
+  {
+   "id": "B",
+   "worktree": "/CHUA-CO-WORKTREE/B",
+   "link": ""
+  },
+  {
+   "id": "H",
+   "worktree": "/CHUA-CO-WORKTREE/H",
+   "link": ""
+  },
+  {
+   "id": "L",
+   "worktree": "/CHUA-CO-WORKTREE/L",
+   "link": ""
+  },
+  {
+   "id": "G",
+   "worktree": "/CHUA-CO-WORKTREE/G",
+   "link": ""
+  },
+  {
+   "id": "D",
+   "worktree": "/CHUA-CO-WORKTREE/D",
+   "link": ""
+  },
+  {
+   "id": "X",
+   "worktree": "/CHUA-CO-WORKTREE/X",
+   "link": "",
+   "nghi": true
+  }
+ ],
+ "hang": [
+  {
+   "ma": "14",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bang-hang-kieu-sheet",
+   "day": "B",
+   "uu_tien": 0,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/inventory/**",
+    "_acceptance/bang-hang-kieu-sheet/**"
+   ],
+   "sau": [
+    "1",
+    "53",
+    "5",
+    "13",
+    "58",
+    "59"
+   ]
+  },
+  {
+   "ma": "15",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "sua-tren-o",
+   "day": "B",
+   "uu_tien": 1,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/inventory/cell-edit/**",
+    "packages/core/src/pricing/**",
+    "_acceptance/sua-tren-o/**"
+   ],
+   "sau": [
+    "14"
+   ]
+  },
+  {
+   "ma": "17",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "cot-ho-so-can",
+   "day": "H",
+   "uu_tien": 2,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/**",
+    "_acceptance/cot-ho-so-can/**"
+   ],
+   "sau": [
+    "14"
+   ]
+  },
+  {
+   "ma": "22",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "hom-nay-dau-chu",
+   "day": "G",
+   "uu_tien": 3,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/today/**",
+    "_acceptance/hom-nay-dau-chu/**"
+   ],
+   "sau": [
+    "15",
+    "17"
+   ]
+  },
+  {
+   "ma": "24",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "o-nhan-lead",
+   "day": "L",
+   "uu_tien": 4,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/leads/**",
+    "packages/core/src/dedupe/**",
+    "_acceptance/o-nhan-lead/**"
+   ],
+   "sau": [
+    "5",
+    "9",
+    "11",
+    "53"
+   ]
+  },
+  {
+   "ma": "25",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "chia-lead-va-han",
+   "day": "L",
+   "uu_tien": 5,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/routing/**",
+    "packages/api/src/jobs/**",
+    "_acceptance/chia-lead-va-han/**"
+   ],
+   "sau": [
+    "24"
+   ]
+  },
+  {
+   "ma": "28",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "cuoc-goi-khai-thac",
+   "day": "G",
+   "uu_tien": 6,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/call/**",
+    "_acceptance/cuoc-goi-khai-thac/**"
+   ],
+   "sau": [
+    "22",
+    "24"
+   ]
+  },
+  {
+   "ma": "26",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "thong-bao-lead",
+   "day": "L",
+   "uu_tien": 7,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/lib/push/**",
+    "_acceptance/thong-bao-lead/**"
+   ],
+   "sau": [
+    "22",
+    "25"
+   ]
+  },
+  {
+   "ma": "30",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "goi-tu-may-tinh",
+   "day": "L",
+   "uu_tien": 8,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/call/dial/**",
+    "_acceptance/goi-tu-may-tinh/**"
+   ],
+   "sau": [
+    "26",
+    "28"
+   ]
+  },
+  {
+   "ma": "61",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "dong-bo-tu-lanh",
+   "day": "H",
+   "uu_tien": 9,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/lib/sync/**",
+    "apps/web/src/components/sync/**",
+    "_acceptance/dong-bo-tu-lanh/**"
+   ],
+   "sau": [
+    "13"
+   ]
+  },
+  {
+   "ma": "63",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "can-trung-ma-hai-toa",
+   "day": "D",
+   "uu_tien": 10,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/catalog/**",
+    "packages/api/src/catalog/**",
+    "_acceptance/can-trung-ma-hai-toa/**"
+   ],
+   "sau": [
+    "9"
+   ]
+  },
+  {
+   "ma": "62",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "ma-hoa-so-chu",
+   "day": "G",
+   "uu_tien": 11,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/api/src/owners/**",
+    "packages/core/src/access/**",
+    "_acceptance/ma-hoa-so-chu/**"
+   ],
+   "sau": [
+    "11"
+   ]
+  },
+  {
+   "ma": "10",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhan-danh-muc-invest",
+   "day": "D",
+   "uu_tien": 12,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/connect/src/**",
+    "_acceptance/nhan-danh-muc-invest/**"
+   ],
+   "sau": [
+    "9"
+   ]
+  },
+  {
+   "ma": "18",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "anh-can-ba-ngan",
+   "day": "H",
+   "uu_tien": 13,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/photos/**",
+    "packages/core/src/photos/**",
+    "_acceptance/anh-can-ba-ngan/**"
+   ],
+   "sau": [
+    "11",
+    "17"
+   ]
+  },
+  {
+   "ma": "27",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lead-bon-nac",
+   "day": "L",
+   "uu_tien": 14,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/leads/mine/**",
+    "_acceptance/lead-bon-nac/**"
+   ],
+   "sau": [
+    "25"
+   ]
+  },
+  {
+   "ma": "23",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "san-sang-ban",
+   "day": "H",
+   "uu_tien": 15,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/ready/**",
+    "packages/core/src/readiness/**",
+    "_acceptance/san-sang-ban/**"
+   ],
+   "sau": [
+    "12",
+    "18"
+   ]
+  },
+  {
+   "ma": "16",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "sua-hang-loat",
+   "day": "B",
+   "uu_tien": 16,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/inventory/bulk/**",
+    "_acceptance/sua-hang-loat/**"
+   ],
+   "sau": [
+    "15"
+   ]
+  },
+  {
+   "ma": "19",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "che-vung-anh",
+   "day": "B",
+   "uu_tien": 17,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/photos/redact/**",
+    "_acceptance/che-vung-anh/**"
+   ],
+   "sau": [
+    "18"
+   ]
+  },
+  {
+   "ma": "29",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "goi-ep-gia-dot-hai",
+   "day": "G",
+   "uu_tien": 18,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/call/push/**",
+    "_acceptance/goi-ep-gia-dot-hai/**"
+   ],
+   "sau": [
+    "28"
+   ]
+  },
+  {
+   "ma": "1",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bai-thu-luoi-5000-dong",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/bai-thu-luoi-5000-dong/**"
+   ]
+  },
+  {
+   "ma": "5",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "du-lieu-mau-san-thu",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/du-lieu-mau-san-thu/**"
+   ]
+  },
+  {
+   "ma": "9",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "danh-muc-go-ma-can",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/danh-muc-go-ma-can/**"
+   ]
+  },
+  {
+   "ma": "11",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lop-truong-nguon",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/lop-truong-nguon/**"
+   ]
+  },
+  {
+   "ma": "12",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "truc-ai-thay-hang",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/truc-ai-thay-hang/**"
+   ]
+  },
+  {
+   "ma": "13",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhanh-tuc-thi",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/nhanh-tuc-thi/**"
+   ]
+  },
+  {
+   "ma": "53",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "vo-ung-dung",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/vo-ung-dung/**"
+   ]
+  },
+  {
+   "ma": "58",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "ban-do-khuon-nhom-da-co",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/ban-do-khuon-nhom-da-co/**"
+   ]
+  },
+  {
+   "ma": "59",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "rang-giu-khuon",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/rang-giu-khuon/**"
+   ]
+  }
+ ],
+ "ngoai_hang_merge": []
+}

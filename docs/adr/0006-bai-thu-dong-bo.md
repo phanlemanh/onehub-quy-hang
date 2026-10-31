@@ -1,5 +1,8 @@
 # ADR-0006: Chọn bộ đồng bộ — kết quả bài thử mất mạng
 
+> **Trùng số.** Số 0006 cũng là [ADR vai, khu và lời mời](0006-vai-khu-va-loi-moi.md) (cùng ngày, có trước). Không đổi số
+> vì hồ sơ đã ký và chú thích mã đang trỏ «ADR-0006»; gọi theo tên: **ADR-0006 bộ đồng bộ**. ADR mới lấy số kế tiếp trên `main`.
+
 Ngày: 2026-10-30 · Trạng thái: **chấp nhận — giám sát đợt nen-dau chốt theo ủy quyền của chủ kho, 2026-10-30** · Liên quan: ADR-0001 mục «Chưa chốt» (bộ đồng bộ),
 Kiến trúc §1 «Nhanh tức thì, ghi trên máy trước», §9 bước 1 (b), §10 · Số đo: `_acceptance/bai-thu-dong-bo-mat-mang/ket-qua.md`
 

@@ -1,0 +1,178 @@
+{
+  "slug": "vong-giao-dien-qua-ban-do",
+  "base": null,
+  "kho": [
+    1440,
+    375
+  ],
+  "cap": [
+    {
+      "nhom": "cai-dat-san",
+      "trang_thai": "mac-dinh",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/settings/users/page.tsx",
+        "duong": "/settings/users"
+      },
+      "anh_moi": null,
+      "anh_mau": "cai-dat-san--mac-dinh--1440--mau.png"
+    },
+    {
+      "nhom": "cai-dat-san",
+      "trang_thai": "mac-dinh",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/settings/users/page.tsx",
+        "duong": "/settings/users"
+      },
+      "anh_moi": null,
+      "anh_mau": "cai-dat-san--mac-dinh--375--mau.png"
+    },
+    {
+      "nhom": "cai-dat-san",
+      "trang_thai": "khong-quyen",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/settings/users/page.tsx",
+        "duong": "/settings/users"
+      },
+      "anh_moi": null,
+      "anh_mau": "cai-dat-san--khong-quyen--1440--mau.png"
+    },
+    {
+      "nhom": "cai-dat-san",
+      "trang_thai": "khong-quyen",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/settings/users/page.tsx",
+        "duong": "/settings/users"
+      },
+      "anh_moi": null,
+      "anh_mau": "cai-dat-san--khong-quyen--375--mau.png"
+    },
+    {
+      "nhom": "cai-dat-san",
+      "trang_thai": "loi",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/settings/users/page.tsx",
+        "duong": "/settings/users"
+      },
+      "anh_moi": null,
+      "anh_mau": "cai-dat-san--loi--1440--mau.png"
+    },
+    {
+      "nhom": "cai-dat-san",
+      "trang_thai": "loi",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/settings/users/page.tsx",
+        "duong": "/settings/users"
+      },
+      "anh_moi": null,
+      "anh_mau": "cai-dat-san--loi--375--mau.png"
+    },
+    {
+      "nhom": "trang-tam",
+      "trang_thai": "mac-dinh",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/(app)/today/page.tsx",
+        "duong": "/today"
+      },
+      "anh_moi": null,
+      "anh_mau": "trang-tam--mac-dinh--1440--mau.png"
+    },
+    {
+      "nhom": "trang-tam",
+      "trang_thai": "mac-dinh",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/(app)/today/page.tsx",
+        "duong": "/today"
+      },
+      "anh_moi": null,
+      "anh_mau": "trang-tam--mac-dinh--375--mau.png"
+    },
+    {
+      "nhom": "trang-thai",
+      "trang_thai": "trong",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/components/shell/notifications.tsx",
+        "duong": "/today (mở chuông)"
+      },
+      "anh_moi": null,
+      "anh_mau": "trang-thai--trong--1440--mau.png"
+    },
+    {
+      "nhom": "trang-thai",
+      "trang_thai": "trong",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/components/shell/notifications.tsx",
+        "duong": "/today (mở chuông)"
+      },
+      "anh_moi": null,
+      "anh_mau": "trang-thai--trong--375--mau.png"
+    },
+    {
+      "nhom": "xac-thuc",
+      "trang_thai": "mac-dinh",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/(auth)/login/page.tsx",
+        "duong": "/login"
+      },
+      "anh_moi": null,
+      "anh_mau": "xac-thuc--mac-dinh--1440--mau.png"
+    },
+    {
+      "nhom": "xac-thuc",
+      "trang_thai": "mac-dinh",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/(auth)/login/page.tsx",
+        "duong": "/login"
+      },
+      "anh_moi": null,
+      "anh_mau": "xac-thuc--mac-dinh--375--mau.png"
+    },
+    {
+      "nhom": "xac-thuc",
+      "trang_thai": "loi",
+      "kho": 1440,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/(auth)/login/page.tsx",
+        "duong": "/login"
+      },
+      "anh_moi": null,
+      "anh_mau": "xac-thuc--loi--1440--mau.png"
+    },
+    {
+      "nhom": "xac-thuc",
+      "trang_thai": "loi",
+      "kho": 375,
+      "tep_moi": null,
+      "mau": {
+        "tep": "apps/web/src/app/(auth)/login/page.tsx",
+        "duong": "/login"
+      },
+      "anh_moi": null,
+      "anh_mau": "xac-thuc--loi--375--mau.png"
+    }
+  ]
+}
