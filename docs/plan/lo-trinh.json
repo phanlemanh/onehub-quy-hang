@@ -1184,6 +1184,53 @@
       ]
     },
     {
+      "ma": "81",
+      "cau_giao": "Mọi điểm sàn chỉnh được khai ở một sổ của lõi — khoá, kiểu, mặc định, khoảng cho phép, ai đổi, áp cho mới hay tính lại, lớp dữ liệu — và luật của lõi nhận cấu hình làm tham số thay vì đọc hằng số",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "ADR-0018 quyết định 1, 2: hằng số của sàn đang rải ở từng hàng (luật 7, 18, 20); Cài đặt sàn 45–50 cần một chỗ khai trước khi có màn",
+      "hang": "T2",
+      "dung_tren": [
+        "8"
+      ],
+      "bat_khi": "Bộ kiểm của lõi: mọi khoá ở sổ tài liệu có ở sổ mã và ngược lại; không khoá nào lớp nguồn; gọi lại 14 ngày, hỏi lại 20%, hạn lead 15/30 cho cùng kết quả cũ ở mặc định, đổi đúng ở một giá trị khác trong khoảng và ở hai biên; giá trị ngoài khoảng bị từ chối nêu đúng khoá",
+      "slug": "so-diem-bien-thien",
+      "nhom": "cai-dat",
+      "dot": "cau-hinh-theo-san-0111",
+      "phu": [
+        "CH1",
+        "CH2"
+      ],
+      "vung": [
+        "packages/core/src/config/**"
+      ]
+    },
+    {
+      "ma": "82",
+      "cau_giao": "Mỗi sàn giữ cấu hình riêng: đổi một điểm qua một lệnh API thành sự kiện chỉ thêm ghi người và vai, sàn chưa đổi thì nhận mặc định của sổ, đối tượng tạo sau lần đổi mang số mới còn đối tượng cũ giữ số lúc tạo, và sàn khác không đọc hay đổi được",
+      "vai": "nen",
+      "tieu_chi": 10,
+      "vi_sao": "ADR-0018 quyết định 3, 4; Tham chiếu §4 «Cấu hình sàn: mọi thay đổi vào nhật ký, không sửa số đã lưu», luật 13, hàng 48 «đổi chỉ áp cho lead mới»",
+      "hang": "T3",
+      "dung_tren": [
+        "81",
+        "7",
+        "25"
+      ],
+      "bat_khi": "Trên Postgres thử: quản trị sàn A đổi hạn nhận lead 15 → 20 phút; lead chia sau tính 20, lead chia trước giữ 15; vai khác → 403; ngoài khoảng → 400 nêu khoá; sàn B vẫn đọc 15; bộ kiểm cách ly có ca cho hai bảng cấu hình; sửa hay xoá sự kiện cấu hình bị chặn",
+      "slug": "cau-hinh-theo-san",
+      "nhom": "cai-dat",
+      "dot": "cau-hinh-theo-san-0111",
+      "phu": [
+        "CH3",
+        "CH4",
+        "CH5"
+      ],
+      "vung": [
+        "packages/api/src/settings/**"
+      ]
+    },
+    {
       "ma": "45",
       "cau_giao": "Quản trị sàn đổi tên hiển thị của trường chuẩn và thêm giá trị riêng neo vào giá trị chuẩn; cùng một căn hiện đúng ở bảng hàng, đội khác và trang khách",
       "vai": "Quản trị sàn",
@@ -1192,7 +1239,8 @@
       "hang": "T2",
       "dung_tren": [
         "7",
-        "8"
+        "8",
+        "82"
       ],
       "slug": "cach-goi-rieng",
       "nhom": "cai-dat",
@@ -1212,7 +1260,8 @@
       "vi_sao": "Màn P1 (S2); luật «sàn thêm nhãn, không thêm nghĩa»",
       "hang": "T2",
       "dung_tren": [
-        "45"
+        "45",
+        "82"
       ],
       "slug": "trang-thai-rieng",
       "nhom": "cai-dat",
@@ -1233,7 +1282,8 @@
       "hang": "T3",
       "dung_tren": [
         "31",
-        "45"
+        "45",
+        "81"
       ],
       "slug": "truong-rieng-toi-thieu",
       "nhom": "cai-dat",
@@ -1254,7 +1304,8 @@
       "hang": "T2",
       "dung_tren": [
         "7",
-        "25"
+        "25",
+        "82"
       ],
       "slug": "luat-chia-lead",
       "nhom": "cai-dat",
@@ -1274,7 +1325,8 @@
       "vi_sao": "Màn P1 (S4); luật 13",
       "hang": "T2",
       "dung_tren": [
-        "28"
+        "28",
+        "82"
       ],
       "slug": "thue-phi",
       "nhom": "cai-dat",
@@ -1295,7 +1347,8 @@
       "hang": "T2",
       "dung_tren": [
         "67",
-        "43"
+        "43",
+        "81"
       ],
       "slug": "mau-nhap-va-bai",
       "nhom": "cai-dat",
@@ -1805,6 +1858,86 @@
         "LH13"
       ],
       "mo_lai_khi": "Có sàn dùng thử cần rao hàng thương mại hay cho thuê"
+    },
+    {
+      "ma": "H8",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Quản trị sàn đặt luật chia lead hay ngưỡng bằng một bảng quyết định — dữ kiện và phép so cố định, khớp dòng đầu, dòng cuối là mặc định",
+      "ly_do": "Bản đầu một luật chia dựng sẵn; chia lead là chuyện thu nhập của đầu chủ (hàng 25 Hỏi-5), chưa có sàn thứ hai khác hình luật — ADR-0018 quyết định 5",
+      "phu": [
+        "CH6"
+      ],
+      "mo_lai_khi": "Cổng Phạm vi hàng 48 hay một sàn thật cần luật chia thứ hai, hoặc một điểm có hai sàn thật khác hình luật"
+    },
+    {
+      "ma": "H9",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Quản trị sàn thêm điều kiện riêng cho «Sẵn sàng bán» mà không bớt điều kiện của lõi",
+      "ly_do": "Chưa sàn nào xin; điều kiện tối thiểu là nghĩa của «Đang bán» trên trang khách — ADR-0018 quyết định 7",
+      "phu": [
+        "CH7"
+      ],
+      "mo_lai_khi": "Hai sàn thật xin điều kiện Sẵn sàng bán khác nhau"
+    },
+    {
+      "ma": "H10",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Quản trị sàn đặt ngưỡng «nên gọi ép giá» khác theo loại căn hay mức giá",
+      "ly_do": "Tham chiếu §13 đưa câu này vào buổi phỏng vấn sau; tới khi có câu trả lời dùng 10 ngày, sàn chỉnh trong 7–14",
+      "phu": [
+        "CH8"
+      ],
+      "mo_lai_khi": "Phỏng vấn trả lời ngưỡng ép giá khác theo loại căn hay mức giá"
+    },
+    {
+      "ma": "H11",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Quản trị sàn tạo trường riêng kiểu chữ, số hay ngày",
+      "ly_do": "Tham chiếu §7 chốt bản đầu chỉ có / không và chọn một; chữ tự do còn là chỗ dễ ghi số chủ — ADR-0018 bất biến 2",
+      "phu": [
+        "CH9"
+      ],
+      "mo_lai_khi": "Hai sàn thật xin trường riêng kiểu chữ, số hay ngày"
+    },
+    {
+      "ma": "H12",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Quản trị sàn xem ai đổi cấu hình lúc nào và trả một điểm về giá trị cũ",
+      "ly_do": "Hàng 82 đã ghi mọi lần đổi thành sự kiện; màn xem chưa có người cần",
+      "phu": [
+        "CH10"
+      ],
+      "mo_lai_khi": "Quản trị sàn thật hỏi ai đổi cấu hình lúc nào hay cần trả về giá trị cũ"
+    },
+    {
+      "ma": "H13",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Đội vận hành mở sàn mới với cấu hình sao từ một sàn mẫu",
+      "ly_do": "Mới có một sàn; sàn chưa đổi đã nhận mặc định dựng sẵn — phanh không phổ quát quá sớm",
+      "phu": [
+        "CH11"
+      ],
+      "mo_lai_khi": "Đội vận hành mở sàn thứ hai thật"
+    },
+    {
+      "ma": "H14",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Sàn tự tạo đối tượng, trường công thức, luồng việc hay kịch bản riêng",
+      "ly_do": "Tham chiếu §7 «không đối tượng mới, không công thức, không bố cục tự dựng»; máy chấm không chứng được hành vi của mã sàn tự viết — ADR-0018 quyết định 7",
+      "phu": [
+        "CH12"
+      ],
+      "mo_lai_khi": "Số đo từ hai sàn thật cho thấy ba lớp của §7 cộng ba bậc luật của ADR-0018 không đủ"
+    },
+    {
+      "ma": "H15",
+      "dot": "cau-hinh-theo-san-0111",
+      "cau_giao": "Tác tử AI nhập dữ liệu ghép cột file vào trường riêng và nhãn riêng của sàn",
+      "ly_do": "Định nghĩa trường riêng, nhãn riêng là dữ liệu nội bộ của sàn; thoả thuận Xử lý bằng AI chỉ mở danh mục và hàng chia sẻ được — ADR-0018 mục Chi phí",
+      "phu": [
+        "CH13"
+      ],
+      "mo_lai_khi": "Bộ thử hàng 64 cho thấy ghép tất định trường riêng hụt ngưỡng và chủ kho mở thêm lớp cho thoả thuận AI"
     }
   ],
   "da_bac": []
