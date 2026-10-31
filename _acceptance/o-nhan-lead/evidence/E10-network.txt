@@ -1,0 +1,14 @@
+# E10 network (fetch/xhr) + console, driver playwright, origin http://localhost:3483 (app-scope)
+req GET  /api/v1/listings
+res 200  GET /api/v1/listings
+req GET  /api/v1/catalog/units/Z-99.99  -> 200
+req GET  /api/v1/catalog/units/B-09.09  -> 200 (x3)
+req POST /api/v1/leads (Slow 3G, khong trung) -> 201
+req POST /api/v1/leads (khong trung) -> 201
+GET /api/v1/catalog/units/B-09.08 -> 200 ; POST /api/v1/leads (chu trung) -> 201
+GET /api/v1/catalog/units/A-02.06 -> 200 ; POST /api/v1/leads (can trung) -> 201
+POST /api/v1/leads/eb417862-563c-4e03-8402-5f26595e1d5c/discard -> 200
+POST /api/v1/leads (CHU DONG chan boi page.route abort, step 10) -> FAIL net::ERR_INTERNET_DISCONNECTED  [co chu dich, expected cua eval]
+# console
+error: Failed to load resource: net::ERR_INTERNET_DISCONNECTED   (hau qua cua chan chu dich o step 10)
+# Ket luan: khong co 4xx/5xx; fail duy nhat la request bi chan chu dich theo steps.
