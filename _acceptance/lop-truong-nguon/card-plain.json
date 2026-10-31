@@ -1,38 +1,117 @@
 {
   "feature_plain": "Chỉ đầu chủ giữ căn và trưởng nhóm thấy chủ nhà và giá đáy; số chủ chỉ hiện khi bấm «Mở số», và mỗi lần bấm được ghi lại — người khác trong sàn mở cùng hồ sơ chỉ biết ai giữ căn.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ coi đúng ba trường — tên chủ, số chủ, giá đáy — là thông tin nguồn, loại không bao giờ rời sàn."},
-    {"id": "AC-2", "p": "Sẽ cho đúng hai loại người thấy nguồn: đầu chủ giữ căn (còn vai Đầu chủ) và trưởng nhóm; luật kiểm bằng cùng một bảng 12 ô ở lõi và ở kho dữ liệu."},
-    {"id": "AC-3", "p": "Sẽ trả hồ sơ chủ nhà không kèm số nào; người không thấy nguồn chỉ nhận «không thấy» và tên đầu chủ để liên hệ."},
-    {"id": "AC-4", "p": "Sẽ để đầu chủ nhận một căn chưa có người giữ bằng cách ghi chủ nhà đầu tiên; số được chuẩn hoá, ghi sai khuôn thì không lưu gì."},
-    {"id": "AC-5", "p": "Sẽ cho đầu chủ giữ căn và trưởng nhóm xem tên, giá đáy, biết «có số», và chỉ họ sửa được chủ nhà."},
-    {"id": "AC-6", "p": "Sẽ giữ cho đầu khách, đầu chủ khác, telesales, quản trị sàn không nhận được tên, số, giá đáy qua bất kỳ lời gọi nào về căn."},
-    {"id": "AC-7", "p": "Sẽ trả số đầy đủ chỉ khi bấm «Mở số»: bấm n lần thành đúng n lần ghi (ai, vai gì, lúc nào); bị từ chối thì không ghi gì."},
-    {"id": "AC-9", "p": "Sẽ giữ sàn này không thấy, không ghi được đầu chủ, chủ nhà, lần mở số của sàn kia."},
-    {"id": "AC-10", "p": "Sẽ để trưởng nhóm bàn giao căn sang đầu chủ khác: người mới thấy, người cũ hết thấy, và mỗi lần bàn giao để lại một dòng lịch sử."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ coi đúng ba trường — tên chủ, số chủ, giá đáy — là thông tin nguồn, loại không bao giờ rời sàn."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ cho đúng hai loại người thấy nguồn: đầu chủ giữ căn (còn vai Đầu chủ) và trưởng nhóm; luật kiểm bằng cùng một bảng 12 ô ở lõi và ở kho dữ liệu."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ trả hồ sơ chủ nhà không kèm số nào; người không thấy nguồn chỉ nhận «không thấy» và tên đầu chủ để liên hệ."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ để đầu chủ nhận một căn chưa có người giữ bằng cách ghi chủ nhà đầu tiên; số được chuẩn hoá, ghi sai khuôn thì không lưu gì."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ cho đầu chủ giữ căn và trưởng nhóm xem tên, giá đáy, biết «có số», và chỉ họ sửa được chủ nhà."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ giữ cho đầu khách, đầu chủ khác, telesales, quản trị sàn không nhận được tên, số, giá đáy qua bất kỳ lời gọi nào về căn."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ trả số đầy đủ chỉ khi bấm «Mở số»: bấm n lần thành đúng n lần ghi (ai, vai gì, lúc nào); bị từ chối thì không ghi gì."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ giữ sàn này không thấy, không ghi được đầu chủ, chủ nhà, lần mở số của sàn kia."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ để trưởng nhóm bàn giao căn sang đầu chủ khác: người mới thấy, người cũ hết thấy, và mỗi lần bàn giao để lại một dòng lịch sử."
+    }
   ],
   "wont_do": [
-    {"id": "AC-8", "p": "Chặn ở kho dữ liệu: ai đọc thẳng số chủ đã lưu đều bị từ chối — kể cả đầu chủ giữ căn; lịch sử mở số và bàn giao không sửa, không xoá được."},
-    {"id": "OOS-1", "p": "KHÔNG mã hoá số chủ ở hàng này — tách hàng sau (Hỏi-1)."},
-    {"id": "OOS-2", "p": "KHÔNG làm ảnh sổ — chưa có kho ảnh."},
-    {"id": "OOS-3", "p": "KHÔNG làm nhóm và trục «Chỉ tôi → Nhóm → Toàn sàn» — việc của hàng 12."},
-    {"id": "OOS-4", "p": "KHÔNG làm telesales nhập số chủ ở lead, kiểm trùng chủ nhà — việc của hàng dòng vào."},
-    {"id": "OOS-5", "p": "KHÔNG giữ lịch sử giá đáy — chỉ một giá đáy hiện hành."},
-    {"id": "OOS-6", "p": "KHÔNG đưa số chủ xuống máy, xoá khi đăng xuất — việc của hàng 13."},
-    {"id": "OOS-7", "p": "KHÔNG làm màn nào — hồ sơ căn, «Xin dẫn xem», «Liên hệ đầu chủ» làm ở hàng giao diện."}
+    {
+      "id": "AC-8",
+      "p": "Chặn ở kho dữ liệu: ai đọc thẳng số chủ đã lưu đều bị từ chối — kể cả đầu chủ giữ căn; lịch sử mở số và bàn giao không sửa, không xoá được."
+    },
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG mã hoá số chủ ở hàng này — tách hàng sau (Hỏi-1)."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG làm ảnh sổ — chưa có kho ảnh."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG làm nhóm và trục «Chỉ tôi → Nhóm → Toàn sàn» — việc của hàng 12."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG làm telesales nhập số chủ ở lead, kiểm trùng chủ nhà — việc của hàng dòng vào."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG giữ lịch sử giá đáy — chỉ một giá đáy hiện hành."
+    },
+    {
+      "id": "OOS-6",
+      "p": "KHÔNG đưa số chủ xuống máy, xoá khi đăng xuất — việc của hàng 13."
+    },
+    {
+      "id": "OOS-7",
+      "p": "KHÔNG làm màn nào — hồ sơ căn, «Xin dẫn xem», «Liên hệ đầu chủ» làm ở hàng giao diện."
+    }
   ],
   "scope_plain": "Hàng này dựng phần lõi và kho dữ liệu của lớp nguồn; các mục dưới cố ý để sau.",
   "coverage_plain": [
-    {"i": 0, "p": "Mọi loại người xem đã có tiêu chí: đầu chủ giữ căn, đầu chủ khác, đầu khách, telesales, trưởng nhóm, quản trị sàn, sàn khác (AC-2, AC-5, AC-6, AC-9)."},
-    {"i": 1, "p": "Mọi thao tác đã có tiêu chí: ghi, đọc, mở số, bàn giao; xoá chủ nhà không có ở hàng này."},
-    {"i": 2, "p": "Mỗi luật được chặn ở ba tầng — lõi, lời gọi API, kho dữ liệu — không trông vào giao diện."},
-    {"i": 3, "p": "Mọi đường có thể rò đã có tiêu chí: hồ sơ chủ nhà, hồ sơ căn, danh sách căn, lịch sử căn, đọc thẳng kho, sàn khác; trang khách và kết nối ra ngoài để sau."},
-    {"i": 4, "p": "Ba trường nguồn đều có tiêu chí; ảnh sổ để sau nhưng đã bị chặn khỏi lịch sử căn."}
+    {
+      "i": 0,
+      "p": "Mọi loại người xem đã có tiêu chí: đầu chủ giữ căn, đầu chủ khác, đầu khách, telesales, trưởng nhóm, quản trị sàn, sàn khác (AC-2, AC-5, AC-6, AC-9)."
+    },
+    {
+      "i": 1,
+      "p": "Mọi thao tác đã có tiêu chí: ghi, đọc, mở số, bàn giao; xoá chủ nhà không có ở hàng này."
+    },
+    {
+      "i": 2,
+      "p": "Mỗi luật được chặn ở ba tầng — lõi, lời gọi API, kho dữ liệu — không trông vào giao diện."
+    },
+    {
+      "i": 3,
+      "p": "Mọi đường có thể rò đã có tiêu chí: hồ sơ chủ nhà, hồ sơ căn, danh sách căn, lịch sử căn, đọc thẳng kho, sàn khác; trang khách và kết nối ra ngoài để sau."
+    },
+    {
+      "i": 4,
+      "p": "Ba trường nguồn đều có tiêu chí; ảnh sổ để sau nhưng đã bị chặn khỏi lịch sử căn."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Luật ai được nhận căn bị ghi là máy tự quyết, trong khi tài liệu sản phẩm không nói; ca trưởng nhóm không kiêm Đầu chủ ghi chủ nhà chưa định. Đã xử: thành câu hỏi Hỏi-3 cho anh, thêm ca trưởng nhóm bị từ chối, và bỏ hẳn việc hiện số rút gọn."},
-    {"i": 1, "p": "Bàn giao căn kiểu ghi đè làm mất lịch sử ai từng giữ căn lúc số bị mở. Đã xử: mỗi lần bàn giao thêm một dòng, dòng cũ giữ nguyên, có phép đếm."},
-    {"i": 2, "p": "Chưa có phép đo chứng kho dữ liệu tự chặn người không được thấy (chỉ đo qua API). Đã xử: cùng bảng 12 ô chạy thẳng ở kho dữ liệu, ghim câu từ chối, thêm telesales và quản trị sàn sửa chủ nhà."},
-    {"i": 3, "p": "Bảng ai-thấy-gì có ô vô nghĩa, chưa ghi kết quả từng ô, thiếu ca kiêm vai. Đã xử: bảng 12 ô có kết quả ngay trong hợp đồng, gồm hai ca kiêm vai."}
-  ]
+    {
+      "i": 0,
+      "p": "Luật ai được nhận căn bị ghi là máy tự quyết, trong khi tài liệu sản phẩm không nói; ca trưởng nhóm không kiêm Đầu chủ ghi chủ nhà chưa định. Đã xử: thành câu hỏi Hỏi-3 cho anh, thêm ca trưởng nhóm bị từ chối, và bỏ hẳn việc hiện số rút gọn."
+    },
+    {
+      "i": 1,
+      "p": "Bàn giao căn kiểu ghi đè làm mất lịch sử ai từng giữ căn lúc số bị mở. Đã xử: mỗi lần bàn giao thêm một dòng, dòng cũ giữ nguyên, có phép đếm."
+    },
+    {
+      "i": 2,
+      "p": "Chưa có phép đo chứng kho dữ liệu tự chặn người không được thấy (chỉ đo qua API). Đã xử: cùng bảng 12 ô chạy thẳng ở kho dữ liệu, ghim câu từ chối, thêm telesales và quản trị sàn sửa chủ nhà."
+    },
+    {
+      "i": 3,
+      "p": "Bảng ai-thấy-gì có ô vô nghĩa, chưa ghi kết quả từng ô, thiếu ca kiêm vai. Đã xử: bảng 12 ô có kết quả ngay trong hợp đồng, gồm hai ca kiêm vai."
+    }
+  ],
+  "analyst_plain": "Các phép kiểm cũng xanh khi chạy trên bản trước việc này, vì bản trước chưa có ca kiểm nào của việc này — không có nghĩa là ca kiểm yếu. Bằng chứng ca kiểm bắt được lỗi thật là các lần cố tình làm hỏng mã lúc viết (ví dụ cho quản trị sàn thấy chủ nhà, hay để lọt số vào hồ sơ trả về): lần nào ca tương ứng cũng đỏ."
 }
