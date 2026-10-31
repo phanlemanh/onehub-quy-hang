@@ -32,7 +32,7 @@ const CHU: Partial<Record<ApiErrorCode, string>> = {
   [API_ERRORS.alreadyMember.code]: "Email này đã là thành viên của sàn.",
   [API_ERRORS.lastAdmin.code]: "Sàn cần ít nhất một quản trị.",
   [API_ERRORS.roleRequired.code]: "Chọn ít nhất một vai.",
-  [API_ERRORS.zoneNameTaken.code]: "Tên khu này đã có.",
+  [API_ERRORS.zoneNameTaken.code]: "Tên vùng này đã có.",
 };
 const goi = (method: string, path: string, body?: unknown) =>
   fetch(`/api/v1/company${path}`, { method, headers: { "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
@@ -41,7 +41,7 @@ const loiCua = async (res: Response) => {
   return (ma && CHU[ma]) || "Có lỗi, thử lại.";
 };
 
-/** Chọn nhiều bằng Checkbox — dùng cho vai và khu. */
+/** Chọn nhiều bằng Checkbox — dùng cho vai và vùng. */
 function ChonNhieu({ ten, cac, chon, doi }: { ten: string; cac: { ma: string; nhan: string }[]; chon: string[]; doi: (x: string[]) => void }) {
   return (
     <fieldset className="flex flex-wrap gap-x-4 gap-y-2">
@@ -136,7 +136,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             {cacKhu.length > 0 ? (
               <ChonNhieu ten="Vùng phụ trách" cac={cacKhu} chon={khuChon} doi={setKhuChon} />
             ) : (
-              <p className="text-sm text-muted-foreground">Chưa có khu — thêm khu ở dưới.</p>
+              <p className="text-sm text-muted-foreground">Chưa có vùng — thêm vùng ở dưới.</p>
             )}
             <div className="flex gap-2">
               <Button type="submit">Mời</Button>
@@ -210,7 +210,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium">Khu</h2>
+        <h2 className="text-sm font-medium">Vùng</h2>
         <div className="flex flex-wrap gap-1">
           {khu.map((k) => (
             <Badge key={k.id} variant="outline">
@@ -220,12 +220,12 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
         </div>
         <form className="flex items-end gap-2" onSubmit={themKhu}>
           <Field data-invalid={loiKhu ? true : undefined}>
-            <FieldLabel htmlFor="ten-khu">Tên khu</FieldLabel>
+            <FieldLabel htmlFor="ten-khu">Tên vùng</FieldLabel>
             <Input id="ten-khu" required value={tenKhu} onChange={(e) => setTenKhu(e.target.value)} />
             {loiKhu && <FieldError role="alert">{loiKhu}</FieldError>}
           </Field>
           <Button type="submit" variant="outline">
-            Thêm khu
+            Thêm vùng
           </Button>
         </form>
       </section>
