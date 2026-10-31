@@ -1,0 +1,5 @@
+# Hai trang máy vẽ lại từ hồ sơ (kit nghiệm thu, khối GITATTR-TEP-SINH): gộp nhánh chính vào nhánh việc giữ bản của nhánh
+# đang đứng thay vì dừng xung đột; vẽ lại bằng `node "$CLAUDE_PLUGIN_ROOT/scripts/product-map.mjs" --root .` rồi commit —
+# CI chạy `--check` nên bản vẽ sai sau gộp vẫn bị bắt. Driver `tep-sinh` bật ở mỗi bản clone qua `npm install` (prepare).
+PRODUCT-MAP.md merge=tep-sinh
+LO-TRINH.html merge=tep-sinh

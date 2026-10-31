@@ -9,7 +9,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "prepare": "git config core.hooksPath .githooks || true",
+    "prepare": "git config core.hooksPath .githooks && git config merge.tep-sinh.driver true || true",
     "dev": "npm run dev -w @quy-hang/web",
     "build": "npm run build -w @quy-hang/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
