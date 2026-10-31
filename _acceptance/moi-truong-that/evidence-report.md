@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: moi-truong-that
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: grader subagent (fresh context, verify phase, round 2) — Claude Opus 5.5
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 0422d55bf395ad94fa32bc3b14add3730f26d2a9
-human_signoff:
+human_signoff: Manh Phan 2026-10-31
 ---
 
 # Evidence Report: moi-truong-that
@@ -28,7 +28,7 @@ vẫn trả UNCERTAIN; ở T3 mọi mục judgment đều phải có người k�
 | E7 | AC-7 | script | PASS |
 | E8 | AC-8 | script | PASS |
 | E9 | AC-9 | script | PASS |
-| E10 | AC-10 | judgment | UNCERTAIN |
+| E10 | AC-10 | judgment | PASS (human_override) |
 
 ## Evidence
 
@@ -180,7 +180,7 @@ vẫn trả UNCERTAIN; ở T3 mọi mục judgment đều phải có người k�
   rationale: Ba chỗ nói cùng một điều và khớp ci.yml, vercel.json, nen-du-an.sql về nơi chạy, vùng, cách áp migration và cách giữ khoá (lượt này §10 và §12 đã nêu bí mật chỉ ở Vercel Sensitive và secret GitHub, khoá số chủ nhà chưa sinh). Riêng giới hạn còn lại thì chưa cùng: Kiến trúc §10 ghi «Còn mở (ADR-0009 Hệ quả):» như danh sách đủ nhưng chỉ kể 3 trong 5 mục của Hệ quả, Tham chiếu §12 cũng kể đúng 3 mục đó; cả hai bỏ «Resend trả 403 tới khi tên miền gửi được xác minh» (nên câu «mã đăng nhập gửi qua Resend» đọc như đã chạy) và «bản xem trước chưa đăng nhập được». Judge cũng nêu ADR dòng 50 «001–005 áp đủ» lệch với chữ AC-2 «005 chưa ghi sổ» — đo lượt này cho thấy ADR đúng với thực tế, chữ của hợp đồng mới là chỗ cũ.
   required_evidence:
     - Bản sửa Kiến trúc §10 (dòng «Còn mở», quanh dòng 214) và Tham chiếu §12 (dòng 31/10, quanh dòng 317) thêm hai mục — thư mã chưa tới hộp thư tới khi Resend xác minh onehub.center, và bản xem trước chưa đăng nhập được — hoặc một dòng của chủ kho trong hồ sơ xác nhận hai danh sách đó cố ý chỉ kể giới hạn hạ tầng.
-  human_override:
+  human_override: Manh Phan 2026-10-31
 
 ## Known limits
 
