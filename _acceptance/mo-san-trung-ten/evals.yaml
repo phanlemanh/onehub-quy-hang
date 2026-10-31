@@ -1,0 +1,51 @@
+schema_version: 1
+feature_slug: mo-san-trung-ten
+# Một lệnh máy: `executors.test.isolation` (npm run db:migrate && npm run db:test — gồm packages/db/tests/*.test.mjs và
+# packages/api/test-db), cần DATABASE_URL tới Postgres dãy X, cổng 5554. exit 0 KHÔNG đủ: người chấm đối chiếu từng tên
+# ca nêu trong `expected` trên dòng reporter — có mặt, «ok», không «# SKIP»/«# TODO» (thiếu DATABASE_URL thì các ca
+# skip: đó là đỏ).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «mở sàn: tên trùng, email khác → sàn riêng» có mặt và ok trong packages/db/tests/mo-san.test.mjs — tên và email mang nhãn chạy riêng (chạy bộ kiểm hai lần liên tiếp trên cùng cơ sở dữ liệu vẫn xanh) — moSan tên «[Sàn trùng 1 <nhãn>]» email X rồi cùng tên email Y: companyId khác nhau; Y có đúng một dòng company_members ở sàn mới với roles ['company_admin'] và 0 dòng ở sàn cũ; danh sách thành viên sàn cũ trước và sau bằng nhau (deepEqual); lần hai trả daCo === 1, lần một daCo === 0. Chiều đỏ: đưa moSan về tìm sàn theo tên → ca đỏ «email Y vào sàn cũ»."
+    paths: [packages/db/scripts/mo-san.mjs, packages/db/tests/mo-san.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ba ca cũ có mặt và ok trong packages/db/tests/mo-san.test.mjs: «mở sàn: lần hai cùng tham số không tạo trùng», «mở sàn: email viết hoa có khoảng trắng gắn vào cùng tài khoản», «mở sàn: người đầu tiên mang vai quản trị sàn» (vai không lặp khi chạy lại); và ca cũ «mở sàn: cùng email, tên sàn khác → người thuộc hai sàn». Ca mới «mở sàn: chạy lại sàn thứ hai trong hai sàn cùng tên» có mặt và ok — mở T với X, T với Y, rồi chạy lại T với «  Y viết hoa  »: trả đúng companyId của Y, chayLai === true, số sàn tên T vẫn 2, Y vẫn 1 dòng thành viên. Ca mới «mở sàn: thành viên thường không tính là chạy lại» có mặt và ok — Z được chèn làm thành viên thường (roles không có company_admin) của sàn tên T, moSan T với Z ra sàn mới, chayLai === false. Chiều đỏ: chỉ xét sàn đầu tiên cùng tên → ca «chạy lại sàn thứ hai» đỏ với số sàn 3.: moSan luôn tạo sàn mới bất kể email đã là thành viên → ca «lần hai cùng tham số không tạo trùng» đỏ."
+    paths: [packages/db/scripts/mo-san.mjs, packages/db/tests/mo-san.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «mở sàn: ba lần cùng tên, ba email → ba sàn» có mặt và ok — tên và email mang nhãn chạy; ma trận viết trước ba email, mỗi lần moSan một lần, số lần gọi bằng 3; ra 3 companyId đôi một khác; mỗi sàn đúng 1 dòng company_members (đếm theo sàn) là company_admin; daCo lần lượt [0, 1, 2]. Chiều đỏ: daCo đếm cả sàn vừa tạo → ca đỏ nêu [1, 2, 3]."
+    paths: [packages/db/scripts/mo-san.mjs, packages/db/tests/mo-san.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «sàn trùng tên: người sàn mới không đọc được dòng nào của sàn cũ» có mặt và ok trong packages/db/tests/isolation.test.mjs — hai sàn cùng tên mở bằng moSan THẬT (không chèn tay companies), mỗi sàn có thêm một dòng ở các bảng của công ty mà ca dựng được (ít nhất companies, company_members, listings, listing_events); danh sách bảng có cột company_id rút từ information_schema của cơ sở dữ liệu (không gõ tay), trước hết đếm bằng vai chủ số dòng của sàn cũ ở từng bảng — bảng > 0 mới vào nhóm «đã xét», ghi riêng số bảng rỗng, và đòi company_members, listings, listing_events nằm trong nhóm đã xét; với mỗi bảng đã xét, dưới vai quy_hang_app + người MỚI đặt sàn mới, rồi người MỚI đặt sàn CŨ: đếm dòng company_id = sàn cũ bằng 0 (thông điệp nêu tên bảng và sàn đặt); thêm phép đo companies theo id sàn cũ bằng 0 ở cả hai cách đặt; đối chứng dương cùng ca: quản trị cũ đặt sàn cũ thấy dòng của sàn cũ ở companies và company_members. Chiều đỏ thứ hai: chèn người mới vào company_members sàn cũ trong bản sao → ca đỏ ở vế «người mới đặt sàn cũ». Chiều đỏ: đưa moSan về tìm sàn theo tên → hai lần mở ra cùng sàn, ca đỏ «hai sàn trùng tên cùng mã»."
+    paths: [packages/db/scripts/mo-san.mjs, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «dòng lệnh mở sàn: báo trùng tên» có mặt và ok trong packages/db/tests/mo-san.test.mjs — chạy tệp mo-san.mjs bằng node con với DATABASE_URL hai lần cùng tên «[Sàn mở cli <nhãn chạy>]», hai email: lần một stdout không chứa «sàn khác cùng tên», lần hai stdout chứa «đã có 1 sàn khác cùng tên — đây là sàn mới» và mã sàn mới (khớp companies trong cơ sở dữ liệu); lần ba chạy lại đúng lệnh lần hai: stdout chứa «chạy lại — sàn có sẵn» và đúng mã sàn lần hai; ca dọn hai sàn và hai tài khoản đã tạo. Chiều đỏ: bỏ dòng in → ca đỏ «thiếu dòng báo trùng tên»."
+    paths: [packages/db/scripts/mo-san.mjs, packages/db/tests/mo-san.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
