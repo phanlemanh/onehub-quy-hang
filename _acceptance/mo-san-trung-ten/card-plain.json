@@ -1,11 +1,5 @@
 {
   "feature_plain": "Đội vận hành mở sàn cho một công ty mới trùng tên với sàn đang chạy thì được một sàn riêng; quản trị của công ty mới không bao giờ bị gắn lặng vào sàn cũ và không thấy dữ liệu của sàn cũ.",
-  "will_do": [
-    {"id":"AC-1","p":"Sẽ tạo sàn riêng khi mở sàn trùng tên cho một email quản trị khác; sàn cũ giữ nguyên người."},
-    {"id":"AC-2","p":"Sẽ coi là chạy lại (không tạo gì thêm) khi email đã là quản trị của một sàn cùng tên — kể cả khi có nhiều sàn cùng tên; nhân viên thường thì không tính."},
-    {"id":"AC-3","p":"Sẽ cho ba sàn riêng khi mở ba lần cùng tên cho ba email."},
-    {"id":"AC-4","p":"Sẽ chứng trên cơ sở dữ liệu thật: người của sàn mới, đặt sàn nào cũng vậy, không đọc được dòng nào của sàn cũ."},
-    {"id":"AC-5","p":"Sẽ in rõ cho đội vận hành: «đã có N sàn khác cùng tên — đây là sàn mới» hoặc «chạy lại — sàn có sẵn»."}
-  ],
-  "scope_plain": "Những việc cố ý để ngoài lần này:"
+  "scope_plain": "Những việc cố ý để ngoài lần này:",
+  "analyst_plain": ""
 }
