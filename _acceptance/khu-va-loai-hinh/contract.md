@@ -5,7 +5,7 @@ slug: khu-va-loai-hinh
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: implemented
 design_doc: docs/superpowers/specs/2026-10-31-khu-va-loai-hinh-design.md
 approved_by: Manh Phan
 approved_at: 2026-10-31T15:23:10Z
