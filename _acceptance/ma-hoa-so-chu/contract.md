@@ -108,14 +108,16 @@ Then dòng `leads` có `owner_phone` null, `owner_phone_enc` (ngữ cảnh `lead
 và `owner_phone_hash` có giá trị; đọc dòng lead bằng vai chủ dưới dạng chữ không thấy số ở bốn dạng; vai API không đọc
 được ba cột số của lead; chèn hay sửa `leads.owner_phone` khác null bị từ chối nêu tên ràng buộc
 `leads_phone_chi_ban_ma`; lệnh mã hoá lại chuyển dòng lead số rõ sang bản mã và dấu vết, validate ràng buộc ấy, chạy
-lại không đổi byte; bản trả cho telesales vẫn không mang số.
+lại không đổi byte; bản trả cho telesales vẫn không mang số; lead không mang số nào (cả ba cột số null) bị từ chối nêu tên
+ràng buộc `leads_phone_co_so`; «Bỏ lead này» trên một lead cũ còn số rõ bị từ chối nêu tên ràng buộc cho tới khi chạy lệnh
+mã hoá lại, rồi chạy được — nên lệnh mã hoá lại phải chạy ngay sau khi áp migration.
 
 **AC-12 — Kiểm trùng lúc nhập lead so dấu vết, không so số.** (cross-layer)
 Given chủ nhà mang số mẫu trên một hàng đã có đầu chủ, và một lead trước cùng số đã về một đầu chủ
 When telesales nhập lead mang số ấy (viết `0900 000 0xx` hay `+84…`); và nhập lead cùng số ở sàn khác
 Then kết quả kiểm trùng giữ đúng luật của hàng 24 (lead về đầu chủ giữ chủ nhà, `+84` vẫn khớp); hàm
 `app.lead_dedupe_facts` nhận dấu vết (`bytea`) thay cho số — không còn hàm nào của cơ sở dữ liệu nhận số chủ dạng chữ;
-lead ở sàn khác không khớp chủ nhà của sàn này.
+lead ở sàn khác không khớp chủ nhà của sàn này, và hai lead cùng số ở hai sàn mang dấu vết khác nhau.
 
 ## Coverage
 
@@ -136,7 +138,7 @@ pháp lý trước dữ liệu thật (ADR-0009 §10), không phải của hàng
   (AC-3).
 - Trục A thêm: bảng lead của hàng 24 (gộp trước 62 theo lệnh giám sát) — ghi qua API và dòng cũ (AC-11); trục C thêm:
   dấu vết so trùng lead với chủ nhà và lead với lead (AC-12).
-- Later: xoay khoá (byte phiên bản đặt sẵn) · xoá cột `owner_phone` · hàm kiểm trùng so dấu vết (hàng 24 / kiểm trùng).
+- Later: xoay khoá (byte phiên bản đặt sẵn) · xoá cột `owner_phone` · kiểm trùng mở rộng ngoài ô nhận lead (hàng kiểm trùng).
 - Never: mã hoá trong cơ sở dữ liệu bằng pgcrypto — khoá phải đi vào phiên cơ sở dữ liệu, trái ADR-0009 §9.
 - `[GIẢ ĐỊNH]` chờ gạch: cột số điện thoại ở mọi bảng đều có `phone` trong tên (quy ước RESO-first; quét AC-5 dựa trên
   tên). Cột số đặt tên khác (ví dụ `mobile`) sẽ lọt quét.
@@ -159,7 +161,8 @@ Ngưỡng SỐNG của `opportunity.md`, từng vế:
 
 - Xoá cột `owner_phone` — migration của hàng sau, sau khi cơ sở dữ liệu thật đã chạy lệnh mã hoá lại.
 - Xoay khoá — byte phiên bản `0x01` đặt sẵn; lệnh xoay để sau.
-- Hàm kiểm trùng so dấu vết — của hàng 24 (ô nhận lead) và hàng kiểm trùng; hàng này chỉ cấp `dauVetSo` và cột dấu vết.
+- Kiểm trùng mở rộng ngoài ô nhận lead (hàng kiểm trùng). Hàm kiểm trùng của ô nhận lead (`app.lead_dedupe_facts`) thì
+  hàng này chuyển sang so dấu vết (AC-12, nhánh «24 gộp trước»).
 - Đặt khoá thật ở Vercel, cất bản ngoài máy, chạy lệnh mã hoá lại trên cơ sở dữ liệu thật — việc vận hành của chủ kho
   và giám sát, qua yêu cầu `can-nguoi` sau gộp.
 - Số chủ trên máy (hàng 13), ảnh sổ, mọi màn.

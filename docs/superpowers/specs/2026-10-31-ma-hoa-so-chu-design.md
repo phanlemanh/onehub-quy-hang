@@ -56,7 +56,7 @@ giữ nguyên) và bất biến 2 (lớp `source` — trần `never_leaves_compa
   được đọc `has_phone`.
 - `app.reveal_owner_phone(uuid)` dựng lại, trả `bytea` (bản mã) thay cho `text`: vẫn xét quyền, vẫn ghi một dòng
   `owner_phone_reveals`, rồi trả bản mã. Không có bản mã → «chưa có số chủ» như cũ.
-- Hàm `app.owner_phone_hash_matches(p_hash bytea)` **không** dựng ở hàng này — hàm kiểm trùng là của hàng 24/kiểm trùng.
+- Hàm kiểm trùng của ô nhận lead (`app.lead_dedupe_facts`, hàng 24 gộp trước) chuyển sang so dấu vết ở mục 8.
 
 ### 4. API
 
@@ -128,6 +128,10 @@ Giám sát chốt hàng 24 (PR #44) gộp trước 62. Migration 007 của hàng
 - `createLead` (`packages/api/src/leads/store.ts`) mã hoá số và tính dấu vết theo sàn trước khi gọi hàm dữ kiện và ghi
   lead; khoá đọc một lần ở `registerLeadRoutes` như ở chủ nhà.
 - Lệnh mã hoá lại phủ thêm bảng `leads` (`daMaHoaLead`), validate `leads_phone_chi_ban_ma`.
+- Lead phải có số: `leads_phone_co_so check (owner_phone is not null or owner_phone_enc is not null)` thay chỗ `not null`
+  cũ (năm mục bắt buộc của hàng 24).
+- Ràng buộc NOT VALID vẫn được xét ở mọi lần sửa dòng: lead cũ còn số rõ thì `app.discard_lead` («Bỏ lead này») bị từ
+  chối tới khi chạy lệnh mã hoá lại. Luật vận hành: chạy lệnh mã hoá lại NGAY sau khi áp migration 008 (ADR-0013).
 - Lead chưa có cửa mở số: số của lead chưa ai đọc lại được (chốt 29/10 của hàng 24 — telesales không thấy lại số). Ngữ
   cảnh bản mã đặt sẵn cho hàng sau cần mở.
 
@@ -138,7 +142,7 @@ Bỏ — hàng không có màn (sổ quyết định).
 ## Ngoài thiết kế này
 
 Xoá cột `owner_phone` (hàng sau, sau khi cơ sở dữ liệu thật chạy lệnh mã hoá lại) · xoay khoá (byte phiên bản đặt
-sẵn, lệnh xoay để sau) · hàm kiểm trùng (hàng 24 và hàng kiểm trùng) · số chủ trên máy (hàng 13) · ảnh sổ · đặt khoá
+sẵn, lệnh xoay để sau) · kiểm trùng mở rộng ngoài ô nhận lead (hàng kiểm trùng) · số chủ trên máy (hàng 13) · ảnh sổ · đặt khoá
 thật ở Vercel (chủ kho, theo hướng dẫn gửi kèm yêu cầu `can-nguoi` sau gộp) · bản xem trước của Vercel có nhận khoá thật
 không (Hỏi-1).
 
