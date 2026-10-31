@@ -157,7 +157,7 @@ Hai chiều với Platform là đúng thiết kế: hàng đi ra, khách đi và
 | Ảnh | Supabase Storage, hai vùng; sinh bản thu nhỏ khi tải lên | Gửi bản nhẹ, giữ bản gốc; ngăn nội bộ chỉ mở bằng link ngắn hạn | Đã dùng (nhà cung cấp) |
 | Việc nền | Bảng việc trong Postgres + lịch chạy mỗi phút của Vercel | Hạn lead 15 phút, hàng đợi hằng đêm, ảnh thu nhỏ, nạp nguồn cấp — không thêm hạ tầng | Mẫu đang chạy ở CRM |
 | Thông báo | Web Push (máy tính, Android, iPhone khi đã cài lên màn hình chính) + trong app | Báo lead tức thì | Thử trên iPhone |
-| Nhập Excel | Đọc file ngay trên trình duyệt (SheetJS hoặc exceljs), gửi từng dòng lên máy chủ để ghép căn | Xem trước nhanh, không chờ tải file lên | — |
+| Nhập Excel | Đọc file ngay trên trình duyệt; tác tử Claude lập kế hoạch từ hồ sơ cột đã che, mã ở lõi áp lên mọi dòng; nguồn không tới nhà cung cấp AI — [Nhập dữ liệu](nhap-du-lieu.md) | Xem trước nhanh, file gốc không lên máy chủ | Đã chốt 31/10 ([ADR-0011](../adr/0011-nhap-du-lieu-tac-tu.md)) |
 | Trang khách | Dựng ở máy chủ, ảnh xem trước sinh theo bộ căn, đọc bản giá sống | Link sống, ghi công đúng người | Thử với Zalo |
 | Điện thoại | Bản đầu: web cài lên màn hình chính. Sau: vỏ app gốc bọc cùng mã web (Capacitor); bộ gõ viết gốc Android | Đầu khách chủ yếu đọc và gửi — web làm được, kể cả chia sẻ ảnh + tin sang Zalo. Việc web trên iPhone không làm được thì để vỏ app | Đã biết giới hạn (mục 7) |
 | Chạy | Vercel (cùng đội), vùng Singapore | Đã dùng cho Invest và CRM | Đã dùng |

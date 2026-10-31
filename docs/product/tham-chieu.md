@@ -202,7 +202,7 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 | Đội | — | — | — | Có | — |
 | Cài đặt sàn | — | — | — | — | Có |
 | + Lead | Có | Có | — | Có | — |
-| Nhập Excel | — | Có | — | — | Có |
+| Nhập Excel | — | Có | — | Có | — |
 | Phát hàng | — | Có | — | Có | — |
 
 Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng — có hàng gì, ở đâu? · Đã gửi — khách đang phản ứng ra sao? · Đội — đội đang chạy thế nào? · Cài đặt sàn — sàn gọi tên và chạy theo luật nào?
@@ -246,7 +246,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Hồ sơ căn | Chế độ cuộc gọi trên điện thoại | Đầu chủ · điện thoại | K1–K4 | Dự phòng | P2 |
 | Cửa vào | Ô nhận lead | Telesales · máy tính | L1–L3 | Bản đầu | P0 |
 | Cửa vào | Ô nhận lead | Telesales · điện thoại | L4, L5 | Bản đầu | P1 |
-| Cửa vào | Nhập Excel: ghép cột, xem trước | Đầu chủ, quản trị · máy tính | N1, N2 | Bản đầu | P0 |
+| Cửa vào | Nhập Excel: ghép cột, xem trước | Đầu chủ, trưởng nhóm · máy tính (quản trị chỉ quản mẫu file, ADR-0011) | N1, N2 | Bản đầu | P0 |
 | Cửa ra | Gửi: chọn → xem trước → chia sẻ → theo dõi | Đầu khách · điện thoại | G1–G4 | Bản đầu | P0 |
 | Cửa ra | Trang khách: khách riêng | Khách · điện thoại | T1–T3 | Bản đầu | P0 |
 | Cửa ra | Trang khách: nhóm môi giới | Môi giới sàn khác · máy tính | T4 | Bản đầu | P1 |
@@ -322,6 +322,8 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 31/10 | Trục ai thấy hàng, hai nấc: lead và hàng chưa từng Đang bán ở «Chỉ tôi» — chỉ người tạo đọc và sửa được, người khác (cả quản trị sàn, trưởng nhóm) nhận «không có hàng này»; lần đầu «Sẵn sàng bán» thì lên «Toàn sàn» và giữ nấc ấy cả khi tạm ngừng hay rời Đang bán; hàng «Toàn sàn» mọi thành viên sàn sửa được như hàng 8. Nấc tính từ sự kiện, chặn ở lõi và API (chưa ở cơ sở dữ liệu); «Nhóm» và đổi nấc bằng tay để sau | Mục 6 · `_acceptance/truc-ai-thay-hang/` |
 | 31/10 | Phiên đăng nhập 30 ngày, trượt theo ngày dùng: dùng lại sau hơn một ngày thì hạn dời ra đủ 30 ngày (tối đa mỗi ngày một lần), cả cookie trình duyệt khi mở trang; bỏ không 30 ngày thì xin mã lại; chưa có trần tuyệt đối | ADR-0005 «Bổ sung 31/10» · `_acceptance/phien-dang-nhap-30-ngay/` |
 | 31/10 | Mã đăng nhập chỉ phát qua một đường: xin mã kiểu khác đăng nhập bị từ chối (400), giới hạn 5 lần / 15 phút gác mọi đường gửi mã còn mở cho mỗi email; đường quên, đặt lại mật khẩu và đổi email của thư viện đăng nhập trả 404, không gửi thư, không đốt lượt | ADR-0005 «Bổ sung 31/10 — đường gửi mã» · `_acceptance/dong-duong-gui-ma-thua/` |
+| 31/10 | Chuẩn hoá là một lớp của lõi cho mọi cửa vào (nhập file, ô nhận lead, sửa trên ô, API), không riêng lần nhập: thuộc tính căn tự điền từ mã, không gõ; trường danh sách cố định chọn hoặc so với giá trị chuẩn và từ điển của sàn; lựa chọn của người thành đề xuất từ điển, quản trị sàn duyệt; AI chỉ dọn từ điển định kỳ, không soát từng lần gõ; dữ liệu đã lưu chỉ đổi qua sự kiện có người. | ADR-0011 quyết định 12 · `docs/architecture/nhap-du-lieu.md` §12 |
+| 31/10 | Nhập dữ liệu: tác tử Claude Opus 5.5 lập kế hoạch nhập từ hồ sơ cột (tiêu đề + giá trị của cột danh mục, giá, trạng thái), mã ở lõi áp lên mọi dòng, người xem trước từng ô rồi mới ghi qua lệnh; chủ nhà, số, giá đáy, tên người, ghi chú không bao giờ tới nhà cung cấp AI (che ở trình duyệt, máy chủ quét lại, kiểm bắt buộc); cửa ra AI là thoả thuận «Xử lý bằng AI» sàn bật / tắt, trần 10 USD/tháng/sàn; không AI vẫn nhập được và đo chế độ không AI trước — nền đạt ngưỡng thì gác hàng tác tử; Google Sheets bản đầu nhận file tải về; hoàn tác cả lần nhập bằng sự kiện bù; người nhập là đầu chủ và trưởng nhóm. Hàng 20, 21 thay bằng hàng 64–71 | ADR-0011 · `docs/architecture/nhap-du-lieu.md` |
 
 ## 13. Chỗ cần chốt
 
