@@ -102,6 +102,9 @@ Kit lấy từ `CLAUDE_PLUGIN_ROOT`, vắng thì từ sổ cài qua `packages/ui
 
 ## 6. Rủi ro
 
-- PR này đổi luật chặn trong khi đợt `nen-dau` còn chạy: chỉ gộp sau khi giám sát báo đợt đã đóng, sau PR #21, trước PR
-  #15 (gói `nen-2`). Gói `nen-2` mở hồ sơ từ hàng 9, 11, 12, 13 — đều có trong lộ trình, nên luật chặn không vướng.
+- PR này đổi luật chặn trong khi đợt `nen-dau` còn chạy: chỉ gộp sau khi giám sát báo đợt đã đóng (đã đóng 31/10), sau
+  PR #21, trước PR #15 (gói `nen-2`). Gói `nen-2` mở hồ sơ từ các hàng có trong lộ trình. **Đo 31/10** — gộp nhánh PR #15
+  (`bce8d1d`) vào bản sao tạm của nhánh này: `PRODUCT-MAP.md` và `LO-TRINH.html` gộp không dừng (driver chạy đúng); tệp lộ
+  trình xung đột vì cả hai nhánh cùng thêm hàng vào cuối — gỡ bằng cách giữ hàng của cả hai. Sau gộp: luật chặn lộ trình
+  thoát 0, năm hồ sơ của `nen-2` đều nối hàng; lưới trước-gộp không gọi tên hồ sơ nào của `nen-2`.
 - `prepare` đổi cấu hình git của bản clone: chỉ thêm một khoá driver, đảo bằng `git config --unset merge.tep-sinh.driver`.
