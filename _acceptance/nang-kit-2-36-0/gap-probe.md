@@ -1,6 +1,6 @@
 ---
 slug: nang-kit-2-36-0
-at: 2026-10-31T02:35:00Z
+at: 2026-10-31T01:26:00Z
 verdict: findings
 p0: 0
 p1: 2
