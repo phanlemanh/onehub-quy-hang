@@ -20,7 +20,20 @@ type Kiem = (v: unknown) => string | null;
 const chu: Kiem = (v) => (typeof v === "string" && v.trim().length > 0 && v.length <= 200 ? null : "cần chữ, 1–200 ký tự");
 const chuHayXoa: Kiem = (v) => (v === null ? null : chu(v));
 const tien: Kiem = (v) => (typeof v === "number" && Number.isSafeInteger(v) && v > 0 ? null : "cần số đồng nguyên dương");
-const ngay: Kiem = (v) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) ? null : "cần ngày YYYY-MM-DD");
+export const NGAY_SAI_DANG = "cần ngày YYYY-MM-DD";
+export const NGAY_KHONG_CO_THAT = "ngày không có thật";
+/**
+ * Ngày theo lịch Gregorian, không dùng `Date.parse`: nó tự cuộn ngày lố sang tháng sau (30/2 thành 2/3), để ngày không
+ * có thật qua được rồi cơ sở dữ liệu báo lỗi hệ thống (hàng 57). Lịch không có năm 0.
+ */
+const ngay: Kiem = (v) => {
+  const m = typeof v === "string" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(v) : null;
+  if (!m) return NGAY_SAI_DANG;
+  const [nam, thang, ngayTrongThang] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  const nhuan = (nam % 4 === 0 && nam % 100 !== 0) || nam % 400 === 0;
+  const soNgay = [31, nhuan ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][thang - 1];
+  return nam >= 1 && soNgay !== undefined && ngayTrongThang >= 1 && ngayTrongThang <= soNgay ? null : NGAY_KHONG_CO_THAT;
+};
 const motTrong = (ds: readonly string[]): Kiem => (v) => (typeof v === "string" && ds.includes(v) ? null : `cần một trong: ${ds.join(", ")}`);
 
 /** Khuôn từng loại: khoá → [bắt buộc, cách kiểm]. */
