@@ -19,7 +19,8 @@ ADR-0020 xin giữ chỗ ở giám sát (yêu cầu L-11).
    - **Lên bảng** — chủ nhà của lead đã thành hàng Sẵn sàng bán (Hỏi-1).
    Ngoài bốn nấc: **Trả lại** (đầu chủ báo số không liên lạc được), **Đã gửi lại** (trỏ lead mới), **Tin bổ sung** (lead
    căn trùng — ghi vào hàng đang mở), **Đã bỏ** (lead căn trùng telesales bỏ).
-3. **Trả lại**: đầu chủ của lead báo «Số không liên lạc được» khi chưa ghi gọi lần đầu. Lead rời việc của đầu chủ: không
+3. **Trả lại**: đầu chủ của lead báo «Số không liên lạc được» khi lead chưa Lên bảng, kể cả khi đã ghi gọi lần đầu (Hỏi-4).
+   Lead rời việc của đầu chủ: không
    chia lại, không báo quá hạn, không tính là lead đang mở. Nút «Trả lại» ở màn của đầu chủ là hàng 22 — hàng này có lối
    API.
 4. **Sửa số và gửi lại**: telesales nhập số mới ngay trên dòng lead bị trả lại; máy tạo một lead mới chép các mục khác của
@@ -30,16 +31,20 @@ ADR-0020 xin giữ chỗ ở giám sát (yêu cầu L-11).
 ## 2. Dữ liệu (migration 015)
 
 - `leads` thêm `returned_at`, `returned_by` (lần trả lại), `resubmitted_at`, `resubmitted_lead_id` (khoá ngoại về lead mới
-  cùng sàn). Ràng buộc: hai cặp cùng có hay cùng trống; lead đã gửi lại phải là lead đã trả lại; trả lại chỉ khi chưa ghi
-  gọi lần đầu. Vai API đọc bốn cột mới; không cấp sửa.
+  cùng sàn). Ràng buộc: hai cặp cùng có hay cùng trống; lead đã gửi lại phải là lead đã trả lại. Vai API đọc bốn cột mới; không cấp sửa.
 - Hàm security definer, lọc theo sàn đang làm:
-  - `app.return_lead(lead)` — người gọi là đầu chủ của lead, lead không trùng hay chủ trùng, chưa bỏ, chưa trả lại, chưa ghi
-    gọi. Mã lỗi: P0002 (không phải lead của người gọi) · 23505 (đã trả lại) · 22023 (đã ghi gọi lần đầu).
+  - `app.return_lead(lead)` — người gọi là đầu chủ của lead, lead không trùng hay chủ trùng, chưa bỏ, chưa trả lại, chưa Lên
+    bảng (cùng định nghĩa với `lead_board_dates`; Hỏi-4). Mã lỗi: P0002 (không phải lead của người gọi) · 23505 (đã trả lại) ·
+    22023 (đã Lên bảng).
   - `app.mark_resubmitted(old, new)` — người gọi là người nhập lead cũ, lead cũ đã trả lại, chưa gửi lại; lead mới cùng
     người nhập, cùng sàn. Lối API tạo lead mới bằng `createLead` của hàng 24 rồi gọi hàm này trong cùng giao dịch.
   - `app.lead_board_dates(leads uuid[])` — với lead do người gọi nhập: lúc lên bảng = lần đầu một hàng mà chủ nhà mang
     cùng dấu vết số (`owner_phone_hash`) và đầu chủ hiện tại là đầu chủ của lead chuyển sang Sẵn sàng bán (`status_changed`
-    → `Active`) kể từ lúc nhập lead. Chỉ trả mã lead và mốc giờ (Hỏi-1).
+    → `Active`) kể từ lúc nhập lead. Chỉ trả mã lead và mốc giờ (Hỏi-1). Định nghĩa đặt ở một hàm nội bộ
+    `app.lead_board_at_all(sàn)` (không cấp cho vai API) mà ba hàm dùng chung.
+  - `app.lead_board_metric(sàn, từ, đến)` — hàm báo cáo cho số đo «Số ngày lead → Sẵn sàng bán»: lead lên bảng trong khoảng,
+    lúc nhập lead đầu chuỗi (đi ngược `resubmitted_lead_id`), lúc lên bảng, số ngày. Chỉ kết nối chủ chạy được; vai API bị từ
+    chối quyền. Không số chủ, không mã hàng.
 - Thay bốn hàm của hàng 25 bằng `create or replace` cùng chữ ký, thêm điều kiện «chưa trả lại»: `lead_job_companies`,
   `lead_routing_candidates` (lead đang mở), `lead_deadline_facts`, và `lead_routing_queue` (lead cùng số đã trả lại không
   là người của lead trước). Vế «lead trước cùng số đã về đầu chủ» của `app.lead_dedupe_facts` (hàng 24, 62) cũng bỏ lead
@@ -84,6 +89,10 @@ vòng. Mỗi vùng dữ liệu có trống (một hành động «+ Lead»), đa
 - **Hỏi-2 — lead gửi lại đi về đâu**: khuyến nghị đi như lead mới (kiểm trùng; không trùng thì chia theo cách chia của sàn,
   hạn tính lại). Lối khác: về thẳng đầu chủ đã trả lại.
 - **Hỏi-3 — khối của màn** (ADR-0019): trang ba lối, máy khuyên một lối.
+- **Hỏi-4 — trả lại tới lúc nào**: khuyến nghị trả lại được tới khi lead Lên bảng, kể cả sau khi đã ghi gọi lần đầu — mốc gọi
+  lần đầu của hàng 25 chỉ ghi một lần gọi (có hạn 30 phút và lời báo trưởng nhóm), không nói chủ nhà đã nghe máy; số sai thường
+  chỉ lộ ra khi gọi. Lối khác: chỉ trả lại khi chưa ghi gọi — đầu chủ đã ghi gọi để khỏi bị báo quá hạn thì lead kẹt ở «Đã gọi»
+  và telesales không thấy «Sửa số và gửi lại».
 
 ## 7b. Bất biến chạm
 

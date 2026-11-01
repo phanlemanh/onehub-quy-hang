@@ -1,0 +1,45 @@
+{
+"feature_plain": "Telesales mở app vào Hôm nay là thấy mọi lead mình đã nhập đang ở nấc nào — Đã gửi, Đã nhận, Đã gọi, Lên bảng — và khi đầu chủ báo số không liên lạc được thì sửa số rồi gửi lại ngay trên dòng ấy; telesales không bao giờ thấy số chủ hay hàng.",
+"will_do": [
+ {"id":"AC-1","p":"Sẽ tính nấc của mỗi lead ở một chỗ duy nhất trong lõi, với nhãn tiếng Việt, và bản telesales nhận không có số chủ hay hàng."},
+ {"id":"AC-2","p":"Sẽ cho telesales xem đúng các lead chính mình nhập, mới nhất trước, kèm toà, căn, giá, tên đầu chủ, nấc và giờ."},
+ {"id":"AC-3","p":"Sẽ đổi nấc đúng theo từng bước thật của lead: chờ chia → có đầu chủ → đã nhận → đã gọi → lên bảng."},
+ {"id":"AC-4","p":"Sẽ cho đầu chủ của lead trả lại vì số không liên lạc được cho tới khi lead lên bảng, kể cả đã gọi (Hỏi-4); người khác không trả được."},
+ {"id":"AC-6","p":"Sẽ cho telesales sửa số của lead bị trả lại và gửi lại thành lead mới, lead mới vẫn qua kiểm trùng như mọi lead."},
+ {"id":"AC-7","p":"Sẽ chia lead gửi lại như lead mới theo cách chia của sàn, hạn tính lại từ lần giao mới (Hỏi-2)."},
+ {"id":"AC-8","p":"Sẽ coi lead là Lên bảng khi chính đầu chủ ấy có hàng của chủ nhà cùng số chuyển Sẵn sàng bán sau lúc nhập lead (Hỏi-1)."},
+ {"id":"AC-9","p":"Sẽ giữ người sàn khác không thấy, không trả lại, không gửi lại được lead của sàn mình."},
+ {"id":"AC-10","p":"Sẽ hiện danh sách ở Hôm nay của telesales trên máy tính và điện thoại, có đủ trạng thái trống, đang tải, lỗi."},
+ {"id":"AC-11","p":"Sẽ không để số chủ ở bất kỳ dạng nào lọt ra màn hay phản hồi mạng của telesales."},
+ {"id":"AC-12","p":"Sẽ có câu tính «số ngày từ lead tới Sẵn sàng bán» cho cả sàn, chạy được ngay trên dữ liệu mẫu."}
+],
+"wont_do": [
+ {"id":"AC-5","p":"Sẽ KHÔNG chia lại, báo quá hạn hay tính tải cho lead đã trả lại, và lead mới cùng số không quay về đầu chủ đã trả."},
+ {"id":"OOS-1","p":"Không làm nút «Trả lại» trên màn của đầu chủ — màn ấy là hàng 22; tạm thời trả lại qua lối API."},
+ {"id":"OOS-2","p":"Không làm Hôm nay của đầu chủ, trưởng nhóm, đầu khách — họ vẫn thấy chỗ tạm như cũ."},
+ {"id":"OOS-3","p":"Không gắn lead với hàng bằng mã — việc của hồ sơ căn và Hôm nay của đầu chủ."},
+ {"id":"OOS-4","p":"Không báo cho telesales khi lead đổi nấc — họ mở Hôm nay để xem."},
+ {"id":"OOS-5","p":"Chỉ một lý do trả lại «Số không liên lạc được»; lý do khác chờ màn của đầu chủ."},
+ {"id":"OOS-6","p":"Không dựng lại ô nhập lead trên điện thoại — đó là hàng riêng."}
+],
+"scope_plain": "Sáu việc để hàng khác làm:",
+"coverage_plain": [
+ {"i":0,"p":"Bốn nấc và dấu «chờ chia» đều có ca, đi qua đời một lead thật (AC-1, AC-3)."},
+ {"i":1,"p":"Bốn trạng thái phụ — trả lại, đã gửi lại, tin bổ sung, đã bỏ — đều có ca (AC-1, AC-4, AC-6)."},
+ {"i":2,"p":"Trả lại được đo ở ba lúc: chưa gọi, đã gọi chưa lên bảng, đã lên bảng (AC-4, Hỏi-4)."},
+ {"i":3,"p":"Mỗi vai — người nhập, đầu chủ, đầu chủ khác, trưởng nhóm, sàn khác, chưa đăng nhập — có ca được hay bị chặn."},
+ {"i":4,"p":"Lên bảng có năm hàng mẫu, chỉ một hàng đúng cả ba điều mới tính (AC-8)."},
+ {"i":5,"p":"Nhịp chia được chạy thật với lead trả lại, lead gửi lại và lead cùng số (AC-5, AC-7)."},
+ {"i":6,"p":"Màn được chụp ở 1440 và 375, sáng tối, có lead, trống, đang tải, lỗi và vai khác (AC-10)."},
+ {"i":7,"p":"Số chủ, mã hàng và sàn khác được dò trên mọi đường ra, có đối chứng cho chính máy dò (AC-2, AC-9, AC-11)."},
+ {"i":8,"p":"Ba lớp — lõi, cơ sở dữ liệu với API, màn — mỗi lớp có bằng chứng riêng."},
+ {"i":9,"p":"Câu tính số đo được chạy trên dữ liệu mẫu có chuỗi gửi lại, hai telesales, lead ngoài khoảng và sàn khác (AC-12)."}
+],
+"gap_probe_plain": [
+ {"i":0,"p":"Việc chỉ cho trả lại khi đầu chủ chưa ghi gọi bị máy tự chốt, trong khi đầu chủ hay ghi gọi một lần không ai nghe để khỏi bị báo quá hạn — lead sẽ kẹt ở «Đã gọi» và telesales không bao giờ được sửa số. Đã đưa thành Hỏi-4 cho anh, máy khuyên cho trả lại tới khi lead lên bảng."},
+ {"i":1,"p":"Chưa đo việc nhịp chia không trả lead cùng số về đầu chủ đã trả lại. Đã thêm ca chạy nhịp thật với hai đầu chủ, có đối chứng."},
+ {"i":2,"p":"Chưa đo khi số gửi lại trùng chủ nhà người khác đang giữ hay căn đã có hàng. Đã thêm hai ca để hai đầu chủ không cùng gọi một chủ nhà."},
+ {"i":3,"p":"Máy dò số chủ bỏ sót dạng +84 và dữ liệu màn dựng phía máy chủ, lại không tự chứng mình dò được. Đã dò theo chín số cuối, quét đủ ba loại phản hồi, có chuỗi cài sẵn làm đối chứng."},
+ {"i":4,"p":"Câu tính số đo hai tuần thử không chạy được cho cả sàn. Đã thêm hàm báo cáo riêng chỉ người quản trị dữ liệu chạy được và một tiêu chí chạy nó trên dữ liệu mẫu."}
+]
+}

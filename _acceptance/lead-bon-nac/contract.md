@@ -18,7 +18,7 @@ approved_at:
 Hàng 27 của lộ trình (dãy L, đợt `dau-chu-dong-vao`), đứng trên hàng 25 (chia lead và hạn, ADR-0017) và hàng 24 (ô nhận
 lead, ADR-0012). Lộ trình ghi T2 với vùng màn `leads/mine`; «trả lại» và «lên bảng» cần cột và hàm mới ở cơ sở dữ liệu
 (migration `015`, `t3_paths`) nên hàng chạy hạng T3. Màn đầu của nhóm màn mới «lead của tôi» đi trang ba lối của ADR-0019.
-Câu Hỏi-1..3 soạn theo khuyến nghị; chủ kho chốt ở Cổng Phạm vi.
+Câu Hỏi-1..4 soạn theo khuyến nghị; chủ kho chốt ở Cổng Phạm vi.
 
 Source input: `docs/plan/lo-trinh.json` hàng 27 · `_acceptance/lead-bon-nac/opportunity.md` · thiết kế
 `docs/superpowers/specs/2026-11-01-lead-bon-nac-design.md` · trang ba lối `_acceptance/lead-bon-nac/ba-loi/index.html`
@@ -42,13 +42,16 @@ lead, chủ nhà mang cùng dấu vết số, chuyển sang Sẵn sàng bán (`A
   gọi lần đầu, rồi đầu chủ tạo hàng cho chủ nhà ấy qua đường ghi thật và đưa hàng sang Sẵn sàng bán, Then sau mỗi bước
   `GET /api/v1/leads` của telesales ra đúng nấc kế tiếp: Đã gửi (chờ chia) → Đã gửi (tên đầu chủ) → Đã nhận → Đã gọi → Lên
   bảng, mốc của từng nấc bằng lúc bước ấy xảy ra.
-- AC-4: Given lead đã về một đầu chủ, When gọi `POST /api/v1/leads/{id}/return`, Then đầu chủ của lead trả lại được khi chưa
-  ghi gọi lần đầu (200, nấc thành Trả lại với lý do «Số không liên lạc được»); người khác, kể cả trưởng nhóm và người nhập
-  → 404; lần hai → 409; lead đã ghi gọi → 409; lead căn trùng → 404; chưa đăng nhập → 401.
+- AC-4: Given lead đã về một đầu chủ, When gọi `POST /api/v1/leads/{id}/return`, Then đầu chủ của lead trả lại được khi lead
+  chưa Lên bảng, kể cả khi đã ghi gọi lần đầu (Hỏi-4) — 200, nấc thành Trả lại với lý do «Số không liên lạc được»; người
+  khác, kể cả trưởng nhóm và người nhập → 404; lần hai → 409; lead đã Lên bảng → 409; lead căn trùng → 404; chưa đăng nhập
+  → 401.
 - AC-5: Given lead đã trả lại, When nhịp của hàng 25 chạy ở các mốc hạn, Then lead không được chia lại, không sinh lời báo
-  mới, không được tính là lead đang mở của đầu chủ, và lead mới cùng số không về đầu chủ ấy vì lead đã trả lại.
+  mới, không được tính là lead đang mở của đầu chủ, và lead mới cùng số không về đầu chủ ấy vì lead đã trả lại — cả ở kiểm
+  trùng lẫn ở nhịp chia.
 - AC-6: Given lead đã trả lại, When người nhập gọi `POST /api/v1/leads/{id}/resubmit` với số mới, Then máy tạo một lead mới
-  chép toà, căn, nhu cầu, giá, thời gian của lead cũ với số mới, chạy kiểm trùng và trả kết quả như lead mới nhập (201);
+  chép toà, căn, nhu cầu, giá, thời gian của lead cũ với số mới, chạy kiểm trùng và trả kết quả như lead mới nhập (201) —
+  số mới trùng chủ nhà đã có đầu chủ ra «chủ đã có đầu chủ» và không vào nhịp chia, căn đã có hàng mở ra tin bổ sung;
   lead cũ thành Đã gửi lại trỏ lead mới; số sai định dạng → 400; lead chưa trả lại → 409; gửi lại lần hai → 409; người
   khác → 404.
 - AC-7: Given lead gửi lại không trùng, When nhịp của hàng 25 chạy, Then lead mới được đóng dấu và chia theo cách chia của
@@ -64,7 +67,12 @@ lead, chủ nhà mang cùng dấu vết số, chuyển sang Sẵn sàng bán (`A
   — gửi được thì dòng thành Đã gửi lại và lead mới hiện đầu danh sách; danh sách trống có một hành động «+ Lead»; đang tải
   có `Skeleton` đúng bố cục; lỗi có «Thử lại»; vai khác mở Hôm nay vẫn thấy chỗ tạm như trước; `/leads/mine` mở cùng màn.
 - AC-11: Given màn của AC-10 đã hiện lead của sàn mẫu, When đọc toàn bộ chữ trên màn và mọi phản hồi mạng của màn, Then
-  không có số chủ nhà nào của lead ở bất kỳ dạng chữ số nào, không có mã hàng.
+  không có số chủ nhà nào của lead ở bất kỳ dạng chữ số nào (dò theo chín chữ số cuối, phủ dạng 0, 84, +84) trong tài liệu
+  trang, gói dữ liệu màn và phản hồi `/api/v1/*`, không có mã hàng; máy dò bắt được một số cài sẵn (đối chứng dương).
+- AC-12: Given bộ mẫu có hai telesales, lead lên bảng và một chuỗi gửi lại, When chạy hàm báo cáo `app.lead_board_metric`
+  bằng kết nối chủ cho một sàn và một khoảng ngày, Then ra đúng các lead lên bảng trong khoảng của sàn ấy với lúc nhập lead
+  đầu chuỗi, lúc lên bảng và số ngày bằng bảng viết trước; lead gửi lại tính từ lead đầu tiên của chuỗi; không số chủ, không
+  mã hàng; vai API gọi hàm → bị từ chối quyền.
 
 ## Coverage
 
@@ -73,21 +81,25 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead n
 - Trục nấc: Đã gửi chờ chia · Đã gửi có người · Đã nhận · Đã gọi · Lên bảng (AC-1, AC-3) [thước CE: câu giao hàng 27,
   ghi chép 29/10 §12 «Sau khi gửi»]
 - Trục trạng thái phụ: Trả lại · Đã gửi lại · Tin bổ sung · Đã bỏ (AC-1, AC-4, AC-6)
+- Trục lúc trả lại: chưa gọi · đã gọi chưa lên bảng · đã lên bảng (AC-4, Hỏi-4)
 - Trục ai làm: người nhập · đầu chủ của lead · đầu chủ khác · trưởng nhóm · người sàn khác · chưa đăng nhập (AC-2, AC-4,
   AC-6, AC-9)
 - Trục lên bảng: cùng số cùng đầu chủ sau lúc nhập · đầu chủ khác · trước lúc nhập · chưa Sẵn sàng bán · khác số (AC-8)
 - Trục nhịp: lead trả lại · lead gửi lại · lead cùng số với lead trả lại (AC-5, AC-7)
 - Trục màn: có lead · trống · đang tải · lỗi · 1440 · 375 · vai khác (AC-10)
 - Trục rò: số chủ · mã hàng · sàn khác (AC-2, AC-9, AC-11)
-- Trục lớp: lõi thuần (AC-1) · cơ sở dữ liệu + API (AC-2..AC-9) · màn (AC-10, AC-11)
+- Trục lớp: lõi thuần (AC-1) · cơ sở dữ liệu + API (AC-2..AC-9, AC-12) · màn (AC-10, AC-11)
+- Trục đo: lead lên bảng thẳng · chuỗi gửi lại · hai telesales · ngoài khoảng · sàn khác (AC-12)
 
 ## Đường đo
 
 Ô cơ hội khai số đo hai tuần thử «Số ngày lead → Sẵn sàng bán»:
 
-- «Số ngày lead → Sẵn sàng bán» = mốc Lên bảng trừ `created_at` của lead, trên các lead có mốc Lên bảng trong khoảng đo ←
-  AC-8 (mốc lên bảng), AC-3 (mốc đi qua đời lead thật); lấy bằng một câu tính trên `app.lead_board_dates`. Lead gửi lại tính
-  từ lúc nhập lead đầu tiên của chuỗi — câu tính đi ngược `resubmitted_lead_id`.
+- «Số ngày lead → Sẵn sàng bán» = mốc Lên bảng trừ `created_at` của lead đầu chuỗi, trên các lead có mốc Lên bảng trong
+  khoảng đo ← AC-12 (câu tính chạy thật trên bộ mẫu), AC-8 (định nghĩa lên bảng), AC-3 (mốc đi qua đời lead thật). Câu tính:
+  `select * from app.lead_board_metric('<mã sàn>', '<từ>', '<đến>')` chạy bằng kết nối chủ (Supabase SQL editor); hàm dùng
+  chung định nghĩa lên bảng với `app.lead_board_dates`, đi ngược `resubmitted_lead_id` để lấy lead đầu chuỗi, không cấp cho
+  vai API. Trung vị và phân bố số ngày tính trên cột `days`.
 - Theo lời chốt Hỏi-1: chọn lối «để trống tới hàng 17/22» thì số đo này chưa có dữ liệu tới khi lead được gắn với hàng.
 
 ## Out of scope
