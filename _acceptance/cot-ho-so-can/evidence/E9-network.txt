@@ -1,0 +1,6 @@
+E9 (verifier doc lap, context Playwright rieng)
+App traffic: GET /api/v1/listings, /api/v1/listings/<id>, /api/v1/catalog -> toan 200 khi co mang.
+Bao sai -> Chep: khong co loi goi /api nao phat sinh (chi GET /api/v1/listings nen cua dong bo).
+FAIL ERR_INTERNET_DISCONNECTED: /api/v1/listings, /listings/<id> (chi trong luc gia lap offline buoc 8, co chu y).
+Console: khong NotAllowedError; chi "Failed to load resource: net::ERR_INTERNET_DISCONNECTED" luc offline.
+Ngoai le: giua buoc 5 may chu dev 3482 bi tien trinh khac tat (HMR websocket ERR_CONNECTION_REFUSED, chrome-error) -> dung lai bang dung-h.mjs, lam lai buoc 5-11 tren may chu moi.

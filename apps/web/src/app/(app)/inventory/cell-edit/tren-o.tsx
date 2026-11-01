@@ -19,6 +19,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
+import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
 import { KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
 import { chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
@@ -97,7 +98,8 @@ export function useSuaTrenO() {
   /** Ctrl/Cmd+Z khi lưới có tiêu điểm: hoàn tác lần sửa thành công gần nhất của người này trên bảng này (AC-6). */
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (phien || e.shiftKey || !(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z") return;
+      // Đang gõ trong ô chữ (ô lọc cột…) thì Ctrl/Cmd+Z là của ô gõ, không hoàn tác lần sửa căn (hàng 16).
+      if (phien || laOGo(e.target) || e.shiftKey || !(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z") return;
       const kq = so.dungPhim(docPhienBan);
       if (!kq) return;
       e.preventDefault();

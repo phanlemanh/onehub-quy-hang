@@ -1,0 +1,19 @@
+# Driver: Chrome headless qua CDP (cdp.mjs), khong co duong doc network; thay bang nhat ky may chu dev (web-b.log) khoang thoi gian chay
+# Dong co 4xx/5xx/error trong 300 dong cuoi:
+(khong co)
+# Phan tail 15 dong:
+ GET /api/v1/listings/fd73f329-c13e-4361-9601-2f6fbab4183f 200 in 11ms (next.js: 1.4ms, application-code: 9ms)
+ GET /api/v1/listings/c90f695f-7eed-44ed-99dd-2245ba281288 200 in 7ms (next.js: 0.3ms, application-code: 7ms)
+ GET /api/v1/listings/f8dddf5c-22e2-4559-9d90-139a78d08399 200 in 6ms (next.js: 0.3ms, application-code: 6ms)
+ GET /api/v1/listings/20b322d9-f48d-4cf5-b088-696ca5919f2f 200 in 7ms (next.js: 0.4ms, application-code: 6ms)
+ POST /api/v1/listings/f8dddf5c-22e2-4559-9d90-139a78d08399/events 200 in 16ms (next.js: 0.4ms, application-code: 15ms)
+ POST /api/v1/listings/fd73f329-c13e-4361-9601-2f6fbab4183f/events 200 in 17ms (next.js: 2ms, application-code: 15ms)
+ GET /api/v1/listings 200 in 13ms (next.js: 0.3ms, application-code: 13ms)
+ GET /api/v1/listings/fd73f329-c13e-4361-9601-2f6fbab4183f 200 in 11ms (next.js: 1.5ms, application-code: 9ms)
+ GET /api/v1/listings/c90f695f-7eed-44ed-99dd-2245ba281288 200 in 10ms (next.js: 0.3ms, application-code: 9ms)
+ GET /api/v1/listings/f8dddf5c-22e2-4559-9d90-139a78d08399 200 in 10ms (next.js: 0.3ms, application-code: 9ms)
+ GET /api/v1/listings/20b322d9-f48d-4cf5-b088-696ca5919f2f 200 in 7ms (next.js: 0.3ms, application-code: 7ms)
+ GET /api/v1/listings 200 in 16ms (next.js: 1.4ms, application-code: 15ms)
+ GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 12ms (next.js: 1.3ms, application-code: 11ms)
+ GET /api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 200 in 10ms (next.js: 0.4ms, application-code: 10ms)
+ GET /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f 200 in 10ms (next.js: 0.3ms, application-code: 10ms)

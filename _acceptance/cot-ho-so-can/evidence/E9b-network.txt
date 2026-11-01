@@ -1,0 +1,7 @@
+E9b network (Claude_Browser read_network_requests; app origin http://localhost:3482)
+Cửa sổ 1 (thao tác bằng chuột/form_input, có sự kiện focus của công cụ):
+  marker-truoc-bao-sai -> GET /api/v1/listings 200 -> GET /api/v1/listings 200 -> marker-sau-chia-se
+Kiểm chứng: im lặng 15s = 0 lời gọi /api; dispatch window focus = 1 GET /api/v1/listings (bộ đồng bộ quayLaiTrang, react.tsx).
+Cửa sổ 2 (thao tác bằng DOM click, không focus): marker2-truoc-bao-sai -> marker2-sau-chia-se : 0 lời gọi /api, 0 POST.
+Không có request FAIL-eligible lỗi trong phiên này (các FAILED ERR_CONNECTION_REFUSED trong bộ đệm là của phiên cũ trước khi dựng lại server). 404 chỉ ở các marker tự gài.
+Console: không lỗi app; chỉ 404 marker.

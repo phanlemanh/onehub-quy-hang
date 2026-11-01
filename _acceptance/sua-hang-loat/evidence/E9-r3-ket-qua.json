@@ -1,0 +1,82 @@
+{
+ "cotXacNhan": true,
+ "nhomChu": "Nhóm:\nKhông nhóm",
+ "n0": {
+  "B-90.01": {
+   "id": "7b5e1b8a-afa8-472b-8dcd-973878d84f96",
+   "status": "Active",
+   "ageDays": 0,
+   "lastConfirmedAt": "2026-11-01T06:36:13.948Z",
+   "version": 4,
+   "nOC": 0,
+   "nAll": 4,
+   "lastOC": []
+  },
+  "B-90.02": {
+   "id": "af1da34f-e0db-48b0-84a9-3ca831b94595",
+   "status": "Active",
+   "ageDays": 0,
+   "lastConfirmedAt": "2026-11-01T06:36:13.993Z",
+   "version": 4,
+   "nOC": 0,
+   "nAll": 4,
+   "lastOC": []
+  },
+  "B-06.02": {
+   "id": "72864117-6ba2-480b-aceb-083594475b62",
+   "status": "Withdrawn",
+   "ageDays": 1,
+   "lastConfirmedAt": "2026-10-31T14:31:36.882Z",
+   "version": 2,
+   "nOC": 0,
+   "nAll": 2,
+   "lastOC": []
+  }
+ },
+ "thanh": "3 căn đã chọn",
+ "tuoiTruocUI": "{\"B-90.01\":\"[Mẫu] Để trống | Hôm nay | 3/5 | Toàn sàn\",\"B-90.02\":\"[Mẫu] Để trống | Hôm nay | 3/5 | Toàn sàn\",\"B-06.02\":\"— | 1 ngày trước | 0/5 | Chỉ tôi\"}",
+ "hop": "Đánh dấu đã gọi 2 căn\n\nCòn / giữ giá — tính là vừa xác nhận với chủ nhà · không hoàn tác được.\n\n1 căn không đổi được\n\nB-06.02 — căn đã đóng\nThôi\nĐổi",
+ "toast": "[{\"text\":\"Đã đánh dấu đã gọi 2 căn\\nCòn / giữ giá · không hoàn tác được\",\"buttons\":[]}]",
+ "chiBaoNgay": "Đang gửi 1 thay đổi",
+ "dongBoSau": "15.9s",
+ "chiBaoCuoi": "Đã đồng bộ · 14:08",
+ "tuoiSauUI": "{\"B-90.01\":\"[Mẫu] Để trống | Hôm nay | 3/5 | Toàn sàn\",\"B-90.02\":\"[Mẫu] Để trống | Hôm nay | 3/5 | Toàn sàn\",\"B-06.02\":\"— | 1 ngày trước | 0/5 | Chỉ tôi\"}",
+ "n1": {
+  "B-90.01": {
+   "id": "7b5e1b8a-afa8-472b-8dcd-973878d84f96",
+   "status": "Active",
+   "ageDays": 0,
+   "lastConfirmedAt": "2026-11-01T07:08:44.477Z",
+   "version": 5,
+   "nOC": 1,
+   "nAll": 5,
+   "lastOC": [
+    true
+   ]
+  },
+  "B-90.02": {
+   "id": "af1da34f-e0db-48b0-84a9-3ca831b94595",
+   "status": "Active",
+   "ageDays": 0,
+   "lastConfirmedAt": "2026-11-01T07:08:59.678Z",
+   "version": 5,
+   "nOC": 1,
+   "nAll": 5,
+   "lastOC": [
+    true
+   ]
+  },
+  "B-06.02": {
+   "id": "72864117-6ba2-480b-aceb-083594475b62",
+   "status": "Withdrawn",
+   "ageDays": 1,
+   "lastConfirmedAt": "2026-10-31T14:31:36.882Z",
+   "version": 2,
+   "nOC": 0,
+   "nAll": 2,
+   "lastOC": []
+  }
+ },
+ "thanhSau": "1 căn đã chọn",
+ "toastSau": "[]"
+}

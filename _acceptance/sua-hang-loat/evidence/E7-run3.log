@@ -1,0 +1,38 @@
+started: 2026-11-01T07:02:15.970Z
+count: 30 / 48 căn
+S1 filter value: 
+S1 bar: 3 căn đã chọn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step1.png
+n0 owner_confirmed: {"B-13.02":2,"B-14.02":3,"B-14.05":2}
+ids: {"B-13.02":"d6e209d5-4c0f-4cb7-9183-d53babe721df","B-14.02":"13ad04df-07ec-4580-8468-803b3236a195","B-14.05":"77b97452-b7ad-4d85-9aeb-598874f1e075"}
+status: {"B-13.02":"Hold","B-14.02":"Pending","B-14.05":"Active"}
+S2 bar: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S2 rows: ["1 Toà B B-13.02 2PN 68,5 m² 13 Đông Bắc Tạm ngừng 3,56 tỷ Ba"]
+S2 count: 1 / 48 căn
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step2.png
+S3 bar Toà→Loại căn: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step3a.png
+S3 bar Không nhóm: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step3b.png
+S3 filter: B-13.02
+S4 dialog: Đánh dấu đã gọi 3 căn Còn / giữ giá — tính là vừa xác nhận với chủ nhà · không hoàn tác được. Thôi Đổi
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step4.png
+S4 after Thôi: {"B-13.02":2,"B-14.02":3,"B-14.05":2}
+S4 bar after Thôi: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S4 dialog after Thôi: null
+S5 dialog: Đánh dấu đã gọi 3 căn Còn / giữ giá — tính là vừa xác nhận với chủ nhà · không hoàn tác được. Thôi Đổi
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step5a.png
+S5 click Đổi at: 2026-11-01T07:02:31.883Z
+sync xong sau (s): 15.1
+sync text: Đã đồng bộ · 14:02
+frame /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/_acceptance/sua-hang-loat/evidence/E7-step5b.png
+đủ n0+1 sau (s) kể từ sync: 0.1
+S5 after Đổi: {"B-13.02":3,"B-14.02":4,"B-14.05":3}
+S5 +8s: {"B-13.02":3,"B-14.02":4,"B-14.05":3}
+ev B-13.02: [[7,"owner_confirmed","927b2594-4ea0-40ae-9e6e-d77117968e59","2026-11-01T06:37:50.835Z"],[8,"owner_confirmed","927b2594-4ea0-40ae-9e6e-d77117968e59","2026-11-01T07:02:46.792Z"]]
+ev B-14.02: [[8,"owner_confirmed","927b2594-4ea0-40ae-9e6e-d77117968e59","2026-11-01T06:37:35.646Z"],[9,"owner_confirmed","927b2594-4ea0-40ae-9e6e-d77117968e59","2026-11-01T07:02:31.601Z"]]
+ev B-14.05: [[18,"owner_confirmed","927b2594-4ea0-40ae-9e6e-d77117968e59","2026-11-01T06:39:30.837Z"],[23,"owner_confirmed","927b2594-4ea0-40ae-9e6e-d77117968e59","2026-11-01T07:02:46.736Z"]]
+me: {"id":"927b2594-4ea0-40ae-9e6e-d77117968e59","email":"dau-chu-1@mau.quy-hang.test"}
+net total: 31
+net bad(>=400): []
+net writes: [["2026-11-01T07:02:31.617Z","POST","/api/v1/listings/13ad04df-07ec-4580-8468-803b3236a195/events",200],["2026-11-01T07:02:46.781Z","POST","/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events",200],["2026-11-01T07:02:46.801Z","POST","/api/v1/listings/d6e209d5-4c0f-4cb7-9183-d53babe721df/events",200]]

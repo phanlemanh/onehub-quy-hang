@@ -36,8 +36,8 @@ const DANH_MUC = {
           buildingKey: "A",
           buildingName: "Toà A",
           units: [
-            { upi: "urn:mau:A-01.01", unitNumber: "A-01.01", stack: "01", floor: 1, livingArea: 54.2, bedroomsTotal: 1, directionFaces: "Đông Nam", ownerPhone: "0900 000 001" },
-            { upi: "urn:mau:A-01.02", unitNumber: "A-01.02", stack: "02", floor: 1, livingArea: null, bedroomsTotal: 0, directionFaces: null },
+            { upi: "urn:mau:A-01.01", unitNumber: "A-01.01", stack: "01", floor: 1, livingArea: 54.2, bedroomsTotal: 1, directionFaces: "Đông Nam", propertyType: "Residential", propertySubType: "Condominium", ownerPhone: "0900 000 001" },
+            { upi: "urn:mau:A-01.02", unitNumber: "A-01.02", stack: "02", floor: 1, livingArea: null, bedroomsTotal: 0, directionFaces: null, propertyType: "Residential", propertySubType: "Condominium" },
           ],
         },
       ],
@@ -55,7 +55,7 @@ function api(auth: Auth, san: string[]) {
 /** Khoá được phép ở từng tầng của khuôn danh mục — viết tay, không rút từ mã đang đo. */
 const KHOA_DUOC = new Set([
   "subdivisions", "subdivisionKey", "subdivisionName", "complexName", "buildings", "buildingKey", "buildingName", "units",
-  "upi", "unitNumber", "stack", "floor", "livingArea", "bedroomsTotal", "directionFaces",
+  "upi", "unitNumber", "stack", "floor", "livingArea", "bedroomsTotal", "directionFaces", "propertyType", "propertySubType",
 ]);
 function khoaLa(v: unknown, ra: string[] = []): string[] {
   if (Array.isArray(v)) v.forEach((x) => khoaLa(x, ra));
@@ -74,8 +74,8 @@ test("đọc cả danh mục: thành viên một sàn nhận đúng danh mục, 
   assert.deepEqual(khoaLa(than), [], "thân trả có khoá ngoài khuôn danh mục");
   const u = than.subdivisions[0]?.buildings[0]?.units ?? [];
   assert.equal(u.length, 2);
-  assert.deepEqual(Object.keys(u[0] ?? {}).sort(), ["bedroomsTotal", "directionFaces", "floor", "livingArea", "stack", "unitNumber", "upi"]);
-  assert.deepEqual(u[0], { upi: "urn:mau:A-01.01", unitNumber: "A-01.01", stack: "01", floor: 1, livingArea: 54.2, bedroomsTotal: 1, directionFaces: "Đông Nam" });
+  assert.deepEqual(Object.keys(u[0] ?? {}).sort(), ["bedroomsTotal", "directionFaces", "floor", "livingArea", "propertySubType", "propertyType", "stack", "unitNumber", "upi"]);
+  assert.deepEqual(u[0], { upi: "urn:mau:A-01.01", unitNumber: "A-01.01", stack: "01", floor: 1, livingArea: 54.2, bedroomsTotal: 1, directionFaces: "Đông Nam", propertyType: "Residential", propertySubType: "Condominium" });
   assert.equal(u[1]?.bedroomsTotal, 0);
 });
 
