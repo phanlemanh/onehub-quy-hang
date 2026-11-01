@@ -5,8 +5,10 @@ slug: nap-mau-ban-that
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db, ci]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-01-nap-mau-ban-that-design.md
+approved_by: Manh Phan
+approved_at: 2026-11-01T07:33:51Z
 ---
 
 # Acceptance Contract: nap-mau-ban-that
