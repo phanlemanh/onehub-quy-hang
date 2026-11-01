@@ -47,3 +47,18 @@ test("ghi sai bị từ chối ngay, không xếp hàng", () => {
   assert.deepEqual(a.ngan, truoc);
   assert.deepEqual(moHoSo(a.ngan, "h")!.can, banTruoc);
 });
+
+// Hàng 15 (AC-9): trình sửa trên ô mở ở phiên bản người đã thấy; kho kéo bản mới trong lúc gõ thì lần sửa vẫn mang
+// phiên bản cũ để máy chủ trả xung đột (vào «Cần xem»), không ghi đè lặng.
+test("cơ sở người đã thấy: cũ hơn bản trên máy thì lần sửa mang phiên bản cũ; vắng hay không cũ hơn thì như trước", () => {
+  const gia = { listPrice: 3_200_000_000, feeInclusion: "excluded" };
+  const cu = apTrenMay(goc(), "h", "price_changed", gia, NGAY, "op-1", 2);
+  assert.ok(cu.ok);
+  assert.equal(cu.op.expectedVersion, 2, "cơ sở 2 < bản trên máy 3 → lần sửa mang 2");
+  // Đối chứng: không có cơ sở, hay cơ sở bằng bản trên máy, giữ hành vi cũ (bản trên máy).
+  for (const coSo of [undefined, 3, 9]) {
+    const kq = apTrenMay(goc(), "h", "price_changed", gia, NGAY, "op-2", coSo);
+    assert.ok(kq.ok);
+    assert.equal(kq.op.expectedVersion, 3, `cơ sở ${coSo} → mang bản trên máy 3`);
+  }
+});

@@ -1,0 +1,3 @@
+Network/console E4u (driver: Chrome headless qua CDP, origin http://localhost:3481; khong ghi tung request o phia trinh duyet — doi chieu bang nhat ky may chu dev .acceptance-runs/bang-hang-kieu-sheet/web-b.log)
+App API trong luot: GET /api/v1/listings, GET /api/v1/listings/<id> (200); POST /api/v1/listings/<id>/events chi o buoc «Đổi» (200). Khong thay 4xx/5xx app-scope do UI.
+Note: dev overlay «1 Issue» (canh bao dev Base UI PopoverTrigger nativeButton), khong chan chuc nang.

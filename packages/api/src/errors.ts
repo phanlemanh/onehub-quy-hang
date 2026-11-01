@@ -28,6 +28,9 @@ export const API_ERRORS = {
   leadRoleRequired: { code: "lead-role-required", status: 403 },
   notDuplicateUnit: { code: "not-duplicate-unit", status: 400 },
   alreadyDiscarded: { code: "already-discarded", status: 409 },
+  // Cửa nhận danh mục (ADR-0015).
+  agreementInactive: { code: "agreement-inactive", status: 403 },
+  invalidFeed: { code: "invalid-feed", status: 422 },
   // Chia lead và hạn (ADR-0017).
   invalidSettings: { code: "invalid-settings", status: 400 },
   alreadyAccepted: { code: "already-accepted", status: 409 },

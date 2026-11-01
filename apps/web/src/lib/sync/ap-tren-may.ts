@@ -44,6 +44,9 @@ export function apTrenMay(
   payload: Record<string, unknown>,
   now: string,
   opId: string,
+  /** Phiên bản người đã thấy khi mở trình sửa (hàng 15). Kho kéo bản mới trong lúc người gõ thì lần sửa vẫn mang phiên
+   * bản cũ, để máy chủ trả xung đột và hàng vào «Cần xem» — không ghi đè lặng lên lần sửa người chưa thấy. */
+  coSo?: number,
 ): { ok: true; ngan: Ngan; op: PendingOp } | { ok: false; loi: LoiTrenMay } {
   const server = n.listings?.find((l) => l.id === listingId);
   if (!server) return { ok: false, loi: { kind: "not-found" } };
@@ -55,6 +58,7 @@ export function apTrenMay(
     const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload });
     if (!kq.ok) return { ok: false, loi: kq.kind === "invalid-transition" ? { kind: kq.kind, reason: kq.reason } : { kind: kq.kind, missing: kq.missing } };
   }
-  const op: PendingOp = { opId, listingId, type, payload, expectedVersion: hienTai.version, clientSeq: n.nextSeq, createdAt: now };
+  const expectedVersion = coSo !== undefined && coSo < hienTai.version ? coSo : hienTai.version;
+  const op: PendingOp = { opId, listingId, type, payload, expectedVersion, clientSeq: n.nextSeq, createdAt: now };
   return { ok: true, op, ngan: { ...n, queue: [...n.queue, op], nextSeq: n.nextSeq + 1 } };
 }

@@ -1,0 +1,5 @@
+Driver: Chrome headless qua CDP (cdp.mjs), tab rieng. Nguon: performance.getEntriesByType('resource') cua trang /inventory sau khi mo-dong o Gia.
+App-origin fetch (http://localhost:3481/api/v1): catalog 200 x2, listings 200 x2, listings/38f0c26e-... 200. Khong request app nao >=400 do trang sinh ra.
+Ghi chu: GET /api/v1/listings/<id>/events -> 404 la do chinh verifier probe (route khong ton tai; su kien nam trong GET /listings/<id>.events); khong phai traffic cua trang.
+Console (Playwright pane dung chung, KHONG dung cho ket qua): Base UI nativeButton warning o PopoverTrigger (useSuaTrenO) - note, khong fail.
+dev_server.url trong config = :3460, thuc te 3481 -> scoping khop mot phan.
