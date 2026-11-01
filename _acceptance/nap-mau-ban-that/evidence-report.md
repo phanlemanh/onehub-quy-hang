@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: e4ef2b9354c36dbeb87a17a249bd4c4a89ca6962
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: nap-mau-ban-that

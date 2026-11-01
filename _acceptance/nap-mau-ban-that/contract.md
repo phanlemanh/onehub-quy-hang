@@ -5,7 +5,7 @@ slug: nap-mau-ban-that
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db, ci]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-nap-mau-ban-that-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01T07:33:51Z
@@ -104,3 +104,8 @@ trên ô cơ hội và bộ nạp hàng 5 [SUY-TỪ-REPO: packages/db/seed/nap.m
   API mới ngoài vùng) — phải duyệt lại Cổng Phạm vi.
 - Bộ kiểm mới chạy bằng `node --import tsx --test` (bộ nạp dùng lại hàm ghi TypeScript của API) — thêm một dòng
   executor vào `_acceptance/config.yaml`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-4: Ca kiểm «email chủ kho không vào kho» luôn xanh, nên email thật lỡ ghi vào kho không bị nó bắt.
+  - Ngoài-5: Ca kiểm nút GitHub chỉ dò chữ, bước chặn nhánh hay xác nhận gỡ viết ngược chiều vẫn qua.
+  - Ngoài-6: Ca đọc chéo sàn chỉ có đối chứng dương cho bảng hàng, các bảng chủ nhà, lead, sự kiện thì không.
+  - Ngoài-7: Ca giải mã sai khoá chấp nhận mọi lỗi, không ghim đúng thông điệp lỗi.
