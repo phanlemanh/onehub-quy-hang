@@ -3,8 +3,9 @@
  * sự kiện của lõi (luật 8); giá luôn đi cùng điều kiện phí (luật 7) vì mọi đường đều dựng `price_changed` đủ hai khoá.
  */
 import { missingFor, TRANSITIONS, type Requirement, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
-import { hoanTacDuoc } from "./hoan-tac";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
+import { FEE_LABEL, STATUS_LABEL } from "../cot";
+import { hoanTacDuoc } from "./hoan-tac";
 
 /** Phần của một dòng Bảng hàng mà trình sửa cần. */
 export type HangSua = {
@@ -32,14 +33,40 @@ export const CHON_PHI = "Chọn Bao phí hay Không bao phí";
 
 const laPhi = (v: unknown): v is FeeInclusion => v === "included" || v === "excluded";
 
+/**
+ * Mọi chỗ trình sửa hiện giá viết bằng `vietGia` — đúng từng đồng (va-sua-tren-o). Tham số `viet` chỉ để đối chứng đỏ
+ * của bài kiểm thay bộ viết; mã chạy không truyền.
+ */
+type VietGia = (dong: number) => string;
+
 /** Máy nói lại giá (luật 7) bằng đúng chữ của cột Phí: «Hiểu là: 4,8 tỷ, không bao phí». */
-const docLai = (dong: number, phi: FeeInclusion) => `Hiểu là: ${vietGia(dong)}, ${phi === "included" ? "bao phí" : "không bao phí"}`;
+const docLai = (dong: number, phi: FeeInclusion, viet: VietGia = vietGia) => `Hiểu là: ${viet(dong)}, ${phi === "included" ? "bao phí" : "không bao phí"}`;
 
 /** Dòng «Hiểu là: …» sống dưới ô Giá; null khi chưa hiểu hay chưa chọn phí. */
-export function hieuLaGia(chu: string, phi: FeeInclusion | null): string | null {
+export function hieuLaGia(chu: string, phi: FeeInclusion | null, viet: VietGia = vietGia): string | null {
   const kq = docGia(chu);
   if (!kq.ok || !phi) return null;
-  return docLai(kq.dong, phi);
+  return docLai(kq.dong, phi, viet);
+}
+
+/** Dòng «Hiểu là: giá chốt …» dưới ô Giá chốt; null khi chưa hiểu. */
+export function hieuLaGiaChot(chu: string, viet: VietGia = vietGia): string | null {
+  const kq = docGia(chu);
+  return kq.ok ? `Hiểu là: giá chốt ${viet(kq.dong)}` : null;
+}
+
+/** Chữ điền sẵn ô gõ Giá: giá hiện tại viết đủ — Enter không gõ gì thì đọc lại đúng số cũ, không đổi giá. */
+export function chuDienSan(hang: Pick<HangSua, "listPrice">, viet: VietGia = vietGia): string {
+  return hang.listPrice === null ? "" : viet(hang.listPrice);
+}
+
+/** Dòng «cũ → mới» của hộp hỏi lại. */
+export function moTaThayDoi(hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">, lenh: Lenh, viet: VietGia = vietGia): string {
+  if (lenh.type === "price_changed") {
+    const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${FEE_LABEL[hang.feeInclusion ?? ""] ?? "—"}`;
+    return `${cu} → ${viet(lenh.payload.listPrice)}, ${FEE_LABEL[lenh.payload.feeInclusion]}`;
+  }
+  return `${STATUS_LABEL[hang.standardStatus]} → ${STATUS_LABEL[lenh.payload.to]}`;
 }
 
 /** Trình sửa Giá: chữ đã gõ + điều kiện phí đang chọn → một lệnh đổi giá. */
@@ -91,7 +118,7 @@ export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemT
     const kq = docGia(them.giaChot);
     if (!kq.ok) return { ok: false, loi: chuaHieu(them.giaChot) };
     closePrice = kq.dong;
-    hieuLa = `Hiểu là: giá chốt ${vietGia(kq.dong)}`;
+    hieuLa = hieuLaGiaChot(them.giaChot);
   }
   const thieu = missingFor(to, { ...hang, closePrice, withdrawnReason: them.lyDo });
   if (thieu.length) {
