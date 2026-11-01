@@ -1,5 +1,5 @@
 {
-  "feature_plain": "Mỗi người làm việc với sàn trở thành một liên hệ duy nhất theo chuẩn RESO: một chủ nhà có hai số vẫn là một người, có một đầu chủ giữ; lead và hàng của người ấy cùng gắn vào liên hệ đó, nên kiểm trùng, «Lên bảng» và «Sửa số» không còn phải đoán.",
+  "feature_plain": "Mỗi người làm việc với sàn nay là một liên hệ: một người, nhiều số, một hay nhiều loại (Chủ bán, Chủ cho thuê, Người mua, Người thuê), một đầu chủ giữ; lead và chủ nhà của hàng gắn vào liên hệ, nên chủ hai số không còn thành hai người, «Lên bảng» là dữ kiện thật, và dữ liệu cũ được gộp theo số.",
   "will_do": [
     {
       "id": "AC-1",
