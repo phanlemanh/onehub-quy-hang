@@ -1,0 +1,35 @@
+{
+ "feature_plain": "Đầu chủ mở app vào Hôm nay thấy năm hàng đợi của mình — lead mới, nên gọi ép giá, cần gọi lại, thiếu thông tin, mới đổi — mỗi căn đúng một chỗ, có lý do bằng chữ, và ghi kết quả gọi một chạm.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ xếp mỗi căn mình giữ vào đúng một hàng đợi theo thứ tự ép giá → gọi lại → thiếu tin → mới đổi; căn người khác giữ, Đã bán, Ngừng bán không vào."},
+  {"id":"AC-2","p":"Sẽ dùng mặc định của sàn 14 ngày (gọi lại) và 10 ngày (ép giá); sàn chỉnh trong khoảng thì theo sàn, ngoài khoảng thì về mặc định."},
+  {"id":"AC-3","p":"Sẽ đưa căn vào Mới đổi khi người khác đổi giá hay trạng thái từ 0 giờ hôm qua (giờ Việt Nam), kèm câu «3,10 → 2,95 tỷ — Trưởng nhóm, hôm qua»."},
+  {"id":"AC-4","p":"Sẽ cho dữ liệu hàng mang người giữ và lần đổi giá, đổi trạng thái gần nhất (ai, vai gì, cũ → mới) — không kèm thông tin chủ nhà."},
+  {"id":"AC-5","p":"Sẽ cho đầu chủ thấy lead giao cho mình đang chờ nhận hay chờ gọi, kèm hạn — không số chủ, không lead của người khác."},
+  {"id":"AC-6","p":"Sẽ hiện năm nhóm đúng thứ tự, có số, lý do bằng chữ, giá kèm điều kiện phí; người vừa đầu chủ vừa telesales thấy cả hai vùng."},
+  {"id":"AC-7","p":"Sẽ ghi «Còn · giữ giá» một chạm: căn rời nhóm ngay, máy chủ nhận đúng một lần xác nhận, mất mạng vẫn ghi trên máy; «Đổi giá, trạng thái…» mở hồ sơ căn."},
+  {"id":"AC-8","p":"Sẽ có Nhận · Đã gọi · Trả lại trên lead; lead rời nhóm khi đã gọi hay trả lại; lỗi nói bằng chữ."},
+  {"id":"AC-9","p":"Sẽ có màn trống, đang tải, lỗi có thử lại, và đọc được ở khổ điện thoại."},
+  {"id":"AC-10","p":"Sẽ dựng khuôn cho nhóm màn mới theo lối anh duyệt ở trang ba lối, bài chấm vòng và lint xanh."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"KHÔNG làm Mở số của lead cho đầu chủ ở hàng này (Hỏi-3)."},
+  {"id":"OOS-2","p":"KHÔNG ghi «Chưa gọi được» — căn gọi hụt nằm lại nhóm."},
+  {"id":"OOS-3","p":"KHÔNG làm hàng đợi Xin dẫn xem, bản điện thoại, màn chỉnh ngưỡng, đổi đầu chủ hàng loạt, vá hoàn tác — các hàng khác."},
+  {"id":"OOS-4","p":"KHÔNG tạo hàng từ lead trên màn này."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Cả hai loại việc đều có tiêu chí: lead mới (AC-5, AC-8) và bốn hàng đợi của căn (AC-1…AC-3)."},
+  {"i":1,"p":"Căn của mình, của người khác, đã đóng, và căn hợp nhiều nhóm cùng lúc đều được thử (AC-1)."},
+  {"i":2,"p":"Mọi lớp đều có bài đo: tính hàng đợi, dữ liệu trả về, màn, khuôn (AC-1…AC-10)."},
+  {"i":3,"p":"Màn được nhìn ở mặc định, trống, đang tải, lỗi, mất mạng và khổ điện thoại (AC-6, AC-7, AC-9)."},
+  {"i":4,"p":"Để sau: Xin dẫn xem, mở số lead, gọi hụt, bản điện thoại, màn chỉnh ngưỡng."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Nếu ép giá chỉ tính từ lần đổi giá thì bấm «Còn · giữ giá» không đưa căn ra khỏi nhóm — đây là nghĩa sản phẩm, nên thành Hỏi-1 cho anh."},
+  {"i":1,"p":"Người vừa đầu chủ vừa telesales chưa có tiêu chí — đã thêm."},
+  {"i":2,"p":"Đường kéo dữ liệu về máy chưa được đo — đã thêm bài đo, kèm ca chặn thông tin chủ nhà."},
+  {"i":3,"p":"Chỉ giữ người đổi cuối sẽ làm sót lần trưởng nhóm giảm giá — đã đổi thành hai bản ghi riêng cho giá và trạng thái."},
+  {"i":4,"p":"Ranh giới «hôm qua» lúc 0–7 giờ sáng giờ Việt Nam chưa được thử — đã thêm."}
+ ]
+}

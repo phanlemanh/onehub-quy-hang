@@ -1,0 +1,134 @@
+schema_version: 1
+feature_slug: hom-nay-dau-chu
+# Lệnh máy: executors.test.core (lõi hàng đợi), executors.test.web (lý do bằng chữ, nhóm màn — thuần), executors.test.isolation
+# (API trên Postgres dãy G, cổng 5564 — cần DATABASE_URL), executors.script.lint / giao_dien. Người chấm đối chiếu tên ca nêu
+# trong `expected` với dòng reporter: có mặt, ok, không SKIP. Ui-check chạy trên máy dev dãy G (cổng 3484, Postgres 5564),
+# dữ liệu dựng bằng _acceptance/hom-nay-dau-chu/thu/dung-g.mjs (in mã căn, lead của từng nhóm).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hàng đợi: mỗi căn đúng một nhóm» (packages/core/src/today/hang-doi.test.ts) có mặt và ok — ma trận viết trước đếm đúng 16 tổ hợp (assert số) của bốn điều kiện ép giá · gọi lại · thiếu tin · mới đổi bật/tắt trên căn Đang bán mình giữ: mỗi tổ hợp ra đúng nhóm thắng theo thứ tự ép giá > gọi lại > thiếu tin > mới đổi > null; ca «hàng đợi: luật mốc ép giá» ok — theo luật chốt ở Hỏi-1: (khuyên) xác nhận sau mốc đổi giá đặt lại đồng hồ → căn rời ep-gia ngay sau owner_confirmed và quay lại sau đúng ngưỡng; (lối khác) chỉ đổi giá đặt lại → căn ở lại ep-gia sau owner_confirmed — ma trận 4 (xác nhận trước/sau mốc × ngày qua ngưỡng có/không), assert số; ca «hàng đợi: căn không vào nhóm» ok — ma trận 4 (assert số): người khác giữ, chưa ai giữ, Đã bán, Ngừng bán, mỗi ca bật cả bốn điều kiện vẫn ra null. Chiều đỏ: đảo thứ tự gọi lại trước ép giá → tổ hợp (ép giá+gọi lại) đỏ."
+    paths: [packages/core/src/today/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hàng đợi: ngưỡng mặc định và sàn đè» có mặt và ok — QUEUE_DEFAULTS là {callBackAfterDays:14, priceNegotiationAfterDays:10}; đọc dòng cài đặt sàn: 7 và 30 (gọi lại), 7 và 14 (ép giá) được nhận, 6, 31, 15, chuỗi, thiếu khoá thì về mặc định (ma trận 8, assert số); ranh giới: chưa xác nhận đúng 14 ngày → goi-lai, 13 ngày → null; giá giữ đúng 10 ngày → ep-gia, 9 → null."
+    paths: [packages/core/src/today/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «settings/queue: ngưỡng đang áp» (packages/api/test-db/hom-nay.test.ts) có mặt và ok — sàn chưa cài trả {callBackAfterDays:14, priceNegotiationAfterDays:10}; ghi company_settings queue.call_back_after_days=21 → trả 21; ghi 40 → trả 14; chưa đăng nhập → 401. Chiều đỏ: trả thẳng giá trị lưu không qua khoảng → ca 40 đỏ."
+    paths: [packages/api/src/today/**, packages/core/src/today/**, packages/api/test-db/hom-nay.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hàng đợi: mới đổi từ hôm qua bởi người khác» có mặt và ok — bayGio cố định 2026-11-02T03:00:00Z (10:00 giờ VN); ma trận 6 (assert số): đổi giá 2026-10-31T17:00:00Z (00:00 hôm qua VN) bởi người khác → moi-doi; 2026-10-31T16:59:59Z → null; đổi trạng thái hôm nay bởi người khác → moi-doi; đổi giá bởi chính mình → null; chưa từng đổi → null; đổi bởi người khác nhưng căn cũng quá ngưỡng gọi lại → goi-lai (thắng). Thêm ca «người khác đổi giá hôm qua, mình đổi trạng thái hôm nay» → moi-doi (xét riêng lần đổi giá). Ca «hàng đợi: ranh giới ngày giờ Việt Nam» ok — bayGio 2026-11-01T18:00:00Z (01:00 ngày 02/11 giờ VN): đổi lúc 2026-10-31T17:00:00Z → moi-doi, 2026-10-31T16:59:59Z → null (ma trận 2, assert số); bộ chạy dưới TZ=UTC và TZ=Asia/Ho_Chi_Minh cho cùng kết quả. Ca «lý do: chữ mới đổi» (apps/web, executors.test.web) ok — dựng từ bản ghi lastPriceChange {from:3100000000,to:2950000000,byRoles:['team_lead'],at:hôm qua} ra đúng '3,10 → 2,95 tỷ — Trưởng nhóm, hôm qua'."
+    paths: [packages/core/src/today/**, apps/web/src/app/(app)/today/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «listings: người giữ và mốc đổi» (packages/api/test-db/hom-nay.test.ts) có mặt và ok — trên sàn tạm: hàng H1 gán đầu chủ A, đổi giá bởi B (vai trưởng nhóm) rồi đổi trạng thái bởi A; GET /api/v1/listings trả H1 với listAgentKey=A, priceChangeTimestamp = occurredAt của price_changed, statusChangeTimestamp = occurredAt của status_changed, lastPriceChange = {byUserId:B, byRoles chứa team_lead, from: giá cũ, to: giá mới}, lastStatusChange = {byUserId:A, from, to}; hàng H2 chưa ai giữ, chưa đổi → các trường null; findSourceLeaks trên toàn thân trả rỗng. Chiều đỏ: lấy mốc từ created thay vì price_changed → ca đỏ."
+    paths: [packages/api/src/listings/**, packages/api/test-db/hom-nay.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «kéo về: giữ trường hàng đợi, chặn khoá nguồn» (apps/web/src/lib/sync/*.test.ts) có mặt và ok — keoVe với hàm gọi giả trả hai hàng mang listAgentKey, priceChangeTimestamp, statusChangeTimestamp, lastPriceChange, lastStatusChange: kho sau kéo có đủ năm trường đúng giá trị (so sâu); đối chứng dương cùng fixture: thêm khoá ownerPhone vào một hàng → keoVe ném LoiKeo với thông điệp chứa 'mang nguồn' và kho không đổi."
+    paths: [apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «leads/assigned: chỉ lead giao cho tôi đang chờ gọi» có mặt và ok — dữ liệu: lead giao A ở nấc Đã gửi, Đã nhận, Đã gọi, Trả lại, Bỏ; lead giao B; lead sàn khác giao người cùng tên vai. A nhận đúng hai lead (Đã gửi, Đã nhận — so tập id), mỗi lead có buildingName, unitNumber, nhu cầu, câu giá, createdAt, acceptDueAt, callDueAt và KHÔNG khoá nào chứa phone (findSourceLeaks rỗng); B nhận đúng lead của B; người hai vai (Đầu chủ và telesales) nhận đúng lead giao cho mình, 200; telesales không vai Đầu chủ → 403. Chiều đỏ: bỏ lọc matched_agent_user_id → A thấy lead của B, ca đỏ."
+    paths: [packages/api/src/leads/**, packages/api/src/today/**, packages/api/test-db/hom-nay.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G (cổng 3484, Postgres 5564), sàn «[Mẫu] Sàn thử», dữ liệu dựng bằng node _acceptance/hom-nay-dau-chu/thu/dung-g.mjs (in mã căn và lead của từng nhóm cho dau-chu-1)"
+    steps:
+      - "Đăng nhập dau-chu-1@mau.quy-hang.test (mã ở nhật ký máy dev). Khổ 1440x900. Mở /today, chờ nhóm hiện → chụp evidence/E6-1440.png; ghi tên nhóm theo thứ tự, số của mỗi nhóm, và từng dòng (mã căn hay toà-căn, lý do, giá)"
+      - "Đối chiếu với danh sách dung-g.mjs in: mỗi mã căn xuất hiện đúng một lần và ở đúng nhóm in ra; căn của dau-chu-2 và căn Đã bán không xuất hiện"
+      - "Đăng nhập telesales@mau.quy-hang.test, mở /today → chụp evidence/E6-telesales.png; đăng nhập truong-nhom@mau.quy-hang.test (không vai Đầu chủ) mở /today → chụp evidence/E6-truong-nhom.png"
+      - "Đăng nhập tài khoản hai vai dung-g.mjs in (Đầu chủ + telesales), mở /today → chụp evidence/E6-hai-vai.png; ghi thứ tự hai vùng và số dòng mỗi vùng"
+    expected: "Đầu chủ: nhóm theo đúng thứ tự Lead mới · Nên gọi ép giá · Cần gọi lại · Thiếu thông tin · Mới đổi, số nhóm bằng số dòng, mỗi căn một lần ở đúng nhóm dung-g.mjs in; lý do là chữ (vd «Chưa xác nhận 16 ngày», «Giá giữ 12 ngày», «Thiếu: pháp lý, tài chính», «… → … — Trưởng nhóm, hôm qua»); giá kèm «Bao phí»/«Không bao phí». Không căn của dau-chu-2, không căn Đã bán. Telesales thấy vùng «Lead đã nhập»; trưởng nhóm thấy chỗ tạm; người hai vai thấy Hôm nay của đầu chủ trước, vùng Lead đã nhập sau, mỗi vùng đúng số dòng dung-g.mjs in."
+    paths: ["apps/web/src/app/(app)/today/**", packages/core/src/today/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E6, đăng nhập dau-chu-1"
+    steps:
+      - "Ghi số nhóm Cần gọi lại. Gọi GET /api/v1/listings/<căn C1 dung-g.mjs in cho nhóm Cần gọi lại> trong trang → ghi số sự kiện owner_confirmed"
+      - "Bấm «Còn · giữ giá» trên dòng C1 → chụp evidence/E7-sau-bam.png; ghi dòng C1 còn trong nhóm không, số nhóm"
+      - "Chờ chỉ báo đồng bộ về «đã gửi» rồi gọi lại GET /api/v1/listings/<C1> → ghi số sự kiện owner_confirmed và lastConfirmedAt"
+      - "Bật offline (DevTools), bấm «Còn · giữ giá» trên căn C2 (Nên gọi ép giá) → ghi dòng rời nhóm không và chỉ báo; bật mạng, chờ gửi, GET /api/v1/listings/<C2> → ghi số owner_confirmed"
+      - "Bấm «Đổi giá, trạng thái…» trên căn C3 → chụp evidence/E7-ho-so.png; ghi mã căn ở đầu cột hồ sơ"
+    expected: "Sau bấm C1 rời nhóm ngay, số nhóm giảm 1; máy chủ có đúng thêm một owner_confirmed cho C1, lastConfirmedAt mới. Offline: C2 rời nhóm, chỉ báo nói mất mạng; có mạng lại thì máy chủ có đúng một owner_confirmed mới cho C2. «Đổi giá, trạng thái…» mở cột hồ sơ của đúng C3."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E6, đăng nhập dau-chu-1; dung-g.mjs in ba lead L1 (Đã gửi), L2 (Đã nhận), L3 (Đã gửi) giao dau-chu-1 và lead L4 đã lên bảng"
+    steps:
+      - "Bấm «Nhận» trên L1 → ghi dòng L1 còn trong nhóm và chữ nấc; GET /api/v1/leads/assigned → ghi acceptedAt của L1"
+      - "Bấm «Đã gọi» trên L2 → ghi L2 còn trong nhóm không; trong trang gọi GET /api/v1/leads/assigned → L2 có trong kết quả không"
+      - "Bấm «Trả lại · Số không liên lạc được» trên L3 → ghi L3 còn không; chụp evidence/E8-sau.png"
+      - "Trong trang gọi POST /api/v1/leads/<L4>/return (fetch) → ghi mã lỗi; rồi giả lập dòng trả 409 bằng cách bấm «Trả lại» trên một lead mà telesales vừa gửi lại (dung-g.mjs in L5) → chụp evidence/E8-409.png, ghi chữ báo"
+    expected: "L1 ở lại nhóm với nấc «Đã nhận», acceptedAt có giá trị; L2 rời nhóm và không còn trong /leads/assigned; L3 rời nhóm; lỗi 409 hiện lý do bằng chữ (vd «Lead đã lên bảng, không trả lại được»), dòng giữ nguyên."
+    paths: ["apps/web/src/app/(app)/today/**", packages/api/src/leads/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G; dau-chu-2 sau khi dung-g.mjs --trong (không việc nào)"
+    steps:
+      - "Đăng nhập dau-chu-2, mở /today 1440 → chụp evidence/E9-trong.png; bấm nút trên khối trống → ghi URL"
+      - "Đăng nhập dau-chu-1, chặn GET /api/v1/leads/assigned (DevTools block request), tải lại /today → chụp lúc tải evidence/E9-dang-tai.png và sau evidence/E9-loi.png; bỏ chặn, bấm «Thử lại» → ghi nhóm Lead mới hiện lại không"
+      - "Khổ 375x812 /today → chụp evidence/E9-375.png; ghi scrollWidth vs innerWidth"
+    expected: "Trống: «Hôm nay không còn việc» và nút đưa tới /inventory. Đang tải: Skeleton theo bố cục nhóm. Lỗi: nói tải lead không được, nút «Thử lại» làm nhóm Lead mới hiện lại; các nhóm căn vẫn hiện. 375: một cột, scrollWidth ≤ innerWidth."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; stdout có 'khuôn: 9 nhóm · 0 lỗi đọc · 0 lệch' (hay nhiều nhóm hơn nếu main đã thêm) và dòng 'ba lối: ' đếm ≥ 3 trang, ≥ 1 dựng bằng lệnh; 'chuẩn giao diện: đạt'."
+    paths: [design/patterns/**, _acceptance/hom-nay-dau-chu/ba-loi/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ba lối: hồ sơ hàng 22 qua bài chấm vòng» (packages/ui-lint/tests/ba-loi-hang-22.test.mjs) có mặt và ok — chạy kiemVongBaLoi trên kho tạm có design/patterns gốc trừ hom-nay-dau-chu.md và hồ sơ hom-nay-dau-chu thật (design-pass.md, ba-loi/) → dieu = [nhóm mới hom-nay-dau-chu], loi rỗng; đối chứng: đổi divergence thành skipped trên bản sao → loi chứa 'skipped'."
+    paths: [_acceptance/hom-nay-dau-chu/ba-loi/**, _acceptance/hom-nay-dau-chu/design-pass.md, design/patterns/hom-nay-dau-chu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

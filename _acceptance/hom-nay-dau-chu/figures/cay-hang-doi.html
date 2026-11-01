@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cây hàng đợi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #eb6c36;
+      --font-sans: 'Geist', system-ui, sans-serif; --font-serif: 'Instrument Serif', 'Lora', serif; --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .frame { max-width: 1240px; width: 100%; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.25; margin-bottom: 0.35rem; }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Luồng quyết định · Hỏi-1 · Hỏi-2 · AC-1 AC-2 AC-3 AC-7</p>
+    <h1>Một căn mình giữ vào nhóm nào của Hôm nay?</h1>
+    <p class="subtitle">Xét lần lượt từ trái sang; căn dừng ở câu «Có» đầu tiên, nên mỗi căn vào đúng một nhóm.</p>
+    <svg viewBox="0 0 1304 448" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Cây hàng đợi</title>
+      <desc id="d">Căn mình giữ, chưa Đã bán hay Ngừng, đi qua bốn câu hỏi theo thứ tự: đang bán và đủ 10 ngày từ mốc ép giá thì Nên gọi ép giá; không thì 14 ngày chưa xác nhận thì Cần gọi lại; không thì mức đủ thiếu thì Thiếu thông tin; không thì người khác đổi giá hay trạng thái từ 0 giờ hôm qua thì Mới đổi; không thì không vào nhóm. Hỏi-1, máy khuyên: mốc ép giá là lần muộn hơn giữa đổi giá và xác nhận, bấm Còn giữ giá đặt lại đồng hồ, 10 ngày sau là đợt hai. Lối khác: mốc là lần đổi giá, căn giữ giá nằm lì ở nhóm.</desc>
+      <defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="1304" height="448" fill="#f5f5f5"/>
+<line x1="172" y1="96" x2="202" y2="96" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="404" y1="96" x2="434" y2="96" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="636" y1="96" x2="666" y2="96" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="868" y1="96" x2="898" y2="96" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="1100" y1="96" x2="1142" y2="96" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="304" y1="152" x2="304" y2="190" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="536" y1="152" x2="536" y2="190" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="768" y1="152" x2="768" y2="190" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="1000" y1="152" x2="1000" y2="190" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 292 240 L 292 256 Q 292 264 284 264 L 208 264 Q 200 264 200 272 L 200 286" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+<path d="M 316 240 L 316 256 Q 316 264 324 264 L 528 264 Q 536 264 536 272 L 536 286" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<rect x="32" y="64" width="140" height="64" rx="20" fill="#f5f5f5"/><rect x="32" y="64" width="140" height="64" rx="20" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="102" y="92" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Căn mình giữ</text>
+<text x="102" y="110" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">chưa Đã bán / Ngừng</text>
+<polygon points="304,40 404,96 304,152 204,96" fill="#f5f5f5"/><polygon points="304,40 404,96 304,152 204,96" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="304" y="92" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đang bán và ≥ 10 ngày</text>
+<text x="304" y="108" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">từ mốc ép giá?</text>
+<polygon points="536,40 636,96 536,152 436,96" fill="#f5f5f5"/><polygon points="536,40 636,96 536,152 436,96" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="536" y="92" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">≥ 14 ngày chưa</text>
+<text x="536" y="108" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">xác nhận?</text>
+<polygon points="768,40 868,96 768,152 668,96" fill="#f5f5f5"/><polygon points="768,40 868,96 768,152 668,96" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="768" y="100" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mức đủ thiếu?</text>
+<polygon points="1000,40 1100,96 1000,152 900,96" fill="#f5f5f5"/><polygon points="1000,40 1100,96 1000,152 900,96" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="1000" y="84" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Người khác đổi giá,</text>
+<text x="1000" y="100" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">trạng thái từ 0 giờ</text>
+<text x="1000" y="116" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">hôm qua?</text>
+<rect x="224" y="192" width="160" height="48" rx="6" fill="#f5f5f5"/><rect x="224" y="192" width="160" height="48" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<rect x="232" y="200" width="20" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="242" y="209" fill="#4f5d75" font-size="7" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">1</text>
+<text x="304" y="224" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Nên gọi ép giá</text>
+<rect x="456" y="192" width="160" height="48" rx="6" fill="#f5f5f5"/><rect x="456" y="192" width="160" height="48" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<rect x="464" y="200" width="20" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="474" y="209" fill="#4f5d75" font-size="7" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">2</text>
+<text x="536" y="224" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cần gọi lại</text>
+<rect x="688" y="192" width="160" height="48" rx="6" fill="#f5f5f5"/><rect x="688" y="192" width="160" height="48" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<rect x="696" y="200" width="20" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="706" y="209" fill="#4f5d75" font-size="7" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">3</text>
+<text x="768" y="224" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Thiếu thông tin</text>
+<rect x="920" y="192" width="160" height="48" rx="6" fill="#f5f5f5"/><rect x="920" y="192" width="160" height="48" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<rect x="928" y="200" width="20" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="938" y="209" fill="#4f5d75" font-size="7" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle">4</text>
+<text x="1000" y="224" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mới đổi</text>
+<rect x="1144" y="72" width="128" height="48" rx="20" fill="#f5f5f5"/><rect x="1144" y="72" width="128" height="48" rx="20" fill="transparent" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="1208" y="100" fill="#4f5d75" font-size="11" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">Không vào nhóm</text>
+<rect x="32" y="288" width="336" height="88" rx="6" fill="#f5f5f5"/><rect x="32" y="288" width="336" height="88" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="44" y="306" fill="#ba4513" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">HỎI-1 · MÁY KHUYÊN</text>
+<text x="44" y="326" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="start">Mốc = lần muộn hơn giữa đổi giá và xác nhận</text>
+<text x="44" y="344" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Bấm «Còn · giữ giá» là đặt lại đồng hồ</text>
+<text x="44" y="362" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">10 ngày sau căn quay lại: đợt hai</text>
+<rect x="400" y="288" width="272" height="88" rx="6" fill="#f5f5f5"/><rect x="400" y="288" width="272" height="88" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="412" y="306" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">HỎI-1 · LỐI KHÁC</text>
+<text x="412" y="326" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="start">Mốc = lần đổi giá gần nhất</text>
+<text x="412" y="344" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Căn giữ giá nằm lì ở nhóm</text>
+<rect x="312" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+<text x="324" y="173" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+<rect x="544" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+<text x="556" y="173" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+<rect x="776" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+<text x="788" y="173" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+<rect x="1008" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+<text x="1020" y="173" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+<rect x="400" y="76" width="40" height="12" rx="2" fill="#f5f5f5"/>
+<text x="420" y="85" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+<rect x="632" y="76" width="40" height="12" rx="2" fill="#f5f5f5"/>
+<text x="652" y="85" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+<rect x="864" y="76" width="40" height="12" rx="2" fill="#f5f5f5"/>
+<text x="884" y="85" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+<rect x="1102" y="76" width="40" height="12" rx="2" fill="#f5f5f5"/>
+<text x="1122" y="85" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+<line x1="32" y1="400" x2="1272" y2="400" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="32" y="424" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">CHÚ GIẢI</text>
+<rect x="112" y="412" width="28" height="16" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="148" y="424" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Nhánh máy khuyên</text>
+<rect x="272" y="412" width="28" height="16" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="308" y="424" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Lối khác</text>
+<text x="1272" y="424" fill="#2d3142" font-size="10" font-weight="500" font-family="'Geist', sans-serif" text-anchor="end">Thứ tự thắng = Hỏi-2: ép giá &gt; gọi lại &gt; thiếu tin &gt; mới đổi</text>
+    </svg>
+  </main>
+</body>
+</html>
