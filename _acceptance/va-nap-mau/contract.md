@@ -5,7 +5,7 @@ slug: va-nap-mau
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-va-nap-mau-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01T08:34:20Z
@@ -72,3 +72,8 @@ Quét theo khuôn risk-premortem cho thực thể «một lần bấm nút trên
 - AC-1 theo khuyến nghị Hỏi-1, AC-7 theo khuyến nghị Hỏi-2; chủ kho chọn lối khác thì đổi cách làm, không đổi tiêu chí.
 - AC-5 đóng giới hạn Ngoài-5 của hàng 87 như một hệ quả của việc chạy thật các bước.
 - Xin chạm `_acceptance/config.yaml` (một dòng `du_lieu_mau`).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Bộ kiểm kiểu tạo tạm một tệp sai kiểu trong mã nguồn; chạy chồng với một lượt kiểm kiểu khác thì lượt kia đỏ giả, bị ngắt giữa chừng thì tệp nằm lại phải xoá tay.
+  - Ngoài-2: Dòng ghi chú đầu tệp nút vẫn ghi «tham số chỉ đi qua env», ngược với cách truyền email mới.
+  - Ngoài-3: Cùng giới hạn với Ngoài-1 (lượt soát lỗi nêu cùng chỗ).
+  - Ngoài-4: Bộ kiểm chưa thử vài ký tự tách dòng hiếm (C1, U+2029); bộ nạp vẫn chặn đúng nhưng thu hẹp việc chặn sau này thì bộ kiểm không bắt.
