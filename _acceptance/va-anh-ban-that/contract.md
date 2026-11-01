@@ -5,7 +5,7 @@ slug: va-anh-ban-that
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-va-anh-ban-that-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -63,3 +63,12 @@ Bỏ quét không gian: ba lỗi đã có tên từ Cổng Bằng chứng hàng 
 - Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm khẳng định bản gốc không đi qua API nhưng thực ra chỉ đo thứ do chính bài kiểm tạo ra, nên nếu sau này sai thì bài kiểm không báo. — `packages/api/test-db/photos-ban-that.test.ts`
 - Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm tự động chỉ xem trong mã có đúng dòng chữ chứ không chạy thử xem lời báo lỗi có hiện lên màn hình, nên có thể bỏ sót lỗi hiển thị. — `apps/web/src/app/(app)/units/photos/ban-that.test.ts`
 - Ngoài-7 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm việc chặn mã ảnh của sàn khác chỉ thấy bị từ chối chứ không chắc từ chối đúng lý do, nên có thể bỏ sót lỗi khác che mất. — `packages/api/test-db/photos-ban-that.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Một tên trường trong phản hồi ảnh viết lệch kiểu so với các trường khác; người dùng cuối không thấy gì, chỉ gây phiền cho người viết code về sau.
+  - Ngoài-2: Nếu khoá hay cấu hình kho ảnh hỏng, người dùng bị báo nhầm là «không phải ảnh» thay vì lỗi hệ thống, nên khó biết cần báo người quản trị.
+  - Ngoài-3: Một số lần tải ảnh bị từ chối vẫn để lại bản gốc trong kho mà không hồ sơ nào trỏ tới, chiếm chỗ lâu dài.
+  - Ngoài-4: Trong vòng một phút sau khi xác nhận, người giữ link tải lên có thể thay bản gốc bằng tệp khác chưa được kiểm.
+  - Ngoài-5: Bài kiểm khẳng định bản gốc không đi qua API nhưng thực ra chỉ đo thứ do chính bài kiểm tạo ra, nên nếu sau này sai thì bài kiểm không báo.
+  - Ngoài-6: Bài kiểm tự động chỉ xem trong mã có đúng dòng chữ chứ không chạy thử xem lời báo lỗi có hiện lên màn hình, nên có thể bỏ sót lỗi hiển thị.
+  - Ngoài-7: Bài kiểm việc chặn mã ảnh của sàn khác chỉ thấy bị từ chối chứ không chắc từ chối đúng lý do, nên có thể bỏ sót lỗi khác che mất.
+  - tệp rỗng (AC-2): Tải tệp rỗng lên link tải lên thì bước xác nhận báo lỗi chung thay vì «không phải ảnh», và tệp rỗng nằm lại kho.
