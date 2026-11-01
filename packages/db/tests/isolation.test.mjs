@@ -1474,3 +1474,26 @@ test("liên hệ: chỗ trường riêng giữ rỗng", { skip }, async () => {
     await c.query("set local role quy_hang_app");
   });
 });
+
+test("liên hệ: chỉ người giữ và trưởng nhóm sửa loại, kể cả liên hệ chưa có người giữ", { skip }, async () => {
+  await withLienHe(async (c) => {
+    // [dòng, người, liên hệ, được sửa]
+    const BANG = [
+      ["chưa có người giữ × đầu chủ", LH.DC1, K0, false],
+      ["chưa có người giữ × telesales", LH.TS, K0, false],
+      ["có người giữ × đầu chủ khác", LH.DC2, K1, false],
+      ["có người giữ × người giữ", LH.DC1, K1, true],
+      ["chưa có người giữ × trưởng nhóm", LH.TN, K0, true],
+    ];
+    let so = 0;
+    for (const [ten, ai, k, duoc] of BANG) {
+      await lamNguoi(c, ai, COMPANY_A);
+      if (duoc) await c.query("select app.set_contact_types($1, '{Seller,Buyer}')", [k]);
+      else await expectError(c, "select app.set_contact_types($1, '{Seller,Tenant}')", [k], /không có liên hệ này/);
+      const loai = (await chuChay(c, "select contact_types from contacts where id = $1", [k], [ai, COMPANY_A])).rows[0].contact_types;
+      assert.equal(loai.includes("Tenant"), false, `dòng «${ten}»: sửa trái phép đã ghi`);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+  });
+});
