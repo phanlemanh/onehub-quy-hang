@@ -56,8 +56,10 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     photoTooLarge: ["photo-too-large", 400],
     photoInternalNoSample: ["photo-internal-no-sample", 400],
     photoStorageMissing: ["photo-storage-missing", 503],
+    // va-anh-ban-that.
+    photoAlreadyConfirmed: ["photo-already-confirmed", 409],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 44);
+  assert.equal(Object.keys(API_ERRORS).length, 45);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

@@ -54,6 +54,7 @@ export const API_ERRORS = {
   photoTooLarge: { code: "photo-too-large", status: 400 },
   photoInternalNoSample: { code: "photo-internal-no-sample", status: 400 },
   photoStorageMissing: { code: "photo-storage-missing", status: 503 },
+  photoAlreadyConfirmed: { code: "photo-already-confirmed", status: 409 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;
