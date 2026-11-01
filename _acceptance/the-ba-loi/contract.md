@@ -5,7 +5,7 @@ slug: the-ba-loi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [lint, docs]
-status: machine-cleared
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-the-ba-loi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -122,3 +122,8 @@ Chân ngành: `[NGÀNH: design review «options side by side» — Design Counci
 - Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi chấm một bản cũ bằng tuỳ chọn chỉ định điểm đến, kết quả có thể xanh hoặc đỏ sai vì phần hồ sơ và trang lấy từ thư mục đang mở chứ không từ bản đó. — `packages/ui-lint/lib/ba-loi.mjs`
 - Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Nếu sau này trang ba lối đánh dấu nhầm cột được khuyên khi lời khuyên không phải ReUI, bộ kiểm hiện tại có thể không bắt được. — `packages/ui-lint/tests/ba-loi.test.mjs`
 - Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Chữ dùng để thử hai trang cũ là bản chép tay, nên nếu chép lệch khỏi trang đã ký thì bài thử vẫn xanh mà không ai biết. — `packages/ui-lint/tests/ba-loi.test.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Khi nhánh chính đã đổi khối đích của một màn sau lúc vòng rẽ ra, bài chấm có thể báo nhầm vòng chạm ô chưa có khuôn cho tới khi gộp nhánh chính vào nhánh việc.
+  - Ngoài-3: Chấm một bản cũ bằng tuỳ chọn chỉ định điểm đến thì phần hồ sơ và trang vẫn lấy từ thư mục đang mở, kết quả có thể sai.
+  - Ngoài-4: Bộ kiểm chỉ chứng cột được khuyên đánh dấu đúng khi lời khuyên là ReUI.
+  - Ngoài-5: Chữ dùng để thử hai trang cũ là bản chép tay, không rút từ trang đã ký.
