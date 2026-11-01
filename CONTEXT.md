@@ -12,7 +12,10 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Căn | `unit` *(đề xuất)* | Vật thể trong danh mục: khu → toà → trục → căn | — |
 | Khu | `subdivisionName`, `subdivisionKey` (RESO `SubdivisionName`) | Khu dân cư, khu đô thị hay khu của chủ đầu tư chứa căn; danh mục dùng chung | «Dự án» |
 | Loại hình | `propertyType` / `propertySubType` (RESO) | Loại của căn, giá trị RESO nguyên văn: căn hộ `Residential` / `Condominium`, nhà phố `Residential` / `Townhouse`, biệt thự `Residential` / `Single Family Residence`, đất `Land` / `Unimproved Land`; nhãn riêng của sàn («Shophouse», «Liền kề») neo vào đây; loại hình nào dùng trường nào đọc từ một bảng của lõi | Loại hình ngoài bốn cặp |
-| Lead | `lead` *(đề xuất)* | Hàng ở nấc đầu, từ telesales hoặc đầu chủ tự nhập | — |
+| Lead | `lead` · RESO `ContactType = Lead` | Trạng thái của một liên hệ chưa nói chuyện hai chiều (KW «Mark as Lead»); bản ghi lead của Quỹ hàng là cơ hội phía bán ở pha đầu gắn liên hệ ấy, từ telesales hay đầu chủ tự nhập — không phải hàng | «Hàng ở nấc đầu» |
+| Liên hệ | `contact` (RESO `Contacts`) | Đối tượng: một người làm việc với sàn — một người, nhiều số, một hay nhiều loại liên hệ, một người giữ (ADR-0021). Va chữ với nút «Liên hệ đầu chủ» của hồ sơ đầu khách (hàng 33 hỏi đổi nhãn) | «Danh bạ» |
+| Loại liên hệ | `contact_types` (RESO `ContactType`) | Chủ bán `Seller` · Chủ cho thuê `Landlord` · Người mua `Buyer` · Người thuê `Tenant`; một người mang được nhiều loại; mang Chủ bán hay Chủ cho thuê là lớp nguồn | — |
+| Người giữ | `owner_member_user_id` (RESO `OwnerMemberKey`) | Đầu chủ giữ một liên hệ chủ nhà; chưa có người giữ thì chỉ trưởng nhóm thấy | «Chủ sở hữu» |
 | Đầu chủ | `listing_agent` *(đề xuất, RESO `ListAgent`)* | Người giữ nguồn chủ nhà của căn | «Người giữ» |
 | Đầu khách | `buyer_agent` *(đề xuất, RESO `BuyerAgent`)* | Người đem căn đi bán cho khách | — |
 | Bao phí / Không bao phí | *(đề xuất)* | Giá đã / chưa gồm thuế TNCN, lệ phí trước bạ, phí môi giới theo định nghĩa của sàn | Trên trang khách: «đã / chưa gồm phí chuyển nhượng» |

@@ -49,6 +49,10 @@ export const API_ERRORS = {
   alreadyOnBoard: { code: "already-on-board", status: 409 },
   notReturned: { code: "not-returned", status: 409 },
   alreadyResubmitted: { code: "already-resubmitted", status: 409 },
+  // Liên hệ (ADR-0021).
+  leadHasListing: { code: "lead-has-listing", status: 409 },
+  leadNotListable: { code: "lead-not-listable", status: 409 },
+  ownerTypeRequired: { code: "owner-type-required", status: 400 },
   // Ảnh căn ba ngăn (ADR-0014).
   photoNotImage: { code: "photo-not-image", status: 400 },
   photoTooLarge: { code: "photo-too-large", status: 400 },

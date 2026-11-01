@@ -1,8 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { navigationFor } from "@quy-hang/core";
+import { typesForNeed } from "@quy-hang/core/contacts";
 import { decideOutcome, OPEN_STATUSES, validateLeadInput, type LeadRecord, type MyLeadRecord, type Outcome } from "@quy-hang/core/dedupe";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { createListing, isRefusal as laTuChoiHang } from "../listings/store";
 import { khoaSoChu } from "../owners/khoa";
 import { dauVetSo, maHoaSo, nguCanhLead } from "../owners/ma-hoa";
 
@@ -57,7 +59,11 @@ async function canEnterLead(tx: pg.PoolClient): Promise<boolean> {
   return navigationFor(rows[0]?.roles ?? []).actions.includes("new_lead");
 }
 
-export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<LeadRecord | Refusal> {
+/**
+ * `intoContact` (lối gửi lại): số mới chưa thuộc ai thì thêm vào liên hệ của lead cũ; số đã thuộc liên hệ khác thì lead gắn
+ * liên hệ ấy (hàng 85, AC-6).
+ */
+export async function createLead(tx: pg.PoolClient, payload: unknown, intoContact: string | null = null): Promise<LeadRecord | Refusal> {
   if (!(await canEnterLead(tx))) return { error: API_ERRORS.leadRoleRequired };
   const kiem = validateLeadInput(payload);
   if (!kiem.ok) return { error: API_ERRORS.invalidPayload, details: kiem.errors };
@@ -75,10 +81,21 @@ export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<L
     openListing: f.open_listing_id ? { listingId: f.open_listing_id, agentUserId: f.open_listing_agent } : null,
     ownerAgentUserId: f.owner_agent,
   });
+  // Liên hệ của số (hàng 85): tìm theo dấu vết hay tạo; bản mã chép kèm ngữ cảnh của chính lead.
+  const banMa = maHoaSo(v.ownerPhone, nguCanhLead(san, id), khoa);
+  const { rows: lh } = await tx.query<{ c: string }>("select app.contact_for_phone($1, $2, $3, $4, $5, $6) c", [
+    dauVet,
+    banMa,
+    nguCanhLead(san, id),
+    typesForNeed(v.need),
+    quyet.agentUserId,
+    intoContact,
+  ]);
   const ghi = await tx.query<LeadRow>(
     `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion,
-                        desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id)
-     values ($1, app.current_company_id(), app.current_user_id(), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                        desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id,
+                        contact_id)
+     values ($1, app.current_company_id(), app.current_user_id(), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
      returning ${COT}`,
     [
       id,
@@ -88,11 +105,12 @@ export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<L
       v.listPrice,
       v.feeInclusion,
       v.desiredListingTime,
-      maHoaSo(v.ownerPhone, nguCanhLead(san, id), khoa),
+      banMa,
       dauVet,
       quyet.outcome,
       quyet.agentUserId,
       quyet.listingId,
+      lh[0]!.c,
     ],
   );
   return toRecord(ghi.rows[0]!);
@@ -215,6 +233,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
   if (!cu) return { error: API_ERRORS.notFound };
   if (cu.returned_at === null) return { error: API_ERRORS.notReturned };
   if (cu.resubmitted_at !== null) return { error: API_ERRORS.alreadyResubmitted };
+  const { rows: lhCu } = await tx.query<{ contact_id: string | null }>("select contact_id from leads where id = $1", [id]);
   const moi = await createLead(tx, {
     ownerPhone: (body as { ownerPhone?: unknown }).ownerPhone,
     buildingName: cu.building_name,
@@ -223,7 +242,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
     listPrice: Number(cu.list_price),
     feeInclusion: cu.fee_inclusion,
     desiredListingTime: cu.desired_listing_time,
-  });
+  }, lhCu[0]?.contact_id ?? null);
   if (isRefusal(moi)) return moi;
   try {
     await tx.query("select app.mark_resubmitted($1, $2)", [id, moi.id]);
@@ -235,4 +254,43 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
     throw e;
   }
   return (await readLeadForStage(tx, moi.id))!;
+}
+
+// ---- Tạo hàng từ lead (hàng 85, ADR-0021) ----
+
+/**
+ * Đầu chủ của lead tạo hàng: toà, căn từ lead; đầu chủ giữ căn; chủ nhà của hàng là liên hệ của lead (chưa tên, chưa số —
+ * «Mở số» báo chưa có số tới khi đầu chủ ghi chủ nhà); bảng nối `lead_listings` mang mã lead, «Lên bảng» đọc từ đó.
+ */
+export async function createListingFromLead(tx: pg.PoolClient, id: string): Promise<{ id: string } | Refusal> {
+  await tx.query("savepoint hang_tu_lead");
+  let lead: { building_name: string; unit_number: string | null; contact_id: string | null };
+  try {
+    lead = (await tx.query("select * from app.lead_for_listing($1)", [id])).rows[0];
+  } catch (e) {
+    await tx.query("rollback to savepoint hang_tu_lead");
+    const code = (e as { code?: string }).code;
+    if (code === "P0002") return { error: API_ERRORS.notFound };
+    if (code === "22023") return { error: API_ERRORS.leadNotListable };
+    if (code === "23505") return { error: API_ERRORS.leadHasListing };
+    throw e;
+  }
+  const tao = await createListing(tx, { buildingName: lead.building_name, ...(lead.unit_number !== null && { unitNumber: lead.unit_number }) });
+  if (laTuChoiHang(tao)) throw new RefusalAfterWrite({ error: tao.error, ...(tao.details && { details: tao.details }) });
+  const hang = tao.listingId;
+  await tx.query(
+    "insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values (app.current_company_id(), $1, 1, app.current_user_id(), app.current_user_id())",
+    [hang],
+  );
+  await tx.query(
+    "insert into listing_owners (company_id, listing_id, contact_id, updated_by) values (app.current_company_id(), $1, $2, app.current_user_id())",
+    [hang, lead.contact_id],
+  );
+  try {
+    await tx.query("insert into lead_listings (company_id, lead_id, listing_id, created_by) values (app.current_company_id(), $1, $2, app.current_user_id())", [id, hang]);
+  } catch (e) {
+    if ((e as { code?: string }).code === "23505") throw new RefusalAfterWrite({ error: API_ERRORS.leadHasListing });
+    throw e;
+  }
+  return { id: hang };
 }
