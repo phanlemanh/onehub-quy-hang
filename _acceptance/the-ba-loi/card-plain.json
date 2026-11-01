@@ -1,0 +1,35 @@
+{
+ "feature_plain": "Khi một vòng giao diện gặp chỗ chưa có khuôn, máy dựng trang so ba lối (Trong kho · ReUI · Vẽ mới) bằng một lệnh để anh duyệt ở Cổng Phạm vi, và bài chấm đỏ nếu vòng ấy bỏ bước so lối.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ in sẵn danh sách sáu ảnh phải chụp (ba lối × máy tính, điện thoại) và một khung chữ để điền, không đè chữ đã điền."},
+  {"id":"AC-2","p":"Sẽ dựng một trang tự chứa: lời khuyên của máy ghim đầu trang, ba cột cùng thứ tự, mỗi cột ảnh hai khổ, một câu động cơ, một câu đánh đổi; đọc được trên máy tính và điện thoại, nền sáng và tối."},
+  {"id":"AC-4","p":"Sẽ từ chối dựng trang khi thiếu chữ, thiếu ảnh, ảnh sai khổ hay lời khuyên trỏ sai, và nói đúng lối nào sai gì."},
+  {"id":"AC-5","p":"Sẽ tự nhận vòng chạm chỗ chưa có khuôn: thêm nhóm màn mới, đổi khối đích của một màn, hay thêm một chỗ phải tự ghép."},
+  {"id":"AC-6","p":"Sẽ báo đỏ khi vòng như vậy bỏ bước so lối, thiếu trang, trang sai hay trang bị sửa tay sau khi dựng."},
+  {"id":"AC-8","p":"Sẽ thử trên vật thật: ảnh và chữ của trang ba lối hàng 17 và 27, tệp nhóm màn và bảng «Chỗ hở» thật."},
+  {"id":"AC-9","p":"Sẽ thêm răng vào lint: hồ sơ đã mở bước so lối mà thiếu trang hay trang sai thì đỏ; hồ sơ đã ký thì giữ nguyên trang."}
+ ],
+ "wont_do": [
+  {"id":"AC-3","p":"Sẽ KHÔNG bỏ cột khi một lối không có ứng viên: cột vẫn hiện «không có» kèm điều đã tra."},
+  {"id":"AC-7","p":"Sẽ KHÔNG đòi trang ba lối khi vòng chỉ dựng màn theo khuôn sẵn có."},
+  {"id":"OOS-1","p":"KHÔNG làm phần nhu cầu trích sẵn, thước chấm chung và dữ liệu ca xấu nhất — chờ vài vòng đầu (H17)."},
+  {"id":"OOS-2","p":"KHÔNG đưa ảnh trạng thái phụ (trống, đang tải, lỗi) lên trang của lệnh."},
+  {"id":"OOS-3","p":"KHÔNG chạy bài này ở CI mỗi PR trong vòng này (xem Hỏi-1)."},
+  {"id":"OOS-4","p":"KHÔNG dựng lại hai trang tay của hàng 17 và 27 — hồ sơ đã ký."},
+  {"id":"OOS-5","p":"KHÔNG bắt được đổi khối đích nếu chỉ đổi trong mã mà không sửa bảng khối đích."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Mọi việc của tính năng đều có tiêu chí: lập kế hoạch ảnh (AC-1), dựng trang (AC-2…4), nhận vòng (AC-5…7), răng lint (AC-9), luật ghi (AC-10)."},
+  {"i":1,"p":"Mỗi trạng thái của một lối đều có ca: đủ (AC-2), không có ứng viên (AC-3), thiếu hay sai (AC-4)."},
+  {"i":2,"p":"Ba loại chỗ chưa có khuôn, vòng đi khuôn sẵn, và vòng chỉ đổi cột bảng đều được thử (AC-5…8)."},
+  {"i":3,"p":"Đo trên dữ liệu thử, trên vật thật của 17 và 27, và trên cây thật của kho (AC-8, AC-9)."},
+  {"i":4,"p":"Để sau: ảnh trạng thái phụ, chạy ở CI, nhu cầu và thước chung."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Chỗ đặt bài chấm (chạy ở bước chấm của vòng hay ở CI) là lựa chọn độ cứng của rào — máy không được tự quyết, nên thành câu Hỏi-1 cho anh."},
+  {"i":1,"p":"Chưa có phép đo nào mở trang thật ở máy tính và điện thoại, sáng và tối — đã thêm phép nhìn trên trang mẫu dựng từ hàng 17."},
+  {"i":2,"p":"Chưa có bài đi trọn từ khung chữ máy ghi tới trang — đã thêm."},
+  {"i":3,"p":"So trang với bản dựng lại sẽ làm đỏ hồ sơ đã ký khi mẫu trang đổi về sau — đã đổi: chỉ so hồ sơ chưa ký."},
+  {"i":4,"p":"Đề nghị lấy bảng «Chỗ hở» trước hàng 83 từ lịch sử git — không làm: máy đã đo, 13 tên trùng hệt, và CI không có lịch sử."}
+ ]
+}
