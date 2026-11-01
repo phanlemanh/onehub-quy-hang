@@ -1,0 +1,71 @@
+schema_version: 1
+feature_slug: vet-chon-khoi
+# Lệnh máy: `executors.test.ui_lint` (node --test của packages/ui-lint, gồm kiem-chuan.test.mjs) và
+# `executors.script.giao_dien` (kiem-chuan.mjs trên cây thật — bước cuối của npm run lint). Người chấm đối chiếu từng tên
+# ca nêu trong `expected` trong dòng reporter: có mặt, «ok», không SKIP. Ca tiêm lỗi dựng trên BẢN SAO của hai tệp thật
+# (đọc từ cây, sửa đúng một ô), không viết tay bảng mới.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; stdout có dòng 'khối: 2 dòng đủ chín ô' (hay số lớn hơn nếu main đã thêm khối), có đúng 4 dòng bắt đầu 'vo-va-ia.md chỗ hở «' và chứa 'hạn xem lại 2026-10-30 đã tới' — mỗi tên trong bốn chỗ đăng nhập, ô nhận lead, trống · lỗi · báo, người dùng xuất hiện đúng một lần — và dòng cuối 'chuẩn giao diện: đạt'; không dòng nào bắt đầu 'catalog.md khối' hay 'catalog.md thiếu khối'. Chiều đỏ: CLI không in mảng cảnh báo → thiếu bốn dòng, eval trượt."
+    paths: [.agents/skills/quy-hang-ui/catalog.md, packages/ui-lint/kiem-chuan.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «khối: chuyển thể mà thiếu dòng thì đỏ gọi tên khối» (packages/ui-lint/tests/kiem-chuan.test.mjs) có mặt và ok — trên bản sao cây: thêm tệp apps/web/src/x.tsx có chú thích '// chuyển thể `list-11` cho thử' → loi chứa đúng 'catalog.md thiếu khối: list-11' kèm 'x.tsx:1'; ca «khối: bộ quét bắt hai khối thật» ok — ma trận viết trước đúng 2 phần tử (app-shell-8, data-grid-editing-6, assert số): mỗi phần tử xoá dòng của khối ấy khỏi bản sao catalog.md thật → loi chứa 'catalog.md thiếu khối: <khối>' kèm tệp:dòng của một chú thích thật (đọc bằng grep trên cây, không gõ tay số dòng); và số khối bộ quét nhận trên cây thật bằng số dòng của bảng; ca «khối: tên đứng trước chữ chuyển thể không tính» ok — chú thích 'khối đích `auth-15` chuyển thể ở việc riêng (Hỏi-3)' không sinh lỗi, không nhận nhầm 'i-3'. Chiều đỏ: bỏ điều kiện «sau chữ chuyển thể» → ca thứ ba đỏ nêu auth-15; bộ quét trả rỗng → ca thứ hai đỏ."
+    paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «khối: dòng thiếu ô hay trỏ sai thì đỏ gọi tên dòng và cột» có mặt và ok — ma trận viết trước đếm bằng đúng 16 (assert số): 8 cột trừ Khối gốc × ô rỗng, cộng ô Archetype chỉ '—', Ảnh chuẩn trỏ tệp không có, Tệp đang dùng trỏ tệp không có, Tệp đang dùng ghi đường không bọc dấu `…`, Phiên bản ReUI sai khuôn, Nhóm đang dùng là tên không có trong design/patterns, Duyệt sai khuôn 'hôm qua', Duyệt tên khác approved_by của hồ sơ (tên '[Tên]'); mỗi ca sửa đúng một ô của dòng app-shell-8 trên bản sao catalog.md thật và assert loi chứa 'catalog.md khối app-shell-8' cùng tên cột ấy; đối chứng dương: bản sao không sửa → không lỗi khối. Chiều đỏ: bỏ kiểm tồn tại tệp → ca ảnh chuẩn đỏ; bỏ đối chiếu approved_by → ca tên khác đỏ."
+    paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs, .agents/skills/quy-hang-ui/catalog.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «chỗ hở: cây thật đủ năm ô cho 13 dòng» có mặt và ok — đọc bảng §3 của docs/design/vo-va-ia.md thật: đúng 13 dòng (assert số), mỗi dòng năm ô không rỗng và không chỉ '—', hạn mở đầu bằng ngày hay 'khi '; ca «chỗ hở: ô đã tra khớp kết quả ReUI thô» ok — với mỗi dòng có ứng viên (không phải 'không có'), truy vấn trong ô xuất hiện trong _acceptance/vet-chon-khoi/evidence/reui-tra.md và ứng viên nằm trong danh sách tên trả về của đúng truy vấn ấy; kiemChuan trên cây thật không có dòng lỗi bắt đầu 'vo-va-ia.md chỗ hở'. Chiều đỏ: đổi ứng viên một ô thành tên không có trong kết quả → ca thứ hai đỏ nêu tên chỗ."
+    paths: [docs/design/vo-va-ia.md, packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs, _acceptance/vet-chon-khoi/evidence/reui-tra.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «chỗ hở: dòng thiếu ô thì đỏ gọi tên dòng» có mặt và ok — ma trận viết trước đếm bằng đúng 11 (assert số): 4 cột trừ Chỗ (Chỗ là tên dòng trong thông điệp) × (ô rỗng, ô chỉ '—'), cộng hạn 'sau này' (không ngày, không 'khi '), ô Đã tra sai khuôn 'đã tra', ô Ghép chỉ khoảng trắng; mỗi ca sửa một ô của dòng «Luật chia lead» trên bản sao vo-va-ia.md thật, assert loi chứa 'vo-va-ia.md chỗ hở «Luật chia lead»' cùng tên cột; đối chứng dương: bản sao không sửa → không lỗi chỗ hở. Chiều đỏ: chỉ kiểm ô Hạn → các ca cột khác đỏ; coi '—' là có nội dung → năm ca '—' đỏ."
+    paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs, docs/design/vo-va-ia.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «chỗ hở: hạn đã tới thì cảnh báo có tên, không lỗi» có mặt và ok — bản sao vo-va-ia.md thật với hôm nay cố định 2026-11-01 truyền vào hàm: dòng hạn '2026-10-30 — …' ra đúng một cảnh báo chứa tên chỗ và '2026-10-30', không thêm lỗi; đổi hạn thành '2099-01-01' hay 'khi có màn thứ hai' → không cảnh báo cho dòng ấy; ca «chỗ hở: cây thật có bốn cảnh báo chỗ tạm» ok — cây thật cho đúng 4 cảnh báo, tên bốn chỗ: đăng nhập, ô nhận lead, trống · lỗi · báo, người dùng; kiemChuan trên cây thật loi rỗng. Chiều đỏ: coi hạn đã tới là lỗi → loi khác rỗng, ca đỏ."
+    paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs, docs/design/vo-va-ia.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «vết khối: sửa ngoài hai bảng thì đầu ra không đổi» có mặt và ok — bản sao cây: thêm đoạn văn có chữ 'chuyển thể list-11' vào §4 của vo-va-ia.md, thêm một dòng bảng vào mục khác của catalog.md («Thành phần đã cài» giữ khớp đĩa), sửa một tệp docs khác; assert lỗi và cảnh báo về hai bảng giống hệt bản sao gốc (so mảng). Đối chứng dương cùng ca: sửa một ô trong bảng Chỗ hở thì đầu ra đổi."
+    paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: judgment
+    question: "Đọc docs/design/vo-va-ia.md và .agents/skills/quy-hang-ui/SKILL.md. Có đủ bốn ý: (1) §3 nói mỗi dòng «Chỗ hở» phải ghi đã tra gì trên ReUI, vì sao không đứng và hạn xem lại (ngày hay điều kiện «khi …»); (2) §3 nói rơi bậc xuống ghép hay tự viết trong một vòng là một dòng decisions.jsonl của hồ sơ; (3) skill nói bậc 2 của thang dùng lại tra bảng «Khối đã chuyển thể» của catalog.md; (4) skill nói chuyển thể khối mới thì thêm dòng đủ chín ô, tệp chuyển thể mang chú thích «chuyển thể … <khối>», và ghép hay tự viết thì thêm dòng «Chỗ hở» đủ năm ô, trong cùng PR? PASS khi đủ bốn ý; FAIL nêu ý thiếu."
+    inputs: [docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/SKILL.md]
+    expected: "PASS — đủ bốn ý."
+    paths: [docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/SKILL.md]
+    evidence_required: [run_id, verdict, judges]
