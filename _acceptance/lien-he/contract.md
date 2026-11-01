@@ -5,7 +5,7 @@ slug: lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-lien-he-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -127,3 +127,10 @@ bán» của hàng 27 đổi định nghĩa lên bảng sang dữ kiện ← AC-
   sau 016–020 — ca kiểm nạp rồi nạp lại ra 30 liên hệ Chủ bán, 12 lead gắn liên hệ, không đổi gì; chỉ chạm seed sau khi hàng
   va-nap-mau của dãy D gộp. CONTEXT.md ghi «liên hệ» là đối tượng (RESO Contact) và nút «Liên hệ đầu chủ» (hàng 33) là chỗ
   va chữ để hàng 33 hỏi đổi nhãn — hàng 85 không tự đổi nhãn.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-2: Luật «chỉ đầu chủ của lead tạo được hàng từ lead» do API giữ; cơ sở dữ liệu chưa tự chặn ghi thẳng bảng nối lead với hàng.
+  - Ngoài-3: Trạng thái «Lead / Liên hệ» của một liên hệ đếm theo phần hàng và lead người xem thấy, nên có thể khác nhau giữa hai người xem.
+  - Ngoài-5: Sau khi trưởng nhóm giao lại hàng hay lead, người giữ liên hệ có thể thấy nhãn «lead» dù liên hệ đã có hàng hay đã được gọi.
+  - Ngoài-6: Bài kiểm trạng thái liên hệ chưa đo riêng trường hợp lead đã trả lại.
+  - Ngoài-7: Bài kiểm tài liệu chỉ kiểm chữ có mặt, chưa kiểm từng dòng bảng RESO ghép đúng cặp.
+  - Ngoài-8: Bài kiểm chuyển dữ liệu cũ chỉ ghim ngữ cảnh mã hoá gốc ở một dòng số, chưa ở từng dòng.

@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 6f26c850dd915565527c1b9bd27b01cdef4b3b77
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: lien-he
