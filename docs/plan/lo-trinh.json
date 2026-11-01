@@ -530,7 +530,7 @@
     },
     {
       "ma": "65",
-      "cau_giao": "Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file; chủ nhà và số trong file thành liên hệ chủ nhà của sàn (hàng 85) qua cùng đường kiểm trùng theo liên hệ",
       "vai": "Đầu chủ",
       "tieu_chi": 11,
       "vi_sao": "Màn P0 N1, N2; luật 11; ADR-0011 quyết định 5, 8, 11. 11 tiêu chí vì xem trước và ghi không tách được mà giữ nghĩa «xem trước rồi mới ghi»",
@@ -543,7 +543,8 @@
         "9",
         "11",
         "12",
-        "15"
+        "15",
+        "85"
       ],
       "slug": "nhap-excel-xem-truoc-ghi",
       "nhom": "nhap-du-lieu",
@@ -706,7 +707,8 @@
       "hang": "T2",
       "dung_tren": [
         "15",
-        "17"
+        "17",
+        "85"
       ],
       "slug": "hom-nay-dau-chu",
       "nhom": "dau-chu",
@@ -892,13 +894,15 @@
     },
     {
       "ma": "31",
-      "cau_giao": "Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang",
+      "cau_giao": "Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách)",
       "vai": "nen",
       "tieu_chi": 9,
       "vi_sao": "Bất biến 4; luật 23–24; kiểm bắt buộc trước phát hành",
       "hang": "T3",
       "dung_tren": [
-        "11"
+        "11",
+        "18",
+        "85"
       ],
       "slug": "luat-an-va-kiem-ro-ri",
       "bat_khi": "Bộ kiểm rò rỉ chạy trong CI và đỏ khi cố tình thêm một trường nội bộ; gửi khách riêng không có mã căn",
