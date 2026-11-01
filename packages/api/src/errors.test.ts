@@ -46,8 +46,13 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     leadNotAssignable: ["lead-not-assignable", 400],
     badJobSecret: ["bad-job-secret", 401],
     jobSecretMissing: ["job-secret-missing", 503],
+    // Hàng 27 (ADR-0020).
+    alreadyReturned: ["already-returned", 409],
+    alreadyOnBoard: ["already-on-board", 409],
+    notReturned: ["not-returned", 409],
+    alreadyResubmitted: ["already-resubmitted", 409],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 36);
+  assert.equal(Object.keys(API_ERRORS).length, 40);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

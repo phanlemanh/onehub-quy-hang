@@ -44,6 +44,11 @@ export const API_ERRORS = {
   leadNotAssignable: { code: "lead-not-assignable", status: 400 },
   badJobSecret: { code: "bad-job-secret", status: 401 },
   jobSecretMissing: { code: "job-secret-missing", status: 503 },
+  // Lead bốn nấc (ADR-0020).
+  alreadyReturned: { code: "already-returned", status: 409 },
+  alreadyOnBoard: { code: "already-on-board", status: 409 },
+  notReturned: { code: "not-returned", status: 409 },
+  alreadyResubmitted: { code: "already-resubmitted", status: 409 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

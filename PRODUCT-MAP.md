@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>11 việc"]
+  GD --> B["Sắp mở vòng<br/>12 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>6 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>30 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>31 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -31,7 +31,8 @@ flowchart TD
 - Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá (`goi-ep-gia-dot-hai`)
 - Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
 - Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình — lead mới, cần gọi lại, nên gọi ép giá, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng đợi, ghi kết quả gọi một chạm (`hom-nay-dau-chu`)
-- Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
+- Mỗi người làm việc với sàn là một liên hệ (RESO Contacts): một người, nhiều số (bản mã + dấu vết), một hay nhiều loại liên hệ — Chủ bán, Chủ cho thuê, Người mua, Người thuê… (ContactType) — và một người giữ; lead và hàng gắn vào liên hệ chủ nhà: kiểm trùng tìm theo liên hệ, «Lên bảng» là dữ kiện (hàng tạo từ lead mang mã lead), «Sửa số» thêm số vào cùng người; liên hệ có chỗ cho trường riêng theo loại liên hệ của sàn (định nghĩa ở hàng 47); số và mọi thứ của chủ nhà vẫn lớp nguồn, telesales tạo được nhưng không đọc lại số; Tham chiếu thêm mục «Tri thức ngành và RESO» (`lien-he`)
+- Chủ kho đăng nhập bản thật, chọn «[Mẫu] Sàn thử» và thấy đủ dữ liệu mẫu — 180 căn danh mục, 30 chủ nhà (số đã mã hoá), 40 hàng đủ sáu trạng thái, 12 lead có ca trùng, khu và người phụ trách — nạp bằng một nút chạy tay trên GitHub Actions, chạy lại không đổi gì, gỡ được đúng sàn mẫu mà không chạm sàn thật (`nap-mau-ban-that`)
 - Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ thiếu (`san-sang-ban`)
 - Chủ sản phẩm duyệt Cổng Phạm vi của một vòng chạm ô chưa có khuôn và thấy trang so ba lối — Trong kho, ReUI, Vẽ mới — cùng khổ 1440 và 375, mỗi lối một câu đánh đổi, lời khuyên của máy ghim trên trang; vòng chỉ đi khuôn sẵn thì không có trang ấy (`the-ba-loi`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
@@ -52,6 +53,7 @@ flowchart TD
 - Mọi đường gửi mã đăng nhập đi qua cùng giới hạn 5 lần xin mã trong 15 phút cho mỗi email; đường quên mật khẩu của plugin không còn phục vụ (`dong-duong-gui-ma-thua`)
 - Bộ dữ liệu mẫu của một sàn thử — một dự án căn hộ, hai mẫu file bảng hàng Excel, lead và chủ nhà giả — sinh từ khuôn của bảng hàng thật, mọi bản ghi mang nhãn mẫu (`du-lieu-mau-san-thu`)
 - Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi (`khu-va-loai-hinh`)
+- Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
 - Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện (`loi-hang-va-su-kien`)
 - Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện (`lop-truong-nguon`)
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
