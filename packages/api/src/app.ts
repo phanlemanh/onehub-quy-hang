@@ -17,6 +17,8 @@ import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
+import { registerPhotoRoutes } from "./photos/routes";
+import type { KhoAnh, KhoAnhVang } from "./photos/kho";
 
 /**
  * API có phiên bản cho mọi bề mặt và mọi hệ thống ngoài (ADR-0017 §4). Mọi thay đổi dữ liệu sẽ là một lệnh qua đây —
@@ -33,6 +35,8 @@ export type ApiDeps = {
   auth: Auth;
   /** Khoá của lối việc nền (`JOB_SECRET`); vắng thì lối ấy trả 503. Chủ kho đặt ở Vercel và Supabase (ADR-0017). */
   jobSecret?: string;
+  /** Kho byte ảnh (ADR-0014); vắng thì chọn theo môi trường — test truyền bản S3 trỏ máy chủ giả. */
+  khoAnh?: KhoAnh | KhoAnhVang;
 };
 
 const Health = z
@@ -155,6 +159,7 @@ export function createApi(deps: ApiDeps) {
   registerLeadRoutes(api, deps);
   registerRoutingRoutes(api, deps);
   registerJobRoutes(api, deps);
+  registerPhotoRoutes(api, deps, deps.khoAnh);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",
