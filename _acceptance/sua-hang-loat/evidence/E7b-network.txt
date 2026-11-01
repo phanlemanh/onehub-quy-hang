@@ -1,30 +1,5 @@
-/api/v1/catalog 200
-/api/v1/catalog 200
-/api/v1/listings 200
-/api/v1/listings 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/ab94b733-6ba8-4757-a099-e271d53b1523 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/6935393b-3402-40a9-a3e5-afb17b50387a 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/ab94b733-6ba8-4757-a099-e271d53b1523 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/6935393b-3402-40a9-a3e5-afb17b50387a 200
-/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0/events 200
-/api/v1/listings 200
-/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0/events 409
-/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0 200
-/api/v1/listings/6935393b-3402-40a9-a3e5-afb17b50387a/events 200
-/api/v1/listings/ab94b733-6ba8-4757-a099-e271d53b1523/events 200
-/api/v1/listings 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/ab94b733-6ba8-4757-a099-e271d53b1523 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0 200
-/api/v1/listings?limit=200 200
-/api/v1/listings/6935393b-3402-40a9-a3e5-afb17b50387a 200
-/api/v1/me 200
+E7b network: driver = Chrome headless qua CDP (script scratchpad), khong thu network cua trang; bang chung song = nhat ky may chu dev
+--- web-b.log dong cuoi cua lan chay nay ---
+ POST /api/v1/listings/057c4e09-b48c-4c36-9fe6-8bd53819a22b/events 200 in 22ms (next.js: 1.6ms, application-code: 20ms)
+ POST /api/v1/listings/17ec0ef7-28ba-496c-86fd-c8feb00bdb01/events 200 in 20ms (next.js: 1.4ms, application-code: 19ms)
+ POST /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764/events 200 in 14ms (next.js: 0.4ms, application-code: 14ms)
