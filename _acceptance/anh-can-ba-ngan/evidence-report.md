@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: cd1ccf23aaa802c8ea81df6da20ba3e6a6431156
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: anh-can-ba-ngan
@@ -109,7 +109,7 @@ human_signoff:
   run_id: minted-anh-can-ba-ngan-E10-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T08:53:48Z
   screenshot: evidence/E10-step1.png
   observed: |

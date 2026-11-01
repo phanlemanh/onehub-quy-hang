@@ -5,7 +5,7 @@ slug: anh-can-ba-ngan
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-anh-can-ba-ngan-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -103,3 +103,13 @@ Thước CE: mỗi ô (B × D) và (B × F) có ít nhất một ca trong evals 
 - Việc của chủ kho (ngoài phạm vi máy — máy không ghi `.env*`): đặt giá trị `STORAGE_S3_ACCESS_KEY`,
   `STORAGE_S3_SECRET_KEY`, `STORAGE_S3_ENDPOINT` ở Vercel và thêm ba dòng tên vào `.env.example`; tên và chú thích ở
   ADR-0014 mục Vận hành. Bản thật thiếu khoá thì API báo lỗi rõ và không dựng mục ảnh.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Thả ảnh lên tên thẻ «Tự có từ mã» vẫn nhận ảnh vào ngăn đang mở thay vì từ chối.
+  - Ngoài-2: Khi căn đã có ảnh bìa, «Đưa lên đầu» ở ảnh khác không đưa ảnh đó lên trước ảnh bìa.
+  - Ngoài-3: Bài kiểm «thẻ Tự có từ mã không nhận ảnh» chỉ đo hàm phụ, không đo màn thật.
+  - Ngoài-4: Các đường ảnh chưa có trong tài liệu OpenAPI; kiểm đầu vào viết tay thay vì zod.
+  - Ngoài-5: Tên trường API ảnh còn tiếng Việt, đổi cùng đợt đổi tên API.
+  - Ngoài-7: Lỗi đúng lúc ghi hay xoá có thể để dòng ảnh và byte ở kho ảnh lệch nhau.
+  - Ngoài-9: Lỗi giữa chừng ở bản thật có thể để sót tệp ảnh trên kho riêng tư không còn dòng nào trỏ tới.
+- Mở hợp đồng mới (Cổng Bằng chứng 2026-11-01): Ngoài-6 ảnh 4,5–10 MB vượt trần thân yêu cầu của Vercel; Ngoài-8 phản hồi
+  chuyển hướng giữ đệm lâu hơn link ký 60 giây; Ngoài-10 lỗi sửa, xoá ảnh không báo người dùng.
