@@ -10,6 +10,7 @@ import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
+import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerMemberRoutes } from "./thanh-vien";
@@ -144,6 +145,7 @@ export function createApi(deps: ApiDeps) {
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
   registerCatalogRoutes(api, deps);
+  registerFeedRoutes(api, deps);
   registerLeadRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {

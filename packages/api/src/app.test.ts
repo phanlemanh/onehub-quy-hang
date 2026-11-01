@@ -48,6 +48,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
     "PUT /api/v1/listings/{listingId}/listing-agent",
     "GET /api/v1/catalog/units/{code}",
+    // Nhận danh mục Invest (ADR-0015).
+    "POST /api/v1/catalog/feeds",
     // Hàng 24 (ADR-0012).
     "POST /api/v1/leads",
     "GET /api/v1/leads/buildings",
