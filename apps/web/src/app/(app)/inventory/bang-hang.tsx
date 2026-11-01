@@ -219,7 +219,20 @@ function visibilityTu(cot: CotId[]): ColumnVisibilityState {
   return Object.fromEntries(COT.filter((c) => !cot.includes(c.id)).map((c) => [c.id, false]));
 }
 
-export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string; gocNhinId?: string }) {
+/** `dangMo` / `onMoCan` (hàng 17): hồ sơ căn đang mở ở cột phải — dòng của nó được đánh dấu; bấm dòng căn thì mở hồ sơ. */
+export function BangHang({
+  nguoi,
+  san,
+  gocNhinId,
+  dangMo = null,
+  onMoCan,
+}: {
+  nguoi: string;
+  san: string;
+  gocNhinId?: string;
+  dangMo?: string | null;
+  onMoCan?: (d: DongBang) => void;
+}) {
   useDatPhamVi(nguoi, san);
   const router = useRouter();
   const frameRef = useRef<HTMLDivElement | null>(null);
@@ -303,6 +316,7 @@ export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string
     });
   }, []);
 
+  const dongDangMo = useMemo<Record<string, true>>(() => (dangMo ? { [dangMo]: true } : {}), [dangMo]);
   const tableOptions = useMemo(
     () => ({
       features: dataGridFeatures,
@@ -310,7 +324,9 @@ export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string
       data: cay,
       getRowId,
       getSubRows,
-      state: { sorting: sap, columnVisibility, expanded, columnPinning: { start: ["row", "buildingName", "unitNumber"].filter((id) => id === "row" || cot.includes(id as CotId)), end: [] } },
+      // Hàng 17: chọn dòng chỉ để đánh dấu hồ sơ đang mở — không có ô tích.
+      enableRowSelection: dangMo !== null,
+      state: { rowSelection: dongDangMo, sorting: sap, columnVisibility, expanded, columnPinning: { start: ["row", "buildingName", "unitNumber"].filter((id) => id === "row" || cot.includes(id as CotId)), end: [] } },
       onSortingChange,
       onColumnVisibilityChange,
       onExpandedChange: setExpanded,
@@ -320,7 +336,7 @@ export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string
       manualPagination: true,
       autoResetExpanded: false,
     }),
-    [columns, cay, sap, columnVisibility, expanded, cot, onSortingChange, onColumnVisibilityChange],
+    [columns, cay, sap, columnVisibility, expanded, cot, onSortingChange, onColumnVisibilityChange, dangMo, dongDangMo],
   );
   const table = useTable(tableOptions, selectGridState);
 
@@ -443,6 +459,7 @@ export function BangHang({ nguoi, san, gocNhinId }: { nguoi: string; san: string
         <DataGrid
           table={table}
           recordCount={daLoc.length}
+          onRowClick={onMoCan ? (d: DongLuoi) => d.kind === "can" && onMoCan(d.dong) : undefined}
           i18n={I18N}
           emptyMessage={
             <TrangThai
