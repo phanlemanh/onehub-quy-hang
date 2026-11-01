@@ -154,3 +154,25 @@ test("đối chứng đỏ: bộ viết làm tròn hai số lẻ thì chỗ đ�
   const lech = (Object.keys(MONG(chu)) as Cho[]).filter((c) => sai[c] !== MONG(chu)[c]);
   assert.deepEqual(lech, ["đọc lại", "giá chốt", "hỏi lại", "điền sẵn"], `chỗ lệch: ${lech.join(", ")}`);
 });
+
+test("E7 hàng 23: nhãn thiếu đủ điều — «ảnh thật», «mã căn»; Bảng hàng không có số ảnh thì không báo ảnh", async () => {
+  const { nhanThieu } = await import("./lenh");
+  const { readFileSync } = await import("node:fs");
+  const { fileURLToPath } = await import("node:url");
+  const du = { ...HANG, listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant", standardStatus: "Incomplete" as const };
+  // Ngữ cảnh có số ảnh (như hồ sơ căn đưa) → báo đúng nhãn.
+  const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active");
+  assert.deepEqual(coSo, { ok: false, loi: "Chưa lên Đang bán được: thiếu ảnh thật" });
+  const khongMa = dungLenhTrangThai({ ...du, unitNumber: null }, "Active");
+  assert.deepEqual(khongMa, { ok: false, loi: "Chưa lên Đang bán được: thiếu mã căn" });
+  // Bảng hàng không có số ảnh (Hỏi-2) → không báo ảnh, lệnh dựng được, máy chủ xét.
+  assert.equal(dungLenhTrangThai(du, "Active").ok, true);
+  assert.equal(nhanThieu("realPhoto"), "ảnh thật");
+  assert.equal(nhanThieu("unitNumber"), "mã căn");
+  assert.equal(nhanThieu("dieu-la"), "dieu-la", "điều lạ giữ nguyên tên");
+  // Lỗi máy chủ trả về (trình sửa ô và bộ đồng bộ) đi qua bảng nhãn, không in tên khoá thô.
+  const tren = readFileSync(fileURLToPath(new URL("./tren-o.tsx", import.meta.url)), "utf8");
+  assert.match(tren, /l\.missing\.map\(nhanThieu\)/, "tren-o.tsx in tên khoá thô");
+  const gui = readFileSync(fileURLToPath(new URL("../../../../lib/sync/gui.ts", import.meta.url)), "utf8");
+  assert.match(gui, /b\.missing\.map\(nhanDieuKien\)/, "gui.ts in tên khoá thô");
+});
