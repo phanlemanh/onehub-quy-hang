@@ -58,16 +58,17 @@ const BANG = {
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`, `${W}/app/(app)/proto/o-nhan-lead/page.tsx`], ngoaiLe: [] },
   // Lead của tôi (hàng 27): ba trang ba lối của ADR-0019, nhóm màn mới.
-  "lead-cua-toi": { theoKhuon: ["reui", "trong-kho", "ve-moi"].map((p) => `${W}/app/(app)/proto/lead-bon-nac/${p}/page.tsx`), ngoaiLe: [] },
+  "lead-cua-toi": { theoKhuon: [`${W}/app/(app)/leads/mine/page.tsx`], ngoaiLe: [`${W}/app/(app)/today/page.tsx`] },
   "trang-tam": {
-    theoKhuon: [...TRANG_TAM, `${W}/app/settings/[section]/page.tsx`],
+    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/")), `${W}/app/settings/[section]/page.tsx`],
     ngoaiLe: [
       `${W}/app/(app)/inventory/page.tsx`,
       `${W}/app/(app)/inventory/views/[id]/page.tsx`,
+      `${W}/app/(app)/leads/mine/page.tsx`,
       `${W}/app/(app)/leads/new/page.tsx`,
-      ...["reui", "trong-kho", "ve-moi"].map((p) => `${W}/app/(app)/proto/lead-bon-nac/${p}/page.tsx`),
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
+      `${W}/app/(app)/today/page.tsx`,
     ],
   },
   // Hàng 14: Bảng hàng rời trang tạm, nhóm màn mới (luật đợt 18).
@@ -76,6 +77,8 @@ const BANG = {
 const NHAN_DIEN_TRANG_THAI = [
   ...TRANG_TAM.slice(0, 3),
   `${W}/app/(app)/layout.tsx`,
+  // Lead của tôi (hàng 27): màn, khuôn, vùng và nguồn thật.
+  ...["khung.tsx", "lead-da-nhap.tsx", "nguon-that.tsx", "page.tsx"].map((p) => `${W}/app/(app)/leads/mine/${p}`),
   // Ô nhận lead (hàng 24) — nhóm o-nhan-lead, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["khung.tsx", "nguon-that.tsx", "o-lead.tsx", "page.tsx"].map((p) => `${W}/app/(app)/leads/new/${p}`),
   ...TRANG_TAM.slice(3),
@@ -86,10 +89,6 @@ const NHAN_DIEN_TRANG_THAI = [
   // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["page.tsx", "trang-thu.tsx"].map((p) => `${W}/app/(app)/proto/nhanh-tuc-thi/${p}`),
   ...["page.tsx", "trang-mau.tsx"].map((p) => `${W}/app/(app)/proto/o-nhan-lead/${p}`),
-  // Lead của tôi (hàng 27): trang ba lối, khuôn tạm và vùng chung.
-  ...["_chung/khung.tsx", "_chung/vung-chung.tsx", "reui/lead-da-nhap.tsx", "reui/page.tsx", "trong-kho/lead-da-nhap.tsx", "trong-kho/page.tsx", "ve-moi/lead-da-nhap.tsx", "ve-moi/page.tsx"].map(
-    (p) => `${W}/app/(app)/proto/lead-bon-nac/${p}`,
-  ),
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -104,10 +103,10 @@ const CHO_TRANG_THAI = [
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
   `${W}/app/(app)/inventory/khung.tsx`,
+  // Lead của tôi (hàng 27): lỗi và trống của vùng Lead đã nhập.
+  ...Array(2).fill(`${W}/app/(app)/leads/mine/lead-da-nhap.tsx`),
   ...Array(5).fill(`${W}/app/(app)/leads/new/o-lead.tsx`),
   `${W}/app/(app)/leads/new/page.tsx`,
-  // Lead của tôi (hàng 27): trống và lỗi của vùng chung ba lối.
-  ...Array(2).fill(`${W}/app/(app)/proto/lead-bon-nac/_chung/vung-chung.tsx`),
   `${W}/app/settings/users/page.tsx`,
   `${W}/app/settings/users/quan-nguoi.tsx`,
   `${W}/app/settings/users/quan-nguoi.tsx`,
@@ -283,9 +282,9 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
-      "lead-cua-toi: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 9 tệp theo khuôn · 8 ngoại lệ · 0 lệch",
+      "trang-tam: 8 tệp theo khuôn · 7 ngoại lệ · 0 lệch",
       "trang-thai: 18 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);

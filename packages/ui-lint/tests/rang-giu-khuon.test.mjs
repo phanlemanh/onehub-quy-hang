@@ -76,7 +76,7 @@ describe("E1 — tiêm khối cấm vào tệp màn của mỗi nhóm → đúng
   const CA = [
     ["settings/thu/page.tsx mới nhập Frame", `${W}/app/settings/thu/page.tsx`, NHAP("Frame", "@/components/reui/frame") + "export default function P() {\n  return null;\n}\n", "Frame", "cai-dat-san", "MucCaiDat"],
     ["trang đăng nhập nhập Card", `${W}/app/(auth)/login/page.tsx`, null, "Card", "xac-thuc", "Khung"],
-    ["trang tạm Hôm nay nhập Empty", `${W}/app/(app)/today/page.tsx`, null, "Empty", "trang-tam", "Placeholder"],
+    ["trang tạm Của tôi nhập Empty", `${W}/app/(app)/me/page.tsx`, null, "Empty", "trang-tam", "Placeholder"],
     ["quan-nguoi.tsx nhập Alert", `${W}/app/settings/users/quan-nguoi.tsx`, null, "Alert", "trang-thai", "TrangThai"],
   ];
   const TU = { Card: "@/components/ui/card", Empty: "@/components/ui/empty", Alert: "@/components/reui/alert" };
