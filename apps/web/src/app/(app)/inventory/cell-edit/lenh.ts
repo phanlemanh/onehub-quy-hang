@@ -2,9 +2,10 @@
  * Dựng lệnh từ trình sửa trên ô (hàng 15). Thuần — không React: trình sửa, hoàn tác và bài kiểm cùng đọc. Mỗi lệnh là một
  * sự kiện của lõi (luật 8); giá luôn đi cùng điều kiện phí (luật 7) vì mọi đường đều dựng `price_changed` đủ hai khoá.
  */
-import { missingFor, TRANSITIONS, type Requirement, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
+import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
 import { FEE_LABEL, STATUS_LABEL } from "../cot";
+import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { hoanTacDuoc } from "./hoan-tac";
 
 /** Phần của một dòng Bảng hàng mà trình sửa cần. */
@@ -92,14 +93,18 @@ export function nacTrangThai(tu: StandardStatus): readonly StandardStatus[] {
   return TRANSITIONS[tu];
 }
 
-const NHAN_THIEU: Record<Requirement, string> = {
-  listPrice: "giá",
-  feeInclusion: "điều kiện phí",
-  legalStatus: "pháp lý",
-  occupantType: "tình trạng sử dụng",
-  closePrice: "giá chốt",
-  withdrawnReason: "lý do ngừng",
-};
+const NHAN_THIEU = NHAN_DIEU_KIEN;
+
+export const nhanThieu = nhanDieuKien;
+
+/** Câu báo khi máy không áp được lần sửa (trình sửa ô) — điều thiếu đi qua bảng nhãn của lõi. */
+export function moTaLoi(l: LoiTrenMay): string {
+  if (l.kind === "missing-requirement") return `Thiếu ${l.missing.map(nhanThieu).join(", ")}`;
+  if (l.kind === "invalid-transition") return l.reason;
+  if (l.kind === "not-found") return "Không còn thấy hàng này";
+  if (l.kind === "kho") return "Máy chưa lưu được lần sửa — thử lại";
+  return "Lần sửa không hợp lệ";
+}
 
 export type ThemTrangThai = { giaChot?: string; ngayBan?: string; lyDo?: WithdrawnReason };
 

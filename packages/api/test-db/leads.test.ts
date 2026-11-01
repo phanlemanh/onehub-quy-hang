@@ -5,7 +5,7 @@ import { after, before, test } from "node:test";
 import { STATE_COLUMNS } from "../src/listings/store";
 import { createApi } from "../src/app";
 import { SAMPLE_PACK } from "../src/catalog/sample";
-import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "./helpers";
 import { normalizePhone } from "@quy-hang/core/access";
 import { KHOA_DEV } from "../src/owners/khoa";
 import { dauVetSo } from "../src/owners/ma-hoa";
@@ -86,6 +86,7 @@ async function napHang(h: HangMau) {
       const to = h.trangThai;
       v = await ghi(id, dc.cookie, v, "status_changed", to === "Withdrawn" ? { to, withdrawnReason: "owner_changed_mind" } : { to });
     } else {
+      await themAnhThat(id); // hàng 23: vào Đang bán cần ảnh thật
       v = await ghi(id, dc.cookie, v, "status_changed", { to: "Active" });
       if (h.trangThai === "Closed") await ghi(id, dc.cookie, v, "status_changed", { to: "Closed", closePrice: h.gia, closeDate: "2026-10-01" });
       if (h.trangThai === "Pending") await ghi(id, dc.cookie, v, "status_changed", { to: "Pending" });

@@ -28,6 +28,9 @@ sau đọc cùng một hàng, nên lõi này phải có trước màn.
    `Closed`, `Withdrawn` là nấc cuối. Vào `Closed` bắt buộc giá chốt (`ClosePrice`, `CloseDate`); vào `Withdrawn` bắt
    buộc một trong ba lý do; vào `Active` cần giá kèm điều kiện phí, pháp lý, tình trạng sử dụng (Hỏi-1 — điều «ảnh thật»
    thêm khi có kho ảnh; «giá về tay» thay cho «giá kèm điều kiện phí» khi có phần tính giá).
+   **Hàng 23 (01/11):** điều «ảnh thật» đã thêm — ít nhất `listing.ready_min_real_photos` ảnh (mặc định 1) ngăn Gửi
+   được, không ảnh mẫu, chưa xoá; máy chủ đếm khi đổi sang `Active`. Hàng chưa có mã căn thiếu «mã căn» (ảnh gắn căn theo
+   toà + mã). «Giá về tay» vẫn là giá kèm điều kiện phí tới hàng 28.
 5. **Độ tươi** = lần xác nhận gần nhất với chủ nhà; đổi giá, đổi trạng thái mặc định tính là xác nhận (luật 9), «Còn /
    giữ giá» luôn là xác nhận, lệnh tắt được cờ. Lõi không đọc đồng hồ; mốc «cần gọi lại» mặc định 14 ngày.
    **Mức đủ** = năm mục ngang nhau (Hỏi-4): giá kèm điều kiện phí, nội thất, pháp lý, tài chính, tình trạng sử dụng.

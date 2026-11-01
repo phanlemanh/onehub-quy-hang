@@ -144,6 +144,18 @@ async function taoHang(cookie, toa, ma) {
   };
 }
 
+// Hàng 23: vào Đang bán cần một ảnh thật của căn — tải một PNG 1×1 vào ngăn Gửi được bằng phiên trưởng nhóm (thêm ảnh
+// được ở mọi căn của sàn) trước lệnh lên Đang bán.
+const PNG_1X1 = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
+async function taiAnhThat(toa, ma) {
+  const f = new FormData();
+  for (const [k, v] of Object.entries({ toa, ma, compartment: "shareable", width: "1", height: "1" })) f.set(k, v);
+  f.set("original", new File([PNG_1X1], "mau.png", { type: "image/png" }));
+  f.set("thumb", new File([PNG_1X1], "mau-nhe.png", { type: "image/png" }));
+  const r = await fetch(`${URL_GOC}/api/v1/units/photos`, { method: "POST", headers: { origin: URL_GOC, cookie: ck["truong-nhom"] }, body: f });
+  if (r.status !== 201) throw new Error(`tải ảnh thật ${toa} ${ma} → ${r.status} ${await r.text()}`);
+}
+
 async function napMot(cookie, h, i) {
   const { su } = await taoHang(cookie, toaCua.get(h.maCan), h.maCan);
   const s = (t, p) => su(cookie, t, p);
@@ -152,6 +164,7 @@ async function napMot(cookie, h, i) {
   const lenBan = ["Active", "Pending", "Closed"].includes(h.trangThai) || (h.trangThai === "Hold" && i % 2 === 0);
   if (lenBan) {
     await s("details_changed", { legalStatus: "[Mẫu] Sổ hồng", occupantType: i % 3 ? "[Mẫu] Để trống" : "[Mẫu] Chủ đang ở" });
+    await taiAnhThat(toaCua.get(h.maCan), h.maCan);
     await s("status_changed", { to: "Active" });
   }
   if (h.trangThai === "Pending") await s("status_changed", { to: "Pending" });
@@ -182,6 +195,7 @@ if (!co("Toà A", A.unitNumber)) {
   const cu = await taoHang(d1, "Toà A", A.unitNumber);
   await cu.su(d1, "price_changed", { listPrice: 3_100_000_000, feeInclusion: "included" });
   await cu.su(d1, "details_changed", { legalStatus: "[Mẫu] Sổ hồng", occupantType: "[Mẫu] Để trống" });
+  await taiAnhThat("Toà A", A.unitNumber); // ảnh của căn — dùng chung cho hai lần rao
   await cu.su(d1, "status_changed", { to: "Active" });
   await cu.su(d1, "status_changed", { to: "Withdrawn", withdrawnReason: "owner_changed_mind" });
   const mo = await taoHang(d1, "Toà A", A.unitNumber);

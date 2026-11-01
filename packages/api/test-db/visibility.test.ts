@@ -6,7 +6,7 @@ import { after, before, test } from "node:test";
 import { visibilityOf, factsFromEvents } from "@quy-hang/core/visibility";
 import type { ListingEvent } from "@quy-hang/core/listing";
 import { createApi } from "../src/app";
-import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "./helpers";
 
 after(cleanup);
 
@@ -76,6 +76,7 @@ async function buoc(n: Nguoi, h: View, type: string, payload: object): Promise<V
   return (await r.json()) as View;
 }
 async function lenDangBan(n: Nguoi, h: View): Promise<View> {
+  await themAnhThat(h.id); // hàng 23: vào Đang bán cần ảnh thật
   h = await buoc(n, h, "price_changed", GIA);
   h = await buoc(n, h, "details_changed", DU);
   return buoc(n, h, "status_changed", { to: "Active" });
@@ -177,6 +178,7 @@ test("nấc của danh sách khớp nấc gấp từ sự kiện", async () => {
         h = await buoc(X, h, "price_changed", GIA);
         h = await buoc(X, h, "details_changed", DU);
         h = await buoc(X, h, "status_changed", { to: "Hold" });
+        await themAnhThat(h.id);
         return buoc(X, h, "status_changed", { to: "Active" });
       },
       "Company",

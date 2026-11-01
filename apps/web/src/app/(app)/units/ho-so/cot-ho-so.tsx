@@ -25,6 +25,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../../inventory/danh-muc";
 import { MucAnhCan } from "../photos/muc-anh-can";
+import { hienNutSanSang, type Dich } from "../ready/san-sang";
+import { NEO_MUC_ANH, NutSanSang } from "../ready/nut-san-sang";
 import { NutBaoSai } from "./nut-bao-sai";
 import {
   cacLanRao,
@@ -65,9 +67,9 @@ function CapGiaTri({ ds }: { ds: [string, string][] }) {
   );
 }
 
-function Muc({ tieuDe, phai, children }: { tieuDe: string; phai?: React.ReactNode; children: React.ReactNode }) {
+function Muc({ tieuDe, phai, id, children }: { tieuDe: string; phai?: React.ReactNode; id?: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 p-4" aria-label={tieuDe}>
+    <section className="flex flex-col gap-3 p-4" aria-label={tieuDe} id={id}>
       <div className="flex min-h-8 items-center justify-between gap-2">
         <h3 className={TIEU_MUC}>{tieuDe}</h3>
         {phai}
@@ -102,6 +104,11 @@ const doiUrl = (href: string) => (e: MouseEvent) => {
   window.history.replaceState(null, "", href);
 };
 
+/** Ô của mục «Lần rao đang mở» mang «Chưa có» khi lần bấm «Sẵn sàng bán» gần nhất báo thiếu đúng điều ấy. */
+function danhDauChuaCo(nhan: string, dich: readonly Dich[]): boolean {
+  return (nhan === NHAN_PHAN.legalStatus && dich.includes("legalStatus")) || (nhan === NHAN_PHAN.occupantType && dich.includes("occupantType"));
+}
+
 export type HoSoProps = {
   nguoi: string;
   san: string;
@@ -127,6 +134,8 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   // Kéo lịch sử mọi lần rao của căn ở nền (thường một, hai lần): lần rao xếp theo lúc tạo, lịch sử của lần đang xem.
   // Lần rao đã có lượt kéo xong (thành hay không): chưa có thì phần lịch sử đang tải.
   const [daKeo, setDaKeo] = useState<Record<string, true>>({});
+  // Điều còn thiếu sau lần bấm «Sẵn sàng bán» gần nhất (hàng 23) — đánh dấu «Chưa có» đúng ô.
+  const [dichThieu, setDichThieu] = useState<Dich[]>([]);
   useEffect(() => {
     let huy = false;
     for (const id of ids ? ids.split(",") : []) {
@@ -227,7 +236,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
       <Separator />
       <div className="flex flex-col gap-2 p-4" aria-label="Giá và mức đủ">
         <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-semibold">{p.gia}</span>
+          <span className="text-2xl font-semibold">{dichThieu.includes("gia") ? "Chưa có giá về tay" : p.gia}</span>
           {p.phi ? <Badge variant="outline">{p.phi}</Badge> : null}
         </div>
         <Progress value={(p.mucDu.co / p.mucDu.tren) * 100} aria-label="Mức đủ thông tin" />
@@ -242,7 +251,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
         </div>
       </div>
       <Separator />
-      <Muc tieuDe="Ảnh">
+      <Muc tieuDe="Ảnh" id={NEO_MUC_ANH}>
         <MucAnhCan toa={tim.toa} ma={chon.ma} />
       </Muc>
       <Separator />
@@ -251,7 +260,9 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
       </Muc>
       <Separator />
       <Muc tieuDe={dangXem.dangMo ? "Lần rao đang mở" : "Lần rao đang xem"}>
-        <CapGiaTri ds={p.truong} />
+        {/* Mọi hàng thấy trên máy là hàng người xem sửa được (hàng 8, 12); máy chủ vẫn xét quyền. */}
+        {dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang hang={can} toa={tim.toa} ma={chon.ma} onThieu={setDichThieu} /> : null}
+        <CapGiaTri ds={p.truong.map(([k, v]): [string, string] => (danhDauChuaCo(k, dichThieu) ? [k, "Chưa có · điền ở Bảng hàng"] : [k, v]))} />
       </Muc>
       <Separator />
       <Muc tieuDe="Các lần rao">
