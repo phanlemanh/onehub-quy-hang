@@ -1,0 +1,1 @@
+Khong doc duoc network: trang chay trong browser context rieng tao bang run_code (khong qua duong read_network_requests cua tab mac dinh). Cac fetch /api/v1/listings tra 200 (ket qua doc duoc trong script). networkObserved=n-a (driver).

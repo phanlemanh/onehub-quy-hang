@@ -1,0 +1,1 @@
+Driver: CDP tu viet (Chrome headless rieng) - khong doc duoc network; networkObserved=n-a (driver). Trinh duyet Playwright dung chung voi cac phien cham khac nen khong dung.
