@@ -33,6 +33,10 @@ bí mật chỉ ở Vercel và secret GitHub, không ở kho.
    của mọi nhánh trên cơ sở dữ liệu thật, thiếu khoá thì API của nó không dựng. Chủ kho sinh khoá ở máy mình và cất **một
    bản** trong trình quản lý mật khẩu của chủ kho — không ở kho, không ở tin nhắn, không ở máy tác tử. Khoá Sensitive của
    Vercel không đọc lại được, nên bản ngoài Vercel là bản duy nhất dùng được cho lệnh mã hoá lại.
+   **Bản thứ ba (hàng 87, 01/11).** Nút «Nạp dữ liệu mẫu» (`.github/workflows/nap-mau.yml`) mã hoá số chủ mẫu ngay trên
+   máy chạy job, nên khoá có thêm một bản ở secret `OWNER_PHONE_KEY` của environment `production` trên GitHub — chủ kho
+   chép từ trình quản lý mật khẩu, giới hạn environment chỉ nhánh `main`, chỉ job nạp mẫu đọc nó. Xoay khoá phải đổi cả
+   ba nơi: Vercel Production, trình quản lý mật khẩu, secret GitHub.
 6. **Số chủ của lead (hàng 24 gộp trước, migration 009).** `leads.owner_phone_enc` + `owner_phone_hash`, ngữ cảnh
    `leads:<company_id>:<lead_id>`; `leads_phone_chi_ban_ma` (NOT VALID) chặn số rõ mới, `leads_phone_co_so` bắt lead phải
    có số. `app.lead_dedupe_facts` nhận dấu vết (`bytea`) và so `owner_phone_hash` của chủ nhà và của lead trước — không
