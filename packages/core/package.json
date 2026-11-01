@@ -9,7 +9,8 @@
     "./access": "./src/access/index.ts",
     "./visibility": "./src/visibility/index.ts",
     "./dedupe": "./src/dedupe/index.ts",
-    "./pricing": "./src/pricing/index.ts"
+    "./pricing": "./src/pricing/index.ts",
+    "./routing": "./src/routing/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",

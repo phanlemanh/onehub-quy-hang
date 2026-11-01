@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import { ESLint } from "eslint";
 import tseslint from "typescript-eslint";
 import plugin from "../index.mjs";
+import { tepVetKhoi } from "../kiem-chuan.mjs";
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(PKG, "..", "..");
@@ -21,7 +22,7 @@ const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui"
 
 function banSao({ kiemChuan = false } = {}) {
   const d = mkdtempSync(join(tmpdir(), "rang-khuon-"));
-  for (const t of ["design/patterns", W, ...(kiemChuan ? TEP_KIEM_CHUAN : [])]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
+  for (const t of ["design/patterns", W, ...(kiemChuan ? [...TEP_KIEM_CHUAN, ...tepVetKhoi(ROOT)] : [])]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
   if (kiemChuan)
     for (const s of ["quy-hang-ui", "reui"]) {
       mkdirSync(join(d, ".claude/skills"), { recursive: true });

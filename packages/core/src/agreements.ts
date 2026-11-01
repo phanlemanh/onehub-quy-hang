@@ -41,6 +41,10 @@ export interface FlowContext {
   aggregated?: boolean;
   /** Công ty đã bật riêng trường này cho ra ngoài (cho lớp `custom_field`). */
   fieldSharedByCompany?: boolean;
+  /** Loại kết nối bên gọi mong đợi; có mặt thì thoả thuận phải đúng loại này. */
+  kind?: ConnectionKind;
+  /** Chiều bên gọi mong đợi; có mặt thì thoả thuận phải đúng chiều này. */
+  direction?: Direction;
 }
 
 /**
@@ -66,6 +70,13 @@ export function agreementErrors(agreement: Agreement): string[] {
 export function mayFlow(agreement: Agreement, dataClass: DataClass, ctx: FlowContext): FlowDecision {
   // Trần đứng trước mọi thứ: thoả thuận sai cấu trúc cũng không mở được lớp «nguồn».
   if (dataClass === "source") return { ok: false, reason: "Lớp «Nguồn» không bao giờ rời công ty." };
+  // Bên gọi nêu loại và chiều mong đợi: thoả thuận của loại khác không mở được luồng này.
+  if (ctx.kind !== undefined && ctx.kind !== agreement.kind) {
+    return { ok: false, reason: "Thoả thuận không đúng loại kết nối." };
+  }
+  if (ctx.direction !== undefined && ctx.direction !== agreement.direction) {
+    return { ok: false, reason: "Thoả thuận không đúng chiều." };
+  }
   if (agreement.status !== "active") return { ok: false, reason: `Thoả thuận đang ${agreement.status}.` };
   if (ctx.at < agreement.validFrom) return { ok: false, reason: "Thoả thuận chưa đến ngày hiệu lực." };
   if (agreement.validUntil && ctx.at >= agreement.validUntil) return { ok: false, reason: "Thoả thuận đã hết hiệu lực." };

@@ -30,8 +30,24 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     leadRoleRequired: ["lead-role-required", 403],
     notDuplicateUnit: ["not-duplicate-unit", 400],
     alreadyDiscarded: ["already-discarded", 409],
+    // Nhận danh mục Invest (ADR-0015).
+    agreementInactive: ["agreement-inactive", 403],
+    invalidFeed: ["invalid-feed", 422],
+    // Hàng 25 (ADR-0017).
+    invalidSettings: ["invalid-settings", 400],
+    alreadyAccepted: ["already-accepted", 409],
+    alreadyCalled: ["already-called", 409],
+    alreadyClaimed: ["already-claimed", 409],
+    onLeave: ["on-leave", 403],
+    teamLeadRequired: ["team-lead-required", 403],
+    alertReaderRequired: ["alert-reader-required", 403],
+    leaveForbidden: ["leave-forbidden", 403],
+    notAListingAgent: ["not-a-listing-agent", 400],
+    leadNotAssignable: ["lead-not-assignable", 400],
+    badJobSecret: ["bad-job-secret", 401],
+    jobSecretMissing: ["job-secret-missing", 503],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 22);
+  assert.equal(Object.keys(API_ERRORS).length, 36);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);
