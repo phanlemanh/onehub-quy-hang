@@ -5,7 +5,7 @@ slug: sua-hang-loat
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: _acceptance/sua-hang-loat/design.md
@@ -87,3 +87,9 @@ Quét không gian AC theo trục (preset entity-feature + test-matrix, rút gọ
 - Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Một bài kiểm tự động nói là bảo vệ việc «căn đã đóng không bị gọi nhầm» thực ra không bắt được lỗi nếu bộ xét sai. Người dùng không thấy gì ngay, nhưng lỗi về sau có thể lọt qua. — `apps/web/src/app/(app)/inventory/bulk/lo.test.ts`
 - Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm xác nhận chỉ ba cột sửa được trên bảng chỉ đọc chữ trong mã nên có thể xanh dù bảng thật mở nhầm cột, hoặc đỏ dù bảng đúng. Người dùng chưa gặp lỗi nào. — `apps/web/src/app/(app)/inventory/cell-edit/cot-sua.test.ts`
 - Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm câu cảnh báo «Không hoàn tác được» chỉ phủ một phần các chuyển trạng thái, nên một lệch ở chuyển còn lại có thể không bị bắt. Hiện chưa thấy người dùng gặp lỗi. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Sửa nhiều căn một lần thì máy chủ nhận ngay căn đầu, các căn còn lại lên sau khoảng 15 giây.
+  - Ngoài-2: Lõi thêm mục bắt buộc mới thì hộp hỏi của sửa hàng loạt có thể ghi «thiếu undefined».
+  - Ngoài-4: Đối chứng đỏ của bài «căn đã đóng không bị đánh dấu đã gọi» còn yếu.
+  - Ngoài-5: Bài kiểm «chỉ ba cột sửa được» đọc chữ trong mã thay vì cấu hình bảng thật.
+  - Ngoài-6: Bài kiểm cảnh báo «Không hoàn tác được» chỉ phủ 4 trên 12 chuyển trạng thái.
