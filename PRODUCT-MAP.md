@@ -11,7 +11,7 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>7 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>35 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
@@ -32,6 +32,10 @@ flowchart TD
 - Mỗi người làm việc với sàn là một liên hệ (RESO Contacts): một người, nhiều số (bản mã + dấu vết), một hay nhiều loại liên hệ — Chủ bán, Chủ cho thuê, Người mua, Người thuê… (ContactType) — và một người giữ; lead và hàng gắn vào liên hệ chủ nhà: kiểm trùng tìm theo liên hệ, «Lên bảng» là dữ kiện (hàng tạo từ lead mang mã lead), «Sửa số» thêm số vào cùng người; liên hệ có chỗ cho trường riêng theo loại liên hệ của sàn (định nghĩa ở hàng 47); số và mọi thứ của chủ nhà vẫn lớp nguồn, telesales tạo được nhưng không đọc lại số; Tham chiếu thêm mục «Tri thức ngành và RESO» (`lien-he`)
 - Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ thiếu (`san-sang-ban`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
+
+## Đang làm
+
+- Đầu chủ tải ảnh điện thoại tới 10 MB lên hồ sơ căn trên bản thật mà không bị chặn ở giới hạn máy chủ, mở lại hồ sơ không thấy ảnh vỡ, và thấy lời báo khi sửa hay xoá ảnh không thành (`va-anh-ban-that`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
