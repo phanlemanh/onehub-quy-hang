@@ -5,7 +5,7 @@ slug: chuyen-khong-ket-khoa
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [db]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-01-chuyen-khong-ket-khoa-design.md
 approved_by:
 approved_at:
@@ -44,3 +44,9 @@ Bỏ quét coverage — một lỗi đã gọi tên, một thế kẹt (dòng `d
 - Ca của AC-1 dựng lại thế kẹt bằng khoá tường minh (như hai bài gỡ ràng buộc khoá chủ nhà rồi lead), không chạy cùng hai
   bài thật; bài gỡ ràng buộc nào sau này khoá theo thứ tự khác thì ca này không thấy.
 - Việc giám sát giao: mở PR nhỏ «fix(lien-he): bài chuyển dữ liệu cũ không kẹt khoá», gộp qua `gop`, báo giám sát khi gộp.
+- Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm có thể đôi khi xanh dù lỗi kẹt khoá quay lại, nên lưới bảo vệ yếu hơn hồ sơ nói. Người dùng cuối không bị ảnh hưởng. — `packages/api/test-db/lien-he-chuyen.test.ts`
+- Ngoài-2 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi bài kiểm này tự đỏ, nó có thể làm các bài kiểm khác treo, che mất lỗi gốc. Người dùng cuối không bị ảnh hưởng. — `packages/api/test-db/lien-he-chuyen.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Hiếm khi, một bài kiểm của hồ sơ khác có thể đỏ oan vì va chạm khoá khi chạy song song. Người dùng cuối không bị ảnh hưởng. — `packages/api/test-db/lien-he-chuyen.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm có thể xanh oan mà chưa thật sự dựng được tình huống kẹt khoá. Người dùng cuối không bị ảnh hưởng. — `packages/api/test-db/lien-he-chuyen.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi bài kiểm này đỏ, các bài kiểm khác có thể treo và lỗi gốc bị che. Người dùng cuối không bị ảnh hưởng. — `packages/api/test-db/lien-he-chuyen.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm có thể báo xanh dù chưa chứng minh được tình huống kẹt khoá đã xảy ra. Người dùng cuối không bị ảnh hưởng. — `packages/api/test-db/lien-he-chuyen.test.ts`
