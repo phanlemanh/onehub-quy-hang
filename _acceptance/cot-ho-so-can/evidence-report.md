@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c3c7d88cca32557036250c1747e056768d288722
+verified_commit: 7eaea147e22d7705549d910420a83177e4bc83a0
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -200,3 +200,7 @@ Round 2: mọi eval xanh (E1-E7, E8, E8b, E9, E9b, E10) và các lệnh suite xa
 ### Re-pin lần 1 — 2026-11-01, do hoá cũ do gộp main và chính commit chữ ký
 run_id: repin-20261101T074712Z-61496
 sha: c3c7d88cca32557036250c1747e056768d288722 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E9, E9b · diff chạm vật đo ngoài làn máy: E9 — chưa chứng lại, đi vòng S4 delta
+
+### Re-pin lần 2 — 2026-11-01, do san-sang-ban (hàng 23) chạm đường của hồ sơ: nút Sẵn sàng bán ở hồ sơ căn, bước tải ảnh thật trong dung-h
+run_id: repin-20261101T163718Z-11972
+sha: 7eaea147e22d7705549d910420a83177e4bc83a0 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E9, E9b · diff chạm vật đo ngoài làn máy: E9, E9b — chưa chứng lại, đi vòng S4 delta
