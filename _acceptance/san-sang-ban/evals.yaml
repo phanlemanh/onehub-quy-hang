@@ -1,0 +1,107 @@
+schema_version: 1
+feature_slug: san-sang-ban
+# Ca thuần lõi: packages/core/src/listing/status.test.ts. Ca trên Postgres: packages/api/test-db/san-sang-ban.test.ts
+# (npm run db:test). Ca web thuần: apps/web/src/app/(app)/units/ready/*.test.ts và inventory/cell-edit/lenh.test.ts.
+# Ca web trên Postgres dãy (bộ đồng bộ nói với API thật): apps/web/src/lib/sync/test-db/san-sang-ban.db-test.mts.
+# Bài trên màn: «DỰNG H» như hàng 18 — node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; trình duyệt chrome-devtools.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «điều ảnh thật vào Đang bán» có mặt và ok — bảng viết trước: missingFor('Active') đủ bốn điều cũ với (realPhotoCount, minRealPhotos) = (0, vắng) → ['realPhoto']; (1, vắng) → []; (1, 2) → ['realPhoto']; (2, 2) → []; (5, 3) → []; thiếu cả năm (listPrice null, feeInclusion null, legalStatus null, occupantType null, realPhotoCount 0) → đúng năm điều theo thứ tự cố định; vào Pending, Hold, Withdrawn (có lý do), Closed (có giá chốt) với realPhotoCount 0 → không có realPhoto; checkTransition Incomplete→Active với realPhotoCount 0 → { ok:false, kind:'missing-requirement', missing:['realPhoto'] }. Đọc cấu hình: dòng { key:'listing.ready_min_real_photos', value } với value 3 → 3; 0, 21, 2.5, '2', null → mặc định 1 kèm lỗi nêu đúng khoá; vắng dòng → 1. Chiều đỏ: bỏ điều ảnh khỏi missingFor thì ca (0, vắng) đỏ, thông điệp nêu số đếm."
+    paths: ["packages/core/src/listing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «máy chủ đòi ảnh thật» có mặt và ok — trên Postgres thật, hàng đủ giá, điều kiện phí, pháp lý, tình trạng sử dụng; ma trận viết trước bốn ca không có ảnh thật [không ảnh, chỉ ảnh mẫu ngăn Gửi được, chỉ ảnh ngăn Nội bộ, ảnh Gửi được đã xoá khỏi căn] → mỗi ca 400 đúng { error: 'missing-requirement', missing: ['realPhoto'] }, số dòng listing_events của hàng không đổi, trạng thái vẫn Incomplete; đối chứng dương: thêm một ảnh thật ngăn Gửi được qua API ảnh → lệnh 200, trạng thái gấp ra Active, đúng một sự kiện status_changed → Active. Cấu hình: sàn A đặt listing.ready_min_real_photos = 2 (ghi company_settings bằng quản trị sàn) → hàng có một ảnh thật bị 400 ['realPhoto'], thêm ảnh thứ hai → 200; sàn B không đặt khoá, một ảnh → 200. Chiều đỏ: API không đếm ảnh (ngữ cảnh thiếu realPhotoCount) thì ca không ảnh đỏ, thông điệp nêu mã trả về."
+    paths: ["packages/api/src/listings/**", "packages/core/src/listing/**", "packages/api/test-db/san-sang-ban.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lên Toàn sàn sau Sẵn sàng bán» có mặt và ok — hàng do đầu chủ A tạo: trước lệnh, đầu chủ B cùng sàn GET hàng → 404; sau lệnh ở E2 (có ảnh thật) → 200 và đúng mã hàng; đầu chủ sàn khác GET → 404 cả trước lẫn sau. Chiều đỏ: hàng không lên Toàn sàn thì ca B-sau đỏ, thông điệp nêu mã trả về."
+    paths: ["packages/api/src/listings/**", "packages/core/src/visibility/**", "packages/api/test-db/san-sang-ban.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «khi nào có nút» có mặt và ok — hàm hienNutSanSang(trangThai, suaDuoc) trên bảng toàn phần viết trước 6 trạng thái × 2 quyền = 12 ca: true đúng ở (Incomplete, sửa được) và (Hold, sửa được), false ở 10 ca còn lại; cot-ho-so.tsx gắn thành phần nút trong mục «Lần rao đang mở» (quét mã: thành phần nhập từ units/ready và đặt trong Muc có tiêu đề lần rao). Chiều đỏ: hiện nút ở Pending thì ca đỏ, thông điệp nêu trạng thái."
+    paths: ["apps/web/src/app/(app)/units/ready/**", "apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «chỉ đúng chỗ thiếu» có mặt và ok — kiemSanSang(hang, soAnhThat, toiThieu) trên ma trận viết trước: thiếu từng điều một (5 ca) và thiếu cả năm → danh sách đúng nhãn theo thứ tự [Giá về tay, Ảnh thật, Pháp lý, Tình trạng sử dụng] (giá và điều kiện phí gộp một dòng «Giá về tay»), mỗi dòng mang đích đúng: Ảnh thật → mục Ảnh, ba điều kia → ô tương ứng của mục «Lần rao đang mở»; mọi ca thiếu trả lenh null; danh sách lấy từ missingFor của lõi (lõi trả một điều không có nhãn → ném lỗi nêu điều ấy). Đối chứng: đủ → danh sách rỗng. Chiều đỏ: bỏ dòng ảnh thì ca thiếu ảnh đỏ, thông điệp nêu điều thiếu."
+    paths: ["apps/web/src/app/(app)/units/ready/**", "packages/core/src/listing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đếm ảnh thật như máy chủ» có mặt và ok — demAnhThat trên danh sách ảnh dạng phản hồi API ảnh (GET /api/v1/units/photos), ma trận viết trước giống E2: [không ảnh, chỉ ảnh mẫu Gửi được, chỉ ảnh Nội bộ, ảnh Gửi được đã xoá (API không trả)] → 0; một ảnh thật Gửi được → 1; hai ảnh thật + một ảnh mẫu + một ảnh Nội bộ → 2. Fixture dựng từ cùng kiểu UnitPhoto của lõi. Chiều đỏ: đếm cả ảnh mẫu thì ca chỉ-ảnh-mẫu đỏ, thông điệp nêu số đếm."
+    paths: ["apps/web/src/app/(app)/units/ready/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đủ thì gửi một lệnh» có mặt và ok — với hàng đủ và soAnhThat 1, kiemSanSang trả lenh bằng đúng (deepEqual) lenh mà dungLenhTrangThai(hang, 'Active') trả; thành phần nút với hàm gửi giả: bấm một lần → hàm gửi nhận đúng một lệnh status_changed { to: 'Active' }; bấm khi còn thiếu → 0 lần. Chiều đỏ: dựng lệnh riêng khác dungLenhTrangThai thì ca so lệnh đỏ, thông điệp nêu payload."
+    paths: ["apps/web/src/app/(app)/units/ready/**", "apps/web/src/app/(app)/inventory/cell-edit/lenh.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «nút tới API thật» có mặt và ok — bộ đồng bộ của web nói với API thật trên Postgres dãy: lệnh do kiemSanSang dựng cho hàng đủ điều và có một ảnh thật → đồng bộ 200, listing_events có đúng một status_changed → Active, hàng trên máy gấp ra Active; ca máy chủ từ chối: xoá ảnh thật qua API rồi đẩy lệnh đã dựng → hàng trên máy về Incomplete và danh sách Cần xem có đúng một mục cho hàng ấy với lý do chứa «ảnh thật». Chiều đỏ: Cần xem không mang lý do thì ca từ chối đỏ, thông điệp nêu lý do nhận được."
+    paths: ["apps/web/src/app/(app)/units/ready/**", "apps/web/src/lib/sync/**", "packages/api/src/listings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «nhãn thiếu đủ điều» có mặt và ok — dungLenhTrangThai sang Active với realPhotoCount 0 trong ngữ cảnh → lỗi đúng «Chưa lên Đang bán được: thiếu ảnh thật»; không có realPhotoCount (Bảng hàng, theo Hỏi-2) → không báo ảnh; bảng nhãn thiếu có khoá cho mọi phần tử của Requirement (kiểu TypeScript Record ép đủ — npm run typecheck là đối chứng); moTaLoi của lỗi máy chủ { missing: ['realPhoto'] } ra chữ có «ảnh thật». Chiều đỏ: thiếu nhãn realPhoto thì typecheck đỏ, thông điệp nêu khoá."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3482/units"
+    steps: "DỰNG H như hàng 18 (node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; chrome-devtools, không playwright MCP, không trình duyệt trong app). Đầu chủ mẫu 1, khổ 1440×900. Tạo qua API ba hàng mới của đầu chủ ở ba căn chưa có ảnh (lệnh tạo hàng, đổi giá kèm điều kiện phí; hàng X và Y thêm pháp lý và tình trạng sử dụng, hàng Z chỉ thêm tình trạng sử dụng — không đổi trạng thái); căn của Y thêm một ảnh đánh dấu «Ảnh mẫu». Hồ sơ căn X: (1) thấy nút «Sẵn sàng bán» ở mục «Lần rao đang mở» → chụp; (2) bấm → «Còn thiếu: Ảnh thật» và không có lệnh đổi trạng thái nào trong mạng → chụp; (3) thêm một ảnh vẽ bằng mã vào ngăn Gửi được, bấm lại → nhãn «Đang bán», nút biến mất → chụp. Hồ sơ căn Y: (4) bấm → «Còn thiếu: Ảnh thật» → chụp. Hồ sơ căn Z: (5) bấm → «Còn thiếu» có Pháp lý và Ảnh thật, ô Pháp lý của mục «Lần rao đang mở» ghi «Chưa có» kèm «điền ở Bảng hàng» → chụp; bấm dòng «Ảnh thật» → màn cuộn tới mục Ảnh → chụp. (6) Đầu chủ mẫu 2 mở Bảng hàng → thấy mã căn X → chụp. Tắt máy chủ dev khi xong (dung-h.mjs --tat)."
+    expected: "Bước 1 có nút; bước 2 danh sách thiếu đúng một dòng «Ảnh thật»; bước 3 Đang bán và hết nút; bước 4 ảnh mẫu không tính; bước 5 «Chưa có» đúng ô Pháp lý và liên kết tới mục Ảnh; bước 6 người khác thấy căn X."
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: judgment
+    question: "Sổ điểm biến thiên có điểm listing.ready_min_real_photos với kiểu int, mặc định 1, khoảng 1–20, Quản trị sàn, nguồn hàng 23, và điều khoá K7 có trỏ sang điểm ấy cho phần ảnh thay vì giữ ảnh là hằng không? Mục «Đếm» của sổ có khớp số dòng phần A và phần C sau khi thêm không? Đối chiếu ngành §7 có ghi luật ảnh tối thiểu khi lên Active của MLS (ít nhất hai MLS có tên) kèm đường dẫn nguồn không? ADR-0008 có ghi điều ảnh thật đã thêm (hàng 23) mà không mâu thuẫn với sổ không?"
+    inputs: [docs/architecture/so-diem-bien-thien.md, docs/product/doi-chieu-nganh.md, docs/adr/0008-loi-hang-va-su-kien.md, _acceptance/san-sang-ban/contract.md]
+    paths: [docs/architecture/so-diem-bien-thien.md, docs/product/doi-chieu-nganh.md, docs/adr/0008-loi-hang-va-su-kien.md]
+    evidence_required: [judged_by, verdict, rationale]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «ngoại tuyến không kiểm ảnh» có mặt và ok — thành phần nút với nguồn ảnh giả ném lỗi mạng (và ca onLine false): nút disabled, chữ đúng «Cần mạng để kiểm ảnh», bấm (gọi trình xử lý trực tiếp) → hàm gửi 0 lần và không hiện «Còn thiếu: Ảnh thật»; đối chứng: nguồn ảnh trả một ảnh thật → nút bật. Chiều đỏ: coi lỗi đọc ảnh là 0 ảnh thì ca ngoại tuyến hiện «Còn thiếu: Ảnh thật» và đỏ, thông điệp nêu chữ hiện ra."
+    paths: ["apps/web/src/app/(app)/units/ready/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]

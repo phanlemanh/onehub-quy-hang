@@ -1,0 +1,32 @@
+{
+  "feature_plain": "Đầu chủ bấm «Sẵn sàng bán» ở hồ sơ căn: đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng thì căn lên bảng hàng chung ngay; thiếu thì máy nói đúng điều thiếu và chỉ chỗ.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ coi ảnh thật là điều bắt buộc để vào Đang bán; số ảnh tối thiểu mặc định 1, sàn nâng được qua cấu hình, không bỏ được."},
+    {"id": "AC-2", "p": "Sẽ chặn ở máy chủ mọi lần lên Đang bán khi căn chưa đủ ảnh thật — ảnh mẫu, ảnh ngăn Nội bộ, ảnh đã xoá không tính."},
+    {"id": "AC-3", "p": "Sẽ để căn vừa lên Đang bán hiện cho cả sàn, sàn khác vẫn không thấy."},
+    {"id": "AC-4", "p": "Sẽ có nút «Sẵn sàng bán» ở hồ sơ căn khi lần rao chưa đủ để rao hay tạm ngừng và người xem sửa được hàng."},
+    {"id": "AC-5", "p": "Sẽ liệt đúng điều còn thiếu (Giá về tay, Ảnh thật, Pháp lý, Tình trạng sử dụng) và chỉ chỗ: ô «Chưa có», dòng Ảnh thật dẫn tới mục Ảnh."},
+    {"id": "AC-6", "p": "Sẽ gửi đúng một lệnh lên Đang bán khi đủ, qua cùng đường với sửa ô; máy chủ từ chối thì hàng về như cũ và vào Cần xem có lý do."},
+    {"id": "AC-7", "p": "Sẽ báo «thiếu ảnh thật» ở Bảng hàng khi máy chủ từ chối lên Đang bán vì ảnh."},
+    {"id": "AC-8", "p": "Sẽ chứng trên bản chạy thật: thiếu ảnh thì báo, thêm ảnh thì lên Đang bán, người khác thấy căn, ảnh mẫu không tính, «Chưa có» đúng ô."},
+    {"id": "AC-9", "p": "Sẽ ghi điểm cấu hình số ảnh tối thiểu vào Sổ điểm biến thiên và luật ảnh của các MLS vào Đối chiếu ngành, kèm nguồn."},
+    {"id": "AC-10", "p": "Sẽ làm nút mờ với chữ «Cần mạng để kiểm ảnh» khi ngoại tuyến, không gửi gì."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Chưa làm máy tính giá về tay — tạm hiểu giá về tay là giá kèm điều kiện phí, tới hàng 28."},
+    {"id": "OOS-2", "p": "Chưa có màn chỉnh số ảnh tối thiểu — hàng này chỉ đọc cấu hình, mặc định 1."},
+    {"id": "OOS-3", "p": "Sàn chưa bỏ hay thêm điều kiện nào khác ngoài số ảnh."},
+    {"id": "OOS-4", "p": "Chưa sửa giá, pháp lý, tình trạng sử dụng ngay ở hồ sơ căn — vẫn sửa ở Bảng hàng."},
+    {"id": "OOS-5", "p": "Chưa có nút «Sẵn sàng bán» ở Bảng hàng hay màn điện thoại riêng."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Không quét không gian: bốn điều kiện × các lối lên Đang bán, mọi lối đi qua một cửa máy chủ — đã liệt đủ trong mười tiêu chí."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Thiếu phép đo cách nút đếm ảnh thật — đã thêm bài đếm cùng định nghĩa với máy chủ và bước nhìn căn chỉ có ảnh mẫu."},
+    {"i": 1, "p": "Chưa đo khi máy chủ từ chối sau lúc nút gửi — đã thêm bài chạy qua máy chủ thật, cả ca được lẫn ca bị từ chối về Cần xem."},
+    {"i": 2, "p": "Bảng hàng có kiểm ảnh trước khi gửi không là lựa chọn của người — đưa thành Hỏi-2."},
+    {"i": 3, "p": "Bài nhìn chưa thấy «Chưa có» đúng ô và liên kết tới mục Ảnh — đã thêm bước."},
+    {"i": 4, "p": "Ngoại tuyến chưa có tiêu chí — đã thêm tiêu chí và bài đo."}
+  ]
+}
