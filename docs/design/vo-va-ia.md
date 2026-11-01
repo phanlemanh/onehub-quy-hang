@@ -88,6 +88,27 @@ chuyển hướng (không trả JSX) không phải màn. Đường đi của mà
 
 `doi-chieu.mjs --mau --slug <slug>` lập kế hoạch cho riêng màn mẫu của mọi nhóm — dùng khi cần chứng màn mẫu chạy được.
 
+**Ba lối — ô chưa có khuôn** (ADR-0019, hàng 84). Một vòng chạm **ô chưa có khuôn** khi, so nhánh chính: thêm nhóm mới ở
+`design/patterns/` (màn đầu của nhóm), đổi ô «Khối đích» của một màn ở bảng dưới, hay thêm một dòng «Chỗ hở» ở §3 (định
+dựng một ô bằng ghép hay tự viết). Khi đó bước phân kỳ của `design-pass` **phải mở** (`divergence: opened`) với ba lối tên
+cố định — **Trong kho** (khối đã chuyển thể hay khuôn gần nhất, tra ở `catalog.md` «Khối đã chuyển thể»), **ReUI** (một,
+hai khối tra bằng MCP `reui`; khối đích ở bảng dưới là khuyến nghị đầu vào cho lối này, không còn là lời chốt cuối) và
+**Vẽ mới** (ghép từ thành phần) — rồi gửi trang ba lối kèm thẻ Cổng Phạm vi trước khi ký; ký Cổng Phạm vi là duyệt lối
+được khuyên hay lối người chọn thay. Lối không có ứng viên ghi «không có» kèm điều đã tra, không bỏ cột. Trang dựng bằng
+lệnh — cách làm từng bước ở skill `quy-hang-ui` «Vòng giao diện qua bản đồ khuôn»:
+
+1. `node packages/ui-lint/doi-chieu.mjs --ba-loi --slug <slug>` — sáu ảnh phải chụp (`<lối>-<khổ>.png`, 1440 và 375) và
+   khung `_acceptance/<slug>/ba-loi/ba-loi.json`.
+2. Chụp ba lối cùng dữ liệu mẫu, điền khung (nhãn, câu động cơ, câu đánh đổi mỗi lối; lời khuyên và lý do).
+3. `node packages/ui-lint/doi-chieu.mjs --dung-ba-loi <slug>` — ghép `ba-loi/index.html`; thiếu chữ, thiếu ảnh hay ảnh sai
+   khổ thì đỏ và không ghi trang.
+4. Bước chấm: `node packages/ui-lint/doi-chieu.mjs --kiem-ba-loi --base <nhánh chính> --slug <slug>` — vòng có ô chưa có
+   khuôn mà `design-pass.md` vắng, ghi `skipped`, hay trang ba lối thiếu, sai hoặc sửa tay sau khi dựng thì đỏ.
+
+Màn đi khuôn sẵn của nhóm (chỉ điền khe) thì không cần trang và `divergence: skipped` vẫn hợp lệ. `npm run lint` giữ
+thêm: hồ sơ đã mở bước phân kỳ phải có `ba-loi/index.html`; trang dựng bằng lệnh phải qua bài kiểm (hồ sơ đã ký giữ
+nguyên trang).
+
 **Số đo** (hàng 60). Ở bước chấm, vòng chạm giao diện chạy
 `node packages/ui-lint/so-do-vong.mjs --slug <slug> --base <nhánh chính> --write` — ghi `_acceptance/<slug>/khuon-so-do.json`:
 số tệp theo khuôn, số lần răng khuôn bắt trên các commit của vòng (cận dưới: lần bắt trước khi commit không đếm), số
