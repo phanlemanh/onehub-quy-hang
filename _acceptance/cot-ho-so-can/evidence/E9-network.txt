@@ -1,0 +1,5 @@
+E9 network (chrome-devtools, app origin http://localhost:3482): 18 doc/xhr/fetch requests, all 200:
+/inventory?unit=..., /units/A-06.01, /units/KHONG-CO, /api/v1/catalog x7, /api/v1/listings x3, /api/v1/listings/<id> x3 (A lan 2, lan 1, Z).
+Console error/warn/issue: none (a11y "No label for form field" issue seen once earlier on bao-sai dialog).
+Share: navigator.share called with title+text (Toa, Khu, Thuoc tinh, Dang hien, Dung la); no NotAllowedError; clipboard.readText timed out (permission prompt, not readable).
+Offline: reload and in-app row click while offline -> Chrome ERR_INTERNET_DISCONNECTED error page (full navigation), no app UI.

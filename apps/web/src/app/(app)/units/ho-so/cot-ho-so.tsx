@@ -4,7 +4,7 @@
 // lần rao, dòng thời gian lịch sử. Đọc kho trên máy và danh mục đã giữ; lịch sử kéo ở nền và giữ trên máy (hàng 13).
 import { Maximize2, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
 
 import { Badge } from "@/components/reui/badge";
 import {
@@ -76,6 +76,31 @@ function Muc({ tieuDe, phai, children }: { tieuDe: string; phai?: React.ReactNod
   );
 }
 
+/** Trình duyệt báo ngoại tuyến — lượt kéo chưa chạy thì `lastAttempt` chưa biết mất mạng. */
+function useNgoaiTuyen() {
+  return useSyncExternalStore(
+    (f) => {
+      window.addEventListener("online", f);
+      window.addEventListener("offline", f);
+      return () => {
+        window.removeEventListener("online", f);
+        window.removeEventListener("offline", f);
+      };
+    },
+    () => !navigator.onLine,
+    () => false,
+  );
+}
+
+/**
+ * Đổi căn, lần rao, toà hay đóng cột chỉ đổi tham số URL — không điều hướng của Next (nó gọi máy chủ dựng lại trang, mất
+ * mạng thì ra trang lỗi của trình duyệt). `useSearchParams` theo kịp `history.replaceState`.
+ */
+const doiUrl = (href: string) => (e: MouseEvent) => {
+  e.preventDefault();
+  window.history.replaceState(null, "", href);
+};
+
 export type HoSoProps = {
   nguoi: string;
   san: string;
@@ -90,6 +115,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   const { bd } = useBoDongBo();
   const ds = useDanhSachHang();
   const ngan = bd.ngan();
+  const ngoaiTuyen = useNgoaiTuyen();
   const danhMuc = useDanhMuc(san);
   const tim = useMemo(() => timCan(ds, chon.ma, chon.toa), [ds, chon.ma, chon.toa]);
   const toa = tim.kind === "mot" ? tim.toa : null;
@@ -125,7 +151,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   }
 
   const nutDong = dongHref ? (
-    <Button variant="ghost" size="icon-sm" aria-label="Đóng hồ sơ" nativeButton={false} render={<Link href={dongHref} scroll={false} />}>
+    <Button variant="ghost" size="icon-sm" aria-label="Đóng hồ sơ" nativeButton={false} render={<a href={dongHref} onClick={doiUrl(dongHref)} />}>
       <X />
     </Button>
   ) : null;
@@ -150,7 +176,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
               Mã «{chon.ma}» có ở {tim.toa.length} toà — chọn toà:
               <span className="flex flex-wrap gap-2">
                 {tim.toa.map((t) => (
-                  <Button key={t} variant="outline" size="sm" nativeButton={false} render={<Link href={duong({ ma: chon.ma, toa: t, lan: null })} scroll={false} />}>
+                  <Button key={t} variant="outline" size="sm" nativeButton={false} render={<a href={duong({ ma: chon.ma, toa: t, lan: null })} onClick={doiUrl(duong({ ma: chon.ma, toa: t, lan: null }))} />}>
                     {t}
                   </Button>
                 ))}
@@ -166,7 +192,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   const tt = thuocTinh(danhMuc, tim.toa, chon.ma);
   const p = phanLanRao(can);
   const lichSu = ngan.history[can.id] ?? [];
-  const ttls = trangThaiLichSu({ coBan: lichSu.length > 0, dangTai: !daKeo[can.id], lan: ngan.lastAttempt });
+  const ttls = trangThaiLichSu({ coBan: lichSu.length > 0, dangTai: !daKeo[can.id], lan: ngan.lastAttempt, ngoaiTuyen });
   const dong = dongLichSu(lichSu, nguoi);
   const dangXem = lan.find((r) => r.id === can.id)!;
   const tuoi = can.freshness as { confirmed?: boolean; ageDays?: number } | undefined;
@@ -227,9 +253,9 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
         <ul className="flex flex-col gap-1 text-sm">
           {lan.map((r, i) => (
             <li key={r.id}>
-              <Link
+              <a
                 href={duong({ ma: chon.ma, toa: tim.toa, lan: r.id })}
-                scroll={false}
+                onClick={doiUrl(duong({ ma: chon.ma, toa: tim.toa, lan: r.id }))}
                 aria-current={r.id === can.id ? "true" : undefined}
                 className="flex items-center justify-between gap-2 rounded-md px-2 py-1 transition-colors hover:bg-accent aria-[current=true]:bg-accent"
               >
@@ -240,7 +266,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
                 <span className="text-muted-foreground">
                   {r.gia} · {r.tu ? ngay(r.tu) : "…"}
                 </span>
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
@@ -249,6 +275,13 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
       <Muc tieuDe="Lịch sử" phai={ttls.kind === "tren-may" ? <span className="text-xs text-muted-foreground">{ttls.chu}</span> : null}>
         {ttls.kind === "can-mang" ? (
           <p className="text-sm text-muted-foreground">{ttls.chu}</p>
+        ) : ttls.kind === "khong-tai-duoc" ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            {ttls.chu}
+            <Button variant="outline" size="sm" onClick={() => void bd.taiLichSu(can.id)}>
+              Thử lại
+            </Button>
+          </div>
         ) : ttls.kind === "dang-tai" ? (
           <div className="flex flex-col gap-2" aria-busy="true" aria-label="Đang tải lịch sử">
             <Skeleton className="h-5 w-full" />

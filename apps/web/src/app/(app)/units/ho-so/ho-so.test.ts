@@ -168,6 +168,10 @@ test("lịch sử khi mất mạng", () => {
     ["đã tải, mất mạng", { coBan: true, dangTai: false, lan: "mang" }, "tren-may", "đang xem bản trên máy"],
     ["chưa tải, mất mạng", { coBan: false, dangTai: false, lan: "mang" }, "can-mang", "Lịch sử cần mạng để tải lần đầu"],
     ["chưa tải, đang tải", { coBan: false, dangTai: true, lan: "ok" }, "dang-tai", null],
+    // Lượt 1 S4: kéo xong mà rỗng khi có mạng thì không quay chờ mãi; trình duyệt ngoại tuyến tính là mất mạng.
+    ["kéo xong vẫn rỗng, có mạng", { coBan: false, dangTai: false, lan: "ok" }, "khong-tai-duoc", "Không tải được lịch sử"],
+    ["đã tải, trình duyệt ngoại tuyến", { coBan: true, dangTai: false, lan: "ok", ngoaiTuyen: true }, "tren-may", "đang xem bản trên máy"],
+    ["chưa tải, trình duyệt ngoại tuyến, đang thử", { coBan: false, dangTai: true, lan: "ok", ngoaiTuyen: true }, "can-mang", "Lịch sử cần mạng để tải lần đầu"],
   ];
   for (const [ten, vao, kind, chu] of CA) {
     const r = trangThaiLichSu(vao);

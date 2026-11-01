@@ -7,6 +7,8 @@ feature_slug: cot-ho-so-can
 #     3482, nhật ký ở thư mục tạm của máy (lệnh in đường; ngoài cây kho để máy chủ dev không tự dựng lại). In mã căn thử
 #     (A), căn ngoài danh mục, cặp mã trùng hai toà, căn C chưa mở. Đăng nhập bằng email, đọc mã ở nhật ký: grep "[ma-dang-nhap] <email>" <nhật ký> | tail -1
 #   Tắt: node _acceptance/cot-ho-so-can/thu/dung-h.mjs --tat (chỉ kill PID nó đã ghi).
+# Trình duyệt chấm: KHÔNG dùng công cụ ghi tệp vào cây kho (playwright MCP ghi .playwright-mcp/ ở gốc kho — máy chủ dev
+#   thấy tệp đổi, dựng lại liên tục, trang tải lại không dứt; lượt 1 S4). Dùng chrome-devtools hoặc trình duyệt trong app.
 # Kiểm thuần nằm ở apps/web/src/app/(app)/units/ho-so/*.test.ts, chạy bằng config:executors.test.web.
 evals:
   - id: E1
@@ -45,7 +47,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «lịch sử khi mất mạng» có mặt và ok — ma trận viết trước 4 ca × (trạng thái phần lịch sử, chữ hiện) = 8 assert: có lịch sử đã tải + lần kéo cuối ok → «da-tai», không dòng phụ; có lịch sử đã tải + lastAttempt «mang» → «tren-may», chữ «đang xem bản trên máy»; chưa tải + «mang» → «can-mang», chữ «Lịch sử cần mạng để tải lần đầu»; chưa tải + đang tải → «dang-tai». Chiều đỏ: coi lịch sử rỗng là «không có sự kiện» thì ca chưa-tải đỏ, thông điệp nêu chữ mong đợi."
+    expected: "exit 0; ca «lịch sử khi mất mạng» có mặt và ok — ma trận viết trước 7 ca × (trạng thái phần lịch sử, chữ hiện) = 14 assert: có lịch sử đã tải + lần kéo cuối ok → «da-tai», không dòng phụ; có lịch sử đã tải + lastAttempt «mang» → «tren-may», chữ «đang xem bản trên máy»; chưa tải + «mang» → «can-mang», chữ «Lịch sử cần mạng để tải lần đầu»; chưa tải + đang tải → «dang-tai»; kéo xong vẫn rỗng khi có mạng → «khong-tai-duoc», chữ «Không tải được lịch sử»; trình duyệt báo ngoại tuyến tính như mất mạng (đã tải → «tren-may»; chưa tải dù đang thử → «can-mang»). Chiều đỏ: coi lịch sử rỗng là «không có sự kiện» thì ca chưa-tải đỏ, thông điệp nêu chữ mong đợi."
     paths: ["apps/web/src/app/(app)/units/ho-so/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -93,11 +95,11 @@ evals:
       - "Bấm «Chép và mở bảng chia sẻ» → ghi chữ báo hiện ra hoặc bảng chia sẻ mở, và mọi lỗi console (NotAllowedError…); đọc bộ nhớ tạm nếu được (navigator.clipboard.readText) và ghi nội dung"
       - "Đóng bảng soạn, bấm «Đóng» cột → ghi URL; tải lại http://localhost:3482/inventory?unit=<mã A>&toa=<toà A> → chụp evidence/E9-tai-lai.png"
       - "Bấm lần rao đã ngừng trong «Các lần rao» → ghi đầu phần lần rao, giá, số dòng lịch sử; bấm lại lần rao đang mở"
-      - "Giả lập mất mạng (chế độ offline của trình duyệt), tải lại /inventory?unit=<mã A>&toa=<toà A> → chụp evidence/E9-mat-mang.png; ghi chữ phần lịch sử và số dòng; mở căn C chưa từng mở (dung-h.mjs in) → ghi chữ phần lịch sử; bật mạng lại"
+      - "Trong trang đang mở cột A (lịch sử đã tải), giả lập mất mạng (chế độ offline của trình duyệt — KHÔNG tải lại trang: mở ứng dụng khi mất mạng hẳn ngoài phạm vi từ hàng 13) → bấm dòng căn C chưa từng mở (dung-h.mjs in) → chụp evidence/E9-mat-mang-c.png, ghi URL và chữ phần lịch sử; bấm lại dòng A → chụp evidence/E9-mat-mang.png, ghi chữ phần lịch sử và số dòng; bật mạng lại"
       - "Bấm dòng căn ngoài danh mục (dung-h.mjs in) → chụp evidence/E9-ngoai-danh-muc.png; ghi phần thuộc tính và có/không nút Báo sai"
       - "Khổ 375x812, mở http://localhost:3482/units/<mã A> → chụp evidence/E9-375.png; ghi có tràn ngang không (scrollWidth vs clientWidth) và ba phần có mặt"
       - "Mở /units/<mã trùng hai toà> nếu dung-h.mjs in cặp → chụp evidence/E9-nhieu-can.png; mở /units/KHONG-CO → ghi chữ"
-    expected: "Cột hồ sơ đứng bên phải bảng, URL có ?unit=<mã A>, dòng A đánh dấu; bảy thuộc tính đúng như dung-h.mjs in từ danh mục; lần rao đang mở có giá kèm phí và mức đủ n/5; «Các lần rao» hai dòng, mới nhất trên; lịch sử sáu dòng, mới nhất trên, có «Bạn» và «Trưởng nhóm», đổi giá dạng «a → b». Bấm căn khác thì đầu cột đổi, cột không đóng; bảng cuộn được. Nút chia sẻ tắt khi trống, bật khi có giá trị. Bấm chia sẻ: hiện «Đã chép» hoặc bảng chia sẻ mở, không lỗi NotAllowedError; bộ nhớ tạm (nếu đọc được) chứa mã căn, toà, thuộc tính, giá trị đúng. Đóng thì URL không còn unit/toa/lan; tải lại mở đúng A. Lần rao đã ngừng: đầu phần «Ngừng hẳn», giá 3,10 tỷ của nó. Mất mạng: lịch sử của A vẫn đủ dòng kèm «đang xem bản trên máy»; căn C ghi «Lịch sử cần mạng để tải lần đầu». Căn ngoài danh mục: «Chưa có trong danh mục», không nút Báo sai. 375: một cột, không tràn ngang, ba phần có mặt. Nhiều căn: «Nhiều căn» kèm tên hai toà. KHONG-CO: «Không có căn này trong Bảng hàng». Đối chứng: đầu cột trước và sau bấm căn khác khác nhau."
+    expected: "Cột hồ sơ đứng bên phải bảng, URL có ?unit=<mã A>, dòng A đánh dấu; bảy thuộc tính đúng như dung-h.mjs in từ danh mục; lần rao đang mở có giá kèm phí và mức đủ n/5; «Các lần rao» hai dòng, mới nhất trên; lịch sử sáu dòng, mới nhất trên, có «Bạn» và «Trưởng nhóm», đổi giá dạng «a → b». Bấm căn khác thì đầu cột đổi, cột không đóng; bảng cuộn được. Nút chia sẻ tắt khi trống, bật khi có giá trị. Bấm chia sẻ: hiện «Đã chép» hoặc bảng chia sẻ mở, không lỗi NotAllowedError; bộ nhớ tạm (nếu đọc được) chứa mã căn, toà, thuộc tính, giá trị đúng. Đóng thì URL không còn unit/toa/lan; tải lại mở đúng A. Lần rao đã ngừng: đầu phần «Ngừng hẳn», giá 3,10 tỷ của nó. Mất mạng: bấm căn khác không rời trang (không có trang lỗi của trình duyệt); căn C ghi «Lịch sử cần mạng để tải lần đầu»; lịch sử của A vẫn đủ dòng kèm «đang xem bản trên máy». Căn ngoài danh mục: «Chưa có trong danh mục», không nút Báo sai. 375: một cột, không tràn ngang, ba phần có mặt. Nhiều căn: «Nhiều căn» kèm tên hai toà. KHONG-CO: «Không có căn này trong Bảng hàng». Đối chứng: đầu cột trước và sau bấm căn khác khác nhau."
     paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 

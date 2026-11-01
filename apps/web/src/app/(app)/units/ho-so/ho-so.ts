@@ -122,7 +122,7 @@ export function chonLanRao(ds: readonly LanRao[], lan: string | null): string | 
   return (ds.find((r) => r.dangMo) ?? ds[0])?.id ?? null;
 }
 
-export const NHAN_PHAN: Record<string, string> = { furnished: "Nội thất", legalStatus: "Pháp lý", financing: "Tài chính", occupantType: "Tình trạng sử dụng" };
+export const NHAN_PHAN: Record<string, string> = { price: "Giá", furnished: "Nội thất", legalStatus: "Pháp lý", financing: "Tài chính", occupantType: "Tình trạng sử dụng" };
 
 /** Phần của lần rao đang xem và mức đủ tính bằng luật lõi trên bản trên máy. */
 export function phanLanRao(l: ListingView): { gia: string; phi: string | null; truong: [string, string][]; mucDu: { co: number; tren: number; thieu: string[] } } {
@@ -176,15 +176,17 @@ export function dongLichSu(events: readonly ListingEvent[], toi: string): DongLi
   return out.reverse();
 }
 
-export type TrangThaiLichSu = { kind: "da-tai" | "tren-may" | "can-mang" | "dang-tai"; chu: string | null };
+export type TrangThaiLichSu = { kind: "da-tai" | "tren-may" | "can-mang" | "dang-tai" | "khong-tai-duoc"; chu: string | null };
 
 /**
  * Phần lịch sử theo bản đã tải và mạng. Lần rao luôn có sự kiện tạo, nên lịch sử rỗng nghĩa là chưa tải — không phải
- * «không có sự kiện».
+ * «không có sự kiện». Mất mạng = lượt kéo cuối gặp mất mạng hoặc trình duyệt báo ngoại tuyến. Lượt kéo đã xong mà vẫn
+ * rỗng khi có mạng (máy chủ lỗi, hết phiên) thì nói không tải được — không quay chờ mãi.
  */
-export function trangThaiLichSu(o: { coBan: boolean; dangTai: boolean; lan: LanThu | null }): TrangThaiLichSu {
-  const mang = o.lan === "mang";
+export function trangThaiLichSu(o: { coBan: boolean; dangTai: boolean; lan: LanThu | null; ngoaiTuyen?: boolean }): TrangThaiLichSu {
+  const mang = o.lan === "mang" || o.ngoaiTuyen === true;
   if (o.coBan) return mang ? { kind: "tren-may", chu: "đang xem bản trên máy" } : { kind: "da-tai", chu: null };
-  if (mang && !o.dangTai) return { kind: "can-mang", chu: "Lịch sử cần mạng để tải lần đầu" };
-  return { kind: "dang-tai", chu: null };
+  if (mang) return { kind: "can-mang", chu: "Lịch sử cần mạng để tải lần đầu" };
+  if (o.dangTai) return { kind: "dang-tai", chu: null };
+  return { kind: "khong-tai-duoc", chu: "Không tải được lịch sử" };
 }

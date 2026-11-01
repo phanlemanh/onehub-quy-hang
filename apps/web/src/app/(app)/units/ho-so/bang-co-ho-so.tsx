@@ -2,7 +2,7 @@
 
 // Bảng hàng kèm hồ sơ căn đang mở (`/inventory?unit=<mã>&toa=<toà>&lan=<lần rao>`, Tham chiếu §routes): bấm dòng mở cột
 // phải, bảng vẫn dùng được. Nhóm panel luôn dựng để bảng không dựng lại (mất lọc, cuộn) khi cột mở hay đóng.
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -14,7 +14,6 @@ import { KhungHoSoCan } from "./khung";
 
 export function BangCoHoSo({ nguoi, san }: { nguoi: string; san: string }) {
   const q = useSearchParams();
-  const router = useRouter();
   const path = usePathname();
   const chon = docCot(new URLSearchParams(q));
   const qs = q.toString();
@@ -22,9 +21,10 @@ export function BangCoHoSo({ nguoi, san }: { nguoi: string; san: string }) {
   const moCan = useCallback(
     (d: DongBang) => {
       if (!d.unitNumber) return;
-      router.replace(`${path}?${moCot(new URLSearchParams(qs), { ma: d.unitNumber, toa: d.buildingName, lan: d.id })}`, { scroll: false });
+      // Chỉ đổi URL — không điều hướng của Next, mất mạng vẫn đổi được căn (lượt 1 S4).
+      window.history.replaceState(null, "", `${path}?${moCot(new URLSearchParams(qs), { ma: d.unitNumber, toa: d.buildingName, lan: d.id })}`);
     },
-    [router, path, qs],
+    [path, qs],
   );
   const duong = useCallback((c: ChonCan) => {
     const m = new URLSearchParams(dongCot(new URLSearchParams(qs)));

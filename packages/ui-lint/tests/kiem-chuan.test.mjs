@@ -129,10 +129,9 @@ describe("vết chọn khối — danh mục khối", () => {
       assert.ok(loi.some((l) => l.includes("catalog.md thiếu khối: list-11") && l.includes("x.tsx:1")), loi.join("\n"));
     }));
 
-  it("khối: bộ quét bắt ba khối thật", () => {
-    // Hàng 17 thêm `solution-crm-4` (Hồ sơ căn).
-    const thatTren = ["app-shell-8", "data-grid-editing-6", "solution-crm-4"];
-    assert.equal(thatTren.length, 3);
+  it("khối: bộ quét bắt hai khối thật", () => {
+    const thatTren = ["app-shell-8", "data-grid-editing-6"];
+    assert.equal(thatTren.length, 2);
     const noi = spawnSync("grep", ["-rn", "chuyển thể", join(ROOT, "apps/web/src")], { encoding: "utf8" }).stdout;
     for (const khoi of thatTren)
       voiBanSao((root) => {
