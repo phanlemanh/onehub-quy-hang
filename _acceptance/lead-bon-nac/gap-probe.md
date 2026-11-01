@@ -1,0 +1,16 @@
+---
+slug: lead-bon-nac
+at: 2026-11-01T01:15:21Z
+verdict: findings
+p0: 1
+p1: 4
+p2: 0
+---
+## Findings
+| Sev | Artifact | Thiếu gì | Kịch bản fail | Thước đo | Xử lý |
+| --- | --- | --- | --- | --- | --- |
+| P0 | design | Dòng sổ d-20261101T010336Z-5 (chỉ trả lại được lead chưa ghi gọi lần đầu) ghi «một lối», nhưng lối khác còn sống: mốc gọi lần đầu của hàng 25 chỉ ghi một lần gọi (hạn 30 phút, báo trưởng nhóm), không nói chủ nhà đã nghe máy | Đầu chủ gọi không ai nghe, ghi gọi để khỏi bị báo quá hạn, rồi bấm trả lại bị 409; lead kẹt ở «Đã gọi», telesales không bao giờ thấy «Sửa số và gửi lại» | Đổi thành câu hỏi người (kho_dao true) kèm khuyến nghị và lối khác; thiết kế §7, AC-4, E4 viết theo lời chốt | human-gate1: thành Hỏi-4 (d-20261101T011940Z-15, supersedes dòng 5; khuyến nghị trả lại được tới khi lead Lên bảng, kể cả đã gọi); AC-4, E4 (thêm dòng «đã gọi chưa lên bảng → 200», «đã lên bảng → 409», hai chiều đỏ), thiết kế §1, §2, §7 viết theo khuyến nghị |
+| P1 | evals | E5 chỉ đo kiểm trùng ra 'new' cho lead cùng số với lead đã trả lại, không chạy nhịp chia nên `lead_routing_queue` (người của lead trước) không được đo | Bản dựng sửa kiểm trùng mà quên hàng chờ chia; nhịp kế vẫn giao lead cho đầu chủ đã trả lại, E5 vẫn xanh | Ca nhịp chia với hai đầu chủ, lượt kế trỏ đầu chủ 2; đối chứng dương lead trước chưa trả lại về đầu chủ 1; chiều đỏ trên `lead_routing_queue` | fixed: AC-5 ghi «cả ở kiểm trùng lẫn ở nhịp chia»; E5 thêm ca «trả lại: nhịp chia không trả lead cùng số về đầu chủ đã trả» kèm đối chứng dương ở sàn thứ hai và chiều đỏ trên `lead_routing_queue` |
+| P1 | evals | E6/E7 chỉ dựng số mới không trùng; không ca nào cho số gửi lại trùng chủ nhà đã có đầu chủ hay căn đã có hàng mở | Lối gửi lại gán outcome 'new' cố định; hai đầu chủ cùng gọi một chủ nhà mà E6, E7 xanh | Hai dòng bảng E6: owner_has_agent (đầu chủ 2, không chia lại) và tin bổ sung; chiều đỏ outcome cố định | fixed: AC-6 ghi hai kết cục; E6 thêm ca «gửi lại: số mới vẫn qua kiểm trùng» hai dòng và chiều đỏ «gán 'new' cố định» |
+| P1 | evals | E9/E11 dò số chủ dạng 10 chữ số mở đầu 0, E11 chỉ quét /api/v1/*, không đối chứng dương cho máy dò | Số rò ở dạng +84 hay trong gói RSC của màn dựng phía máy chủ; E9, E11 xanh dù số chủ đã ở trình duyệt telesales | Dò chín chữ số cuối; quét document, RSC, /api/v1/*; đối chứng dương với chuỗi cài sẵn | fixed: AC-11 ghi rõ chín chữ số cuối, ba loại phản hồi và đối chứng dương; E9 dò thêm thân return/resubmit, chín chữ số cuối, đối chứng dương đếm 2; E11 quét /today và /leads/mine, đếm số phản hồi từng loại, đối chứng dương |
+| P1 | contract | Đường đo bảo tính số «Số ngày lead → Sẵn sàng bán» trên `app.lead_board_dates`, nhưng hàm chỉ trả lead của người gọi; chưa nêu câu tính, vai chạy, không eval chạy đường đo | Hết hai tuần thử, câu tính gộp sàn ra 0 dòng; Cổng Giá trị không có số | Ghi câu tính và vai chạy; eval chạy câu tính trên bộ mẫu có chuỗi gửi lại | fixed: hàm báo cáo `app.lead_board_metric(sàn, từ, đến)` chỉ kết nối chủ chạy được, dùng chung định nghĩa lên bảng (d-20261101T011940Z-16); Đường đo ghi câu tính; thêm AC-12, E12 (hai telesales, chuỗi gửi lại tính từ lead đầu, ngoài khoảng, sàn khác, vai API bị từ chối, chiều đỏ) |

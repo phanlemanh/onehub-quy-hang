@@ -3,10 +3,10 @@ nhom: trang-tam
 doi_tuong: [nha-chua-co-man, muc-chua-co-man]
 khuon: { ten: Placeholder, nhap: "@/components/shell/placeholder" }
 nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/web/src/app/settings/[section]/page.tsx"]
-mau_dang_chay: { tep: "apps/web/src/app/(app)/today/page.tsx", duong: "/today", trang_thai: [mac-dinh] }
+mau_dang_chay: { tep: "apps/web/src/app/(app)/me/page.tsx", duong: "/me", trang_thai: [mac-dinh] }
 khe_bat_buoc: [path]
 cam_ngoai_khuon: [Frame, Empty, EmptyHeader, Card]
-ngoai_le: [{ tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", ly_do: "Trang thử ẩn của bộ đồng bộ (hàng 13, Hỏi-3): không có lối vào trong điều hướng, đo vế mất mạng trên thiết bị; gỡ khi Bảng hàng thật ra (hàng 14)." }, { tep: "apps/web/src/app/(app)/inventory/page.tsx", ly_do: "Màn thật của nhóm bang-hang (hàng 14) — rời trang tạm theo KH-tt-roi-nhom." }, { tep: "apps/web/src/app/(app)/inventory/views/[id]/page.tsx", ly_do: "Góc nhìn đã lưu, nhóm bang-hang (hàng 14)." }, { tep: "apps/web/src/app/(app)/leads/new/page.tsx", ly_do: "Màn thật Ô nhận lead (hàng 24) — thuộc nhóm o-nhan-lead." }, { tep: "apps/web/src/app/(app)/proto/o-nhan-lead/page.tsx", ly_do: "Trang mẫu design-pass của Ô nhận lead (hàng 24) — thuộc nhóm o-nhan-lead." }]
+ngoai_le: [{ tep: "apps/web/src/app/(app)/leads/mine/page.tsx", ly_do: "Màn thật Lead đã nhập (hàng 27) — thuộc nhóm lead-cua-toi." }, { tep: "apps/web/src/app/(app)/today/page.tsx", ly_do: "Hôm nay của telesales là vùng Lead đã nhập (hàng 27, nhóm lead-cua-toi); vai khác vẫn thấy chỗ tạm tới hàng 22, 42." }, { tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", ly_do: "Trang thử ẩn của bộ đồng bộ (hàng 13, Hỏi-3): không có lối vào trong điều hướng, đo vế mất mạng trên thiết bị; gỡ khi Bảng hàng thật ra (hàng 14)." }, { tep: "apps/web/src/app/(app)/inventory/page.tsx", ly_do: "Màn thật của nhóm bang-hang (hàng 14) — rời trang tạm theo KH-tt-roi-nhom." }, { tep: "apps/web/src/app/(app)/inventory/views/[id]/page.tsx", ly_do: "Góc nhìn đã lưu, nhóm bang-hang (hàng 14)." }, { tep: "apps/web/src/app/(app)/leads/new/page.tsx", ly_do: "Màn thật Ô nhận lead (hàng 24) — thuộc nhóm o-nhan-lead." }, { tep: "apps/web/src/app/(app)/proto/o-nhan-lead/page.tsx", ly_do: "Trang mẫu design-pass của Ô nhận lead (hàng 24) — thuộc nhóm o-nhan-lead." }]
 luat: [KH-tt-noi-muc, KH-tt-roi-nhom]
 ---
 # Trang tạm

@@ -1,0 +1,14 @@
+{
+  "slug": "lead-bon-nac",
+  "base": "origin/main",
+  "head": "34230366eceea1bff2c191a2c806828b2e2bb04a",
+  "tep_theo_khuon": [
+    "apps/web/src/app/(app)/leads/mine/page.tsx"
+  ],
+  "rang_bat": 0,
+  "rang_bat_chi_tiet": [],
+  "lech_lot": 0,
+  "kit": null,
+  "ly_do_kit": "hồ sơ chưa có dòng gio-may trong _acceptance/lead-bon-nac/run-log.jsonl",
+  "gioi_han": "răng bắt trước khi commit (lint trong trình soạn, hook cuối lượt) không đếm"
+}

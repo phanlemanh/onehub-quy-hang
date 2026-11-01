@@ -1,5 +1,5 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
-import { leadResultView, type LeadRecord } from "@quy-hang/core/dedupe";
+import { leadResultView, myLeadView, type LeadRecord, type MyLeadRecord } from "@quy-hang/core/dedupe";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import type pg from "pg";
@@ -9,7 +9,17 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { SAMPLE_CATALOG } from "../catalog/sample";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
-import { createLead, discardLead, isRefusal, readOwnLead, type Refusal } from "./store";
+import {
+  createLead,
+  discardLead,
+  isRefusal,
+  listMyLeads,
+  readOwnLead,
+  RefusalAfterWrite,
+  resubmitLead,
+  returnLead,
+  type Refusal,
+} from "./store";
 
 /**
  * Ô nhận lead (hàng 24, ADR-0012). Người nhập chỉ nhận bản của telesales (`leadResultView` của lõi): kết quả kiểm trùng,
@@ -25,7 +35,7 @@ const loi = {
   401: err("Chưa đăng nhập"),
   403: err("Chưa gắn sàn, hoặc vai không nhập được lead"),
   404: err("Không có lead này của người gọi"),
-  409: err("Chọn sàn, hoặc lead đã bỏ"),
+  409: err("Chọn sàn, lead đã bỏ, đã trả lại, đã lên bảng, chưa trả lại hay đã gửi lại"),
 };
 const Lead = z.object({ id: z.string(), outcome: z.string() }).passthrough();
 
@@ -114,6 +124,72 @@ export function registerLeadRoutes(api: OpenAPIHono, { appPool, identityPool, au
       if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
       const kq = await withCompany(appPool, ctx, (tx) => discardLead(tx, leadId));
       return isRefusal(kq) ? tuChoi(c, kq) : c.json(await ban(kq), 200);
+    },
+  );
+
+  // ---- Lead bốn nấc (hàng 27, ADR-0020): bản `myLeadView` của lõi — nấc và mốc, không số chủ, không mã hàng ----
+  const banNac = async (rows: MyLeadRecord[]) => {
+    const ten = new Map<string, string | null>();
+    for (const r of rows) if (r.matchedAgentUserId && !ten.has(r.matchedAgentUserId)) ten.set(r.matchedAgentUserId, await tenNguoi(identityPool, r.matchedAgentUserId));
+    return rows.map((r) => myLeadView(r, r.matchedAgentUserId ? (ten.get(r.matchedAgentUserId) ?? null) : null));
+  };
+
+  api.openapi(
+    createRoute({
+      method: "get",
+      path: BASE,
+      summary: "Lead mình đã nhập, mới nhất trước — nấc, mốc từng nấc, tên đầu chủ",
+      responses: { 200: ok("Lead đã nhập", z.array(Lead)), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const rows = await withCompany(appPool, ctx, (tx) => listMyLeads(tx));
+      return c.json(await banNac(rows), 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "post",
+      path: `${BASE}/{leadId}/return`,
+      summary: "Đầu chủ trả lại lead — số không liên lạc được; được tới khi lead lên bảng",
+      request: { params: z.object({ leadId: z.string() }) },
+      responses: { 200: ok("Đã trả lại", Lead), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const { leadId } = c.req.valid("param");
+      if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
+      const kq = await withCompany(appPool, ctx, (tx) => returnLead(tx, leadId));
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json((await banNac([kq]))[0], 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "post",
+      path: `${BASE}/{leadId}/resubmit`,
+      summary: "«Sửa số và gửi lại» — lead mới với số mới, kiểm trùng và chia như lead mới",
+      request: {
+        params: z.object({ leadId: z.string() }),
+        body: { content: { "application/json": { schema: z.record(z.unknown()) } } },
+      },
+      responses: { 201: ok("Lead mới", Lead), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const { leadId } = c.req.valid("param");
+      if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
+      try {
+        const kq = await withCompany(appPool, ctx, (tx) => resubmitLead(tx, leadId, c.req.valid("json")));
+        return isRefusal(kq) ? tuChoi(c, kq) : c.json((await banNac([kq]))[0], 201);
+      } catch (e) {
+        if (e instanceof RefusalAfterWrite) return tuChoi(c, e.refusal);
+        throw e;
+      }
     },
   );
 }
