@@ -8,6 +8,7 @@ Mỗi loại thông tin ở đúng một chỗ. Khi hai nơi nói khác nhau, n�
 | Kiến trúc kho, API, kết nối, stack, thứ tự dựng | [`architecture/kien-truc-repo-va-stack.md`](architecture/kien-truc-repo-va-stack.md) | Điều đã chốt có ADR đi kèm |
 | Quyết định kiến trúc | [`adr/`](adr/) | Gốc: ADR-0017 của onehub-invest |
 | Việc phát triển: hàng, chờ điều kiện, thứ tự | [`plan/lo-trinh.json`](plan/lo-trinh.json) · trang [`LO-TRINH.html`](../LO-TRINH.html) | Thêm việc bằng `/acceptance-gate:cat-luot`, mở vòng bằng `/feature-loop:feature-loop <mã>`; bản phạm vi của từng đợt nằm cạnh |
+| Sản phẩm cùng loại làm thế nào, để sàn cấu hình ở đâu — theo năng lực, kèm nguồn | [`product/doi-chieu-nganh.md`](product/doi-chieu-nganh.md) | ADR-0022; bản thiết kế lấy ít nhất hai sản phẩm từ đây, tra thêm thì bổ sung cùng PR |
 | Điểm sàn chỉnh được: khoá, mặc định, khoảng, ai đổi, điều khoá | [`architecture/so-diem-bien-thien.md`](architecture/so-diem-bien-thien.md) | Đề xuất cùng ADR-0018; hàng thêm con số hay lựa chọn của sàn khai vào đây cùng PR |
 | Vỏ ứng dụng, IA theo giao diện, khối ReUI đích của từng màn, chỗ hở | [`design/vo-va-ia.md`](design/vo-va-ia.md) | Chọn trên kho trước — luật ở [`../.claude/rules/giao-dien.md`](../.claude/rules/giao-dien.md); ADR-0002 |
 | Từ vựng: nhãn trên màn ↔ tên code | [`../CONTEXT.md`](../CONTEXT.md) | Nhãn mới thêm cùng commit |
