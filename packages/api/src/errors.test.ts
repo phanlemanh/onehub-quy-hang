@@ -51,8 +51,12 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     alreadyOnBoard: ["already-on-board", 409],
     notReturned: ["not-returned", 409],
     alreadyResubmitted: ["already-resubmitted", 409],
+    // Hàng 85 (ADR-0021).
+    leadHasListing: ["lead-has-listing", 409],
+    leadNotListable: ["lead-not-listable", 409],
+    ownerTypeRequired: ["owner-type-required", 400],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 40);
+  assert.equal(Object.keys(API_ERRORS).length, 43);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

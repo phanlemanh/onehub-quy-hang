@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { appPool, cleanup } from "./helpers";
-import { ai, dong, lenBang, nam, nhap, nhip, sanMoi, send, soMoi, type San } from "./san-thu";
+import { ai, dong, hangCoChu, hangTuLead, lenBang, nam, nhap, nhip, sanMoi, send, soMoi, type San } from "./san-thu";
 
 after(cleanup);
 
@@ -217,3 +217,90 @@ test("liên hệ: trả lại bỏ người giữ khi hết liên kết", async 
   assert.equal(n, 2);
 });
 
+
+// ---- AC-7 ----
+const taoTuLead = (san: San, id: string, k: string) => send("POST", `/api/v1/leads/${id}/listing`, undefined, san.nguoi[k]?.cookie ?? "");
+
+test("liên hệ: tạo hàng từ lead", async () => {
+  const s = await sanMoi(MOT);
+  const leadVe = async (can?: string) => {
+    const l = await nhap(s, nam(soMoi(s), "Toà A", can));
+    await nhip(new Date(), s);
+    return l.id;
+  };
+  const tot = await leadVe("A-08.01");
+  const khac = await leadVe();
+  const daTra = await leadVe();
+  assert.equal((await tra(s, daTra, "dc1")).status, 200);
+  await hangCoChu(s, "dc1", "A-08.02", soMoi(s));
+  const canTrung = (await nhap(s, nam(soMoi(s), "Toà A", "A-08.02"))).id;
+  // [dòng, lead, người gọi, mã HTTP, mã lỗi]
+  const BANG: [string, string, string, number, string | null][] = [
+    ["đầu chủ của lead", tot, "dc1", 201, null],
+    ["lần hai", tot, "dc1", 409, "lead-has-listing"],
+    ["đầu chủ khác", khac, "dc2", 404, "not-found"],
+    ["trưởng nhóm", khac, "tn", 404, "not-found"],
+    ["telesales người nhập", khac, "ts", 404, "not-found"],
+    ["lead trả lại", daTra, "dc1", 409, "lead-not-listable"],
+    ["lead căn trùng", canTrung, "dc1", 409, "lead-not-listable"],
+    ["không cookie", khac, "khach", 401, "unauthenticated"],
+  ];
+  let so = 0;
+  for (const [ten, id, k, ma, loi] of BANG) {
+    const r = await taoTuLead(s, id, k);
+    const than = (await r.json()) as { error?: string; id?: string };
+    assert.deepEqual([r.status, than.error ?? null], [ma, loi], `dòng «${ten}»`);
+    if (ma === 201) {
+      const h = than.id!;
+      const d = await dong(tot);
+      const hang = (await appPool.query("select building_name, unit_number from listings where id = $1", [h])).rows[0];
+      assert.deepEqual(hang, { building_name: d.building_name, unit_number: d.unit_number });
+      assert.equal((await appPool.query("select lead_id from lead_listings where listing_id = $1", [h])).rows[0]?.lead_id, tot, "hàng không mang mã lead");
+      assert.equal((await appPool.query("select contact_id from listing_owners where listing_id = $1", [h])).rows[0]?.contact_id, await lienHeCua(tot));
+      const giu = (await appPool.query("select user_id from listing_agent_assignments where listing_id = $1 order by seq desc limit 1", [h])).rows[0]?.user_id;
+      assert.equal(ai(s, giu), "dc1");
+      // Hàng tạo từ lead chưa có số trên chủ nhà của hàng: «Mở số» báo chưa có số, không lỗi.
+      const mo = await send("POST", `/api/v1/listings/${h}/owner/phone-reveal`, undefined, s.nguoi.dc1!.cookie);
+      assert.deepEqual([mo.status, ((await mo.json()) as { error: string }).error], [404, "owner-not-set"]);
+    }
+    so++;
+  }
+  assert.equal(so, BANG.length);
+});
+
+test("liên hệ: lên bảng là dữ kiện", async () => {
+  const s = await sanMoi(MOT);
+  const boardAt = async (id: string) =>
+    ((await (await send("GET", "/api/v1/leads", undefined, s.nguoi.ts!.cookie)).json()) as { id: string; boardAt: string | null }[]).find((v) => v.id === id)!.boardAt;
+  // (1) hàng mang mã lead sang Active → lên bảng đúng mốc.
+  const a = await nhap(s, nam(soMoi(s), "Toà A"));
+  await nhip(new Date(), s);
+  const mA = await lenBang(s, "dc1", await hangTuLead(s, "dc1", a.id));
+  // (2) hàng cùng số của chính đầu chủ, không mang mã lead, sang Active → không lên bảng.
+  const soB = soMoi(s);
+  const b = await nhap(s, nam(soB, "Toà A"));
+  await nhip(new Date(), s);
+  await lenBang(s, "dc1", await hangCoChu(s, "dc1", "A-09.01", soB));
+  // (3) chuỗi Z trả lại → Z' gửi lại → hàng mang mã Z' Active → Z' lên bảng, số đo tính từ lúc nhập Z.
+  const tu = new Date();
+  const z = await nhap(s, nam(soMoi(s), "Toà A"));
+  await nhip(new Date(), s);
+  assert.equal((await tra(s, z.id, "dc1")).status, 200);
+  const z2 = await guiLai(s, z.id, soMoi(s));
+  await nhip(new Date(), s);
+  const mZ2 = await lenBang(s, "dc1", await hangTuLead(s, "dc1", z2));
+  const BANG: [string, string, string | null][] = [
+    ["hàng mang mã lead", a.id, mA.toISOString()],
+    ["hàng cùng số không mang mã", b.id, null],
+    ["chuỗi gửi lại", z2, mZ2.toISOString()],
+  ];
+  let so = 0;
+  for (const [ten, id, mong] of BANG) {
+    assert.equal(await boardAt(id), mong, `dòng «${ten}»`);
+    so++;
+  }
+  assert.equal(so, 3);
+  const ra = (await appPool.query("select lead_id, first_created_at from app.lead_board_metric($1, $2, now() + interval '1 minute')", [s.companyId, tu])).rows;
+  const dauZ = (await dong(z.id)).created_at as Date;
+  assert.deepEqual(ra.filter((r) => r.lead_id === z2).map((r) => (r.first_created_at as Date).toISOString()), [dauZ.toISOString()]);
+});

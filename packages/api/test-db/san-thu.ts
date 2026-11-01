@@ -142,3 +142,10 @@ export async function docHam<T extends pg.QueryResultRow>(san: San, sql: string,
     c.release();
   }
 }
+
+/** Đầu chủ của lead tạo hàng từ lead (hàng 85): hàng mang mã lead. Trả mã hàng. */
+export async function hangTuLead(san: San, k: string, leadId: string) {
+  const r = await send("POST", `/api/v1/leads/${leadId}/listing`, undefined, san.nguoi[k]!.cookie);
+  assert.equal(r.status, 201, await r.clone().text());
+  return ((await r.json()) as { id: string }).id;
+}

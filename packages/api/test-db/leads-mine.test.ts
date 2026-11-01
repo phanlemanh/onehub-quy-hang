@@ -12,6 +12,7 @@ import {
   docHam,
   dong,
   hangCoChu,
+  hangTuLead,
   leadMau,
   lenBang,
   nam,
@@ -109,7 +110,7 @@ test("lead của tôi: bốn nấc đi qua đời lead thật", async () => {
     if (ten_ === "sau nhịp chia") await nhip(t, s);
     if (ten_ === "sau nhận") await ghi(s, id, "accept", "dc1");
     if (ten_ === "sau first-call") await ghi(s, id, "first-call", "dc1");
-    if (ten_ === "sau tạo hàng, chưa Active") hang = await hangCoChu(s, "dc1", "A-09.09", l04.soDienThoai, toa);
+    if (ten_ === "sau tạo hàng, chưa Active") hang = await hangTuLead(s, "dc1", id);
     if (ten_ === "sau Active") moc = await lenBang(s, "dc1", hang);
     const { v, d } = await buoc();
     assert.deepEqual([v.stage, v.awaitingRouting, v.agentName], [nac, cho, dauChu], ten_);
@@ -132,8 +133,8 @@ test("trả lại: chỉ đầu chủ của lead, khi chưa lên bảng", async 
   await ghi(s, daGoi, "first-call", "dc1");
   const soLen = soMoi(s);
   const daLen = await leadVe(s, soLen);
-  const hang = await hangCoChu(s, "dc1", "A-07.07", soLen);
-  await lenBang(s, "dc1", hang);
+  await lenBang(s, "dc1", await hangTuLead(s, "dc1", daLen));
+  await hangCoChu(s, "dc1", "A-07.07", soMoi(s)); // căn có hàng mở cho dòng «lead căn trùng»
   const khac = await leadVe(s, soMoi(s));
   const canTrung = (await nhap(s, nam(soMoi(s), "Toà A", "A-07.07"))).id;
   assert.equal((await dong(canTrung)).outcome, "unit_has_open_listing");
@@ -392,9 +393,9 @@ test("lên bảng: bảng hàng viết trước", async () => {
     if (ca === "c") moc = await lenBang(s, "dc1", await hangCoChu(s, "dc1", "A-01.01", S));
     const id = await leadVe(s, S);
     assert.equal(ai(s, (await dong(id)).matched_agent_user_id), "dc1", ten);
-    if (ca === "a") moc = await lenBang(s, "dc1", await hangCoChu(s, "dc1", "A-01.01", S));
+    if (ca === "a") moc = await lenBang(s, "dc1", await hangTuLead(s, "dc1", id));
     if (ca === "b") moc = await lenBang(s, "dc2", await hangCoChu(s, "dc2", "A-01.01", S));
-    if (ca === "d") await hangCoChu(s, "dc1", "A-01.01", S);
+    if (ca === "d") await hangTuLead(s, "dc1", id);
     if (ca === "e") moc = await lenBang(s, "dc1", await hangCoChu(s, "dc1", "A-01.01", soMoi(s)));
     const v = await tim(s, id);
     assert.deepEqual(v.boardAt !== null, mong, `dòng «${ten}»`);
@@ -454,11 +455,11 @@ const soDo = async (san: San, tu: Date, den: Date) =>
 test("số đo: ngày lead → Sẵn sàng bán trên bộ mẫu", async () => {
   const s = await sanMoi({ ts: { vai: ["telesales"] }, ts2: { vai: ["telesales"] }, dc1: { vai: ["listing_agent"], khu: ["Toà A"] } });
   const khac = await sanMoi({ ts: { vai: ["telesales"] }, dc1: { vai: ["listing_agent"], khu: ["Toà A"] } });
-  const lenVoiSo = async (san: San, so: string, can: string) => lenBang(san, "dc1", await hangCoChu(san, "dc1", can, so));
+  const lenTuLead = async (san: San, lead: string) => lenBang(san, "dc1", await hangTuLead(san, "dc1", lead));
   // W lên bảng trước khoảng đo.
   const soW = soMoi(s);
   const w = await leadVe(s, soW);
-  await lenVoiSo(s, soW, "A-10.01");
+  await lenTuLead(s, w);
   await new Promise((r) => setTimeout(r, 20));
   const tu = new Date();
   const [soX, soY, soZ, soZ2] = [soMoi(s), soMoi(s), soMoi(s), soMoi(s)];
@@ -468,16 +469,15 @@ test("số đo: ngày lead → Sẵn sàng bán trên bộ mẫu", async () => {
   assert.equal((await tra(s, z, "dc1")).status, 200);
   const z2 = ((await (await guiLai(s, z, { ownerPhone: soZ2 })).json()) as View).id;
   await nhip(new Date(), s);
-  const mX = await lenVoiSo(s, soX, "A-10.02");
-  const mY = await lenVoiSo(s, soY, "A-10.03");
-  const mZ2 = await lenVoiSo(s, soZ2, "A-10.04");
+  const mX = await lenTuLead(s, x);
+  const mY = await lenTuLead(s, y);
+  const mZ2 = await lenTuLead(s, z2);
   await lui(x, mX, 3);
   await lui(y, mY, 5);
   await lui(z, mZ2, 6);
   await lui(z2, mZ2, 5);
   const soK = soMoi(khac);
-  await leadVe(khac, soK);
-  await lenVoiSo(khac, soK, "A-10.05");
+  await lenTuLead(khac, await leadVe(khac, soK));
   const den = sau(new Date(), 1);
   const ra = await soDo(s, tu, den);
   assert.deepEqual(ra.map((r) => Object.keys(r)), ra.map(() => ["lead_id", "first_created_at", "board_at", "days"]));
@@ -514,7 +514,7 @@ test("số đo: chuỗi gửi lại hai lần", async () => {
   const soZ3 = soMoi(s);
   const z3 = ((await (await guiLai(s, z2, { ownerPhone: soZ3 })).json()) as View).id;
   await nhip(new Date(), s);
-  const m = await lenBang(s, "dc1", await hangCoChu(s, "dc1", "A-11.01", soZ3));
+  const m = await lenBang(s, "dc1", await hangTuLead(s, "dc1", z3));
   await lui(z, m, 7);
   await lui(z2, m, 4);
   await lui(z3, m, 2);
