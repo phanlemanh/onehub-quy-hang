@@ -9,6 +9,7 @@ import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { docBanDo, kiemCay, manNgoaiBanDo } from "./lib/ban-do.mjs";
+import { divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -243,6 +244,33 @@ function kiemBanDo(root, loi, dong) {
   dong.push(`khuôn: ${bd.nhom.length} nhóm · ${bd.loi.length} lỗi đọc · ${lech.length} lệch`);
 }
 
+/** Hồ sơ đã ký giữ nguyên trang (kit cấm sửa) — chỉ hồ sơ chưa ký bị so với bản dựng lại. */
+const DA_KY = new Set(["signed-off", "machine-cleared"]);
+
+/** Trang ba lối (hàng 84): bước phân kỳ đã mở thì phải có trang; trang dựng bằng lệnh thì phải qua bài kiểm. */
+function kiemBaLoiCay(root, loi, dong) {
+  const goc = join(root, "_acceptance");
+  if (!existsSync(goc)) return;
+  let trang = 0;
+  let lenh = 0;
+  for (const slug of readdirSync(goc).sort()) {
+    const dv = divergenceCua(root, slug);
+    const coJson = existsSync(join(goc, slug, "ba-loi/ba-loi.json"));
+    if (dv === null && !coJson) continue;
+    const coTrang = existsSync(join(goc, slug, "ba-loi/index.html"));
+    if (dv !== null && /^opened\b/.test(dv) && !coTrang && !coJson) {
+      loi.push(`hồ sơ ${slug}: design-pass mở bước phân kỳ mà thiếu ba-loi/index.html`);
+      continue;
+    }
+    if (coTrang) trang++;
+    if (!coJson) continue;
+    lenh++;
+    const st = /^status:\s*(\S+)/m.exec(doc(root, `_acceptance/${slug}/contract.md`) ?? "")?.[1];
+    for (const l of kiemTrangHoSo(root, slug, { soLai: !DA_KY.has(st) })) loi.push(`hồ sơ ${slug}: ${l}`);
+  }
+  dong.push(`ba lối: ${trang} trang · ${lenh} dựng bằng lệnh`);
+}
+
 /** `homNay` (YYYY-MM-DD) để so hạn xem lại — mặc định ngày chạy. Cảnh báo không làm đỏ. */
 export function kiemChuan(root, { homNay = new Date().toISOString().slice(0, 10) } = {}) {
   const loi = [];
@@ -257,6 +285,7 @@ export function kiemChuan(root, { homNay = new Date().toISOString().slice(0, 10)
   kiemCauHinh(root, loi, dong);
   kiemCi(root, loi, dong);
   kiemBanDo(root, loi, dong);
+  kiemBaLoiCay(root, loi, dong);
   return { loi, canhBao, dong: loi.length ? [] : [...dong, "chuẩn giao diện: đạt"] };
 }
 
