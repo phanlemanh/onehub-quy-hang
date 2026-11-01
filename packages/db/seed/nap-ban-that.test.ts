@@ -191,7 +191,9 @@ test("chi-ban-ma: số chủ và số lead chỉ là bản mã đúng ngữ cả
     assert.equal(giaiMaSo(r.enc, nguCanhChuNha(san, r.listing_id), khoa), soCua.get(r.unit_number), "đối chứng dương: giải đúng số");
     assert.ok(r.hash.equals(dauVetSo(soCua.get(r.unit_number)!, san, khoa)), "dấu vết");
   }
-  const [a, b] = chu;
+  assert.ok(chu.length >= 2);
+  const a = chu[0]!;
+  const b = chu[1]!;
   assert.throws(() => giaiMaSo(a!.enc, nguCanhChuNha(san, a!.listing_id), { key: randomBytes(32) }), "khoá khác phải không giải được");
   assert.throws(() => giaiMaSo(a!.enc, nguCanhChuNha(san, b!.listing_id), khoa), "bản mã chép sang dòng khác phải không giải được");
   const lead = (await pool.query<{ id: string; owner_phone: string | null; enc: Buffer; hash: Buffer }>(
@@ -370,4 +372,17 @@ test("tra-danh-muc: thành viên sàn mẫu tra được 180 căn (E12)", async 
   await h.createLoneUser(le);
   assert.equal((await goiApi("/api/v1/catalog/units/A-01.03", await login(le))).status, 403, "phiên chưa thuộc sàn nào");
   await go();
+});
+
+test("email-ky-tu-dieu-khien: bộ nạp từ chối ký tự điều khiển trước mọi câu ghi (E4, hàng va-nap-mau)", async () => {
+  const { chuanHoaEmail } = await import("./nap-ban-that");
+  // Ma trận viết trước: mọi lớp ký tự điều khiển và dấu tách dòng Unicode.
+  const SAI = ["a@b.co\nNODE_OPTIONS=x", "a@b.co\r", "a\x00@b.co", "a@b.co\u0007", "a\x1f@b.co", "a@b.co\x7f", "a\t@b.co", "a@b.co\u2028"];
+  for (const e of SAI) assert.throws(() => chuanHoaEmail(e), /email chủ kho sai dạng/, JSON.stringify(e));
+  assert.equal(chuanHoaEmail("T-x@Example.Test"), "t-x@example.test", "đối chứng dương");
+  const truoc = await chup();
+  const r = chayCli(["--nap", "--email", "a@b.co\x7f"], {});
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /email chủ kho sai dạng/);
+  assert.deepEqual(bangLech(truoc, await chup()), [], "không dòng nào đổi");
 });
