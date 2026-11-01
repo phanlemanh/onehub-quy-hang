@@ -8,7 +8,8 @@
     "./listing": "./src/listing/index.ts",
     "./access": "./src/access/index.ts",
     "./visibility": "./src/visibility/index.ts",
-    "./dedupe": "./src/dedupe/index.ts"
+    "./dedupe": "./src/dedupe/index.ts",
+    "./routing": "./src/routing/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",

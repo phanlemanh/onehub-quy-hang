@@ -33,7 +33,7 @@ export function getApi(): Api {
     sender,
     env,
   });
-  cached = createApi({ appPool: new pg.Pool({ connectionString: url }), identityPool, auth });
+  cached = createApi({ appPool: new pg.Pool({ connectionString: url }), identityPool, auth, jobSecret: process.env.JOB_SECRET });
   return cached;
 }
 

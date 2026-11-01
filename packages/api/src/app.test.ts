@@ -57,6 +57,17 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/leads/buildings",
     "GET /api/v1/leads/{leadId}",
     "POST /api/v1/leads/{leadId}/discard",
+    // Hàng 25 (ADR-0017).
+    "GET /api/v1/company/settings/lead-routing",
+    "PUT /api/v1/company/settings/lead-routing",
+    "PUT /api/v1/company/members/{userId}/leave",
+    "POST /api/v1/leads/{leadId}/accept",
+    "POST /api/v1/leads/{leadId}/first-call",
+    "POST /api/v1/leads/{leadId}/claim",
+    "POST /api/v1/leads/{leadId}/assign",
+    "GET /api/v1/lead-pool",
+    "GET /api/v1/lead-alerts",
+    "POST /api/v1/jobs/lead-tick",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

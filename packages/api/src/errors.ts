@@ -31,6 +31,19 @@ export const API_ERRORS = {
   // Cửa nhận danh mục (ADR-0015).
   agreementInactive: { code: "agreement-inactive", status: 403 },
   invalidFeed: { code: "invalid-feed", status: 422 },
+  // Chia lead và hạn (ADR-0017).
+  invalidSettings: { code: "invalid-settings", status: 400 },
+  alreadyAccepted: { code: "already-accepted", status: 409 },
+  alreadyCalled: { code: "already-called", status: 409 },
+  alreadyClaimed: { code: "already-claimed", status: 409 },
+  onLeave: { code: "on-leave", status: 403 },
+  teamLeadRequired: { code: "team-lead-required", status: 403 },
+  alertReaderRequired: { code: "alert-reader-required", status: 403 },
+  leaveForbidden: { code: "leave-forbidden", status: 403 },
+  notAListingAgent: { code: "not-a-listing-agent", status: 400 },
+  leadNotAssignable: { code: "lead-not-assignable", status: 400 },
+  badJobSecret: { code: "bad-job-secret", status: 401 },
+  jobSecretMissing: { code: "job-secret-missing", status: 503 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;
