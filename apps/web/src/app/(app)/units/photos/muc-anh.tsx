@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { chuanBiTep, tepTuLuotDan, type TepSanSang } from "./tai-len";
+import { guiLuot, tepTuLuotDan, type TepSanSang } from "./tai-len";
 
 export type DanhSachAnh = { anh: UnitPhoto[]; noiBo: "thay" | "an"; suaDuoc: boolean };
 export type SuaAnh = { compartment?: Compartment; order?: string[]; isCover?: true; isSample?: boolean };
@@ -41,7 +41,7 @@ export type NguonAnh = {
 };
 
 type The = Compartment | "catalog";
-type OCho = { key: string; ten: string; loi?: string };
+type OCho = { key: string; ten: string; ngan: Compartment; loi?: string };
 
 function useNgoaiTuyen() {
   return useSyncExternalStore(
@@ -84,20 +84,15 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
   const nhan = useCallback(
     async (files: File[], ngan: Compartment) => {
       if (!files.length || !ds?.suaDuoc) return;
-      if (!navigator.onLine) {
-        setCho(files.map((f, i) => ({ key: `${Date.now()}-${i}`, ten: f.name, loi: CHU_CAN_MANG })));
-        return;
-      }
-      const o = files.map((f, i) => ({ key: `${Date.now()}-${i}`, ten: f.name }));
+      const goc = Date.now();
+      const o = files.map((f, i) => ({ key: `${goc}-${i}`, ten: f.name, ngan }));
       setCho((c) => [...c, ...o]);
-      await Promise.all(
-        files.map(async (f, i) => {
-          const key = o[i]!.key;
-          const tep = await chuanBiTep(f);
-          const loi = !tep.ok ? tep.lyDo : await nguon.them(tep, ngan).then(() => undefined, () => "Không gửi được — thử lại");
-          setCho((c) => (loi ? c.map((x) => (x.key === key ? { ...x, loi } : x)) : c.filter((x) => x.key !== key)));
-        }),
-      );
+      const kq = await guiLuot(files, (tep) => nguon.them(tep, ngan), { onLine: navigator.onLine });
+      setCho((c) => c.flatMap((x) => {
+        const i = o.findIndex((y) => y.key === x.key);
+        if (i < 0) return [x];
+        return kq[i]!.loi ? [{ ...x, loi: kq[i]!.loi! }] : [];
+      }));
       tai();
     },
     [ds?.suaDuoc, nguon, tai],
@@ -151,7 +146,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
             </Button>
           </div>
         ) : null}
-        {anh.length === 0 && cho.length === 0 ? (
+        {anh.length === 0 && !cho.some((c) => c.ngan === ngan) ? (
           <TrangThai kind="empty" title={ngan === "shareable" ? "Chưa có ảnh gửi được" : "Chưa có giấy tờ nội bộ"} description={ds.suaDuoc ? "Thả ảnh vào khung này." : "Người giữ căn chưa thêm ảnh."} />
         ) : (
           <Sortable value={anh} onValueChange={sapLai} getItemValue={(p) => p.id} strategy="grid" className="grid grid-cols-2 gap-2 @md:grid-cols-3 @3xl:grid-cols-5">
@@ -190,9 +185,9 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
             ))}
           </Sortable>
         )}
-        {cho.length ? (
+        {cho.some((c) => c.ngan === ngan) ? (
           <ul className="flex flex-col gap-1 text-xs" aria-label="Ảnh đang thêm">
-            {cho.map((c) => (
+            {cho.filter((c) => c.ngan === ngan).map((c) => (
               <li key={c.key} className={`flex items-center justify-between gap-2 rounded-md border px-2 py-1 ${c.loi ? "border-destructive text-destructive" : ""}`}>
                 <span className="truncate">{c.ten}</span>
                 <span>{c.loi ?? "Đang tải…"}</span>

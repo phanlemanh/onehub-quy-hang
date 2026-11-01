@@ -1,6 +1,6 @@
 // Nhận ảnh thả hay dán vào mục Ảnh (hàng 18): kiểm tệp và đọc ngày chụp bằng luật lõi, vẽ bản nhẹ bằng canvas. Không giữ
 // gì trên máy — tệp lỗi hay lúc mất mạng thì bỏ (Hỏi-5).
-import { coBanNhe, docNgayChup, kiemTepAnh, type PhotoType } from "@quy-hang/core/photos";
+import { CHU_CAN_MANG, coBanNhe, docNgayChup, kiemTepAnh, type PhotoType } from "@quy-hang/core/photos";
 
 export type TepSanSang = { ok: true; file: File; type: PhotoType; takenAt: string | null; thumb: Blob; width: number; height: number };
 export type TepLoi = { ok: false; file: File; lyDo: string };
@@ -44,4 +44,28 @@ export async function chuanBiTep(file: File, ve = veBanNhe): Promise<TepSanSang 
   } catch {
     return { ok: false, file, lyDo: "Không phải ảnh" };
   }
+}
+
+export type KetQuaTep = { ten: string; loi: string | null };
+
+/**
+ * Gửi một lượt thả hay dán: mất mạng thì không gửi tệp nào và không giữ gì lại (Hỏi-5); mỗi tệp chuẩn bị và gửi riêng,
+ * lỗi một tệp không chặn tệp khác. Trả lại kết quả từng tệp theo thứ tự thả.
+ */
+export async function guiLuot(
+  files: readonly File[],
+  them: (tep: TepSanSang) => Promise<void>,
+  o: { onLine: boolean; ve?: Parameters<typeof chuanBiTep>[1] },
+): Promise<KetQuaTep[]> {
+  if (!o.onLine) return files.map((f) => ({ ten: f.name, loi: CHU_CAN_MANG }));
+  return Promise.all(
+    files.map(async (f) => {
+      const tep = await chuanBiTep(f, o.ve);
+      if (!tep.ok) return { ten: f.name, loi: tep.lyDo };
+      return them(tep).then(
+        () => ({ ten: f.name, loi: null }),
+        () => ({ ten: f.name, loi: "Không gửi được — thử lại" }),
+      );
+    }),
+  );
 }
