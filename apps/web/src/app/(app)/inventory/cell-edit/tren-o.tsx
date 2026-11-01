@@ -64,7 +64,9 @@ export function useSuaTrenO() {
         return;
       }
       const g = kq.banGhi;
-      const ketQua = await sua(g.id, g.lenh.type, g.lenh.payload);
+      // Lệnh bù mang phiên bản vừa xét: một lần kéo về chen giữa lúc xét và lúc ghi thì thành xung đột, vào «Cần xem»,
+      // không ghi đè lặng lần sửa sau (AC-5).
+      const ketQua = await sua(g.id, g.lenh.type, g.lenh.payload, g.phienBanSau);
       if (ketQua.ok) toast.success(`Đã hoàn tác ${g.nhan}`);
       else toast.error(`${KHONG_HOAN_TAC}: ${moTaLoi(ketQua.loi)}`);
     },
