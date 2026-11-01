@@ -97,3 +97,11 @@ evals:
     expected: "exit 0; trong `packages/db/tests/danh-muc-dung-chung.test.mjs` ca «danh mục dùng chung: tập cột đúng danh sách viết trước» có mặt và ok — đọc information_schema.columns của catalog_subdivisions và catalog_units, so (sắp theo tên) bằng deepEqual với hai danh sách viết tay trong tệp kiểm (không lấy từ migration); đối chứng: mỗi danh sách có ít nhất một tên cột đúng và không chứa tên nào khớp owner|phone|price|photo (cột floor là tầng, không bị cấm). Chiều đỏ: thêm cột owner_phone vào migration → ca đỏ nêu cột thừa."
     paths: [packages/db/migrations/010_danh_muc_dung_chung.sql, packages/db/tests/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/db/tests/danh-muc-dung-chung.test.mjs` ca «danh mục dùng chung: mỗi sàn chỉ thấy dòng tin của mình, không ai đọc mã thoả thuận» có mặt và ok — hai sàn A, B cùng nằm trong catalog_trusted_companies (chủ bảng thêm), mỗi sàn nạp một khu một căn bằng thoả thuận của mình; bằng vai quy_hang_app: sàn A select catalog_trusted_companies ra đúng một dòng company_id = A, sàn B ra đúng một dòng = B, lời gọi chưa đặt sàn ra 0 dòng; ma trận viết trước bốn phép đọc agreement_id (sàn A đọc dòng khu của B, dòng căn của B, dòng khu của chính A, lời gọi chưa đặt sàn đọc dòng căn của A), số lần so bằng 4, mỗi phép bị từ chối với SQLSTATE 42501; đối chứng dương: cùng sàn A select mọi cột danh mục còn lại (danh sách viết trước, không agreement_id) của dòng khu và căn của B ra đúng giá trị. Và ca «nhận gói: thoả thuận đang bật, gói đúng khuôn vào vùng dùng chung» của E4 vẫn ok sau khi thu hẹp. Chiều đỏ: để luật đọc danh sách tin là using (true) → sàn A thấy hai dòng, ca đỏ nêu số dòng; cấp lại select agreement_id → phần tử đầu đỏ."
+    paths: [packages/db/migrations/**, packages/db/tests/**, packages/api/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

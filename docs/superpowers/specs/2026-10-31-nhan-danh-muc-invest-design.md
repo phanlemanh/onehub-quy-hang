@@ -88,3 +88,13 @@ Tên ca kiểm, cách chia hàm trong `feeds.ts`, chỉ mục phụ của bảng
 ## Đặc tả UX
 
 Bỏ — hàng này không có màn (sổ: «bỏ đặc-tả-UX»).
+
+## Sửa sau lần trả lại (01/11)
+
+Chủ kho trả hàng 10 ở Cổng Bằng chứng («Ký 25, trả 10 sửa»): danh sách sàn được tin cho mọi sàn đọc chéo, kể cả mã
+thoả thuận trên dòng danh mục — trái bất biến 1. Sửa bằng một migration mới (010 đã commit): luật đọc
+`catalog_trusted_companies` chỉ `company_id = app.current_company_id()` (hàm `app.catalog_source_active` chạy quyền
+người gọi vẫn thấy dòng của chính sàn, nên không cần security definer); cột `agreement_id` của `catalog_subdivisions`,
+`catalog_units` thôi cấp `select` cho `quy_hang_app` (cấp quyền theo cột: đọc mọi cột danh mục, ghi được
+`agreement_id`, không đọc được nó). Cửa nhận không đọc `agreement_id` nên không đổi hành vi. Tiêu chí mới AC-11, đo E12.
+

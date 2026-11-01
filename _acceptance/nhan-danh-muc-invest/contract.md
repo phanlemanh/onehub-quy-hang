@@ -5,10 +5,8 @@ slug: nhan-danh-muc-invest
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: signed-off
+status: draft
 design_doc: docs/superpowers/specs/2026-10-31-nhan-danh-muc-invest-design.md
-approved_by: Manh Phan
-approved_at: 2026-10-31T23:10:48Z
 ---
 
 # Acceptance Contract: nhan-danh-muc-invest
@@ -62,6 +60,11 @@ Source input: `docs/plan/lo-trinh.json` hàng 10 · `_acceptance/nhan-danh-muc-i
   hàng 72 (lõi, API, Postgres) vẫn xanh.
 - AC-10: Given vùng dùng chung sau migration, When đọc tập cột của bảng khu và bảng căn, Then đúng bằng danh sách
   viết trước trong ca kiểm — không cột nào của lớp khác `catalog` (không chủ nhà, giá, số điện thoại, ảnh).
+- AC-11: Given hai sàn đều nằm trong danh sách được tin và mỗi sàn đã nạp một gói, When một sàn — hoặc lời gọi chưa
+  đặt sàn — đọc danh sách tin và đọc mã thoả thuận trên dòng khu, căn của vùng dùng chung bằng vai `quy_hang_app`,
+  Then sàn ấy chỉ thấy đúng một dòng danh sách tin là của chính mình (lời gọi chưa đặt sàn thấy 0 dòng), không đọc
+  được mã thoả thuận của bất kỳ dòng khu, căn nào (lỗi quyền 42501), vẫn đọc được mọi cột danh mục của mọi dòng; cửa
+  nhận vẫn nhận gói của sàn được tin như AC-4. (Ngoài-1 hàng 10, chủ kho «trả 10 sửa» 01/11 — bất biến 1.)
 
 ## Coverage
 
@@ -73,7 +76,7 @@ ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts]
 - Trục thoả thuận: đang bật và được tin (AC-4) | đang bật mà không được tin (AC-6, AC-8) | tạm dừng, kết thúc, hết hạn,
   chưa hiệu lực, thiếu lớp, khác loại, chiều ra, không có (AC-6, AC-8) | bật lại (AC-6) [thước CE: `mayFlow` của `packages/core/src/agreements.ts`]
 - Trục lặp: gói lần đầu (AC-4) | gửi lại y nguyên (AC-5) | gửi lại có thay đổi (AC-5)
-- Trục lớp chặn: lõi khuôn (AC-1…AC-3) | API (AC-4…AC-7, AC-9) | cơ sở dữ liệu (AC-8, AC-10)
+- Trục lớp chặn: lõi khuôn (AC-1…AC-3) | API (AC-4…AC-7, AC-9) | cơ sở dữ liệu (AC-8, AC-10, AC-11)
 - Trục người gọi: chưa đăng nhập · chưa có sàn · không phải quản trị · quản trị (AC-9, AC-4)
 - Later: khoá máy cho Invest tự đẩy; số thị trường và tin rao trong khuôn; đường tra đọc vùng dùng chung; gói cũ hơn
   gói đã nhận (theo mốc đo); xoá căn không còn trong gói.
@@ -106,6 +109,5 @@ ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts]
 - Hàng này nâng số phiên bản khuôn cấp vào 0 → 1, xử hàng 72 Ngoài-4 (đổi tên khoá chưa nâng số) và Ngoài-5 (khuôn
   chưa chở trường nhà thấp tầng, đất).
 - Yêu cầu D-4: chạm tệp ngoài vùng của hàng (migration, đường API, ADR, Tham chiếu).
-- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
-  - Ngoài-1: Mỗi sàn xem được danh sách sàn được tin làm nguồn danh mục và mã thoả thuận của họ — chỉ mã nội bộ, không thông tin chủ nhà, giá hay khách.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01 (trước lần trả lại; Ngoài-1 nâng thành AC-11):
   - Ngoài-2: Khi hạ tầng thiếu quyền do cấu hình sai, người gửi gói vẫn chỉ thấy «thoả thuận không hiệu lực», nên tìm nguyên nhân thật chậm hơn.
