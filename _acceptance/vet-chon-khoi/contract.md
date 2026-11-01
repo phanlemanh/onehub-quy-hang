@@ -5,7 +5,7 @@ slug: vet-chon-khoi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [docs, lint]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-01-vet-chon-khoi-design.md
 approved_by:
 approved_at:
@@ -105,3 +105,8 @@ Quét Zwicky (preset test-matrix). Chân sản phẩm: `[SUY-TỪ-REPO: docs/adr
 ## Notes
 
 - Vùng của hàng: `packages/ui-lint/**`, `.agents/skills/quy-hang-ui/**`, `docs/design/vo-va-ia.md`.
+- Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Cột Archetype của danh mục khối chỉ bị bắt khi để trống. Ghi một tên sai nhưng là từ thường gặp trong tài liệu vỏ và IA thì kiểm chuẩn vẫn xanh. — `packages/ui-lint/kiem-chuan.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Nếu chạy kiểm tra trong khoảng 0 đến 7 giờ sáng giờ Việt Nam, cảnh báo về hạn xem lại đúng ngày hôm nay sẽ hiện trễ đến sáng. Đến 7 giờ thì cảnh báo xuất hiện bình thường. — `packages/ui-lint/kiem-chuan.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Cột Archetype chỉ bị bắt lỗi khi trống; một giá trị bịa nhưng trùng chữ nào đó trong tài liệu vẫn qua mặt kiểm chuẩn. — `packages/ui-lint/kiem-chuan.mjs`
+- Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Chạy kiểm tra trước 7 giờ sáng giờ Việt Nam thì dòng nhắc hạn xem lại của đúng hôm nay chưa hiện, sau 7 giờ mới hiện. — `packages/ui-lint/kiem-chuan.mjs`
+- Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bảng ghi điều đã tra trên kho khối giao diện được đối chiếu với một tệp kết quả do người gõ lại, không phải bản chụp nguyên văn từ công cụ tra. Máy không chứng minh được lượt tra đã thật sự chạy. — `packages/ui-lint/tests/kiem-chuan.test.mjs`
