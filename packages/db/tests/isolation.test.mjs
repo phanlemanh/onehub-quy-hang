@@ -1174,3 +1174,126 @@ test("chia lead: cấu hình chỉ quản trị sàn ghi được, ghi đúng t�
     assert.equal((await c.query(chen, [COMPANY_A, QT_A])).rowCount, 1);
   });
 });
+
+// ---- Lead bốn nấc (015_lead_bon_nac, hàng 27: AC-9) ----
+const BN_DC_A = "u-bn-dau-chu-a";
+const BN_TS_A = "u-bn-telesales-a";
+const BN_NG_B = "u-bn-nguoi-b"; // sàn B: đầu chủ, telesales, trưởng nhóm
+const BN_TRA = "00000000-0000-4000-8000-0000000005a1"; // lead A đã về BN_DC_A, chưa trả lại
+const BN_DA_TRA = "00000000-0000-4000-8000-0000000005a2"; // lead A đã trả lại, chưa gửi lại
+const BN_MOI = "00000000-0000-4000-8000-0000000005a3"; // lead A mới của cùng người nhập
+const BN_LEN = "00000000-0000-4000-8000-0000000005a4"; // lead A đã lên bảng
+const BN_HANG = "00000000-0000-4000-8000-0000000005a5";
+const BN_B = "00000000-0000-4000-8000-0000000005b1"; // lead B của BN_NG_B
+
+/** Sàn A: đầu chủ, telesales, bốn lead chủ trùng và một hàng Sẵn sàng bán của đầu chủ với chủ nhà mang dấu vết số của
+ * BN_LEN; sàn B: một người đủ vai và một lead. Dựng bằng vai chủ rồi chuyển sang vai API. */
+async function withBonNac(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [BN_DC_A, COMPANY_A, ["listing_agent"]],
+      [BN_TS_A, COMPANY_A, ["telesales"]],
+      [BN_NG_B, COMPANY_B, ["listing_agent", "telesales", "team_lead"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    const dauLen = randomBytes(32);
+    const lead = (id, san, nguoi, dauChu, hash = randomBytes(32), them = "") =>
+      c.query(
+        `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
+                            owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id ${them ? ", returned_at, returned_by" : ""})
+         values ($1, $2, $3, 'Toà A', 'sale', 1, 'included', 'now', $4, $5, 'owner_has_agent', $6 ${them ? ", now(), $6" : ""})`,
+        [id, san, nguoi, Buffer.concat([Buffer.from([1]), randomBytes(38)]), hash, dauChu],
+      );
+    await lead(BN_TRA, COMPANY_A, BN_TS_A, BN_DC_A);
+    await lead(BN_DA_TRA, COMPANY_A, BN_TS_A, BN_DC_A, randomBytes(32), "tra");
+    await lead(BN_MOI, COMPANY_A, BN_TS_A, BN_DC_A);
+    await lead(BN_LEN, COMPANY_A, BN_TS_A, BN_DC_A, dauLen);
+    await lead(BN_B, COMPANY_B, BN_NG_B, BN_NG_B);
+    await c.query(
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $2, 1, 'created', '{"buildingName":"Toà A"}', $3, '{listing_agent}', false),
+              ($1, $2, 2, 'status_changed', '{"to":"Active"}', $3, '{listing_agent}', true)`,
+      [COMPANY_A, BN_HANG, BN_DC_A],
+    );
+    await c.query("insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, 'Toà A', 'Active', 2)", [BN_HANG, COMPANY_A]);
+    await c.query("insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 1, $3, $3)", [COMPANY_A, BN_HANG, BN_DC_A]);
+    await c.query(
+      "insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, updated_by) values ($1, $2, '[Tên]', $3, $4, $5)",
+      [COMPANY_A, BN_HANG, Buffer.concat([Buffer.from([1]), randomBytes(38)]), dauLen, BN_DC_A],
+    );
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+const dongBonNac = (c, id, quayVe) =>
+  docChu(c, "select returned_at, returned_by, resubmitted_at, resubmitted_lead_id from leads where id = $1", [id], quayVe).then((r) => r[0]);
+
+test("lead bốn nấc: hàm ghi của sàn B không đổi lead nào của sàn A, cùng lời gọi dưới A đổi đúng một dòng", { skip }, async () => {
+  await withBonNac(async (c) => {
+    // [tên, người A, lời gọi, lead đọc lại]
+    const ca = [
+      ["return_lead", BN_DC_A, `select app.return_lead('${BN_TRA}')`, BN_TRA],
+      ["mark_resubmitted", BN_TS_A, `select app.mark_resubmitted('${BN_DA_TRA}', '${BN_MOI}')`, BN_DA_TRA],
+    ];
+    let so = 0;
+    for (const [ten, nguoiA, sql, id] of ca) {
+      for (const ai of [nguoiA, BN_NG_B]) {
+        await lamNguoi(c, ai, COMPANY_B);
+        const truoc = await dongBonNac(c, id, [ai, COMPANY_B]);
+        await expectError(c, sql, [], /không có lead này của người gọi/);
+        assert.deepEqual(await dongBonNac(c, id, [ai, COMPANY_B]), truoc, `${ten}: dòng của A đổi dưới B`);
+      }
+      await lamNguoi(c, nguoiA, COMPANY_A);
+      const truoc = await dongBonNac(c, id, [nguoiA, COMPANY_A]);
+      await c.query(sql);
+      assert.notDeepEqual(await dongBonNac(c, id, [nguoiA, COMPANY_A]), truoc, `${ten}: đối chứng dưới A không đổi gì`);
+      so++;
+    }
+    assert.equal(so, ca.length);
+    // B cũng không trỏ lead của mình vào lead của A.
+    await lamNguoi(c, BN_NG_B, COMPANY_B);
+    await expectError(c, "select app.mark_resubmitted($1, $2)", [BN_B, BN_MOI], /không có lead này của người gọi/);
+  });
+});
+
+test("lead bốn nấc: hàm lên bảng của sàn B không trả lead nào của sàn A, trả đúng hai cột", { skip }, async () => {
+  await withBonNac(async (c) => {
+    const tat = [BN_TRA, BN_DA_TRA, BN_MOI, BN_LEN];
+    await lamNguoi(c, BN_TS_A, COMPANY_A);
+    const a = await c.query("select * from app.lead_board_dates($1)", [tat]);
+    assert.deepEqual(a.fields.map((f) => f.name), ["lead_id", "board_at"]);
+    assert.deepEqual(a.rows.map((r) => r.lead_id), [BN_LEN], "đối chứng dưới A");
+    for (const ai of [BN_TS_A, BN_NG_B]) {
+      await lamNguoi(c, ai, COMPANY_B);
+      assert.deepEqual((await c.query("select * from app.lead_board_dates($1)", [tat])).rows, [], `lead của A lộ sang B (${ai})`);
+    }
+    // Người khác trong cùng sàn A (đầu chủ) không đọc mốc lead telesales nhập.
+    await lamNguoi(c, BN_DC_A, COMPANY_A);
+    assert.deepEqual((await c.query("select * from app.lead_board_dates($1)", [tat])).rows, []);
+  });
+});
+
+test("lead bốn nấc: vai API không sửa bốn cột mới, không gọi hàm lên bảng toàn sàn và hàm số đo", { skip }, async () => {
+  await withBonNac(async (c) => {
+    await lamNguoi(c, BN_DC_A, COMPANY_A);
+    for (const cot of ["returned_at = now()", "returned_by = 'x'", "resubmitted_at = now()", `resubmitted_lead_id = '${BN_MOI}'`]) {
+      await expectError(c, `update leads set ${cot} where id = $1`, [BN_TRA], /permission denied/);
+    }
+    await expectError(c, "select * from app.lead_board_at_all($1)", [COMPANY_A], /permission denied/);
+    await expectError(c, "select * from app.lead_board_metric($1, now() - interval '1 day', now() + interval '1 day')", [COMPANY_A], /permission denied/);
+    // Đối chứng dương: kết nối chủ chạy được hàm số đo và thấy lead đã lên bảng.
+    await c.query("reset role");
+    const r = await c.query("select * from app.lead_board_metric($1, now() - interval '1 day', now() + interval '1 day')", [COMPANY_A]);
+    assert.deepEqual(r.fields.map((f) => f.name), ["lead_id", "first_created_at", "board_at", "days"]);
+    assert.deepEqual(r.rows.map((x) => x.lead_id), [BN_LEN]);
+  });
+});
