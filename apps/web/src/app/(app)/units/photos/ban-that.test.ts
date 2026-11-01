@@ -68,4 +68,9 @@ test("E5 báo lỗi sửa xoá: năm việc × (API lỗi, mất mạng) báo đ
   const tran = nguon.split("\n").filter((d) => /nguon\.(sua|xoa)\(/.test(d) && !/lam\("(bia|mau|ngan|thuTu|xoa)", \(\) => nguon\.(sua|xoa)\(/.test(d));
   assert.deepEqual(tran, [], "có nút sửa/xoá ảnh không đi qua lamViec");
   assert.ok(nguon.split("\n").filter((d) => /lam\("/.test(d)).length >= 7, "đếm lời gọi lam quá ít — bài quét không thấy mã");
+  // Lời báo đi vào khung riêng mà chính mục Ảnh gắn — hồ sơ căn không có khung chung (lượt chấm 2: toast không hiện).
+  const khung = /const KHUNG_BAO = "([^"]+)"/.exec(nguon)?.[1];
+  assert.ok(khung, "mục Ảnh không khai khung thông báo");
+  assert.match(nguon, /<Toaster id=\{KHUNG_BAO\}/, "mục Ảnh không gắn khung thông báo của mình");
+  assert.match(nguon, /toast\.error\(chu, \{ toasterId: KHUNG_BAO \}\)/, "lời báo không trỏ vào khung của mục Ảnh");
 });

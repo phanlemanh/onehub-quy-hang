@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,6 +31,10 @@ import { toast } from "sonner";
 
 import { guiLuot, nganChoTha, tepTuLuotDan, type TepSanSang, type The } from "./tai-len";
 import { lamViec, type ViecAnh } from "./viec-anh";
+
+// Khung thông báo riêng của mục Ảnh: hồ sơ căn không có khung chung; Bảng hàng có khung của trình sửa trên ô — id riêng
+// để hai khung không hiện trùng một lời báo.
+const KHUNG_BAO = "muc-anh";
 
 export type DanhSachAnh = { anh: UnitPhoto[]; noiBo: "thay" | "an"; suaDuoc: boolean };
 export type SuaAnh = { compartment?: Compartment; order?: string[]; isCover?: true; isSample?: boolean };
@@ -82,7 +87,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
     );
   }, [nguon]);
   useEffect(tai, [tai]);
-  const lam = (viec: ViecAnh, goi: () => Promise<void>) => void lamViec(viec, goi, { baoLoi: (chu) => toast.error(chu), taiLai: tai });
+  const lam = (viec: ViecAnh, goi: () => Promise<void>) => void lamViec(viec, goi, { baoLoi: (chu) => toast.error(chu, { toasterId: KHUNG_BAO }), taiLai: tai });
 
   const nhan = useCallback(
     async (files: File[], ngan: Compartment) => {
@@ -282,6 +287,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Toaster id={KHUNG_BAO} position="bottom-right" />
     </section>
   );
 }

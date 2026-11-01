@@ -1,11 +1,6 @@
-E6 network (chrome-devtools, origin http://localhost:3482)
-Buoc 1 (trang /units/A-06.01, anh PNG 5.402.713 byte ve bang ma):
-  POST /api/v1/units/photos/upload-url [200]
-  POST /api/v1/units/photos [201]
-  GET  /api/v1/units/photos?toa=Toà A&ma=A-06.01 [200]
-  GET  /api/v1/units/photos/<id>/thumb [200]
-Buoc 2 (trang /inventory?unit=A-06.01, cot ho so):
-  GET catalog/listings/units/photos [200] x nhieu lan
-  DELETE /api/v1/units/photos/<id> -> bi chan o trinh duyet bang initScript (window.fetch tra 500 gia, khong toi may chu); window.__del = ["/api/v1/units/photos/b4af9a45-..."]
-Console: chi [info] React DevTools, [log] HMR connected. Khong error.
-Ghi chu: 500 cua DELETE la loi do cong cu chu dong chen (khong phai loi that cua ung dung).
+E6 network (chrome-devtools, trang /units/A-06.01?toa=Toà A, app-origin http://localhost:3482)
+GET catalog x2 200; GET units/photos x5 200; GET listings/{id} x2 200; GET listings x2 200
+POST /api/v1/units/photos/upload-url 200 ; POST /api/v1/units/photos 201 (anh 4,87 MB)
+DELETE /api/v1/units/photos/{id}: lan dau (khong chan) 200; lan co chan bang fetch override (initScript) -> tra 500 gia, khong qua mang
+Console: chi info React DevTools + [HMR] connected; khong loi.
+Phat hien: <Toaster> chi mount o inventory/cell-edit/tren-o.tsx, KHONG mount o /units/[code] -> toast.error khong hien (DOM [data-sonner-toaster] = null).
