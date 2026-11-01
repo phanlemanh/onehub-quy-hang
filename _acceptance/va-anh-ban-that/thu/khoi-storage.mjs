@@ -1,12 +1,17 @@
 // Thử khói kho ảnh thật (va-anh-ban-that, Hỏi-3) — CHỦ KHO chạy trên máy mình, khoá ở .env.local (máy không đọc):
-//   node --env-file=.env.local --import tsx _acceptance/va-anh-ban-that/thu/khoi-storage.mjs [--origin https://<tên miền chính>]
+//   node --env-file=.env.local --import tsx _acceptance/va-anh-ban-that/thu/khoi-storage.mjs [--origin <gốc app>]
+// Gốc app mặc định là BETTER_AUTH_URL của môi trường (tên miền chính ở bản thật).
 // Ký link PUT bằng chính mô-đun kho-s3 của API, PUT 8 MB, hỏi CORS (OPTIONS kèm Origin), GET Range, xoá. In một dòng mỗi
 // bước và dòng cuối «THỬ KHÓI: ĐẠT» hay «THỬ KHÓI: TRƯỢT — <bước>». Đối tượng thử nằm dưới tiền tố «khoi-thu/», luôn bị xoá.
 import { randomUUID } from "node:crypto";
 import { parseArgs } from "node:util";
 import { cauHinhS3, khoS3, kyLinkPut } from "../../../packages/api/src/photos/kho-s3.ts";
 
-const { values: a } = parseArgs({ options: { origin: { type: "string", default: "https://quy-hang.onehub.vn" } } });
+const { values: a } = parseArgs({ options: { origin: { type: "string", default: process.env.BETTER_AUTH_URL ?? "" } } });
+if (!a.origin) {
+  console.log("THỬ KHÓI: TRƯỢT — thiếu gốc app: truyền --origin hoặc đặt BETTER_AUTH_URL");
+  process.exit(1);
+}
 const cfg = cauHinhS3();
 if (!cfg) {
   console.log("THỬ KHÓI: TRƯỢT — chưa có khoá kho ảnh trong môi trường");
