@@ -51,8 +51,13 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     alreadyOnBoard: ["already-on-board", 409],
     notReturned: ["not-returned", 409],
     alreadyResubmitted: ["already-resubmitted", 409],
+    // Hàng 18 (ADR-0014).
+    photoNotImage: ["photo-not-image", 400],
+    photoTooLarge: ["photo-too-large", 400],
+    photoInternalNoSample: ["photo-internal-no-sample", 400],
+    photoStorageMissing: ["photo-storage-missing", 503],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 40);
+  assert.equal(Object.keys(API_ERRORS).length, 44);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);
