@@ -108,7 +108,10 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
   cùng hàng ấy: hàng đợi là bộ lọc lưu được (ADR-0022) ở hàng 22; đầu hồ sơ, tab, hai cột ở vòng hồ sơ kế; cột thứ hai
   có số cùng hàng 52.
 - Bốn chỗ ghép tạm «chờ khoá ReUI Pro» (đăng nhập, ô nhận lead, trống · lỗi · báo, người dùng) hết lý do chờ — MCP `reui`
-  trả gói Pro; trống · lỗi · báo trả trong hàng nền, ba chỗ kia là hàng riêng theo màn.
+  trả gói Pro. Hàng nền 91 trả hai chỗ nằm trong vùng của nó: trống · lỗi · báo (chuyển thể `empty-state-1`, `-2` vào
+  `TrangThai`) và người dùng (`solution-users-8`, cùng lúc chuyển Cài đặt sàn sang bố cục Đọc). Đăng nhập (`auth-15`) và ô
+  nhận lead (`form-2`) mở thành hàng riêng theo màn khi hàng 91 gộp — giám sát cấp mã; tới lúc đó hai dòng «Chỗ hở» đổi
+  hạn xem lại thành «khi hàng ấy mở».
 - `docs/design/vo-va-ia.md` §2 thêm cột «Bố cục»; danh mục khối thêm dòng cho mỗi khối hệ bố cục dùng; skill
   `quy-hang-ui` thêm mục hệ bố cục — trong PR của hàng nền.
 - Giả định chờ gạch ở Cổng Phạm vi của hàng nền: máy tính vừa có cần bố cục riêng (chưa xem trên bản chạy); không đủ

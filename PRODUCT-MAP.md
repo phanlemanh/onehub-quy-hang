@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TD
-  A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
+  A["Đang cân nhắc cơ hội<br/>1 việc"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>7 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
@@ -21,6 +21,10 @@ flowchart TD
 > **Cổng Đáng** việc này có đáng làm không · **Cổng Phạm vi** bộ tiêu chí
 > đã đủ và đúng chưa · **Cổng Bằng chứng** đã làm đúng thứ đã hứa chưa ·
 > **Cổng Giá trị** thứ đã giao có ăn thua không.
+
+## Đang cân nhắc cơ hội
+
+- Mọi màn sau đăng nhập chọn một trong bảy bố cục có tên của hệ bố cục — Tràn, Danh sách – chi tiết, Đọc, Hồ sơ hai cột, Bảng điều khiển, Luồng nhiều bước, Dòng tin — với sáu vùng chuẩn (đầu màn, thanh công cụ, thân, cột phụ, chân, ngăn nổi), chờ tải theo hình của bố cục, rỗng · lỗi · ngoại tuyến một luật chung, ba khổ 1440 · 1024 · 375 và một menu Tạo trên vỏ; trang mẫu sống bày mọi bố cục × trạng thái × khổ không cần cơ sở dữ liệu hay đăng nhập, ảnh chụp từ nó là ảnh chuẩn để đối chiếu màn mới (`he-bo-cuc`)
 
 ## Sắp mở vòng
 

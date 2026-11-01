@@ -1900,11 +1900,11 @@
       "vi_sao": "ADR-0024: so với Verve CRM (cùng họ khối ReUI) Quỹ hàng thiếu tầng bố cục giữa thang dùng lại và khuôn nhóm màn — ba chỗ chờ tải viết tay, hai kiểu căn lề, nút tạo ở hai nơi, hồ sơ toàn màn không lối về, năm kích thước tuỳ ý, ảnh đối chiếu cần Postgres và đăng nhập; chủ kho 02/11 «Duyệt hướng chung»",
       "vai": "Đầu chủ · Đầu khách · Trưởng nhóm · Quản trị sàn",
       "tieu_chi": 10,
-      "hang": "T3",
+      "hang": "T2",
       "dung_tren": [
         "84"
       ],
-      "bat_khi": "Một màn dưới (app) không khai bố cục, đặt max-w hay h-[…] tay, dựng Skeleton ngoài khuôn hay gọi thẳng Sheet → npm run lint đỏ; trang mẫu sống mở không có Postgres, không đăng nhập, đủ bảy bố cục × chờ tải · rỗng · lỗi · ngoại tuyến × ba khổ; vòng giao diện so màn mới với ảnh chuẩn của bố cục nó dùng; MCP reui và shadcn chạy từ .mcp.json của kho; Cài đặt sàn và trang tạm đã chuyển, màn của hàng đang chạy mang ngoại lệ có hạn",
+      "bat_khi": "Một màn dưới (app) không khai bố cục, đặt max-w hay h-[…] tay, dựng Skeleton ngoài khuôn hay gọi thẳng Sheet → npm run lint đỏ; trang mẫu sống mở không có Postgres, không đăng nhập, đủ bảy bố cục × chờ tải · rỗng · lỗi · ngoại tuyến × ba khổ; vòng giao diện so màn mới với ảnh chuẩn của bố cục nó dùng; MCP reui và shadcn chạy từ .mcp.json của kho; Cài đặt sàn (kèm Người dùng theo solution-users-8) và trang tạm đã chuyển, TrangThai chuyển thể empty-state, màn của hàng đang chạy mang ngoại lệ có hạn",
       "nhom": "nen",
       "vung": [
         ".mcp.json",
