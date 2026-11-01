@@ -6,7 +6,8 @@ feature_slug: sua-tren-o
 #     3481, nhật ký .acceptance-runs/bang-hang-kieu-sheet/web-b.log. In bảng email ↔ số hàng mỗi người thấy.
 #   Phiên đăng nhập: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs (cookieCua) giữ phiên ở .acceptance-runs.
 #   Lịch sử sự kiện của một hàng: GET /api/v1/listings/<id>/events (fetch trong trang, cùng phiên).
-#   Bài nhìn GHI dữ liệu: mỗi bài chọn hàng riêng (mã căn ghi ở steps) để các bài chạy song song không đụng nhau.
+#   Bài nhìn GHI dữ liệu: mỗi bài lấy một hàng riêng của Toà B theo thứ tự «Đang bán có giá thứ k theo Mã căn» (k ghi ở
+#   steps) để các bài chạy song song không đụng nhau; Toà A để dò tay.
 evals:
   - id: E1
     criterion: AC-1
@@ -21,12 +22,12 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở http://localhost:3481/inventory, Nhóm = Không nhóm, lọc Mã căn = A-01.03 (hàng Đang bán có giá) — ghi giá, phí, Xác nhận hiện tại; fetch GET /api/v1/listings/<id>/events → ghi số sự kiện (n0)"
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở http://localhost:3481/inventory, Nhóm = Không nhóm, Toà B, chọn hàng Đang bán có giá THỨ NHẤT theo Mã căn tăng dần (ghi mã, gọi là M) — ghi giá, phí, Xác nhận hiện tại; fetch GET /api/v1/listings/<id>/events → ghi số sự kiện (n0)"
       - "Nhấp đúp ô Giá → chụp evidence/E2-mo-sua.png; ghi các phần trong trình sửa (ô gõ, hai nút phí và nút nào đang chọn, dòng chữ dưới ô, có nút «Lưu» không)"
       - "Gõ «abc» → chụp evidence/E2-chua-hieu.png; ghi dòng chữ dưới ô; bấm Enter → ghi ô còn mở không; fetch số sự kiện (phải vẫn n0); bấm Esc → ghi giá trên ô"
       - "Mở lại ô Giá, gõ giá cao hơn giá cũ dưới 20% (vd giá cũ × 1,1, viết theo tỷ, hai số lẻ) → ghi dòng «Hiểu là: …» → Enter → chụp evidence/E2-da-doi.png; ghi giá trên ô, Xác nhận của hàng, chữ thông báo góc màn, chân bảng"
       - "Fetch lại events → ghi số sự kiện (n1) và sự kiện cuối: type, payload, confirmedWithOwner"
-    expected: "Trình sửa có ô gõ + hai nút «Bao phí / Không bao phí» (nút của điều kiện hiện tại đang chọn), dòng «Tính là vừa xác nhận với chủ nhà», không nút Lưu. «abc» → «Chưa hiểu «abc» — gõ như 4,65 tỷ hoặc 950 triệu», Enter không đóng ô, số sự kiện vẫn n0, Esc trả giá cũ. Giá trong ngưỡng: «Hiểu là: <giá>, <điều kiện phí>» khớp chữ đã gõ; Enter ghi thẳng (không hộp hỏi lại); ô hiện giá mới; Xác nhận «Hôm nay»; thông báo «Đã đổi giá A-01.03 · Hoàn tác». n1 = n0 + 1; sự kiện cuối type price_changed, payload đúng hai khoá listPrice (bằng số đã gõ) và feeInclusion, confirmedWithOwner true. Mỗi mục một đạt/trượt."
+    expected: "Trình sửa có ô gõ + hai nút «Bao phí / Không bao phí» (nút của điều kiện hiện tại đang chọn), dòng «Tính là vừa xác nhận với chủ nhà», không nút Lưu. «abc» → «Chưa hiểu «abc» — gõ như 4,65 tỷ hoặc 950 triệu», Enter không đóng ô, số sự kiện vẫn n0, Esc trả giá cũ. Giá trong ngưỡng: «Hiểu là: <giá>, <điều kiện phí>» khớp chữ đã gõ; Enter ghi thẳng (không hộp hỏi lại); ô hiện giá mới; Xác nhận «Hôm nay»; thông báo «Đã đổi giá M · Hoàn tác». n1 = n0 + 1; sự kiện cuối type price_changed, payload đúng hai khoá listPrice (bằng số đã gõ) và feeInclusion, confirmedWithOwner true. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/inventory/**", "packages/core/src/pricing/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -61,7 +62,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = A-04.06 (hàng có giá) — ghi giá, phí; fetch events → n0"
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Toà B, hàng Đang bán có giá THỨ HAI theo Mã căn (ghi mã) — ghi giá, phí; fetch events → n0"
       - "Nhấp đúp ô Phí → chụp evidence/E4-phi.png; chọn điều kiện còn lại → ghi hộp hỏi lại có hiện không (đổi phí luôn hỏi) và chữ của hộp → bấm «Đổi» → fetch events → ghi sự kiện cuối (type, payload)"
       - "Mở ô Giá, gõ giá cũ × 1,5 → Enter → chụp evidence/E4-hoi-lai.png; ghi chữ hộp hỏi lại (giá cũ, giá mới, phần trăm) → bấm «Thôi» → ghi giá trên ô; fetch events → số sự kiện"
       - "Tìm một hàng chưa có giá (Giá = «—», ghi mã) → nhấp đúp ô Phí → ghi trình sửa nào mở; nhấp đúp ô Giá, gõ «3 tỷ» không chọn phí → Enter → ghi chữ báo và số sự kiện của hàng đó"
@@ -91,11 +92,11 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = B-08.02 — ghi trạng thái; nhấp đúp ô Trạng thái → chụp evidence/E6-nac.png; ghi danh sách nấc"
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Toà B, hàng Đang bán có giá THỨ BA theo Mã căn (ghi mã) — ghi trạng thái; nhấp đúp ô Trạng thái → chụp evidence/E6-nac.png; ghi danh sách nấc"
       - "Chọn «Tạm ngừng» → ghi có hộp hỏi lại không → ghi trạng thái mới; fetch events → sự kiện cuối"
       - "Tìm hàng Chưa đủ để rao thiếu pháp lý (ghi mã) → ô Trạng thái → chọn «Đang bán» → chụp evidence/E6-thieu.png; ghi chữ báo; fetch số sự kiện hàng đó trước/sau"
-      - "Hàng Đang bán khác (ghi mã) → ô Trạng thái → chọn «Đã bán» → chụp evidence/E6-da-ban.png; ghi các ô hỏi thêm và ngày mặc định; gõ giá chốt «4,5 tỷ» → ghi «Hiểu là…» → xác nhận (hộp «Không hoàn tác được») → fetch events → sự kiện cuối"
-    expected: "Danh sách nấc của B-08.02 đúng bảng ADR-0008 cho trạng thái hiện tại (ghi rõ trạng thái và danh sách). Tạm ngừng ghi status_changed {to:'Hold'}. Đang bán thiếu điều kiện: báo «Chưa lên Đang bán được: thiếu …» gọi tên phần thiếu, không sự kiện mới. Đã bán hỏi giá chốt + ngày bán (mặc định hôm nay), đọc lại «Hiểu là: 4,5 tỷ», hộp có «Không hoàn tác được», ghi status_changed {to:'Closed', closePrice:4500000000, closeDate hôm nay}. Mỗi mục một đạt/trượt."
+      - "Hàng Đang bán có giá THỨ TÁM ở Toà B (ghi mã) → ô Trạng thái → chọn «Đã bán» → chụp evidence/E6-da-ban.png; ghi các ô hỏi thêm và ngày mặc định; gõ giá chốt «4,5 tỷ» → ghi «Hiểu là…» → xác nhận (hộp «Không hoàn tác được») → fetch events → sự kiện cuối"
+    expected: "Danh sách nấc của hàng đã chọn đúng bảng ADR-0008 cho trạng thái hiện tại (ghi rõ trạng thái và danh sách). Tạm ngừng ghi status_changed {to:'Hold'}. Đang bán thiếu điều kiện: báo «Chưa lên Đang bán được: thiếu …» gọi tên phần thiếu, không sự kiện mới. Đã bán hỏi giá chốt + ngày bán (mặc định hôm nay), đọc lại «Hiểu là: 4,5 tỷ», hộp có «Không hoàn tác được», ghi status_changed {to:'Closed', closePrice:4500000000, closeDate hôm nay}. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -104,9 +105,9 @@ evals:
     executor: ui-check
     layer: backend-effect
     steps:
-      - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = B-14.04 — ghi Xác nhận hiện tại (phải khác «Hôm nay»; nếu đang «Hôm nay» chọn hàng khác có Xác nhận cũ, ghi mã)"
+      - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Toà B, hàng Đang bán có giá THỨ TƯ theo Mã căn có Xác nhận khác «Hôm nay» (ghi mã) — ghi Xác nhận hiện tại"
       - "Sửa ô Giá trong ngưỡng 20% → Enter → ghi Xác nhận của hàng; fetch events → sự kiện cuối: type, confirmedWithOwner, occurredAt"
-      - "Sửa ô Trạng thái của một hàng Đang bán khác sang Tạm ngừng → fetch events của hàng đó → confirmedWithOwner"
+      - "Sửa ô Trạng thái của hàng Đang bán có giá THỨ NHẤT ở Toà A theo Mã căn sang Tạm ngừng (ghi mã) → fetch events của hàng đó → confirmedWithOwner"
     expected: "Trước khi sửa Xác nhận khác «Hôm nay»; sau khi sửa giá Xác nhận «Hôm nay»; sự kiện price_changed confirmedWithOwner true, occurredAt hôm nay; sự kiện status_changed confirmedWithOwner true. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
@@ -125,7 +126,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = A-02.05 (hàng Đang bán có giá; không có thì chọn hàng Đang bán có giá khác, ghi mã) — ghi giá, phí; fetch events → n0"
+      - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Toà B, hàng Đang bán có giá THỨ NĂM theo Mã căn (ghi mã) — ghi giá, phí; fetch events → n0"
       - "Sửa giá trong ngưỡng → Enter → chụp evidence/E8-thong-bao.png; bấm «Hoàn tác» trên thông báo → ghi giá, phí trên ô; fetch events → n và hai sự kiện cuối"
       - "Sửa giá lần nữa → Enter → bấm Ctrl+Z (Cmd+Z trên mac) khi lưới có tiêu điểm → ghi giá trên ô; fetch events"
       - "Chuyển hàng sang «Ngừng hẳn» (lý do Chủ đổi ý) → chụp evidence/E8-khong-hoan-tac.png của hộp hỏi lại → xác nhận → ghi thông báo sau khi ghi có nút Hoàn tác không"
@@ -140,8 +141,8 @@ evals:
     steps:
       - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm, bật ba cột ẩn. Viết trước danh sách 19 cột; với từng cột: chọn ô của dòng đầu, nhấp đúp và bấm Enter → ghi có trình sửa mở không (mỗi cột một dòng)"
       - "Khổ 375x812: mở /inventory → ghi có lưới không và thử nhấp đúp vào bất kỳ ô giá nào nếu có → ghi có mở sửa không"
-      - "Khổ 1440: bật giả lập mất mạng (CDP Network.emulateNetworkConditions offline) → sửa ô Giá của hàng A-06.01 (hay hàng có giá khác, ghi mã) trong ngưỡng → ghi ô có đổi không và chỉ báo chờ gửi; tắt giả lập → chờ 10 giây → fetch events → sự kiện cuối"
-      - "Hai phiên: dau-chu-1 và trưởng nhóm (truong-nhom) cùng mở hàng A-07.02 (hay hàng cả hai thấy, ghi mã). Phiên trưởng nhóm sửa giá trước; phiên dau-chu-1 (chưa tải lại) sửa giá → chụp evidence/E9-can-xem.png; ghi phiên dau-chu-1 thấy gì (Cần xem, bốn lối) và giá ở máy chủ (fetch listing)"
+      - "Khổ 1440: bật giả lập mất mạng (CDP Network.emulateNetworkConditions offline) → sửa ô Giá của hàng Đang bán có giá THỨ SÁU ở Toà B theo Mã căn (ghi mã) trong ngưỡng → ghi ô có đổi không và chỉ báo chờ gửi; tắt giả lập → chờ 10 giây → fetch events → sự kiện cuối"
+      - "Hai phiên: dau-chu-1 và trưởng nhóm (truong-nhom) cùng mở hàng Đang bán có giá THỨ BẢY ở Toà B mà cả hai thấy (ghi mã). Phiên trưởng nhóm sửa giá trước; phiên dau-chu-1 (chưa tải lại) sửa giá → chụp evidence/E9-can-xem.png; ghi phiên dau-chu-1 thấy gì (Cần xem, bốn lối) và giá ở máy chủ (fetch listing)"
     expected: "Đúng ba cột Giá, Phí, Trạng thái mở trình sửa; mười sáu cột còn lại không mở (mỗi cột một đạt/trượt). Khổ 375 không mở sửa ở đâu. Mất mạng: ô đổi ngay, chỉ báo chờ gửi hiện; có mạng lại thì sự kiện lên máy chủ. Hai phiên: phiên sau vào «Cần xem», giá máy chủ là giá của phiên trước, không bị ghi đè lặng. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]

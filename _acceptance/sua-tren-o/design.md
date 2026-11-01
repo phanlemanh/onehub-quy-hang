@@ -21,8 +21,8 @@ hàng 14 (khối `data-grid-editing-6`, đang tắt sửa ô tường minh).
 
 1. **Bộ đọc giá** — `packages/core/src/pricing/`: chữ đầu chủ gõ → số đồng. Nhận «4,65 tỷ», «4.65 tỷ», «4,65t»,
    «4 tỷ 650», «4ty65», «950 triệu», «950tr», «950 tr», «4650000000», «4.650.000.000». Không đoán: chữ mơ hồ (một số
-   trần nhỏ hơn 1.000 không đơn vị, hai số, đơn vị lạ) → trả «chưa hiểu». Câu đọc lại «Hiểu là: 4,65 tỷ, không bao phí»
-   dùng lại `understoodPrice` đã có ở `packages/core/src/dedupe` (một chỗ dựng chữ).
+   trần dưới 1 triệu không đơn vị, hai số, đơn vị lạ) → trả «chưa hiểu». Câu đọc lại «Hiểu là: 4,65 tỷ, không bao phí»
+   dùng đúng chữ của cột Phí («bao phí / không bao phí»), không dùng «đã / chưa bao phí» của Ô nhận lead.
 2. **Ngưỡng hỏi lại** — `packages/core/src/pricing/`: hằng `MUC_HOI_LAI_DOI_GIA_PHAN_TRAM = 20` khai một chỗ có tên,
    chú thích «mặc định của sàn» (khoá `price.change_confirm_pct` ở `docs/architecture/so-diem-bien-thien.md`; luật thường
    trực G-3110-24). Hàm thuần `canHoiLai(cu, moi)`: đổi điều kiện phí → luôn hỏi (luật 12 cấm so giá bao phí với không

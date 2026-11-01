@@ -23,8 +23,8 @@ test("E2b: trình sửa Giá dựng đúng một lệnh đổi giá đủ hai kh
   assert.deepEqual(kq.lenh, { type: "price_changed", payload: { listPrice: 4_800_000_000, feeInclusion: "excluded" } });
   assert.deepEqual(Object.keys(kq.lenh.payload).sort(), ["feeInclusion", "listPrice"]);
   assert.deepEqual(validatePayload(kq.lenh.type, kq.lenh.payload), []);
-  assert.equal(kq.hieuLa, "Hiểu là: 4,8 tỷ, chưa bao phí");
-  assert.equal(hieuLaGia("4,8 tỷ", "included"), "Hiểu là: 4,8 tỷ, đã bao phí");
+  assert.equal(kq.hieuLa, "Hiểu là: 4,8 tỷ, không bao phí");
+  assert.equal(hieuLaGia("4,8 tỷ", "included"), "Hiểu là: 4,8 tỷ, bao phí");
 });
 
 test("E2b đối chứng đỏ: lệnh thiếu điều kiện phí bị khuôn lõi gọi tên", () => {

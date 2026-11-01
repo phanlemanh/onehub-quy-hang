@@ -2,7 +2,6 @@
  * Dựng lệnh từ trình sửa trên ô (hàng 15). Thuần — không React: trình sửa, hoàn tác và bài kiểm cùng đọc. Mỗi lệnh là một
  * sự kiện của lõi (luật 8); giá luôn đi cùng điều kiện phí (luật 7) vì mọi đường đều dựng `price_changed` đủ hai khoá.
  */
-import { understoodPrice } from "@quy-hang/core/dedupe";
 import { missingFor, TRANSITIONS, type Requirement, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { hoanTacDuoc } from "./hoan-tac";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
@@ -33,11 +32,14 @@ export const CHON_PHI = "Chọn Bao phí hay Không bao phí";
 
 const laPhi = (v: unknown): v is FeeInclusion => v === "included" || v === "excluded";
 
+/** Máy nói lại giá (luật 7) bằng đúng chữ của cột Phí: «Hiểu là: 4,8 tỷ, không bao phí». */
+const docLai = (dong: number, phi: FeeInclusion) => `Hiểu là: ${vietGia(dong)}, ${phi === "included" ? "bao phí" : "không bao phí"}`;
+
 /** Dòng «Hiểu là: …» sống dưới ô Giá; null khi chưa hiểu hay chưa chọn phí. */
 export function hieuLaGia(chu: string, phi: FeeInclusion | null): string | null {
   const kq = docGia(chu);
   if (!kq.ok || !phi) return null;
-  return `Hiểu là: ${understoodPrice(kq.dong, phi)}`;
+  return docLai(kq.dong, phi);
 }
 
 /** Trình sửa Giá: chữ đã gõ + điều kiện phí đang chọn → một lệnh đổi giá. */
@@ -47,7 +49,7 @@ export function dungLenhGia(hang: HangSua, chu: string, phi: FeeInclusion | null
   if (!phi) return { ok: false, loi: CHON_PHI };
   const lenh: Lenh = { type: "price_changed", payload: { listPrice: kq.dong, feeInclusion: phi } };
   const cu = { listPrice: hang.listPrice, feeInclusion: laPhi(hang.feeInclusion) ? hang.feeInclusion : null };
-  return { ok: true, lenh, hieuLa: `Hiểu là: ${understoodPrice(kq.dong, phi)}`, hoiLai: canHoiLai(cu, lenh.payload), khongHoanTac: !hoanTacDuoc(hang, lenh) };
+  return { ok: true, lenh, hieuLa: docLai(kq.dong, phi), hoiLai: canHoiLai(cu, lenh.payload), khongHoanTac: !hoanTacDuoc(hang, lenh) };
 }
 
 /** Trình sửa Phí: giữ giá, đổi điều kiện. Hàng chưa có giá thì mở trình sửa Giá (không có phí trơn). */
@@ -55,7 +57,7 @@ export function dungLenhPhi(hang: HangSua, phi: FeeInclusion): KetQuaLenh {
   if (hang.listPrice === null) return { ok: false, moTrinhSuaGia: true };
   const lenh: Lenh = { type: "price_changed", payload: { listPrice: hang.listPrice, feeInclusion: phi } };
   const cu = { listPrice: hang.listPrice, feeInclusion: laPhi(hang.feeInclusion) ? hang.feeInclusion : null };
-  return { ok: true, lenh, hieuLa: `Hiểu là: ${understoodPrice(hang.listPrice, phi)}`, hoiLai: canHoiLai(cu, lenh.payload), khongHoanTac: !hoanTacDuoc(hang, lenh) };
+  return { ok: true, lenh, hieuLa: docLai(hang.listPrice, phi), hoiLai: canHoiLai(cu, lenh.payload), khongHoanTac: !hoanTacDuoc(hang, lenh) };
 }
 
 /** Các nấc trình sửa Trạng thái đưa ra: đúng bảng chuyển ADR-0008 từ trạng thái hiện tại. */
