@@ -5,7 +5,7 @@ slug: hom-nay-dau-chu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, core]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-01-hom-nay-dau-chu-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
