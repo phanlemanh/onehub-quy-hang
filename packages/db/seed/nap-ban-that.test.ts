@@ -342,7 +342,7 @@ test("doc-cheo: thành viên sàn thật không thấy dòng nào của sàn m�
       return dem;
     }, false);
   assert.deepEqual(await doc(chuKhoId, sanThat), { listings: 0, listing_owners: 0, leads: 0, listing_events: 0 });
-  assert.ok((await doc(dauChu, san)).listings > 0, "đối chứng dương: đầu chủ sàn mẫu thấy hàng");
+  assert.ok(((await doc(dauChu, san)).listings ?? 0) > 0, "đối chứng dương: đầu chủ sàn mẫu thấy hàng");
   await go();
 });
 
