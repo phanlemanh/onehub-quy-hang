@@ -83,7 +83,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["khung.tsx", "nguon-that.tsx", "o-lead.tsx", "page.tsx"].map((p) => `${W}/app/(app)/leads/new/${p}`),
   ...TRANG_TAM.slice(3),
   // Bảng hàng (hàng 14): màn, khuôn và các thành phần của nó; trình sửa trên ô (hàng 15).
-  ...["bang-hang.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
+  ...["bang-hang.tsx", "bulk/thanh.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
   ),
   // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
