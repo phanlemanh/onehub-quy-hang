@@ -1,25 +1,64 @@
 {
   "feature_plain": "Vá ba lỗi ảnh chỉ lộ ở bản thật của hàng 18: ảnh điện thoại 4,5–10 MB tải được, mở lại hồ sơ không thấy ảnh vỡ, và sửa hay xoá ảnh không thành thì có lời báo.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ cho ảnh tới 10 MB tải lên thẳng kho ảnh bằng link ký ngắn hạn, không đi qua giới hạn 4,5 MB của máy chủ."},
-    {"id": "AC-2", "p": "Sẽ kiểm ảnh đã tải lên có thật là ảnh và đúng cỡ trước khi ghi; người không được thêm ảnh hay mã ảnh lạ bị từ chối."},
-    {"id": "AC-3", "p": "Sẽ giữ đường tải cũ ở máy dev và CI, mọi bài kiểm của hàng 18 vẫn xanh."},
-    {"id": "AC-4", "p": "Sẽ không cho trình duyệt giữ đệm đường dẫn tới ảnh lâu hơn link ký, nên mở lại hồ sơ không thấy ảnh vỡ."},
-    {"id": "AC-5", "p": "Sẽ báo bằng thông báo nổi khi đặt bìa, ảnh mẫu, đổi ngăn, đổi thứ tự hay xoá ảnh không thành."},
-    {"id": "AC-6", "p": "Sẽ chứng trên bản chạy dev: ảnh lớn vào ngăn, và lời báo khi xoá hỏng."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ cho ảnh tới 10 MB tải lên thẳng kho ảnh bằng link ký ngắn hạn, không đi qua giới hạn 4,5 MB của máy chủ."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ kiểm ảnh đã tải lên có thật là ảnh và đúng cỡ trước khi ghi; người không được thêm ảnh hay mã ảnh lạ bị từ chối."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ giữ đường tải cũ ở máy dev và CI, mọi bài kiểm của hàng 18 vẫn xanh."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ không cho trình duyệt giữ đệm đường dẫn tới ảnh lâu hơn link ký, nên mở lại hồ sơ không thấy ảnh vỡ."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ báo bằng thông báo nổi khi đặt bìa, ảnh mẫu, đổi ngăn, đổi thứ tự hay xoá ảnh không thành."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ chứng trên bản chạy dev: ảnh lớn vào ngăn, và lời báo khi xoá hỏng."
+    }
   ],
   "wont_do": [
-    {"id": "OOS-1", "p": "KHÔNG dọn byte sót trên kho khi lỗi giữa chừng — hạn chế đã biết của hàng 18."},
-    {"id": "OOS-2", "p": "KHÔNG đổi tên trường API, chưa khai OpenAPI cho đường ảnh — hạn chế đã biết."},
-    {"id": "OOS-3", "p": "KHÔNG làm che vùng ảnh — hàng 19."}
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG dọn byte sót trên kho khi lỗi giữa chừng — hạn chế đã biết của hàng 18."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG đổi tên trường API, chưa khai OpenAPI cho đường ảnh — hạn chế đã biết."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG làm che vùng ảnh — hàng 19."
+    }
   ],
   "scope_plain": "Ba việc để chỗ khác:",
   "coverage_plain": [],
   "gap_probe_plain": [
-    {"i": 0, "p": "Chưa có bài nào thử trên kho ảnh thật — nay thêm bài đo đường ba bước phía web, và thử thật trên bản xem trước thành câu Hỏi-3 vì máy không có khoá."},
-    {"i": 1, "p": "Cách vá ảnh vỡ có hai lối đổi chác tiền và độ lộ link — nay thành câu Hỏi-2."},
-    {"i": 2, "p": "Chưa thử mã ảnh của sàn khác, mã đã dùng, cỡ và loại khai sai — nay có bốn ca, và mọi lệnh xoá trên kho phải nằm trong thư mục của sàn."},
-    {"i": 3, "p": "Chữ thông báo lệch giữa các tài liệu — nay chốt một bảng năm câu và bài kiểm quét mọi nút."}
+    {
+      "i": 0,
+      "p": "Chưa có bài nào thử trên kho ảnh thật — nay thêm bài đo đường ba bước phía web; thử thật do chủ kho chạy một lệnh trên máy mình với khoá (Hỏi-3), vì bản xem trước chưa đăng nhập được."
+    },
+    {
+      "i": 1,
+      "p": "Cách vá ảnh vỡ có hai lối đổi chác tiền và độ lộ link — nay thành câu Hỏi-2."
+    },
+    {
+      "i": 2,
+      "p": "Chưa thử mã ảnh của sàn khác, mã đã dùng, cỡ và loại khai sai — nay có bốn ca, và mọi lệnh xoá trên kho phải nằm trong thư mục của sàn."
+    },
+    {
+      "i": 3,
+      "p": "Chữ thông báo lệch giữa các tài liệu — nay chốt một bảng năm câu và bài kiểm quét mọi nút."
+    }
   ],
   "decisions_plain": [],
   "analyst_plain": ""

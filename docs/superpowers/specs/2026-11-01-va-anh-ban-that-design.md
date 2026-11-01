@@ -31,9 +31,10 @@ ký tải lên, nhưng mất bản gốc nguyên độ phân giải.
 
 ## Thử trên kho ảnh thật (Hỏi-3)
 
-Máy không có khoá Storage thật. Lượt chấm đo đường tải thẳng bằng máy chủ S3 giả và bài kiểm phía web. Khi chủ kho đặt
-ba khoá ở Vercel Preview, `_acceptance/va-anh-ban-that/thu/khoi-storage.mjs` chạy một lần trên bản xem trước: PUT 8 MB
-từ trình duyệt (CORS), GET Range, ảnh hiện — trước khi gộp. Chưa có khoá thì gộp với hạn chế đã biết.
+Máy không có khoá Storage thật. Lượt chấm đo đường tải thẳng bằng máy chủ S3 giả và bài kiểm phía web. Bản xem trước
+chưa đăng nhập được (ADR-0009), nên chủ kho chạy `_acceptance/va-anh-ban-that/thu/khoi-storage.mjs` một lần trên máy mình
+với ba khoá ở `.env.local`: ký link PUT bằng mô-đun `kho-s3`, PUT 8 MB, hỏi CORS (OPTIONS kèm Origin tên miền chính), GET
+Range, xoá — dán kết quả vào PR trước khi gộp. Chưa chạy được thì gộp với hạn chế đã biết.
 
 ## 2. Ranh giới mã
 

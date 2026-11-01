@@ -39,8 +39,8 @@ hợp đồng viết theo khuyến nghị: link ký tải lên thẳng kho ảnh
   thử lại», ảnh hiện về trạng thái máy chủ; khi thành công
   không có thông báo lỗi.
 - AC-6: Given bản chạy dev của dãy H (kho Postgres) với dữ liệu mẫu, When đầu chủ thêm một ảnh lớn hơn 4,5 MB và làm hỏng một lần xoá (API giả
-  trả lỗi qua công cụ trình duyệt), Then mắt thấy ảnh vào ngăn và thông báo lỗi xoá. Đường tải thẳng lên Supabase Storage thật thử khói trên bản xem trước khi chủ kho đã đặt khoá
-  (Hỏi-3), không thuộc lượt chấm.
+  trả lỗi qua công cụ trình duyệt), Then mắt thấy ảnh vào ngăn và thông báo lỗi xoá. Đường tải thẳng lên Supabase Storage thật do chủ kho thử khói từ máy mình với khoá trong .env.local
+  (`thu/khoi-storage.mjs`, Hỏi-3), không thuộc lượt chấm.
 
 ## Coverage
 
