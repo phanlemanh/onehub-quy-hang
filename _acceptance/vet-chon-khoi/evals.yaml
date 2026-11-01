@@ -41,7 +41,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.ui_lint
-    expected: "exit 0; ca «chỗ hở: dòng thiếu ô thì đỏ gọi tên dòng» có mặt và ok — ma trận viết trước đếm bằng đúng 11 (assert số): 5 cột × ô rỗng, 5 cột × ô chỉ '—', và hạn 'sau này' (không ngày, không 'khi '); mỗi ca sửa một ô của dòng «Luật chia lead» trên bản sao vo-va-ia.md thật, assert loi chứa 'vo-va-ia.md chỗ hở «Luật chia lead»' cùng tên cột; đối chứng dương: bản sao không sửa → không lỗi chỗ hở. Chiều đỏ: chỉ kiểm ô Hạn → các ca cột khác đỏ; coi '—' là có nội dung → năm ca '—' đỏ."
+    expected: "exit 0; ca «chỗ hở: dòng thiếu ô thì đỏ gọi tên dòng» có mặt và ok — ma trận viết trước đếm bằng đúng 11 (assert số): 4 cột trừ Chỗ (Chỗ là tên dòng trong thông điệp) × (ô rỗng, ô chỉ '—'), cộng hạn 'sau này' (không ngày, không 'khi '), ô Đã tra sai khuôn 'đã tra', ô Ghép chỉ khoảng trắng; mỗi ca sửa một ô của dòng «Luật chia lead» trên bản sao vo-va-ia.md thật, assert loi chứa 'vo-va-ia.md chỗ hở «Luật chia lead»' cùng tên cột; đối chứng dương: bản sao không sửa → không lỗi chỗ hở. Chiều đỏ: chỉ kiểm ô Hạn → các ca cột khác đỏ; coi '—' là có nội dung → năm ca '—' đỏ."
     paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs, docs/design/vo-va-ia.md]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

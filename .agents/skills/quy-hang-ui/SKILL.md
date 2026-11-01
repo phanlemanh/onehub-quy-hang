@@ -41,6 +41,16 @@ Hai tầng vênh nhau thì tầng trên thắng; ghi chỗ lệch vào phần b�
 - Cài xong → thêm một dòng vào bảng «Thành phần đã cài» của `catalog.md`. `npm run lint` (bước kiểm chuẩn) đỏ khi
   bảng thiếu thành phần nào đang có trên đĩa.
 
+## Vết chọn khối (ADR-0019 quyết định 3–4)
+
+- **Bậc 2 của thang dùng lại tra bảng «Khối đã chuyển thể» của `catalog.md`** — khối trong kho kèm archetype, nhóm đang
+  dùng và ảnh chuẩn — trước khi tìm khối ReUI khác.
+- Chuyển thể một khối mới → trong cùng PR thêm một dòng đủ chín ô vào bảng ấy (archetype, nhóm, tệp, màn, ảnh chuẩn PNG có
+  trong kho, `reui skill <mã>`, `ngày · người ký Cổng Phạm vi · hồ sơ`, đã đổi gì), và tệp chuyển thể mang chú thích
+  «chuyển thể … <khối>» — kiểm chuẩn nhận khối đã chuyển thể qua chú thích ấy và đỏ khi bảng chưa có dòng.
+- Ghép hay tự viết một ô (bậc 6–7) → trong cùng PR thêm một dòng «Chỗ hở» đủ năm ô ở `docs/design/vo-va-ia.md` §3 (đã tra
+  gì trên ReUI, vì sao không đứng, hạn xem lại), và một dòng `decisions.jsonl` của hồ sơ nói vì sao rơi bậc.
+
 ## Lint giao diện và mức nợ
 
 Bộ luật `quy-hang-ui` (`packages/ui-lint`) áp mức error cho `apps/web/src/**/*.{ts,tsx}`, trừ hai thư mục cài nguyên
