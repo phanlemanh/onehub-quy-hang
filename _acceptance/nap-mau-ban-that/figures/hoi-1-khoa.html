@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hỏi-1 khoá mã hoá</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75; --color-accent:#eb6c36;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Lora',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+    body { font-family:var(--font-sans); background:var(--color-paper); color:var(--color-ink); min-height:100vh;
+      display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .frame { max-width:1100px; width:100%; }
+    .eyebrow { font-family:var(--font-mono); font-size:0.66rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-muted); margin-bottom:0.5rem; }
+    h1 { font-family:var(--font-serif); font-size:clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.25; margin-bottom:0.35rem; }
+    .subtitle { color:var(--color-muted); font-size:0.9rem; line-height:1.5; margin-bottom:1.25rem; }
+    svg { width:100%; display:block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Luồng hai nhánh · Hỏi-1 · AC-2, AC-3, AC-8</p>
+    <h1>Khoá mã hoá số chủ nằm ở đâu khi nạp dữ liệu mẫu?</h1>
+    <p class="subtitle">Cả hai nhánh đều chỉ để bản mã vào cơ sở dữ liệu thật. Khác nhau ở chỗ khoá có thêm chỗ ở hay bản thật có thêm cửa ghi.</p>
+    <svg viewBox="0 0 968 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Hỏi-1 khoá mã hoá</title>
+      <desc id="d">Hai nhánh. Nhánh A, máy khuyên: chủ kho chép khoá từ trình quản lý mật khẩu vào secret GitHub ở môi trường production chỉ cho nhánh main; nút Nạp dữ liệu mẫu mã hoá trên máy chạy nút; cơ sở dữ liệu thật chỉ nhận bản mã. Nhánh B: khoá ở lại Vercel; nút gọi một đường ghi mẫu mới trên bản thật bằng JOB_SECRET, một secret GitHub mới; máy chủ Vercel mã hoá; cơ sở dữ liệu thật chỉ nhận bản mã.</desc>
+      <defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="968" height="480" fill="#f5f5f5"/>
+<rect x="8" y="16" width="952" height="184" rx="8" fill="rgba(235,108,54,0.05)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="24" y="40" fill="#ba4513" font-size="9" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">NHÁNH A · MÁY KHUYÊN</text>
+<path d="M 224 96 L 262 96" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 464 96 L 502 96" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 704 96 L 742 96" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="24" y="56" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="24" y="56" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="124" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chủ kho chép khoá</text>
+<text x="124" y="106" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">từ trình quản lý mật khẩu</text>
+<text x="124" y="120" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">cùng giá trị khoá bản thật</text>
+<rect x="264" y="56" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="264" y="56" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="456" y="72" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-8</text>
+<text x="364" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Secret trên GitHub</text>
+<text x="364" y="106" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">môi trường production</text>
+<text x="364" y="120" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">chỉ nhánh main được dùng</text>
+<rect x="504" y="56" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="504" y="56" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="696" y="72" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-3</text>
+<text x="604" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Nút «Nạp dữ liệu mẫu»</text>
+<text x="604" y="106" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">mã hoá ngay trên máy chạy nút</text>
+<text x="604" y="120" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">khoá thiếu hay sai → dừng, không ghi</text>
+<rect x="744" y="56" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="744" y="56" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="936" y="72" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-2</text>
+<text x="844" y="88" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cơ sở dữ liệu thật</text>
+<text x="844" y="106" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">chỉ nhận bản mã</text>
+<text x="844" y="120" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">số chủ nhà, số lead không có dạng rõ</text>
+<text x="24" y="164" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐƯỢC</text>
+<text x="88" y="164" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Không mở cửa ghi mới nào trên bản thật; dữ liệu đi đúng đường ghi đã có kiểm.</text>
+<text x="24" y="184" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐỔI LẠI</text>
+<text x="88" y="184" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Khoá có thêm một chỗ ở — GitHub, khoá chặt cho nhánh main.</text>
+<rect x="8" y="224" width="952" height="184" rx="8" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="24" y="248" fill="#4f5d75" font-size="9" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">NHÁNH B</text>
+<path d="M 224 304 L 262 304" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 464 304 L 502 304" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 704 304 L 742 304" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="24" y="264" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="24" y="264" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="124" y="296" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Khoá ở lại Vercel</text>
+<text x="124" y="314" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">không chép sang GitHub</text>
+<rect x="264" y="264" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="264" y="264" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="456" y="280" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-8</text>
+<text x="364" y="296" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Nút gọi bản thật</text>
+<text x="364" y="314" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">qua một đường ghi mẫu mới</text>
+<text x="364" y="328" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">kèm JOB_SECRET — secret GitHub mới</text>
+<rect x="504" y="264" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="504" y="264" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="696" y="280" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-3</text>
+<text x="604" y="296" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Máy chủ Vercel mã hoá</text>
+<text x="604" y="314" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">khoá không rời Vercel</text>
+<text x="604" y="328" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">khoá thiếu hay sai → dừng, không ghi</text>
+<rect x="744" y="264" width="200" height="80" rx="6" fill="#f5f5f5"/><rect x="744" y="264" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="936" y="280" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-2</text>
+<text x="844" y="296" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cơ sở dữ liệu thật</text>
+<text x="844" y="314" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">chỉ nhận bản mã</text>
+<text x="844" y="328" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">số chủ nhà, số lead không có dạng rõ</text>
+<text x="24" y="372" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐƯỢC</text>
+<text x="88" y="372" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Khoá chỉ nằm ở một nơi.</text>
+<text x="24" y="392" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">ĐỔI LẠI</text>
+<text x="88" y="392" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Thêm một cửa ghi trên bản thật — thêm chỗ bị tấn công; vẫn phải thêm một secret vào GitHub.</text>
+<line x1="8" y1="432" x2="960" y2="432" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="8" y="460" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">CHÚ GIẢI</text>
+<rect x="88" y="448" width="28" height="16" rx="2" fill="rgba(235,108,54,0.05)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="124" y="460" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Nhánh máy khuyên</text>
+<rect x="248" y="448" width="28" height="16" rx="2" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="284" y="460" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Nhánh khác</text>
+<text x="392" y="460" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">AC-n · tiêu chí nghiệm thu đo ở bước ấy</text>
+    </svg>
+  </main>
+</body>
+</html>
