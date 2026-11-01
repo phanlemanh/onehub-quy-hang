@@ -5,7 +5,7 @@ slug: bat-rang-buoc-ban-ma
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: docs/superpowers/specs/2026-11-01-bat-rang-buoc-ban-ma-design.md
