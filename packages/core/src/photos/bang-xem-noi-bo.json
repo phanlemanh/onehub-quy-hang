@@ -1,0 +1,10 @@
+[
+  { "o": "dau-chu-giu-can", "vai": ["listing_agent"], "giu": true, "coLanRao": true, "doc_noi_bo": true, "doc_byte_noi_bo": true, "them_noi_bo": true, "them_gui_duoc": true, "doc_gui_duoc": true },
+  { "o": "truong-nhom-1", "vai": ["team_lead"], "giu": false, "coLanRao": true, "doc_noi_bo": true, "doc_byte_noi_bo": true, "them_noi_bo": true, "them_gui_duoc": true, "doc_gui_duoc": true },
+  { "o": "truong-nhom-2", "vai": ["team_lead"], "giu": false, "coLanRao": true, "doc_noi_bo": true, "doc_byte_noi_bo": true, "them_noi_bo": true, "them_gui_duoc": true, "doc_gui_duoc": true },
+  { "o": "dau-chu-khac", "vai": ["listing_agent"], "giu": false, "coLanRao": true, "doc_noi_bo": false, "doc_byte_noi_bo": false, "them_noi_bo": false, "them_gui_duoc": false, "doc_gui_duoc": true },
+  { "o": "dau-khach", "vai": ["buyer_agent"], "giu": false, "coLanRao": true, "doc_noi_bo": false, "doc_byte_noi_bo": false, "them_noi_bo": false, "them_gui_duoc": false, "doc_gui_duoc": true },
+  { "o": "telesales", "vai": ["telesales"], "giu": false, "coLanRao": true, "doc_noi_bo": false, "doc_byte_noi_bo": false, "them_noi_bo": false, "them_gui_duoc": false, "doc_gui_duoc": true },
+  { "o": "quan-tri-san", "vai": ["company_admin"], "giu": false, "coLanRao": true, "doc_noi_bo": false, "doc_byte_noi_bo": false, "them_noi_bo": false, "them_gui_duoc": false, "doc_gui_duoc": true },
+  { "o": "truong-nhom-can-chua-rao", "vai": ["team_lead"], "giu": false, "coLanRao": false, "doc_noi_bo": true, "doc_byte_noi_bo": true, "them_noi_bo": true, "them_gui_duoc": true, "doc_gui_duoc": true }
+]
