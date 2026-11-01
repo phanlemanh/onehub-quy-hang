@@ -18,11 +18,11 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
+import { COT_SUA } from "./cot-sua";
 import { KHONG_HOAN_TAC, lenhHoanTac } from "./hoan-tac";
 import { chuaHieu, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, homNay, nacTrangThai, XAC_NHAN, type KetQuaLenh, type Lenh } from "./lenh";
 
-/** Ba cột sửa được trên ô (luật 6: chỉ phần của lần rao; bốn phần chữ để hàng sau). */
-export const COT_SUA: ReadonlySet<CotId> = new Set<CotId>(["listPrice", "feeInclusion", "standardStatus"]);
+export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
 
 const NHAN_COT: Record<CotSua, string> = { listPrice: "giá", feeInclusion: "phí", standardStatus: "trạng thái" };

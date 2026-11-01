@@ -52,8 +52,8 @@ trả lời giám sát B-9 (chạm `bang-hang.tsx`, `cot.ts`, `proto/sua-tren-o/
   lần sửa không hoàn tác được — nấc cuối Đã bán, Ngừng hẳn; chuyển mà chiều ngược không có trong bảng ADR-0008; lần đặt
   giá đầu tiên — thì hộp hỏi lại hiện «Không hoàn tác được» TRƯỚC khi ghi và thông báo sau khi ghi không có nút Hoàn tác.
   (cross-layer)
-- AC-9: Given Bảng hàng, When thử mở sửa ở mọi cột, Then chỉ ba cột Giá, Phí, Trạng thái mở được trên máy tính; mười ba
-  cột còn lại (thuộc tính căn và phần khác) không mở; khổ 375 không mở sửa ở cột nào; mất mạng vẫn sửa được (ô đổi, hàng
+- AC-9: Given Bảng hàng, When thử mở sửa ở mọi cột, Then chỉ ba cột Giá, Phí, Trạng thái mở được trên máy tính; mười sáu
+  cột còn lại (mười ba cột hiện và ba cột ẩn: thuộc tính căn và phần khác) không mở; khổ 375 không mở sửa ở cột nào; mất mạng vẫn sửa được (ô đổi, hàng
   chờ gửi tăng một) và gửi khi có mạng; hai người cùng sửa một hàng thì hàng vào «Cần xem», không ghi đè lặng.
 - AC-10: Given cây sau hàng này, When chạy kiểm kiểu, lint (luật `quy-hang-ui`, mức nợ 0, kiểm chuẩn danh mục), bộ test
   và bộ kiểm cách ly, Then tất cả xanh; `vo-va-ia.md` và Tham chiếu thôi ghi Bảng hàng «chỉ đọc» và §12 có dòng sổ của
