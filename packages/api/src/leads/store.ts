@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { navigationFor } from "@quy-hang/core";
+import { typesForNeed } from "@quy-hang/core/contacts";
 import { decideOutcome, OPEN_STATUSES, validateLeadInput, type LeadRecord, type MyLeadRecord, type Outcome } from "@quy-hang/core/dedupe";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -57,7 +58,11 @@ async function canEnterLead(tx: pg.PoolClient): Promise<boolean> {
   return navigationFor(rows[0]?.roles ?? []).actions.includes("new_lead");
 }
 
-export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<LeadRecord | Refusal> {
+/**
+ * `intoContact` (lối gửi lại): số mới chưa thuộc ai thì thêm vào liên hệ của lead cũ; số đã thuộc liên hệ khác thì lead gắn
+ * liên hệ ấy (hàng 85, AC-6).
+ */
+export async function createLead(tx: pg.PoolClient, payload: unknown, intoContact: string | null = null): Promise<LeadRecord | Refusal> {
   if (!(await canEnterLead(tx))) return { error: API_ERRORS.leadRoleRequired };
   const kiem = validateLeadInput(payload);
   if (!kiem.ok) return { error: API_ERRORS.invalidPayload, details: kiem.errors };
@@ -75,10 +80,21 @@ export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<L
     openListing: f.open_listing_id ? { listingId: f.open_listing_id, agentUserId: f.open_listing_agent } : null,
     ownerAgentUserId: f.owner_agent,
   });
+  // Liên hệ của số (hàng 85): tìm theo dấu vết hay tạo; bản mã chép kèm ngữ cảnh của chính lead.
+  const banMa = maHoaSo(v.ownerPhone, nguCanhLead(san, id), khoa);
+  const { rows: lh } = await tx.query<{ c: string }>("select app.contact_for_phone($1, $2, $3, $4, $5, $6) c", [
+    dauVet,
+    banMa,
+    nguCanhLead(san, id),
+    typesForNeed(v.need),
+    quyet.agentUserId,
+    intoContact,
+  ]);
   const ghi = await tx.query<LeadRow>(
     `insert into leads (id, company_id, created_by, building_name, unit_number, need, list_price, fee_inclusion,
-                        desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id)
-     values ($1, app.current_company_id(), app.current_user_id(), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                        desired_listing_time, owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id, matched_listing_id,
+                        contact_id)
+     values ($1, app.current_company_id(), app.current_user_id(), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
      returning ${COT}`,
     [
       id,
@@ -88,11 +104,12 @@ export async function createLead(tx: pg.PoolClient, payload: unknown): Promise<L
       v.listPrice,
       v.feeInclusion,
       v.desiredListingTime,
-      maHoaSo(v.ownerPhone, nguCanhLead(san, id), khoa),
+      banMa,
       dauVet,
       quyet.outcome,
       quyet.agentUserId,
       quyet.listingId,
+      lh[0]!.c,
     ],
   );
   return toRecord(ghi.rows[0]!);
@@ -215,6 +232,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
   if (!cu) return { error: API_ERRORS.notFound };
   if (cu.returned_at === null) return { error: API_ERRORS.notReturned };
   if (cu.resubmitted_at !== null) return { error: API_ERRORS.alreadyResubmitted };
+  const { rows: lhCu } = await tx.query<{ contact_id: string | null }>("select contact_id from leads where id = $1", [id]);
   const moi = await createLead(tx, {
     ownerPhone: (body as { ownerPhone?: unknown }).ownerPhone,
     buildingName: cu.building_name,
@@ -223,7 +241,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
     listPrice: Number(cu.list_price),
     feeInclusion: cu.fee_inclusion,
     desiredListingTime: cu.desired_listing_time,
-  });
+  }, lhCu[0]?.contact_id ?? null);
   if (isRefusal(moi)) return moi;
   try {
     await tx.query("select app.mark_resubmitted($1, $2)", [id, moi.id]);
