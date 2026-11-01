@@ -1,0 +1,30 @@
+# E11 network (nguon: nhat ky may chu dev .acceptance-runs/bang-hang-kieu-sheet/web-b.log; trinh duyet Playwright khong chi doc network rieng cho context cua bai)
+ POST /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a/events 200 in 13ms (next.js: 0.4ms, application-code: 13ms)
+ POST /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a/events 200 in 10ms (next.js: 0.4ms, application-code: 10ms)
+ POST /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a/events 200 in 9ms (next.js: 0.4ms, application-code: 8ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 12ms (next.js: 1.3ms, application-code: 10ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 11ms (next.js: 0.4ms, application-code: 11ms)
+ POST /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a/events 200 in 16ms (next.js: 1.4ms, application-code: 15ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 15ms (next.js: 1.4ms, application-code: 13ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 18ms (next.js: 1.5ms, application-code: 16ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 12ms (next.js: 0.4ms, application-code: 11ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 14ms (next.js: 1.4ms, application-code: 12ms)
+ POST /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a/events 200 in 20ms (next.js: 1.7ms, application-code: 18ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 14ms (next.js: 0.4ms, application-code: 14ms)
+ GET /api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a 200 in 13ms (next.js: 1.3ms, application-code: 11ms)
+--- loi 4xx/5xx/error o /api gan nhat ---
+Error: Module not found: Can't resolve '@quy-hang/core'
+Error: Module not found: Can't resolve '@quy-hang/core/access'
+Error: Module not found: Can't resolve '@quy-hang/core/listing'
+Error: Module not found: Can't resolve '@quy-hang/core/listing'
+Error: Module not found: Can't resolve '@quy-hang/core/listing'
+> 12 |   type PayloadError,
+  17 | export type LoiTrenMay = { kind: "invalid-payload"; errors: PayloadError[] } | { kind: "in...
+Error: Module not found: Can't resolve '@quy-hang/core/pricing'
+Error: Module not found: Can't resolve '@quy-hang/core/pricing'
+Error: Module not found: Can't resolve '@quy-hang/core'
+ GET /api/v1/listings 500 in 173ms (next.js: 111ms, application-code: 62ms)
+ POST /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events 409 in 16ms (next.js: 1.7ms, application-code: 14ms)
+ GET /api/v1/listings?limit=1 401 in 5ms (next.js: 1.6ms, application-code: 3ms)
+ GET /api/v1/me 401 in 4ms (next.js: 1.4ms, application-code: 2ms)
+ POST /api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2/events 409 in 18ms (next.js: 1.6ms, application-code: 16ms)

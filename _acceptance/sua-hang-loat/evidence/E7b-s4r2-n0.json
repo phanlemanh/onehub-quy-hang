@@ -1,0 +1,636 @@
+{
+ "A-02.06": {
+  "id": "17ec0ef7-28ba-496c-86fd-c8feb00bdb01",
+  "version": 3,
+  "n": 3,
+  "oc": 1,
+  "ev": [
+   {
+    "seq": 1,
+    "type": "created",
+    "payload": {
+     "unitNumber": "A-02.06",
+     "buildingName": "Toà A"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-10-31T14:31:36.347Z"
+   },
+   {
+    "seq": 2,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 5960000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.355Z"
+   },
+   {
+    "seq": 3,
+    "type": "owner_confirmed",
+    "payload": {},
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.363Z"
+   }
+  ]
+ },
+ "A-04.06": {
+  "id": "057c4e09-b48c-4c36-9fe6-8bd53819a22b",
+  "version": 17,
+  "n": 17,
+  "oc": 0,
+  "ev": [
+   {
+    "seq": 1,
+    "type": "created",
+    "payload": {
+     "unitNumber": "A-04.06",
+     "buildingName": "Toà A"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-10-31T14:31:36.390Z"
+   },
+   {
+    "seq": 2,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 8060000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.404Z"
+   },
+   {
+    "seq": 3,
+    "type": "details_changed",
+    "payload": {
+     "legalStatus": "[Mẫu] Sổ hồng",
+     "occupantType": "[Mẫu] Để trống"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-10-31T14:31:36.412Z"
+   },
+   {
+    "seq": 4,
+    "type": "status_changed",
+    "payload": {
+     "to": "Active"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.421Z"
+   },
+   {
+    "seq": 5,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 8870000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T02:57:30.750Z"
+   },
+   {
+    "seq": 6,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 8900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:30:36.125Z"
+   },
+   {
+    "seq": 7,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 8870000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:30:44.692Z"
+   },
+   {
+    "seq": 8,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 8900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:30:55.648Z"
+   },
+   {
+    "seq": 9,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 8870000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:30:56.879Z"
+   },
+   {
+    "seq": 10,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "excluded"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:32:16.947Z"
+   },
+   {
+    "seq": 11,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "excluded"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:32:25.784Z"
+   },
+   {
+    "seq": 12,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:32:40.014Z"
+   },
+   {
+    "seq": 13,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:32:48.843Z"
+   },
+   {
+    "seq": 14,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "excluded"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:43:06.590Z"
+   },
+   {
+    "seq": 15,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:12.814Z"
+   },
+   {
+    "seq": 16,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:15.454Z"
+   },
+   {
+    "seq": 17,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4655000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:55.258Z"
+   }
+  ]
+ },
+ "A-06.04": {
+  "id": "f5c54940-b998-4988-9866-88a45b415764",
+  "version": 24,
+  "n": 24,
+  "oc": 0,
+  "ev": [
+   {
+    "seq": 1,
+    "type": "created",
+    "payload": {
+     "unitNumber": "A-06.04",
+     "buildingName": "Toà A"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-10-31T14:31:36.508Z"
+   },
+   {
+    "seq": 2,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4940000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.516Z"
+   },
+   {
+    "seq": 3,
+    "type": "details_changed",
+    "payload": {
+     "legalStatus": "[Mẫu] Sổ hồng",
+     "occupantType": "[Mẫu] Để trống"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-10-31T14:31:36.525Z"
+   },
+   {
+    "seq": 4,
+    "type": "status_changed",
+    "payload": {
+     "to": "Active"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.535Z"
+   },
+   {
+    "seq": 5,
+    "type": "status_changed",
+    "payload": {
+     "to": "Hold"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-10-31T14:31:36.546Z"
+   },
+   {
+    "seq": 6,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 5000000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:33:53.090Z"
+   },
+   {
+    "seq": 7,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:34:47.370Z"
+   },
+   {
+    "seq": 8,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 5000000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:34:49.460Z"
+   },
+   {
+    "seq": 9,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:35:11.172Z"
+   },
+   {
+    "seq": 10,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4800000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:35:12.763Z"
+   },
+   {
+    "seq": 11,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:43:20.135Z"
+   },
+   {
+    "seq": 12,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4800000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:43:22.566Z"
+   },
+   {
+    "seq": 13,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:43:45.531Z"
+   },
+   {
+    "seq": 14,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4800000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:43:47.953Z"
+   },
+   {
+    "seq": 15,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:12.544Z"
+   },
+   {
+    "seq": 16,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4800000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:15.017Z"
+   },
+   {
+    "seq": 17,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:36.287Z"
+   },
+   {
+    "seq": 18,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4800000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:38.774Z"
+   },
+   {
+    "seq": 19,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4850000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:50.964Z"
+   },
+   {
+    "seq": 20,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:44:52.246Z"
+   },
+   {
+    "seq": 21,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4800000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:45:10.989Z"
+   },
+   {
+    "seq": 22,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4900000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:45:13.469Z"
+   },
+   {
+    "seq": 23,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4850000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:45:25.689Z"
+   },
+   {
+    "seq": 24,
+    "type": "price_changed",
+    "payload": {
+     "listPrice": 4950000000,
+     "feeInclusion": "included"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T05:45:26.949Z"
+   }
+  ]
+ }
+}

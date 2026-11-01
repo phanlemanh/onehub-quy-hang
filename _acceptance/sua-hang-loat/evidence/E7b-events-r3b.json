@@ -1,0 +1,98 @@
+{
+ "B-97.01": {
+  "id": "ab94b733-6ba8-4757-a099-e271d53b1523",
+  "status": "Incomplete",
+  "version": 2,
+  "ev": [
+   {
+    "seq": 1,
+    "type": "created",
+    "payload": {
+     "unitNumber": "B-97.01",
+     "buildingName": "Toà B"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-11-01T06:41:16.515Z"
+   },
+   {
+    "seq": 2,
+    "type": "owner_confirmed",
+    "payload": {},
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T06:43:32.705Z"
+   }
+  ]
+ },
+ "B-97.02": {
+  "id": "49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0",
+  "status": "Incomplete",
+  "version": 2,
+  "ev": [
+   {
+    "seq": 1,
+    "type": "created",
+    "payload": {
+     "unitNumber": "B-97.02",
+     "buildingName": "Toà B"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-11-01T06:41:16.539Z"
+   },
+   {
+    "seq": 2,
+    "type": "owner_confirmed",
+    "payload": {},
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T06:43:17.360Z"
+   }
+  ]
+ },
+ "B-97.03": {
+  "id": "6935393b-3402-40a9-a3e5-afb17b50387a",
+  "status": "Incomplete",
+  "version": 2,
+  "ev": [
+   {
+    "seq": 1,
+    "type": "created",
+    "payload": {
+     "unitNumber": "B-97.03",
+     "buildingName": "Toà B"
+    },
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": false,
+    "occurredAt": "2026-11-01T06:41:16.559Z"
+   },
+   {
+    "seq": 2,
+    "type": "owner_confirmed",
+    "payload": {},
+    "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+    "actorRoles": [
+     "listing_agent"
+    ],
+    "confirmedWithOwner": true,
+    "occurredAt": "2026-11-01T06:43:32.678Z"
+   }
+  ]
+ }
+}

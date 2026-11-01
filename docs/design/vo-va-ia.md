@@ -122,6 +122,12 @@ chính, phần còn lại ghép.
 | Tôi (điện thoại) | — · 38 | Frame stack | `settings-3` | vùng | Hồ sơ, sàn, cài lên màn hình chính, thông báo, đăng xuất | — |
 | Trống · lỗi · báo | dùng chung | — | [`empty-state-1`](https://reui.io/preview/radix/empty-state-1), [`empty-state-2`](https://reui.io/preview/radix/empty-state-2), ngăn báo `sheet-7`, `sonner` | — | Bỏ hình minh hoạ nặng; biểu tượng lucide nhỏ | `empty-state-12` |
 
+**Đã chuyển thể (hàng 17, 01/11) — Hồ sơ căn, cột phải.** Trang ba lối (ADR-0019) chọn lối ReUI: `solution-crm-4`
+chuyển thể bằng tay ở `apps/web/src/app/(app)/units/ho-so/` (khuôn `KhungHoSoCan`, nhóm màn `design/patterns/ho-so-can.md`)
+— ngăn phủ → cột chia đôi bằng `resizable` cạnh Bảng hàng; giá + mức đủ đầu cột thay thanh xác suất; khối «Key fields» →
+thuộc tính căn tự điền (khoá); giai đoạn → trạng thái của lần rao đang xem, kèm danh sách các lần rao; dòng thời gian →
+lịch sử sự kiện (ai, khi nào, từ gì sang gì); bỏ đội, việc kế, tài chính. Ảnh ba ngăn để hàng 18.
+
 **Đã chuyển thể (hàng 14, 31/10) — Bảng hàng, máy tính.** `data-grid-editing-6` cài nguyên bản, chuyển thể ở
 `apps/web/src/app/(app)/inventory/` (khuôn `KhungBangHang`, nhóm màn `design/patterns/bang-hang.md`). Đổi: dữ liệu từ kho
 trên máy (hàng 13) ghép thuộc tính căn từ danh mục; mười chín cột theo RESO, ba cột ẩn mặc định; hàng lọc theo cột giữ;
