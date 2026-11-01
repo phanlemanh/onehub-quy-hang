@@ -29,9 +29,11 @@ export type DongBang = {
   closePrice: number | null;
   closeDate: string | null;
   withdrawnReason: string | null;
+  /** RESO `PropertySubType` từ danh mục (hàng 22) — không phải cột của bảng. */
+  propertySubType?: string | null;
 };
 
-export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack">;
+export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType">;
 /** Kiểu ô lọc của cột: chữ chứa · chọn một giá trị · luật số. */
 export type KieuCot = "chu" | "chon" | "so";
 

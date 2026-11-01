@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { readMe } from "@/lib/api";
+import { KhungHomNay } from "../../today/khung";
 import { BaLoi } from "./ba-loi";
 
 export const dynamic = "force-dynamic";
@@ -12,5 +13,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ l
   const me = await readMe((await headers()).get("cookie") ?? "");
   if (!me?.activeCompany?.roles.includes("listing_agent")) notFound();
   const { loi } = await searchParams;
-  return <BaLoi loi={loi === "trong-kho" || loi === "ve-moi" ? loi : "reui"} />;
+  return (
+    <KhungHomNay>
+      <BaLoi loi={loi === "trong-kho" || loi === "ve-moi" ? loi : "reui"} />
+    </KhungHomNay>
+  );
 }
