@@ -1,0 +1,75 @@
+schema_version: 1
+feature_slug: va-nap-mau
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.nap_mau_yml
+    paths: [".github/workflows/nap-mau.yml", "packages/db/seed/nap-mau-yml.test.mjs"]
+    expected: |
+      Ca «npm-ci-giu-tsx»: môi trường bước npm ci dựng từ tệp thật → `npm config get omit` không chứa dev; bước chạy bộ
+      nạp có NODE_ENV=production. Chiều đỏ cùng phép đo: bản sao tệp đặt NODE_ENV ở cấp job → omit chứa dev, thông điệp
+      nêu «npm ci bỏ devDependencies».
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.nap_mau_yml
+    paths: [".github/workflows/nap-mau.yml", "packages/db/seed/nap-mau-yml.test.mjs"]
+    expected: |
+      Ma trận viết trước, chạy thật khối run của bước bằng bash. viec=nap: hợp lệ → 0 và in ::add-mask::<email>; xuống
+      dòng + NODE_OPTIONS, ký tự điều khiển, khoảng trắng, rỗng, có «%0A» → khác 0, không in ::add-mask::. viec=go: email
+      rỗng và email rác → 0. GITHUB_ENV, GITHUB_OUTPUT giả không đổi byte nào ở mọi ca. Chiều đỏ: bản sao bỏ điều kiện
+      viec → ca gỡ email rỗng ra khác 0, thông điệp nêu «gỡ».
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.nap_mau_yml
+    paths: [".github/workflows/nap-mau.yml", "packages/db/seed/nap-mau-yml.test.mjs"]
+    expected: |
+      Ca «khong-ghi-tep-moi-truong» trên tệp thật xanh; chiều đỏ: bản sao thêm `echo "EMAIL=$EMAIL" >> "$GITHUB_ENV"`,
+      bản sao đưa EMAIL vào env của job, bản sao chèn ${{ inputs.email }} vào lệnh — mỗi bản báo đúng lỗi có tên.
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.nap_mau
+    paths: ["packages/db/seed/**"]
+    expected: |
+      Ma trận viết trước: chuanHoaEmail ném «email chủ kho sai dạng» với \n + NODE_OPTIONS, \r, \x00, \u0007, \x1f, \x7f,
+      \t, U+2028; nhận "t-x@example.test" (đối chứng dương). Chạy CLI với email \x7f trên Postgres thử: thoát khác 0 và
+      ảnh chụp mọi bảng trước bằng sau.
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.nap_mau_yml
+    paths: [".github/workflows/nap-mau.yml", "packages/db/seed/nap-mau-yml.test.mjs"]
+    expected: |
+      Chạy thật bước chặn nhánh: refs/heads/main → 0, refs/heads/khac → khác 0; bước xác nhận gỡ: «[Mẫu] Sàn thử» → 0,
+      «bat ky» → khác 0. Chiều đỏ: bản sao đảo điều kiện chặn nhánh thành `&& exit 1` → ca main ra khác 0, test nêu
+      «chặn nhánh».
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.typecheck_db
+    paths: ["packages/db/**"]
+    expected: |
+      `tsc -p packages/db --listFilesOnly` liệt cả nap-ban-that.ts và nap-ban-that.test.ts; tệp tạm có lỗi kiểu trong
+      packages/db/seed → đúng lệnh `npm run typecheck` ở gốc (lệnh của job check) thoát khác 0, thông điệp nêu tên tệp
+      tạm; gỡ tệp tạm thì `npm run typecheck` xanh (đối chứng dương).
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    paths: ["packages/db/seed/**", "_acceptance/config.yaml"]
+    expected: Mọi ca của bộ dữ liệu mẫu hàng 5 xanh qua đúng lệnh chấm du_lieu_mau.
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.nap_mau
+    paths: ["packages/db/seed/**"]
+    expected: Mọi ca của bộ kiểm bộ nạp hàng 87 (kể cả ca mới E4) xanh.
+  - id: E9
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/**"]
+    expected: Bộ kiểm cách ly xanh.
