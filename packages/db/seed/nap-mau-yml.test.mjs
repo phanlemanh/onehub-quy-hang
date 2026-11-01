@@ -1,27 +1,90 @@
-// Đọc tệp nút «Nạp dữ liệu mẫu» (hàng 87, E8 của hồ sơ nap-mau-ban-that). Phân tích theo dòng — kho không khai thư viện
-// YAML; khuôn tệp do chính kho viết. Mỗi luật một lỗi có tên; ca đỏ chạy cùng hàm trên bản sửa của chính tệp.
+// Nút «Nạp dữ liệu mẫu» (hàng 87, vá ở hàng va-nap-mau). Không dò chuỗi: rút khối `run:` của từng bước rồi CHẠY THẬT bằng
+// bash với tệp sự kiện và tệp môi trường giả, đo quan hệ (thoát đúng chiều, tệp môi trường không đổi). Luật tĩnh còn lại
+// (kênh lộ input) ở kiemWorkflow. Phân tích theo dòng — kho không khai thư viện YAML; khuôn tệp do chính kho viết.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
-const TEP = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../.github/workflows/nap-mau.yml");
+const GOC = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+const TEP = path.join(GOC, ".github/workflows/nap-mau.yml");
 const TEN_SAN = "[Mẫu] Sàn thử";
+const THAT = readFileSync(TEP, "utf8");
 
-/** Các bước của job: mỗi phần tử là khối dòng bắt đầu bằng `      - `. */
-function cacBuoc(dong) {
-  const dau = dong.findIndex((d) => /^ {4}steps:\s*$/.test(d));
-  const buoc = [];
+/** Môi trường cấp job: các dòng 6 dấu cách dưới `    env:` của job, trước `    steps:`. */
+export function envJob(text) {
+  const dong = text.split("\n");
+  const dau = dong.findIndex((d) => /^ {4}env:\s*$/.test(d));
+  const env = {};
+  if (dau < 0) return env;
   for (const d of dong.slice(dau + 1)) {
-    if (/^ {6}- /.test(d)) buoc.push([d]);
-    else if (/^ {8}/.test(d) && buoc.length) buoc.at(-1).push(d);
-    else if (d.trim() && !/^ {6,}/.test(d)) break;
+    const m = /^ {6}([A-Z_]+): (.*)$/.exec(d);
+    if (!m) break;
+    env[m[1]] = m[2];
   }
-  return buoc.map((b) => b.join("\n"));
+  return env;
 }
 
-/** Danh sách lỗi của tệp workflow; rỗng = đạt. */
+/** Các bước của job: tên, env của bước, khối run (bỏ thụt), điều kiện if. */
+export function cacBuoc(text) {
+  const dong = text.split("\n");
+  const dau = dong.findIndex((d) => /^ {4}steps:\s*$/.test(d));
+  const buoc = [];
+  let vung = null;
+  for (const d of dong.slice(dau + 1)) {
+    if (d.trim() && !/^ {6}/.test(d)) break;
+    const moi = /^ {6}- (\w+):\s*(.*)$/.exec(d);
+    if (moi) {
+      buoc.push({ name: "", env: {}, run: "", if: undefined, uses: undefined });
+      vung = null;
+      gan(buoc.at(-1), moi[1], moi[2]);
+      if (moi[1] === "run" && moi[2] === "|") vung = "run";
+      continue;
+    }
+    const b = buoc.at(-1);
+    if (!b) continue;
+    const khoa = /^ {8}(\w+):\s*(.*)$/.exec(d);
+    if (khoa) {
+      vung = khoa[1] === "run" && khoa[2] === "|" ? "run" : khoa[1] === "env" ? "env" : null;
+      if (vung === null) gan(b, khoa[1], khoa[2]);
+      continue;
+    }
+    if (vung === "run" && (/^ {10}/.test(d) || !d.trim())) b.run += d.replace(/^ {10}/, "") + "\n";
+    else if (vung === "env") {
+      const m = /^ {10}([A-Z_]+): (.*)$/.exec(d);
+      if (m) b.env[m[1]] = m[2];
+    }
+  }
+  return buoc;
+}
+function gan(b, khoa, gia) {
+  if (khoa === "name") b.name = gia;
+  else if (khoa === "if") b.if = gia;
+  else if (khoa === "uses") b.uses = gia;
+  else if (khoa === "run" && gia !== "|") b.run = gia;
+}
+const buocTen = (text, ten) => cacBuoc(text).find((b) => b.name === ten);
+
+/** Chạy khối run như runner (bash -e, pipefail) với tệp sự kiện và tệp môi trường giả. */
+function chayBuoc(run, { email, env = {} } = {}) {
+  const thu = mkdtempSync(path.join(tmpdir(), "nap-mau-yml-"));
+  const suKien = path.join(thu, "event.json");
+  const envFile = path.join(thu, "env");
+  const outFile = path.join(thu, "out");
+  writeFileSync(suKien, JSON.stringify({ inputs: email === undefined ? {} : { email } }));
+  writeFileSync(envFile, "");
+  writeFileSync(outFile, "");
+  const r = spawnSync("bash", ["--noprofile", "--norc", "-eo", "pipefail", "-c", run], {
+    env: { PATH: process.env.PATH, GITHUB_EVENT_PATH: suKien, GITHUB_ENV: envFile, GITHUB_OUTPUT: outFile, ...env },
+    encoding: "utf8",
+  });
+  return { status: r.status, stdout: r.stdout, envFile: readFileSync(envFile, "utf8"), outFile: readFileSync(outFile, "utf8") };
+}
+
+/** Luật tĩnh: kênh lộ input và hình dạng nút. Danh sách lỗi; rỗng = đạt. */
 export function kiemWorkflow(text) {
   const loi = [];
   const dong = text.split("\n");
@@ -33,56 +96,91 @@ export function kiemWorkflow(text) {
   }
   if (khoaOn < 0 || conOn.length !== 1 || conOn[0] !== "workflow_dispatch:") loi.push("chỉ workflow_dispatch");
   for (const t of ["viec", "email", "xac_nhan"]) if (!dong.some((d) => d === `      ${t}:`)) loi.push(`thiếu tham số ${t}`);
-  if (!/options: \[nap, go\]/.test(text)) loi.push("viec phải là nap hoặc go");
   if (!dong.some((d) => /^ {4}environment: production\s*$/.test(d))) loi.push("environment production");
-  if (!dong.some((d) => /^ {6}NODE_ENV: production\s*$/.test(d))) loi.push("NODE_ENV production");
-  // Email không được vào môi trường của job: GitHub in môi trường ở đầu log mỗi bước, trước khi kịp che.
-  if (dong.some((d) => /^\s+EMAIL: /.test(d))) loi.push("email vào môi trường trước khi che");
-
-  const buoc = cacBuoc(dong);
-  if (!(buoc[0]?.includes("refs/heads/main") && buoc[0].includes("exit 1"))) loi.push("chặn nhánh: bước đầu phải thoát khi ref khác main");
-  const xacNhan = buoc.find((b) => /if: .*inputs\.viec == 'go'/.test(b));
-  if (!(xacNhan?.includes(`"${TEN_SAN}"`) && xacNhan.includes("exit 1"))) loi.push("xác nhận gỡ: thiếu bước so đúng tên sàn mẫu");
-  const iChe = buoc.findIndex((b) => b.includes("::add-mask::$EMAIL"));
-  const iNap = buoc.findIndex((b) => b.includes("nap-ban-that.ts"));
-  if (iChe < 0 || iNap < 0 || iChe > iNap) loi.push("che email trước bước chạy bộ nạp");
-  for (const xacNhanGo of [xacNhan]) if (xacNhanGo && buoc.indexOf(xacNhanGo) > iNap) loi.push("xác nhận gỡ phải trước bước chạy bộ nạp");
-
-  // Bí mật và tham số chỉ đi qua env: không dòng `run` nào được chèn `${{ secrets. }}` hay `${{ inputs. }}`.
-  let trongRun = false;
+  const buoc = cacBuoc(text);
+  // Chỉ xét lệnh, không xét chú thích: nhắc tên tệp trong lời giải thích không phải ghi vào nó.
+  if (buoc.some((b) => /GITHUB_ENV|GITHUB_OUTPUT/.test(b.run))) loi.push("ghi vào tệp môi trường của job");
+  if ("EMAIL" in envJob(text) || buoc.some((b) => "EMAIL" in b.env)) loi.push("email nằm trong env");
+  if ("NODE_ENV" in envJob(text)) loi.push("NODE_ENV ở cấp job");
+  const nap = buoc.find((b) => b.run.includes("nap-ban-that.ts"));
+  if (!nap?.run.includes("$GITHUB_EVENT_PATH")) loi.push("bước chạy bộ nạp không đọc email từ tệp sự kiện");
+  if (nap?.env.NODE_ENV !== "production") loi.push("bước chạy bộ nạp thiếu NODE_ENV=production");
+  for (const b of buoc) if (/\$\{\{/.test(b.run)) loi.push(`chèn thẳng vào lệnh ở bước «${b.name}»`);
   for (const d of dong) {
-    if (/^\s+(- )?run: /.test(d) || /^\s+(- )?run: \|/.test(d)) trongRun = true;
-    else if (/^\s+(- )?(name|if|uses|with|env):/.test(d)) trongRun = false;
-    if (trongRun && /\$\{\{\s*(secrets|inputs)\./.test(d)) loi.push(`chèn thẳng vào lệnh: ${d.trim()}`);
     if (/secrets\./.test(d) && !/^ {6}[A-Z_]+: \$\{\{ secrets\.[A-Z_]+ \}\}\s*$/.test(d)) loi.push(`bí mật ngoài khoá env: ${d.trim()}`);
     if (/(echo|printf).*(OWNER_PHONE_KEY|DATABASE_URL)/.test(d)) loi.push(`in bí mật: ${d.trim()}`);
   }
   return loi;
 }
 
-const THAT = readFileSync(TEP, "utf8");
+/** Môi trường của bước `npm ci` = env job + env bước; hỏi npm có bỏ devDependencies không. */
+function omitCuaNpmCi(text) {
+  const b = cacBuoc(text).find((x) => x.run.trim() === "npm ci");
+  assert.ok(b, "không thấy bước npm ci");
+  const env = { ...process.env };
+  delete env.NODE_ENV;
+  delete env.npm_config_omit;
+  for (const [k, v] of Object.entries({ ...envJob(text), ...b.env })) if (!/\$\{\{/.test(v)) env[k] = v;
+  return spawnSync("npm", ["config", "get", "omit"], { cwd: GOC, env, encoding: "utf8" }).stdout;
+}
 
-test("nap-mau.yml đạt mọi luật (E8)", () => {
+test("npm-ci-giu-tsx: bước npm ci không bỏ devDependencies, bước bộ nạp chạy chế độ thật (E1)", () => {
+  assert.ok(!/dev/.test(omitCuaNpmCi(THAT)), "npm ci bỏ devDependencies — tsx sẽ không được cài");
+  assert.equal(buocTen(THAT, "Chạy bộ nạp")?.env.NODE_ENV, "production");
+  // Chiều đỏ cùng phép đo: NODE_ENV ở cấp job thì npm ci bỏ dev.
+  const sai = THAT.replace("    env:\n", "    env:\n      NODE_ENV: production\n");
+  assert.match(omitCuaNpmCi(sai), /dev/, "đối chứng: NODE_ENV cấp job phải làm npm ci bỏ devDependencies");
+});
+
+// Ma trận viết trước: [viec, email, thoát 0?]. Email hợp lệ phải được che đúng nguyên văn.
+const MA_TRAN = [
+  ["nap", "T-x@example.test", true],
+  ["nap", "a@b.co\nNODE_OPTIONS=--require /tmp/x", false],
+  ["nap", "a@b.co\u0007", false],
+  ["nap", "a@b.co\r", false],
+  ["nap", "a b@c.co", false],
+  ["nap", "", false],
+  ["nap", "a%0Ab@x.co", false],
+  ["go", "", true],
+  ["go", "rac\nX=1", true],
+];
+
+test("email-ma-tran: bước kiểm email chạy thật trên 9 ca (E2)", () => {
+  const run = buocTen(THAT, "Kiểm và che email")?.run;
+  assert.ok(run, "không thấy bước «Kiểm và che email»");
+  for (const [viec, email, dat] of MA_TRAN) {
+    const r = chayBuoc(run, { email, env: { VIEC: viec } });
+    const nhan = `${viec} ${JSON.stringify(email)}`;
+    assert.equal(r.status === 0, dat, `${nhan}: thoát ${r.status}`);
+    if (viec === "nap") assert.equal(r.stdout.includes(`::add-mask::${email}\n`), dat, `${nhan}: che email`);
+    assert.equal(r.envFile + r.outFile, "", `${nhan}: tệp môi trường của job bị ghi`);
+  }
+  // Chiều đỏ: bỏ điều kiện viec thì nút gỡ chết khi ô email trống.
+  const boDieuKien = run.replace('if [ "$VIEC" = "nap" ]; then', "if true; then");
+  assert.notEqual(boDieuKien, run);
+  assert.notEqual(chayBuoc(boDieuKien, { email: "", env: { VIEC: "go" } }).status, 0, "gỡ: bỏ điều kiện viec phải làm ca gỡ đỏ");
+});
+
+test("khong-ghi-tep-moi-truong: không kênh nào lộ input (E3)", () => {
   assert.deepEqual(kiemWorkflow(THAT), []);
-});
-
-test("chiều đỏ: bỏ bước chặn nhánh thì báo «chặn nhánh»", () => {
-  const sua = THAT.replace(/ {6}- name: Chỉ nhánh main\n {8}run: \|\n.*\n/, "");
-  assert.notEqual(sua, THAT, "bản sửa phải khác tệp thật");
-  assert.ok(kiemWorkflow(sua).some((l) => l.startsWith("chặn nhánh")), kiemWorkflow(sua).join("; "));
-});
-
-test("chiều đỏ: chèn bí mật thẳng vào lệnh hay echo khoá thì báo", () => {
+  const ghiEnv = THAT.replace('echo "::add-mask::$EMAIL"', 'echo "::add-mask::$EMAIL"\n            echo "EMAIL=$EMAIL" >> "$GITHUB_ENV"');
+  assert.ok(kiemWorkflow(ghiEnv).includes("ghi vào tệp môi trường của job"));
+  const envJobCoEmail = THAT.replace("    env:\n", "    env:\n      EMAIL: ${{ inputs.email }}\n");
+  assert.ok(kiemWorkflow(envJobCoEmail).includes("email nằm trong env"));
   const chen = THAT.replace('--email "$EMAIL"', '--email "${{ inputs.email }}"');
   assert.ok(kiemWorkflow(chen).some((l) => l.startsWith("chèn thẳng vào lệnh")));
-  const inKhoa = THAT.replace('echo "::add-mask::$EMAIL"', 'echo "$OWNER_PHONE_KEY"');
-  assert.ok(kiemWorkflow(THAT.replace("      NODE_ENV: production\n", "      NODE_ENV: production\n      EMAIL: ${{ inputs.email }}\n")).includes("email vào môi trường trước khi che"));
-  const loi = kiemWorkflow(inKhoa);
-  assert.ok(loi.some((l) => l.startsWith("in bí mật")) && loi.includes("che email trước bước chạy bộ nạp"), loi.join("; "));
 });
 
-test("chiều đỏ: thêm sự kiện push, bỏ xác nhận gỡ, bỏ NODE_ENV thì báo", () => {
-  assert.ok(kiemWorkflow(THAT.replace("on:\n  workflow_dispatch:", "on:\n  push:\n  workflow_dispatch:")).includes("chỉ workflow_dispatch"));
-  assert.ok(kiemWorkflow(THAT.replace(`"${TEN_SAN}"`, '"bất kỳ"')).includes("xác nhận gỡ: thiếu bước so đúng tên sàn mẫu"));
-  assert.ok(kiemWorkflow(THAT.replace("      NODE_ENV: production\n", "")).includes("NODE_ENV production"));
+test("chan-nhanh-va-xac-nhan: hai rào chạy đúng chiều (E5)", () => {
+  const nhanh = buocTen(THAT, "Chỉ nhánh main").run;
+  assert.equal(chayBuoc(nhanh, { env: { GITHUB_REF: "refs/heads/main" } }).status, 0, "main phải qua");
+  assert.notEqual(chayBuoc(nhanh, { env: { GITHUB_REF: "refs/heads/khac" } }).status, 0, "nhánh khác phải bị chặn");
+  const go = buocTen(THAT, "Xác nhận gỡ");
+  assert.match(go.if ?? "", /inputs\.viec == 'go'/);
+  assert.equal(chayBuoc(go.run, { env: { XAC_NHAN: TEN_SAN } }).status, 0, "xác nhận đúng phải qua");
+  assert.notEqual(chayBuoc(go.run, { env: { XAC_NHAN: "bat ky" } }).status, 0, "xác nhận sai phải bị chặn");
+  // Chiều đỏ: đảo điều kiện chặn nhánh thì chính main bị chặn.
+  const dao = nhanh.replace("] || {", "] && {");
+  assert.notEqual(dao, nhanh);
+  assert.notEqual(chayBuoc(dao, { env: { GITHUB_REF: "refs/heads/main" } }).status, 0, "chặn nhánh: bản đảo phải chặn main");
 });

@@ -43,6 +43,9 @@ const boKhoangTrang = (so: string) => so.replace(/\s/g, "");
 
 /** Chuẩn hoá email chủ kho; ném trước mọi câu ghi khi sai dạng hay thuộc miền mẫu. Thông điệp không chứa email. */
 export function chuanHoaEmail(tho: string): string {
+  // Ký tự điều khiển (kể cả xuống dòng, \r, \x7f) và dấu tách dòng Unicode bị từ chối TRƯỚC khi gọt khoảng trắng: gọt
+  // trước thì «a@b.co\r» lọt qua (hàng va-nap-mau, lớp chặn thứ hai sau bước kiểm của nút).
+  if (/[\p{Cc}\u2028\u2029]/u.test(tho.replace(/^ +| +$/g, ""))) throw new Error("email chủ kho sai dạng");
   const email = tho.trim().toLowerCase();
   if (!EMAIL_DUNG.test(email)) throw new Error("email chủ kho sai dạng");
   if (email.endsWith(`@${MIEN_EMAIL}`)) throw new Error("email chủ kho thuộc miền mẫu — cần email thật của chủ kho");
