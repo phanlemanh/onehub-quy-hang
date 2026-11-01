@@ -13,6 +13,9 @@ const dir = fileURLToPath(new URL("../migrations/", import.meta.url));
 const files = (await readdir(dir)).filter((f) => /^\d{3}_.+\.sql$/.test(f)).sort();
 
 const client = new pg.Client({ connectionString: url });
+// Lời nhắc của migration (raise notice) phải ra tới log job deploy — pg bỏ notice khi không ai nghe.
+let dangAp = "";
+client.on("notice", (n) => console.log(`${dangAp}: ${n.message}`));
 await client.connect();
 try {
   await client.query(
@@ -23,6 +26,7 @@ try {
   for (const file of files) {
     if (done.has(file)) continue;
     const sql = await readFile(new URL(file, `file://${dir}`), "utf8");
+    dangAp = file;
     await client.query("begin");
     try {
       await client.query(sql);
