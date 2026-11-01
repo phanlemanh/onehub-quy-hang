@@ -19,7 +19,11 @@ kèm cặp hai chiều (vật lành xanh, bản sao phá đỏ với thông đi�
   theo dòng `enable` + `force`; ràng buộc nội bộ không bìa/không ảnh mẫu, một bìa mỗi căn; trigger chỉ thêm cho sự
   kiện; quyền vai `quy_hang_app` (không `delete` trên `unit_photos`, có `delete` trên `unit_photo_files` cho Hỏi-6).
   Ca cách ly: hai sàn trùng toà/mã; bảng 40 ô nạp từ `bang-xem-noi-bo.json`; pg_class rls/force.
-- Verify: Postgres dãy H — `npm run db:migrate && npm run db:test`.
+- Thứ tự migration (giám sát): migrate áp tệp chưa chạy theo thứ tự tên, nên bản thật chạy 012 SAU 013–016 (và 017, 020
+  nếu hàng 85 gộp trước) còn CSDL mới chạy 012 TRƯỚC. 012 chỉ tham chiếu bảng, hàm của 001–011 (`listings`,
+  `listing_agent_assignments`, `app.current_*`, `app.can_see_source`); không đụng gì do 013+ tạo.
+- Verify: Postgres dãy H, hai thứ tự — (a) CSDL trống `npm run db:migrate` đủ rồi `db:test` + `test:isolation`; (b) CSDL
+  migrate main không có 012 (tới 015/016) rồi mới áp 012, chạy lại cả hai bộ kiểm. Cả hai xanh.
 - Phục vụ: E5, E9. `independent: true` (chỉ đọc JSON của task 1 — làm sau task 1 trong cùng nhánh).
 
 ## Task 3 — API ảnh (`packages/api/src/photos/`)
