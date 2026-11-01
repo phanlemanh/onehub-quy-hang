@@ -222,22 +222,43 @@ test("danh mục dùng chung: mỗi sàn chỉ thấy dòng tin của mình, kh�
     }
     assert.equal(daSo, 4);
 
-    // Đối chứng dương: mọi cột danh mục còn lại của dòng sàn B đọc được, đúng giá trị.
+    // Đối chứng dương: MỌI cột danh mục (danh sách viết trước, trừ agreement_id) của dòng sàn B đọc được bằng vai API.
+    const DOC_KHU = ["subdivision_key", "subdivision_name", "complex_name", "provider", "measured_at", "updated_at"];
+    const DOC_CAN = ["upi", "subdivision_key", "building_key", "building_name", "unit_number", "stack", "floor", "living_area",
+      "bedrooms_total", "direction_faces", "property_type", "property_sub_type", "lot_size_area", "stories_total",
+      "frontage_length", "access_road_width", "provider", "measured_at", "updated_at"];
     await datSan(c, TRUSTED);
-    const khu = await c.query(
-      "select subdivision_key, subdivision_name, complex_name, provider from catalog_subdivisions where subdivision_key = $1",
-      [khuB],
+    const khu = await c.query(`select ${DOC_KHU.join(", ")} from catalog_subdivisions where subdivision_key = $1`, [khuB]);
+    assert.equal(khu.rowCount, 1);
+    assert.deepEqual(Object.keys(khu.rows[0]), DOC_KHU);
+    assert.deepEqual(
+      { subdivision_key: khu.rows[0].subdivision_key, subdivision_name: khu.rows[0].subdivision_name,
+        complex_name: khu.rows[0].complex_name, provider: khu.rows[0].provider },
+      { subdivision_key: khuB, subdivision_name: "[Mẫu] Khu", complex_name: null, provider: "onehub-invest" },
     );
-    assert.deepEqual(khu.rows, [{ subdivision_key: khuB, subdivision_name: "[Mẫu] Khu", complex_name: null, provider: "onehub-invest" }]);
-    const can = await c.query(
-      `select upi, subdivision_key, building_key, building_name, unit_number, property_type, property_sub_type, provider
-         from catalog_units where upi = $1`,
-      [upiB],
-    );
-    assert.deepEqual(can.rows, [{
+    assert.ok(khu.rows[0].measured_at instanceof Date && khu.rows[0].updated_at instanceof Date);
+    const can = await c.query(`select ${DOC_CAN.join(", ")} from catalog_units where upi = $1`, [upiB]);
+    assert.equal(can.rowCount, 1);
+    assert.deepEqual(Object.keys(can.rows[0]), DOC_CAN);
+    const { measured_at, updated_at, ...giaTri } = can.rows[0];
+    assert.ok(measured_at instanceof Date && updated_at instanceof Date);
+    assert.deepEqual(giaTri, {
       upi: upiB, subdivision_key: khuB, building_key: "toa-1", building_name: "[Mẫu] Toà", unit_number: "A-01",
-      property_type: "Residential", property_sub_type: "Apartment", provider: "onehub-invest",
-    }]);
+      stack: null, floor: null, living_area: null, bedrooms_total: null, direction_faces: null,
+      property_type: "Residential", property_sub_type: "Apartment", lot_size_area: null, stories_total: null,
+      frontage_length: null, access_road_width: null, provider: "onehub-invest",
+    });
+    // Đối chiếu: tập cột vai API đọc được (quyền theo cột) đúng bằng hai danh sách trên — không thiếu, không thừa.
+    for (const [bang, mong] of [["catalog_subdivisions", DOC_KHU], ["catalog_units", DOC_CAN]]) {
+      const { rows } = await c.query(
+        `select column_name from information_schema.columns
+          where table_schema = 'public' and table_name = $1
+            and has_column_privilege('quy_hang_app', format('public.%I', table_name), column_name, 'SELECT')
+          order by column_name`,
+        [bang],
+      );
+      assert.deepEqual(rows.map((r) => r.column_name), [...mong].sort(), `cột đọc được · ${bang}`);
+    }
   });
 });
 
