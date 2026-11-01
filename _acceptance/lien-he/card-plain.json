@@ -1,31 +1,98 @@
 {
   "feature_plain": "Mỗi người làm việc với sàn trở thành một liên hệ duy nhất theo chuẩn RESO: một chủ nhà có hai số vẫn là một người, có một đầu chủ giữ; lead và hàng của người ấy cùng gắn vào liên hệ đó, nên kiểm trùng, «Lên bảng» và «Sửa số» không còn phải đoán.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ có bốn loại liên hệ theo RESO — Chủ bán, Chủ cho thuê, Người mua, Người thuê; một người mang được nhiều loại; liên hệ chủ nhà là thông tin nguồn."},
-    {"id": "AC-2", "p": "Sẽ lưu liên hệ và các số của họ tách theo sàn; một số chỉ thuộc một người trong sàn; chỉ đầu chủ giữ và trưởng nhóm đọc được liên hệ chủ nhà; có chỗ trống cho trường riêng (hàng 47 mới dùng)."},
-    {"id": "AC-3", "p": "Sẽ tự tạo hay tìm liên hệ khi telesales nhập lead; telesales không đọc lại được liên hệ hay số."},
-    {"id": "AC-4", "p": "Sẽ nhận ra chủ nhà hai số là một người: lead mới với số nào cũng về đúng đầu chủ đang giữ người ấy."},
-    {"id": "AC-5", "p": "Sẽ gắn chủ nhà của hàng vào liên hệ khi đầu chủ ghi chủ nhà; giá đáy vẫn theo từng căn; «Mở số» chạy như cũ."},
-    {"id": "AC-6", "p": "Sẽ thêm số mới vào cùng người khi telesales «Sửa số và gửi lại»; lead trả lại mà người ấy không còn việc gì thì thôi có đầu chủ giữ."},
-    {"id": "AC-7", "p": "Sẽ cho đầu chủ tạo hàng thẳng từ lead; «Lên bảng» tính từ chính hàng ấy, không đoán theo số nữa."},
-    {"id": "AC-8", "p": "Sẽ cho một người vừa là Chủ bán vừa là Người mua mà vẫn là một liên hệ; còn hàng hay lead thì không bỏ được loại chủ nhà."},
-    {"id": "AC-9", "p": "Sẽ chuyển chủ nhà và lead đã có sang liên hệ, gộp theo số trong từng sàn, giữ nguyên dữ liệu cũ để gỡ được."},
-    {"id": "AC-10", "p": "Sẽ thêm vào Tham chiếu mục «Tri thức ngành và RESO», từ vựng mới cho liên hệ, và ADR-0021."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ có bốn loại liên hệ theo RESO — Chủ bán, Chủ cho thuê, Người mua, Người thuê; một người mang được nhiều loại; liên hệ chủ nhà là thông tin nguồn; mỗi người hiện là «Lead» tới khi đã nói chuyện hai chiều (theo KW)."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ lưu liên hệ và các số của họ tách theo sàn; một số chỉ thuộc một người; số có nhãn Nhà · Di động · Công ty · Khác và một số chính; chỉ đầu chủ giữ và trưởng nhóm đọc được liên hệ chủ nhà; có chỗ trống cho trường riêng (hàng 47)."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ tự tạo hay tìm liên hệ khi telesales nhập lead; telesales không đọc lại được liên hệ hay số."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ nhận ra chủ nhà hai số là một người: lead mới với số nào cũng về đúng đầu chủ đang giữ người ấy."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ gắn chủ nhà của hàng vào liên hệ khi đầu chủ ghi chủ nhà; giá đáy vẫn theo từng căn; «Mở số» chạy như cũ."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ thêm số mới vào cùng người khi telesales «Sửa số và gửi lại»; lead trả lại mà người ấy không còn việc gì thì thôi có đầu chủ giữ."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ cho đầu chủ tạo hàng thẳng từ lead; «Lên bảng» tính từ chính hàng ấy, không đoán theo số nữa."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ cho một người vừa là Chủ bán vừa là Người mua mà vẫn là một liên hệ; còn hàng hay lead thì không bỏ được loại chủ nhà."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ chuyển chủ nhà và lead đã có sang liên hệ, gộp theo số trong từng sàn, giữ nguyên dữ liệu cũ để gỡ được."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ thêm vào Tham chiếu mục «Tri thức ngành và RESO», từ vựng mới cho liên hệ, chữ «Lead» theo KW, và ADR-0021."
+    }
   ],
   "wont_do": [
-    {"id": "OOS-1", "p": "KHÔNG làm liên hệ khách của đầu khách (gắn Lần gửi, lịch xem) — hàng 86."},
-    {"id": "OOS-2", "p": "KHÔNG làm cơ chế trường riêng, không nới luật cấm trường riêng mang thông tin nguồn — hàng 47."},
-    {"id": "OOS-3", "p": "KHÔNG có màn xem, sửa, gộp tay liên hệ — hàng sau."},
-    {"id": "OOS-4", "p": "KHÔNG bỏ hẳn bảng chủ nhà của hàng để chuyển sang bảng nối theo RESO — việc sau."},
-    {"id": "OOS-5", "p": "KHÔNG tự đổi đầu chủ giữ liên hệ khi trưởng nhóm giao lại hàng — lệch hiện ở Hôm nay của trưởng nhóm, hàng 42."},
-    {"id": "OOS-6", "p": "KHÔNG lưu tên đầy đủ, địa chỉ, email hay trường RESO khác của liên hệ ngoài tên, loại, số, người giữ."}
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG làm liên hệ khách của đầu khách (gắn Lần gửi, lịch xem) — hàng 86."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG làm cơ chế trường riêng, không nới luật cấm trường riêng mang thông tin nguồn — hàng 47."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG có màn xem, sửa, gộp tay liên hệ — hàng sau."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG bỏ hẳn bảng chủ nhà của hàng để chuyển sang bảng nối theo RESO — việc sau."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG tự đổi đầu chủ giữ liên hệ khi trưởng nhóm giao lại hàng — lệch hiện ở Hôm nay của trưởng nhóm, hàng 42."
+    },
+    {
+      "id": "OOS-6",
+      "p": "KHÔNG lưu tên đầy đủ, địa chỉ, email hay trường RESO khác của liên hệ ngoài tên, loại, số, người giữ."
+    },
+    {
+      "id": "OOS-7",
+      "p": "KHÔNG làm nguồn lead, quan hệ giữa các liên hệ, thẻ, người cùng xem (các trường KW khác) — hàng sau."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Bài chấm việc chuyển dữ liệu cũ dựng dữ liệu sai thời điểm nên có thể xanh dù gộp sai — đã viết lại: dựng đúng trạng thái trước khi có liên hệ, kiểm từng số giải được, có đối chứng đổi thứ tự."},
-    {"i": 1, "p": "Hai câu hỏi về dữ liệu cũ bị ghi là dễ đảo dù chạm mọi sàn khi lên bản thật — đã ghi lại là khó đảo, kèm đường gỡ: dữ liệu cũ giữ nguyên từng byte."},
-    {"i": 2, "p": "Chưa nêu tên các ca kiểm của hàng 27 sẽ đổi — đã ghi đúng năm ca vào sổ và bài chấm đối chiếu danh sách ấy."},
-    {"i": 3, "p": "Thiếu trường hợp liên hệ chưa có đầu chủ giữ — đã thêm: chỉ trưởng nhóm thấy, và số ấy không quay về đầu chủ đã trả lại."},
-    {"i": 4, "p": "Chưa nói rõ không được bỏ loại chủ nhà khi còn hàng hay lead — đã viết vào tiêu chí và thêm bảng chín ô."}
+    {
+      "i": 0,
+      "p": "Bài chấm việc chuyển dữ liệu cũ dựng dữ liệu sai thời điểm nên có thể xanh dù gộp sai — đã viết lại: dựng đúng trạng thái trước khi có liên hệ, kiểm từng số giải được, có đối chứng đổi thứ tự."
+    },
+    {
+      "i": 1,
+      "p": "Hai câu hỏi về dữ liệu cũ bị ghi là dễ đảo dù chạm mọi sàn khi lên bản thật — đã ghi lại là khó đảo, kèm đường gỡ: dữ liệu cũ giữ nguyên từng byte."
+    },
+    {
+      "i": 2,
+      "p": "Chưa nêu tên các ca kiểm của hàng 27 sẽ đổi — đã ghi đúng năm ca vào sổ và bài chấm đối chiếu danh sách ấy."
+    },
+    {
+      "i": 3,
+      "p": "Thiếu trường hợp liên hệ chưa có đầu chủ giữ — đã thêm: chỉ trưởng nhóm thấy, và số ấy không quay về đầu chủ đã trả lại."
+    },
+    {
+      "i": 4,
+      "p": "Chưa nói rõ không được bỏ loại chủ nhà khi còn hàng hay lead — đã viết vào tiêu chí và thêm bảng chín ô."
+    }
   ],
   "scope_plain": "Phần cắt hay hoãn — mỗi mục đã có hàng lộ trình nhận:"
 }

@@ -31,9 +31,11 @@ Chủ cho thuê `Landlord`, Người mua `Buyer`, Người thuê `Tenant`; «li�
 - AC-1: Given lõi của `packages/core`, When dựng loại liên hệ, Then thực đơn đúng bốn giá trị RESO `Seller · Landlord ·
   Buyer · Tenant` với nhãn Chủ bán · Chủ cho thuê · Người mua · Người thuê; nhu cầu của lead ra loại (Bán → `Seller`, Cho
   thuê → `Landlord`, Cả hai → cả hai); liên hệ mang `Seller` hay `Landlord` là lớp nguồn; bản xem của liên hệ cho người
-  không được xem chỉ nói «không thấy», cho người được xem không bao giờ có số.
+  không được xem chỉ nói «không thấy», cho người được xem không bao giờ có số; trạng thái Lead/Liên hệ của
+  người suy từ dữ kiện — `contact` khi có mốc gọi lần đầu trên một lead của họ hay có hàng gắn họ, ngược lại `lead` (KW).
 - AC-2: Given migration 016, When đọc lược đồ và gọi bằng vai API, Then có bảng liên hệ và bảng số của liên hệ bật và ép
-  luật theo dòng theo sàn; một dấu vết số chỉ thuộc một liên hệ trong sàn; vai API không đọc được bản mã hay dấu vết, không
+  luật theo dòng theo sàn; một dấu vết số chỉ thuộc một liên hệ trong sàn; mỗi số mang nhãn `Home · Mobile · Work ·
+  Other` và đúng một số chính trên mỗi liên hệ; vai API không đọc được bản mã hay dấu vết, không
   ghi thẳng hai bảng; liên hệ chủ nhà chỉ người giữ (còn vai Đầu chủ) và trưởng nhóm đọc được — liên hệ chưa có người giữ chỉ trưởng nhóm đọc; chỗ trường riêng có mặt và
   giữ rỗng; lược đồ không có cột số dạng chữ nào chưa bị chặn.
 - AC-3: Given telesales nhập lead qua `POST /api/v1/leads`, When số chưa thuộc liên hệ nào, Then máy tạo một liên hệ chủ nhà
@@ -70,7 +72,7 @@ Chủ cho thuê `Landlord`, Người mua `Buyer`, Người thuê `Tenant`; «li�
   lead và số liên hệ gộp từ nhiều đầu chủ của từng sàn lúc chạy.
 - AC-10: Given tài liệu của kho, When đọc Tham chiếu, CONTEXT.md và ADR-0021, Then Tham chiếu có mục «Tri thức ngành và RESO»
   với bảng đối tượng ↔ RESO ↔ khái niệm ngành; CONTEXT.md có «Liên hệ», «Loại liên hệ», «Người giữ» và dòng «Lead» viết lại
-  theo Hỏi-5; nhãn loại liên hệ trong CONTEXT.md khớp nhãn của lõi; ADR-0021 có mục chờ cho hàng 47 về lớp nguồn của trường
+  theo Hỏi-5 (trạng thái của liên hệ chưa nói chuyện hai chiều, bản ghi lead là cơ hội pha đầu); nhãn loại liên hệ trong CONTEXT.md khớp nhãn của lõi; ADR-0021 có mục chờ cho hàng 47 về lớp nguồn của trường
   riêng của liên hệ.
 
 ## Coverage
@@ -103,6 +105,8 @@ bán» của hàng 27 đổi định nghĩa lên bảng sang dữ kiện ← AC-
 - Đổi người giữ liên hệ khi trưởng nhóm giao lại hàng, và báo lệch người giữ ↔ đầu chủ giữ căn — Hôm nay của trưởng nhóm,
   hàng 42 (Hỏi-3).
 - Tên, địa chỉ, email và các trường RESO khác của liên hệ ngoài tên, loại, số, người giữ.
+- Nguồn lead (KW Lead Source — nguồn ngoài hay liên hệ giới thiệu), quan hệ giữa các liên hệ (KW Relationships), thẻ, người
+  cùng xem (KW Collaborators) — hàng sau.
 
 > Out of scope = scope-truth (Gate 1 duyệt mục này). Rationale/trade-off từng mục → 1 entry `descope` trong `decisions.jsonl`.
 

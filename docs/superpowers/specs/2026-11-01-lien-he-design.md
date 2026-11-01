@@ -13,9 +13,10 @@ lịch xem) là hàng 86; cơ chế định nghĩa trường riêng là hàng 47
 | --- | --- | --- | --- | --- |
 | Liên hệ (mới) | `Contacts` — «a member's clients and other contacts»; khoá `ContactKey`; người giữ `OwnerMemberKey` (FK `Member`); tên `FullName` | Contact (danh bạ) | không có | — |
 | Loại liên hệ | `ContactType` (String List, **Multi**): `Seller` «owner selling», `Landlord` «owner renting/leasing out», `Buyer`, `Tenant`, `Lead` «may be a potential buyer or seller», `Prospect`… | lead → contact sau cuộc nói chuyện hai chiều | không có | Một người nhiều loại là chuẩn (Multi) |
-| Số của liên hệ | `MobilePhone`, `HomePhone`… và `OtherPhone` (nhiều số, `OtherPhoneType`, `ResourceName` + `ResourceRecordKey`) | — | số nằm trên từng hàng (`listing_owners`) và từng lead (`leads`) | Một người hai số đang thành hai người |
+| Số của liên hệ | `MobilePhone`, `HomePhone`… và `OtherPhone` (nhiều số, `OtherPhoneType`, `ResourceName` + `ResourceRecordKey`); `PreferredPhone` | Primary Phone + Additional Phone, nhãn Home · Mobile · Work · Other | số nằm trên từng hàng (`listing_owners`) và từng lead (`leads`) | Một người hai số đang thành hai người |
 | Chủ nhà của hàng | `ContactListings` (`ContactKey` ↔ `ListingKey`) | Opportunity đường ống Listings gắn contact | `listing_owners` — mỗi hàng một dòng tên + số | Tham chiếu §4 khai «Chủ nhà» là một người (các căn của người đó); mã dựng «chủ nhà của hàng» |
-| Lead | `ContactType = Lead` (con người) | Opportunity pha Cultivate | bản ghi riêng, mang số riêng | CONTEXT.md «Lead = hàng ở nấc đầu» lệch cả RESO lẫn mã — Hỏi-5 |
+| Lead | `ContactType = Lead` (con người) | Cùng một bản ghi con người với contact: ô «Mark as Lead»; lead = ít thông tin, trao đổi một chiều; contact = đã nói chuyện hai chiều; giao dịch là Opportunity (pha Cultivate…) | bản ghi riêng, mang số riêng | Bản ghi «lead» của Quỹ hàng ứng với Opportunity pha đầu + nguồn lead; trạng thái Lead/Liên hệ của người suy từ cuộc gọi đầu — Hỏi-5 |
+| Người giữ | `OwnerMemberKey` | Tài khoản nhóm: Owner (bản ghi của nhóm) ≠ Assignee (người làm việc, tạo Opportunity); Lead Pool, Lead Routing | sàn giữ bản ghi; đầu chủ là người giữ | Sàn ↔ Owner, người giữ ↔ Assignee — khớp; kho chung của hàng 25 ↔ Lead Pool |
 | Nguồn gốc liên hệ | `LeadSource` («person or source that provided the contact») | lead source | không có | Ghi `created_by` thay, đủ cho hàng này |
 | Trường riêng | — (RESO dùng trường chuẩn; sàn tự thêm) | custom fields của Command | ADR-0018 quyết định 8: trường riêng cho hàng, cấm lớp `source` | Liên hệ chủ nhà là lớp nguồn → mục chờ cho hàng 47 (§6) |
 
@@ -25,7 +26,8 @@ lịch xem) là hàng 86; cơ chế định nghĩa trường riêng là hàng 47
    loại (`contact_types text[]`, giá trị RESO `Seller · Landlord · Buyer · Tenant`), người giữ (`owner_member_user_id`,
    RESO `OwnerMemberKey`), chỗ trường riêng (`custom jsonb`), người tạo, mốc.
 2. **Một số → một người trong sàn.** Bảng `contact_phones`: bản mã, dấu vết (cùng hàm dấu vết theo sàn của ADR-0013),
-   ngữ cảnh mã hoá, người thêm, mốc. Duy nhất `(sàn, dấu vết)`: một số chỉ thuộc một liên hệ. Một liên hệ nhiều số.
+   ngữ cảnh mã hoá, nhãn (`Home · Mobile · Work · Other` — KW, RESO `PreferredPhone`), cờ số chính, người thêm, mốc. Số đầu
+   tiên của liên hệ là số chính; số chuyển từ dữ liệu cũ và số từ lead mang nhãn `Mobile`. Duy nhất `(sàn, dấu vết)`: một số chỉ thuộc một liên hệ. Một liên hệ nhiều số.
 3. **Lớp nguồn.** Liên hệ mang `Seller` hay `Landlord` là chủ nhà: tên, số, loại, trường riêng đều lớp `source` (bất biến 2)
    — chỉ người giữ (còn vai Đầu chủ) và trưởng nhóm đọc; vai API không đọc được cột số; số chỉ ra qua cửa mở số có ghi sự
    kiện (đường mở số của hàng 11 giữ nguyên). Telesales tạo được liên hệ (qua nhập lead) nhưng không đọc lại được.
@@ -43,11 +45,14 @@ lịch xem) là hàng 86; cơ chế định nghĩa trường riêng là hàng 47
 9. **Hàng tạo từ lead.** `POST /api/v1/leads/{id}/listing` — đầu chủ của lead (chưa trả lại, chưa bỏ) tạo hàng: toà, căn từ
    lead; hàng mang `origin_lead_id`; chủ nhà của hàng là liên hệ của lead; đầu chủ giữ căn. «Lên bảng» thay định nghĩa:
    lần đầu hàng có `origin_lead_id` = lead (hay = lead gửi lại sau nó trong chuỗi) sang Sẵn sàng bán — dữ kiện, không suy.
-10. **Một người nhiều loại.** `PATCH /api/v1/contacts/{id}` (người giữ, trưởng nhóm) thêm hay bỏ loại; vẫn một liên hệ.
+10. **Lead hay Liên hệ (KW).** Bản xem của liên hệ có trạng thái `lead` (chưa nói chuyện hai chiều) hay `contact` (đã nói
+    chuyện): suy từ dữ kiện — liên hệ thành `contact` khi một lead của họ có mốc gọi lần đầu, hay khi đầu chủ ghi chủ nhà của
+    hàng; không cột lưu.
+11. **Một người nhiều loại.** `PATCH /api/v1/contacts/{id}` (người giữ, trưởng nhóm) thêm hay bỏ loại; vẫn một liên hệ.
     `GET /api/v1/contacts/{id}` trả bản của người được xem (lõi dựng, không số). Màn liên hệ là hàng sau.
-11. **Chuyển dữ liệu cũ.** Migration 016 dựng liên hệ từ `listing_owners` và `leads` hiện có, gộp theo dấu vết số trong
+12. **Chuyển dữ liệu cũ.** Migration 016 dựng liên hệ từ `listing_owners` và `leads` hiện có, gộp theo dấu vết số trong
     từng sàn; chạy lại không đổi gì.
-12. **Tài liệu.** Tham chiếu thêm mục «Tri thức ngành và RESO» (bảng §1 thành bảng thường trực); CONTEXT.md thêm «Liên hệ»,
+13. **Tài liệu.** Tham chiếu thêm mục «Tri thức ngành và RESO» (bảng §1 thành bảng thường trực); CONTEXT.md thêm «Liên hệ»,
     «Loại liên hệ», «Người giữ», sửa «Lead» theo Hỏi-5; ADR-0021.
 
 ## 3. Dữ liệu (migration 016)
@@ -101,9 +106,9 @@ chủ đích (quyết định mới, chủ kho duyệt), hàng 85 không nới.
   Lối khác: đổi theo — các hàng khác của cùng chủ đứng tên đầu chủ cũ, luật «một chủ → một đầu chủ» gãy theo hướng khác.
 - **Hỏi-4 — telesales có thấy tên liên hệ của lead mình nhập**: khuyến nghị không (liên hệ chủ nhà trọn lớp nguồn; lead từ
   telesales chưa có tên). Lối khác: thấy tên — mở một trường nguồn cho vai không giữ nguồn.
-- **Hỏi-5 — chữ «Lead» trong từ vựng**: khuyến nghị «Lead (phía chủ nhà) — một lần báo vào sàn rằng một liên hệ chủ nhà muốn
-  bán hay cho thuê; RESO tương đương `ContactType = Lead` phía bán, KW: cơ hội pha Cultivate; không phải hàng». Lối khác: giữ
-  «hàng ở nấc đầu» — lệch RESO và mã.
+- **Hỏi-5 — chữ «Lead» trong từ vựng** (chủ kho chọn theo KW, 01/11): «Lead — trạng thái của một liên hệ chưa nói chuyện hai
+  chiều (KW «Mark as Lead»; RESO `ContactType = Lead`). Bản ghi lead của Quỹ hàng là cơ hội phía bán ở pha đầu gắn liên hệ ấy
+  (KW Opportunity, pha Cultivate), không phải hàng».
 
 ## 7b. Bất biến chạm
 
