@@ -1,0 +1,101 @@
+schema_version: 1
+feature_slug: the-ba-loi
+# Lệnh máy: `executors.test.ui_lint` (node --test của packages/ui-lint, gồm tests/ba-loi.test.mjs) và
+# `executors.script.giao_dien` (kiem-chuan.mjs trên cây thật — bước cuối của npm run lint). Người chấm đối chiếu từng tên
+# ca nêu trong `expected` trong dòng reporter: có mặt, «ok», không SKIP. Ca dựng trang chạy CLI bằng tiến trình con trên
+# kho tạm; ảnh thử sinh bằng bộ mã PNG trong test (rộng đúng khổ), ảnh vật thử chép từ hai hồ sơ đã ký.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ba lối: kế hoạch sáu ảnh và khung» có mặt và ok — trên kho tạm: --ba-loi --slug in đúng 6 dòng, tập tên ảnh bằng đúng {trong-kho,reui,ve-moi}×{1440,375} dạng '<lối>-<khổ>.png' (assert số 6 và so tập), ghi ba-loi/ba-loi.json có khoá man, khuyen, loi với ba lối; điền một chữ vào khung rồi chạy lại → chữ còn nguyên (không đè). Ca «ba lối: khung đi trọn tới trang» ok — (a) khung vừa ghi, chưa điền: --dung-ba-loi thoát 1 (không phải 2), stderr có đúng ba dòng bắt đầu 'ba lối «' cho trong-kho, reui, ve-moi cùng dòng 'lời khuyên' và 'màn'; (b) điền chuỗi vào đúng các khoá khung có sẵn (không thêm khoá), đặt sáu ảnh → thoát 0. Chiều đỏ: lệnh đè khung → assert chữ đã điền đỏ."
+    paths: [packages/ui-lint/doi-chieu.mjs, packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ba lối: dựng trang đủ ba cột» có mặt và ok — ba-loi.json đủ, sáu ảnh PNG đúng khổ: --dung-ba-loi thoát 0; index.html có đúng 3 section[data-loi] theo thứ tự trong-kho, reui, ve-moi (so mảng); phần tử data-khuyen đứng trước section đầu và chứa tên lối khuyên cùng lý do; đúng section khuyên mang class chon; mỗi section 2 ảnh src data:image/png;base64 và chứa câu động cơ, câu đánh đổi của lối ấy; không src nào trỏ tệp ngoài; dựng lần hai ra chuỗi bằng hệt. Chiều đỏ: bỏ đánh dấu cột khuyên hay đổi thứ tự cột → assert đỏ."
+    paths: [packages/ui-lint/doi-chieu.mjs, packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ba lối: lối không có vẫn giữ cột» có mặt và ok — lối ve-moi khai {khong_co:true, da_tra:'`<truy vấn>` → không có'}, không có ảnh ve-moi: dựng thoát 0, section[data-loi=ve-moi] có mặt, chứa 'không có' và chuỗi đã tra, không thẻ img; đối chứng: lối ve-moi là object rỗng (không ứng viên, không khai không có) → thoát 1, stderr chứa 'ba lối «ve-moi»' và không ghi index.html; khai không có mà da_tra rỗng → thoát 1 nêu 'ba lối «ve-moi»' và 'đã tra'."
+    paths: [packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ba lối: trang sai thì đỏ gọi tên» có mặt và ok — ma trận viết trước đếm bằng đúng 10 (assert số): thiếu dong_co, thiếu danh_doi, thiếu nhan, thiếu ảnh reui-375.png, ảnh reui-1440.png rộng 1280, ảnh reui-375.png không phải PNG, khuyen.loi 'khac', khuyen.loi trỏ lối khai không có, khuyen.ly_do rỗng, man rỗng; mỗi ca sửa đúng một chỗ trên bản đủ, assert thoát 1, stderr chứa tên lối ('ba lối «reui»') hay 'lời khuyên' hay 'màn' cùng điều sai ('động cơ', 'đánh đổi', 'nhãn', 'thiếu ảnh', 'khổ', 'PNG', …), và index.html không được ghi (vắng sau lệnh); đối chứng dương: bản đủ → thoát 0. ba-loi.json vắng → thoát 2. Chiều đỏ: bỏ kiểm khổ → ca 1280 đỏ."
+    paths: [packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ô chưa có khuôn: nhận ba loại» có mặt và ok — kho git tạm chép design/patterns và docs/design/vo-va-ia.md thật, commit gốc; ma trận 3 ca (assert số): thêm design/patterns/thu-moi.md → stdout chứa 'ô chưa có khuôn: nhóm mới thu-moi'; đổi ô Khối đích của dòng «Đăng nhập» ở §2 → 'ô chưa có khuôn: đổi khối đích Đăng nhập'; thêm một dòng «Chỗ hở» tên «Ô thử» → 'ô chưa có khuôn: chỗ hở mới Ô thử'; đối chứng: sửa chữ ô «Vì sao không đứng» của một dòng cũ → không dòng 'ô chưa có khuôn'. Cùng ca chạy với --den <commit> trên lịch sử kho tạm cho kết quả như so cây làm việc."
+    paths: [packages/ui-lint/doi-chieu.mjs, packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ô chưa có khuôn: bỏ bước phân kỳ thì đỏ» có mặt và ok — trên vòng thêm nhóm mới, ma trận viết trước đúng 5 ca đỏ (assert số): design-pass.md vắng; divergence: skipped; divergence opened mà thiếu ba-loi/; trang sai một chỗ (thiếu danh_doi); index.html bị sửa tay sau khi dựng — mỗi ca thoát 1 với dòng nêu lý do ('design-pass', 'skipped', 'trang ba lối', 'đánh đổi', 'khác bản dựng lại'); đối chứng dương: divergence: opened — … cùng trang dựng bằng lệnh → thoát 0. Chiều đỏ: bài chỉ đọc design-pass mà không kiểm trang → ca thiếu ba-loi đỏ."
+    paths: [packages/ui-lint/doi-chieu.mjs, packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ô chưa có khuôn: đi khuôn sẵn thì không cần trang» có mặt và ok — kho tạm: sửa một tệp màn của nhóm có sẵn (page.tsx của nhóm cai-dat-san) và một dòng chữ ngoài hai bảng của vo-va-ia.md; với design-pass.md ghi divergence: skipped, và với design-pass.md vắng: cả hai thoát 0, stdout chứa 'không cần trang', không dòng 'ô chưa có khuôn'."
+    paths: [packages/ui-lint/doi-chieu.mjs, packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «vật thử: trang 17 và 27 dựng bằng lệnh» có mặt và ok — ma trận 2 hồ sơ (cot-ho-so-can, lead-bon-nac; assert số): chép sáu ảnh <lối>-<khổ>.png thật của hồ sơ vào kho tạm, ba-loi.json mang chữ động cơ/đánh đổi/lời khuyên của trang tay ấy; dựng thoát 0, 3 section, 6 ảnh nhúng; ảnh thật đọc IHDR đúng khổ. Ca «vật thử: lịch sử bảng thật» ok — gốc là design/patterns thật trừ ho-so-can.md, đầu thêm lại → 'nhóm mới ho-so-can'; cùng với lead-cua-toi.md → 'nhóm mới lead-cua-toi'; gốc là vo-va-ia.md thật bỏ dòng «Cột hồ sơ cạnh bảng» khỏi §3, đầu là tệp thật → 'chỗ hở mới Cột hồ sơ cạnh bảng'; gốc là §3 hai cột (Chỗ | Ghép) dựng từ chính 13 dòng thật, đầu là §3 năm cột thật → không dòng 'ô chưa có khuôn'."
+    paths: [packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/doi-chieu.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; stdout có dòng bắt đầu 'ba lối: ' nêu số trang (≥ 2 — cot-ho-so-can, lead-bon-nac) và dòng cuối 'chuẩn giao diện: đạt'; không dòng lỗi bắt đầu 'ba lối «' hay 'hồ sơ '. Hai chiều đỏ đo ở test: ca «kiểm chuẩn: ba lối mở mà thiếu trang thì đỏ» (packages/ui-lint/tests/ba-loi.test.mjs) — bản sao cây thật, xoá ba-loi/index.html của một hồ sơ khai opened → loi chứa tên hồ sơ và 'ba-loi/index.html'; thêm ba-loi.json sai (thiếu danh_doi) cho một hồ sơ tạm khai opened → loi chứa tên hồ sơ; trang khác bản dựng lại ở hồ sơ tạm status draft → loi chứa 'khác bản dựng lại'; cùng trang ấy khi contract của hồ sơ tạm ghi status: signed-off (và machine-cleared) → không lỗi (ma trận 2 trạng thái, assert số); bản sao lành → không lỗi ba lối."
+    paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/lib/ba-loi.mjs, packages/ui-lint/tests/ba-loi.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    target: _acceptance/the-ba-loi/evidence/ba-loi-mau.html
+    steps:
+      - "Mở tệp trang mẫu bằng trình duyệt (file:///<gốc kho>/_acceptance/the-ba-loi/evidence/ba-loi-mau.html — Playwright mở được file://). Khổ 1440x900, prefers-color-scheme light → chụp evidence/E11-1440-sang.png; ghi scrollWidth vs innerWidth, top của [data-khuyen] và chữ của nó, top của ba section[data-loi] theo thứ tự, màu chữ và màu nền computed của body, viền của section.chon so với section khác"
+      - "Cùng trang, prefers-color-scheme dark → chụp evidence/E11-1440-toi.png; ghi màu chữ và màu nền computed của body"
+      - "Khổ 375x812, light → chụp evidence/E11-375-sang.png; ghi scrollWidth vs innerWidth, top của [data-khuyen], top của ba section theo thứ tự"
+      - "Khổ 375x812, dark → chụp evidence/E11-375-toi.png; ghi scrollWidth vs innerWidth, màu chữ và màu nền computed của body"
+    expected: "Mở tệp trang mẫu (dựng bằng --dung-ba-loi từ ảnh và chữ của trang tay hàng 17) bằng trình duyệt ở 4 tổ hợp: 1440×900 sáng, 1440×900 tối, 375×812 sáng, 375×812 tối (prefers-color-scheme). Mỗi tổ hợp một ảnh chụp lưu evidence/E11-<khổ>-<nền>.png. Đạt khi cả 4: document.documentElement.scrollWidth <= innerWidth (không cuộn ngang); khối lời khuyên nằm trong khung đầu (getBoundingClientRect().top < innerHeight) và nêu «ReUI»; ở 1440 ba cột nằm cùng một hàng (cùng top), ở 375 ba cột xếp dọc theo thứ tự Trong kho, ReUI, Vẽ mới; chữ thân trang và nền khác màu rõ ở cả sáng và tối (màu chữ computed khác màu nền computed); cột ReUI có viền đánh dấu khác hai cột kia."
+    paths: [packages/ui-lint/lib/ba-loi.mjs, _acceptance/the-ba-loi/evidence/ba-loi-mau.html]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-10
+    executor: judgment
+    question: "Đọc ba tệp. Cả ba có cùng nói đủ năm ý không: (1) «ô chưa có khuôn» là vòng thêm nhóm mới, đổi khối đích của một màn, hay thêm một dòng «Chỗ hở» (ghép, tự viết); (2) khi đó bước phân kỳ của design-pass mở (divergence: opened) với ba lối tên cố định Trong kho · ReUI · Vẽ mới, trang ba lối gửi kèm thẻ Cổng Phạm vi; (3) trang dựng bằng doi-chieu.mjs --ba-loi rồi --dung-ba-loi (skill quy-hang-ui phải có lệnh; luật giao diện và vo-va-ia được trỏ về skill); (4) bước chấm chạy --kiem-ba-loi, đỏ khi bỏ bước phân kỳ; (5) màn đi khuôn sẵn thì skipped hợp lệ, và khối đích §2 là khuyến nghị đầu vào cho lối ReUI? PASS khi đủ năm ý ở mức mỗi tệp đứng được một mình hoặc trỏ đúng chỗ có ý ấy; FAIL nêu tệp và ý thiếu."
+    inputs: [.claude/rules/giao-dien.md, docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/SKILL.md]
+    expected: "PASS — đủ năm ý."
+    paths: [.claude/rules/giao-dien.md, docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/SKILL.md]
+    evidence_required: [run_id, verdict, judges]

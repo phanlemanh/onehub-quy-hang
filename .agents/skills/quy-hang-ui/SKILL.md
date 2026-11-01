@@ -92,8 +92,15 @@ Luật và lý do ở `docs/design/vo-va-ia.md` §2 «Nhóm mới», «Đối ch
    `nhan_dien` trang tạm cùng PR. Không dựng khuôn cho nhóm chưa có màn.
 3. **Thiết kế (`design-pass`):** `doi-chieu.mjs --base <nhánh chính> --slug <slug>` → chụp từng cặp màn mới · màn mẫu
    ở 1440 và 375 → `doi-chieu.mjs --dung <slug>` → gửi `doi-chieu/index.html` kèm thẻ Cổng Phạm vi trước khi ký.
-4. **Chấm:** `ban-do-khuon.mjs --base <nhánh chính>` (0 lệch mới, gồm màn ngoài bản đồ) và
-   `so-do-vong.mjs --slug <slug> --base <nhánh chính> --write`.
+   **Ô chưa có khuôn** (nhóm mới · đổi «Khối đích» của một màn · thêm dòng «Chỗ hở» — ADR-0019) → bước phân kỳ mở
+   (`divergence: opened`) với ba lối tên cố định Trong kho · ReUI · Vẽ mới (khối đích `vo-va-ia.md` §2 là khuyến nghị đầu
+   vào cho lối ReUI): `doi-chieu.mjs --ba-loi --slug <slug>` → chụp sáu ảnh `<lối>-<khổ>.png` cùng dữ liệu mẫu → điền
+   `ba-loi/ba-loi.json` (nhãn, câu động cơ, câu đánh đổi mỗi lối; lối không có ứng viên ghi `{"khong_co": true,
+   "da_tra": "…"}`; lời khuyên và lý do) → `doi-chieu.mjs --dung-ba-loi <slug>` → gửi `ba-loi/index.html` kèm thẻ Cổng
+   Phạm vi. Màn đi khuôn sẵn của nhóm thì không cần trang, `divergence: skipped` hợp lệ.
+4. **Chấm:** `ban-do-khuon.mjs --base <nhánh chính>` (0 lệch mới, gồm màn ngoài bản đồ),
+   `doi-chieu.mjs --kiem-ba-loi --base <nhánh chính> --slug <slug>` (đỏ khi vòng có ô chưa có khuôn mà bỏ bước phân kỳ
+   hay trang ba lối thiếu, sai, sửa tay) và `so-do-vong.mjs --slug <slug> --base <nhánh chính> --write`.
 5. **Sau gộp:** chủ sản phẩm thấy lệch khi dùng → một dòng trong `docs/design/lech-lot.md`.
 
 ## Sàn thiết kế
