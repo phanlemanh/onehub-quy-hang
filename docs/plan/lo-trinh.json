@@ -1894,6 +1894,37 @@
       ]
     },
     {
+      "ma": "91",
+      "cau_giao": "Mọi màn sau đăng nhập chọn một trong bảy bố cục có tên của hệ bố cục — Tràn, Danh sách – chi tiết, Đọc, Hồ sơ hai cột, Bảng điều khiển, Luồng nhiều bước, Dòng tin — với sáu vùng chuẩn (đầu màn, thanh công cụ, thân, cột phụ, chân, ngăn nổi), chờ tải theo hình của bố cục, rỗng · lỗi · ngoại tuyến một luật chung, ba khổ 1440 · 1024 · 375 và một menu Tạo trên vỏ; trang mẫu sống bày mọi bố cục × trạng thái × khổ không cần cơ sở dữ liệu hay đăng nhập, ảnh chụp từ nó là ảnh chuẩn để đối chiếu màn mới",
+      "slug": "he-bo-cuc",
+      "vi_sao": "ADR-0024: so với Verve CRM (cùng họ khối ReUI) Quỹ hàng thiếu tầng bố cục giữa thang dùng lại và khuôn nhóm màn — ba chỗ chờ tải viết tay, hai kiểu căn lề, nút tạo ở hai nơi, hồ sơ toàn màn không lối về, năm kích thước tuỳ ý, ảnh đối chiếu cần Postgres và đăng nhập; chủ kho 02/11 «Duyệt hướng chung»",
+      "vai": "Đầu chủ · Đầu khách · Trưởng nhóm · Quản trị sàn",
+      "tieu_chi": 10,
+      "hang": "T3",
+      "dung_tren": [
+        "84"
+      ],
+      "bat_khi": "Một màn dưới (app) không khai bố cục, đặt max-w hay h-[…] tay, dựng Skeleton ngoài khuôn hay gọi thẳng Sheet → npm run lint đỏ; trang mẫu sống mở không có Postgres, không đăng nhập, đủ bảy bố cục × chờ tải · rỗng · lỗi · ngoại tuyến × ba khổ; vòng giao diện so màn mới với ảnh chuẩn của bố cục nó dùng; MCP reui và shadcn chạy từ .mcp.json của kho; Cài đặt sàn và trang tạm đã chuyển, màn của hàng đang chạy mang ngoại lệ có hạn",
+      "nhom": "nen",
+      "vung": [
+        ".mcp.json",
+        "apps/web/src/components/bo-cuc/**",
+        "apps/web/src/components/trang-thai.tsx",
+        "apps/web/src/components/shell/**",
+        "apps/web/src/app/(app)/proto/he-bo-cuc/**",
+        "apps/web/src/app/(app)/settings/**",
+        "apps/web/src/app/**/loading.tsx",
+        "apps/web/src/app/**/error.tsx",
+        "apps/web/src/app/**/not-found.tsx",
+        "design/patterns/**",
+        "packages/ui-lint/**",
+        ".agents/skills/quy-hang-ui/**",
+        ".claude/rules/giao-dien.md",
+        "docs/design/vo-va-ia.md",
+        "docs/product/tham-chieu.md"
+      ]
+    },
+    {
       "ma": "va-nap-mau",
       "cau_giao": "Nút «Nạp dữ liệu mẫu» chạy được trên bản thật và không mở đường chèn lệnh: npm ci giữ công cụ chạy bộ nạp dù chạy chế độ thật, ô email chỉ nhận đúng một địa chỉ email một dòng và không bao giờ ghi thô vào môi trường của job, bộ nạp TypeScript của gói db được kiểm kiểu trong CI, lệnh chấm bộ dữ liệu mẫu hàng 5 chạy lại được",
       "slug": "va-nap-mau",
