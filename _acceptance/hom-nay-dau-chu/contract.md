@@ -24,7 +24,8 @@ mình là người giữ (`listing_agent_assignments`). Giờ «hôm qua» tính
 **AC-1 — Bộ mặc định: năm nhóm, mỗi căn đúng một nhóm.**
 Given sàn chưa đặt bộ nhóm; căn mình giữ, nấc khác Đã bán và Ngừng bán
 When tính hàng đợi
-Then bộ nhóm là Lead mới · Nên gọi ép giá · Cần gọi lại · Thiếu thông tin · Mới đổi theo thứ tự ấy, ngưỡng 10 (ép giá, mốc
+Then bộ nhóm là `new_lead` · `price_adjustment` · `call_back` · `missing_info` · `recent_change` theo thứ tự ấy, tên mặc
+định Lead mới · <nhãn chốt ở Hỏi-5> · Cần gọi lại · Thiếu thông tin · Mới đổi, ngưỡng 10 (ép giá, mốc
 theo Hỏi-1, chưa đổi giá thì từ lúc lên Đang bán) và 14 (gọi lại), đọc đè từ hai khoá ngưỡng cũ khi sàn đặt trong khoảng
 và chưa có bộ nhóm riêng; căn vào đúng nhóm bật đầu tiên hợp mọi
 điều kiện hay không nhóm nào; căn người khác giữ, căn Đã bán, Ngừng bán không vào nhóm nào.
@@ -45,7 +46,7 @@ hiện ra, nhóm loại hình nhận đúng căn của loại hình ấy; lời 
 
 **AC-4 — Bộ nhóm hỏng thì về mặc định, ghi sai thì từ chối.**
 Given bộ nhóm của sàn có khoá lạ, điều kiện ngoài từ vựng, ngày ngoài khoảng (Hỏi-4), hành động ngoài thực đơn, loại hình
-ngoài tập mã, mã nhóm trùng, thiếu nhóm lead, hay lệch đối tượng (nhóm căn mang điều kiện / hành động của lead và ngược lại)
+ngoài tập mã, tên nhóm quá 40 ký tự hay chứa số điện thoại / email, mã nhóm trùng, thiếu nhóm lead, hay lệch đối tượng (nhóm căn mang điều kiện / hành động của lead và ngược lại)
 When đọc bộ nhóm, hay quản trị sàn ghi bằng `PUT /api/v1/company/settings/queue`
 Then lúc đọc cả bộ của sàn bị bỏ, dùng bộ mặc định, lời đọc trả `nguon: mac-dinh` kèm lỗi gọi tên chỗ sai; lúc ghi trả 400
 nêu chỗ sai và không ghi gì; người không phải quản trị sàn ghi thì 403.

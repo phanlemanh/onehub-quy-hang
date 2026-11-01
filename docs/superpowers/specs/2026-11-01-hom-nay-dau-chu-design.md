@@ -42,7 +42,7 @@ hình. → Chủ kho chọn 01/11: **hàng đợi là dữ liệu của sàn** (
 
 ### 3.1 Hàng đợi là dữ liệu của sàn (lõi thuần, `packages/core/src/today/`)
 
-**Bộ máy.** Một **nhóm** là dữ liệu: `{ ma, ten, doiTuong: "can" | "lead", bat, dieuKien[], hanhDong[] }`; một **bộ nhóm**
+**Bộ máy.** Một **nhóm** là dữ liệu: `{ code, label, subject: "listing" | "lead", enabled, conditions[], actions[] }`; một **bộ nhóm**
 là mảng có thứ tự. Căn đi qua bộ nhóm theo thứ tự, vào **nhóm bật đầu tiên** mà mọi điều kiện của nhóm đều đúng — nên
 mỗi căn đúng một nhóm (luật 18) và thứ tự là thứ tự thắng. Lead đi riêng qua nhóm `doiTuong: "lead"`.
 
@@ -50,34 +50,42 @@ mỗi căn đúng một nhóm (luật 18) và thứ tự là thứ tự thắng.
 
 | Điều kiện | Nghĩa | RESO |
 | --- | --- | --- |
-| `{ loai: "trang-thai", thuoc: [...] }` | nấc của căn thuộc danh sách | `StandardStatus` |
-| `{ loai: "qua-ngay", moc, ngay }` | đã quá `ngay` ngày kể từ mốc; `moc` ∈ `gia` (lần đổi giá gần nhất, chưa đổi thì lúc lên Đang bán) · `xac-nhan` · `len-dang-ban` · `gia-hay-xac-nhan` (lần muộn hơn của `gia` và `xac-nhan`); mốc chưa có → tính là quá | `PriceChangeTimestamp`, `StatusChangeTimestamp` |
-| `{ loai: "thieu-tin" }` | mức đủ chưa đủ | — |
-| `{ loai: "nguoi-khac-doi", tu: "hom-qua" \| "hom-nay" }` | người khác mình đổi giá hay trạng thái từ 0 giờ hôm qua / hôm nay (giờ Việt Nam, UTC+7 cố định) | — |
-| `{ loai: "loai-hinh", thuoc: [...] }` | loại hình của căn trong danh mục thuộc danh sách — giá trị là mã RESO `PropertySubType` mà danh mục dùng (`Condominium`, `Townhouse`, …, tập đóng ở lõi); loại hình lấy qua ghép danh mục sẵn có của Bảng hàng (`ghep-danh-muc.ts`) trên máy; căn ngoài danh mục → sai | `PropertySubType` |
-| `{ loai: "nac-lead", thuoc: [...] }` | (nhóm lead) nấc của lead thuộc danh sách | — |
+| `{ kind: "status_in", in: [...] }` | nấc của căn thuộc danh sách | `StandardStatus` |
+| `{ kind: "days_since", anchor, days }` | đã quá `days` ngày kể từ mốc; `anchor` ∈ `price` (lần đổi giá gần nhất, chưa đổi thì lúc lên Đang bán) · `confirmed` · `active_since` · `price_or_confirmed` (lần muộn hơn của `price` và `confirmed`); mốc chưa có → tính là quá | `PriceChangeTimestamp`, `StatusChangeTimestamp` |
+| `{ kind: "missing_info" }` | mức đủ chưa đủ | — |
+| `{ kind: "changed_by_other", since: "yesterday" \| "today" }` | người khác mình đổi giá hay trạng thái từ 0 giờ hôm qua / hôm nay (giờ Việt Nam, UTC+7 cố định) | — |
+| `{ kind: "property_sub_type_in", in: [...] }` | loại hình của căn trong danh mục thuộc danh sách — giá trị là mã RESO `PropertySubType` mà danh mục dùng (`Condominium`, `Townhouse`, …, tập đóng ở lõi); loại hình lấy qua ghép danh mục sẵn có của Bảng hàng (`ghep-danh-muc.ts`) trên máy; căn ngoài danh mục → sai | `PropertySubType` |
+| `{ kind: "lead_stage_in", in: [...] }` | (nhóm lead) nấc của lead thuộc danh sách | — |
 
-**Hành động một chạm — thực đơn đóng:** `con-giu-gia` (sự kiện `owner_confirmed`), `mo-ho-so` (cột hồ sơ căn), và cho lead
-`nhan`, `da-goi`, `tra-lai`.
+**Hành động một chạm — thực đơn đóng:** `owner_confirmed` (sự kiện `owner_confirmed`), `open_record` (cột hồ sơ căn), và cho lead
+`accept`, `first_call`, `return`.
 
 **Bộ mặc định** (`BO_NHOM_MAC_DINH` ở `packages/core/src/today/mac-dinh.ts`, comment «mặc định của sàn») — đúng năm nhóm
-đã phác: Lead mới (`nac-lead` Đã gửi, Đã nhận) · Nên gọi ép giá (`trang-thai` Đang bán + `qua-ngay doi-gia-hay-xac-nhan
-10`, Hỏi-1) · Cần gọi lại (`qua-ngay xac-nhan 14`) · Thiếu thông tin · Mới đổi (`nguoi-khac-doi hom-qua`). Mọi nhóm căn
+đã phác: Lead mới (`lead_stage_in` Đã gửi, Đã nhận) · Nên gọi ép giá (`status_in` Đang bán + `days_since doi-price_or_confirmed
+10`, Hỏi-1) · Cần gọi lại (`days_since xac-nhan 14`) · Thiếu thông tin · Mới đổi (`changed_by_other hom-qua`). Mọi nhóm căn
 ngầm thêm hai điều kiện không tắt được: căn mình giữ, nấc khác Đã bán và Ngừng bán. Nhóm lead ngầm thêm: lead giao cho
-mình, chưa trả lại, chưa bỏ (trả lại và bỏ là nấc riêng của `leadStage`, ADR-0020, nên `nac-lead` Đã gửi · Đã nhận đã loại
+mình, chưa trả lại, chưa bỏ (trả lại và bỏ là nấc riêng của `leadStage`, ADR-0020, nên `lead_stage_in` Đã gửi · Đã nhận đã loại
 chúng; điều kiện ngầm giữ chắc cả khi sàn ghi nấc khác).
+
+**Mã và tên.** Mã nhóm, khoá điều kiện, hành động là tiếng Anh (luật «code, API tiếng Anh» của kho): nhóm mặc định
+`new_lead` · `price_adjustment` · `call_back` · `missing_info` · `recent_change`; hành động `owner_confirmed`,
+`open_record`, `accept`, `first_call`, `return`. **Tên nhóm (`label`) là dữ liệu của sàn** — nhãn mặc định tiếng Việt đặt ở
+một chỗ có tên trong `packages/core/src/today/mac-dinh.ts` (Hỏi-5 chốt nhãn mặc định của `price_adjustment`); tên do sàn
+đặt qua bộ kiểm chung của nhãn: ≤ 40 ký tự, qua bộ dò số điện thoại / email (ADR-0011), lớp `company_internal`. Đây là
+đúng khuôn «Từ vựng của sàn» (ADR-0022 nguyên tắc, ADR-0023 thiết kế, hàng 90 dựng sổ từ vựng — giám sát xếp 01/11); khi
+hàng 90 xong, nhãn mặc định dời vào sổ từ vựng.
 
 **Sàn ghi đè** (ADR-0018): khoá `queue.groups` trong `company_settings` mang trọn bộ nhóm của sàn (bật/tắt, đổi tên, đổi
 thứ tự, đổi ngưỡng, nhóm mới ghép từ điều kiện, nhóm theo loại hình). Vắng khoá → bộ mặc định, với ngưỡng đọc từ hai khoá
 đã khai ở `so-diem-bien-thien.md` #4, #5 (giữ đường cũ). Khi đã có `queue.groups` thì hai khoá cũ hết tác dụng
 (bộ của sàn là trọn bộ); khi bộ của sàn hỏng thì dùng bộ mặc định với ngưỡng từ hai khoá cũ nếu hợp lệ. Đọc bằng bộ kiểm
-chặt: khoá lạ, điều kiện ngoài từ vựng, ngày ngoài khoảng (Hỏi-4), hành động ngoài thực đơn, loại hình ngoài tập mã, hai
-nhóm trùng mã, không nhóm lead, **lệch đối tượng** (nhóm căn mang `nac-lead` hay hành động lead; nhóm lead mang điều kiện
-hay hành động của căn), nhóm căn đặt `trang-thai` chỉ gồm Đã bán / Ngừng bán (luôn rỗng) → **cả bộ của sàn bị bỏ, dùng bộ
+chặt: khoá lạ, điều kiện ngoài từ vựng, ngày ngoài khoảng (Hỏi-4), hành động ngoài thực đơn, loại hình ngoài tập mã, tên nhóm quá 40 ký tự hay chứa số điện thoại / email, hai
+nhóm trùng mã, không nhóm lead, **lệch đối tượng** (nhóm căn mang `lead_stage_in` hay hành động lead; nhóm lead mang điều kiện
+hay hành động của căn), nhóm căn đặt `status_in` chỉ gồm Đã bán / Ngừng bán (luôn rỗng) → **cả bộ của sàn bị bỏ, dùng bộ
 mặc định**, lỗi gọi tên chỗ sai (không áp nửa bộ).
 
-**Khoảng ngày (Hỏi-4).** Khuyên: giữ khoảng đã chốt cho hai nhóm mặc định — nhóm mã `ep-gia` 7–14 (luật 18), `goi-lai`
-7–30 (`so-diem-bien-thien.md` #4) — và 1–90 cho điều kiện `qua-ngay` của nhóm sàn tự tạo. Lối khác: một khoảng 1–365 cho
+**Khoảng ngày (Hỏi-4).** Khuyên: giữ khoảng đã chốt cho hai nhóm mặc định — nhóm mã `price_adjustment` 7–14 (luật 18), `call_back`
+7–30 (`so-diem-bien-thien.md` #4) — và 1–90 cho điều kiện `days_since` của nhóm sàn tự tạo. Lối khác: một khoảng 1–365 cho
 mọi nhóm, sửa luật 18 trong cùng PR.
 
 **Bộ nhóm trên máy.** Lần đọc bộ nhóm thành công được lưu trong kho trên máy theo sàn; mất mạng hay lỗi đọc thì màn chia
