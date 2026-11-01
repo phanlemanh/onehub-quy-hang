@@ -154,9 +154,15 @@ Quỹ hàng: ba ngăn Gửi được · Tự có từ mã · Nội bộ; ngăn n
 | RESO | `Media`: `Order` (phần tử 0 là ảnh chính), `PreferredPhotoYN`, `Permission` (Public, IDX, VOW, Agent Only), `MediaCategory`, `ImageOf` | Lookup do RESO định | [dd.reso.org Media](https://dd.reso.org/DD2.0/Media/) |
 | CRM Mỹ | Lấy ảnh từ MLS; quản lý ảnh riêng **chưa kiểm** | — | — |
 | Meey CRM | Quỹ hàng có ảnh và video | Chưa kiểm | [meeycrm.com](https://meeycrm.com/) |
+| Autoenhance | Tự nhận diện và làm mờ mặt người, biển số trên ảnh bất động sản | Tài khoản bật «Auto Privacy»; kiểu che chỉnh được không: chưa kiểm | [help.autoenhance.ai](https://help.autoenhance.ai/en/articles/7856090-privacy-blur-license-plates-and-people) |
+| Zalo | Không có công cụ che trong khung gửi ảnh; ảnh gửi bị nén còn vài trăm KB trừ khi gửi dạng tệp | Người dùng bật «Ghi nhớ chất lượng ảnh và video» | [cellphones.com.vn](https://cellphones.com.vn/sforum/meo-gui-anh-tren-zalo-chat-luong-cao) (bên thứ ba) |
 
 **Bài học:** RESO `Permission` cùng hình với ba ngăn ảnh của Quỹ hàng (quyền hiển thị gắn vào từng ảnh). Ngăn là cố định
 vì đứng trên bất biến.
+
+**Che vùng (hàng 19):** công cụ ngành làm mờ (Autoenhance tự động, Canva bằng cọ); Quỹ hàng tô kín màu đặc vì làm mờ chữ
+số đọc ngược được — giữ cứng (Hỏi-3, lý do quyền và an toàn). Cỡ ảnh gửi đi là mặc định của sàn (Hỏi-2), như Zalo để người
+dùng chọn giữ chất lượng.
 
 ## 8. Phát hàng và trang khách
 
