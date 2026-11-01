@@ -92,17 +92,30 @@ export async function putOwner(tx: pg.PoolClient, listingId: string, payload: un
   const san = await sanDangLam(tx);
   const banMa = so === undefined ? null : maHoaSo(so, nguCanhChuNha(san, listingId), khoa);
   const dauVet = so === undefined ? null : dauVetSo(so, san, khoa);
-  const giaTri = [listingId, v.value.ownerName, banMa, dauVet, v.value.floorPrice ?? null];
+  // Liên hệ của chủ nhà (hàng 85): số → liên hệ, chưa có số thì giữ liên hệ cũ của dòng hay tạo mới; liên hệ chưa có người
+  // giữ thì nhận đầu chủ giữ căn.
+  const { rows: cu } = await tx.query<{ contact_id: string | null }>("select contact_id from listing_owners where listing_id = $1", [listingId]);
+  const lienHe = (
+    await tx.query<{ c: string }>("select app.contact_for_owner($1, $2, $3, $4, $5, $6) c", [
+      dauVet,
+      banMa,
+      nguCanhChuNha(san, listingId),
+      v.value.ownerName,
+      agent,
+      cu[0]?.contact_id ?? null,
+    ])
+  ).rows[0]!.c;
+  const giaTri = [listingId, v.value.ownerName, banMa, dauVet, v.value.floorPrice ?? null, lienHe];
   const sua = await tx.query(
     `update listing_owners set owner_name = $2, owner_phone = null, owner_phone_enc = $3, owner_phone_hash = $4, floor_price = $5,
-       updated_by = app.current_user_id(), updated_at = now()
+       contact_id = $6, updated_by = app.current_user_id(), updated_at = now()
      where listing_id = $1`,
     giaTri,
   );
   if (!sua.rowCount) {
     await tx.query(
-      `insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, floor_price, updated_by)
-       values (app.current_company_id(), $1, $2, $3, $4, $5, app.current_user_id())`,
+      `insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, floor_price, contact_id, updated_by)
+       values (app.current_company_id(), $1, $2, $3, $4, $5, $6, app.current_user_id())`,
       giaTri,
     );
   }

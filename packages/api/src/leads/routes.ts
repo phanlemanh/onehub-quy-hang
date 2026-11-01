@@ -11,6 +11,7 @@ import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import {
   createLead,
+  createListingFromLead,
   discardLead,
   isRefusal,
   listMyLeads,
@@ -186,6 +187,29 @@ export function registerLeadRoutes(api: OpenAPIHono, { appPool, identityPool, au
       try {
         const kq = await withCompany(appPool, ctx, (tx) => resubmitLead(tx, leadId, c.req.valid("json")));
         return isRefusal(kq) ? tuChoi(c, kq) : c.json((await banNac([kq]))[0], 201);
+      } catch (e) {
+        if (e instanceof RefusalAfterWrite) return tuChoi(c, e.refusal);
+        throw e;
+      }
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "post",
+      path: `${BASE}/{leadId}/listing`,
+      summary: "Đầu chủ của lead tạo hàng từ lead — hàng mang mã lead, chủ nhà là liên hệ của lead",
+      request: { params: z.object({ leadId: z.string() }) },
+      responses: { 201: ok("Hàng mới", z.object({ id: z.string() })), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const { leadId } = c.req.valid("param");
+      if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
+      try {
+        const kq = await withCompany(appPool, ctx, (tx) => createListingFromLead(tx, leadId));
+        return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 201);
       } catch (e) {
         if (e instanceof RefusalAfterWrite) return tuChoi(c, e.refusal);
         throw e;
