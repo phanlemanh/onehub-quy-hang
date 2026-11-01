@@ -72,6 +72,24 @@
         "apps/web"
       ],
       "port": 3472
+    },
+    {
+      "name": "web-l",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "DATABASE_URL=postgres://postgres:quyhang@localhost:5563/postgres",
+        "BETTER_AUTH_SECRET=dev-l-chuoi-thu-khong-dung-o-ban-that",
+        "BETTER_AUTH_URL=http://localhost:3483",
+        "npm",
+        "run",
+        "dev",
+        "-w",
+        "@quy-hang/web",
+        "--",
+        "-p",
+        "3483"
+      ],
+      "port": 3483
     }
   ]
 }
