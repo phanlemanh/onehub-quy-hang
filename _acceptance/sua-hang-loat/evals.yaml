@@ -8,6 +8,7 @@ feature_slug: sua-hang-loat
 #   Hàng cho bài nhìn: Toà B, theo mã căn tăng dần (Toà A đã dùng ở hồ sơ sua-tren-o, va-sua-tren-o). Mỗi bài ghi mã thật
 #   của căn đã dùng, và căn của bài này không dùng lại ở bài sau (bài sau lấy căn kế tiếp). Toà B thiếu loại căn bài cần
 #   (vd căn Ngừng hẳn) thì lấy ở toà kế theo thứ tự chữ cái, ghi mã.
+#   Ghi trên máy trước, gửi lên sau (luật 30): đọc sự kiện máy chủ chỉ sau khi chỉ báo đồng bộ đầu trang về «Đã đồng bộ».
 evals:
   - id: E1
     criterion: AC-3
@@ -81,8 +82,9 @@ evals:
     executor: ui-check
     layer: backend-effect
     steps:
-      - "Chính lượt chạy của E7 (cùng phiên, cùng căn): đọc lại events 3 căn từ GET /api/v1/listings/<id> sau bước «Đổi» khi 2 căn đang bị lọc ẩn"
-    expected: "Mỗi căn trong 3 căn — kể cả 2 căn bị lọc ẩn lúc bấm — có đúng 1 sự kiện owner_confirmed mới so với trước bước Đổi; actorUserId là phiên dau-chu-1."
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Chọn 3 căn còn mở ở toà khác Toà B (thứ tự chữ cái, theo mã căn) — không căn nào bài khác dùng; fetch events 3 căn → n0 từng căn"
+      - "Tích 3 căn; lọc Mã căn để chỉ còn 1 căn hiện → «Đánh dấu đã gọi» → «Đổi»; chờ chỉ báo đồng bộ đầu trang về «Đã đồng bộ» (tối đa 60 giây, ghi thời gian) → chụp evidence/E7b-step1.png → fetch events 3 căn"
+    expected: "Mỗi căn trong 3 căn — kể cả 2 căn bị lọc ẩn lúc bấm — có đúng 1 sự kiện owner_confirmed mới (n0+1); actorUserId là phiên dau-chu-1."
     paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -116,7 +118,7 @@ evals:
     layer: backend-effect
     steps:
       - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm, hiện cột Độ tươi. Chọn lô 3 căn: 2 căn còn mở kế tiếp ở Toà B (không dùng căn của bài trước) + 1 căn Đã bán hoặc Ngừng hẳn. Ghi Độ tươi; fetch events → n0 từng căn"
-      - "Tích 3 căn → «Đánh dấu đã gọi» → chụp evidence/E9-hoi-lai.png; ghi chữ hộp hỏi → «Đổi» → chụp evidence/E9-da-goi.png; ghi chữ thông báo (có nút Hoàn tác không) và Độ tươi 3 căn → fetch events 3 căn"
+      - "Tích 3 căn → «Đánh dấu đã gọi» → chụp evidence/E9-hoi-lai.png; ghi chữ hộp hỏi → «Đổi» → chụp evidence/E9-da-goi.png; ghi chữ thông báo (có nút Hoàn tác không) → chờ chỉ báo đồng bộ đầu trang về «Đã đồng bộ» (tối đa 60 giây, ghi thời gian) → ghi Độ tươi 3 căn → fetch events 3 căn"
     expected: "Hộp hỏi nêu 2 căn, «Còn / giữ giá», «không hoàn tác được», và «1 căn không đổi được: <mã> — căn đã đóng». Sau Đổi: 2 căn còn mở mỗi căn đúng 1 sự kiện owner_confirmed (confirmedWithOwner true), Độ tươi về «hôm nay»; căn đóng không sự kiện mới; thông báo «Đã đánh dấu đã gọi 2 căn», không nút Hoàn tác. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
