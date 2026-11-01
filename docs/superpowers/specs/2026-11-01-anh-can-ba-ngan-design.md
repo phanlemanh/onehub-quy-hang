@@ -63,8 +63,9 @@ Khuyến nghị (giám sát đợt, trả lời H-6): **Supabase Storage**, buck
    `service_role` (bỏ qua luật theo dòng của cả cơ sở dữ liệu). Token phiên theo người dùng tôn trọng luật của
    `storage.objects` nhưng đòi người dùng Supabase Auth — kho dùng better-auth (ADR-0005); tự ký JWT cần secret JWT của
    dự án, mạnh ngang `service_role`. Vậy dùng **khoá S3**: `STORAGE_S3_ACCESS_KEY`, `STORAGE_S3_SECRET_KEY`,
-   `STORAGE_S3_ENDPOINT` (ba biến mới ở `.env.example`, tệp bảo vệ — `cham-tep`; giá trị chủ kho đặt ở Vercel, máy không
-   đọc). Không dùng `service_role` ở đâu cả.
+   `STORAGE_S3_ENDPOINT`. `.env.example` nằm ngoài phạm vi hàng (máy không ghi `.env*`): tên ba biến và chú thích ghi ở
+   ADR-0014 mục Vận hành; việc của chủ kho — đặt giá trị ở Vercel và thêm ba dòng tên vào `.env.example` bằng tay — ghi
+   vào thẻ Cổng Bằng chứng. Mã đọc biến báo lỗi rõ khi thiếu, như `OWNER_PHONE_KEY`. Không dùng `service_role` ở đâu cả.
 2. **Một mô-đun duy nhất** `packages/api/src/photos/kho-s3.ts` đọc ba biến ấy và ký yêu cầu (SigV4 viết bằng `node:crypto`,
    không thêm gói); bài quét import đỏ khi tệp khác đọc các biến hay nhập mô-đun ngoài `photos/kho.ts`.
 3. **Đường đối tượng mang `company_id`**: `<company_id>/<photo_id>/<original|thumb>`; API chỉ ký link sau khi đọc được
@@ -124,7 +125,7 @@ và nói «Danh mục chưa có mặt bằng, ảnh view cho căn này». Khi kh
 - `packages/core/src/photos/` — kiểu, `kiemTepAnh`, `docNgayChup`, `nhanAnh`, `sapXep`, `anhRaNgoai`, `anhDanhMuc`,
   `canSeeUnitInternal`; xuất qua `@quy-hang/core/photos` (thêm dòng ở `core/index.ts`).
 - `packages/api/src/photos/` — `routes.ts`, `store.ts`, `kho.ts` (giao diện `KhoAnh`, bản Postgres), `kho-s3.ts` (bản
-  Supabase Storage — mô-đun duy nhất cầm khoá S3); `.env.example` ba biến (xin `cham-tep`); thêm dòng đăng ký
+  Supabase Storage — mô-đun duy nhất cầm khoá S3); thêm dòng đăng ký
   ở `app.ts`, mã lỗi ở `errors.ts`.
 - `packages/db/migrations/012_anh_can.sql`; ca mới trong `packages/db/tests/isolation.test.mjs`.
 - `apps/web/src/app/(app)/units/photos/` — `muc-anh.tsx` (mục Ảnh), `tai-len.ts` (thả, dán, vẽ bản nhẹ, gửi);

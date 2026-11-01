@@ -97,3 +97,7 @@ Thước CE: mỗi ô (B × D) và (B × F) có ít nhất một ca trong evals 
 - Xem ảnh khi mất mạng; Supabase Storage — theo ADR-0014 khi dung lượng vượt hoặc Hỏi-1 chọn lối khác.
 
 ## Notes
+
+- Việc của chủ kho (ngoài phạm vi máy — máy không ghi `.env*`): đặt giá trị `STORAGE_S3_ACCESS_KEY`,
+  `STORAGE_S3_SECRET_KEY`, `STORAGE_S3_ENDPOINT` ở Vercel và thêm ba dòng tên vào `.env.example`; tên và chú thích ở
+  ADR-0014 mục Vận hành. Bản thật thiếu khoá thì API báo lỗi rõ và không dựng mục ảnh.
