@@ -10,9 +10,12 @@ import pg from "pg";
 import { MIEN_EMAIL, TEN_SAN } from "./du-lieu-mau.mjs";
 import { THU_MUC_MAU } from "./sinh.mjs";
 
-/** Nạp lại được: chạy lần hai không đổi số dòng hay nội dung. Vai đặt bằng đúng ma trận, không cộng dồn. */
-export async function napMau(client, d) {
-  let san = (await client.query("select id from companies where name = $1 order by created_at limit 1", [d.san.ten])).rows[0]?.id;
+/**
+ * Nạp lại được: chạy lần hai không đổi số dòng hay nội dung. Vai đặt bằng đúng ma trận, không cộng dồn. `sanId` có thì
+ * nạp vào đúng sàn ấy — bộ nạp bản thật (`nap-ban-that.ts`) tự nhận sàn mẫu, không tìm theo tên.
+ */
+export async function napMau(client, d, sanId) {
+  let san = sanId ?? (await client.query("select id from companies where name = $1 order by created_at limit 1", [d.san.ten])).rows[0]?.id;
   if (!san) san = (await client.query("insert into companies (name) values ($1) returning id", [d.san.ten])).rows[0].id;
   const khu = {};
   for (const k of d.khu) {

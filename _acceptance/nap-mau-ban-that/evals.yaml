@@ -97,8 +97,8 @@ evals:
     expected: Bộ kiểm cách ly xanh (hồi quy — bộ nạp không đổi migration hay luật).
   - id: E10
     criterion: AC-9
-    executor: script
-    cmd: config:executors.script.du_lieu_mau
+    executor: test
+    cmd: config:executors.test.du_lieu_mau_tsx
     paths: ["packages/db/seed/**"]
     expected: Mọi ca của bộ dữ liệu mẫu hàng 5 vẫn xanh (sinh tất định, nạp và xoá cũ).
   - id: E12
