@@ -1,7 +1,7 @@
 # ADR-0022: Định vị và chuẩn đối chiếu — Quỹ hàng là gì, so với ai, theo luật nào
 
-Ngày: 2026-11-01 · Trạng thái: **đề xuất** (bản nháp phiên thiết kế; chủ kho duyệt hướng rồi mới mở PR, accepted khi PR
-gộp) · Liên quan: ADR-0017 của onehub-invest (gốc); ADR-0008 (lõi hàng, sự kiện chỉ thêm), ADR-0017 (chia lead), ADR-0018
+Ngày: 2026-11-01 · Trạng thái: **đề xuất** (Manh Phan 01/11 duyệt hướng: «Duyệt, mở PR» — gồm năm điểm ở «Hỏi chủ kho» và
+ranh giới với ADR-0023; accepted khi PR gộp) · Liên quan: ADR-0017 của onehub-invest (gốc); ADR-0008 (lõi hàng, sự kiện chỉ thêm), ADR-0017 (chia lead), ADR-0018
 (cấu hình theo sàn), ADR-0019 (cổng chọn khối), ADR-0020 (lead bốn nấc), ADR-0021 (liên hệ); Tham chiếu §1, §5, §7, §8,
 §15; Kiến trúc §0; [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md) · chi tiết đối chiếu:
 [Đối chiếu ngành](../product/doi-chieu-nganh.md) · luật cho bản thiết kế:
