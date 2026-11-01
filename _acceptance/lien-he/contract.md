@@ -123,3 +123,7 @@ bán» của hàng 27 đổi định nghĩa lên bảng sang dữ kiện ← AC-
   dòng sổ «ca hàng 27 đổi theo AC-7».
 - Hỏi-1 và Hỏi-2 chạm dữ liệu đã có trên mọi sàn khi deploy (khó đảo): đảo bằng gỡ gộp từ cột số cũ giữ nguyên (AC-9).
 - S3 chỉ bắt đầu sau khi hàng 17 gộp và nhánh đã gộp nhánh chính (giám sát, trùng tệp).
+- Việc thêm do giám sát giao ở S3 (01/11, sổ quyết định): bộ nạp mẫu bản thật `packages/db/seed/nap.mjs` (hàng 87) phải chạy
+  sau 016–020 — ca kiểm nạp rồi nạp lại ra 30 liên hệ Chủ bán, 12 lead gắn liên hệ, không đổi gì; chỉ chạm seed sau khi hàng
+  va-nap-mau của dãy D gộp. CONTEXT.md ghi «liên hệ» là đối tượng (RESO Contact) và nút «Liên hệ đầu chủ» (hàng 33) là chỗ
+  va chữ để hàng 33 hỏi đổi nhãn — hàng 85 không tự đổi nhãn.
