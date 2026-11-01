@@ -54,12 +54,13 @@ async function dauChuGiu(tx: pg.PoolClient, listingId: string): Promise<string |
 }
 
 async function docChuNha(tx: pg.PoolClient, listingId: string, viewer: Viewer, agent: string | null): Promise<OwnerView | Refusal> {
-  const { rows } = await tx.query<{ owner_name: string; floor_price: number | null; has_phone: boolean }>(
+  const { rows } = await tx.query<{ owner_name: string | null; floor_price: number | null; has_phone: boolean }>(
     "select owner_name, floor_price::float8 as floor_price, has_phone from listing_owners where listing_id = $1",
     [listingId],
   );
   const r = rows[0];
-  if (!r) return ve(API_ERRORS.ownerNotSet);
+  // Hàng tạo từ lead mang dòng chủ nhà chưa tên (chỉ gắn liên hệ của lead): chưa có chủ nhà tới khi đầu chủ ghi tên.
+  if (!r || r.owner_name === null) return ve(API_ERRORS.ownerNotSet);
   return ownerView({ listingAgentUserId: agent, ownerName: r.owner_name, floorPrice: r.floor_price, hasPhone: r.has_phone }, viewer);
 }
 

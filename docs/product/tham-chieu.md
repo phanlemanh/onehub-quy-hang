@@ -17,6 +17,8 @@ Phác thảo: [Phác thảo UX quỹ hàng](https://claude.ai/artifact/VESE23Chn
 
 **Kiểu sản phẩm** — Đã chốt 29/10 (ADR-0017): Quỹ hàng là SaaS cho ngành bất động sản, linh hoạt theo công ty và theo kết nối. Kiến trúc dựng cơ chế; mỗi kết nối với Invest, Platform hay công ty khác là một thoả thuận bật / tắt, chỉ mở được tới trần của từng lớp dữ liệu. Trần là bất biến: thông tin chủ nhà không bao giờ rời công ty. Chi tiết: [Kiến trúc repo và stack](../architecture/kien-truc-repo-va-stack.md), mục 0.
 
+**Loại phần mềm và chuẩn đối chiếu** — Đã chốt hướng 01/11 (ADR-0022): phần mềm phía cung cho một sàn môi giới, gồm ba khối — quỹ hàng nội bộ (một kiểu MLS thu nhỏ trong sàn), khai thác và CRM phía chủ nhà, phát hàng bằng link sống. Không phải cổng đăng tin, MLS liên sàn, CRM người mua, phần mềm giao dịch hay công cụ gửi tự động. Thiết kế so với RESO và ít nhất hai sản phẩm cùng loại; danh sách cố định trong câu giao mặc định là dữ liệu của sàn. Chi tiết: [ADR-0022](../adr/0022-dinh-vi-va-chuan-doi-chieu.md), [Đối chiếu ngành](doi-chieu-nganh.md).
+
 ## 2. Vai và thiết bị
 
 Ghi nhận 29/10: **đầu chủ làm việc trên máy tính; đầu khách xem bảng hàng trên điện thoại.** Đây là căn cứ chia nguồn lực ở mục 10 và ở thứ tự dựng.
@@ -344,6 +346,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 01/11 | Lead bốn nấc: telesales mở Hôm nay thấy lead mình nhập, mới nhất trước, qua Đã gửi (chưa có người là «Chờ chia») → Đã nhận → Đã gọi → Lên bảng; lên bảng suy từ hàng của chính đầu chủ ấy có chủ nhà cùng dấu vết số chuyển Sẵn sàng bán sau lúc nhập lead (Hỏi-1); đầu chủ trả lại lead «Số không liên lạc được» tới khi lead lên bảng, kể cả đã ghi gọi (Hỏi-4) — lead trả lại thôi là lead đang mở, thôi bị báo quá hạn, không neo số ấy cho đầu chủ đã trả; «Sửa số và gửi lại» tạo lead mới đi như mọi lead mới (Hỏi-2); không thấy số chủ, mã hàng; số đo «Số ngày lead → Sẵn sàng bán» tính từ lúc nhập lead đầu chuỗi; màn theo khối `list-11` (Hỏi-3). Nút «Trả lại» trên màn của đầu chủ là hàng 22 | ADR-0020 · `_acceptance/lead-bon-nac/` |
 | 01/11 | Hôm nay của đầu chủ: hàng đợi là dữ liệu của sàn — bộ máy điều kiện đóng (nấc, quá N ngày từ mốc giá / xác nhận / lên Đang bán, thiếu thông tin, người khác đổi từ hôm qua, loại hình, nấc lead), năm nhóm làm bộ mặc định (Lead mới · Nên gọi điều chỉnh giá · Cần gọi lại · Thiếu thông tin · Mới đổi), mỗi căn đúng một nhóm theo thứ tự; sàn thay trọn bộ nhóm (tên, thứ tự, bật/tắt, ngưỡng, nhóm theo loại hình) — màn sửa ở hàng 48, bộ hỏng thì về mặc định. Mốc điều chỉnh giá là lần muộn hơn giữa đổi giá và xác nhận (Hỏi-1); khoảng ngày giữ 7–14 / 7–30, nhóm tự tạo 1–90 (Hỏi-4); nhãn «ép giá» đổi thành «điều chỉnh giá», sàn đổi lại được (Hỏi-5); mở số lead cho đầu chủ là hàng riêng (Hỏi-3). «Còn · giữ giá» một chạm, Nhận · Đã gọi · Trả lại trên lead | Mục 8 luật 18 · `_acceptance/hom-nay-dau-chu/` · ADR-0019, ADR-0022 |
 | 01/11 | Liên hệ: mỗi người làm việc với sàn là một liên hệ theo RESO Contacts — một người, nhiều số (nhãn, một số chính), một hay nhiều loại Chủ bán · Chủ cho thuê · Người mua · Người thuê, một đầu chủ giữ; lead và chủ nhà của hàng gắn liên hệ, kiểm trùng đi qua liên hệ; «Sửa số và gửi lại» thêm số vào cùng người; đầu chủ tạo hàng thẳng từ lead và «Lên bảng» là dữ kiện, không đoán theo số (Hỏi-2); dữ liệu cũ gộp theo số, người giữ là đầu chủ có lần gán mới nhất, danh sách gộp cho trưởng nhóm (Hỏi-1); giao lại hàng không tự đổi người giữ (Hỏi-3); telesales không đọc lại liên hệ (Hỏi-4); «Lead» là trạng thái của người chưa nói chuyện hai chiều theo KW (Hỏi-5); chỗ trường riêng giữ rỗng tới hàng 47 | ADR-0021 · `_acceptance/lien-he/` · §15 |
+| 01/11 | Định vị và chuẩn đối chiếu (chủ kho duyệt hướng 01/11): Quỹ hàng là phần mềm phía cung cho sàn môi giới, ba khối (quỹ hàng nội bộ, khai thác và CRM phía chủ nhà, phát hàng bằng link sống); nhóm tương đồng theo năng lực (Follow Up Boss, KW Command, Lofty, BoldTrail, REDX, BoomTown, MLS theo RESO); một bảng luật thiết kế (4 bất biến, 9 luật kiến trúc, 5 luật thiết kế mới: câu giao là điểm sàn, danh sách cố định mặc định là dữ liệu của sàn, một người là một liên hệ, so với ít nhất hai sản phẩm, nghĩa do lõi giữ và tên gọi là dữ liệu của sàn — sổ từ vựng là ADR-0023 và hàng nền 90); chín chỗ cứng đã gộp xem lại ở Cổng Phạm vi của hàng sắp chạm | ADR-0022 · `docs/product/doi-chieu-nganh.md` · `.claude/rules/thiet-ke-doi-chieu.md` |
 
 ## 13. Chỗ cần chốt
 
@@ -413,7 +416,8 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 
 Đối tượng của Quỹ hàng đặt cạnh chuẩn dữ liệu RESO Data Dictionary 2.0 (dd.reso.org) và khái niệm của ngành môi giới
 (Keller Williams Command). Hàng chạm đối tượng nghiệp vụ đối chiếu bảng này ở bước thiết kế; chỗ lệch thành câu hỏi Cổng
-Phạm vi.
+Phạm vi. Cách làm việc (hàng đợi, đường ống, chia lead, kịch bản, phát hàng) — phần RESO không định nghĩa — đối chiếu với sản
+phẩm cùng loại ở [Đối chiếu ngành](doi-chieu-nganh.md) (ADR-0022).
 
 | Quỹ hàng | RESO | Ngành môi giới (KW Command) | Ghi chú |
 | --- | --- | --- | --- |

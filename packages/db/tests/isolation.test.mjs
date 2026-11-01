@@ -1672,3 +1672,66 @@ test("ảnh căn: ràng buộc nội bộ không bìa, một bìa mỗi căn, s�
     await expectError(c, "delete from unit_photo_events where photo_id = $1", [anhId(0, "shareable")], /chỉ thêm/);
   });
 });
+
+// ---- Bảng nối lead với hàng (lead_listings, 016 — hàng va-lien-he: AC-1) ----
+// Dữ liệu dựng withBonNac: sàn A có dòng nối BN_LEN → BN_HANG; mỗi sàn thêm một hàng chưa nối (dựng bằng vai chủ).
+const NOI_HANG_A = "00000000-0000-4000-8000-0000000005c1";
+const NOI_HANG_B = "00000000-0000-4000-8000-0000000005c2";
+async function themHangChuaNoi(c) {
+  await c.query("reset role");
+  await c.query(
+    "insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, 'Toà A', 'Incomplete', 1), ($3, $4, 'Toà A', 'Incomplete', 1)",
+    [NOI_HANG_A, COMPANY_A, NOI_HANG_B, COMPANY_B],
+  );
+  await c.query("set local role quy_hang_app");
+}
+const chenNoi = (c, san, lead, hang, nguoi) =>
+  c.query("insert into lead_listings (company_id, lead_id, listing_id, created_by) values ($1, $2, $3, $4)", [san, lead, hang, nguoi]);
+
+test("bảng nối lead với hàng: bật và ép luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relrowsecurity r, c.relforcerowsecurity f from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname = 'lead_listings'`,
+    );
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("bảng nối lead với hàng: sàn B không đọc, không ghi nối của sàn A", { skip }, async () => {
+  await withBonNac(async (c) => {
+    await themHangChuaNoi(c);
+    // Bảng viết trước: (người, sàn, việc) → kết quả. Mỗi dòng so đúng một lần.
+    const BANG = [
+      ["sàn B đọc dòng nối của sàn A", BN_NG_B, COMPANY_B, async () => (await c.query("select lead_id from lead_listings where lead_id = $1", [BN_LEN])).rowCount, 0],
+      ["sàn B chèn dòng mang mã sàn A", BN_NG_B, COMPANY_B, () => chenNoi(c, COMPANY_A, BN_TRA, NOI_HANG_A, BN_NG_B), /row-level security/],
+      ["sàn B chèn dòng sàn B ghi tên người khác", BN_NG_B, COMPANY_B, () => chenNoi(c, COMPANY_B, BN_B, NOI_HANG_B, BN_DC_A), /row-level security/],
+      ["sàn B chèn dòng sàn B trỏ lead của sàn A", BN_NG_B, COMPANY_B, () => chenNoi(c, COMPANY_B, BN_TRA, NOI_HANG_B, BN_NG_B), /lead_listings_lead_fkey/],
+      ["sàn B chèn dòng sàn B trỏ hàng của sàn A", BN_NG_B, COMPANY_B, () => chenNoi(c, COMPANY_B, BN_B, NOI_HANG_A, BN_NG_B), /lead_listings_listing_fkey/],
+      ["sàn A đọc dòng nối của sàn A", BN_DC_A, COMPANY_A, async () => (await c.query("select lead_id, listing_id from lead_listings")).rows, [{ lead_id: BN_LEN, listing_id: BN_HANG }]],
+      ["đối chứng: sàn A chèn dòng ghi tên mình", BN_DC_A, COMPANY_A, async () => (await chenNoi(c, COMPANY_A, BN_TRA, NOI_HANG_A, BN_DC_A)).rowCount, 1],
+    ];
+    let so = 0;
+    for (const [ten, nguoi, san, viec, mong] of BANG) {
+      await lamNguoi(c, nguoi, san);
+      await c.query("savepoint noi");
+      if (mong instanceof RegExp) await assert.rejects(viec(), mong, `dòng «${ten}»: không bị chặn đúng lỗi`);
+      else assert.deepEqual(await viec(), mong, `dòng «${ten}»`);
+      await c.query("rollback to savepoint noi");
+      so++;
+    }
+    assert.equal(so, 7);
+  });
+});
+
+test("bảng nối lead với hàng: vai API không sửa, không xoá", { skip }, async () => {
+  await withBonNac(async (c) => {
+    await lamNguoi(c, BN_DC_A, COMPANY_A);
+    await expectError(c, "update lead_listings set created_by = $1 where lead_id = $2", [BN_DC_A, BN_LEN], /permission denied/);
+    await expectError(c, "delete from lead_listings where lead_id = $1", [BN_LEN], /permission denied/);
+  });
+});

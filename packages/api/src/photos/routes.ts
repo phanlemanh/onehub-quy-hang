@@ -9,7 +9,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { chonKhoAnh, type KhoAnh, type KhoAnhVang } from "./kho";
-import { addPhoto, isRefusal, listPhotos, patchPhoto, readPhoto, removePhoto, type Refusal, type SuaVao } from "./store";
+import { addPhoto, isRefusal, listPhotos, patchPhoto, readPhoto, removePhoto, uploadUrl, type Refusal, type SuaVao, type TepVao } from "./store";
 
 /**
  * Ảnh căn ba ngăn (hàng 18, ADR-0014): `/api/v1/units/photos`. Không đi qua bộ đồng bộ; ngăn nội bộ trả no-store; link tới
@@ -58,6 +58,15 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     });
   });
 
+  api.post(`${BASE}/upload-url`, async (c) => {
+    const b = (await c.req.json().catch(() => null)) as Record<string, unknown> | null;
+    if (!b || typeof b.toa !== "string" || typeof b.ma !== "string" || !b.toa.trim() || !b.ma.trim() || typeof b.contentType !== "string" || typeof b.byteSize !== "number") {
+      return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
+    }
+    const v = { toa: b.toa.trim(), ma: b.ma.trim(), contentType: b.contentType, byteSize: b.byteSize };
+    return chay(c, (tx, ctx, k) => uploadUrl(tx, k, ctx.companyId, v));
+  });
+
   api.post(BASE, async (c) => {
     const f = await c.req.parseBody().catch(() => null);
     const original = f?.original;
@@ -65,14 +74,14 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     const ngan = String(f?.compartment ?? "");
     const takenAt = typeof f?.takenAt === "string" && NGAY.test(f.takenAt) ? f.takenAt : null;
     const w = Number(f?.width), h = Number(f?.height);
-    if (!(original instanceof File) || !(thumb instanceof File) || !(COMPARTMENTS as readonly string[]).includes(ngan) || !(w > 0) || !(h > 0)
+    const photoId = typeof f?.photoId === "string" ? f.photoId : null;
+    if ((!(original instanceof File) && !photoId) || !(thumb instanceof File) || !(COMPARTMENTS as readonly string[]).includes(ngan) || !(w > 0) || !(h > 0)
       || typeof f?.toa !== "string" || typeof f?.ma !== "string" || !f.toa.trim() || !f.ma.trim()) {
       return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
     }
-    const t = {
-      toa: f.toa.trim(), ma: f.ma.trim(), ngan: ngan as Compartment, takenAt, width: Math.round(w), height: Math.round(h),
-      original: Buffer.from(await original.arrayBuffer()), thumb: Buffer.from(await thumb.arrayBuffer()),
-    };
+    const chung = { toa: f.toa.trim(), ma: f.ma.trim(), ngan: ngan as Compartment, takenAt, width: Math.round(w), height: Math.round(h), thumb: Buffer.from(await thumb.arrayBuffer()) };
+    // Có mã ảnh: bản gốc đã tải thẳng lên kho (bản Storage); không thì bản gốc đi trong thân yêu cầu.
+    const t: TepVao = photoId ? { ...chung, photoId } : { ...chung, original: Buffer.from(await (original as File).arrayBuffer()) };
     return chay(c, (tx, ctx, k) => addPhoto(tx, k, ctx.companyId, t), (c, kq) => c.json(kq, 201));
   });
 
@@ -100,9 +109,13 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
       c,
       (tx, ctx, k) => readPhoto(tx, k, ctx.companyId, c.req.param("id"), c.req.param("bien") as "original" | "thumb"),
       (c, kq) => {
-        // Ngăn nội bộ: trình duyệt không giữ đệm (AC-6); ngăn gửi được giữ ngắn.
+        // Chuyển hướng tới link ký 60 giây không được giữ đệm, ngăn nào cũng vậy (va-anh-ban-that, Hỏi-2).
+        if (kq.doc!.kind === "link") {
+          c.header("Cache-Control", "private, no-store");
+          return c.redirect(kq.doc!.url, 302);
+        }
+        // Byte (bản Postgres): ngăn nội bộ trình duyệt không giữ đệm (AC-6 hàng 18); ngăn gửi được giữ ngắn.
         c.header("Cache-Control", kq.noiBo ? "private, no-store" : "private, max-age=300");
-        if (kq.doc!.kind === "link") return c.redirect(kq.doc!.url, 302);
         const bytes = kq.doc!.bytes;
         c.header("Content-Type", loaiTuByteDau(bytes.subarray(0, 64)) ?? kq.type);
         return c.body(new Uint8Array(bytes), 200);

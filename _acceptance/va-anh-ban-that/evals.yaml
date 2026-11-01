@@ -1,0 +1,75 @@
+schema_version: 1
+feature_slug: va-anh-ban-that
+# Ca trên Postgres chạy trong npm run db:test (packages/api/test-db/photos-ban-that.test.ts), kho S3 trỏ máy chủ giả.
+# Ca thuần: packages/api/src/photos/kho-s3.test.ts (ký PUT), apps/web/src/app/(app)/units/photos/*.test.ts.
+# Bài trên màn: «DỰNG H» như hàng 18 — node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; trình duyệt chrome-devtools.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «tải thẳng lên kho» có mặt và ok — kho S3 trỏ máy chủ giả: đầu chủ giữ căn xin link tải lên (cỡ 8 000 000) → 200 với url PUT có X-Amz-Expires=60, đường /unit-photos/<company_id>/<photo_id>/original; PUT 8 MB lên máy chủ giả; POST xác nhận chỉ mang photoId + bản nhẹ (thân < 1 MB, đo bằng byte multipart) → 201; dòng ảnh có byte_size 8 000 000; máy chủ giả nhận đúng [PUT original (từ test), GET Range original, PUT thumb]. Chiều đỏ: bản sao routes nhận bản gốc qua thân POST ở bản S3 thì ca đo thân đỏ, thông điệp nêu số byte."
+    paths: ["packages/api/src/photos/**", "packages/api/test-db/photos-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «ký link PUT» có mặt và ok — kyLinkPut trên véc tơ viết trước (khoá, vùng, thời điểm, đường) ra chữ ký SigV4 tính lại bằng tay theo chuẩn (chuỗi chuẩn hoá viết trước trong test), X-Amz-Expires=60, phương thức PUT trong chuỗi chuẩn hoá. Chiều đỏ: ký với phương thức GET thì chữ ký khác, thông điệp nêu phương thức."
+    paths: ["packages/api/src/photos/kho-s3.ts", "packages/api/src/photos/kho-s3.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E1c
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đường ba bước của web» có mặt và ok — nguonApi với fetch giả: API trả link → đúng ba lời gọi theo thứ tự [POST upload-url, PUT tới đúng url link với thân bằng byte gốc (so băm), POST /api/v1/units/photos mang photoId và thumb, KHÔNG mang trường original]; API trả { truc_tiep: false } → một lời gọi POST mang original như hàng 18. Chiều đỏ: gửi original trong POST cuối khi đã có link thì ca đỏ, thông điệp nêu trường."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «kiểm bản gốc trên kho» có mặt và ok — ma trận viết trước 3 ca: đối tượng là văn bản → 400 photo-not-image, đối tượng 10 485 761 byte → 400 photo-too-large, không có đối tượng → 400 photo-not-image; mỗi ca đếm dòng unit_photos và unit_photo_events không đổi và máy chủ giả nhận một DELETE cho đối tượng sai (trừ ca không có); đầu khách xin link → 403, đầu chủ sàn khác → 403, máy chủ giả nhận 0 yêu cầu; thêm bốn ca viết trước: xác nhận photoId do sàn khác xin → 400, 0 DELETE ngoài tiền tố sàn của phiên; xác nhận photoId đã có dòng → 409 already-confirmed hoặc 400 (ghim mã), số dòng không đổi, 0 DELETE; xin link cỡ 10 485 761 → 400 photo-too-large, kho nhận 0 yêu cầu; xin link loại text/plain → 400 photo-not-image; mọi DELETE máy chủ giả nhận có đường bắt đầu bằng company_id của phiên (assert trên toàn danh sách). Chiều đỏ: bỏ GET Range kiểm byte đầu thì ca văn bản đỏ, thông điệp nêu số dòng."
+    paths: ["packages/api/src/photos/**", "packages/api/test-db/photos-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; packages/api/test-db/photos.test.ts của hàng 18 chạy nguyên và ok (bảy ca); bản Postgres xin link tải lên → 200 { truc_tiep: false }. Chiều đỏ: bản Postgres trả link thì ca đỏ, thông điệp nêu kho."
+    paths: ["packages/api/src/photos/**", "packages/api/test-db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «chuyển hướng không đệm» có mặt và ok — bản S3: GET ảnh gửi được và ảnh nội bộ → 302, Cache-Control đúng «private, no-store» cả hai; bản Postgres: nội bộ «private, no-store», gửi được «private, max-age=300» (bốn assert viết trước). Chiều đỏ: trả max-age=300 cho chuyển hướng thì ca đỏ, thông điệp nêu ngăn."
+    paths: ["packages/api/src/photos/routes.ts", "packages/api/test-db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «báo lỗi sửa xoá» có mặt và ok — hàm lamViec(tenViec, goi) của mục Ảnh với toast giả: bảng VIEC_ANH của mục Ảnh (năm việc mọi nút trong muc-anh.tsx gọi qua — quét mã nguồn: không lời gọi nguon.sua/nguon.xoa nào ngoài lamViec) × (API lỗi, mất mạng) → mỗi ca toast.error gọi đúng một lần với chữ viết trước của bảng («Không đặt ảnh bìa được — thử lại», «Không đánh dấu ảnh mẫu được — thử lại», «Không chuyển ngăn được — thử lại», «Không đổi thứ tự được — thử lại», «Không xoá ảnh được — thử lại»), rồi tải lại danh sách; năm việc thành công → toast.error 0 lần (đối chứng dương). Chiều đỏ: nuốt lỗi như hàng 18 thì ca lỗi đỏ, thông điệp nêu việc."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3482/inventory"
+    steps: "DỰNG H như hàng 18 (node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; chrome-devtools, không playwright MCP, không trình duyệt trong app). Đầu chủ giữ căn A, khổ 1440×900: (1) thả một ảnh PNG vẽ bằng mã nặng hơn 4,5 MB (canvas lớn, nén thấp) → ảnh vào ngăn Gửi được — chụp; (2) chặn lời gọi DELETE ảnh bằng công cụ trình duyệt (trả 500) rồi Xoá khỏi căn → thông báo «Không xoá ảnh được — thử lại», ảnh vẫn còn — chụp. Máy dev dùng kho Postgres nên bước 1 chứng ảnh lớn đi được trên giao diện; đường link ký đo ở E1."
+    expected: "Bước 1 ảnh lớn vào ngăn; bước 2 thấy thông báo lỗi xoá và ảnh còn."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]

@@ -13,6 +13,12 @@ export type KhoAnh = {
   ghi(tx: pg.PoolClient, companyId: string, photoId: string, bien: BienThe, bytes: Buffer, type: string): Promise<void>;
   xoa(tx: pg.PoolClient, companyId: string, photoId: string): Promise<void>;
   doc(tx: pg.PoolClient, companyId: string, photoId: string, bien: BienThe): Promise<DocAnh>;
+  /** Kho có tải thẳng (bản Storage): link PUT cho bản gốc, đọc đầu bản gốc đã tải, xoá bản gốc sai. Bản Postgres không có. */
+  taiThang?: {
+    kyLinkTaiLen(companyId: string, photoId: string): string;
+    kiemBanGoc(companyId: string, photoId: string): Promise<{ dau: Buffer; size: number } | null>;
+    xoaGoc(companyId: string, photoId: string): Promise<void>;
+  };
 };
 export type KhoAnhVang = { ten: "vang"; lyDo: string };
 
@@ -47,6 +53,12 @@ export function khoTuS3(s3: ReturnType<typeof khoS3>): KhoAnh {
     },
     async doc(_tx, companyId, photoId, bien) {
       return { kind: "link", url: s3.link(duongDoiTuong(companyId, photoId, bien), GIAY_LINK) };
+    },
+    // Mọi đường đối tượng dựng từ mã sàn của phiên — không thể chạm đối tượng của sàn khác.
+    taiThang: {
+      kyLinkTaiLen: (companyId, photoId) => s3.linkTaiLen(duongDoiTuong(companyId, photoId, "original"), GIAY_LINK),
+      kiemBanGoc: (companyId, photoId) => s3.docDau(duongDoiTuong(companyId, photoId, "original")),
+      xoaGoc: (companyId, photoId) => s3.xoa(duongDoiTuong(companyId, photoId, "original")),
     },
   };
 }
