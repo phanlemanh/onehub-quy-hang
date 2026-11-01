@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: d987a9d532a3386a13eb91f64ab0e41225e032cf
+verified_commit: 1c746689b504967738cbd009561b3f67797cc3ae
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -142,3 +142,7 @@ none — mọi eval nhiều lần chạy đều đồng nhất (mọi eval chỉ
 ## Iterations
 
 Round 1: mọi eval máy xanh; E5 là mục judgment, hội đồng đề xuất PASS nhưng chưa có human_override nên verdict giữ PENDING-JUDGMENT chờ người chốt ở Cổng 2.
+
+### Re-pin lần 1 — 2026-11-01, do hoá cũ do gộp main (hàng 25) sau chữ ký
+run_id: repin-20261101T005107Z-45704
+sha: 1c746689b504967738cbd009561b3f67797cc3ae · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · ngoài làn máy: E5 · diff chạm vật đo ngoài làn máy: E5 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-4
