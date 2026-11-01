@@ -12,6 +12,8 @@ const CHO_PHEP = [
   /^apps\/web\/src\/app\/\(app\)\/inventory\/bang-hang\.tsx$/,
   /^apps\/web\/src\/app\/\(app\)\/inventory\/cot\.ts$/,
   /^apps\/web\/src\/app\/\(app\)\/proto\/sua-tren-o\//,
+  // Luật thường trực của đợt (31/10): bộ kiểm ui-lint chụp cây thật — dãy được sửa dòng chụp cho tệp màn của mình.
+  /^packages\/ui-lint\/tests\/ban-do-khuon\.test\.mjs$/,
   /^docs\/design\/vo-va-ia\.md$/,
   /^docs\/product\/tham-chieu\.md$/,
   /^PRODUCT-MAP\.md$/,

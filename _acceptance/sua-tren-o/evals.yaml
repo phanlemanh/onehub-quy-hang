@@ -185,7 +185,7 @@ evals:
     criterion: AC-10
     executor: script
     cmd: node _acceptance/sua-tren-o/thu/ranh-gioi.mjs
-    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main (git merge-base HEAD origin/main) và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: packages/core/src/pricing/**, packages/core/package.json (một dòng exports, B-10), apps/web/src/app/(app)/inventory/cell-edit/**, inventory/bang-hang.tsx, inventory/cot.ts, apps/web/src/app/(app)/proto/sua-tren-o/**, docs/design/vo-va-ia.md, docs/product/tham-chieu.md, PRODUCT-MAP.md, LO-TRINH.html, _acceptance/sua-tren-o/**. Đối chứng đỏ chạy trong cùng lệnh: danh sách giả có thêm apps/web/src/lib/sync/gui.ts thì hàm kiểm trả đúng tệp ấy — thiếu đối chứng đỏ thì exit 1 «thước không phân biệt được»."
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main (git merge-base HEAD origin/main) và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: packages/core/src/pricing/**, packages/core/package.json (một dòng exports, B-10), apps/web/src/app/(app)/inventory/cell-edit/**, inventory/bang-hang.tsx, inventory/cot.ts, apps/web/src/app/(app)/proto/sua-tren-o/**, packages/ui-lint/tests/ban-do-khuon.test.mjs (dòng chụp cây, luật thường trực của đợt 31/10 — sổ d-20261101T021859Z-11), docs/design/vo-va-ia.md, docs/product/tham-chieu.md, PRODUCT-MAP.md, LO-TRINH.html, _acceptance/sua-tren-o/**. Đối chứng đỏ chạy trong cùng lệnh: danh sách giả có thêm apps/web/src/lib/sync/gui.ts thì hàm kiểm trả đúng tệp ấy — thiếu đối chứng đỏ thì exit 1 «thước không phân biệt được»."
     paths: ["_acceptance/sua-tren-o/thu/ranh-gioi.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
