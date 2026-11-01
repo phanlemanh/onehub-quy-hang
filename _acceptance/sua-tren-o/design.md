@@ -52,8 +52,9 @@ hàng 14 (khối `data-grid-editing-6`, đang tắt sửa ô tường minh).
 - Không thêm cờ «không tính là xác nhận»: bộ đồng bộ hàng 13 không gửi cờ, máy chủ mặc định tính (luật 9 «mặc định»);
   trình sửa nói rõ «Tính là vừa xác nhận với chủ nhà». Lối tắt cờ để hàng sau (ngoài ranh giới `lib/sync`).
 - Đổi điều kiện phí luôn hỏi lại — **Hỏi-1** ở Cổng Phạm vi (nháp theo khuyến nghị; luật 12 không quyết việc hỏi).
-- Hoàn tác KHÔNG tính là vừa xác nhận với chủ nhà — **Hỏi-2** ở Cổng Phạm vi (nháp theo khuyến nghị; cần một chạm nhỏ ở
-  `lib/sync` để lệnh hoàn tác gửi cờ, xin giám sát sau câu trả lời).
+- Hoàn tác tính như mọi lần sửa ở hàng này; gỡ luôn lần xác nhận của lần sửa nhầm để hàng sau — **Hỏi-2** trình lại ở
+  Cổng Phạm vi (sổ d-20261101T021239Z-9). Cột Xác nhận lấy lần xác nhận mới nhất, nên cho hoàn tác «không tính» một mình
+  không đổi điều Đầu chủ thấy; khuyến nghị cũ ghi «Xác nhận về như trước» là sai.
 - Không chạm `lib/sync`, API, cơ sở dữ liệu: sửa đi qua `useSuaHang()` có sẵn.
 
 ## Ngoài phạm vi

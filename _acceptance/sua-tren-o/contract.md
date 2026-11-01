@@ -80,7 +80,7 @@ Quét không gian AC theo trục (morphological, preset entity-feature, rút g�
 - Trục D — sau khi ghi: hoàn tác được · không hoàn tác được · xác nhận · mất mạng · đụng nhau [thước CE: luật 8, 9, 10, 30]
 - Trục E — khổ: 1440 · 375 [thước CE: luật 6]
 - Core: A×B ở AC-2, AC-4, AC-5, AC-6; C ở AC-1, AC-3; D ở AC-7, AC-8, AC-9; E ở AC-9; rào AC-10.
-- Later: sửa bốn phần chữ của lần rao trên ô · cờ «không tính là xác nhận» · sàn chỉnh ngưỡng · màn sửa nhanh điện thoại.
+- Later: sửa bốn phần chữ của lần rao trên ô · cờ «không tính là xác nhận» · hoàn tác gỡ lần xác nhận của lần sửa nhầm · sàn chỉnh ngưỡng · màn sửa nhanh điện thoại.
 - Never: sửa thuộc tính căn trên ô (luật 6) · ghi giá không kèm điều kiện phí (luật 7).
 
 ## Out of scope
@@ -88,6 +88,8 @@ Quét không gian AC theo trục (morphological, preset entity-feature, rút g�
 - Sửa hàng loạt, dán nhiều ô, kéo điền, đổi trạng thái cho hàng đã tích (hàng 16).
 - Sửa Nội thất, Pháp lý, Tài chính, Tình trạng sử dụng trên ô — bốn phần chữ của lần rao, để hàng sau.
 - Cờ «không tính là xác nhận với chủ nhà» trên trình sửa — cần sửa bộ đồng bộ (`lib/sync`), ngoài ranh giới.
+- Hoàn tác gỡ luôn lần xác nhận của lần sửa nhầm — cột Xác nhận lấy lần xác nhận mới nhất, nên cần sửa bước gấp ở lõi
+  và bộ đồng bộ; ở hàng này hoàn tác tính như mọi lần sửa (Hỏi-2, sổ d-20261101T021239Z-9). Để hàng sau.
 - Sàn chỉnh ngưỡng 20% ở Cài đặt sàn — hàng cấu hình theo sàn đọc hằng của hàng này.
 - Giá về tay và tỉ lệ bao phí (luật 12–13); màn sửa nhanh trên điện thoại.
 
