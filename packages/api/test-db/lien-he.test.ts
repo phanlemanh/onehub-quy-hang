@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { appPool, cleanup } from "./helpers";
-import { ai, dong, hangCoChu, hangTuLead, lenBang, nam, nhap, nhip, sanMoi, send, soMoi, type San } from "./san-thu";
+import { ai, dong, hangCoChu, hangTuLead, lenBang, nam, nhap, nhip, sanMoi, send, soMoi, type San, maMoi } from "./san-thu";
 
 after(cleanup);
 
@@ -273,7 +273,7 @@ test("liên hệ: lên bảng là dữ kiện", async () => {
   const boardAt = async (id: string) =>
     ((await (await send("GET", "/api/v1/leads", undefined, s.nguoi.ts!.cookie)).json()) as { id: string; boardAt: string | null }[]).find((v) => v.id === id)!.boardAt;
   // (1) hàng mang mã lead sang Active → lên bảng đúng mốc.
-  const a = await nhap(s, nam(soMoi(s), "Toà A"));
+  const a = await nhap(s, nam(soMoi(s), "Toà A", maMoi(s))); // hàng 23: lên bảng cần mã căn
   await nhip(new Date(), s);
   const mA = await lenBang(s, "dc1", await hangTuLead(s, "dc1", a.id));
   // (2) hàng cùng số của chính đầu chủ, không mang mã lead, sang Active → không lên bảng.
@@ -283,7 +283,7 @@ test("liên hệ: lên bảng là dữ kiện", async () => {
   await lenBang(s, "dc1", await hangCoChu(s, "dc1", "A-09.01", soB));
   // (3) chuỗi Z trả lại → Z' gửi lại → hàng mang mã Z' Active → Z' lên bảng, số đo tính từ lúc nhập Z.
   const tu = new Date();
-  const z = await nhap(s, nam(soMoi(s), "Toà A"));
+  const z = await nhap(s, nam(soMoi(s), "Toà A", maMoi(s))); // hàng 23: lên bảng cần mã căn
   await nhip(new Date(), s);
   assert.equal((await tra(s, z.id, "dc1")).status, 200);
   const z2 = await guiLai(s, z.id, soMoi(s));

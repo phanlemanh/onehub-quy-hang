@@ -5,7 +5,7 @@ import { foldListing, type ListingEvent } from "@quy-hang/core/listing";
 import { createApi } from "../src/app";
 import { API_ERRORS } from "../src/errors";
 import { STATE_COLUMNS } from "../src/listings/store";
-import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "./helpers";
 
 after(cleanup);
 
@@ -47,6 +47,7 @@ const banTinh = async (id: string) => (await appPool.query("select to_jsonb(l) -
 
 /** Đưa hàng tới «Đang bán» qua lệnh; trả phiên bản cuối. */
 async function denDangBan(cookie: string, id: string) {
+  await themAnhThat(id); // hàng 23: vào Đang bán cần ảnh thật
   assert.equal((await lenh(cookie, id, { type: "price_changed", payload: GIA, expectedVersion: 1 })).status, 200);
   assert.equal((await lenh(cookie, id, { type: "details_changed", payload: DU, expectedVersion: 2 })).status, 200);
   const r = await lenh(cookie, id, { type: "status_changed", payload: { to: "Active" }, expectedVersion: 3 });
@@ -94,6 +95,7 @@ test("lệnh bị từ chối không ghi gì", async () => {
 test("đổi trạng thái: thiếu điều kiện trả 400 và không ghi", async () => {
   const a = await sanMoi("L3");
   const h = await taoHang(a.cookie);
+  await themAnhThat(h.id); // hàng 23: ảnh thật có sẵn — ca này đo bốn điều cũ
   // Vào Đang bán thiếu từng điều kiện — ba ca riêng.
   const CA: [string, object, string[]][] = [
     ["thiếu giá kèm điều kiện phí", { details: DU }, ["listPrice", "feeInclusion"]],

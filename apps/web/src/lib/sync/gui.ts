@@ -7,7 +7,7 @@
  * hàng đợi để gửi lại ở nhịp sau. Chỉ 4xx khác mới đối chiếu rồi thành «cần xem». Căn đang «cần xem» không gửi: thao tác
  * sửa tiếp được giữ tới khi người chọn lối (xu-ly-can-xem.ts).
  */
-import type { ListingEvent } from "@quy-hang/core/listing";
+import { nhanDieuKien, type ListingEvent } from "@quy-hang/core/listing";
 import type { Goi, LanThu, ListingView, Me, NeedsReview, Ngan, PendingOp } from "./types";
 
 class MatMang extends Error {}
@@ -66,9 +66,14 @@ export async function doiChieu(
     return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: thang.payload.to === "Pending" ? "da-coc" : "da-ban", server } }, view: view as ListingView, events };
   }
   if (traLoi.status === 409) return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: "dung-nhau", server } }, view: view as ListingView, events };
-  const b = (traLoi.body ?? {}) as { error?: string; reason?: string; missing?: string[] };
-  const reason = b.reason ?? (b.missing ? `thiếu ${b.missing.join(", ")}` : (b.error ?? `máy chủ trả ${traLoi.status}`));
+  const reason = lyDoTuChoi(traLoi.body, traLoi.status);
   return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: "tu-choi", reason, server } }, view: view as ListingView, events };
+}
+
+/** Lý do «Cần xem» khi máy chủ từ chối lệnh (4xx): lý do của máy chủ, hay điều thiếu qua bảng nhãn của lõi. */
+export function lyDoTuChoi(body: unknown, status: number): string {
+  const b = (body ?? {}) as { error?: string; reason?: string; missing?: string[] };
+  return b.reason ?? (b.missing ? `thiếu ${b.missing.map(nhanDieuKien).join(", ")}` : (b.error ?? `máy chủ trả ${status}`));
 }
 
 /** `lan`: kết cục của lượt — `mang`/`phien` dừng cả lô; `may-chu` khi ít nhất một căn gặp 5xx (căn khác vẫn gửi). */

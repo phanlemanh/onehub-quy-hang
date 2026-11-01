@@ -5,6 +5,7 @@
  * cuối cũng là lần sửa sau cùng: «Giữ của tôi» xếp thao tác cũ rồi tới thao tác giữ; ba lối kia bỏ thao tác cũ và xếp
  * lại thao tác giữ — luôn nối chuỗi lại trên bản máy chủ mới.
  */
+import { nhanDieuKien } from "@quy-hang/core/listing";
 import { apTrenMay } from "./ap-tren-may";
 import type { NeedsReview, Ngan, PendingOp } from "./types";
 
@@ -27,7 +28,7 @@ function xepLai(n: Ngan, r: NeedsReview, ops: PendingOp[]): Ngan {
     const op = ops[i]!;
     const kq = apTrenMay(m, listingId, op.type, op.payload, op.createdAt, op.opId);
     if (!kq.ok) {
-      const reason = kq.loi.kind === "invalid-transition" ? kq.loi.reason : kq.loi.kind === "missing-requirement" ? `thiếu ${kq.loi.missing.join(", ")}` : "không áp được trên bản mới";
+      const reason = kq.loi.kind === "invalid-transition" ? kq.loi.reason : kq.loi.kind === "missing-requirement" ? `thiếu ${kq.loi.missing.map(nhanDieuKien).join(", ")}` : "không áp được trên bản mới";
       return { ...m, review: [...m.review, { listingId, kind: "tu-choi", mine: ops.slice(i), server: r.server, reason }] };
     }
     m = kq.ngan;

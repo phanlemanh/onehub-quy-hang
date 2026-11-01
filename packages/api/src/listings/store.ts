@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import {
   checkTransition,
   confirmsWithOwner,
+  docCauHinhSanSang,
+  KHOA_ANH_THAT_TOI_THIEU,
   foldListing,
   validatePayload,
   WINS_IMMEDIATELY,
@@ -147,7 +149,9 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   const hienTai = foldListing(events);
   if (type === "status_changed") {
     // «Thắng ngay» bỏ qua phép so phiên bản, KHÔNG bỏ qua bảng chuyển: xét trên trạng thái hiện tại của hàng.
-    const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload });
+    // Vào Đang bán: máy chủ luôn đếm ảnh thật của căn và đọc số tối thiểu của sàn (hàng 23) — mọi lối lên bảng qua đây.
+    const anh = payload.to === "Active" ? await nguCanhAnh(tx, hienTai) : {};
+    const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh });
     if (!kq.ok) {
       return kq.kind === "invalid-transition"
         ? { error: API_ERRORS.invalidTransition, reason: kq.reason }
@@ -160,6 +164,18 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   const facts = factsFromEvents([...events, event]);
   await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);
   return { listingId, state, event, facts };
+}
+
+/** Ảnh thật của căn (ngăn Gửi được, không ảnh mẫu, chưa xoá) và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */
+async function nguCanhAnh(tx: pg.PoolClient, hang: ListingState): Promise<{ realPhotoCount: number; minRealPhotos: number }> {
+  const { rows } = await tx.query<{ n: number }>(
+    `select count(*)::int n from unit_photos
+     where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2)
+       and compartment = 'shareable' and not is_sample and removed_at is null`,
+    [hang.buildingName, hang.unitNumber],
+  );
+  const cauHinh = await tx.query<{ key: string; value: unknown }>("select key, value from company_settings where key = $1", [KHOA_ANH_THAT_TOI_THIEU]);
+  return { realPhotoCount: rows[0]!.n, minRealPhotos: docCauHinhSanSang(cauHinh.rows).minRealPhotos };
 }
 
 export const isRefusal = (r: Applied | Refusal): r is Refusal => "error" in r;
