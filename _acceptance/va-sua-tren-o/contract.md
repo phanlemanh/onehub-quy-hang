@@ -5,7 +5,7 @@ slug: va-sua-tren-o
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: _acceptance/va-sua-tren-o/design.md
@@ -70,3 +70,7 @@ Quét không gian AC theo trục (preset test-matrix, rút gọn):
 ## Notes
 
 - Dữ liệu cho bài nhìn: chỗ thử dãy B của hàng 14 (`_acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs`).
+- Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi máy chưa lưu được lần hoàn tác và báo thử lại, bấm Hoàn tác lần nữa lại báo «Đã hoàn tác rồi» dù giá chưa được trả về. Người dùng phải tự sửa lại giá bằng tay. — `apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx`
+- Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Nếu việc lưu hoặc hoàn tác gặp lỗi bất ngờ, ô sửa đã đóng và không có thông báo lỗi nào. Người dùng tưởng đã lưu hoặc đã hoàn tác trong khi chưa. — `apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Một chỗ hiện giá trong hộp hỏi lại chưa có bài kiểm riêng cho giá lẻ. Hiện nó vẫn hiển thị đúng, nhưng sau này sửa nhầm thì bài kiểm không bắt được. — `apps/web/src/app/(app)/inventory/cell-edit/lenh.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm chứng minh việc gõ chữ vô nghĩa không sinh lệnh có phần đối chứng chưa đủ mạnh. Người dùng không thấy khác biệt, chỉ là bài kiểm có thể không báo đỏ khi lẽ ra phải báo. — `apps/web/src/app/(app)/inventory/cell-edit/lenh.test.ts`

@@ -1,13 +1,4 @@
-259617: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 11ms (next.js: 0.5ms, application-code: 10ms)
-259630: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 14ms (next.js: 1.6ms, application-code: 13ms)
-259636: POST /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events 200 in 16ms (next.js: 1.8ms, application-code: 15ms)
-259638: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 21ms (next.js: 1.4ms, application-code: 19ms)
-259649: POST /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events 200 in 16ms (next.js: 1.6ms, application-code: 15ms)
-259651: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 13ms (next.js: 1.4ms, application-code: 11ms)
-259653: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 13ms (next.js: 0.3ms, application-code: 13ms)
-259658: POST /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events 200 in 20ms (next.js: 1.5ms, application-code: 18ms)
-259661: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 13ms (next.js: 0.4ms, application-code: 13ms)
-259663: POST /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events 200 in 19ms (next.js: 1.5ms, application-code: 18ms)
-259665: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 10ms (next.js: 1.3ms, application-code: 9ms)
-259667: GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 200 in 13ms (next.js: 1.4ms, application-code: 11ms)
---- driver: CDP thô (không có công cụ đọc network); trên là log máy chủ dev 3481 cho listing C. 409 dòng cũ là lần chạy thử đầu (phiên 2 ghi khi chưa kéo bản mới)
+Driver: CDP thô (Chrome headless, hai tiến trình riêng = hai phiên riêng); không có công cụ đọc network/console.
+Quan sát gián tiếp qua fetch trong trang: GET /api/v1/listings, GET /api/v1/listings/<id> đều 200; ghi của phiên 1 và phiên 2 (price_changed) được máy chủ nhận (giá máy chủ 6,51 tỷ rồi 6,52 tỷ). Không thấy 4xx/5xx nào ở lệnh gọi của driver.
+Log máy chủ dev 3481 không ghi trong lúc chạy (máy chủ do tiến trình khác bật) — không có dòng để dump.
+Console: không đọc được. Lớp phủ dev Next hiện «1 Issue» ở góc dưới phải mọi khung (không rõ nội dung).

@@ -357,5 +357,51 @@
 522. [GET] http://localhost:3481/api/v1/listings => [200] OK
 523. [GET] http://localhost:3481/api/v1/listings/057c4e09-b48c-4c36-9fe6-8bd53819a22b => [200] OK
 524. [GET] http://localhost:3481/api/v1/listings/057c4e09-b48c-4c36-9fe6-8bd53819a22b => [200] OK
+525. [GET] http://localhost:3481/api/v1/listings => [200] OK
+526. [GET] http://localhost:3481/api/v1/listings => [200] OK
+527. [GET] http://localhost:3481/api/v1/listings => [200] OK
+528. [GET] http://localhost:3481/api/v1/listings => [200] OK
+529. [GET] http://localhost:3481/api/v1/listings => [200] OK
+530. [GET] http://localhost:3481/api/v1/listings => [200] OK
+531. [GET] http://localhost:3481/api/v1/listings => [200] OK
+532. [GET] http://localhost:3481/api/v1/listings => [200] OK
+533. [GET] http://localhost:3481/api/v1/listings => [200] OK
+534. [GET] http://localhost:3481/api/v1/listings => [200] OK
+535. [GET] http://localhost:3481/api/v1/listings => [200] OK
+536. [GET] http://localhost:3481/api/v1/listings => [200] OK
+537. [GET] http://localhost:3481/api/v1/listings => [200] OK
+538. [GET] http://localhost:3481/api/v1/listings => [200] OK
+539. [GET] http://localhost:3481/api/v1/listings => [200] OK
+540. [GET] http://localhost:3481/api/v1/listings => [200] OK
+541. [GET] http://localhost:3481/api/v1/listings => [200] OK
+542. [GET] http://localhost:3481/api/v1/listings => [200] OK
+543. [GET] http://localhost:3481/api/v1/listings => [200] OK
+544. [GET] http://localhost:3481/api/v1/listings => [200] OK
+578. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+579. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+580. [GET] http://localhost:3481/api/v1/listings => [200] OK
+581. [GET] http://localhost:3481/api/v1/listings => [200] OK
+582. [GET] http://localhost:3481/api/v1/listings => [200] OK
+583. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
+584. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+585. [POST] http://localhost:3481/__nextjs_original-stack-frames => [200] OK
+586. [POST] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events => [200] OK
+587. [GET] http://localhost:3481/api/v1/listings => [200] OK
+588. [POST] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events => [200] OK
+589. [GET] http://localhost:3481/api/v1/listings => [200] OK
+590. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+591. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+592. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+593. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+594. [GET] http://localhost:3481/api/v1/listings => [200] OK
+595. [POST] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events => [200] OK
+596. [GET] http://localhost:3481/api/v1/listings => [200] OK
+597. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+598. [POST] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events => [200] OK
+599. [GET] http://localhost:3481/api/v1/listings => [200] OK
+600. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
+601. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
 
-Note: 165 static requests not shown, run with "static" option to see them.
+Note: 198 static requests not shown, run with "static" option to see them.
+--- console error (dev, Base UI warning, not a network failure) ---
+Base UI: component acting as button expected native <button> (nativeButton prop) at PopoverTrigger/useSuaTrenO
