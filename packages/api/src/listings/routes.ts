@@ -8,6 +8,7 @@ import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { NO_QUEUE_FACTS, readQueueFacts } from "./lan-doi";
 import { applyCommand, createListing, FACTS_SQL, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
 
 /**
@@ -110,7 +111,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
     createRoute({
       method: "get",
       path: BASE,
-      summary: "Hàng của sàn đang làm, kèm trạng thái, độ tươi, mức đủ",
+      summary: "Hàng của sàn đang làm, kèm trạng thái, độ tươi, mức đủ, người giữ và lần đổi giá, trạng thái cuối",
       responses: { 200: ok("Hàng", z.array(Listing)), ...loi },
     }),
     async (c) => {
@@ -124,12 +125,14 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
            from listings l where l.company_id = app.current_company_id() order by l.id`,
         );
         const nguoiXem = await viewerOf(tx, ctx.userId);
+        // Người giữ và lần đổi cuối (hàng 22) — tính lúc đọc từ bảng gán và bảng sự kiện.
+        const hangDoi = await readQueueFacts(tx);
         return rows.flatMap((r: Record<string, unknown>) => {
           const { id, creatorUserId, statusesReached, ...s } = r;
           const facts: VisibilityFacts = { creatorUserId: String(creatorUserId), statusesReached: statusesReached as string[] };
           if (!canRead(nguoiXem, facts)) return [];
           const st = { ...s, lastConfirmedAt: s.lastConfirmedAt instanceof Date ? s.lastConfirmedAt.toISOString() : null } as ListingState;
-          return [view(String(id), st, facts)];
+          return [{ ...view(String(id), st, facts), ...(hangDoi.get(String(id)) ?? NO_QUEUE_FACTS) }];
         });
       });
       return c.json(ds, 200);
@@ -149,12 +152,16 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if ("code" in ctx) return tra(c, ctx);
       const { listingId } = c.req.valid("param");
       if (!/^[0-9a-f-]{36}$/i.test(listingId)) return tra(c, API_ERRORS.notFound);
-      const kq = await withCompany(appPool, ctx, async (tx) => ({ events: await loadEvents(tx, listingId), nguoiXem: await viewerOf(tx, ctx.userId) }));
+      const kq = await withCompany(appPool, ctx, async (tx) => ({
+        events: await loadEvents(tx, listingId),
+        nguoiXem: await viewerOf(tx, ctx.userId),
+        hangDoi: (await readQueueFacts(tx, [listingId])).get(listingId) ?? NO_QUEUE_FACTS,
+      }));
       if (!kq.events.length) return tra(c, API_ERRORS.notFound);
       const facts = factsFromEvents(kq.events);
       // «Chỉ tôi» của người khác: cùng câu trả lời với hàng không có (AC-4).
       if (!canRead(kq.nguoiXem, facts)) return tra(c, API_ERRORS.notFound);
-      return c.json({ ...view(listingId, foldListing(kq.events), facts), events: kq.events }, 200);
+      return c.json({ ...view(listingId, foldListing(kq.events), facts), ...kq.hangDoi, events: kq.events }, 200);
     },
   );
 }

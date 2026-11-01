@@ -16,6 +16,7 @@ import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
 import { registerContactRoutes } from "./contacts/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
+import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
@@ -157,6 +158,8 @@ export function createApi(deps: ApiDeps) {
   registerCatalogRoutes(api, deps);
   registerFeedRoutes(api, deps);
   registerCatalogReadAll(api, deps);
+  // Hàng 22: trước lối lead — /leads/assigned phải khớp trước /leads/{leadId}.
+  registerTodayRoutes(api, deps);
   registerLeadRoutes(api, deps);
   registerRoutingRoutes(api, deps);
   registerContactRoutes(api, deps);
