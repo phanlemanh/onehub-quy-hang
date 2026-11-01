@@ -6,7 +6,7 @@
 import { createApi } from "../src/app";
 import { SAMPLE_PACK } from "../src/catalog/sample";
 import { runLeadTick } from "../src/jobs/lead-tick";
-import { appPool, BASE_URL, cookieOf, identityPool, makeAuth } from "./helpers";
+import { appPool, BASE_URL, cookieOf, identityPool, makeAuth, themAnhThat } from "./helpers";
 
 const { auth, sent } = makeAuth();
 const app = createApi({ appPool, identityPool, auth });
@@ -55,6 +55,7 @@ const nhip = () => runLeadTick(appPool, new Date(), [san]);
 async function hangActive(ck: string, can: string, so: string) {
   const { id } = await phai(await send("POST", "/api/v1/listings", { buildingName: "Toà A", unitNumber: can }, ck), 201);
   await phai(await send("PUT", `/api/v1/listings/${id}/owner`, { ownerName: "[Mẫu] Chủ nhà", ownerPhone: so }, ck), 200);
+  await themAnhThat(id); // hàng 23: vào Đang bán cần ảnh thật
   let v = 1;
   for (const body of [
     { type: "price_changed", payload: { listPrice: 3_200_000_000, feeInclusion: "included" } },

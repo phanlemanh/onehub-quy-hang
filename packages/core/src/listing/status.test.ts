@@ -60,3 +60,42 @@ test("điều kiện vào trạng thái", () => {
     assert.deepEqual(thay, mong, ten);
   }
 });
+
+test("điều ảnh thật vào Đang bán (hàng 23, E1)", async () => {
+  const { missingFor } = await import("./status");
+  const BON = { listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant" };
+  // [realPhotoCount, minRealPhotos, mong] — viết tay, không sinh từ hàm.
+  const BANG: [number, number | undefined, string[]][] = [
+    [0, undefined, ["realPhoto"]],
+    [1, undefined, []],
+    [1, 2, ["realPhoto"]],
+    [2, 2, []],
+    [5, 3, []],
+  ];
+  for (const [dem, toiThieu, mong] of BANG) {
+    assert.deepEqual(missingFor("Active", { ...BON, realPhotoCount: dem, minRealPhotos: toiThieu }), mong, `ảnh ${dem}, tối thiểu ${toiThieu ?? "vắng"}`);
+  }
+  assert.deepEqual(
+    missingFor("Active", { listPrice: null, feeInclusion: null, legalStatus: null, occupantType: null, realPhotoCount: 0 }),
+    ["listPrice", "feeInclusion", "realPhoto", "legalStatus", "occupantType"],
+    "thiếu cả năm theo thứ tự cố định",
+  );
+  // Vắng số đếm (Bảng hàng, Hỏi-2): điều ảnh không xét trên máy.
+  assert.deepEqual(missingFor("Active", BON), []);
+  for (const [to, them] of [["Pending", {}], ["Hold", {}], ["Withdrawn", { withdrawnReason: "unreachable" }], ["Closed", { closePrice: 3_400_000_000 }]] as const) {
+    assert.ok(!missingFor(to, { ...BON, ...them, realPhotoCount: 0 }).includes("realPhoto"), `${to} không đòi ảnh`);
+  }
+  assert.deepEqual(checkTransition("Incomplete", "Active", { ...BON, realPhotoCount: 0 }), { ok: false, kind: "missing-requirement", missing: ["realPhoto"] });
+});
+
+test("đọc cấu hình số ảnh thật tối thiểu (hàng 23, E1)", async () => {
+  const { docCauHinhSanSang, KHOA_ANH_THAT_TOI_THIEU } = await import("./san-sang");
+  assert.deepEqual(docCauHinhSanSang([]), { minRealPhotos: 1, loi: null }, "vắng dòng");
+  assert.deepEqual(docCauHinhSanSang([{ key: KHOA_ANH_THAT_TOI_THIEU, value: 3 }]), { minRealPhotos: 3, loi: null });
+  assert.deepEqual(docCauHinhSanSang([{ key: "lead.routing_strategy", value: 3 }]), { minRealPhotos: 1, loi: null }, "khoá khác không tính");
+  for (const v of [0, 21, 2.5, "2", null]) {
+    const kq = docCauHinhSanSang([{ key: KHOA_ANH_THAT_TOI_THIEU, value: v }]);
+    assert.equal(kq.minRealPhotos, 1, `giá trị ${JSON.stringify(v)} về mặc định`);
+    assert.match(kq.loi ?? "", /listing\.ready_min_real_photos/, `giá trị ${JSON.stringify(v)} phải báo lỗi nêu khoá`);
+  }
+});

@@ -7,7 +7,7 @@
  * hàng đợi để gửi lại ở nhịp sau. Chỉ 4xx khác mới đối chiếu rồi thành «cần xem». Căn đang «cần xem» không gửi: thao tác
  * sửa tiếp được giữ tới khi người chọn lối (xu-ly-can-xem.ts).
  */
-import type { ListingEvent } from "@quy-hang/core/listing";
+import { nhanDieuKien, type ListingEvent } from "@quy-hang/core/listing";
 import type { Goi, LanThu, ListingView, Me, NeedsReview, Ngan, PendingOp } from "./types";
 
 class MatMang extends Error {}
@@ -67,7 +67,7 @@ export async function doiChieu(
   }
   if (traLoi.status === 409) return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: "dung-nhau", server } }, view: view as ListingView, events };
   const b = (traLoi.body ?? {}) as { error?: string; reason?: string; missing?: string[] };
-  const reason = b.reason ?? (b.missing ? `thiếu ${b.missing.join(", ")}` : (b.error ?? `máy chủ trả ${traLoi.status}`));
+  const reason = b.reason ?? (b.missing ? `thiếu ${b.missing.map(nhanDieuKien).join(", ")}` : (b.error ?? `máy chủ trả ${traLoi.status}`));
   return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: "tu-choi", reason, server } }, view: view as ListingView, events };
 }
 

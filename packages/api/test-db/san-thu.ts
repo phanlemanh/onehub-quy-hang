@@ -5,7 +5,7 @@ import type pg from "pg";
 import { createApi } from "../src/app";
 import { SAMPLE_PACK } from "../src/catalog/sample";
 import { runLeadTick } from "../src/jobs/lead-tick";
-import { appPool, BASE_URL, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { appPool, BASE_URL, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "./helpers";
 
 const { auth, sent } = makeAuth();
 export const app = createApi({ appPool, identityPool, auth });
@@ -121,6 +121,7 @@ export async function lenBang(san: San, k: string, hangId: string): Promise<Date
   };
   await lenh({ type: "price_changed", payload: { listPrice: 3_200_000_000, feeInclusion: "included" } });
   await lenh({ type: "details_changed", payload: { legalStatus: "pink_book", occupantType: "vacant" } });
+  await themAnhThat(hangId); // hàng 23: vào Đang bán cần ảnh thật
   await lenh({ type: "status_changed", payload: { to: "Active" } });
   return (
     await appPool.query<{ occurred_at: Date }>(
