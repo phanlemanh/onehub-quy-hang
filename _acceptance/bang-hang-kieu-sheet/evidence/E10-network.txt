@@ -1,0 +1,55 @@
+# E10 network (CDP Network.* của lượt chạy)
+## ok (461)
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/listings
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/catalog
+[trong-sáng] 200 http://localhost:3481/api/v1/listings
+[dang-tai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-sáng] 200 http://localhost:3481/api/v1/listings
+[loi-sáng] 200 http://localhost:3481/api/v1/catalog
+[loi-sáng] 200 http://localhost:3481/api/v1/catalog
+[loi-sáng] 200 http://localhost:3481/api/v1/listings
+[loi-sáng] 200 http://localhost:3481/api/v1/listings
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-sáng] 200 http://localhost:3481/api/v1/listings
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/listings
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/catalog
+[trong-tối] 200 http://localhost:3481/api/v1/listings
+[dang-tai-tối] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-tối] 200 http://localhost:3481/api/v1/catalog
+[dang-tai-tối] 200 http://localhost:3481/api/v1/listings
+[loi-tối] 200 http://localhost:3481/api/v1/catalog
+[loi-tối] 200 http://localhost:3481/api/v1/catalog
+[loi-tối] 200 http://localhost:3481/api/v1/listings
+[loi-tối] 200 http://localhost:3481/api/v1/listings
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/listings
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/catalog
+[dien-thoai-tối] 200 http://localhost:3481/api/v1/listings
+## thất bại / >=400 (13)
+[trong-sáng] 404 http://localhost:3481/favicon.ico
+[loi-sáng] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-sáng] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-sáng] FAILED net::ERR_ABORTED http://localhost:3481/inventory blocked=
+[loi-sáng] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-sáng] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-sáng] FAILED  http://localhost:3481/api/v1/listings blocked=inspector
+[loi-tối] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-tối] FAILED net::ERR_INTERNET_DISCONNECTED http://localhost:3481/inventory blocked=
+[loi-tối] FAILED net::ERR_ABORTED http://localhost:3481/inventory blocked=
+[loi-tối] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-tối] FAILED  http://localhost:3481/api/v1/catalog blocked=inspector
+[loi-tối] FAILED  http://localhost:3481/api/v1/listings blocked=inspector
+## console errors (0)
+

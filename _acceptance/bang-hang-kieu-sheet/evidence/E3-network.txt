@@ -1,0 +1,4 @@
+dau-chu-1: [{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/catalog","s":200}]
+dau-chu-1 console/err: n/a (CDP listener not attached; resource timing only)
+dau-chu-2: [{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/catalog","s":200},{"u":"/api/v1/listings","s":200},{"u":"/api/v1/listings","s":200}]
+dau-chu-2 console/err: n/a (CDP listener not attached; resource timing only)

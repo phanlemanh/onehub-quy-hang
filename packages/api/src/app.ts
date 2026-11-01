@@ -11,6 +11,7 @@ import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerCatalogRoutes } from "./catalog/routes";
+import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 
@@ -144,6 +145,7 @@ export function createApi(deps: ApiDeps) {
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
   registerCatalogRoutes(api, deps);
+  registerCatalogReadAll(api, deps);
   registerLeadRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {

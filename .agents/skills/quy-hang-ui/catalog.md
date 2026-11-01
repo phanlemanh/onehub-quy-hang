@@ -59,8 +59,9 @@ dòng.
 | sortable | reui | `npx shadcn@latest add @reui/sortable` | kéo sắp xếp (trạng thái của sàn) |
 | stepper | reui | `npx shadcn@latest add @reui/stepper` | các bước của luồng |
 | timeline | reui | `npx shadcn@latest add @reui/timeline` | lịch sử giá, trạng thái |
+| data-grid | reui | kèm `@reui/data-grid-editing-6` (thư mục `reui/data-grid/`, mười hai tệp) | lưới của Bảng hàng: cuộn ảo, hàng lọc, chọn ô và chép; một dòng của `data-grid-cell-selection.tsx` sửa để qua cờ kiểu chặt (Hỏi-1 của hàng 14) |
 
-Chưa cài — mã ReUI nguyên bản đỏ kiểu chặt của kho (`noUncheckedIndexedAccess` ở `tsconfig.base.json`): `data-grid`,
+Chưa cài — mã ReUI nguyên bản đỏ kiểu chặt của kho (`noUncheckedIndexedAccess` ở `tsconfig.base.json`):
 `filters`, `cascader`, `event-calendar`, hook `use-file-upload`. Hàng đầu tiên cần chúng quyết: nới cờ cho `apps/web` hay
 chuyển thể bản cài cho qua kiểu chặt. `use-copy-to-clipboard` không có trên kho ReUI.
 
@@ -72,3 +73,4 @@ thể nằm ở chỗ dùng.
 | Khối gốc | Tệp đang dùng | Màn | Đã đổi gì khi chuyển thể |
 | --- | --- | --- | --- |
 | `@reui/app-shell-8` | `apps/web/src/components/shell/` (`app-shell.tsx`, `home-rail.tsx`, `second-column.tsx`, `account-menu.tsx`, `company-switcher.tsx`, `notifications.tsx`, `unit-jump.tsx`) | Vỏ máy tính mọi màn sau đăng nhập (hàng 53, ADR-0002) | Org → bộ chọn Sàn (chỉ hiện khi hơn một sàn), bỏ App/Env; ô tìm ⌘K → «Gõ mã căn» (cmdk, chỉ vai có Bảng hàng); Create → nút + Lead · Nhập Excel · Phát hàng theo vai; cột biểu tượng và cột thứ hai đọc `navigationFor` của `packages/core`, Cài đặt sàn ở đáy; menu tài khoản chuyển lên thanh trên (tên sàn, Tôi, sáng/tối, đăng xuất); ngăn thông báo trống; tay nắm và nút tìm dùng `Button` thay thẻ `<button>` trần; nhớ cột thứ hai bằng cookie `qh_cot2` theo người, sàn, nhà |
+| `@reui/data-grid-editing-6` | `apps/web/src/app/(app)/inventory/` (`bang-hang.tsx`, `hang-loc.tsx`, `thanh-cong-cu.tsx`, `bieu-thuc-so.ts`, `loc.ts`) | Bảng hàng trên máy tính (hàng 14, ADR-0004) | Dữ liệu từ kho trên máy (hàng 13) ghép danh mục; mười chín cột theo RESO và nhãn `CONTEXT.md`, ba cột ẩn mặc định; hàng lọc theo cột giữ (chữ Việt, luật số đọc dấu phẩy, Giá gõ theo tỷ); chỉ đọc — bỏ sửa ô, dán, kéo điền, hoàn tác, đổi trạng thái hàng loạt, xuất file, tìm chung; thêm nhóm Toà → Loại căn theo cách của `data-grid-grouping-2` (dòng con TanStack), menu «Góc nhìn ▾», chọn cách nhóm, menu cột; bỏ thanh trạng thái vùng chọn và chân tổng theo cột, giữ dòng «n / N căn» |
