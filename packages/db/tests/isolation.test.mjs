@@ -1222,6 +1222,7 @@ async function withBonNac(fn) {
       [COMPANY_A, BN_HANG, BN_DC_A],
     );
     await c.query("insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, 'Toà A', 'Active', 2)", [BN_HANG, COMPANY_A]);
+    await c.query("insert into lead_listings (company_id, lead_id, listing_id, created_by) values ($1, $2, $3, $4)", [COMPANY_A, BN_LEN, BN_HANG, BN_DC_A]);
     await c.query("insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 1, $3, $3)", [COMPANY_A, BN_HANG, BN_DC_A]);
     await c.query(
       "insert into listing_owners (company_id, listing_id, owner_name, owner_phone_enc, owner_phone_hash, updated_by) values ($1, $2, '[Tên]', $3, $4, $5)",
@@ -1295,5 +1296,181 @@ test("lead bốn nấc: vai API không sửa bốn cột mới, không gọi hà
     const r = await c.query("select * from app.lead_board_metric($1, now() - interval '1 day', now() + interval '1 day')", [COMPANY_A]);
     assert.deepEqual(r.fields.map((f) => f.name), ["lead_id", "first_created_at", "board_at", "days"]);
     assert.deepEqual(r.rows.map((x) => x.lead_id), [BN_LEN]);
+  });
+});
+
+// ---- Liên hệ (016_lien_he, hàng 85: AC-2) ----
+const LH = {
+  DC1: "u-lh-dau-chu-1",
+  DC2: "u-lh-dau-chu-2",
+  TN: "u-lh-truong-nhom",
+  TS: "u-lh-telesales",
+  QT: "u-lh-quan-tri",
+  MAT: "u-lh-mat-vai", // người giữ cũ đã mất vai Đầu chủ
+  B: "u-lh-nguoi-b",
+};
+const K1 = "00000000-0000-4000-8000-0000000006a1"; // liên hệ A, người giữ DC1
+const K2 = "00000000-0000-4000-8000-0000000006a2"; // liên hệ A, người giữ đã mất vai
+const K0 = "00000000-0000-4000-8000-0000000006a3"; // liên hệ A chưa có người giữ
+const KB = "00000000-0000-4000-8000-0000000006b1"; // liên hệ B
+const banMa = () => Buffer.concat([Buffer.from([1]), randomBytes(38)]);
+const ctxCua = (san) => `leads:${san}:00000000-0000-4000-8000-0000000006ff`;
+
+async function withLienHe(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [LH.DC1, COMPANY_A, ["listing_agent"]],
+      [LH.DC2, COMPANY_A, ["listing_agent"]],
+      [LH.TN, COMPANY_A, ["team_lead"]],
+      [LH.TS, COMPANY_A, ["telesales"]],
+      [LH.QT, COMPANY_A, ["company_admin"]],
+      [LH.MAT, COMPANY_A, ["telesales"]],
+      [LH.B, COMPANY_B, ["listing_agent", "team_lead", "telesales"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    for (const [id, san, giu] of [[K1, COMPANY_A, LH.DC1], [K2, COMPANY_A, LH.MAT], [K0, COMPANY_A, null], [KB, COMPANY_B, LH.B]]) {
+      await c.query("insert into contacts (company_id, id, contact_types, owner_member_user_id, created_by) values ($1, $2, '{Seller}', $3, 'x')", [san, id, giu]);
+      await c.query(
+        "insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, is_primary, added_by) values ($1, $2, $3, $4, $5, true, 'x')",
+        [san, id, banMa(), randomBytes(32), ctxCua(san)],
+      );
+    }
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+const chuChay = async (c, sql, params, quayVe) => {
+  await c.query("reset role");
+  try {
+    return await c.query(sql, params);
+  } finally {
+    await c.query("set local role quy_hang_app");
+    if (quayVe) await lamNguoi(c, quayVe[0], quayVe[1]);
+  }
+};
+
+test("liên hệ: hai bảng mới nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      "select relname, relrowsecurity r, relforcerowsecurity f from pg_class where relname in ('contacts', 'contact_phones') order by relname",
+    );
+    assert.deepEqual(rows, [
+      { relname: "contact_phones", r: true, f: true },
+      { relname: "contacts", r: true, f: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("liên hệ: sàn B không đọc, không ghi liên hệ và số của sàn A", { skip }, async () => {
+  await withLienHe(async (c) => {
+    await lamNguoi(c, LH.TN, COMPANY_A);
+    assert.ok((await c.query("select 1 from contacts where company_id = $1", [COMPANY_A])).rowCount >= 3, "đối chứng dưới A rỗng");
+    assert.ok((await c.query("select 1 from contact_phones where company_id = $1", [COMPANY_A])).rowCount >= 3);
+    for (const ai of [LH.TN, LH.B]) {
+      await lamNguoi(c, ai, COMPANY_B);
+      assert.equal((await c.query("select 1 from contacts where company_id = $1", [COMPANY_A])).rowCount, 0, `liên hệ A lộ sang B (${ai})`);
+      assert.equal((await c.query("select 1 from contact_phones where company_id = $1", [COMPANY_A])).rowCount, 0);
+      await expectError(c, "select app.set_contact_types($1, '{Seller,Buyer}')", [K1], /không có liên hệ này/);
+      await expectError(c, "select app.contact_for_phone($1, $2, $3, '{Seller}', null, $4)", [randomBytes(32), banMa(), ctxCua(COMPANY_B), K1], /không có liên hệ này/);
+    }
+    const sau = await chuChay(c, "select contact_types from contacts where id = $1", [K1], [LH.B, COMPANY_B]);
+    assert.deepEqual(sau.rows[0].contact_types, ["Seller"], "B đổi được loại liên hệ của A");
+  });
+});
+
+test("liên hệ: một dấu vết một liên hệ", { skip }, async () => {
+  await withLienHe(async (c) => {
+    const h = randomBytes(32);
+    const chen = (san, k) =>
+      chuChay(c, "insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, is_primary, added_by) values ($1, $2, $3, $4, $5, false, 'x')", [san, k, banMa(), h, ctxCua(san)]);
+    await chen(COMPANY_A, K1);
+    await c.query("reset role");
+    await c.query("savepoint sp");
+    await assert.rejects(c.query("insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, is_primary, added_by) values ($1, $2, $3, $4, $5, false, 'x')", [COMPANY_A, K2, banMa(), h, ctxCua(COMPANY_A)]), /contact_phones_one_hash/);
+    await c.query("rollback to savepoint sp");
+    await c.query("set local role quy_hang_app");
+    assert.equal((await chen(COMPANY_B, KB)).rowCount, 1, "đối chứng: cùng dấu vết ở sàn khác bị chặn");
+  });
+});
+
+test("liên hệ: nhãn số và số chính", { skip }, async () => {
+  await withLienHe(async (c) => {
+    const chen = (nhan, chinh) =>
+      c.query("insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, label, is_primary, added_by) values ($1, $2, $3, $4, $5, $6, $7, 'x')", [COMPANY_A, K1, banMa(), randomBytes(32), ctxCua(COMPANY_A), nhan, chinh]);
+    await c.query("reset role");
+    for (const [ten, nhan, chinh, loi] of [["nhãn lạ", "Fax", false, /contact_phones_label_check/], ["số chính thứ hai", "Mobile", true, /contact_phones_one_primary/]]) {
+      await c.query("savepoint sp");
+      await assert.rejects(chen(nhan, chinh), loi, ten);
+      await c.query("rollback to savepoint sp");
+    }
+    assert.equal((await chen("Work", false)).rowCount, 1, "đối chứng: số phụ thứ hai bị chặn");
+    await c.query("set local role quy_hang_app");
+  });
+});
+
+test("liên hệ: vai API không đọc ba cột số, không ghi thẳng hai bảng", { skip }, async () => {
+  await withLienHe(async (c) => {
+    await lamNguoi(c, LH.TN, COMPANY_A);
+    for (const cot of ["phone_enc", "phone_hash", "enc_context"]) {
+      await expectError(c, `select ${cot} from contact_phones`, [], /permission denied/);
+    }
+    for (const sql of [
+      "insert into contacts (company_id, contact_types, created_by) values ($1, '{Seller}', 'x')",
+      "update contacts set owner_member_user_id = 'x' where company_id = $1",
+      "delete from contacts where company_id = $1",
+      "update contact_phones set is_primary = false where company_id = $1",
+    ]) {
+      await expectError(c, sql, [COMPANY_A], /permission denied/);
+    }
+    assert.equal((await c.query("select label, is_primary from contact_phones where contact_id = $1", [K1])).rowCount, 1, "đối chứng: cột nhãn đọc được");
+  });
+});
+
+test("liên hệ: ai đọc liên hệ chủ nhà", { skip }, async () => {
+  await withLienHe(async (c) => {
+    // [dòng, người, liên hệ, thấy]
+    const BANG = [
+      ["người giữ còn vai Đầu chủ", LH.DC1, K1, true],
+      ["người giữ đã mất vai", LH.MAT, K2, false],
+      ["trưởng nhóm", LH.TN, K1, true],
+      ["đầu chủ khác", LH.DC2, K1, false],
+      ["telesales", LH.TS, K1, false],
+      ["quản trị", LH.QT, K1, false],
+      ["chưa có người giữ × đầu chủ", LH.DC1, K0, false],
+      ["chưa có người giữ × trưởng nhóm", LH.TN, K0, true],
+      ["chưa có người giữ × telesales", LH.TS, K0, false],
+    ];
+    let so = 0;
+    for (const [ten, ai, k, mong] of BANG) {
+      await lamNguoi(c, ai, COMPANY_A);
+      const thay = (await c.query("select 1 from contacts where id = $1", [k])).rowCount === 1;
+      const thaySo = (await c.query("select 1 from contact_phones where contact_id = $1", [k])).rowCount === 1;
+      assert.deepEqual([thay, thaySo], [mong, mong], `dòng «${ten}»`);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+  });
+});
+
+test("liên hệ: chỗ trường riêng giữ rỗng", { skip }, async () => {
+  await withLienHe(async (c) => {
+    await c.query("reset role");
+    await c.query("savepoint sp");
+    await assert.rejects(c.query(`update contacts set custom = '{"a":1}' where id = $1`, [K1]), /contacts_custom_check/);
+    await c.query("rollback to savepoint sp");
+    await c.query("set local role quy_hang_app");
   });
 });
