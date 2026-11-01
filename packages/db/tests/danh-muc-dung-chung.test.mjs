@@ -1,4 +1,4 @@
-// Vùng danh mục dùng chung (010_danh_muc_dung_chung): mọi sàn đọc chung; chỉ sàn được tin, ghi bằng thoả thuận
+// Vùng danh mục dùng chung (010_danh_muc_dung_chung, 014_danh_muc_doc_cua_minh): mọi sàn đọc chung cột danh mục; chỉ sàn được tin, ghi bằng thoả thuận
 // `catalog_source` chiều vào đang hiệu lực của chính mình, mới ghi được; không ai tự thêm mình vào danh sách tin, không
 // ai xoá. Chạy trên Postgres thật đã áp migration; mỗi ca một giao dịch rồi rollback.
 import assert from "node:assert/strict";
@@ -187,9 +187,57 @@ test("danh mục dùng chung: mọi sàn và lời gọi chưa đặt sàn đọ
       const ten = san ?? "chưa đặt";
       assert.equal((await c.query("select 1 from catalog_subdivisions where subdivision_key = $1", [khu])).rowCount, 1, `khu · ${ten}`);
       assert.equal((await c.query("select 1 from catalog_units where upi = $1", [upi])).rowCount, 1, `căn · ${ten}`);
-      assert.equal((await c.query("select 1 from catalog_trusted_companies where company_id = $1", [TRUSTED])).rowCount, 1,
-        `danh sách tin · ${ten}`);
     }
+  });
+});
+
+test("danh mục dùng chung: mỗi sàn chỉ thấy dòng tin của mình, không ai đọc mã thoả thuận", { skip }, async () => {
+  await withCatalog(async (c, ag) => {
+    const a = await ghiMau(c, ag);
+    const khuB = `thu-${nhan()}`;
+    const upiB = `urn:onehub:upi:thu:${nhan()}`;
+    await datSan(c, TRUSTED_OTHER);
+    await c.query(INSERT_KHU, [khuB, ag.otherValid]);
+    await c.query(INSERT_CAN, [upiB, khuB, ag.otherValid]);
+
+    // Danh sách tin: mỗi sàn đúng một dòng là của mình; lời gọi chưa đặt sàn không thấy dòng nào.
+    for (const [san, mong] of [[TRUSTED, [TRUSTED]], [TRUSTED_OTHER, [TRUSTED_OTHER]], [null, []]]) {
+      await datSan(c, san);
+      const { rows } = await c.query("select company_id from catalog_trusted_companies order by company_id");
+      assert.deepEqual(rows.map((r) => r.company_id), mong, `danh sách tin · ${san ?? "chưa đặt"}`);
+    }
+
+    // Mã thoả thuận: bốn phép đọc viết trước, mỗi phép bị từ chối bằng lỗi quyền.
+    const DOC = [
+      [TRUSTED, "select agreement_id from catalog_subdivisions where subdivision_key = $1", [khuB], "A đọc khu của B"],
+      [TRUSTED, "select agreement_id from catalog_units where upi = $1", [upiB], "A đọc căn của B"],
+      [TRUSTED, "select agreement_id from catalog_subdivisions where subdivision_key = $1", [a.khu], "A đọc khu của A"],
+      [null, "select agreement_id from catalog_units where upi = $1", [a.upi], "chưa đặt sàn đọc căn của A"],
+    ];
+    let daSo = 0;
+    for (const [san, sql, params, ten] of DOC) {
+      await datSan(c, san);
+      await expectCode(c, sql, params, "42501", ten);
+      daSo++;
+    }
+    assert.equal(daSo, 4);
+
+    // Đối chứng dương: mọi cột danh mục còn lại của dòng sàn B đọc được, đúng giá trị.
+    await datSan(c, TRUSTED);
+    const khu = await c.query(
+      "select subdivision_key, subdivision_name, complex_name, provider from catalog_subdivisions where subdivision_key = $1",
+      [khuB],
+    );
+    assert.deepEqual(khu.rows, [{ subdivision_key: khuB, subdivision_name: "[Mẫu] Khu", complex_name: null, provider: "onehub-invest" }]);
+    const can = await c.query(
+      `select upi, subdivision_key, building_key, building_name, unit_number, property_type, property_sub_type, provider
+         from catalog_units where upi = $1`,
+      [upiB],
+    );
+    assert.deepEqual(can.rows, [{
+      upi: upiB, subdivision_key: khuB, building_key: "toa-1", building_name: "[Mẫu] Toà", unit_number: "A-01",
+      property_type: "Residential", property_sub_type: "Apartment", provider: "onehub-invest",
+    }]);
   });
 });
 

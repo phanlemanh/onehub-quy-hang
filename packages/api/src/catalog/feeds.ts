@@ -122,22 +122,27 @@ async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: string)
   );
   if (khu.length === 0) return { created: 0, updated: 0 };
 
-  // Khu trước (căn trỏ khoá khu). Cập nhật chỉ khi thuộc tính đổi; mốc đo làm tươi ở câu riêng bên dưới.
+  // Khu trước (căn trỏ khoá khu). Cập nhật chỉ khi thuộc tính đổi; mốc đo làm tươi ở câu riêng bên dưới. Mã thoả thuận
+  // gán từ tham số, không đọc `excluded.agreement_id`: vai API không có quyền đọc cột ấy (migration 014).
   await tx.query(
     `insert into catalog_subdivisions (subdivision_key, subdivision_name, complex_name, provider, measured_at, agreement_id)
      select k.subdivision_key, k.subdivision_name, k.complex_name, $2, $3, $4
      from jsonb_to_recordset($1::jsonb) as k(subdivision_key text, subdivision_name text, complex_name text)
      on conflict (subdivision_key) do update
        set subdivision_name = excluded.subdivision_name, complex_name = excluded.complex_name,
-           provider = excluded.provider, measured_at = excluded.measured_at, agreement_id = excluded.agreement_id,
+           provider = excluded.provider, measured_at = excluded.measured_at, agreement_id = $4,
            updated_at = now()
        where (catalog_subdivisions.subdivision_name, catalog_subdivisions.complex_name, catalog_subdivisions.provider)
              is distinct from (excluded.subdivision_name, excluded.complex_name, excluded.provider)`,
     [JSON.stringify(khu), feed.provider, feed.measuredAt, agreementId],
   );
 
-  // Căn: khoá là UPI — gửi lại không nhân đôi; `returning` chỉ ra căn mới (xmax = 0) và căn thật sự đổi.
-  const { rows } = await tx.query<{ created: boolean }>(
+  // Căn: khoá là UPI — gửi lại không nhân đôi. Đếm căn mới bằng UPI đã có trước câu ghi (vai API không đọc được cột hệ
+  // thống `xmax` khi chỉ được cấp quyền đọc theo cột — migration 014); số dòng câu ghi = căn mới + căn thật sự đổi.
+  const daCo = await tx.query<{ n: number }>("select count(*)::int as n from catalog_units where upi = any ($1::text[])", [
+    can.map((u) => u.upi),
+  ]);
+  const ghi = await tx.query(
     `insert into catalog_units (upi, subdivision_key, building_key, building_name, unit_number, stack, floor, living_area,
                                 bedrooms_total, direction_faces, property_type, property_sub_type, lot_size_area,
                                 stories_total, frontage_length, access_road_width, provider, measured_at, agreement_id)
@@ -156,7 +161,7 @@ async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: string)
            property_sub_type = excluded.property_sub_type, lot_size_area = excluded.lot_size_area,
            stories_total = excluded.stories_total, frontage_length = excluded.frontage_length,
            access_road_width = excluded.access_road_width, provider = excluded.provider,
-           measured_at = excluded.measured_at, agreement_id = excluded.agreement_id, updated_at = now()
+           measured_at = excluded.measured_at, agreement_id = $4, updated_at = now()
        where (catalog_units.subdivision_key, catalog_units.building_key, catalog_units.building_name,
               catalog_units.unit_number, catalog_units.stack, catalog_units.floor, catalog_units.living_area,
               catalog_units.bedrooms_total, catalog_units.direction_faces, catalog_units.property_type,
@@ -166,8 +171,7 @@ async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: string)
              (excluded.subdivision_key, excluded.building_key, excluded.building_name, excluded.unit_number,
               excluded.stack, excluded.floor, excluded.living_area, excluded.bedrooms_total, excluded.direction_faces,
               excluded.property_type, excluded.property_sub_type, excluded.lot_size_area, excluded.stories_total,
-              excluded.frontage_length, excluded.access_road_width, excluded.provider)
-     returning (xmax = 0) as created`,
+              excluded.frontage_length, excluded.access_road_width, excluded.provider)`,
     [JSON.stringify(can), feed.provider, feed.measuredAt, agreementId],
   );
 
@@ -186,8 +190,8 @@ async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: string)
     );
   }
 
-  const created = rows.filter((r) => r.created).length;
-  return { created, updated: rows.length - created };
+  const created = can.length - (daCo.rows[0]?.n ?? 0);
+  return { created, updated: (ghi.rowCount ?? 0) - created };
 }
 
 export function registerFeedRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps, hooks: FeedHooks = {}) {
