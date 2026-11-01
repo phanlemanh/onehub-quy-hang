@@ -123,5 +123,11 @@ export function useHoSoHang(id: string | null) {
 
 export function useSuaHang() {
   const { bd } = useBoDongBo();
-  return (listingId: string, type: EventType, payload: Record<string, unknown>) => bd.sua(listingId, type, payload);
+  return (listingId: string, type: EventType, payload: Record<string, unknown>, coSo?: number) => bd.sua(listingId, type, payload, coSo);
+}
+
+/** Phiên bản trên máy của một căn lúc gọi — trình sửa trên ô ghi lại khi mở để làm `coSo` cho lần ghi (hàng 15). */
+export function useDocPhienBan() {
+  const { bd } = useBoDongBo();
+  return useCallback((id: string) => bd.danhSach().find((l) => l.id === id)?.version, [bd]);
 }

@@ -5,7 +5,7 @@ feature_slug: sua-tren-o
 #   → Postgres dãy B (cổng 5561) đã migrate; sàn và người mẫu của hàng 5; 40 hàng mẫu nạp qua API; máy chủ dev cổng
 #     3481, nhật ký .acceptance-runs/bang-hang-kieu-sheet/web-b.log. In bảng email ↔ số hàng mỗi người thấy.
 #   Phiên đăng nhập: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs (cookieCua) giữ phiên ở .acceptance-runs.
-#   Lịch sử sự kiện của một hàng: GET /api/v1/listings/<id>/events (fetch trong trang, cùng phiên).
+#   Lịch sử sự kiện của một hàng: GET /api/v1/listings/<id>, trường events (fetch trong trang, cùng phiên; không có đường /events riêng).
 #   Bài nhìn GHI dữ liệu: mỗi bài chốt mã căn riêng (Đang bán có giá lúc dựng hồ sơ, 01/11) — E2 B-03.04 · E4u B-08.02
 #   · E6u B-13.02, B-14.04 · E7 B-14.05, A-13.01 · E8u B-14.06 · E9 B-15.01, B-15.05 — không bài nào ghi hàng của bài khác.
 #   Hàng đã đổi ở lượt chấm trước (không còn Đang bán) thì ghi trạng thái gặp được rồi dùng hàng Đang bán có giá chưa bài
@@ -24,7 +24,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở http://localhost:3481/inventory, Nhóm = Không nhóm, lọc Mã căn = B-03.04 (gọi là M) — ghi giá, phí, Xác nhận hiện tại; fetch GET /api/v1/listings/<id>/events → ghi số sự kiện (n0)"
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở http://localhost:3481/inventory, Nhóm = Không nhóm, lọc Mã căn = B-03.04 (gọi là M) — ghi giá, phí, Xác nhận hiện tại; fetch GET /api/v1/listings/<id> (trường events) → ghi số sự kiện (n0)"
       - "Nhấp đúp ô Giá → chụp evidence/E2-mo-sua.png; ghi các phần trong trình sửa (ô gõ, hai nút phí và nút nào đang chọn, dòng chữ dưới ô, có nút «Lưu» không)"
       - "Gõ «abc» → chụp evidence/E2-chua-hieu.png; ghi dòng chữ dưới ô; bấm Enter → ghi ô còn mở không; fetch số sự kiện (phải vẫn n0); bấm Esc → ghi giá trên ô"
       - "Mở lại ô Giá, gõ giá cao hơn giá cũ dưới 20% (vd giá cũ × 1,1, viết theo tỷ, hai số lẻ) → ghi dòng «Hiểu là: …» → Enter → chụp evidence/E2-da-doi.png; ghi giá trên ô, Xác nhận của hàng, chữ thông báo góc màn, chân bảng"
@@ -108,8 +108,8 @@ evals:
     layer: backend-effect
     steps:
       - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = B-14.05 — ghi Xác nhận hiện tại"
-      - "Sửa ô Giá trong ngưỡng 20% → Enter → ghi Xác nhận của hàng; fetch events → sự kiện cuối: type, confirmedWithOwner, occurredAt"
-      - "Sửa ô Trạng thái của hàng A-13.01 sang Tạm ngừng → fetch events của hàng đó → confirmedWithOwner"
+      - "Sửa ô Giá trong ngưỡng 20% → Enter → ghi Xác nhận của hàng; fetch events (GET /api/v1/listings/<id>, trường events — không có đường /events riêng) → sự kiện cuối: type, confirmedWithOwner, occurredAt"
+      - "Sửa ô Trạng thái của hàng A-13.01 sang Tạm ngừng → fetch events của hàng đó (GET /api/v1/listings/<id>, trường events) → confirmedWithOwner"
     expected: "Trước khi sửa Xác nhận khác «Hôm nay»; sau khi sửa giá Xác nhận «Hôm nay»; sự kiện price_changed confirmedWithOwner true, occurredAt hôm nay; sự kiện status_changed confirmedWithOwner true. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
@@ -185,7 +185,7 @@ evals:
     criterion: AC-10
     executor: script
     cmd: node _acceptance/sua-tren-o/thu/ranh-gioi.mjs
-    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main (git merge-base HEAD origin/main) và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: packages/core/src/pricing/**, packages/core/package.json (một dòng exports, B-10), apps/web/src/app/(app)/inventory/cell-edit/**, inventory/bang-hang.tsx, inventory/cot.ts, apps/web/src/app/(app)/proto/sua-tren-o/**, packages/ui-lint/tests/ban-do-khuon.test.mjs (dòng chụp cây, luật thường trực của đợt 31/10 — sổ d-20261101T021859Z-11), docs/design/vo-va-ia.md, docs/product/tham-chieu.md, PRODUCT-MAP.md, LO-TRINH.html, _acceptance/sua-tren-o/**. Đối chứng đỏ chạy trong cùng lệnh: danh sách giả có thêm apps/web/src/lib/sync/gui.ts thì hàm kiểm trả đúng tệp ấy — thiếu đối chứng đỏ thì exit 1 «thước không phân biệt được»."
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main (git merge-base HEAD origin/main) và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: packages/core/src/pricing/**, packages/core/package.json (một dòng exports, B-10), apps/web/src/app/(app)/inventory/cell-edit/**, inventory/bang-hang.tsx, inventory/cot.ts, apps/web/src/app/(app)/proto/sua-tren-o/**, apps/web/src/lib/sync/ap-tren-may.ts, ap-tren-may.test.ts, dong-bo.ts, react.tsx (tham số tuỳ chọn coSo — giám sát cho chạm B-13, sổ S4-r1), packages/ui-lint/tests/ban-do-khuon.test.mjs (dòng chụp cây, luật thường trực của đợt 31/10 — sổ d-20261101T021859Z-11), docs/design/vo-va-ia.md, docs/product/tham-chieu.md, PRODUCT-MAP.md, LO-TRINH.html, _acceptance/sua-tren-o/**. Đối chứng đỏ chạy trong cùng lệnh: danh sách giả có thêm packages/api/src/listings/store.ts thì hàm kiểm trả đúng tệp ấy — thiếu đối chứng đỏ thì exit 1 «thước không phân biệt được»."
     paths: ["_acceptance/sua-tren-o/thu/ranh-gioi.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

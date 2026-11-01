@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useSuaHang } from "@/lib/sync/react";
+import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
 import { COT_SUA } from "./cot-sua";
@@ -28,7 +28,7 @@ type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
 const NHAN_COT: Record<CotSua, string> = { listPrice: "giá", feeInclusion: "phí", standardStatus: "trạng thái" };
 const PHI: FeeInclusion[] = ["included", "excluded"];
 
-type Phien = { hang: DongBang; cot: CotSua; chuDau?: string; o: { top: number; left: number; width: number; height: number } };
+type Phien = { hang: DongBang; cot: CotSua; chuDau?: string; coSo?: number; o: { top: number; left: number; width: number; height: number } };
 type DaGhi = { id: string; nhan: string; lenh: Lenh };
 type ChoXacNhan = Extract<KetQuaLenh, { ok: true }>;
 
@@ -50,15 +50,19 @@ function moTaThayDoi(hang: DongBang, lenh: Lenh): string {
 
 export function useSuaTrenO() {
   const sua = useSuaHang();
+  const docPhienBan = useDocPhienBan();
   const [phien, setPhien] = useState<Phien | null>(null);
   const daGhi = useRef<DaGhi | null>(null);
 
   const moTrinhSua = useCallback((hang: DongBang, cot: CotId, chuDau?: string) => {
     if (!COT_SUA.has(cot)) return;
+    // Hàng chưa có giá: ô Phí mở thẳng trình sửa Giá — không có phí trơn (AC-4).
+    if (cot === "feeInclusion" && hang.listPrice === null) cot = "listPrice";
     const td = document.querySelector("td[data-cell-focused]");
     const r = td?.getBoundingClientRect();
-    setPhien({ hang, cot: cot as CotSua, chuDau, o: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : { top: 0, left: 0, width: 0, height: 0 } });
-  }, []);
+    // Phiên bản người đang thấy: kho kéo bản mới trong lúc gõ thì lần ghi vào «Cần xem», không ghi đè lặng (AC-9).
+    setPhien({ hang, cot: cot as CotSua, chuDau, coSo: docPhienBan(hang.id), o: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : { top: 0, left: 0, width: 0, height: 0 } });
+  }, [docPhienBan]);
 
   const hoanTac = useCallback(async () => {
     const g = daGhi.current;
@@ -70,9 +74,9 @@ export function useSuaTrenO() {
   }, [sua]);
 
   const ghi = useCallback(
-    async (hang: DongBang, cot: CotSua, kq: ChoXacNhan) => {
+    async (hang: DongBang, cot: CotSua, kq: ChoXacNhan, coSo: number | undefined) => {
       setPhien(null);
-      const ketQua = await sua(hang.id, kq.lenh.type, kq.lenh.payload);
+      const ketQua = await sua(hang.id, kq.lenh.type, kq.lenh.payload, coSo);
       if (!ketQua.ok) {
         toast.error(moTaLoi(ketQua.loi));
         return;
@@ -108,7 +112,7 @@ export function useSuaTrenO() {
             render={<span aria-hidden className="pointer-events-none fixed" style={{ top: phien.o.top, left: phien.o.left, width: phien.o.width, height: phien.o.height }} />}
           />
           <PopoverContent align="start" side="bottom" sideOffset={2} className="w-80 p-3">
-            <TrinhSua phien={phien} onDoiCot={(cot) => setPhien({ ...phien, cot, chuDau: undefined })} onHuy={() => setPhien(null)} onGhi={(kq) => void ghi(phien.hang, phien.cot, kq)} />
+            <TrinhSua phien={phien} onDoiCot={(cot) => setPhien({ ...phien, cot, chuDau: undefined })} onHuy={() => setPhien(null)} onGhi={(kq) => void ghi(phien.hang, phien.cot, kq, phien.coSo)} />
           </PopoverContent>
         </Popover>
       ) : null}
