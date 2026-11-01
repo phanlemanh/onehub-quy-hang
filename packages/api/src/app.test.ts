@@ -74,6 +74,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/leads/{leadId}/resubmit",
     // Hàng 85 (ADR-0021).
     "POST /api/v1/leads/{leadId}/listing",
+    "GET /api/v1/contacts/{contactId}",
+    "PATCH /api/v1/contacts/{contactId}",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

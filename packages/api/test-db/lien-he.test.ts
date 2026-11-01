@@ -304,3 +304,97 @@ test("liên hệ: lên bảng là dữ kiện", async () => {
   const dauZ = (await dong(z.id)).created_at as Date;
   assert.deepEqual(ra.filter((r) => r.lead_id === z2).map((r) => (r.first_created_at as Date).toISOString()), [dauZ.toISOString()]);
 });
+
+// ---- AC-8 ----
+const xem = (san: San, id: string, k: string) => send("GET", `/api/v1/contacts/${id}`, undefined, san.nguoi[k]?.cookie ?? "");
+const sua = (san: San, id: string, k: string, than: unknown) => send("PATCH", `/api/v1/contacts/${id}`, than, san.nguoi[k]?.cookie ?? "");
+const lienHeCuaHang = async (h: string) => (await appPool.query<{ contact_id: string }>("select contact_id from listing_owners where listing_id = $1", [h])).rows[0]!.contact_id;
+
+test("liên hệ: một người nhiều loại", async () => {
+  const s = await sanMoi(MOT);
+  const h = await taoHang(s, "dc1", "A-10.01");
+  await datChu(s, "dc1", h, soMoi(s));
+  const K = await lienHeCuaHang(h);
+  const truoc = [await demLienHe(s), (await lienHe(K)).so];
+  const r = await sua(s, K, "dc1", { contactTypes: ["Buyer", "Seller", "Seller"] });
+  assert.equal(r.status, 200, await r.clone().text());
+  assert.deepEqual([await demLienHe(s), (await lienHe(K)).so], truoc);
+  assert.deepEqual((await lienHe(K)).contact_types, ["Seller", "Buyer"]);
+  const v = (await (await xem(s, K, "dc1")).json()) as Record<string, unknown>;
+  assert.deepEqual(Object.keys(v), ["id", "fullName", "contactTypes", "ownerMemberUserId", "phoneCount", "status", "createdAt"]);
+  assert.deepEqual([v.contactTypes, v.phoneCount, v.status], [["Seller", "Buyer"], 1, "contact"]);
+});
+
+test("liên hệ: ai xem, ai sửa", async () => {
+  const s = await sanMoi(MOT);
+  const b = await sanMoi({ tn: { vai: ["team_lead", "listing_agent"] } });
+  const h = await taoHang(s, "dc1", "A-11.01");
+  await datChu(s, "dc1", h, soMoi(s));
+  const K = await lienHeCuaHang(h);
+  const l = await nhap(s, nam(soMoi(s), "Toà A"));
+  await nhip(new Date(), s);
+  assert.equal((await tra(s, l.id, "dc1")).status, 200);
+  const K0 = (await lienHeCua(l.id))!; // liên hệ đã thôi người giữ
+  const than = { contactTypes: ["Seller", "Buyer"] };
+  // [dòng, sàn, người, liên hệ, mã GET, mã PATCH]
+  const BANG: [string, San, string, string, number, number][] = [
+    ["người giữ", s, "dc1", K, 200, 200],
+    ["trưởng nhóm", s, "tn", K, 200, 200],
+    ["đầu chủ khác", s, "dc2", K, 404, 404],
+    ["telesales", s, "ts", K, 404, 404],
+    ["quản trị", s, "qt", K, 404, 404],
+    ["người sàn khác", b, "tn", K, 404, 404],
+    ["không cookie", s, "khach", K, 401, 401],
+    ["chưa có người giữ × đầu chủ", s, "dc1", K0, 404, 404],
+    ["chưa có người giữ × trưởng nhóm", s, "tn", K0, 200, 200],
+  ];
+  let so = 0;
+  for (const [ten, san, k, id, mGet, mPatch] of BANG) {
+    // Ô bị từ chối gửi thêm loại «Người thuê»: dữ liệu không được đổi dù lối trả gì.
+    const gui = mPatch === 200 ? than : { contactTypes: ["Seller", "Tenant"] };
+    assert.deepEqual([(await xem(san, id, k)).status, (await sua(san, id, k, gui)).status], [mGet, mPatch], `ô «${ten}»`);
+    assert.ok(!(await lienHe(id)).contact_types.includes("Tenant"), `ô «${ten}»: sửa trái phép đã ghi`);
+    so += 2;
+  }
+  assert.equal(so, 18);
+});
+
+test("liên hệ: khuôn sửa loại", async () => {
+  const s = await sanMoi(MOT);
+  const h0 = await taoHang(s, "dc1", "A-12.01");
+  await datChu(s, "dc1", h0, soMoi(s));
+  const K = await lienHeCuaHang(h0);
+  for (const [ten, than] of [["khoá lạ", { contactTypes: ["Seller"], x: 1 }], ["loại ngoài thực đơn", { contactTypes: ["Lead"] }], ["mảng rỗng", { contactTypes: [] }]] as const) {
+    const r = await sua(s, K, "dc1", than);
+    assert.deepEqual([r.status, ((await r.json()) as { error: string }).error], [400, "invalid-payload"], ten);
+  }
+  // Ba kiểu liên hệ mang Seller + Landlord: còn hàng · còn lead mở · không còn liên kết (lead trả lại).
+  const dung = async (kieu: string) => {
+    const so = soMoi(s);
+    if (kieu === "còn hàng") {
+      const h = await taoHang(s, "dc1", `A-12.${s.so}`);
+      await datChu(s, "dc1", h, so);
+      const c = await lienHeCuaHang(h);
+      assert.equal((await sua(s, c, "tn", { contactTypes: ["Seller", "Landlord"] })).status, 200);
+      return c;
+    }
+    const l = await nhap(s, { ...nam(so, "Toà A"), need: "sale_or_lease" });
+    await nhip(new Date(), s);
+    if (kieu === "không còn liên kết") assert.equal((await tra(s, l.id, "dc1")).status, 200);
+    return (await lienHeCua(l.id))!;
+  };
+  // [kiểu, loại sau sửa, mã mong]
+  const BANG: [string, string[], number][] = [];
+  for (const kieu of ["còn hàng", "còn lead mở", "không còn liên kết"]) {
+    BANG.push([kieu, ["Landlord", "Buyer"], 200], [kieu, ["Seller", "Buyer"], 200], [kieu, ["Buyer"], kieu === "không còn liên kết" ? 200 : 400]);
+  }
+  let so = 0;
+  for (const [kieu, loai, ma] of BANG) {
+    const c = await dung(kieu);
+    const r = await sua(s, c, "tn", { contactTypes: loai });
+    const e = ma === 400 ? ((await r.json()) as { error: string }).error : null;
+    assert.deepEqual([r.status, e], [ma, ma === 400 ? "owner-type-required" : null], `ô «${kieu} × ${loai.join("+")}»`);
+    so++;
+  }
+  assert.equal(so, 9);
+});

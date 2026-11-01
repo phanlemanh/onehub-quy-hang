@@ -13,6 +13,7 @@ import { registerOwnerRoutes } from "./owners/routes";
 import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
+import { registerContactRoutes } from "./contacts/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerJobRoutes } from "./jobs/routes";
@@ -154,6 +155,7 @@ export function createApi(deps: ApiDeps) {
   registerCatalogReadAll(api, deps);
   registerLeadRoutes(api, deps);
   registerRoutingRoutes(api, deps);
+  registerContactRoutes(api, deps);
   registerJobRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
