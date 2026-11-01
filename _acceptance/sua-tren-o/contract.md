@@ -73,7 +73,7 @@ một lần xác nhận để số ấy đếm được.
 
 Quét không gian AC theo trục (morphological, preset entity-feature, rút gọn):
 
-- Trục A — cột sửa: Giá · Phí · Trạng thái · (13 cột khoá) [thước CE: luật 6, `cot.ts`]
+- Trục A — cột sửa: Giá · Phí · Trạng thái · (16 cột khoá) [thước CE: luật 6, `cot.ts`]
 - Trục B — loại thay đổi: tăng/giảm giá trong ngưỡng · vượt ngưỡng · đổi điều kiện phí · đặt giá lần đầu · từng nấc chuyển
   trạng thái · nấc cần thêm thông tin (Đã bán, Ngừng hẳn) · nấc thiếu điều kiện (Đang bán) [thước CE: luật 7, ADR-0008]
 - Trục C — chữ người gõ: đúng · mơ hồ · sai · biên [thước CE: bảng chữ viết trước của AC-1]

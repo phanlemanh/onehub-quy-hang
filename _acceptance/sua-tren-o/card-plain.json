@@ -1,0 +1,40 @@
+{
+  "feature_plain": "Đầu chủ sửa giá, điều kiện phí và trạng thái ngay trên ô của Bảng hàng: máy đọc lại «Hiểu là…», hỏi lại khi giá đổi mạnh, mỗi lần sửa tính là vừa xác nhận với chủ nhà và hoàn tác được.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiểu giá gõ theo cách nói của nghề — «4,65 tỷ», «4ty65», «950tr», số đủ — và nói «chưa hiểu» thay vì đoán khi chữ mơ hồ."},
+    {"id": "AC-2", "p": "Sẽ cho sửa ô Giá ngay trên bảng: gõ giá, thấy «Hiểu là: 4,8 tỷ, không bao phí», Enter là ghi, không có nút Lưu."},
+    {"id": "AC-3", "p": "Sẽ báo ngay dưới ô khi chưa hiểu chữ đã gõ, và không ghi gì cho tới khi gõ lại."},
+    {"id": "AC-5", "p": "Sẽ hỏi lại tại ô, nêu giá cũ → giá mới và phần trăm, khi giá đổi quá 20% hoặc khi đổi điều kiện phí."},
+    {"id": "AC-6", "p": "Sẽ chỉ đưa ra các nấc trạng thái được phép đi tiếp; Đã bán hỏi giá chốt và ngày, Ngừng hẳn hỏi lý do, thiếu điều kiện lên Đang bán thì nói thiếu gì."},
+    {"id": "AC-7", "p": "Sẽ tính mỗi lần sửa giá hay trạng thái là vừa xác nhận với chủ nhà — cột Xác nhận thành «Hôm nay»."},
+    {"id": "AC-8", "p": "Sẽ cho hoàn tác lần sửa vừa rồi (nút trên thông báo hay Ctrl/Cmd+Z); lần sửa không hoàn tác được thì nói trước khi ghi."},
+    {"id": "AC-9", "p": "Sẽ chỉ mở sửa ở ba cột Giá, Phí, Trạng thái trên máy tính; mất mạng vẫn sửa được; hai người cùng sửa thì đưa vào «Cần xem», không ghi đè lặng."},
+    {"id": "AC-10", "p": "Sẽ giữ kho xanh và tài liệu thôi ghi Bảng hàng «chỉ đọc»; không tệp nào ngoài phạm vi đã duyệt đổi."}
+  ],
+  "wont_do": [
+    {"id": "AC-4", "p": "Chặn mọi đường ghi giá thiếu điều kiện phí — sửa ô Phí giữ giá cũ, hàng chưa có giá thì bắt chọn phí trước."},
+    {"id": "OOS-1", "p": "KHÔNG làm sửa hàng loạt, dán nhiều ô, kéo điền — để hàng 16."},
+    {"id": "OOS-2", "p": "KHÔNG mở sửa trên ô cho Nội thất, Pháp lý, Tài chính, Tình trạng sử dụng — để hàng sau."},
+    {"id": "OOS-3", "p": "KHÔNG có nút tắt «tính là xác nhận» cho lần sửa thường — mọi lần sửa đều tính."},
+    {"id": "OOS-4", "p": "KHÔNG cho sàn chỉnh ngưỡng 20% ở bản này — hàng cấu hình theo sàn sẽ đọc con số này."},
+    {"id": "OOS-5", "p": "KHÔNG tính giá về tay hay tỉ lệ bao phí, KHÔNG làm màn sửa nhanh trên điện thoại."}
+  ],
+  "scope_plain": "Những phần cắt hay hoãn ở vòng này:",
+  "coverage_plain": [
+    {"i": 0, "p": "Cột: ba cột sửa được, mười sáu cột khoá — đủ khi bài nhìn thử từng cột trong 19 cột (AC-9)."},
+    {"i": 1, "p": "Loại thay đổi: trong ngưỡng, vượt ngưỡng, đổi phí, đặt giá lần đầu, từng nấc trạng thái — đủ khi mỗi loại có một ca (AC-2, AC-4, AC-5, AC-6)."},
+    {"i": 2, "p": "Chữ người gõ: đúng, mơ hồ, sai, biên — đủ khi bảng chữ viết trước ra đúng số hay «chưa hiểu» (AC-1, AC-3)."},
+    {"i": 3, "p": "Sau khi ghi: hoàn tác được, không hoàn tác được, xác nhận, mất mạng, đụng nhau — đủ khi mỗi vế có bài đo (AC-7, AC-8, AC-9)."},
+    {"i": 4, "p": "Khổ màn: máy tính sửa được, điện thoại không (AC-9)."},
+    {"i": 5, "p": "Phần lõi phủ các trục trên bằng mười tiêu chí."},
+    {"i": 6, "p": "Để sau: sửa bốn phần chữ, nút tắt xác nhận, sàn chỉnh ngưỡng, màn sửa nhanh điện thoại."},
+    {"i": 7, "p": "Không bao giờ: sửa thuộc tính căn trên ô, ghi giá thiếu điều kiện phí."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Chưa ai quyết hoàn tác có tính là vừa gọi chủ nhà không — sửa nhầm rồi hoàn tác sẽ làm căn trông tươi giả. Đưa lên thành Hỏi-2."},
+    {"i": 1, "p": "Việc «đổi phí luôn hỏi lại» bị ghi là máy quyết theo luật 12, nhưng luật 12 không quyết điều đó. Đưa lên thành Hỏi-1."},
+    {"i": 2, "p": "Các bài nhìn chọn hàng theo thứ tự có thể giẫm lên nhau khi chạy song song. Đã sửa: mỗi bài chốt mã căn riêng."},
+    {"i": 3, "p": "Chưa có phép đo chặn việc sửa lan ra ngoài phạm vi đã duyệt. Đã sửa: thêm bài máy so tệp đổi với danh sách cho phép."},
+    {"i": 4, "p": "Số cột khoá ghi lệch (13 và 16) và danh sách cột chưa viết trước. Đã sửa: thống nhất 16, liệt đủ 19 cột, thêm bài kiểm tập cột sửa được."}
+  ]
+}
