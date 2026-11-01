@@ -5,7 +5,7 @@ slug: vet-chon-khoi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [docs, lint]
-status: machine-cleared
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-vet-chon-khoi-design.md
 approved_by:
 approved_at:
@@ -110,3 +110,9 @@ Quét Zwicky (preset test-matrix). Chân sản phẩm: `[SUY-TỪ-REPO: docs/adr
 - Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Cột Archetype chỉ bị bắt lỗi khi trống; một giá trị bịa nhưng trùng chữ nào đó trong tài liệu vẫn qua mặt kiểm chuẩn. — `packages/ui-lint/kiem-chuan.mjs`
 - Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Chạy kiểm tra trước 7 giờ sáng giờ Việt Nam thì dòng nhắc hạn xem lại của đúng hôm nay chưa hiện, sau 7 giờ mới hiện. — `packages/ui-lint/kiem-chuan.mjs`
 - Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bảng ghi điều đã tra trên kho khối giao diện được đối chiếu với một tệp kết quả do người gõ lại, không phải bản chụp nguyên văn từ công cụ tra. Máy không chứng minh được lượt tra đã thật sự chạy. — `packages/ui-lint/tests/kiem-chuan.test.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Cột Archetype chỉ bị bắt khi trống; một tên sai nhưng trùng chữ có trong tài liệu vỏ và IA vẫn qua.
+  - Ngoài-2: Chạy kiểm tra trước 7 giờ sáng giờ Việt Nam thì cảnh báo hạn xem lại của đúng hôm nay hiện trễ vài giờ.
+  - Ngoài-3: Cùng giới hạn với Ngoài-1 — Archetype được so bằng tìm chữ trong cả tài liệu, không so với danh sách tên.
+  - Ngoài-4: Cùng giới hạn với Ngoài-2 — ngày mặc định của kiểm chuẩn lấy theo giờ UTC.
+  - Ngoài-5: Tệp kết quả tra ReUI là bản chép lại, không phải bản chụp nguyên văn của công cụ tra, nên chưa chứng minh lần tra đã chạy.
