@@ -99,8 +99,8 @@ function khoGia() {
 }
 const goc = (companyId: string, id: string) => `/storage/v1/s3/unit-photos/${companyId}/${id}/original`;
 type Link = { truc_tiep: boolean; photoId?: string; url?: string };
-async function xinLink(a: ReturnType<typeof createApi>, cookie: string, o: { byteSize: number; contentType?: string }) {
-  return goi(a, "POST", "/api/v1/units/photos/upload-url", { toa: TOA, ma: MA, contentType: o.contentType ?? "image/jpeg", byteSize: o.byteSize }, cookie);
+async function xinLink(a: ReturnType<typeof createApi>, cookie: string, o: { byteSize: number; contentType?: string; ma?: string }) {
+  return goi(a, "POST", "/api/v1/units/photos/upload-url", { toa: TOA, ma: o.ma ?? MA, contentType: o.contentType ?? "image/jpeg", byteSize: o.byteSize }, cookie);
 }
 function formXacNhan(photoId: string) {
   const f = new FormData();
@@ -155,8 +155,10 @@ test("E2 kiểm bản gốc trên kho: sai loại, quá cỡ, không có, mã s�
     ["quá cỡ", JPEG(10_485_761), 10_000_000, 400, "photo-too-large"],
     ["không có", null, 5000, 400, "photo-not-image"],
   ];
+  const saiLoai: string[] = [];
   for (const [ten, nd, khai, ma, loi] of ca) {
     const id = await tu(khai, nd);
+    if (nd) saiLoai.push(goc(s.companyId, id));
     const r = await goi(k.app, "POST", "/api/v1/units/photos", formXacNhan(id), s.dauChu.cookie);
     assert.deepEqual([r.status, await r.json()], [ma, { error: loi }], `ca ${ten}`);
     assert.deepEqual(await demDong(s.companyId), truoc, `ca ${ten}: còn dòng`);
@@ -175,15 +177,29 @@ test("E2 kiểm bản gốc trên kho: sai loại, quá cỡ, không có, mã s�
   r = await goi(k.app, "POST", "/api/v1/units/photos", formXacNhan(ok), s.dauChu.cookie);
   assert.deepEqual([r.status, await r.json()], [409, { error: "photo-already-confirmed" }]);
   assert.deepEqual(await demDong(s.companyId), sau, "xác nhận lần hai đổi số dòng");
+  // Hai lần xác nhận song song cùng mã: một lần ghi, lần kia 409 — không vỡ khoá chính.
+  const song = await tu(5000, JPEG(5000));
+  const hai = await Promise.all([1, 2].map(() => goi(k.app, "POST", "/api/v1/units/photos", formXacNhan(song), s.dauChu.cookie)));
+  assert.deepEqual(hai.map((x) => x.status).sort(), [201, 409], "xác nhận song song");
+  // Mã sai khuôn uuid: 400, không chạm cơ sở dữ liệu hay kho.
+  r = await goi(k.app, "POST", "/api/v1/units/photos", formXacNhan("-".repeat(36)), s.dauChu.cookie);
+  assert.deepEqual([r.status, await r.json()], [400, { error: "invalid-payload" }]);
   // Khai sai ở bước xin link, và người không được thêm ảnh: kho không nhận yêu cầu nào.
   const truocKho = k.nhan.length;
   assert.deepEqual([(r = await xinLink(k.app, s.dauChu.cookie, { byteSize: 10_485_761 })).status, await r.json()], [400, { error: "photo-too-large" }]);
   assert.deepEqual([(r = await xinLink(k.app, s.dauChu.cookie, { byteSize: 100, contentType: "text/plain" })).status, await r.json()], [400, { error: "photo-not-image" }]);
   assert.equal((await xinLink(k.app, s.dauKhach.cookie, { byteSize: 5000 })).status, 403);
+  // Đầu chủ sàn B xin link cho căn chỉ sàn A có → 403.
+  const MA_A = "A-0602";
+  assert.equal((await goi(app, "POST", "/api/v1/listings", { buildingName: TOA, unitNumber: MA_A }, s.dauChu.cookie)).status, 201);
+  assert.equal((await xinLink(k.app, b.dauChu.cookie, { byteSize: 5000, ma: MA_A })).status, 403, "đầu chủ sàn khác xin link");
+  // Đầu chủ sàn B khai cookie sàn A (không là thành viên A): phiên vẫn ở sàn B — link nằm dưới tiền tố B, không bao giờ A.
+  const bVaoA = b.dauChu.cookie.replace(`qh_san=${b.companyId}`, `qh_san=${s.companyId}`);
+  const lba = (await (await xinLink(k.app, bVaoA, { byteSize: 5000 })).json()) as Link;
+  assert.ok(new URL(lba.url!).pathname.startsWith(`/storage/v1/s3/unit-photos/${b.companyId}/`), `link của B dưới tiền tố khác: ${lba.url}`);
   assert.equal(k.nhan.length, truocKho, "kho nhận yêu cầu khi xin link bị từ chối");
-  const xoa = k.nhan.filter((y) => y.method === "DELETE");
-  assert.ok(xoa.length >= 2);
-  for (const y of xoa) assert.ok(y.path.startsWith(`/storage/v1/s3/unit-photos/${s.companyId}/`), `DELETE ngoài tiền tố sàn: ${y.path}`);
+  const xoa = k.nhan.filter((y) => y.method === "DELETE").map((y) => y.path);
+  assert.deepEqual(xoa, saiLoai, "DELETE đúng hai đối tượng sai, không gì khác");
 });
 
 test("E3 kho Postgres: xin link trả truc_tiep false, đường cũ vẫn chạy", async () => {

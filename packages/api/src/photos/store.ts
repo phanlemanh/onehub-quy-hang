@@ -78,7 +78,7 @@ export async function addPhoto(tx: pg.PoolClient, kho: KhoAnh, companyId: string
     goc = { dau: t.original.subarray(0, 64), size: t.original.length, bytes: t.original };
   } else {
     // Bản gốc đã ở kho dưới tiền tố mã sàn của phiên — mã của sàn khác hay mã bịa không có ở đó.
-    if (!kho.taiThang || !/^[0-9a-f-]{36}$/i.test(t.photoId)) return ve(API_ERRORS.invalidPayload);
+    if (!kho.taiThang || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t.photoId)) return ve(API_ERRORS.invalidPayload);
     if ((await tx.query("select 1 from unit_photos where id = $1", [t.photoId])).rowCount) return ve(API_ERRORS.photoAlreadyConfirmed);
     const tren = await kho.taiThang.kiemBanGoc(companyId, t.photoId);
     if (!tren) return ve(API_ERRORS.photoNotImage);
@@ -96,10 +96,12 @@ export async function addPhoto(tx: pg.PoolClient, kho: KhoAnh, companyId: string
   )).rows[0]!.n;
   const { rows } = await tx.query<Dong>(
     `insert into unit_photos (id, company_id, building_name, unit_number, compartment, display_order, taken_at, content_type, byte_size, width, height, added_by)
-     values ($11, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, app.current_user_id()) returning ${COT}`,
+     values ($11, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, app.current_user_id()) on conflict (id) do nothing returning ${COT}`,
     [companyId, t.toa, t.ma, t.ngan, thuTu, t.takenAt, kq.type, goc.size, t.width, t.height, id],
   );
-  const d = rows[0]!;
+  // Mã đã có dòng mà phiên không đọc được (ảnh nội bộ căn khác) hay hai lần xác nhận song song: từ chối, không ghi.
+  const d = rows[0];
+  if (!d) return ve(API_ERRORS.photoAlreadyConfirmed);
   if (goc.bytes) await kho.ghi(tx, companyId, d.id, "original", goc.bytes, kq.type);
   await kho.ghi(tx, companyId, d.id, "thumb", t.thumb, loaiNhe);
   await suKien(tx, d.id, "added", { compartment: t.ngan });
