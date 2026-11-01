@@ -146,6 +146,9 @@ const toMyRecord = (r: MyLeadRow, boardAt: Date | null): MyLeadRecord => ({
   resubmittedLeadId: r.resubmitted_lead_id,
 });
 
+/** Lấy khoá đọc bảng chủ nhà trước bảng lead — cùng thứ tự với đường nhập lead và hàm lên bảng; đảo thứ tự là khoá chéo. */
+const khoaTheoThuTu = (tx: pg.PoolClient) => tx.query("select 1 from app.lead_board_dates('{}'::uuid[])");
+
 /** Nối mốc lên bảng — hàm của cơ sở dữ liệu chỉ trả mốc cho lead người gọi đã nhập. */
 async function voiMocLenBang(tx: pg.PoolClient, rows: MyLeadRow[]): Promise<MyLeadRecord[]> {
   if (!rows.length) return [];
@@ -156,6 +159,7 @@ async function voiMocLenBang(tx: pg.PoolClient, rows: MyLeadRow[]): Promise<MyLe
 
 /** Lead người gọi đã nhập ở sàn đang làm, mới nhất trước. */
 export async function listMyLeads(tx: pg.PoolClient): Promise<MyLeadRecord[]> {
+  await khoaTheoThuTu(tx);
   const { rows } = await tx.query<MyLeadRow>(
     `select ${COT_NAC} from leads where company_id = app.current_company_id() and created_by = app.current_user_id()
      order by created_at desc, id desc`,
@@ -202,6 +206,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
   }
   const la = Object.keys(body).filter((k) => k !== "ownerPhone");
   if (la.length) return { error: API_ERRORS.invalidPayload, details: la.map((path) => ({ path, reason: "khoá lạ" })) };
+  await khoaTheoThuTu(tx);
   const { rows } = await tx.query<MyLeadRow>(
     `select ${COT_NAC} from leads where company_id = app.current_company_id() and id = $1 and created_by = app.current_user_id()`,
     [id],

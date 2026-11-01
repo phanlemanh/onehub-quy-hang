@@ -29,21 +29,20 @@ grant select (returned_at, returned_by, resubmitted_at, resubmitted_lead_id) on 
 create or replace function app.lead_board_at_all(p_company uuid) returns table (lead_id uuid, board_at timestamptz)
   language sql stable security definer set search_path = ''
   as $$
-    select l.id, b.board_at
-    from public.leads l
-    cross join lateral (
-      select min(e.occurred_at) as board_at
-      from public.listing_owners o
-      join public.listing_events e on e.company_id = o.company_id and e.listing_id = o.listing_id
-      where o.company_id = l.company_id and o.owner_phone_hash = l.owner_phone_hash
-        and e.type = 'status_changed' and e.payload ->> 'to' = 'Active' and e.occurred_at >= l.created_at
-        and (select a.user_id from public.listing_agent_assignments a
-             where a.company_id = o.company_id and a.listing_id = o.listing_id
-             order by a.seq desc limit 1) = l.matched_agent_user_id
-    ) b
-    where l.company_id = p_company and l.matched_agent_user_id is not null
-      and l.outcome in ('new', 'owner_has_agent') and l.discarded_at is null and l.returned_at is null
-      and b.board_at is not null
+    -- Đọc bảng chủ nhà trước bảng lead: cùng thứ tự khoá với đường nhập lead (kiểm trùng) và với lần đổi ràng buộc hai bảng
+    -- ở migration — đảo thứ tự là khoá chéo.
+    select l.id, min(e.occurred_at)
+    from public.listing_owners o
+    join public.listing_events e on e.company_id = o.company_id and e.listing_id = o.listing_id
+    join public.leads l on l.company_id = o.company_id and l.owner_phone_hash = o.owner_phone_hash
+    where o.company_id = p_company
+      and e.type = 'status_changed' and e.payload ->> 'to' = 'Active' and e.occurred_at >= l.created_at
+      and l.matched_agent_user_id is not null and l.outcome in ('new', 'owner_has_agent')
+      and l.discarded_at is null and l.returned_at is null
+      and (select a.user_id from public.listing_agent_assignments a
+           where a.company_id = o.company_id and a.listing_id = o.listing_id
+           order by a.seq desc limit 1) = l.matched_agent_user_id
+    group by l.id
   $$;
 revoke all on function app.lead_board_at_all(uuid) from public;
 
@@ -68,6 +67,8 @@ create or replace function app.return_lead(p_lead uuid) returns void
   declare
     v public.leads%rowtype;
   begin
+    -- Khoá đọc bảng chủ nhà trước khi khoá dòng lead (thứ tự khoá như app.lead_board_at_all).
+    perform 1 from public.listing_owners where false;
     select * into v from public.leads
       where company_id = app.current_company_id() and id = p_lead
         and matched_agent_user_id = app.current_user_id() and outcome in ('new', 'owner_has_agent') and discarded_at is null
