@@ -5,7 +5,7 @@ slug: cot-ho-so-can
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-cot-ho-so-can-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -105,3 +105,12 @@ Thước CE: mỗi ô (B × C) có ít nhất một ca trong evals [CE chưa ki�
 - Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi mở căn bằng đường link chép từ nơi khác, hoặc chọn toà khi mã căn trùng, hồ sơ vẫn mở đúng nhưng không dòng nào trong bảng được tô sáng. Đầu chủ khó nhận ra đang xem căn nào trong bảng. — `apps/web/src/app/(app)/units/ho-so/bang-co-ho-so.tsx`
 - Ngoài-7 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm cho lời báo sai thông tin căn chưa chứng minh được là sẽ bắt khi số điện thoại chủ nhà lọt vào. Hiện lời báo không chứa thông tin chủ nhà, nhưng nếu sau này có người sửa nhầm thì bài kiểm có thể không kêu. — `apps/web/src/app/(app)/units/ho-so/bao-sai.test.ts`
 - Ngoài-8 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm luật giao diện tự đếm danh sách khối do chính nó gõ, nên khi thêm khối mới có thể không ai nhắc kiểm. Tên ca trong hồ sơ nghiệm thu cũ cũng lệch với bài kiểm thật, làm người chấm khó đối chiếu. — `packages/ui-lint/tests/kiem-chuan.test.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Cmd/Ctrl-bấm lần rao, toà hay nút Đóng không mở thẻ mới, chỉ đổi trong thẻ đang xem.
+  - Ngoài-2: Bấm «Thử lại» lịch sử mà vẫn lỗi thì màn không báo gì thêm.
+  - Ngoài-3: Không mở được lần rao, toà hay nút Đóng ở thẻ khác để so sánh hay chép link.
+  - Ngoài-4: Bài kiểm của bộ quét giao diện kiểm kém hơn một khối đã chuyển thể.
+  - Ngoài-5: Bài kiểm của bộ quét chỉ thử hai trong ba khối đã chuyển thể.
+  - Ngoài-6: Mở căn bằng link thiếu lần rao thì hồ sơ đúng nhưng dòng trong bảng không được tô.
+  - Ngoài-7: Bài kiểm lời báo sai chưa chứng được sẽ bắt khi số chủ nhà lọt vào.
+  - Ngoài-8: Bài kiểm luật giao diện tự đếm danh sách do chính nó gõ; tên ca trong hồ sơ cũ lệch bài kiểm thật.
