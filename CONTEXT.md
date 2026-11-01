@@ -33,6 +33,11 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Cách chia | `routing_strategy` | Cách sàn chọn người nhận lead không trùng, từ thực đơn: theo vùng lần lượt, lần lượt toàn sàn, theo vùng ít lead đang mở, kho chung, trưởng nhóm chia tay | «Luật chia» |
 | Kho chung | `open_pool` | Cách chia để lead chờ, đầu chủ phụ trách toà tự bấm nhận | — |
 | Lead đang mở | `open_leads` | Lead đã về một đầu chủ, chưa bỏ, chưa ghi gọi lần đầu — thước đo tải khi chia | — |
+| Lead đã nhập | `GET /api/v1/leads` · `myLeadView` | Lead một người đã nhập, mới nhất trước, kèm nấc và tên đầu chủ — không số chủ, không hàng | — |
+| Nấc của lead | `LeadStage` | Bốn nấc Đã gửi `sent` → Đã nhận `accepted` → Đã gọi `called` → Lên bảng `on_board`; trạng thái phụ Trả lại `returned`, Đã gửi lại `resubmitted`, Tin bổ sung `supplement`, Đã bỏ `discarded`; «Chờ chia» là Đã gửi chưa có người | — |
+| Lên bảng | `board_at` | Lúc hàng của đầu chủ lead, chủ nhà cùng dấu vết số, chuyển Sẵn sàng bán sau lúc nhập lead | «Duyệt» |
+| Trả lại | `returned_at` | Đầu chủ báo số không liên lạc được; lead rời việc của đầu chủ | «Huỷ lead» |
+| Gửi lại | `resubmitted_lead_id` | «Sửa số và gửi lại»: lead mới với số mới, đi như lead mới; lead cũ trỏ tới nó | — |
 | Lời báo | `lead_alert` | Báo cho người đọc báo của sàn: chưa chia được, quá hạn nhận, quá hạn gọi | «Cảnh báo» |
 | Cấu hình của sàn | `company_settings` | Lựa chọn và con số sàn chỉnh được, mỗi khoá một dòng; khoá vắng là mặc định | «Cài đặt» cho dữ liệu |
 | Sự kiện của hàng | `listing_event` | Một lần thay đổi của hàng: tạo, đổi phần lần rao, đổi giá, đổi trạng thái, xác nhận với chủ nhà; chỉ thêm, ghi người và vai lúc làm (ADR-0008) | — |
