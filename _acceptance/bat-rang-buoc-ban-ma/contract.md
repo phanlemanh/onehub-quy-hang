@@ -5,7 +5,7 @@ slug: bat-rang-buoc-ban-ma
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: docs/superpowers/specs/2026-11-01-bat-rang-buoc-ban-ma-design.md
@@ -78,3 +78,5 @@ VALIDATE CONSTRAINT]` (chỉ chủ bảng, quét dòng cũ, khoá SHARE UPDATE E
 - Tệp ngoài `migrations/` mà hàng chạm: `packages/db/scripts/migrate.mjs` (in notice), `packages/db/tests/bat-rang-buoc.test.mjs`,
   `packages/api/test-db/bat-rang-buoc-migrate.test.ts`, ADR-0013, Tham chiếu §12.
 - Hỏi-1 (ca gỡ và dựng ràng buộc có chạy trên bản thật) và Hỏi-2 (bản thật còn số rõ có được deploy) ở thiết kế §Hỏi.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Bài kiểm lời nhắc của migration chưa chứng minh lời nhắc luôn mang đúng tên tệp 013 phát ra nó; nội dung lời nhắc và việc bật ràng buộc vẫn được đo đúng.

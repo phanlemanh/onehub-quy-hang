@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: bat-rang-buoc-ban-ma
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: d987a9d532a3386a13eb91f64ab0e41225e032cf
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: bat-rang-buoc-ban-ma
@@ -84,7 +84,7 @@ human_signoff:
     - domain-correctness: PASS — Bảng sạch thì 013 tự bật khi deploy. Bảng còn số rõ thì 013 bỏ qua và phải chạy ma-hoa-lai.ts, lệnh này tự bật. Lời nhắc in ở đầu ra npm run db:migrate, tức log job deploy. Dòng 01/11 nằm trong §12, ngay trước «## 13», và trỏ tệp 013.
     - operational-feasibility: PASS — Mục «Bật hẳn ràng buộc khi deploy» của ADR-0013 nêu đủ ba ý đầu; lời nhắc in ở đầu ra npm run db:migrate, tức log job deploy; dòng 01/11 ở §12 (dòng 335) trỏ đúng tệp 013.
     - spec-alignment: PASS — ADR-0013 nêu đủ ba ý; Tham chiếu §12 có dòng 01/11 trỏ tới packages/db/migrations/013_bat_rang_buoc_ban_ma.sql và tới ADR-0013.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-01 — Đạt
 
 ### Lệnh suite (hồi quy)
 
