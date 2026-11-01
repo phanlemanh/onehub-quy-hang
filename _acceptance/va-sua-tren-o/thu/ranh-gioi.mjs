@@ -13,6 +13,8 @@ const CHO_PHEP = [
   /^docs\/plan\/lo-trinh\.json$/,
   /^LO-TRINH\.html$/,
   /^PRODUCT-MAP\.md$/,
+  // Dòng §12 của hàng trong Tham chiếu — luật thường trực của giám sát (B-19).
+  /^docs\/product\/tham-chieu\.md$/,
 ];
 const ngoai = (tep) => tep.filter((t) => !CHO_PHEP.some((r) => r.test(t)));
 
