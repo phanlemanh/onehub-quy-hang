@@ -1,0 +1,1 @@
+Driver: CDP tu viet (Chrome headless rieng, cdp.mjs cua ho so bang-hang-kieu-sheet) - khong doc duoc network/console; networkObserved=n-a (driver). Luu y: phien cham khac chay 'pkill -f qh-b-chrome-' lam chet Chrome cua lan chay 2 va 3 (phai chay lai).
