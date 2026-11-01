@@ -93,3 +93,10 @@ và tên các kết quả trả về theo thứ tự. Bài kiểm đối chiếu
 - solution-users-8
 - dialog-8
 - solution-users-2
+
+## `image upload dropzone gallery reorder`
+- c-sortable-7
+- c-file-upload-4
+- c-file-upload-7
+- c-file-upload-10
+- schedule-6
