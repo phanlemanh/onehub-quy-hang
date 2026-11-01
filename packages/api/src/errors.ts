@@ -53,6 +53,11 @@ export const API_ERRORS = {
   leadHasListing: { code: "lead-has-listing", status: 409 },
   leadNotListable: { code: "lead-not-listable", status: 409 },
   ownerTypeRequired: { code: "owner-type-required", status: 400 },
+  // Ảnh căn ba ngăn (ADR-0014).
+  photoNotImage: { code: "photo-not-image", status: 400 },
+  photoTooLarge: { code: "photo-too-large", status: 400 },
+  photoInternalNoSample: { code: "photo-internal-no-sample", status: 400 },
+  photoStorageMissing: { code: "photo-storage-missing", status: 503 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

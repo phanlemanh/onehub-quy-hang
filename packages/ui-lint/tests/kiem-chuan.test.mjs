@@ -182,9 +182,9 @@ describe("vết chọn khối — Chỗ hở", () => {
   const bangThat = () => readFileSync(join(ROOT, VVI), "utf8").split("## 3. Chỗ hở")[1].split(/\n## /)[0];
   const dongThat = () => bangThat().split("\n").filter((l) => /^\| /.test(l)).slice(2).map((l) => l.trim().slice(1, -1).split("|").map((o) => o.trim()));
 
-  it("chỗ hở: cây thật đủ năm ô cho 13 dòng", () => {
+  it("chỗ hở: cây thật đủ năm ô cho 14 dòng", () => {
     const dong = dongThat();
-    assert.equal(dong.length, 13);
+    assert.equal(dong.length, 14);
     for (const o of dong) {
       assert.equal(o.length, 5, o[0]);
       for (const c of o) assert.ok(c !== "" && !/^[—–-]$/.test(c), `${o[0]}: ô rỗng`);

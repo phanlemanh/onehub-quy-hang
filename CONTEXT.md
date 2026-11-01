@@ -58,6 +58,8 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Tôi | `me` | Tab tài khoản trên điện thoại | — |
 | Gõ mã căn | `unitJump` | Ô mở thẳng hồ sơ căn hoặc nhảy tới nhà bằng bàn phím; chỉ vai có Bảng hàng | — |
 | Hồ sơ căn | `/units/<mã>` | Toàn bộ thông tin của một căn; trên máy tính mở thành cột phải cạnh Bảng hàng | — |
+| Ảnh căn | `unit_photo` *(RESO `Media`)* | Ảnh thuộc căn của sàn (toà + mã), không thuộc lần rao; lần rao chọn ảnh hiện (luật 27, ADR-0014) | «Ảnh tin» |
+| Ngăn ảnh: Gửi được · Tự có từ mã · Nội bộ | `compartment`: `shareable` · danh mục · `internal` *(RESO `Permission`, `MediaCategory`)* | Ba chỗ xếp ảnh của căn; Nội bộ (sổ, hợp đồng, giấy tờ) là lớp `source`, chỉ đầu chủ giữ căn và trưởng nhóm xem, không ra ngoài sàn, không lưu trên máy | «Ảnh riêng» |
 | Kho trên máy | `LocalStore` | Bản hàng, lịch sử căn đã mở và thay đổi chờ gửi giữ trên thiết bị của một người, theo từng sàn; đăng xuất là xoá | «Bộ nhớ đệm» |
 | Thay đổi chờ gửi | `PendingOp` | Một lần sửa đã ghi trên máy, chưa được máy chủ nhận | «Bản nháp» |
 | Cần xem | `needsReview` | Căn có thay đổi chờ mà máy chủ không nhận (hai người cùng sửa, căn đã cọc/đã bán, bị từ chối); người chọn lối | «Xung đột» trên màn |

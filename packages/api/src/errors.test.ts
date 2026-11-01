@@ -55,8 +55,13 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     leadHasListing: ["lead-has-listing", 409],
     leadNotListable: ["lead-not-listable", 409],
     ownerTypeRequired: ["owner-type-required", 400],
+    // Hàng 18 (ADR-0014).
+    photoNotImage: ["photo-not-image", 400],
+    photoTooLarge: ["photo-too-large", 400],
+    photoInternalNoSample: ["photo-internal-no-sample", 400],
+    photoStorageMissing: ["photo-storage-missing", 503],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 43);
+  assert.equal(Object.keys(API_ERRORS).length, 47);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

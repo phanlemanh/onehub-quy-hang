@@ -2,12 +2,12 @@
 nhom: ho-so-can
 doi_tuong: [can, lan-rao, lich-su-hang]
 khuon: { ten: KhungHoSoCan, nhap: "@/app/(app)/units/ho-so/khung" }
-nhan_dien: ["apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx"]
+nhan_dien: ["apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx"]
 mau_dang_chay: { tep: "apps/web/src/app/(app)/units/[code]/page.tsx", duong: "/units/A-01.02", trang_thai: [mac-dinh, nhieu-can, khong-co] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card, Placeholder]
 ngoai_le: []
-luat: [KH-hs-mot-khung, KH-hs-tren-may, KH-hs-khoa-thuoc-tinh]
+luat: [KH-hs-mot-khung, KH-hs-tren-may, KH-hs-khoa-thuoc-tinh, KH-hs-anh-noi-bo]
 ---
 # Hồ sơ căn
 
@@ -26,4 +26,8 @@ Bằng chứng.
   trong Frame của Bảng hàng (`KhungHoSoCan cot`), không lồng Frame trong Frame; không `Card`, không `Placeholder`.
 - **KH-hs-tren-may** — Hồ sơ đọc kho trên máy (bộ đồng bộ, hàng 13) và danh mục đã giữ trên máy; lịch sử qua
   `useHoSoHang`, mất mạng thì xem bản đã tải.
+- **KH-hs-anh-noi-bo** — Mục Ảnh (hàng 18, `units/photos/`) là ngoại lệ có tên của KH-hs-tren-may: ảnh và danh sách ảnh đọc
+  thẳng API, không qua bộ đồng bộ, không vào kho trên máy; ngăn nội bộ API trả no-store. Ẩn ngăn nội bộ do API và luật
+  theo dòng quyết — mục chỉ trình điều API trả. Trang bấm được `proto/anh-can-ba-ngan` đi cùng khuôn, gỡ khi màn thật
+  qua Cổng Bằng chứng.
 - **KH-hs-khoa-thuoc-tinh** — Thuộc tính căn từ danh mục là chữ khoá, không ô sửa; sai thì «Báo sai thông tin căn».
