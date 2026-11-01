@@ -5,7 +5,7 @@ slug: the-ba-loi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [lint, docs]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-01-the-ba-loi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
