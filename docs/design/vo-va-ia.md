@@ -125,7 +125,9 @@ chính, phần còn lại ghép.
 **Đã chuyển thể (hàng 14, 31/10) — Bảng hàng, máy tính.** `data-grid-editing-6` cài nguyên bản, chuyển thể ở
 `apps/web/src/app/(app)/inventory/` (khuôn `KhungBangHang`, nhóm màn `design/patterns/bang-hang.md`). Đổi: dữ liệu từ kho
 trên máy (hàng 13) ghép thuộc tính căn từ danh mục; mười chín cột theo RESO, ba cột ẩn mặc định; hàng lọc theo cột giữ;
-**chỉ đọc** — bỏ sửa ô, dán, kéo điền, hoàn tác, đổi hàng loạt (hàng 15, 16); nhóm Toà → Loại căn theo cách của
+sửa trên ô ba cột Giá, Phí, Trạng thái (hàng 15, 01/11: trình sửa nổi ghép từ Input, ToggleGroup, Popover, Select, đọc
+lại «Hiểu là…», hỏi lại khi giá đổi quá 20% hay đổi phí, hoàn tác trên thông báo Sonner và Ctrl/Cmd+Z); dán, kéo điền,
+đổi hàng loạt là hàng 16; nhóm Toà → Loại căn theo cách của
 `data-grid-grouping-2` bằng dòng con của lưới, đổi được sang Toà hay Không nhóm; nút «Góc nhìn ▾» đầu thanh công cụ lưu bộ
 lọc, cột hiện, sắp xếp, cách nhóm thành góc nhìn **trên máy theo người và sàn** — góc nhìn của đội để một hàng sau. Dưới
 `md` là khối báo bảng thẻ của mục 32.
