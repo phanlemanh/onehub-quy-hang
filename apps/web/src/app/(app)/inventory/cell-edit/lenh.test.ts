@@ -157,8 +157,6 @@ test("đối chứng đỏ: bộ viết làm tròn hai số lẻ thì chỗ đ�
 
 test("E7 hàng 23: nhãn thiếu đủ điều — «ảnh thật», «mã căn»; Bảng hàng không có số ảnh thì không báo ảnh", async () => {
   const { nhanThieu } = await import("./lenh");
-  const { readFileSync } = await import("node:fs");
-  const { fileURLToPath } = await import("node:url");
   const du = { ...HANG, listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant", standardStatus: "Incomplete" as const };
   // Ngữ cảnh có số ảnh (như hồ sơ căn đưa) → báo đúng nhãn.
   const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active");
@@ -170,9 +168,11 @@ test("E7 hàng 23: nhãn thiếu đủ điều — «ảnh thật», «mã căn�
   assert.equal(nhanThieu("realPhoto"), "ảnh thật");
   assert.equal(nhanThieu("unitNumber"), "mã căn");
   assert.equal(nhanThieu("dieu-la"), "dieu-la", "điều lạ giữ nguyên tên");
-  // Lỗi máy chủ trả về (trình sửa ô và bộ đồng bộ) đi qua bảng nhãn, không in tên khoá thô.
-  const tren = readFileSync(fileURLToPath(new URL("./tren-o.tsx", import.meta.url)), "utf8");
-  assert.match(tren, /l\.missing\.map\(nhanThieu\)/, "tren-o.tsx in tên khoá thô");
-  const gui = readFileSync(fileURLToPath(new URL("../../../../lib/sync/gui.ts", import.meta.url)), "utf8");
-  assert.match(gui, /b\.missing\.map\(nhanDieuKien\)/, "gui.ts in tên khoá thô");
+  // Câu báo thật mà người dùng thấy: trình sửa ô (lỗi trên máy) và «Cần xem» (máy chủ từ chối).
+  const { moTaLoi } = await import("./lenh");
+  const { lyDoTuChoi } = await import("@/lib/sync/gui");
+  assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["realPhoto"] }), "Thiếu ảnh thật");
+  assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["unitNumber", "legalStatus"] }), "Thiếu mã căn, pháp lý");
+  assert.equal(lyDoTuChoi({ error: "missing-requirement", missing: ["realPhoto"] }, 400), "thiếu ảnh thật");
+  assert.equal(lyDoTuChoi({ error: "invalid-transition", reason: "Closed không chuyển sang Active" }, 400), "Closed không chuyển sang Active", "đối chứng: lý do của máy chủ giữ nguyên");
 });

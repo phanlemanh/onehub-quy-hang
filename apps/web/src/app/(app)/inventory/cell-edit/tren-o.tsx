@@ -22,7 +22,7 @@ import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } f
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
 import { KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, nhanThieu, XAC_NHAN, type KetQuaLenh } from "./lenh";
+import { chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, hieuLaGiaChot, homNay, moTaLoi, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -33,13 +33,6 @@ const PHI: FeeInclusion[] = ["included", "excluded"];
 type Phien = { hang: DongBang; cot: CotSua; chuDau?: string; coSo?: number; o: { top: number; left: number; width: number; height: number } };
 type ChoXacNhan = Extract<KetQuaLenh, { ok: true }>;
 
-function moTaLoi(l: LoiTrenMay): string {
-  if (l.kind === "missing-requirement") return `Thiếu ${l.missing.map(nhanThieu).join(", ")}`;
-  if (l.kind === "invalid-transition") return l.reason;
-  if (l.kind === "not-found") return "Không còn thấy hàng này";
-  if (l.kind === "kho") return "Máy chưa lưu được lần sửa — thử lại";
-  return "Lần sửa không hợp lệ";
-}
 
 export function useSuaTrenO() {
   const sua = useSuaHang();

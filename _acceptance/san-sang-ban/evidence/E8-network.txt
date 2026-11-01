@@ -1,0 +1,9 @@
+E8 network (chrome-devtools, fetch/xhr, origin http://localhost:3482) - buoc 1-5, phien Dau chu mau 1
+Buoc 1-2 (X A-07.01): GET catalog x2, GET units/photos x3, GET listings/b3141bc6.., GET listings -> tat ca 200; KHONG co POST .../events khi bam nut (buoc 2).
+Buoc 3 (X): POST units/photos/upload-url 200, POST units/photos 201, GET photos 200 x2, POST listings/b3141bc6../events 200 (status_changed Active), GET listing 200, GET listings 200.
+Buoc 4 (Y A-07.02): GET catalog, photos, listings/9d9ced92.., listings -> 200; khong POST events.
+Buoc 5 (Z A-07.03): GET catalog, photos, listings/71408a7c.., listings -> 200; khong POST events.
+Console: chi info React DevTools + [HMR] connected; khong error.
+Loi/4xx/5xx: khong co.
+Luu y quan sat (ngoai AC-8): ma Y va Z, muc "Lich su" hien "Khong tai duoc lich su - Thu lai" du GET listings/{id} tra 200.
+Buoc 6 (Dau chu mau 2, context cach ly): GET catalog x2 200, GET listings 200; khong loi.
