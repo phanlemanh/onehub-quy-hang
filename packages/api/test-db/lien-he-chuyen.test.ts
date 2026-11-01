@@ -2,6 +2,7 @@
 // bằng kết nối chủ (xoá liên hệ và số, gỡ mã liên hệ), chụp từng byte cột số cũ, rồi chạy hàm chuyển của migration.
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
+import type pg from "pg";
 import { khoaSoChu } from "../src/owners/khoa";
 import { giaiMaSo } from "../src/owners/ma-hoa";
 import { appPool, cleanup } from "./helpers";
@@ -37,13 +38,34 @@ async function dung(daoMoc: boolean) {
   return { s, S, l1, h1, h2, h3, sau: sau[0]! };
 }
 
-/** Đưa sàn về trạng thái trước 016: gỡ mã liên hệ, xoá số và liên hệ. */
-async function veTruoc016(san: San) {
-  await appPool.query("update leads set contact_id = null where company_id = $1", [san.companyId]);
-  await appPool.query("update listing_owners set contact_id = null where company_id = $1", [san.companyId]);
-  await appPool.query("delete from contact_phones where company_id = $1", [san.companyId]);
-  await appPool.query("delete from contacts where company_id = $1", [san.companyId]);
+/** Chạy trong một giao dịch khoá bảng chủ nhà rồi bảng lead trước mọi câu ghi — cùng thứ tự với các bài gỡ ràng buộc
+ * (ma-hoa-so-chu, bat-rang-buoc-migrate) chạy song song. Xoá liên hệ kiểm khoá ngoại trên lead trước chủ nhà; không khoá
+ * trước thì hai bên chờ nhau. */
+async function theoThuTuKhoa<T>(fn: (c: pg.PoolClient) => Promise<T>): Promise<T> {
+  const c = await appPool.connect();
+  try {
+    await c.query("begin");
+    await c.query("lock table listing_owners in row exclusive mode");
+    await c.query("lock table leads in row exclusive mode");
+    const kq = await fn(c);
+    await c.query("commit");
+    return kq;
+  } catch (e) {
+    await c.query("rollback").catch(() => {});
+    throw e;
+  } finally {
+    c.release();
+  }
 }
+
+/** Đưa sàn về trạng thái trước 016: gỡ mã liên hệ, xoá số và liên hệ. */
+const veTruoc016 = (san: San) =>
+  theoThuTuKhoa(async (c) => {
+    await c.query("update listing_owners set contact_id = null where company_id = $1", [san.companyId]);
+    await c.query("update leads set contact_id = null where company_id = $1", [san.companyId]);
+    await c.query("delete from contact_phones where company_id = $1", [san.companyId]);
+    await c.query("delete from contacts where company_id = $1", [san.companyId]);
+  });
 const chup = async (san: San) =>
   (
     await appPool.query(
@@ -54,7 +76,7 @@ const chup = async (san: San) =>
   ).rows;
 const dem = async (san: San) =>
   (await appPool.query<{ c: number; p: number }>("select (select count(*)::int from contacts where company_id = $1) c, (select count(*)::int from contact_phones where company_id = $1) p", [san.companyId])).rows[0]!;
-const chuyen = (san: San) => appPool.query("select * from app.lien_he_chuyen_du_lieu($1)", [san.companyId]);
+const chuyen = (san: San) => theoThuTuKhoa((c) => c.query("select * from app.lien_he_chuyen_du_lieu($1)", [san.companyId]));
 
 test("liên hệ: chuyển dữ liệu cũ", async () => {
   const A = await dung(false);
@@ -109,4 +131,40 @@ test("liên hệ: chuyển trên sàn không có dữ liệu", async () => {
   const s = await sanMoi({ ts: { vai: ["telesales"] } });
   const r = (await chuyen(s)).rows;
   assert.deepEqual(r.map((x) => [x.leads, x.contacts, x.gop]), [[0, 0, 0]]);
+});
+
+test("liên hệ: bài chuyển không kẹt khoá với bài gỡ ràng buộc chạy song song", async () => {
+  const X = await dung(false);
+  const lienHeTruoc = (await appPool.query<{ id: string }>("select id from contacts where company_id = $1", [X.s.companyId])).rows.map((r) => r.id);
+  assert.ok(lienHeTruoc.length > 0, "đối chứng: sàn chưa có liên hệ trước khi chuyển");
+  // Một giao dịch khác đang giữ khoá độc quyền bảng chủ nhà rồi sẽ xin bảng lead — đúng thứ tự của bài gỡ ràng buộc.
+  const ben = await appPool.connect();
+  let loiBen: unknown = null;
+  let loiChuyen: unknown = null;
+  try {
+    await ben.query("begin");
+    await ben.query("set local lock_timeout = '5s'");
+    await ben.query("lock table listing_owners in access exclusive mode");
+    const dang = veTruoc016(X.s)
+      .then(() => chuyen(X.s))
+      .catch((e) => (loiChuyen = e));
+    // Chờ tới khi bài chuyển thật sự đứng đợi khoá bảng chủ nhà — thế kẹt dựng tất định, không theo nhịp máy.
+    let doi = false;
+    for (let i = 0; i < 100 && !doi; i++) {
+      doi = (await appPool.query<{ n: number }>("select count(*)::int n from pg_locks where not granted and relation = 'listing_owners'::regclass")).rows[0]!.n > 0;
+      if (!doi) await new Promise((r) => setTimeout(r, 50));
+    }
+    assert.ok(doi, "bài chuyển không đứng đợi khoá bảng chủ nhà — thế kẹt không dựng được");
+    await ben.query("lock table leads in access exclusive mode").catch((e) => (loiBen = e));
+    await ben.query("rollback");
+    await dang;
+  } finally {
+    ben.release();
+  }
+  assert.equal(loiBen, null, `kẹt khoá (bên gỡ ràng buộc): ${String(loiBen)}`);
+  assert.equal(loiChuyen, null, `kẹt khoá (bài chuyển): ${String(loiChuyen)}`);
+  // Bài chuyển chạy trọn: mọi lead gắn liên hệ, và liên hệ là bản dựng mới chứ không phải dữ liệu cũ quay lui.
+  assert.equal((await appPool.query<{ n: number }>("select count(*)::int n from leads where company_id = $1 and contact_id is null", [X.s.companyId])).rows[0]!.n, 0);
+  const lienHeSau = (await appPool.query<{ id: string }>("select id from contacts where company_id = $1", [X.s.companyId])).rows.map((r) => r.id);
+  assert.ok(lienHeSau.length > 0 && lienHeSau.every((id) => !lienHeTruoc.includes(id)), "liên hệ sau chuyển vẫn là liên hệ cũ — bài chuyển không chạy");
 });
