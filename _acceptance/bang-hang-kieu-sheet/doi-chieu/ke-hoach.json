@@ -1,0 +1,106 @@
+{
+  "slug": "bang-hang-kieu-sheet",
+  "base": "origin/main",
+  "kho": [
+    1440,
+    375
+  ],
+  "cap": [
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "mac-dinh",
+      "kho": 1440,
+      "tep_moi": "apps/web/src/app/(app)/inventory/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--mac-dinh--1440--moi.png",
+      "anh_mau": "bang-hang--mac-dinh--1440--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "mac-dinh",
+      "kho": 375,
+      "tep_moi": "apps/web/src/app/(app)/inventory/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--mac-dinh--375--moi.png",
+      "anh_mau": "bang-hang--mac-dinh--375--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "loc-rong",
+      "kho": 1440,
+      "tep_moi": "apps/web/src/app/(app)/inventory/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--loc-rong--1440--moi.png",
+      "anh_mau": "bang-hang--loc-rong--1440--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "loc-rong",
+      "kho": 375,
+      "tep_moi": "apps/web/src/app/(app)/inventory/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--loc-rong--375--moi.png",
+      "anh_mau": "bang-hang--loc-rong--375--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "mac-dinh",
+      "kho": 1440,
+      "tep_moi": "apps/web/src/app/(app)/inventory/views/[id]/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--mac-dinh--1440--moi-2.png",
+      "anh_mau": "bang-hang--mac-dinh--1440--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "mac-dinh",
+      "kho": 375,
+      "tep_moi": "apps/web/src/app/(app)/inventory/views/[id]/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--mac-dinh--375--moi-2.png",
+      "anh_mau": "bang-hang--mac-dinh--375--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "loc-rong",
+      "kho": 1440,
+      "tep_moi": "apps/web/src/app/(app)/inventory/views/[id]/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--loc-rong--1440--moi-2.png",
+      "anh_mau": "bang-hang--loc-rong--1440--mau.png"
+    },
+    {
+      "nhom": "bang-hang",
+      "trang_thai": "loc-rong",
+      "kho": 375,
+      "tep_moi": "apps/web/src/app/(app)/inventory/views/[id]/page.tsx",
+      "mau": {
+        "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+        "duong": "/inventory"
+      },
+      "anh_moi": "bang-hang--loc-rong--375--moi-2.png",
+      "anh_mau": "bang-hang--loc-rong--375--mau.png"
+    }
+  ]
+}

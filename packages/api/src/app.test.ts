@@ -48,6 +48,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
     "PUT /api/v1/listings/{listingId}/listing-agent",
     "GET /api/v1/catalog/units/{code}",
+    // Hàng 14: Bảng hàng đọc cả danh mục một lần.
+    "GET /api/v1/catalog",
     // Hàng 24 (ADR-0012).
     "POST /api/v1/leads",
     "GET /api/v1/leads/buildings",

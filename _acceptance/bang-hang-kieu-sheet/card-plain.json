@@ -1,0 +1,132 @@
+{
+ "feature_plain": "Đầu chủ mở Bảng hàng trên máy tính và thấy mọi căn của sàn như một Sheet: lọc theo từng cột, nhóm theo toà rồi loại căn, lưu cách xem để lần sau mở một chạm.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ cho Bảng hàng đọc cả danh mục dự án một lần (AC-1, tuyến đọc danh mục), chỉ phần thuộc tính căn, cùng luật vào như ô gõ mã căn."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ gắn loại căn, diện tích, tầng, hướng cho từng căn theo đúng toà của nó; căn không có trong danh mục ghi «Chưa rõ»."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ hiện đúng các căn đầu chủ được thấy, mười sáu cột theo cách gọi của sàn, giá dạng «4,65 tỷ», trạng thái có màu, và dòng tổng «n / N căn»."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ có ô lọc ở mọi cột — gõ chữ, chọn một giá trị, hay luật số như «<=5» (giá tính theo tỷ); lọc nhiều cột cùng lúc, «Xoá lọc» trả đủ."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ nhóm sẵn theo Toà rồi Loại căn, mỗi nhóm ghi số căn và gập mở được; đổi được sang chỉ Toà hay không nhóm."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ lưu cách xem (bộ lọc, cột hiện, sắp xếp, cách nhóm) thành góc nhìn có tên, mở lại một chạm từ cột góc nhìn, lưu đè, đổi tên, xoá có hỏi lại."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ nói rõ khi sàn chưa có hàng, khi đang tải, khi tải lỗi (có «Thử lại»), và trên điện thoại báo bảng dạng thẻ ở mục 32 — đọc được cả sáng lẫn tối."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ cuộn mượt 5.000 căn trên máy văn phòng giả lập (AC-9, máy đo của bài thử lưới) — đo thử trên bản build: đạt, sát ngưỡng."
+  },
+  {
+   "id": "AC-10",
+   "p": "Sẽ giữ mọi rào của kho xanh và ghi lại trong tài liệu: nhóm màn Bảng hàng mới, khối lưới đã chuyển thể, dòng mới ở Tham chiếu."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "AC-7",
+   "p": "Sẽ KHÔNG đổi dữ liệu nào từ bảng ở bản này: gõ, xoá, dán vào ô không có tác dụng; lọc, nhóm, sắp không cần mạng; chép vùng ô ra Excel/Zalo vẫn được."
+  },
+  {
+   "id": "OOS-1",
+   "p": "Sửa giá, phí, trạng thái ngay trên ô — mục 15, làm tiếp ngay sau."
+  },
+  {
+   "id": "OOS-2",
+   "p": "Chọn nhiều căn rồi đổi một lần — mục 16."
+  },
+  {
+   "id": "OOS-3",
+   "p": "Bấm dòng mở hồ sơ căn bên phải — mục 17."
+  },
+  {
+   "id": "OOS-4",
+   "p": "Bảng hàng dạng thẻ trên điện thoại — mục 32."
+  },
+  {
+   "id": "OOS-5",
+   "p": "Góc nhìn chung cho cả đội và góc nhìn đi theo người sang máy khác — cần lưu ở máy chủ, đã gửi giám sát thành mục mới."
+  },
+  {
+   "id": "OOS-6",
+   "p": "Gỡ trang thử ẩn của bộ đồng bộ — việc phụ đã gửi."
+  }
+ ],
+ "scope_plain": "Bản này là phần ĐỌC của Bảng hàng; sửa trên bảng đi ở các mục kế của cùng dãy.",
+ "coverage_plain": [
+  {
+   "i": 0,
+   "p": "Việc trên bảng — xem, lọc, nhóm, sắp, chép, lưu và mở góc nhìn — mỗi việc có tiêu chí; sửa bị chặn có chủ đích (AC-7)."
+  },
+  {
+   "i": 1,
+   "p": "Nguồn cột — phần chào bán, độ tươi, mức đủ, ai thấy, và thuộc tính căn từ danh mục — đủ khi mọi cột có ô lọc (AC-4) và cột danh mục khớp từng căn (AC-2, AC-3)."
+  },
+  {
+   "i": 2,
+   "p": "Tình trạng dữ liệu — đang tải, trống, lỗi, lọc ra không căn, căn ngoài danh mục, mất mạng — mỗi tình trạng có màn của nó (AC-7, AC-8)."
+  },
+  {
+   "i": 3,
+   "p": "Người và chỗ — đầu chủ, người khác cùng máy, sàn khác, máy tính, điện thoại, sáng/tối — góc nhìn không lẫn người lẫn sàn (AC-6), điện thoại có lời báo (AC-8)."
+  },
+  {
+   "i": 4,
+   "p": "Phần lõi phủ bởi mười tiêu chí; mỗi tiêu chí có ít nhất một bài đo."
+  },
+  {
+   "i": 5,
+   "p": "Để sau: góc nhìn của đội, độ tươi ở chân cột góc nhìn, đổi tên cột theo cách gọi của sàn, ghim góc nhìn trên điện thoại."
+  },
+  {
+   "i": 6,
+   "p": "Không bao giờ: cột chủ nhà trên Bảng hàng — thông tin chủ nhà không rời chỗ của nó."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Nhãn loại căn («2PN», «Studio») và hai lựa chọn nhóm phụ bị ghi như đã có căn cứ trong Tham chiếu, thực ra là máy chọn — đã tách thành câu hỏi riêng cho anh (Hỏi-2)."
+  },
+  {
+   "i": 1,
+   "p": "Chưa có bài nào so loại căn trên màn với đúng dữ liệu danh mục máy chủ trả — đã thêm bước so năm căn viết trước vào bài nhìn bảng."
+  },
+  {
+   "i": 2,
+   "p": "Bài «không đổi dữ liệu» chỉ chặn một kiểu gửi, và chưa thử tải lại trang khi mất mạng — đã chặn mọi kiểu ghi và thêm bước tải lại khi offline kèm đối chứng."
+  },
+  {
+   "i": 3,
+   "p": "«Sàn khác không thấy góc nhìn của tôi» mới đo trên kho giả — đã thêm người mẫu hai sàn và bước đổi sàn trên màn thật."
+  },
+  {
+   "i": 4,
+   "p": "Màn trống, lỗi, điện thoại chưa được chụp ở giao diện tối và «đọc được» chưa có số — đã đổi thành bảng tám ô sáng/tối có đo độ tương phản."
+  }
+ ],
+ "decisions": [
+  {
+   "id": "E15",
+   "q": "Bốn tài liệu đã ghi đúng Bảng hàng vừa làm chưa?",
+   "why": "Hội đồng ba góc nhìn đề xuất đạt ở lượt 2; lượt 3 không đổi tài liệu nên giữ kết quả."
+  }
+ ],
+ "analyst_plain": "Một bài kiểm của web xanh cả trước lẫn sau thay đổi — nó không tự chứng được thay đổi, phần chứng nằm ở các bài khác."
+}

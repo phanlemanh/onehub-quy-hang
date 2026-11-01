@@ -11,6 +11,7 @@ import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerCatalogRoutes } from "./catalog/routes";
+import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerJobRoutes } from "./jobs/routes";
@@ -148,6 +149,7 @@ export function createApi(deps: ApiDeps) {
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
   registerCatalogRoutes(api, deps);
+  registerCatalogReadAll(api, deps);
   registerLeadRoutes(api, deps);
   registerRoutingRoutes(api, deps);
   registerJobRoutes(api, deps);

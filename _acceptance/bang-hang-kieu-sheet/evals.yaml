@@ -1,0 +1,184 @@
+schema_version: 1
+feature_slug: bang-hang-kieu-sheet
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps):
+#   node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs
+#   → Postgres dãy B (container quy-hang-db-B, cổng 5561) đã migrate; sàn và người mẫu của hàng 5 (nap.mjs --nap);
+#     40 hàng mẫu nạp qua API; máy chủ dev cổng 3481, nhật ký ở .acceptance-runs/bang-hang-kieu-sheet/web-b.log.
+#   In bảng email ↔ vai và số hàng mỗi người thấy. Đăng nhập bằng email, đọc mã ở nhật ký đó:
+#   grep "[ma-dang-nhap] <email>" .acceptance-runs/bang-hang-kieu-sheet/web-b.log | tail -1
+#   Tắt: node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs --tat (chỉ kill PID nó đã ghi).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; doc-ca-danh-muc.test.ts: (a) thành viên có sàn → 200, thân bằng đúng danh mục tham số (so sâu với gói đưa vào, không với SAMPLE_CATALOG chép tay), mỗi căn có đủ đúng bảy khoá của CatalogUnitData; (b) quét mọi khoá ở mọi tầng của thân: mọi khoá thuộc danh sách khoá của khuôn danh mục viết tay trong tệp kiểm (danh sách trắng — chặt hơn danh sách trường nguồn), danh mục đưa vào có chèn ownerPhone mà thân trả không có — đối chứng đỏ trong cùng tệp: quét chính danh mục đưa vào thì báo đúng tên khoá ownerPhone; (c) không phiên → 401 unauthenticated; chưa gắn sàn → 403; nhiều sàn chưa chọn → 409 — cùng mã lỗi với tuyến tra mã căn."
+    paths: ["packages/api/src/catalog/doc-ca-danh-muc.ts", "packages/api/src/catalog/doc-ca-danh-muc.test.ts", "packages/api/src/app.ts", "packages/api/src/app.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ghep-danh-muc.test.ts với danh mục đọc từ packages/db/seed/mau/du-lieu-mau.json (đường suy từ vị trí tệp kiểm): ma trận viết trước bốn ca × bốn trường (loại căn, diện tích, tầng, hướng) = 16 assert — căn 1PN, căn studio (bedroomsTotal 0 → «Studio», dựng thêm trong bản sao danh mục), căn ngoài danh mục (→ «Chưa rõ», ba trường null), danh mục null (→ «Chưa rõ»); ca cùng mã căn ở hai toà (bản sao danh mục đổi toà B có căn trùng mã) ra đúng thuộc tính của toà của hàng. Đối chứng đỏ: hàm ghép bỏ điều kiện toà thì ca trùng mã đỏ với thông điệp gọi tên toà."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B (đầu tệp). Khổ 1440x900. Đăng nhập Đầu chủ mẫu thứ nhất (dau-chu-1) — dung-b.mjs in số hàng người này thấy (N)."
+      - "Mở http://localhost:3481/inventory, chờ lưới → chụp evidence/E3-bang.png; ghi vào observed: nhãn các tiêu đề cột theo thứ tự, chữ dòng tổng ở chân bảng, giá và trạng thái của 3 dòng đầu, tên các nhóm cấp một và số căn mỗi nhóm"
+      - "Mở menu cột → bật Giá chốt, Ngày bán, Lý do ngừng → chụp evidence/E3-cot-an.png; ghi tiêu đề cột sau khi bật"
+      - "Đăng nhập Đầu chủ mẫu thứ hai (dau-chu-2), mở /inventory → ghi chữ dòng tổng (đối chứng trục ai thấy hàng: dung-b.mjs in số mong đợi cho từng người)"
+      - "Gọi GET http://localhost:3481/api/v1/listings bằng phiên dau-chu-1 (fetch trong trang) → ghi số phần tử"
+      - "Viết trước năm mã căn — A-01.03, A-04.06, B-08.02, B-14.04 và một căn có mã trùng ở hai toà nếu danh mục có (không có thì ghi «không có cặp trùng») — rồi fetch /api/v1/catalog trong trang; với từng mã, ghi cạnh nhau loại căn, diện tích, tầng, hướng trên lưới (Nhóm = Không nhóm, lọc Mã căn) và đáp án tính từ thân API (bedroomsTotal → «nPN», 0 → «Studio»; livingArea; floor; directionFaces) của đúng toà của dòng"
+    expected: "Mười sáu tiêu đề đúng thứ tự Toà · Mã căn · Loại căn · Diện tích · Tầng · Hướng · Trạng thái · Giá · Phí · Nội thất · Pháp lý · Tài chính · Tình trạng sử dụng · Xác nhận · Mức đủ · Ai thấy; ba cột ẩn không có trước khi bật, có sau khi bật. Dòng tổng «N / N căn» với N bằng số phần tử API trả cho dau-chu-1 và bằng số dung-b.mjs in; dau-chu-2 thấy số của chính người ấy (khác N khi bộ mẫu có hàng «Chỉ tôi» — dung-b.mjs in hai số mong đợi viết trước). Giá dạng «x,xx tỷ», trạng thái là Badge có chữ tiếng Việt. Nhóm cấp một là Toà A, Toà B với số căn cộng lại bằng N. Bảng năm mã: mọi ô lưới bằng đáp án tính từ thân API — mỗi ô một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**", "packages/api/src/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    layer: backend-effect
+    expected: "exit 0; loc.test.ts (ca «cột mặc định», «định dạng giá và nhãn trạng thái»): danh sách cột mặc định của bảng (hằng xuất từ mã bảng) bằng đúng mảng mười sáu id viết tay trong tệp kiểm, ba cột ẩn mặc định đúng ba id; hàm định dạng giá: 4650000000 → «4,65 tỷ», 950000000 → «950 triệu», null → «—»; nhãn trạng thái đủ sáu StandardStatus theo CONTEXT.md. Đối chứng đỏ: mảng mong đợi đổi chỗ hai cột thì assert đỏ gọi tên cột."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; loc.test.ts trên 40 hàng mẫu ghép danh mục: ma trận viết trước — với MỖI cột lọc được (mười sáu cột hiện + ba cột ẩn) một ca lọc đúng kiểu của cột (chữ chứa không phân biệt dấu hoa thường, chọn một giá trị, luật số `<=`, `>`, khoảng `a-b`; Giá theo tỷ) so số căn khớp với đáp án đếm độc lập trong tệp kiểm (không gọi hàm đang đo); một ca ba ô lọc cùng lúc ra giao của ba tập; bộ lọc rỗng ra đủ 40; bộ lọc không khớp ra 0. Hằng «cột lọc được» bằng hằng «mọi cột» (không cột nào thiếu ô lọc). Đối chứng đỏ: một cột bị bỏ khỏi bảng lọc thì ca ma trận của cột đó đỏ với tên cột."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở /inventory."
+      - "Mở hàng lọc theo cột → chụp evidence/E5-hang-loc.png; ghi mỗi cột hiện có ô lọc không và kiểu ô (chữ, chọn, số)"
+      - "Đặt Trạng thái = Đang bán → ghi dòng tổng; gõ «<=5» vào ô lọc Giá, Enter → ghi dòng tổng; thêm Mã căn chứa «a-1» → ghi dòng tổng và mọi mã căn còn lại (tối đa 3) → chụp evidence/E5-ba-loc.png"
+      - "Bấm Xoá lọc → ghi dòng tổng"
+      - "Đặt Mã căn chứa «zzz» → chụp evidence/E5-loc-rong.png; ghi chữ hiện ra"
+    expected: "Mười sáu cột hiện đều có ô lọc, kiểu đúng: chọn cho Toà, Loại căn, Trạng thái, Phí, Ai thấy; số cho Diện tích, Tầng, Giá, Xác nhận (số ngày từ lần xác nhận), Mức đủ; chữ cho các cột còn lại. Mỗi lần thêm ô lọc dòng tổng giảm hoặc giữ, không tăng; sau ba ô lọc còn ít nhất một căn và mọi mã căn còn lại chứa «a-1», đều Đang bán, giá ≤ 5 tỷ. Xoá lọc trả «N / N căn». «zzz» hiện «Không căn nào khớp bộ lọc» kèm nút Xoá lọc."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở /inventory (lần đầu, chưa đổi gì)."
+      - "Chụp evidence/E6-mac-dinh.png; ghi điều khiển Nhóm đang chọn gì, nhóm cấp một và cấp hai (tên + số căn) của Toà A"
+      - "Gập nhóm Toà A → ghi các dòng còn hiện; mở lại"
+      - "Đổi Nhóm sang Toà → chụp evidence/E6-toa.png; đổi sang Không nhóm → chụp evidence/E6-khong-nhom.png; ghi có hàng nhóm không"
+      - "Đổi lại Toà → Loại căn, lọc Trạng thái = Đang bán → ghi số căn của từng nhóm"
+    expected: "Mặc định Toà → Loại căn: dưới Toà A là các nhóm loại căn (vd 1PN, 2PN, 3PN) lồng bên trong, số căn các nhóm con cộng bằng số của Toà A. Gập Toà A ẩn mọi dòng của nó. Toà: chỉ một cấp nhóm. Không nhóm: không hàng nhóm. Sau lọc, số căn mỗi nhóm bằng số căn Đang bán của nhóm đó (cộng lại bằng dòng tổng)."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; goc-nhin.test.ts trên kho giả (Map thay bộ nhớ trình duyệt): lưu → đọc lại ra đúng bốn phần (lọc, cột hiện, sắp xếp, nhóm) — round-trip qua chính hàm ghi và hàm đọc; khoá theo người + sàn: người B hay sàn khác đọc ra rỗng; tên rỗng, chỉ khoảng trắng, dài hơn 60 ký tự, trùng (không phân biệt hoa thường) bị từ chối với lý do; đổi tên, xoá chạy; bản ghi hỏng (JSON sai, phiên bản lạ) đọc ra rỗng không ném; so «đã đổi»: cùng trạng thái ra false, khác một ô lọc ra true. Đối chứng đỏ: khoá bỏ phần sàn thì ca sàn khác đỏ với thông điệp gọi tên khoá."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở /inventory."
+      - "Đặt: Trạng thái = Đang bán, ẩn cột Hướng, sắp Giá tăng dần, Nhóm = Toà. Góc nhìn ▾ → Lưu góc nhìn… → để trống → bấm Lưu → chụp evidence/E8-ten-rong.png; ghi chữ báo"
+      - "Đặt tên «2PN dưới 5 tỷ» → Lưu → mở cột thứ hai (tay nắm) → chụp evidence/E8-cot.png; ghi mục trong «Góc nhìn của tôi»"
+      - "Lưu thêm một góc nhìn tên «2pn DƯỚI 5 TỶ» → ghi chữ báo"
+      - "Tải lại /inventory (bộ lọc trở về mặc định) → bấm «2PN dưới 5 tỷ» ở cột thứ hai → ghi địa chỉ, các ô lọc, cột Hướng có hiện không, chiều sắp của Giá, Nhóm → chụp evidence/E8-mo-lai.png"
+      - "Bỏ lọc Trạng thái → chụp evidence/E8-da-doi.png; ghi nhãn cạnh tên góc nhìn và các nút; bấm Lưu đè → tải lại → ghi các ô lọc"
+      - "Đổi tên thành «Đang bán toà» → ghi tên ở cột thứ hai; Xoá → ghi hộp xác nhận → xác nhận → ghi cột thứ hai"
+      - "Lưu một góc nhìn «Thử» → đăng xuất → đăng nhập dau-chu-2 trên cùng trình duyệt → mở cột thứ hai → ghi «Góc nhìn của tôi»"
+      - "dau-chu-2 (thuộc hai sàn: Sàn thử và Sàn trống — dung-b.mjs gắn): ở Sàn thử lưu «Thử-A» → đổi sang Sàn trống bằng bộ chọn sàn → mở cột thứ hai → ghi «Góc nhìn của tôi»; đổi về Sàn thử → ghi lại; đọc localStorage, ghi các khoá qh:goc-nhin:v1:* và so phần sàn với mã sàn đang làm (GET /api/v1/me)"
+      - "Mở http://localhost:3481/inventory/views/khong-co → chụp evidence/E8-khong-co.png; ghi chữ và lối về"
+    expected: "Tên rỗng: báo dưới ô, không lưu. Lưu xong góc nhìn hiện ở cột thứ hai và menu. Tên trùng khác hoa thường bị báo trùng. Mở lại: địa chỉ /inventory/views/<id>, Trạng thái = Đang bán, cột Hướng ẩn, Giá tăng dần, Nhóm = Toà — cả bốn khớp. Bỏ lọc → nhãn «Đã đổi» với «Lưu đè» và «Lưu thành góc nhìn mới»; sau Lưu đè và tải lại, góc nhìn không còn lọc Trạng thái. Đổi tên hiện tên mới; Xoá có hộp xác nhận, xong thì mục biến mất. dau-chu-2 không thấy «Thử». Ở Sàn trống không có «Thử-A»; về Sàn thử thì «Thử-A» hiện lại; khoá chứa đúng mã sàn đang làm. id lạ: «Góc nhìn này không có trên máy này» kèm lối về Bảng hàng. Đối chứng: trước khi bấm góc nhìn, lưới ở trạng thái mặc định khác cả bốn phần."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/shell/second-column.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở /inventory, chờ lưới và chỉ báo «Đã đồng bộ»."
+      - "Bật ghi mạng (DevTools Network hay read_network_requests) và giữ tới hết bước chép. Bấm một ô Giá → gõ «123», nhấn Delete, dán (Ctrl/Cmd+V) một chuỗi «9» → ghi giá trị ô trước và sau, chữ chỉ báo đồng bộ"
+      - "Lọc Trạng thái, đổi Nhóm, sắp Giá → ghi mọi yêu cầu mạng phát sinh từ lúc bật ghi (phương thức + đường)"
+      - "Chọn vùng 2×3 ô → Ctrl/Cmd+C → đọc clipboard (navigator.clipboard.readText trong trang) → ghi văn bản"
+      - "Đọc kho trên máy: số thao tác chờ (IndexedDB của bộ đồng bộ, hàng đợi của sàn đang làm) → ghi"
+      - "Tắt mạng (DevTools offline) → lọc Loại căn = 2PN, đổi Nhóm → chụp evidence/E9-mat-mang.png; ghi dòng tổng và các nhóm loại căn"
+      - "Bật lại mạng nhưng chặn mọi yêu cầu tới /api/v1/* (DevTools chặn yêu cầu theo mẫu, hay Network.setBlockedURLs) — trang vẫn tải được, API thì không, như mất mạng sau khi mở trang (kho không có service worker nên tải lại khi offline hẳn là trang lỗi của trình duyệt, ngoài phạm vi hàng 14); tải lại /inventory, đặt Nhóm = Toà → Loại căn → ghi tên các nhóm loại căn của Toà A (so với lúc có mạng)"
+      - "Đối chứng: xoá khoá qh:danh-muc:v1:* trong localStorage, vẫn chặn /api/v1/*, tải lại → ghi tên các nhóm loại căn"
+    expected: "Giá trị ô không đổi; trong suốt phiên ghi không yêu cầu nào có phương thức khác GET hay HEAD; lọc, nhóm, sắp không phát sinh yêu cầu nào (ngoài lượt kéo định kỳ GET /api/v1/listings nếu rơi vào giữa — ghi rõ nếu có); hàng đợi thao tác chờ 0; clipboard là 2 dòng × 3 ô tách bằng tab đúng giá trị đang hiện. Mất mạng: lọc và nhóm vẫn chạy; sau khi tải lại trang lúc API bị chặn các nhóm loại căn của Toà A trùng tên với lúc có mạng; đối chứng xoá bản danh mục đã giữ thì mọi căn rơi vào «Chưa rõ» (chứng bản giữ là bền, không chỉ trong bộ nhớ trang). Đối chứng: trước khi tắt mạng có ít nhất một GET /api/v1/catalog đã chạy trong phiên (danh mục được giữ từ đó)."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Ma trận viết trước bốn trạng thái × hai giao diện = 8 ô; mỗi ô một ảnh evidence/E10-<trạng thái>-<sáng|tối>.png và ghi tỉ lệ tương phản của chữ chính và chữ nút (màu chữ so màu nền thật đo bằng getComputedStyle)"
+      - "trong: đăng nhập trong@mau.quy-hang.test, khổ 1440x900, mở /inventory; ghi chữ và nút"
+      - "dang-tai: dau-chu-1, khổ 1440x900, xoá IndexedDB của trang, bật Slow 3G, tải lại /inventory → chụp ngay; ghi mô tả khung chờ"
+      - "loi: dau-chu-1, xoá IndexedDB, offline, tải lại → chụp; ghi chữ và nút; bật mạng, bấm Thử lại → ghi kết quả"
+      - "dien-thoai: dau-chu-1, khổ 375x812, mở /inventory → chụp; ghi chữ; đo document.documentElement.scrollWidth và clientWidth"
+      - "Lặp bốn ô trên ở giao diện còn lại (menu tài khoản → sáng/tối)"
+    expected: "Trống: «Sàn chưa có hàng nào» kèm nút «Nhập Excel». Đang tải: khung chờ có thanh và các dòng xám đúng bố cục lưới, không chữ «Loading». Lỗi: «Chưa tải được bảng hàng» kèm «Thử lại»; có mạng lại bấm Thử lại thì lưới hiện. Điện thoại: «Bảng hàng dạng thẻ trên điện thoại dựng ở mục 32», scrollWidth <= clientWidth. Cả 8 ô: tỉ lệ tương phản chữ chính và chữ nút ≥ 4,5:1 — mỗi ô một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs
+    expected: "exit 0; in bảng ba lượt hợp lệ (hiệu chuẩn đạt) và trung vị: p95 khoảng cách khung ≤ 33,4 ms, khung > 50 ms ≤ 1%, cuộn tới căn cuối của 5.000 hàng; lượt đối chứng tiêm việc bận 60 ms mỗi khung (cùng máy đo) trượt ngưỡng p95 — thiếu đối chứng trượt thì exit 1 «máy đo không phân biệt được». Lệnh tự build và bật bản build ở cổng 3491 (giám sát cấp, B-6), đo bản build như ADR-0004, tắt đúng PID khi xong; số ghi vào .acceptance-runs/bang-hang-kieu-sheet/so-do-cuon.json."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**", "_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    paths: ["apps/web/**", "packages/api/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; kiểm chuẩn không báo thành phần thiếu trong catalog.md; bài quét khuôn in «0 lệch» và có nhóm bang-hang"
+    paths: ["apps/web/**", ".agents/skills/quy-hang-ui/catalog.md", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E15
+    criterion: AC-10
+    executor: judgment
+    question: "Trong bốn tệp: (1) bang-hang.md là mục bản đồ khuôn đủ chín khoá frontmatter (nhom, doi_tuong, khuon, nhan_dien, mau_dang_chay, khe_bat_buoc, cam_ngoai_khuon, ngoai_le, luat) với mau_dang_chay trỏ trang /inventory và có ít nhất một luật KH- mô tả khuôn; (2) vo-va-ia.md ghi data-grid-editing-6 là khối đã chuyển thể cho Bảng hàng kèm đổi gì (chỉ đọc ở hàng 14, nhóm Toà → Loại căn, góc nhìn trên máy); (3) catalog.md có dòng cho khối data-grid-editing-6 (bảng «Khối đã chuyển thể») và dòng cho thành phần data-grid (bảng «Thành phần đã cài») — hàng 14 chỉ cài thêm đúng thư mục data-grid dưới components/reui, các thành phần ui khối kéo theo đã có sẵn, cascader của khối không cài (mục Notes của contract.md); (4) tham-chieu.md §12 có một dòng ngày 31/10 nói Bảng hàng đọc, lọc mọi cột, nhóm Toà → Loại căn, góc nhìn lưu trên máy theo người và sàn, góc nhìn của đội để sau — cả bốn đúng không?"
+    inputs: [design/patterns/bang-hang.md, docs/design/vo-va-ia.md, .agents/skills/quy-hang-ui/catalog.md, docs/product/tham-chieu.md, _acceptance/bang-hang-kieu-sheet/contract.md]
+    paths: ["design/patterns/bang-hang.md", "docs/design/vo-va-ia.md", ".agents/skills/quy-hang-ui/catalog.md", "docs/product/tham-chieu.md"]
+    evidence_required: [judged_by, verdict, rationale]
