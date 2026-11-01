@@ -39,11 +39,10 @@ function voi(fn) {
   }
 }
 
-const NHOM = ["cai-dat-san", "o-nhan-lead", "trang-tam", "trang-thai", "xac-thuc"];
+const NHOM = ["bang-hang", "cai-dat-san", "o-nhan-lead", "trang-tam", "trang-thai", "xac-thuc"];
 const TRANG_TAM = [
   "exports/new",
   "imports/new",
-  "inventory",
   "me",
   "shares",
   "team",
@@ -60,8 +59,16 @@ const BANG = {
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`, `${W}/app/(app)/proto/o-nhan-lead/page.tsx`], ngoaiLe: [] },
   "trang-tam": {
     theoKhuon: [...TRANG_TAM, `${W}/app/settings/[section]/page.tsx`],
-    ngoaiLe: [`${W}/app/(app)/leads/new/page.tsx`, `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`, `${W}/app/(app)/proto/o-nhan-lead/page.tsx`],
+    ngoaiLe: [
+      `${W}/app/(app)/inventory/page.tsx`,
+      `${W}/app/(app)/inventory/views/[id]/page.tsx`,
+      `${W}/app/(app)/leads/new/page.tsx`,
+      `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
+      `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
+    ],
   },
+  // Hàng 14: Bảng hàng rời trang tạm, nhóm màn mới (luật đợt 18).
+  "bang-hang": { theoKhuon: [`${W}/app/(app)/inventory/page.tsx`, `${W}/app/(app)/inventory/views/[id]/page.tsx`], ngoaiLe: [] },
 };
 const NHAN_DIEN_TRANG_THAI = [
   ...TRANG_TAM.slice(0, 3),
@@ -69,6 +76,8 @@ const NHAN_DIEN_TRANG_THAI = [
   // Ô nhận lead (hàng 24) — nhóm o-nhan-lead, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["khung.tsx", "nguon-that.tsx", "o-lead.tsx", "page.tsx"].map((p) => `${W}/app/(app)/leads/new/${p}`),
   ...TRANG_TAM.slice(3),
+  // Bảng hàng (hàng 14): màn, khuôn và các thành phần của nó.
+  ...["bang-hang.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map((p) => `${W}/app/(app)/inventory/${p}`),
   // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["page.tsx", "trang-thu.tsx"].map((p) => `${W}/app/(app)/proto/nhanh-tuc-thi/${p}`),
   ...["page.tsx", "trang-mau.tsx"].map((p) => `${W}/app/(app)/proto/o-nhan-lead/${p}`),
@@ -83,6 +92,9 @@ const NHAN_DIEN_TRANG_THAI = [
   ),
 ];
 const CHO_TRANG_THAI = [
+  // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
+  ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
+  `${W}/app/(app)/inventory/khung.tsx`,
   ...Array(5).fill(`${W}/app/(app)/leads/new/o-lead.tsx`),
   `${W}/app/(app)/leads/new/page.tsx`,
   `${W}/app/settings/users/page.tsx`,
@@ -121,7 +133,7 @@ describe("E1 — bản đồ thật: bốn tệp đủ khoá §11.3", () => {
   it("đối chứng: bản sao mất một tệp nhóm thì danh sách nhóm thiếu đúng tên ấy", () =>
     voi((d) => {
       unlinkSync(join(d, "design/patterns/trang-tam.md"));
-      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["cai-dat-san", "o-nhan-lead", "trang-thai", "xac-thuc"]);
+      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "o-nhan-lead", "trang-thai", "xac-thuc"]);
     }));
 });
 
@@ -258,10 +270,11 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     assert.equal(r.status, 0, r.stderr);
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
+      "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 10 tệp theo khuôn · 3 ngoại lệ · 0 lệch",
-      "trang-thai: 11 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 9 tệp theo khuôn · 5 ngoại lệ · 0 lệch",
+      "trang-thai: 16 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

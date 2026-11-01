@@ -14,7 +14,8 @@ const CLI = join(PKG, "ban-do-khuon.mjs");
 const KIEM_CHUAN = join(PKG, "kiem-chuan.mjs");
 const W = "apps/web/src";
 const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml"];
-const INVENTORY = `${W}/app/(app)/inventory/page.tsx`;
+// Màn mẫu của ca (a): Lịch xem — còn ở trang tạm, chưa nhóm nào (Bảng hàng đã có nhóm từ hàng 14).
+const LICH_XEM = `${W}/app/(app)/viewings/page.tsx`;
 const BAO_CAO = `${W}/app/(app)/bao-cao/page.tsx`;
 const NHAN_TRANG_TAM = 'nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/web/src/app/settings/[section]/page.tsx"]';
 
@@ -51,27 +52,27 @@ function roiTrangTam(d, boRa = []) {
     d,
     "design/patterns/trang-tam.md",
     NHAN_TRANG_TAM,
-    `nhan_dien: [${["today", "me", "team", "shares", "viewings", "exports/new", "imports/new", "leads/new", "units/[code]", "inventory"]
+    `nhan_dien: [${["today", "me", "team", "shares", "viewings", "exports/new", "imports/new", "leads/new", "units/[code]"]
       .filter((m) => !boRa.includes(m))
       .map((m) => `"apps/web/src/app/(app)/${m}/page.tsx"`)
       .join(", ")}, "apps/web/src/app/settings/[section]/page.tsx"]`,
   );
 }
-const BANG_HANG_KHUON = 'export function BangHang({ title }: { title: string }) {\n  return <section>{title}</section>;\n}\n';
-const BANG_HANG_MD = `---
-nhom: bang-hang
-doi_tuong: [can]
-khuon: { ten: BangHang, nhap: "@/components/bang-hang/khung" }
-nhan_dien: ["apps/web/src/app/(app)/inventory/page.tsx"]
-mau_dang_chay: { tep: "apps/web/src/app/(app)/inventory/page.tsx", duong: "/inventory", trang_thai: [mac-dinh] }
+const LICH_XEM_KHUON = 'export function LichXem({ title }: { title: string }) {\n  return <section>{title}</section>;\n}\n';
+const LICH_XEM_MD = `---
+nhom: lich-xem
+doi_tuong: [lich-xem]
+khuon: { ten: LichXem, nhap: "@/components/lich-xem/khung" }
+nhan_dien: ["apps/web/src/app/(app)/viewings/page.tsx"]
+mau_dang_chay: { tep: "apps/web/src/app/(app)/viewings/page.tsx", duong: "/viewings", trang_thai: [mac-dinh] }
 khe_bat_buoc: [title]
 cam_ngoai_khuon: [Card]
 ngoai_le: []
-luat: [KH-bh-mot]
+luat: [KH-lx-mot]
 ---
-# Bảng hàng
+# Lịch xem
 
-- **KH-bh-mot** — Bảng hàng dựng qua BangHang.
+- **KH-lx-mot** — Lịch xem dựng qua LichXem.
 `;
 
 describe("màn ngoài bản đồ — ban-do-khuon.mjs đầy đủ (E4)", () => {
@@ -82,29 +83,29 @@ describe("màn ngoài bản đồ — ban-do-khuon.mjs đầy đủ (E4)", () =>
       assert.deepEqual(dongNgoai(r.stderr), []);
     }));
 
-  it("(a) inventory rời trang tạm mà không có nhóm → đúng một dòng ngoai-ban-do nêu tệp và design/patterns/", () =>
+  it("(a) viewings rời trang tạm mà không có nhóm → đúng một dòng ngoai-ban-do nêu tệp và design/patterns/", () =>
     voi({}, (d) => {
-      roiTrangTam(d, ["inventory"]);
-      ghi(d, INVENTORY, 'export default function P() {\n  return <main>bảng</main>;\n}\n');
+      roiTrangTam(d, ["viewings"]);
+      ghi(d, LICH_XEM, 'export default function P() {\n  return <main>lịch</main>;\n}\n');
       const r = chay(d);
       assert.equal(r.status, 1);
       const ds = dongNgoai(r.stderr);
       assert.equal(ds.length, 1, r.stderr);
-      assert.ok(ds[0].startsWith(`${INVENTORY}: ngoai-ban-do — màn chưa thuộc nhóm nào`), ds[0]);
+      assert.ok(ds[0].startsWith(`${LICH_XEM}: ngoai-ban-do — màn chưa thuộc nhóm nào`), ds[0]);
       assert.ok(ds[0].includes("design/patterns/"), ds[0]);
-      assert.ok(!r.stderr.includes(`${INVENTORY}: trang-tam`), "tệp đã rời trang tạm không được báo lệch trang-tam");
+      assert.ok(!r.stderr.includes(`${LICH_XEM}: trang-tam`), "tệp đã rời trang tạm không được báo lệch trang-tam");
     }));
 
-  it("(a) chiều xanh: thêm design/patterns/bang-hang.md + khuôn, trang dựng <BangHang> → mã 0", () =>
+  it("(a) chiều xanh: thêm design/patterns/lich-xem.md + khuôn, trang dựng <LichXem> → mã 0", () =>
     voi({}, (d) => {
-      roiTrangTam(d, ["inventory"]);
-      ghi(d, INVENTORY, 'import { BangHang } from "@/components/bang-hang/khung";\n\nexport default function P() {\n  return <BangHang title="Bảng hàng" />;\n}\n');
+      roiTrangTam(d, ["viewings"]);
+      ghi(d, LICH_XEM, 'import { LichXem } from "@/components/lich-xem/khung";\n\nexport default function P() {\n  return <LichXem title="Lịch xem" />;\n}\n');
       assert.equal(chay(d).status, 1, "trước khi thêm mục bản đồ phải đỏ");
-      ghi(d, `${W}/components/bang-hang/khung.tsx`, BANG_HANG_KHUON);
-      ghi(d, "design/patterns/bang-hang.md", BANG_HANG_MD);
+      ghi(d, `${W}/components/lich-xem/khung.tsx`, LICH_XEM_KHUON);
+      ghi(d, "design/patterns/lich-xem.md", LICH_XEM_MD);
       const r = chay(d);
       assert.equal(r.status, 0, r.stderr);
-      assert.ok(r.stdout.includes("bang-hang: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch"), r.stdout);
+      assert.ok(r.stdout.includes("lich-xem: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch"), r.stdout);
     }));
 
   it("(b) trang mới bao-cao trả <div>, ngoài mọi nhóm → một dòng ngoai-ban-do", () =>
@@ -145,7 +146,7 @@ describe("màn ngoài bản đồ — chấm theo vòng và kiem-chuan (E5)", ()
       assert.equal(chay(d, "--base", ref).status, 0);
       const k = kc(d);
       assert.equal(k.status, 0, k.stdout + k.stderr);
-      assert.ok(k.stdout.split("\n").includes("khuôn: 5 nhóm · 0 lỗi đọc · 0 lệch"), k.stdout);
+      assert.ok(k.stdout.split("\n").includes("khuôn: 6 nhóm · 0 lỗi đọc · 0 lệch"), k.stdout);
     }));
 
   it("vòng chỉ thêm một màn ngoài bản đồ → --base đỏ nêu tệp, không lối «không tệp nào đổi»; kiem-chuan đỏ nêu tệp", () =>

@@ -50,6 +50,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/catalog/units/{code}",
     // Nhận danh mục Invest (ADR-0015).
     "POST /api/v1/catalog/feeds",
+    // Hàng 14: Bảng hàng đọc cả danh mục một lần.
+    "GET /api/v1/catalog",
     // Hàng 24 (ADR-0012).
     "POST /api/v1/leads",
     "GET /api/v1/leads/buildings",

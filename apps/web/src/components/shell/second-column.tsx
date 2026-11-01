@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
   FileSpreadsheetIcon,
   LinkIcon,
+  BookmarkIcon,
   ListChecksIcon,
   PercentIcon,
   PlusIcon,
@@ -20,6 +21,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { SU_KIEN_MO_LUU, useGocNhinCuaToi } from "@/app/(app)/inventory/goc-nhin-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -75,6 +77,9 @@ function NavList({ items }: { items: Item[] }) {
 }
 
 function InventoryColumn() {
+  // Góc nhìn của tôi lưu trên máy theo người và sàn (hàng 14); góc nhìn của đội cần bảng ở máy chủ — hàng sau.
+  const { ds } = useGocNhinCuaToi();
+  const items: Item[] = ds.map((g) => ({ label: g.ten, href: `/inventory/views/${encodeURIComponent(g.id)}`, icon: BookmarkIcon }));
   return (
     <>
       <div className="min-h-0 grow">
@@ -84,9 +89,14 @@ function InventoryColumn() {
             <p className="px-3 py-1 text-sm text-muted-foreground">Chưa có góc nhìn</p>
             <Separator className="my-2" />
             <SectionTitle>Góc nhìn của tôi</SectionTitle>
-            <p className="px-3 py-1 text-sm text-muted-foreground">Chưa có góc nhìn</p>
+            {items.length ? <NavList items={items} /> : <p className="px-3 py-1 text-sm text-muted-foreground">Chưa có góc nhìn</p>}
             <div className="px-2 pt-2">
-              <Button variant="ghost" size="sm" disabled className="w-full justify-start gap-2.5 font-normal">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2.5 font-normal"
+                onClick={() => window.dispatchEvent(new Event(SU_KIEN_MO_LUU))}
+              >
                 <PlusIcon aria-hidden="true" />
                 Lưu góc nhìn
               </Button>
