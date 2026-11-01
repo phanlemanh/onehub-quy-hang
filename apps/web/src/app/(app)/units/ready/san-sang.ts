@@ -18,11 +18,12 @@ export function demAnhThat(anh: readonly Pick<UnitPhoto, "compartment" | "isSamp
 }
 
 /** Chỗ chỉ tới cho một điều thiếu: mục Ảnh, ô giá ở đầu cột, hay ô của mục «Lần rao đang mở». */
-export type Dich = "anh" | "gia" | "legalStatus" | "occupantType";
+export type Dich = "ma" | "anh" | "gia" | "legalStatus" | "occupantType";
 export type DieuThieu = { nhan: string; dich: Dich };
 
 /** Nhãn và chỗ của mỗi điều thiếu khi vào Đang bán; giá và điều kiện phí gộp một dòng «Giá về tay» (tới hàng 28). */
 const DIEU: Partial<Record<Requirement, DieuThieu>> = {
+  unitNumber: { nhan: "Mã căn", dich: "ma" },
   listPrice: { nhan: "Giá về tay", dich: "gia" },
   feeInclusion: { nhan: "Giá về tay", dich: "gia" },
   realPhoto: { nhan: "Ảnh thật", dich: "anh" },

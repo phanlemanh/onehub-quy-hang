@@ -77,3 +77,6 @@ Bỏ quét không gian: bốn điều của câu giao × một lối mới (nút
 - Nút «Sẵn sàng bán» ở Bảng hàng và trên điện thoại ngoài hồ sơ căn.
 
 ## Notes
+
+- Known limits — khai ở thi công 2026-11-01 (giám sát chọn «B»):
+  - Nút nạp mẫu bản thật cho sàn mới dừng ở căn Đang bán đầu tiên (căn mẫu chưa có ảnh) tới khi hàng vá nap-mau-co-anh xong; sàn mẫu đã nạp không ảnh hưởng.

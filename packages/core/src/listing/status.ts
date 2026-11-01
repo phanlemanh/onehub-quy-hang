@@ -30,10 +30,11 @@ export function isStandardStatus(value: unknown): value is StandardStatus {
 }
 
 /** Điều thiếu khi vào một trạng thái — tên trùng khoá dữ liệu để màn chỉ đúng ô cần điền. */
-export type Requirement = "closePrice" | "withdrawnReason" | "listPrice" | "feeInclusion" | "realPhoto" | "legalStatus" | "occupantType";
+export type Requirement = "closePrice" | "withdrawnReason" | "unitNumber" | "listPrice" | "feeInclusion" | "realPhoto" | "legalStatus" | "occupantType";
 
 /** Nhãn mặc định của từng điều thiếu (chữ thường, ghép sau «thiếu») — một chỗ cho Bảng hàng, bộ đồng bộ, hồ sơ căn. */
 export const NHAN_DIEU_KIEN: Readonly<Record<Requirement, string>> = {
+  unitNumber: "mã căn",
   listPrice: "giá",
   feeInclusion: "điều kiện phí",
   realPhoto: "ảnh thật",
@@ -48,6 +49,8 @@ export const nhanDieuKien = (k: string): string => (NHAN_DIEU_KIEN as Record<str
 
 /** Những gì hàng đang có, cộng giá trị kèm theo lệnh đổi trạng thái. */
 export type TransitionContext = {
+  /** Mã căn của hàng (hàng 23): vắng mã thì không gắn được ảnh — không vào Đang bán. Khoá vắng hẳn thì không xét. */
+  unitNumber?: string | null;
   listPrice?: number | null;
   feeInclusion?: string | null;
   legalStatus?: string | null;
@@ -84,9 +87,12 @@ export function missingFor(to: StandardStatus, ctx: TransitionContext): Requirem
   }
   if (to === "Active") {
     const thieu: Requirement[] = [];
+    const khongMa = "unitNumber" in ctx && !co(ctx.unitNumber);
+    if (khongMa) thieu.push("unitNumber");
     if (!(typeof ctx.listPrice === "number" && ctx.listPrice > 0)) thieu.push("listPrice");
     if (!co(ctx.feeInclusion)) thieu.push("feeInclusion");
-    if (ctx.realPhotoCount !== undefined && ctx.realPhotoCount < (ctx.minRealPhotos ?? MAC_DINH_ANH_THAT_TOI_THIEU)) thieu.push("realPhoto");
+    // Ảnh gắn căn theo toà + mã: hàng chưa có mã chỉ báo «mã căn», không báo thêm «ảnh thật».
+    if (!khongMa && ctx.realPhotoCount !== undefined && ctx.realPhotoCount < (ctx.minRealPhotos ?? MAC_DINH_ANH_THAT_TOI_THIEU)) thieu.push("realPhoto");
     if (!co(ctx.legalStatus)) thieu.push("legalStatus");
     if (!co(ctx.occupantType)) thieu.push("occupantType");
     return thieu;

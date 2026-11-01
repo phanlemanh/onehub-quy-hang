@@ -53,6 +53,7 @@ test("E5 chỉ đúng chỗ thiếu: ma trận viết trước", () => {
     ["thiếu giá", { listPrice: null }, 1, [["Giá về tay", "gia"]]],
     ["thiếu điều kiện phí", { feeInclusion: null }, 1, [["Giá về tay", "gia"]]],
     ["thiếu ảnh", {}, 0, [["Ảnh thật", "anh"]]],
+    ["chưa có mã căn (không báo thêm ảnh)", { unitNumber: null }, 0, [["Mã căn", "ma"]]],
     ["thiếu pháp lý", { legalStatus: null }, 1, [["Pháp lý", "legalStatus"]]],
     ["thiếu tình trạng sử dụng", { occupantType: null }, 1, [["Tình trạng sử dụng", "occupantType"]]],
     [

@@ -79,6 +79,8 @@ export const nam = (so: string, toa: string, can?: string) => ({
 });
 /** Số mẫu chưa dùng trong sàn. */
 export const soMoi = (san: San) => `0900 000 0${san.so++}`;
+/** Mã căn mẫu chưa dùng trong sàn — hàng 23: hàng không mã căn không lên Đang bán, lead sẽ lên bảng phải mang mã. */
+export const maMoi = (san: San) => `M-${san.so++}.01`;
 
 export async function nhap(san: San, body: unknown, ai = "ts"): Promise<{ id: string; outcome: string }> {
   const r = await send("POST", "/api/v1/leads", body, san.nguoi[ai]!.cookie);

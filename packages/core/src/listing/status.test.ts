@@ -86,6 +86,11 @@ test("điều ảnh thật vào Đang bán (hàng 23, E1)", async () => {
     assert.ok(!missingFor(to, { ...BON, ...them, realPhotoCount: 0 }).includes("realPhoto"), `${to} không đòi ảnh`);
   }
   assert.deepEqual(checkTransition("Incomplete", "Active", { ...BON, realPhotoCount: 0 }), { ok: false, kind: "missing-requirement", missing: ["realPhoto"] });
+  // Mã căn (giám sát «C»): hàng chưa có mã chỉ báo «mã căn», không báo thêm ảnh; có mã thì như trên; khoá vắng thì không xét.
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: null, realPhotoCount: 0 }), ["unitNumber"], "chưa có mã căn");
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "", realPhotoCount: 0 }), ["unitNumber"], "mã căn rỗng");
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "A-0601", realPhotoCount: 0 }), ["realPhoto"], "có mã, chưa ảnh");
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "A-0601", realPhotoCount: 1 }), [], "có mã, có ảnh");
 });
 
 test("đọc cấu hình số ảnh thật tối thiểu (hàng 23, E1)", async () => {
