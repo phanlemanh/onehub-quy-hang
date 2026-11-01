@@ -5,8 +5,8 @@
 
 /**
  * Bảng hàng trên máy tính (hàng 14) — chuyển thể `data-grid-view.tsx` của khối data-grid-editing-6 (ADR-0004, khối đích ở
- * `docs/design/vo-va-ia.md` §2): giữ lưới cuộn ảo, hàng lọc theo cột, chọn ô và chép; bỏ sửa ô, dán, kéo điền, hoàn tác,
- * đổi trạng thái hàng loạt (hàng 15, 16). Thêm nhóm Toà → Loại căn theo cách của `data-grid-grouping-2` và góc nhìn đã
+ * `docs/design/vo-va-ia.md` §2): giữ lưới cuộn ảo, hàng lọc theo cột, chọn ô và chép; sửa trên ô ba cột Giá, Phí, Trạng
+ * thái qua `cell-edit/` (hàng 15); bỏ dán, kéo điền, đổi trạng thái hàng loạt (hàng 16). Thêm nhóm Toà → Loại căn theo cách của `data-grid-grouping-2` và góc nhìn đã
  * lưu. Dữ liệu từ kho trên máy (hàng 13): lọc, nhóm, sắp không gọi mạng.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -48,6 +48,10 @@ import { HangLocContext, HeaderStack, NutXoaLoc, OLoc } from "./hang-loc";
 import { locDong, locSai, luaChon, sapDong, soOLocDangChay, type BoLocCot } from "./loc";
 import { nhomDong, type CachNhom, type DongLuoi } from "./nhom";
 import { ChonCot, ChonNhom, HopGocNhin, MenuGocNhin, type CheDoHop } from "./thanh-cong-cu";
+import { COT_SUA, useSuaTrenO } from "./cell-edit/tren-o";
+
+// Dán, xoá, kéo điền hàng loạt là hàng 16: lưới gửi lô ghi thì bỏ qua — chỉ trình sửa trên ô ghi.
+const BO_QUA_GHI_LOAT = () => undefined;
 
 const ROW_HEIGHT = { px: 37, className: "[&>td]:h-9.25" };
 
@@ -172,8 +176,11 @@ function taoCot(cotNhanNhom: CotId): DefCot[] {
       minSize: 80,
       meta: {
         headerTitle: cot.label,
-        // Chỉ đọc ở hàng này: chép ra đúng chữ đang hiện, không ô nào ghi được.
-        cellEdit: { editable: false, format: (_v: unknown, d: DongLuoi) => (d.kind === "can" ? chuCuaO(d.dong, cot.id) : d.label) },
+        // Chép ra đúng chữ đang hiện. Ba cột Giá, Phí, Trạng thái mở trình sửa trên ô (hàng 15) qua onCellEditRequest.
+        cellEdit: {
+          editable: COT_SUA.has(cot.id) ? (d: DongLuoi) => d.kind === "can" : false,
+          format: (_v: unknown, d: DongLuoi) => (d.kind === "can" ? chuCuaO(d.dong, cot.id) : d.label),
+        },
       },
     })),
   ];
@@ -237,6 +244,7 @@ export function BangHang({
   const router = useRouter();
   const frameRef = useRef<HTMLDivElement | null>(null);
   const { hang, daKeo, loiMang, thuLai } = useDanhSachTrenMay();
+  const suaTrenO = useSuaTrenO();
   const danhMuc = useDanhMuc(san);
   const { ds: gocNhins } = useGocNhinCuaToi();
   const gocNhin: GocNhin | undefined = gocNhinId ? gocNhins.find((g) => g.id === gocNhinId) : undefined;
@@ -475,11 +483,14 @@ export function BangHang({
           }
           tableLayout={TABLE_LAYOUT}
           tableClassNames={TABLE_CLASS_NAMES}
+          onCellEditRequest={(r) => (r.row.kind === "can" ? suaTrenO.moTrinhSua(r.row.dong, r.columnId as CotId, r.initialText) : undefined)}
+          onCellsChange={BO_QUA_GHI_LOAT}
         >
-          <FramePanel ref={frameRef} className="p-0">
+          <FramePanel ref={frameRef} className="p-0" onKeyDown={suaTrenO.onKeyDown}>
             {than}
           </FramePanel>
         </DataGrid>
+        {suaTrenO.trinhSua}
         {hop ? (
           <HopGocNhin
             cheDo={hop}

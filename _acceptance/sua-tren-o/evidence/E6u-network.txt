@@ -1,0 +1,3 @@
+E6u network (tab #e6u, playwright, performance resource entries /api/v1): /catalog, /listings, /listings/<id>, /me, /listings/<id>/events -> all 200. Failed app requests: none.
+Console: 2 dev-only errors from Base UI "PopoverTrigger expected a native <button> (nativeButton)" at tren-o.tsx:111 (React dev warning, not network).
+Third-party: none.
