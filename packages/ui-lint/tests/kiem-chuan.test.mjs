@@ -162,12 +162,13 @@ describe("vết chọn khối — danh mục khối", () => {
       ["Archetype", 1, "—"],
       ["Ảnh chuẩn", 5, "`_acceptance/khong-co.png`"],
       ["Tệp đang dùng", 3, "`apps/web/src/khong-co/`"],
+      ["Tệp đang dùng", 3, "apps/web/src/khong-co/"],
       ["Nhóm đang dùng", 2, "nhom-khong-co"],
       ["Duyệt", 7, "hôm qua"],
       ["Duyệt", 7, "2026-10-31 · [Tên] · vo-ung-dung"],
       ["Phiên bản ReUI", 6, "mới nhất"],
     ];
-    assert.equal(ca.length, 15);
+    assert.equal(ca.length, 16);
     for (const [cot, i, giaTri] of ca)
       voiBanSao((root) => {
         suaO(root, CATALOG, DONG_SHELL, i, giaTri);

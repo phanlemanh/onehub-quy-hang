@@ -161,6 +161,7 @@ function kiemKhoi(root, loi, dong) {
       for (const n of nhomDung.split(",").map((x) => x.trim()))
         if (n !== "vỏ" && !nhom.has(n)) sai(ten, "Nhóm đang dùng", `«${n}» không là nhóm của design/patterns`);
     let thuMuc = "";
+    if (!rong(tepDung ?? "") && trongVet(tepDung).length === 0) sai(ten, "Tệp đang dùng", "phải ghi đường trong dấu `…`");
     for (const t of trongVet(tepDung ?? "")) {
       const duong = t.includes("/") ? t : join(thuMuc, t);
       if (t.endsWith("/")) thuMuc = t;

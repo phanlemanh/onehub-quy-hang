@@ -25,7 +25,7 @@ evals:
     criterion: AC-3
     executor: test
     cmd: config:executors.test.ui_lint
-    expected: "exit 0; ca «khối: dòng thiếu ô hay trỏ sai thì đỏ gọi tên dòng và cột» có mặt và ok — ma trận viết trước đếm bằng đúng 15 (assert số): 9 cột × ô rỗng, cộng ô Archetype chỉ '—', Ảnh chuẩn trỏ tệp không có, Tệp đang dùng trỏ tệp không có, Nhóm đang dùng là tên không có trong design/patterns, Duyệt sai khuôn 'hôm qua', Duyệt tên khác approved_by của hồ sơ (tên '[Tên]'); mỗi ca sửa đúng một ô của dòng app-shell-8 trên bản sao catalog.md thật và assert loi chứa 'catalog.md khối app-shell-8' cùng tên cột ấy; đối chứng dương: bản sao không sửa → không lỗi khối. Chiều đỏ: bỏ kiểm tồn tại tệp → ca ảnh chuẩn đỏ; bỏ đối chiếu approved_by → ca tên khác đỏ."
+    expected: "exit 0; ca «khối: dòng thiếu ô hay trỏ sai thì đỏ gọi tên dòng và cột» có mặt và ok — ma trận viết trước đếm bằng đúng 16 (assert số): 8 cột trừ Khối gốc × ô rỗng, cộng ô Archetype chỉ '—', Ảnh chuẩn trỏ tệp không có, Tệp đang dùng trỏ tệp không có, Tệp đang dùng ghi đường không bọc dấu `…`, Phiên bản ReUI sai khuôn, Nhóm đang dùng là tên không có trong design/patterns, Duyệt sai khuôn 'hôm qua', Duyệt tên khác approved_by của hồ sơ (tên '[Tên]'); mỗi ca sửa đúng một ô của dòng app-shell-8 trên bản sao catalog.md thật và assert loi chứa 'catalog.md khối app-shell-8' cùng tên cột ấy; đối chứng dương: bản sao không sửa → không lỗi khối. Chiều đỏ: bỏ kiểm tồn tại tệp → ca ảnh chuẩn đỏ; bỏ đối chiếu approved_by → ca tên khác đỏ."
     paths: [packages/ui-lint/kiem-chuan.mjs, packages/ui-lint/tests/kiem-chuan.test.mjs, .agents/skills/quy-hang-ui/catalog.md]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
