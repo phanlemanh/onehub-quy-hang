@@ -3,11 +3,12 @@
 /**
  * Sửa trên ô (hàng 15) cho ba cột Giá, Phí, Trạng thái của Bảng hàng. Lưới mở trình sửa qua `onCellEditRequest` (Enter,
  * F2, gõ, nhấp đúp); trình sửa nổi ngay tại ô (Popover neo vào ô đang chọn). Không nút Lưu: Enter ghi một sự kiện qua
- * kho trên máy (hàng 13), rồi thông báo «Đã đổi … · Hoàn tác» (luật 8). Logic thuần ở `lenh.ts`, `hoan-tac.ts`.
+ * kho trên máy (hàng 13), rồi thông báo «Đã đổi … · Hoàn tác» (luật 8); mỗi thông báo hoàn tác đúng lần sửa của nó
+ * (va-sua-tren-o). Logic thuần ở `lenh.ts`, `hoan-tac.ts`.
  */
-import { useCallback, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useState, type KeyboardEvent, type ReactNode } from "react";
 import type { StandardStatus, WithdrawnReason } from "@quy-hang/core/listing";
-import { docGia, vietGia, vietPhanTram, type FeeInclusion } from "@quy-hang/core/pricing";
+import { docGia, vietPhanTram, type FeeInclusion } from "@quy-hang/core/pricing";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,8 +20,8 @@ import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
 import { COT_SUA } from "./cot-sua";
-import { KHONG_HOAN_TAC, lenhHoanTac } from "./hoan-tac";
-import { chuaHieu, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, homNay, nacTrangThai, XAC_NHAN, type KetQuaLenh, type Lenh } from "./lenh";
+import { KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
+import { chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -29,7 +30,6 @@ const NHAN_COT: Record<CotSua, string> = { listPrice: "giá", feeInclusion: "ph�
 const PHI: FeeInclusion[] = ["included", "excluded"];
 
 type Phien = { hang: DongBang; cot: CotSua; chuDau?: string; coSo?: number; o: { top: number; left: number; width: number; height: number } };
-type DaGhi = { id: string; nhan: string; lenh: Lenh };
 type ChoXacNhan = Extract<KetQuaLenh, { ok: true }>;
 
 function moTaLoi(l: LoiTrenMay): string {
@@ -40,19 +40,11 @@ function moTaLoi(l: LoiTrenMay): string {
   return "Lần sửa không hợp lệ";
 }
 
-function moTaThayDoi(hang: DongBang, lenh: Lenh): string {
-  if (lenh.type === "price_changed") {
-    const cu = hang.listPrice === null ? "chưa có giá" : `${vietGia(hang.listPrice)}, ${FEE_LABEL[hang.feeInclusion ?? ""] ?? "—"}`;
-    return `${cu} → ${vietGia(lenh.payload.listPrice)}, ${FEE_LABEL[lenh.payload.feeInclusion]}`;
-  }
-  return `${STATUS_LABEL[hang.standardStatus]} → ${STATUS_LABEL[lenh.payload.to]}`;
-}
-
 export function useSuaTrenO() {
   const sua = useSuaHang();
   const docPhienBan = useDocPhienBan();
   const [phien, setPhien] = useState<Phien | null>(null);
-  const daGhi = useRef<DaGhi | null>(null);
+  const [so] = useState(taoSoHoanTac);
 
   const moTrinhSua = useCallback((hang: DongBang, cot: CotId, chuDau?: string) => {
     if (!COT_SUA.has(cot)) return;
@@ -64,14 +56,22 @@ export function useSuaTrenO() {
     setPhien({ hang, cot: cot as CotSua, chuDau, coSo: docPhienBan(hang.id), o: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : { top: 0, left: 0, width: 0, height: 0 } });
   }, [docPhienBan]);
 
-  const hoanTac = useCallback(async () => {
-    const g = daGhi.current;
-    daGhi.current = null;
-    if (!g) return;
-    const kq = await sua(g.id, g.lenh.type, g.lenh.payload);
-    if (kq.ok) toast.success(`Đã hoàn tác ${g.nhan}`);
-    else toast.error(`Không hoàn tác được: ${moTaLoi(kq.loi)}`);
-  }, [sua]);
+  /** Ghi lệnh bù của bản ghi đã được bộ giữ cho dùng; bị từ chối thì báo, không ghi gì. Lệnh bù không tạo bản ghi mới. */
+  const hoanTac = useCallback(
+    async (kq: KetQuaDung) => {
+      if (!kq.ok) {
+        toast.error(kq.loi);
+        return;
+      }
+      const g = kq.banGhi;
+      // Lệnh bù mang phiên bản vừa xét: một lần kéo về chen giữa lúc xét và lúc ghi thì thành xung đột, vào «Cần xem»,
+      // không ghi đè lặng lần sửa sau (AC-5).
+      const ketQua = await sua(g.id, g.lenh.type, g.lenh.payload, g.phienBanSau);
+      if (ketQua.ok) toast.success(`Đã hoàn tác ${g.nhan}`);
+      else toast.error(`${KHONG_HOAN_TAC}: ${moTaLoi(ketQua.loi)}`);
+    },
+    [sua],
+  );
 
   const ghi = useCallback(
     async (hang: DongBang, cot: CotSua, kq: ChoXacNhan, coSo: number | undefined) => {
@@ -83,24 +83,27 @@ export function useSuaTrenO() {
       }
       const nhan = `${NHAN_COT[cot]} ${hang.unitNumber ?? ""}`.trim();
       const bu = lenhHoanTac(hang, kq.lenh);
-      daGhi.current = bu ? { id: hang.id, nhan, lenh: bu } : null;
+      // Phiên bản căn ngay sau lần ghi này: căn đổi phiên bản nữa là có lần sửa sau, thông báo này thôi hoàn tác (AC-5).
+      const banGhi: BanGhiHoanTac | null = so.ghi(bu ? { id: hang.id, nhan, lenh: bu, phienBanSau: ketQua.op.expectedVersion + 1 } : null);
       toast(`Đã đổi ${nhan}`, {
-        description: bu ? XAC_NHAN : `${XAC_NHAN} · ${KHONG_HOAN_TAC}`,
+        description: banGhi ? XAC_NHAN : `${XAC_NHAN} · ${KHONG_HOAN_TAC}`,
         duration: 10_000,
-        action: bu ? { label: "Hoàn tác", onClick: () => void hoanTac() } : undefined,
+        action: banGhi ? { label: "Hoàn tác", onClick: () => void hoanTac(so.dungNut(banGhi, docPhienBan)) } : undefined,
       });
     },
-    [sua, hoanTac],
+    [sua, so, hoanTac, docPhienBan],
   );
 
-  /** Ctrl/Cmd+Z khi lưới có tiêu điểm: hoàn tác lần sửa gần nhất của người này trên bảng này. */
+  /** Ctrl/Cmd+Z khi lưới có tiêu điểm: hoàn tác lần sửa thành công gần nhất của người này trên bảng này (AC-6). */
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (phien || e.shiftKey || !(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z" || !daGhi.current) return;
+      if (phien || e.shiftKey || !(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z") return;
+      const kq = so.dungPhim(docPhienBan);
+      if (!kq) return;
       e.preventDefault();
-      void hoanTac();
+      void hoanTac(kq);
     },
-    [phien, hoanTac],
+    [phien, so, hoanTac, docPhienBan],
   );
 
   const trinhSua: ReactNode = (
@@ -143,7 +146,7 @@ export function TrinhSua({ phien, onDoiCot, onHuy, onGhi }: { phien: Pick<Phien,
 }
 
 function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; chuDau?: string; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
-  const [chu, setChu] = useState(chuDau ?? (hang.listPrice === null ? "" : vietGia(hang.listPrice)));
+  const [chu, setChu] = useState(chuDau ?? chuDienSan(hang));
   const [phi, setPhi] = useState<FeeInclusion | null>(hang.feeInclusion === "included" || hang.feeInclusion === "excluded" ? hang.feeInclusion : null);
   const hieuLa = hieuLaGia(chu, phi);
   // Chưa hiểu thì báo ngay khi gõ (AC-3), không đợi Enter.
@@ -225,7 +228,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
       {to === "Closed" ? (
         <>
           <Input autoFocus aria-label="Giá chốt" value={giaChot} onChange={(e) => (setGiaChot(e.target.value), onDoiChu())} placeholder="Giá chốt, vd 4,5 tỷ" maxLength={40} />
-          <p className="text-xs text-foreground">{docGia(giaChot).ok ? `Hiểu là: giá chốt ${vietGia((docGia(giaChot) as { dong: number }).dong)}` : " "}</p>
+          <p className="text-xs text-foreground">{hieuLaGiaChot(giaChot) ?? " "}</p>
           <Input type="date" aria-label="Ngày bán" value={ngayBan} onChange={(e) => setNgayBan(e.target.value)} />
         </>
       ) : null}

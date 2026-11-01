@@ -1,0 +1,124 @@
+schema_version: 1
+feature_slug: va-sua-tren-o
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps) — chỗ thử dãy B của hàng 14:
+#   node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs
+#   → Postgres dãy B (cổng 5561) đã migrate; sàn và người mẫu của hàng 5; 40 hàng mẫu; máy chủ dev cổng 3481.
+#   Phiên đăng nhập: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs (cookieCua) giữ phiên ở .acceptance-runs.
+#   Lịch sử sự kiện của một hàng: GET /api/v1/listings/<id>, trường events (fetch trong trang, cùng phiên).
+#   Hàng cho bài nhìn: lấy hàng Toà A, Đang bán, có giá, theo mã căn tăng dần, BỎ A-13.01 (hồ sơ sua-tren-o đã dùng):
+#   E3 dùng hàng thứ nhất (P); E5 hàng thứ hai (A) và thứ ba (B); E5b hàng thứ tư (C); E5c hàng thứ năm (D). Ghi mã thật vào output.
+#   Mỗi bài ghi thêm: sự kiện của hàng mình có tác giả lạ không (actorUserId khác phiên).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; pricing/doc-gia.test.ts có ca «viết rồi đọc lại»: bảng viết trước số → chữ («4655000000»→«4,655 tỷ», «4650500000»→«4,6505 tỷ», «1500000»→«1,5 triệu», «1234567»→«1,234567 triệu», «950000000»→«950 triệu», «4800000000»→«4,8 tỷ», «1000000000000»→«1000 tỷ», «1000000»→«1 triệu», «999999999»→«999,999999 triệu», «1000000001»→«1,000000001 tỷ»), mỗi dòng assert chữ đúng VÀ docGia(chữ).dong bằng số; thêm 2.000 số nguyên sinh bằng bộ sinh có hạt giống cố định trong [1e6, 1e12], mỗi số assert đọc lại bằng chính nó (thông điệp nêu số hỏng). Đối chứng đỏ trong tệp: bộ viết giả làm tròn hai số lẻ của tỷ thì dòng 4655000000 đỏ với thông điệp gọi tên số."
+    paths: ["packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; cell-edit/lenh.test.ts: ma trận viết trước các chỗ hiện giá × hai giá (4655000000 «4,655 tỷ», 4650500000 «4,6505 tỷ»): (1) đọc lại khi gõ (hieuLaGia) → «Hiểu là: 4,655 tỷ, không bao phí»; (2) đọc lại giá chốt → «Hiểu là: giá chốt 4,6505 tỷ»; (3) mô tả «cũ → mới» của hộp hỏi lại (moTaThayDoi) chứa đúng hai giá viết đủ; (4) chữ điền sẵn ô gõ (chuDienSan) → «4,655 tỷ» — mỗi ô một assert, lệnh dựng ra mang listPrice/closePrice bằng số. Thêm «4 tỷ 655» và «1,5 triệu» cho (1). Đối chứng đỏ trong tệp: thay bộ viết bằng bản làm tròn hai số lẻ thì ô (1)/(3)/(4) đỏ với thông điệp gọi tên chỗ."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**", "packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, /inventory, Nhóm = Không nhóm, lọc Mã căn = P — ghi giá, phí; fetch GET /api/v1/listings/<id> → số sự kiện n0"
+      - "Nhấp đúp ô Giá, gõ «4,655 tỷ» và bấm nút điều kiện phí KHÁC phí hiện tại (đổi phí luôn bật hộp hỏi lại) → chụp evidence/E3-hieu-la.png; ghi dòng «Hiểu là» → Enter → chụp evidence/E3-hoi-lai.png; ghi chữ trong hộp hỏi lại → bấm «Đổi» → ghi chữ thông báo; fetch events → sự kiện cuối listPrice"
+      - "Nhấp đúp ô Giá lần nữa → chụp evidence/E3-dien-san.png; ghi chữ điền sẵn trong ô gõ → Enter không gõ gì → fetch events → ghi số sự kiện và listPrice của mọi sự kiện mới"
+      - "Mở lại ô Giá, gõ «1,5 triệu» (KHÔNG bấm Enter) → ghi dòng «Hiểu là» → Esc"
+    expected: "Dòng «Hiểu là: 4,655 tỷ, <phí mới>»; hộp hỏi lại hiện và viết giá mới «4,655 tỷ», không «4,66 tỷ»; sự kiện ghi listPrice 4655000000. Ô gõ điền sẵn «4,655 tỷ»; Enter không gõ gì: mọi sự kiện mới (nếu có) mang listPrice 4655000000, không sự kiện nào mang 4660000000. «1,5 triệu» → «Hiểu là: 1,5 triệu, …». Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**", "packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E4
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; cell-edit/hoan-tac.test.ts: ma trận viết trước của xetHoanTac(banGhi, phienBanHienTai) — {daDung:false, phienBanSau:7} với 7 → {ok:true}; với 8 → {ok:false, loi:'Không hoàn tác được: căn đã có lần sửa sau'}; với 6 → cùng lỗi ấy; với undefined (căn không còn trên máy) → cùng lỗi ấy; {daDung:true} với 7 → {ok:false, loi:'Đã hoàn tác rồi'}; mỗi ô một assert ghim chữ lỗi. Đối chứng đỏ: hàm giả bỏ so phiên bản thì ô 8 đỏ với thông điệp gọi tên ô."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm, lọc Toà A. Ghi giá, phí của A và B; fetch events của A, B → nA0, nB0"
+      - "Sửa giá A trong ngưỡng → Enter; trong 3 giây sửa giá B trong ngưỡng → Enter → chụp evidence/E5-hai-thong-bao.png (hai thông báo cùng hiện)"
+      - "Bấm «Hoàn tác» trên thông báo của A → chụp evidence/E5-hoan-tac-a.png; ghi giá trên ô A, B và chữ thông báo; fetch events A, B"
+      - "Bấm Ctrl+Z (Cmd+Z trên mac) khi lưới có tiêu điểm → ghi giá ô A, B; fetch events A, B; bấm Ctrl+Z lần nữa → fetch events A, B (không đổi số)"
+      - "Sửa giá A lần 1 → Enter; sửa giá A lần 2 → Enter; bấm «Hoàn tác» trên thông báo của lần 1 → chụp evidence/E5-co-lan-sau.png; ghi chữ thông báo lỗi và giá ô A; fetch events A"
+    expected: "Hoàn tác thông báo của A: A về giá và phí trước, events A = nA0 + 2 (sửa + bù), events B = nB0 + 1, thông báo «Đã hoàn tác giá A». Ctrl+Z lần một đảo B (lần sửa thành công gần nhất), A không có sự kiện mới; Ctrl+Z lần hai không ghi gì. Thông báo cũ của A khi A đã có lần sửa sau: «Không hoàn tác được: căn đã có lần sửa sau», giá A vẫn là giá lần 2, không sự kiện mới. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5b
+    criterion: AC-5
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Hai phiên: dau-chu-1 (phiên 1) và truong-nhom (phiên 2), cả hai /inventory, Không nhóm, lọc Mã căn = C (hàng Toà A Đang bán có giá thứ tư theo luật chọn hàng). Fetch events C → n0"
+      - "Phiên 1 sửa giá C trong ngưỡng → Enter (thông báo «Đã đổi giá C · Hoàn tác» hiện)"
+      - "Phiên 2 sửa giá C sang giá khác trong ngưỡng → Enter; ghi giá máy chủ (fetch listing). Phiên 1 chờ tới khi chỉ báo đồng bộ đổi và ô C hiện giá của phiên 2 (tối đa 40 giây; ghi thời gian)"
+      - "Phiên 1 bấm «Hoàn tác» trên thông báo cũ (nếu thông báo đã tắt thì làm lại bước 2–3 nhanh hơn, ghi số lần) → chụp evidence/E5b-nguoi-khac.png; ghi chữ thông báo; fetch events C, giá máy chủ"
+    expected: "Phiên 1 hiện «Không hoàn tác được: căn đã có lần sửa sau»; events C = n0 + 2 (hai lần sửa), không sự kiện bù; giá máy chủ là giá của phiên 2. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5c
+    criterion: AC-6
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. dau-chu-1, /inventory, Không nhóm, lọc Mã căn = D (hàng thứ năm theo luật chọn hàng). Fetch events D → n0"
+      - "Sửa giá D trong ngưỡng → Enter; bấm «Hoàn tác» trên thông báo; bấm Ctrl+Z (Cmd+Z) khi lưới có tiêu điểm → fetch events D → n1"
+      - "Sửa giá D lần nữa → Enter; bấm Ctrl+Z trước; rồi bấm «Hoàn tác» trên thông báo vừa hiện của lần sửa đó (còn trên màn) → chụp evidence/E5c-da-hoan-tac.png; ghi chữ thông báo; fetch events D → n2"
+    expected: "n1 = n0 + 2 (một sửa + đúng một bù, Ctrl+Z không thêm); n2 = n1 + 2 (một sửa + đúng một bù); nút lần sau hiện «Đã hoàn tác rồi». Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; cell-edit/hoan-tac.test.ts: bộ giữ bản ghi (soHoanTac: ghi, dungNut, dungPhim) — (a) ghi A rồi B, dùng nút của A → lệnh bù của A, rồi dùng phím → lệnh bù của B (lệnh bù không tạo bản ghi), phím lần nữa → không lệnh; (b) ghi D, dùng nút rồi phím → đúng một lệnh bù; (c) ghi D, phím rồi nút → đúng một lệnh bù, nút ra 'Đã hoàn tác rồi'. Mỗi chiều một ca, đếm lệnh bù. Đối chứng đỏ: bỏ đánh dấu đã dùng thì (b) ra hai lệnh bù và ca đỏ gọi tên chiều."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; «chuẩn giao diện: đạt»; «0 lệch»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/va-sua-tren-o/thu/ranh-gioi.mjs
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: packages/core/src/pricing/**, apps/web/src/app/(app)/inventory/cell-edit/**, _acceptance/va-sua-tren-o/**, docs/plan/lo-trinh.json, LO-TRINH.html, PRODUCT-MAP.md. Đối chứng đỏ trong cùng lệnh: danh sách giả có thêm apps/web/src/lib/sync/dong-bo.ts thì hàm kiểm gọi đúng tệp ấy — thiếu thì exit 1 «thước không phân biệt được»."
+    paths: ["_acceptance/va-sua-tren-o/thu/ranh-gioi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -1,0 +1,67 @@
+{
+ "feature_plain": "Vá hai lỗi anh tách ra ở hàng 15: dòng «Hiểu là» đọc lại đúng từng đồng máy sẽ ghi, và nút Hoàn tác trên mỗi thông báo hoàn tác đúng lần sửa của chính nó, không đè lên lần sửa sau.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ viết giá đúng từng đồng: «4,655 tỷ», «1,5 triệu», «1000 tỷ» — viết rồi đọc lại luôn ra đúng số cũ, thử trên bảng viết trước và 2.000 số ngẫu nhiên."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ đọc lại đúng số máy ghi ở mọi chỗ trình sửa hiện giá: dòng «Hiểu là», giá chốt, hộp hỏi lại, chữ điền sẵn."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ điền sẵn «4,655 tỷ» khi mở ô Giá của căn 4,655 tỷ; bấm Enter không gõ gì không bao giờ ghi thành 4,66 tỷ."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ hoàn tác đúng căn của thông báo: sửa A rồi B, bấm Hoàn tác trên thông báo của A thì chỉ A về giá cũ."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ không ghi gì và báo «Không hoàn tác được: căn đã có lần sửa sau» khi căn đã được sửa tiếp — của mình hay người khác (Hỏi-1)."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ hoàn tác mỗi lần sửa đúng một lần dù bấm nút hay Ctrl+Z trước; Ctrl+Z vẫn hoàn tác lần sửa gần nhất như hàng 15."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ giữ kiểm kiểu, lint, bộ test, sàn thiết kế xanh và không chạm tệp ngoài phần được giao."
+  },
+  {
+   "id": "OOS-1",
+   "p": "KHÔNG đổi cột Giá của Bảng hàng — cột vẫn viết gọn hai số lẻ."
+  },
+  {
+   "id": "OOS-2",
+   "p": "KHÔNG sửa chuyện ghi lỗi rồi Ctrl+Z đảo lần sửa trước — anh đã chọn ghi giới hạn đã biết ở hàng 15."
+  },
+  {
+   "id": "OOS-3",
+   "p": "KHÔNG làm chặt các bài tự kiểm yếu của hàng 15."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Lựa chọn «từ chối hoàn tác khi đã có lần sửa sau» là đánh đổi chỉ anh quyết được, máy đã ghi nhầm là luật có sẵn — đổi thành Hỏi-1, nháp theo khuyến nghị."
+  },
+  {
+   "i": 1,
+   "p": "Chưa có bài thử lần sửa sau của người khác kéo về máy — đã thêm bài hai phiên (đầu chủ và trưởng nhóm), đếm sự kiện."
+  },
+  {
+   "i": 2,
+   "p": "Chưa có bài thử nút và Ctrl+Z dùng chung một lần hoàn tác trên bản thật — đã thêm bài hai chiều, đếm sự kiện bù."
+  },
+  {
+   "i": 3,
+   "p": "Bài chấm chỉ đo dòng «Hiểu là», bỏ sót hộp hỏi lại và chữ điền sẵn — đã đổi thành bảng mọi chỗ hiện giá; bài nhìn đổi phí để hộp hỏi lại luôn hiện."
+  },
+  {
+   "i": 4,
+   "p": "Hợp đồng chưa nói Ctrl+Z sau khi hoàn tác A thì đảo gì — đã ghi rõ: đảo lần sửa thành công gần nhất còn lại."
+  }
+ ]
+}

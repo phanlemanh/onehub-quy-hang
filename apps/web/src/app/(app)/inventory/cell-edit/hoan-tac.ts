@@ -22,3 +22,52 @@ export function lenhHoanTac(truoc: Truoc, lenh: Lenh): Lenh | null {
 export function hoanTacDuoc(truoc: Truoc, lenh: Lenh): boolean {
   return lenhHoanTac(truoc, lenh) !== null;
 }
+
+/**
+ * Bản ghi hoàn tác của một lần sửa thành công (va-sua-tren-o): thông báo giữ đúng bản ghi của nó, Ctrl/Cmd+Z giữ bản ghi
+ * của lần sửa thành công gần nhất. `phienBanSau` là phiên bản căn ngay sau lần ghi — căn đã đổi phiên bản thì có lần sửa
+ * sau (của mình hay người khác kéo về máy), hoàn tác không ghi đè lên nó.
+ */
+export type BanGhiHoanTac = { id: string; nhan: string; lenh: Lenh; phienBanSau: number; daDung: boolean };
+
+export const DA_SUA_SAU = `${KHONG_HOAN_TAC}: căn đã có lần sửa sau`;
+export const DA_HOAN_TAC = "Đã hoàn tác rồi";
+
+export type KetQuaXet = { ok: true } | { ok: false; loi: string };
+
+/** Quyết một lần bấm hoàn tác: đã dùng → «Đã hoàn tác rồi»; phiên bản trên máy khác phiên bản sau lần ghi → từ chối. */
+export function xetHoanTac(banGhi: Pick<BanGhiHoanTac, "daDung" | "phienBanSau">, phienBanHienTai: number | undefined): KetQuaXet {
+  if (banGhi.daDung) return { ok: false, loi: DA_HOAN_TAC };
+  if (phienBanHienTai !== banGhi.phienBanSau) return { ok: false, loi: DA_SUA_SAU };
+  return { ok: true };
+}
+
+export type KetQuaDung = { ok: true; banGhi: BanGhiHoanTac } | { ok: false; loi: string };
+
+/**
+ * Bộ giữ bản ghi — thuần, không React. Chỉ lần sửa của người gọi `ghi`; lệnh bù không tạo bản ghi. Dùng xong (nút hay phím)
+ * thì bản ghi đánh dấu đã dùng và rời Ctrl+Z. `phienBan` đọc phiên bản trên máy của căn lúc bấm.
+ */
+export function taoSoHoanTac() {
+  let ganNhat: BanGhiHoanTac | null = null;
+  const dung = (b: BanGhiHoanTac, phienBan: (id: string) => number | undefined): KetQuaDung => {
+    const kq = xetHoanTac(b, phienBan(b.id));
+    if (!kq.ok) return kq;
+    b.daDung = true;
+    if (ganNhat === b) ganNhat = null;
+    return { ok: true, banGhi: b };
+  };
+  return {
+    /** Lần sửa thành công: bản ghi mới, hoặc null khi lần sửa không hoàn tác được (Ctrl+Z thôi trỏ lần trước). */
+    ghi(b: Omit<BanGhiHoanTac, "daDung"> | null): BanGhiHoanTac | null {
+      ganNhat = b ? { ...b, daDung: false } : null;
+      return ganNhat;
+    },
+    /** Nút «Hoàn tác» trên thông báo: đúng bản ghi của thông báo ấy. */
+    dungNut: dung,
+    /** Ctrl/Cmd+Z: bản ghi gần nhất; null khi không còn gì để hoàn tác (phím không làm gì). */
+    dungPhim(phienBan: (id: string) => number | undefined): KetQuaDung | null {
+      return ganNhat ? dung(ganNhat, phienBan) : null;
+    },
+  };
+}

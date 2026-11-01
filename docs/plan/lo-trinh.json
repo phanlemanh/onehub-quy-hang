@@ -1820,6 +1820,12 @@
       "cau_giao": "Khi deploy, cơ sở dữ liệu tự bật hẳn hai ràng buộc chặn số chủ để rõ (bảng chủ nhà và bảng lead) nếu bảng không còn số rõ; còn số rõ thì bỏ qua và nhắc chạy lệnh mã hoá lại",
       "slug": "bat-rang-buoc-ban-ma",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
+    },
+    {
+      "ma": "va-sua-tren-o",
+      "cau_giao": "Vá sửa trên ô: dòng «Hiểu là» đọc lại đúng số máy ghi, không làm tròn; nút Hoàn tác trên thông báo hoàn tác đúng lần sửa của chính nó và không ghi đè lần sửa sau",
+      "slug": "va-sua-tren-o",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
     }
   ],
   "chan_troi": [
