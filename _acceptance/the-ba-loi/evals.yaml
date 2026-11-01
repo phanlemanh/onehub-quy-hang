@@ -82,6 +82,11 @@ evals:
     executor: ui-check
     layer: ui-observed
     target: _acceptance/the-ba-loi/evidence/ba-loi-mau.html
+    steps:
+      - "Mở tệp trang mẫu bằng trình duyệt (file:///<gốc kho>/_acceptance/the-ba-loi/evidence/ba-loi-mau.html — Playwright mở được file://). Khổ 1440x900, prefers-color-scheme light → chụp evidence/E11-1440-sang.png; ghi scrollWidth vs innerWidth, top của [data-khuyen] và chữ của nó, top của ba section[data-loi] theo thứ tự, màu chữ và màu nền computed của body, viền của section.chon so với section khác"
+      - "Cùng trang, prefers-color-scheme dark → chụp evidence/E11-1440-toi.png; ghi màu chữ và màu nền computed của body"
+      - "Khổ 375x812, light → chụp evidence/E11-375-sang.png; ghi scrollWidth vs innerWidth, top của [data-khuyen], top của ba section theo thứ tự"
+      - "Khổ 375x812, dark → chụp evidence/E11-375-toi.png; ghi scrollWidth vs innerWidth, màu chữ và màu nền computed của body"
     expected: "Mở tệp trang mẫu (dựng bằng --dung-ba-loi từ ảnh và chữ của trang tay hàng 17) bằng trình duyệt ở 4 tổ hợp: 1440×900 sáng, 1440×900 tối, 375×812 sáng, 375×812 tối (prefers-color-scheme). Mỗi tổ hợp một ảnh chụp lưu evidence/E11-<khổ>-<nền>.png. Đạt khi cả 4: document.documentElement.scrollWidth <= innerWidth (không cuộn ngang); khối lời khuyên nằm trong khung đầu (getBoundingClientRect().top < innerHeight) và nêu «ReUI»; ở 1440 ba cột nằm cùng một hàng (cùng top), ở 375 ba cột xếp dọc theo thứ tự Trong kho, ReUI, Vẽ mới; chữ thân trang và nền khác màu rõ ở cả sáng và tối (màu chữ computed khác màu nền computed); cột ReUI có viền đánh dấu khác hai cột kia."
     paths: [packages/ui-lint/lib/ba-loi.mjs, _acceptance/the-ba-loi/evidence/ba-loi-mau.html]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
