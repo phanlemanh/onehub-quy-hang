@@ -55,12 +55,28 @@ lần rao chọn ảnh»). Việc lần rao chọn ảnh hiện là hàng sau (2
 
 ### Nơi giữ byte (Hỏi-1)
 
-Khuyến nghị: **giữ byte trong Postgres** của dự án Quỹ hàng (bảng `unit_photo_files`), sau một giao diện `KhoAnh`
-(`ghi`, `doc`) ở API để đổi sang Supabase Storage khi số ảnh lớn. Vì sao: không thêm dịch vụ, không khoá mới, không có
-link công khai nào tồn tại; ngăn nội bộ được chặn bằng chính luật theo dòng của cơ sở dữ liệu (bất biến 2 — chặn ở lõi
-và kho dữ liệu, không ở giao diện), và bộ kiểm cách ly đo được trên Postgres dãy. Giá: dung lượng cơ sở dữ liệu (gói
-Free 500 MB; ước 300 KB/ảnh gốc + 40 KB bản nhẹ → khoảng 1 400 ảnh). Lối khác: Supabase Storage kho riêng tư + link ký
-ngắn hạn (đúng bảng stack Kiến trúc §3) — cần hai khoá mới ở Vercel, lượt chấm trên máy không chạm được kho thật.
+Khuyến nghị (giám sát đợt, trả lời H-6): **Supabase Storage**, bucket riêng tư `unit-photos`, sau giao diện `KhoAnh`
+(`ghi`, `xoa`, `kyLink`) ở API. Bốn điều kiện đi vào hợp đồng:
+
+1. **Khoá hẹp nhất có được.** Tài liệu Supabase (Storage › S3 › Authentication): khoá S3 «full access to all S3
+   operations across all buckets and bypass RLS» — chỉ chạm Storage, không chạm cơ sở dữ liệu, nên hẹp hơn
+   `service_role` (bỏ qua luật theo dòng của cả cơ sở dữ liệu). Token phiên theo người dùng tôn trọng luật của
+   `storage.objects` nhưng đòi người dùng Supabase Auth — kho dùng better-auth (ADR-0005); tự ký JWT cần secret JWT của
+   dự án, mạnh ngang `service_role`. Vậy dùng **khoá S3**: `STORAGE_S3_ACCESS_KEY`, `STORAGE_S3_SECRET_KEY`,
+   `STORAGE_S3_ENDPOINT` (ba biến mới ở `.env.example`, tệp bảo vệ — `cham-tep`; giá trị chủ kho đặt ở Vercel, máy không
+   đọc). Không dùng `service_role` ở đâu cả.
+2. **Một mô-đun duy nhất** `packages/api/src/photos/kho-s3.ts` đọc ba biến ấy và ký yêu cầu (SigV4 viết bằng `node:crypto`,
+   không thêm gói); bài quét import đỏ khi tệp khác đọc các biến hay nhập mô-đun ngoài `photos/kho.ts`.
+3. **Đường đối tượng mang `company_id`**: `<company_id>/<photo_id>/<original|thumb>`; API chỉ ký link sau khi đọc được
+   dòng ảnh bằng vai `quy_hang_app` (luật theo dòng — ngăn nội bộ, sàn khác bị chặn trước khi có link). Link GET ký 60 giây;
+   tải lên đi qua API (API ghi đối tượng), trình duyệt không cầm khoá hay link ghi.
+4. **Chi phí** ghi ở ADR-0014: gói Free 1 GB Storage; ước 300 KB/ảnh gốc + 40 KB bản nhẹ → khoảng 3 000 ảnh; vượt thì theo
+   gói Pro của dự án (100 GB kèm gói).
+
+Máy dev, CI và lượt chấm chạy bản Postgres của `KhoAnh` (bảng `unit_photo_files`, cùng luật theo dòng) — không có khoá
+S3 thì API chọn bản ấy; bản thật thiếu khoá thì API không dựng mục ảnh (như khoá số chủ, ADR-0013). Bản S3 kiểm bằng véc
+tơ ký mẫu của SigV4 và một máy chủ S3 giả trong test. Lối khác: chỉ Postgres — không khoá mới, nhưng ăn dung lượng cơ sở
+dữ liệu (Free 500 MB).
 
 ## 3. Đường ảnh đi
 
@@ -69,8 +85,9 @@ ngắn hạn (đúng bảng stack Kiến trúc §3) — cần hai khoá mới �
 2. Gửi `POST /api/v1/units/photos` (multipart: bản gốc nguyên byte, bản nhẹ, toà, mã căn, ngăn, ngày chụp). API kiểm
    lại loại (byte đầu tệp, không tin phần mở rộng), cỡ, quyền; ghi ảnh + hai byte + sự kiện `added` trong một giao dịch.
 3. Danh sách: `GET /api/v1/units/photos?toa=&ma=` trả ảnh người xem được (luật theo dòng lọc), kèm `noiBo: "an"` khi
-   người xem không thấy ngăn nội bộ. Ảnh: `GET /api/v1/units/photos/{id}/{thumb|original}` — ngăn nội bộ trả
-   `Cache-Control: private, no-store`; ngăn gửi được `private, max-age=300`. Không có đường dẫn công khai.
+   người xem không thấy ngăn nội bộ. Ảnh: `GET /api/v1/units/photos/{id}/{thumb|original}` — API kiểm dòng ảnh rồi
+   chuyển hướng 302 tới link ký 60 giây (bản S3) hoặc trả byte (bản Postgres); phản hồi ngăn nội bộ mang
+   `Cache-Control: private, no-store`, ngăn gửi được `private, max-age=300`. Không có đường dẫn công khai.
 4. Đổi ngăn, thứ tự, bìa, ảnh mẫu, xoá: `PATCH /api/v1/units/photos/{id}` và `DELETE` (đặt `removed_at`), mỗi lệnh
    một sự kiện.
 
@@ -106,7 +123,8 @@ và nói «Danh mục chưa có mặt bằng, ảnh view cho căn này». Khi kh
 
 - `packages/core/src/photos/` — kiểu, `kiemTepAnh`, `docNgayChup`, `nhanAnh`, `sapXep`, `anhRaNgoai`, `anhDanhMuc`,
   `canSeeUnitInternal`; xuất qua `@quy-hang/core/photos` (thêm dòng ở `core/index.ts`).
-- `packages/api/src/photos/` — `routes.ts`, `store.ts`, `kho.ts` (giao diện `KhoAnh`, bản Postgres); thêm dòng đăng ký
+- `packages/api/src/photos/` — `routes.ts`, `store.ts`, `kho.ts` (giao diện `KhoAnh`, bản Postgres), `kho-s3.ts` (bản
+  Supabase Storage — mô-đun duy nhất cầm khoá S3); `.env.example` ba biến (xin `cham-tep`); thêm dòng đăng ký
   ở `app.ts`, mã lỗi ở `errors.ts`.
 - `packages/db/migrations/012_anh_can.sql`; ca mới trong `packages/db/tests/isolation.test.mjs`.
 - `apps/web/src/app/(app)/units/photos/` — `muc-anh.tsx` (mục Ảnh), `tai-len.ts` (thả, dán, vẽ bản nhẹ, gửi);

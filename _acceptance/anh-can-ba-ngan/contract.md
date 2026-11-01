@@ -17,7 +17,8 @@ Hàng 18 của lộ trình (dãy H, đợt `dau-chu-dong-vao`), mã phạm vi D6
 lớp nguồn) và hàng 17 (cột hồ sơ căn). T3: migration `012_anh_can.sql` (giữ chỗ lúc mở đợt) và ADR-0014. Ngăn nội bộ
 mang lớp `source` (trần `never_leaves_company`, bất biến 2) và không ra trang khách (bất biến 4) — chặn ở lõi và luật
 theo dòng, không ở giao diện (luật đợt 20). Nơi giữ byte là câu hỏi cho chủ kho (Hỏi-1); hợp đồng viết theo khuyến
-nghị: byte trong Postgres sau giao diện `KhoAnh`.
+nghị: Supabase Storage riêng tư sau giao diện `KhoAnh`, khoá S3 chỉ trong một mô-đun máy chủ; máy dev, CI và lượt chấm
+chạy bản Postgres của `KhoAnh`.
 
 ## Criteria
 
@@ -45,9 +46,11 @@ nghị: byte trong Postgres sau giao diện `KhoAnh`.
   không nhận dòng, số đếm hay byte nào của ngăn nội bộ — API trả như ảnh không có, và chính luật theo dòng của cơ sở dữ
   liệu chặn khi truy vấn thẳng bằng vai `quy_hang_app`; đổi người giữ căn thì quyền đi theo người
   mới; căn chưa có lần rao nào thì chỉ trưởng nhóm thấy ngăn nội bộ.
-- AC-6: Given người xem được ngăn nội bộ, When mở ảnh nội bộ, Then byte trả với `Cache-Control: private, no-store`,
-  không qua bộ đồng bộ, không ghi vào IndexedDB hay hàng đợi ghi của máy, và không có đường dẫn nào mở được ảnh khi
-  không có phiên đăng nhập của sàn; danh sách ảnh (cả hai ngăn) cũng không vào kho trên máy.
+- AC-6: Given người xem được ngăn nội bộ, When mở ảnh nội bộ, Then phản hồi mang `Cache-Control: private, no-store`,
+  không qua bộ đồng bộ, không ghi vào IndexedDB hay hàng đợi ghi của máy; không có đường dẫn nào mở được ảnh khi không có
+  phiên đăng nhập của sàn — link tới kho ảnh chỉ do API ký sau khi đọc được dòng ảnh dưới luật theo dòng, sống 60 giây,
+  đường đối tượng mang mã sàn; khoá của kho ảnh chỉ một mô-đun máy chủ đọc được; danh sách ảnh (cả hai ngăn) cũng không
+  vào kho trên máy.
 - AC-7: Given một căn có ảnh ở hai ngăn, When một cửa ra (trang khách, gửi ảnh + tin, phát hàng — hàng sau) chọn ảnh qua
   hàm lõi `anhRaNgoai`, Then chỉ ảnh ngăn Gửi được ra, đúng thứ tự, ảnh bìa đầu, ảnh mẫu giữ nhãn; ảnh ngăn nội bộ mang
   lớp `source` và không bao giờ ra, kể cả khi cửa ra truyền cờ hay thoả thuận nào.

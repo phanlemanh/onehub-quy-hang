@@ -96,6 +96,15 @@ evals:
     paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/photos/**", "apps/web/src/lib/sync/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.api
+    layer: backend-effect
+    expected: "exit 0; ba ca có mặt và ok — (1) «khoá kho ảnh một chỗ»: quét mọi tệp .ts của packages/**/src và apps/web/src (danh sách tệp đọc từ đĩa, không gõ tay), chỉ packages/api/src/photos/kho-s3.ts chứa tên biến STORAGE_S3_ACCESS_KEY / STORAGE_S3_SECRET_KEY, chỉ packages/api/src/photos/kho.ts nhập kho-s3, không tệp nào chứa SUPABASE_SERVICE_ROLE — đối chứng dương: bản sao cây thêm một tệp đọc STORAGE_S3_SECRET_KEY thì ca đỏ, thông điệp nêu tệp; (2) «ký đúng SigV4»: hàm ký trên véc tơ mẫu SigV4 của AWS (presign GET) ra đúng chữ ký viết trước; link ký có X-Amz-Expires=60 và đường đối tượng bắt đầu bằng company_id của ảnh; (3) «kiểm quyền trước khi ký»: bản S3 trỏ máy chủ S3 giả trong test, đầu khách xin link ảnh nội bộ → 404 và máy chủ giả nhận 0 yêu cầu; đầu chủ giữ căn → 302 tới link ký của máy chủ giả; tải lên ghi đúng hai đối tượng <company_id>/<photo_id>/original|thumb ở máy chủ giả; xoá (Hỏi-6) gửi đúng hai lệnh DELETE. Chiều đỏ: ký link trước khi đọc dòng ảnh thì ca (3) đỏ, thông điệp nêu số yêu cầu máy chủ giả nhận."
+    paths: ["packages/api/src/photos/**", "apps/web/src/**", "packages/*/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
   - id: E7
     criterion: AC-7
     executor: test
