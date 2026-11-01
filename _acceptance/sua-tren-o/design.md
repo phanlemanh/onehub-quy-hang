@@ -51,7 +51,9 @@ hàng 14 (khối `data-grid-editing-6`, đang tắt sửa ô tường minh).
   hỏi lại nói rõ.
 - Không thêm cờ «không tính là xác nhận»: bộ đồng bộ hàng 13 không gửi cờ, máy chủ mặc định tính (luật 9 «mặc định»);
   trình sửa nói rõ «Tính là vừa xác nhận với chủ nhà». Lối tắt cờ để hàng sau (ngoài ranh giới `lib/sync`).
-- Đổi điều kiện phí luôn hỏi lại — luật 12.
+- Đổi điều kiện phí luôn hỏi lại — **Hỏi-1** ở Cổng Phạm vi (nháp theo khuyến nghị; luật 12 không quyết việc hỏi).
+- Hoàn tác KHÔNG tính là vừa xác nhận với chủ nhà — **Hỏi-2** ở Cổng Phạm vi (nháp theo khuyến nghị; cần một chạm nhỏ ở
+  `lib/sync` để lệnh hoàn tác gửi cờ, xin giám sát sau câu trả lời).
 - Không chạm `lib/sync`, API, cơ sở dữ liệu: sửa đi qua `useSuaHang()` có sẵn.
 
 ## Ngoài phạm vi
