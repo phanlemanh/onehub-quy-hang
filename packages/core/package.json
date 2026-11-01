@@ -11,6 +11,7 @@
     "./dedupe": "./src/dedupe/index.ts",
     "./pricing": "./src/pricing/index.ts",
     "./routing": "./src/routing/index.ts",
+    "./contacts": "./src/contacts/index.ts",
     "./photos": "./src/photos/index.ts"
   },
   "scripts": {

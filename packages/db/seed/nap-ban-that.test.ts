@@ -386,3 +386,27 @@ test("email-ky-tu-dieu-khien: bộ nạp từ chối ký tự điều khiển tr
   assert.match(r.stderr, /email chủ kho sai dạng/);
   assert.deepEqual(bangLech(truoc, await chup()), [], "không dòng nào đổi");
 });
+
+test("lien-he: chủ nhà và lead mẫu thành liên hệ, nạp lại không đổi (hàng 85, AC-9)", async () => {
+  await nap();
+  const [san] = await gd(timSanMau);
+  const q = async <T extends pg.QueryResultRow>(sql: string) => (await pool.query<T>(sql, [san])).rows;
+  // 30 chủ nhà của gói → 30 liên hệ Chủ bán trên 40 dòng chủ nhà của hàng; mỗi lead gắn một liên hệ.
+  const chu = await q<{ n: number; gan: number; lh: number; ban: number }>(
+    `select count(*)::int n, count(o.contact_id)::int gan, count(distinct o.contact_id)::int lh,
+            count(distinct o.contact_id) filter (where c.contact_types = '{Seller}')::int ban
+     from listing_owners o left join contacts c on c.id = o.contact_id where o.company_id = $1`,
+  );
+  assert.deepEqual(chu, [{ n: GOI.hang.length, gan: GOI.hang.length, lh: GOI.chuNha.length, ban: GOI.chuNha.length }]);
+  const lead = await q<{ n: number; gan: number }>("select count(*)::int n, count(contact_id)::int gan from leads where company_id = $1");
+  assert.deepEqual(lead, [{ n: GOI.lead.length, gan: GOI.lead.length }]);
+  // Lead mang số của một chủ nhà gắn đúng liên hệ ấy; số mới thành liên hệ riêng.
+  const soChu = new Set(GOI.chuNha.map((c) => so(c.soDienThoai)));
+  const soLeadMoi = new Set(GOI.lead.map((l) => so(l.soDienThoai)).filter((s) => !soChu.has(s)));
+  const tong = (await q<{ n: number }>("select count(*)::int n from contacts where company_id = $1"))[0]!.n;
+  assert.equal(tong, GOI.chuNha.length + soLeadMoi.size);
+  const a = await chup();
+  assert.deepEqual((await nap()).moi, { hang: 0, chuNha: 0, lead: 0 });
+  assert.deepEqual(bangLech(a, await chup()), [], "nạp lại đổi bảng");
+  await go();
+});
