@@ -1900,6 +1900,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
     },
     {
+      "ma": "va-anh-ban-that",
+      "cau_giao": "Đầu chủ tải ảnh điện thoại tới 10 MB lên hồ sơ căn trên bản thật mà không bị chặn ở giới hạn máy chủ, mở lại hồ sơ không thấy ảnh vỡ, và thấy lời báo khi sửa hay xoá ảnh không thành",
+      "slug": "va-anh-ban-that",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
+    },
+    {
       "ma": "va-lien-he",
       "cau_giao": "Vá hai mục ngoài hợp đồng của hàng 85 «Liên hệ»: thêm ca cách ly giữa công ty cho dữ liệu nối lead với hàng (sàn B không đọc, không ghi được nối của sàn A, có đối chứng dưới sàn A, có chiều đỏ); và hàng tạo từ lead báo «chưa có chủ nhà» thay vì trả tên chủ nhà trống, đúng khuôn API đã hứa.",
       "slug": "va-lien-he",
