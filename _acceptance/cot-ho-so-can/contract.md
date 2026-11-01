@@ -5,7 +5,7 @@ slug: cot-ho-so-can
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-01-cot-ho-so-can-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -96,3 +96,12 @@ Thước CE: mỗi ô (B × C) có ít nhất một ca trong evals [CE chưa ki�
 - Nhận báo sai trên máy chủ và hàng đợi duyệt của Invest — hàng riêng sau (Kiến trúc §7).
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Giữ Cmd hoặc Ctrl rồi bấm vào một lần rao, một toà hay nút Đóng sẽ không mở thẻ mới như người dùng quen, mà đổi ngay trong thẻ đang xem. Bấm thường vẫn chạy đúng. — `apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi lịch sử không tải được, bấm «Thử lại» mà vẫn lỗi thì màn không đổi gì, người dùng không biết lần thử đã chạy và đã hỏng. — `apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx`
+- Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Giữ Cmd hoặc Ctrl rồi bấm vào lần rao, toà hay nút Đóng chỉ đổi địa chỉ trong thẻ hiện tại, không mở thẻ khác để so sánh hay chép link. — `apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Người dùng không thấy gì khác. Bài kiểm nội bộ của bộ quét giao diện kiểm kém hơn một khối đã chuyển thể, nên sau này nếu khối đó mất dòng khai báo thì máy có thể không báo. — `packages/ui-lint/tests/kiem-chuan.test.mjs`
+- Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Người dùng không thấy gì khác. Bài kiểm nội bộ chỉ thử hai trong ba khối đã chuyển thể, nên một khối có thể mất khai báo mà không bị phát hiện. — `packages/ui-lint/tests/kiem-chuan.test.mjs`
+- Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Khi mở căn bằng đường link chép từ nơi khác, hoặc chọn toà khi mã căn trùng, hồ sơ vẫn mở đúng nhưng không dòng nào trong bảng được tô sáng. Đầu chủ khó nhận ra đang xem căn nào trong bảng. — `apps/web/src/app/(app)/units/ho-so/bang-co-ho-so.tsx`
+- Ngoài-7 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm cho lời báo sai thông tin căn chưa chứng minh được là sẽ bắt khi số điện thoại chủ nhà lọt vào. Hiện lời báo không chứa thông tin chủ nhà, nhưng nếu sau này có người sửa nhầm thì bài kiểm có thể không kêu. — `apps/web/src/app/(app)/units/ho-so/bao-sai.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm luật giao diện tự đếm danh sách khối do chính nó gõ, nên khi thêm khối mới có thể không ai nhắc kiểm. Tên ca trong hồ sơ nghiệm thu cũ cũng lệch với bài kiểm thật, làm người chấm khó đối chiếu. — `packages/ui-lint/tests/kiem-chuan.test.mjs`

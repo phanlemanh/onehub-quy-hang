@@ -1,5 +1,6 @@
-E9 network (chrome-devtools, app origin http://localhost:3482): 18 doc/xhr/fetch requests, all 200:
-/inventory?unit=..., /units/A-06.01, /units/KHONG-CO, /api/v1/catalog x7, /api/v1/listings x3, /api/v1/listings/<id> x3 (A lan 2, lan 1, Z).
-Console error/warn/issue: none (a11y "No label for form field" issue seen once earlier on bao-sai dialog).
-Share: navigator.share called with title+text (Toa, Khu, Thuoc tinh, Dang hien, Dung la); no NotAllowedError; clipboard.readText timed out (permission prompt, not readable).
-Offline: reload and in-app row click while offline -> Chrome ERR_INTERNET_DISCONNECTED error page (full navigation), no app UI.
+E9 (verifier doc lap, context Playwright rieng)
+App traffic: GET /api/v1/listings, /api/v1/listings/<id>, /api/v1/catalog -> toan 200 khi co mang.
+Bao sai -> Chep: khong co loi goi /api nao phat sinh (chi GET /api/v1/listings nen cua dong bo).
+FAIL ERR_INTERNET_DISCONNECTED: /api/v1/listings, /listings/<id> (chi trong luc gia lap offline buoc 8, co chu y).
+Console: khong NotAllowedError; chi "Failed to load resource: net::ERR_INTERNET_DISCONNECTED" luc offline.
+Ngoai le: giua buoc 5 may chu dev 3482 bi tien trinh khac tat (HMR websocket ERR_CONNECTION_REFUSED, chrome-error) -> dung lai bang dung-h.mjs, lam lai buoc 5-11 tren may chu moi.
