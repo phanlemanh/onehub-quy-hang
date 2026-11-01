@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 6eb8072c5ce351de557235b3767ba61f231feb89
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: va-sua-tren-o
@@ -53,7 +53,7 @@ human_signoff:
   run_id: minted-va-sua-tren-o-E3-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T05:39:40Z
   screenshot: evidence/E3-hieu-la.png
   observed: |
@@ -73,7 +73,7 @@ human_signoff:
   run_id: E5-va-sua-tren-o-verifier-20261101
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T05:39:40Z
   screenshot: evidence/E5-hai-thong-bao.png
   observed: |
@@ -84,7 +84,7 @@ human_signoff:
   run_id: E5b-20261101-verifier-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T05:39:40Z
   screenshot: evidence/E5b-nguoi-khac.png
   observed: |
@@ -98,7 +98,7 @@ human_signoff:
   run_id: minted-va-sua-tren-o-E5c-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T05:39:40Z
   screenshot: evidence/E5c-step1.png
   observed: |
