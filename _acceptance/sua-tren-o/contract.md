@@ -5,7 +5,7 @@ slug: sua-tren-o
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, docs]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: _acceptance/sua-tren-o/design.md

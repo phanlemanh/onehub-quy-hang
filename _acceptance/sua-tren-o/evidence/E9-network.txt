@@ -1,17 +1,12 @@
-# E9 network (nguon: nhat ky may chu dev 3481; driver CDP tu viet khong doc network trinh duyet)
-## tong theo ma trang thai (500 dong cuoi)
- 387 200
-  10 404
-   1 409
-## dong >=400 (500 dong cuoi)
- GET /api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11/events 404 in 1.5ms (next.js: 0.3ms, application-code: 1.2ms)
- GET /api/v1/listings/d6e209d5-4c0f-4cb7-9183-d53babe721df/events 404 in 1.5ms (next.js: 0.4ms, application-code: 1.1ms)
- GET /api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11/events 404 in 1.4ms (next.js: 0.3ms, application-code: 1.1ms)
- GET /api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09/events 404 in 1.6ms (next.js: 0.3ms, application-code: 1.3ms)
- GET /api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09/events 404 in 1.6ms (next.js: 0.4ms, application-code: 1.3ms)
- GET /api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events 404 in 1.4ms (next.js: 0.2ms, application-code: 1.1ms)
- GET /api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2/events 404 in 1.5ms (next.js: 0.3ms, application-code: 1.2ms)
- GET /api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2/events 404 in 1.4ms (next.js: 0.3ms, application-code: 1.1ms)
- GET /api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events 404 in 1.6ms (next.js: 0.4ms, application-code: 1.2ms)
- GET /api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events 404 in 1.8ms (next.js: 0.4ms, application-code: 1.4ms)
- POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 409 in 9ms (next.js: 1.3ms, application-code: 8ms)
+E9 network (driver: CDP thuần qua cdp.mjs, không có read_network_requests; nguồn dây: nhật ký máy chủ dev web-b.log, các dòng của lượt chấm này)
+153772: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 200 in 14ms (next.js: 1.3ms, application-code: 13ms)
+153804: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 200 in 17ms (next.js: 1.3ms, application-code: 15ms)
+153808: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 409 in 9ms (next.js: 1.3ms, application-code: 8ms)
+154492: POST /api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2/events 200 in 19ms (next.js: 0.4ms, application-code: 18ms)
+154563: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 200 in 15ms (next.js: 1.3ms, application-code: 14ms)
+154573: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 409 in 13ms (next.js: 1.5ms, application-code: 11ms)
+154610: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 200 in 25ms (next.js: 1.4ms, application-code: 24ms)
+154619: POST /api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f/events 409 in 14ms (next.js: 1.7ms, application-code: 12ms)
+GET /events 404 trong nhật ký: do tập lệnh chấm cũ gọi đường không tồn tại; app không gọi (apps/web chỉ POST .../events ở gui.ts). Lượt này đọc lịch sử bằng GET /api/v1/listings/<id> (200).
+409 ở B-15.05: hai lần POST của phiên dau-chu-1 bị từ chối vì expectedVersion cũ — là chủ đích của bước Hai phiên (kỳ vọng Cần xem).
+Mất mạng giả lập (Network.emulateNetworkConditions offline) làm fetch của app tới localhost:3481 lỗi trong cửa sổ giả lập — chủ đích bước 3.
