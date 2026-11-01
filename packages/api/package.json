@@ -10,7 +10,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
-    "test:db": "node --env-file-if-exists=../../.env.local --import tsx --test --test-reporter=spec \"test-db/**/*.test.ts\""
+    "test:db": "node --env-file-if-exists=../../.env.local --import tsx --test --test-concurrency=1 --test-reporter=spec \"test-db/**/*.test.ts\""
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.18.0",
