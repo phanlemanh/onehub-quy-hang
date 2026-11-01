@@ -69,10 +69,11 @@ describe("kiem-chuan.mjs", () => {
   phaThu(
     "thành phần dạng thư mục chưa vào catalog",
     (r) => {
-      mkdirSync(join(r, "apps/web/src/components/reui/data-grid"));
-      writeFileSync(join(r, "apps/web/src/components/reui/data-grid/data-grid.tsx"), "export {};\n");
+      // Thư mục giả — data-grid thật đã cài và có dòng từ hàng 14.
+      mkdirSync(join(r, "apps/web/src/components/reui/luoi-thu"));
+      writeFileSync(join(r, "apps/web/src/components/reui/luoi-thu/luoi-thu.tsx"), "export {};\n");
     },
-    "catalog.md thiếu: data-grid",
+    "catalog.md thiếu: luoi-thu",
   );
   phaThu(
     "symlink reui trỏ sai",

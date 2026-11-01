@@ -9,7 +9,6 @@ type Info = { title: string; question: string; rows: string };
 
 const PLACEHOLDER: Record<string, Info> = {
   "/today": { title: "Hôm nay", question: "Giờ làm gì?", rows: "mục 22 (máy tính), 39 (điện thoại)" },
-  "/inventory": { title: "Bảng hàng", question: "Có hàng gì, ở đâu?", rows: "mục 14 (máy tính), 32 (điện thoại)" },
   "/shares": { title: "Đã gửi", question: "Khách đang phản ứng ra sao?", rows: "mục 34 (luồng Gửi), 36 (Đã gửi)" },
   "/viewings": { title: "Lịch xem", question: "Khách hẹn xem căn nào, lúc nào?", rows: "chưa xếp mục" },
   "/team": { title: "Đội", question: "Đội đang chạy thế nào?", rows: "chưa xếp mục" },

@@ -1,0 +1,11 @@
+E6 network (driver CDP khong co read_network; dung nhat ky may chu dev .acceptance-runs/bang-hang-kieu-sheet/web-b.log cho lan tai /inventory moi nhat):
+ GET /api/v1/me 200 in 10ms (next.js: 1.5ms, application-code: 9ms)
+ GET /api/v1/catalog 200 in 9ms (next.js: 1.5ms, application-code: 8ms)
+ GET /api/v1/catalog 200 in 13ms (next.js: 0.5ms, application-code: 12ms)
+ GET /api/v1/listings 200 in 11ms (next.js: 0.4ms, application-code: 11ms)
+ GET /api/v1/me 200 in 10ms (next.js: 1.6ms, application-code: 8ms)
+ GET /api/v1/me 200 in 7ms (next.js: 0.3ms, application-code: 6ms)
+ GET /api/v1/catalog 200 in 23ms (next.js: 8ms, application-code: 15ms)
+ GET /api/v1/catalog 200 in 10ms (next.js: 0.4ms, application-code: 10ms)
+ GET /api/v1/listings 200 in 35ms (next.js: 0.7ms, application-code: 34ms)
+Ghi chu: 409 listings o nhat ky cu la truoc khi co cookie qh_san (dung-b), khong thuoc lan chay E6 neu khong xuat hien o tren.
