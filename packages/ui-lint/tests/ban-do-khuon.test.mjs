@@ -39,7 +39,7 @@ function voi(fn) {
   }
 }
 
-const NHOM = ["bang-hang", "cai-dat-san", "o-nhan-lead", "trang-tam", "trang-thai", "xac-thuc"];
+const NHOM = ["bang-hang", "cai-dat-san", "ho-so-can", "o-nhan-lead", "trang-tam", "trang-thai", "xac-thuc"];
 const TRANG_TAM = [
   "exports/new",
   "imports/new",
@@ -63,12 +63,15 @@ const BANG = {
       `${W}/app/(app)/inventory/page.tsx`,
       `${W}/app/(app)/inventory/views/[id]/page.tsx`,
       `${W}/app/(app)/leads/new/page.tsx`,
+      `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
     ],
   },
   // Hàng 14: Bảng hàng rời trang tạm, nhóm màn mới (luật đợt 18).
   "bang-hang": { theoKhuon: [`${W}/app/(app)/inventory/page.tsx`, `${W}/app/(app)/inventory/views/[id]/page.tsx`], ngoaiLe: [] },
+  // Hàng 17: Hồ sơ căn, nhóm màn mới — trang ba lối là màn mẫu tới khi màn thật rời trang tạm.
+  "ho-so-can": { theoKhuon: [`${W}/app/(app)/proto/cot-ho-so-can/page.tsx`], ngoaiLe: [] },
 };
 const NHAN_DIEN_TRANG_THAI = [
   ...TRANG_TAM.slice(0, 3),
@@ -81,6 +84,9 @@ const NHAN_DIEN_TRANG_THAI = [
   // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["page.tsx", "trang-thu.tsx"].map((p) => `${W}/app/(app)/proto/nhanh-tuc-thi/${p}`),
   ...["page.tsx", "trang-mau.tsx"].map((p) => `${W}/app/(app)/proto/o-nhan-lead/${p}`),
+  // Hồ sơ căn (hàng 17): trang ba lối và khuôn của nhóm.
+  ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/cot-ho-so-can/${p}`),
+  `${W}/app/(app)/units/ho-so/khung.tsx`,
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -133,7 +139,7 @@ describe("E1 — bản đồ thật: bốn tệp đủ khoá §11.3", () => {
   it("đối chứng: bản sao mất một tệp nhóm thì danh sách nhóm thiếu đúng tên ấy", () =>
     voi((d) => {
       unlinkSync(join(d, "design/patterns/trang-tam.md"));
-      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "o-nhan-lead", "trang-thai", "xac-thuc"]);
+      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "ho-so-can", "o-nhan-lead", "trang-thai", "xac-thuc"]);
     }));
 });
 
@@ -272,8 +278,9 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "ho-so-can: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 9 tệp theo khuôn · 5 ngoại lệ · 0 lệch",
+      "trang-tam: 9 tệp theo khuôn · 6 ngoại lệ · 0 lệch",
       "trang-thai: 16 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);

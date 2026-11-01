@@ -1,0 +1,123 @@
+schema_version: 1
+feature_slug: cot-ho-so-can
+# Dựng chung cho eval ui-check (gọi là «DỰNG H» trong steps):
+#   node _acceptance/cot-ho-so-can/thu/dung-h.mjs
+#   → Postgres dãy H (container quy-hang-db-H, cổng 5562) đã migrate; sàn và người mẫu của hàng 5 (nap.mjs --nap);
+#     hàng mẫu nạp qua API, thêm cho một căn hai lần rao và đủ sáu sự kiện của AC-4 do hai người làm; máy chủ dev cổng
+#     3482, nhật ký ở .acceptance-runs/cot-ho-so-can/web-h.log. In mã căn thử (A), căn ngoài danh mục, cặp mã trùng hai
+#     toà nếu có. Đăng nhập bằng email, đọc mã ở nhật ký: grep "[ma-dang-nhap] <email>" <nhật ký> | tail -1
+#   Tắt: node _acceptance/cot-ho-so-can/thu/dung-h.mjs --tat (chỉ kill PID nó đã ghi).
+# Kiểm thuần nằm ở apps/web/src/app/(app)/units/ho-so/*.test.ts, chạy bằng config:executors.test.web.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đường của cột hồ sơ» có mặt và ok — hàm dựng URL từ dòng (toà T, mã M, lần rao L) luôn ra `unit=M&toa=T&lan=L`, kể cả khi M chỉ có ở một toà (link chép không lệch khi danh mục thêm toà sau); đọc ngược URL ra đúng (toà, mã, lần rao) — ma trận viết trước 5 ca (mã thường, mã có ký tự cần mã hoá như «A-12.03», toà có dấu cách, URL chỉ unit không toa → toà null, URL không có unit → null) = 5 assert; đóng cột → URL bỏ unit, toa, lan và giữ nguyên các tham số khác (view, bộ lọc) — so chuỗi query trước/sau. Chiều đỏ: hàm bỏ toa khi mã chỉ ở một toà thì ca «luôn kèm toà» đỏ, thông điệp nêu mã và URL đọc được."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «thuộc tính căn tự điền» có mặt và ok — danh mục đọc từ packages/db/seed/mau/du-lieu-mau.json (đường suy từ vị trí tệp kiểm, không chép tay): với ba căn viết trước, bảy trường (loại căn, diện tích, tầng, hướng, toà, khu, loại hình) bằng giá trị tính lại từ danh mục cho đúng toà = 21 assert; bản sao danh mục thêm căn trùng mã ở toà kia với diện tích khác → mỗi toà ra đúng diện tích của mình; căn ngoài danh mục → kết quả «ngoai-danh-muc» (không có trường nào, và cờ coBaoSai false). Chiều đỏ: bỏ điều kiện toà thì ca trùng mã đỏ, thông điệp nêu toà và diện tích hai bên."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/inventory/ghep-danh-muc.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «lần rao của căn» có mặt và ok — kho trên máy giả có bốn hàng: hai trên căn A (một Active tạo 02/10, một Withdrawn tạo 14/03), một trên căn cùng mã ở toà kia, một căn D chỉ có lần rao Withdrawn; danh sách lần rao của A có đúng 2 phần tử, mới nhất trên (deepEqual dãy viết tay: trạng thái nhãn tiếng Việt, giá, ngày bắt đầu), không có hàng toà kia; chọn lần rao: lan vắng → hàng Active của A; lan = hàng Withdrawn của A → hàng Withdrawn (nhãn «Ngừng bán»); căn D lan vắng → lần rao mới nhất của D; lan trỏ hàng của căn khác → bỏ qua, về mặc định — 4 assert; có thao tác đổi giá chờ gửi trên hàng Active thì giá hiện là giá chờ gửi (qua bản trên máy của bộ đồng bộ, không tự áp); mức đủ «4/5» bằng completeness.filled. Chiều đỏ: đọc listPrice thô bỏ hàng đợi thì ca chờ gửi đỏ, thông điệp nêu giá mong đợi và giá đọc được; chọn luôn hàng Active bỏ lan thì ca Withdrawn đỏ, thông điệp nêu id hai hàng."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/lib/sync/doc.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «dòng lịch sử từ sự kiện» có mặt và ok — sáu sự kiện viết tay theo khuôn ListingEvent (created; price_changed 3,40 tỷ bao phí; price_changed 3,25 tỷ; status_changed ComingSoon→Active; details_changed legalStatus; owner_confirmed), người làm là người xem (X) và Trưởng nhóm (Y): kết quả deepEqual dãy viết tay sáu dòng mới nhất trên — mỗi dòng {việc, chi tiết, người, lúc}: «Đổi giá» chi tiết «3,40 tỷ → 3,25 tỷ», «Đổi trạng thái» chi tiết «Sắp bán → Đang bán» (nhãn STATUS_LABEL), «Đổi phần lần rao» chi tiết «Pháp lý: …», người «Bạn» cho X và «Trưởng nhóm» cho Y; lần đổi giá đầu chi tiết «— → 3,40 tỷ». Ca chủ ý (Hỏi-3): hai người khác nhau Z1, Z2 cùng vai listing_agent ra cùng nhãn «Đầu chủ» — assert bằng nhau. Chiều đỏ: người lấy từ actorUserId thô thì ca đỏ, thông điệp nêu dòng và người mong đợi."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «lịch sử khi mất mạng» có mặt và ok — ma trận viết trước 4 ca × (trạng thái phần lịch sử, chữ hiện) = 8 assert: có lịch sử đã tải + lần kéo cuối ok → «da-tai», không dòng phụ; có lịch sử đã tải + lastAttempt «mang» → «tren-may», chữ «đang xem bản trên máy»; chưa tải + «mang» → «can-mang», chữ «Lịch sử cần mạng để tải lần đầu»; chưa tải + đang tải → «dang-tai». Chiều đỏ: coi lịch sử rỗng là «không có sự kiện» thì ca chưa-tải đỏ, thông điệp nêu chữ mong đợi."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «báo sai thông tin căn» có mặt và ok — nội dung báo dựng từ (căn A, thuộc tính Diện tích, giá trị đang hiện 68,5 m², giá trị đúng 70,2 m², ghi chú) chứa đúng bảy mảnh viết trước (mã căn, toà, khu, tên thuộc tính, giá trị đang hiện, giá trị đúng, ghi chú) — 7 assert; quét nội dung không chứa khoá nào của SOURCE_KEYS lõi và không chứa số chủ dạng 0900 — đối chứng dương: nội dung dựng từ căn có gắn số chủ giả vẫn không chứa số ấy; chia sẻ với navigator giả có share → share gọi đúng một lần với nội dung ấy, clipboard không gọi; navigator không có share → clipboard.writeText gọi một lần, trả «Đã chép»; fetch giả đếm 0 lời gọi trong cả hai ca; giá trị đúng rỗng hay toàn khoảng trắng → coGui false. Chiều đỏ: bỏ kiểm rỗng thì ca rỗng đỏ, thông điệp nêu coGui."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «tìm căn theo mã» có mặt và ok — kho trên máy giả và danh mục mẫu: mã chỉ ở toà A → {kind: mot, toà A}; mã ở hai toà → {kind: nhieu, toà: [A, B] sắp theo tên}; cùng mã kèm toa=B → {kind: mot, toà B}; mã không có trên máy → {kind: khong}; mã của hàng «Chỉ tôi» người khác (không có trong kho trên máy vì API không trả) → {kind: khong} — 5 assert; so mã không phân biệt hoa thường và khoảng trắng đầu cuối như ghép danh mục. Chiều đỏ: trả căn đầu tiên khi mã trùng thì ca nhiều căn đỏ, thông điệp nêu hai toà."
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «khuôn: 7 nhóm · 0 lỗi đọc · 0 lệch» (thêm nhóm ho-so-can) và «chuẩn giao diện: đạt»; `/units/[code]/page.tsx` khớp nhan_dien của design/patterns/ho-so-can.md và không còn trong trang-tam. Chiều đỏ ghi ở S3: trang /units/[code] trả JSX ngoài KhungHoSoCan thì bài quét khuôn đỏ nêu tệp."
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/**", "packages/ui-lint/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; bộ kiểm ui-lint xanh với dòng chụp cây của ban-do-khuon/man-ngoai-ban-do/kiem-chuan đã đếm lại cho nhóm ho-so-can (luật thường trực G-3110-17)."
+    paths: ["packages/ui-lint/**", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG H (đầu tệp). Khổ 1440x900. Đăng nhập Đầu chủ mẫu thứ nhất (dau-chu-1). Mở http://localhost:3482/inventory, chờ lưới."
+      - "Bấm dòng của căn A (dung-h.mjs in mã) → chụp evidence/E9-cot.png; ghi URL, chữ đầu cột, bảy thuộc tính, phần lần rao đang mở, các lần rao, mọi dòng lịch sử"
+      - "Bấm dòng căn khác → ghi đầu cột (đổi căn, cột không đóng); cuộn bảng xuống đáy → ghi bảng vẫn cuộn; bấm lại A"
+      - "Bấm «Báo sai thông tin căn» → chụp evidence/E9-bao-sai.png; ghi trạng thái nút chia sẻ khi giá trị đúng trống, rồi gõ «70,2 m²» → ghi trạng thái nút"
+      - "Bấm «Chép và mở bảng chia sẻ» → ghi chữ báo hiện ra hoặc bảng chia sẻ mở, và mọi lỗi console (NotAllowedError…); đọc bộ nhớ tạm nếu được (navigator.clipboard.readText) và ghi nội dung"
+      - "Đóng bảng soạn, bấm «Đóng» cột → ghi URL; tải lại http://localhost:3482/inventory?unit=<mã A>&toa=<toà A> → chụp evidence/E9-tai-lai.png"
+      - "Bấm lần rao đã ngừng trong «Các lần rao» → ghi đầu phần lần rao, giá, số dòng lịch sử; bấm lại lần rao đang mở"
+      - "Giả lập mất mạng (chế độ offline của trình duyệt), tải lại /inventory?unit=<mã A>&toa=<toà A> → chụp evidence/E9-mat-mang.png; ghi chữ phần lịch sử và số dòng; mở căn C chưa từng mở (dung-h.mjs in) → ghi chữ phần lịch sử; bật mạng lại"
+      - "Bấm dòng căn ngoài danh mục (dung-h.mjs in) → chụp evidence/E9-ngoai-danh-muc.png; ghi phần thuộc tính và có/không nút Báo sai"
+      - "Khổ 375x812, mở http://localhost:3482/units/<mã A> → chụp evidence/E9-375.png; ghi có tràn ngang không (scrollWidth vs clientWidth) và ba phần có mặt"
+      - "Mở /units/<mã trùng hai toà> nếu dung-h.mjs in cặp → chụp evidence/E9-nhieu-can.png; mở /units/KHONG-CO → ghi chữ"
+    expected: "Cột hồ sơ đứng bên phải bảng, URL có ?unit=<mã A>, dòng A đánh dấu; bảy thuộc tính đúng như dung-h.mjs in từ danh mục; lần rao đang mở có giá kèm phí và mức đủ n/5; «Các lần rao» hai dòng, mới nhất trên; lịch sử sáu dòng, mới nhất trên, có «Bạn» và «Trưởng nhóm», đổi giá dạng «a → b». Bấm căn khác thì đầu cột đổi, cột không đóng; bảng cuộn được. Nút chia sẻ tắt khi trống, bật khi có giá trị. Bấm chia sẻ: hiện «Đã chép» hoặc bảng chia sẻ mở, không lỗi NotAllowedError; bộ nhớ tạm (nếu đọc được) chứa mã căn, toà, thuộc tính, giá trị đúng. Đóng thì URL không còn unit/toa/lan; tải lại mở đúng A. Lần rao đã ngừng: đầu phần «Ngừng bán», giá 3,10 tỷ của nó. Mất mạng: lịch sử của A vẫn đủ dòng kèm «đang xem bản trên máy»; căn C ghi «Lịch sử cần mạng để tải lần đầu». Căn ngoài danh mục: «Chưa có trong danh mục», không nút Báo sai. 375: một cột, không tràn ngang, ba phần có mặt. Nhiều căn: «Nhiều căn» kèm tên hai toà. KHONG-CO: «Không có căn này trong Bảng hàng». Đối chứng: đầu cột trước và sau bấm căn khác khác nhau."
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9b
+    criterion: AC-9
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG H. Khổ 1440x900, đăng nhập dau-chu-1, mở http://localhost:3482/inventory?unit=<mã A>, chờ lịch sử hiện."
+      - "Trong trang: fetch GET /api/v1/listings rồi GET /api/v1/listings/<id hàng đang mở của A> bằng phiên hiện tại; ghi số sự kiện, loại từng sự kiện, listPrice, standardStatus, completeness.filled"
+      - "Ghi số dòng lịch sử trên cột, giá và trạng thái ở phần lần rao đang mở, mức đủ"
+      - "Mở tab mạng (read_network_requests) từ lúc bấm «Báo sai thông tin căn» tới lúc bấm «Chép và mở bảng chia sẻ» → ghi các lời gọi /api"
+    expected: "Số dòng lịch sử bằng số sự kiện API trả, thứ tự ngược; giá, trạng thái, mức đủ trên cột bằng giá trị API (không có thao tác chờ gửi). Báo sai không phát sinh lời gọi /api nào."
+    paths: ["apps/web/src/app/(app)/units/**", "packages/api/src/listings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0 — sàn M1: không mã màu thô trên tệp giao diện vòng chạm (`apps/web/src/app/(app)/units/**`, `inventory/**`)."
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
