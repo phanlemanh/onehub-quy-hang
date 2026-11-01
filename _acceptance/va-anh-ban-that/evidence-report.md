@@ -1,19 +1,16 @@
 ---
 schema_version: 2
 feature_slug: va-anh-ban-that
-verdict: REJECT
-failed_evals: ["E6"]
-reason:
+verdict: PASS
+failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 50d55eb1a67956b4f295dded0649e11de7a02d93
+verified_commit: 077b6cefbf44e8f545ea32620a87a6d9a7b199bc
 human_signoff:
 ---
 
 # Evidence Report: va-anh-ban-that
-
-Round 2. Lệnh ui-check:E6 không đạt và không gắn thêm eval nào ngoài E6.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -24,133 +21,122 @@ Round 2. Lệnh ui-check:E6 không đạt và không gắn thêm eval nào ngoà
 | E3 | AC-3 | test | PASS |
 | E4 | AC-4 | test | PASS |
 | E5 | AC-5 | test | PASS |
-| E6 | AC-6 | ui-check | REJECT |
+| E6 | AC-6 | ui-check | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-anh-ban-that-E1-r2
+  run_id: minted-va-anh-ban-that-E1-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 4787.000125
+    ℹ duration_ms 4946.697917
 
 - eval: E2
-  run_id: minted-va-anh-ban-that-E2-r2
+  run_id: minted-va-anh-ban-that-E2-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 4787.000125
+    ℹ duration_ms 4946.697917
 
 - eval: E3
-  run_id: minted-va-anh-ban-that-E3-r2
+  run_id: minted-va-anh-ban-that-E3-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 4787.000125
+    ℹ duration_ms 4946.697917
 
 - eval: E4
-  run_id: minted-va-anh-ban-that-E4-r2
+  run_id: minted-va-anh-ban-that-E4-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 4787.000125
+    ℹ duration_ms 4946.697917
 
 - eval: E1b
-  run_id: minted-va-anh-ban-that-E1b-r2
+  run_id: minted-va-anh-ban-that-E1b-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.api
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm test -w @quy-hang/api
-    ℹ duration_ms 60493.918209
+    ℹ duration_ms 60462.078667
 
 - eval: E1c
-  run_id: minted-va-anh-ban-that-E1c-r2
+  run_id: minted-va-anh-ban-that-E1c-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 230.882167
+    ℹ duration_ms 279.126667
 
 - eval: E5
-  run_id: minted-va-anh-ban-that-E5-r2
+  run_id: minted-va-anh-ban-that-E5-r3
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 230.882167
+    ℹ duration_ms 279.126667
 
 - eval: E6
-  run_id: minted-va-anh-ban-that-E6-r2
-  exit_code: 1
+  run_id: minted-va-anh-ban-that-E6-r3
+  exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
   screenshot: evidence/E6-step1.png
   observed: |
-    E6-step1.png (read): unit page A-06.01 "Dang ban", Anh section, tab "Gui duoc (1)", one large noise image tile with "Bia" badge, caption "Anh that · 01/11/2026" and a "..." menu. Matches Expected step 1 (large image entered the Gui duoc tray).
-    E6-step2.png (read, taken right after confirming Xoa with DELETE forced to 500): same page, tab "Gui duoc (1)", the noise image tile is still there, but there is NO error notice anywhere (no "Khong xoa anh duoc — thu lai" toast, no banner). Expected requires the notice to be seen; it is absent, so step 2 contradicts Expected.
+    E6-step1.png (đã mở bằng Read, 1440x900): Bảng hàng với hồ sơ căn A-06.01 (Toà A, Đang bán) mở bên phải. Mục ẢNH, tab «Gửi được (1)» đang chọn, có một ô ảnh nhiễu màu gắn nhãn «Bìa», tiêu đề «Ảnh thật · 01/11/20…», nút «...». Tức ảnh PNG 5.401.883 byte (khoảng 5,4 MB, lớn hơn 4,5 MB) đã vào ngăn Gửi được. Khớp Expected bước 1. E6-step2.png (đã mở bằng Read): cùng hồ sơ, ngăn vẫn «Gửi được (1)» và ảnh «Bìa» vẫn còn. Góc dưới phải có thông báo có biểu tượng lỗi «Không xoá ảnh được — thử lại». Khớp Expected bước 2.
   network_observed: clean
-  output: |
-    Frames: E6-step1.png, E6-step2.png; network: E6-network.txt (all in _acceptance/va-anh-ban-that/evidence/).
-    Dung-h (port 3482, chrome-devtools, 1440x900), PNG 4,874,713 bytes tải qua ô "Chon anh" (không phải kéo thả thật).
-    Bước 1 đạt: tab "Gui duoc (0)" thành "Gui duoc (1)"; ba lời gọi tải đều thành công; ô ảnh có nhãn "Bia".
-    Bước 2 không đạt: xoá bị ép lỗi bằng initScript; ảnh vẫn còn (đúng) nhưng chữ "Khong xoa anh duoc — thu lai" KHÔNG hiện. DOM không có [data-sonner-toast] lẫn [data-sonner-toaster].
-    Nguyên nhân (grep): muc-anh.tsx gọi toast.error trong lamViec, nhưng Toaster chỉ gắn ở inventory/cell-edit/tren-o.tsx, không có trên /units/[code] nên toast.error không có chỗ hiển thị.
-    Lần thử đầu (đặt override sau khi tải trang) không chặn được, DELETE thật trả thành công và ảnh bị xoá; đã bỏ và làm lại bằng initScript.
-    Ngoài lỗi cố ý đã chèn, không có lỗi mạng hay lỗi console.
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-anh-ban-that-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-va-anh-ban-that-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-anh-ban-that-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-va-anh-ban-that-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-anh-ban-that-SUITE-test_hooks-r2
+  run_id: minted-va-anh-ban-that-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-anh-ban-that-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-va-anh-ban-that-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-anh-ban-that-SUITE-typecheck-r2
+  run_id: minted-va-anh-ban-that-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-01T13:14:32Z
+  verified_at: 2026-11-01T13:22:22Z
 
 - cmd: npm run lint
-  run_id: minted-va-anh-ban-that-SUITE-lint-r2
+  run_id: minted-va-anh-ban-that-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-01T13:14:32Z
-
-Lệnh không gắn eval mà không đạt: ui-check:E6 (thuộc E6, đã nêu ở trên).
+  verified_at: 2026-11-01T13:22:22Z
 
 ## Known limits
 
@@ -158,10 +144,13 @@ Lệnh không gắn eval mà không đạt: ui-check:E6 (thuộc E6, đã nêu �
 
 ## Analyst
 
-Eval không phân biệt (đạt cả trên HEAD lẫn baseline; chứng minh harness chứ chưa chứng minh tính năng — nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+Non-discriminating (xanh ở cả code hiện tại lẫn baseline), cần viết lại để khẳng định hành vi mới hoặc xác nhận là regression-guard có chủ ý:
+
 - `npm run db:migrate && npm run db:test` — E1, E2, E3, E4
 - `npm test -w @quy-hang/api` — E1b
 - `npm test -w @quy-hang/web` — E1c, E5
+
+E6 (ui-check): baseline n-a, không chạy được trên code cũ.
 
 ## Variance
 
@@ -169,6 +158,7 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval xanh; verdict PASS.
-Round 2: E6 failed — sau khi xoá lỗi, thông báo «Không xoá ảnh được — thử lại» không hiện vì Toaster không gắn trên trang /units/[code]; ảnh vẫn còn đúng. Returned to implementation.
+Round 1: lượt chấm đầu của hàng va-anh-ban-that; chi tiết xem run-log.jsonl và hồ sơ lượt 1 (xác nhận mã ảnh từ chối 400/409 thay vì 500; E2 đo ca sàn khác).
+Round 2: lượt 2 — thông báo lỗi sửa/xoá không hiện ở hồ sơ căn (E6); mục Ảnh tự gắn khung thông báo rồi chấm lại.
+Round 3: mọi eval xanh (E1, E1b, E1c, E2, E3, E4, E5, E6) trên commit 077b6cef — verdict PASS.
 
