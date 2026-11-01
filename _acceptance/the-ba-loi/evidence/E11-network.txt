@@ -1,0 +1,6 @@
+Server http.server 127.0.0.1:8765 (file:// bi chan)
+console: 1 error luc nap dau (xem log), sau do 0
+127.0.0.1 - - [01/Nov/2026 15:26:24] "GET /ba-loi-mau.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Nov/2026 15:26:25] "GET /ba-loi-mau.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Nov/2026 15:26:25] code 404, message File not found
+127.0.0.1 - - [01/Nov/2026 15:26:25] "GET /favicon.ico HTTP/1.1" 404 -

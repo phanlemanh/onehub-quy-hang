@@ -15,6 +15,10 @@ executors:
     luoi_nguong: "node --test \"_acceptance/bai-thu-luoi-5000-dong/thu/*.test.mjs\""   # bai-thu-luoi-5000-dong: ngưỡng, kết luận, main sạch
     web: "npm test -w @quy-hang/web"               # nhanh-tuc-thi: bộ đồng bộ trên máy, kiểm thuần (N-14)
     web_db: "npm run test:db -w @quy-hang/web"     # nhanh-tuc-thi: bộ đồng bộ nói với API thật trên Postgres dãy — cần DATABASE_URL (N-14)
+    nap_mau: "node --env-file-if-exists=.env.local --import tsx --test \"packages/db/seed/*.test.ts\""   # nap-mau-ban-that: bộ nạp mẫu bản thật trên Postgres dãy — cần DATABASE_URL
+    nap_mau_yml: "node --test packages/db/seed/nap-mau-yml.test.mjs"   # nap-mau-ban-that AC-8: đọc tệp workflow nút nạp
+    typecheck_db: "node --test packages/db/seed/typecheck-db.test.mjs"   # va-nap-mau E6: gói db nằm trong npm run typecheck của gốc, chiều đỏ trên chính lệnh ấy
+    du_lieu_mau_tsx: "node --env-file-if-exists=.env.local --import tsx --test \"packages/db/seed/*.test.mjs\""   # nap-mau-ban-that E10: như du_lieu_mau nhưng có tsx — bộ kiểm hàng 5 nhập packages/connect (TypeScript) từ hàng 10
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
@@ -25,7 +29,7 @@ executors:
     luoi_do_lai: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs"   # bai-thu-luoi-5000-dong: dựng nhánh thử từ tag, đo, so ngưỡng — cổng riêng 3468
     luoi_trang: "node _acceptance/bai-thu-luoi-5000-dong/thu/do-lai.mjs --chi-trang --cong 3466"   # cổng và worktree riêng: chạy song song với luoi_do_lai khi chấm
     luoi_main_sach: "node _acceptance/bai-thu-luoi-5000-dong/thu/main-sach.mjs"
-    du_lieu_mau: "node --test \"packages/db/seed/*.test.mjs\""   # du-lieu-mau-san-thu: sinh tất định, không dữ liệu thật, nhãn mẫu, nạp và xoá — cần DATABASE_URL tới Postgres dãy (duyệt ở yêu cầu T-9)
+    du_lieu_mau: "node --env-file-if-exists=.env.local --import tsx --test \"packages/db/seed/*.test.mjs\""   # du-lieu-mau-san-thu: sinh tất định, không dữ liệu thật, nhãn mẫu, nạp và xoá — cần DATABASE_URL tới Postgres dãy (duyệt ở yêu cầu T-9)
     # moi-truong-that (ADR-0009): kiểm môi trường thật từ bên ngoài, chỉ đọc. Cần DATABASE_URL vai chủ tới Supabase thật,
     # SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY (moi_truong_that); APP_URL (suc_khoe_that). Không chạy trong suite_keys.
     moi_truong_that: "node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"
