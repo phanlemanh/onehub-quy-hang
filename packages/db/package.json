@@ -6,7 +6,8 @@
   "scripts": {
     "migrate": "node --env-file-if-exists=../../.env.local scripts/migrate.mjs",
     "test:isolation": "node --env-file-if-exists=../../.env.local --test \"tests/*.test.mjs\"",
-    "van-hanh:mo-san": "node --env-file-if-exists=../../.env.local scripts/mo-san.mjs"
+    "van-hanh:mo-san": "node --env-file-if-exists=../../.env.local scripts/mo-san.mjs",
+    "typecheck": "tsc --noEmit -p ."
   },
   "dependencies": {
     "pg": "^8.13.0"

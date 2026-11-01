@@ -1933,6 +1933,12 @@
         "packages/api/src/contacts/**",
         "packages/db/migrations/**"
       ]
+    },
+    {
+      "ma": "va-nap-mau",
+      "cau_giao": "Nút «Nạp dữ liệu mẫu» chạy được trên bản thật và không mở đường chèn lệnh: npm ci giữ công cụ chạy bộ nạp dù chạy chế độ thật, ô email chỉ nhận đúng một địa chỉ email một dòng và không bao giờ ghi thô vào môi trường của job, bộ nạp TypeScript của gói db được kiểm kiểu trong CI, lệnh chấm bộ dữ liệu mẫu hàng 5 chạy lại được",
+      "slug": "va-nap-mau",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
     }
   ],
   "chan_troi": [
