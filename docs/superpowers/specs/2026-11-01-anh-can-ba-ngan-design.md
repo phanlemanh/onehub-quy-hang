@@ -70,13 +70,13 @@ Khuyến nghị (giám sát đợt, trả lời H-6): **Supabase Storage**, buck
 3. **Đường đối tượng mang `company_id`**: `<company_id>/<photo_id>/<original|thumb>`; API chỉ ký link sau khi đọc được
    dòng ảnh bằng vai `quy_hang_app` (luật theo dòng — ngăn nội bộ, sàn khác bị chặn trước khi có link). Link GET ký 60 giây;
    tải lên đi qua API (API ghi đối tượng), trình duyệt không cầm khoá hay link ghi.
-4. **Chi phí** ghi ở ADR-0014: gói Free 1 GB Storage; ước 300 KB/ảnh gốc + 40 KB bản nhẹ → khoảng 3 000 ảnh; vượt thì theo
-   gói Pro của dự án (100 GB kèm gói).
+4. **Chi phí** ghi ở ADR-0014: tổ chức Supabase của dự án ở gói Pro — 100 GB Storage kèm gói (ước 300 KB/ảnh gốc + 40 KB
+   bản nhẹ → khoảng 300 000 ảnh), vượt thì tính theo dung lượng của gói.
 
 Máy dev, CI và lượt chấm chạy bản Postgres của `KhoAnh` (bảng `unit_photo_files`, cùng luật theo dòng) — không có khoá
 S3 thì API chọn bản ấy; bản thật thiếu khoá thì API không dựng mục ảnh (như khoá số chủ, ADR-0013). Bản S3 kiểm bằng véc
-tơ ký mẫu của SigV4 và một máy chủ S3 giả trong test. Lối khác: chỉ Postgres — không khoá mới, nhưng ăn dung lượng cơ sở
-dữ liệu (Free 500 MB).
+tơ ký mẫu của SigV4 và một máy chủ S3 giả trong test. Lối khác: chỉ Postgres — không khoá mới, nhưng phình đĩa và sao lưu cơ sở
+dữ liệu (8 GB của gói Pro), chậm migrate và kiểm cách ly trên bản thật.
 
 ## 3. Đường ảnh đi
 
