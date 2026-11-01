@@ -1,17 +1,19 @@
 ---
 slug: hom-nay-dau-chu
-at: 2026-11-01T14:10:00Z
+at: 2026-11-01T14:45:00Z
 verdict: findings
 p0: 1
-p1: 3
-p2: 1
+p1: 4
+p2: 0
 ---
 ## Findings
 
+Lượt hai — sau khi chủ kho chọn «hàng đợi là dữ liệu của sàn» (lượt một: 1 P0 thành Hỏi-1, 3 P1 và 1 P2 đã sửa).
+
 | Sev | Artifact | Thiếu gì | Kịch bản fail | Thước đo | Xử lý |
 |---|---|---|---|---|---|
-| P0 | contract | Mốc ép giá tính từ đổi giá thì «Còn · giữ giá» không đưa căn ra khỏi nhóm ép giá — AC-1 và AC-7 mâu thuẫn; luật này chỉ chủ kho quyết | E7 đỏ, hoặc máy tự chọn nghĩa và «đợt hai» không đếm được | Câu hỏi cho chủ kho, ma trận E1 thêm chiều xác nhận trước/sau mốc | human-gate1: Hỏi-1 viết lại (dòng sổ mới thay dòng cũ) gồm luật xác nhận; E1 thêm ca «luật mốc ép giá»; Đường đo đếm đợt hai bằng chạy lại hàm hàng đợi |
-| P1 | contract | Người hai vai (Đầu chủ + telesales) không có GWT, E6 không thử | Trang if/else chỉ hiện một vùng, E6 vẫn xanh | AC-6 thêm Given hai vai, E6 thêm bước, E5 thêm ca | fixed: AC-6, AC-5, E5, E6 |
-| P1 | evals | Đường kéo về của bộ đồng bộ không được đo, assert nguồn không có đối chứng dương | Trường mới không tới kho trên máy, hay lưới nguồn bị bỏ mà E4 xanh | Ca trên keoVe kèm đối chứng dương | fixed: thêm E4b (executors.test.web) |
-| P1 | design | lastChangeBy chỉ giữ người của sự kiện cuối, thiếu giá cũ và vai | Trưởng nhóm giảm giá hôm qua, đầu chủ đổi trạng thái sáng nay → căn không vào Mới đổi | Hai bản ghi lần đổi cuối có lúc, người, vai, cũ → mới | fixed: design §3.2, AC-3, AC-4, E3, E4 |
-| P2 | evals | E3 không thử khung 17:00–23:59Z khi giờ VN đã sang ngày | Tính «hôm qua» bằng ngày UTC thì 0–7 giờ sáng lấy lùi một ngày | Ca bayGio 18:00Z, chạy dưới hai múi giờ | fixed: E3 thêm ca ranh giới, design ghi UTC+7 cố định |
+| P0 | design | Khoảng ngày 1–365 nới khoảng 7–14 của luật 18 mà không ai quyết; chưa nói khoá cũ hay bộ của sàn thắng | Sàn đặt ép giá 3 ngày, nhận 200; đầu chủ làm phiền chủ nhà | Câu hỏi cho chủ kho; E4 thêm ca ngoài khoảng, ca khoá cũ + bộ sàn | human-gate1: Hỏi-4; design chốt bộ của sàn là trọn bộ (khoá cũ hết tác dụng), bộ hỏng thì mặc định dùng ngưỡng khoá cũ; E1, E4 thêm ca |
+| P1 | design | Mốc ép giá không lùi về lúc lên Đang bán; nhóm lead thiếu điều kiện ngầm | Căn mới lên hôm qua hiện ngay ở ép giá | Ca căn lên 11 ngày / 3 ngày; lead trả lại không ra | fixed: mốc `gia` lùi về lúc lên Đang bán; điều kiện ngầm của nhóm lead; E1, E6 thêm ca |
+| P1 | design | Loại hình chưa đi xuyên lớp, tập giá trị chưa khai | Nhóm «Nhà phố» luôn rỗng không báo lỗi | Tập mã RESO PropertySubType; ca qua ghép danh mục thật; ca ngoài tập | fixed: design khai tập mã và nguồn (ghép danh mục của Bảng hàng); E2 thêm ca web qua ghepDanhMuc; E4, E4b thêm ca ngoài tập |
+| P1 | design | Bộ kiểm chưa soát lệch đối tượng giữa nhóm, điều kiện, hành động | Nhóm căn có nút Nhận, bấm ra 404 | Ca chéo loại trong E4, E4b | fixed: bộ kiểm thêm lệch đối tượng và nhóm luôn rỗng; E4 ma trận 11 ca, E4b ca 400 |
+| P1 | design | Mất mạng hay lỗi đọc thì chia nhóm theo bộ nào chưa nói | Sàn tắt nhóm, mất mạng thì nhóm hiện lại | Bước E10 với bộ của sàn và offline | fixed: bộ nhóm lưu trên máy theo sàn, báo giờ lưu; AC-10, E10 sửa |
