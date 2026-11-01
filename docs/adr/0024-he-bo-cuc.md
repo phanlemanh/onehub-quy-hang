@@ -91,10 +91,17 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
 
 10. **MCP `reui` và `shadcn` khai trong `.mcp.json` của kho**, khoá đọc từ biến môi trường, không ghi vào tệp.
 
-11. **Duyệt một lần, không thêm cổng.** Cổng Phạm vi của hàng nền trình trang mẫu sống và ba trang ba lối — menu Tạo, đầu
+11. **Bản đồ hệ thiết kế một chỗ** (chủ kho 02/11 «Gửi vào hàng nền»). Skill `quy-hang-ui` giữ bảng «Bản đồ hệ thiết kế»:
+    mỗi tệp một dòng — lớp (chỉ dẫn · nền · nhãn · chọn khối · khuôn · bố cục · kiểm · cổng · sổ · đối chiếu), việc nó làm,
+    đường dẫn — gồm cả token (`globals.css`), hook kiểm cuối lượt, hiện trạng cổng chọn khối, đối chiếu ngành, canvas phác
+    thảo và tệp mới của hệ bố cục (thành phần bố cục, trang mẫu sống, ảnh chuẩn, `.mcp.json`). `docs/README.md` trỏ dòng
+    thiết kế sang bảng ấy, không thành tài liệu thứ ba. Kiểm chuẩn đỏ khi một tệp thuộc hệ thiết kế không có dòng — cùng
+    cơ chế đang kiểm danh mục thành phần đã cài. Điểm xuất phát: bản nháp 18 dòng của phiên setup thiết kế.
+
+12. **Duyệt một lần, không thêm cổng.** Cổng Phạm vi của hàng nền trình trang mẫu sống và ba trang ba lối — menu Tạo, đầu
     màn, các bố cục chưa có màn nào trong kho dùng. Sau đó máy giữ; đổi hệ bố cục chỉ qua ADR sửa.
 
-12. **Theo Verve và giữ riêng.** Theo: đầu màn thống nhất, một menu Tạo, cột thứ hai có số, lọc dạng chip đọc thành câu,
+13. **Theo Verve và giữ riêng.** Theo: đầu màn thống nhất, một menu Tạo, cột thứ hai có số, lọc dạng chip đọc thành câu,
     tab có số đếm, nút làm ngay trong dòng, dòng cài đặt nhãn trái ô phải. Giữ: hồ sơ mở cạnh bảng; thanh tab dưới điện
     thoại; lưới dày; sửa từng ô lưu ngay và hoàn tác (không lưu cả bảng ở Bảng hàng); không kéo thẻ để đổi trạng thái căn;
     Hôm nay là hàng đợi, không phải lịch; không bảng nhiều biểu đồ ở bản đầu; Hôm nay không có cột thứ hai (§9).
@@ -102,7 +109,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
 ## Hệ quả
 
 - Hàng nền 91 làm tám bước: khai MCP · kiểm kê màn → bố cục, chụp mốc · token nền · menu Tạo · bảy bố cục và sáu vùng ·
-  trạng thái · trang mẫu sống và ảnh chuẩn · răng. Menu Tạo đổi nút đã chốt ở Tham chiếu §9 — sửa trong PR của hàng.
+  trạng thái · trang mẫu sống và ảnh chuẩn · răng và bản đồ hệ thiết kế. Menu Tạo đổi nút đã chốt ở Tham chiếu §9 — sửa trong PR của hàng.
 - Chuyển màn đang có: màn không hàng nào chạm (Cài đặt sàn, trang tạm, vỏ) chuyển trong hàng nền; Bảng hàng, hồ sơ căn,
   Hôm nay, lead chuyển khi hàng của chúng tới bước, mang ngoại lệ có hạn tới lúc đó. Mẫu bên trong theo hướng này đi
   cùng hàng ấy: hàng đợi là bộ lọc lưu được (ADR-0022) ở hàng 22; đầu hồ sơ, tab, hai cột ở vòng hồ sơ kế; cột thứ hai
