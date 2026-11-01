@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { validatePayload } from "@quy-hang/core/listing";
-import { CHON_PHI, chuaHieu, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, type HangSua, type KetQuaLenh } from "./lenh";
+import { CHON_PHI, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, hieuLaGiaChot, moTaThayDoi, type HangSua, type KetQuaLenh } from "./lenh";
 
 const HANG: HangSua = {
   id: "h1",
@@ -92,4 +92,65 @@ test("Đã bán đọc giá chốt bằng cùng bộ đọc", () => {
   assert.ok(kq.ok);
   assert.deepEqual(kq.lenh, { type: "status_changed", payload: { to: "Closed", closePrice: 4_500_000_000, closeDate: "2026-11-01" } });
   assert.equal(kq.hieuLa, "Hiểu là: giá chốt 4,5 tỷ");
+});
+
+// Mọi chỗ trình sửa hiện giá viết đúng từng đồng (va-sua-tren-o AC-2, AC-3) — bảng viết tay: chỗ × giá → chữ mong đợi.
+type Cho = "đọc lại" | "giá chốt" | "hỏi lại" | "điền sẵn";
+const GIA_LE: [number, string, string][] = [
+  [4_655_000_000, "4,655 tỷ", "4,655 tỷ"],
+  [4_650_500_000, "4,6505 tỷ", "4,6505 tỷ"],
+];
+
+/** Chữ của từng chỗ cho một giá, với bộ viết cho trước (mặc định bộ viết thật). */
+function choHienGia(dong: number, chuGo: string, viet?: (d: number) => string): Record<Cho, string | null> {
+  const hang: HangSua = { ...HANG, listPrice: dong };
+  const lenh = dungLenhGia(HANG, chuGo, "included");
+  assert.ok(lenh.ok);
+  assert.equal(lenh.lenh.type === "price_changed" && lenh.lenh.payload.listPrice, dong, `lệnh mang listPrice ${dong}`);
+  const chot = dungLenhTrangThai(HANG, "Closed", { giaChot: chuGo, ngayBan: "2026-11-01" });
+  assert.ok(chot.ok);
+  assert.equal(chot.lenh.type === "status_changed" && chot.lenh.payload.closePrice, dong, `lệnh mang closePrice ${dong}`);
+  return {
+    "đọc lại": hieuLaGia(chuGo, "excluded", viet),
+    "giá chốt": hieuLaGiaChot(chuGo, viet),
+    "hỏi lại": moTaThayDoi(HANG, lenh.lenh, viet),
+    "điền sẵn": chuDienSan(hang, viet),
+  };
+}
+
+const MONG: (chu: string) => Record<Cho, string> = (chu) => ({
+  "đọc lại": `Hiểu là: ${chu}, không bao phí`,
+  "giá chốt": `Hiểu là: giá chốt ${chu}`,
+  "hỏi lại": `4,5 tỷ, Không bao phí → ${chu}, Bao phí`,
+  "điền sẵn": chu,
+});
+
+for (const [dong, chuGo, chu] of GIA_LE) {
+  const thuc = choHienGia(dong, chuGo);
+  for (const cho of Object.keys(MONG(chu)) as Cho[]) {
+    test(`AC-2: ${cho} của ${dong} → «${MONG(chu)[cho]}»`, () => {
+      assert.equal(thuc[cho], MONG(chu)[cho], `chỗ «${cho}», giá ${dong}`);
+    });
+  }
+}
+
+test("AC-2: đọc lại «4 tỷ 655» và «1,5 triệu»", () => {
+  assert.equal(hieuLaGia("4 tỷ 655", "excluded"), "Hiểu là: 4,655 tỷ, không bao phí");
+  assert.equal(hieuLaGia("1,5 triệu", "included"), "Hiểu là: 1,5 triệu, bao phí");
+});
+
+test("AC-3: căn 4,655 tỷ — chữ điền sẵn đọc lại đúng số cũ, Enter không đổi giá", () => {
+  const hang: HangSua = { ...HANG, listPrice: 4_655_000_000 };
+  const kq = dungLenhGia(hang, chuDienSan(hang), "excluded");
+  assert.ok(kq.ok);
+  assert.equal(kq.lenh.type === "price_changed" && kq.lenh.payload.listPrice, 4_655_000_000);
+});
+
+test("đối chứng đỏ: bộ viết làm tròn hai số lẻ thì chỗ đọc lại, hỏi lại, điền sẵn bị gọi tên", () => {
+  const SO_2 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 });
+  const vietTron = (d: number) => (d >= 1e9 ? `${SO_2.format(d / 1e9)} tỷ` : `${SO_2.format(d / 1e6)} triệu`);
+  const [dong, chuGo, chu] = GIA_LE[0]!;
+  const sai = choHienGia(dong, chuGo, vietTron);
+  const lech = (Object.keys(MONG(chu)) as Cho[]).filter((c) => sai[c] !== MONG(chu)[c]);
+  assert.deepEqual(lech, ["đọc lại", "giá chốt", "hỏi lại", "điền sẵn"], `chỗ lệch: ${lech.join(", ")}`);
 });

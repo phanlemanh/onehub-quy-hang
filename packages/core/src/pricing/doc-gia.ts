@@ -67,11 +67,16 @@ export function docGia(chu: string): KetQuaDocGia {
   return CHUA_HIEU;
 }
 
-const SO_2 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 });
-const SO_NGUYEN = new Intl.NumberFormat("vi-VN");
+/** Phần nguyên và phần lẻ của `dong` theo đơn vị, bằng số nguyên (không số thực); số 0 cuối của phần lẻ cắt đi. */
+function vietTheo(dong: number, donVi: number): string {
+  const le = String(dong % donVi).padStart(String(donVi).length - 1, "0").replace(/0+$/, "");
+  return le ? `${Math.floor(dong / donVi)},${le}` : String(Math.floor(dong / donVi));
+}
 
-/** «4,65 tỷ» · «950 triệu» — cùng cách viết với cột Giá của Bảng hàng. */
+/**
+ * «4,655 tỷ» · «1,234567 triệu» · «1000 tỷ» — viết đúng từng đồng (va-sua-tren-o): `docGia(vietGia(x)).dong === x` với mọi
+ * số nguyên đồng bộ đọc nhận. Không dấu chấm nghìn: bộ đọc coi dấu chấm là dấu lẻ. Cột Giá của Bảng hàng viết gọn riêng.
+ */
 export function vietGia(dong: number): string {
-  if (dong >= TY) return `${SO_2.format(dong / TY)} tỷ`;
-  return `${SO_NGUYEN.format(Math.round(dong / TRIEU))} triệu`;
+  return dong >= TY ? `${vietTheo(dong, TY)} tỷ` : `${vietTheo(dong, TRIEU)} triệu`;
 }

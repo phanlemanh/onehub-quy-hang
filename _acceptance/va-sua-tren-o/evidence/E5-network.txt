@@ -1,0 +1,39 @@
+# fetch từ trang (bọc window.fetch) + lỗi console, E5 lượt chấm độc lập
+GET /api/v1/catalog 200
+GET /api/v1/catalog 200
+GET /api/v1/listings 200
+GET /api/v1/listings 200
+GET /api/v1/me 200
+GET /api/v1/listings 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+GET /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6 200
+POST /__nextjs_original-stack-frames 200
+POST /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764/events 200
+GET /api/v1/listings 200
+POST /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6/events 200
+GET /api/v1/listings 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+GET /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6 200
+POST /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764/events 200
+GET /api/v1/listings 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+GET /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6 200
+POST /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6/events 200
+GET /api/v1/listings 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+GET /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+GET /api/v1/listings/f2e776c9-879f-4ff8-b0cb-eb38e1e038d6 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+POST /__nextjs_original-stack-frames 200
+POST /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764/events 200
+GET /api/v1/listings 200
+POST /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764/events 200
+GET /api/v1/listings 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+GET /api/v1/listings/f5c54940-b998-4988-9866-88a45b415764 200
+# console/error
+console.error: Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Page (
+console.error: Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Popove
