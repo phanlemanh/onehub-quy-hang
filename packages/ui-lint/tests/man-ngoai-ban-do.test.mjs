@@ -7,6 +7,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { tepVetKhoi } from "../kiem-chuan.mjs";
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(PKG, "..", "..");
@@ -21,7 +22,7 @@ const NHAN_TRANG_TAM = 'nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/
 
 function banSao({ kiemChuan = false } = {}) {
   const d = mkdtempSync(join(tmpdir(), "ngoai-ban-do-"));
-  for (const t of ["design/patterns", W, ...(kiemChuan ? TEP_KIEM_CHUAN : [])]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
+  for (const t of ["design/patterns", W, ...(kiemChuan ? [...TEP_KIEM_CHUAN, ...tepVetKhoi(ROOT)] : [])]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
   if (kiemChuan)
     for (const s of ["quy-hang-ui", "reui"]) {
       mkdirSync(join(d, ".claude/skills"), { recursive: true });

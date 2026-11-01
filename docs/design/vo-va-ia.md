@@ -138,21 +138,27 @@ lọc, cột hiện, sắp xếp, cách nhóm thành góc nhìn **trên máy the
 
 ## 3. Chỗ hở — không có khối, ghép từ thành phần
 
-| Chỗ | Ghép |
-| --- | --- |
-| Thanh tab dưới điện thoại | Như mục 1 |
-| Chế độ cuộc gọi | Frame hai cột. Trái: câu hỏi khai thác (`Item` + `Checkbox`/`Collapsible`), kết quả gọi một chạm bằng `ToggleGroup` lớn có `Kbd`. Phải: máy tính giá bao phí ↔ giá về tay bằng hai `number-field` nối hai chiều |
-| Góc nhìn đã lưu | Cột thứ hai của vỏ + lưu bộ lọc (`filters`), cột, cách nhóm của lưới thành một đối tượng Góc nhìn |
-| Cột hồ sơ cạnh bảng | shadcn `resizable` (không khối nào kéo theo) |
-| Dán ảnh từ clipboard | `c-file-upload-8` + `c-sortable-7` cho kéo thả; phần dán tự viết |
-| Luật chia lead | `Field` + `Select` + bảng luật trong Frame |
-| Luồng Gửi | Thẻ `product-grid-2` có `Checkbox` → thanh đáy dính đếm căn đã chọn → `Drawer` toàn màn xem trước chính trang khách → nút mở bảng chia sẻ của máy. Không tích hợp gửi tin |
-| Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ |
-| Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu |
-| Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 6 — ghép `Frame` + `Field` + `Input` + `Button` ở hàng 6; chuyển thể khối `auth-15` là việc riêng (ADR-0005) |
-| Ô nhận lead (hàng 24) | Bậc 6 — ghép `Frame` (khuôn `KhungLead`) + `Field` + `Input` + `Select` + `ToggleGroup` + `Button`, kết quả kiểm trùng qua `TrangThai`, hỏi lại «Bỏ lead này» bằng `AlertDialog`; khối Pro `form-2` chuyển thể vào chính `apps/web/src/app/(app)/leads/new/o-lead.tsx` khi có khoá ReUI. Cột phải `list-11` là hàng 27 |
-| Trống · lỗi · báo (`TrangThai`) | Bậc 6 — ghép `Empty` + `Alert` đã cài thành khuôn `apps/web/src/components/trang-thai.tsx` (hàng 58); khối đích `empty-state-*` là khối Pro, chuyển thể vào chính tệp ấy khi có khoá ReUI |
-| Người dùng (Cài đặt sàn, tạm) | Bậc 6 — ghép `Frame` + `Item` + `Badge` + `Field` + `Checkbox` + `AlertDialog` ở hàng 7; khối Pro `solution-users-8` khi có khoá ReUI (ADR-0006) |
+Mỗi chỗ dựng bằng ghép hay tự viết (bậc 6–7 của thang) có một dòng ở đây, đủ năm ô (ADR-0019 quyết định 3): **Đã tra trên
+ReUI** — `` `<truy vấn>` → <ứng viên gần nhất> `` (hay «không có»), truy vấn chạy bằng MCP `reui`; **Vì sao không đứng**;
+**Hạn xem lại** — mở đầu bằng ngày `YYYY-MM-DD` hay bằng «khi » (một điều kiện). Rơi bậc xuống ghép hay tự viết trong một
+vòng là một dòng `decisions.jsonl` của hồ sơ vòng ấy. Kiểm chuẩn (`npm run lint`) đỏ khi một ô trống hay chỉ «—», và in
+cảnh báo có tên khi hạn là ngày đã tới — mỗi cảnh báo là một chỗ cần mở thành hàng riêng.
+
+| Chỗ | Ghép | Đã tra trên ReUI | Vì sao không đứng | Hạn xem lại |
+| --- | --- | --- | --- | --- |
+| Thanh tab dưới điện thoại | Như mục 1 | `mobile bottom tab bar navigation` → app-shell-11 | Khối vỏ của ReUI là cột bên cho máy tính; không khối nào có thanh tab đáy cho điện thoại | khi ReUI có khối thanh tab đáy cho điện thoại |
+| Chế độ cuộc gọi | Frame hai cột. Trái: câu hỏi khai thác (`Item` + `Checkbox`/`Collapsible`), kết quả gọi một chạm bằng `ToggleGroup` lớn có `Kbd`. Phải: máy tính giá bao phí ↔ giá về tay bằng hai `number-field` nối hai chiều | `call script checklist with call outcome buttons and price calculator` → không có | Kết quả lệch đề (thẻ so sánh sản phẩm, báo cáo tác tử); không khối nào có kịch bản gọi hay máy tính giá hai chiều | khi dựng màn Chế độ cuộc gọi (hàng 28–30) |
+| Góc nhìn đã lưu | Cột thứ hai của vỏ + lưu bộ lọc (`filters`), cột, cách nhóm của lưới thành một đối tượng Góc nhìn | `saved views for data grid filters` → solution-dev-ops-2 | Góc nhìn đã lưu nằm trong khối nhật ký kiểm toán nguyên trang, không tách được khỏi lưới khác loại | khi làm góc nhìn của đội cho Bảng hàng |
+| Cột hồ sơ cạnh bảng | shadcn `resizable` (không khối nào kéo theo) | `resizable detail panel beside table` → c-resizable-9 | Chỉ có ví dụ thành phần `resizable`; không khối nào đặt hồ sơ cạnh bảng | khi dựng cột hồ sơ căn (mục 17) |
+| Dán ảnh từ clipboard | `c-file-upload-8` + `c-sortable-7` cho kéo thả; phần dán tự viết | `paste image from clipboard upload sortable` → c-file-upload-8 | Đã dùng `c-file-upload-8` và `c-sortable-7`; không ví dụ nào nhận ảnh dán từ clipboard | khi ReUI có tải ảnh bằng dán |
+| Luật chia lead | `Field` + `Select` + bảng luật trong Frame | `lead assignment rules settings` → solution-ai-ops-5 | Khối luật định tuyến cho AI — dữ liệu, chữ và cách bật tắt khác hẳn luật chia lead | khi dựng màn cài đặt chia lead của Cài đặt sàn |
+| Luồng Gửi | Thẻ `product-grid-2` có `Checkbox` → thanh đáy dính đếm căn đã chọn → `Drawer` toàn màn xem trước chính trang khách → nút mở bảng chia sẻ của máy. Không tích hợp gửi tin | `select products and share preview sheet` → không có | Kết quả là sheet tạo lịch chạy, SLO; không khối nào chọn nhiều thẻ rồi xem trước và mở chia sẻ | khi dựng luồng Gửi (hàng 34) |
+| Chọn sàn sau đăng nhập | Frame giữa trang, danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ | `workspace picker list after sign in` → không có | Kết quả là đăng nhập nhiều cách và quản nhãn; không khối nào chọn không gian làm việc sau đăng nhập | khi ReUI có khối chọn không gian làm việc |
+| Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu | `task queue with due date overdue badge` → data-grid-grouping-1 | Đây chính là khối đích của Hôm nay, đầu chủ; Badge hạn là chi tiết trong khối, không là ô riêng | khi chuyển thể `data-grid-grouping-1` cho Hôm nay (hàng 22) |
+| Đăng nhập, chọn sàn, chưa gắn sàn (tạm) | Bậc 6 — ghép `Frame` + `Field` + `Input` + `Button` ở hàng 6; chuyển thể khối `auth-15` là việc riêng (ADR-0005) | `sign in with email one-time code` → auth-17 | Khối đích `auth-15` là khối Pro, chưa chuyển thể; `auth-17` gần nhất nhưng mang nhiều cách đăng nhập mà kho chỉ dùng mã email | 2026-10-30 — khi có khoá ReUI Pro |
+| Ô nhận lead (hàng 24) | Bậc 6 — ghép `Frame` (khuôn `KhungLead`) + `Field` + `Input` + `Select` + `ToggleGroup` + `Button`, kết quả kiểm trùng qua `TrangThai`, hỏi lại «Bỏ lead này» bằng `AlertDialog`; khối Pro `form-2` chuyển thể vào chính `apps/web/src/app/(app)/leads/new/o-lead.tsx` khi có khoá ReUI. Cột phải `list-11` là hàng 27 | `new lead intake form with duplicate check` → form-2 | Khối đích `form-2` là khối Pro; hàng 24 ghép tạm chờ khoá | 2026-10-30 — khi có khoá ReUI Pro |
+| Trống · lỗi · báo (`TrangThai`) | Bậc 6 — ghép `Empty` + `Alert` đã cài thành khuôn `apps/web/src/components/trang-thai.tsx` (hàng 58); khối đích `empty-state-*` là khối Pro, chuyển thể vào chính tệp ấy khi có khoá ReUI | `empty state error state` → empty-state-7 | Khối đích `empty-state-*` là khối Pro; ghép tạm chờ khoá | 2026-10-30 — khi có khoá ReUI Pro |
+| Người dùng (Cài đặt sàn, tạm) | Bậc 6 — ghép `Frame` + `Item` + `Badge` + `Field` + `Checkbox` + `AlertDialog` ở hàng 7; khối Pro `solution-users-8` khi có khoá ReUI (ADR-0006) | `team users management roles invite` → solution-users-8 | Khối đích `solution-users-8` là khối Pro; hàng 7 ghép tạm chờ khoá | 2026-10-30 — khi có khoá ReUI Pro |
 
 ## 4. Tránh
 

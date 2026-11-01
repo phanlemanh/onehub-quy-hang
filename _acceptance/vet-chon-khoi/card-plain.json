@@ -1,0 +1,19 @@
+{
+  "feature_plain": "Mỗi lần kho chọn khối giao diện đều để lại một dòng tra được: khối lấy từ ReUI ghi ở danh mục khối, chỗ phải ghép tay ghi ở «Chỗ hở» kèm đã tra gì, vì sao không dùng được và khi nào xem lại; thiếu một ô thì bài kiểm báo đỏ gọi đúng dòng.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ ghi đủ chín ô cho hai khối đã dùng (vỏ ứng dụng, Bảng hàng), kể cả ảnh chuẩn và người duyệt."},
+    {"id": "AC-2", "p": "Sẽ báo đỏ gọi tên khối khi mã đã chuyển thể một khối mà danh mục chưa có dòng."},
+    {"id": "AC-3", "p": "Sẽ báo đỏ gọi tên dòng và cột khi một dòng khối trống ô, trỏ ảnh hay tệp không có, hay người duyệt không khớp hồ sơ ký."},
+    {"id": "AC-4", "p": "Sẽ điền đủ năm ô cho 13 chỗ ghép tay bằng kết quả tra ReUI thật."},
+    {"id": "AC-5", "p": "Sẽ báo đỏ gọi tên chỗ khi thiếu điều đã tra, lý do hay hạn xem lại."},
+    {"id": "AC-6", "p": "Sẽ chỉ cảnh báo, không chặn, khi hạn xem lại đã tới — bốn chỗ chờ khối Pro ra cảnh báo ngay."},
+    {"id": "AC-7", "p": "Sẽ KHÔNG báo gì khi chỉ sửa phần tài liệu khác ngoài hai bảng."},
+    {"id": "AC-8", "p": "Sẽ ghi luật cho người và máy: ba ô bắt buộc, rơi bậc là một dòng sổ, bậc 2 tra danh mục khối."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG làm trang ba lối khi chọn khối — hàng 84."},
+    {"id": "OOS-2", "p": "KHÔNG thay bốn chỗ ghép tạm bằng khối Pro — mỗi chỗ thành hàng riêng sau khi hàng này ký."},
+    {"id": "OOS-3", "p": "KHÔNG có máy đo dòng «rơi bậc» trong sổ quyết định — chỉ là luật chữ."},
+    {"id": "OOS-4", "p": "KHÔNG sửa mã giao diện để thêm dấu nhận diện."}
+  ]
+}

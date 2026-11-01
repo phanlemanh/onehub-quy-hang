@@ -1,0 +1,107 @@
+schema_version: 1
+feature_slug: nhan-danh-muc-invest
+# Lệnh máy: `executors.test.connect` (khuôn ở packages/connect), `executors.test.isolation` (bộ cách ly của packages/db
+# + packages/api/test-db, cần DATABASE_URL tới Postgres dãy D, cổng 5565), `executors.test.core`, `executors.test.api`.
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên
+# ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khuôn v1: gói mẫu đúng khuôn đọc ra đủ khu, toà, căn» có mặt và ok — gói mẫu viết tay trong tệp kiểm (nhãn [Mẫu], hai khu, ba toà, căn hộ đủ chín trường với giá trị khác nhau và một nhà phố Residential/Townhouse mang đủ bốn trường lotSizeArea, storiesTotal, frontageLength, accessRoadWidth, khác null và khác nhau) qua parseCatalogFeed ra ok: true, đếm khu/toà/căn bằng số viết trước, và căn hộ chọn trước cùng nhà phố deepEqual đúng các trường đã viết; ca đối chứng cùng gói: CATALOG_FEED_SCHEMA_VERSION === 1 và cùng gói mang schemaVersion 0 bị từ chối. Ca «khuôn v1: dữ liệu mẫu của lõi đổi sang khuôn rồi đọc lại» có mặt và ok — danh mục mẫu packages/db/seed/mau/du-lieu-mau.json (đọc theo đường suy từ vị trí tệp kiểm) bọc thành gói v1 rồi qua parseCatalogFeed ra ok: true, và tập khoá của từng khu, toà, căn bằng tập khoá của bản lõi. Ca «khuôn v1: luật loại hình nằm trong khuôn» có mặt và ok — ma trận viết trước ba phần tử (cặp Residential/Land, căn hộ mang lotSizeArea, nhà phố mang stack), số lần so bằng 3: ok: false, đúng một lỗi với path tới căn ấy và message nêu tên trường; đối chứng dương: cùng gói sửa căn ấy thì ok: true. Chiều đỏ: khuôn thiếu propertyType → ca đỏ nêu trường."
+    paths: [packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khuôn v1: khoá lạ ở từng cấp bị từ chối, nêu đúng đường khoá» có mặt và ok — ma trận viết trước bốn cấp × khoá lạ (gốc `extra`, khu `ownerName`, toà `note`, căn `ownerPhone`), mỗi phần tử một lần so, số lần so bằng 4: ok: false và errors có đúng một mục với path bằng đường viết trước (vd ['subdivisions',0,'buildings',1,'units',2]) và message nhắc tên khoá; đối chứng dương cùng gói không khoá lạ ra ok: true. Chiều đỏ: bỏ .strict() ở cấp căn → phần tử ownerPhone đỏ nêu cấp."
+    paths: [packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khuôn v1: phiên bản sai và UPI trùng bị từ chối» có mặt và ok — schemaVersion 0, 2 và vắng, mỗi giá trị một lần so, ra ok: false với lỗi ở path ['schemaVersion']; gói có hai căn cùng UPI ở hai toà ra ok: false với lỗi nêu UPI ấy; đối chứng: cùng gói đổi UPI căn thứ hai thì ok: true. Chiều đỏ: bỏ kiểm UPI trùng → ca đỏ nêu UPI."
+    paths: [packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/api/test-db/catalog/nhan-goi.test.ts` ca «nhận gói: thoả thuận đang bật, gói đúng khuôn vào vùng dùng chung» có mặt và ok — sàn thử nằm trong catalog_trusted_companies (chủ bảng thêm trong phần dựng ca) và có thoả thuận catalog_source inbound active có lớp catalog; quản trị sàn POST /api/v1/catalog/feeds gói mẫu v1 nhận 200 với số khu/toà/căn bằng số viết trước; gói có một căn hộ và một nhà phố mang đủ bốn trường thấp tầng (khác null, khác nhau); đọc thẳng bảng catalog_units theo UPI ra đúng giá trị của MỌI cột trong danh sách cột viết trước của E11 cho từng căn (so theo UPI, không theo thứ tự), và catalog_subdivisions ra đúng subdivision_name, complex_name. Chiều đỏ: đường trả 200 mà không ghi → ca đỏ nêu số dòng."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/connect/src/**, packages/db/migrations/010_danh_muc_dung_chung.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: gửi lại không nhân đôi, đổi một căn thì cập nhật đúng căn ấy» có mặt và ok — sau lần nhận đầu, đếm dòng catalog_units và catalog_subdivisions của provider thử; thân trả về có đúng các khoá viết trước { subdivisions, buildings, units, created, updated }; lần đầu created bằng số căn, updated 0; gửi lại y nguyên: số dòng hai bảng bằng nhau, created 0; gửi gói đổi livingArea của một căn: created 0, updated 1, đúng căn ấy đổi giá trị, mọi căn khác giữ nguyên (so toàn bộ theo UPI). Chiều đỏ: ghi bằng insert không theo UPI → số dòng gấp đôi, ca đỏ nêu số."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/db/migrations/010_danh_muc_dung_chung.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: thoả thuận không đang bật thì 403 và không ghi dòng nào» có mặt và ok — ma trận viết trước chín trạng thái (paused, ended, valid_until đã qua, valid_from chưa tới, data_classes thiếu catalog, khác loại — lead_source inbound active có lớp catalog, chiều ra — catalog_source outbound active có lớp catalog, không có thoả thuận, thoả thuận active mà sàn không nằm trong catalog_trusted_companies), mỗi phần tử một lần so, số lần so bằng 9: 403 thân { error: 'agreement-inactive' } và số dòng catalog_units VÀ catalog_subdivisions của provider phần tử ấy đều bằng 0; thêm một phần tử giữa giao dịch: thoả thuận hợp lệ lúc cửa nhận kiểm, rồi (qua móc thử của tệp kiểm, chủ bảng đổi status sang paused ngay trước câu ghi) cơ sở dữ liệu từ chối — trả 403 agreement-inactive (không 500) và hai bảng 0 dòng; đối chứng dương: bật lại (status active) thì cùng gói nhận 200. Chiều đỏ: đường chỉ kiểm status → phần tử hết hạn đỏ nêu trạng thái; đường chỉ hỏi mayFlow → phần tử khác loại đỏ."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/db/migrations/010_danh_muc_dung_chung.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: gói sai khuôn thì 422 và không ghi dòng nào» có mặt và ok — với thoả thuận đang bật: gói có khoá lạ ở căn cuối cùng của toà cuối, gói schemaVersion 0, gói có căn cuối mang cặp Residential/Land, và gói có căn hộ mang lotSizeArea, mỗi gói nhận 422 thân { error: 'invalid-feed', errors: [...] } có đúng đường khoá viết trước (lỗi loại hình: đường tới căn kèm tên trường propertySubType hoặc lotSizeArea); số dòng catalog_units và catalog_subdivisions của provider thử trước và sau bằng nhau (0). Chiều đỏ: ghi từng căn trước khi kiểm hết → căn đầu đã vào, ca đỏ nêu số dòng."
+    paths: [packages/api/src/catalog/**, packages/api/test-db/catalog/**, packages/connect/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/db/tests/danh-muc-dung-chung.test.mjs` các ca có mặt và ok: «danh mục dùng chung: thoả thuận không hợp lệ thì không ghi được» (ma trận viết trước chín phần tử — không có thoả thuận, paused, ended, valid_until đã qua, valid_from chưa tới, thiếu lớp catalog, khác loại lead_source, chiều ra outbound, trỏ thoả thuận hợp lệ của một công ty được tin khác — mỗi phần tử: insert và update bằng vai quy_hang_app bị từ chối với SQLSTATE 42501, số lần so bằng 9; đối chứng dương cùng dữ liệu với thoả thuận hợp lệ của sàn được tin thành công), «danh mục dùng chung: sàn tự tạo thoả thuận mà không được tin không ghi được» (sàn tự insert thoả thuận catalog_source active cho mình — được — rồi insert vào catalog_units bị từ chối), «danh mục dùng chung: không ai tự thêm mình vào danh sách tin» (insert vào catalog_trusted_companies bằng quy_hang_app bị từ chối), «danh mục dùng chung: không ai xoá được» (delete bằng quy_hang_app của sàn được tin: lỗi 42501 hoặc 0 dòng bị xoá, và dòng vẫn còn khi đọc lại), «danh mục dùng chung: mọi sàn và lời gọi chưa đặt sàn đọc được» (sàn B không thoả thuận và lời gọi chưa đặt sàn đều select ra dòng sàn A đã nạp); «danh mục dùng chung: ba bảng bật và ép luật theo dòng» (đọc relrowsecurity và relforcerowsecurity của catalog_subdivisions, catalog_units, catalog_trusted_companies từ pg_class, cả hai true cho từng bảng, số bảng bằng 3); và ca có sẵn «mọi bảng dữ liệu đều bật và ép luật theo dòng» vẫn ok. Chiều đỏ: policy insert dùng `with check (true)` → ca thứ nhất đỏ; hàm kiểm bỏ điều kiện loại → phần tử khác loại đỏ."
+    paths: [packages/db/migrations/010_danh_muc_dung_chung.sql, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhận gói: cổng vào 401/403 và OpenAPI» có mặt và ok — chưa đăng nhập 401 { error: 'unauthenticated' }, người không thuộc sàn 403 { error: 'no-company' }, vai đầu chủ của sàn có thoả thuận 403 { error: 'admin-required' }; đối chứng: quản trị cùng sàn 200; tài liệu OpenAPI có đường POST /api/v1/catalog/feeds. Và năm ca của hàng 9 trong `packages/api/test-db/catalog/catalog.test.ts` cùng ba ca của hàng 63 trong `packages/api/test-db/catalog/trung-ma-hai-toa.test.ts` và hai ca của hàng 72 («danh mục: tham số project cũ bị từ chối 400», «loại hình: thân found qua API mang đúng mười hai khoá viết trước») vẫn có mặt và ok."
+    paths: [packages/api/src/**, packages/api/test-db/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; mọi ca của hàng 9 trong `packages/core/src/catalog/catalog.test.ts` của hàng 63 trong `packages/core/src/catalog/trung-ma-hai-toa.test.ts` và của hàng 72 trong `packages/core/src/catalog/khu-va-loai-hinh.test.ts` vẫn có mặt và ok."
+    paths: [packages/core/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/db/tests/danh-muc-dung-chung.test.mjs` ca «danh mục dùng chung: tập cột đúng danh sách viết trước» có mặt và ok — đọc information_schema.columns của catalog_subdivisions và catalog_units, so (sắp theo tên) bằng deepEqual với hai danh sách viết tay trong tệp kiểm (không lấy từ migration); đối chứng: mỗi danh sách có ít nhất một tên cột đúng và không chứa tên nào khớp owner|phone|price|photo (cột floor là tầng, không bị cấm). Chiều đỏ: thêm cột owner_phone vào migration → ca đỏ nêu cột thừa."
+    paths: [packages/db/migrations/010_danh_muc_dung_chung.sql, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong `packages/db/tests/danh-muc-dung-chung.test.mjs` ca «danh mục dùng chung: mỗi sàn chỉ thấy dòng tin của mình, không ai đọc mã thoả thuận» có mặt và ok — hai sàn A, B cùng nằm trong catalog_trusted_companies (chủ bảng thêm), mỗi sàn nạp một khu một căn bằng thoả thuận của mình; bằng vai quy_hang_app: sàn A select catalog_trusted_companies ra đúng một dòng company_id = A, sàn B ra đúng một dòng = B, lời gọi chưa đặt sàn ra 0 dòng; ma trận viết trước bốn phép đọc agreement_id (sàn A đọc dòng khu của B, dòng căn của B, dòng khu của chính A, lời gọi chưa đặt sàn đọc dòng căn của A), số lần so bằng 4, mỗi phép bị từ chối với SQLSTATE 42501; đối chứng dương: cùng sàn A select mọi cột danh mục còn lại (danh sách viết trước, không agreement_id) của dòng khu và căn của B ra đúng giá trị. Và ca «nhận gói: thoả thuận đang bật, gói đúng khuôn vào vùng dùng chung» của E4 vẫn ok sau khi thu hẹp. Chiều đỏ: để luật đọc danh sách tin là using (true) → sàn A thấy hai dòng, ca đỏ nêu số dòng; cấp lại select agreement_id → phần tử đầu đỏ."
+    paths: [packages/db/migrations/**, packages/db/tests/**, packages/api/src/catalog/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

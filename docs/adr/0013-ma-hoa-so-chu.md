@@ -65,6 +65,17 @@ trong trình quản lý mật khẩu là phải hỏi lại số từ chủ nhà
    dev; in `đã mã hoá N dòng, M dòng đã là bản mã, L lead`. Chạy lại không đổi gì.
 3. Đếm lại cả hai bảng: phải bằng 0.
 
+**Bật hẳn ràng buộc khi deploy** (migration 013, 01/11). Chỉ chủ bảng validate được, và trên bản thật vai chủ chỉ chạy
+qua job deploy, nên việc bật đi bằng migration 013, xét từng bảng:
+
+- bảng không còn số rõ → 013 tự bật hẳn ràng buộc của bảng ấy khi deploy; không cần chạy bước 2;
+- bảng còn số rõ → 013 bỏ qua, không lỗi, và in lời nhắc `<bảng> còn N dòng số rõ — ràng buộc … chưa bật; chạy
+  packages/api/van-hanh/ma-hoa-lai.ts` ở đầu ra `npm run db:migrate`, tức **log của job deploy**. Chạy lệnh mã hoá lại
+  (bước 2) — lệnh ấy tự bật ràng buộc;
+- bộ kiểm cách ly chạy trong job deploy có ca trạng thái: bảng không còn số rõ mà ràng buộc chưa bật thì deploy dừng
+  trước khi bản mới lên người dùng. Bảng còn số rõ thì ràng buộc được phép chưa bật (deploy vẫn đi tiếp — Hỏi-2 của
+  hàng `bat-rang-buoc-ban-ma`).
+
 **Xoá cột `owner_phone`** là migration của hàng sau, sau khi cơ sở dữ liệu thật đã chạy bước trên.
 
 ## Ngoài quyết định này

@@ -1,0 +1,109 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hồ sơ · bat-rang-buoc-ban-ma</title>
+<style>
+:root{--bg:#faf9f6;--card:#fff;--bd:#e6e4de;--ink:#1f1f1d;--mut:#6c6a64;--hint:#9a988f}
+*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.5;font-size:15px}
+.wrap{max-width:920px;margin:0 auto;padding:24px 20px 64px}
+h1{font-size:20px;margin:0 0 2px}h2{font-size:15px;margin:30px 0 10px;letter-spacing:.02em}
+.sub{font-size:13px;color:var(--mut)}
+.badge{display:inline-block;font-size:12px;font-weight:600;padding:3px 11px;border-radius:999px;vertical-align:middle}
+.pass{background:#E1F5EE;color:#085041}.pend{background:#FAEEDA;color:#633806}.rej{background:#FAECE7;color:#712B13}.neutral{background:#f1efe8;color:#444441}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--mut);margin-top:6px}
+.meta b{color:var(--ink);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--bd)}th{color:var(--mut);font-weight:600;font-size:12px}
+td a{color:#185FA5;text-decoration:none}.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.eval{scroll-margin-top:14px}.eval h3{font-size:14px;margin:0 0 4px}.eval .crit{font-size:13px;color:var(--mut);margin:0 0 8px}
+pre.out{background:#1f1f1d;color:#e8e6df;border-radius:8px;padding:11px 13px;overflow:auto;max-height:280px;font-size:12px;margin:8px 0}
+.kv{font-size:12px;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0}.kv b{color:var(--ink)}
+.shot img{display:block;max-width:100%;border:1px solid var(--bd);border-radius:8px}
+.slide{position:relative}.slide .frame{position:absolute;inset:0;opacity:0;transition:opacity .35s}.slide .frame:first-child{position:relative}.slide .frame.on{opacity:1}
+.slidebar{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--mut);margin-top:6px}
+.btn{font-size:12px;padding:4px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;cursor:pointer}
+.ov{background:#FAEEDA;color:#633806;border-radius:7px;padding:6px 10px;font-size:12px;display:inline-block}
+.ovok{background:#E1F5EE;color:#085041}
+.note{font-size:13px;color:var(--mut)}.flag{font-size:13px;border-radius:8px;padding:8px 11px;margin:6px 0}
+.fred{background:#FAECE7;color:#712B13}.fok{background:#E1F5EE;color:#085041}
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--bd);font-size:12px;color:var(--hint)}
+ul.ck{list-style:none;padding:0;margin:0}ul.ck li{padding:5px 0;font-size:14px}ul.ck input{margin-right:8px}
+.tl{border-left:2px solid var(--bd);padding-left:14px;margin:0}.tl li{font-size:13px;margin:0 0 6px;list-style:none}
+.dai{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 8px}
+.o{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 11px;min-width:0}
+.o .hoi{font-size:11px;color:var(--mut);text-transform:none;letter-spacing:.02em}
+.o .tra{font-size:13px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.vang{color:var(--hint);font-style:italic}
+.chu-kho{font-size:12px;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 10px}.chu-kho b{color:var(--ink)}
+details.muc{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin:0 0 10px;padding:0 14px}
+details.muc>summary{cursor:pointer;font-weight:600;font-size:14px;padding:11px 0}
+details.muc[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:10px}
+details.muc .noi{padding:0 0 12px;font-size:13px}
+.loc{display:flex;gap:6px;margin:0 0 8px}.loc .btn[aria-pressed="true"]{background:#1f1f1d;color:#fff}
+.tl li[hidden]{display:none}
+@media (max-width:720px){.dai{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>Khi deploy, cơ sở dữ liệu tự bật hẳn hai ràng buộc chặn số chủ để rõ nếu bảng không còn số rõ; còn số rõ thì bỏ qua và nhắc chạy lệnh mã hoá lại</h1><div class="sub">Trang hồ sơ · <span class="mono">bat-rang-buoc-ban-ma</span> · tier T3</div>
+<section class="dai" aria-label="Hồ sơ trong một phút"><div class="o" data-o="da_giao" data-nguon="contract.md"><div class="hoi">Đã giao gì</div><div class="tra">Khi deploy, cơ sở dữ liệu tự bật hẳn hai ràng buộc chặn số chủ để rõ nếu bảng không còn số rõ; còn số rõ thì bỏ qua và nhắc chạy lệnh mã hoá lại</div></div><div class="o" data-o="vi_sao" data-nguon="contract.md"><div class="hoi">Vì sao</div><div class="tra">Nối tiếp hàng 62 (ma-hoa-so-chu, ADR-0013). Hai ràng buộc listing_owners_phone_chi_ban_ma và leads_phone_chi_ban_ma đang NOT VALID trên bản thật; chỉ vai chủ quy_hang_owner validate được, và vai ấy chỉ chạy qua job deploy (ADR-0009 §2). Chủ kho chốt 01/11: «Thêm migration nhỏ để CI tự bật khi deploy tôi đồng ý». Giám sát cấp số migration 013…</div></div><div class="o" data-o="trang_thai" data-nguon="contract.md"><div class="hoi">Trạng thái</div><div class="tra">Đang làm</div></div><div class="o" data-o="ngay" data-nguon="contract.md"><div class="hoi">Ngày</div><div class="tra">2026-11-01</div></div><div class="o" data-o="production" data-nguon="decisions.jsonl"><div class="hoi">Đã lên production chưa</div><div class="tra">chưa ghi quan sát production</div></div><div class="o" data-o="do_gi" data-nguon="opportunity.md"><div class="hoi">Sẽ đo gì, khi nào</div><div class="tra"><span class="vang">chưa có — opportunity.md</span></div></div><div class="o" data-o="ket_qua" data-nguon="uat-session.md"><div class="hoi">Kết quả</div><div class="tra">chưa đo</div></div><div class="o" data-o="chua_lam" data-nguon="contract.md"><div class="hoi">Chưa làm gì</div><div class="tra">3 mục để ngoài phạm vi · 0 giới hạn đã biết</div></div><div class="o" data-o="ai_quyet" data-nguon="contract.md"><div class="hoi">Ai quyết</div><div class="tra">Cổng Phạm vi: Manh Phan · Cổng Bằng chứng: chưa ký</div></div></section>
+<div class="chu-kho" data-chu-kho><span data-k="tieu_chi">Tiêu chí <b>4</b></span><span data-k="phep_do">Phép đo <b>6</b></span><span data-k="luot_cham">Lượt chấm <b><span class="vang">chưa có — usage-report.md</span></b></span><span data-k="token">Token <b><span class="vang">chưa có — usage-report.md</span></b></span><span data-k="quyet_dinh_may">Quyết định máy <b>6</b></span><span data-k="quyet_dinh_nguoi">người <b>3</b></span><span data-k="ma">Mã <b>d987a9d</b></span></div>
+<details class="muc" id="vi-sao"><summary>Vì sao làm</summary><div class="noi"><p>Nối tiếp hàng 62 (ma-hoa-so-chu, ADR-0013). Hai ràng buộc listing_owners_phone_chi_ban_ma và leads_phone_chi_ban_ma đang NOT VALID trên bản thật; chỉ vai chủ quy_hang_owner validate được, và vai ấy chỉ chạy qua job deploy (ADR-0009 §2). Chủ kho chốt 01/11: «Thêm migration nhỏ để CI tự bật khi deploy tôi đồng ý». Giám sát cấp số migration 013. Bất biến chạm: 2 (chỉ chặn thêm, trần lớp source không đổi).</p></div></details>
+<details class="muc" id="da-hua"><summary>Đã hứa</summary><div class="noi"><ol class="hua"><li data-ac="AC-1"><b>AC-1</b> — — Bảng sạch thì bật hẳn.**</li><li data-ac="AC-2"><b>AC-2</b> — — Bảng còn số rõ thì bỏ qua, không hỏng, và mỗi bảng xét riêng.**</li><li data-ac="AC-3"><b>AC-3</b> — — Bản thật có chốt trước khi lên người dùng.**</li><li data-ac="AC-4"><b>AC-4</b> — — Người vận hành biết đường bật. **</li></ol></div></details>
+<details class="muc" id="thiet-ke"><summary>Thiết kế</summary><div class="noi"><p class="mono" data-design-doc>docs/superpowers/specs/2026-11-01-bat-rang-buoc-ban-ma-design.md</p></div></details>
+<details class="muc" id="quyet-dinh"><summary>Quyết định</summary><div class="noi"><div class="loc" role="group" aria-label="Lọc quyết định"><button class="btn" data-loc="tat-ca" aria-pressed="true">Tất cả 9</button><button class="btn" data-loc="may" aria-pressed="false">Máy 6</button><button class="btn" data-loc="nguoi" aria-pressed="false">Người 3</button></div><ol class="tl" data-dong-thoi-gian><li data-loai="nguoi" data-id="d-20261101T001624Z-1"><b>2026-11-01</b> · Người (Manh Phan) · approach · S0 — Cổng Đáng: build — chủ kho «Thêm migration nhỏ để CI tự bật khi deploy tôi đồng ý»<div class="note">Chủ kho gõ ở phiên dãy G ngày 01/11; giám sát cấp số 013 và chỉ đường hồ sơ mới.</div></li><li data-loai="may" data-id="d-20261101T001624Z-2"><b>2026-11-01</b> · Máy · approach · S1 — Đã tra tri thức: bật hẳn ràng buộc chặn số chủ để rõ khi deploy migration validate constraint<div class="note">Kho đã khai tri_thuc — bước thiết kế tra trang trước khi chọn.</div></li><li data-loai="may" data-id="d-20261101T001624Z-3"><b>2026-11-01</b> · Máy · approach · S1 — Tệp 013 xét từng bảng: không còn số rõ thì validate, còn số rõ thì raise notice và bỏ qua, không validate thẳng<div class="note">Lệnh mã hoá lại vẫn tự validate nên bảng bị bỏ qua sẽ được bật khi chạy lệnh ấy (thiết kế §2, E2).</div></li><li data-loai="may" data-id="d-20261101T001624Z-4"><b>2026-11-01</b> · Máy · approach · S1 — Chốt bản thật bằng một tệp kiểm mới trong packages/db/tests, chạy ở cả job isolation lẫn job deploy, kèm kiem-ci.mjs có sẵn giữ thứ tự migrate → cách ly → hook<div class="note">Job deploy chạy test:isolation với glob tests/*.test.mjs trước deploy hook (ci.yml, kiem-ci.mjs dòng 15).</div></li><li data-loai="may" data-id="d-20261101T001624Z-5"><b>2026-11-01</b> · Máy · approach · S1 — Hỏi-1: ca hai chiều (gỡ và dựng ràng buộc trong giao dịch hoàn lại, chạy chính tệp 013) cũng chạy ở job deploy trên bản thật<div class="note">Đo đúng tệp migration trên đúng cơ sở dữ liệu thật; khoá ghi trên hai bảng chỉ vài mili giây lúc deploy (thiết kế §3).</div></li><li data-loai="may" data-id="d-20261101T001957Z-6"><b>2026-11-01</b> · Máy · approach · S1 — Hỏi-1: ca gỡ và dựng ràng buộc chỉ chạy khi vai là superuser (Postgres dãy, CI); bản thật chỉ chạy ca trạng thái chỉ đọc<div class="note">Gỡ và dựng ràng buộc lấy khoá ACCESS EXCLUSIVE chặn cả đọc tới khi hoàn lại, lúc deploy bản cũ còn phục vụ người dùng (gap-probe P1 thứ ba, thiết kế §3).</div></li><li data-loai="may" data-id="d-20261101T001957Z-7"><b>2026-11-01</b> · Máy · approach · S1 — Hỏi-2: ca trạng thái chấp nhận NOT VALID khi bảng còn số rõ — bản thật còn số rõ chưa mã hoá lại vẫn deploy được, lời nhắc ở log<div class="note">Ràng buộc NOT VALID vẫn chặn mọi số rõ mới; chặn deploy chỉ vì dòng cũ là lựa chọn vận hành của chủ kho (gap-probe P2 thứ tư).</div></li><li data-loai="nguoi" data-id="d-20261101T002155Z-8"><b>2026-11-01</b> · Người · seal · gate1 — </li><li data-loai="nguoi" data-id="d-20261101T002336Z-9"><b>2026-11-01</b> · Người (Manh Phan) · approach · S2 — Gate 1.5: chủ kho duyệt kế hoạch thi công docs/superpowers/plans/2026-11-01-bat-rang-buoc-ban-ma.md — «duyệt kế hoạch»<div class="note">Hồ sơ T3, kế hoạch trình ở phiên dãy G.</div></li></ol></div></details>
+<details class="muc" id="bang-chung"><summary>Bằng chứng</summary><div class="noi">
+<div class="card" style="margin-top:12px"><span class="badge pend">PENDING-JUDGMENT</span>
+<div class="meta"><span>Verified by: <b>fresh-context verification subagent</b></span><span>Human signoff: <b>CHƯA ký</b></span><span>enforcement: <b>strict</b></span></div></div>
+<h2>Các eval</h2><div class="card" style="padding:4px 8px"><table><thead><tr><th>Eval</th><th>Tiêu chí</th><th>Loại</th><th>Verdict</th><th>run_id</th><th>verified_at</th></tr></thead><tbody>
+<tr><td><a href="#E1">E1</a></td><td>AC-1</td><td>test</td><td><span class="badge pass">PASS</span></td><td class="mono">minted-bat-rang-buoc-ban-ma-E1-r1</td><td class="mono">2026-11-01T00:31:18Z</td></tr>
+<tr><td><a href="#E2">E2</a></td><td>AC-2</td><td>test</td><td><span class="badge pass">PASS</span></td><td class="mono">minted-bat-rang-buoc-ban-ma-E2-r1</td><td class="mono">2026-11-01T00:31:18Z</td></tr>
+<tr><td><a href="#E3">E3</a></td><td>AC-3</td><td>test</td><td><span class="badge pass">PASS</span></td><td class="mono">minted-bat-rang-buoc-ban-ma-E3-r1</td><td class="mono">2026-11-01T00:31:18Z</td></tr>
+<tr><td><a href="#E4">E4</a></td><td>AC-3</td><td>script</td><td><span class="badge pass">PASS</span></td><td class="mono">minted-bat-rang-buoc-ban-ma-E4-r1</td><td class="mono">2026-11-01T00:31:18Z</td></tr>
+<tr><td><a href="#E5">E5</a></td><td>AC-4</td><td>judgment</td><td><span class="badge neutral">PASS (ĐỀ XUẤT CỦA HỘI ĐỒNG, CHỜ NGƯỜI CHỐT Ở CỔNG 2)</span></td><td class="mono">—</td><td class="mono">—</td></tr>
+<tr><td><a href="#E6">E6</a></td><td>AC-2</td><td>test</td><td><span class="badge pass">PASS</span></td><td class="mono">minted-bat-rang-buoc-ban-ma-E6-r1</td><td class="mono">2026-11-01T00:31:18Z</td></tr>
+</tbody></table></div>
+<h2>Chi tiết từng eval</h2>
+<div class="card eval" id="E1"><h3><span class="badge pass">PASS</span> &nbsp;E1 · test</h3><p class="crit">AC-1: — Bảng sạch thì bật hẳn.**</p>
+<div class="kv"><span>run_id <b>minted-bat-rang-buoc-ban-ma-E1-r1</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.test.isolation</b></span><span>verified_at <b>2026-11-01T00:31:18Z</b></span><span>baseline <b>green</b></span></div>
+<pre class="out">lệnh: npm run db:migrate &amp;&amp; npm run db:test
+ℹ duration_ms 6623.352584</pre>
+</div>
+<div class="card eval" id="E2"><h3><span class="badge pass">PASS</span> &nbsp;E2 · test</h3><p class="crit">AC-2: — Bảng còn số rõ thì bỏ qua, không hỏng, và mỗi bảng xét riêng.**</p>
+<div class="kv"><span>run_id <b>minted-bat-rang-buoc-ban-ma-E2-r1</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.test.isolation</b></span><span>verified_at <b>2026-11-01T00:31:18Z</b></span><span>baseline <b>green</b></span></div>
+<pre class="out">lệnh: npm run db:migrate &amp;&amp; npm run db:test
+ℹ duration_ms 6623.352584</pre>
+</div>
+<div class="card eval" id="E3"><h3><span class="badge pass">PASS</span> &nbsp;E3 · test</h3><p class="crit">AC-3: — Bản thật có chốt trước khi lên người dùng.**</p>
+<div class="kv"><span>run_id <b>minted-bat-rang-buoc-ban-ma-E3-r1</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.test.isolation</b></span><span>verified_at <b>2026-11-01T00:31:18Z</b></span><span>baseline <b>green</b></span></div>
+<pre class="out">lệnh: npm run db:migrate &amp;&amp; npm run db:test
+ℹ duration_ms 6623.352584</pre>
+</div>
+<div class="card eval" id="E4"><h3><span class="badge pass">PASS</span> &nbsp;E4 · script</h3><p class="crit">AC-3: — Bản thật có chốt trước khi lên người dùng.**</p>
+<div class="kv"><span>run_id <b>minted-bat-rang-buoc-ban-ma-E4-r1</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.script.kiem_ci</b></span><span>verified_at <b>2026-11-01T00:31:18Z</b></span><span>baseline <b>green</b></span></div>
+<pre class="out">lệnh: node _acceptance/moi-truong-that/thu/kiem-ci.mjs
+KẾT: ĐẠT</pre>
+</div>
+<div class="card eval" id="E5"><h3><span class="badge neutral">PASS (ĐỀ XUẤT CỦA HỘI ĐỒNG, CHỜ NGƯỜI CHỐT Ở CỔNG 2)</span> &nbsp;E5 · judgment</h3><p class="crit">AC-4: — Người vận hành biết đường bật. **</p>
+<div class="kv"><span>judged_by <b>judge-subagent (fresh context), hội đồng ba lăng kính</b></span></div>
+<p class="note"><b>Phán đoán:</b> Đề xuất PASS; ba lăng kính cùng thấy ADR-0013, mục «Bật hẳn ràng buộc khi deploy», nêu đủ ba ý, và dòng 01/11 ở §12 của Tham chiếu (dòng 335) trỏ đúng tệp 013_bat_rang_buoc_ban_ma.sql.</p>
+<div class="ov ovok">human_override: # chi nguoi ghi</div>
+</div>
+<div class="card eval" id="E6"><h3><span class="badge pass">PASS</span> &nbsp;E6 · test</h3><p class="crit">AC-2: — Bảng còn số rõ thì bỏ qua, không hỏng, và mỗi bảng xét riêng.**</p>
+<div class="kv"><span>run_id <b>minted-bat-rang-buoc-ban-ma-E6-r1</b></span><span>exit_code <b>0</b></span><span>verifier <b class="mono">config:executors.test.isolation</b></span><span>verified_at <b>2026-11-01T00:31:18Z</b></span><span>baseline <b>green</b></span></div>
+<pre class="out">lệnh: npm run db:migrate &amp;&amp; npm run db:test
+ℹ duration_ms 6623.352584</pre>
+</div>
+<h2>Eval không phân biệt (Analyst)</h2><div class="flag fred">Eval không phân biệt (xanh cả trên code mới lẫn baseline, chứng minh harness hơn là tính năng; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+- npm run db:migrate &amp;&amp; npm run db:test — E1, E2, E3, E6
+- node _acceptance/moi-truong-that/thu/kiem-ci.mjs — E4
+Các lệnh suite xanh cả hai phía là regression-guard bình thường, không liệt kê.</div>
+<h2>Vòng verify</h2><ul class="tl"><li>Round 1: mọi eval máy xanh; E5 là mục judgment, hội đồng đề xuất PASS nhưng chưa có human_override nên verdict giữ PENDING-JUDGMENT chờ người chốt ở Cổng 2.</li></ul>
+</div></details>
+<details class="muc" id="tai-nguyen"><summary>Tài nguyên</summary><div class="noi"><span class="vang">chưa có — usage-report.md</span></div></details>
+<details class="muc" id="gioi-han"><summary>Giới hạn và ngoài hợp đồng</summary><div class="noi"><ul data-gioi-han><li data-loai="ngoai">Xoá cột `owner_phone` — hàng sau của ADR-0013.</li><li data-loai="ngoai">Đổi phân quyền vai `postgres` hay cấp quyền chuyển vai trên Supabase.</li><li data-loai="ngoai">Chạy lệnh mã hoá lại trên bản thật — bản thật 0 số rõ (giám sát đếm 01/11).</li></ul></div></details>
+<details class="muc" id="giao"><summary>Giao</summary><div class="noi"><div class="kv" data-giao><span>Mã đã chấm <b class="mono">d987a9d532a3386a13eb91f64ab0e41225e032cf</b></span><span>Ngày ký <b>—</b></span><span>Cổng Phạm vi: Manh Phan · Cổng Bằng chứng: chưa ký</span><span data-pr>chưa gộp</span></div><p class="note">chưa ghi quan sát production</p></div></details>
+<details class="muc" id="gia-tri"><summary>Giá trị</summary><div class="noi"><span class="vang">chưa có — opportunity.md</span></div></details>
+<div class="foot">Trang trình bày · KHÔNG quyết — <span class="mono">evidence-report.md</span> + hook là nguồn-sự-thật. Sinh từ run đã verify; ảnh/output gắn run_id.</div>
+<script>
+document.querySelectorAll('[data-loc]').forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-loc');document.querySelectorAll('[data-loc]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});document.querySelectorAll('[data-dong-thoi-gian] li').forEach(function(li){li.hidden=!(v==='tat-ca'||li.getAttribute('data-loai')===v);});});});
+document.querySelectorAll('.slide').forEach(function(s){var fr=s.querySelectorAll('.frame');if(fr.length<2)return;var i=0;fr[0].classList.add('on');var adv=function(){fr[i].classList.remove('on');i=(i+1)%fr.length;fr[i].classList.add('on');};s._t=setInterval(adv,1600);var bar=s.nextElementSibling,b=bar?bar.querySelector('[data-toggle]'):null;if(b)b.addEventListener('click',function(){if(s._t){clearInterval(s._t);s._t=null;b.textContent='▶ Chạy';}else{s._t=setInterval(adv,1600);b.textContent='⏸ Tạm dừng';}});});
+</script>
+</div></body></html>

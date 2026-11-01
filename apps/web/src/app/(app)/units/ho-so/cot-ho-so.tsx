@@ -1,6 +1,6 @@
 "use client";
 
-// Hồ sơ căn (hàng 17) — `solution-crm-4` chuyển thành cột (Cổng Phạm vi, Hỏi-2): giá + mức đủ đầu cột, thuộc tính căn,
+// Hồ sơ căn (hàng 17) — chuyển thể `solution-crm-4` thành cột (Cổng Phạm vi, Hỏi-2): giá + mức đủ đầu cột, thuộc tính căn,
 // lần rao, dòng thời gian lịch sử. Đọc kho trên máy và danh mục đã giữ; lịch sử kéo ở nền và giữ trên máy (hàng 13).
 import { Maximize2, X } from "lucide-react";
 import Link from "next/link";
