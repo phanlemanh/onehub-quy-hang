@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TD
-  A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
+  A["Đang cân nhắc cơ hội<br/>2 việc"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>11 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
@@ -21,6 +21,11 @@ flowchart TD
 > **Cổng Đáng** việc này có đáng làm không · **Cổng Phạm vi** bộ tiêu chí
 > đã đủ và đúng chưa · **Cổng Bằng chứng** đã làm đúng thứ đã hứa chưa ·
 > **Cổng Giá trị** thứ đã giao có ăn thua không.
+
+## Đang cân nhắc cơ hội
+
+- Trưởng nhóm tích nhiều căn trên Bảng hàng rồi đổi đầu chủ một lần: chọn từ danh sách thành viên mang vai Đầu chủ của sàn, hộp hỏi kể đủ căn và người giữ cũ, đổi đầu chủ của hàng thì đổi luôn người giữ liên hệ chủ nhà theo luật một chủ một đầu chủ, hoàn tác được (`doi-dau-chu-hang-loat`)
+- Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng (`va-duong-loi-hoan-tac`)
 
 ## Sắp mở vòng
 
