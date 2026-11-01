@@ -1,0 +1,112 @@
+schema_version: 1
+feature_slug: nap-mau-ban-that
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    paths: ["packages/db/seed/**", "packages/api/src/listings/**", "packages/api/src/owners/**", "packages/api/src/leads/**"]
+    expected: |
+      Ca «nạp đủ gói» xanh: đếm người 6, khu 2, hàng 40, phân bố trạng thái đúng sáu số của gói, mỗi hàng có sự kiện
+      created và đầu chủ theo gói, 40 dòng chủ nhà đúng tên (30 tên khác nhau), 12 lead với kết quả L-01
+      unit_has_open_listing, L-02 owner_has_agent, còn lại new. Chiều đỏ cùng fixture: bản sao gói đổi trạng thái một
+      hàng → ca đếm phân bố đỏ với thông điệp nêu trạng thái lệch. Chiều đỏ của quan hệ «luật tính»: bản sao gói
+      đổi hàng mở của căn L-01 thành Closed và bỏ chủ nhà mang số của L-02 → L-01, L-02 ra new; thông điệp nêu mã lead.
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    paths: ["packages/db/seed/**", "packages/api/src/owners/**", "packages/api/src/leads/**"]
+    expected: |
+      Ca «chỉ bản mã» xanh: owner_phone rỗng ở mọi dòng sàn mẫu; giải mỗi bản mã bằng khoá thử với ngữ cảnh của dòng ra
+      đúng số của gói (đối chứng dương); giải bằng khoá khác và giải bản mã chép sang dòng khác đều ném lỗi (ghim thông
+      điệp); owner_phone_hash bằng dauVetSo của cùng số và sàn.
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.nap_mau
+    paths: ["packages/db/seed/**", "packages/api/src/owners/khoa.ts"]
+    expected: |
+      Ba ca khoá vắng, sai dạng, khoá dev: tiến trình thoát khác 0, stderr nêu OWNER_PHONE_KEY và không chứa giá trị
+      khoá, đếm mọi bảng trước/sau bằng nhau. Đối chứng dương cùng fixture: khoá hợp lệ thì thoát 0.
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    paths: ["packages/db/seed/**"]
+    expected: |
+      Ảnh chụp toàn bảng (mọi bảng public và identity, mọi cột, sắp theo khoá) sau lần một bằng sau lần hai; đầu ra lần
+      hai báo 0 hàng, 0 chủ nhà, 0 lead mới. Chiều đỏ: một dòng bị sửa giữa hai lần thì so ảnh chụp đỏ, nêu bảng lệch.
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.nap_mau
+    paths: ["packages/db/seed/**"]
+    expected: |
+      Ca email mới tạo tài khoản; ca email đã là thành viên sàn thật giữ dòng thành viên sàn thật nguyên vẹn và thêm
+      dòng sàn mẫu với vai theo Hỏi-2; email sai dạng và email miền mẫu thoát khác 0 trước khi ghi; stdout và stderr
+      không chứa email; quét `git ls-files` không tệp nào chứa email chủ kho của ca thử.
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    paths: ["packages/db/seed/**"]
+    expected: |
+      Ảnh chụp các bảng ngoài phần sàn mẫu trước nạp bằng sau gỡ; sàn mẫu và tài khoản miền mẫu đếm 0; tài khoản chủ kho
+      còn cùng dòng thành viên sàn thật. Ca hai sàn trùng tên: thoát khác 0, đếm mọi bảng không đổi. Ca không có sàn
+      mẫu: thoát 0, báo không có gì, đếm không đổi. Ca sàn thật tên «[Mẫu] Sàn thử» không quản trị mẫu: gỡ không xoá
+      nó (đếm mọi bảng không đổi), nạp dựng sàn mẫu riêng và sàn thật trùng tên không thêm dòng nào. Đối chứng dương:
+      sàn mẫu thật vẫn gỡ được trên cùng fixture.
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.nap_mau
+    paths: ["packages/db/seed/**"]
+    expected: |
+      Bản sao gói với lead cuối mang số sai dạng — lỗi xảy ra SAU khi sàn, tài khoản, 40 hàng, chủ nhà đã ghi: nạp
+      thoát khác 0, thông điệp nêu L-12, đếm mọi bảng bằng trước khi chạy. Đối chứng dương: gói nguyên vẹn nạp được trên
+      cùng fixture.
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.nap_mau_yml
+    paths: [".github/workflows/nap-mau.yml", "packages/db/seed/nap-mau-yml.test.mjs"]
+    expected: |
+      Đọc tệp workflow: on chỉ có workflow_dispatch với ba tham số; environment production; bước đầu so github.ref với
+      refs/heads/main và exit 1; bước xác nhận gỡ so xac_nhan; ::add-mask:: email trước bước chạy bộ nạp; secrets chỉ
+      xuất hiện trong khoá env; không lệnh echo/printf nào nhắc secrets; NODE_ENV production. Chiều đỏ cùng fixture:
+      bản sao tệp bỏ chặn nhánh main → ca đỏ nêu «chặn nhánh».
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    paths: ["packages/db/seed/**"]
+    expected: |
+      Ca đọc chéo trong nap-ban-that.test.ts trên cơ sở dữ liệu đã nạp: thành viên sàn thật đọc bằng vai quy_hang_app
+      thấy 0 dòng hàng, chủ nhà, lead, sự kiện của sàn mẫu; đối chứng dương: thành viên sàn mẫu thấy 40 hàng.
+  - id: E11
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/**"]
+    expected: Bộ kiểm cách ly xanh (hồi quy — bộ nạp không đổi migration hay luật).
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.du_lieu_mau
+    paths: ["packages/db/seed/**"]
+    expected: Mọi ca của bộ dữ liệu mẫu hàng 5 vẫn xanh (sinh tất định, nạp và xoá cũ).
+  - id: E12
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    paths: ["packages/db/seed/**", "packages/api/src/catalog/**"]
+    expected: |
+      Sau nạp, gọi đường tra danh mục của createApi bằng phiên thành viên sàn mẫu với NODE_ENV=production: 180 căn, và
+      tra mã căn của H-01 ra căn A-01.03. Đối chứng âm cùng fixture: phiên chưa thuộc sàn nào bị từ chối (403).
