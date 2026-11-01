@@ -5,7 +5,8 @@ gộp) · Liên quan: ADR-0017 của onehub-invest (gốc); ADR-0008 (lõi hàng
 (cấu hình theo sàn), ADR-0019 (cổng chọn khối), ADR-0020 (lead bốn nấc), ADR-0021 (liên hệ); Tham chiếu §1, §5, §7, §8,
 §15; Kiến trúc §0; [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md) · chi tiết đối chiếu:
 [Đối chiếu ngành](../product/doi-chieu-nganh.md) · luật cho bản thiết kế:
-[`.claude/rules/thiet-ke-doi-chieu.md`](../../.claude/rules/thiet-ke-doi-chieu.md)
+[`.claude/rules/thiet-ke-doi-chieu.md`](../../.claude/rules/thiet-ke-doi-chieu.md) · bản kỹ thuật đi kèm: ADR-0023 «Sổ từ
+vựng của sàn» (giám sát giữ số), hàng nền 90
 
 ## Bối cảnh
 
@@ -29,7 +30,9 @@ Hai lần có chung một gốc (ghi chép của dãy G, 01/11):
 
 Giám sát đợt `dau-chu-dong-vao` đã thêm hai luật thường trực vào luật của đợt (01/11). Luật của đợt hết hiệu lực khi đợt
 đóng. Chủ kho hỏi thêm ba câu: Quỹ hàng là gì, luật thiết kế kiến trúc là gì, và nhóm sản phẩm tương đồng là những ai.
-Chủ kho bổ sung REDX và BoomTown vào nhóm tương đồng.
+Chủ kho bổ sung REDX và BoomTown vào nhóm tương đồng. Ở hàng 22, sau khi hỏi nhãn «ép giá» có thể là dữ liệu của sàn
+không, chủ kho hỏi tiếp: chuẩn hoá thế nào để các màn và tính năng về sau nhất quán kiến trúc, lõi bảng dữ liệu nào phải
+đi theo. Dãy G đo trên `main`: nhãn hiển thị đang viết tay ở 19 bảng, 20 chỗ, có một bảng hai bản (mục 4, Y).
 
 ## Quyết định
 
@@ -118,10 +121,15 @@ Một chỗ cho mọi luật. Cột «Giữ bằng» nói luật ấy có máy k
 | **D2** | **Danh sách cố định trong câu giao mặc định là dữ liệu của sàn** | Áp cho nhóm, bước, nấc, hàng đợi, câu hỏi, lý do, mẫu, luật. Có bộ mặc định, sàn ghi đè theo A6. Danh sách có nghĩa chung đi hai tầng: chuẩn của lõi cộng nhãn của sàn neo vào. Giữ cứng phải có một trong bốn lý do (bất biến; nghĩa chuẩn để so giữa sàn; quyền và an toàn; nền tảng) và thành một điều khoá trong sổ | **Mới — ADR này** | Luật cho bản thiết kế; điều khoá ở sổ; Cổng Phạm vi |
 | **D3** | **Một người là một liên hệ** | Chủ bán, chủ cho thuê, người mua, người thuê đều là loại của một liên hệ; không bảng người riêng cho từng vai | **Mới thành luật** — ADR-0021 | Bộ ca liên hệ; luật cho bản thiết kế |
 | **D4** | **Thiết kế đối chiếu RESO và ít nhất hai sản phẩm** | Bảng đối chiếu có cột «ta viết cứng — họ cho cấu hình»; mỗi dòng ở cột này thành một Hỏi ở Cổng Phạm vi; khẳng định về sản phẩm khác kèm nguồn | **Mới** — mở rộng luật đợt 01/11 | Luật cho bản thiết kế; phản biện context sạch |
+| **D5** | **Nghĩa do lõi giữ; tên gọi và tập con là dữ liệu của sàn** | Mỗi tập đóng (trạng thái, lý do, nấc, loại, hàng đợi, ngăn…) có mã máy ở lõi (RESO khi có) và một **mức sàn được chạm**: *Khoá* · *Đổi tên* · *Thêm nhãn neo* vào một mã chuẩn · *Thêm định nghĩa* ghép từ khuôn đóng của lõi. Mọi danh sách hiển thị đọc nhãn từ **một sổ từ vựng**; màn không giữ bảng nhãn riêng | **Mới — ADR này** (nguyên tắc); ADR-0023 (sổ, kỹ thuật) | Răng chặn bảng nhãn viết tay (hàng 90, chưa dựng) |
 
 D2 không nới A1. «Dữ liệu của sàn» là các dòng dựng từ tập điều kiện, giá trị hay chiến lược **đóng** của lõi, ví dụ một
 hàng đợi là một bộ lọc trên các điều kiện lõi biết tính. Nó không phải đối tượng sàn tự tạo, công thức hay kịch bản.
 Ranh giới «tới khi có số đo từ hai sàn thật» của ADR-0018 giữ nguyên cho bậc 3.
+
+D5 là D2 nhìn từ phía chữ. Bốn mức ứng với hai tầng: *Khoá* là giữ cứng (một trong bốn lý do của D2); *Đổi tên* và *Thêm
+nhãn neo* là tầng nhãn của sàn trên nghĩa chuẩn (mẫu `MlsStatus`); *Thêm định nghĩa* là danh sách làm việc của sàn (mẫu
+Smart Lists). D5 mở rộng ADR-0018 quyết định 9 từ «bộ trường của sàn» thành «bộ từ vựng của sàn».
 
 ### 4. Gắn vào quy trình
 
@@ -132,7 +140,14 @@ Ranh giới «tới khi có số đo từ hai sàn thật» của ADR-0018 giữ
    gì mới thì bổ sung trong cùng PR. Thêm một dòng vào bảng «mỗi loại thông tin một chỗ» ở `docs/README.md`.
 3. **Tham chiếu §1** có một dòng trỏ ADR này; §12 thêm một dòng quyết định; §15 trỏ trang Đối chiếu ngành cho phần «cách
    làm việc». `AGENTS.md` thêm một dòng ở «Luật làm việc».
-4. **Danh sách xem lại.** Hàng đã gộp, hay luật Tham chiếu đã chốt, có cùng kiểu cứng. Không mở hàng mới cho việc xem lại.
+4. **Ranh giới với ADR-0023 và hàng 90.** ADR này ghi **nguyên tắc** D5: nghĩa ở lõi, tên và tập con là dữ liệu của sàn,
+   bốn mức chạm, một sổ đọc chung. **ADR-0023** (giám sát giữ số) thiết kế **kỹ thuật** sổ từ vựng: chỗ đặt trong lõi, mức
+   của từng tập, lưu ở `company_settings` hay bảng riêng theo ADR-0018 quyết định 3, bộ kiểm chung cho nhãn sàn gõ (tối
+   đa 40 ký tự, qua bộ dò số điện thoại và email của ADR-0011, lớp `company_internal`, không bao giờ `source`), một hàm
+   đọc ở lõi và một lối đọc trên web, răng chặn bảng nhãn viết tay. **Hàng nền 90** (giám sát giữ mã) dựng sổ và dời 20 chỗ
+   nhãn hiện có vào mà không đổi chữ nào trên màn. Hàng 90 đứng trên 45, 46, 47, 48, 70 và cạnh 82. Hàng 22 không chờ
+   hàng 90: đặt nhãn mặc định ở một chỗ có tên trong lõi, theo khuôn của sổ, để hàng 90 dời vào sau.
+5. **Danh sách xem lại.** Hàng đã gộp, hay luật Tham chiếu đã chốt, có cùng kiểu cứng. Không mở hàng mới cho việc xem lại.
    Mỗi mục thành một Hỏi ở Cổng Phạm vi của hàng **sắp chạm** chỗ ấy. Khuyến nghị dưới đây là của máy; người chọn ở cổng.
 
    | # | Chỗ cứng | Ở đâu | Ngành làm | Khuyến nghị | Hỏi ở hàng |
@@ -149,7 +164,20 @@ Ranh giới «tới khi có số đo từ hai sàn thật» của ADR-0018 giữ
 
    Đã khớp ngành, không cần xem lại: chia lead (hàng 25), góc nhìn lưu được (hàng 14), ảnh ba ngăn (hàng 18, cùng hình
    RESO `Permission`), nhãn trạng thái neo vào chuẩn (hàng 46). Các hàng chưa mở mà câu giao có danh sách (23, 26, 29,
-   37, 42, 43, 50) nhận luật D1–D4 khi mở, không cần mục riêng.
+   37, 42, 43, 50) nhận luật D1–D5 khi mở, không cần mục riêng. Mức chạm của từng tập trong X1–X9 chốt ở ADR-0023; khuyến
+   nghị ở bảng trên là điểm khởi đầu.
+
+   **Y — nhãn viết tay, dời vào sổ ở hàng 90** (đo trên `main` 594b3f3, dãy G đề xuất, phiên này kiểm lại):
+
+   | Ở đâu | Bảng nhãn |
+   | --- | --- |
+   | `apps/web/…/inventory/cot.ts` | `STATUS_LABEL`, `FEE_LABEL`, `VISIBILITY_LABEL`, `WITHDRAWN_LABEL` |
+   | `apps/web/…/inventory/cell-edit/lenh.ts` **và** `…/inventory/bulk/lo.ts` | `NHAN_THIEU`, hai bản có thể lệch nhau |
+   | `apps/web/…/inventory/cell-edit/tren-o.tsx`, `…/units/ho-so/ho-so.ts` | `NHAN_COT`, `NHAN_PHAN` |
+   | `apps/web/src/components/shell/nav-labels.ts` | `TAB_LABEL`, `ACTION_LABEL` |
+   | `packages/core/src/contacts/index.ts` | `CONTACT_TYPE_LABELS`, `PHONE_LABELS` |
+   | `packages/core/src/dedupe/index.ts`, `…/dedupe/lead-stage.ts` | `NEED_LABELS`, `LISTING_TIME_LABELS`, `LEAD_STAGE_LABELS`, `RETURN_REASON_LABEL`, `AWAITING_ROUTING_LABEL` |
+   | `packages/core/src/photos/index.ts`, `navigation.ts`, `data-classes.ts` | `NHAN_NGAN`, `HOME_LABEL`, `DATA_CLASS_LABEL` (hai bảng sau ở mức *Khoá*) |
 
 ## Hệ quả
 
@@ -157,15 +185,16 @@ Ranh giới «tới khi có số đo từ hai sàn thật» của ADR-0018 giữ
   không thêm cổng; mỗi Hỏi kèm khuyến nghị của máy để người trả lời một chạm.
 - Sổ điểm biến thiên sẽ thêm điều khoá có lý do (X3, X8, X9), và có thể bớt K8, đổi K6, K12 tuỳ câu trả lời ở X1, X4–X7.
   Sổ đổi ở hàng chạm tới, không đổi trong PR này.
-- D1–D4 là luật chữ, chưa có máy kiểm. Nếu lần thứ ba dựng cứng lọt qua S1 thì thêm một bài kiểm: bản thiết kế chạm đối
+- D1–D4 là luật chữ, chưa có máy kiểm; D5 có răng khi hàng 90 xong. Nếu lần thứ ba dựng cứng lọt qua S1 thì thêm một bài kiểm: bản thiết kế chạm đối
   tượng nghiệp vụ mà thiếu bảng đối chiếu thì đỏ.
 - Trang Đối chiếu ngành sẽ cũ dần. Mục «chưa kiểm» là việc tra tiếp của chính hàng cần nó, không phải một đợt nghiên cứu
   riêng.
+- Một tên gọi đổi ở Cài đặt sàn thì hiện đúng ở mọi màn, khi hàng 90 xong. Trước đó, đổi nhãn vẫn là sửa mã ở nhiều chỗ.
 - Định vị ở mục 1 là căn cứ để từ chối việc ngoài phạm vi: CRM người mua đầy đủ, tự gửi theo lịch, quản lý giao dịch.
 
 ## Hỏi chủ kho
 
-Một quyết định: **duyệt hướng của ADR này để mở PR.** Máy đã tự chốt bốn điểm dưới đây; chủ kho phủ quyết điểm nào thì
+Một quyết định: **duyệt hướng của ADR này để mở PR, cùng ranh giới với ADR-0023 và hàng 90.** Máy đã tự chốt bốn điểm dưới đây; chủ kho phủ quyết điểm nào thì
 ghi số điểm.
 
 1. **Định vị** ở mục 1: phần mềm phía cung, ba khối, sáu điều «không phải».
@@ -176,6 +205,8 @@ ghi số điểm.
    «Trả lại» của hàng 22.
 4. **Chỗ để:** chi tiết đối chiếu ở trang sống `docs/product/doi-chieu-nganh.md`; ADR giữ quyết định và nhóm tương đồng;
    luật cho bản thiết kế ở `.claude/rules/thiet-ke-doi-chieu.md`.
+5. **Ranh giới hai bản:** nguyên tắc từ vựng của sàn (D5) ở ADR này; sổ từ vựng là ADR-0023 cùng hàng nền 90, đứng trên
+   45, 46, 47, 48, 70. Hàng 22 không chờ hàng 90.
 
 ## Nguồn đã kiểm (01/11/2026)
 

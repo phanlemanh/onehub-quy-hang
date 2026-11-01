@@ -18,6 +18,9 @@ tự định nghĩa cả hai.
 - **Giữ cứng phải có một trong bốn lý do**: bất biến; nghĩa chuẩn để so giữa các sàn (khi đó sàn thêm nhãn neo vào giá trị
   chuẩn, như RESO `StandardStatus` ↔ `MlsStatus`); quyền và an toàn; nền tảng. Mỗi chỗ giữ cứng thành một dòng «điều
   khoá» ở [Sổ điểm biến thiên](../../docs/architecture/so-diem-bien-thien.md), có ghi lý do.
+- **Nghĩa do lõi giữ; tên gọi và tập con là dữ liệu của sàn.** Mỗi tập đóng mới khai mức sàn được chạm: Khoá · Đổi tên ·
+  Thêm nhãn neo · Thêm định nghĩa. Nhãn hiển thị không viết thành bảng trong màn. Đọc từ sổ từ vựng (ADR-0023, hàng 90);
+  tới khi có sổ thì đặt nhãn mặc định ở một chỗ có tên trong `packages/core`.
 - **Một người là một liên hệ** (RESO `Contacts`, ADR-0021). Chủ nhà, khách, người mua hay người thuê đều là loại của liên
   hệ, không phải bảng riêng.
 - **Bản thiết kế có bảng đối chiếu** với các cột: năng lực hoặc đối tượng · RESO · ít nhất **hai** sản phẩm có tên, lấy
