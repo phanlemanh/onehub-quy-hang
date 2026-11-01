@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: d728bdb84bd8b3b19f2a96261e545eafe87c25fd
+verified_commit: 5882e2cf3bc08032ae9a8cf144626efc78d61cdc
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -153,3 +153,7 @@ Round 2: E1 đến E7 đạt, E8 do panel đề xuất PASS; không còn eval tr
 ### Re-pin lần 1 — 2026-11-01, do hoá cũ do gộp main (hàng 10) sau lượt chấm
 run_id: repin-20261101T021412Z-46649
 sha: d728bdb84bd8b3b19f2a96261e545eafe87c25fd · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng · ngoài làn máy: E8 · AC không có chốt máy: AC-8
+
+### Re-pin lần 2 — 2026-11-01, do hoá cũ do gộp main; vet-chon-khoi chạm do thêm kết quả tra ReUI của hàng 18
+run_id: repin-20261101T101747Z-67853
+sha: 5882e2cf3bc08032ae9a8cf144626efc78d61cdc · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng · ngoài làn máy: E8 · diff chạm vật đo ngoài làn máy: E8 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-8
