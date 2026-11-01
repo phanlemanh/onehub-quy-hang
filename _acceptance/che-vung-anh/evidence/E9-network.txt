@@ -1,0 +1,5 @@
+E9 network (playwright, context rieng, app origin http://localhost:3481)
+POST /api/v1/units/photos/upload-url -> BLOCKED by test route (503, chu dong chan boi bai; khong tinh la loi mang cua ung dung)
+Cac GET /api/v1/catalog, /listings, /units/photos, /thumb, /original -> 200
+Console: error "Failed to load resource: 503" (chinh yeu cau bi chan)
+Khong co request FAIL-eligible nao khac. Sau khi bo chan: GET /api/v1/units/photos?toa=Toà B&ma=B-15.05 -> 200

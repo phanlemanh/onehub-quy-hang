@@ -5,7 +5,7 @@ slug: che-vung-anh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: _acceptance/che-vung-anh/design.md
@@ -73,3 +73,7 @@ Quét không gian AC theo trục (preset entity-feature + test-matrix, rút gọ
 
 - Dữ liệu cho bài nhìn: chỗ thử dãy B của hàng 14 (`_acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs`), cộng ảnh mẫu của
   hồ sơ anh-can-ba-ngan.
+- Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Màn che vùng ảnh chạy bình thường với người dùng. Chỉ là sổ thiết kế chưa ghi lại việc màn này được ghép từ thành phần có sẵn và tự viết thêm. — `apps/web/src/app/(app)/units/photos/redact/trinh-che.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Nếu bản che đã lưu mà ảnh gốc chưa chuyển được sang Nội bộ, màn vẫn mở và danh sách ảnh không cập nhật. Bấm Lưu lần nữa sẽ tạo thêm một bản che trùng, và ảnh gốc vẫn còn ở ngăn Gửi được cho tới khi người dùng tự chuyển. — `apps/web/src/app/(app)/units/photos/redact/trinh-che.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Với ảnh PNG có vùng trong suốt, khung đen đã bỏ vẫn hiện trên màn xem trước. Người dùng thấy như đang che nhưng bản lưu thì không che vùng đó. — `apps/web/src/app/(app)/units/photos/redact/trinh-che.tsx`
+- Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm tự động chưa chứng minh được ảnh chụp dọc từ điện thoại được che đúng vị trí. Nếu lỗi xoay xuất hiện thì bài vẫn xanh, và chỉ mắt người xem mới thấy. — `apps/web/src/app/(app)/units/photos/redact/vung.test.ts`
