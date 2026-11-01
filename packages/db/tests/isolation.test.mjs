@@ -1297,3 +1297,178 @@ test("lead bốn nấc: vai API không sửa bốn cột mới, không gọi hà
     assert.deepEqual(r.rows.map((x) => x.lead_id), [BN_LEN]);
   });
 });
+
+// ---- Ảnh căn ba ngăn (012_anh_can, hàng 18: E5, E9) ----
+// Bảng 8 người × 5 ô là tệp dữ liệu viết tay của lõi — kiểm lõi (canSeeUnitInternal) và kiểm cơ sở dữ liệu nạp CÙNG tệp.
+const BANG_XEM_NOI_BO = JSON.parse(
+  readFileSync(new URL("../../core/src/photos/bang-xem-noi-bo.json", import.meta.url), "utf8"),
+);
+const U_ANH_DC = "u-anh-dau-chu-giu-khac"; // giữ các căn «không giữ» của bảng
+const U_ANH_B = "u-anh-truong-nhom-b";
+const nguoiAnh = (i) => `u-anh-o-${i}`;
+const hangAnh = (i) => `00000000-0000-4000-8000-0000000003${String(i).padStart(2, "0")}`;
+const canAnh = (i) => `A-${String(i + 1).padStart(2, "0")}.01`;
+const anhId = (i, ngan, san = "a") => `00000000-0000-4000-8000-${san === "a" ? "000000" : "0000b0"}${ngan === "internal" ? "4" : "5"}${String(i).padStart(5, "0")}`;
+const TOA_ANH = "[Toà ảnh]";
+const BYTE = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]);
+
+/** Dựng hai sàn; sàn A có mỗi ô của bảng một căn (có hoặc không lần rao), mỗi căn một ảnh mỗi ngăn kèm byte và sự kiện;
+ *  sàn B có căn trùng toà và mã với căn 0 của A. Rồi chuyển sang vai API ở sàn A. */
+async function withAnh(fn) {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    await client.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    const nguoi = [[U_ANH_DC, COMPANY_A, ["listing_agent"]], [U_ANH_B, COMPANY_B, ["team_lead"]], ...BANG_XEM_NOI_BO.map((o, i) => [nguoiAnh(i), COMPANY_A, o.vai])];
+    for (const [id, san, vai] of nguoi) {
+      await client.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await client.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    const can = [...BANG_XEM_NOI_BO.map((o, i) => ({ san: COMPANY_A, i, ma: canAnh(i), rao: o.coLanRao, giu: o.giu ? nguoiAnh(i) : U_ANH_DC, s: "a" })), { san: COMPANY_B, i: 0, ma: canAnh(0), rao: true, giu: U_ANH_B, s: "b" }];
+    for (const c of can) {
+      if (c.rao) {
+        const id = c.s === "a" ? hangAnh(c.i) : "00000000-0000-4000-8000-0000000003b0";
+        await client.query(
+          `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+           values ($1, $2, 1, 'created', '{"buildingName":"[Toà ảnh]"}', $3, '{listing_agent}', false)`,
+          [c.san, id, c.giu],
+        );
+        await client.query("insert into listings (id, company_id, building_name, unit_number, standard_status, version) values ($1, $2, $3, $4, 'Incomplete', 1)", [id, c.san, TOA_ANH, c.ma]);
+        await client.query("insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 1, $3, $3)", [c.san, id, c.giu]);
+      }
+      for (const ngan of ["internal", "shareable"]) {
+        const pid = anhId(c.i, ngan, c.s);
+        await client.query(
+          `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+           values ($1, $2, $3, $4, $5, 'image/jpeg', 7, 10, 10, $6)`,
+          [pid, c.san, TOA_ANH, c.ma, ngan, c.giu],
+        );
+        for (const v of ["original", "thumb"]) await client.query("insert into unit_photo_files (company_id, photo_id, variant, content) values ($1, $2, $3, $4)", [c.san, pid, v, BYTE]);
+        await client.query("insert into unit_photo_events (company_id, photo_id, type, actor_user_id) values ($1, $2, 'added', $3)", [c.san, pid, c.giu]);
+      }
+    }
+    await client.query("set local role quy_hang_app");
+    await client.query("select set_config('app.company_id', $1, true)", [COMPANY_A]);
+    return await fn(client);
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+}
+/** Thử một câu ghi trong savepoint: trả true nếu ghi được. */
+async function ghiDuoc(c, sql, params) {
+  await c.query("savepoint thu_ghi");
+  try {
+    await c.query(sql, params);
+    await c.query("rollback to savepoint thu_ghi");
+    return true;
+  } catch {
+    await c.query("rollback to savepoint thu_ghi");
+    return false;
+  }
+}
+const themAnh = (c, i, ngan, nguoi) =>
+  ghiDuoc(
+    c,
+    `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+     values (gen_random_uuid(), $1, $2, $3, $4, 'image/png', 9, 10, 10, $5)`,
+    [COMPANY_A, TOA_ANH, canAnh(i), ngan, nguoi],
+  );
+
+test("ảnh căn: ba bảng mới nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relname, c.relrowsecurity and c.relforcerowsecurity as ep from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname in ('unit_photos', 'unit_photo_files', 'unit_photo_events') order by c.relname`,
+    );
+    assert.deepEqual(rows, [
+      { relname: "unit_photo_events", ep: true },
+      { relname: "unit_photo_files", ep: true },
+      { relname: "unit_photos", ep: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("ảnh căn: ngăn nội bộ theo người — 8 người × 5 ô từ bang-xem-noi-bo.json (E5)", { skip }, async () => {
+  await withAnh(async (c) => {
+    let o = 0;
+    for (const [i, ca] of BANG_XEM_NOI_BO.entries()) {
+      await lamNguoi(c, nguoiAnh(i));
+      const docNoiBo = (await c.query("select count(*)::int n from unit_photos where id = $1", [anhId(i, "internal")])).rows[0].n === 1;
+      const docByte = (await c.query("select count(*)::int n from unit_photo_files where photo_id = $1", [anhId(i, "internal")])).rows[0].n === 2;
+      const docGui = (await c.query("select count(*)::int n from unit_photos where id = $1", [anhId(i, "shareable")])).rows[0].n === 1;
+      const thucTe = {
+        doc_noi_bo: docNoiBo,
+        doc_byte_noi_bo: docByte,
+        them_noi_bo: await themAnh(c, i, "internal", nguoiAnh(i)),
+        them_gui_duoc: await themAnh(c, i, "shareable", nguoiAnh(i)),
+        doc_gui_duoc: docGui,
+      };
+      for (const k of Object.keys(thucTe)) {
+        assert.equal(thucTe[k], ca[k], `người ${ca.o} × ô ${k}`);
+        o++;
+      }
+    }
+    assert.equal(o, 40);
+  });
+});
+
+test("ảnh căn: gán lại đầu chủ giữ căn thì quyền nội bộ đổi chỗ (E5)", { skip }, async () => {
+  await withAnh(async (c) => {
+    const giu = nguoiAnh(0);
+    await lamNguoi(c, U_ANH_DC);
+    assert.equal((await c.query("select count(*)::int n from unit_photos where id = $1", [anhId(0, "internal")])).rows[0].n, 0, "trước khi gán: người khác không thấy");
+    await c.query("reset role");
+    await c.query("insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 2, $3, $3)", [COMPANY_A, hangAnh(0), U_ANH_DC]);
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, U_ANH_DC);
+    assert.equal((await c.query("select count(*)::int n from unit_photos where id = $1", [anhId(0, "internal")])).rows[0].n, 1, "sau khi gán: người mới thấy");
+    await lamNguoi(c, giu);
+    assert.equal((await c.query("select count(*)::int n from unit_photos where id = $1", [anhId(0, "internal")])).rows[0].n, 0, "sau khi gán: người cũ thôi thấy");
+  });
+});
+
+test("ảnh căn: sàn khác không đọc, không ghi được ảnh, byte, sự kiện — kể cả căn trùng toà và mã (E9)", { skip }, async () => {
+  await withAnh(async (c) => {
+    await lamNguoi(c, U_ANH_B, COMPANY_B);
+    for (const bang of ["unit_photos", "unit_photo_files", "unit_photo_events"]) {
+      const col = bang === "unit_photos" ? "id" : "photo_id";
+      const n = (await c.query(`select count(*)::int n from ${bang} where ${col} in ($1, $2)`, [anhId(0, "internal"), anhId(0, "shareable")])).rows[0].n;
+      assert.equal(n, 0, `${bang}: sàn B đọc được ảnh của sàn A`);
+    }
+    assert.equal((await c.query("select count(*)::int n from unit_photos")).rows[0].n, 2, "sàn B chỉ thấy hai ảnh của mình");
+    assert.equal(await themAnh(c, 0, "shareable", U_ANH_B), false, "sàn B ghi được ảnh mang mã sàn A");
+    const sua = await c.query("update unit_photos set display_order = 9 where id = $1", [anhId(0, "shareable")]);
+    assert.equal(sua.rowCount, 0, "sàn B sửa được ảnh của sàn A");
+    assert.equal((await c.query("select app.can_see_unit_internal($1, $2) ok", [TOA_ANH, canAnh(0)])).rows[0].ok, true, "trưởng nhóm B thấy nội bộ căn của chính B");
+    await lamNguoi(c, U_ANH_B, COMPANY_A);
+    assert.equal((await c.query("select app.can_see_unit_internal($1, $2) ok", [TOA_ANH, canAnh(0)])).rows[0].ok, false, "người không thuộc sàn A thấy nội bộ căn của A");
+  });
+});
+
+test("ảnh căn: ràng buộc nội bộ không bìa, một bìa mỗi căn, sự kiện chỉ thêm (E3b, E4)", { skip }, async () => {
+  await withAnh(async (c) => {
+    await lamNguoi(c, nguoiAnh(0));
+    await expectError(c, "update unit_photos set is_sample = true where id = $1", [anhId(0, "internal")], /unit_photos_internal_plain/);
+    await c.query("update unit_photos set is_cover = true where id = $1", [anhId(0, "shareable")]);
+    await expectError(
+      c,
+      `insert into unit_photos (id, company_id, building_name, unit_number, compartment, is_cover, content_type, byte_size, width, height, added_by)
+       values (gen_random_uuid(), $1, $2, $3, 'shareable', true, 'image/png', 9, 10, 10, $4)`,
+      [COMPANY_A, TOA_ANH, canAnh(0), nguoiAnh(0)],
+      /unit_photos_one_cover/,
+    );
+    await expectError(c, "update unit_photo_events set type = 'removed' where photo_id = $1", [anhId(0, "shareable")], /permission denied|chỉ thêm/);
+    await expectError(c, "delete from unit_photo_events where photo_id = $1", [anhId(0, "shareable")], /permission denied|chỉ thêm/);
+    await expectError(c, "delete from unit_photos where id = $1", [anhId(0, "shareable")], /permission denied/);
+    await c.query("reset role");
+    await expectError(c, "update unit_photo_events set type = 'removed' where photo_id = $1", [anhId(0, "shareable")], /chỉ thêm/);
+    await expectError(c, "delete from unit_photo_events where photo_id = $1", [anhId(0, "shareable")], /chỉ thêm/);
+  });
+});

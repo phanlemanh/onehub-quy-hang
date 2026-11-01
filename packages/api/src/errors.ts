@@ -49,6 +49,11 @@ export const API_ERRORS = {
   alreadyOnBoard: { code: "already-on-board", status: 409 },
   notReturned: { code: "not-returned", status: 409 },
   alreadyResubmitted: { code: "already-resubmitted", status: 409 },
+  // Ảnh căn ba ngăn (ADR-0014).
+  photoNotImage: { code: "photo-not-image", status: 400 },
+  photoTooLarge: { code: "photo-too-large", status: 400 },
+  photoInternalNoSample: { code: "photo-internal-no-sample", status: 400 },
+  photoStorageMissing: { code: "photo-storage-missing", status: 503 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

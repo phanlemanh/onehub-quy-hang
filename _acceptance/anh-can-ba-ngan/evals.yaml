@@ -1,0 +1,159 @@
+schema_version: 1
+feature_slug: anh-can-ba-ngan
+# Dựng chung cho eval ui-check (gọi là «DỰNG H» trong steps):
+#   node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs
+#   → Postgres dãy H (container quy-hang-db-H, cổng 5562) đã migrate; sàn mẫu của hàng 5 có đầu chủ giữ căn A, trưởng
+#     nhóm, đầu chủ khác, đầu khách; căn A bắt đầu không ảnh (ảnh lần dựng trước đánh dấu xoá); máy chủ dev cổng 3482,
+#     nhật ký ngoài cây kho. In mã căn A và đường ba ảnh mẫu
+#     (JPEG có EXIF ngày chụp, PNG, ảnh «sổ» giả) cùng một tệp «.jpg» thực ra là văn bản. Đăng nhập bằng email, đọc mã ở
+#     nhật ký. Tắt: node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs --tat (chỉ kill PID nó đã ghi).
+# Trình duyệt chấm: KHÔNG dùng công cụ ghi tệp vào cây kho (playwright MCP) — dùng chrome-devtools hoặc trình duyệt trong app.
+# Ảnh mẫu là ảnh vẽ bằng mã (khối màu, chữ «[Sổ mẫu]»), không ảnh thật, không dữ liệu cá nhân.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «tải ảnh lên» có mặt và ok — hàm tải lên (units/photos/tai-len.ts) với fetch giả: ba tệp thả một lượt → ba lời gọi POST, mỗi lời gọi multipart mang bản gốc nguyên byte (so băm), bản nhẹ, toà, mã, ngăn của thẻ đang mở; thả lên thẻ «Nội bộ» → ngăn internal; dán (ClipboardEvent giả có hai mục ảnh, một mục chữ) → đúng hai lời gọi; dán khi tiêu điểm ở ô nhập chữ → 0 lời gọi; bản nhẹ có cạnh dài ≤ 480 (ảnh 2000×1500 → 480×360, ảnh 300×200 giữ nguyên) — ma trận viết trước 6 ca = 6 assert. Chiều đỏ: bỏ kiểm tiêu điểm ô nhập thì ca dán-trong-ô đỏ, thông điệp nêu số lời gọi."
+    paths: ["apps/web/src/app/(app)/units/photos/**", "packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «ghi ảnh» có mặt và ok trên Postgres dãy — POST ảnh của đầu chủ giữ căn: một dòng unit_photos đúng toà, mã, ngăn, display_order tăng dần theo thứ tự gửi; unit_photo_files có đúng hai biến thể, byte original trùng băm tệp gửi; một sự kiện added; GET danh sách trả ảnh theo display_order; GET byte trả đúng content_type. Chiều đỏ: bản sao store bỏ ghi thumb thì ca đỏ, thông điệp nêu biến thể thiếu."
+    paths: ["packages/api/src/photos/**", "packages/db/migrations/012_anh_can.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kiểm tệp ảnh» có mặt và ok — kiemTepAnh trên ma trận viết trước 7 ca × (kết quả, lý do) = 14 assert: JPEG đúng byte đầu; PNG; WebP; tệp «.jpg» là văn bản → «Không phải ảnh»; GIF → «Không phải ảnh»; JPEG 10 485 761 byte → «Ảnh quá 10 MB»; đúng 10 485 760 byte → nhận. Chiều đỏ: xét đuôi tên thay byte đầu thì ca «.jpg là văn bản» đỏ, thông điệp nêu tên ca."
+    paths: ["packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «API từ chối tệp hỏng» có mặt và ok — POST thẳng tệp văn bản đuôi .jpg → 400 mã lỗi photo-not-image, POST 10 485 761 byte → 400 photo-too-large; đếm dòng unit_photos, unit_photo_files, unit_photo_events trước và sau bằng nhau (3 assert mỗi ca). Phía web: lượt ba tệp có một tệp hỏng → hai lời gọi POST, ô hỏng mang lý do; navigator.onLine false → 0 lời gọi, chữ «Cần mạng để thêm ảnh», và kho trên máy giả (IndexedDB giả) không nhận khoá nào. Chiều đỏ: API bỏ kiểm byte đầu thì ca .jpg-văn-bản đỏ, thông điệp nêu số dòng sau."
+    paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «sắp ảnh, bìa, nhãn» có mặt và ok — sapXep trả ảnh bìa đầu rồi theo display_order; không ai chọn bìa → ảnh đầu là bìa; nhanAnh: is_sample → «Ảnh mẫu»; taken_at 2026-10-20 → «Ảnh thật · 20/10/2026»; taken_at trống, added_at 2026-11-01 → «Ảnh thật · 01/11/2026»; docNgayChup trên ba JPEG viết bằng mã (EXIF DateTimeOriginal 2026:10:20 08:15:00, không EXIF, EXIF hỏng) → 2026-10-20, null, null — 8 assert viết trước. Chiều đỏ: docNgayChup đọc DateTime (ngày sửa) thay DateTimeOriginal thì ca EXIF đỏ, thông điệp nêu ngày đọc được."
+    paths: ["packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «đổi thứ tự, bìa, ảnh mẫu» có mặt và ok — PATCH thứ tự ba ảnh [c,a,b] → GET trả c,a,b; đặt bìa b → đúng một dòng is_cover; đặt bìa a → b thôi là bìa (đếm is_cover = 1); bật is_sample trên ảnh ngăn internal → 400 photo-internal-no-sample; ràng buộc cơ sở dữ liệu chặn cả khi ghi thẳng bằng SQL vai quy_hang_app (lỗi check). Chiều đỏ: bỏ ràng buộc một bìa thì ca đếm đỏ, thông điệp nêu số bìa."
+    paths: ["packages/api/src/photos/**", "packages/db/migrations/012_anh_can.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «đổi ngăn, xoá, sự kiện» có mặt và ok — chuyển ảnh bìa có is_sample sang internal → compartment internal, is_cover false, is_sample false, ngăn Gửi được có bìa mới là ảnh đầu; xoá → removed_at, removed_by đặt, GET không trả ảnh, byte trả 404, và đếm dòng unit_photo_files của ảnh ấy = 0 (Hỏi-6, xoá hẳn byte) trong khi ảnh khác của căn còn đủ hai biến thể; sáu lệnh (thêm, đổi ngăn, thứ tự, bìa, ảnh mẫu, xoá) → đúng sáu sự kiện với type, photo_id, actor viết trước (deepEqual dãy); UPDATE và DELETE trên unit_photo_events bằng vai quy_hang_app và bằng vai chủ bảng đều lỗi. Chiều đỏ: bản sao bỏ trigger chỉ thêm thì ca UPDATE-chủ-bảng đỏ, thông điệp nêu vai; bản sao store chỉ đặt removed_at mà không xoá byte thì ca đếm đỏ, thông điệp nêu số dòng còn lại."
+    paths: ["packages/api/src/photos/**", "packages/db/migrations/012_anh_can.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «ngăn nội bộ theo người» có mặt và ok — bảng ca viết trước 8 người (đầu chủ giữ căn, trưởng nhóm thứ nhất, trưởng nhóm thứ hai cùng sàn, đầu chủ khác, đầu khách, telesales, quản trị sàn, trưởng nhóm khi căn chưa có lần rao) × (đọc ảnh nội bộ, đọc byte nội bộ, thêm ảnh nội bộ, thêm ảnh gửi được, đọc ảnh gửi được) = 40 ô, mỗi ô ghi kết quả viết trước; thêm ca căn chưa có lần rao: đầu chủ nào cũng không thấy nội bộ, chạy bằng vai quy_hang_app với app.current_user_id đặt từng người; gán lại đầu chủ giữ căn sang người khác → hai người đổi chỗ ở mọi ô; bảng ca ấy được nạp từ cùng một tệp JSON với kiểm lõi canSeeUnitInternal (packages/core/src/photos/bang-xem-noi-bo.json) và hai bên ra cùng kết quả. Chiều đỏ: bản sao luật đọc bỏ điều kiện can_see_unit_internal thì ô (đầu khách, đọc ảnh nội bộ) đỏ, thông điệp nêu người và ô; luật lõi đổi team_lead thành «trưởng nhóm cùng khu» mà SQL không đổi thì ô (trưởng nhóm thứ hai) lệch giữa hai bên, thông điệp nêu ô."
+    paths: ["packages/db/migrations/012_anh_can.sql", "packages/db/tests/**", "packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «API ẩn ngăn nội bộ» có mặt và ok — đầu khách GET danh sách → chỉ ảnh shareable, trường noiBo = «an», không trường số đếm nội bộ; GET byte của id ảnh nội bộ → 404 (như không có); PATCH, DELETE ảnh shareable → 403; đầu chủ giữ căn → thấy đủ, noiBo = «thay». Chiều đỏ: trả số đếm nội bộ cho người không thấy thì ca đỏ, thông điệp nêu trường."
+    paths: ["packages/api/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «không đệm, không công khai» có mặt và ok — GET byte ảnh nội bộ có header Cache-Control đúng «private, no-store»; ảnh gửi được «private, max-age=300»; GET byte không cookie phiên → 401 cho cả hai ngăn. Phía web (config:executors.test.web, cùng tệp kiểm của units/photos): quét mã nguồn units/photos/** và lib/sync/** — không tệp nào trong units/photos nhập lib/sync hay indexedDB, và danh sách bảng của bộ đồng bộ không có bảng ảnh (đọc từ chính hằng số của bộ đồng bộ, không chép tay). Chiều đỏ: thêm một dòng nhập lib/sync vào bản sao muc-anh.tsx thì ca quét đỏ, thông điệp nêu tệp."
+    paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/photos/**", "apps/web/src/lib/sync/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.api
+    layer: backend-effect
+    expected: "exit 0; hai ca có mặt và ok — (1) «khoá kho ảnh một chỗ»: quét mọi tệp .ts của packages/**/src và apps/web/src (danh sách tệp đọc từ đĩa, không gõ tay), chỉ packages/api/src/photos/kho-s3.ts chứa tên biến STORAGE_S3_ACCESS_KEY / STORAGE_S3_SECRET_KEY, chỉ packages/api/src/photos/kho.ts nhập kho-s3, không tệp nào chứa SUPABASE_SERVICE_ROLE — đối chứng dương: bản sao cây thêm một tệp đọc STORAGE_S3_SECRET_KEY thì ca đỏ, thông điệp nêu tệp; (2) «ký đúng SigV4»: hàm ký trên véc tơ mẫu SigV4 của AWS (presign GET) ra đúng chữ ký viết trước; link ký có X-Amz-Expires=60 và đường đối tượng bắt đầu bằng company_id của ảnh. Chiều đỏ: bản sao cây thêm một tệp đọc STORAGE_S3_SECRET_KEY thì ca (1) đỏ, thông điệp nêu tệp."
+    paths: ["packages/api/src/photos/**", "apps/web/src/**", "packages/*/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6c
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «E6b bản Storage» có mặt và ok — (3) «kiểm quyền trước khi ký»: bản S3 trỏ máy chủ S3 giả trong test, đầu khách xin link ảnh nội bộ → 404 và máy chủ giả nhận 0 yêu cầu; đầu chủ giữ căn → 302 tới link ký của máy chủ giả; tải lên ghi đúng hai đối tượng <company_id>/<photo_id>/original|thumb ở máy chủ giả; xoá (Hỏi-6) gửi đúng hai lệnh DELETE. Chiều đỏ: ký link trước khi đọc dòng ảnh thì ca (3) đỏ, thông điệp nêu số lần kho được xin link (ký là phép tính tại chỗ, không gọi máy chủ giả)."
+    paths: ["packages/api/src/photos/**", "packages/api/test-db/photos.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «ảnh ra ngoài» có mặt và ok — anhRaNgoai trên năm ảnh viết trước (ba shareable thứ tự 2,0,1 với bìa ở 1, một ảnh mẫu, hai internal trong đó một mang is_cover lỗi dữ liệu) → deepEqual dãy id viết tay [bìa, theo thứ tự…], ảnh mẫu giữ nhan «Ảnh mẫu», không id internal nào; lớp của ngăn internal = source và CEILING[source] = never_leaves_company (đọc từ data-classes, không chép); gọi kèm tuỳ chọn {thoaThuan: mọi lớp} vẫn không ra ảnh internal. Chiều đỏ: lọc theo is_cover thay compartment thì ảnh internal mang bìa lỗi lọt ra, thông điệp nêu id."
+    paths: ["packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «ảnh tự có từ mã» có mặt và ok — anhDanhMuc trên dòng danh mục thật đọc từ packages/db/seed/mau/du-lieu-mau.json (đường suy từ vị trí tệp kiểm) → mảng rỗng; trên một dòng danh mục giả có trường ảnh theo khuôn đề xuất → trả đúng các ảnh của đúng toà và mã; chữ trống của thẻ bằng hằng «Danh mục chưa có mặt bằng, ảnh view cho căn này». Chiều đỏ: trả ảnh của mã trùng ở toà khác thì ca đỏ, thông điệp nêu toà."
+    paths: ["packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; bộ kiểm cách ly có ca «ảnh căn giữa hai sàn» và ok — sàn X, Y có căn trùng toà và mã; người Y (trưởng nhóm của Y) đọc unit_photos, unit_photo_files, unit_photo_events của X → 0 dòng; insert với company_id của X → lỗi luật; update ảnh X theo id → 0 dòng đổi; can_see_unit_internal của căn X trong phiên Y → false; ba bảng ảnh đều relrowsecurity và relforcerowsecurity true (đọc pg_class). Chiều đỏ: bản sao migration bỏ force row level security trên unit_photo_files thì ca pg_class đỏ, thông điệp nêu bảng."
+    paths: ["packages/db/migrations/012_anh_can.sql", "packages/db/tests/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3482/inventory"
+    steps: "DỰNG H = chạy `node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs` từ gốc kho (in mã căn A, thư mục ảnh mẫu và cookie phiên của dau-chu-1, dau-khach…; đặt cookie qh.session_token bằng document.cookie trên http://localhost:3482 rồi tải lại). Trình duyệt: chrome-devtools (isolatedContext riêng); KHÔNG dùng playwright MCP (ghi tệp vào cây kho) và KHÔNG dùng trình duyệt trong app (tự tải lại trang dev liên tục). Khổ 1440×900, đăng nhập đầu chủ giữ căn A: (1) mở Bảng hàng, bấm dòng A → cột hồ sơ, mục Ảnh, thẻ Gửi được trống với chữ hướng dẫn kéo/dán — chụp; (2) thả ba ảnh mẫu một lượt (DataTransfer giả qua công cụ trình duyệt) → ba ô chờ rồi ba bản nhẹ, nhãn «Ảnh thật · 20/10/2026» trên ảnh JPEG có EXIF — chụp; (3) thả tệp .jpg văn bản → ô báo «Không phải ảnh», ảnh khác giữ nguyên — chụp; (4) kéo ảnh thứ ba lên đầu (công cụ không kéo được bằng chuột thì menu → «Đưa lên đầu»), menu → Đặt làm ảnh bìa → nhãn «Bìa» — chụp; tải lại trang → thứ tự và bìa giữ; (5) thả ảnh «[Sổ mẫu]» lên tên thẻ Nội bộ → thẻ Nội bộ có 1 ảnh — chụp; mở ảnh nội bộ (bản lớn mở khi bấm ảnh — chụp), ghi header Cache-Control của lời gọi byte (tab mạng) phải có no-store; (5b) qua công cụ trình duyệt liệt indexedDB.databases() và nội dung mọi kho, caches.keys() và mọi mục — 0 mục chứa id hay đường dẫn ảnh nội bộ; đối chứng dương: id ảnh Gửi được có trong lời gọi mạng danh sách, để chứng bài dò thấy được id; (5c) bấm «Chọn ảnh» ở ngăn Gửi được, chọn một tệp → ảnh vào ngăn — chụp; (5d) chép một ảnh vào bộ nhớ tạm của trình duyệt rồi nhấn ⌘V khi tiêu điểm ngoài ô nhập → ảnh vào ngăn — chụp; (6) bật ngoại tuyến của trình duyệt → vùng thả tắt, chữ «Cần mạng để thêm ảnh» — chụp; (7) khổ 390×844 (trình duyệt không thu hẹp hơn thì khổ nhỏ nhất nó cho, ghi số), mở hồ sơ toàn màn /units/<mã A>?toa=Toà A → mục Ảnh hiện, không tràn ngang (scrollWidth = innerWidth) — chụp; (8) đăng xuất, đăng nhập đầu khách cùng sàn, mở căn A → thẻ Gửi được có đủ các ảnh đầu chủ đã thêm ở bước 2, 5c, 5d (5 ảnh), không menu sửa, thẻ Nội bộ khoá với chữ «Chỉ người giữ căn và trưởng nhóm xem», không số đếm — chụp; lời gọi danh sách ảnh trong tab mạng không có id ảnh sổ."
+    expected: "Mỗi bước có ảnh chụp đúng điều tả; header no-store có ở bước 5; bước 5b ra 0 mục nội bộ và thấy id đối chứng; bước 8 không thấy ảnh sổ ở cả màn và mạng."
+    paths: ["apps/web/src/app/(app)/units/**", "packages/api/src/photos/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca bản đồ khuôn có nhóm ho-so-can với luật KH-hs-anh-noi-bo và ngoại lệ có tên của KH-hs-tren-may cho units/photos (đọc từ design/patterns/ho-so-can.md); tệp units/photos/muc-anh.tsx được nhận diện thuộc nhóm ho-so-can, 0 lệch. Chiều đỏ: bản sao muc-anh.tsx lồng Card trong Frame thì ca lệch đỏ, thông điệp nêu tệp và luật KH-hs-mot-khung."
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/photos/**", "packages/ui-lint/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
