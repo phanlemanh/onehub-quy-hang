@@ -156,3 +156,5 @@ export function understoodPrice(listPrice: number, fee: FeeInclusion): string {
   const tien = listPrice >= 1_000_000_000 ? `${so1.format(listPrice / 1_000_000_000)} tỷ` : `${so1.format(listPrice / 1_000_000)} triệu`;
   return `${tien}, ${fee === "included" ? "đã bao phí" : "chưa bao phí"}`;
 }
+
+export * from "./lead-stage";

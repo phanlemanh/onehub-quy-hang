@@ -1,0 +1,10 @@
+E10 network (playwright, origin http://localhost:3483; chi doan chan mang/thu lai ghi duoc listener)
+GET /today 200
+GET /api/v1/listings 200
+FAILED GET /api/v1/leads net::ERR_CONNECTION_REFUSED   (CHU DONG chan boi buoc eval, lan tai dau)
+CONSOLE.error Failed to load resource: net::ERR_CONNECTION_REFUSED (do chan chu dong)
+FAILED GET /api/v1/leads net::ERR_CONNECTION_REFUSED   (tu thu lai cua man, do chan chu dong)
+CONSOLE.error Failed to load resource: net::ERR_CONNECTION_REFUSED (do chan chu dong)
+GET /api/v1/leads 200   (sau khi mo mang va bam Thu lai)
+Cac buoc truoc (today/leads/mine, resubmit POST /api/v1/leads/:id/resubmit, dau chu, san trong): khong ghi listener; log may dev khong cho thay 4xx/5xx (GET /api/v1/leads 200, POST resubmit 201 dong truoc do).
+Khong co request third-party.

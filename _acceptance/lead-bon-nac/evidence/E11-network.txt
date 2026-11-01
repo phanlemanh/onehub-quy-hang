@@ -1,0 +1,10 @@
+E11 network (context rieng, localhost:3483, telesales@mau.quy-hang.test)
+GET 200 /today [text/html]
+GET 200 /api/v1/leads [application/json]
+GET 200 /api/v1/listings [application/json]
+GET 200 /api/v1/leads [application/json]
+GET 307 /today (RSC) ; GET 200 /today?_rsc [text/x-component]
+GET 200 /leads/mine [text/html]
+GET 200 /api/v1/leads x2, /api/v1/listings [application/json]
+GET 307 /leads/mine (RSC) ; GET 200 /leads/mine?_rsc [text/x-component]
+requestfailed: none ; 4xx/5xx: none ; console error/warning: none seen in this context

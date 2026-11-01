@@ -45,6 +45,7 @@ dòng.
 | sonner | ui | `npx shadcn@latest add sonner` | toast báo |
 | spinner | ui | kèm khi cài thành phần khác | vòng chờ trong nút |
 | switch | ui | `npx shadcn@latest add switch` | bật/tắt cài đặt |
+| table | ui | kèm `@reui/list-11` | bảng nhỏ trong Frame của khối `list-11` (lối «ReUI» của trang ba lối hàng 27); bảng dữ liệu lớn vẫn dùng `reui/data-grid` |
 | tabs | ui | `npx shadcn@latest add tabs` | thẻ trong một vùng |
 | textarea | ui | `npx shadcn@latest add textarea` | ô nhập nhiều dòng |
 | toggle-group | ui | `npx shadcn@latest add toggle-group` | nhóm nút bật |
