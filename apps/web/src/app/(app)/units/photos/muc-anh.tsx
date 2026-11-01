@@ -26,7 +26,10 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+
 import { guiLuot, nganChoTha, tepTuLuotDan, type TepSanSang, type The } from "./tai-len";
+import { lamViec, type ViecAnh } from "./viec-anh";
 
 export type DanhSachAnh = { anh: UnitPhoto[]; noiBo: "thay" | "an"; suaDuoc: boolean };
 export type SuaAnh = { compartment?: Compartment; order?: string[]; isCover?: true; isSample?: boolean };
@@ -79,6 +82,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
     );
   }, [nguon]);
   useEffect(tai, [tai]);
+  const lam = (viec: ViecAnh, goi: () => Promise<void>) => void lamViec(viec, goi, { baoLoi: (chu) => toast.error(chu), taiLai: tai });
 
   const nhan = useCallback(
     async (files: File[], ngan: Compartment) => {
@@ -134,7 +138,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
     const anh = theoNgan(ngan);
     const sapLai = (moi: UnitPhoto[]) => {
       setDs({ ...ds, anh: [...ds.anh.filter((p) => p.compartment !== ngan), ...moi.map((p, i) => ({ ...p, displayOrder: i }))] });
-      void nguon.sua(moi[0]!.id, { order: moi.map((p) => p.id) }).then(tai, tai);
+      lam("thuTu", () => nguon.sua(moi[0]!.id, { order: moi.map((p) => p.id) }));
     };
     return (
       <div className="flex flex-col gap-3">
@@ -167,18 +171,18 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
                         {ngan === "shareable" ? (
                           <>
                             {i > 0 ? (
-                              <DropdownMenuItem onClick={() => void nguon.sua(p.id, { order: [p.id, ...anh.filter((x) => x.id !== p.id).map((x) => x.id)] }).then(tai, tai)}>
+                              <DropdownMenuItem onClick={() => lam("thuTu", () => nguon.sua(p.id, { order: [p.id, ...anh.filter((x) => x.id !== p.id).map((x) => x.id)] }))}>
                                 Đưa lên đầu
                               </DropdownMenuItem>
                             ) : null}
-                            <DropdownMenuItem onClick={() => void nguon.sua(p.id, { isCover: true }).then(tai, tai)}>Đặt làm ảnh bìa</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => void nguon.sua(p.id, { isSample: !p.isSample }).then(tai, tai)}>
+                            <DropdownMenuItem onClick={() => lam("bia", () => nguon.sua(p.id, { isCover: true }))}>Đặt làm ảnh bìa</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => lam("mau", () => nguon.sua(p.id, { isSample: !p.isSample }))}>
                               {p.isSample ? "Bỏ «Ảnh mẫu»" : "Đánh dấu «Ảnh mẫu»"}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => void nguon.sua(p.id, { compartment: "internal" }).then(tai, tai)}>Chuyển sang Nội bộ</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => lam("ngan", () => nguon.sua(p.id, { compartment: "internal" }))}>Chuyển sang Nội bộ</DropdownMenuItem>
                           </>
                         ) : (
-                          <DropdownMenuItem onClick={() => void nguon.sua(p.id, { compartment: "shareable" }).then(tai, tai)}>Chuyển sang Gửi được</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => lam("ngan", () => nguon.sua(p.id, { compartment: "shareable" }))}>Chuyển sang Gửi được</DropdownMenuItem>
                         )}
                         <DropdownMenuItem variant="destructive" onClick={() => setXoa(p)}>Xoá khỏi căn</DropdownMenuItem>
                       </DropdownMenuContent>
@@ -269,7 +273,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
-                if (xoa) void nguon.xoa(xoa.id).then(tai, tai);
+                if (xoa) lam("xoa", () => nguon.xoa(xoa.id));
                 setXoa(null);
               }}
             >

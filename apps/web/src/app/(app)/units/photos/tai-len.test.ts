@@ -15,6 +15,8 @@ const veGia = async () => ({ thumb: new Blob([new Uint8Array([0x89, 0x50, 0x4e, 
 function fetchGia() {
   const goi: { url: string; method: string; body: FormData | null }[] = [];
   const f = (async (url: string, init?: RequestInit) => {
+    // Bản Postgres: xin link tải lên trả «không tải thẳng» (va-anh-ban-that) — chỉ đếm lời gọi thêm ảnh.
+    if (String(url).endsWith("/upload-url")) return new Response(JSON.stringify({ truc_tiep: false }), { status: 200 });
     goi.push({ url: String(url), method: init?.method ?? "GET", body: (init?.body as FormData) ?? null });
     return new Response("{}", { status: 201 });
   }) as typeof fetch;
