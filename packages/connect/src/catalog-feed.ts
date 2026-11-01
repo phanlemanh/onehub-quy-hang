@@ -1,3 +1,4 @@
+import { unitFieldErrors } from "@quy-hang/core";
 import { z } from "zod";
 
 /**
@@ -5,17 +6,23 @@ import { z } from "zod";
  *
  * Bên cung cấp đầu tiên là OneHub Invest (ADR-0017 §5): khu → toà → trục → căn từ danh bạ vật thể. Tên trường theo
  * RESO DD 2.1 như ADR-0013/ADR-0016 của Invest: toà = BuildingName, phân khu = ComplexName, trục = extension Stack,
- * định danh căn = UPI kiểu `urn:onehub:upi`.
+ * định danh căn = UPI kiểu `urn:onehub:upi`. Hình khớp `CatalogData` của lõi cộng phần đầu gói (`schemaVersion`,
+ * `provider`, `measuredAt`).
  *
  * Mọi object đều `.strict()`: khoá lạ bị từ chối. Đây là lưới ở cửa nhận — không phải cách duy nhất chặn tên nguồn,
  * đường dẫn bài gốc hay giá trị chỉ có từ S08 (bộ soát ở cửa ra của Invest làm việc đó), nhưng thứ gì không có trong
  * khuôn thì không vào được.
  *
- * Phiên bản 0 = nháp, chưa phát hành: Invest chưa ghim. Lên 1 khi có số thị trường và tin rao đã khớp căn.
+ * Phiên bản 1 (ADR-0015): luật loại hình của lõi nằm trong khuôn — cặp `propertyType/propertySubType` phải có trong
+ * bảng loại hình, trường không thuộc loại hình phải vắng hoặc `null`. UPI trùng trong gói và khoá khu trùng bị từ chối
+ * cả gói. Bản 0 (nháp) bỏ.
  */
-export const CATALOG_FEED_SCHEMA_VERSION = 0;
+export const CATALOG_FEED_SCHEMA_VERSION = 1;
 
 const Upi = z.string().regex(/^urn:onehub:upi:/, "UPI phải có dạng urn:onehub:upi:…");
+
+/** Số đo dương hoặc `null`; vắng = loại hình không dùng trường này. */
+const OptionalMeasure = z.number().positive().nullable().optional();
 
 export const CatalogUnit = z
   .object({
@@ -26,9 +33,15 @@ export const CatalogUnit = z
     livingArea: z.number().positive().nullable(),
     bedroomsTotal: z.number().int().nonnegative().nullable(),
     directionFaces: z.string().min(1).nullable(),
-    // Loại hình RESO nguyên văn (hàng 72, ADR-0016 quyết định 1); cặp hợp lệ do lõi kiểm.
+    // Loại hình RESO nguyên văn (hàng 72, ADR-0016 quyết định 1); cặp hợp lệ do bảng loại hình của lõi kiểm.
     propertyType: z.string().min(1),
     propertySubType: z.string().min(1),
+    // Trường của loại hình thấp tầng, đất (ADR-0016 quyết định 2); căn hộ không có.
+    lotSizeArea: OptionalMeasure,
+    storiesTotal: z.number().int().positive().nullable().optional(),
+    frontageLength: OptionalMeasure,
+    /** Lộ giới — đặc trưng Việt Nam, RESO không có. */
+    accessRoadWidth: OptionalMeasure,
   })
   .strict();
 
@@ -57,6 +70,43 @@ export const CatalogFeed = z
     measuredAt: z.string().datetime({ offset: true }),
     subdivisions: z.array(CatalogSubdivision),
   })
-  .strict();
+  .strict()
+  .superRefine((feed, ctx) => {
+    // Khoá khu trùng: upsert lần hai sẽ đè lần một — từ chối cả gói (Review Focus 2).
+    const subdivisionKeys = new Set<string>();
+    // UPI là định danh căn toàn cục: hai căn cùng UPI trong một gói thì không biết căn nào đúng.
+    const upis = new Set<string>();
+    feed.subdivisions.forEach((s, i) => {
+      if (subdivisionKeys.has(s.subdivisionKey)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["subdivisions", i, "subdivisionKey"],
+          message: `Khoá khu «${s.subdivisionKey}» trùng trong gói.`,
+        });
+      }
+      subdivisionKeys.add(s.subdivisionKey);
+      s.buildings.forEach((b, j) => {
+        b.units.forEach((u, k) => {
+          const unitPath = ["subdivisions", i, "buildings", j, "units", k];
+          if (upis.has(u.upi)) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, path: [...unitPath, "upi"], message: `UPI «${u.upi}» trùng trong gói.` });
+          }
+          upis.add(u.upi);
+          for (const e of unitFieldErrors(u)) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, path: [...unitPath, e.field], message: e.message });
+          }
+        });
+      });
+    });
+  });
 
 export type CatalogFeed = z.infer<typeof CatalogFeed>;
+
+export type CatalogFeedError = { path: (string | number)[]; message: string };
+
+/** Đọc một gói danh mục; sai khuôn thì trả mọi lỗi kèm đường khoá, không ném. */
+export function parseCatalogFeed(raw: unknown): { ok: true; feed: CatalogFeed } | { ok: false; errors: CatalogFeedError[] } {
+  const r = CatalogFeed.safeParse(raw);
+  if (r.success) return { ok: true, feed: r.data };
+  return { ok: false, errors: r.error.issues.map((issue) => ({ path: [...issue.path], message: issue.message })) };
+}

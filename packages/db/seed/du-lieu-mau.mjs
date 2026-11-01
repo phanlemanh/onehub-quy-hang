@@ -73,7 +73,7 @@ export function sinhDuLieuMau({ hatGiong = HAT_GIONG } = {}) {
 
   // Căn không mang được khoá nhãn (khuôn danh mục strict): nhãn của căn là tiền tố UPI urn:onehub:upi:mau:.
   const danhMuc = {
-    schemaVersion: 0,
+    schemaVersion: 1,
     provider: "[Mẫu] Nguồn danh mục thử",
     measuredAt: "2026-10-30T00:00:00+07:00",
     subdivisions: [
