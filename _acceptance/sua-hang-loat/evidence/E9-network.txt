@@ -1,56 +1,21 @@
-32. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-33. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-34. [GET] http://localhost:3481/api/v1/listings => [200] OK
-35. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
-36. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
-37. [GET] http://localhost:3481/api/v1/listings/46f4c7d8-7d28-4b16-be89-f8ddde951558 => [200] OK
-38. [GET] http://localhost:3481/api/v1/listings/517ef755-528d-42a9-8935-2f85780b459f => [200] OK
-39. [GET] http://localhost:3481/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2 => [200] OK
-40. [GET] http://localhost:3481/api/v1/listings/72864117-6ba2-480b-aceb-083594475b62 => [200] OK
-41. [GET] http://localhost:3481/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11 => [200] OK
-42. [GET] http://localhost:3481/api/v1/listings/ea9f7cf1-bdd4-459d-88c9-44132c627571 => [200] OK
-43. [GET] http://localhost:3481/api/v1/listings/20b322d9-f48d-4cf5-b088-696ca5919f2f => [200] OK
-44. [GET] http://localhost:3481/api/v1/listings/7181248b-d882-4036-b739-f37740a11728 => [200] OK
-45. [GET] http://localhost:3481/api/v1/listings/d6e209d5-4c0f-4cb7-9183-d53babe721df => [200] OK
-46. [GET] http://localhost:3481/api/v1/listings/13ad04df-07ec-4580-8468-803b3236a195 => [200] OK
-47. [GET] http://localhost:3481/api/v1/listings/1074ba71-e0f4-4031-b67b-f56eabe12e9a => [200] OK
-48. [GET] http://localhost:3481/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 => [200] OK
-49. [GET] http://localhost:3481/api/v1/listings/7d82c8d1-4fa2-4312-9f02-d26fadf7a62d => [200] OK
-50. [GET] http://localhost:3481/api/v1/listings/edf0dc1e-ace4-4145-b491-f0982df839a2 => [200] OK
-51. [GET] http://localhost:3481/api/v1/listings/6971313a-99a5-423f-a16e-333c6fcb5c5f => [200] OK
-52. [GET] http://localhost:3481/api/v1/listings/7b5e1b8a-afa8-472b-8dcd-973878d84f96 => [200] OK
-53. [GET] http://localhost:3481/api/v1/listings/af1da34f-e0db-48b0-84a9-3ca831b94595 => [200] OK
-54. [GET] http://localhost:3481/api/v1/listings/4e12f252-91a9-4695-aee3-c1fbc6ca5f44 => [200] OK
-55. [GET] http://localhost:3481/api/v1/listings/1183b142-1bdb-4c17-9524-07bfd5b11d4a => [200] OK
-56. [GET] http://localhost:3481/api/v1/listings/71e62d74-1772-4467-b2c5-3d41a5c6e848 => [200] OK
-57. [GET] http://localhost:3481/api/v1/listings/b034da85-dfd0-4de5-90fd-cc8a1ceb976f => [200] OK
-58. [GET] http://localhost:3481/api/v1/listings/fd73f329-c13e-4361-9601-2f6fbab4183f => [200] OK
-59. [GET] http://localhost:3481/api/v1/listings/c90f695f-7eed-44ed-99dd-2245ba281288 => [200] OK
-60. [GET] http://localhost:3481/api/v1/listings/f8dddf5c-22e2-4559-9d90-139a78d08399 => [200] OK
-61. [GET] http://localhost:3481/api/v1/listings/ab94b733-6ba8-4757-a099-e271d53b1523 => [200] OK
-62. [GET] http://localhost:3481/api/v1/listings/49ba4e6c-cc0b-43d2-ac32-3c5d359c73e0 => [200] OK
-63. [GET] http://localhost:3481/api/v1/listings/6935393b-3402-40a9-a3e5-afb17b50387a => [200] OK
-64. [GET] http://localhost:3481/api/v1/listings/a7570eac-6987-4db9-9068-a076065d0350 => [200] OK
-65. [GET] http://localhost:3481/api/v1/listings/52280048-f6a6-4619-ada5-b51bfdb10577 => [200] OK
-66. [GET] http://localhost:3481/api/v1/listings/b538d065-05f8-4d60-9d06-09a75cdc03f1 => [200] OK
-100. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-101. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-102. [GET] http://localhost:3481/api/v1/listings => [200] OK
-103. [GET] http://localhost:3481/api/v1/listings => [200] OK
-104. [GET] http://localhost:3481/api/v1/listings => [FAILED] net::ERR_CONNECTION_REFUSED
-137. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-138. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-139. [GET] http://localhost:3481/api/v1/listings => [200] OK
-140. [GET] http://localhost:3481/api/v1/listings => [200] OK
-141. [GET] http://localhost:3481/api/v1/listings => [200] OK
-142. [POST] http://localhost:3481/api/v1/listings/46f4c7d8-7d28-4b16-be89-f8ddde951558/events => [200] OK
-143. [GET] http://localhost:3481/api/v1/listings => [200] OK
-144. [POST] http://localhost:3481/api/v1/listings/ea9f7cf1-bdd4-459d-88c9-44132c627571/events => [200] OK
-145. [GET] http://localhost:3481/api/v1/listings => [200] OK
-146. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
-147. [GET] http://localhost:3481/api/v1/listings/46f4c7d8-7d28-4b16-be89-f8ddde951558 => [200] OK
-148. [GET] http://localhost:3481/api/v1/listings/ea9f7cf1-bdd4-459d-88c9-44132c627571 => [200] OK
-149. [GET] http://localhost:3481/api/v1/listings/517ef755-528d-42a9-8935-2f85780b459f => [200] OK
-
-Note: 96 static requests not shown, run with "static" option to see them.
-Console errors (all:true, ca phien playwright dung chung): ws hmr + 1 GET /api/v1/listings ERR_CONNECTION_REFUSED — do server 3481 chua chay truoc khi dung-b.mjs khoi dong (moc truoc steps cua eval nay); khong phat sinh trong luc chay steps.
+# Driver: Chrome headless qua CDP (cdp.mjs), không có đường đọc network; thay bằng nhật ký máy chủ dev (web-b.log) trong khoảng chạy (19 dòng)
+# Dòng có 4xx/5xx/error/fail:
+(không có)
+# Dòng /api/v1:
+ GET /api/v1/catalog 200 in 10ms (next.js: 1.5ms, application-code: 9ms)
+ GET /api/v1/catalog 200 in 7ms (next.js: 0.4ms, application-code: 6ms)
+ GET /api/v1/listings 200 in 12ms (next.js: 0.5ms, application-code: 12ms)
+ GET /api/v1/listings 200 in 12ms (next.js: 1.3ms, application-code: 11ms)
+ GET /api/v1/listings 200 in 13ms (next.js: 1.4ms, application-code: 12ms)
+ GET /api/v1/listings/7b5e1b8a-afa8-472b-8dcd-973878d84f96 200 in 9ms (next.js: 0.3ms, application-code: 9ms)
+ GET /api/v1/listings/af1da34f-e0db-48b0-84a9-3ca831b94595 200 in 9ms (next.js: 0.3ms, application-code: 9ms)
+ GET /api/v1/listings/72864117-6ba2-480b-aceb-083594475b62 200 in 9ms (next.js: 0.4ms, application-code: 8ms)
+ POST /api/v1/listings/7b5e1b8a-afa8-472b-8dcd-973878d84f96/events 200 in 20ms (next.js: 1.2ms, application-code: 18ms)
+ GET /api/v1/listings 200 in 13ms (next.js: 0.4ms, application-code: 13ms)
+ POST /api/v1/listings/af1da34f-e0db-48b0-84a9-3ca831b94595/events 200 in 29ms (next.js: 1.2ms, application-code: 28ms)
+ GET /api/v1/listings 200 in 13ms (next.js: 0.3ms, application-code: 13ms)
+ GET /api/v1/listings 200 in 14ms (next.js: 1.4ms, application-code: 13ms)
+ GET /api/v1/listings 200 in 11ms (next.js: 1.1ms, application-code: 10ms)
+ GET /api/v1/listings/7b5e1b8a-afa8-472b-8dcd-973878d84f96 200 in 6ms (next.js: 0.3ms, application-code: 6ms)
+ GET /api/v1/listings/af1da34f-e0db-48b0-84a9-3ca831b94595 200 in 6ms (next.js: 0.3ms, application-code: 6ms)
+ GET /api/v1/listings/72864117-6ba2-480b-aceb-083594475b62 200 in 6ms (next.js: 0.3ms, application-code: 6ms)

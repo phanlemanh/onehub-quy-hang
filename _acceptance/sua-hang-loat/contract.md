@@ -5,7 +5,7 @@ slug: sua-hang-loat
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: _acceptance/sua-hang-loat/design.md
@@ -82,3 +82,8 @@ Quét không gian AC theo trục (preset entity-feature + test-matrix, rút gọ
 ## Notes
 
 - Dữ liệu cho bài nhìn: chỗ thử dãy B của hàng 14 (`_acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs`).
+- Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Sau khi sửa nhiều căn một lần, máy chủ chỉ nhận ngay căn đầu; các căn còn lại lên sau khoảng 15 giây. Trong lúc đó người khác và trang khách chưa thấy thay đổi dù thông báo đã báo xong. — `apps/web/src/app/(app)/inventory/bulk/thanh.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Hiện tại hộp hỏi vẫn ghi đúng tên mục còn thiếu. Nếu sau này sản phẩm thêm một mục bắt buộc mới, hộp hỏi của sửa hàng loạt có thể ghi «thiếu undefined» thay vì tên mục. — `apps/web/src/app/(app)/inventory/bulk/lo.ts`
+- Ngoài-4 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Một bài kiểm tự động nói là bảo vệ việc «căn đã đóng không bị gọi nhầm» thực ra không bắt được lỗi nếu bộ xét sai. Người dùng không thấy gì ngay, nhưng lỗi về sau có thể lọt qua. — `apps/web/src/app/(app)/inventory/bulk/lo.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm xác nhận chỉ ba cột sửa được trên bảng chỉ đọc chữ trong mã nên có thể xanh dù bảng thật mở nhầm cột, hoặc đỏ dù bảng đúng. Người dùng chưa gặp lỗi nào. — `apps/web/src/app/(app)/inventory/cell-edit/cot-sua.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Bài kiểm câu cảnh báo «Không hoàn tác được» chỉ phủ một phần các chuyển trạng thái, nên một lệch ở chuyển còn lại có thể không bị bắt. Hiện chưa thấy người dùng gặp lỗi. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.test.ts`

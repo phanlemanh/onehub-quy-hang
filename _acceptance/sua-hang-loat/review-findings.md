@@ -1,14 +1,17 @@
-# Review findings: sua-hang-loat (round 2)
+# Review findings: sua-hang-loat (round 3)
 
 ## Trong hợp đồng
-
-(không có finding)
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-(không có finding mới ở vòng này)
+- **Sửa hàng loạt chỉ gửi căn đầu tiên ngay, các căn còn lại nằm chờ khoảng 15 giây tới nhịp đồng bộ sau**
+  Người dùng thấy gì: Sau khi sửa nhiều căn một lần, máy chủ chỉ nhận ngay căn đầu; các căn còn lại lên sau khoảng 15 giây. Trong lúc đó người khác và trang khách chưa thấy thay đổi dù thông báo đã báo xong.
+  Căn cứ: Dữ liệu không mất vì đã lưu trên máy và tự lên máy chủ sau chừng 15 giây, nên hậu quả nhẹ; nếu đóng tab sớm thì phần còn lại lên ở lần mở sau.
+  file: `apps/web/src/app/(app)/inventory/bulk/thanh.tsx`
+  severity: medium
+  Đề xuất: known-limits
 
 - **Bảng nhãn «thiếu …» bị chép lại với kiểu lỏng Record<string, string> thay vì Record<Requirement, string> (r1)**
   Người dùng thấy gì: Hiện tại hộp hỏi vẫn ghi đúng tên mục còn thiếu. Nếu sau này sản phẩm thêm một mục bắt buộc mới, hộp hỏi của sửa hàng loạt có thể ghi «thiếu undefined» thay vì tên mục.
@@ -44,9 +47,5 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   file: `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.test.ts`
   severity: low
   Đề xuất: known-limits
-
-## Chưa adversarial-verify (refuter chết)
-
-(không có)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
