@@ -72,3 +72,4 @@ Bỏ quét không gian: ba lỗi đã có tên từ Cổng Bằng chứng hàng 
   - Ngoài-6: Bài kiểm tự động chỉ xem trong mã có đúng dòng chữ chứ không chạy thử xem lời báo lỗi có hiện lên màn hình, nên có thể bỏ sót lỗi hiển thị.
   - Ngoài-7: Bài kiểm việc chặn mã ảnh của sàn khác chỉ thấy bị từ chối chứ không chắc từ chối đúng lý do, nên có thể bỏ sót lỗi khác che mất.
   - tệp rỗng (AC-2): Tải tệp rỗng lên link tải lên thì bước xác nhận báo lỗi chung thay vì «không phải ảnh», và tệp rỗng nằm lại kho.
+  - Hỏi-3: Đường tải thẳng lên kho ảnh thật chưa thử khói (khoá kho ảnh chưa đặt trên bản thật) — chạy `thu/khoi-storage.mjs` khi đặt khoá.
