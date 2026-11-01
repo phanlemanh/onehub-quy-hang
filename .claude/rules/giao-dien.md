@@ -22,5 +22,11 @@ Vỏ, IA và khối đích của từng màn: `docs/design/vo-va-ia.md` (ADR-000
 - **Style `base-nova`** (Base UI), icon `lucide`, nền neutral — như onehub-invest. Lỗi TS kiểu `render does not exist`
   là đang cài nhầm biến thể Radix.
 - Chọn khối mới cho một màn → sửa cột «Khối đích» và bảng khối đã chuyển thể trong cùng PR.
+- **Ô chưa có khuôn → trang ba lối** (ADR-0019): vòng thêm nhóm mới ở `design/patterns/`, đổi «Khối đích» của một màn,
+  hay thêm một dòng «Chỗ hở» (ghép, tự viết) thì bước phân kỳ của `design-pass` mở (`divergence: opened`) với ba lối
+  Trong kho · ReUI · Vẽ mới; trang dựng bằng `doi-chieu.mjs --ba-loi` → chụp → điền `ba-loi.json` → `--dung-ba-loi`, gửi
+  kèm thẻ Cổng Phạm vi; bước chấm chạy `doi-chieu.mjs --kiem-ba-loi --base <nhánh chính> --slug <slug>`, đỏ khi bỏ bước
+  phân kỳ. Màn đi khuôn sẵn thì `skipped` hợp lệ; khối đích ở `vo-va-ia.md` §2 là khuyến nghị đầu vào cho lối ReUI. Chi
+  tiết: `vo-va-ia.md` §2 «Ba lối», skill `quy-hang-ui` «Vòng giao diện qua bản đồ khuôn».
 - Skill giao diện của kho: `quy-hang-ui` (`.agents/skills/quy-hang-ui/`, nạp sau skill `reui`) — thứ tự thẩm quyền, lint
   `quy-hang-ui` và mức nợ, sàn thiết kế M1, danh mục thành phần đã cài. `npm run lint` đỏ khi nợ giao diện vượt trần 0.

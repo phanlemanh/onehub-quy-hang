@@ -6,6 +6,13 @@
 //                                                                     chưa theo dõi) thuộc một nhóm đơn vị màn
 //   … --mau --slug <slug>                                             kế hoạch ảnh màn mẫu của mọi nhóm
 //   … --dung <slug>                                                   ghép doi-chieu/index.html; thiếu ảnh → mã 1
+//
+// Ba lối (ADR-0019, hồ sơ the-ba-loi) — ô chưa có khuôn duyệt trên trang so Trong kho · ReUI · Vẽ mới:
+//   … --ba-loi --slug <slug>        in sáu ảnh phải chụp vào _acceptance/<slug>/ba-loi/, ghi khung ba-loi.json (không đè)
+//   … --dung-ba-loi <slug>          kiểm rồi ghép ba-loi/index.html; sai → mã 1, không ghi trang; json vắng → mã 2
+//   … --kiem-ba-loi --base <ref> --slug <slug> [--den <ref>]
+//                                   vòng chạm ô chưa có khuôn (nhóm mới · đổi khối đích · chỗ hở mới) thì design-pass
+//                                   phải «divergence: opened» và trang ba lối hợp lệ — sai → mã 1
 //   [--root <kho>]
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -13,6 +20,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { docBanDo, nhomCuaTep } from "./lib/ban-do.mjs";
+import { dungTrangBaLoi, KHO_BA_LOI, khungBaLoi, kiemBaLoi, kiemVongBaLoi, LoiDoc, LOI, tenAnhBaLoi } from "./lib/ba-loi.mjs";
 
 /** Khổ máy tính và điện thoại mà skill quy-hang-ui buộc nhìn màn đang chạy. */
 export const KHO = [1440, 375];
@@ -126,11 +134,56 @@ ${hang.join("\n")}
   console.log(`đối chiếu: ${cap.length} cặp đủ`);
 }
 
+const thuMucBaLoi = (slug) => join(root, "_acceptance", slug, "ba-loi");
+
+function keHoachBaLoi(slug) {
+  const d = thuMucBaLoi(slug);
+  mkdirSync(d, { recursive: true });
+  const p = join(d, "ba-loi.json");
+  if (!existsSync(p)) writeFileSync(p, JSON.stringify(khungBaLoi(), null, 2) + "\n");
+  for (const { ma } of LOI) for (const kho of KHO_BA_LOI) console.log(`${ma} · ${kho} → ba-loi/${tenAnhBaLoi(ma, kho)}`);
+}
+
+function dungBaLoi(slug) {
+  const d = thuMucBaLoi(slug);
+  let kq;
+  try {
+    kq = kiemBaLoi(d);
+  } catch (e) {
+    if (!(e instanceof LoiDoc)) throw e;
+    console.error(e.message);
+    process.exit(2);
+  }
+  for (const l of kq.loi) console.error(l);
+  if (kq.loi.length) process.exit(1);
+  writeFileSync(join(d, "index.html"), dungTrangBaLoi(kq.du, d));
+  console.log(`ba lối: dựng ${slug}/ba-loi/index.html — khuyên ${kq.du.khuyen.loi}`);
+}
+
+function kiemVong(slug, base, den) {
+  let kq;
+  try {
+    kq = kiemVongBaLoi(root, slug, base, den);
+  } catch (e) {
+    if (!(e instanceof LoiDoc)) throw e;
+    console.error(e.message);
+    process.exit(2);
+  }
+  if (!kq.dieu.length) return console.log("ba lối: vòng không chạm ô chưa có khuôn — không cần trang");
+  for (const d of kq.dieu) console.log(`ô chưa có khuôn: ${d.loai} ${d.ten}`);
+  for (const l of kq.loi) console.error(l);
+  if (kq.loi.length) process.exit(1);
+  console.log("ba lối: bước phân kỳ đã mở, trang đủ");
+}
+
 const slug = arg("--slug");
-if (arg("--dung")) dung(arg("--dung"));
+if (arg("--dung-ba-loi")) dungBaLoi(arg("--dung-ba-loi"));
+else if (args.includes("--ba-loi") && slug) keHoachBaLoi(slug);
+else if (args.includes("--kiem-ba-loi") && slug && arg("--base")) kiemVong(slug, arg("--base"), arg("--den"));
+else if (arg("--dung")) dung(arg("--dung"));
 else if (args.includes("--mau") && slug) keHoachMau(slug);
 else if (arg("--base") && slug) keHoachBase(arg("--base"), slug);
 else {
-  console.error("dùng: doi-chieu.mjs --base <ref> --slug <slug> | --mau --slug <slug> | --dung <slug> [--root <kho>]");
+  console.error("dùng: doi-chieu.mjs --base <ref> --slug <slug> | --mau --slug <slug> | --dung <slug> | --ba-loi --slug <slug> | --dung-ba-loi <slug> | --kiem-ba-loi --base <ref> --slug <slug> [--den <ref>] [--root <kho>]");
   process.exit(2);
 }
