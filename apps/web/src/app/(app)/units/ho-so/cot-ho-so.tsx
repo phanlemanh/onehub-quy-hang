@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../../inventory/danh-muc";
+import { MucAnhCan } from "../photos/muc-anh-can";
 import { NutBaoSai } from "./nut-bao-sai";
 import {
   cacLanRao,
@@ -240,6 +241,10 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
           </span>
         </div>
       </div>
+      <Separator />
+      <Muc tieuDe="Ảnh">
+        <MucAnhCan toa={tim.toa} ma={chon.ma} />
+      </Muc>
       <Separator />
       <Muc tieuDe="Thuộc tính căn" phai={coBaoSai(tt) && tt.kind === "co" ? <NutBaoSai ma={chon.ma} toa={tim.toa} khu={tt.khu} truong={tt.truong} /> : null}>
         {tt.kind === "co" ? <CapGiaTri ds={tt.truong} /> : <p className="text-sm text-muted-foreground">Chưa có trong danh mục</p>}
