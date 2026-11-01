@@ -5,7 +5,7 @@ slug: chuyen-khong-ket-khoa
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [db]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-01-chuyen-khong-ket-khoa-design.md
 approved_by:
 approved_at:
