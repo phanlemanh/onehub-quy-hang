@@ -1,0 +1,6 @@
+Network/console E4u (Playwright, origin http://localhost:3481)
+App API: GET /api/v1/catalog 200, /listings 200, /listings?limit=200 200, /listings/<id> 200, POST /listings/b78bef71-.../events 200 (1 lan, nut «Đổi»). Khong co request app nao 4xx/5xx do UI.
+Note: GET /listings/<id>/events 404 la do chinh verifier goi nham (route do chi co POST) — khong phai UI.
+Note: favicon.ico 404 (static, note-only).
+Console error (dev): Base UI PopoverTrigger nativeButton=true render non-button (tren-o.tsx:107, useSuaTrenO) — canh bao dev, khong chan chuc nang.
+POST /__nextjs_original-stack-frames 200 (dev overlay).

@@ -1,0 +1,1 @@
+Driver: Chrome headless qua CDP tu viet (khong co tool doc network). networkObserved = n-a (driver). Chi quan sat: overlay dev Next '1 Issue' o goc trai duoi.
