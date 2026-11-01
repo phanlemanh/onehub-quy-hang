@@ -11,6 +11,8 @@ const CHO_PHEP = [
   /^apps\/web\/src\/app\/\(app\)\/inventory\/bang-hang\.tsx$/,
   /^apps\/web\/src\/app\/\(app\)\/inventory\/cell-edit\/tren-o\.tsx$/,
   /^_acceptance\/sua-hang-loat\//,
+  // Bảng viết trước của bài quét khuôn: tệp giao diện mới vào danh sách nhận diện (luật thường trực, ranh-gioi-them).
+  /^packages\/ui-lint\/tests\/ban-do-khuon\.test\.mjs$/,
   // Tệp sinh của kho ở mỗi cổng, và dòng §12 của hàng trong Tham chiếu (luật thường trực, B-19).
   /^docs\/plan\/lo-trinh\.json$/,
   /^LO-TRINH\.html$/,
