@@ -5,7 +5,7 @@ slug: lead-bon-nac
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-lead-bon-nac-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -121,3 +121,9 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead n
 - Migration `015_lead_bon_nac.sql` và ADR-0020 xin giữ chỗ ở giám sát (yêu cầu L-11); trùng số thì đổi trước khi gộp.
 - 015 thay bằng `create or replace` bốn hàm của hàng 25 và `app.lead_dedupe_facts` (hàng 24, 62), cùng chữ ký, chỉ thêm điều
   kiện «chưa trả lại»; bộ kiểm của ba hàng ấy phải xanh nguyên.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Hôm nay quyết hiện vùng Lead đã nhập theo tên vai «telesales», không theo bảng vai của lõi — thêm vai nhập được lead thì vai ấy chưa thấy vùng này tới khi sửa riêng.
+  - Ngoài-2: Mọi lần «Sửa số và gửi lại» bị từ chối 409 đều hiện «Lead này đã được gửi lại», kể cả khi lý do là lead chưa bị trả lại hay chưa chọn sàn.
+  - Ngoài-3: Mở hai tab hay trạng thái đã đổi thì dòng vẫn hiện «Trả lại» kèm ô số, bấm lại vẫn ra cùng lỗi tới khi tải lại trang.
+  - Ngoài-5: Đường truyền trả trang lạ thay vì dữ liệu thì vùng Lead đã nhập có thể quay tải mãi, hay nút «Sửa số và gửi lại» bị khoá; tải lại trang là gỡ được.
+  - Ngoài-6: Bài kiểm luật giữ khuôn chưa có ca riêng cho nhóm màn Lead đã nhập.
