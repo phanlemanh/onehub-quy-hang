@@ -1,27 +1,82 @@
 {
   "feature_plain": "Khi đưa bản mới lên, cơ sở dữ liệu tự bật hẳn hai lớp chặn số điện thoại chủ nhà để rõ nếu bảng đã sạch; bảng nào còn số rõ thì bỏ qua và nhắc người vận hành chạy lệnh mã hoá lại, không làm hỏng lần đưa bản.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ bật hẳn lớp chặn ở bảng chủ nhà và bảng lead khi bảng không còn số rõ; chạy lại lần nữa không đổi gì."},
-    {"id": "AC-2", "p": "Sẽ xét từng bảng riêng: bảng còn số rõ thì bỏ qua, không lỗi, không đụng dữ liệu, và in đúng một lời nhắc (tên bảng, số dòng, lệnh mã hoá lại — không in số điện thoại) ra log đưa bản; bảng sạch thì không nhắc."},
-    {"id": "AC-3", "p": "Sẽ dừng việc đưa bản lên người dùng nếu bảng đã sạch mà lớp chặn vẫn chưa bật; bài kiểm tạm gỡ lớp chặn chỉ chạy ở máy thử, không chạy trên bản thật."},
-    {"id": "AC-4", "p": "Sẽ ghi vào sổ tay vận hành và sổ quyết định cách lớp chặn được bật và chỗ đọc lời nhắc."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ bật hẳn lớp chặn ở bảng chủ nhà và bảng lead khi bảng không còn số rõ; chạy lại lần nữa không đổi gì."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ xét từng bảng riêng: bảng còn số rõ thì bỏ qua, không lỗi, không đụng dữ liệu, và in đúng một lời nhắc (tên bảng, số dòng, lệnh mã hoá lại — không in số điện thoại) ra log đưa bản; bảng sạch thì không nhắc."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ dừng việc đưa bản lên người dùng nếu bảng đã sạch mà lớp chặn vẫn chưa bật; bài kiểm tạm gỡ lớp chặn chỉ chạy ở máy thử, không chạy trên bản thật."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ ghi vào sổ tay vận hành và sổ quyết định cách lớp chặn được bật và chỗ đọc lời nhắc."
+    }
   ],
   "wont_do": [
-    {"id": "OOS-1", "p": "KHÔNG xoá cột số rõ cũ — việc của hàng sau."},
-    {"id": "OOS-2", "p": "KHÔNG đổi phân quyền tài khoản cơ sở dữ liệu trên Supabase."},
-    {"id": "OOS-3", "p": "KHÔNG chạy lệnh mã hoá lại trên bản thật — bản thật đang không có số rõ nào."}
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG xoá cột số rõ cũ — việc của hàng sau."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG đổi phân quyền tài khoản cơ sở dữ liệu trên Supabase."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG chạy lệnh mã hoá lại trên bản thật — bản thật đang không có số rõ nào."
+    }
   ],
   "coverage_plain": [
-    {"i": 0, "p": "Phủ cả hai bảng có số chủ — bảng chủ nhà và bảng lead — mỗi bảng xét riêng (AC-2)."},
-    {"i": 1, "p": "Phủ ba trạng thái: bảng sạch chưa bật (AC-1), bảng còn số rõ (AC-2), đã bật rồi chạy lại (AC-1)."},
-    {"i": 2, "p": "Phủ ba nơi chạy: máy thử của dãy, CI, và bản thật qua bước đưa bản bằng tài khoản chủ bảng (AC-3)."},
-    {"i": 3, "p": "Không làm: đổi phân quyền để bật bằng tay — giám sát đã quyết không đổi."}
+    {
+      "i": 0,
+      "p": "Phủ cả hai bảng có số chủ — bảng chủ nhà và bảng lead — mỗi bảng xét riêng (AC-2)."
+    },
+    {
+      "i": 1,
+      "p": "Phủ ba trạng thái: bảng sạch chưa bật (AC-1), bảng còn số rõ (AC-2), đã bật rồi chạy lại (AC-1)."
+    },
+    {
+      "i": 2,
+      "p": "Phủ ba nơi chạy: máy thử của dãy, CI, và bản thật qua bước đưa bản bằng tài khoản chủ bảng (AC-3)."
+    },
+    {
+      "i": 3,
+      "p": "Không làm: đổi phân quyền để bật bằng tay — giám sát đã quyết không đổi."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Lo tài khoản chủ bảng trên bản thật bị luật theo công ty che khi đếm số rõ. Đã kiểm: tài khoản ấy được khai bỏ qua luật này nên đếm đúng; nếu sai thì lần đưa bản báo lỗi ồn chứ không lặng lẽ — ghi vào thiết kế và hợp đồng."},
-    {"i": 1, "p": "Lời nhắc có thể không bao giờ tới log vì chương trình chạy migration không nghe lời nhắc của cơ sở dữ liệu. Đã sửa: thêm một dòng cho chương trình in lời nhắc, và một bài kiểm chạy migration thật rồi đọc đầu ra."},
-    {"i": 2, "p": "Bài kiểm tạm gỡ lớp chặn khoá cả việc đọc bảng, nếu chạy trên bản thật lúc đưa bản có thể làm người dùng chờ. Đã sửa: bài ấy chỉ chạy ở máy thử; bản thật chỉ chạy bài kiểm chỉ đọc. Thành Hỏi-1 cho anh."},
-    {"i": 3, "p": "Việc cho phép bản thật còn số rõ vẫn được đưa bản là quyết định vận hành, không phải máy tự chốt. Đã đổi thành Hỏi-2 cho anh."},
-    {"i": 4, "p": "Chưa đo việc bảng sạch không bị nhắc nhầm. Đã thêm phép đếm lời nhắc vào các bài kiểm."}
+    {
+      "i": 0,
+      "p": "Lo tài khoản chủ bảng trên bản thật bị luật theo công ty che khi đếm số rõ. Đã kiểm: tài khoản ấy được khai bỏ qua luật này nên đếm đúng; nếu sai thì lần đưa bản báo lỗi ồn chứ không lặng lẽ — ghi vào thiết kế và hợp đồng."
+    },
+    {
+      "i": 1,
+      "p": "Lời nhắc có thể không bao giờ tới log vì chương trình chạy migration không nghe lời nhắc của cơ sở dữ liệu. Đã sửa: thêm một dòng cho chương trình in lời nhắc, và một bài kiểm chạy migration thật rồi đọc đầu ra."
+    },
+    {
+      "i": 2,
+      "p": "Bài kiểm tạm gỡ lớp chặn khoá cả việc đọc bảng, nếu chạy trên bản thật lúc đưa bản có thể làm người dùng chờ. Đã sửa: bài ấy chỉ chạy ở máy thử; bản thật chỉ chạy bài kiểm chỉ đọc. Thành Hỏi-1 cho anh."
+    },
+    {
+      "i": 3,
+      "p": "Việc cho phép bản thật còn số rõ vẫn được đưa bản là quyết định vận hành, không phải máy tự chốt. Đã đổi thành Hỏi-2 cho anh."
+    },
+    {
+      "i": 4,
+      "p": "Chưa đo việc bảng sạch không bị nhắc nhầm. Đã thêm phép đếm lời nhắc vào các bài kiểm."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "E5",
+      "q": "Sổ tay đủ để người vận hành biết lớp chặn bật thế nào?",
+      "why": "Ba máy chấm đề xuất đạt: sổ tay nói bảng sạch thì migration tự bật khi đưa bản, bảng còn số rõ thì chạy lệnh mã hoá lại (lệnh tự bật), lời nhắc nằm ở log đưa bản, và sổ quyết định có dòng 01/11 trỏ migration."
+    }
   ]
 }
