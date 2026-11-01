@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 077b6cefbf44e8f545ea32620a87a6d9a7b199bc
+verified_commit: 83ab1c7c5e223bd4882af2595b5cffc680d42bb8
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -162,3 +162,7 @@ Round 1: lượt chấm đầu của hàng va-anh-ban-that; chi tiết xem run-l
 Round 2: lượt 2 — thông báo lỗi sửa/xoá không hiện ở hồ sơ căn (E6); mục Ảnh tự gắn khung thông báo rồi chấm lại.
 Round 3: mọi eval xanh (E1, E1b, E1c, E2, E3, E4, E5, E6) trên commit 077b6cef — verdict PASS.
 
+
+### Re-pin lần 1 — 2026-11-01, do hoá cũ do gộp nhánh chính trước khi gộp PR
+run_id: repin-20261101T134808Z-37286
+sha: 83ab1c7c5e223bd4882af2595b5cffc680d42bb8 · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng · ngoài làn máy: E6 · AC không có chốt máy: AC-6
