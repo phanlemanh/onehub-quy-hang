@@ -1,28 +1,3 @@
 {
-  "feature_plain": "Chủ kho bấm một nút trên GitHub là bản thật có sàn «[Mẫu] Sàn thử» đầy hàng, chủ nhà, lead, người phụ trách để xem mọi màn; bấm lại không đổi gì, bấm gỡ thì chỉ sàn mẫu biến mất.",
-  "will_do": [
-    {"id": "AC-1", "p": "Sẽ dựng sàn mẫu với 6 người mẫu, 2 khu, 40 hàng đúng sáu trạng thái, mỗi hàng có đầu chủ phụ trách và chủ nhà, 12 lead mà kết quả trùng do chính luật kiểm trùng tính."},
-    {"id": "AC-2", "p": "Sẽ cất số chủ nhà và số lead chỉ ở dạng bản mã; giải đúng khoá mới ra số, khoá khác hay chép sang dòng khác thì không ra."},
-    {"id": "AC-4", "p": "Sẽ để bấm nạp lần hai không đổi một dòng nào trong cơ sở dữ liệu."},
-    {"id": "AC-5", "p": "Sẽ cho tài khoản chủ kho vào sàn mẫu (theo Hỏi-2) mà không đụng vai của chủ kho ở sàn thật; email không nằm trong kho hay trong log."},
-    {"id": "AC-8", "p": "Sẽ có nút «Nạp dữ liệu mẫu» trên GitHub Actions chỉ chạy từ nhánh chính, gỡ phải gõ đúng tên sàn mẫu, không in bí mật."},
-    {"id": "AC-9", "p": "Sẽ giữ cách ly: thành viên sàn thật không thấy dòng nào của sàn mẫu; mọi bộ kiểm cũ vẫn xanh."},
-    {"id": "AC-10", "p": "Sẽ cho thành viên sàn mẫu tra được 180 căn danh mục và ra đúng căn của từng hàng mẫu."}
-  ],
-  "wont_do": [
-    {"id": "AC-3", "p": "Chặn chạy khi khoá mã hoá vắng, sai dạng hay là khoá dev — không ghi dòng nào, thông điệp không lộ khoá."},
-    {"id": "AC-6", "p": "Sẽ KHÔNG xoá gì ngoài sàn mẫu khi gỡ: sàn thật — kể cả sàn thật trùng tên mẫu — không đổi một dòng; hai sàn mẫu khớp thì từ chối."},
-    {"id": "AC-7", "p": "Sẽ KHÔNG để lại nửa sàn khi lỗi giữa chừng: lỗi ở lead cuối thì mọi thứ của lần chạy ấy rút lại."},
-    {"id": "OOS-1", "p": "Không ghi 180 căn vào vùng danh mục dùng chung — mọi sàn thật sẽ thấy dòng mẫu và không gỡ được."},
-    {"id": "OOS-2", "p": "Không tự đặt khoá trên GitHub hay bấm nút trên bản thật — việc của chủ kho sau khi gộp."},
-    {"id": "OOS-3", "p": "Không thêm màn, đường API hay bảng mới."},
-    {"id": "OOS-4", "p": "Không sửa gói dữ liệu mẫu mà các bài thử khác đọc."}
-  ],
-  "gap_probe_plain": [
-    {"i": 0, "p": "Gỡ theo tên có thể xoá trọn một sàn thật tự đặt tên «[Mẫu] Sàn thử» — đã sửa: nhận sàn mẫu bằng tên cộng quản trị mẫu, đưa lên Hỏi-3, thêm ca sàn thật trùng tên."},
-    {"i": 1, "p": "Ngưỡng đòi 180 căn danh mục mà chưa ai đo — đã thêm tiêu chí tra danh mục bằng phiên thành viên sàn mẫu (AC-10)."},
-    {"i": 2, "p": "Bộ kiểm chưa chứng kết quả trùng do luật tính — đã thêm ca đổi dữ liệu thì kết quả đổi theo."},
-    {"i": 3, "p": "Ca lỗi giữa chừng gãy trước khi ghi nên không chứng được rút lại trọn — đã chuyển lỗi xuống lead cuối, sau khi hàng đã ghi."},
-    {"i": 4, "p": "Ca đọc chéo sàn chạy nhầm bộ kiểm — đã tách thành hai mục, mỗi mục đúng bộ kiểm của nó."}
-  ]
+  "feature_plain": "Chủ kho bấm một nút trên GitHub là bản thật có sàn «[Mẫu] Sàn thử» đầy hàng, chủ nhà, lead, người phụ trách để xem mọi màn; bấm lại không đổi gì, bấm gỡ thì chỉ sàn mẫu biến mất."
 }
