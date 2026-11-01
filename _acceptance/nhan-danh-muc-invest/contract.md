@@ -5,7 +5,7 @@ slug: nhan-danh-muc-invest
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-nhan-danh-muc-invest-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01T00:45:00Z
@@ -111,5 +111,7 @@ ADR-0017 §5 và khuôn v0 [SUY-TỪ-REPO: packages/connect/src/catalog-feed.ts]
 - Hàng này nâng số phiên bản khuôn cấp vào 0 → 1, xử hàng 72 Ngoài-4 (đổi tên khoá chưa nâng số) và Ngoài-5 (khuôn
   chưa chở trường nhà thấp tầng, đất).
 - Yêu cầu D-4: chạm tệp ngoài vùng của hàng (migration, đường API, ADR, Tham chiếu).
-- Known limits — chọn ở Cổng Bằng chứng 2026-11-01 (trước lần trả lại; Ngoài-1 nâng thành AC-11):
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01 (sau lần trả lại; danh sách sàn được tin đã sửa ở AC-11):
+  - Ngoài-1: Một gói danh mục cũ tới trễ sau gói mới có thể ghi đè thông tin mới và kéo lùi mốc đo; gửi lại gói đúng là khôi phục.
   - Ngoài-2: Khi hạ tầng thiếu quyền do cấu hình sai, người gửi gói vẫn chỉ thấy «thoả thuận không hiệu lực», nên tìm nguyên nhân thật chậm hơn.
+  - Ngoài-4: Cùng giới hạn với Ngoài-2 (lượt chấm 1 nêu cùng chỗ).
