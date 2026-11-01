@@ -1,0 +1,5 @@
+E9 network (playwright browser_network_requests, filter api/v1, origin http://localhost:3481)
+Tat ca request app-scope: GET /api/v1/listings, /catalog, /listings/<id>, POST /api/v1/listings/<id>/events -> [200] OK. Khong co 4xx/5xx/timeout.
+POST cua lan Doi dau: 13ad04df (B-14.02) -> 200; B-10.01 (7181248b) khong thay POST luc doc log; event seq6 cua B-10.01 xuat hien 06:36:10Z (15s sau Doi 06:35:55Z).
+Luu y: trinh duyet playwright dung chung voi cac grader khac (log co POST toi listing khac: 057c4e09, f2e776c9, edf0dc1e, 6971313a, 77b97452).
+Console errors (2, dev warning Base UI nativeButton tai useSuaTrenO/PopoverTrigger) - khong phai network.

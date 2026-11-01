@@ -1,0 +1,311 @@
+{
+ "final": {
+  "B-08.04": {
+   "version": 6,
+   "ev": [
+    {
+     "seq": 1,
+     "type": "created",
+     "payload": {
+      "unitNumber": "B-08.04",
+      "buildingName": "Toà B"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": false,
+     "occurredAt": "2026-10-31T14:31:37.287Z"
+    },
+    {
+     "seq": 2,
+     "type": "price_changed",
+     "payload": {
+      "listPrice": 4530000000,
+      "feeInclusion": "included"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.296Z"
+    },
+    {
+     "seq": 3,
+     "type": "details_changed",
+     "payload": {
+      "legalStatus": "[Mẫu] Sổ hồng",
+      "occupantType": "[Mẫu] Chủ đang ở"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": false,
+     "occurredAt": "2026-10-31T14:31:37.306Z"
+    },
+    {
+     "seq": 4,
+     "type": "status_changed",
+     "payload": {
+      "to": "Active"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.316Z"
+    },
+    {
+     "seq": 5,
+     "type": "status_changed",
+     "payload": {
+      "to": "Pending"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.329Z"
+    },
+    {
+     "seq": 6,
+     "type": "owner_confirmed",
+     "payload": {},
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.340Z"
+    }
+   ]
+  },
+  "B-10.01": {
+   "version": 8,
+   "ev": [
+    {
+     "seq": 1,
+     "type": "created",
+     "payload": {
+      "unitNumber": "B-10.01",
+      "buildingName": "Toà B"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": false,
+     "occurredAt": "2026-10-31T14:31:37.379Z"
+    },
+    {
+     "seq": 2,
+     "type": "price_changed",
+     "payload": {
+      "listPrice": 2440000000,
+      "feeInclusion": "included"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.388Z"
+    },
+    {
+     "seq": 3,
+     "type": "details_changed",
+     "payload": {
+      "legalStatus": "[Mẫu] Sổ hồng",
+      "occupantType": "[Mẫu] Để trống"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": false,
+     "occurredAt": "2026-10-31T14:31:37.398Z"
+    },
+    {
+     "seq": 4,
+     "type": "status_changed",
+     "payload": {
+      "to": "Active"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.411Z"
+    },
+    {
+     "seq": 5,
+     "type": "status_changed",
+     "payload": {
+      "to": "Pending"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.421Z"
+    },
+    {
+     "seq": 6,
+     "type": "owner_confirmed",
+     "payload": {},
+     "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-11-01T06:36:10.493Z"
+    },
+    {
+     "seq": 7,
+     "type": "owner_confirmed",
+     "payload": {},
+     "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-11-01T06:36:27.125Z"
+    },
+    {
+     "seq": 8,
+     "type": "owner_confirmed",
+     "payload": {},
+     "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-11-01T06:37:36.974Z"
+    }
+   ]
+  },
+  "B-13.02": {
+   "version": 7,
+   "ev": [
+    {
+     "seq": 1,
+     "type": "created",
+     "payload": {
+      "unitNumber": "B-13.02",
+      "buildingName": "Toà B"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": false,
+     "occurredAt": "2026-10-31T14:31:37.510Z"
+    },
+    {
+     "seq": 2,
+     "type": "price_changed",
+     "payload": {
+      "listPrice": 3560000000,
+      "feeInclusion": "included"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.518Z"
+    },
+    {
+     "seq": 3,
+     "type": "details_changed",
+     "payload": {
+      "legalStatus": "[Mẫu] Sổ hồng",
+      "occupantType": "[Mẫu] Chủ đang ở"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": false,
+     "occurredAt": "2026-10-31T14:31:37.527Z"
+    },
+    {
+     "seq": 4,
+     "type": "status_changed",
+     "payload": {
+      "to": "Active"
+     },
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.535Z"
+    },
+    {
+     "seq": 5,
+     "type": "owner_confirmed",
+     "payload": {},
+     "actorUserId": "2aec3338-c6a3-47c2-87e1-33d5193eb2c9",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-10-31T14:31:37.544Z"
+    },
+    {
+     "seq": 6,
+     "type": "status_changed",
+     "payload": {
+      "to": "Hold"
+     },
+     "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-11-01T02:41:39.445Z"
+    },
+    {
+     "seq": 7,
+     "type": "owner_confirmed",
+     "payload": {},
+     "actorUserId": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+     "actorRoles": [
+      "listing_agent"
+     ],
+     "confirmedWithOwner": true,
+     "occurredAt": "2026-11-01T06:37:50.835Z"
+    }
+   ]
+  }
+ },
+ "me": {
+  "user": {
+   "id": "927b2594-4ea0-40ae-9e6e-d77117968e59",
+   "email": "dau-chu-1@mau.quy-hang.test"
+  },
+  "companies": [
+   {
+    "id": "a309691a-026e-458b-ae4e-6ab645fa7e48",
+    "name": "[Mẫu] Sàn thử",
+    "roles": [
+     "listing_agent"
+    ]
+   }
+  ],
+  "activeCompany": {
+   "id": "a309691a-026e-458b-ae4e-6ab645fa7e48",
+   "name": "[Mẫu] Sàn thử",
+   "roles": [
+    "listing_agent"
+   ]
+  }
+ }
+}
