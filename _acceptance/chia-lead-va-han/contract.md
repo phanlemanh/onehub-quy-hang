@@ -5,7 +5,7 @@ slug: chia-lead-va-han
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-10-31-chia-lead-va-han-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -181,4 +181,11 @@ Quét morphological-scan, preset entity-feature, cho thực thể «một lead s
   dạng «<nhóm>.<khoá>»: `lead_routing.strategy`, `lead_routing.accept_minutes`, `lead_routing.first_call_minutes`,
   `lead_routing.alert_to`. Khoá vắng = mặc định của sàn khai một chỗ ở lõi (`DEFAULT_LEAD_ROUTING`); SQL không chép con số.
   Kiểu đặt tên báo phiên CH (sổ điểm biến thiên) để gom sau.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-1: Lần đầu bật nhịp mỗi phút, lead nhập từ trước mà đã gắn sẵn đầu chủ có thể bị báo quá hạn một loạt cho trưởng nhóm.
+  - Ngoài-2: Ba chức năng chỉ dành cho nhịp nền chưa kiểm vai ở cơ sở dữ liệu; chưa có lối nào của app gọi tới được, sàn khác không bị chạm.
+  - Ngoài-3: Khoá việc nền quá ngắn vẫn được nhận; chủ kho đặt khoá ngẫu nhiên từ 32 ký tự theo hướng dẫn ADR-0017.
+  - Ngoài-4: Mỗi nhịp máy làm thêm việc thừa cho lead cũ và mốc hạn lưu kèm lời báo lệch dưới một mili giây; trưởng nhóm vẫn nhận đúng một lời báo.
+  - Ngoài-6: Bài kiểm cách ly của bốn thao tác nhận, gọi, tự nhận, giao lại chỉ đo chiều chặn, chưa có đối chứng phân biệt.
+  - Ngoài-7: Ca khớp tên toà viết bằng dấu tổ hợp chưa thật sự đo bước chuẩn hoá Unicode.
 - Dãy L chạy Postgres 5563 (container `quy-hang-db-L`), dev 3483. Migration 011 và ADR-0017 do giám sát giữ chỗ (L-8).
