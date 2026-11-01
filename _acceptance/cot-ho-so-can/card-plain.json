@@ -1,0 +1,110 @@
+{
+  "feature_plain": "Đầu chủ bấm một căn trên Bảng hàng và đọc hồ sơ căn ở cột bên phải — thuộc tính tự điền, các lần rao, ai đổi giá hay trạng thái khi nào — mà không rời bảng; thấy thuộc tính sai thì soạn lời báo gửi đội vận hành.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ mở hồ sơ ở cột phải khi bấm một dòng, đổi căn khi bấm dòng khác, giữ được link để mở lại đúng căn."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ hiện thuộc tính căn lấy từ danh mục đúng toà, không cho sửa; căn ngoài danh mục ghi rõ «Chưa có trong danh mục»."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ hiện lần rao đang xem (giá, phí, bốn phần, mức đủ) và mọi lần rao của căn, xem được cả lần đã ngừng."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ liệt lịch sử: đổi giá từ bao nhiêu sang bao nhiêu, đổi trạng thái, ai làm («Bạn» hay tên vai), lúc nào."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ vẫn cho xem lịch sử đã tải khi mất mạng, và nói rõ khi lịch sử chưa từng tải."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ soạn lời báo sai đủ mã căn, thuộc tính, giá trị đúng rồi mở bảng chia sẻ của máy để người tự gửi — không kèm gì của chủ nhà."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ mở hồ sơ toàn màn theo mã căn; mã có ở hai toà thì cho chọn toà; mã không có thì nói rõ."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ lập khuôn cho nhóm màn Hồ sơ căn để các màn sau của nhóm dựng giống nhau."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ chứng trên bản chạy thật với dữ liệu mẫu, ở khổ máy tính và điện thoại."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG cho sửa giá, trạng thái hay phần lần rao trên cột — để hàng 15, 19."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG có ảnh căn — để hàng 18."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG hiện chủ nhà và số điện thoại — để hàng 62."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG làm hồ sơ căn trên điện thoại cho đầu khách — để hàng 33."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG hiện tên đồng nghiệp đã sửa, chỉ hiện vai của họ (theo Hỏi-3)."
+    },
+    {
+      "id": "OOS-6",
+      "p": "KHÔNG lưu lời báo sai trong ứng dụng hay gửi sang Invest — để một hàng sau."
+    }
+  ],
+  "coverage_plain": [
+    {
+      "i": 0,
+      "p": "Mọi đường vào hồ sơ đều có tiêu chí: bấm dòng, link, mở toàn màn, gõ mã căn (AC-1, AC-7)."
+    },
+    {
+      "i": 1,
+      "p": "Mỗi phần của hồ sơ — thuộc tính, lần rao, lịch sử, báo sai — có tiêu chí riêng (AC-2 đến AC-6)."
+    },
+    {
+      "i": 2,
+      "p": "Các tình huống dữ liệu khó — ngoài danh mục, mã trùng hai toà, mất mạng, lần rao đã ngừng, thay đổi chưa gửi — đều có ca đo."
+    },
+    {
+      "i": 3,
+      "p": "Lịch sử phân biệt việc mình làm với việc người khác cùng sàn làm (AC-4)."
+    }
+  ],
+  "gap_probe_plain": [
+    {
+      "i": 0,
+      "p": "Chọn hiện vai thay vì tên người sửa là việc của chủ sản phẩm, máy đã tự quyết — nay đưa thành câu Hỏi-3."
+    },
+    {
+      "i": 1,
+      "p": "Link chỉ kèm toà khi mã trùng sẽ hỏng khi danh mục thêm toà sau — nay link luôn kèm toà."
+    },
+    {
+      "i": 2,
+      "p": "Bấm dòng của lần rao đã ngừng thì cột hiện nhầm lần đang mở — nay cột theo đúng lần rao đã bấm."
+    },
+    {
+      "i": 3,
+      "p": "Chưa có bước nào ngắt mạng thật để thấy lịch sử còn trên máy — nay bài chấm trên bản chạy có bước ấy."
+    },
+    {
+      "i": 4,
+      "p": "Chưa có bước nào bấm nút chia sẻ thật — nay bài chấm bấm và ghi lỗi nếu có."
+    }
+  ],
+  "scope_plain": "Sáu việc để hàng khác, mỗi việc một dòng:",
+  "decisions_plain": [],
+  "analyst_plain": ""
+}

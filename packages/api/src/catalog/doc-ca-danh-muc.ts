@@ -25,6 +25,9 @@ const Unit = z.object({
   livingArea: z.number().nullable(),
   bedroomsTotal: z.number().nullable(),
   directionFaces: z.string().nullable(),
+  // Hàng 17: hồ sơ căn hiện loại hình — lớp công khai của danh mục, không phải lớp nguồn.
+  propertyType: z.string(),
+  propertySubType: z.string(),
 });
 const Catalog = z
   .object({
@@ -57,6 +60,8 @@ function chepKhuon(catalog: CatalogData): z.infer<typeof Catalog> {
           livingArea: u.livingArea,
           bedroomsTotal: u.bedroomsTotal,
           directionFaces: u.directionFaces,
+          propertyType: u.propertyType,
+          propertySubType: u.propertySubType,
         })),
       })),
     })),

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ba lối · Cột hồ sơ căn</title>
+<style>
+  :root { --bg:#fafafa; --fg:#171717; --muted:#737373; --line:#e5e5e5; --card:#fff; --pin:#ecfdf5; --pin-line:#10b981; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0a0a0a; --fg:#fafafa; --muted:#a3a3a3; --line:#262626; --card:#171717; --pin:#052e1c; --pin-line:#34d399; } }
+  body { margin:0; padding:24px 16px; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width:1500px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+  h1 { font-size:22px; margin:0; } p { margin:0; color:var(--muted); }
+  .khuyen { border:1px solid var(--pin-line); background:var(--pin); border-radius:10px; padding:12px 14px; color:var(--fg); }
+  .luoi { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+  @media (max-width: 900px) { .luoi { grid-template-columns:1fr; } }
+  section { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:10px; }
+  section.chon { border-color:var(--pin-line); box-shadow:0 0 0 2px var(--pin-line); }
+  h2 { font-size:17px; margin:0; } .nhan { font-size:12px; color:var(--muted); }
+  img { width:100%; height:auto; border:1px solid var(--line); border-radius:6px; display:block; }
+  .anh { display:grid; grid-template-columns:3fr 1fr; gap:8px; align-items:start; }
+  dl { margin:0; display:grid; grid-template-columns:5.5rem 1fr; gap:4px 8px; font-size:14px; } dt { color:var(--muted); } dd { margin:0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Cột hồ sơ căn — ba lối (hàng 17)</h1>
+  <p>Cùng dữ liệu mẫu, cùng khổ 1440 và 375. Bảng bên trái là dòng giả, chỉ để thấy cột phải đứng cạnh bảng. Bản chạy:
+    /proto/cot-ho-so-can?loi=… trên máy dev dãy H.</p>
+  <div class="khuyen"><strong>Máy khuyên: ReUI.</strong> Đúng khối đích đã chọn cho Hồ sơ căn, không phải tự ghép; giá và
+    mức đủ thấy đầu tiên, lịch sử trả giá cùng một lần cuộn — đầu chủ gọi chủ nhà cần thấy cả hai cùng lúc.</div>
+  <div class="luoi">
+    <section>
+      <h2>Trong kho</h2>
+      <span class="nhan">Khuôn Cài đặt sàn: mỗi mục một khung có tiêu đề</span>
+      <div class="anh"><img src="trong-kho-1440.png" alt="Trong kho, khổ 1440"><img src="trong-kho-375.png" alt="Trong kho, khổ 375"></div>
+      <dl><dt>Động cơ</dt><dd>Đã có trong kho, quen mắt với Cài đặt sàn.</dd>
+        <dt>Đánh đổi</dt><dd>Bốn khung chồng ăn chỗ; lịch sử rơi xuống đáy, phải cuộn mới thấy.</dd></dl>
+    </section>
+    <section class="chon">
+      <h2>ReUI · khuyên</h2>
+      <span class="nhan">solution-crm-4 chuyển thành cột: giá + mức đủ, trường chính, dòng thời gian</span>
+      <div class="anh"><img src="reui-1440.png" alt="ReUI, khổ 1440"><img src="reui-375.png" alt="ReUI, khổ 375"></div>
+      <dl><dt>Động cơ</dt><dd>Khối đích đã chốt; giá, mức đủ và lịch sử đọc trong một cuộn.</dd>
+        <dt>Đánh đổi</dt><dd>Khối gốc là ngăn phủ — phải đổi thành cột chia đôi; dài hơn Vẽ mới.</dd></dl>
+    </section>
+    <section>
+      <h2>Vẽ mới</h2>
+      <span class="nhan">Ghép khung + ba ngăn: Căn · Lần rao · Lịch sử</span>
+      <div class="anh"><img src="ve-moi-1440.png" alt="Vẽ mới, khổ 1440"><img src="ve-moi-375.png" alt="Vẽ mới, khổ 375"></div>
+      <dl><dt>Động cơ</dt><dd>Gọn nhất, không cuộn.</dd>
+        <dt>Đánh đổi</dt><dd>Lịch sử và lần rao nằm sau một chạm; tự ghép nên phải ghi «Chỗ hở» kèm hạn xem lại.</dd></dl>
+    </section>
+  </div>
+  <section>
+    <h2>Báo sai thông tin căn (chung cho ba lối)</h2>
+    <span class="nhan">Theo khuyến nghị Hỏi-1: soạn lời báo rồi chép và mở bảng chia sẻ của thiết bị</span>
+    <img src="bao-sai-1440.png" alt="Bảng soạn báo sai, khổ 1440">
+  </section>
+</main>
+</body>
+</html>
