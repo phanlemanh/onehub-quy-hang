@@ -1,0 +1,55 @@
+schema_version: 1
+feature_slug: bat-rang-buoc-ban-ma
+# Lệnh máy `executors.test.isolation` (migrate rồi bộ cách ly + test-db, cần DATABASE_URL tới Postgres dãy G, cổng 5564).
+# exit 0 không đủ: người chấm đối chiếu từng tên ca nêu trong `expected` trong dòng reporter — có mặt, «ok», không SKIP
+# (trừ đúng ca nêu trong E3 là được phép bỏ qua khi vai không phải superuser — trên Postgres dãy vai là superuser nên
+# ca ấy PHẢI chạy, không SKIP).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bật ràng buộc: bảng sạch thì tệp 013 bật hẳn, chạy lại không đổi» (packages/db/tests/bat-rang-buoc.test.mjs) có mặt và ok — trong giao dịch hoàn lại: gỡ rồi dựng lại hai ràng buộc NOT VALID, assert convalidated false cho cả hai (đối chứng: trạng thái trước đúng là chưa bật), đọc và chạy NGUYÊN VĂN nội dung tệp 013 từ đĩa, assert convalidated true cho cả hai và số notice nhận qua sự kiện 'notice' của client pg bằng 0; chạy tệp lần hai không ném, vẫn true, số notice vẫn 0. Chiều đỏ: tệp 013 không validate (hay validate sai tên ràng buộc) → ca đỏ nêu tên ràng buộc còn false; tệp nhắc cả bảng sạch → ca đỏ nêu số notice."
+    paths: [packages/db/migrations/013_bat_rang_buoc_ban_ma.sql, packages/db/tests/bat-rang-buoc.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bật ràng buộc: bảng còn số rõ thì bỏ qua, bảng kia vẫn bật» có mặt và ok — hai lượt viết tay đếm được bằng đúng 2 (assert số lượt): (a) cấy một dòng listing_owners số rõ '0900000061', leads sạch; (b) cấy một lead số rõ '0900000062', listing_owners sạch. Mỗi lượt: chạy tệp 013 không ném; ràng buộc bảng bẩn convalidated false, bảng sạch true; dòng số rõ còn nguyên giá trị; tổng notice của lượt bằng đúng 1, cho bảng bẩn, chứa tên bảng, chữ '1 dòng', tên ràng buộc và 'packages/api/van-hanh/ma-hoa-lai.ts', KHÔNG chứa tên bảng sạch và KHÔNG chứa bốn dạng của số mẫu; rồi set owner_phone null cho dòng ấy (kèm bản mã đúng khuôn nếu ràng buộc khác đòi), chạy lại tệp 013 → bảng ấy true, không notice. Chiều đỏ: validate thẳng không điều kiện → ca ném 'check constraint … is violated'; xét chung hai bảng → bảng sạch giữ false; notice in số → ca đỏ nêu dạng bị bắt."
+    paths: [packages/db/migrations/013_bat_rang_buoc_ban_ma.sql, packages/db/tests/bat-rang-buoc.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bật ràng buộc: bảng không còn số rõ thì ràng buộc phải đã bật» có mặt và ok — chỉ đọc, không cấy gì: với từng bảng đếm owner_phone is not null, 0 ⇒ assert convalidated true, >0 ⇒ assert false; thông điệp ghim nêu tên bảng, số đếm và trạng thái. Hàm kiểm của ca được đo hai chiều bằng chính các ca E1/E2 (trong giao dịch của chúng, sau khi dựng NOT VALID trên bảng sạch, gọi hàm kiểm → báo đỏ đúng tên ràng buộc) — ca không hằng đúng. Ca E1/E2 khai điều kiện chạy: chỉ khi rolsuper của current_user là true, ngược lại t.skip với lý do 'gỡ và dựng ràng buộc lấy khoá ACCESS EXCLUSIVE — không chạy trên vai không phải superuser (bản thật)'; trên Postgres dãy hai ca ấy chạy (không SKIP). Đối chứng nhánh bỏ qua: hàm quyết định chạy-hay-bỏ được gọi với rolsuper false trả 'bỏ' kèm đúng lý do ấy."
+    paths: [packages/db/migrations/013_bat_rang_buoc_ban_ma.sql, packages/db/tests/bat-rang-buoc.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.kiem_ci
+    expected: "exit 0 và dòng 'KẾT: ĐẠT' — job deploy chạy npm run db:migrate trước test:isolation trước VERCEL_DEPLOY_HOOK, DATABASE_URL lấy từ PROD_DATABASE_URL; vế «bộ cách ly của deploy gồm tệp bat-rang-buoc.test.mjs» được E3 đo qua glob tests/*.test.mjs của script test:isolation."
+    paths: [.github/workflows/ci.yml, packages/db/package.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: judgment
+    question: "Đọc ADR-0013 và docs/product/tham-chieu.md. Người vận hành chỉ có hai tệp này có biết: (1) bảng không còn số rõ thì migration 013 tự bật hẳn ràng buộc khi deploy; (2) bảng còn số rõ thì migration bỏ qua, phải chạy packages/api/van-hanh/ma-hoa-lai.ts và lệnh ấy tự bật; (3) lời nhắc của migration in ra ở đầu ra npm run db:migrate, tức log job deploy; và §12 Tham chiếu có dòng ngày 01/11 trỏ tệp 013 không? PASS khi đủ bốn ý; FAIL nêu ý thiếu."
+    inputs: [docs/adr/0013-ma-hoa-so-chu.md, docs/product/tham-chieu.md]
+    expected: "PASS — đủ bốn ý."
+    paths: [docs/adr/0013-ma-hoa-so-chu.md, docs/product/tham-chieu.md]
+    evidence_required: [run_id, verdict, judges]
+
+  - id: E6
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bật ràng buộc: lời nhắc của 013 hiện ở đầu ra npm run db:migrate» (packages/api/test-db/bat-rang-buoc-migrate.test.ts) có mặt và ok — tạo một cơ sở dữ liệu tạm, spawn packages/db/scripts/migrate.mjs thật với DATABASE_URL trỏ nó: lần một mọi tệp áp, stdout chứa 'đã áp 013_bat_rang_buoc_ban_ma.sql' và KHÔNG chứa 'ma-hoa-lai' (đối chứng: bảng sạch không nhắc); rồi bằng vai chủ trên cơ sở dữ liệu tạm: xoá dòng 013 khỏi schema_migrations, gỡ listing_owners_phone_chi_ban_ma, cấy một chủ nhà số rõ '0900000063', dựng lại NOT VALID; spawn migrate.mjs lần hai: mã thoát 0, stdout chứa '013_bat_rang_buoc_ban_ma.sql', 'listing_owners', '1 dòng', 'listing_owners_phone_chi_ban_ma' và 'packages/api/van-hanh/ma-hoa-lai.ts', không chứa bốn dạng của số mẫu; cuối ca xoá cơ sở dữ liệu tạm. Chiều đỏ: migrate.mjs không lắng nghe notice → stdout lần hai thiếu 'ma-hoa-lai', ca đỏ nêu stdout thực."
+    paths: [packages/db/scripts/migrate.mjs, packages/db/migrations/013_bat_rang_buoc_ban_ma.sql, packages/api/test-db/bat-rang-buoc-migrate.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
