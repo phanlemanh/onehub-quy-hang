@@ -1,0 +1,20 @@
+{
+  "feature_plain": "Vá hai lỗ của hàng 85: chứng minh sàn này không đọc hay ghi chéo được dữ liệu nối lead với hàng của sàn khác, và hàng tạo từ lead báo «chưa có chủ nhà» thay vì hiện tên chủ nhà trống.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ có bài kiểm tự động: người sàn khác không đọc, không chèn được dữ liệu nối lead với hàng của sàn này, kể cả trỏ chéo sang lead hay hàng của sàn này; người trong sàn vẫn đọc và ghi đúng phần của mình."},
+    {"id": "AC-2", "p": "Sẽ báo «chưa có chủ nhà» khi đầu chủ hay trưởng nhóm xem chủ nhà hoặc bấm «Mở số» trên hàng vừa tạo từ lead mà chưa ghi chủ nhà; ghi chủ nhà có tên xong thì đọc ra đúng tên, liên hệ của lead vẫn gắn."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG làm cơ sở dữ liệu tự chặn việc tạo hàng từ lead của người khác — anh đã ghi giới hạn này ở hàng 85."},
+    {"id": "OOS-2", "p": "KHÔNG sửa nhãn Lead/Liên hệ đổi theo người xem và ba chỗ bài kiểm mỏng của hàng 85 — đã ghi giới hạn."},
+    {"id": "OOS-3", "p": "KHÔNG dời tên và số chủ nhà sang liên hệ — việc sau."},
+    {"id": "OOS-4", "p": "KHÔNG có màn chủ nhà hay màn liên hệ — hàng 86."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy định tự quyết cách báo «chưa có chủ nhà» mà bỏ sót lối tự điền tên từ liên hệ của lead — đã chuyển thành câu hỏi cho anh (Hỏi-1)."},
+    {"i": 1, "p": "Căn cứ giữ dòng chủ nhà chưa tên trích sai chỗ — đã trích đúng lời hứa đã ký của hàng 85 («chủ nhà là liên hệ của lead») và kiểm chỉ một chỗ trong mã đọc tên chủ nhà."},
+    {"i": 2, "p": "Việc «Mở số» vẫn báo chưa có chủ nhà chưa được ghi là lựa chọn — đã ghi, theo hệ quả hàng 85 đã khai."},
+    {"i": 3, "p": "Bài kiểm thiếu ô trưởng nhóm bấm «Mở số» — đã thêm, đủ bốn ô."},
+    {"i": 4, "p": "Bài kiểm cách ly chưa đo việc sàn khác trỏ chéo sang lead hay hàng của sàn này — đã thêm hai dòng; ràng buộc sẵn có của cơ sở dữ liệu chặn việc này."}
+  ]
+}

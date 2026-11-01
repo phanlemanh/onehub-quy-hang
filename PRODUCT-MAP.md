@@ -10,7 +10,7 @@ flowchart TD
   GD --> B["Sắp mở vòng<br/>7 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
-  B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
+  B --> CD["Chờ duyệt phạm vi<br/>1 việc"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>7 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>36 việc"] --> GG{"Cổng Giá trị"}
@@ -31,6 +31,10 @@ flowchart TD
 - Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình — lead mới, cần gọi lại, nên gọi ép giá, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng đợi, ghi kết quả gọi một chạm (`hom-nay-dau-chu`)
 - Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ thiếu (`san-sang-ban`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
+
+## Chờ duyệt phạm vi
+
+- Vá hàng 85 «Liên hệ» — ca cách ly cho bảng nối lead với hàng, và hàng tạo từ lead báo «chưa có chủ nhà» thay vì trả tên trống (`va-lien-he`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
