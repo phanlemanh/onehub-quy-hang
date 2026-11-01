@@ -1,0 +1,21 @@
+schema_version: 1
+feature_slug: chuyen-khong-ket-khoa
+# Lệnh máy: `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy L, cổng 5563).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/lien-he-chuyen.test.ts ca «liên hệ: bài chuyển không kẹt khoá với bài gỡ ràng buộc chạy song song» có mặt và ok — đối chứng trước: sàn có liên hệ; một giao dịch giữ khoá access exclusive bảng listing_owners (lock_timeout 5s), bài chuyển (veTruoc016 rồi chuyen) chạy, ca chờ tới khi pg_locks có khoá chưa cấp trên listing_owners (thế kẹt dựng tất định, thông điệp ghim nếu không dựng được), giao dịch ấy xin access exclusive bảng leads: cả hai bên không lỗi (hai assert riêng, thông điệp «kẹt khoá (bên gỡ ràng buộc)» và «kẹt khoá (bài chuyển)»); sau đó đếm lead của sàn có contact_id null bằng 0 và mọi liên hệ của sàn là mã mới, không trùng mã trước khi chuyển (bài chuyển chạy thật, không phải dữ liệu quay lui). Chiều đỏ: bỏ hai lệnh khoá đầu giao dịch trong theoThuTuKhoa (giữ thứ tự câu cũ lead trước chủ nhà) → ca đỏ với «kẹt khoá (bài chuyển): error: deadlock detected», tất định (10/10 lần ở S3)."
+    paths: [packages/api/test-db/lien-he-chuyen.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/lien-he-chuyen.test.ts hai ca «liên hệ: chuyển dữ liệu cũ» và «liên hệ: chuyển trên sàn không có dữ liệu» có mặt và ok."
+    paths: [packages/api/test-db/lien-he-chuyen.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -1,0 +1,11 @@
+{
+  "feature_plain": "Bài kiểm chuyển dữ liệu cũ của hàng 85 thôi kẹt khoá với các bài kiểm khác chạy cùng lúc, nên ghim lại của dãy khác không còn đỏ oan.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ có bài kiểm dựng đúng thế kẹt đã gặp và chứng bài chuyển dữ liệu chạy trọn mà không kẹt khoá."},
+    {"id": "AC-2", "p": "Sẽ giữ hai bài kiểm chuyển dữ liệu cũ của hàng 85 có mặt và xanh."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG đổi hàm chuyển của cơ sở dữ liệu — nó chỉ chạy một lần lúc nâng cấp."},
+    {"id": "OOS-2", "p": "KHÔNG chạy cả bộ kiểm tuần tự hay sửa bài kiểm của hồ sơ khác."}
+  ]
+}
