@@ -5,7 +5,7 @@ import type pg from "pg";
 import { createApi } from "../src/app";
 import { SAMPLE_PACK } from "../src/catalog/sample";
 import { runLeadTick } from "../src/jobs/lead-tick";
-import { appPool, BASE_URL, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { appPool, BASE_URL, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "./helpers";
 
 const { auth, sent } = makeAuth();
 export const app = createApi({ appPool, identityPool, auth });
@@ -79,6 +79,8 @@ export const nam = (so: string, toa: string, can?: string) => ({
 });
 /** Số mẫu chưa dùng trong sàn. */
 export const soMoi = (san: San) => `0900 000 0${san.so++}`;
+/** Mã căn mẫu chưa dùng trong sàn — hàng 23: hàng không mã căn không lên Đang bán, lead sẽ lên bảng phải mang mã. */
+export const maMoi = (san: San) => `M-${san.so++}.01`;
 
 export async function nhap(san: San, body: unknown, ai = "ts"): Promise<{ id: string; outcome: string }> {
   const r = await send("POST", "/api/v1/leads", body, san.nguoi[ai]!.cookie);
@@ -121,6 +123,7 @@ export async function lenBang(san: San, k: string, hangId: string): Promise<Date
   };
   await lenh({ type: "price_changed", payload: { listPrice: 3_200_000_000, feeInclusion: "included" } });
   await lenh({ type: "details_changed", payload: { legalStatus: "pink_book", occupantType: "vacant" } });
+  await themAnhThat(hangId); // hàng 23: vào Đang bán cần ảnh thật
   await lenh({ type: "status_changed", payload: { to: "Active" } });
   return (
     await appPool.query<{ occurred_at: Date }>(

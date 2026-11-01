@@ -6,7 +6,7 @@ import { after, test } from "node:test";
 import { NGAY_CO_THAT, NGAY_KHONG_CO_THAT_CA } from "../../../core/src/listing/ngay-ca.fixture";
 import { createApi } from "../../src/app";
 import { API_ERRORS } from "../../src/errors";
-import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN } from "../helpers";
+import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "../helpers";
 
 after(cleanup);
 
@@ -71,6 +71,7 @@ test("chốt bán với ngày không có thật: 400 nêu closeDate, không ghi"
   // Đưa hàng tới «Đang bán» — chỗ người thật chốt bán.
   assert.equal((await lenh(cookie, id, { type: "price_changed", payload: { listPrice: 3_500_000_000, feeInclusion: "excluded" }, expectedVersion: 1 })).status, 200);
   assert.equal((await lenh(cookie, id, { type: "details_changed", payload: { legalStatus: "pink_book", occupantType: "vacant" }, expectedVersion: 2 })).status, 200);
+  await themAnhThat(id); // hàng 23: vào Đang bán cần ảnh thật
   assert.equal((await lenh(cookie, id, { type: "status_changed", payload: { to: "Active" }, expectedVersion: 3 })).status, 200);
 
   const demSuKien = async () => (await appPool.query<{ n: number }>("select count(*)::int n from listing_events where listing_id = $1", [id])).rows[0]!.n;

@@ -16,6 +16,7 @@ type Helpers = {
   createLoneUser(email: string): Promise<string>;
   cleanup(): Promise<void>;
   cookieOf(res: Response): string;
+  themAnhThat(listingId: string): Promise<void>;
 };
 export const H = h as unknown as Helpers;
 
@@ -117,6 +118,7 @@ export async function taoCan(n: Nguoi, dangBan: boolean, companyId?: string): Pr
   const id = r.body.id as string;
   if (!dangBan) return id;
   let v = r.body.version as number;
+  await H.themAnhThat(id); // hàng 23: vào Đang bán cần ảnh thật
   for (const [type, payload] of [
     ["price_changed", { listPrice: 3_500_000_000, feeInclusion: "excluded" }],
     ["details_changed", { legalStatus: "pink_book", occupantType: "vacant" }],

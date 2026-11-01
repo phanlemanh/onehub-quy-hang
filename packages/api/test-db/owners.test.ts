@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { findSourceLeaks } from "@quy-hang/core/access";
 import { createApi } from "../src/app";
-import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
+import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN, themAnhThat } from "./helpers";
 
 after(cleanup);
 
@@ -62,6 +62,7 @@ const taoHangChiToi = async (cookie: string) => {
 /** Hàng đã lên «Toàn sàn» (lần đầu Đang bán), để mọi thành viên của sàn đọc được hàng — nguồn chỉ thấy trên hàng đọc được. */
 const taoHang = async (cookie: string) => {
   let h = await taoHangChiToi(cookie);
+  await themAnhThat(h.id); // hàng 23: vào Đang bán cần ảnh thật
   for (const [type, payload] of [
     ["price_changed", { listPrice: 3_500_000_000, feeInclusion: "excluded" }],
     ["details_changed", { legalStatus: "pink_book", occupantType: "vacant" }],

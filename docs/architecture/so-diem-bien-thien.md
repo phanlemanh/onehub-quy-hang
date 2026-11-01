@@ -90,6 +90,12 @@ nội bộ hay nguồn ra trang khách (bất biến 2, 4) — bộ kiểm rò r
 Bật / tắt «Xử lý bằng AI» **không phải** cấu hình: đó là thoả thuận `ai_processing` (ADR-0011 quyết định 2), có nhật ký
 và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 
+### A7. Lên bảng — luật 17, hàng 23
+
+| # | Khoá | Điểm | Kiểu | Mặc định | Khoảng | Ai đổi | Ghi đè | Hiệu lực | Lớp | Tình trạng | Nguồn | Màn |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 33 | `listing.ready_min_real_photos` | Số ảnh thật tối thiểu (ngăn Gửi được, không ảnh mẫu, chưa xoá) để căn vào Đang bán | `int` | 1 | 1–20 (sàn nâng được, không bỏ được — giữ nghĩa K7) | Quản trị sàn | — | lần đổi trạng thái kế | company_internal | Mở | Luật 17; hàng 23 (giám sát đồng ý 01/11); MLS mỗi nơi một luật (Đối chiếu ngành §7); lõi `listing/san-sang.ts`, máy chủ đọc khi đổi sang Đang bán | chưa có |
+
 ## B. Ứng viên — chưa mở, chờ điều kiện
 
 | # | Điểm | Vì sao chưa | Mở lại khi | Chờ |
@@ -110,7 +116,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K4 | Ai thấy nguồn: đầu chủ giữ căn và trưởng nhóm; quản trị sàn không tự thấy | Bất biến 2 kề; quyền | ADR-0010; `access/bang-xem-nguon.json` |
 | K5 | Trục ai thấy hàng: «Chỉ tôi» → «Toàn sàn» khi lần đầu Đang bán | Quyền, lớp khó đảo; «Nhóm» chưa có | §6; hàng 12; `visibility/index.ts` |
 | K6 | Mức đủ thông tin: năm mục, theo loại hình | Danh sách hỏi chung; so được giữa sàn | ADR-0008 quyết định 5; ADR-0016 quyết định 2 |
-| K7 | Điều kiện tối thiểu vào Đang bán: giá kèm điều kiện phí, pháp lý, tình trạng sử dụng (ảnh thật khi có kho ảnh) | Nghĩa của «Đang bán» trên trang khách | Luật 17; ADR-0008 Hỏi-1; `missingFor` |
+| K7 | Điều kiện tối thiểu vào Đang bán: mã căn, giá kèm điều kiện phí (thay cho giá về tay tới hàng 28), ít nhất một ảnh thật, pháp lý, tình trạng sử dụng; số ảnh thật tối thiểu sàn nâng được ở #33 | Nghĩa của «Đang bán» trên trang khách | Luật 17; ADR-0008 Hỏi-1; hàng 23; `missingFor` |
 | K8 | Mỗi căn ở đúng một hàng đợi; ép giá thắng gọi lại | Hôm nay đọc được | Luật 18 |
 | K9 | Sửa giá hay trạng thái là vừa xác nhận với chủ nhà | Tắt theo từng lệnh, không theo sàn | Luật 9; ADR-0008 quyết định 5; ADR-0011 quyết định 8 |
 | K10 | Cách đọc mã căn của khu | Dữ liệu của danh mục dùng chung, không của sàn | Hàng 9; `catalog/code-rule.ts` |
@@ -126,14 +132,14 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 
 ## Đếm
 
-- **28 điểm** ở phần A (#1–#27 và #3a): 26 «Mở» (Tham chiếu, ADR hay lời chủ kho đã chốt là mặc định của sàn), 2
-  «Đề xuất» (#14, #20). Cột «Khoảng» là đề xuất của phiên này, chốt ở Cổng Phạm vi của hàng màn. 6 trong 28 là đối tượng
-  cấu hình có bảng riêng (`map`: #19, #21, #22, #25, #26, #27); 22 là giá trị đơn.
+- **29 điểm** ở phần A (#1–#27, #3a và #33 của hàng 23): 27 «Mở» (Tham chiếu, ADR hay lời chủ kho đã chốt là mặc định của sàn), 2
+  «Đề xuất» (#14, #20). Cột «Khoảng» là đề xuất của phiên này, chốt ở Cổng Phạm vi của hàng màn. 6 trong 29 là đối tượng
+  cấu hình có bảng riêng (`map`: #19, #21, #22, #25, #26, #27); 23 là giá trị đơn.
 - **Đã có trong mã hay nhánh**: 3 điểm (#1, #2 ở nhánh hàng 25; #4 ở `main`) — đều khai một chỗ, chưa đọc theo sàn.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
-- **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G), điều kiện K7 (hàng 23, dãy H) — chưa có nhánh mã lúc kiểm.
+- **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
 - **5 ứng viên** ở phần B, **19 điều khoá** ở phần C.
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
-  hay 48 gom vào.
+  hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.

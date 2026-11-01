@@ -115,3 +115,17 @@ export function recordingPool(pool: pg.Pool): { pool: pg.Pool; records: QueryRec
   };
   return { pool: wrapped as unknown as pg.Pool, records };
 }
+
+/**
+ * Thêm một ảnh thật (ngăn Gửi được, không ảnh mẫu) cho căn của hàng — bài kiểm đưa hàng lên Đang bán cần nó từ hàng 23
+ * (luật lõi: vào Đang bán phải có ảnh thật). Ghi thẳng bằng kết nối chủ; byte ảnh không cần cho phép đếm.
+ */
+export async function themAnhThat(listingId: string): Promise<void> {
+  const r = await appPool.query(
+    `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+     select gen_random_uuid(), company_id, building_name, unit_number, 'shareable', 'image/jpeg', 1000, 10, 10, 'bai-kiem'
+     from listings where id = $1 and unit_number is not null`,
+    [listingId],
+  );
+  if (r.rowCount !== 1) throw new Error(`themAnhThat: hàng ${listingId} không có hay không có mã căn`);
+}
