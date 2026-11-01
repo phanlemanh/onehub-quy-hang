@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 0d08e8fec259ec8d69ac9c1a6c792b3df5ec5edc
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: nhan-danh-muc-invest
