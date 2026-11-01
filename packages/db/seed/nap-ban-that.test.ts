@@ -403,7 +403,7 @@ test("lien-he: chủ nhà và lead mẫu thành liên hệ, nạp lại không �
   // Lead mang số của một chủ nhà gắn đúng liên hệ ấy; số mới thành liên hệ riêng.
   const soChu = new Set(GOI.chuNha.map((c) => so(c.soDienThoai)));
   const soLeadMoi = new Set(GOI.lead.map((l) => so(l.soDienThoai)).filter((s) => !soChu.has(s)));
-  const [{ n: tong }] = await q<{ n: number }>("select count(*)::int n from contacts where company_id = $1");
+  const tong = (await q<{ n: number }>("select count(*)::int n from contacts where company_id = $1"))[0]!.n;
   assert.equal(tong, GOI.chuNha.length + soLeadMoi.size);
   const a = await chup();
   assert.deepEqual((await nap()).moi, { hang: 0, chuNha: 0, lead: 0 });
