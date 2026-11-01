@@ -1,0 +1,63 @@
+# Nút nạp và gỡ dữ liệu mẫu trên bản thật (hàng 87, hồ sơ nap-mau-ban-that). Chủ kho bấm tay ở Actions → «Nạp dữ liệu
+# mẫu» → Run workflow trên main. Cần secret OWNER_PHONE_KEY ở environment production (Hỏi-1; ADR-0013 §5) — environment
+# ấy giữ khoá cơ sở dữ liệu thật nên chỉ nhánh main chạy được. Tham số chỉ đi qua env, không chèn thẳng vào lệnh.
+name: Nạp dữ liệu mẫu
+
+on:
+  workflow_dispatch:
+    inputs:
+      viec:
+        description: "nap = nạp hay chạy lại; go = gỡ sàn mẫu"
+        type: choice
+        options: [nap, go]
+        default: nap
+      email:
+        description: "Email tài khoản chủ kho (chỉ cho nap) — không ghi vào kho, được che trong log"
+        type: string
+        required: false
+      xac_nhan:
+        description: "Chỉ cho go: gõ đúng [Mẫu] Sàn thử"
+        type: string
+        required: false
+
+jobs:
+  nap-mau:
+    name: nap-mau
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: nap-mau-production
+      cancel-in-progress: false
+    env:
+      DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+      OWNER_PHONE_KEY: ${{ secrets.OWNER_PHONE_KEY }}
+      NODE_ENV: production
+      VIEC: ${{ inputs.viec }}
+      XAC_NHAN: ${{ inputs.xac_nhan }}
+    steps:
+      - name: Chỉ nhánh main
+        run: |
+          [ "$GITHUB_REF" = "refs/heads/main" ] || { echo "Nút chỉ chạy từ nhánh main"; exit 1; }
+      # Email đọc từ tệp sự kiện, che rồi mới vào môi trường: biến môi trường của job hiện nguyên văn ở đầu log mỗi bước.
+      - name: Che email
+        run: |
+          EMAIL=$(jq -r '.inputs.email // ""' "$GITHUB_EVENT_PATH")
+          if [ -n "$EMAIL" ]; then echo "::add-mask::$EMAIL"; fi
+          echo "EMAIL=$EMAIL" >> "$GITHUB_ENV"
+      - name: Xác nhận gỡ
+        if: ${{ inputs.viec == 'go' }}
+        run: |
+          [ "$XAC_NHAN" = "[Mẫu] Sàn thử" ] || { echo "Gỡ cần gõ đúng tên sàn mẫu ở ô xac_nhan"; exit 1; }
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Chạy bộ nạp
+        run: |
+          if [ "$VIEC" = "go" ]; then
+            node --import tsx packages/db/seed/nap-ban-that.ts --go
+          else
+            node --import tsx packages/db/seed/nap-ban-that.ts --nap --email "$EMAIL"
+          fi
