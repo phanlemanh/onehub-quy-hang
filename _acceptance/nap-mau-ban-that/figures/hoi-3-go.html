@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hỏi-3 nút gỡ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75; --color-accent:#eb6c36;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Lora',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+    body { font-family:var(--font-sans); background:var(--color-paper); color:var(--color-ink); min-height:100vh;
+      display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .frame { max-width:1100px; width:100%; }
+    .eyebrow { font-family:var(--font-mono); font-size:0.66rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-muted); margin-bottom:0.5rem; }
+    h1 { font-family:var(--font-serif); font-size:clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.25; margin-bottom:0.35rem; }
+    .subtitle { color:var(--color-muted); font-size:0.9rem; line-height:1.5; margin-bottom:1.25rem; }
+    svg { width:100%; display:block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Lưu đồ · Hỏi-3 · AC-6</p>
+    <h1>Nút gỡ nhận ra sàn mẫu thế nào trước khi xoá?</h1>
+    <p class="subtitle">Gỡ là xoá dữ liệu trên bản thật, nên nút chỉ xoá khi nhận đúng một sàn mẫu. Tên một mình không đủ: sàn thật có thể đặt trùng tên.</p>
+    <svg viewBox="0 0 968 592" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Hỏi-3 nút gỡ</title>
+      <desc id="d">Lưu đồ nút gỡ. Bấm nút gỡ, gõ đúng tên sàn mẫu. Bước 1: tìm các sàn tên [Mẫu] Sàn thử. Bước 2, máy khuyên: chỉ giữ sàn có quản trị mẫu quan-tri@mau.quy-hang.test là thành viên; sàn thật trùng tên bị loại ở bước này, không đổi một dòng. Đếm số sàn còn lại: 0 thì báo không có gì để gỡ, không xoá; 1 thì xoá sàn ấy theo mã sàn cùng tài khoản miền mẫu; từ 2 trở lên thì từ chối, không xoá.</desc>
+      <defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="968" height="592" fill="#f5f5f5"/>
+<path d="M 484 64 L 484 94" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 484 152 L 484 182" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 484 248 L 484 278" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 644 216 L 702 216" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<rect x="656" y="196" width="32" height="12" rx="2" fill="#f5f5f5"/>
+<text x="672" y="205" fill="#5c6378" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LOẠI</text>
+<path d="M 404 320 L 192 320 Q 184 320 184 328 L 184 406" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="274" y="300" width="44" height="12" rx="2" fill="#f5f5f5"/>
+<text x="296" y="309" fill="#5c6378" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">0 SÀN</text>
+<path d="M 484 360 L 484 406" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="492" y="372" width="44" height="12" rx="2" fill="#f5f5f5"/>
+<text x="496" y="381" fill="#5c6378" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.06em">1 SÀN</text>
+<path d="M 564 320 L 776 320 Q 784 320 784 328 L 784 406" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="648" y="300" width="48" height="12" rx="2" fill="#f5f5f5"/>
+<text x="672" y="309" fill="#5c6378" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">≥2 SÀN</text>
+<rect x="384" y="24" width="200" height="40" rx="20" fill="#f5f5f5"/><rect x="384" y="24" width="200" height="40" rx="20" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="484" y="48" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bấm nút gỡ, gõ đúng tên sàn mẫu</text>
+<rect x="324" y="96" width="320" height="56" rx="6" fill="#f5f5f5"/><rect x="324" y="96" width="320" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="636" y="112" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">BƯỚC 1</text>
+<text x="484" y="128" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tìm các sàn tên «[Mẫu] Sàn thử»</text>
+<rect x="324" y="184" width="320" height="64" rx="6" fill="#f5f5f5"/><rect x="324" y="184" width="320" height="64" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="336" y="200" fill="#ba4513" font-size="8" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">BƯỚC 2 · MÁY KHUYÊN</text>
+<text x="484" y="220" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chỉ giữ sàn có quản trị mẫu là thành viên</text>
+<text x="484" y="238" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="middle">quan-tri@mau.quy-hang.test</text>
+<rect x="704" y="184" width="240" height="64" rx="6" fill="#f5f5f5"/><rect x="704" y="184" width="240" height="64" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="824" y="216" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Sàn thật trùng tên</text>
+<text x="824" y="234" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">bị loại ở bước này — không đổi một dòng</text>
+<polygon points="484,280 564,320 484,360 404,320" fill="#f5f5f5"/><polygon points="484,280 564,320 484,360 404,320" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="484" y="317" fill="#2d3142" font-size="10" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Còn lại</text>
+<text x="484" y="331" fill="#2d3142" font-size="10" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">bao nhiêu sàn?</text>
+<rect x="64" y="408" width="240" height="72" rx="6" fill="#f5f5f5"/><rect x="64" y="408" width="240" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="184" y="440" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Không có gì để gỡ</text>
+<text x="184" y="458" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">báo «không có gì để gỡ»</text>
+<text x="184" y="472" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">không xoá gì</text>
+<rect x="364" y="408" width="240" height="72" rx="6" fill="#f5f5f5"/><rect x="364" y="408" width="240" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.4"/>
+<text x="596" y="424" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">AC-6</text>
+<text x="484" y="440" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Xoá đúng sàn ấy</text>
+<text x="484" y="458" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">theo mã sàn, cùng mọi dòng của sàn</text>
+<text x="484" y="472" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">và tài khoản miền mẫu</text>
+<rect x="664" y="408" width="240" height="72" rx="6" fill="#f5f5f5"/><rect x="664" y="408" width="240" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="784" y="440" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Từ chối gỡ</text>
+<text x="784" y="458" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">không xoá gì</text>
+<text x="784" y="472" fill="#4f5d75" font-size="9.5" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">báo để người xem lại</text>
+<text x="64" y="516" fill="#2d3142" font-size="11" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Ở mọi ngả, sàn thật không đổi một dòng; tài khoản chủ kho chỉ mất chỗ thành viên ở sàn mẫu.</text>
+<text x="64" y="536" fill="#4f5d75" font-size="13" font-weight="400" font-family="'Instrument Serif', serif" text-anchor="start" font-style="italic">Lối khác của Hỏi-3: nhận sàn mẫu theo mã sàn ghi lại sau lần nạp — chắc hơn, nhưng mất chỗ ghi ấy là không gỡ được bằng nút.</text>
+<line x1="8" y1="552" x2="960" y2="552" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="8" y="576" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">CHÚ GIẢI</text>
+<rect x="88" y="564" width="28" height="16" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="124" y="576" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Cách nhận sàn máy khuyên</text>
+<polygon points="304,564 316,572 304,580 292,572" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="324" y="576" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Chỗ rẽ</text>
+<line x1="392" y1="572" x2="420" y2="572" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="428" y="576" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Bị loại, không đụng tới</text>
+    </svg>
+  </main>
+</body>
+</html>

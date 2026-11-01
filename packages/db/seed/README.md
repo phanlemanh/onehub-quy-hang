@@ -25,10 +25,33 @@ DATABASE_URL=postgres://postgres:quyhang@localhost:5544/postgres node packages/d
 Chạy lại không đổi gì. `--xoa` xoá tài khoản email miền mẫu và sàn tên đúng «[Mẫu] Sàn thử» — không câu xoá nào thiếu
 một trong hai điều kiện ấy.
 
-Danh mục, hàng, chủ nhà, lead chưa có bảng: các hàng dựng bảng (8, 9–10, 11, 24) đọc `mau/du-lieu-mau.json` khi nạp.
+`nap.mjs` chỉ dựng phần nền. Hàng, chủ nhà, lead mẫu đi qua bộ nạp bản thật dưới đây.
+
+## Bản thật (hàng 87)
+
+`nap-ban-that.ts` nạp vào «[Mẫu] Sàn thử» thêm 40 hàng đủ sáu trạng thái, chủ nhà (số mã hoá bằng `OWNER_PHONE_KEY`),
+đầu chủ phụ trách, 12 lead (kết quả trùng do luật kiểm trùng tính) và tài khoản chủ kho với đủ mọi vai. Hàng, chủ nhà,
+lead đi qua hàm ghi của API dưới vai `quy_hang_app` — cả lần chạy một giao dịch. Danh mục 180 căn không ghi vào cơ sở dữ
+liệu: đường tra phục vụ danh mục mẫu ở mọi môi trường. Sàn mẫu = tên đúng CÙNG `quan-tri@mau.quy-hang.test` là thành
+viên; sàn thật trùng tên không bị nạp vào hay gỡ.
+
+```bash
+# Khoá thật bắt buộc (thiếu, sai dạng hay khoá dev thì thoát trước khi ghi). Không in email, số, khoá.
+node --import tsx packages/db/seed/nap-ban-that.ts --nap --email <email chủ kho>   # chạy lại không đổi gì
+node --import tsx packages/db/seed/nap-ban-that.ts --go                             # gỡ sàn mẫu + tài khoản miền mẫu
+```
+
+Trên bản thật chạy bằng nút, không chạy ở máy:
+
+1. Một lần: GitHub → Settings → Environments → `production` → thêm secret `OWNER_PHONE_KEY` (cùng giá trị Vercel
+   Production, chép từ trình quản lý mật khẩu) và đặt «Deployment branches» chỉ `main` (ADR-0013 §5).
+2. Actions → «Nạp dữ liệu mẫu» → Run workflow trên `main`, `viec: nap`, `email: <email của chủ kho>`.
+3. Đăng nhập bản thật, chọn «[Mẫu] Sàn thử».
+4. Gỡ: cùng nút, `viec: go`, `xac_nhan: [Mẫu] Sàn thử`.
 
 ## Kiểm
 
 ```bash
-node --test "packages/db/seed/*.test.mjs"   # cần python3; vắng DATABASE_URL thì dùng Postgres dãy T (5547)
+node --import tsx --test "packages/db/seed/*.test.mjs"   # cần python3; vắng DATABASE_URL thì dùng Postgres dãy T (5547)
+node --import tsx --test "packages/db/seed/*.test.ts"    # bộ nạp bản thật — cần DATABASE_URL tới Postgres đã áp migration
 ```
