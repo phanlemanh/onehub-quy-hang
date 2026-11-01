@@ -6,7 +6,7 @@
 /**
  * Bảng hàng trên máy tính (hàng 14) — chuyển thể `data-grid-view.tsx` của khối data-grid-editing-6 (ADR-0004, khối đích ở
  * `docs/design/vo-va-ia.md` §2): giữ lưới cuộn ảo, hàng lọc theo cột, chọn ô và chép; sửa trên ô ba cột Giá, Phí, Trạng
- * thái qua `cell-edit/` (hàng 15); bỏ dán, kéo điền, đổi trạng thái hàng loạt (hàng 16). Thêm nhóm Toà → Loại căn theo cách của `data-grid-grouping-2` và góc nhìn đã
+ * thái qua `cell-edit/` (hàng 15); tích căn rồi đổi trạng thái, đánh dấu đã gọi hàng loạt qua `bulk/` (hàng 16); bỏ dán, kéo điền. Thêm nhóm Toà → Loại căn theo cách của `data-grid-grouping-2` và góc nhìn đã
  * lưu. Dữ liệu từ kho trên máy (hàng 13): lọc, nhóm, sắp không gọi mạng.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -49,8 +49,9 @@ import { locDong, locSai, luaChon, sapDong, soOLocDangChay, type BoLocCot } from
 import { nhomDong, type CachNhom, type DongLuoi } from "./nhom";
 import { ChonCot, ChonNhom, HopGocNhin, MenuGocNhin, type CheDoHop } from "./thanh-cong-cu";
 import { COT_SUA, useSuaTrenO } from "./cell-edit/tren-o";
+import { OTich, OTichHet, TichProvider, useSuaHangLoat } from "./bulk/thanh";
 
-// Dán, xoá, kéo điền hàng loạt là hàng 16: lưới gửi lô ghi thì bỏ qua — chỉ trình sửa trên ô ghi.
+// Dán, xoá, kéo điền nhiều ô là hàng sau (hàng 16 chỉ tích căn): lưới gửi lô ghi thì bỏ qua — chỉ trình sửa trên ô ghi.
 const BO_QUA_GHI_LOAT = () => undefined;
 
 const ROW_HEIGHT = { px: 37, className: "[&>td]:h-9.25" };
@@ -140,14 +141,18 @@ function taoCot(cotNhanNhom: CotId): DefCot[] {
   return [
     {
       id: "row",
-      header: () => <HeaderStack title={null} filter={<NutXoaLoc />} />,
+      // Ô tích của sửa hàng loạt (hàng 16) đứng cạnh số dòng.
+      header: () => <HeaderStack title={<OTichHet />} filter={<NutXoaLoc />} />,
       cell: ({ row }) =>
         row.original.kind === "can" ? (
-          <span data-slot="row-number" className="text-muted-foreground block text-center text-xs tabular-nums">
-            {row.original.stt}
+          <span className="flex items-center gap-1.5">
+            <OTich id={row.original.dong.id} />
+            <span data-slot="row-number" className="text-muted-foreground text-xs tabular-nums">
+              {row.original.stt}
+            </span>
           </span>
         ) : null,
-      size: 48,
+      size: 72,
       enableSorting: false,
       enableHiding: false,
       enableResizing: false,
@@ -281,6 +286,7 @@ export function BangHang({
   const idx = useMemo(() => chiMuc(danhMuc), [danhMuc]);
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx)), [hang, idx]);
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap), [dong, loc, sap]);
+  const loat = useSuaHangLoat(dong, daLoc);
   const cay = useMemo(() => nhomDong(daLoc, nhom), [daLoc, nhom]);
   const sai = useMemo(() => locSai(loc), [loc]);
 
@@ -384,6 +390,7 @@ export function BangHang({
       <span className="text-muted-foreground text-xs tabular-nums">
         <span className="text-foreground text-sm font-medium">{daLoc.length}</span> / {dong.length} căn
       </span>
+      {loat.thanh}
       <div className="ms-auto flex flex-wrap items-center gap-1.5">
         <ChonNhom value={nhom} onChange={setNhom} />
         <Toggle variant="outline" pressed={locMo} onPressedChange={setLocMo}>
@@ -464,6 +471,7 @@ export function BangHang({
   return (
     <TooltipProvider delay={200}>
       <HangLocContext.Provider value={hangLoc}>
+        <TichProvider value={loat.ctx}>
         <DataGrid
           table={table}
           recordCount={daLoc.length}
@@ -491,6 +499,7 @@ export function BangHang({
           </FramePanel>
         </DataGrid>
         {suaTrenO.trinhSua}
+        {loat.hop}
         {hop ? (
           <HopGocNhin
             cheDo={hop}
@@ -502,6 +511,7 @@ export function BangHang({
             onDaXoa={() => router.push("/inventory")}
           />
         ) : null}
+        </TichProvider>
       </HangLocContext.Provider>
     </TooltipProvider>
   );

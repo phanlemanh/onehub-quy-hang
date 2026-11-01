@@ -1,0 +1,89 @@
+{
+ "feature_plain": "Đầu chủ tích nhiều căn trên Bảng hàng rồi đổi trạng thái hay đánh dấu đã gọi cho tất cả trong một lần; máy kể trước căn nào không đổi được.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ có ô tích ở đầu mỗi dòng và «Chọn hết»; tích căn nào là hiện thanh «n căn đã chọn» với Đổi trạng thái, Đánh dấu đã gọi, Bỏ chọn."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ giữ căn đã tích khi đổi lọc, nhóm, góc nhìn; thanh nói số căn đang bị lọc ẩn, và thao tác vẫn ghi cho cả căn ẩn."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ xét từng căn theo bảng chuyển trạng thái: căn đổi được, căn không đổi được kèm lý do; menu không bao giờ có «Đã bán»; «Ngừng hẳn» hỏi một lý do cho cả lô."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ hỏi lại một lần trước khi đổi trạng thái lô, kể «n căn đổi được» và căn nào không đổi được; Thôi không ghi gì, Đổi ghi đúng một sự kiện cho mỗi căn đổi được (Hỏi-2)."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ đánh dấu đã gọi («Còn / giữ giá») cho mọi căn còn mở trong lô, làm tươi căn về «hôm nay»; căn đã bán hay đã ngừng không bị đánh dấu; nói trước là không hoàn tác được."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ báo đúng số căn đã ghi, kể cả căn máy chưa ghi được; căn đã ghi bỏ tích, căn còn việc thì vẫn tích."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ hoàn tác cả lô đổi trạng thái bằng một nút; căn đã có lần sửa sau thì để yên và kể số; bấm lần hai báo «Đã hoàn tác rồi»."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ KHÔNG hoàn tác lần sửa giá nào khi anh bấm Ctrl/Cmd+Z lúc đang gõ trong ô lọc cột (lỗi anh tách ra ở hàng trước)."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ giữ kiểm kiểu, lint, bộ test, sàn thiết kế xanh và không chạm tệp ngoài phần được giao."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Máy tự cho «đánh dấu đã gọi» nghĩa là «Còn / giữ giá» mà chưa loại được «Không nghe máy» — đã nêu ràng buộc thật: hệ thống chưa có sự kiện «Không nghe máy», thêm là chạm lõi ngoài vùng; ghi vào phần không làm."
+  },
+  {
+   "i": 1,
+   "p": "Máy ghi «mọi thao tác lô đều hỏi lại» như luật, nhưng với đổi trạng thái đã có hoàn tác lô thì ghi ngay cũng được — đây là đánh đổi của anh, thành Hỏi-2."
+  },
+  {
+   "i": 2,
+   "p": "Chưa có bài thử khi máy không ghi được một căn trong lô — đã thêm bài kiểm số trong thông báo và căn nào còn tích."
+  },
+  {
+   "i": 3,
+   "p": "Chưa có bài thử ghi thật cho căn đang bị lọc ẩn — đã thêm bước bấm Đổi khi hai căn đang ẩn và đếm sự kiện cả ba căn."
+  },
+  {
+   "i": 4,
+   "p": "Chưa có bài nhìn «Ngừng hẳn» bắt chọn lý do và lô không căn nào đổi được — đã thêm bài: nút Đổi tắt khi chưa lý do, lý do nằm trong sự kiện từng căn."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "OOS-1",
+   "p": "KHÔNG có đổi đầu chủ hàng loạt trong hàng này — cần API và bộ đồng bộ mới, tách thành hàng sau (Hỏi-1)."
+  },
+  {
+   "id": "OOS-2",
+   "p": "KHÔNG chốt Đã bán hàng loạt — mỗi căn cần giá chốt riêng, đổi từng căn trên ô."
+  },
+  {
+   "id": "OOS-3",
+   "p": "KHÔNG có dán, kéo điền nhiều ô — câu giao hàng 16 không nêu."
+  },
+  {
+   "id": "OOS-4",
+   "p": "KHÔNG có trên điện thoại — sửa chỉ có trên máy tính."
+  },
+  {
+   "id": "OOS-5",
+   "p": "KHÔNG hoàn tác lô bằng Ctrl/Cmd+Z — lô hoàn tác bằng nút trên thông báo."
+  },
+  {
+   "id": "OOS-6",
+   "p": "KHÔNG ghi «Không nghe máy» theo lô — hệ thống chưa có loại sự kiện này."
+  }
+ ]
+}

@@ -1,0 +1,187 @@
+schema_version: 1
+feature_slug: sua-hang-loat
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps) — chỗ thử dãy B của hàng 14:
+#   node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs
+#   → Postgres dãy B (cổng 5561) đã migrate; sàn và người mẫu của hàng 5; 40 hàng mẫu; máy chủ dev cổng 3481.
+#   Phiên đăng nhập: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs (cookieCua) giữ phiên ở .acceptance-runs.
+#   Lịch sử sự kiện của một hàng: GET /api/v1/listings/<id>, trường events (fetch trong trang, cùng phiên).
+#   Hàng cho bài nhìn: Toà B, theo mã căn tăng dần (Toà A đã dùng ở hồ sơ sua-tren-o, va-sua-tren-o). Mỗi bài ghi mã thật
+#   của căn đã dùng, và căn của bài này không dùng lại ở bài sau (bài sau lấy căn kế tiếp). Toà B thiếu loại căn bài cần
+#   (vd căn Ngừng hẳn) thì lấy ở toà kế theo thứ tự chữ cái, ghi mã.
+#   Ghi trên máy trước, gửi lên sau (luật 30): đọc sự kiện máy chủ chỉ sau khi chỉ báo đồng bộ đầu trang về «Đã đồng bộ».
+evals:
+  - id: E1
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; inventory/bulk/lo.test.ts: ma trận viết tay mọi cặp trạng thái hiện tại (6) × nấc đích (Incomplete, Active, Pending, Hold, Withdrawn) của xetDoiTrangThai trên một căn đủ mục — mỗi ô assert ngăn (đổi được / không đổi được) và chữ lý do («đã ở nấc này», «không chuyển được từ <nhãn>»); thêm căn Chưa đủ để rao thiếu giá → Đang bán ra «thiếu giá, điều kiện phí, …»; lô trộn 4 căn ra đúng hai danh sách theo thứ tự đầu vào; nacMenu(lô) chỉ chứa nấc có ít nhất một căn đổi được và không bao giờ chứa Closed; Withdrawn không lý do → không căn nào đổi được, lý do «chọn lý do ngừng». Đối chứng đỏ trong tệp: hàm xét giả bỏ bảng chuyển (coi mọi nấc đều đổi được) thì ô Closed→Active và Withdrawn→Hold đỏ với thông điệp gọi tên ô."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; inventory/bulk/lo.test.ts: ma trận viết tay xetDaGoi trên 6 trạng thái — Incomplete, Active, Pending, Hold → đổi được; Closed, Withdrawn → không đổi được, lý do «căn đã đóng»; lệnh dựng cho mỗi căn đổi được là {type:'owner_confirmed', payload:{}} và qua validatePayload của lõi không lỗi. Đối chứng đỏ: hàm giả không loại căn đóng thì ô Closed đỏ gọi tên ô."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; inventory/bulk/hoan-tac-lo.test.ts: ma trận viết tay của hàm quyết hoàn tác lô — lô 3 căn {phienBanSau 5, 8, 2}, phiên bản hiện tại {5, 9, undefined} → bù đúng căn 1, bỏ qua căn 2 và 3 (đếm 2 «đã có lần sửa sau»); lệnh bù mỗi căn bằng lenhHoanTac của cell-edit (về nấc cũ); lô đã dùng → «Đã hoàn tác rồi», không lệnh; căn mà lenhHoanTac trả null (chuyển không đảo được) → bỏ qua có đếm riêng. Đối chứng đỏ: hàm giả bỏ so phiên bản thì căn 2 bị bù — ca đỏ gọi tên căn."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; inventory/bulk/lo.test.ts: demLocAn(idTich, idDangHien) — bảng viết tay {tích 4, hiện 4 → 0}, {tích 4, hiện 2 trong số đó → 2}, {tích 0 → 0}, {tích 3, hiện 5 căn khác → 3}; và hangCuaLo(idTich, moiHang) trả đủ căn tích kể cả căn không hiện. Đối chứng đỏ: hàm giả lấy giao với căn đang hiện thì ca {tích 4, hiện 2} trả 2 căn thay vì 4 và đỏ gọi tên ca."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; inventory/bulk/phim.test.ts: ma trận viết tay laOGo trên đối tượng giả lập phần tử (không cần DOM) — input type text/search → true; input type checkbox → false; textarea → true; phần tử isContentEditable → true; td của lưới, div, null → false. Đối chứng đỏ: hàm giả chỉ nhận INPUT thì ô textarea và contenteditable đỏ gọi tên ô."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, /inventory, Nhóm = Không nhóm → chụp evidence/E6-chua-tich.png (cột ô tích ở đầu dòng, không thanh hành động)"
+      - "Lọc Toà B; tích ô của 2 căn đầu theo mã căn → chụp evidence/E6-hai-can.png; ghi chữ thanh hành động"
+      - "Bấm «Chọn hết» ở đầu cột → ghi chữ thanh và số căn đang hiện của bộ lọc Toà B"
+      - "Bấm «Bỏ chọn» → ghi có còn ô nào tích và thanh còn hiện không"
+    expected: "Chưa tích: có cột ô tích, không thanh. Hai căn: thanh «2 căn đã chọn» với Đổi trạng thái, Đánh dấu đã gọi, Bỏ chọn. Chọn hết: số trong thanh bằng số căn đang hiện của Toà B. Bỏ chọn: không ô nào tích, thanh biến mất. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm, lọc Toà B; tích 3 căn kế tiếp theo mã căn (không dùng căn của E6)"
+      - "Đổi lọc Mã căn sao cho chỉ còn 1 trong 3 căn hiện → chụp evidence/E7-loc-an.png; ghi chữ thanh"
+      - "Đổi Nhóm = Toà → Loại căn rồi về Không nhóm; ghi chữ thanh"
+      - "Bấm «Đánh dấu đã gọi» → chụp evidence/E7-hoi-lai.png; ghi số căn hộp hỏi nêu → bấm «Thôi» → fetch events 3 căn → n0 từng căn"
+      - "Vẫn giữ bộ lọc (2 căn ẩn): «Đánh dấu đã gọi» → «Đổi» → fetch events 3 căn"
+    expected: "Sau khi lọc: thanh «3 căn đã chọn · 2 đang bị lọc ẩn»; đổi nhóm không mất tích (vẫn 3); hộp hỏi nêu 3 căn; Thôi không ghi gì. Sau Đổi: cả 3 căn — gồm 2 căn đang bị lọc ẩn — mỗi căn đúng 1 sự kiện owner_confirmed mới (n0+1). Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7b
+    criterion: AC-2
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Chọn 3 căn còn mở ở toà khác Toà B (thứ tự chữ cái, theo mã căn) — không căn nào bài khác dùng; fetch events 3 căn → n0 từng căn"
+      - "Tích 3 căn; lọc Mã căn để chỉ còn 1 căn hiện → «Đánh dấu đã gọi» → «Đổi»; chờ chỉ báo đồng bộ đầu trang về «Đã đồng bộ» (tối đa 60 giây, ghi thời gian) → chụp evidence/E7b-step1.png → fetch events 3 căn"
+    expected: "Mỗi căn trong 3 căn — kể cả 2 căn bị lọc ẩn lúc bấm — có đúng 1 sự kiện owner_confirmed mới (n0+1); actorUserId là phiên dau-chu-1."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-4
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Chọn lô 4 căn: 3 căn Đang bán kế tiếp ở Toà B (không dùng căn của E6, E7) + 1 căn Ngừng hẳn hoặc Đã bán (luật chọn hàng ở đầu tệp). Ghi trạng thái và fetch events của 4 căn → n0 từng căn"
+      - "Tích 4 căn → «Đổi trạng thái» → ghi danh sách nấc trong menu → chọn «Tạm ngừng» → chụp evidence/E8-hoi-lai.png; ghi chữ hộp hỏi → bấm «Thôi» → fetch events 4 căn"
+      - "Mở lại «Đổi trạng thái» → «Tạm ngừng» → bấm «Đổi» → chụp evidence/E8-da-doi.png; ghi chữ thông báo, trạng thái 4 ô, căn nào còn tích → fetch events 4 căn"
+    expected: "Menu không có «Đã bán». Hộp hỏi «Đổi 3 căn sang Tạm ngừng» và «1 căn không đổi được: <mã> — không chuyển được từ <nấc>». Thôi: không căn nào có sự kiện mới. Đổi: 3 căn Đang bán mỗi căn đúng 1 sự kiện mới status_changed to Hold; căn đóng không có sự kiện mới và vẫn tích; 3 căn đã đổi bỏ tích; thông báo «Đã đổi trạng thái 3 căn». Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8b
+    criterion: AC-4
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Chọn 2 căn Đang bán kế tiếp ở Toà B (không dùng căn của bài trước); fetch events → n0 từng căn"
+      - "Tích 2 căn → «Đổi trạng thái» → «Ngừng hẳn» → chụp evidence/E8b-chua-ly-do.png; ghi nút Đổi bật hay tắt → chọn lý do «Không liên lạc được» → bấm «Đổi» → fetch events 2 căn"
+      - "Bỏ chọn; tích 2 căn vừa ngừng (giờ là Ngừng hẳn) → «Đổi trạng thái» → ghi danh sách nấc của menu (hoặc ghi rằng menu không còn nấc nào) → nếu có nấc, chọn một → chụp evidence/E8b-khong-doi-duoc.png; ghi nút Đổi bật hay tắt"
+    expected: "Chưa chọn lý do: nút Đổi tắt. Sau Đổi: 2 căn mỗi căn đúng 1 sự kiện status_changed to Withdrawn mang withdrawnReason unreachable. Lô 2 căn Ngừng hẳn: menu không có nấc nào (nấc cuối), hoặc hộp hỏi kể 2 căn không đổi được và nút Đổi tắt — không sự kiện mới. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-5
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm, hiện cột Độ tươi. Chọn lô 3 căn: 2 căn còn mở kế tiếp ở Toà B (không dùng căn của bài trước) + 1 căn Đã bán hoặc Ngừng hẳn. Ghi Độ tươi; fetch events → n0 từng căn"
+      - "Tích 3 căn → «Đánh dấu đã gọi» → chụp evidence/E9-hoi-lai.png; ghi chữ hộp hỏi → «Đổi» → chụp evidence/E9-da-goi.png; ghi chữ thông báo (có nút Hoàn tác không) → chờ chỉ báo đồng bộ đầu trang về «Đã đồng bộ» (tối đa 60 giây, ghi thời gian) → ghi Độ tươi 3 căn → fetch events 3 căn"
+    expected: "Hộp hỏi nêu 2 căn, «Còn / giữ giá», «không hoàn tác được», và «1 căn không đổi được: <mã> — căn đã đóng». Sau Đổi: 2 căn còn mở mỗi căn đúng 1 sự kiện owner_confirmed (confirmedWithOwner true), Độ tươi về «hôm nay»; căn đóng không sự kiện mới; thông báo «Đã đánh dấu đã gọi 2 căn», không nút Hoàn tác. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; inventory/bulk/lo.test.ts: gomKetQua(lô, kếtQuảGhiTừngCăn) — bảng viết tay: 3 căn đều ghi được → thông báo «Đã đổi trạng thái 3 căn», bỏ tích 3; 3 căn mà căn 2 bị kho trên máy từ chối → «Đã đổi trạng thái 2 căn · 1 căn chưa ghi được», căn 2 vẫn tích, căn 1 và 3 bỏ tích; căn không đổi được của bước xét vẫn tích; cùng bảng cho «Đã đánh dấu đã gọi n căn». Đối chứng đỏ: hàm giả đếm theo số căn định ghi thì ca có căn bị từ chối đỏ, thông điệp gọi tên ca."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Chọn 3 căn Đang bán kế tiếp ở Toà B (không dùng căn của bài trước), gọi X, Y, Z. Fetch events → n0 từng căn"
+      - "Tích X, Y, Z → «Đổi trạng thái» → «Tạm ngừng» → «Đổi» (thông báo «Đã đổi trạng thái 3 căn · Hoàn tác» hiện)"
+      - "Trong lúc thông báo còn: sửa trên ô trạng thái của Y từ Tạm ngừng sang Đang bán (Enter / hộp hỏi Đổi) → rồi bấm «Hoàn tác» trên thông báo của lô → chụp evidence/E10-hoan-tac-lo.png; ghi chữ thông báo và trạng thái X, Y, Z → fetch events 3 căn"
+      - "Bấm lại «Hoàn tác» của lô nếu còn (hoặc ghi rằng thông báo đã đóng) → ghi chữ → fetch events 3 căn"
+    expected: "Hoàn tác lô: X và Z mỗi căn thêm đúng 1 sự kiện bù status_changed to Active (tổng n0+2), về Đang bán; Y không có sự kiện bù (tổng n0+2: đổi lô + sửa trên ô), giữ trạng thái của lần sửa sau; thông báo «Đã hoàn tác 2 căn» và «1 căn đã có lần sửa sau — bỏ qua». Bấm lại: «Đã hoàn tác rồi», không sự kiện mới. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-8
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Chọn căn Đang bán kế tiếp ở Toà B (không dùng căn của bài trước), gọi W; fetch events → n0"
+      - "Sửa giá W trong ngưỡng → Enter (thông báo «Đã đổi giá W · Hoàn tác»); fetch events → n1"
+      - "Bấm vào ô lọc cột Mã căn, gõ «B-»; bấm Cmd+Z (Ctrl+Z ngoài mac) → chụp evidence/E11-o-loc.png; ghi chữ còn trong ô lọc và giá ô W → fetch events W"
+    expected: "Sau Cmd+Z trong ô lọc: chữ trong ô lọc lùi theo phím hoàn tác của ô gõ (hoặc giữ nguyên), giá W vẫn là giá vừa sửa, events W = n1 (không sự kiện bù), không thông báo «Đã hoàn tác». Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E12
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; «chuẩn giao diện: đạt»; «0 lệch»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E15
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/sua-hang-loat/thu/ranh-gioi.mjs
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: inventory/bulk/**, inventory/bang-hang.tsx, inventory/cell-edit/tren-o.tsx, _acceptance/sua-hang-loat/**, docs/plan/lo-trinh.json, LO-TRINH.html, PRODUCT-MAP.md, docs/product/tham-chieu.md. Đối chứng đỏ trong cùng lệnh: danh sách giả thêm apps/web/src/lib/sync/dong-bo.ts thì hàm kiểm gọi đúng tệp ấy — thiếu thì exit 1 «thước không phân biệt được»."
+    paths: ["_acceptance/sua-hang-loat/thu/ranh-gioi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

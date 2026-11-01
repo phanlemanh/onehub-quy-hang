@@ -1,0 +1,7 @@
+n0(bước3) {"B-03.04":{"status":"Withdrawn","reason":"unreachable","n":17,"last":["status_changed:{\"to\":\"Withdrawn\",\"withdrawnReason\":\"unreachable\"}"]},"B-08.02":{"status":"Withdrawn","reason":"unreachable","n":7,"last":["status_changed:{\"to\":\"Withdrawn\",\"withdrawnReason\":\"unreachable\"}"]}}
+thanh: 2 căn đã chọn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+menu3 (mọi menuitem): Không căn nào đổi được [disabled]
+nấc bấm được: []
+n2(bước3) {"B-03.04":{"status":"Withdrawn","reason":"unreachable","n":17,"last":["status_changed:{\"to\":\"Withdrawn\",\"withdrawnReason\":\"unreachable\"}"]},"B-08.02":{"status":"Withdrawn","reason":"unreachable","n":7,"last":["status_changed:{\"to\":\"Withdrawn\",\"withdrawnReason\":\"unreachable\"}"]}}
+NET [["GET","/api/v1/catalog",200],["GET","/api/v1/catalog",200],["GET","/api/v1/listings",200],["GET","/api/v1/listings",200],["GET","/api/v1/listings",200],["GET","/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2",200],["GET","/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11",200],["GET","/api/v1/listings",200],["GET","/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2",200],["GET","/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11",200]]
+CON []

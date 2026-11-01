@@ -1,0 +1,15 @@
+n0 {"B-13.02":{"n":6,"oc":1},"B-14.02":{"n":6,"oc":1},"B-14.05":{"n":15,"oc":0}}
+S1 bar: 3 căn đã chọn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S2 bar (loc an): 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S2 rows: ["1|Toà B|B-13.02|2PN|68,5 m²|13|Đông Bắc|Tạm ngừng|3,56 tỷ|Bao phí|—|[Mẫu] Sổ hồng|—|[Mẫu] Chủ đang ở|Hôm nay|3/5|Toàn sàn|"]
+S3 bar Nhóm=Toà: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+opts ["Toà → Loại căn","Toà","Không nhóm"]
+S3 bar Nhóm=Loại căn: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S3 bar Không nhóm: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S4 dialog: Đánh dấu đã gọi 3 căn Còn / giữ giá — tính là vừa xác nhận với chủ nhà · không hoàn tác được. Thôi Đổi
+S4 after Thôi: {"B-13.02":{"n":6,"oc":1},"B-14.02":{"n":6,"oc":1},"B-14.05":{"n":15,"oc":0}}
+bar after Thôi: 3 căn đã chọn · 2 đang bị lọc ẩn Đổi trạng thái Đánh dấu đã gọi Bỏ chọn
+S5 dialog: Đánh dấu đã gọi 3 căn Còn / giữ giá — tính là vừa xác nhận với chủ nhà · không hoàn tác được. Thôi Đổi
+S5 toast/bar: null ["Đang gửi 2 thay đổi","2","Đã đánh dấu đã gọi 3 căn Còn / giữ giá · không hoàn tác được","Bảng hàng dạng thẻ trên điện thoại dựng ở mục 32"]
+S5 after Đổi: {"B-13.02":{"n":6,"oc":1,"last":{"type":"status_changed","actor":"927b2594-4ea0-40ae-9e6e-d77117968e59"}},"B-14.02":{"n":7,"oc":2,"last":{"type":"owner_confirmed","actor":"927b2594-4ea0-40ae-9e6e-d77117968e59"}},"B-14.05":{"n":15,"oc":0,"last":{"type":"status_changed","actor":"927b2594-4ea0-40ae-9e6e-d77117968e59"}}}
+NET [["/api/v1/listings","GET",200],["/api/v1/listings/d6e209d5-4c0f-4cb7-9183-d53babe721df","GET",200],["/api/v1/listings/13ad04df-07ec-4580-8468-803b3236a195","GET",200],["/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075","GET",200],["/api/v1/listings","GET",200],["/api/v1/listings","GET",200],["/api/v1/listings/d6e209d5-4c0f-4cb7-9183-d53babe721df","GET",200],["/api/v1/listings/13ad04df-07ec-4580-8468-803b3236a195","GET",200],["/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075","GET",200],["/api/v1/listings/13ad04df-07ec-4580-8468-803b3236a195/events","POST",200],["/api/v1/listings","GET",200],["/api/v1/listings","GET",200],["/api/v1/listings/d6e209d5-4c0f-4cb7-9183-d53babe721df","GET",200],["/api/v1/listings/13ad04df-07ec-4580-8468-803b3236a195","GET",200],["/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075","GET",200]]
