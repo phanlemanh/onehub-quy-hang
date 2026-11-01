@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ba lối · Lead đã nhập</title>
+<style>
+  :root {
+    --nen: #f7f7f6; --mat: #ffffff; --chu: #1c1c1a; --phu: #62625e; --vien: #e2e2de;
+    --nhan: #0b6b3a; --nhan-nen: #e7f4ec; --nhan-vien: #b8dcc6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --nen: #141413; --mat: #1d1d1b; --chu: #ececea; --phu: #a3a39e; --vien: #33332f;
+      --nhan: #6fd39c; --nhan-nen: #14291d; --nhan-vien: #24543a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--nen); color: var(--chu);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1440px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .phu { color: var(--phu); }
+  .khuyen { margin: 20px 0 24px; padding: 16px 18px; border: 1px solid var(--nhan-vien); background: var(--nhan-nen);
+    border-radius: 12px; }
+  .khuyen b { color: var(--nhan); }
+  .luoi { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 1100px) { .luoi { grid-template-columns: 1fr; } }
+  .loi { background: var(--mat); border: 1px solid var(--vien); border-radius: 12px; padding: 16px; display: flex;
+    flex-direction: column; gap: 12px; min-width: 0; }
+  .loi.duoc-khuyen { border-color: var(--nhan); box-shadow: 0 0 0 1px var(--nhan); }
+  .loi h2 { font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .the { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--nhan-nen);
+    color: var(--nhan); border: 1px solid var(--nhan-vien); }
+  .anh { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); gap: 8px; align-items: start; }
+  .anh a { display: block; border: 1px solid var(--vien); border-radius: 8px; overflow: hidden; background: #fff; }
+  .anh img { display: block; width: 100%; height: auto; }
+  .anh figcaption { font-size: 12px; color: var(--phu); padding: 4px 2px 0; }
+  dl { margin: 0; display: grid; gap: 8px; }
+  dt { font-weight: 600; font-size: 13px; }
+  dd { margin: 0; }
+  code { font-size: 13px; }
+  ul { margin: 0; padding-left: 18px; }
+  details { margin-top: 28px; background: var(--mat); border: 1px solid var(--vien); border-radius: 12px; padding: 12px 16px; }
+  summary { cursor: pointer; font-weight: 600; }
+  .vung { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+  @media (max-width: 700px) { .vung { grid-template-columns: 1fr; } }
+  .vung h3 { font-size: 14px; margin: 0 0 6px; }
+  .vung .ba { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .vung img, .tuong-tac img { width: 100%; height: auto; border: 1px solid var(--vien); border-radius: 6px; display: block; }
+  .tuong-tac { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+  @media (max-width: 700px) { .tuong-tac { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lead đã nhập · bốn nấc — ba lối</h1>
+  <p class="phu">Hàng 27 <code>lead-bon-nac</code> · màn đầu của nhóm mới <code>lead-cua-toi</code> · trang ba lối theo ADR-0019,
+    gửi kèm thẻ Cổng Phạm vi. Ảnh chụp bản chạy thật (máy dev dãy L, người mẫu Telesales), khổ 1440 và 375, sáng.
+    Dữ liệu mẫu, không số chủ, không mã hàng.</p>
+
+  <section class="khuyen" aria-label="Lời khuyên của máy">
+    <b>Máy khuyên: lối ReUI (<code>list-11</code>).</b>
+    Khối đích đã chọn ở ADR-0002 đứng được sau chuyển thể: tám lead vừa một màn 1440 không cuộn, cột Nấc thẳng hàng để
+    quét, co về hai cột trên điện thoại và vừa cột phải hẹp cạnh Ô nhận lead; cài xong thành khối «trong kho» cho màn sau.
+    <br><span class="phu">Ký Cổng Phạm vi là duyệt lối này, hoặc ghi lối khác thay.</span>
+  </section>
+
+  <div class="luoi">
+    <article class="loi">
+      <h2>Trong kho</h2>
+      <div class="anh">
+        <figure style="margin:0"><a href="trong-kho-1440.png"><img src="trong-kho-1440.png" alt="Lối Trong kho, khổ 1440"></a><figcaption>1440</figcaption></figure>
+        <figure style="margin:0"><a href="trong-kho-375.png"><img src="trong-kho-375.png" alt="Lối Trong kho, khổ 375"></a><figcaption>375</figcaption></figure>
+      </div>
+      <dl>
+        <dt>Động cơ</dt>
+        <dd>Không cài gì mới: khuôn Frame của Ô nhận lead, mỗi lead một dòng <code>Item</code> viền với nấc là <code>Badge</code> và giờ — đọc giống hệt màn hàng 24 đã duyệt.</dd>
+        <dt>Đánh đổi</dt>
+        <dd>Thưa nhất trong ba lối (cần cuộn từ lead thứ tám ở 1440) và nấc nằm lệch phải theo độ dài dòng, khó quét dọc.</dd>
+        <dt>Điều đã tra</dt>
+        <dd><code>catalog.md</code> «Khối đã chuyển thể»: <code>app-shell-8</code>, <code>data-grid-editing-6</code> — không khối danh sách nào; khuôn gần nhất <code>KhungLead</code> (nhóm <code>o-nhan-lead</code>); thành phần đã cài: Frame, Item, Badge, Field, Input, Skeleton, TrangThai.</dd>
+      </dl>
+      <p class="phu"><a href="http://localhost:3483/proto/lead-bon-nac/trong-kho">/proto/lead-bon-nac/trong-kho</a></p>
+    </article>
+
+    <article class="loi duoc-khuyen">
+      <h2>ReUI <span class="the">Máy khuyên</span></h2>
+      <div class="anh">
+        <figure style="margin:0"><a href="reui-1440.png"><img src="reui-1440.png" alt="Lối ReUI, khổ 1440"></a><figcaption>1440 · <code>list-11</code> đã cài, chuyển thể</figcaption></figure>
+        <figure style="margin:0"><a href="reui-375.png"><img src="reui-375.png" alt="Lối ReUI, khổ 375"></a><figcaption>375</figcaption></figure>
+      </div>
+      <dl>
+        <dt>Động cơ</dt>
+        <dd>Khối đích <code>list-11</code> (Frame stacked, bảng ba cột, Badge -light): Lead · Nấc · Giờ và đầu chủ; lead bị trả lại có dòng phụ với ô sửa số; điện thoại ẩn cột thứ ba, giờ và đầu chủ xuống dưới tên.</dd>
+        <dt>Đánh đổi</dt>
+        <dd>Thêm thành phần <code>table</code> vào kho và một bảng thứ hai cạnh <code>data-grid</code>; lead bị trả lại vẫn nằm theo thời gian, không nổi lên đầu.</dd>
+        <dt>Điều đã tra</dt>
+        <dd>
+          <ul>
+            <li><code>get_block list-11</code> — khối đích ở <code>vo-va-ia.md</code> §2, Pro, họ Frame. <b>Đã cài</b> bằng khoá có sẵn; kéo theo <code>ui/table</code> (thêm dòng catalog); thư mục khối và logo mẫu gỡ sau khi chuyển thể vào chỗ dùng.</li>
+            <li><code>search</code> «list of submitted items with status progress stages pipeline timestamp», <code>surface: frame</code> → <code>chart-39</code>, <code>chart-34</code>, <code>card-8</code>, <code>kanban-board-9</code>, <code>timeline-8</code>, <code>c-item-5</code>, <code>list-1</code>.</li>
+            <li>Ứng viên thứ hai <code>chart-39</code> (Deploy History — thước nấc theo đoạn, giờ bên phải): hợp nhất về ý, <b>chỉ xem ảnh, chưa cài</b> — kéo theo hover-card, icon-tile, motion, sonner, dialog.
+              <a href="https://reui.io/preview/radix/chart-39"><img src="https://reui.io/thumbnails/blocks/chart-39-light.webp" alt="Ảnh xem trước chart-39 của ReUI" style="width:100%;margin-top:6px;border:1px solid var(--vien);border-radius:6px"></a></li>
+          </ul>
+        </dd>
+      </dl>
+      <p class="phu"><a href="http://localhost:3483/proto/lead-bon-nac/reui">/proto/lead-bon-nac/reui</a> · ảnh gốc khối: <a href="https://reui.io/preview/radix/list-11">list-11</a></p>
+    </article>
+
+    <article class="loi">
+      <h2>Vẽ mới</h2>
+      <div class="anh">
+        <figure style="margin:0"><a href="ve-moi-1440.png"><img src="ve-moi-1440.png" alt="Lối Vẽ mới, khổ 1440"></a><figcaption>1440</figcaption></figure>
+        <figure style="margin:0"><a href="ve-moi-375.png"><img src="ve-moi-375.png" alt="Lối Vẽ mới, khổ 375"></a><figcaption>375</figcaption></figure>
+      </div>
+      <dl>
+        <dt>Động cơ</dt>
+        <dd>Trục là nấc, không phải thời gian: bốn cột Đã gửi · Đã nhận · Đã gọi · Lên bảng; lead bị trả lại nổi lên dải «Cần bạn làm» trên đầu; tin bổ sung và lead đã gửi lại ở dải «Ngoài bốn nấc».</dd>
+        <dt>Đánh đổi</dt>
+        <dd>Không vừa cột phải hẹp cạnh Ô nhận lead, bỏ thứ tự «mới nhất trước» giữa các cột, và trên điện thoại thành bốn khối xếp chồng dài nhất.</dd>
+        <dt>Điều đã tra</dt>
+        <dd>Ghép bậc 6 từ Frame + Item + Badge, lưới bốn cột tự đặt. ReUI gần nhất: <code>kanban-board-9</code> (bảng kéo-thả — telesales không đổi nấc nên không đứng), <code>chart-39</code> (đã xếp ở lối ReUI).</dd>
+      </dl>
+      <p class="phu"><a href="http://localhost:3483/proto/lead-bon-nac/ve-moi">/proto/lead-bon-nac/ve-moi</a></p>
+    </article>
+  </div>
+
+  <details>
+    <summary>Trống · đang tải · lỗi của từng lối (375)</summary>
+    <div class="vung">
+      <div><h3>Trong kho</h3><div class="ba">
+        <a href="trang-thai/trong-kho--trong-375.png"><img src="trang-thai/trong-kho--trong-375.png" alt="Trong kho, trống"></a>
+        <a href="trang-thai/trong-kho--dang-tai-375.png"><img src="trang-thai/trong-kho--dang-tai-375.png" alt="Trong kho, đang tải"></a>
+        <a href="trang-thai/trong-kho--loi-375.png"><img src="trang-thai/trong-kho--loi-375.png" alt="Trong kho, lỗi"></a></div></div>
+      <div><h3>ReUI</h3><div class="ba">
+        <a href="trang-thai/reui--trong-375.png"><img src="trang-thai/reui--trong-375.png" alt="ReUI, trống"></a>
+        <a href="trang-thai/reui--dang-tai-375.png"><img src="trang-thai/reui--dang-tai-375.png" alt="ReUI, đang tải"></a>
+        <a href="trang-thai/reui--loi-375.png"><img src="trang-thai/reui--loi-375.png" alt="ReUI, lỗi"></a></div></div>
+      <div><h3>Vẽ mới</h3><div class="ba">
+        <a href="trang-thai/ve-moi--trong-375.png"><img src="trang-thai/ve-moi--trong-375.png" alt="Vẽ mới, trống"></a>
+        <a href="trang-thai/ve-moi--dang-tai-375.png"><img src="trang-thai/ve-moi--dang-tai-375.png" alt="Vẽ mới, đang tải"></a>
+        <a href="trang-thai/ve-moi--loi-375.png"><img src="trang-thai/ve-moi--loi-375.png" alt="Vẽ mới, lỗi"></a></div></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Sửa số và gửi lại (lối ReUI, 1440)</summary>
+    <div class="tuong-tac">
+      <figure style="margin:0"><a href="trang-thai/reui--so-sai-1440.png"><img src="trang-thai/reui--so-sai-1440.png" alt="Số mới thiếu chữ số, báo lỗi dưới ô"></a><figcaption class="phu">Số thiếu chữ số → lỗi dưới ô, không gửi.</figcaption></figure>
+      <figure style="margin:0"><a href="trang-thai/reui--da-gui-lai-1440.png"><img src="trang-thai/reui--da-gui-lai-1440.png" alt="Sau khi gửi lại: lead mới ở đầu, lead cũ thành Đã gửi lại"></a><figcaption class="phu">Gửi lại → lead mới ở đầu, «Đang chờ chia»; lead cũ thành «Đã gửi lại» trỏ lead mới.</figcaption></figure>
+    </div>
+  </details>
+</main>
+</body>
+</html>
