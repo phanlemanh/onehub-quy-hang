@@ -7,8 +7,8 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7cf053e1d62040c198aabd1b3e884af12344340a
-human_signoff:
+verified_commit: e5e2512eedaf2179dfe7b5151ea8a088d10d7bbb
+human_signoff: Manh Phan 2026-11-02
 ---
 
 # Evidence Report: hom-nay-dau-chu
@@ -93,7 +93,7 @@ Baseline round nay khong do: field baseline cua tung block eval ghi n-a.
   run_id: minted-hom-nay-dau-chu-E7-r2
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui_check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T15:37:09Z
   screenshot: evidence/E7-1440.png
   observed: |
@@ -154,7 +154,7 @@ Baseline round nay khong do: field baseline cua tung block eval ghi n-a.
   run_id: minted-hom-nay-dau-chu-E8-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui_check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T15:13:20Z
   carried_from_round: 1
   screenshot: evidence/E8-step1.png
@@ -167,7 +167,7 @@ Baseline round nay khong do: field baseline cua tung block eval ghi n-a.
   run_id: E9-20261101
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui_check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T15:13:20Z
   carried_from_round: 1
   screenshot: evidence/E9-step1.jpg
@@ -180,7 +180,7 @@ Baseline round nay khong do: field baseline cua tung block eval ghi n-a.
   run_id: E10-hom-nay-dau-chu-2026-11-01
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui_check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-01T15:13:20Z
   carried_from_round: 1
   screenshot: evidence/E10-step1.png
@@ -258,3 +258,7 @@ none — every multi-run eval is uniform
 
 Round 1: toàn bộ eval E1–E11b chạy lần đầu (run_id hậu tố r1).
 Round 2: chạy lại E3b, E4b, E5, E6, E7 và các lệnh suite sau commit 7cf053e (bộ test cơ sở dữ liệu chạy tuần tự từng tệp); các eval còn lại carry-forward từ round 1 vì delta không chạm paths của chúng. Không có eval nào cần người quyết; không có judgment item.
+
+### Re-pin lần 1 — 2026-11-01, do gộp nhánh chính sau lượt chấm 2, trước chữ ký
+run_id: repin-20261101T220753Z-18631
+sha: e5e2512eedaf2179dfe7b5151ea8a088d10d7bbb · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · ngoài làn máy: E7, E8, E9, E10 · AC không có chốt máy: AC-7, AC-8, AC-9, AC-10

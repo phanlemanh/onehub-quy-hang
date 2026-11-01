@@ -5,7 +5,7 @@ slug: hom-nay-dau-chu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, core]
-status: machine-cleared
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-hom-nay-dau-chu-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -137,3 +137,5 @@ Quét Zwicky (preset entity-feature). Chân sản phẩm: `[SUY-TỪ-REPO: docs/
 
 - Vùng của hàng: `apps/web/src/app/(app)/today/**`, cộng các thư mục khai ở Cổng Phạm vi.
 - Ngoài-1 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Sau khi đầu chủ đổi giá hay trạng thái một căn ở Bảng hàng hoặc Hồ sơ, căn đó có thể tạm biến khỏi màn Hôm nay cho đến lần tải lại dữ liệu kế tiếp. Nếu lần tải lại đó lỗi hoặc mất mạng thì căn vắng lâu hơn, và màn không báo gì. — `packages/api/src/listings/routes.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Sau khi đầu chủ đổi giá hay trạng thái một căn, căn đó có thể tạm biến khỏi màn Hôm nay tới lần đồng bộ kế tiếp; mất mạng thì vắng lâu hơn và màn không báo.
