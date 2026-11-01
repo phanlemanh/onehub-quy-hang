@@ -5,7 +5,7 @@ slug: san-sang-ban
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-01-san-sang-ban-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-01
@@ -80,3 +80,5 @@ Bỏ quét không gian: bốn điều của câu giao × một lối mới (nút
 
 - Known limits — khai ở thi công 2026-11-01 (giám sát chọn «B»):
   - Nút nạp mẫu bản thật cho sàn mới dừng ở căn Đang bán đầu tiên (căn mẫu chưa có ảnh) tới khi hàng vá nap-mau-co-anh xong; sàn mẫu đã nạp không ảnh hưởng.
+- Ngoài-3 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Nếu sàn lỡ đặt số ảnh tối thiểu sai, hệ thống âm thầm dùng 1 ảnh mà không báo ai. Hiện chưa có chỗ nào để sàn tự đặt giá trị này nên chưa ai gặp. — `packages/api/src/listings/store.ts`
+- Ngoài-6 (máy định tuyến 2026-11-01, đề xuất S4 known-limits): Nếu cấu hình số ảnh tối thiểu của sàn bị sai, căn chỉ có 1 ảnh vẫn lên bán mà không ai được báo. Sàn tưởng đã siết chặt hơn. — `packages/api/src/listings/store.ts`
