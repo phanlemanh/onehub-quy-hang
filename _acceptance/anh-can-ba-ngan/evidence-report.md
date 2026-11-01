@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: cd1ccf23aaa802c8ea81df6da20ba3e6a6431156
+verified_commit: a869867534a7242670d346375ac5038dca20458b
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -213,3 +213,7 @@ none — mọi eval nhiều lần chạy đều đồng nhất (mọi eval vòng
 
 Round 1: E10 không đạt và có 10 phát hiện của bước đo (E2, E5, E6, E8 và E1 có ca đo hàm phụ thay vì đầu ra); trả về triển khai, sửa ở commit c315989 và cd1ccf2.
 Round 2: toàn bộ eval PASS (E1b, E3b, E4, E5b, E6c, E9 mang từ vòng 1); phát hiện ngoài hợp đồng chuyển người quyết ở Cổng 2.
+
+### Re-pin lần 1 — 2026-11-01, do hoá cũ do gộp main sau chữ ký
+run_id: repin-20261101T091431Z-10677
+sha: a869867534a7242670d346375ac5038dca20458b · suites: 7 lệnh exit 0 · evals: 16/16 eval máy đạt kỳ vọng · ngoài làn máy: E10
