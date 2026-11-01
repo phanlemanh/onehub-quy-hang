@@ -1,0 +1,7 @@
+E6 network (chrome-devtools, app origin http://localhost:3482) - fetch/xhr
+Console: chi [info] React DevTools + [log] HMR connected; khong co loi.
+Buoc 1: POST /api/v1/units/photos/upload-url 200; POST /api/v1/units/photos 201; GET /api/v1/units/photos 200 (anh PNG 5401883 byte)
+Luot xoa dau (reqid 83): DELETE /api/v1/units/photos/d30af6df-... 200 (khong chan duoc: nguonApi giu tham chieu fetch goc tu luc mo ho so; anh nay da xoa that)
+Dong ho so, mo lai (nguonApi dung fetch da bao), tai lai anh: upload-url 200, POST 201 (reqid 95-97)
+Luot xoa chan: window.fetch tra Response 500 cho DELETE /api/v1/units/photos/* (2 lan: __delLog.length=2) - tra gia o trinh duyet, khong toi mang; UI hien «Khong xoa anh duoc - thu lai», anh con (Gui duoc (1))
+Khong co request app-origin nao 4xx/5xx/that bai tren mang that.

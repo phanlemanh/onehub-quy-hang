@@ -17,6 +17,10 @@ export function nguonApi(toa: string, ma: string, f: typeof fetch = fetch): Nguo
       return (await r.json()) as DanhSachAnh;
     },
     async them(tep: TepSanSang, ngan: Compartment) {
+      // Bản Storage: bản gốc đi thẳng lên kho bằng link ký (không qua giới hạn thân yêu cầu của hàm Vercel), rồi xác nhận
+      // bằng mã ảnh; bản Postgres (truc_tiep false): bản gốc đi trong thân như cũ.
+      const r = await ok(await f(`${BASE}/upload-url`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ toa, ma, contentType: tep.type, byteSize: tep.file.size }) }));
+      const link = (await r.json()) as { truc_tiep: boolean; photoId?: string; url?: string };
       const fd = new FormData();
       fd.set("toa", toa);
       fd.set("ma", ma);
@@ -24,7 +28,12 @@ export function nguonApi(toa: string, ma: string, f: typeof fetch = fetch): Nguo
       fd.set("width", String(tep.width));
       fd.set("height", String(tep.height));
       if (tep.takenAt) fd.set("takenAt", tep.takenAt);
-      fd.set("original", tep.file, tep.file.name);
+      if (link.truc_tiep && link.url && link.photoId) {
+        await ok(await f(link.url, { method: "PUT", headers: { "content-type": tep.type }, body: tep.file }));
+        fd.set("photoId", link.photoId);
+      } else {
+        fd.set("original", tep.file, tep.file.name);
+      }
       fd.set("thumb", tep.thumb, "thumb");
       await ok(await f(BASE, { method: "POST", body: fd }));
     },

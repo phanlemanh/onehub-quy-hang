@@ -42,8 +42,19 @@ function khoaKy(secret: string, ngay: string, region: string) {
   return hmac(hmac(hmac(hmac(`AWS4${secret}`, ngay), region), "s3"), "aws4_request");
 }
 
+type KyLink = { url: string; accessKey: string; secretKey: string; region: string; now: Date; expires: number };
+
 /** Link GET ký sẵn (query SigV4, chỉ ký header host). */
-export function kyLinkGet(o: { url: string; accessKey: string; secretKey: string; region: string; now: Date; expires: number }): string {
+export function kyLinkGet(o: KyLink): string {
+  return kyLink("GET", o);
+}
+
+/** Link PUT ký sẵn — trình duyệt tải bản gốc thẳng lên kho, không qua giới hạn thân yêu cầu của hàm Vercel. */
+export function kyLinkPut(o: KyLink): string {
+  return kyLink("PUT", o);
+}
+
+function kyLink(method: "GET" | "PUT", o: KyLink): string {
   const u = new URL(o.url);
   const amz = ngayAmz(o.now);
   const scope = `${amz.slice(0, 8)}/${o.region}/s3/aws4_request`;
@@ -55,24 +66,27 @@ export function kyLinkGet(o: { url: string; accessKey: string; secretKey: string
     ["X-Amz-SignedHeaders", "host"],
   ];
   const cq = q.map(([k, v]) => `${ma(k)}=${ma(v)}`).sort().join("&");
-  const canon = ["GET", u.pathname, cq, `host:${u.host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
+  const canon = [method, u.pathname, cq, `host:${u.host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
   const sts = ["AWS4-HMAC-SHA256", amz, scope, hex(canon)].join("\n");
   const sig = createHmac("sha256", khoaKy(o.secretKey, amz.slice(0, 8), o.region)).update(sts).digest("hex");
   return `${u.origin}${u.pathname}?${cq}&X-Amz-Signature=${sig}`;
 }
 
 /** Header Authorization cho PUT/DELETE (ký host, x-amz-content-sha256, x-amz-date). */
-export function kyHeader(o: { method: string; url: string; body: Buffer; accessKey: string; secretKey: string; region: string; now: Date }) {
+export function kyHeader(o: { method: string; url: string; body: Buffer; accessKey: string; secretKey: string; region: string; now: Date; them?: Record<string, string> }) {
   const u = new URL(o.url);
   const amz = ngayAmz(o.now);
   const scope = `${amz.slice(0, 8)}/${o.region}/s3/aws4_request`;
   const bam = hex(o.body);
-  const canonHeaders = `host:${u.host}\nx-amz-content-sha256:${bam}\nx-amz-date:${amz}\n`;
-  const signed = "host;x-amz-content-sha256;x-amz-date";
+  const them = Object.entries(o.them ?? {}).map(([k, v]) => [k.toLowerCase(), v] as const);
+  const tat = [["host", u.host], ...them, ["x-amz-content-sha256", bam], ["x-amz-date", amz]].sort((a, b) => (a[0]! < b[0]! ? -1 : 1));
+  const canonHeaders = tat.map(([k, v]) => `${k}:${v}\n`).join("");
+  const signed = tat.map(([k]) => k).join(";");
   const canon = [o.method, u.pathname, "", canonHeaders, signed, bam].join("\n");
   const sts = ["AWS4-HMAC-SHA256", amz, scope, hex(canon)].join("\n");
   const sig = createHmac("sha256", khoaKy(o.secretKey, amz.slice(0, 8), o.region)).update(sts).digest("hex");
   return {
+    ...Object.fromEntries(them),
     "x-amz-content-sha256": bam,
     "x-amz-date": amz,
     authorization: `AWS4-HMAC-SHA256 Credential=${o.accessKey}/${scope}, SignedHeaders=${signed}, Signature=${sig}`,
@@ -84,14 +98,27 @@ export const duongDoiTuong = (companyId: string, photoId: string, variant: strin
 
 export function khoS3(cfg: CauHinhS3, f: typeof fetch = fetch) {
   const url = (key: string) => `${cfg.endpoint}/${cfg.bucket}/${key}`;
+  const ky = (method: string, key: string, body: Buffer, them?: Record<string, string>) =>
+    kyHeader({ method, url: url(key), body, accessKey: cfg.accessKey, secretKey: cfg.secretKey, region: cfg.region, now: new Date(), them });
   const goi = async (method: "PUT" | "DELETE", key: string, body: Buffer, type?: string) => {
-    const h = kyHeader({ method, url: url(key), body, accessKey: cfg.accessKey, secretKey: cfg.secretKey, region: cfg.region, now: new Date() });
-    const r = await f(url(key), { method, headers: { ...h, ...(type ? { "content-type": type } : {}) }, ...(method === "PUT" ? { body: new Uint8Array(body) } : {}) });
+    const r = await f(url(key), { method, headers: { ...ky(method, key, body), ...(type ? { "content-type": type } : {}) }, ...(method === "PUT" ? { body: new Uint8Array(body) } : {}) });
     if (!r.ok && !(method === "DELETE" && r.status === 404)) throw new Error(`kho ảnh: ${method} trả ${r.status}`);
   };
+  const link = (method: "GET" | "PUT", key: string, giay: number) =>
+    (method === "GET" ? kyLinkGet : kyLinkPut)({ url: url(key), accessKey: cfg.accessKey, secretKey: cfg.secretKey, region: cfg.region, now: new Date(), expires: giay });
   return {
     ghi: (key: string, bytes: Buffer, type: string) => goi("PUT", key, bytes, type),
     xoa: (key: string) => goi("DELETE", key, Buffer.alloc(0)),
-    link: (key: string, giay: number) => kyLinkGet({ url: url(key), accessKey: cfg.accessKey, secretKey: cfg.secretKey, region: cfg.region, now: new Date(), expires: giay }),
+    link: (key: string, giay: number) => link("GET", key, giay),
+    linkTaiLen: (key: string, giay: number) => link("PUT", key, giay),
+    /** 64 byte đầu và cỡ thật của một đối tượng; không có thì null. */
+    async docDau(key: string): Promise<{ dau: Buffer; size: number } | null> {
+      const r = await f(url(key), { method: "GET", headers: ky("GET", key, Buffer.alloc(0), { range: "bytes=0-63" }) });
+      if (r.status === 404 || r.status === 403) return null;
+      if (!r.ok) throw new Error(`kho ảnh: GET trả ${r.status}`);
+      const dau = Buffer.from(await r.arrayBuffer());
+      const tong = /\/(\d+)$/.exec(r.headers.get("content-range") ?? "")?.[1];
+      return { dau: dau.subarray(0, 64), size: tong ? Number(tong) : Number(r.headers.get("content-length") ?? dau.length) };
+    },
   };
 }

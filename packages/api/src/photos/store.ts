@@ -1,4 +1,5 @@
-import { kiemTepAnh, loaiTuByteDau, type Compartment, type UnitPhoto } from "@quy-hang/core/photos";
+import { kiemTepAnh, loaiTuByteDau, MAX_PHOTO_BYTES, PHOTO_TYPES, type Compartment, type UnitPhoto } from "@quy-hang/core/photos";
+import { randomUUID } from "node:crypto";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import type { BienThe, DocAnh, KhoAnh } from "./kho";
@@ -50,25 +51,58 @@ export async function listPhotos(tx: pg.PoolClient, toa: string, ma: string): Pr
   return { anh: rows.map(raAnh), noiBo: thay ? "thay" : "an", suaDuoc: thay };
 }
 
-export type TepVao = { toa: string; ma: string; ngan: Compartment; takenAt: string | null; width: number; height: number; original: Buffer; thumb: Buffer };
+/** Bản gốc đi kèm thân yêu cầu (bản Postgres), hay đã tải thẳng lên kho bằng link ký (bản Storage, `photoId`). */
+export type TepVao = { toa: string; ma: string; ngan: Compartment; takenAt: string | null; width: number; height: number; thumb: Buffer } & (
+  | { original: Buffer }
+  | { photoId: string }
+);
+
+/** Xin link tải bản gốc thẳng lên kho (va-anh-ban-that): kiểm loại, cỡ khai và quyền thêm ảnh như lệnh thêm. */
+export async function uploadUrl(tx: pg.PoolClient, kho: KhoAnh, companyId: string, b: { toa: string; ma: string; contentType: string; byteSize: number }): Promise<{ truc_tiep: false } | { truc_tiep: true; photoId: string; url: string } | Refusal> {
+  if (!(PHOTO_TYPES as readonly string[]).includes(b.contentType)) return ve(API_ERRORS.photoNotImage);
+  if (!(b.byteSize > 0) || b.byteSize > MAX_PHOTO_BYTES) return ve(API_ERRORS.photoTooLarge);
+  if (!(await thayNoiBo(tx, b.toa, b.ma))) return ve(API_ERRORS.listingAgentRequired);
+  if (!kho.taiThang) return { truc_tiep: false };
+  const photoId = randomUUID();
+  return { truc_tiep: true, photoId, url: kho.taiThang.kyLinkTaiLen(companyId, photoId) };
+}
 
 export async function addPhoto(tx: pg.PoolClient, kho: KhoAnh, companyId: string, t: TepVao): Promise<{ anh: UnitPhoto } | Refusal> {
-  const kq = kiemTepAnh(t.original.subarray(0, 64), t.original.length);
-  if (!kq.ok) return ve(kq.lyDo === "Ảnh quá 10 MB" ? API_ERRORS.photoTooLarge : API_ERRORS.photoNotImage);
   const loaiNhe = loaiTuByteDau(t.thumb.subarray(0, 64));
   if (!loaiNhe || t.thumb.length > 1024 * 1024) return ve(API_ERRORS.photoNotImage);
   if (!(await thayNoiBo(tx, t.toa, t.ma))) return ve(API_ERRORS.listingAgentRequired);
+  let id: string;
+  let goc: { dau: Buffer; size: number; bytes?: Buffer };
+  if ("original" in t) {
+    id = randomUUID();
+    goc = { dau: t.original.subarray(0, 64), size: t.original.length, bytes: t.original };
+  } else {
+    // Bản gốc đã ở kho dưới tiền tố mã sàn của phiên — mã của sàn khác hay mã bịa không có ở đó.
+    if (!kho.taiThang || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t.photoId)) return ve(API_ERRORS.invalidPayload);
+    if ((await tx.query("select 1 from unit_photos where id = $1", [t.photoId])).rowCount) return ve(API_ERRORS.photoAlreadyConfirmed);
+    const tren = await kho.taiThang.kiemBanGoc(companyId, t.photoId);
+    if (!tren) return ve(API_ERRORS.photoNotImage);
+    id = t.photoId;
+    goc = tren;
+  }
+  const kq = kiemTepAnh(goc.dau, goc.size);
+  if (!kq.ok) {
+    if (!("original" in t)) await kho.taiThang!.xoaGoc(companyId, id);
+    return ve(kq.lyDo === "Ảnh quá 10 MB" ? API_ERRORS.photoTooLarge : API_ERRORS.photoNotImage);
+  }
   const thuTu = (await tx.query<{ n: number }>(
     "select coalesce(max(display_order) + 1, 0)::int n from unit_photos where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2) and compartment = $3",
     [t.toa, t.ma, t.ngan],
   )).rows[0]!.n;
   const { rows } = await tx.query<Dong>(
     `insert into unit_photos (id, company_id, building_name, unit_number, compartment, display_order, taken_at, content_type, byte_size, width, height, added_by)
-     values (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, app.current_user_id()) returning ${COT}`,
-    [companyId, t.toa, t.ma, t.ngan, thuTu, t.takenAt, kq.type, t.original.length, t.width, t.height],
+     values ($11, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, app.current_user_id()) on conflict (id) do nothing returning ${COT}`,
+    [companyId, t.toa, t.ma, t.ngan, thuTu, t.takenAt, kq.type, goc.size, t.width, t.height, id],
   );
-  const d = rows[0]!;
-  await kho.ghi(tx, companyId, d.id, "original", t.original, kq.type);
+  // Mã đã có dòng mà phiên không đọc được (ảnh nội bộ căn khác) hay hai lần xác nhận song song: từ chối, không ghi.
+  const d = rows[0];
+  if (!d) return ve(API_ERRORS.photoAlreadyConfirmed);
+  if (goc.bytes) await kho.ghi(tx, companyId, d.id, "original", goc.bytes, kq.type);
   await kho.ghi(tx, companyId, d.id, "thumb", t.thumb, loaiNhe);
   await suKien(tx, d.id, "added", { compartment: t.ngan });
   return { anh: raAnh(d) };

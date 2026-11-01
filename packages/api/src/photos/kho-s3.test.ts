@@ -6,7 +6,8 @@ import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { cauHinhS3, duongDoiTuong, khoS3, kyLinkGet } from "./kho-s3";
+import { createHash, createHmac } from "node:crypto";
+import { cauHinhS3, duongDoiTuong, khoS3, kyLinkGet, kyLinkPut } from "./kho-s3";
 
 test("ký đúng SigV4: véc tơ presigned GET của AWS", () => {
   const url = kyLinkGet({
@@ -18,6 +19,24 @@ test("ký đúng SigV4: véc tơ presigned GET của AWS", () => {
     expires: 86400,
   });
   assert.equal(new URL(url).searchParams.get("X-Amz-Signature"), "aeeed9bbccd4d02ee5c0109b86d86835f995330da4c265957d157751f604d404");
+});
+
+test("ký link PUT: chữ ký bằng chuỗi chuẩn hoá viết tay theo SigV4, phương thức PUT, sống 60 giây", () => {
+  const o = { url: "https://ref.supabase.co/storage/v1/s3/unit-photos/co-a/p-1/original", accessKey: "AK", secretKey: "SK", region: "ap-southeast-1", now: new Date("2026-11-01T10:00:00Z"), expires: 60 };
+  // Chuỗi chuẩn hoá viết tay (AWS SigV4, presigned URL) — không gọi hàm đang kiểm.
+  const cq = "X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK%2F20261101%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20261101T100000Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host";
+  const kyTay = (method: string) => {
+    const canon = [method, "/storage/v1/s3/unit-photos/co-a/p-1/original", cq, "host:ref.supabase.co\n", "host", "UNSIGNED-PAYLOAD"].join("\n");
+    const sts = ["AWS4-HMAC-SHA256", "20261101T100000Z", "20261101/ap-southeast-1/s3/aws4_request", createHash("sha256").update(canon).digest("hex")].join("\n");
+    const h = (k: Buffer | string, d: string) => createHmac("sha256", k).update(d).digest();
+    const khoa = h(h(h(h("AWS4SK", "20261101"), "ap-southeast-1"), "s3"), "aws4_request");
+    return createHmac("sha256", khoa).update(sts).digest("hex");
+  };
+  const u = new URL(kyLinkPut(o));
+  assert.equal(u.searchParams.get("X-Amz-Expires"), "60");
+  assert.equal(u.searchParams.get("X-Amz-Signature"), kyTay("PUT"), "chữ ký PUT lệch chuỗi chuẩn hoá viết tay");
+  assert.notEqual(u.searchParams.get("X-Amz-Signature"), kyTay("GET"), "link PUT ký bằng phương thức GET");
+  assert.equal(new URL(kyLinkGet(o)).searchParams.get("X-Amz-Signature"), kyTay("GET"));
 });
 
 test("link ảnh: sống 60 giây, đường đối tượng mở đầu bằng mã sàn", () => {

@@ -42,6 +42,9 @@ docs/adr/         quyết định kiến trúc của kho này
 - **Dữ liệu cá nhân thật không vào kho**: không tên, số điện thoại thật trong test, fixture, docs. Dùng `[Tên]`,
   `0900 000 0xx`.
 - **Schema chỉ đổi bằng migration mới** trong `packages/db/migrations/NNN_*.sql`; không sửa migration đã commit.
+- **Thiết kế đối chiếu ngành** (ADR-0022): câu giao là điểm sàn, không phải trần; danh sách cố định trong câu giao mặc
+  định là dữ liệu của sàn; bản thiết kế so với RESO và ít nhất hai sản phẩm ở `docs/product/doi-chieu-nganh.md`. Bảng
+  luật thiết kế đủ bộ ở ADR-0022 §3.
 - **RESO-first**: tên trường và giá trị theo RESO Data Dictionary khi có (`UnitNumber`, `BuildingName`, `LivingArea`…);
   đặc trưng Việt Nam mới được đặt tên riêng.
 - **TypeScript chặt** ở mọi gói. Code, API, tên bảng tiếng Anh; comment nghiệp vụ và chữ UI tiếng Việt, nhãn lấy từ
