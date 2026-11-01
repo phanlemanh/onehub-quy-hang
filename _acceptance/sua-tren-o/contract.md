@@ -5,7 +5,7 @@ slug: sua-tren-o
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, docs]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-01
 design_doc: _acceptance/sua-tren-o/design.md
@@ -101,3 +101,8 @@ Quét không gian AC theo trục (morphological, preset entity-feature, rút g�
   sửa), `proto/sua-tren-o/` (trang mẫu design-pass), dòng «chỉ đọc» của Bảng hàng ở `docs/design/vo-va-ia.md` và Tham
   chiếu + dòng sổ §12.
 - Dữ liệu cho bài nhìn: chỗ thử dãy B của hàng 14 (`_acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs`, 40 hàng mẫu).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-01:
+  - Ngoài-4: Sau một lần sửa bị lỗi, bấm Ctrl+Z sẽ hoàn tác lần sửa thành công trước đó, có thể ở căn khác.
+  - Ngoài-5: Bài tự kiểm chưa chứng minh việc chặn chữ không hiểu như «abc» sẽ báo đỏ nếu bị gỡ.
+  - Ngoài-6: Bài tự kiểm chỉ thử 10 trong 15 kiểu chữ không hiểu của bảng bộ đọc giá.
+  - Ngoài-7: Bài tự kiểm chỉ đối chiếu «Không hoàn tác được» cho 4 trong 12 kiểu chuyển trạng thái.

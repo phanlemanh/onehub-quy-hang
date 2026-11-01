@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 feature_slug: sua-tren-o
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 4175185dbd7d71c5e8157b6e712e86acafe7d55b
-human_signoff:
+human_signoff: Manh Phan 2026-11-01
 ---
 
 # Evidence Report: sua-tren-o
@@ -204,13 +204,13 @@ Round 2. Mọi eval máy và eval nhìn thật đạt. Còn một mục judgment
   required_evidence:
     - Một câu trong tham-chieu.md §12 (dòng 335 hoặc dòng khác) hoặc vo-va-ia.md nói thẳng hoàn tác trạng thái bị giới hạn bởi bảng chuyển trạng thái (ví dụ hoàn tác chỉ chạy khi nấc cũ vẫn là nấc hợp lệ từ trạng thái hiện tại). Tệp ở /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/modest-shtern-330841/docs/product/tham-chieu.md dòng 335.
     - Hoặc đổi câu hỏi E13 thành «hoàn tác là một sự kiện bù, lần không hoàn tác được thì nói trước khi ghi», đúng chữ dòng 335 (khi đó là PASS); hoặc thêm ADR-0008 vào danh sách input.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-01 — Đạt
 
 - eval: E14
   run_id: minted-sua-tren-o-E14-r2
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.script
+  verifier: _acceptance/sua-tren-o/thu/ranh-gioi.mjs
   verified_at: 2026-11-01T02:56:00Z
   output: |
     0 tệp ngoài ranh giới
