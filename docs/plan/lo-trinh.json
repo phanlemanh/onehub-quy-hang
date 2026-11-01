@@ -1996,6 +1996,16 @@
         "CK4"
       ],
       "mo_lai_khi": "Hàng 83 ký: mỗi dòng «Chỗ hở» có hạn đã tới thành một hàng theo màn"
+    },
+    {
+      "ma": "H17",
+      "dot": "cong-chon-khoi-0111",
+      "cau_giao": "Trang ba lối mở bằng nhu cầu trích từ câu giao và Tham chiếu, chấm ba lối bằng một thước chung, ảnh dựng trên dữ liệu mẫu ca xấu nhất",
+      "ly_do": "Khuyến nghị bổ sung chưa có thực tế: chưa vòng nào đi trang ba lối; chủ kho 01/11 giữ hàng 84 như đã gộp",
+      "phu": [
+        "CK5"
+      ],
+      "mo_lai_khi": "Ba vòng đầu đi trang ba lối đã ký Cổng Phạm vi, và ít nhất một lần chủ kho chọn khác lời khuyên của máy hay một lệch lọt ghi ở lech-lot.md cho màn đã qua trang ba lối"
     }
   ],
   "da_bac": []
