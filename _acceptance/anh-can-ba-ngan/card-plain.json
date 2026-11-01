@@ -1,0 +1,41 @@
+{
+  "feature_plain": "Đầu chủ kéo hoặc dán ảnh từ Zalo vào hồ sơ căn trên máy tính và xếp vào ba ngăn — Gửi được, Tự có từ mã, Nội bộ; giấy tờ ở ngăn Nội bộ chỉ người giữ căn và trưởng nhóm xem, không bao giờ ra ngoài sàn, không nằm lại trên máy.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ nhận ảnh kéo thả hay dán ⌘V vào hồ sơ căn, vào đúng ngăn đang mở, giữ bản gốc và một bản nhẹ, tải lại vẫn còn."},
+    {"id": "AC-2", "p": "Sẽ từ chối rõ tệp không phải ảnh, ảnh quá 10 MB, hay lúc mất mạng — ảnh khác cùng lượt vẫn vào, không ảnh nào nằm lại trên máy."},
+    {"id": "AC-3", "p": "Sẽ cho đổi thứ tự, chọn ảnh bìa, đánh dấu «Ảnh mẫu»; mỗi ảnh mang nhãn «Ảnh thật · ngày» hoặc «Ảnh mẫu»."},
+    {"id": "AC-4", "p": "Sẽ cho chuyển ảnh giữa Gửi được và Nội bộ, xoá ảnh khỏi căn; mỗi thay đổi ghi ai làm lúc nào, không sửa xoá được."},
+    {"id": "AC-5", "p": "Sẽ chỉ cho đầu chủ giữ căn và trưởng nhóm thấy, sửa ngăn Nội bộ — người khác thấy thẻ khoá, không số đếm, chặn ngay ở cơ sở dữ liệu."},
+    {"id": "AC-6", "p": "Sẽ không để ảnh nội bộ nằm trên máy: không vào kho trên máy, trình duyệt không giữ đệm, không link công khai."},
+    {"id": "AC-7", "p": "Sẽ chỉ cho ảnh ngăn Gửi được ra ngoài sàn, qua một hàm lõi duy nhất mọi cửa ra phải dùng."},
+    {"id": "AC-8", "p": "Sẽ hiện thẻ «Tự có từ mã» và nói rõ khi danh mục chưa có mặt bằng, ảnh view."},
+    {"id": "AC-9", "p": "Sẽ cách ly ảnh giữa hai sàn, kể cả căn trùng toà và mã; bộ kiểm cách ly có ca mới."},
+    {"id": "AC-10", "p": "Sẽ chứng luồng chính trên bản chạy thật ở khổ máy tính và khổ hẹp, và ghi luật mới vào khuôn nhóm Hồ sơ căn."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG để lần rao chọn ảnh hiện, chưa tính ảnh vào mức đủ — hàng 23, 32."},
+    {"id": "OOS-2", "p": "KHÔNG có công cụ che vùng trên ảnh — hàng 19."},
+    {"id": "OOS-3", "p": "KHÔNG gửi ảnh + tin, chưa có trang khách có ảnh — hàng 32, 33."},
+    {"id": "OOS-4", "p": "KHÔNG chụp ảnh trong app trên điện thoại hay nhận ảnh chia sẻ từ Zalo điện thoại."},
+    {"id": "OOS-5", "p": "KHÔNG lấy mặt bằng, ảnh view từ danh mục Invest — cần đổi khuôn nhận dữ liệu (hàng 10)."},
+    {"id": "OOS-6", "p": "KHÔNG xem ảnh khi mất mạng, chưa chuyển sang kho tệp Supabase."}
+  ],
+  "scope_plain": "Sáu việc để hàng khác, mỗi việc một dòng:",
+  "coverage_plain": [
+    {"i": 0, "p": "Mọi đường đưa ảnh vào đều có tiêu chí: kéo thả, dán, nút «Chọn ảnh», gửi thẳng vào API (AC-1, AC-2)."},
+    {"i": 1, "p": "Cả ba ngăn có tiêu chí riêng: Gửi được (AC-3), Nội bộ (AC-5, AC-6, AC-7), Tự có từ mã (AC-8)."},
+    {"i": 2, "p": "Mọi thao tác trên ảnh — thêm, sắp, bìa, ảnh mẫu, đổi ngăn, xoá, xem lớn — có ca đo (AC-3, AC-4, AC-10)."},
+    {"i": 3, "p": "Tám kiểu người xem được đo ở cơ sở dữ liệu, gồm hai trưởng nhóm và căn chưa có lần rao (AC-5, AC-9)."},
+    {"i": 4, "p": "Tệp sai loại, quá cỡ, mất mạng, lượt có tệp hỏng đều có ca đo (AC-2)."},
+    {"i": 5, "p": "Ba nơi ảnh có thể lọt ra — màn hình, bộ nhớ máy, cửa ra ngoài sàn — đều có ca đo (AC-5, AC-6, AC-7)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc từ chối ảnh khi mất mạng ở cả hai ngăn là đánh đổi của chủ kho, máy đã tự quyết — nay thành câu Hỏi-5."},
+    {"i": 1, "p": "Xoá ảnh mà vẫn giữ byte giấy tờ chủ nhà là lựa chọn giữ dữ liệu cá nhân chưa ai quyết — nay thành Hỏi-6, bài chấm đếm byte còn lại."},
+    {"i": 2, "p": "Chưa rõ trưởng nhóm nào thấy ngăn nội bộ — nay ghi rõ mọi trưởng nhóm của sàn như luật hàng 11, bảng ca tăng lên tám người."},
+    {"i": 3, "p": "Chưa có bước nào soi bộ nhớ thật của trình duyệt sau khi xem ảnh sổ — nay bài chấm trên bản chạy có bước ấy."},
+    {"i": 4, "p": "Nút «Chọn ảnh», dán và xem ảnh lớn chưa có bước nào bấm thật — nay bài chấm trên bản chạy có ba bước ấy."}
+  ],
+  "decisions_plain": [],
+  "analyst_plain": ""
+}
