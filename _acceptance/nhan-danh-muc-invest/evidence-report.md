@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 44a6cbd0fb24b0d6b7c50513a459fa14d0605e71
+verified_commit: 2b4d1f872811f0fd336a629afeab8b86ee379b49
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -208,3 +208,7 @@ none — every multi-run eval is uniform
 Round 1: E1, E2, E3, E10 chay lan dau; cac eval con lai quay lai sau khi sua.
 Round 2: E4, E5, E6, E7, E9 chay lai sau khi sua; carry E1, E2, E3, E10 tu round 1.
 Round 3: E8, E11, E12 chay lai (sua danh muc dung chung chi cho san doc dong tin cua minh, an ma thoa thuan; migration 014) cung toan bo lenh suite; E1-E7, E9, E10 carry-forward.
+
+### Re-pin lần 1 — 2026-11-01, do hoá cũ do gộp nhánh chính sau lượt chấm vòng 3
+run_id: repin-20261101T010441Z-35450
+sha: 2b4d1f872811f0fd336a629afeab8b86ee379b49 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng
