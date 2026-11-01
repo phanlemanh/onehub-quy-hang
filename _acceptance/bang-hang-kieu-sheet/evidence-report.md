@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: da3c19d2c215d85252d4d346096912d55a049c1e
+verified_commit: 028f56366fb9e425239b7642b861e7ec0e35c078
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -281,3 +281,7 @@ Round 1: E1 chạy lần đầu; kết quả giữ làm bằng chứng mang sang
 Round 2: baseline đo lần cuối; panel E15 chấm.
 Round 3: E2-E14 chạy lại; bằng chứng mang sang round 4.
 Round 4: E8 chạy lại (chỗ thử dựng có khoá, chấm lượt r5), bảy lệnh suite xanh; các eval còn lại mang sang.
+
+### Re-pin lần 1 — 2026-11-01, do hoá cũ do chính commit chữ ký
+run_id: repin-20261031T235642Z-32215
+sha: 028f56366fb9e425239b7642b861e7ec0e35c078 · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E3, E5, E6, E8, E9, E10, E15 · diff chạm vật đo ngoài làn máy: E3, E5, E6, E8, E9, E10, E15 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-5, AC-7, AC-8
