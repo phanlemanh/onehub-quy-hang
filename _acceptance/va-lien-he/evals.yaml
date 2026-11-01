@@ -1,0 +1,22 @@
+schema_version: 1
+feature_slug: va-lien-he
+# Lệnh máy: `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy L, cổng 5563).
+# exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng tên ca nêu trong `expected` — có mặt, «ok», không «# SKIP».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ba ca mới có mặt và ok: «bảng nối lead với hàng: bật và ép luật theo dòng» — relrowsecurity, relforcerowsecurity của lead_listings deepEqual {true,true}; «bảng nối lead với hàng: sàn B không đọc, không ghi nối của sàn A» — bảng viết trước sáu dòng (người sàn B đọc dòng nối sàn A → 0 dòng; người sàn B chèn dòng mang mã sàn A → lỗi row-level security; người sàn B chèn dòng sàn B ghi tên người khác → lỗi row-level security; người sàn B chèn dòng sàn B trỏ lead của sàn A → lỗi khoá ngoại lead_listings_lead_fkey; người sàn B chèn dòng sàn B trỏ hàng của sàn A → lỗi khoá ngoại lead_listings_listing_fkey; người sàn A đọc → đúng một dòng BN_LEN → BN_HANG) cộng đối chứng dương người sàn A chèn dòng ghi tên mình thì được, đếm bảy lần so; «bảng nối lead với hàng: vai API không sửa, không xoá» — update và delete đều permission denied. Chiều đỏ: nới luật đọc bỏ điều kiện sàn → dòng «người sàn B đọc» ra 1, ca đỏ nêu dòng; nới luật chèn bỏ điều kiện người tạo → dòng «ghi tên người khác» không lỗi, ca đỏ nêu dòng."
+    paths: [packages/db/tests/isolation.test.mjs, packages/db/migrations/016_*.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/va-lien-he.test.ts có mặt và ok: «chủ nhà của hàng tạo từ lead: chưa có tên thì báo chưa có chủ nhà» — đầu chủ tạo hàng từ lead (POST /api/v1/leads/{id}/listing 201); bảng viết trước bốn dòng (đầu chủ GET owner, trưởng nhóm GET owner, đầu chủ POST owner/phone-reveal, trưởng nhóm POST owner/phone-reveal) → 404 với mã owner-not-set, đếm bốn lần so; đầu chủ PUT owner tên [Tên] → 200, GET lại → 200 ownerName deepEqual «[Tên]», đọc thẳng bảng thấy listing_owners.contact_id vẫn bằng contact_id của lead; đối chứng: hàng tạo thường rồi PUT chủ nhà → GET 200 với tên. Chiều đỏ: bỏ điều kiện tên rỗng ở docChuNha → dòng «đầu chủ GET owner» ra 200, ca đỏ nêu dòng."
+    paths: [packages/api/src/owners/**, packages/api/test-db/va-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
