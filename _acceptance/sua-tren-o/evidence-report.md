@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 4175185dbd7d71c5e8157b6e712e86acafe7d55b
+verified_commit: af35bd62fe036de020831e74eca0234ffdf84d7d
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -274,3 +274,7 @@ none — every multi-run eval is uniform
 
 Round 1: E4u, E7, E9 không đạt — ô Phí của căn chưa có giá chưa mở trình sửa Giá, và lần sửa chưa mang phiên bản người đã thấy (nên có thể ghi đè lặng); bài E2, E7 đọc sự kiện chưa đúng đường. Trả về thi công.
 Round 2: mọi eval máy và nhìn thật đạt sau sửa vòng 1 (commit 4175185); E13 còn UNCERTAIN chờ người chốt. Verdict PENDING-JUDGMENT.
+
+### Re-pin lần 1 — 2026-11-01, do gộp main vào nhánh trước khi gộp PR #56
+run_id: repin-20261101T034254Z-26765
+sha: af35bd62fe036de020831e74eca0234ffdf84d7d · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E2, E4u, E6u, E7, E8u, E9, E13 · diff chạm vật đo ngoài làn máy: E13 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-7
