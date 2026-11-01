@@ -1,0 +1,179 @@
+schema_version: 1
+feature_slug: sua-tren-o
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps) — chỗ thử dãy B của hàng 14:
+#   node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs
+#   → Postgres dãy B (cổng 5561) đã migrate; sàn và người mẫu của hàng 5; 40 hàng mẫu nạp qua API; máy chủ dev cổng
+#     3481, nhật ký .acceptance-runs/bang-hang-kieu-sheet/web-b.log. In bảng email ↔ số hàng mỗi người thấy.
+#   Phiên đăng nhập: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs (cookieCua) giữ phiên ở .acceptance-runs.
+#   Lịch sử sự kiện của một hàng: GET /api/v1/listings/<id>/events (fetch trong trang, cùng phiên).
+#   Bài nhìn GHI dữ liệu: mỗi bài chọn hàng riêng (mã căn ghi ở steps) để các bài chạy song song không đụng nhau.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; pricing/doc-gia.test.ts: bảng chữ viết trước ≥ 20 dòng chữ → số đồng (gồm «4,65 tỷ»=4650000000, «4.65 tỷ», «4,65t», «4 tỷ 650»=4650000000, «4ty65», «950 triệu»=950000000, «950tr», «950 tr», «4650000000», «4.650.000.000», «1,2 tỷ»=1200000000), mỗi dòng một assert; bảng ≥ 8 dòng mơ hồ/sai («», «abc», «12», «4,65 tỷ 3 triệu 2», «-5 tỷ», «1001 tỷ», «4,65 đô», «tỷ») mỗi dòng assert ra «chưa hiểu» (không phải một số). Đối chứng đỏ trong tệp: một bộ đọc giả coi số trần là tỷ thì dòng «12» đỏ với thông điệp gọi tên dòng."
+    paths: ["packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở http://localhost:3481/inventory, Nhóm = Không nhóm, lọc Mã căn = A-01.03 (hàng Đang bán có giá) — ghi giá, phí, Xác nhận hiện tại; fetch GET /api/v1/listings/<id>/events → ghi số sự kiện (n0)"
+      - "Nhấp đúp ô Giá → chụp evidence/E2-mo-sua.png; ghi các phần trong trình sửa (ô gõ, hai nút phí và nút nào đang chọn, dòng chữ dưới ô, có nút «Lưu» không)"
+      - "Gõ «abc» → chụp evidence/E2-chua-hieu.png; ghi dòng chữ dưới ô; bấm Enter → ghi ô còn mở không; fetch số sự kiện (phải vẫn n0); bấm Esc → ghi giá trên ô"
+      - "Mở lại ô Giá, gõ giá cao hơn giá cũ dưới 20% (vd giá cũ × 1,1, viết theo tỷ, hai số lẻ) → ghi dòng «Hiểu là: …» → Enter → chụp evidence/E2-da-doi.png; ghi giá trên ô, Xác nhận của hàng, chữ thông báo góc màn, chân bảng"
+      - "Fetch lại events → ghi số sự kiện (n1) và sự kiện cuối: type, payload, confirmedWithOwner"
+    expected: "Trình sửa có ô gõ + hai nút «Bao phí / Không bao phí» (nút của điều kiện hiện tại đang chọn), dòng «Tính là vừa xác nhận với chủ nhà», không nút Lưu. «abc» → «Chưa hiểu «abc» — gõ như 4,65 tỷ hoặc 950 triệu», Enter không đóng ô, số sự kiện vẫn n0, Esc trả giá cũ. Giá trong ngưỡng: «Hiểu là: <giá>, <điều kiện phí>» khớp chữ đã gõ; Enter ghi thẳng (không hộp hỏi lại); ô hiện giá mới; Xác nhận «Hôm nay»; thông báo «Đã đổi giá A-01.03 · Hoàn tác». n1 = n0 + 1; sự kiện cuối type price_changed, payload đúng hai khoá listPrice (bằng số đã gõ) và feeInclusion, confirmedWithOwner true. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**", "packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    layer: backend-effect
+    expected: "exit 0; cell-edit/lenh.test.ts: hàm dựng lệnh từ trình sửa Giá (giá cũ, phí cũ, chữ gõ, phí chọn) → đúng MỘT lệnh {type:'price_changed', payload:{listPrice, feeInclusion}} với số đồng của bộ đọc, payload đúng hai khoá; lệnh qua validatePayload của lõi không lỗi. Đối chứng đỏ: payload thiếu feeInclusion thì validatePayload báo «feeInclusion thiếu» và assert gọi tên khoá."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**", "packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; cell-edit/lenh.test.ts: với mọi dòng «chưa hiểu» của bảng E1, hàm dựng lệnh trả kết quả lỗi mang chữ «Chưa hiểu «<chữ>» — gõ như 4,65 tỷ hoặc 950 triệu» và KHÔNG lệnh nào (danh sách lệnh rỗng). Đối chứng đỏ: dựng lệnh bỏ kiểm bộ đọc thì ca «abc» sinh lệnh và assert đỏ."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    layer: backend-effect
+    expected: "exit 0; cell-edit/lenh.test.ts: ma trận viết trước — (a) sửa Phí trên hàng có giá → một lệnh price_changed với listPrice cũ + feeInclusion mới; (b) sửa Phí trên hàng chưa có giá → không lệnh, kết quả «mở trình sửa Giá»; (c) trình sửa Giá trên hàng chưa có giá, chưa chọn phí → không lệnh, lỗi «Chọn Bao phí hay Không bao phí»; (d) quét mọi đường dựng lệnh của cell-edit: mọi lệnh price_changed có cả hai khoá. Đối chứng đỏ: ca (a) dựng lệnh chỉ có feeInclusion thì assert đỏ gọi tên khoá listPrice."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4u
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = A-04.06 (hàng có giá) — ghi giá, phí; fetch events → n0"
+      - "Nhấp đúp ô Phí → chụp evidence/E4-phi.png; chọn điều kiện còn lại → ghi hộp hỏi lại có hiện không (đổi phí luôn hỏi) và chữ của hộp → bấm «Đổi» → fetch events → ghi sự kiện cuối (type, payload)"
+      - "Mở ô Giá, gõ giá cũ × 1,5 → Enter → chụp evidence/E4-hoi-lai.png; ghi chữ hộp hỏi lại (giá cũ, giá mới, phần trăm) → bấm «Thôi» → ghi giá trên ô; fetch events → số sự kiện"
+      - "Tìm một hàng chưa có giá (Giá = «—», ghi mã) → nhấp đúp ô Phí → ghi trình sửa nào mở; nhấp đúp ô Giá, gõ «3 tỷ» không chọn phí → Enter → ghi chữ báo và số sự kiện của hàng đó"
+    expected: "Đổi phí → hộp hỏi lại hiện, «Đổi» ghi price_changed với listPrice bằng giá cũ, feeInclusion bằng điều kiện mới. Giá × 1,5 → hộp hiện giá cũ → giá mới và «+50%»; «Thôi» giữ giá cũ, số sự kiện không tăng. Hàng chưa có giá: ô Phí mở trình sửa Giá; Enter khi chưa chọn phí báo «Chọn Bao phí hay Không bao phí», không sự kiện mới. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; pricing/hoi-lai.test.ts: hằng ngưỡng xuất từ pricing bằng 20; ma trận viết trước canHoiLai(cũ, mới) — cùng phí: +20% → không hỏi, +20,01% → hỏi, −20% → không, −20,01% → hỏi, bằng nhau → không; đổi phí cùng số → hỏi; cũ chưa có giá → không hỏi; mỗi ca một assert, kèm phần trăm làm tròn hiển thị (+50%, −25%). Đối chứng đỏ: hàm dùng ≥ thay > thì ca đúng 20% đỏ với tên ca. Kiểm tĩnh trong tệp: dòng khai hằng có chú thích chứa «mặc định của sàn» và chỉ một chỗ trong packages/core/src khai số 20 cho ngưỡng này."
+    paths: ["packages/core/src/pricing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    layer: backend-effect
+    expected: "exit 0; cell-edit/trang-thai.test.ts: ma trận viết trước sáu trạng thái hiện tại × danh sách nấc trình sửa đưa ra, so với bảng viết tay trong tệp (Chưa đủ để rao → Đang bán, Tạm ngừng, Ngừng hẳn; Đang bán → Đang giao dịch, Đã bán, Tạm ngừng, Ngừng hẳn; Đang giao dịch → Đang bán, Đã bán, Ngừng hẳn; Tạm ngừng → Đang bán, Ngừng hẳn; Đã bán, Ngừng hẳn → rỗng); dựng lệnh: Đã bán thiếu giá chốt → lỗi, có giá chốt «4,5 tỷ» + ngày → status_changed {to:'Closed', closePrice:4500000000, closeDate}; Ngừng hẳn thiếu lý do → lỗi, có lý do → withdrawnReason đúng; Đang bán trên hàng thiếu pháp lý → lỗi gọi tên phần thiếu, không lệnh. Đối chứng đỏ: thêm nấc Đã bán → Đang bán vào trình sửa thì ca ma trận đỏ."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6u
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = B-08.02 — ghi trạng thái; nhấp đúp ô Trạng thái → chụp evidence/E6-nac.png; ghi danh sách nấc"
+      - "Chọn «Tạm ngừng» → ghi có hộp hỏi lại không → ghi trạng thái mới; fetch events → sự kiện cuối"
+      - "Tìm hàng Chưa đủ để rao thiếu pháp lý (ghi mã) → ô Trạng thái → chọn «Đang bán» → chụp evidence/E6-thieu.png; ghi chữ báo; fetch số sự kiện hàng đó trước/sau"
+      - "Hàng Đang bán khác (ghi mã) → ô Trạng thái → chọn «Đã bán» → chụp evidence/E6-da-ban.png; ghi các ô hỏi thêm và ngày mặc định; gõ giá chốt «4,5 tỷ» → ghi «Hiểu là…» → xác nhận (hộp «Không hoàn tác được») → fetch events → sự kiện cuối"
+    expected: "Danh sách nấc của B-08.02 đúng bảng ADR-0008 cho trạng thái hiện tại (ghi rõ trạng thái và danh sách). Tạm ngừng ghi status_changed {to:'Hold'}. Đang bán thiếu điều kiện: báo «Chưa lên Đang bán được: thiếu …» gọi tên phần thiếu, không sự kiện mới. Đã bán hỏi giá chốt + ngày bán (mặc định hôm nay), đọc lại «Hiểu là: 4,5 tỷ», hộp có «Không hoàn tác được», ghi status_changed {to:'Closed', closePrice:4500000000, closeDate hôm nay}. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = B-14.04 — ghi Xác nhận hiện tại (phải khác «Hôm nay»; nếu đang «Hôm nay» chọn hàng khác có Xác nhận cũ, ghi mã)"
+      - "Sửa ô Giá trong ngưỡng 20% → Enter → ghi Xác nhận của hàng; fetch events → sự kiện cuối: type, confirmedWithOwner, occurredAt"
+      - "Sửa ô Trạng thái của một hàng Đang bán khác sang Tạm ngừng → fetch events của hàng đó → confirmedWithOwner"
+    expected: "Trước khi sửa Xác nhận khác «Hôm nay»; sau khi sửa giá Xác nhận «Hôm nay»; sự kiện price_changed confirmedWithOwner true, occurredAt hôm nay; sự kiện status_changed confirmedWithOwner true. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    layer: backend-effect
+    expected: "exit 0; cell-edit/hoan-tac.test.ts: ma trận viết trước — hoàn tác đổi giá (giá A, phí X → giá B, phí Y) dựng đúng MỘT lệnh price_changed {listPrice:A, feeInclusion:X}; hoàn tác lần đặt giá đầu (cũ chưa có giá) → «không hoàn tác được»; với MỌI chuyển trạng thái của bảng ADR-0008: hoàn tác được ⟺ chiều ngược có trong bảng (Đang bán↔Tạm ngừng, Đang bán↔Đang giao dịch, Chưa đủ để rao→* và →Đã bán/Ngừng hẳn không) — lệnh hoàn tác là status_changed {to:<cũ>}; hàm «không hoàn tác được» là cùng hàm trình sửa dùng để bật câu «Không hoàn tác được» trong hộp hỏi lại. Đối chứng đỏ: coi Đã bán → Đang bán là hoàn tác được thì ca ma trận đỏ."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8u
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. dau-chu-1, /inventory, Không nhóm. Lọc Mã căn = A-02.05 (hàng Đang bán có giá; không có thì chọn hàng Đang bán có giá khác, ghi mã) — ghi giá, phí; fetch events → n0"
+      - "Sửa giá trong ngưỡng → Enter → chụp evidence/E8-thong-bao.png; bấm «Hoàn tác» trên thông báo → ghi giá, phí trên ô; fetch events → n và hai sự kiện cuối"
+      - "Sửa giá lần nữa → Enter → bấm Ctrl+Z (Cmd+Z trên mac) khi lưới có tiêu điểm → ghi giá trên ô; fetch events"
+      - "Chuyển hàng sang «Ngừng hẳn» (lý do Chủ đổi ý) → chụp evidence/E8-khong-hoan-tac.png của hộp hỏi lại → xác nhận → ghi thông báo sau khi ghi có nút Hoàn tác không"
+    expected: "Hoàn tác trên thông báo: ô về đúng giá và phí cũ; n = n0 + 2, sự kiện cuối price_changed mang giá và phí cũ, sự kiện sửa vẫn còn. Ctrl/Cmd+Z: ô về giá trước, thêm một sự kiện bù. Ngừng hẳn: hộp hỏi lại có «Không hoàn tác được»; thông báo sau khi ghi không có nút Hoàn tác. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, /inventory, Không nhóm, bật ba cột ẩn. Viết trước danh sách 19 cột; với từng cột: chọn ô của dòng đầu, nhấp đúp và bấm Enter → ghi có trình sửa mở không (mỗi cột một dòng)"
+      - "Khổ 375x812: mở /inventory → ghi có lưới không và thử nhấp đúp vào bất kỳ ô giá nào nếu có → ghi có mở sửa không"
+      - "Khổ 1440: bật giả lập mất mạng (CDP Network.emulateNetworkConditions offline) → sửa ô Giá của hàng A-06.01 (hay hàng có giá khác, ghi mã) trong ngưỡng → ghi ô có đổi không và chỉ báo chờ gửi; tắt giả lập → chờ 10 giây → fetch events → sự kiện cuối"
+      - "Hai phiên: dau-chu-1 và trưởng nhóm (truong-nhom) cùng mở hàng A-07.02 (hay hàng cả hai thấy, ghi mã). Phiên trưởng nhóm sửa giá trước; phiên dau-chu-1 (chưa tải lại) sửa giá → chụp evidence/E9-can-xem.png; ghi phiên dau-chu-1 thấy gì (Cần xem, bốn lối) và giá ở máy chủ (fetch listing)"
+    expected: "Đúng ba cột Giá, Phí, Trạng thái mở trình sửa; mười sáu cột còn lại không mở (mỗi cột một đạt/trượt). Khổ 375 không mở sửa ở đâu. Mất mạng: ô đổi ngay, chỉ báo chờ gửi hiện; có mạng lại thì sự kiện lên máy chủ. Hai phiên: phiên sau vào «Cần xem», giá máy chủ là giá của phiên trước, không bị ghi đè lặng. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    paths: ["apps/web/**", "packages/core/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; kiểm chuẩn «chuẩn giao diện: đạt»; bài quét khuôn «0 lệch»"
+    paths: ["apps/web/**", ".agents/skills/quy-hang-ui/catalog.md", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-10
+    executor: judgment
+    question: "Trong ba tệp: (1) vo-va-ia.md, dòng khối đã chuyển thể của Bảng hàng (data-grid-editing-6), thôi ghi «chỉ đọc — bỏ sửa ô…» cho sửa ô và nói sửa trên ô ba cột Giá, Phí, Trạng thái đã bật (hàng 15), sửa hàng loạt/dán/kéo điền vẫn để hàng 16; (2) tham-chieu.md §12 có một dòng ngày 01/11 nói sửa trên ô ba cột với bộ đọc giá «Hiểu là…», hỏi lại khi đổi quá 20% hay đổi điều kiện phí, hoàn tác là sự kiện bù giới hạn bởi bảng chuyển trạng thái; (3) contract.md của sua-tren-o liệt đúng các tệp ngoài vùng đã duyệt ở Notes — cả ba đúng không?"
+    inputs: [docs/design/vo-va-ia.md, docs/product/tham-chieu.md, _acceptance/sua-tren-o/contract.md]
+    paths: ["docs/design/vo-va-ia.md", "docs/product/tham-chieu.md"]
+    evidence_required: [judged_by, verdict, rationale]
