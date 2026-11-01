@@ -16,6 +16,7 @@ import {
   MAX_PHOTO_BYTES,
   nhanAnh,
   sapXep,
+  quyenAnh,
   type UnitPhoto,
 } from ".";
 
@@ -110,10 +111,13 @@ test("E8 ảnh tự có từ mã: danh mục thật chưa có ảnh; dòng giả
   const toa = mau.danhMuc.subdivisions[0]?.buildings[0];
   const mot = toa && toa.units[0] ? { buildingName: toa.buildingName, ...toa.units[0] } : null;
   assert.ok(mot, "dữ liệu mẫu phải có ít nhất một căn danh mục");
-  assert.deepEqual(anhDanhMuc(mot), []);
+  assert.deepEqual(anhDanhMuc(mot, mot!), [], "danh mục thật đã có ảnh");
   const media = [{ kind: "floor_plan" as const, url: "https://example.test/a.png" }];
-  assert.deepEqual(anhDanhMuc({ buildingName: "Toà A", unitNumber: "A-01.01", media }), media);
-  assert.deepEqual(anhDanhMuc(null), []);
+  const dong = { buildingName: "Toà A", unitNumber: "A-01.01", media };
+  assert.deepEqual(anhDanhMuc(dong, { buildingName: "Toà A", unitNumber: "A-0101" }), media, "đúng toà, đúng mã (viết khác dấu)");
+  assert.deepEqual(anhDanhMuc(dong, { buildingName: "Toà B", unitNumber: "A-01.01" }), [], "trả ảnh của mã trùng ở Toà B");
+  assert.deepEqual(anhDanhMuc(dong, { buildingName: "Toà A", unitNumber: "A-01.02" }), [], "trả ảnh của mã khác");
+  assert.deepEqual(anhDanhMuc(null, { buildingName: "Toà A", unitNumber: "A-01.01" }), []);
   assert.equal(CHU_DANH_MUC_TRONG, "Danh mục chưa có mặt bằng, ảnh view cho căn này");
 });
 
@@ -126,13 +130,12 @@ test("E5 bảng ai thấy ngăn nội bộ ở lõi: 8 người × 5 ô", () => 
   for (const c of BANG) {
     const nguoi = `u-${c.o}`;
     const holder = !c.coLanRao ? null : c.giu ? nguoi : "u-dau-chu-giu-can-khac";
-    const thay = canSeeUnitInternal({ userId: nguoi, roles: c.vai }, { holderUserId: holder });
-    for (const k of ["doc_noi_bo", "doc_byte_noi_bo", "them_noi_bo", "them_gui_duoc"] as const) {
-      assert.equal(thay, c[k], `${c.o} × ${k}`);
+    const q = quyenAnh({ userId: nguoi, roles: c.vai }, { holderUserId: holder });
+    assert.equal(canSeeUnitInternal({ userId: nguoi, roles: c.vai }, { holderUserId: holder }), q.doc_noi_bo);
+    for (const k of ["doc_noi_bo", "doc_byte_noi_bo", "them_noi_bo", "them_gui_duoc", "doc_gui_duoc"] as const) {
+      assert.equal(q[k], c[k], `${c.o} × ${k}`);
       o++;
     }
-    assert.equal(true, c.doc_gui_duoc, `${c.o} × doc_gui_duoc`);
-    o++;
   }
   assert.equal(o, 40);
 });

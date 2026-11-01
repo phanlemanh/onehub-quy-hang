@@ -1,9 +1,22 @@
 // Nhận ảnh thả hay dán vào mục Ảnh (hàng 18): kiểm tệp và đọc ngày chụp bằng luật lõi, vẽ bản nhẹ bằng canvas. Không giữ
 // gì trên máy — tệp lỗi hay lúc mất mạng thì bỏ (Hỏi-5).
-import { CHU_CAN_MANG, coBanNhe, docNgayChup, kiemTepAnh, type PhotoType } from "@quy-hang/core/photos";
+import { CHU_CAN_MANG, coBanNhe, docNgayChup, kiemTepAnh, type Compartment, type PhotoType } from "@quy-hang/core/photos";
 
 export type TepSanSang = { ok: true; file: File; type: PhotoType; takenAt: string | null; thumb: Blob; width: number; height: number };
 export type TepLoi = { ok: false; file: File; lyDo: string };
+
+export type The = Compartment | "catalog";
+
+/**
+ * Ngăn nhận ảnh của một lần thả: thả lên tên một thẻ thì vào ngăn của thẻ ấy (thẻ «Nội bộ» chỉ khi người xem thấy nội bộ),
+ * thả vào thân mục thì vào ngăn của thẻ đang mở; thẻ «Tự có từ mã» không nhận ảnh. Trả null khi không nhận.
+ */
+export function nganChoTha(o: { theDich: The | null; theDangMo: The; thayNoiBo: boolean }): Compartment | null {
+  const the = o.theDich ?? o.theDangMo;
+  if (the === "catalog") return null;
+  if (the === "internal" && !o.thayNoiBo) return null;
+  return the;
+}
 
 /** Ô nhập chữ đang giữ tiêu điểm thì ⌘V là dán chữ, không phải dán ảnh. */
 export function dangGoChu(el: Element | null): boolean {

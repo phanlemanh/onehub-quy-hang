@@ -65,6 +65,13 @@ const r = await fetch(`${URL_GOC}/api/v1/listings/${moi.id}/listing-agent`, {
 });
 if (r.status !== 200) throw new Error(`gán đầu chủ giữ căn A: ${r.status} ${await r.text()}`);
 
+// Căn A bắt đầu không ảnh: ảnh của lần dựng trước đánh dấu đã xoá và xoá byte (dữ liệu thử của dãy H; sự kiện giữ nguyên
+// vì bảng sự kiện chỉ thêm).
+const sql = `update unit_photos set removed_at = now(), removed_by = 'dung-h', is_cover = false
+  where building_name = 'Toà A' and app.unit_key(unit_number) = app.unit_key('${ma.replace(/'/g, "")}') and removed_at is null;
+  delete from unit_photo_files f using unit_photos p where p.company_id = f.company_id and p.id = f.photo_id and p.removed_at is not null;`;
+execFileSync("docker", ["exec", "quy-hang-db-H", "psql", "-U", "postgres", "-v", "ON_ERROR_STOP=1", "-c", sql], { stdio: "ignore" });
+
 // Ảnh mẫu: PNG vẽ bằng mã; JPEG đổi từ PNG bằng sips rồi chèn APP1 EXIF DateTimeOriginal.
 mkdirSync(ANH, { recursive: true });
 const crc = (b) => {

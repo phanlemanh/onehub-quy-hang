@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { guiLuot, tepTuLuotDan, type TepSanSang } from "./tai-len";
+import { guiLuot, nganChoTha, tepTuLuotDan, type TepSanSang, type The } from "./tai-len";
 
 export type DanhSachAnh = { anh: UnitPhoto[]; noiBo: "thay" | "an"; suaDuoc: boolean };
 export type SuaAnh = { compartment?: Compartment; order?: string[]; isCover?: true; isSample?: boolean };
@@ -40,7 +40,6 @@ export type NguonAnh = {
   urlAnh(id: string, bien: "thumb" | "original"): string;
 };
 
-type The = Compartment | "catalog";
 type OCho = { key: string; ten: string; ngan: Compartment; loi?: string };
 
 function useNgoaiTuyen() {
@@ -111,11 +110,12 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
     return () => window.removeEventListener("paste", onPaste);
   }, [nhan, the]);
 
-  const tha = (e: DragEvent, ngan: Compartment) => {
+  const tha = (e: DragEvent, theDich: The | null) => {
     e.preventDefault();
     e.stopPropagation();
     setKeoVao(false);
-    void nhan(Array.from(e.dataTransfer.files), ngan);
+    const ngan = nganChoTha({ theDich, theDangMo: the, thayNoiBo: ds?.noiBo === "thay" });
+    if (ngan) void nhan(Array.from(e.dataTransfer.files), ngan);
   };
   const choThaVao = (e: DragEvent) => {
     if (!ds?.suaDuoc || ngoaiTuyen || !e.dataTransfer.types.includes("Files")) return;
@@ -166,6 +166,11 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
                       <DropdownMenuContent align="end">
                         {ngan === "shareable" ? (
                           <>
+                            {i > 0 ? (
+                              <DropdownMenuItem onClick={() => void nguon.sua(p.id, { order: [p.id, ...anh.filter((x) => x.id !== p.id).map((x) => x.id)] }).then(tai, tai)}>
+                                Đưa lên đầu
+                              </DropdownMenuItem>
+                            ) : null}
                             <DropdownMenuItem onClick={() => void nguon.sua(p.id, { isCover: true }).then(tai, tai)}>Đặt làm ảnh bìa</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => void nguon.sua(p.id, { isSample: !p.isSample }).then(tai, tai)}>
                               {p.isSample ? "Bỏ «Ảnh mẫu»" : "Đánh dấu «Ảnh mẫu»"}
@@ -209,9 +214,9 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
       ref={goc}
       aria-label="Ảnh"
       className={`@container flex flex-col gap-3 rounded-md ${keoVao ? "ring-primary ring-2" : ""}`}
-      onDragOver={(e) => nganDangMo && choThaVao(e)}
+      onDragOver={choThaVao}
       onDragLeave={() => setKeoVao(false)}
-      onDrop={(e) => nganDangMo && tha(e, nganDangMo)}
+      onDrop={(e) => tha(e, null)}
     >
       <Input
         ref={chonTep}
@@ -230,7 +235,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
             {NHAN_NGAN.shareable} ({soLuong("shareable")})
           </TabsTrigger>
           <TabsTrigger value="catalog">{NHAN_NGAN.catalog}</TabsTrigger>
-          <TabsTrigger value="internal" onDragOver={ds.noiBo === "thay" ? choThaVao : undefined} onDrop={ds.noiBo === "thay" ? (e) => tha(e, "internal") : undefined}>
+          <TabsTrigger value="internal" onDragOver={ds.noiBo === "thay" ? choThaVao : undefined} onDrop={(e) => tha(e, "internal")}>
             {ds.noiBo === "an" ? <Lock /> : null}
             {NHAN_NGAN.internal}
             {ds.noiBo === "thay" ? ` (${soLuong("internal")})` : null}

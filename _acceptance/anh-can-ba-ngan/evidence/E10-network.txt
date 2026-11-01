@@ -1,0 +1,10 @@
+E10 network (chrome-devtools, origin http://localhost:3482, ba pha: dau-chu-1 / ngoai tuyen / dau-khach)
+Failed requests (>=400, connection error) tren origin app: KHONG co. Moi GET/POST /api/v1/* tra 200/201.
+POST /api/v1/units/photos -> 201 (x3 tha, x1 tha vao the Noi bo, x1 Chon anh, x1 dan).
+Tha tep tin-nhan.jpg: bi tu choi phia trinh duyet (khong co POST), thong bao "Khong phai anh".
+GET /api/v1/units/photos/ceedf8e4-.../original  -> 200 cache-control: private, no-store
+GET /api/v1/units/photos/ceedf8e4-.../thumb     -> 200 cache-control: private, no-store
+GET /api/v1/units/photos?toa=...&ma=A-06.01 (dau-khach) -> 200, noiBo:"an", suaDuoc:false, khong co id ceedf8e4 (anh noi bo)
+Console errors: khong doc rieng (list_console_messages khong goi).
+Third-party: localhost:3999 (server phu cua verifier de lay byte anh mau) -> 200, khong thuoc scope app.
+Khong co hanh vi ghi dau-hieu CORS/5xx. Luu y: khi ngoai tuyen, fetch toi 3999 cung that bai (khong phai loi app).

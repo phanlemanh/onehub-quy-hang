@@ -111,8 +111,14 @@ export function anhRaNgoai(anh: readonly UnitPhoto[], tuyChon: { thoaThuan?: rea
 
 /** Ảnh danh mục của một căn — khuôn danh mục hiện chưa có trường ảnh nên hôm nay luôn rỗng (hàng 10 đổi khuôn). */
 export type AnhDanhMuc = { kind: "floor_plan" | "view"; url: string };
-export function anhDanhMuc(dong: { buildingName: string; unitNumber: string; media?: readonly AnhDanhMuc[] } | null): AnhDanhMuc[] {
-  return dong?.media ? [...dong.media] : [];
+const khoaMa = (s: string) => s.replace(/[^0-9A-Za-z]/g, "").toUpperCase();
+/** Ảnh danh mục của đúng căn hỏi — dòng danh mục khác toà hay khác mã thì không trả gì. */
+export function anhDanhMuc(
+  dong: { buildingName: string; unitNumber: string; media?: readonly AnhDanhMuc[] } | null,
+  can: { buildingName: string; unitNumber: string },
+): AnhDanhMuc[] {
+  if (!dong || dong.buildingName !== can.buildingName || khoaMa(dong.unitNumber) !== khoaMa(can.unitNumber)) return [];
+  return dong.media ? [...dong.media] : [];
 }
 
 /**
@@ -122,6 +128,14 @@ export function anhDanhMuc(dong: { buildingName: string; unitNumber: string; med
 export function canSeeUnitInternal(viewer: { userId: string; roles: readonly string[] }, unit: { holderUserId: string | null }): boolean {
   if (viewer.roles.includes("team_lead")) return true;
   return viewer.roles.includes("listing_agent") && unit.holderUserId !== null && unit.holderUserId === viewer.userId;
+}
+
+/** Năm quyền của một người trên ảnh một căn — cùng bảng ca với luật theo dòng của migration 012. */
+export type QuyenAnh = { doc_noi_bo: boolean; doc_byte_noi_bo: boolean; them_noi_bo: boolean; them_gui_duoc: boolean; doc_gui_duoc: boolean };
+export function quyenAnh(viewer: { userId: string; roles: readonly string[] }, unit: { holderUserId: string | null }): QuyenAnh {
+  const noiBo = canSeeUnitInternal(viewer, unit);
+  // Ngăn Gửi được: mọi thành viên sàn đọc (sàn khác đã chặn ở cơ sở dữ liệu); thêm, sửa chỉ người thấy nội bộ (Hỏi-4).
+  return { doc_noi_bo: noiBo, doc_byte_noi_bo: noiBo, them_noi_bo: noiBo, them_gui_duoc: noiBo, doc_gui_duoc: viewer.roles.length > 0 };
 }
 
 /** Ngày chụp từ EXIF DateTimeOriginal của JPEG (`YYYY-MM-DD`), không có hay hỏng thì null. Mã thuần, không thư viện. */
