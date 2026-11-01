@@ -183,10 +183,10 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
       bao();
       await thuNgay();
     },
-    async sua(listingId: string, type: EventType, payload: Record<string, unknown>): Promise<ReturnType<typeof apTrenMay> | { ok: false; loi: LoiTrenMay }> {
+    async sua(listingId: string, type: EventType, payload: Record<string, unknown>, coSo?: number): Promise<ReturnType<typeof apTrenMay> | { ok: false; loi: LoiTrenMay }> {
       try {
         const n = await docKho(companyId);
-        const kq = apTrenMay(n, listingId, type, payload, nay(), taoMa());
+        const kq = apTrenMay(n, listingId, type, payload, nay(), taoMa(), coSo);
         if (!kq.ok) return kq;
         await doi(companyId, (m) => ({ ...m, queue: [...m.queue, kq.op], nextSeq: Math.max(m.nextSeq, kq.op.clientSeq + 1) }));
         void thuNgay();

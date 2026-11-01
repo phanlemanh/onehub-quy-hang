@@ -1,0 +1,36 @@
+30. [GET] http://localhost:3481/api/v1/listings => [200] OK
+62. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+63. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+64. [GET] http://localhost:3481/api/v1/listings => [200] OK
+65. [GET] http://localhost:3481/api/v1/me => [200] OK
+97. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+98. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+99. [GET] http://localhost:3481/api/v1/listings => [200] OK
+100. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
+101. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
+102. [GET] http://localhost:3481/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11/events => [404] Not Found
+103. [POST] http://localhost:3481/__nextjs_original-stack-frames => [200] OK
+105. [GET] http://localhost:3481/api/v1/listings?limit=200 => [200] OK
+106. [GET] http://localhost:3481/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11/events => [404] Not Found
+107. [GET] http://localhost:3481/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11 => [200] OK
+108. [GET] http://localhost:3481/api/v1/listings => [200] OK
+109. [GET] http://localhost:3481/api/v1/listings => [200] OK
+110. [GET] http://localhost:3481/api/v1/listings/b78bef71-11a7-449d-8c14-f05c66d0db11 => [200] OK
+111. [POST] http://localhost:3481/__nextjs_original-stack-frames => [200] OK
+112. [GET] http://localhost:3481/api/v1/listings => [200] OK
+113. [GET] http://localhost:3481/api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09/events => [404] Not Found
+114. [GET] http://localhost:3481/api/v1/listings => [200] OK
+115. [GET] http://localhost:3481/api/v1/listings => [200] OK
+116. [GET] http://localhost:3481/api/v1/listings => [200] OK
+117. [GET] http://localhost:3481/api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09/events => [404] Not Found
+118. [GET] http://localhost:3481/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events => [404] Not Found
+119. [GET] http://localhost:3481/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 => [200] OK
+120. [GET] http://localhost:3481/api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09 => [200] OK
+121. [POST] http://localhost:3481/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075/events => [200] OK
+122. [GET] http://localhost:3481/api/v1/listings => [200] OK
+123. [GET] http://localhost:3481/api/v1/listings/77b97452-b7ad-4d85-9aeb-598874f1e075 => [200] OK
+124. [POST] http://localhost:3481/api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09/events => [200] OK
+125. [GET] http://localhost:3481/api/v1/listings => [200] OK
+126. [GET] http://localhost:3481/api/v1/listings/4917621f-f266-463e-af28-d69fd3c8eb09 => [200] OK
+
+Note: 92 static requests not shown, run with "static" option to see them.

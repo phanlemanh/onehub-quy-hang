@@ -1,0 +1,12 @@
+Nguon: performance resource entries cua trang /inventory (driver CDP headless)
+/api/v1/catalog 200
+/api/v1/catalog 200
+/api/v1/listings 200
+/api/v1/listings 200
+/api/v1/listings 200
+/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2 200
+/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2 200
+/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2 200
+/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2/events 200
+/api/v1/listings 200
+/api/v1/listings/38f0c26e-0ccd-4967-bc23-5ae5313891f2 200
