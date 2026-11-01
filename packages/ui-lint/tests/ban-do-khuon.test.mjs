@@ -39,7 +39,7 @@ function voi(fn) {
   }
 }
 
-const NHOM = ["bang-hang", "cai-dat-san", "o-nhan-lead", "trang-tam", "trang-thai", "xac-thuc"];
+const NHOM = ["bang-hang", "cai-dat-san", "lead-cua-toi", "o-nhan-lead", "trang-tam", "trang-thai", "xac-thuc"];
 const TRANG_TAM = [
   "exports/new",
   "imports/new",
@@ -57,12 +57,15 @@ const BANG = {
     ngoaiLe: [`${W}/app/settings/[section]/page.tsx`, `${W}/app/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`, `${W}/app/(app)/proto/o-nhan-lead/page.tsx`], ngoaiLe: [] },
+  // Lead của tôi (hàng 27): ba trang ba lối của ADR-0019, nhóm màn mới.
+  "lead-cua-toi": { theoKhuon: ["reui", "trong-kho", "ve-moi"].map((p) => `${W}/app/(app)/proto/lead-bon-nac/${p}/page.tsx`), ngoaiLe: [] },
   "trang-tam": {
     theoKhuon: [...TRANG_TAM, `${W}/app/settings/[section]/page.tsx`],
     ngoaiLe: [
       `${W}/app/(app)/inventory/page.tsx`,
       `${W}/app/(app)/inventory/views/[id]/page.tsx`,
       `${W}/app/(app)/leads/new/page.tsx`,
+      ...["reui", "trong-kho", "ve-moi"].map((p) => `${W}/app/(app)/proto/lead-bon-nac/${p}/page.tsx`),
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
     ],
@@ -81,6 +84,10 @@ const NHAN_DIEN_TRANG_THAI = [
   // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["page.tsx", "trang-thu.tsx"].map((p) => `${W}/app/(app)/proto/nhanh-tuc-thi/${p}`),
   ...["page.tsx", "trang-mau.tsx"].map((p) => `${W}/app/(app)/proto/o-nhan-lead/${p}`),
+  // Lead của tôi (hàng 27): trang ba lối, khuôn tạm và vùng chung.
+  ...["_chung/khung.tsx", "_chung/vung-chung.tsx", "reui/lead-da-nhap.tsx", "reui/page.tsx", "trong-kho/lead-da-nhap.tsx", "trong-kho/page.tsx", "ve-moi/lead-da-nhap.tsx", "ve-moi/page.tsx"].map(
+    (p) => `${W}/app/(app)/proto/lead-bon-nac/${p}`,
+  ),
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -97,6 +104,8 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/inventory/khung.tsx`,
   ...Array(5).fill(`${W}/app/(app)/leads/new/o-lead.tsx`),
   `${W}/app/(app)/leads/new/page.tsx`,
+  // Lead của tôi (hàng 27): trống và lỗi của vùng chung ba lối.
+  ...Array(2).fill(`${W}/app/(app)/proto/lead-bon-nac/_chung/vung-chung.tsx`),
   `${W}/app/settings/users/page.tsx`,
   `${W}/app/settings/users/quan-nguoi.tsx`,
   `${W}/app/settings/users/quan-nguoi.tsx`,
@@ -133,7 +142,7 @@ describe("E1 — bản đồ thật: bốn tệp đủ khoá §11.3", () => {
   it("đối chứng: bản sao mất một tệp nhóm thì danh sách nhóm thiếu đúng tên ấy", () =>
     voi((d) => {
       unlinkSync(join(d, "design/patterns/trang-tam.md"));
-      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "o-nhan-lead", "trang-thai", "xac-thuc"]);
+      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "lead-cua-toi", "o-nhan-lead", "trang-thai", "xac-thuc"]);
     }));
 });
 
@@ -272,9 +281,10 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "lead-cua-toi: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 9 tệp theo khuôn · 5 ngoại lệ · 0 lệch",
-      "trang-thai: 16 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 9 tệp theo khuôn · 8 ngoại lệ · 0 lệch",
+      "trang-thai: 18 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
