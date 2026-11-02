@@ -36,7 +36,7 @@ Dùng lại: `docGia`, `canHoiLai`, `vietPhanTram` (giá), `checkTransition`, `T
 
 - **Đường dẫn:** `/units/call?hang=<mã hồ sơ>` mở chế độ ép giá; `/units/call?lead=<mã lead>` giữ chế độ khai thác của
   hàng 28. Một trang, hai chế độ (ghi chép kiến trúc 29/10: cuộc gọi là chế độ toàn màn của hồ sơ căn).
-- **Đầu màn:** đường dẫn «Hôm nay › <mã căn>», nấc «Nên gọi ép giá» (căn Đang bán), giá hiện tại kèm điều kiện phí, «Lên
+- **Đầu màn:** đường dẫn «Hôm nay › <mã căn>», nấc «Nên gọi điều chỉnh giá» (căn Đang bán), giá hiện tại kèm điều kiện phí, «Lên
   bảng N ngày · lần đổi giá gần nhất M ngày trước».
 - **Kết quả cuộc gọi** (`push/ket-qua.ts`, `push/khoi-ket-qua.tsx`): bốn nút có phím H · G · B · K.
   - H Hạ giá: ô giá + điều kiện phí (Alt+1/Alt+2), dòng «Hiểu là X · trước Y · −z%», hỏi lại theo `canHoiLai`, Enter ghi

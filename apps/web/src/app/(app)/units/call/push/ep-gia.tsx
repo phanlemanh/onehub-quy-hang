@@ -100,6 +100,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
   const { moCanXem } = useBoDongBo();
   const canXem = useCanXem().find((r) => r.listingId === hangId) ?? null;
   const oHa = useRef<HTMLInputElement>(null);
+  const khoiKq = useRef<HTMLDivElement>(null);
   const oChot = useRef<HTMLInputElement>(null);
   const danhSach = useRef<HTMLDivElement>(null);
   const oGia = useRef<HTMLInputElement>(null);
@@ -205,8 +206,11 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
     const laO = dang instanceof HTMLInputElement || dang instanceof HTMLTextAreaElement;
     const trongDs = !dang || dang === document.body || (danhSach.current?.contains(dang) ?? false);
     const cho: ChoTro = laO ? ((dang as HTMLElement).dataset.o === "gia" ? "o-gia" : "o-chu") : "khong";
-    // Con trỏ ở nút ngoài danh sách: chỉ Ctrl+Enter, phím khác đi theo trình duyệt.
-    if (!laO && !trongDs && !((e.ctrlKey || e.metaKey) && e.key === "Enter")) return;
+    // Con trỏ ở một lựa chọn của khối kết quả (sau khi bấm chuột): phím của khối kết quả vẫn chạy, Enter ghi chứ không bấm lại
+    // nút (bấm lại là bỏ chọn).
+    const trongKq = !laO && dang instanceof HTMLElement && !!dang.closest('[data-slot="toggle-group-item"]') && (khoiKq.current?.contains(dang) ?? false);
+    // Con trỏ ở nút khác ngoài danh sách: chỉ Ctrl+Enter, phím khác đi theo trình duyệt.
+    if (!laO && !trongDs && !trongKq && !((e.ctrlKey || e.metaKey) && e.key === "Enter")) return;
     const k = xuLyPhimKetQua(e, cho, chon);
     if (k) {
       e.preventDefault();
@@ -220,7 +224,11 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
       e.preventDefault();
       return chon === "giu-gia" ? void ghi("owner_confirmed", {}, NHAN_KQ["giu-gia"]) : ghiBan();
     }
-    if (chon === "ban") return;
+    if (trongKq && e.key === "Enter" && !e.ctrlKey && !e.metaKey && chon === "ha-gia") {
+      e.preventDefault();
+      return hoiLaiHa ? void ghi("price_changed", hoiLaiHa.lenh, nhanHa(hoiLaiHa.lenh)) : ghiHa();
+    }
+    if (chon === "ban" || trongKq) return;
     const l = xuLyPhim(e, cho, dung);
     if (!l || l.kind === "da-goi" || l.kind === "xong") return;
     e.preventDefault();
@@ -242,7 +250,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
     <div className="flex flex-col gap-1">
       <FramePanel className="flex flex-col gap-2" aria-label="Căn đang gọi">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="warning-light">Nên gọi ép giá</Badge>
+          <Badge variant="warning-light">Nên gọi điều chỉnh giá</Badge>
           <Badge variant={can.standardStatus === "Active" ? "success-light" : "outline"}>{dau.nac}</Badge>
         </div>
         <h1 className="text-lg font-semibold">
@@ -251,7 +259,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
         <p className="text-muted-foreground text-sm">{dau.phu}</p>
       </FramePanel>
 
-      <FramePanel className="flex flex-col gap-3" aria-label="Kết quả cuộc gọi">
+      <FramePanel ref={khoiKq} className="flex flex-col gap-3" aria-label="Kết quả cuộc gọi">
         <h2 className={TIEU_MUC}>Kết quả cuộc gọi</h2>
         <ToggleGroup variant="outline" className="flex-wrap" value={chon ? [chon] : []} onValueChange={(v: string[]) => chonKq((v[v.length - 1] as KetQua | undefined) ?? null)}>
           {KET_QUA.map((k) => (
