@@ -1,0 +1,70 @@
+{
+  "nhanh_chinh": "main",
+  "tick_giay": 5,
+  "han_thue_phut": {
+    "s4": 90,
+    "ghim-lai": 40,
+    "duong-nen": 40,
+    "merge": 120
+  },
+  "nhip_cu_phut": 10,
+  "suc_khoe": {
+    "swap_gb": 8,
+    "ap_luc_muc": 2,
+    "rss_gb": 8
+  },
+  "s4_tran_gom_phut": 60,
+  "bao_ve": [
+    "packages/db/migrations/**",
+    "package-lock.json",
+    "docs/plan/lo-trinh.json",
+    "_acceptance/config.yaml",
+    "CONTEXT.md",
+    "PRODUCT-MAP.md",
+    "LO-TRINH.html",
+    ".env.example",
+    ".github/workflows/**",
+    ".githooks/**",
+    ".claude/settings.json",
+    ".claude/hooks/**",
+    "eslint.config.mjs",
+    "tsconfig.base.json",
+    "packages/core/src/data-classes.ts",
+    "packages/core/src/agreements.ts"
+  ],
+  "nguon_hang": [
+    "docs/plan/lo-trinh.json:86",
+    "docs/plan/lo-trinh.json:31",
+    "docs/plan/lo-trinh.json:32",
+    "docs/plan/lo-trinh.json:34",
+    "docs/plan/lo-trinh.json:35",
+    "docs/plan/lo-trinh.json:36",
+    "docs/plan/lo-trinh.json:37",
+    "docs/plan/lo-trinh.json:92",
+    "docs/plan/lo-trinh.json:64",
+    "docs/plan/lo-trinh.json:65",
+    "docs/plan/lo-trinh.json:52",
+    "docs/plan/lo-trinh.json:38",
+    "docs/plan/lo-trinh.json:33",
+    "docs/plan/lo-trinh.json:va-moc-goi-dau-lead-tra-lai",
+    "docs/plan/lo-trinh.json:va-doi-gia-can-da-ban",
+    "docs/plan/lo-trinh.json:va-tieu-de-goi",
+    "docs/plan/lo-trinh.json:43",
+    "docs/plan/lo-trinh.json:66",
+    "docs/plan/lo-trinh.json:67",
+    "docs/plan/lo-trinh.json:88",
+    "docs/plan/lo-trinh.json:89",
+    "docs/plan/lo-trinh.json:81",
+    "docs/plan/lo-trinh.json:82",
+    "docs/plan/lo-trinh.json:93",
+    "docs/plan/lo-trinh.json:39",
+    "docs/plan/lo-trinh.json:42",
+    "docs/plan/lo-trinh.json:51"
+  ],
+  "han_muc": {
+    "bao_truoc_pct": 80,
+    "ban_giao_pct": 90,
+    "cho_ban_giao_phut": 20,
+    "cho_dat_lai_phut": 45
+  }
+}

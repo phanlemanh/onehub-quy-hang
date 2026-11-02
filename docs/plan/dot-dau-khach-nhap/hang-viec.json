@@ -1,0 +1,740 @@
+{
+ "dot": "dau-khach-nhap",
+ "muc_tieu": "Dựng nửa đầu khách của bản đầu — bảng hàng dạng thẻ, hồ sơ trên điện thoại, luồng Gửi, trang khách, Đã gửi, Hôm nay đầu khách, tab Tôi — trên luật ẩn và liên hệ khách; nhập file bảng hàng cũ không AI (lõi, xem trước và ghi, hoàn tác, nhớ mẫu); số đo hai tuần thử; nền cấu hình theo sàn; và các việc tách ra từ đợt trước",
+ "day": [
+  {
+   "id": "L",
+   "worktree": "/CHUA-CO-WORKTREE/L",
+   "link": ""
+  },
+  {
+   "id": "B",
+   "worktree": "/CHUA-CO-WORKTREE/B",
+   "link": ""
+  },
+  {
+   "id": "G",
+   "worktree": "/CHUA-CO-WORKTREE/G",
+   "link": ""
+  },
+  {
+   "id": "H",
+   "worktree": "/CHUA-CO-WORKTREE/H",
+   "link": ""
+  },
+  {
+   "id": "D",
+   "worktree": "/CHUA-CO-WORKTREE/D",
+   "link": ""
+  },
+  {
+   "id": "X",
+   "worktree": "/CHUA-CO-WORKTREE/X",
+   "link": "",
+   "nghi": true
+  }
+ ],
+ "hang": [
+  {
+   "ma": "86",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lien-he-khach",
+   "day": "L",
+   "uu_tien": 0,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/contacts/**",
+    "packages/api/src/contacts/**",
+    "packages/core/src/sharing/**",
+    "packages/db/migrations/**",
+    "_acceptance/lien-he-khach/**"
+   ],
+   "sau": [
+    "85"
+   ]
+  },
+  {
+   "ma": "31",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "luat-an-va-kiem-ro-ri",
+   "day": "H",
+   "uu_tien": 1,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/redaction/**",
+    "_acceptance/luat-an-va-kiem-ro-ri/**"
+   ],
+   "sau": [
+    "11",
+    "18",
+    "85"
+   ]
+  },
+  {
+   "ma": "32",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bang-hang-dang-the",
+   "day": "B",
+   "uu_tien": 2,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/inventory/cards/**",
+    "_acceptance/bang-hang-dang-the/**"
+   ],
+   "sau": [
+    "13",
+    "23",
+    "53"
+   ]
+  },
+  {
+   "ma": "34",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "luong-gui",
+   "day": "L",
+   "uu_tien": 3,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/shares/new/**",
+    "_acceptance/luong-gui/**"
+   ],
+   "sau": [
+    "3",
+    "31",
+    "32",
+    "86"
+   ]
+  },
+  {
+   "ma": "35",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "trang-khach-rieng",
+   "day": "L",
+   "uu_tien": 4,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/s/**",
+    "_acceptance/trang-khach-rieng/**"
+   ],
+   "sau": [
+    "34"
+   ]
+  },
+  {
+   "ma": "36",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "da-gui",
+   "day": "L",
+   "uu_tien": 5,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/shares/**",
+    "_acceptance/da-gui/**"
+   ],
+   "sau": [
+    "35"
+   ]
+  },
+  {
+   "ma": "37",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "hom-nay-dau-khach",
+   "day": "L",
+   "uu_tien": 6,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/today/buyer/**",
+    "_acceptance/hom-nay-dau-khach/**"
+   ],
+   "sau": [
+    "36"
+   ]
+  },
+  {
+   "ma": "92",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lam-lai-hom-nay-dau-chu",
+   "day": "H",
+   "uu_tien": 7,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/today/*.tsx",
+    "apps/web/src/app/(app)/today/*.ts",
+    "design/patterns/hom-nay-dau-chu.md",
+    "_acceptance/lam-lai-hom-nay-dau-chu/**"
+   ],
+   "sau": [
+    "22",
+    "91"
+   ]
+  },
+  {
+   "ma": "64",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhap-loi-tat-dinh",
+   "day": "G",
+   "uu_tien": 8,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/import/**",
+    "packages/core/test/import/**",
+    "_acceptance/nhap-loi-tat-dinh/**"
+   ],
+   "sau": [
+    "5",
+    "9"
+   ]
+  },
+  {
+   "ma": "65",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhap-excel-xem-truoc-ghi",
+   "day": "G",
+   "uu_tien": 9,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/imports/**",
+    "packages/api/src/imports/**",
+    "packages/db/migrations/**",
+    "_acceptance/nhap-excel-xem-truoc-ghi/**"
+   ],
+   "sau": [
+    "64",
+    "5",
+    "8",
+    "9",
+    "11",
+    "12",
+    "15",
+    "85"
+   ]
+  },
+  {
+   "ma": "52",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "so-do-hai-tuan-thu",
+   "day": "D",
+   "uu_tien": 10,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/metrics/**",
+    "_acceptance/so-do-hai-tuan-thu/**"
+   ],
+   "sau": [
+    "8",
+    "13"
+   ]
+  },
+  {
+   "ma": "38",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "tab-toi",
+   "day": "H",
+   "uu_tien": 11,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/me/**",
+    "_acceptance/tab-toi/**"
+   ],
+   "sau": [
+    "13",
+    "26",
+    "53"
+   ]
+  },
+  {
+   "ma": "33",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "ho-so-can-dien-thoai",
+   "day": "B",
+   "uu_tien": 12,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/units/mobile/**",
+    "_acceptance/ho-so-can-dien-thoai/**"
+   ],
+   "sau": [
+    "17",
+    "32"
+   ]
+  },
+  {
+   "ma": "va-moc-goi-dau-lead-tra-lai",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "va-moc-goi-dau-lead-tra-lai",
+   "day": "D",
+   "uu_tien": 13,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/db/migrations/**",
+    "packages/api/src/routing/**",
+    "packages/api/src/leads/**",
+    "packages/api/test-db/**",
+    "_acceptance/va-moc-goi-dau-lead-tra-lai/**"
+   ],
+   "sau": [
+    "25",
+    "27"
+   ]
+  },
+  {
+   "ma": "va-doi-gia-can-da-ban",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "va-doi-gia-can-da-ban",
+   "day": "G",
+   "uu_tien": 14,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/listing/**",
+    "packages/core/src/pricing/**",
+    "packages/api/src/listings/**",
+    "_acceptance/va-doi-gia-can-da-ban/**"
+   ],
+   "sau": [
+    "8",
+    "13"
+   ]
+  },
+  {
+   "ma": "va-tieu-de-goi",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "va-tieu-de-goi",
+   "day": "B",
+   "uu_tien": 15,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/components/shell/app-shell.tsx",
+    "apps/web/src/components/shell/*.test.ts",
+    "_acceptance/va-tieu-de-goi/**"
+   ],
+   "sau": [
+    "28",
+    "29"
+   ]
+  },
+  {
+   "ma": "43",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "phat-hang",
+   "day": "H",
+   "uu_tien": 16,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/exports/**",
+    "_acceptance/phat-hang/**"
+   ],
+   "sau": [
+    "14",
+    "31"
+   ]
+  },
+  {
+   "ma": "66",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhap-hoan-tac",
+   "day": "G",
+   "uu_tien": 17,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/listing/**",
+    "packages/api/src/imports/undo/**",
+    "_acceptance/nhap-hoan-tac/**"
+   ],
+   "sau": [
+    "65"
+   ]
+  },
+  {
+   "ma": "67",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhap-nho-mau",
+   "day": "G",
+   "uu_tien": 18,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/import/memory/**",
+    "apps/web/src/app/(app)/imports/templates/**",
+    "_acceptance/nhap-nho-mau/**"
+   ],
+   "sau": [
+    "65",
+    "5"
+   ]
+  },
+  {
+   "ma": "88",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "va-duong-loi-hoan-tac",
+   "day": "B",
+   "uu_tien": 19,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/inventory/cell-edit/**",
+    "apps/web/src/app/(app)/inventory/bulk/**",
+    "_acceptance/va-duong-loi-hoan-tac/**"
+   ],
+   "sau": [
+    "16"
+   ]
+  },
+  {
+   "ma": "89",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "doi-dau-chu-hang-loat",
+   "day": "B",
+   "uu_tien": 20,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/inventory/bulk/**",
+    "packages/api/src/listings/**",
+    "packages/api/src/contacts/**",
+    "packages/db/migrations/**",
+    "_acceptance/doi-dau-chu-hang-loat/**"
+   ],
+   "sau": [
+    "16",
+    "85",
+    "86"
+   ]
+  },
+  {
+   "ma": "81",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "so-diem-bien-thien",
+   "day": "D",
+   "uu_tien": 21,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/core/src/config/**",
+    "_acceptance/so-diem-bien-thien/**"
+   ],
+   "sau": [
+    "8"
+   ]
+  },
+  {
+   "ma": "82",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "cau-hinh-theo-san",
+   "day": "D",
+   "uu_tien": 22,
+   "s4": "local",
+   "ranh_gioi": [
+    "packages/api/src/settings/**",
+    "packages/db/migrations/**",
+    "_acceptance/cau-hinh-theo-san/**"
+   ],
+   "sau": [
+    "81",
+    "7",
+    "25"
+   ]
+  },
+  {
+   "ma": "93",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "dang-nhap-auth-15",
+   "day": "B",
+   "uu_tien": 23,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(auth)/**",
+    "design/patterns/xac-thuc.md",
+    "_acceptance/dang-nhap-auth-15/**"
+   ],
+   "sau": [
+    "6",
+    "91"
+   ]
+  },
+  {
+   "ma": "39",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "hom-nay-dau-chu-dien-thoai",
+   "day": "H",
+   "uu_tien": 24,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/today/mobile/**",
+    "_acceptance/hom-nay-dau-chu-dien-thoai/**"
+   ],
+   "sau": [
+    "22",
+    "38",
+    "92"
+   ]
+  },
+  {
+   "ma": "42",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "hom-nay-truong-nhom",
+   "day": "D",
+   "uu_tien": 25,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/today/lead/**",
+    "_acceptance/hom-nay-truong-nhom/**"
+   ],
+   "sau": [
+    "22",
+    "25"
+   ]
+  },
+  {
+   "ma": "51",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lead-dien-thoai",
+   "day": "D",
+   "uu_tien": 26,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/leads/mobile/**",
+    "_acceptance/lead-dien-thoai/**"
+   ],
+   "sau": [
+    "27"
+   ]
+  },
+  {
+   "ma": "3",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bai-thu-zalo",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/bai-thu-zalo/**"
+   ]
+  },
+  {
+   "ma": "5",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "du-lieu-mau-san-thu",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/du-lieu-mau-san-thu/**"
+   ]
+  },
+  {
+   "ma": "6",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "dang-nhap-theo-san",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/dang-nhap-theo-san/**"
+   ]
+  },
+  {
+   "ma": "7",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "moi-nguoi-vai-khu",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/moi-nguoi-vai-khu/**"
+   ]
+  },
+  {
+   "ma": "8",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "loi-hang-va-su-kien",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/loi-hang-va-su-kien/**"
+   ]
+  },
+  {
+   "ma": "9",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "danh-muc-go-ma-can",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/danh-muc-go-ma-can/**"
+   ]
+  },
+  {
+   "ma": "11",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lop-truong-nguon",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/lop-truong-nguon/**"
+   ]
+  },
+  {
+   "ma": "12",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "truc-ai-thay-hang",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/truc-ai-thay-hang/**"
+   ]
+  },
+  {
+   "ma": "13",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "nhanh-tuc-thi",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/nhanh-tuc-thi/**"
+   ]
+  },
+  {
+   "ma": "14",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "bang-hang-kieu-sheet",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/bang-hang-kieu-sheet/**"
+   ]
+  },
+  {
+   "ma": "15",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "sua-tren-o",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/sua-tren-o/**"
+   ]
+  },
+  {
+   "ma": "16",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "sua-hang-loat",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/sua-hang-loat/**"
+   ]
+  },
+  {
+   "ma": "17",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "cot-ho-so-can",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/cot-ho-so-can/**"
+   ]
+  },
+  {
+   "ma": "18",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "anh-can-ba-ngan",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/anh-can-ba-ngan/**"
+   ]
+  },
+  {
+   "ma": "22",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "hom-nay-dau-chu",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/hom-nay-dau-chu/**"
+   ]
+  },
+  {
+   "ma": "23",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "san-sang-ban",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/san-sang-ban/**"
+   ]
+  },
+  {
+   "ma": "25",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "chia-lead-va-han",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/chia-lead-va-han/**"
+   ]
+  },
+  {
+   "ma": "26",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "thong-bao-lead",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/thong-bao-lead/**"
+   ]
+  },
+  {
+   "ma": "27",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lead-bon-nac",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/lead-bon-nac/**"
+   ]
+  },
+  {
+   "ma": "28",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "cuoc-goi-khai-thac",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/cuoc-goi-khai-thac/**"
+   ]
+  },
+  {
+   "ma": "29",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "goi-ep-gia-dot-hai",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/goi-ep-gia-dot-hai/**"
+   ]
+  },
+  {
+   "ma": "53",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "vo-ung-dung",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/vo-ung-dung/**"
+   ]
+  },
+  {
+   "ma": "85",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lien-he",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/lien-he/**"
+   ]
+  },
+  {
+   "ma": "91",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "he-bo-cuc",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/he-bo-cuc/**"
+   ]
+  }
+ ],
+ "ngoai_hang_merge": []
+}
