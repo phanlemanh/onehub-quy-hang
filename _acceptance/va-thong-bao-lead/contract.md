@@ -5,8 +5,10 @@ slug: va-thong-bao-lead
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: draft
+status: approved
 design_doc: _acceptance/va-thong-bao-lead/design.md
+approved_by: Manh Phan
+approved_at: 2026-11-02
 ---
 
 # Acceptance Contract: va-thong-bao-lead
