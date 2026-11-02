@@ -1,12 +1,13 @@
-// «Sẵn sàng bán» ở hồ sơ căn (hàng 23) — E4, E5, E5b, E6, E10. Phần thuần: không React, không mạng.
+// «Sẵn sàng bán» ở hồ sơ căn (hàng 23) — E4, E5, E5b, E6, E10; hàng vá va-san-sang-ban — VSSB-E1…E5. Phần thuần: không React,
+// không mạng.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { STANDARD_STATUSES, type StandardStatus } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
-import { dungLenhTrangThai, type HangSua } from "../../inventory/cell-edit/lenh";
-import { bamSanSang, demAnhThat, hienNutSanSang, kiemSanSang } from "./san-sang";
+import { dungLenhTrangThai, moTaLoi, type HangSua } from "../../inventory/cell-edit/lenh";
+import { bamSanSang, CHU_ANH_CAP_NHAT, dauCuaCan, demAnhThat, hienNutSanSang, kiemSanSang, thieuHienTai, type KetQuaGui } from "./san-sang";
 
 const DU: HangSua = { id: "h1", unitNumber: "A-0601", listPrice: 3_250_000_000, feeInclusion: "included", standardStatus: "Incomplete", legalStatus: "pink_book", occupantType: "vacant" };
 /** Ảnh dạng phản hồi của API ảnh (kiểu UnitPhoto của lõi). */
@@ -89,7 +90,7 @@ test("E6 đủ thì gửi đúng một lệnh của trình sửa ô", async () =
   assert.ok(tuO.ok && "lenh" in tuO);
   assert.deepEqual(kq.lenh, tuO.lenh, `payload: ${JSON.stringify(kq.lenh)}`);
   const da: unknown[] = [];
-  const gui = async (l: unknown) => void da.push(l);
+  const gui = async (l: unknown): Promise<KetQuaGui> => (da.push(l), { ok: true });
   assert.deepEqual(await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui }), { kind: "da-gui" });
   assert.deepEqual(da, [{ type: "status_changed", payload: { to: "Active" } }]);
   const tt = await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable", true)] }), gui });
@@ -99,7 +100,7 @@ test("E6 đủ thì gửi đúng một lệnh của trình sửa ô", async () =
 
 test("E10 ngoại tuyến hay đọc ảnh lỗi: «Cần mạng để kiểm ảnh», không gửi", async () => {
   let gui = 0;
-  const g = async () => void gui++;
+  const g = async (): Promise<KetQuaGui> => (gui++, { ok: true });
   const loi = async () => {
     throw new TypeError("Failed to fetch");
   };
@@ -110,4 +111,89 @@ test("E10 ngoại tuyến hay đọc ảnh lỗi: «Cần mạng để kiểm �
   const nguon = readFileSync(fileURLToPath(new URL("./nut-san-sang.tsx", import.meta.url)), "utf8");
   assert.match(nguon, /disabled=\{!coMang \|\| dang\}/, "nút không mờ khi ngoại tuyến");
   assert.match(nguon, /CHU_CAN_MANG_KIEM_ANH/, "thiếu chữ «Cần mạng để kiểm ảnh»");
+});
+
+// ——— Hàng vá va-san-sang-ban ———
+const NUT = () => readFileSync(fileURLToPath(new URL("./nut-san-sang.tsx", import.meta.url)), "utf8");
+const COT = () => readFileSync(fileURLToPath(new URL("../ho-so/cot-ho-so.tsx", import.meta.url)), "utf8");
+
+test("VSSB-E1 dấu «Chưa có» gắn với lần rao đã bấm", () => {
+  const kq = { id: "lan-A1", dich: ["gia", "legalStatus"] as const };
+  // [lần rao đang xem, dấu mong đợi] — A2 là lần rao khác của cùng căn A (cùng mã căn, khác mã lần rao).
+  const CA: [string, string[]][] = [
+    ["lan-B", []],
+    ["lan-A2", []],
+    ["lan-A1", ["gia", "legalStatus"]],
+  ];
+  for (const [id, mong] of CA) assert.deepEqual([...dauCuaCan(kq, id)], mong, `lần rao ${id}`);
+  assert.deepEqual([...dauCuaCan(null, "lan-A1")], [], "chưa bấm ở đâu");
+  assert.match(COT(), /<NutSanSang key=\{can\.id\} /, "nút không dựng lại theo mã lần rao");
+});
+
+test("VSSB-E2 nút gỡ ra thì dấu «Chưa có» của lần rao ấy không còn", () => {
+  assert.match(NUT(), /useEffect\(\(\) => \(\) => onThieu\(id, \[\]\), \[id, onThieu\]\)/, "thiếu hàm dọn onThieu(id, [])");
+  assert.deepEqual([...dauCuaCan({ id: "lan-A1", dich: [] }, "lan-A1")], [], "hàm dọn để lại dấu");
+});
+
+test("VSSB-E3 danh sách suy lại từ hàng đang xem: ma trận viết trước", async () => {
+  let gui = 0;
+  const g = async (): Promise<KetQuaGui> => (gui++, { ok: true });
+  const bam = async (hang: HangSua, soAnh: number) => {
+    const tt = await bamSanSang(hang, { onLine: true, docAnh: async () => ({ anh: Array.from({ length: soAnh }, () => anh("shareable")) }), gui: g });
+    assert.equal(tt.kind, "thieu", "lần bấm phải ra danh sách");
+    return tt;
+  };
+  const nhan = (tt: Awaited<ReturnType<typeof bam>>, hang: HangSua) => thieuHienTai(tt, hang).map((t) => t.nhan);
+  // [ca, hàng lúc bấm, số ảnh, danh sách lúc bấm, hàng sau khi điền, danh sách sau khi điền]
+  const CA: [string, Partial<HangSua>, number, string[], Partial<HangSua>, string[]][] = [
+    ["điền giá", { listPrice: null, legalStatus: null }, 1, ["Giá về tay", "Pháp lý"], { legalStatus: null }, ["Pháp lý"]],
+    ["điền thêm pháp lý", { listPrice: null, legalStatus: null }, 1, ["Giá về tay", "Pháp lý"], {}, []],
+    ["điền điều kiện phí", { feeInclusion: null }, 1, ["Giá về tay"], {}, []],
+    ["điền tình trạng sử dụng", { occupantType: null }, 1, ["Tình trạng sử dụng"], {}, []],
+    ["chưa có mã căn, 0 ảnh → điền mã căn", { unitNumber: null }, 0, ["Mã căn"], {}, ["Ảnh thật"]],
+    ["chưa có mã căn, 1 ảnh → điền mã căn", { unitNumber: null }, 1, ["Mã căn"], {}, []],
+    ["đủ trường, 0 ảnh", {}, 0, ["Ảnh thật"], {}, ["Ảnh thật"]],
+    ["điền pháp lý, còn ảnh", { legalStatus: null }, 0, ["Ảnh thật", "Pháp lý"], {}, ["Ảnh thật"]],
+  ];
+  let so = 0;
+  for (const [ten, luc, soAnh, truoc, sau, mong] of CA) {
+    const tt = await bam({ ...DU, ...luc }, soAnh);
+    assert.deepEqual(nhan(tt, { ...DU, ...luc }), truoc, `${ten}: lúc bấm`);
+    assert.deepEqual(nhan(tt, { ...DU, ...sau }), mong, `${ten}: còn lại sau khi điền`);
+    so++;
+  }
+  assert.equal(so, CA.length);
+  assert.equal(gui, 0, "hết điều thiếu mà máy tự gửi");
+  assert.deepEqual(thieuHienTai({ kind: "da-gui" }, DU), [], "ngoài trạng thái thiếu thì không danh sách");
+  assert.match(NUT(), /CHU_ANH_CAP_NHAT/, "thiếu dòng «Ảnh thật cập nhật khi bấm lại»");
+  assert.equal(CHU_ANH_CAP_NHAT, "Ảnh thật cập nhật khi bấm lại");
+});
+
+test("VSSB-E4 lệnh không vào hàng đợi: báo lỗi bằng câu của trình sửa ô, không «đã gửi»", async () => {
+  const doc = async () => ({ anh: [anh("shareable")] });
+  const CA: [string, () => Promise<KetQuaGui>, string][] = [
+    ["luật trên máy thiếu pháp lý", async () => ({ ok: false, loi: { kind: "missing-requirement", missing: ["legalStatus"] } }), moTaLoi({ kind: "missing-requirement", missing: ["legalStatus"] })],
+    ["kho trên máy lỗi", async () => ({ ok: false, loi: { kind: "kho" } }), "Máy chưa lưu được lần sửa — thử lại"],
+    ["chuyển không hợp lệ", async () => ({ ok: false, loi: { kind: "invalid-transition", reason: "[Lý do R]" } }), "[Lý do R]"],
+    ["hàm gửi ném lỗi", async () => {
+      throw new Error("IndexedDB");
+    }, "Máy chưa lưu được lần sửa — thử lại"],
+  ];
+  for (const [ten, gui, chu] of CA) {
+    const tt = await bamSanSang(DU, { onLine: true, docAnh: doc, gui });
+    assert.deepEqual(tt, { kind: "loi", chu }, `${ten}: kind ${tt.kind}`);
+  }
+  assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["legalStatus"] }), "Thiếu pháp lý");
+  const nguon = NUT();
+  assert.match(nguon, /disabled=\{!coMang \|\| dang\}/, "nút bị khoá theo trạng thái lỗi");
+  assert.match(nguon, /tt\.kind === "loi" \? <TrangThai kind="error"/, "lời báo lỗi không dùng TrangThai kiểu error");
+});
+
+test("VSSB-E5 lệnh vào hàng đợi: «đã gửi», đúng một lệnh (đối chứng)", async () => {
+  const da: unknown[] = [];
+  const tt = await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: async (l) => (da.push(l), { ok: true }) });
+  assert.deepEqual(tt, { kind: "da-gui" });
+  const tuO = dungLenhTrangThai(DU, "Active");
+  assert.ok(tuO.ok && "lenh" in tuO);
+  assert.deepEqual(da, [tuO.lenh]);
 });

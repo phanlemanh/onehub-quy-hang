@@ -1,0 +1,55 @@
+schema_version: 1
+feature_slug: va-san-sang-ban
+# Ca thuần: apps/web/src/app/(app)/units/ready/san-sang.test.ts (npm test -w @quy-hang/web).
+# Bài trên màn: «DỰNG H» như hàng 23 — node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; trình duyệt chrome-devtools.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «kết quả gắn với căn» có mặt và ok — hàm thuần chọn dấu cho căn đang xem: kết quả { id: A, dich: [gia, legalStatus] } xem ở căn B → []; xem ở lần rao A2 (cùng mã căn, khác mã lần rao) → []; xem ở A → đúng [gia, legalStatus]; và nguồn cot-ho-so.tsx dựng NutSanSang với key={can.id} (regex trên thẻ NutSanSang). Chiều đỏ: hàm trả dich bất kể id thì ca B đỏ, thông điệp nêu mã căn."
+    paths: ["apps/web/src/app/(app)/units/ready/**", "apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «nút gỡ ra thì xoá dấu» có mặt và ok — nguồn nut-san-sang.tsx có hiệu ứng dọn gọi onThieu([]) khi gỡ (regex trên khối useEffect trả hàm dọn), và hàm chọn dấu với id rỗng/null trả []. Chiều đỏ: bỏ hàm dọn thì ca đỏ, thông điệp nêu «onThieu([])»."
+    paths: ["apps/web/src/app/(app)/units/ready/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «danh sách suy lại từ hàng» có mặt và ok — ma trận viết trước 8 ca (1 ảnh trừ khi ghi): thiếu [giá, pháp lý] → [Giá về tay, Pháp lý]; điền giá → [Pháp lý]; điền thêm pháp lý → [] và hàm gửi giả đếm 0 lần; thiếu điều kiện phí → điền → []; thiếu tình trạng sử dụng → điền → []; thiếu mã căn với 0 ảnh → [Mã căn] (không Ảnh thật) → điền mã căn → [Ảnh thật]; thiếu mã căn với 1 ảnh → điền mã căn → []; đủ trường với 0 ảnh → [Ảnh thật]. Số assert bằng số ca. Nguồn nut-san-sang.tsx có chữ «Ảnh thật cập nhật khi bấm lại». Chiều đỏ: trả danh sách lúc bấm (không suy lại) thì ca «điền giá» đỏ, thông điệp nêu điều còn lại."
+    paths: ["apps/web/src/app/(app)/units/ready/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «gửi không vào hàng đợi» có mặt và ok — ma trận viết trước 4 ca của gui giả: { ok: false, loi: missing-requirement [legalStatus] } → kind loi, chữ bằng moTaLoi của cùng lỗi («Thiếu pháp lý»); { ok: false, loi: kho } → «Máy chưa lưu được lần sửa — thử lại»; { ok: false, loi: invalid-transition reason R } → chữ R; gui ném Error → kind loi, chữ lỗi kho; mỗi ca kind ≠ da-gui. Nguồn nut-san-sang.tsx: nút chỉ disabled theo mạng và đang bấm (không theo kind loi), lời báo dùng TrangThai kind error. Chiều đỏ: bỏ kiểm ok thì ca missing-requirement trả da-gui, thông điệp nêu kind."
+    paths: ["apps/web/src/app/(app)/units/ready/**", "apps/web/src/app/(app)/inventory/cell-edit/lenh.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca E6 của hàng 23 (gửi đúng một lệnh qua gui) vẫn ok với gui giả trả { ok: true } → kind da-gui, gui gọi đúng 1 lần với lệnh bằng dungLenhTrangThai(hang, Active). Chiều đỏ: gui trả ok true mà hàm trả loi thì ca đỏ."
+    paths: ["apps/web/src/app/(app)/units/ready/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3482/inventory"
+    steps: "DỰNG H như hàng 23 (node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; chrome-devtools, không playwright MCP, không trình duyệt trong app). Đầu chủ mẫu 1, khổ 1440×900. Tạo qua API hai hàng mới của đầu chủ ở hai căn khác nhau (lệnh tạo hàng, đổi giá kèm điều kiện phí, thêm tình trạng sử dụng — KHÔNG thêm pháp lý, không đổi trạng thái): căn A và căn B. Ở Bảng hàng mở cột hồ sơ của căn A (chọn mã căn A): (1) bấm «Sẵn sàng bán» → thấy «Còn thiếu:» có «Pháp lý» và ô Pháp lý của mục «Lần rao đang mở» ghi «Chưa có · điền ở Bảng hàng» → chụp E6-1-thieu.png; (2) chọn căn B trong Bảng hàng → cột hồ sơ của B không có «Còn thiếu:» và không ô nào ghi «Chưa có» → chụp E6-2-can-khac.png; (3) chọn lại căn A → không có «Còn thiếu:», nút «Sẵn sàng bán» chưa bấm → chụp E6-3-quay-lai.png; (4) bấm lại «Sẵn sàng bán» ở A, rồi điền Pháp lý của hàng A ngay ở ô Bảng hàng (không bấm lại nút) → dòng «Pháp lý» rời danh sách «Còn thiếu» và ô Pháp lý của cột hết chữ «Chưa có» → chụp E6-4-dien-phap-ly.png. Tắt máy chủ dev khi xong (dung-h.mjs --tat)."
+    expected: "Mở cột hồ sơ của căn A Chưa đủ để rao thiếu pháp lý; bấm «Sẵn sàng bán» → thấy «Còn thiếu:» và ô Pháp lý mang «Chưa có · điền ở Bảng hàng» (khung 1); chọn căn B trong Bảng hàng → cột mới không có «Còn thiếu:» và không ô nào mang «Chưa có» (khung 2); quay lại A → không có «Còn thiếu:», nút chưa bấm (khung 3); bấm lại ở A rồi điền pháp lý ở ô Bảng hàng → dòng «Pháp lý» rời danh sách, ô Pháp lý hết dấu, không bấm lại (khung 4). Chụp evidence/E6-1-thieu.png, E6-2-can-khac.png, E6-3-quay-lai.png, E6-4-dien-phap-ly.png."
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [screenshot, observed, verified_at]
+

@@ -1944,6 +1944,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
     },
     {
+      "ma": "va-san-sang-ban",
+      "cau_giao": "Vá Sẵn sàng bán: chuyển căn hay điền xong thì «Còn thiếu» và «Chưa có» làm mới đúng căn đang xem; nút chỉ báo đã gửi khi lệnh vào hàng đợi, không vào thì báo lỗi và giữ nút bấm lại được",
+      "slug": "va-san-sang-ban",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
+    },
+    {
       "ma": "chuyen-khong-ket-khoa",
       "cau_giao": "Bài kiểm «liên hệ: chuyển dữ liệu cũ» của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (dãy H đỏ khi ghim lại PR #66): gom các bước ghi nhiều bảng vào một giao dịch khoá bảng chủ nhà rồi bảng lead trước, kèm ca dựng đúng thế kẹt.",
       "slug": "chuyen-khong-ket-khoa",
