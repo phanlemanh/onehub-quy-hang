@@ -71,7 +71,8 @@ qua `lead_listings`, chưa có thì `null`). Lead không giao cho mình, đã b�
 ## 4. Đường đo
 
 Thước của Cổng Đáng: thời gian lead → cuộc gọi đầu. Số từ `leads.first_called_at − coalesce(routed_at, created_at)` —
-đã có từ hàng 22/25; vòng này thêm một lối ghi mốc ấy ngay trong chế độ cuộc gọi (nút «Đã gọi» của thẻ lead, AC-2).
+đã có từ hàng 22/25; vòng này thêm hai lối ghi mốc ấy trong chế độ cuộc gọi — nút «Đã gọi» và câu trả lời đầu tiên (Hỏi-6,
+AC-2).
 
 <!-- <<<UX-SPEC-TEMPLATE -->
 ## Đặc tả UX
@@ -109,8 +110,11 @@ Thước của Cổng Đáng: thời gian lead → cuộc gọi đầu. Số t�
 
 ### 4. Hành vi
 
-- Phím: Tab / Shift+Tab đổi nhóm (vòng), 1–3 chọn lựa chọn của nhóm đang đứng, Delete xoá câu trả lời của nhóm, Ctrl+Enter
-  «Xong cuộc gọi»; phím số không bắt khi con trỏ đang ở ô chữ (giá, môi giới %).
+- Phím: Tab / Shift+Tab đổi nhóm (vòng), 1–3 chọn lựa chọn của nhóm đang đứng, Delete xoá câu trả lời của nhóm, G «Đã
+  gọi», Ctrl+Enter «Xong cuộc gọi»; phím số không bắt khi con trỏ đang ở ô chữ (giá, môi giới %). Nhóm «Giá và phí»: vào
+  nhóm thì con trỏ ở ô giá; Alt+1 / Alt+2 chọn Bao phí / Không bao phí ngay trong ô, Enter ghi, Esc rời ô về danh sách.
+- Mốc gọi đầu (Hỏi-6): câu trả lời đầu tiên ghi luôn mốc gọi đầu khi lead chưa có (`POST /leads/<mã>/first-call` có
+  sẵn); nút «Đã gọi» cho cuộc gọi không hỏi được gì.
 - Giá theo cách nói của nghề (`docGia`); đổi quá 20% hay đổi điều kiện phí thì hỏi lại kèm giá cũ → mới (`canHoiLai`).
 - Máy tính: sửa ô nào thì ô kia tính lại; môi giới % sửa được (0–10, bước 0,1), không lưu.
 - Khổ: máy tính ≥1280 ba cột; dưới `lg` xếp một cột theo thứ tự thẻ lead → danh sách hỏi → tính giá (bản điện thoại là
@@ -145,4 +149,4 @@ môi giới từng căn (hàng 49), bản điện thoại.
 ## 6. Câu hỏi ở Cổng Phạm vi
 
 Hỏi-1 đường dẫn · Hỏi-2 bộ lựa chọn của danh sách hỏi · Hỏi-3 ba tỉ lệ thuế phí · Hỏi-4 tập căn đem so · Hỏi-5 lúc tạo
-hồ sơ căn của lead. Khuyến nghị và lối khác ở `_acceptance/cuoc-goi-khai-thac/decisions.jsonl`.
+hồ sơ căn của lead · Hỏi-6 câu trả lời đầu tiên có ghi mốc gọi đầu không. Khuyến nghị và lối khác ở `_acceptance/cuoc-goi-khai-thac/decisions.jsonl`.

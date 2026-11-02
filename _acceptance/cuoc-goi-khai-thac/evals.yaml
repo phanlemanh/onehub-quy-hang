@@ -10,7 +10,7 @@ evals:
     criterion: AC-1
     executor: test
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «leads/assigned/{id}: một lead của tôi bất kể nhóm» (packages/api/test-db/cuoc-goi-khai-thac.test.ts) có mặt và ok — dữ liệu: lead L1 giao A ở nấc Đã nhận, L2 giao A đã ghi gọi đầu (rời nhóm Lead mới), L3 giao B, L4 giao A đã trả lại, L5 giao A đã có hồ sơ căn tạo từ lead; A GET L1 → 200 với id, buildingName, unitNumber, need, priceText, listPrice (số), feeInclusion, stage, listingId null; A GET L2 → 200 stage 'called'; A GET L5 → listingId bằng id hồ sơ tạo từ lead; A GET L3 → 404; A GET L4 → 404; findSourceLeaks trên mọi thân trả rỗng và không khoá nào chứa 'phone'; ma trận đếm đúng 5 ca (assert số). Chiều đỏ: bỏ điều kiện matched_agent_user_id → A GET L3 ra 200, ca đỏ ghim 'lead của người khác'."
+    expected: "exit 0; ca «leads/assigned/{id}: một lead của tôi bất kể nhóm» (packages/api/test-db/cuoc-goi-khai-thac.test.ts) có mặt và ok — dữ liệu: lead L1 giao A ở nấc Đã nhận, L2 giao A đã ghi gọi đầu (rời nhóm Lead mới), L3 giao B, L4 giao A đã trả lại, L5 giao A đã có hồ sơ căn tạo từ lead; A GET L1 → 200 với id, buildingName, unitNumber, need, priceText, listPrice (số), feeInclusion, stage, listingId null; A GET L2 → 200 stage 'called'; A GET L5 → listingId bằng id hồ sơ tạo từ lead; A GET L3 → 404; A GET L4 → 404; L6 giao A đã bỏ → 404; findSourceLeaks trên mọi thân trả rỗng và không khoá nào chứa 'phone'; ma trận đếm đúng 6 ca (assert số). Chiều đỏ: bỏ điều kiện matched_agent_user_id → A GET L3 ra 200, ca đỏ ghim 'lead của người khác'."
     paths: [packages/api/src/today/**, packages/api/test-db/cuoc-goi-khai-thac.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -40,15 +40,24 @@ evals:
     criterion: AC-2
     executor: ui-check
     layer: backend-effect
-    target: "Như E1b, dau-chu-1; dung-d.mjs in lead L1 (Đã nhận, chưa gọi) và L7 (sẽ bị trả lại bởi lệnh dung-d.mjs --tra <L7>)"
+    target: "Như E1b, dau-chu-1; dung-d.mjs in lead L11, L12 (Đã nhận, chưa gọi, chưa hồ sơ — riêng cho bài này) và L7 (sẽ bị trả lại bởi lệnh dung-d.mjs --tra <L7>)"
     steps:
-      - "Mở /units/call?lead=<L1>; trong trang gọi GET /api/v1/leads/assigned/<L1> → ghi stage"
-      - "Bấm «Đã gọi» trên thẻ lead → chụp evidence/E2-da-goi.png; ghi chữ nấc và nút «Đã gọi» còn không"
-      - "Gọi lại GET /api/v1/leads/assigned/<L1> → ghi stage; tải lại trang → ghi thẻ còn hiện không"
+      - "Mở /units/call?lead=<L11>; trong trang gọi GET /api/v1/leads/assigned/<L11> → ghi stage"
+      - "Gõ phím G → chụp evidence/E2-da-goi.png; ghi chữ nấc và nút «Đã gọi» còn không"
+      - "Gọi lại GET /api/v1/leads/assigned/<L11> → ghi stage; tải lại trang → ghi thẻ còn hiện không"
+      - "Mở /units/call?lead=<L12>, chỉ dùng phím: Tab tới Tình trạng sử dụng, gõ 1, rồi Ctrl+Enter (không bấm «Đã gọi»); GET /api/v1/leads/assigned/<L12> → ghi stage; chọn thêm một câu trả lời ở lead ấy rồi GET lại → ghi stage có đổi không"
       - "Mở /units/call?lead=<L7>; chạy dung-d.mjs --tra <L7> trong terminal; bấm «Đã gọi» → chụp evidence/E2-409.png; ghi chữ báo và nấc"
-    expected: "Trước: stage 'accepted'. Sau bấm: nấc «Đã gọi», nút ẩn; API trả stage 'called'; tải lại vẫn mở được chế độ cuộc gọi của L1 (lead đã rời nhóm Lead mới). L7: thẻ nói lý do bằng chữ (không mã lỗi trần), nấc giữ nguyên."
-    paths: ["apps/web/src/app/(app)/units/call/**", packages/api/src/routing/**]
+    expected: "Trước: stage 'accepted'. Sau phím G: nấc «Đã gọi», nút ẩn; API trả stage 'called'; tải lại vẫn mở được chế độ cuộc gọi của L11 (lead đã rời nhóm Lead mới). L12: sau câu trả lời đầu tiên stage 'called' dù không bấm «Đã gọi»; câu trả lời thứ hai không gây lỗi, stage giữ 'called'. L7: thẻ nói lý do bằng chữ (không mã lỗi trần), nấc giữ nguyên."
+    paths: ["apps/web/src/app/(app)/units/call/**", packages/api/src/routing/**, packages/api/src/today/**]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mốc gọi đầu: ghi đúng một lần» (apps/web/src/app/(app)/units/call/goi-dau.test.ts) có mặt và ok — với hàm gọi giả, ma trận viết trước 5 ca (assert số): lead chưa mốc + câu trả lời đầu tiên → gọi POST /leads/<id>/first-call đúng một lần; hai câu trả lời liền nhau khi chưa mốc → vẫn một lần; lead đã có mốc (firstCalledAt khác null hay stage 'called') + câu trả lời → không gọi; phím G khi chưa mốc → gọi một lần, khi đã mốc → không gọi; POST trả 409 → trạng thái giữ nấc cũ và câu lý do bằng chữ (không mã lỗi trần). Đối chứng đỏ: bỏ kiểm mốc có sẵn → ca lead đã có mốc gọi tên 'first-call thừa'."
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
     criterion: AC-3
@@ -70,13 +79,14 @@ evals:
     criterion: AC-4
     executor: ui-check
     layer: ui-observed
-    target: "Như E1b, dau-chu-1, lead L1"
+    target: "Như E1b, dau-chu-1, lead L5 đã có hồ sơ H5 (dung-d.mjs in)"
     steps:
+      - "Mở /units/call?lead=<L5>; trong trang đếm sự kiện của H5 (GET /api/v1/listings/<H5>, đếm lịch sử) → ghi số n0; chọn một lựa chọn chưa có ở danh sách hỏi, chờ gửi, đếm lại → n1 (đối chứng dương)"
       - "Ở khối tính giá gõ «2,75 tỷ», chọn Bao phí → chụp evidence/E4-bao-phi.png; ghi về tay và ba dòng khoản"
       - "Sửa ô về tay thành «2,6 tỷ» → ghi ô giá bao phí; sửa môi giới 1 → 1,5 → ghi về tay"
       - "Gõ «abc» vào ô giá → chụp evidence/E4-chua-hieu.png; ghi chữ báo"
-      - "Trong trang gọi GET /api/v1/listings và đếm sự kiện của hồ sơ L1 trước và sau các bước trên (GET /api/v1/listings/<hồ sơ>/events nếu có hồ sơ) → ghi số"
-    expected: "2,75 tỷ bao phí → về tay 2,65375 tỷ (hay viết gọn 2,65 tỷ kèm số đủ), dòng thuế thu nhập cá nhân 55 triệu · lệ phí trước bạ 13,75 triệu · môi giới 27,5 triệu; dòng «Tỉ lệ mặc định của sàn»; sửa về tay thì giá bao phí tính lại; môi giới 1,5% thì về tay giảm 13,75 triệu; «abc» báo chưa hiểu dưới ô; số sự kiện không đổi qua các bước máy tính."
+      - "Chờ 5 giây, đếm lại sự kiện của H5 → n2; GET /api/v1/listings và đếm hồ sơ của toà · căn L5"
+    expected: "2,75 tỷ bao phí → về tay 2,65375 tỷ (hay viết gọn 2,65 tỷ kèm số đủ), dòng thuế thu nhập cá nhân 55 triệu · lệ phí trước bạ 13,75 triệu · môi giới 27,5 triệu; dòng «Tỉ lệ mặc định của sàn»; sửa về tay thì giá bao phí tính lại; môi giới 1,5% thì về tay giảm 13,75 triệu; «abc» báo chưa hiểu dưới ô; n1 = n0 + 1 (đối chứng dương), n2 = n1 (máy tính không ghi gì), vẫn đúng một hồ sơ của L5."
     paths: ["apps/web/src/app/(app)/units/call/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -113,7 +123,7 @@ evals:
     criterion: AC-6
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «phím: ma trận» (apps/web/src/app/(app)/units/call/phim.test.ts) có mặt và ok — bảng viết trước đếm đúng 9 ca (assert số): Tab ở nhóm cuối về nhóm đầu, Shift+Tab ở nhóm đầu về nhóm cuối, '2' ở nhóm nội thất ra lệnh ghi {furnished: lựa chọn thứ hai}, '9' khi nhóm chỉ có 3 lựa chọn không ra lệnh, Delete ra lệnh ghi {<mục>: null}, '1' khi con trỏ ở ô chữ không ra lệnh, Ctrl+Enter ra 'xong', '1' ở nhóm giá chọn điều kiện phí 'included', phím có Alt không ra lệnh; ca «giá trị ngoài bộ» ok — furnished 'Nội thất cao cấp' → hàng lựa chọn có thêm dòng giá trị hiện có đánh dấu ngoài bộ, không lựa chọn nào đang chọn. Đối chứng đỏ: bỏ kiểm ô chữ → ca con trỏ ở ô chữ gọi tên."
+    expected: "exit 0; ca «phím: ma trận» (apps/web/src/app/(app)/units/call/phim.test.ts) có mặt và ok — bảng viết trước đếm đúng 10 ca (assert số): Tab ở nhóm cuối về nhóm đầu, Shift+Tab ở nhóm đầu về nhóm cuối, '2' ở nhóm nội thất ra lệnh ghi {furnished: lựa chọn thứ hai}, '9' khi nhóm chỉ có 3 lựa chọn không ra lệnh, Delete ra lệnh ghi {<mục>: null}, '1' khi con trỏ ở ô chữ không ra lệnh, Ctrl+Enter ra 'xong', con trỏ ở ô giá + Alt+1 → chọn điều kiện phí 'included' và chữ ô giá giữ nguyên, Alt+1 khi con trỏ ở ô môi giới không ra lệnh, Esc ở ô giá → con trỏ về danh sách và phím số chọn lại được; ca «giá trị ngoài bộ» ok — furnished 'Nội thất cao cấp' → hàng lựa chọn có thêm dòng giá trị hiện có đánh dấu ngoài bộ, không lựa chọn nào đang chọn. Đối chứng đỏ: bỏ kiểm ô chữ → ca con trỏ ở ô chữ gọi tên."
     paths: ["apps/web/src/app/(app)/units/call/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -123,7 +133,7 @@ evals:
     layer: backend-effect
     target: "Như E1b; lead L5 đã có hồ sơ căn (dung-d.mjs in mã hồ sơ H5)"
     steps:
-      - "Mở /units/call?lead=<L5>; trong trang gọi GET /api/v1/listings/<H5>/events (hay lịch sử hồ sơ) → ghi số sự kiện details_changed"
+      - "Mở /units/call?lead=<L5>; trong trang gọi GET /api/v1/listings/<H5> (hồ sơ kèm lịch sử sự kiện) → ghi số sự kiện details_changed"
       - "Bấm Tab tới nhóm Nội thất, gõ 2 → chụp evidence/E6-noi-that.png; chờ chỉ báo đồng bộ «đã gửi»; ghi lại số sự kiện và giá trị furnished trên máy chủ"
       - "Gõ Delete ở nhóm ấy → chờ gửi → ghi furnished trên máy chủ"
       - "Bấm vào ô giá rồi gõ 1 → ghi ô giá có chữ '1' không và số sự kiện có đổi không"
@@ -144,13 +154,26 @@ evals:
     criterion: AC-7
     executor: ui-check
     layer: ui-observed
-    target: "Như E1b, lead L1 chưa có giá trên hồ sơ (hay chưa có hồ sơ)"
+    target: "Như E1b, lead L13 chưa có hồ sơ (dung-d.mjs in, riêng cho bài này)"
     steps:
-      - "Mở /units/call?lead=<L1>, tới nhóm Giá và phí → chụp evidence/E7-goi-y.png; ghi chữ gợi sẵn"
-      - "Gõ «2,8 tỷ», chọn Bao phí → ghi dòng «Hiểu là…»; Enter → ghi mức đủ và giá trên thẻ"
+      - "Mở /units/call?lead=<L13>, tới nhóm Giá và phí bằng phím → chụp evidence/E7-goi-y.png; ghi chữ gợi sẵn"
+      - "Chỉ bằng phím, không chuột: xoá ô, gõ «2,8 tỷ», Alt+1 → ghi dòng «Hiểu là…»; Enter → ghi mức đủ và giá trên thẻ"
       - "Gõ «3,5 tỷ», Enter → chụp evidence/E7-hoi-lai.png; ghi chữ hỏi lại; chọn huỷ → ghi giá còn 2,8 tỷ"
     expected: "Ô gợi giá của lead kèm điều kiện phí; «Hiểu là 2,8 tỷ · bao phí» trước khi ghi; Enter ghi, mục giá đủ; 3,5 tỷ hỏi lại kèm 2,8 → 3,5 tỷ và +25%; huỷ thì không ghi."
     paths: ["apps/web/src/app/(app)/units/call/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7c
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; lead L14 đã có hồ sơ H14 giá 2,75 tỷ bao phí (dung-d.mjs in, riêng cho bài này)"
+    steps:
+      - "Mở /units/call?lead=<L14>; nhóm Giá và phí gõ «2,8 tỷ», Alt+1, Enter; chờ chỉ báo «đã gửi»; GET /api/v1/listings/<H14> → ghi listPrice, feeInclusion"
+      - "Gõ «3,5 tỷ», Enter, xác nhận ở hộp hỏi lại; chờ gửi; GET lại → ghi listPrice, feeInclusion và số price_changed"
+      - "Chạy dung-d.mjs --ban <H14> (người khác chuyển H14 sang Đã bán trên máy chủ); gõ «3,4 tỷ», Enter; chờ lượt gửi → chụp evidence/E7c-tu-choi.png; ghi chỉ báo đồng bộ và Cần xem"
+    expected: "Sau 2,8: máy chủ listPrice 2800000000, feeInclusion 'included'. Sau 3,5 đã xác nhận: listPrice 3500000000, có đúng hai price_changed mới. Máy chủ từ chối (căn đã bán): hồ sơ vào Cần xem, chỉ báo nói vì sao, giá trên máy chủ giữ 3500000000."
+    paths: ["apps/web/src/app/(app)/units/call/**", apps/web/src/lib/sync/**]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
   - id: E8
@@ -178,13 +201,13 @@ evals:
     criterion: AC-9
     executor: ui-check
     layer: backend-effect
-    target: "Như E1b; lead L1 chưa có hồ sơ căn"
+    target: "Như E1b; lead L15 chưa có hồ sơ căn (dung-d.mjs in, riêng cho bài này)"
     steps:
-      - "Mở /units/call?lead=<L1>; GET /api/v1/leads/assigned/<L1> → ghi listingId; chụp evidence/E9-chua-ho-so.png (dòng báo tạo hồ sơ)"
-      - "Chọn Tình trạng sử dụng (phím 1) → chờ gửi; GET lại → ghi listingId; GET /api/v1/listings → đếm hồ sơ của toà · căn L1 và ghi occupantType"
-      - "Chọn thêm Pháp lý (phím 1), tải lại trang, chọn Tài chính → chờ gửi; đếm lại hồ sơ của toà · căn L1"
+      - "Mở /units/call?lead=<L15>; GET /api/v1/leads/assigned/<L15> → ghi listingId; chụp evidence/E9-chua-ho-so.png (dòng báo tạo hồ sơ)"
+      - "Chọn Tình trạng sử dụng (phím 1) → chờ gửi; GET lại → ghi listingId; GET /api/v1/listings → đếm hồ sơ của toà · căn L15 và ghi occupantType"
+      - "Chọn thêm Pháp lý (phím 1), tải lại trang, chọn Tài chính → chờ gửi; đếm lại hồ sơ của toà · căn L15"
       - "Lead L9 (dung-d.mjs in, ở trạng thái tạo hàng bị từ chối): chọn một lựa chọn → chụp evidence/E9-loi.png; ghi chữ báo và lựa chọn có được đánh dấu không"
-    expected: "Trước: listingId null. Sau lần chọn đầu: listingId có giá trị, đúng một hồ sơ của L1, occupantType bằng lựa chọn; các lần sau (kể cả sau tải lại) vẫn đúng một hồ sơ, đủ ba mục. L9: báo lỗi ở nhóm, lựa chọn không đánh dấu, bấm lại được."
+    expected: "Trước: listingId null. Sau lần chọn đầu: listingId có giá trị, đúng một hồ sơ của L15, occupantType bằng lựa chọn; các lần sau (kể cả sau tải lại) vẫn đúng một hồ sơ, đủ ba mục. L9: báo lỗi ở nhóm, lựa chọn không đánh dấu, bấm lại được."
     paths: ["apps/web/src/app/(app)/units/call/**", packages/api/src/today/**]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -200,7 +223,7 @@ evals:
     criterion: AC-10
     executor: test
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «leads/assigned/{id}: vai và nguồn» (packages/api/test-db/cuoc-goi-khai-thac.test.ts) có mặt và ok — telesales không vai Đầu chủ GET → 403; chưa đăng nhập → 401; thân 200 của đầu chủ qua findSourceLeaks rỗng và tập khoá bằng đúng tập khai (assert so sâu tập khoá); đối chứng đỏ: thêm cột owner_phone_mask vào câu chọn của bản sao bộ dựng → tập khoá lệch, ca gọi tên khoá thừa."
+    expected: "exit 0; ca «leads/assigned/{id}: vai và nguồn» (packages/api/test-db/cuoc-goi-khai-thac.test.ts) có mặt và ok — telesales không vai Đầu chủ GET → 403; quản trị sàn không vai Đầu chủ GET → 403; chưa đăng nhập → 401; thân 200 của đầu chủ qua findSourceLeaks rỗng và tập khoá bằng đúng tập khai (assert so sâu tập khoá); đối chứng đỏ: thêm cột owner_phone_mask vào câu chọn của bản sao bộ dựng → tập khoá lệch, ca gọi tên khoá thừa."
     paths: [packages/api/src/today/**, packages/api/test-db/cuoc-goi-khai-thac.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
