@@ -1,0 +1,117 @@
+schema_version: 1
+feature_slug: goi-tu-may-tinh
+# Lệnh máy: `executors.test.isolation` (cần DATABASE_URL tới Postgres dãy L — .env.local), `executors.test.core`,
+# `executors.test.web`. Người, sàn, lead lấy từ sàn thử của hàng 27 (packages/api/test-db/san-thu.ts), số mẫu 0900 000 0xx.
+# Dịch vụ đẩy giả: deps.pushSender của buildApp ghi lại mọi lời gửi (như bài kiểm thong-bao-lead).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/goi-tu-may-tinh.test.ts ca «quay số: đầu chủ được giao» có mặt và ok — dc1 có hai đăng ký thông báo ở sàn (endpoint mẫu của fcm.googleapis.com và web.push.apple.com), lead nhập với số mẫu về dc1; bảng ba nấc còn việc (Đã gửi, Đã nhận, Đã gọi) × POST /api/v1/leads/{id}/phone-dial (không gửi kèm endpoint) → 200 {devices: 2, otherDevices: 2}, mỗi nấc hộp thư đi thêm đúng 2 dòng user_id = dc1, payload deepEqual {title: 'Gọi chủ nhà', body: '<Toà> · <nhãn nhu cầu>', url: '/units/call/dial?lead=<id>', tag: 'quay-so:<id>'}; dịch vụ đẩy giả nhận đúng 2 lời gửi tới đúng hai endpoint với đúng payload ấy; đếm 3 nấc. Không đổi lead: đọc dòng lead (outcome, accepted_at, first_called_at, matched_agent_user_id, returned_at) trước và sau → deepEqual, và lead_phone_reveals của lead vẫn 0; đối chứng dương: gọi lối «Nhận» thì accepted_at đổi, gọi mở số thì vết thành 1. Chiều đỏ: bỏ lệnh ghi hộp thư → đếm 0, đỏ nêu «hộp thư»; đổi url sang /today → đỏ nêu url."
+    paths: [packages/api/src/leads/**, packages/core/src/push/**, packages/api/test-db/goi-tu-may-tinh.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «quay số: người không được gọi» — bảng viết trước mười dòng (đầu chủ khác cùng sàn có đăng ký, telesales đã nhập lead, trưởng nhóm có đăng ký, quản trị sàn, người sàn khác, người được giao đã bị gỡ vai Đầu chủ, chưa đăng nhập, lead đã trả lại, lead đã bỏ, lead căn trùng — đầu chủ giữ căn gọi) → mã trả về viết trước theo từng dòng (401, 403 hay 404) và số dòng hộp thư đi có tag 'quay-so:<lead>' sau mỗi dòng vẫn 0, dịch vụ đẩy giả không nhận lời gửi nào; đếm bằng số dòng (10). Đối chứng dương cùng dữ liệu: dòng «đầu chủ được giao» trên chính lead ấy trả 200 và đếm dòng hộp thư ≥ 1. Chiều đỏ: bỏ điều kiện người được giao khỏi truy vấn kiểm → dòng «đầu chủ khác cùng sàn» ra 200, đỏ nêu dòng."
+    paths: [packages/api/src/leads/**, packages/api/test-db/goi-tu-may-tinh.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/push/push.test.ts ca «nội dung quay số» có mặt và ok — noiDungQuaySo({leadId, buildingName, need}) trả object có Object.keys deepEqual PUSH_PAYLOAD_KEYS theo thứ tự, title 'Gọi chủ nhà', body '<Toà> · <nhãn nhu cầu>', url '/units/call/dial?lead=<id mã hoá URL>', tag 'quay-so:<id>'; hàm không nhận tham số số, tên chủ, giá hay mã căn (kiểu tham số chỉ ba khoá — ca kiểm truyền thêm khoá ownerPhone qua ép kiểu thì kết quả vẫn không chứa số). Chiều đỏ: thêm mã căn vào body → ca so body đỏ nêu giá trị."
+    paths: [packages/core/src/push/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «quay số: không rò lớp nguồn» trong packages/api/test-db/goi-tu-may-tinh.test.ts — lead có số mẫu, tên chủ mẫu '[Tên]', giá và mã căn; sau một lời quay số thành công: payload mọi dòng hộp thư đi của lead và mọi payload dịch vụ đẩy giả nhận, thân trả của lời quay số, thân trả của mọi lời bị từ chối ở E2, và mọi dòng ghi ra console (log, error, warn) cùng process.stdout.write/process.stderr.write trong lúc chạy ca (bọc tạm) — không chứa số ở bốn dạng (timDangSo của packages/api/src/owners/ma-hoa.ts), không chứa tên chủ, chuỗi giá hay mã căn của lead. Đối chứng dương: thân trả của lời mở số thành công trên cùng lead chứa số và timDangSo bắt được; payload chứa tên toà (máy dò chuỗi chạy thật). Chiều đỏ: thêm mã căn vào body thông báo → đỏ nêu chỗ rò."
+    paths: [packages/api/src/leads/**, packages/core/src/push/**, packages/api/test-db/goi-tu-may-tinh.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «quay số: chưa có thiết bị khác» — bảng viết trước ba dòng: (a) dc1 không có đăng ký nào, gọi không kèm endpoint → 200 {devices: 0, otherDevices: 0}, hộp thư đi không thêm dòng, dịch vụ đẩy giả không nhận gì; (b) dc1 chỉ có đăng ký M (máy tính), gọi kèm {endpoint: M} → 200 {devices: 1, otherDevices: 0}; (c) dc1 có M và P (điện thoại), gọi kèm {endpoint: M} → {devices: 2, otherDevices: 1}; đếm 3 dòng. Đăng ký của người khác cùng sàn không vào otherDevices (dc2 có một đăng ký, dòng (a) vẫn 0). Chiều đỏ: tính otherDevices bằng devices → dòng (b) đỏ nêu giá trị."
+    paths: [packages/api/src/leads/**, packages/api/test-db/goi-tu-may-tinh.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/units/call/dial/quay-so.test.ts có mặt và ok — guiQuaySo(id, goi) với lời gọi giả: bảng viết trước sáu câu trả lời (200 {devices: 3, otherDevices: 2}, 200 {devices: 1, otherDevices: 1}, 200 {devices: 1, otherDevices: 0}, 404, 401, mạng lỗi) → câu báo viết trước («Đã gửi tới 2 thiết bị khác — chạm thông báo trên điện thoại để gọi», «Đã gửi tới 1 thiết bị khác — chạm thông báo trên điện thoại để gọi», «Chưa có điện thoại nào bật thông báo lead — trên điện thoại mở Hôm nay, bấm Bật thông báo», «Lead này không còn của bạn», «Hết phiên đăng nhập — đăng nhập lại rồi thử», «Mất mạng — chưa gửi được, thử lại khi có mạng»), đếm 6; lời gọi đúng POST /api/v1/leads/<id>/phone-dial, thân mang {endpoint} khi có điểm đăng ký của máy này và {} khi không; hàm không ghi lead (không gọi đường nào khác). Chiều đỏ: báo theo devices thay cho otherDevices → dòng {devices: 1, otherDevices: 0} đỏ nêu câu báo."
+    paths: [apps/web/src/app/(app)/units/call/dial/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/units/call/dial/quay-so.test.ts ca «trang quay số» có mặt và ok — goiChuNha(id, goi, diToi) với lời gọi giả: 200 có số → gọi đúng POST /api/v1/leads/<id>/phone-reveal một lần, diToi được gọi đúng một lần với 'tel:0900000011', kết quả mang số; bảng viết trước bốn câu trả lời lỗi (403, 404, 401, mạng lỗi) → câu báo viết trước như mo-so.ts và diToi không được gọi; docMaLead của trang nhận mã hợp khuôn, từ chối chuỗi sai khuôn và rỗng; hàm không gọi localStorage, sessionStorage hay indexedDB (bọc giả ném lỗi nếu bị gọi). Chiều đỏ: gọi diToi trước khi mở số → ca thứ tự đỏ nêu «tel trước mở số»."
+    paths: [apps/web/src/app/(app)/units/call/dial/**, apps/web/src/app/(app)/today/mo-so.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3483/today"
+    steps:
+      - "Bản dev dãy L ĐANG CHẠY ở http://localhost:3483 (launch web-l, Postgres 5563, sàn «[Mẫu] Sàn thử» đã nạp, lead mẫu dựng bằng packages/api/test-db/dung-man-lead-bon-nac.ts) — không tự khởi động hay tắt máy chủ; không chạm cơ sở dữ liệu ngoài các lối API của màn, trừ bước dựng đăng ký ghi rõ dưới."
+      - "Dùng chrome-devtools MCP. Phiên: chạy `node --env-file=.env.local --import tsx _acceptance/thong-bao-lead/thu/phien.mts dau-chu-1@mau.quy-hang.test` từ gốc kho → JSON {value, qh_san}; mở http://localhost:3483/login rồi evaluate_script đặt hai cookie `qh.session_token=<value>` và `qh_san=<qh_san>` (path=/)."
+      - "Khung 1 (1440×900): ở Hôm nay bấm «Gọi» trên một dòng nhóm «Lead mới» → chế độ cuộc gọi mở; thẻ lead có nút «Quay số trên điện thoại». Chụp evidence/E8-1-nut.png."
+      - "Khung 2: (đầu chủ mẫu 1 chưa có đăng ký thông báo) bấm nút → dòng «Chưa có điện thoại nào bật thông báo lead — trên điện thoại mở Hôm nay, bấm Bật thông báo». Chụp evidence/E8-2-chua-co.png."
+      - "Khung 3: chạy `node --env-file=.env.local --import tsx _acceptance/goi-tu-may-tinh/thu/dang-ky.mts dau-chu-1@mau.quy-hang.test` (thêm một đăng ký mẫu qua POST /api/v1/me/push-subscriptions), bấm «Quay số trên điện thoại» lại → «Đã gửi tới 1 thiết bị khác — chạm thông báo trên điện thoại để gọi» kèm «Gửi lại»; nhãn nấc của thẻ lead không đổi (không thành «Đã gọi»). Chụp evidence/E8-3-da-gui.png."
+      - "Khung 4: emulate networkConditions 'Offline', bấm «Gửi lại» → dòng «Mất mạng — chưa gửi được, thử lại khi có mạng» dưới nút, nút vẫn bấm được; bỏ Offline. Chụp evidence/E8-4-mat-mang.png."
+      - "Khung 5: emulate 'Slow 3G', bấm «Gửi lại» và chụp ngay → nút khoá lúc gửi. Chụp evidence/E8-5-dang-gui.png; bỏ Slow 3G."
+    expected: "(khung 1) chế độ cuộc gọi có nút «Quay số trên điện thoại» trong thẻ lead; (khung 2) chưa thiết bị → câu «Chưa có điện thoại nào bật thông báo lead — trên điện thoại mở Hôm nay, bấm Bật thông báo»; (khung 3) có một thiết bị → «Đã gửi tới 1 thiết bị khác — chạm thông báo trên điện thoại để gọi» kèm «Gửi lại», nấc lead không đổi; (khung 4) mất mạng → dòng lỗi dưới nút, nút bấm lại được; (khung 5) nút khoá lúc đang gửi."
+    paths: [apps/web/src/app/(app)/units/call/dial/**, apps/web/src/app/(app)/units/call/cuoc-goi.tsx]
+    evidence_required: [screenshot, observed]
+
+  - id: E9
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3483/units/call/dial"
+    steps:
+      - "Cùng bản dev và cách đặt phiên như E8 (đầu chủ mẫu 1)."
+      - "Khung 1 (emulate viewport '375x812x3,mobile,touch'): lấy mã một lead nhóm «Lead mới» của đầu chủ mẫu 1 (đọc từ Hôm nay, thuộc tính href của nút «Gọi» `/units/call?lead=<id>`), navigate_page http://localhost:3483/units/call/dial?lead=<id> → thấy «<Toà> · <nhu cầu>» và nút lớn «Gọi chủ nhà» rộng hết khổ. Chụp evidence/E9-1-trang.png."
+      - "Khung 2: evaluate_script chặn điều hướng tel bằng cách ghi lại (gắn trước khi bấm: window.__tel = [] và bọc location.assign; nếu trang dùng thẻ a thì đọc href) rồi bấm «Gọi chủ nhà» → số dạng 0900 000 0xx hiện kèm nút «Gọi» có href tel:0900000xxx; ghi vào observed đích tel trang đã đưa tới. Chụp evidence/E9-2-da-mo.png."
+      - "Khung 3: tải lại trang → số ẩn, lại là nút «Gọi chủ nhà». Chụp evidence/E9-3-tai-lai.png."
+      - "Khung 4: navigate_page http://localhost:3483/units/call/dial?lead=khong-phai-ma → «Không thấy lead này trong việc của bạn» kèm «Về Hôm nay». Chụp evidence/E9-4-khong-thay.png."
+      - "Khung 4b: đặt phiên của dau-chu-2@mau.quy-hang.test (cùng cách), navigate_page tới /units/call/dial?lead=<id của đầu chủ mẫu 1 ở khung 1> → «Không thấy lead này trong việc của bạn» và evaluate_script xác nhận tên toà của lead ấy KHÔNG có trong document.body.innerText; đặt phiên truong-nhom@mau.quy-hang.test, mở cùng đường → trang 404 (không có nút «Gọi chủ nhà»). Chụp evidence/E9-4b-nguoi-khac.png. Đặt lại phiên đầu chủ mẫu 1."
+      - "Khung 5: emulate 'Offline', mở lại trang lead hợp lệ đã tải (hoặc tải khi có mạng rồi bật Offline), bấm «Gọi chủ nhà» → một dòng lỗi dưới nút, nút bấm lại được; bỏ Offline. Chụp evidence/E9-5-mat-mang.png."
+      - "Cuối: evaluate_script dò localStorage, sessionStorage và mọi cơ sở IndexedDB của trang tìm số ở bốn dạng → 0 lần. Ghi vào observed."
+    expected: "(khung 1, 375×812) trang quay số hiện tên toà · nhu cầu và nút lớn «Gọi chủ nhà»; (khung 2) bấm → số hiện theo nhóm chữ số kèm «Gọi» href tel:0900000xxx và trang đã đưa trình duyệt tới đúng tel ấy; (khung 3) tải lại → số ẩn; (khung 4) mã sai khuôn → «Không thấy lead này trong việc của bạn» + «Về Hôm nay»; (khung 4b) đầu chủ mẫu 2 mở lead của đầu chủ mẫu 1 → «Không thấy…», không có tên toà; trưởng nhóm → 404; (khung 5) mất mạng → dòng lỗi, bấm lại được; kho trên máy không chứa số."
+    paths: [apps/web/src/app/(app)/units/call/dial/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E10
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «quay số: url thông báo dẫn tới trang quay số và mở số một vết» trong packages/api/test-db/goi-tu-may-tinh.test.ts — url của payload quay số so khuôn /units/call/dial?lead=<id> và trang `apps/web/src/app/(app)/units/call/dial/page.tsx` tồn tại (đọc đĩa); gọi phone-reveal trên lead ấy bằng dc1 → 200 số mẫu và lead_phone_reveals của lead tăng đúng 1. Chiều đỏ: đổi url payload sang /units/call/quay-so → đỏ nêu «trang không tồn tại»."
+    paths: [packages/api/src/leads/**, packages/core/src/push/**, apps/web/src/app/(app)/units/call/dial/**, packages/api/test-db/goi-tu-may-tinh.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/units/call/dial/quay-so.test.ts ca «Tham chiếu §12 có dòng Gọi từ máy tính» — đọc docs/product/tham-chieu.md, cắt đúng mục «## 12.» tới «## 13.», có một dòng bảng chứa «Gọi từ máy tính» và đủ ba cụm «thông báo», «trang quay số», «tổng đài»; đối chứng dương: cùng hàm cắt mục tìm được dòng «Mở số của lead». Chiều đỏ: đổi chữ dòng thành «Gọi máy tính» → đỏ nêu cụm thiếu."
+    paths: [docs/product/tham-chieu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
