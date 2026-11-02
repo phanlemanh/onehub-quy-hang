@@ -9,8 +9,8 @@ import { QuanNguoi, type Khu, type ThanhVien } from "./quan-nguoi";
 
 export const dynamic = "force-dynamic";
 
-// Cài đặt sàn → Người dùng (S6, hàng 7), dựng qua khuôn MucCaiDat (design/patterns/cai-dat-san.md). Ghép từ thành phần
-// đã cài; khối Pro `solution-users-8` để sau (ADR-0006).
+// Cài đặt sàn → Người dùng (S6, hàng 7), dựng qua khuôn MucCaiDat (design/patterns/cai-dat-san.md). Thân là khối Pro
+// solution-users-8 đã chuyển (hàng 91, components/khoi/solution-users-8/) — mang Frame riêng nên đặt `khoi`.
 export default async function NguoiDung() {
   const cookie = (await headers()).get("cookie") ?? "";
   const me = await readMe(cookie);
@@ -20,7 +20,7 @@ export default async function NguoiDung() {
   const api = getApi();
   const res = await api.request("http://quy-hang.local/api/v1/company/members", { headers: { cookie } });
   return (
-    <MucCaiDat title="Người dùng" description={`Người của sàn ${me.activeCompany.name}`}>
+    <MucCaiDat title="Người dùng" description={`Người của sàn ${me.activeCompany.name}`} khoi>
       {res.status === 403 ? (
         <TrangThai kind="notice" title="Chỉ quản trị sàn xem được trang này." />
       ) : (

@@ -10,6 +10,9 @@ import { fileURLToPath } from "node:url";
 import { deflateSync } from "node:zlib";
 import { kiemChuan, tepVetKhoi } from "../kiem-chuan.mjs";
 import { rongPng } from "../lib/ba-loi.mjs";
+import { tepBanDoHeThietKe } from "../lib/ban-do-he-thiet-ke.mjs";
+import { tepBoCucCan } from "../lib/bo-cuc.mjs";
+import { docBanDo } from "../lib/ban-do.mjs";
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(PKG, "..", "..");
@@ -403,7 +406,7 @@ const TEP_CAY = ["apps/web/components.json", "apps/web/src", "design/patterns", 
 const HO_THAT = ["cot-ho-so-can", "lead-bon-nac"];
 function cay(fn) {
   return tam((d) => {
-    for (const rel of [...TEP_CAY, ...tepVetKhoi(ROOT)]) cpSync(join(ROOT, rel), join(d, rel), { recursive: true });
+    for (const rel of [...TEP_CAY, ...tepVetKhoi(ROOT), ...tepBanDoHeThietKe(ROOT), ...tepBoCucCan(ROOT, docBanDo(ROOT))]) cpSync(join(ROOT, rel), join(d, rel), { recursive: true });
     for (const h of HO_THAT) for (const t of ["design-pass.md", "ba-loi"]) cpSync(join(ROOT, "_acceptance", h, t), join(d, "_acceptance", h, t), { recursive: true });
     mkdirSync(join(d, ".claude/skills"), { recursive: true });
     for (const s of ["quy-hang-ui", "reui"]) symlinkSync(`../../.agents/skills/${s}`, join(d, ".claude/skills", s));

@@ -26,7 +26,7 @@ export default async function Page() {
           <LeadDaNhapThat />
         </KhungLeadCuaToi>
       ) : null}
-      {!dauChu && !telesales ? <Placeholder path="/today" /> : null}
+      {!dauChu && !telesales ? <Placeholder path="/today" trongKhung /> : null}
     </KhungHomNay>
   );
 }

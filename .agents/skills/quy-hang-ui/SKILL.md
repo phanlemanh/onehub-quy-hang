@@ -109,6 +109,116 @@ Kho ở bậc **M1** của design-floor (`design.surface_globs` trong `_acceptan
 `apps/web/src/components/**`). Ở bước chấm của mỗi vòng chạm giao diện, `executors.design.floor` chặn mã màu thô trên
 tệp giao diện mà vòng chạm. Bậc M2 (bộ token, danh mục máy-đọc) mở khi có màn thật.
 
+## Bản đồ hệ thiết kế
+
+Mỗi tệp của hệ thiết kế một dòng (hàng 91): lớp, việc, đường dẫn. Lớp là một trong chỉ dẫn · nền · nhãn · chọn khối ·
+khuôn · bố cục · kiểm · cổng · sổ · đối chiếu. Khối máy đọc dưới đây khai mẫu đường dẫn của hệ thiết kế; kiểm chuẩn so cây
+với bảng — tệp khớp mẫu mà thiếu dòng, hay dòng trỏ tệp không có, thì đỏ. Khối đã chuyển thể (`components/khoi/**`) ghi
+ở `catalog.md`, không lặp ở đây.
+
+<!-- <<<BAN-DO-HE-THIET-KE-MAU
+.agents/skills/quy-hang-ui/*.md
+.claude/rules/giao-dien.md
+CONTEXT.md
+apps/web/components.json
+apps/web/src/app/globals.css
+apps/web/src/components/bo-cuc/*.ts
+apps/web/src/components/bo-cuc/*.tsx
+apps/web/src/components/trang-thai.tsx
+apps/web/src/app/mau/he-bo-cuc/**/*.ts
+apps/web/src/app/mau/he-bo-cuc/**/*.tsx
+design/anh-chuan/ke.json
+design/patterns/*.md
+docs/adr/0002-*.md
+docs/adr/0019-*.md
+docs/adr/0024-*.md
+docs/design/*.md
+_acceptance/config.yaml
+_acceptance/he-bo-cuc/thu/*.cjs
+packages/ui-lint/*.mjs
+packages/ui-lint/*.json
+packages/ui-lint/lib/*.mjs
+packages/ui-lint/rules/*.mjs
+!**/*.test.ts
+BAN-DO-HE-THIET-KE-MAU>>> -->
+
+| Lớp | Việc | Đường dẫn |
+| --- | --- | --- |
+| chỉ dẫn | Skill giao diện của kho: thứ tự thẩm quyền, thang dùng lại, lint, vòng qua bản đồ khuôn, bảng này | `.agents/skills/quy-hang-ui/SKILL.md` |
+| chọn khối | Danh mục thành phần đã cài và khối đã chuyển thể, ô «Duyệt» của từng khối | `.agents/skills/quy-hang-ui/catalog.md` |
+| chỉ dẫn | Luật giao diện theo đường dẫn: thang dùng lại bảy bậc, một họ khung mỗi màn, trang ba lối | `.claude/rules/giao-dien.md` |
+| nhãn | Từ vựng: nhãn UI ↔ tên code, chữ trên màn lấy từ đây | `CONTEXT.md` |
+| cổng | Cấu hình cổng: skill chuẩn giao diện, surface_globs, executors.design | `_acceptance/config.yaml` |
+| đối chiếu | Chụp 21 ảnh chuẩn sáng và 7 tối từ trang mẫu sống | `_acceptance/he-bo-cuc/thu/chup-anh-chuan.cjs` |
+| nền | Cấu hình shadcn: style base-nova, nền neutral, icon lucide, registry @reui | `apps/web/components.json` |
+| nền | Token màu, chữ, bo góc và token bố cục (lề trang, khoảng khung, bề rộng đọc, ngăn, khung vỏ) | `apps/web/src/app/globals.css` |
+| đối chiếu | Dữ liệu mẫu của trang mẫu sống, không gọi API | `apps/web/src/app/mau/he-bo-cuc/du-lieu-mau.ts` |
+| đối chiếu | Màn mẫu của từng bố cục dựng từ khối thật | `apps/web/src/app/mau/he-bo-cuc/man-mau.tsx` |
+| đối chiếu | Trang mẫu sống /mau/he-bo-cuc: thanh chọn bố cục × trạng thái × khổ | `apps/web/src/app/mau/he-bo-cuc/page.tsx` |
+| đối chiếu | Tổ hợp 7 × 5 × 3 và địa chỉ của từng tổ hợp | `apps/web/src/app/mau/he-bo-cuc/to-hop.ts` |
+| đối chiếu | Khuôn TrangMau: vỏ thật với người mẫu, không bộ đồng bộ | `apps/web/src/app/mau/he-bo-cuc/trang-mau.tsx` |
+| đối chiếu | Một tổ hợp ở đúng khổ — máy chụp ảnh chuẩn mở thẳng địa chỉ này | `apps/web/src/app/mau/he-bo-cuc/xem/page.tsx` |
+| bố cục | BoCuc: bảy bố cục giữ lề, đầu màn, xếp thân và cột phụ; không dựng Frame | `apps/web/src/components/bo-cuc/bo-cuc.tsx` |
+| bố cục | ChoTai: chờ tải theo hình của từng bố cục — chỗ duy nhất dựng Skeleton | `apps/web/src/components/bo-cuc/cho-tai.tsx` |
+| bố cục | Dải ngoại tuyến ở đầu màn, nội dung đã tải giữ nguyên | `apps/web/src/components/bo-cuc/dai-ngoai-tuyen.tsx` |
+| bố cục | DauMan: đường dẫn luôn có, tiêu đề, điều khiển cấp màn và nút bên phải | `apps/web/src/components/bo-cuc/dau-man.tsx` |
+| bố cục | Cửa nhập của hệ bố cục cho màn | `apps/web/src/components/bo-cuc/index.ts` |
+| bố cục | Ma trận bảy bố cục × vùng, bản điện thoại, chia nút — một nguồn cho bố cục, test và bài quét | `apps/web/src/components/bo-cuc/ma-tran.ts` |
+| bố cục | NganNoi: ngăn inset bên phải (sheet-9), điện thoại ngăn từ đáy — chỗ duy nhất gọi Sheet, Drawer | `apps/web/src/components/bo-cuc/ngan-noi.tsx` |
+| bố cục | TrangThai: rỗng (empty-state-1), tìm không ra (empty-state-2), lỗi, báo, chờ tải nhỏ | `apps/web/src/components/trang-thai.tsx` |
+| đối chiếu | Kê ảnh chuẩn: mỗi ảnh một dòng địa chỉ, khổ, commit | `design/anh-chuan/ke.json` |
+| khuôn | Khuôn Bảng hàng | `design/patterns/bang-hang.md` |
+| khuôn | Khuôn Cài đặt sàn — bố cục Đọc | `design/patterns/cai-dat-san.md` |
+| khuôn | Khuôn Hồ sơ căn | `design/patterns/ho-so-can.md` |
+| khuôn | Khuôn Hôm nay của đầu chủ | `design/patterns/hom-nay-dau-chu.md` |
+| khuôn | Khuôn Lead của tôi | `design/patterns/lead-cua-toi.md` |
+| khuôn | Khuôn Ô nhận lead | `design/patterns/o-nhan-lead.md` |
+| khuôn | Khuôn trang mẫu sống | `design/patterns/trang-mau.md` |
+| khuôn | Khuôn trang tạm — bố cục Đọc | `design/patterns/trang-tam.md` |
+| khuôn | Khuôn trạng thái: mọi chỗ trình trống · lỗi · báo đi qua TrangThai | `design/patterns/trang-thai.md` |
+| khuôn | Khuôn đăng nhập, chọn sàn, chưa gắn sàn | `design/patterns/xac-thuc.md` |
+| sổ | ADR vỏ, IA, chọn từ ReUI | `docs/adr/0002-vo-va-ia-chon-tu-reui.md` |
+| sổ | ADR cổng chọn khối và trang ba lối | `docs/adr/0019-cong-chon-khoi.md` |
+| sổ | ADR hệ bố cục | `docs/adr/0024-he-bo-cuc.md` |
+| sổ | Nháp hiện trạng cổng chọn khối | `docs/design/cong-chon-khoi-hien-trang.md` |
+| sổ | Lệch lọt qua lưới khuôn — mỗi lần chủ sản phẩm thấy một dòng | `docs/design/lech-lot.md` |
+| chọn khối | Vỏ, IA, khối đích và bố cục của từng màn, chỗ hở | `docs/design/vo-va-ia.md` |
+| kiểm | Lệnh bài quét khuôn: mỗi nhóm một dòng tóm tắt | `packages/ui-lint/ban-do-khuon.mjs` |
+| kiểm | Chặn tắt luật không lý do | `packages/ui-lint/check-bare-disables.mjs` |
+| đối chiếu | Kế hoạch đối chiếu màn mới với màn mẫu hay ảnh chuẩn; trang ba lối | `packages/ui-lint/doi-chieu.mjs` |
+| kiểm | Plugin ESLint quy-hang-ui: mười bốn luật | `packages/ui-lint/index.mjs` |
+| kiểm | Kiểm chuẩn giao diện: cài đặt, skill, danh mục, khuôn, bố cục, ba lối, MCP, bảng này | `packages/ui-lint/kiem-chuan.mjs` |
+| kiểm | Trang ba lối: nhiều ô một hồ sơ, dựng và kiểm | `packages/ui-lint/lib/ba-loi.mjs` |
+| kiểm | Kiểm bảng này: mỗi tệp của hệ thiết kế một dòng | `packages/ui-lint/lib/ban-do-he-thiet-ke.mjs` |
+| kiểm | Đọc bản đồ khuôn, kiểm cây theo khuôn | `packages/ui-lint/lib/ban-do.mjs` |
+| kiểm | Bố cục có khai, khuôn dựng đúng kiểu, ngoại lệ có hạn | `packages/ui-lint/lib/bo-cuc.mjs` |
+| kiểm | Duyệt chuỗi class cho luật | `packages/ui-lint/lib/class-strings.mjs` |
+| kiểm | Gốc kho và bản đồ khuôn cho luật ESLint | `packages/ui-lint/lib/goc-kho.mjs` |
+| kiểm | Kiểm .mcp.json: reui và shadcn, không khoá | `packages/ui-lint/lib/mcp.mjs` |
+| kiểm | Thư mục thành phần cài nguyên bản, luật bỏ qua | `packages/ui-lint/lib/vendor.mjs` |
+| kiểm | Phạm vi của ba luật bố cục | `packages/ui-lint/lib/vung-bo-cuc.mjs` |
+| sổ | Mức nợ giao diện, trần 0 | `packages/ui-lint/muc-no.json` |
+| kiểm | Đếm nợ giao diện so trần | `packages/ui-lint/muc-no.mjs` |
+| nền | Gói ui-lint: lệnh test | `packages/ui-lint/package.json` |
+| kiểm | Luật: không nhập khối cấm ngoài khuôn | `packages/ui-lint/rules/ban-do-khuon.mjs` |
+| kiểm | Luật: cỡ chữ theo thang | `packages/ui-lint/rules/no-arbitrary-text-size.mjs` |
+| kiểm | Luật: dùng render thay asChild (base-nova) | `packages/ui-lint/rules/no-aschild.mjs` |
+| kiểm | Luật: chuyển động theo chuẩn ReUI | `packages/ui-lint/rules/no-banned-motion.mjs` |
+| kiểm | Luật: Sheet, Drawer chỉ qua NganNoi | `packages/ui-lint/rules/no-direct-sheet.mjs` |
+| kiểm | Luật: icon lucide, không emoji | `packages/ui-lint/rules/no-emoji-icons.mjs` |
+| kiểm | Luật: màu qua token | `packages/ui-lint/rules/no-hardcoded-color.mjs` |
+| kiểm | Luật: bề rộng, chiều cao, lề trang thuộc bố cục | `packages/ui-lint/rules/no-layout-arbitrary.mjs` |
+| kiểm | Luật: không alert/confirm của trình duyệt | `packages/ui-lint/rules/no-native-dialogs.mjs` |
+| kiểm | Luật: điều khiển qua thành phần | `packages/ui-lint/rules/no-raw-controls.mjs` |
+| kiểm | Luật: không bảng màu thô | `packages/ui-lint/rules/no-raw-palette.mjs` |
+| kiểm | Luật: Skeleton chỉ trong ChoTai | `packages/ui-lint/rules/no-raw-skeleton.mjs` |
+| kiểm | Luật: bảng qua data-grid | `packages/ui-lint/rules/no-raw-table.mjs` |
+| kiểm | Luật: tắt luật phải có lý do | `packages/ui-lint/rules/require-disable-reason.mjs` |
+| sổ | Đếm lệch lọt mỗi vòng | `packages/ui-lint/so-do-vong.mjs` |
+| kiểm | Tiện ích test luật | `packages/ui-lint/test-utils.mjs` |
+| kiểm | Thử sàn thiết kế | `packages/ui-lint/thu-san.mjs` |
+| cổng | Tìm bản kit nghiệm thu đang cài | `packages/ui-lint/tim-kit.mjs` |
+
 ## Vòng làm việc ngắn
 
 1. Viết kế hoạch bảy dòng của `reui` (bề mặt, archetype, họ khung, mật độ, vùng, trạng thái, chuyển động) — màn vận

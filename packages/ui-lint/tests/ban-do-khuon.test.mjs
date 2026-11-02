@@ -259,7 +259,7 @@ describe("E3 — nhóm đơn vị màn: mọi màn hiện có dựng khuôn ở 
 });
 
 describe("E4 — nhóm trạng thái: mọi chỗ trình trống · lỗi · báo đi qua TrangThai", () => {
-  const QN = `${W}/app/settings/users/quan-nguoi.tsx`;
+  const QN = `${W}/app/(app)/settings/users/quan-nguoi.tsx`;
   it("cây thật: 0 lệch, nhan_dien và năm chỗ khớp bảng viết trước", () => {
     const r = kiemCay(ROOT, docBanDo(ROOT))["trang-thai"];
     assert.deepEqual(r.lech, []);

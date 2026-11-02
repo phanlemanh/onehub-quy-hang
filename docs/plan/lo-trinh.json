@@ -129,7 +129,7 @@
         "N3"
       ],
       "vung": [
-        "apps/web/src/app/settings/users/**"
+        "apps/web/src/app/(app)/settings/users/**"
       ]
     },
     {
@@ -172,7 +172,7 @@
       "vung": [
         "packages/api/src/auth/**",
         "apps/web/src/app/(auth)/**",
-        "apps/web/src/app/settings/users/**"
+        "apps/web/src/app/(app)/settings/users/**"
       ]
     },
     {
@@ -325,7 +325,7 @@
       ],
       "vung": [
         "design/patterns/**",
-        "apps/web/src/app/settings/**",
+        "apps/web/src/app/(app)/settings/**",
         "apps/web/src/app/(auth)/**",
         "apps/web/src/components/shell/placeholder.tsx"
       ]
@@ -670,7 +670,7 @@
       ],
       "vung": [
         "packages/core/src/import/normalize/**",
-        "apps/web/src/app/settings/labels/**"
+        "apps/web/src/app/(app)/settings/labels/**"
       ]
     },
     {
@@ -694,7 +694,7 @@
       ],
       "vung": [
         "packages/api/src/imports/ai/aliases/**",
-        "apps/web/src/app/settings/labels/suggestions/**"
+        "apps/web/src/app/(app)/settings/labels/suggestions/**"
       ]
     },
     {
@@ -1298,7 +1298,7 @@
         "P8"
       ],
       "vung": [
-        "apps/web/src/app/settings/labels/**"
+        "apps/web/src/app/(app)/settings/labels/**"
       ]
     },
     {
@@ -1319,7 +1319,7 @@
         "P9"
       ],
       "vung": [
-        "apps/web/src/app/settings/statuses/**"
+        "apps/web/src/app/(app)/settings/statuses/**"
       ]
     },
     {
@@ -1342,7 +1342,7 @@
         "P10"
       ],
       "vung": [
-        "apps/web/src/app/settings/fields/**"
+        "apps/web/src/app/(app)/settings/fields/**"
       ]
     },
     {
@@ -1364,7 +1364,7 @@
         "P11"
       ],
       "vung": [
-        "apps/web/src/app/settings/lead-routing/**"
+        "apps/web/src/app/(app)/settings/lead-routing/**"
       ]
     },
     {
@@ -1385,7 +1385,7 @@
         "P12"
       ],
       "vung": [
-        "apps/web/src/app/settings/fees/**"
+        "apps/web/src/app/(app)/settings/fees/**"
       ]
     },
     {
@@ -1407,7 +1407,7 @@
         "P13"
       ],
       "vung": [
-        "apps/web/src/app/settings/templates/**"
+        "apps/web/src/app/(app)/settings/templates/**"
       ]
     },
     {

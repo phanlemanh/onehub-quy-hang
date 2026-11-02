@@ -11,6 +11,8 @@ import { fileURLToPath } from "node:url";
 import { docBanDo, kiemCay, manNgoaiBanDo } from "./lib/ban-do.mjs";
 import { cacOBaLoi, divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
 import { kiemMcp } from "./lib/mcp.mjs";
+import { dongHan, kiemBoCuc } from "./lib/bo-cuc.mjs";
+import { kiemBanDoHeThietKe } from "./lib/ban-do-he-thiet-ke.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -241,8 +243,19 @@ function kiemBanDo(root, loi, dong) {
   const cay = kiemCay(root, bd);
   const lech = [...Object.values(cay).flatMap((r) => r.lech), ...manNgoaiBanDo(root, bd)];
   for (const l of bd.loi) loi.push(`khuôn: ${l}`);
+  // Bố cục (hàng 91): màn dưới (app) thuộc nhóm có khai bo_cuc mà khuôn dựng đúng kiểu; ngoại lệ có hạn in ra từng dòng.
+  const bc = bd.loi.length ? { lech: [], han: [] } : kiemBoCuc(root, bd);
+  lech.push(...bc.lech);
   for (const l of lech) loi.push(`khuôn: ${l.tep}: ${l.nhom} — ${l.dieu}`);
   dong.push(`khuôn: ${bd.nhom.length} nhóm · ${bd.loi.length} lỗi đọc · ${lech.length} lệch`);
+  for (const h of bc.han) dong.push(dongHan(h));
+}
+
+/** Bản đồ hệ thiết kế (hàng 91): mỗi tệp khớp mẫu của hệ thiết kế một dòng trong bảng của skill. */
+function kiemHeThietKe(root, loi, dong) {
+  const r = kiemBanDoHeThietKe(root);
+  if (r.loi.length) return loi.push(...r.loi);
+  dong.push(`bản đồ hệ thiết kế: ${r.soTep} tệp · ${r.soDong} dòng`);
 }
 
 /** MCP của kho (hàng 91): `.mcp.json` khai reui và shadcn, không mang khoá. */
@@ -299,6 +312,7 @@ export function kiemChuan(root, { homNay = new Date().toISOString().slice(0, 10)
   kiemBanDo(root, loi, dong);
   kiemBaLoiCay(root, loi, dong);
   kiemMcpKho(root, loi, dong);
+  kiemHeThietKe(root, loi, dong);
   return { loi, canhBao, dong: loi.length ? [] : [...dong, "chuẩn giao diện: đạt"] };
 }
 

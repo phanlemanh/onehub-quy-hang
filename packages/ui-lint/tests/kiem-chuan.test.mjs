@@ -8,6 +8,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as KC from "../kiem-chuan.mjs";
 import { kiemChuan, tepVetKhoi } from "../kiem-chuan.mjs";
+import { tepBanDoHeThietKe } from "../lib/ban-do-he-thiet-ke.mjs";
+import { tepBoCucCan } from "../lib/bo-cuc.mjs";
+import { docBanDo } from "../lib/ban-do.mjs";
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(PKG, "..", "..");
@@ -25,7 +28,7 @@ const TEP = [
 
 function banSao() {
   const root = mkdtempSync(join(tmpdir(), "kiem-chuan-"));
-  for (const rel of [...TEP, ...tepVetKhoi(ROOT)]) cpSync(join(ROOT, rel), join(root, rel), { recursive: true });
+  for (const rel of [...TEP, ...tepVetKhoi(ROOT), ...tepBanDoHeThietKe(ROOT), ...tepBoCucCan(ROOT, docBanDo(ROOT))]) cpSync(join(ROOT, rel), join(root, rel), { recursive: true });
   mkdirSync(join(root, ".claude/skills"), { recursive: true });
   for (const s of ["quy-hang-ui", "reui"]) symlinkSync(`../../.agents/skills/${s}`, join(root, ".claude/skills", s));
   return root;
