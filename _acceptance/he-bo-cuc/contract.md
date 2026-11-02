@@ -5,9 +5,7 @@ slug: he-bo-cuc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, web]
-status: approved
-approved_by: Manh Phan
-approved_at: 2026-11-02
+status: draft
 design_doc: docs/superpowers/specs/2026-11-02-he-bo-cuc-design.md
 ---
 
@@ -34,7 +32,7 @@ Given một màn dưới `(app)` dựng `<BoCuc kieu="…">` với vùng của n
 When màn hiện ở máy tính rộng
 Then đúng bảy kiểu được nhận (kiểu lạ là lỗi kiểu TypeScript); bố cục chỉ giữ khung trang — lề, dải đầu màn, xếp thân
 và cột phụ theo kiểu — và không tự dựng Frame: mỗi vùng là một khối ReUI nguyên vẹn mang Frame của nó (đầu khung, thanh
-công cụ, chân); cột phụ chỉ ở Danh sách – chi tiết, Hồ sơ (dữ kiện trái 20rem), Luồng nhiều bước; lề, khoảng
+công cụ, chân); cột phụ chỉ ở Danh sách – chi tiết (hồ sơ trong ngăn inset bên phải) và Luồng nhiều bước; Hồ sơ một cột căn giữa; lề, khoảng
 cách lấy từ token bố cục, không từ số trong màn; mỗi ô của trang mẫu mang một nhãn nguồn (khối · c-* · thành phần · ghép)
 ở bảng bóc tách, không ô nào vẽ tay.
 
