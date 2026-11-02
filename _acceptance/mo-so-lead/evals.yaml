@@ -52,6 +52,17 @@ evals:
     executor: ui-check
     layer: ui-observed
     target: "http://localhost:3483/today"
+    steps:
+      - "Bản dev dãy L ĐANG CHẠY ở http://localhost:3483 (launch web-l, Postgres 5563, sàn «[Mẫu] Sàn thử» đã nạp, lead mẫu dựng bằng packages/api/test-db/dung-man-lead-bon-nac.ts) — không tự khởi động hay tắt máy chủ; không chạm cơ sở dữ liệu ngoài các lối API của màn."
+      - "Dùng chrome-devtools MCP (không trình duyệt trong app). Phiên: chạy `node --env-file=.env.local --import tsx _acceptance/thong-bao-lead/thu/phien.mts dau-chu-1@mau.quy-hang.test` từ gốc kho → JSON {value, qh_san}; mở http://localhost:3483/login rồi evaluate_script `document.cookie = 'qh.session_token=<value>; path=/'; document.cookie = 'qh_san=<qh_san>; path=/'`."
+      - "Khung 1 (1440×900): navigate_page http://localhost:3483/today; nhóm «Lead mới» có dòng lead với nút «Mở số» cạnh «Nhận»/«Đã gọi». Chụp evidence/E6-1-mo-so.png."
+      - "Khung 2: bấm «Mở số» trên dòng lead đầu → số dạng 0900 000 0xx hiện trên dòng kèm nút «Gọi»; evaluate_script đọc href của a[href^=\"tel:\"] → tel:0900000xxx; nấc của dòng (nhãn Đã gửi/Đã nhận) không đổi. Chụp evidence/E6-2-so-hien.png."
+      - "Khung 3 (emulate viewport '375x812x3,mobile,touch', tải lại, bấm «Mở số» cùng dòng): số và «Gọi» nằm dưới tên lead. Chụp evidence/E6-3-dien-thoai.png."
+      - "Khung 4 (1440×900): tải lại trang → dòng lại là nút «Mở số», không còn số. Chụp evidence/E6-4-tai-lai.png."
+      - "Khung 5: trên một dòng nấc Đã gửi bấm «Nhận», rồi vẫn thấy «Mở số» và bấm mở được số. Chụp evidence/E6-5-sau-nhan.png."
+      - "Khung 6: emulate networkConditions 'Offline', bấm «Mở số» trên một dòng chưa mở → dòng chữ «Mất mạng — chưa mở được số, thử lại khi có mạng.» dưới nút, nút vẫn bấm được; bỏ Offline (emulate không networkConditions), bấm lại → số hiện. Chụp evidence/E6-6-mat-mang.png (lúc thấy dòng lỗi)."
+      - "Khung 7: emulate networkConditions 'Slow 3G', bấm «Mở số» trên một dòng chưa mở và chụp ngay → nút bị khoá (disabled) lúc chờ. Chụp evidence/E6-7-dang-mo.png; bỏ Slow 3G."
+      - "Cuối: evaluate_script dò localStorage (mọi khoá và giá trị) và các cơ sở IndexedDB của trang (indexedDB.databases(), đọc mọi store) tìm số ở bốn dạng 0900000xxx, 0900 000 xxx, +84…, 84… của các số vừa mở → 0 lần. Ghi kết quả vào observed."
     expected: "Đầu chủ mẫu 1 có một lead đã về mình ở nhóm «Lead mới»: (khung 1, 1440×900) dòng lead có nút «Mở số» cạnh «Nhận»/«Đã gọi»; (khung 2) bấm «Mở số» → số hiện trên dòng dạng nhóm 0900 000 0xx kèm nút «Gọi» có href tel:0900000xxx; nhóm vẫn đúng chỗ, «Nhận»/«Đã gọi» không đổi nấc; (khung 3, 375×812) cùng dòng trên điện thoại, số và «Gọi» xuống dưới tên; (khung 4) tải lại trang → số ẩn, lại là nút «Mở số»; (khung 5) bấm «Nhận» trên một lead Đã gửi rồi vẫn thấy «Mở số» và mở được; (khung 6) emulate networkConditions Offline rồi bấm «Mở số» → dòng chữ «Mất mạng — chưa mở được số, thử lại khi có mạng» dưới nút, nút vẫn bấm được; bỏ Offline, bấm lại → số hiện; (khung 7) emulate Slow 3G, bấm «Mở số» và chụp ngay lúc chờ → nút bị khoá; sau các bước, localStorage và IndexedDB của trang không chứa số (evaluate_script dò bốn dạng)."
     paths: [apps/web/src/app/(app)/today/**]
     evidence_required: [screenshot, observed]
