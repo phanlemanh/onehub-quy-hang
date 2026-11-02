@@ -1,19 +1,18 @@
 ---
 schema_version: 2
 feature_slug: he-bo-cuc
-verdict: REJECT
-failed_evals: ["E6"]
-reason:
+verdict: PASS
+failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: bf10b05baad2f9d43f41e05792ca6e905a912793
+verified_commit: 77a20a0520b078a24677dde9f19169bbfca471ea
 human_signoff:
 ---
 
 # Evidence Report: he-bo-cuc
 
-Round 2. Mười sáu trên mười bảy eval đạt. Eval E6 (ui-check, AC-6) không đạt: ở khổ 375, bố cục «Luồng nhiều bước» hiện thẳng trong trang chứ không phải «ngăn toàn màn» như Expected. Mọi lệnh suite xanh. Lệnh ui-check:E6 là lệnh duy nhất kết thúc khác 0, và nó gắn eval E6; không có lệnh fail nào không gắn eval.
+Round 2. Nội dung thay trọn round cũ; lịch sử round nằm ở mục Iterations.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -25,7 +24,7 @@ Round 2. Mười sáu trên mười bảy eval đạt. Eval E6 (ui-check, AC-6) 
 | E4c | AC-4 | test | PASS |
 | E4u | AC-4 | ui-check | PASS |
 | E5 | AC-5 | test | PASS |
-| E6 | AC-6 | ui-check | FAIL |
+| E6 | AC-6 | ui-check | PASS |
 | E7 | AC-7 | test | PASS |
 | E7u | AC-7 | ui-check | PASS |
 | E8 | AC-8 | test | PASS |
@@ -38,208 +37,220 @@ Round 2. Mười sáu trên mười bảy eval đạt. Eval E6 (ui-check, AC-6) 
 ## Evidence
 
 - eval: E1
-  run_id: minted-he-bo-cuc-E1-r2
+  run_id: minted-he-bo-cuc-E1-r1
   exit_code: 0
-  baseline: green
+  carried_from_round: 1
+  baseline: n-a
   verifier: config:executors.test.ui_lint
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T04:58:26Z
   output: |
-    lệnh: npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 17121.056625
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E1b
-  run_id: minted-he-bo-cuc-E1b-r2
+  run_id: minted-he-bo-cuc-E1b-r1
   exit_code: 0
-  baseline: green
+  carried_from_round: 1
+  baseline: n-a
   verifier: config:executors.script.giao_dien
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T04:58:26Z
   output: |
-    lệnh: node packages/ui-lint/kiem-chuan.mjs
-    chuẩn giao diện: đạt
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E2
   run_id: minted-he-bo-cuc-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2088.010958
+    ℹ duration_ms 1587.935292
+    (lệnh npm test -w @quy-hang/web kết thúc sạch)
 
 - eval: E3
   run_id: minted-he-bo-cuc-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2088.010958
+    ℹ duration_ms 1587.935292
+    (lệnh npm test -w @quy-hang/web kết thúc sạch)
 
 - eval: E4
-  run_id: minted-he-bo-cuc-E4-r2
+  run_id: minted-he-bo-cuc-E4-r1
   exit_code: 0
-  baseline: green
+  carried_from_round: 1
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T04:58:26Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2088.010958
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E4c
-  run_id: minted-he-bo-cuc-E4c-r2
+  run_id: minted-he-bo-cuc-E4c-r1
   exit_code: 0
-  baseline: green
+  carried_from_round: 1
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T04:58:26Z
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 202.851834
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E4u
   run_id: minted-he-bo-cuc-E4u-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   screenshot: evidence/E4u-truong-nhom.png
   observed: |
-    Trưởng nhóm, /inventory, 1440x900: thanh trên bên phải có nút đen «+ Lead» liền kề nút mũi tên xuống (tách đôi kiểu ReUI), không có nút «Tạo ▾» riêng; bảng hàng có cột thứ hai mở sẵn. Bấm mũi tên mở popover đúng hai mục «Nhập Excel» và «Phát hàng» (E4u-step3-menu-open.png); bấm «Nhập Excel» đến /imports/new, thanh trên vẫn «+ Lead» và mũi tên (E4u-step3-after-nhap-excel.png).
-    Đầu chủ, /today (E4u-dau-chu.png): thanh trên giống hệt, «+ Lead» và mũi tên. Khớp Expected lối ReUI; không mâu thuẫn.
+    E4u-truong-nhom.png (/inventory, 1440x900, truong nhom): thanh tren co chon san «[Mau] San thu», o «Go ma can… ⌘K» o giua, nut den «+ Lead» dinh lien mui ten xo xuong ben canh (nhom nut), chip «Da dong dong bo · 13:20», chuong, avatar «TR»; ben duoi la Bang hang nhom theo Toa -> Loai can (14 can); man khong co nut tao rieng. Khop Expected (loi ReUI: nut chinh + mui ten). E4u-step2-menu-mo.png: menu tha xuong duoi mui ten co dung hai muc «Nhap Excel» va «Phat hang» (khong lap «+ Lead»). E4u-step3.png: sau khi bam «Nhap Excel» man «Nhap Excel» (duong dan Quy hang › Nhap Excel, «Man nay dang dung») tai /imports/new, thanh tren van «+ Lead» + mui ten. E4u-dau-chu.png (/today, dau chu-1): thanh tren y het: «+ Lead» + mui ten, chip dong bo, chuong, avatar «DA»; noi dung la hang doi Hom nay; E4u-step4-menu-mo.png menu mo cung hai muc Nhap Excel, Phat hang. Tat ca khop Expected va bang §9.
   network_observed: clean
 
 - eval: E5
   run_id: minted-he-bo-cuc-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2088.010958
+    ℹ duration_ms 1587.935292
+    (lệnh npm test -w @quy-hang/web kết thúc sạch)
 
 - eval: E6
-  run_id: minted-he-bo-cuc-E6-r2
-  exit_code: 1
+  run_id: E6-he-bo-cuc-s4v2-verifier-2026-11-02
+  exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   screenshot: evidence/E6-tran-375.png
   observed: |
-    Đạt: Tràn 375 thành thẻ (E6-tran-375.png); Danh sách – chi tiết 375 mở tờ «Hồ sơ căn» từ đáy cao 716px và mở lại khi bấm thẻ khác (E6-danh-sach-chi-tiet-375.png, E6-ngan-375-mo-lai.png); 1440 ngăn nổi inset bên phải cách mép 16px, đè bảng, bấm dòng khác thì đổi hồ sơ không đóng (E6-ngan-1440.png, E6-ngan-1440-doi-dong.png); Hồ sơ một cột, Đọc và Dòng tin giữ hình, Bảng điều khiển báo «không có trên điện thoại»; 1024 cùng bố cục 1440 theo Hỏi-5; không bố cục nào cuộn ngang ở 375.
-    Không đạt: E6-luong-nhieu-buoc-375.png chụp màn «Nhập Excel · Bước 2 / 4 · Ghép cột» hiện thẳng trong trang giữa thanh trên và thanh tab dưới, khung Ghép cột và Xem trước xếp dọc; không có ngăn hay tờ toàn màn, không phần tử role=dialog. Mâu thuẫn Expected «Luồng nhiều bước ngăn toàn màn».
+    Đã mở bằng Read từng frame vừa lưu và đối chiếu với Expected. Chỉ những tệp dưới đây được mở; ba tệp E6-ngan-1440-da-dong, E6-ngan-375-da-dong và E6-ngan-375-mac-dinh (tệp cuối trùng nội dung với E6-danh-sach-chi-tiet-375) không mở lại, kết luận về trạng thái «đã đóng» lấy từ số đo dlg=null.
+    - E6-tran-375.png: tiêu đề «Bảng hàng», 6 thẻ dọc (A-06.01 · 3,10 tỷ … C-21.03 · 6,10 tỷ), chân «6 / 128 căn», thanh dưới 4 tab. Không có bảng, không cuộn ngang. Khớp «Tràn thành thẻ».
+    - E6-danh-sach-chi-tiet-375.png: phía trên mờ, phía dưới là ngăn từ đáy tiêu đề «Hồ sơ căn» (A-06.01, Đang bán, 3,10 tỷ, thuộc tính căn, lịch sử, chân «Còn · giữ giá» và «Gửi khách»). Khớp «mở chi tiết trong ngăn từ đáy».
+    - E6-doc-375.png: «Cài đặt sàn», một cột (ô tên gọi, công tắc, Tỷ/Triệu, Huỷ/Lưu). Giữ hình.
+    - E6-ho-so-375.png: một cột, đầu hồ sơ A-06.01, giá 3,10 tỷ, thuộc tính căn, lần rao đang mở, lịch sử. Giữ một cột.
+    - E6-bang-dieu-khien-375.png: «Tổng quan», thẻ «Bảng điều khiển không có trên điện thoại / Mở trên máy tính để xem đội.», phần còn lại trống. Khớp.
+    - E6-luong-nhieu-buoc-375.png: «Nhập Excel», chip «Bước 2 / 4 · Ghép cột», nút X ở đầu, nút Lùi/Tiếp, khối Xem trước. Phủ kín khung, không còn thanh dưới. Khớp «ngăn toàn màn».
+    - E6-dong-tin-375.png (xem kèm văn bản đo lúc chụp): «Đã gửi», Activity, các chip lọc, mốc TODAY, các thẻ hoạt động. Giữ hình dòng tin.
+    - E6-tran-1440.png: vỏ đủ (thanh trái, cột điều hướng 200px), bảng 5 cột, không có ngăn. E6-tran-1024.png: cùng bố cục, bảng hẹp hơn.
+    - E6-danh-sach-chi-tiet-1440.png: bảng bên trái bị ngăn «Hồ sơ căn» (inset, bo góc, cách mép khoảng 16px) đè từ bên phải, hàng A-06.01 được tô chọn, có nút mở toàn màn và đóng. Khớp «ngăn inset bên phải đè lên bảng».
+    - E6-danh-sach-chi-tiet-1024.png: cùng bố cục, ngăn rộng 512 nằm bên phải, cột điều hướng 200px còn hiện, không có hình riêng. Khớp dòng sổ Hỏi-5.
+    - E6-ngan-1440.png: ngăn hiện hồ sơ A-12.08 (4,25 tỷ) sau khi bấm dòng A-12.08, hàng đó được tô chọn.
+    - E6-ngan-1440-dong-khac.png: ngăn vẫn mở, hồ sơ đổi sang C-08.11 (3,95 tỷ, Chờ duyệt, Toà C), hàng C-08.11 được tô. Khớp «bấm dòng khác vẫn đổi hồ sơ».
+    - E6-ngan-375.png: ngăn từ đáy, hồ sơ A-12.08 (4,25 tỷ), nền phía trên mờ. Khớp «từ đáy ở 375».
+    Ghi nhận phụ, không ảnh hưởng kết quả. Dữ liệu mẫu có tiêu đề hồ sơ luôn ghi «Toà A» dù dòng chọn thuộc Toà C (C-08.11); đó là dữ liệu mẫu, không thuộc tiêu chí AC-6. Huy hiệu «N» của công cụ dev Next.js đã được ẩn bằng CSS trong iframe khi chụp lượt này.
   network_observed: clean
-  output: |
-    PASS  Không cuộn ngang ở 375, cả 7 bố cục (scrollWidth bằng innerWidth).
-    PASS  Danh sách – chi tiết ở 375: ngăn từ đáy; ở 1440: ngăn nổi inset bên phải, đổi dòng không đóng.
-    FAIL  Luồng nhiều bước ở 375 phải là «ngăn toàn màn»: thực tế hiện thẳng trong trang, không có ngăn. Số 0 phần tử role=dialog. Tệp ma-tran.ts ghi dien_thoai «ngăn toàn màn» nhưng bo-cuc.tsx nhánh luong-nhieu-buoc chỉ xếp lưới, không dùng NganNoi hay Drawer.
-    PASS  1024 cùng bố cục với 1440 theo dòng sổ Hỏi-5.
 
 - eval: E7
   run_id: minted-he-bo-cuc-E7-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2088.010958
+    ℹ duration_ms 1587.935292
+    (lệnh npm test -w @quy-hang/web kết thúc sạch)
 
 - eval: E7u
   run_id: minted-he-bo-cuc-E7u-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   screenshot: evidence/E7u-trang.png
   observed: |
-    E7u-trang.png: /mau/he-bo-cuc ở 1440, không bị đưa về /login; thanh chọn có 7 bố cục, 5 trạng thái, các nút khổ 1440, 1024, 375 và Mở riêng. Chờ tải là lưới khung chờ 5 cột x 9 hàng (45 phần tử), rỗng có biểu tượng kính lúp và nút «Bỏ lọc», lỗi có dải đỏ nhạt và nút «Thử lại», ngoại tuyến có dải đầu màn «Đang xem bản đã tải — mất mạng» với bảng 6 căn giữ nguyên. Hồ sơ ở 1024 một cột, không có cột thứ hai. Ghi chú nhỏ: ở khổ 1440 nội dung trong khung bị cắt mép phải (nút avatar chỉ thấy chữ «T»); không ảnh hưởng điều kiện đã nêu.
+    E7u-trang.png: trang /mau/he-bo-cuc mở thẳng ở cổng 3494, tiêu đề «Hệ bố cục — trang mẫu sống», thanh chọn 3 hàng (7 bố cục: Tràn, Danh sách – chi tiết, Đọc, Hồ sơ, Bảng điều khiển, Luồng nhiều bbước, Dòng tin; 5 trạng thái; khổ 1440/1024/375/Mở riêng), bên dưới là khung bàn làm việc «[Mẫu] Sàn thử» với bảng 6/128 căn. Không bị đưa về /login. E7u-tran-mac-dinh.png: bảng Bảng hàng 6 hàng, huy hiệu Đang bán/Giữ chỗ/Chờ duyệt. E7u-tran-cho-tai.png: chỉ có khung (cột trái, thanh trên, breadcrumb) và lưới xương 5 cột x 8 hàng các thanh xám, không có bảng thật = chờ tải theo hình lưới, đúng. E7u-tran-rong.png: biểu tượng kính lúp, «Không căn nào khớp bộ lọc», «Bỏ bớt điều kiện lọc để thấy thêm căn.», nút «Bỏ lọc» = rỗng có hành động, đúng. E7u-tran-loi.png: dải đỏ nhạt «Không tải được danh sách / Kiểm tra mạng rồi thử lại.» kèm nút «Thử lại» = lỗi có thử lại, đúng. E7u-tran-ngoai-tuyen.png: dải đầu màn «Đang xem bản đã tải — mất mạng / Thay đổi được giữ trên máy và gửi đi khi có mạng lại.» nằm phía trên, bảng 6 căn vẫn nguyên bên dưới = ngoại tuyến giữ nội dung, đúng. E7u-ho-so-1024.png: bố cục Hồ sơ ở khổ 1024 (khung thu hẹp ~1024): căn A-06.01 Đang bán, 3,10 tỷ, thanh mức đủ thông tin 3/5, khối THUỘC TÍNH CĂN, LẦN RÀO ĐANG MỞ; một cột, không vỡ. Ghi chú: ở khổ 1440 khung xem thử bị cắt mép phải vì bằng đúng bề ngang cửa sổ chụp (1440), không phải lỗi đo được của trang; không có lỗi console.
   network_observed: clean
 
 - eval: E8
   run_id: minted-he-bo-cuc-E8-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.ui_lint
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 17121.056625
+    ℹ duration_ms 16410.855958
+    (lệnh npm test -w @quy-hang/ui-lint kết thúc sạch)
 
 - eval: E9
-  run_id: minted-he-bo-cuc-E9-r2
+  run_id: minted-he-bo-cuc-E9-r1
   exit_code: 0
-  baseline: green
+  carried_from_round: 1
+  baseline: n-a
   verifier: config:executors.test.ui_lint
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T04:58:26Z
   output: |
-    lệnh: npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 17121.056625
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E9b
   run_id: minted-he-bo-cuc-E9b-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.lint
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm run lint
     chuẩn giao diện: đạt
 
 - eval: E10
   run_id: minted-he-bo-cuc-E10-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.ui_lint
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 17121.056625
+    ℹ duration_ms 16410.855958
+    (lệnh npm test -w @quy-hang/ui-lint kết thúc sạch)
 
 - eval: E10u
   run_id: minted-he-bo-cuc-E10u-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T06:03:05Z
-  screenshot: evidence/E10u-nguoi-dung.png
+  verified_at: 2026-11-02T06:14:26Z
+  screenshot: evidence/E10u-step1.png
   observed: |
-    E10u-nguoi-dung.png (1440x900): vỏ Cài đặt sàn, đường dẫn «Cài đặt sàn > Người dùng», tiêu đề «Người dùng», nút «Mời người», hai tab «Thành viên 7» và «Vùng 2», ô «Tìm theo email», danh sách 7 người dạng hàng (avatar, email, huy hiệu vai, vùng, «Sửa», xoá); nội dung rộng 1135px trong cột 1167px, không max-width. Hộp «Mời người» và «Sửa» đều có ô chọn vai (Telesales, Đầu chủ, Đầu khách, Trưởng nhóm, Quản trị sàn) kèm vùng phụ trách.
-    E10u-trang-tam.png: trang tạm «Cách gọi» cùng bố cục Đọc, nói «Dựng ở mục 45 của lộ trình». E10u-nguoi-dung-375.png: thẻ thành viên một cột, không cuộn ngang (scrollWidth bằng clientWidth, 375). Khớp Expected.
+    E10u-nguoi-dung.png (1440): vo ung dung co thanh dieu huong "CAI DAT SAN" ben trai (Nguoi dung dang chon, Cach goi, Truong rieng, Trang thai, Luat chia lead, Thue phi, Mau nhap). Cot noi dung: breadcrumb "Cai dat san > Nguoi dung", tieu de "Nguoi dung", mo ta "Nguoi cua san [Mau] San thu", dong "7 thanh vien · 2 vung" va nut den "Moi nguoi" o phai. Hai tab "Thanh vien 7" (gach chan) va "Vung 2". O tim "Tim theo email". Khoi "Thanh vien - 7 nguoi trong san" gom cac dong: dau-chu-1 (Dau chu, Toa A), dau-chu-2 (Dau chu, Toa B), dau-khach (Dau khach, Chua giao vung), hai-vai (Dau chu + Telesales), quan-tri (chip "Ban", "Quan tri cuoi", Quan tri san), telesales, truong-nhom; moi dong co nut Sua va thung rac (dong cua chinh minh la icon thoat). Noi dung chiem het be rong cot (tu ~280 den ~1415), khong gioi han hep. Khong co dem ghe. Khop Expected.
+    E10u-trang-tam.png (1440): cung vo, muc "Cach goi" dang chon; cung bo cuc Doc: breadcrumb, tieu de "Cach goi", mo ta "San goi ten truong va gia tri the nao?", mot the rong het be rong cot co icon bua, "Man nay dang dung", "Dung o muc 45 cua lo trinh." Khop Expected (trang tam noi muc lo trinh).
+    E10u-nguoi-dung-375.png (375): header "Cai dat san", nut "< Cai dat san", tieu de "Nguoi dung", mo ta, "7 thanh vien · 2 vung", nut "Moi nguoi", tab Thanh vien 7 / Vung 2, o tim, danh sach the 1 cot (avatar, email, chip vai, vung, Sua, rac) vua khung, thanh tab duoi "Cai dat san | Toi"; khong thay phan nao bi cat ngang; do duoc scrollWidth = 375 = clientWidth => khong cuon ngang. Khop Expected.
+    E10u-step4-hop-moi.png: hop thoai "Moi nguoi" co Email, Vai (5 checkbox chon duoc), Vung phu trach (Toa A, Toa B), nut Huy/Moi — vai chon duoc trong hop moi.
   network_observed: clean
 
 - eval: E11
   run_id: minted-he-bo-cuc-E11-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.design_floor
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
   output: |
-    lệnh: node "$R/scripts/design-floor-s4.mjs" --root .
-    (không có dòng lỗi; không mã màu thô trên tệp giao diện vòng chạm)
+    design-floor-s4 không in dòng lỗi nào; lệnh kết thúc sạch, không có mã màu thô trên tệp giao diện vòng chạm.
 
 ### Lệnh suite (hồi quy)
+
+- cmd: npm test -w @quy-hang/core
+  run_id: minted-he-bo-cuc-SUITE-npm_test_w_quy_hang_core-r2
+  exit_code: 0
+  verified_at: 2026-11-02T06:14:26Z
 
 - cmd: npm test -w @quy-hang/api
   run_id: minted-he-bo-cuc-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
 
 - cmd: npm test -w @quy-hang/connect
   run_id: minted-he-bo-cuc-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
 
 - cmd: npm run test:hooks
   run_id: minted-he-bo-cuc-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
 
 - cmd: npm run typecheck
   run_id: minted-he-bo-cuc-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-02T06:03:05Z
+  verified_at: 2026-11-02T06:14:26Z
 
 ## Known limits
 
@@ -247,22 +258,22 @@ Round 2. Mười sáu trên mười bảy eval đạt. Eval E6 (ui-check, AC-6) 
 
 ## Analyst
 
-Eval không-phân-biệt (xanh trên cả mã hiện tại lẫn mã nền, nên chứng minh harness chứ chưa chứng minh tính năng; cần viết lại để assert hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý):
+carried tu round 2 — baseline khong do lai round nay (evals.yaml khong doi tu lan baseline cuoi). Baseline khong do: moi eval ghi baseline n-a.
 
+Eval khong-phan-biet (pass tren ca HEAD lan baseline cuoi, chung minh harness chu khong phai feature; viet lai de assert hanh vi moi hoac xac nhan la regression-guard co chu y):
 - npm test -w @quy-hang/ui-lint: E1, E8, E9, E10
 - node packages/ui-lint/kiem-chuan.mjs: E1b
 - npm test -w @quy-hang/web: E2, E3, E4, E5, E7
 - npm test -w @quy-hang/core: E4c
 - npm run lint: E9b
-- design-floor-s4.mjs --root .: E11
-
-Baseline không đo: E4u, E6, E7u, E10u (eval ui-check, baseline n-a).
+- design-floor-s4 (config:executors.script.design_floor): E11
 
 ## Variance
 
-none — mọi eval đa lần chạy đều đồng nhất (mọi eval chạy một lần, tất định).
+none — every multi-run eval is uniform (moi eval chay mot lan, deterministic, khong co pass_rate hon hop).
 
 ## Iterations
 
-Round 1: E11 bị chặn (CLAUDE_PLUGIN_ROOT không đặt, lệnh không chạy tới bước kiểm); E4u thất bại — vỏ dựng nút chia «+ Lead ▾» chứ không phải lối «+ Tạo ▾» ở dòng sổ Hỏi-2 mới nhất, trưởng nhóm thiếu mục «Nhập Excel» so với Tham chiếu §9; E10u thất bại — màn Người dùng không có lời mời đang chờ và bố cục Đọc không giới hạn bề rộng đọc. Cần hợp đồng làm rõ hoặc sửa code, rồi chạy lại E11 với biến CLAUDE_PLUGIN_ROOT.
-Round 2: E6 thất bại — ở khổ 375 bố cục «Luồng nhiều bước» hiện thẳng trong trang, không có ngăn toàn màn (bo-cuc.tsx nhánh luong-nhieu-buoc chỉ xếp lưới, trong khi ma-tran.ts khai «ngăn toàn màn»). E4u, E10u, E11 nay đạt. Trả lại cho bước làm.
+Round 1: E1, E1b, E4, E4c, E9 dat va duoc mang sang round 2 (carry-forward); chi tiet round 1 khong nam trong du lieu round nay.
+Round 2 (luot dau): E6 chua dat — Luong nhieu buoc o 375 chua la ngan phu toan man; sua o commit 750e735, tra ve trien khai.
+Round 2 (chay lai tren 77a20a0): moi eval dat, khong con eval nao rot.

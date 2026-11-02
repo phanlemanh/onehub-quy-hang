@@ -5,7 +5,7 @@ slug: he-bo-cuc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, web]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-02
 design_doc: docs/superpowers/specs/2026-11-02-he-bo-cuc-design.md
@@ -130,3 +130,13 @@ vào đúng một bố cục» của ADR.
 
 - Vùng của hàng: `ranh_gioi` hàng 91 ở `hang-viec.json`, cộng `apps/web/src/app/mau/**` và `apps/web/src/proxy.ts`
   (trang mẫu sống nằm ngoài `(app)` — layout của `(app)` đòi phiên).
+- Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Nếu người dùng mở thẳng một luồng nhiều bước từ đường dẫn chia sẻ hoặc tab mới trên điện thoại, bấm Đóng có thể không có tác dụng và họ chỉ thoát được bằng đường dẫn trong ngăn. Hiện chưa có màn thật nào dùng bố cục này nên chưa ai gặp. — `apps/web/src/components/bo-cuc/luong-toan-man.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Một màn sau này dùng tuỳ chọn ngăn toàn màn theo đúng lời mô tả có thể bị phủ kín cả màn hình máy tính thay vì ngăn bên phải. Hiện không màn nào gặp tình huống này. — `apps/web/src/components/bo-cuc/ngan-noi.tsx`
+- Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Trên điện thoại, nếu mở luồng nhiều bước đầu tiên trong tab, nút X, phím Esc và chạm ra ngoài đều không đóng được ngăn và không báo gì. Ngăn che cả thanh tab nên người dùng chỉ thoát được qua đường dẫn trong ngăn. — `apps/web/src/components/bo-cuc/luong-toan-man.tsx`
+- Ngoài-5 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Trang mẫu và ảnh chuẩn Dòng tin hiện chữ tiếng Anh và tên người nước ngoài, nên người so màn mới với ảnh chuẩn sẽ thấy chữ lạ so với giao diện tiếng Việt thật. — `apps/web/src/components/khoi/solution-crm-5/data.tsx`
+- Ngoài-7 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Nếu người làm màn quên khai phần chi tiết, cột bên phải của màn Danh sách – chi tiết biến mất mà không có cảnh báo. Người dùng cuối chỉ gặp khi một màn được dựng sai. — `apps/web/src/components/bo-cuc/bo-cuc.tsx`
+- Ngoài-8 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm tự động coi vùng đầu màn là có mặt dù do chính bài kiểm tự gắn nhãn, nên nếu bố cục làm hỏng vùng này thì bài kiểm vẫn báo xanh. Người dùng không thấy trực tiếp. — `apps/web/src/components/bo-cuc/bo-cuc.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bộ kiểm tra «không còn nút tạo trùng» bỏ sót các nút dẫn tới tạo bằng cách khác, nên ở Bảng hàng vẫn còn một nút Nhập Excel mà kiểm tra không bắt. Người dùng có thể thấy hai chỗ cùng làm một việc. — `apps/web/src/components/shell/menu-tao.test.ts`
+- Ngoài-10 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm «bố cục không tự dựng khung» có thể vẫn xanh dù tên khung đổi, nên về sau có thể bỏ sót việc bố cục dựng khung trở lại. Người dùng không thấy gì ngay. — `apps/web/src/components/bo-cuc/bo-cuc.test.ts`
+- Ngoài-11 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm các màn lỗi và chờ tải chỉ xác nhận tệp có nhập khối chung chứ chưa kiểm khối đó có hiện ra. Nếu có tuyến nhập mà không dùng, người dùng có thể gặp màn lỗi trống. — `apps/web/src/components/trang-thai.test.ts`
+- Ngoài-12 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Ghi chú commit đi kèm bộ ảnh chuẩn có thể không đúng với phiên bản giao diện đã thực sự được chụp, làm người sau khó tin ảnh ứng với mã nào. — `_acceptance/he-bo-cuc/thu/chup-anh-chuan.cjs`
