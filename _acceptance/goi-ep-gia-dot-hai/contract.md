@@ -5,7 +5,7 @@ slug: goi-ep-gia-dot-hai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-goi-ep-gia-dot-hai-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -91,3 +91,14 @@ Quét bằng skill morphological-scan, preset entity-feature (đối tượng: m
 
 - Không migration, không bảng mới, không API mới.
 - Tám Hỏi ở `decisions.jsonl`; người chọn khác khuyến nghị thì tiêu chí liên quan sửa trước khi duyệt.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-03:
+  - Ngoài-1: Người dùng cuối không bị ảnh hưởng: tính năng ghi giữ giá hoạt động như đã hứa. Chỉ là hồ sơ nghiệm thu không nói rõ hai bài thử đã dùng nhầm căn của nhau, nên lần chấm sau có thể bị nhiễu và báo xanh chưa chắc chắn.
+  - Ngoài-2: Bài thử tự động xác nhận «Enter không ghi nhầm Còn · giữ giá» chỉ chờ 3 giây nên có thể bỏ sót lỗi nếu máy chủ nhận chậm hơn. Người dùng không gặp lỗi mới nào từ đây; chỉ là lưới an toàn của đội kiểm thử kém chặt hơn.
+  - Ngoài-3: Nếu một sàn đổi tên nhóm «Nên gọi điều chỉnh giá», màn ghi cuộc gọi vẫn hiện tên mặc định, lệch với tên trên màn Hôm nay. Chỉ lệch chữ, không sai dữ liệu. (Đã sửa ở vòng chấm sau — nhãn nhóm nay lấy tên sàn đặt; dòng giữ theo chọn của chủ kho.)
+  - Ngoài-4: Nếu đầu chủ chọn «Giữ giá» rồi dùng phím mũi tên sang lựa chọn khác và nhấn Enter để chọn, máy ghi ngay «Còn · giữ giá» thay vì chuyển lựa chọn. Một sự kiện ghi nhầm có thể phải sửa lại sau. (Đã sửa ở vòng chấm sau — Enter chỉ ghi khi con trỏ ở đúng lựa chọn đang chọn; dòng giữ theo chọn của chủ kho.)
+  - Ngoài-5: Bài thử tự động cho thao tác bấm chuột rồi Enter chưa chứng minh được điều nó hứa, nên lỗi bấm lại làm mất lựa chọn có thể lọt qua mà vẫn báo đạt. Người dùng không thấy gì cho đến khi lỗi thật xảy ra. (Đã sửa ở vòng chấm sau — bài thử viết lại bằng chuột và phím thật, đếm sự kiện; dòng giữ theo chọn của chủ kho.)
+  - Ngoài-6: Bài thử chỉ kiểm có dòng chữ «Đã ghi» hiện ra, không đếm số lần ghi và không kiểm lựa chọn còn được giữ. Ghi hai lần hay mất lựa chọn vẫn có thể được báo là đạt. (Đã sửa ở vòng chấm sau — bài thử nay đếm owner_confirmed trên máy chủ và kiểm lựa chọn còn giữ; dòng giữ theo chọn của chủ kho.)
+  - Ngoài-7: Thẻ trên đầu màn gọi vẫn ghi «Nên gọi ép giá», là chữ cũ đã bỏ, và không theo tên nhóm mà sàn tự đặt. Đầu chủ vẫn gọi và ghi được bình thường, chỉ thấy chữ lệch với màn Hôm nay. (Đã sửa ở vòng chấm sau — nhãn đầu màn không còn chữ «ép giá», lấy tên nhóm sàn đặt; dòng giữ theo chọn của chủ kho.)
+  - Ngoài-8: Nếu mở một căn chưa có lịch sử trên máy lúc mất mạng hoặc máy chủ lỗi, khối lịch sử cứ hiện «Đang tải» mà không báo lỗi hay cho thử lại. Có mạng lại và mở lại thì lịch sử hiện đúng.
+  - Ngoài-9: Bài kiểm câu «thấp hơn giá về tay» chỉ thử một trường hợp nên có thể bỏ sót việc tính nhầm khi giá đã gồm phí. Người dùng hiện chưa thấy sai số nào.
+  - Ngoài-10: Bài kiểm đầu màn dùng dữ liệu căn tự khai chứ không dựng từ chuỗi sự kiện thật, nên nếu cấu trúc dữ liệu đổi sau này bài kiểm có thể vẫn xanh dù đầu màn sai.

@@ -7,7 +7,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: a56984665127916a78c90aeab45555b845053465
-human_signoff:
+human_signoff: Manh Phan 2026-11-03
 ---
 
 # Evidence Report: goi-ep-gia-dot-hai
@@ -140,7 +140,7 @@ human_signoff:
   run_id: minted-goi-ep-gia-dot-hai-E1b-r6
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E1b-1440.png
   observed: |
@@ -151,7 +151,7 @@ human_signoff:
   run_id: minted-goi-ep-gia-dot-hai-E2b-r6
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E2b-step1.png
   observed: |
@@ -162,7 +162,7 @@ human_signoff:
   run_id: minted-goi-ep-gia-dot-hai-E3b-r6
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E3b-step1.png
   observed: |
@@ -173,7 +173,7 @@ human_signoff:
   run_id: E5b-vong8-P3-bcf205c0
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E5b-step1.png
   observed: |
@@ -184,7 +184,7 @@ human_signoff:
   run_id: E5c-r8-P9-c8d9021f
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E5c-mat-mang.png
   observed: |
@@ -195,7 +195,7 @@ human_signoff:
   run_id: minted-goi-ep-gia-dot-hai-E6-r6
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E6-giu-gia.png
   observed: |
@@ -206,7 +206,7 @@ human_signoff:
   run_id: E7b-v9-20261103-0113
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E7b-step1.png
   observed: |
@@ -217,7 +217,7 @@ human_signoff:
   run_id: minted-goi-ep-gia-dot-hai-E8-r6
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E8-step1.png
   observed: |
@@ -228,7 +228,7 @@ human_signoff:
   run_id: minted-goi-ep-gia-dot-hai-E9b-r6
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E9b-step1.png
   observed: |
@@ -241,7 +241,7 @@ human_signoff:
   run_id: E10b-r6-2026-11-03-dayD-3485
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E10b-step1.png
   observed: |
