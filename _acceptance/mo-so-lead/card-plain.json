@@ -1,28 +1,4 @@
 {
-  "feature_plain": "Đầu chủ được giao lead bấm «Mở số» ngay trên dòng lead ở Hôm nay, thấy số chủ nhà và bấm «Gọi»; mỗi lần mở để lại một vết ai mở, lúc nào; người khác không mở được.",
-  "will_do": [
-    {"id": "AC-1", "p": "Sẽ cho đầu chủ đang được giao lead mở đúng số người đã nhập, ở mọi nấc Đã gửi · Đã nhận · Đã gọi; mỗi lần mở ghi một vết; mở số không đổi nấc lead."},
-    {"id": "AC-2", "p": "Sẽ từ chối mọi người khác (đầu chủ khác, telesales, trưởng nhóm, quản trị, sàn khác, người đã bị gỡ vai Đầu chủ) và lead đã trả lại, đã gửi lại, lead căn trùng — bị từ chối thì không ghi vết."},
-    {"id": "AC-3", "p": "Sẽ giữ vết mở số chỉ thêm: người mở thấy vết của mình, trưởng nhóm thấy cả sàn, người khác và sàn khác không thấy, không ai sửa hay xoá được."},
-    {"id": "AC-4", "p": "Sẽ không để số lọt ra danh sách lead, lời từ chối hay nhật ký máy chủ — chỉ câu trả lời của «Mở số» mang số."},
-    {"id": "AC-5", "p": "Sẽ hiện số theo nhóm chữ số kèm nút «Gọi» ngay trên dòng; tải lại trang thì số ẩn; không lưu số trên máy; lỗi hiện một dòng dưới nút và bấm lại được."},
-    {"id": "AC-6", "p": "Sẽ ghi quyết định «Mở số của lead» vào Sổ quyết định của Tham chiếu."}
-  ],
-  "wont_do": [
-    {"id": "OOS-1", "p": "KHÔNG mở các số khác của liên hệ chủ nhà — chỉ số nhập cùng lead."},
-    {"id": "OOS-2", "p": "KHÔNG gọi trong trình duyệt, ghi âm hay ghi kết quả cuộc gọi — việc của hàng Cuộc gọi."},
-    {"id": "OOS-3", "p": "KHÔNG làm màn xem vết mở số cho trưởng nhóm — hàng 42."},
-    {"id": "OOS-4", "p": "KHÔNG cho telesales xem lại số đã nhập — giữ chốt 29/10."},
-    {"id": "OOS-5", "p": "KHÔNG thử bấm «Gọi» trên điện thoại thật ở bài chấm máy — để phiên nghiệm thu."}
-  ],
-  "coverage_plain": [
-    {"i": 0, "p": "Không quét lưới chống sót: đây là một cửa theo khuôn «Mở số» của hồ sơ căn; các trục đã kê thẳng — ai mở (AC-1, AC-2), lead ở nấc nào (AC-2), vết (AC-1, AC-3), rò số (AC-4, AC-5), màn (AC-5), tài liệu (AC-6)."}
-  ],
-  "gap_probe_plain": [
-    {"i": 0, "p": "Thiếu thử mở số khi lead đã ở nấc Đã nhận, Đã gọi và khi người nhận bị gỡ vai Đầu chủ — đã thêm vào bộ đo."},
-    {"i": 1, "p": "Điều «mở số không tự ghi Đã nhận» chỉ được nhìn trên màn — đã thêm bài kiểm ở máy chủ so dòng lead trước và sau."},
-    {"i": 2, "p": "Bài dò số trong nhật ký chưa chứng nó bắt được nhật ký thật và chưa có ca máy chủ lỗi — đã thêm cả hai."},
-    {"i": 3, "p": "Trạng thái đang mở và mở lỗi chưa có ảnh chụp — đã thêm hai khung chụp (mất mạng, mạng chậm)."},
-    {"i": 4, "p": "Căn cứ cho «lead nào mở được» trích chưa đủ — đã đổi sang định nghĩa «lead còn việc» có sẵn, và tách lead căn trùng thành câu hỏi Hỏi-3 cho anh."}
-  ]
+  "feature_plain": "Đầu chủ đang được giao lead bấm «Mở số» ngay trên dòng lead ở Hôm nay, thấy số chủ nhà và bấm «Gọi»; mỗi lần mở để lại một vết ai mở, lúc nào; người khác không mở được và số không lưu trên máy.",
+  "analyst_plain": "Các bài kiểm của việc này chạy xanh cả trên bản trước khi làm, vì bài kiểm mới chưa có ở đó — bình thường với tính năng mới; mỗi bài kiểm mới đã được phá thử để thấy đỏ đúng chỗ (bỏ ghi vết, nới quyền cho mọi đầu chủ, nới luật đọc vết, liên kết gọi giữ dấu cách)."
 }
