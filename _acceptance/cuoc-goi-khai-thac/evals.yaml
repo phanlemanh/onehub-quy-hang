@@ -5,6 +5,9 @@ feature_slug: cuoc-goi-khai-thac
 # Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có mặt, ok, không SKIP. Ui-check chạy trên máy dev
 # dãy D (cổng 3485, Postgres 5565), sàn «[Mẫu] Sàn thử»; dữ liệu dựng bằng
 # node --env-file-if-exists=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/dung-d.mjs (in mã lead, mã căn).
+# Đăng nhập người mẫu không cần đọc nhật ký máy dev: node --env-file=.env.local --import tsx
+# _acceptance/cuoc-goi-khai-thac/thu/phien.mts <email> in cookie phiên — đặt `qh.session_token` và `qh_san` cho localhost.
+# Dữ liệu đã dựng sẵn: chạy lại dung-d.mjs chỉ in lại mã (giữ ở .acceptance-runs/cuoc-goi-khai-thac/dung-d.json).
 evals:
   - id: E1
     criterion: AC-1
