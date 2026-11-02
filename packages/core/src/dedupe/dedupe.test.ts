@@ -1,7 +1,7 @@
 // Ô nhận lead và kiểm trùng ở lõi (hàng 24: AC-1, AC-2, AC-7). Số chủ là số mẫu `0900 000 0xx`.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { SOURCE_KEYS, STANDARD_STATUSES } from "../listing";
+import { kiemMaCan, LY_DO_MA_CAN_KHONG_CHU_SO, SOURCE_KEYS, STANDARD_STATUSES } from "../listing";
 import {
   canDiscard,
   decideOutcome,
@@ -75,6 +75,33 @@ test("lead: thiếu hay sai từng mục nêu đúng khoá", () => {
   const rong = validateLeadInput({});
   assert.ok(!rong.ok);
   if (!rong.ok) assert.deepEqual(rong.errors.map((e) => e.path).sort(), ["buildingName", "desiredListingTime", "feeInclusion", "listPrice", "need", "ownerPhone"]);
+});
+
+// hàng va-ma-can-lead (AC-1): ô nhận lead theo đúng luật mã căn của lõi hàng, không chép luật.
+test("lead: mã căn phải có chữ hay số", () => {
+  const HOP_LE = ["A-12.05", "a 02.06", "12"];
+  const TOAN_DAU = ["---", ".", "/ /", "Đ", "_", "__", "Đ-Ê"];
+  let so = 0;
+  for (const ma of HOP_LE) {
+    const r = validateLeadInput({ ...DU, unitNumber: ` ${ma} ` });
+    assert.ok(r.ok, ma);
+    assert.equal(r.value.unitNumber, ma, ma);
+    so++;
+  }
+  for (const ma of TOAN_DAU) {
+    assert.deepEqual(validateLeadInput({ ...DU, unitNumber: ma }), { ok: false, errors: [{ path: "unitNumber", reason: LY_DO_MA_CAN_KHONG_CHU_SO }] }, ma);
+    so++;
+  }
+  assert.equal(so, 10);
+  assert.equal(LY_DO_MA_CAN_KHONG_CHU_SO, "Mã căn cần ít nhất một chữ (A–Z) hoặc số (0–9)");
+  // Đối chứng: lead chỉ biết toà vẫn hợp lệ.
+  const chiToa: Record<string, unknown> = { ...DU };
+  delete chiToa.unitNumber;
+  assert.ok(validateLeadInput(chiToa).ok);
+  // Quan hệ hai luật trên ma trận cộng mã biên (chữ toàn khổ, phân số, chữ số Ả Rập).
+  for (const ma of [...HOP_LE, ...TOAN_DAU, "Ａ1", "1⁄2", "٣"]) {
+    assert.equal(validateLeadInput({ ...DU, unitNumber: ma }).ok, kiemMaCan(ma) === null, ma);
+  }
 });
 
 test("lead: khoá lạ bị từ chối", () => {
