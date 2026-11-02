@@ -1,0 +1,128 @@
+2851. [GET] http://localhost:3484/mau/he-bo-cuc?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh&kho=375&_rsc=Z1k8hfRa9Ccnv_Kb => [500] Internal Server Error
+2852. [GET] http://localhost:3484/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh&_rsc=80-BkSUI1CzZKhge => [500] Internal Server Error
+2853. [GET] http://localhost:3484/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh => [500] Internal Server Error
+2854. [GET] http://localhost:3484/mau/he-bo-cuc?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh&kho=375 => [500] Internal Server Error
+2855. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_compiled_14ibvnakj0v0q._.js => [FAILED] net::ERR_ABORTED
+2856. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_shared_lib_196_nl_l493zz._.js => [FAILED] net::ERR_ABORTED
+2857. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_client_16lnmlosr3ca7._.js => [FAILED] net::ERR_ABORTED
+2858. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_1gdrd03q-xsfc._.js => [FAILED] net::ERR_ABORTED
+2859. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_app_0yrdk3r5ni6li.js => [FAILED] net::ERR_ABORTED
+2860. [GET] http://localhost:3484/_next/static/chunks/%5Bnext%5D_entry_page-loader_ts_0z3haqkb6-d3h._.js => [FAILED] net::ERR_ABORTED
+2861. [GET] http://localhost:3484/_next/static/chunks/node_modules_react-dom_cjs_react-dom-client_development_1nq9a-7w2rk6e.js => [FAILED] net::ERR_ABORTED
+2862. [GET] http://localhost:3484/_next/static/chunks/node_modules_react-dom_cjs_react-dom_development_0d3scg3xnfy6h.js => [FAILED] net::ERR_ABORTED
+2863. [GET] http://localhost:3484/_next/static/chunks/node_modules_react-dom_13voigl36lis-._.js => [FAILED] net::ERR_ABORTED
+2864. [GET] http://localhost:3484/_next/static/chunks/node_modules_10e2-xouig913._.js => [FAILED] net::ERR_ABORTED
+2865. [GET] http://localhost:3484/_next/static/chunks/%5Broot-of-the-server%5D__0v4f-fblfy04_._.js => [FAILED] net::ERR_ABORTED
+2866. [GET] http://localhost:3484/_next/static/chunks/apps_web_pages__app_0du2_q-cjzmdk._.js => [FAILED] net::ERR_ABORTED
+2867. [GET] http://localhost:3484/_next/static/chunks/turbopack-apps_web_pages__app_012rah7i7e6q5._.js => [FAILED] net::ERR_ABORTED
+2868. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_compiled_1rva-8xykwpb-._.js => [FAILED] net::ERR_ABORTED
+2869. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_shared_lib_1pjif-zr9-ese._.js => [FAILED] net::ERR_ABORTED
+2870. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_client_0tk8-26rtzlym._.js => [FAILED] net::ERR_ABORTED
+2871. [GET] http://localhost:3484/_next/static/chunks/node_modules_next_dist_1atto1n9flxez._.js => [FAILED] net::ERR_ABORTED
+2872. [GET] http://localhost:3484/_next/static/chunks/%5Bnext%5D_entry_page-loader_ts_1aoli7mnyw1hs._.js => [FAILED] net::ERR_ABORTED
+2873. [GET] http://localhost:3484/_next/static/chunks/node_modules_1u_-h1v56pkhg._.js => [FAILED] net::ERR_ABORTED
+2874. [GET] http://localhost:3484/_next/static/chunks/%5Broot-of-the-server%5D__0nu-1gmnouzp9._.js => [FAILED] net::ERR_ABORTED
+2875. [GET] http://localhost:3484/_next/static/chunks/apps_web_pages__error_0oimm0mybi11k._.js => [FAILED] net::ERR_ABORTED
+2876. [GET] http://localhost:3484/_next/static/chunks/turbopack-apps_web_pages__error_1irfprutmd0vt._.js => [FAILED] net::ERR_ABORTED
+2877. [GET] http://localhost:3484/_next/static/development/_buildManifest.js => [FAILED] net::ERR_ABORTED
+2878. [GET] http://localhost:3484/_next/static/development/_ssgManifest.js => [FAILED] net::ERR_ABORTED
+2879. [GET] http://localhost:3484/_next/static/development/_clientMiddlewareManifest.js => [FAILED] net::ERR_ABORTED
+2905. [GET] http://localhost:3484/login => [500] Internal Server Error
+2906. [GET] http://localhost:3484/login => [500] Internal Server Error
+2907. [GET] http://localhost:3484/login => [500] Internal Server Error
+2908. [GET] http://localhost:3484/login => [500] Internal Server Error
+2909. [GET] http://localhost:3484/login => [500] Internal Server Error
+2910. [GET] http://localhost:3484/login => [500] Internal Server Error
+2911. [GET] http://localhost:3484/login => [500] Internal Server Error
+2912. [GET] http://localhost:3484/login => [500] Internal Server Error
+2913. [GET] http://localhost:3484/login => [500] Internal Server Error
+2914. [GET] http://localhost:3484/login => [500] Internal Server Error
+2915. [GET] http://localhost:3484/login => [500] Internal Server Error
+2916. [GET] http://localhost:3484/login => [500] Internal Server Error
+2917. [GET] http://localhost:3484/login => [500] Internal Server Error
+2918. [GET] http://localhost:3484/login => [500] Internal Server Error
+2919. [GET] http://localhost:3484/login => [500] Internal Server Error
+2920. [GET] http://localhost:3484/login => [500] Internal Server Error
+2921. [GET] http://localhost:3484/login => [500] Internal Server Error
+2922. [GET] http://localhost:3484/login => [500] Internal Server Error
+2923. [GET] http://localhost:3484/login => [500] Internal Server Error
+2924. [GET] http://localhost:3484/login => [500] Internal Server Error
+2925. [GET] http://localhost:3484/login => [500] Internal Server Error
+2926. [GET] http://localhost:3484/login => [500] Internal Server Error
+2927. [GET] http://localhost:3484/login => [500] Internal Server Error
+2928. [GET] http://localhost:3484/login => [500] Internal Server Error
+2929. [GET] http://localhost:3484/login => [500] Internal Server Error
+2963. [POST] http://localhost:3484/api/v1/auth/email-otp/send-verification-otp => [200] OK
+2964. [POST] http://localhost:3484/api/v1/auth/sign-in/email-otp => [200] OK
+2965. [GET] http://localhost:3484/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+2966. [GET] http://localhost:3484/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+2967. [GET] http://localhost:3484/select-company?_rsc=2Md0sTUZcnjCijMr => [200] OK
+2968. [GET] http://localhost:3484/select-company?_rsc=2Md0sTUZcnjCijMr => [200] OK
+2973. [POST] http://localhost:3484/api/v1/auth/email-otp/send-verification-otp => [429] TOO_MANY_REQUESTS
+2974. [POST] http://localhost:3484/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+2975. [POST] http://localhost:3484/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
+2976. [GET] http://localhost:3484/api/v1/listings => [409] Conflict
+2977. [GET] http://localhost:3484/api/v1/me => [200] OK
+2978. [POST] http://localhost:3484/api/v1/me/company => [200] OK
+2979. [GET] http://localhost:3484/api/v1/listings => [200] OK
+2980. [GET] http://localhost:3484/api/v1/leads/buildings => [200] OK
+2981. [POST] http://localhost:3484/api/v1/leads => [201] Created
+2982. [POST] http://localhost:3484/api/v1/leads/2ea458eb-6787-442d-b752-5f3cf3e7602a/listing => [404] Not Found
+2983. [POST] http://localhost:3484/api/v1/leads => [201] Created
+2984. [POST] http://localhost:3484/api/v1/leads/c3e1fad9-b3ed-4f26-82af-d37c9de358b4/listing => [404] Not Found
+2985. [POST] http://localhost:3484/api/v1/leads/2ea458eb-6787-442d-b752-5f3cf3e7602a/claim => [404] Not Found
+2986. [POST] http://localhost:3484/api/v1/leads/2ea458eb-6787-442d-b752-5f3cf3e7602a/accept => [404] Not Found
+2987. [POST] http://localhost:3484/api/v1/leads/c3e1fad9-b3ed-4f26-82af-d37c9de358b4/claim => [404] Not Found
+2988. [POST] http://localhost:3484/api/v1/leads/c3e1fad9-b3ed-4f26-82af-d37c9de358b4/accept => [404] Not Found
+2989. [GET] http://localhost:3484/api/v1/lead-pool => [200] OK
+2990. [POST] http://localhost:3484/api/v1/leads/2ea458eb-6787-442d-b752-5f3cf3e7602a/accept => [200] OK
+2991. [POST] http://localhost:3484/api/v1/leads/2ea458eb-6787-442d-b752-5f3cf3e7602a/listing => [201] Created
+2992. [POST] http://localhost:3484/api/v1/leads/c3e1fad9-b3ed-4f26-82af-d37c9de358b4/accept => [200] OK
+2993. [POST] http://localhost:3484/api/v1/leads/c3e1fad9-b3ed-4f26-82af-d37c9de358b4/listing => [201] Created
+2994. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3038. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3039. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3040. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3042. [GET] http://localhost:3484/api/v1/listings/b72bc560-e46a-46b4-9dff-35eb893860b4 => [200] OK
+3043. [POST] http://localhost:3484/__nextjs_original-stack-frames => [200] OK
+3088. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3089. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3090. [POST] http://localhost:3484/__nextjs_original-stack-frames => [200] OK
+3091. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3092. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3093. [GET] http://localhost:3484/api/v1/listings/3ecab31e-dab0-47e9-a4e9-580e44e8d921 => [200] OK
+3094. [GET] http://localhost:3484/api/v1/listings/3ecab31e-dab0-47e9-a4e9-580e44e8d921 => [200] OK
+3136. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3137. [GET] http://localhost:3484/api/v1/company/settings/queue => [200] OK
+3138. [GET] http://localhost:3484/api/v1/leads/assigned => [200] OK
+3139. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3140. [GET] http://localhost:3484/api/v1/company/settings/queue => [200] OK
+3141. [GET] http://localhost:3484/api/v1/leads/assigned => [200] OK
+3142. [GET] http://localhost:3484/api/v1/push/public-key => [200] OK
+3143. [GET] http://localhost:3484/api/v1/push/public-key => [200] OK
+3144. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3189. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3190. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3191. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3192. [GET] http://localhost:3484/api/v1/listings/b72bc560-e46a-46b4-9dff-35eb893860b4 => [200] OK
+3193. [POST] http://localhost:3484/__nextjs_original-stack-frames => [200] OK
+3194. [GET] http://localhost:3484/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-12.5905 => [200] OK
+3195. [GET] http://localhost:3484/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-12.5905 => [200] OK
+3196. [POST] http://localhost:3484/api/v1/listings/b72bc560-e46a-46b4-9dff-35eb893860b4/events => [200] OK
+3197. [GET] http://localhost:3484/api/v1/listings/b72bc560-e46a-46b4-9dff-35eb893860b4 => [200] OK
+3198. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3199. [GET] http://localhost:3484/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-12.5905 => [200] OK
+3200. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3245. [GET] http://localhost:3484/api/v1/listings => [200] OK
+3246. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3247. [GET] http://localhost:3484/api/v1/catalog => [200] OK
+3248. [POST] http://localhost:3484/__nextjs_original-stack-frames => [200] OK
+3249. [GET] http://localhost:3484/api/v1/listings/4d4ed450-9649-4574-961a-ee8cdd26634f => [200] OK
+3250. [GET] http://localhost:3484/api/v1/units/photos?toa=To%C3%A0%20A&ma=a-12-5905 => [200] OK
+3251. [GET] http://localhost:3484/api/v1/units/photos?toa=To%C3%A0%20A&ma=a-12-5905 => [200] OK
+3252. [POST] http://localhost:3484/api/v1/listings/4d4ed450-9649-4574-961a-ee8cdd26634f/events => [422] Unprocessable Entity
+3253. [GET] http://localhost:3484/api/v1/listings/4d4ed450-9649-4574-961a-ee8cdd26634f => [200] OK
+3254. [GET] http://localhost:3484/api/v1/listings/4d4ed450-9649-4574-961a-ee8cdd26634f => [200] OK
+3255. [GET] http://localhost:3484/api/v1/listings => [200] OK
+
+Note: 335 static requests not shown, run with "static" option to see them.
