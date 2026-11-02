@@ -80,6 +80,10 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/company/settings/queue",
     "PUT /api/v1/company/settings/queue",
     "GET /api/v1/leads/assigned",
+    // Hàng 26 (ADR-0025).
+    "GET /api/v1/push/public-key",
+    "POST /api/v1/me/push-subscriptions",
+    "DELETE /api/v1/me/push-subscriptions",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

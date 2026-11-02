@@ -65,7 +65,7 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     // Hàng 26 (ADR-0025).
     pushNotConfigured: ["push-not-configured", 503],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 48);
+  assert.equal(Object.keys(API_ERRORS).length, 49);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);
