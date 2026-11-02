@@ -5,4 +5,5 @@ export * from "./fold";
 export * from "./freshness";
 export * from "./completeness";
 export * from "./san-sang";
+export * from "./danh-sach-hoi";
 export * from "./gan-ma-can";

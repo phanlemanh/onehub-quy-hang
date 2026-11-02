@@ -162,6 +162,10 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
       </>
     ) : (
       <>
+        {/* Chế độ cuộc gọi khai thác (hàng 28): mở lead trên máy tính, vừa nghe vừa ghi. */}
+        <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?lead=${encodeURIComponent(v.lead.id)}`} />}>
+          Gọi
+        </Button>
         {co(v.nhom, "accept") && v.lead.stage === "sent" && (
           <Button size="sm" disabled={ban} onClick={() => hd.lead(v.lead, "accept")}>
             Nhận
