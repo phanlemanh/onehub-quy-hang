@@ -8,12 +8,12 @@ import { CotThuocTinh, NhoCotThuocTinhProvider } from "./cot-thuoc-tinh";
 
 const NOI_DUNG = h("p", null, "thuộc tính căn");
 const dungTrong = (mo: boolean) =>
-  renderToStaticMarkup(h(NhoCotThuocTinhProvider, { mo, onDoi: () => {} }, h(CotThuocTinh, null, NOI_DUNG)));
+  renderToStaticMarkup(h(NhoCotThuocTinhProvider, { mo, onDoi: () => {}, children: h(CotThuocTinh, { children: NOI_DUNG }) }));
 
 describe("cột thuộc tính", () => {
   it("cột thuộc tính: mặc định mở, gập được", () => {
     // Ngoài vỏ (trang mẫu): cột tự giữ trạng thái, mặc định mở.
-    const tuDo = renderToStaticMarkup(h(CotThuocTinh, null, NOI_DUNG));
+    const tuDo = renderToStaticMarkup(h(CotThuocTinh, { children: NOI_DUNG }));
     assert.match(tuDo, /data-cot-thuoc-tinh="mo"/);
     assert.match(tuDo, /thuộc tính căn/);
     assert.match(tuDo, /aria-label="Gập cột thuộc tính"/);
