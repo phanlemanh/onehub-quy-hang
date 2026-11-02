@@ -1,9 +1,9 @@
-// Gắn mã căn qua API trên Postgres thật (hàng dien-ma-can-cho-hang: E2, E3, ADR-0026). Trạng thái của hàng cùng căn đặt
+// Gắn mã căn qua API trên Postgres thật (hàng dien-ma-can-cho-hang: E2, E3, ADR-0026; hàng va-dien-ma-can-cho-hang: E2). Trạng thái của hàng cùng căn đặt
 // thẳng cột bản tính bằng kết nối chủ — phép kiểm trùng đọc đúng cột ấy; lối chuyển trạng thái đã có bài kiểm riêng.
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
-import { STANDARD_STATUSES, type StandardStatus } from "@quy-hang/core/listing";
+import { kiemMaCan, STANDARD_STATUSES, type StandardStatus } from "@quy-hang/core/listing";
 import { API_ERRORS } from "../src/errors";
 import { createApi } from "../src/app";
 import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "./helpers";
@@ -133,4 +133,53 @@ test("API gắn mã căn", async () => {
     so++;
   }
   assert.equal(so, 3 + OPEN_STATUSES.length + DONG.length + 1, "số ca phải bằng ma trận dựng từ hai danh sách của lõi");
+});
+
+// ——— Hàng va-dien-ma-can-cho-hang (E2): mã căn phải có chữ hay số ———
+
+const demSuKien = async (id: string) => (await appPool.query<{ n: number }>("select count(*)::int n from listing_events where listing_id = $1", [id])).rows[0]!.n;
+const docMa = async (s: San, id: string) => ((await (await goi("GET", `/api/v1/listings/${id}`, undefined, s.cookie)).json()) as { unitNumber: string | null }).unitNumber;
+type Loi400 = { error: string; details?: { path: string; reason: string }[] };
+
+test("gắn mã toàn dấu bị từ chối, không khoá hàng", async () => {
+  const s = await san("toan-dau");
+  const id = await tao(s, `[Toà ${RUN} toan-dau]`);
+  const n0 = await demSuKien(id);
+  const r = await gan(s, id, "---");
+  assert.equal(r.status, 400, await r.clone().text());
+  const b = (await r.json()) as Loi400;
+  assert.equal(b.error, API_ERRORS.invalidPayload.code);
+  assert.ok(b.details?.some((d) => d.path === "unitNumber"), JSON.stringify(b));
+  assert.equal(await demSuKien(id), n0, "không sự kiện nào được ghi");
+  assert.equal(await docMa(s, id), null, "hàng vẫn chưa mã");
+  // Đối chứng dương cùng hàng, cùng phiên bản: mã đúng thì gắn được — hàng không bị khoá.
+  const lai = await gan(s, id, "A-12.05");
+  assert.equal(lai.status, 200, await lai.clone().text());
+  assert.equal(await docMa(s, id), "A-12.05");
+});
+
+test("tạo hàng mã toàn dấu bị từ chối", async () => {
+  const s = await san("tao-dau");
+  const dem = async () => (await appPool.query<{ n: number }>("select count(*)::int n from listings where company_id = $1", [s.companyId])).rows[0]!.n;
+  const toa = `[Toà ${RUN} tao-dau]`;
+  const n0 = await dem();
+  const r = await goi("POST", "/api/v1/listings", { buildingName: toa, unitNumber: "---" }, s.cookie);
+  assert.equal(r.status, 400, await r.clone().text());
+  const b = (await r.json()) as Loi400;
+  assert.equal(b.error, API_ERRORS.invalidPayload.code);
+  assert.ok(b.details?.some((d) => d.path === "unitNumber"), JSON.stringify(b));
+  assert.equal(await dem(), n0, "không hàng nào được ghi");
+  // Đối chứng dương: cùng thân với mã đúng → 201.
+  assert.equal(await docMa(s, await tao(s, toa, "A-12.05")), "A-12.05");
+});
+
+test("luật lõi khớp app.unit_key", async () => {
+  const MA = ["A-12.05", "a 02.06", "12", "---", ".", "/ /", "Đ", "_", "__", "Đ-Ê"];
+  let so = 0;
+  for (const ma of MA) {
+    const khoa = (await appPool.query<{ k: string | null }>("select app.unit_key($1) k", [ma])).rows[0]!.k;
+    assert.equal(kiemMaCan(ma) === null, khoa !== null, `${ma}: kiemMaCan=${kiemMaCan(ma)} unit_key=${khoa}`);
+    so++;
+  }
+  assert.equal(so, 10);
 });
