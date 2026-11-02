@@ -9,7 +9,8 @@ import { coVung, type KieuBoCuc, THONG_TIN, type Vung } from "./ma-tran";
 
 // Bố cục trang của hệ bố cục (ADR-0024): giữ khung trang — lề, đầu màn, xếp thân và cột phụ, bản điện thoại — còn mỗi
 // vùng là một khối ReUI nguyên vẹn mang Frame của nó (đầu khung, thanh công cụ, chân). Bố cục KHÔNG dựng Frame: dựng thì
-// khối thành Frame trong Frame và màn phải vẽ tay lại phần khối đã có (khảo sát ReUI + Verve, 02/11).
+// khối thành Frame trong Frame và màn phải vẽ tay lại phần khối đã có (khảo sát ReUI + Verve, 02/11). Hồ sơ là một cột căn
+// giữa 48rem như hồ sơ căn đang chạy (chủ kho 02/11).
 
 export type TrangThaiTai = "san-sang" | "cho-tai" | "loi" | "rong";
 
@@ -61,16 +62,6 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
         </div>
       </div>
     </>
-  ) : kieu === "ho-so-hai-cot" ? (
-    // Hồ sơ hai cột theo Verve: cột dữ kiện trái 20rem, thân phải; điện thoại dữ kiện lên trước.
-    <div className="grid min-w-0 gap-khung lg:grid-cols-[20rem_minmax(0,1fr)]">
-      <div data-vung="cot-phu" className="flex min-w-0 flex-col gap-khung">
-        {phu}
-      </div>
-      <div data-vung="than" className="flex min-w-0 flex-col gap-khung">
-        {than}
-      </div>
-    </div>
   ) : (
     // Luồng nhiều bước: thân hai phần, xem trước một phần.
     <div className="grid min-w-0 gap-khung lg:grid-cols-3">
@@ -88,7 +79,7 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
       data-bo-cuc-goc={kieu}
       data-bo-cuc={kieu}
       data-mat-do={tt.mat_do}
-      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", kieu === "dong-tin" && "mx-auto max-w-(--container-doc)")}
+      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", (kieu === "dong-tin" || kieu === "ho-so") && "mx-auto max-w-(--container-doc)")}
     >
       {dauMan}
       <DaiNgoaiTuyen ngoaiTuyen={ngoaiTuyen} />

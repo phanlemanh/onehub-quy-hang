@@ -79,13 +79,11 @@ export function ChoTai({ kieu }: { kieu: KieuBoCuc }) {
         );
       case "doc":
         return <DongNhanO />;
-      case "ho-so-hai-cot":
+      case "ho-so":
         return (
-          <div data-cho-tai="hai-cot" className="grid gap-khung lg:grid-cols-3">
-            <div className="flex flex-col gap-khung lg:col-span-2">
-              <Doan />
-              <Doan />
-            </div>
+          <div data-cho-tai="ho-so" className="flex flex-col gap-3 p-4">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-10 w-32" />
             <Doan dong={6} />
           </div>
         );

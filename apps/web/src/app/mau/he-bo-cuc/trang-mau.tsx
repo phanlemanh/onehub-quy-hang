@@ -20,7 +20,7 @@ const NHA_CUA: Record<KieuBoCuc, Home> = {
   tran: "inventory",
   "danh-sach-chi-tiet": "today",
   doc: "settings",
-  "ho-so-hai-cot": "inventory",
+  "ho-so": "inventory",
   "bang-dieu-khien": "team",
   "luong-nhieu-buoc": "inventory",
   "dong-tin": "shares",

@@ -15,7 +15,7 @@ design_doc: docs/superpowers/specs/2026-11-02-he-bo-cuc-design.md
 
 Hàng 91 (dãy G), hàng nền của đợt. Gốc: ADR-0024 (chủ kho duyệt hướng 02/11 «Duyệt hướng chung»), ô cơ hội đã quyết
 `build` 01/11. Đứng trên hàng 84 (trang ba lối). Ba tầng nền · khung ứng dụng · bố cục trang; bảy bố cục Tràn · Danh sách
-– chi tiết · Đọc · Hồ sơ hai cột · Bảng điều khiển · Luồng nhiều bước · Dòng tin; sáu vùng đầu màn · thanh công cụ ·
+– chi tiết · Đọc · Hồ sơ · Bảng điều khiển · Luồng nhiều bước · Dòng tin; sáu vùng đầu màn · thanh công cụ ·
 thân · cột phụ · chân · ngăn nổi; ba khổ 1440 · 1024 · 375.
 
 ## Criteria
@@ -32,7 +32,7 @@ Given một màn dưới `(app)` dựng `<BoCuc kieu="…">` với vùng của n
 When màn hiện ở máy tính rộng
 Then đúng bảy kiểu được nhận (kiểu lạ là lỗi kiểu TypeScript); bố cục chỉ giữ khung trang — lề, dải đầu màn, xếp thân
 và cột phụ theo kiểu — và không tự dựng Frame: mỗi vùng là một khối ReUI nguyên vẹn mang Frame của nó (đầu khung, thanh
-công cụ, chân); cột phụ chỉ ở Danh sách – chi tiết, Hồ sơ hai cột (dữ kiện trái 20rem), Luồng nhiều bước; lề, khoảng
+công cụ, chân); cột phụ chỉ ở Danh sách – chi tiết, Hồ sơ (dữ kiện trái 20rem), Luồng nhiều bước; lề, khoảng
 cách lấy từ token bố cục, không từ số trong màn; mỗi ô của trang mẫu mang một nhãn nguồn (khối · c-* · thành phần · ghép)
 ở bảng bóc tách, không ô nào vẽ tay.
 
@@ -60,8 +60,8 @@ tuyến là dải báo ở đầu màn, nội dung đã tải giữ nguyên.
 ### AC-6 — Ba khổ
 Given mỗi bố cục trên trang mẫu sống
 When xem ở 1440, 1024 và 375
-Then bản điện thoại theo ADR-0024 §5 — Tràn thành thẻ, Danh sách – chi tiết thành hai màn chồng, Hồ sơ hai cột một cột
-có nút dính đáy, Luồng nhiều bước ngăn toàn màn, Đọc và Dòng tin giữ, Bảng điều khiển không có trên điện thoại; ngăn nổi
+Then bản điện thoại theo ADR-0024 §5 — Tràn thành thẻ, Danh sách – chi tiết thành hai màn chồng, Hồ sơ giữ một
+cột, Luồng nhiều bước ngăn toàn màn, Đọc và Dòng tin giữ, Bảng điều khiển không có trên điện thoại; ngăn nổi
 là ngăn bên ở máy tính và ngăn từ đáy ở điện thoại; không cuộn ngang ở 375.
 
 ### AC-7 — Trang mẫu sống

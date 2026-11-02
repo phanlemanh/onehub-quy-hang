@@ -7,6 +7,7 @@ import { BoCuc, DauMan, type KieuBoCuc, type TrangThaiTai } from "@/components/b
 import { ChiaDoi } from "@/components/khoi/c-resizable-9";
 import { MucCaiDatKhoi } from "@/components/khoi/settings-3/muc-cai-dat";
 import { SettingField } from "@/components/khoi/settings-3/setting-field";
+import { CapGiaTri, DauHoSo, KhungHoSo, MucHoSo, SoChinh } from "@/components/khoi/solution-crm-4/ho-so";
 import { ActivityTimeline } from "@/components/khoi/solution-crm-5/activity-timeline";
 import type { CardData } from "@/components/khoi/stats-7/data";
 import { Stats } from "@/components/khoi/stats-7/stats";
@@ -162,26 +163,41 @@ function KhungLuoiCan({ tieuDe, dem, nut, chon, onChon }: { tieuDe: string; dem:
   );
 }
 
-/** Dữ kiện của một căn — ghép theo trang hồ sơ của Verve (Frame «Contact details»: nhãn trái, giá trị phải). */
-function KhungDuKien({ can, tieuDe = "Thông tin căn" }: { can: CanMau; tieuDe?: string }) {
+/** Hồ sơ một căn — giải phẫu hồ sơ căn đang chạy (khoi/solution-crm-4/ho-so.tsx), dùng chung cho toàn màn và cột cạnh bảng. */
+function HoSoCan({ can, cot = false }: { can: CanMau; cot?: boolean }) {
   return (
-    <Frame spacing="sm" className="w-full">
-      <FrameHeader>
-        <FrameTitle>{tieuDe}</FrameTitle>
-      </FrameHeader>
-      <FramePanel>
-        <dl className="grid grid-cols-2 gap-y-2 text-sm">
-          <dt className="text-muted-foreground">Mã căn</dt>
-          <dd className="text-right font-medium">{can.ma}</dd>
-          <dt className="text-muted-foreground">Toà</dt>
-          <dd className="text-right">{can.toa}</dd>
-          <dt className="text-muted-foreground">Giá</dt>
-          <dd className="text-right">{can.gia}</dd>
-          <dt className="text-muted-foreground">Xác nhận</dt>
-          <dd className="text-right">{can.tuoi} trước</dd>
-        </dl>
-      </FramePanel>
-    </Frame>
+    <KhungHoSo cot={cot} nhan="Hồ sơ căn">
+      <DauHoSo ngu="[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ" ten={can.ma} trangThai={can.trangThai} trangThaiTone={TONE[can.trangThai] ?? "info-light"} phu={`Xác nhận ${can.tuoi} trước`} />
+      <SoChinh giaTri={can.gia} nhan="Bao phí" tienDo={{ co: 3, tren: 5, chu: "Mức đủ thông tin · thiếu Nội thất, Tài chính", nhanThanh: "Mức đủ thông tin" }} />
+      <MucHoSo tieuDe="Thuộc tính căn" phai={<Button variant="ghost" size="sm">Báo sai thông tin căn</Button>}>
+        <CapGiaTri
+          ds={[
+            ["Loại căn", "1PN"],
+            ["Diện tích", "54,2 m²"],
+            ["Tầng", "6"],
+            ["Hướng", "Đông Nam"],
+            ["Toà", can.toa],
+          ]}
+        />
+      </MucHoSo>
+      <MucHoSo tieuDe="Lần rao đang mở">
+        <CapGiaTri
+          ds={[
+            ["Nội thất", "—"],
+            ["Pháp lý", "[Mẫu] Sổ hồng"],
+            ["Tình trạng sử dụng", "[Mẫu] Để trống"],
+          ]}
+        />
+      </MucHoSo>
+      <MucHoSo tieuDe="Lịch sử">
+        <CapGiaTri
+          ds={[
+            ["01/11 09:12", "Đổi giá 3,10 → 3,25 tỷ · Trưởng nhóm"],
+            ["31/10 16:40", "Xác nhận còn hàng · Đầu chủ"],
+          ]}
+        />
+      </MucHoSo>
+    </KhungHoSo>
   );
 }
 
@@ -189,7 +205,7 @@ const DUONG: Record<KieuBoCuc, [{ nhan: string; href: string }, { nhan: string }
   tran: [{ nhan: "Bảng hàng", href: "#" }, { nhan: "Mọi căn" }],
   "danh-sach-chi-tiet": [{ nhan: "Hôm nay", href: "#" }, { nhan: "Lead đã nhập" }],
   doc: [{ nhan: "Cài đặt sàn", href: "#" }, { nhan: "Cách gọi" }],
-  "ho-so-hai-cot": [{ nhan: "Bảng hàng", href: "#" }, { nhan: "Căn A-06.01" }],
+  "ho-so": [{ nhan: "Bảng hàng", href: "#" }, { nhan: "Căn A-06.01" }],
   "bang-dieu-khien": [{ nhan: "Đội", href: "#" }, { nhan: "Tổng quan" }],
   "luong-nhieu-buoc": [{ nhan: "Bảng hàng", href: "#" }, { nhan: "Nhập Excel" }],
   "dong-tin": [{ nhan: "Đã gửi", href: "#" }, { nhan: "Link đã gửi" }],
@@ -217,7 +233,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           chiTietMo={chon !== undefined}
           chiaDoi={(trai, phai) => <ChiaDoi trai={trai} phai={phai} />}
           dauMan={<DauMan duongDan={duong} />}
-          cotPhu={can && <KhungDuKien can={can} tieuDe={`Căn ${can.ma}`} />}
+          cotPhu={can && <HoSoCan can={can} />}
         >
           <KhungLuoiCan tieuDe="Lead đã nhập" dem="37 lead · 6 hôm nay" chon={chon} onChon={setChon} />
         </BoCuc>
@@ -260,25 +276,11 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
         </BoCuc>
       );
     }
-    case "ho-so-hai-cot": {
+    case "ho-so": {
       const can = CAN_MAU[0];
       return (
-        <BoCuc
-          kieu="ho-so-hai-cot"
-          {...chung}
-          rong={rongLanDau("Căn chưa có thông tin", "Đầu chủ điền khi nhận hàng.", "Điền thông tin")}
-          dauMan={
-            <DauMan
-              duongDan={duong}
-              tieuDe={`Căn ${can?.ma ?? ""}`}
-              moTa="Toà A · 2 phòng ngủ · 68 m²"
-              phu={<Badge variant="success-light">Đang bán</Badge>}
-              nut={[{ nhan: "Gửi khách" }, { nhan: "Còn · giữ giá" }]}
-            />
-          }
-          cotPhu={can && <KhungDuKien can={can} />}
-        >
-          <ActivityTimeline />
+        <BoCuc kieu="ho-so" {...chung} rong={rongLanDau("Căn chưa có thông tin", "Đầu chủ điền khi nhận hàng.", "Điền thông tin")} dauMan={<DauMan duongDan={duong} />}>
+          {can && <HoSoCan can={can} />}
         </BoCuc>
       );
     }

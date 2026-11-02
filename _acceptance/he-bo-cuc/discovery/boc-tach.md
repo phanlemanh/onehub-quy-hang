@@ -33,11 +33,10 @@ Hệ quả là bảng, chip lọc, ô số và dòng tin đều bị vẽ lại 
 | (mọi bố cục) | ngăn nổi | thành phần | `sheet` / `drawer` | `components/bo-cuc/ngan-noi.tsx` |
 | Tràn | lưới + lọc + chân | **ghép, chờ** | `solution-crm-3` (chính là màn Contacts của Verve). Cần thành phần `filters`, mà `filters` lỗi kiểu dưới `noUncheckedIndexedAccess` | trang mẫu `KhungLuoiCan` |
 | Danh sách – chi tiết | chia đôi | c-\* | `c-resizable-9` (tay nắm viên thuốc) | `components/khoi/c-resizable-9.tsx` |
-| Danh sách – chi tiết | cột phụ (hồ sơ cạnh bảng) | khối | `solution-crm-4` (ngăn bên): đã chuyển thể ở `units/ho-so/` | trang mẫu `KhungDuKien` (ghép tạm cho mẫu) |
+| Danh sách – chi tiết | cột phụ (hồ sơ cạnh bảng) | khối | `solution-crm-4` — cùng thành phần hồ sơ dùng chung | `components/khoi/solution-crm-4/ho-so.tsx` |
 | Đọc | dòng cài đặt + khung | khối | `settings-3`: giữ `SettingField` và khung gốc; bỏ ô màu, tuỳ chọn trình soạn | `components/khoi/settings-3/` |
-| Hồ sơ hai cột | đầu hồ sơ | ghép | dải đầu màn (như Verve) | `dau-man.tsx` |
-| Hồ sơ hai cột | dữ kiện (cột trái 20rem) | ghép | Verve tự ghép Frame «Contact details»; ReUI không có khối trang hồ sơ | trang mẫu `KhungDuKien` |
-| Hồ sơ hai cột | hoạt động | khối | `solution-crm-5` | `components/khoi/solution-crm-5/` |
+| Hồ sơ | khung, đầu hồ sơ, khối số chính, mục, cặp nhãn–giá trị | khối | `solution-crm-4` đã chuyển thể ở hồ sơ căn (hàng 17) — rút thành thành phần dùng chung, giữ nguyên lớp (chủ kho 02/11 chọn bố cục này) | `components/khoi/solution-crm-4/ho-so.tsx` |
+| Hồ sơ | dải đường dẫn | ghép | `dau-man.tsx`, không tiêu đề (tên ở đầu hồ sơ) | `dau-man.tsx` |
 | Bảng điều khiển | ô số | khối | `stats-7` (ô số thành prop) | `components/khoi/stats-7/` |
 | Bảng điều khiển | bảng nhóm theo người | **ghép, chờ** | `data-grid-grouping-2`: khối có 5 lỗi kiểu (sửa được khi chuyển thể), chưa làm ở đợt này | trang mẫu |
 | Luồng nhiều bước | stepper + ghép cột | **ghép, chờ** | `solution-crm-6`: cần hook `use-file-upload`, hook này lỗi kiểu | trang mẫu |
@@ -62,3 +61,13 @@ Hệ quả là bảng, chip lọc, ô số và dòng tin đều bị vẽ lại 
 - Đăng ký khối vào danh mục.
   - Kiểm chuẩn đòi mỗi khối chuyển thể một dòng ở `catalog.md` «Khối đã chuyển thể», ô «Duyệt» khớp người ký Cổng Phạm vi.
   - Các dòng đã ghi «2026-11-02 · Manh Phan · he-bo-cuc». Chúng chỉ hợp lệ sau khi Cổng Phạm vi hàng 91 được duyệt; trước đó kiểm chuẩn đỏ, nên nhánh chưa đẩy được.
+
+## Hồ sơ theo màn đang có (chủ kho 02/11)
+
+Chủ kho chọn bố cục hồ sơ căn đang chạy (hàng 17) thay bản hai cột theo Verve. Đó là bậc 2 của thang dùng lại — khối đã
+chuyển thể trong kho thắng khối mới. Giải phẫu của nó (`units/ho-so/cot-ho-so.tsx`) được rút nguyên lớp thành
+`components/khoi/solution-crm-4/ho-so.tsx`: `KhungHoSo` (toàn màn là Frame; `cot` là FramePanel trong Frame của Bảng
+hàng) · `DauHoSo` · `SoChinh` · `MucHoSo` · `CapGiaTri`. Hồ sơ căn, liên hệ, lead dựng từ các mảnh này. Màn `units/`
+thuộc vùng hàng 33 nên chưa đổi; tới bước ấy nó nhập các mảnh dùng chung thay bản riêng (ngoại lệ có hạn đã trỏ hàng 33).
+Thay đổi duy nhất so với màn đang chạy: cột cạnh bảng thôi đặt chiều cao viết cứng `h-[calc(100svh-10.5rem)]` — chiều
+cao thuộc bố cục (luật no-layout-arbitrary).

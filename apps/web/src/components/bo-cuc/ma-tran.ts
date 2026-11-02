@@ -5,7 +5,7 @@ export const BO_CUC = [
   "tran",
   "danh-sach-chi-tiet",
   "doc",
-  "ho-so-hai-cot",
+  "ho-so",
   "bang-dieu-khien",
   "luong-nhieu-buoc",
   "dong-tin",
@@ -55,12 +55,12 @@ export const THONG_TIN: Record<KieuBoCuc, ThongTin> = {
     vung: ["dau-man", "than"],
     dien_thoai: "giữ",
   },
-  "ho-so-hai-cot": {
-    ten: "Hồ sơ hai cột",
+  "ho-so": {
+    ten: "Hồ sơ",
     mat_do: "thuong",
-    khoi_nguon: "ghép theo Verve: Frame dữ kiện + solution-crm-5",
-    vung: ["dau-man", "than", "cot-phu"],
-    dien_thoai: "một cột, dữ kiện trước",
+    khoi_nguon: "solution-crm-4 — một cột theo hồ sơ căn hàng 17 (khoi/solution-crm-4/ho-so.tsx)",
+    vung: ["dau-man", "than"],
+    dien_thoai: "giữ một cột",
   },
   "bang-dieu-khien": {
     ten: "Bảng điều khiển",

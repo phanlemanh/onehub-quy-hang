@@ -41,7 +41,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Tràn | dày | `data-grid-editing-6` | Bảng hàng, Hôm nay đầu chủ, trang nhóm môi giới, Lịch xem |
    | Danh sách – chi tiết | dày | `resizable` theo `c-resizable-9` | Bảng hàng có hồ sơ cạnh bên, lead đã nhập |
    | Đọc | thường | `settings-3` (gỡ max-width ở gốc khối) | Ô nhận lead, từng mục Cài đặt sàn, Tôi |
-   | Hồ sơ hai cột | thường | `solution-crm-4` | Hồ sơ căn toàn màn, chế độ cuộc gọi, hồ sơ liên hệ |
+   | Hồ sơ | thường | `solution-crm-4` — một cột theo hồ sơ căn hàng 17 (chủ kho 02/11) | Hồ sơ căn toàn màn, chế độ cuộc gọi, hồ sơ liên hệ |
    | Bảng điều khiển | thường | `stats-7` + `data-grid-grouping-2` | Hôm nay trưởng nhóm, Đội |
    | Luồng nhiều bước | thường | `solution-crm-6` | Nhập Excel, Gửi, Phát hàng |
    | Dòng tin | thường | `solution-crm-5` | Hôm nay đầu khách, Đã gửi trên điện thoại |
@@ -58,7 +58,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Tràn | tiêu đề, nút chính | lọc, góc nhìn, nhóm | — | đếm n/N |
    | Danh sách – chi tiết | như Tràn | như Tràn | hồ sơ kéo chia | đếm n/N |
    | Đọc | đường dẫn khi sâu | — | — | lưu/huỷ hay nút gửi |
-   | Hồ sơ hai cột | lối về, tên, trạng thái, ≤ 2 nút | — | thân đã chia hai cột | — |
+   | Hồ sơ | đường dẫn (tên, trạng thái, nút ở đầu hồ sơ trong khung) | — | — (toàn màn một cột căn giữa 48rem; cạnh bảng là cột phụ của Danh sách – chi tiết) | — |
    | Bảng điều khiển | chọn kỳ | — | — | — |
    | Luồng nhiều bước | bước đang ở | — | xem trước | lùi/tiếp |
    | Dòng tin | tiêu đề | lọc theo loại | — | — |
@@ -75,7 +75,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    tuyến (dải báo đầu màn khi đang xem bản đã tải) — mỗi thứ một luật chung. Không đủ quyền và xung đột khi lưu để sau.
 
 5. **Ba khổ.** Máy tính rộng (1440), máy tính vừa (1024), điện thoại (375). Bản điện thoại của từng bố cục: Tràn thành
-   thẻ; Danh sách – chi tiết thành hai màn chồng; Hồ sơ hai cột thành một cột có nút dính đáy; Luồng nhiều bước mở ngăn
+   thẻ; Danh sách – chi tiết thành hai màn chồng; Hồ sơ thành một cột có nút dính đáy; Luồng nhiều bước mở ngăn
    toàn màn; Đọc và Dòng tin giữ; Bảng điều khiển không có trên điện thoại (Đội không có ở §9).
 
 6. **Bậc mới trên thang dùng lại.** Trước khối đích của màn, ô tra hệ bố cục: bố cục và vùng đã có thì dùng. Vùng đi đúng

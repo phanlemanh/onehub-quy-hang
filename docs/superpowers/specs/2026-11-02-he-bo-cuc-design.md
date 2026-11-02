@@ -140,8 +140,12 @@ không tra được điều mới về sản phẩm khác.
 
 ## Câu hỏi cho người (Cổng Phạm vi)
 
+> 02/11, chủ kho chọn bố cục Hồ sơ theo hồ sơ căn đang chạy (thay Hỏi-7): một cột giải phẫu `solution-crm-4`, toàn màn
+> căn giữa 48rem, cạnh bảng là cột phụ; giải phẫu rút thành `components/khoi/solution-crm-4/ho-so.tsx`. Bố cục đổi tên
+> «Hồ sơ hai cột» → «Hồ sơ».
+
 > Khảo sát ReUI và Verve CRM 02/11 (`_acceptance/he-bo-cuc/discovery/khao-sat-reui-verve.md`) đổi khuyến nghị Hỏi-2
-> (menu Tạo theo Verve), Hỏi-3 (đầu màn ba dạng theo bố cục) và thêm Hỏi-7 (Hồ sơ hai cột ghép theo Verve, `solution-crm-4`
+> (menu Tạo theo Verve), Hỏi-3 (đầu màn ba dạng theo bố cục) và thêm Hỏi-7 (Hồ sơ ghép theo Verve, `solution-crm-4`
 > về vai ngăn bên), Hỏi-8 (Đọc hết bề rộng). Sổ quyết định giữ dòng mới, dòng cũ bị thay. Bản bấm được đã theo số đo Verve
 > ở những chỗ không cần người: lề 16px, khung `sm` cho bố cục dày, nhãn trạng thái `-light`, nút «+» Tạo ở 375, rỗng và
 > lỗi có một hành động.
