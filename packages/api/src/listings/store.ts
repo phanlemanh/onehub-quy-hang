@@ -7,6 +7,7 @@ import {
   foldListing,
   kiemGanMaCan,
   lyDoCanDangMo,
+  LY_DO_MA_CAN_DA_CO,
   validatePayload,
   WINS_IMMEDIATELY,
   type EventType,
@@ -154,6 +155,10 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   const type = cmd.type as EventType;
   const payload = cmd.payload as Record<string, unknown>;
 
+  // Hàng đã có mã: từ chối bằng chính sự thật ấy, trước phép so phiên bản — máy đang giữ bản cũ (gắn lúc mất mạng) nhận lý
+  // do «đã có mã» thay cho «đụng nhau» (ADR-0026).
+  if (type === "unit_number_assigned" && kiemGanMaCan(foldListing(events))) return { error: API_ERRORS.unitNumberAlreadySet, reason: LY_DO_MA_CAN_DA_CO };
+
   const thangNgay = type === "status_changed" && WINS_IMMEDIATELY.includes(payload.to as never);
   if (!thangNgay && cmd.expectedVersion !== version) return { error: API_ERRORS.versionConflict };
 
@@ -171,8 +176,7 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   }
 
   if (type === "unit_number_assigned") {
-    // Gắn mã căn (ADR-0026): một lần, chỉ khi hàng chưa có mã; căn đã có hàng đang mở khác của sàn thì từ chối.
-    if (kiemGanMaCan(hienTai)) return { error: API_ERRORS.unitNumberAlreadySet };
+    // Gắn mã căn (ADR-0026): căn đã có hàng đang mở khác của sàn thì từ chối.
     const trung = await hangMoCungCan(tx, listingId, hienTai.buildingName, payload.unitNumber as string);
     if (trung) return { error: API_ERRORS.unitAlreadyListed, reason: lyDoCanDangMo(trung.status), conflictListingId: trung.id };
   }

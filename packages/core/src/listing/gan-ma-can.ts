@@ -8,6 +8,9 @@ import type { StandardStatus } from "./status";
 /** Mã từ chối khi hàng đã có mã căn — máy chủ và hàng đợi trên máy cùng dùng. */
 export const MA_CAN_DA_CO = "unit-number-already-set";
 
+/** Lý do kèm mã từ chối ấy — «Cần xem» trên máy in câu này. */
+export const LY_DO_MA_CAN_DA_CO = "Hàng này đã có mã căn";
+
 /** Hàng nhận sự kiện `unit_number_assigned` không: chưa có mã thì nhận (`null`), đã có thì trả mã từ chối. */
 export function kiemGanMaCan(hang: Pick<ListingState, "unitNumber">): typeof MA_CAN_DA_CO | null {
   return hang.unitNumber !== null && hang.unitNumber.trim() !== "" ? MA_CAN_DA_CO : null;
