@@ -144,6 +144,12 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
   const nut =
     v.kind === "can" ? (
       <>
+        {/* Chế độ cuộc gọi ép giá (hàng 29): căn ở nhóm «Nên gọi điều chỉnh giá». */}
+        {v.nhom.code === "price_adjustment" && (
+          <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?hang=${encodeURIComponent(v.can.id)}`} />}>
+            Ghi cuộc gọi
+          </Button>
+        )}
         {co(v.nhom, "owner_confirmed") && (
           <Button size="sm" disabled={ban} onClick={() => hd.conGiuGia(v.can)}>
             Còn · giữ giá
@@ -163,9 +169,9 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
       </>
     ) : (
       <>
-        {/* Chế độ cuộc gọi khai thác (hàng 28): mở lead trên máy tính, vừa nghe vừa ghi. */}
+        {/* Chế độ cuộc gọi khai thác (hàng 28): mở lead trên máy tính, vừa nghe vừa ghi. «Gọi» để dành cho nút quay số sau «Mở số» (hàng 29, Hỏi-8). */}
         <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?lead=${encodeURIComponent(v.lead.id)}`} />}>
-          Gọi
+          Ghi cuộc gọi
         </Button>
         {co(v.nhom, "accept") && v.lead.stage === "sent" && (
           <Button size="sm" disabled={ban} onClick={() => hd.lead(v.lead, "accept")}>

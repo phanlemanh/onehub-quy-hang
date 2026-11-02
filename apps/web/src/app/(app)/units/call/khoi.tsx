@@ -31,13 +31,13 @@ const so = new Intl.NumberFormat("vi-VN");
 const dong = (n: number) => `${so.format(n)} đ`;
 const ty = (n: number) => `${new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 3 }).format(n / 1_000_000_000)} tỷ`;
 
-/** Ba cột KD1 trên máy tính; dưới `lg` xếp một cột: thẻ lead → danh sách hỏi → tính giá. */
+/** Một cột của bố cục «Hồ sơ» (hàng 29, Hỏi-1): thẻ → danh sách hỏi → tính giá và so giá, theo thứ tự đầu chủ dùng khi gọi. */
 export function BaCot({ the, hoi, gia }: { the: ReactNode; hoi: ReactNode; gia: ReactNode }) {
   return (
-    <div className="grid gap-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1.3fr)]">
+    <div className="flex flex-col gap-1">
       {the}
       {hoi}
-      <div className="flex flex-col gap-1">{gia}</div>
+      {gia}
     </div>
   );
 }

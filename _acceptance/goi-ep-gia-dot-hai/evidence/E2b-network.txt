@@ -1,0 +1,13 @@
+Driver: Chrome headless rieng qua CDP (profile tam), dev server dung chung 3485. P1=25b4b5eb-9c49-4e53-ba87-c35f48421ce7 (A-28.01, dung-d luot 8)
+marker sau offline: giu
+--- fetch trong trang ---
+[
+ "200 GET /api/v1/listings/25b4b5eb-9c49-4e53-ba87-c35f48421ce7",
+ "200 GET /api/v1/listings",
+ "200 GET /api/v1/listings/25b4b5eb-9c49-4e53-ba87-c35f48421ce7",
+ "200 GET /api/v1/catalog",
+ "200 GET /api/v1/catalog",
+ "200 GET /api/v1/listings/25b4b5eb-9c49-4e53-ba87-c35f48421ce7/owner",
+ "200 GET /api/v1/listings/25b4b5eb-9c49-4e53-ba87-c35f48421ce7/owner",
+ "FAIL GET /api/v1/listings Failed to fetch"
+]

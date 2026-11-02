@@ -1,0 +1,41 @@
+import { readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { GOC, moChrome } from "../../bang-hang-kieu-sheet/thu/cdp.mjs";
+const P4 = process.argv[2];
+const EV = path.join(GOC, "_acceptance/goi-ep-gia-dot-hai/evidence");
+const phien = JSON.parse(readFileSync(path.join(GOC, ".acceptance-runs/goi-ep-gia-dot-hai/phien-dau-chu-1.json"), "utf8"));
+const nghi = (ms) => new Promise((r) => setTimeout(r, ms));
+const get = (t) => t.tinh(`fetch("/api/v1/listings/${P4}").then(async r=>{const d=await r.json();return {st:r.status,last:d.lastConfirmedAt,n:(d.events||[]).filter(e=>e.type==="owner_confirmed").length,total:(d.events||[]).length,status:d.standardStatus,price:d.listPrice}})`);
+const nhom = (t) => t.tinh(`(() => { const id=${JSON.stringify(P4)}; const heads=[...document.querySelectorAll('*')].filter(e=>e.children.length===0&&/Nên gọi điều chỉnh giá/.test(e.textContent)); let sec=null, inG=false; for(const h of heads){let a=h; while(a&&a!==document.body){ if(a.querySelector('a[href*="hang="]')){sec=a;break} a=a.parentElement } if(sec&&sec.querySelector('a[href*="hang="+id+"]'.replace('"+id+"',id)))inG=true } return {heading:heads.length, linkAnywhere:document.querySelectorAll('a[href*="hang='+id+'"]').length, inGroup:inG, sec:sec?sec.innerText.slice(0,160):null}; })()`);
+const chrome = await moChrome();
+const out = {};
+try {
+  const t = await chrome.trang(1440, 900);
+  await t.datCookie([`${phien.name}=${phien.value}`, `qh_san=${phien.qh_san}`]);
+  await t.di("/today");
+  await t.cho(`document.body.innerText.includes("Nên gọi điều chỉnh giá")`, 30000).catch(() => {});
+  await nghi(2000);
+  out.step1 = await nhom(t); out.get1 = await get(t);
+  writeFileSync(path.join(EV, "E6-step1.png"), await t.chup());
+  await t.di(`/units/call?hang=${P4}`);
+  await t.cho(`document.querySelector('[aria-label="Căn đang gọi"]') !== null`);
+  await nghi(2000);
+  await t.gui("Input.dispatchKeyEvent", { type: "keyDown", key: "G", code: "KeyG", windowsVirtualKeyCode: 71, text: "G", modifiers: 8 });
+  await t.gui("Input.dispatchKeyEvent", { type: "keyUp", key: "G", code: "KeyG", windowsVirtualKeyCode: 71, modifiers: 8 });
+  await nghi(600);
+  out.chon = await t.tinh(`[...document.querySelectorAll('[aria-label="Kết quả cuộc gọi"] [data-slot="toggle-group-item"]')].map(b=>b.innerText.replace(/\\n/g,' ')+':'+b.getAttribute('aria-pressed')+'/'+b.getAttribute('data-state'))`);
+  const png = await t.chup();
+  writeFileSync(path.join(EV, "E6-giu-gia.png"), png); writeFileSync(path.join(EV, "E6-step2.png"), png);
+  await t.gui("Input.dispatchKeyEvent", { type: "keyDown", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13, text: "\r" });
+  await t.gui("Input.dispatchKeyEvent", { type: "keyUp", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13 });
+  let g; for (let i = 0; i < 30; i++) { await nghi(1000); g = await get(t); if (g.n >= 1) break; }
+  out.get2 = g; await nghi(1500);
+  writeFileSync(path.join(EV, "E6-step2-sau-gui.png"), await t.chup());
+  out.txtSau = await t.tinh(`document.body.innerText.slice(0,500)`);
+  await t.di("/today");
+  await t.cho(`document.body.innerText.includes("Nên gọi điều chỉnh giá")`, 30000).catch(() => {});
+  await nghi(2000);
+  out.step3 = await nhom(t); out.get3 = await get(t);
+  writeFileSync(path.join(EV, "E6-step3.png"), await t.chup());
+} finally { chrome.dong(); }
+console.log(JSON.stringify(out, null, 1));

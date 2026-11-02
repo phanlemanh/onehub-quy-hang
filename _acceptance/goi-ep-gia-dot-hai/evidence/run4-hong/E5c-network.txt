@@ -1,0 +1,20 @@
+BASE status=200 listPrice=2800000000 standardStatus=Active price_changed=1 unit=A-24.09
+S1 onLine false
+S1 truoc-Enter: Mất mạng · đang xem bản trên máy | Đang xem bản đã tải — mất mạng | Hiểu là 2,75 tỷ · không bao phí · trước 2,8 tỷ · −2% · Enter ghi | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+saved E5c-mat-mang.png
+saved E5c-step1.png
+S1 sau-Enter: Mất mạng · 1 thay đổi chờ gửi | Đang xem bản đã tải — mất mạng | Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+S1 server: status=200 listPrice=2800000000 standardStatus=Active price_changed=1 unit=A-24.09
+S2 waited ms 2032
+saved E5c-step2.png
+S2 ui: Đã đồng bộ · 00:23 | Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+S2 server: status=200 listPrice=2750000000 standardStatus=Active price_changed=2 unit=A-24.09
+S3 offline sau-Enter: Đã đồng bộ · 00:23 | Đang xem bản đã tải — mất mạng | Chưa hiểu «2,75 tỷh2,7 tỷ» — gõ như 2,75 tỷ hoặc 950 triệu | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+saved E5c-step3a.png
+BAN: hồ sơ f78644b5-928a-4f5c-9aca-1b311a5ac70d đã sang Đã bán trên máy chủ (trưởng nhóm chuyển)
+S3 server before online: status=200 listPrice=2750000000 standardStatus=Closed price_changed=2 unit=A-24.09
+saved E5c-tu-choi.png
+saved E5c-step3.png
+S3 ui: Đã đồng bộ · 00:24 | Đã bán | Chưa hiểu «2,75 tỷh2,7 tỷ» — gõ như 2,75 tỷ hoặc 950 triệu | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+S3 server: status=200 listPrice=2750000000 standardStatus=Closed price_changed=2 unit=A-24.09
+NET [["GET","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d",200],["GET","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d",200],["GET","/api/v1/listings",200],["GET","/api/v1/catalog",200],["GET","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d/owner",200],["GET","/api/v1/catalog",200],["GET","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d/owner",200],["GET","/api/v1/listings","ERR Failed to fetch"],["POST","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d/events","ERR Failed to fetch"],["POST","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d/events",200],["GET","/api/v1/listings/f78644b5-928a-4f5c-9aca-1b311a5ac70d",200],["GET","/api/v1/listings",200],["GET","/api/v1/listings",200],["GET","/api/v1/listings",200]] ERR=[]
