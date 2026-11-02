@@ -1,0 +1,4 @@
+E7u network (Claude_Browser read_network_requests, urlPattern api/v1) + console
+App-origin XHR/fetch (http://localhost:3482/api/v1/*): 28 requests, all 200 OK (catalog, company/settings/queue, leads, leads/assigned, listings, auth/get-session, auth/sign-out x2, auth/email-otp/send-verification-otp x2, auth/sign-in/email-otp x2).
+Document requests: /today, /today?nhom=new_lead -> 200. No 4xx/5xx, no connection errors.
+Console: only React DevTools info + [HMR] connected. No errors.
