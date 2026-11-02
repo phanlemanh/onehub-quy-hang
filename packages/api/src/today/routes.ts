@@ -7,7 +7,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { rolesOf } from "../routing/store";
-import { readAssignedLeads, readQueueSettings, writeQueueSettings } from "./store";
+import { readAssignedLead, readAssignedLeads, readQueueSettings, writeQueueSettings } from "./store";
 
 /**
  * Hôm nay của đầu chủ (hàng 22): bộ nhóm của sàn (đọc cả sàn, ghi chỉ quản trị sàn) và lead giao cho tôi (vai Đầu chủ).
@@ -41,6 +41,11 @@ const AssignedLead = z.object({
   acceptedAt: z.string().nullable(),
   acceptDueAt: z.string(),
   callDueAt: z.string(),
+});
+const AssignedLeadDetail = AssignedLead.extend({
+  listPrice: z.number(),
+  feeInclusion: z.enum(["included", "excluded"]),
+  listingId: z.string().nullable(),
 });
 
 export function registerTodayRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps) {
@@ -105,6 +110,27 @@ export function registerTodayRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
         (await rolesOf(tx)).includes("listing_agent") ? readAssignedLeads(tx) : null,
       );
       return kq === null ? tra(c, API_ERRORS.listingAgentRequired) : c.json(kq, 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "get",
+      path: "/api/v1/leads/assigned/{leadId}",
+      summary: "Một lead giao cho tôi bất kể nhóm Hôm nay — như dòng danh sách, thêm giá số, điều kiện phí, hồ sơ căn của lead; không số chủ",
+      request: { params: z.object({ leadId: z.string() }) },
+      responses: { 200: ok("Lead giao cho tôi", AssignedLeadDetail), 404: err("Không phải lead của tôi, đã bỏ hay đã trả lại"), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const { leadId } = c.req.valid("param");
+      const kq = await withCompany(appPool, ctx, async (tx) => {
+        if (!(await rolesOf(tx)).includes("listing_agent")) return API_ERRORS.listingAgentRequired;
+        // Mã không đúng khuôn trả 404 như lead không có — không để câu chọn báo lỗi kiểu.
+        return /^[0-9a-f-]{36}$/i.test(leadId) ? ((await readAssignedLead(tx, leadId)) ?? API_ERRORS.notFound) : API_ERRORS.notFound;
+      });
+      return "code" in kq ? tra(c, kq) : c.json(kq, 200);
     },
   );
 }
