@@ -1,0 +1,56 @@
+== L11 (trinh duyet Playwright MCP dung chung, BI NHIEM boi tac tu khac) ==
+POST listings/<H>/events net::ERR_INTERNET_DISCONNECTED (failed); POST listings events 200; GET /listings 200; GET leads/assigned/L11 200; console: Failed to load resource ERR_INTERNET_DISCONNECTED
+
+== L12 run1 (Chrome rieng, headless) ==
+GET /units/call?lead=93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+POST /api/v1/leads/93698cb9-f095-4a5a-88fb-5b7852aa9d0d/listing -> 201
+GET /api/v1/listings -> 200
+POST /api/v1/leads/93698cb9-f095-4a5a-88fb-5b7852aa9d0d/first-call -> 200
+POST /api/v1/listings/adb5b66f-237d-4adc-b260-4ef86f5cd3b1/events -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /today?_rsc=p_ZiLVR8KTrKTWRL -> 200
+FAILED GET http://localhost:3485/today?_rsc=p_ZiLVR8KTrKTWRL net::ERR_ABORTED
+GET /api/v1/catalog -> 200
+GET /api/v1/company/settings/queue -> 200
+GET /api/v1/leads/assigned -> 200
+GET /api/v1/company/settings/queue -> 200
+GET /api/v1/push/public-key -> 200
+GET /api/v1/leads/assigned -> 200
+GET /api/v1/push/public-key -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+console: ['error: Failed to load resource: the server responded with a status of 404 (Not Found)']
+
+== L12 run2 (tra loi thu hai) ==
+GET /units/call?lead=93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+POST /api/v1/listings/adb5b66f-237d-4adc-b260-4ef86f5cd3b1/events -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/leads/assigned/93698cb9-f095-4a5a-88fb-5b7852aa9d0d -> 200
+console: ['error: Failed to load resource: the server responded with a status of 404 (Not Found)']
+
+== L7 ==
+GET /units/call?lead=28ec0d64-e84a-4694-8ed4-31c25bda6043 -> 200
+GET /api/v1/leads/assigned/28ec0d64-e84a-4694-8ed4-31c25bda6043 -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/leads/assigned/28ec0d64-e84a-4694-8ed4-31c25bda6043 -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/catalog -> 200
+POST /api/v1/leads/28ec0d64-e84a-4694-8ed4-31c25bda6043/return -> 200
+POST /api/v1/leads/28ec0d64-e84a-4694-8ed4-31c25bda6043/first-call -> 200
+GET /api/v1/leads/assigned/28ec0d64-e84a-4694-8ed4-31c25bda6043 -> 404
+console: ['error: Failed to load resource: the server responded with a status of 404 (Not Found)', 'error: Failed to load resource: the server responded with a status of 404 (Not Found)']
+
+== dung-d.mjs --tra: 429 too-many-code-requests (otp_requests 5/15 phut) ==

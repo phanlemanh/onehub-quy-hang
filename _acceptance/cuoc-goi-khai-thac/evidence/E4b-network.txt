@@ -1,0 +1,14 @@
+E4b network (playwright, context rieng, origin http://localhost:3485 = dev_server.url)
+Request toi app-origin (API + non-GET), theo thu tu:
+GET /api/v1/leads/assigned/ff631093-... 200
+GET /api/v1/listings 200
+GET /api/v1/leads/assigned/ff631093-... 200
+GET /api/v1/catalog 200
+GET /api/v1/catalog 200
+GET /api/v1/listings/d0031d22-... (dem n0) 200
+GET /api/v1/listings 200
+POST /api/v1/listings/d0031d22-.../events 200   <- DUY NHAT 1 lan ghi, sau khi chon lua chon (doi chung duong)
+GET /api/v1/listings 200 ; GET /api/v1/listings/d0031d22-... (dem n1) 200
+GET /api/v1/listings 200 ; GET /api/v1/listings/d0031d22-... (dem n2) 200 ; GET /api/v1/listings 200
+Khong co POST/PATCH nao trong luc go o gia, bam Bao phi, sua ve tay, sua moi gioi, go abc, cho 5 giay.
+requestfailed: khong co. Console error/warning + pageerror: khong co. Third-party: khong co.

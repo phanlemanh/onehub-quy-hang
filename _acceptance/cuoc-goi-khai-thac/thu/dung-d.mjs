@@ -2,6 +2,8 @@
 //   node --env-file-if-exists=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/dung-d.mjs          dựng (một lần) và in mã
 //   node --env-file-if-exists=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/dung-d.mjs --tra <L>  đầu chủ trả lại lead L
 //   node --env-file-if-exists=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/dung-d.mjs --ban <H>  chuyển hồ sơ H sang Đã bán
+//   node --env-file-if-exists=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/dung-d.mjs --goi <L>  ghi mốc gọi đầu của L như từ thiết bị khác
+//   node --env-file-if-exists=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/dung-d.mjs --vong 2   dựng lại các lead bài chấm ghi vào (L7, L11–L15)
 // Cần sàn «[Mẫu] Sàn thử» đã nạp (`node packages/db/seed/nap.mjs --nap`). Đi qua API thật trong tiến trình (như
 // dung-man-lead-bon-nac.ts): telesales mẫu nhập lead, nhịp chia giao cho đầu chủ, đầu chủ ghi nấc. Không in số chủ. Mã đã
 // dựng giữ ở .acceptance-runs/cuoc-goi-khai-thac/dung-d.json — chạy lại chỉ in, không dựng chồng.
@@ -15,7 +17,11 @@ import { appPool, BASE_URL, cookieOf, identityPool, makeAuth, themAnhThat } from
 
 const GOC = path.resolve(import.meta.dirname, "../../..");
 const GIU = path.join(GOC, ".acceptance-runs/cuoc-goi-khai-thac/dung-d.json");
-const { values } = parseArgs({ options: { tra: { type: "string" }, ban: { type: "string" } } });
+const { values } = parseArgs({ options: { tra: { type: "string" }, ban: { type: "string" }, goi: { type: "string" }, vong: { type: "string" } } });
+// Mỗi lượt chấm cần lead chưa ai ghi: lượt n > 1 dựng lại L7, L11–L15 ở tầng khác (L1, L3, L5, L6, L8, L9 dùng lại).
+const VONG = Number(values.vong ?? 1);
+const TANG = { 1: ["12", "09", "10", "10", "11", "12"], 2: ["08", "13", "14", "14", "15", "15"], 3: ["06", "06", "05", "05", "04", "04"] }[VONG];
+if (!TANG) throw new Error("--vong chỉ nhận 1, 2, 3");
 
 const { auth, sent } = makeAuth();
 const app = createApi({ appPool, identityPool, auth });
@@ -26,7 +32,7 @@ const send = (method, p, body, cookie = "") =>
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 async function phai(res, ma) {
-  if (res.status !== ma) throw new Error(`${new URL(res.url).pathname}: ${res.status} — ${await res.text()}`);
+  if (res.status !== ma) throw new Error(`${res.url || "lời gọi API"}: ${res.status} — ${await res.text()}`);
   return res.json();
 }
 
@@ -58,6 +64,12 @@ if (values.tra) {
   await ketThuc();
   process.exit(0);
 }
+if (values.goi) {
+  await phai(await send("POST", `/api/v1/leads/${values.goi}/first-call`, undefined, dc1), 200);
+  console.log(`đã ghi mốc gọi đầu của lead ${values.goi} (như từ thiết bị khác)`);
+  await ketThuc();
+  process.exit(0);
+}
 if (values.ban) {
   const s = (await appPool.query("select standard_status from listings where id = $1", [values.ban])).rows[0]?.standard_status;
   if (s === "Incomplete") {
@@ -65,14 +77,25 @@ if (values.ban) {
     await themAnhThat(values.ban);
     await lenh(dc1, values.ban, { type: "status_changed", payload: { to: "Active" } });
   }
-  await lenh(dc1, values.ban, { type: "status_changed", payload: { to: "Closed", closePrice: 3_400_000_000, closeDate: "2026-11-02" } });
-  console.log(`hồ sơ ${values.ban} đã sang Đã bán trên máy chủ`);
+  // Người khác (trưởng nhóm) chuyển Đã bán: bộ đồng bộ của đầu chủ nhận ca «Đã bán thắng ngay» (luật 10).
+  const tn = await vao("truong-nhom@mau.quy-hang.test");
+  await lenh(tn, values.ban, { type: "status_changed", payload: { to: "Closed", closePrice: 3_400_000_000, closeDate: "2026-11-02" } });
+  console.log(`hồ sơ ${values.ban} đã sang Đã bán trên máy chủ (trưởng nhóm chuyển)`);
   await ketThuc();
   process.exit(0);
 }
 
-if (existsSync(GIU)) {
-  console.log(readFileSync(path.join(GIU), "utf8"));
+const GIU_VONG = VONG === 1 ? GIU : GIU.replace(/\.json$/, `-v${VONG}.json`);
+if (!values.vong) {
+  // Không nêu lượt: in bản của lượt mới nhất đã dựng.
+  const moi = [3, 2].map((v) => GIU.replace(/\.json$/, `-v${v}.json`)).find((p) => existsSync(p));
+  if (moi || existsSync(GIU)) {
+    console.log(readFileSync(moi ?? GIU, "utf8"));
+    await ketThuc();
+    process.exit(0);
+  }
+} else if (existsSync(GIU_VONG)) {
+  console.log(readFileSync(GIU_VONG, "utf8"));
   await ketThuc();
   process.exit(0);
 }
@@ -102,7 +125,8 @@ const nhap = async (body, mong = "new") => {
   const cu = await timLead(body.buildingName, body.unitNumber);
   if (cu) return cu.id;
   const r = await phai(await send("POST", "/api/v1/leads", body, ts), 201);
-  if (r.outcome !== mong) throw new Error(`lead ${body.buildingName} ${body.unitNumber ?? ""}: kết cục ${r.outcome}, mong ${mong}`);
+  // Số mẫu trùng chủ nhà đã có đầu chủ thì lead về thẳng đầu chủ ấy («owner_has_agent») — vẫn tạo hồ sơ được.
+  if (r.outcome !== mong && !(mong === "new" && r.outcome === "owner_has_agent")) throw new Error(`lead ${body.buildingName} ${body.unitNumber ?? ""}: kết cục ${r.outcome}, mong ${mong}`);
   return r.id;
 };
 const ghi = (id, duoi) => send("POST", `/api/v1/leads/${id}/${duoi}`, undefined, dc1).then((r) => phai(r, 200));
@@ -134,18 +158,18 @@ L.L1 = await nhap(nam("Toà A", "A-09.01", 2_600_000_000));
 L.L3 = await nhap(nam("Toà B", "B-09.02"));
 L.L5 = await nhap(nam("Toà A", "A-07.03"));
 L.L6 = await nhap(nam("Toà A"));
-L.L7 = await nhap(nam("Toà A", "A-12.03"));
+L.L7 = await nhap(nam("Toà A", `A-${TANG[0]}.03`));
 L.L8 = await nhap(nam("Toà Thử Trống"));
-L.L11 = await nhap(nam("Toà A", "A-09.02"));
-L.L12 = await nhap(nam("Toà A", "A-10.02"));
-L.L13 = await nhap(nam("Toà A", "A-10.03"));
-L.L14 = await nhap(nam("Toà A", "A-11.03"));
-L.L15 = await nhap(nam("Toà A", "A-12.02"));
+L.L11 = await nhap(nam("Toà A", `A-${TANG[1]}.02`));
+L.L12 = await nhap(nam("Toà A", `A-${TANG[2]}.02`));
+L.L13 = await nhap(nam("Toà A", `A-${TANG[3]}.03`));
+L.L14 = await nhap(nam("Toà A", `A-${TANG[4]}.03`));
+L.L15 = await nhap(nam("Toà A", `A-${TANG[5]}.02`));
 await runLeadTick(appPool, new Date(), [san]);
 // L8 ở toà không ai phụ trách: trưởng nhóm giao cho đầu chủ 1.
 const nac = async (id) => (await appPool.query("select accepted_at, matched_agent_user_id from leads where id = $1", [id])).rows[0];
 if ((await nac(L.L8)).matched_agent_user_id !== dc1Id) await phai(await send("POST", `/api/v1/leads/${L.L8}/assign`, { agentUserId: dc1Id }, tn), 200);
-for (const k of ["L1", "L5", "L7", "L11", "L12", "L13", "L14", "L15"]) if (!(await nac(L[k])).accepted_at) await ghi(L[k], "accept");
+for (const k of ["L1", "L5", "L7", "L11", "L12", "L13", "L14", "L15"]) if (!(await nac(L[k])).accepted_at) await ghi(L[k], "accept").catch((e) => { throw new Error(`nhận ${k}: ${e.message}`); });
 const hoSo = async (id) => (await appPool.query("select listing_id from lead_listings where lead_id = $1", [id])).rows[0]?.listing_id ?? (await hoSoTuLead(id));
 L.H5 = await hoSo(L.L5);
 L.H14 = await hoSo(L.L14);
@@ -165,7 +189,7 @@ const so1 = soGiaToa({
 });
 const dong = (n) => new Intl.NumberFormat("vi-VN").format(n);
 const ra = [
-  "lead (dau-chu-1 trừ L3):",
+  `lead (dau-chu-1 trừ L3) — lượt dựng ${VONG}:`,
   ...Object.entries(L).map(([k, v]) => `  ${k.padEnd(4)} ${v}`),
   `  L3 thuộc dau-chu-2; L9 là lead căn trùng (${hangMo}, kết cục ${l9.outcome}) — tạo hồ sơ bị từ chối`,
   "so giá L1 (Toà A, 1PN, về tay giảm dần):",
@@ -173,6 +197,6 @@ const ra = [
   `  dải ${dong(so1.dai.thap)} – ${dong(so1.dai.giua)} – ${dong(so1.dai.cao)}; L1 về tay ${dong(tinhVeTay(2_600_000_000, "included").veTay)}, lệch ${so1.viTri.lechPhanTram}%`,
 ];
 mkdirSync(path.dirname(GIU), { recursive: true });
-writeFileSync(GIU, `${ra.join("\n")}\n`);
+writeFileSync(GIU_VONG, `${ra.join("\n")}\n`);
 console.log(ra.join("\n"));
 await ketThuc();
