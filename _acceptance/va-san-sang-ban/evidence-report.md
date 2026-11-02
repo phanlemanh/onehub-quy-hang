@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 1a5bd16374beaf15acf4845356039ab6660f273c
-human_signoff:
+human_signoff: Manh Phan 2026-11-02
 ---
 
 # Evidence Report: va-san-sang-ban

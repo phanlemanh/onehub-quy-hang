@@ -5,7 +5,7 @@ slug: va-san-sang-ban
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-va-san-sang-ban-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -53,3 +53,7 @@ Bỏ quét không gian: ba lỗi đã có tên từ Cổng Bằng chứng hàng 
 - Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Nếu có lỗi bất ngờ khi bấm Sẵn sàng bán, người dùng vẫn thấy lời báo «Máy chưa lưu được lần sửa — thử lại» và bấm lại được. Nhưng lỗi thật không để lại dấu vết nên đội kỹ thuật khó biết và khó tìm nguyên nhân. — `apps/web/src/app/(app)/units/ready/san-sang.ts`
 - Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Một bài kiểm tra về việc dấu «Chưa có» biến mất khi chuyển căn không thật sự chạy bước dọn dấu. Nếu sau này ai đó làm hỏng bước ấy, bài kiểm tra vẫn xanh và dấu cũ có thể lại hiện ở căn khác. — `apps/web/src/app/(app)/units/ready/san-sang.test.ts`
 - Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm tra không phát hiện được nếu ai đó bớt đi một số tình huống đã hứa kiểm. Người dùng không thấy gì khác hôm nay. — `apps/web/src/app/(app)/units/ready/san-sang.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Lỗi bất ngờ khi bấm «Sẵn sàng bán» hiện «Máy chưa lưu được lần sửa — thử lại» mà không để lại dấu vết cho đội kỹ thuật.
+  - Ngoài-2: Bài kiểm việc dấu «Chưa có» biến mất khi chuyển căn không chạy thật bước dọn dấu.
+  - Ngoài-3: Bài kiểm danh sách «Còn thiếu» không phát hiện nếu ai đó bớt ca đã hứa kiểm.
