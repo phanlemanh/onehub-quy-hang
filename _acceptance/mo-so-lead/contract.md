@@ -5,7 +5,7 @@ slug: mo-so-lead
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-mo-so-lead-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -64,3 +64,7 @@ Bỏ quét coverage có tên — không gian AC là một cửa có sẵn khuôn
 - Giám sát cấp (02/11): migration `017_mo_so_lead.sql` (số giữ cho hàng này), vùng ở `hang-viec.json`.
 - Hỏi-1 (trưởng nhóm có mở được không), Hỏi-2 (mở số có tự ghi «Đã nhận»), Hỏi-3 (lead căn trùng có mở được) nháp theo
   khuyến nghị «không» — chủ kho chốt ở Cổng Phạm vi.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: bài kiểm «nhật ký máy chủ không mang số» chỉ chứng việc bọc bắt được ít nhất một dòng, chưa ghim đúng dòng của lỗi máy chủ.
+  - Ngoài-2: bài kiểm ở màn dùng câu trả lời giả viết tay, máy chủ đổi dạng trả số thì màn có thể báo «Chưa mở được số» mà bài không bắt.
+  - Ngoài-3: bài kiểm «không lưu số trên máy» chưa chứng được bẫy kho trên máy đã gài đúng chỗ.
