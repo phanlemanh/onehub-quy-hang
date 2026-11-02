@@ -6,6 +6,8 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:f
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { docBanDo } from "../lib/ban-do.mjs";
+import { kiemBoCuc } from "../lib/bo-cuc.mjs";
 import { docBanDoHeThietKe, kiemBanDoHeThietKe, LOP, SKILL, tepBanDoHeThietKe, tepHeThietKe } from "../lib/ban-do-he-thiet-ke.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
@@ -43,7 +45,13 @@ describe("bản đồ hệ thiết kế", () => {
       const dong = s.split("\n").find((x) => x.endsWith("`apps/web/src/components/bo-cuc/ngan-noi.tsx` |"));
       assert.ok(dong);
       writeFileSync(join(d, SKILL), s.replace(`${dong}\n`, ""));
-      assert.deepEqual(kiemBanDoHeThietKe(d).loi, [`bản đồ hệ thiết kế: tệp «apps/web/src/components/bo-cuc/ngan-noi.tsx» thiếu dòng — thêm vào bảng ở ${SKILL}`]);
+      assert.deepEqual(kiemBanDoHeThietKe(d).loi, [`bản đồ hệ thiết kế: thiếu dòng: apps/web/src/components/bo-cuc/ngan-noi.tsx — thêm vào bảng ở ${SKILL}`]);
+    }));
+
+  it("đối chứng: tệp mới khớp mẫu mà không có dòng thì đỏ gọi tên tệp", () =>
+    voi((d) => {
+      writeFileSync(join(d, "apps/web/src/components/bo-cuc/thu.tsx"), "export function Thu() {\n  return null;\n}\n");
+      assert.deepEqual(kiemBanDoHeThietKe(d).loi, [`bản đồ hệ thiết kế: thiếu dòng: apps/web/src/components/bo-cuc/thu.tsx — thêm vào bảng ở ${SKILL}`]);
     }));
 
   it("đối chứng: lớp ngoài danh sách thì đỏ", () =>
@@ -54,9 +62,32 @@ describe("bản đồ hệ thiết kế", () => {
       assert.match(l[0], /«CONTEXT\.md» lớp «màu» ngoài danh sách/);
     }));
 
+  it("README trỏ bảng", () => {
+    assert.match(readFileSync(join(ROOT, "docs/README.md"), "utf8"), /\]\([^)]*\.agents\/skills\/quy-hang-ui\/SKILL\.md#bản-đồ-hệ-thiết-kế\)/);
+    assert.match(readFileSync(join(ROOT, SKILL), "utf8"), /^## Bản đồ hệ thiết kế$/m);
+  });
+
   it("đối chứng: README không trỏ bảng thì đỏ", () =>
     voi((d) => {
       sua(d, "docs/README.md", "SKILL.md#bản-đồ-hệ-thiết-kế", "SKILL.md");
       assert.deepEqual(kiemBanDoHeThietKe(d).loi, ["bản đồ hệ thiết kế: docs/README.md chưa trỏ sang bảng «Bản đồ hệ thiết kế»"]);
     }));
+});
+
+describe("Cài đặt sàn vào vỏ", () => {
+  it("Cài đặt sàn: bố cục Đọc", () => {
+    const bd = docBanDo(ROOT);
+    const g = (n) => bd.nhom.find((x) => x.data.nhom === n);
+    const cd = g("cai-dat-san");
+    assert.equal(cd.data.bo_cuc, "doc");
+    assert.ok(cd.data.nhan_dien.every((gl) => gl.startsWith("apps/web/src/app/(app)/settings/")), JSON.stringify(cd.data.nhan_dien));
+    assert.equal(cd.data.khuon.ten, "MucCaiDat");
+    assert.equal(cd.khuonTep, "apps/web/src/app/(app)/settings/khung.tsx");
+    assert.match(readFileSync(join(ROOT, cd.khuonTep), "utf8"), /<BoCuc[^>]*kieu="doc"/);
+    assert.deepEqual(kiemBoCuc(ROOT, bd).lech.filter((l) => l.nhom === "cai-dat-san"), []);
+    assert.equal(g("trang-tam").data.bo_cuc, "doc");
+    const vo = readFileSync(join(ROOT, "docs/design/vo-va-ia.md"), "utf8");
+    const dau = vo.split("\n").find((l) => l.startsWith("| Màn | Phác thảo"));
+    assert.ok(dau.split("|").map((c) => c.trim()).includes("Bố cục"), dau);
+  });
 });

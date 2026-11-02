@@ -47,7 +47,7 @@ export function kiemBanDoHeThietKe(root) {
     if (!existsSync(join(root, d.tep))) loi.push(`bản đồ hệ thiết kế: dòng trỏ tệp không có «${d.tep}»`);
   }
   const cay = tepHeThietKe(root, bd.mau, bd.bo);
-  for (const t of cay) if (!theoTep.has(t)) loi.push(`bản đồ hệ thiết kế: tệp «${t}» thiếu dòng — thêm vào bảng ở ${SKILL}`);
+  for (const t of cay) if (!theoTep.has(t)) loi.push(`bản đồ hệ thiết kế: thiếu dòng: ${t} — thêm vào bảng ở ${SKILL}`);
   const readme = existsSync(join(root, "docs/README.md")) ? readFileSync(join(root, "docs/README.md"), "utf8") : "";
   if (!/quy-hang-ui\/SKILL\.md#bản-đồ-hệ-thiết-kế/.test(readme)) loi.push("bản đồ hệ thiết kế: docs/README.md chưa trỏ sang bảng «Bản đồ hệ thiết kế»");
   return { loi, soTep: cay.length, soDong: bd.dong.length };

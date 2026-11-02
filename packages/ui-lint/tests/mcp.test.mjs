@@ -40,7 +40,7 @@ describe("mcp", () => {
     assert.ok(loi.some((l) => l.includes("mcp: thiếu máy chủ reui")), loi.join("\n"));
   });
 
-  it("mcp: đối chứng — khoá thật trong tệp thì đỏ", () => {
+  it("mcp: chuỗi khoá thật thì đỏ", () => {
     const loi = kiemMcp(banSao((j) => (j.mcpServers.reui.headers.Authorization = "Bearer reui_live_abcdef1234567890")));
     assert.ok(loi.some((l) => l.includes("mcp: chuỗi trông như khoá")), loi.join("\n"));
   });

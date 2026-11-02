@@ -9,7 +9,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deflateSync } from "node:zlib";
 import { kiemChuan, tepVetKhoi } from "../kiem-chuan.mjs";
-import { rongPng } from "../lib/ba-loi.mjs";
+import { kiemTrangHoSo, rongPng } from "../lib/ba-loi.mjs";
 import { tepBanDoHeThietKe } from "../lib/ban-do-he-thiet-ke.mjs";
 import { tepBoCucCan } from "../lib/bo-cuc.mjs";
 import { docBanDo } from "../lib/ban-do.mjs";
@@ -133,6 +133,38 @@ describe("ba lối: khung đi trọn tới trang", () => {
       for (const l of LOI) for (const kh of KHO) writeFileSync(join(thuMuc(d), `${l}-${kh}.png`), png(kh));
       const r2 = chay(d, "--dung-ba-loi", SLUG);
       assert.equal(r2.status, 0, r2.stderr);
+    }));
+});
+
+describe("ba lối nhiều ô", () => {
+  /** Hồ sơ có nhiều ô chưa có khuôn (hàng 91): mỗi ô một thư mục ba-loi/<mã ô>/, dựng bằng --dung-ba-loi … --o <mã ô>. */
+  function datO(d, o) {
+    const t = join(thuMuc(d), o);
+    mkdirSync(t, { recursive: true });
+    writeFileSync(join(t, "ba-loi.json"), JSON.stringify(DU, null, 2));
+    for (const l of LOI) for (const k of KHO) writeFileSync(join(t, `${l}-${k}.png`), png(k));
+    const r = chay(d, "--dung-ba-loi", SLUG, "--o", o);
+    assert.equal(r.status, 0, r.stderr);
+  }
+  it("ba lối nhiều ô", () =>
+    tam((d) => {
+      datO(d, "a");
+      datO(d, "b");
+      assert.deepEqual(kiemTrangHoSo(d, SLUG), []);
+      unlinkSync(join(thuMuc(d), "b", "reui-375.png"));
+      const l = kiemTrangHoSo(d, SLUG);
+      assert.equal(l.length, 1, JSON.stringify(l));
+      assert.ok(l[0].startsWith("ô b: "), l[0]);
+    }));
+  it("đối chứng: hồ sơ một ô (ba-loi/ba-loi.json) kiểm như cũ, lỗi không mang tiền tố ô", () =>
+    tam((d) => {
+      datDu(d);
+      assert.equal(chay(d, "--dung-ba-loi", SLUG).status, 0);
+      assert.deepEqual(kiemTrangHoSo(d, SLUG), []);
+      unlinkSync(join(thuMuc(d), "reui-375.png"));
+      const l = kiemTrangHoSo(d, SLUG);
+      assert.equal(l.length, 1, JSON.stringify(l));
+      assert.ok(!l[0].startsWith("ô "), l[0]);
     }));
 });
 
