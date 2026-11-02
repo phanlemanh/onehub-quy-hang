@@ -1,0 +1,136 @@
+schema_version: 1
+feature_slug: dien-ma-can-cho-hang
+# Dựng chung cho mọi eval ui-check («DỰNG G»): máy dev cấu hình `web-dcdv-g` của .claude/launch.json (cổng 3484, Postgres
+# 5564 đã migrate, dữ liệu mẫu đã nạp). Đăng nhập bằng email dau-chu-1@mau.quy-hang.test, mã đọc ở dòng
+# «[ma-dang-nhap] <email> <mã>» của nhật ký máy chủ (phiên chính chạy máy chủ với nhật ký ở .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log).
+# Hàng chưa có mã căn: tạo qua API một lead chỉ có toà rồi «Tạo hàng từ lead» (POST /api/v1/leads/{id}/listing).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «gắn mã căn: khuôn và gấp» (packages/core/src/listing/*.test.ts) có mặt và ok — ma trận viết trước: payload {unitNumber:'A-12.05'} hợp lệ; thiếu unitNumber, chuỗi rỗng, 201 ký tự, khoá lạ x, khoá chủ nhà ownerPhone → mỗi ca đúng một lỗi ghim đường khoá (đếm đủ 6 ca, assert số); gấp hàng chưa mã với sự kiện ấy → unitNumber = 'A-12.05'; gấp hàng đã có mã → lỗi mã 'unit-number-already-set' (chiều đỏ ghim mã lỗi, đối chứng: hàng chưa mã cùng fixture nhận)."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; migration mới áp được; ca «loại sự kiện gắn mã căn» (packages/api/test-db/dien-ma-can.test.ts) ok — chèn listing_events type 'unit_number_assigned' thành công; type 'lam-bay' bị ràng buộc từ chối (chiều đỏ ghim tên ràng buộc); bộ kiểm cách ly (packages/db/tests/isolation.test.mjs) xanh."
+    paths: [packages/db/migrations/**, packages/api/test-db/dien-ma-can.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «API gắn mã căn» (packages/api/test-db/dien-ma-can.test.ts) ok — ma trận viết trước năm trạng thái: hàng chưa mã → 201 và GET hàng trả unitNumber; hàng đã mã → 422 'unit-number-already-set'; hàng cùng căn ở MỖI trạng thái của OPEN_STATUSES (lõi dedupe, mã khác hoa thường và dấu gạch: 'a12-05' với 'A12.05') → 422 'unit-already-listed' kèm id hàng kia, một ca mỗi trạng thái; hàng cùng căn ở MỖI trạng thái đóng (STANDARD_STATUSES trừ OPEN_STATUSES) → 201, một ca mỗi trạng thái; hàng cùng căn của sàn khác → 201 (cách ly); người không có quyền sửa hàng → 403; số ca = 3 + |OPEN_STATUSES| + |đóng| + 1, assert số bằng ma trận dựng từ chính hai danh sách của lõi."
+    paths: [packages/api/src/listings/**, packages/db/migrations/**, packages/api/test-db/dien-ma-can.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «sẵn sàng bán sau khi gắn mã» (packages/core/src/listing/*.test.ts) ok — cùng một hàng chưa ảnh: trước khi gắn missingFor('Active') có 'unitNumber' và không có 'realPhoto'; sau khi gấp sự kiện gắn mã thì không có 'unitNumber' và có 'realPhoto' (hai chiều trên cùng fixture)."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hồ sơ theo hàng» (apps/web/src/app/(app)/units/ho-so/*.test.ts) ok — docCot đọc ?hang=<id> thành chọn theo hàng, ?unit= vẫn như cũ; tìm hàng theo id trên kho trên máy trả đúng hàng chưa mã; hàng đã có mã tìm theo id thì trả kèm mã (hồ sơ theo mã); id không có → không tìm thấy (chiều đỏ)."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «lệnh gắn mã căn» (apps/web/src/app/(app)/units/ho-so/*.test.ts) ok — dựng lệnh từ ô: mã có khoảng trắng hai đầu → payload đã cắt; mã rỗng → không dựng lệnh, trả lỗi 'Gõ mã căn'; hàng đã có mã → không dựng lệnh; lệnh vào hàng đợi trên máy có type 'unit_number_assigned' và expectedVersion của hàng."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6u
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G cổng 3484 (DỰNG G), đăng nhập dau-chu-1@mau.quy-hang.test"
+    steps:
+      - "Đích: máy chủ chạy sẵn ở cổng 3484 — dùng chung, KHÔNG tắt; mã đăng nhập ở .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log. Đặt MA = «A-12.<4 số cuối của run_id>»; GET /api/v1/listings ghi rằng chưa hàng nào của «Toà A» mang mã MA. Tạo qua API hai lead chỉ có toà «Toà A» rồi tạo hàng từ mỗi lead (hàng X, hàng Y)."
+      - "Khổ 1440x900, mở /inventory?hang=<id hàng X> → chụp evidence/E6u-1-chua-co.png; ghi ô «Mã căn», dấu «Chưa có», nút"
+      - "Gõ MA, bấm «Lưu mã căn» → chụp evidence/E6u-2-da-gan.png; ghi địa chỉ (phải có unit=MA) và «Còn thiếu» (không còn Mã căn)"
+      - "Mở /inventory?hang=<id hàng Y>, gõ MA viết thường và thay dấu chấm bằng gạch, lưu → chụp evidence/E6u-3-trung.png; ghi lỗi tại ô (nêu hàng đang mở) và chữ đã gõ còn giữ"
+      - "Xoá trắng ô, bấm lưu → chụp evidence/E6u-4-rong.png; ghi lời «Gõ mã căn»"
+    expected: "Hàng X chưa mã: hồ sơ mở, ô Mã căn đánh dấu Chưa có, có ô nhập và nút Lưu mã căn; lưu xong địa chỉ theo mã mới, Còn thiếu không còn Mã căn; hàng Y gõ mã trùng khác hoa thường: lỗi tại ô nêu hàng đang mở, chữ giữ; ô rỗng: báo Gõ mã căn, không gửi."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", packages/api/src/listings/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web_db
+    expected: "exit 0; ca «đồng bộ gắn mã căn» (apps/web/src/lib/sync/test-db/*.db-test.mts) ok — bộ đồng bộ nói với API thật, ma trận viết trước 3 ca: 201 → hàng trên máy mang mã, hàng đợi rỗng; 422 unit-already-listed (gửi sau khi có mạng lại) → hàng trên máy về chưa mã, lệnh rời hàng đợi, «Cần xem» có lý do chứa «Căn này đã có hàng đang mở» và id hàng kia; 422 unit-number-already-set → hàng trên máy giữ mã của máy chủ, «Cần xem» có lý do; đếm đủ 3 ca, assert số."
+    paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «lối vào hồ sơ hàng chưa mã» (apps/web/src/**/*.test.ts) ok — hàm mở hồ sơ từ dòng Bảng hàng: hàng chưa mã → tham số hang=<id>, hàng có mã → unit/toa/lan như cũ (hai chiều); liên kết dòng «Chưa có mã căn» ở Hôm nay trỏ /inventory?hang=<id>; đích của «Mã căn» trong Còn thiếu là ô mã căn (id phần tử cố định)."
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7u
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G cổng 3484 (DỰNG G), đăng nhập dau-chu-1@mau.quy-hang.test"
+    steps:
+      - "Đích: máy chủ chạy sẵn ở cổng 3484 — dùng chung, KHÔNG tắt; mã đăng nhập ở .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log. Tạo qua API một lead chỉ có toà rồi tạo hàng từ lead (hàng Z)."
+      - "Khổ 1440x900, ở /inventory bấm dòng của hàng Z (cột mã căn trống) → chụp evidence/E7u-1-bang-hang.png; ghi cột hồ sơ có mở"
+      - "Ở /today bấm dòng «Chưa có mã căn · <toà>» của hàng Z → chụp evidence/E7u-2-hom-nay.png; ghi hồ sơ mở"
+      - "Trong hồ sơ bấm «Sẵn sàng bán», ở «Còn thiếu» bấm «Mã căn» → chụp evidence/E7u-3-con-thieu.png; ghi phần tử đang focus"
+    expected: "Bấm dòng hàng chưa mã ở Bảng hàng mở cột hồ sơ của hàng ấy; bấm dòng Chưa có mã căn ở Hôm nay mở hồ sơ; bấm Mã căn trong Còn thiếu đưa con trỏ vào ô mã căn."
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8u
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G cổng 3484 (DỰNG G), đăng nhập dau-chu-1@mau.quy-hang.test"
+    steps:
+      - "Đích: máy chủ chạy sẵn ở cổng 3484 — dùng chung, KHÔNG tắt; mã đăng nhập ở .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log. Tạo một hàng chưa mã như E6u."
+      - "Khổ 375x812, mở /inventory?hang=<id> → chụp evidence/E8u-1-dien-thoai.png; ghi document.documentElement.scrollWidth so với innerWidth"
+      - "Gõ mã mới, lưu → chụp evidence/E8u-2-da-gan.png"
+    expected: "Ở 375 ô Mã căn và nút Lưu mã căn hiện đủ, dùng được; scrollWidth bằng innerWidth; lưu xong hồ sơ theo mã mới."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: judgment
+    inputs: [docs/product/tham-chieu.md, docs/adr/0026-gan-ma-can.md]
+    question: "Tham chiếu có ghi rằng mã căn của hàng gắn một lần ở hồ sơ căn và máy chặn khi sàn đã có hàng đang mở trên cùng căn không; tài liệu quyết định về hàng và sự kiện có ghi loại sự kiện gắn mã căn và lý do không cho đổi mã qua sự kiện đổi chi tiết lần rao không?"
+    expected: "Cả hai tệp ghi đủ: Tham chiếu nêu cách gắn mã một lần và luật chặn trùng hàng đang mở; tài liệu quyết định nêu loại sự kiện mới và vì sao mã căn không đi qua sự kiện đổi chi tiết."
+    evidence_required: [run_id, verdict, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; «mức nợ giao diện: 0/0»; kiểm chuẩn in «chuẩn giao diện: đạt»; không lệch khuôn ở nhóm ho-so-can."
+    paths: [apps/web/src/**, packages/ui-lint/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: [apps/web/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

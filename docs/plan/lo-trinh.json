@@ -1960,6 +1960,12 @@
       "cau_giao": "Vá Che vùng ảnh: trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ",
       "slug": "va-che-vung-anh",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "dien-ma-can-cho-hang",
+      "cau_giao": "Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà: hàng chưa có mã căn báo thiếu «mã căn» và không lên Đang bán (hàng 23 chọn C); đầu chủ điền mã căn ngay ở hồ sơ căn để hàng đủ điều kiện rao.",
+      "slug": "dien-ma-can-cho-hang",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],
   "chan_troi": [
