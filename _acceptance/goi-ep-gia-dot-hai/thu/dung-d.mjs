@@ -6,11 +6,12 @@
 // chỉ thêm và máy chủ đóng dấu giờ hiện tại, nên lệnh mở một phiên chủ cơ sở dữ liệu, `set session_replication_role = replica`
 // (chỉ trong phiên ấy — bỏ qua trigger chỉ-thêm) và dời `occurred_at` từng sự kiện về số ngày đã khai, rồi đặt lại
 // `last_confirmed_at` theo sự kiện có xác nhận muộn nhất. Chỉ chạy trên Postgres thử: từ chối khi cổng không phải 5565.
-// Số chủ là số mẫu `0900 000 099`, tên `[Tên]`. Mã đã dựng giữ ở .acceptance-runs/goi-ep-gia-dot-hai/ — chạy lại chỉ in.
+// Số chủ là số mẫu `0900 000 091`–`099`, tên `[Tên]`. Mã đã dựng giữ ở .acceptance-runs/goi-ep-gia-dot-hai/ — chạy lại chỉ in.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { createApi } from "../../../packages/api/src/app.ts";
+import { BO_NHOM_MAC_DINH, nhomCuaCan } from "../../../packages/core/src/today/index.ts";
 import { appPool, BASE_URL, cookieOf, identityPool, makeAuth, themAnhThat } from "../../../packages/api/test-db/helpers.ts";
 
 const GOC = path.resolve(import.meta.dirname, "../../..");
@@ -56,13 +57,16 @@ if (values.ban) {
   await ketThuc();
   process.exit(0);
 }
-if (existsSync(GIU)) {
-  console.log(readFileSync(GIU, "utf8"));
+// Không nêu lượt: in bản của lượt mới nhất đã dựng; nêu lượt đã dựng: in bản ấy.
+const MOI = values.vong ? GIU : [5, 4, 3, 2].map((v) => GIU.replace(/\.json$/, `-v${v}.json`)).find((p) => existsSync(p)) ?? GIU;
+if (existsSync(MOI)) {
+  console.log(readFileSync(MOI, "utf8"));
   await ketThuc();
   process.exit(0);
 }
 
 const dc1 = await vao("dau-chu-1@mau.quy-hang.test");
+const dc1Id = (await phai(await send("GET", "/api/v1/me", undefined, dc1), 200)).user.id;
 const N = 2_800_000_000;
 /** Dãy lệnh của từng hồ sơ: [số ngày trước, lệnh]. P1 mang lịch sử trả giá đủ ba loại dòng; các hồ sơ khác lên bảng 20 ngày trước. */
 const DAY_P1 = [
@@ -92,7 +96,9 @@ for (const [i, ten] of TEN.entries()) {
     const seq = (await appPool.query("select max(seq) s from listing_events where listing_id = $1", [id])).rows[0].s;
     for (let s = 1; s <= seq; s++) if (!ngay.has(s)) ngay.set(s, d);
   }
-  if (ten === "P1") await phai(await send("PUT", `/api/v1/listings/${id}/owner`, { ownerName: "[Tên]", ownerPhone: "0900 000 099", floorPrice: 2_700_000_000 }, dc1), 200);
+  // Mọi hồ sơ có dòng chủ nhà (gắn đầu chủ giữ căn — căn chưa gắn không vào hàng việc Hôm nay); chỉ P1 có giá đáy.
+  const chu = { ownerName: "[Tên]", ownerPhone: `0900 000 0${91 + i}`, ...(ten === "P1" && { floorPrice: 2_700_000_000 }) };
+  await phai(await send("PUT", `/api/v1/listings/${id}/owner`, chu, dc1), 200);
   // Lùi mốc trong phiên chủ, chỉ phiên ấy bỏ qua trigger.
   const c = await appPool.connect();
   try {
@@ -122,7 +128,10 @@ for (const ten of TEN) {
   const v = await phai(await send("GET", `/api/v1/listings/${P[ten].id}`, undefined, dc1), 200);
   const mocEp = Math.min(ngayTu(v.priceChangeTimestamp), ngayTu(v.lastConfirmedAt));
   if (mocEp < 10) throw new Error(`${ten}: mốc ép giá ${mocEp} ngày < 10 — chưa đủ điều kiện`);
-  ra.push(`  ${ten} ${P[ten].id} · ${P[ten].can} · ${v.standardStatus} · 2,8 tỷ · không bao phí · mốc ép giá ${mocEp} ngày`);
+  // Đối chứng dương của E6, E8: luật xếp nhóm của lõi (bộ mặc định — sàn mẫu không đặt bộ riêng) đưa căn vào nhóm ép giá.
+  const nhom = nhomCuaCan(BO_NHOM_MAC_DINH, { ...v, unitType: null, livingArea: null }, dc1Id, new Date().toISOString());
+  if (nhom?.code !== "price_adjustment") throw new Error(`${ten}: không vào nhóm «Nên gọi điều chỉnh giá» (nhóm ${nhom?.code ?? "không"})`);
+  ra.push(`  ${ten} ${P[ten].id} · ${P[ten].can} · ${v.standardStatus} · 2,8 tỷ · không bao phí · mốc ép giá ${mocEp} ngày · nhóm ${nhom.label}`);
 }
 ra.push(
   "P1 đầu màn: «Lên bảng 38 ngày · đổi giá gần nhất 23 ngày trước»; giá đáy 2,7 tỷ (thấp hơn giá về tay hiện tại); P2 chưa ghi giá đáy",

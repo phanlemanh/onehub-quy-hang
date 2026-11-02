@@ -155,7 +155,7 @@ const CHO_TRANG_THAI = [
   // Chế độ cuộc gọi (hàng 28): không thấy lead, lỗi tải lead.
   ...Array(2).fill(`${W}/app/(app)/units/call/cuoc-goi.tsx`),
   // Chế độ ép giá (hàng 29): không thấy căn, đã ghi kết quả.
-  ...Array(2).fill(`${W}/app/(app)/units/call/push/ep-gia.tsx`),
+  ...Array(3).fill(`${W}/app/(app)/units/call/push/ep-gia.tsx`),
   // Hồ sơ căn (hàng 17): khung xương và «không có / nhiều căn» của cột, kết quả chia sẻ của báo sai.
   ...["cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
   // Mục Ảnh (hàng 18): lỗi tải, trống của ngăn, thẻ Tự có từ mã, ngăn nội bộ khoá.
@@ -349,7 +349,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 7 tệp theo khuôn · 14 ngoại lệ · 0 lệch",
-      "trang-thai: 54 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 55 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

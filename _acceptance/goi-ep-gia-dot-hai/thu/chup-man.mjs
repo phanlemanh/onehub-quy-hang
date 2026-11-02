@@ -2,7 +2,7 @@
 // khổ, và một khung ép giá đã chọn «Hạ giá». Phiên lấy bằng lệnh cấp phiên thử của hàng 28 (không đọc nhật ký máy chủ).
 //   QH_B_URL=http://localhost:3485 node --env-file=.env.local --import tsx _acceptance/goi-ep-gia-dot-hai/thu/chup-man.mjs <mã hồ sơ> [mã lead]
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { GOC, moChrome } from "../../bang-hang-kieu-sheet/thu/cdp.mjs";
 
@@ -10,12 +10,14 @@ const [hang, lead] = process.argv.slice(2);
 if (!hang) throw new Error("thiếu mã hồ sơ");
 const DICH = path.join(GOC, ".acceptance-runs/goi-ep-gia-dot-hai/chup");
 mkdirSync(DICH, { recursive: true });
-const phien = JSON.parse(
-  execFileSync(process.execPath, ["--env-file=.env.local", "--import", "tsx", "_acceptance/cuoc-goi-khai-thac/thu/phien.mts", "dau-chu-1@mau.quy-hang.test"], { cwd: GOC, encoding: "utf8" })
-    .trim()
-    .split("\n")
-    .at(-1),
-);
+// Phiên giữ ở .acceptance-runs (máy chủ giới hạn số lần gửi mã); hết hạn thì xoá tệp để cấp lại.
+const TEP_PHIEN = path.join(GOC, ".acceptance-runs/goi-ep-gia-dot-hai/phien-dau-chu-1.json");
+if (!existsSync(TEP_PHIEN)) {
+  const ra = execFileSync(process.execPath, ["--env-file=.env.local", "--import", "tsx", "_acceptance/cuoc-goi-khai-thac/thu/phien.mts", "dau-chu-1@mau.quy-hang.test"], { cwd: GOC, encoding: "utf8" });
+  mkdirSync(path.dirname(TEP_PHIEN), { recursive: true });
+  writeFileSync(TEP_PHIEN, ra.trim().split("\n").at(-1));
+}
+const phien = JSON.parse(readFileSync(TEP_PHIEN, "utf8"));
 const cookie = [`${phien.name}=${phien.value}`, `qh_san=${phien.qh_san}`];
 const chrome = await moChrome();
 const MAN = [["ep-gia", `/units/call?hang=${hang}`, `document.querySelector('[aria-label="Căn đang gọi"]') !== null`]];

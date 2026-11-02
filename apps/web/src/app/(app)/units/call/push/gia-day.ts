@@ -11,7 +11,10 @@ export async function docGiaDay(goi: Goi, hangId: string): Promise<GiaDay> {
   try {
     const r = await goi("GET", `/api/v1/listings/${encodeURIComponent(hangId)}/owner`);
     const b = r.body as { visible?: boolean; floorPrice?: number | null } | null;
-    if (r.status !== 200 || !b || b.visible !== true) return { kind: "an" };
+    // Không thấy nguồn (200 visible:false), không có quyền (403) hay không thấy căn (404) → ẩn khối; lỗi khác (401, 5xx) → báo
+    // chưa tải được, để người có quyền không lầm là căn không có giá đáy.
+    if (r.status === 403 || r.status === 404 || (r.status === 200 && b?.visible === false)) return { kind: "an" };
+    if (r.status !== 200 || !b || b.visible !== true) return { kind: "loi" };
     return typeof b.floorPrice === "number" ? { kind: "co", dong: b.floorPrice } : { kind: "chua" };
   } catch {
     return { kind: "loi" };

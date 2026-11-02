@@ -29,7 +29,7 @@ evals:
       - "Đăng nhập dau-chu-1. Khổ 1440x900. Mở /today, ở nhóm «Nên gọi điều chỉnh giá» trên dòng P1 bấm «Ghi cuộc gọi» → ghi URL; ghi nhãn mọi nút trên dòng P1 và trên một dòng lead ở nhóm Lead mới; chụp evidence/E1b-1440.png; ghi chữ đầu màn"
       - "Mở /units/call?hang=<mã không tồn tại> → chụp evidence/E1b-khong-thay.png; bấm nút trên khối báo → ghi URL"
       - "Mở /units/call?lead=<L1 của hàng 28, dung-d của cuoc-goi-khai-thac in> → ghi trang có thẻ lead của chế độ khai thác không"
-    expected: "URL /units/call?hang=<P1>; đầu màn có mã căn · toà của P1, nấc, «2,8 tỷ · không bao phí», số ngày lên bảng và số ngày từ lần đổi giá gần nhất khớp dung-d.mjs in; mã không tồn tại: «Không thấy căn này trong kho của bạn», nút đưa về /today; ?lead= vẫn mở chế độ khai thác; nút mở chế độ cuộc gọi trên dòng căn và dòng lead mang nhãn «Ghi cuộc gọi», không nút nào khác trên dòng mang nhãn «Gọi» trừ nút quay số sau «Mở số»."
+    expected: "URL /units/call?hang=<P1>; đầu màn có mã căn · toà của P1, nấc, «2,8 tỷ · không bao phí», số ngày lên bảng và số ngày từ lần đổi giá gần nhất khớp dung-d.mjs in; mã không tồn tại: «Không thấy căn này trong kho của bạn», nút đưa về /today; ?lead= vẫn mở chế độ khai thác (bước 2 chủ ý gọi mã không tồn tại: GET /api/v1/listings/<mã ấy> trả 404 — mong đợi, không tính lỗi mạng); nút mở chế độ cuộc gọi trên dòng căn và dòng lead mang nhãn «Ghi cuộc gọi», không nút nào khác trên dòng mang nhãn «Gọi» trừ nút quay số sau «Mở số»."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
     paths: ["apps/web/src/app/(app)/units/call/**", "apps/web/src/app/(app)/today/**"]
 
@@ -48,7 +48,7 @@ evals:
     target: "Như E1b; P1 có lịch sử: lên bảng, hạ giá, «Còn · giữ giá» (dung-d.mjs in dãy mong đợi)"
     steps:
       - "Mở /units/call?hang=<P1> → chụp khối «Lịch sử trả giá» evidence/E2b-lich-su.png; ghi từng dòng"
-      - "Bật offline (DevTools), tải lại trang → chụp evidence/E2b-mat-mang.png; ghi khối lịch sử còn hiện không"
+      - "Bật offline (DevTools) KHÔNG tải lại trang (ứng dụng chưa có bản trang dùng ngoại tuyến — lịch sử đọc từ kho trên máy của trang đang mở), chờ một nhịp đồng bộ báo mất mạng → chụp evidence/E2b-mat-mang.png; ghi khối lịch sử còn hiện không"
     expected: "Các dòng khớp dãy dung-d.mjs in, mới nhất trên, có ngày giờ, điều kiện phí, nhãn «đã xác nhận với chủ» ở dòng có dấu ấy; mất mạng vẫn hiện bản đã kéo."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
     paths: ["apps/web/src/app/(app)/units/call/**"]
@@ -65,7 +65,7 @@ evals:
     criterion: AC-3
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «giá đáy: khối theo trả lời» (apps/web/src/app/(app)/units/call/push/gia-day.test.ts) có mặt và ok — 5 ca (assert số): visible true + floorPrice 2,7 tỷ trên giá 2,8 tỷ không bao phí → «2,7 tỷ», «thấp hơn giá về tay hiện tại 3,6%»; visible true + floorPrice null → «Chưa ghi giá đáy»; visible false → không khối; 403/404 → không khối; mất mạng → «Chưa tải được giá đáy». Hàm đọc chỉ gọi đúng GET /api/v1/listings/<id>/owner và không chạm localStorage hay kho trên máy (hàm gọi giả đếm, kho giả đếm ghi = 0). Đối chứng đỏ: khối đọc floorPrice khi visible false → ca visible false gọi tên."
+    expected: "exit 0; ca «giá đáy: khối theo trả lời» (apps/web/src/app/(app)/units/call/push/gia-day.test.ts) có mặt và ok — 8 ca (assert số): visible true + floorPrice 2,7 tỷ trên giá 2,8 tỷ không bao phí → «2,7 tỷ», «thấp hơn giá về tay hiện tại 3,6%»; visible true + floorPrice null → «Chưa ghi giá đáy»; visible false → không khối; 403/404 → không khối; 401 và 503 → «Chưa tải được giá đáy»; mất mạng → «Chưa tải được giá đáy». Hàm đọc chỉ gọi đúng GET /api/v1/listings/<id>/owner và không chạm localStorage hay kho trên máy (hàm gọi giả đếm; kho giả thay localStorage và indexedDB đếm ghi = 0). Đối chứng đỏ: khối đọc floorPrice khi visible false → ca visible false gọi tên; bản đọc ghi giá đáy vào localStorage → kho giả đếm 1; coi lỗi máy chủ là không có quyền → ca 401 và 503 gọi tên."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
     paths: ["apps/web/src/app/(app)/units/call/**"]
 
@@ -121,7 +121,7 @@ evals:
       - "Mở /units/call?hang=<P9>; tắt mạng của trang (DevTools Network: Offline); H, gõ «2,75 tỷ», Alt+2, Enter → chụp evidence/E5c-mat-mang.png; ghi chỉ báo đồng bộ và chữ trên khối kết quả"
       - "Bật mạng lại, chờ gửi; GET /api/v1/listings/<P9> → ghi listPrice và số price_changed"
       - "Tắt mạng lại; H, gõ «2,7 tỷ», Enter; chạy dung-d.mjs --ban <P9> trong terminal; bật mạng, chờ lượt gửi → chụp evidence/E5c-tu-choi.png; ghi chỉ báo đồng bộ, Cần xem, và GET lại listPrice, standardStatus"
-    expected: "Mất mạng: lần hạ giá ghi trên máy, chỉ báo nói chưa gửi vì mất mạng; có mạng lại máy chủ nhận 2750000000, đúng một price_changed mới. Máy chủ từ chối lần hạ giá ghi trên bản trước khi căn được bán (lời gọi gửi trả 409 — mong đợi): hồ sơ vào Cần xem, chỉ báo nói vì sao; máy chủ giữ 2750000000 và Closed."
+    expected: "Mất mạng: lần hạ giá ghi trên máy, chỉ báo nói chưa gửi vì mất mạng; có mạng lại máy chủ nhận 2750000000, đúng một price_changed mới. Máy chủ từ chối lần hạ giá ghi trên bản trước khi căn được bán (lời gọi gửi trả 409 — mong đợi): hồ sơ vào Cần xem, màn ép giá nói vì sao («Lần ghi chưa lên máy chủ: căn đã bán») thay câu «Đã ghi»; máy chủ giữ 2750000000 và Closed."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
     paths: ["apps/web/src/app/(app)/units/call/**"]
 

@@ -22,6 +22,9 @@ const MA_TRAN: [string, { status: number; body: unknown } | "mat-mang", KhoiGiaD
   ["chưa ghi giá đáy", { status: 200, body: { visible: true, ownerName: "[Tên]", floorPrice: null, hasPhone: false } }, { kind: "chu", chinh: "Chưa ghi giá đáy", phu: null }],
   ["không thấy nguồn", { status: 200, body: { visible: false, listingAgentUserId: "u" } }, { kind: "an" }],
   ["403", { status: 403, body: { error: "listing-agent-required" } }, { kind: "an" }],
+  ["404", { status: 404, body: { error: "not-found" } }, { kind: "an" }],
+  ["hết phiên", { status: 401, body: { error: "unauthorized" } }, { kind: "chu", chinh: "Chưa tải được giá đáy", phu: null }],
+  ["máy chủ lỗi", { status: 503, body: null }, { kind: "chu", chinh: "Chưa tải được giá đáy", phu: null }],
   ["mất mạng", "mat-mang", { kind: "chu", chinh: "Chưa tải được giá đáy", phu: null }],
 ];
 
@@ -36,10 +39,43 @@ async function caSai(khoi: Khoi): Promise<string[]> {
 }
 
 test("giá đáy: khối theo trả lời", async () => {
-  assert.equal(MA_TRAN.length, 5);
-  assert.deepEqual(await caSai(khoiGiaDay), []);
-  // Không chạm bộ nhớ trình duyệt: môi trường kiểm không có localStorage, đọc vẫn chạy trọn.
-  assert.equal(typeof (globalThis as { localStorage?: unknown }).localStorage, "undefined");
+  assert.equal(MA_TRAN.length, 8);
+  const ghi = khoGia();
+  try {
+    assert.deepEqual(await caSai(khoiGiaDay), []);
+  } finally {
+    ghi.go();
+  }
+  // Không chạm bộ nhớ trình duyệt: kho giả đếm mọi lần ghi trong lúc chạy trọn ma trận.
+  assert.equal(ghi.dem(), 0);
+});
+
+/** Kho giả thay localStorage và indexedDB trong lúc chạy, đếm lần ghi hay mở. */
+function khoGia() {
+  const g = globalThis as Record<string, unknown>;
+  const cu = { localStorage: g.localStorage, indexedDB: g.indexedDB };
+  let n = 0;
+  g.localStorage = { setItem: () => void n++, getItem: () => null, removeItem: () => void n++, clear: () => void n++ };
+  g.indexedDB = { open: () => (n++, {}) };
+  return { dem: () => n, go: () => Object.assign(g, cu) };
+}
+
+test("giá đáy: đối chứng đỏ — bản đọc ghi giá đáy vào bộ nhớ trình duyệt bị kho giả đếm", async () => {
+  const ghi = khoGia();
+  try {
+    const g = goiGia(MA_TRAN[0]![1]);
+    const gd = await docGiaDay(g.f, "h1");
+    if (gd.kind === "co") (globalThis as { localStorage: Storage }).localStorage.setItem("floor", String(gd.dong));
+  } finally {
+    ghi.go();
+  }
+  assert.equal(ghi.dem(), 1);
+});
+
+test("giá đáy: đối chứng đỏ — coi lỗi máy chủ là không có quyền bị gọi tên", async () => {
+  const anHet: Khoi = (gd, gia) => (gd.kind === "loi" ? { kind: "an" } : khoiGiaDay(gd, gia));
+  const sai = await caSai(anHet);
+  assert.ok(sai.includes("máy chủ lỗi") && sai.includes("hết phiên"));
 });
 
 test("giá đáy: đối chứng đỏ — đọc floorPrice khi không thấy nguồn bị gọi tên", async () => {

@@ -5,7 +5,7 @@
 // thẳng đường chủ nhà, không lưu trên máy (KH-cg-khong-nguon).
 import { soGiaToa, vietGia, type CanSo, type FeeInclusion } from "@quy-hang/core/pricing";
 import type { EventType, ListingEvent } from "@quy-hang/core/listing";
-import type { ListingView } from "@/lib/sync/types";
+import type { ListingView, NeedsReview } from "@/lib/sync/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useEffectEvent, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { goiFetch } from "@/lib/sync/goi-fetch";
-import { useBoDongBo, useDanhSachHang, useHoSoHang, useSuaHang } from "@/lib/sync/react";
+import { useBoDongBo, useCanXem, useDanhSachHang, useHoSoHang, useSuaHang } from "@/lib/sync/react";
 import { moTaLoi } from "../../../inventory/cell-edit/lenh";
 import { useDanhMuc } from "../../../inventory/danh-muc";
 import { nhanLoaiCan } from "../../../inventory/ghep-danh-muc";
@@ -37,6 +37,10 @@ import { BA_LOI, homNay, KET_QUA, lenhBan, loiMo, xuLyPhimKetQua, type KetQua, t
 import { lichSuTraGia } from "./lich-su";
 
 const TIEU_MUC = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
+/** Câu «Đã ghi» của lần hạ giá — một chỗ cho phím Enter, nút Ghi và hộp hỏi lại. */
+const nhanHa = (l: LenhGia) => `Hạ giá ${vietGia(l.listPrice)} · ${NHAN_PHI[l.feeInclusion]}`;
+/** Vì sao máy chủ không nhận lần ghi của căn — cùng chữ với bảng «Cần xem». */
+const VI_SAO: Record<NeedsReview["kind"], string> = { "da-ban": "căn đã bán", "da-coc": "căn đã cọc", "dung-nhau": "người khác vừa sửa căn này", "tu-choi": "máy chủ không nhận" };
 const NHAN_KQ: Record<KetQua, string> = { "ha-gia": "Hạ giá", "giu-gia": "Còn · giữ giá", ban: "Đã cọc / bán…", "khong-nghe": "Không nghe máy" };
 
 const khongDangKy = () => () => {};
@@ -92,6 +96,9 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
   const [ngayBan, setNgayBan] = useState(homNay());
   const [baoLoi, setBaoLoi] = useState<string | null>(null);
   const [daGhi, setDaGhi] = useState<string | null>(null);
+  // Lần ghi của căn này máy chủ không nhận (hàng 13, 61): màn nói vì sao thay câu «Đã ghi», lối xử ở bảng «Cần xem».
+  const { moCanXem } = useBoDongBo();
+  const canXem = useCanXem().find((r) => r.listingId === hangId) ?? null;
   const oHa = useRef<HTMLInputElement>(null);
   const oChot = useRef<HTMLInputElement>(null);
   const danhSach = useRef<HTMLDivElement>(null);
@@ -120,7 +127,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
     if (kq.kind === "chua-hieu") return setBaoLoi(kq.loi);
     if (kq.kind === "chon-phi") return setBaoLoi("Chọn Bao phí (Alt+1) hay Không bao phí (Alt+2)");
     if (kq.kind === "hoi-lai") return setHoiLaiHa({ lenh: kq.lenh, cuMoi: kq.cuMoi, phanTram: kq.phanTram });
-    void ghi("price_changed", kq.lenh, `Hạ giá ${vietGia(kq.lenh.listPrice)} · ${NHAN_PHI[kq.lenh.feeInclusion]}`);
+    void ghi("price_changed", kq.lenh, nhanHa(kq.lenh));
   };
   const ghiBan = () => {
     if (!loi) return setBaoLoi("Chọn một lối: 1 Đã cọc · 2 Sàn mình bán · 3 Chủ bán nơi khác");
@@ -141,7 +148,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
     }
     if (e.key === "Enter" && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
-      if (hoiLaiHa) void ghi("price_changed", hoiLaiHa.lenh, `Hạ giá ${vietGia(hoiLaiHa.lenh.listPrice)} · ${NHAN_PHI[hoiLaiHa.lenh.feeInclusion]}`);
+      if (hoiLaiHa) void ghi("price_changed", hoiLaiHa.lenh, nhanHa(hoiLaiHa.lenh));
       else ghiHa();
     }
     if (e.key === "Escape") {
@@ -275,7 +282,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
                   Đổi {hoiLaiHa.cuMoi}
                   {hoiLaiHa.phanTram ? ` (${hoiLaiHa.phanTram})` : ""}?
                 </span>
-                <Button size="sm" onClick={() => void ghi("price_changed", hoiLaiHa.lenh, `Hạ giá ${vietGia(hoiLaiHa.lenh.listPrice)}`)}>
+                <Button size="sm" onClick={() => void ghi("price_changed", hoiLaiHa.lenh, nhanHa(hoiLaiHa.lenh))}>
                   Ghi <Kbd>Enter</Kbd>
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => setHoiLaiHa(null)}>
@@ -317,7 +324,18 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
           </div>
         )}
         {baoLoi ? <p className="text-destructive text-sm">{baoLoi}</p> : null}
-        {daGhi ? (
+        {canXem ? (
+          <div className="flex flex-col items-start gap-2">
+            <TrangThai
+              kind="error"
+              title={`Lần ghi chưa lên máy chủ: ${canXem.kind === "tu-choi" && canXem.reason ? canXem.reason : VI_SAO[canXem.kind]}`}
+              description="Thao tác của bạn đang chờ ở «Cần xem» — chọn giữ hay bỏ ở đó."
+            />
+            <Button size="sm" variant="outline" onClick={() => moCanXem(true)}>
+              Mở Cần xem
+            </Button>
+          </div>
+        ) : daGhi ? (
           <div className="flex flex-col items-start gap-2">
             <TrangThai kind="notice" title={`Đã ghi: ${daGhi}`} />
             <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/today" />}>
