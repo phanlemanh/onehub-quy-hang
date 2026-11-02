@@ -3,7 +3,7 @@
 **Đã quyết** — Manh Phan, 02/11, nguyên văn: «Tôi đồng ý build tất cả» (22 hàng). Đã chép vào ô cơ hội từng hàng
 (`decision: build`, `stage: decided`): mười lăm ô ở PR này, bảy ô (31, 64–67, 88, 89) trên nhánh PR #61.
 
-**Hai hàng thêm 02/11 sau PR #88 — chờ quyết**: 92 và 93, bảng cuối thẻ.
+**Hai hàng thêm 02/11 sau PR #88 — đã quyết** — Manh Phan, 02/11, nguyên văn: «Build cả hai» (92, 93), bảng cuối thẻ.
 
 Mở 02/11. Một lần ngồi, 22 quyết định: mỗi hàng có đáng dựng không. Cột «Quyết» chép đúng chữ người gõ — máy không tự
 điền. Mỗi hàng nhận một trong bốn chữ: `build` (dựng) · `iterate` (làm lại ý trước khi dựng) · `park` (gác, chưa làm) ·
@@ -78,13 +78,12 @@ Mọi hàng cùng một chữ thì viết gọn được: `tất cả ___`, kèm
 Máy chép đúng chữ người gõ vào ô cơ hội của từng hàng (`decision`, `decided_by`, `decided_at`, `stage: decided`), như đã
 làm với ba đợt trước.
 
-## Hai hàng thêm 02/11 — chờ quyết
+## Hai hàng thêm 02/11 — đã quyết `build`
 
 Sau PR #88 (chủ kho chọn lại khối đích bằng khoá ReUI Pro), hai màn đã ký phải làm lại theo khối mới. Hai ô ở PR này
-(`_acceptance/lam-lai-hom-nay-dau-chu/`, `_acceptance/dang-nhap-auth-15/`), `stage: discovery`. Không quyết thì đợt vẫn
-mở và 22 hàng trên chạy như cũ — riêng 39 đứng sau 92, nên gác 92 là gác cả 39.
+(`_acceptance/lam-lai-hom-nay-dau-chu/`, `_acceptance/dang-nhap-auth-15/`), đã chép quyết (`decision: build`, `stage: decided`).
 
 | # | Người dùng được gì | Đứng trên | Dãy | Hạng · giờ máy | Khuyến nghị — căn cứ | Quyết |
 |---|---|---|---|---|---|---|
-| 92 | Đầu chủ đọc mỗi việc của Hôm nay trên một dòng — tên căn, «Vì sao hôm nay» hai tầng với hạn tô màu, giá — và làm việc đầu của nhóm bằng đúng một nút; việc còn lại trong ⋯ | 22, 91 | H | T2 · 0,99–6,53 h | `build` — chủ kho chọn 14A sau khi chỉ ra nút rối và lý do khó đọc; màn đầu chủ mở mỗi ngày trong hai tuần thử; 39 dựng trên khuôn của nó; lấp lượt 2 của dãy H, không kéo dài đợt | |
-| 93 | Người trong sàn đăng nhập trên thẻ theo `auth-15`: chỉ mã một lần qua email, không nút Google, Apple, GitHub; chọn sàn và chưa gắn sàn cùng khuôn | 6, 91 | B | T2 · 0,99–6,53 h | `build` — màn đăng nhập đang là bản ghép tạm, dòng «Chỗ hở» quá hạn từ 30/10; chủ kho chọn `auth-15` 02/11; chỉ đổi giao diện, lấp lượt 5 của dãy B | |
+| 92 | Đầu chủ đọc mỗi việc của Hôm nay trên một dòng — tên căn, «Vì sao hôm nay» hai tầng với hạn tô màu, giá — và làm việc đầu của nhóm bằng đúng một nút; việc còn lại trong ⋯ | 22, 91 | H | T2 · 0,99–6,53 h | `build` — chủ kho chọn 14A sau khi chỉ ra nút rối và lý do khó đọc; màn đầu chủ mở mỗi ngày trong hai tuần thử; 39 dựng trên khuôn của nó; lấp lượt 2 của dãy H, không kéo dài đợt | `build` |
+| 93 | Người trong sàn đăng nhập trên thẻ theo `auth-15`: chỉ mã một lần qua email, không nút Google, Apple, GitHub; chọn sàn và chưa gắn sàn cùng khuôn | 6, 91 | B | T2 · 0,99–6,53 h | `build` — màn đăng nhập đang là bản ghép tạm, dòng «Chỗ hở» quá hạn từ 30/10; chủ kho chọn `auth-15` 02/11; chỉ đổi giao diện, lấp lượt 5 của dãy B | `build` |
