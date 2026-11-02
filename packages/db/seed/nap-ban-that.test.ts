@@ -636,14 +636,17 @@ test("go-xoa-byte: gỡ xoá byte đúng mọi ảnh sàn mẫu, mỗi lệnh ma
 
 test("hong-o-lan-ghi-10: kho ném sau khi đã ghi lần 10 thì xoá đúng mọi mã trong nhật ký ghi (E7 nap-mau-co-anh)", async () => {
   const truoc = await chup();
-  const gia = khoGia({ nemOLanGhi: 10 });
-  await assert.rejects(nap(GOI, EMAIL_CHU_KHO, gia.kho), /kho giả: lỗi ở lần ghi 10/);
-  const daGhi = new Set(gia.ghi().map((x) => x.photoId));
-  assert.ok(daGhi.has(gia.ghi()[9]!.photoId), "mã của lần ghi thứ 10 có trong nhật ký");
-  assert.equal(daGhi.size, 5);
-  const sanMau = gia.ghi()[0]!.companyId;
-  assert.notEqual(sanMau, sanThat);
-  assert.deepEqual(loiXoa(gia.xoa(), { san: sanMau, mong: daGhi, camSan: sanThat, camAnh: new Set([anhThat]) }), []);
+  // Lần 9 là bản gốc của ảnh thứ năm (mã chưa từng vào sổ), lần 10 là bản nhẹ của nó: cả hai phải được dọn.
+  for (const [k, soAnh] of [[9, 5], [10, 5]] as const) {
+    const gia = khoGia({ nemOLanGhi: k });
+    await assert.rejects(nap(GOI, EMAIL_CHU_KHO, gia.kho), new RegExp(`kho giả: lỗi ở lần ghi ${k}`));
+    const daGhi = new Set(gia.ghi().map((x) => x.photoId));
+    assert.ok(daGhi.has(gia.ghi()[k - 1]!.photoId), `lần ${k}: mã của lần ghi hỏng có trong nhật ký`);
+    assert.equal(daGhi.size, soAnh, `lần ${k}: số ảnh đã ghi`);
+    const sanMau = gia.ghi()[0]!.companyId;
+    assert.notEqual(sanMau, sanThat);
+    assert.deepEqual(loiXoa(gia.xoa(), { san: sanMau, mong: daGhi, camSan: sanThat, camAnh: new Set([anhThat]) }), [], `lần ${k}`);
+  }
   // Kho ném cả khi xoá: lỗi của lần chạy vẫn là lỗi kho ở lần 10.
   const nem = khoGia({ nemOLanGhi: 10, nemKhiXoa: true });
   await assert.rejects(nap(GOI, EMAIL_CHU_KHO, nem.kho), /kho giả: lỗi ở lần ghi 10/);
