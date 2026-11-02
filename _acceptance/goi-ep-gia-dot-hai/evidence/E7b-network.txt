@@ -1,40 +1,7 @@
-# E7b network (playwright response/requestfailed, app origin http://localhost:3485)
-## step1
-GET /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c => 200
-GET /api/v1/listings => 200
-GET /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c => 200
-GET /api/v1/catalog => 200
-GET /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c/owner => 200
-GET /api/v1/catalog => 200
-GET /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c/owner => 200
-POST /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c/events => 200
-GET /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c => 200
-GET /api/v1/listings => 200
-GET /api/v1/listings/4473b9a8-25c0-4033-9358-e60b8e37b38c => 200
-## step2
-GET /api/v1/catalog => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc/owner => 200
-GET /api/v1/catalog => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc/owner => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc => 200
-GET /api/v1/listings => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc => 200
-POST /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc/events => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc => 200
-GET /api/v1/listings => 200
-GET /api/v1/listings/4801f4f3-7549-4724-ba34-f0f079330cbc => 200
-## step3
-GET /api/v1/catalog => 200
-GET /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2/owner => 200
-GET /api/v1/catalog => 200
-GET /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2/owner => 200
-GET /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2 => 200
-GET /api/v1/listings => 200
-GET /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2 => 200
-POST /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2/events => 200
-GET /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2 => 200
-GET /api/v1/listings => 200
-GET /api/v1/listings/32cd7e1b-1899-47f5-b71e-48ce20c2eee2 => 200
-# console errors
-Failed to load resource: the server responded with a status of 404 (Not Found)
+NETWORK E7b (fetch hook trong trang, origin localhost:3485; Chrome headless rieng qua CDP)
+S1 ["GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075","GET 200 /api/v1/listings","GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075","GET 200 /api/v1/catalog","GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075/owner","GET 200 /api/v1/catalog","GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075/owner","GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075","GET 200 /api/v1/listings","POST 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075/events","GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075","GET 200 /api/v1/listings","GET 200 /api/v1/listings/63b2c9e5-fdc9-4628-895d-db58c1058075"]
+S1err []
+S2 ["GET 200 /api/v1/catalog","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28/owner","GET 200 /api/v1/catalog","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28/owner","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28","GET 200 /api/v1/listings","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28","GET 200 /api/v1/listings","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28","POST 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28/events","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28","GET 200 /api/v1/listings","GET 200 /api/v1/listings/f4bd40d7-2666-4cd0-ae3e-3ed62e5c7c28"]
+S2err []
+S3 ["GET 200 /api/v1/catalog","GET 200 /api/v1/catalog","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e/owner","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e/owner","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e","GET 200 /api/v1/listings","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e","POST 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e/events","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e","GET 200 /api/v1/listings","GET 200 /api/v1/listings/974672aa-6b0b-4752-bee3-202eda77a52e"]
+S3err []

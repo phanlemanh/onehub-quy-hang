@@ -1,27 +1,17 @@
 {
   "telesales": {
-    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
+    "loc": "/units/call?hang=0dd344f4-0696-4bcc-809f-4b6fab20c83a",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call"
     ],
-    "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 00:38\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 00:47\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
     "log": [
-      {
-        "url": "/__nextjs_original-stack-frames",
-        "method": "POST",
-        "status": 200,
-        "len": 2154,
-        "ownerPhone": false,
-        "titleDeed": false,
-        "p0900": false,
-        "floorPrice": false
-      },
       {
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 55909,
+        "len": 74801,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
@@ -37,28 +27,18 @@
     "docStatus": 200
   },
   "quan-tri": {
-    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
+    "loc": "/units/call?hang=0dd344f4-0696-4bcc-809f-4b6fab20c83a",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call"
     ],
-    "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 00:38\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 00:47\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
     "log": [
       {
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 55909,
-        "ownerPhone": false,
-        "titleDeed": false,
-        "p0900": false,
-        "floorPrice": false
-      },
-      {
-        "url": "/__nextjs_original-stack-frames",
-        "method": "POST",
-        "status": 200,
-        "len": 2154,
+        "len": 74801,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
@@ -74,28 +54,18 @@
     "docStatus": 200
   },
   "truong-nhom": {
-    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
+    "loc": "/units/call?hang=0dd344f4-0696-4bcc-809f-4b6fab20c83a",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call"
     ],
-    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:38\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:47\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
     "log": [
       {
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 55909,
-        "ownerPhone": false,
-        "titleDeed": false,
-        "p0900": false,
-        "floorPrice": false
-      },
-      {
-        "url": "/__nextjs_original-stack-frames",
-        "method": "POST",
-        "status": 200,
-        "len": 2154,
+        "len": 74801,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
@@ -111,16 +81,16 @@
     "docStatus": 200
   },
   "dau-chu-1": {
-    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
+    "loc": "/units/call?hang=0dd344f4-0696-4bcc-809f-4b6fab20c83a",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call",
-      "A-25.01 · Toà A · 2,8 tỷ · không bao phí"
+      "A-26.01 · Toà A · 2,8 tỷ · không bao phí"
     ],
-    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:38\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi điều chỉnh giá\nĐang bán\nA-25.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl\n+\nEnter\nvề Hôm nay\n\nLỊCH SỬ TRẢ GIÁ\nCòn · giữ giá · đã xác nhận với chủ\nĐầu chủ · 00:29 19/10\nHạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận với chủ\nĐầu chủ · 00:29 11/10\nLên bảng 2,95 tỷ ",
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:48\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi điều chỉnh giá\nĐang bán\nA-26.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl\n+\nEnter\nvề Hôm nay\n\nLỊCH SỬ TRẢ GIÁ\nCòn · giữ giá · đã xác nhận với chủ\nĐầu chủ · 00:44 19/10\nHạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận với chủ\nĐầu chủ · 00:44 11/10\nLên bảng 2,95 tỷ · không bao phí · đã xác nhận với chủ\nĐầu chủ · 00:44 26/09\nTạo hồ sơ\nĐầu chủ · 00:44 24/09\nGIÁ ĐÁY ",
     "log": [
       {
-        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
+        "url": "/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a",
         "method": "GET",
         "status": 200,
         "len": 2437,
@@ -133,14 +103,14 @@
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 62630,
+        "len": 81522,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
         "floorPrice": false
       },
       {
-        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
+        "url": "/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a",
         "method": "GET",
         "status": 200,
         "len": 2437,
@@ -160,7 +130,7 @@
         "floorPrice": false
       },
       {
-        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner",
+        "url": "/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a/owner",
         "method": "GET",
         "status": 200,
         "len": 76,
@@ -180,7 +150,7 @@
         "floorPrice": false
       },
       {
-        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner",
+        "url": "/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a/owner",
         "method": "GET",
         "status": 200,
         "len": 76,
@@ -194,13 +164,13 @@
     "domTitleDeed": false,
     "dom0900": false,
     "res": [
-      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
-      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
+      "http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a",
+      "http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a",
       "http://localhost:3485/api/v1/listings",
       "http://localhost:3485/api/v1/catalog",
-      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner",
+      "http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a/owner",
       "http://localhost:3485/api/v1/catalog",
-      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner"
+      "http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a/owner"
     ],
     "docStatus": 200
   }

@@ -1,5 +1,57 @@
-Driver: Chrome headless rieng qua CDP (Network/Page/Runtime event day du), dev server dung chung 3485 (config 3460 khong chay). P1 = 91904244-71bc-45ae-b48f-d3a26a649446 (A-25.01, dung-d luot 5).
-Luu y: trinh duyet Playwright MCP dung chung voi phien khac (URL tu nhay sang hang khac) nen khong dung cho ket qua; ket qua lay tu Chrome rieng.
-Online: tai trang, khong request that bai. Sau Network.emulateNetworkConditions offline (khong tai lai, marker window.__m con nguyen):
-  khong request /api/ moi, khong loadingFailed, khong frameNavigated, khong console.error.
-Ket luan network: sach.
+Driver: Chrome headless rieng qua CDP, dev server dung chung 3485 (config 3460 khong chay). P1=0dd344f4-0696-4bcc-809f-4b6fab20c83a (A-26.01, dung-d luot 6).
+marker window.__m sau offline: giu
+
+--- network ---
+200 GET http://localhost:3485/units/call?hang=0dd344f4-0696-4bcc-809f-4b6fab20c83a [Document]
+NAV http://localhost:3485/units/call?hang=0dd344f4-0696-4bcc-809f-4b6fab20c83a
+200 GET http://localhost:3485/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css [Stylesheet]
+200 GET http://localhost:3485/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 [Font]
+200 GET http://localhost:3485/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 [Font]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js [Script]
+200 GET http://localhost:3485/manifest.webmanifest [Manifest]
+200 GET http://localhost:3485/_next/static/chunks/apps_web_1anvha4rlo79g._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/apps_web_20p8eawbcoy94._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/apps_web_src_1y5l-kud9pt6s._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_drawer_0_4bb8bkpmi10._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_1axlho38regs0._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_1nc4crjayg17u._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_internals_1l88rrr5k8_28._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_00ecwwfw3lcbq._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/_019q2kglz__79._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_1l2ifqw-pm-fo._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/_1d-iqqqbayd8i._.js [Script]
+200 GET http://localhost:3485/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 [Font]
+200 GET http://localhost:3485/_next/static/chunks/_0iw5c-zo6ta3f._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_0zs-tj5w7mqeo._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/apps_web_src_11gcnic_hiavz._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/_1y306g9rrggck._.js [Script]
+200 GET http://localhost:3485/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js [Script]
+404 GET http://localhost:3485/favicon.ico [Other]
+200 GET http://localhost:3485/icons/icon-192.png [Other]
+200 GET http://localhost:3485/manifest.webmanifest [Manifest]
+200 GET http://localhost:3485/icons/icon-192.png [Other]
+200 GET http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a [Fetch]
+200 GET http://localhost:3485/api/v1/listings [Fetch]
+200 GET http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a [Fetch]
+200 GET http://localhost:3485/api/v1/catalog [Fetch]
+200 GET http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a/owner [Fetch]
+200 GET http://localhost:3485/api/v1/catalog [Fetch]
+200 GET http://localhost:3485/api/v1/listings/0dd344f4-0696-4bcc-809f-4b6fab20c83a/owner [Fetch]
+---- OFFLINE ----
+
+--- console error/warn ---
+(khong co)

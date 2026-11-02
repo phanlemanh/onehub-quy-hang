@@ -1,14 +1,2 @@
-E6 vong chay 2026-11-03 00:37 (P4 = A-25.04, 118ad420-eb5e-493a-8ec1-1b057771d18c), may dev 3485 (dung chung, khong tat)
-Nguon: PerformanceResourceTiming tren trang /units/call sau G+Enter (driver CDP khong co read_network_requests; console khong doc duoc)
-fetch /api/v1/catalog 200
-fetch /api/v1/listings/<P4>/owner 200
-fetch /api/v1/catalog 200
-fetch /api/v1/listings/<P4>/owner 200
-fetch /api/v1/listings/<P4> 200
-fetch /api/v1/listings/<P4> 200
-fetch /api/v1/listings 200
-fetch /api/v1/listings 200
-fetch /api/v1/listings/<P4>/events 200
-fetch /api/v1/listings/<P4> 200
-fetch /api/v1/listings 200
-Khong co request app that bai.
+Driver: CDP script (khong co read_network_requests). Network khong doc duoc: n-a (driver).
+Cac GET /api/v1/listings/<P2> truc tiep tra 200 truoc va sau G.

@@ -1,7 +1,5 @@
-GET0 {"st":200,"last":"2026-10-13T17:29:34.929Z","n":0,"types":"created,price_changed,details_changed,status_changed"}
-STEP1 /today {"r":{"hasInGroup":true,"total":true,"head":"Nên gọi điều chỉnh giá\nCần gọi lại\nThiếu thông tin\nMới đổi\nBật thông báo lead\nNhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.\nBật thông báo\nHôm nay\n41 việc\nLead mới\n8\n\t\t\t\t\n\nToà A · A-09.0"},"dom":[{"inGroup":false,"rows":0,"len":76},{"inGroup":true,"rows":39,"len":5099}]}
-SAU G chọn: H Hạ giá:false/null | G Giữ giá:true/null | B Đã cọc / bán…:false/null | K Không nghe máy:false/null
-SAU Enter chữ: Đã ghi: Còn · giữ giá || sync: Đã đồng bộ · 00:37
-NET ["fetch /api/v1/catalog 200","fetch /api/v1/listings/118ad420-eb5e-493a-8ec1-1b057771d18c/owner 200","fetch /api/v1/catalog 200","fetch /api/v1/listings/118ad420-eb5e-493a-8ec1-1b057771d18c/owner 200","fetch /api/v1/listings/118ad420-eb5e-493a-8ec1-1b057771d18c 200","fetch /api/v1/listings/118ad420-eb5e-493a-8ec1-1b057771d18c 200","fetch /api/v1/listings 200","fetch /api/v1/listings 200","fetch /api/v1/listings/118ad420-eb5e-493a-8ec1-1b057771d18c/events 200","fetch /api/v1/listings/118ad420-eb5e-493a-8ec1-1b057771d18c 200","fetch /api/v1/listings 200"]
-GET2 {"st":200,"last":"2026-11-02T17:37:39.429Z","n":1,"types":"created,price_changed,details_changed,status_changed,owner_confirmed"}
-STEP3 /today {"r":{"hasInGroup":true,"total":true,"head":"Nên gọi điều chỉnh giá\nCần gọi lại\nThiếu thông tin\nMới đổi\nBật thông báo lead\nNhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.\nBật thông báo\nHôm nay\n41 việc\nLead mới\n8\n\t\t\t\t\n\nToà A · A-09.0"},"dom":[{"inGroup":false,"rows":0,"len":76},{"inGroup":true,"rows":39,"len":5083}]}
+E6-step1 {"coNhom":true,"inGroup":true,"inPage":true,"nhomLen":4044}
+GET1 {"st":200,"last":"2026-10-13T17:44:18.039Z","keys":["id","buildingName","unitNumber","standardStatus","listPrice","feeInclusion","furnished","legalStatus"],"n":0}
+CHON ["H Hạ giá:false","G Giữ giá:true","B Đã cọc / bán…:false","K Không nghe máy:false"]
+GET2 {"st":200,"last":"2026-11-02T17:47:57.259Z","keys":["id","buildingName","unitNumber","standardStatus","listPrice","feeInclusion","furnished","legalStatus"],"n":1}
+E6-step3 {"coNhom":true,"inGroup":false,"inPage":true,"nhomLen":3926}

@@ -166,8 +166,8 @@ evals:
     target: "Như E1b; P8 của dau-chu-1 ở nhóm «Nên gọi điều chỉnh giá» (riêng cho bài này)"
     steps:
       - "Đối chứng dương: mở /today → ghi P8 có ở nhóm «Nên gọi điều chỉnh giá» không (không có thì dừng «chưa đủ điều kiện»); GET /api/v1/listings/<P8> → ghi version và số sự kiện"
-      - "Mở /units/call?hang=<P8>; phím K → ghi URL sau đó"
-      - "Chờ 5 giây; GET lại → ghi version và số sự kiện; ở /today ghi P8 còn ở nhóm ép giá không"
+      - "Bước K chạy trên Chrome RIÊNG (trình duyệt dùng chung với bài chấm khác bị bài khác điều hướng — vòng 4): QUA_HOM_NAY=1 QH_B_URL=http://localhost:3485 node --env-file=.env.local --import tsx _acceptance/goi-ep-gia-dot-hai/thu/thu-k.mjs <P8> — mở chế độ cuộc gọi bằng «Ghi cuộc gọi» trên dòng P8 ở Hôm nay, phím K thật, in URL sau 0,5 · 2 · 5 · 11 giây và version, số sự kiện trước/sau → ghi nguyên văn đầu ra và mã thoát"
+      - "Ở /today ghi P8 còn ở nhóm ép giá không"
     expected: "Sau K trang về /today; version và số sự kiện không đổi; P8 vẫn ở nhóm «Nên gọi điều chỉnh giá»."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
     paths: ["apps/web/src/app/(app)/units/call/**"]

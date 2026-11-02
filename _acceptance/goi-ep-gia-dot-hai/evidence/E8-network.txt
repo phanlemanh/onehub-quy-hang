@@ -1,4 +1,5 @@
-E8 network (playwright, app origin http://localhost:3485; 33 /api/ responses, all 200)
-GET /api/v1/catalog, company/settings/queue, push/public-key, leads/assigned, listings, listings/<P8>, listings/<P8>/owner => 200 (khong POST nao)
-FAILED http://localhost:3485/today?_rsc=p_ZiLVR8KTrKTWRL net::ERR_ABORTED  (RSC prefetch bi huy khi dieu huong - note, khong phai API)
+E8 network (playwright, app origin http://localhost:3485 = may chu dev co san, khong phai minh start; config dev_server.url la 3460 nhung server dung la 3485)
+Buoc 2: tat ca request /api/v1 la GET (catalog, listings/<P8>, listings/<P8>/owner, listings, company/settings/queue, leads/assigned, push/public-key, listings/<P1>...). Khong POST nao, khong status >=400.
+FAILED http://localhost:3485/today?_rsc=... net::ERR_ABORTED (RSC prefetch bi huy - note, khong phai API)
+FAILED http://localhost:3485/units/call?hang=<P1>&_rsc=... net::ERR_ABORTED (RSC prefetch - note)
 console error/warning: none

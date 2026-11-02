@@ -1,6 +1,7 @@
-E3b chay tren http://localhost:3485 (dev server dang chay san cua day D; KHONG nam trong dev_server.url=3460 -> unscoped-partial). Moi /api/ response deu 200, khong request that bai.
-BUOC 1 dau-chu-1 P1=91904244-... -> 200 /owner floorPrice=true 2700000000=true (x2); catalog/listings/listings/<id>: floorPrice=false
-BUOC 2 dau-chu-1 P2=2e8da431-... -> 200 /owner floorPrice=true(khoa ton tai, gia tri null) 2700000000=false; catalog/listings: false
-BUOC 3 dau-chu-2 P1 -> /owner 200 x4 floorPrice=false; catalog/listings/listings/<id>: false. curl: {"visible":false,"listingAgentUserId":"75bbf576-..."}
-Storage: localStorage chi 1 khoa qh:danh-muc:v1:<san>, 'floor' = so tang ("floor":1), khong co floorPrice/2700000000; IndexedDB quy-hang-sync:<user> x2 (store ngan): khong 'floor', khong 2700000000; sessionStorage sach.
-Ghi chu: banner "mat mang" o buoc 1 va 3 la do navigator.onLine=false cua trinh duyet kiem sau khi toi reset gia lap offline (khong lien quan AC-3); request van 200.
+E3b chay tren http://localhost:3485 (dev server dang chay san cua day D; KHONG phai dev_server.url=3460 -> unscoped-partial). Khong start/stop server.
+Tat ca /api/v1 response 200, khong request that bai, khong loi console lien quan.
+B1 dau-chu-1 P1(0dd344f4 A-26.01): GET /listings/<P1>/owner 200 x2 body co floorPrice=2700000000; /catalog, /listings, /listings/<P1>: khong floorPrice.
+B2 dau-chu-1 P2(d41a5c73): /owner 200 floorPrice=null; NHUNG P2 da bi eval truoc ghi (xac nhan hom nay) -> trang tu ve /today, khong con khung. Thay bang P3 (4af4caa7 A-26.03, chua dung): khoi «Chua ghi gia day».
+B3 dau-chu-2 P1: /owner 200 x2 khong co floorPrice; cac loi goi khac khong floorPrice.
+Luu tru: localStorage (khoa qh:danh-muc:v1:<san>) va IndexedDB quy-hang-sync:<user> x2: khong chuoi 'floorPrice', khong '2700000000' ('floor' chi la so tang "floor":N).
+Luu y: lan chay dau cua B3 trang dau-chu-2 nhay sang can khac A-27.09 (khong phai P1); lan chay lai o lai P1 dung.

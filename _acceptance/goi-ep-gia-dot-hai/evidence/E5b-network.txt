@@ -1,5 +1,4 @@
-Run E5b (lan chay doc lap, context trinh duyet rieng, origin http://localhost:3485 - dev_server.url khai 3460 nen ngoai scope da khai)
+Run E5b (lan chay doc lap, context trinh duyet rieng, origin http://localhost:3485 - dev_server.url khai 3460 nen ngoai scope da khai; P3=7906f56a-5a37-4343-bad5-be723416a011, dung-d vong 7)
 Console errors: none
-Failed requests: none
-GET /api/v1/listings/d8117e0d-... 200 (x4) ; GET /api/v1/listings 200 (x3) ; GET /api/v1/catalog 200 (x3) ; GET .../owner 200 (x4)
-POST /api/v1/listings/d8117e0d-.../events 200 (x1, buoc 1 only)
+Failed requests: none (21 lời gọi /api, tất cả 200)
+GET /api/v1/listings/P3 (x9), GET /api/v1/listings (x3), GET /api/v1/catalog (x3), GET .../P3/owner (x4), POST /api/v1/listings/P3/events 200 (x1, buoc 1 duy nhat)
