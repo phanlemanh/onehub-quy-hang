@@ -201,7 +201,11 @@ test("mở số: người không được mở, và số không ra ngoài cửa 
   // E4 — số không ra ngoài cửa mở số. Máy dò bốn dạng; đối chứng: thân của lời mở thành công bị bắt.
   assert.ok(timDangSo(okBody, ok.so), "máy dò không bắt số trong thân mở thành công");
   for (const t of tuChoi) assert.equal(timDangSo(t.body, t.so), null, `lời từ chối mang số: ${t.body}`);
-  const ds = await (await send("GET", "/api/v1/leads/assigned", undefined, s.nguoi.dc1!.cookie)).text();
+  const rDs = await send("GET", "/api/v1/leads/assigned", undefined, s.nguoi.dc1!.cookie);
+  const ds = await rDs.text();
+  // Đối chứng dương: danh sách trả được và thật sự chứa lead vừa mở — khẳng định âm dưới đây đo trên một thân có lead ấy.
+  assert.equal(rDs.status, 200, `danh sách lead giao: ${ds}`);
+  assert.ok((JSON.parse(ds) as { id: string }[]).some((x) => x.id === ok.id), "danh sách lead giao không có lead vừa mở — đối chứng hỏng");
   assert.equal(timDangSo(ds, ok.so), null, "danh sách lead giao mang số");
 });
 

@@ -1,0 +1,16 @@
+E6 network (chrome-devtools, trang http://localhost:3483/today, ngữ cảnh cô lập e6-mo-so)
+Phạm vi FAIL-eligible: origin http://localhost:3483 (dev_server.url trong config là :3460 nhưng bản chấm chạy cổng 3483 theo đề; coi origin của trang là app).
+document GET /today [200] x3 (tải đầu, tải lại điện thoại/desktop, tải lại trước Slow 3G)
+GET /api/v1/catalog, /company/settings/queue, /leads/assigned, /push/public-key, /listings  [200] mọi lần
+POST /api/v1/leads/4bf6c295-.../accept [200]
+POST /api/v1/leads/4bf6c295-.../phone-reveal [200]
+POST /api/v1/leads/9516525a-.../phone-reveal [200] (lần Slow 3G, và lần sau bỏ Offline)
+--- Cửa sổ Offline do chính bước 8 gây ra (emulate networkConditions=Offline) ---
+reqid=242 GET /api/v1/listings [net::ERR_INTERNET_DISCONNECTED]
+reqid=243 GET /api/v1/listings [net::ERR_INTERNET_DISCONNECTED]
+reqid=244 GET /api/v1/listings [net::ERR_INTERNET_DISCONNECTED]
+reqid=245 POST /api/v1/leads/9516525a-.../phone-reveal [net::ERR_INTERNET_DISCONNECTED]
+reqid=246 GET /api/v1/listings [200]  (sau khi bỏ Offline)
+reqid=247 POST /api/v1/leads/9516525a-.../phone-reveal [200]
+Không có 4xx/5xx nào. Không có request bên thứ ba.
+Console: 1 lỗi "Failed to load resource: net::ERR_INTERNET_DISCONNECTED" [4 lần] = đúng 4 request ở cửa sổ Offline; còn lại info/log (React DevTools, HMR).
