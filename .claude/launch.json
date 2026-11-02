@@ -74,22 +74,20 @@
       "port": 3472
     },
     {
-      "name": "web-l",
+      "name": "web-dcdv-g",
       "runtimeExecutable": "env",
       "runtimeArgs": [
-        "DATABASE_URL=postgres://postgres:quyhang@localhost:5563/postgres",
-        "BETTER_AUTH_SECRET=dev-l-chuoi-thu-khong-dung-o-ban-that",
-        "BETTER_AUTH_URL=http://localhost:3483",
-        "npm",
-        "run",
+        "DATABASE_URL=postgres://postgres:quyhang@localhost:5564/postgres",
+        "BETTER_AUTH_SECRET=dev-dcdv-g-chuoi-thu-khong-dung-o-ban-that",
+        "BETTER_AUTH_URL=http://localhost:3484",
+        "npx",
+        "next",
         "dev",
-        "-w",
-        "@quy-hang/web",
-        "--",
         "-p",
-        "3483"
+        "3484",
+        "apps/web"
       ],
-      "port": 3483
+      "port": 3484
     }
   ]
 }

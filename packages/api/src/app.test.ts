@@ -76,6 +76,10 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/leads/{leadId}/listing",
     "GET /api/v1/contacts/{contactId}",
     "PATCH /api/v1/contacts/{contactId}",
+    // Hàng 22: Hôm nay của đầu chủ.
+    "GET /api/v1/company/settings/queue",
+    "PUT /api/v1/company/settings/queue",
+    "GET /api/v1/leads/assigned",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

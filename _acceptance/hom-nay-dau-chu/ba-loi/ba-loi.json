@@ -1,0 +1,24 @@
+{
+  "man": "Hôm nay của đầu chủ (hàng 22)",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Khối đích đã chọn ở ADR-0002 đứng được: bảng nhóm theo hàng đợi đặc nhất (bảy việc một màn 1440 không cuộn), cột Lý do · Giá · Hạn thẳng hàng để quét «giờ gọi ai», nhóm gập được; điện thoại xếp một cột; dùng lại data-grid đã cài như Bảng hàng."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Khuôn KhungLeadCuaToi (list-11 đã cài) — Frame stacked, mỗi hàng đợi một khối danh sách",
+      "dong_co": "Không cài gì mới, cùng dáng vùng Lead đã nhập của telesales; mỗi dòng ba tầng đọc như thẻ.",
+      "danh_doi": "Thưa: năm việc một màn 1440, lý do nằm dòng thứ ba nên quét dọc chậm; nhóm không gập được."
+    },
+    "reui": {
+      "nhan": "data-grid-grouping-1 — bảng nhóm theo hàng đợi, nhóm gập được, nút làm ngay cuối dòng",
+      "dong_co": "Khối đích của màn; đặc nhất, cột Lý do · Giá · Hạn thẳng hàng, giống cách đọc Bảng hàng.",
+      "danh_doi": "Rộng nhất (gần hết bề ngang 1440); điện thoại phải xếp lại thành một cột nhiều dòng."
+    },
+    "ve-moi": {
+      "nhan": "Ghép Tabs + Item: một tab một hàng đợi kèm số",
+      "dong_co": "Gọn nhất, mỗi lần chỉ một hàng đợi nên tập trung.",
+      "danh_doi": "Bốn hàng đợi nằm sau tab — mở app không thấy ngay tổng việc; tự ghép nên phải ghi «Chỗ hở» kèm hạn xem lại."
+    }
+  }
+}

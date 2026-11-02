@@ -154,9 +154,18 @@ Quỹ hàng: ba ngăn Gửi được · Tự có từ mã · Nội bộ; ngăn n
 | RESO | `Media`: `Order` (phần tử 0 là ảnh chính), `PreferredPhotoYN`, `Permission` (Public, IDX, VOW, Agent Only), `MediaCategory`, `ImageOf` | Lookup do RESO định | [dd.reso.org Media](https://dd.reso.org/DD2.0/Media/) |
 | CRM Mỹ | Lấy ảnh từ MLS; quản lý ảnh riêng **chưa kiểm** | — | — |
 | Meey CRM | Quỹ hàng có ảnh và video | Chưa kiểm | [meeycrm.com](https://meeycrm.com/) |
+| Autoenhance | Tự nhận diện và làm mờ mặt người, biển số trên ảnh bất động sản | Tài khoản bật «Auto Privacy»; kiểu che chỉnh được không: chưa kiểm | [help.autoenhance.ai](https://help.autoenhance.ai/en/articles/7856090-privacy-blur-license-plates-and-people) |
+| Zalo | Không có công cụ che trong khung gửi ảnh; ảnh gửi bị nén còn vài trăm KB trừ khi gửi dạng tệp | Người dùng bật «Ghi nhớ chất lượng ảnh và video» | [cellphones.com.vn](https://cellphones.com.vn/sforum/meo-gui-anh-tren-zalo-chat-luong-cao) (bên thứ ba) |
+| MLS Mỹ — ảnh tối thiểu khi lên `Active` | Mỗi MLS một luật: ValleyMLS đòi ít nhất một ảnh mặt trước trước khi hàng Active; CRMLS phạt khi thiếu ảnh ngoài nhà; SmartMLS cho 48 giờ (căn hộ chung cư được dùng ảnh toà); OneKey MLS 24 giờ | Không có số chung | [ValleyMLS Rules](https://www.scribd.com/document/473759807/ValleyMLS-Rules-Regs) · [CRMLS](https://blog.crmls.org/?p=283) · [SmartMLS](https://matrix.smartmls.com/hc/en-us/articles/13118343449371-Photos-required-on-listings) · [OneKey MLS](https://support.onekeymls.com/hc/en-us/articles/43263101370388-Photograph-Required-for-All-Listings) |
+
+**Bài học (hàng 23):** ảnh tối thiểu khi lên bảng là luật riêng của từng MLS, không có số chung — Quỹ hàng để sàn đặt (`listing.ready_min_real_photos`, mặc định 1, Sổ điểm biến thiên #33).
 
 **Bài học:** RESO `Permission` cùng hình với ba ngăn ảnh của Quỹ hàng (quyền hiển thị gắn vào từng ảnh). Ngăn là cố định
 vì đứng trên bất biến.
+
+**Che vùng (hàng 19):** công cụ ngành làm mờ (Autoenhance tự động, Canva bằng cọ); Quỹ hàng tô kín màu đặc vì làm mờ chữ
+số đọc ngược được — giữ cứng (Hỏi-3, lý do quyền và an toàn). Cỡ ảnh gửi đi là mặc định của sàn (Hỏi-2), như Zalo để người
+dùng chọn giữ chất lượng.
 
 ## 8. Phát hàng và trang khách
 

@@ -1,0 +1,11 @@
+E8 network (Chrome headless qua CDP, performance resource timing cua trang ho so can, origin http://localhost:3481)
+GET  /api/v1/catalog 200 (x2)
+GET  /api/v1/listings 200
+GET  /api/v1/units/photos?toa=Toa%20B&ma=B-08.02 200 (x2)
+GET  /api/v1/listings/d5b82f0d-96cd-46b4-8b9a-d623dcacbcec 200
+GET  /api/v1/units/photos/53f96e3f-.../original 200 (x2)   (tai anh goc de dung ban che)
+POST /api/v1/units/photos/upload-url 200
+POST /api/v1/units/photos 201                               (ban che)
+PATCH /api/v1/units/photos/53f96e3f-... 200                 (goc sang noi bo)
+GET  /api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.02 200
+Khong co request 4xx/5xx, khong connection error. Console errors: khong doc (CDP rut gon).

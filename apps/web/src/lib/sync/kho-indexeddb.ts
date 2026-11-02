@@ -39,7 +39,8 @@ export function taoKhoIndexedDb(userId: string): LocalStore {
   return {
     async read(companyId) {
       const v = await cho((await lay()).transaction(NGAN).objectStore(NGAN).get(companyId));
-      return (v as Ngan | undefined) ?? nganTrong();
+      // Ngăn ghi từ bản cũ thiếu khoá mới (vd `queueSet`, hàng 22): phủ lên ngăn trống để mọi khoá có giá trị.
+      return v ? { ...nganTrong(), ...(v as Ngan) } : nganTrong();
     },
     async write(companyId, ngan) {
       const tx = (await lay()).transaction(NGAN, "readwrite");

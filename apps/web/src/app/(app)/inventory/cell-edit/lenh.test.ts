@@ -154,3 +154,25 @@ test("đối chứng đỏ: bộ viết làm tròn hai số lẻ thì chỗ đ�
   const lech = (Object.keys(MONG(chu)) as Cho[]).filter((c) => sai[c] !== MONG(chu)[c]);
   assert.deepEqual(lech, ["đọc lại", "giá chốt", "hỏi lại", "điền sẵn"], `chỗ lệch: ${lech.join(", ")}`);
 });
+
+test("E7 hàng 23: nhãn thiếu đủ điều — «ảnh thật», «mã căn»; Bảng hàng không có số ảnh thì không báo ảnh", async () => {
+  const { nhanThieu } = await import("./lenh");
+  const du = { ...HANG, listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant", standardStatus: "Incomplete" as const };
+  // Ngữ cảnh có số ảnh (như hồ sơ căn đưa) → báo đúng nhãn.
+  const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active");
+  assert.deepEqual(coSo, { ok: false, loi: "Chưa lên Đang bán được: thiếu ảnh thật" });
+  const khongMa = dungLenhTrangThai({ ...du, unitNumber: null }, "Active");
+  assert.deepEqual(khongMa, { ok: false, loi: "Chưa lên Đang bán được: thiếu mã căn" });
+  // Bảng hàng không có số ảnh (Hỏi-2) → không báo ảnh, lệnh dựng được, máy chủ xét.
+  assert.equal(dungLenhTrangThai(du, "Active").ok, true);
+  assert.equal(nhanThieu("realPhoto"), "ảnh thật");
+  assert.equal(nhanThieu("unitNumber"), "mã căn");
+  assert.equal(nhanThieu("dieu-la"), "dieu-la", "điều lạ giữ nguyên tên");
+  // Câu báo thật mà người dùng thấy: trình sửa ô (lỗi trên máy) và «Cần xem» (máy chủ từ chối).
+  const { moTaLoi } = await import("./lenh");
+  const { lyDoTuChoi } = await import("@/lib/sync/gui");
+  assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["realPhoto"] }), "Thiếu ảnh thật");
+  assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["unitNumber", "legalStatus"] }), "Thiếu mã căn, pháp lý");
+  assert.equal(lyDoTuChoi({ error: "missing-requirement", missing: ["realPhoto"] }, 400), "thiếu ảnh thật");
+  assert.equal(lyDoTuChoi({ error: "invalid-transition", reason: "Closed không chuyển sang Active" }, 400), "Closed không chuyển sang Active", "đối chứng: lý do của máy chủ giữ nguyên");
+});

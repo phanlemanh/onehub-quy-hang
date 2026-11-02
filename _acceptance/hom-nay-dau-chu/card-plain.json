@@ -1,0 +1,123 @@
+{
+ "feature_plain": "Đầu chủ mở app vào Hôm nay thấy các hàng đợi của mình theo bộ nhóm của sàn — mặc định lead mới, nên gọi ép giá, cần gọi lại, thiếu thông tin, mới đổi — mỗi căn đúng một chỗ, lý do bằng chữ, ghi kết quả gọi một chạm; sàn tự định nghĩa nhóm như Smart List của Follow Up Boss nhưng giữ luật mỗi căn một nhóm.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ giao mọi sàn bộ mặc định năm nhóm (điều chỉnh giá sau 10 ngày, gọi lại sau 14 ngày — tên mặc định chốt ở Hỏi-5) và xếp mỗi căn mình giữ vào đúng một nhóm theo thứ tự."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ tính đúng từng điều kiện trong bộ từ vựng đóng: nấc, quá N ngày từ mốc, thiếu tin, người khác đổi từ hôm qua (giờ Việt Nam), loại hình, nấc lead."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ cho sàn thay trọn bộ nhóm: tắt, đổi tên, đổi thứ tự, đổi ngưỡng, thêm nhóm theo loại hình (vd nhà phố); sàn khác không bị ảnh hưởng."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ quay về bộ mặc định khi bộ của sàn hỏng (kể cả tên nhóm quá 40 ký tự hay chứa số điện thoại) và nói rõ chỗ sai; ghi bộ sai thì từ chối; chỉ quản trị sàn được ghi."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ cho dữ liệu hàng mang người giữ và lần đổi giá, đổi trạng thái gần nhất (ai, vai, cũ → mới), không kèm thông tin chủ nhà."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ cho đầu chủ thấy lead giao cho mình đang chờ nhận hay chờ gọi, kèm hạn — không số chủ, không lead của người khác."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ hiện các nhóm đúng tên và thứ tự sàn đặt, có số, lý do bằng chữ, giá kèm phí; người vừa đầu chủ vừa telesales thấy cả hai vùng."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ ghi «Còn · giữ giá» một chạm: máy chủ nhận đúng một lần xác nhận, căn rời nhóm khi hết điều kiện, mất mạng vẫn ghi trên máy."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ có Nhận · Đã gọi · Trả lại trên lead; lỗi nói bằng chữ."
+  },
+  {
+   "id": "AC-10",
+   "p": "Sẽ có màn trống, đang tải, lỗi có thử lại; mất mạng vẫn chia nhóm theo bộ của sàn đã lưu trên máy; đọc được ở khổ điện thoại."
+  },
+  {
+   "id": "AC-11",
+   "p": "Sẽ dựng khuôn cho nhóm màn mới theo lối anh duyệt ở trang ba lối; bài chấm vòng và lint xanh."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "OOS-1",
+   "p": "KHÔNG làm màn sửa bộ nhóm — hàng 48; hàng này chỉ có lối ghi cho quản trị sàn."
+  },
+  {
+   "id": "OOS-2",
+   "p": "KHÔNG làm nhóm riêng từng người, kịch bản tự chạy nhiều bước, AI chấm ưu tiên, nguồn gọi ngoài."
+  },
+  {
+   "id": "OOS-3",
+   "p": "KHÔNG làm Mở số của lead cho đầu chủ (Hỏi-3)."
+  },
+  {
+   "id": "OOS-4",
+   "p": "KHÔNG ghi «Chưa gọi được» — căn gọi hụt nằm lại nhóm."
+  },
+  {
+   "id": "OOS-5",
+   "p": "KHÔNG làm Xin dẫn xem, bản điện thoại, đổi đầu chủ hàng loạt, vá hoàn tác — các hàng khác."
+  },
+  {
+   "id": "OOS-6",
+   "p": "KHÔNG tạo hàng từ lead trên màn này."
+  }
+ ],
+ "coverage_plain": [
+  {
+   "i": 0,
+   "p": "Bộ nhóm từ mọi nguồn đều có tiêu chí: mặc định, sàn ghi đè, bộ hỏng hay ghi sai."
+  },
+  {
+   "i": 1,
+   "p": "Mỗi loại điều kiện của bộ từ vựng có ca đúng, ca sai; lead có tiêu chí riêng."
+  },
+  {
+   "i": 2,
+   "p": "Căn của mình, người khác, đã đóng, căn hợp nhiều nhóm đều được thử."
+  },
+  {
+   "i": 3,
+   "p": "Mọi lớp đều có bài đo: tính hàng đợi, dữ liệu, màn, khuôn."
+  },
+  {
+   "i": 4,
+   "p": "Màn được nhìn ở bộ mặc định, bộ của sàn, trống, đang tải, lỗi, mất mạng, khổ điện thoại."
+  },
+  {
+   "i": 5,
+   "p": "Để sau: màn sửa bộ nhóm, nhóm riêng từng người, kịch bản tự chạy, AI ưu tiên, nguồn ngoài, mở số lead."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Thiết kế mới vô tình nới khoảng 7–14 ngày của luật ép giá — thành Hỏi-4 cho anh."
+  },
+  {
+   "i": 1,
+   "p": "Căn mới lên bán chưa đổi giá sẽ vào ép giá ngay — đã sửa: tính từ lúc lên bán."
+  },
+  {
+   "i": 2,
+   "p": "Nhóm theo loại hình chưa có nguồn dữ liệu và tập giá trị — đã sửa, kèm bài đo xuyên lớp."
+  },
+  {
+   "i": 3,
+   "p": "Sàn có thể đặt nút của lead vào nhóm căn — bộ kiểm nay chặn, có bài đo."
+  },
+  {
+   "i": 4,
+   "p": "Mất mạng thì nhóm sàn đã tắt có thể hiện lại — nay dùng bộ nhóm đã lưu trên máy."
+  }
+ ]
+}

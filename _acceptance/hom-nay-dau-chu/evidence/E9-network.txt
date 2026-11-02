@@ -1,0 +1,9 @@
+Browser pane, origin http://localhost:3484 (last 60 api requests)
+POST /api/v1/leads/f0077746.../accept 200 (nhan nham L3 truoc)
+POST /api/v1/leads/3600ef0b.../accept 200 (L1)
+POST /api/v1/leads/0bbbc774.../first-call 200 (L2)
+POST /api/v1/leads/f0077746.../return 200 (L3)
+POST /api/v1/leads/ab8cd8c3.../return 409 {"error":"already-on-board"} (L4, fetch)
+POST /api/v1/leads/400674a0.../return 409 (L5, bam nut)
+GET /api/v1/leads/assigned all 200
+Console errors: 404 (GET /api/auth/get-session, truoc cac buoc, phien dang nhap cu), 409 x2 (du kien)

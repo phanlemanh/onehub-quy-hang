@@ -1,0 +1,2 @@
+E10 network: driver la Chrome headless qua CDP thuan (script), khong co duong doc network/console -> n-a (driver).
+Ghi chu cac che do loi duoc mo phong: (1) buoc 2 loi: ghi de window.fetch cho GET /api/v1/leads/assigned va /api/v1/company/settings/queue (giu 9s roi TypeError Failed to fetch), khong phai DevTools block; (2) buoc 3 mat mang: Network.setBlockedURLs */api/v1/* + reload tai lieu, vi Network offline + reload tai lieu -> chrome-error ERR_INTERNET_DISCONNECTED (khong co service worker, 0 registration).
