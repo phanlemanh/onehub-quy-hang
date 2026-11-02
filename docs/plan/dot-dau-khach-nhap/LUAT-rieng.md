@@ -31,7 +31,8 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
 11. `PRODUCT-MAP.md` và `LO-TRINH.html` không sửa tay; xung đột thì vẽ lại bằng `product-map.mjs` sau khi gộp
     `origin/main`.
 12. Tệp dùng chung (`CONTEXT.md`, `_acceptance/config.yaml`, `docs/product/tham-chieu.md`, `.env.example`,
-    `packages/core/src/index.ts`, `packages/api/src/app.ts`, `apps/web/src/app/(app)/today/page.tsx`) chỉ thêm dòng,
+    `packages/core/src/index.ts`, `packages/api/src/app.ts`, `apps/web/src/app/(app)/today/page.tsx`,
+    `.agents/skills/quy-hang-ui/catalog.md`, `docs/design/vo-va-ia.md`, `packages/ui-lint/tests/kiem-chuan.test.mjs`) chỉ thêm dòng,
     không sửa hay xoá dòng của người khác; xung đột thì giữ cả hai bên. Sửa dòng có sẵn thì gửi yêu cầu `cham-tep`.
 13. PR mở ở dạng nháp tới lúc trình Cổng Bằng chứng; chuyển sẵn sàng bằng `gh pr ready`.
 14. Một kiểm tra CI đỏ ở phần PR không chạm: đối chiếu cùng kiểm tra trên `main`, chạy lại riêng trên máy; cả hai xanh
@@ -40,7 +41,8 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
 16. Việc cần chủ kho cầm máy thật (mở bảng chia sẻ và dán link vào Zalo của hàng 34–35, cài lên màn hình chính và xoá
     dữ liệu khi đăng xuất của hàng 38, gọi lại một chạm của hàng 39, nhập lead trên điện thoại của hàng 51) gửi một yêu
     cầu `can-nguoi` gom đủ các bước, để chủ kho làm trong một lần ngồi. Giám sát gom các yêu cầu cùng lượt thành một.
-17. Dãy X là dãy neo: giữ hai mươi hàng đã ký (3, 5, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 25, 26, 27, 53, 85) để
+17. Dãy X là dãy neo: giữ hai mươi hai hàng đã ký (3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 25, 26, 27, 53, 85,
+    91) để
     `sau` của đợt này chặn đúng. Dãy X nghỉ, không mở chip, không ai ghi danh vào.
 18. Bản đồ khuôn (hàng 58–60, `docs/design/vo-va-ia.md`) và hệ bố cục (hàng 91, ADR-0024): mỗi màn mới chọn một trong
     bảy bố cục có tên và khai ở Cổng Phạm vi. Màn đầu tiên của một nhóm chưa có trong `design/patterns/` — Gửi (34),
@@ -48,7 +50,9 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
     (42)
     — tạo tệp nhóm `design/patterns/<nhóm>.md` và khuôn ngay trong vòng ấy, theo khối đích ở `vo-va-ia.md` §2; vòng sau
     của nhóm đi qua khuôn. Nhóm đã có (Bảng hàng cho 32, Hồ sơ căn cho 33, Hôm nay đầu chủ cho 39, Ô nhận lead cho 51)
-    đi qua khuôn sẵn; sửa tệp nhóm của người khác là `cham-tep`.
+    đi qua khuôn sẵn; sửa tệp nhóm của người khác là `cham-tep`. Khối đích của từng màn là bảng ở `vo-va-ia.md` §2
+    trên `main` sau PR #88 (chủ kho chọn lại bằng khoá ReUI Pro 02/11) — khuyến nghị đầu vào cho lối ReUI của trang ba
+    lối, không phải khối của lúc dựng gói; dãy nào đã chụp ba lối theo khối cũ thì chụp lại lối ReUI.
 19. Hàng 31 (luật ẩn và bộ kiểm rò rỉ): ẩn ở lõi, không ẩn ở giao diện (bất biến 4). Bộ kiểm rò rỉ vào CI là đổi
     `.github/workflows/**` (tệp bảo vệ) — `cham-tep` ở S1, và job mới phải nối vào `ci-ok`. Hàng 34, 35, 36, 43 chỉ
     dựng dữ liệu ra bằng luật ẩn của 31; không màn nào tự lọc trường.
@@ -75,3 +79,17 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
 26. Phiên chờ chủ kho thì tiêu đề bắt đầu «⏳ CHỜ ANH: <việc>»; hết chờ thì đổi lại tên thường.
 27. Mọi dãy được vẽ lại `PRODUCT-MAP.md` và `LO-TRINH.html` bằng `product-map.mjs` trong PR của mình, không cần
     `cham-tep` (luật 11).
+28. Hàng 92 làm lại Hôm nay đầu chủ (hàng 22 đã ký) theo quyết định 14A ở `vo-va-ia.md` §2: dòng của
+    `solution-agents-2`, cột «Vì sao hôm nay» hai tầng kiểu ô hạn của `data-grid-base-5` thay hai cột Lý do và Hạn, mỗi
+    dòng đúng một nút viền cùng bề rộng là việc đầu của nhóm (một chạm), việc còn lại vào ⋯. Hàng đợi, luật mỗi căn một
+    hàng đợi, ghi kết quả và nguồn dữ liệu của 22 không đổi — mười tiêu chí đã ký của 22 chạy lại phải đạt. Dãy sửa khuôn
+    `KhungHomNay` (`design/patterns/hom-nay-dau-chu.md`) và dòng của nó ở bảng «Khối đã chuyển thể» của `catalog.md`.
+    Hàng 39 dựng bản điện thoại trên khuôn ấy nên đứng sau 92, cùng dãy H.
+29. Hàng 93 chuyển thể `auth-15` cho ba màn đăng nhập, chọn sàn, chưa gắn sàn (khuôn `design/patterns/xac-thuc.md`), bỏ
+    nút Google, Apple, GitHub (ADR-0005: chỉ mã một lần qua email). Chỉ đổi giao diện: không tệp nào dưới
+    `packages/api/src/auth/**`, luồng và phiên của hàng 6 giữ nguyên — chạm tới đó là đổi hạng, gửi `cham-tep`.
+30. Dòng «Chỗ hở» ở `vo-va-ia.md` §3 và bài `packages/ui-lint/tests/kiem-chuan.test.mjs` ghim đúng các cảnh báo hạn đã
+    quá. Hàng nào đóng một dòng có hạn đã quá (93 với Đăng nhập; dãy của 51 với Ô nhận lead) thì bớt cảnh báo ấy ở bài
+    kiểm trong cùng PR; 92 đóng dòng «Hàng đợi có hạn» (hạn theo điều kiện, không cảnh báo). Dãy của 51 cũng sửa câu «ghép theo khối đích form-2» ở `design/patterns/o-nhan-lead.md`
+    thành «bản ghép là đích» (chủ kho 02/11). Dòng «Trống · lỗi · báo» đã chuyển thể `empty-state-1/2` — dãy nào chạm
+    `vo-va-ia.md` trước thì đóng nó, kèm bài kiểm.

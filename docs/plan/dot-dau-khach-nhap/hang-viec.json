@@ -151,11 +151,29 @@
    ]
   },
   {
+   "ma": "92",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "lam-lai-hom-nay-dau-chu",
+   "day": "H",
+   "uu_tien": 7,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(app)/today/*.tsx",
+    "apps/web/src/app/(app)/today/*.ts",
+    "design/patterns/hom-nay-dau-chu.md",
+    "_acceptance/lam-lai-hom-nay-dau-chu/**"
+   ],
+   "sau": [
+    "22",
+    "91"
+   ]
+  },
+  {
    "ma": "64",
    "tep": "docs/plan/lo-trinh.json",
    "slug": "nhap-loi-tat-dinh",
    "day": "G",
-   "uu_tien": 7,
+   "uu_tien": 8,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/import/**",
@@ -172,7 +190,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "nhap-excel-xem-truoc-ghi",
    "day": "G",
-   "uu_tien": 8,
+   "uu_tien": 9,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/imports/**",
@@ -196,7 +214,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "so-do-hai-tuan-thu",
    "day": "D",
-   "uu_tien": 9,
+   "uu_tien": 10,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/metrics/**",
@@ -212,7 +230,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "tab-toi",
    "day": "H",
-   "uu_tien": 10,
+   "uu_tien": 11,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/me/**",
@@ -229,7 +247,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "ho-so-can-dien-thoai",
    "day": "B",
-   "uu_tien": 11,
+   "uu_tien": 12,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/units/mobile/**",
@@ -245,7 +263,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "phat-hang",
    "day": "H",
-   "uu_tien": 12,
+   "uu_tien": 13,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/exports/**",
@@ -261,7 +279,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "nhap-hoan-tac",
    "day": "G",
-   "uu_tien": 13,
+   "uu_tien": 14,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/listing/**",
@@ -277,7 +295,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "nhap-nho-mau",
    "day": "G",
-   "uu_tien": 14,
+   "uu_tien": 15,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/import/memory/**",
@@ -294,7 +312,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "va-duong-loi-hoan-tac",
    "day": "B",
-   "uu_tien": 15,
+   "uu_tien": 16,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/inventory/cell-edit/**",
@@ -310,7 +328,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "doi-dau-chu-hang-loat",
    "day": "B",
-   "uu_tien": 16,
+   "uu_tien": 17,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/inventory/bulk/**",
@@ -330,7 +348,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "so-diem-bien-thien",
    "day": "D",
-   "uu_tien": 17,
+   "uu_tien": 18,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/config/**",
@@ -345,7 +363,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "cau-hinh-theo-san",
    "day": "D",
-   "uu_tien": 18,
+   "uu_tien": 19,
    "s4": "local",
    "ranh_gioi": [
     "packages/api/src/settings/**",
@@ -359,11 +377,28 @@
    ]
   },
   {
+   "ma": "93",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "dang-nhap-auth-15",
+   "day": "B",
+   "uu_tien": 20,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/app/(auth)/**",
+    "design/patterns/xac-thuc.md",
+    "_acceptance/dang-nhap-auth-15/**"
+   ],
+   "sau": [
+    "6",
+    "91"
+   ]
+  },
+  {
    "ma": "39",
    "tep": "docs/plan/lo-trinh.json",
    "slug": "hom-nay-dau-chu-dien-thoai",
    "day": "H",
-   "uu_tien": 19,
+   "uu_tien": 21,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/today/mobile/**",
@@ -371,7 +406,8 @@
    ],
    "sau": [
     "22",
-    "38"
+    "38",
+    "92"
    ]
   },
   {
@@ -379,7 +415,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "hom-nay-truong-nhom",
    "day": "D",
-   "uu_tien": 20,
+   "uu_tien": 22,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/today/lead/**",
@@ -395,7 +431,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "lead-dien-thoai",
    "day": "D",
-   "uu_tien": 21,
+   "uu_tien": 23,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/leads/mobile/**",
@@ -423,6 +459,16 @@
    "uu_tien": 99,
    "ranh_gioi": [
     "_acceptance/du-lieu-mau-san-thu/**"
+   ]
+  },
+  {
+   "ma": "6",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "dang-nhap-theo-san",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/dang-nhap-theo-san/**"
    ]
   },
   {
@@ -603,6 +649,16 @@
    "uu_tien": 99,
    "ranh_gioi": [
     "_acceptance/lien-he/**"
+   ]
+  },
+  {
+   "ma": "91",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "he-bo-cuc",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/he-bo-cuc/**"
    ]
   }
  ],

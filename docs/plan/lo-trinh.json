@@ -1068,7 +1068,8 @@
       "hang": "T2",
       "dung_tren": [
         "22",
-        "38"
+        "38",
+        "92"
       ],
       "slug": "hom-nay-dau-chu-dien-thoai",
       "nhom": "con-lai",
@@ -1984,6 +1985,53 @@
       "cau_giao": "Vá Thông báo lead: chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo",
       "slug": "va-thong-bao-lead",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "92",
+      "cau_giao": "Đầu chủ mở Hôm nay và đọc mỗi việc trên một dòng: tên căn, cột «Vì sao hôm nay» hai tầng — lý do chữ đậm, hạn đỏ khi quá, vàng khi còn dưới 15 phút — và giá; làm việc đầu của nhóm bằng đúng một nút, một chạm; việc còn lại nằm trong ⋯; hàng đợi, luật mỗi căn một hàng đợi và ghi kết quả của hàng 22 giữ nguyên",
+      "slug": "lam-lai-hom-nay-dau-chu",
+      "vi_sao": "Quyết định 14A của chủ kho 02/11 (PR #88, vo-va-ia §2): bản hàng 22 rối nút và lý do khó đọc; khối đích đổi từ data-grid-grouping-1 sang solution-agents-2 cộng ô hạn của data-grid-base-5. Hàng 39 dựng bản điện thoại trên khuôn mới nên đứng sau",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "hang": "T2",
+      "dung_tren": [
+        "22",
+        "91"
+      ],
+      "bat_khi": "Mỗi dòng đúng một nút viền cùng bề rộng, nhãn là việc đầu của nhóm (Nhận · Đã gọi · Còn · giữ giá); Trả lại có hỏi lại, Đổi giá, trạng thái, Mở hồ sơ nằm trong ⋯; cột Lý do và Hạn gộp thành một ô hai tầng; mười tiêu chí đã ký của hàng 22 vẫn đạt; khuôn KhungHomNay và bảng «Khối đã chuyển thể» của danh mục ghi khối mới",
+      "nhom": "dau-chu",
+      "vung": [
+        "apps/web/src/app/(app)/today/*.tsx",
+        "apps/web/src/app/(app)/today/*.ts",
+        "design/patterns/hom-nay-dau-chu.md",
+        ".agents/skills/quy-hang-ui/catalog.md",
+        "docs/design/vo-va-ia.md"
+      ]
+    },
+    {
+      "ma": "93",
+      "cau_giao": "Người trong sàn đăng nhập trên một thẻ theo khối auth-15: chỉ mã một lần qua email, không nút Google, Apple hay GitHub, giữ chân điều khoản; chọn sàn và chưa gắn sàn đi cùng khuôn; luồng đăng nhập, phiên và luật vào đúng sàn của hàng 6 giữ nguyên",
+      "slug": "dang-nhap-auth-15",
+      "vi_sao": "Chủ kho chọn auth-15 bỏ OAuth 02/11 (PR #88, vo-va-ia §2 và «Chỗ hở»): màn đăng nhập đang là bản ghép tạm bậc 6 từ hàng 6, dòng «Chỗ hở» quá hạn 30/10; phần Đăng nhập của mục chân trời H16",
+      "vai": "Người trong sàn",
+      "tieu_chi": 6,
+      "hang": "T2",
+      "dung_tren": [
+        "6",
+        "91"
+      ],
+      "bat_khi": "Ba màn đăng nhập, chọn sàn, chưa gắn sàn dựng trên khuôn Khung theo auth-15, không nút OAuth; không đổi tệp nào dưới packages/api/src/auth; dòng «Chỗ hở» Đăng nhập rời §3 và bài kiem-chuan bớt đúng một cảnh báo hạn",
+      "nhom": "nen",
+      "phu": [
+        "CK4"
+      ],
+      "vung": [
+        "apps/web/src/app/(auth)/**",
+        "design/patterns/xac-thuc.md",
+        ".agents/skills/quy-hang-ui/catalog.md",
+        "docs/design/vo-va-ia.md",
+        "packages/ui-lint/tests/kiem-chuan.test.mjs"
+      ]
     }
   ],
   "chan_troi": [
