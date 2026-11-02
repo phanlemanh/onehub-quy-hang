@@ -1,0 +1,14 @@
+NETWORK (isolated browser context, app-origin, non-static), run 17:0x
+200 GET /api/v1/auth/get-session
+200 GET /today
+200 GET /api/v1/company/settings/queue (x2)
+200 GET /api/v1/push/public-key (x2)
+200 GET /api/v1/leads/assigned (x2)
+200 GET /api/v1/catalog (x2)
+200 GET /api/v1/listings
+200 GET /today?nhom=new_lead&_rsc=...   then FAILED net::ERR_ABORTED (RSC prefetch/nav superseded by click on missing_info; note-only, Next.js _rsc fetch, not an app error)
+200 GET /today?nhom=missing_info&_rsc=...  then FAILED net::ERR_ABORTED (same RSC request superseded by reload; note-only)
+200 GET /today?nhom=new_lead (reload)
+200 GET /api/v1/company/settings/queue, push/public-key, leads/assigned, catalog, listings (all 200)
+CONSOLE (error/warning): (none)
+Note: the shared Playwright default page was being driven concurrently by other sessions (URL cycled nhom values); this run used a fresh isolated browser context.
