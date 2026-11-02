@@ -2002,6 +2002,12 @@
       "cau_giao": "Vá bài kiểm Nạp mẫu có ảnh: ca kho Storage có đối chứng dương, phá thử thì đỏ",
       "slug": "va-nap-mau-co-anh",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-ma-can-lead",
+      "cau_giao": "Vá mã căn của lead: lead nhập mã căn toàn dấu bị từ chối ngay lúc nhập với lời báo như hồ sơ hàng; tạo hàng từ lead không còn ném lỗi",
+      "slug": "va-ma-can-lead",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],
   "chan_troi": [
