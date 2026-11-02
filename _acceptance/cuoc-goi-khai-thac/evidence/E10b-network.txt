@@ -1,0 +1,19 @@
+E10b network (driver: playwright MCP, 3 contexts, localhost:3485)
+
+== telesales: nav 200 http://localhost:3485/units/call?lead=0712fe09-7318-452f-b9b4-e5d2d129daa9
+GET 200 fetch http://localhost:3485/api/v1/listings bodyLen=6079 phone=0 floor=0 titleDeed=0 0900=0
+failed/4xx/5xx: 0
+
+== quan-tri: nav 200 http://localhost:3485/units/call?lead=0712fe09-7318-452f-b9b4-e5d2d129daa9
+GET 200 fetch http://localhost:3485/api/v1/listings bodyLen=6079 phone=0 floor=0 titleDeed=0 0900=0
+failed/4xx/5xx: 0
+
+== dau-chu-1: nav 200 http://localhost:3485/units/call?lead=0712fe09-7318-452f-b9b4-e5d2d129daa9
+GET 200 fetch http://localhost:3485/api/v1/leads/assigned/0712fe09-7318-452f-b9b4-e5d2d129daa9 bodyLen=382 phone=0 floor=0 titleDeed=0 0900=0
+GET 200 fetch http://localhost:3485/api/v1/leads/assigned/0712fe09-7318-452f-b9b4-e5d2d129daa9 bodyLen=382 phone=0 floor=0 titleDeed=0 0900=0
+GET 200 fetch http://localhost:3485/api/v1/listings bodyLen=9164 phone=0 floor=0 titleDeed=0 0900=0
+GET 200 fetch http://localhost:3485/api/v1/catalog bodyLen=37357 phone=0 floor=180 titleDeed=0 0900=0
+GET 200 fetch http://localhost:3485/api/v1/catalog bodyLen=37357 phone=0 floor=180 titleDeed=0 0900=0
+failed/4xx/5xx: 0
+
+console errors: not collected via MCP in run_code (page.on console not attached)

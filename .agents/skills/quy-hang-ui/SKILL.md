@@ -170,6 +170,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | đối chiếu | Kê ảnh chuẩn: mỗi ảnh một dòng địa chỉ, khổ, commit | `design/anh-chuan/ke.json` |
 | khuôn | Khuôn Bảng hàng | `design/patterns/bang-hang.md` |
 | khuôn | Khuôn Cài đặt sàn — bố cục Đọc | `design/patterns/cai-dat-san.md` |
+| khuôn | Khuôn Chế độ cuộc gọi | `design/patterns/cuoc-goi.md` |
 | khuôn | Khuôn Hồ sơ căn | `design/patterns/ho-so-can.md` |
 | khuôn | Khuôn Hôm nay của đầu chủ | `design/patterns/hom-nay-dau-chu.md` |
 | khuôn | Khuôn Lead của tôi | `design/patterns/lead-cua-toi.md` |
