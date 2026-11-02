@@ -63,6 +63,9 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Luồng nhiều bước | bước đang ở | — | xem trước | lùi/tiếp |
    | Dòng tin | tiêu đề | lọc theo loại | — | — |
 
+   **Đầu màn** (chủ kho 02/11): đường dẫn bên trái; điều khiển cấp màn (chọn kỳ, khoảng ngày) và nút bên phải, như Verve;
+   cạnh tiêu đề chỉ có nhãn (trạng thái, bước); tiêu đề trùng mục cuối của đường dẫn.
+
    **Bố cục không dựng Frame** (bóc tách 02/11, `_acceptance/he-bo-cuc/discovery/boc-tach.md`): bố cục giữ đầu màn, thân,
    cột phụ; thanh công cụ và chân là phần của khối ReUI đặt trong thân, khối mang Frame của nó — bảng trên là vùng theo
    nghĩa, không phải chỗ bố cục tự dựng.

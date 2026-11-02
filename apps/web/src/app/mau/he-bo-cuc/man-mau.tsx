@@ -1,6 +1,6 @@
 "use client";
 
-import { InboxIcon, Maximize2Icon, SearchXIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { CalendarIcon, InboxIcon, Maximize2Icon, SearchXIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { BoCuc, DauMan, type KieuBoCuc, type TrangThaiTai } from "@/components/bo-cuc";
@@ -16,6 +16,7 @@ import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -201,6 +202,9 @@ function HoSoCan({ can, trongNgan = false }: { can: CanMau; trongNgan?: boolean 
   );
 }
 
+// Kỳ của Bảng điều khiển — giá trị → nhãn cho Select (Base UI hiện nhãn qua `items`).
+const KY = { tuan: "Tuần này", thang: "Tháng này", quy: "Quý này" };
+
 const DUONG: Record<KieuBoCuc, [{ nhan: string; href: string }, { nhan: string }]> = {
   tran: [{ nhan: "Bảng hàng", href: "#" }, { nhan: "Mọi căn" }],
   "danh-sach-chi-tiet": [{ nhan: "Hôm nay", href: "#" }, { nhan: "Lead đã nhập" }],
@@ -310,14 +314,24 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           dauMan={
             <DauMan
               duongDan={duong}
-              tieuDe="Đội"
+              tieuDe="Tổng quan"
               moTa="Số của đội theo kỳ"
-              phu={
-                <ToggleGroup defaultValue={["tuan"]} size="sm">
-                  <ToggleGroupItem value="tuan">Tuần</ToggleGroupItem>
-                  <ToggleGroupItem value="thang">Tháng</ToggleGroupItem>
-                </ToggleGroup>
+              dieuKhien={
+                <Select defaultValue="tuan" items={KY}>
+                  <SelectTrigger size="sm" aria-label="Kỳ">
+                    <CalendarIcon aria-hidden="true" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align="end">
+                    {Object.entries(KY).map(([v, nhan]) => (
+                      <SelectItem key={v} value={v}>
+                        {nhan}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               }
+              nut={[{ nhan: "Xuất số" }]}
             />
           }
         >

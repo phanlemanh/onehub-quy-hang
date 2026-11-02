@@ -31,6 +31,7 @@ export function DauMan({
   duongDan,
   nut = [],
   phu,
+  dieuKhien,
 }: {
   /** Bỏ khi khối của thân mang tiêu đề trong đầu khung của nó (Tràn, Danh sách – chi tiết). */
   tieuDe?: ReactNode;
@@ -41,8 +42,13 @@ export function DauMan({
    */
   duongDan: [DuongDan, DuongDan, ...DuongDan[]];
   nut?: NutDauMan[];
-  /** Chỗ cho chọn kỳ, bước đang ở, nhãn trạng thái — thứ đứng cạnh tiêu đề. */
+  /** Nhãn đứng cạnh tiêu đề: trạng thái, bước đang ở. Không đặt điều khiển ở đây. */
   phu?: ReactNode;
+  /**
+   * Điều khiển cấp màn ở bên phải, trước các nút: chọn kỳ, khoảng ngày (như «Quarter ▾», «Jun 22 to Jul 12» của Verve;
+   * ReUI compose «Headers»: tiêu đề trái, điều khiển và hành động phải).
+   */
+  dieuKhien?: ReactNode;
 }) {
   const { chinh, phu: nutPhu, them } = chiaNut(nut);
   return (
@@ -80,8 +86,9 @@ export function DauMan({
         )}
         {moTa && <p className="text-sm text-muted-foreground">{moTa}</p>}
       </div>
-      {chinh && (
+      {(chinh || dieuKhien) && (
         <div className="flex shrink-0 items-center gap-2">
+          {dieuKhien}
           {them.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Thêm việc" />}>
@@ -100,7 +107,7 @@ export function DauMan({
           {nutPhu.map((n) => (
             <NutMot key={n.nhan} n={n} variant="outline" />
           ))}
-          <NutMot n={chinh} variant="default" />
+          {chinh && <NutMot n={chinh} variant="default" />}
         </div>
       )}
     </header>

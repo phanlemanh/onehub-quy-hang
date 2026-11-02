@@ -27,7 +27,7 @@ Hệ quả là bảng, chip lọc, ô số và dòng tin đều bị vẽ lại 
 | --- | --- | --- | --- | --- |
 | (vỏ) | menu Tạo | c-\* | `c-button-group-51` | `components/shell/menu-tao.tsx` |
 | (vỏ) | cột thứ hai | khối | `app-shell-8` (đã có) | `components/shell/second-column.tsx` |
-| (mọi bố cục) | dải đầu màn | ghép | ReUI không có khối đầu trang; ghép `breadcrumb` + `button` + `dropdown-menu` như Verve («Chỗ hở») | `components/bo-cuc/dau-man.tsx` |
+| (mọi bố cục) | dải đầu màn (đường dẫn trái · điều khiển cấp màn và nút phải · nhãn cạnh tiêu đề) | ghép | ReUI không có khối đầu trang; ghép `breadcrumb` + `button` + `dropdown-menu` như Verve («Chỗ hở») | `components/bo-cuc/dau-man.tsx` |
 | (mọi bố cục) | rỗng, lỗi | khối | `empty-state-1`, `-2`: bỏ hình minh hoạ theo vo-va-ia §2; thêm khe hành động | `components/trang-thai.tsx` |
 | (mọi bố cục) | chờ tải | thành phần | `skeleton` theo hình bố cục (luật ReUI «Skeleton in the real layout») | `components/bo-cuc/cho-tai.tsx` |
 | (mọi bố cục) | ngăn nổi | thành phần | `sheet` / `drawer` | `components/bo-cuc/ngan-noi.tsx` |
@@ -37,6 +37,7 @@ Hệ quả là bảng, chip lọc, ô số và dòng tin đều bị vẽ lại 
 | Đọc | dòng cài đặt + khung | khối | `settings-3`: giữ `SettingField` và khung gốc; bỏ ô màu, tuỳ chọn trình soạn | `components/khoi/settings-3/` |
 | Hồ sơ | khung, đầu hồ sơ, khối số chính, mục, cặp nhãn–giá trị | khối | `solution-crm-4` đã chuyển thể ở hồ sơ căn (hàng 17) — rút thành thành phần dùng chung, giữ nguyên lớp (chủ kho 02/11 chọn bố cục này) | `components/khoi/solution-crm-4/ho-so.tsx` |
 | Hồ sơ | dải đường dẫn | ghép | `dau-man.tsx`, không tiêu đề (tên ở đầu hồ sơ) | `dau-man.tsx` |
+| Bảng điều khiển | chọn kỳ | thành phần | `select` có biểu tượng lịch, ở khe `dieuKhien` bên phải đầu màn (như «Quarter ▾» của Verve) | `dau-man.tsx` |
 | Bảng điều khiển | ô số | khối | `stats-7` (ô số thành prop) | `components/khoi/stats-7/` |
 | Bảng điều khiển | bảng nhóm theo người | **ghép, chờ** | `data-grid-grouping-2`: khối có 5 lỗi kiểu (sửa được khi chuyển thể), chưa làm ở đợt này | trang mẫu |
 | Luồng nhiều bước | stepper + ghép cột | **ghép, chờ** | `solution-crm-6`: cần hook `use-file-upload`, hook này lỗi kiểu | trang mẫu |
