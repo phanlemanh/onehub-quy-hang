@@ -1,0 +1,21 @@
+# E7c network (playwright-core, Chrome)
+200 GET http://localhost:3485/units/call?lead=f0bf3452-c0b5-4c74-8643-59547006024a [document]
+200 GET http://localhost:3485/api/v1/leads/assigned/f0bf3452-c0b5-4c74-8643-59547006024a [fetch]
+200 GET http://localhost:3485/api/v1/listings [fetch]
+200 GET http://localhost:3485/api/v1/leads/assigned/f0bf3452-c0b5-4c74-8643-59547006024a [fetch]
+200 GET http://localhost:3485/api/v1/catalog [fetch]
+200 GET http://localhost:3485/api/v1/catalog [fetch]
+200 POST http://localhost:3485/api/v1/leads/f0bf3452-c0b5-4c74-8643-59547006024a/first-call [fetch]
+200 POST http://localhost:3485/api/v1/listings/bd4ed0c2-4829-4c03-a1ba-6592e9856c1b/events [fetch]
+200 GET http://localhost:3485/api/v1/listings [fetch]
+200 POST http://localhost:3485/api/v1/listings/bd4ed0c2-4829-4c03-a1ba-6592e9856c1b/events [fetch]
+200 GET http://localhost:3485/api/v1/listings [fetch]
+FAILED POST http://localhost:3485/api/v1/listings/bd4ed0c2-4829-4c03-a1ba-6592e9856c1b/events net::ERR_INTERNET_DISCONNECTED
+409 POST http://localhost:3485/api/v1/listings/bd4ed0c2-4829-4c03-a1ba-6592e9856c1b/events [fetch]
+200 GET http://localhost:3485/api/v1/listings/bd4ed0c2-4829-4c03-a1ba-6592e9856c1b [fetch]
+200 GET http://localhost:3485/api/v1/listings [fetch]
+
+# console error/warning
+error: Failed to load resource: the server responded with a status of 404 (Not Found)
+error: Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+error: Failed to load resource: the server responded with a status of 409 (Conflict)

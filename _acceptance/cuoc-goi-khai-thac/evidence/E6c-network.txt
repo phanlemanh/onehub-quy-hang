@@ -1,0 +1,18 @@
+NETWORK (app-origin XHR/fetch, non-static) + console errors/warnings
+GET /units/call?lead=ff631093-7510-467a-9f44-5a2749124c89 -> 200
+GET /api/v1/leads/assigned/ff631093-7510-467a-9f44-5a2749124c89 -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/leads/assigned/ff631093-7510-467a-9f44-5a2749124c89 -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/catalog -> 200
+GET /api/v1/listings/d0031d22-2130-4263-9bc8-9abfb6c389a4 -> 200
+POST /api/v1/leads/ff631093-7510-467a-9f44-5a2749124c89/first-call -> 200
+POST /api/v1/listings/d0031d22-2130-4263-9bc8-9abfb6c389a4/events -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/listings/d0031d22-2130-4263-9bc8-9abfb6c389a4 -> 200
+POST /api/v1/listings/d0031d22-2130-4263-9bc8-9abfb6c389a4/events -> 200
+GET /api/v1/listings -> 200
+GET /api/v1/listings/d0031d22-2130-4263-9bc8-9abfb6c389a4 -> 200
+GET /api/v1/listings/d0031d22-2130-4263-9bc8-9abfb6c389a4 -> 200
+--- console error/warning ---
+error: Failed to load resource: the server responded with a status of 404 (Not Found)
