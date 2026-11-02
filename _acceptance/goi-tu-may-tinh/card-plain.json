@@ -1,0 +1,55 @@
+{
+  "feature_plain": "Đang ở chế độ cuộc gọi trên máy tính, đầu chủ bấm «Quay số trên điện thoại»: điện thoại của chính mình hiện thông báo «Gọi chủ nhà», chạm vào là tới trang có một nút gọi, bấm thì mở số (để lại vết) và điện thoại quay số chủ nhà.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ gửi thông báo «Gọi chủ nhà · <Toà> · <nhu cầu>» tới mọi điện thoại đã bật thông báo của chính đầu chủ đang được giao lead; lead không đổi nấc, chưa ghi vết mở số."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ chỉ cho đầu chủ đang được giao lead gửi quay số; đầu chủ khác, telesales, trưởng nhóm, quản trị, sàn khác, lead đã trả hay đã bỏ đều bị chặn và không thông báo nào được ghi."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ giữ thông báo chỉ có tên toà và nhu cầu — không số chủ, tên chủ, giá hay mã căn, vì thông báo đi qua máy chủ của Apple/Google."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ báo thật số điện thoại nhận được: chưa bật thông báo ở đâu, hay chỉ bật trên chính máy tính này, thì báo «chưa có điện thoại nào» chứ không báo «đã gửi»."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ hiện kết quả ngay dưới nút trên máy tính (đã gửi tới mấy thiết bị khác, gửi lại, hay lỗi mạng / lead không còn của bạn / hết phiên); bấm không tự ghi «Đã gọi»."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ mở trang quay số trên điện thoại: tên toà, nhu cầu và nút lớn «Gọi chủ nhà»; bấm thì mở số (một vết) và đưa sang ứng dụng gọi; tải lại thì số ẩn, máy không lưu số."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ ghi vào Sổ quyết định của Tham chiếu dòng «Gọi từ máy tính»."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "OOS-1",
+      "p": "Không nối tổng đài, không gọi trong trình duyệt, không ghi âm — để sau."
+    },
+    {
+      "id": "OOS-2",
+      "p": "Không chọn thiết bị nhận: máy tính đang bật thông báo cũng hiện một thông báo thừa (lời báo thì không đếm nó)."
+    },
+    {
+      "id": "OOS-3",
+      "p": "Không tự ghi «Đã gọi» khi điện thoại quay số — đầu chủ vẫn bấm «Đã gọi» sau cuộc gọi."
+    },
+    {
+      "id": "OOS-4",
+      "p": "Không thử trên điện thoại thật ở bước chấm máy — để phiên nghiệm thu."
+    },
+    {
+      "id": "OOS-5",
+      "p": "Không xử hai nút «Gọi» trùng tên trên dòng lead ở Hôm nay — việc của hàng 29."
+    }
+  ]
+}
