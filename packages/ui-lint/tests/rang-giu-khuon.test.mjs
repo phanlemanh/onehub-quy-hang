@@ -154,7 +154,7 @@ describe("E5 — bài quét khuôn trong kiem-chuan", () => {
     voi({ kiemChuan: true }, (d) => {
       const lanh = spawnSync(process.execPath, [KIEM_CHUAN, "--root", d], { encoding: "utf8" });
       assert.equal(lanh.status, 0, lanh.stderr);
-      assert.ok(lanh.stdout.split("\n").includes("khuôn: 9 nhóm · 0 lỗi đọc · 0 lệch"), lanh.stdout);
+      assert.ok(lanh.stdout.split("\n").includes("khuôn: 10 nhóm · 0 lỗi đọc · 0 lệch"), lanh.stdout);
       const U = `${W}/app/settings/users/page.tsx`;
       sua(d, U, "return (\n    <MucCaiDat", 'return (\n    <main className="min-h-svh">\n    <MucCaiDat');
       sua(d, U, "</MucCaiDat>\n  );", "</MucCaiDat>\n    </main>\n  );");

@@ -37,7 +37,7 @@ function phongNguTheo(dm: CatalogData | null) {
 }
 
 export function CuocGoi({ leadId, san }: { leadId: string | null; san: string }) {
-  const [tai, setTai] = useState<{ kind: "dang" } | { kind: "co"; lead: LeadCuocGoi } | { kind: "khong-thay" } | { kind: "loi" }>(leadId ? { kind: "dang" } : { kind: "khong-thay" });
+  const [tai, setTai] = useState<{ kind: "dang" } | { kind: "co"; lead: LeadCuocGoi } | { kind: "vang" } | { kind: "loi" }>(leadId ? { kind: "dang" } : { kind: "vang" });
   const [lan, setLan] = useState(0);
   useEffect(() => {
     if (!leadId) return;
@@ -49,7 +49,7 @@ export function CuocGoi({ leadId, san }: { leadId: string | null; san: string })
   }, [leadId, lan]);
 
   if (tai.kind === "dang") return <DangTai />;
-  if (tai.kind === "khong-thay")
+  if (tai.kind === "vang")
     return (
       <div className="flex flex-col items-start gap-2 p-4">
         <TrangThai kind="notice" title={KHONG_THAY_LEAD} />
