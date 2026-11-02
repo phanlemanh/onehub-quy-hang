@@ -5,7 +5,7 @@ slug: goi-tu-may-tinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: machine-cleared
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-02
 design_doc: docs/superpowers/specs/2026-11-02-goi-tu-may-tinh-design.md
