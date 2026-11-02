@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 074e1531df16f6c5a6f48adcf746da2e080768ce
+verified_commit: a3890550245ad6210422e6e737fb7c515a485464
 human_signoff: Manh Phan 2026-11-02
 ---
 
@@ -178,3 +178,7 @@ none — mọi eval nhiều lần chạy đều đồng đều (không eval nào
 
 Round 1: E1, E3, E4, E5, E6, E7 hỏng — ở đuôi kết quả, ca E6 và E7 dừng ở điều kiện đầu «Postgres dãy đang có sàn mẫu — gỡ trước khi chạy bộ kiểm» (còn sàn mẫu mã ea69bb7f-be0a-47c7-b589-45bb9a36450d); bốn eval còn lại chưa thấy lỗi riêng. Verdict REJECT, trả lại khâu thi công.
 Round 2: commit 074e153 (hai tệp kiểm sàn mẫu nối đuôi bằng khoá tư vấn, ba chỗ chặt hơn theo lượt chấm r1). E1, E3, E4, E5, E6, E7, E8 và bảy lệnh suite đều qua; E2 mang sang từ round 1 vì delta không chạm paths của eval. E9 còn chờ người chốt ở Cổng 2 nên verdict là PENDING-JUDGMENT.
+
+### Re-pin lần 1 — 2026-11-02, do gộp main (PR #78, #79, #80) sau chữ ký
+run_id: repin-20261102T082005Z-44768
+sha: a3890550245ad6210422e6e737fb7c515a485464 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E9 (E9 không khai paths) · AC không có chốt máy: AC-8
