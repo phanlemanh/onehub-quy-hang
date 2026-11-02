@@ -8,7 +8,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.test.isolation
-    expected: "exit 0; trong packages/api/test-db/thong-bao-lead.test.ts ca «đăng ký: bật, bật lại, gỡ» có mặt và ok — POST /api/v1/me/push-subscriptions với endpoint giả 201, đọc thẳng bảng thấy đúng một dòng gắn người và sàn; POST lại cùng endpoint 200, vẫn một dòng; DELETE với endpoint ấy 204, bảng còn 0 dòng; đăng xuất (POST đăng xuất kèm endpoint của thiết bị) xoá đăng ký của thiết bị ấy, đăng ký thiết bị khác còn; không cookie 401; thân sai khuôn (thiếu keys) 400; ca «khoá công khai» — GET /api/v1/push/public-key trả đúng khoá cấu hình, thiếu khoá thì 503 mã push-not-configured. Chiều đỏ: bỏ ràng buộc duy nhất (company_id, user_id, endpoint) → dòng «bật lại» ra hai dòng."
+    expected: "exit 0; trong packages/api/test-db/thong-bao-lead.test.ts ca «đăng ký: bật, bật lại, gỡ» có mặt và ok — POST /api/v1/me/push-subscriptions với endpoint giả 201, đọc thẳng bảng thấy đúng một dòng gắn người và sàn; POST lại cùng endpoint 200, vẫn một dòng; DELETE với endpoint ấy 204, bảng còn 0 dòng; đăng xuất (POST đăng xuất kèm endpoint của thiết bị) xoá đăng ký của thiết bị ấy, đăng ký thiết bị khác còn; không cookie 401; thân sai khuôn (thiếu keys) 400; ca «khoá công khai» — GET /api/v1/push/public-key trả khoá công khai do máy chủ tự sinh (dạng base64url 65 byte), gọi lần hai trả đúng khoá ấy. Chiều đỏ: bỏ ràng buộc duy nhất (company_id, user_id, endpoint) → dòng «bật lại» ra hai dòng."
     paths: [packages/api/src/push/**, packages/db/migrations/0*_thong_bao*.sql, packages/api/test-db/thong-bao-lead.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -60,7 +60,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     target: "http://localhost:3483/today"
-    expected: "Ma trận viết trước, mỗi ô một ảnh: (đầu chủ, trưởng nhóm) × (chưa bật — nút «Bật thông báo»; đã bật — không dải; thiếu khoá VAPID — chữ «Thông báo chưa được cấu hình», không nút; từ chối quyền — dòng «Thông báo đang tắt trong trình duyệt»; iPhone Safari chưa cài ở khổ 375 — ba bước cài, không nút) ở khổ 1440 trừ ô iPhone; /manifest.webmanifest trả JSON có name, icons, start_url, display standalone; /sw.js trả 200."
+    expected: "Ma trận viết trước, mỗi ô một ảnh: (đầu chủ, trưởng nhóm) × (chưa bật — nút «Bật thông báo»; đã bật — không dải; máy chủ không dựng được khoá (khoá mã hoá vắng) — chữ «Thông báo chưa được cấu hình», không nút; từ chối quyền — dòng «Thông báo đang tắt trong trình duyệt»; iPhone Safari chưa cài ở khổ 375 — ba bước cài, không nút) ở khổ 1440 trừ ô iPhone; /manifest.webmanifest trả JSON có name, icons, start_url, display standalone; /sw.js trả 200."
     paths: [apps/web/src/app/(app)/today/**, apps/web/src/app/manifest.ts, apps/web/public/**]
     evidence_required: [screenshot, observed]
 
@@ -85,7 +85,8 @@ evals:
   - id: E9
     criterion: AC-9
     executor: test
-    cmd: config:executors.test.core
-    expected: "exit 0; ca «thông báo lead: tài liệu khớp» trong packages/core/src/push/push.test.ts — Tham chiếu có dòng §12 nhắc «thông báo lead»; docs/adr có tệp ADR mới nhắc «Web Push» và «lớp nguồn»; .env.example có ba dòng VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT. Chiều đỏ: xoá một biến khỏi .env.example → ca đỏ nêu tên biến."
-    paths: [docs/product/tham-chieu.md, docs/adr/**, .env.example, packages/core/src/push/**]
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/thong-bao-lead.test.ts ca «khoá VAPID tự sinh, không ai cầm» có mặt và ok — bảng push_vapid trống: hai lời gọi lấy khoá chạy song song → bảng đúng một dòng, hai lời gọi trả cùng khoá công khai; cột khoá riêng không chứa khoá riêng rõ (so byte: khác, và không chứa chuỗi base64url của khoá riêng), giải bằng khoá con HKDF nhãn quy-hang/push-vapid/v1 ra khoá riêng khớp khoá công khai (ký thử rồi kiểm chữ ký); vai API select push_vapid → permission denied; .env.example không có biến VAPID nào. Trong packages/core/src/push/push.test.ts ca «thông báo lead: tài liệu khớp» — Tham chiếu §12 nhắc «thông báo lead»; docs/adr/0025-*.md nhắc «Web Push», «lớp nguồn» và «không ai cầm khoá». Chiều đỏ: lưu khoá riêng rõ → so byte đỏ nêu cột; bỏ ràng buộc một dòng → ca song song ra hai dòng."
+    paths: [packages/api/src/push/**, packages/db/migrations/018_*.sql, packages/api/test-db/thong-bao-lead.test.ts, docs/product/tham-chieu.md, docs/adr/**, .env.example, packages/core/src/push/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

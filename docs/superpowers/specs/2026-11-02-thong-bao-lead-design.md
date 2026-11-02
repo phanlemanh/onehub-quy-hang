@@ -34,9 +34,14 @@ web đã cài lên màn hình chính; §7 hẹn hướng dẫn cài cho iPhone.
 - **Đăng ký chết** (dịch vụ đẩy trả 404 hay 410) → xoá đăng ký ấy; lỗi khác giữ, ghi lần hỏng.
 - **Trưởng nhóm** nhận đẩy cho lời báo mới (`unrouted`, `accept_overdue`, `first_call_overdue`) — ADR-0017 Hỏi-6 hẹn nới
   hàng 26 (Hỏi-1). Nội dung: loại lời báo + toà, mở `/today` (màn lời báo là hàng 42).
-- **Khoá VAPID** đọc từ môi trường (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`), khai ở `.env.example`. Thiếu
-  khoá: dải bật báo «Thông báo chưa được cấu hình», nhịp chia chạy như cũ. Gửi bằng thư viện `web-push` (ký VAPID, mã hoá
-  aes128gcm theo RFC 8291) — tự viết mã hoá là rủi ro không cần.
+- **Khoá VAPID — không ai cầm khoá.** Máy chủ tự sinh cặp khoá P-256 ở lần dùng đầu (`web-push`
+  `generateVAPIDKeys`), lưu ở bảng hệ thống `push_vapid` (một dòng, không thuộc sàn nào): khoá công khai lưu thường, khoá
+  riêng lưu bản mã AES-256-GCM bằng một khoá con suy từ `OWNER_PHONE_KEY` qua HKDF (nhãn `quy-hang/push-vapid/v1`) — cùng
+  cách ADR-0013 suy khoá con cho dấu vết số; khoá gốc vẫn chỉ ở Vercel Production. Không thêm biến môi trường, không ai sinh,
+  đọc, chép hay chuyển khoá. Hai lần dùng đầu chạy song song: ràng buộc một dòng giữ một cặp, bên sau đọc lại. Bảng bật luật
+  theo dòng không có luật đọc nào, vai API không được cấp — chỉ đi qua hai hàm `security definer` (lấy, khởi tạo). Xoay khoá
+  = xoá dòng, thiết bị đăng ký lại ở lần mở kế. «Chủ thể» VAPID = `BETTER_AUTH_URL` đã có. Gửi bằng thư viện `web-push`
+  (mã hoá aes128gcm theo RFC 8291) — tự viết mã hoá là rủi ro không cần.
 - Thử trên điện thoại thật (iPhone đã cài, Android) là việc của phiên nghiệm thu, không phải bài chấm máy.
 
 ## Ngoài phạm vi

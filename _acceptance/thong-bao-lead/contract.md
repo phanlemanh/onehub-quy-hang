@@ -26,10 +26,10 @@ khung Hôm nay.
 
 ## Criteria
 
-- AC-1: Given đầu chủ hay trưởng nhóm mở Hôm nay trên trình duyệt hỗ trợ đẩy, chưa bật, khoá VAPID đã cấu hình, When bấm
+- AC-1: Given đầu chủ hay trưởng nhóm mở Hôm nay trên trình duyệt hỗ trợ đẩy, chưa bật, khoá đã sẵn (máy chủ tự sinh), When bấm
   «Bật thông báo» và cho phép, Then thiết bị đăng ký với dịch vụ đẩy và máy chủ lưu một đăng ký gắn người và sàn; dải bật biến
-  mất; cùng thiết bị bật lại không sinh dòng thứ hai; gỡ (`DELETE`) và đăng xuất xoá đúng đăng ký ấy; thiếu khoá VAPID thì dải
-  báo «Thông báo chưa được cấu hình», không nút; từ chối quyền thì một dòng «Thông báo đang tắt trong trình duyệt».
+  mất; cùng thiết bị bật lại không sinh dòng thứ hai; gỡ (`DELETE`) và đăng xuất xoá đúng đăng ký ấy; máy chủ không dựng được
+  khoá thì dải báo «Thông báo chưa được cấu hình», không nút; từ chối quyền thì một dòng «Thông báo đang tắt trong trình duyệt».
 - AC-2: Given bảng đăng ký, When đọc lược đồ và gọi bằng vai API, Then bảng bật và ép luật theo dòng; người chỉ đọc, thêm,
   xoá đăng ký của chính mình trong sàn đang làm; người khác cùng sàn, sàn khác đều không đọc được; đối chứng: chính người đọc
   được đăng ký của mình.
@@ -48,21 +48,23 @@ khung Hôm nay.
   dẫn cài (Chia sẻ → Thêm vào MH chính); web có manifest, biểu tượng và service worker đăng ký ở gốc.
 - AC-8: Given trưởng nhóm có đăng ký, When nhịp chia ghi một lời báo mới (`unrouted`, `accept_overdue`, `first_call_overdue`),
   Then trưởng nhóm nhận một thông báo nêu loại lời báo và toà, mở `/today`; nội dung theo cùng luật AC-4.
-- AC-9: Given tài liệu của kho, When đọc, Then Tham chiếu ghi thông báo lead, ADR-0025 ghi lựa chọn Web Push và nội dung không
-  mang lớp nguồn, `.env.example` khai `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`.
+- AC-9: Given máy chủ chưa có khoá VAPID, When thông báo được dùng lần đầu (kể cả hai lần đầu chạy song song), Then máy chủ tự
+  sinh đúng một cặp khoá; khoá riêng chỉ nằm ở dạng bản mã, giải được bằng khoá con suy từ khoá mã hoá đã có; vai API không đọc
+  được bảng khoá; không thêm biến môi trường; Tham chiếu ghi thông báo lead, ADR-0025 ghi lựa chọn Web Push, nội dung không
+  mang lớp nguồn và lối khoá không người cầm.
 
 ## Coverage
 
 Bỏ quét coverage có tên — không gian AC lấy từ ba lối giao lead đã kê ở ADR-0017 và kiến trúc §7 (dòng `descope`
 «bỏ coverage-scan»). Trục đã phủ: lối giao (AC-3) · thiết bị (AC-1, AC-7) · người nhận (AC-3, AC-8) · rò (AC-2, AC-4) · hỏng
-(AC-5) · mở (AC-6) · tài liệu (AC-9).
+(AC-5) · mở (AC-6) · khoá và tài liệu (AC-9).
 
 ## Đường đo
 
 - Thời gian lead → cuộc gọi đầu (opportunity.md, Tham chiếu §11): mốc giao `leads.routed_at` và mốc gọi đầu
   `leads.first_called_at` đã có (hàng 25, 27); hàng này thêm mốc gửi `push_outbox.sent_at` (AC-3) để tách phần thông báo.
-  Ngưỡng số và timebox: chủ kho điền ở `opportunity.md` trước phiên thử trên điện thoại thật — chưa điền thì phiên nghiệm thu
-  không kết luận sống/chết.
+  Ngưỡng số và timebox: Hỏi-4 (khuyến nghị trung vị ≤ 5 phút, timebox hai tuần thử) — chủ kho chốt, máy ghi vào
+  `opportunity.md`.
 
 ## Out of scope
 
@@ -74,6 +76,6 @@ Bỏ quét coverage có tên — không gian AC lấy từ ba lối giao lead đ
 
 ## Notes
 
-- Việc của chủ kho trước khi bật trên bản thật: đặt `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` ở Vercel
-  (máy sinh cặp khoá bằng `npx web-push generate-vapid-keys` và trao tận tay; agent không ghi `.env*`).
+- Không ai cầm khoá: máy chủ tự sinh khoá VAPID, khoá riêng mã hoá bằng khoá con của `OWNER_PHONE_KEY` đã có trên Vercel
+  (giám sát 02/11, luật chủ kho «máy không tạo, đọc, chép hay chuyển khoá bí mật»).
 - Giám sát cấp (02/11): migration `018_thong_bao_lead.sql`, ADR-0025.
