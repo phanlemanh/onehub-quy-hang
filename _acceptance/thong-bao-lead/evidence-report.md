@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: bd9f8213d92b9b0a02a11be65d80c8f1ea62ae50
-human_signoff:
+human_signoff: Manh Phan 2026-11-02
 ---
 
 # Evidence Report: thong-bao-lead

@@ -5,7 +5,7 @@ slug: thong-bao-lead
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-thong-bao-lead-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -81,3 +81,6 @@ Bỏ quét coverage có tên — không gian AC lấy từ ba lối giao lead đ
 - Không ai cầm khoá: máy chủ tự sinh khoá VAPID, khoá riêng mã hoá bằng khoá con của `OWNER_PHONE_KEY` đã có trên Vercel
   (giám sát 02/11, luật chủ kho «máy không tạo, đọc, chép hay chuyển khoá bí mật»).
 - Giám sát cấp (02/11): migration `018_thong_bao_lead.sql`, ADR-0025.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-2: khoá thiết bị sai khuôn trong yêu cầu tự chế nhận lỗi chung thay vì lời báo «thân sai khuôn».
+  - Ngoài-3: người chấm lại các bước trên màn hình cần tự dựng cấu hình chạy dev của dãy L (cổng 3483) trước khi cấp phiên thử.
