@@ -59,6 +59,7 @@ evals:
     layer: ui-observed
     target: "Máy dev dãy G cổng 3484 (Postgres 5564, dữ liệu mẫu nap.mjs); đăng nhập truong-nhom@mau.quy-hang.test rồi dau-chu-1@mau.quy-hang.test"
     steps:
+      - "Đích (target đã duyệt): Máy dev dãy G cổng 3484 (Postgres 5564, dữ liệu mẫu nap.mjs); đăng nhập truong-nhom@mau.quy-hang.test rồi dau-chu-1@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3484 (Postgres 5564 đã migrate, dữ liệu mẫu đã nạp) — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3484, không dừng Postgres 5564; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/he-bo-cuc/dev-3484.log (gốc kho)"
       - "Khổ 1440x900, trưởng nhóm, mở /inventory → chụp evidence/E4u-truong-nhom.png; ghi nút trên thanh trên và các mục khi mở menu Tạo"
       - "Bấm mục «Nhập Excel» trong menu → ghi địa chỉ mở ra"
       - "Đăng nhập dau-chu-1, mở /today → chụp evidence/E4u-dau-chu.png; ghi nút trên thanh trên"
@@ -81,6 +82,7 @@ evals:
     layer: ui-observed
     target: "Trang mẫu sống /mau/he-bo-cuc trên máy dev dãy G cổng 3484"
     steps:
+      - "Đích (target đã duyệt): Trang mẫu sống /mau/he-bo-cuc trên máy dev dãy G cổng 3484. Máy chủ đã chạy sẵn ở cổng 3484 (Postgres 5564 đã migrate, dữ liệu mẫu đã nạp) — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3484, không dừng Postgres 5564; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/he-bo-cuc/dev-3484.log (gốc kho)"
       - "Với từng bố cục (7), mở /mau/he-bo-cuc?bo-cuc=<mã>&trang-thai=mac-dinh&kho=375 → chụp evidence/E6-<mã>-375.png; ghi hình bản điện thoại và document.documentElement.scrollWidth so với innerWidth"
       - "Mở tran và danh-sach-chi-tiet ở kho=1024 và kho=1440 → chụp evidence/E6-<mã>-<khổ>.png; ghi cột phụ ở đâu"
       - "Ở danh-sach-chi-tiet, mở ngăn nổi ở 1440 rồi ở 375 → chụp evidence/E6-ngan-1440.png, evidence/E6-ngan-375.png; ghi ngăn mở từ đâu"
@@ -102,6 +104,7 @@ evals:
     layer: ui-observed
     target: "Máy chủ web dãy G cổng 3484 chạy KHÔNG có DATABASE_URL (dừng Postgres 5564 hoặc bỏ biến), trình duyệt sạch cookie"
     steps:
+      - "Đích (target đã duyệt): Máy chủ web dãy G cổng 3484 chạy KHÔNG có DATABASE_URL (dừng Postgres 5564 hoặc bỏ biến), trình duyệt sạch cookie. Các eval ui-check khác chấm song song trên 3484 có cơ sở dữ liệu, nên eval này dùng máy chủ thứ hai ĐANG CHẠY SẴN ở cổng 3494, bật từ bản build với env KHÔNG có DATABASE_URL (pid ở .acceptance-runs/he-bo-cuc/pid-3494.txt, kiểm env bằng ps eww) — thay 3484 bằng 3494 ở mọi bước; KHÔNG dừng Postgres 5564, KHÔNG tắt máy chủ"
       - "Xoá cookie, mở /mau/he-bo-cuc → chụp evidence/E7u-trang.png; ghi địa chỉ cuối (không bị đưa về /login) và các lựa chọn trên thanh chọn"
       - "Chọn lần lượt năm trạng thái cho bố cục tran ở 1440 → chụp evidence/E7u-tran-<trạng thái>.png"
       - "Chọn ho-so, kho=1024 → chụp evidence/E7u-ho-so-1024.png; ghi lỗi console nếu có"
@@ -147,6 +150,7 @@ evals:
     layer: ui-observed
     target: "Máy dev dãy G cổng 3484, đăng nhập quan-tri@mau.quy-hang.test"
     steps:
+      - "Đích (target đã duyệt): Máy dev dãy G cổng 3484, đăng nhập quan-tri@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3484 (Postgres 5564 đã migrate, dữ liệu mẫu đã nạp) — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3484, không dừng Postgres 5564; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/he-bo-cuc/dev-3484.log (gốc kho)"
       - "Khổ 1440x900, mở /settings/users → chụp evidence/E10u-nguoi-dung.png; ghi tab, cột, số người, đếm ghế nếu có"
       - "Mở /settings/labels (mục chưa dựng) → chụp evidence/E10u-trang-tam.png"
       - "Khổ 375, mở /settings/users → chụp evidence/E10u-nguoi-dung-375.png; ghi cuộn ngang"
