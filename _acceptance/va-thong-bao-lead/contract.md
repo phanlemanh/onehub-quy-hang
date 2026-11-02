@@ -5,7 +5,7 @@ slug: va-thong-bao-lead
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: implemented
+status: verified
 design_doc: _acceptance/va-thong-bao-lead/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -66,3 +66,5 @@ Ngoài-4: AC-4, AC-5, AC-6 · Ngoài-5: AC-7 (descope «bỏ coverage-scan»).
 
 - Bằng chứng E7 của hàng 26 (ô «đã bật») dùng địa chỉ `push.example.test`; sau vòng này địa chỉ ấy không lưu được nên ô ấy
   sẽ hiện dải báo lỗi — đúng hành vi mới (AC-7), hồ sơ hàng 26 không chấm lại.
+- Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Hồ sơ nói có một phép thử chứng minh máy chủ thật sự bỏ qua đăng ký có địa chỉ lạ, nhưng phép thử đó chưa có. Hành vi vẫn đúng, chỉ là chưa có bằng chứng chắc như hồ sơ đã ghi. — `_acceptance/va-thong-bao-lead/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Phép thử ở bước này chỉ kiểm danh sách kết quả trả về chứ chưa kiểm việc ghi xuống dữ liệu. Nếu sau này có người sửa để ghi nhầm cả những thông báo chưa gửi, bước này vẫn báo xanh, dù một bài kiểm khác vẫn bắt được. — `_acceptance/va-thong-bao-lead/evals.yaml`
