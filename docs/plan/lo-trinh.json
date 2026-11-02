@@ -1960,6 +1960,12 @@
       "cau_giao": "Vá Che vùng ảnh: trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ",
       "slug": "va-che-vung-anh",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-thong-bao-lead",
+      "cau_giao": "Vá Thông báo lead: chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo",
+      "slug": "va-thong-bao-lead",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],
   "chan_troi": [

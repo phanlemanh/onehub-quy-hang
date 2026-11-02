@@ -1,0 +1,139 @@
+schema_version: 1
+feature_slug: va-thong-bao-lead
+# Ca thuần: packages/core/src/push/push.test.ts (lõi), packages/api/src/push/gui.test.ts (máy chủ, đồng hồ giả),
+#   apps/web/src/lib/push/dang-ky.test.ts (web). Ca trên Postgres dãy B: packages/api/test-db/va-thong-bao-lead.test.ts và
+#   bộ hàng 26 packages/api/test-db/thong-bao-lead.test.ts — chạy qua executors.test.isolation (cần DATABASE_URL tới 5561).
+# «DỰNG B» cho bài nhìn: node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs (Postgres 5561, dev 3481, người mẫu hàng 5);
+#   phiên và trang: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs (cookieCua, moChrome; Page.addScriptToEvaluateOnNewDocument
+#   qua `gui`). Thiết bị «đã bật» giả bằng initScript: Notification.permission = 'granted', PushManager.prototype.getSubscription
+#   trả một đăng ký có endpoint do ô đặt và khoá đúng khuôn (p256dh 'B'×87, auth 'A'×22) — lưu thật đi tới máy chủ thật.
+# Mỗi bài nhìn GHI số đo vào evidence/<E>-measure.json (đo bằng mã trong trang và truy vấn cơ sở dữ liệu, không ước trên ảnh).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; push.test.ts có các ca «AC-1 …» và tất cả ok — ma trận viết tay của laDichVuDay(địa chỉ), mỗi ô một assert: CHẤP NHẬN https://fcm.googleapis.com/fcm/send/x · https://fcm.googleapis.com/wp/x · https://updates.push.services.mozilla.com/wpush/v2/x · https://web.push.apple.com/x · https://wns2-par02p.notify.windows.com/w/?token=x · https://FCM.GOOGLEAPIS.COM/x (chữ hoa) · https://fcm.googleapis.com:443/x; TỪ CHỐI http://fcm.googleapis.com/x · https://push.example.test/x · https://fcm.googleapis.com.evil.test/x · https://evilfcm.googleapis.com/x · https://notify.windows.com/x (không nhãn trước đuôi) · https://evil-notify.windows.com/x · https://fcm.googleapis.com@evil.test/x · https://u:p@fcm.googleapis.com/x · https://fcm.googleapis.com:8443/x · https://169.254.169.254/x · https://localhost/x · https://[::1]/x · chuỗi rỗng · 'không phải địa chỉ'. Ca hằng: PUSH_SEND.deliverBudgetMs + timeoutMs < PUSH_CLAIM_HOLD_MS và tickBudgetMs + timeoutMs < PUSH_CLAIM_HOLD_MS (= 60 000, giữ chỗ của migration 018). Đối chứng đỏ: hàm giả chỉ xét tiền tố «https://» thì các ô https://push.example.test/x và https://fcm.googleapis.com.evil.test/x bị gọi tên trong thông điệp."
+    paths: ["packages/core/src/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; packages/api/src/push/gui.test.ts có các ca «AC-4 …», «AC-5 …», «AC-3 …» và tất cả ok — guiCacDong(dòng, bộ gửi, khoá, {timeoutMs, hanChot, dongHo}) với đồng hồ giả: (a) bộ gửi không bao giờ trả lời → dòng ấy kết quả 'failed' với lỗi «quá hạn gửi», hàm trả về sau đúng timeoutMs của đồng hồ giả; (b) bộ gửi trả ok → 'sent'; (c) bộ gửi trả 410 → 'gone'; (d) dòng có địa chỉ https://push.example.test/x → 'gone' và bộ gửi KHÔNG được gọi (đếm lần gọi = 0 cho dòng ấy); (e) năm dòng, mỗi lần gửi tốn 3 giây đồng hồ giả, hanChot = bắt đầu + 7 giây, timeoutMs 5 giây, điều kiện gửi «bây giờ + timeoutMs ≤ hanChot» → chỉ dòng 1 được gửi (dòng 2 ở 3 giây: 3 + 5 > 7), bốn dòng còn lại trả về trong danh sách «chưa gửi», không có kết quả. Mỗi ô một assert. Đối chứng đỏ: hàm giả bỏ hạn chót thì ô (e) gửi đủ năm dòng và ca đỏ nêu «chưa gửi»; hàm giả không xét địa chỉ thì ô (d) gọi bộ gửi và ca đỏ nêu địa chỉ."
+    paths: ["packages/api/src/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «AC-5 …» của gui.test.ts (ô (e) ở E2) ok — dòng chưa gửi không có kết quả nên guiHopThu không ghi app.push_outbox_mark cho chúng (đếm lời ghi = số dòng có kết quả)."
+    paths: ["packages/api/src/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; packages/api/test-db/va-thong-bao-lead.test.ts có ca «AC-2 …» ok — đầu chủ POST /api/v1/me/push-subscriptions với từng địa chỉ lạ (https://push.example.test/…, https://169.254.169.254/…, https://fcm.googleapis.com.evil.test/…, http://fcm.googleapis.com/…) → mỗi lần 400 và số dòng push_subscriptions của người ấy không đổi (đếm trước/sau bằng truy vấn); địa chỉ https://fcm.googleapis.com/fcm/send/<mã chạy> → 201 và có đúng một dòng. Đối chứng dương ngay trong ca: địa chỉ hợp lệ lưu được."
+    paths: ["packages/api/src/push/**", "packages/core/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-3 …» ok — đầu chủ có hai đăng ký: một hợp lệ (fcm) lưu qua API, một địa chỉ https://push.example.test/… chèn thẳng bằng hàm lưu của kho dưới ngữ cảnh người ấy (như dòng lưu trước bản vá); nhập một lead giao cho người ấy → bộ gửi giả được gọi đúng một lần, tới địa chỉ fcm; đăng ký push.example.test không còn trong push_subscriptions. Đối chứng: trước nhịp, đăng ký lạ có mặt (đếm 2)."
+    paths: ["packages/api/src/push/**", "packages/core/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-6 …» ok — bộ gửi giả không bao giờ trả lời; đầu chủ có ba đăng ký fcm; telesales nhập lead giao ngay cho đầu chủ → yêu cầu trả 201 trong dưới 8 000 ms (đo bằng đồng hồ của ca, ghi số ms vào thông điệp; hạn lối giao 8 giây, một lần gửi 5 giây nên chỉ một lần gửi bắt đầu); lead ở trạng thái đã giao cho đầu chủ; trong ba dòng push_outbox của lead đúng một dòng attempts = 1, sent_at null, last_error chứa «quá hạn gửi», hai dòng attempts = 0. Đối chứng đỏ: không truyền hạn chót ở lối giao thì ba dòng đều bị thử và thời gian ≥ 15 000 ms — thông điệp nêu số dòng đã thử và số ms. Ca giữ chỗ: dòng vừa nhận bằng app.push_outbox_claim(t) không được nhận lại bởi app.push_outbox_claim(t + 59 giây) và được nhận lại ở t + 61 giây (đối chứng hai chiều của giữ chỗ một phút)."
+    paths: ["packages/api/src/push/**", "packages/api/src/jobs/**", "packages/core/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; apps/web/src/lib/push/dang-ky.test.ts có các ca «AC-7 …» ok — (a) ma trận viết tay của luu(đăng ký, fetch giả): fetch bị từ chối (mất mạng) → false; 500 → false; 401 → false; 400 → false; 201 → true; 200 → true; mỗi ô một assert; đối chứng đỏ: hàm lưu giả không bắt lỗi thì ô «bị từ chối» ném ra và bị gọi tên; (b) ma trận viết tay của phanLoai: đã đăng ký + quyền granted + daLuu false → 'loi-luu'; daLuu true → 'da-bat'; daLuu null → 'da-bat' (chưa thử lưu); chưa đăng ký + daLuu false → 'chua-bat'; quyền denied + daLuu false → 'tu-choi'; iPhone chưa cài → 'ios-chua-cai'. Đối chứng đỏ: hàm giả bỏ daLuu thì ô 'loi-luu' bị gọi tên."
+    paths: ["apps/web/src/lib/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440×900. Phiên dau-chu-1 (cookieCua) trên Chrome của cdp.mjs; mỗi ô một trang mới."
+      - "Ô «lưu hỏng»: initScript thiết bị đã bật với endpoint https://push.example.test/ui-<mã chạy> → mở /today, chờ 3 giây → ghi: có section aria-label «Thông báo lead» không, chữ trong đó, có nút «Bật thông báo» không; ghi mã trả của POST /api/v1/me/push-subscriptions (Network) ; chụp evidence/E8-luu-hong.png"
+      - "Ô «lưu được»: initScript thiết bị đã bật với endpoint https://fcm.googleapis.com/fcm/send/ui-<mã chạy> → mở /today, chờ 3 giây → ghi có section «Thông báo lead» không; mã trả của POST; đếm dòng push_subscriptions của dau-chu-1 có endpoint ấy (Postgres 5561); chụp evidence/E8-luu-duoc.png"
+      - "Ô «chưa bật»: không initScript → mở /today → ghi chữ của section «Thông báo lead» và nút; chụp evidence/E8-chua-bat.png"
+      - "Ghi evidence/E8-measure.json: mỗi ô {o, coDai, chu, coNut, postStatus, soDong} cộng bảng đạt/trượt từng mục của Expected"
+    expected: "Lưu hỏng: POST trả 400; dải hiện với chữ «Chưa bật được thông báo — thử lại» và nút «Bật thông báo». Lưu được: POST trả 200 hay 201; không có dải; có đúng một dòng đăng ký với endpoint ấy. Chưa bật: dải «Bật thông báo lead» với nút «Bật thông báo» như hàng 26. Mỗi ô × mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/lib/push/**", "apps/web/src/app/(app)/today/dai-bat.tsx", "packages/api/src/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; mọi ca của packages/api/test-db/thong-bao-lead.test.ts (hàng 26: khoá VAPID, đăng ký, gửi khi lead về, quay lui không gửi, lỗi tạm gửi lại, gửi lỗi không làm hỏng việc giao, đăng ký chết bị gỡ, trưởng nhóm nhận đẩy) có mặt và ok với địa chỉ thử dưới https://fcm.googleapis.com/fcm/send/…"
+    paths: ["packages/api/src/push/**", "packages/api/src/jobs/**", "packages/api/test-db/thong-bao-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; «chuẩn giao diện: đạt»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/app/(app)/today/dai-bat.tsx", "apps/web/src/lib/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/va-thong-bao-lead/thu/ranh-gioi.mjs
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main (git diff --no-renames) và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: packages/api/src/push/**, packages/api/src/jobs/**, packages/core/src/push/**, apps/web/src/lib/push/**, apps/web/src/app/(app)/today/dai-bat.tsx, packages/api/test-db/va-thong-bao-lead.test.ts, packages/api/test-db/thong-bao-lead.test.ts, _acceptance/va-thong-bao-lead/**, docs/plan/lo-trinh.json, LO-TRINH.html, PRODUCT-MAP.md, docs/product/tham-chieu.md. Đối chứng đỏ trong cùng lệnh: danh sách giả thêm packages/db/migrations/018_thong_bao_lead.sql thì hàm kiểm gọi đúng tệp ấy — thiếu thì exit 1 «thước không phân biệt được»."
+    paths: ["_acceptance/va-thong-bao-lead/thu/ranh-gioi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-5 …» của va-thong-bao-lead.test.ts ok — sáu dòng chờ gửi tạo qua lối thật (đầu chủ có sáu đăng ký fcm, lead giao khi bộ gửi trả lỗi tạm 500 nên sáu dòng còn chờ trong khung), rồi runLeadTick với bộ gửi treo và thời hạn rút ngắn truyền qua tham số (một lần gửi 500 ms, ngân sách nhịp 1 200 ms) → nhịp kết thúc trong dưới 2 500 ms; số dòng tăng lần thử < 6 và ≥ 1; dòng chưa thử giữ nguyên attempts. Ca mặc định: runLeadTick không truyền thời hạn dùng đúng PUSH_SEND.tickBudgetMs và PUSH_SEND.timeoutMs (đọc qua hàm thời hạn mặc định được xuất). Đối chứng đỏ: bỏ hạn chót thì cả sáu dòng bị thử và thời gian ≥ 3 000 ms — thông điệp nêu số dòng và ms."
+    paths: ["packages/api/src/push/**", "packages/api/src/jobs/**", "packages/core/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E15
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-8 …» ok — đầu chủ có đăng ký fcm; POST /api/v1/auth/sign-out với thân {pushEndpoint: 'https://push.example.test/x'} → mã 2xx, lần gọi /api/v1/me kế tiếp bằng cookie cũ trả 401, đăng ký fcm vẫn còn (đếm 1); đăng nhập lại, đăng xuất với thân mang đúng địa chỉ fcm → 2xx và đăng ký ấy bị gỡ (đếm 0). Đối chứng dương nằm trong cùng ca."
+    paths: ["packages/api/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
