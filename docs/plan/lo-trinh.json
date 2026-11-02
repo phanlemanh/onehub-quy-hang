@@ -2009,6 +2009,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     },
     {
+      "ma": "mo-so-lead",
+      "cau_giao": "Đầu chủ được giao lead mở số chủ nhà của lead ấy ngay ở Hôm nay để gọi; mỗi lần mở số thành một vết (người, vai, lúc) như «Mở số» của hồ sơ căn; người không được giao lead không mở được.",
+      "slug": "mo-so-lead",
+      "vi_sao": "Chủ kho quyết build ở Hỏi-3 hàng 22 (_acceptance/hom-nay-dau-chu d-20261101T135417Z-10); máy thêm khi mở vòng, 2026-11-02"
+    },
+    {
       "ma": "dien-ma-can-cho-hang",
       "cau_giao": "Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà: hàng chưa có mã căn báo thiếu «mã căn» và không lên Đang bán (hàng 23 chọn C); đầu chủ điền mã căn ngay ở hồ sơ căn để hàng đủ điều kiện rao.",
       "slug": "dien-ma-can-cho-hang",
@@ -2018,6 +2024,30 @@
       "ma": "va-thong-bao-lead",
       "cau_giao": "Vá Thông báo lead: chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo",
       "slug": "va-thong-bao-lead",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-dien-ma-can-cho-hang",
+      "cau_giao": "Vá Điền mã căn: mã căn phải có ít nhất một chữ hay số; mã toàn dấu bị từ chối với lời báo rõ, không khoá hàng",
+      "slug": "va-dien-ma-can-cho-hang",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-he-bo-cuc",
+      "cau_giao": "Vá Hệ bố cục: mỗi mục của Hôm nay ở cột thứ hai mở đúng chỗ của nó, mục chưa có màn thì ẩn hay báo rõ, không mục nào bấm mà không phản hồi",
+      "slug": "va-he-bo-cuc",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-nap-mau-co-anh",
+      "cau_giao": "Vá bài kiểm Nạp mẫu có ảnh: ca kho Storage có đối chứng dương, phá thử thì đỏ",
+      "slug": "va-nap-mau-co-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-ma-can-lead",
+      "cau_giao": "Vá mã căn của lead: lead nhập mã căn toàn dấu bị từ chối ngay lúc nhập với lời báo như hồ sơ hàng; tạo hàng từ lead không còn ném lỗi",
+      "slug": "va-ma-can-lead",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],

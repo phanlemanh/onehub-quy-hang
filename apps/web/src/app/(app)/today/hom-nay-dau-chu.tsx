@@ -7,7 +7,7 @@
 import { NEED_LABELS, RETURN_REASON_LABEL, LEAD_STAGE_LABELS, type LeadState } from "@quy-hang/core/dedupe";
 import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type Action, type BoNhom, type LeadAction, type Nhom } from "@quy-hang/core/today";
 import { useTable, type ColumnDef, type ExpandedState, type Row } from "@tanstack/react-table";
-import { InboxIcon, RotateCwIcon } from "lucide-react";
+import { InboxIcon, PhoneIcon, RotateCwIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
@@ -28,6 +28,8 @@ import { docCot, dongCot, duongHangChuaMa, moCot, type ChonCan } from "../units/
 import { KhungHoSoCan } from "../units/ho-so/khung";
 import { canHomNay, chuGiaPhi, chuGio, chuGioNgay, chuHan, chuLoai, lyDo, type CanHomNay } from "./ly-do";
 import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
+import { docNhomThamSo, timNhom } from "./mo-nhom";
+import { chuSo, moSo, telHref } from "./mo-so";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
 
 type Feat = DataGridFeatures;
@@ -110,6 +112,9 @@ type HanhDong = {
   conGiuGia: (c: CanHomNay) => void;
   moHoSo: (c: CanHomNay) => void;
   lead: (l: LeadGiao, viec: LeadAction) => void;
+  /** Số đã mở theo dòng lead (hàng mo-so-lead) — chỉ trong trạng thái của màn, không lưu trên máy. */
+  so: Readonly<Record<string, string>>;
+  moSo: (l: LeadGiao) => void;
 };
 
 function LyDo({ v }: { v: Viec }) {
@@ -135,9 +140,16 @@ const co = (n: Nhom, a: Action) => n.actions.includes(a);
 function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: string }) {
   const ban = hd.dangGhi.has(v.id);
   const loi = hd.loi[v.id];
+  const soMo = hd.so[v.id];
   const nut =
     v.kind === "can" ? (
       <>
+        {/* Chế độ cuộc gọi ép giá (hàng 29): căn ở nhóm «Nên gọi điều chỉnh giá». */}
+        {v.nhom.code === "price_adjustment" && (
+          <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?hang=${encodeURIComponent(v.can.id)}`} />}>
+            Ghi cuộc gọi
+          </Button>
+        )}
         {co(v.nhom, "owner_confirmed") && (
           <Button size="sm" disabled={ban} onClick={() => hd.conGiuGia(v.can)}>
             Còn · giữ giá
@@ -157,6 +169,10 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
       </>
     ) : (
       <>
+        {/* Chế độ cuộc gọi khai thác (hàng 28): mở lead trên máy tính, vừa nghe vừa ghi. «Gọi» để dành cho nút quay số sau «Mở số» (hàng 29, Hỏi-8). */}
+        <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?lead=${encodeURIComponent(v.lead.id)}`} />}>
+          Ghi cuộc gọi
+        </Button>
         {co(v.nhom, "accept") && v.lead.stage === "sent" && (
           <Button size="sm" disabled={ban} onClick={() => hd.lead(v.lead, "accept")}>
             Nhận
@@ -170,6 +186,19 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
         {co(v.nhom, "return") && (
           <Button size="sm" variant="ghost" disabled={ban} onClick={() => hd.lead(v.lead, "return")}>
             Trả lại · {RETURN_REASON_LABEL}
+          </Button>
+        )}
+        {soMo ? (
+          <span className="flex items-center gap-2">
+            <span className="text-foreground text-sm font-medium tabular-nums">{chuSo(soMo)}</span>
+            <Button size="sm" nativeButton={false} render={<a href={telHref(soMo)} />}>
+              <PhoneIcon data-icon="inline-start" />
+              Gọi
+            </Button>
+          </span>
+        ) : (
+          <Button size="sm" variant="outline" disabled={ban} onClick={() => hd.moSo(v.lead)}>
+            Mở số
           </Button>
         )}
       </>
@@ -372,10 +401,25 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
   const qs = q.toString();
   const chon = docCot(new URLSearchParams(qs));
 
+  // Số đã mở theo dòng (hàng mo-so-lead): chỉ sống trong trạng thái màn — tải lại trang là ẩn, mở lại ghi thêm vết.
+  const [soDaMo, setSoDaMo] = useState<Record<string, string>>({});
+
   const hd: HanhDong = {
     bayGio,
     dangGhi,
     loi,
+    so: soDaMo,
+    moSo: (l) => {
+      const id = `lead:${l.id}`;
+      ban(id, true);
+      datLoi(id, null);
+      void moSo(l.id)
+        .then((kq) => {
+          if (kq.ok) setSoDaMo((m) => ({ ...m, [id]: kq.so }));
+          else datLoi(id, kq.loi);
+        })
+        .finally(() => ban(id, false));
+    },
     conGiuGia: (c) => {
       const id = `can:${c.id}`;
       ban(id, true);
@@ -433,7 +477,29 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
     );
     return () => window.cancelAnimationFrame(id);
   }, [dongMo]);
-  const rowSelection: Record<string, true> = dongMo ? { [dongMo]: true } : {};
+
+  // ——— Mở đúng nhóm từ cột thứ hai (va-he-bo-cuc): /today?nhom=<mã> — cùng đường với lead; có lead thì lead thắng ———
+  const nhomThamSo = docNhomThamSo(qs);
+  // Lưới còn đang tải thì chưa có kết quả: không báo nhầm «không có việc» lúc lưới còn rỗng.
+  const ketQuaNhom = nhomThamSo ? timNhom({ bo, dangHien: dangTaiLead ? null : nhom, ma: nhomThamSo }) : null;
+  const dongNhom = ketQuaNhom && "dong" in ketQuaNhom ? ketQuaNhom.dong : null;
+  const [daMoNhom, setDaMoNhom] = useState<string | null>(null);
+  if (ketQuaNhom && "dong" in ketQuaNhom && daMoNhom !== ketQuaNhom.dong) {
+    setDaMoNhom(ketQuaNhom.dong);
+    setExpanded((e) => moNhom(e === true ? true : (e as Record<string, boolean>), ketQuaNhom.nhom));
+  }
+  useEffect(() => {
+    if (!dongNhom) return;
+    const id = window.requestAnimationFrame(() =>
+      document.querySelector(`[data-row-id="${CSS.escape(dongNhom)}"]`)?.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      }),
+    );
+    return () => window.cancelAnimationFrame(id);
+  }, [dongNhom]);
+  const chonDong = dongMo ?? dongNhom;
+  const rowSelection: Record<string, true> = chonDong ? { [chonDong]: true } : {};
   const cay: DongLuoi[] = nhom.map((g) => ({
     kind: "nhom",
     id: `nhom:${g.nhom.code}`,
@@ -527,6 +593,11 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
         {ketQuaMo && "khongCon" in ketQuaMo ? (
           <FramePanel className="p-0!">
             <TrangThai kind="notice" title={ketQuaMo.khongCon} />
+          </FramePanel>
+        ) : null}
+        {ketQuaNhom && "bao" in ketQuaNhom ? (
+          <FramePanel className="p-0!">
+            <TrangThai kind="notice" title={ketQuaNhom.bao} />
           </FramePanel>
         ) : null}
         {hoSo && rong ? (

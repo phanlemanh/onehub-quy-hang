@@ -1,0 +1,8 @@
+E8 network (fetch/xhr, app origin http://localhost:3483)
+GETs /api/v1/catalog, company/settings/queue, leads/assigned(+id), push/public-key, listings: all 200
+POST /api/v1/leads/9516525a-.../phone-dial [200]  (khung 2: chua co thiet bi)
+POST .../phone-dial [200]  (khung 3: da gui)
+POST .../phone-dial [net::ERR_INTERNET_DISCONNECTED]  (khung 4: emulate Offline, co chu y)
+POST .../phone-dial [200]  (khung 5: Slow 3G)
+Console error: Failed to load resource: net::ERR_INTERNET_DISCONNECTED (do buoc Offline co chu y)
+Ghi chu: dang-ky POST /api/v1/me/push-subscriptions chay bang curl -> 201.

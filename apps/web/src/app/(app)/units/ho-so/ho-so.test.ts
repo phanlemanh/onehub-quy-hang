@@ -232,6 +232,8 @@ test("lệnh gắn mã căn", () => {
   assert.deepEqual(dungLenhGanMa(chuaMa, "  A-12.05 "), { lenh: { type: "unit_number_assigned", payload: { unitNumber: "A-12.05" }, coSo: 4 } });
   assert.deepEqual(dungLenhGanMa(chuaMa, "   "), { loi: CHU_GO_MA_CAN });
   assert.equal(CHU_GO_MA_CAN, "Gõ mã căn");
+  // Mã toàn dấu (va-dien-ma-can-cho-hang, E3): câu báo của lõi tại ô, không dựng lệnh.
+  assert.deepEqual(dungLenhGanMa(chuaMa, "---"), { loi: "Mã căn cần ít nhất một chữ (A–Z) hoặc số (0–9)" });
   assert.deepEqual(dungLenhGanMa(hang("h-1", "Toà A", "A-01.02"), "A-12.05"), { loi: null }, "hàng đã có mã → không dựng lệnh");
 
   // Lệnh vào hàng đợi trên máy đúng loại và phiên bản của hàng; bản trên máy mang mã ngay.

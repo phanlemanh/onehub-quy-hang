@@ -1,0 +1,5 @@
+Total messages: 20 (Errors: 2, Warnings: 0)
+Returning 2 messages for level "warning"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3482/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 400 (BAD_REQUEST) @ http://localhost:3482/api/v1/auth/sign-in/email-otp:0

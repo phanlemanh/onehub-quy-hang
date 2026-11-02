@@ -1,0 +1,10 @@
+E9 network (chrome-devtools, trang 31, 117 request, 3 lần điều hướng cuối)
+App-scope (origin http://localhost:3483):
+ GET /api/v1/leads/assigned/9516525a-... [404] x2   -> khung 4b (đầu chủ mẫu 2 mở lead của đầu chủ mẫu 1; trưởng nhóm) — 404 là đường «Không thấy» mà expected khai
+ GET /api/v1/leads/assigned/9516525a-... [200] x2   -> đầu chủ mẫu 1 hợp lệ
+ GET /api/v1/listings [200] x3
+ GET /units/call/dial?lead=... [200] (tài liệu; trang 404 của Next cũng trả 200 ở bản dev, curl xác nhận 200 cho dc2 và trưởng nhóm)
+ POST /api/v1/leads/9516525a-.../phone-reveal [net::ERR_INTERNET_DISCONNECTED] -> khung 5 cố ý Offline (expected khai dòng lỗi)
+ static (_next/static, font): 200/304
+Third-party: không có.
+Console: 404 Failed to load resource x2 (khung 4b), ERR_INTERNET_DISCONNECTED x1 (khung 5); không lỗi khác.

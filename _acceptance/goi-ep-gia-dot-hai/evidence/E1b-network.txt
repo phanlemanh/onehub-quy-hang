@@ -1,0 +1,6 @@
+E1b lượt chấm độc lập — Chrome riêng (CDP), origin http://localhost:3485 (máy dev dãy D có sẵn, không do verifier khởi động)
+Nguồn: performance.getEntriesByType('resource') (initiator fetch, responseStatus) cho từng bước
+[bước 1: /today -> chế độ cuộc gọi P1] toàn 200: catalog, company/settings/queue, leads/assigned, push/public-key, listings, listings/c9d51fa2.../owner, listings/c9d51fa2...
+[bước 2: /units/call?hang=00000000-0000-4000-8000-000000000000] GET /api/v1/listings/00000000-... => 404 (x2) — MONG ĐỢI theo expected; GET /api/v1/listings => 200
+[bước 3: /units/call?lead=0712fe09-...] leads/assigned/0712fe09... => 200 (x2), listings => 200, catalog => 200 (x2)
+Console: không đọc được qua CDP script (Runtime.enable không thu); không thấy lỗi trong trang.

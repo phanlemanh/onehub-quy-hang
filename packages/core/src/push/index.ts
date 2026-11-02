@@ -40,6 +40,25 @@ export function noiDungLead(lead: { leadId: string; buildingName: string; need: 
   };
 }
 
+/** Tiêu đề thông báo quay số (hàng 30) — mặc định của sàn, dời vào sổ từ vựng khi hàng 90 xong. */
+export const PUSH_DIAL_TITLE = "Gọi chủ nhà";
+
+/** Đường mở trang quay số trên điện thoại ở đúng lead. */
+export const dialUrl = (leadId: string) => `/units/call/dial?lead=${encodeURIComponent(leadId)}`;
+
+/**
+ * Thông báo quay số (hàng 30): đầu chủ bấm ở chế độ cuộc gọi trên máy tính, điện thoại của chính mình nhận «Gọi chủ nhà» ·
+ * «<Toà> · <nhu cầu>», chạm mở trang quay số. Tham số chỉ ba khoá — số, tên chủ, giá, mã căn không đi vào đây (bất biến 2).
+ */
+export function noiDungQuaySo(lead: { leadId: string; buildingName: string; need: Need }): PushPayload {
+  return {
+    title: PUSH_DIAL_TITLE,
+    body: `${lead.buildingName} · ${NEED_LABELS[lead.need]}`,
+    url: dialUrl(lead.leadId),
+    tag: `quay-so:${lead.leadId}`,
+  };
+}
+
 /** Thông báo cho trưởng nhóm khi nhịp chia ghi một lời báo mới: loại lời báo · toà, mở Hôm nay (màn lời báo là hàng 42). */
 export function noiDungLoiBao(alert: { leadId: string; kind: AlertKind; buildingName: string }): PushPayload {
   return {

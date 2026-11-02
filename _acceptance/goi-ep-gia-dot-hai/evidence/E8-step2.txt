@@ -1,0 +1,7 @@
+trước K {"version":4,"events":4}
+500 /today
+1500 /today
+3000 /today
+6000 /today
+sau K {"version":4,"events":4}
+đạt: K về /today, không ghi gì

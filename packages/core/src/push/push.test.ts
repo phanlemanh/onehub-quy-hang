@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { PUSH_CLAIM_HOLD_MS, PUSH_PAYLOAD_KEYS, PUSH_SEND, laDichVuDay, noiDungLead, noiDungLoiBao, type PushPayload } from "./index";
+import { PUSH_CLAIM_HOLD_MS, PUSH_PAYLOAD_KEYS, PUSH_SEND, laDichVuDay, noiDungLead, noiDungLoiBao, noiDungQuaySo, type PushPayload } from "./index";
 
 /** Lead mẫu mang đủ thứ không được ra thông báo: số chủ, tên chủ, giá, mã căn. */
 const LEAD_MAU = {
@@ -26,6 +26,31 @@ const MAY_DO: Record<string, (s: string) => boolean> = {
 };
 
 const lot = (p: PushPayload) => Object.entries(MAY_DO).filter(([, bat]) => bat(JSON.stringify(p))).map(([ten]) => ten);
+
+describe("nội dung quay số", () => {
+  it("bốn khoá theo thứ tự, «Gọi chủ nhà» · «<Toà> · <nhu cầu>», mở trang quay số; không lọt thứ gì của lớp nguồn", () => {
+    const BANG = [
+      { need: "sale", body: "[Toà A] · Bán" },
+      { need: "lease", body: "[Toà A] · Cho thuê" },
+      { need: "sale_or_lease", body: "[Toà A] · Cả hai" },
+    ] as const;
+    let dem = 0;
+    for (const dong of BANG) {
+      // Ép kiểu đưa cả lead mẫu (số, tên chủ, giá, mã căn) — lõi chỉ được nhặt toà, nhu cầu, mã.
+      const p = noiDungQuaySo({ ...LEAD_MAU, need: dong.need } as Parameters<typeof noiDungQuaySo>[0]);
+      assert.deepEqual(Object.keys(p), [...PUSH_PAYLOAD_KEYS], `khoá của nhu cầu ${dong.need}`);
+      assert.deepEqual(lot(p), [], `nhu cầu ${dong.need} lọt: ${lot(p).join(", ")}`);
+      assert.equal(p.title, "Gọi chủ nhà");
+      assert.equal(p.body, dong.body, `thân của nhu cầu ${dong.need}`);
+      assert.equal(p.url, `/units/call/dial?lead=${LEAD_MAU.leadId}`);
+      assert.equal(p.tag, `quay-so:${LEAD_MAU.leadId}`);
+      dem++;
+    }
+    assert.equal(dem, 3);
+    // Mã lạ được mã hoá trong url (lõi không tin bên gọi đã kiểm khuôn).
+    assert.equal(noiDungQuaySo({ leadId: "a b&c", buildingName: "[Toà A]", need: "sale" }).url, "/units/call/dial?lead=a%20b%26c");
+  });
+});
 
 describe("nội dung thông báo lead", () => {
   it("chỉ bốn khoá, thân «<Toà> · <nhu cầu>» cho ba nhu cầu, không lọt thứ gì của lớp nguồn", () => {

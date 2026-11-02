@@ -1,0 +1,1720 @@
+[
+ {
+  "ten": "ep-gia",
+  "rong": 1440,
+  "cao": 900,
+  "file": "E9b-step1.png",
+  "pr": {
+   "url": "/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be",
+   "iw": 1440,
+   "sw": 1440,
+   "bsw": 1440,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    464,
+    768
+   ],
+   "cand": [
+    {
+     "t": "div",
+     "al": "Tạo",
+     "dato": null,
+     "txt": "+ Lead",
+     "top": 20,
+     "left": 1127,
+     "w": 90
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "Đã đồng bộ · 01:09",
+     "top": 24,
+     "left": 1221,
+     "w": 138
+    },
+    {
+     "t": "aside",
+     "al": "Cột Bảng hàng",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "Góc nhìn",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay | Gọi ép giá",
+     "top": 75,
+     "left": 480,
+     "w": 146
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 111,
+     "left": 480,
+     "w": 736
+    },
+    {
+     "t": "div",
+     "al": "Căn đang gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 115,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "A-21.01 · Toà A · 2,8 tỷ · không bao phí",
+     "top": 160,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Kết quả cuộc gọi",
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI | H | Hạ giá | G | Giữ giá | B | Đã cọc / bán",
+     "top": 237,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI",
+     "top": 254,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Lịch sử trả giá",
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ | Còn · giữ giá · đã xác nhận với ch",
+     "top": 367,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ",
+     "top": 384,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Còn · giữ giá · đã xác nhận với chủ",
+     "top": 416,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Hạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận ",
+     "top": 478,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Lên bảng 2,95 tỷ · không bao phí · đã xác nhận với",
+     "top": 540,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Tạo hồ sơ",
+     "top": 602,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "div",
+     "al": "Giá đáy",
+     "dato": null,
+     "txt": "GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ | 2,7 tỷ | thấp hơn giá ",
+     "top": 656,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 3/5 |  | Còn thiếu: nội thất, tài",
+     "top": 749,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 766,
+     "left": 501,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Đã hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ph",
+     "top": 866,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 1361,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 1378,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà |  | Chưa biết loại căn — so cả to",
+     "top": 1647,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà",
+     "top": 1664,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 1732,
+     "left": 501,
+     "w": 694
+    }
+   ]
+  }
+ },
+ {
+  "ten": "khai-thac",
+  "rong": 1440,
+  "cao": 900,
+  "file": "E9b-step2.png",
+  "pr": {
+   "url": "/units/call?lead=0712fe09-7318-452f-b9b4-e5d2d129daa9",
+   "iw": 1440,
+   "sw": 1440,
+   "bsw": 1440,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    464,
+    768
+   ],
+   "cand": [
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay | Gọi khai thác",
+     "top": -150,
+     "left": 480,
+     "w": 166
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Đã nhận | Nhập 14:31 02/11 | A-09.01 · Toà A | Loại căn | ",
+     "top": -114,
+     "left": 480,
+     "w": 736
+    },
+    {
+     "t": "div",
+     "al": "Thẻ lead",
+     "dato": null,
+     "txt": "Đã nhận | Nhập 14:31 02/11 | A-09.01 · Toà A | Loại căn | ",
+     "top": -110,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "A-09.01 · Toà A",
+     "top": -61,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tạo",
+     "dato": null,
+     "txt": "+ Lead",
+     "top": 20,
+     "left": 1127,
+     "w": 90
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "Đã đồng bộ · 01:09",
+     "top": 24,
+     "left": 1221,
+     "w": 138
+    },
+    {
+     "t": "aside",
+     "al": "Cột Bảng hàng",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "Góc nhìn",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "div",
+     "al": "Quay số trên điện thoại",
+     "dato": null,
+     "txt": "Quay số trên điện thoại",
+     "top": 202,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 0/5 |  | Còn thiếu: giá và phí, n",
+     "top": 268,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 285,
+     "left": 501,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Chưa hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ",
+     "top": 417,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 912,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 929,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà · 1PN | x | 2,2 tỷ | giữa 2,316 tỷ | 2",
+     "top": 1278,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà · 1PN",
+     "top": 1295,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 1331,
+     "left": 501,
+     "w": 694
+    }
+   ]
+  }
+ },
+ {
+  "ten": "ep-gia",
+  "rong": 1280,
+  "cao": 800,
+  "file": "E9b-step3-ep-1280.png",
+  "pr": {
+   "url": "/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be",
+   "iw": 1280,
+   "sw": 1280,
+   "bsw": 1280,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    384,
+    768
+   ],
+   "cand": [
+    {
+     "t": "div",
+     "al": "Tạo",
+     "dato": null,
+     "txt": "+ Lead",
+     "top": 20,
+     "left": 967,
+     "w": 90
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "Đã đồng bộ · 01:09",
+     "top": 24,
+     "left": 1061,
+     "w": 138
+    },
+    {
+     "t": "aside",
+     "al": "Cột Bảng hàng",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "Góc nhìn",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay | Gọi ép giá",
+     "top": 75,
+     "left": 400,
+     "w": 146
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 111,
+     "left": 400,
+     "w": 736
+    },
+    {
+     "t": "div",
+     "al": "Căn đang gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 115,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "A-21.01 · Toà A · 2,8 tỷ · không bao phí",
+     "top": 160,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Kết quả cuộc gọi",
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI | H | Hạ giá | G | Giữ giá | B | Đã cọc / bán",
+     "top": 237,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI",
+     "top": 254,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Lịch sử trả giá",
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ | Còn · giữ giá · đã xác nhận với ch",
+     "top": 367,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ",
+     "top": 384,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Còn · giữ giá · đã xác nhận với chủ",
+     "top": 416,
+     "left": 445,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Hạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận ",
+     "top": 478,
+     "left": 445,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Lên bảng 2,95 tỷ · không bao phí · đã xác nhận với",
+     "top": 540,
+     "left": 445,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Tạo hồ sơ",
+     "top": 602,
+     "left": 445,
+     "w": 670
+    },
+    {
+     "t": "div",
+     "al": "Giá đáy",
+     "dato": null,
+     "txt": "GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ | 2,7 tỷ | thấp hơn giá ",
+     "top": 656,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 3/5 |  | Còn thiếu: nội thất, tài",
+     "top": 749,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 766,
+     "left": 421,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Đã hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ph",
+     "top": 866,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 1361,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 1378,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà |  | Chưa biết loại căn — so cả to",
+     "top": 1647,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà",
+     "top": 1664,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 1732,
+     "left": 421,
+     "w": 694
+    }
+   ]
+  }
+ },
+ {
+  "ten": "khai-thac",
+  "rong": 1280,
+  "cao": 800,
+  "file": "E9b-step3-khai-thac-1280.png",
+  "pr": {
+   "url": "/units/call?lead=0712fe09-7318-452f-b9b4-e5d2d129daa9",
+   "iw": 1280,
+   "sw": 1280,
+   "bsw": 1280,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    384,
+    768
+   ],
+   "cand": [
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay | Gọi khai thác",
+     "top": -250,
+     "left": 400,
+     "w": 166
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Đã nhận | Nhập 14:31 02/11 | A-09.01 · Toà A | Loại căn | ",
+     "top": -214,
+     "left": 400,
+     "w": 736
+    },
+    {
+     "t": "div",
+     "al": "Thẻ lead",
+     "dato": null,
+     "txt": "Đã nhận | Nhập 14:31 02/11 | A-09.01 · Toà A | Loại căn | ",
+     "top": -210,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "A-09.01 · Toà A",
+     "top": -161,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tạo",
+     "dato": null,
+     "txt": "+ Lead",
+     "top": 20,
+     "left": 967,
+     "w": 90
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "Đã đồng bộ · 01:09",
+     "top": 24,
+     "left": 1061,
+     "w": 138
+    },
+    {
+     "t": "aside",
+     "al": "Cột Bảng hàng",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "Góc nhìn",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "div",
+     "al": "Quay số trên điện thoại",
+     "dato": null,
+     "txt": "Quay số trên điện thoại",
+     "top": 102,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 0/5 |  | Còn thiếu: giá và phí, n",
+     "top": 168,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 185,
+     "left": 421,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Chưa hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ",
+     "top": 317,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 812,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 829,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà · 1PN | x | 2,2 tỷ | giữa 2,316 tỷ | 2",
+     "top": 1178,
+     "left": 404,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà · 1PN",
+     "top": 1195,
+     "left": 421,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 1231,
+     "left": 421,
+     "w": 694
+    }
+   ]
+  }
+ },
+ {
+  "ten": "ep-gia",
+  "rong": 375,
+  "cao": 812,
+  "file": "E9b-step3.png",
+  "pr": {
+   "url": "/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be",
+   "iw": 375,
+   "sw": 375,
+   "bsw": 375,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    0,
+    375
+   ],
+   "cand": [
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "Căn call",
+     "top": 12,
+     "left": 16,
+     "w": 209
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "",
+     "top": 14,
+     "left": 297,
+     "w": 30
+    },
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay",
+     "top": 64,
+     "left": 16,
+     "w": 74
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 100,
+     "left": 16,
+     "w": 343
+    },
+    {
+     "t": "div",
+     "al": "Căn đang gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 104,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "A-21.01 · Toà A · 2,8 tỷ · không bao phí",
+     "top": 149,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Kết quả cuộc gọi",
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI | H | Hạ giá | G | Giữ giá | B | Đã cọc / bán",
+     "top": 274,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI",
+     "top": 291,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Lịch sử trả giá",
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ | Còn · giữ giá · đã xác nhận với ch",
+     "top": 464,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ",
+     "top": 481,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Còn · giữ giá · đã xác nhận với chủ",
+     "top": 513,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Hạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận ",
+     "top": 575,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Lên bảng 2,95 tỷ · không bao phí · đã xác nhận với",
+     "top": 657,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Tạo hồ sơ",
+     "top": 739,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "nav",
+     "al": "Nhà",
+     "dato": null,
+     "txt": "Hôm nay | Bảng hàng | Tôi",
+     "top": 755,
+     "left": 0,
+     "w": 375
+    },
+    {
+     "t": "div",
+     "al": "Giá đáy",
+     "dato": null,
+     "txt": "GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ | 2,7 tỷ | thấp hơn giá ",
+     "top": 793,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 3/5 |  | Còn thiếu: nội thất, tài",
+     "top": 886,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 903,
+     "left": 37,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Đã hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ph",
+     "top": 1027,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 1630,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 1647,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà |  | Chưa biết loại căn — so cả to",
+     "top": 1916,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà",
+     "top": 1933,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 2001,
+     "left": 37,
+     "w": 301
+    }
+   ]
+  }
+ },
+ {
+  "ten": "ep-gia",
+  "rong": 1440,
+  "cao": 3000,
+  "file": "E9b-ep-gia-1440.png",
+  "pr": {
+   "url": "/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be",
+   "iw": 1440,
+   "sw": 1440,
+   "bsw": 1440,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    464,
+    768
+   ],
+   "cand": [
+    {
+     "t": "div",
+     "al": "Tạo",
+     "dato": null,
+     "txt": "+ Lead",
+     "top": 20,
+     "left": 1127,
+     "w": 90
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "Đã đồng bộ · 01:09",
+     "top": 24,
+     "left": 1221,
+     "w": 138
+    },
+    {
+     "t": "aside",
+     "al": "Cột Bảng hàng",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "Góc nhìn",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay | Gọi ép giá",
+     "top": 75,
+     "left": 480,
+     "w": 146
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 111,
+     "left": 480,
+     "w": 736
+    },
+    {
+     "t": "div",
+     "al": "Căn đang gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 115,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "A-21.01 · Toà A · 2,8 tỷ · không bao phí",
+     "top": 160,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Kết quả cuộc gọi",
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI | H | Hạ giá | G | Giữ giá | B | Đã cọc / bán",
+     "top": 237,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI",
+     "top": 254,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Lịch sử trả giá",
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ | Còn · giữ giá · đã xác nhận với ch",
+     "top": 367,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ",
+     "top": 384,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Còn · giữ giá · đã xác nhận với chủ",
+     "top": 416,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Hạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận ",
+     "top": 478,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Lên bảng 2,95 tỷ · không bao phí · đã xác nhận với",
+     "top": 540,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Tạo hồ sơ",
+     "top": 602,
+     "left": 525,
+     "w": 670
+    },
+    {
+     "t": "div",
+     "al": "Giá đáy",
+     "dato": null,
+     "txt": "GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ | 2,7 tỷ | thấp hơn giá ",
+     "top": 656,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 3/5 |  | Còn thiếu: nội thất, tài",
+     "top": 749,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 766,
+     "left": 501,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Đã hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ph",
+     "top": 866,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 1361,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 1378,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà |  | Chưa biết loại căn — so cả to",
+     "top": 1647,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà",
+     "top": 1664,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 1732,
+     "left": 501,
+     "w": 694
+    }
+   ]
+  }
+ },
+ {
+  "ten": "khai-thac",
+  "rong": 1440,
+  "cao": 3000,
+  "file": "E9b-khai-thac-1440.png",
+  "pr": {
+   "url": "/units/call?lead=0712fe09-7318-452f-b9b4-e5d2d129daa9",
+   "iw": 1440,
+   "sw": 1440,
+   "bsw": 1440,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    464,
+    768
+   ],
+   "cand": [
+    {
+     "t": "div",
+     "al": "Tạo",
+     "dato": null,
+     "txt": "+ Lead",
+     "top": 20,
+     "left": 1127,
+     "w": 90
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "Đã đồng bộ · 01:09",
+     "top": 24,
+     "left": 1221,
+     "w": 138
+    },
+    {
+     "t": "aside",
+     "al": "Cột Bảng hàng",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "Góc nhìn",
+     "dato": null,
+     "txt": "GÓC NHÌN CỦA ĐỘI |  | Chưa có góc nhìn |  | GÓC NHÌN CỦA T",
+     "top": 59,
+     "left": 64,
+     "w": 200
+    },
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay | Gọi khai thác",
+     "top": 75,
+     "left": 480,
+     "w": 166
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Đã nhận | Nhập 14:31 02/11 | A-09.01 · Toà A | Loại căn | ",
+     "top": 111,
+     "left": 480,
+     "w": 736
+    },
+    {
+     "t": "div",
+     "al": "Thẻ lead",
+     "dato": null,
+     "txt": "Đã nhận | Nhập 14:31 02/11 | A-09.01 · Toà A | Loại căn | ",
+     "top": 115,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "A-09.01 · Toà A",
+     "top": 164,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Quay số trên điện thoại",
+     "dato": null,
+     "txt": "Quay số trên điện thoại",
+     "top": 427,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 0/5 |  | Còn thiếu: giá và phí, n",
+     "top": 493,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 510,
+     "left": 501,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Chưa hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ",
+     "top": 642,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 1137,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 1154,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà · 1PN | x | 2,2 tỷ | giữa 2,316 tỷ | 2",
+     "top": 1503,
+     "left": 484,
+     "w": 728
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà · 1PN",
+     "top": 1520,
+     "left": 501,
+     "w": 694
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 1556,
+     "left": 501,
+     "w": 694
+    }
+   ]
+  }
+ },
+ {
+  "ten": "ep-gia",
+  "rong": 375,
+  "cao": 3000,
+  "file": "E9b-375.png",
+  "pr": {
+   "url": "/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be",
+   "iw": 375,
+   "sw": 375,
+   "bsw": 375,
+   "boCuc": "ho-so",
+   "boCucRect": [
+    0,
+    375
+   ],
+   "cand": [
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "Căn call",
+     "top": 12,
+     "left": 16,
+     "w": 209
+    },
+    {
+     "t": "span",
+     "al": "Đã đồng bộ · 01:09",
+     "dato": null,
+     "txt": "",
+     "top": 14,
+     "left": 297,
+     "w": 30
+    },
+    {
+     "t": "nav",
+     "al": "breadcrumb",
+     "dato": null,
+     "txt": "Hôm nay",
+     "top": 64,
+     "left": 16,
+     "w": 74
+    },
+    {
+     "t": "div",
+     "al": "Chế độ cuộc gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 100,
+     "left": 16,
+     "w": 343
+    },
+    {
+     "t": "div",
+     "al": "Căn đang gọi",
+     "dato": null,
+     "txt": "Nên gọi điều chỉnh giá | Đang bán | A-21.01 · Toà A · ",
+     "top": 104,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h1",
+     "al": null,
+     "dato": null,
+     "txt": "A-21.01 · Toà A · 2,8 tỷ · không bao phí",
+     "top": 149,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Kết quả cuộc gọi",
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI | H | Hạ giá | G | Giữ giá | B | Đã cọc / bán",
+     "top": 274,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "KẾT QUẢ CUỘC GỌI",
+     "top": 291,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Lịch sử trả giá",
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ | Còn · giữ giá · đã xác nhận với ch",
+     "top": 464,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "LỊCH SỬ TRẢ GIÁ",
+     "top": 481,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Còn · giữ giá · đã xác nhận với chủ",
+     "top": 513,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Hạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận ",
+     "top": 575,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Lên bảng 2,95 tỷ · không bao phí · đã xác nhận với",
+     "top": 657,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "h3",
+     "al": null,
+     "dato": null,
+     "txt": "Tạo hồ sơ",
+     "top": 739,
+     "left": 61,
+     "w": 277
+    },
+    {
+     "t": "div",
+     "al": "Giá đáy",
+     "dato": null,
+     "txt": "GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ | 2,7 tỷ | thấp hơn giá ",
+     "top": 793,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Danh sách hỏi",
+     "dato": null,
+     "txt": "Danh sách hỏi | Mức đủ 3/5 |  | Còn thiếu: nội thất, tài",
+     "top": 886,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Danh sách hỏi",
+     "top": 903,
+     "left": 37,
+     "w": 108
+    },
+    {
+     "t": "div",
+     "al": "Các nhóm hỏi",
+     "dato": null,
+     "txt": "Giá và phí | Đã hỏi | Alt+1 | Bao phí | Alt+2 | Không bao ph",
+     "top": 1027,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Tính giá",
+     "dato": null,
+     "txt": "Tính giá | Giá chủ báo | Môi giới % | Bao phí | Không bao ",
+     "top": 1630,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Tính giá",
+     "top": 1647,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Cùng loại trong toà",
+     "dato": null,
+     "txt": "Cùng loại trong toà |  | Chưa biết loại căn — so cả to",
+     "top": 1916,
+     "left": 20,
+     "w": 335
+    },
+    {
+     "t": "h2",
+     "al": null,
+     "dato": null,
+     "txt": "Cùng loại trong toà",
+     "top": 1933,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "div",
+     "al": "Vị trí căn này trên dải về tay của toà",
+     "dato": null,
+     "txt": "x",
+     "top": 2001,
+     "left": 37,
+     "w": 301
+    },
+    {
+     "t": "nav",
+     "al": "Nhà",
+     "dato": null,
+     "txt": "Hôm nay | Bảng hàng | Tôi",
+     "top": 2943,
+     "left": 0,
+     "w": 375
+    }
+   ]
+  }
+ }
+]

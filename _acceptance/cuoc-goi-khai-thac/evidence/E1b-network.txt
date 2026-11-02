@@ -1,0 +1,5 @@
+## network E1b (app, khong gom _next/anh); 404 tren /leads/assigned/<L3> la mong doi
+404 GET http://localhost:3485/api/v1/leads/assigned/ac5651d8-2c8b-423c-a402-0fac46873143 [fetch] x2
+Cac request app con lai deu 200 (today, catalog, listings, leads/assigned, leads/assigned/<L1>, <L6>, push, settings/queue)
+## console error
+Failed to load resource: 404 (x2, cung la 2 lan 404 tren)

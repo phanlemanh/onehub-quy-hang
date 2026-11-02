@@ -2,6 +2,7 @@
  * Sự kiện của hàng — chỉ thêm, không sửa (Tham chiếu §4). Mỗi loại một khuôn payload CHẶT: khoá lạ ở bất kỳ cấp nào bị
  * từ chối, nên thông tin chủ nhà (lớp `source`) không có đường vào bảng sự kiện (bất biến 2, AC-10).
  */
+import { kiemMaCan } from "./gan-ma-can";
 import { isStandardStatus, WITHDRAWN_REASONS } from "./status";
 
 export const EVENT_TYPES = [
@@ -26,6 +27,8 @@ export const SOURCE_KEYS = ["ownerName", "ownerPhone", "floorPrice", "titleDeedP
 
 type Kiem = (v: unknown) => string | null;
 const chu: Kiem = (v) => (typeof v === "string" && v.trim().length > 0 && v.length <= 200 ? null : "cần chữ, 1–200 ký tự");
+/** Mã căn: chữ như mọi trường chữ, và có ít nhất một chữ hay số để so căn được (`kiemMaCan`). */
+const maCan: Kiem = (v) => chu(v) ?? kiemMaCan(v as string);
 const chuHayXoa: Kiem = (v) => (v === null ? null : chu(v));
 const tien: Kiem = (v) => (typeof v === "number" && Number.isSafeInteger(v) && v > 0 ? null : "cần số đồng nguyên dương");
 export const NGAY_SAI_DANG = "cần ngày YYYY-MM-DD";
@@ -46,7 +49,7 @@ const motTrong = (ds: readonly string[]): Kiem => (v) => (typeof v === "string" 
 
 /** Khuôn từng loại: khoá → [bắt buộc, cách kiểm]. */
 const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
-  created: { buildingName: [true, chu], unitNumber: [false, chu] },
+  created: { buildingName: [true, chu], unitNumber: [false, maCan] },
   details_changed: Object.fromEntries(DETAIL_FIELDS.map((k) => [k, [false, chuHayXoa]])),
   price_changed: { listPrice: [true, tien], feeInclusion: [true, motTrong(FEE_INCLUSIONS)] },
   status_changed: {
@@ -56,7 +59,7 @@ const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
     withdrawnReason: [false, motTrong(WITHDRAWN_REASONS)],
   },
   owner_confirmed: {},
-  unit_number_assigned: { unitNumber: [true, chu] },
+  unit_number_assigned: { unitNumber: [true, maCan] },
 };
 
 export type PayloadError = { path: string; reason: string };
