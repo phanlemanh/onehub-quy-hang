@@ -7,6 +7,7 @@ import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
+import { PUSH_SEND, laDichVuDay } from "@quy-hang/core/push";
 import { guiHopThu, webPushSender } from "./gui";
 import { khoaVapid } from "./khoa-vapid";
 import { goDangKy, luuDangKy } from "./store";
@@ -19,7 +20,8 @@ const ApiError = z.object({ error: z.string() });
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
 const loi = { 401: err("Chưa đăng nhập"), 403: err("Chưa gắn sàn"), 409: err("Chọn sàn") };
 
-const Endpoint = z.string().url().startsWith("https://").max(2048);
+/** Địa chỉ đăng ký: chỉ dịch vụ đẩy đã biết (va-thong-bao-lead) — máy chủ không bao giờ gửi tới máy người khai. */
+const Endpoint = z.string().url().max(2048).refine(laDichVuDay, "địa chỉ không thuộc dịch vụ đẩy đã biết");
 const DangKy = z
   .object({
     endpoint: Endpoint,
@@ -29,9 +31,15 @@ const DangKy = z
   .strict();
 const GoDangKy = z.object({ endpoint: Endpoint }).strict();
 
-/** Lối giao lead gửi các dòng mới của sàn sau khi giao dịch đã ghi xong; dòng lỗi tạm để nhịp chia gửi lại. */
+/**
+ * Lối giao lead gửi các dòng mới của sàn sau khi giao dịch đã ghi xong; dòng lỗi tạm để nhịp chia gửi lại. Người nhập đang
+ * chờ: gửi tối đa ngân sách lối giao của lõi, phần còn lại để nhịp chia.
+ */
 export const guiSauKhiGhi = (deps: ApiDeps, companyId: string) =>
-  guiHopThu(deps.appPool, companyId, deps.pushSender ?? webPushSender, new Date(), true);
+  guiHopThu(deps.appPool, companyId, deps.pushSender ?? webPushSender, new Date(), true, {
+    timeoutMs: PUSH_SEND.timeoutMs,
+    hanChot: Date.now() + PUSH_SEND.deliverBudgetMs,
+  });
 
 export function registerPushRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps) {
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {

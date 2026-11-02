@@ -49,3 +49,39 @@ export function noiDungLoiBao(alert: { leadId: string; kind: AlertKind; building
     tag: `alert:${alert.kind}:${alert.leadId}`,
   };
 }
+
+/**
+ * Máy của các dịch vụ đẩy đã biết (hồ sơ va-thong-bao-lead): Google (Chrome, Edge Android, Opera, Samsung), Mozilla
+ * (Firefox), Apple (Safari, iPhone đã cài) và Microsoft (Edge trên Windows, máy `wns2-<vùng>.notify.windows.com`). Máy chủ chỉ
+ * gửi tới các máy này — KHÔNG phải dữ liệu của sàn: cho sàn hay người dùng thêm máy là mở lại lỗ máy chủ tự gọi tới địa chỉ lạ.
+ */
+export const PUSH_SERVICE_HOSTS = {
+  exact: ["fcm.googleapis.com", "updates.push.services.mozilla.com", "web.push.apple.com"],
+  suffix: [".notify.windows.com"],
+} as const;
+
+/** Địa chỉ đăng ký có phải của dịch vụ đẩy đã biết: https, cổng mặc định, không tên/mật khẩu, máy khớp danh sách. */
+export function laDichVuDay(endpoint: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(endpoint);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== "https:" || u.username || u.password || (u.port !== "" && u.port !== "443")) return false;
+  const may = u.hostname.toLowerCase();
+  return (
+    (PUSH_SERVICE_HOSTS.exact as readonly string[]).includes(may) ||
+    PUSH_SERVICE_HOSTS.suffix.some((d) => may.endsWith(d) && may.length > d.length)
+  );
+}
+
+/** Giữ chỗ một dòng chờ gửi: `app.push_outbox_claim` không nhận lại dòng giữ chưa quá một phút (migration 018). */
+export const PUSH_CLAIM_HOLD_MS = 60_000;
+
+/**
+ * Thời hạn gửi — mặc định của sàn (sẽ vào sổ điểm biến thiên): một lần gửi tối đa 5 giây; lối giao lead gửi tối đa 8 giây
+ * (người nhập đang chờ) rồi để phần còn lại cho nhịp chia; nhịp chia tối đa 40 giây cho mọi sàn. Mọi ngân sách cộng một lần
+ * gửi phải dưới giữ chỗ một phút — dòng đang gửi không bao giờ bị nhịp sau nhận lại.
+ */
+export const PUSH_SEND = { timeoutMs: 5_000, deliverBudgetMs: 8_000, tickBudgetMs: 40_000 } as const;

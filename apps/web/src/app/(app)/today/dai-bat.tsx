@@ -29,6 +29,8 @@ export function DaiBatThongBao() {
   if (tt === "dang-kiem" || tt === "da-bat") return null;
   if (tt === "tu-choi") return <p className="text-muted-foreground text-sm">Thông báo đang tắt trong trình duyệt</p>;
 
+  // Thiết bị đã bật mà máy chủ chưa lưu (va-thong-bao-lead, Hỏi-1): cùng khối báo lỗi của lần bấm hỏng.
+  const coLoi = loi || tt === "loi-luu";
   const bat = async () => {
     setDangBat(true);
     setLoi(false);
@@ -57,8 +59,8 @@ export function DaiBatThongBao() {
       <TrangThai kind="notice" title="Trình duyệt này không nhận được thông báo" description="Mở Quỹ hàng bằng Chrome, Edge hay Safari bản mới." />
     ) : (
       <TrangThai
-        kind={loi ? "error" : "notice"}
-        title={loi ? "Chưa bật được thông báo — thử lại" : "Bật thông báo lead"}
+        kind={coLoi ? "error" : "notice"}
+        title={coLoi ? "Chưa bật được thông báo — thử lại" : "Bật thông báo lead"}
         description={
           <span className="flex flex-col items-start gap-2">
             <span>Nhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.</span>

@@ -1,0 +1,152 @@
+[
+  {
+    "o": "luu-hong",
+    "requests": [
+      {
+        "u": "/api/v1/me/push-subscriptions",
+        "m": "POST",
+        "s": 400
+      },
+      {
+        "u": "/api/v1/me/push-subscriptions",
+        "m": "POST",
+        "s": 400
+      },
+      {
+        "u": "/api/v1/company/settings/queue",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/catalog",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/company/settings/queue",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/leads/assigned",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/catalog",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/leads/assigned",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/listings",
+        "m": "GET",
+        "s": 200
+      }
+    ]
+  },
+  {
+    "o": "luu-duoc",
+    "requests": [
+      {
+        "u": "/api/v1/catalog",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/company/settings/queue",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/company/settings/queue",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/leads/assigned",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/me/push-subscriptions",
+        "m": "POST",
+        "s": 201
+      },
+      {
+        "u": "/api/v1/leads/assigned",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/catalog",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/me/push-subscriptions",
+        "m": "POST",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/listings",
+        "m": "GET",
+        "s": 200
+      }
+    ]
+  },
+  {
+    "o": "chua-bat",
+    "requests": [
+      {
+        "u": "/api/v1/catalog",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/company/settings/queue",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/company/settings/queue",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/leads/assigned",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/leads/assigned",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/push/public-key",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/push/public-key",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/catalog",
+        "m": "GET",
+        "s": 200
+      },
+      {
+        "u": "/api/v1/listings",
+        "m": "GET",
+        "s": 200
+      }
+    ]
+  }
+]
