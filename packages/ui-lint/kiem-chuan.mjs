@@ -10,6 +10,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { docBanDo, kiemCay, manNgoaiBanDo } from "./lib/ban-do.mjs";
 import { cacOBaLoi, divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
+import { kiemMcp } from "./lib/mcp.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -244,6 +245,13 @@ function kiemBanDo(root, loi, dong) {
   dong.push(`khuôn: ${bd.nhom.length} nhóm · ${bd.loi.length} lỗi đọc · ${lech.length} lệch`);
 }
 
+/** MCP của kho (hàng 91): `.mcp.json` khai reui và shadcn, không mang khoá. */
+function kiemMcpKho(root, loi, dong) {
+  const l = kiemMcp(join(root, ".mcp.json"));
+  if (l.length) return loi.push(...l);
+  dong.push("mcp: reui · shadcn");
+}
+
 /** Hồ sơ đã ký giữ nguyên trang (kit cấm sửa) — chỉ hồ sơ chưa ký bị so với bản dựng lại. */
 const DA_KY = new Set(["signed-off", "machine-cleared"]);
 
@@ -290,6 +298,7 @@ export function kiemChuan(root, { homNay = new Date().toISOString().slice(0, 10)
   kiemCi(root, loi, dong);
   kiemBanDo(root, loi, dong);
   kiemBaLoiCay(root, loi, dong);
+  kiemMcpKho(root, loi, dong);
   return { loi, canhBao, dong: loi.length ? [] : [...dong, "chuẩn giao diện: đạt"] };
 }
 

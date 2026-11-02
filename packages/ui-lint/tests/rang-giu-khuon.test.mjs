@@ -18,7 +18,7 @@ const CLI = join(PKG, "ban-do-khuon.mjs");
 const KIEM_CHUAN = join(PKG, "kiem-chuan.mjs");
 const W = "apps/web/src";
 const LUAT = "quy-hang-ui/ban-do-khuon";
-const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml"];
+const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml", ".mcp.json"];
 
 function banSao({ kiemChuan = false } = {}) {
   const d = mkdtempSync(join(tmpdir(), "rang-khuon-"));

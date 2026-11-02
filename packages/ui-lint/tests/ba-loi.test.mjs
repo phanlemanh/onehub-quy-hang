@@ -399,7 +399,7 @@ describe("vật thử: lịch sử bảng thật", () => {
 });
 
 // ——— Răng trên cây (kiểm chuẩn) ———
-const TEP_CAY = ["apps/web/components.json", "apps/web/src", "design/patterns", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml"];
+const TEP_CAY = ["apps/web/components.json", "apps/web/src", "design/patterns", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml", ".mcp.json"];
 const HO_THAT = ["cot-ho-so-can", "lead-bon-nac"];
 function cay(fn) {
   return tam((d) => {

@@ -20,6 +20,7 @@ const TEP = [
   ".agents/skills/reui",
   "_acceptance/config.yaml",
   ".github/workflows/ci.yml",
+  ".mcp.json",
 ];
 
 function banSao() {

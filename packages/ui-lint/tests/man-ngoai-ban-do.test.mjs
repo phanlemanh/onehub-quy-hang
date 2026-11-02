@@ -14,7 +14,7 @@ const ROOT = join(PKG, "..", "..");
 const CLI = join(PKG, "ban-do-khuon.mjs");
 const KIEM_CHUAN = join(PKG, "kiem-chuan.mjs");
 const W = "apps/web/src";
-const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml"];
+const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml", ".mcp.json"];
 // Màn mẫu của ca (a): Lịch xem — còn ở trang tạm, chưa nhóm nào (Bảng hàng đã có nhóm từ hàng 14).
 const LICH_XEM = `${W}/app/(app)/viewings/page.tsx`;
 const BAO_CAO = `${W}/app/(app)/bao-cao/page.tsx`;
