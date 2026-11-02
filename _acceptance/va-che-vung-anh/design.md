@@ -18,8 +18,9 @@ như cũ».
 
 ## Cách vá
 
-1. **Hộp rộng trên máy tính.** `DialogContent` của trình che mang `sm:max-w-5xl` (64rem) — bậc nhỏ nhất của thang giữ trọn
-   khung vẽ 960 cộng lề trong hộp (2 × 1rem). Dưới 640px lớp không áp: điện thoại giữ hộp gần hết bề ngang như cũ.
+1. **Hộp rộng trên máy tính.** `DialogContent` của trình che mang `sm:max-w-[min(64rem,calc(100%-2rem))]` — 64rem (bậc nhỏ nhất của thang giữ trọn
+   khung vẽ 960 cộng lề trong hộp 2 × 1rem), không quá bề ngang màn trừ 2rem để giữ lề hai bên ở khổ 640–1056px. Dưới
+   640px lớp không áp: điện thoại giữ hộp gần hết bề ngang như cũ.
 2. **Khung vẽ co theo hộp.** Canvas giữ cỡ vẽ `hien` (độ nét xem trước không đổi), hiển thị bằng CSS
    `block w-auto h-auto max-w-full max-h-[calc(100dvh-13rem)] mx-auto`: bề ngang không vượt hộp, bề cao chừa chỗ cho đầu hộp
    và hàng nút để hộp nằm trong màn ở khổ máy tính vừa (1024×768). Phần tử thay thế có tỉ lệ riêng nên hai trần cùng giữ tỉ
@@ -34,7 +35,7 @@ Không đổi: lưu bản che (`luu.ts`, `ve.ts`), cỡ bản nhẹ, menu ảnh,
 
 ADR-0024 §9 đỏ khi màn đặt bề rộng hay kích thước tuỳ ý và khi gọi thẳng ngăn nổi; ngăn nổi của hệ bố cục do hàng 91
 (`he-bo-cuc`) dựng — hàng ấy chưa gộp vào nhánh chính lúc mở vòng này. Theo §9 («Màn của hàng đang chạy ghi ngoại lệ có
-hạn … tới khi hàng ấy chuyển») và lời giao của giám sát, hai lớp `sm:max-w-5xl` và `max-h-[calc(100dvh-13rem)]` là
+hạn … tới khi hàng ấy chuyển») và lời giao của giám sát, hai lớp `sm:max-w-[min(64rem,calc(100%-2rem))]` và `max-h-[calc(100dvh-13rem)]` là
 **ngoại lệ có hạn**: ghi ở Notes của hợp đồng và một dòng chú thích tại chỗ; hết hạn khi trình che chuyển sang ngăn nổi của
 hệ bố cục. Ghi vào bản đồ khuôn (`design/patterns/`) là tệp ngoài vùng của hàng — gửi việc phụ để hàng 91 liệt trình che
 (và hộp xem ảnh của `muc-anh.tsx`, cùng lỗi) vào danh sách chuyển.

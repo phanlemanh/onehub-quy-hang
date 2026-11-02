@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { BAN_CHE_CANH_DAI } from "@quy-hang/core/photos";
-import { coBanChe, coExif, khungTuMan, toKin, type Khung } from "./vung";
+import { coBanChe, coExif, diemTrenKhung, khungTuMan, toKin, type Khung } from "./vung";
 
 // E1 — [tên, điểm a, điểm b, cỡ hiện, cỡ ảnh đã xoay, khung mong đợi].
 type O = [string, [number, number], [number, number], [number, number], [number, number], Khung | null];
@@ -96,4 +96,41 @@ test("E4 đối chứng đỏ: bộ kiểm chỉ đọc JPEG thì ca WebP có EX
   const sai = (b: Uint8Array) => b[0] === 0xff && coExif(b);
   const lech = EXIF.filter(([, b, m]) => sai(b) !== m).map(([t]) => t);
   assert.deepEqual(lech, ["WebP có chunk EXIF"]);
+});
+
+// E1v — hàng va-che-vung-anh: khung vẽ co theo hộp, điểm kéo đổi từ cỡ hiển thị sang cỡ vẽ trước khi sang điểm ảnh.
+// [tên, điểm trên khung hiển thị, cỡ hiển thị, cỡ vẽ, điểm vẽ mong đợi].
+type D = [string, [number, number], [number, number], [number, number], [number, number]];
+const DOI_DIEM: D[] = [
+  ["co 0,5", [100, 50], [480, 300], [960, 600], [200, 100]],
+  ["không co", [100, 50], [960, 600], [960, 600], [100, 50]],
+  ["co lệch trục do làm tròn", [481, 300], [481, 300], [960, 600], [960, 600]],
+  ["điểm âm không kẹp", [-10, -4], [480, 300], [960, 600], [-20, -8]],
+  ["khung hiển thị rỗng", [30, 40], [0, 0], [960, 600], [30, 40]],
+];
+for (const [ten, p, hienThi, hien, mong] of DOI_DIEM) {
+  test(`E1v ${ten}`, () => {
+    assert.deepEqual(diemTrenKhung({ x: p[0], y: p[1] }, { w: hienThi[0], h: hienThi[1] }, { w: hien[0], h: hien[1] }), { x: mong[0], y: mong[1] }, `ô ${ten}`);
+  });
+}
+
+test("E1v đối chứng đỏ: hàm giả trả nguyên điểm thì ô co 0,5 bị gọi tên", () => {
+  const sai = (p: { x: number; y: number }) => p;
+  const lech = DOI_DIEM.filter(([, p, , , m]) => JSON.stringify(sai({ x: p[0], y: p[1] })) !== JSON.stringify({ x: m[0], y: m[1] })).map(([t]) => t);
+  assert.ok(lech.includes("co 0,5"), `ô lệch: ${lech.join(", ")}`);
+});
+
+// Ảnh 2000×1250 vẽ 960×600; khung hiển thị co 480×300.
+const ANH = { w: 2000, h: 1250 }, VE = { w: 960, h: 600 }, CO_NUA = { w: 480, h: 300 };
+const keoCo = (a: [number, number], b: [number, number]) =>
+  khungTuMan(diemTrenKhung({ x: a[0], y: a[1] }, CO_NUA, VE), diemTrenKhung({ x: b[0], y: b[1] }, CO_NUA, VE), VE, ANH);
+
+test("E1v kéo trên khung co cho cùng khung điểm ảnh như kéo trên khung không co", () => {
+  const khongCo = khungTuMan({ x: 100, y: 50 }, { x: 300, y: 250 }, VE, ANH);
+  assert.deepEqual(keoCo([50, 25], [150, 125]), khongCo, "khung co ≠ khung không co");
+  assert.deepEqual(khongCo, { x: 208, y: 104, w: 417, h: 417 }, "khung viết tay");
+});
+
+test("E1v kéo tràn mép trên khung co kẹp về mép ảnh", () => {
+  assert.deepEqual(keoCo([-5, -5], [600, 400]), { x: 0, y: 0, w: 2000, h: 1250 });
 });

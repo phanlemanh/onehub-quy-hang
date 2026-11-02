@@ -53,7 +53,7 @@ Bỏ quét không gian: một lỗi đã có tên (Ngoài-3 hàng 19); trục c�
 
 ## Notes
 
-- Ngoại lệ có hạn (ADR-0024 §9): `sm:max-w-5xl` của hộp che và trần cao `max-h-[calc(100dvh-13rem)]` của khung vẽ là bề rộng,
+- Ngoại lệ có hạn (ADR-0024 §9): `sm:max-w-[min(64rem,calc(100%-2rem))]` của hộp che và trần cao `max-h-[calc(100dvh-13rem)]` của khung vẽ là bề rộng,
   bề cao đặt tay; hết hạn khi trình che chuyển sang ngăn nổi của hệ bố cục (hàng 91). Hàng 91 chưa gộp lúc mở vòng này.
   ADR-0024 bảo ghi ngoại lệ ở bản đồ khuôn (`design/patterns/`) — tệp ngoài vùng của hàng, nên ghi ở đây và một dòng chú
   thích tại chỗ; việc phụ B-27 xin hàng 91 liệt trình che vào danh sách chuyển.

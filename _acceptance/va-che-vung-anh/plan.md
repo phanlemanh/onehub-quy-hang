@@ -14,7 +14,7 @@ Một chuỗi việc nối nhau trong `apps/web/src/app/(app)/units/photos/redac
 ## Việc 2 — trình che: hộp rộng, khung co, điểm kéo theo cỡ hiển thị (phục vụ E2–E5) · independent: false
 
 - Tệp: `redact/trinh-che.tsx`.
-- `DialogContent className="sm:max-w-5xl"` (bỏ `max-w-5xl` không tiền tố); canvas thêm
+- `DialogContent className="sm:max-w-[min(64rem,calc(100%-2rem))]"` (bỏ `max-w-5xl` không tiền tố); canvas thêm
   `block h-auto max-h-[calc(100dvh-13rem)] w-auto max-w-full`; `diem()` đọc `getBoundingClientRect` rồi qua `diemTrenKhung`
   với cỡ vẽ `hien`. Chú thích một dòng: ngoại lệ có hạn của ADR-0024 tới khi chuyển sang ngăn nổi (hàng 91).
 - Kiểm: `npm run typecheck`, `npm run lint` (mức nợ 0), bản chạy dev dãy B (3481) nhìn ba khổ.

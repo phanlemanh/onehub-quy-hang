@@ -2,8 +2,8 @@ schema_version: 1
 feature_slug: va-che-vung-anh
 # Ca thuần: apps/web/src/app/(app)/units/photos/redact/vung.test.ts (npm test -w @quy-hang/web).
 # «DỰNG B» như hàng 19: node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs — Postgres dãy B (5561), sàn và người mẫu của
-#   hàng 5, máy chủ dev cổng 3481; phiên: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs. Căn: căn Toà C đầu tiên theo mã căn
-#   mà dau-chu-1 giữ. Ảnh thử dựng trong bài (canvas trên trang, tải qua mục Ảnh vào ngăn Gửi được): ngang 2000×1500, dọc
+#   hàng 5, máy chủ dev cổng 3481; phiên: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs. Căn: căn đầu tiên theo mã căn
+#   mà dau-chu-1 giữ (hàng 19 dùng B-15.05 Toà B). Ảnh thử dựng trong bài (canvas trên trang, tải qua mục Ảnh vào ngăn Gửi được): ngang 2000×1500, dọc
 #   1500×2000, nhỏ 400×300, rất rộng 3000×600 — mỗi ảnh nền xám có một ô vuông đỏ ở tâm để thấy ảnh. Ghi mã căn và id ảnh.
 # Đo hình chữ nhật bằng getBoundingClientRect của: hộp (phần tử role=dialog), canvas (aria-label «Ảnh để vẽ vùng che»),
 #   nút «Lưu bản che»; khổ cửa sổ = innerWidth × innerHeight. «Trọn trong» = bốn cạnh, sai số 1px.
