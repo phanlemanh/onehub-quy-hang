@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { navigationFor } from "@quy-hang/core";
 import { typesForNeed } from "@quy-hang/core/contacts";
 import { decideOutcome, OPEN_STATUSES, validateLeadInput, type LeadRecord, type MyLeadRecord, type Need, type Outcome } from "@quy-hang/core/dedupe";
+import { kiemMaCan } from "@quy-hang/core/listing";
 import { noiDungQuaySo } from "@quy-hang/core/push";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -264,6 +265,12 @@ export class RefusalAfterWrite extends Error {
 }
 
 /**
+ * Mã căn của lead cũ còn dùng được để dựng lại (va-ma-can-lead, Hỏi-1): lead ghi trước luật có thể mang mã toàn dấu — hai
+ * đường dựng lại bỏ mã ấy (hàng chưa mã, lead mới chỉ toà) thay vì hỏng; bản ghi lead cũ không đổi.
+ */
+const maDung = (ma: string | null): ma is string => ma !== null && kiemMaCan(ma) === null;
+
+/**
  * «Sửa số và gửi lại» (Hỏi-2): lead mới chép năm mục của lead cũ với số mới, đi qua đường ghi của hàng 24 — kiểm trùng, rồi
  * nhịp chia như mọi lead mới; lead cũ mang dấu «đã gửi lại» trỏ lead mới, cùng giao dịch.
  */
@@ -286,7 +293,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
   const moi = await createLead(tx, {
     ownerPhone: (body as { ownerPhone?: unknown }).ownerPhone,
     buildingName: cu.building_name,
-    ...(cu.unit_number !== null && { unitNumber: cu.unit_number }),
+    ...(maDung(cu.unit_number) && { unitNumber: cu.unit_number }),
     need: cu.need,
     listPrice: Number(cu.list_price),
     feeInclusion: cu.fee_inclusion,
@@ -324,7 +331,7 @@ export async function createListingFromLead(tx: pg.PoolClient, id: string): Prom
     if (code === "23505") return { error: API_ERRORS.leadHasListing };
     throw e;
   }
-  const tao = await createListing(tx, { buildingName: lead.building_name, ...(lead.unit_number !== null && { unitNumber: lead.unit_number }) });
+  const tao = await createListing(tx, { buildingName: lead.building_name, ...(maDung(lead.unit_number) && { unitNumber: lead.unit_number }) });
   if (laTuChoiHang(tao)) throw new RefusalAfterWrite({ error: tao.error, ...(tao.details && { details: tao.details }) });
   const hang = tao.listingId;
   await tx.query(
