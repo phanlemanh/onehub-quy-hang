@@ -1,0 +1,33 @@
+{
+ "feature_plain": "Hàng tạo từ lead mới biết toà nay có đường điền mã căn: đầu chủ mở hồ sơ của hàng, gõ mã một lần, máy chặn nếu căn ấy đã có hàng đang mở; có mã rồi thì hàng thôi báo thiếu mã căn và lên Đang bán như thường.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ có một việc «gắn mã căn» riêng trong lõi, chỉ nhận khi hàng chưa có mã, từ chối khi hàng đã có mã."},
+  {"id":"AC-2","p":"Sẽ cho cơ sở dữ liệu nhận loại việc mới này, loại lạ vẫn bị chặn, cách ly giữa các sàn giữ nguyên."},
+  {"id":"AC-3","p":"Sẽ cho máy chủ nhận gắn mã, từ chối khi hàng đã có mã hay khi sàn đã có hàng đang mở trên cùng căn (nói rõ hàng kia), không chặn hàng đã đóng hay hàng của sàn khác."},
+  {"id":"AC-4","p":"Sẽ thôi báo «Còn thiếu: Mã căn» ngay khi hàng có mã, và xét ảnh như mọi hàng có mã."},
+  {"id":"AC-5","p":"Sẽ mở được hồ sơ của hàng chưa có mã, hiện ô «Mã căn — Chưa có» cùng ô nhập và nút lưu."},
+  {"id":"AC-6","p":"Sẽ lưu mã từ hồ sơ qua hàng đợi như mọi lần sửa; bị từ chối (kể cả lúc có mạng lại) thì hàng về chưa có mã, lý do hiện ở «Cần xem» và tại ô."},
+  {"id":"AC-7","p":"Sẽ cho ba lối vào hồ sơ của hàng chưa có mã: bấm dòng ở Bảng hàng, dòng «Chưa có mã căn» ở Hôm nay, và «Mã căn» trong «Còn thiếu»."},
+  {"id":"AC-8","p":"Sẽ dùng được trên điện thoại 375, không cuộn ngang."},
+  {"id":"AC-9","p":"Sẽ ghi cách mới vào Tham chiếu và một tài liệu quyết định riêng (ADR-0026)."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"Sẽ KHÔNG cho sửa hay gỡ mã căn đã gắn — đặt nhầm thì là việc riêng."},
+  {"id":"OOS-2","p":"Sẽ KHÔNG gộp hai hàng trùng căn, cũng không thêm ràng buộc duy nhất ở tầng dữ liệu (dữ liệu cũ có thể đã trùng)."},
+  {"id":"OOS-3","p":"Sẽ KHÔNG thêm căn vào danh mục dùng chung — danh mục do OneHub Invest cấp."},
+  {"id":"OOS-4","p":"Sẽ KHÔNG gắn lại ảnh tải trước khi có mã — hàng chưa có mã không tải ảnh được."}
+ ],
+ "scope_plain": "Bốn việc cố ý để ngoài vòng này:",
+ "coverage_plain": [
+  {"i":0,"p":"Đã quét bốn trục: lớp (lõi · dữ liệu · máy chủ · web), trạng thái hàng (chưa mã · đã mã · trùng căn đang mở · trùng căn đã đóng · sàn khác), lối vào và khổ màn."},
+  {"i":1,"p":"Lõi: AC-1, AC-4 · dữ liệu: AC-2 · máy chủ: AC-3 đủ năm trạng thái hàng · web: AC-5 đến AC-8 · ba lối vào ở AC-7 · khổ 1440 và 375 · tài liệu AC-9."},
+  {"i":2,"p":"Đủ là: mỗi trạng thái hàng có ít nhất một ca máy, mỗi lối vào có một ca web và một khung chụp màn thật."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Bỏ bước làm bản bấm được không phải lựa chọn của máy — đã chuyển thành Hỏi-4 cho anh, máy khuyên làm."},
+  {"i":1,"p":"Chưa đo trường hợp máy chủ từ chối khi vừa có mạng lại — đã sửa: hàng về chưa có mã, lý do vào «Cần xem», thêm một phép đo nói với máy chủ thật."},
+  {"i":2,"p":"Tiêu chí tài liệu đọc nhầm tài liệu quyết định cũ — đã chốt ADR-0026."},
+  {"i":3,"p":"Bước xem bằng mắt dùng mã cố định nên lượt chấm lại sẽ vấp hàng của lượt trước — đã cho mỗi lượt một mã riêng."},
+  {"i":4,"p":"«Hàng đang mở» chưa định nghĩa — đã trỏ đúng danh sách trạng thái mở của lõi và chấm từng trạng thái."}
+ ]
+}
