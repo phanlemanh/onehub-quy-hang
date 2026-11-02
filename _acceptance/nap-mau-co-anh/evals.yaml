@@ -1,0 +1,83 @@
+schema_version: 1
+feature_slug: nap-mau-co-anh
+# Ca trên Postgres dãy: packages/db/seed/nap-ban-that.test.ts (executors.test.nap_mau — cần DATABASE_URL, .env.local 5562).
+# Ca thuần của ảnh vẽ: packages/db/seed/anh-mau.test.mjs (executors.test.du_lieu_mau_tsx).
+# Kho giả: đối tượng KhoAnh ghi lại mọi lệnh ghi/xoá (khuôn của packages/api/src/photos/kho.ts), không mạng.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ca «nap-co-anh» có mặt và ok — sau nạp với khoPostgres: phân bố trạng thái đúng gói; bảng viết tay 40 dòng (mã hàng → số ảnh mong: 1 cho Active/Pending/Closed/Hold, 0 cho Incomplete/Withdrawn) so với số ảnh shareable, is_sample=false, removed_at null đếm theo (toà, mã căn); mỗi ảnh có đúng một sự kiện added với actor = đầu chủ của hàng. Số assert bằng 40 + phân bố. Chiều đỏ trên cùng fixture: gói đổi một hàng Chưa đủ thành Đang bán thì bảng mong lệch đúng hàng ấy, thông điệp nêu mã hàng."
+    paths: ["packages/db/seed/nap-ban-that.ts", "packages/db/seed/anh-mau.mjs", "packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.du_lieu_mau_tsx
+    expected: "exit 0; ca «anh-mau» có mặt và ok — anhMau(i) hai lần cùng i ra Buffer bằng nhau; i=0 và i=1 khác nhau; với i ∈ {0, 1, 28}: kiemTepAnh(goc) ok và type image/png, chiều rộng/cao đọc từ khối IHDR bằng số khai, mỗi tệp < 1 MB, bản nhẹ nhỏ hơn bản gốc. Chiều đỏ: một tệp sửa byte đầu thì kiemTepAnh trả «Không phải ảnh», thông điệp nêu i."
+    paths: ["packages/db/seed/anh-mau.mjs", "packages/db/seed/anh-mau.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ca «anh-doc-lai» có mặt và ok — một ảnh của sàn mẫu đọc bằng readPhoto (vai quy_hang_app, đầu chủ của hàng) ra byte bằng anhMau(thứ tự hàng).goc. Chiều đỏ: so với anhMau(thứ tự khác) thì không bằng, thông điệp nêu mã ảnh."
+    paths: ["packages/db/seed/nap-ban-that.ts", "packages/db/seed/anh-mau.mjs", "packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ca «chay-lai» (E4 hàng 87) vẫn ok với ảnh chụp mọi bảng gồm unit_photos, unit_photo_files, unit_photo_events; thêm: kho giả ở lần nạp thứ hai đếm 0 lệnh ghi. Chiều đỏ của phép so đã có (sửa một dòng thì ảnh lệch đúng bảng ấy)."
+    paths: ["packages/db/seed/nap-ban-that.ts", "packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ba ca có mặt và ok — «kho-storage»: nạp với kho giả mang tên s3 → 29×2 lệnh ghi, mỗi lệnh có companyId = sàn mẫu, biến thể {original, thumb} đủ cho mỗi mã ảnh; unit_photo_files không có dòng nào của sàn mẫu. «chon-kho» (ma trận viết trước, chạy dòng lệnh, khoá phone đúng): NODE_ENV=production × {đủ ba biến giả, thiếu STORAGE_S3_ACCESS_KEY, thiếu STORAGE_S3_SECRET_KEY, thiếu STORAGE_S3_ENDPOINT, không biến nào} và NODE_ENV vắng × {thiếu STORAGE_S3_ENDPOINT} — mỗi ô ghi tay tập biến mong trong lời báo (rỗng cho ô đủ ba); assert tập tên STORAGE_S3_* rút từ stderr BẰNG tập mong (so tập, không so chuỗi có mặt), ô có tập mong khác rỗng thì mã 1 và ảnh chụp mọi bảng trước = sau. Số assert bằng 6 ô. «khong-khoa-ngoai-ban-that»: NODE_ENV vắng, không biến nào → dùng kho Postgres (nạp thành công, unit_photo_files có 58 dòng của sàn mẫu). Chiều đỏ: tập mong của ô «thiếu ACCESS_KEY» đổi thành đủ ba thì ô đỏ, thông điệp nêu tên ô."
+    paths: ["packages/db/seed/nap-ban-that.ts", "packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ca «go-xoa-byte» có mặt và ok — sàn thật được thêm một ảnh qua addPhoto; nạp mẫu với kho giả rồi gỡ với kho giả: tập mã ảnh nhận lệnh xoá BẰNG tập mã ảnh của sàn mẫu đọc trước khi gỡ (29 mã); MỌI lệnh xoá mang companyId = sàn mẫu; giao với mã ảnh và companyId của sàn thật rỗng; ảnh chụp các bảng của sàn thật trước = sau. Chiều đỏ trên cùng fixture: chèn vào nhật ký một lệnh xoá mang companyId sàn thật thì phép so đỏ, thông điệp nêu mã sàn ấy."
+    paths: ["packages/db/seed/nap-ban-that.ts", "packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ca «hong-giua-chung» (E7 hàng 87) vẫn ok VÀ: tập mã ảnh nhận lệnh xoá ở kho giả BẰNG tập mã ảnh trong NHẬT KÝ GHI của kho giả (29), mỗi lệnh xoá mang companyId = sàn mẫu; ca «hong-o-lan-ghi-10»: kho giả ghi nhật ký rồi ném ở lần ghi thứ 10 → lần chạy ném, tập xoá BẰNG tập mã trong nhật ký ghi (gồm mã của lần ghi thứ 10); biến thể kho giả mà xoá ném lỗi thì lỗi lần chạy vẫn là lỗi gốc (thông điệp nêu mã lead, hay lỗi kho ở lần 10), không phải lỗi xoá. Không sàn mẫu nào còn sau các ca. Chiều đỏ: bỏ một mã khỏi tập xoá mong thì so lệch, thông điệp nêu mã ấy."
+    paths: ["packages/db/seed/nap-ban-that.ts", "packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.nap_mau_yml
+    expected: "exit 0; ca «ba-khoa-kho-anh» có mặt và ok — trong nap-mau.yml, bước tên «Chạy bộ nạp» có env STORAGE_S3_ACCESS_KEY, STORAGE_S3_SECRET_KEY, STORAGE_S3_ENDPOINT mỗi biến giá trị dạng ${{ secrets.<TÊN> }} và có NODE_ENV: production; không bước nào khác và env mức job không khai biến STORAGE_S3_ nào. Mọi ca cũ của tệp kiểm vẫn ok. Chiều đỏ trên bản sao tệp: chuyển một biến lên env mức job thì ca đỏ, thông điệp nêu tên biến; bỏ NODE_ENV khỏi bước thì ca đỏ, thông điệp nêu NODE_ENV."
+    paths: [".github/workflows/nap-mau.yml", "packages/db/seed/nap-mau-yml.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-8
+    executor: judgment
+    inputs: ["packages/db/seed/README.md"]
+    question: "Mục «Bản thật» của README có nói (a) căn mẫu từng lên Đang bán có một ảnh vẽ bằng mã, không ảnh thật của ai; (b) bước một lần thêm ba secret STORAGE_S3_ACCESS_KEY, STORAGE_S3_SECRET_KEY, STORAGE_S3_ENDPOINT ở environment production của GitHub, cùng giá trị Vercel Production; (c) README có câu nói thiếu secret thì nút dừng trước khi ghi với lời báo thiếu khoá (chỉ hỏi README có nói, hành vi thật do E5, E8 đo); (d) gỡ xoá cả byte ảnh mẫu trên kho — và không chứa giá trị khoá nào?"
+    expected: "PASS khi đủ (a), (b), (c), (d) và không giá trị khoá; thiếu một vế là FAIL."
+    evidence_required: [run_id, verdict, verifier, verified_at]
