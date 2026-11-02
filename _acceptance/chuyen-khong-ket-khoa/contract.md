@@ -5,7 +5,7 @@ slug: chuyen-khong-ket-khoa
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-01-chuyen-khong-ket-khoa-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -54,3 +54,6 @@ Bỏ quét coverage — một lỗi đã gọi tên, một thế kẹt (dòng `d
   - Ngoài-5: Ca cũ khi đỏ có thể che lỗi gốc.
   - Ngoài-6: Ca cũ chưa chứng được thế kẹt đã xảy ra.
 - Việc giám sát giao: mở PR nhỏ «fix(lien-he): bài chuyển dữ liệu cũ không kẹt khoá», gộp qua `gop`, báo giám sát khi gộp.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02 (lượt 3):
+  - Ngoài-1: Lời mô tả E1 trong bài chấm còn ghi ba lần chụp khoá, trong khi ca kiểm thật chụp sáu lần trên hai đường chạy.
+  - Ngoài-2: Trang bằng chứng của lượt 1 từng trình kết quả của ca cũ; trang đã dựng lại ở lượt 3.
