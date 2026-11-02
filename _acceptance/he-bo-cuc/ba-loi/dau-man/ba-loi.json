@@ -1,0 +1,24 @@
+{
+  "man": "Đầu màn của mọi bố cục (hàng 91, Hỏi-3) — dựng trên mục Cài đặt sàn «Cách gọi»; bố cục không dựng Frame, đầu màn là dải ngoài khung",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Theo Verve và lời anh «Luôn có breakcrumb»: màn danh sách và cài đặt có dải đường dẫn, tiêu đề nằm trong đầu khung của khối (lối này); màn hồ sơ, luồng, tổng quan dùng dải đủ đường dẫn + tiêu đề + nút (lối Vẽ mới). Một thành phần DauMan, tiêu đề tuỳ chọn."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Không dải — tiêu đề chỉ trong đầu khung của khối",
+      "dong_co": "Gọn nhất, không thêm dòng nào trên khối.",
+      "danh_doi": "Không có đường dẫn — trái lời chủ kho 02/11 «Luôn có breakcrumb»; màn sâu không có lối về."
+    },
+    "reui": {
+      "nhan": "Dải đường dẫn ngoài khung, tiêu đề trong đầu khung của khối (như danh sách của Verve)",
+      "dong_co": "Đường dẫn luôn có mà không lặp tiêu đề; khối giữ trọn đầu khung của nó.",
+      "danh_doi": "Nút của màn nằm trong đầu khung của khối, không ở dải; màn nhiều khối phải chọn khối nào giữ nút."
+    },
+    "ve-moi": {
+      "nhan": "Dải đủ ngoài khung: đường dẫn, tiêu đề, một dòng, nút (như hồ sơ của Verve)",
+      "dong_co": "Một chỗ cho tên màn và nút, hợp màn có nhiều khối (hồ sơ, bảng điều khiển).",
+      "danh_doi": "Ở màn một khối thì tiêu đề lặp hai lần (dải và đầu khung) — phải bỏ tiêu đề khối."
+    }
+  }
+}

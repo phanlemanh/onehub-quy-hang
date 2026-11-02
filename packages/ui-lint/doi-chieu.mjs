@@ -16,27 +16,26 @@
 //   [--root <kho>]
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { docBanDo, nhomCuaTep } from "./lib/ban-do.mjs";
+import { docBanDo } from "./lib/ban-do.mjs";
+import { KHO, keHoachDoiChieu, tenAnh } from "./lib/doi-chieu.mjs";
 import { dungTrangBaLoi, KHO_BA_LOI, khungBaLoi, kiemBaLoi, kiemVongBaLoi, LoiDoc, LOI, tenAnhBaLoi } from "./lib/ba-loi.mjs";
 
-/** Khổ máy tính và điện thoại mà skill quy-hang-ui buộc nhìn màn đang chạy. */
-export const KHO = [1440, 375];
+export { KHO };
 
 const args = process.argv.slice(2);
 const arg = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : null);
 const root = resolve(arg("--root") ?? join(dirname(fileURLToPath(import.meta.url)), "../.."));
 const thuMuc = (slug) => join(root, "_acceptance", slug, "doi-chieu");
-const tenAnh = (nhom, tt, kho, phia) => `${nhom}--${tt}--${kho}--${phia}.png`;
 const cam = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
 function ghiKeHoach(slug, keHoach) {
   mkdirSync(thuMuc(slug), { recursive: true });
   writeFileSync(join(thuMuc(slug), "ke-hoach.json"), JSON.stringify(keHoach, null, 2) + "\n");
   for (const c of keHoach.cap)
-    console.log(`${c.nhom} · ${c.trang_thai} · ${c.kho}: ${c.tep_moi ?? "(màn mẫu)"} ↔ ${c.mau.duong} → ${[c.anh_moi, c.anh_mau].filter(Boolean).join(" · ")}`);
+    console.log(`${c.nhom} · ${c.trang_thai} · ${c.kho}: ${c.tep_moi ?? "(màn mẫu)"} ↔ ${c.mau.duong} → ${[c.anh_moi, c.anh_mau, c.anh_chuan].filter(Boolean).join(" · ")}`);
 }
 
 function keHoachBase(ref, slug) {
@@ -47,26 +46,15 @@ function keHoachBase(ref, slug) {
   const doi = [...new Set([...git("diff", "--name-only", ref).split("\n"), ...git("ls-files", "--others", "--exclude-standard").split("\n")])]
     .filter(Boolean)
     .sort();
-  const cap = [];
-  const daDung = new Map();
-  for (const tep of doi)
-    for (const g of nhomCuaTep(banDo, tep).filter((g) => g.donVi === "man")) {
-      if (!existsSync(join(root, tep))) continue;
-      const { nhom, mau_dang_chay: mau } = g.data;
-      const n = (daDung.get(nhom) ?? 0) + 1;
-      daDung.set(nhom, n);
-      for (const tt of mau.trang_thai)
-        for (const kho of KHO)
-          cap.push({
-            nhom,
-            trang_thai: tt,
-            kho,
-            tep_moi: tep,
-            mau: { tep: mau.tep, duong: mau.duong },
-            anh_moi: tenAnh(nhom, tt, kho, n === 1 ? "moi" : `moi-${n}`),
-            anh_mau: tenAnh(nhom, tt, kho, "mau"),
-          });
+  const coTaiBase = (t) => {
+    try {
+      git("cat-file", "-e", `${ref}:${t}`);
+      return true;
+    } catch {
+      return false;
     }
+  };
+  const cap = keHoachDoiChieu(root, banDo, doi, coTaiBase);
   if (!cap.length) {
     console.log("đối chiếu: vòng không chạm màn của nhóm nào");
     return;
@@ -95,8 +83,9 @@ function dung(slug) {
   }
   const { cap } = JSON.parse(readFileSync(p, "utf8"));
   const thieu = [];
-  const o = (ten, nhan) => {
-    const f = join(thuMuc(slug), ten);
+  // Ảnh chuẩn (`design/anh-chuan/…`) đọc từ gốc kho; ảnh của vòng đọc từ thư mục đối chiếu của hồ sơ.
+  const o = (ten, nhan, goc = thuMuc(slug)) => {
+    const f = join(goc, ten);
     if (!existsSync(f)) {
       thieu.push(ten);
       return `<td class="thieu">thiếu ảnh ${cam(ten)}</td>`;
@@ -108,7 +97,7 @@ function dung(slug) {
     (c, i) =>
       `<tr data-cap="${i}"><th scope="row">${cam(c.nhom)}<br>${cam(c.trang_thai)} · ${c.kho}</th>` +
       (c.anh_moi ? o(c.anh_moi, `màn mới · ${c.tep_moi}`) : "") +
-      o(c.anh_mau, `màn mẫu · ${c.mau.duong}`) +
+      (c.anh_chuan ? o(c.anh_chuan, `ảnh chuẩn · ${c.anh_chuan}`, root) : o(c.anh_mau, `màn mẫu · ${c.mau.duong}`)) +
       "</tr>",
   );
   const html = `<!doctype html>
@@ -134,14 +123,15 @@ ${hang.join("\n")}
   console.log(`đối chiếu: ${cap.length} cặp đủ`);
 }
 
-const thuMucBaLoi = (slug) => join(root, "_acceptance", slug, "ba-loi");
+// `--o <mã ô>` (hàng 91): hồ sơ có nhiều ô chưa có khuôn đặt mỗi ô một thư mục `ba-loi/<mã ô>/`.
+const thuMucBaLoi = (slug) => join(root, "_acceptance", slug, "ba-loi", ...(arg("--o") ? [arg("--o")] : []));
 
 function keHoachBaLoi(slug) {
   const d = thuMucBaLoi(slug);
   mkdirSync(d, { recursive: true });
   const p = join(d, "ba-loi.json");
   if (!existsSync(p)) writeFileSync(p, JSON.stringify(khungBaLoi(), null, 2) + "\n");
-  for (const { ma } of LOI) for (const kho of KHO_BA_LOI) console.log(`${ma} · ${kho} → ba-loi/${tenAnhBaLoi(ma, kho)}`);
+  for (const { ma } of LOI) for (const kho of KHO_BA_LOI) console.log(`${ma} · ${kho} → ${relative(join(root, "_acceptance", slug), d)}/${tenAnhBaLoi(ma, kho)}`);
 }
 
 function dungBaLoi(slug) {
@@ -157,7 +147,7 @@ function dungBaLoi(slug) {
   for (const l of kq.loi) console.error(l);
   if (kq.loi.length) process.exit(1);
   writeFileSync(join(d, "index.html"), dungTrangBaLoi(kq.du, d));
-  console.log(`ba lối: dựng ${slug}/ba-loi/index.html — khuyên ${kq.du.khuyen.loi}`);
+  console.log(`ba lối: dựng ${relative(join(root, "_acceptance"), d)}/index.html — khuyên ${kq.du.khuyen.loi}`);
 }
 
 function kiemVong(slug, base, den) {

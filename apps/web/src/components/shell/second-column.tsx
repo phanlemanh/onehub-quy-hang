@@ -1,6 +1,7 @@
 "use client";
 
 import { type Home, HOME_LABEL } from "@quy-hang/core";
+import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import { cn } from "cn";
 import {
   CalendarClockIcon,
@@ -26,13 +27,19 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-// Cột thứ hai theo nhà (§9) — chuyển thể InnerSidebar + InnerSidebarNav của app-shell-8. Hôm nay và Đội không có cột.
+// Cột thứ hai theo nhà (§9) — chuyển thể InnerSidebar + InnerSidebarNav của app-shell-8. Mọi nhà có cột, mặc định mở
+// (hàng 91, chủ kho 02/11).
 type Item = { label: string; href: string; icon: LucideIcon };
 
 const SHARES: Item[] = [
   { label: "Link đã gửi", href: "/shares", icon: LinkIcon },
   { label: "Lịch xem", href: "/viewings", icon: CalendarClockIcon },
 ];
+
+// Hôm nay: các hàng đợi của bộ nhóm mặc định (hàng 22). Bộ nhóm của sàn và số đếm theo nhóm vào cột ở hàng 42.
+const TODAY: Item[] = BO_NHOM_MAC_DINH.filter((n) => n.enabled).map((n) => ({ label: n.label, href: `/today#${n.code}`, icon: ListChecksIcon }));
+
+const TEAM: Item[] = [{ label: "Tổng quan", href: "/team", icon: UsersIcon }];
 
 export const SETTINGS_ITEMS: Item[] = [
   { label: "Người dùng", href: "/settings/users", icon: UsersIcon },
@@ -114,7 +121,7 @@ function InventoryColumn() {
 
 function ColumnContent({ home }: { home: Home }) {
   if (home === "inventory") return <InventoryColumn />;
-  const items = home === "shares" ? SHARES : SETTINGS_ITEMS;
+  const items = home === "shares" ? SHARES : home === "today" ? TODAY : home === "team" ? TEAM : SETTINGS_ITEMS;
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col py-1" aria-label={HOME_LABEL[home]}>

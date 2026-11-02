@@ -1,6 +1,7 @@
 // Plugin ESLint quy-hang-ui: làm "tự vẽ tay UI" phát hiện được bằng máy (chuẩn ReUI + shadcn base-nova).
 // Chuyển từ eslint-plugin-onehub-ui của onehub-invest (cùng chủ kho); đổi tên plugin, giữ nguyên mười luật; luật
-// thứ mười một `ban-do-khuon` (hàng 59) giữ bản đồ khuôn design/patterns/.
+// thứ mười một `ban-do-khuon` (hàng 59) giữ bản đồ khuôn design/patterns/; ba luật của hệ bố cục
+// (hàng 91) giữ bề rộng, chờ tải và ngăn nổi ở bố cục.
 import noRawTable from "./rules/no-raw-table.mjs";
 import noRawControls from "./rules/no-raw-controls.mjs";
 import noNativeDialogs from "./rules/no-native-dialogs.mjs";
@@ -12,6 +13,9 @@ import noAsChild from "./rules/no-aschild.mjs";
 import noEmojiIcons from "./rules/no-emoji-icons.mjs";
 import requireDisableReason from "./rules/require-disable-reason.mjs";
 import banDoKhuon from "./rules/ban-do-khuon.mjs";
+import noLayoutArbitrary from "./rules/no-layout-arbitrary.mjs";
+import noRawSkeleton from "./rules/no-raw-skeleton.mjs";
+import noDirectSheet from "./rules/no-direct-sheet.mjs";
 
 export default {
   meta: { name: "quy-hang-ui" },
@@ -27,5 +31,8 @@ export default {
     "no-emoji-icons": noEmojiIcons,
     "require-disable-reason": requireDisableReason,
     "ban-do-khuon": banDoKhuon,
+    "no-layout-arbitrary": noLayoutArbitrary,
+    "no-raw-skeleton": noRawSkeleton,
+    "no-direct-sheet": noDirectSheet,
   },
 };

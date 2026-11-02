@@ -10,7 +10,6 @@ import { useSyncExternalStore } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { thanDangXuat } from "@/lib/push/dang-ky";
-import { useBoDongBo } from "@/lib/sync/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,9 +64,9 @@ function ThemeSegmentedToggle() {
   );
 }
 
-export function AccountMenu({ email, companyName }: { email: string; companyName: string }) {
+/** Thân menu tài khoản, không đọc bộ đồng bộ — vỏ thật nối `dangXuat` của bộ đồng bộ ở `app-shell-dong-bo.tsx`. */
+export function AccountMenuKhung({ email, companyName, dangXuat }: { email: string; companyName: string; dangXuat: () => Promise<boolean> }) {
   const router = useRouter();
-  const { dangXuat } = useBoDongBo();
   const initials = email.slice(0, 2).toUpperCase();
 
   return (

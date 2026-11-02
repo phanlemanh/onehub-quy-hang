@@ -1,0 +1,22 @@
+{
+  "man": "Ba bố cục chưa màn nào trong kho dùng — Bảng điều khiển, Luồng nhiều bước, Dòng tin (hàng 91, Hỏi-4); ảnh là Bảng điều khiển, hai bố cục kia xem trên trang mẫu sống",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Khối nguồn ADR-0024 đã chọn (stats-7 + data-grid-grouping-2, solution-crm-6, solution-crm-5) đứng được; kho chưa có màn nào cho ba bố cục này nên không có ứng viên trong kho."
+  },
+  "loi": {
+    "trong-kho": {
+      "khong_co": true,
+      "da_tra": "design/patterns/ (chín nhóm), catalog.md «Khối đã chuyển thể» — không màn nào dựng bảng điều khiển, luồng nhiều bước hay dòng tin."
+    },
+    "reui": {
+      "nhan": "Khối nguồn ADR-0024: stats-7 + data-grid-grouping-2 · solution-crm-6 · solution-crm-5",
+      "dong_co": "Cùng họ Frame với các bố cục đã có; ô số, lưới nhóm, luồng có bước và dòng tin theo khối Pro đã trả.",
+      "danh_doi": "Bảng điều khiển không có trên điện thoại (báo một dòng); khi màn đầu của bố cục tới vẫn phải chuyển thể từ mã khối đã cài."
+    },
+    "ve-moi": {
+      "khong_co": true,
+      "da_tra": "Không vẽ mới: ADR-0024 đã đối chiếu Material 3, Polaris, Atlassian và chọn khối nguồn; vẽ mới không thêm gì ngoài các khối ấy."
+    }
+  }
+}
