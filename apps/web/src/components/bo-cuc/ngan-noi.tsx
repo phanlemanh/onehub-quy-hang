@@ -18,11 +18,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // (Danh sách – chi tiết; chủ kho 02/11).
 
 const NUT_MO = "text-muted-foreground hover:text-foreground";
-const INSET = "inset-y-4 right-4 left-auto h-[calc(100svh-2rem)] w-[min(32rem,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-xl border p-0 outline-none";
+const INSET = "inset-y-ngan-le right-ngan-le left-auto h-[calc(100svh-2*var(--spacing-ngan-le))] w-[min(var(--container-ngan),calc(100vw-2*var(--spacing-ngan-le)))] max-w-none gap-0 overflow-hidden rounded-xl border p-0 outline-none";
 // Lớp popup bên phải của SheetContent (components/ui/sheet.tsx, bản cài), đường cong chuyển động theo chuẩn ReUI của kho;
 // SheetContent luôn dựng lớp phủ chặn bấm, nên ngăn đè lên bảng ghép thẳng từ Popup, bỏ lớp phủ.
 const POPUP =
-  "fixed z-50 flex flex-col bg-popover bg-clip-padding text-sm text-popover-foreground shadow-lg transition duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] data-ending-style:translate-x-[2.5rem] data-ending-style:opacity-0 data-starting-style:translate-x-[2.5rem] data-starting-style:opacity-0";
+  "fixed z-50 flex flex-col bg-popover bg-clip-padding text-sm text-popover-foreground shadow-lg transition duration-200 ease-vao data-ending-style:translate-x-[2.5rem] data-ending-style:opacity-0 data-starting-style:translate-x-[2.5rem] data-starting-style:opacity-0";
 
 export function NganNoi({
   mo,

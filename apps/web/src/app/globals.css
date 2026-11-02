@@ -165,6 +165,19 @@
     --spacing-khung: 1rem;
     --container-doc: 48rem;
     --breakpoint-vua: 64rem;
+    /* Ngăn nổi inset (sheet-9) và cột nhãn của hồ sơ (solution-crm-4, hồ sơ căn hàng 17). */
+    --spacing-ngan-le: 1rem;
+    --container-ngan: 32rem;
+    --spacing-ho-so-nhan: 8rem;
+    /* Đường cong «vào» của chuẩn chuyển động ReUI (layout/motion): ease-vao. */
+    --ease-vao: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Khung vỏ app-shell-8: thanh trên, cột biểu tượng, cột thứ hai — một chỗ, vỏ đọc lại. */
+:root {
+    --vo-thanh-tren: 50px;
+    --vo-cot-bieu-tuong: 63px;
+    --vo-cot-hai: 200px;
 }
 
 :root {

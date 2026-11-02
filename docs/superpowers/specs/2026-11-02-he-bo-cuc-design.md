@@ -20,6 +20,11 @@ thoại; màn chỉ điền vùng. Có một trang mẫu sống bày mọi bố 
   - `--breakpoint-vua`: 1024px.
 
   Đây là mọi số bố cục được dùng. Màn không viết số.
+
+  Thêm 02/11 khi soát token (không đổi hình): `--spacing-ngan-le` 1rem và `--container-ngan` 32rem (ngăn inset
+  `sheet-9`), `--spacing-ho-so-nhan` 8rem (cột nhãn hồ sơ), `--ease-vao` (đường cong «vào» của ReUI), và ba số khung vỏ
+  `--vo-thanh-tren` 50px, `--vo-cot-bieu-tuong` 63px, `--vo-cot-hai` 200px. Màu sáng/tối là token của ReUI, giữ nguyên;
+  ảnh chuẩn có thêm bản tối ở 1440.
 - **Khung ứng dụng** (`components/shell/`): vỏ `app-shell-8` giữ nguyên, có hai đổi.
   - Bỏ `p-4` ở cột nội dung: lề nay thuộc bố cục, nhờ đó Tràn đi được sát mép.
   - Các nút tạo rời rạc nhập thành **menu Tạo**: một nút chính theo vai, cộng menu các việc tạo khác (lối chọn ở Hỏi-2).

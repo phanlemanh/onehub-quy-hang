@@ -168,14 +168,14 @@ export function AppShell({
     <SidebarProvider
       className={cn(
         "h-svh",
-        "[--header-height:50px]",
+        "[--header-height:var(--vo-thanh-tren)]",
         "[--sidebar-accent:color-mix(in_oklab,var(--color-primary)_5%,transparent)]",
         "[--sidebar-accent-foreground:var(--color-primary)]",
       )}
       style={
         {
-          "--sidebar-width": nav.homes.length > 0 ? "63px" : "0px",
-          "--sidebar-width-inner": "200px",
+          "--sidebar-width": nav.homes.length > 0 ? "var(--vo-cot-bieu-tuong)" : "0px",
+          "--sidebar-width-inner": "var(--vo-cot-hai)",
         } as CSSProperties
       }
     >
