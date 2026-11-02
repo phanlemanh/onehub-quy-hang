@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 1809311728ac0f37fc6542e93301f237be9c6b66
+verified_commit: 0fe6f9689aa18df6686dcfa036a28883f2aa7970
 human_signoff:
 ---
 
@@ -210,3 +210,7 @@ none — every multi-run eval is uniform
 
 Round 1: mười một eval E1–E11 (E1, E2, E3, E4, E5, E11, E6u, E10u, E7u, E8, E9) đạt lần đầu, run_id hậu tố r1.
 Round 2: delta không chạm paths của các eval trên nên mang sang (carried_from_round: 1); bảy lệnh suite chạy lại, tất cả xanh.
+
+### Re-pin lần 1 — 2026-11-02, do gộp main (PR #83, #85) sau lượt chấm r2
+run_id: repin-20261102T095347Z-26379
+sha: 0fe6f9689aa18df6686dcfa036a28883f2aa7970 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E10u, E7u · diff chạm vật đo ngoài làn máy: E6u, E10u, E7u — chưa chứng lại, đi vòng S4 delta
