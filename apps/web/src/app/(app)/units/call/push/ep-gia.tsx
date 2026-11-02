@@ -5,6 +5,7 @@
 // thẳng đường chủ nhà, không lưu trên máy (KH-cg-khong-nguon).
 import { soGiaToa, vietGia, type CanSo, type FeeInclusion } from "@quy-hang/core/pricing";
 import type { EventType, ListingEvent } from "@quy-hang/core/listing";
+import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import type { ListingView, NeedsReview } from "@/lib/sync/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -97,7 +98,9 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
   const [baoLoi, setBaoLoi] = useState<string | null>(null);
   const [daGhi, setDaGhi] = useState<string | null>(null);
   // Lần ghi của căn này máy chủ không nhận (hàng 13, 61): màn nói vì sao thay câu «Đã ghi», lối xử ở bảng «Cần xem».
-  const { moCanXem } = useBoDongBo();
+  const { bd, moCanXem } = useBoDongBo();
+  // Tên nhóm ép giá là dữ liệu của sàn (Hôm nay đầu chủ, Hỏi-5): lấy từ bộ nhóm đã lưu trên máy, chưa có thì bộ mặc định.
+  const tenNhom = (bd.boNhomDaLuu()?.groups ?? BO_NHOM_MAC_DINH).find((n) => n.code === "price_adjustment")?.label ?? "Nên gọi điều chỉnh giá";
   const canXem = useCanXem().find((r) => r.listingId === hangId) ?? null;
   const oHa = useRef<HTMLInputElement>(null);
   const khoiKq = useRef<HTMLDivElement>(null);
@@ -211,6 +214,8 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
     const trongKq = !laO && dang instanceof HTMLElement && !!dang.closest('[data-slot="toggle-group-item"]') && (khoiKq.current?.contains(dang) ?? false);
     // Con trỏ ở nút khác ngoài danh sách: chỉ Ctrl+Enter, phím khác đi theo trình duyệt.
     if (!laO && !trongDs && !trongKq && !((e.ctrlKey || e.metaKey) && e.key === "Enter")) return;
+    // Enter trên một lựa chọn chưa chọn (dời tới bằng mũi tên): để trình duyệt chọn nó, không ghi lựa chọn cũ.
+    if (trongKq && e.key === "Enter" && !e.ctrlKey && !e.metaKey && (dang as HTMLElement).getAttribute("aria-pressed") !== "true") return;
     const k = xuLyPhimKetQua(e, cho, chon);
     if (k) {
       e.preventDefault();
@@ -250,7 +255,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
     <div className="flex flex-col gap-1">
       <FramePanel className="flex flex-col gap-2" aria-label="Căn đang gọi">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="warning-light">Nên gọi điều chỉnh giá</Badge>
+          <Badge variant="warning-light">{tenNhom}</Badge>
           <Badge variant={can.standardStatus === "Active" ? "success-light" : "outline"}>{dau.nac}</Badge>
         </div>
         <h1 className="text-lg font-semibold">

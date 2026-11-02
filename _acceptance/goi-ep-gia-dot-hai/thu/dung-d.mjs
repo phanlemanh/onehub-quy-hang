@@ -17,7 +17,7 @@ import { appPool, BASE_URL, cookieOf, identityPool, makeAuth, themAnhThat } from
 const GOC = path.resolve(import.meta.dirname, "../../..");
 const { values } = parseArgs({ options: { ban: { type: "string" }, vong: { type: "string" } } });
 const VONG = Number(values.vong ?? 1);
-if (!(VONG >= 1 && VONG <= 5)) throw new Error("--vong chỉ nhận 1–5");
+if (!(VONG >= 1 && VONG <= 9)) throw new Error("--vong chỉ nhận 1–9");
 const GIU = path.join(GOC, `.acceptance-runs/goi-ep-gia-dot-hai/dung-d${VONG === 1 ? "" : `-v${VONG}`}.json`);
 if (new URL(process.env.DATABASE_URL ?? "postgres://x@localhost:0/").port !== "5565") throw new Error("chỉ chạy trên Postgres thử của dãy D (cổng 5565)");
 
@@ -58,7 +58,7 @@ if (values.ban) {
   process.exit(0);
 }
 // Không nêu lượt: in bản của lượt mới nhất đã dựng; nêu lượt đã dựng: in bản ấy.
-const MOI = values.vong ? GIU : [5, 4, 3, 2].map((v) => GIU.replace(/\.json$/, `-v${v}.json`)).find((p) => existsSync(p)) ?? GIU;
+const MOI = values.vong ? GIU : [9, 8, 7, 6, 5, 4, 3, 2].map((v) => GIU.replace(/\.json$/, `-v${v}.json`)).find((p) => existsSync(p)) ?? GIU;
 if (existsSync(MOI)) {
   console.log(readFileSync(MOI, "utf8"));
   await ketThuc();
