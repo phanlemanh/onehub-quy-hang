@@ -7,6 +7,8 @@ import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
+import { noiDungLead } from "@quy-hang/core/push";
+
 import { docLeadThamSo, KHONG_CON_LEAD, moNhom, timLead } from "./mo-lead";
 
 const MA = "0b6f1c2e-3d4a-4e5f-8a9b-0c1d2e3f4a5b";
@@ -50,12 +52,12 @@ describe("service worker: bấm thông báo", () => {
   const GOC = "https://quyhang.example.test";
   const SW = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../../../public/sw.js"), "utf8");
 
-  /** Nạp sw.js thật với `self` giả (kèm `clients` khi cần); trả bộ nghe sự kiện và hàm thuần. */
-  function napSw(clients?: unknown) {
+  /** Nạp sw.js thật với `self` giả (kèm `clients` và `registration` khi cần); trả bộ nghe sự kiện và hàm thuần. */
+  function napSw(clients?: unknown, registration?: unknown) {
     const nghe: Record<string, (e: unknown) => void> = {};
     const ctx = vm.createContext({
       URL,
-      self: { clients, addEventListener: (ten: string, f: (e: unknown) => void) => (nghe[ten] = f), location: { origin: GOC } },
+      self: { clients, registration, addEventListener: (ten: string, f: (e: unknown) => void) => (nghe[ten] = f), location: { origin: GOC } },
     });
     vm.runInContext(SW, ctx);
     return { nghe, xuLy: ctx.xuLyBamThongBao as (url: string, clients: unknown, origin: string) => Promise<string> };
@@ -89,18 +91,27 @@ describe("service worker: bấm thông báo", () => {
     assert.equal(so, 2);
   });
 
-  it("sự kiện notificationclick đi qua bộ xử lý với url của thông báo", async () => {
+  it("trọn vòng: nội dung lõi dựng → bộ nghe push hiện thông báo → chạm thông báo mở đúng lead", async () => {
+    // Nội dung do lõi dựng (cùng hàm máy chủ dùng), không dựng tay khuôn bên đọc.
+    const noiDung = noiDungLead({ leadId: MA, buildingName: "[Toà A]", need: "sale" });
+    const hien: { title: string; options: { body: string; tag: string; data: { url: string } } }[] = [];
     const c = clientsGia([]);
-    const { nghe } = napSw(c.api);
+    const { nghe } = napSw(c.api, { showNotification: async (title: string, options: never) => void hien.push({ title, options }) });
     assert.deepEqual(Object.keys(nghe).sort(), ["activate", "install", "notificationclick", "push"]);
     let cho: Promise<unknown> | null = null;
+    nghe.push!({ data: { json: () => JSON.parse(JSON.stringify(noiDung)) }, waitUntil: (p: Promise<unknown>) => void (cho = p) });
+    await cho;
+    assert.equal(hien.length, 1, "bộ nghe push không hiện thông báo");
+    assert.deepEqual([hien[0]!.title, hien[0]!.options.body, hien[0]!.options.tag], [noiDung.title, noiDung.body, noiDung.tag]);
+    // Chạm đúng thông báo vừa hiện: data do chính bộ nghe push ghi.
     let dong = false;
+    cho = null;
     nghe.notificationclick!({
-      notification: { data: { url: `/today?lead=${MA}` }, close: () => void (dong = true) },
+      notification: { data: hien[0]!.options.data, close: () => void (dong = true) },
       waitUntil: (p: Promise<unknown>) => void (cho = p),
     });
     await cho;
     assert.ok(dong, "thông báo không đóng");
-    assert.deepEqual(c.nhat, [`open ${GOC}/today?lead=${MA}`]);
+    assert.deepEqual(c.nhat, [`open ${GOC}/today?lead=${MA}`], "chạm thông báo không mở đúng lead");
   });
 });

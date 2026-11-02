@@ -1,0 +1,4 @@
+E10 network (chrome-devtools, isolatedContext e7-e10, 127 requests lien quan /today + /today?lead=...)
+App-scope fetch/XHR (origin localhost:3483, /api/v1): catalog, company/settings/queue, leads/assigned, push/public-key, listings -> tat ca [200]. Moi lan nap trang: 3 GET document /today* [200].
+Static: _next chunks 200/304, font woff2 200. Khong co request that bai / 4xx / 5xx.
+Console: 6 messages, chi info (React DevTools) + log (HMR connected). Khong co error/warn.

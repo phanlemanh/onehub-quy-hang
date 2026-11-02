@@ -1,0 +1,14 @@
+E7 network (chrome-devtools MCP, origin http://localhost:3483), per page since last navigation
+FAIL-eligible = fetch/XHR toi origin app. Khong thay request nao 4xx/5xx/connection-error.
+dau-chu chua-bat      : GET catalog/queue/leads/assigned 200; GET push/public-key 200; GET listings 200
+dau-chu da-bat        : catalog/queue/leads/assigned 200; POST me/push-subscriptions 201 (x2); listings 200
+dau-chu chua-cau-hinh : catalog/queue/leads/assigned 200; listings 200 (fetch public-key bi initScript chan phia client, khong ra day)
+dau-chu tu-choi       : catalog/queue/leads/assigned 200; listings 200
+dau-chu iphone        : catalog/queue/leads/assigned 200; listings 200 (1 listings [pending] luc dieu huong, sau do 200)
+truong-nhom chua-bat  : GET push/public-key 200 (x2); listings 200
+truong-nhom da-bat    : POST me/push-subscriptions 201 (x2); listings 200
+truong-nhom chua-cau-hinh : listings 200
+truong-nhom tu-choi   : listings 200
+truong-nhom iphone    : GET manifest.webmanifest 200; sw.js 304; listings 200
+Console error: khong co o 5 trang kiem (chi [log] HMR connected).
+Asset tinh: 304/200 (note only).

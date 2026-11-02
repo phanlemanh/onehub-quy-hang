@@ -239,13 +239,13 @@ test("việc giao quay lui không gửi", async () => {
           [s.nguoi.dc1!.userId, l.id],
         );
         const r = await send("POST", `/api/v1/leads/${l.id}/assign`, { agentUserId: s.nguoi.dc2!.userId }, s.nguoi.tn!.cookie);
-        assert.notEqual(r.status, 200);
+        assert.equal(r.status, 500, "trưởng nhóm giao: không quay lui vì lỗi ép");
         assert.equal(ai(s, (await dong(l.id)).matched_agent_user_id), "dc1", "việc giao không quay lui");
       }],
       ["nhập lead", async () => {
         const truoc = (await appPool.query("select count(*)::int n from leads where company_id = $1", [s.companyId])).rows[0].n;
         const r = await send("POST", "/api/v1/leads", nam(soChu, "Toà A"), s.nguoi.ts!.cookie);
-        assert.notEqual(r.status, 201);
+        assert.equal(r.status, 500, "nhập lead: không quay lui vì lỗi ép");
         const sau_ = (await appPool.query("select count(*)::int n from leads where company_id = $1", [s.companyId])).rows[0].n;
         assert.equal(sau_, truoc, "lead vẫn được ghi");
       }],
@@ -262,6 +262,30 @@ test("việc giao quay lui không gửi", async () => {
     await appPool.query(`drop trigger if exists ${ham} on push_outbox`);
     await appPool.query(`drop function if exists public.${ham}()`);
   }
+  // Đối chứng dương: gỡ lỗi ép, cùng ba lối trên cùng dữ liệu thì giao được và gửi đúng một lần — ba ô trên đỏ vì lỗi ép.
+  const BANG_DOI_CHUNG: [string, () => Promise<void>, string][] = [
+    ["trưởng nhóm giao", async () => {
+      const r = await send("POST", `/api/v1/leads/${l.id}/assign`, { agentUserId: s.nguoi.dc2!.userId }, s.nguoi.tn!.cookie);
+      assert.equal(r.status, 200, await r.clone().text());
+    }, "dc2"],
+    ["nhập lead", async () => {
+      const r = await send("POST", "/api/v1/leads", nam(soChu, "Toà A"), s.nguoi.ts!.cookie);
+      assert.equal(r.status, 201, await r.clone().text());
+    }, "dc1"],
+    ["nhịp chia", async () => {
+      await nhapLead(s, nam(soMoi(s), "Toà A"));
+      const kq = await nhip(new Date(), s);
+      assert.deepEqual([kq.failed, kq.routed], [0, 1]);
+    }, "dc1"],
+  ];
+  let soDoiChung = 0;
+  for (const [ten, viec, ai_] of BANG_DOI_CHUNG) {
+    const truoc = daGui.length;
+    await viec();
+    assert.equal(guiToi(s, ai_, truoc).length, 1, `đối chứng «${ten}»: không gửi đúng một lần`);
+    soDoiChung++;
+  }
+  assert.equal(soDoiChung, 3);
 });
 
 test("lỗi tạm gửi lại", async () => {
@@ -308,7 +332,9 @@ test("gửi lỗi không làm hỏng việc giao", async () => {
   };
   try {
     const l = await nhapLead(s, nam(soMoi(s), "Toà A"));
+    const tu = daGui.length;
     const kq = await nhip(new Date(), s);
+    assert.equal(guiToi(s, "dc1", tu).length, 1, "bộ gửi hỏng không được gọi — ca không đo lỗi gửi");
     assert.equal(kq.routed, 1);
     assert.equal(kq.failed, 0);
     assert.equal(ai(s, (await dong(l.id)).matched_agent_user_id), "dc1");
