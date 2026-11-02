@@ -1990,6 +1990,12 @@
       "cau_giao": "Vá Hệ bố cục: mỗi mục của Hôm nay ở cột thứ hai mở đúng chỗ của nó, mục chưa có màn thì ẩn hay báo rõ, không mục nào bấm mà không phản hồi",
       "slug": "va-he-bo-cuc",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-nap-mau-co-anh",
+      "cau_giao": "Vá bài kiểm Nạp mẫu có ảnh: ca kho Storage có đối chứng dương, phá thử thì đỏ",
+      "slug": "va-nap-mau-co-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],
   "chan_troi": [
