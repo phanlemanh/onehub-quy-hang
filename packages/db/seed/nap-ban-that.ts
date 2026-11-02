@@ -106,8 +106,10 @@ export async function napBanThat(
   try {
     return await napTrongSo(client, goi, { ...opts, kho });
   } catch (e) {
-    // Cố gắng hết: lỗi xoá của từng ảnh nuốt riêng, không che lỗi gốc.
-    for (const x of so) await opts.kho.xoa(client as pg.PoolClient, x.companyId, x.photoId).catch(() => {});
+    // Cố gắng hết: lỗi xoá của từng ảnh nuốt riêng, không che lỗi gốc — chỉ báo số ảnh còn sót trên kho.
+    let sot = 0;
+    for (const x of so) await opts.kho.xoa(client as pg.PoolClient, x.companyId, x.photoId).catch(() => sot++);
+    if (sot) console.error(`nap-ban-that: dọn sau lỗi không xoá được ${sot}/${so.length} ảnh khỏi kho ảnh`);
     throw e;
   }
 }

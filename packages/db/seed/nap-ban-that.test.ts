@@ -24,6 +24,7 @@ const { goBanThat, napBanThat, timSanMau } = await import("./nap-ban-that");
 const { khoPostgres } = await import("../../api/src/photos/kho");
 const { addPhoto, isRefusal: laTuChoiAnh, readPhoto } = await import("../../api/src/photos/store");
 const { anhMau } = await import("./anh-mau.mjs");
+const { giuKhoaSanMau } = await import("./khoa-san-mau.mjs");
 type GoiMau = import("./nap-ban-that").GoiMau;
 type KhoAnh = import("../../api/src/photos/kho").KhoAnh;
 
@@ -152,8 +153,11 @@ function chayCli(args: string[], env: Record<string, string | undefined>) {
 let sanThat = "";
 let chuKhoId = "";
 let anhThat = "";
+let nhaKhoa: (() => Promise<void>) | undefined;
 
 before(async () => {
+  // Nối đuôi với du-lieu-mau.test.mjs: cùng dựng sàn mẫu trên một Postgres.
+  nhaKhoa = await giuKhoaSanMau(process.env.DATABASE_URL!);
   assert.deepEqual(await gd(timSanMau), [], "Postgres dãy đang có sàn mẫu — gỡ trước khi chạy bộ kiểm");
   // Sàn thật cạnh bên: chủ kho là quản trị, có một hàng, một chủ nhà, một lead (ghi thẳng bằng vai chủ).
   const s = await h.openCompany(`[Sàn ${h.RUN} thật]`, EMAIL_CHU_KHO);
@@ -195,8 +199,12 @@ before(async () => {
 });
 
 after(async () => {
-  await go();
-  await h.cleanup();
+  try {
+    await go();
+    await h.cleanup();
+  } finally {
+    await nhaKhoa?.();
+  }
 });
 
 test("nap-du-goi: đủ người, khu, hàng sáu trạng thái, chủ nhà, lead, người phụ trách (E1)", async () => {
@@ -424,8 +432,16 @@ test("hong-giua-chung: lỗi ở lead cuối rút lại cả lần chạy (E7)",
   assert.deepEqual(loiXoa(gia.xoa(), { san: sanMau, mong: new Set([...daGhi].filter((x) => x !== boMot)), camSan: sanThat, camAnh }), [`xoá thừa ảnh ${boMot}`]);
   // Kho ném lỗi khi xoá: lỗi của lần chạy vẫn là lỗi gốc.
   const nemXoa = khoGia({ nemKhiXoa: true });
-  await assert.rejects(nap(goi, EMAIL_CHU_KHO, nemXoa.kho), /L-12/);
+  const loiCu = console.error;
+  const baoLoi: string[] = [];
+  console.error = (m: unknown) => void baoLoi.push(String(m));
+  try {
+    await assert.rejects(nap(goi, EMAIL_CHU_KHO, nemXoa.kho), /L-12/);
+  } finally {
+    console.error = loiCu;
+  }
   assert.equal(nemXoa.xoa().length, 29, "lỗi xoá của một ảnh không dừng việc xoá ảnh khác");
+  assert.deepEqual(baoLoi, ["nap-ban-that: dọn sau lỗi không xoá được 29/29 ảnh khỏi kho ảnh"], "báo số ảnh còn sót");
   assert.deepEqual(bangLech(truoc, await chup()), [], "không sàn mẫu nào còn");
   const { moi } = await nap();
   assert.equal(moi.hang, 40, "đối chứng: gói nguyên vẹn nạp được");
@@ -598,6 +614,11 @@ test("chon-kho: bản thật thiếu khoá thì dừng, lời báo nêu đúng b
     raCuaO.set(ten, r.stderr);
     assert.equal(lechO(ten, mong, r.stderr), null);
     soAssert++;
+    // Đối chứng dương của ô đủ ba: qua bước chọn kho, chết vì kho giả không tới được — không phải lý do khác.
+    if (!mong.length) {
+      assert.equal(r.status, 1, `ô «${ten}»: mã thoát`);
+      assert.match(r.stderr, /nap-ban-that: fetch failed/, `ô «${ten}»: phải dừng vì không tới được kho Storage`);
+    }
     if (mong.length) {
       assert.equal(r.status, 1, `ô «${ten}»: mã thoát`);
       assert.ok(!Object.values(GIA).some((v) => r.stderr.includes(v)), `ô «${ten}»: lời báo không chứa giá trị khoá`);

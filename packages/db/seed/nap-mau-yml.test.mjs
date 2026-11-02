@@ -109,7 +109,7 @@ export function kiemWorkflow(text) {
   for (const d of dong) {
     // Bí mật chỉ là giá trị một khoá env — của job (6 dấu cách) hay của bước (10).
     if (/secrets\./.test(d) && !/^ {6}( {4})?[A-Z0-9_]+: \$\{\{ secrets\.[A-Z0-9_]+ \}\}\s*$/.test(d)) loi.push(`bí mật ngoài khoá env: ${d.trim()}`);
-    if (/(echo|printf).*(OWNER_PHONE_KEY|DATABASE_URL)/.test(d)) loi.push(`in bí mật: ${d.trim()}`);
+    if (/(echo|printf).*(OWNER_PHONE_KEY|DATABASE_URL|STORAGE_S3_)/.test(d)) loi.push(`in bí mật: ${d.trim()}`);
   }
   return loi;
 }
@@ -208,6 +208,10 @@ test("ba-khoa-kho-anh: bước chạy bộ nạp nhận ba khoá kho ảnh từ 
   // Luật tĩnh nhận env của bước nhưng vẫn bắt bí mật nằm trong lệnh.
   const trongLenh = THAT.replace('--email "$EMAIL"', '--email "$EMAIL" --khoa ${{ secrets.STORAGE_S3_SECRET_KEY }}');
   assert.ok(kiemWorkflow(trongLenh).some((l) => l.startsWith("bí mật ngoài khoá env: node")), "bí mật trong lệnh phải bị bắt");
+  // Luật chặn in bí mật phủ cả ba khoá kho ảnh.
+  const inKhoa = THAT.replace('EMAIL=$(jq', 'echo "$STORAGE_S3_SECRET_KEY"\n          EMAIL=$(jq');
+  assert.notEqual(inKhoa, THAT);
+  assert.ok(kiemWorkflow(inKhoa).some((l) => l.startsWith("in bí mật:")), "in khoá kho ảnh phải bị bắt");
   // Chiều đỏ trên bản sao: dời một biến lên env mức job.
   const dong = "          STORAGE_S3_ENDPOINT: ${{ secrets.STORAGE_S3_ENDPOINT }}\n";
   assert.ok(THAT.includes(dong));
