@@ -5,7 +5,7 @@ slug: nap-mau-co-anh
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-02-nap-mau-co-anh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
