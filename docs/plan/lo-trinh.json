@@ -1956,6 +1956,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
     },
     {
+      "ma": "va-che-vung-anh",
+      "cau_giao": "Vá Che vùng ảnh: trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ",
+      "slug": "va-che-vung-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
       "ma": "mo-so-lead",
       "cau_giao": "Đầu chủ được giao lead mở số chủ nhà của lead ấy ngay ở Hôm nay để gọi; mỗi lần mở số thành một vết (người, vai, lúc) như «Mở số» của hồ sơ căn; người không được giao lead không mở được.",
       "slug": "mo-so-lead",

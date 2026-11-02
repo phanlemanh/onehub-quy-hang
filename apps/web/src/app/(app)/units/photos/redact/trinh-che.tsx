@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { luuBanChe, type NguonLuu } from "./luu";
 import { dungBanChe, moAnh } from "./ve";
-import { khungTuMan, type Khung } from "./vung";
+import { diemTrenKhung, khungTuMan, type Khung } from "./vung";
 
 const KHUNG_MAN = { w: 960, h: 600 };
 
@@ -38,9 +38,12 @@ export function TrinhChe({ anh, nguon, urlGoc, onDong, onDaLuu }: { anh: UnitPho
   // Cỡ hiện: ảnh vừa khung màn, giữ tỉ lệ.
   const hien = bmp ? (() => { const k = Math.min(KHUNG_MAN.w / bmp.width, KHUNG_MAN.h / bmp.height, 1); return { w: Math.round(bmp.width * k), h: Math.round(bmp.height * k) }; })() : null;
 
+  // Khung vẽ co theo hộp khi hiện: điểm trong viền đổi về cỡ vẽ `hien` trước khi sang điểm ảnh.
   const diem = (e: PointerEvent<HTMLCanvasElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    const c = e.currentTarget;
+    const r = c.getBoundingClientRect();
+    const hienThi = { w: c.clientWidth, h: c.clientHeight };
+    return diemTrenKhung({ x: e.clientX - r.left - c.clientLeft, y: e.clientY - r.top - c.clientTop }, hienThi, hien ?? hienThi);
   };
   const tam = keo && bmp && hien ? khungTuMan(keo.a, keo.b, hien, { w: bmp.width, h: bmp.height }) : null;
 
@@ -67,7 +70,9 @@ export function TrinhChe({ anh, nguon, urlGoc, onDong, onDaLuu }: { anh: UnitPho
 
   return (
     <Dialog open onOpenChange={(mo) => (!mo && !dangLuu ? onDong() : null)}>
-      <DialogContent className="max-w-5xl">
+      {/* Ngoại lệ có hạn của ADR-0024 (va-che-vung-anh): bề rộng hộp và trần cao khung vẽ đặt tay tới khi trình che chuyển
+          sang ngăn nổi của hệ bố cục (hàng 91). Dưới sm giữ bề rộng mặc định của hộp trên điện thoại. */}
+      <DialogContent className="sm:max-w-[min(64rem,calc(100%-2rem))]">
         <DialogHeader>
           <DialogTitle>Che vùng</DialogTitle>
           <DialogDescription>Kéo để vẽ vùng che. Bản che lưu ở ngăn Gửi được; bản gốc sang Nội bộ.</DialogDescription>
@@ -79,7 +84,7 @@ export function TrinhChe({ anh, nguon, urlGoc, onDong, onDaLuu }: { anh: UnitPho
             width={hien.w}
             height={hien.h}
             aria-label="Ảnh để vẽ vùng che"
-            className="mx-auto cursor-crosshair touch-none rounded-md border"
+            className="mx-auto block h-auto max-h-[calc(100dvh-13rem)] w-auto max-w-full cursor-crosshair touch-none rounded-md border"
             onPointerDown={(e) => (e.currentTarget.setPointerCapture(e.pointerId), setKeo({ a: diem(e), b: diem(e) }))}
             onPointerMove={(e) => (keo ? setKeo({ a: keo.a, b: diem(e) }) : null)}
             onPointerUp={() => {

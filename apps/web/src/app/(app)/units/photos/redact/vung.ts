@@ -25,6 +25,15 @@ export function khungTuMan(a: { x: number; y: number }, b: { x: number; y: numbe
   return x1 > x0 && y1 > y0 ? { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } : null;
 }
 
+/**
+ * Điểm trên khung vẽ đang hiện ở cỡ `hienThi` (đã co theo hộp) → điểm trên cỡ vẽ `hien` mà `khungTuMan` đọc. Nhân theo từng
+ * trục; không kẹp — `khungTuMan` kẹp mép. Khung hiển thị rỗng (chưa bố trí) trả nguyên điểm.
+ */
+export function diemTrenKhung(p: { x: number; y: number }, hienThi: Co, hien: Co): { x: number; y: number } {
+  if (!hienThi.w || !hienThi.h) return p;
+  return { x: (p.x * hien.w) / hienThi.w, y: (p.y * hien.h) / hienThi.h };
+}
+
 /** Màu tô: đen đặc, đủ độ đục — làm mờ hay vỡ hạt đọc ngược được chữ số (Hỏi-3). */
 export const MAU_TO: readonly [number, number, number, number] = [0, 0, 0, 255];
 
