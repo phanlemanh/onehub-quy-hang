@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1136 692" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Lora:ital,wght@0,400;1,400&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');
+          .nm { font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 600; fill: #2d3142; }
+          .dm { font-family: 'Geist', sans-serif; font-size: 11px; font-weight: 600; fill: #2d3142; }
+          .sb { font-family: 'Geist', sans-serif; font-size: 9px; fill: #4f5d75; }
+          .tg { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #4f5d75; letter-spacing: 0.08em; }
+          .ey { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #4f5d75; letter-spacing: 0.18em; font-weight: 500; }
+          .al { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #4f5d75; letter-spacing: 0.06em; }
+          .ala { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #ba4513; letter-spacing: 0.06em; font-weight: 500; }
+          .co { font-family: 'Instrument Serif', 'Lora', serif; font-style: italic; font-size: 14px; fill: #2d3142; }
+          .lg { font-family: 'Geist', sans-serif; font-size: 9px; fill: #4f5d75; }
+          .lt { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #4f5d75; letter-spacing: 0.18em; }
+        </style>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- ===== Tình huống 1 · Gỡ sàn mẫu ===== -->
+      <text x="32" y="32" class="ey">TÌNH HUỐNG 1 · GỠ SÀN MẪU</text>
+
+      <!-- Mũi tên -->
+      <line x1="200" y1="148" x2="232" y2="148" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="424" y1="148" x2="456" y2="148" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M536 108 L536 80 Q536 72 544 72 L680 72" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <line x1="880" y1="72" x2="920" y2="72" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <path d="M536 188 L536 216 Q536 224 544 224 L680 224" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="880" y1="224" x2="920" y2="224" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Nhãn mũi tên -->
+      <rect x="548" y="48" width="120" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="608" y="60" class="ala" text-anchor="middle">A · KHUYẾN NGHỊ</text>
+      <rect x="596" y="200" width="24" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="608" y="212" class="al" text-anchor="middle">B</text>
+
+      <!-- Nút -->
+      <rect x="32" y="120" width="168" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="32" y="120" width="168" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="116" y="152" class="nm" text-anchor="middle">Gỡ sàn mẫu</text>
+
+      <rect x="232" y="120" width="192" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="232" y="120" width="192" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="328" y="146" class="nm" text-anchor="middle">Đọc mã ảnh của</text>
+      <text x="328" y="162" class="nm" text-anchor="middle">đúng sàn mẫu</text>
+
+      <polygon points="536,108 616,148 536,188 456,148" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="536" y="142" class="tg" text-anchor="middle">HỎI-2</text>
+      <text x="536" y="160" class="dm" text-anchor="middle">Cho xoá byte?</text>
+
+      <rect x="680" y="44" width="200" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="680" y="44" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="780" y="70" class="nm" text-anchor="middle">Xoá byte dưới tiền tố</text>
+      <text x="780" y="86" class="nm" text-anchor="middle">mã sàn mẫu</text>
+
+      <rect x="920" y="44" width="184" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="920" y="44" width="184" height="56" rx="28" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="1012" y="70" class="nm" text-anchor="middle">Storage sạch</text>
+      <text x="1012" y="86" class="sb" text-anchor="middle">không còn byte của sàn mẫu</text>
+
+      <rect x="680" y="196" width="200" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="680" y="196" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="780" y="228" class="nm" text-anchor="middle">Không xoá</text>
+
+      <rect x="920" y="196" width="184" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="920" y="196" width="184" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="1012" y="222" class="nm" text-anchor="middle">58 đối tượng mồ côi</text>
+      <text x="1012" y="238" class="sb" text-anchor="middle">mỗi lần gỡ · 29 căn × 2 bản</text>
+
+      <!-- Phân cách -->
+      <line x1="32" y1="276" x2="1104" y2="276" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <!-- ===== Tình huống 2 · Lần nạp hỏng giữa chừng ===== -->
+      <text x="32" y="304" class="ey">TÌNH HUỐNG 2 · LẦN NẠP HỎNG GIỮA CHỪNG</text>
+
+      <!-- Mũi tên -->
+      <line x1="200" y1="420" x2="232" y2="420" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="424" y1="420" x2="456" y2="420" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M536 380 L536 352 Q536 344 544 344 L680 344" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <line x1="880" y1="344" x2="920" y2="344" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <path d="M536 460 L536 488 Q536 496 544 496 L680 496" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="880" y1="496" x2="920" y2="496" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Nhãn mũi tên -->
+      <rect x="548" y="320" width="120" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="608" y="332" class="ala" text-anchor="middle">A · KHUYẾN NGHỊ</text>
+      <rect x="596" y="472" width="24" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="608" y="484" class="al" text-anchor="middle">B</text>
+
+      <!-- Nút -->
+      <rect x="32" y="392" width="168" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="32" y="392" width="168" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="116" y="418" class="nm" text-anchor="middle">Lần nạp hỏng</text>
+      <text x="116" y="434" class="sb" text-anchor="middle">sau khi đã ghi vài ảnh</text>
+
+      <rect x="232" y="392" width="192" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="232" y="392" width="192" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="328" y="418" class="nm" text-anchor="middle">Sổ ghi của lần chạy</text>
+      <text x="328" y="434" class="sb" text-anchor="middle">mã mọi ảnh đã gửi lên kho</text>
+
+      <polygon points="536,380 616,420 536,460 456,420" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="536" y="414" class="tg" text-anchor="middle">HỎI-2</text>
+      <text x="536" y="432" class="dm" text-anchor="middle">Cho xoá byte?</text>
+
+      <rect x="680" y="316" width="200" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="680" y="316" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="780" y="342" class="nm" text-anchor="middle">Xoá đúng các mã đã ghi</text>
+      <text x="780" y="358" class="sb" text-anchor="middle">rồi mới rút lại cả lần chạy</text>
+
+      <rect x="920" y="316" width="184" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="920" y="316" width="184" height="56" rx="28" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="1012" y="342" class="nm" text-anchor="middle">Storage sạch</text>
+      <text x="1012" y="358" class="sb" text-anchor="middle">như chưa từng chạy</text>
+
+      <rect x="680" y="468" width="200" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="680" y="468" width="200" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="780" y="500" class="nm" text-anchor="middle">Không xoá</text>
+
+      <rect x="920" y="468" width="184" height="56" rx="28" fill="#f5f5f5"/>
+      <rect x="920" y="468" width="184" height="56" rx="28" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="1012" y="494" class="nm" text-anchor="middle">Byte mồ côi tới 58</text>
+      <text x="1012" y="510" class="sb" text-anchor="middle">tuỳ hỏng ở ảnh thứ mấy</text>
+
+      <!-- ===== Cảnh báo ===== -->
+      <rect x="32" y="552" width="1072" height="56" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="48" y="574" class="ey">KHÔNG ĐẢO ĐƯỢC</text>
+      <text x="48" y="596" class="co">Xoá trên Storage bản thật không đảo được — mỗi lệnh xoá mang mã sàn mẫu, ca kiểm ghim điều đó.</text>
+
+      <!-- ===== Chú giải ===== -->
+      <line x1="32" y1="632" x2="1104" y2="632" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="32" y="652" class="lt">CHÚ GIẢI · HÌNH MANG LOẠI</text>
+
+      <rect x="32" y="664" width="24" height="12" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="64" y="674" class="lg">Bắt đầu / kết cục</text>
+
+      <rect x="188" y="664" width="24" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="220" y="674" class="lg">Bước</text>
+
+      <polygon points="296,670 308,664 320,670 308,676" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="328" y="674" class="lg">Rẽ nhánh</text>
+
+      <line x1="412" y1="670" x2="440" y2="670" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="448" y="674" class="lg">Lối khuyến nghị</text>
+
+      <line x1="560" y1="670" x2="588" y2="670" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="596" y="674" class="lg">Lối khác</text>
+
+      <text x="1104" y="674" class="tg" text-anchor="end">CĂN CỨ · AC-5 · AC-6</text>
+    </svg>
