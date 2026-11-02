@@ -530,7 +530,7 @@
     },
     {
       "ma": "65",
-      "cau_giao": "Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file; chủ nhà và số trong file thành liên hệ chủ nhà của sàn (hàng 85) qua cùng đường kiểm trùng theo liên hệ",
       "vai": "Đầu chủ",
       "tieu_chi": 11,
       "vi_sao": "Màn P0 N1, N2; luật 11; ADR-0011 quyết định 5, 8, 11. 11 tiêu chí vì xem trước và ghi không tách được mà giữ nghĩa «xem trước rồi mới ghi»",
@@ -543,7 +543,8 @@
         "9",
         "11",
         "12",
-        "15"
+        "15",
+        "85"
       ],
       "slug": "nhap-excel-xem-truoc-ghi",
       "nhom": "nhap-du-lieu",
@@ -706,7 +707,8 @@
       "hang": "T2",
       "dung_tren": [
         "15",
-        "17"
+        "17",
+        "85"
       ],
       "slug": "hom-nay-dau-chu",
       "nhom": "dau-chu",
@@ -892,13 +894,15 @@
     },
     {
       "ma": "31",
-      "cau_giao": "Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang",
+      "cau_giao": "Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách)",
       "vai": "nen",
       "tieu_chi": 9,
       "vi_sao": "Bất biến 4; luật 23–24; kiểm bắt buộc trước phát hành",
       "hang": "T3",
       "dung_tren": [
-        "11"
+        "11",
+        "18",
+        "85"
       ],
       "slug": "luat-an-va-kiem-ro-ri",
       "bat_khi": "Bộ kiểm rò rỉ chạy trong CI và đỏ khi cố tình thêm một trường nội bộ; gửi khách riêng không có mã căn",
@@ -1892,6 +1896,43 @@
         "packages/db/seed/**",
         ".github/workflows/**",
         "_acceptance/nap-mau-ban-that/**"
+      ]
+    },
+    {
+      "ma": "88",
+      "cau_giao": "Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng",
+      "slug": "va-duong-loi-hoan-tac",
+      "vi_sao": "Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng hàng 16 (Ngoài-3: hoàn tác lô báo thành công dù vài căn chưa ghi); gộp cùng giới hạn đã ghi ở va-sua-tren-o (Ngoài-1: hoàn tác hỏng vẫn đánh dấu đã hoàn tác; Ngoài-3: lỗi bất ngờ sau khi ô sửa đóng thì im lặng) vì cùng đường lỗi",
+      "vai": "Đầu chủ",
+      "tieu_chi": 7,
+      "hang": "T2",
+      "dung_tren": [
+        "16"
+      ],
+      "bat_khi": "Tiêm lỗi ghi ở kho trên máy cho 2 trong 5 căn của một lô rồi hoàn tác: thông báo kể đúng 2 căn chưa trả về, bấm lại hoàn tác được 2 căn ấy; lỗi bất ngờ sau khi ô sửa đóng hiện thông báo; hoàn tác thành công không đổi hành vi",
+      "vung": [
+        "apps/web/src/app/(app)/inventory/cell-edit/**",
+        "apps/web/src/app/(app)/inventory/bulk/**"
+      ]
+    },
+    {
+      "ma": "89",
+      "cau_giao": "Trưởng nhóm tích nhiều căn trên Bảng hàng rồi đổi đầu chủ một lần: chọn từ danh sách thành viên mang vai Đầu chủ của sàn, hộp hỏi kể đủ căn và người giữ cũ, đổi đầu chủ của hàng thì đổi luôn người giữ liên hệ chủ nhà theo luật một chủ một đầu chủ, hoàn tác được",
+      "slug": "doi-dau-chu-hang-loat",
+      "vi_sao": "Chủ kho duyệt tách ở Cổng Phạm vi hàng 16 (Hỏi-1): đổi đầu chủ hàng loạt cần API mới — hàng chưa mang đầu chủ, trưởng nhóm chưa lấy được danh sách thành viên, web chưa biết vai; đứng sau 85 vì đổi đầu chủ phải đổi người giữ liên hệ chủ nhà (Hỏi-3 hàng 85)",
+      "vai": "Trưởng nhóm",
+      "tieu_chi": 9,
+      "hang": "T3",
+      "dung_tren": [
+        "16",
+        "85"
+      ],
+      "bat_khi": "Trưởng nhóm đổi đầu chủ cho 5 căn của 2 chủ nhà: mọi hàng của 2 chủ ấy và 2 liên hệ cùng sang đầu chủ mới; đầu chủ không phải trưởng nhóm không thấy lệnh; hoàn tác trả đủ người giữ cũ; bộ kiểm cách ly xanh",
+      "vung": [
+        "apps/web/src/app/(app)/inventory/bulk/**",
+        "packages/api/src/listings/**",
+        "packages/api/src/contacts/**",
+        "packages/db/migrations/**"
       ]
     },
     {
