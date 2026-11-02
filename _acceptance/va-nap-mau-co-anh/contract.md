@@ -5,7 +5,7 @@ slug: va-nap-mau-co-anh
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-va-nap-mau-co-anh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -57,3 +57,6 @@ Quét tay — một trục rời rạc nhỏ (sổ quyết định, dòng «bỏ
 - Các ca «go-xoa-byte», «chon-kho», «khong-khoa-ngoai-ban-that» — ngoài mục chủ kho mở.
 
 ## Notes
+
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Bài kiểm dựng đường ảnh mong đợi bằng chính hàm máy chủ dùng để ghi, nên hàm ấy đặt sai mã sàn thì ảnh vào sai thư mục kho mà bài kiểm vẫn xanh.
