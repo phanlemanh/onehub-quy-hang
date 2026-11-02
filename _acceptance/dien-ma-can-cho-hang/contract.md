@@ -35,7 +35,7 @@ Then ràng buộc loại sự kiện nhận nó, loại lạ vẫn bị chặn; 
 ### AC-3 — API gắn mã căn (cross-layer)
 Given đầu chủ có quyền sửa một hàng chưa có mã
 When gửi `unit_number_assigned` qua `POST /api/v1/listings/{id}/events`
-Then 201 và hàng mang mã mới; hàng đã có mã → 422 `unit-number-already-set`; sàn đã có hàng đang mở khác trên cùng
+Then 200 (như mọi lệnh đổi hàng) và hàng mang mã mới; hàng đã có mã → 422 `unit-number-already-set`; sàn đã có hàng đang mở khác trên cùng
 căn (cùng toà, mã so bằng `app.unit_key`; «đang mở» là tập `OPEN_STATUSES` của lõi) → 422 `unit-already-listed` kèm mã
 hàng kia; hàng cùng căn ở trạng thái đóng không chặn;
 hàng của sàn khác cùng căn không chặn; người không có quyền sửa hàng → 403.
@@ -56,7 +56,8 @@ Given hồ sơ của hàng chưa có mã
 When đầu chủ gõ mã và bấm «Lưu mã căn» (hay Enter)
 Then lệnh đi qua hàng đợi lệnh trên máy; máy chủ nhận thì địa chỉ chuyển sang hồ sơ theo mã mới và «Còn thiếu» không còn
 «Mã căn»; máy chủ từ chối (đang có mạng, hay sau khi có mạng lại) thì hàng trên máy trở về chưa có mã, lệnh rời hàng đợi
-vào «Cần xem» với lý do của máy chủ («Căn này đã có hàng đang mở: <mã hàng>»), hồ sơ hiện lỗi ấy tại ô và giữ chữ đã gõ
+vào «Cần xem» với lý do của máy chủ («Căn này đã có hàng đang mở (<trạng thái hàng kia>)», mã hàng kia đi trong thân trả
+lời để mở liên kết «Mở hàng kia», không in ra chữ), hồ sơ hiện lỗi ấy tại ô và giữ chữ đã gõ
 khi còn mở; mã rỗng thì báo «Gõ mã căn», không gửi.
 
 ### AC-7 — Lối vào hồ sơ của hàng chưa có mã

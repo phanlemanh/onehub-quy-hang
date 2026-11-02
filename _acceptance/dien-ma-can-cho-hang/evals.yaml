@@ -25,7 +25,7 @@ evals:
     criterion: AC-3
     executor: test
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «API gắn mã căn» (packages/api/test-db/dien-ma-can.test.ts) ok — ma trận viết trước năm trạng thái: hàng chưa mã → 201 và GET hàng trả unitNumber; hàng đã mã → 422 'unit-number-already-set'; hàng cùng căn ở MỖI trạng thái của OPEN_STATUSES (lõi dedupe, mã khác hoa thường và dấu gạch: 'a12-05' với 'A12.05') → 422 'unit-already-listed' kèm id hàng kia, một ca mỗi trạng thái; hàng cùng căn ở MỖI trạng thái đóng (STANDARD_STATUSES trừ OPEN_STATUSES) → 201, một ca mỗi trạng thái; hàng cùng căn của sàn khác → 201 (cách ly); người không có quyền sửa hàng → 403; số ca = 3 + |OPEN_STATUSES| + |đóng| + 1, assert số bằng ma trận dựng từ chính hai danh sách của lõi."
+    expected: "exit 0; ca «API gắn mã căn» (packages/api/test-db/dien-ma-can.test.ts) ok — ma trận viết trước năm trạng thái: hàng chưa mã → 200 và GET hàng trả unitNumber; hàng đã mã → 422 'unit-number-already-set'; hàng cùng căn ở MỖI trạng thái của OPEN_STATUSES (lõi dedupe, mã khác hoa thường và dấu gạch: 'a12-05' với 'A12.05') → 422 'unit-already-listed' kèm id hàng kia, một ca mỗi trạng thái; hàng cùng căn ở MỖI trạng thái đóng (STANDARD_STATUSES trừ OPEN_STATUSES) → 200, một ca mỗi trạng thái; hàng cùng căn của sàn khác → 200 (cách ly); người không có quyền sửa hàng → 403; số ca = 3 + |OPEN_STATUSES| + |đóng| + 1, assert số bằng ma trận dựng từ chính hai danh sách của lõi."
     paths: [packages/api/src/listings/**, packages/db/migrations/**, packages/api/test-db/dien-ma-can.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -72,7 +72,7 @@ evals:
     criterion: AC-6
     executor: test
     cmd: config:executors.test.web_db
-    expected: "exit 0; ca «đồng bộ gắn mã căn» (apps/web/src/lib/sync/test-db/*.db-test.mts) ok — bộ đồng bộ nói với API thật, ma trận viết trước 3 ca: 201 → hàng trên máy mang mã, hàng đợi rỗng; 422 unit-already-listed (gửi sau khi có mạng lại) → hàng trên máy về chưa mã, lệnh rời hàng đợi, «Cần xem» có lý do chứa «Căn này đã có hàng đang mở» và id hàng kia; 422 unit-number-already-set → hàng trên máy giữ mã của máy chủ, «Cần xem» có lý do; đếm đủ 3 ca, assert số."
+    expected: "exit 0; ca «đồng bộ gắn mã căn» (apps/web/src/lib/sync/test-db/*.db-test.mts) ok — bộ đồng bộ nói với API thật, ma trận viết trước 3 ca: 200 → hàng trên máy mang mã, hàng đợi rỗng; 422 unit-already-listed (gửi sau khi có mạng lại) → hàng trên máy về chưa mã, lệnh rời hàng đợi, «Cần xem» có lý do chứa «Căn này đã có hàng đang mở» kèm trạng thái hàng kia, không chứa id; mục «Cần xem» mang id hàng kia; 422 unit-number-already-set → hàng trên máy giữ mã của máy chủ, «Cần xem» có lý do; đếm đủ 3 ca, assert số."
     paths: [apps/web/src/lib/sync/**, packages/api/src/listings/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
