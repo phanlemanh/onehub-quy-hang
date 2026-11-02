@@ -1,42 +1,122 @@
-37. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-38. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-39. [GET] http://localhost:3481/api/v1/listings => [200] OK
-40. [GET] http://localhost:3481/units/A-01.03?_rsc=EpsVYRCCROET-7bJ => [200] OK
-45. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.03 => [200] OK
-46. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-47. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.03 => [200] OK
-48. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-49. [GET] http://localhost:3481/api/v1/listings/8bbbf6da-0b42-4eee-9450-7cfbb49f2909 => [200] OK
-50. [GET] http://localhost:3481/api/v1/listings/8bbbf6da-0b42-4eee-9450-7cfbb49f2909 => [200] OK
-51. [GET] http://localhost:3481/api/v1/listings => [200] OK
-53. [GET] http://localhost:3481/api/v1/listings => [200] OK
-54. [GET] http://localhost:3481/api/v1/listings => [200] OK
-85. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-86. [GET] http://localhost:3481/api/v1/catalog => [200] OK
-87. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
-88. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
-89. [GET] http://localhost:3481/api/v1/listings/0d3ccafa-17be-4f8c-92ec-448b37bb2f4b => [200] OK
-90. [GET] http://localhost:3481/api/v1/listings => [200] OK
-92. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
-93. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
+1. [GET] http://localhost:3481/today => [200] OK
+2. [GET] http://localhost:3481/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 => [200] OK
+3. [GET] http://localhost:3481/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 => [200] OK
+4. [GET] http://localhost:3481/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css => [200] OK
+5. [GET] http://localhost:3481/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js => [200] OK
+6. [GET] http://localhost:3481/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js => [200] OK
+7. [GET] http://localhost:3481/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js => [200] OK
+8. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js => [200] OK
+9. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js => [200] OK
+10. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js => [200] OK
+11. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js => [200] OK
+12. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js => [200] OK
+13. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js => [200] OK
+14. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js => [200] OK
+15. [GET] http://localhost:3481/_next/static/chunks/apps_web_1anvha4rlo79g._.js => [200] OK
+16. [GET] http://localhost:3481/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js => [200] OK
+17. [GET] http://localhost:3481/_next/static/chunks/apps_web_0zvjq820toihh._.js => [200] OK
+18. [GET] http://localhost:3481/_next/static/chunks/node_modules_1nc4crjayg17u._.js => [200] OK
+19. [GET] http://localhost:3481/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js => [200] OK
+20. [GET] http://localhost:3481/_next/static/chunks/_0vk_6u2fxr3o4._.js => [200] OK
+21. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js => [200] OK
+22. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js => [200] OK
+23. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js => [200] OK
+24. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js => [200] OK
+25. [GET] http://localhost:3481/_next/static/chunks/node_modules_16ircntwozn6b._.js => [200] OK
+26. [GET] http://localhost:3481/_next/static/chunks/_0ulkem9-0qdfz._.js => [200] OK
+27. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40tanstack_table-core_dist_0o17k3b-tj3z5._.js => [200] OK
+28. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_078uw-_vurtcd._.js => [200] OK
+29. [GET] http://localhost:3481/_next/static/chunks/node_modules_react-resizable-panels_dist_react-resizable-panels_0chim-r0s13l6.js => [200] OK
+30. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40dnd-kit_core_dist_core_esm_0i-bf15xqk6tl.js => [200] OK
+31. [GET] http://localhost:3481/_next/static/chunks/node_modules_0l7s04qb8hnl9._.js => [200] OK
+32. [GET] http://localhost:3481/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 => [200] OK
+33. [GET] http://localhost:3481/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js => [200] OK
+34. [GET] http://localhost:3481/favicon.ico => [404] Not Found
+35. [GET] http://localhost:3481/api/v1/listings => [200] OK
+36. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+37. [GET] http://localhost:3481/api/v1/company/settings/queue => [200] OK
+38. [GET] http://localhost:3481/api/v1/leads/assigned => [200] OK
+39. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+40. [GET] http://localhost:3481/api/v1/company/settings/queue => [200] OK
+41. [GET] http://localhost:3481/api/v1/leads/assigned => [200] OK
+42. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.03 => [200] OK
+43. [GET] http://localhost:3481/api/v1/listings => [200] OK
+44. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.05 => [200] OK
+45. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.04 => [200] OK
+46. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06 => [200] OK
+47. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.04 => [200] OK
+48. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+49. [GET] http://localhost:3481/units/A-04.06 => [200] OK
+50. [GET] http://localhost:3481/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 => [200] OK
+51. [GET] http://localhost:3481/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 => [200] OK
+52. [GET] http://localhost:3481/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css => [304] Not Modified
+53. [GET] http://localhost:3481/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js => [304] Not Modified
+54. [GET] http://localhost:3481/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js => [304] Not Modified
+55. [GET] http://localhost:3481/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js => [304] Not Modified
+56. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js => [304] Not Modified
+57. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js => [304] Not Modified
+58. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js => [304] Not Modified
+59. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js => [304] Not Modified
+60. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js => [304] Not Modified
+61. [GET] http://localhost:3481/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js => [304] Not Modified
+62. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js => [304] Not Modified
+63. [GET] http://localhost:3481/_next/static/chunks/apps_web_1anvha4rlo79g._.js => [304] Not Modified
+64. [GET] http://localhost:3481/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js => [304] Not Modified
+65. [GET] http://localhost:3481/_next/static/chunks/apps_web_0ni5l-jxnvmgl._.js => [200] OK
+66. [GET] http://localhost:3481/_next/static/chunks/node_modules_1nc4crjayg17u._.js => [304] Not Modified
+67. [GET] http://localhost:3481/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js => [304] Not Modified
+68. [GET] http://localhost:3481/_next/static/chunks/_0vk_6u2fxr3o4._.js => [304] Not Modified
+69. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js => [304] Not Modified
+70. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js => [304] Not Modified
+71. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js => [304] Not Modified
+72. [GET] http://localhost:3481/_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js => [304] Not Modified
+73. [GET] http://localhost:3481/_next/static/chunks/node_modules_16ircntwozn6b._.js => [304] Not Modified
+74. [GET] http://localhost:3481/_next/static/chunks/_1vkpfpwwg5swm._.js => [200] OK
+75. [GET] http://localhost:3481/_next/static/chunks/node_modules_096k5pd-5z7e2._.js => [200] OK
+76. [GET] http://localhost:3481/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 => [200] OK
+77. [GET] http://localhost:3481/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js => [304] Not Modified
+78. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+79. [GET] http://localhost:3481/api/v1/catalog => [200] OK
+80. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+81. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+82. [GET] http://localhost:3481/api/v1/listings/0d3ccafa-17be-4f8c-92ec-448b37bb2f4b => [200] OK
+83. [GET] http://localhost:3481/api/v1/listings => [200] OK
+84. [GET] http://localhost:3481/api/v1/units/photos/086b2500-87e6-4ffe-9e60-90e43c21c294/thumb => [200] OK
+85. [GET] http://localhost:3481/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb => [200] OK
+86. [GET] http://localhost:3481/api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/thumb => [200] OK
+87. [GET] http://localhost:3481/api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/thumb => [200] OK
+88. [GET] http://localhost:3481/api/v1/units/photos/059fe3c9-c597-453c-9e71-da7c9665b2e6/thumb => [200] OK
+89. [GET] http://localhost:3481/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/thumb => [200] OK
+90. [GET] http://localhost:3481/api/v1/units/photos/b4b73d72-7e5e-498c-af34-1057601de69b/thumb => [200] OK
+91. [GET] http://localhost:3481/api/v1/units/photos/795d7b02-fa25-48ff-afa2-f35957e6505d/thumb => [200] OK
+92. [GET] http://localhost:3481/api/v1/units/photos/5481b30c-fbf2-4c69-932e-dedbf2504db4/thumb => [200] OK
+93. [GET] http://localhost:3481/api/v1/units/photos/af5f1ba3-ec3d-4b3c-9493-859fb3e87c94/thumb => [200] OK
 94. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
-96. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
-97. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
-98. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
-100. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
-101. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
-102. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
-104. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
-105. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
-106. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
-108. [GET] http://localhost:3481/api/v1/listings => [200] OK
-109. [GET] http://localhost:3481/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original => [200] OK
-110. [GET] http://localhost:3481/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original => [200] OK
-111. [GET] http://localhost:3481/api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/original => [200] OK
-112. [GET] http://localhost:3481/api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/original => [200] OK
-113. [GET] http://localhost:3481/api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/original => [200] OK
-114. [GET] http://localhost:3481/api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/original => [200] OK
-115. [GET] http://localhost:3481/api/v1/units/photos/059fe3c9-c597-453c-9e71-da7c9665b2e6/original => [200] OK
-116. [GET] http://localhost:3481/api/v1/units/photos/059fe3c9-c597-453c-9e71-da7c9665b2e6/original => [200] OK
-
-Note: 76 static requests not shown, run with "static" option to see them.--- console: [ERROR] 404 /favicon.ico (static, note-only)
+95. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
+96. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
+97. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+98. [GET] http://localhost:3481/api/v1/units/photos/62f65ddf-c6e5-47fd-b959-95c4751e8eab/thumb => [200] OK
+99. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
+100. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
+101. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+102. [GET] http://localhost:3481/api/v1/units/photos/543279c3-461a-47c9-be6b-8b48434b7ad9/thumb => [200] OK
+103. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
+104. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
+105. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+106. [GET] http://localhost:3481/api/v1/units/photos/40bff383-d8b1-4c96-885d-cb590e542990/thumb => [200] OK
+107. [POST] http://localhost:3481/api/v1/units/photos/upload-url => [200] OK
+108. [POST] http://localhost:3481/api/v1/units/photos => [201] Created
+109. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+110. [GET] http://localhost:3481/api/v1/units/photos/50846f4f-36ff-43cf-bf69-af1694766532/thumb => [200] OK
+111. [GET] http://localhost:3481/api/v1/listings => [200] OK
+112. [GET] http://localhost:3481/api/v1/units/photos/62f65ddf-c6e5-47fd-b959-95c4751e8eab/original => [200] OK
+113. [GET] http://localhost:3481/api/v1/units/photos/62f65ddf-c6e5-47fd-b959-95c4751e8eab/original => [200] OK
+114. [GET] http://localhost:3481/api/v1/units/photos/543279c3-461a-47c9-be6b-8b48434b7ad9/original => [200] OK
+115. [GET] http://localhost:3481/api/v1/units/photos/543279c3-461a-47c9-be6b-8b48434b7ad9/original => [200] OK
+116. [GET] http://localhost:3481/api/v1/units/photos/40bff383-d8b1-4c96-885d-cb590e542990/original => [200] OK
+117. [GET] http://localhost:3481/api/v1/units/photos/40bff383-d8b1-4c96-885d-cb590e542990/original => [200] OK
+118. [GET] http://localhost:3481/api/v1/units/photos/50846f4f-36ff-43cf-bf69-af1694766532/original => [200] OK
+119. [GET] http://localhost:3481/api/v1/units/photos/50846f4f-36ff-43cf-bf69-af1694766532/original => [200] OK
+120. [GET] http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+--- console errors/warnings ---
+(không có)

@@ -1,19 +1,19 @@
-E5 network (driver: Chrome headless CDP, hook fetch + PerformanceResourceTiming + console.error)
-origin app: http://localhost:3481 (dev server dùng chung, không do eval này bật)
+E5 network (driver: Chrome headless CDP, fetch hook + PerformanceResourceTiming + console.error/onerror hook)
+origin app: http://localhost:3481 (dev server dùng chung, không do eval này bật; config dev_server.url = http://localhost:3460 — khác cổng)
 
 == fetch/XHR (app-origin) ==
 GET /api/v1/catalog -> 200
 GET /api/v1/catalog -> 200
 GET /api/v1/listings -> 200
 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 -> 200
-GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 -> 200
 GET /api/v1/listings/0d3ccafa-17be-4f8c-92ec-448b37bb2f4b -> 200
-POST /api/v1/units/photos/upload-url -> 200
-POST /api/v1/units/photos -> 201
 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 -> 200
 GET /api/v1/listings -> 200
-GET /api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original -> 200
-GET /api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original -> 200
+GET /api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original -> 200
+GET /api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original -> 200
+
+== console errors / onerror / unhandledrejection ==
+(không có)
 
 == resource entries ==
 link 200 /_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2
@@ -21,26 +21,26 @@ link 200 /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2
 link 200 /_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css
 link 200 /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js
 script 200 /_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js
-script 200 /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js
 script 200 /_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js
+script 200 /_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js
 script 200 /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js
 script 200 /_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js
-script 200 /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js
-script 200 /_next/static/chunks/apps_web_1anvha4rlo79g._.js
-script 200 /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js
-script 200 /_next/static/chunks/apps_web_0ni5l-jxnvmgl._.js
-script 200 /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js
-script 200 /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js
-script 200 /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js
 script 200 /_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js
 script 200 /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js
+script 200 /_next/static/chunks/apps_web_1anvha4rlo79g._.js
+script 200 /_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js
+script 200 /_next/static/chunks/apps_web_0ni5l-jxnvmgl._.js
+script 200 /_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js
+script 200 /_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js
+script 200 /_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js
+script 200 /_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js
 script 200 /_next/static/chunks/_0vk_6u2fxr3o4._.js
-script 200 /_next/static/chunks/node_modules_1nc4crjayg17u._.js
 script 200 /_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js
+script 200 /_next/static/chunks/node_modules_1nc4crjayg17u._.js
 script 200 /_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js
+script 200 /_next/static/chunks/node_modules_16ircntwozn6b._.js
 script 200 /_next/static/chunks/_1vkpfpwwg5swm._.js
 script 200 /_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js
-script 200 /_next/static/chunks/node_modules_16ircntwozn6b._.js
 script 200 /_next/static/chunks/node_modules_096k5pd-5z7e2._.js
 css 200 /_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2
 script 200 /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js
@@ -51,23 +51,23 @@ fetch 200 /api/v1/listings
 fetch 200 /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
 fetch 200 /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
 fetch 200 /api/v1/listings/0d3ccafa-17be-4f8c-92ec-448b37bb2f4b
-img 200 /api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb
 img 200 /api/v1/units/photos/086b2500-87e6-4ffe-9e60-90e43c21c294/thumb
-img 200 /api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/thumb
-img 200 /api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/thumb
-img 200 /api/v1/units/photos/059fe3c9-c597-453c-9e71-da7c9665b2e6/thumb
-fetch 200 /api/v1/units/photos/upload-url
-fetch 201 /api/v1/units/photos
-fetch 200 /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
 img 200 /api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/thumb
+img 200 /api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb
+img 200 /api/v1/units/photos/059fe3c9-c597-453c-9e71-da7c9665b2e6/thumb
+img 200 /api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/thumb
+img 200 /api/v1/units/photos/b4b73d72-7e5e-498c-af34-1057601de69b/thumb
+img 200 /api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/thumb
+img 200 /api/v1/units/photos/795d7b02-fa25-48ff-afa2-f35957e6505d/thumb
+img 200 /api/v1/units/photos/af5f1ba3-ec3d-4b3c-9493-859fb3e87c94/thumb
+img 200 /api/v1/units/photos/5481b30c-fbf2-4c69-932e-dedbf2504db4/thumb
+img 200 /api/v1/units/photos/543279c3-461a-47c9-be6b-8b48434b7ad9/thumb
+img 200 /api/v1/units/photos/62f65ddf-c6e5-47fd-b959-95c4751e8eab/thumb
+img 200 /api/v1/units/photos/40bff383-d8b1-4c96-885d-cb590e542990/thumb
+img 200 /api/v1/units/photos/50846f4f-36ff-43cf-bf69-af1694766532/thumb
 fetch 200 /api/v1/listings
-fetch 200 /api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original
-fetch 200 /api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original
+fetch 200 /api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original
+fetch 200 /api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original
 
-== navigation ==
-[{"n":"http://localhost:3481/units/A-04.06?toa=To%C3%A0%20A","s":200}]
-
-== console.error / onerror / unhandledrejection ==
-(không có)
-
-FAIL-eligible >=400/ERR: 1
+resource lỗi (status 0 hoặc >=400): 1
+404 /favicon.ico

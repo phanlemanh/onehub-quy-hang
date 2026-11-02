@@ -5,7 +5,7 @@ slug: va-che-vung-anh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: _acceptance/va-che-vung-anh/design.md
 approved_by:
 approved_at:
@@ -60,3 +60,5 @@ Bỏ quét không gian: một lỗi đã có tên (Ngoài-3 hàng 19); trục c�
 - Nếu hàng 91 gộp vào nhánh chính trước khi chấm S4 hay trước khi gộp hàng này và luật quét khuôn đỏ ở hai lớp trên: xin chạm
   bản đồ khuôn (yêu cầu `cham-tep`), ghi ngoại lệ có hạn ở đó, thêm đúng tệp ấy vào danh sách cho phép của E10; báo cáo S4 ghi
   E8 chạy trên nhánh chính có hay chưa có luật quét khuôn của hàng 91.
+- Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Hồ sơ nghiệm thu ghi một số bài kiểm màn hình là đạt dù chưa có số đo kèm theo như quy định của chính hồ sơ. Người dùng cuối không thấy lỗi nào; chỉ là bằng chứng chưa chắc chắn bằng cách hồ sơ tự đặt ra. — `_acceptance/va-che-vung-anh/evals.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Hồ sơ ghi hai bài kiểm khung che là đạt nhưng chưa có số đo thật kèm theo, nên chưa chứng minh chắc chắn vùng che nằm đúng chỗ con trỏ. Người dùng cuối chưa thấy lỗi nào. — `_acceptance/va-che-vung-anh/evals.yaml`

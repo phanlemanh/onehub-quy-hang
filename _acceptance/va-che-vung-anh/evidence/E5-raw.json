@@ -1,17 +1,46 @@
 {
  "ma": "A-04.06 (Toà A)",
- "soAnhTruoc": 5,
+ "anhId": "88bbde78-28b6-46d5-88ea-4cc0c6940c5c",
+ "soAnhTruoc": 14,
+ "anh": {
+  "id": "88bbde78-28b6-46d5-88ea-4cc0c6940c5c",
+  "buildingName": "Toà A",
+  "unitNumber": "A-04.06",
+  "compartment": "shareable",
+  "displayOrder": 1,
+  "isCover": false,
+  "isSample": false,
+  "takenAt": null,
+  "addedAt": "2026-11-02T05:38:52.484Z",
+  "contentType": "image/png",
+  "width": 2000,
+  "height": 1500
+ },
  "vien": {
   "iw": 375,
-  "ih": 812
+  "ih": 812,
+  "dpr": 1,
+  "sw": 375
  },
- "kichThuocTep": 63522,
- "anhMoi": {
-  "id": "e7e4c5ef-43c1-4ae8-8559-8c953b1f627a",
-  "w": 2000,
-  "h": 1500,
-  "ngan": "shareable"
- },
+ "imgSrcs": [
+  "/api/v1/units/photos/086b2500-87e6-4ffe-9e60-90e43c21c294/thumb",
+  "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb",
+  "/api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/thumb",
+  "/api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/thumb",
+  "/api/v1/units/photos/059fe3c9-c597-453c-9e71-da7c9665b2e6/thumb",
+  "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/thumb",
+  "/api/v1/units/photos/b4b73d72-7e5e-498c-af34-1057601de69b/thumb",
+  "/api/v1/units/photos/795d7b02-fa25-48ff-afa2-f35957e6505d/thumb",
+  "/api/v1/units/photos/5481b30c-fbf2-4c69-932e-dedbf2504db4/thumb",
+  "/api/v1/units/photos/af5f1ba3-ec3d-4b3c-9493-859fb3e87c94/thumb",
+  "/api/v1/units/photos/62f65ddf-c6e5-47fd-b959-95c4751e8eab/thumb",
+  "/api/v1/units/photos/543279c3-461a-47c9-be6b-8b48434b7ad9/thumb",
+  "/api/v1/units/photos/40bff383-d8b1-4c96-885d-cb590e542990/thumb",
+  "/api/v1/units/photos/50846f4f-36ff-43cf-bf69-af1694766532/thumb"
+ ],
+ "imgSrcCuaAnh": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb",
+ "nutThaoTac": "{\"x\":319,\"y\":429.5}",
+ "mucMenu": "Che vùng…",
  "hop": {
   "x": 16,
   "y": 154.625,
@@ -34,69 +63,98 @@
  },
  "canvasKichThuoc": {
   "w": 800,
-  "h": 600
+  "h": 600,
+  "cw": 309,
+  "ch": 232
  },
  "vien2": {
   "iw": 375,
   "ih": 812,
   "sw": 375
  },
+ "dialogs": 1,
+ "tieuDe": "Che vùng\n\nKéo để vẽ vùng che. Bản che lưu ở ngăn Gửi được; bản gốc sang Nội bộ.\n\n0 vùng che\nBỏ khung cuối\nBỏ hết\nLưu bản che\nClose",
  "chan": {
-  "coFooter": true,
-  "nut": [
+  "ftClass": "-mx-4 -mb-4 flex flex-col-reverse rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end items-center gap-2",
+  "ftSlot": "dialog-footer",
+  "ft": {
+   "x": 16,
+   "y": 500.375,
+   "w": 343,
+   "h": 157,
+   "l": 16,
+   "r": 359,
+   "t": 500.375,
+   "b": 657.375
+  },
+  "nutTrongChan": [
    {
     "t": "Bỏ khung cuối",
     "dis": true,
     "r": {
+     "x": 133.921875,
+     "y": 589.375,
+     "w": 107.15625,
+     "h": 28,
      "l": 133.921875,
      "r": 241.078125,
      "t": 589.375,
-     "b": 617.375,
-     "w": 107.15625,
-     "h": 28
-    }
+     "b": 617.375
+    },
+    "conTrongChan": true
    },
    {
     "t": "Bỏ hết",
     "dis": true,
     "r": {
+     "x": 156.6875,
+     "y": 553.375,
+     "w": 61.625,
+     "h": 28,
      "l": 156.6875,
      "r": 218.3125,
      "t": 553.375,
-     "b": 581.375,
-     "w": 61.625,
-     "h": 28
-    }
+     "b": 581.375
+    },
+    "conTrongChan": true
    },
    {
     "t": "Lưu bản che",
     "dis": true,
     "r": {
+     "x": 139.890625,
+     "y": 517.375,
+     "w": 95.203125,
+     "h": 28,
      "l": 139.890625,
      "r": 235.09375,
      "t": 517.375,
-     "b": 545.375,
-     "w": 95.203125,
-     "h": 28
-    }
+     "b": 545.375
+    },
+    "conTrongChan": true
    }
   ],
-  "text": "0 vùng che\nBỏ khung cuối\nBỏ hết\nLưu bản che",
   "tatCaNutTrongHop": [
-   "Bỏ khung cuối",
-   "Bỏ hết",
-   "Lưu bản che",
-   "Close"
+   {
+    "t": "Bỏ khung cuối",
+    "inFooter": true
+   },
+   {
+    "t": "Bỏ hết",
+    "inFooter": true
+   },
+   {
+    "t": "Lưu bản che",
+    "inFooter": true
+   },
+   {
+    "t": "Close",
+    "inFooter": false
+   }
   ],
-  "fr": {
-   "l": 16,
-   "r": 359,
-   "t": 500.375,
-   "b": 657.375
-  }
+  "chanText": "0 vùng che\nBỏ khung cuối\nBỏ hết\nLưu bản che"
  },
  "dongHop": true,
- "soAnhSau": 6,
  "net": [
   {
    "u": "/api/v1/catalog",
@@ -119,24 +177,9 @@
    "s": 200
   },
   {
-   "u": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06",
-   "m": "GET",
-   "s": 200
-  },
-  {
    "u": "/api/v1/listings/0d3ccafa-17be-4f8c-92ec-448b37bb2f4b",
    "m": "GET",
    "s": 200
-  },
-  {
-   "u": "/api/v1/units/photos/upload-url",
-   "m": "POST",
-   "s": 200
-  },
-  {
-   "u": "/api/v1/units/photos",
-   "m": "POST",
-   "s": 201
   },
   {
    "u": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06",
@@ -149,12 +192,12 @@
    "s": 200
   },
   {
-   "u": "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original",
+   "u": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original",
    "m": "GET",
    "s": 200
   },
   {
-   "u": "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original",
+   "u": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original",
    "m": "GET",
    "s": 200
   }
@@ -187,12 +230,12 @@
    "t": "script"
   },
   {
-   "n": "/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js",
+   "n": "/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js",
    "s": 200,
    "t": "script"
   },
   {
-   "n": "/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js",
+   "n": "/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js",
    "s": 200,
    "t": "script"
   },
@@ -207,41 +250,6 @@
    "t": "script"
   },
   {
-   "n": "/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/apps_web_1anvha4rlo79g._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/apps_web_0ni5l-jxnvmgl._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
    "n": "/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js",
    "s": 200,
    "t": "script"
@@ -252,12 +260,42 @@
    "t": "script"
   },
   {
-   "n": "/_next/static/chunks/_0vk_6u2fxr3o4._.js",
+   "n": "/_next/static/chunks/apps_web_1anvha4rlo79g._.js",
    "s": 200,
    "t": "script"
   },
   {
-   "n": "/_next/static/chunks/node_modules_1nc4crjayg17u._.js",
+   "n": "/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/apps_web_0ni5l-jxnvmgl._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/node_modules_%40base-ui_react_internals_0q9jwk7gyhiy4._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/_0vk_6u2fxr3o4._.js",
    "s": 200,
    "t": "script"
   },
@@ -267,7 +305,17 @@
    "t": "script"
   },
   {
+   "n": "/_next/static/chunks/node_modules_1nc4crjayg17u._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
    "n": "/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js",
+   "s": 200,
+   "t": "script"
+  },
+  {
+   "n": "/_next/static/chunks/node_modules_16ircntwozn6b._.js",
    "s": 200,
    "t": "script"
   },
@@ -278,11 +326,6 @@
   },
   {
    "n": "/_next/static/chunks/node_modules_%40base-ui_react_1j-1fwe931ita._.js",
-   "s": 200,
-   "t": "script"
-  },
-  {
-   "n": "/_next/static/chunks/node_modules_16ircntwozn6b._.js",
    "s": 200,
    "t": "script"
   },
@@ -337,22 +380,17 @@
    "t": "fetch"
   },
   {
-   "n": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb",
-   "s": 200,
-   "t": "img"
-  },
-  {
    "n": "/api/v1/units/photos/086b2500-87e6-4ffe-9e60-90e43c21c294/thumb",
    "s": 200,
    "t": "img"
   },
   {
-   "n": "/api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/thumb",
+   "n": "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/thumb",
    "s": 200,
    "t": "img"
   },
   {
-   "n": "/api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/thumb",
+   "n": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/thumb",
    "s": 200,
    "t": "img"
   },
@@ -362,22 +400,52 @@
    "t": "img"
   },
   {
-   "n": "/api/v1/units/photos/upload-url",
+   "n": "/api/v1/units/photos/1e861ab2-4e01-4a69-bcca-343bce77a664/thumb",
    "s": 200,
-   "t": "fetch"
+   "t": "img"
   },
   {
-   "n": "/api/v1/units/photos",
-   "s": 201,
-   "t": "fetch"
-  },
-  {
-   "n": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06",
+   "n": "/api/v1/units/photos/b4b73d72-7e5e-498c-af34-1057601de69b/thumb",
    "s": 200,
-   "t": "fetch"
+   "t": "img"
   },
   {
-   "n": "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/thumb",
+   "n": "/api/v1/units/photos/391641ce-eda7-421b-a0aa-f2ac74a1ce1d/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/795d7b02-fa25-48ff-afa2-f35957e6505d/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/af5f1ba3-ec3d-4b3c-9493-859fb3e87c94/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/5481b30c-fbf2-4c69-932e-dedbf2504db4/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/543279c3-461a-47c9-be6b-8b48434b7ad9/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/62f65ddf-c6e5-47fd-b959-95c4751e8eab/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/40bff383-d8b1-4c96-885d-cb590e542990/thumb",
+   "s": 200,
+   "t": "img"
+  },
+  {
+   "n": "/api/v1/units/photos/50846f4f-36ff-43cf-bf69-af1694766532/thumb",
    "s": 200,
    "t": "img"
   },
@@ -387,20 +455,15 @@
    "t": "fetch"
   },
   {
-   "n": "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original",
+   "n": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original",
    "s": 200,
    "t": "fetch"
   },
   {
-   "n": "/api/v1/units/photos/e7e4c5ef-43c1-4ae8-8559-8c953b1f627a/original",
+   "n": "/api/v1/units/photos/88bbde78-28b6-46d5-88ea-4cc0c6940c5c/original",
    "s": 200,
    "t": "fetch"
   }
  ],
- "nav": [
-  {
-   "n": "http://localhost:3481/units/A-04.06?toa=To%C3%A0%20A",
-   "s": 200
-  }
- ]
+ "soAnhSau": 14
 }
