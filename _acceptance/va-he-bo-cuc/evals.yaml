@@ -43,6 +43,14 @@ evals:
     paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
+  - id: E11
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mo-nhom: nhóm trống rồi sang nhóm có việc» có mặt và ok — trên cùng một danh sách nhóm đang hiện (rút từ chiaNhom của packages/core trên dữ liệu thử, không viết tay khuôn danh sách): mã của một nhóm mặc định không có trong danh sách → đúng một chữ báo «Hôm nay không có việc ở «<nhãn>»»; đổi tham số sang mã có trong danh sách → không chữ báo, dòng chọn 'nhom:<mã>'. Chiều đỏ: mong không chữ báo cho mã nhóm trống thì đỏ, thông điệp nêu mã."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
   - id: E6u
     criterion: AC-1
     executor: ui-check
