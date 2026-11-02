@@ -1,0 +1,110 @@
+schema_version: 1
+feature_slug: va-he-bo-cuc
+# Ca thuần: apps/web/src/app/(app)/today/mo-nhom.test.ts (mô-đun mo-nhom.ts — đọc tham số, tìm chỗ của nhóm, chữ báo,
+# mục đang chọn của cột) và mo-lead.test.ts của hàng 26. Ca nhìn: máy dev dãy H, Postgres 5562, dữ liệu mẫu nap.mjs.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mo-nhom: chỗ của nhóm» có mặt và ok — ma trận viết tay năm mã nhóm mặc định × {đang tải, có việc, không việc}: đang tải → không chữ báo, không dòng chọn; có việc → {dong: 'nhom:<mã>'} và moNhom mở đúng khoá 'nhom:<mã>' mà giữ khoá khác; không việc → chữ báo nhóm trống mang nhãn của nhóm. Số assert bằng 15 ô. Chiều đỏ trên cùng fixture: ô «price_adjustment có việc» mong dòng 'nhom:call_back' thì phép so đỏ, thông điệp nêu tên ô; ô «đang tải» mong chữ báo nhóm trống thì đỏ."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mo-nhom: mục cột sáng» có mặt và ok — với mỗi chuỗi tham số trong ma trận viết tay (năm mã đúng, chuỗi rỗng, mã sai khuôn, mã lạ, có lead): tập mục được chọn tính từ danh sách mục thật của cột (xuất từ second-column.tsx, không chép tay) BẰNG tập mong (đúng một mục cho mã đúng, rỗng cho các ô còn lại); mọi href của mục Hôm nay khớp '/today?nhom=<mã>' và không href nào chứa '#'. Chiều đỏ: danh sách mục với một href đổi về '/today#call_back' thì phép so href đỏ, thông điệp nêu nhãn mục."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts", "apps/web/src/components/shell/second-column.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mo-nhom: tham số» có mặt và ok — ma trận viết tay: '', 'Price_adjustment', 'gía', 'a', 'x'.repeat(41), 'call-back' → null (bỏ qua); 'price_adjustment' → 'price_adjustment'; mã đúng khuôn không có trong bộ nhóm ('nhom_la', và 'missing_info' khi bộ nhóm tắt nó) → chữ báo «Không có hàng đợi này ở Hôm nay của bạn». Khuôn so với khuôn mã nhóm của lõi bằng cách chạy kiemBoNhom của packages/core trên cùng ma trận (mã nào lõi nhận thì bộ đọc nhận). Chiều đỏ: một ô mong null mà đổi thành mã thì so đỏ, thông điệp nêu chuỗi vào."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các ca của mo-lead.test.ts (hàng 26) có mặt và ok; ca «mo-nhom: lead thắng» — chuỗi 'lead=<uuid>&nhom=price_adjustment' cho nhóm cần mở = null (đường lead lo), chuỗi chỉ 'nhom=price_adjustment' cho 'price_adjustment'. Chiều đỏ: hàm bỏ luật lead-thắng (bản sao trong ca) thì ô đầu đỏ, thông điệp nêu 'lead thắng'."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-lead.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts", "apps/web/src/app/(app)/today/mo-lead.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mo-nhom: không đầu chủ» có mặt và ok — ma trận viết tay vai {chỉ telesales, chỉ trưởng nhóm, đầu chủ kiêm telesales} × {năm mã mặc định, mã lạ 'nhom_la', mã sai khuôn}: không đầu chủ × mã mặc định → «Hàng đợi «<nhãn>» chỉ có ở Hôm nay của đầu chủ» đúng nhãn từng nhóm; không đầu chủ × mã lạ → «Không có hàng đợi này ở Hôm nay của bạn»; sai khuôn → null; đầu chủ kiêm telesales → không có chữ báo «chỉ có ở Hôm nay của đầu chủ» (xử như đầu chủ). Theo lối Hỏi-1 người chọn: lối ẩn thêm ô danh sách mục cột của người không đầu chủ rỗng. Chiều đỏ: nhãn mong của một mã đổi sang nhãn nhóm khác thì đỏ, thông điệp nêu mã; ô hai vai mong chữ báo không-đầu-chủ thì đỏ."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mo-nhom: nhóm trống rồi sang nhóm có việc» có mặt và ok — trên cùng một danh sách nhóm đang hiện (rút từ chiaNhom của packages/core trên dữ liệu thử, không viết tay khuôn danh sách): mã của một nhóm mặc định không có trong danh sách → đúng một chữ báo «Hôm nay không có việc ở «<nhãn>»»; đổi tham số sang mã có trong danh sách → không chữ báo, dòng chọn 'nhom:<mã>'. Chiều đỏ: mong không chữ báo cho mã nhóm trống thì đỏ, thông điệp nêu mã."
+    paths: ["apps/web/src/app/(app)/today/mo-nhom.ts", "apps/web/src/app/(app)/today/mo-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6u
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy H cổng 3482 (Postgres 5562 đã migrate, dữ liệu mẫu nap.mjs); đăng nhập dau-chu-1@mau.quy-hang.test"
+    steps:
+      - "Đích (target đã duyệt): Máy dev dãy H cổng 3482 (Postgres 5562 đã migrate, dữ liệu mẫu nap.mjs); đăng nhập dau-chu-1@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3482 — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3482, không dừng Postgres 5562; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/va-he-bo-cuc/dev-3482.log (gốc kho)"
+      - "Khổ 1440x900, mở /today trần → ghi TẬP mã nhóm đang hiện trên lưới (nhóm có việc của dau-chu-1 trong dữ liệu mẫu) — tập này quyết ô nào mong gì; gập mọi nhóm, chụp evidence/E6u-truoc.png"
+      - "Với từng mục của cột thứ hai (năm mục): bấm mục → ghi location.href, nhóm nào mở, dòng nào mang trạng thái chọn, dòng nhóm có nằm trong khung nhìn không (getBoundingClientRect so với khung cuộn), mục nào của cột mang aria-current, số dòng báo; chụp evidence/E6u-<mã>.png"
+      - "Tải lại trang tại /today?nhom=<một mã có việc> → ghi như trên sau khi lưới tải xong; chụp evidence/E6u-tai-lai.png"
+      - "Khổ 1024x768, bấm một mục có việc → chụp evidence/E6u-1024.png, ghi như trên"
+    expected: "Mỗi mục: địa chỉ /today?nhom=<mã>; đúng một mục cột mang aria-current — mục vừa bấm. Mã thuộc tập nhóm có việc: nhóm mở, đúng dòng nhóm ấy được chọn và nằm trong khung nhìn, nhóm khác giữ trạng thái, không dòng báo. Tải lại tại mã có việc: như khi bấm. 1024 như 1440."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/components/shell/second-column.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E10u
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy H cổng 3482 (Postgres 5562 đã migrate, dữ liệu mẫu nap.mjs); đăng nhập dau-chu-1@mau.quy-hang.test, nếu năm nhóm đều có việc thì dau-chu-2@mau.quy-hang.test"
+    steps:
+      - "Đích (target đã duyệt): Máy dev dãy H cổng 3482 (Postgres 5562 đã migrate, dữ liệu mẫu nap.mjs); đăng nhập dau-chu-1@mau.quy-hang.test, nếu năm nhóm đều có việc thì dau-chu-2@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3482 — dùng chung, KHÔNG tắt; mã đăng nhập đọc ở .acceptance-runs/va-he-bo-cuc/dev-3482.log (gốc kho)"
+      - "Khổ 1440x900, mở /today trần → ghi tập mã nhóm đang hiện trên lưới; chọn MỘT mã mặc định không có trong tập (nhóm trống). Tài khoản nào cũng đủ năm nhóm → ghi rõ «dữ liệu mẫu không có nhóm trống» và dừng ca"
+      - "Bấm mục của nhóm trống ở cột thứ hai → ghi location.href, chữ và số dòng báo, các nhóm còn trên lưới; chụp evidence/E10u-trong.png"
+      - "Bấm tiếp mục của một nhóm có việc → ghi số dòng báo và dòng được chọn; chụp evidence/E10u-sang-co-viec.png"
+      - "Tải lại trang tại /today?nhom=<mã nhóm trống> → ghi số dòng báo khi lưới đang tải (ảnh chụp ngay sau khi tải, evidence/E10u-dang-tai.png) và sau khi tải xong"
+    expected: "Nhóm trống: đúng một dòng báo «Hôm nay không có việc ở «<nhãn>»», lưới giữ nguyên các nhóm có việc. Sang nhóm có việc: 0 dòng báo, dòng nhóm ấy được chọn. Tải lại: khi đang tải 0 dòng báo, tải xong đúng một dòng báo. Ghi «dữ liệu mẫu không có nhóm trống» là UNCERTAIN, không phải PASS."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/components/shell/second-column.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7u
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy H cổng 3482 (Postgres 5562 đã migrate, dữ liệu mẫu nap.mjs); đăng nhập telesales@mau.quy-hang.test (chỉ vai Telesales) rồi truong-nhom@mau.quy-hang.test (chỉ vai Trưởng nhóm)"
+    steps:
+      - "Đích (target đã duyệt): Máy dev dãy H cổng 3482 (Postgres 5562 đã migrate, dữ liệu mẫu nap.mjs); đăng nhập telesales@mau.quy-hang.test rồi truong-nhom@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3482 — dùng chung, KHÔNG tắt; mã đăng nhập đọc ở .acceptance-runs/va-he-bo-cuc/dev-3482.log (gốc kho)"
+      - "Khổ 1440x900, mỗi tài khoản: mở /today → chụp evidence/E7u-<vai>-tran.png; ghi có cột thứ hai hay không. Có cột (trưởng nhóm): bấm mục «Lead mới» ở cột. Không có cột (telesales — vỏ một nhà): mở thẳng /today?nhom=new_lead. Chụp evidence/E7u-<vai>-nhom.png; ghi location.href, chữ dòng báo, số dòng báo, mục cột mang aria-current (nếu có cột), và phần thân dưới dòng báo có giống bản trần không"
+    expected: "Theo lối Hỏi-1 người chọn. Lối báo rõ: vai có cột thứ hai (trưởng nhóm) thấy năm mục; bấm «Lead mới» (hay mở thẳng, với telesales không có cột) → địa chỉ /today?nhom=new_lead, đầu màn đúng một dòng báo «Hàng đợi «Lead mới» chỉ có ở Hôm nay của đầu chủ»; phần còn lại của màn giống bản /today trần của cùng vai. Lối ẩn: cột Hôm nay không có mục hàng đợi, có dòng «Hàng đợi có ở Hôm nay của đầu chủ»; bước bấm thay bằng mở thẳng /today?nhom=new_lead, kết quả dòng báo như lối báo rõ."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/components/shell/second-column.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0» và «khuôn: … 0 lệch» có mặt; chuẩn giao diện: đạt."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]

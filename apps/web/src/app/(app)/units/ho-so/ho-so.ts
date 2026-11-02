@@ -3,7 +3,7 @@
  * Đọc kho trên máy và danh mục đã giữ, không gọi mạng — kiểm bằng `node:test`.
  */
 import type { CatalogData, CatalogSubdivisionData, CatalogUnitData } from "@quy-hang/core";
-import { completeness, type ListingEvent, type StandardStatus } from "@quy-hang/core/listing";
+import { completeness, kiemMaCan, type ListingEvent, type StandardStatus } from "@quy-hang/core/listing";
 import type { LanThu, ListingView } from "@/lib/sync/types";
 import { nhanVai } from "@/lib/vai";
 import { dinhDangGia, FEE_LABEL, STATUS_LABEL } from "../../inventory/cot";
@@ -103,6 +103,9 @@ export function dungLenhGanMa(hang: ListingView, chu: string): { lenh: LenhGanMa
   if (hang.unitNumber) return { loi: null };
   const ma = chu.trim();
   if (!ma) return { loi: CHU_GO_MA_CAN };
+  // Mã toàn dấu: lõi báo câu riêng tại ô — máy chủ cũng từ chối, nên không vào hàng đợi.
+  const khongChuSo = kiemMaCan(ma);
+  if (khongChuSo) return { loi: khongChuSo };
   return { lenh: { type: "unit_number_assigned", payload: { unitNumber: ma }, coSo: hang.version } };
 }
 
