@@ -118,7 +118,7 @@ const nam = (toa, can, gia = 2_750_000_000) => ({
 /** Lead của lần dựng trước (dừng giữa chừng) cùng toà · căn thì dùng lại — chạy nối không nhập chồng. */
 const timLead = async (toa, can) =>
   (await appPool.query(
-    "select id, outcome from leads where company_id = $1 and building_name = $2 and unit_number is not distinct from $3 order by created_at desc limit 1",
+    "select id, outcome from leads where company_id = $1 and building_name = $2 and unit_number is not distinct from $3 and outcome in ('new', 'owner_has_agent') order by created_at desc limit 1",
     [san, toa, can ?? null],
   )).rows[0];
 const nhap = async (body, mong = "new") => {
@@ -174,7 +174,7 @@ const hoSo = async (id) => (await appPool.query("select listing_id from lead_lis
 L.H5 = await hoSo(L.L5);
 L.H14 = await hoSo(L.L14);
 // L9: lead căn trùng với hồ sơ đang mở của chính đầu chủ (H5) — về đầu chủ nhưng không tạo hồ sơ được.
-const l9 = (await timLead("Toà A", "A-07.03").then(async (cu) => (cu && cu.id !== L.L5 ? cu : null))) ?? (await phai(await send("POST", "/api/v1/leads", nam("Toà A", "A-07.03"), ts), 201));
+const l9 = (await appPool.query("select id, outcome from leads where company_id = $1 and building_name = 'Toà A' and unit_number = 'A-07.03' and outcome = 'unit_has_open_listing' order by created_at limit 1", [san])).rows[0] ?? (await phai(await send("POST", "/api/v1/leads", nam("Toà A", "A-07.03"), ts), 201));
 L.L9 = l9.id;
 const hangMo = "A-07.03";
 if ((await appPool.query("select list_price from listings where id = $1", [L.H14])).rows[0].list_price === null)
