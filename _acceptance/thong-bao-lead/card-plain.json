@@ -1,0 +1,28 @@
+{
+  "feature_plain": "Đầu chủ nhận thông báo đẩy trên điện thoại và máy tính ngay khi có lead về mình; chạm vào thì mở đúng lead ở Hôm nay. iPhone được hướng dẫn cài web lên màn hình chính để nhận được thông báo.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ có dải «Bật thông báo» ở đầu Hôm nay cho đầu chủ và trưởng nhóm; bật một lần mỗi thiết bị, đăng xuất thì thiết bị thôi nhận."},
+    {"id": "AC-2", "p": "Sẽ giữ đăng ký thiết bị của mỗi người riêng tư: người khác, sàn khác không đọc được."},
+    {"id": "AC-3", "p": "Sẽ báo ngay khi lead về đầu chủ (chia tự động, trưởng nhóm giao, nhập lead khớp đầu chủ); lỗi mạng tạm thời thì phút sau báo lại; tự nhận từ kho chung thì không báo."},
+    {"id": "AC-4", "p": "Sẽ chỉ ghi «Lead mới», toà và nhu cầu trên thông báo — không số, không tên chủ, không giá, không mã căn."},
+    {"id": "AC-5", "p": "Sẽ tự bỏ thiết bị đã gỡ app hay tắt nhận, không làm hỏng việc báo tới thiết bị khác."},
+    {"id": "AC-6", "p": "Sẽ mở đúng lead ở Hôm nay khi chạm thông báo; lead đã chuyển đi thì báo «Lead này không còn ở Hôm nay của bạn»."},
+    {"id": "AC-7", "p": "Sẽ hướng dẫn iPhone cài web lên màn hình chính thay vì hiện nút bật vô dụng."},
+    {"id": "AC-8", "p": "Sẽ báo trưởng nhóm khi có lead chưa chia được hay quá hạn nhận, quá hạn gọi (theo Hỏi-1)."},
+    {"id": "AC-9", "p": "Sẽ ghi tài liệu: Tham chiếu, ADR-0025, và tên ba khoá cấu hình thông báo."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG làm tab «Tôi» trên điện thoại — hàng tab-toi."},
+    {"id": "OOS-2", "p": "KHÔNG báo cho đầu khách, telesales, quản trị; không nhắc hạn gọi cho chính đầu chủ; không chuông trong app."},
+    {"id": "OOS-3", "p": "KHÔNG gửi qua Zalo OA."},
+    {"id": "OOS-4", "p": "KHÔNG làm màn lời báo của trưởng nhóm — hàng 42."},
+    {"id": "OOS-5", "p": "KHÔNG thử trên điện thoại thật trong bài chấm máy — để phiên nghiệm thu."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy định gửi một lần rồi thôi — lỗi mạng tạm là mất tiếng chuông. Đã đổi sang hộp thư đi: phút sau báo lại, trong hạn nhận 15 phút."},
+    {"i": 1, "p": "Trưởng nhóm chưa có chỗ nào để bật thông báo. Đã đưa chỗ đặt dải bật thành câu hỏi cho anh (Hỏi-3)."},
+    {"i": 2, "p": "Các trạng thái của dải bật (đã bật, thiếu cấu hình, bị từ chối) và đăng xuất chưa được chấm — đã thêm ảnh từng trạng thái cho cả hai vai."},
+    {"i": 3, "p": "Việc chạm thông báo mở đúng lead mới đo bằng hàm — đã thêm bài chấm trên màn đang chạy."},
+    {"i": 4, "p": "Chưa có đường đo cho số «lead → cuộc gọi đầu» — đã thêm; ngưỡng số anh điền trước phiên thử."}
+  ]
+}
