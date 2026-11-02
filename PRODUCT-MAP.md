@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>3 việc"]
+  GD --> B["Sắp mở vòng<br/>2 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>15 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>41 việc"] --> GG{"Cổng Giá trị"}
+  GB --> DG["Đã giao<br/>16 việc"]
+  GB --> CN["Chờ phiên nghiệm thu<br/>42 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -24,7 +24,6 @@ flowchart TD
 
 ## Sắp mở vòng
 
-- Đầu chủ mở chế độ cuộc gọi của một lead trên máy tính: thẻ lead so giá với toà, danh sách hỏi chọn bằng phím, tính giá bao phí ↔ về tay; ghi xong thì mức đủ tự tính lại (`cuoc-goi-khai-thac`)
 - Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá (`goi-ep-gia-dot-hai`)
 - Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
 
@@ -45,6 +44,7 @@ flowchart TD
 - Che vùng ảnh: đầu chủ kéo khung che lên ảnh căn rồi lưu một bản che nhẹ ở ngăn Gửi được; bản gốc giữ nguyên và sang ngăn Nội bộ (`che-vung-anh`)
 - Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo (`chia-lead-va-han`)
 - Đầu chủ chọn một căn và thấy cột hồ sơ cạnh bảng — thuộc tính tự điền, lần rao, lịch sử giá và trạng thái ai sửa khi nào; thấy thuộc tính sai thì bấm «Báo sai thông tin căn» (`cot-ho-so-can`)
+- Đầu chủ mở chế độ cuộc gọi của một lead trên máy tính: thẻ lead so giá với toà, danh sách hỏi chọn bằng phím, tính giá bao phí ↔ về tay; ghi xong thì mức đủ tự tính lại (`cuoc-goi-khai-thac`)
 - Người trong sàn đăng nhập và vào đúng vùng dữ liệu của sàn mình; chưa gắn sàn thì không thấy gì (`dang-nhap-theo-san`)
 - Đầu chủ gõ mã căn và thấy thuộc tính căn tự điền theo cách đọc mã của dự án; mã chưa có trong danh mục thì báo rõ (`danh-muc-go-ma-can`)
 - Đầu chủ sửa căn lúc máy chủ trục trặc ngắn hay hết phiên thì thay đổi tự gửi lại khi máy chủ trả lời được, chỉ báo đồng bộ nói đúng vì sao chưa gửi, và căn đang ở Cần xem sửa tiếp hay xử lý không kẹt, không đảo thứ tự hai lần sửa (`dong-bo-tu-lanh`)
@@ -82,6 +82,7 @@ flowchart TD
 - Bài kiểm chuyển dữ liệu cũ của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (`chuyen-khong-ket-khoa`)
 - Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà — mở hồ sơ căn của hàng chưa có mã, gắn mã một lần, máy chặn trùng hàng đang mở cùng căn; hàng có mã thì thôi báo thiếu mã căn và xét ảnh như thường (`dien-ma-can-cho-hang`)
 - Đổi đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh, giữ nguyên hành vi và chữ trên màn (`doi-ten-api-tieng-anh`)
+- Đầu chủ được giao lead mở số chủ nhà của lead ấy ở Hôm nay để gọi; mỗi lần mở là một vết (`mo-so-lead`)
 - Môi trường chạy thật — Supabase dự án riêng và Vercel vùng Singapore, migration áp qua CI trước khi deploy, mã đăng nhập gửi qua Resend (`moi-truong-that`)
 - Nâng kit nghiệm thu lên 2.36.0 và bật các nấc có căn cứ — gộp không dừng ở tệp sinh, phản biện bắt buộc, chặn việc ngoài lộ trình, máy tự định tuyến mục ngoài hợp đồng (`nang-kit-2-36-0`)
 - Vá nạp mẫu bản thật — căn mẫu Đang bán nhận một ảnh thật vẽ bằng mã trước khi lên Đang bán, để nút «Nạp dữ liệu mẫu» chạy trọn trên sàn mới sau luật ảnh thật của hàng 23 (`nap-mau-co-anh`)
