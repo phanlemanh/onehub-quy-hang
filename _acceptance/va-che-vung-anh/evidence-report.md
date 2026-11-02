@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 157c783fec870f1df83f3e969241f816c5bafc96
+verified_commit: 314fb0152bb4d912168d567f288aa81ff51ee315
 human_signoff: Manh Phan 2026-11-02
 ---
 
@@ -179,3 +179,7 @@ none — every multi-run eval is uniform
 Round 1: E8 failed — bản sao kịch bản chấm nằm trong cây làm lint đỏ; dời ra ngoài cây, chấm lại.
 Round 2: E7, E8 chạy lại, các eval còn lại mang sang từ round 1; bài nhìn E2, E4 bị phát hiện thiếu tệp số đo — bắt ghi số đo vào evidence/<E>-measure.json, chấm lại.
 Round 3: chạy lại toàn bộ 10 eval trên commit 157c783; E2–E5 ghi đủ khung ảnh, số đo và mạng — tất cả PASS.
+
+### Re-pin lần 1 — 2026-11-02, do gộp nhánh chính (hàng 26) sau chữ ký
+run_id: repin-20261102T071539Z-69424
+sha: 314fb0152bb4d912168d567f288aa81ff51ee315 · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng · ngoài làn máy: E2, E3, E4, E5 · AC không có chốt máy: AC-2, AC-3, AC-4, AC-5
