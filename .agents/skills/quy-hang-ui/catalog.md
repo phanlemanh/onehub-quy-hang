@@ -90,3 +90,20 @@ chuyển thể một khối mà bảng chưa có dòng.
 | `@reui/empty-state-1` | Frame stack | trang-thai | `apps/web/src/components/trang-thai.tsx` | Trống · lỗi · báo mọi màn (hàng 91) | `design/anh-chuan/tran-1440.png` | reui skill 68f0e6fa91 | 2026-11-02 · Manh Phan · he-bo-cuc | Chuyển thể vào `TrangThai`: Empty không viền, đầu, mô tả, hàng hành động (`hanhDong`); bỏ hình minh hoạ, dùng biểu tượng lucide nhỏ (vo-va-ia §2) |
 | `@reui/empty-state-2` | Frame stack | trang-thai | `apps/web/src/components/trang-thai.tsx` | Trống vì lọc không ra (hàng 91) | `design/anh-chuan/tran-1440.png` | reui skill 68f0e6fa91 | 2026-11-02 · Manh Phan · he-bo-cuc | Như `empty-state-1`; hành động «Bỏ lọc» thay hàng gợi ý tìm kiếm |
 | `@reui/c-button-group-51` | Inventory Admin | vỏ | `apps/web/src/components/shell/menu-tao.tsx` | Menu Tạo trên thanh trên (hàng 91) | `design/anh-chuan/tran-1440.png` | reui skill 68f0e6fa91 | 2026-11-02 · Manh Phan · he-bo-cuc | «New ▾» → việc tạo theo vai từ `navigationFor`; nút chính là việc tạo đầu của vai; điện thoại thêm nút «+» |
+
+## Ảnh chuẩn của bố cục
+
+Bảy bố cục của hệ bố cục (ADR-0024, hàng 91) — mỗi bố cục bốn ảnh chụp từ trang mẫu sống ở trạng thái mặc định: ba khổ
+sáng và khổ 1440 tối. Màn mới của một nhóm chưa có màn mẫu đối chiếu với ảnh chuẩn của `bo_cuc` nhóm khai
+(`doi-chieu.mjs --base`). Chụp lại: `PW=<node_modules/playwright> node _acceptance/he-bo-cuc/thu/chup-anh-chuan.cjs`
+trên máy dev 3484; địa chỉ, khổ, giao diện và commit của từng tấm ở `design/anh-chuan/ke.json`.
+
+| Bố cục | Mã | Ảnh chuẩn | Trang mẫu |
+| --- | --- | --- | --- |
+| Tràn | `tran` | `design/anh-chuan/tran-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=tran&trang-thai=mac-dinh` |
+| Danh sách – chi tiết | `danh-sach-chi-tiet` | `design/anh-chuan/danh-sach-chi-tiet-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh` |
+| Đọc | `doc` | `design/anh-chuan/doc-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=doc&trang-thai=mac-dinh` |
+| Hồ sơ | `ho-so` | `design/anh-chuan/ho-so-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=ho-so&trang-thai=mac-dinh` |
+| Bảng điều khiển | `bang-dieu-khien` | `design/anh-chuan/bang-dieu-khien-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=bang-dieu-khien&trang-thai=mac-dinh` |
+| Luồng nhiều bước | `luong-nhieu-buoc` | `design/anh-chuan/luong-nhieu-buoc-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=luong-nhieu-buoc&trang-thai=mac-dinh` |
+| Dòng tin | `dong-tin` | `design/anh-chuan/dong-tin-1440.png` · `-1024` · `-375` · `-1440-toi` | `/mau/he-bo-cuc/xem?bo-cuc=dong-tin&trang-thai=mac-dinh` |

@@ -188,10 +188,12 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | đối chiếu | Kế hoạch đối chiếu màn mới với màn mẫu hay ảnh chuẩn; trang ba lối | `packages/ui-lint/doi-chieu.mjs` |
 | kiểm | Plugin ESLint quy-hang-ui: mười bốn luật | `packages/ui-lint/index.mjs` |
 | kiểm | Kiểm chuẩn giao diện: cài đặt, skill, danh mục, khuôn, bố cục, ba lối, MCP, bảng này | `packages/ui-lint/kiem-chuan.mjs` |
+| kiểm | Ảnh chuẩn của bảy bố cục: đủ tấm, đúng khổ, ke.json, dòng danh mục | `packages/ui-lint/lib/anh-chuan.mjs` |
 | kiểm | Trang ba lối: nhiều ô một hồ sơ, dựng và kiểm | `packages/ui-lint/lib/ba-loi.mjs` |
 | kiểm | Kiểm bảng này: mỗi tệp của hệ thiết kế một dòng | `packages/ui-lint/lib/ban-do-he-thiet-ke.mjs` |
 | kiểm | Đọc bản đồ khuôn, kiểm cây theo khuôn | `packages/ui-lint/lib/ban-do.mjs` |
 | kiểm | Bố cục có khai, khuôn dựng đúng kiểu, ngoại lệ có hạn | `packages/ui-lint/lib/bo-cuc.mjs` |
+| kiểm | Cặp ảnh đối chiếu: màn mới cạnh màn mẫu hay ảnh chuẩn của bố cục | `packages/ui-lint/lib/doi-chieu.mjs` |
 | kiểm | Duyệt chuỗi class cho luật | `packages/ui-lint/lib/class-strings.mjs` |
 | kiểm | Gốc kho và bản đồ khuôn cho luật ESLint | `packages/ui-lint/lib/goc-kho.mjs` |
 | kiểm | Kiểm .mcp.json: reui và shadcn, không khoá | `packages/ui-lint/lib/mcp.mjs` |

@@ -324,7 +324,7 @@ export function docBanDo(root) {
     }
     for (const k of Object.keys(data)) if (!(k in KHOA) && !KHOA_TUY_CHON.includes(k)) loiKieu.push(`${k}: khoá lạ`);
     if ("bo_cuc" in data && (typeof data.bo_cuc !== "string" || !kieuBoCuc(root).includes(data.bo_cuc)))
-      loiKieu.push(`bo_cuc: «${data.bo_cuc}» không phải một trong bảy bố cục (${kieuBoCuc(root).join(", ")})`);
+      loiKieu.push(`bo_cuc lạ: «${data.bo_cuc}» không phải một trong bảy bố cục (${kieuBoCuc(root).join(", ")})`);
     if ("ngoai_le_han" in data) kiemNgoaiLeHan(data.ngoai_le_han, loiKieu);
     const donVi = data.don_vi ?? "man";
     if (!DON_VI.includes(donVi)) loiKieu.push(`don_vi: phải là man hay phan-tu (đang là ${JSON.stringify(donVi)})`);
