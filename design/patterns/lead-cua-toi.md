@@ -6,7 +6,7 @@ nhan_dien: ["apps/web/src/app/(app)/leads/mine/page.tsx", "apps/web/src/app/(app
 mau_dang_chay: { tep: "apps/web/src/app/(app)/leads/mine/page.tsx", duong: "/leads/mine", trang_thai: [mac-dinh, trong, dang-tai, loi, tra-lai, da-gui-lai, tin-bo-sung] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
-ngoai_le: [{ tep: "apps/web/src/app/(app)/today/page.tsx", ly_do: "Hôm nay theo vai: telesales thấy vùng Lead đã nhập qua KhungLeadCuaToi, vai khác giữ chỗ tạm Placeholder tới hàng 22, 42 — hai khuôn theo vai trong một trang." }]
+ngoai_le: [{ tep: "apps/web/src/app/(app)/today/page.tsx", ly_do: "Hôm nay theo vai — trang thuộc nhóm hom-nay-dau-chu (khuôn KhungHomNay): vùng đầu chủ là Hôm nay của đầu chủ, vùng telesales dựng qua KhungLeadCuaToi đặt trong KhungHomNay, sau vùng đầu chủ." }]
 luat: [KH-lct-mot-khung, KH-lct-khong-hang, KH-lct-ba-trang-thai]
 ---
 # Lead của tôi

@@ -14,7 +14,7 @@ import type { LocalStore } from "./kho";
 import { keoLichSu, keoVe, LoiKeo } from "./keo";
 import { dongHoThat, taoNhip, type DongHo } from "./mang";
 import { suyChiBao } from "./trang-thai";
-import { nganTrong, type Goi, type LanThu, type Me, type Ngan } from "./types";
+import { nganTrong, type BoNhomDaLuu, type Goi, type LanThu, type Me, type Ngan } from "./types";
 import { boThayDoi, giuCuaToi, layBanMoi, suaLai } from "./xu-ly-can-xem";
 
 export type BoDongBo = ReturnType<typeof taoBoDongBo>;
@@ -204,6 +204,14 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
     chiBao: () => suyChiBao(dem, dangGui, loiKho),
     canXem: () => dem.review,
     ngan: () => dem,
+    /** Người đang dùng bộ đồng bộ. */
+    me: () => o.me,
+    /** Bộ nhóm Hôm nay đã lưu của sàn đang làm (hàng 22); chưa từng lưu là `null`. */
+    boNhomDaLuu: () => dem.queueSet ?? null,
+    /** Lưu lần đọc bộ nhóm thành công vào ngăn của sàn; kho lỗi thì thôi — lần sau đọc lại. */
+    async luuBoNhom(bo: BoNhomDaLuu) {
+      await em(doi(companyId, (n) => ({ ...n, queueSet: bo })));
+    },
     // Mỗi lối xếp lại thao tác giữ của căn (xu-ly-can-xem.ts) rồi gửi bằng một lượt MỚI: lượt đang bay đã đọc kho trước
     // khi người chọn, nên không mang thao tác vừa xếp lại (hàng 61 — không chờ tới nhịp sau).
     async giuCuaToi(id: string) {

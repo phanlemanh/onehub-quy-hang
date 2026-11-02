@@ -26,7 +26,7 @@ Ghi nhận 29/10: **đầu chủ làm việc trên máy tính; đầu khách xem
 | Vai | Việc | Thiết bị chính | Trên thiết bị kia | Không thấy |
 | --- | --- | --- | --- | --- |
 | Telesales | Gọi lọc chủ nhà, nhập lead | Máy tính (đề xuất, chưa hỏi) | Điện thoại: nhập lead, theo dõi bốn nấc | Bảng hàng, căn của người khác |
-| Đầu chủ | Biến lead thành hàng, giữ tươi, ép giá, cho dẫn xem | **Máy tính** | Điện thoại: nhận báo lead, ghi kết quả gọi, đổi giá nhanh, chụp ảnh khi đi xem | Chủ nhà của đầu chủ khác |
+| Đầu chủ | Biến lead thành hàng, giữ tươi, gọi điều chỉnh giá, cho dẫn xem | **Máy tính** | Điện thoại: nhận báo lead, ghi kết quả gọi, đổi giá nhanh, chụp ảnh khi đi xem | Chủ nhà của đầu chủ khác |
 | Đầu khách | Tìm căn, gửi khách, dẫn xem | **Điện thoại** | Máy tính: lọc và gửi khi ngồi văn phòng | Chủ nhà, số chủ, giá đáy, ảnh sổ |
 | Trưởng nhóm | Chia lead, xem phễu, xử lý ngoại lệ, bàn giao | Máy tính | Điện thoại: báo lead quá hạn | — (thấy như đầu chủ, cho cả nhóm) |
 | Quản trị sàn | Cấu hình sàn | Chỉ máy tính | — | Không tự thấy chủ nhà |
@@ -148,7 +148,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 15. Độ tươi là ngày xác nhận gần nhất với chủ nhà; căn nhạt dần theo tuổi.
 16. Mức đủ thông tin tự tính, và chính là danh sách hỏi của màn cuộc gọi.
 17. «Sẵn sàng bán» một chạm: máy kiểm giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; không qua người duyệt.
-18. Chỉ Hôm nay được đẩy việc; mỗi căn nằm ở đúng một hàng đợi (ép giá thắng gọi lại). Mặc định: cần gọi lại sau 14 ngày chưa xác nhận; nên gọi ép giá sau 10 ngày (sàn chỉnh trong 7–14).
+18. Chỉ Hôm nay được đẩy việc; mỗi căn nằm ở đúng một hàng đợi (điều chỉnh giá thắng gọi lại). Mặc định: cần gọi lại sau 14 ngày chưa xác nhận; nên gọi điều chỉnh giá sau 10 ngày (sàn chỉnh trong 7–14).
 
 **Lead**
 
@@ -267,7 +267,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 
 - **Vào**: ô nhận lead năm mục, kiểm trùng, chia lead theo toà kèm thông báo; nhập file bảng hàng cũ; gõ mã căn là tự điền.
 - **Khai thác**: thẻ lead mức nhẹ (giá so toà, chủ còn căn nào), màn cuộc gọi có danh sách hỏi, máy tính giá bao phí ↔ giá về tay, ảnh căn ba ngăn, «Sẵn sàng bán» một chạm.
-- **Giữ tươi**: hàng đợi gọi lại và ép giá, kết quả gọi một chạm, lịch sử trả giá, sửa hàng loạt, trạng thái có tên và lịch sử, mức đủ tự tính.
+- **Giữ tươi**: hàng đợi gọi lại và điều chỉnh giá, kết quả gọi một chạm, lịch sử trả giá, sửa hàng loạt, trạng thái có tên và lịch sử, mức đủ tự tính.
 - **Tìm**: bảng kiểu Sheet, lọc mọi cột, góc nhìn đã lưu, nhóm theo toà rồi loại căn, cột hồ sơ; bảng hàng dạng thẻ trên điện thoại.
 - **Phát**: luồng Gửi, trang khách hai cách hiện, link sống, phát bảng hàng, chép bài theo mẫu kênh.
 - **Sàn và đội**: tách sàn, vai và quyền theo khu, lớp trường, lịch sử ai sửa gì; cách gọi riêng, trạng thái riêng, trường riêng tối thiểu, luật chia lead, thuế phí.
@@ -283,7 +283,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Tỉ lệ mã căn tự điền được | Danh mục đủ phủ khu chưa? |
 | Thời gian khách hỏi → gửi được căn | Việc thật có nhanh hơn không? |
 | Thời gian lead → cuộc gọi đầu; số ngày lead → Sẵn sàng bán; số lead trùng bị chặn | Dòng vào có chạy không? |
-| Số căn gọi ép giá đợt hai | Hàng ngộp có được chăm không? |
+| Số căn gọi điều chỉnh giá đợt hai | Hàng ngộp có được chăm không? |
 | Số lần phát bảng hàng; số link khách mở, số lượt quan tâm | Hàng có được phát ra từ đây không? |
 | Tỉ lệ thao tác trên máy tính / điện thoại theo vai | Ghi nhận thiết bị theo vai có đúng không? |
 | Số lần mất mạng và thao tác lúc mất mạng trên điện thoại | Có cần ngoại tuyến thật không? |
@@ -344,8 +344,10 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 01/11 | Ảnh căn ba ngăn: ảnh thuộc căn của sàn (toà + mã), không thuộc lần rao (Hỏi-2); đầu chủ kéo thả hay dán ⌘V ảnh từ Zalo vào mục Ảnh của hồ sơ căn, vào ngăn của thẻ đang mở — Gửi được (bìa, thứ tự, «Ảnh mẫu», nhãn «Ảnh thật · ngày» lấy ngày chụp trong tệp, vắng thì ngày thêm — Hỏi-3), Tự có từ mã (danh mục chưa mang ảnh), Nội bộ; thêm, sửa ở mọi ngăn chỉ đầu chủ giữ căn và trưởng nhóm, mọi thành viên xem ngăn Gửi được (Hỏi-4); ngăn Nội bộ chặn ở cơ sở dữ liệu, không ra ngoài sàn, không lưu trên máy; thêm ảnh cần mạng (Hỏi-5); xoá là xoá hẳn byte (Hỏi-6); byte ở Supabase Storage riêng tư, link ký 60 giây, khoá S3 một mô-đun (Hỏi-1) — chủ kho 01/11 | Mục 5 · ADR-0014 · `_acceptance/anh-can-ba-ngan/` |
 | 01/11 | Sửa hàng loạt (hàng 16): Bảng hàng trên máy tính có ô tích đầu dòng và «Chọn hết» (tích các căn đang hiện); căn đã tích giữ khi đổi lọc, nhóm, góc nhìn, thanh nói số căn bị lọc ẩn và thao tác ghi cho cả căn ẩn; «Đổi trạng thái» cả lô theo bảng chuyển ADR-0008, không có Đã bán (giá chốt từng căn), Ngừng hẳn một lý do cho cả lô; «Đánh dấu đã gọi» ghi «Còn / giữ giá» cho căn còn mở, căn đã đóng không nhận; mọi thao tác lô hỏi lại một lần, kể trước căn không đổi được (chủ kho duyệt Hỏi-2); mỗi căn một sự kiện, thông báo đếm số căn ghi được thật; hoàn tác lô đổi trạng thái bằng nút trên thông báo, căn đã có lần sửa sau thì bỏ qua; đánh dấu đã gọi không hoàn tác được; Ctrl/Cmd+Z khi đang gõ trong ô lọc cột không hoàn tác lần sửa căn; «đổi đầu chủ hàng loạt» tách thành hàng sau (Hỏi-1 — cần API và bộ đồng bộ mới); dán, kéo điền, «Không nghe máy» hàng loạt chưa làm | Mục 8, 9 · `_acceptance/sua-hang-loat/` |
 | 01/11 | Lead bốn nấc: telesales mở Hôm nay thấy lead mình nhập, mới nhất trước, qua Đã gửi (chưa có người là «Chờ chia») → Đã nhận → Đã gọi → Lên bảng; lên bảng suy từ hàng của chính đầu chủ ấy có chủ nhà cùng dấu vết số chuyển Sẵn sàng bán sau lúc nhập lead (Hỏi-1); đầu chủ trả lại lead «Số không liên lạc được» tới khi lead lên bảng, kể cả đã ghi gọi (Hỏi-4) — lead trả lại thôi là lead đang mở, thôi bị báo quá hạn, không neo số ấy cho đầu chủ đã trả; «Sửa số và gửi lại» tạo lead mới đi như mọi lead mới (Hỏi-2); không thấy số chủ, mã hàng; số đo «Số ngày lead → Sẵn sàng bán» tính từ lúc nhập lead đầu chuỗi; màn theo khối `list-11` (Hỏi-3). Nút «Trả lại» trên màn của đầu chủ là hàng 22 | ADR-0020 · `_acceptance/lead-bon-nac/` |
+| 01/11 | Hôm nay của đầu chủ: hàng đợi là dữ liệu của sàn — bộ máy điều kiện đóng (nấc, quá N ngày từ mốc giá / xác nhận / lên Đang bán, thiếu thông tin, người khác đổi từ hôm qua, loại hình, nấc lead), năm nhóm làm bộ mặc định (Lead mới · Nên gọi điều chỉnh giá · Cần gọi lại · Thiếu thông tin · Mới đổi), mỗi căn đúng một nhóm theo thứ tự; sàn thay trọn bộ nhóm (tên, thứ tự, bật/tắt, ngưỡng, nhóm theo loại hình) — màn sửa ở hàng 48, bộ hỏng thì về mặc định. Mốc điều chỉnh giá là lần muộn hơn giữa đổi giá và xác nhận (Hỏi-1); khoảng ngày giữ 7–14 / 7–30, nhóm tự tạo 1–90 (Hỏi-4); nhãn «ép giá» đổi thành «điều chỉnh giá», sàn đổi lại được (Hỏi-5); mở số lead cho đầu chủ là hàng riêng (Hỏi-3). «Còn · giữ giá» một chạm, Nhận · Đã gọi · Trả lại trên lead | Mục 8 luật 18 · `_acceptance/hom-nay-dau-chu/` · ADR-0019, ADR-0022 |
 | 01/11 | Liên hệ: mỗi người làm việc với sàn là một liên hệ theo RESO Contacts — một người, nhiều số (nhãn, một số chính), một hay nhiều loại Chủ bán · Chủ cho thuê · Người mua · Người thuê, một đầu chủ giữ; lead và chủ nhà của hàng gắn liên hệ, kiểm trùng đi qua liên hệ; «Sửa số và gửi lại» thêm số vào cùng người; đầu chủ tạo hàng thẳng từ lead và «Lên bảng» là dữ kiện, không đoán theo số (Hỏi-2); dữ liệu cũ gộp theo số, người giữ là đầu chủ có lần gán mới nhất, danh sách gộp cho trưởng nhóm (Hỏi-1); giao lại hàng không tự đổi người giữ (Hỏi-3); telesales không đọc lại liên hệ (Hỏi-4); «Lead» là trạng thái của người chưa nói chuyện hai chiều theo KW (Hỏi-5); chỗ trường riêng giữ rỗng tới hàng 47 | ADR-0021 · `_acceptance/lien-he/` · §15 |
 | 01/11 | Định vị và chuẩn đối chiếu (chủ kho duyệt hướng 01/11): Quỹ hàng là phần mềm phía cung cho sàn môi giới, ba khối (quỹ hàng nội bộ, khai thác và CRM phía chủ nhà, phát hàng bằng link sống); nhóm tương đồng theo năng lực (Follow Up Boss, KW Command, Lofty, BoldTrail, REDX, BoomTown, MLS theo RESO); một bảng luật thiết kế (4 bất biến, 9 luật kiến trúc, 5 luật thiết kế mới: câu giao là điểm sàn, danh sách cố định mặc định là dữ liệu của sàn, một người là một liên hệ, so với ít nhất hai sản phẩm, nghĩa do lõi giữ và tên gọi là dữ liệu của sàn — sổ từ vựng là ADR-0023 và hàng nền 90); chín chỗ cứng đã gộp xem lại ở Cổng Phạm vi của hàng sắp chạm | ADR-0022 · `docs/product/doi-chieu-nganh.md` · `.claude/rules/thiet-ke-doi-chieu.md` |
+| 02/11 | Che vùng ảnh (hàng 19): ảnh ngăn Gửi được có «Che vùng…» cho đầu chủ giữ căn và trưởng nhóm — kéo khung trên ảnh đã xoay đúng chiều, vùng che tô kín màu đặc (giữ cứng vì làm mờ đọc ngược được chữ số, chủ kho duyệt Hỏi-3); lưu thành ảnh mới ở ngăn Gửi được, cạnh dài tối đa 1600 điểm ảnh (mặc định của sàn khai ở lõi, Hỏi-2), cùng ngày chụp, không mang thông tin ẩn của ảnh gốc; bản gốc giữ nguyên byte và tự sang ngăn Nội bộ (Hỏi-1); ảnh Nội bộ không che được để ảnh sổ không lọt ra qua bản che; tải lỗi thì không ghi gì; tự nhận diện mặt, biển số và bản nhẹ cho mọi ảnh gửi đi chưa làm (hàng gửi) | Mục 8 luật 29 · `_acceptance/che-vung-anh/` |
 | 01/11 | «Sẵn sàng bán» một chạm (luật 17): nút ở mục «Lần rao đang mở» của hồ sơ căn khi lần rao Chưa đủ để rao hay Tạm ngừng; máy kiểm mã căn, giá về tay (tạm là giá kèm điều kiện phí tới hàng 28), ảnh thật, pháp lý, tình trạng sử dụng, thiếu thì liệt đúng điều và chỉ chỗ; ảnh thật là luật lõi cho mọi lối vào Đang bán, máy chủ đếm (ngăn Gửi được, không ảnh mẫu, chưa xoá), số tối thiểu sàn nâng được `listing.ready_min_real_photos` mặc định 1 (Hỏi-1); Bảng hàng không kiểm ảnh trước, máy chủ chặn và lỗi về Cần xem (Hỏi-2); hàng chưa có mã căn không lên Đang bán tới hàng điền mã căn | ADR-0008 · `_acceptance/san-sang-ban/` · Sổ điểm biến thiên #33 |
 | 02/11 | Hệ bố cục (chủ kho duyệt hướng 02/11): mọi màn sau đăng nhập chọn một trong bảy bố cục có tên — Tràn, Danh sách – chi tiết, Đọc, Hồ sơ hai cột, Bảng điều khiển, Luồng nhiều bước, Dòng tin — với sáu vùng chuẩn và chờ tải theo hình của bố cục; một menu Tạo trên vỏ; trang mẫu sống không cần cơ sở dữ liệu là ảnh chuẩn để đối chiếu; giữ hồ sơ cạnh bảng, thanh tab dưới điện thoại và lưới dày | ADR-0024 · hàng nền 91 |
 
@@ -385,7 +387,7 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 - [ ] Đầu khách xin dẫn xem thế nào hôm nay, mất bao lâu, ai cầm chìa khoá. Xin dẫn xem và lịch xem chờ câu này.
 - [ ] Telesales đang dùng công cụ gì, có chịu nhập thẳng vào Quỹ hàng không; lead marketing đến từ đâu.
 - [ ] Đầu khách có lúc nào cần số chủ nhà; khi đó ai mở hộ. Tới khi có câu trả lời: không, đầu khách bấm «Liên hệ đầu chủ».
-- [ ] Ngưỡng ngày ép giá có khác theo loại căn, mức giá không. Tới khi có câu trả lời: 10 ngày, sàn chỉnh trong 7–14.
+- [ ] Ngưỡng ngày điều chỉnh giá có khác theo loại căn, mức giá không. Tới khi có câu trả lời: 10 ngày, sàn chỉnh trong 7–14.
 - [ ] Hai chỗ bị gạch trong ghi chép (trùng chủ nhà; telesales ghi sơ sài) đã hết đau, hay gạch vì lý do khác.
 
 ## 14. Thuật ngữ
@@ -406,7 +408,7 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 | Sẵn sàng bán | Nút đưa hàng lên bảng sau khi máy kiểm đủ điều kiện | «Duyệt» |
 | Độ tươi | Tuổi của lần xác nhận gần nhất với chủ nhà | — |
 | Mức đủ thông tin | Phần đã có trong danh sách hỏi | — |
-| Hàng đợi | Lead mới · Cần gọi lại · Nên gọi ép giá · Xin dẫn xem · Thiếu thông tin · Mới đổi | — |
+| Hàng đợi | Lead mới · Cần gọi lại · Nên gọi điều chỉnh giá · Xin dẫn xem · Thiếu thông tin · Mới đổi | — |
 | Góc nhìn | Bộ lọc + cột + cách xem đã lưu | «Tab» |
 | Lần gửi · Đã gửi | Một link đã gửi · nhà theo dõi các link | — |
 | Trang khách · Link sống | Trang công khai từ link; giá và trạng thái theo bảng hàng | — |

@@ -41,7 +41,7 @@ for (const [ten, toa, ma, [loai, dt, tang, huong]] of MA_TRAN) {
 }
 
 test("ghép danh mục: danh mục chưa tải (null) ra «Chưa rõ»", () => {
-  assert.deepEqual(thuocTinhCan(chiMuc(null), "Toà A", can1PN.unitNumber), { unitType: "Chưa rõ", livingArea: null, floor: null, directionFaces: null });
+  assert.deepEqual(thuocTinhCan(chiMuc(null), "Toà A", can1PN.unitNumber), { unitType: "Chưa rõ", livingArea: null, floor: null, directionFaces: null, propertySubType: null });
 });
 
 test("ghép danh mục: cùng mã ở hai toà lấy đúng căn của toà của hàng", () => {

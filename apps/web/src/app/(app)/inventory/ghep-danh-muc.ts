@@ -6,9 +6,16 @@ import type { CatalogData, CatalogUnitData } from "@quy-hang/core";
 import type { ListingView } from "@/lib/sync/types";
 import { CHUA_RO, type DongBang } from "./cot";
 
-type ThuocTinhCan = { unitType: string; livingArea: number | null; floor: number | null; directionFaces: string | null };
+type ThuocTinhCan = {
+  unitType: string;
+  livingArea: number | null;
+  floor: number | null;
+  directionFaces: string | null;
+  /** RESO `PropertySubType` của danh mục — điều kiện loại hình của hàng đợi Hôm nay (hàng 22); ngoài danh mục là `null`. */
+  propertySubType: string | null;
+};
 
-const KHONG_CO: ThuocTinhCan = { unitType: CHUA_RO, livingArea: null, floor: null, directionFaces: null };
+const KHONG_CO: ThuocTinhCan = { unitType: CHUA_RO, livingArea: null, floor: null, directionFaces: null, propertySubType: null };
 const chuan = (s: string) => s.trim().toLowerCase();
 const khoa = (toa: string, ma: string) => `${chuan(toa)}\u0000${chuan(ma)}`;
 
@@ -29,7 +36,13 @@ export function chiMuc(catalog: CatalogData | null): ChiMucDanhMuc {
 export function thuocTinhCan(idx: ChiMucDanhMuc, buildingName: string, unitNumber: string | null): ThuocTinhCan {
   const u = unitNumber ? idx.get(khoa(buildingName, unitNumber)) : undefined;
   if (!u) return KHONG_CO;
-  return { unitType: nhanLoaiCan(u.bedroomsTotal), livingArea: u.livingArea, floor: u.floor, directionFaces: u.directionFaces };
+  return {
+    unitType: nhanLoaiCan(u.bedroomsTotal),
+    livingArea: u.livingArea,
+    floor: u.floor,
+    directionFaces: u.directionFaces,
+    propertySubType: u.propertySubType ?? null,
+  };
 }
 
 function soNgay(f: unknown): { confirmedAgeDays: number | null; needsCallBack: boolean } {

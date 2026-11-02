@@ -1,0 +1,9 @@
+E8 network (Playwright, app origin http://localhost:3484) — api requests in order of the steps
+109 POST /api/v1/listings/08b58759-…/events => 200 (C1 B-01.02, owner_confirmed)
+111 GET  /api/v1/listings/08b58759-… => 200 (owner_confirmed n=1)
+113 POST /api/v1/listings/77298729-…/events => FAILED net::ERR_INTERNET_DISCONNECTED (C2 A-01.01; offline chu dong bat boi buoc 4)
+114 POST /api/v1/listings/77298729-…/events => 200 (gui lai sau khi co mang)
+116 GET  /api/v1/listings/77298729-… => 200 (owner_confirmed n=1)
+122/123 GET /api/v1/listings/88378170-… => 200 (C3 A-01.04, ho so)
+Mọi request còn lại /api/v1 (catalog, queue, leads/assigned, listings, units/photos, auth, me/company) => 200
+Console error duy nhat: Failed to load resource net::ERR_INTERNET_DISCONNECTED .../77298729-…/events (do chu dong tat mang theo steps)

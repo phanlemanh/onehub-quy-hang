@@ -31,6 +31,7 @@ import { toast } from "sonner";
 
 import { guiLuot, nganChoTha, tepTuLuotDan, type TepSanSang, type The } from "./tai-len";
 import { lamViec, type ViecAnh } from "./viec-anh";
+import { TrinhChe } from "./redact/trinh-che";
 
 // Khung thông báo riêng của mục Ảnh: hồ sơ căn không có khung chung; Bảng hàng có khung của trình sửa trên ô — id riêng
 // để hai khung không hiện trùng một lời báo.
@@ -72,6 +73,8 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
   const [cho, setCho] = useState<OCho[]>([]);
   const [xem, setXem] = useState<UnitPhoto | null>(null);
   const [xoa, setXoa] = useState<UnitPhoto | null>(null);
+  // Che vùng (hàng 19): chỉ ảnh ngăn Gửi được.
+  const [che, setChe] = useState<UnitPhoto | null>(null);
   const [keoVao, setKeoVao] = useState(false);
   const ngoaiTuyen = useNgoaiTuyen();
   const chonTep = useRef<HTMLInputElement>(null);
@@ -185,6 +188,7 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
                               {p.isSample ? "Bỏ «Ảnh mẫu»" : "Đánh dấu «Ảnh mẫu»"}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => lam("ngan", () => nguon.sua(p.id, { compartment: "internal" }))}>Chuyển sang Nội bộ</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setChe(p)}>Che vùng…</DropdownMenuItem>
                           </>
                         ) : (
                           <DropdownMenuItem onClick={() => lam("ngan", () => nguon.sua(p.id, { compartment: "shareable" }))}>Chuyển sang Gửi được</DropdownMenuItem>
@@ -287,6 +291,19 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {che ? (
+        <TrinhChe
+          anh={che}
+          nguon={nguon}
+          urlGoc={nguon.urlAnh(che.id, "original")}
+          onDong={() => setChe(null)}
+          onDaLuu={() => {
+            setChe(null);
+            tai();
+            toast.success("Đã lưu bản che · bản gốc ở Nội bộ", { toasterId: KHUNG_BAO });
+          }}
+        />
+      ) : null}
       <Toaster id={KHUNG_BAO} position="bottom-right" />
     </section>
   );
