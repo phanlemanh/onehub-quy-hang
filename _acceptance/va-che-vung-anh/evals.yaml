@@ -6,7 +6,9 @@ feature_slug: va-che-vung-anh
 #   mà dau-chu-1 giữ (hàng 19 dùng B-15.05 Toà B). Ảnh thử dựng trong bài (canvas trên trang, tải qua mục Ảnh vào ngăn Gửi được): ngang 2000×1500, dọc
 #   1500×2000, nhỏ 400×300, rất rộng 3000×600 — mỗi ảnh nền xám có một ô vuông đỏ ở tâm để thấy ảnh. Ghi mã căn và id ảnh.
 # Đo hình chữ nhật bằng getBoundingClientRect của: hộp (phần tử role=dialog), canvas (aria-label «Ảnh để vẽ vùng che»),
-#   nút «Lưu bản che»; khổ cửa sổ = innerWidth × innerHeight. «Trọn trong» = bốn cạnh, sai số 1px.
+#   nút «Lưu bản che»; khổ cửa sổ = innerWidth × innerHeight. «Trọn trong» = bốn cạnh, sai số 1px. Cỡ hiển thị của khung vẽ
+#   (tỉ lệ, «không phóng to», hệ số co) đo bằng canvas.clientWidth × clientHeight — không tính viền 1px mỗi bên.
+#   Mỗi bài nhìn GHI số đo vào evidence/<E>-measure.json (đo bằng mã trong trang, không ước trên ảnh chụp); thiếu tệp → trượt.
 evals:
   - id: E1
     criterion: AC-1
@@ -22,8 +24,9 @@ evals:
     layer: ui-observed
     steps:
       - "DỰNG B. Khổ 1440×900. dau-chu-1, hồ sơ căn; tải bốn ảnh thử vào ngăn Gửi được (ngang 2000×1500, dọc 1500×2000, nhỏ 400×300, rất rộng 3000×600)"
-      - "Với từng ảnh: menu ảnh → «Che vùng…» → chờ canvas hiện → ghi hình chữ nhật của hộp, canvas, nút «Lưu bản che»; ghi canvas.width × canvas.height và tỉ lệ hiển thị (rect.width/rect.height) so tỉ lệ ảnh; chụp evidence/E2-<ngang|doc|nho|rong>.png → đóng không lưu"
-    expected: "Với cả bốn ảnh: canvas trọn trong hộp (bốn cạnh); canvas không chồng nút «Lưu bản che» (đáy canvas ≤ đỉnh nút); hộp trọn trong cửa sổ; tỉ lệ hiển thị bằng tỉ lệ ảnh (sai số 1%); ảnh nhỏ 400×300 hiện 400×300 (không phóng to); hộp rộng hơn 24rem (384px) ở ảnh ngang. Mỗi ảnh × mỗi mục một đạt/trượt."
+      - "Với từng ảnh: menu ảnh → «Che vùng…» → chờ canvas hiện → ghi hình chữ nhật của hộp, canvas, nút «Lưu bản che»; ghi canvas.width × canvas.height, clientWidth × clientHeight và tỉ lệ hiển thị (clientWidth/clientHeight) so tỉ lệ ảnh; chụp evidence/E2-<ngang|doc|nho|rong>.png → đóng không lưu"
+      - "Ghi evidence/E2-measure.json: mỗi ảnh một mục {anh, hop, canvas, nut, ve, hienThi, tiLe} cộng bảng đạt/trượt từng mục của Expected"
+    expected: "Với cả bốn ảnh: canvas trọn trong hộp (bốn cạnh); canvas không chồng nút «Lưu bản che» (đáy canvas ≤ đỉnh nút); hộp trọn trong cửa sổ; tỉ lệ hiển thị bằng tỉ lệ ảnh (sai số 1%); ảnh nhỏ 400×300 hiện clientWidth × clientHeight = 400×300 (không phóng to); hộp rộng hơn 24rem (384px) ở ảnh ngang. Mỗi ảnh × mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/units/photos/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -47,6 +50,7 @@ evals:
       - "Kéo chuột thật (pointer) từ điểm màn (r.left + 0,2·r.width, r.top + 0,2·r.height) tới (r.left + 0,8·r.width, r.top + 0,8·r.height) → ghi «n vùng che» → chụp evidence/E4-keo.png"
       - "Vùng mong đợi trên canvas theo phân số cỡ vẽ: 0,2–0,8 mỗi trục (kéo trên màn đổi theo cỡ hiển thị). Vùng của bản lỗi «không chia tỉ lệ» (lấy điểm màn làm điểm vẽ): 0,2·s–0,8·s. Bước dò trước: chọn bốn điểm dò theo phân số (x = y) 0,5 · 0,78 · 0,82 · 0,15; với mỗi điểm tính kết quả của bản đúng và bản lỗi; nếu không điểm nào cho hai kết quả khác nhau → kết luận trượt với thông điệp «thước không phân biệt được» (khung co quá ít)"
       - "Đọc điểm ảnh của canvas bằng getContext('2d').getImageData tại bốn điểm dò (toạ độ = phân số × canvas.width, × canvas.height) → ghi RGBA từng điểm; đóng không lưu"
+      - "Ghi evidence/E4-measure.json: {anh (id, cỡ gốc), r, ve, s, keo: [điểm đầu, điểm cuối trên màn], vungDung, vungLoi, diemDo: [{f, rgba, dungDen, loiDen}], diemPhanBiet, vung} cộng bảng đạt/trượt từng mục của Expected"
     expected: "s < 1 (khung đang co); «1 vùng che»; có ít nhất một điểm dò mà bản đúng và bản lỗi cho kết quả khác nhau (ghi điểm đó); điểm 0,5 và 0,78 đen (R,G,B ≤ 10); điểm 0,82 và 0,15 không đen. Mỗi mục một đạt/trượt."
     paths: ["apps/web/src/app/(app)/units/photos/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
