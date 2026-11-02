@@ -5,7 +5,7 @@ slug: va-ma-can-lead
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-03
 design_doc: docs/superpowers/specs/2026-11-02-va-ma-can-lead-design.md

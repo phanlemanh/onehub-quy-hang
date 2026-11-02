@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 7b29bf33e72cedc0eb56f8f72e7d92cfdc4b7d10
-human_signoff:
+human_signoff: Manh Phan 2026-11-03
 ---
 
 # Evidence Report: va-ma-can-lead
