@@ -5,6 +5,7 @@ import { cn } from "cn";
 
 import { ChoTai } from "./cho-tai";
 import { DaiNgoaiTuyen } from "./dai-ngoai-tuyen";
+import { NganNoi } from "./ngan-noi";
 import { coVung, type KieuBoCuc, THONG_TIN, type Vung } from "./ma-tran";
 
 // Bố cục trang của hệ bố cục (ADR-0024): giữ khung trang — lề, đầu màn, xếp thân và cột phụ, bản điện thoại — còn mỗi
@@ -24,10 +25,11 @@ type Props = {
   trangThai?: TrangThaiTai;
   rong?: ReactNode;
   loi?: ReactNode;
-  /** Danh sách – chi tiết trên điện thoại: hai màn chồng — có chi tiết mở thì chỉ hiện cột phụ. */
-  chiTietMo?: boolean;
-  /** Danh sách – chi tiết trên máy tính: thân và cột phụ kéo chia (c-resizable-9) — bố cục nhận hàm xếp từ khối. */
-  chiaDoi?: (trai: ReactNode, phai: ReactNode) => ReactNode;
+  /**
+   * Danh sách – chi tiết: bảng giữ toàn bề rộng, chi tiết (cột phụ) trượt ra trong ngăn inset bên phải đè lên bảng mà bảng
+   * vẫn bấm được (sheet-9; chủ kho 02/11). Điện thoại mở ngăn từ đáy.
+   */
+  chiTiet?: { mo: boolean; onMo: (mo: boolean) => void; tieuDe: ReactNode; hanhDong?: ReactNode; chan?: ReactNode };
   /** Trang mẫu sống dựng ngoại tuyến không cần ngắt mạng. */
   ngoaiTuyen?: boolean;
 };
@@ -41,7 +43,7 @@ function chiCo(kieu: KieuBoCuc, vung: Vung, noiDung: ReactNode): ReactNode {
   return noiDung;
 }
 
-export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", rong, loi, chiTietMo, chiaDoi, ngoaiTuyen }: Props) {
+export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", rong, loi, chiTiet, ngoaiTuyen }: Props) {
   const tt = THONG_TIN[kieu];
   const phu = trangThai === "san-sang" ? chiCo(kieu, "cot-phu", cotPhu) : null;
   const than = trangThai === "cho-tai" ? <ChoTai kieu={kieu} /> : trangThai === "loi" ? loi : trangThai === "rong" ? rong : children;
@@ -52,15 +54,14 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
     </div>
   ) : kieu === "danh-sach-chi-tiet" ? (
     <>
-      <div className="hidden min-w-0 lg:flex">{chiaDoi ? chiaDoi(than, phu) : than}</div>
-      <div className="flex min-w-0 flex-col gap-khung lg:hidden">
-        <div data-vung="than" className={cn("min-w-0", chiTietMo && "max-lg:hidden")}>
-          {than}
-        </div>
-        <div data-vung="cot-phu" className={cn("min-w-0", !chiTietMo && "max-lg:hidden")}>
-          {phu}
-        </div>
+      <div data-vung="than" className="flex min-w-0 flex-col gap-khung">
+        {than}
       </div>
+      {chiTiet && (
+        <NganNoi phuBang mo={chiTiet.mo} onMo={chiTiet.onMo} tieuDe={chiTiet.tieuDe} hanhDong={chiTiet.hanhDong} chan={chiTiet.chan}>
+          <div data-vung="cot-phu">{phu}</div>
+        </NganNoi>
+      )}
     </>
   ) : (
     // Luồng nhiều bước: thân hai phần, xem trước một phần.

@@ -32,8 +32,8 @@ Hệ quả là bảng, chip lọc, ô số và dòng tin đều bị vẽ lại 
 | (mọi bố cục) | chờ tải | thành phần | `skeleton` theo hình bố cục (luật ReUI «Skeleton in the real layout») | `components/bo-cuc/cho-tai.tsx` |
 | (mọi bố cục) | ngăn nổi | thành phần | `sheet` / `drawer` | `components/bo-cuc/ngan-noi.tsx` |
 | Tràn | lưới + lọc + chân | **ghép, chờ** | `solution-crm-3` (chính là màn Contacts của Verve). Cần thành phần `filters`, mà `filters` lỗi kiểu dưới `noUncheckedIndexedAccess` | trang mẫu `KhungLuoiCan` |
-| Danh sách – chi tiết | chia đôi | c-\* | `c-resizable-9` (tay nắm viên thuốc) | `components/khoi/c-resizable-9.tsx` |
-| Danh sách – chi tiết | cột phụ (hồ sơ cạnh bảng) | khối | `solution-crm-4` — cùng thành phần hồ sơ dùng chung | `components/khoi/solution-crm-4/ho-so.tsx` |
+| Danh sách – chi tiết | ngăn chi tiết trượt phải | khối | `sheet-9` — ngăn inset: cách mép 1rem, bo góc, đầu ngăn tên + nút, thân cuộn, chân dính đáy; đè lên bảng mà bảng vẫn bấm được (chủ kho 02/11) | `components/bo-cuc/ngan-noi.tsx` |
+| Danh sách – chi tiết | hồ sơ trong ngăn | khối | `solution-crm-4` — `ThanHoSo` (thân hồ sơ không khung) cùng các mảnh dùng chung | `components/khoi/solution-crm-4/ho-so.tsx` |
 | Đọc | dòng cài đặt + khung | khối | `settings-3`: giữ `SettingField` và khung gốc; bỏ ô màu, tuỳ chọn trình soạn | `components/khoi/settings-3/` |
 | Hồ sơ | khung, đầu hồ sơ, khối số chính, mục, cặp nhãn–giá trị | khối | `solution-crm-4` đã chuyển thể ở hồ sơ căn (hàng 17) — rút thành thành phần dùng chung, giữ nguyên lớp (chủ kho 02/11 chọn bố cục này) | `components/khoi/solution-crm-4/ho-so.tsx` |
 | Hồ sơ | dải đường dẫn | ghép | `dau-man.tsx`, không tiêu đề (tên ở đầu hồ sơ) | `dau-man.tsx` |
@@ -71,3 +71,11 @@ hàng) · `DauHoSo` · `SoChinh` · `MucHoSo` · `CapGiaTri`. Hồ sơ căn, li�
 thuộc vùng hàng 33 nên chưa đổi; tới bước ấy nó nhập các mảnh dùng chung thay bản riêng (ngoại lệ có hạn đã trỏ hàng 33).
 Thay đổi duy nhất so với màn đang chạy: cột cạnh bảng thôi đặt chiều cao viết cứng `h-[calc(100svh-10.5rem)]` — chiều
 cao thuộc bố cục (luật no-layout-arbitrary).
+
+## Chi tiết trượt phải (chủ kho 02/11)
+
+Chủ kho chọn cách hiển thị của nhóm khối sheet của ReUI: bảng giữ toàn bề rộng, chi tiết trượt ra bên phải. Khối gốc
+`sheet-9` (Ticket details) — kiểu inset mà mọi khối sheet của ReUI dùng chung — chuyển thể vào chính `NganNoi`, chỗ duy
+nhất được gọi Sheet. Ngăn `phuBang` không khoá và không phủ mờ: `SheetContent` của bản cài luôn dựng lớp phủ chặn bấm,
+nên ngăn đè lên bảng ghép thẳng từ Popup của Base UI với đúng lớp popup bên phải của bản cài. Đã thử trên bản chạy: lớp
+phủ không có, bấm dòng B-03.05 thì ngăn đổi sang hồ sơ B-03.05, Esc đóng ngăn. Cột chia đôi `c-resizable-9` bỏ.

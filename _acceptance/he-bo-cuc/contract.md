@@ -60,7 +60,7 @@ tuyến là dải báo ở đầu màn, nội dung đã tải giữ nguyên.
 ### AC-6 — Ba khổ
 Given mỗi bố cục trên trang mẫu sống
 When xem ở 1440, 1024 và 375
-Then bản điện thoại theo ADR-0024 §5 — Tràn thành thẻ, Danh sách – chi tiết thành hai màn chồng, Hồ sơ giữ một
+Then bản điện thoại theo ADR-0024 §5 — Tràn thành thẻ, Danh sách – chi tiết mở chi tiết trong ngăn từ đáy, Hồ sơ giữ một
 cột, Luồng nhiều bước ngăn toàn màn, Đọc và Dòng tin giữ, Bảng điều khiển không có trên điện thoại; ngăn nổi
 là ngăn bên ở máy tính và ngăn từ đáy ở điện thoại; không cuộn ngang ở 375.
 

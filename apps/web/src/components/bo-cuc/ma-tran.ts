@@ -44,9 +44,9 @@ export const THONG_TIN: Record<KieuBoCuc, ThongTin> = {
   "danh-sach-chi-tiet": {
     ten: "Danh sách – chi tiết",
     mat_do: "day",
-    khoi_nguon: "resizable theo c-resizable-9",
+    khoi_nguon: "sheet-9 (ngăn inset trượt phải) + hồ sơ solution-crm-4",
     vung: ["dau-man", "than", "cot-phu"],
-    dien_thoai: "hai màn chồng",
+    dien_thoai: "chi tiết mở ngăn từ đáy",
   },
   doc: {
     ten: "Đọc",

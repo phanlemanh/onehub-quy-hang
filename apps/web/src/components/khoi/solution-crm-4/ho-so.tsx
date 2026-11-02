@@ -16,17 +16,7 @@ const TIEU_MUC = "text-xs font-medium uppercase tracking-wide text-muted-foregro
  * của Danh sách – chi tiết. Các mảnh con xếp chồng, bố cục chèn đường kẻ giữa chúng.
  */
 export function KhungHoSo({ cot = false, nhan = "Hồ sơ", children }: { cot?: boolean; nhan?: string; children: ReactNode }) {
-  const manh = Children.toArray(children).filter(Boolean);
-  const than = (
-    <div className="flex flex-col" data-slot="ho-so">
-      {manh.map((m, i) => (
-        <Fragment key={i}>
-          {i > 0 && <Separator />}
-          {m}
-        </Fragment>
-      ))}
-    </div>
-  );
+  const than = <ThanHoSo>{children}</ThanHoSo>;
   if (cot)
     return (
       <FramePanel className="flex h-full min-h-0 flex-col overflow-y-auto p-0" aria-label={nhan}>
@@ -39,6 +29,21 @@ export function KhungHoSo({ cot = false, nhan = "Hồ sơ", children }: { cot?: 
         {than}
       </FramePanel>
     </Frame>
+  );
+}
+
+/** Thân hồ sơ không khung: các mảnh xếp chồng, ngăn bằng đường kẻ — đặt trong ngăn nổi (NganNoi) hay trong KhungHoSo. */
+export function ThanHoSo({ children }: { children: ReactNode }) {
+  const manh = Children.toArray(children).filter(Boolean);
+  return (
+    <div className="flex flex-col" data-slot="ho-so">
+      {manh.map((m, i) => (
+        <Fragment key={i}>
+          {i > 0 && <Separator />}
+          {m}
+        </Fragment>
+      ))}
+    </div>
   );
 }
 

@@ -39,7 +39,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Bố cục | Mật độ | Khối nguồn (mã đã cài) | Màn |
    | --- | --- | --- | --- |
    | Tràn | dày | `data-grid-editing-6` | Bảng hàng, Hôm nay đầu chủ, trang nhóm môi giới, Lịch xem |
-   | Danh sách – chi tiết | dày | `resizable` theo `c-resizable-9` | Bảng hàng có hồ sơ cạnh bên, lead đã nhập |
+   | Danh sách – chi tiết | dày | bảng + ngăn trượt phải `sheet-9` (chủ kho 02/11) | Bảng hàng có hồ sơ cạnh bên, lead đã nhập |
    | Đọc | thường | `settings-3` (gỡ max-width ở gốc khối) | Ô nhận lead, từng mục Cài đặt sàn, Tôi |
    | Hồ sơ | thường | `solution-crm-4` — một cột theo hồ sơ căn hàng 17 (chủ kho 02/11) | Hồ sơ căn toàn màn, chế độ cuộc gọi, hồ sơ liên hệ |
    | Bảng điều khiển | thường | `stats-7` + `data-grid-grouping-2` | Hôm nay trưởng nhóm, Đội |
@@ -107,7 +107,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
     màn, các bố cục chưa có màn nào trong kho dùng. Sau đó máy giữ; đổi hệ bố cục chỉ qua ADR sửa.
 
 13. **Theo Verve và giữ riêng.** Theo: đầu màn thống nhất, một menu Tạo, cột thứ hai có số, lọc dạng chip đọc thành câu,
-    tab có số đếm, nút làm ngay trong dòng, dòng cài đặt nhãn trái ô phải. Giữ: hồ sơ mở cạnh bảng; thanh tab dưới điện
+    tab có số đếm, nút làm ngay trong dòng, dòng cài đặt nhãn trái ô phải. Giữ: hồ sơ mở cạnh bảng — nay trượt phải trong ngăn inset, bảng vẫn bấm được (chủ kho 02/11); thanh tab dưới điện
     thoại; lưới dày; sửa từng ô lưu ngay và hoàn tác (không lưu cả bảng ở Bảng hàng); không kéo thẻ để đổi trạng thái căn;
     Hôm nay là hàng đợi, không phải lịch; không bảng nhiều biểu đồ ở bản đầu. Cột thứ hai thì theo Verve: mọi nhà có, mặc định mở (chủ kho 02/11 tại Cổng
     Phạm vi hàng 91 — thay «Hôm nay không có cột thứ hai» của §9).

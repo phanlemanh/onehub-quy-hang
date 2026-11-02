@@ -1,13 +1,12 @@
 "use client";
 
-import { InboxIcon, SearchXIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { InboxIcon, Maximize2Icon, SearchXIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { BoCuc, DauMan, type KieuBoCuc, type TrangThaiTai } from "@/components/bo-cuc";
-import { ChiaDoi } from "@/components/khoi/c-resizable-9";
 import { MucCaiDatKhoi } from "@/components/khoi/settings-3/muc-cai-dat";
 import { SettingField } from "@/components/khoi/settings-3/setting-field";
-import { CapGiaTri, DauHoSo, KhungHoSo, MucHoSo, SoChinh } from "@/components/khoi/solution-crm-4/ho-so";
+import { CapGiaTri, DauHoSo, KhungHoSo, MucHoSo, SoChinh, ThanHoSo } from "@/components/khoi/solution-crm-4/ho-so";
 import { ActivityTimeline } from "@/components/khoi/solution-crm-5/activity-timeline";
 import type { CardData } from "@/components/khoi/stats-7/data";
 import { Stats } from "@/components/khoi/stats-7/stats";
@@ -164,9 +163,10 @@ function KhungLuoiCan({ tieuDe, dem, nut, chon, onChon }: { tieuDe: string; dem:
 }
 
 /** Hồ sơ một căn — giải phẫu hồ sơ căn đang chạy (khoi/solution-crm-4/ho-so.tsx), dùng chung cho toàn màn và cột cạnh bảng. */
-function HoSoCan({ can, cot = false }: { can: CanMau; cot?: boolean }) {
+function HoSoCan({ can, trongNgan = false }: { can: CanMau; trongNgan?: boolean }) {
+  const Khung = trongNgan ? ThanHoSo : KhungHoSo;
   return (
-    <KhungHoSo cot={cot} nhan="Hồ sơ căn">
+    <Khung>
       <DauHoSo ngu="[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ" ten={can.ma} trangThai={can.trangThai} trangThaiTone={TONE[can.trangThai] ?? "info-light"} phu={`Xác nhận ${can.tuoi} trước`} />
       <SoChinh giaTri={can.gia} nhan="Bao phí" tienDo={{ co: 3, tren: 5, chu: "Mức đủ thông tin · thiếu Nội thất, Tài chính", nhanThanh: "Mức đủ thông tin" }} />
       <MucHoSo tieuDe="Thuộc tính căn" phai={<Button variant="ghost" size="sm">Báo sai thông tin căn</Button>}>
@@ -197,7 +197,7 @@ function HoSoCan({ can, cot = false }: { can: CanMau; cot?: boolean }) {
           ]}
         />
       </MucHoSo>
-    </KhungHoSo>
+    </Khung>
   );
 }
 
@@ -212,7 +212,8 @@ const DUONG: Record<KieuBoCuc, [{ nhan: string; href: string }, { nhan: string }
 };
 
 export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; trangThai: TrangThaiMau; dauMan?: LoiDauMan }) {
-  const [chon, setChon] = useState<string | undefined>();
+  // Trang mẫu mở sẵn hồ sơ dòng đầu ở Danh sách – chi tiết để ảnh chuẩn thấy ngăn trượt phải.
+  const [chon, setChon] = useState<string | undefined>(kieu === "danh-sach-chi-tiet" && trangThai === "mac-dinh" ? CAN_MAU[0]?.ma : undefined);
   const chung = { trangThai: sangTai(trangThai), ngoaiTuyen: trangThai === "ngoai-tuyen", loi: LOI };
   const duong = DUONG[kieu];
 
@@ -230,10 +231,26 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           kieu="danh-sach-chi-tiet"
           {...chung}
           rong={RONG_LOC}
-          chiTietMo={chon !== undefined}
-          chiaDoi={(trai, phai) => <ChiaDoi trai={trai} phai={phai} />}
           dauMan={<DauMan duongDan={duong} />}
-          cotPhu={can && <HoSoCan can={can} />}
+          chiTiet={{
+            mo: chon !== undefined,
+            onMo: (mo) => !mo && setChon(undefined),
+            tieuDe: "Hồ sơ căn",
+            hanhDong: (
+              <Button variant="ghost" size="icon-sm" aria-label="Mở toàn màn">
+                <Maximize2Icon aria-hidden="true" />
+              </Button>
+            ),
+            chan: (
+              <>
+                <Button className="min-w-0 flex-1">Còn · giữ giá</Button>
+                <Button variant="outline" className="min-w-0 flex-1">
+                  Gửi khách
+                </Button>
+              </>
+            ),
+          }}
+          cotPhu={can && <HoSoCan can={can} trongNgan />}
         >
           <KhungLuoiCan tieuDe="Lead đã nhập" dem="37 lead · 6 hôm nay" chon={chon} onChon={setChon} />
         </BoCuc>
