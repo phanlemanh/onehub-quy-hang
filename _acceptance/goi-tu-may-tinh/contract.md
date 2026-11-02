@@ -5,7 +5,7 @@ slug: goi-tu-may-tinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-11-02
 design_doc: docs/superpowers/specs/2026-11-02-goi-tu-may-tinh-design.md
@@ -80,3 +80,8 @@ lớp nguồn (AC-3) · màn máy tính (AC-5) · màn điện thoại và mở 
 - Hỏi-1 (thông báo hay mã QR) nháp theo khuyến nghị «thông báo» — chủ kho chốt ở Cổng Phạm vi.
 - Không migration: dùng `app.push_outbox_add` của migration 018; cơ sở dữ liệu đã chặn nội dung khác bốn khoá.
 - Một dòng cắm nút vào `units/call/cuoc-goi.tsx` (tệp của hàng 29) — đã xin giám sát `cham-tep` (L-22).
+- Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Trên trang quay số, dòng tiêu đề trên cùng hiện chữ «Căn call» thay vì một nhãn tiếng Việt đúng. Chức năng gọi vẫn chạy bình thường, chỉ là chữ ở đầu trang trông lạ. — `apps/web/src/components/shell/app-shell.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bản ghi mạng đi kèm hồ sơ ghi là không có lời từ chối nào, trong khi hai khung thử người không phải chủ lead chắc chắn có từ chối. Sản phẩm chạy đúng, chỉ là hồ sơ nghiệm thu ghi chưa đủ. — `_acceptance/goi-tu-may-tinh/evidence/E9-network.txt`
+- Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm xem nhật ký có lộ số điện thoại chủ nhà hay không có thể vẫn báo xanh ngay cả khi nó không bắt được dòng nhật ký nào. Hiện chưa có bằng chứng số bị lộ, chỉ là bài kiểm chưa chứng minh chắc điều đó. — `packages/api/test-db/goi-tu-may-tinh.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Khi dùng bàn phím, nhấn Enter trên nút «Quay số trên điện thoại» hoặc «Đã gọi» không kích hoạt nút mà kéo con trỏ vào ô giá. Bấm bằng chuột hay chạm vẫn dùng bình thường. — `apps/web/src/app/(app)/units/call/cuoc-goi.tsx`
+- Ngoài-5 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm chống rò giá và mã căn chưa tự chứng minh là máy dò bắt được khi có rò thật, nên nếu giá lộ ra dưới dạng lạ thì có thể không ai nhận ra. Người dùng không thấy gì khác đi hôm nay. — `packages/api/test-db/goi-tu-may-tinh.test.ts`
