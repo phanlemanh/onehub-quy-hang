@@ -108,6 +108,17 @@ test("khoá công khai: máy chủ tự sinh, lần hai trả đúng khoá ấy"
   assert.equal(Buffer.from(k1, "base64url").length, 65);
   assert.equal(await lay(), k1);
   assert.equal((await send("GET", "/api/v1/push/public-key")).status, 401);
+  // Máy chủ không dựng được khoá mã hoá (khoá hỏng): 503 push-not-configured, dải web báo «chưa được cấu hình».
+  const cu = process.env.OWNER_PHONE_KEY;
+  process.env.OWNER_PHONE_KEY = "khoa-hong";
+  try {
+    const r = await send("GET", "/api/v1/push/public-key", undefined, s.nguoi.dc1!.cookie);
+    assert.equal(r.status, 503);
+    assert.deepEqual(await r.json(), { error: "push-not-configured" });
+  } finally {
+    if (cu === undefined) delete process.env.OWNER_PHONE_KEY;
+    else process.env.OWNER_PHONE_KEY = cu;
+  }
 });
 
 test("đăng ký: bật, bật lại, gỡ", async () => {
