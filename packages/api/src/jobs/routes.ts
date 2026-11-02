@@ -16,7 +16,7 @@ const Tick = z.object({ companies: z.number(), routed: z.number(), alerts: z.num
 const khop = (a: string, b: string) =>
   timingSafeEqual(createHash("sha256").update(a).digest(), createHash("sha256").update(b).digest());
 
-export function registerJobRoutes(api: OpenAPIHono, { appPool, jobSecret }: ApiDeps) {
+export function registerJobRoutes(api: OpenAPIHono, { appPool, jobSecret, pushSender }: ApiDeps) {
   api.openapi(
     createRoute({
       method: "post",
@@ -32,7 +32,7 @@ export function registerJobRoutes(api: OpenAPIHono, { appPool, jobSecret }: ApiD
       if (!jobSecret) return c.json({ error: API_ERRORS.jobSecretMissing.code }, 503);
       const m = /^Bearer (.+)$/.exec(c.req.header("authorization") ?? "");
       if (!m || !khop(m[1]!, jobSecret)) return c.json({ error: API_ERRORS.badJobSecret.code }, 401);
-      return c.json(await runLeadTick(appPool, new Date()), 200);
+      return c.json(await runLeadTick(appPool, new Date(), undefined, pushSender), 200);
     },
   );
 }
