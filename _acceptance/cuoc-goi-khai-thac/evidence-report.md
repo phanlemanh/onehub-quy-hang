@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 86ba9f8225d6a1ebe08bc5991567510e29e97ecd
+verified_commit: f45b727dfb15b71c6afd95fbaeb57b4f370ad8be
 human_signoff: Manh Phan 2026-11-02
 ---
 
@@ -320,3 +320,7 @@ none — every multi-run eval is uniform
 
 Round 1: chạy toàn bộ eval AC-1 đến AC-10; các eval E3, E4, E5, E5b, E6, E6b, E6c, E8, E8b, E10, E10b có run_id đuôi r1 hoặc theo ngày.
 Round 2: chạy lại E1, E1b, E1c, E2, E2b, E4b, E7, E7b, E7c, E9, E9b cùng sáu lệnh suite; các eval còn lại carry-forward vì delta không chạm paths của chúng. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-02, do hoá cũ do gộp nhánh chính (PR #83, #85) sau chữ ký
+run_id: repin-20261102T095052Z-69596
+sha: f45b727dfb15b71c6afd95fbaeb57b4f370ad8be · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E1b, E2, E4b, E5b, E6c, E7b, E7c, E8b, E9, E10b · diff chạm vật đo ngoài làn máy: E1b, E7c — chưa chứng lại, đi vòng S4 delta
