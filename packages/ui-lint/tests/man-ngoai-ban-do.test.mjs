@@ -21,7 +21,7 @@ const TEP_KIEM_CHUAN = ["apps/web/components.json", ".agents/skills/quy-hang-ui"
 // Màn mẫu của ca (a): Lịch xem — còn ở trang tạm, chưa nhóm nào (Bảng hàng đã có nhóm từ hàng 14).
 const LICH_XEM = `${W}/app/(app)/viewings/page.tsx`;
 const BAO_CAO = `${W}/app/(app)/bao-cao/page.tsx`;
-const NHAN_TRANG_TAM = 'nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/web/src/app/settings/[section]/page.tsx"]';
+const NHAN_TRANG_TAM = 'nhan_dien: ["apps/web/src/app/(app)/**/page.tsx"]';
 
 function banSao({ kiemChuan = false } = {}) {
   const d = mkdtempSync(join(tmpdir(), "ngoai-ban-do-"));
@@ -59,7 +59,7 @@ function roiTrangTam(d, boRa = []) {
     `nhan_dien: [${["today", "me", "team", "shares", "viewings", "exports/new", "imports/new", "leads/new", "units/[code]"]
       .filter((m) => !boRa.includes(m))
       .map((m) => `"apps/web/src/app/(app)/${m}/page.tsx"`)
-      .join(", ")}, "apps/web/src/app/settings/[section]/page.tsx"]`,
+      .join(", ")}, "apps/web/src/app/(app)/settings/[section]/page.tsx"]`,
   );
 }
 const LICH_XEM_KHUON = 'export function LichXem({ title }: { title: string }) {\n  return <section>{title}</section>;\n}\n';
@@ -150,7 +150,7 @@ describe("màn ngoài bản đồ — chấm theo vòng và kiem-chuan (E5)", ()
       assert.equal(chay(d, "--base", ref).status, 0);
       const k = kc(d);
       assert.equal(k.status, 0, k.stdout + k.stderr);
-      assert.ok(k.stdout.split("\n").includes("khuôn: 9 nhóm · 0 lỗi đọc · 0 lệch"), k.stdout);
+      assert.ok(k.stdout.split("\n").includes("khuôn: 10 nhóm · 0 lỗi đọc · 0 lệch"), k.stdout);
     }));
 
   it("vòng chỉ thêm một màn ngoài bản đồ → --base đỏ nêu tệp, không lối «không tệp nào đổi»; kiem-chuan đỏ nêu tệp", () =>
@@ -173,7 +173,7 @@ describe("màn ngoài bản đồ — chấm theo vòng và kiem-chuan (E5)", ()
   it("--base không rơi lối «không tệp nào đổi» kể cả khi không nhóm nào (cả nhóm trạng thái) phủ trang mới", () =>
     kho((d) => {
       roiTrangTam(d);
-      sua(d, "design/patterns/trang-thai.md", '"apps/web/src/app/**/*.tsx"', '"apps/web/src/app/(auth)/**/*.tsx", "apps/web/src/app/settings/**/*.tsx", "apps/web/src/app/(app)/today/*.tsx", "apps/web/src/app/page.tsx"');
+      sua(d, "design/patterns/trang-thai.md", '"apps/web/src/app/**/*.tsx"', '"apps/web/src/app/(auth)/**/*.tsx", "apps/web/src/app/(app)/settings/**/*.tsx", "apps/web/src/app/(app)/today/*.tsx", "apps/web/src/app/page.tsx"');
       git(d, "commit", "-qam", "thu-hep");
       const ref = git(d, "rev-parse", "HEAD").trim();
       ghi(d, BAO_CAO, "export default function P() {\n  return <div>báo cáo</div>;\n}\n");

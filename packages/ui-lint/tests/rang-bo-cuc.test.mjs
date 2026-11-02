@@ -15,7 +15,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const W = "apps/web/src";
 const MOI = `${W}/app/(app)/thu-bo-cuc/page.tsx`;
 
-const linter = new Linter({ configType: "flat" });
+// Neo cwd ở gốc kho: `npm test -w` chạy từ packages/ui-lint, «**/*.tsx» ngoài cwd thì không cấu hình nào khớp.
+const linter = new Linter({ configType: "flat", cwd: ROOT });
 function loi(luat, tep, ma) {
   return linter
     .verify(ma, [

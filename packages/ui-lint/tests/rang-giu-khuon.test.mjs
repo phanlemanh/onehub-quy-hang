@@ -47,6 +47,10 @@ function sua(d, t, cu, moi) {
   assert.ok(s.includes(cu), `bản sao ${t} không có đoạn cần phá: ${cu}`);
   writeFileSync(join(d, t), s.replace(cu, moi));
 }
+// Mục cài đặt mới dưới (app) khớp cả nhan_dien của trang tạm: vòng thật khai nó rời trang tạm (KH-tt-roi-nhom, hàng 91).
+function roiTrangTam(d, tep) {
+  sua(d, "design/patterns/trang-tam.md", "ngoai_le: [{", `ngoai_le: [{ tep: "${tep}", ly_do: "Mục thử rời trang tạm." }, {`);
+}
 
 /** ESLint chỉ bật luật ban-do-khuon, chạy trong bản sao. */
 function lintSao(d) {
@@ -77,16 +81,16 @@ describe("E1 — tiêm khối cấm vào tệp màn của mỗi nhóm → đúng
       assert.deepEqual(r.flatMap((x) => x.messages.filter((m) => m.ruleId === LUAT)), []);
     }));
   const CA = [
-    ["settings/thu/page.tsx mới nhập Frame", `${W}/app/settings/thu/page.tsx`, NHAP("Frame", "@/components/reui/frame") + "export default function P() {\n  return null;\n}\n", "Frame", "cai-dat-san", "MucCaiDat"],
+    ["settings/thu/page.tsx mới nhập Frame", `${W}/app/(app)/settings/thu/page.tsx`, NHAP("Frame", "@/components/reui/frame") + "export default function P() {\n  return null;\n}\n", "Frame", "cai-dat-san", "MucCaiDat"],
     ["trang đăng nhập nhập Card", `${W}/app/(auth)/login/page.tsx`, null, "Card", "xac-thuc", "Khung"],
     ["trang tạm Của tôi nhập Empty", `${W}/app/(app)/me/page.tsx`, null, "Empty", "trang-tam", "Placeholder"],
-    ["quan-nguoi.tsx nhập Alert", `${W}/app/settings/users/quan-nguoi.tsx`, null, "Alert", "trang-thai", "TrangThai"],
+    ["quan-nguoi.tsx nhập Alert", `${W}/app/(app)/settings/users/quan-nguoi.tsx`, null, "Alert", "trang-thai", "TrangThai"],
   ];
   const TU = { Card: "@/components/ui/card", Empty: "@/components/ui/empty", Alert: "@/components/reui/alert" };
   for (const [ten, tep, moi, khoi, nhom, khuon] of CA)
     it(ten, () =>
       voi({}, async (d) => {
-        if (moi) ghi(d, tep, moi);
+        if (moi) (ghi(d, tep, moi), roiTrangTam(d, tep));
         else ghi(d, tep, NHAP(khoi, TU[khoi]) + readFileSync(join(d, tep), "utf8"));
         const m = await loiLuat(d, tep);
         const coTrongLoi = m.length === 1 ? m[0] : null;
@@ -99,8 +103,8 @@ describe("E1 — tiêm khối cấm vào tệp màn của mỗi nhóm → đúng
 
 describe("E2 — phải im", () => {
   const CA = [
-    ["tệp khuôn tự nhập khối của nó", `${W}/app/settings/khung.tsx`, null],
-    ["ngoại lệ đã khai nhập Frame", `${W}/app/settings/page.tsx`, NHAP("Frame", "@/components/reui/frame")],
+    ["tệp khuôn tự nhập khối của nó", `${W}/app/(app)/settings/khung.tsx`, null],
+    ["ngoại lệ đã khai nhập Frame", `${W}/app/(app)/settings/page.tsx`, NHAP("Frame", "@/components/reui/frame")],
     ["tệp ngoài mọi nhóm màn nhập Frame", `${W}/components/shell/app-shell.tsx`, NHAP("Frame", "@/components/reui/frame")],
     ["tệp nhóm nhập khối không cấm", `${W}/app/(auth)/login/page.tsx`, NHAP("Button", "@/components/ui/button")],
   ];
@@ -112,7 +116,7 @@ describe("E2 — phải im", () => {
       }));
   it("đối chứng: ngoại lệ của cai-dat-san nhập Empty → 1 lỗi nhóm trang-thai (luật không tắt ở tệp ấy)", () =>
     voi({}, async (d) => {
-      const tep = `${W}/app/settings/page.tsx`;
+      const tep = `${W}/app/(app)/settings/page.tsx`;
       ghi(d, tep, NHAP("Empty", "@/components/ui/empty") + readFileSync(join(d, tep), "utf8"));
       const m = await loiLuat(d, tep);
       assert.equal(m.length, 1);
@@ -121,7 +125,7 @@ describe("E2 — phải im", () => {
 });
 
 describe("E3 — nhập đổi tên vẫn bị bắt theo tên gốc", () => {
-  const tep = `${W}/app/settings/thu/page.tsx`;
+  const tep = `${W}/app/(app)/settings/thu/page.tsx`;
   const than = "export default function P() {\n  return null;\n}\n";
   it("Frame as F → 1 lỗi nêu Frame", () =>
     voi({}, async (d) => {
@@ -157,18 +161,18 @@ describe("E5 — bài quét khuôn trong kiem-chuan", () => {
     voi({ kiemChuan: true }, (d) => {
       const lanh = spawnSync(process.execPath, [KIEM_CHUAN, "--root", d], { encoding: "utf8" });
       assert.equal(lanh.status, 0, lanh.stderr);
-      assert.ok(lanh.stdout.split("\n").includes("khuôn: 9 nhóm · 0 lỗi đọc · 0 lệch"), lanh.stdout);
-      const U = `${W}/app/settings/users/page.tsx`;
+      assert.ok(lanh.stdout.split("\n").includes("khuôn: 10 nhóm · 0 lỗi đọc · 0 lệch"), lanh.stdout);
+      const U = `${W}/app/(app)/settings/users/page.tsx`;
       sua(d, U, "return (\n    <MucCaiDat", 'return (\n    <main className="min-h-svh">\n    <MucCaiDat');
       sua(d, U, "</MucCaiDat>\n  );", "</MucCaiDat>\n    </main>\n  );");
       const hong = spawnSync(process.execPath, [KIEM_CHUAN, "--root", d], { encoding: "utf8" });
       assert.equal(hong.status, 1);
-      assert.match(hong.stderr, /khuôn: apps\/web\/src\/app\/settings\/users\/page\.tsx: cai-dat-san — gốc là <main>/);
+      assert.match(hong.stderr, /khuôn: apps\/web\/src\/app\/\(app\)\/settings\/users\/page\.tsx: cai-dat-san — gốc là <main>/);
     }));
 });
 
 describe("E6 — chế độ --base: chỉ chấm tệp và dòng vòng chạm", () => {
-  const U = `${W}/app/settings/users/page.tsx`;
+  const U = `${W}/app/(app)/settings/users/page.tsx`;
   const git = (d, ...a) => execFileSync("git", ["-C", d, ...a], { encoding: "utf8" });
   const chay = (d, ...a) => spawnSync(process.execPath, [CLI, "--root", d, ...a], { encoding: "utf8" });
   /** Kho git tạm: commit cây lành, rồi commit nợ cũ (Người dùng trả <main>) làm ref. */
@@ -204,7 +208,7 @@ describe("E6 — chế độ --base: chỉ chấm tệp và dòng vòng chạm",
     }));
   it("(c) tệp màn mới chưa theo dõi dựng lệch → nêu tệp ấy", () =>
     kho((d, ref) => {
-      ghi(d, `${W}/app/settings/thu/page.tsx`, 'export default function P() {\n  return <main className="min-h-svh">x</main>;\n}\n');
+      ghi(d, `${W}/app/(app)/settings/thu/page.tsx`, 'export default function P() {\n  return <main className="min-h-svh">x</main>;\n}\n');
       const r = chay(d, "--base", ref);
       assert.equal(r.status, 1);
       assert.match(r.stderr, /settings\/thu\/page\.tsx: cai-dat-san — gốc là <main>/);
@@ -214,7 +218,7 @@ describe("E6 — chế độ --base: chỉ chấm tệp và dòng vòng chạm",
       sua(d, U, "export const dynamic", "// một dòng chú thích mới\nexport const dynamic");
       const r = chay(d, "--base", ref);
       assert.equal(r.status, 0, r.stderr);
-      assert.match(r.stdout, /^nợ cũ: apps\/web\/src\/app\/settings\/users\/page\.tsx: cai-dat-san — gốc là <main>/m);
+      assert.match(r.stdout, /^nợ cũ: apps\/web\/src\/app\/\(app\)\/settings\/users\/page\.tsx: cai-dat-san — gốc là <main>/m);
       git(d, "checkout", "-q", "--", U);
       sua(d, U, '<main className="min-h-svh">', '<main className="min-h-svh p-2">');
       const r2 = chay(d, "--base", ref);
@@ -234,14 +238,14 @@ describe("E7b — cấu hình eslint thật của kho", () => {
   const that = () => new ESLint({ cwd: ROOT });
   it("trang Cài đặt mới nhập Frame → đúng 1 lỗi ban-do-khuon mức error", async () => {
     const [r] = await that().lintText(NHAP("Frame", "@/components/reui/frame") + "export default function P() {\n  return null;\n}\n", {
-      filePath: join(ROOT, W, "app/settings/thu/page.tsx"),
+      filePath: join(ROOT, W, "app/(app)/settings/thu/page.tsx"),
     });
     const m = r.messages.filter((x) => x.ruleId === LUAT);
     assert.equal(m.length, 1, JSON.stringify(r.messages));
     assert.equal(m[0].severity, 2);
   });
   it("luật ở mức error cho một tệp mỗi nhóm", async () => {
-    for (const t of ["app/(auth)/login/page.tsx", "app/settings/users/page.tsx", "app/(app)/today/page.tsx", "app/settings/users/quan-nguoi.tsx"]) {
+    for (const t of ["app/(auth)/login/page.tsx", "app/(app)/settings/users/page.tsx", "app/(app)/today/page.tsx", "app/(app)/settings/users/quan-nguoi.tsx"]) {
       const c = await that().calculateConfigForFile(join(ROOT, W, t));
       assert.deepEqual([c.rules?.[LUAT]?.[0]], [2], t);
     }

@@ -114,7 +114,8 @@ export function khoiDaChuyenThe(root) {
         readFileSync(p, "utf8")
           .split("\n")
           .forEach((l, i) => {
-            const k = l.indexOf("chuyển thể");
+            // Chú thích mở đầu câu viết «Chuyển thể» hoa: vẫn là dấu chuyển thể (khối settings-3, hàng 91).
+            const k = l.toLowerCase().indexOf("chuyển thể");
             if (k < 0) return;
             for (const m of l.slice(k).matchAll(TEN_KHOI)) if (!thay.has(m[1])) thay.set(m[1], `${p.slice(root.length + 1)}:${i + 1}`);
           });

@@ -66,7 +66,7 @@ function tam(fn) {
 /** Kho git tạm chép design/patterns, vo-va-ia.md và một màn của nhóm cai-dat-san từ kho thật, commit gốc. */
 function kho(fn) {
   return tam((d) => {
-    for (const t of ["design/patterns", VO, "apps/web/src/app/settings/users/page.tsx"]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
+    for (const t of ["design/patterns", VO, "apps/web/src/app/(app)/settings/users/page.tsx"]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
     git(d, "init", "-q");
     git(d, "add", "-A");
     git(d, "commit", "-qm", "goc");
@@ -303,7 +303,7 @@ describe("ô chưa có khuôn: đi khuôn sẵn thì không cần trang", () => 
   ])
     it(`sửa màn nhóm có sẵn, ${ten} → 0, không cần trang`, () =>
       kho((d, goc) => {
-        sua(d, "apps/web/src/app/settings/users/page.tsx", (s) => s + "\n// sửa thử\n");
+        sua(d, "apps/web/src/app/(app)/settings/users/page.tsx", (s) => s + "\n// sửa thử\n");
         sua(d, VO, (s) => s.replace("# Vỏ, IA và khối đích của từng màn", "# Vỏ, IA và khối đích của từng màn (sửa thử)"));
         lam(d);
         const r = chay(d, "--kiem-ba-loi", "--base", goc, "--slug", SLUG);
