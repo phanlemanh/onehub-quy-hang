@@ -47,7 +47,8 @@ evals:
     criterion: AC-6
     executor: ui-check
     layer: ui-observed
-    target: "http://localhost:3482/inventory (dựng bằng node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; đăng nhập bằng cookie in ra)"
+    target: "http://localhost:3482/inventory"
+    steps: "DỰNG H như hàng 23 (node _acceptance/anh-can-ba-ngan/thu/dung-h.mjs; chrome-devtools, không playwright MCP, không trình duyệt trong app). Đầu chủ mẫu 1, khổ 1440×900. Tạo qua API hai hàng mới của đầu chủ ở hai căn khác nhau (lệnh tạo hàng, đổi giá kèm điều kiện phí, thêm tình trạng sử dụng — KHÔNG thêm pháp lý, không đổi trạng thái): căn A và căn B. Ở Bảng hàng mở cột hồ sơ của căn A (chọn mã căn A): (1) bấm «Sẵn sàng bán» → thấy «Còn thiếu:» có «Pháp lý» và ô Pháp lý của mục «Lần rao đang mở» ghi «Chưa có · điền ở Bảng hàng» → chụp E6-1-thieu.png; (2) chọn căn B trong Bảng hàng → cột hồ sơ của B không có «Còn thiếu:» và không ô nào ghi «Chưa có» → chụp E6-2-can-khac.png; (3) chọn lại căn A → không có «Còn thiếu:», nút «Sẵn sàng bán» chưa bấm → chụp E6-3-quay-lai.png; (4) bấm lại «Sẵn sàng bán» ở A, rồi điền Pháp lý của hàng A ngay ở ô Bảng hàng (không bấm lại nút) → dòng «Pháp lý» rời danh sách «Còn thiếu» và ô Pháp lý của cột hết chữ «Chưa có» → chụp E6-4-dien-phap-ly.png. Tắt máy chủ dev khi xong (dung-h.mjs --tat)."
     expected: "Mở cột hồ sơ của căn A Chưa đủ để rao thiếu pháp lý; bấm «Sẵn sàng bán» → thấy «Còn thiếu:» và ô Pháp lý mang «Chưa có · điền ở Bảng hàng» (khung 1); chọn căn B trong Bảng hàng → cột mới không có «Còn thiếu:» và không ô nào mang «Chưa có» (khung 2); quay lại A → không có «Còn thiếu:», nút chưa bấm (khung 3); bấm lại ở A rồi điền pháp lý ở ô Bảng hàng → dòng «Pháp lý» rời danh sách, ô Pháp lý hết dấu, không bấm lại (khung 4). Chụp evidence/E6-1-thieu.png, E6-2-can-khac.png, E6-3-quay-lai.png, E6-4-dien-phap-ly.png."
     paths: ["apps/web/src/app/(app)/units/**"]
     evidence_required: [screenshot, observed, verified_at]
