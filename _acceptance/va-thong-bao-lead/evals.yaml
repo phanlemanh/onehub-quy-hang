@@ -8,6 +8,9 @@ feature_slug: va-thong-bao-lead
 #   qua `gui`). Thiết bị «đã bật» giả bằng initScript: Notification.permission = 'granted', PushManager.prototype.getSubscription
 #   trả một đăng ký có endpoint do ô đặt và khoá đúng khuôn (p256dh 'B'×87, auth 'A'×22) — lưu thật đi tới máy chủ thật.
 # Mỗi bài nhìn GHI số đo vào evidence/<E>-measure.json (đo bằng mã trong trang và truy vấn cơ sở dữ liệu, không ước trên ảnh).
+# Bản dev biên dịch /today lần đầu chậm (≈ 25 giây) và khung chờ tải đứng trước khi mã trang chạy: bọc window.fetch bằng initScript
+#   ghi URL và mã trả, rồi chờ tới khi có câu trả lời của /api/v1/push/public-key hay /api/v1/me/push-subscriptions (tối đa 90 giây)
+#   trước khi đo dải. Không mở trình duyệt khác vào cổng 3481 cùng lúc (tab lặp về /login làm máy chủ dev biên dịch lại liên tục).
 evals:
   - id: E1
     criterion: AC-1
@@ -56,7 +59,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «AC-6 …» ok — bộ gửi giả không bao giờ trả lời; đầu chủ có ba đăng ký fcm; telesales nhập lead giao ngay cho đầu chủ → yêu cầu trả 201 trong dưới 8 000 ms (đo bằng đồng hồ của ca, ghi số ms vào thông điệp; hạn lối giao 8 giây, một lần gửi 5 giây nên chỉ một lần gửi bắt đầu); lead ở trạng thái đã giao cho đầu chủ; trong ba dòng push_outbox của lead đúng một dòng attempts = 1, sent_at null, last_error chứa «quá hạn gửi», hai dòng attempts = 0. Đối chứng đỏ: không truyền hạn chót ở lối giao thì ba dòng đều bị thử và thời gian ≥ 15 000 ms — thông điệp nêu số dòng đã thử và số ms. Ca giữ chỗ: dòng vừa nhận bằng app.push_outbox_claim(t) không được nhận lại bởi app.push_outbox_claim(t + 59 giây) và được nhận lại ở t + 61 giây (đối chứng hai chiều của giữ chỗ một phút)."
+    expected: "exit 0; ca «AC-6 …» ok — bộ gửi giả không bao giờ trả lời; đầu chủ có ba đăng ký fcm; telesales nhập lead giao ngay cho đầu chủ → yêu cầu trả 201 trong dưới 8 000 ms (đo bằng đồng hồ của ca, ghi số ms vào thông điệp; hạn lối giao 8 giây, một lần gửi 5 giây nên chỉ một lần gửi bắt đầu); lead ở trạng thái đã giao cho đầu chủ; trong ba dòng push_outbox của lead đúng một dòng attempts = 1, sent_at null, last_error chứa «quá hạn gửi», hai dòng attempts = 0. Thông điệp ghim số dòng đã thử và số ms (phá thử ở S3: bỏ hạn lối giao thì ca đỏ ở 15 s, ba dòng thử). Ca giữ chỗ: dòng vừa nhận bằng app.push_outbox_claim(t) không được nhận lại bởi app.push_outbox_claim(t + 59 giây) và được nhận lại ở t + 61 giây (đối chứng hai chiều của giữ chỗ một phút)."
     paths: ["packages/api/src/push/**", "packages/api/src/jobs/**", "packages/core/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -125,7 +128,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «AC-5 …» của va-thong-bao-lead.test.ts ok — sáu dòng chờ gửi tạo qua lối thật (đầu chủ có sáu đăng ký fcm, lead giao khi bộ gửi trả lỗi tạm 500 nên sáu dòng còn chờ trong khung), rồi runLeadTick với bộ gửi treo và thời hạn rút ngắn truyền qua tham số (một lần gửi 500 ms, ngân sách nhịp 1 200 ms) → nhịp kết thúc trong dưới 2 500 ms; số dòng tăng lần thử < 6 và ≥ 1; dòng chưa thử giữ nguyên attempts. Ca mặc định: runLeadTick không truyền thời hạn dùng đúng PUSH_SEND.tickBudgetMs và PUSH_SEND.timeoutMs (đọc qua hàm thời hạn mặc định được xuất). Đối chứng đỏ: bỏ hạn chót thì cả sáu dòng bị thử và thời gian ≥ 3 000 ms — thông điệp nêu số dòng và ms."
+    expected: "exit 0; ca «AC-5 …» của va-thong-bao-lead.test.ts ok — sáu dòng chờ gửi tạo qua lối thật (đầu chủ có sáu đăng ký fcm, lead giao khi bộ gửi trả lỗi tạm 500 nên sáu dòng còn chờ trong khung), rồi runLeadTick ở mốc quá giữ chỗ với bộ gửi treo và thời hạn rút ngắn truyền qua tham số (một lần gửi 500 ms, ngân sách nhịp 2 000 ms) → nhịp kết thúc trong dưới 3 000 ms; số dòng tăng lần thử < 6 và ≥ 1; dòng chưa thử giữ nguyên attempts. Ca mặc định: HAN_NHIP_MAC_DINH (thời hạn runLeadTick dùng khi không truyền) bằng đúng PUSH_SEND.timeoutMs và PUSH_SEND.tickBudgetMs. Đối chứng đỏ cùng khuôn sáu dòng (ca riêng «AC-5 đối chứng đỏ»): ngân sách 600 000 ms thì cả sáu dòng bị thử và thời gian ≥ 3 000 ms — thông điệp nêu số dòng và ms."
     paths: ["packages/api/src/push/**", "packages/api/src/jobs/**", "packages/core/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -134,6 +137,6 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «AC-8 …» ok — đầu chủ có đăng ký fcm; POST /api/v1/auth/sign-out với thân {pushEndpoint: 'https://push.example.test/x'} → mã 2xx, lần gọi /api/v1/me kế tiếp bằng cookie cũ trả 401, đăng ký fcm vẫn còn (đếm 1); đăng nhập lại, đăng xuất với thân mang đúng địa chỉ fcm → 2xx và đăng ký ấy bị gỡ (đếm 0). Đối chứng dương nằm trong cùng ca."
+    expected: "exit 0; ca «AC-8 …» ok — đầu chủ có đăng ký fcm; POST /api/v1/auth/sign-out với thân {pushEndpoint: 'https://push.example.test/x'} → mã 2xx, lần gọi /api/v1/me kế tiếp bằng cookie cũ trả 401, đăng ký fcm vẫn còn (đếm 1); đầu chủ thứ hai (dc2) có đăng ký fcm đăng xuất với thân mang đúng địa chỉ ấy → 2xx và đăng ký ấy bị gỡ (đếm 0). Đối chứng dương nằm trong cùng ca."
     paths: ["packages/api/src/push/**", "packages/api/test-db/va-thong-bao-lead.test.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
