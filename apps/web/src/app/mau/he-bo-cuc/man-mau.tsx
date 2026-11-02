@@ -175,7 +175,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           kieu="tran"
           {...chung}
           rong={rongDanhSach}
-          dauMan={<DauMan tieuDe="Bảng hàng" moTa="Căn đang chào bán của sàn" nut={[{ nhan: "Lưu góc nhìn" }]} />}
+          dauMan={<DauMan tieuDe="Bảng hàng" moTa="Căn đang chào bán của sàn" duongDan={[{ nhan: "Bảng hàng", href: "#" }, { nhan: "Mọi căn" }]} nut={[{ nhan: "Lưu góc nhìn" }]} />}
           thanhCongCu={
             <>
               <Chip>Toà A</Chip>
@@ -197,7 +197,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
             {...chung}
             rong={rongDanhSach}
             chiTietMo={chon !== undefined}
-            dauMan={<DauMan tieuDe="Lead đã nhập" moTa="Lead của tôi, mới nhất trước" nut={[{ nhan: "Lọc thêm", onClick: () => setNganMo(true), icon: <FilterIcon aria-hidden="true" /> }]} />}
+            dauMan={<DauMan tieuDe="Lead đã nhập" moTa="Lead của tôi, mới nhất trước" duongDan={[{ nhan: "Hôm nay", href: "#" }, { nhan: "Lead đã nhập" }]} nut={[{ nhan: "Lọc thêm", onClick: () => setNganMo(true), icon: <FilterIcon aria-hidden="true" /> }]} />}
             thanhCongCu={
               <>
                 <Chip>Hôm nay</Chip>
@@ -296,7 +296,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
             <DauMan
               tieuDe={`Căn ${can?.ma ?? ""}`}
               moTa="Toà A · 2 phòng ngủ · 68 m²"
-              loiVe={{ nhan: "Bảng hàng", href: "#" }}
+              duongDan={[{ nhan: "Bảng hàng", href: "#" }, { nhan: `Căn ${can?.ma ?? ""}` }]}
               phu={<Badge variant="success-light">Đang bán</Badge>}
               nut={[{ nhan: "Gửi khách" }, { nhan: "Còn · giữ giá" }]}
             />
@@ -318,6 +318,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
             <DauMan
               tieuDe="Đội"
               moTa="Số của đội theo kỳ"
+              duongDan={[{ nhan: "Đội", href: "#" }, { nhan: "Tổng quan" }]}
               phu={
                 <ToggleGroup defaultValue={["tuan"]} size="sm">
                   <ToggleGroupItem value="tuan">Tuần</ToggleGroupItem>
@@ -346,7 +347,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           kieu="luong-nhieu-buoc"
           {...chung}
           rong={<TrangThai kind="empty" icon={InboxIcon} title="Tệp chưa có dòng nào" description="Chọn tệp bảng tính có ít nhất một căn." />}
-          dauMan={<DauMan tieuDe="Nhập Excel" moTa="Đưa hàng vào từ bảng tính" phu={<Badge variant="outline">Bước 2 / 4 · Ghép cột</Badge>} />}
+          dauMan={<DauMan tieuDe="Nhập Excel" moTa="Đưa hàng vào từ bảng tính" duongDan={[{ nhan: "Bảng hàng", href: "#" }, { nhan: "Nhập Excel" }]} phu={<Badge variant="outline">Bước 2 / 4 · Ghép cột</Badge>} />}
           cotPhu={
             <div className="flex flex-col gap-2 text-sm">
               <span className="font-medium">Xem trước</span>
@@ -378,7 +379,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           kieu="dong-tin"
           {...chung}
           rong={<TrangThai kind="empty" icon={InboxIcon} title="Chưa có tin nào" description="Tin hiện khi khách mở link đã gửi." />}
-          dauMan={<DauMan tieuDe="Đã gửi" moTa="Khách đang phản ứng ra sao" />}
+          dauMan={<DauMan tieuDe="Đã gửi" moTa="Khách đang phản ứng ra sao" duongDan={[{ nhan: "Đã gửi", href: "#" }, { nhan: "Link đã gửi" }]} />}
           thanhCongCu={
             <>
               <Chip>Mở link</Chip>

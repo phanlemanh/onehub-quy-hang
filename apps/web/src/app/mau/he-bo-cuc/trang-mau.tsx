@@ -1,3 +1,4 @@
+import type { Home } from "@quy-hang/core";
 import Link from "next/link";
 
 import { BO_CUC, type KieuBoCuc, THONG_TIN } from "@/components/bo-cuc/ma-tran";
@@ -13,6 +14,17 @@ import { diaChiTrang, diaChiXem, type KhoMau, type LoiDauMan, KHO_MAU, TEN_TRANG
 // Khuôn của nhóm `trang-mau` (design/patterns/trang-mau.md): trang mẫu sống của hệ bố cục (ADR-0024 quyết định 8, hàng
 // 91) — chọn bố cục × trạng thái × khổ, xem trong khung đúng bề rộng. Không cần cơ sở dữ liệu, không đăng nhập: proxy cho
 // địa chỉ này qua, trang chỉ đọc dữ liệu mẫu. Ảnh chuẩn chụp từ trang xem (`/mau/he-bo-cuc/xem`) ở từng khổ.
+
+// Nhà đứng cho từng bố cục trên trang mẫu, để cột thứ hai hiện như màn thật dùng bố cục ấy.
+const NHA_CUA: Record<KieuBoCuc, Home> = {
+  tran: "inventory",
+  "danh-sach-chi-tiet": "today",
+  doc: "settings",
+  "ho-so-hai-cot": "inventory",
+  "bang-dieu-khien": "team",
+  "luong-nhieu-buoc": "inventory",
+  "dong-tin": "shares",
+};
 
 const CAO: Record<(typeof KHO_MAU)[number], number> = { 1440: 900, 1024: 768, 375: 812 };
 
@@ -34,7 +46,7 @@ export function TrangMau({
 }) {
   if (che === "xem")
     return (
-      <AppShell user={NGUOI_MAU} nav={NAV_MAU} remembered={{}} mau menuTao={menuTao}>
+      <AppShell user={NGUOI_MAU} nav={NAV_MAU} remembered={{}} mau menuTao={menuTao} nhaMau={NHA_CUA[boCuc]}>
         <ManMau kieu={boCuc} trangThai={trangThai} dauMan={dauMan} />
       </AppShell>
     );

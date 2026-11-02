@@ -33,7 +33,7 @@ evals:
     criterion: AC-3
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «đầu màn: chia nút» (apps/web/src/components/bo-cuc/dau-man.test.ts) có mặt và ok — chiaNut với 0..5 nút (ma trận viết trước 6 ca, assert số): nút đầu là chính, tối đa 2 phụ, phần dư vào «…»; 5 nút → 1 chính · 2 phụ · 2 trong menu; ca «đầu màn: đường dẫn khi sâu» ok — đường dẫn 1 tầng không hiện nav breadcrumb, 2 tầng hiện; ca «đầu màn: hồ sơ có lối về» ok — kieu ho-so-hai-cot không truyền lối về vẫn ra liên kết về (mặc định là nhà của tuyến). Chiều đỏ: nâng trần nút phụ lên 3 → ca 5 nút đỏ với thông điệp nêu số nút phụ."
+    expected: "exit 0; ca «đầu màn: chia nút» (apps/web/src/components/bo-cuc/dau-man.test.ts) có mặt và ok — chiaNut với 0..5 nút (ma trận viết trước 6 ca, assert số): nút đầu là chính, tối đa 2 phụ, phần dư vào «…»; 5 nút → 1 chính · 2 phụ · 2 trong menu; ca «đầu màn: luôn có đường dẫn» ok — DauMan với đường dẫn 2, 3, 4 tầng đều ra nav[aria-label=breadcrumb] với đúng số mục (assert số); mục áp chót mang data-tang=cha là liên kết và là mục duy nhất không có max-md:hidden; kiểu của prop duongDan không nhận mảng 0 hay 1 mục (ca @ts-expect-error);  Chiều đỏ: nâng trần nút phụ lên 3 → ca 5 nút đỏ với thông điệp nêu số nút phụ."
     paths: [apps/web/src/components/bo-cuc/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -43,6 +43,14 @@ evals:
     cmd: config:executors.test.web
     expected: "exit 0; ca «menu Tạo: theo vai» (apps/web/src/components/shell/menu-tao.test.ts) có mặt và ok — ma trận viết trước năm vai §9 (telesales, listing_agent, buyer_agent, team_lead, company_admin) đọc navigationFor thật: chiaViecTao cho nút chính = actions[0], menu = actions[1..], vai không có việc tạo → chinh null (assert từng vai, đếm đúng 5 ca); ca «menu Tạo: không nút tạo trùng» ok — quét apps/web/src/app/**/*.tsx và apps/web/src/components/**/*.tsx (trừ components/shell/menu-tao.tsx, components/ui/**, components/reui/**, app/mau/**): không tệp nào còn liên kết tới ACTION_PATH; chiều đỏ trên bản sao: thêm một nút Link tới ACTION_PATH.new_lead vào components/shell/app-shell.tsx → ca đỏ, thông điệp ghim 'components/shell/app-shell.tsx'."
     paths: [apps/web/src/components/shell/**, packages/core/src/navigation.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4c
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «cột thứ hai: mọi nhà, mặc định mở» (packages/core/src/navigation.test.ts) có mặt và ok — isSecondColumnOpen(h, undefined) = true cho đủ 5 nhà today, inventory, shares, team, settings (assert từng nhà, đếm 5); isSecondColumnOpen(h, false) = false cho cả 5 (người gập thì nhớ). Chiều đỏ: đặt inventory mặc định false trong bản sao → ca đỏ, thông điệp ghim 'inventory'."
+    paths: [packages/core/src/navigation.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4u

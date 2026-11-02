@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftIcon, EllipsisIcon } from "lucide-react";
+import { ChevronLeftIcon, EllipsisIcon } from "lucide-react";
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 
@@ -18,8 +18,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 import { chiaNut } from "./ma-tran";
 
-// Đầu màn của hệ bố cục (ADR-0024 §3): đường dẫn khi màn sâu hơn một tầng · tiêu đề và một dòng · một nút chính, tối
-// đa hai nút phụ, còn lại vào «…». ReUI không có khối đầu trang riêng — ghép FrameHeader + breadcrumb + button +
+// Đầu màn của hệ bố cục (ADR-0024 §3): đường dẫn luôn có (nhà › màn; chủ kho 02/11 «Luôn có breakcrumb»), điện thoại
+// chỉ còn mục cha làm lối về · tiêu đề và một dòng · một nút chính, tối đa hai nút phụ, còn lại vào «…». ReUI không có khối đầu trang riêng — ghép FrameHeader + breadcrumb + button +
 // dropdown-menu (dòng «Chỗ hở» ở vo-va-ia.md §3).
 
 export type NutDauMan = { nhan: string; href?: string; onClick?: () => void; icon?: ReactNode };
@@ -28,17 +28,17 @@ export type DuongDan = { nhan: string; href?: string };
 export function DauMan({
   tieuDe,
   moTa,
-  duongDan = [],
-  loiVe,
+  duongDan,
   nut = [],
   phu,
 }: {
   tieuDe: ReactNode;
   moTa?: ReactNode;
-  /** Các tầng từ nhà tới màn này, gồm cả màn này ở cuối. Hiện khi sâu hơn một tầng. */
-  duongDan?: DuongDan[];
-  /** Lối về của màn toàn màn (Hồ sơ hai cột). */
-  loiVe?: DuongDan;
+  /**
+   * Các tầng từ nhà tới màn này, ít nhất nhà › màn, màn này ở cuối. Luôn hiện; mục cha là lối về (điện thoại chỉ hiện
+   * mục cha). Hồ sơ toàn màn không cần lối về riêng.
+   */
+  duongDan: [DuongDan, DuongDan, ...DuongDan[]];
   nut?: NutDauMan[];
   /** Chỗ cho chọn kỳ, bước đang ở, nhãn trạng thái — thứ đứng cạnh tiêu đề. */
   phu?: ReactNode;
@@ -47,30 +47,30 @@ export function DauMan({
   return (
     <FrameHeader data-vung="dau-man" className="flex flex-row flex-wrap items-start justify-between gap-3">
       <div className="flex min-w-0 flex-col gap-1">
-        {loiVe && (
-          <Button variant="ghost" size="sm" className="-ml-2 self-start" nativeButton={false} render={<Link href={loiVe.href ?? "/"} />}>
-            <ArrowLeftIcon aria-hidden="true" />
-            {loiVe.nhan}
-          </Button>
-        )}
-        {duongDan.length > 1 && (
-          <Breadcrumb>
-            <BreadcrumbList>
-              {duongDan.map((t, i) => (
+        {/* Máy tính: đủ các tầng. Điện thoại: chỉ mục cha thành lối về «‹ cha» — tiêu đề đã nói màn hiện tại. */}
+        <Breadcrumb>
+          <BreadcrumbList>
+            {duongDan.map((t, i) => {
+              const cuoi = i === duongDan.length - 1;
+              const cha = i === duongDan.length - 2;
+              return (
                 <Fragment key={`${t.nhan}-${i}`}>
-                  {i > 0 && <BreadcrumbSeparator />}
-                  <BreadcrumbItem>
-                    {i < duongDan.length - 1 && t.href ? (
-                      <BreadcrumbLink render={<Link href={t.href} />}>{t.nhan}</BreadcrumbLink>
+                  {i > 0 && <BreadcrumbSeparator className="max-md:hidden" />}
+                  <BreadcrumbItem data-tang={cuoi ? "cuoi" : cha ? "cha" : "tren"} className={cha ? undefined : "max-md:hidden"}>
+                    {!cuoi && t.href ? (
+                      <BreadcrumbLink className="inline-flex items-center gap-1" render={<Link href={t.href} />}>
+                        {cha && <ChevronLeftIcon aria-hidden="true" className="size-3.5 md:hidden" />}
+                        {t.nhan}
+                      </BreadcrumbLink>
                     ) : (
                       <BreadcrumbPage>{t.nhan}</BreadcrumbPage>
                     )}
                   </BreadcrumbItem>
                 </Fragment>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
-        )}
+              );
+            })}
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="flex flex-wrap items-center gap-2">
           <FrameTitle>{tieuDe}</FrameTitle>
           {phu}

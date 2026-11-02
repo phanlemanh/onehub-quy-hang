@@ -133,6 +133,7 @@ export function AppShell({
   children,
   mau,
   menuTao,
+  nhaMau,
 }: {
   user: ShellUser;
   nav: Navigation;
@@ -143,9 +144,11 @@ export function AppShell({
   mau?: boolean;
   /** Chỉ trang ba lối của menu Tạo đổi lối; vỏ thật dùng lối mặc định. */
   menuTao?: LoiMenuTao;
+  /** Trang mẫu sống: nhà đứng thay cho địa chỉ /mau/… để cột thứ hai và tiêu đề hiện như màn thật. */
+  nhaMau?: Home;
 }) {
   const pathname = usePathname();
-  const home = homeOfPath(pathname);
+  const home = (mau && nhaMau) || homeOfPath(pathname);
   const [choices, setChoices] = useState(remembered);
   const [jumpOpen, setJumpOpen] = useState(false);
   const openJump = () => setJumpOpen(true);

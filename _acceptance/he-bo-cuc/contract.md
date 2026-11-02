@@ -37,15 +37,16 @@ số trong màn; Tràn đi sát mép cột nội dung, Đọc giới hạn ở b
 ### AC-3 — Đầu màn
 Given một màn khai đường dẫn, tiêu đề, một dòng mô tả và danh sách nút
 When đầu màn hiện
-Then đường dẫn chỉ hiện khi màn sâu hơn một tầng; đúng một nút chính, tối đa hai nút phụ, nút còn lại vào menu «…»;
-hồ sơ toàn màn (Hồ sơ hai cột) luôn có lối về.
+Then đường dẫn luôn hiện (ít nhất nhà › màn, sâu hơn thì thêm tầng) và mục cha là lối về — điện thoại chỉ hiện mục cha
+dạng «‹ cha»; đúng một nút chính, tối đa hai nút phụ, nút còn lại vào menu «…».
 
-### AC-4 — Menu Tạo trên vỏ
+### AC-4 — Menu Tạo và cột thứ hai trên vỏ
 Given người đăng nhập với vai bất kỳ ở Tham chiếu §9
 When thanh trên hiện
 Then việc tạo hiện ở đúng một chỗ: một nút chính (việc tạo đầu tiên của vai) cộng menu các việc tạo còn lại theo lối đã
 chọn ở Cổng Phạm vi; vai không có việc tạo không thấy nút; không màn nào còn nút tạo trùng ở đầu khung; Tham chiếu §9 ghi
-cách mới.
+cách mới; mọi nhà (Hôm nay, Bảng hàng, Đã gửi, Đội, Cài đặt sàn) có cột thứ hai, mặc định mở, người gập thì máy nhớ theo
+người, sàn, nhà.
 
 ### AC-5 — Trạng thái chung
 Given một tuyến dưới `(app)` đang tải, lỗi, không thấy, hay rỗng, hay mất mạng khi đang xem bản đã tải

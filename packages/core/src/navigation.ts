@@ -125,12 +125,14 @@ export function homeOfPath(path: string): Home | null {
 }
 
 /**
- * Cột thứ hai của từng nhà trên máy tính (§9): `false` = có cột, mặc định gập; `true` = có cột, mặc định mở.
- * Nhà vắng trong bảng (Hôm nay, Đội) không có cột thứ hai. Hồ sơ căn mặc định gập như Bảng hàng.
+ * Cột thứ hai của từng nhà trên máy tính (§9): `true` = có cột, mặc định mở. Mọi nhà có cột thứ hai và mặc định mở
+ * (chủ kho 02/11, hàng 91: «Mặc định luôn giữ và có sub nav»); người gập thì nhớ theo người, sàn, nhà.
  */
 export const SECOND_COLUMN_OPEN_BY_DEFAULT: Partial<Record<Home, boolean>> = {
-  inventory: false,
+  today: true,
+  inventory: true,
   shares: true,
+  team: true,
   settings: true,
 };
 

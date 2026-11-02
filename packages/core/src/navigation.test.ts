@@ -183,13 +183,17 @@ test("Nhà của đường: hồ sơ căn thuộc Bảng hàng, Lịch xem thu�
   assert.equal(homeOfPath("/me"), null);
 });
 
-test("Cột thứ hai: mặc định gập ở Bảng hàng, mở ở Đã gửi và Cài đặt sàn, không có ở Hôm nay", () => {
-  assert.equal(isSecondColumnOpen("inventory", undefined), false);
-  assert.equal(isSecondColumnOpen("shares", undefined), true);
-  assert.equal(isSecondColumnOpen("settings", undefined), true);
-  assert.equal(isSecondColumnOpen("today", true), false);
-  assert.equal(isSecondColumnOpen("inventory", true), true);
-  assert.equal(isSecondColumnOpen("shares", false), false);
+test("cột thứ hai: mọi nhà, mặc định mở", () => {
+  // Ma trận viết trước: đủ năm nhà của §9 (hàng 91, «Mặc định luôn giữ và có sub nav»).
+  const NHA = ["today", "inventory", "shares", "team", "settings"] as const;
+  let dem = 0;
+  for (const h of NHA) {
+    assert.equal(isSecondColumnOpen(h, undefined), true, `${h}: mặc định phải mở`);
+    assert.equal(isSecondColumnOpen(h, false), false, `${h}: người gập thì nhớ`);
+    assert.equal(isSecondColumnOpen(h, true), true, `${h}: người mở thì nhớ`);
+    dem++;
+  }
+  assert.equal(dem, 5);
 });
 
 test("Khoá nhớ tách theo người, sàn và nhà", () => {

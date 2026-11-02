@@ -48,7 +48,8 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
 
    Trang khách và đăng nhập không có vỏ (họ card); chúng ngoài bảy bố cục, như Tham chiếu §9.
 
-3. **Sáu vùng, định nghĩa một lần.** Đầu màn (đường dẫn khi sâu hơn một tầng · tiêu đề và một dòng · một nút chính, tối
+3. **Sáu vùng, định nghĩa một lần.** Đầu màn (đường dẫn luôn có — nhà › màn, điện thoại chỉ mục cuối; chủ kho 02/11 ·
+   tiêu đề và một dòng · một nút chính, tối
    đa hai nút phụ, còn lại vào «…») · thanh công cụ · thân · cột phụ · chân · ngăn nổi (máy tính mở ngăn bên, điện thoại
    mở ngăn từ đáy, tự đổi theo khổ). Ma trận bố cục × vùng:
 
@@ -104,7 +105,8 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
 13. **Theo Verve và giữ riêng.** Theo: đầu màn thống nhất, một menu Tạo, cột thứ hai có số, lọc dạng chip đọc thành câu,
     tab có số đếm, nút làm ngay trong dòng, dòng cài đặt nhãn trái ô phải. Giữ: hồ sơ mở cạnh bảng; thanh tab dưới điện
     thoại; lưới dày; sửa từng ô lưu ngay và hoàn tác (không lưu cả bảng ở Bảng hàng); không kéo thẻ để đổi trạng thái căn;
-    Hôm nay là hàng đợi, không phải lịch; không bảng nhiều biểu đồ ở bản đầu; Hôm nay không có cột thứ hai (§9).
+    Hôm nay là hàng đợi, không phải lịch; không bảng nhiều biểu đồ ở bản đầu. Cột thứ hai thì theo Verve: mọi nhà có, mặc định mở (chủ kho 02/11 tại Cổng
+    Phạm vi hàng 91 — thay «Hôm nay không có cột thứ hai» của §9).
 
 ## Hệ quả
 
