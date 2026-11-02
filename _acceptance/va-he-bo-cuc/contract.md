@@ -5,7 +5,7 @@ slug: va-he-bo-cuc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-02-va-he-bo-cuc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
