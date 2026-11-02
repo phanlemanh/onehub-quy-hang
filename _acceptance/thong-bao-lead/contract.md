@@ -5,7 +5,7 @@ slug: thong-bao-lead
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-02-thong-bao-lead-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02

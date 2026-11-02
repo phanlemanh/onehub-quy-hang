@@ -1,19 +1,19 @@
 ---
 schema_version: 2
 feature_slug: thong-bao-lead
-verdict: REJECT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 874478ca6ae45f9d092f498e77df621a53e9092a
+verified_commit: bd9f8213d92b9b0a02a11be65d80c8f1ea62ae50
 human_signoff:
 ---
 
 # Evidence Report: thong-bao-lead
 
-Round 1. Cả mười eval của hợp đồng đều chạy xanh, nhưng lệnh suite `npm run lint` thất bại và lệnh này không gắn eval nào, nên tổng kết là REJECT (xem khối lệnh suite và mục Iterations).
+Round 2. Cả mười eval của hợp đồng và sáu lệnh suite đều chạy xanh trên cây bd9f821; lỗi lệnh suite lint ở round 1 đã hết.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -31,148 +31,145 @@ Round 1. Cả mười eval của hợp đồng đều chạy xanh, nhưng lệnh
 ## Evidence
 
 - eval: E1
-  run_id: minted-thong-bao-lead-E1-r1
+  run_id: minted-thong-bao-lead-E1-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm run db:migrate && npm run db:test (gộp chung E1, E2, E3, E5, E8, E9; một lần chạy, một lần đạt)
-    ℹ duration_ms 25795.513542
+    ℹ duration_ms 26706.067083
 
 - eval: E2
-  run_id: minted-thong-bao-lead-E2-r1
+  run_id: minted-thong-bao-lead-E2-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm run db:migrate && npm run db:test (cùng lần chạy với E1)
-    ℹ duration_ms 25795.513542
+    ℹ duration_ms 26706.067083
 
 - eval: E3
-  run_id: minted-thong-bao-lead-E3-r1
+  run_id: minted-thong-bao-lead-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm run db:migrate && npm run db:test (cùng lần chạy với E1)
-    ℹ duration_ms 25795.513542
+    ℹ duration_ms 26706.067083
 
 - eval: E4
-  run_id: minted-thong-bao-lead-E4-r1
+  run_id: minted-thong-bao-lead-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 167.79025
+    ℹ duration_ms 203.581583
 
 - eval: E5
-  run_id: minted-thong-bao-lead-E5-r1
+  run_id: minted-thong-bao-lead-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm run db:migrate && npm run db:test (cùng lần chạy với E1)
-    ℹ duration_ms 25795.513542
+    ℹ duration_ms 26706.067083
 
 - eval: E6
-  run_id: minted-thong-bao-lead-E6-r1
+  run_id: minted-thong-bao-lead-E6-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 305.239542
+    ℹ duration_ms 403.761958
 
 - eval: E7
-  run_id: minted-thong-bao-lead-E7-r1
+  run_id: minted-thong-bao-lead-E7-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   screenshot: evidence/E7-dau-chu-chua-bat.png
   observed: |
-    Đã mở từng ảnh bằng Read. (1) dau-chu-chua-bat: màn «Hôm nay» của đầu chủ; trên cùng khung viền «Bật thông báo lead» / «Nhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.» + nút sáng «Bật thông báo» kèm icon chuông; dưới là bảng Hôm nay 3 việc (Lead mới 2, Thiếu thông tin 1). Khớp Expected. (2) dau-chu-da-bat: không có dải nào; bảng «Hôm nay 3 việc» đứng ngay dưới thanh trên cùng; khớp. (3) dau-chu-chua-cau-hinh: khung viền «Thông báo chưa được cấu hình» + «Máy chủ chưa sẵn sàng gửi thông báo lead.», không nút; bảng Hôm nay bên dưới; khớp. (4) dau-chu-tu-choi: duy nhất một dòng chữ xám «Thông báo đang tắt trong trình duyệt» không khung, không nút; khớp. (5) dau-chu-iphone (375 rộng): khung viền «Cài Quỹ hàng lên màn hình chính để nhận thông…» (cắt) và danh sách 1. Bấm nút Chia sẻ ở thanh dưới của Safari 2. Chọn «Thêm vào MH chính» 3. Mở Quỹ hàng từ màn hình chính rồi bật thông báo; không nút; thanh điều hướng dưới Hôm nay / Bảng hàng / Tôi; khớp. (6) truong-nhom-chua-bat: dải «Bật thông báo lead» + nút «Bật thông báo» trên khối «Hôm nay – Giờ làm gì? – Màn này đang dựng» (trang giữ chỗ); khớp. (7) truong-nhom-da-bat: không dải; khối «Hôm nay» đứng đầu; khớp. (8) truong-nhom-chua-cau-hinh: «Thông báo chưa được cấu hình» + dòng phụ, không nút; khớp. (9) truong-nhom-tu-choi: dòng «Thông báo đang tắt trong trình duyệt», không khung, không nút; khớp. (10) truong-nhom-iphone: ba bước cài như ở (5), không nút, trên trang giữ chỗ; khớp. Manifest và sw.js: xem output. Không có mâu thuẫn với Expected.
+    dau-chu-chua-bat.png (2880x1800, DPR2 do resize_page): header «[Mau] San thu», dai khung dau trang «Bat thong bao lead» / «Nhan thong bao khi lead ve ban, ke ca khi khong mo Quy hang.» + nut sang «Bat thong bao» co icon chuong; duoi la vung «Hom nay · 3 viec» (Lead moi 2, Thieu thong tin 1). Khop Expected. dau-chu-da-bat.png: khong dai; «Hom nay · 3 viec» dung ngay duoi thanh tren; khop. dau-chu-chua-cau-hinh.png: dai chu «Thong bao chua duoc cau hinh» / «May chu chua san sang gui thong bao lead.», khong nut; khop. dau-chu-tu-choi.png: mot dong chu xam nhat «Thong bao dang tat trong trinh duyet» nam tren vung Hom nay, khong khung, khong nut; khop. dau-chu-iphone.png (1125x2436, khung 375): tieu de «Hom nay», dai «Cai Quy hang len man hinh chinh de nhan thong...» voi danh sach 3 buoc dung loi Expected, khong nut trong dai; duoi la danh sach lead; thanh tab Hom nay/Bang hang/Toi. Khop. truong-nhom-chua-bat.png: dai «Bat thong bao lead» + nut «Bat thong bao» dung tren khung «Hom nay / Gio lam gi? / Man nay dang dung»; khop. truong-nhom-da-bat.png: chi con khung giu cho «Hom nay / Man nay dang dung», khong dai; khop. truong-nhom-chua-cau-hinh.png: dai «Thong bao chua duoc cau hinh» / «May chu chua san sang gui thong bao lead.», khong nut; khop. truong-nhom-tu-choi.png: dong «Thong bao dang tat trong trinh duyet» khong khung/nut; khop. truong-nhom-iphone.png: dai ba buoc cai (Chia se -> «Them vao MH chinh» -> mo tu man hinh chinh), khong nut, duoi la khung giu cho + tab Hom nay/Bang hang/Gui/Toi; khop. Khong frame nao mau thuan Expected.
   network_observed: clean
   output: |
-    Evidence đã lưu (mười ảnh) trong _acceptance/thong-bao-lead/evidence/ :
-    E7-dau-chu-chua-bat.png, E7-dau-chu-da-bat.png, E7-dau-chu-chua-cau-hinh.png, E7-dau-chu-tu-choi.png, E7-dau-chu-iphone.png, E7-truong-nhom-chua-bat.png, E7-truong-nhom-da-bat.png, E7-truong-nhom-chua-cau-hinh.png, E7-truong-nhom-tu-choi.png, E7-truong-nhom-iphone.png, và E7-network.txt.
+    Mười frame đã lưu trong _acceptance/thong-bao-lead/evidence/: E7-{dau-chu,truong-nhom}-{chua-bat,da-bat,chua-cau-hinh,tu-choi,iphone}.png, kèm E7-network.txt (số liệu thô nằm ở tệp này).
+    Request tới app origin đều thành công, console chỉ có info React DevTools và HMR, không lỗi.
 
 - eval: E10
-  run_id: minted-thong-bao-lead-E10-r1
+  run_id: minted-thong-bao-lead-E10-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   screenshot: evidence/E10-mo-lead.png
   observed: |
-    E10-mo-lead.png (đọc bằng Read): màn «Hôm nay» 3 việc, nhóm «Lead mới 2» đang mở (mũi tên xuống), dòng đầu «Toà A · A-09.05 · Bán · Đã nhận · Hạn gọi còn 1 phút» nằm ngang y≈380-410 trong khung, nền dòng sáng hơn nhẹ (trạng thái chọn; DOM xác nhận data-state=selected), dòng thứ hai «Toà A · chỉ biết toà» và nhóm «Thiếu thông tin» mở dưới. Khớp Expected: nhóm mở, dòng được chọn, trong tầm nhìn.
-    E10-mo-lead-trang-moi.png: giống hệt sau khi mở trang mới — nhóm Lead mới mở, dòng A-09.05 được chọn (nền sáng nhẹ, DOM selected) và trong khung. Khớp Expected.
-    E10-khong-con.png: dưới tiêu đề «Hôm nay · 3 việc» có dòng thông báo «Lead này không còn ở Hôm nay của bạn» phía trên nhóm Lead mới; không dòng nào được chọn. Khớp Expected.
+    E10-mo-lead.png: nhóm «Lead mới» (số 2) mở và «Thiếu thông tin» (1) cũng mở. Trang đã cuộn nhẹ (băng thông báo bị cắt ở trên). Dòng «Toà A · A-09.05 · Bán» (Đã nhận, 3,2 tỷ, Quá hạn gọi 9 phút) nằm trọn trong khung, nền sáng hơn dòng bên dưới, khớp data-state=selected. Khớp Expected.
+    E10-mo-lead-trang-moi.png: trang mở mới từ URL có ?lead. Bố cục giống frame trước (chỉ khác đếm phút: quá hạn 10 phút). Nhóm «Lead mới» mở, dòng «Toà A · A-09.05» nằm trong khung và được tô nền như frame trước (DOM xác nhận selected, top 255.5). Khớp Expected.
+    E10-khong-con.png: dòng thông báo «Lead này không còn ở Hôm nay của bạn» hiện ngay dưới tiêu đề «Hôm nay» (3 việc), trên nhóm «Lead mới». Không dòng nào được tô chọn (DOM xác nhận selected=0). Khớp Expected.
   network_observed: clean
   output: |
-    5. navigate_page /today?lead=11111111-2222-4333-8444-555555555555: body chứa «Lead này không còn ở Hôm nay của bạn»; không dòng nào selected -> PASS
-    6. Network: 127 request, mọi /api/v1/* (catalog, settings/queue, leads/assigned, push/public-key, listings) trả thành công; static thành công; console chỉ info/log (HMR, React DevTools), không error. Dump: evidence/E10-network.txt
-    Frames đã lưu: _acceptance/thong-bao-lead/evidence/E10-mo-lead.png ; E10-mo-lead-trang-moi.png ; E10-khong-con.png ; E10-network.txt
+    Ba lần điều hướng giữ lại 150 request; ba document, các fetch /api/v1 và asset tĩnh đều thành công; console chỉ có 6 dòng info/log (gợi ý React DevTools, HMR), không error hay warn. Số liệu thô: evidence/E10-network.txt.
 
 - eval: E8
-  run_id: minted-thong-bao-lead-E8-r1
+  run_id: minted-thong-bao-lead-E8-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm run db:migrate && npm run db:test (cùng lần chạy với E1)
-    ℹ duration_ms 25795.513542
+    ℹ duration_ms 26706.067083
 
 - eval: E9
-  run_id: minted-thong-bao-lead-E9-r1
+  run_id: minted-thong-bao-lead-E9-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
   output: |
     Lệnh: npm run db:migrate && npm run db:test (cùng lần chạy với E1)
-    ℹ duration_ms 25795.513542
+    ℹ duration_ms 26706.067083
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-thong-bao-lead-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-thong-bao-lead-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-thong-bao-lead-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-thong-bao-lead-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
 
 - cmd: npm run test:hooks
-  run_id: minted-thong-bao-lead-SUITE-test_hooks-r1
+  run_id: minted-thong-bao-lead-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-thong-bao-lead-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-thong-bao-lead-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
 
 - cmd: npm run typecheck
-  run_id: minted-thong-bao-lead-SUITE-typecheck-r1
+  run_id: minted-thong-bao-lead-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-02T05:13:57Z
+  verified_at: 2026-11-02T05:27:06Z
 
 - cmd: npm run lint
-  run_id: minted-thong-bao-lead-SUITE-lint-r1
-  exit_code: 1
-  verified_at: 2026-11-02T05:13:57Z
-  ghi chú: lệnh này không gắn eval nào. eslint dừng ở tệp công cụ chấm .acceptance-runs/thong-bao-lead/acceptance-verify.js, lỗi phân tích cú pháp «return outside of function» ở dòng 210 (1 lỗi); kèm 1 cảnh báo 'LoiTrenMay' khai báo mà không dùng ở apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx dòng 20. Ba bước sau eslint trong chuỗi lint (directive trần, mức nợ giao diện, kiểm chuẩn) không chạy tới vì chuỗi dừng ở bước đầu.
+  run_id: minted-thong-bao-lead-SUITE-lint-r2
+  exit_code: 0
+  verified_at: 2026-11-02T05:27:06Z
 
 ## Known limits
 
@@ -180,17 +177,17 @@ Round 1. Cả mười eval của hợp đồng đều chạy xanh, nhưng lệnh
 
 ## Analyst
 
-Eval không-phân-biệt (xanh trên cả HEAD lẫn baseline diffBase, chứng minh harness chứ không chứng minh feature): E1, E2, E3, E5, E8, E9 (lệnh `npm run db:migrate && npm run db:test`), E4 (lệnh `npm test -w @quy-hang/core`), E6 (lệnh `npm test -w @quy-hang/web`). Cần viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý. E7 và E10 là ui-check, baseline n-a.
-
-Lệnh suite xanh-cả-hai-phía là regression-guard bình thường, không liệt kê.
-
-Lệnh thất bại không gắn eval: `npm run lint` (chi tiết ở khối lệnh suite). Đây là nguyên nhân duy nhất của tổng kết REJECT ở round này.
+Eval không phân biệt (xanh trên cả cây hiện tại lẫn cây baseline; chứng minh bộ chạy chứ chưa chứng minh tính năng, cần viết lại để khẳng định hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý):
+- npm run db:migrate && npm run db:test: E1, E2, E3, E5, E8, E9
+- npm test -w @quy-hang/core: E4
+- npm test -w @quy-hang/web: E6
 
 ## Variance
 
-none — mọi eval nhiều lần chạy đều đồng nhất (mọi eval chạy một lần, tất định)
+none — mọi eval chạy một lần, xác định, kết quả đồng nhất.
 
 ## Iterations
 
 Round 1: không eval nào của hợp đồng thất bại; lệnh suite `npm run lint` thất bại ở tệp công cụ chấm `.acceptance-runs/thong-bao-lead/acceptance-verify.js` (lỗi cú pháp, dòng 210), không gắn eval nào. Trả về triển khai.
+Round 2: cả mười eval và sáu lệnh suite đều xanh trên bd9f821; verdict PASS.
 

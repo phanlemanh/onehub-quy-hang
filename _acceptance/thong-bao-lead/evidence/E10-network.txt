@@ -1,4 +1,10 @@
-E10 network (chrome-devtools, isolatedContext e7-e10, 127 requests lien quan /today + /today?lead=...)
-App-scope fetch/XHR (origin localhost:3483, /api/v1): catalog, company/settings/queue, leads/assigned, push/public-key, listings -> tat ca [200]. Moi lan nap trang: 3 GET document /today* [200].
-Static: _next chunks 200/304, font woff2 200. Khong co request that bai / 4xx / 5xx.
-Console: 6 messages, chi info (React DevTools) + log (HMR connected). Khong co error/warn.
+# E10 network + console (chrome-devtools, page 13, isolatedContext e10-mo-lead), 150 requests kept across 3 navigations
+Document requests:
+GET http://localhost:3483/today [200]
+GET http://localhost:3483/today?lead=9516525a-8712-470a-a059-42ca9010a1a6 [200]
+GET http://localhost:3483/today?lead=11111111-2222-4333-8444-555555555555 [200]
+Per navigation fetch/XHR (app origin /api/v1), all [200]:
+catalog x2, company/settings/queue x2, leads/assigned x2, push/public-key x2, listings x1   (x3 navigations)
+Static assets (_next/static chunks, fonts): 200/304 only; no failures.
+Failed requests (4xx/5xx/connection): none
+Console: 6 messages, all info/log (React DevTools hint, HMR connected). No errors, no warnings.
