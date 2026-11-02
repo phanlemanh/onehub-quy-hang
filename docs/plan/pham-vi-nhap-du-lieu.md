@@ -79,4 +79,4 @@ Sửa kèm:
   Vercel (Sensitive). Cần trước khi ND5 chạy bộ thử có tác tử; ND1–ND4 không cần.
 - **Người pháp lý rà** bốn câu ở [Nhập dữ liệu §11](../architecture/nhap-du-lieu.md#11-an-toàn-và-pháp-lý), cùng đợt rà
   Kiến trúc §8 — trước khi ND5 chạm dữ liệu thật; trên dữ liệu mẫu thì dựng và đo được trước.
-- **Vercel Pro** trước sàn trả tiền đầu tiên (điều khoản Hobby là phi thương mại; ghi chú phiên môi trường thật 31/10).
+- ~~**Vercel Pro** trước sàn trả tiền đầu tiên~~ — xong: đội đã ở gói Pro (đính chính 02/11, ADR-0009).
