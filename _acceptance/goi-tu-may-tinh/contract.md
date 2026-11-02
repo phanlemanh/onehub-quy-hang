@@ -5,7 +5,7 @@ slug: goi-tu-may-tinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-02
 design_doc: docs/superpowers/specs/2026-11-02-goi-tu-may-tinh-design.md
@@ -85,3 +85,9 @@ lớp nguồn (AC-3) · màn máy tính (AC-5) · màn điện thoại và mở 
 - Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm xem nhật ký có lộ số điện thoại chủ nhà hay không có thể vẫn báo xanh ngay cả khi nó không bắt được dòng nhật ký nào. Hiện chưa có bằng chứng số bị lộ, chỉ là bài kiểm chưa chứng minh chắc điều đó. — `packages/api/test-db/goi-tu-may-tinh.test.ts`
 - Ngoài-4 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Khi dùng bàn phím, nhấn Enter trên nút «Quay số trên điện thoại» hoặc «Đã gọi» không kích hoạt nút mà kéo con trỏ vào ô giá. Bấm bằng chuột hay chạm vẫn dùng bình thường. — `apps/web/src/app/(app)/units/call/cuoc-goi.tsx`
 - Ngoài-5 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm chống rò giá và mã căn chưa tự chứng minh là máy dò bắt được khi có rò thật, nên nếu giá lộ ra dưới dạng lạ thì có thể không ai nhận ra. Người dùng không thấy gì khác đi hôm nay. — `packages/api/test-db/goi-tu-may-tinh.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Trên trang quay số, dòng tiêu đề trên cùng hiện chữ «Căn call» thay vì một nhãn tiếng Việt đúng. Chức năng gọi vẫn chạy bình thường, chỉ là chữ ở đầu trang trông lạ.
+  - Ngoài-2: Bản ghi mạng đi kèm hồ sơ ghi là không có lời từ chối nào, trong khi hai khung thử người không phải chủ lead chắc chắn có từ chối. Sản phẩm chạy đúng, chỉ là hồ sơ nghiệm thu ghi chưa đủ.
+  - Ngoài-3: Bài kiểm xem nhật ký có lộ số điện thoại chủ nhà hay không có thể vẫn báo xanh ngay cả khi nó không bắt được dòng nhật ký nào. Hiện chưa có bằng chứng số bị lộ, chỉ là bài kiểm chưa chứng minh chắc điều đó.
+  - Ngoài-4: Khi dùng bàn phím, nhấn Enter trên nút «Quay số trên điện thoại» hoặc «Đã gọi» không kích hoạt nút mà kéo con trỏ vào ô giá. Bấm bằng chuột hay chạm vẫn dùng bình thường.
+  - Ngoài-5: Bài kiểm chống rò giá và mã căn chưa tự chứng minh là máy dò bắt được khi có rò thật, nên nếu giá lộ ra dưới dạng lạ thì có thể không ai nhận ra. Người dùng không thấy gì khác đi hôm nay.
