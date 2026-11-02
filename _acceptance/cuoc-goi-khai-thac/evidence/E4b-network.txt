@@ -1,14 +1,4 @@
-E4b network (playwright, context rieng, origin http://localhost:3485 = dev_server.url)
-Request toi app-origin (API + non-GET), theo thu tu:
-GET /api/v1/leads/assigned/ff631093-... 200
-GET /api/v1/listings 200
-GET /api/v1/leads/assigned/ff631093-... 200
-GET /api/v1/catalog 200
-GET /api/v1/catalog 200
-GET /api/v1/listings/d0031d22-... (dem n0) 200
-GET /api/v1/listings 200
-POST /api/v1/listings/d0031d22-.../events 200   <- DUY NHAT 1 lan ghi, sau khi chon lua chon (doi chung duong)
-GET /api/v1/listings 200 ; GET /api/v1/listings/d0031d22-... (dem n1) 200
-GET /api/v1/listings 200 ; GET /api/v1/listings/d0031d22-... (dem n2) 200 ; GET /api/v1/listings 200
-Khong co POST/PATCH nao trong luc go o gia, bam Bao phi, sua ve tay, sua moi gioi, go abc, cho 5 giay.
-requestfailed: khong co. Console error/warning + pageerror: khong co. Third-party: khong co.
+E4b lan chay doc lap (playwright, origin http://localhost:3485 = server dev chung cua worktree)
+GET leads/assigned x2, GET listings, GET catalog x2, GET listings/H5 (n0=8), POST listings/H5/events (1 lan, sau khi chon "2 Co ban"), GET listings, GET listings/H5 (n1=9), GET listings/H5 (n2=9), GET listings
+Khong co POST/PATCH nao khi go gia, Bao phi, sua ve tay, sua moi gioi, go abc, cho 5 giay.
+Response >=400 / requestfailed: khong co. Console error/warning/pageerror: khong co. Third-party: khong co.

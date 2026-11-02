@@ -1,16 +1,11 @@
-E9 network (Playwright, context rieng; app origin http://localhost:3485/api/v1)
-== Buoc 2 (L15, chon Tinh trang su dung phim 1) ==
-POST /leads/<L15>/listing -> 201
-POST /leads/<L15>/first-call -> 200
-POST /listings/3760ecab-.../events -> 200
-GET /listings -> 200 ; GET /leads/assigned/<L15> -> 200 ; GET /catalog -> 200
-== Buoc 3 (L15, Phap ly phim 1, tai lai, Tai chinh phim 1) ==
-POST /listings/3760ecab-.../events -> 200 (x2), khong con POST /leads/<L15>/listing
-GET /leads/assigned, /listings, /catalog -> 200
-== Buoc 4 (L9, Tinh trang su dung phim 2, roi bam lai) ==
-POST /leads/<L9>/listing -> 409 (lan chon dau)
-POST /leads/<L9>/listing -> 409 (lan bam lai)
-console.error: Failed to load resource: 409 (Conflict) x2
-GET /leads/assigned/<L9>, /listings, /catalog -> 200
-Third-party: khong co. Request FAILED (connection): khong co. Status >= 500: khong co.
-Ghi chu: 409 la ket cuc thiet ke cua L9 (unit_has_open_listing) nhung expected cua E9 khong khai ma 409.
+# E9 network (playwright, ngữ cảnh riêng, máy dev 3485)
+## L15
+GET 200 /api/v1/leads/assigned/L15 ; GET 200 /api/v1/listings ; GET 200 /api/v1/catalog x2
+POST 201 /api/v1/leads/L15/listing  (một lần)
+POST 200 /api/v1/leads/L15/first-call
+POST 200 /api/v1/listings/985b3480-80de-439d-b779-e35d02aa37c3/events  (x3: Trống, Có sổ, Không vay)
+sau tải lại: GET 200 leads/assigned, listings, catalog; không POST /listing lần nữa
+## L9
+POST 409 /api/v1/leads/bdd9c75a-55c4-4e93-89eb-37f2a232a27b/listing  (lần bấm 1)
+POST 409 /api/v1/leads/bdd9c75a-55c4-4e93-89eb-37f2a232a27b/listing  (lần bấm 2)
+console: 2x "Failed to load resource: 409 (Conflict)" — mong đợi theo expected
