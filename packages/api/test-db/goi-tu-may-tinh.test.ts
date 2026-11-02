@@ -132,6 +132,24 @@ test("quay số: người không được gọi, và không rò lớp nguồn", 
   for (const k of ["dc1", "dc2", "tn", "ts"]) await bat(s, k, "P");
   await bat(sKhac, "dc1", "P");
   const tuChoi: { body: string; so: string }[] = [];
+  // E4: mọi lời gọi cửa quay số của ca — từ chối lẫn thành công — chạy trong vòng bọc năm kênh nhật ký; `lo` gom hết.
+  const lo: string[] = [];
+  const boc = async <T>(fn: () => Promise<T>): Promise<T> => {
+    const cu = { log: console.log, error: console.error, warn: console.warn, out: process.stdout.write, err: process.stderr.write };
+    const ghiLai = (...a: unknown[]) => void lo.push(a.map(String).join(" "));
+    try {
+      console.log = ghiLai;
+      console.error = ghiLai;
+      console.warn = ghiLai;
+      process.stdout.write = ((c: unknown) => (ghiLai(c), true)) as typeof process.stdout.write;
+      process.stderr.write = ((c: unknown) => (ghiLai(c), true)) as typeof process.stderr.write;
+      return await fn();
+    } finally {
+      Object.assign(console, { log: cu.log, error: cu.error, warn: cu.warn });
+      process.stdout.write = cu.out;
+      process.stderr.write = cu.err;
+    }
+  };
   const BANG: [string, () => Promise<{ id: string; so: string; k: string; san?: San }>, number][] = [
     ["đầu chủ khác cùng sàn", async () => ({ ...(await leadCuaDc1(s)), k: "dc2" }), 404],
     ["telesales đã nhập lead", async () => ({ ...(await leadCuaDc1(s)), k: "ts" }), 403],
@@ -174,8 +192,10 @@ test("quay số: người không được gọi, và không rò lớp nguồn", 
   for (const [ten, dung, ma] of BANG) {
     const { id, so, k, san } = await dung();
     const tu = daGui.length;
-    const r = await quaySo(san ?? s, id, k);
-    const body = await r.text();
+    const { r, body } = await boc(async () => {
+      const r = await quaySo(san ?? s, id, k);
+      return { r, body: await r.text() };
+    });
     assert.equal(r.status, ma, `dòng «${ten}»: ${body}`);
     assert.equal((await hopThu(id)).length, 0, `dòng «${ten}»: có dòng hộp thư`);
     assert.equal(daGui.length - tu, 0, `dòng «${ten}»: có lần gửi`);
@@ -192,8 +212,10 @@ test("quay số: người không được gọi, và không rò lớp nguồn", 
     await nhip(s);
     assert.equal((await dong(l.id)).matched_agent_user_id, s.nguoi.dc1!.userId);
     await bat(s, "kiem", "M");
-    const r = await quaySo(s, l.id, "kiem");
-    const body = await r.text();
+    const { r, body } = await boc(async () => {
+      const r = await quaySo(s, l.id, "kiem");
+      return { r, body: await r.text() };
+    });
     assert.equal(r.status, 404, `đầu chủ kiêm người nhập gọi lead về dc1: ${body}`);
     assert.equal((await hopThu(l.id)).length, 0, "đầu chủ kiêm người nhập: có dòng hộp thư");
     tuChoi.push({ body, so: chuan(so) });
@@ -201,25 +223,12 @@ test("quay số: người không được gọi, và không rò lớp nguồn", 
 
   // Đối chứng dương cùng dữ liệu: người được giao gọi chính một lead còn việc → 200, có dòng hộp thư.
   const ok = await leadCuaDc1(s, "A-12.05");
-  const lo: string[] = [];
-  const cu = { log: console.log, error: console.error, warn: console.warn, out: process.stdout.write, err: process.stderr.write };
-  const ghiLai = (...a: unknown[]) => void lo.push(a.map(String).join(" "));
-  let okBody: string;
   const tu = daGui.length;
-  try {
-    console.log = ghiLai;
-    console.error = ghiLai;
-    console.warn = ghiLai;
-    process.stdout.write = ((c: unknown) => (ghiLai(c), true)) as typeof process.stdout.write;
-    process.stderr.write = ((c: unknown) => (ghiLai(c), true)) as typeof process.stderr.write;
+  const { r: rOk, body: okBody } = await boc(async () => {
     const r = await quaySo(s, ok.id, "dc1");
-    okBody = await r.text();
-    assert.equal(r.status, 200, okBody);
-  } finally {
-    Object.assign(console, { log: cu.log, error: cu.error, warn: cu.warn });
-    process.stdout.write = cu.out;
-    process.stderr.write = cu.err;
-  }
+    return { r, body: await r.text() };
+  });
+  assert.equal(rOk.status, 200, okBody);
   const ht = await hopThu(ok.id);
   assert.ok(ht.length >= 1, "đối chứng: không dòng hộp thư");
 
@@ -238,6 +247,7 @@ test("quay số: người không được gọi, và không rò lớp nguồn", 
   ];
   for (const [noi, chu] of cho) for (const [loai, bat] of RO) assert.equal(bat(chu), false, `rò ${loai} ở ${noi}: ${chu}`);
   for (const t of tuChoi) assert.equal(timDangSo(t.body, t.so), null, `lời từ chối mang số: ${t.body}`);
+  for (const t of tuChoi) assert.equal(timDangSo(lo.join("\n"), t.so), null, "nhật ký ở lối từ chối mang số của lead");
   // Đối chứng dương: máy dò chạy thật — thân mở số mang số, nội dung thông báo mang tên toà.
   const mo = await (await moSo(s, ok.id, "dc1")).text();
   assert.ok(timDangSo(mo, ok.so), "máy dò không bắt số trong thân mở số");

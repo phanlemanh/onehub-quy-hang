@@ -1,0 +1,7 @@
+E9 network (chrome-devtools, trang 27, 118 request)
+- document/static: 200/304
+- GET /api/v1/listings 200, GET /api/v1/me 200, GET /api/v1/leads/assigned/<id> 200
+- POST /api/v1/leads/4bf6c295-.../phone-reveal  net::ERR_INTERNET_DISCONNECTED  (chu y: do buoc khung 5 emulate Offline, dung expected)
+- GET /api/v1/listings [pending] mot lan luc Offline roi 200 sau do
+- Console error: 1 = "Failed to load resource: net::ERR_INTERNET_DISCONNECTED" (cung request Offline)
+- Khong co 4xx/5xx. Khong third-party.

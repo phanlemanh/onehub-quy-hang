@@ -1,0 +1,3 @@
+fetch/xhr app-origin localhost:3483: all 200 (catalog, settings/queue, leads/assigned, push/public-key, listings, POST leads/<id>/phone-dial x5 = 200)
+POST phone-dial reqid=97: net::ERR_INTERNET_DISCONNECTED (cố ý: emulate Offline, frame 4; expected)
+console: 1 error "Failed to load resource: net::ERR_INTERNET_DISCONNECTED" (cùng request offline); còn lại HMR/info.
