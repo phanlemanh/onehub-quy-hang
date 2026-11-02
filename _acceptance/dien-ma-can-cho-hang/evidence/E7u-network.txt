@@ -1,0 +1,5 @@
+Network E7u (playwright; trinh duyet dung chung voi verifier khac)
+App-origin fetch cua luong E7u (hang Z 0251f236): GET /api/v1/listings 200; GET /api/v1/catalog 200 (x2); GET /api/v1/listings/0251f236.../ 200; POST /api/v1/leads/2eef70ab.../listing 201 (setup)
+Setup ghi chu: POST /api/v1/leads 201 (lead 16828442, khong giao cho dau-chu-1 nen POST .../listing 404 - setup, khong thuoc buoc eval); POST /api/v1/listings 201 (hang 3ecab31e tao truc tiep, bo - khong vao Hom nay vi khong co nguoi phu trach)
+Console error: 422 POST /api/v1/listings/4d4ed450.../events - cua verifier khac (hang khac), khong thuoc luong Z
+Console error: hydration mismatch BangHang (dev, skeleton vs toolbar) - khong anh huong ket qua

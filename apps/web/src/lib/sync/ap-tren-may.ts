@@ -5,6 +5,8 @@
 import {
   checkTransition,
   confirmsWithOwner,
+  kiemGanMaCan,
+  LY_DO_MA_CAN_DA_CO,
   stepListing,
   validatePayload,
   type EventType,
@@ -58,6 +60,7 @@ export function apTrenMay(
     const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload });
     if (!kq.ok) return { ok: false, loi: kq.kind === "invalid-transition" ? { kind: kq.kind, reason: kq.reason } : { kind: kq.kind, missing: kq.missing } };
   }
+  if (type === "unit_number_assigned" && kiemGanMaCan(hienTai)) return { ok: false, loi: { kind: "invalid-payload", errors: [{ path: "unitNumber", reason: LY_DO_MA_CAN_DA_CO }] } };
   const expectedVersion = coSo !== undefined && coSo < hienTai.version ? coSo : hienTai.version;
   const op: PendingOp = { opId, listingId, type, payload, expectedVersion, clientSeq: n.nextSeq, createdAt: now };
   return { ok: true, op, ngan: { ...n, queue: [...n.queue, op], nextSeq: n.nextSeq + 1 } };
