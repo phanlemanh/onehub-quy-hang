@@ -1,0 +1,21 @@
+schema_version: 1
+feature_slug: chuyen-khong-ket-khoa
+# Lệnh máy: `executors.test.isolation` (bộ cách ly + packages/api/test-db, cần DATABASE_URL tới Postgres dãy L, cổng 5563).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/lien-he-chuyen.test.ts ca «liên hệ: bài chuyển khoá bảng chủ nhà rồi bảng lead trước mọi câu ghi» có mặt và ok — trong giao dịch của bài chuyển (theoThuTuKhoa), chụp pg_locks của chính pg_backend_pid() lọc locktype=relation, granted, bảng thuộc {listing_owners, leads, contacts}, sau lệnh khoá thứ nhất, sau lệnh khoá thứ hai và đầu thân giao dịch: deepEqual [[listing_owners],[leads, listing_owners],[leads, listing_owners]] (contacts không có — đối chứng lọc), thông điệp «chưa khoá bảng chủ nhà rồi bảng lead trước câu ghi»; ở mọi lần chụp số khoá loại bảng mode thuộc {ShareLock, ShareRowExclusiveLock, ExclusiveLock, AccessExclusiveLock} của chính kết nối bằng 0, thông điệp «bài chuyển giữ khoá mạnh trên bảng»; bài chuyển chạy trọn: đối chứng trước (sàn có liên hệ; sau bước trước 016 số lead chưa gắn liên hệ > 0), sau chuyển lead chưa gắn liên hệ bằng 0 và mọi liên hệ là mã mới. Chiều đỏ (S3 lượt 2, mỗi đột biến một lần chạy): đảo hai lệnh khoá → «chưa khoá…»; bỏ hai lệnh khoá → «chưa khoá…»; khoá lead không ghi chế độ (access exclusive) → «bài chuyển giữ khoá mạnh trên bảng»."
+    paths: [packages/api/test-db/lien-he-chuyen.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/lien-he-chuyen.test.ts hai ca «liên hệ: chuyển dữ liệu cũ» và «liên hệ: chuyển trên sàn không có dữ liệu» có mặt và ok."
+    paths: [packages/api/test-db/lien-he-chuyen.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

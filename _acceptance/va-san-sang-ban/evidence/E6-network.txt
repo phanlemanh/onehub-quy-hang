@@ -1,0 +1,2 @@
+E6 network (chrome-devtools, origin http://localhost:3482, fetch/xhr):
+31 requests, all GET /api/v1/{catalog,listings,listings/<id>,units/photos,me} -> 200. Failed requests: none. Console error/warn: none.

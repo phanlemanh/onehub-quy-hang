@@ -4,7 +4,7 @@
 // lần rao, dòng thời gian lịch sử. Đọc kho trên máy và danh mục đã giữ; lịch sử kéo ở nền và giữ trên máy (hàng 13).
 import { Maximize2, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
 
 import { Badge } from "@/components/reui/badge";
 import {
@@ -25,7 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../../inventory/danh-muc";
 import { MucAnhCan } from "../photos/muc-anh-can";
-import { hienNutSanSang, type Dich } from "../ready/san-sang";
+import { dauCuaCan, hienNutSanSang, type Dich } from "../ready/san-sang";
 import { NEO_MUC_ANH, NutSanSang } from "../ready/nut-san-sang";
 import { NutBaoSai } from "./nut-bao-sai";
 import {
@@ -135,7 +135,9 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   // Lần rao đã có lượt kéo xong (thành hay không): chưa có thì phần lịch sử đang tải.
   const [daKeo, setDaKeo] = useState<Record<string, true>>({});
   // Điều còn thiếu sau lần bấm «Sẵn sàng bán» gần nhất (hàng 23) — đánh dấu «Chưa có» đúng ô.
-  const [dichThieu, setDichThieu] = useState<Dich[]>([]);
+  // Kết quả «Sẵn sàng bán» gắn với lần rao đã bấm: đổi lần rao thì không mang dấu «Chưa có» sang (va-san-sang-ban).
+  const [thieuCua, setThieuCua] = useState<{ id: string; dich: readonly Dich[] } | null>(null);
+  const baoThieu = useCallback((id: string, dich: readonly Dich[]) => setThieuCua({ id, dich }), []);
   useEffect(() => {
     let huy = false;
     for (const id of ids ? ids.split(",") : []) {
@@ -205,6 +207,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   const ttls = trangThaiLichSu({ coBan: lichSu.length > 0, dangTai: !daKeo[can.id], lan: ngan.lastAttempt, ngoaiTuyen });
   const dong = dongLichSu(lichSu, nguoi);
   const dangXem = lan.find((r) => r.id === can.id)!;
+  const dichThieu = dauCuaCan(thieuCua, can.id);
   const tuoi = can.freshness as { confirmed?: boolean; ageDays?: number } | undefined;
   const loaiHinh = tt.kind === "co" ? tt.truong.find(([k]) => k === "Loại hình")?.[1] : null;
   const dauCot = [tt.kind === "co" ? tt.khu : null, tim.toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · ");
@@ -261,7 +264,7 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
       <Separator />
       <Muc tieuDe={dangXem.dangMo ? "Lần rao đang mở" : "Lần rao đang xem"}>
         {/* Mọi hàng thấy trên máy là hàng người xem sửa được (hàng 8, 12); máy chủ vẫn xét quyền. */}
-        {dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang hang={can} toa={tim.toa} ma={chon.ma} onThieu={setDichThieu} /> : null}
+        {dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang key={can.id} hang={can} toa={tim.toa} ma={chon.ma} onThieu={baoThieu} /> : null}
         <CapGiaTri ds={p.truong.map(([k, v]): [string, string] => (danhDauChuaCo(k, dichThieu) ? [k, "Chưa có · điền ở Bảng hàng"] : [k, v]))} />
       </Muc>
       <Separator />
