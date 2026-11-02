@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import { type LucideIcon, SearchXIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/reui/alert";
@@ -18,10 +18,13 @@ type Props = {
   icon?: LucideIcon;
   /** Một hành động: rỗng thì việc chính để có dữ liệu, lỗi thì «Thử lại» (ReUI layout «States»). */
   hanhDong?: ReactNode;
+  /** Chỉ cho `empty`: lọc hay tìm không ra gì (empty-state-2) — khác vùng chưa có gì (empty-state-1). */
+  timKhongRa?: boolean;
   className?: string;
 };
 
-export function TrangThai({ kind, title, description, icon: Icon, hanhDong, className }: Props) {
+export function TrangThai({ kind, title, description, icon, hanhDong, timKhongRa = false, className }: Props) {
+  const Icon = icon ?? (timKhongRa ? SearchXIcon : undefined);
   if (kind === "loading") {
     return (
       <Empty role="status" aria-busy="true" className={className}>
@@ -37,7 +40,7 @@ export function TrangThai({ kind, title, description, icon: Icon, hanhDong, clas
   }
   if (kind === "empty") {
     return (
-      <Empty className={className}>
+      <Empty data-kieu={timKhongRa ? "tim-khong-ra" : "chua-co"} className={className}>
         <EmptyHeader>
           {Icon && (
             <EmptyMedia variant="icon">
