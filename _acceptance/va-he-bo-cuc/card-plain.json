@@ -1,32 +1,3 @@
 {
-  "feature_plain": "Ở Hôm nay, bấm một hàng đợi ở cột bên trái thì màn mở đúng nhóm ấy và mục sáng lên; mục không có chỗ thì Hôm nay báo một dòng, không còn nút bấm mà im lặng.",
-  "will_do": [
-    {"id": "AC-1", "p": "Sẽ mở đúng nhóm khi đầu chủ bấm một hàng đợi có việc: nhóm mở ra, dòng nhóm được chọn và cuộn vào khung; mở thẳng địa chỉ hay tải lại trang cũng vậy, không báo nhầm lúc đang tải."},
-    {"id": "AC-2", "p": "Sẽ làm sáng đúng mục đang chọn ở cột, và chỉ mục ấy."},
-    {"id": "AC-3", "p": "Sẽ báo một dòng «Hôm nay không có việc ở …» khi nhóm hôm nay trống; bấm sang nhóm có việc thì dòng báo mất."},
-    {"id": "AC-4", "p": "Sẽ xử người không có vai Đầu chủ theo lối anh chọn ở Hỏi-1: báo một dòng khi bấm, hay ẩn mục hàng đợi khỏi cột."},
-    {"id": "AC-5", "p": "Sẽ bỏ qua địa chỉ sai khuôn như không có gì; mã nhóm đúng khuôn mà không có ở Hôm nay thì báo «Không có hàng đợi này ở Hôm nay của bạn»."},
-    {"id": "AC-6", "p": "Sẽ giữ nguyên đường mở lead từ thông báo: có cả lead và nhóm trên địa chỉ thì lead thắng."},
-    {"id": "AC-7", "p": "Sẽ giữ lint giao diện sạch, không mã màu thô, dòng báo dùng khuôn có sẵn của Hôm nay."}
-  ],
-  "wont_do": [
-    {"id": "OOS-1", "p": "KHÔNG làm bộ nhóm riêng của sàn và số đếm ở cột — để hàng 42."},
-    {"id": "OOS-2", "p": "KHÔNG đụng mục ở cột của các nhà khác (Đã gửi, Cài đặt sàn, Đội)."},
-    {"id": "OOS-3", "p": "KHÔNG làm Hôm nay của trưởng nhóm — hàng 42."},
-    {"id": "OOS-4", "p": "KHÔNG đổi gì trên điện thoại — ở đó không có cột thứ hai."},
-    {"id": "OOS-5", "p": "KHÔNG giữ cột hồ sơ đang mở khi bấm mục nhóm — bấm là vào Hôm nay ở nhóm ấy, cột hồ sơ đóng."}
-  ],
-  "coverage_plain": [
-    {"i": 2, "p": "Năm hàng đợi mặc định: mỗi mục mở đúng nhóm và sáng đúng mục (AC-1, AC-2) — đủ khi bài kiểm thuần chạy đủ năm mã và bài nhìn màn bấm cả năm."},
-    {"i": 3, "p": "Chỗ của nhóm — có việc, trống, không có trong bộ nhóm (AC-1, AC-3, AC-5) — đủ khi mỗi ô có một ca kiểm và bài nhìn màn bắt được một nhóm trống thật."},
-    {"i": 4, "p": "Vai — đầu chủ, đầu chủ kiêm telesales, không đầu chủ (AC-1, AC-4) — đủ khi ma trận vai × mã chạy hết và bài nhìn màn đăng nhập bằng telesales và trưởng nhóm."},
-    {"i": 5, "p": "Địa chỉ — đúng, sai khuôn, mã lạ, có cả lead, vắng (AC-2, AC-5, AC-6) — đủ khi ma trận tham số chạy hết và bài kiểm đường lead cũ vẫn xanh."},
-    {"i": 6, "p": "Khổ máy tính 1440 và 1024 (AC-1) — đủ khi bài nhìn màn chụp cả hai khổ."}
-  ],
-  "gap_probe_plain": [
-    {"i": 0, "p": "Máy từng ghi nhầm là tự quyết chuyện «ẩn hay báo rõ» với người không phải đầu chủ, trong khi câu giao để người chọn — nay thành Hỏi-1 cho anh, tiêu chí 4 và các bài kiểm rẽ theo lối anh chọn."},
-    {"i": 1, "p": "Ca nhóm trống chưa có bài kiểm riêng và chưa đo dòng báo mất khi sang nhóm có việc — đã thêm một bài nhìn màn tự dò nhóm trống trong dữ liệu mẫu; không dò được thì ghi «chưa chắc», không tính đạt."},
-    {"i": 2, "p": "Lúc màn đang tải có thể báo nhầm «không có việc» hay cuộn hụt — tiêu chí 1 thêm vế tải nguội, bài kiểm thuần thêm ô đang tải, bài nhìn màn thêm bước tải lại."},
-    {"i": 3, "p": "Người kiêm hai vai và người không phải đầu chủ mở mã lạ chưa được định nghĩa — đã ghi: hai vai xử như đầu chủ, mã lạ thì ai cũng thấy cùng một dòng báo."}
-  ]
+  "feature_plain": "Ở Hôm nay, bấm một hàng đợi ở cột bên trái thì màn mở đúng nhóm ấy và mục sáng lên; mục không có chỗ thì Hôm nay báo một dòng, không còn nút bấm mà im lặng."
 }
