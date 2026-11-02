@@ -18,13 +18,13 @@ approved_at:
 Hàng 29 (dãy D), mã L6, phác thảo KD2 — Tham chiếu §5 (một bộ kết quả gọi), §6 (lớp nguồn), §8 luật 7, 9, 10, 14, 16.
 Đứng trên hàng 28 (chế độ cuộc gọi khai thác `/units/call?lead=`), hàng 22 (Hôm nay, nhóm «Nên gọi điều chỉnh giá») và hàng 13
 (bộ đồng bộ trên máy). «Đầu chủ» = vai `listing_agent`; «người thấy nguồn» = đầu chủ giữ căn hoặc trưởng nhóm (lõi
-`canSeeSource`). Bảy chỗ chỉ chủ kho quyết ghi ở sổ (Hỏi-1…Hỏi-7); tiêu chí dưới viết theo khuyến nghị của từng Hỏi.
+`canSeeSource`). Tám chỗ chỉ chủ kho quyết ghi ở sổ (Hỏi-1…Hỏi-8); tiêu chí dưới viết theo khuyến nghị của từng Hỏi.
 
 Source input: `docs/plan/lo-trinh.json` hàng 29 · `_acceptance/goi-ep-gia-dot-hai/opportunity.md`
 
 ## Criteria
 
-- AC-1: Given đầu chủ có một căn Đang bán ở nhóm «Nên gọi điều chỉnh giá» của Hôm nay, When bấm «Gọi» trên dòng căn, Then trang
+- AC-1: Given đầu chủ có một căn Đang bán ở nhóm «Nên gọi điều chỉnh giá» của Hôm nay, When bấm «Ghi cuộc gọi» trên dòng căn (Hỏi-8: «Gọi» để dành cho nút quay số sau «Mở số»; nút mở chế độ khai thác trên dòng lead của hàng 28 cũng đổi nhãn thành «Ghi cuộc gọi»), Then trang
   `/units/call?hang=<mã hồ sơ>` mở chế độ ép giá: đầu màn nêu mã căn · toà, nấc, giá hiện tại kèm điều kiện phí, số ngày lên
   bảng và số ngày từ lần đổi giá gần nhất, đọc từ kho trên máy; mã hồ sơ không có trên máy thì trang báo «Không thấy căn này
   trong kho của bạn» kèm «Về Hôm nay»; `/units/call?lead=` của hàng 28 vẫn mở chế độ khai thác như cũ.
@@ -90,4 +90,4 @@ Quét bằng skill morphological-scan, preset entity-feature (đối tượng: m
 ## Notes
 
 - Không migration, không bảng mới, không API mới.
-- Bảy Hỏi ở `decisions.jsonl`; người chọn khác khuyến nghị thì tiêu chí liên quan sửa trước khi duyệt.
+- Tám Hỏi ở `decisions.jsonl`; người chọn khác khuyến nghị thì tiêu chí liên quan sửa trước khi duyệt.

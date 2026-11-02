@@ -26,10 +26,10 @@ evals:
     layer: ui-observed
     target: "Máy dev dãy D; dau-chu-1; dung-d.mjs in P1 (căn Đang bán ở nhóm «Nên gọi điều chỉnh giá», giá 2,8 tỷ không bao phí) và một mã hồ sơ không tồn tại"
     steps:
-      - "Đăng nhập dau-chu-1. Khổ 1440x900. Mở /today, ở nhóm «Nên gọi điều chỉnh giá» trên dòng P1 bấm «Gọi» → ghi URL; chụp evidence/E1b-1440.png; ghi chữ đầu màn"
+      - "Đăng nhập dau-chu-1. Khổ 1440x900. Mở /today, ở nhóm «Nên gọi điều chỉnh giá» trên dòng P1 bấm «Ghi cuộc gọi» → ghi URL; ghi nhãn mọi nút trên dòng P1 và trên một dòng lead ở nhóm Lead mới; chụp evidence/E1b-1440.png; ghi chữ đầu màn"
       - "Mở /units/call?hang=<mã không tồn tại> → chụp evidence/E1b-khong-thay.png; bấm nút trên khối báo → ghi URL"
       - "Mở /units/call?lead=<L1 của hàng 28, dung-d của cuoc-goi-khai-thac in> → ghi trang có thẻ lead của chế độ khai thác không"
-    expected: "URL /units/call?hang=<P1>; đầu màn có mã căn · toà của P1, nấc, «2,8 tỷ · không bao phí», số ngày lên bảng và số ngày từ lần đổi giá gần nhất khớp dung-d.mjs in; mã không tồn tại: «Không thấy căn này trong kho của bạn», nút đưa về /today; ?lead= vẫn mở chế độ khai thác."
+    expected: "URL /units/call?hang=<P1>; đầu màn có mã căn · toà của P1, nấc, «2,8 tỷ · không bao phí», số ngày lên bảng và số ngày từ lần đổi giá gần nhất khớp dung-d.mjs in; mã không tồn tại: «Không thấy căn này trong kho của bạn», nút đưa về /today; ?lead= vẫn mở chế độ khai thác; nút mở chế độ cuộc gọi trên dòng căn và dòng lead mang nhãn «Ghi cuộc gọi», không nút nào khác trên dòng mang nhãn «Gọi» trừ nút quay số sau «Mở số»."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
     paths: ["apps/web/src/app/(app)/units/call/**", "apps/web/src/app/(app)/today/**"]
 

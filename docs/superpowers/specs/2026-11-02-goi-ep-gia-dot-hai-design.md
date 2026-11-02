@@ -56,7 +56,8 @@ Dùng lại: `docGia`, `canHoiLai`, `vietPhanTram` (giá), `checkTransition`, `T
 - **Danh sách hỏi, tính giá, so giá:** khối của hàng 28, hồ sơ là hồ sơ đang gọi; so giá trừ chính căn.
 - **Bố cục (Hỏi-1):** khuyến nghị bố cục «Hồ sơ» của ADR-0024 — `BoCuc kieu="ho-so"` trong `KhungCuocGoi`, thân một cột
   48rem bằng `KhungHoSo` + `MucHoSo` (solution-crm-4); chế độ khai thác của hàng 28 chuyển theo, đóng ngoại lệ có hạn.
-- **Hôm nay:** dòng căn ở nhóm «Nên gọi điều chỉnh giá» thêm nút «Gọi» mở `/units/call?hang=<id>` (chỉ thêm dòng).
+- **Hôm nay:** dòng căn ở nhóm «Nên gọi điều chỉnh giá» thêm nút «Ghi cuộc gọi» mở `/units/call?hang=<id>`; nút «Gọi» của hàng 28
+  trên dòng lead đổi nhãn thành «Ghi cuộc gọi» — «Gọi» để dành cho nút quay số sau «Mở số» của hàng mở số lead (Hỏi-8).
 
 ### 3.3 API — không đổi
 
@@ -137,5 +138,5 @@ còn căn nào khác» (Hỏi-6); dòng giá lead gốc trong lịch sử (Hỏi
 ## 6. Câu hỏi ở Cổng Phạm vi
 
 Hỏi-1 bố cục · Hỏi-2 «Không nghe máy» · Hỏi-3 ghi giá đáy mới · Hỏi-4 ô tắt xác nhận · Hỏi-5 dòng giá lead gốc trong lịch
-sử · Hỏi-6 ghi chú cuộc gọi, tin rao công khai, «chủ còn căn nào» · Hỏi-7 trưởng nhóm không vai Đầu chủ mở màn. Khuyến nghị và lối khác ở
+sử · Hỏi-6 ghi chú cuộc gọi, tin rao công khai, «chủ còn căn nào» · Hỏi-7 trưởng nhóm không vai Đầu chủ mở màn · Hỏi-8 nhãn hai nút «Gọi» trên dòng lead. Khuyến nghị và lối khác ở
 `_acceptance/goi-ep-gia-dot-hai/decisions.jsonl`.
