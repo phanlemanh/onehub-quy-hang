@@ -1,0 +1,6 @@
+{
+  "feature_plain": "Nút «Nạp dữ liệu mẫu» chạy trọn trên sàn mới: mỗi căn mẫu từng lên Đang bán có một ảnh vẽ bằng mã, ảnh cất đúng kho bản thật đang đọc, và gỡ hay nạp hỏng thì không để ảnh thừa trên kho.",
+  "decisions": [
+    { "id": "E9", "q": "Hướng dẫn bộ nạp đã nói đủ về ảnh mẫu và ba khoá kho ảnh chưa?", "why": "Ba góc nhìn của hội đồng cùng thấy đủ bốn ý và không chép giá trị khoá nào; hàng hạng cao nên người chốt." }
+  ]
+}

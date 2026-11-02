@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { readMe } from "@/lib/api";
-import { AppShell } from "./app-shell";
+import { AppShellDongBo } from "./app-shell-dong-bo";
 import { SECOND_COLUMN_COOKIE } from "./cookie";
 
 const HOMES: Home[] = ["today", "inventory", "shares", "team", "settings"];
@@ -35,12 +35,12 @@ export async function ShellLayout({ children }: { children: ReactNode }) {
   const { activeCompany } = me;
   const raw = (await cookies()).get(SECOND_COLUMN_COOKIE)?.value;
   return (
-    <AppShell
+    <AppShellDongBo
       user={{ userId: me.user.id, email: me.user.email, companies: me.companies, activeCompany }}
       nav={navigationFor(activeCompany.roles)}
       remembered={rememberedFor(raw, me.user.id, activeCompany.id)}
     >
       {children}
-    </AppShell>
+    </AppShellDongBo>
   );
 }

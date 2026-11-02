@@ -21,7 +21,7 @@ export function envJob(text) {
   const env = {};
   if (dau < 0) return env;
   for (const d of dong.slice(dau + 1)) {
-    const m = /^ {6}([A-Z_]+): (.*)$/.exec(d);
+    const m = /^ {6}([A-Z0-9_]+): (.*)$/.exec(d);
     if (!m) break;
     env[m[1]] = m[2];
   }
@@ -54,7 +54,7 @@ export function cacBuoc(text) {
     }
     if (vung === "run" && (/^ {10}/.test(d) || !d.trim())) b.run += d.replace(/^ {10}/, "") + "\n";
     else if (vung === "env") {
-      const m = /^ {10}([A-Z_]+): (.*)$/.exec(d);
+      const m = /^ {10}([A-Z0-9_]+): (.*)$/.exec(d);
       if (m) b.env[m[1]] = m[2];
     }
   }
@@ -107,8 +107,9 @@ export function kiemWorkflow(text) {
   if (nap?.env.NODE_ENV !== "production") loi.push("bước chạy bộ nạp thiếu NODE_ENV=production");
   for (const b of buoc) if (/\$\{\{/.test(b.run)) loi.push(`chèn thẳng vào lệnh ở bước «${b.name}»`);
   for (const d of dong) {
-    if (/secrets\./.test(d) && !/^ {6}[A-Z_]+: \$\{\{ secrets\.[A-Z_]+ \}\}\s*$/.test(d)) loi.push(`bí mật ngoài khoá env: ${d.trim()}`);
-    if (/(echo|printf).*(OWNER_PHONE_KEY|DATABASE_URL)/.test(d)) loi.push(`in bí mật: ${d.trim()}`);
+    // Bí mật chỉ là giá trị một khoá env — của job (6 dấu cách) hay của bước (10).
+    if (/secrets\./.test(d) && !/^ {6}( {4})?[A-Z0-9_]+: \$\{\{ secrets\.[A-Z0-9_]+ \}\}\s*$/.test(d)) loi.push(`bí mật ngoài khoá env: ${d.trim()}`);
+    if (/(echo|printf).*(OWNER_PHONE_KEY|DATABASE_URL|STORAGE_S3_)/.test(d)) loi.push(`in bí mật: ${d.trim()}`);
   }
   return loi;
 }
@@ -183,4 +184,41 @@ test("chan-nhanh-va-xac-nhan: hai rào chạy đúng chiều (E5)", () => {
   const dao = nhanh.replace("] || {", "] && {");
   assert.notEqual(dao, nhanh);
   assert.notEqual(chayBuoc(dao, { env: { GITHUB_REF: "refs/heads/main" } }).status, 0, "chặn nhánh: bản đảo phải chặn main");
+});
+
+const KHOA_KHO = ["STORAGE_S3_ACCESS_KEY", "STORAGE_S3_SECRET_KEY", "STORAGE_S3_ENDPOINT"];
+/** Ba khoá kho ảnh chỉ ở bước «Chạy bộ nạp», từ secrets, cạnh NODE_ENV production (hàng nap-mau-co-anh). Danh sách lỗi. */
+export function kiemKhoaKho(text) {
+  const loi = [];
+  const buoc = cacBuoc(text);
+  const nap = buoc.find((b) => b.name === "Chạy bộ nạp");
+  if (!nap) return ["không thấy bước «Chạy bộ nạp»"];
+  for (const k of KHOA_KHO) {
+    if (nap.env[k] !== `\${{ secrets.${k} }}`) loi.push(`bước «Chạy bộ nạp» thiếu ${k} từ secrets.${k}`);
+    if (k in envJob(text)) loi.push(`${k} khai ở env mức job`);
+    for (const b of buoc) if (b !== nap && k in b.env) loi.push(`${k} khai ở bước «${b.name}»`);
+  }
+  if (nap.env.NODE_ENV !== "production") loi.push("bước «Chạy bộ nạp» thiếu NODE_ENV: production");
+  return loi;
+}
+
+test("ba-khoa-kho-anh: bước chạy bộ nạp nhận ba khoá kho ảnh từ secrets, không nơi nào khác (E8 nap-mau-co-anh)", () => {
+  assert.deepEqual(kiemKhoaKho(THAT), []);
+  assert.deepEqual(kiemWorkflow(THAT), [], "luật tĩnh cũ vẫn đạt");
+  // Luật tĩnh nhận env của bước nhưng vẫn bắt bí mật nằm trong lệnh.
+  const trongLenh = THAT.replace('--email "$EMAIL"', '--email "$EMAIL" --khoa ${{ secrets.STORAGE_S3_SECRET_KEY }}');
+  assert.ok(kiemWorkflow(trongLenh).some((l) => l.startsWith("bí mật ngoài khoá env: node")), "bí mật trong lệnh phải bị bắt");
+  // Luật chặn in bí mật phủ cả ba khoá kho ảnh.
+  const inKhoa = THAT.replace('EMAIL=$(jq', 'echo "$STORAGE_S3_SECRET_KEY"\n          EMAIL=$(jq');
+  assert.notEqual(inKhoa, THAT);
+  assert.ok(kiemWorkflow(inKhoa).some((l) => l.startsWith("in bí mật:")), "in khoá kho ảnh phải bị bắt");
+  // Chiều đỏ trên bản sao: dời một biến lên env mức job.
+  const dong = "          STORAGE_S3_ENDPOINT: ${{ secrets.STORAGE_S3_ENDPOINT }}\n";
+  assert.ok(THAT.includes(dong));
+  const len = THAT.replace(dong, "").replace("    env:\n", "    env:\n      STORAGE_S3_ENDPOINT: ${{ secrets.STORAGE_S3_ENDPOINT }}\n");
+  assert.deepEqual(kiemKhoaKho(len), ["bước «Chạy bộ nạp» thiếu STORAGE_S3_ENDPOINT từ secrets.STORAGE_S3_ENDPOINT", "STORAGE_S3_ENDPOINT khai ở env mức job"]);
+  // Chiều đỏ: bỏ NODE_ENV khỏi bước thì ca đỏ, thông điệp nêu NODE_ENV.
+  const boNodeEnv = THAT.replace("          NODE_ENV: production\n", "");
+  assert.notEqual(boNodeEnv, THAT);
+  assert.deepEqual(kiemKhoaKho(boNodeEnv), ["bước «Chạy bộ nạp» thiếu NODE_ENV: production"]);
 });

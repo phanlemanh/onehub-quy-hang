@@ -1,0 +1,154 @@
+---
+schema_version: 1
+feature: Mọi màn sau đăng nhập chọn một trong bảy bố cục có tên với sáu vùng chuẩn, chờ tải theo hình bố cục, rỗng · lỗi · ngoại tuyến một luật, ba khổ và một menu Tạo trên vỏ; trang mẫu sống không cần cơ sở dữ liệu hay đăng nhập cho ảnh chuẩn để đối chiếu màn mới; răng lint và bản đồ hệ thiết kế giữ luật
+slug: he-bo-cuc
+owner: phanlemanh@gmail.com
+risk_tier: T2
+surfaces: [ui, web]
+status: signed-off
+approved_by: Manh Phan
+approved_at: 2026-11-02
+design_doc: docs/superpowers/specs/2026-11-02-he-bo-cuc-design.md
+---
+
+# Acceptance Contract: he-bo-cuc
+
+## Context
+
+Hàng 91 (dãy G), hàng nền của đợt. Gốc: ADR-0024 (chủ kho duyệt hướng 02/11 «Duyệt hướng chung»), ô cơ hội đã quyết
+`build` 01/11. Đứng trên hàng 84 (trang ba lối). Ba tầng nền · khung ứng dụng · bố cục trang; bảy bố cục Tràn · Danh sách
+– chi tiết · Đọc · Hồ sơ · Bảng điều khiển · Luồng nhiều bước · Dòng tin; sáu vùng đầu màn · thanh công cụ ·
+thân · cột phụ · chân · ngăn nổi; ba khổ 1440 · 1024 · 375.
+
+## Criteria
+
+### AC-1 — MCP của kho
+Given kho vừa clone, chưa có cấu hình MCP người dùng
+When mở phiên Claude Code ở gốc kho
+Then `.mcp.json` khai hai máy chủ `reui` (HTTP, style `base-nova`) và `shadcn`; khoá ReUI chỉ đọc từ biến môi trường
+`REUI_LICENSE_KEY`, tệp không mang chuỗi khoá nào; bước kiểm chuẩn đỏ khi tệp mang chuỗi trông như khoá thật hay thiếu
+một trong hai máy chủ.
+
+### AC-2 — Bảy bố cục và sáu vùng
+Given một màn dưới `(app)` dựng `<BoCuc kieu="…">` với vùng của nó
+When màn hiện ở máy tính rộng
+Then đúng bảy kiểu được nhận (kiểu lạ là lỗi kiểu TypeScript); bố cục chỉ giữ khung trang — lề, dải đầu màn, xếp thân
+và cột phụ theo kiểu — và không tự dựng Frame: mỗi vùng là một khối ReUI nguyên vẹn mang Frame của nó (đầu khung, thanh
+công cụ, chân); cột phụ chỉ ở Danh sách – chi tiết (hồ sơ trong ngăn inset bên phải) và Luồng nhiều bước; Hồ sơ một cột căn giữa; lề, khoảng
+cách lấy từ token bố cục, không từ số trong màn; mỗi ô của trang mẫu mang một nhãn nguồn (khối · c-* · thành phần · ghép)
+ở bảng bóc tách, không ô nào vẽ tay.
+
+### AC-3 — Đầu màn
+Given một màn khai đường dẫn, tiêu đề, một dòng mô tả và danh sách nút
+When đầu màn hiện
+Then đường dẫn luôn hiện (ít nhất nhà › màn, sâu hơn thì thêm tầng) và mục cha là lối về — điện thoại chỉ hiện mục cha
+dạng «‹ cha»; đúng một nút chính, tối đa hai nút phụ, nút còn lại vào menu «…».
+
+### AC-4 — Menu Tạo và cột thứ hai trên vỏ
+Given người đăng nhập với vai bất kỳ ở Tham chiếu §9
+When thanh trên hiện
+Then việc tạo hiện ở đúng một chỗ: một nút chính (việc tạo đầu tiên của vai) cộng menu các việc tạo còn lại theo lối đã
+chọn ở Cổng Phạm vi; vai không có việc tạo không thấy nút; không màn nào còn nút tạo trùng ở đầu khung; Tham chiếu §9 ghi
+cách mới; mọi nhà (Hôm nay, Bảng hàng, Đã gửi, Đội, Cài đặt sàn) có cột thứ hai, mặc định mở, người gập thì máy nhớ theo
+người, sàn, nhà.
+
+### AC-5 — Trạng thái chung
+Given một tuyến dưới `(app)` đang tải, lỗi, không thấy, hay rỗng, hay mất mạng khi đang xem bản đã tải
+When người mở tuyến
+Then chờ tải theo hình của bố cục (lưới theo `c-data-grid-21` cho Tràn); lỗi và «không thấy» cấp tuyến có ở `(app)` và
+gốc (kể cả `global-error`) và đi qua `TrangThai`; `TrangThai` có kiểu chờ tải và chuyển thể `empty-state-1`, `-2`; ngoại
+tuyến là dải báo ở đầu màn, nội dung đã tải giữ nguyên.
+
+### AC-6 — Ba khổ
+Given mỗi bố cục trên trang mẫu sống
+When xem ở 1440, 1024 và 375
+Then bản điện thoại theo ADR-0024 §5 — Tràn thành thẻ, Danh sách – chi tiết mở chi tiết trong ngăn từ đáy, Hồ sơ giữ một
+cột, Luồng nhiều bước ngăn toàn màn, Đọc và Dòng tin giữ, Bảng điều khiển không có trên điện thoại; ngăn nổi
+là ngăn bên ở máy tính và ngăn từ đáy ở điện thoại; không cuộn ngang ở 375.
+
+### AC-7 — Trang mẫu sống
+Given máy chủ web chạy không có cơ sở dữ liệu và trình duyệt không có cookie phiên
+When mở `/mau/he-bo-cuc`
+Then trang hiện đủ bảy bố cục × năm trạng thái (mặc định · chờ tải · rỗng · lỗi · ngoại tuyến) × ba khổ bằng dữ liệu mẫu,
+mỗi tổ hợp có địa chỉ riêng; trang không nhập lớp gọi API; ở bản chính thức trang theo lối đã chọn ở Cổng Phạm vi (Hỏi-1).
+
+### AC-8 — Ảnh chuẩn và đối chiếu
+Given ảnh chuẩn chụp từ trang mẫu sống
+When một vòng giao diện chạm màn của một nhóm có khai bố cục
+Then kho có 21 ảnh chuẩn sáng (bảy bố cục × ba khổ) và 7 ảnh chuẩn tối (bảy bố cục ở 1440), chụp bằng
+`_acceptance/he-bo-cuc/thu/chup-anh-chuan.cjs`, ghi ở danh mục khối; mục bản đồ khuôn có khoá `bo_cuc`; bộ đối chiếu lập
+cặp «màn mới · ảnh chuẩn của bố cục nó dùng», kể cả màn đầu của nhóm chưa có màn mẫu; trang ba lối nhận nhiều ô
+trong một hồ sơ (`ba-loi/<mã ô>/`, lệnh `--o <mã ô>`) và kiểm chuẩn kiểm từng ô, lỗi gọi tên ô.
+
+### AC-9 — Răng lint
+Given một màn dưới `(app)` (tệp thử)
+When chạy `npm run lint`
+Then đỏ với thông điệp gọi tên luật ở mỗi ca: nhóm của màn không khai bố cục hay khuôn không dựng đúng kiểu; màn đặt
+`max-w-*`, `h-[…]`, `w-[…]`, `min-h-[…]` hay lề ở gốc; nhập `Skeleton` ngoài khuôn chờ tải; nhập `Sheet`/`Drawer` ngoài
+ngăn nổi; màn của hàng đang chạy mang ngoại lệ có hạn (hạn trỏ hàng đã gộp thì đỏ); mức nợ giữ 0.
+
+### AC-10 — Chuyển màn và bản đồ hệ thiết kế
+Given kho sau hàng
+When đọc mã và tài liệu
+Then Cài đặt sàn ở `(app)/settings` đi bố cục Đọc, mục Người dùng chuyển thể `solution-users-8`; trang tạm đi bố cục Đọc;
+`vo-va-ia.md` §2 có cột «Bố cục»; skill `quy-hang-ui` có bảng «Bản đồ hệ thiết kế» mỗi tệp một dòng (lớp, việc, đường
+dẫn), `docs/README.md` trỏ sang bảng; kiểm chuẩn đỏ khi một tệp thuộc hệ thiết kế thiếu dòng.
+
+## Coverage
+
+Quét Zwicky (preset entity-feature, đối tượng «màn»). Chân sản phẩm: `[SUY-TỪ-REPO: docs/adr/0024-he-bo-cuc.md]`
+quyết định 1–13; `[SUY-TỪ-REPO: docs/design/vo-va-ia.md]` §1–§2; `[SUY-TỪ-REPO: design/patterns/]` chín nhóm. Chân
+ngành: `[NGÀNH: Material 3 canonical layouts]`, `[NGÀNH: Shopify Polaris page layouts]`, `[NGÀNH: Atlassian page
+layout]`, `[NGÀNH: Verve CRM trên ReUI]` (ADR-0024 bối cảnh). Thước CE: ngưỡng `bat_khi` của hàng 91 và phép thử «mỗi màn
+vào đúng một bố cục» của ADR.
+
+- Trục A — tầng: nền (AC-2) | khung ứng dụng (AC-4) | bố cục và vùng (AC-2, AC-3).
+- Trục B — trạng thái: mặc định · chờ tải · rỗng · lỗi · ngoại tuyến (AC-5, AC-7); không đủ quyền, xung đột khi lưu →
+  Later (ADR quyết định 4).
+- Trục C — khổ: 1440 · 1024 · 375 (AC-6) `[GIẢ ĐỊNH: 1024 không cần bố cục riêng — Hỏi-5]`.
+- Trục D — vật giữ luật: lint (AC-9) | bài quét khuôn (AC-8, AC-9) | kiểm chuẩn (AC-1, AC-10) | ảnh chuẩn (AC-8).
+- Trục E — màn: chuyển trong hàng (AC-10) | ngoại lệ có hạn (AC-9) | trang mẫu (AC-7).
+- Later: khuôn không đủ quyền `[GIẢ ĐỊNH: Hỏi-6]`; xung đột khi lưu; lệnh dựng màn; đăng nhập `auth-15` và ô nhận lead
+  `form-2` (hàng riêng).
+
+## Đường đo
+
+- «Một màn dưới (app) không khai bố cục… → npm run lint đỏ»: AC-9, đo bằng bộ test của `packages/ui-lint` trên tệp thử.
+- «Trang mẫu sống mở không Postgres, không đăng nhập, đủ 7 × trạng thái × 3 khổ»: AC-7, đo bằng ui-check trên máy chủ
+  không có `DATABASE_URL` và trình duyệt không cookie.
+- «Vòng giao diện so màn mới với ảnh chuẩn»: AC-8, đo bằng kế hoạch đối chiếu sinh ra cặp ảnh chuẩn.
+- «MCP chạy từ .mcp.json»: AC-1. «Cài đặt sàn, trang tạm, TrangThai đã chuyển; bản đồ hệ thiết kế»: AC-10.
+
+## Out of scope
+
+- Chuyển Bảng hàng, hồ sơ căn, Hôm nay, lead sang bố cục — mỗi màn chuyển ở hàng của nó; hàng này chỉ ghi ngoại lệ có hạn.
+- Đăng nhập (`auth-15`) và ô nhận lead (`form-2`) — hàng riêng khi hàng 91 gộp, giám sát cấp mã.
+- Khuôn không đủ quyền và xung đột khi lưu (ADR-0024 quyết định 4).
+- Lệnh dựng màn sinh khung từ khối (ADR-0024 «Phương án đã cân»).
+
+## Notes
+
+- Vùng của hàng: `ranh_gioi` hàng 91 ở `hang-viec.json`, cộng `apps/web/src/app/mau/**` và `apps/web/src/proxy.ts`
+  (trang mẫu sống nằm ngoài `(app)` — layout của `(app)` đòi phiên).
+- Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Nếu người dùng mở thẳng một luồng nhiều bước từ đường dẫn chia sẻ hoặc tab mới trên điện thoại, bấm Đóng có thể không có tác dụng và họ chỉ thoát được bằng đường dẫn trong ngăn. Hiện chưa có màn thật nào dùng bố cục này nên chưa ai gặp. — `apps/web/src/components/bo-cuc/luong-toan-man.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Một màn sau này dùng tuỳ chọn ngăn toàn màn theo đúng lời mô tả có thể bị phủ kín cả màn hình máy tính thay vì ngăn bên phải. Hiện không màn nào gặp tình huống này. — `apps/web/src/components/bo-cuc/ngan-noi.tsx`
+- Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Trên điện thoại, nếu mở luồng nhiều bước đầu tiên trong tab, nút X, phím Esc và chạm ra ngoài đều không đóng được ngăn và không báo gì. Ngăn che cả thanh tab nên người dùng chỉ thoát được qua đường dẫn trong ngăn. — `apps/web/src/components/bo-cuc/luong-toan-man.tsx`
+- Ngoài-5 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Trang mẫu và ảnh chuẩn Dòng tin hiện chữ tiếng Anh và tên người nước ngoài, nên người so màn mới với ảnh chuẩn sẽ thấy chữ lạ so với giao diện tiếng Việt thật. — `apps/web/src/components/khoi/solution-crm-5/data.tsx`
+- Ngoài-7 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Nếu người làm màn quên khai phần chi tiết, cột bên phải của màn Danh sách – chi tiết biến mất mà không có cảnh báo. Người dùng cuối chỉ gặp khi một màn được dựng sai. — `apps/web/src/components/bo-cuc/bo-cuc.tsx`
+- Ngoài-8 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm tự động coi vùng đầu màn là có mặt dù do chính bài kiểm tự gắn nhãn, nên nếu bố cục làm hỏng vùng này thì bài kiểm vẫn báo xanh. Người dùng không thấy trực tiếp. — `apps/web/src/components/bo-cuc/bo-cuc.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bộ kiểm tra «không còn nút tạo trùng» bỏ sót các nút dẫn tới tạo bằng cách khác, nên ở Bảng hàng vẫn còn một nút Nhập Excel mà kiểm tra không bắt. Người dùng có thể thấy hai chỗ cùng làm một việc. — `apps/web/src/components/shell/menu-tao.test.ts`
+- Ngoài-10 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm «bố cục không tự dựng khung» có thể vẫn xanh dù tên khung đổi, nên về sau có thể bỏ sót việc bố cục dựng khung trở lại. Người dùng không thấy gì ngay. — `apps/web/src/components/bo-cuc/bo-cuc.test.ts`
+- Ngoài-11 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Bài kiểm các màn lỗi và chờ tải chỉ xác nhận tệp có nhập khối chung chứ chưa kiểm khối đó có hiện ra. Nếu có tuyến nhập mà không dùng, người dùng có thể gặp màn lỗi trống. — `apps/web/src/components/trang-thai.test.ts`
+- Ngoài-12 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Ghi chú commit đi kèm bộ ảnh chuẩn có thể không đúng với phiên bản giao diện đã thực sự được chụp, làm người sau khó tin ảnh ứng với mã nào. — `_acceptance/he-bo-cuc/thu/chup-anh-chuan.cjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Nếu người dùng mở thẳng một luồng nhiều bước từ đường dẫn chia sẻ hoặc tab mới trên điện thoại, bấm Đóng có thể không có tác dụng và họ chỉ thoát được bằng đường dẫn trong ngăn. Hiện chưa có màn thật nào dùng bố cục này nên chưa ai gặp.
+  - Ngoài-2: Một màn sau này dùng tuỳ chọn ngăn toàn màn theo đúng lời mô tả có thể bị phủ kín cả màn hình máy tính thay vì ngăn bên phải. Hiện không màn nào gặp tình huống này.
+  - Ngoài-3: Trên điện thoại, nếu mở luồng nhiều bước đầu tiên trong tab, nút X, phím Esc và chạm ra ngoài đều không đóng được ngăn và không báo gì. Ngăn che cả thanh tab nên người dùng chỉ thoát được qua đường dẫn trong ngăn.
+  - Ngoài-5: Trang mẫu và ảnh chuẩn Dòng tin hiện chữ tiếng Anh và tên người nước ngoài, nên người so màn mới với ảnh chuẩn sẽ thấy chữ lạ so với giao diện tiếng Việt thật. Ảnh chuẩn Dòng tin còn chứa ảnh mặt người (ảnh kho Unsplash của khối ReUI).
+  - Ngoài-7: Nếu người làm màn quên khai phần chi tiết, cột bên phải của màn Danh sách – chi tiết biến mất mà không có cảnh báo. Người dùng cuối chỉ gặp khi một màn được dựng sai.
+  - Ngoài-8: Bài kiểm tự động coi vùng đầu màn là có mặt dù do chính bài kiểm tự gắn nhãn, nên nếu bố cục làm hỏng vùng này thì bài kiểm vẫn báo xanh. Người dùng không thấy trực tiếp.
+  - Ngoài-9: Bộ kiểm tra «không còn nút tạo trùng» bỏ sót các nút dẫn tới tạo bằng cách khác, nên ở Bảng hàng vẫn còn một nút Nhập Excel mà kiểm tra không bắt. Người dùng có thể thấy hai chỗ cùng làm một việc.
+  - Ngoài-10: Bài kiểm «bố cục không tự dựng khung» có thể vẫn xanh dù tên khung đổi, nên về sau có thể bỏ sót việc bố cục dựng khung trở lại. Người dùng không thấy gì ngay.
+  - Ngoài-11: Bài kiểm các màn lỗi và chờ tải chỉ xác nhận tệp có nhập khối chung chứ chưa kiểm khối đó có hiện ra. Nếu có tuyến nhập mà không dùng, người dùng có thể gặp màn lỗi trống.
+  - Ngoài-12: Ghi chú commit đi kèm bộ ảnh chuẩn có thể không đúng với phiên bản giao diện đã thực sự được chụp, làm người sau khó tin ảnh ứng với mã nào.
+  - Màn Người dùng (Hỏi-9, Cổng Phạm vi 02/11): chưa có lời mời đang chờ — thêm người là vào thẳng; lời mời là hàng riêng nếu sàn cần.

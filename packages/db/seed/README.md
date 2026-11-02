@@ -35,6 +35,14 @@ lead đi qua hàm ghi của API dưới vai `quy_hang_app` — cả lần chạy
 liệu: đường tra phục vụ danh mục mẫu ở mọi môi trường. Sàn mẫu = tên đúng CÙNG `quan-tri@mau.quy-hang.test` là thành
 viên; sàn thật trùng tên không bị nạp vào hay gỡ.
 
+Ảnh mẫu (hàng nap-mau-co-anh): luật lõi đòi một ảnh thật trước khi vào Đang bán, nên mỗi căn mẫu từng lên Đang bán (Đang
+bán, Đã cọc, Đã bán, Tạm giữ) có đúng một ảnh vẽ bằng mã (`anh-mau.mjs`: khối màu theo thứ tự hàng, không chữ) — không
+phải ảnh thật của ai. Ảnh thêm qua API ảnh, byte cất ở kho ảnh chọn như API: đủ ba khoá `STORAGE_S3_ACCESS_KEY`,
+`STORAGE_S3_SECRET_KEY`, `STORAGE_S3_ENDPOINT` → Supabase Storage; không khoá nào ngoài bản thật → bảng
+`unit_photo_files`; bản thật (`NODE_ENV=production`) thiếu khoá, hay ở đâu thiếu một phần khoá → dừng trước khi ghi, lời
+báo nêu đúng biến thiếu. Gỡ xoá cả byte ảnh mẫu trên kho (chỉ ảnh của đúng sàn mẫu, dưới tiền tố mã sàn mẫu); lần nạp
+hỏng giữa chừng xoá byte đã lên kho của chính lần ấy.
+
 ```bash
 # Khoá thật bắt buộc (thiếu, sai dạng hay khoá dev thì thoát trước khi ghi). Không in email, số, khoá.
 node --import tsx packages/db/seed/nap-ban-that.ts --nap --email <email chủ kho>   # chạy lại không đổi gì
@@ -43,8 +51,10 @@ node --import tsx packages/db/seed/nap-ban-that.ts --go                         
 
 Trên bản thật chạy bằng nút, không chạy ở máy:
 
-1. Một lần: GitHub → Settings → Environments → `production` → thêm secret `OWNER_PHONE_KEY` (cùng giá trị Vercel
-   Production, chép từ trình quản lý mật khẩu) và đặt «Deployment branches» chỉ `main` (ADR-0013 §5).
+1. Một lần: GitHub → Settings → Environments → `production` → thêm secret `OWNER_PHONE_KEY` và ba secret kho ảnh
+   `STORAGE_S3_ACCESS_KEY`, `STORAGE_S3_SECRET_KEY`, `STORAGE_S3_ENDPOINT` (cùng giá trị Vercel Production, chép từ trình
+   quản lý mật khẩu), rồi đặt «Deployment branches» chỉ `main` (ADR-0013 §5). Thiếu secret kho ảnh thì nút dừng trước
+   khi ghi với lời báo «kho ảnh: thiếu …».
 2. Actions → «Nạp dữ liệu mẫu» → Run workflow trên `main`, `viec: nap`, `email: <email của chủ kho>`.
 3. Đăng nhập bản thật, chọn «[Mẫu] Sàn thử».
 4. Gỡ: cùng nút, `viec: go`, `xac_nhan: [Mẫu] Sàn thử`.

@@ -1,29 +1,8 @@
 // Cấm nhập khối cấm theo vùng của bản đồ khuôn (hồ sơ rang-giu-khuon, hàng 59): tệp thuộc một nhóm của
 // design/patterns/ không được nhập tên nằm trong `cam_ngoai_khuon` của nhóm — so theo tên gốc, nên đổi tên lúc nhập
 // không lách được. Bản đồ đọc lỗi thì mọi tệp nhận một lỗi nêu lỗi đọc.
-import { existsSync, readdirSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
-import { docBanDo, nhomCuaTep, THU_MUC_BAN_DO } from "../lib/ban-do.mjs";
-
-const banDoTheoGoc = new Map();
-
-function timGoc(tep) {
-  let d = dirname(resolve(tep));
-  for (;;) {
-    if (existsSync(join(d, THU_MUC_BAN_DO))) return d;
-    const tren = dirname(d);
-    if (tren === d) return null;
-    d = tren;
-  }
-}
-
-/** Bản đồ đọc một lần mỗi tiến trình, đọc lại khi một tệp bản đồ đổi (khoá gồm thời điểm sửa của từng tệp). */
-function banDo(goc) {
-  const dir = join(goc, THU_MUC_BAN_DO);
-  const khoa = `${goc}|${readdirSync(dir).map((f) => `${f}:${statSync(join(dir, f)).mtimeMs}`).join(",")}`;
-  if (!banDoTheoGoc.has(khoa)) banDoTheoGoc.set(khoa, docBanDo(goc));
-  return banDoTheoGoc.get(khoa);
-}
+import { nhomCuaTep, THU_MUC_BAN_DO } from "../lib/ban-do.mjs";
+import { banDo, timGoc, tuongDoi } from "../lib/goc-kho.mjs";
 
 export default {
   meta: {
@@ -39,7 +18,7 @@ export default {
   create(context) {
     const goc = timGoc(context.filename);
     if (!goc) return {};
-    const tep = relative(goc, resolve(context.filename)).split("\\").join("/");
+    const tep = tuongDoi(goc, context.filename);
     const bd = banDo(goc);
     if (bd.loi.length)
       return {

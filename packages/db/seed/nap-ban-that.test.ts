@@ -1,4 +1,5 @@
-// Bộ nạp mẫu cho bản thật (hàng 87) trên Postgres dãy — E1–E7, E9, E12 của hồ sơ nap-mau-ban-that.
+// Bộ nạp mẫu cho bản thật (hàng 87) trên Postgres dãy — E1–E7, E9, E12 của hồ sơ nap-mau-ban-that; E1, E3–E7 của hồ sơ
+// nap-mau-co-anh (ảnh vẽ bằng mã trước khi lên Đang bán, kho byte chọn như API, dọn byte khi gỡ hay khi hỏng).
 // Chạy: node --import tsx --test "packages/db/seed/*.test.ts" (cần DATABASE_URL tới Postgres đã áp migration).
 import { randomBytes, randomUUID } from "node:crypto";
 import assert from "node:assert/strict";
@@ -20,7 +21,12 @@ const { dauVetSo, giaiMaSo, maHoaSo, nguCanhChuNha, nguCanhLead } = await import
 const h = await import("../../api/test-db/helpers");
 const { TEN_SAN, MIEN_EMAIL } = await import("./du-lieu-mau.mjs");
 const { goBanThat, napBanThat, timSanMau } = await import("./nap-ban-that");
+const { khoPostgres } = await import("../../api/src/photos/kho");
+const { addPhoto, isRefusal: laTuChoiAnh, readPhoto } = await import("../../api/src/photos/store");
+const { anhMau } = await import("./anh-mau.mjs");
+const { giuKhoaSanMau } = await import("./khoa-san-mau.mjs");
 type GoiMau = import("./nap-ban-that").GoiMau;
+type KhoAnh = import("../../api/src/photos/kho").KhoAnh;
 
 const THU_MUC = path.dirname(fileURLToPath(import.meta.url));
 const TEP_NAP = path.join(THU_MUC, "nap-ban-that.ts");
@@ -48,8 +54,75 @@ async function gd<T>(fn: (c: pg.PoolClient) => Promise<T>, giu = true): Promise<
     c.release();
   }
 }
-const nap = (goi = GOI, email = EMAIL_CHU_KHO) => gd((c) => napBanThat(c, goi, { khoa, email }));
-const go = () => gd((c) => goBanThat(c));
+const nap = (goi = GOI, email = EMAIL_CHU_KHO, kho: KhoAnh = khoPostgres) => gd((c) => napBanThat(c, goi, { khoa, email, kho }));
+const go = (kho: KhoAnh = khoPostgres) => gd((c) => goBanThat(c, kho));
+
+/** Một giao dịch dưới vai API với người và sàn đặt cục bộ — như khi người bấm. */
+const vaiApp = <T>(user: string, company: string, fn: (c: pg.PoolClient) => Promise<T>, giu = true) =>
+  gd(async (c) => {
+    await c.query("set local role quy_hang_app");
+    await c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [user, company]);
+    return fn(c);
+  }, giu);
+
+type LenhKho = { lenh: "ghi" | "xoa"; companyId: string; photoId: string; bien?: string };
+/** Kho giả: ghi lại mọi lệnh ghi/xoá (khuôn KhoAnh của API), không mạng. Ném ở lần ghi thứ k SAU khi đã ghi nhật ký. */
+function khoGia(o: { ten?: "postgres" | "s3"; nemOLanGhi?: number; nemKhiXoa?: boolean } = {}) {
+  const nhatKy: LenhKho[] = [];
+  let soGhi = 0;
+  const kho: KhoAnh = {
+    ten: o.ten ?? "s3",
+    async ghi(_tx, companyId, photoId, bien) {
+      nhatKy.push({ lenh: "ghi", companyId, photoId, bien });
+      if (++soGhi === o.nemOLanGhi) throw new Error(`kho giả: lỗi ở lần ghi ${soGhi}`);
+    },
+    async xoa(_tx, companyId, photoId) {
+      nhatKy.push({ lenh: "xoa", companyId, photoId });
+      if (o.nemKhiXoa) throw new Error("kho giả: lỗi khi xoá");
+    },
+    async doc() {
+      return null;
+    },
+  };
+  const loc = (l: LenhKho["lenh"]) => nhatKy.filter((x) => x.lenh === l);
+  return { kho, nhatKy, ghi: () => loc("ghi"), xoa: () => loc("xoa") };
+}
+
+/**
+ * Lỗi của nhật ký xoá so với mong: tập mã ảnh xoá BẰNG tập mong, mọi lệnh mang mã sàn mẫu, không lệnh nào chạm sàn cấm
+ * hay mã ảnh cấm. Thông điệp nêu mã lệch — dùng cho cả đối chứng dương và chiều đỏ.
+ */
+function loiXoa(xoa: LenhKho[], o: { san: string; mong: Set<string>; camSan: string; camAnh: Set<string> }): string[] {
+  const loi: string[] = [];
+  const co = new Set(xoa.map((x) => x.photoId));
+  for (const id of o.mong) if (!co.has(id)) loi.push(`thiếu lệnh xoá ảnh ${id}`);
+  for (const id of co) if (!o.mong.has(id)) loi.push(`xoá thừa ảnh ${id}`);
+  for (const x of xoa) {
+    if (x.companyId !== o.san) loi.push(`lệnh xoá ${x.photoId} mang mã sàn ${x.companyId}, không phải sàn mẫu`);
+    if (x.companyId === o.camSan) loi.push(`lệnh xoá chạm sàn thật ${o.camSan}`);
+    if (o.camAnh.has(x.photoId)) loi.push(`lệnh xoá chạm ảnh sàn thật ${x.photoId}`);
+  }
+  return loi;
+}
+
+// Bảng mong viết tay (không suy từ gói): mã hàng → số ảnh thật ngăn Gửi được. Hàng từng lên Đang bán (Đang bán, Đã cọc,
+// Đã bán, Tạm giữ) có một; Chưa đủ và Ngừng hẳn không có.
+const ANH_MONG: Record<string, number> = {
+  "H-01": 1, "H-02": 0, "H-03": 1, "H-04": 0, "H-05": 0, "H-06": 0, "H-07": 1, "H-08": 1, "H-09": 1, "H-10": 1,
+  "H-11": 1, "H-12": 0, "H-13": 1, "H-14": 0, "H-15": 1, "H-16": 0, "H-17": 1, "H-18": 1, "H-19": 1, "H-20": 0,
+  "H-21": 1, "H-22": 1, "H-23": 1, "H-24": 0, "H-25": 0, "H-26": 1, "H-27": 1, "H-28": 1, "H-29": 1, "H-30": 1,
+  "H-31": 1, "H-32": 0, "H-33": 1, "H-34": 1, "H-35": 1, "H-36": 1, "H-37": 1, "H-38": 1, "H-39": 1, "H-40": 1,
+};
+/** Hàng nào có số ảnh thật lệch bảng mong — thông điệp nêu mã hàng. */
+async function lechAnh(san: string, goi: GoiMau): Promise<string[]> {
+  const { rows } = await pool.query<{ unit_number: string; n: number }>(
+    `select unit_number, count(*)::int n from unit_photos
+     where company_id = $1 and compartment = 'shareable' and not is_sample and removed_at is null group by 1`,
+    [san],
+  );
+  const dem = new Map(rows.map((r) => [r.unit_number, r.n]));
+  return goi.hang.filter((g) => (dem.get(g.maCan) ?? 0) !== ANH_MONG[g.ma]).map((g) => `${g.ma}: mong ${ANH_MONG[g.ma]} ảnh, có ${dem.get(g.maCan) ?? 0}`);
+}
 
 /** Ảnh chụp mọi bảng của schema public và identity, mọi cột, thứ tự cố định. */
 async function chup(): Promise<Record<string, string[]>> {
@@ -68,17 +141,23 @@ function bangLech(a: Record<string, string[]>, b: Record<string, string[]>): str
   return [...new Set([...Object.keys(a), ...Object.keys(b)])].filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k]));
 }
 
+const KHOA_KHO = ["STORAGE_S3_ACCESS_KEY", "STORAGE_S3_SECRET_KEY", "STORAGE_S3_ENDPOINT"] as const;
+/** Dòng lệnh nạp; ba khoá kho ảnh của môi trường ngoài bị bỏ — ca nào cần thì tự đặt. */
 function chayCli(args: string[], env: Record<string, string | undefined>) {
   return spawnSync(process.execPath, ["--import", "tsx", TEP_NAP, ...args], {
-    env: { ...process.env, ...env },
+    env: { ...process.env, ...Object.fromEntries(KHOA_KHO.map((k) => [k, undefined])), ...env },
     encoding: "utf8",
   });
 }
 
 let sanThat = "";
 let chuKhoId = "";
+let anhThat = "";
+let nhaKhoa: (() => Promise<void>) | undefined;
 
 before(async () => {
+  // Nối đuôi với du-lieu-mau.test.mjs: cùng dựng sàn mẫu trên một Postgres.
+  nhaKhoa = await giuKhoaSanMau(process.env.DATABASE_URL!);
   assert.deepEqual(await gd(timSanMau), [], "Postgres dãy đang có sàn mẫu — gỡ trước khi chạy bộ kiểm");
   // Sàn thật cạnh bên: chủ kho là quản trị, có một hàng, một chủ nhà, một lead (ghi thẳng bằng vai chủ).
   const s = await h.openCompany(`[Sàn ${h.RUN} thật]`, EMAIL_CHU_KHO);
@@ -107,12 +186,25 @@ before(async () => {
        values ($1, $2, $3, 'Toà A', 'sale', 1000000000, 'excluded', 'now', $4, $5, 'new')`,
       [lead, sanThat, chuKhoId, maHoaSo(soThat, nguCanhLead(sanThat, lead), khoa), dauVetSo(soThat, sanThat, khoa)],
     );
+    // Chủ kho là trưởng nhóm ở sàn thật để thêm được ảnh của căn (luật ngăn nội bộ của hàng 18).
+    await c.query("update company_members set roles = array_append(roles, 'team_lead') where company_id = $1 and user_id = $2", [sanThat, chuKhoId]);
   });
+  // Sàn thật có một ảnh, thêm qua API ảnh — gỡ sàn mẫu không được chạm tới nó (E6 nap-mau-co-anh).
+  const a = anhMau(99);
+  const r = await vaiApp(chuKhoId, sanThat, (c) =>
+    addPhoto(c, khoPostgres, sanThat, { toa: "Toà A", ma: "A-01.01", ngan: "shareable", takenAt: null, width: a.width, height: a.height, thumb: a.nhe, original: a.goc }),
+  );
+  assert.ok(!laTuChoiAnh(r), `thêm ảnh sàn thật: ${JSON.stringify(r)}`);
+  anhThat = r.anh.id;
 });
 
 after(async () => {
-  await go();
-  await h.cleanup();
+  try {
+    await go();
+    await h.cleanup();
+  } finally {
+    await nhaKhoa?.();
+  }
 });
 
 test("nap-du-goi: đủ người, khu, hàng sáu trạng thái, chủ nhà, lead, người phụ trách (E1)", async () => {
@@ -222,7 +314,8 @@ test("khoa-sai: khoá vắng, sai dạng, khoá dev thì không ghi gì (E3)", a
     if (gia) assert.ok(!r.stderr.includes(gia), `${ten}: thông điệp không chứa giá trị khoá`);
   }
   assert.deepEqual(bangLech(truoc, await chup()), []);
-  const ok = chayCli(["--nap", "--email", EMAIL_CHU_KHO], {});
+  // Ngoài bản thật, không khoá kho ảnh → kho Postgres (đường bản thật thiếu khoá: ca chon-kho).
+  const ok = chayCli(["--nap", "--email", EMAIL_CHU_KHO], { NODE_ENV: undefined });
   assert.equal(ok.status, 0, `đối chứng dương: khoá hợp lệ — ${ok.stderr}`);
   await go();
 });
@@ -230,10 +323,13 @@ test("khoa-sai: khoá vắng, sai dạng, khoá dev thì không ghi gì (E3)", a
 test("chay-lai: lần hai không đổi một dòng (E4)", async () => {
   await nap();
   const a = await chup();
-  const { moi } = await nap();
+  const gia = khoGia();
+  const { moi } = await nap(GOI, EMAIL_CHU_KHO, gia.kho);
   assert.deepEqual(moi, { hang: 0, chuNha: 0, lead: 0 });
+  assert.equal(gia.ghi().length, 0, "nạp lại không được ghi byte ảnh nào");
   const b = await chup();
   assert.deepEqual(bangLech(a, b), [], "chạy lại đổi bảng");
+  for (const t of ["public.unit_photos", "public.unit_photo_files", "public.unit_photo_events"]) assert.ok(a[t]?.length, `ảnh chụp có dòng ${t}`);
   // Chiều đỏ của phép so: sửa một dòng thì ảnh chụp phải lệch đúng bảng ấy.
   const [san] = await gd(timSanMau);
   await pool.query("update listings set list_price = list_price + 1 where id = (select id from listings where company_id = $1 limit 1)", [san]);
@@ -264,7 +360,7 @@ test("email-chu-kho: tạo, giữ sàn thật, chuẩn hoá, đặt lại vai, t
   for (const e of ["abc", `x@${MIEN_EMAIL}`]) await assert.rejects(nap(GOI, e), /email chủ kho/);
   assert.deepEqual(bangLech(truoc, await chup()), []);
   // Đầu ra lệnh không chứa email; kho không chứa email thử.
-  const r = chayCli(["--nap", "--email", EMAIL_CHU_KHO], {});
+  const r = chayCli(["--nap", "--email", EMAIL_CHU_KHO], { NODE_ENV: undefined });
   assert.equal(r.status, 0, r.stderr);
   assert.ok(!(r.stdout + r.stderr).toLowerCase().includes(EMAIL_CHU_KHO), "đầu ra không chứa email");
   const goc = execFileSync("git", ["rev-parse", "--show-toplevel"], { encoding: "utf8" }).trim();
@@ -323,6 +419,30 @@ test("hong-giua-chung: lỗi ở lead cuối rút lại cả lần chạy (E7)",
   goi.lead.at(-1)!.soDienThoai = "12345";
   await assert.rejects(nap(goi), /L-12/);
   assert.deepEqual(bangLech(truoc, await chup()), [], "không dòng nào được để lại");
+  // Byte đã lên kho: kho nhận lệnh xoá đúng mọi mã trong nhật ký ghi của chính kho, mỗi lệnh mang mã sàn mẫu.
+  const gia = khoGia();
+  await assert.rejects(nap(goi, EMAIL_CHU_KHO, gia.kho), /L-12/);
+  const daGhi = new Set(gia.ghi().map((x) => x.photoId));
+  assert.equal(daGhi.size, 29, "29 ảnh đã ghi trước khi lead cuối bị từ chối");
+  const sanMau = gia.ghi()[0]!.companyId;
+  const camAnh = new Set([anhThat]);
+  assert.deepEqual(loiXoa(gia.xoa(), { san: sanMau, mong: daGhi, camSan: sanThat, camAnh }), []);
+  // Chiều đỏ: bỏ một mã khỏi tập mong thì phép so nêu đúng mã ấy.
+  const boMot = [...daGhi][3]!;
+  assert.deepEqual(loiXoa(gia.xoa(), { san: sanMau, mong: new Set([...daGhi].filter((x) => x !== boMot)), camSan: sanThat, camAnh }), [`xoá thừa ảnh ${boMot}`]);
+  // Kho ném lỗi khi xoá: lỗi của lần chạy vẫn là lỗi gốc.
+  const nemXoa = khoGia({ nemKhiXoa: true });
+  const loiCu = console.error;
+  const baoLoi: string[] = [];
+  console.error = (m: unknown) => void baoLoi.push(String(m));
+  try {
+    await assert.rejects(nap(goi, EMAIL_CHU_KHO, nemXoa.kho), /L-12/);
+  } finally {
+    console.error = loiCu;
+  }
+  assert.equal(nemXoa.xoa().length, 29, "lỗi xoá của một ảnh không dừng việc xoá ảnh khác");
+  assert.deepEqual(baoLoi, ["nap-ban-that: dọn sau lỗi không xoá được 29/29 ảnh khỏi kho ảnh"], "báo số ảnh còn sót");
+  assert.deepEqual(bangLech(truoc, await chup()), [], "không sàn mẫu nào còn");
   const { moi } = await nap();
   assert.equal(moi.hang, 40, "đối chứng: gói nguyên vẹn nạp được");
   await go();
@@ -381,7 +501,7 @@ test("email-ky-tu-dieu-khien: bộ nạp từ chối ký tự điều khiển tr
   for (const e of SAI) assert.throws(() => chuanHoaEmail(e), /email chủ kho sai dạng/, JSON.stringify(e));
   assert.equal(chuanHoaEmail("T-x@Example.Test"), "t-x@example.test", "đối chứng dương");
   const truoc = await chup();
-  const r = chayCli(["--nap", "--email", "a@b.co\x7f"], {});
+  const r = chayCli(["--nap", "--email", "a@b.co\x7f"], { NODE_ENV: undefined });
   assert.notEqual(r.status, 0);
   assert.match(r.stderr, /email chủ kho sai dạng/);
   assert.deepEqual(bangLech(truoc, await chup()), [], "không dòng nào đổi");
@@ -409,4 +529,148 @@ test("lien-he: chủ nhà và lead mẫu thành liên hệ, nạp lại không �
   assert.deepEqual((await nap()).moi, { hang: 0, chuNha: 0, lead: 0 });
   assert.deepEqual(bangLech(a, await chup()), [], "nạp lại đổi bảng");
   await go();
+});
+
+test("nap-co-anh: căn từng lên Đang bán có đúng một ảnh thật do đầu chủ thêm (E1 nap-mau-co-anh)", async () => {
+  const { san } = await nap();
+  const dem = Object.fromEntries((await pool.query<{ s: string; n: number }>("select standard_status s, count(*)::int n from listings where company_id = $1 group by 1", [san])).rows.map((r) => [r.s, r.n]));
+  assert.deepEqual(dem, { Active: 14, Incomplete: 6, Pending: 5, Closed: 5, Hold: 5, Withdrawn: 5 }, "phân bố trạng thái lệch gói");
+  assert.deepEqual(await lechAnh(san, GOI), [], "số ảnh thật theo hàng lệch bảng mong");
+  // Không ảnh nào khác (ảnh mẫu, ngăn nội bộ, đã xoá) — tổng ảnh bằng tổng mong.
+  const tong = (await pool.query<{ n: number }>("select count(*)::int n from unit_photos where company_id = $1", [san])).rows[0]!.n;
+  assert.equal(tong, Object.values(ANH_MONG).reduce((a, b) => a + b, 0));
+  // Mỗi ảnh đúng một sự kiện added, người làm là đầu chủ của hàng.
+  const idDauChu = new Map<string, string>();
+  for (const n of GOI.nguoi) idDauChu.set(n.khoa, (await pool.query<{ id: string }>('select id from identity."user" where email = $1', [n.email])).rows[0]!.id);
+  const suKien = new Map(
+    (await pool.query<{ unit_number: string; actors: string[] }>(
+      `select p.unit_number, coalesce(array_agg(e.actor_user_id) filter (where e.type = 'added'), '{}') actors
+       from unit_photos p left join unit_photo_events e on e.photo_id = p.id where p.company_id = $1 group by p.id, p.unit_number`,
+      [san],
+    )).rows.map((r) => [r.unit_number, r.actors]),
+  );
+  for (const g of GOI.hang.filter((x) => ANH_MONG[x.ma] === 1)) {
+    assert.deepEqual(suKien.get(g.maCan), [idDauChu.get(g.dauChu)], `${g.ma}: sự kiện added của đầu chủ`);
+  }
+  await go();
+  // Chiều đỏ trên cùng fixture: gói đổi một hàng Chưa đủ thành Đang bán thì bảng mong lệch đúng hàng ấy.
+  const goi = ban(GOI);
+  goi.hang.find((x) => x.ma === "H-04")!.trangThai = "Active";
+  const { san: san2 } = await nap(goi);
+  assert.deepEqual(await lechAnh(san2, goi), ["H-04: mong 0 ảnh, có 1"]);
+  await go();
+});
+
+test("anh-doc-lai: ảnh đọc lại qua API ảnh ra đúng byte đã nạp (E3 nap-mau-co-anh)", async () => {
+  const { san } = await nap();
+  const thuTu = GOI.hang.findIndex((g) => g.ma === "H-07");
+  const g = GOI.hang[thuTu]!;
+  const dauChu = (await pool.query<{ id: string }>('select id from identity."user" where email = $1', [GOI.nguoi.find((n) => n.khoa === g.dauChu)!.email])).rows[0]!.id;
+  const anh = (await pool.query<{ id: string }>("select id from unit_photos where company_id = $1 and unit_number = $2", [san, g.maCan])).rows[0]!.id;
+  const doc = await vaiApp(dauChu, san, (c) => readPhoto(c, khoPostgres, san, anh, "original"), false);
+  assert.ok(!laTuChoiAnh(doc) && doc.doc?.kind === "byte", `ảnh ${anh}: đọc không ra byte`);
+  const bytes = doc.doc.kind === "byte" ? doc.doc.bytes : Buffer.alloc(0);
+  assert.ok(bytes.equals(anhMau(thuTu).goc), `ảnh ${anh}: byte khác ảnh vẽ của thứ tự ${thuTu}`);
+  // Chiều đỏ: so với ảnh vẽ của thứ tự khác thì không bằng.
+  assert.ok(!bytes.equals(anhMau(thuTu + 1).goc), `ảnh ${anh}: trùng byte với thứ tự khác`);
+  await go();
+});
+
+test("kho-storage: đủ khoá thì byte đi vào kho Storage dưới mã sàn mẫu, bảng byte không có dòng (E5 nap-mau-co-anh)", async () => {
+  const gia = khoGia({ ten: "s3" });
+  const { san } = await nap(GOI, EMAIL_CHU_KHO, gia.kho);
+  const ghi = gia.ghi();
+  assert.equal(ghi.length, 29 * 2);
+  assert.deepEqual([...new Set(ghi.map((x) => x.companyId))], [san], "mọi lệnh ghi mang mã sàn mẫu");
+  const bien = new Map<string, string[]>();
+  for (const x of ghi) bien.set(x.photoId, [...(bien.get(x.photoId) ?? []), x.bien!]);
+  assert.equal(bien.size, 29);
+  for (const [id, b] of bien) assert.deepEqual(b.sort(), ["original", "thumb"], `ảnh ${id}: biến thể`);
+  assert.equal((await pool.query("select 1 from unit_photo_files where company_id = $1", [san])).rowCount, 0);
+  await go(gia.kho);
+});
+
+test("chon-kho: bản thật thiếu khoá thì dừng, lời báo nêu đúng biến thiếu, không bảng nào đổi (E5 nap-mau-co-anh)", async () => {
+  const GIA = { STORAGE_S3_ACCESS_KEY: "khoa-thu", STORAGE_S3_SECRET_KEY: "bi-mat-thu", STORAGE_S3_ENDPOINT: "http://127.0.0.1:9/storage/v1/s3" };
+  const bo = (...ten: string[]) => Object.fromEntries(Object.entries(GIA).filter(([k]) => !ten.includes(k)));
+  // Ma trận viết trước: ô → (môi trường, tập biến mong trong lời báo).
+  const O: [string, Record<string, string | undefined>, string[]][] = [
+    ["bản thật · đủ ba", { NODE_ENV: "production", ...GIA }, []],
+    ["bản thật · thiếu ACCESS_KEY", { NODE_ENV: "production", ...bo("STORAGE_S3_ACCESS_KEY") }, ["STORAGE_S3_ACCESS_KEY"]],
+    ["bản thật · thiếu SECRET_KEY", { NODE_ENV: "production", ...bo("STORAGE_S3_SECRET_KEY") }, ["STORAGE_S3_SECRET_KEY"]],
+    ["bản thật · thiếu ENDPOINT", { NODE_ENV: "production", ...bo("STORAGE_S3_ENDPOINT") }, ["STORAGE_S3_ENDPOINT"]],
+    ["bản thật · không biến nào", { NODE_ENV: "production" }, ["STORAGE_S3_ACCESS_KEY", "STORAGE_S3_ENDPOINT", "STORAGE_S3_SECRET_KEY"]],
+    ["ngoài bản thật · thiếu ENDPOINT", { NODE_ENV: undefined, ...bo("STORAGE_S3_ENDPOINT") }, ["STORAGE_S3_ENDPOINT"]],
+  ];
+  const lechO = (ten: string, mong: string[], stderr: string) => {
+    const co = [...new Set(stderr.match(/STORAGE_S3_[A-Z_]+/g) ?? [])].sort();
+    return JSON.stringify(co) === JSON.stringify([...mong].sort()) ? null : `ô «${ten}»: lời báo nêu ${JSON.stringify(co)}, mong ${JSON.stringify(mong)}`;
+  };
+  const truoc = await chup();
+  let soAssert = 0;
+  const raCuaO = new Map<string, string>();
+  for (const [ten, env, mong] of O) {
+    const r = chayCli(["--nap", "--email", EMAIL_CHU_KHO], env);
+    raCuaO.set(ten, r.stderr);
+    assert.equal(lechO(ten, mong, r.stderr), null);
+    soAssert++;
+    // Đối chứng dương của ô đủ ba: qua bước chọn kho, chết vì kho giả không tới được — không phải lý do khác.
+    if (!mong.length) {
+      assert.equal(r.status, 1, `ô «${ten}»: mã thoát`);
+      assert.match(r.stderr, /nap-ban-that: fetch failed/, `ô «${ten}»: phải dừng vì không tới được kho Storage`);
+    }
+    if (mong.length) {
+      assert.equal(r.status, 1, `ô «${ten}»: mã thoát`);
+      assert.ok(!Object.values(GIA).some((v) => r.stderr.includes(v)), `ô «${ten}»: lời báo không chứa giá trị khoá`);
+      assert.deepEqual(bangLech(truoc, await chup()), [], `ô «${ten}»: không bảng nào đổi`);
+    }
+  }
+  assert.equal(soAssert, 6);
+  assert.deepEqual(bangLech(truoc, await chup()), [], "đủ ba khoá giả: kho không tới được, lần chạy rút lại");
+  // Chiều đỏ: tập mong của ô «thiếu ACCESS_KEY» đổi thành rỗng thì ô đỏ, thông điệp nêu tên ô.
+  assert.match(lechO("bản thật · thiếu ACCESS_KEY", [], raCuaO.get("bản thật · thiếu ACCESS_KEY")!) ?? "", /ô «bản thật · thiếu ACCESS_KEY»/);
+});
+
+test("khong-khoa-ngoai-ban-that: không khoá nào ngoài bản thật thì dùng kho Postgres (E5 nap-mau-co-anh)", async () => {
+  const r = chayCli(["--nap", "--email", EMAIL_CHU_KHO], { NODE_ENV: undefined });
+  assert.equal(r.status, 0, r.stderr);
+  const [san] = await gd(timSanMau);
+  assert.equal((await pool.query("select 1 from unit_photo_files where company_id = $1", [san])).rowCount, 29 * 2);
+  await go();
+});
+
+test("go-xoa-byte: gỡ xoá byte đúng mọi ảnh sàn mẫu, mỗi lệnh mang mã sàn mẫu, sàn thật không đổi (E6 nap-mau-co-anh)", async () => {
+  const truoc = await chup();
+  const gia = khoGia();
+  const { san } = await nap(GOI, EMAIL_CHU_KHO, gia.kho);
+  const anhMauSan = new Set((await pool.query<{ id: string }>("select id from unit_photos where company_id = $1", [san])).rows.map((r) => r.id));
+  assert.equal(anhMauSan.size, 29);
+  assert.equal((await go(gia.kho)).ket, "da-go");
+  const camAnh = new Set([anhThat]);
+  assert.deepEqual(loiXoa(gia.xoa(), { san, mong: anhMauSan, camSan: sanThat, camAnh }), []);
+  assert.deepEqual(bangLech(truoc, await chup()), [], "sàn thật và mọi bảng như trước khi nạp");
+  assert.equal((await pool.query("select 1 from unit_photos where id = $1 and company_id = $2", [anhThat, sanThat])).rowCount, 1);
+  // Chiều đỏ trên cùng fixture: một lệnh xoá mang mã sàn thật thì phép so nêu mã sàn ấy.
+  const lech = [...gia.xoa(), { lenh: "xoa" as const, companyId: sanThat, photoId: [...anhMauSan][0]! }];
+  assert.ok(loiXoa(lech, { san, mong: anhMauSan, camSan: sanThat, camAnh }).includes(`lệnh xoá chạm sàn thật ${sanThat}`));
+});
+
+test("hong-o-lan-ghi-10: kho ném sau khi đã ghi lần 10 thì xoá đúng mọi mã trong nhật ký ghi (E7 nap-mau-co-anh)", async () => {
+  const truoc = await chup();
+  // Lần 9 là bản gốc của ảnh thứ năm (mã chưa từng vào sổ), lần 10 là bản nhẹ của nó: cả hai phải được dọn.
+  for (const [k, soAnh] of [[9, 5], [10, 5]] as const) {
+    const gia = khoGia({ nemOLanGhi: k });
+    await assert.rejects(nap(GOI, EMAIL_CHU_KHO, gia.kho), new RegExp(`kho giả: lỗi ở lần ghi ${k}`));
+    const daGhi = new Set(gia.ghi().map((x) => x.photoId));
+    assert.ok(daGhi.has(gia.ghi()[k - 1]!.photoId), `lần ${k}: mã của lần ghi hỏng có trong nhật ký`);
+    assert.equal(daGhi.size, soAnh, `lần ${k}: số ảnh đã ghi`);
+    const sanMau = gia.ghi()[0]!.companyId;
+    assert.notEqual(sanMau, sanThat);
+    assert.deepEqual(loiXoa(gia.xoa(), { san: sanMau, mong: daGhi, camSan: sanThat, camAnh: new Set([anhThat]) }), [], `lần ${k}`);
+  }
+  // Kho ném cả khi xoá: lỗi của lần chạy vẫn là lỗi kho ở lần 10.
+  const nem = khoGia({ nemOLanGhi: 10, nemKhiXoa: true });
+  await assert.rejects(nap(GOI, EMAIL_CHU_KHO, nem.kho), /kho giả: lỗi ở lần ghi 10/);
+  assert.deepEqual(bangLech(truoc, await chup()), [], "không sàn mẫu nào còn");
+  assert.deepEqual(await gd(timSanMau), []);
 });

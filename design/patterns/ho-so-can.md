@@ -8,6 +8,8 @@ khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card, Placeholder]
 ngoai_le: []
 luat: [KH-hs-mot-khung, KH-hs-tren-may, KH-hs-khoa-thuoc-tinh, KH-hs-anh-noi-bo]
+bo_cuc: ho-so
+ngoai_le_han: [{ tep: "apps/web/src/app/(app)/units/[code]/page.tsx", han: ho-so-can-dien-thoai, ly_do: "Hồ sơ căn chuyển sang bố cục Hồ sơ ở hàng 33." }, { tep: "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", han: ho-so-can-dien-thoai, ly_do: "Hồ sơ căn chuyển sang bố cục Hồ sơ ở hàng 33." }, { tep: "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx", han: ho-so-can-dien-thoai, ly_do: "Hồ sơ căn chuyển sang bố cục Hồ sơ ở hàng 33." }]
 ---
 # Hồ sơ căn
 

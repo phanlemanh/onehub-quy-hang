@@ -38,18 +38,19 @@ test("Đầu khách: thêm Đã gửi, không nút nào", () => {
   assert.equal(nav.unitJump, true);
 });
 
-test("Trưởng nhóm: thêm Đội; + Lead, Phát hàng; điện thoại không có Đội", () => {
+test("Trưởng nhóm: thêm Đội; + Lead, Nhập Excel (ADR-0011), Phát hàng; điện thoại không có Đội", () => {
   const nav = navigationFor(["team_lead"]);
   assert.deepEqual(nav.homes, ["today", "inventory", "shares", "team"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
-  assert.deepEqual(nav.actions, ["new_lead", "export"]);
+  assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
+  assert.deepEqual(nav.mobileActions, ["new_lead"]);
 });
 
 test("Chỉ Quản trị sàn: mở vào Cài đặt sàn, điện thoại Cài đặt sàn · Tôi, không ô gõ mã căn", () => {
   const nav = navigationFor(["company_admin"]);
   assert.deepEqual(nav.homes, ["settings"]);
   assert.deepEqual(nav.tabs, ["settings", "me"]);
-  assert.deepEqual(nav.actions, ["import"]);
+  assert.deepEqual(nav.actions, []);
   assert.equal(nav.landing, "/settings");
   assert.equal(nav.unitJump, false);
 });
@@ -74,13 +75,14 @@ test("Mã vai lạ bị bỏ qua", () => {
 
 // Ma trận viết trước: bảng nhà và nút theo vai chép từ Tham chiếu §9 (+ Hỏi-2, Hỏi-3 chốt ở Cổng Phạm vi 31/10).
 // Năm vai × năm trường = 25 so sánh; hàm so trả lời lệch gọi tên vai và trường.
-type Row = Pick<Navigation, "homes" | "tabs" | "actions" | "landing" | "unitJump">;
+type Row = Pick<Navigation, "homes" | "tabs" | "actions" | "mobileActions" | "landing" | "unitJump">;
 const SECTION_9: Record<Role, Row> = {
-  telesales: { homes: [], tabs: ["today", "lead", "me"], actions: ["new_lead"], landing: "/today", unitJump: false },
+  telesales: { homes: [], tabs: ["today", "lead", "me"], actions: ["new_lead"], mobileActions: [], landing: "/today", unitJump: false },
   listing_agent: {
     homes: ["today", "inventory"],
     tabs: ["today", "inventory", "me"],
     actions: ["new_lead", "import", "export"],
+    mobileActions: ["new_lead"],
     landing: "/today",
     unitJump: true,
   },
@@ -88,20 +90,23 @@ const SECTION_9: Record<Role, Row> = {
     homes: ["today", "inventory", "shares"],
     tabs: ["today", "inventory", "send", "me"],
     actions: [],
+    mobileActions: [],
     landing: "/today",
     unitJump: true,
   },
   team_lead: {
     homes: ["today", "inventory", "shares", "team"],
     tabs: ["today", "inventory", "send", "me"],
-    actions: ["new_lead", "export"],
+    actions: ["new_lead", "import", "export"],
+    mobileActions: ["new_lead"],
     landing: "/today",
     unitJump: true,
   },
-  company_admin: { homes: ["settings"], tabs: ["settings", "me"], actions: ["import"], landing: "/settings", unitJump: false },
+  // ADR-0011: quản trị chỉ quản mẫu file, không có việc tạo.
+  company_admin: { homes: ["settings"], tabs: ["settings", "me"], actions: [], mobileActions: [], landing: "/settings", unitJump: false },
 };
 
-const FIELDS = ["homes", "tabs", "actions", "landing", "unitJump"] as const;
+const FIELDS = ["homes", "tabs", "actions", "mobileActions", "landing", "unitJump"] as const;
 
 function diffTable(table: Record<Role, Row>): string[] {
   const out: string[] = [];
@@ -116,7 +121,7 @@ function diffTable(table: Record<Role, Row>): string[] {
   return out;
 }
 
-test("Năm vai × năm trường khớp bảng §9 (25 so sánh)", () => {
+test("Năm vai × sáu trường khớp bảng §9 (30 so sánh)", () => {
   let compared = 0;
   for (const role of ROLES) {
     const got = navigationFor([role]);
@@ -125,7 +130,7 @@ test("Năm vai × năm trường khớp bảng §9 (25 so sánh)", () => {
       compared++;
     }
   }
-  assert.equal(compared, 25);
+  assert.equal(compared, 30);
   assert.deepEqual(diffTable(SECTION_9), []);
 });
 
@@ -134,6 +139,13 @@ test("Đối chứng đỏ: bảng giả thiếu «Phát hàng» của Trưởng
   const diff = diffTable(fake);
   assert.equal(diff.length, 1);
   assert.match(diff[0] ?? "", /^team_lead\.actions: .*"export"/);
+});
+
+test("Đối chứng đỏ: bảng giả cho Đầu chủ Nhập Excel trên điện thoại → hàm so gọi tên vai và trường", () => {
+  const fake = { ...SECTION_9, listing_agent: { ...SECTION_9.listing_agent, mobileActions: ["new_lead", "import"] as Action[] } };
+  const diff = diffTable(fake);
+  assert.equal(diff.length, 1);
+  assert.match(diff[0] ?? "", /^listing_agent\.mobileActions: .*"import"/);
 });
 
 test("Đầu chủ + Đầu khách nhận hợp nhà và nút", () => {
@@ -183,13 +195,17 @@ test("Nhà của đường: hồ sơ căn thuộc Bảng hàng, Lịch xem thu�
   assert.equal(homeOfPath("/me"), null);
 });
 
-test("Cột thứ hai: mặc định gập ở Bảng hàng, mở ở Đã gửi và Cài đặt sàn, không có ở Hôm nay", () => {
-  assert.equal(isSecondColumnOpen("inventory", undefined), false);
-  assert.equal(isSecondColumnOpen("shares", undefined), true);
-  assert.equal(isSecondColumnOpen("settings", undefined), true);
-  assert.equal(isSecondColumnOpen("today", true), false);
-  assert.equal(isSecondColumnOpen("inventory", true), true);
-  assert.equal(isSecondColumnOpen("shares", false), false);
+test("cột thứ hai: mọi nhà, mặc định mở", () => {
+  // Ma trận viết trước: đủ năm nhà của §9 (hàng 91, «Mặc định luôn giữ và có sub nav»).
+  const NHA = ["today", "inventory", "shares", "team", "settings"] as const;
+  let dem = 0;
+  for (const h of NHA) {
+    assert.equal(isSecondColumnOpen(h, undefined), true, `${h}: mặc định phải mở`);
+    assert.equal(isSecondColumnOpen(h, false), false, `${h}: người gập thì nhớ`);
+    assert.equal(isSecondColumnOpen(h, true), true, `${h}: người mở thì nhớ`);
+    dem++;
+  }
+  assert.equal(dem, 5);
 });
 
 test("Khoá nhớ tách theo người, sàn và nhà", () => {

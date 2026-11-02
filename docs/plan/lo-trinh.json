@@ -129,7 +129,7 @@
         "N3"
       ],
       "vung": [
-        "apps/web/src/app/settings/users/**"
+        "apps/web/src/app/(app)/settings/users/**"
       ]
     },
     {
@@ -172,7 +172,7 @@
       "vung": [
         "packages/api/src/auth/**",
         "apps/web/src/app/(auth)/**",
-        "apps/web/src/app/settings/users/**"
+        "apps/web/src/app/(app)/settings/users/**"
       ]
     },
     {
@@ -325,7 +325,7 @@
       ],
       "vung": [
         "design/patterns/**",
-        "apps/web/src/app/settings/**",
+        "apps/web/src/app/(app)/settings/**",
         "apps/web/src/app/(auth)/**",
         "apps/web/src/components/shell/placeholder.tsx"
       ]
@@ -670,7 +670,7 @@
       ],
       "vung": [
         "packages/core/src/import/normalize/**",
-        "apps/web/src/app/settings/labels/**"
+        "apps/web/src/app/(app)/settings/labels/**"
       ]
     },
     {
@@ -694,7 +694,7 @@
       ],
       "vung": [
         "packages/api/src/imports/ai/aliases/**",
-        "apps/web/src/app/settings/labels/suggestions/**"
+        "apps/web/src/app/(app)/settings/labels/suggestions/**"
       ]
     },
     {
@@ -1298,7 +1298,7 @@
         "P8"
       ],
       "vung": [
-        "apps/web/src/app/settings/labels/**"
+        "apps/web/src/app/(app)/settings/labels/**"
       ]
     },
     {
@@ -1319,7 +1319,7 @@
         "P9"
       ],
       "vung": [
-        "apps/web/src/app/settings/statuses/**"
+        "apps/web/src/app/(app)/settings/statuses/**"
       ]
     },
     {
@@ -1342,7 +1342,7 @@
         "P10"
       ],
       "vung": [
-        "apps/web/src/app/settings/fields/**"
+        "apps/web/src/app/(app)/settings/fields/**"
       ]
     },
     {
@@ -1364,7 +1364,7 @@
         "P11"
       ],
       "vung": [
-        "apps/web/src/app/settings/lead-routing/**"
+        "apps/web/src/app/(app)/settings/lead-routing/**"
       ]
     },
     {
@@ -1385,7 +1385,7 @@
         "P12"
       ],
       "vung": [
-        "apps/web/src/app/settings/fees/**"
+        "apps/web/src/app/(app)/settings/fees/**"
       ]
     },
     {
@@ -1407,7 +1407,7 @@
         "P13"
       ],
       "vung": [
-        "apps/web/src/app/settings/templates/**"
+        "apps/web/src/app/(app)/settings/templates/**"
       ]
     },
     {
@@ -1954,6 +1954,12 @@
       "cau_giao": "Bài kiểm «liên hệ: chuyển dữ liệu cũ» của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (dãy H đỏ khi ghim lại PR #66): gom các bước ghi nhiều bảng vào một giao dịch khoá bảng chủ nhà rồi bảng lead trước, kèm ca dựng đúng thế kẹt.",
       "slug": "chuyen-khong-ket-khoa",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
+    },
+    {
+      "ma": "nap-mau-co-anh",
+      "cau_giao": "Vá nạp mẫu bản thật: căn mẫu Đang bán nhận một ảnh thật vẽ bằng mã (ngăn Gửi được) trước khi lên Đang bán, để nút «Nạp dữ liệu mẫu» chạy trọn trên sàn mới sau luật ảnh thật của hàng 23",
+      "slug": "nap-mau-co-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     },
     {
       "ma": "va-che-vung-anh",

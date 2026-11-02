@@ -9,7 +9,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deflateSync } from "node:zlib";
 import { kiemChuan, tepVetKhoi } from "../kiem-chuan.mjs";
-import { rongPng } from "../lib/ba-loi.mjs";
+import { kiemTrangHoSo, rongPng } from "../lib/ba-loi.mjs";
+import { tepBanDoHeThietKe } from "../lib/ban-do-he-thiet-ke.mjs";
+import { tepBoCucCan } from "../lib/bo-cuc.mjs";
+import { docBanDo } from "../lib/ban-do.mjs";
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(PKG, "..", "..");
@@ -63,7 +66,7 @@ function tam(fn) {
 /** Kho git tạm chép design/patterns, vo-va-ia.md và một màn của nhóm cai-dat-san từ kho thật, commit gốc. */
 function kho(fn) {
   return tam((d) => {
-    for (const t of ["design/patterns", VO, "apps/web/src/app/settings/users/page.tsx"]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
+    for (const t of ["design/patterns", VO, "apps/web/src/app/(app)/settings/users/page.tsx"]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
     git(d, "init", "-q");
     git(d, "add", "-A");
     git(d, "commit", "-qm", "goc");
@@ -130,6 +133,38 @@ describe("ba lối: khung đi trọn tới trang", () => {
       for (const l of LOI) for (const kh of KHO) writeFileSync(join(thuMuc(d), `${l}-${kh}.png`), png(kh));
       const r2 = chay(d, "--dung-ba-loi", SLUG);
       assert.equal(r2.status, 0, r2.stderr);
+    }));
+});
+
+describe("ba lối nhiều ô", () => {
+  /** Hồ sơ có nhiều ô chưa có khuôn (hàng 91): mỗi ô một thư mục ba-loi/<mã ô>/, dựng bằng --dung-ba-loi … --o <mã ô>. */
+  function datO(d, o) {
+    const t = join(thuMuc(d), o);
+    mkdirSync(t, { recursive: true });
+    writeFileSync(join(t, "ba-loi.json"), JSON.stringify(DU, null, 2));
+    for (const l of LOI) for (const k of KHO) writeFileSync(join(t, `${l}-${k}.png`), png(k));
+    const r = chay(d, "--dung-ba-loi", SLUG, "--o", o);
+    assert.equal(r.status, 0, r.stderr);
+  }
+  it("ba lối nhiều ô", () =>
+    tam((d) => {
+      datO(d, "a");
+      datO(d, "b");
+      assert.deepEqual(kiemTrangHoSo(d, SLUG), []);
+      unlinkSync(join(thuMuc(d), "b", "reui-375.png"));
+      const l = kiemTrangHoSo(d, SLUG);
+      assert.equal(l.length, 1, JSON.stringify(l));
+      assert.ok(l[0].startsWith("ô b: "), l[0]);
+    }));
+  it("đối chứng: hồ sơ một ô (ba-loi/ba-loi.json) kiểm như cũ, lỗi không mang tiền tố ô", () =>
+    tam((d) => {
+      datDu(d);
+      assert.equal(chay(d, "--dung-ba-loi", SLUG).status, 0);
+      assert.deepEqual(kiemTrangHoSo(d, SLUG), []);
+      unlinkSync(join(thuMuc(d), "reui-375.png"));
+      const l = kiemTrangHoSo(d, SLUG);
+      assert.equal(l.length, 1, JSON.stringify(l));
+      assert.ok(!l[0].startsWith("ô "), l[0]);
     }));
 });
 
@@ -300,7 +335,7 @@ describe("ô chưa có khuôn: đi khuôn sẵn thì không cần trang", () => 
   ])
     it(`sửa màn nhóm có sẵn, ${ten} → 0, không cần trang`, () =>
       kho((d, goc) => {
-        sua(d, "apps/web/src/app/settings/users/page.tsx", (s) => s + "\n// sửa thử\n");
+        sua(d, "apps/web/src/app/(app)/settings/users/page.tsx", (s) => s + "\n// sửa thử\n");
         sua(d, VO, (s) => s.replace("# Vỏ, IA và khối đích của từng màn", "# Vỏ, IA và khối đích của từng màn (sửa thử)"));
         lam(d);
         const r = chay(d, "--kiem-ba-loi", "--base", goc, "--slug", SLUG);
@@ -399,11 +434,11 @@ describe("vật thử: lịch sử bảng thật", () => {
 });
 
 // ——— Răng trên cây (kiểm chuẩn) ———
-const TEP_CAY = ["apps/web/components.json", "apps/web/src", "design/patterns", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml"];
+const TEP_CAY = ["apps/web/components.json", "apps/web/src", "design/patterns", ".agents/skills/quy-hang-ui", ".agents/skills/reui", "_acceptance/config.yaml", ".github/workflows/ci.yml", ".mcp.json"];
 const HO_THAT = ["cot-ho-so-can", "lead-bon-nac"];
 function cay(fn) {
   return tam((d) => {
-    for (const rel of [...TEP_CAY, ...tepVetKhoi(ROOT)]) cpSync(join(ROOT, rel), join(d, rel), { recursive: true });
+    for (const rel of [...TEP_CAY, ...tepVetKhoi(ROOT), ...tepBanDoHeThietKe(ROOT), ...tepBoCucCan(ROOT, docBanDo(ROOT))]) cpSync(join(ROOT, rel), join(d, rel), { recursive: true });
     for (const h of HO_THAT) for (const t of ["design-pass.md", "ba-loi"]) cpSync(join(ROOT, "_acceptance", h, t), join(d, "_acceptance", h, t), { recursive: true });
     mkdirSync(join(d, ".claude/skills"), { recursive: true });
     for (const s of ["quy-hang-ui", "reui"]) symlinkSync(`../../.agents/skills/${s}`, join(d, ".claude/skills", s));

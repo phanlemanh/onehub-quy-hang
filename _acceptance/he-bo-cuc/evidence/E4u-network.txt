@@ -1,0 +1,104 @@
+# network (app-origin fetch/xhr/document) + console warn/error
+200 GET document /select-company
+200 POST fetch /api/v1/me/company
+200 GET fetch /?_rsc=UJjI-fs6pV-8lH8D
+FAILED GET http://localhost:3484/?_rsc=UJjI-fs6pV-8lH8D net::ERR_ABORTED
+200 GET fetch /?_rsc=q3mOO9BClNZHexY7
+FAILED GET http://localhost:3484/?_rsc=q3mOO9BClNZHexY7 net::ERR_ABORTED
+200 GET fetch /today?_rsc=2Md0sTUZcnjCijMr
+200 GET fetch /today?_rsc=2Md0sTUZcnjCijMr
+FAILED GET http://localhost:3484/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+FAILED GET http://localhost:3484/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+200 POST fetch /__nextjs_original-stack-frames
+200 GET fetch /api/v1/listings
+200 GET document /inventory
+200 GET fetch /api/v1/listings
+200 GET fetch /api/v1/catalog
+200 POST fetch /__nextjs_original-stack-frames
+200 GET fetch /imports/new?_rsc=1qcvAgoeABwRlXjw
+200 GET document /select-company
+200 POST fetch /api/v1/me/company
+200 GET fetch /?_rsc=UJjI-fs6pV-8lH8D
+200 GET fetch /?_rsc=q3mOO9BClNZHexY7
+FAILED GET http://localhost:3484/?_rsc=UJjI-fs6pV-8lH8D net::ERR_ABORTED
+200 GET fetch /today?_rsc=2Md0sTUZcnjCijMr
+200 GET fetch /today?_rsc=2Md0sTUZcnjCijMr
+FAILED GET http://localhost:3484/today?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+200 POST fetch /__nextjs_original-stack-frames
+200 GET fetch /api/v1/catalog
+200 GET fetch /api/v1/company/settings/queue
+200 GET fetch /api/v1/leads/assigned
+200 GET fetch /api/v1/catalog
+200 GET fetch /api/v1/company/settings/queue
+200 GET fetch /api/v1/leads/assigned
+200 GET fetch /api/v1/listings
+200 GET document /today
+200 GET fetch /api/v1/catalog
+200 GET fetch /api/v1/company/settings/queue
+200 GET fetch /api/v1/company/settings/queue
+200 GET fetch /api/v1/leads/assigned
+200 GET fetch /api/v1/catalog
+200 GET fetch /api/v1/leads/assigned
+200 GET fetch /api/v1/listings
+# console
+error Failed to load resource: the server responded with a status of 404 (Not Found)
+pageerror Failed to execute 'measure' on 'Performance': '​Home' cannot have a negative time stamp.
+pageerror Failed to execute 'measure' on 'Performance': '​Home' cannot have a negative time stamp.
+pageerror Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className={undefined} style={{...}}>
+      <BangHang nguoi="c4e507dc-b..." san="a4d40778-1..." dangMo={null} onMoCan={function BangCoHoSo.useCallback[moCan]}>
+        <TooltipProvider delay={200}>
+          <TooltipProvider data-slot="tooltip-pr..." delay={200}>
+            <FloatingDelayGroup delay={{open:200, ...}} timeoutMs={400}>
+              <DataGrid table={{...}} recordCount={14} onRowClick={function} i18n={{labels:{...}}} ...>
+                <DataGridProvider table={{...}} loadingMode="skeleton" tableLayout={{dense:true, ...}} ...>
+                  <FramePanel ref={{current:null}} className="p-0" ...>
+                    <div className="relative o..." data-slot="frame-panel" ref={{current:null}} ...>
+                      <div
++                       className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-he..."
+-                       className="flex flex-col gap-2 p-4"
+-                       aria-busy="true"
+-                       aria-label="Đang tải bảng hàng"
+                      >
+                        ...
+                          <MenuTrigger data-slot="dropdown-m..." render={<Button>}>
+                            <Button type="button" variant="outline" onClick={function} onMouseDown={function} ...>
+                              <Button data-slot="dropdown-m..." className={"group/bu..."} type="button" ...>
++                               <button
++                                 type="button"
++                                 onClick={function}
++                                 onMouseDown={function}
++                                 onKeyDown={function}
++                                 onKeyUp={function}
++                                 onPointerDown={function}
++                                 tabIndex={0}
++                                 disabled={false}
++                                 data-slot="dropdown-menu-trigger"
++                                 onFocus={function}
++                                 onPointerEnter={function}
++                                 aria-haspopup="menu"
++                                 aria-expanded={false}
++                                 aria-controls={undefined}
++                                 id="base-ui-_R_qb6n6atpeuqknelb_"
++                                 ref={function}
++                                 className={"group/button inline-flex shrink-0 items-center justify-center rounded-l..."}
++                               >
+-                               <div className="flex gap-2">
+                        ...
+                      ...
+              ...
+
+pageerror Failed to execute 'measure' on 'Performance': '​Home' cannot have a negative time stamp.
+pageerror Failed to execute 'measure' on 'Performance': '​Home' cannot have a negative time stamp.
