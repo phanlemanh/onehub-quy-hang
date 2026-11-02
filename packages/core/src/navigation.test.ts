@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   type Action,
+  cotThuocTinhKey,
+  isCotThuocTinhMo,
   homeOfPath,
   isSecondColumnOpen,
   type Navigation,
@@ -216,4 +218,16 @@ test("Khoá nhớ tách theo người, sàn và nhà", () => {
     secondColumnKey("u1", "c1", "shares"),
   ]);
   assert.equal(keys.size, 4);
+});
+
+test("cột thuộc tính: mặc định mở, nhớ theo người và sàn", () => {
+  assert.equal(isCotThuocTinhMo(undefined), true);
+  assert.equal(isCotThuocTinhMo(false), false);
+  assert.equal(isCotThuocTinhMo(true), true);
+  assert.equal(cotThuocTinhKey("u1", "c1"), "u1:c1:thuoc-tinh");
+  // Đối chứng: khác người hay khác sàn là khoá khác; không trùng khoá cột thứ hai của bất kỳ nhà nào.
+  assert.notEqual(cotThuocTinhKey("u1", "c1"), cotThuocTinhKey("u2", "c1"));
+  assert.notEqual(cotThuocTinhKey("u1", "c1"), cotThuocTinhKey("u1", "c2"));
+  for (const h of ["today", "inventory", "shares", "team", "settings"] as const)
+    assert.notEqual(cotThuocTinhKey("u1", "c1"), secondColumnKey("u1", "c1", h), h);
 });

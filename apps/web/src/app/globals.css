@@ -169,6 +169,8 @@
     --spacing-ngan-le: 1rem;
     --container-ngan: 32rem;
     --spacing-ho-so-nhan: 8rem;
+    /* Cột thuộc tính của bố cục Hồ sơ — 320px như cột dữ kiện của Verve (chủ kho 02/11). */
+    --spacing-cot-thuoc-tinh: 20rem;
     /* Đường cong «vào» của chuẩn chuyển động ReUI (layout/motion): ease-vao. */
     --ease-vao: cubic-bezier(0.22, 1, 0.36, 1);
 }

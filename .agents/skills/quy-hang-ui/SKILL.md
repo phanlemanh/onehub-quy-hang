@@ -160,6 +160,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | đối chiếu | Một tổ hợp ở đúng khổ — máy chụp ảnh chuẩn mở thẳng địa chỉ này | `apps/web/src/app/mau/he-bo-cuc/xem/page.tsx` |
 | bố cục | BoCuc: bảy bố cục giữ lề, đầu màn, xếp thân và cột phụ; không dựng Frame | `apps/web/src/components/bo-cuc/bo-cuc.tsx` |
 | bố cục | ChoTai: chờ tải theo hình của từng bố cục — chỗ duy nhất dựng Skeleton | `apps/web/src/components/bo-cuc/cho-tai.tsx` |
+| bố cục | CotThuocTinh: cột thuộc tính trái 320px của bố cục Hồ sơ, người dùng mở hay gập, vỏ nhớ theo người và sàn | `apps/web/src/components/bo-cuc/cot-thuoc-tinh.tsx` |
 | bố cục | Dải ngoại tuyến ở đầu màn, nội dung đã tải giữ nguyên | `apps/web/src/components/bo-cuc/dai-ngoai-tuyen.tsx` |
 | bố cục | DauMan: đường dẫn luôn có, tiêu đề, điều khiển cấp màn và nút bên phải | `apps/web/src/components/bo-cuc/dau-man.tsx` |
 | bố cục | Cửa nhập của hệ bố cục cho màn | `apps/web/src/components/bo-cuc/index.ts` |

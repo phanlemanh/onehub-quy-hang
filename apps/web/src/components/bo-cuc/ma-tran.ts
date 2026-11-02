@@ -58,9 +58,9 @@ export const THONG_TIN: Record<KieuBoCuc, ThongTin> = {
   "ho-so": {
     ten: "Hồ sơ",
     mat_do: "thuong",
-    khoi_nguon: "solution-crm-4 — một cột theo hồ sơ căn hàng 17 (khoi/solution-crm-4/ho-so.tsx)",
-    vung: ["dau-man", "than"],
-    dien_thoai: "giữ một cột",
+    khoi_nguon: "solution-crm-4 — thân hồ sơ theo hồ sơ căn hàng 17 (khoi/solution-crm-4/ho-so.tsx); cột thuộc tính trái kiểu Verve",
+    vung: ["dau-man", "than", "cot-phu"],
+    dien_thoai: "cột thuộc tính xếp trên thân, gập được",
   },
   "bang-dieu-khien": {
     ten: "Bảng điều khiển",

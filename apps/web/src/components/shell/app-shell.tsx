@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  cotThuocTinhKey,
   type Home,
   HOME_LABEL,
+  isCotThuocTinhMo,
   homeOfPath,
   isSecondColumnOpen,
   type Navigation,
@@ -15,6 +17,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type CSSProperties, type ReactNode, useState } from "react";
 
+import { NhoCotThuocTinhProvider } from "@/components/bo-cuc/cot-thuoc-tinh";
 import { Button } from "@/components/ui/button";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AccountMenuKhung } from "./account-menu";
@@ -124,6 +127,7 @@ export function AppShell({
   user,
   nav,
   remembered,
+  thuocTinh,
   children,
   mau,
   menuTao,
@@ -137,6 +141,8 @@ export function AppShell({
   nav: Navigation;
   /** Cột thứ hai người đã mở/gập ở từng nhà, của đúng người và sàn đang làm. */
   remembered: Partial<Record<Home, boolean>>;
+  /** Cột thuộc tính của bố cục Hồ sơ người đã mở/gập (người và sàn đang làm); vắng là chưa chọn — mở. */
+  thuocTinh?: boolean;
   children: ReactNode;
   /** Trang mẫu sống (hàng 91): nhà lấy từ `nhaMau`, đầu điện thoại không mở việc thật. */
   mau?: boolean;
@@ -153,6 +159,7 @@ export function AppShell({
   const pathname = usePathname();
   const home = (mau && nhaMau) || homeOfPath(pathname);
   const [choices, setChoices] = useState(remembered);
+  const [thuocTinhMo, setThuocTinhMo] = useState(isCotThuocTinhMo(thuocTinh));
   const [jumpOpen, setJumpOpen] = useState(false);
   const openJump = () => setJumpOpen(true);
   useUnitJumpKeys(nav.unitJump, setJumpOpen);
@@ -165,6 +172,11 @@ export function AppShell({
     const next = !columnOpen;
     setChoices((c) => ({ ...c, [home]: next }));
     writeRemembered(secondColumnKey(user.userId, user.activeCompany.id, home), next);
+  }
+
+  function doiThuocTinh(next: boolean) {
+    setThuocTinhMo(next);
+    if (!mau) writeRemembered(cotThuocTinhKey(user.userId, user.activeCompany.id), next);
   }
 
   return (
@@ -194,7 +206,9 @@ export function AppShell({
           {/* Lề thuộc bố cục (ADR-0024): màn dựng qua BoCuc tự giữ lề; màn chưa chuyển (ngoại lệ có hạn) giữ lề cũ của vỏ.
               Bỏ nhánh lề cũ khi màn cuối rời ngoại lệ. */}
           <div className="flex min-w-0 flex-1 flex-col overflow-y-auto p-4 pb-24 md:pb-4 has-[[data-bo-cuc-goc]]:p-0 has-[[data-bo-cuc-goc]]:pb-20 md:has-[[data-bo-cuc-goc]]:pb-0">
-            {children}
+            <NhoCotThuocTinhProvider mo={thuocTinhMo} onDoi={doiThuocTinh}>
+              {children}
+            </NhoCotThuocTinhProvider>
           </div>
         </div>
 
