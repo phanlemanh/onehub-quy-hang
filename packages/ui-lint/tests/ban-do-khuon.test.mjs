@@ -144,6 +144,9 @@ const CHO_TRANG_THAI = [
   ...Array(4).fill(`${W}/app/(app)/today/hom-nay-dau-chu.tsx`),
   // Thông báo lead (hàng 26): lead từ thông báo không còn ở Hôm nay.
   `${W}/app/(app)/today/hom-nay-dau-chu.tsx`,
+  // Mở hàng đợi từ cột thứ hai (va-he-bo-cuc): nhóm không có chỗ ở Hôm nay của đầu chủ; người không có vai Đầu chủ.
+  `${W}/app/(app)/today/hom-nay-dau-chu.tsx`,
+  `${W}/app/(app)/today/page.tsx`,
   // Hồ sơ căn (hàng 17): khung xương và «không có / nhiều căn» của cột, kết quả chia sẻ của báo sai.
   ...["cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
   // Mục Ảnh (hàng 18): lỗi tải, trống của ngăn, thẻ Tự có từ mã, ngăn nội bộ khoá.
@@ -336,7 +339,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 7 tệp theo khuôn · 13 ngoại lệ · 0 lệch",
-      "trang-thai: 47 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 49 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

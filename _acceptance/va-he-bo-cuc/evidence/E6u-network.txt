@@ -1,0 +1,5 @@
+E6u network (Playwright, app-origin http://localhost:3482; dev_server.url trong config = :3460 nhung dich duoc duyet la :3482 cung may chu app)
+Tat ca response app-origin: 200 (document /today, /today?nhom=*, /api/v1/catalog, /api/v1/company/settings/queue, /api/v1/leads/assigned, /api/v1/listings, /api/v1/push/public-key, _next static).
+Khong co 4xx/5xx. Khong third-party. Console error/warning: 0, pageerror: 0.
+Ghi chu (note-only): "requestfailed net::ERR_ABORTED" tren GET /today?nhom=<ma>&_rsc=... (RSC prefetch bi Next huy khi dieu huong; cung URL do da tra 200 truoc do) - huy phia client, khong phai loi ket noi/timeout/5xx.
+Dang nhap: qua API email-otp cua chinh app (curl, ma doc o dev-3482.log) roi nap cookie vao ngu canh trinh duyet rieng (UI dang nhap bang MCP chung bi dung dong thoi boi tac vu khac).

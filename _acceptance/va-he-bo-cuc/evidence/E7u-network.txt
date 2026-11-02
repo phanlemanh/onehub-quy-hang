@@ -1,0 +1,5 @@
+E7u network (Playwright, context rieng, 1440x900). origin app http://localhost:3482
+Console error/warning: 0 (ca hai tai khoan)
+App fetch/XHR/doc: login 200; POST send-verification-otp 200; POST sign-in/email-otp 200; GET /today 200; GET /today?nhom=new_lead 200 (telesales) hoac RSC 200 (truong-nhom); GET /api/v1/leads 200; GET /api/v1/listings 200; GET /api/v1/auth/get-session 200; GET /api/v1/push/public-key 200
+Chi ghi chu (khong FAIL): net::ERR_ABORTED cho /?_rsc=, /today?_rsc=, /today?nhom=new_lead&_rsc= (RSC prefetch bi huy khi dieu huong), /_next/static/chunks/*.js, /__nextjs_font/geist-latin.woff2 (static, huy khi chuyen trang)
+Khong co status >=400, khong connection-error ngoai ERR_ABORTED cua prefetch/static.
