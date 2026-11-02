@@ -10,8 +10,8 @@ flowchart TD
   GD --> B["Sắp mở vòng<br/>1 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
-  B --> CD["Chờ duyệt phạm vi<br/>1 việc"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
+  B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
+  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>19 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>43 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
@@ -26,7 +26,7 @@ flowchart TD
 
 - Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá (`goi-ep-gia-dot-hai`)
 
-## Chờ duyệt phạm vi
+## Đang làm
 
 - Vá mã căn của lead — lead nhập mã căn toàn dấu bị từ chối ngay lúc nhập với lời báo như hồ sơ hàng; tạo hàng và gửi lại từ lead cũ mang mã rác không còn hỏng (`va-ma-can-lead`)
 
