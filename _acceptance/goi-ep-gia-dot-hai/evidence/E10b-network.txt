@@ -1,17 +1,27 @@
 {
   "telesales": {
-    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call"
     ],
-    "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 00:13\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 00:38\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
     "log": [
+      {
+        "url": "/__nextjs_original-stack-frames",
+        "method": "POST",
+        "status": 200,
+        "len": 2154,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
       {
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 46437,
+        "len": 55909,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
@@ -21,21 +31,34 @@
     "domOwnerPhone": false,
     "domTitleDeed": false,
     "dom0900": false,
-    "docStatusRefetch": 200
+    "res": [
+      "http://localhost:3485/api/v1/listings"
+    ],
+    "docStatus": 200
   },
   "quan-tri": {
-    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call"
     ],
-    "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 00:13\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 00:38\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
     "log": [
       {
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 46437,
+        "len": 55909,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/__nextjs_original-stack-frames",
+        "method": "POST",
+        "status": 200,
+        "len": 2154,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
@@ -45,22 +68,34 @@
     "domOwnerPhone": false,
     "domTitleDeed": false,
     "dom0900": false,
-    "docStatusRefetch": 200
+    "res": [
+      "http://localhost:3485/api/v1/listings"
+    ],
+    "docStatus": 200
   },
   "truong-nhom": {
-    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
     "title": "Quỹ hàng",
     "h1": [
-      "Căn call",
-      "Gõ mã căn"
+      "Căn call"
     ],
-    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:13\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:38\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
     "log": [
       {
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 46437,
+        "len": 55909,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/__nextjs_original-stack-frames",
+        "method": "POST",
+        "status": 200,
+        "len": 2154,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
@@ -70,26 +105,22 @@
     "domOwnerPhone": false,
     "domTitleDeed": false,
     "dom0900": false,
-    "docStatusRefetch": 200
-  }
-}{
+    "res": [
+      "http://localhost:3485/api/v1/listings"
+    ],
+    "docStatus": 200
+  },
   "dau-chu-1": {
-    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "loc": "/units/call?hang=91904244-71bc-45ae-b48f-d3a26a649446",
     "title": "Quỹ hàng",
     "h1": [
       "Căn call",
-      "A-24.01 · Toà A · 2,8 tỷ · không bao phí",
-      "KẾT QUẢ CUỘC GỌI",
-      "LỊCH SỬ TRẢ GIÁ",
-      "Danh sách hỏi",
-      "Tính giá",
-      "Cùng loại trong toà",
-      "Gõ mã căn"
+      "A-25.01 · Toà A · 2,8 tỷ · không bao phí"
     ],
-    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:31\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi ép giá\nĐang bán\nA-24.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl\n+\nEnter\nvề Hôm nay\n\nLỊCH SỬ TRẢ GIÁ\nCòn · giữ giá · đã xác nhận với chủ\nĐầu chủ · 00:08 19/10\nHạ 2,",
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:38\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi điều chỉnh giá\nĐang bán\nA-25.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl\n+\nEnter\nvề Hôm nay\n\nLỊCH SỬ TRẢ GIÁ\nCòn · giữ giá · đã xác nhận với chủ\nĐầu chủ · 00:29 19/10\nHạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận với chủ\nĐầu chủ · 00:29 11/10\nLên bảng 2,95 tỷ ",
     "log": [
       {
-        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
         "method": "GET",
         "status": 200,
         "len": 2437,
@@ -102,14 +133,14 @@
         "url": "/api/v1/listings",
         "method": "GET",
         "status": 200,
-        "len": 53198,
+        "len": 62630,
         "ownerPhone": false,
         "titleDeed": false,
         "p0900": false,
         "floorPrice": false
       },
       {
-        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
         "method": "GET",
         "status": 200,
         "len": 2437,
@@ -129,7 +160,7 @@
         "floorPrice": false
       },
       {
-        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b/owner",
+        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner",
         "method": "GET",
         "status": 200,
         "len": 76,
@@ -149,7 +180,7 @@
         "floorPrice": false
       },
       {
-        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b/owner",
+        "url": "/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner",
         "method": "GET",
         "status": 200,
         "len": 76,
@@ -162,7 +193,15 @@
     "domOwnerPhone": false,
     "domTitleDeed": false,
     "dom0900": false,
-    "docStatusRefetch": 200
+    "res": [
+      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
+      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446",
+      "http://localhost:3485/api/v1/listings",
+      "http://localhost:3485/api/v1/catalog",
+      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner",
+      "http://localhost:3485/api/v1/catalog",
+      "http://localhost:3485/api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner"
+    ],
+    "docStatus": 200
   }
 }
-Ghi chu: moi lan goi /api/v1 deu 200; khong request that bai; document /units/call?hang=P1 cua telesales/quan-tri/truong-nhom tra HTTP 200 voi giao dien notFound (NEXT_HTTP_ERROR_FALLBACK;404 + meta noindex); route khong ton tai tra 404 that. Dev overlay Next hien '1 Issue' o step1-3.

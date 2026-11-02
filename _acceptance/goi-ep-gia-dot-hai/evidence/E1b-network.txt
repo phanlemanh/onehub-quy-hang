@@ -1,5 +1,11 @@
-E1b network (playwright, origin http://localhost:3485)
-step1 /today -> /units/call?hang=9ada9a1a-...: api GETs listings/catalog/owner all 200 (no failures observed)
-step2 /units/call?hang=00000000-0000-4000-8000-000000000000: GET /api/v1/listings/<ma> => 404 (x2, expected by eval), GET /api/v1/listings => 200
-step3 /units/call?lead=0712fe09-...: GET leads/assigned/<L1> 200 x2, listings 200, catalog 200 x2
-console errors: favicon.ico 404 (static, note only); listings/<ma khong ton tai> 404 (expected, repeated retries)
+NETWORK E1b (app-origin localhost:3485, khong gom static) - Playwright response/requestfailed listeners
+200 GET /today
+200 GET /api/v1/catalog ; /company/settings/queue ; /leads/assigned ; /push/public-key ; /listings
+200 GET /units/call?hang=91904244-...(P1)
+FAILED /units/call?hang=P1&_rsc=... net::ERR_ABORTED (RSC prefetch bi huy khi dieu huong - khong phai loi app)
+200 GET /api/v1/listings/P1/owner ; 200 GET /api/v1/listings/P1
+200 GET /units/call?hang=00000000-0000-4000-8000-000000000000
+404 GET /api/v1/listings/00000000-0000-4000-8000-000000000000 (x2) - CHU Y, mong doi theo Expected
+200 GET /today?_rsc=... ; FAILED same net::ERR_ABORTED (prefetch huy)
+Buoc 3: 200 /units/call?lead=L1 ; 200 /api/v1/leads/assigned/L1 ; 200 /api/v1/listings ; 200 /api/v1/catalog
+CONSOLE: 2 error "404 Not Found" (chinh la 404 buoc 2). Khong loi khac.

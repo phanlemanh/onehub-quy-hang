@@ -1,6 +1,5 @@
-Driver: Chrome headless qua CDP (cdp.mjs), khong co console/network event tho; dung Resource Timing. Origin 3485 (dev server dung chung; config 3460 khong chay). P1 = 9ada9a1a-b810-49ec-b1ba-8c075067ed3b (A-24.01, luot dung 4).
-Online + sau khi bat offline (khong tai lai), API app-scope:
-  /api/v1/listings/<P1> 200 (x2), /api/v1/listings 200, /api/v1/catalog 200 (x2), /api/v1/listings/<P1>/owner 200 (x2)
-  tat ca 200; khong request that bai; khong third-party.
-Offline: khong co request moi nao toi API (khoi lich su doc tu kho tren may), chi bao 'Dang xem ban da tai — mat mang'.
-Console errors: khong doc duoc (driver khong cap).
+Driver: Chrome headless rieng qua CDP (Network/Page/Runtime event day du), dev server dung chung 3485 (config 3460 khong chay). P1 = 91904244-71bc-45ae-b48f-d3a26a649446 (A-25.01, dung-d luot 5).
+Luu y: trinh duyet Playwright MCP dung chung voi phien khac (URL tu nhay sang hang khac) nen khong dung cho ket qua; ket qua lay tu Chrome rieng.
+Online: tai trang, khong request that bai. Sau Network.emulateNetworkConditions offline (khong tai lai, marker window.__m con nguyen):
+  khong request /api/ moi, khong loadingFailed, khong frameNavigated, khong console.error.
+Ket luan network: sach.

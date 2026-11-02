@@ -24,9 +24,9 @@ Hôm nay
 Gọi ép giá
 Đang xem bản đã tải — mất mạng
 Thay đổi được giữ trên máy và gửi đi khi có mạng lại.
-Nên gọi ép giá
+Nên gọi điều chỉnh giá
 Đang bán
-A-22.09 · Toà A · 2,75 tỷ · không bao phí
+A-23.08 · Toà A · 2,75 tỷ · không bao phí
 
 Lên bảng 20 ngày · chưa đổi giá lần nào
 
@@ -66,9 +66,11 @@ về Hôm nay
 
 LỊCH SỬ TRẢ GIÁ
 Lên bảng 2,8 tỷ · không bao phí · đã xác nhận với chủ
-Đầu chủ · 23:59 13/10
+Đầu chủ · 00:06 14/10
 Tạo hồ sơ
-Đầu chủ · 23:58 11/10
+Đầu chủ · 00:06 12/10
+GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ
+Chưa ghi giá đáy
 Danh sách hỏi
 Mức đủ 3/5
 
@@ -150,20 +152,41 @@ giữa 2,8 tỷ
 Căn này về tay 2,75 tỷ · −1,8% so với giữa toà
 
 Mã	Giá	Phí	Trạng thái	Xác nhận
+A-24.05	2,8 tỷ	N	Đang giao dịch	00:13 03/11
+A-23.07	2,8 tỷ	N	Đang bán	00:06 14/10
+A-25.04	2,8 tỷ	N	Đang bán	00:37 03/11
+A-23.06	2,8 tỷ	N	Đang bán	00:06 14/10
 A-22.01	2,8 tỷ	N	Đang bán	23:59 18/10
 A-21.08	2,8 tỷ	N	Đang bán	23:28 13/10
 A-21.04	2,8 tỷ	N	Đang bán	23:28 13/10
+A-25.02	2,8 tỷ	N	Đang bán	00:29 14/10
 A-22.07	2,8 tỷ	N	Đang bán	23:59 13/10
+A-23.01	2,8 tỷ	N	Đang bán	00:06 19/10
+A-23.03	2,8 tỷ	N	Đang bán	00:06 14/10
 A-22.05	2,8 tỷ	N	Đang bán	23:59 13/10
 A-22.06	2,8 tỷ	N	Đang bán	23:59 13/10
 A-22.03	2,8 tỷ	N	Đang bán	23:59 13/10
 A-22.08	2,8 tỷ	N	Đang bán	23:59 13/10
+A-23.04	2,8 tỷ	N	Đang bán	00:06 14/10
+A-23.02	2,8 tỷ	N	Đang bán	00:06 14/10
+A-24.04	2,8 tỷ	N	Đang bán	00:35 03/11
+A-25.06	2,8 tỷ	N	Đang bán	00:29 14/10
 A-21.02	2,8 tỷ	N	Đang bán	23:28 13/10
+A-25.01	2,8 tỷ	N	Đang bán	00:29 19/10
+A-25.07	2,8 tỷ	N	Đang bán	00:29 14/10
+A-24.01	2,8 tỷ	N	Đang bán	00:08 19/10
 A-22.02	2,8 tỷ	N	Đang bán	23:59 13/10
 A-22.04	2,8 tỷ	N	Đang bán	23:59 13/10
 A-21.05	2,8 tỷ	N	Đang giao dịch	23:35 02/11
+A-23.05	2,8 tỷ	N	Đang bán	00:06 14/10
+A-25.08	2,8 tỷ	N	Đang bán	00:29 14/10
 A-21.01	2,8 tỷ	N	Đang bán	23:28 18/10
+A-24.02	2,8 tỷ	N	Đang bán	00:08 14/10
+A-24.08	2,8 tỷ	N	Đang bán	00:08 14/10
+A-25.05	2,8 tỷ	N	Đang bán	00:29 14/10
 A-21.03	2,72 tỷ	N	Đang bán	23:54 02/11
+A-24.03	2,72 tỷ	N	Đang bán	00:26 03/11
+A-25.03	2,72 tỷ	N	Đang bán	00:38 03/11
 A-06.01	2,45 tỷ	N	Đang giao dịch	14:31 02/11
 A-04.01	2,5 tỷ	BP	Đang giao dịch	14:31 02/11
 A-02.01	2,4 tỷ	BP	Đang bán	14:31 02/11

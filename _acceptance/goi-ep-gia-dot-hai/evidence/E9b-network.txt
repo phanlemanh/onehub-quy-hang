@@ -1,4 +1,37 @@
-E9b network: driver la CDP tu viet (cdp.mjs) khong co read_network_requests; doc performance.getEntriesByType('resource') trong trang (responseStatus) cho /api/ — dev server 3485 (dung chung, khong tu start/tat).
-ep 1440/1280/375: GET /api/v1/listings/<P1> 200, /listings 200, /catalog 200, /listings/<P1>/owner 200
-khai thac 1440/1280: GET /api/v1/leads/assigned/<L1> 200, /listings 200, /catalog 200
-Khong co request app nao >=400. Console khong doc duoc.
+E9b network (CDP, origin http://localhost:3485; performance resource entries, responseStatus). console errors: not read by this driver
+ep-gia-1440: innerWidth=1440 scrollWidth=1440
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446 200
+  /api/v1/listings 200
+  /api/v1/catalog 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner 200
+  /api/v1/catalog 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner 200
+khai-thac-1440: innerWidth=1440 scrollWidth=1440
+  /api/v1/leads/assigned/0712fe09-7318-452f-b9b4-e5d2d129daa9 200
+  /api/v1/leads/assigned/0712fe09-7318-452f-b9b4-e5d2d129daa9 200
+  /api/v1/listings 200
+  /api/v1/catalog 200
+  /api/v1/catalog 200
+ep-gia-1280: innerWidth=1280 scrollWidth=1280
+  /api/v1/catalog 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner 200
+  /api/v1/catalog 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446 200
+  /api/v1/listings 200
+khai-thac-1280: innerWidth=1280 scrollWidth=1280
+  /api/v1/leads/assigned/0712fe09-7318-452f-b9b4-e5d2d129daa9 200
+  /api/v1/leads/assigned/0712fe09-7318-452f-b9b4-e5d2d129daa9 200
+  /api/v1/listings 200
+  /api/v1/catalog 200
+  /api/v1/catalog 200
+ep-gia-375: innerWidth=375 scrollWidth=375
+  /api/v1/catalog 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner 200
+  /api/v1/catalog 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446/owner 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446 200
+  /api/v1/listings/91904244-71bc-45ae-b48f-d3a26a649446 200
+  /api/v1/listings 200

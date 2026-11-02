@@ -1,21 +1,75 @@
-BASE status=200 listPrice=2800000000 standardStatus=Active price_changed=1 unit=A-25.09
-S1 onLine false
-S1 truoc-Enter: Mất mạng · đang xem bản trên máy | Đang xem bản đã tải — mất mạng | Hiểu là 2,75 tỷ · không bao phí · trước 2,8 tỷ · −2% · Enter ghi | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
-saved E5c-mat-mang.png
-saved E5c-step1.png
-S1 sau-Enter: Mất mạng · 1 thay đổi chờ gửi | Đang xem bản đã tải — mất mạng | Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
-S1 server: status=200 listPrice=2800000000 standardStatus=Active price_changed=1 unit=A-25.09
-S2 waited ms 2033
-saved E5c-step2.png
-S2 ui: Đã đồng bộ · 00:31 | Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
-S2 server: status=200 listPrice=2750000000 standardStatus=Active price_changed=2 unit=A-25.09
-S3 truoc-go: INPUT:2,75 tỷh
-S3 offline sau-Enter: Mất mạng · 1 thay đổi chờ gửi | Đang xem bản đã tải — mất mạng | Hiểu là 2,7 tỷ · không bao phí · trước 2,7 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,7 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
-saved E5c-step3a.png
-BAN: hồ sơ 2f4d6d01-a8a6-4907-af55-e94977b90d7a đã sang Đã bán trên máy chủ (trưởng nhóm chuyển)
-S3 server before online: status=200 listPrice=2750000000 standardStatus=Closed price_changed=2 unit=A-25.09
-saved E5c-tu-choi.png
-saved E5c-step3.png
-S3 ui: 1 căn cần xem | Đã bán | Hiểu là 2,7 tỷ · không bao phí · trước 2,75 tỷ · −2% · Enter ghi | Lần ghi chưa lên máy chủ: căn đã bán | Thao tác của bạn đang chờ ở «Cần xem» — chọn giữ hay bỏ ở đó. | Mở Cần xem | Đã bán 2,75 tỷ · đã xác nhận với chủ | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
-S3 server: status=200 listPrice=2750000000 standardStatus=Closed price_changed=2 unit=A-25.09
-NET [["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a",200],["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a",200],["GET","/api/v1/listings",200],["GET","/api/v1/catalog",200],["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a/owner",200],["GET","/api/v1/catalog",200],["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a/owner",200],["GET","/api/v1/listings","ERR Failed to fetch"],["POST","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a/events","ERR Failed to fetch"],["POST","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a/events",200],["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a",200],["GET","/api/v1/listings",200],["POST","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a/events","ERR Failed to fetch"],["POST","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a/events",409],["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a",200],["GET","/api/v1/listings/2f4d6d01-a8a6-4907-af55-e94977b90d7a",200],["GET","/api/v1/listings",200]] ERR=[]
+# NETWORK (CDP) E5c
+2026-11-02T17:39:36.350Z GET http://localhost:3485/units/call?hang=62f8c81a-96dc-4758-8115-13f6c39d7872 -> 200 [Document]
+2026-11-02T17:39:36.358Z GET http://localhost:3485/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 -> 200 [Font]
+2026-11-02T17:39:36.358Z GET http://localhost:3485/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2 -> 200 [Font]
+2026-11-02T17:39:36.359Z GET http://localhost:3485/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js -> 200 [Script]
+2026-11-02T17:39:36.360Z GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js -> 200 [Script]
+2026-11-02T17:39:36.360Z GET http://localhost:3485/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js -> 200 [Script]
+2026-11-02T17:39:36.360Z GET http://localhost:3485/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css -> 200 [Stylesheet]
+2026-11-02T17:39:36.360Z GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js -> 200 [Script]
+2026-11-02T17:39:36.362Z GET http://localhost:3485/manifest.webmanifest -> 200 [Manifest]
+2026-11-02T17:39:36.364Z GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js -> 200 [Script]
+2026-11-02T17:39:36.365Z GET http://localhost:3485/_next/static/chunks/apps_web_1anvha4rlo79g._.js -> 200 [Script]
+2026-11-02T17:39:36.366Z GET http://localhost:3485/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js -> 200 [Script]
+2026-11-02T17:39:36.369Z GET http://localhost:3485/_next/static/chunks/apps_web_20p8eawbcoy94._.js -> 200 [Script]
+2026-11-02T17:39:36.369Z GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js -> 200 [Script]
+2026-11-02T17:39:36.399Z GET http://localhost:3485/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js -> 200 [Script]
+2026-11-02T17:39:36.399Z GET http://localhost:3485/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2 -> 200 [Font]
+2026-11-02T17:39:36.400Z GET http://localhost:3485/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js -> 200 [Script]
+2026-11-02T17:39:36.400Z GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js -> 200 [Script]
+2026-11-02T17:39:36.401Z GET http://localhost:3485/_next/static/chunks/apps_web_src_1y5l-kud9pt6s._.js -> 200 [Script]
+2026-11-02T17:39:36.401Z GET http://localhost:3485/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js -> 200 [Script]
+2026-11-02T17:39:36.402Z GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js -> 200 [Script]
+2026-11-02T17:39:36.403Z GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_drawer_0_4bb8bkpmi10._.js -> 200 [Script]
+2026-11-02T17:39:36.403Z GET http://localhost:3485/_next/static/chunks/node_modules_1axlho38regs0._.js -> 200 [Script]
+2026-11-02T17:39:36.404Z GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js -> 200 [Script]
+2026-11-02T17:39:36.404Z GET http://localhost:3485/_next/static/chunks/node_modules_1nc4crjayg17u._.js -> 200 [Script]
+2026-11-02T17:39:36.404Z GET http://localhost:3485/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js -> 200 [Script]
+2026-11-02T17:39:36.405Z GET http://localhost:3485/_next/static/chunks/_019q2kglz__79._.js -> 200 [Script]
+2026-11-02T17:39:36.405Z GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_00ecwwfw3lcbq._.js -> 200 [Script]
+2026-11-02T17:39:36.406Z GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_internals_1l88rrr5k8_28._.js -> 200 [Script]
+2026-11-02T17:39:36.406Z GET http://localhost:3485/_next/static/chunks/_1d-iqqqbayd8i._.js -> 200 [Script]
+2026-11-02T17:39:36.406Z GET http://localhost:3485/_next/static/chunks/node_modules_1l2ifqw-pm-fo._.js -> 200 [Script]
+2026-11-02T17:39:36.406Z GET http://localhost:3485/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js -> 200 [Script]
+2026-11-02T17:39:36.406Z GET http://localhost:3485/_next/static/chunks/_0iw5c-zo6ta3f._.js -> 200 [Script]
+2026-11-02T17:39:36.407Z GET http://localhost:3485/_next/static/chunks/node_modules_0zs-tj5w7mqeo._.js -> 200 [Script]
+2026-11-02T17:39:36.407Z GET http://localhost:3485/_next/static/chunks/apps_web_src_11gcnic_hiavz._.js -> 200 [Script]
+2026-11-02T17:39:36.442Z GET http://localhost:3485/_next/static/chunks/_1y306g9rrggck._.js -> 200 [Script]
+2026-11-02T17:39:36.444Z GET http://localhost:3485/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js -> 200 [Script]
+2026-11-02T17:39:36.474Z GET http://localhost:3485/favicon.ico -> 404 [Other]
+2026-11-02T17:39:36.485Z GET http://localhost:3485/icons/icon-192.png -> 200 [Other]
+2026-11-02T17:39:36.538Z GET http://localhost:3485/manifest.webmanifest -> 200 [Manifest]
+2026-11-02T17:39:36.540Z GET http://localhost:3485/icons/icon-192.png -> 200 [Other]
+2026-11-02T17:39:36.571Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872 -> 200 [Fetch]
+2026-11-02T17:39:36.583Z GET http://localhost:3485/api/v1/listings -> 200 [Fetch]
+2026-11-02T17:39:36.642Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872 -> 200 [Fetch]
+2026-11-02T17:39:36.646Z GET http://localhost:3485/api/v1/catalog -> 200 [Fetch]
+2026-11-02T17:39:36.646Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872/owner -> 200 [Fetch]
+2026-11-02T17:39:36.646Z GET http://localhost:3485/api/v1/catalog -> 200 [Fetch]
+2026-11-02T17:39:36.663Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872/owner -> 200 [Fetch]
+2026-11-02T17:39:42.258Z GET http://localhost:3485/api/v1/listings FAILED net::ERR_INTERNET_DISCONNECTED [Fetch]
+2026-11-02T17:39:43.542Z POST http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872/events FAILED net::ERR_INTERNET_DISCONNECTED [Fetch]
+2026-11-02T17:39:46.103Z POST http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872/events -> 200 [Fetch]
+2026-11-02T17:39:46.137Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872 -> 200 [Fetch]
+2026-11-02T17:39:46.180Z GET http://localhost:3485/api/v1/listings -> 200 [Fetch]
+2026-11-02T17:39:56.799Z POST http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872/events FAILED net::ERR_INTERNET_DISCONNECTED [Fetch]
+2026-11-02T17:39:59.805Z POST http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872/events -> 409 [Fetch]
+2026-11-02T17:39:59.817Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872 -> 200 [Fetch]
+2026-11-02T17:39:59.856Z GET http://localhost:3485/api/v1/listings/62f8c81a-96dc-4758-8115-13f6c39d7872 -> 200 [Fetch]
+2026-11-02T17:39:59.895Z GET http://localhost:3485/api/v1/listings -> 200 [Fetch]
+# CONSOLE errors/warnings
+# LOG
+api-truoc: {"http":200,"listPrice":2800000000,"standardStatus":"Active","nPriceChanged":1,"last":"status_changed"}
+s0-text: Đã đồng bộ · 00:39 | Hạ giá | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+s1-truoc-enter: Mất mạng · đang xem bản trên máy | Đang xem bản đã tải — mất mạng | Thay đổi được giữ trên máy và gửi đi khi có mạng lại. | Hạ giá | Hiểu là 2,75 tỷ · không bao phí · trước 2,8 tỷ · −2% · Enter ghi | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+s1-sau-enter: Mất mạng · 1 thay đổi chờ gửi | Đang xem bản đã tải — mất mạng | Thay đổi được giữ trên máy và gửi đi khi có mạng lại. | Hạ giá | Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+s1-api-offline-bang-node: {"http":200,"listPrice":2800000000,"standardStatus":"Active","nPriceChanged":1,"last":"status_changed"}
+s2-text: Đã đồng bộ · 00:39 | Hạ giá | Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,75 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+s2-api: {"http":200,"listPrice":2750000000,"standardStatus":"Active","nPriceChanged":2,"last":"price_changed"}
+s3-focus-sau-esc: BODY:
+s3-input-sau-H: INPUT:2,75 tỷ
+s3-truoc-ban: Mất mạng · 1 thay đổi chờ gửi | Đang xem bản đã tải — mất mạng | Thay đổi được giữ trên máy và gửi đi khi có mạng lại. | Hạ giá | Hiểu là 2,7 tỷ · không bao phí · trước 2,7 tỷ · 0% · Enter ghi | Đã ghi: Hạ giá 2,7 tỷ · không bao phí | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+dung-d-ban: hồ sơ 62f8c81a-96dc-4758-8115-13f6c39d7872 đã sang Đã bán trên máy chủ (trưởng nhóm chuyển)
+s3-text: 1 căn cần xem | Đã bán | Hạ giá | Hiểu là 2,7 tỷ · không bao phí · trước 2,75 tỷ · −2% · Enter ghi | Lần ghi chưa lên máy chủ: căn đã bán | Thao tác của bạn đang chờ ở «Cần xem» — chọn giữ hay bỏ ở đó. | Mở Cần xem | Đã bán 2,75 tỷ · đã xác nhận với chủ | Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+s3-api: {"http":200,"listPrice":2750000000,"standardStatus":"Closed","nPriceChanged":2,"last":"status_changed"}
+s3-co-Da-ghi: false
