@@ -104,7 +104,7 @@ evals:
     criterion: AC-8
     executor: test
     cmd: config:executors.test.ui_lint
-    expected: "exit 0; ca «ảnh chuẩn: đủ 21» (packages/ui-lint/tests/anh-chuan.test.mjs) có mặt và ok — design/anh-chuan/ có đúng 21 tệp <bố cục>-<1440|1024|375>.png khớp 7 mã BO_CUC (assert số), mỗi tệp là PNG hợp lệ; catalog.md có dòng ảnh chuẩn cho từng bố cục; ca «bản đồ: khoá bo_cuc» ok — mục bản đồ nhóm dưới (app) khai bo_cuc thuộc 7 mã; mã lạ → lỗi đọc ghim 'bo_cuc lạ'; ca «đối chiếu: cặp ảnh chuẩn» ok — keHoachDoiChieu cho vòng chạm màn của nhóm có bo_cuc mà chưa có màn mẫu sinh cặp (màn mới, design/anh-chuan/<bo_cuc>-1440.png và -375.png). Chiều đỏ: xoá một ảnh chuẩn trong bản sao → ca đủ-21 đỏ ghim tên tệp thiếu."
+    expected: "exit 0; ca «ảnh chuẩn: đủ 21» (packages/ui-lint/tests/anh-chuan.test.mjs) có mặt và ok — design/anh-chuan/ có đúng 21 tệp <bố cục>-<1440|1024|375>.png khớp 7 mã BO_CUC (assert số), mỗi tệp là PNG hợp lệ; catalog.md có dòng ảnh chuẩn cho từng bố cục; ca «bản đồ: khoá bo_cuc» ok — mục bản đồ nhóm dưới (app) khai bo_cuc thuộc 7 mã; mã lạ → lỗi đọc ghim 'bo_cuc lạ'; ca «đối chiếu: cặp ảnh chuẩn» ok — keHoachDoiChieu cho vòng chạm màn của nhóm có bo_cuc mà chưa có màn mẫu sinh cặp (màn mới, design/anh-chuan/<bo_cuc>-1440.png và -375.png); ca «ba lối nhiều ô» (packages/ui-lint/tests/ba-loi.test.mjs) ok — hồ sơ thử có ba-loi/a/ và ba-loi/b/ hợp lệ → kiemTrangHoSo trả []; xoá một ảnh của ô b → đúng một lỗi mở đầu 'ô b:'; hồ sơ một ô (ba-loi/ba-loi.json) vẫn kiểm như cũ. Chiều đỏ: xoá một ảnh chuẩn trong bản sao → ca đủ-21 đỏ ghim tên tệp thiếu."
     paths: [design/anh-chuan/**, design/patterns/**, packages/ui-lint/**, .agents/skills/quy-hang-ui/catalog.md]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

@@ -16,7 +16,7 @@
 //   [--root <kho>]
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { docBanDo, nhomCuaTep } from "./lib/ban-do.mjs";
@@ -134,14 +134,15 @@ ${hang.join("\n")}
   console.log(`đối chiếu: ${cap.length} cặp đủ`);
 }
 
-const thuMucBaLoi = (slug) => join(root, "_acceptance", slug, "ba-loi");
+// `--o <mã ô>` (hàng 91): hồ sơ có nhiều ô chưa có khuôn đặt mỗi ô một thư mục `ba-loi/<mã ô>/`.
+const thuMucBaLoi = (slug) => join(root, "_acceptance", slug, "ba-loi", ...(arg("--o") ? [arg("--o")] : []));
 
 function keHoachBaLoi(slug) {
   const d = thuMucBaLoi(slug);
   mkdirSync(d, { recursive: true });
   const p = join(d, "ba-loi.json");
   if (!existsSync(p)) writeFileSync(p, JSON.stringify(khungBaLoi(), null, 2) + "\n");
-  for (const { ma } of LOI) for (const kho of KHO_BA_LOI) console.log(`${ma} · ${kho} → ba-loi/${tenAnhBaLoi(ma, kho)}`);
+  for (const { ma } of LOI) for (const kho of KHO_BA_LOI) console.log(`${ma} · ${kho} → ${relative(join(root, "_acceptance", slug), d)}/${tenAnhBaLoi(ma, kho)}`);
 }
 
 function dungBaLoi(slug) {
@@ -157,7 +158,7 @@ function dungBaLoi(slug) {
   for (const l of kq.loi) console.error(l);
   if (kq.loi.length) process.exit(1);
   writeFileSync(join(d, "index.html"), dungTrangBaLoi(kq.du, d));
-  console.log(`ba lối: dựng ${slug}/ba-loi/index.html — khuyên ${kq.du.khuyen.loi}`);
+  console.log(`ba lối: dựng ${relative(join(root, "_acceptance"), d)}/index.html — khuyên ${kq.du.khuyen.loi}`);
 }
 
 function kiemVong(slug, base, den) {

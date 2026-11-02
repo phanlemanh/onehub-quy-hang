@@ -71,7 +71,8 @@ mỗi tổ hợp có địa chỉ riêng; trang không nhập lớp gọi API; �
 Given ảnh chuẩn chụp từ trang mẫu sống
 When một vòng giao diện chạm màn của một nhóm có khai bố cục
 Then kho có 21 ảnh chuẩn (bảy bố cục × ba khổ) ghi ở danh mục khối; mục bản đồ khuôn có khoá `bo_cuc`; bộ đối chiếu lập
-cặp «màn mới · ảnh chuẩn của bố cục nó dùng», kể cả màn đầu của nhóm chưa có màn mẫu.
+cặp «màn mới · ảnh chuẩn của bố cục nó dùng», kể cả màn đầu của nhóm chưa có màn mẫu; trang ba lối nhận nhiều ô
+trong một hồ sơ (`ba-loi/<mã ô>/`, lệnh `--o <mã ô>`) và kiểm chuẩn kiểm từng ô, lỗi gọi tên ô.
 
 ### AC-9 — Răng lint
 Given một màn dưới `(app)` (tệp thử)

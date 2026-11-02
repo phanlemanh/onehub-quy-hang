@@ -18,7 +18,10 @@ export function MobileHeader({
   unitJump,
   onJump,
   className,
+  mau,
 }: {
+  /** Trang mẫu sống: không có bộ đồng bộ nên không có chỉ báo. */
+  mau?: boolean;
   title: string;
   unitJump: boolean;
   onJump: () => void;
@@ -34,7 +37,7 @@ export function MobileHeader({
           <SearchIcon />
         </Button>
       )}
-      <ChiBaoDongBo gon />
+      {!mau && <ChiBaoDongBo gon />}
       <Notifications />
     </header>
   );

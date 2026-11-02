@@ -1,0 +1,24 @@
+{
+  "man": "Đầu màn của mọi bố cục (hàng 91, Hỏi-3) — dựng trên mục Cài đặt sàn «Cách gọi»",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Ghép ngay trong FrameHeader nên cùng họ khung với thân màn: đường dẫn khi sâu, tiêu đề và một dòng, một nút chính, hai nút phụ, phần còn lại vào «…» — một luật cho mọi màn, như ADR-0024 §3."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Tiêu đề và nút rời trong FrameHeader — cách các màn hôm nay tự làm",
+      "dong_co": "Không đổi thói quen của màn đã có; mọi nút hiện thẳng.",
+      "danh_doi": "Không có đường dẫn nên màn sâu không biết đang ở đâu; số nút không giới hạn, bốn nút đã tràn hàng."
+    },
+    "reui": {
+      "nhan": "FrameHeader + breadcrumb + button + dropdown-menu (ghép, dòng «Chỗ hở»)",
+      "dong_co": "Một luật cho mọi màn; đường dẫn và trần hai nút phụ chặn đầu màn rối.",
+      "danh_doi": "Nút thứ tư trở đi nằm sau «…», người phải mở mới thấy; vẫn là ghép vì ReUI không có khối đầu trang."
+    },
+    "ve-moi": {
+      "nhan": "Dải đầu màn tách khỏi Frame, nằm trên nền",
+      "dong_co": "Thoáng, tiêu đề lớn như trang tài liệu.",
+      "danh_doi": "Hai lớp đầu (dải và khung) ở mọi màn, tốn chiều cao màn Tràn; khác họ khung với thân."
+    }
+  }
+}

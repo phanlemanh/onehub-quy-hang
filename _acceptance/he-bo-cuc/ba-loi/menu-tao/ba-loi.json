@@ -1,0 +1,24 @@
+{
+  "man": "Menu Tạo trên thanh trên của vỏ (hàng 91, Hỏi-2)",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Giữ một chạm cho việc tạo đầu của vai (+ Lead), mọi việc tạo khác gom vào một menu ngay cạnh — thanh trên không chật ở 768–1023 như các nút rời, và màn không còn nút tạo của riêng nó."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Nút rời theo vai — vỏ app-shell-8 hôm nay",
+      "dong_co": "Không đổi gì; mỗi việc tạo một nút, thấy hết không cần mở menu.",
+      "danh_doi": "Ba nút chiếm thanh trên, chật ở máy tính vừa; nút tạo còn lặp ở đầu khung một số màn."
+    },
+    "reui": {
+      "nhan": "Nút chia button-group + dropdown-menu: «+ Lead» và mũi tên mở việc tạo khác",
+      "dong_co": "Một chạm cho việc làm nhiều nhất, phần còn lại một chỗ — cách Verve và ReUI đặt nút tạo.",
+      "danh_doi": "Việc tạo thứ hai trở đi cần hai chạm; người phải biết mũi tên mở thêm việc."
+    },
+    "ve-moi": {
+      "nhan": "Một nút «Tạo ▾» mở menu mọi việc tạo",
+      "dong_co": "Gọn nhất, một kiểu cho mọi vai.",
+      "danh_doi": "Mất cú một chạm cho lead — việc tạo làm nhiều nhất cũng phải mở menu; tự ghép nên thêm dòng «Chỗ hở»."
+    }
+  }
+}

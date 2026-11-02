@@ -65,8 +65,13 @@ function ThemeSegmentedToggle() {
 }
 
 export function AccountMenu({ email, companyName }: { email: string; companyName: string }) {
-  const router = useRouter();
   const { dangXuat } = useBoDongBo();
+  return <AccountMenuKhung email={email} companyName={companyName} dangXuat={dangXuat} />;
+}
+
+/** Thân menu tài khoản, không đọc bộ đồng bộ — trang mẫu sống dựng vỏ không có bộ đồng bộ. */
+export function AccountMenuKhung({ email, companyName, dangXuat }: { email: string; companyName: string; dangXuat: () => Promise<boolean> }) {
+  const router = useRouter();
   const initials = email.slice(0, 2).toUpperCase();
 
   return (
