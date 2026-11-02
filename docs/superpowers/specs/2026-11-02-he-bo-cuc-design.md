@@ -40,7 +40,7 @@ components/bo-cuc/
   vung.tsx            DauMan · ThanhCongCu · Than · CotPhu · Chan
   dau-man.tsx         đường dẫn (khi sâu > 1 tầng) · tiêu đề + một dòng · 1 nút chính, ≤ 2 phụ, còn lại «…»
   ngan-noi.tsx        NganNoi: Sheet phải ở máy tính, Drawer đáy ở điện thoại — chỗ duy nhất gọi Sheet/Drawer
-  cho-tai.tsx         ChoTai theo kiểu: lưới theo c-data-grid-21, đọc, hồ sơ hai cột, bảng điều khiển, luồng, dòng tin
+  cho-tai.tsx         ChoTai theo kiểu: lưới theo c-data-grid-21, đọc, hồ sơ một cột, bảng điều khiển, luồng, dòng tin
   dai-ngoai-tuyen.tsx dải báo đầu màn khi đang xem bản đã tải mà mất mạng (đọc trạng thái mạng của bộ đồng bộ)
   ma-tran.ts          bố cục × vùng (bảng ADR §3) — máy đọc, test và trang mẫu dùng chung
 ```
