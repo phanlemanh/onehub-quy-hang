@@ -174,7 +174,7 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
         {soMo ? (
           <span className="flex items-center gap-2">
             <span className="text-foreground text-sm font-medium tabular-nums">{chuSo(soMo)}</span>
-            <Button size="sm" render={<a href={telHref(soMo)} />}>
+            <Button size="sm" nativeButton={false} render={<a href={telHref(soMo)} />}>
               <PhoneIcon data-icon="inline-start" />
               Gọi
             </Button>
