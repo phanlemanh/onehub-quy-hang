@@ -1,0 +1,4 @@
+{
+  "feature_plain": "Đầu chủ đang được giao lead bấm «Mở số» ngay trên dòng lead ở Hôm nay, thấy số chủ nhà và bấm «Gọi»; mỗi lần mở để lại một vết ai mở, lúc nào; người khác không mở được và số không lưu trên máy.",
+  "analyst_plain": "Các bài kiểm của việc này chạy xanh cả trên bản trước khi làm, vì bài kiểm mới chưa có ở đó — bình thường với tính năng mới; mỗi bài kiểm mới đã được phá thử để thấy đỏ đúng chỗ (bỏ ghi vết, nới quyền cho mọi đầu chủ, nới luật đọc vết, liên kết gọi giữ dấu cách)."
+}
