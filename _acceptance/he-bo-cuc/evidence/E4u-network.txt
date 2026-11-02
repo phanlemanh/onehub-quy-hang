@@ -1,0 +1,6 @@
+Driver: playwright (context cách ly), máy chủ dùng chung http://localhost:3484 — không bật/tắt máy chủ nào.
+Trưởng nhóm /inventory (47 phản hồi app-origin, tải lại có nghe mạng): không có FAILED, không có status >= 400.
+  fetch/XHR app: GET /api/v1/listings 200 · GET /api/v1/catalog 200 · POST /__nextjs_original-stack-frames 200 (dev overlay)
+Đầu chủ /today (47 phản hồi): không có FAILED, không có status >= 400.
+Console (trưởng nhóm /inventory): [info] React DevTools · [log] HMR connected · [pageerror] "Hydration failed because the server rendered HTML didn't match the client" (ghi chú, ngoài phạm vi fetch/XHR; dev overlay hiện «1 Issue»).
+Console (đầu chủ /today): không pageerror.

@@ -1,0 +1,9 @@
+E7u network/console (driver: Playwright, origin http://localhost:3494, server next start, no DATABASE_URL in env of pid 97329/97455)
+Console error/warning/pageerror during scripted run (7 trang): 0
+Console (first manual load): 1 error = GET /favicon.ico 404 (static asset, note only)
+Document loads: 7x GET /mau/he-bo-cuc?... -> 200 (and iframe /mau/he-bo-cuc/xem?... -> 200); no redirect to /login for the page itself
+Status >= 500 or connection error: 0
+4xx on fetch/XHR: 0 (only favicon.ico 404, static)
+Aborted (net::ERR_ABORTED): Next RSC prefetch requests (?_rsc=...) cancelled when the test navigated away - not connection errors
+307 -> /login: only Next <Link> prefetches of shell routes (/today, /inventory, /shares, /team, /leads/new) fired from the sample shell inside the xem iframe; page itself not redirected
+No /api/* requests, no database requests observed
