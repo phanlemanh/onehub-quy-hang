@@ -1966,6 +1966,12 @@
       "cau_giao": "Vá Che vùng ảnh: trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ",
       "slug": "va-che-vung-anh",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-he-bo-cuc",
+      "cau_giao": "Vá Hệ bố cục: mỗi mục của Hôm nay ở cột thứ hai mở đúng chỗ của nó, mục chưa có màn thì ẩn hay báo rõ, không mục nào bấm mà không phản hồi",
+      "slug": "va-he-bo-cuc",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],
   "chan_troi": [
