@@ -1,53 +1,32 @@
-# Review findings: chuyen-khong-ket-khoa
+# Review findings: chuyen-khong-ket-khoa (round 2)
 
 ## Trong hợp đồng
 
-Không có finding nào.
+- **Ca kiểm AC-1 không chụp khoá trên chính đường chạy của bài chuyển**
+  file: `packages/api/test-db/lien-he-chuyen.test.ts:153`
+  severity: medium
+  AC: AC-1
+  source: bugs
+  detail: Ca kiểm gọi `theoThuTuKhoa(ghi, ghi)`, tức chỉ chụp pg_locks trong một giao dịch rỗng. Nó không chụp trong lần gọi `chuyen()`, nơi thực sự chạy app.lien_he_chuyen_du_lieu. Đoạn sau gọi `chuyen(X.s)` và chỉ kiểm kết quả dữ liệu, không kiểm khoá. Hệ quả có hai. (1) Nếu `chuyen` bị đổi để không đi qua theoThuTuKhoa (ví dụ quay về gọi thẳng appPool.query), ca kiểm vẫn xanh, dù tên ca và expected của E1 nói ca này chứng «trong giao dịch của bài chuyển». (2) Khoá mà hàm chuyển tự lấy khi chạy thì không bao giờ được đếm, nên khẳng định của AC-1 «bài chuyển không giữ khoá độc quyền bảng chung nào» chưa được đo trên bài chuyển thật. Các đột biến được nêu trong evals chỉ đụng đến theoThuTuKhoa, nên không lộ ra lỗ hổng này.
+
+- **Đo CHỈ DẪN thay vì ĐẦU RA: ca thứ tự khoá chỉ đo hàm khoá dùng chung chạy với một hàm thăm dò, không đo đường thật của bài chuyển**
+  file: `packages/api/test-db/lien-he-chuyen.test.ts:153`
+  severity: medium
+  AC: AC-1
+  source: measurement
+  detail: AC-1 hứa rằng chính bài chuyển (bước đưa sàn về trước 016 `veTruoc016` và lần chạy `chuyen`) đã giữ khoá bảng chủ nhà rồi bảng lead trước câu ghi đầu tiên. Nhưng ca chỉ đọc pg_locks (assert deepEqual `chup` ở dòng 154 và `manh === 0` ở dòng 155) trong lời gọi `await theoThuTuKhoa(ghi, ghi)`. Ở lời gọi đó, `ghi` vừa là hàm thăm dò, vừa đứng ở chỗ thân giao dịch. Vậy ca đo hàm khoá dùng chung chứ không đo chỗ dùng nó. Các lệnh `veTruoc016(X.s)` (dòng 160) và `chuyen(X.s)` (dòng 163) có chạy thật, nhưng không lần chụp khoá nào nằm trong giao dịch của chúng, và các assert sau đó chỉ kiểm kết quả dữ liệu. Nếu `veTruoc016` hoặc `chuyen` quay về gọi thẳng `appPool.query` như bản cũ từng kẹt khoá, cả ca vẫn xanh. Ba đột biến đỏ trong evals.yaml E1 đều đổi bên trong `theoThuTuKhoa`, nên không bắt được kiểu hồi quy này. Cách sửa gợi ý: chụp khoá ngay trong thân giao dịch của `veTruoc016` và `chuyen` (truyền hàm thăm dò `sauMoiKhoa` qua chúng, hoặc chụp ở đầu `fn`).
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Phép chờ khoá trong ca kẹt khoá đếm cả khoá chờ của tệp kiểm khác, nên chiều đỏ không tất định như hồ sơ khẳng định**
-  Người dùng thấy gì: Bài kiểm có thể đôi khi xanh dù lỗi kẹt khoá quay lại, nên lưới bảo vệ yếu hơn hồ sơ nói. Người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ là bài kiểm nội bộ, không mất dữ liệu và không chạm người dùng; chỉ làm lưới bắt lỗi kém chắc hơn, sửa sau vẫn rẻ.
-  file: `packages/api/test-db/lien-he-chuyen.test.ts`
-  severity: medium
+- **Bằng chứng PASS đã cũ: chấm ở mã 02bd061 với một ca kiểm không còn tồn tại**
+  Người dùng thấy gì: Trang bằng chứng đang trình để ký ghi kết quả của một lượt chấm trên mã cũ, nên người ký có thể ký trên số liệu không còn khớp với bản hiện tại.
+  Căn cứ: Không mất dữ liệu và không ảnh hưởng người dùng cuối, chỉ là hồ sơ ký lệch bản; chấm lại là rẻ và làm được bất cứ lúc nào trước khi ký.
+  file: `_acceptance/chuyen-khong-ket-khoa/evidence-page.html`
+  severity: high
   Đề xuất: known-limits
 
-- **Nhánh lỗi trả kết nối về pool khi giao dịch còn mở và còn giữ ACCESS EXCLUSIVE trên listing_owners**
-  Người dùng thấy gì: Khi bài kiểm này tự đỏ, nó có thể làm các bài kiểm khác treo, che mất lỗi gốc. Người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ xảy ra khi bài kiểm đã hỏng sẵn, không mất dữ liệu; kẹt tự hết khi tiến trình kiểm kết thúc, chạy lại là được.
-  file: `packages/api/test-db/lien-he-chuyen.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Ca mới tự gây kẹt khoá với tệp kiểm khác chạy song song (cùng loại lỗi hồ sơ này định sửa)**
-  Người dùng thấy gì: Hiếm khi, một bài kiểm của hồ sơ khác có thể đỏ oan vì va chạm khoá khi chạy song song. Người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ làm đỏ giả ở bài kiểm, không mất dữ liệu, chạy lại thường xanh; nhưng đáng ghi lại vì có thể gây nhiễu ở lần gộp khác.
-  file: `packages/api/test-db/lien-he-chuyen.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Vòng chờ pg_locks không lọc theo kết nối của bài chuyển nên thế kẹt không tất định khi chạy song song**
-  Người dùng thấy gì: Bài kiểm có thể xanh oan mà chưa thật sự dựng được tình huống kẹt khoá. Người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ làm lưới kiểm yếu đi, không động đến dữ liệu thật; sửa sau rẻ và an toàn.
-  file: `packages/api/test-db/lien-he-chuyen.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Nhánh lỗi trả kết nối về pool khi giao dịch còn mở và vẫn giữ ACCESS EXCLUSIVE**
-  Người dùng thấy gì: Khi bài kiểm này đỏ, các bài kiểm khác có thể treo và lỗi gốc bị che. Người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ xảy ra khi bài kiểm đã hỏng, không mất dữ liệu, thử lại là hết; hậu quả nhẹ.
-  file: `packages/api/test-db/lien-he-chuyen.test.ts`
-  severity: low
-  Đề xuất: known-limits
-
-- **Hình dạng 4 (âm tính một mình): bước đối chứng dương 'thế kẹt đã dựng' không gắn với phiên của bài chuyển**
-  Người dùng thấy gì: Bài kiểm có thể báo xanh dù chưa chứng minh được tình huống kẹt khoá đã xảy ra. Người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ làm bài kiểm kém chắc, không có mất mát dữ liệu hay ảnh hưởng người dùng; sửa sau rẻ.
-  file: `packages/api/test-db/lien-he-chuyen.test.ts`
-  severity: medium
-  Đề xuất: known-limits
+## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

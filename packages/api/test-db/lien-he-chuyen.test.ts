@@ -50,6 +50,7 @@ async function theoThuTuKhoa<T>(fn: (c: pg.PoolClient) => Promise<T>, sauMoiKhoa
     await c.query("lock table leads in row exclusive mode");
     await sauMoiKhoa?.(c);
     const kq = await fn(c);
+    await sauMoiKhoa?.(c);
     await c.query("commit");
     return kq;
   } catch (e) {
@@ -61,13 +62,13 @@ async function theoThuTuKhoa<T>(fn: (c: pg.PoolClient) => Promise<T>, sauMoiKhoa
 }
 
 /** Đưa sàn về trạng thái trước 016: gỡ mã liên hệ, xoá số và liên hệ. */
-const veTruoc016 = (san: San) =>
+const veTruoc016 = (san: San, thamDo?: (c: pg.PoolClient) => Promise<void>) =>
   theoThuTuKhoa(async (c) => {
     await c.query("update listing_owners set contact_id = null where company_id = $1", [san.companyId]);
     await c.query("update leads set contact_id = null where company_id = $1", [san.companyId]);
     await c.query("delete from contact_phones where company_id = $1", [san.companyId]);
     await c.query("delete from contacts where company_id = $1", [san.companyId]);
-  });
+  }, thamDo);
 const chup = async (san: San) =>
   (
     await appPool.query(
@@ -78,7 +79,8 @@ const chup = async (san: San) =>
   ).rows;
 const dem = async (san: San) =>
   (await appPool.query<{ c: number; p: number }>("select (select count(*)::int from contacts where company_id = $1) c, (select count(*)::int from contact_phones where company_id = $1) p", [san.companyId])).rows[0]!;
-const chuyen = (san: San) => theoThuTuKhoa((c) => c.query("select * from app.lien_he_chuyen_du_lieu($1)", [san.companyId]));
+const chuyen = (san: San, thamDo?: (c: pg.PoolClient) => Promise<void>) =>
+  theoThuTuKhoa((c) => c.query("select * from app.lien_he_chuyen_du_lieu($1)", [san.companyId]), thamDo);
 
 test("liên hệ: chuyển dữ liệu cũ", async () => {
   const A = await dung(false);
@@ -150,17 +152,18 @@ test("liên hệ: bài chuyển khoá bảng chủ nhà rồi bảng lead trư�
     chup.push(r.rows.map((x) => x.bang).sort());
     manh += (await c.query<{ n: number }>("select count(*)::int n from pg_locks where pid = pg_backend_pid() and locktype = 'relation' and mode = any($1)", [MANH])).rows[0]!.n;
   };
-  await theoThuTuKhoa(ghi, ghi);
-  assert.deepEqual(chup, [["listing_owners"], ["leads", "listing_owners"], ["leads", "listing_owners"]], "chưa khoá bảng chủ nhà rồi bảng lead trước câu ghi");
-  assert.equal(manh, 0, "bài chuyển giữ khoá mạnh trên bảng");
-  // Bài chuyển đi qua đúng đường ấy chạy trọn: mọi lead gắn liên hệ, liên hệ là bản dựng mới.
+  // Chụp trên chính đường chạy của bài chuyển: bước trước 016 rồi hàm chuyển, mỗi đường ba lần (sau hai lệnh khoá, sau thân).
   const X = await dung(false);
   const truoc = (await appPool.query<{ id: string }>("select id from contacts where company_id = $1", [X.s.companyId])).rows.map((r) => r.id);
   assert.ok(truoc.length > 0, "đối chứng: sàn chưa có liên hệ trước khi chuyển");
-  await veTruoc016(X.s);
+  await veTruoc016(X.s, ghi);
   const goLienKet = (await appPool.query<{ n: number }>("select count(*)::int n from leads where company_id = $1 and contact_id is null", [X.s.companyId])).rows[0]!.n;
   assert.ok(goLienKet > 0, "đối chứng: bước trước 016 không gỡ liên kết lead");
-  await chuyen(X.s);
+  await chuyen(X.s, ghi);
+  // Hai lần chụp đầu của mỗi đường: chủ nhà trước, rồi chủ nhà và lead — trước câu ghi đầu tiên.
+  assert.equal(chup.length, 6, "thiếu lần chụp trên đường chạy của bài chuyển");
+  assert.deepEqual([chup[0], chup[1], chup[3], chup[4]], [["listing_owners"], ["leads", "listing_owners"], ["listing_owners"], ["leads", "listing_owners"]], "chưa khoá bảng chủ nhà rồi bảng lead trước câu ghi");
+  assert.equal(manh, 0, "bài chuyển giữ khoá mạnh trên bảng");
   assert.equal((await appPool.query<{ n: number }>("select count(*)::int n from leads where company_id = $1 and contact_id is null", [X.s.companyId])).rows[0]!.n, 0, "lead chưa gắn liên hệ sau chuyển");
   const sau = (await appPool.query<{ id: string }>("select id from contacts where company_id = $1", [X.s.companyId])).rows.map((r) => r.id);
   assert.ok(sau.length > 0 && sau.every((id) => !truoc.includes(id)), "liên hệ sau chuyển vẫn là liên hệ cũ — bài chuyển không chạy");

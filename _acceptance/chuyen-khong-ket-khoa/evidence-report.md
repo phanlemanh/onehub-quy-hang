@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 02bd061999be7e5ec922782a666060f2b253fa37
+verified_commit: aebbf39c7ff04e9331b8a7dbd66f5b7fe2a92e58
 human_signoff:
 ---
 
@@ -21,63 +21,61 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-chuyen-khong-ket-khoa-E1-r1
+  run_id: minted-chuyen-khong-ket-khoa-E1-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test
-    ca «liên hệ: bài chuyển không kẹt khoá với bài gỡ ràng buộc chạy song song» có mặt và ok
-    ℹ duration_ms 7063.463875
+    npm run db:migrate && npm run db:test
+    ℹ duration_ms 22875.93125
 
 - eval: E2
-  run_id: minted-chuyen-khong-ket-khoa-E2-r1
+  run_id: minted-chuyen-khong-ket-khoa-E2-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test
-    hai ca «liên hệ: chuyển dữ liệu cũ» và «liên hệ: chuyển trên sàn không có dữ liệu» có mặt và ok
-    ℹ duration_ms 7063.463875
+    npm run db:migrate && npm run db:test
+    ℹ duration_ms 22875.93125
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 - cmd: npm run test:hooks
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-test_hooks-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 - cmd: npm run typecheck
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-typecheck-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 - cmd: npm run lint
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-lint-r1
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-01T15:46:48Z
+  verified_at: 2026-11-02T02:40:28Z
 
 ## Known limits
 
@@ -85,12 +83,13 @@ human_signoff:
 
 ## Analyst
 
-none — mọi eval feature đều red trên baseline (có phân biệt)
+Eval không phân biệt (xanh ở cả HEAD lẫn baseline): E1 và E2, cùng lệnh `npm run db:migrate && npm run db:test`. Hai eval này chứng minh harness chạy được. Chúng chưa chứng minh riêng tính năng, nên cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý. Với E1, phần đo khoá chỉ chụp trong giao dịch của hàm khoá dùng chung, không chụp trong lần chạy bài chuyển thật (xem review-findings.md, mục Trong hợp đồng).
 
 ## Variance
 
-none — mọi eval nhiều lần chạy đều đồng nhất
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E1, E2 đều đạt, baseline red (có phân biệt); các lệnh suite hồi quy xanh. Verdict PASS.
+Round 1: PASS ở mã 02bd061, hồ sơ bằng chứng đó về sau cũ vì ca kiểm E1 được viết lại.
+Round 2: PASS ở mã aebbf39, E1 và E2 cùng bảy lệnh suite đều xanh.
