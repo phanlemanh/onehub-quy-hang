@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: aebbf39c7ff04e9331b8a7dbd66f5b7fe2a92e58
+verified_commit: f7ef63737e2eda978a2f8a9215590707b096474c
 human_signoff:
 ---
 
@@ -21,61 +21,63 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-chuyen-khong-ket-khoa-E1-r2
+  run_id: minted-chuyen-khong-ket-khoa-E1-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 22875.93125
+    lệnh: npm run db:migrate && npm run db:test
+    ca «liên hệ: bài chuyển khoá bảng chủ nhà rồi bảng lead trước mọi câu ghi» có mặt và ok
+    ℹ duration_ms 22622.272875
 
 - eval: E2
-  run_id: minted-chuyen-khong-ket-khoa-E2-r2
+  run_id: minted-chuyen-khong-ket-khoa-E2-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 22875.93125
+    lệnh: npm run db:migrate && npm run db:test
+    hai ca «liên hệ: chuyển dữ liệu cũ» và «liên hệ: chuyển trên sàn không có dữ liệu» có mặt và ok
+    ℹ duration_ms 22622.272875
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 - cmd: npm run test:hooks
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-test_hooks-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 - cmd: npm run typecheck
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-typecheck-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 - cmd: npm run lint
-  run_id: minted-chuyen-khong-ket-khoa-SUITE-lint-r2
+  run_id: minted-chuyen-khong-ket-khoa-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-02T02:40:28Z
+  verified_at: 2026-11-02T02:45:32Z
 
 ## Known limits
 
@@ -83,13 +85,15 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh ở cả HEAD lẫn baseline): E1 và E2, cùng lệnh `npm run db:migrate && npm run db:test`. Hai eval này chứng minh harness chạy được. Chúng chưa chứng minh riêng tính năng, nên cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý. Với E1, phần đo khoá chỉ chụp trong giao dịch của hàm khoá dùng chung, không chụp trong lần chạy bài chuyển thật (xem review-findings.md, mục Trong hợp đồng).
+carried tu round 2 — baseline khong do lai round nay.
+
+Eval khong-phan-biet (xanh ca tren code hien tai lan baseline): E1, E2 (lenh `npm run db:migrate && npm run db:test`). Hai eval nay chung minh harness; nen viet lai de assert hanh vi moi, hoac xac nhan la regression-guard co chu y.
 
 ## Variance
 
-none — every multi-run eval is uniform
+none — every multi-run eval is uniform (moi eval chay mot lan, deterministic).
 
 ## Iterations
 
-Round 1: PASS ở mã 02bd061, hồ sơ bằng chứng đó về sau cũ vì ca kiểm E1 được viết lại.
-Round 2: PASS ở mã aebbf39, E1 và E2 cùng bảy lệnh suite đều xanh.
+Round 1-2: xem run-log.jsonl; round 2 cham o ma 02bd061 voi mot ca kiem sau do da doi.
+Round 3: E1, E2 va bay lenh suite deu xanh o ma f7ef637 (sau luot sua S4 luot 2). Verdict PASS. Khong co judge panel nao duoc de xuat (eval deu la test may).

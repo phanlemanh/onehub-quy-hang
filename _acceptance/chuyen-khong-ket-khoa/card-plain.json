@@ -19,5 +19,6 @@
       "id": "OOS-2",
       "p": "KHÔNG chạy cả bộ kiểm tuần tự hay sửa bài kiểm của hồ sơ khác."
     }
-  ]
+  ],
+  "analyst_plain": "Hai bài chấm dùng chung lệnh chạy cả bộ kiểm cơ sở dữ liệu, nên lệnh ấy cũng xanh trên nhánh chính cũ. Việc ca mới thật sự bắt lỗi được chứng bằng bốn phá thử: đảo khoá, bỏ khoá, khoá độc quyền, bài chuyển bỏ giao dịch khoá — lần nào cũng đỏ đúng thông điệp."
 }
