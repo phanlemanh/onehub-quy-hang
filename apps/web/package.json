@@ -8,7 +8,7 @@
     "start": "next start -p 3460",
     "typecheck": "tsc --noEmit -p .",
     "dev:q": "next dev -p 3461",
-    "test": "node --import tsx --test \"src/**/*.test.ts\"",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test \"src/**/*.test.ts\"",
     "test:db": "node --env-file-if-exists=../../.env.local --import tsx --test \"src/lib/sync/test-db/*.db-test.mts\""
   },
   "dependencies": {
