@@ -21,6 +21,28 @@ const KHOA = {
   luat: "mang-chuoi",
 };
 export const KHOA_BAT_BUOC = Object.keys(KHOA);
+/**
+ * Khoá thêm của kho: `don_vi` (thiếu thì `man`); `bo_cuc` — bố cục nhóm dựng (hàng 91, ADR-0024); `ngoai_le_han` — màn
+ * của hàng đang chạy chưa chuyển sang bố cục, mỗi dòng `{ tep, han: <slug hàng nhận>, ly_do }`.
+ */
+export const KHOA_TUY_CHON = ["don_vi", "bo_cuc", "ngoai_le_han"];
+
+/** Bảy bố cục đọc thẳng từ ma trận của app (một nguồn với BoCuc), không chép danh sách. */
+export function kieuBoCuc(root) {
+  const p = join(root, GOC_WEB, "components/bo-cuc/ma-tran.ts");
+  if (!existsSync(p)) return [];
+  const m = /export const BO_CUC = \[([\s\S]*?)\] as const/.exec(readFileSync(p, "utf8"));
+  return m ? [...m[1].matchAll(/"([a-z-]+)"/g)].map((x) => x[1]) : [];
+}
+
+function kiemNgoaiLeHan(v, loi) {
+  if (!Array.isArray(v)) return loi.push("ngoai_le_han phải là […]");
+  v.forEach((x, i) => {
+    if (!x || typeof x !== "object" || Array.isArray(x)) return loi.push(`ngoai_le_han[${i}] phải là { tep, han, ly_do }`);
+    for (const k of ["tep", "han", "ly_do"]) if (typeof x[k] !== "string" || !x[k].trim()) loi.push(`ngoai_le_han[${i}] thiếu ${k}`);
+    for (const k of Object.keys(x)) if (!["tep", "han", "ly_do"].includes(k)) loi.push(`ngoai_le_han[${i}].${k}: khoá lạ`);
+  });
+}
 const DON_VI = ["man", "phan-tu"];
 
 // ---------- frontmatter: tập con YAML một dòng ----------
@@ -300,7 +322,10 @@ export function docBanDo(root) {
       if (!(k in data)) loiKieu.push(`${k}: thiếu khoá`);
       else kiemKieu(k, KHOA[k], data[k], loiKieu);
     }
-    for (const k of Object.keys(data)) if (!(k in KHOA) && k !== "don_vi") loiKieu.push(`${k}: khoá lạ`);
+    for (const k of Object.keys(data)) if (!(k in KHOA) && !KHOA_TUY_CHON.includes(k)) loiKieu.push(`${k}: khoá lạ`);
+    if ("bo_cuc" in data && (typeof data.bo_cuc !== "string" || !kieuBoCuc(root).includes(data.bo_cuc)))
+      loiKieu.push(`bo_cuc lạ: «${data.bo_cuc}» không phải một trong bảy bố cục (${kieuBoCuc(root).join(", ")})`);
+    if ("ngoai_le_han" in data) kiemNgoaiLeHan(data.ngoai_le_han, loiKieu);
     const donVi = data.don_vi ?? "man";
     if (!DON_VI.includes(donVi)) loiKieu.push(`don_vi: phải là man hay phan-tu (đang là ${JSON.stringify(donVi)})`);
     loiKieu.forEach(L);

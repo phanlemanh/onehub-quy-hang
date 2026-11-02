@@ -9,7 +9,7 @@ import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { after, test } from "node:test";
+import { after, before, test } from "node:test";
 import pg from "pg";
 import { CatalogFeed } from "../../connect/src/catalog-feed.ts";
 import { moSan } from "../scripts/mo-san.mjs";
@@ -29,6 +29,7 @@ import {
   quetChuoi,
   sinhDuLieuMau,
 } from "./du-lieu-mau.mjs";
+import { giuKhoaSanMau } from "./khoa-san-mau.mjs";
 import { CAU_XOA, napMau, xoaMau } from "./nap.mjs";
 import { MAU_A, MAU_B } from "./mau-file.mjs";
 import { THU_MUC_MAU } from "./sinh.mjs";
@@ -116,6 +117,11 @@ function kiemXlsxThat(doc) {
 const host = new URL(URL_DB).hostname;
 assert.ok(["localhost", "127.0.0.1", "::1", "[::1]"].includes(host), `bài kiểm chỉ chạy trên Postgres của máy, không trên ${host}`);
 const pool = new pg.Pool({ connectionString: URL_DB, max: 2 });
+// Nối đuôi với nap-ban-that.test.ts: cùng dựng sàn mẫu trên một Postgres.
+let nhaKhoa;
+before(async () => {
+  nhaKhoa = await giuKhoaSanMau(URL_DB);
+});
 after(async () => {
   const c = await pool.connect();
   try {
@@ -123,6 +129,7 @@ after(async () => {
   } finally {
     c.release();
     await pool.end();
+    await nhaKhoa?.();
   }
 });
 

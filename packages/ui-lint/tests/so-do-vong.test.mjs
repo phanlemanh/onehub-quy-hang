@@ -13,9 +13,9 @@ const ROOT = join(PKG, "..", "..");
 const CLI = join(PKG, "so-do-vong.mjs");
 const W = "apps/web/src";
 const SLUG = "thu-so-do";
-const THU = `${W}/app/settings/thu/page.tsx`;
+const THU = `${W}/app/(app)/settings/thu/page.tsx`;
 const BAO_CAO = `${W}/app/(app)/bao-cao/page.tsx`;
-const NHAN_TRANG_TAM = 'nhan_dien: ["apps/web/src/app/(app)/**/page.tsx", "apps/web/src/app/settings/[section]/page.tsx"]';
+const NHAN_TRANG_TAM = 'nhan_dien: ["apps/web/src/app/(app)/**/page.tsx"]';
 const TRANG_TAM = ["today", "me", "team", "shares", "viewings", "exports/new", "imports/new", "leads/new", "units/[code]", "inventory"];
 
 const git = (d, ...a) => execFileSync("git", ["-C", d, "-c", "user.email=may@example.test", "-c", "user.name=may", ...a], { encoding: "utf8" });
@@ -25,7 +25,7 @@ const chay = (d, ...a) => spawnSync(process.execPath, [CLI, "--root", d, "--slug
 const soDo = (d) => JSON.parse(readFileSync(join(d, "_acceptance", SLUG, "khuon-so-do.json"), "utf8"));
 
 const MAIN = 'export default function P() {\n  return <main className="min-h-svh">x</main>;\n}\n';
-const MUC = 'import { MucCaiDat } from "@/app/settings/khung";\n\nexport default function P() {\n  return <MucCaiDat title="Thử">x</MucCaiDat>;\n}\n';
+const MUC = 'import { MucCaiDat } from "@/app/(app)/settings/khung";\n\nexport default function P() {\n  return <MucCaiDat title="Thử">x</MucCaiDat>;\n}\n';
 const BAO_CAO_MD = `---
 nhom: bao-cao
 doi_tuong: [bao-cao]
@@ -59,11 +59,16 @@ function kho(fn) {
     commit(d, "lanh");
     const ref = git(d, "rev-parse", "HEAD").trim();
     ghi(d, THU, MAIN);
+    // Mục cài đặt mới khớp cả nhan_dien của trang tạm: vòng thật khai nó rời trang tạm (KH-tt-roi-nhom, hàng 91).
+    const tt0 = readFileSync(join(d, "design/patterns/trang-tam.md"), "utf8");
+    assert.ok(tt0.includes("ngoai_le: [{"), "trang-tam.md không còn mảng ngoai_le để thêm");
+    ghi(d, "design/patterns/trang-tam.md", tt0.replace("ngoai_le: [{", `ngoai_le: [{ tep: "${THU}", ly_do: "Mục thử rời trang tạm." }, {`));
     commit(d, "c1 lệch cai-dat-san");
     ghi(d, THU, MUC);
     commit(d, "c2 sửa");
     const tt = readFileSync(join(d, "design/patterns/trang-tam.md"), "utf8");
-    ghi(d, "design/patterns/trang-tam.md", tt.replace(NHAN_TRANG_TAM, `nhan_dien: [${TRANG_TAM.map((m) => `"apps/web/src/app/(app)/${m}/page.tsx"`).join(", ")}, "apps/web/src/app/settings/[section]/page.tsx"]`));
+    assert.ok(tt.includes(NHAN_TRANG_TAM), "trang-tam.md đổi nhan_dien — sửa NHAN_TRANG_TAM của ca thử");
+    ghi(d, "design/patterns/trang-tam.md", tt.replace(NHAN_TRANG_TAM, `nhan_dien: [${TRANG_TAM.map((m) => `"apps/web/src/app/(app)/${m}/page.tsx"`).join(", ")}, "apps/web/src/app/(app)/settings/[section]/page.tsx"]`));
     ghi(d, BAO_CAO, 'import { KhungBaoCao } from "@/components/bao-cao/khung";\n\nexport default function P() {\n  return <KhungBaoCao title="Báo cáo" />;\n}\n');
     commit(d, "c3 màn ngoài bản đồ");
     ghi(d, `${W}/components/bao-cao/khung.tsx`, "export function KhungBaoCao({ title }: { title: string }) {\n  return <section>{title}</section>;\n}\n");
@@ -106,7 +111,7 @@ describe("so-do-vong — nợ cũ không phải răng bắt (E6)", () => {
   it("lệch có sẵn ở <ref> trong tệp khác, vòng sửa nó ở commit cuối → không tính vào rang_bat", () => {
     const d = mkdtempSync(join(tmpdir(), "so-do-vong-no-"));
     try {
-      const U = `${W}/app/settings/users/page.tsx`;
+      const U = `${W}/app/(app)/settings/users/page.tsx`;
       for (const t of ["design/patterns", W]) cpSync(join(ROOT, t), join(d, t), { recursive: true });
       const lanh = readFileSync(join(d, U), "utf8");
       git(d, "init", "-q");

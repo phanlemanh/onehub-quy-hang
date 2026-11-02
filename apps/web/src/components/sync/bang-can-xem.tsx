@@ -1,8 +1,9 @@
 "use client";
 
-// Bảng Cần xem (hàng 13, AC-6, AC-7): mỗi căn đụng nhau, đã cọc/đã bán hay bị từ chối, kèm lối do người chọn.
+// Bảng Cần xem (hàng 13, AC-6, AC-7): mỗi căn đụng nhau, đã cọc/đã bán hay bị từ chối, kèm lối do người chọn. Mở trong
+// ngăn nổi của hệ bố cục (hàng 91): máy tính ngăn bên, điện thoại ngăn từ đáy.
+import { NganNoi } from "@/components/bo-cuc/ngan-noi";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useBoDongBo, useCanXem } from "@/lib/sync/react";
 import type { NeedsReview, PendingOp } from "@/lib/sync/types";
 import { thaoTacGiu } from "@/lib/sync/xu-ly-can-xem";
@@ -71,18 +72,17 @@ export function BangCanXem() {
   const { canXemMo, moCanXem } = useBoDongBo();
   const ds = useCanXem();
   return (
-    <Sheet open={canXemMo && ds.length > 0} onOpenChange={moCanXem}>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Căn cần xem</SheetTitle>
-          <SheetDescription>Thay đổi của bạn chưa lên vì có người sửa trước hay máy chủ không nhận. Chọn lối cho từng căn.</SheetDescription>
-        </SheetHeader>
-        <div className="px-4">
-          {ds.map((r) => (
-            <MotCan key={r.listingId} r={r} />
-          ))}
-        </div>
-      </SheetContent>
-    </Sheet>
+    <NganNoi
+      mo={canXemMo && ds.length > 0}
+      onMo={moCanXem}
+      tieuDe="Căn cần xem"
+      moTa="Thay đổi của bạn chưa lên vì có người sửa trước hay máy chủ không nhận. Chọn lối cho từng căn."
+    >
+      <div className="px-4">
+        {ds.map((r) => (
+          <MotCan key={r.listingId} r={r} />
+        ))}
+      </div>
+    </NganNoi>
   );
 }

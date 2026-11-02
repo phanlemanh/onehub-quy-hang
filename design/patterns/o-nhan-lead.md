@@ -8,6 +8,8 @@ khe_bat_buoc: [children]
 cam_ngoai_khuon: [Frame, FrameHeader, FramePanel, Card]
 ngoai_le: []
 luat: [KH-ol-mot-khung, KH-ol-khong-quyen, KH-ol-ket-qua-tu-loi]
+bo_cuc: doc
+ngoai_le_han: [{ tep: "apps/web/src/app/(app)/leads/new/page.tsx", han: lead-dien-thoai, ly_do: "Ô nhận lead chuyển sang bố cục Đọc ở hàng 51." }, { tep: "apps/web/src/app/(app)/proto/o-nhan-lead/page.tsx", han: lead-dien-thoai, ly_do: "Ô nhận lead chuyển sang bố cục Đọc ở hàng 51." }]
 ---
 # Ô nhận lead
 

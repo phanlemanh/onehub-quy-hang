@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ACTION_PATH,
   type Home,
   HOME_LABEL,
   homeOfPath,
@@ -18,16 +17,12 @@ import { type CSSProperties, type ReactNode, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AccountMenu } from "./account-menu";
+import { AccountMenuKhung } from "./account-menu";
 import { CompanySwitcher } from "./company-switcher";
 import { SECOND_COLUMN_COOKIE } from "./cookie";
 import { HomeRail } from "./home-rail";
 import { MobileHeader, MobileTabBar } from "./mobile-shell";
-import { ACTION_LABEL } from "./nav-labels";
-import { BangCanXem } from "@/components/sync/bang-can-xem";
-import { ChiBaoDongBo } from "@/components/sync/chi-bao-dong-bo";
-import { HoiDangXuat } from "@/components/sync/hoi-dang-xuat";
-import { BoDongBoProvider } from "@/lib/sync/react";
+import { type LoiMenuTao, MenuTao } from "./menu-tao";
 import { Notifications } from "./notifications";
 import { SecondColumn, SecondColumnToggle } from "./second-column";
 import { UnitJumpButton, UnitJumpDialog, useUnitJumpKeys } from "./unit-jump";
@@ -79,11 +74,17 @@ function DesktopHeader({
   nav,
   onJump,
   className,
+  menuTao,
+  chiBao,
+  taiKhoan,
 }: {
   user: ShellUser;
   nav: Navigation;
   onJump: () => void;
   className?: string;
+  menuTao?: LoiMenuTao;
+  chiBao?: ReactNode;
+  taiKhoan?: ReactNode;
 }) {
   return (
     <header
@@ -110,24 +111,10 @@ function DesktopHeader({
             Hôm nay
           </Button>
         )}
-        {nav.actions.map((action, i) => {
-          const { label, icon: Icon } = ACTION_LABEL[action];
-          return (
-            <Button
-              key={action}
-              variant={i === 0 ? "default" : "outline"}
-              size="sm"
-              nativeButton={false}
-              render={<Link href={ACTION_PATH[action]} />}
-            >
-              {action !== "new_lead" && <Icon aria-hidden="true" />}
-              {label}
-            </Button>
-          );
-        })}
-        <ChiBaoDongBo />
+        <MenuTao actions={nav.actions} loi={menuTao} />
+        {chiBao}
         <Notifications />
-        <AccountMenu email={user.email} companyName={user.activeCompany.name} />
+        {taiKhoan ?? <AccountMenuKhung email={user.email} companyName={user.activeCompany.name} dangXuat={async () => false} />}
       </div>
     </header>
   );
@@ -138,15 +125,33 @@ export function AppShell({
   nav,
   remembered,
   children,
+  mau,
+  menuTao,
+  nhaMau,
+  chiBao,
+  chiBaoGon,
+  taiKhoan,
+  phuVo,
 }: {
   user: ShellUser;
   nav: Navigation;
   /** Cột thứ hai người đã mở/gập ở từng nhà, của đúng người và sàn đang làm. */
   remembered: Partial<Record<Home, boolean>>;
   children: ReactNode;
+  /** Trang mẫu sống (hàng 91): nhà lấy từ `nhaMau`, đầu điện thoại không mở việc thật. */
+  mau?: boolean;
+  /** Chỉ trang ba lối của menu Tạo đổi lối; vỏ thật dùng lối mặc định. */
+  menuTao?: LoiMenuTao;
+  /** Trang mẫu sống: nhà đứng thay cho địa chỉ /mau/… để cột thứ hai và tiêu đề hiện như màn thật. */
+  nhaMau?: Home;
+  /** Phần của bộ đồng bộ — vỏ thật (`AppShellDongBo`) truyền vào; trang mẫu sống để trống nên không nhập lớp đồng bộ. */
+  chiBao?: ReactNode;
+  chiBaoGon?: ReactNode;
+  taiKhoan?: ReactNode;
+  phuVo?: ReactNode;
 }) {
   const pathname = usePathname();
-  const home = homeOfPath(pathname);
+  const home = (mau && nhaMau) || homeOfPath(pathname);
   const [choices, setChoices] = useState(remembered);
   const [jumpOpen, setJumpOpen] = useState(false);
   const openJump = () => setJumpOpen(true);
@@ -163,45 +168,41 @@ export function AppShell({
   }
 
   return (
-    <BoDongBoProvider
-      userId={user.userId}
-      companyId={user.activeCompany.id}
-      companyIds={user.companies.map((c) => c.id)}
-      roles={user.activeCompany.roles ?? []}
-    >
     <SidebarProvider
       className={cn(
         "h-svh",
-        "[--header-height:50px]",
+        "[--header-height:var(--vo-thanh-tren)]",
         "[--sidebar-accent:color-mix(in_oklab,var(--color-primary)_5%,transparent)]",
         "[--sidebar-accent-foreground:var(--color-primary)]",
       )}
       style={
         {
-          "--sidebar-width": nav.homes.length > 0 ? "63px" : "0px",
-          "--sidebar-width-inner": "200px",
+          "--sidebar-width": nav.homes.length > 0 ? "var(--vo-cot-bieu-tuong)" : "0px",
+          "--sidebar-width-inner": "var(--vo-cot-hai)",
         } as CSSProperties
       }
     >
       {nav.homes.length > 0 && <HomeRail homes={nav.homes} current={home} />}
 
       <SidebarInset className="overflow-hidden shadow-none md:border">
-        <DesktopHeader user={user} nav={nav} onJump={openJump} className="hidden md:flex" />
-        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" />
+        <DesktopHeader user={user} nav={nav} onJump={openJump} className="hidden md:flex" menuTao={menuTao} chiBao={chiBao} taiKhoan={taiKhoan} />
+        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.mobileActions} />
 
         <div className="relative flex min-h-0 flex-1">
           {hasColumn && home && <SecondColumn home={home} open={columnOpen} />}
           {hasColumn && <SecondColumnToggle open={columnOpen} onToggle={toggleColumn} />}
-          <div className="flex min-w-0 flex-1 flex-col overflow-y-auto p-4 pb-24 md:pb-4">{children}</div>
+          {/* Lề thuộc bố cục (ADR-0024): màn dựng qua BoCuc tự giữ lề; màn chưa chuyển (ngoại lệ có hạn) giữ lề cũ của vỏ.
+              Bỏ nhánh lề cũ khi màn cuối rời ngoại lệ. */}
+          <div className="flex min-w-0 flex-1 flex-col overflow-y-auto p-4 pb-24 md:pb-4 has-[[data-bo-cuc-goc]]:p-0 has-[[data-bo-cuc-goc]]:pb-20 md:has-[[data-bo-cuc-goc]]:pb-0">
+            {children}
+          </div>
         </div>
 
         <MobileTabBar nav={nav} className="md:hidden" />
       </SidebarInset>
 
       {nav.unitJump && <UnitJumpDialog open={jumpOpen} onOpenChange={setJumpOpen} homes={nav.homes} />}
-      <BangCanXem />
-      <HoiDangXuat />
+      {phuVo}
     </SidebarProvider>
-    </BoDongBoProvider>
   );
 }

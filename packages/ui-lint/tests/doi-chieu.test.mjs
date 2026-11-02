@@ -15,9 +15,9 @@ const ROOT = join(PKG, "..", "..");
 const CLI = join(PKG, "doi-chieu.mjs");
 const W = "apps/web/src";
 const SLUG = "thu-doi-chieu";
-const USERS = `${W}/app/settings/users/page.tsx`;
+const USERS = `${W}/app/(app)/settings/users/page.tsx`;
 const LOGIN = `${W}/app/(auth)/login/page.tsx`;
-const THU = `${W}/app/settings/thu/page.tsx`;
+const THU = `${W}/app/(app)/settings/thu/page.tsx`;
 
 const git = (d, ...a) => execFileSync("git", ["-C", d, "-c", "user.email=may@example.test", "-c", "user.name=may", ...a], { encoding: "utf8" });
 function kho(fn) {
@@ -36,6 +36,13 @@ const ghi = (d, t, s) => (mkdirSync(dirname(join(d, t)), { recursive: true }), w
 const them = (d, t, s) => writeFileSync(join(d, t), readFileSync(join(d, t), "utf8") + s);
 const chay = (d, ...a) => spawnSync(process.execPath, [CLI, "--root", d, ...a], { encoding: "utf8" });
 const keHoach = (d) => JSON.parse(readFileSync(join(d, "_acceptance", SLUG, "doi-chieu/ke-hoach.json"), "utf8"));
+// Mục cài đặt mới dưới (app) khớp cả nhan_dien của trang tạm: vòng thật khai nó rời trang tạm (KH-tt-roi-nhom, hàng 91).
+function roiTrangTam(d, tep) {
+  const t = join(d, "design/patterns/trang-tam.md");
+  const s = readFileSync(t, "utf8");
+  assert.ok(s.includes("ngoai_le: [{"), "trang-tam.md không còn mảng ngoai_le để thêm");
+  writeFileSync(t, s.replace("ngoai_le: [{", `ngoai_le: [{ tep: "${tep}", ly_do: "Mục thử rời trang tạm." }, {`));
+}
 const khoa = (c) => `${c.nhom}|${c.trang_thai}|${c.kho}|${c.tep_moi}`;
 
 /** PNG 1×1 một màu — mỗi ảnh một màu để so byte theo cặp. */
@@ -95,7 +102,8 @@ describe("doi-chieu --base (E1)", () => {
 
   it("màn mới chưa git add sinh đủ 6 cặp của nó; tệp chưa theo dõi dưới docs/ không sinh cặp nào", () =>
     kho((d, ref) => {
-      ghi(d, THU, 'import { MucCaiDat } from "@/app/settings/khung";\n\nexport default function P() {\n  return <MucCaiDat title="Thử">x</MucCaiDat>;\n}\n');
+      ghi(d, THU, 'import { MucCaiDat } from "@/app/(app)/settings/khung";\n\nexport default function P() {\n  return <MucCaiDat title="Thử">x</MucCaiDat>;\n}\n');
+      roiTrangTam(d, THU);
       ghi(d, "docs/moi.md", "# x\n");
       const r = chay(d, "--base", ref, "--slug", SLUG);
       assert.equal(r.status, 0, r.stderr);
