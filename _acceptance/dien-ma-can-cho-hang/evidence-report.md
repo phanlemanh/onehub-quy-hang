@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: dien-ma-can-cho-hang
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: f4d5f1234d73a8b1e2da6c46debf38b4562fcaa3
-human_signoff:
+human_signoff: Manh Phan 2026-11-02
 ---
 
 # Evidence Report: dien-ma-can-cho-hang
@@ -126,7 +126,7 @@ human_signoff:
   run_id: E6u-1793608585905
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:34:23Z
   screenshot: evidence/E6u-step1.png
   observed: |
@@ -140,7 +140,7 @@ human_signoff:
   run_id: minted-dien-ma-can-cho-hang-E7u-r1
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:34:23Z
   screenshot: evidence/E7u-1-bang-hang.png
   observed: |
@@ -153,7 +153,7 @@ human_signoff:
   run_id: minted-dien-ma-can-cho-hang-E8u-r1
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:34:23Z
   screenshot: evidence/E8u-step1.html
   observed: |
@@ -163,10 +163,9 @@ human_signoff:
 - eval: E9
   judged_by: judge panel (3 lens, fresh context)
   verdict: PASS (đề xuất của hội đồng)
-  verifier: judge panel (fresh context)
   verified_at: 2026-11-02T08:34:23Z
   rationale: Cả ba lens thấy Tham chiếu (§8 luật 6) và ADR-0026 ghi đủ cách gắn mã một lần, luật chặn trùng hàng đang mở, loại sự kiện mới và lý do không dùng sự kiện đổi chi tiết. Bản đồ mã lượt chạy không có mã cho E9, nên khối này không mang dòng mã chạy.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-02 — Đạt
 
 ### Lệnh suite (hồi quy)
 

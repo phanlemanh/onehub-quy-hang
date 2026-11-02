@@ -5,7 +5,7 @@ slug: dien-ma-can-cho-hang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, web, api, db]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-02
 design_doc: docs/superpowers/specs/2026-11-02-dien-ma-can-cho-hang-design.md
@@ -96,3 +96,8 @@ Trục (morphological-scan, preset entity-feature): lớp (lõi · cơ sở dữ
 
 - Vùng: `ranh_gioi` của hàng ở `hang-viec.json`, cộng migration 020, ADR-0026, Tham chiếu, Hôm nay (một liên kết), sẵn
   sàng bán (một liên kết), hàng đợi lệnh trên máy nếu cần loại lệnh mới — khai ở Cổng Phạm vi.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Hai người gắn cùng một mã căn cho hai hàng cùng toà đúng cùng lúc thì cả hai có thể được nhận, sàn có hai hàng đang mở trên một căn; đầu chủ đóng hay gộp hàng thừa bằng tay.
+  - Ngoài-3: Cùng hạn chế ấy khi hai thiết bị, hay hàng đợi ngoại tuyến, xả lệnh gắn mã cùng lúc.
+  - Ngoài-5: Khi gửi lại đăng ký thông báo lead bị lỗi, dải bật vẫn ẩn như đã bật; người dùng có thể không nhận thông báo mà không thấy dấu hiệu.
+  - Ngoài-6: Một bài kiểm của trang mẫu bố cục (bản thử phải dựng trang) kiểm rỗng, nên không bắt được khi trang mẫu thôi dựng ở bản thử.
