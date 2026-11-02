@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 013800fcabe731d193d9fa5f3ed43e29b2aea04b
+verified_commit: f93bbfbd79ba06f9058aeab3d8af12f7d8357f6c
 human_signoff: Manh Phan 2026-11-02
 ---
 
@@ -233,3 +233,7 @@ Round 1: mọi eval máy đều xanh; E9 chờ người chốt ở Gate 2. Verdi
 ### Re-pin lần 1 — 2026-11-02, do hoá cũ do gộp main (PR #81, #82) sau chữ ký
 run_id: repin-20261102T092301Z-56855
 sha: 013800fcabe731d193d9fa5f3ed43e29b2aea04b · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E7u, E8u, E9 (E9 không khai paths) · AC không có chốt máy: AC-8, AC-9
+
+### Re-pin lần 2 — 2026-11-02, do hoá cũ do gộp main lần hai (PR #83 và việc dãy L)
+run_id: repin-20261102T093752Z-63431
+sha: f93bbfbd79ba06f9058aeab3d8af12f7d8357f6c · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E7u, E8u, E9 (E9 không khai paths) · diff chạm vật đo ngoài làn máy: E7u — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-8, AC-9
