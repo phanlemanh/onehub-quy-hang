@@ -1,0 +1,177 @@
+{
+  "telesales": {
+    "loc": "/units/call?hang=e6f98257-4be5-4584-8503-8b1b9211029d",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call"
+    ],
+    "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 01:09\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "log": [
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 93681,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "res": [
+      "http://localhost:3485/api/v1/listings"
+    ],
+    "nav": 200
+  },
+  "quan-tri": {
+    "loc": "/units/call?hang=e6f98257-4be5-4584-8503-8b1b9211029d",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call"
+    ],
+    "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 01:09\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "log": [
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 93681,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "res": [
+      "http://localhost:3485/api/v1/listings"
+    ],
+    "nav": 200
+  },
+  "truong-nhom": {
+    "loc": "/units/call?hang=e6f98257-4be5-4584-8503-8b1b9211029d",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call"
+    ],
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 01:09\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
+    "log": [
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 93681,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "res": [
+      "http://localhost:3485/api/v1/listings"
+    ],
+    "nav": 200
+  },
+  "dau-chu-1": {
+    "loc": "/units/call?hang=e6f98257-4be5-4584-8503-8b1b9211029d",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call",
+      "A-29.01 · Toà A · 2,8 tỷ · không bao phí"
+    ],
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 01:09\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi điều chỉnh giá\nĐang bán\nA-29.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl\n+\nEnter\nvề Hôm nay\n\nLỊCH SỬ TRẢ GIÁ\nCòn · giữ giá · đã xác nhận với chủ\nĐầu chủ · 01:07 19/",
+    "log": [
+      {
+        "url": "/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d",
+        "method": "GET",
+        "status": 200,
+        "len": 2437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 100402,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d",
+        "method": "GET",
+        "status": 200,
+        "len": 2437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/catalog",
+        "method": "GET",
+        "status": 200,
+        "len": 37357,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/catalog",
+        "method": "GET",
+        "status": 200,
+        "len": 37357,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d/owner",
+        "method": "GET",
+        "status": 200,
+        "len": 76,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": true
+      },
+      {
+        "url": "/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d/owner",
+        "method": "GET",
+        "status": 200,
+        "len": 76,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "0900": false,
+        "floorPrice": true
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "res": [
+      "http://localhost:3485/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d",
+      "http://localhost:3485/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d",
+      "http://localhost:3485/api/v1/listings",
+      "http://localhost:3485/api/v1/catalog",
+      "http://localhost:3485/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d/owner",
+      "http://localhost:3485/api/v1/catalog",
+      "http://localhost:3485/api/v1/listings/e6f98257-4be5-4584-8503-8b1b9211029d/owner"
+    ],
+    "nav": 200
+  }
+}

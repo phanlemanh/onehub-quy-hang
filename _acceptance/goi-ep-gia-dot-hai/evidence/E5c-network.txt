@@ -1,0 +1,6 @@
+E5c network (isolated Playwright context, app origin localhost:3485, P9=c8d9021f-dd68-42f7-9072-94d8efdec694), deduped:
+S1 offline: POST /api/v1/listings/<P9>/events FAILED net::ERR_INTERNET_DISCONNECTED (expected, page offline); console: Failed to load resource ERR_INTERNET_DISCONNECTED
+S2 online: POST /events 200; GET /listings/<P9> 200; GET /listings 200
+S3 offline again, then dung-d --ban; online: POST /events 409 (expected by eval); GET /listings/<P9> 200 x2; GET /listings 200
+No 5xx. Only 4xx is the 409 declared in expected.
+Note: first attempt used the shared default Playwright page which was navigated to another listing by another agent; its queue was cleared; one write went to v7 P1 (4a82d2fc, prior-round data). Not part of this result.

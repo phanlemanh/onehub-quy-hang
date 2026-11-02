@@ -1,0 +1,3 @@
+Run E5b vong 8 (Chrome rieng qua CDP, origin http://localhost:3485 - ngoai dev_server.url 3460; P3=bcf205c0-8fd2-4417-bcaf-a619e76d837d)
+Nguon: performance resource entries (khong co console/network tool trong driver CDP). Failed requests: none. Cac loi goi /api/v1/{catalog,listings,listings/P3,listings/P3/owner}: tat ca 200. POST events 200 (1 lan, buoc 1).
+Console errors: khong doc duoc (n-a)
