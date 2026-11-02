@@ -12,7 +12,8 @@
     "./pricing": "./src/pricing/index.ts",
     "./routing": "./src/routing/index.ts",
     "./contacts": "./src/contacts/index.ts",
-    "./photos": "./src/photos/index.ts"
+    "./photos": "./src/photos/index.ts",
+    "./today": "./src/today/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
