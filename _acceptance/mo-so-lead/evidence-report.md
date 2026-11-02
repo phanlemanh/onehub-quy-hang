@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 09d82242c60b0b22c0fbff6ad893f61425313bf5
+verified_commit: 2f1979393015e9a1cdd707ad401436cb8578763a
 human_signoff: Manh Phan 2026-11-02
 ---
 
@@ -156,3 +156,7 @@ none — every multi-run eval is uniform
 Round 1: 10 kết quả về đủ, PASS; một finding trong hợp đồng (AC-4, đối chứng dương cho vế danh sách lead giao) và ba finding ngoài hợp đồng. Trả về triển khai, sửa ở commit 09d8224.
 Round 2: chạy lại E1, E2, E4 và toàn bộ lệnh suite trên commit 09d82242c60b0b22c0fbff6ad893f61425313bf5, đều xanh; E3, E5, E6, E7 mang sang từ round 1 vì delta không chạm paths của chúng. Ghi chú: mốc verified_at của các khối round 2 là mốc lúc soạn báo cáo, không phải mốc máy ghi trong nhật ký chạy.
 
+
+### Re-pin lần 1 — 2026-11-02, do gộp nhánh chính sau lượt chấm
+run_id: repin-20261102T093442Z-18041
+sha: 2f1979393015e9a1cdd707ad401436cb8578763a · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng · ngoài làn máy: E6 · diff chạm vật đo ngoài làn máy: E6 — chưa chứng lại, đi vòng S4 delta
