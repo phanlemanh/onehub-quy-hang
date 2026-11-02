@@ -7,7 +7,7 @@ import {
   type RoutingCandidate,
   type RoutingStrategyKey,
 } from "@quy-hang/core/routing";
-import { PUSH_RETRY } from "@quy-hang/core/push";
+import { PUSH_RETRY, PUSH_SEND } from "@quy-hang/core/push";
 import type pg from "pg";
 import { withCompany } from "../db";
 import { guiHopThu, webPushSender, type PushSender } from "../push/gui";
@@ -119,14 +119,22 @@ async function motSan(tx: pg.PoolClient, now: Date): Promise<{ routed: number; a
   return { routed, alerts };
 }
 
-/** `only`: chỉ chạy các sàn này (bộ kiểm dùng để không chạm sàn của bộ kiểm khác đang chạy song song). */
+/** Thời hạn gửi mặc định của một nhịp (va-thong-bao-lead): một lần gửi và ngân sách nhịp chia của lõi. */
+export const HAN_NHIP_MAC_DINH = { timeoutMs: PUSH_SEND.timeoutMs, budgetMs: PUSH_SEND.tickBudgetMs } as const;
+
+/**
+ * `only`: chỉ chạy các sàn này (bộ kiểm dùng để không chạm sàn của bộ kiểm khác đang chạy song song). `hanGui`: thời hạn gửi
+ * của nhịp — một hạn chót chung cho mọi sàn, nên nhịp kết thúc trước khi dòng đang gửi hết giữ chỗ.
+ */
 export async function runLeadTick(
   pool: pg.Pool,
   now: Date,
   only?: readonly string[],
   sender: PushSender = webPushSender,
+  hanGui: { timeoutMs: number; budgetMs: number } = HAN_NHIP_MAC_DINH,
 ): Promise<TickResult> {
   const kq: TickResult = { companies: 0, routed: 0, alerts: 0, failed: 0 };
+  const han = { timeoutMs: hanGui.timeoutMs, hanChot: Date.now() + hanGui.budgetMs };
   const sanCoViec = (
     await withCompany(pool, { userId: "", companyId: null }, async (tx) =>
       (await tx.query<{ company_id: string }>("select company_id from app.lead_job_companies()")).rows.map((r) => r.company_id),
@@ -152,8 +160,8 @@ export async function runLeadTick(
       kq.failed++;
       console.error(`nhịp chia lead: sàn ${companyId} lỗi`, e instanceof Error ? e.message : e);
     }
-    await guiHopThu(pool, companyId, sender, now);
+    await guiHopThu(pool, companyId, sender, now, false, han);
   }
-  for (const companyId of sanChoGui) await guiHopThu(pool, companyId, sender, now);
+  for (const companyId of sanChoGui) await guiHopThu(pool, companyId, sender, now, false, han);
   return kq;
 }
