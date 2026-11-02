@@ -1954,6 +1954,12 @@
       "cau_giao": "Bài kiểm «liên hệ: chuyển dữ liệu cũ» của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (dãy H đỏ khi ghim lại PR #66): gom các bước ghi nhiều bảng vào một giao dịch khoá bảng chủ nhà rồi bảng lead trước, kèm ca dựng đúng thế kẹt.",
       "slug": "chuyen-khong-ket-khoa",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
+    },
+    {
+      "ma": "va-che-vung-anh",
+      "cau_giao": "Vá Che vùng ảnh: trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ",
+      "slug": "va-che-vung-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     }
   ],
   "chan_troi": [
