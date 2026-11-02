@@ -130,7 +130,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 
 **Sửa và nhập**
 
-6. Chỉ sửa trên ô phần của lần rao; thuộc tính căn khoá. Sửa trên ô chỉ có ở danh sách trên máy tính; điện thoại dùng nút kết quả gọi và màn sửa nhanh.
+6. Chỉ sửa trên ô phần của lần rao; thuộc tính căn khoá. Sửa trên ô chỉ có ở danh sách trên máy tính; điện thoại dùng nút kết quả gọi và màn sửa nhanh. Hàng tạo khi mới biết toà được gắn mã căn đúng một lần ở hồ sơ căn; căn đã có hàng đang mở khác của sàn thì máy chặn và chỉ hàng kia (ADR-0026).
 7. Giá luôn đi cùng điều kiện phí; máy nói lại «Hiểu là…»; đổi quá khoảng 20% thì hỏi lại.
 8. Không có nút Lưu; mỗi lần sửa là một sự kiện, hoàn tác được.
 9. Sửa giá hay trạng thái mặc định tính là vừa xác nhận với chủ nhà — Đã chốt 28/10.
@@ -355,6 +355,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 02/11 | Hệ bố cục (chủ kho duyệt hướng 02/11): mọi màn sau đăng nhập chọn một trong bảy bố cục có tên — Tràn, Danh sách – chi tiết, Đọc, Hồ sơ, Bảng điều khiển, Luồng nhiều bước, Dòng tin — với sáu vùng chuẩn và chờ tải theo hình của bố cục; một menu Tạo trên vỏ; trang mẫu sống không cần cơ sở dữ liệu là ảnh chuẩn để đối chiếu; giữ hồ sơ cạnh bảng, thanh tab dưới điện thoại và lưới dày | ADR-0024 · hàng nền 91 |
 | 30/10 | Chọn chữ (ghi vào kho 02/11): nhãn trong lõi dùng chữ chuẩn ngành, xét theo thứ tự luật Việt Nam → từ vựng chung OneHub (onehub-invest) → chữ thị trường công khai; chữ nghề của môi giới (đầu chủ, giá đáy, bao phí, ép giá…) là tên gọi riêng của sàn, không làm nhãn chuẩn mới. Thay luật 5 ở mục 8; nhãn đang có giữ tới lượt dọn bảng sau khi đóng đợt; chữ đã chốt sau 30/10 (như «Khu», 31/10) giữ nguyên | `CONTEXT.md` mục «Chọn chữ» · ADR-0022 D5 |
 | 02/11 | Thông báo lead (hàng 26): đầu chủ bật thông báo trên từng thiết bị ở dải đầu Hôm nay (iPhone chưa cài lên màn hình chính thấy hướng dẫn cài); lead về mình bằng nhịp chia, trưởng nhóm giao hay lúc nhập khớp chủ nhà / căn thì nhận Web Push «Lead mới · <Toà> · <nhu cầu>», chạm mở đúng lead ở Hôm nay — không số, không tên chủ, không giá, không mã căn; tự nhận từ kho chung không báo; trưởng nhóm nhận đẩy cho lời báo mới; lỗi tạm gửi lại tối đa ba lần trong 15 phút; khoá VAPID máy chủ tự sinh, không ai cầm khoá | `docs/adr/0025-thong-bao-lead.md` · `_acceptance/thong-bao-lead/` |
+| 02/11 | Điền mã căn cho hàng chỉ biết toà: hồ sơ căn mở theo hàng (`?hang=`) khi chưa có mã, ô «Mã căn» gắn mã một lần qua hàng đợi trên máy; mã ngoài danh mục vẫn lưu; căn đã có hàng đang mở khác của sàn thì máy chủ chặn, lỗi tại ô nêu trạng thái hàng kia kèm «Mở hàng kia»; lối vào từ Bảng hàng, dòng «Chưa có mã căn» ở Hôm nay, «Mã căn» trong «Còn thiếu»; có mã thì xét ảnh thật như mọi hàng. Không sửa mã đã gắn | `docs/adr/0026-gan-ma-can.md` · `_acceptance/dien-ma-can-cho-hang/` |
 
 ## 13. Chỗ cần chốt
 
