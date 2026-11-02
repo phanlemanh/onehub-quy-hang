@@ -5,10 +5,10 @@ import { cn } from "cn";
 import { SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { TAB_LABEL } from "./nav-labels";
-import { ChiBaoDongBo } from "@/components/sync/chi-bao-dong-bo";
 import { MenuTaoDienThoai } from "./menu-tao";
 import { Notifications } from "./notifications";
 
@@ -19,11 +19,11 @@ export function MobileHeader({
   unitJump,
   onJump,
   className,
-  mau,
+  chiBao,
   actions = [],
 }: {
-  /** Trang mẫu sống: không có bộ đồng bộ nên không có chỉ báo. */
-  mau?: boolean;
+  /** Chỉ báo đồng bộ dạng gọn — vỏ thật truyền vào; trang mẫu sống không có bộ đồng bộ nên để trống. */
+  chiBao?: ReactNode;
   /** Việc tạo của vai — nút «+» mở menu Tạo. */
   actions?: readonly Action[];
   title: string;
@@ -42,7 +42,7 @@ export function MobileHeader({
         </Button>
       )}
       <MenuTaoDienThoai actions={actions} />
-      {!mau && <ChiBaoDongBo gon />}
+      {chiBao}
       <Notifications />
     </header>
   );

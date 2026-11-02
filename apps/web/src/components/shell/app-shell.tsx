@@ -17,15 +17,11 @@ import { type CSSProperties, type ReactNode, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AccountMenu, AccountMenuKhung } from "./account-menu";
+import { AccountMenuKhung } from "./account-menu";
 import { CompanySwitcher } from "./company-switcher";
 import { SECOND_COLUMN_COOKIE } from "./cookie";
 import { HomeRail } from "./home-rail";
 import { MobileHeader, MobileTabBar } from "./mobile-shell";
-import { BangCanXem } from "@/components/sync/bang-can-xem";
-import { ChiBaoDongBo } from "@/components/sync/chi-bao-dong-bo";
-import { HoiDangXuat } from "@/components/sync/hoi-dang-xuat";
-import { BoDongBoProvider } from "@/lib/sync/react";
 import { type LoiMenuTao, MenuTao } from "./menu-tao";
 import { Notifications } from "./notifications";
 import { SecondColumn, SecondColumnToggle } from "./second-column";
@@ -78,15 +74,17 @@ function DesktopHeader({
   nav,
   onJump,
   className,
-  mau,
   menuTao,
+  chiBao,
+  taiKhoan,
 }: {
   user: ShellUser;
   nav: Navigation;
   onJump: () => void;
   className?: string;
-  mau?: boolean;
   menuTao?: LoiMenuTao;
+  chiBao?: ReactNode;
+  taiKhoan?: ReactNode;
 }) {
   return (
     <header
@@ -114,13 +112,9 @@ function DesktopHeader({
           </Button>
         )}
         <MenuTao actions={nav.actions} loi={menuTao} />
-        {!mau && <ChiBaoDongBo />}
+        {chiBao}
         <Notifications />
-        {mau ? (
-          <AccountMenuKhung email={user.email} companyName={user.activeCompany.name} dangXuat={async () => false} />
-        ) : (
-          <AccountMenu email={user.email} companyName={user.activeCompany.name} />
-        )}
+        {taiKhoan ?? <AccountMenuKhung email={user.email} companyName={user.activeCompany.name} dangXuat={async () => false} />}
       </div>
     </header>
   );
@@ -134,18 +128,27 @@ export function AppShell({
   mau,
   menuTao,
   nhaMau,
+  chiBao,
+  chiBaoGon,
+  taiKhoan,
+  phuVo,
 }: {
   user: ShellUser;
   nav: Navigation;
   /** Cột thứ hai người đã mở/gập ở từng nhà, của đúng người và sàn đang làm. */
   remembered: Partial<Record<Home, boolean>>;
   children: ReactNode;
-  /** Trang mẫu sống (hàng 91): dựng vỏ không có bộ đồng bộ, không gọi mạng. */
+  /** Trang mẫu sống (hàng 91): nhà lấy từ `nhaMau`, đầu điện thoại không mở việc thật. */
   mau?: boolean;
   /** Chỉ trang ba lối của menu Tạo đổi lối; vỏ thật dùng lối mặc định. */
   menuTao?: LoiMenuTao;
   /** Trang mẫu sống: nhà đứng thay cho địa chỉ /mau/… để cột thứ hai và tiêu đề hiện như màn thật. */
   nhaMau?: Home;
+  /** Phần của bộ đồng bộ — vỏ thật (`AppShellDongBo`) truyền vào; trang mẫu sống để trống nên không nhập lớp đồng bộ. */
+  chiBao?: ReactNode;
+  chiBaoGon?: ReactNode;
+  taiKhoan?: ReactNode;
+  phuVo?: ReactNode;
 }) {
   const pathname = usePathname();
   const home = (mau && nhaMau) || homeOfPath(pathname);
@@ -164,7 +167,7 @@ export function AppShell({
     writeRemembered(secondColumnKey(user.userId, user.activeCompany.id, home), next);
   }
 
-  const vo = (
+  return (
     <SidebarProvider
       className={cn(
         "h-svh",
@@ -182,8 +185,8 @@ export function AppShell({
       {nav.homes.length > 0 && <HomeRail homes={nav.homes} current={home} />}
 
       <SidebarInset className="overflow-hidden shadow-none md:border">
-        <DesktopHeader user={user} nav={nav} onJump={openJump} className="hidden md:flex" mau={mau} menuTao={menuTao} />
-        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" mau={mau} actions={nav.actions} />
+        <DesktopHeader user={user} nav={nav} onJump={openJump} className="hidden md:flex" menuTao={menuTao} chiBao={chiBao} taiKhoan={taiKhoan} />
+        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.actions} />
 
         <div className="relative flex min-h-0 flex-1">
           {hasColumn && home && <SecondColumn home={home} open={columnOpen} />}
@@ -199,19 +202,7 @@ export function AppShell({
       </SidebarInset>
 
       {nav.unitJump && <UnitJumpDialog open={jumpOpen} onOpenChange={setJumpOpen} homes={nav.homes} />}
-      {!mau && <BangCanXem />}
-      {!mau && <HoiDangXuat />}
+      {phuVo}
     </SidebarProvider>
-  );
-  if (mau) return vo;
-  return (
-    <BoDongBoProvider
-      userId={user.userId}
-      companyId={user.activeCompany.id}
-      companyIds={user.companies.map((c) => c.id)}
-      roles={user.activeCompany.roles ?? []}
-    >
-      {vo}
-    </BoDongBoProvider>
   );
 }
