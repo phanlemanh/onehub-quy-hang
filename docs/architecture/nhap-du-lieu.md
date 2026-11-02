@@ -162,7 +162,7 @@ thư viện ở hàng dựng).
 | `request_values` | Xin giá trị của một cột «chưa rõ» cho một trường đích | Mã cấp khi bộ dò không thấy dữ liệu cá nhân **và** trường đích thuộc lớp thoả thuận mở; còn lại trả «không cấp» |
 | `submit_plan` | Nộp kế hoạch | Sai khuôn thì trả lỗi để sửa, tính một lượt |
 
-- **Giới hạn**: tối đa 8 lượt, trần 240 giây (dưới 300 giây của Vercel Hobby). Chạm trần thì trả kế hoạch đến đâu dùng
+- **Giới hạn**: tối đa 8 lượt, trần 240 giây (dưới 300 giây mặc định của hàm Vercel). Chạm trần thì trả kế hoạch đến đâu dùng
   đến đó, cột còn lại về «cần người». Lỗi nhà cung cấp, hết trần chi phí, thoả thuận tắt → chế độ tất định.
 - **Ô lạ còn lại**: sau khi áp kế hoạch, ô không đọc được của cột thuộc lớp được mở (≤ 300 ô) gửi một lần, mỗi ô kèm lý
   do mã từ chối; tác tử trả đề xuất cho từng ô, hiện là «máy đề xuất», người chọn. Đo ở bộ thử xem Haiku 5.5 có đủ cho việc
