@@ -1,1 +1,4 @@
-E9b network: driver la CDP tu viet (cdp.mjs), khong doc duoc network/console -> n-a (driver). Dev server 3485 co san, khong tu start.
+E9b network: driver la CDP tu viet (cdp.mjs) khong co read_network_requests; doc performance.getEntriesByType('resource') trong trang (responseStatus) cho /api/ — dev server 3485 (dung chung, khong tu start/tat).
+ep 1440/1280/375: GET /api/v1/listings/<P1> 200, /listings 200, /catalog 200, /listings/<P1>/owner 200
+khai thac 1440/1280: GET /api/v1/leads/assigned/<L1> 200, /listings 200, /catalog 200
+Khong co request app nao >=400. Console khong doc duoc.

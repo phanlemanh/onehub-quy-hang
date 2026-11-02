@@ -1,39 +1,4 @@
-Driver: Chrome CDP; resource timing (fetch/xhr) cua trang /today cuoi:
-[
- {
-  "u": "http://localhost:3485/api/v1/catalog",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/company/settings/queue",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/leads/assigned",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/catalog",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/company/settings/queue",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/leads/assigned",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/push/public-key",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/push/public-key",
-  "s": 200
- },
- {
-  "u": "http://localhost:3485/api/v1/listings",
-  "s": 200
- }
-]
+E8 network (playwright, app origin http://localhost:3485; 33 /api/ responses, all 200)
+GET /api/v1/catalog, company/settings/queue, push/public-key, leads/assigned, listings, listings/<P8>, listings/<P8>/owner => 200 (khong POST nao)
+FAILED http://localhost:3485/today?_rsc=p_ZiLVR8KTrKTWRL net::ERR_ABORTED  (RSC prefetch bi huy khi dieu huong - note, khong phai API)
+console error/warning: none

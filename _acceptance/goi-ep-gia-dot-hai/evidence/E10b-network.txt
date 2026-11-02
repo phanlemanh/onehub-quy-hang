@@ -1,183 +1,168 @@
-[
-  {
-    "u": "telesales",
-    "info": {
-      "title": "Quỹ hàng",
-      "h1": [
-        "Căn call"
-      ],
-      "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 23:37\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
-      "log": [
-        {
-          "url": "/api/v1/listings",
-          "method": "GET",
-          "status": 200,
-          "len": 18419,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        }
-      ],
-      "hasOwnerPhoneInDom": false,
-      "has0900Dom": false,
-      "nav": [
-        200
-      ]
-    },
-    "docStatus": 200,
-    "loc": null
+{
+  "telesales": {
+    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call"
+    ],
+    "text": "[Mẫu] Sàn thử\nHôm nay\n+ Lead\nĐã đồng bộ · 00:13\nTE\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "log": [
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 46437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "docStatusRefetch": 200
   },
-  {
-    "u": "quan-tri",
-    "info": {
-      "title": "Quỹ hàng",
-      "h1": [
-        "Căn call"
-      ],
-      "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 23:37\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
-      "log": [
-        {
-          "url": "/api/v1/listings",
-          "method": "GET",
-          "status": 200,
-          "len": 18419,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        }
-      ],
-      "hasOwnerPhoneInDom": false,
-      "has0900Dom": false,
-      "nav": [
-        200
-      ]
-    },
-    "docStatus": 200,
-    "loc": null
+  "quan-tri": {
+    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call"
+    ],
+    "text": "[Mẫu] Sàn thử\nĐã đồng bộ · 00:13\nQU\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay",
+    "log": [
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 46437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "docStatusRefetch": 200
   },
-  {
-    "u": "truong-nhom",
-    "info": {
-      "title": "Quỹ hàng",
-      "h1": [
-        "Căn call",
-        "Gõ mã căn"
-      ],
-      "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 23:37\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
-      "log": [
-        {
-          "url": "/api/v1/listings",
-          "method": "GET",
-          "status": 200,
-          "len": 18419,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        }
-      ],
-      "hasOwnerPhoneInDom": false,
-      "has0900Dom": false,
-      "nav": [
-        200
-      ]
-    },
-    "docStatus": 200,
-    "loc": null
-  },
-  {
-    "u": "dau-chu-1",
-    "info": {
-      "title": "Quỹ hàng",
-      "h1": [
-        "Căn call",
-        "A-21.01 · Toà A · 2,8 tỷ · không bao phí",
-        "KẾT QUẢ CUỘC GỌI",
-        "LỊCH SỬ TRẢ GIÁ",
-        "Danh sách hỏi"
-      ],
-      "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 23:37\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi ép giá\nĐang bán\nA-21.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl",
-      "log": [
-        {
-          "url": "/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be",
-          "method": "GET",
-          "status": 200,
-          "len": 2437,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        },
-        {
-          "url": "/api/v1/listings",
-          "method": "GET",
-          "status": 200,
-          "len": 25140,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        },
-        {
-          "url": "/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be",
-          "method": "GET",
-          "status": 200,
-          "len": 2437,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        },
-        {
-          "url": "/api/v1/catalog",
-          "method": "GET",
-          "status": 200,
-          "len": 37357,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        },
-        {
-          "url": "/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner",
-          "method": "GET",
-          "status": 200,
-          "len": 76,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": true
-        },
-        {
-          "url": "/api/v1/catalog",
-          "method": "GET",
-          "status": 200,
-          "len": 37357,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": false
-        },
-        {
-          "url": "/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner",
-          "method": "GET",
-          "status": 200,
-          "len": 76,
-          "ownerPhone": false,
-          "titleDeed": false,
-          "p0900": false,
-          "floorPrice": true
-        }
-      ],
-      "hasOwnerPhoneInDom": false,
-      "has0900Dom": false,
-      "nav": [
-        200
-      ]
-    },
-    "docStatus": 200,
-    "loc": null
+  "truong-nhom": {
+    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call",
+      "Gõ mã căn"
+    ],
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:13\nTR\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nKhông thấy trang này\nĐịa chỉ không còn, hoặc bạn không có quyền xem.\nVề Hôm nay\nGõ mã căn\n\nGõ mã căn hoặc tên nhà",
+    "log": [
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 46437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "docStatusRefetch": 200
   }
-]
+}{
+  "dau-chu-1": {
+    "loc": "/units/call?hang=9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+    "title": "Quỹ hàng",
+    "h1": [
+      "Căn call",
+      "A-24.01 · Toà A · 2,8 tỷ · không bao phí",
+      "KẾT QUẢ CUỘC GỌI",
+      "LỊCH SỬ TRẢ GIÁ",
+      "Danh sách hỏi",
+      "Tính giá",
+      "Cùng loại trong toà",
+      "Gõ mã căn"
+    ],
+    "text": "[Mẫu] Sàn thử\nGõ mã căn…\n⌘\nK\n+ Lead\nĐã đồng bộ · 00:31\nDA\n\nGÓC NHÌN CỦA ĐỘI\n\nChưa có góc nhìn\n\nGÓC NHÌN CỦA TÔI\n\nChưa có góc nhìn\n\nLưu góc nhìn\n\nĐộ tươi\n\nChưa có số\n\nHôm nay\nGọi ép giá\nNên gọi ép giá\nĐang bán\nA-24.01 · Toà A · 2,8 tỷ · không bao phí\n\nLên bảng 38 ngày · đổi giá gần nhất 23 ngày trước\n\nKẾT QUẢ CUỘC GỌI\nH\nHạ giá\nG\nGiữ giá\nB\nĐã cọc / bán…\nK\nKhông nghe máy\n\nH\nG\nB\nK\nchọn ·\nEsc\nbỏ ·\nCtrl\n+\nEnter\nvề Hôm nay\n\nLỊCH SỬ TRẢ GIÁ\nCòn · giữ giá · đã xác nhận với chủ\nĐầu chủ · 00:08 19/10\nHạ 2,",
+    "log": [
+      {
+        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+        "method": "GET",
+        "status": 200,
+        "len": 2437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings",
+        "method": "GET",
+        "status": 200,
+        "len": 53198,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b",
+        "method": "GET",
+        "status": 200,
+        "len": 2437,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/catalog",
+        "method": "GET",
+        "status": 200,
+        "len": 37357,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b/owner",
+        "method": "GET",
+        "status": 200,
+        "len": 76,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": true
+      },
+      {
+        "url": "/api/v1/catalog",
+        "method": "GET",
+        "status": 200,
+        "len": 37357,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": false
+      },
+      {
+        "url": "/api/v1/listings/9ada9a1a-b810-49ec-b1ba-8c075067ed3b/owner",
+        "method": "GET",
+        "status": 200,
+        "len": 76,
+        "ownerPhone": false,
+        "titleDeed": false,
+        "p0900": false,
+        "floorPrice": true
+      }
+    ],
+    "domOwnerPhone": false,
+    "domTitleDeed": false,
+    "dom0900": false,
+    "docStatusRefetch": 200
+  }
+}
+Ghi chu: moi lan goi /api/v1 deu 200; khong request that bai; document /units/call?hang=P1 cua telesales/quan-tri/truong-nhom tra HTTP 200 voi giao dien notFound (NEXT_HTTP_ERROR_FALLBACK;404 + meta noindex); route khong ton tai tra 404 that. Dev overlay Next hien '1 Issue' o step1-3.

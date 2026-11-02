@@ -1,12 +1,6 @@
-Driver: Chrome headless qua CDP (cdp.mjs), khong co console/network event tho; dung Resource Timing. Origin 3485 (dev server dung chung cua day D; config 3460 la mac dinh).
-Online load, API app-scope:
-   /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be 200
-   /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be 200
-   /api/v1/listings 200
-   /api/v1/catalog 200
-   /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner 200
-   /api/v1/catalog 200
-   /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner 200
-  tat ca 200
-Offline + Page.reload: document navigation that bai ERR_INTERNET_DISCONNECTED (trang loi cua Chrome); sw.js chi lo push, khong cache trang.
-Offline khong reload: khoi lich su con, chi bao 'Dang xem ban da tai — mat mang'.
+Driver: Chrome headless qua CDP (cdp.mjs), khong co console/network event tho; dung Resource Timing. Origin 3485 (dev server dung chung; config 3460 khong chay). P1 = 9ada9a1a-b810-49ec-b1ba-8c075067ed3b (A-24.01, luot dung 4).
+Online + sau khi bat offline (khong tai lai), API app-scope:
+  /api/v1/listings/<P1> 200 (x2), /api/v1/listings 200, /api/v1/catalog 200 (x2), /api/v1/listings/<P1>/owner 200 (x2)
+  tat ca 200; khong request that bai; khong third-party.
+Offline: khong co request moi nao toi API (khoi lich su doc tu kho tren may), chi bao 'Dang xem ban da tai — mat mang'.
+Console errors: khong doc duoc (driver khong cap).
