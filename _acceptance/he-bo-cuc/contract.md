@@ -30,9 +30,11 @@ một trong hai máy chủ.
 ### AC-2 — Bảy bố cục và sáu vùng
 Given một màn dưới `(app)` dựng `<BoCuc kieu="…">` với vùng của nó
 When màn hiện ở máy tính rộng
-Then đúng bảy kiểu được nhận (kiểu lạ là lỗi kiểu TypeScript); mỗi kiểu đặt vùng theo ma trận ADR-0024 §3 (vùng không
-thuộc bố cục không hiện và bị báo ở môi trường dựng); lề, bề rộng, khoảng cách lấy từ bốn token bố cục của nền, không từ
-số trong màn; Tràn đi sát mép cột nội dung, Đọc giới hạn ở bề rộng đọc.
+Then đúng bảy kiểu được nhận (kiểu lạ là lỗi kiểu TypeScript); bố cục chỉ giữ khung trang — lề, dải đầu màn, xếp thân
+và cột phụ theo kiểu — và không tự dựng Frame: mỗi vùng là một khối ReUI nguyên vẹn mang Frame của nó (đầu khung, thanh
+công cụ, chân); cột phụ chỉ ở Danh sách – chi tiết, Hồ sơ hai cột (dữ kiện trái 20rem), Luồng nhiều bước; lề, khoảng
+cách lấy từ token bố cục, không từ số trong màn; mỗi ô của trang mẫu mang một nhãn nguồn (khối · c-* · thành phần · ghép)
+ở bảng bóc tách, không ô nào vẽ tay.
 
 ### AC-3 — Đầu màn
 Given một màn khai đường dẫn, tiêu đề, một dòng mô tả và danh sách nút

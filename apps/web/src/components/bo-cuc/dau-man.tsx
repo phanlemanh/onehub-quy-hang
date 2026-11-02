@@ -4,7 +4,6 @@ import { ChevronLeftIcon, EllipsisIcon } from "lucide-react";
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 
-import { FrameDescription, FrameHeader, FrameTitle } from "@/components/reui/frame";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,8 +17,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 import { chiaNut } from "./ma-tran";
 
-// Đầu màn của hệ bố cục (ADR-0024 §3): đường dẫn luôn có (nhà › màn; chủ kho 02/11 «Luôn có breakcrumb»), điện thoại
-// chỉ còn mục cha làm lối về · tiêu đề và một dòng · một nút chính, tối đa hai nút phụ, còn lại vào «…». ReUI không có khối đầu trang riêng — ghép FrameHeader + breadcrumb + button +
+// Đầu màn của hệ bố cục (ADR-0024 §3): dải ngoài khung, trên các khối của thân — như Verve CRM (ghép bậc 6: ReUI không có
+// khối đầu trang). Đường dẫn luôn có (nhà › màn; chủ kho 02/11 «Luôn có breakcrumb»), điện thoại chỉ còn mục cha làm lối
+// về · tiêu đề và một dòng (bỏ khi khối của thân đã mang tiêu đề, như Tràn) · một nút chính, tối đa hai nút phụ, còn lại vào «…». ReUI không có khối đầu trang riêng — ghép FrameHeader + breadcrumb + button +
 // dropdown-menu (dòng «Chỗ hở» ở vo-va-ia.md §3).
 
 export type NutDauMan = { nhan: string; href?: string; onClick?: () => void; icon?: ReactNode };
@@ -32,7 +32,8 @@ export function DauMan({
   nut = [],
   phu,
 }: {
-  tieuDe: ReactNode;
+  /** Bỏ khi khối của thân mang tiêu đề trong đầu khung của nó (Tràn, Danh sách – chi tiết). */
+  tieuDe?: ReactNode;
   moTa?: ReactNode;
   /**
    * Các tầng từ nhà tới màn này, ít nhất nhà › màn, màn này ở cuối. Luôn hiện; mục cha là lối về (điện thoại chỉ hiện
@@ -45,7 +46,7 @@ export function DauMan({
 }) {
   const { chinh, phu: nutPhu, them } = chiaNut(nut);
   return (
-    <FrameHeader data-vung="dau-man" className="flex flex-row flex-wrap items-start justify-between gap-3">
+    <header data-vung="dau-man" className="flex flex-row flex-wrap items-start justify-between gap-3">
       <div className="flex min-w-0 flex-col gap-1">
         {/* Máy tính: đủ các tầng. Điện thoại: chỉ mục cha thành lối về «‹ cha» — tiêu đề đã nói màn hiện tại. */}
         <Breadcrumb>
@@ -71,11 +72,13 @@ export function DauMan({
             })}
           </BreadcrumbList>
         </Breadcrumb>
-        <div className="flex flex-wrap items-center gap-2">
-          <FrameTitle>{tieuDe}</FrameTitle>
-          {phu}
-        </div>
-        {moTa && <FrameDescription>{moTa}</FrameDescription>}
+        {(tieuDe || phu) && (
+          <div className="flex flex-wrap items-center gap-2">
+            {tieuDe && <h1 className="text-lg font-semibold tracking-tight">{tieuDe}</h1>}
+            {phu}
+          </div>
+        )}
+        {moTa && <p className="text-sm text-muted-foreground">{moTa}</p>}
       </div>
       {chinh && (
         <div className="flex shrink-0 items-center gap-2">
@@ -100,7 +103,7 @@ export function DauMan({
           <NutMot n={chinh} variant="default" />
         </div>
       )}
-    </FrameHeader>
+    </header>
   );
 }
 

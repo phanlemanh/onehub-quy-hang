@@ -10,7 +10,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 import { ACTION_LABEL } from "./nav-labels";
 
-// Menu Tạo trên thanh trên (ADR-0024 quyết định 1, 13): mọi việc tạo của vai ở đúng một chỗ — việc tạo đầu của vai là
+// Menu Tạo trên thanh trên — chuyển thể c-button-group-51 (ReUI, hàng 91; ButtonGroup + DropdownMenu «New ▾»). ADR-0024
+// quyết định 1, 13: mọi việc tạo của vai ở đúng một chỗ — việc tạo đầu của vai là
 // nút chính một chạm, các việc còn lại trong menu. Việc tạo theo vai đọc từ `navigationFor` (Tham chiếu §9); màn không
 // đặt nút tạo của riêng nó. `loi` chỉ để trang ba lối của hàng 91 dựng ba cách đặt cạnh nhau; vỏ thật dùng lối đã chọn.
 

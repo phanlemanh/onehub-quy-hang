@@ -13,8 +13,14 @@ export const BO_CUC = [
 
 export type KieuBoCuc = (typeof BO_CUC)[number];
 
-/** Năm vùng nằm trong khung màn; ngăn nổi (`NganNoi`) là vùng thứ sáu, mở trên màn chứ không chiếm chỗ trong khung. */
-export const VUNG = ["dau-man", "thanh-cong-cu", "than", "cot-phu", "chan"] as const;
+/**
+ * Vùng ở cấp trang mà bố cục xếp: đầu màn (dải ngoài khung), thân, cột phụ. Thanh công cụ và chân thuộc về khối ReUI
+ * đặt trong thân (khối mang Frame của nó — ReUI, Verve); ngăn nổi (`NganNoi`) mở trên màn, không chiếm chỗ.
+ */
+export const VUNG = ["dau-man", "than", "cot-phu"] as const;
+
+/** Vùng nằm trong khối của thân (ADR-0024 §3): bố cục không dựng, khối ReUI mang sẵn. */
+export const VUNG_TRONG_KHOI = ["thanh-cong-cu", "chan"] as const;
 
 export type Vung = (typeof VUNG)[number];
 
@@ -31,30 +37,30 @@ export const THONG_TIN: Record<KieuBoCuc, ThongTin> = {
   tran: {
     ten: "Tràn",
     mat_do: "day",
-    khoi_nguon: "data-grid-editing-6",
-    vung: ["dau-man", "thanh-cong-cu", "than", "chan"],
+    khoi_nguon: "solution-crm-3 (chờ quyết kiểu chặt cho filters)",
+    vung: ["dau-man", "than"],
     dien_thoai: "thành thẻ",
   },
   "danh-sach-chi-tiet": {
     ten: "Danh sách – chi tiết",
     mat_do: "day",
     khoi_nguon: "resizable theo c-resizable-9",
-    vung: ["dau-man", "thanh-cong-cu", "than", "cot-phu", "chan"],
+    vung: ["dau-man", "than", "cot-phu"],
     dien_thoai: "hai màn chồng",
   },
   doc: {
     ten: "Đọc",
     mat_do: "thuong",
     khoi_nguon: "settings-3",
-    vung: ["dau-man", "than", "chan"],
+    vung: ["dau-man", "than"],
     dien_thoai: "giữ",
   },
   "ho-so-hai-cot": {
     ten: "Hồ sơ hai cột",
     mat_do: "thuong",
-    khoi_nguon: "solution-crm-4",
+    khoi_nguon: "ghép theo Verve: Frame dữ kiện + solution-crm-5",
     vung: ["dau-man", "than", "cot-phu"],
-    dien_thoai: "một cột, nút dính đáy",
+    dien_thoai: "một cột, dữ kiện trước",
   },
   "bang-dieu-khien": {
     ten: "Bảng điều khiển",
@@ -67,14 +73,14 @@ export const THONG_TIN: Record<KieuBoCuc, ThongTin> = {
     ten: "Luồng nhiều bước",
     mat_do: "thuong",
     khoi_nguon: "solution-crm-6",
-    vung: ["dau-man", "than", "cot-phu", "chan"],
+    vung: ["dau-man", "than", "cot-phu"],
     dien_thoai: "ngăn toàn màn",
   },
   "dong-tin": {
     ten: "Dòng tin",
     mat_do: "thuong",
     khoi_nguon: "solution-crm-5",
-    vung: ["dau-man", "thanh-cong-cu", "than"],
+    vung: ["dau-man", "than"],
     dien_thoai: "giữ",
   },
 };

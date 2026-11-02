@@ -6,8 +6,8 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { Spinner } from "@/components/ui/spinner";
 
 // Khuôn của nhóm `trang-thai` (design/patterns/trang-thai.md): mọi chỗ trình trống · lỗi · báo trong màn đi qua đây.
-// Ghép `Empty` (shadcn) và `Alert` (ReUI) đã cài; khối đích `empty-state-*` của vo-va-ia là khối Pro — khi kho có khoá
-// ReUI thì chuyển thể vào chính tệp này, mọi màn đổi theo. Lỗi gắn một ô nhập dùng `FieldError`, không qua đây.
+// Nơi chuyển thể empty-state-1 và empty-state-2 (ReUI Pro, hàng 91): giữ Empty không viền, đầu, mô tả và hàng hành động của
+// khối; bỏ hình minh hoạ nặng, dùng biểu tượng lucide nhỏ (vo-va-ia.md §2 dòng «Trống · lỗi · báo»). Lỗi gắn một ô nhập dùng `FieldError`, không qua đây.
 type Props = {
   /** `empty` — vùng chưa có gì · `error` — thao tác hay lần tải thất bại · `notice` — điều người cần biết, không phải lỗi ·
    * `loading` — một chỗ nhỏ đang tải (vùng lớn dùng ChoTai theo hình của bố cục). */

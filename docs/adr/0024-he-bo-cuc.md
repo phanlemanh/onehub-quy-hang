@@ -63,6 +63,10 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Luồng nhiều bước | bước đang ở | — | xem trước | lùi/tiếp |
    | Dòng tin | tiêu đề | lọc theo loại | — | — |
 
+   **Bố cục không dựng Frame** (bóc tách 02/11, `_acceptance/he-bo-cuc/discovery/boc-tach.md`): bố cục giữ đầu màn, thân,
+   cột phụ; thanh công cụ và chân là phần của khối ReUI đặt trong thân, khối mang Frame của nó — bảng trên là vùng theo
+   nghĩa, không phải chỗ bố cục tự dựng.
+
    ReUI không có khối đầu trang riêng (đã tra `page header with breadcrumb title and primary action buttons` →
    `navbar-9`, không đứng): đầu màn ghép từ `FrameHeader` + `breadcrumb` + `button` + `dropdown-menu`, ghi «Chỗ hở».
 
