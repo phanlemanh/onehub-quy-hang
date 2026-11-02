@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: nap-mau-co-anh
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 074e1531df16f6c5a6f48adcf746da2e080768ce
-human_signoff:
+human_signoff: Manh Phan 2026-11-02
 ---
 
 # Evidence Report: nap-mau-co-anh
@@ -111,7 +111,7 @@ Lệnh fail không gắn eval nào: không có. Mọi lệnh máy của round 2 
   judged_by: judge panel đề xuất (3 góc nhìn, context sạch)
   verdict: PASS
   rationale: Đề xuất PASS khi đủ bốn vế (a), (b), (c), (d) và không có giá trị khoá. Cả ba góc nhìn đều thấy mục «Bản thật» của README nói đủ bốn ý và chỉ nêu tên biến.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-02 — Đạt
 
   Phiếu từng góc nhìn:
   - domain-correctness: PASS — README mục «Bản thật» nói đủ bốn ý. (a) Mỗi căn từng lên Đang bán có đúng một ảnh vẽ bằng mã, «không phải ảnh thật của ai». (b) Bước một lần thêm đủ ba secret ở environment `production` của GitHub, cùng giá trị Vercel Production. (c) Có câu «Thiếu secret kho ảnh thì nút dừng trước khi ghi với lời báo «kho ảnh: thiếu …»». (d) «Gỡ xoá cả byte ảnh mẫu trên kho». README chỉ nêu tên biến, không chứa giá trị khoá nào.

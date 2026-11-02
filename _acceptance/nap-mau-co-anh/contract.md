@@ -5,7 +5,7 @@ slug: nap-mau-co-anh
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-nap-mau-co-anh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -77,3 +77,11 @@ sàn còn, ảnh vỡ tới lần gỡ sau) — ghi ở Out of scope.
 - Đổi gói `mau/du-lieu-mau.json` hay công cụ dựng dev của hàng 17 (đã vá ở hàng 23).
 
 ## Notes
+
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Nạp hỏng vì lỗi cơ sở dữ liệu khi dùng kho ảnh Postgres (máy dev, CI) thì dòng báo nói mọi ảnh còn sót dù giao dịch đã dọn sạch — chỉ lời báo sai.
+  - Ngoài-2: Bài kiểm luật chặn in bí mật chỉ thử một trong ba khoá kho ảnh; luật hiện phủ cả ba nhờ tiền tố tên.
+  - Ngoài-4: Luật chặn in bí mật của nút nạp từng chưa phủ ba khoá kho ảnh (đã sửa ở lượt chấm 2).
+  - Ngoài-5: Lỗi đúng lúc chốt lần nạp thì ảnh đã tải lên Storage nằm lại, không dòng nào trỏ tới, lần gỡ sau không xoá được — chỉ tốn dung lượng.
+  - Ngoài-6: Dọn ảnh sau lần nạp hỏng mà kho cũng từ chối xoá thì từng không báo gì (đã thêm dòng báo số ảnh sót ở lượt chấm 2).
+  - Ngoài-7: Ô «bản thật, đủ ba khoá» của ca chọn kho từng thiếu đối chứng dương (đã ghim mã thoát và lỗi không tới được kho ở lượt chấm 2).
