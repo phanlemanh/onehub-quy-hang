@@ -9,7 +9,7 @@ import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { docBanDo, kiemCay, manNgoaiBanDo } from "./lib/ban-do.mjs";
-import { divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
+import { cacOBaLoi, divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -255,14 +255,18 @@ function kiemBaLoiCay(root, loi, dong) {
   let lenh = 0;
   for (const slug of readdirSync(goc).sort()) {
     const dv = divergenceCua(root, slug);
-    const coJson = existsSync(join(goc, slug, "ba-loi/ba-loi.json"));
+    // Hồ sơ nhiều ô (hàng 91) đặt mỗi ô ở ba-loi/<mã ô>/ — đếm mỗi ô một trang, kiểm qua kiemTrangHoSo như hồ sơ một ô.
+    const cacO = cacOBaLoi(join(goc, slug, "ba-loi"));
+    const coJson = existsSync(join(goc, slug, "ba-loi/ba-loi.json")) || cacO.length > 0;
     if (dv === null && !coJson) continue;
-    const coTrang = existsSync(join(goc, slug, "ba-loi/index.html"));
-    if (dv !== null && /^opened\b/.test(dv) && !coTrang && !coJson) {
+    const soTrang = cacO.length
+      ? cacO.filter((o) => existsSync(join(goc, slug, "ba-loi", o, "index.html"))).length
+      : Number(existsSync(join(goc, slug, "ba-loi/index.html")));
+    if (dv !== null && /^opened\b/.test(dv) && !soTrang && !coJson) {
       loi.push(`hồ sơ ${slug}: design-pass mở bước phân kỳ mà thiếu ba-loi/index.html`);
       continue;
     }
-    if (coTrang) trang++;
+    trang += soTrang;
     if (!coJson) continue;
     lenh++;
     const st = /^status:\s*(\S+)/m.exec(doc(root, `_acceptance/${slug}/contract.md`) ?? "")?.[1];
