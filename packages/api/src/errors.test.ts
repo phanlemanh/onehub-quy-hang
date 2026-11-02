@@ -62,6 +62,8 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     photoStorageMissing: ["photo-storage-missing", 503],
     // va-anh-ban-that.
     photoAlreadyConfirmed: ["photo-already-confirmed", 409],
+    // Hàng 26 (ADR-0025).
+    pushNotConfigured: ["push-not-configured", 503],
   };
   assert.equal(Object.keys(API_ERRORS).length, 48);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
