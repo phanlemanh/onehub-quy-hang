@@ -182,7 +182,7 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 
 - **Một địa chỉ cho một thứ; màn tự đổi theo thiết bị và vai.** Bảng hàng trên máy tính là bảng kiểu Sheet, trên điện thoại là thẻ; Hôm nay của đầu chủ là hàng đợi, của đầu khách là dòng phản ứng của khách. Link mở trên máy nào cũng đúng chỗ. Một người nhiều vai thấy hợp các nhà của mọi vai.
 - **Máy tính** — ba tầng:
-  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · menu Tạo · chuông báo · tài khoản. **Menu Tạo** (hàng 91): việc tạo đầu của vai là nút chính một chạm, các việc còn lại (Lead · Nhập Excel · Phát hàng theo vai) trong menu; vai không có việc tạo không thấy nút; màn không đặt nút tạo riêng.
+  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · menu Tạo · chuông báo · tài khoản. **Menu Tạo** (hàng 91): việc tạo đầu của vai là nút chính một chạm, các việc còn lại (Lead · Nhập Excel · Phát hàng theo vai) trong menu; vai không có việc tạo không thấy nút; màn không đặt nút tạo riêng. Điện thoại: nút «+» trên thanh trên chỉ mở «+ Lead» (không Nhập Excel, Phát hàng); telesales nhận lead bằng tab Lead nên không có nút «+».
   - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị, ở đáy).
   - **Cột thứ hai luôn có và mặc định mở** ở mọi nhà (hàng 91, chủ kho 02/11); ai gập thì máy nhớ theo người, sàn, nhà. Góc nhìn đã lưu vẫn một chạm ở nút «Góc nhìn» đầu thanh công cụ của bảng.
   - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay → các hàng đợi của bộ nhóm · Đội → Tổng quan.

@@ -161,7 +161,7 @@ evals:
   - id: E11
     criterion: AC-2
     executor: script
-    cmd: config:executors.design.floor
+    cmd: config:executors.script.design_floor
     expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
     paths: [apps/web/src/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

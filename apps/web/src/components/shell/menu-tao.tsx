@@ -91,8 +91,8 @@ export function MenuTao({ actions, loi = "reui" }: { actions: readonly Action[];
 }
 
 /**
- * Điện thoại: một nút «+» trên thanh trên mở mọi việc tạo của vai — mọi hành động của vỏ phải với tới được ở mọi khổ
- * (ReUI compose.md «Responsive»; Verve CRM giữ nút «+» ở 375).
+ * Điện thoại: một nút «+» trên thanh trên mở việc tạo của vai có trên điện thoại (`Navigation.mobileActions` — §9 không
+ * có Nhập Excel, Phát hàng trên điện thoại); ReUI compose.md «Responsive», Verve CRM giữ nút «+» ở 375.
  */
 export function MenuTaoDienThoai({ actions }: { actions: readonly Action[] }) {
   if (actions.length === 0) return null;

@@ -97,6 +97,12 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    `Sheet`/`Drawer` cho ngăn nổi. Màn của hàng đang chạy ghi ngoại lệ có hạn ở bản đồ khuôn tới khi hàng ấy chuyển; mức
    nợ giao diện giữ trần 0.
 
+   Hộp nổi còn tự đặt bề rộng, chờ chuyển sang ngăn nổi (ghi theo dãy B, hàng 27 — chưa sửa trong hàng 91):
+   - `apps/web/src/app/(app)/units/photos/redact/trinh-che.tsx` — hộp che vùng ảnh; ngoại lệ có hạn `sm:max-w-5xl`,
+     `max-h-[calc(100dvh-13rem)]` do hàng vá `va-che-vung-anh` đặt.
+   - `apps/web/src/app/(app)/units/photos/muc-anh.tsx` — hộp xem ảnh lớn; cùng lỗi `sm:max-w-sm` của hộp thắng
+     `max-w-4xl`, hàng vá của B sửa tạm.
+
 10. **MCP `reui` và `shadcn` khai trong `.mcp.json` của kho**, khoá đọc từ biến môi trường, không ghi vào tệp.
 
 11. **Bản đồ hệ thiết kế một chỗ** (chủ kho 02/11 «Gửi vào hàng nền»). Skill `quy-hang-ui` giữ bảng «Bản đồ hệ thiết kế»:

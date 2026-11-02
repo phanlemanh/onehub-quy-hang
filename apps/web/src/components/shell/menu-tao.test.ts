@@ -16,8 +16,8 @@ const THEO_VAI: [Role, Action | null, Action[]][] = [
   ["telesales", "new_lead", []],
   ["listing_agent", "new_lead", ["import", "export"]],
   ["buyer_agent", null, []],
-  ["team_lead", "new_lead", ["export"]],
-  ["company_admin", "import", []],
+  ["team_lead", "new_lead", ["import", "export"]],
+  ["company_admin", null, []],
 ];
 
 const BO_QUA = [/^components\/shell\/menu-tao\.tsx$/, /^components\/ui\//, /^components\/reui\//, /^app\/mau\//, /\.test\.tsx?$/];

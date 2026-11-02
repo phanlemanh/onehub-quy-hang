@@ -186,7 +186,7 @@ export function AppShell({
 
       <SidebarInset className="overflow-hidden shadow-none md:border">
         <DesktopHeader user={user} nav={nav} onJump={openJump} className="hidden md:flex" menuTao={menuTao} chiBao={chiBao} taiKhoan={taiKhoan} />
-        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.actions} />
+        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.mobileActions} />
 
         <div className="relative flex min-h-0 flex-1">
           {hasColumn && home && <SecondColumn home={home} open={columnOpen} />}
