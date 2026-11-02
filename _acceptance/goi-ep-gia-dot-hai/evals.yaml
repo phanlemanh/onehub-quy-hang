@@ -1,0 +1,224 @@
+schema_version: 1
+feature_slug: goi-ep-gia-dot-hai
+# Lệnh máy: executors.test.web (lịch sử, kết quả gọi, hạ giá, giá đáy — thuần), executors.test.isolation (API trên Postgres
+# dãy D, cổng 5565 — cần DATABASE_URL), executors.script.lint (bản đồ khuôn, bố cục). Người chấm đối chiếu tên ca nêu trong
+# `expected` với dòng reporter: có mặt, ok, không SKIP. Ui-check chạy trên máy dev dãy D (cổng 3485, Postgres 5565), sàn
+# «[Mẫu] Sàn thử»; dữ liệu dựng bằng node --env-file-if-exists=.env.local --import tsx
+# _acceptance/goi-ep-gia-dot-hai/thu/dung-d.mjs (in mã hồ sơ, giá mong đợi; chạy lại chỉ in). Đăng nhập người mẫu: node
+# --env-file=.env.local --import tsx _acceptance/cuoc-goi-khai-thac/thu/phien.mts <email> in cookie phiên. Mỗi bài ui-check
+# có ghi dữ liệu dùng hồ sơ riêng của nó và một tab trình duyệt riêng. Mốc thời gian: sự kiện của hồ sơ chỉ thêm và máy chủ
+# đóng dấu giờ hiện tại, nên dung-d.mjs dựng hồ sơ qua API rồi lùi `occurred_at` các sự kiện trên Postgres THỬ của dãy D bằng
+# phiên chủ cơ sở dữ liệu (`set session_replication_role = replica`, chỉ trong phiên ấy) và in mốc ép giá của từng hồ sơ. Bài
+# ui-check cần căn ở nhóm «Nên gọi điều chỉnh giá» mà dung-d.mjs in mốc dưới 10 ngày thì dừng «chưa đủ điều kiện», không
+# chấm màn.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «ép giá: đầu màn» (apps/web/src/app/(app)/units/call/push/dau-man.test.ts) có mặt và ok — ma trận viết trước 4 ca (assert số): hồ sơ Đang bán 2,8 tỷ không bao phí, lên bảng 38 ngày trước, đổi giá 23 ngày trước → «A-15.08 · Toà A», nấc «Đang bán», «2,8 tỷ · không bao phí», «Lên bảng 38 ngày · đổi giá gần nhất 23 ngày trước»; hồ sơ chưa từng đổi giá → «chưa đổi giá lần nào»; mã hồ sơ không có trong danh sách trên máy → kết quả 'vang'; tham số `lead=` → chế độ khai thác, `hang=` → chế độ ép giá, cả hai vắng → 'vang'. Đối chứng đỏ: tính số ngày từ lần tạo thay vì từ lần lên Đang bán → ca 38 ngày gọi tên."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E1b
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy D; dau-chu-1; dung-d.mjs in P1 (căn Đang bán ở nhóm «Nên gọi điều chỉnh giá», giá 2,8 tỷ không bao phí) và một mã hồ sơ không tồn tại"
+    steps:
+      - "Đăng nhập dau-chu-1. Khổ 1440x900. Mở /today, ở nhóm «Nên gọi điều chỉnh giá» trên dòng P1 bấm «Gọi» → ghi URL; chụp evidence/E1b-1440.png; ghi chữ đầu màn"
+      - "Mở /units/call?hang=<mã không tồn tại> → chụp evidence/E1b-khong-thay.png; bấm nút trên khối báo → ghi URL"
+      - "Mở /units/call?lead=<L1 của hàng 28, dung-d của cuoc-goi-khai-thac in> → ghi trang có thẻ lead của chế độ khai thác không"
+    expected: "URL /units/call?hang=<P1>; đầu màn có mã căn · toà của P1, nấc, «2,8 tỷ · không bao phí», số ngày lên bảng và số ngày từ lần đổi giá gần nhất khớp dung-d.mjs in; mã không tồn tại: «Không thấy căn này trong kho của bạn», nút đưa về /today; ?lead= vẫn mở chế độ khai thác."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**", "apps/web/src/app/(app)/today/**"]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «lịch sử trả giá: ma trận sự kiện» (apps/web/src/app/(app)/units/call/push/lich-su.test.ts) có mặt và ok — dãy sự kiện viết trước 9 sự kiện (created, details_changed, price_changed 2,95 tỷ N, status_changed Active, price_changed 2,9 tỷ N, owner_confirmed, price_changed 2,9 tỷ BP, price_changed 3,1 tỷ BP, status_changed Pending) ra đúng 7 dòng (assert số; details_changed và created không thành dòng giá trừ dòng «Tạo hồ sơ»), mới nhất trên, chữ từng dòng khớp bảng: «Đã cọc», «Tăng 2,9 tỷ → 3,1 tỷ», «Đổi điều kiện phí: không bao phí → bao phí», «Còn · giữ giá», «Hạ 2,95 tỷ → 2,9 tỷ», «Lên bảng 2,95 tỷ», «Tạo hồ sơ»; dòng mang confirmedWithOwner có nhãn «đã xác nhận với chủ»; Closed ra «Đã bán <giá chốt>», Withdrawn sold_elsewhere ra «Ngừng hẳn — chủ bán nơi khác»; lịch sử chưa kéo về (null) → trạng thái 'dang-tai'. Đối chứng đỏ: so giá với giá đầu dãy thay vì giá ngay trước → dòng «Tăng 2,9 → 3,1» gọi tên."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E2b
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    target: "Như E1b; P1 có lịch sử: lên bảng, hạ giá, «Còn · giữ giá» (dung-d.mjs in dãy mong đợi)"
+    steps:
+      - "Mở /units/call?hang=<P1> → chụp khối «Lịch sử trả giá» evidence/E2b-lich-su.png; ghi từng dòng"
+      - "Bật offline (DevTools), tải lại trang → chụp evidence/E2b-mat-mang.png; ghi khối lịch sử còn hiện không"
+    expected: "Các dòng khớp dãy dung-d.mjs in, mới nhất trên, có ngày giờ, điều kiện phí, nhãn «đã xác nhận với chủ» ở dòng có dấu ấy; mất mạng vẫn hiện bản đã kéo."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «chủ nhà: giá đáy theo người xem» (packages/api/test-db/goi-ep-gia-dot-hai.test.ts) có mặt và ok — ma trận 5 người (assert số): đầu chủ giữ căn → visible true, floorPrice 2700000000; trưởng nhóm → floorPrice 2700000000; đầu chủ khác → visible false, không khoá floorPrice; telesales → visible false hay 403, không khoá floorPrice; chưa đăng nhập → 401; căn chủ nhà chưa có giá đáy → floorPrice null cho đầu chủ giữ căn. Đối chứng đỏ: bộ dựng trả trọn dòng chủ nhà cho mọi người (bản sao) → ca đầu chủ khác gọi tên 'floorPrice lọt'."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: [packages/api/src/owners/**, packages/api/test-db/goi-ep-gia-dot-hai.test.ts]
+
+  - id: E3a
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «giá đáy: khối theo trả lời» (apps/web/src/app/(app)/units/call/push/gia-day.test.ts) có mặt và ok — 5 ca (assert số): visible true + floorPrice 2,7 tỷ trên giá 2,8 tỷ không bao phí → «2,7 tỷ», «thấp hơn giá về tay hiện tại 3,6%»; visible true + floorPrice null → «Chưa ghi giá đáy»; visible false → không khối; 403/404 → không khối; mất mạng → «Chưa tải được giá đáy». Hàm đọc chỉ gọi đúng GET /api/v1/listings/<id>/owner và không chạm localStorage hay kho trên máy (hàm gọi giả đếm, kho giả đếm ghi = 0). Đối chứng đỏ: khối đọc floorPrice khi visible false → ca visible false gọi tên."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E3b
+    criterion: AC-3
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; P1 của dau-chu-1 có giá đáy 2,7 tỷ; P2 của dau-chu-1 chưa có giá đáy; người mẫu truong-nhom, dau-chu-2"
+    steps:
+      - "dau-chu-1 mở /units/call?hang=<P1> → chụp evidence/E3b-gia-day.png; ghi khối giá đáy; DevTools Network: ghi các lời gọi có floorPrice"
+      - "dau-chu-1 mở /units/call?hang=<P2> → ghi khối giá đáy"
+      - "dau-chu-2 mở /units/call?hang=<P1> → chụp evidence/E3b-khac.png; ghi có khối giá đáy không, thân lời gọi /owner có floorPrice không"
+      - "Sau cả ba bước, trong trang chạy: JSON.stringify(localStorage) và đọc kho IndexedDB của bộ đồng bộ → tìm chuỗi 'floor' và '2700000000'"
+    expected: "P1: «2,7 tỷ» kèm phần trăm cách giá về tay; chỉ lời gọi /owner mang floorPrice; P2: «Chưa ghi giá đáy»; dau-chu-2: không khối giá đáy, thân /owner không có floorPrice; localStorage và IndexedDB không có giá đáy."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**", packages/api/src/owners/**]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «kết quả gọi: phím» (apps/web/src/app/(app)/units/call/push/ket-qua.test.ts) có mặt và ok — bảng viết trước 9 ca (assert số): 'h' ngoài ô chữ → chọn ha-gia; 'G' → giu-gia; 'b' → ban; 'k' → khong-nghe; 'h' khi con trỏ ở ô chữ → không lệnh; Escape khi đang chọn ban → bỏ chọn; ở ban, '2' → lối san-ban; ở ban, '4' → không lệnh; Ctrl+Enter → ve-hom-nay. Đối chứng đỏ: bỏ kiểm ô chữ → ca con trỏ ở ô chữ gọi tên."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hạ giá: luật sửa giá» (apps/web/src/app/(app)/units/call/push/ha-gia.test.ts) có mặt và ok — 5 ca (assert số) trên giá cũ 2,8 tỷ không bao phí: '2,72 tỷ' + excluded → lệnh price_changed {listPrice: 2720000000, feeInclusion: 'excluded'}, chữ «Hiểu là 2,72 tỷ · không bao phí · trước 2,8 tỷ · −3%»; '2 tỷ' → hỏi lại kèm «2,8 tỷ · không bao phí → 2 tỷ · không bao phí» và «−29%»; '2,8 tỷ' + included → hỏi lại (đổi phí); 'abc' → chưa hiểu, không lệnh; lệnh không mang khoá gợi ý nào ngoài listPrice, feeInclusion (assert tập khoá). Đối chứng đỏ: bỏ qua canHoiLai → ca 2 tỷ gọi tên."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E5b
+    criterion: AC-5
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; P3 của dau-chu-1, Đang bán 2,8 tỷ không bao phí (riêng cho bài này)"
+    steps:
+      - "Mở /units/call?hang=<P3>; chỉ bằng phím: H, xoá ô, gõ «2,72 tỷ», Alt+2 → ghi dòng «Hiểu là…»; Enter → chờ chỉ báo «đã gửi»; GET /api/v1/listings/<P3> → ghi listPrice, feeInclusion, sự kiện price_changed cuối và confirmedWithOwner của nó"
+      - "Mở lại trang, H, gõ «2 tỷ», Enter → chụp evidence/E5b-hoi-lai.png; ghi chữ hỏi lại; Esc → ghi giá máy chủ"
+      - "H, gõ «abc», Enter → ghi chữ báo"
+    expected: "«Hiểu là 2,72 tỷ · không bao phí · trước 2,8 tỷ · −3%»; máy chủ listPrice 2720000000 excluded, sự kiện price_changed mới có confirmedWithOwner true; 2 tỷ hỏi lại kèm cũ → mới và −26%, Esc không ghi (giá giữ 2720000000); «abc» báo chưa hiểu, không sự kiện mới; không câu nào gợi ý mức nên hạ."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E5c
+    criterion: AC-5
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; P9 của dau-chu-1, Đang bán 2,8 tỷ không bao phí (riêng cho bài này); dung-d.mjs --ban <P9> để trưởng nhóm chuyển Đã bán"
+    steps:
+      - "Mở /units/call?hang=<P9>; tắt mạng của trang (DevTools Network: Offline); H, gõ «2,75 tỷ», Alt+2, Enter → chụp evidence/E5c-mat-mang.png; ghi chỉ báo đồng bộ và chữ trên khối kết quả"
+      - "Bật mạng lại, chờ gửi; GET /api/v1/listings/<P9> → ghi listPrice và số price_changed"
+      - "Tắt mạng lại; H, gõ «2,7 tỷ», Enter; chạy dung-d.mjs --ban <P9> trong terminal; bật mạng, chờ lượt gửi → chụp evidence/E5c-tu-choi.png; ghi chỉ báo đồng bộ, Cần xem, và GET lại listPrice, standardStatus"
+    expected: "Mất mạng: lần hạ giá ghi trên máy, chỉ báo nói chưa gửi vì mất mạng; có mạng lại máy chủ nhận 2750000000, đúng một price_changed mới. Máy chủ từ chối lần hạ giá ghi trên bản trước khi căn được bán (lời gọi gửi trả 409 — mong đợi): hồ sơ vào Cần xem, chỉ báo nói vì sao; máy chủ giữ 2750000000 và Closed."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; P4 của dau-chu-1 ở nhóm «Nên gọi điều chỉnh giá» (riêng cho bài này)"
+    steps:
+      - "Đối chứng dương: mở /today → ghi P4 có ở nhóm «Nên gọi điều chỉnh giá» không (không có thì dừng «chưa đủ điều kiện»); GET /api/v1/listings/<P4> → ghi lastConfirmedAt và số sự kiện owner_confirmed"
+      - "Mở /units/call?hang=<P4>; phím G rồi Enter → chụp evidence/E6-giu-gia.png; chờ gửi; GET lại → ghi lastConfirmedAt và số owner_confirmed"
+      - "Mở /today → ghi P4 còn ở nhóm «Nên gọi điều chỉnh giá» không"
+    expected: "Sau G: đúng một owner_confirmed mới, lastConfirmedAt đổi sang lần ghi; P4 rời nhóm ép giá ở Hôm nay."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**", "apps/web/src/app/(app)/today/**"]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đã cọc / bán: ba lối» (apps/web/src/app/(app)/units/call/push/ket-qua.test.ts) có mặt và ok — 6 ca (assert số) trên hồ sơ Đang bán: da-coc → status_changed {to: 'Pending'}; san-ban + '2,75 tỷ' + ngày '2026-11-02' → {to: 'Closed', closePrice: 2750000000, closeDate: '2026-11-02'}; san-ban thiếu giá chốt → báo «Cần giá chốt», không lệnh; chu-ban-noi-khac → {to: 'Withdrawn', withdrawnReason: 'sold_elsewhere'}; hồ sơ Tạm ngừng → da-coc tắt kèm lý do của bảng chuyển; ngày bán mặc định là hôm nay theo giờ máy. Đối chứng đỏ: bỏ kiểm bảng chuyển → ca Tạm ngừng gọi tên."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E7b
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; P5, P6, P7 của dau-chu-1 Đang bán (riêng cho bài này)"
+    steps:
+      - "Mở /units/call?hang=<P5>; chỉ bằng chuột: bấm nút «Đã cọc / bán…», bấm «Đã cọc», bấm nút ghi → chờ gửi; GET /api/v1/listings/<P5> → ghi standardStatus"
+      - "Mở /units/call?hang=<P6>; B, 2, Enter không gõ giá chốt → chụp evidence/E7b-thieu-gia.png; ghi chữ báo; gõ «2,75 tỷ», Enter → chờ gửi; GET → ghi standardStatus, closePrice, closeDate"
+      - "Mở /units/call?hang=<P7>; B, 3, Enter → chờ gửi; GET → ghi standardStatus, withdrawnReason"
+    expected: "P5 Pending; P6 báo cần giá chốt rồi Closed 2750000000 với ngày hôm nay; P7 Withdrawn sold_elsewhere."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: backend-effect
+    target: "Như E1b; P8 của dau-chu-1 ở nhóm «Nên gọi điều chỉnh giá» (riêng cho bài này)"
+    steps:
+      - "Đối chứng dương: mở /today → ghi P8 có ở nhóm «Nên gọi điều chỉnh giá» không (không có thì dừng «chưa đủ điều kiện»); GET /api/v1/listings/<P8> → ghi version và số sự kiện"
+      - "Mở /units/call?hang=<P8>; phím K → ghi URL sau đó"
+      - "Chờ 5 giây; GET lại → ghi version và số sự kiện; ở /today ghi P8 còn ở nhóm ép giá không"
+    expected: "Sau K trang về /today; version và số sự kiện không đổi; P8 vẫn ở nhóm «Nên gọi điều chỉnh giá»."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; stdout có 'khuôn: ' với 0 lỗi đọc · 0 lệch, 'chuẩn giao diện: đạt'; design/patterns/cuoc-goi.md không còn khoá ngoai_le_han (bài quét bố cục không có dòng hạn nào trỏ units/call); lệnh npm test -w @quy-hang/ui-lint trong cùng lượt chấm xanh, gồm ca «bản đồ: khoá bo_cuc»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: [design/patterns/**, "apps/web/src/app/(app)/units/call/**"]
+
+  - id: E9a
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; mọi ca của hàng 28 trong apps/web/src/app/(app)/units/call/*.test.ts (phím: ma trận, máy tính: hai chiều, giá trong danh sách hỏi, mức đủ: theo bản trên máy, hồ sơ của lead: tạo một lần, mốc gọi đầu: ghi đúng một lần) có mặt và ok — chuyển bố cục không đổi hành vi."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E9b
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    target: "Như E1b; P1 và L1 của hàng 28"
+    steps:
+      - "Khổ 1440x900 mở /units/call?hang=<P1> → chụp evidence/E9b-ep-gia-1440.png; ghi thứ tự các mục từ trên xuống"
+      - "Khổ 1440x900 mở /units/call?lead=<L1> → chụp evidence/E9b-khai-thac-1440.png; ghi thứ tự các mục"
+      - "Khổ 1280x800 cả hai → ghi scrollWidth so với innerWidth; khổ 375x812 ép giá → chụp evidence/E9b-375.png"
+    expected: "Cả hai trong bố cục Hồ sơ: đầu màn rồi một cột căn giữa; ép giá: kết quả gọi → lịch sử trả giá và giá đáy → danh sách hỏi → tính giá → so giá; khai thác: thẻ lead → danh sách hỏi → tính giá → so giá; 1280 không cuộn ngang; 375 một cột."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «chủ nhà: vai và nguồn» (packages/api/test-db/goi-ep-gia-dot-hai.test.ts) có mặt và ok — thân GET /owner của đầu chủ giữ căn có đúng tập khoá khai (assert so sâu) và không khoá ownerPhone hay titleDeedPhoto; thân GET /api/v1/listings/<id> qua findSourceLeaks rỗng; đối chứng đỏ: thêm ownerPhone vào bản sao thân → tập khoá lệch, ca gọi tên khoá thừa."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+    paths: [packages/api/src/owners/**, packages/api/test-db/goi-ep-gia-dot-hai.test.ts]
+
+  - id: E10b
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy D; người mẫu telesales@mau.quy-hang.test và quan-tri@mau.quy-hang.test; dau-chu-1 với P1"
+    steps:
+      - "Đăng nhập telesales, mở /units/call?hang=<P1> → chụp evidence/E10b-telesales.png; ghi trang hiện gì"
+      - "Đăng nhập quan-tri, mở cùng URL → ghi trang hiện gì"
+      - "Đăng nhập truong-nhom@mau.quy-hang.test (không vai Đầu chủ), mở cùng URL → ghi trang hiện gì"
+      - "Đăng nhập dau-chu-1, mở /units/call?hang=<P1>; DevTools Network: ghi mọi lời gọi /api/v1 của trang; tìm trong thân 'ownerPhone', 'titleDeed', '0900'; ghi lời gọi nào mang 'floorPrice'"
+    expected: "Telesales, quản trị và trưởng nhóm: trang không thấy (404); đầu chủ: không lời gọi nào mang số chủ hay ảnh sổ; floorPrice chỉ ở lời gọi /owner."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+    paths: ["apps/web/src/app/(app)/units/call/**"]
