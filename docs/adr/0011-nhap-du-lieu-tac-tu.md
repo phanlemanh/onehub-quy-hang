@@ -20,7 +20,7 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
   và không thuộc ZDR. Vùng suy luận chỉ có `global` hoặc `us` (giá ×1,1); nơi lưu chỉ có `us` — **không có vùng châu Á**.
 - **Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15** (hiệu lực 1/1/2026): chuyển dữ liệu cá nhân ra nước ngoài phải lập hồ sơ
   đánh giá tác động và nộp trong 60 ngày (các bản bình luận luật lệch nhau về mốc tính); phạt tới 5% doanh thu năm trước.
-- **Vercel Hobby**: hàm chạy tối đa 300 giây; Pro mặc định 300, nâng được 800. Gói Hobby là dùng phi thương mại.
+- **Vercel**: hàm chạy mặc định tối đa 300 giây; gói Pro nâng được 800. Đội đã ở gói Pro (đính chính 02/11, ADR-0009).
 - **Google**: `drive.file` không nhạy cảm, đi cùng Google Picker; `spreadsheets.readonly` nhạy cảm, phải qua xét duyệt
   ứng dụng và mở mọi bảng tính của người dùng.
 
@@ -132,7 +132,7 @@ mẫu sạch ở `packages/db/seed/mau/` (40 dòng, 13 và 16 cột); bộ đọ
 | | C. Picker + `drive.file` | Chọn file ngay, nhập lại theo file | Dự án Google Cloud, màn đồng ý, giữ khoá Picker | Vài ngày dựng + xét duyệt nhẹ |
 | | D. `spreadsheets.readonly` | Đọc mọi bảng | Phạm vi nhạy cảm, mở mọi bảng tính, xét duyệt nặng | Tuần |
 | Chạy ở đâu | **A. Trình duyệt + một hàm API cho tác tử** — chọn | File không lên máy chủ; khớp Kiến trúc §5 | Màn đóng giữa chừng thì làm lại phần xem trước | 0 thêm |
-| | B. Tải file lên, việc nền xử lý | Làm tiếp được khi đóng màn | Hàng đợi việc, lịch Hobby chỉ một lần/ngày; file có số chủ nằm trên máy chủ | Cần Pro |
+| | B. Tải file lên, việc nền xử lý | Làm tiếp được khi đóng màn | Hàng đợi việc; file có số chủ nằm trên máy chủ | Đội đã ở Pro (02/11) |
 | | C. Batch API | Rẻ 50% | Tới 24 giờ; giữ 29 ngày, không ZDR | Không hợp xem trước |
 | Học theo sàn | **A. Mẫu + từ điển ở cơ sở dữ liệu của sàn** — chọn | Tất định, rẻ dần, đi theo sàn trên mọi máy | Thêm hai bảng có luật theo dòng | Migration |
 | | B. Đưa lần nhập cũ vào lời nhắc | Không bảng mới | Mỗi lần trả tiền đọc lại; không tất định | Tăng theo thời gian |
@@ -156,7 +156,7 @@ Chi phí ước bằng cỡ dữ liệu, chưa đo token thật (máy phiên nà
 - Bảng mới (luật theo dòng): lần nhập, kết quả từng dòng, mẫu file, từ điển giá trị, sổ chi phí AI.
 - Kiểm bắt buộc mới: bộ kiểm rò nguồn ra AI (gói gửi đi không chứa giá trị nguồn hay dữ liệu cá nhân).
 - Vận hành (việc của người, ngoài kho): tài khoản Claude API của OneHub, khoá trong Vercel, trần chi tiêu; người pháp lý rà
-  bốn câu ở quyết định 2; nâng Vercel Pro trước sàn trả tiền (điều khoản Hobby).
+  bốn câu ở quyết định 2; ~~nâng Vercel Pro trước sàn trả tiền~~ — đã ở Pro (đính chính 02/11).
 
 ## Nguồn đã kiểm (31/10/2026)
 
