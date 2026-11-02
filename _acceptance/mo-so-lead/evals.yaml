@@ -1,0 +1,76 @@
+schema_version: 1
+feature_slug: mo-so-lead
+# Lệnh máy: `executors.test.isolation` (cần DATABASE_URL tới Postgres dãy L — .env.local), `executors.test.web`.
+# Người, sàn, lead lấy từ sàn thử của hàng 27 (packages/api/test-db/san-thu.ts), số mẫu 0900 000 0xx.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/mo-so-lead.test.ts ca «mở số: đầu chủ được giao» có mặt và ok — lead nhập với số mẫu, nhịp chia về dc1; dc1 gọi POST /api/v1/leads/{id}/phone-reveal → 200, ownerPhone deepEqual số đã nhập (dạng chuẩn hoá); đếm thẳng bảng lead_phone_reveals của lead: 1 dòng với actor_user_id = dc1, actor_roles chứa listing_agent, occurred_at trong khoảng trước–sau lời gọi; gọi lần hai → 200, đếm 2. Bảng bốn lối giao (nhịp chia, trưởng nhóm giao, nhập khớp chủ nhà, tự nhận kho chung) → mỗi lối người nhận mở được, đếm 4. Bảng ba nấc còn việc (Đã gửi, Đã nhận, Đã gọi) × người được giao mở số → 200, mỗi nấc thêm đúng một vết, đếm 3. Mở số không đổi lead: đọc dòng lead (outcome, accepted_at, first_called_at, matched_agent_user_id, returned_at) trước và sau hai lần mở → deepEqual; đối chứng dương: gọi lối «Nhận» thì accepted_at đổi. Chiều đỏ: bỏ dòng ghi vết trong hàm mở số → ca đếm ra 0, đỏ nêu «vết»; thêm lệnh ghi mốc nhận vào hàm mở số → ca «không đổi lead» đỏ nêu trường accepted_at."
+    paths: [packages/api/src/leads/**, packages/db/migrations/017_*.sql, packages/api/test-db/mo-so-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mở số: người không được mở» — bảng viết trước mười dòng (đầu chủ khác cùng sàn, telesales đã nhập lead, trưởng nhóm, quản trị sàn, người sàn khác đặt sàn của mình, người được giao đã bị gỡ vai Đầu chủ, lead đã trả lại, lead đã gửi lại — lead cũ, lead căn trùng — đầu chủ giữ căn mở (theo Hỏi-3 khuyến nghị không), lead căn trùng đã bỏ) → mã trả về viết trước (403 hay 404 theo từng dòng, chưa đăng nhập 401 thêm một dòng) và vết của lead sau mỗi dòng vẫn 0; đếm bằng số dòng (11). Đối chứng dương cùng dữ liệu: dòng «đầu chủ được giao» trên chính lead ấy trả 200 và đếm 1. Chiều đỏ: nới hàm mở số cho mọi đầu chủ của sàn → dòng «đầu chủ khác cùng sàn» ra 200, đỏ nêu dòng."
+    paths: [packages/api/src/leads/**, packages/db/migrations/017_*.sql, packages/api/test-db/mo-so-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ba ca mới có mặt và ok — «vết mở số lead: bật và ép luật theo dòng» (relrowsecurity, relforcerowsecurity); «vết mở số lead: ai đọc được» — bảng viết trước (người mở, trưởng nhóm cùng sàn, đầu chủ khác cùng sàn, người sàn khác) × đọc vết của người mở → (1, 1, 0, 0), đếm 4; «vết mở số lead: chỉ thêm» — vai API insert thẳng → lỗi quyền hay luật theo dòng, update → permission denied, delete → permission denied; vai chủ update và delete một vết → bị trigger chỉ-thêm chặn; đếm 5. Chiều đỏ: thêm luật đọc theo sàn bỏ điều kiện người → dòng «đầu chủ khác cùng sàn» ra 1, đỏ nêu dòng."
+    paths: [packages/db/migrations/017_*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mở số: số không ra ngoài cửa mở số» trong packages/api/test-db/mo-so-lead.test.ts — với một lead mang số mẫu: thân trả của GET /api/v1/leads/assigned, thân trả của mọi lời mở số bị từ chối ở E2, và mọi dòng ghi ra hai kênh nhật ký thật của API trong lúc chạy ca — console (log, error, warn) và process.stdout.write/process.stderr.write, bọc tạm cả năm — không chứa số ở bốn dạng (0900000xxx, 0900 000 xxx, +84…, 84…; dùng timDangSo của packages/api/src/owners/ma-hoa.ts); ca máy chủ lỗi ép: đổi khoá mã hoá số chủ sang một khoá hợp lệ khác trong lúc gọi mở số → mã 500 viết trước, thân trả và nhật ký không có số, và vết không ghi (giao dịch quay lui). Đối chứng dương hai vế: thân trả của lời mở số thành công chứa số và máy dò bắt được; lỗi 500 ép ở trên sinh ít nhất một dòng nhật ký bị bọc bắt được (đếm ≥ 1) — chứng việc bọc tóm kênh thật. Chiều đỏ: thêm số vào bản tin lỗi 403 → máy dò bắt, đỏ nêu chỗ rò."
+    paths: [packages/api/src/leads/**, packages/api/test-db/mo-so-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/today/mo-so.test.ts có mặt và ok — chuSo viết số theo nhóm (bảng viết trước bốn dạng vào: 0900000011, 0900 000 011, +84900000011, chuỗi rỗng → '0900 000 011', '0900 000 011', '0900 000 011', ''); telHref ra 'tel:0900000011'; mở số qua hàm moSo với fetch giả — bảng viết trước năm câu trả lời (200 có số, 403, 404, 401, mạng lỗi) → kết quả viết trước (số; «Lead này không còn của bạn» cho 403 và 404; «Hết phiên đăng nhập — đăng nhập lại rồi thử»; «Mất mạng — chưa mở được số, thử lại khi có mạng»), đếm 5; moSo không gọi localStorage, sessionStorage hay indexedDB (bọc giả ném lỗi nếu bị gọi). Chiều đỏ: telHref giữ dấu cách → dòng tel đỏ nêu giá trị."
+    paths: [apps/web/src/app/(app)/today/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3483/today"
+    steps:
+      - "Bản dev dãy L ĐANG CHẠY ở http://localhost:3483 (launch web-l, Postgres 5563, sàn «[Mẫu] Sàn thử» đã nạp, lead mẫu dựng bằng packages/api/test-db/dung-man-lead-bon-nac.ts) — không tự khởi động hay tắt máy chủ; không chạm cơ sở dữ liệu ngoài các lối API của màn."
+      - "Dùng chrome-devtools MCP (không trình duyệt trong app). Phiên: chạy `node --env-file=.env.local --import tsx _acceptance/thong-bao-lead/thu/phien.mts dau-chu-1@mau.quy-hang.test` từ gốc kho → JSON {value, qh_san}; mở http://localhost:3483/login rồi evaluate_script `document.cookie = 'qh.session_token=<value>; path=/'; document.cookie = 'qh_san=<qh_san>; path=/'`."
+      - "Khung 1 (1440×900): navigate_page http://localhost:3483/today; nhóm «Lead mới» có dòng lead với nút «Mở số» cạnh «Nhận»/«Đã gọi». Chụp evidence/E6-1-mo-so.png."
+      - "Khung 2: bấm «Mở số» trên dòng lead đầu → số dạng 0900 000 0xx hiện trên dòng kèm nút «Gọi»; evaluate_script đọc href của a[href^=\"tel:\"] → tel:0900000xxx; nấc của dòng (nhãn Đã gửi/Đã nhận) không đổi. Chụp evidence/E6-2-so-hien.png."
+      - "Khung 3 (emulate viewport '375x812x3,mobile,touch', tải lại, bấm «Mở số» cùng dòng): số và «Gọi» nằm dưới tên lead. Chụp evidence/E6-3-dien-thoai.png."
+      - "Khung 4 (1440×900): tải lại trang → dòng lại là nút «Mở số», không còn số. Chụp evidence/E6-4-tai-lai.png."
+      - "Khung 5: trên một dòng nấc Đã gửi bấm «Nhận», rồi vẫn thấy «Mở số» và bấm mở được số. Chụp evidence/E6-5-sau-nhan.png."
+      - "Khung 6: emulate networkConditions 'Offline', bấm «Mở số» trên một dòng chưa mở → dòng chữ «Mất mạng — chưa mở được số, thử lại khi có mạng.» dưới nút, nút vẫn bấm được; bỏ Offline (emulate không networkConditions), bấm lại → số hiện. Chụp evidence/E6-6-mat-mang.png (lúc thấy dòng lỗi)."
+      - "Khung 7: emulate networkConditions 'Slow 3G', bấm «Mở số» trên một dòng chưa mở và chụp ngay → nút bị khoá (disabled) lúc chờ. Chụp evidence/E6-7-dang-mo.png; bỏ Slow 3G."
+      - "Cuối: evaluate_script dò localStorage (mọi khoá và giá trị) và các cơ sở IndexedDB của trang (indexedDB.databases(), đọc mọi store) tìm số ở bốn dạng 0900000xxx, 0900 000 xxx, +84…, 84… của các số vừa mở → 0 lần. Ghi kết quả vào observed."
+    expected: "Đầu chủ mẫu 1 có một lead đã về mình ở nhóm «Lead mới»: (khung 1, 1440×900) dòng lead có nút «Mở số» cạnh «Nhận»/«Đã gọi»; (khung 2) bấm «Mở số» → số hiện trên dòng dạng nhóm 0900 000 0xx kèm nút «Gọi» có href tel:0900000xxx; nhóm vẫn đúng chỗ, «Nhận»/«Đã gọi» không đổi nấc; (khung 3, 375×812) cùng dòng trên điện thoại, số và «Gọi» xuống dưới tên; (khung 4) tải lại trang → số ẩn, lại là nút «Mở số»; (khung 5) bấm «Nhận» trên một lead Đã gửi rồi vẫn thấy «Mở số» và mở được; (khung 6) emulate networkConditions Offline rồi bấm «Mở số» → dòng chữ «Mất mạng — chưa mở được số, thử lại khi có mạng» dưới nút, nút vẫn bấm được; bỏ Offline, bấm lại → số hiện; (khung 7) emulate Slow 3G, bấm «Mở số» và chụp ngay lúc chờ → nút bị khoá; sau các bước, localStorage và IndexedDB của trang không chứa số (evaluate_script dò bốn dạng)."
+    paths: [apps/web/src/app/(app)/today/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mở số lead: tài liệu khớp» trong apps/web/src/app/(app)/today/mo-so.test.ts — đọc docs/product/tham-chieu.md (đường suy từ vị trí tệp kiểm), lấy đúng mục §12 tới mục kế, có một dòng chứa «Mở số của lead» và chứa cả «vết» và «không lưu trên máy»; đếm 3 cụm. Chiều đỏ: bỏ dòng ấy → ca đỏ nêu cụm thiếu."
+    paths: [docs/product/tham-chieu.md, apps/web/src/app/(app)/today/mo-so.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

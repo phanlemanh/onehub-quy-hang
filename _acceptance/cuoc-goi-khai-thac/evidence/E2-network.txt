@@ -1,0 +1,6 @@
+E2 network (driver: playwright MCP, isolated context, localhost:3485 dev dãy D)
+L11: GET leads/assigned/L11 200 (accepted) ; phím G -> POST /leads/L11/first-call 200 ; GET 200 (called); reload GET 200
+L12: POST /leads/L12/listing 201 ; POST /leads/L12/first-call 200 ; POST /listings/<id>/events 200 ; câu trả lời 2: chỉ POST /listings/<id>/events 200 (không first-call lại)
+L7: POST /leads/L7/first-call 409 (mong đợi, expected khai đúng)
+failed/5xx: 0 ; 4xx ngoài expected: 0 ; console errors: 0
+Ghi chú: lượt đầu trên page dùng chung bị phiên khác điều hướng sang L15 (nhiễu); đã bỏ, chạy lại trong context riêng.

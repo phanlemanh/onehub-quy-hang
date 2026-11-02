@@ -1,0 +1,4 @@
+E4b lan chay doc lap (playwright, origin http://localhost:3485 = server dev chung cua worktree)
+GET leads/assigned x2, GET listings, GET catalog x2, GET listings/H5 (n0=8), POST listings/H5/events (1 lan, sau khi chon "2 Co ban"), GET listings, GET listings/H5 (n1=9), GET listings/H5 (n2=9), GET listings
+Khong co POST/PATCH nao khi go gia, Bao phi, sua ve tay, sua moi gioi, go abc, cho 5 giay.
+Response >=400 / requestfailed: khong co. Console error/warning/pageerror: khong co. Third-party: khong co.

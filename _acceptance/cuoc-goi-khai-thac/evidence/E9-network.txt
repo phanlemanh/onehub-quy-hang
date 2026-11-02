@@ -1,0 +1,11 @@
+# E9 network (playwright, ngữ cảnh riêng, máy dev 3485)
+## L15
+GET 200 /api/v1/leads/assigned/L15 ; GET 200 /api/v1/listings ; GET 200 /api/v1/catalog x2
+POST 201 /api/v1/leads/L15/listing  (một lần)
+POST 200 /api/v1/leads/L15/first-call
+POST 200 /api/v1/listings/985b3480-80de-439d-b779-e35d02aa37c3/events  (x3: Trống, Có sổ, Không vay)
+sau tải lại: GET 200 leads/assigned, listings, catalog; không POST /listing lần nữa
+## L9
+POST 409 /api/v1/leads/bdd9c75a-55c4-4e93-89eb-37f2a232a27b/listing  (lần bấm 1)
+POST 409 /api/v1/leads/bdd9c75a-55c4-4e93-89eb-37f2a232a27b/listing  (lần bấm 2)
+console: 2x "Failed to load resource: 409 (Conflict)" — mong đợi theo expected

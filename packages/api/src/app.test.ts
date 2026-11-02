@@ -80,10 +80,14 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/company/settings/queue",
     "PUT /api/v1/company/settings/queue",
     "GET /api/v1/leads/assigned",
+    // Hàng 28: một lead của tôi cho chế độ cuộc gọi.
+    "GET /api/v1/leads/assigned/{leadId}",
     // Hàng 26 (ADR-0025).
     "GET /api/v1/push/public-key",
     "POST /api/v1/me/push-subscriptions",
     "DELETE /api/v1/me/push-subscriptions",
+    // Hàng mo-so-lead.
+    "POST /api/v1/leads/{leadId}/phone-reveal",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
