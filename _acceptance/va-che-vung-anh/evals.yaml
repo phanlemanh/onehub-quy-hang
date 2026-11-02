@@ -1,0 +1,104 @@
+schema_version: 1
+feature_slug: va-che-vung-anh
+# Ca thuần: apps/web/src/app/(app)/units/photos/redact/vung.test.ts (npm test -w @quy-hang/web).
+# «DỰNG B» như hàng 19: node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs — Postgres dãy B (5561), sàn và người mẫu của
+#   hàng 5, máy chủ dev cổng 3481; phiên: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs. Căn: căn đầu tiên theo mã căn
+#   mà dau-chu-1 giữ (hàng 19 dùng B-15.05 Toà B). Ảnh thử dựng trong bài (canvas trên trang, tải qua mục Ảnh vào ngăn Gửi được): ngang 2000×1500, dọc
+#   1500×2000, nhỏ 400×300, rất rộng 3000×600 — mỗi ảnh nền xám có một ô vuông đỏ ở tâm để thấy ảnh. Ghi mã căn và id ảnh.
+# Đo hình chữ nhật bằng getBoundingClientRect của: hộp (phần tử role=dialog), canvas (aria-label «Ảnh để vẽ vùng che»),
+#   nút «Lưu bản che»; khổ cửa sổ = innerWidth × innerHeight. «Trọn trong» = bốn cạnh, sai số 1px. Cỡ hiển thị của khung vẽ
+#   (tỉ lệ, «không phóng to», hệ số co) đo bằng canvas.clientWidth × clientHeight — không tính viền 1px mỗi bên.
+#   Mỗi bài nhìn GHI số đo vào evidence/<E>-measure.json (đo bằng mã trong trang, không ước trên ảnh chụp); thiếu tệp → trượt.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; redact/vung.test.ts có các ca «E1v …» và tất cả ok — (a) ma trận viết tay của diemTrenKhung(điểm, cỡ hiển thị, cỡ vẽ): co 0,5 (hiển thị 480×300, vẽ 960×600) điểm (100,50) → (200,100); không co (960×600 / 960×600) giữ nguyên điểm; co lệch trục do làm tròn (hiển thị 481×300, vẽ 960×600) điểm (481,300) → (960,600); điểm âm (-10,-4) trên co 0,5 → (-20,-8) không kẹp; khung hiển thị rỗng (0×0) trả nguyên điểm; (b) chuỗi diemTrenKhung → khungTuMan: kéo (50,25)-(150,125) trên khung hiển thị 480×300 của ảnh 2000×1250 vẽ 960×600 cho cùng khung điểm ảnh với kéo (100,50)-(300,250) trên khung không co, và bằng khung viết tay {x:208,y:104,w:417,h:417}; kéo tràn mép trên khung co kẹp về mép ảnh. Mỗi ô một assert. Đối chứng đỏ: hàm giả bỏ chia tỉ lệ (trả nguyên điểm) thì ô co 0,5 đỏ, thông điệp gọi tên ô."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440×900. dau-chu-1, hồ sơ căn; tải bốn ảnh thử vào ngăn Gửi được (ngang 2000×1500, dọc 1500×2000, nhỏ 400×300, rất rộng 3000×600)"
+      - "Với từng ảnh: menu ảnh → «Che vùng…» → chờ canvas hiện → ghi hình chữ nhật của hộp, canvas, nút «Lưu bản che»; ghi canvas.width × canvas.height, clientWidth × clientHeight và tỉ lệ hiển thị (clientWidth/clientHeight) so tỉ lệ ảnh; chụp evidence/E2-<ngang|doc|nho|rong>.png → đóng không lưu"
+      - "Ghi evidence/E2-measure.json: mỗi ảnh một mục {anh, hop, canvas, nut, ve, hienThi, tiLe} cộng bảng đạt/trượt từng mục của Expected"
+    expected: "Với cả bốn ảnh: canvas trọn trong hộp (bốn cạnh); canvas không chồng nút «Lưu bản che» (đáy canvas ≤ đỉnh nút); hộp trọn trong cửa sổ; tỉ lệ hiển thị bằng tỉ lệ ảnh (sai số 1%); ảnh nhỏ 400×300 hiện clientWidth × clientHeight = 400×300 (không phóng to); hộp rộng hơn 24rem (384px) ở ảnh ngang. Mỗi ảnh × mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1024×768. dau-chu-1, cùng căn và ảnh của E2 (chưa có thì tải như E2)"
+      - "Ảnh ngang 2000×1500 rồi ảnh dọc 1500×2000: menu ảnh → «Che vùng…» → chờ canvas → ghi hình chữ nhật của hộp, canvas, nút «Lưu bản che», canvas.width × canvas.height, innerHeight; chụp evidence/E3-<ngang|doc>.png → đóng không lưu"
+    expected: "Với cả hai ảnh: hộp trọn trong cửa sổ (đỉnh ≥ 0, đáy ≤ innerHeight); canvas trọn trong hộp; đáy canvas ≤ đỉnh nút «Lưu bản che»; nút «Lưu bản che» trọn trong hộp và trọn trong cửa sổ; canvas hiển thị thấp hơn canvas.height (đã co) — ghi hệ số co r.height/canvas.height. Mỗi ảnh × mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E4
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1024×768. dau-chu-1, ảnh dọc 1500×2000 của E2 → «Che vùng…» → ghi hình chữ nhật r của canvas, canvas.width × canvas.height và hệ số co s = r.width/canvas.width"
+      - "Kéo chuột thật (pointer) từ điểm màn (r.left + 0,2·r.width, r.top + 0,2·r.height) tới (r.left + 0,8·r.width, r.top + 0,8·r.height) → ghi «n vùng che» → chụp evidence/E4-keo.png"
+      - "Vùng mong đợi trên canvas theo phân số cỡ vẽ: 0,2–0,8 mỗi trục (kéo trên màn đổi theo cỡ hiển thị). Vùng của bản lỗi «không chia tỉ lệ» (lấy điểm màn làm điểm vẽ): 0,2·s–0,8·s. Bước dò trước: chọn bốn điểm dò theo phân số (x = y) 0,5 · 0,78 · 0,82 · 0,15; với mỗi điểm tính kết quả của bản đúng và bản lỗi; nếu không điểm nào cho hai kết quả khác nhau → kết luận trượt với thông điệp «thước không phân biệt được» (khung co quá ít)"
+      - "Đọc điểm ảnh của canvas bằng getContext('2d').getImageData tại bốn điểm dò (toạ độ = phân số × canvas.width, × canvas.height) → ghi RGBA từng điểm; đóng không lưu"
+      - "Ghi evidence/E4-measure.json: {anh (id, cỡ gốc), r, ve, s, keo: [điểm đầu, điểm cuối trên màn], vungDung, vungLoi, diemDo: [{f, rgba, dungDen, loiDen}], diemPhanBiet, vung} cộng bảng đạt/trượt từng mục của Expected"
+    expected: "s < 1 (khung đang co); «1 vùng che»; có ít nhất một điểm dò mà bản đúng và bản lỗi cho kết quả khác nhau (ghi điểm đó); điểm 0,5 và 0,78 đen (R,G,B ≤ 10); điểm 0,82 và 0,15 không đen. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375×812. dau-chu-1, hồ sơ căn, ảnh ngang 2000×1500 của E2 → menu ảnh → «Che vùng…» → chờ canvas → ghi hình chữ nhật của hộp, canvas; ghi các nút trong hàng chân hộp; chụp evidence/E5-dien-thoai.png → đóng không lưu"
+    expected: "Bề ngang hộp = innerWidth − 32 (sai số 1px); canvas trọn trong hộp; hàng chân có đúng ba nút «Bỏ khung cuối», «Bỏ hết», «Lưu bản che» như hàng 19. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các ca E1–E5 của hàng 19 trong redact/vung.test.ts và redact/luu.test.ts có mặt và ok (đổi toạ độ, tô kín, cỡ bản nhẹ, EXIF, lưu bản che)."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; «chuẩn giao diện: đạt»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-6
+    executor: script
+    cmd: node _acceptance/va-che-vung-anh/thu/ranh-gioi.mjs
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: units/photos/redact/**, _acceptance/va-che-vung-anh/**, docs/plan/lo-trinh.json, LO-TRINH.html, PRODUCT-MAP.md. Đối chứng đỏ trong cùng lệnh: danh sách giả thêm apps/web/src/app/(app)/units/photos/muc-anh.tsx thì hàm kiểm gọi đúng tệp ấy — thiếu thì exit 1 «thước không phân biệt được»."
+    paths: ["_acceptance/va-che-vung-anh/thu/ranh-gioi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

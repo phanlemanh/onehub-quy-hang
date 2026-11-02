@@ -18,6 +18,8 @@ export interface Navigation {
   tabs: Tab[];
   /** Nút của thanh trên (máy tính). */
   actions: Action[];
+  /** Việc tạo trên điện thoại (nút «+»): §9 — điện thoại không có Nhập Excel, Phát hàng; vai có tab Lead không lặp nút. */
+  mobileActions: Action[];
   /** Đường mở đầu khi vào `/`. */
   landing: string;
   /** Có ô «Gõ mã căn» hay không (Hỏi-3: chỉ vai có Bảng hàng). */
@@ -60,9 +62,13 @@ const ACTIONS: Record<Role, Action[]> = {
   telesales: ["new_lead"],
   listing_agent: ["new_lead", "import", "export"],
   buyer_agent: [],
-  team_lead: ["new_lead", "export"],
-  company_admin: ["import"],
+  team_lead: ["new_lead", "import", "export"],
+  // ADR-0011: quản trị chỉ quản mẫu file ở Cài đặt sàn, không tự nhập.
+  company_admin: [],
 };
+
+/** Việc tạo có trên điện thoại (§9: không có Nhập Excel, Phát hàng). */
+const MOBILE_ACTIONS: Action[] = ["new_lead"];
 
 const HOME_ORDER: Home[] = ["today", "inventory", "shares", "team", "settings"];
 const ACTION_ORDER: Action[] = ["new_lead", "import", "export"];
@@ -95,10 +101,12 @@ export function navigationFor(roles: readonly string[]): Navigation {
   // Điện thoại không có Cài đặt sàn — trừ người chỉ Quản trị sàn (Hỏi-2).
   if (adminOnly) tabSet.add("settings");
 
+  const actions = ACTION_ORDER.filter((a) => actionSet.has(a));
   return {
     homes,
     tabs: TAB_ORDER.filter((t) => tabSet.has(t)),
-    actions: ACTION_ORDER.filter((a) => actionSet.has(a)),
+    actions,
+    mobileActions: actions.filter((a) => MOBILE_ACTIONS.includes(a) && !(a === "new_lead" && tabSet.has("lead"))),
     landing: adminOnly ? HOME_PATH.settings : HOME_PATH.today,
     unitJump: hasBoard,
   };
@@ -125,12 +133,14 @@ export function homeOfPath(path: string): Home | null {
 }
 
 /**
- * Cột thứ hai của từng nhà trên máy tính (§9): `false` = có cột, mặc định gập; `true` = có cột, mặc định mở.
- * Nhà vắng trong bảng (Hôm nay, Đội) không có cột thứ hai. Hồ sơ căn mặc định gập như Bảng hàng.
+ * Cột thứ hai của từng nhà trên máy tính (§9): `true` = có cột, mặc định mở. Mọi nhà có cột thứ hai và mặc định mở
+ * (chủ kho 02/11, hàng 91: «Mặc định luôn giữ và có sub nav»); người gập thì nhớ theo người, sàn, nhà.
  */
 export const SECOND_COLUMN_OPEN_BY_DEFAULT: Partial<Record<Home, boolean>> = {
-  inventory: false,
+  today: true,
+  inventory: true,
   shares: true,
+  team: true,
   settings: true,
 };
 

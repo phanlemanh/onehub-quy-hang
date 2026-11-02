@@ -1,0 +1,78 @@
+{
+ "ngang": {
+  "id": "90c0fdf2-e960-4aac-a334-d3b94a24e60b",
+  "goc": "2000x1500",
+  "box": {
+   "left": 16,
+   "top": 27.5,
+   "right": 1008,
+   "bottom": 740.5
+  },
+  "canvas": {
+   "left": 139,
+   "top": 103.5,
+   "right": 885,
+   "bottom": 663.5,
+   "width": 746,
+   "height": 560
+  },
+  "btn": {
+   "left": 896.796875,
+   "top": 696.5,
+   "right": 992,
+   "bottom": 724.5
+  },
+  "cw": 800,
+  "ch": 600,
+  "iw": 1024,
+  "ih": 768,
+  "heSoCo": 0.9333333333333333,
+  "assertions": {
+   "hop-tron-trong-cua-so (dinh>=0, day<=innerHeight)": true,
+   "canvas-tron-trong-hop": true,
+   "day-canvas<=dinh-nut": true,
+   "nut-tron-trong-hop": true,
+   "nut-tron-trong-cua-so": true,
+   "canvas-hien-thi-thap-hon-canvas.height (da co)": true
+  },
+  "allPass": true
+ },
+ "doc": {
+  "id": "e59c887b-b726-4f4f-8efd-9aa111acca79",
+  "goc": "1500x2000",
+  "box": {
+   "left": 16,
+   "top": 27.5,
+   "right": 1008,
+   "bottom": 740.5
+  },
+  "canvas": {
+   "left": 301.75,
+   "top": 103.5,
+   "right": 722.25,
+   "bottom": 663.5,
+   "width": 420.5,
+   "height": 560
+  },
+  "btn": {
+   "left": 896.796875,
+   "top": 696.5,
+   "right": 992,
+   "bottom": 724.5
+  },
+  "cw": 450,
+  "ch": 600,
+  "iw": 1024,
+  "ih": 768,
+  "heSoCo": 0.9333333333333333,
+  "assertions": {
+   "hop-tron-trong-cua-so (dinh>=0, day<=innerHeight)": true,
+   "canvas-tron-trong-hop": true,
+   "day-canvas<=dinh-nut": true,
+   "nut-tron-trong-hop": true,
+   "nut-tron-trong-cua-so": true,
+   "canvas-hien-thi-thap-hon-canvas.height (da co)": true
+  },
+  "allPass": true
+ }
+}

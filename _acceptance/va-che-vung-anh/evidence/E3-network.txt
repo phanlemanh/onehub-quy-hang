@@ -1,0 +1,13 @@
+# E3 verifier run 2026-11-02 (Playwright, 1024x768, dau-chu-1, B-15.05 Toa B, dev 3481)
+RESP 200 GET document http://localhost:3481/units/B-15.05?toa=To%C3%A0%20B
+RESP 200 GET fetch http://localhost:3481/api/v1/catalog (x2)
+RESP 200 GET fetch http://localhost:3481/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-15.05 (x2)
+RESP 200 GET image .../api/v1/units/photos/{33589dbb,90c0fdf2,e59c887b,57880cb3,dd2ccb37}/thumb (x5)
+RESP 200 GET fetch http://localhost:3481/api/v1/listings
+RESP 200 GET fetch http://localhost:3481/api/v1/listings/5ca68d07-bd4a-40a3-8dc9-479774f33f2c
+RESP 200 GET fetch .../api/v1/units/photos/90c0fdf2-e960-4aac-a334-d3b94a24e60b/original (x2)
+RESP 200 GET fetch .../api/v1/units/photos/e59c887b-b726-4f4f-8efd-9aa111acca79/original (x2)
+RESP 200 static assets (fonts, _next chunks, css) - all 200
+REQFAIL: none
+CONSOLE.info React DevTools hint; CONSOLE.log [HMR] connected
+CONSOLE.error / PAGEERROR: none

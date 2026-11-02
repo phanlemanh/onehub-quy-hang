@@ -8,6 +8,8 @@ khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card, Placeholder]
 ngoai_le: []
 luat: [KH-cg-mot-khung, KH-cg-tren-may, KH-cg-phim, KH-cg-khong-nguon]
+bo_cuc: ho-so
+ngoai_le_han: [{ tep: "apps/web/src/app/(app)/units/call/page.tsx", han: goi-ep-gia-dot-hai, ly_do: "Chế độ cuộc gọi chuyển sang bố cục ở hàng 29: Cổng Phạm vi hàng 28 (02/11) duyệt ba cột trong một Frame trước khi hệ bố cục gộp; bố cục Hồ sơ một cột — chọn lại cách xếp ba vùng ở hàng 29." }, { tep: "apps/web/src/app/(app)/proto/cuoc-goi-khai-thac/page.tsx", han: goi-ep-gia-dot-hai, ly_do: "Trang ba lối của hàng 28, chuyển hay gỡ cùng màn thật ở hàng 29." }]
 ---
 # Chế độ cuộc gọi
 
