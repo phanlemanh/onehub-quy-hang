@@ -1954,6 +1954,12 @@
       "cau_giao": "Bài kiểm «liên hệ: chuyển dữ liệu cũ» của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (dãy H đỏ khi ghim lại PR #66): gom các bước ghi nhiều bảng vào một giao dịch khoá bảng chủ nhà rồi bảng lead trước, kèm ca dựng đúng thế kẹt.",
       "slug": "chuyen-khong-ket-khoa",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
+    },
+    {
+      "ma": "mo-so-lead",
+      "cau_giao": "Đầu chủ được giao lead mở số chủ nhà của lead ấy ngay ở Hôm nay để gọi; mỗi lần mở số thành một vết (người, vai, lúc) như «Mở số» của hồ sơ căn; người không được giao lead không mở được.",
+      "slug": "mo-so-lead",
+      "vi_sao": "Chủ kho quyết build ở Hỏi-3 hàng 22 (_acceptance/hom-nay-dau-chu d-20261101T135417Z-10); máy thêm khi mở vòng, 2026-11-02"
     }
   ],
   "chan_troi": [
