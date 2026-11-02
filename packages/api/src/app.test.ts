@@ -84,6 +84,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/push/public-key",
     "POST /api/v1/me/push-subscriptions",
     "DELETE /api/v1/me/push-subscriptions",
+    // Hàng mo-so-lead.
+    "POST /api/v1/leads/{leadId}/phone-reveal",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
