@@ -30,7 +30,7 @@ const chuan = (s: string) => s.trim().toLowerCase();
 const GIA = DANH_SACH_HOI.findIndex((m) => m.ma === "price");
 
 /** Số phòng ngủ theo danh mục, khoá toà + mã căn; ngoài danh mục là `null`. */
-function phongNguTheo(dm: CatalogData | null) {
+export function phongNguTheo(dm: CatalogData | null) {
   const m = new Map<string, number | null>();
   for (const k of dm?.subdivisions ?? []) for (const b of k.buildings) for (const u of b.units) m.set(`${chuan(b.buildingName)}\u0000${chuan(u.unitNumber)}`, u.bedroomsTotal);
   return (toa: string, ma: string | null) => (ma ? (m.get(`${chuan(toa)}\u0000${chuan(ma)}`) ?? null) : null);
