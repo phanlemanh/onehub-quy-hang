@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 77a20a0520b078a24677dde9f19169bbfca471ea
+verified_commit: dcae7ccbdaf09deaa6ef7494efe5e12350f4234a
 human_signoff: Manh Phan 2026-11-02
 ---
 
@@ -277,3 +277,7 @@ none — every multi-run eval is uniform (moi eval chay mot lan, deterministic, 
 Round 1: E1, E1b, E4, E4c, E9 dat va duoc mang sang round 2 (carry-forward); chi tiet round 1 khong nam trong du lieu round nay.
 Round 2 (luot dau): E6 chua dat — Luong nhieu buoc o 375 chua la ngan phu toan man; sua o commit 750e735, tra ve trien khai.
 Round 2 (chay lai tren 77a20a0): moi eval dat, khong con eval nao rot.
+
+### Re-pin lần 1 — 2026-11-02, do gộp main sau chữ ký (PR #78, #79)
+run_id: repin-20261102T071743Z-57604
+sha: dcae7ccbdaf09deaa6ef7494efe5e12350f4234a · suites: 7 lệnh exit 0 · evals: 13/13 eval máy đạt kỳ vọng · ngoài làn máy: E4u, E6, E7u, E10u · diff chạm vật đo ngoài làn máy: E4u — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-6
