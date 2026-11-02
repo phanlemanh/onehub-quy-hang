@@ -4,7 +4,15 @@
  */
 import { isStandardStatus, WITHDRAWN_REASONS } from "./status";
 
-export const EVENT_TYPES = ["created", "details_changed", "price_changed", "status_changed", "owner_confirmed"] as const;
+export const EVENT_TYPES = [
+  "created",
+  "details_changed",
+  "price_changed",
+  "status_changed",
+  "owner_confirmed",
+  // Gắn mã căn cho hàng tạo khi mới biết toà (ADR-0026) — một lần, chỉ khi hàng chưa có mã.
+  "unit_number_assigned",
+] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 
 export const FEE_INCLUSIONS = ["included", "excluded"] as const;
@@ -48,6 +56,7 @@ const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
     withdrawnReason: [false, motTrong(WITHDRAWN_REASONS)],
   },
   owner_confirmed: {},
+  unit_number_assigned: { unitNumber: [true, chu] },
 };
 
 export type PayloadError = { path: string; reason: string };
