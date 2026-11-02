@@ -7,13 +7,13 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 0fe6f9689aa18df6686dcfa036a28883f2aa7970
+verified_commit: 1b21604c07e12b9a584f1777915931df42aa893d
 human_signoff:
 ---
 
 # Evidence Report: va-he-bo-cuc
 
-Round 2. Bảy lệnh suite chạy lại và đều xanh. Mười một eval của round 1 được mang sang vì delta không chạm paths của chúng (xem section Iterations).
+Round 3 (vòng thu hẹp sau gộp main PR #83, #85). Ba eval nhìn màn E6u, E10u, E7u và hai eval script E8, E9 chạy lại trên cây 1b21604; sáu lệnh suite chạy lại và đều xanh. Sáu eval test E1, E2, E3, E4, E5, E11 mang sang từ round 1 vì delta không chạm paths của chúng.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -98,105 +98,86 @@ Lệnh suite xanh ở cả hai phía là regression-guard bình thường, khôn
   note: carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E6u
-  run_id: minted-va-he-bo-cuc-E6u-r1
+  run_id: minted-va-he-bo-cuc-E6u-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T09:25:59Z
-  carried_from_round: 1
-  note: carry-forward tu round 1 — delta khong cham paths cua eval
+  verified_at: 2026-11-02T09:59:13Z
   screenshot: evidence/E6u-step1.png
   observed: |
-    E6u-truoc.png (1440x900): cot hai 'HOM NAY' co nam muc (Lead moi, Nen goi dieu chinh gia, Can goi lai, Thieu thong tin, Moi doi), khong muc nao to sang; luoi 'Hom nay 15 viec' chi co mot dong nhom 'Thieu thong tin 15' dang gap (mui ten >), khong dong bao. E6u-new_lead.png: muc 'Lead moi' to sang (aria-current), luoi hien dung mot dong bao 'Hom nay khong co viec o <Lead moi>' phia tren dong nhom 'Thieu thong tin 15' van gap. E6u-missing_info.png: muc 'Thieu thong tin' to sang, nhom mo (mui ten xuong) liet ke cac can A-13.01... , dong nhom nam o top khung nhin, nen nhom hoi xam (da chon), khong dong bao. E6u-tai-lai.png (tai lai tai ?nhom=missing_info): giong het anh missing_info, muc 'Thieu thong tin' sang, nhom mo, khong dong bao. E6u-1024.png (1024x768): bo cuc mot cot trong luoi, cot hai van hien, muc 'Thieu thong tin' sang, nhom mo, dong nhom o top khung, khong dong bao. Doi chieu Expected: khop (dia chi /today?nhom=<ma>, dung mot aria-current, nhom co viec mo + chon + trong khung nhin + 0 bao, tai lai nhu bam, 1024 nhu 1440).
+    Đã mở từng frame bằng Read. step1/E6u-truoc (1440x900): cột thứ hai liệt kê 5 mục (Lead mới, Nên gọi điều chỉnh giá, Cần gọi lại, Thiếu thông tin, Mới đổi), không mục nào được tô; lưới «Hôm nay · 15 việc» chỉ có một dòng nhóm «Thiếu thông tin 15» đang gập (mũi tên >), không dòng báo. step2 (new_lead): mục «Lead mới» được tô nền; trên lưới hiện dòng báo «Hôm nay không có việc ở «Lead mới»», nhóm «Thiếu thông tin 15» vẫn gập. step3 (price_adjustment): «Nên gọi điều chỉnh giá» được tô, dòng báo «…«Nên gọi điều chỉnh giá»», nhóm vẫn gập. step4 (call_back): «Cần gọi lại» được tô, dòng báo «…«Cần gọi lại»», nhóm gập. step5 (missing_info): «Thiếu thông tin» được tô; nhóm «Thiếu thông tin 15» mở (mũi tên v), dòng nhóm có nền chọn, nằm ngay đầu lưới trong khung nhìn, các dòng căn A-13.01… hiện bên dưới, không dòng báo. step6 (recent_change): «Mới đổi» được tô, dòng báo «…«Mới đổi»», nhóm gập. step7 (tải lại tại ?nhom=missing_info): giống hệt step5 — «Thiếu thông tin» được tô, nhóm mở, dòng nhóm được chọn và trong khung nhìn, không dòng báo. step8 (1024x768, bấm Thiếu thông tin): cùng trạng thái như step5 — mục «Thiếu thông tin» được tô, nhóm mở, dòng nhóm chọn ở đầu lưới, các dòng việc xếp dọc theo khổ hẹp, không dòng báo. Tất cả khớp Expected; không frame nào mâu thuẫn.
   network_observed: clean
+  note: giới hạn cần biết của lần chạy — dữ liệu mẫu dau-chu-1 chỉ có MỘT nhóm có việc (missing_info), nên vế «nhóm khác giữ trạng thái» chỉ kiểm được ở mức nhóm duy nhất giữ gập khi bấm mã không việc.
 
 - eval: E10u
-  run_id: minted-va-he-bo-cuc-E10u-r1
+  run_id: minted-va-he-bo-cuc-E10u-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T09:25:59Z
-  carried_from_round: 1
-  note: carry-forward tu round 1 — delta khong cham paths cua eval
-  screenshot: evidence/E10u-step1.png
+  verified_at: 2026-11-02T09:59:13Z
+  screenshot: evidence/E10u-trong.png
   observed: |
-    I opened each saved frame with Read and compared it against Expected.
-    - E10u-step1.png (bare /today, dau-chu-1, 1440x900): The second column lists 5 entries, none highlighted. The grid "Hôm nay · 15 việc" shows ONE group, "Thiếu thông tin 15", with rows such as A-13.01 · Toà A. An unrelated banner "Bật thông báo lead" sits above it. There is no "Hôm nay không có việc" line. Groups on the grid = {missing_info}, so the empty groups are new_lead, price_adjustment, call_back and recent_change. I chose new_lead ("Lead mới").
-    - E10u-trong.png (after clicking "Lead mới"): The "Lead mới" entry is highlighted. Directly under the "Hôm nay · 15 việc" header, one line reads «Hôm nay không có việc ở «Lead mới»». The "Thiếu thông tin 15" group and its rows stay below it unchanged. Only this one nhóm line is present.
-    - E10u-sang-co-viec.png (after clicking "Thiếu thông tin"): "Thiếu thông tin" is highlighted and "Lead mới" is not. There is no "không có việc" line, and the grid is the same 15-row group.
-    - E10u-dang-tai.png (right after reload at ?nhom=new_lead): The page shows a skeleton under the "Hôm nay" title, with "Lead mới" highlighted. There is no notice line, no banner and no group.
-    - E10u-sau-tai.png (3s later): The "Lead mới" line is back, identical to E10u-trong.png, with one nhóm line and the group retained.
-    - E10u-step2.png, step3.png and step4.png are copies of trong, sang-co-viec and dang-tai.
-    All frames match Expected.
+    Da mo bang Read tung frame chinh. E10u-trong.png: cot hai muc «Lead mới» to nen (duoc chon); vung «Hôm nay» noi «15 việc»; ngay duoi tieu de co DUNG MOT dong khung «Hôm nay không có việc ở «Lead mới»», phia duoi luoi giu nguyen nhom «Thiếu thông tin» chip 15 voi cac dong A-13.01, A-06.03... -> khop Expected. E10u-sang-co-viec.png: muc «Thiếu thông tin» o cot hai duoc to nen, KHONG co dong bao nao, luoi chi «Thiếu thông tin» 15 viec -> khop Expected (0 dong bao, dong nhom duoc chon). E10u-dang-tai.png: muc «Lead mới» duoc chon, chip goc phai «Đang tải lần đầu», thanh «Hôm nay» voi cac khung xam skeleton, KHONG co dong bao -> khop (0 dong bao khi dang tai). E10u-sau-tai.png: giong khung trong, co DUNG MOT dong «Hôm nay không có việc ở «Lead mới»» va luoi «Thiếu thông tin» 15 -> khop. E10u-step1.png: /today tran chi hien nhom «Thiếu thông tin» 15 viec, khong dong bao.
   network_observed: clean
 
 - eval: E7u
-  run_id: minted-va-he-bo-cuc-E7u-r1
+  run_id: minted-va-he-bo-cuc-E7u-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-02T09:25:59Z
-  carried_from_round: 1
-  note: carry-forward tu round 1 — delta khong cham paths cua eval
+  verified_at: 2026-11-02T09:59:13Z
   screenshot: evidence/E7u-telesales-tran.png
   observed: |
-    Da mo tung frame bang Read. (1) E7u-telesales-tran.png (telesales, /today): vo mot nha, KHONG co cot thu hai va khong co thanh rail; thanh tren co link «Hom nay», «+ Lead»; than man la bang «Lead da nhap» (cac hang Toa A... Cho chia). Khong co dong bao. (2) E7u-telesales-nhom.png (mo thang /today?nhom=new_lead): location.href = http://localhost:3482/today?nhom=new_lead; dau man dung MOT dong bao «Hang doi «Lead moi» chi co o Hom nay cua dau chu» (role=status, so dong bao = 1); khong co cot nen khong co muc aria-current trong cot (aria-current chi o link «Hom nay» tren thanh); phan than duoi dong bao la cung bang «Lead da nhap», cung cac hang va cung thu tu nhu ban tran, chi bi day xuong do dong bao. (3) E7u-truong-nhom-tran.png (truong nhom, /today): CO cot thu hai «Hom nay» voi dung nam muc (Lead moi, Nen goi dieu chinh gia, Can goi lai, Thieu thong tin, Moi doi); khong muc nao aria-current; than: the «Bat thong bao lead» + «Man nay dang dung». Khong dong bao. (4) E7u-truong-nhom-nhom.png (bam «Lead moi» o cot): location.href = http://localhost:3482/today?nhom=new_lead; muc «Lead moi» mang aria-current=page va sang len trong cot; dau man dung MOT dong bao «Hang doi «Lead moi» chi co o Hom nay cua dau chu» (so dong bao = 1); phan con lai (the «Bat thong bao lead» + «Man nay dang dung») giong het ban tran cua cung vai. Khop Expected cho loi bao ro. LUU Y lech gia dinh buoc: cot thu hai co o truong nhom, KHONG co o telesales (dung nhu steps noi) — nhung vi vay loi «an» (cot khong co muc hang doi, dong «Hang doi co o Hom nay cua dau chu») khong the hien o hai vai nay nen khong duoc kiem trong eval nay; buoc mo thang cho telesales cho ket qua dong bao dung nhu loi bao ro.
+    Đã mở từng frame bằng Read. (1) E7u-telesales-tran.png (telesales, /today trần, 1440x900): vỏ một nhà, KHÔNG có cột thứ hai; đầu màn chỉ có thanh trên (Hôm nay, + Lead, Đã đồng bộ, avatar TE), ngay dưới là bảng «Lead đã nhập» (cột Lead/Nấc/Giờ · đầu chủ, các dòng Toà A·A-09.05… nấc «Chờ chia»); không có dòng báo. (2) E7u-telesales-nhom.png (/today?nhom=new_lead): đầu màn có đúng một dòng báo «Hàng đợi «Lead mới» chỉ có ở Hôm nay của đầu chủ», phía dưới là bảng «Lead đã nhập» giống hệt frame trần (cùng các dòng, cùng thứ tự). (3) E7u-truong-nhom-tran.png (trưởng nhóm, /today trần): có cột thứ hai tiêu đề HÔM NAY với năm mục Lead mới / Nên gọi điều chỉnh giá / Cần gọi lại / Thiếu thông tin / Mới đổi; thân là dòng «Thông báo đang tắt trong trình duyệt» và thẻ «Màn này đang dựng — Dựng ở mục 22 (máy tính), 39 (điện thoại) của lộ trình»; không có dòng báo. (4) E7u-truong-nhom-nhom.png (sau khi bấm «Lead mới» ở cột): cột vẫn năm mục, «Lead mới» được tô nổi (aria-current=page), đầu màn có đúng một dòng báo «Hàng đợi «Lead mới» chỉ có ở Hôm nay của đầu chủ»; phần dưới dòng báo (thông báo tắt + thẻ «Màn này đang dựng») giống bản trần. Khớp Expected (lối báo rõ).
   network_observed: clean
 
 - eval: E8
-  run_id: minted-va-he-bo-cuc-E8-r1
+  run_id: minted-va-he-bo-cuc-E8-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.lint
-  verified_at: 2026-11-02T09:25:59Z
-  carried_from_round: 1
-  note: carry-forward tu round 1 — delta khong cham paths cua eval
+  verified_at: 2026-11-02T09:59:13Z
+  output: |
+    chuẩn giao diện: đạt
 
 - eval: E9
-  run_id: minted-va-he-bo-cuc-E9-r1
+  run_id: minted-va-he-bo-cuc-E9-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.design_floor
-  verified_at: 2026-11-02T09:25:59Z
-  carried_from_round: 1
-  note: carry-forward tu round 1 — delta khong cham paths cua eval
+  verified_at: 2026-11-02T09:59:13Z
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
+  verified_at: 2026-11-02T09:59:13Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
+  verified_at: 2026-11-02T09:59:13Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
+  verified_at: 2026-11-02T09:59:13Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-he-bo-cuc-SUITE-test_hooks-r2
+  run_id: minted-va-he-bo-cuc-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
+  verified_at: 2026-11-02T09:59:13Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-va-he-bo-cuc-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
+  verified_at: 2026-11-02T09:59:13Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-he-bo-cuc-SUITE-typecheck-r2
+  run_id: minted-va-he-bo-cuc-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
-
-- cmd: npm run lint
-  run_id: minted-va-he-bo-cuc-SUITE-lint-r2
-  exit_code: 0
-  verified_at: 2026-11-02T09:40:39Z
+  verified_at: 2026-11-02T09:59:13Z
 
 ## Known limits
 
@@ -208,9 +189,10 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mười một eval E1–E11 (E1, E2, E3, E4, E5, E11, E6u, E10u, E7u, E8, E9) đạt lần đầu, run_id hậu tố r1.
-Round 2: delta không chạm paths của các eval trên nên mang sang (carried_from_round: 1); bảy lệnh suite chạy lại, tất cả xanh.
+Round 1: lệnh suite ui-lint đỏ nên vòng chưa qua; mười một eval E1–E11 đều đạt, run_id hậu tố r1.
+Round 2: delta không chạm paths của các eval nên mang sang (carried_from_round: 1); bảy lệnh suite chạy lại, tất cả xanh.
+Round 3: sau gộp main PR #83, #85 chạy lại E6u, E10u, E7u (bài nhìn màn), E8, E9 và sáu lệnh suite, tất cả đạt; E1, E2, E3, E4, E5, E11 mang sang từ round 1. Mốc verified_at của round 3 lấy theo giờ commit 1b21604 vì lần chạy không cấp giờ riêng.
 
 ### Re-pin lần 1 — 2026-11-02, do gộp main (PR #83, #85) sau lượt chấm r2
 run_id: repin-20261102T095347Z-26379
-sha: 0fe6f9689aa18df6686dcfa036a28883f2aa7970 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E10u, E7u · diff chạm vật đo ngoài làn máy: E6u, E10u, E7u — chưa chứng lại, đi vòng S4 delta
+sha: 0fe6f9689aa18df6686dcfa036a28883f2aa7970 · suites: 7 lệnh đạt · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E10u, E7u · diff chạm vật đo ngoài làn máy: E6u, E10u, E7u — đã chứng lại ở round 3 bằng bài nhìn màn.

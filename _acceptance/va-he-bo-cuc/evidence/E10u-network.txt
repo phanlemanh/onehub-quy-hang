@@ -1,43 +1,14 @@
-122. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-155. [POST] http://localhost:3482/api/v1/auth/email-otp/send-verification-otp => [200] OK
-221. [POST] http://localhost:3482/api/v1/auth/email-otp/send-verification-otp => [200] OK
-254. [POST] http://localhost:3482/api/v1/auth/email-otp/send-verification-otp => [200] OK
-255. [POST] http://localhost:3482/api/v1/auth/sign-in/email-otp => [400] BAD_REQUEST
-256. [POST] http://localhost:3482/api/v1/auth/sign-in/email-otp => [200] OK
-257. [GET] http://localhost:3482/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
-258. [GET] http://localhost:3482/?_rsc=q3mOO9BClNZHexY7 => [200] OK
-259. [GET] http://localhost:3482/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
-260. [GET] http://localhost:3482/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
-313. [GET] http://localhost:3482/api/v1/catalog => [200] OK
-314. [GET] http://localhost:3482/api/v1/company/settings/queue => [200] OK
-315. [GET] http://localhost:3482/api/v1/leads/assigned => [200] OK
-316. [GET] http://localhost:3482/api/v1/catalog => [200] OK
-317. [GET] http://localhost:3482/api/v1/company/settings/queue => [200] OK
-318. [GET] http://localhost:3482/api/v1/leads/assigned => [200] OK
-319. [GET] http://localhost:3482/api/v1/listings => [200] OK
-320. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-321. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-362. [GET] http://localhost:3482/api/v1/catalog => [200] OK
-363. [GET] http://localhost:3482/api/v1/company/settings/queue => [200] OK
-364. [GET] http://localhost:3482/api/v1/leads/assigned => [200] OK
-365. [GET] http://localhost:3482/api/v1/catalog => [200] OK
-366. [GET] http://localhost:3482/api/v1/company/settings/queue => [200] OK
-367. [GET] http://localhost:3482/api/v1/leads/assigned => [200] OK
-368. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-369. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-370. [GET] http://localhost:3482/api/v1/listings => [200] OK
-371. [GET] http://localhost:3482/today?nhom=new_lead&_rsc=ELSQ6suIFecjpRld => [200] OK
-372. [GET] http://localhost:3482/api/v1/auth/get-session => [200] OK
-373. [GET] http://localhost:3482/today?nhom=missing_info&_rsc=ELSQ6suIFecjpRld => [200] OK
-374. [GET] http://localhost:3482/api/v1/listings => [200] OK
-415. [GET] http://localhost:3482/api/v1/catalog => [200] OK
-416. [GET] http://localhost:3482/api/v1/company/settings/queue => [200] OK
-417. [GET] http://localhost:3482/api/v1/leads/assigned => [200] OK
-418. [GET] http://localhost:3482/api/v1/catalog => [200] OK
-419. [GET] http://localhost:3482/api/v1/company/settings/queue => [200] OK
-420. [GET] http://localhost:3482/api/v1/leads/assigned => [200] OK
-421. [GET] http://localhost:3482/api/v1/listings => [200] OK
-422. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-423. [GET] http://localhost:3482/api/v1/push/public-key => [200] OK
-
-Note: 261 static requests not shown, run with "static" option to see them.
+NETWORK (isolated browser context, app-origin, non-static), run 17:0x
+200 GET /api/v1/auth/get-session
+200 GET /today
+200 GET /api/v1/company/settings/queue (x2)
+200 GET /api/v1/push/public-key (x2)
+200 GET /api/v1/leads/assigned (x2)
+200 GET /api/v1/catalog (x2)
+200 GET /api/v1/listings
+200 GET /today?nhom=new_lead&_rsc=...   then FAILED net::ERR_ABORTED (RSC prefetch/nav superseded by click on missing_info; note-only, Next.js _rsc fetch, not an app error)
+200 GET /today?nhom=missing_info&_rsc=...  then FAILED net::ERR_ABORTED (same RSC request superseded by reload; note-only)
+200 GET /today?nhom=new_lead (reload)
+200 GET /api/v1/company/settings/queue, push/public-key, leads/assigned, catalog, listings (all 200)
+CONSOLE (error/warning): (none)
+Note: the shared Playwright default page was being driven concurrently by other sessions (URL cycled nhom values); this run used a fresh isolated browser context.

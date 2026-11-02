@@ -5,7 +5,7 @@ slug: va-he-bo-cuc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-02-va-he-bo-cuc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -69,6 +69,9 @@ Bốn trục, quét tay (sổ quyết định, dòng «bỏ coverage-scan»):
 
 ## Notes
 
+- Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Khi danh sách lead giao cho bạn tải lỗi (mất mạng, máy chủ trục trặc), bấm mục «Lead mới» ở cột bên vẫn hiện «Hôm nay không có việc ở «Lead mới»» cạnh dòng báo lỗi tải. Trang nói là không có việc trong khi thật ra chưa biết. — `apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Người dùng không gặp lỗi nào hôm nay: người kiêm đầu chủ vẫn được xử như đầu chủ. Nhưng nếu sau này ai đó đổi cách nhận biết vai, bài kiểm vẫn xanh và có thể để lọt một người kiêm đầu chủ bị báo sai là «chỉ có ở Hôm nay của đầu chủ». — `apps/web/src/app/(app)/today/mo-nhom.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Chỉ một trong năm hàng đợi được kiểm tự động về việc mở đúng nhóm khi bấm; bốn hàng đợi còn lại nếu sau này hỏng thì bài kiểm không tự báo. Hiện chưa thấy hàng đợi nào bấm sai. — `apps/web/src/app/(app)/today/mo-nhom.test.ts`
 - Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Khi danh sách lead giao cho bạn tải lỗi (mất mạng, máy chủ trục trặc), bấm mục «Lead mới» ở cột bên vẫn hiện «Hôm nay không có việc ở «Lead mới»» cạnh dòng báo lỗi tải. Trang nói là không có việc trong khi thật ra chưa biết. — `apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx`
 - Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Người dùng không gặp lỗi nào hôm nay: người kiêm đầu chủ vẫn được xử như đầu chủ. Nhưng nếu sau này ai đó đổi cách nhận biết vai, bài kiểm vẫn xanh và có thể để lọt một người kiêm đầu chủ bị báo sai là «chỉ có ở Hôm nay của đầu chủ». — `apps/web/src/app/(app)/today/mo-nhom.test.ts`
 - Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Chỉ một trong năm hàng đợi được kiểm tự động về việc mở đúng nhóm khi bấm; bốn hàng đợi còn lại nếu sau này hỏng thì bài kiểm không tự báo. Hiện chưa thấy hàng đợi nào bấm sai. — `apps/web/src/app/(app)/today/mo-nhom.test.ts`
