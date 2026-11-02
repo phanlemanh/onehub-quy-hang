@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: e62d0bd6a82a20a26eab1ee41d4f637c430a9260
+verified_commit: 73e082b35a52c405a2bdc8511f0eabcbf7464edf
 human_signoff:
 ---
 
@@ -93,7 +93,7 @@ human_signoff:
   run_id: minted-goi-tu-may-tinh-E8-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T15:45:42Z
   screenshot: evidence/E8-1-nut.png
   observed: |
@@ -104,7 +104,7 @@ human_signoff:
   run_id: minted-goi-tu-may-tinh-E9-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T15:45:42Z
   screenshot: evidence/E9-1-trang.png
   observed: |
@@ -198,3 +198,7 @@ none — every multi-run eval is uniform
 
 Round 1: E8 failed — khung 2 không dựng được vì tài khoản mẫu đã có 4 thiết bị đăng ký từ trước (tiền đề «chưa có đăng ký» không đạt), và bài ui-lint ban-do-khuon lệch số so với bản đồ khuôn. Returned to implementation.
 Round 2: mọi eval đạt — E1, E2, E4, E5, E10, E7, E8, E9 chạy lại; E3, E6, E11 mang từ round 1 vì delta không chạm paths của chúng.
+
+### Re-pin lần 1 — 2026-11-02, do gộp nhánh chính trước PR
+run_id: repin-20261102T155751Z-52496
+sha: 73e082b35a52c405a2bdc8511f0eabcbf7464edf · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E8, E9
