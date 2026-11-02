@@ -6,6 +6,7 @@ import type { ApiDeps } from "../app";
 import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
+import { guiSauKhiGhi } from "../push/routes";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import {
   acceptLead,
@@ -53,7 +54,8 @@ async function tenNguoi(identityPool: pg.Pool, ids: string[]): Promise<Map<strin
   return new Map(rows.map((r) => [r.id, r.name]));
 }
 
-export function registerRoutingRoutes(api: OpenAPIHono, { appPool, identityPool, auth }: ApiDeps) {
+export function registerRoutingRoutes(api: OpenAPIHono, deps: ApiDeps) {
+  const { appPool, identityPool, auth } = deps;
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
     const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
     if (!user) return API_ERRORS.unauthenticated;
@@ -163,7 +165,9 @@ export function registerRoutingRoutes(api: OpenAPIHono, { appPool, identityPool,
       const { agentUserId } = c.req.valid("json");
       if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
       const kq = await withCompany(appPool, ctx, (tx) => reassignLead(tx, leadId, agentUserId));
-      return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 200);
+      if (isRefusal(kq)) return tuChoi(c, kq);
+      await guiSauKhiGhi(deps, ctx.companyId);
+      return c.json(kq, 200);
     },
   );
 

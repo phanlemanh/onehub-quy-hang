@@ -12,6 +12,9 @@ const geist = Geist({ subsets: ["latin", "vietnamese"], variable: "--font-sans" 
 export const metadata: Metadata = {
   title: "Quỹ hàng",
   description: "Quản lý hàng cho sàn môi giới bất động sản",
+  // Cài lên màn hình chính (hàng 26): iPhone chỉ nhận thông báo khi web đã cài; manifest ở app/manifest.ts.
+  appleWebApp: { capable: true, title: "Quỹ hàng", statusBarStyle: "default" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

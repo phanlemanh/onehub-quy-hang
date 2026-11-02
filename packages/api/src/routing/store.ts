@@ -7,6 +7,7 @@ import {
 } from "@quy-hang/core/routing";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { baoLeadVe } from "../push/store";
 
 /**
  * Ghi và đọc của hàng 25 trên client do withCompany trao. Hàm cơ sở dữ liệu báo mỗi ca bằng một mã lỗi Postgres; ở đây
@@ -89,6 +90,8 @@ export const reassignLead = (tx: pg.PoolClient, id: string, agentUserId: string)
   goi(
     async () => {
       const r = await tx.query<{ moc: Date }>("select app.reassign_lead($1, $2) moc", [id, agentUserId]);
+      // Báo đầu chủ vừa được giao (hàng 26) — cùng giao dịch, quay lui cùng việc giao.
+      await baoLeadVe(tx, id, agentUserId);
       return { id, agentUserId, deadlineFrom: r.rows[0]!.moc.toISOString() };
     },
     {

@@ -27,6 +27,6 @@ Số đo hai tuần thử gần nhất (Tham chiếu §11): Thời gian lead →
 ## Ngưỡng chết / ngưỡng UAT
 
 - Câu hỏi phép đo trả lời: [đề xuất] đã đạt «Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay» chưa?
-- Kết quả nào là SỐNG: [đề xuất] Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay
-- Kết quả nào là CHẾT: [đề xuất] chưa đạt «Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay» khi hết timebox
-- Timebox: …
+- Kết quả nào là SỐNG: trung vị thời gian lead về đầu chủ → cuộc gọi đầu ≤ 5 phút (Hỏi-4, chủ kho duyệt Cổng Phạm vi 02/11)
+- Kết quả nào là CHẾT: trung vị > 5 phút khi hết timebox
+- Timebox: hai tuần thử (Tham chiếu §11)

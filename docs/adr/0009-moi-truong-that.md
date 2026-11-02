@@ -60,8 +60,9 @@ bước 7).
 - Thư mã đăng nhập: Resend trả 403 tới khi tên miền gửi `onehub.center` xác minh ở Resend; người xin mã vẫn nhận câu trả lời thành công (ADR-0005 §4 — không lộ ai có tài khoản), lỗi chỉ ở nhật ký.
 - Bản xem trước của nhánh dùng chung cơ sở dữ liệu thật. Trước khi có dữ liệu thật: tách cơ sở dữ liệu cho bản xem trước
   (nhánh Supabase hay dự án riêng) hoặc tắt bản xem trước.
-- Đội Vercel đang ở gói Hobby: lịch chạy chỉ một lần mỗi ngày và điều khoản là dùng phi thương mại. Việc nền mỗi phút
-  (Kiến trúc §5) cần quyết nâng gói trước hàng dựng việc nền.
+- ~~Đội Vercel đang ở gói Hobby~~ — đính chính 02/11: đội `phanlemanh-8330's projects` ở gói **Pro**, đang hiệu lực
+  (không phải dùng thử; kỳ 26/10–26/11, đọc bằng Vercel CLI). Điều khoản thương mại không còn chặn; lịch chạy của Vercel
+  không còn trần một lần mỗi ngày. Việc nền mỗi phút (Kiến trúc §5) chọn nơi chạy theo thiết kế của từng hàng, không vì gói.
 - Đăng nhập trên bản xem trước dùng `BETTER_AUTH_URL` của tên miền chính — chỉ kiểm được API, chưa đăng nhập được.
 - Ghim chứng chỉ của Supabase (`sslrootcert`) và cân chế độ giao dịch của pooler khi tải tăng.
 - Môi trường mới (staging, sàn riêng) dựng theo cùng thứ tự: `nen-du-an.sql` → migration → bộ kiểm cách ly → advisors.

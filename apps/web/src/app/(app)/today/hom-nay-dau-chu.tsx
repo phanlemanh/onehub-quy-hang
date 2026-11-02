@@ -27,6 +27,7 @@ import { CotHoSo } from "../units/ho-so/cot-ho-so";
 import { docCot, dongCot, moCot, type ChonCan } from "../units/ho-so/ho-so";
 import { KhungHoSoCan } from "../units/ho-so/khung";
 import { canHomNay, chuGiaPhi, chuGio, chuGioNgay, chuHan, chuLoai, lyDo, type CanHomNay } from "./ly-do";
+import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
 
 type Feat = DataGridFeatures;
@@ -399,6 +400,27 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
   };
 
   const [expanded, setExpanded] = useState<ExpandedState>(true);
+
+  // ——— Mở đúng lead từ thông báo (hàng 26): /today?lead=<id> ———
+  const leadMo = docLeadThamSo(qs);
+  const dangTaiLead = ngan.listings === null || taiBo.kind === "dang" || taiLead.kind === "dang";
+  const ketQuaMo = leadMo && !dangTaiLead && taiLead.kind === "ok" ? timLead(nhom, leadMo) : null;
+  const dongMo = ketQuaMo && "dong" in ketQuaMo ? ketQuaMo.dong : null;
+  const nhomMo = ketQuaMo && "nhom" in ketQuaMo ? ketQuaMo.nhom : null;
+  // Mở nhóm ngay lúc dựng (một lần cho mỗi lead), rồi cuộn sau khi lưới đã vẽ dòng.
+  const [daMo, setDaMo] = useState<string | null>(null);
+  if (dongMo && nhomMo && daMo !== dongMo) {
+    setDaMo(dongMo);
+    setExpanded((e) => moNhom(e === true ? true : (e as Record<string, boolean>), nhomMo));
+  }
+  useEffect(() => {
+    if (!dongMo) return;
+    const id = window.requestAnimationFrame(() =>
+      document.querySelector(`[data-row-id="${CSS.escape(dongMo)}"]`)?.scrollIntoView({ block: "center", behavior: "smooth" }),
+    );
+    return () => window.cancelAnimationFrame(id);
+  }, [dongMo]);
+  const rowSelection: Record<string, true> = dongMo ? { [dongMo]: true } : {};
   const cay: DongLuoi[] = nhom.map((g) => ({
     kind: "nhom",
     id: `nhom:${g.nhom.code}`,
@@ -415,7 +437,8 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
     data: cay,
     getRowId,
     getSubRows,
-    state: { expanded, columnVisibility: namCot ? HIEN_HET : CHI_VIEC, pagination: KHONG_CHIA_TRANG },
+    state: { expanded, columnVisibility: namCot ? HIEN_HET : CHI_VIEC, pagination: KHONG_CHIA_TRANG, rowSelection },
+    enableRowSelection: true,
     onExpandedChange: setExpanded,
     autoResetExpanded: false,
   });
@@ -486,6 +509,11 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
                 </span>
               }
             />
+          </FramePanel>
+        ) : null}
+        {ketQuaMo && "khongCon" in ketQuaMo ? (
+          <FramePanel className="p-0!">
+            <TrangThai kind="notice" title={ketQuaMo.khongCon} />
           </FramePanel>
         ) : null}
         {hoSo && rong ? (

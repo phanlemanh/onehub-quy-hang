@@ -59,6 +59,8 @@ export const API_ERRORS = {
   photoInternalNoSample: { code: "photo-internal-no-sample", status: 400 },
   photoStorageMissing: { code: "photo-storage-missing", status: 503 },
   photoAlreadyConfirmed: { code: "photo-already-confirmed", status: 409 },
+  // Thông báo lead (ADR-0025).
+  pushNotConfigured: { code: "push-not-configured", status: 503 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

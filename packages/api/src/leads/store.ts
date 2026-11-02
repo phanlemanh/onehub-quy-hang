@@ -6,6 +6,7 @@ import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { createListing, isRefusal as laTuChoiHang } from "../listings/store";
 import { khoaSoChu } from "../owners/khoa";
+import { baoLeadVe } from "../push/store";
 import { dauVetSo, maHoaSo, nguCanhLead } from "../owners/ma-hoa";
 
 /**
@@ -113,6 +114,8 @@ export async function createLead(tx: pg.PoolClient, payload: unknown, intoContac
       lh[0]!.c,
     ],
   );
+  // Lead khớp đầu chủ giữ chủ nhà hay căn: báo đầu chủ ấy (hàng 26) — dòng «cần báo» quay lui cùng việc nhập.
+  if (quyet.agentUserId) await baoLeadVe(tx, id, quyet.agentUserId);
   return toRecord(ghi.rows[0]!);
 }
 

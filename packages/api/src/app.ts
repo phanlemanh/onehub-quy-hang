@@ -21,6 +21,8 @@ import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
+import type { PushSender } from "./push/gui";
+import { registerPushRoutes, registerPushSignOut } from "./push/routes";
 
 /**
  * API có phiên bản cho mọi bề mặt và mọi hệ thống ngoài (ADR-0017 §4). Mọi thay đổi dữ liệu sẽ là một lệnh qua đây —
@@ -39,6 +41,8 @@ export type ApiDeps = {
   jobSecret?: string;
   /** Kho byte ảnh (ADR-0014); vắng thì chọn theo môi trường — test truyền bản S3 trỏ máy chủ giả. */
   khoAnh?: KhoAnh | KhoAnhVang;
+  /** Bộ gửi thông báo lead (ADR-0025); vắng thì gửi bằng `web-push` — test truyền bộ gửi giả ghi lại. */
+  pushSender?: PushSender;
 };
 
 const Health = z
@@ -79,6 +83,8 @@ export function createApi(deps: ApiDeps) {
       ),
   );
 
+  // Đăng xuất gỡ đăng ký thông báo của thiết bị trước khi tới better-auth (ADR-0025) — đăng ký trước lối danh tính chung.
+  registerPushSignOut(api, deps);
   // Danh tính: gửi mã, nhập mã, đăng xuất, đọc phiên — better-auth giữ trọn.
   api.on(["GET", "POST"], `${AUTH_BASE_PATH}/*`, (c) => auth.handler(c.req.raw));
 
@@ -164,6 +170,7 @@ export function createApi(deps: ApiDeps) {
   registerRoutingRoutes(api, deps);
   registerContactRoutes(api, deps);
   registerJobRoutes(api, deps);
+  registerPushRoutes(api, deps);
   registerPhotoRoutes(api, deps, deps.khoAnh);
 
   api.doc(`${BASE}/openapi.json`, {
