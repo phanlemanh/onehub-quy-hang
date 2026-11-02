@@ -1,12 +1,1 @@
-{"feature_plain":"Nút «Sẵn sàng bán» thôi nói sai: danh sách «Còn thiếu» và dấu «Chưa có» luôn là của căn đang xem và tự bớt khi đầu chủ điền; nút chỉ báo đã gửi khi lệnh thật sự vào hàng đợi.",
-"will_do":[
-{"id":"AC-1","p":"Sẽ không mang danh sách «Còn thiếu» hay dấu «Chưa có» của căn này sang căn khác hay lần rao khác."},
-{"id":"AC-2","p":"Sẽ xoá dấu «Chưa có» khi chuyển sang căn không có nút, hay khi lần rao vừa lên Đang bán."},
-{"id":"AC-3","p":"Sẽ bỏ ngay một điều khỏi danh sách khi đầu chủ điền nó, không cần bấm lại; đủ hết thì không tự gửi."},
-{"id":"AC-4","p":"Sẽ báo lỗi và để nút bấm lại được khi lệnh không vào hàng đợi, thay vì báo đã gửi."},
-{"id":"AC-5","p":"Sẽ vẫn gửi đúng một lệnh và báo đã gửi khi lệnh vào hàng đợi."},
-{"id":"AC-6","p":"Sẽ được chấm bằng mắt trên bản chạy thử: đổi căn, quay lại, điền pháp lý."}],
-"wont_do":[
-{"id":"OOS-1","p":"Dòng «Ảnh thật» không tự đổi khi thêm ảnh — đổi ở lần bấm sau (Hỏi-2)."},
-{"id":"OOS-2","p":"Không đổi lời báo khi máy chủ từ chối sau khi lệnh đã vào hàng đợi."},
-{"id":"OOS-3","p":"Không vá cấu hình số ảnh tối thiểu sai — hạn chế đã biết của hàng 23."}]}
+{"feature_plain":"Nút «Sẵn sàng bán» thôi nói sai: danh sách «Còn thiếu» và dấu «Chưa có» luôn là của lần rao đang xem và tự bớt khi đầu chủ điền; nút chỉ báo đã gửi khi lệnh thật sự vào hàng đợi."}
