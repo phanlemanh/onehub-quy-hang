@@ -5,6 +5,9 @@
 
 **Hai hàng thêm 02/11 sau PR #88 — đã quyết** — Manh Phan, 02/11, nguyên văn: «Build cả hai» (92, 93), bảng cuối thẻ.
 
+**Hai hàng vá máy chủ thêm 03/11 — đã quyết** — Manh Phan, nguyên văn: «hai lỗi máy chủ: mở hai hàng vá ở đợt kế»
+(giám sát đợt `dau-chu-dong-vao` ghi 2026-11-02T21:21Z, tức sáng 03/11 giờ Việt Nam), bảng cuối thẻ.
+
 Mở 02/11. Một lần ngồi, 22 quyết định: mỗi hàng có đáng dựng không. Cột «Quyết» chép đúng chữ người gõ — máy không tự
 điền. Mỗi hàng nhận một trong bốn chữ: `build` (dựng) · `iterate` (làm lại ý trước khi dựng) · `park` (gác, chưa làm) ·
 `kill` (bỏ).
@@ -87,3 +90,14 @@ Sau PR #88 (chủ kho chọn lại khối đích bằng khoá ReUI Pro), hai mà
 |---|---|---|---|---|---|---|
 | 92 | Đầu chủ đọc mỗi việc của Hôm nay trên một dòng — tên căn, «Vì sao hôm nay» hai tầng với hạn tô màu, giá — và làm việc đầu của nhóm bằng đúng một nút; việc còn lại trong ⋯ | 22, 91 | H | T2 · 0,99–6,53 h | `build` — chủ kho chọn 14A sau khi chỉ ra nút rối và lý do khó đọc; màn đầu chủ mở mỗi ngày trong hai tuần thử; 39 dựng trên khuôn của nó; lấp lượt 2 của dãy H, không kéo dài đợt | `build` |
 | 93 | Người trong sàn đăng nhập trên thẻ theo `auth-15`: chỉ mã một lần qua email, không nút Google, Apple, GitHub; chọn sàn và chưa gắn sàn cùng khuôn | 6, 91 | B | T2 · 0,99–6,53 h | `build` — màn đăng nhập đang là bản ghép tạm, dòng «Chỗ hở» quá hạn từ 30/10; chủ kho chọn `auth-15` 02/11; chỉ đổi giao diện, lấp lượt 5 của dãy B | `build` |
+
+## Hai hàng vá máy chủ thêm 03/11 — đã quyết `build`
+
+Dãy D báo khi làm hàng 28 (đợt `dau-chu-dong-vao`, 02/11): hai lỗi ở máy chủ, ngoài hợp đồng của 28. Chủ kho chọn mở
+hai hàng vá ở đợt này. Hai ô ở PR này (`_acceptance/va-moc-goi-dau-lead-tra-lai/`, `_acceptance/va-doi-gia-can-da-ban/`),
+đã chép quyết (`decision: build`, `stage: decided`). Hàng vá lấy slug làm mã.
+
+| # | Người dùng được gì | Đứng trên | Dãy | Hạng · giờ máy | Khuyến nghị — căn cứ | Quyết |
+|---|---|---|---|---|---|---|
+| `va-moc-goi-dau-lead-tra-lai` | Lead đã trả lại không còn nhận mốc gọi đầu của người giữ cũ — luật chia và hạn của trưởng nhóm đọc đúng người đang giữ | 25, 27 | D | T3 · 1,2–8,85 h | `build` — lỗi ghi sai dữ liệu ở máy chủ, giao diện không chặn được; một hàm cơ sở dữ liệu thay bằng migration mới; lượt 3 của dãy D | `build` |
+| `va-doi-gia-can-da-ban` | Căn Đã bán không đổi giá được nữa, kể cả từ máy có bản cũ; lệnh bị từ chối hiện ở «Cần xem» với lý do rõ | 8, 13 | G | T2 · 0,99–6,53 h | `build` — luật trạng thái của hàng 8 chỉ chặn ở ô, máy chủ vẫn nhận; vá ở lõi; lượt 3 của dãy G | `build` |

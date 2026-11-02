@@ -74,8 +74,8 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
 24. Hàng 52 (số đo hai tuần thử) chỉ đọc sự kiện đã có; thấy thiếu sự kiện cho một số đo thì ghi vào hợp đồng là giới
     hạn đã biết và gửi `can-nguoi`, không tự thêm sự kiện vào hàng của dãy khác. Ngưỡng của số đo không đặt ở hàng này
     — chủ kho đặt ở Cổng Đáng trước hai tuần thử.
-25. Số migration và số ADR: giám sát giữ chỗ lúc mở đợt cho các hàng T3 có thể cần (86, 65, 66, 82, 89, 31), tính trên
-    `origin/main` lúc ấy; luật 3 vẫn áp khi gộp.
+25. Số migration và số ADR: giám sát giữ chỗ lúc mở đợt cho các hàng T3 có thể cần (86, 65, 66, 82, 89, 31,
+    `va-moc-goi-dau-lead-tra-lai`), tính trên `origin/main` lúc ấy; luật 3 vẫn áp khi gộp.
 26. Phiên chờ chủ kho thì tiêu đề bắt đầu «⏳ CHỜ ANH: <việc>»; hết chờ thì đổi lại tên thường.
 27. Mọi dãy được vẽ lại `PRODUCT-MAP.md` và `LO-TRINH.html` bằng `product-map.mjs` trong PR của mình, không cần
     `cham-tep` (luật 11).
@@ -93,3 +93,9 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
     kiểm trong cùng PR; 92 đóng dòng «Hàng đợi có hạn» (hạn theo điều kiện, không cảnh báo). Dãy của 51 cũng sửa câu «ghép theo khối đích form-2» ở `design/patterns/o-nhan-lead.md`
     thành «bản ghép là đích» (chủ kho 02/11). Dòng «Trống · lỗi · báo» đã chuyển thể `empty-state-1/2` — dãy nào chạm
     `vo-va-ia.md` trước thì đóng nó, kèm bài kiểm.
+31. Hai hàng vá máy chủ (thêm 03/11) sửa ở máy chủ, không chặn ở giao diện. `va-moc-goi-dau-lead-tra-lai` (D, T3): thay
+    `app.mark_first_call` bằng migration mới — số xin giám sát như luật 25, không sửa `011_chia_lead_va_han.sql` — cho
+    hàm từ chối lead đã có `returned_at`; bài kiểm ở `packages/api/test-db/` có ca trả lại rồi ghi gọi đầu (đỏ trên bản
+    cũ), kèm ca lead đang giữ vẫn ghi được. `va-doi-gia-can-da-ban` (G, T2): luật «căn Đã bán không đổi giá» nằm ở
+    `packages/core` (luật trạng thái của hàng 8), máy chủ trả 4xx với lý do tiếng Việt; bộ đồng bộ đã đưa 4xx thật vào
+    «Cần xem» — dãy chỉ kiểm, sửa `apps/web/src/lib/sync/**` thì gửi `cham-tep`.

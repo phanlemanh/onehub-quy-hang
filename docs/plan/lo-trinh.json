@@ -2032,6 +2032,47 @@
         "docs/design/vo-va-ia.md",
         "packages/ui-lint/tests/kiem-chuan.test.mjs"
       ]
+    },
+    {
+      "ma": "va-moc-goi-dau-lead-tra-lai",
+      "cau_giao": "Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ",
+      "slug": "va-moc-goi-dau-lead-tra-lai",
+      "vi_sao": "Dãy D báo khi làm hàng 28 (đợt dau-chu-dong-vao, 02/11): app.mark_first_call chỉ kiểm người giữ, outcome và discarded_at, không kiểm returned_at — đầu chủ đã trả lead vẫn ghi được mốc gọi đầu, làm lệch luật chia và hạn của hàng 25. Chủ kho 02/11: «hai lỗi máy chủ: mở hai hàng vá ở đợt kế»",
+      "vai": "Đầu chủ",
+      "tieu_chi": 3,
+      "hang": "T3",
+      "dung_tren": [
+        "25",
+        "27"
+      ],
+      "bat_khi": "Lead đã trả lại thì app.mark_first_call từ chối người giữ cũ (mã lỗi như lead không còn của người gọi), first_called_at và accepted_at không đổi; lead đang giữ vẫn ghi gọi đầu như cũ; sửa bằng migration mới, không sửa 011; bài kiểm cơ sở dữ liệu có ca trả lại rồi ghi gọi đầu, phá thử thì đỏ",
+      "nhom": "dong-vao",
+      "vung": [
+        "packages/db/migrations/**",
+        "packages/api/src/routing/**",
+        "packages/api/src/leads/**",
+        "packages/api/test-db/**"
+      ]
+    },
+    {
+      "ma": "va-doi-gia-can-da-ban",
+      "cau_giao": "Vá đổi giá căn Đã bán: máy chủ từ chối lệnh đổi giá trên căn Đã bán với lý do rõ, kể cả khi bản trên máy đã mới; bộ đồng bộ đưa lệnh ấy vào «Cần xem»",
+      "slug": "va-doi-gia-can-da-ban",
+      "vi_sao": "Dãy D báo khi làm hàng 28 (đợt dau-chu-dong-vao, 02/11): máy chủ nhận price_changed trên căn Đã bán (Closed) khi bản trên máy đã mới — luật trạng thái của hàng 8 chỉ chặn ở ô. Chủ kho 02/11: «hai lỗi máy chủ: mở hai hàng vá ở đợt kế»",
+      "vai": "Đầu chủ",
+      "tieu_chi": 3,
+      "hang": "T2",
+      "dung_tren": [
+        "8",
+        "13"
+      ],
+      "bat_khi": "Căn Đã bán thì máy chủ từ chối lệnh đổi giá với lý do rõ bằng tiếng Việt, lịch sử và giá không đổi; bộ đồng bộ đưa lệnh bị từ chối vào «Cần xem» với lý do ấy; căn các trạng thái khác đổi giá như cũ; luật nằm ở packages/core, không chặn ở giao diện",
+      "nhom": "nen",
+      "vung": [
+        "packages/core/src/listing/**",
+        "packages/core/src/pricing/**",
+        "packages/api/src/listings/**"
+      ]
     }
   ],
   "chan_troi": [
