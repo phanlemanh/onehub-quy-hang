@@ -115,7 +115,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["cuoc-goi.tsx", "khoi.tsx", "khung.tsx", "page.tsx"].map((p) => `${W}/app/(app)/units/call/${p}`),
   // Thông báo lead (hàng 26): dải bật thông báo ở đầu /today.
   ...["dai-bat.tsx", "hom-nay-dau-chu.tsx", "khung.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
-  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
+  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/o-ma-can.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -154,7 +154,7 @@ const CHO_TRANG_THAI = [
   // Chế độ cuộc gọi (hàng 28): không thấy lead, lỗi tải lead.
   ...Array(2).fill(`${W}/app/(app)/units/call/cuoc-goi.tsx`),
   // Hồ sơ căn (hàng 17): khung xương và «không có / nhiều căn» của cột, kết quả chia sẻ của báo sai.
-  ...["cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
+  ...["cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
   // Mục Ảnh (hàng 18): lỗi tải, trống của ngăn, thẻ Tự có từ mã, ngăn nội bộ khoá.
   ...Array(4).fill(`${W}/app/(app)/units/photos/muc-anh.tsx`),
   // Trình che vùng ảnh (hàng 19): ảnh không mở được, lưu lỗi.
@@ -346,7 +346,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 7 tệp theo khuôn · 15 ngoại lệ · 0 lệch",
-      "trang-thai: 49 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 50 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

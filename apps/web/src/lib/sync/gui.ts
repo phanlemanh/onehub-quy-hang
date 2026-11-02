@@ -67,7 +67,9 @@ export async function doiChieu(
   }
   if (traLoi.status === 409) return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: "dung-nhau", server } }, view: view as ListingView, events };
   const reason = lyDoTuChoi(traLoi.body, traLoi.status);
-  return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: "tu-choi", reason, server } }, view: view as ListingView, events };
+  const kia = (traLoi.body as { conflictListingId?: unknown } | null)?.conflictListingId;
+  const review = { listingId: op.listingId, kind: "tu-choi" as const, reason, server, ...(typeof kia === "string" && { conflictListingId: kia }) };
+  return { dc: { kq: "can-xem", review }, view: view as ListingView, events };
 }
 
 /** Lý do «Cần xem» khi máy chủ từ chối lệnh (4xx): lý do của máy chủ, hay điều thiếu qua bảng nhãn của lõi. */

@@ -104,6 +104,15 @@
         "apps/web"
       ],
       "port": 3485
+    },
+    {
+      "name": "web-dcdv-g-nhat-ky",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "mkdir -p .acceptance-runs/dien-ma-can-cho-hang && DATABASE_URL=postgres://postgres:quyhang@localhost:5564/postgres BETTER_AUTH_SECRET=dev-dcdv-g-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3484 npx next dev -p 3484 apps/web 2>&1 | tee .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log"
+      ],
+      "port": 3484
     }
   ]
 }

@@ -24,7 +24,7 @@ import { useBoDongBo, useDanhSachHang, useSuaHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../inventory/danh-muc";
 import { chiMuc } from "../inventory/ghep-danh-muc";
 import { CotHoSo } from "../units/ho-so/cot-ho-so";
-import { docCot, dongCot, moCot, type ChonCan } from "../units/ho-so/ho-so";
+import { docCot, dongCot, duongHangChuaMa, moCot, type ChonCan } from "../units/ho-so/ho-so";
 import { KhungHoSoCan } from "../units/ho-so/khung";
 import { canHomNay, chuGiaPhi, chuGio, chuGioNgay, chuHan, chuLoai, lyDo, type CanHomNay } from "./ly-do";
 import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
@@ -144,9 +144,15 @@ function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: stri
           </Button>
         )}
         {co(v.nhom, "open_record") && (
-          <Button size="sm" variant="outline" disabled={!v.can.unitNumber} onClick={() => hd.moHoSo(v.can)}>
-            Đổi giá, trạng thái…
-          </Button>
+          v.can.unitNumber ? (
+            <Button size="sm" variant="outline" onClick={() => hd.moHoSo(v.can)}>
+              Đổi giá, trạng thái…
+            </Button>
+          ) : (
+            <Button size="sm" variant="outline" nativeButton={false} render={<Link href={duongHangChuaMa(v.can.id)} />}>
+              Đổi giá, trạng thái…
+            </Button>
+          )
         )}
       </>
     ) : (
@@ -202,7 +208,14 @@ function taoCot(hd: HanhDong, rong: boolean): DefCot[] {
         const v = d.v;
         return (
           <div className="flex min-w-0 flex-col gap-0.5 ps-9 whitespace-normal">
-            <span className="text-foreground text-sm font-medium">{tieuDe(v)}</span>
+            {v.kind === "can" && !v.can.unitNumber ? (
+              // Hàng chưa có mã căn: dòng mở hồ sơ của hàng để gắn mã (ADR-0026).
+              <Link href={duongHangChuaMa(v.can.id)} className="text-foreground text-sm font-medium underline-offset-2 hover:underline">
+                {tieuDe(v)}
+              </Link>
+            ) : (
+              <span className="text-foreground text-sm font-medium">{tieuDe(v)}</span>
+            )}
             <span className="text-muted-foreground text-sm">{phuDe(v)}</span>
             {!rong && (
               <div className="flex flex-col gap-2 pt-1">
