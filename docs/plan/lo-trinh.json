@@ -1968,6 +1968,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     },
     {
+      "ma": "mo-so-lead",
+      "cau_giao": "Đầu chủ được giao lead mở số chủ nhà của lead ấy ngay ở Hôm nay để gọi; mỗi lần mở số thành một vết (người, vai, lúc) như «Mở số» của hồ sơ căn; người không được giao lead không mở được.",
+      "slug": "mo-so-lead",
+      "vi_sao": "Chủ kho quyết build ở Hỏi-3 hàng 22 (_acceptance/hom-nay-dau-chu d-20261101T135417Z-10); máy thêm khi mở vòng, 2026-11-02"
+    },
+    {
       "ma": "dien-ma-can-cho-hang",
       "cau_giao": "Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà: hàng chưa có mã căn báo thiếu «mã căn» và không lên Đang bán (hàng 23 chọn C); đầu chủ điền mã căn ngay ở hồ sơ căn để hàng đủ điều kiện rao.",
       "slug": "dien-ma-can-cho-hang",
