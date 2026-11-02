@@ -8,6 +8,8 @@ khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
 ngoai_le: [{ tep: "apps/web/src/app/(app)/today/page.tsx", ly_do: "Hôm nay theo vai — trang thuộc nhóm hom-nay-dau-chu (khuôn KhungHomNay): vùng đầu chủ là Hôm nay của đầu chủ, vùng telesales dựng qua KhungLeadCuaToi đặt trong KhungHomNay, sau vùng đầu chủ." }]
 luat: [KH-lct-mot-khung, KH-lct-khong-hang, KH-lct-ba-trang-thai]
+bo_cuc: danh-sach-chi-tiet
+ngoai_le_han: [{ tep: "apps/web/src/app/(app)/leads/mine/page.tsx", han: lead-dien-thoai, ly_do: "Lead của tôi chuyển sang bố cục ở hàng 51." }]
 ---
 # Lead của tôi
 

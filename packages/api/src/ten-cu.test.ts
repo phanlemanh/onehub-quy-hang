@@ -42,7 +42,7 @@ test("không còn tên tiếng Việt cũ trong mã nguồn", () => {
 });
 
 test("màn đọc mã lỗi từ API_ERRORS", () => {
-  const man = readFileSync(join(GOC, "apps/web/src/app/settings/users/quan-nguoi.tsx"), "utf8");
+  const man = readFileSync(join(GOC, "apps/web/src/app/(app)/settings/users/quan-nguoi.tsx"), "utf8");
   assert.match(man, /from "@quy-hang\/api\/errors"/);
   const khoa = [...man.matchAll(/\[API_ERRORS\.(\w+)\.code\]/g)].map((m) => m[1]);
   assert.deepEqual(khoa, ["alreadyMember", "lastAdmin", "roleRequired", "zoneNameTaken"]);

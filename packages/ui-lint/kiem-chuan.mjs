@@ -9,7 +9,10 @@ import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { docBanDo, kiemCay, manNgoaiBanDo } from "./lib/ban-do.mjs";
-import { divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
+import { cacOBaLoi, divergenceCua, kiemTrangHoSo } from "./lib/ba-loi.mjs";
+import { kiemMcp } from "./lib/mcp.mjs";
+import { dongHan, kiemBoCuc } from "./lib/bo-cuc.mjs";
+import { kiemBanDoHeThietKe } from "./lib/ban-do-he-thiet-ke.mjs";
 
 export const THANH_PHAN_NEN = { ui: ["button", "badge", "input", "separator", "skeleton", "tooltip"], reui: ["frame"] };
 const SKILLS = ["quy-hang-ui", "reui"];
@@ -111,7 +114,8 @@ export function khoiDaChuyenThe(root) {
         readFileSync(p, "utf8")
           .split("\n")
           .forEach((l, i) => {
-            const k = l.indexOf("chuyển thể");
+            // Chú thích mở đầu câu viết «Chuyển thể» hoa: vẫn là dấu chuyển thể (khối settings-3, hàng 91).
+            const k = l.toLowerCase().indexOf("chuyển thể");
             if (k < 0) return;
             for (const m of l.slice(k).matchAll(TEN_KHOI)) if (!thay.has(m[1])) thay.set(m[1], `${p.slice(root.length + 1)}:${i + 1}`);
           });
@@ -240,8 +244,26 @@ function kiemBanDo(root, loi, dong) {
   const cay = kiemCay(root, bd);
   const lech = [...Object.values(cay).flatMap((r) => r.lech), ...manNgoaiBanDo(root, bd)];
   for (const l of bd.loi) loi.push(`khuôn: ${l}`);
+  // Bố cục (hàng 91): màn dưới (app) thuộc nhóm có khai bo_cuc mà khuôn dựng đúng kiểu; ngoại lệ có hạn in ra từng dòng.
+  const bc = bd.loi.length ? { lech: [], han: [] } : kiemBoCuc(root, bd);
+  lech.push(...bc.lech);
   for (const l of lech) loi.push(`khuôn: ${l.tep}: ${l.nhom} — ${l.dieu}`);
   dong.push(`khuôn: ${bd.nhom.length} nhóm · ${bd.loi.length} lỗi đọc · ${lech.length} lệch`);
+  for (const h of bc.han) dong.push(dongHan(h));
+}
+
+/** Bản đồ hệ thiết kế (hàng 91): mỗi tệp khớp mẫu của hệ thiết kế một dòng trong bảng của skill. */
+function kiemHeThietKe(root, loi, dong) {
+  const r = kiemBanDoHeThietKe(root);
+  if (r.loi.length) return loi.push(...r.loi);
+  dong.push(`bản đồ hệ thiết kế: ${r.soTep} tệp · ${r.soDong} dòng`);
+}
+
+/** MCP của kho (hàng 91): `.mcp.json` khai reui và shadcn, không mang khoá. */
+function kiemMcpKho(root, loi, dong) {
+  const l = kiemMcp(join(root, ".mcp.json"));
+  if (l.length) return loi.push(...l);
+  dong.push("mcp: reui · shadcn");
 }
 
 /** Hồ sơ đã ký giữ nguyên trang (kit cấm sửa) — chỉ hồ sơ chưa ký bị so với bản dựng lại. */
@@ -255,14 +277,18 @@ function kiemBaLoiCay(root, loi, dong) {
   let lenh = 0;
   for (const slug of readdirSync(goc).sort()) {
     const dv = divergenceCua(root, slug);
-    const coJson = existsSync(join(goc, slug, "ba-loi/ba-loi.json"));
+    // Hồ sơ nhiều ô (hàng 91) đặt mỗi ô ở ba-loi/<mã ô>/ — đếm mỗi ô một trang, kiểm qua kiemTrangHoSo như hồ sơ một ô.
+    const cacO = cacOBaLoi(join(goc, slug, "ba-loi"));
+    const coJson = existsSync(join(goc, slug, "ba-loi/ba-loi.json")) || cacO.length > 0;
     if (dv === null && !coJson) continue;
-    const coTrang = existsSync(join(goc, slug, "ba-loi/index.html"));
-    if (dv !== null && /^opened\b/.test(dv) && !coTrang && !coJson) {
+    const soTrang = cacO.length
+      ? cacO.filter((o) => existsSync(join(goc, slug, "ba-loi", o, "index.html"))).length
+      : Number(existsSync(join(goc, slug, "ba-loi/index.html")));
+    if (dv !== null && /^opened\b/.test(dv) && !soTrang && !coJson) {
       loi.push(`hồ sơ ${slug}: design-pass mở bước phân kỳ mà thiếu ba-loi/index.html`);
       continue;
     }
-    if (coTrang) trang++;
+    trang += soTrang;
     if (!coJson) continue;
     lenh++;
     const st = /^status:\s*(\S+)/m.exec(doc(root, `_acceptance/${slug}/contract.md`) ?? "")?.[1];
@@ -286,6 +312,8 @@ export function kiemChuan(root, { homNay = new Date().toISOString().slice(0, 10)
   kiemCi(root, loi, dong);
   kiemBanDo(root, loi, dong);
   kiemBaLoiCay(root, loi, dong);
+  kiemMcpKho(root, loi, dong);
+  kiemHeThietKe(root, loi, dong);
   return { loi, canhBao, dong: loi.length ? [] : [...dong, "chuẩn giao diện: đạt"] };
 }
 

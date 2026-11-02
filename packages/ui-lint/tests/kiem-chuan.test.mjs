@@ -8,6 +8,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as KC from "../kiem-chuan.mjs";
 import { kiemChuan, tepVetKhoi } from "../kiem-chuan.mjs";
+import { tepBanDoHeThietKe } from "../lib/ban-do-he-thiet-ke.mjs";
+import { tepBoCucCan } from "../lib/bo-cuc.mjs";
+import { docBanDo } from "../lib/ban-do.mjs";
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(PKG, "..", "..");
@@ -20,11 +23,12 @@ const TEP = [
   ".agents/skills/reui",
   "_acceptance/config.yaml",
   ".github/workflows/ci.yml",
+  ".mcp.json",
 ];
 
 function banSao() {
   const root = mkdtempSync(join(tmpdir(), "kiem-chuan-"));
-  for (const rel of [...TEP, ...tepVetKhoi(ROOT)]) cpSync(join(ROOT, rel), join(root, rel), { recursive: true });
+  for (const rel of [...TEP, ...tepVetKhoi(ROOT), ...tepBanDoHeThietKe(ROOT), ...tepBoCucCan(ROOT, docBanDo(ROOT))]) cpSync(join(ROOT, rel), join(root, rel), { recursive: true });
   mkdirSync(join(root, ".claude/skills"), { recursive: true });
   for (const s of ["quy-hang-ui", "reui"]) symlinkSync(`../../.agents/skills/${s}`, join(root, ".claude/skills", s));
   return root;
@@ -149,6 +153,17 @@ describe("vết chọn khối — danh mục khối", () => {
     });
   });
 
+  it("khối: «Chuyển thể» hoa đầu câu vẫn là dấu — catalog thiếu khối ấy thì đỏ; đối chứng: catalog có dòng thì không", () =>
+    voiBanSao((root) => {
+      writeFileSync(join(root, "apps/web/src/y.tsx"), "// Chuyển thể settings-3 (ReUI Pro): khung gốc của khối.\nexport {};\n");
+      assert.deepEqual(loiVet(root).loi.filter((l) => l.startsWith("catalog.md thiếu khối: settings-3 ")), []);
+      sua(root, CATALOG, (s) => s.split("\n").filter((l) => !l.startsWith("| `@reui/settings-3`")).join("\n"));
+      assert.ok(
+        loiVet(root).loi.some((l) => l.startsWith("catalog.md thiếu khối: settings-3 (chuyển thể ở apps/web/src/")),
+        JSON.stringify(loiVet(root).loi),
+      );
+    }));
+
   it("khối: tên đứng trước chữ chuyển thể không tính", () =>
     voiBanSao((root) => {
       writeFileSync(join(root, "apps/web/src/y.tsx"), "// khối đích `auth-15` chuyển thể ở việc riêng (Hỏi-3).\nexport {};\n");
@@ -182,9 +197,10 @@ describe("vết chọn khối — Chỗ hở", () => {
   const bangThat = () => readFileSync(join(ROOT, VVI), "utf8").split("## 3. Chỗ hở")[1].split(/\n## /)[0];
   const dongThat = () => bangThat().split("\n").filter((l) => /^\| /.test(l)).slice(2).map((l) => l.trim().slice(1, -1).split("|").map((o) => o.trim()));
 
-  it("chỗ hở: cây thật đủ năm ô cho 14 dòng", () => {
+  it("chỗ hở: cây thật đủ năm ô cho 13 dòng", () => {
     const dong = dongThat();
-    assert.equal(dong.length, 14);
+    // Hàng 91: dòng «Người dùng (Cài đặt sàn, tạm)» rời bảng — Người dùng nay chạy khối solution-users-8.
+    assert.equal(dong.length, 13);
     for (const o of dong) {
       assert.equal(o.length, 5, o[0]);
       for (const c of o) assert.ok(c !== "" && !/^[—–-]$/.test(c), `${o[0]}: ô rỗng`);
@@ -235,11 +251,11 @@ describe("vết chọn khối — Chỗ hở", () => {
       }
     }));
 
-  it("chỗ hở: cây thật có bốn cảnh báo chỗ tạm", () => {
+  it("chỗ hở: cây thật có ba cảnh báo chỗ tạm", () => {
     const r = kiemChuan(ROOT, { homNay: HOM_NAY });
     assert.deepEqual(r.loi, []);
-    assert.equal(r.canhBao.length, 4);
-    for (const ten of ["Đăng nhập", "Ô nhận lead", "Trống · lỗi · báo", "Người dùng"])
+    assert.equal(r.canhBao.length, 3);
+    for (const ten of ["Đăng nhập", "Ô nhận lead", "Trống · lỗi · báo"])
       assert.equal(r.canhBao.filter((c) => c.includes(`«${ten}`)).length, 1, ten);
   });
 });

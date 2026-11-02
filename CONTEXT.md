@@ -74,3 +74,31 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Xử lý bằng AI | `ai_processing` *(đề xuất)* | Loại kết nối: gửi hồ sơ cột đã che cho nhà cung cấp AI lập kế hoạch nhập; sàn bật / tắt; không bao giờ mở lớp nguồn | «Tích hợp AI» |
 | Cấu hình sàn | `company_settings` *(đề xuất)* | Giá trị sàn đặt cho một điểm sàn chỉnh được; sàn chưa đặt thì nhận mặc định dựng sẵn; mỗi lần đổi là một sự kiện ghi người và vai (ADR-0018) | «Tuỳ biến» |
 | Điểm sàn chỉnh được | `config key` *(đề xuất)* | Một dòng của sổ điểm biến thiên: khoá, kiểu, mặc định, khoảng, ai đổi, hiệu lực, lớp dữ liệu (`docs/architecture/so-diem-bien-thien.md`) | — |
+
+## Chọn chữ
+
+Chốt 30/10 (chủ kho), ghi vào kho 02/11. Nhãn trong lõi dùng chữ chuẩn của ngành. Chữ nghề của môi giới là tên gọi
+riêng của sàn, đặt qua sổ từ vựng (ADR-0022 D5). Khi chọn nhãn cho một khái niệm mới, xét theo thứ tự sau; nguồn đứng
+trên thắng:
+
+1. **Chữ của luật Việt Nam**, cho mọi thứ có nghĩa pháp lý: Luật Kinh doanh bất động sản 2023, Luật Nhà ở 2023, Luật
+   Đất đai 2024, Luật Thuế thu nhập cá nhân 2025, Bộ luật Dân sự (đặt cọc).
+2. **Từ vựng chung của OneHub**, tức `CONTEXT.md` của onehub-invest, cho thứ hai sản phẩm dùng chung: địa lý, vật thể,
+   giá, loại hình, trạng thái chào. Danh mục căn đến từ Invest nên tên phải trùng.
+3. **Chữ thị trường công khai**: cách các cổng tin rao lớn và hợp đồng mẫu gọi thuộc tính căn.
+4. **Chữ nghề** (đầu chủ, đầu khách, giá đáy, giá về tay, bao phí, ép giá, còn hàng…) không làm nhãn chuẩn mới.
+
+Thang này chỉ chọn nhãn tiếng Việt; tên code vẫn theo RESO. Chữ đã chốt riêng sau 30/10 giữ nguyên, ví dụ «Khu» thay
+«dự án» (31/10). Nhãn chữ nghề đang có trong bảng trên giữ tới lượt dọn bảng sau khi đóng đợt, vì luật đợt chỉ cho thêm
+dòng.
+
+**Đọc khi hai dòng lệch, tới lượt dọn bảng:**
+
+- **Lead**: đọc theo dòng «Lead» của bảng này, tức trạng thái của một liên hệ (RESO `ContactType`). Không đọc theo
+  Tham chiếu §14 «hàng ở nấc đầu».
+- **«Người giữ»** là thuật ngữ cho người giữ một liên hệ (`OwnerMemberKey`). Cột «Không dùng» ở dòng Đầu chủ và luật 5
+  ở Tham chiếu §8 chỉ có nghĩa: không gọi vai Đầu chủ bằng chữ này.
+- **«Cấu hình của sàn» và «Cấu hình sàn»** là một khái niệm (`company_settings`, ADR-0018). Không dùng cả «Cài đặt»
+  (cho dữ liệu) lẫn «Tuỳ biến». Dòng thừa được gộp ở lượt dọn.
+- **«Lần rao»** đang hiện trên màn («Lần rao đang mở», «Tạo lần rao») với cùng nghĩa «Hàng» (`listing`). Chọn một chữ
+  ở lượt dọn.

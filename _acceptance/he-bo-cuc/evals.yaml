@@ -1,0 +1,167 @@
+schema_version: 1
+feature_slug: he-bo-cuc
+# Lệnh máy: executors.test.web (bố cục, vùng, đầu màn, trang mẫu — kiểm thuần), executors.test.core (điều hướng, menu Tạo),
+# executors.test.ui_lint (răng lint, bài quét khuôn, kiểm chuẩn, đối chiếu), executors.script.lint / giao_dien (trạng thái
+# cây). Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có mặt, ok, không SKIP. Ui-check chạy trên máy
+# dev dãy G cổng 3484; E7 chạy máy chủ KHÔNG có DATABASE_URL và trình duyệt không cookie.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «mcp: kho khai reui và shadcn» (packages/ui-lint/tests/mcp.test.mjs) có mặt và ok — đọc .mcp.json thật của kho: có mcpServers.reui (type http, url https://mcp.reui.io, header X-Reui-Style base-nova, Authorization dùng ${REUI_LICENSE_KEY…}) và mcpServers.shadcn (command npx, args chứa shadcn và mcp); ca «mcp: chuỗi khoá thật thì đỏ» ok — bản sao tệp với Authorization 'Bearer sk_live_…' (chuỗi ≥ 20 ký tự không phải ${…}) → kiemMcp trả lỗi ghim 'khoá viết thẳng trong .mcp.json'; bản sao thiếu shadcn → lỗi ghim 'thiếu máy chủ shadcn'; tệp thật → không lỗi."
+    paths: [.mcp.json, packages/ui-lint/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; dòng in có «mcp: reui · shadcn» và không có dòng lỗi mcp — kiểm chuẩn trên cây thật đọc .mcp.json qua cùng hàm kiemMcp của E1."
+    paths: [.mcp.json, packages/ui-lint/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «bố cục: bảy kiểu» (apps/web/src/components/bo-cuc/bo-cuc.test.ts) có mặt và ok — BO_CUC có đúng 7 mã theo thứ tự tran, danh-sach-chi-tiet, doc, ho-so, bang-dieu-khien, luong-nhieu-buoc, dong-tin (assert số và thứ tự); ca «bố cục: ma trận vùng» ok — ma trận viết trước 7 × 3 vùng (đầu màn, thân, cột phụ): cột phụ có ở đúng hai kiểu danh-sach-chi-tiet, luong-nhieu-buoc; dựng renderToStaticMarkup mỗi kiểu với đủ ba vùng: vùng thuộc bố cục có mặt (data-vung), vùng không thuộc vắng — đếm đúng 21 ô (assert số); ca «bố cục: không dựng Frame» ok — HTML của BoCuc với thân là một <div> trần không chứa data-slot=frame cho cả 7 kiểu; ca «bố cục: số lấy từ token» ok — gốc mang p-trang gap-khung, không lớp px-/max-w- (trừ ho-so và dong-tin max-w-(--container-doc)); globals.css khai --spacing-trang, --spacing-khung, --container-doc, --breakpoint-vua; ca «bóc tách: mỗi ô một nhãn» ok — bảng ở _acceptance/he-bo-cuc/discovery/boc-tach.md mỗi dòng có nhãn thuộc {khối, c-*, thành phần, ghép, ghép, chờ} và không dòng nào «vẽ tay». Chiều đỏ: cho BoCuc bọc Frame trở lại → ca không-dựng-Frame đỏ ghim kiểu đầu tiên."
+    paths: [apps/web/src/components/bo-cuc/**, apps/web/src/app/globals.css]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đầu màn: chia nút» (apps/web/src/components/bo-cuc/dau-man.test.ts) có mặt và ok — chiaNut với 0..5 nút (ma trận viết trước 6 ca, assert số): nút đầu là chính, tối đa 2 phụ, phần dư vào «…»; 5 nút → 1 chính · 2 phụ · 2 trong menu; ca «đầu màn: luôn có đường dẫn» ok — DauMan với đường dẫn 2, 3, 4 tầng đều ra nav[aria-label=breadcrumb] với đúng số mục (assert số); mục áp chót mang data-tang=cha là liên kết và là mục duy nhất không có max-md:hidden; kiểu của prop duongDan không nhận mảng 0 hay 1 mục (ca @ts-expect-error);  Chiều đỏ: nâng trần nút phụ lên 3 → ca 5 nút đỏ với thông điệp nêu số nút phụ."
+    paths: [apps/web/src/components/bo-cuc/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «menu Tạo: theo vai» (apps/web/src/components/shell/menu-tao.test.ts) có mặt và ok — ma trận viết trước năm vai §9 (telesales, listing_agent, buyer_agent, team_lead, company_admin) đọc navigationFor thật: chiaViecTao cho nút chính = actions[0], menu = actions[1..], vai không có việc tạo → chinh null (assert từng vai, đếm đúng 5 ca); ca «menu Tạo: không nút tạo trùng» ok — quét apps/web/src/app/**/*.tsx và apps/web/src/components/**/*.tsx (trừ components/shell/menu-tao.tsx, components/ui/**, components/reui/**, app/mau/**): không tệp nào còn liên kết tới ACTION_PATH; chiều đỏ trên bản sao: thêm một nút Link tới ACTION_PATH.new_lead vào components/shell/app-shell.tsx → ca đỏ, thông điệp ghim 'components/shell/app-shell.tsx'."
+    paths: [apps/web/src/components/shell/**, packages/core/src/navigation.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4c
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «cột thứ hai: mọi nhà, mặc định mở» (packages/core/src/navigation.test.ts) có mặt và ok — isSecondColumnOpen(h, undefined) = true cho đủ 5 nhà today, inventory, shares, team, settings (assert từng nhà, đếm 5); isSecondColumnOpen(h, false) = false cho cả 5 (người gập thì nhớ). Chiều đỏ: đặt inventory mặc định false trong bản sao → ca đỏ, thông điệp ghim 'inventory'."
+    paths: [packages/core/src/navigation.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4u
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G cổng 3484 (Postgres 5564, dữ liệu mẫu nap.mjs); đăng nhập truong-nhom@mau.quy-hang.test rồi dau-chu-1@mau.quy-hang.test"
+    steps:
+      - "Đích (target đã duyệt): Máy dev dãy G cổng 3484 (Postgres 5564, dữ liệu mẫu nap.mjs); đăng nhập truong-nhom@mau.quy-hang.test rồi dau-chu-1@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3484 (Postgres 5564 đã migrate, dữ liệu mẫu đã nạp) — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3484, không dừng Postgres 5564; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/he-bo-cuc/dev-3484.log (gốc kho)"
+      - "Khổ 1440x900, trưởng nhóm, mở /inventory → chụp evidence/E4u-truong-nhom.png; ghi nút trên thanh trên và các mục khi mở menu Tạo"
+      - "Bấm mục «Nhập Excel» trong menu → ghi địa chỉ mở ra"
+      - "Đăng nhập dau-chu-1, mở /today → chụp evidence/E4u-dau-chu.png; ghi nút trên thanh trên"
+      - "Trên /inventory của trưởng nhóm, đếm phần tử a[href] dẫn tới /leads/new, /imports/new, /exports/new khi menu đóng và khi menu mở"
+    expected: "Hình theo lối người chọn ở dòng sổ Hỏi-2 (gate1): lối ReUI — một nút chính là việc tạo đầu của vai (§9) cộng mũi tên mở các việc còn lại; lối Vẽ mới — một nút «Tạo ▾» mở mọi việc; lối Trong kho — các nút rời theo vai. Mọi lối: đúng việc tạo của vai theo §9, bấm một việc mở đúng địa chỉ ACTION_PATH; mỗi địa chỉ tạo có đúng một liên kết trên màn (menu đóng: chỉ nút hiện; menu mở: mỗi việc một mục)."
+    paths: [apps/web/src/components/shell/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «trạng thái: năm kiểu» (apps/web/src/components/trang-thai.test.ts) có mặt và ok — TrangThai nhận empty, error, notice, loading; loading ra role=status aria-busy=true; empty dựng theo empty-state-1 (có khe hành động) và kiểu tìm-không-ra theo empty-state-2; ca «chờ tải theo bố cục» (bo-cuc/cho-tai.test.ts) ok — ChoTai mỗi kiểu ra hình riêng: tran có lưới (data-cho-tai=luoi) nhiều dòng, doc có khối dòng nhãn–ô, ho-so hai cột — đếm đúng 7 kiểu (assert số); ca «tuyến: chờ tải, lỗi, không thấy» ok — tồn tại và dựng qua TrangThai/ChoTai: app/(app)/loading.tsx, app/(app)/error.tsx, app/(app)/not-found.tsx, app/error.tsx, app/not-found.tsx, app/global-error.tsx (đếm 6); ca «ngoại tuyến: dải đầu màn» ok — DaiNgoaiTuyen khi trực tuyến không ra gì, khi ngoại tuyến ra dải role=status nói đang xem bản đã tải. Chiều đỏ: xoá app/(app)/error.tsx trong bản sao → ca tuyến đỏ ghim tên tệp."
+    paths: [apps/web/src/components/trang-thai.tsx, apps/web/src/components/bo-cuc/**, "apps/web/src/app/**/loading.tsx", "apps/web/src/app/**/error.tsx", "apps/web/src/app/**/not-found.tsx", apps/web/src/app/global-error.tsx]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "Trang mẫu sống /mau/he-bo-cuc trên máy dev dãy G cổng 3484"
+    steps:
+      - "Đích (target đã duyệt): Trang mẫu sống /mau/he-bo-cuc trên máy dev dãy G cổng 3484. Máy chủ đã chạy sẵn ở cổng 3484 (Postgres 5564 đã migrate, dữ liệu mẫu đã nạp) — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3484, không dừng Postgres 5564; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/he-bo-cuc/dev-3484.log (gốc kho)"
+      - "Với từng bố cục (7), mở /mau/he-bo-cuc?bo-cuc=<mã>&trang-thai=mac-dinh&kho=375 → chụp evidence/E6-<mã>-375.png; ghi hình bản điện thoại và document.documentElement.scrollWidth so với innerWidth"
+      - "Mở tran và danh-sach-chi-tiet ở kho=1024 và kho=1440 → chụp evidence/E6-<mã>-<khổ>.png; ghi cột phụ ở đâu"
+      - "Ở danh-sach-chi-tiet, mở ngăn nổi ở 1440 rồi ở 375 → chụp evidence/E6-ngan-1440.png, evidence/E6-ngan-375.png; ghi ngăn mở từ đâu"
+    expected: "375: Tràn thành thẻ; Danh sách – chi tiết mở chi tiết trong ngăn từ đáy; ở 1440 chi tiết là ngăn inset bên phải đè lên bảng mà bấm dòng khác vẫn đổi hồ sơ; Hồ sơ giữ một cột như hồ sơ căn đang chạy; Luồng nhiều bước ngăn toàn màn; Đọc và Dòng tin giữ hình; Bảng điều khiển báo không có trên điện thoại. Không bố cục nào cuộn ngang ở 375 (scrollWidth = innerWidth). Ngăn nổi mở bên phải ở 1440, từ đáy ở 375. 1024 theo lối người chọn ở dòng sổ Hỏi-5 (gate1): không bố cục riêng — cùng bố cục 1440, cột phụ của Danh sách – chi tiết vẫn hiện hoặc thu theo dòng sổ; có bố cục riêng — hình riêng ghi ở dòng sổ."
+    paths: [apps/web/src/components/bo-cuc/**, apps/web/src/app/mau/he-bo-cuc/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «trang mẫu: không gọi API» (apps/web/src/app/mau/he-bo-cuc/mau.test.ts) có mặt và ok — đồ thị nhập tĩnh của app/mau/he-bo-cuc/** (đi theo import tương đối và @/) không chạm @/lib/api, @/lib/sync/dong-bo, @/lib/sync/react, next/headers; ca «trang mẫu: đủ tổ hợp» ok — TO_HOP sinh đúng 7 × 5 × 3 = 105 tổ hợp, mỗi tổ hợp một địa chỉ khác nhau (assert số và Set); ca «proxy: cho trang mẫu qua không phiên» ok — proxy() với /mau/he-bo-cuc và /mau/he-bo-cuc/xem không cookie trả next khi VERCEL_ENV vắng hay 'preview'; /inventory không cookie vẫn redirect /login; ca «bản chính thức đóng trang mẫu» ok — với VERCEL_ENV='production': proxy() /mau/he-bo-cuc không cookie redirect /login, và trang page.tsx, xem/page.tsx gọi notFound (bắt lỗi NEXT_HTTP_ERROR_FALLBACK;404) — theo lối người chọn ở dòng sổ Hỏi-1 (gate1); đối chứng VERCEL_ENV='preview' cùng ca ra next và trang dựng. Chiều đỏ: thêm import '@/lib/api' vào một tệp của trang mẫu trong bản sao → ca không-gọi-API đỏ ghim tên tệp."
+    paths: [apps/web/src/app/mau/he-bo-cuc/**, apps/web/src/proxy.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7u
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy chủ web dãy G cổng 3484 chạy KHÔNG có DATABASE_URL (dừng Postgres 5564 hoặc bỏ biến), trình duyệt sạch cookie"
+    steps:
+      - "Đích (target đã duyệt): Máy chủ web dãy G cổng 3484 chạy KHÔNG có DATABASE_URL (dừng Postgres 5564 hoặc bỏ biến), trình duyệt sạch cookie. Các eval ui-check khác chấm song song trên 3484 có cơ sở dữ liệu, nên eval này dùng máy chủ thứ hai ĐANG CHẠY SẴN ở cổng 3494, bật từ bản build với env KHÔNG có DATABASE_URL (pid ở .acceptance-runs/he-bo-cuc/pid-3494.txt, kiểm env bằng ps eww) — thay 3484 bằng 3494 ở mọi bước; KHÔNG dừng Postgres 5564, KHÔNG tắt máy chủ"
+      - "Xoá cookie, mở /mau/he-bo-cuc → chụp evidence/E7u-trang.png; ghi địa chỉ cuối (không bị đưa về /login) và các lựa chọn trên thanh chọn"
+      - "Chọn lần lượt năm trạng thái cho bố cục tran ở 1440 → chụp evidence/E7u-tran-<trạng thái>.png"
+      - "Chọn ho-so, kho=1024 → chụp evidence/E7u-ho-so-1024.png; ghi lỗi console nếu có"
+    expected: "Trang mở không đăng nhập, không lỗi console về mạng hay cơ sở dữ liệu; thanh chọn có 7 bố cục, 5 trạng thái, 3 khổ; mỗi trạng thái hiện đúng: chờ tải theo hình lưới, rỗng có hành động, lỗi có thử lại, ngoại tuyến có dải đầu màn với nội dung giữ nguyên."
+    paths: [apps/web/src/app/mau/he-bo-cuc/**, apps/web/src/components/bo-cuc/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «ảnh chuẩn: đủ 21» (packages/ui-lint/tests/anh-chuan.test.mjs) có mặt và ok — design/anh-chuan/ có đúng 21 tệp <bố cục>-<1440|1024|375>.png khớp 7 mã BO_CUC (assert số), bề rộng PNG (IHDR) bằng khổ trong tên tệp; có thêm đúng 7 tệp <bố cục>-1440-toi.png (chế độ tối); design/anh-chuan/ke.json có đúng 28 dòng, mỗi dòng địa chỉ /mau/he-bo-cuc/xem?bo-cuc=<mã>&trang-thai=mac-dinh, khổ, giao_dien sang|toi, commit — khớp từng tệp; catalog.md có dòng ảnh chuẩn cho từng bố cục; ca «bản đồ: khoá bo_cuc» ok — mục bản đồ nhóm dưới (app) khai bo_cuc thuộc 7 mã; mã lạ → lỗi đọc ghim 'bo_cuc lạ'; ca «đối chiếu: cặp ảnh chuẩn» ok — keHoachDoiChieu cho vòng chạm màn của nhóm có bo_cuc mà chưa có màn mẫu sinh cặp (màn mới, design/anh-chuan/<bo_cuc>-1440.png và -375.png); ca «ba lối nhiều ô» (packages/ui-lint/tests/ba-loi.test.mjs) ok — hồ sơ thử có ba-loi/a/ và ba-loi/b/ hợp lệ → kiemTrangHoSo trả []; xoá một ảnh của ô b → đúng một lỗi mở đầu 'ô b:'; hồ sơ một ô (ba-loi/ba-loi.json) vẫn kiểm như cũ. Chiều đỏ: xoá một ảnh chuẩn trong bản sao → ca đủ-21 đỏ ghim tên tệp thiếu."
+    paths: [design/anh-chuan/**, design/patterns/**, packages/ui-lint/**, .agents/skills/quy-hang-ui/catalog.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «răng: ma trận vi phạm» (packages/ui-lint/tests/rang-bo-cuc.test.mjs) có mặt và ok — ma trận viết trước, mỗi luật một tệp thử vi phạm và một tệp thử lành trên cùng fixture: no-layout-arbitrary (max-w-2xl, h-[calc(100svh-10rem)], w-[320px], min-h-[60svh], p-6 ở gốc trang) · no-raw-skeleton (nhập Skeleton trong app/) · no-direct-sheet (nhập Sheet, Drawer trong app/) · bài quét khuôn (nhóm thiếu bo_cuc; khuôn dựng BoCuc sai kiểu) — mỗi tệp vi phạm đỏ với messageId/thông điệp ghim tên luật, mỗi tệp lành xanh, đếm đúng số ca của ma trận (assert số); ca «ngoại lệ có hạn» ok — ngoai_le có han trỏ hàng chưa gộp → in 'ngoại lệ có hạn: <tệp> → hàng <mã>', không đỏ; han trỏ hàng đã gộp → đỏ ghim 'hạn đã tới'; han trỏ mã không có trong lộ trình → đỏ ghim 'hạn lạ'; han bằng 91 → đỏ ghim 'hạn lạ'. Lộ trình của ca lấy bằng chính bộ đọc lộ trình của bài quét trên bản sao docs/plan/lo-trinh.json thật (hàng đã gộp chọn từ hồ sơ signed-off thật), không viết tay khuôn."
+    paths: [packages/ui-lint/**, design/patterns/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0 trên cây thật; dòng in có «mức nợ giao diện: 0/0» và dòng khuôn có «0 lệch»; tập ngoại lệ có hạn in ra BẰNG ĐÚNG bảng viết trước ở design doc §«Chuyển màn trong hàng» — 11 tệp: inventory/page.tsx, inventory/views/[id]/page.tsx, proto/nhanh-tuc-thi/page.tsx → 79; units/[code]/page.tsx, proto/cot-ho-so-can/page.tsx, proto/anh-can-ba-ngan/page.tsx → 33; today/page.tsx, proto/hom-nay-dau-chu/page.tsx → 42; leads/mine/page.tsx, leads/new/page.tsx, proto/o-nhan-lead/page.tsx → 51 (người chấm so từng cặp tệp → hàng); không tệp settings/** hay trang tạm nào trong tập."
+    paths: [apps/web/src/**, packages/ui-lint/**, design/patterns/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «bản đồ hệ thiết kế: mỗi tệp một dòng» (packages/ui-lint/tests/ban-do-he-thiet-ke.test.mjs) có mặt và ok — đọc khối máy đọc mẫu đường dẫn và bảng của .agents/skills/quy-hang-ui/SKILL.md thật: mọi tệp khớp mẫu có đúng một dòng, mỗi dòng có lớp thuộc mười lớp đã khai và đường dẫn tồn tại; bản sao thêm tệp apps/web/src/components/bo-cuc/thu.tsx không có dòng → đỏ ghim 'thiếu dòng: apps/web/src/components/bo-cuc/thu.tsx'; ca «README trỏ bảng» ok — docs/README.md có liên kết tới mục «Bản đồ hệ thiết kế» của skill; ca «Cài đặt sàn: bố cục Đọc» ok — mục bản đồ cai-dat-san có bo_cuc doc, nhan_dien dưới apps/web/src/app/(app)/settings/, khuôn MucCaiDat dựng BoCuc kieu doc; trang-tam có bo_cuc doc; vo-va-ia.md §2 có cột «Bố cục»."
+    paths: [.agents/skills/quy-hang-ui/**, docs/README.md, design/patterns/**, "apps/web/src/app/(app)/settings/**", docs/design/vo-va-ia.md, packages/ui-lint/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10u
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G cổng 3484, đăng nhập quan-tri@mau.quy-hang.test"
+    steps:
+      - "Đích (target đã duyệt): Máy dev dãy G cổng 3484, đăng nhập quan-tri@mau.quy-hang.test. Máy chủ đã chạy sẵn ở cổng 3484 (Postgres 5564 đã migrate, dữ liệu mẫu đã nạp) — dùng chung, KHÔNG tắt, không bật máy chủ khác ở 3484, không dừng Postgres 5564; đăng nhập bằng email, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của .acceptance-runs/he-bo-cuc/dev-3484.log (gốc kho)"
+      - "Khổ 1440x900, mở /settings/users → chụp evidence/E10u-nguoi-dung.png; ghi tab, cột, số người, đếm ghế nếu có"
+      - "Mở /settings/labels (mục chưa dựng) → chụp evidence/E10u-trang-tam.png"
+      - "Khổ 375, mở /settings/users → chụp evidence/E10u-nguoi-dung-375.png; ghi cuộn ngang"
+    expected: "Người dùng hiện theo solution-users-8 (tab thành viên, vai chọn được trong hộp mời và sửa) trong bố cục Đọc: hết bề rộng cột nội dung theo Hỏi-8, đầu màn có tiêu đề; trang tạm cùng bố cục Đọc nói mục lộ trình; 375 không cuộn ngang."
+    paths: ["apps/web/src/app/(app)/settings/**", apps/web/src/components/shell/placeholder.tsx]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: [apps/web/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
