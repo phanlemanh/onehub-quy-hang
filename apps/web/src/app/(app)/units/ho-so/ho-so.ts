@@ -16,25 +16,46 @@ const cungCan = (l: { buildingName: string; unitNumber: string | null }, toa: st
 // ——— Đường của cột ———
 
 export type ChonCan = { ma: string; toa: string | null; lan: string | null };
-const THAM_SO = ["unit", "toa", "lan"] as const;
+/** Hồ sơ mở theo hàng — lối của hàng chưa có mã căn (ADR-0026): không có mã để đặt lên địa chỉ, chỉ còn mã hàng. */
+export type ChonHang = { hang: string };
+export type ChonCot = ChonCan | ChonHang;
+const THAM_SO = ["unit", "toa", "lan", "hang"] as const;
 
-/** Cột đang mở theo URL: `?unit=<mã căn>&toa=<toà>&lan=<lần rao>`; không có `unit` thì không mở. */
-export function docCot(q: URLSearchParams): ChonCan | null {
+/**
+ * Cột đang mở theo URL: `?unit=<mã căn>&toa=<toà>&lan=<lần rao>`, hay `?hang=<mã hàng>` cho hàng chưa có mã căn; không có
+ * cả hai thì không mở. Có `unit` thì theo căn.
+ */
+export function docCot(q: URLSearchParams): ChonCot | null {
   const ma = q.get("unit")?.trim();
-  if (!ma) return null;
-  return { ma, toa: q.get("toa")?.trim() || null, lan: q.get("lan")?.trim() || null };
+  if (ma) return { ma, toa: q.get("toa")?.trim() || null, lan: q.get("lan")?.trim() || null };
+  const hang = q.get("hang")?.trim();
+  return hang ? { hang } : null;
 }
+
+export const laChonHang = (c: ChonCot): c is ChonHang => "hang" in c;
 
 /** Bấm dòng: luôn kèm toà và lần rao — link chép không đổi nghĩa khi danh mục thêm toà trùng mã sau này. */
 export function moCot(q: URLSearchParams, c: { ma: string; toa: string; lan: string }): string {
   const m = new URLSearchParams(q);
+  m.delete("hang");
   m.set("unit", c.ma);
   m.set("toa", c.toa);
   m.set("lan", c.lan);
   return m.toString();
 }
 
-/** Đóng cột: bỏ ba tham số của cột, giữ nguyên mọi tham số khác. */
+/** Mở hồ sơ từ một dòng hàng: có mã căn thì theo căn (`moCot`), chưa có thì theo hàng (`?hang=`). */
+export function moHang(q: URLSearchParams, h: { id: string; buildingName: string; unitNumber: string | null }): string {
+  if (h.unitNumber) return moCot(q, { ma: h.unitNumber, toa: h.buildingName, lan: h.id });
+  const m = new URLSearchParams(dongCot(q));
+  m.set("hang", h.id);
+  return m.toString();
+}
+
+/** Lối từ Hôm nay tới hồ sơ của hàng chưa có mã căn: cột hồ sơ của Bảng hàng (máy tính) hay toàn màn (điện thoại). */
+export const duongHangChuaMa = (id: string) => `/inventory?${new URLSearchParams({ hang: id })}`;
+
+/** Đóng cột: bỏ các tham số của cột, giữ nguyên mọi tham số khác. */
 export function dongCot(q: URLSearchParams): string {
   const m = new URLSearchParams(q);
   for (const k of THAM_SO) m.delete(k);
@@ -56,6 +77,33 @@ export function timCan(ds: readonly ListingView[], ma: string, toa: string | nul
   if (cacToa.length === 0) return { kind: "khong" };
   if (cacToa.length > 1) return { kind: "nhieu", toa: cacToa };
   return { kind: "mot", toa: cacToa[0]!, hang: theoToa };
+}
+
+// ——— Tìm hàng theo mã hàng ———
+
+export type KetQuaHang = { kind: "chua-ma"; hang: ListingView } | { kind: "co-ma"; chon: ChonCan } | { kind: "khong" };
+
+/** Hàng của `?hang=` trên kho trên máy: chưa có mã thì hồ sơ của hàng; đã có mã thì hồ sơ theo căn như mọi hàng. */
+export function timHang(ds: readonly ListingView[], id: string): KetQuaHang {
+  const h = ds.find((l) => l.id === id);
+  if (!h) return { kind: "khong" };
+  return h.unitNumber ? { kind: "co-ma", chon: { ma: h.unitNumber, toa: h.buildingName, lan: h.id } } : { kind: "chua-ma", hang: h };
+}
+
+// ——— Gắn mã căn (ADR-0026) ———
+
+/** Id cố định của ô mã căn — «Mã căn» trong «Còn thiếu» đưa con trỏ tới đây. */
+export const ID_O_MA_CAN = "o-ma-can";
+export const CHU_GO_MA_CAN = "Gõ mã căn";
+
+export type LenhGanMa = { type: "unit_number_assigned"; payload: { unitNumber: string }; coSo: number };
+
+/** Lệnh từ ô mã căn: cắt khoảng trắng hai đầu; rỗng → lời «Gõ mã căn»; hàng đã có mã → không dựng lệnh (mã đã khoá). */
+export function dungLenhGanMa(hang: ListingView, chu: string): { lenh: LenhGanMa } | { loi: string | null } {
+  if (hang.unitNumber) return { loi: null };
+  const ma = chu.trim();
+  if (!ma) return { loi: CHU_GO_MA_CAN };
+  return { lenh: { type: "unit_number_assigned", payload: { unitNumber: ma }, coSo: hang.version } };
 }
 
 // ——— Thuộc tính căn ———
@@ -109,11 +157,16 @@ export type LanRao = { id: string; trangThai: string; dangMo: boolean; gia: stri
  * tải; lần rao chưa tải lịch sử xếp sau, lần đang mở trước lần đã ngừng.
  */
 export function cacLanRao(ds: readonly ListingView[], toa: string, ma: string, lichSu: Record<string, readonly ListingEvent[]>): LanRao[] {
-  const tao = (id: string) => lichSu[id]?.find((e) => e.type === "created")?.occurredAt ?? null;
   return ds
     .filter((l) => cungCan(l, toa, ma))
-    .map((l) => ({ id: l.id, trangThai: STATUS_LABEL[l.standardStatus], dangMo: laDangMo(l.standardStatus), gia: dinhDangGia(l.listPrice), tu: tao(l.id) }))
+    .map((l) => lanRaoCua(l, lichSu))
     .sort((a, b) => (b.tu ?? "").localeCompare(a.tu ?? "") || Number(b.dangMo) - Number(a.dangMo));
+}
+
+/** Một lần rao trên máy — hàng chưa có mã căn có đúng một lần rao, chính nó. */
+export function lanRaoCua(l: ListingView, lichSu: Record<string, readonly ListingEvent[]>): LanRao {
+  const tu = lichSu[l.id]?.find((e) => e.type === "created")?.occurredAt ?? null;
+  return { id: l.id, trangThai: STATUS_LABEL[l.standardStatus], dangMo: laDangMo(l.standardStatus), gia: dinhDangGia(l.listPrice), tu };
 }
 
 /** Lần rao đang xem: `lan` của URL nếu thuộc căn; vắng thì lần đang mở; không còn lần mở thì lần mới nhất. */
