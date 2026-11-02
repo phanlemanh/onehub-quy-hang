@@ -157,7 +157,8 @@
 /*
  * Token bố cục (hệ bố cục, ADR-0024 quyết định 1): token của ReUI ở trên giữ nguyên; bốn số dưới là mọi số bố cục mà màn
  * được dùng — lề trang (`p-trang`), khoảng giữa các khung (`gap-khung`), bề rộng đọc (`max-w-(--container-doc)`) và điểm
- * gãy máy tính vừa (`vua:`). Màn không viết số; bố cục ở `components/bo-cuc/` đọc các token này.
+ * gãy máy tính vừa (`vua:`). Màn không viết số; bố cục ở `components/bo-cuc/` đọc các token này. Lề 16px ở mọi khổ — đo
+ * trên Verve CRM (cùng họ khối ReUI) 02/11.
  */
 @theme {
     --spacing-trang: var(--bo-cuc-le);
@@ -168,10 +169,4 @@
 
 :root {
     --bo-cuc-le: 1rem;
-}
-
-@media (min-width: 48rem) {
-    :root {
-        --bo-cuc-le: 1.5rem;
-    }
 }

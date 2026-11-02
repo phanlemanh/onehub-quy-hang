@@ -1,8 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/reui/alert";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/reui/alert";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Spinner } from "@/components/ui/spinner";
 
 // Khuôn của nhóm `trang-thai` (design/patterns/trang-thai.md): mọi chỗ trình trống · lỗi · báo trong màn đi qua đây.
@@ -16,10 +16,12 @@ type Props = {
   description?: ReactNode;
   /** Chỉ cho `empty`: biểu tượng lucide nhỏ trên tiêu đề. */
   icon?: LucideIcon;
+  /** Một hành động: rỗng thì việc chính để có dữ liệu, lỗi thì «Thử lại» (ReUI layout «States»). */
+  hanhDong?: ReactNode;
   className?: string;
 };
 
-export function TrangThai({ kind, title, description, icon: Icon, className }: Props) {
+export function TrangThai({ kind, title, description, icon: Icon, hanhDong, className }: Props) {
   if (kind === "loading") {
     return (
       <Empty role="status" aria-busy="true" className={className}>
@@ -45,6 +47,7 @@ export function TrangThai({ kind, title, description, icon: Icon, className }: P
           <EmptyTitle>{title}</EmptyTitle>
           {description && <EmptyDescription>{description}</EmptyDescription>}
         </EmptyHeader>
+        {hanhDong && <EmptyContent>{hanhDong}</EmptyContent>}
       </Empty>
     );
   }
@@ -52,6 +55,7 @@ export function TrangThai({ kind, title, description, icon: Icon, className }: P
     <Alert variant={kind === "error" ? "destructive" : "default"} role={kind === "error" ? "alert" : "status"} className={className}>
       <AlertTitle>{title}</AlertTitle>
       {description && <AlertDescription>{description}</AlertDescription>}
+      {hanhDong && <AlertAction>{hanhDong}</AlertAction>}
     </Alert>
   );
 }

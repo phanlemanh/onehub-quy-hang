@@ -22,7 +22,21 @@ import type { LoiDauMan, TrangThaiMau } from "./to-hop";
 
 const sangTai = (t: TrangThaiMau): TrangThaiTai => (t === "cho-tai" ? "cho-tai" : t === "loi" ? "loi" : t === "rong" ? "rong" : "san-sang");
 
-const LOI = <TrangThai kind="error" title="Không tải được danh sách" description="Kiểm tra mạng rồi thử lại." />;
+const LOI = (
+  <TrangThai
+    kind="error"
+    title="Không tải được danh sách"
+    description="Kiểm tra mạng rồi thử lại."
+    hanhDong={
+      <Button size="sm" variant="outline">
+        Thử lại
+      </Button>
+    }
+  />
+);
+
+// Nhãn trạng thái theo ReUI: trạng thái dùng `<tone>-light`, không dùng `secondary` (layout.md «State badge»).
+const TONE: Record<string, "success-light" | "warning-light" | "info-light"> = { "Đang bán": "success-light", "Giữ chỗ": "warning-light", "Chờ duyệt": "info-light" };
 
 function Chip({ children }: { children: ReactNode }) {
   return (
@@ -53,7 +67,7 @@ function BangCan({ chon, onChon }: { chon?: string; onChon?: (ma: string) => voi
                 <TableCell>{c.toa}</TableCell>
                 <TableCell>{c.gia}</TableCell>
                 <TableCell>
-                  <Badge variant="secondary">{c.trangThai}</Badge>
+                  <Badge variant={TONE[c.trangThai] ?? "info-light"}>{c.trangThai}</Badge>
                 </TableCell>
                 <TableCell>{c.tuoi}</TableCell>
               </TableRow>
@@ -91,7 +105,7 @@ function HoSo({ can, onVe }: { can: CanMau; onVe?: () => void }) {
       )}
       <div className="flex items-center gap-2">
         <span className="font-medium">{can.ma}</span>
-        <Badge variant="secondary">{can.trangThai}</Badge>
+        <Badge variant={TONE[can.trangThai] ?? "info-light"}>{can.trangThai}</Badge>
       </div>
       <dl className="grid grid-cols-2 gap-2 text-sm">
         <dt className="text-muted-foreground">Toà</dt>
@@ -139,7 +153,19 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
   const ngoaiTuyen = trangThai === "ngoai-tuyen";
   const [chon, setChon] = useState<string | undefined>();
   const [nganMo, setNganMo] = useState(false);
-  const rongDanhSach = <TrangThai kind="empty" icon={SearchXIcon} title="Không căn nào khớp bộ lọc" description="Bỏ bớt điều kiện lọc để thấy thêm căn." />;
+  const rongDanhSach = (
+    <TrangThai
+      kind="empty"
+      icon={SearchXIcon}
+      title="Không căn nào khớp bộ lọc"
+      description="Bỏ bớt điều kiện lọc để thấy thêm căn."
+      hanhDong={
+        <Button size="sm" variant="outline">
+          Bỏ lọc
+        </Button>
+      }
+    />
+  );
   const chung = { trangThai: tai, ngoaiTuyen, loi: LOI };
 
   switch (kieu) {
@@ -271,7 +297,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
               tieuDe={`Căn ${can?.ma ?? ""}`}
               moTa="Toà A · 2 phòng ngủ · 68 m²"
               loiVe={{ nhan: "Bảng hàng", href: "#" }}
-              phu={<Badge variant="secondary">Đang bán</Badge>}
+              phu={<Badge variant="success-light">Đang bán</Badge>}
               nut={[{ nhan: "Gửi khách" }, { nhan: "Còn · giữ giá" }]}
             />
           }
@@ -320,7 +346,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
           kieu="luong-nhieu-buoc"
           {...chung}
           rong={<TrangThai kind="empty" icon={InboxIcon} title="Tệp chưa có dòng nào" description="Chọn tệp bảng tính có ít nhất một căn." />}
-          dauMan={<DauMan tieuDe="Nhập Excel" moTa="Đưa hàng vào từ bảng tính" phu={<Badge variant="secondary">Bước 2 / 4 · Ghép cột</Badge>} />}
+          dauMan={<DauMan tieuDe="Nhập Excel" moTa="Đưa hàng vào từ bảng tính" phu={<Badge variant="outline">Bước 2 / 4 · Ghép cột</Badge>} />}
           cotPhu={
             <div className="flex flex-col gap-2 text-sm">
               <span className="font-medium">Xem trước</span>

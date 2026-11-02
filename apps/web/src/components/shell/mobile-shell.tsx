@@ -1,6 +1,6 @@
 "use client";
 
-import { type Navigation, TAB_PATH } from "@quy-hang/core";
+import { type Action, type Navigation, TAB_PATH } from "@quy-hang/core";
 import { cn } from "cn";
 import { SearchIcon } from "lucide-react";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { TAB_LABEL } from "./nav-labels";
 import { ChiBaoDongBo } from "@/components/sync/chi-bao-dong-bo";
+import { MenuTaoDienThoai } from "./menu-tao";
 import { Notifications } from "./notifications";
 
 // Vỏ điện thoại (dưới md): thanh trên mảnh — tên nhà · gõ mã căn · chuông — và thanh tab dưới cố định theo vai.
@@ -19,9 +20,12 @@ export function MobileHeader({
   onJump,
   className,
   mau,
+  actions = [],
 }: {
   /** Trang mẫu sống: không có bộ đồng bộ nên không có chỉ báo. */
   mau?: boolean;
+  /** Việc tạo của vai — nút «+» mở menu Tạo. */
+  actions?: readonly Action[];
   title: string;
   unitJump: boolean;
   onJump: () => void;
@@ -37,6 +41,7 @@ export function MobileHeader({
           <SearchIcon />
         </Button>
       )}
+      <MenuTaoDienThoai actions={actions} />
       {!mau && <ChiBaoDongBo gon />}
       <Notifications />
     </header>

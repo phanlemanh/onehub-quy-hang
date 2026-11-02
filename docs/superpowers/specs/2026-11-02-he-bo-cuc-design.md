@@ -140,6 +140,12 @@ không tra được điều mới về sản phẩm khác.
 
 ## Câu hỏi cho người (Cổng Phạm vi)
 
+> Khảo sát ReUI và Verve CRM 02/11 (`_acceptance/he-bo-cuc/discovery/khao-sat-reui-verve.md`) đổi khuyến nghị Hỏi-2
+> (menu Tạo theo Verve), Hỏi-3 (đầu màn ba dạng theo bố cục) và thêm Hỏi-7 (Hồ sơ hai cột ghép theo Verve, `solution-crm-4`
+> về vai ngăn bên), Hỏi-8 (Đọc hết bề rộng). Sổ quyết định giữ dòng mới, dòng cũ bị thay. Bản bấm được đã theo số đo Verve
+> ở những chỗ không cần người: lề 16px, khung `sm` cho bố cục dày, nhãn trạng thái `-light`, nút «+» Tạo ở 375, rỗng và
+> lỗi có một hành động.
+
 - **Hỏi-1** — Trang mẫu sống có mở trên bản chính thức không?
   - Khuyến nghị: chỉ mở ngoài bản chính thức (bản xem trước, máy). Ở bản chính thức trang trả «không thấy».
   - Lối khác: mở mọi nơi. Trang không mang dữ liệu thật, nhưng ai có địa chỉ cũng xem được toàn bộ giao diện.

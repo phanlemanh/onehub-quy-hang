@@ -59,7 +59,7 @@ export function BoCuc({ kieu, dauMan, thanhCongCu, cotPhu, chan, children, trang
     );
 
   const khung = (
-    <Frame data-bo-cuc={kieu} data-mat-do={tt.mat_do} className="w-full">
+    <Frame data-bo-cuc={kieu} data-mat-do={tt.mat_do} spacing={tt.mat_do === "day" ? "sm" : "default"} className="w-full">
       {dauMan}
       <DaiNgoaiTuyen ngoaiTuyen={ngoaiTuyen} />
       {congCu && (
