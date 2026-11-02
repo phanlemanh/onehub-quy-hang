@@ -64,8 +64,11 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     photoAlreadyConfirmed: ["photo-already-confirmed", 409],
     // Hàng 26 (ADR-0025).
     pushNotConfigured: ["push-not-configured", 503],
+    // dien-ma-can-cho-hang (ADR-0026).
+    unitNumberAlreadySet: ["unit-number-already-set", 422],
+    unitAlreadyListed: ["unit-already-listed", 422],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 49);
+  assert.equal(Object.keys(API_ERRORS).length, 51);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

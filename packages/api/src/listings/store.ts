@@ -5,6 +5,9 @@ import {
   docCauHinhSanSang,
   KHOA_ANH_THAT_TOI_THIEU,
   foldListing,
+  kiemGanMaCan,
+  lyDoCanDangMo,
+  LY_DO_MA_CAN_DA_CO,
   validatePayload,
   WINS_IMMEDIATELY,
   type EventType,
@@ -12,7 +15,9 @@ import {
   type ListingState,
   type PayloadError,
   type Requirement,
+  type StandardStatus,
 } from "@quy-hang/core/listing";
+import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
 import { canRead, factsFromEvents, type Viewer, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -24,7 +29,14 @@ import { API_ERRORS, type ApiErrorEntry } from "../errors";
 
 export type Ctx = { userId: string; companyId: string };
 export type Command = { type: unknown; payload: unknown; expectedVersion?: number; confirmedWithOwner?: boolean };
-export type Refusal = { error: ApiErrorEntry; details?: PayloadError[]; missing?: Requirement[]; reason?: string };
+export type Refusal = {
+  error: ApiErrorEntry;
+  details?: PayloadError[];
+  missing?: Requirement[];
+  reason?: string;
+  /** Hàng đang mở khác trên cùng căn — khi gắn mã căn bị từ chối vì trùng (ADR-0026). */
+  conflictListingId?: string;
+};
 export type Applied = { listingId: string; state: ListingState; event: ListingEvent; facts: VisibilityFacts };
 
 /** Cột của bảng `listings` ứng với từng khoá của bản tính — cũng là danh sách bộ kiểm «gấp lại» so. */
@@ -143,6 +155,10 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   const type = cmd.type as EventType;
   const payload = cmd.payload as Record<string, unknown>;
 
+  // Hàng đã có mã: từ chối bằng chính sự thật ấy, trước phép so phiên bản — máy đang giữ bản cũ (gắn lúc mất mạng) nhận lý
+  // do «đã có mã» thay cho «đụng nhau» (ADR-0026).
+  if (type === "unit_number_assigned" && kiemGanMaCan(foldListing(events))) return { error: API_ERRORS.unitNumberAlreadySet, reason: LY_DO_MA_CAN_DA_CO };
+
   const thangNgay = type === "status_changed" && WINS_IMMEDIATELY.includes(payload.to as never);
   if (!thangNgay && cmd.expectedVersion !== version) return { error: API_ERRORS.versionConflict };
 
@@ -157,6 +173,12 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
         ? { error: API_ERRORS.invalidTransition, reason: kq.reason }
         : { error: API_ERRORS.missingRequirement, missing: kq.missing };
     }
+  }
+
+  if (type === "unit_number_assigned") {
+    // Gắn mã căn (ADR-0026): căn đã có hàng đang mở khác của sàn thì từ chối.
+    const trung = await hangMoCungCan(tx, listingId, hienTai.buildingName, payload.unitNumber as string);
+    if (trung) return { error: API_ERRORS.unitAlreadyListed, reason: lyDoCanDangMo(trung.status), conflictListingId: trung.id };
   }
 
   const event = await ghiSuKien(tx, listingId, version + 1, type, payload, confirmsWithOwner(type, cmd.confirmedWithOwner));
@@ -176,6 +198,20 @@ async function nguCanhAnh(tx: pg.PoolClient, hang: ListingState): Promise<{ real
   );
   const cauHinh = await tx.query<{ key: string; value: unknown }>("select key, value from company_settings where key = $1", [KHOA_ANH_THAT_TOI_THIEU]);
   return { realPhotoCount: rows[0]!.n, minRealPhotos: docCauHinhSanSang(cauHinh.rows).minRealPhotos };
+}
+
+/**
+ * Hàng đang mở khác của sàn trên cùng căn: cùng toà, mã so bằng `app.unit_key`, trạng thái thuộc `OPEN_STATUSES` của lõi.
+ * Luật cách ly giới hạn phép tìm trong sàn đang làm — hàng của sàn khác không chặn.
+ */
+async function hangMoCungCan(tx: pg.PoolClient, listingId: string, toa: string, ma: string): Promise<{ id: string; status: StandardStatus } | null> {
+  const { rows } = await tx.query<{ id: string; status: StandardStatus }>(
+    `select id, standard_status as status from listings
+     where id <> $1 and building_name = $2 and app.unit_key(unit_number) = app.unit_key($3) and standard_status = any($4)
+     order by id limit 1`,
+    [listingId, toa, ma, OPEN_STATUSES],
+  );
+  return rows[0] ?? null;
 }
 
 export const isRefusal = (r: Applied | Refusal): r is Refusal => "error" in r;

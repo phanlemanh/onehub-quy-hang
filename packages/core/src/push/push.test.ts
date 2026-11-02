@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { PUSH_PAYLOAD_KEYS, noiDungLead, noiDungLoiBao, type PushPayload } from "./index";
+import { PUSH_CLAIM_HOLD_MS, PUSH_PAYLOAD_KEYS, PUSH_SEND, laDichVuDay, noiDungLead, noiDungLoiBao, type PushPayload } from "./index";
 
 /** Lead mẫu mang đủ thứ không được ra thông báo: số chủ, tên chủ, giá, mã căn. */
 const LEAD_MAU = {
@@ -104,5 +104,47 @@ describe("thông báo lead: tài liệu khớp", () => {
       dem++;
     }
     assert.equal(dem, 3);
+  });
+});
+
+// AC-1 hồ sơ va-thong-bao-lead: chỉ địa chỉ của dịch vụ đẩy đã biết. Bảng viết trước, mỗi ô một assert.
+const CHAP_NHAN = [
+  "https://fcm.googleapis.com/fcm/send/x",
+  "https://fcm.googleapis.com/wp/x",
+  "https://updates.push.services.mozilla.com/wpush/v2/x",
+  "https://web.push.apple.com/x",
+  "https://wns2-par02p.notify.windows.com/w/?token=x",
+  "https://FCM.GOOGLEAPIS.COM/x",
+  "https://fcm.googleapis.com:443/x",
+];
+const TU_CHOI = [
+  "http://fcm.googleapis.com/x",
+  "https://push.example.test/x",
+  "https://fcm.googleapis.com.evil.test/x",
+  "https://evilfcm.googleapis.com/x",
+  "https://notify.windows.com/x",
+  "https://evil-notify.windows.com/x",
+  "https://fcm.googleapis.com@evil.test/x",
+  "https://u:p@fcm.googleapis.com/x",
+  "https://fcm.googleapis.com:8443/x",
+  "https://169.254.169.254/x",
+  "https://localhost/x",
+  "https://[::1]/x",
+  "",
+  "không phải địa chỉ",
+];
+
+describe("AC-1 địa chỉ của dịch vụ đẩy đã biết", () => {
+  for (const d of CHAP_NHAN) it(`AC-1 chấp nhận ${d}`, () => assert.equal(laDichVuDay(d), true, `ô ${d}`));
+  for (const d of TU_CHOI) it(`AC-1 từ chối «${d}»`, () => assert.equal(laDichVuDay(d), false, `ô «${d}»`));
+  it("AC-1 đối chứng đỏ: hàm giả chỉ xét tiền tố https bị gọi tên ở ô lách", () => {
+    const gia = (d: string) => d.startsWith("https://");
+    const lot = TU_CHOI.filter((d) => gia(d) !== laDichVuDay(d));
+    assert.ok(lot.includes("https://push.example.test/x") && lot.includes("https://fcm.googleapis.com.evil.test/x"), `ô lọt: ${lot.join(", ")}`);
+  });
+  it("AC-5 mọi ngân sách gửi cộng một lần gửi nhỏ hơn giữ chỗ một phút (migration 018)", () => {
+    assert.equal(PUSH_CLAIM_HOLD_MS, 60_000);
+    assert.ok(PUSH_SEND.deliverBudgetMs + PUSH_SEND.timeoutMs < PUSH_CLAIM_HOLD_MS, "lối giao");
+    assert.ok(PUSH_SEND.tickBudgetMs + PUSH_SEND.timeoutMs < PUSH_CLAIM_HOLD_MS, "nhịp chia");
   });
 });

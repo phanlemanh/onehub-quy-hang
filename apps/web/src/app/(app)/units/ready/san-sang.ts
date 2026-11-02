@@ -4,6 +4,7 @@ import { MAC_DINH_ANH_THAT_TOI_THIEU, missingFor, type Requirement, type Standar
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { dungLenhTrangThai, moTaLoi, type HangSua, type Lenh } from "../../inventory/cell-edit/lenh";
+import { ID_O_MA_CAN } from "../ho-so/ho-so";
 
 /** Hai trạng thái có lối lên Đang bán mà không phải khách bỏ cọc (Pending → Active giữ ở trình sửa ô). */
 const CO_NUT: readonly StandardStatus[] = ["Incomplete", "Hold"];
@@ -21,6 +22,9 @@ export function demAnhThat(anh: readonly Pick<UnitPhoto, "compartment" | "isSamp
 /** Chỗ chỉ tới cho một điều thiếu: mục Ảnh, ô giá ở đầu cột, hay ô của mục «Lần rao đang mở». */
 export type Dich = "ma" | "anh" | "gia" | "legalStatus" | "occupantType";
 export type DieuThieu = { nhan: string; dich: Dich };
+
+/** Neo trong hồ sơ của điều thiếu «Mã căn»: ô mã căn của hàng chưa có mã (ADR-0026) — bấm thì con trỏ tới ô. */
+export const NEO_MA_CAN = `#${ID_O_MA_CAN}`;
 
 /** Nhãn và chỗ của mỗi điều thiếu khi vào Đang bán; giá và điều kiện phí gộp một dòng «Giá về tay» (tới hàng 28). */
 const DIEU: Partial<Record<Requirement, DieuThieu>> = {

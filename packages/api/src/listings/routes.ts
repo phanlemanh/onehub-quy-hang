@@ -22,6 +22,7 @@ const ApiError = z.object({
   details: z.array(z.object({ path: z.string(), reason: z.string() })).optional(),
   missing: z.array(z.string()).optional(),
   reason: z.string().optional(),
+  conflictListingId: z.string().optional(),
 });
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
 const ok = (description: string, schema: z.ZodTypeAny) => ({ description, content: { "application/json": { schema } } });
@@ -32,6 +33,7 @@ const loi = {
   403: err("Chưa gắn sàn"),
   404: err("Không có hàng này ở sàn đang làm"),
   409: err("Chọn sàn, hoặc phiên bản cũ — đã có người sửa trước"),
+  422: err("Gắn mã căn: hàng đã có mã, hay căn đã có hàng đang mở khác của sàn"),
 };
 const Listing = z.object({ id: z.string() }).passthrough();
 const Command = z
@@ -63,7 +65,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
   }
   const tra = (c: Context, l: ApiErrorEntry) => c.json({ error: l.code }, l.status as 400);
   const tuChoi = (c: Context, r: Refusal) =>
-    c.json({ error: r.error.code, ...(r.details && { details: r.details }), ...(r.missing && { missing: r.missing }), ...(r.reason && { reason: r.reason }) }, r.error.status as 400);
+    c.json({ error: r.error.code, ...(r.details && { details: r.details }), ...(r.missing && { missing: r.missing }), ...(r.reason && { reason: r.reason }), ...(r.conflictListingId && { conflictListingId: r.conflictListingId }) }, r.error.status as 400);
 
   api.openapi(
     createRoute({
