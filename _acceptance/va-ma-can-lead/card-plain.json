@@ -1,0 +1,14 @@
+{
+  "feature_plain": "Lead mang mã căn chỉ toàn dấu như «---» bị từ chối ngay lúc nhập; lead cũ đã lỡ mang mã rác vẫn tạo được hàng và gửi lại được, không còn báo lỗi mỗi lần bấm.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ từ chối mã căn không có chữ hay số ở ô nhận lead, với đúng câu báo của hồ sơ hàng."},
+    {"id": "AC-2", "p": "Sẽ trả lỗi rõ cho lead như vậy và không ghi lead nào; mã đúng thì nhận như cũ."},
+    {"id": "AC-3", "p": "Sẽ cho lead cũ mang mã rác tạo được hàng chưa có mã căn; đầu chủ gắn mã sau ở hồ sơ căn."},
+    {"id": "AC-4", "p": "Sẽ cho lead đã trả mang mã rác gửi lại được; lead mới chỉ mang toà."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Sẽ KHÔNG sửa các lead cũ đang mang mã rác trong dữ liệu."},
+    {"id": "OOS-2", "p": "Sẽ KHÔNG đổi câu báo trên màn nhập lead — màn chỉ gửi mã đọc từ danh mục."},
+    {"id": "OOS-3", "p": "Sẽ KHÔNG thêm chặn ở cơ sở dữ liệu cho mã căn của lead."}
+  ]
+}
