@@ -9,8 +9,6 @@ status: verified
 design_doc: docs/superpowers/specs/2026-11-01-chuyen-khong-ket-khoa-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
-veto_state: da-veto
-veto_opened_at: 2026-11-01T15:25:00Z
 ---
 
 # Acceptance Contract: chuyen-khong-ket-khoa
