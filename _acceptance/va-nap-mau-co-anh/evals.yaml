@@ -1,0 +1,46 @@
+schema_version: 1
+feature_slug: va-nap-mau-co-anh
+# Một tệp bài kiểm: packages/db/seed/nap-ban-that.test.ts (cần DATABASE_URL tới Postgres đã áp migration).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; ca «kho-storage» có mặt và ok — trước lần nạp assert sàn mẫu vắng (0 dòng unit_photos, unit_photo_files của mọi mã sàn mẫu); kho lấy bằng chonKhoAnh(env đủ ba khoá giả, fetch ghi lại trả 200), không kho giả tự dựng; kho.ten = 's3'; số đếm chụp ngay sau lần nạp; lechKhoStorage trả [] — vế số: số ảnh sàn mẫu trong unit_photos = số ảnh mong đếm từ gói mẫu GOI (không đọc từ DB) = 29 và số lời PUT = 58 (assert giá trị cụ thể); vế đường: tập đường PUT BẰNG tập dựng bằng duongDoiTuong của API từ mã ảnh đọc lại × {original, thumb}, tiền tố endpoint/bucket; mọi lời gọi là PUT; unit_photo_files 0 dòng của sàn mẫu. Gỡ trong finally; cuối ca timSanMau = [] và 0 dòng unit_photos, unit_photo_files của mọi mã sàn mẫu ca đã dựng."
+    paths: ["packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; trong ca «kho-storage», đối chứng dương trên cùng gói mẫu từ sàn mẫu vừa gỡ sạch: chonKhoAnh(env NODE_ENV vắng, không khoá) → kho.ten = 'postgres'; nạp xong unit_photo_files có đúng 58 dòng của sàn mẫu (cùng câu đếm với E1); fetch ghi lại có 0 lời gọi. Byte: tập bội (biến thể, sha256) của 58 thân PUT ở lần nạp E1 BẰNG tập bội (biến thể, sha256) của 58 dòng unit_photo_files lần này. Chiều đỏ trên cùng dữ liệu: đổi một byte của một thân PUT biến thể thumb thì phép so byte trả lệch, thông điệp nêu biến thể 'thumb' và số thân khác (1)."
+    paths: ["packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.nap_mau
+    layer: backend-effect
+    expected: "exit 0; trong ca «kho-storage», hai chiều đỏ trên cùng gói mẫu, assert thông điệp: (1) lechKhoStorage trên kết quả đã chụp của lần nạp kho Postgres (E2) trả lệch chứa 'kho postgres', 'bảng byte có 58 dòng' và 'Storage nhận 0 lệnh ghi'; (2) từ sàn mẫu vừa gỡ sạch (assert vắng), nạp với kho Storage thật bọc để mỗi lần ghi cũng insert unit_photo_files; bộ bọc tự đếm số lần insert của nó và assert = 58; lechKhoStorage trên số đếm chụp ngay sau lần nạp này trả lệch chứa 'bảng byte có 58 dòng của sàn mẫu'. Không assert nào chỉ so độ dài danh sách lệch."
+    paths: ["packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.typecheck_db
+    expected: "exit 0; gói db (kể cả nap-ban-that.test.ts) qua kiểm kiểu trong npm run typecheck của gốc."
+    paths: ["packages/db/seed/nap-ban-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: node _acceptance/va-nap-mau-co-anh/thu/ranh-gioi.mjs
+    expected: "exit 0, in «0 tệp ngoài ranh giới» — từ điểm cắt nhánh với main, dưới packages/ và apps/ chỉ đúng packages/db/seed/nap-ban-that.test.ts đổi (bộ nạp, chonKhoAnh, khoS3, kho Postgres và mọi helper giữ nguyên); ngoài hai thư mục ấy chỉ tệp của hồ sơ, bản thiết kế và tệp sinh của kho. Đối chứng đỏ trong cùng lệnh: thêm tệp giả packages/api/src/photos/kho.ts vào danh sách thì nó bị gọi tên, không thì lệnh thoát 1 «thước không phân biệt được»."
+    paths: ["packages/**", "apps/**", "_acceptance/va-nap-mau-co-anh/thu/ranh-gioi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
