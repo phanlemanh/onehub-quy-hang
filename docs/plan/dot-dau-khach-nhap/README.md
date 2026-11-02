@@ -40,6 +40,8 @@ bản ghép `KhungLead` là đích, không `form-2`. Giữ: 33 `product-detail-5
 
 ## Phụ thuộc vào PR #61
 
+**Đã xong 03/11:** PR #61 gộp vào main (`3273a44`); lộ trình có 88, 89, `docGoi` không còn cảnh báo. Phần dưới giữ làm lịch sử.
+
 Bảy hàng của đợt — 31, 64, 65, 66, 67, 88, 89 — có ô Cổng Đáng ở PR #61 (`claude/cong-dang-88-89`, nháp), và PR ấy
 thêm hai hàng 88, 89 vào lộ trình cùng sửa `dung_tren` của 31, 65, 22 theo hàng 85. Gói này xếp tầng theo lộ trình
 của PR #61. **PR #61 phải gộp trước khi mở đợt.** Gộp chậm thì kit vẫn mở được (88, 89 khai tay đủ slug trong
