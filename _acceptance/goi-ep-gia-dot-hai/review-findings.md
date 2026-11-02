@@ -1,12 +1,14 @@
+# Review findings: goi-ep-gia-dot-hai (round 6)
+
 ## Trong hợp đồng
 
-Không có finding nào.
+Không có finding nào map vào AC ở round này.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **E6 chạy trên P2 thay vì P4 (căn riêng của bài), ghi xác nhận lên căn của E3b, và cả hai vẫn được ghi PASS mà không nêu lệch**
+- **E6 chạy trên P2 thay vì P4 (căn riêng của bài), ghi xác nhận lên căn của E3b, và cả hai vẫn được ghi PASS mà không nêu lệch (r5)**
   Người dùng thấy gì: Người dùng cuối không bị ảnh hưởng: tính năng ghi giữ giá hoạt động như đã hứa. Chỉ là hồ sơ nghiệm thu không nói rõ hai bài thử đã dùng nhầm căn của nhau, nên lần chấm sau có thể bị nhiễu và báo xanh chưa chắc chắn.
   Căn cứ: Hậu quả nhẹ vì không mất hay lộ dữ liệu của người dùng và chỉ làm độ tin cậy của hồ sơ chấm giảm; có thể ghi lại làm hạn chế đã biết và dựng lại dữ liệu thử sạch khi chấm lần sau.
   file: `_acceptance/goi-ep-gia-dot-hai/evidence/E6-network.txt`

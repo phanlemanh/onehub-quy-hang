@@ -1,2 +1,1 @@
-Driver: CDP script (khong co read_network_requests). Network khong doc duoc: n-a (driver).
-Cac GET /api/v1/listings/<P2> truc tiep tra 200 truoc va sau G.
+n-a (driver): CDP script (thu/e6-verify.mjs) khong doc network; ket qua GET /api/v1/listings/<P4> truoc/sau: 200/200/200

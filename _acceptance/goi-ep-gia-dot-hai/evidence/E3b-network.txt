@@ -1,7 +1,7 @@
-E3b chay tren http://localhost:3485 (dev server dang chay san cua day D; KHONG phai dev_server.url=3460 -> unscoped-partial). Khong start/stop server.
-Tat ca /api/v1 response 200, khong request that bai, khong loi console lien quan.
-B1 dau-chu-1 P1(0dd344f4 A-26.01): GET /listings/<P1>/owner 200 x2 body co floorPrice=2700000000; /catalog, /listings, /listings/<P1>: khong floorPrice.
-B2 dau-chu-1 P2(d41a5c73): /owner 200 floorPrice=null; NHUNG P2 da bi eval truoc ghi (xac nhan hom nay) -> trang tu ve /today, khong con khung. Thay bang P3 (4af4caa7 A-26.03, chua dung): khoi «Chua ghi gia day».
-B3 dau-chu-2 P1: /owner 200 x2 khong co floorPrice; cac loi goi khac khong floorPrice.
-Luu tru: localStorage (khoa qh:danh-muc:v1:<san>) va IndexedDB quy-hang-sync:<user> x2: khong chuoi 'floorPrice', khong '2700000000' ('floor' chi la so tang "floor":N).
-Luu y: lan chay dau cua B3 trang dau-chu-2 nhay sang can khac A-27.09 (khong phai P1); lan chay lai o lai P1 dung.
+E3b chay lai tren http://localhost:3485 (dev server dang chay san cua day D; KHONG phai dev_server.url=3460 -> unscoped-partial). Khong start/stop server. Driver: Playwright MCP (response listener /api/v1).
+Du lieu: dung-d-v9 (P1 e6f98257 A-29.01, P2 eac1b50d A-29.02).
+B1 dau-chu-1 P1: /listings/<P1>/owner 200 x2 floorPrice=2700000000; /catalog x2, /listings, /listings/<P1> x2: 200, khong floorPrice.
+B2 dau-chu-1 P2: /owner 200 x2 floorPrice=null; cac loi goi khac 200 khong floorPrice.
+B3 dau-chu-2 P1: /owner 200 x2 khong co khoa floorPrice; cac loi goi khac 200 khong floorPrice.
+Luu tru: localStorage 42849 ky tu: chi co "floor" (so tang), khong 'floorPrice', khong '2700000000'. IndexedDB quy-hang-sync:<user> x2: khong 'floor', khong '2700000000'.
+Console error: 0. Request that bai: 0.

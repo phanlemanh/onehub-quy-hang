@@ -1,4 +1,3 @@
-Run E5b (lan chay doc lap, context trinh duyet rieng, origin http://localhost:3485 - dev_server.url khai 3460 nen ngoai scope da khai; P3=7906f56a-5a37-4343-bad5-be723416a011, dung-d vong 7)
-Console errors: none
-Failed requests: none (21 lời gọi /api, tất cả 200)
-GET /api/v1/listings/P3 (x9), GET /api/v1/listings (x3), GET /api/v1/catalog (x3), GET .../P3/owner (x4), POST /api/v1/listings/P3/events 200 (x1, buoc 1 duy nhat)
+Run E5b vong 8 (Chrome rieng qua CDP, origin http://localhost:3485 - ngoai dev_server.url 3460; P3=bcf205c0-8fd2-4417-bcaf-a619e76d837d)
+Nguon: performance resource entries (khong co console/network tool trong driver CDP). Failed requests: none. Cac loi goi /api/v1/{catalog,listings,listings/P3,listings/P3/owner}: tat ca 200. POST events 200 (1 lan, buoc 1).
+Console errors: khong doc duoc (n-a)

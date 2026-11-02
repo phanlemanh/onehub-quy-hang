@@ -6,13 +6,11 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 75efd6fc917ea41071fd6dfe61f1a6758ce19ea6
+verified_commit: a56984665127916a78c90aeab45555b845053465
 human_signoff:
 ---
 
 # Evidence Report: goi-ep-gia-dot-hai
-
-Vòng 5. Chạy lại E8 (bước K trên Chrome riêng) và bảy lệnh suite; 19 eval còn lại mang từ vòng trước vì delta không chạm paths của chúng.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -34,272 +32,253 @@ Vòng 5. Chạy lại E8 (bước K trên Chrome riêng) và bảy lệnh suite;
 | E9 | AC-9 | script | PASS |
 | E9a | AC-9 | test | PASS |
 | E9b | AC-9 | ui-check | PASS |
-| E10 | AC-10 | test | PASS |
+| E10 | AC-10 | test | PASS (carry-forward từ round 2) |
 | E10b | AC-10 | ui-check | PASS |
 
 ## Evidence
 
-### Eval chạy lại vòng 5
-
-- eval: E8
-  run_id: minted-goi-ep-gia-dot-hai-E8-r5
+- eval: E1
+  run_id: minted-goi-ep-gia-dot-hai-E1-r6
   exit_code: 0
   baseline: n-a
-  verifier: scripts/verify-ui (driver CDP, bước K chạy trên Chrome riêng)
-  verified_at: 2026-11-02T17:58:40Z
-  screenshot: evidence/E8-step1.png
-  observed: |
-    E8-step1.png (/today trước K): màn Hôm nay tối, thanh trái liệt kê Lead mới / Nên gọi điều chỉnh giá / Cần gọi lại / Thiếu thông tin / Mới đổi; danh sách cuộn tới các dòng căn Toà A có «Giá giữ 15/20 ngày», «2,80 tỷ · Không bao phí», nút «Ghi cuộc gọi», «Còn · giữ giá», «Đối giá, trạng thái…»; có dòng A-27.08 · Toà A. Tiêu đề nhóm đã cuộn khỏi khung nên nhóm xác nhận bằng DOM: «Nên gọi điều chỉnh giá». E8-step3.png (/today sau K): giống hệt khung 1 — A-27.08 vẫn nằm trong cùng danh sách ép giá với các nút như cũ, không đổi trạng thái. Khớp Expected: sau K về /today, version 4 và 4 sự kiện không đổi, P8 vẫn ở nhóm «Nên gọi điều chỉnh giá».
-  network_observed: n-a (driver)
-  output: |
-    Bước 3: /today sau K → DOM: A-27.08 vẫn dưới tiêu đề «Nên gọi điều chỉnh giá»; GET cuối: version 4, 4 sự kiện → PASS.
-    Frame đã lưu: E8-step1.png, E8-step3.png; log bước 2: E8-step2.txt (bước K chạy trên Chrome riêng, không có frame).
-    Không có E8-network.txt: driver là script CDP, không có đường đọc network.
-    Mọi assertion pass.
-
-### Eval mang từ vòng trước
-
-- eval: E1
-  run_id: minted-goi-ep-gia-dot-hai-E1-r4
-  exit_code: 0
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
-
-- eval: E1b
-  run_id: minted-goi-ep-gia-dot-hai-E1b-r4
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E1b-1440.png
-  observed: |
-    E1b-1440.png (da Read): /today khuon 1440x900, cuon toi nhom «Nen goi dieu chinh gia» (huy hieu 29); dong A-26.01 · Toa A, «Gia giu 15 ngay», «2,80 ty · Khong bao phi», nut «Ghi cuoc goi», «Con · giu gia», «Doi gia, trang thai…»; cac dong lead phia tren co «Ghi cuoc goi», «Da goi», «Tra lai · So khong lien lac duoc», «Mo so». E1b-step1.png: chi tiet Goi ep gia, chip «Nen goi dieu chinh gia», «Dang ban», tieu de «A-26.01 · Toa A · 2,8 ty · khong bao phi», dong phu «Len bang 38 ngay · doi gia gan nhat 23 ngay truoc»; khoi «KET QUA CUOC GOI» H/G/B/K; «LICH SU TRA GIA» 4 dong (Con · giu gia, Ha 2,95 ty → 2,8 ty, Len bang 2,95 ty, Tao ho so); «GIA DAY CHU TUNG NOI · NOI BO 2,7 ty». E1b-khong-thay.png (= step2): khoi bao «Khong thay can nay trong kho cua ban» va nut «Ve Hom nay». E1b-step3.png: Goi khai thac cua lead L1 (the A-09.01 · Toa A, «Da nhan», chu nha muon 2,6 ty da bao phi, «Da goi G», Danh sach hoi 0/5). Tat ca khop Expected.
-  network_observed: clean
+    npm test -w @quy-hang/web: ca «ép giá: đầu màn» có mặt và ok
+    ℹ duration_ms 1299.660334
 
 - eval: E2
-  run_id: minted-goi-ep-gia-dot-hai-E2-r4
+  run_id: minted-goi-ep-gia-dot-hai-E2-r6
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
-
-- eval: E2b
-  run_id: E2b-20261103-0047
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E2b-step1.png
-  observed: |
-    Frame E2b-step1.png (online, /units/call?hang=P1, P1 = A-26.01 từ dung-d lượt 6): khối «LỊCH SỬ TRẢ GIÁ» có 4 dòng, mới nhất ở trên, mỗi dòng có người và ngày giờ. (1) «Còn · giữ giá · đã xác nhận với chủ», Đầu chủ · 00:44 19/10. (2) «Hạ 2,95 tỷ → 2,8 tỷ · không bao phí · đã xác nhận với chủ», 00:44 11/10. (3) «Lên bảng 2,95 tỷ · không bao phí · đã xác nhận với chủ», 00:44 26/09. (4) «Tạo hồ sơ», 00:44 24/09, không có nhãn xác nhận. Khớp dãy dung-d.mjs in («Còn · giữ giá» · «Hạ 2,95→2,8» · «Lên bảng 2,95» · «Tạo hồ sơ»). Ngày khớp mốc 15/23/38/40 ngày trước 03/11. Phí hiện đủ ở các dòng giá, nhãn «đã xác nhận với chủ» chỉ ở ba dòng có dấu, đúng như dựng. Dưới khối có «GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ 2,7 tỷ». Frame E2b-step2.png (offline bật bằng CDP, không tải lại, marker window.__m còn nguyên, navigator.onLine=false, chờ 12 giây): có biểu ngữ «Đang xem bản đã tải — mất mạng / Thay đổi được giữ trên máy và gửi đi khi có mạng lại.» Khối «LỊCH SỬ TRẢ GIÁ» vẫn hiện nguyên 4 dòng giống online (cùng nội dung, ngày giờ, nhãn xác nhận) và giá đáy 2,7 tỷ. Đối chiếu Expected: khớp ở cả hai bước.
-  network_observed: clean
-
-- eval: E3
-  run_id: minted-goi-ep-gia-dot-hai-E3-r4
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
+    npm test -w @quy-hang/web: ca «lịch sử trả giá: ma trận sự kiện» có mặt và ok
+    ℹ duration_ms 1299.660334
 
 - eval: E3a
-  run_id: minted-goi-ep-gia-dot-hai-E3a-r4
+  run_id: minted-goi-ep-gia-dot-hai-E3a-r6
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
-
-- eval: E3b
-  run_id: minted-goi-ep-gia-dot-hai-E3b-r4
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E3b-gia-day.png
-  observed: |
-    E3b-step1.png (dau-chu-1, P1): đầu màn «A-26.01 · Toà A · 2,8 tỷ · không bao phí», «Lên bảng 38 ngày · đổi giá gần nhất 23 ngày trước», lịch sử trả giá 4 dòng, dưới có khối «GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ» «2,7 tỷ» và «thấp hơn giá về tay hiện tại 3,6%» — khớp expected. E3b-step2-P3.png (dau-chu-1, căn thay P2: A-26.03): cùng khối nhãn «GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ» với chữ «Chưa ghi giá đáy» — khớp expected cho P2 (nhưng là căn thay thế). E3b-step3.png và E3b-khac.png (dau-chu-2, P1): đầu màn A-26.01 cùng lịch sử trả giá, rồi chuyển thẳng sang «Danh sách hỏi», không có khối giá đáy — khớp expected.
-  network_observed: unscoped-partial
+    npm test -w @quy-hang/web: ca «giá đáy: khối theo trả lời» có mặt và ok
+    ℹ duration_ms 1299.660334
 
 - eval: E4
-  run_id: minted-goi-ep-gia-dot-hai-E4-r4
+  run_id: minted-goi-ep-gia-dot-hai-E4-r6
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
+    npm test -w @quy-hang/web: ca «kết quả gọi: phím» có mặt và ok
+    ℹ duration_ms 1299.660334
 
 - eval: E5
-  run_id: minted-goi-ep-gia-dot-hai-E5-r4
+  run_id: minted-goi-ep-gia-dot-hai-E5-r6
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
-
-- eval: E5b
-  run_id: E5b-vong7-P3-7906f56a
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E5b-step1.png
-  observed: |
-    step0: căn A-27.03 2,8 tỷ không bao phí, chưa đổi giá lần nào. step1: ô Hạ giá «2,72 tỷ», Alt+2 sáng, dòng «Hiểu là 2,72 tỷ · không bao phí · trước 2,8 tỷ · −3% · Enter ghi». step1b-da-gui: đầu màn «2,72 tỷ», khung «Đã ghi: Hạ giá 2,72 tỷ · không bao phí», lịch sử có dòng «Hạ 2,8 tỷ → 2,72 tỷ · đã xác nhận với chủ», thanh trên «Đã đồng bộ · 00:49». hoi-lai (mở lại trang, 2 tỷ): «Hiểu là 2 tỷ · không bao phí · trước 2,72 tỷ · −26%» và hỏi «Đổi 2,72 tỷ · không bao phí → 2 tỷ · không bao phí (−26%)?» với nút Ghi Enter / Huỷ Esc. step2-esc: khung hỏi lại biến mất, giá đầu màn vẫn 2,72 tỷ, không có dòng «Đã ghi». step3-abc: chữ đỏ «Chưa hiểu «abc» — gõ như 2,75 tỷ hoặc 950 triệu», giá đầu màn 2,72 tỷ, lịch sử không thêm dòng. Khớp Expected, không có chữ khuyên mức hạ.
-  network_observed: unscoped-partial
-
-- eval: E5c
-  run_id: minted-goi-ep-gia-dot-hai-E5c-r4
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E5c-mat-mang.png
-  observed: |
-    I read the two key frames and the step texts. E5c-mat-mang.png: the top-bar indicator reads «Mất mạng · 1 thay đổi chờ gửi». A banner says «Đang xem bản đã tải — mất mạng / Thay đổi được giữ trên máy và gửi đi khi có mạng lại». The Hạ giá input holds «2,75 tỷ». Under it: «Hiểu là 2,75 tỷ · không bao phí · trước 2,75 tỷ · 0% · Enter ghi». The result block reads «Đã ghi: Hạ giá 2,75 tỷ · không bao phí». The header still shows 2,75 tỷ, and the history has no new row yet, which fits the change being local only. E5c-tu-choi.png: the indicator is a red «1 căn cần xem». The listing shows the badge «Đã bán». A red result block reads «Lần ghi chưa lên máy chủ: căn đã bán / Thao tác của bạn đang chờ ở «Cần xem» — chọn giữ hay bỏ ở đó.», with an «Mở Cần xem» button. The line «Đã ghi» is replaced. The history shows «Đã bán 2,75 tỷ · Trưởng nhóm», then «Hạ 2,8 → 2,75 tỷ», then «Lên bảng 2,8 tỷ», then «Tạo hồ sơ». E5c-step2.png (online again): the indicator is «Đã đồng bộ» and the history gained «Hạ 2,8 tỷ → 2,75 tỷ». All frames match Expected.
-  network_observed: clean
-
-- eval: E6
-  run_id: minted-goi-ep-gia-dot-hai-E6-r4
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E6-giu-gia.png
-  observed: |
-    E6-step1-cuon.png (/today): cac dong A-26.02 · Toa A, «Gia giu 20 ngay», 2,80 ty · Khong bao phi, nut «Ghi cuoc goi» + «Con · giu gia», nam trong nhom ep gia, truoc tieu de «Can goi lai 5» (doi chung duong dat). E6-step2-chon.png (/units/call?hang=P2): nhan «Nen goi dieu chinh gia» + «Dang ban», «A-26.02 · Toa A · 2,8 ty · khong bao phi», «Len bang 20 ngay · chua doi gia lan nao»; «G Giu gia» duoc chon; dong «Ghi «Con · giu gia» — tinh la vua xac nhan voi chu nha»; lich su chi co «Len bang 2,8 ty» va «Tao ho so». E6-giu-gia.png / E6-step2.png (sau Enter): «Da ghi: Con · giu gia», chi bao «Da dong bo · 00:47», lich su co dong moi tren cung «Con · giu gia · da xac nhan voi chu · Dau chu · 00:47 03/11». E6-step3-cuon.png (/today sau G): A-26.02 · Toa A nam o nhom «Thieu thong tin» («Thieu: noi that, tai chinh»), khong con o nhom ep gia. Khop Expected.
-  network_observed: n-a (driver)
+    npm test -w @quy-hang/web: ca «hạ giá: luật sửa giá» có mặt và ok
+    ℹ duration_ms 1299.660334
 
 - eval: E7
-  run_id: minted-goi-ep-gia-dot-hai-E7-r4
+  run_id: minted-goi-ep-gia-dot-hai-E7-r6
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
-
-- eval: E7b
-  run_id: E7b-r4-20261103-0049
-  exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E7b-step1.png
-  observed: |
-    E7b-step1.png: man «Gọi ép giá» A-27.05 · Toà A · 2,8 tỷ · không bao phí, nhan «Đang bán»; khoi KET QUA CUOC GOI co «B Đã cọc / bán…» dang mo, hang con «1 Đã cọc» duoc chon, nut «Ghi Enter» hien (chua ghi). E7b-thieu-gia.png: A-27.06, B+2 da chon «Sàn mình bán», hien o «Giá chốt, vd 2,75 tỷ» (rong, co focus) va o ngay 03/11/2026, chu do «Cần giá chốt» duoi nut Ghi, chua co «Đã ghi». E7b-step2-sau-ghi.png: o gia chot «2,75 tỷ», thong bao «Đã ghi: Sàn mình bán», nhan dau man doi «Đã bán», lich su co dong moi «Đã bán 2,75 tỷ · đã xác nhận với chủ» 00:48 03/11. E7b-step3.png: A-27.07, «Đã ghi: Chủ bán nơi khác», nhan «Ngừng hẳn», lich su «Ngừng hẳn — chủ bán nơi khác» 00:49 03/11. Khop Expected: P5 Pending; P6 bao can gia chot roi Closed 2750000000 ngay 2026-11-03 (hom nay); P7 Withdrawn sold_elsewhere.
-  network_observed: clean
-
-- eval: E9
-  run_id: minted-goi-ep-gia-dot-hai-E9-r4
-  exit_code: 0
-  verifier: config:executors.script.lint
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
+    npm test -w @quy-hang/web: ca «đã cọc / bán: ba lối» có mặt và ok
+    ℹ duration_ms 1299.660334
 
 - eval: E9a
-  run_id: minted-goi-ep-gia-dot-hai-E9a-r4
+  run_id: minted-goi-ep-gia-dot-hai-E9a-r6
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
+  verified_at: 2026-11-02T18:08:19Z
   output: |
-    carry-forward từ round 4 — delta không chạm paths của eval
+    npm test -w @quy-hang/web: mọi ca của hàng 28 trong units/call/*.test.ts có mặt và ok
+    ℹ duration_ms 1299.660334
 
-- eval: E9b
-  run_id: E9b
+- eval: E3
+  run_id: minted-goi-ep-gia-dot-hai-E3-r6
   exit_code: 0
-  verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
-  screenshot: evidence/E9b-step1.png
-  observed: |
-    E9b-ep-gia-1440.png (đã Read): breadcrumb Hôm nay > Gọi ép giá; cột trung tâm rộng khoảng 768px căn giữa vùng nội dung bên phải thanh góc nhìn. Từ trên xuống: thẻ đầu màn (nhãn Nên gọi điều chỉnh giá, Đang bán, tiêu đề A-26.01 · Toà A · 2,8 tỷ · không bao phí, Lên bảng 38 ngày · đổi giá gần nhất 23 ngày trước); Kết quả cuộc gọi (H Hạ giá, G Giữ giá, B Đã cọc / bán…, K Không nghe máy); Lịch sử trả giá 4 mốc rồi Giá đáy chủ từng nói · nội bộ 2,7 tỷ trong cùng thẻ; Danh sách hỏi Mức đủ 3/5; Tính giá; Cùng loại trong toà (so giá, bảng). Khớp Expected. E9b-khai-thac-1440.png (đã Read): breadcrumb Hôm nay > Gọi khai thác; cùng cột căn giữa; thẻ lead (Đã nhận, Nhập 14:31 02/11, A-09.01 · Toà A, loại căn 1PN, 54,2 m², chủ nhà muốn 2,6 tỷ đã bao phí, nút Đã gọi G) → Danh sách hỏi 0/5 → Tính giá → Cùng loại trong toà · 1PN; không có khối kết quả gọi hay lịch sử. Khớp. E9b-375.png (đã Read): một cột full chiều rộng, thanh trên Căn call, Hôm nay, thẻ đầu màn → Kết quả cuộc gọi → Lịch sử trả giá + giá đáy 2,7 tỷ → Danh sách hỏi → Tính giá → Cùng loại trong toà, thanh nav dưới Hôm nay/Bảng hàng/Tôi; bảng so giá bị cắt cột phải trong thẻ nhưng trang không tràn. Khớp. Các frame step1/step2/1280 cùng bố cục (probe số đo xác nhận).
-  network_observed: clean
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-02T18:08:19Z
+  output: |
+    npm run db:migrate && npm run db:test: ca «chủ nhà: giá đáy theo người xem» có mặt và ok
+    ℹ duration_ms 38486.218458
+
+- eval: E9
+  run_id: minted-goi-ep-gia-dot-hai-E9-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.script.lint
+  verified_at: 2026-11-02T18:08:19Z
+  output: |
+    npm run lint
+    chuẩn giao diện: đạt
 
 - eval: E10
   run_id: minted-goi-ep-gia-dot-hai-E10-r2
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
   verified_at: 2026-11-02T17:11:08Z
   carried_from_round: 2
-  output: |
-    carry-forward từ round 2 — delta không chạm paths của eval
+  # carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E1b
+  run_id: minted-goi-ep-gia-dot-hai-E1b-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E1b-1440.png
+  observed: |
+    E1b-1440.png (Hôm nay 1440x900, cuộn): cột trái Lead mới/Nên gọi điều chỉnh giá/Cần gọi lại/Thiếu thông tin/Mới đổi; danh sách các dòng căn Toà A, dòng A-21.01 · Toà A «Giá giữ 16 ngày · 2,80 tỷ · Không bao phí» với ba nút «Ghi cuộc gọi», «Còn · giữ giá», «Đổi giá, trạng thái…»; mọi dòng khác cùng ba nút, không nút nhãn «Gọi». E1b-step1.png: /units/call?hang=P1, nhãn nhóm «Nên gọi điều chỉnh giá» + «Đang bán», «A-21.01 · Toà A · 2,8 tỷ · không bao phí», «Lên bảng 38 ngày · đổi giá gần nhất 23 ngày trước», khối KẾT QUẢ CUỘC GỌI (Hạ giá/Giữ giá/Đã cọc / bán…/Không nghe máy), LỊCH SỬ TRẢ GIÁ 4 dòng (Còn · giữ giá; Hạ 2,95 tỷ → 2,8 tỷ; Lên bảng 2,95 tỷ; Tạo hồ sơ), giá đáy 2,7 tỷ thấp hơn 3,6%. E1b-khong-thay.png (=step2): ô báo «Không thấy căn này trong kho của bạn» và nút «Về Hôm nay», trang trống còn lại. E1b-step3.png: chế độ khai thác lead L1 — «CHỦ NHÀ MUỐN 2,6 tỷ, đã bao phí», «Nhu cầu: Bán», nút «Đã gọi G», khối «Quay số trên điện thoại», «Danh sách hỏi Mức đủ 0/5», ô Giá và phí «2,6 tỷ». Tất cả khớp Expected.
+  network_observed: clean
+
+- eval: E2b
+  run_id: minted-goi-ep-gia-dot-hai-E2b-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E2b-step1.png
+  observed: |
+    E2b-step1.png (online, 1440x1000, da doc): dau man «Nen goi dieu chinh gia · Dang ban», «A-28.01 · Toa A · 2,8 ty · khong bao phi», «Len bang 38 ngay · doi gia gan nhat 23 ngay truoc»; khoi «LICH SU TRA GIA» dong theo thu tu moi nhat tren: «Con · giu gia · da xac nhan voi chu — Dau chu · 01:07 19/10», «Ha 2,95 ty -> 2,8 ty · khong bao phi · da xac nhan voi chu — Dau chu · 01:07 11/10», «Len bang 2,95 ty · khong bao phi · da xac nhan voi chu — 01:07 26/09», «Tao ho so — 01:07 24/09»; ben duoi «GIA DAY CHU TUNG NOI · NOI BO 2,7 ty». Chi bao dong bo «Da dong bo». Khop dung-d.mjs. E2b-step2.png (offline, khong tai lai, da doc): chi bao tren cung «Mat mang · dang xem ban tren may», banner «Dang xem ban da tai — mat mang / Thay doi duoc giu tren may va gui di khi co mang lai.»; khoi «LICH SU TRA GIA» van hien du 4 dong y het frame online (cung ngay gio, nhan da xac nhan voi chu). E2b-lich-su.png va E2b-mat-mang.png la ban trung cua hai frame tren.
+  network_observed: clean
+
+- eval: E3b
+  run_id: minted-goi-ep-gia-dot-hai-E3b-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E3b-step1.png
+  observed: |
+    E3b-step1.png (dau-chu-1, P1 A-29.01): đầu màn «A-29.01 · Toà A · 2,8 tỷ · không bao phí», lịch sử trả giá 4 dòng, dưới có khối «GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ» «2,7 tỷ» và «thấp hơn giá về tay hiện tại 3,6%» — khớp expected. E3b-step2.png (dau-chu-1, P2 A-29.02): khối cùng nhãn với «Chưa ghi giá đáy» — khớp. E3b-step3.png (dau-chu-2, P1): đầu màn A-29.01 cùng lịch sử trả giá, rồi chuyển thẳng sang «Danh sách hỏi», không có khối giá đáy — khớp. E3b-gia-day.png và E3b-khac.png là bản chụp trùng step1 và step3.
+  network_observed: unscoped-partial
+
+- eval: E5b
+  run_id: E5b-vong8-P3-bcf205c0
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E5b-step1.png
+  observed: |
+    E5b-step1.png: căn A-28.03 Toà A 2,8 tỷ không bao phí, chưa đổi giá lần nào. Ô Hạ giá chứa «2,72 tỷ», dòng «Hiểu là 2,72 tỷ · không bao phí · trước 2,8 tỷ · −3% · Enter ghi». Khớp expected. E5b-step1b-da-gui.png: đầu màn «2,72 tỷ · không bao phí», khung «Đã ghi: Hạ giá 2,72 tỷ · không bao phí», lịch sử có dòng «Hạ 2,8 tỷ → 2,72 tỷ · đã xác nhận với chủ», thanh trên «Đã đồng bộ · 01:10». E5b-hoi-lai.png (mở lại trang, H, «2 tỷ», Enter): «Hiểu là 2 tỷ · không bao phí · trước 2,72 tỷ · −26%» và hỏi «Đổi 2,72 tỷ · không bao phí → 2 tỷ · không bao phí (−26%)?» với nút Ghi Enter / Huỷ Esc. Khớp expected. E5b-step2-esc.png: khung hỏi lại biến mất, không có «Đã ghi», giá đầu màn vẫn 2,72 tỷ, lịch sử không thêm dòng. E5b-step3-abc.png (tải lại trang, H, «abc», Enter): chữ đỏ «Chưa hiểu «abc» — gõ như 2,75 tỷ hoặc 950 triệu», giá đầu màn 2,72 tỷ, lịch sử không thêm dòng. Không frame nào có chữ gợi ý mức nên hạ (chữ «gõ như 2,75 tỷ hoặc 950 triệu» là ví dụ cú pháp nhập, không phải khuyên mức hạ).
+  network_observed: unscoped-partial
+
+- eval: E5c
+  run_id: E5c-r8-P9-c8d9021f
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E5c-mat-mang.png
+  observed: |
+    E5c-mat-mang.png (đã đọc): màn ép giá hồ sơ A-28.09 · Toà A; chỉ báo đầu trang «Mất mạng · 1 thay đổi chờ gửi» (biểu tượng mất sóng); băng «Đang xem bản đã tải — mất mạng / Thay đổi được giữ trên máy và gửi đi khi có mạng lại»; tiêu đề căn đã đổi sang 2,75 tỷ · không bao phí; ô giá «2,75 tỷ», dòng hiểu «Hiểu là 2,75 tỷ · không bao phí … Enter ghi»; khối kết quả «Đã ghi: Hạ giá 2,75 tỷ · không bao phí» (ghi trên máy); lịch sử chưa có dòng hạ giá mới (chưa lên máy chủ). Khớp expected phần mất mạng. E5c-tu-choi.png (đã đọc): chỉ báo đầu trang «1 căn cần xem» (đỏ); thẻ trạng thái «Đã bán»; khối kết quả KHÔNG còn «Đã ghi» mà hiện «Lần ghi chưa lên máy chủ: căn đã bán / Thao tác của bạn đang chờ ở «Cần xem» — chọn giữ hay bỏ ở đó.» + nút «Mở Cần xem»; lịch sử có «Đã bán 2,75 tỷ · Trưởng nhóm» trên «Hạ 2,8 tỷ → 2,75 tỷ · Đầu chủ». Khớp expected phần từ chối. Các frame phụ E5c-step0-online/step1/step2/step3/step3a/step3b chưa Read từng tệp nhưng nội dung đã đối chiếu qua text DOM cùng lượt.
+  network_observed: clean
+
+- eval: E6
+  run_id: minted-goi-ep-gia-dot-hai-E6-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E6-giu-gia.png
+  observed: |
+    E6-giu-gia.png: màn Gọi ép giá, đầu màn «A-28.04 · Toà A · 2,8 tỷ · không bao phí», nhãn «Nên gọi điều chỉnh giá» + «Đang bán»; trong KẾT QUẢ CUỘC GỌI «G Giữ giá» được chọn, dòng «Ghi «Còn · giữ giá» — tính là vừa xác nhận với chủ nhà.» và nút Ghi Enter, chưa có «Đã ghi». E6-step2-sau-gui.png: sau Enter hiện «Đã ghi: Còn · giữ giá», chỉ báo «Đã đồng bộ · 01:10», lịch sử có dòng mới trên cùng «Còn · giữ giá · đã xác nhận với chủ · 01:10 03/11». E6-step1.png (/today trước, 72 việc): khung nhìn đầu trang chỉ thấy nhóm Lead mới, nhóm ép giá nằm dưới màn nên P4 không thấy trong ảnh; bằng chứng P4 có ở Hôm nay là DOM (link hang=P4 có 1) và căn cùng bộ P5 nằm dưới tiêu đề «Nên gọi điều chỉnh giá» (42). E6-step3.png (/today sau, 71 việc): giảm một việc, link hang=P4 còn 0. Khớp Expected.
+  network_observed: n-a (driver)
+
+- eval: E7b
+  run_id: E7b-v9-20261103-0113
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E7b-step1.png
+  observed: |
+    Đã mở và đọc: E7b-step1.png (P5 = A-27.05 trong bản dựng v9 là A-29.05): đầu màn "A-29.05 · Toà A · 2,8 tỷ · không bao phí", nhãn "Đang bán"; khối KẾT QUẢ CUỘC GỌI có "B Đã cọc / bán…" đang mở, hàng con "1 Đã cọc" được chọn (viền sáng), nút "Ghi Enter" hiện, chưa có chữ "Đã ghi". E7b-thieu-gia.png (P6 = A-29.06): B+2 đã chọn "2 Sàn mình bán", hiện ô "Giá chốt, vd 2,75 tỷ" (rỗng, có focus) và ô ngày 03/11/2026, chữ đỏ "Cần giá chốt" dưới nút Ghi, chưa "Đã ghi", nhãn vẫn "Đang bán". E7b-step2.png: ô giá "2,75 tỷ", thông báo "Đã ghi: Sàn mình bán", nhãn đầu màn đổi "Đã bán", lịch sử có dòng mới "Đã bán 2,75 tỷ · đã xác nhận với chủ" 01:13 03/11. E7b-step3.png (P7 = A-29.07): "Đã ghi: Chủ bán nơi khác", nhãn "Ngừng hẳn", lịch sử "Ngừng hẳn — chủ bán nơi khác · đã xác nhận với chủ" 01:13 03/11. Khớp Expected.
+  network_observed: clean
+
+- eval: E8
+  run_id: minted-goi-ep-gia-dot-hai-E8-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E8-step1.png
+  observed: |
+    E8-step1.png (/today?nhom=price_adjustment, trước K): màn Hôm nay tối, mục «Nên gọi điều chỉnh giá» đang chọn ở thanh trái; danh sách có dòng «A-28.08 · Toà A», «Giá giữ 20 ngày», «2,80 tỷ · Không bao phí», nút «Ghi cuộc gọi» và «Còn · giữ giá», «Đối giá, trạng thái…» — khớp P8 và nằm trong nhóm ép giá. E8-step3.png (/today sau K): cùng nhóm, dòng «A-28.08 · Toà A · Giá giữ 20 ngày · 2,80 tỷ · Không bao phí» vẫn còn với «Ghi cuộc gọi» / «Còn · giữ giá» — P8 vẫn ở nhóm ép giá. E8-step2.txt (bước K, Chrome riêng, không có khung ảnh): các dòng URL đều /today, trạng thái không đổi.
+  network_observed: n-a (driver)
+
+- eval: E9b
+  run_id: minted-goi-ep-gia-dot-hai-E9b-r6
+  exit_code: 0
+  baseline: n-a
+  verifier: ui-check
+  verified_at: 2026-11-02T18:08:19Z
+  screenshot: evidence/E9b-step1.png
+  observed: |
+    E9b-ep-gia-1440.png (1440 rộng, chụp cao 3000): thanh trên cùng, thanh bên trái, một cột giữa trong khung. Từ trên xuống: breadcrumb «Hôm nay › Gọi ép giá»; đầu màn có nhãn «Nên gọi điều chỉnh giá», «Đang bán», tiêu đề «A-21.01 · Toà A · 2,8 tỷ · không bao phí», «Lên bảng 38 ngày · đổi giá gần nhất 23 ngày trước»; KẾT QUẢ CUỘC GỌI (Hạ giá/Giữ giá/Đã cọc-bán/Không nghe máy); LỊCH SỬ TRẢ GIÁ (4 dòng: Còn·giữ giá, Hạ 2,95→2,8 tỷ, Lên bảng 2,95 tỷ, Tạo hồ sơ) ngay sau đó GIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ 2,7 tỷ; Danh sách hỏi (Mức đủ 3/5); Tính giá; Cùng loại trong toà (bảng so giá). Khớp expected.
+    E9b-khai-thac-1440.png: breadcrumb «Hôm nay › Gọi khai thác»; thẻ lead (Đã nhận, A-09.01 · Toà A, 1PN, 54,2 m², chủ nhà muốn 2,6 tỷ đã bao phí, nút Đã gọi); khối nhỏ «Quay số trên điện thoại»; Danh sách hỏi (Mức đủ 0/5); Tính giá; Cùng loại trong toà · 1PN. Khớp thứ tự expected, một cột căn giữa.
+    E9b-375.png: một cột tràn rộng 375, header «Cân call»/tiêu đề di động, thứ tự: đầu màn → Kết quả cuộc gọi → Lịch sử trả giá + Giá đáy → Danh sách hỏi → Tính giá → Cùng loại; không thấy cuộn ngang trang. Khớp expected.
+  network_observed: n-a (driver)
 
 - eval: E10b
-  run_id: minted-goi-ep-gia-dot-hai-E10b-r4
+  run_id: E10b-r6-2026-11-03-dayD-3485
   exit_code: 0
+  baseline: n-a
   verifier: ui-check
-  verified_at: 2026-11-02T17:46:07Z
-  carried_from_round: 4
-  # carry-forward từ round 4 — delta không chạm paths của eval
+  verified_at: 2026-11-02T18:08:19Z
   screenshot: evidence/E10b-step1.png
   observed: |
-    Frames được mở bằng Read. step1 (telesales, cũng lưu thành E10b-telesales.png): thanh đầu có «[Mẫu] Sàn thử», «Hôm nay», «+ Lead», «Đã đồng bộ · 00:47», avatar TE. Thân trang là màn «Không thấy trang này / Địa chỉ không còn, hoặc bạn không có quyền xem.» và nút «Về Hôm nay». Không có nội dung căn nào. step2 (quan-tri): vỏ có rail trái, avatar QU, cùng màn «Không thấy trang này». step3 (truong-nhom): vỏ đầy đủ với cột «Góc nhìn của đội/của tôi» và «Độ tươi», thân trang vẫn là «Không thấy trang này». step4 (dau-chu-1): trang «Gọi ép giá» đầy đủ, A-26.01 · Toà A · 2,8 tỷ · không bao phí, nhãn «Nên gọi điều chỉnh giá», «Lịch sử trả giá», khối «Giá đáy chủ từng nói · nội bộ 2,7 tỷ». Không thấy số điện thoại chủ hay ảnh sổ trên màn. Khớp Expected về hiển thị; telesales, quản trị và trưởng nhóm đều nhận màn không thấy (notFound()), đầu chủ thì thấy trang.
+    Cả 4 frame đã mở bằng Read. step1 và E10b-telesales.png (telesales, giống hệt): vỏ chỉ có «[Mẫu] Sàn thử», «Hôm nay», «+ Lead», «Đã đồng bộ · 01:09», avatar TE. Thân trang là màn «Không thấy trang này / Địa chỉ không còn, hoặc bạn không có quyền xem.» kèm nút «Về Hôm nay», không có nội dung căn nào. step2 (quan-tri): vỏ có rail trái và avatar QU, cùng màn «Không thấy trang này». step3 (truong-nhom): vỏ đầy đủ có cột «Góc nhìn của đội/của tôi», ô tìm «Gõ mã căn…», avatar TR, thân trang vẫn là «Không thấy trang này». step4 (dau-chu-1, avatar DA): trang Gọi ép giá của căn A-29.01 hiện đủ, gồm thẻ «Nên gọi điều chỉnh giá / Đang bán», «Kết quả cuộc gọi» (Hạ giá, Giữ giá, Đã cọc/bán…, Không nghe máy), «Lịch sử trả giá» và khối «Giá đáy chủ từng nói · nội bộ 2,7 tỷ». Không thấy số điện thoại chủ hay ảnh sổ ở bất kỳ frame nào. Khớp Expected. Lưu ý: ba vai bị chặn nhận màn «Không thấy trang này» trong vỏ app, trạng thái tài liệu HTTP là 200 chứ không phải 404 thật; các vòng 1 đến 5 đã chấp nhận hiện tượng này (màn không-thấy là hiển thị 404 của app).
   network_observed: unscoped-partial
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_core-r5
+  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_core-r6
   exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
+  verified_at: 2026-11-02T18:08:19Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_api-r5
+  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_api-r6
   exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
+  verified_at: 2026-11-02T18:08:19Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_connect-r5
+  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_connect-r6
   exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
+  verified_at: 2026-11-02T18:08:19Z
 
 - cmd: npm run test:hooks
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-test_hooks-r5
+  run_id: minted-goi-ep-gia-dot-hai-SUITE-test_hooks-r6
   exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
+  verified_at: 2026-11-02T18:08:19Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_ui_lint-r5
+  run_id: minted-goi-ep-gia-dot-hai-SUITE-npm_test_w_quy_hang_ui_lint-r6
   exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
+  verified_at: 2026-11-02T18:08:19Z
 
 - cmd: npm run typecheck
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-typecheck-r5
+  run_id: minted-goi-ep-gia-dot-hai-SUITE-typecheck-r6
   exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
-
-- cmd: npm run lint
-  run_id: minted-goi-ep-gia-dot-hai-SUITE-lint-r5
-  exit_code: 0
-  baseline: n-a
-  verified_at: 2026-11-02T17:58:40Z
+  verified_at: 2026-11-02T18:08:19Z
 
 ## Known limits
 
@@ -307,13 +286,16 @@ Vòng 5. Chạy lại E8 (bước K trên Chrome riêng) và bảy lệnh suite;
 
 ## Analyst
 
-none — mọi eval feature đều red trên baseline (có phân biệt)
+carried tu round 5 — baseline khong do lai round nay
+
+none — khong co eval nao duoc liet ke la khong-phan-biet (baseline round nay khong do lai; moi eval ghi baseline n-a).
 
 ## Variance
 
-none — mọi eval nhiều lượt chạy đều đồng nhất
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 4: E8 bị bác — bước K của E8 chạy trên trình duyệt dùng chung nên nhiễu chéo với bài khác; sửa thước, bước K chạy trên Chrome riêng.
-Round 5: chạy lại E8 và bảy lệnh suite, tất cả xanh; 19 eval còn lại mang từ round 4 (E10 từ round 2) vì delta không chạm paths.
+Round 4: E8 REJECT do trình duyệt dùng chung; sửa thước, bước K chạy trên Chrome riêng.
+Round 5: PASS; hợp đồng đã chấm.
+Round 6: PASS sau gộp main (hàng 30 quay số); E10 carry-forward từ round 2, các eval còn lại chạy lại trên bản gộp.
