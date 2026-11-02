@@ -88,6 +88,7 @@ describe("ảnh chuẩn", () => {
 const BO_CUC_NHOM = {
   "bang-hang": "tran",
   "cai-dat-san": "doc",
+  "cuoc-goi": "ho-so",
   "ho-so-can": "ho-so",
   "hom-nay-dau-chu": "tran",
   "lead-cua-toi": "danh-sach-chi-tiet",

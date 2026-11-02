@@ -1,0 +1,24 @@
+{
+  "man": "Chế độ cuộc gọi khai thác (hàng 28)",
+  "khuyen": {
+    "loi": "ve-moi",
+    "ly_do": "Đúng bản phác KD1 chủ kho đã vẽ: ba vùng thấy cùng lúc trong một màn 1440 không cuộn — vừa nghe vừa gõ danh sách hỏi ở giữa mà giá về tay và dải toà vẫn ở ngay bên phải; ghép từ thành phần đã cài theo dòng «Chỗ hở» Chế độ cuộc gọi sẵn có."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Khuôn hồ sơ căn (KhungHoSoCan, solution-crm-4 đã chuyển thành cột) — một cột hẹp, bốn khối nối nhau",
+      "dong_co": "Không dựng khuôn mới về dáng: cuộc gọi là một chế độ của hồ sơ căn (luật 3), đọc giống hồ sơ toàn màn.",
+      "danh_doi": "Phải cuộn qua thẻ lead và danh sách hỏi mới tới máy tính giá và dải toà — trong lúc đang nói chuyện thì mất chỗ đối chiếu."
+    },
+    "reui": {
+      "nhan": "solution-crm-4 dáng bản ghi — đầu bản ghi trải ngang, cột chính danh sách hỏi, cột phụ tính giá và so giá",
+      "dong_co": "Khối Record detail của ReUI; tra «call script checklist … price calculator» chỉ ra c-questionnaire-3 (câu trả lời gõ cạnh lựa chọn) cho ô danh sách hỏi, không khối nào có kịch bản gọi hay máy tính giá.",
+      "danh_doi": "Đầu bản ghi chiếm gần nửa màn 1440, danh sách hỏi bị đẩy xuống và nhóm cuối phải cuộn; so giá toà rơi dưới nếp gấp."
+    },
+    "ve-moi": {
+      "nhan": "Ghép ba cột theo KD1: thẻ lead · danh sách hỏi · tính giá và so giá toà, mỗi cột một FramePanel",
+      "dong_co": "Gọn nhất cho việc vừa nghe vừa gõ: mọi thứ cần trong cuộc gọi ở một màn; đúng dáng chủ kho đã phác.",
+      "danh_doi": "Tự ghép nên dòng «Chỗ hở» Chế độ cuộc gọi phải sửa từ hai cột thành ba cột kèm hạn xem lại; dưới 1024 xếp một cột dài."
+    }
+  }
+}

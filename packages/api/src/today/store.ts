@@ -82,50 +82,88 @@ const PHUT = 60_000;
  * không lên bảng). Hạn nhận, hạn gọi tính từ mốc về người như lời báo (`dueAlerts`): hai hạn đã đóng dấu lên lead, lead
  * chưa đóng dấu thì lấy cấu hình hiện tại của sàn.
  */
-export async function readAssignedLeads(tx: pg.PoolClient): Promise<AssignedLeadView[]> {
-  const { bo } = await readQueue(tx);
-  const cauHinh = await readSettings(tx);
-  const { rows } = await tx.query<DongLead>(
-    `select l.id, l.building_name, l.unit_number, l.need, l.list_price, l.fee_inclusion, l.outcome, l.matched_agent_user_id,
+const COT_LEAD = `l.id, l.building_name, l.unit_number, l.need, l.list_price, l.fee_inclusion, l.outcome, l.matched_agent_user_id,
             l.created_at, l.routed_at, l.accepted_at, l.first_called_at, l.returned_at, l.resubmitted_at, l.discarded_at,
             l.accept_minutes, l.first_call_minutes,
             (select min(e.occurred_at) from lead_listings x
                join listing_events e on e.company_id = x.company_id and e.listing_id = x.listing_id
               where x.company_id = l.company_id and x.lead_id = l.id
                 and e.type = 'status_changed' and e.payload ->> 'to' = 'Active'
-                and l.discarded_at is null and l.returned_at is null) as board_at
+                and l.discarded_at is null and l.returned_at is null) as board_at`;
+
+const nacCua = (r: DongLead) =>
+  leadStage({
+    outcome: r.outcome,
+    matchedAgentUserId: r.matched_agent_user_id,
+    routedAt: iso(r.routed_at),
+    acceptedAt: iso(r.accepted_at),
+    firstCalledAt: iso(r.first_called_at),
+    boardAt: iso(r.board_at),
+    returnedAt: iso(r.returned_at),
+    resubmittedAt: iso(r.resubmitted_at),
+    discardedAt: iso(r.discarded_at),
+  });
+
+/** Dựng từng khoá tường minh: không khoá nào của dòng tự lọt ra (bất biến 2). */
+function banXemLead(r: DongLead, stage: LeadState, cauHinh: { acceptMinutes: number; firstCallMinutes: number }): AssignedLeadView {
+  const tu = (r.routed_at ?? r.created_at).getTime();
+  return {
+    id: r.id,
+    buildingName: r.building_name,
+    unitNumber: r.unit_number,
+    need: r.need,
+    priceText: understoodPrice(Number(r.list_price), r.fee_inclusion),
+    createdAt: r.created_at.toISOString(),
+    stage,
+    acceptedAt: iso(r.accepted_at),
+    acceptDueAt: new Date(tu + (r.accept_minutes ?? cauHinh.acceptMinutes) * PHUT).toISOString(),
+    callDueAt: new Date(tu + (r.first_call_minutes ?? cauHinh.firstCallMinutes) * PHUT).toISOString(),
+  };
+}
+
+/**
+ * Lead về chính người gọi (`matched_agent_user_id`), lọc bằng nhóm lead của bộ đang áp. Không đọc cột số (vai API không có
+ * quyền); mốc lên bảng gom từ bảng nối lead–hàng và sự kiện → Active, như `app.lead_board_at_all` (lead đã bỏ, đã trả lại
+ * không lên bảng). Hạn nhận, hạn gọi tính từ mốc về người như lời báo (`dueAlerts`): hai hạn đã đóng dấu lên lead, lead
+ * chưa đóng dấu thì lấy cấu hình hiện tại của sàn.
+ */
+export async function readAssignedLeads(tx: pg.PoolClient): Promise<AssignedLeadView[]> {
+  const { bo } = await readQueue(tx);
+  const cauHinh = await readSettings(tx);
+  const { rows } = await tx.query<DongLead>(
+    `select ${COT_LEAD}
      from leads l
      where l.company_id = app.current_company_id() and l.matched_agent_user_id = app.current_user_id()
      order by coalesce(l.routed_at, l.created_at), l.id`,
   );
   return rows.flatMap((r) => {
-    const stage = leadStage({
-      outcome: r.outcome,
-      matchedAgentUserId: r.matched_agent_user_id,
-      routedAt: iso(r.routed_at),
-      acceptedAt: iso(r.accepted_at),
-      firstCalledAt: iso(r.first_called_at),
-      boardAt: iso(r.board_at),
-      returnedAt: iso(r.returned_at),
-      resubmittedAt: iso(r.resubmitted_at),
-      discardedAt: iso(r.discarded_at),
-    });
-    if (!nhomCuaLead(bo, { stage })) return [];
-    const tu = (r.routed_at ?? r.created_at).getTime();
-    // Dựng từng khoá tường minh: không khoá nào của dòng tự lọt ra (bất biến 2).
-    return [
-      {
-        id: r.id,
-        buildingName: r.building_name,
-        unitNumber: r.unit_number,
-        need: r.need,
-        priceText: understoodPrice(Number(r.list_price), r.fee_inclusion),
-        createdAt: r.created_at.toISOString(),
-        stage,
-        acceptedAt: iso(r.accepted_at),
-        acceptDueAt: new Date(tu + (r.accept_minutes ?? cauHinh.acceptMinutes) * PHUT).toISOString(),
-        callDueAt: new Date(tu + (r.first_call_minutes ?? cauHinh.firstCallMinutes) * PHUT).toISOString(),
-      },
-    ];
+    const stage = nacCua(r);
+    return nhomCuaLead(bo, { stage }) ? [banXemLead(r, stage, cauHinh)] : [];
   });
+}
+
+/** Một lead của tôi cho chế độ cuộc gọi (hàng 28): như dòng của danh sách, thêm giá số, điều kiện phí và hồ sơ căn của lead. */
+export type AssignedLeadDetailView = AssignedLeadView & { listPrice: number; feeInclusion: FeeInclusion; listingId: string | null };
+
+/**
+ * Một lead giao cho chính người gọi, bất kể nhóm của bộ đang áp — sau «Đã gọi» lead rời nhóm Lead mới mà chế độ cuộc gọi
+ * vẫn phải đọc được. Lead của người khác, đã bỏ hay đã trả lại → `null` (404). Hồ sơ căn đọc từ bảng nối `lead_listings`.
+ */
+export async function readAssignedLead(tx: pg.PoolClient, id: string): Promise<AssignedLeadDetailView | null> {
+  const { rows } = await tx.query<DongLead & { listing_id: string | null }>(
+    `select ${COT_LEAD},
+            (select x.listing_id from lead_listings x where x.company_id = l.company_id and x.lead_id = l.id) as listing_id
+     from leads l
+     where l.company_id = app.current_company_id() and l.matched_agent_user_id = app.current_user_id() and l.id = $1
+       and l.discarded_at is null and l.returned_at is null`,
+    [id],
+  );
+  const r = rows[0];
+  if (!r) return null;
+  return {
+    ...banXemLead(r, nacCua(r), await readSettings(tx)),
+    listPrice: Number(r.list_price),
+    feeInclusion: r.fee_inclusion,
+    listingId: r.listing_id,
+  };
 }

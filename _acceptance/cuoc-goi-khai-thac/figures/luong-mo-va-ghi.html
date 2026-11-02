@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luồng mở và ghi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1560px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 0.35rem;
+    }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; max-width: 70ch; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Sơ đồ luồng · Cổng Phạm vi · AC-1, AC-8, AC-9</p>
+    <h1>Một đường mở cho mọi lead; hồ sơ căn sinh ra ở câu trả lời đầu</h1>
+    <p class="subtitle">Ba ô cam là ba chỗ chờ chủ kho chốt: Hỏi-1 (đường dẫn của chế độ cuộc gọi), Hỏi-5 (lúc tạo hồ sơ căn cho lead chưa có) và Hỏi-6 (câu trả lời đầu tiên ghi mốc gọi đầu). Ghi ở nhánh nào cũng qua Hỏi-6, rồi mức đủ tính lại ngay trên máy và Ctrl+Enter về Hôm nay.</p>
+    <svg viewBox="0 0 1544 412" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Luồng mở và ghi của chế độ cuộc gọi</title>
+      <desc id="d">Từ dòng lead ở Hôm nay, nút Gọi mở đường /units/call?lead= mã lead (Hỏi-1), trang đọc một lead của mình. Rẽ: lead đã có hồ sơ căn thì ghi câu trả lời vào hồ sơ có sẵn; chưa có thì câu trả lời đầu tiên tạo hồ sơ căn từ lead (Hỏi-5) rồi ghi vào hồ sơ vừa tạo. Hai nhánh gặp nhau ở Hỏi-6: nếu lead chưa có mốc gọi đầu thì máy ghi mốc Đã gọi; lối khác là chỉ nút Đã gọi, phím G. Sau đó mức đủ tính lại trên máy, rồi Ctrl+Enter về Hôm nay. Lối khác của Hỏi-5: nút Tạo hồ sơ căn riêng, phím N.</desc>
+      <defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="1544" height="412" fill="#f5f5f5"/>
+<g transform="translate(0,-136)">
+
+<!-- ===== Arrows (drawn before boxes) ===== -->
+<line x1="160" y1="220" x2="190" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="352" y1="220" x2="382" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="544" y1="220" x2="586" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<!-- ĐÃ CÓ -->
+<line x1="708" y1="220" x2="758" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="712" y="200" width="44" height="12" rx="2" fill="#f5f5f5"/><text x="734" y="209" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ĐÃ CÓ</text>
+<!-- CHƯA CÓ -->
+<line x1="648" y1="268" x2="648" y2="322" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="656" y="288" width="52" height="12" rx="2" fill="#f5f5f5"/><text x="682" y="297" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CHƯA CÓ</text>
+<line x1="720" y1="364" x2="758" y2="364" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="936" y1="364" x2="982" y2="364" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<!-- rejoin -->
+<line x1="1072" y1="324" x2="1072" y2="262" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="936" y1="220" x2="982" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="1160" y1="220" x2="1190" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="1352" y1="220" x2="1382" y2="220" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+<!-- ===== Nodes ===== -->
+<!-- Start: Hôm nay -->
+<rect x="32" y="192" width="128" height="56" rx="24" fill="#f5f5f5"/><rect x="32" y="192" width="128" height="56" rx="24" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="96" y="216" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Hôm nay</text>
+<text x="96" y="232" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">dòng lead · nút «Gọi»</text>
+
+<!-- Hỏi-1: Mở chế độ cuộc gọi -->
+<rect x="192" y="180" width="160" height="80" rx="6" fill="#f5f5f5"/><rect x="192" y="180" width="160" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<rect x="200" y="188" width="96" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/>
+<text x="248" y="197" fill="#ba4513" font-size="7" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-1 · ĐƯỜNG DẪN</text>
+<text x="272" y="224" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mở chế độ cuộc gọi</text>
+<text x="272" y="244" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">/units/call?lead=&lt;mã&gt;</text>
+
+<!-- Đọc một lead -->
+<rect x="384" y="180" width="160" height="80" rx="6" fill="#f5f5f5"/><rect x="384" y="180" width="160" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="464" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đọc một lead</text>
+<text x="464" y="228" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">chỉ lead giao cho mình</text>
+<text x="464" y="244" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">GET leads/assigned/&lt;mã&gt;</text>
+
+<!-- Decision -->
+<polygon points="588,220 648,172 708,220 648,268" fill="#f5f5f5"/>
+<polygon points="588,220 648,172 708,220 648,268" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="648" y="216" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đã có hồ sơ</text>
+<text x="648" y="232" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">căn?</text>
+
+<!-- Nhánh đã có: ghi vào hồ sơ có sẵn -->
+<rect x="760" y="184" width="176" height="72" rx="6" fill="#f5f5f5"/><rect x="760" y="184" width="176" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="848" y="210" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ghi vào hồ sơ có sẵn</text>
+<text x="848" y="226" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">không tạo hồ sơ thứ hai</text>
+<text x="848" y="242" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">listingId của lead</text>
+
+<!-- Nhánh chưa có: câu trả lời đầu tiên -->
+<rect x="576" y="324" width="144" height="80" rx="6" fill="#f5f5f5"/><rect x="576" y="324" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="648" y="360" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Câu trả lời đầu tiên</text>
+<text x="648" y="376" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">chọn bằng phím 1–3</text>
+
+<!-- Hỏi-5: tạo hồ sơ căn từ lead -->
+<rect x="760" y="324" width="176" height="80" rx="6" fill="#f5f5f5"/><rect x="760" y="324" width="176" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<rect x="768" y="332" width="96" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/>
+<text x="816" y="341" fill="#ba4513" font-size="7" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-5 · TẠO HỒ SƠ</text>
+<text x="848" y="368" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tạo hồ sơ căn từ lead</text>
+<text x="848" y="384" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">ở câu trả lời đầu tiên</text>
+
+<!-- Ghi câu trả lời vào hồ sơ vừa tạo -->
+<rect x="984" y="324" width="176" height="80" rx="6" fill="#f5f5f5"/><rect x="984" y="324" width="176" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="1072" y="360" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ghi câu trả lời</text>
+<text x="1072" y="376" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">vào hồ sơ vừa tạo</text>
+
+<!-- Hỏi-6: ghi mốc gọi đầu (cả hai nhánh) -->
+<rect x="984" y="180" width="176" height="80" rx="6" fill="#f5f5f5"/><rect x="984" y="180" width="176" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<rect x="992" y="188" width="112" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/>
+<text x="1048" y="197" fill="#ba4513" font-size="7" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-6 · MỐC GỌI ĐẦU</text>
+<text x="1072" y="224" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ghi mốc «Đã gọi»</text>
+<text x="1072" y="240" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">nếu lead chưa có mốc gọi đầu</text>
+
+<!-- Mức đủ -->
+<rect x="1192" y="180" width="160" height="80" rx="6" fill="#f5f5f5"/><rect x="1192" y="180" width="160" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="1272" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mức đủ tính lại</text>
+<text x="1272" y="228" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">trên máy · kể cả mất mạng</text>
+<text x="1272" y="244" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Mức đủ k/5</text>
+
+<!-- End -->
+<rect x="1384" y="192" width="128" height="56" rx="24" fill="#f5f5f5"/><rect x="1384" y="192" width="128" height="56" rx="24" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="1448" y="216" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Về Hôm nay</text>
+<text x="1448" y="232" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Ctrl+Enter</text>
+
+<!-- ===== Annotations ===== -->
+<path d="M 236 304 Q 228 288 248 264" fill="none" stroke="rgba(235,108,54,0.50)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="192" y="324" fill="#ba4513" font-size="14" font-family="'Instrument Serif', 'Lora', serif" font-style="italic">Lead có mã căn hay chỉ biết toà</text>
+<text x="192" y="344" fill="#ba4513" font-size="14" font-family="'Instrument Serif', 'Lora', serif" font-style="italic">đều mở cùng một đường.</text>
+<path d="M 800 432 Q 788 424 800 408" fill="none" stroke="rgba(235,108,54,0.50)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="808" y="440" fill="#ba4513" font-size="14" font-family="'Instrument Serif', 'Lora', serif" font-style="italic">Lối khác: nút «Tạo hồ sơ căn» riêng (phím N).</text>
+<path d="M 1196 308 Q 1176 296 1156 264" fill="none" stroke="rgba(235,108,54,0.50)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="1200" y="320" fill="#ba4513" font-size="14" font-family="'Instrument Serif', 'Lora', serif" font-style="italic">Lối khác: chỉ nút «Đã gọi»</text>
+<text x="1200" y="340" fill="#ba4513" font-size="14" font-family="'Instrument Serif', 'Lora', serif" font-style="italic">(phím G).</text>
+
+<!-- ===== Legend ===== -->
+<line x1="32" y1="484" x2="1512" y2="484" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="32" y="512" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+<rect x="112" y="500" width="28" height="16" rx="8" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="148" y="512" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Điểm vào / ra</text>
+<rect x="248" y="500" width="28" height="16" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="284" y="512" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bước</text>
+<polygon points="344,508 356,500 368,508 356,516" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="376" y="512" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Rẽ nhánh</text>
+<rect x="448" y="500" width="28" height="16" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="484" y="512" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Điểm chờ chủ kho chốt ở Cổng Phạm vi (Hỏi-1, Hỏi-5, Hỏi-6)</text>
+</g>
+    </svg>
+  </main>
+</body>
+</html>
