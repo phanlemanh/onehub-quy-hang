@@ -8,6 +8,7 @@ import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { SAMPLE_CATALOG } from "../catalog/sample";
 import { withCompany } from "../db";
+import { guiSauKhiGhi } from "../push/routes";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import {
   createLead,
@@ -49,7 +50,8 @@ async function tenNguoi(identityPool: pg.Pool, userId: string | null): Promise<s
   return rows[0]?.name ?? null;
 }
 
-export function registerLeadRoutes(api: OpenAPIHono, { appPool, identityPool, auth }: ApiDeps) {
+export function registerLeadRoutes(api: OpenAPIHono, deps: ApiDeps) {
+  const { appPool, identityPool, auth } = deps;
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
     const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
     if (!user) return API_ERRORS.unauthenticated;
@@ -88,7 +90,9 @@ export function registerLeadRoutes(api: OpenAPIHono, { appPool, identityPool, au
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
       const kq = await withCompany(appPool, ctx, (tx) => createLead(tx, c.req.valid("json")));
-      return isRefusal(kq) ? tuChoi(c, kq) : c.json(await ban(kq), 201);
+      if (isRefusal(kq)) return tuChoi(c, kq);
+      await guiSauKhiGhi(deps, ctx.companyId);
+      return c.json(await ban(kq), 201);
     },
   );
 
@@ -186,7 +190,9 @@ export function registerLeadRoutes(api: OpenAPIHono, { appPool, identityPool, au
       if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
       try {
         const kq = await withCompany(appPool, ctx, (tx) => resubmitLead(tx, leadId, c.req.valid("json")));
-        return isRefusal(kq) ? tuChoi(c, kq) : c.json((await banNac([kq]))[0], 201);
+        if (isRefusal(kq)) return tuChoi(c, kq);
+        await guiSauKhiGhi(deps, ctx.companyId);
+        return c.json((await banNac([kq]))[0], 201);
       } catch (e) {
         if (e instanceof RefusalAfterWrite) return tuChoi(c, e.refusal);
         throw e;

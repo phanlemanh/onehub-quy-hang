@@ -5,6 +5,7 @@ import { readMe } from "@/lib/api";
 
 import { KhungLeadCuaToi } from "../leads/mine/khung";
 import { LeadDaNhapThat } from "../leads/mine/nguon-that";
+import { DaiBatThongBao } from "./dai-bat";
 import { HomNayDauChu } from "./hom-nay-dau-chu";
 import { KhungHomNay } from "./khung";
 
@@ -12,14 +13,17 @@ export const dynamic = "force-dynamic";
 
 // Hôm nay theo vai (Tham chiếu §10): Đầu chủ thấy Hôm nay của đầu chủ (hàng 22, khuôn KhungHomNay); telesales thấy vùng
 // «Lead đã nhập» (hàng 27, khuôn KhungLeadCuaToi) — người hai vai thấy cả hai, đầu chủ trước; vai khác giữ chỗ tạm tới
-// Hôm nay của trưởng nhóm (hàng 42).
+// Hôm nay của trưởng nhóm (hàng 42). Dải bật thông báo lead (hàng 26) đứng đầu cho đầu chủ và trưởng nhóm — trưởng nhóm
+// thấy dải cả khi đang ở trang giữ chỗ.
 export default async function Page() {
   const me = await readMe((await headers()).get("cookie") ?? "");
   const vai = me?.activeCompany?.roles ?? [];
   const dauChu = me?.activeCompany && vai.includes("listing_agent") ? { nguoi: me.user.id, san: me.activeCompany.id } : null;
   const telesales = vai.includes("telesales");
+  const nhanDay = Boolean(me?.activeCompany) && (vai.includes("listing_agent") || vai.includes("team_lead"));
   return (
     <KhungHomNay>
+      {nhanDay ? <DaiBatThongBao /> : null}
       {dauChu ? <HomNayDauChu nguoi={dauChu.nguoi} san={dauChu.san} /> : null}
       {telesales ? (
         <KhungLeadCuaToi>

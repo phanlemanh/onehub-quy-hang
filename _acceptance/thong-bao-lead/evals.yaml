@@ -1,0 +1,111 @@
+schema_version: 1
+feature_slug: thong-bao-lead
+# Lệnh máy: `executors.test.core`, `executors.test.web`, `executors.test.isolation` (cần DATABASE_URL tới Postgres dãy L).
+# Gửi đẩy trong bài kiểm đi qua một bộ gửi giả bơm vào API (như bộ gửi thư của đăng nhập) — không gọi dịch vụ đẩy thật.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/thong-bao-lead.test.ts ca «đăng ký: bật, bật lại, gỡ» có mặt và ok — POST /api/v1/me/push-subscriptions với endpoint giả 201, đọc thẳng bảng thấy đúng một dòng gắn người và sàn; POST lại cùng endpoint 200, vẫn một dòng; DELETE với endpoint ấy 204, bảng còn 0 dòng; đăng xuất (POST đăng xuất kèm endpoint của thiết bị) xoá đăng ký của thiết bị ấy, đăng ký thiết bị khác còn; không cookie 401; thân sai khuôn (thiếu keys) 400; ca «khoá công khai» — GET /api/v1/push/public-key trả khoá công khai do máy chủ tự sinh (dạng base64url 65 byte), gọi lần hai trả đúng khoá ấy. Chiều đỏ: bỏ ràng buộc duy nhất (company_id, user_id, endpoint) → dòng «bật lại» ra hai dòng."
+    paths: [packages/api/src/push/**, packages/db/migrations/0*_thong_bao*.sql, packages/api/test-db/thong-bao-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ba ca mới có mặt và ok — «đăng ký đẩy: bật và ép luật theo dòng»; «đăng ký đẩy: ai đọc được» — bảng viết trước (chính người, người khác cùng sàn, trưởng nhóm cùng sàn, người sàn khác) × (đọc, thêm dòng ghi tên người khác, xoá) → kết quả viết trước, đếm bằng số ô; «đăng ký đẩy: hàm lấy đăng ký cho lối gửi» — bảng viết trước (gọi cho người cùng sàn → đúng đăng ký của người ấy; gọi với sàn đang làm khác → 0 dòng; vai API gọi trực tiếp không qua lối gửi → permission denied) đếm bằng số dòng. Chiều đỏ: nới luật đọc bỏ điều kiện người → dòng «người khác cùng sàn × đọc» ra 1, ca đỏ nêu dòng."
+    paths: [packages/db/migrations/0*_thong_bao*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/thong-bao-lead.test.ts ca «gửi khi lead về đầu chủ» có mặt và ok — bộ gửi giả ghi lại mọi lần gửi; bảng viết trước năm dòng (nhịp chia về dc1, trưởng nhóm giao cho dc2, nhập lead khớp đầu chủ giữ chủ nhà, gửi lại lead khớp, dc1 tự nhận từ kho chung) → (người nhận, số lần gửi) deepEqual, dòng tự nhận ra 0; ca «việc giao quay lui không gửi» — bảng ba lối (nhịp chia, trưởng nhóm giao, nhập lead) mỗi lối ép lỗi sau khi giao trong cùng giao dịch → 0 lần gửi và 0 dòng hộp thư đi, đếm 3; ca «lỗi tạm gửi lại» — bộ gửi giả trả 500 lần đầu, nhịp sau gửi đúng một lần nữa, lần thứ tư không gửi; ca «gửi lỗi không làm hỏng việc giao» — bộ gửi giả ném lỗi → lead vẫn mang đầu chủ, nhịp trả routed 1. Chiều đỏ: gửi trước khi commit (trong giao dịch) → ca quay lui ra 1 lần gửi, đỏ nêu dòng."
+    paths: [packages/api/src/push/**, packages/api/src/jobs/lead-tick.ts, packages/api/src/routing/**, packages/api/src/leads/**, packages/api/test-db/thong-bao-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/push/push.test.ts ca «nội dung thông báo lead» có mặt và ok — dựng từ một lead mẫu có số, tên chủ, giá, mã căn: Object.keys deepEqual danh sách viết trước [title, body, url, tag]; body deepEqual «<Toà> · <nhu cầu>» cho ba nhu cầu (bảng ba dòng, đếm 3); máy dò chín chữ số, tên chủ mẫu, chuỗi giá, mã căn mẫu không bắt gì trong JSON nội dung, đối chứng dương cùng máy dò bắt chuỗi cài sẵn; url deepEqual /today?lead=<id>. Chiều đỏ: thêm mã căn vào body → máy dò mã căn bắt, ca đỏ nêu khoá."
+    paths: [packages/core/src/push/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đăng ký chết bị gỡ» trong packages/api/test-db/thong-bao-lead.test.ts — người có ba đăng ký, bộ gửi giả trả 410 cho đăng ký 1, 404 cho đăng ký 2, lỗi 500 cho đăng ký 3: sau gửi bảng còn đúng đăng ký 3 với lần hỏng được ghi; lần gửi kế đăng ký 3 vẫn được gửi. Chiều đỏ: coi 500 như 410 → đăng ký 3 bị xoá, ca đỏ nêu đăng ký."
+    paths: [packages/api/src/push/**, packages/api/test-db/thong-bao-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/today/mo-lead.test.ts có mặt và ok — đọc ?lead=<id> từ URL ra mã lead (bảng viết trước: có mã hợp lệ, mã rỗng, mã sai khuôn, không có tham số → kết quả viết trước, đếm 4); chọn nhóm và dòng: danh sách lead mẫu có lead ở nhóm new_lead → trả {nhom:'new_lead', dong:'lead:<id>'}; lead không có trong danh sách → trả «không còn» với chữ «Lead này không còn ở Hôm nay của bạn»; bộ xử lý bấm thông báo của service worker (tách thành mô-đun thuần) với cửa sổ đang mở có cùng gốc → đưa cửa sổ lên và chuyển tới đúng url /today?lead=<id>, không có cửa sổ → mở cửa sổ mới với đúng url (bảng hai dòng). Chiều đỏ: bỏ kiểm khuôn mã → dòng «mã sai khuôn» ra mã, ca đỏ nêu dòng."
+    paths: [apps/web/src/app/(app)/today/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3483/today"
+    steps:
+      - "Bản dev dãy L ĐANG CHẠY ở http://localhost:3483 (launch web-l, Postgres 5563, sàn «[Mẫu] Sàn thử» đã nạp) — không tự khởi động hay tắt máy chủ; không chạm cơ sở dữ liệu."
+      - "Dùng chrome-devtools MCP (không trình duyệt trong app). Mỗi ô một trang mới trong một isolatedContext riêng (vd «e7-<ô>»), để quyền và đăng ký thiết bị không lẫn giữa các ô."
+      - "Phiên: chạy `node --env-file=.env.local --import tsx _acceptance/thong-bao-lead/thu/phien.mts <email>` từ gốc kho (email dau-chu-1@mau.quy-hang.test hay truong-nhom@mau.quy-hang.test) → JSON {value, qh_san}; mở http://localhost:3483/login rồi evaluate_script `document.cookie = 'qh.session_token=<value>; path=/'; document.cookie = 'qh_san=<qh_san>; path=/'`."
+      - "Ô «chưa bật» (khổ 1440×900): navigate_page http://localhost:3483/today không initScript → chụp; dải «Bật thông báo lead» có nút «Bật thông báo». Lưu evidence/E7-<vai>-chua-bat.png."
+      - "Ô «đã bật»: navigate_page /today với initScript `Object.defineProperty(Notification,'permission',{get:()=>'granted'});PushManager.prototype.getSubscription=async function(){const e='https://push.example.test/ui-'+Math.random();return{endpoint:e,toJSON(){return{endpoint:e,keys:{p256dh:'B'.repeat(87),auth:'A'.repeat(22)}}}}}` → không dải nào (vùng Hôm nay đứng đầu). Lưu evidence/E7-<vai>-da-bat.png."
+      - "Ô «máy chủ không dựng được khoá»: initScript `const f=window.fetch;window.fetch=(u,o)=>String(u).includes('/api/v1/push/public-key')?Promise.resolve(new Response('{\"error\":\"push-not-configured\"}',{status:503})):f(u,o)` (giả đúng câu trả lời 503 mà máy chủ trả khi khoá mã hoá hỏng — vế máy chủ chứng ở E1, ca «khoá công khai») → chữ «Thông báo chưa được cấu hình», không nút. Lưu evidence/E7-<vai>-chua-cau-hinh.png."
+      - "Ô «từ chối quyền»: initScript `Object.defineProperty(Notification,'permission',{get:()=>'denied'})` → một dòng «Thông báo đang tắt trong trình duyệt», không khung báo, không nút. Lưu evidence/E7-<vai>-tu-choi.png."
+      - "Ô «iPhone Safari chưa cài» (khổ 375): emulate viewport '375x812x3,mobile,touch' và userAgent 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' rồi navigate_page /today → ba bước cài (Chia sẻ → «Thêm vào MH chính» → mở từ màn hình chính), không nút. Lưu evidence/E7-<vai>-iphone.png."
+      - "Làm năm ô cho đầu chủ (dau-chu-1) và năm ô cho trưởng nhóm (truong-nhom — dải đứng trên trang giữ chỗ): <vai> = dau-chu | truong-nhom, mười ảnh."
+      - "Cuối: evaluate_script `Promise.all([fetch('/manifest.webmanifest').then(async r=>({s:r.status,j:await r.json()})),fetch('/sw.js').then(r=>r.status)])` → manifest 200 có name, icons, start_url, display 'standalone'; sw.js 200. Ghi kết quả vào observed."
+    expected: "Ma trận viết trước, mỗi ô một ảnh: (đầu chủ, trưởng nhóm) × (chưa bật — nút «Bật thông báo»; đã bật — không dải; máy chủ không dựng được khoá (khoá mã hoá vắng) — chữ «Thông báo chưa được cấu hình», không nút; từ chối quyền — dòng «Thông báo đang tắt trong trình duyệt»; iPhone Safari chưa cài ở khổ 375 — ba bước cài, không nút) ở khổ 1440 trừ ô iPhone; /manifest.webmanifest trả JSON có name, icons, start_url, display standalone; /sw.js trả 200."
+    paths: [apps/web/src/app/(app)/today/**, apps/web/src/app/manifest.ts, apps/web/public/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E10
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3483/today"
+    steps:
+      - "Bản dev dãy L ĐANG CHẠY ở http://localhost:3483 (launch web-l, Postgres 5563, sàn «[Mẫu] Sàn thử» đã nạp) — không tự khởi động hay tắt máy chủ; không chạm cơ sở dữ liệu."
+      - "Dùng chrome-devtools MCP (không trình duyệt trong app). Mỗi ô một trang mới trong một isolatedContext riêng (vd «e7-<ô>»), để quyền và đăng ký thiết bị không lẫn giữa các ô."
+      - "Phiên: chạy `node --env-file=.env.local --import tsx _acceptance/thong-bao-lead/thu/phien.mts <email>` từ gốc kho (email dau-chu-1@mau.quy-hang.test hay truong-nhom@mau.quy-hang.test) → JSON {value, qh_san}; mở http://localhost:3483/login rồi evaluate_script `document.cookie = 'qh.session_token=<value>; path=/'; document.cookie = 'qh_san=<qh_san>; path=/'`."
+      - "Đầu chủ dau-chu-1, khổ 1440×520 (thấp để dòng lead nằm ngoài tầm nhìn khi nhóm mở). Mở http://localhost:3483/today, đọc mã lead của một dòng ở nhóm «Lead mới» bằng evaluate_script `[...document.querySelectorAll('[data-row-id^=\"lead:\"]')].map(r=>r.dataset.rowId)` (chọn mã đầu, bỏ tiền tố lead:)."
+      - "Gập nhóm «Lead mới» (bấm nút «Gập nhóm» của dòng nhóm), cuộn trang xuống cuối, rồi evaluate_script `window.history.pushState(null,'','/today?lead=<mã>')` (đổi URL trong trang như khi trang đã mở) và chờ 2 giây → nhóm mở lại, dòng [data-row-id=\"lead:<mã>\"] mang data-state=\"selected\" và nằm trong tầm nhìn (getBoundingClientRect trong khung). Chụp evidence/E10-mo-lead.png."
+      - "Lối thứ hai (mở trang mới như khi chạm thông báo mở cửa sổ): navigate_page http://localhost:3483/today?lead=<mã> → dòng được chọn và trong tầm nhìn. Chụp evidence/E10-mo-lead-trang-moi.png."
+      - "navigate_page http://localhost:3483/today?lead=11111111-2222-4333-8444-555555555555 → dòng «Lead này không còn ở Hôm nay của bạn». Chụp evidence/E10-khong-con.png."
+    expected: "Đầu chủ có lead ở nhóm đang đóng, dòng nằm ngoài tầm nhìn: mở /today?lead=<id> → nhóm mở, dòng lead:<id> được chọn và nằm trong tầm nhìn (chụp); mở /today?lead=<id lạ> → dòng «Lead này không còn ở Hôm nay của bạn» (chụp)."
+    paths: [apps/web/src/app/(app)/today/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trưởng nhóm nhận đẩy lời báo» trong packages/api/test-db/thong-bao-lead.test.ts — bảng viết trước ba loại lời báo (unrouted, accept_overdue, first_call_overdue) → trưởng nhóm có đăng ký nhận đúng một thông báo mỗi lời báo mới, nội dung khoá deepEqual danh sách viết trước, url /today; lời báo đã có (nhịp sau) không gửi lại; đầu chủ không nhận lời báo. Chiều đỏ: gửi lại mọi nhịp → dòng «nhịp sau» ra 1 lần gửi, ca đỏ nêu dòng."
+    paths: [packages/api/src/push/**, packages/api/src/jobs/lead-tick.ts, packages/api/test-db/thong-bao-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/thong-bao-lead.test.ts ca «khoá VAPID tự sinh, không ai cầm» có mặt và ok — bảng push_vapid trống: hai lời gọi lấy khoá chạy song song → bảng đúng một dòng, hai lời gọi trả cùng khoá công khai; cột khoá riêng không chứa khoá riêng rõ (so byte: khác, và không chứa chuỗi base64url của khoá riêng), giải bằng khoá con HKDF nhãn quy-hang/push-vapid/v1 ra khoá riêng khớp khoá công khai (ký thử rồi kiểm chữ ký); vai API select push_vapid → permission denied; .env.example không có biến VAPID nào. Trong packages/core/src/push/push.test.ts ca «thông báo lead: tài liệu khớp» — Tham chiếu §12 nhắc «thông báo lead»; docs/adr/0025-*.md nhắc «Web Push», «lớp nguồn» và «không ai cầm khoá». Chiều đỏ: lưu khoá riêng rõ → so byte đỏ nêu cột; bỏ ràng buộc một dòng → ca song song ra hai dòng."
+    paths: [packages/api/src/push/**, packages/db/migrations/018_*.sql, packages/api/test-db/thong-bao-lead.test.ts, docs/product/tham-chieu.md, docs/adr/**, .env.example, packages/core/src/push/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
