@@ -1,0 +1,81 @@
+{
+ "feature_plain": "Đầu chủ kéo khung che lên ảnh căn rồi lưu một bản che nhẹ sẵn để gửi; bản gốc giữ nguyên và cất vào ngăn Nội bộ.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ có mục «Che vùng…» trên ảnh ngăn Gửi được cho người sửa được ảnh; ảnh Nội bộ không có mục này, để ảnh sổ không bao giờ lọt ra ngoài qua bản che."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ cho kéo nhiều khung che, bỏ khung cuối, bỏ hết; khung rơi đúng chỗ người thấy kể cả ảnh dọc chụp điện thoại."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ tô kín màu đặc đúng từng điểm trong khung, ngoài khung giữ nguyên — không làm mờ để chữ số không đọc ngược được (Hỏi-3)."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ thu bản che về bản nhẹ, cạnh dài tối đa 1600 điểm ảnh — mặc định của sàn khai một chỗ (Hỏi-2)."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ lưu bản che thành ảnh mới ở ngăn Gửi được, cùng ngày chụp; bản gốc giữ nguyên và tự sang ngăn Nội bộ (Hỏi-1); lịch sử ảnh ghi đủ hai việc."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ bỏ thông tin ẩn của ảnh (vị trí GPS, máy chụp) khỏi bản che."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ KHÔNG ghi gì và KHÔNG chuyển bản gốc khi tải bản che lỗi; khung vẫn giữ để thử lại."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ giữ kiểm kiểu, lint, bộ test, sàn thiết kế xanh và không chạm tệp ngoài phần được giao."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "OOS-1",
+   "p": "KHÔNG tự nhận diện mặt người hay biển số — cần AI và thoả thuận «Xử lý bằng AI» của sàn."
+  },
+  {
+   "id": "OOS-2",
+   "p": "KHÔNG làm đường gửi và trang khách — bản nhẹ cho mọi ảnh gửi đi thuộc hàng gửi."
+  },
+  {
+   "id": "OOS-3",
+   "p": "KHÔNG sửa lại khung của bản che đã lưu — muốn che khác thì che lại từ bản gốc."
+  },
+  {
+   "id": "OOS-4",
+   "p": "KHÔNG che trên điện thoại."
+  },
+  {
+   "id": "OOS-5",
+   "p": "KHÔNG nối bản che với bản gốc trong dữ liệu — cần đổi cơ sở dữ liệu."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Che được cả ảnh Nội bộ thì phần còn lại của ảnh sổ sẽ ra ngăn Gửi được — đã giới hạn chỉ ảnh Gửi được và chặn ở bước lưu."
+  },
+  {
+   "i": 1,
+   "p": "Ảnh dọc chụp điện thoại có thể bị tô lệch, lộ đúng chỗ định che — đã thêm ca ảnh xoay vào tiêu chí và bài chấm."
+  },
+  {
+   "i": 2,
+   "p": "Chưa có bài chắc chắn bản che mất thông tin vị trí — bài nhìn nay bắt buộc ảnh gốc có thông tin ấy trước khi che."
+  },
+  {
+   "i": 3,
+   "p": "Chưa đo lịch sử ảnh và bản gốc còn nguyên byte — bài nhìn nay so dấu byte và đếm hai sự kiện đúng thứ tự."
+  },
+  {
+   "i": 4,
+   "p": "Bảng đối chiếu thiếu sản phẩm và chưa hỏi về kiểu che — đã thêm và thành Hỏi-3."
+  }
+ ]
+}
