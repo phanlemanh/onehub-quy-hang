@@ -296,11 +296,28 @@
    ]
   },
   {
+   "ma": "va-tieu-de-goi",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "va-tieu-de-goi",
+   "day": "B",
+   "uu_tien": 15,
+   "s4": "local",
+   "ranh_gioi": [
+    "apps/web/src/components/shell/app-shell.tsx",
+    "apps/web/src/components/shell/*.test.ts",
+    "_acceptance/va-tieu-de-goi/**"
+   ],
+   "sau": [
+    "28",
+    "29"
+   ]
+  },
+  {
    "ma": "43",
    "tep": "docs/plan/lo-trinh.json",
    "slug": "phat-hang",
    "day": "H",
-   "uu_tien": 15,
+   "uu_tien": 16,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/exports/**",
@@ -316,7 +333,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "nhap-hoan-tac",
    "day": "G",
-   "uu_tien": 16,
+   "uu_tien": 17,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/listing/**",
@@ -332,7 +349,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "nhap-nho-mau",
    "day": "G",
-   "uu_tien": 17,
+   "uu_tien": 18,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/import/memory/**",
@@ -349,7 +366,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "va-duong-loi-hoan-tac",
    "day": "B",
-   "uu_tien": 18,
+   "uu_tien": 19,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/inventory/cell-edit/**",
@@ -365,7 +382,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "doi-dau-chu-hang-loat",
    "day": "B",
-   "uu_tien": 19,
+   "uu_tien": 20,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/inventory/bulk/**",
@@ -385,7 +402,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "so-diem-bien-thien",
    "day": "D",
-   "uu_tien": 20,
+   "uu_tien": 21,
    "s4": "local",
    "ranh_gioi": [
     "packages/core/src/config/**",
@@ -400,7 +417,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "cau-hinh-theo-san",
    "day": "D",
-   "uu_tien": 21,
+   "uu_tien": 22,
    "s4": "local",
    "ranh_gioi": [
     "packages/api/src/settings/**",
@@ -418,7 +435,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "dang-nhap-auth-15",
    "day": "B",
-   "uu_tien": 22,
+   "uu_tien": 23,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(auth)/**",
@@ -435,7 +452,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "hom-nay-dau-chu-dien-thoai",
    "day": "H",
-   "uu_tien": 23,
+   "uu_tien": 24,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/today/mobile/**",
@@ -452,7 +469,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "hom-nay-truong-nhom",
    "day": "D",
-   "uu_tien": 24,
+   "uu_tien": 25,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/today/lead/**",
@@ -468,7 +485,7 @@
    "tep": "docs/plan/lo-trinh.json",
    "slug": "lead-dien-thoai",
    "day": "D",
-   "uu_tien": 25,
+   "uu_tien": 26,
    "s4": "local",
    "ranh_gioi": [
     "apps/web/src/app/(app)/leads/mobile/**",
@@ -666,6 +683,26 @@
    "uu_tien": 99,
    "ranh_gioi": [
     "_acceptance/lead-bon-nac/**"
+   ]
+  },
+  {
+   "ma": "28",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "cuoc-goi-khai-thac",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/cuoc-goi-khai-thac/**"
+   ]
+  },
+  {
+   "ma": "29",
+   "tep": "docs/plan/lo-trinh.json",
+   "slug": "goi-ep-gia-dot-hai",
+   "day": "X",
+   "uu_tien": 99,
+   "ranh_gioi": [
+    "_acceptance/goi-ep-gia-dot-hai/**"
    ]
   },
   {

@@ -4,7 +4,7 @@ Dựng sẵn ngày 02/11 trong lúc đợt `dau-chu-dong-vao` còn chạy (còn 
 ấy đóng. Cùng khuôn với `docs/plan/dot-dau-chu-dong-vao/` (gói `dieu-phoi`, kit 2.36.0): `dieu-phoi.config.json`,
 `hang-viec.json`, `LUAT-rieng.md`. Hàng lấy từ `docs/plan/lo-trinh.json` qua `nguon_hang`.
 
-26 hàng, chọn theo hai câu hỏi: hàng đã hết phụ thuộc chưa, và hai tuần thử có cần nó không.
+27 hàng, chọn theo hai câu hỏi: hàng đã hết phụ thuộc chưa, và hai tuần thử có cần nó không.
 
 - **Nửa đầu khách của bản đầu** (nhóm `dau-khach`, 31–38) cùng liên hệ khách (86): mọi màn P0 của §10 còn lại — bảng
   hàng dạng thẻ, hồ sơ trên điện thoại, luồng Gửi, trang khách, Đã gửi, Hôm nay của đầu khách — và tab Tôi.
@@ -19,10 +19,12 @@ Dựng sẵn ngày 02/11 trong lúc đợt `dau-chu-dong-vao` còn chạy (còn 
 - **Hai màn đã ký làm lại theo khối đích mới** (thêm 02/11 sau PR #88): 92 Hôm nay đầu chủ theo quyết định 14A
   (`solution-agents-2`, một nút mỗi dòng, «Vì sao hôm nay» hai tầng) và 93 Đăng nhập theo `auth-15` bỏ OAuth. 39 (bản
   điện thoại) dựng trên khuôn của 92 nên đứng sau nó.
-- **Hai hàng vá máy chủ** (thêm 03/11, chủ kho: «hai lỗi máy chủ: mở hai hàng vá ở đợt kế»; dãy D báo khi làm hàng 28):
+- **Ba hàng vá** (thêm 03/11; dãy D báo khi làm hàng 28). Hai lỗi máy chủ (chủ kho: «hai lỗi máy chủ: mở hai hàng vá ở
+  đợt kế»):
   `va-moc-goi-dau-lead-tra-lai` — lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ (luật chia và hạn của
   hàng 25); `va-doi-gia-can-da-ban` — máy chủ từ chối đổi giá trên căn Đã bán, bộ đồng bộ đưa lệnh vào «Cần xem» (luật
-  trạng thái của hàng 8). Hàng vá không có mã số, mã là slug như các hàng vá của đợt trước.
+  trạng thái của hàng 8). Và `va-tieu-de-goi` (chủ kho: «tiêu đề Căn call: mở hàng vá ở đợt kế») — màn ghi cuộc gọi
+  trên điện thoại hiện «Ghi cuộc gọi» thay vì «Căn call». Hàng vá không có mã số, mã là slug như các hàng vá của đợt trước.
 
 Hai tuần thử cần 31–38, 64–65 và 52; 43 là P1 nhưng mang một số đo của §11. Còn lại có thể gác ở Cổng Đáng mà không hàng nào khác bị chặn, trừ chuỗi đã ghi ở
 cột «Đứng trên» của thẻ.
@@ -47,7 +49,7 @@ Thẻ Cổng Đáng của gói này liệt cả bảy hàng ấy, để chủ kh
 
 ## Mở đợt
 
-1. Gói này, PR #61, và 26 ô cơ hội đã vào `main`; Cổng Đáng đã quyết ở `the-cong-dang.md`.
+1. Gói này, PR #61, và 27 ô cơ hội đã vào `main`; Cổng Đáng đã quyết ở `the-cong-dang.md`.
 2. Đợt `dau-chu-dong-vao` đã đóng (`/dieu-phoi:dong-dot`) — kit chỉ chạy một đợt mỗi lần.
 3. Mở từ một phiên mới ở checkout chính: `/dieu-phoi:mo-dot dau-khach-nhap`. Docker đang chạy.
 
@@ -57,12 +59,12 @@ lại của dãy.
 ## Độ rộng của đồ thị và số dãy
 
 Mọi hàng các hàng này đứng trên mà nằm ngoài đợt đều đã ký trên `main` (kiểm 02/11: 3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15,
-16, 17, 18, 22, 23, 25, 26, 27, 53, 85, 91 đều `signed-off`). Không hàng nào đứng trên 28, 29, 30 của đợt đang chạy — đợt này không
-chờ phần cuối của đợt trước, chỉ chờ nó đóng. Xếp tầng theo `dung_tren` (tầng = lượt sớm nhất có thể bắt đầu):
+16, 17, 18, 22, 23, 25, 26, 27, 53, 85, 91 đều `signed-off`; 28, 29 kiểm 03/11 cho `va-tieu-de-goi`). Không hàng nào
+đứng trên 30 hay hàng vá còn dở của đợt đang chạy — đợt này không chờ phần cuối của đợt trước, chỉ chờ nó đóng. Xếp tầng theo `dung_tren` (tầng = lượt sớm nhất có thể bắt đầu):
 
 | Tầng | Hàng | Rộng |
 |---|---|---|
-| 0 | 31, 32, 38, 42, 51, 52, 64, 81, 86, 88, 92, 93, hai hàng vá | 14 |
+| 0 | 31, 32, 38, 42, 51, 52, 64, 81, 86, 88, 92, 93, ba hàng vá | 15 |
 | 1 | 33, 34, 39, 43, 65, 82, 89 | 7 |
 | 2 | 35, 66, 67 | 3 |
 | 3 | 36 | 1 |
@@ -72,18 +74,18 @@ chờ phần cuối của đợt trước, chỉ chờ nó đóng. Xếp tầng 
 64 → 65 → 66 → 67 dài gần bằng — hai hàng T3 liền nhau — nên dãy G cũng là đường găng thực tế.
 
 Mô phỏng bằng `chonHangKe` của kit 2.36.0 (mọi hàng quyết `build`, xét cả chồng vùng) cho năm dãy chạy hết trong sáu
-lượt. 26 hàng trên năm dãy cần ít nhất sáu lượt, nên sáu là sàn: hai hàng vá 03/11 kéo đợt thêm một lượt so với bản 24
-hàng, và lượt 6 chỉ còn 51 (P1) ở dãy D. Đường găng 86 → 37 vẫn xong ở lượt 5. (V = vá: Vmốc = `va-moc-goi-dau-lead-tra-lai`,
-Vgiá = `va-doi-gia-can-da-ban`.)
+lượt. 27 hàng trên năm dãy cần ít nhất sáu lượt, nên sáu là sàn: ba hàng vá 03/11 kéo đợt thêm một lượt so với bản 24
+hàng, và lượt 6 chỉ còn 93 (dãy B) và 51 (P1, dãy D). Đường găng 86 → 37 vẫn xong ở lượt 5. (V = vá: Vmốc =
+`va-moc-goi-dau-lead-tra-lai`, Vgiá = `va-doi-gia-can-da-ban`, Vtđ = `va-tieu-de-goi`.)
 
 | Lượt | L | B | G | H | D |
 |---|---|---|---|---|---|
 | 1 | 86 | 32 | 64 | 31 | 52 |
 | 2 | 34 | 33 | 65 | 92 | 81 |
-| 3 | 35 | 88 | Vgiá | 38 | Vmốc |
-| 4 | 36 | 89 | 66 | 43 | 42 |
-| 5 | 37 | 93 | 67 | 39 | 82 |
-| 6 | — | — | — | — | 51 |
+| 3 | 35 | Vtđ | Vgiá | 38 | Vmốc |
+| 4 | 36 | 88 | 66 | 43 | 82 |
+| 5 | 37 | 89 | 67 | 39 | 42 |
+| 6 | — | 93 | — | — | 51 |
 
 Không lên sáu dãy: tầng 0 rộng mười nhưng các tầng sau hẹp dần, dãy thứ sáu không rút được lượt nào; và máy 36 GB
 chạy bốn dãy đợt nen-2 còn trống 21–29 GB (lượt chấm p95 4,0 GB, lượt đường nền p95 4,7 GB). Năm dãy như đợt trước.
@@ -96,18 +98,17 @@ riêng G có hai (65, 66) — bù lại G không có hàng P1 — và D có hai 
 | Dãy | Hàng (theo thứ tự chạy) | Bắt đầu khi | Vì sao chung dãy |
 |---|---|---|---|
 | L · Gửi khách | 86 → 34 → 35 → 36 → 37 | ngay; 34 chờ 31, 32 | Đường găng. Liên hệ khách (86) chạm `core/sharing/**` mà luồng Gửi dùng; 34 → 37 là chuỗi Gửi → trang khách → Đã gửi → Hôm nay đầu khách |
-| B · Bảng hàng | 32 → 33 → 88 → 89 → 93 | ngay; 89 chờ 86 | Khu `inventory/**` và `units/**`. 32 mở đầu vì 34 chờ nó; 93 (Đăng nhập, khu `(auth)/**`) lấp lượt 5 |
+| B · Bảng hàng | 32 → 33 → Vtđ → 88 → 89 → 93 | ngay; 89 chờ 86 | Khu `inventory/**` và `units/**`. 32 mở đầu vì 34 chờ nó; Vtđ sửa tiêu đề của `/units/call` ở vỏ (`components/shell/app-shell.tsx`), dãy duy nhất còn chỗ trước lượt 6; 93 (Đăng nhập, khu `(auth)/**`) cuối dãy |
 | G · Nhập | 64 → 65 → Vgiá → 66 → 67 | ngay | Chuỗi nhập trong khu `import/**`, `imports/**`. Vgiá chạm `core/listing/**` như 66 nên chung dãy, chạy trước 66 vì là vá |
 | H · Cửa ra và Hôm nay đầu chủ | 31 → 92 → 38 → 43 → 39 | ngay; 43 chờ 31; 39 chờ 92, 38 | 31 (luật ẩn) mở đầu vì 34 chờ nó; Phát hàng (43) là cửa ra thứ hai dựng trên luật ẩn; 92 làm lại Hôm nay đầu chủ và 39 dựng bản điện thoại trên khuôn ấy — cùng dãy để một người giữ khuôn `KhungHomNay`; 38 là tab Tôi |
-| D · Nền sàn | 52 → 81 → Vmốc → 42 → 82 → 51 | ngay | Ba hàng nền ở lõi và API (`metrics/**`, `config/**`, `settings/**`), cộng 42 và 51 lấp chỗ. Vmốc về D vì D là dãy làm luồng lead và tìm ra lỗi; 82 lùi sau 42 vì chung `packages/db/migrations/**` với 89 đang chạy ở lượt 4 |
-| X · neo (nghỉ) | 3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 25, 26, 27, 53, 85, 91 | — | Không phải việc: giữ chỗ để `sau` trỏ tới hàng đợt trước (luật 17) |
+| D · Nền sàn | 52 → 81 → Vmốc → 82 → 42 → 51 | ngay | Ba hàng nền ở lõi và API (`metrics/**`, `config/**`, `settings/**`), cộng 42 và 51 lấp chỗ. Vmốc về D vì D là dãy làm luồng lead và tìm ra lỗi; Vmốc và 82 chung `packages/db/migrations/**` với 89 nên không chạy cùng lượt với nó |
+| X · neo (nghỉ) | 3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 25, 26, 27, 28, 29, 53, 85, 91 | — | Không phải việc: giữ chỗ để `sau` trỏ tới hàng đợt trước (luật 17) |
 
 Bộ phát lịch giao trong mỗi dãy hàng sẵn sàng có `uu_tien` nhỏ nhất, nên thứ tự thật trong dãy theo phụ thuộc.
 
 Ưu tiên khi tranh lượt chấm (`uu_tien`, cũng là thứ tự `nguon_hang`): đường găng trước — 86, 31, 32, 34, 35, 36, 37 —
-rồi 92 (màn đầu chủ dùng mỗi ngày trong hai tuần thử), rồi phần hai tuần thử cần (64, 65, 52, 38, 33), rồi hai hàng vá
-máy chủ (Vmốc, Vgiá — trước mọi hàng P1), rồi 43, rồi nhập còn
-lại (66, 67), rồi vá và nền (88, 89, 81, 82), rồi 93, cuối cùng ba hàng P1 lấp chỗ (39, 42, 51). Chưa đặt mốc ngày cho hàng nào: hai tuần thử chưa có ngày.
+rồi 92 (màn đầu chủ dùng mỗi ngày trong hai tuần thử), rồi phần hai tuần thử cần (64, 65, 52, 38, 33), rồi ba hàng vá
+(Vmốc, Vgiá, Vtđ — trước mọi hàng P1), rồi 43, rồi nhập còn lại (66, 67), rồi vá và nền (88, 89, 81, 82), rồi 93, cuối cùng ba hàng P1 lấp chỗ (39, 42, 51). Chưa đặt mốc ngày cho hàng nào: hai tuần thử chưa có ngày.
 
 Vùng tệp (`ranh_gioi`) lấy từ trường `vung` của lộ trình cộng thư mục hồ sơ, sửa cho trỏ đúng `apps/web/src/app/(app)/…`
 như lượt trước (vùng của lộ trình thiếu nhóm đường `(app)`); trang khách `/s/<mã>` nằm ngoài vỏ nên giữ
@@ -117,7 +118,7 @@ dãy: 89 (B) và 86 (L) cùng `packages/api/src/contacts/**` — 89 khai `sau` t
 ở ba thư mục con khác nhau của `today/`, tệp chung `today/page.tsx` theo luật 12. 92 giữ các tệp ở gốc `today/`
 (`today/*.tsx`, `today/*.ts`); bộ dò chồng vùng của kit so mẫu theo tiền tố nên coi 92 chồng với 37 và 42 — chúng chỉ
 không chạy cùng lúc (mô phỏng: 92 xong ở lượt 2, trước cả hai). Vgiá (G) chồng 89 (B) ở `packages/api/src/listings/**`
-— mô phỏng: Vgiá lượt 3, 89 lượt 4. Mọi cặp khác ở hai dãy không chồng.
+— mô phỏng: Vgiá lượt 3, 89 lượt 5. Mọi cặp khác ở hai dãy không chồng.
 
 Cổng dev và Postgres mỗi dãy: L 3491 / 5571, B 3492 / 5572, G 3493 / 5573, H 3494 / 5574, D 3495 / 5575, container
 `quy-hang-db-dkn-<dãy>` (luật 7; kiểm 02/11 không cổng nào đang nghe; tên container khác đợt trước vì container

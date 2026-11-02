@@ -2073,6 +2073,25 @@
         "packages/core/src/pricing/**",
         "packages/api/src/listings/**"
       ]
+    },
+    {
+      "ma": "va-tieu-de-goi",
+      "cau_giao": "Vá tiêu đề Cuộc gọi: trên điện thoại, đầu trang của màn ghi cuộc gọi hiện «Ghi cuộc gọi» thay vì «Căn call»; trang của một căn vẫn hiện mã căn như cũ",
+      "slug": "va-tieu-de-goi",
+      "vi_sao": "Dãy D báo (tín hiệu D-25, 02/11, đợt dau-chu-dong-vao): titleOf ở vỏ ứng dụng coi mọi /units/<x> là mã căn nên màn ghi cuộc gọi của hàng 28 hiện «Căn call» trên điện thoại. Chủ kho: «tiêu đề Căn call: mở hàng vá ở đợt kế»",
+      "vai": "Đầu chủ",
+      "tieu_chi": 3,
+      "hang": "T2",
+      "dung_tren": [
+        "28",
+        "29"
+      ],
+      "bat_khi": "Trên điện thoại /units/call và /units/call/dial hiện tiêu đề «Ghi cuộc gọi» (khớp nhãn nút Hỏi-8 của hàng 29); trang một căn thật vẫn hiện «Căn <mã>» như cũ; có bài kiểm cho titleOf phủ cả hai ca",
+      "nhom": "dong-vao",
+      "vung": [
+        "apps/web/src/components/shell/app-shell.tsx",
+        "apps/web/src/components/shell/*.test.ts"
+      ]
     }
   ],
   "chan_troi": [

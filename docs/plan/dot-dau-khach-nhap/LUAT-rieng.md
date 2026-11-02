@@ -41,8 +41,8 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
 16. Việc cần chủ kho cầm máy thật (mở bảng chia sẻ và dán link vào Zalo của hàng 34–35, cài lên màn hình chính và xoá
     dữ liệu khi đăng xuất của hàng 38, gọi lại một chạm của hàng 39, nhập lead trên điện thoại của hàng 51) gửi một yêu
     cầu `can-nguoi` gom đủ các bước, để chủ kho làm trong một lần ngồi. Giám sát gom các yêu cầu cùng lượt thành một.
-17. Dãy X là dãy neo: giữ hai mươi hai hàng đã ký (3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 25, 26, 27, 53, 85,
-    91) để
+17. Dãy X là dãy neo: giữ hai mươi bốn hàng đã ký (3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 25, 26, 27,
+    28, 29, 53, 85, 91) để
     `sau` của đợt này chặn đúng. Dãy X nghỉ, không mở chip, không ai ghi danh vào.
 18. Bản đồ khuôn (hàng 58–60, `docs/design/vo-va-ia.md`) và hệ bố cục (hàng 91, ADR-0024): mỗi màn mới chọn một trong
     bảy bố cục có tên và khai ở Cổng Phạm vi. Màn đầu tiên của một nhóm chưa có trong `design/patterns/` — Gửi (34),
@@ -99,3 +99,7 @@ của các hàng đợt này, mỗi luật đến từ chỗ hàng chạm tệp 
     cũ), kèm ca lead đang giữ vẫn ghi được. `va-doi-gia-can-da-ban` (G, T2): luật «căn Đã bán không đổi giá» nằm ở
     `packages/core` (luật trạng thái của hàng 8), máy chủ trả 4xx với lý do tiếng Việt; bộ đồng bộ đã đưa 4xx thật vào
     «Cần xem» — dãy chỉ kiểm, sửa `apps/web/src/lib/sync/**` thì gửi `cham-tep`.
+32. `va-tieu-de-goi` (B, T2): sửa `titleOf` ở `apps/web/src/components/shell/app-shell.tsx` để `/units/call` và
+    `/units/call/dial` có tiêu đề «Ghi cuộc gọi» (nhãn nút Hỏi-8 của hàng 29), không phải «Căn call»; trang một căn vẫn
+    «Căn <mã>». Đường dẫn con nào khác của `/units/` không phải mã căn cũng theo cùng luật. Bài kiểm cho `titleOf` đặt
+    cạnh tệp (`*.test.ts`); tách `titleOf` ra tệp riêng thì tệp ấy ở cùng thư mục và ghi vào hợp đồng.
