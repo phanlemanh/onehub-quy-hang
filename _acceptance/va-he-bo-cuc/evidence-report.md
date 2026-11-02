@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 1b21604c07e12b9a584f1777915931df42aa893d
+verified_commit: dbd73eae1f3b6cd4fae4e0e954a47a02fa5ccb33
 human_signoff:
 ---
 
@@ -196,3 +196,7 @@ Round 3: sau gộp main PR #83, #85 chạy lại E6u, E10u, E7u (bài nhìn màn
 ### Re-pin lần 1 — 2026-11-02, do gộp main (PR #83, #85) sau lượt chấm r2
 run_id: repin-20261102T095347Z-26379
 sha: 0fe6f9689aa18df6686dcfa036a28883f2aa7970 · suites: 7 lệnh đạt · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E10u, E7u · diff chạm vật đo ngoài làn máy: E6u, E10u, E7u — đã chứng lại ở round 3 bằng bài nhìn màn.
+
+### Re-pin lần 2 — 2026-11-02, do gộp main PR #84 (nút Gọi ở dòng lead của Hôm nay) sau lượt chấm r3
+run_id: repin-20261102T101219Z-62289
+sha: dbd73eae1f3b6cd4fae4e0e954a47a02fa5ccb33 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6u, E10u, E7u · diff chạm vật đo ngoài làn máy: E6u, E10u, E7u — chưa chứng lại, đi vòng S4 delta
