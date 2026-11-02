@@ -3,13 +3,26 @@
  * mọi phần thuần kiểm được bằng `node:test`; trình duyệt thay kho bằng IndexedDB và hàm gọi bằng `fetch` cùng gốc.
  */
 import type { EventType, ListingEvent, ListingState } from "@quy-hang/core/listing";
+import type { BoNhom, LanDoi } from "@quy-hang/core/today";
 
-/** Hàng như `GET /api/v1/listings` trả: bản tính + độ tươi, mức đủ, nấc của trục ai thấy hàng. Không có trường nguồn. */
+/**
+ * Hàng như `GET /api/v1/listings` trả: bản tính + độ tươi, mức đủ, nấc của trục ai thấy hàng, người giữ và lần đổi giá,
+ * đổi trạng thái gần nhất (hàng 22, RESO `ListAgentKey`, `PriceChangeTimestamp`, `StatusChangeTimestamp`). Không có
+ * trường nguồn. Năm trường của hàng 22 tuỳ chọn: kho trên máy từ trước hàng 22 chưa có chúng tới lần kéo kế.
+ */
 export type ListingView = { id: string } & ListingState & {
     freshness?: unknown;
     completeness?: unknown;
     visibility?: "Private" | "Company";
+    listAgentKey?: string | null;
+    priceChangeTimestamp?: string | null;
+    statusChangeTimestamp?: string | null;
+    lastPriceChange?: LanDoi | null;
+    lastStatusChange?: LanDoi | null;
   };
+
+/** Lần đọc bộ nhóm Hôm nay thành công gần nhất của sàn (`GET /api/v1/company/settings/queue`, hàng 22). */
+export type BoNhomDaLuu = { groups: BoNhom; source: "default" | "company"; savedAt: string };
 
 /** Một lần sửa đã ghi trên máy, chưa được máy chủ nhận («thao tác chờ»). */
 export type PendingOp = {
@@ -48,9 +61,11 @@ export type Ngan = {
   lastPullAt: string | null;
   lastAttempt: LanThu | null;
   nextSeq: number;
+  /** Bộ nhóm Hôm nay đã lưu — mất mạng hay lỗi đọc thì màn chia theo bộ này. Ngăn cũ chưa có khoá này đọc là `null`. */
+  queueSet?: BoNhomDaLuu | null;
 };
 
-export const nganTrong = (): Ngan => ({ listings: null, history: {}, queue: [], review: [], lastPullAt: null, lastAttempt: null, nextSeq: 1 });
+export const nganTrong = (): Ngan => ({ listings: null, history: {}, queue: [], review: [], lastPullAt: null, lastAttempt: null, nextSeq: 1, queueSet: null });
 
 /** Hàm gọi API. Ném lỗi = mất mạng; còn lại trả mã HTTP và thân đã đọc JSON. */
 export type Goi = (method: "GET" | "POST", path: string, body?: unknown) => Promise<{ status: number; body: unknown }>;
