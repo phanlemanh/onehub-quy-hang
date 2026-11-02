@@ -7,7 +7,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 86ba9f8225d6a1ebe08bc5991567510e29e97ecd
-human_signoff:
+human_signoff: Manh Phan 2026-11-02
 ---
 
 # Evidence Report: cuoc-goi-khai-thac
@@ -95,7 +95,7 @@ human_signoff:
   run_id: minted-cuoc-goi-khai-thac-E1b-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:52:35Z
   screenshot: evidence/E1b-step1.png
   observed: |
@@ -109,7 +109,7 @@ human_signoff:
   run_id: minted-cuoc-goi-khai-thac-E2-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:52:35Z
   screenshot: evidence/E2-da-goi.png
   observed: |
@@ -120,7 +120,7 @@ human_signoff:
   run_id: minted-cuoc-goi-khai-thac-E4b-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:52:35Z
   screenshot: evidence/E4-bao-phi.png
   observed: |
@@ -133,7 +133,7 @@ human_signoff:
   run_id: minted-cuoc-goi-khai-thac-E7b-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:52:35Z
   screenshot: evidence/E7b-step1.png
   observed: |
@@ -144,7 +144,7 @@ human_signoff:
   run_id: minted-cuoc-goi-khai-thac-E7c-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:52:35Z
   screenshot: evidence/E7c-step1.png
   observed: |
@@ -155,7 +155,7 @@ human_signoff:
   run_id: minted-cuoc-goi-khai-thac-E9-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T08:52:35Z
   screenshot: evidence/E9-chua-ho-so.png
   observed: |
@@ -191,7 +191,7 @@ human_signoff:
 - eval: E5b
   run_id: E5b-20261102
   exit_code: 0
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T07:54:25Z
   carried_from_round: 1
   screenshot: evidence/E5b-step1.png
@@ -220,7 +220,7 @@ human_signoff:
 - eval: E6c
   run_id: E6c-2026-11-02
   exit_code: 0
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T07:54:25Z
   carried_from_round: 1
   screenshot: evidence/E6c-step1.png
@@ -240,7 +240,7 @@ human_signoff:
 - eval: E8b
   run_id: minted-cuoc-goi-khai-thac-E8b-r1
   exit_code: 0
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T07:54:25Z
   carried_from_round: 1
   screenshot: evidence/E8b-step1.png
@@ -260,7 +260,7 @@ human_signoff:
 - eval: E10b
   run_id: E10b-2026-11-02
   exit_code: 0
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-02T07:54:25Z
   carried_from_round: 1
   screenshot: evidence/E10b-step1.png

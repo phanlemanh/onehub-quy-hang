@@ -5,7 +5,7 @@ slug: cuoc-goi-khai-thac
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-cuoc-goi-khai-thac-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -99,3 +99,12 @@ Quét bằng skill morphological-scan, preset entity-feature (đối tượng: c
 
 - Không migration, không bảng mới. Tệp ngoài vùng `units/call/**` xin ở yêu cầu D-23.
 - Năm Hỏi ở `decisions.jsonl`; người chọn khác khuyến nghị thì tiêu chí liên quan sửa trước khi duyệt.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Nếu bước chốt dữ liệu lỗi đúng lúc nạp bản thật, ảnh đã tải lên kho ngoài có thể nằm lại mà không căn nào trỏ tới, và lời báo không cho biết. Chỉ gặp khi nạp dữ liệu thử, người dùng cuối không thấy.
+  - Ngoài-2: Khi nạp bản thật lỗi, máy báo sai là không xoá được hết ảnh dù thực tế đã được gỡ sạch. Người vận hành có thể lo có rác trong khi không có.
+  - Ngoài-4: Kịch bản thử tự chép số phòng ngủ; nếu dữ liệu mẫu đổi, phép so với trang cuộc gọi có thể lệch mà không ai hay. Hiện hai bên vẫn khớp, người dùng không thấy gì.
+  - Ngoài-5: Bài kiểm ảnh mẫu chỉ thử vài thứ tự trong số 40 nên có thể bỏ sót một ảnh trùng hay sai khuôn ở thứ tự khác. Ảnh chỉ dùng cho dữ liệu thử.
+  - Ngoài-7: Nếu mốc gọi đầu đã được ghi từ máy khác sau khi mở thẻ, thẻ vẫn báo «Lead đã ghi gọi rồi» và không chuyển sang Đã gọi. Đầu chủ vẫn gọi và ghi câu trả lời bình thường, chỉ thấy dòng báo lỗi thừa.
+  - Ngoài-8: Khi con trỏ đang ở một nút như «Đã gọi» hay nút bao phí, bấm Enter không kích hoạt nút đó, còn bấm phím số hoặc Delete có thể ghi hay xoá một câu trả lời ngoài ý muốn.
+  - Ngoài-9: Bài kiểm cho tình huống máy chủ từ chối ghi mốc gọi dùng một lý do mà máy chủ thật không bao giờ trả, nên nó không bảo vệ được tình huống lead đã trả lại. Người dùng không gặp lỗi mới từ chỗ này.
+  - Ngoài-10: Bài kiểm dải giá thấp – giữa – cao chỉ thử trên hai căn, nên nếu cách tính «giữa» bị đổi thành trung bình thì bài kiểm vẫn xanh. Với toà có từ ba căn trở lên, mức «giữa» người dùng thấy có thể lệch mà không ai phát hiện.
