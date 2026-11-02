@@ -76,9 +76,9 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440×900. Phiên dau-chu-1 (cookieCua) trên Chrome của cdp.mjs; mỗi ô một trang mới."
-      - "Ô «lưu hỏng»: initScript thiết bị đã bật với endpoint https://push.example.test/ui-<mã chạy> → mở /today, chờ 3 giây → ghi: có section aria-label «Thông báo lead» không, chữ trong đó, có nút «Bật thông báo» không; ghi mã trả của POST /api/v1/me/push-subscriptions (Network) ; chụp evidence/E8-luu-hong.png"
-      - "Ô «lưu được»: initScript thiết bị đã bật với endpoint https://fcm.googleapis.com/fcm/send/ui-<mã chạy> → mở /today, chờ 3 giây → ghi có section «Thông báo lead» không; mã trả của POST; đếm dòng push_subscriptions của dau-chu-1 có endpoint ấy (Postgres 5561); chụp evidence/E8-luu-duoc.png"
+      - "DỰNG B. Khổ 1440×900. Phiên dau-chu-1 (cookieCua) trên Chrome của cdp.mjs; mỗi ô một trang mới. Mỗi ô thêm initScript bọc window.fetch ghi URL và mã trả vào window.__f; sau khi mở /today chờ (tối đa 90 giây, bản dev biên dịch /today lần đầu ≈ 25 giây) tới khi window.__f có câu trả lời của /api/v1/push/public-key hay /api/v1/me/push-subscriptions, rồi chờ thêm 3 giây mới đo. Không mở trình duyệt nào khác vào cổng 3481 cùng lúc."
+      - "Ô «lưu hỏng»: initScript thiết bị đã bật với endpoint https://push.example.test/ui-<mã chạy> → mở /today, chờ như bước 1 → ghi: có section aria-label «Thông báo lead» không, chữ trong đó, có nút «Bật thông báo» không; ghi mã trả của POST /api/v1/me/push-subscriptions (Network) ; chụp evidence/E8-luu-hong.png"
+      - "Ô «lưu được»: initScript thiết bị đã bật với endpoint https://fcm.googleapis.com/fcm/send/ui-<mã chạy> → mở /today, chờ như bước 1 → ghi có section «Thông báo lead» không; mã trả của POST; đếm dòng push_subscriptions của dau-chu-1 có endpoint ấy (Postgres 5561); chụp evidence/E8-luu-duoc.png"
       - "Ô «chưa bật»: không initScript → mở /today → ghi chữ của section «Thông báo lead» và nút; chụp evidence/E8-chua-bat.png"
       - "Ghi evidence/E8-measure.json: mỗi ô {o, coDai, chu, coNut, postStatus, soDong} cộng bảng đạt/trượt từng mục của Expected"
     expected: "Lưu hỏng: POST trả 400; dải hiện với chữ «Chưa bật được thông báo — thử lại» và nút «Bật thông báo». Lưu được: POST trả 200 hay 201; không có dải; có đúng một dòng đăng ký với endpoint ấy. Chưa bật: dải «Bật thông báo lead» với nút «Bật thông báo» như hàng 26. Mỗi ô × mỗi mục một đạt/trượt."
