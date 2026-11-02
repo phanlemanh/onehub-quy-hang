@@ -1852,3 +1852,100 @@ test("đăng ký đẩy: hàm lấy đăng ký cho lối gửi", { skip }, async
     assert.equal(so, 5);
   });
 });
+
+// ---- Vết mở số của lead (017_mo_so_lead, hàng mo-so-lead) ----
+const MS_DC = "u-ms-dc"; // đầu chủ được giao, sàn A
+const MS_KHAC = "u-ms-khac"; // đầu chủ khác, sàn A
+const MS_TN = "u-ms-tn"; // trưởng nhóm, sàn A
+const MS_B = "u-ms-b"; // đầu chủ sàn B
+const MS_LEAD = "00000000-0000-4000-8000-0000000000e1";
+
+/** Dựng hai sàn, bốn người, một lead của A giao cho MS_DC; MS_DC mở số một lần (qua hàm) để có một vết. */
+async function withMoSo(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [MS_DC, COMPANY_A, ["listing_agent"]],
+      [MS_KHAC, COMPANY_A, ["listing_agent"]],
+      [MS_TN, COMPANY_A, ["team_lead"]],
+      [MS_B, COMPANY_B, ["listing_agent"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    await c.query(
+      `insert into leads (id, company_id, created_by, building_name, need, list_price, fee_inclusion, desired_listing_time,
+                          owner_phone_enc, owner_phone_hash, outcome, matched_agent_user_id)
+       values ($1, $2, $3, 'Toà A', 'sale', 1, 'included', 'now', $4, $5, 'owner_has_agent', $3)`,
+      [MS_LEAD, COMPANY_A, MS_DC, Buffer.concat([Buffer.from([1]), randomBytes(38)]), randomBytes(32)],
+    );
+    await c.query("set local role quy_hang_app");
+    const dat = (nguoi, san) =>
+      c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [nguoi, san]);
+    await dat(MS_DC, COMPANY_A);
+    await c.query("select app.reveal_lead_phone($1)", [MS_LEAD]);
+    return await fn(c, dat);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+
+test("vết mở số lead: bật và ép luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relrowsecurity r, c.relforcerowsecurity f from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname = 'lead_phone_reveals'`,
+    );
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("vết mở số lead: ai đọc được", { skip }, async () => {
+  await withMoSo(async (c, dat) => {
+    // Bảng viết trước: người đọc vết của người mở (MS_DC) → số dòng.
+    const BANG = [
+      ["người mở", MS_DC, COMPANY_A, 1],
+      ["trưởng nhóm cùng sàn", MS_TN, COMPANY_A, 1],
+      ["đầu chủ khác cùng sàn", MS_KHAC, COMPANY_A, 0],
+      ["người sàn khác", MS_B, COMPANY_B, 0],
+    ];
+    let so = 0;
+    for (const [ten, nguoi, san, mong] of BANG) {
+      await dat(nguoi, san);
+      const n = (await c.query("select 1 from lead_phone_reveals where actor_user_id = $1", [MS_DC])).rowCount;
+      assert.equal(n, mong, `dòng «${ten}»`);
+      so++;
+    }
+    assert.equal(so, 4);
+  });
+});
+
+test("vết mở số lead: chỉ thêm", { skip }, async () => {
+  await withMoSo(async (c, dat) => {
+    await dat(MS_DC, COMPANY_A);
+    // Bảng viết trước: lối ghi thẳng → lỗi viết trước.
+    const BANG = [
+      ["vai API thêm thẳng", () => c.query("insert into lead_phone_reveals (company_id, lead_id, actor_user_id, actor_roles) values ($1, $2, $3, '{listing_agent}')", [COMPANY_A, MS_LEAD, MS_DC]), /permission denied|row-level security/],
+      ["vai API sửa", () => c.query("update lead_phone_reveals set actor_user_id = $1", [MS_KHAC]), /permission denied/],
+      ["vai API xoá", () => c.query("delete from lead_phone_reveals"), /permission denied/],
+      ["vai chủ sửa", async () => { await c.query("reset role"); return c.query("update lead_phone_reveals set actor_user_id = $1", [MS_KHAC]); }, /chỉ thêm/],
+      ["vai chủ xoá", async () => { await c.query("reset role"); return c.query("delete from lead_phone_reveals"); }, /chỉ thêm/],
+    ];
+    let so = 0;
+    for (const [ten, viec, mong] of BANG) {
+      await c.query("savepoint ms");
+      await assert.rejects(viec(), mong, `dòng «${ten}»: không bị chặn đúng lỗi`);
+      await c.query("rollback to savepoint ms");
+      so++;
+    }
+    assert.equal(so, 5);
+  });
+});

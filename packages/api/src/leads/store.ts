@@ -7,7 +7,7 @@ import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { createListing, isRefusal as laTuChoiHang } from "../listings/store";
 import { khoaSoChu } from "../owners/khoa";
 import { baoLeadVe } from "../push/store";
-import { dauVetSo, maHoaSo, nguCanhLead } from "../owners/ma-hoa";
+import { dauVetSo, giaiMaSo, maHoaSo, nguCanhLead, type KhoaSoChu } from "../owners/ma-hoa";
 
 /**
  * Đường ghi duy nhất của lead (hàng 24, ADR-0012). Một giao dịch: lấy hai dữ kiện kiểm trùng ở cơ sở dữ liệu → lõi quyết
@@ -117,6 +117,26 @@ export async function createLead(tx: pg.PoolClient, payload: unknown, intoContac
   // Lead khớp đầu chủ giữ chủ nhà hay căn: báo đầu chủ ấy (hàng 26) — dòng «cần báo» quay lui cùng việc nhập.
   if (quyet.agentUserId) await baoLeadVe(tx, id, quyet.agentUserId);
   return toRecord(ghi.rows[0]!);
+}
+
+/**
+ * Mở số của lead (hàng mo-so-lead): cửa duy nhất ra số chủ của lead, cùng nếp «Mở số» của hồ sơ căn. Hàm cơ sở dữ liệu xét
+ * quyền (đầu chủ đang được giao, lead còn việc), ghi một vết, trả bản mã; ở đây giải bằng khoá với ngữ cảnh của chính lead.
+ * Bị từ chối thì không có vết và thân trả không mang số.
+ */
+export async function revealLeadPhone(tx: pg.PoolClient, id: string, khoa: KhoaSoChu): Promise<{ ownerPhone: string } | Refusal> {
+  await tx.query("savepoint mo_so_lead");
+  let banMa: Buffer;
+  try {
+    banMa = (await tx.query<{ ban_ma: Buffer }>("select app.reveal_lead_phone($1) as ban_ma", [id])).rows[0]!.ban_ma;
+  } catch (e) {
+    const code = (e as { code?: string }).code;
+    if (code !== "42501" && code !== "P0002") throw e;
+    await tx.query("rollback to savepoint mo_so_lead");
+    return { error: code === "42501" ? API_ERRORS.listingAgentRequired : API_ERRORS.notFound };
+  }
+  const san = (await tx.query<{ c: string }>("select app.current_company_id() c")).rows[0]!.c;
+  return { ownerPhone: giaiMaSo(banMa, nguCanhLead(san, id), khoa) };
 }
 
 /** Lead của chính người gọi; lead người khác nhập coi như không có (luật 21). */
