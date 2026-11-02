@@ -6,6 +6,8 @@ export type TrangThaiThietBi =
   | "dang-kiem"
   | "chua-bat"
   | "da-bat"
+  /** Trình duyệt đã bật mà máy chủ chưa lưu được đăng ký (va-thong-bao-lead) — dải vẫn hiện và báo. */
+  | "loi-luu"
   | "tu-choi"
   | "ios-chua-cai"
   | "khong-ho-tro"
@@ -22,14 +24,19 @@ export type DuKienThietBi = {
   daDangKy: boolean;
   /** Máy chủ dựng được khoá — null khi chưa hỏi. */
   cauHinh: boolean | null;
+  /** Lần lưu đăng ký lên máy chủ thành công không — null khi chưa thử. */
+  daLuu?: boolean | null;
 };
 
-/** Thứ tự quyết: iPhone chưa cài → hướng dẫn cài; không hỗ trợ; từ chối; đã bật; máy chủ chưa cấu hình; chưa bật. */
+/**
+ * Thứ tự quyết: iPhone chưa cài → hướng dẫn cài; không hỗ trợ; từ chối; đã bật (lưu hỏng thì «loi-luu»); máy chủ chưa cấu
+ * hình; chưa bật.
+ */
 export function phanLoai(d: DuKienThietBi): Exclude<TrangThaiThietBi, "dang-kiem"> {
   if (d.ios && !d.daCai) return "ios-chua-cai";
   if (!d.coServiceWorker || !d.coPush || d.quyen === "khong-co") return "khong-ho-tro";
   if (d.quyen === "denied") return "tu-choi";
-  if (d.daDangKy && d.quyen === "granted") return "da-bat";
+  if (d.daDangKy && d.quyen === "granted") return d.daLuu === false ? "loi-luu" : "da-bat";
   if (d.cauHinh === false) return "chua-cau-hinh";
   return "chua-bat";
 }
@@ -75,15 +82,17 @@ export async function docTrangThai(): Promise<Exclude<TrangThaiThietBi, "dang-ki
   const truoc = phanLoai(coBan);
   if (truoc !== "chua-bat") {
     // Đã bật trên trình duyệt: gửi lại cho máy chủ (bật lại không thêm dòng) — đăng ký có thể mất ở máy chủ khi đổi sàn.
-    if (truoc === "da-bat" && sub) await luu(sub);
+    // Lưu hỏng thì dải vẫn hiện và báo (va-thong-bao-lead).
+    if (truoc === "da-bat" && sub) return phanLoai({ ...coBan, daLuu: await luu(sub) });
     return truoc;
   }
   return phanLoai({ ...coBan, cauHinh: (await khoaCongKhai()) !== null });
 }
 
-async function luu(sub: PushSubscription): Promise<boolean> {
+/** Lưu đăng ký lên máy chủ: true chỉ khi máy chủ trả 2xx; mất mạng, 4xx, 5xx đều là false, không ném. */
+export async function luu(sub: Pick<PushSubscription, "toJSON">, goi: typeof fetch = fetch): Promise<boolean> {
   try {
-    const r = await fetch(DUONG, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(sub.toJSON()) });
+    const r = await goi(DUONG, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(sub.toJSON()) });
     return r.ok;
   } catch {
     return false;

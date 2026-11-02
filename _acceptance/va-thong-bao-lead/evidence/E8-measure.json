@@ -1,0 +1,52 @@
+{
+  "maChay": "mvz0m4nz",
+  "cac_o": [
+    {
+      "o": "luu-hong",
+      "coDai": true,
+      "chu": "Chưa bật được thông báo — thử lại\nNhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.\nBật thông báo",
+      "coNut": true,
+      "postStatus": [
+        400,
+        400
+      ],
+      "soDong": 0,
+      "url": "/today",
+      "endpoint": "https://push.example.test/ui-mvz0m4nz"
+    },
+    {
+      "o": "luu-duoc",
+      "coDai": false,
+      "chu": "",
+      "coNut": false,
+      "postStatus": [
+        201,
+        200
+      ],
+      "soDong": 1,
+      "url": "/today",
+      "endpoint": "https://fcm.googleapis.com/fcm/send/ui-mvz0m4nz"
+    },
+    {
+      "o": "chua-bat",
+      "coDai": true,
+      "chu": "Bật thông báo lead\nNhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.\nBật thông báo",
+      "coNut": true,
+      "postStatus": null,
+      "soDong": null,
+      "url": "/today",
+      "endpoint": null
+    }
+  ],
+  "bang": {
+    "luu-hong: POST 400": "dat",
+    "luu-hong: dai hien": "dat",
+    "luu-hong: chu 'Chưa bật được thông báo — thử lại'": "dat",
+    "luu-hong: nut 'Bật thông báo'": "dat",
+    "luu-duoc: POST 200/201": "dat",
+    "luu-duoc: khong co dai": "dat",
+    "luu-duoc: dung 1 dong": "dat",
+    "chua-bat: dai 'Bật thông báo lead'": "dat",
+    "chua-bat: nut 'Bật thông báo'": "dat"
+  }
+}
