@@ -5,7 +5,7 @@ slug: va-he-bo-cuc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-02-va-he-bo-cuc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-02
@@ -75,3 +75,10 @@ Bốn trục, quét tay (sổ quyết định, dòng «bỏ coverage-scan»):
 - Ngoài-1 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Khi danh sách lead giao cho bạn tải lỗi (mất mạng, máy chủ trục trặc), bấm mục «Lead mới» ở cột bên vẫn hiện «Hôm nay không có việc ở «Lead mới»» cạnh dòng báo lỗi tải. Trang nói là không có việc trong khi thật ra chưa biết. — `apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx`
 - Ngoài-2 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Người dùng không gặp lỗi nào hôm nay: người kiêm đầu chủ vẫn được xử như đầu chủ. Nhưng nếu sau này ai đó đổi cách nhận biết vai, bài kiểm vẫn xanh và có thể để lọt một người kiêm đầu chủ bị báo sai là «chỉ có ở Hôm nay của đầu chủ». — `apps/web/src/app/(app)/today/mo-nhom.test.ts`
 - Ngoài-3 (máy định tuyến 2026-11-02, đề xuất S4 known-limits): Chỉ một trong năm hàng đợi được kiểm tự động về việc mở đúng nhóm khi bấm; bốn hàng đợi còn lại nếu sau này hỏng thì bài kiểm không tự báo. Hiện chưa thấy hàng đợi nào bấm sai. — `apps/web/src/app/(app)/today/mo-nhom.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-02:
+  - Ngoài-1: Khi danh sách lead giao cho bạn tải lỗi, bấm «Lead mới» ở cột bên vẫn báo «Hôm nay không có việc ở «Lead mới»» cạnh dòng báo lỗi tải, dù thật ra chưa biết.
+  - Ngoài-2: Bài kiểm luật «người kiêm đầu chủ được xử như đầu chủ» đo một bản sao luật, nên đổi cách nhận biết vai sau này có thể lọt mà bài kiểm vẫn xanh.
+  - Ngoài-3: Chỉ một trong năm hàng đợi được kiểm tự động về việc mở đúng nhóm khi bấm; bốn hàng đợi còn lại hỏng sau này thì bài kiểm không tự báo.
+  - Ngoài-4: Cùng giới hạn với Ngoài-1 (lượt chấm 1): lead tải lỗi mà mục «Lead mới» vẫn báo không có việc.
+  - Ngoài-5: Cùng giới hạn với Ngoài-2 (lượt chấm 1): bài kiểm vai đo bản sao luật, không đo trang thật.
+  - Ngoài-6: Cùng giới hạn với Ngoài-3 (lượt chấm 1): việc mở đúng nhóm chỉ được kiểm trên một mã.
