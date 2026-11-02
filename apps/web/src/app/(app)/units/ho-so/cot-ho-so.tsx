@@ -4,7 +4,7 @@
 // lần rao, dòng thời gian lịch sử. Đọc kho trên máy và danh mục đã giữ; lịch sử kéo ở nền và giữ trên máy (hàng 13).
 import { Maximize2, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
 
 import { Badge } from "@/components/reui/badge";
 import {
@@ -23,9 +23,10 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
+import type { ListingView } from "@/lib/sync/types";
 import { useDanhMuc } from "../../inventory/danh-muc";
 import { MucAnhCan } from "../photos/muc-anh-can";
-import { hienNutSanSang, type Dich } from "../ready/san-sang";
+import { dauCuaCan, hienNutSanSang, type Dich } from "../ready/san-sang";
 import { NEO_MUC_ANH, NutSanSang } from "../ready/nut-san-sang";
 import { NutBaoSai } from "./nut-bao-sai";
 import {
@@ -33,13 +34,18 @@ import {
   chonLanRao,
   coBaoSai,
   dongLichSu,
+  laChonHang,
+  lanRaoCua,
   NHAN_PHAN,
   phanLanRao,
   thuocTinh,
   timCan,
+  timHang,
   trangThaiLichSu,
   type ChonCan,
+  type ChonCot,
 } from "./ho-so";
+import { OMaCan } from "./o-ma-can";
 
 const TIEU_MUC = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
 const hai = (n: number) => String(n).padStart(2, "0");
@@ -112,22 +118,46 @@ function danhDauChuaCo(nhan: string, dich: readonly Dich[]): boolean {
 export type HoSoProps = {
   nguoi: string;
   san: string;
-  chon: ChonCan;
+  /** Theo căn (`?unit=`), hay theo hàng (`?hang=`) cho hàng chưa có mã căn (ADR-0026). */
+  chon: ChonCot;
   /** Đường đóng cột (về Bảng hàng); toàn màn không có. */
   dongHref?: string;
   /** Dựng đường cho một lần chọn khác: chọn toà khi mã trùng, chọn lần rao. */
   duong: (c: ChonCan) => string;
 };
 
-export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
+/**
+ * Hồ sơ theo căn hay theo hàng. Hàng của `?hang=` đã có mã (vừa gắn, hay mở link cũ) thì là hồ sơ theo căn; máy chủ đã
+ * nhận mã (không còn lệnh chờ gửi của hàng) thì địa chỉ sang `?unit=` để link chép mở đúng căn.
+ */
+export function CotHoSo(props: HoSoProps) {
+  const { bd } = useBoDongBo();
+  const ds = useDanhSachHang();
+  const { chon, duong } = props;
+  const theoHang = laChonHang(chon) ? timHang(ds, chon.hang) : null;
+  const choGui = theoHang?.kind === "co-ma" && bd.ngan().queue.some((o) => o.listingId === theoHang.chon.lan);
+  const sang = theoHang?.kind === "co-ma" && !choGui ? duong(theoHang.chon) : null;
+  useEffect(() => {
+    if (sang) window.history.replaceState(null, "", sang);
+  }, [sang]);
+  if (!laChonHang(chon)) return <HoSoCan {...props} chon={chon} />;
+  if (theoHang?.kind === "co-ma") return <HoSoCan {...props} chon={theoHang.chon} />;
+  return <HoSoCan {...props} chon={{ ma: "", toa: null, lan: chon.hang }} chuaMa={theoHang?.kind === "chua-ma" ? theoHang.hang : null} />;
+}
+
+function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, "chon"> & { chon: ChonCan; chuaMa?: ListingView | null }) {
   const { bd } = useBoDongBo();
   const ds = useDanhSachHang();
   const ngan = bd.ngan();
   const ngoaiTuyen = useNgoaiTuyen();
   const danhMuc = useDanhMuc(san);
-  const tim = useMemo(() => timCan(ds, chon.ma, chon.toa), [ds, chon.ma, chon.toa]);
+  const theoHang = chuaMa !== undefined;
+  const tim = useMemo(() => (chuaMa ? { kind: "mot" as const, toa: chuaMa.buildingName, hang: [chuaMa] } : theoHang ? { kind: "khong" as const } : timCan(ds, chon.ma, chon.toa)), [ds, chon.ma, chon.toa, chuaMa, theoHang]);
   const toa = tim.kind === "mot" ? tim.toa : null;
-  const lan = useMemo(() => (toa ? cacLanRao(ds, toa, chon.ma, ngan.history) : []), [ds, toa, chon.ma, ngan.history]);
+  const lan = useMemo(
+    () => (chuaMa ? [lanRaoCua(chuaMa, ngan.history)] : toa ? cacLanRao(ds, toa, chon.ma, ngan.history) : []),
+    [ds, toa, chon.ma, ngan.history, chuaMa],
+  );
   const lanId = chonLanRao(lan, chon.lan);
   const ids = lan.map((r) => r.id).join(",");
 
@@ -135,7 +165,9 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   // Lần rao đã có lượt kéo xong (thành hay không): chưa có thì phần lịch sử đang tải.
   const [daKeo, setDaKeo] = useState<Record<string, true>>({});
   // Điều còn thiếu sau lần bấm «Sẵn sàng bán» gần nhất (hàng 23) — đánh dấu «Chưa có» đúng ô.
-  const [dichThieu, setDichThieu] = useState<Dich[]>([]);
+  // Kết quả «Sẵn sàng bán» gắn với lần rao đã bấm: đổi lần rao thì không mang dấu «Chưa có» sang (va-san-sang-ban).
+  const [thieuCua, setThieuCua] = useState<{ id: string; dich: readonly Dich[] } | null>(null);
+  const baoThieu = useCallback((id: string, dich: readonly Dich[]) => setThieuCua({ id, dich }), []);
   useEffect(() => {
     let huy = false;
     for (const id of ids ? ids.split(",") : []) {
@@ -170,7 +202,11 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
     return (
       <div className="flex flex-col gap-3 p-4">
         <div className="flex justify-end">{nutDong}</div>
-        <TrangThai kind="notice" title="Không có căn này trong Bảng hàng" description={`Mã «${chon.ma}» không có trong hàng bạn thấy trên máy này.`} />
+        {theoHang ? (
+          <TrangThai kind="notice" title="Không có hàng này trong Bảng hàng" description="Hàng này không có trong hàng bạn thấy trên máy này." />
+        ) : (
+          <TrangThai kind="notice" title="Không có căn này trong Bảng hàng" description={`Mã «${chon.ma}» không có trong hàng bạn thấy trên máy này.`} />
+        )}
       </div>
     );
   }
@@ -199,15 +235,21 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
   }
 
   const can = ds.find((l) => l.id === lanId)!;
-  const tt = thuocTinh(danhMuc, tim.toa, chon.ma);
+  const tt = chuaMa ? null : thuocTinh(danhMuc, tim.toa, chon.ma);
   const p = phanLanRao(can);
   const lichSu = ngan.history[can.id] ?? [];
   const ttls = trangThaiLichSu({ coBan: lichSu.length > 0, dangTai: !daKeo[can.id], lan: ngan.lastAttempt, ngoaiTuyen });
   const dong = dongLichSu(lichSu, nguoi);
   const dangXem = lan.find((r) => r.id === can.id)!;
+  const dichThieu = dauCuaCan(thieuCua, can.id);
   const tuoi = can.freshness as { confirmed?: boolean; ageDays?: number } | undefined;
-  const loaiHinh = tt.kind === "co" ? tt.truong.find(([k]) => k === "Loại hình")?.[1] : null;
-  const dauCot = [tt.kind === "co" ? tt.khu : null, tim.toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · ");
+  const loaiHinh = tt?.kind === "co" ? tt.truong.find(([k]) => k === "Loại hình")?.[1] : null;
+  const dauCot = [tt?.kind === "co" ? tt.khu : null, tim.toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · ");
+  // «Mở hàng kia» của lỗi trùng căn: hồ sơ theo căn của hàng đang mở ấy, nếu máy này thấy nó.
+  const moHangKia = (id: string) => {
+    const h = ds.find((l) => l.id === id);
+    return h?.unitNumber ? duong({ ma: h.unitNumber, toa: h.buildingName, lan: h.id }) : null;
+  };
 
   return (
     <div className="flex flex-col" data-slot="ho-so-can">
@@ -216,12 +258,12 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
           <div className="flex min-w-0 flex-col gap-1">
             <span className="text-xs text-muted-foreground">{dauCot}</span>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-semibold">{chon.ma}</h2>
+              {chuaMa ? <h2 className="text-lg font-semibold text-muted-foreground">Chưa có mã căn</h2> : <h2 className="text-lg font-semibold">{chon.ma}</h2>}
               <Badge variant={dangXem.dangMo ? "success-light" : "outline"}>{dangXem.trangThai}</Badge>
             </div>
           </div>
           <div className="flex gap-1">
-            {dongHref ? (
+            {dongHref && !chuaMa ? (
               <Button variant="ghost" size="icon-sm" aria-label="Mở toàn màn" nativeButton={false} render={<Link href={`/units/${encodeURIComponent(chon.ma)}?${new URLSearchParams({ toa: tim.toa, lan: can.id })}`} />}>
                 <Maximize2 />
               </Button>
@@ -252,16 +294,25 @@ export function CotHoSo({ nguoi, san, chon, dongHref, duong }: HoSoProps) {
       </div>
       <Separator />
       <Muc tieuDe="Ảnh" id={NEO_MUC_ANH}>
-        <MucAnhCan toa={tim.toa} ma={chon.ma} />
+        {chuaMa ? <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — gắn mã căn rồi tải ảnh.</p> : <MucAnhCan toa={tim.toa} ma={chon.ma} />}
       </Muc>
       <Separator />
-      <Muc tieuDe="Thuộc tính căn" phai={coBaoSai(tt) && tt.kind === "co" ? <NutBaoSai ma={chon.ma} toa={tim.toa} khu={tt.khu} truong={tt.truong} /> : null}>
-        {tt.kind === "co" ? <CapGiaTri ds={tt.truong} /> : <p className="text-sm text-muted-foreground">Chưa có trong danh mục</p>}
+      <Muc tieuDe="Thuộc tính căn" phai={tt && coBaoSai(tt) && tt.kind === "co" ? <NutBaoSai ma={chon.ma} toa={tim.toa} khu={tt.khu} truong={tt.truong} /> : null}>
+        {chuaMa ? (
+          <>
+            <OMaCan key={chuaMa.id} hang={chuaMa} danhMuc={danhMuc} moHangKia={moHangKia} />
+            <CapGiaTri ds={[["Toà", tim.toa]]} />
+          </>
+        ) : tt?.kind === "co" ? (
+          <CapGiaTri ds={tt.truong} />
+        ) : (
+          <p className="text-sm text-muted-foreground">Chưa có trong danh mục</p>
+        )}
       </Muc>
       <Separator />
       <Muc tieuDe={dangXem.dangMo ? "Lần rao đang mở" : "Lần rao đang xem"}>
         {/* Mọi hàng thấy trên máy là hàng người xem sửa được (hàng 8, 12); máy chủ vẫn xét quyền. */}
-        {dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang hang={can} toa={tim.toa} ma={chon.ma} onThieu={setDichThieu} /> : null}
+        {dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang key={can.id} hang={can} toa={tim.toa} ma={chon.ma} onThieu={baoThieu} /> : null}
         <CapGiaTri ds={p.truong.map(([k, v]): [string, string] => (danhDauChuaCo(k, dichThieu) ? [k, "Chưa có · điền ở Bảng hàng"] : [k, v]))} />
       </Muc>
       <Separator />

@@ -43,6 +43,8 @@ export type NeedsReview = {
   mine: PendingOp[];
   server?: { value: ListingView; byUserId: string; byRoles: string[]; at: string };
   reason?: string;
+  /** Gắn mã căn bị từ chối vì căn đã có hàng đang mở khác: mã hàng ấy, để mở liên kết «Mở hàng kia» (ADR-0026). */
+  conflictListingId?: string;
 };
 
 /**

@@ -8,6 +8,8 @@ khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
 ngoai_le: []
 luat: [KH-hn-theo-vai, KH-hn-mot-khung, KH-hn-bo-nhom, KH-hn-tren-may, KH-hn-ba-trang-thai]
+bo_cuc: tran
+ngoai_le_han: [{ tep: "apps/web/src/app/(app)/today/page.tsx", han: hom-nay-truong-nhom, ly_do: "Hôm nay chuyển sang bố cục ở hàng 42." }, { tep: "apps/web/src/app/(app)/proto/hom-nay-dau-chu/page.tsx", han: hom-nay-truong-nhom, ly_do: "Hôm nay chuyển sang bố cục ở hàng 42." }]
 ---
 # Hôm nay của đầu chủ
 

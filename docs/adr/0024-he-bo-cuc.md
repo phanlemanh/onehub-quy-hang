@@ -39,16 +39,17 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Bố cục | Mật độ | Khối nguồn (mã đã cài) | Màn |
    | --- | --- | --- | --- |
    | Tràn | dày | `data-grid-editing-6` | Bảng hàng, Hôm nay đầu chủ, trang nhóm môi giới, Lịch xem |
-   | Danh sách – chi tiết | dày | `resizable` theo `c-resizable-9` | Bảng hàng có hồ sơ cạnh bên, lead đã nhập |
+   | Danh sách – chi tiết | dày | bảng + ngăn trượt phải `sheet-9` (chủ kho 02/11) | Bảng hàng có hồ sơ cạnh bên, lead đã nhập |
    | Đọc | thường | `settings-3` (gỡ max-width ở gốc khối) | Ô nhận lead, từng mục Cài đặt sàn, Tôi |
-   | Hồ sơ hai cột | thường | `solution-crm-4` | Hồ sơ căn toàn màn, chế độ cuộc gọi, hồ sơ liên hệ |
+   | Hồ sơ | thường | `solution-crm-4` — một cột theo hồ sơ căn hàng 17 (chủ kho 02/11) | Hồ sơ căn toàn màn, chế độ cuộc gọi, hồ sơ liên hệ |
    | Bảng điều khiển | thường | `stats-7` + `data-grid-grouping-2` | Hôm nay trưởng nhóm, Đội |
    | Luồng nhiều bước | thường | `solution-crm-6` | Nhập Excel, Gửi, Phát hàng |
    | Dòng tin | thường | `solution-crm-5` | Hôm nay đầu khách, Đã gửi trên điện thoại |
 
    Trang khách và đăng nhập không có vỏ (họ card); chúng ngoài bảy bố cục, như Tham chiếu §9.
 
-3. **Sáu vùng, định nghĩa một lần.** Đầu màn (đường dẫn khi sâu hơn một tầng · tiêu đề và một dòng · một nút chính, tối
+3. **Sáu vùng, định nghĩa một lần.** Đầu màn (đường dẫn luôn có — nhà › màn, điện thoại chỉ mục cuối; chủ kho 02/11 ·
+   tiêu đề và một dòng · một nút chính, tối
    đa hai nút phụ, còn lại vào «…») · thanh công cụ · thân · cột phụ · chân · ngăn nổi (máy tính mở ngăn bên, điện thoại
    mở ngăn từ đáy, tự đổi theo khổ). Ma trận bố cục × vùng:
 
@@ -57,10 +58,17 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    | Tràn | tiêu đề, nút chính | lọc, góc nhìn, nhóm | — | đếm n/N |
    | Danh sách – chi tiết | như Tràn | như Tràn | hồ sơ kéo chia | đếm n/N |
    | Đọc | đường dẫn khi sâu | — | — | lưu/huỷ hay nút gửi |
-   | Hồ sơ hai cột | lối về, tên, trạng thái, ≤ 2 nút | — | thân đã chia hai cột | — |
+   | Hồ sơ | đường dẫn (tên, trạng thái, nút ở đầu hồ sơ trong khung) | — | — (toàn màn một cột căn giữa 48rem; cạnh bảng là cột phụ của Danh sách – chi tiết) | — |
    | Bảng điều khiển | chọn kỳ | — | — | — |
    | Luồng nhiều bước | bước đang ở | — | xem trước | lùi/tiếp |
    | Dòng tin | tiêu đề | lọc theo loại | — | — |
+
+   **Đầu màn** (chủ kho 02/11): đường dẫn bên trái; điều khiển cấp màn (chọn kỳ, khoảng ngày) và nút bên phải, như Verve;
+   cạnh tiêu đề chỉ có nhãn (trạng thái, bước); tiêu đề trùng mục cuối của đường dẫn.
+
+   **Bố cục không dựng Frame** (bóc tách 02/11, `_acceptance/he-bo-cuc/discovery/boc-tach.md`): bố cục giữ đầu màn, thân,
+   cột phụ; thanh công cụ và chân là phần của khối ReUI đặt trong thân, khối mang Frame của nó — bảng trên là vùng theo
+   nghĩa, không phải chỗ bố cục tự dựng.
 
    ReUI không có khối đầu trang riêng (đã tra `page header with breadcrumb title and primary action buttons` →
    `navbar-9`, không đứng): đầu màn ghép từ `FrameHeader` + `breadcrumb` + `button` + `dropdown-menu`, ghi «Chỗ hở».
@@ -70,7 +78,7 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    tuyến (dải báo đầu màn khi đang xem bản đã tải) — mỗi thứ một luật chung. Không đủ quyền và xung đột khi lưu để sau.
 
 5. **Ba khổ.** Máy tính rộng (1440), máy tính vừa (1024), điện thoại (375). Bản điện thoại của từng bố cục: Tràn thành
-   thẻ; Danh sách – chi tiết thành hai màn chồng; Hồ sơ hai cột thành một cột có nút dính đáy; Luồng nhiều bước mở ngăn
+   thẻ; Danh sách – chi tiết thành hai màn chồng; Hồ sơ thành một cột có nút dính đáy; Luồng nhiều bước mở ngăn
    toàn màn; Đọc và Dòng tin giữ; Bảng điều khiển không có trên điện thoại (Đội không có ở §9).
 
 6. **Bậc mới trên thang dùng lại.** Trước khối đích của màn, ô tra hệ bố cục: bố cục và vùng đã có thì dùng. Vùng đi đúng
@@ -89,6 +97,12 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
    `Sheet`/`Drawer` cho ngăn nổi. Màn của hàng đang chạy ghi ngoại lệ có hạn ở bản đồ khuôn tới khi hàng ấy chuyển; mức
    nợ giao diện giữ trần 0.
 
+   Hộp nổi còn tự đặt bề rộng, chờ chuyển sang ngăn nổi (ghi theo dãy B, hàng 27 — chưa sửa trong hàng 91):
+   - `apps/web/src/app/(app)/units/photos/redact/trinh-che.tsx` — hộp che vùng ảnh; ngoại lệ có hạn `sm:max-w-5xl`,
+     `max-h-[calc(100dvh-13rem)]` do hàng vá `va-che-vung-anh` đặt.
+   - `apps/web/src/app/(app)/units/photos/muc-anh.tsx` — hộp xem ảnh lớn; cùng lỗi `sm:max-w-sm` của hộp thắng
+     `max-w-4xl`, hàng vá của B sửa tạm.
+
 10. **MCP `reui` và `shadcn` khai trong `.mcp.json` của kho**, khoá đọc từ biến môi trường, không ghi vào tệp.
 
 11. **Bản đồ hệ thiết kế một chỗ** (chủ kho 02/11 «Gửi vào hàng nền»). Skill `quy-hang-ui` giữ bảng «Bản đồ hệ thiết kế»:
@@ -102,9 +116,10 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
     màn, các bố cục chưa có màn nào trong kho dùng. Sau đó máy giữ; đổi hệ bố cục chỉ qua ADR sửa.
 
 13. **Theo Verve và giữ riêng.** Theo: đầu màn thống nhất, một menu Tạo, cột thứ hai có số, lọc dạng chip đọc thành câu,
-    tab có số đếm, nút làm ngay trong dòng, dòng cài đặt nhãn trái ô phải. Giữ: hồ sơ mở cạnh bảng; thanh tab dưới điện
+    tab có số đếm, nút làm ngay trong dòng, dòng cài đặt nhãn trái ô phải. Giữ: hồ sơ mở cạnh bảng — nay trượt phải trong ngăn inset, bảng vẫn bấm được (chủ kho 02/11); thanh tab dưới điện
     thoại; lưới dày; sửa từng ô lưu ngay và hoàn tác (không lưu cả bảng ở Bảng hàng); không kéo thẻ để đổi trạng thái căn;
-    Hôm nay là hàng đợi, không phải lịch; không bảng nhiều biểu đồ ở bản đầu; Hôm nay không có cột thứ hai (§9).
+    Hôm nay là hàng đợi, không phải lịch; không bảng nhiều biểu đồ ở bản đầu. Cột thứ hai thì theo Verve: mọi nhà có, mặc định mở (chủ kho 02/11 tại Cổng
+    Phạm vi hàng 91 — thay «Hôm nay không có cột thứ hai» của §9).
 
 ## Hệ quả
 

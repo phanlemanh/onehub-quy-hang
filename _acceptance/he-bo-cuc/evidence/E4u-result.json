@@ -1,0 +1,77 @@
+{
+  "url1": "http://localhost:3484/inventory",
+  "allTao": [
+    "BUTTON vis=false  "
+  ],
+  "header": [
+    {
+      "tag": "HEADER",
+      "text": "[Mẫu] Sàn thử | Gõ mã căn… | ⌘ | K | + Lead | Đã đồng bộ · 13:05 | TR",
+      "controls": [
+        "BUTTON:Chọn sàn [haspopup]",
+        "BUTTON:Gõ mã căn",
+        "A:+ Lead ->/leads/new",
+        "BUTTON:Việc tạo khác [haspopup]",
+        "BUTTON:Thông báo [haspopup]",
+        "BUTTON:Tài khoản [haspopup]"
+      ]
+    },
+    {
+      "tag": "HEADER",
+      "text": "Bảng hàng",
+      "controls": [
+        "BUTTON:Gõ mã căn",
+        "BUTTON:Tạo [haspopup]",
+        "BUTTON:Thông báo [haspopup]"
+      ]
+    },
+    {
+      "tag": "HEADER",
+      "text": "Bảng hàng | Có hàng gì, ở đâu?",
+      "controls": []
+    }
+  ],
+  "countClosed": {
+    "/leads/new": 1,
+    "/imports/new": 0,
+    "/exports/new": 0
+  },
+  "taoButtonText": "|Việc tạo khác",
+  "hasTao": true,
+  "menuItems": [
+    "A:Nhập Excel ->/imports/new",
+    "A:Phát hàng ->/exports/new"
+  ],
+  "countOpen": {
+    "/leads/new": 1,
+    "/imports/new": 1,
+    "/exports/new": 1
+  },
+  "nhapExcelCount": 1,
+  "nhapExcelHref": "/imports/new",
+  "urlAfterNhapExcel": "http://localhost:3484/imports/new",
+  "url4": "http://localhost:3484/today",
+  "headerDau": [
+    {
+      "tag": "HEADER",
+      "text": "[Mẫu] Sàn thử | Gõ mã căn… | ⌘ | K | + Lead | Đã đồng bộ · 13:05 | DA",
+      "controls": [
+        "BUTTON:Chọn sàn [haspopup]",
+        "BUTTON:Gõ mã căn",
+        "A:+ Lead ->/leads/new",
+        "BUTTON:Việc tạo khác [haspopup]",
+        "BUTTON:Thông báo [haspopup]",
+        "BUTTON:Tài khoản [haspopup]"
+      ]
+    },
+    {
+      "tag": "HEADER",
+      "text": "Hôm nay",
+      "controls": [
+        "BUTTON:Gõ mã căn",
+        "BUTTON:Tạo [haspopup]",
+        "BUTTON:Thông báo [haspopup]"
+      ]
+    }
+  ]
+}

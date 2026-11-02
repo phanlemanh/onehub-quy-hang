@@ -215,9 +215,27 @@ export function divergenceCua(root, slug) {
   return m ? m[1].trim() : "";
 }
 
-/** Trang ba lối của hồ sơ: lỗi kiểm + so bản dựng lại (khi `soLai`). */
+/**
+ * Các ô của trang ba lối trong một hồ sơ (hàng 91): hồ sơ một ô giữ `ba-loi/ba-loi.json` như cũ; hồ sơ nhiều ô — mỗi ô
+ * chưa có khuôn một trang — đặt từng ô ở `ba-loi/<mã ô>/`. Trả [] khi hồ sơ một ô (hay chưa có thư mục).
+ */
+export function cacOBaLoi(thuMuc) {
+  if (!existsSync(thuMuc) || existsSync(join(thuMuc, "ba-loi.json"))) return [];
+  return readdirSync(thuMuc, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && existsSync(join(thuMuc, d.name, "ba-loi.json")))
+    .map((d) => d.name)
+    .sort();
+}
+
+/** Trang ba lối của hồ sơ: lỗi kiểm + so bản dựng lại (khi `soLai`); hồ sơ nhiều ô kiểm từng ô, lỗi gọi tên ô. */
 export function kiemTrangHoSo(root, slug, { soLai = true } = {}) {
-  const thuMuc = join(root, "_acceptance", slug, "ba-loi");
+  const goc = join(root, "_acceptance", slug, "ba-loi");
+  const cacO = cacOBaLoi(goc);
+  if (cacO.length) return cacO.flatMap((o) => kiemMotTrang(join(goc, o), `${slug}/ba-loi/${o}`, soLai).map((l) => `ô ${o}: ${l}`));
+  return kiemMotTrang(goc, `${slug}/ba-loi`, soLai);
+}
+
+function kiemMotTrang(thuMuc, ten, soLai) {
   const loi = [];
   let kq;
   try {
@@ -229,9 +247,9 @@ export function kiemTrangHoSo(root, slug, { soLai = true } = {}) {
   loi.push(...kq.loi);
   if (loi.length) return loi;
   const trang = join(thuMuc, "index.html");
-  if (!existsSync(trang)) return [`ba lối: thiếu ${slug}/ba-loi/index.html — chạy --dung-ba-loi`];
+  if (!existsSync(trang)) return [`ba lối: thiếu ${ten}/index.html — chạy --dung-ba-loi`];
   if (soLai && readFileSync(trang, "utf8") !== dungTrangBaLoi(kq.du, thuMuc))
-    loi.push(`ba lối: ${slug}/ba-loi/index.html khác bản dựng lại từ ba-loi.json — chạy lại --dung-ba-loi, không sửa tay`);
+    loi.push(`ba lối: ${ten}/index.html khác bản dựng lại từ ba-loi.json — chạy lại --dung-ba-loi, không sửa tay`);
   return loi;
 }
 

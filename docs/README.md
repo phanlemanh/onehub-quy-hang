@@ -11,6 +11,7 @@ Mỗi loại thông tin ở đúng một chỗ. Khi hai nơi nói khác nhau, n�
 | Sản phẩm cùng loại làm thế nào, để sàn cấu hình ở đâu — theo năng lực, kèm nguồn | [`product/doi-chieu-nganh.md`](product/doi-chieu-nganh.md) | ADR-0022; bản thiết kế lấy ít nhất hai sản phẩm từ đây, tra thêm thì bổ sung cùng PR |
 | Điểm sàn chỉnh được: khoá, mặc định, khoảng, ai đổi, điều khoá | [`architecture/so-diem-bien-thien.md`](architecture/so-diem-bien-thien.md) | Đề xuất cùng ADR-0018; hàng thêm con số hay lựa chọn của sàn khai vào đây cùng PR |
 | Vỏ ứng dụng, IA theo giao diện, khối ReUI đích của từng màn, chỗ hở | [`design/vo-va-ia.md`](design/vo-va-ia.md) | Chọn trên kho trước — luật ở [`../.claude/rules/giao-dien.md`](../.claude/rules/giao-dien.md); ADR-0002 |
+| Mỗi tệp của hệ thiết kế: lớp, việc, đường dẫn | [`../.agents/skills/quy-hang-ui/SKILL.md#bản-đồ-hệ-thiết-kế`](../.agents/skills/quy-hang-ui/SKILL.md#bản-đồ-hệ-thiết-kế) | Hàng 91; kiểm chuẩn đỏ khi một tệp thuộc hệ thiết kế thiếu dòng |
 | Từ vựng: nhãn trên màn ↔ tên code | [`../CONTEXT.md`](../CONTEXT.md) | Nhãn mới thêm cùng commit |
 | Luật cho agent, lệnh | [`../AGENTS.md`](../AGENTS.md) | |
 | Lý do, phỏng vấn, lịch sử chỉnh (28–29/10) | [`product/ghi-chep/`](product/ghi-chep/) | Lưu vết, không sửa |

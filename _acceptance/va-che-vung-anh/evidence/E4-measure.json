@@ -1,0 +1,194 @@
+{
+  "anh": {
+    "id": "e59c887b-b726-4f4f-8efd-9aa111acca79",
+    "coGoc": {
+      "w": 1500,
+      "h": 2000
+    },
+    "maCan": "B-15.05",
+    "toa": "Toà B",
+    "thuTuNganGuiDuoc": 2
+  },
+  "khoMan": {
+    "w": 1024,
+    "h": 768
+  },
+  "r": {
+    "left": 301.75,
+    "top": 103.5,
+    "width": 420.5,
+    "height": 560,
+    "right": 722.25,
+    "bottom": 663.5
+  },
+  "ve": {
+    "w": 450,
+    "h": 600,
+    "clientW": 419,
+    "clientH": 558
+  },
+  "s": 0.9344444444444444,
+  "keo": [
+    {
+      "x": 385.85,
+      "y": 215.5
+    },
+    {
+      "x": 638.1500000000001,
+      "y": 551.5
+    }
+  ],
+  "nVungChe": "1 vùng che",
+  "vungDung": {
+    "x": [
+      0.2,
+      0.8
+    ],
+    "y": [
+      0.2,
+      0.8
+    ]
+  },
+  "vungLoi": {
+    "x": [
+      0.18688888888888888,
+      0.7475555555555555
+    ],
+    "y": [
+      0.18688888888888888,
+      0.7475555555555555
+    ]
+  },
+  "diemDo": [
+    {
+      "f": 0.5,
+      "x": 225,
+      "y": 300,
+      "rgba": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "dungDen": true,
+      "loiDen": true,
+      "thucDen": true
+    },
+    {
+      "f": 0.78,
+      "x": 351,
+      "y": 468,
+      "rgba": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "dungDen": true,
+      "loiDen": false,
+      "thucDen": true
+    },
+    {
+      "f": 0.82,
+      "x": 369,
+      "y": 491,
+      "rgba": [
+        136,
+        136,
+        136,
+        255
+      ],
+      "dungDen": false,
+      "loiDen": false,
+      "thucDen": false
+    },
+    {
+      "f": 0.15,
+      "x": 67,
+      "y": 90,
+      "rgba": [
+        136,
+        136,
+        136,
+        255
+      ],
+      "dungDen": false,
+      "loiDen": false,
+      "thucDen": false
+    }
+  ],
+  "diemPhanBiet": [
+    0.78
+  ],
+  "vung": "1 vùng che",
+  "bang": [
+    {
+      "muc": "s < 1 (khung đang co)",
+      "dat": true,
+      "so": 0.9344444444444444
+    },
+    {
+      "muc": "«1 vùng che»",
+      "dat": true,
+      "so": "1 vùng che"
+    },
+    {
+      "muc": "có điểm dò phân biệt đúng/lỗi",
+      "dat": true,
+      "so": [
+        0.78
+      ]
+    },
+    {
+      "muc": "điểm 0.5 đen (R,G,B ≤ 10)",
+      "dat": true,
+      "so": [
+        0,
+        0,
+        0,
+        255
+      ]
+    },
+    {
+      "muc": "điểm 0.78 đen (R,G,B ≤ 10)",
+      "dat": true,
+      "so": [
+        0,
+        0,
+        0,
+        255
+      ]
+    },
+    {
+      "muc": "điểm 0.82 không đen",
+      "dat": true,
+      "so": [
+        136,
+        136,
+        136,
+        255
+      ]
+    },
+    {
+      "muc": "điểm 0.15 không đen",
+      "dat": true,
+      "so": [
+        136,
+        136,
+        136,
+        255
+      ]
+    },
+    {
+      "muc": "đóng không lưu (hộp tắt, số ảnh không đổi)",
+      "dat": true,
+      "so": {
+        "dongTruoc": true,
+        "dongSau": false,
+        "sauDong": 5,
+        "truoc": 5
+      }
+    }
+  ],
+  "ketLuan": "ĐẠT"
+}

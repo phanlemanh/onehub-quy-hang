@@ -1,10 +1,12 @@
 import { HammerIcon } from "lucide-react";
 
-import { Frame, FrameDescription, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
+import { BoCuc, DauMan, type DuongDan } from "@/components/bo-cuc";
+import { Frame, FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 
 // Khuôn của nhóm `trang-tam` (design/patterns/trang-tam.md). Trang giữ chỗ của nhà chưa có màn: cho biết màn này dựng ở mục nào của lộ trình (docs/plan/lo-trinh.json, trường
-// `ma`). «Mục», không «hàng» — «Hàng» trong từ vựng là một lần chào bán căn.
+// `ma`). «Mục», không «hàng» — «Hàng» trong từ vựng là một lần chào bán căn. Trang tạm đi bố cục Đọc (hàng 91); `trongKhung`
+// khi đặt trong khuôn của một màn khác (Hôm nay theo vai) — khung đã có bố cục của nó.
 type Info = { title: string; question: string; rows: string };
 
 const PLACEHOLDER: Record<string, Info> = {
@@ -33,24 +35,29 @@ export function placeholderFor(path: string): Info {
   return PLACEHOLDER[path] ?? { title: "Chưa có màn", question: "Chưa có màn ở địa chỉ này", rows: "chưa xếp mục" };
 }
 
-export function Placeholder({ path }: { path: string }) {
+function duongDanCua(path: string, title: string): [DuongDan, DuongDan] {
+  if (path.startsWith("/settings/")) return [{ nhan: "Cài đặt sàn", href: "/settings" }, { nhan: title }];
+  return [{ nhan: "Quỹ hàng", href: "/" }, { nhan: title }];
+}
+
+export function Placeholder({ path, trongKhung = false }: { path: string; trongKhung?: boolean }) {
   const p = placeholderFor(path);
+  const than = (
+    <Frame className="w-full">
+      <FramePanel>
+        <TrangThai
+          kind="empty"
+          icon={HammerIcon}
+          title="Màn này đang dựng"
+          description={p.rows === "chưa xếp mục" ? "Chưa xếp mục nào trong lộ trình." : `Dựng ở ${p.rows} của lộ trình.`}
+        />
+      </FramePanel>
+    </Frame>
+  );
+  if (trongKhung) return than;
   return (
-    <div className="flex flex-1 flex-col">
-      <Frame className="w-full">
-        <FrameHeader>
-          <FrameTitle>{p.title}</FrameTitle>
-          <FrameDescription>{p.question}</FrameDescription>
-        </FrameHeader>
-        <FramePanel>
-          <TrangThai
-            kind="empty"
-            icon={HammerIcon}
-            title="Màn này đang dựng"
-            description={p.rows === "chưa xếp mục" ? "Chưa xếp mục nào trong lộ trình." : `Dựng ở ${p.rows} của lộ trình.`}
-          />
-        </FramePanel>
-      </Frame>
-    </div>
+    <BoCuc kieu="doc" dauMan={<DauMan duongDan={duongDanCua(path, p.title)} tieuDe={p.title} moTa={p.question} />}>
+      {than}
+    </BoCuc>
   );
 }

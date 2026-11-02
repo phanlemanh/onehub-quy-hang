@@ -7,13 +7,18 @@ import {
   type RoutingCandidate,
   type RoutingStrategyKey,
 } from "@quy-hang/core/routing";
+import { PUSH_RETRY, PUSH_SEND } from "@quy-hang/core/push";
 import type pg from "pg";
 import { withCompany } from "../db";
+import { guiHopThu, webPushSender, type PushSender } from "../push/gui";
+import { baoLeadVe, baoLoiBao } from "../push/store";
 
 /**
  * Một nhịp chia lead và xét hạn (hàng 25, ADR-0017). Mỗi sàn có việc một giao dịch dưới ngữ cảnh sàn ấy (vai
  * `quy_hang_app`, luật theo dòng vẫn áp): đọc cấu hình, đóng dấu lead mới, chia theo dấu của từng lead, rồi ghi lời báo
  * đến hạn. Một sàn lỗi (cấu hình hỏng…) thì bỏ sàn ấy, các sàn khác vẫn chạy. `now` do bên gọi đưa để bộ kiểm đặt mốc.
+ * Thông báo lead (hàng 26): lead chia về đầu chủ và lời báo mới ghi dòng «cần báo» trong giao dịch của sàn; sau khi giao
+ * dịch ghi xong, nhịp gửi các dòng chờ của sàn — kể cả dòng lỗi tạm của lối giao khác, trong khung PUSH_RETRY.
  */
 export type TickResult = { companies: number; routed: number; alerts: number; failed: number };
 
@@ -74,6 +79,7 @@ async function motSan(tx: pg.PoolClient, now: Date): Promise<{ routed: number; a
     const ok = (await tx.query<{ v: boolean }>("select app.route_lead($1, $2, $3) v", [l.lead_id, chon.userId, now])).rows[0]?.v;
     if (!ok) continue;
     routed++;
+    await baoLeadVe(tx, l.lead_id, chon.userId, now);
     const u = ungVien.find((x) => x.userId === chon.userId);
     if (u) {
       u.lastRoutedSeq = ++seq;
@@ -85,7 +91,9 @@ async function motSan(tx: pg.PoolClient, now: Date): Promise<{ routed: number; a
   let alerts = 0;
   const bao = async (lead: string, kind: AlertKind, tu: Date) => {
     const r = await tx.query<{ v: boolean }>("select app.raise_lead_alert($1, $2, $3, $4) v", [lead, kind, tu, now]);
-    if (r.rows[0]?.v) alerts++;
+    if (!r.rows[0]?.v) return;
+    alerts++;
+    await baoLoiBao(tx, lead, kind, now);
   };
   for (const f of (await tx.query<DuKien>("select * from app.lead_deadline_facts()")).rows) {
     if (f.agent_user_id === null) {
@@ -111,14 +119,37 @@ async function motSan(tx: pg.PoolClient, now: Date): Promise<{ routed: number; a
   return { routed, alerts };
 }
 
-/** `only`: chỉ chạy các sàn này (bộ kiểm dùng để không chạm sàn của bộ kiểm khác đang chạy song song). */
-export async function runLeadTick(pool: pg.Pool, now: Date, only?: readonly string[]): Promise<TickResult> {
+/** Thời hạn gửi mặc định của một nhịp (va-thong-bao-lead): một lần gửi và ngân sách nhịp chia của lõi. */
+export const HAN_NHIP_MAC_DINH = { timeoutMs: PUSH_SEND.timeoutMs, budgetMs: PUSH_SEND.tickBudgetMs } as const;
+
+/**
+ * `only`: chỉ chạy các sàn này (bộ kiểm dùng để không chạm sàn của bộ kiểm khác đang chạy song song). `hanGui`: thời hạn gửi
+ * của nhịp — một hạn chót chung cho mọi sàn, nên nhịp kết thúc trước khi dòng đang gửi hết giữ chỗ.
+ */
+export async function runLeadTick(
+  pool: pg.Pool,
+  now: Date,
+  only?: readonly string[],
+  sender: PushSender = webPushSender,
+  hanGui: { timeoutMs: number; budgetMs: number } = HAN_NHIP_MAC_DINH,
+): Promise<TickResult> {
   const kq: TickResult = { companies: 0, routed: 0, alerts: 0, failed: 0 };
+  const han = { timeoutMs: hanGui.timeoutMs, hanChot: Date.now() + hanGui.budgetMs };
   const sanCoViec = (
     await withCompany(pool, { userId: "", companyId: null }, async (tx) =>
       (await tx.query<{ company_id: string }>("select company_id from app.lead_job_companies()")).rows.map((r) => r.company_id),
     )
   ).filter((id) => !only || only.includes(id));
+  // Sàn chỉ còn dòng chờ gửi lại (không còn lead cần chia hay xét hạn).
+  const sanChoGui = (
+    await withCompany(pool, { userId: "", companyId: null }, async (tx) =>
+      (await tx.query<{ company_id: string }>("select company_id from app.push_job_companies($1, $2, $3)", [
+        now,
+        PUSH_RETRY.maxAttempts,
+        PUSH_RETRY.windowMinutes,
+      ])).rows.map((r) => r.company_id),
+    )
+  ).filter((id) => (!only || only.includes(id)) && !sanCoViec.includes(id));
   for (const companyId of sanCoViec) {
     try {
       const r = await withCompany(pool, { userId: "", companyId }, (tx) => motSan(tx, now));
@@ -129,6 +160,8 @@ export async function runLeadTick(pool: pg.Pool, now: Date, only?: readonly stri
       kq.failed++;
       console.error(`nhịp chia lead: sàn ${companyId} lỗi`, e instanceof Error ? e.message : e);
     }
+    await guiHopThu(pool, companyId, sender, now, false, han);
   }
+  for (const companyId of sanChoGui) await guiHopThu(pool, companyId, sender, now, false, han);
   return kq;
 }

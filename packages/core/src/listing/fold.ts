@@ -72,6 +72,9 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
       }
       if (p.to === "Withdrawn") s.withdrawnReason = p.withdrawnReason as string;
       break;
+    case "unit_number_assigned":
+      s.unitNumber = p.unitNumber as string;
+      break;
     default:
       break;
   }
