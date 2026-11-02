@@ -5,7 +5,7 @@ slug: dien-ma-can-cho-hang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, web, api, db]
-status: approved
+status: implemented
 approved_by: Manh Phan
 approved_at: 2026-11-02
 design_doc: docs/superpowers/specs/2026-11-02-dien-ma-can-cho-hang-design.md
