@@ -1,0 +1,39 @@
+{
+  "feature_plain": "Nút «Nạp dữ liệu mẫu» chạy trọn lại trên sàn mới: mỗi căn mẫu đang bán có một ảnh vẽ sẵn, nên qua được luật «phải có ảnh thật» của hàng 23.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ nạp đủ 40 căn mẫu đúng sáu trạng thái; 29 căn từng lên Đang bán mỗi căn có đúng một ảnh ở ngăn Gửi được, do đầu chủ của căn thêm; căn Chưa đủ và Ngừng hẳn không có ảnh."},
+    {"id": "AC-2", "p": "Sẽ dùng ảnh vẽ bằng mã (khối màu, không ảnh thật của ai) mà luật ảnh của sản phẩm nhận, cùng căn thì cùng ảnh, mở lại ra đúng ảnh đã nạp."},
+    {"id": "AC-4", "p": "Sẽ cất ảnh vào cùng kho mà bản thật đang đọc; bản thật thiếu khoá kho ảnh thì dừng trước khi ghi gì, báo đúng khoá nào thiếu."},
+    {"id": "AC-5", "p": "Sẽ xoá cả ảnh mẫu trên kho khi gỡ sàn mẫu, chỉ ảnh của sàn mẫu, không chạm ảnh của sàn thật."},
+    {"id": "AC-6", "p": "Sẽ dọn sạch ảnh đã cất khi một lần nạp hỏng giữa chừng, rồi rút lại cả lần chạy như hiện nay."},
+    {"id": "AC-7", "p": "Sẽ cho nút trên GitHub đọc ba khoá kho ảnh chỉ ở bước nạp, vẫn giữ dấu «bản thật»."},
+    {"id": "AC-8", "p": "Sẽ ghi vào hướng dẫn của bộ nạp: ảnh mẫu là ảnh vẽ, bước một lần thêm ba khoá, thiếu khoá thì nút dừng, gỡ thì xoá cả ảnh."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG đổi gì khi nạp lại sàn mẫu đã có ảnh — không thêm ảnh, không ghi lên kho."},
+    {"id": "OOS-1", "p": "KHÔNG thêm ảnh cho sàn mẫu đã nạp trước hàng 23 — gỡ rồi nạp lại là có ảnh."},
+    {"id": "OOS-2", "p": "KHÔNG xử ca gỡ hỏng sau khi đã xoá ảnh: sàn mẫu còn mà ảnh vỡ tới lần gỡ sau."},
+    {"id": "OOS-3", "p": "KHÔNG tự thêm ba khoá vào GitHub — việc của chủ kho (đã làm 02/11)."},
+    {"id": "OOS-4", "p": "KHÔNG có ảnh Nội bộ, ảnh bìa riêng, ảnh có chữ hay ngày chụp."},
+    {"id": "OOS-5", "p": "KHÔNG đổi bộ dữ liệu mẫu hay công cụ dựng máy thử của hàng 17 (hàng 23 đã vá)."}
+  ],
+  "scope_plain": "Hàng chỉ vá bộ nạp mẫu; không màn nào đổi.",
+  "coverage_plain": [
+    {"i": 0, "p": "Không gian được quét tay theo năm trục dưới đây."},
+    {"i": 1, "p": "Bảng: trục · các giá trị · tiêu chí phủ."},
+    {"i": 2, "p": "Kho cất ảnh: kho nội bộ, kho bản thật, bản thật thiếu khoá — AC-1 (nạp đủ) và AC-4 (chọn kho)."},
+    {"i": 3, "p": "Việc: nạp mới, nạp lại, gỡ, hỏng giữa chừng — AC-1, AC-3 (nạp lại không đổi), AC-5 (gỡ), AC-6 (hỏng)."},
+    {"i": 4, "p": "Trạng thái căn: từng lên Đang bán thì có ảnh, Chưa đủ và Ngừng hẳn thì không — AC-1."},
+    {"i": 5, "p": "Ảnh vẽ: cố định theo căn, đúng khuôn sản phẩm nhận, mở lại được — AC-2."},
+    {"i": 6, "p": "Đường chạy trên bản thật: nút GitHub và hướng dẫn bước một lần — AC-7, AC-8."},
+    {"i": 7, "p": "Ô cố ý bỏ: gỡ hỏng sau khi đã xoá ảnh — ảnh vỡ tới lần gỡ sau."},
+    {"i": 8, "p": "(ô này nằm ở phần Không làm)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Xoá ảnh trên kho bản thật không đảo được mà máy đã tự quyết và chưa ghim sàn của từng lệnh xoá. Đã xử: thành câu hỏi Hỏi-2 cho anh; bài kiểm gỡ và hỏng giữa chừng nay đòi mỗi lệnh xoá mang đúng mã sàn mẫu, có chiều đỏ."},
+    {"i": 1, "p": "Chưa đo nút GitHub còn giữ dấu «bản thật» — mất dấu ấy thì bộ nạp ghi nhầm kho và ảnh vỡ. Đã xử: bài kiểm nút đòi dấu ấy, có chiều đỏ."},
+    {"i": 2, "p": "Chọn kho chưa có bảng đo đủ ô; lời báo thiếu khoá chỉ đo ca thiếu cả ba. Đã xử: bảng sáu ô viết trước (đủ, thiếu từng khoá, không khoá; bản thật và máy thử), so đúng tập khoá thiếu."},
+    {"i": 3, "p": "Hỏng giữa chừng chỉ đo ở một điểm và so với danh sách của chính bộ nạp. Đã xử: thêm ca kho hỏng ở ảnh thứ 10; tập ảnh phải dọn so với nhật ký của kho, không theo bộ nạp."},
+    {"i": 4, "p": "Câu chấm hướng dẫn đòi hai vế mà tiêu chí không có. Đã xử: tiêu chí AC-8 thêm các vế ấy; câu chấm chỉ hỏi hướng dẫn có nói, hành vi thật do bài kiểm máy đo."}
+  ]
+}
