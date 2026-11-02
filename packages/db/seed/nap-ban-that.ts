@@ -3,6 +3,8 @@
 // của API dưới vai quy_hang_app với người mẫu đúng vai — luật vai, sự kiện, kiểm trùng áp như khi người bấm.
 //   node --import tsx packages/db/seed/nap-ban-that.ts --nap --email <email> | --go
 // Nút trên GitHub: .github/workflows/nap-mau.yml. Khoá OWNER_PHONE_KEY thật bắt buộc (ADR-0013); không in email, số, khoá.
+// Căn mẫu từng lên Đang bán có một ảnh vẽ bằng mã (hàng nap-mau-co-anh, luật ảnh thật của hàng 23), byte cất ở kho ảnh
+// chọn như API: đủ ba khoá STORAGE_S3_* → Storage; bản thật thiếu khoá → dừng trước khi mở kết nối.
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -10,10 +12,13 @@ import { parseArgs } from "node:util";
 import pg from "pg";
 import { WITHDRAWN_REASONS } from "@quy-hang/core/listing";
 import { createLead, isRefusal as laTuChoiLead } from "../../api/src/leads/store";
+import { chonKhoAnh, type KhoAnh } from "../../api/src/photos/kho";
+import { addPhoto, isRefusal as laTuChoiAnh } from "../../api/src/photos/store";
 import { applyCommand, createListing, isRefusal, viewerOf, type Command } from "../../api/src/listings/store";
 import { khoaSoChu } from "../../api/src/owners/khoa";
 import { dauVetSo, type KhoaSoChu } from "../../api/src/owners/ma-hoa";
 import { isRefusal as laTuChoiChu, putOwner } from "../../api/src/owners/store";
+import { anhMau } from "./anh-mau.mjs";
 import { MIEN_EMAIL, TEN_SAN } from "./du-lieu-mau.mjs";
 import { napMau } from "./nap.mjs";
 import { THU_MUC_MAU } from "./sinh.mjs";
@@ -78,12 +83,38 @@ function tuChoi(ma: string, r: { error: { code: string } }): never {
   throw new Error(`${ma}: ${r.error.code}`);
 }
 
-/** Nạp trong giao dịch người gọi mở. Dòng đã có (theo khoá tự nhiên) thì bỏ qua — chạy lại không đổi gì. */
+type KetQuaNap = { san: string; moi: { hang: number; chuNha: number; lead: number } };
+
+/**
+ * Nạp trong giao dịch người gọi mở. Dòng đã có (theo khoá tự nhiên) thì bỏ qua — chạy lại không đổi gì. Byte ảnh ở
+ * Storage không nằm trong giao dịch: mỗi lệnh ghi của kho vào sổ của lần chạy TRƯỚC khi xuống kho, lần chạy ném lỗi thì
+ * xoá mọi mã trong sổ rồi mới ném lại lỗi gốc (Hỏi-2) — người gọi rollback phần cơ sở dữ liệu.
+ */
 export async function napBanThat(
   client: pg.ClientBase,
   goi: GoiMau,
-  opts: { khoa: KhoaSoChu; email: string },
-): Promise<{ san: string; moi: { hang: number; chuNha: number; lead: number } }> {
+  opts: { khoa: KhoaSoChu; email: string; kho: KhoAnh },
+): Promise<KetQuaNap> {
+  const so: { companyId: string; photoId: string }[] = [];
+  const kho: KhoAnh = {
+    ...opts.kho,
+    async ghi(tx, companyId, photoId, bien, bytes, type) {
+      if (!so.some((x) => x.photoId === photoId)) so.push({ companyId, photoId });
+      await opts.kho.ghi(tx, companyId, photoId, bien, bytes, type);
+    },
+  };
+  try {
+    return await napTrongSo(client, goi, { ...opts, kho });
+  } catch (e) {
+    // Cố gắng hết: lỗi xoá của từng ảnh nuốt riêng, không che lỗi gốc — chỉ báo số ảnh còn sót trên kho.
+    let sot = 0;
+    for (const x of so) await opts.kho.xoa(client as pg.PoolClient, x.companyId, x.photoId).catch(() => sot++);
+    if (sot) console.error(`nap-ban-that: dọn sau lỗi không xoá được ${sot}/${so.length} ảnh khỏi kho ảnh`);
+    throw e;
+  }
+}
+
+async function napTrongSo(client: pg.ClientBase, goi: GoiMau, opts: { khoa: KhoaSoChu; email: string; kho: KhoAnh }): Promise<KetQuaNap> {
   const email = chuanHoaEmail(opts.email);
   // createLead đọc khoá từ môi trường: phải trùng khoá đã kiểm, không thì số lead mã hoá bằng khoá khác.
   if (!khoaSoChu().key.equals(opts.khoa.key)) throw new Error("OWNER_PHONE_KEY của môi trường khác khoá đã kiểm");
@@ -133,7 +164,7 @@ export async function napBanThat(
   };
 
   let thuTuNgung = 0;
-  for (const h of goi.hang) {
+  for (const [thuTu, h] of goi.hang.entries()) {
     const buildingName = toaCuaCan.get(h.upi) ?? tuChoi(h.ma, { error: { code: "can-khong-co-trong-danh-muc" } });
     const lyDoNgung = h.trangThai === "Withdrawn" ? WITHDRAWN_REASONS[thuTuNgung++ % WITHDRAWN_REASONS.length] : undefined;
     const co = await client.query<{ id: string }>(
@@ -160,6 +191,12 @@ export async function napBanThat(
         await lenh({ type: "status_changed", payload: { to: "Withdrawn", withdrawnReason: lyDoNgung } });
       } else if (h.trangThai !== "Incomplete") {
         await lenh({ type: "details_changed", payload: CHI_TIET_DANG_BAN });
+        // Luật lõi (hàng 23): vào Đang bán cần một ảnh thật ngăn Gửi được — ảnh vẽ theo thứ tự hàng, qua API ảnh.
+        const a = anhMau(thuTu);
+        const anh = await trongVai(client, dauChu, san, (tx) =>
+          addPhoto(tx, opts.kho, san, { toa: buildingName, ma: h.maCan, ngan: "shareable", takenAt: null, width: a.width, height: a.height, thumb: a.nhe, original: a.goc }),
+        );
+        if (laTuChoiAnh(anh)) tuChoi(h.ma, anh);
         await lenh({ type: "status_changed", payload: { to: "Active" } });
         if (h.trangThai === "Closed") await lenh({ type: "status_changed", payload: { to: "Closed", closePrice: h.gia, closeDate: NGAY_CHOT } });
         else if (h.trangThai !== "Active") await lenh({ type: "status_changed", payload: { to: h.trangThai } });
@@ -198,18 +235,24 @@ export async function napBanThat(
 
 export type KetQuaGo = { ket: "khong-co" } | { ket: "da-go"; san: string; nguoi: number } | { ket: "tu-choi"; soSan: number };
 
-/** Gỡ đúng một sàn mẫu theo id, rồi tài khoản miền mẫu không còn thuộc sàn nào. Sàn thật trùng tên không bị chạm. */
-export async function goBanThat(client: pg.ClientBase): Promise<KetQuaGo> {
+/**
+ * Gỡ đúng một sàn mẫu theo id, rồi tài khoản miền mẫu không còn thuộc sàn nào. Sàn thật trùng tên không bị chạm. Byte
+ * ảnh xoá khỏi kho TRƯỚC khi xoá sàn, chỉ mã ảnh của đúng sàn mẫu, mỗi lệnh mang mã sàn mẫu (Hỏi-2).
+ */
+export async function goBanThat(client: pg.ClientBase, kho: KhoAnh): Promise<KetQuaGo> {
   const ds = await timSanMau(client);
   if (ds.length === 0) return { ket: "khong-co" };
   if (ds.length > 1) return { ket: "tu-choi", soSan: ds.length };
-  await client.query("delete from companies where id = $1", [ds[0]]);
+  const san = ds[0]!;
+  const anh = await client.query<{ id: string }>("select id from unit_photos where company_id = $1 order by id", [san]);
+  for (const a of anh.rows) await kho.xoa(client as pg.PoolClient, san, a.id);
+  await client.query("delete from companies where id = $1", [san]);
   const xoa = await client.query(
     `delete from identity."user" u where u.email like $1
        and not exists (select 1 from company_members m where m.user_id = u.id)`,
     [`%@${MIEN_EMAIL}`],
   );
-  return { ket: "da-go", san: ds[0]!, nguoi: xoa.rowCount ?? 0 };
+  return { ket: "da-go", san, nguoi: xoa.rowCount ?? 0 };
 }
 
 async function chay(): Promise<number> {
@@ -221,6 +264,9 @@ async function chay(): Promise<number> {
   // Kiểm khoá và email TRƯỚC khi mở kết nối: sai thì không câu nào chạm cơ sở dữ liệu.
   const khoa = values.nap ? khoaSoChu(process.env, { choPhepKhoaDev: false }) : null;
   if (values.nap) chuanHoaEmail(values.email ?? "");
+  // Kho ảnh chọn như API, cả khi nạp lẫn khi gỡ; bản thật thiếu khoá thì dừng ở đây, lời báo nêu đúng biến thiếu.
+  const kho = chonKhoAnh(process.env);
+  if (kho.ten === "vang") throw new Error(kho.lyDo);
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("thiếu DATABASE_URL của vai chủ");
   const client = new pg.Client({ connectionString: url });
@@ -230,10 +276,10 @@ async function chay(): Promise<number> {
     let ma = 0;
     if (khoa) {
       const goi = JSON.parse(readFileSync(path.join(THU_MUC_MAU, "du-lieu-mau.json"), "utf8")) as GoiMau;
-      const { moi } = await napBanThat(client, goi, { khoa, email: values.email! });
+      const { moi } = await napBanThat(client, goi, { khoa, email: values.email!, kho });
       console.log(`đã nạp ${TEN_SAN}: ${moi.hang} hàng, ${moi.chuNha} chủ nhà, ${moi.lead} lead mới`);
     } else {
-      const kq = await goBanThat(client);
+      const kq = await goBanThat(client, kho);
       if (kq.ket === "khong-co") console.log("không có gì để gỡ");
       else if (kq.ket === "da-go") console.log(`đã gỡ ${TEN_SAN} và ${kq.nguoi} tài khoản mẫu`);
       else {

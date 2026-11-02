@@ -1956,6 +1956,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-01"
     },
     {
+      "ma": "nap-mau-co-anh",
+      "cau_giao": "Vá nạp mẫu bản thật: căn mẫu Đang bán nhận một ảnh thật vẽ bằng mã (ngăn Gửi được) trước khi lên Đang bán, để nút «Nạp dữ liệu mẫu» chạy trọn trên sàn mới sau luật ảnh thật của hàng 23",
+      "slug": "nap-mau-co-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
       "ma": "va-che-vung-anh",
       "cau_giao": "Vá Che vùng ảnh: trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ",
       "slug": "va-che-vung-anh",
