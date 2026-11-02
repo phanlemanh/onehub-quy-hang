@@ -16,6 +16,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // (luật quy-hang-ui/no-direct-sheet). Máy tính mở ngăn bên phải; điện thoại mở ngăn từ đáy.
 // `phuBang`: ngăn đè lên bảng mà bảng vẫn bấm được (không khoá, không phủ mờ) — hồ sơ cạnh bảng đổi theo dòng đang chọn
 // (Danh sách – chi tiết; chủ kho 02/11).
+// `toanMan`: điện thoại mở ngăn phủ toàn màn (Luồng nhiều bước, ADR-0024 §5) — đầu ngăn có tên và nút đóng, thân cuộn.
 
 const NUT_MO = "text-muted-foreground hover:text-foreground";
 const INSET = "inset-y-ngan-le right-ngan-le left-auto h-[calc(100svh-2*var(--spacing-ngan-le))] w-[min(var(--container-ngan),calc(100vw-2*var(--spacing-ngan-le)))] max-w-none gap-0 overflow-hidden rounded-xl border p-0 outline-none";
@@ -32,6 +33,7 @@ export function NganNoi({
   hanhDong,
   chan,
   phuBang = false,
+  toanMan = false,
   children,
 }: {
   mo: boolean;
@@ -43,10 +45,12 @@ export function NganNoi({
   /** Chân dính đáy: nút của bản ghi. */
   chan?: ReactNode;
   phuBang?: boolean;
+  /** Điện thoại: ngăn phủ toàn màn thay ngăn từ đáy. */
+  toanMan?: boolean;
   children: ReactNode;
 }) {
   const dienThoai = useIsMobile();
-  if (dienThoai)
+  if (dienThoai && !toanMan)
     return (
       <Drawer open={mo} onOpenChange={onMo}>
         <DrawerContent data-vung="ngan-noi" data-kho="dien-thoai">
@@ -79,6 +83,14 @@ export function NganNoi({
       {chan && <SheetFooter className="shrink-0 flex-row gap-2 border-t bg-background">{chan}</SheetFooter>}
     </>
   );
+  if (toanMan)
+    return (
+      <Sheet open={mo} onOpenChange={onMo}>
+        <SheetContent side="bottom" showCloseButton={false} data-vung="ngan-noi" data-kho="toan-man" className="max-h-dvh gap-0 border-0 p-0 data-[side=bottom]:h-dvh">
+          {ruot}
+        </SheetContent>
+      </Sheet>
+    );
   if (phuBang)
     return (
       <Sheet open={mo} onOpenChange={onMo} modal={false} disablePointerDismissal>

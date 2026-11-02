@@ -345,6 +345,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
         <BoCuc
           kieu="luong-nhieu-buoc"
           {...chung}
+          luong={{ tieuDe: "Nhập Excel" }}
           rong={rongLanDau("Tệp chưa có dòng nào", "Chọn tệp bảng tính có ít nhất một căn.", "Chọn tệp")}
           dauMan={<DauMan duongDan={duong} tieuDe="Nhập Excel" moTa="Đưa hàng vào từ bảng tính" phu={<Badge variant="outline">Bước 2 / 4 · Ghép cột</Badge>} />}
           cotPhu={

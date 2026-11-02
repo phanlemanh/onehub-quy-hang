@@ -5,6 +5,7 @@ import { cn } from "cn";
 
 import { ChoTai } from "./cho-tai";
 import { DaiNgoaiTuyen } from "./dai-ngoai-tuyen";
+import { LuongToanMan } from "./luong-toan-man";
 import { NganNoi } from "./ngan-noi";
 import { coVung, type KieuBoCuc, THONG_TIN, type Vung } from "./ma-tran";
 
@@ -32,6 +33,8 @@ type Props = {
   chiTiet?: { mo: boolean; onMo: (mo: boolean) => void; tieuDe: ReactNode; hanhDong?: ReactNode; chan?: ReactNode };
   /** Trang mẫu sống dựng ngoại tuyến không cần ngắt mạng. */
   ngoaiTuyen?: boolean;
+  /** Luồng nhiều bước: tên luồng ở đầu ngăn toàn màn trên điện thoại, và việc khi người đóng ngăn (mặc định quay lại). */
+  luong?: { tieuDe: ReactNode; onDong?: () => void };
 };
 
 function chiCo(kieu: KieuBoCuc, vung: Vung, noiDung: ReactNode): ReactNode {
@@ -43,7 +46,7 @@ function chiCo(kieu: KieuBoCuc, vung: Vung, noiDung: ReactNode): ReactNode {
   return noiDung;
 }
 
-export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", rong, loi, chiTiet, ngoaiTuyen }: Props) {
+export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", rong, loi, chiTiet, ngoaiTuyen, luong }: Props) {
   const tt = THONG_TIN[kieu];
   const phu = trangThai === "san-sang" ? chiCo(kieu, "cot-phu", cotPhu) : null;
   const than = trangThai === "cho-tai" ? <ChoTai kieu={kieu} /> : trangThai === "loi" ? loi : trangThai === "rong" ? rong : children;
@@ -75,13 +78,8 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
     </div>
   );
 
-  return (
-    <div
-      data-bo-cuc-goc={kieu}
-      data-bo-cuc={kieu}
-      data-mat-do={tt.mat_do}
-      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", (kieu === "dong-tin" || kieu === "ho-so") && "mx-auto max-w-(--container-doc)")}
-    >
+  const noiDung = (
+    <>
       {dauMan}
       <DaiNgoaiTuyen ngoaiTuyen={ngoaiTuyen} />
       {kieu === "bang-dieu-khien" && (
@@ -90,6 +88,24 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
         </div>
       )}
       <div className={cn("flex min-w-0 flex-1 flex-col", kieu === "bang-dieu-khien" && "max-md:hidden")}>{thanVaPhu}</div>
+    </>
+  );
+
+  return (
+    <div
+      data-bo-cuc-goc={kieu}
+      data-bo-cuc={kieu}
+      data-mat-do={tt.mat_do}
+      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", (kieu === "dong-tin" || kieu === "ho-so") && "mx-auto max-w-(--container-doc)")}
+    >
+      {kieu === "luong-nhieu-buoc" ? (
+        // Điện thoại: cả luồng nằm trong ngăn phủ toàn màn (ADR-0024 §5); máy tính giữ trong trang.
+        <LuongToanMan tieuDe={luong?.tieuDe ?? tt.ten} onDong={luong?.onDong}>
+          {noiDung}
+        </LuongToanMan>
+      ) : (
+        noiDung
+      )}
     </div>
   );
 }

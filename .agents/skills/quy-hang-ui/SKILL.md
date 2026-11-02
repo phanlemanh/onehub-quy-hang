@@ -164,7 +164,8 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | bố cục | DauMan: đường dẫn luôn có, tiêu đề, điều khiển cấp màn và nút bên phải | `apps/web/src/components/bo-cuc/dau-man.tsx` |
 | bố cục | Cửa nhập của hệ bố cục cho màn | `apps/web/src/components/bo-cuc/index.ts` |
 | bố cục | Ma trận bảy bố cục × vùng, bản điện thoại, chia nút — một nguồn cho bố cục, test và bài quét | `apps/web/src/components/bo-cuc/ma-tran.ts` |
-| bố cục | NganNoi: ngăn inset bên phải (sheet-9), điện thoại ngăn từ đáy — chỗ duy nhất gọi Sheet, Drawer | `apps/web/src/components/bo-cuc/ngan-noi.tsx` |
+| bố cục | LuongToanMan: Luồng nhiều bước trên điện thoại mở ngăn phủ toàn màn, đóng là quay lại | `apps/web/src/components/bo-cuc/luong-toan-man.tsx` |
+| bố cục | NganNoi: ngăn inset bên phải (sheet-9), điện thoại ngăn từ đáy hay phủ toàn màn — chỗ duy nhất gọi Sheet, Drawer | `apps/web/src/components/bo-cuc/ngan-noi.tsx` |
 | bố cục | TrangThai: rỗng (empty-state-1), tìm không ra (empty-state-2), lỗi, báo, chờ tải nhỏ | `apps/web/src/components/trang-thai.tsx` |
 | đối chiếu | Kê ảnh chuẩn: mỗi ảnh một dòng địa chỉ, khổ, commit | `design/anh-chuan/ke.json` |
 | khuôn | Khuôn Bảng hàng | `design/patterns/bang-hang.md` |

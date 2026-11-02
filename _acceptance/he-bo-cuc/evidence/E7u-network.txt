@@ -1,9 +1,7 @@
-E7u network/console (driver: Playwright, origin http://localhost:3494, server next start, no DATABASE_URL in env of pid 97329/97455)
-Console error/warning/pageerror during scripted run (7 trang): 0
-Console (first manual load): 1 error = GET /favicon.ico 404 (static asset, note only)
-Document loads: 7x GET /mau/he-bo-cuc?... -> 200 (and iframe /mau/he-bo-cuc/xem?... -> 200); no redirect to /login for the page itself
-Status >= 500 or connection error: 0
-4xx on fetch/XHR: 0 (only favicon.ico 404, static)
-Aborted (net::ERR_ABORTED): Next RSC prefetch requests (?_rsc=...) cancelled when the test navigated away - not connection errors
-307 -> /login: only Next <Link> prefetches of shell routes (/today, /inventory, /shares, /team, /leads/new) fired from the sample shell inside the xem iframe; page itself not redirected
-No /api/* requests, no database requests observed
+E7u network/console dump (server 3494, no DATABASE_URL in env of pid 1091/1137; cookies cleared)
+CONSOLE (error/warn/log via page.on console + pageerror): 0 messages
+HTTP status >= 400 responses: 0
+requestfailed: only net::ERR_ABORTED on Next.js RSC prefetch URLs (?_rsc=...), client-cancelled when the sample page changed
+  query (bo-cuc / trang-thai / kho) and on /login?_rsc prefetch for shell links (/today /inventory /shares /team /settings /leads/new). No 5xx, no connection error, no timeout.
+Main document: GET /mau/he-bo-cuc -> 200, final URL http://localhost:3494/mau/he-bo-cuc (no redirect to /login). iframe /mau/he-bo-cuc/xem?bo-cuc=...&trang-thai=... loaded.
+Third-party requests: none.
