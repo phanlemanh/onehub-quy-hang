@@ -1,0 +1,3 @@
+Network (Claude_Browser read_network_requests, 40 cuoi / 500) - luong E8u:
+app-origin fetch: POST /api/v1/listings (setup) 201; GET /api/v1/listings, /catalog, /listings/{id}, /units/photos -> 200; POST /api/v1/listings/20e59fb9-0cac-4a47-991d-7fcf56bf2cf2/events -> 200 (luu ma A-12.8841).
+Console: bo dem chua loi cu cua cac eval truoc (400/404/422, hydration mismatch dev, HMR websocket) tu luong E6u; khong co loi moi trong luong E8u. Khong co fetch app-origin >= 400 trong 40 request cuoi.

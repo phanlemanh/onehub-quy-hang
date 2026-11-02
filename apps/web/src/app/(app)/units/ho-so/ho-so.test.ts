@@ -6,9 +6,27 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import type { CatalogData } from "@quy-hang/core";
 import type { ListingEvent } from "@quy-hang/core/listing";
-import { banTrenMay } from "@/lib/sync/ap-tren-may";
-import type { ListingView, PendingOp } from "@/lib/sync/types";
-import { cacLanRao, chonLanRao, docCot, dongCot, dongLichSu, moCot, phanLanRao, thuocTinh, timCan, trangThaiLichSu } from "./ho-so";
+import { apTrenMay, banTrenMay } from "@/lib/sync/ap-tren-may";
+import { nganTrong, type ListingView, type PendingOp } from "@/lib/sync/types";
+import {
+  cacLanRao,
+  CHU_GO_MA_CAN,
+  chonLanRao,
+  docCot,
+  dongCot,
+  dongLichSu,
+  duongHangChuaMa,
+  dungLenhGanMa,
+  moCot,
+  moHang,
+  phanLanRao,
+  thuocTinh,
+  timCan,
+  ID_O_MA_CAN,
+  timHang,
+  trangThaiLichSu,
+} from "./ho-so";
+import { NEO_MA_CAN } from "../ready/san-sang";
 
 const goi = JSON.parse(readFileSync(fileURLToPath(new URL("../../../../../../../packages/db/seed/mau/du-lieu-mau.json", import.meta.url)), "utf8")) as {
   danhMuc: CatalogData;
@@ -190,4 +208,52 @@ test("tìm căn theo mã", () => {
   assert.deepEqual(timCan(ds, "KHONG-CO", null), { kind: "khong" });
   // Hàng «Chỉ tôi» của người khác không có trên máy (API không trả) — mã của nó cũng là «không có».
   assert.deepEqual(timCan(ds.filter((l) => l.id !== "a1"), "A-01.02", null), { kind: "khong" });
+});
+
+// ——— dien-ma-can-cho-hang (ADR-0026) ———
+
+test("hồ sơ theo hàng", () => {
+  // docCot: ?hang= thành chọn theo hàng; ?unit= như cũ; có cả hai thì theo căn.
+  assert.deepEqual(docCot(new URLSearchParams("hang=h-9")), { hang: "h-9" });
+  assert.deepEqual(docCot(new URLSearchParams("unit=A-01.02&toa=Toà+A&lan=l-1")), { ma: "A-01.02", toa: "Toà A", lan: "l-1" });
+  assert.deepEqual(docCot(new URLSearchParams("unit=A-01.02&hang=h-9")), { ma: "A-01.02", toa: null, lan: null });
+  assert.equal(dongCot(new URLSearchParams("view=list&hang=h-9")), "view=list", "đóng cột bỏ cả hang");
+
+  const ds = [hang("h-9", "Toà A", null, { standardStatus: "Incomplete", version: 1 }), hang("h-1", "Toà A", "A-01.02")];
+  const chuaMa = timHang(ds, "h-9");
+  assert.equal(chuaMa.kind, "chua-ma");
+  assert.equal(chuaMa.kind === "chua-ma" && chuaMa.hang.id, "h-9");
+  assert.deepEqual(timHang(ds, "h-1"), { kind: "co-ma", chon: { ma: "A-01.02", toa: "Toà A", lan: "h-1" } }, "đã có mã → hồ sơ theo mã");
+  assert.deepEqual(timHang(ds, "h-khong"), { kind: "khong" }, "chiều đỏ: id không có");
+});
+
+test("lệnh gắn mã căn", () => {
+  const chuaMa = hang("h-9", "Toà A", null, { standardStatus: "Incomplete", version: 4 });
+  assert.deepEqual(dungLenhGanMa(chuaMa, "  A-12.05 "), { lenh: { type: "unit_number_assigned", payload: { unitNumber: "A-12.05" }, coSo: 4 } });
+  assert.deepEqual(dungLenhGanMa(chuaMa, "   "), { loi: CHU_GO_MA_CAN });
+  assert.equal(CHU_GO_MA_CAN, "Gõ mã căn");
+  assert.deepEqual(dungLenhGanMa(hang("h-1", "Toà A", "A-01.02"), "A-12.05"), { loi: null }, "hàng đã có mã → không dựng lệnh");
+
+  // Lệnh vào hàng đợi trên máy đúng loại và phiên bản của hàng; bản trên máy mang mã ngay.
+  const kq = dungLenhGanMa(chuaMa, "A-12.05");
+  assert.ok("lenh" in kq);
+  const ap = apTrenMay({ ...nganTrong(), listings: [chuaMa] }, "h-9", kq.lenh.type, kq.lenh.payload, "2026-11-02T09:00:00.000Z", "op-1", kq.lenh.coSo);
+  assert.ok(ap.ok, JSON.stringify(ap));
+  assert.equal(ap.op.type, "unit_number_assigned");
+  assert.equal(ap.op.expectedVersion, 4);
+  assert.equal(banTrenMay(chuaMa, ap.ngan.queue).unitNumber, "A-12.05");
+  // Máy giữ bản đã có mã (vừa gắn, chờ gửi) thì lần gắn thứ hai bị chặn ngay trên máy.
+  assert.equal(apTrenMay(ap.ngan, "h-9", "unit_number_assigned", { unitNumber: "A-12.06" }, "2026-11-02T09:01:00.000Z", "op-2").ok, false);
+});
+
+test("lối vào hồ sơ hàng chưa mã", () => {
+  // Dòng Bảng hàng: chưa mã → hang=<id>; có mã → unit/toa/lan như cũ (hai chiều).
+  assert.equal(moHang(new URLSearchParams("view=list"), { id: "h-9", buildingName: "Toà A", unitNumber: null }), "view=list&hang=h-9");
+  const coMa = new URLSearchParams(moHang(new URLSearchParams("hang=h-9"), { id: "h-1", buildingName: "Toà A", unitNumber: "A-01.02" }));
+  assert.deepEqual([coMa.get("unit"), coMa.get("toa"), coMa.get("lan"), coMa.get("hang")], ["A-01.02", "Toà A", "h-1", null]);
+  // Hôm nay: dòng «Chưa có mã căn» trỏ hồ sơ của Bảng hàng theo hàng.
+  assert.equal(duongHangChuaMa("h-9"), "/inventory?hang=h-9");
+  // «Mã căn» trong «Còn thiếu» trỏ đúng id cố định của ô mã căn.
+  assert.equal(ID_O_MA_CAN, "o-ma-can");
+  assert.equal(NEO_MA_CAN, "#o-ma-can");
 });

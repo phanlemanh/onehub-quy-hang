@@ -1,0 +1,6 @@
+{
+ "feature_plain": "Hàng tạo từ lead mới biết toà nay gắn được mã căn ở hồ sơ: gõ mã một lần, máy chặn khi căn đã có hàng đang mở và chỉ hàng kia; có mã thì hàng thôi báo thiếu mã căn.",
+ "decisions": [
+  {"id": "E9", "q": "Tham chiếu và ADR-0026 đã ghi đủ cách gắn mã căn mới chưa?", "why": "Hội đồng ba người chấm đều thấy đủ: luật 6 của Tham chiếu ghi gắn mã một lần và chặn trùng; ADR-0026 ghi loại sự kiện mới và vì sao không dùng sự kiện đổi chi tiết."}
+ ]
+}

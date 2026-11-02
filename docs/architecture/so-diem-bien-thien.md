@@ -129,6 +129,8 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K17 | Màu theo trạng thái chuẩn | Nhãn riêng nhận màu của trạng thái chuẩn | §5 |
 | K18 | Người bấm gửi; không đăng hộ, không tự trả lời | Bất biến 3 — không có khoá nào | §8 luật 22 |
 | K19 | Link không tự hết hạn ở bản đầu | Chốt 29/10 cho bản đầu | §13 |
+| K20 | Mã căn của hàng gắn một lần; đã có thì khoá | Nghĩa chuẩn để so — thuộc tính căn, ảnh gắn theo toà + mã | ADR-0026 quyết định 1; hồ sơ `dien-ma-can-cho-hang` Hỏi-3 |
+| K21 | Mỗi sàn tối đa một hàng đang mở trên một căn — gắn mã trùng bị chặn | Nghĩa chuẩn để so; «đang mở» là `OPEN_STATUSES` của lõi | §4; ADR-0026 quyết định 4 |
 
 ## Đếm
 
@@ -139,7 +141,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **5 ứng viên** ở phần B, **19 điều khoá** ở phần C.
+- **5 ứng viên** ở phần B, **21 điều khoá** ở phần C.
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.
