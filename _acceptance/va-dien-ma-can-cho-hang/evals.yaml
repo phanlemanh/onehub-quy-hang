@@ -1,0 +1,43 @@
+schema_version: 1
+feature_slug: va-dien-ma-can-cho-hang
+# Dựng chung cho eval ui-check («DỰNG G»): máy dev cấu hình `web-dcdv-g-nhat-ky` của .claude/launch.json (cổng 3484, Postgres
+# 5564 đã migrate, dữ liệu mẫu đã nạp), nhật ký máy chủ ở .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log. Đăng nhập bằng
+# email dau-chu-1@mau.quy-hang.test, mã đọc ở dòng «[ma-dang-nhap] <email> <mã>» của nhật ký ấy.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mã căn phải có chữ hay số» (packages/core/src/listing/*.test.ts) ok — ma trận viết trước cho HAI khuôn created và unit_number_assigned: hợp lệ 'A-12.05', 'a 02.06', '12' → không lỗi; từ chối '---', '.', '/ /', 'Đ', '_', '__', 'Đ-Ê' (chặn luật viết bằng \\w hay lớp chữ Unicode) → mỗi ca đúng một lỗi ở đường unitNumber, reason đúng chuỗi «Mã căn cần ít nhất một chữ (A–Z) hoặc số (0–9)»; số ca = 2 × 10, assert số; kiemMaCan trả null cho mã hợp lệ và câu ấy cho mã toàn dấu (hai chiều cùng bảng)."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «gắn mã toàn dấu bị từ chối, không khoá hàng» (packages/api/test-db/dien-ma-can.test.ts) ok — hàng chưa mã gửi '---' → 400 error 'invalid-payload', details có path 'unitNumber'; đếm listing_events của hàng không đổi; GET hàng trả unitNumber null; gửi lại 'A-12.05' với cùng expectedVersion → 200 và GET trả 'A-12.05' (đối chứng dương cùng hàng); ca «tạo hàng mã toàn dấu bị từ chối» ok — POST /api/v1/listings {buildingName, unitNumber:'---'} → 400 'invalid-payload' path 'unitNumber', số hàng của sàn không đổi; cùng thân với 'A-12.05' → 201 (đối chứng dương); ca «luật lõi khớp app.unit_key» ok — với bảng mã ['A-12.05','a 02.06','12','---','.','/ /','Đ','_','__','Đ-Ê'], kiemMaCan(mã) === null đúng khi select app.unit_key(mã) khác NULL, từng phần tử, assert đủ 10."
+    paths: [packages/core/src/listing/**, packages/api/src/listings/**, packages/api/test-db/dien-ma-can.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «lệnh gắn mã căn» (apps/web/src/app/(app)/units/ho-so/ho-so.test.ts) ok — dungLenhGanMa(hàng chưa mã, '---') trả { loi: 'Mã căn cần ít nhất một chữ (A–Z) hoặc số (0–9)' } và không có lenh; cùng hàng với ' A-12.05 ' trả lenh có unitNumber 'A-12.05' (đối chứng dương); rỗng vẫn trả 'Gõ mã căn'."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3u
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    target: "Máy dev dãy G cổng 3484 (DỰNG G), đăng nhập dau-chu-1@mau.quy-hang.test"
+    steps:
+      - "Đích: máy chủ chạy sẵn ở cổng 3484 — dùng chung, KHÔNG tắt; mã đăng nhập ở .acceptance-runs/dien-ma-can-cho-hang/dev-3484.log. Tạo qua API một hàng chỉ có toà: POST /api/v1/listings {buildingName:'Toà A'} trong trình duyệt đã đăng nhập; ghi id."
+      - "Khổ 1440x900, mở /inventory?hang=<id>, gõ '---' vào ô Mã căn, bấm «Lưu mã căn» → chụp evidence/E3u-1-ma-toan-dau.png; ghi câu dưới ô, chữ trong ô, tiêu đề hồ sơ."
+      - "Đọc GET /api/v1/listings/<id> → ghi unitNumber (phải null) và số sự kiện."
+      - "Khổ 375x812, mở lại /inventory?hang=<id>, gõ '---', bấm «Lưu mã căn» → chụp evidence/E3u-2-375.png; ghi câu báo có đọc trọn dưới ô không, và document.documentElement.scrollWidth so với innerWidth."
+    expected: "Dưới ô hiện «Mã căn cần ít nhất một chữ (A–Z) hoặc số (0–9)»; chữ '---' còn trong ô; tiêu đề vẫn «Chưa có mã căn»; GET trả unitNumber null; không có POST events nào trong lúc bấm; ở 375 câu báo đọc trọn dưới ô, scrollWidth bằng innerWidth."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", packages/core/src/listing/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
