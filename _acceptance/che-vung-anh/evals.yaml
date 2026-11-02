@@ -1,0 +1,124 @@
+schema_version: 1
+feature_slug: che-vung-anh
+# Dựng chung cho mọi eval ui-check («DỰNG B»): node _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs — Postgres dãy B (5561),
+#   sàn và người mẫu của hàng 5, máy chủ dev cổng 3481; kho ảnh trên máy là bảng Postgres (không khoá S3 ngoài production).
+#   Phiên: _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs. Ảnh căn: GET /api/v1/units/photos?toa=&ma= (cùng phiên).
+#   Căn cho bài nhìn: căn Toà C đầu tiên theo mã căn mà dau-chu-1 giữ; chưa có ảnh thì tải một ảnh JPEG mẫu có EXIF
+#   (_acceptance/anh-can-ba-ngan/ có ảnh mẫu, hoặc ảnh 2000x1500 sinh trong bài) vào ngăn Gửi được trước bài. Ghi mã căn.
+evals:
+  - id: E1
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; units/photos/redact/vung.test.ts: ma trận viết tay của hàm đổi toạ độ màn → điểm ảnh gốc: ảnh 2000x1500 hiện 800x600 (tỉ lệ 2,5) khung (10,20)-(110,220) → (25,50)-(275,550); khung kéo ngược chiều (110,220)→(10,20) cho cùng kết quả; khung tràn mép (-5,-5)-(900,700) kẹp về (0,0)-(2000,1500); ảnh nhỏ hiện phóng to (tỉ lệ 0,5); khung rỗng (rộng 0) bị bỏ; ảnh dọc điểm ảnh lưu 2000x1500 kèm hướng xoay EXIF 6 (hiện 1500x2000, hiện 600x800) khung màn (0,0)-(60,80) rơi đúng vùng tương ứng trên khung vẽ đã xoay mà bản che dùng. Mỗi ô một assert. Đối chứng đỏ: hàm giả không kẹp mép thì ô tràn mép đỏ gọi tên ô."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; redact/vung.test.ts: tô kín trên mảng RGBA 8x6 dựng tay — một khung (2,1)-(5,3): mọi điểm trong là màu tô, mọi điểm ngoài bằng giá trị gốc (so từng điểm, đếm đủ 48); hai khung chồng nhau; khung 1x1 ở góc phải dưới; không khung → mảng không đổi. Đối chứng đỏ: hàm giả lệch một điểm ảnh (bỏ cột cuối của khung) thì ca một khung đỏ, thông điệp nêu toạ độ điểm lệch."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; redact/vung.test.ts: cỡ bản nhẹ của bản che — bảng viết tay {4000x3000 → 1600x1200}, {3000x4000 → 1200x1600}, {1600x900 → 1600x900}, {800x600 → 800x600}, {4001x1 → 1600x1}; hằng đọc từ @quy-hang/core/photos (tên hằng cỡ bản che) bằng 1600. Đối chứng đỏ: hàm giả dùng cạnh ngắn thì ca 3000x4000 đỏ gọi tên ca."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**", "packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; redact/vung.test.ts: hàm coExif(byte) trên JPEG viết tay có khối APP1 «Exif» → true, JPEG không APP1 → false, webp có chunk EXIF → true, webp không → false; mỗi ca một assert. Đối chứng đỏ: bộ kiểm giả chỉ đọc JPEG thì ca webp có EXIF đỏ gọi tên ca."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; redact/luu.test.ts: hàm lưu bản che với nguồn giả — (a) tải thành công → gọi tải ảnh mới ở ngăn shareable với takenAt của ảnh gốc, rồi đổi ngăn ảnh gốc sang internal, đúng thứ tự, mỗi việc một lần; (b) tải lỗi → không gọi đổi ngăn, trả lỗi có chữ cho người; (c) tải được mà đổi ngăn lỗi → trả lỗi nêu «bản gốc chưa sang Nội bộ»; (d) ảnh nguồn ngăn internal → từ chối trước khi tải, không gọi tải, không gọi đổi ngăn. Đối chứng đỏ: hàm giả đổi ngăn trước khi tải thì ca (b) gọi đổi ngăn và đỏ gọi tên ca."
+    paths: ["apps/web/src/app/(app)/units/photos/redact/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Đăng nhập dau-chu-1, mở hồ sơ căn của luật chọn căn; mở menu của một ảnh ở ngăn Gửi được → chụp evidence/E6-menu.png; ghi các mục menu"
+      - "Mở menu của một ảnh ở ngăn Nội bộ của cùng căn (chưa có thì chuyển một ảnh sang Nội bộ trước) → ghi các mục menu"
+      - "Đăng nhập một người mẫu không giữ căn và không phải trưởng nhóm (vd dau-chu-2), mở cùng hồ sơ căn → mở menu ảnh (nếu có) → ghi các mục"
+    expected: "dau-chu-1 thấy «Che vùng…» trong menu ảnh ngăn Gửi được, không thấy trong menu ảnh ngăn Nội bộ; người không sửa được không thấy «Che vùng…». Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, hồ sơ căn, menu ảnh → «Che vùng…» → chụp evidence/E7-mo.png; ghi nút «Lưu bản che» bật hay tắt"
+      - "Kéo chuột vẽ 2 khung trên ảnh → chụp evidence/E7-hai-khung.png; ghi số khung trong danh sách và nút Lưu → «Bỏ khung cuối» → ghi số khung → «Bỏ hết» → ghi số khung và nút Lưu → đóng không lưu"
+    expected: "Mở: chưa khung, Lưu tắt. Hai khung tô đen trên ảnh, danh sách 2, Lưu bật. Bỏ khung cuối còn 1. Bỏ hết còn 0, Lưu tắt. Đóng không lưu không ghi ảnh nào (GET ảnh căn trước/sau bằng nhau). Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-5
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, hồ sơ căn. Tải lên ngăn Gửi được một JPEG dọc chụp điện thoại có EXIF (hướng xoay 6, ngày chụp, toạ độ GPS) dựng trong bài — điểm ảnh lưu ngang, có một mốc màu đỏ ở góc trên trái của ảnh khi đã xoay — gọi là ảnh gốc G. GET ảnh căn → ghi số ảnh từng ngăn, id, takenAt của G; tải byte gốc của G → ghi băm sha256 và có khối EXIF không (phải có, không có thì bài không đạt điều kiện); lấy lịch sử ảnh của căn (bảng unit_photo_events qua Postgres dãy B, hay đường API nếu có) → n0"
+      - "Menu ảnh G → «Che vùng…» → vẽ 1 khung phủ mốc đỏ ở góc trên trái như đang thấy trên màn → «Lưu bản che» → chờ thông báo → chụp evidence/E8-da-luu.png; ghi chữ thông báo"
+      - "GET ảnh căn → ghi số ảnh từng ngăn; ảnh mới (id mới) ở ngăn nào, width/height, takenAt; ảnh G ở ngăn nào, byteSize → GET /api/v1/units/photos/<id mới>/original → lưu byte vào evidence/E8-ban-che.webp, ghi cỡ và có khối EXIF không; mở ảnh trong trang → chụp evidence/E8-ban-che.png; kiểm vùng mốc đỏ trên byte bản che đã tô kín. Tải lại byte gốc của G → băm sha256. Lịch sử ảnh của căn → các sự kiện mới sau n0"
+    expected: "Ngăn Gửi được: thêm đúng 1 ảnh mới, cạnh dài ≤ 1600, takenAt bằng của G; ảnh G sang ngăn Nội bộ, băm byte trước và sau bằng nhau; G có EXIF, byte bản che không có EXIF; mốc đỏ (góc trên trái khi đã xoay) bị tô kín trên bản che; lịch sử ảnh có đúng 2 sự kiện mới theo thứ tự: added (id bản che) rồi compartment_changed (id G sang internal), người làm là dau-chu-1. Mỗi mục một đạt/trượt."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    steps:
+      - "DỰNG B. Khổ 1440x900. dau-chu-1, hồ sơ căn, một ảnh ở ngăn Gửi được (không dùng ảnh của E8). GET ảnh căn → ghi số ảnh từng ngăn"
+      - "Chặn yêu cầu tải ảnh mới bằng công cụ chặn mạng của trình duyệt (POST /api/v1/units/photos/upload-url và POST /api/v1/units/photos trả 503) → «Che vùng…» → vẽ 1 khung → «Lưu bản che» → chụp evidence/E9-loi.png; ghi lời báo và số khung còn lại"
+      - "Bỏ chặn → GET ảnh căn → ghi số ảnh từng ngăn và ngăn của ảnh gốc"
+    expected: "Lời báo lỗi trong trình che; khung còn nguyên (1); số ảnh từng ngăn như trước; ảnh gốc vẫn ở ngăn Gửi được. Mỗi mục một đạt/trượt. (Yêu cầu bị bài chủ động chặn không tính là lỗi mạng của ứng dụng.)"
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; in «mức nợ giao diện: 0/0»; «chuẩn giao diện: đạt»; «0 lệch»"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-8
+    executor: script
+    cmd: node _acceptance/che-vung-anh/thu/ranh-gioi.mjs
+    expected: "exit 0; in danh sách tệp đổi từ điểm cắt nhánh với main và «0 tệp ngoài ranh giới»; danh sách cho phép viết trước trong tệp lệnh: units/photos/redact/**, units/photos/muc-anh.tsx, packages/core/src/photos/index.ts, docs/product/doi-chieu-nganh.md, packages/ui-lint/tests/ban-do-khuon.test.mjs, _acceptance/che-vung-anh/**, docs/plan/lo-trinh.json, LO-TRINH.html, PRODUCT-MAP.md, docs/product/tham-chieu.md. Đối chứng đỏ trong cùng lệnh: danh sách giả thêm apps/web/src/lib/sync/dong-bo.ts thì hàm kiểm gọi đúng tệp ấy — thiếu thì exit 1 «thước không phân biệt được»."
+    paths: ["_acceptance/che-vung-anh/thu/ranh-gioi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

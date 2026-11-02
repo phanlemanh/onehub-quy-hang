@@ -40,6 +40,12 @@ export type UnitPhoto = {
 
 export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 export const THUMB_EDGE = 480;
+/**
+ * Bản che của ảnh (hàng 19): cạnh dài tối đa và chất lượng webp khi lưu bản che ra ngăn Gửi được. Mặc định của sàn —
+ * sàn chỉnh ở Cài đặt sàn khi có ô (Hỏi-2 của che-vung-anh, bậc tham số ADR-0018).
+ */
+export const BAN_CHE_CANH_DAI = 1600;
+export const BAN_CHE_CHAT_LUONG = 0.82;
 export const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export type PhotoType = (typeof PHOTO_TYPES)[number];
 
