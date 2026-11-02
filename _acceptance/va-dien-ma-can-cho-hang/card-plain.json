@@ -1,0 +1,23 @@
+{
+ "feature_plain": "Mã căn chỉ gồm dấu như «---» nay bị từ chối kèm lời báo rõ ngay tại ô, nên hàng không còn bị khoá với một mã không dùng được.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ chặn ở lõi mọi mã căn không có chữ (A–Z) hay số (0–9), ở cả lúc tạo hàng lẫn lúc gắn mã, với một câu báo rõ."},
+  {"id":"AC-2","p":"Sẽ cho máy chủ từ chối mã ấy: không ghi gì, hàng vẫn chưa có mã và gắn lại mã đúng được; luật khớp đúng cách kho so căn."},
+  {"id":"AC-3","p":"Sẽ hiện câu báo ngay tại ô «Mã căn», giữ chữ đã gõ, không gửi lệnh nào — trên máy tính và điện thoại."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"Sẽ KHÔNG dọn hàng đã mang mã rác — tính năng gắn mã vừa ra, chưa có bản thật dùng."},
+  {"id":"OOS-2","p":"Sẽ KHÔNG đụng mã căn ở lead — ô nhận lead đã chặn từ trước."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Không quét không gian tiêu chí: đây là một luật đi qua ba lớp, đã ghi lý do trong sổ."},
+  {"i":1,"p":"Lõi (AC-1), máy chủ (AC-2), màn hình (AC-3); hai đường mã căn vào hàng là tạo hàng và gắn mã, AC-1 phủ cả hai."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Câu báo là chữ người dùng đọc nên phải để anh chọn — đã chuyển thành Hỏi-1, máy khuyên câu hiện tại."},
+  {"i":1,"p":"Căn cứ tập ký tự trích nhầm câu chú thích — đã trích đúng dòng của hàm so căn, và thêm phép đo so lõi với hàm ấy trên cơ sở dữ liệu thật."},
+  {"i":2,"p":"Bảng ca thiếu dấu gạch dưới và chữ có dấu — đã thêm, thành 20 ca."},
+  {"i":3,"p":"Chưa đo đường tạo hàng ở máy chủ — đã thêm ca tạo hàng với mã toàn dấu, và kiểm rằng không còn lối tạo hàng nào khác."},
+  {"i":4,"p":"Ảnh chỉ chụp máy tính — đã thêm ảnh điện thoại 375 và đo không cuộn ngang."}
+ ]
+}
