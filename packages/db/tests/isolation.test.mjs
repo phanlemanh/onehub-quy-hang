@@ -1735,3 +1735,120 @@ test("bảng nối lead với hàng: vai API không sửa, không xoá", { skip 
     await expectError(c, "delete from lead_listings where lead_id = $1", [BN_LEN], /permission denied/);
   });
 });
+
+// ---- Thông báo lead (018_thong_bao_lead, hàng 26) ----
+const DAY_TOI = "u-day-toi"; // đầu chủ sàn A
+const DAY_KHAC = "u-day-khac"; // đầu chủ khác sàn A
+const DAY_TN = "u-day-tn"; // trưởng nhóm sàn A
+const DAY_B = "u-day-b"; // đầu chủ sàn B
+const DAY_P256 = "B".repeat(87);
+const DAY_AUTH = "A".repeat(22);
+const dayEndpoint = (ai) => `https://push.example.test/${ai}`;
+
+/** Dựng hai sàn, bốn người, mỗi người một đăng ký bằng vai chủ; rồi chuyển sang vai API. Đổi người bằng `dat`. */
+async function withDay(fn) {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    await client.query("begin");
+    await client.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const u of [DAY_TOI, DAY_KHAC, DAY_TN, DAY_B]) {
+      await client.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [u, `${u}@example.test`]);
+    }
+    await client.query(
+      `insert into company_members (company_id, user_id, roles) values
+         ($1, $3, '{listing_agent}'), ($1, $4, '{listing_agent}'), ($1, $5, '{team_lead}'), ($2, $6, '{listing_agent}')`,
+      [COMPANY_A, COMPANY_B, DAY_TOI, DAY_KHAC, DAY_TN, DAY_B],
+    );
+    for (const [san, u] of [[COMPANY_A, DAY_TOI], [COMPANY_A, DAY_KHAC], [COMPANY_A, DAY_TN], [COMPANY_B, DAY_B]]) {
+      await client.query("insert into push_subscriptions (company_id, user_id, endpoint, p256dh, auth) values ($1, $2, $3, $4, $5)", [
+        san, u, dayEndpoint(u), DAY_P256, DAY_AUTH,
+      ]);
+    }
+    await client.query("set local role quy_hang_app");
+    const dat = (nguoi, san) =>
+      client.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [nguoi, san]);
+    return await fn(client, dat);
+  } finally {
+    await client.query("rollback").catch(() => {});
+    await client.end();
+  }
+}
+
+test("đăng ký đẩy: bật và ép luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relname, c.relrowsecurity r, c.relforcerowsecurity f from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname in ('push_subscriptions', 'push_outbox', 'push_vapid') order by c.relname`,
+    );
+    assert.deepEqual(rows, [
+      { relname: "push_outbox", r: true, f: true },
+      { relname: "push_subscriptions", r: true, f: true },
+      { relname: "push_vapid", r: true, f: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("đăng ký đẩy: ai đọc được", { skip }, async () => {
+  await withDay(async (c, dat) => {
+    const doc = async () => (await c.query("select user_id from push_subscriptions where user_id = $1", [DAY_TOI])).rowCount;
+    const them = async () =>
+      (await c.query(
+        "insert into push_subscriptions (company_id, user_id, endpoint, p256dh, auth) values ($1, $2, $3, $4, $5)",
+        [COMPANY_A, DAY_TOI, dayEndpoint("thiet-bi-2"), DAY_P256, DAY_AUTH],
+      )).rowCount;
+    const xoa = async () => (await c.query("delete from push_subscriptions where user_id = $1", [DAY_TOI])).rowCount;
+    // Bảng viết trước: (người, sàn) × (đọc, thêm dòng ghi tên «tôi», xoá) đăng ký của «tôi» → kết quả.
+    const BANG = [
+      ["chính người", DAY_TOI, COMPANY_A, 1, 1, 1],
+      ["người khác cùng sàn", DAY_KHAC, COMPANY_A, 0, /row-level security/, 0],
+      ["trưởng nhóm cùng sàn", DAY_TN, COMPANY_A, 0, /row-level security/, 0],
+      ["người sàn khác", DAY_B, COMPANY_B, 0, /row-level security/, 0],
+    ];
+    let so = 0;
+    for (const [ten, nguoi, san, ...mong] of BANG) {
+      for (const [viec, ham, m] of [["đọc", doc, mong[0]], ["thêm", them, mong[1]], ["xoá", xoa, mong[2]]]) {
+        await dat(nguoi, san);
+        await c.query("savepoint day");
+        if (m instanceof RegExp) await assert.rejects(ham(), m, `dòng «${ten} × ${viec}»: không bị chặn đúng lỗi`);
+        else assert.equal(await ham(), m, `dòng «${ten} × ${viec}»`);
+        await c.query("rollback to savepoint day");
+        so++;
+      }
+    }
+    assert.equal(so, BANG.length * 3);
+    assert.equal(so, 12);
+  });
+});
+
+test("đăng ký đẩy: hàm lấy đăng ký cho lối gửi", { skip }, async () => {
+  await withDay(async (c, dat) => {
+    const PAYLOAD = { title: "Lead mới", body: "[Toà A] · Bán", url: "/today", tag: "lead:x" };
+    const lay = async () => {
+      await c.query("select app.push_outbox_add($1, $2)", [DAY_TOI, PAYLOAD]);
+      return (await c.query("select endpoint from app.push_outbox_claim(now(), 3, 15)")).rows.map((r) => r.endpoint);
+    };
+    // Bảng viết trước: lối gọi → đăng ký trả về (số dòng) hay lỗi.
+    const BANG = [
+      ["gọi cho người cùng sàn", DAY_TN, COMPANY_A, lay, [dayEndpoint(DAY_TOI)]],
+      ["gọi với sàn đang làm khác", DAY_B, COMPANY_B, lay, []],
+      ["vai API gọi thẳng hàm đăng ký", DAY_TN, COMPANY_A, () => c.query("select * from app.push_targets($1)", [DAY_TOI]), /permission denied/],
+      ["vai API đọc thẳng hộp thư đi", DAY_TN, COMPANY_A, () => c.query("select * from push_outbox"), /permission denied/],
+      ["vai API đọc thẳng bảng khoá", DAY_TN, COMPANY_A, () => c.query("select * from push_vapid"), /permission denied/],
+    ];
+    let so = 0;
+    for (const [ten, nguoi, san, viec, mong] of BANG) {
+      await dat(nguoi, san);
+      await c.query("savepoint day");
+      if (mong instanceof RegExp) await assert.rejects(viec(), mong, `dòng «${ten}»: không bị chặn đúng lỗi`);
+      else assert.deepEqual(await viec(), mong, `dòng «${ten}»`);
+      await c.query("rollback to savepoint day");
+      so++;
+    }
+    assert.equal(so, 5);
+  });
+});
