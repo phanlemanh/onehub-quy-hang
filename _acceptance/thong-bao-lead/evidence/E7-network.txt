@@ -1,0 +1,7 @@
+E7 network + console (chrome-devtools MCP, fetch/xhr/document only, app origin http://localhost:3483)
+[dau-chu chua-bat, page 14] GET /today 200; /api/v1/catalog 200 x2; /company/settings/queue 200 x2; /leads/assigned 200 x2; /push/public-key 200 x2; /listings 200 x4; /manifest.webmanifest 200; /sw.js 304
+[dau-chu chua-cau-hinh, page 16] GET /today 200; catalog/queue/assigned 200 x2 each; /listings 200 x3; NO request to /push/public-key (mock fetch in initScript answers 503 push-not-configured in page, never hits wire)
+[truong-nhom chua-bat, page 19] GET /today 200; /api/v1/push/public-key 200 x2; /listings 200
+[dau-chu da-bat, page 15] GET /today 200; catalog/queue/assigned 200 x2 each; POST /api/v1/me/push-subscriptions 201 x2 (fake endpoint push.example.test per script); /listings 200 x3
+Console (pages 14, 16, 19): info React DevTools, log HMR connected. No errors.
+No 4xx/5xx and no connection errors to app origin.

@@ -9,6 +9,7 @@ import { useSyncExternalStore } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { thanDangXuat } from "@/lib/push/dang-ky";
 import { useBoDongBo } from "@/lib/sync/react";
 import {
   DropdownMenu,
@@ -110,7 +111,7 @@ export function AccountMenu({ email, companyName }: { email: string; companyName
               await fetch("/api/v1/auth/sign-out", {
                 method: "POST",
                 headers: { "content-type": "application/json" },
-                body: "{}",
+                body: await thanDangXuat(),
               });
               router.replace("/login");
               router.refresh();
