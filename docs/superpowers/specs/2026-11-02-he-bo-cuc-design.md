@@ -54,21 +54,22 @@ ba thứ: mật độ (dày · thường), khối nguồn, và bản điện tho
 
 ### Trang mẫu sống
 
-- Địa chỉ `/mau/he-bo-cuc`, ở `app/mau/he-bo-cuc/`, nằm **ngoài** nhóm `(app)`.
+- Địa chỉ `/mau/he-bo-cuc`, ở `app/mau/he-bo-cuc/`, nằm **ngoài** nhóm `(app)`. Bản chính thức nhận diện bằng
+  `VERCEL_ENV=production`: trang trả «không thấy» và proxy không mở địa chỉ này khi không có phiên (Hỏi-1, khuyến nghị).
   - Vì sao ở ngoài: layout của `(app)` đọc phiên và đưa về `/login`, mà layout lồng thì không bỏ qua được.
   - `proxy.ts` cho địa chỉ này qua khi không có cookie phiên.
 - Trang dựng vỏ thật (`AppShell`) với người mẫu và vai mẫu, cùng dữ liệu mẫu trong tệp `du-lieu-mau.ts`. Không nhập
   `lib/api`, không gọi mạng; bài test chặn nếu có một dòng nhập như vậy.
 - Thanh chọn trên trang: bố cục (7) × trạng thái (mặc định · chờ tải · rỗng · lỗi · ngoại tuyến) × khổ (1440 · 1024 ·
-  375). Khổ dựng bằng khung có bề rộng cố định trong trang, nên chụp một lần ra đủ ba khổ. Mỗi tổ hợp có địa chỉ riêng
-  (`?bo-cuc=&trang-thai=&kho=`) để máy chụp.
+  375). Khổ dựng bằng iframe đúng bề rộng nên media query chạy như trên thiết bị. Mỗi tổ hợp có địa chỉ riêng
+  (`/mau/he-bo-cuc/xem?bo-cuc=&trang-thai=`) để máy chụp ở đúng khổ.
 - Trên bản chính thức: theo Hỏi-1.
 
 ### Ảnh chuẩn và đối chiếu
 
 - Ảnh chuẩn: `design/anh-chuan/<bố cục>-<khổ>.png`, gồm 7 × 3 = 21 ảnh ở trạng thái mặc định, chụp từ trang mẫu sống.
-  Bốn trạng thái kia xem trên trang, không chụp, để kho không phình (bốn trạng thái có chung khung). Ảnh chuẩn ghi ở danh
-  mục khối.
+  Bốn trạng thái kia xem trên trang, không chụp, để kho không phình (bốn trạng thái có chung khung). Bước chụp ghi
+  `design/anh-chuan/ke.json`: mỗi ảnh một dòng gồm địa chỉ, khổ, commit. Ảnh chuẩn ghi ở danh mục khối.
 - Mục bản đồ khuôn thêm khoá `bo_cuc: <kiểu>`.
 - `doi-chieu.mjs` lập cặp ảnh «màn mới · ảnh chuẩn của bố cục nó dùng» thay cho màn mẫu khi nhóm chưa có màn mẫu đang
   chạy, nên màn đầu của nhóm mới cũng có vật để so.
@@ -112,12 +113,18 @@ Khoá chỉ đi qua biến môi trường. Bước kiểm chuẩn đỏ khi tệ
   `settings-3`, gỡ `max-w` ở gốc. Mục Người dùng chuyển thể `solution-users-8`.
 - **Trang tạm** dùng bố cục Đọc.
 - **`TrangThai`** chuyển thể `empty-state-1` và `-2`.
-- Các màn còn lại mang ngoại lệ có hạn:
-  - Bảng hàng và `inventory/views` → hàng 52.
-  - Hồ sơ căn → vòng hồ sơ kế của dãy H.
-  - Hôm nay → hàng 42.
-  - Lead → hàng 25.
-  - Các trang `proto/*` → hàng của chúng.
+- Các màn còn lại mang ngoại lệ có hạn, trỏ hàng chưa gộp gần nhất chạm màn ấy (tra `docs/plan/lo-trinh.json` 02/11).
+  Đây là danh sách viết trước mà bài chấm so trọn tập:
+
+  | Tệp (dưới `apps/web/src/app/(app)/`) | Hạn — hàng |
+  | --- | --- |
+  | `inventory/page.tsx`, `inventory/views/[id]/page.tsx`, `proto/nhanh-tuc-thi/page.tsx` | 79 `bang-hang-theo-loai-hinh` |
+  | `units/[code]/page.tsx`, `proto/cot-ho-so-can/page.tsx`, `proto/anh-can-ba-ngan/page.tsx` | 33 `ho-so-can-dien-thoai` |
+  | `today/page.tsx`, `proto/hom-nay-dau-chu/page.tsx` | 42 `hom-nay-truong-nhom` |
+  | `leads/mine/page.tsx`, `leads/new/page.tsx`, `proto/o-nhan-lead/page.tsx` | 51 `lead-dien-thoai` |
+
+- Luật ESLint của hệ bố cục đọc cùng bản đồ khuôn: tệp thuộc nhóm còn ngoại lệ có hạn thì được bỏ qua. Hạn trỏ một mã
+  không có trong lộ trình, trỏ chính hàng 91, hay trỏ hàng đã gộp thì đều đỏ.
 - `vo-va-ia.md` §2 thêm cột «Bố cục».
 
 ## Đối chiếu ngành
