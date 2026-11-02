@@ -167,11 +167,16 @@ function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) 
 
   // ——— Phím ———
   const veDanhSach = () => danhSach.current?.focus();
-  const doiNhom = useCallback((i: number) => {
+  // Vào ô giá thì chọn sẵn cả chữ: gõ là thay giá gợi ý.
+  const vaoOGia = () => {
+    oGia.current?.focus();
+    oGia.current?.select();
+  };
+  const doiNhom = (i: number) => {
     setDung(i);
     // Vào nhóm giá thì con trỏ ở ô giá; nhóm khác thì về danh sách để phím số chọn.
-    requestAnimationFrame(() => (i === GIA ? oGia.current?.focus() : danhSach.current?.focus()));
-  }, []);
+    requestAnimationFrame(() => (i === GIA ? vaoOGia() : danhSach.current?.focus()));
+  };
   const giaTri: Record<string, string | null> = {
     price: can && can.listPrice !== null && can.feeInclusion ? String(can.listPrice) : null,
     furnished: can?.furnished ?? null,
@@ -190,7 +195,7 @@ function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) 
     // Nhóm giá đang đứng mà con trỏ ở danh sách: Enter vào ô giá.
     if (cho === "khong" && dung === GIA && e.key === "Enter" && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
-      return oGia.current?.focus();
+      return vaoOGia();
     }
     if (gia.hoiLai && cho === "o-gia" && e.key === "Escape") {
       e.preventDefault();

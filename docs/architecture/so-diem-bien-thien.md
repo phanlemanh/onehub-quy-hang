@@ -49,9 +49,9 @@ phép», là đề xuất của phiên này, chốt ở Cổng Phạm vi của h
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 7 | `price.change_confirm_pct` | Đổi giá quá bao nhiêu % thì hỏi lại | `int` % | 20 | 5–50 | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 7; ADR-0011 quyết định 1 (luật kiểm của lần nhập) | 49 |
 | 8 | `fee.inclusion` | Định nghĩa «Bao phí» | `set{personalIncomeTax, registrationFee, brokerageFee}` | cả ba | tập con khác rỗng | Quản trị sàn | — | mới — giá bao phí mang định nghĩa lúc tính | company_internal | Mở | §13 (chốt 29/10), luật 13 | 49 |
-| 9 | `fee.brokerage_pct` | Phí môi giới | `decimal` % | 1 | 0–5 | Quản trị sàn | Đầu chủ sửa từng căn | mới | company_internal | Mở | §13 (chốt 29/10) | 49 |
-| 10 | `fee.personal_income_tax_pct` | Thuế thu nhập cá nhân khi chuyển nhượng | `decimal` % | theo luật hiện hành — điền ở hàng 49 sau khi kiểm văn bản | ±0 quanh số luật trừ khi luật đổi | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
-| 11 | `fee.registration_fee_pct` | Lệ phí trước bạ | `decimal` % | như #10 | như #10 | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
+| 9 | `fee.brokerage_pct` | Phí môi giới | `decimal` % | 1 | 0–5 | Quản trị sàn | Đầu chủ sửa từng căn | mới | company_internal | Mở | §13 (chốt 29/10); hàng 28 đọc mặc định ở `TI_LE_BAO_PHI_MAC_DINH` (`pricing/ve-tay.ts`), đầu chủ sửa cho một lần tính trên màn cuộc gọi, chưa lưu | 49 |
+| 10 | `fee.personal_income_tax_pct` | Thuế thu nhập cá nhân khi chuyển nhượng | `decimal` % | 2 (mặc định tạm của hàng 28, `TI_LE_BAO_PHI_MAC_DINH`) — kiểm lại văn bản ở hàng 49 | ±0 quanh số luật trừ khi luật đổi | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
+| 11 | `fee.registration_fee_pct` | Lệ phí trước bạ | `decimal` % | 0,5 (như #10) | như #10 | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
 
 ### A4. Trang khách và gửi — luật 24, 26, §13, hàng 31, 35, 44
 
@@ -105,6 +105,8 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | 30 | Bảng quyết định cho chia lead (chiến lược khác theo loại hình, khoảng giá, nhu cầu) và chiến lược thứ sáu (theo ca, theo giờ) | Thực đơn năm chiến lược (#3) chưa được sàn thật dùng | Sàn thật cần điều kiện mà thực đơn không nói được | CH6 |
 | 31 | Trường riêng kiểu chữ, số, ngày | §7 «để sau» | Hai sàn thật xin | CH9 |
 | 32 | Sao cấu hình của một sàn mẫu cho sàn mới | Mới có một sàn | Đội vận hành mở sàn thứ hai thật | CH11 |
+| 34 | Bộ lựa chọn của danh sách hỏi (chế độ cuộc gọi): mặc định ở `DANH_SACH_HOI` (`listing/danh-sach-hoi.ts`), neo mã RESO khi có | Hàng 28 Hỏi-2: sàn ghi đè qua sổ từ vựng, chưa có | Sổ từ vựng (hàng 90) có | hàng 90 |
+| 35 | Tập căn đem so giá trong toà: cùng toà, cùng số phòng ngủ, nấc `SO_GIA_NAC` (Đang bán, Đang giao dịch) | Hàng 28 Hỏi-4: chưa sàn nào xin tập khác | Sàn thật xin so thêm nấc hay khác loại | — |
 
 ## C. Khoá — khai để không ai hỏi lại
 
@@ -115,7 +117,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K3 | Trần của bảy lớp dữ liệu | Bất biến | `data-classes.ts`; ADR-0017 của onehub-invest |
 | K4 | Ai thấy nguồn: đầu chủ giữ căn và trưởng nhóm; quản trị sàn không tự thấy | Bất biến 2 kề; quyền | ADR-0010; `access/bang-xem-nguon.json` |
 | K5 | Trục ai thấy hàng: «Chỉ tôi» → «Toàn sàn» khi lần đầu Đang bán | Quyền, lớp khó đảo; «Nhóm» chưa có | §6; hàng 12; `visibility/index.ts` |
-| K6 | Mức đủ thông tin: năm mục, theo loại hình | Danh sách hỏi chung; so được giữa sàn | ADR-0008 quyết định 5; ADR-0016 quyết định 2 |
+| K6 | Mức đủ thông tin: năm mục, theo loại hình — cũng là năm nhóm của danh sách hỏi trong chế độ cuộc gọi | Danh sách hỏi chung; so được giữa sàn | ADR-0008 quyết định 5; ADR-0016 quyết định 2; hàng 28 (`DANH_SACH_HOI` khớp `COMPLETENESS_ITEMS`) |
 | K7 | Điều kiện tối thiểu vào Đang bán: mã căn, giá kèm điều kiện phí (thay cho giá về tay tới hàng 28), ít nhất một ảnh thật, pháp lý, tình trạng sử dụng; số ảnh thật tối thiểu sàn nâng được ở #33 | Nghĩa của «Đang bán» trên trang khách | Luật 17; ADR-0008 Hỏi-1; hàng 23; `missingFor` |
 | K8 | Mỗi căn ở đúng một hàng đợi; ép giá thắng gọi lại | Hôm nay đọc được | Luật 18 |
 | K9 | Sửa giá hay trạng thái là vừa xác nhận với chủ nhà | Tắt theo từng lệnh, không theo sàn | Luật 9; ADR-0008 quyết định 5; ADR-0011 quyết định 8 |
@@ -139,7 +141,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **5 ứng viên** ở phần B, **19 điều khoá** ở phần C.
+- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **19 điều khoá** ở phần C.
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.

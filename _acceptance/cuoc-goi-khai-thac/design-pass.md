@@ -48,4 +48,8 @@ Trang so ba lối: `ba-loi/index.html` (dựng bằng `doi-chieu.mjs --dung-ba-l
 - Cả ba ở 375 xếp một cột — bản điện thoại là K1–K4 (dự phòng), không chấm ở vòng này.
 - Hoãn 1 — ReUI có thành phần `questionnaire` (ví dụ `c-questionnaire-3`, chưa cài) cho ô danh sách hỏi: S3 đi thang
   dùng lại, thử thành phần này trước `ToggleGroup` + `Kbd` ghép; không đứng được thì giữ ghép và ghi lý do ở dòng Chỗ hở.
+  **Đã xử ở S3 (02/11):** không đứng — `questionnaire` hỏi một câu mỗi màn và gửi cả biểu mẫu một lần (`FormData`), ví dụ
+  `c-questionnaire-3` kéo theo `Card` (cấm trong Frame); màn cuộc gọi ghi từng lựa chọn ngay và để năm nhóm trên một màn.
+  Giữ `ToggleGroup` + `Kbd` ghép; lý do ghi ở dòng «Chỗ hở — Chế độ cuộc gọi» (`docs/design/vo-va-ia.md` §3), không cài
+  thêm thành phần.
 - Chụp ở nền tối (trình duyệt không đầu theo hệ thống); ba lối dùng cùng token, không mã màu thô.

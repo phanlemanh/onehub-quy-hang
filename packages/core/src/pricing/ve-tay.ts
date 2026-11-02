@@ -10,8 +10,8 @@ export type MaKhoan = (typeof KHOAN_BAO_PHI)[number];
 export type TiLeBaoPhi = Record<MaKhoan, number>;
 
 /**
- * Mặc định của sàn (Hỏi-3, Cổng Phạm vi 02/11): thuế thu nhập cá nhân 2%, lệ phí trước bạ 0,5%, môi giới 1%. Điều khoá
- * `pricing.fee_rates` ở Sổ điểm biến thiên — quản trị sàn đặt ở hàng 49; tới lúc ấy mọi màn đọc hằng này.
+ * Mặc định của sàn (Hỏi-3, Cổng Phạm vi 02/11): thuế thu nhập cá nhân 2%, lệ phí trước bạ 0,5%, môi giới 1%. Ba khoá
+ * `fee.*` (#9–#11) ở Sổ điểm biến thiên — quản trị sàn đặt ở hàng 49; tới lúc ấy mọi màn đọc hằng này.
  */
 export const TI_LE_BAO_PHI_MAC_DINH: TiLeBaoPhi = { thue_tncn: 200, le_phi_truoc_ba: 50, moi_gioi: 100 };
 
