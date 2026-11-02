@@ -2,7 +2,7 @@
 nhom: cuoc-goi
 doi_tuong: [lead, can, lan-rao]
 khuon: { ten: KhungCuocGoi, nhap: "@/app/(app)/units/call/khung" }
-nhan_dien: ["apps/web/src/app/(app)/units/call/page.tsx"]
+nhan_dien: ["apps/web/src/app/(app)/units/call/page.tsx", "apps/web/src/app/(app)/units/call/dial/page.tsx"]
 mau_dang_chay: { tep: "apps/web/src/app/(app)/units/call/page.tsx", duong: "/units/call", trang_thai: [mac-dinh] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card, Placeholder]

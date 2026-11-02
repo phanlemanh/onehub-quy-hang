@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>1 việc"]
+  GD --> B["Sắp mở vòng<br/>chưa có"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>18 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>42 việc"] --> GG{"Cổng Giá trị"}
+  GB --> DG["Đã giao<br/>19 việc"]
+  GB --> CN["Chờ phiên nghiệm thu<br/>43 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -21,10 +21,6 @@ flowchart TD
 > **Cổng Đáng** việc này có đáng làm không · **Cổng Phạm vi** bộ tiêu chí
 > đã đủ và đúng chưa · **Cổng Bằng chứng** đã làm đúng thứ đã hứa chưa ·
 > **Cổng Giá trị** thứ đã giao có ăn thua không.
-
-## Sắp mở vòng
-
-- Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
 
 ## Đang làm
 
@@ -49,6 +45,7 @@ flowchart TD
 - Đầu chủ sửa căn lúc máy chủ trục trặc ngắn hay hết phiên thì thay đổi tự gửi lại khi máy chủ trả lời được, chỉ báo đồng bộ nói đúng vì sao chưa gửi, và căn đang ở Cần xem sửa tiếp hay xử lý không kẹt, không đảo thứ tự hai lần sửa (`dong-bo-tu-lanh`)
 - Mọi đường gửi mã đăng nhập đi qua cùng giới hạn 5 lần xin mã trong 15 phút cho mỗi email; đường quên mật khẩu của plugin không còn phục vụ (`dong-duong-gui-ma-thua`)
 - Bộ dữ liệu mẫu của một sàn thử — một dự án căn hộ, hai mẫu file bảng hàng Excel, lead và chủ nhà giả — sinh từ khuôn của bảng hàng thật, mọi bản ghi mang nhãn mẫu (`du-lieu-mau-san-thu`)
+- Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
 - Mọi màn sau đăng nhập chọn một trong bảy bố cục có tên với sáu vùng chuẩn, chờ tải theo hình bố cục, rỗng · lỗi · ngoại tuyến một luật, ba khổ và một menu Tạo trên vỏ; trang mẫu sống không cần cơ sở dữ liệu hay đăng nhập cho ảnh chuẩn để đối chiếu màn mới; răng lint và bản đồ hệ thiết kế giữ luật (`he-bo-cuc`)
 - Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình theo bộ nhóm của sàn — mặc định lead mới, nên gọi ép giá, cần gọi lại, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng đợi, lý do bằng chữ, ghi kết quả gọi một chạm; sàn tự định nghĩa nhóm từ bộ điều kiện đóng (`hom-nay-dau-chu`)
 - Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi (`khu-va-loai-hinh`)
@@ -92,6 +89,7 @@ flowchart TD
 - Vá Hệ bố cục — mỗi mục của Hôm nay ở cột thứ hai mở đúng chỗ của nó, mục chưa có chỗ thì báo rõ, không mục nào bấm mà không phản hồi (`va-he-bo-cuc`)
 - Vá hàng 85 «Liên hệ» — ca cách ly cho bảng nối lead với hàng, và hàng tạo từ lead báo «chưa có chủ nhà» thay vì trả tên trống (`va-lien-he`)
 - Nút «Nạp dữ liệu mẫu» chạy được trên bản thật và không mở đường chèn lệnh qua ô email; bộ nạp của gói db được kiểm kiểu; lệnh chấm bộ dữ liệu mẫu hàng 5 chạy lại được (`va-nap-mau`)
+- Vá bài kiểm Nạp mẫu có ảnh — ca kho Storage dùng đúng kho bước chọn kho dựng, có đối chứng dương, phá thử thì đỏ (`va-nap-mau-co-anh`)
 - Vá Sẵn sàng bán — chuyển căn hay điền xong thì «Còn thiếu» và «Chưa có» làm mới đúng căn đang xem; nút chỉ báo đã gửi khi lệnh vào hàng đợi, không vào thì báo lỗi và giữ nút bấm lại được (`va-san-sang-ban`)
 - Vá sửa trên ô: dòng «Hiểu là» đọc lại đúng số máy ghi, không làm tròn; nút Hoàn tác trên thông báo hoàn tác đúng lần sửa của chính nó và không ghi đè lần sửa sau (`va-sua-tren-o`)
 - Vá Thông báo lead — chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo (`va-thong-bao-lead`)

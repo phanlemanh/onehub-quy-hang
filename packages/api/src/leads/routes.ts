@@ -14,6 +14,7 @@ import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import {
   createLead,
   createListingFromLead,
+  dialLeadPhone,
   discardLead,
   isRefusal,
   listMyLeads,
@@ -150,6 +151,30 @@ export function registerLeadRoutes(api: OpenAPIHono, deps: ApiDeps) {
       const khoa = khoaSoChu();
       const kq = await withCompany(appPool, ctx, (tx) => revealLeadPhone(tx, leadId, khoa));
       return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "post",
+      path: `${BASE}/{leadId}/phone-dial`,
+      summary: "Gọi từ máy tính — gửi thông báo «Gọi chủ nhà» tới các thiết bị của chính đầu chủ; không đổi lead, không mở số",
+      request: {
+        params: z.object({ leadId: z.string() }),
+        body: { content: { "application/json": { schema: z.object({ endpoint: z.string().max(2048).optional() }).strict() } }, required: false },
+      },
+      responses: { 200: ok("Số thiết bị đã ghi thông báo", z.object({ devices: z.number(), otherDevices: z.number() })), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const { leadId } = c.req.valid("param");
+      if (!laMa(leadId)) return tra(c, API_ERRORS.notFound);
+      const endpoint = (c.req.valid("json") as { endpoint?: string } | undefined)?.endpoint ?? null;
+      const kq = await withCompany(appPool, ctx, (tx) => dialLeadPhone(tx, leadId, endpoint));
+      if (isRefusal(kq)) return tuChoi(c, kq);
+      if (kq.devices > 0) await guiSauKhiGhi(deps, ctx.companyId);
+      return c.json(kq, 200);
     },
   );
 

@@ -23,6 +23,7 @@ import { taoHoSoLead } from "./ho-so-lead";
 import { BaCot, DangTai, DanhSachHoi, SoGia, TheLead, TinhGia, type GiaNhom, type ThuocTinhLead } from "./khoi";
 import { doiMayTinh, mayTinhDau, type DoiMayTinh } from "./may-tinh";
 import { dongMucDu } from "./muc-du";
+import { NutQuaySo } from "./dial/nut-quay-so";
 import { docLeadCuocGoi, KHONG_THAY_LEAD, LOI_TAI_LEAD, type LeadCuocGoi } from "./nguon";
 import { xuLyPhim, type ChoTro } from "./phim";
 
@@ -243,7 +244,7 @@ function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) 
 
   return (
     <BaCot
-      the={<TheLead lead={lead} thuocTinh={tt} onDaGoi={() => void ghiMoc()} dangGhi={dangGoi} loi={loiThe} />}
+      the={<div className="flex flex-col gap-1"><TheLead lead={lead} thuocTinh={tt} onDaGoi={() => void ghiMoc()} dangGhi={dangGoi} loi={loiThe} /><NutQuaySo leadId={lead.id} /></div>}
       hoi={
         <DanhSachHoi
           ref={danhSach}

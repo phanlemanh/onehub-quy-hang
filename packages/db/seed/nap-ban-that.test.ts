@@ -1,7 +1,8 @@
 // Bộ nạp mẫu cho bản thật (hàng 87) trên Postgres dãy — E1–E7, E9, E12 của hồ sơ nap-mau-ban-that; E1, E3–E7 của hồ sơ
-// nap-mau-co-anh (ảnh vẽ bằng mã trước khi lên Đang bán, kho byte chọn như API, dọn byte khi gỡ hay khi hỏng).
+// nap-mau-co-anh (ảnh vẽ bằng mã trước khi lên Đang bán, kho byte chọn như API, dọn byte khi gỡ hay khi hỏng); E1–E3 của
+// hồ sơ va-nap-mau-co-anh (ca kho Storage dùng kho bước chọn kho dựng, có đối chứng dương và chiều đỏ).
 // Chạy: node --import tsx --test "packages/db/seed/*.test.ts" (cần DATABASE_URL tới Postgres đã áp migration).
-import { randomBytes, randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -21,7 +22,8 @@ const { dauVetSo, giaiMaSo, maHoaSo, nguCanhChuNha, nguCanhLead } = await import
 const h = await import("../../api/test-db/helpers");
 const { TEN_SAN, MIEN_EMAIL } = await import("./du-lieu-mau.mjs");
 const { goBanThat, napBanThat, timSanMau } = await import("./nap-ban-that");
-const { khoPostgres } = await import("../../api/src/photos/kho");
+const { chonKhoAnh, khoPostgres } = await import("../../api/src/photos/kho");
+const { cauHinhS3, duongDoiTuong } = await import("../../api/src/photos/kho-s3");
 const { addPhoto, isRefusal: laTuChoiAnh, readPhoto } = await import("../../api/src/photos/store");
 const { anhMau } = await import("./anh-mau.mjs");
 const { giuKhoaSanMau } = await import("./khoa-san-mau.mjs");
@@ -576,18 +578,154 @@ test("anh-doc-lai: ảnh đọc lại qua API ảnh ra đúng byte đã nạp (E
   await go();
 });
 
-test("kho-storage: đủ khoá thì byte đi vào kho Storage dưới mã sàn mẫu, bảng byte không có dòng (E5 nap-mau-co-anh)", async () => {
-  const gia = khoGia({ ten: "s3" });
-  const { san } = await nap(GOI, EMAIL_CHU_KHO, gia.kho);
-  const ghi = gia.ghi();
-  assert.equal(ghi.length, 29 * 2);
-  assert.deepEqual([...new Set(ghi.map((x) => x.companyId))], [san], "mọi lệnh ghi mang mã sàn mẫu");
-  const bien = new Map<string, string[]>();
-  for (const x of ghi) bien.set(x.photoId, [...(bien.get(x.photoId) ?? []), x.bien!]);
-  assert.equal(bien.size, 29);
-  for (const [id, b] of bien) assert.deepEqual(b.sort(), ["original", "thumb"], `ảnh ${id}: biến thể`);
-  assert.equal((await pool.query("select 1 from unit_photo_files where company_id = $1", [san])).rowCount, 0);
-  await go(gia.kho);
+type LoiGoi = { method: string; url: string; body: Buffer };
+/** `fetch` không mạng: ghi lại mọi lời gọi (phương thức, địa chỉ, thân) rồi trả 200 — tiêm vào chonKhoAnh. */
+function fetchGhi() {
+  const goi: LoiGoi[] = [];
+  const f = (async (url: string | URL | Request, init?: RequestInit) => {
+    const body = init?.body instanceof Uint8Array ? Buffer.from(init.body) : Buffer.alloc(0);
+    goi.push({ method: init?.method ?? "GET", url: String(url), body });
+    return new Response(null, { status: 200 });
+  }) as typeof fetch;
+  return { f, goi };
+}
+const ENV_DU = { STORAGE_S3_ACCESS_KEY: "khoa-thu", STORAGE_S3_SECRET_KEY: "bi-mat-thu", STORAGE_S3_ENDPOINT: "http://127.0.0.1:9/storage/v1/s3" };
+/** Số ảnh mong của sàn mẫu, đếm từ gói mẫu theo bảng viết tay ANH_MONG — không đọc cơ sở dữ liệu. */
+const soAnhMong = (goi: GoiMau) => goi.hang.reduce((n, g) => n + ANH_MONG[g.ma]!, 0);
+const demDong = async (bang: "unit_photos" | "unit_photo_files", san: string) =>
+  (await pool.query<{ n: number }>(`select count(*)::int n from ${bang} where company_id = $1`, [san])).rows[0]!.n;
+/** Trước mỗi lần nạp: không sàn mẫu nào, và các sàn mẫu ca đã dựng không còn dòng ảnh hay byte. */
+async function vangSanMau(daDung: string[], luc: string) {
+  assert.deepEqual(await gd(timSanMau), [], `${luc}: Postgres dãy còn sàn mẫu`);
+  for (const san of daDung) {
+    assert.equal(await demDong("unit_photos", san), 0, `${luc}: sàn ${san} còn dòng unit_photos`);
+    assert.equal(await demDong("unit_photo_files", san), 0, `${luc}: sàn ${san} còn dòng unit_photo_files`);
+  }
+}
+
+type KetQuaNap = { ten: string; san: string; goi: LoiGoi[]; dongByte: number; anh: string[] };
+/** Nạp gói mẫu với một kho, chụp số đếm ngay sau lần nạp (trước khi gỡ). */
+async function napChup(kho: KhoAnh, goi: LoiGoi[]): Promise<KetQuaNap> {
+  const { san } = await nap(GOI, EMAIL_CHU_KHO, kho);
+  const anh = (await pool.query<{ id: string }>("select id from unit_photos where company_id = $1", [san])).rows.map((r) => r.id);
+  return { ten: kho.ten, san, goi: [...goi], dongByte: await demDong("unit_photo_files", san), anh };
+}
+
+/**
+ * Lệch của một lần nạp so với điều E5 nap-mau-co-anh hứa cho kho Storage (rỗng = đạt). Mỗi vế một câu mang số đo, để
+ * chiều đỏ ghim được: kho, số ảnh so gói mẫu, số và tập đường PUT, lời gọi khác PUT, dòng trong bảng byte.
+ */
+function lechKhoStorage(kq: KetQuaNap, goc: string): string[] {
+  const loi: string[] = [];
+  const mong = soAnhMong(GOI);
+  const put = kq.goi.filter((g) => g.method === "PUT");
+  if (kq.ten !== "s3") loi.push(`kho ${kq.ten}, không phải Storage`);
+  if (kq.anh.length !== mong) loi.push(`sàn mẫu có ${kq.anh.length} ảnh, gói mẫu mong ${mong}`);
+  if (put.length !== 2 * mong) loi.push(`Storage nhận ${put.length} lệnh ghi, mong ${2 * mong}`);
+  const duong = new Set(kq.anh.flatMap((id) => (["original", "thumb"] as const).map((b) => `${goc}/${duongDoiTuong(kq.san, id, b)}`)));
+  const co = new Set(put.map((g) => g.url));
+  for (const u of duong) if (!co.has(u)) loi.push(`thiếu lệnh ghi ${u}`);
+  for (const u of co) if (!duong.has(u)) loi.push(`lệnh ghi lạ ${u}`);
+  for (const g of kq.goi) if (g.method !== "PUT") loi.push(`lời gọi ${g.method} ${g.url}`);
+  if (kq.dongByte !== 0) loi.push(`bảng byte có ${kq.dongByte} dòng của sàn mẫu`);
+  return loi;
+}
+
+const bam = (b: Buffer) => createHash("sha256").update(b).digest("hex");
+/** Tập bội (biến thể, sha256) của thân đã gửi so với byte gói mẫu: mỗi biến thể lệch bao nhiêu thân, hai chiều. */
+function lechByte(gui: [string, string][], mau: [string, string][]): string[] {
+  const loi: string[] = [];
+  for (const bien of ["original", "thumb"]) {
+    const con = new Map<string, number>();
+    for (const [v, h] of mau) if (v === bien) con.set(h, (con.get(h) ?? 0) + 1);
+    let khongKhop = 0;
+    for (const [v, h] of gui) {
+      if (v !== bien) continue;
+      const n = con.get(h) ?? 0;
+      if (n > 0) con.set(h, n - 1);
+      else khongKhop++;
+    }
+    const chuaGui = [...con.values()].reduce((x, n) => x + n, 0);
+    if (khongKhop || chuaGui) loi.push(`biến thể ${bien}: ${khongKhop} thân gửi lên không khớp, ${chuaGui} byte gói mẫu không được gửi`);
+  }
+  return loi;
+}
+
+test("kho-storage: đủ khoá thì byte đi vào kho Storage dưới mã sàn mẫu, bảng byte không có dòng (E1–E3 va-nap-mau-co-anh)", async () => {
+  const cfg = cauHinhS3(ENV_DU)!;
+  const goc = `${cfg.endpoint}/${cfg.bucket}`;
+  const daDung: string[] = [];
+  try {
+    // (a) Đủ ba khoá: kho do chính bước chọn kho dựng — kho Storage thật của API, fetch không mạng.
+    await vangSanMau(daDung, "trước lần nạp Storage");
+    const fa = fetchGhi();
+    const khoA = chonKhoAnh(ENV_DU, fa.f) as KhoAnh;
+    const a = await napChup(khoA, fa.goi);
+    daDung.push(a.san);
+    assert.deepEqual(lechKhoStorage(a, goc), []);
+    assert.equal(a.ten, "s3", "kho do bước chọn kho dựng phải là Storage");
+    assert.equal(a.anh.length, 29, "sàn mẫu có 29 ảnh");
+    assert.equal(a.goi.filter((g) => g.method === "PUT").length, 58, "Storage nhận 58 lệnh ghi");
+    await go(khoA);
+
+    // (b) Đối chứng dương trên cùng gói: không khoá ngoài bản thật → kho Postgres; câu đếm bảng byte thấy 58 dòng.
+    await vangSanMau(daDung, "trước lần nạp Postgres");
+    const fb = fetchGhi();
+    const khoB = chonKhoAnh({ NODE_ENV: undefined }, fb.f) as KhoAnh;
+    const b = await napChup(khoB, fb.goi);
+    daDung.push(b.san);
+    assert.equal(b.ten, "postgres");
+    assert.equal(b.dongByte, 58, "bảng byte có 58 dòng của sàn mẫu");
+    assert.equal(fb.goi.length, 0, "kho Postgres không gọi Storage");
+    // Byte gửi lên Storage ở (a) là byte của gói mẫu: tập bội (biến thể, sha256) bằng tập bội của bảng byte ở (b).
+    const thanA = a.goi.map((g): [string, string] => [g.url.split("/").pop()!, bam(g.body)]);
+    const { rows } = await pool.query<{ variant: string; content: Buffer }>("select variant, content from unit_photo_files where company_id = $1", [b.san]);
+    const thanB = rows.map((r): [string, string] => [r.variant, bam(r.content)]);
+    assert.deepEqual(lechByte(thanA, thanB), []);
+    // Chiều đỏ của phép so byte: đổi một byte của một thân thumb thì lệch đúng biến thể ấy.
+    const hong = a.goi.find((g) => g.url.endsWith("/thumb"))!;
+    const thanHong = a.goi.map((g): [string, string] => {
+      if (g !== hong) return [g.url.split("/").pop()!, bam(g.body)];
+      const sua = Buffer.from(g.body);
+      sua[0] = sua[0]! ^ 0xff;
+      return ["thumb", bam(sua)];
+    });
+    assert.deepEqual(lechByte(thanHong, thanB), ["biến thể thumb: 1 thân gửi lên không khớp, 1 byte gói mẫu không được gửi"]);
+    // Chiều đỏ «chọn nhầm kho»: phép so của (a) trên kết quả (b).
+    const nham = lechKhoStorage(b, goc);
+    for (const cau of ["kho postgres", "bảng byte có 58 dòng", "Storage nhận 0 lệnh ghi"]) {
+      assert.ok(nham.some((l) => l.includes(cau)), `chọn nhầm kho: thiếu câu «${cau}» trong ${JSON.stringify(nham)}`);
+    }
+    await go(khoB);
+
+    // (c) Chiều đỏ «byte rò vào bảng»: kho Storage thật bọc để mỗi lần ghi cũng ghi bảng byte.
+    await vangSanMau(daDung, "trước lần nạp có bọc");
+    const fc = fetchGhi();
+    const that = chonKhoAnh(ENV_DU, fc.f) as KhoAnh;
+    let ghiBang = 0;
+    const ro: KhoAnh = {
+      ...that,
+      async ghi(tx, companyId, photoId, bien, bytes, type) {
+        await that.ghi(tx, companyId, photoId, bien, bytes, type);
+        await khoPostgres.ghi(tx, companyId, photoId, bien, bytes, type);
+        ghiBang++;
+      },
+      async xoa(tx, companyId, photoId) {
+        await that.xoa(tx, companyId, photoId);
+        await khoPostgres.xoa(tx, companyId, photoId);
+      },
+    };
+    const c = await napChup(ro, fc.goi);
+    daDung.push(c.san);
+    assert.equal(ghiBang, 58, "bộ bọc ghi bảng byte 58 lần");
+    const roRi = lechKhoStorage(c, goc);
+    assert.ok(roRi.includes("bảng byte có 58 dòng của sàn mẫu"), `byte rò: ${JSON.stringify(roRi)}`);
+    await go(ro);
+  } finally {
+    // Ném giữa chừng cũng không để sàn mẫu cho ca sau.
+    if ((await gd(timSanMau)).length) await go();
+  }
+  await vangSanMau(daDung, "cuối ca");
 });
 
 test("chon-kho: bản thật thiếu khoá thì dừng, lời báo nêu đúng biến thiếu, không bảng nào đổi (E5 nap-mau-co-anh)", async () => {
