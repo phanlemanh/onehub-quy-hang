@@ -1,0 +1,34 @@
+schema_version: 1
+feature_slug: va-ma-can-lead
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «lead: mã căn phải có chữ hay số» (packages/core/src/dedupe/dedupe.test.ts) ok — ma trận viết trước 10 mã qua validateLeadInput với thân lead đủ năm mục: hợp lệ 'A-12.05', 'a 02.06', '12' → ok:true và value.unitNumber đúng mã đã cắt khoảng trắng; từ chối '---', '.', '/ /', 'Đ', '_', '__', 'Đ-Ê' → ok:false, errors đúng MỘT phần tử { path: 'unitNumber', reason: LY_DO_MA_CAN_KHONG_CHU_SO } (deepEqual, ghim chuỗi «Mã căn cần ít nhất một chữ (A–Z) hoặc số (0–9)»); assert số ca = 10; lead bỏ unitNumber vẫn ok:true (đối chứng); quan hệ hai luật: với mỗi mã của ma trận cộng mã biên 'Ａ1' (chữ toàn khổ), '1⁄2', '٣' (chữ số Ả Rập), assert validateLeadInput(thân với mã).ok === (kiemMaCan(mã) === null) — luật lead là luật của lõi hàng, không chép."
+    paths: [packages/core/src/dedupe/**, packages/core/src/listing/gan-ma-can.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «nhập lead mã toàn dấu bị từ chối» (packages/api/test-db/va-ma-can-lead.test.ts) ok — POST /api/v1/leads thân đủ với unitNumber '---' → 400, error 'invalid-payload', details có phần tử path 'unitNumber' reason đúng câu báo; đếm leads của sàn không đổi; cùng thân (số điện thoại mẫu khác) với 'A-12.05' → 201 và đếm tăng 1 (đối chứng dương)."
+    paths: [packages/core/src/dedupe/**, packages/api/src/leads/**, packages/api/test-db/va-ma-can-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «tạo hàng từ lead mã rác» ok — lead mang unit_number '---' đổi thẳng bằng kết nối chủ sau khi nhập (dữ liệu trước luật); sau khi đổi, SELECT xác nhận unit_number = '---' và app.unit_key(unit_number) IS NULL (bảng leads không có cột dẫn xuất từ unit_number — khuôn bản ghi rác thật); đầu chủ của lead POST /api/v1/leads/{id}/listing → 201; GET hàng: buildingName của lead, unitNumber null; lead_listings có dòng nối lead ↔ hàng; POST events unit_number_assigned 'A-12.05' expectedVersion 1 → 200 và GET trả 'A-12.05'. Đối chứng cùng đường: lead mang 'A-12.06' → 201, hàng unitNumber 'A-12.06'."
+    paths: [packages/api/src/leads/**, packages/api/test-db/va-ma-can-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «gửi lại lead mã rác» ok — lead đã trả lại, unit_number đổi thẳng thành '---' bằng kết nối chủ; sau khi đổi, SELECT xác nhận unit_number = '---' và app.unit_key(unit_number) IS NULL (bảng leads không có cột dẫn xuất từ unit_number — khuôn bản ghi rác thật); telesales POST /api/v1/leads/{id}/resubmit với số mẫu mới → 201; bản ghi lead mới có building_name của lead cũ và unit_number null; lead cũ có resubmitted_lead_id = id lead mới. Đối chứng cùng đường: lead đã trả mang 'A-12.07' → 201, lead mới unit_number 'A-12.07'."
+    paths: [packages/api/src/leads/**, packages/api/test-db/va-ma-can-lead.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -1,10 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { navigationFor } from "@quy-hang/core";
 import { typesForNeed } from "@quy-hang/core/contacts";
-import { decideOutcome, OPEN_STATUSES, validateLeadInput, type LeadRecord, type MyLeadRecord, type Outcome } from "@quy-hang/core/dedupe";
+import { decideOutcome, OPEN_STATUSES, validateLeadInput, type LeadRecord, type MyLeadRecord, type Need, type Outcome } from "@quy-hang/core/dedupe";
+import { kiemMaCan } from "@quy-hang/core/listing";
+import { noiDungQuaySo } from "@quy-hang/core/push";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { createListing, isRefusal as laTuChoiHang } from "../listings/store";
+import { rolesOf } from "../routing/store";
 import { khoaSoChu } from "../owners/khoa";
 import { baoLeadVe } from "../push/store";
 import { dauVetSo, giaiMaSo, maHoaSo, nguCanhLead, type KhoaSoChu } from "../owners/ma-hoa";
@@ -139,6 +142,30 @@ export async function revealLeadPhone(tx: pg.PoolClient, id: string, khoa: KhoaS
   return { ownerPhone: giaiMaSo(banMa, nguCanhLead(san, id), khoa) };
 }
 
+/**
+ * Gọi từ máy tính (hàng 30): ghi thông báo quay số cho mọi đăng ký của chính người gọi. Ai gọi được = ai mở số được — cùng
+ * vị từ của `app.reveal_lead_phone` (đầu chủ đang được giao, lead còn việc) — nhưng không ghi vết mở số và không đổi lead:
+ * vết chỉ ghi khi điện thoại thật sự mở số. `otherDevices`: đăng ký khác điểm đăng ký máy gọi gửi kèm (luật theo dòng chỉ
+ * cho đọc đăng ký của mình), để máy tính chỉ bật thông báo không tự đếm là «đã gửi».
+ */
+export async function dialLeadPhone(tx: pg.PoolClient, id: string, endpoint: string | null): Promise<{ devices: number; otherDevices: number } | Refusal> {
+  if (!(await rolesOf(tx)).includes("listing_agent")) return { error: API_ERRORS.listingAgentRequired };
+  const { rows } = await tx.query<{ building_name: string; need: Need }>(
+    `select building_name, need from leads
+     where company_id = app.current_company_id() and id = $1 and matched_agent_user_id = app.current_user_id()
+       and outcome in ('new', 'owner_has_agent') and discarded_at is null and returned_at is null`,
+    [id],
+  );
+  const l = rows[0];
+  if (!l) return { error: API_ERRORS.notFound };
+  const noiDung = noiDungQuaySo({ leadId: id, buildingName: l.building_name, need: l.need });
+  const devices = (await tx.query<{ n: number }>("select app.push_outbox_add(app.current_user_id(), $1) n", [noiDung])).rows[0]!.n;
+  const may = endpoint
+    ? Number((await tx.query<{ n: string }>("select count(*) n from push_subscriptions where endpoint = $1", [endpoint])).rows[0]!.n)
+    : 0;
+  return { devices, otherDevices: devices - may };
+}
+
 /** Lead của chính người gọi; lead người khác nhập coi như không có (luật 21). */
 export async function readOwnLead(tx: pg.PoolClient, id: string): Promise<LeadRecord | null> {
   const { rows } = await tx.query<LeadRow>(
@@ -238,6 +265,12 @@ export class RefusalAfterWrite extends Error {
 }
 
 /**
+ * Mã căn của lead cũ còn dùng được để dựng lại (va-ma-can-lead, Hỏi-1): lead ghi trước luật có thể mang mã toàn dấu — hai
+ * đường dựng lại bỏ mã ấy (hàng chưa mã, lead mới chỉ toà) thay vì hỏng; bản ghi lead cũ không đổi.
+ */
+const maDung = (ma: string | null): ma is string => ma !== null && kiemMaCan(ma) === null;
+
+/**
  * «Sửa số và gửi lại» (Hỏi-2): lead mới chép năm mục của lead cũ với số mới, đi qua đường ghi của hàng 24 — kiểm trùng, rồi
  * nhịp chia như mọi lead mới; lead cũ mang dấu «đã gửi lại» trỏ lead mới, cùng giao dịch.
  */
@@ -260,7 +293,7 @@ export async function resubmitLead(tx: pg.PoolClient, id: string, body: unknown)
   const moi = await createLead(tx, {
     ownerPhone: (body as { ownerPhone?: unknown }).ownerPhone,
     buildingName: cu.building_name,
-    ...(cu.unit_number !== null && { unitNumber: cu.unit_number }),
+    ...(maDung(cu.unit_number) && { unitNumber: cu.unit_number }),
     need: cu.need,
     listPrice: Number(cu.list_price),
     feeInclusion: cu.fee_inclusion,
@@ -298,7 +331,7 @@ export async function createListingFromLead(tx: pg.PoolClient, id: string): Prom
     if (code === "23505") return { error: API_ERRORS.leadHasListing };
     throw e;
   }
-  const tao = await createListing(tx, { buildingName: lead.building_name, ...(lead.unit_number !== null && { unitNumber: lead.unit_number }) });
+  const tao = await createListing(tx, { buildingName: lead.building_name, ...(maDung(lead.unit_number) && { unitNumber: lead.unit_number }) });
   if (laTuChoiHang(tao)) throw new RefusalAfterWrite({ error: tao.error, ...(tao.details && { details: tao.details }) });
   const hang = tao.listingId;
   await tx.query(

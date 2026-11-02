@@ -1,0 +1,196 @@
+[Mẫu] Sàn thử
+Gõ mã căn…
+⌘
+K
++ Lead
+Đã đồng bộ · 23:46
+DA
+
+HÔM NAY
+
+Lead mới
+Nên gọi điều chỉnh giá
+Cần gọi lại
+Thiếu thông tin
+Mới đổi
+Bật thông báo lead
+Nhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.
+Bật thông báo
+Hôm nay
+17 việc
+Lead mới
+8
+				
+
+Toà A · A-09.01
+Bán
+	
+Đã nhận
+nhập 14:31
+	2,6 tỷ, đã bao phí	Quá hạn gọi 8 giờ 44 phút	
+Ghi cuộc gọi
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà Thử Trống · chỉ biết toà
+Bán
+	
+Đã gửi
+nhập 14:31
+	2,75 tỷ, đã bao phí	Quá hạn nhận 8 giờ 59 phút	
+Ghi cuộc gọi
+Nhận
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà A · A-13.03
+Bán
+	
+Đã gửi
+nhập 15:18
+	2,75 tỷ, đã bao phí	Quá hạn nhận 8 giờ 14 phút	
+Ghi cuộc gọi
+Nhận
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà A · A-06.03
+Bán
+	
+Đã nhận
+nhập 16:09
+	2,75 tỷ, đã bao phí	Quá hạn gọi 7 giờ 7 phút	
+Ghi cuộc gọi
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà A · A-05.03
+Bán
+	
+Đã nhận
+nhập 16:09
+	2,75 tỷ, đã bao phí	Quá hạn gọi 7 giờ 7 phút	
+Ghi cuộc gọi
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà A · A-05.02
+Bán
+	
+Đã nhận
+nhập 16:09
+	2,75 tỷ, đã bao phí	Quá hạn gọi 7 giờ 7 phút	
+Ghi cuộc gọi
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà A · A-06.02
+Bán
+	
+Đã nhận
+nhập 16:09
+	2,75 tỷ, đã bao phí	Quá hạn gọi 7 giờ 7 phút	
+Ghi cuộc gọi
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Toà A · A-04.02
+Bán
+	
+Đã nhận
+nhập 16:09
+	2,75 tỷ, đã bao phí	Quá hạn gọi 7 giờ 7 phút	
+Ghi cuộc gọi
+Đã gọi
+Trả lại · Số không liên lạc được
+Mở số
+
+
+Nên gọi điều chỉnh giá
+1
+				
+
+A-21.01 · Toà A
+Chưa rõ
+	Giá giữ 15 ngày	2,80 tỷ · Không bao phí	—	
+Ghi cuộc gọi
+Còn · giữ giá
+Đổi giá, trạng thái…
+
+
+Cần gọi lại
+5
+				
+
+A-12.02 · Toà A
+2PN · 68,5 m²
+	Chưa từng xác nhận	Chưa có giá	—	
+Còn · giữ giá
+Đổi giá, trạng thái…
+
+
+A-14.02 · Toà A
+2PN · 68,5 m²
+	Chưa từng xác nhận	Chưa có giá	—	
+Còn · giữ giá
+Đổi giá, trạng thái…
+
+
+A-09.02 · Toà A
+2PN · 68,5 m²
+	Chưa từng xác nhận	Chưa có giá	—	
+Còn · giữ giá
+Đổi giá, trạng thái…
+
+
+A-15.02 · Toà A
+2PN · 68,5 m²
+	Chưa từng xác nhận	Chưa có giá	—	
+Còn · giữ giá
+Đổi giá, trạng thái…
+
+
+A-10.02 · Toà A
+2PN · 68,5 m²
+	Chưa từng xác nhận	Chưa có giá	—	
+Còn · giữ giá
+Đổi giá, trạng thái…
+
+
+Thiếu thông tin
+3
+				
+
+Chưa có mã căn · Toà A
+Chưa rõ
+	Thiếu: pháp lý, tài chính, tình trạng sử dụng	2,80 tỷ · Không bao phí	—	
+Đổi giá, trạng thái…
+
+
+A-10.03 · Toà A
+2PN · 75 m²
+	Thiếu: nội thất, pháp lý, tài chính, tình trạng sử dụng	2,80 tỷ · Bao phí	—	
+Đổi giá, trạng thái…
+
+
+A-14.03 · Toà A
+2PN · 75 m²
+	Thiếu: pháp lý, tài chính, tình trạng sử dụng	2,80 tỷ · Bao phí	—	
+Đổi giá, trạng thái…
+Gõ mã căn
+
+Gõ mã căn hoặc tên nhà

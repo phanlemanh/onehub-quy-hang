@@ -1,0 +1,169 @@
+[Mẫu] Sàn thử
+Gõ mã căn…
+⌘
+K
++ Lead
+Mất mạng · 1 thay đổi chờ gửi
+DA
+
+GÓC NHÌN CỦA ĐỘI
+
+Chưa có góc nhìn
+
+GÓC NHÌN CỦA TÔI
+
+Chưa có góc nhìn
+
+Lưu góc nhìn
+
+Độ tươi
+
+Chưa có số
+
+Hôm nay
+Gọi ép giá
+Nên gọi ép giá
+Đang bán
+A-21.09 · Toà A · 2,7 tỷ · không bao phí
+
+Lên bảng 20 ngày · đổi giá gần nhất 0 ngày trước
+
+KẾT QUẢ CUỘC GỌI
+H
+Hạ giá
+G
+Giữ giá
+B
+Đã cọc / bán…
+K
+Không nghe máy
+Alt+1
+Bao phí
+Alt+2
+Không bao phí
+
+Hiểu là 2,7 tỷ · không bao phí · trước 2,7 tỷ · 0% · Enter ghi
+
+Đã ghi: Hạ giá 2,7 tỷ · không bao phí
+Về Hôm nay
+Ctrl
++
+Enter
+
+H
+G
+B
+K
+chọn ·
+Esc
+bỏ ·
+Ctrl
++
+Enter
+về Hôm nay
+
+LỊCH SỬ TRẢ GIÁ
+Hạ 2,8 tỷ → 2,75 tỷ · không bao phí · đã xác nhận với chủ
+Đầu chủ · 23:42 02/11
+Lên bảng 2,8 tỷ · không bao phí · đã xác nhận với chủ
+Đầu chủ · 23:28 13/10
+Tạo hồ sơ
+Đầu chủ · 23:28 11/10
+Danh sách hỏi
+Mức đủ 3/5
+
+Còn thiếu: nội thất, tài chính
+
+1
+–
+3
+chọn ·
+Tab
+nhóm kế ·
+Delete
+xoá ·
+G
+đã gọi ·
+Ctrl
++
+Enter
+xong cuộc gọi
+
+Giá và phí
+Đã hỏi
+Alt+1
+Bao phí
+Alt+2
+Không bao phí
+
+Hiểu là 2,8 tỷ · không bao phí · Enter ghi
+
+Nội thất
+Chưa hỏi
+1
+Đủ đồ
+2
+Cơ bản
+3
+Thô
+Pháp lý
+Đã hỏi
+1
+Có sổ
+2
+Đang làm sổ
+3
+Hợp đồng mua bán
+Tài chính
+Chưa hỏi
+1
+Không vay
+2
+Đang vay
+Tình trạng sử dụng
+Đã hỏi
+1
+Trống
+2
+Chủ ở
+3
+Đang cho thuê
+Tính giá
+Giá chủ báo
+Môi giới %
+Bao phí
+Không bao phí
+Chủ nhận về tay
+2.800.000.000 đ
+
+Tỉ lệ mặc định của sàn
+
+Cùng loại trong toà
+
+Chưa biết loại căn — so cả toà.
+
+x
+2,2 tỷ
+giữa 2,8 tỷ
+2,8 tỷ
+
+Căn này về tay 2,7 tỷ · −3,6% so với giữa toà
+
+Mã	Giá	Phí	Trạng thái	Xác nhận
+A-21.08	2,8 tỷ	N	Đang bán	23:28 13/10
+A-21.04	2,8 tỷ	N	Đang bán	23:28 13/10
+A-21.02	2,8 tỷ	N	Đang bán	23:28 13/10
+A-21.03	2,8 tỷ	N	Đang bán	23:28 13/10
+A-21.05	2,8 tỷ	N	Đang giao dịch	23:35 02/11
+A-21.01	2,8 tỷ	N	Đang bán	23:28 18/10
+A-06.01	2,45 tỷ	N	Đang giao dịch	14:31 02/11
+A-04.01	2,5 tỷ	BP	Đang giao dịch	14:31 02/11
+A-02.01	2,4 tỷ	BP	Đang bán	14:31 02/11
+A-03.01	2,3 tỷ	N	Đang bán	14:31 02/11
+A-05.01	2,2 tỷ	N	Đang bán	14:31 02/11
+
+Dải tính trên giá chủ nhận về tay. BP = bao phí · N = không bao phí.
+
+Gõ mã căn
+
+Gõ mã căn hoặc tên nhà

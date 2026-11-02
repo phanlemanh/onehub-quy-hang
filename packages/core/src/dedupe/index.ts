@@ -5,6 +5,7 @@
  */
 import { normalizePhone } from "../access/owner-input";
 import { FEE_INCLUSIONS, type PayloadError } from "../listing/events";
+import { kiemMaCan } from "../listing/gan-ma-can";
 import { STANDARD_STATUSES, TRANSITIONS, type StandardStatus } from "../listing/status";
 
 /** Nhu cầu của chủ nhà (Hỏi-1). */
@@ -51,7 +52,11 @@ export function validateLeadInput(payload: unknown): LeadInputResult {
   const so = normalizePhone(p.ownerPhone);
   if (!thieu("ownerPhone") && !so) errors.push({ path: "ownerPhone", reason: "cần số điện thoại Việt Nam 10 chữ số" });
   if (!thieu("buildingName") && !chu(p.buildingName)) errors.push({ path: "buildingName", reason: "cần chữ, 1–200 ký tự" });
-  if ("unitNumber" in p && p.unitNumber !== undefined && !chu(p.unitNumber)) errors.push({ path: "unitNumber", reason: "cần chữ, 1–200 ký tự" });
+  if ("unitNumber" in p && p.unitNumber !== undefined) {
+    // Mã căn theo đúng luật của lõi hàng (va-ma-can-lead): lead mang mã toàn dấu sẽ không tạo được hàng.
+    const loi = !chu(p.unitNumber) ? "cần chữ, 1–200 ký tự" : kiemMaCan(p.unitNumber as string);
+    if (loi) errors.push({ path: "unitNumber", reason: loi });
+  }
   if (!thieu("need") && !motTrong(NEEDS, p.need)) errors.push({ path: "need", reason: `cần một trong: ${NEEDS.join(", ")}` });
   if (!thieu("listPrice") && !(typeof p.listPrice === "number" && Number.isSafeInteger(p.listPrice) && p.listPrice > 0)) {
     errors.push({ path: "listPrice", reason: "cần số đồng nguyên dương" });

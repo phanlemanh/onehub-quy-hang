@@ -23,6 +23,7 @@ import { taoHoSoLead } from "./ho-so-lead";
 import { BaCot, DangTai, DanhSachHoi, SoGia, TheLead, TinhGia, type GiaNhom, type ThuocTinhLead } from "./khoi";
 import { doiMayTinh, mayTinhDau, type DoiMayTinh } from "./may-tinh";
 import { dongMucDu } from "./muc-du";
+import { NutQuaySo } from "./dial/nut-quay-so";
 import { docLeadCuocGoi, KHONG_THAY_LEAD, LOI_TAI_LEAD, type LeadCuocGoi } from "./nguon";
 import { xuLyPhim, type ChoTro } from "./phim";
 
@@ -30,7 +31,7 @@ const chuan = (s: string) => s.trim().toLowerCase();
 const GIA = DANH_SACH_HOI.findIndex((m) => m.ma === "price");
 
 /** Số phòng ngủ theo danh mục, khoá toà + mã căn; ngoài danh mục là `null`. */
-function phongNguTheo(dm: CatalogData | null) {
+export function phongNguTheo(dm: CatalogData | null) {
   const m = new Map<string, number | null>();
   for (const k of dm?.subdivisions ?? []) for (const b of k.buildings) for (const u of b.units) m.set(`${chuan(b.buildingName)}\u0000${chuan(u.unitNumber)}`, u.bedroomsTotal);
   return (toa: string, ma: string | null) => (ma ? (m.get(`${chuan(toa)}\u0000${chuan(ma)}`) ?? null) : null);
@@ -243,7 +244,7 @@ function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) 
 
   return (
     <BaCot
-      the={<TheLead lead={lead} thuocTinh={tt} onDaGoi={() => void ghiMoc()} dangGhi={dangGoi} loi={loiThe} />}
+      the={<div className="flex flex-col gap-1"><TheLead lead={lead} thuocTinh={tt} onDaGoi={() => void ghiMoc()} dangGhi={dangGoi} loi={loiThe} /><NutQuaySo leadId={lead.id} /></div>}
       hoi={
         <DanhSachHoi
           ref={danhSach}

@@ -1987,6 +1987,30 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     },
     {
+      "ma": "va-dien-ma-can-cho-hang",
+      "cau_giao": "Vá Điền mã căn: mã căn phải có ít nhất một chữ hay số; mã toàn dấu bị từ chối với lời báo rõ, không khoá hàng",
+      "slug": "va-dien-ma-can-cho-hang",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-he-bo-cuc",
+      "cau_giao": "Vá Hệ bố cục: mỗi mục của Hôm nay ở cột thứ hai mở đúng chỗ của nó, mục chưa có màn thì ẩn hay báo rõ, không mục nào bấm mà không phản hồi",
+      "slug": "va-he-bo-cuc",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-nap-mau-co-anh",
+      "cau_giao": "Vá bài kiểm Nạp mẫu có ảnh: ca kho Storage có đối chứng dương, phá thử thì đỏ",
+      "slug": "va-nap-mau-co-anh",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
+      "ma": "va-ma-can-lead",
+      "cau_giao": "Vá mã căn của lead: lead nhập mã căn toàn dấu bị từ chối ngay lúc nhập với lời báo như hồ sơ hàng; tạo hàng từ lead không còn ném lỗi",
+      "slug": "va-ma-can-lead",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
+    },
+    {
       "ma": "92",
       "cau_giao": "Đầu chủ mở Hôm nay và đọc mỗi việc trên một dòng: tên căn, cột «Vì sao hôm nay» hai tầng — lý do chữ đậm, hạn đỏ khi quá, vàng khi còn dưới 15 phút — và giá; làm việc đầu của nhóm bằng đúng một nút, một chạm; việc còn lại nằm trong ⋯; hàng đợi, luật mỗi căn một hàng đợi và ghi kết quả của hàng 22 giữ nguyên",
       "slug": "lam-lai-hom-nay-dau-chu",

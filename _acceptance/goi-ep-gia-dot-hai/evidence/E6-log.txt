@@ -1,0 +1,5 @@
+E6-step1 {"coNhom":true,"inGroup":true,"inPage":true,"nhomLen":4044}
+GET1 {"st":200,"last":"2026-10-13T17:44:18.039Z","keys":["id","buildingName","unitNumber","standardStatus","listPrice","feeInclusion","furnished","legalStatus"],"n":0}
+CHON ["H Hạ giá:false","G Giữ giá:true","B Đã cọc / bán…:false","K Không nghe máy:false"]
+GET2 {"st":200,"last":"2026-11-02T17:47:57.259Z","keys":["id","buildingName","unitNumber","standardStatus","listPrice","feeInclusion","furnished","legalStatus"],"n":1}
+E6-step3 {"coNhom":true,"inGroup":false,"inPage":true,"nhomLen":3926}

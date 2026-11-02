@@ -20,9 +20,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { SU_KIEN_MO_LUU, useGocNhinCuaToi } from "@/app/(app)/inventory/goc-nhin-react";
+import { mucDangChon, mucHomNay } from "@/app/(app)/today/mo-nhom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -37,7 +38,8 @@ const SHARES: Item[] = [
 ];
 
 // Hôm nay: các hàng đợi của bộ nhóm mặc định (hàng 22). Bộ nhóm của sàn và số đếm theo nhóm vào cột ở hàng 42.
-const TODAY: Item[] = BO_NHOM_MAC_DINH.filter((n) => n.enabled).map((n) => ({ label: n.label, href: `/today#${n.code}`, icon: ListChecksIcon }));
+// Mỗi mục mở đúng nhóm trên Hôm nay qua `/today?nhom=<mã>` (va-he-bo-cuc).
+export const TODAY_ITEMS: Item[] = mucHomNay(BO_NHOM_MAC_DINH).map((m) => ({ ...m, icon: ListChecksIcon }));
 
 const TEAM: Item[] = [{ label: "Tổng quan", href: "/team", icon: UsersIcon }];
 
@@ -57,10 +59,11 @@ function SectionTitle({ children }: { children: string }) {
 
 function NavList({ items }: { items: Item[] }) {
   const pathname = usePathname();
+  const dangChon = mucDangChon(items, pathname, useSearchParams());
   return (
     <div className="flex flex-col gap-0.5 px-2">
       {items.map(({ label, href, icon: Icon }) => {
-        const isActive = pathname === href;
+        const isActive = href === dangChon;
         return (
           <Button
             key={href}
@@ -121,7 +124,7 @@ function InventoryColumn() {
 
 function ColumnContent({ home }: { home: Home }) {
   if (home === "inventory") return <InventoryColumn />;
-  const items = home === "shares" ? SHARES : home === "today" ? TODAY : home === "team" ? TEAM : SETTINGS_ITEMS;
+  const items = home === "shares" ? SHARES : home === "today" ? TODAY_ITEMS : home === "team" ? TEAM : SETTINGS_ITEMS;
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col py-1" aria-label={HOME_LABEL[home]}>
