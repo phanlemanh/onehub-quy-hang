@@ -87,4 +87,4 @@ flowchart TD
 - Nút «Nạp dữ liệu mẫu» chạy được trên bản thật và không mở đường chèn lệnh qua ô email; bộ nạp của gói db được kiểm kiểu; lệnh chấm bộ dữ liệu mẫu hàng 5 chạy lại được (`va-nap-mau`)
 - Vá Sẵn sàng bán — chuyển căn hay điền xong thì «Còn thiếu» và «Chưa có» làm mới đúng căn đang xem; nút chỉ báo đã gửi khi lệnh vào hàng đợi, không vào thì báo lỗi và giữ nút bấm lại được (`va-san-sang-ban`)
 - Vá sửa trên ô: dòng «Hiểu là» đọc lại đúng số máy ghi, không làm tròn; nút Hoàn tác trên thông báo hoàn tác đúng lần sửa của chính nó và không ghi đè lần sửa sau (`va-sua-tren-o`)
-- Vá Thông báo lead — chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo (`va-thong-bao-lead`) — đã giao — máy thông, bằng chứng xanh-sạch
+- Vá Thông báo lead — chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo (`va-thong-bao-lead`)
