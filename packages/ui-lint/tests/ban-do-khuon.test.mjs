@@ -130,7 +130,8 @@ const CHO_TRANG_THAI = [
   ...Array(4).fill(`${W}/app/(app)/units/photos/muc-anh.tsx`),
   // Trình che vùng ảnh (hàng 19): ảnh không mở được, lưu lỗi.
   ...Array(2).fill(`${W}/app/(app)/units/photos/redact/trinh-che.tsx`),
-  // «Sẵn sàng bán» (hàng 23): danh sách «Còn thiếu».
+  // «Sẵn sàng bán» (hàng 23): danh sách «Còn thiếu»; lời báo «Chưa gửi được» (va-san-sang-ban).
+  `${W}/app/(app)/units/ready/nut-san-sang.tsx`,
   `${W}/app/(app)/units/ready/nut-san-sang.tsx`,
   `${W}/app/settings/users/page.tsx`,
   `${W}/app/settings/users/quan-nguoi.tsx`,
@@ -312,7 +313,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 7 tệp theo khuôn · 11 ngoại lệ · 0 lệch",
-      "trang-thai: 33 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 34 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
