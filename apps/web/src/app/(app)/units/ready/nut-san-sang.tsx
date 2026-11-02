@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { HangSua } from "../../inventory/cell-edit/lenh";
 import { nguonApi } from "../photos/nguon-api";
-import { bamSanSang, CHU_ANH_CAP_NHAT, CHU_CAN_MANG_KIEM_ANH, thieuHienTai, type Dich, type TrangThaiNut } from "./san-sang";
+import { bamSanSang, CHU_ANH_CAP_NHAT, CHU_CAN_MANG_KIEM_ANH, NEO_MA_CAN, thieuHienTai, type Dich, type TrangThaiNut } from "./san-sang";
 
 function useCoMang() {
   return useSyncExternalStore(
@@ -33,7 +33,8 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
   const coMang = useCoMang();
   const sua = useSuaHang();
   const docPhienBan = useDocPhienBan();
-  const nguon = useMemo(() => nguonApi(toa, ma), [toa, ma]);
+  // Hàng chưa có mã căn (ADR-0026) không có ảnh để đếm — ảnh gắn theo toà + mã; lõi chỉ báo «Mã căn».
+  const nguon = useMemo(() => (ma ? nguonApi(toa, ma) : null), [toa, ma]);
   const [tt, setTt] = useState<TrangThaiNut>({ kind: "san" });
   const [dang, setDang] = useState(false);
 
@@ -42,7 +43,7 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
     try {
       const kq = await bamSanSang(hang, {
         onLine: navigator.onLine,
-        docAnh: () => nguon.danhSach(),
+        docAnh: () => (nguon ? nguon.danhSach() : Promise.resolve({ anh: [] })),
         gui: (lenh) => sua(hang.id, lenh.type, lenh.payload, docPhienBan(hang.id)),
       });
       setTt(kq);
@@ -81,6 +82,17 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
                 <li key={t.nhan}>
                   {t.dich === "anh" ? (
                     <a href={`#${NEO_MUC_ANH}`} className="underline underline-offset-2">
+                      {t.nhan}
+                    </a>
+                  ) : t.dich === "ma" ? (
+                    <a
+                      href={NEO_MA_CAN}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.querySelector<HTMLInputElement>(NEO_MA_CAN)?.focus();
+                      }}
+                      className="underline underline-offset-2"
+                    >
                       {t.nhan}
                     </a>
                   ) : (

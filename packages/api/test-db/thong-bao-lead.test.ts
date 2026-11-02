@@ -39,14 +39,14 @@ const nhip = (now: Date, san: San) => runLeadTick(appPool, now, [san.companyId],
 const sau = (t: Date, phut: number) => new Date(t.getTime() + phut * 60_000);
 
 /** Endpoint giả của một thiết bị của một người trong một sàn. */
-const diaChi = (san: San, k: string, thietBi = "1") => `https://push.example.test/${RUN}/${san.companyId}/${k}/${thietBi}`;
+const diaChi = (san: San, k: string, thietBi = "1") => `https://fcm.googleapis.com/fcm/send/${RUN}/${san.companyId}/${k}/${thietBi}`;
 const khoaThietBi = () => ({ p256dh: randomBytes(65).toString("base64url"), auth: randomBytes(16).toString("base64url") });
 async function bat(san: San, k: string, thietBi = "1", trangThai = 201) {
   const r = await send("POST", "/api/v1/me/push-subscriptions", { endpoint: diaChi(san, k, thietBi), expirationTime: null, keys: khoaThietBi() }, san.nguoi[k]!.cookie);
   assert.equal(r.status, trangThai, await r.clone().text());
 }
 /** Số lần gửi tới các thiết bị của một người trong sàn, tính từ mốc `tu` của sổ gửi. */
-const guiToi = (san: San, k: string, tu = 0) => daGui.slice(tu).filter((g) => g.endpoint.startsWith(`https://push.example.test/${RUN}/${san.companyId}/${k}/`));
+const guiToi = (san: San, k: string, tu = 0) => daGui.slice(tu).filter((g) => g.endpoint.startsWith(`https://fcm.googleapis.com/fcm/send/${RUN}/${san.companyId}/${k}/`));
 async function nhapLead(san: San, body: unknown, k = "ts") {
   const r = await send("POST", "/api/v1/leads", body, san.nguoi[k]!.cookie);
   assert.equal(r.status, 201, await r.clone().text());

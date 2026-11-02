@@ -61,6 +61,9 @@ export const API_ERRORS = {
   photoAlreadyConfirmed: { code: "photo-already-confirmed", status: 409 },
   // Thông báo lead (ADR-0025).
   pushNotConfigured: { code: "push-not-configured", status: 503 },
+  // Gắn mã căn (ADR-0026).
+  unitNumberAlreadySet: { code: "unit-number-already-set", status: 422 },
+  unitAlreadyListed: { code: "unit-already-listed", status: 422 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;
