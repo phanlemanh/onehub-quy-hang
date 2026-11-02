@@ -148,11 +148,6 @@ không tra được điều mới về sản phẩm khác.
 > 02/11, chủ kho chọn bố cục Hồ sơ theo hồ sơ căn đang chạy (thay Hỏi-7): một cột giải phẫu `solution-crm-4`, toàn màn
 > căn giữa 48rem, cạnh bảng là cột phụ; giải phẫu rút thành `components/khoi/solution-crm-4/ho-so.tsx`. Bố cục đổi tên
 > «Hồ sơ hai cột» → «Hồ sơ».
->
-> 02/11 (sau lượt chấm 1), chủ kho chốt trên bản vẽ máy tính: giữ cột dữ kiện trái 320px kiểu Verve thành **Cột thuộc
-> tính** (`CotThuocTinh`), người dùng mở hay gập — máy tính mặc định mở, nút gập ở đầu cột, gập còn dải mảnh có nút mở
-> lại, máy nhớ theo người và sàn (cùng cookie cột thứ hai); điện thoại cột xếp trên thân. Thân hồ sơ giữ giải phẫu
-> `solution-crm-4`.
 
 > Khảo sát ReUI và Verve CRM 02/11 (`_acceptance/he-bo-cuc/discovery/khao-sat-reui-verve.md`) đổi khuyến nghị Hỏi-2
 > (menu Tạo theo Verve), Hỏi-3 (đầu màn ba dạng theo bố cục) và thêm Hỏi-7 (Hồ sơ ghép theo Verve, `solution-crm-4`

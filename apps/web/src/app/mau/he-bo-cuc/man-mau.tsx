@@ -163,23 +163,6 @@ function KhungLuoiCan({ tieuDe, dem, nut, chon, onChon }: { tieuDe: string; dem:
   );
 }
 
-/** Mục «Thuộc tính căn» — trong ngăn chi tiết nằm giữa hồ sơ; ở bố cục Hồ sơ toàn màn nó là Cột thuộc tính bên trái. */
-function ThuocTinhCan({ can }: { can: CanMau }) {
-  return (
-    <MucHoSo tieuDe="Thuộc tính căn" phai={<Button variant="ghost" size="sm">Báo sai thông tin căn</Button>}>
-      <CapGiaTri
-        ds={[
-          ["Loại căn", "1PN"],
-          ["Diện tích", "54,2 m²"],
-          ["Tầng", "6"],
-          ["Hướng", "Đông Nam"],
-          ["Toà", can.toa],
-        ]}
-      />
-    </MucHoSo>
-  );
-}
-
 /** Hồ sơ một căn — giải phẫu hồ sơ căn đang chạy (khoi/solution-crm-4/ho-so.tsx), dùng chung cho toàn màn và cột cạnh bảng. */
 function HoSoCan({ can, trongNgan = false }: { can: CanMau; trongNgan?: boolean }) {
   const Khung = trongNgan ? ThanHoSo : KhungHoSo;
@@ -187,7 +170,17 @@ function HoSoCan({ can, trongNgan = false }: { can: CanMau; trongNgan?: boolean 
     <Khung>
       <DauHoSo ngu="[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ" ten={can.ma} trangThai={can.trangThai} trangThaiTone={TONE[can.trangThai] ?? "info-light"} phu={`Xác nhận ${can.tuoi} trước`} />
       <SoChinh giaTri={can.gia} nhan="Bao phí" tienDo={{ co: 3, tren: 5, chu: "Mức đủ thông tin · thiếu Nội thất, Tài chính", nhanThanh: "Mức đủ thông tin" }} />
-      {trongNgan && <ThuocTinhCan can={can} />}
+      <MucHoSo tieuDe="Thuộc tính căn" phai={<Button variant="ghost" size="sm">Báo sai thông tin căn</Button>}>
+        <CapGiaTri
+          ds={[
+            ["Loại căn", "1PN"],
+            ["Diện tích", "54,2 m²"],
+            ["Tầng", "6"],
+            ["Hướng", "Đông Nam"],
+            ["Toà", can.toa],
+          ]}
+        />
+      </MucHoSo>
       <MucHoSo tieuDe="Lần rao đang mở">
         <CapGiaTri
           ds={[
@@ -307,19 +300,7 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
     case "ho-so": {
       const can = CAN_MAU[0];
       return (
-        <BoCuc
-          kieu="ho-so"
-          {...chung}
-          rong={rongLanDau("Căn chưa có thông tin", "Đầu chủ điền khi nhận hàng.", "Điền thông tin")}
-          dauMan={<DauMan duongDan={duong} />}
-          cotPhu={
-            can && (
-              <KhungHoSo nhan="Thuộc tính căn">
-                <ThuocTinhCan can={can} />
-              </KhungHoSo>
-            )
-          }
-        >
+        <BoCuc kieu="ho-so" {...chung} rong={rongLanDau("Căn chưa có thông tin", "Đầu chủ điền khi nhận hàng.", "Điền thông tin")} dauMan={<DauMan duongDan={duong} />}>
           {can && <HoSoCan can={can} />}
         </BoCuc>
       );

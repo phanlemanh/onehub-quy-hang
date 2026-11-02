@@ -7,9 +7,10 @@ export const NGUOI_MAU = {
   userId: "00000000-0000-4000-8000-000000000091",
   email: "truong-nhom@mau.quy-hang.test",
   companies: [{ id: "00000000-0000-4000-8000-0000000000a1", name: "[Mẫu] Sàn thử" }],
-  activeCompany: { id: "00000000-0000-4000-8000-0000000000a1", name: "[Mẫu] Sàn thử", roles: ["team_lead"] },
+  activeCompany: { id: "00000000-0000-4000-8000-0000000000a1", name: "[Mẫu] Sàn thử", roles: ["team_lead", "company_admin"] },
 };
 
+// Trưởng nhóm kiêm quản trị sàn: mọi nhà của trang mẫu đều có cột thứ hai như màn thật (bố cục Đọc đứng ở Cài đặt sàn).
 export const NAV_MAU = navigationFor(NGUOI_MAU.activeCompany.roles);
 
 export type CanMau = { ma: string; toa: string; gia: string; trangThai: string; tuoi: string };

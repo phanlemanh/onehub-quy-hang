@@ -1,112 +1,37 @@
 {
- "feature_plain": "Mọi màn sau đăng nhập dựng theo một trong bảy bố cục có tên, nên đầu màn, lề, chờ tải, trống và lỗi giống nhau ở mọi nơi; có trang mẫu xem được mọi bố cục mà không cần đăng nhập, và luật lint giữ cho màn mới không tự chia vùng.",
- "will_do": [
-  {
-   "id": "AC-1",
-   "p": "Sẽ khai hai máy chủ thư viện giao diện (ReUI, shadcn) ngay trong kho, khoá lấy từ biến môi trường, không ghi khoá vào tệp."
-  },
-  {
-   "id": "AC-2",
-   "p": "Sẽ có đúng bảy bố cục; mỗi bố cục tự đặt vùng, lề và bề rộng, màn chỉ điền nội dung. Hồ sơ có Cột thuộc tính bên trái người dùng mở hay gập, máy nhớ theo người và sàn."
-  },
-  {
-   "id": "AC-3",
-   "p": "Sẽ cho mọi màn một đầu màn chung: đường dẫn khi màn sâu, một nút chính, tối đa hai nút phụ, còn lại vào «…», hồ sơ toàn màn luôn có lối về."
-  },
-  {
-   "id": "AC-4",
-   "p": "Sẽ gom việc tạo vào một nút trên thanh trên theo vai: nút chính một chạm cộng mũi tên mở việc còn lại; điện thoại chỉ có «+ Lead»; màn không có nút tạo riêng."
-  },
-  {
-   "id": "AC-5",
-   "p": "Sẽ cho mọi tuyến có màn chờ tải theo hình bố cục, trang lỗi và «không thấy»; mất mạng thì hiện dải báo, nội dung đã tải giữ nguyên."
-  },
-  {
-   "id": "AC-6",
-   "p": "Sẽ cho mỗi bố cục bản 1440, 1024 và điện thoại 375 không cuộn ngang; ngăn nổi mở bên phải ở máy tính, từ đáy ở điện thoại."
-  },
-  {
-   "id": "AC-7",
-   "p": "Sẽ có trang mẫu sống mở không cần cơ sở dữ liệu và đăng nhập, đủ bảy bố cục × năm trạng thái × ba khổ."
-  },
-  {
-   "id": "AC-8",
-   "p": "Sẽ lưu 21 ảnh chuẩn (cộng 7 ảnh tối) chụp từ trang mẫu; vòng giao diện sau so màn mới với ảnh chuẩn của bố cục nó dùng."
-  },
-  {
-   "id": "AC-10",
-   "p": "Sẽ chuyển Cài đặt sàn (kèm Người dùng theo khối Pro) và trang tạm sang bố cục Đọc, và có một bảng «bản đồ hệ thiết kế» liệt mọi tệp."
-  }
- ],
- "wont_do": [
-  {
-   "id": "AC-9",
-   "p": "Chặn màn tự đặt lề, bề rộng, chiều cao tuỳ ý, tự dựng khung chờ tải hay tự gọi ngăn — lint đỏ; màn của hàng đang chạy được ngoại lệ có hạn."
-  },
-  {
-   "id": "OOS-1",
-   "p": "KHÔNG chuyển Bảng hàng, hồ sơ căn, Hôm nay, lead trong hàng này — mỗi màn chuyển ở hàng của nó (79, 33, 42, 51)."
-  },
-  {
-   "id": "OOS-2",
-   "p": "KHÔNG làm đăng nhập và ô nhận lead theo khối Pro — mở hàng riêng khi hàng này gộp."
-  },
-  {
-   "id": "OOS-3",
-   "p": "KHÔNG làm khuôn «không đủ quyền» và «xung đột khi lưu»."
-  },
-  {
-   "id": "OOS-4",
-   "p": "KHÔNG làm lệnh tự dựng khung màn."
-  }
- ],
- "scope_plain": "Hàng nền chỉ dựng hệ bố cục và chuyển những màn không hàng nào khác đang chạm.",
- "coverage_plain": [
-  {
-   "i": 0,
-   "p": "Tầng: nền (token lề, bề rộng), khung ứng dụng (menu Tạo) và bố cục với đầu màn — AC-2, AC-3, AC-4."
-  },
-  {
-   "i": 1,
-   "p": "Trạng thái: mặc định, chờ tải, rỗng, lỗi, ngoại tuyến đều có trên trang mẫu — AC-5, AC-7; không đủ quyền và xung đột khi lưu để sau."
-  },
-  {
-   "i": 2,
-   "p": "Khổ: 1440, 1024, 375 — AC-6; 1024 có cần bố cục riêng không là Hỏi-5."
-  },
-  {
-   "i": 3,
-   "p": "Vật giữ luật: lint, bài quét khuôn, kiểm chuẩn, ảnh chuẩn — AC-1, AC-8, AC-9, AC-10."
-  },
-  {
-   "i": 4,
-   "p": "Màn: chuyển trong hàng, ngoại lệ có hạn, trang mẫu — AC-7, AC-9, AC-10."
-  },
-  {
-   "i": 5,
-   "p": "Để sau: khuôn không đủ quyền (Hỏi-6), xung đột khi lưu, lệnh dựng màn, đăng nhập và ô nhận lead."
-  }
- ],
- "gap_probe_plain": [
-  {
-   "i": 0,
-   "p": "Phép thử «không nút tạo trùng» chỉ quét một thư mục nên bỏ sót thanh trên — đã mở rộng sang mọi thành phần và thêm đếm liên kết trên màn."
-  },
-  {
-   "i": 1,
-   "p": "Ngoại lệ có hạn chưa có danh sách viết trước, hồ sơ căn chưa có mã hàng — đã thêm bảng 11 tệp → hàng 79 · 33 · 42 · 51 và ca «hạn lạ»."
-  },
-  {
-   "i": 2,
-   "p": "Chưa có phép thử trang mẫu đóng ở bản chính thức — đã thêm ca và sửa proxy để bản chính thức không mở trang này."
-  },
-  {
-   "i": 3,
-   "p": "Ảnh chuẩn chỉ kiểm có mặt — đã thêm tệp kê địa chỉ, khổ, commit và kiểm bề rộng ảnh khớp khổ."
-  },
-  {
-   "i": 4,
-   "p": "Kỳ vọng của menu Tạo và khổ 1024 viết sẵn theo khuyến nghị — đã đổi thành «theo lối anh chọn ở Hỏi-2, Hỏi-5»."
-  }
- ]
+  "feature_plain": "Mọi màn sau đăng nhập dựng theo một trong bảy bố cục có tên, nên đầu màn, lề, chờ tải, trống và lỗi giống nhau ở mọi nơi; có trang mẫu xem được mọi bố cục mà không cần đăng nhập, và luật lint giữ cho màn mới không tự chia vùng.",
+  "will_do": [
+    { "id": "AC-1", "p": "Sẽ khai hai máy chủ thư viện giao diện (ReUI, shadcn) ngay trong kho, khoá lấy từ biến môi trường, không ghi khoá vào tệp." },
+    { "id": "AC-2", "p": "Sẽ có đúng bảy bố cục; mỗi bố cục tự đặt vùng, lề và bề rộng, màn chỉ điền nội dung." },
+    { "id": "AC-3", "p": "Sẽ cho mọi màn một đầu màn chung: đường dẫn khi màn sâu, một nút chính, tối đa hai nút phụ, còn lại vào «…», hồ sơ toàn màn luôn có lối về." },
+    { "id": "AC-4", "p": "Sẽ gom mọi nút tạo vào một menu Tạo trên thanh trên, theo việc tạo của từng vai; không màn nào còn nút tạo riêng." },
+    { "id": "AC-5", "p": "Sẽ cho mọi tuyến có màn chờ tải theo hình bố cục, trang lỗi và «không thấy»; mất mạng thì hiện dải báo, nội dung đã tải giữ nguyên." },
+    { "id": "AC-6", "p": "Sẽ cho mỗi bố cục bản 1440, 1024 và điện thoại 375 không cuộn ngang; ngăn nổi mở bên phải ở máy tính, từ đáy ở điện thoại." },
+    { "id": "AC-7", "p": "Sẽ có trang mẫu sống mở không cần cơ sở dữ liệu và đăng nhập, đủ bảy bố cục × năm trạng thái × ba khổ." },
+    { "id": "AC-8", "p": "Sẽ lưu 21 ảnh chuẩn chụp từ trang mẫu; vòng giao diện sau so màn mới với ảnh chuẩn của bố cục nó dùng." },
+    { "id": "AC-10", "p": "Sẽ chuyển Cài đặt sàn (kèm Người dùng theo khối Pro) và trang tạm sang bố cục Đọc, và có một bảng «bản đồ hệ thiết kế» liệt mọi tệp." }
+  ],
+  "wont_do": [
+    { "id": "AC-9", "p": "Chặn màn tự đặt lề, bề rộng, chiều cao tuỳ ý, tự dựng khung chờ tải hay tự gọi ngăn — lint đỏ; màn của hàng đang chạy được ngoại lệ có hạn." },
+    { "id": "OOS-1", "p": "KHÔNG chuyển Bảng hàng, hồ sơ căn, Hôm nay, lead trong hàng này — mỗi màn chuyển ở hàng của nó (79, 33, 42, 51)." },
+    { "id": "OOS-2", "p": "KHÔNG làm đăng nhập và ô nhận lead theo khối Pro — mở hàng riêng khi hàng này gộp." },
+    { "id": "OOS-3", "p": "KHÔNG làm khuôn «không đủ quyền» và «xung đột khi lưu»." },
+    { "id": "OOS-4", "p": "KHÔNG làm lệnh tự dựng khung màn." }
+  ],
+  "scope_plain": "Hàng nền chỉ dựng hệ bố cục và chuyển những màn không hàng nào khác đang chạm.",
+  "coverage_plain": [
+    { "i": 0, "p": "Tầng: nền (token lề, bề rộng), khung ứng dụng (menu Tạo) và bố cục với đầu màn — AC-2, AC-3, AC-4." },
+    { "i": 1, "p": "Trạng thái: mặc định, chờ tải, rỗng, lỗi, ngoại tuyến đều có trên trang mẫu — AC-5, AC-7; không đủ quyền và xung đột khi lưu để sau." },
+    { "i": 2, "p": "Khổ: 1440, 1024, 375 — AC-6; 1024 có cần bố cục riêng không là Hỏi-5." },
+    { "i": 3, "p": "Vật giữ luật: lint, bài quét khuôn, kiểm chuẩn, ảnh chuẩn — AC-1, AC-8, AC-9, AC-10." },
+    { "i": 4, "p": "Màn: chuyển trong hàng, ngoại lệ có hạn, trang mẫu — AC-7, AC-9, AC-10." },
+    { "i": 5, "p": "Để sau: khuôn không đủ quyền (Hỏi-6), xung đột khi lưu, lệnh dựng màn, đăng nhập và ô nhận lead." }
+  ],
+  "gap_probe_plain": [
+    { "i": 0, "p": "Phép thử «không nút tạo trùng» chỉ quét một thư mục nên bỏ sót thanh trên — đã mở rộng sang mọi thành phần và thêm đếm liên kết trên màn." },
+    { "i": 1, "p": "Ngoại lệ có hạn chưa có danh sách viết trước, hồ sơ căn chưa có mã hàng — đã thêm bảng 11 tệp → hàng 79 · 33 · 42 · 51 và ca «hạn lạ»." },
+    { "i": 2, "p": "Chưa có phép thử trang mẫu đóng ở bản chính thức — đã thêm ca và sửa proxy để bản chính thức không mở trang này." },
+    { "i": 3, "p": "Ảnh chuẩn chỉ kiểm có mặt — đã thêm tệp kê địa chỉ, khổ, commit và kiểm bề rộng ảnh khớp khổ." },
+    { "i": 4, "p": "Kỳ vọng của menu Tạo và khổ 1024 viết sẵn theo khuyến nghị — đã đổi thành «theo lối anh chọn ở Hỏi-2, Hỏi-5»." }
+  ]
 }

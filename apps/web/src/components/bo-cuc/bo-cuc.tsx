@@ -4,15 +4,14 @@ import { TrangThai } from "@/components/trang-thai";
 import { cn } from "cn";
 
 import { ChoTai } from "./cho-tai";
-import { CotThuocTinh } from "./cot-thuoc-tinh";
 import { DaiNgoaiTuyen } from "./dai-ngoai-tuyen";
 import { NganNoi } from "./ngan-noi";
 import { coVung, type KieuBoCuc, THONG_TIN, type Vung } from "./ma-tran";
 
 // Bố cục trang của hệ bố cục (ADR-0024): giữ khung trang — lề, đầu màn, xếp thân và cột phụ, bản điện thoại — còn mỗi
 // vùng là một khối ReUI nguyên vẹn mang Frame của nó (đầu khung, thanh công cụ, chân). Bố cục KHÔNG dựng Frame: dựng thì
-// khối thành Frame trong Frame và màn phải vẽ tay lại phần khối đã có (khảo sát ReUI + Verve, 02/11). Hồ sơ giữ thân hồ sơ
-// căn đang chạy, cột phụ là Cột thuộc tính bên trái gập được (chủ kho 02/11); không có cột thì thân căn giữa 48rem.
+// khối thành Frame trong Frame và màn phải vẽ tay lại phần khối đã có (khảo sát ReUI + Verve, 02/11). Hồ sơ là một cột căn
+// giữa 48rem như hồ sơ căn đang chạy (chủ kho 02/11).
 
 export type TrangThaiTai = "san-sang" | "cho-tai" | "loi" | "rong";
 
@@ -64,13 +63,6 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
         </NganNoi>
       )}
     </>
-  ) : kieu === "ho-so" ? (
-    <div className="flex min-w-0 flex-col gap-khung md:flex-row md:items-start">
-      <CotThuocTinh>{phu}</CotThuocTinh>
-      <div data-vung="than" className="flex min-w-0 flex-1 flex-col gap-khung">
-        {than}
-      </div>
-    </div>
   ) : (
     // Luồng nhiều bước: thân hai phần, xem trước một phần.
     <div className="grid min-w-0 gap-khung lg:grid-cols-3">
@@ -88,7 +80,7 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
       data-bo-cuc-goc={kieu}
       data-bo-cuc={kieu}
       data-mat-do={tt.mat_do}
-      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", (kieu === "dong-tin" || (kieu === "ho-so" && !phu)) && "mx-auto max-w-(--container-doc)")}
+      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", (kieu === "dong-tin" || kieu === "ho-so") && "mx-auto max-w-(--container-doc)")}
     >
       {dauMan}
       <DaiNgoaiTuyen ngoaiTuyen={ngoaiTuyen} />

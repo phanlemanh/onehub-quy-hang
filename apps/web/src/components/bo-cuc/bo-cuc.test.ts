@@ -12,12 +12,12 @@ import { BO_CUC, coVung, type KieuBoCuc, VUNG } from "./ma-tran";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..", "..");
 
-// Ma trận viết trước: vùng nào thuộc kiểu nào (ADR-0024 §3; Hồ sơ có Cột thuộc tính gập được — chủ kho 02/11).
+// Ma trận viết trước: vùng nào thuộc kiểu nào (ADR-0024 §3; Hồ sơ một cột — chủ kho 02/11).
 const MA_TRAN: Record<KieuBoCuc, Record<(typeof VUNG)[number], boolean>> = {
   tran: { "dau-man": true, than: true, "cot-phu": false },
   "danh-sach-chi-tiet": { "dau-man": true, than: true, "cot-phu": true },
   doc: { "dau-man": true, than: true, "cot-phu": false },
-  "ho-so": { "dau-man": true, than: true, "cot-phu": true },
+  "ho-so": { "dau-man": true, than: true, "cot-phu": false },
   "bang-dieu-khien": { "dau-man": true, than: true, "cot-phu": false },
   "luong-nhieu-buoc": { "dau-man": true, than: true, "cot-phu": true },
   "dong-tin": { "dau-man": true, than: true, "cot-phu": false },
@@ -30,7 +30,7 @@ function dung(kieu: KieuBoCuc, thanLa = h("div", null, "thân")) {
 }
 
 /** Token bố cục mà globals.css phải khai. */
-export const TOKEN_BO_CUC = ["--spacing-trang", "--spacing-khung", "--container-doc", "--breakpoint-vua", "--spacing-cot-thuoc-tinh"] as const;
+export const TOKEN_BO_CUC = ["--spacing-trang", "--spacing-khung", "--container-doc", "--breakpoint-vua"] as const;
 
 export function tokenThieu(css: string, token: readonly string[] = TOKEN_BO_CUC): string[] {
   return token.filter((t) => !new RegExp(`${t}\\s*:`).test(css));
@@ -67,7 +67,7 @@ describe("bố cục", () => {
       }
     }
     assert.equal(o, 21);
-    assert.deepEqual(BO_CUC.filter((k) => coVung(k, "cot-phu")), ["danh-sach-chi-tiet", "ho-so", "luong-nhieu-buoc"]);
+    assert.deepEqual(BO_CUC.filter((k) => coVung(k, "cot-phu")), ["danh-sach-chi-tiet", "luong-nhieu-buoc"]);
   });
 
   it("bố cục: không dựng Frame", () => {
@@ -81,12 +81,8 @@ describe("bố cục", () => {
       assert.match(goc, /\bgap-khung\b/, kieu);
       assert.ok(!/(^|\s)px-/.test(goc), `${kieu}: px- ở gốc`);
       const maxW = goc.split(/\s+/).filter((c) => c.startsWith("max-w-"));
-      // Hồ sơ có Cột thuộc tính thì dùng hết bề rộng; chỉ Dòng tin giữ bề rộng đọc.
-      assert.deepEqual(maxW, kieu === "dong-tin" ? ["max-w-(--container-doc)"] : [], `${kieu}: max-w ở gốc`);
+      assert.deepEqual(maxW, kieu === "ho-so" || kieu === "dong-tin" ? ["max-w-(--container-doc)"] : [], `${kieu}: max-w ở gốc`);
     }
-    // Đối chứng: Hồ sơ không truyền cột phụ thì thân căn giữa ở bề rộng đọc như hồ sơ căn đang chạy.
-    const motCot = renderToStaticMarkup(h(BoCuc, { kieu: "ho-so", dauMan: h("header", null, "đầu") }, h("div", null, "thân")));
-    assert.match(/<div data-bo-cuc-goc="ho-so"[^>]*class="([^"]*)"/.exec(motCot)?.[1] ?? "", /max-w-\(--container-doc\)/);
     const css = readFileSync(join(ROOT, "apps/web/src/app/globals.css"), "utf8");
     assert.deepEqual(tokenThieu(css), []);
     assert.deepEqual(tokenThieu(css.replace("--container-doc:", "--container-khac:")), ["--container-doc"]);

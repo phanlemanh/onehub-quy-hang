@@ -156,21 +156,6 @@ export function isSecondColumnOpen(home: Home, remembered: boolean | undefined):
   return remembered ?? byDefault;
 }
 
-/**
- * Cột thuộc tính của bố cục Hồ sơ (chủ kho 02/11, hàng 91): mặc định mở; người gập thì máy nhớ theo người và sàn, cùng
- * kho nhớ với cột thứ hai.
- */
-export const COT_THUOC_TINH_MO_MAC_DINH = true;
-
-export function cotThuocTinhKey(userId: string, companyId: string): string {
-  return `${userId}:${companyId}:thuoc-tinh`;
-}
-
-/** Cột thuộc tính có mở không: người đã chọn thì theo người, chưa thì mở. */
-export function isCotThuocTinhMo(remembered: boolean | undefined): boolean {
-  return remembered ?? COT_THUOC_TINH_MO_MAC_DINH;
-}
-
 function fold(text: string): string {
   return text
     .normalize("NFD")
