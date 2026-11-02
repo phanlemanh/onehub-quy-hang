@@ -1,0 +1,24 @@
+{
+  "feature_plain": "Bài kiểm chuyển dữ liệu cũ của hàng 85 thôi kẹt khoá với các bài kiểm khác chạy cùng lúc, nên ghim lại của dãy khác không còn đỏ oan.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ có bài kiểm chứng bài chuyển dữ liệu khoá bảng chủ nhà rồi bảng lead trước khi ghi gì — cùng thứ tự với các bài kiểm chạy song song — mà không giữ khoá độc quyền bảng chung nào, và bài chuyển vẫn chạy trọn."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ giữ hai bài kiểm chuyển dữ liệu cũ của hàng 85 có mặt và xanh."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG đổi hàm chuyển của cơ sở dữ liệu — nó chỉ chạy một lần lúc nâng cấp."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG chạy cả bộ kiểm tuần tự hay sửa bài kiểm của hồ sơ khác."
+    }
+  ],
+  "analyst_plain": "Hai bài chấm dùng chung lệnh chạy cả bộ kiểm cơ sở dữ liệu, nên lệnh ấy cũng xanh trên nhánh chính cũ. Việc ca mới thật sự bắt lỗi được chứng bằng bốn phá thử: đảo khoá, bỏ khoá, khoá độc quyền, bài chuyển bỏ giao dịch khoá — lần nào cũng đỏ đúng thông điệp."
+}
