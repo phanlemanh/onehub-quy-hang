@@ -1,0 +1,39 @@
+Driver: Chrome CDP; resource timing (fetch/xhr) cua trang /today cuoi:
+[
+ {
+  "u": "http://localhost:3485/api/v1/catalog",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/company/settings/queue",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/leads/assigned",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/catalog",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/company/settings/queue",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/leads/assigned",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/push/public-key",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/push/public-key",
+  "s": 200
+ },
+ {
+  "u": "http://localhost:3485/api/v1/listings",
+  "s": 200
+ }
+]

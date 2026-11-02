@@ -1,0 +1,40 @@
+== BƯỚC 1 dau-chu-1 P1 URL=/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be
+  khối giá đáy (ngữ cảnh): "i chủ\nĐầu chủ · 23:28 25/09\nTạo hồ sơ\nĐầu chủ · 23:28 23/09\nGIÁ ĐÁY CHỦ TỪNG NÓI · NỘI BỘ\n2,7 tỷ\nthấp hơn giá về tay hiện tại 3,6%\nDanh sách hỏi\nMức đủ 3/5\n\nCòn thiếu: nội thất, tài chính\n\n1\n–\n3\nchọn ·\nTab\nnhóm kế ·\nDelete\nxoá ·\nG\nđã gọi ·\nCtrl\n+\nEnter\nxong cuộc gọi\n\nGiá và phí\nĐã hỏi\nAlt+1\nBao phí\nAlt+2\nKhông bao phí\n"
+  có '2,7 tỷ': true · 'Chưa ghi giá đáy': false · 'Chưa tải được giá đáy': false
+  lời gọi fetch trang chính: GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/catalog -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner -> 200 floorInResp=true has2.7e9=true reqBody=null
+    GET /api/v1/catalog -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner -> 200 floorInResp=true has2.7e9=true reqBody=null
+  resource fetch/xhr: ["http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be","http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be","http://localhost:3485/api/v1/listings","http://localhost:3485/api/v1/catalog","http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner","http://localhost:3485/api/v1/catalog","http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner"]
+  ảnh: E3b-step1.png
+== BƯỚC 2 dau-chu-1 P2 URL=/units/call?hang=801be97e-8585-415b-be82-b5e3c46a5e1f
+  khối giá đáy (ngữ cảnh): KHÔNG CÓ chuỗi 'giá đáy'
+  có '2,7 tỷ': false · 'Chưa ghi giá đáy': false · 'Chưa tải được giá đáy': false
+  lời gọi fetch trang chính: GET /api/v1/catalog -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f/owner -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/catalog -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f/owner -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f -> 200 floorInResp=false has2.7e9=false reqBody=null
+  resource fetch/xhr: ["http://localhost:3485/api/v1/catalog","http://localhost:3485/api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f/owner","http://localhost:3485/api/v1/catalog","http://localhost:3485/api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f/owner","http://localhost:3485/api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f","http://localhost:3485/api/v1/listings/801be97e-8585-415b-be82-b5e3c46a5e1f","http://localhost:3485/api/v1/listings"]
+  ảnh: E3b-step2.png
+== BƯỚC 3 dau-chu-2 P1 URL=/units/call?hang=c9d51fa2-aa2b-4793-b882-a233c3dc34be
+  khối giá đáy (ngữ cảnh): KHÔNG CÓ chuỗi 'giá đáy'
+  có '2,7 tỷ': false · 'Chưa ghi giá đáy': false · 'Chưa tải được giá đáy': false
+  lời gọi fetch trang chính: GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/catalog -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/catalog -> 200 floorInResp=false has2.7e9=false reqBody=null
+    GET /api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner -> 200 floorInResp=false has2.7e9=false reqBody=null
+  resource fetch/xhr: ["http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be","http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be","http://localhost:3485/api/v1/listings","http://localhost:3485/api/v1/catalog","http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner","http://localhost:3485/api/v1/catalog","http://localhost:3485/api/v1/listings/c9d51fa2-aa2b-4793-b882-a233c3dc34be/owner"]
+  ảnh: E3b-step3.png
+  localStorage ngữ cảnh floor: ["mau:A-01.01\\\",\\\"unitNumber\\\":\\\"A-01.01\\\",\\\"stack\\\":\\\"01\\\",\\\"floor\\\":1,\\\"livingArea\\\":54.2,\\\"bedroomsTotal\\\":1,\\\"directionFace","mau:A-01.02\\\",\\\"unitNumber\\\":\\\"A-01.02\\\",\\\"stack\\\":\\\"02\\\",\\\"floor\\\":1,\\\"livingArea\\\":68.5,\\\"bedroomsTotal\\\":2,\\\"directionFace","mau:A-01.03\\\",\\\"unitNumber\\\":\\\"A-01.03\\\",\\\"stack\\\":\\\"03\\\",\\\"floor\\\":1,\\\"livingArea\\\":75,\\\"bedroomsTotal\\\":2,\\\"directionFaces\\","mau:A-01.04\\\",\\\"unitNumber\\\":\\\"A-01.04\\\",\\\"stack\\\":\\\"04\\\",\\\"floor\\\":1,\\\"livingArea\\\":82.3,\\\"bedroomsTotal\\\":2,\\\"directionFace"] keys=["qh:danh-muc:v1:64649683-e9b3-4ecf-8b9a-73383a4bf531"]
+== BƯỚC 4 localStorage (42849 ký tự): chứa 'floor'=true · '2700000000'=false
+== BƯỚC 4 IndexedDB: {"res":[{"name":"quy-hang-sync:4c5c3e1e-cded-49d9-a9bd-bdf0bcca9172","stores":{"ngan":1}},{"name":"quy-hang-sync:75bbf576-de87-4100-b2fc-dd32e9744bce","stores":{"ngan":1}}],"len":47639,"floor":false,"n27":false,"sample":[]}
+  sessionStorage keys: 0
