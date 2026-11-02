@@ -1,0 +1,19 @@
+E4 network/console (PerformanceResourceTiming, app-origin non-_next; console errors)
+nav: ["http://localhost:3481/units/B-15.05?toa=To%C3%A0%20B 200"]
+requests:
+other /favicon.ico 404
+fetch /api/v1/catalog 200
+fetch /api/v1/catalog 200
+fetch /api/v1/listings 200
+fetch /api/v1/units/photos?toa=To%C3%A0%20B&ma=B-15.05 200
+fetch /api/v1/units/photos?toa=To%C3%A0%20B&ma=B-15.05 200
+fetch /api/v1/listings/5ca68d07-bd4a-40a3-8dc9-479774f33f2c 200
+img /api/v1/units/photos/33589dbb-4721-4cc0-ba9d-c7966ac95f43/thumb 200
+img /api/v1/units/photos/90c0fdf2-e960-4aac-a334-d3b94a24e60b/thumb 200
+img /api/v1/units/photos/e59c887b-b726-4f4f-8efd-9aa111acca79/thumb 200
+img /api/v1/units/photos/dd2ccb37-c12c-4488-a20e-8d9deb86977d/thumb 200
+img /api/v1/units/photos/57880cb3-03a9-4f0f-9919-5686b76f4b3f/thumb 200
+fetch /api/v1/listings 200
+fetch /api/v1/units/photos/e59c887b-b726-4f4f-8efd-9aa111acca79/original 200
+fetch /api/v1/units/photos/e59c887b-b726-4f4f-8efd-9aa111acca79/original 200
+console errors/warns: []
