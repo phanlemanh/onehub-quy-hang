@@ -1,0 +1,534 @@
+{
+  "verifier": "e2-cdp-doc-lap",
+  "chua": [],
+  "can": {
+    "unitNumber": "A-04.06",
+    "buildingName": "Toà A",
+    "soCanNguoiGiu": 33,
+    "canDungTruocBoQua": [
+      "A-01.03(Closed, suaDuoc=null)",
+      "A-01.05(Withdrawn, suaDuoc=null)",
+      "A-02.04(Closed, suaDuoc=null)",
+      "A-02.06(Incomplete, suaDuoc=null)",
+      "A-03.04(Withdrawn, suaDuoc=null)"
+    ],
+    "lyDo": "căn đầu tiên theo mã căn mà dau-chu-1 sửa được ảnh (suaDuoc=true); các căn đứng trước không cho thêm ảnh"
+  },
+  "anhCoSanTruocKhiTai": 10,
+  "anh": [
+    {
+      "anh": {
+        "khoa": "ngang",
+        "id": "62f65ddf-c6e5-47fd-b959-95c4751e8eab",
+        "coGoc": "2000×1500",
+        "tiLeGoc": 1.3333333333333333
+      },
+      "hop": {
+        "left": 208,
+        "top": 72.5,
+        "right": 1232,
+        "bottom": 827.5,
+        "width": 1024,
+        "height": 755
+      },
+      "canvas": {
+        "left": 319,
+        "top": 148.5,
+        "right": 1121,
+        "bottom": 750.5,
+        "width": 802,
+        "height": 602
+      },
+      "nut": {
+        "left": 1120.796875,
+        "top": 783.5,
+        "right": 1216,
+        "bottom": 811.5,
+        "width": 95.203125,
+        "height": 28
+      },
+      "ve": {
+        "width": 800,
+        "height": 600
+      },
+      "hienThi": {
+        "clientWidth": 800,
+        "clientHeight": 600,
+        "clientLeft": 1,
+        "clientTop": 1
+      },
+      "tiLe": {
+        "hienThi": 1.3333333333333333,
+        "anhGoc": 1.3333333333333333,
+        "khungVe": 1.3333333333333333,
+        "lechPhanTram": 0
+      },
+      "cuaSo": {
+        "innerWidth": 1440,
+        "innerHeight": 900
+      },
+      "soHopMo": 1,
+      "canOnDinh": true,
+      "hangChanHop": [
+        "Bỏ khung cuối",
+        "Bỏ hết",
+        "Lưu bản che",
+        "Close"
+      ],
+      "bang": {
+        "canvasTronTrongHop": {
+          "ok": true,
+          "gt": [
+            "canvas L319 T148.5 R1121 B750.5",
+            "hộp L208 T72.5 R1232 B827.5"
+          ]
+        },
+        "canvasKhongChongNut": {
+          "ok": true,
+          "gt": [
+            "đáy canvas 750.5 ≤ đỉnh nút 783.5"
+          ]
+        },
+        "hopTronTrongCuaSo": {
+          "ok": true,
+          "gt": [
+            "hộp L208 T72.5 R1232 B827.5 trong 1440×900"
+          ]
+        },
+        "tiLeHienThiBangTiLeAnh": {
+          "ok": true,
+          "gt": [
+            "clientW/clientH=1.3333 · tỉ lệ ảnh 2000/1500=1.3333 · tỉ lệ khung vẽ 1.3333 · lệch 0.000%"
+          ]
+        },
+        "hopRongHon24rem": {
+          "ok": true,
+          "gt": [
+            "hộp rộng 1024px (> 384)"
+          ]
+        }
+      }
+    },
+    {
+      "anh": {
+        "khoa": "doc",
+        "id": "543279c3-461a-47c9-be6b-8b48434b7ad9",
+        "coGoc": "1500×2000",
+        "tiLeGoc": 0.75
+      },
+      "hop": {
+        "left": 208,
+        "top": 72.5,
+        "right": 1232,
+        "bottom": 827.5,
+        "width": 1024,
+        "height": 755
+      },
+      "canvas": {
+        "left": 494,
+        "top": 148.5,
+        "right": 946,
+        "bottom": 750.5,
+        "width": 452,
+        "height": 602
+      },
+      "nut": {
+        "left": 1120.796875,
+        "top": 783.5,
+        "right": 1216,
+        "bottom": 811.5,
+        "width": 95.203125,
+        "height": 28
+      },
+      "ve": {
+        "width": 450,
+        "height": 600
+      },
+      "hienThi": {
+        "clientWidth": 450,
+        "clientHeight": 600,
+        "clientLeft": 1,
+        "clientTop": 1
+      },
+      "tiLe": {
+        "hienThi": 0.75,
+        "anhGoc": 0.75,
+        "khungVe": 0.75,
+        "lechPhanTram": 0
+      },
+      "cuaSo": {
+        "innerWidth": 1440,
+        "innerHeight": 900
+      },
+      "soHopMo": 1,
+      "canOnDinh": true,
+      "hangChanHop": [
+        "Bỏ khung cuối",
+        "Bỏ hết",
+        "Lưu bản che",
+        "Close"
+      ],
+      "bang": {
+        "canvasTronTrongHop": {
+          "ok": true,
+          "gt": [
+            "canvas L494 T148.5 R946 B750.5",
+            "hộp L208 T72.5 R1232 B827.5"
+          ]
+        },
+        "canvasKhongChongNut": {
+          "ok": true,
+          "gt": [
+            "đáy canvas 750.5 ≤ đỉnh nút 783.5"
+          ]
+        },
+        "hopTronTrongCuaSo": {
+          "ok": true,
+          "gt": [
+            "hộp L208 T72.5 R1232 B827.5 trong 1440×900"
+          ]
+        },
+        "tiLeHienThiBangTiLeAnh": {
+          "ok": true,
+          "gt": [
+            "clientW/clientH=0.7500 · tỉ lệ ảnh 1500/2000=0.7500 · tỉ lệ khung vẽ 0.7500 · lệch 0.000%"
+          ]
+        }
+      }
+    },
+    {
+      "anh": {
+        "khoa": "nho",
+        "id": "40bff383-d8b1-4c96-885d-cb590e542990",
+        "coGoc": "400×300",
+        "tiLeGoc": 1.3333333333333333
+      },
+      "hop": {
+        "left": 208,
+        "top": 222.5,
+        "right": 1232,
+        "bottom": 677.5,
+        "width": 1024,
+        "height": 455
+      },
+      "canvas": {
+        "left": 519,
+        "top": 298.5,
+        "right": 921,
+        "bottom": 600.5,
+        "width": 402,
+        "height": 302
+      },
+      "nut": {
+        "left": 1120.796875,
+        "top": 633.5,
+        "right": 1216,
+        "bottom": 661.5,
+        "width": 95.203125,
+        "height": 28
+      },
+      "ve": {
+        "width": 400,
+        "height": 300
+      },
+      "hienThi": {
+        "clientWidth": 400,
+        "clientHeight": 300,
+        "clientLeft": 1,
+        "clientTop": 1
+      },
+      "tiLe": {
+        "hienThi": 1.3333333333333333,
+        "anhGoc": 1.3333333333333333,
+        "khungVe": 1.3333333333333333,
+        "lechPhanTram": 0
+      },
+      "cuaSo": {
+        "innerWidth": 1440,
+        "innerHeight": 900
+      },
+      "soHopMo": 1,
+      "canOnDinh": true,
+      "hangChanHop": [
+        "Bỏ khung cuối",
+        "Bỏ hết",
+        "Lưu bản che",
+        "Close"
+      ],
+      "bang": {
+        "canvasTronTrongHop": {
+          "ok": true,
+          "gt": [
+            "canvas L519 T298.5 R921 B600.5",
+            "hộp L208 T222.5 R1232 B677.5"
+          ]
+        },
+        "canvasKhongChongNut": {
+          "ok": true,
+          "gt": [
+            "đáy canvas 600.5 ≤ đỉnh nút 633.5"
+          ]
+        },
+        "hopTronTrongCuaSo": {
+          "ok": true,
+          "gt": [
+            "hộp L208 T222.5 R1232 B677.5 trong 1440×900"
+          ]
+        },
+        "tiLeHienThiBangTiLeAnh": {
+          "ok": true,
+          "gt": [
+            "clientW/clientH=1.3333 · tỉ lệ ảnh 400/300=1.3333 · tỉ lệ khung vẽ 1.3333 · lệch 0.000%"
+          ]
+        },
+        "nhoKhongPhongTo400x300": {
+          "ok": true,
+          "gt": [
+            "clientWidth×clientHeight = 400×300"
+          ]
+        }
+      }
+    },
+    {
+      "anh": {
+        "khoa": "rong",
+        "id": "50846f4f-36ff-43cf-bf69-af1694766532",
+        "coGoc": "3000×600",
+        "tiLeGoc": 5
+      },
+      "hop": {
+        "left": 208,
+        "top": 276.5,
+        "right": 1232,
+        "bottom": 623.5,
+        "width": 1024,
+        "height": 347
+      },
+      "canvas": {
+        "left": 239,
+        "top": 352.5,
+        "right": 1201,
+        "bottom": 546.5,
+        "width": 962,
+        "height": 194
+      },
+      "nut": {
+        "left": 1120.796875,
+        "top": 579.5,
+        "right": 1216,
+        "bottom": 607.5,
+        "width": 95.203125,
+        "height": 28
+      },
+      "ve": {
+        "width": 960,
+        "height": 192
+      },
+      "hienThi": {
+        "clientWidth": 960,
+        "clientHeight": 192,
+        "clientLeft": 1,
+        "clientTop": 1
+      },
+      "tiLe": {
+        "hienThi": 5,
+        "anhGoc": 5,
+        "khungVe": 5,
+        "lechPhanTram": 0
+      },
+      "cuaSo": {
+        "innerWidth": 1440,
+        "innerHeight": 900
+      },
+      "soHopMo": 1,
+      "canOnDinh": true,
+      "hangChanHop": [
+        "Bỏ khung cuối",
+        "Bỏ hết",
+        "Lưu bản che",
+        "Close"
+      ],
+      "bang": {
+        "canvasTronTrongHop": {
+          "ok": true,
+          "gt": [
+            "canvas L239 T352.5 R1201 B546.5",
+            "hộp L208 T276.5 R1232 B623.5"
+          ]
+        },
+        "canvasKhongChongNut": {
+          "ok": true,
+          "gt": [
+            "đáy canvas 546.5 ≤ đỉnh nút 579.5"
+          ]
+        },
+        "hopTronTrongCuaSo": {
+          "ok": true,
+          "gt": [
+            "hộp L208 T276.5 R1232 B623.5 trong 1440×900"
+          ]
+        },
+        "tiLeHienThiBangTiLeAnh": {
+          "ok": true,
+          "gt": [
+            "clientW/clientH=5.0000 · tỉ lệ ảnh 3000/600=5.0000 · tỉ lệ khung vẽ 5.0000 · lệch 0.000%"
+          ]
+        }
+      }
+    }
+  ],
+  "anhSauKhiDongKhongLuu": 14,
+  "tongKet": [
+    {
+      "anh": "ngang",
+      "muc": "canvasTronTrongHop",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "canvas L319 T148.5 R1121 B750.5",
+        "hộp L208 T72.5 R1232 B827.5"
+      ]
+    },
+    {
+      "anh": "ngang",
+      "muc": "canvasKhongChongNut",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "đáy canvas 750.5 ≤ đỉnh nút 783.5"
+      ]
+    },
+    {
+      "anh": "ngang",
+      "muc": "hopTronTrongCuaSo",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "hộp L208 T72.5 R1232 B827.5 trong 1440×900"
+      ]
+    },
+    {
+      "anh": "ngang",
+      "muc": "tiLeHienThiBangTiLeAnh",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "clientW/clientH=1.3333 · tỉ lệ ảnh 2000/1500=1.3333 · tỉ lệ khung vẽ 1.3333 · lệch 0.000%"
+      ]
+    },
+    {
+      "anh": "ngang",
+      "muc": "hopRongHon24rem",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "hộp rộng 1024px (> 384)"
+      ]
+    },
+    {
+      "anh": "doc",
+      "muc": "canvasTronTrongHop",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "canvas L494 T148.5 R946 B750.5",
+        "hộp L208 T72.5 R1232 B827.5"
+      ]
+    },
+    {
+      "anh": "doc",
+      "muc": "canvasKhongChongNut",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "đáy canvas 750.5 ≤ đỉnh nút 783.5"
+      ]
+    },
+    {
+      "anh": "doc",
+      "muc": "hopTronTrongCuaSo",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "hộp L208 T72.5 R1232 B827.5 trong 1440×900"
+      ]
+    },
+    {
+      "anh": "doc",
+      "muc": "tiLeHienThiBangTiLeAnh",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "clientW/clientH=0.7500 · tỉ lệ ảnh 1500/2000=0.7500 · tỉ lệ khung vẽ 0.7500 · lệch 0.000%"
+      ]
+    },
+    {
+      "anh": "nho",
+      "muc": "canvasTronTrongHop",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "canvas L519 T298.5 R921 B600.5",
+        "hộp L208 T222.5 R1232 B677.5"
+      ]
+    },
+    {
+      "anh": "nho",
+      "muc": "canvasKhongChongNut",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "đáy canvas 600.5 ≤ đỉnh nút 633.5"
+      ]
+    },
+    {
+      "anh": "nho",
+      "muc": "hopTronTrongCuaSo",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "hộp L208 T222.5 R1232 B677.5 trong 1440×900"
+      ]
+    },
+    {
+      "anh": "nho",
+      "muc": "tiLeHienThiBangTiLeAnh",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "clientW/clientH=1.3333 · tỉ lệ ảnh 400/300=1.3333 · tỉ lệ khung vẽ 1.3333 · lệch 0.000%"
+      ]
+    },
+    {
+      "anh": "nho",
+      "muc": "nhoKhongPhongTo400x300",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "clientWidth×clientHeight = 400×300"
+      ]
+    },
+    {
+      "anh": "rong",
+      "muc": "canvasTronTrongHop",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "canvas L239 T352.5 R1201 B546.5",
+        "hộp L208 T276.5 R1232 B623.5"
+      ]
+    },
+    {
+      "anh": "rong",
+      "muc": "canvasKhongChongNut",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "đáy canvas 546.5 ≤ đỉnh nút 579.5"
+      ]
+    },
+    {
+      "anh": "rong",
+      "muc": "hopTronTrongCuaSo",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "hộp L208 T276.5 R1232 B623.5 trong 1440×900"
+      ]
+    },
+    {
+      "anh": "rong",
+      "muc": "tiLeHienThiBangTiLeAnh",
+      "ketQua": "ĐẠT",
+      "chiTiet": [
+        "clientW/clientH=5.0000 · tỉ lệ ảnh 3000/600=5.0000 · tỉ lệ khung vẽ 5.0000 · lệch 0.000%"
+      ]
+    }
+  ],
+  "soDat": 18,
+  "soTruot": 0,
+  "verifiedAt": "2026-11-02T05:55:46.315Z"
+}
