@@ -5,10 +5,10 @@ slug: so-do-hai-tuan-thu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: draft
+status: approved
 design_doc: _acceptance/so-do-hai-tuan-thu/design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-03
 ---
 
 # Acceptance Contract: so-do-hai-tuan-thu
