@@ -5,7 +5,7 @@ slug: so-do-hai-tuan-thu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: implemented
+status: verified
 design_doc: _acceptance/so-do-hai-tuan-thu/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -96,3 +96,13 @@ Quét theo khuôn entity-feature của morphological-scan cho thực thể «m�
   khách mở, số lượt quan tâm, tỉ lệ thao tác máy tính / điện thoại theo vai (thiếu thiết bị), số lần mất mạng và thao tác
   lúc mất mạng trên điện thoại. Bảng số đo trả «chưa có sự kiện» cho chúng (AC-8); yêu cầu `can-nguoi` gửi chủ kho.
 - Dãy D chạy dev ở cổng 3495, Postgres 5575 (luật đợt 7) — hàng này không cần cả hai.
+- Ngoài-1 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu trưởng nhóm giao lại một lead sau khi kỳ đo đã kết thúc, số đo của kỳ đó có thể đếm lead ấy là chưa chia thay vì đã chia. Con số của kỳ cũ vì thế có thể đổi theo ngày xem, và hệ thống không báo lỗi. — `packages/core/src/metrics/lead.ts`
+- Ngoài-2 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu sau này ai đó vô tình bỏ luật loại lead đã bỏ khỏi số đo, bài kiểm hiện tại vẫn báo xanh nên lỗi có thể lọt qua mà không ai biết. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu bộ nạp dữ liệu mẫu đổi, cổng nghiệm thu có thể không nhận ra bằng chứng của ca kiểm này đã cũ. — `_acceptance/so-do-hai-tuan-thu/evals.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Dữ liệu dựng tay trong bài kiểm có thể ghi nhận một lần xác nhận với chủ nhà mà hệ thống thật không bao giờ ghi, nên ca kiểm mới thêm sau này có thể ra ngày xác nhận sai. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu dữ liệu mẫu của bộ nạp đổi nội dung nhưng giữ thứ tự lệnh, các số ghim của hai tuần thử có thể vẫn báo xanh trong khi đo trên dữ liệu khác bản thật. — `packages/core/src/metrics/mau.fixture.ts`
+- Ngoài-7 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu số đo đếm nhầm căn này thay căn kia nhưng tổng vẫn khớp, bài kiểm sẽ không phát hiện. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Việc kiểm rằng căn nào được đếm là «nên gọi điều chỉnh giá» chỉ làm với một căn, nên khi ngưỡng đổi thì một căn khác có thể lọt mà không bị bắt. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phần lớn sự kiện dựng trong các ca kiểm không được soi xem có đúng khuôn sự kiện thật hay không, nên một ca kiểm có thể chạy trên dữ liệu mà hệ thống thật sẽ từ chối. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-10 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Bài kiểm «không lộ thông tin chủ nhà» chưa được chứng minh là sẽ báo đỏ khi thông tin đó thật sự lọt ra, nên có thể yên tâm hơn mức nó đáng được. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-11 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Một ca kiểm dựng tay ghi một lần xác nhận với chủ nhà mà hệ thống thật không bao giờ ghi, có thể làm ngày xác nhận trong ca kiểm đó sai. — `packages/core/src/metrics/so-do.test.ts`

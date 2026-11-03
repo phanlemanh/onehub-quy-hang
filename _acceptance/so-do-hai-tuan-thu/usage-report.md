@@ -38,3 +38,36 @@ wall: 360s
 - **claude-sonnet-5-5**: 6 agent · 19 calls · out 22,203 · in 38 · cache_read 252,050 · cache_create 142,215
 - **claude-haiku-5-5**: 7 agent · 15 calls · out 11,125 · in 32 · cache_read 120,055 · cache_create 92,916
 
+### S4 round 2 — wf_50a522cc-bd4 (13 agent, 19,572 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| synthesize:report | claude-sonnet-5-5 | 2 | 4,044 | 4 | 22,371 | 26 |
+| review:bugs | claude-opus-5-5 | 7 | 3,098 | 16 | 139,985 | 34 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 2,131 | 4 | 15,387 | 71 |
+| machine:npm run lint | claude-haiku-5-5 | 2 | 1,841 | 4 | 15,371 | 16 |
+| triage | claude-sonnet-5-5 | 3 | 1,694 | 6 | 33,952 | 16 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 1,537 | 4 | 15,387 | 11 |
+| review:measurement | claude-opus-5-5 | 4 | 1,238 | 10 | 50,791 | 16 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 907 | 4 | 15,377 | 10 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 836 | 4 | 15,389 | 8 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 654 | 4 | 15,375 | 15 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 653 | 4 | 15,395 | 24 |
+| review:conventions | claude-opus-5-5 | 3 | 606 | 6 | 28,225 | 9 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 333 | 4 | 11,037 | 7 |
+
+
+wall: 223s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| machine | 7 | 8,559 | 107,681 | 167 | 12:21:02 | 12:23:49 |
+| review | 3 | 4,942 | 219,001 | 35 | 12:21:02 | 12:21:37 |
+| triage | 1 | 1,694 | 33,952 | 16 | 12:23:52 | 12:24:08 |
+| capture | 1 | 333 | 11,037 | 7 | 12:24:10 | 12:24:17 |
+| synthesize | 1 | 4,044 | 22,371 | 26 | 12:24:19 | 12:24:45 |
+
+- **claude-sonnet-5-5**: 3 agent · 7 calls · out 6,071 · in 14 · cache_read 67,360 · cache_create 71,556
+- **claude-opus-5-5**: 3 agent · 14 calls · out 4,942 · in 32 · cache_read 219,001 · cache_create 70,065
+- **claude-haiku-5-5**: 7 agent · 14 calls · out 8,559 · in 28 · cache_read 107,681 · cache_create 88,970
+
