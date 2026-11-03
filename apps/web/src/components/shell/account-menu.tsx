@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { thanDangXuat } from "@/lib/push/dang-ky";
 import {
+import { dangXuatTrenMay } from "./dang-xuat-tren-may";
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -106,14 +107,15 @@ export function AccountMenuKhung({ email, companyName, dangXuat }: { email: stri
           <DropdownMenuItem
             onClick={async () => {
               // Còn thay đổi chưa gửi thì hỏi; đăng xuất luôn xoá kho trên máy của người này (luật 32).
-              if (!(await dangXuat())) return;
-              await fetch("/api/v1/auth/sign-out", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: await thanDangXuat(),
+              await dangXuatTrenMay({
+                dangXuat,
+                than: thanDangXuat,
+                goi: fetch,
+                ve: () => {
+                  router.replace("/login");
+                  router.refresh();
+                },
               });
-              router.replace("/login");
-              router.refresh();
             }}
           >
             <LogOutIcon aria-hidden="true" />
