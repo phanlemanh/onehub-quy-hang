@@ -5,7 +5,7 @@ slug: va-tieu-de-goi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-03-va-tieu-de-goi-design.md
 approved_by:
 approved_at:
