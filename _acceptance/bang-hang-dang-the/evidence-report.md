@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 53973884cb1fadb0cbd9337627489584b41857e0
+verified_commit: c3c1fff1df0ac05ec5ef00aad717ad6553a6bd34
 human_signoff:
 ---
 
@@ -100,7 +100,7 @@ human_signoff:
   run_id: minted-bang-hang-dang-the-E7-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E7-the.png
   observed: |
@@ -111,7 +111,7 @@ human_signoff:
   run_id: minted-bang-hang-dang-the-E8-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E8-ngan.png
   observed: |
@@ -122,7 +122,7 @@ human_signoff:
   run_id: minted-bang-hang-dang-the-E9-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E9-the-loc.png
   observed: |
@@ -133,7 +133,7 @@ human_signoff:
   run_id: E10-20261103
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E10-step1.png
   observed: |
@@ -144,7 +144,7 @@ human_signoff:
   run_id: minted-bang-hang-dang-the-E11-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E11-step1.png
   observed: |
@@ -155,7 +155,7 @@ human_signoff:
   run_id: E12-ui-verify
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E12-anh-bia.png
   observed: |
@@ -166,7 +166,7 @@ human_signoff:
   run_id: minted-bang-hang-dang-the-E13-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-03T12:44:17Z
   screenshot: evidence/E13-step1.png
   observed: |
@@ -277,3 +277,7 @@ none — mọi eval chạy một lần và xác định (runs 1), không có ph�
 ## Iterations
 
 Round 1: mọi eval đạt (E1-E16, E18 máy; E17 hội đồng đề xuất PASS) — không có eval trượt.
+
+### Re-pin lần 1 — 2026-11-03, do gộp main (PR #97, #98) sau lượt chấm
+run_id: repin-20261103T141032Z-96991
+sha: c3c1fff1df0ac05ec5ef00aad717ad6553a6bd34 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E7, E8, E9, E10, E11, E12, E13, E17 · AC không có chốt máy: AC-6, AC-8
