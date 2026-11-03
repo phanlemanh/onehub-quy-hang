@@ -2370,6 +2370,12 @@
         "apps/web/src/app/(app)/units/ho-so/**",
         "packages/api/src/catalog/**"
       ]
+    },
+    {
+      "ma": "man-nhap-excel",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ (xlsx, csv) vào màn Nhập Excel, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi qua đường ghi lần nhập của hàng 65; xem thử nói đủ «ghi N căn mới, cập nhật M, tin bổ sung K, bỏ J»",
+      "slug": "man-nhap-excel",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-03"
     }
   ],
   "chan_troi": [
