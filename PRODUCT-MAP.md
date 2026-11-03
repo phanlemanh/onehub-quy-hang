@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>20 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>48 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>49 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -46,10 +46,6 @@ flowchart TD
 - Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng (`va-duong-loi-hoan-tac`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
 - Vá tiêu đề Cuộc gọi: trên điện thoại, đầu trang của màn ghi cuộc gọi hiện «Ghi cuộc gọi» thay vì «Căn call»; trang của một căn vẫn hiện mã căn như cũ (`va-tieu-de-goi`)
-
-## Đang làm
-
-- Đường ghi lần nhập (65a): một lần nhập file bảng hàng ghi qua đúng cửa của lõi hàng — hàng mới, cập nhật hàng mình giữ, tin bổ sung cho căn người khác giữ, chủ nhà và số vào liên hệ chủ nhà ở dạng bản mã, độ tươi theo ngày trong file; xem thử trả đúng điều lần ghi sẽ làm (`nhap-excel-xem-truoc-ghi`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
@@ -87,6 +83,7 @@ flowchart TD
 - Một nút chạy tay trên GitHub Actions nạp đủ dữ liệu mẫu (hàng sáu trạng thái, chủ nhà số mã hoá, lead có ca trùng, người phụ trách, tài khoản chủ kho) vào «[Mẫu] Sàn thử» trên bản thật, chạy lại không đổi gì, gỡ chỉ đúng sàn mẫu (`nap-mau-ban-that`)
 - Gói danh mục Invest đẩy sang theo khuôn phiên bản 1 được nhận vào vùng danh mục dùng chung khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt bị từ chối (`nhan-danh-muc-invest`)
 - Bảng hàng và hồ sơ đọc từ kho trên máy nên lọc, cuộn, mở hồ sơ không chờ mạng; sửa ghi trên máy trước, rớt mạng vài phút không mất thay đổi (`nhanh-tuc-thi`)
+- Đường ghi lần nhập (65a): một lần nhập file bảng hàng ghi qua đúng cửa của lõi hàng — hàng mới, cập nhật hàng mình giữ, tin bổ sung cho căn người khác giữ, chủ nhà và số vào liên hệ chủ nhà ở dạng bản mã, độ tươi theo ngày trong file; xem thử trả đúng điều lần ghi sẽ làm (`nhap-excel-xem-truoc-ghi`)
 - Lõi đọc một bảng hàng bẩn và nói được từng cột là gì, từng ô ra giá trị chuẩn nào hay vì sao không đọc được — không cần AI — trên bộ file thử có đáp án (`nhap-loi-tat-dinh`)
 - Telesales nhập lead đủ năm mục trên máy tính và thấy ngay kết quả kiểm trùng: không trùng, đã có đầu chủ, hay căn đã có hàng mở (`o-nhan-lead`)
 - Một màn của nhóm dựng ngoài khuôn làm bài kiểm của kho đỏ và gọi đúng tên tệp cùng khối cấm; chỉ sửa tài liệu hay hồ sơ thì bài kiểm im (`rang-giu-khuon`)

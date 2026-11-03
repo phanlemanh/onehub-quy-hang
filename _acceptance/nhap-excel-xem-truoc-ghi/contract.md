@@ -5,7 +5,7 @@ slug: nhap-excel-xem-truoc-ghi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-03-nhap-excel-xem-truoc-ghi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -96,3 +96,9 @@ Quét không gian tiêu chí (preset entity-feature × test-matrix, skill morpho
   `docs/product/{tham-chieu,doi-chieu-nganh}.md` (chỉ thêm dòng), `docs/plan/lo-trinh.json` (thêm hàng `man-nhap-excel`).
 - Chồng tệp với `ghi-thiet-bi-va-mat-mang` (dãy D, migration 028): mỗi bên chỉ thêm trường của mình (G-5).
 - Nguồn ba lỗi AC-2: Ngoài-2, Ngoài-4, Ngoài-5 của hàng 64 (luật 38).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: dòng có số chủ hay giá đáy mà ô tên chủ trống thì số và giá ấy không được lưu và người nhập không được báo; căn cập nhật không ghi thông tin chủ nhà trong file.
+  - Ngoài-2: dòng tin bổ sung thiếu số hay giá vẫn được đếm vào số tin bổ sung dù không có tin nào gửi đi; lý do vẫn hiện ở từng dòng.
+  - Ngoài-3: nhập từ 0 giờ đến 7 giờ sáng giờ Việt Nam thì ngày xác nhận là hôm nay bị coi là ngày tương lai và thành ô cần người.
+  - Ngoài-4: bài kiểm gói quá 200 dòng có một phép đếm luôn đúng; việc từ chối gói quá cỡ chỉ được chứng bằng mã lỗi.
+  - Ngoài-5: bài kiểm hai dòng cùng số chủ nhà vẫn xanh khi cả hai dòng không gắn liên hệ nào.
