@@ -1,19 +1,17 @@
 ---
 schema_version: 2
 feature_slug: luat-an-va-kiem-ro-ri
-verdict: REJECT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6e08d66a953b75d06670ed63be36bb816346ed37
+verified_commit: ccec6ed4d9994a0bc3f972cc2cf3cef0a877dbac
 human_signoff:
 ---
 
 # Evidence Report: luat-an-va-kiem-ro-ri
-
-Vòng 2. Mọi lệnh máy đều xanh, nhưng phản biện context sạch xác nhận 3 lỗi trong hợp đồng ở AC-9 (rào cửa ra bỏ sót route API công khai khai theo khuôn BASE). Danh sách ở review-findings.md. Verdict REJECT.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -27,171 +25,167 @@ Vòng 2. Mọi lệnh máy đều xanh, nhưng phản biện context sạch xác
 | E8 | AC-8 | test | PASS |
 | E9 | AC-9 | script | PASS |
 | E9b | AC-9 | script | PASS |
-| E10 | AC-10 | script | PASS (carry-forward từ round 1) |
-
-## Analyst
-
-carried tu round 1 — baseline khong do lai round nay
-
-Eval không phân biệt (xanh ở cả HEAD lẫn baseline; chứng minh harness chứ chưa chứng minh feature, cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
-
-- `npm test -w @quy-hang/core`: E1, E2, E3, E4, E5, E6, E7, E8
-- `node --test "_acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs"`: E9b, E10
-
-Lệnh suite xanh cả hai phía là regression-guard bình thường, không liệt kê.
+| E10 | AC-10 | script | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-luat-an-va-kiem-ro-ri-E1-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E1-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «một hàm cho mọi cửa» ok
+    ℹ duration_ms 306.7225
 
 - eval: E2
-  run_id: minted-luat-an-va-kiem-ro-ri-E2-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E2-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «bảng lớp trọn» ok
+    ℹ duration_ms 306.7225
 
 - eval: E3
-  run_id: minted-luat-an-va-kiem-ro-ri-E3-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E3-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «không rò ở mọi tổ hợp» ok
+    ℹ duration_ms 306.7225
 
 - eval: E4
-  run_id: minted-luat-an-va-kiem-ro-ri-E4-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E4-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «mã căn theo người nhận» ok
+    ℹ duration_ms 306.7225
 
 - eval: E5
-  run_id: minted-luat-an-va-kiem-ro-ri-E5-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E5-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «liên hệ không ra ngoài» ok
+    ℹ duration_ms 306.7225
 
 - eval: E6
-  run_id: minted-luat-an-va-kiem-ro-ri-E6-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E6-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «ảnh chỉ ngăn Gửi được» ok
+    ℹ duration_ms 306.7225
 
 - eval: E7
-  run_id: minted-luat-an-va-kiem-ro-ri-E7-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E7-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «trạng thái, giá, độ tươi» ok
+    ℹ duration_ms 306.7225
 
 - eval: E8
-  run_id: minted-luat-an-va-kiem-ro-ri-E8-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E8-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 299.269292
+    npm test -w @quy-hang/core — ca «quét văn bản mọi dạng» ok
+    ℹ duration_ms 306.7225
 
 - eval: E9
-  run_id: minted-luat-an-va-kiem-ro-ri-E9-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E9-r3
   exit_code: 0
-  baseline: n-a
+  baseline: red
   verifier: config:executors.script.ro_ri
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    npm run test:ro-ri
-    ℹ duration_ms 92.382375
+    npm run test:ro-ri — ca «cửa ra có trang thì có tệp kiểm» ok
+    ℹ duration_ms 100.033792
 
 - eval: E9b
-  run_id: minted-luat-an-va-kiem-ro-ri-E9b-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-E9b-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.script.lint_bo_qua
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
   output: |
-    node --test "_acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs"
-    ℹ duration_ms 1201.207125
+    node --test _acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs
+    ℹ duration_ms 1214.195791
 
 - eval: E10
   run_id: minted-luat-an-va-kiem-ro-ri-E10-r1
-  carried_from_round: 1
   exit_code: 0
-  baseline: n-a
   verifier: config:executors.script.lint_bo_qua
   verified_at: 2026-11-03T12:37:20Z
-  note: carry-forward tu round 1 — delta khong cham paths cua eval
+  carried_from_round: 1
+  output: |
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
 
 - cmd: npm run test:hooks
-  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-test_hooks-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
 
 - cmd: npm run typecheck
-  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-typecheck-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
 
 - cmd: npm run lint
-  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-lint-r2
+  run_id: minted-luat-an-va-kiem-ro-ri-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-03T13:50:35Z
+  verified_at: 2026-11-03T14:19:33Z
 
 ## Known limits
 
 ## Ngoài hợp đồng
 
+## Analyst
+
+Eval không phân biệt (xanh ở cả code hiện tại lẫn baseline — chứng minh harness, không chứng minh feature; viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+- npm test -w @quy-hang/core — E1, E2, E3, E4, E5, E6, E7, E8
+- node --test "_acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs" — E9b
+
 ## Variance
 
-none — không eval nào chạy nhiều lần (mọi eval deterministic, runs 1, không flaky).
+none — mọi eval chạy một lần, deterministic, không có phương sai.
 
 ## Iterations
 
-Round 1: lệnh máy xanh nhưng phản biện nêu lỗi trong hợp đồng ở AC-8 (bộ kiểm bỏ sót số sau dãy số) và AC-9 (rào cửa ra không bắt route API công khai). Quay lại thi công.
-Round 2: lệnh máy xanh (E10 carry-forward từ round 1). Còn lỗi trong hợp đồng ở AC-9: rào cửa ra vẫn bỏ sót route API công khai khai theo khuôn BASE + template literal, ca thử chỉ dùng path literal. Verdict REJECT.
+Round 1: hồ sơ dựng lần đầu, E10 chạy ở round này (run_id r1), còn lại chuyển sang các round sau.
+Round 2: lượt chấm REJECT, dừng vá vì cùng lớp lỗi AC-9 (route API công khai).
+Round 3: phạm vi AC-9 thu lại chỉ còn trang web (route API công khai sang hàng 35); mọi eval và lệnh suite xanh; E10 mang từ round 1.

@@ -106,7 +106,7 @@
     },
     {
       "i": 2,
-      "p": "Rào bắt trang cửa ra phải có bài kiểm rò rỉ dễ bị né (đặt trang trong nhóm route, hay bài kiểm rỗng). Đã sửa: nhận cửa ra theo địa chỉ trang, bài kiểm phải thật sự gọi bộ quét, thêm chỗ cho đường API công khai; việc trang có dựng từ luật ẩn hay không được đo gián tiếp bằng lượt quét mồi."
+      "p": "Rào bắt trang cửa ra phải có bài kiểm rò rỉ dễ bị né (đặt trang trong nhóm route, hay bài kiểm rỗng). Đã sửa: nhận cửa ra theo địa chỉ trang, bài kiểm phải thật sự gọi bộ quét, (rào cho đường API công khai đã chuyển sang hàng 35 khi thu phạm vi 03/11); việc trang có dựng từ luật ẩn hay không được đo gián tiếp bằng lượt quét mồi."
     },
     {
       "i": 3,
