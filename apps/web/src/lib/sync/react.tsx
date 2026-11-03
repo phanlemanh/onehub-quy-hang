@@ -10,6 +10,7 @@ import type { BoLoc } from "./doc";
 import { taoBoDongBo, type BoDongBo } from "./dong-bo";
 import { goiFetch } from "./goi-fetch";
 import { taoKhoIndexedDb } from "./kho-indexeddb";
+import { bocGoiBiBao, dichBiBao, xoaMayBiBao } from "./may-bi-bao";
 import { canHoiKhiDangXuat } from "./trang-thai";
 
 type Ctx = {
@@ -30,7 +31,17 @@ const BoDongBoCtx = createContext<Ctx | null>(null);
 export function BoDongBoProvider({ userId, companyId, companyIds, roles, children }: { userId: string; companyId: string; companyIds: string[]; roles: string[]; children: ReactNode }) {
   const kho = useMemo(() => taoKhoIndexedDb(userId), [userId]);
   const vai = roles.join(",");
-  const bd = useMemo(() => taoBoDongBo({ goi: goiFetch, kho, me: { userId, roles: vai ? vai.split(",") : [] }, companyId }), [kho, userId, companyId, vai]);
+  const bd = useMemo(() => {
+    // Máy bị báo mất (hàng 38): khép bộ đồng bộ trước, rồi xoá kho của người bị báo và về màn đăng nhập.
+    let ban: BoDongBo | null = null;
+    const goi = bocGoiBiBao(goiFetch, async (u) => {
+      await ban?.dongHan();
+      await xoaMayBiBao(u);
+      window.location.replace(dichBiBao(u));
+    });
+    ban = taoBoDongBo({ goi, kho, me: { userId, roles: vai ? vai.split(",") : [] }, companyId });
+    return ban;
+  }, [kho, userId, companyId, vai]);
   const [hoi, setHoi] = useState<Ctx["hoi"]>(null);
   const [canXemMo, moCanXem] = useState(false);
   const [nhapLai, setNhapLai] = useState<Ctx["nhapLai"]>({});
