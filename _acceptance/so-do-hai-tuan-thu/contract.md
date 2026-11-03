@@ -5,7 +5,7 @@ slug: so-do-hai-tuan-thu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: verified
+status: signed-off
 design_doc: _acceptance/so-do-hai-tuan-thu/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -106,3 +106,14 @@ Quét theo khuôn entity-feature của morphological-scan cho thực thể «m�
 - Ngoài-9 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phần lớn sự kiện dựng trong các ca kiểm không được soi xem có đúng khuôn sự kiện thật hay không, nên một ca kiểm có thể chạy trên dữ liệu mà hệ thống thật sẽ từ chối. — `packages/core/src/metrics/so-do.test.ts`
 - Ngoài-10 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Bài kiểm «không lộ thông tin chủ nhà» chưa được chứng minh là sẽ báo đỏ khi thông tin đó thật sự lọt ra, nên có thể yên tâm hơn mức nó đáng được. — `packages/core/src/metrics/so-do.test.ts`
 - Ngoài-11 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Một ca kiểm dựng tay ghi một lần xác nhận với chủ nhà mà hệ thống thật không bao giờ ghi, có thể làm ngày xác nhận trong ca kiểm đó sai. — `packages/core/src/metrics/so-do.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-03:
+  - Ngoài-1: Nếu trưởng nhóm giao lại một lead sau khi kỳ đo đã kết thúc, số đo của kỳ đó có thể đếm lead ấy là chưa chia thay vì đã chia. Con số của kỳ cũ vì thế có thể đổi theo ngày xem, và hệ thống không báo lỗi.
+  - Ngoài-2: Nếu sau này ai đó vô tình bỏ luật loại lead đã bỏ khỏi số đo, bài kiểm hiện tại vẫn báo xanh nên lỗi có thể lọt qua mà không ai biết.
+  - Ngoài-3: Nếu bộ nạp dữ liệu mẫu đổi, cổng nghiệm thu có thể không nhận ra bằng chứng của ca kiểm này đã cũ.
+  - Ngoài-4: Dữ liệu dựng tay trong bài kiểm có thể ghi nhận một lần xác nhận với chủ nhà mà hệ thống thật không bao giờ ghi, nên ca kiểm mới thêm sau này có thể ra ngày xác nhận sai.
+  - Ngoài-6: Nếu dữ liệu mẫu của bộ nạp đổi nội dung nhưng giữ thứ tự lệnh, các số ghim của hai tuần thử có thể vẫn báo xanh trong khi đo trên dữ liệu khác bản thật.
+  - Ngoài-7: Nếu số đo đếm nhầm căn này thay căn kia nhưng tổng vẫn khớp, bài kiểm sẽ không phát hiện.
+  - Ngoài-8: Việc kiểm rằng căn nào được đếm là «nên gọi điều chỉnh giá» chỉ làm với một căn, nên khi ngưỡng đổi thì một căn khác có thể lọt mà không bị bắt.
+  - Ngoài-9: Phần lớn sự kiện dựng trong các ca kiểm không được soi xem có đúng khuôn sự kiện thật hay không, nên một ca kiểm có thể chạy trên dữ liệu mà hệ thống thật sẽ từ chối.
+  - Ngoài-10: Bài kiểm «không lộ thông tin chủ nhà» chưa được chứng minh là sẽ báo đỏ khi thông tin đó thật sự lọt ra, nên có thể yên tâm hơn mức nó đáng được.
+  - Ngoài-11: Một ca kiểm dựng tay ghi một lần xác nhận với chủ nhà mà hệ thống thật không bao giờ ghi, có thể làm ngày xác nhận trong ca kiểm đó sai.
