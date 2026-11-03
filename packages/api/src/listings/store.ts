@@ -109,7 +109,18 @@ export const FACTS_SQL = {
      where e.company_id = app.current_company_id() and e.listing_id = l.id and e.seq = 1)`,
   statusesReached: `array(select distinct e.payload->>'to' from listing_events e
      where e.company_id = app.current_company_id() and e.listing_id = l.id and e.type = 'status_changed')`,
+  listingAgentUserId: `(select a.user_id from listing_agent_assignments a
+     where a.company_id = app.current_company_id() and a.listing_id = l.id order by a.seq desc limit 1)`,
 };
+
+/** Dữ kiện ai thấy hàng của một hàng: gấp từ dãy sự kiện, cộng đầu chủ đang giữ căn (bảng gán — không ở dãy sự kiện). */
+export async function factsOf(tx: pg.PoolClient, listingId: string, events: readonly ListingEvent[]): Promise<VisibilityFacts> {
+  const { rows } = await tx.query<{ user_id: string }>(
+    "select user_id from listing_agent_assignments where company_id = app.current_company_id() and listing_id = $1 order by seq desc limit 1",
+    [listingId],
+  );
+  return { ...factsFromEvents(events), listingAgentUserId: rows[0]?.user_id ?? null };
+}
 
 async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type: EventType, payload: object, confirmed: boolean) {
   const { rows } = await tx.query<EventRow>(
@@ -147,7 +158,7 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // Trục ai thấy hàng (hàng 12): không đọc được thì như hàng không có — xét trước phiên bản và khuôn để mã lỗi không lộ
   // hàng có thật (AC-5).
   const events = await loadEvents(tx, listingId);
-  if (!canRead(viewer, factsFromEvents(events))) return { error: API_ERRORS.notFound };
+  if (!canRead(viewer, await factsOf(tx, listingId, events))) return { error: API_ERRORS.notFound };
 
   const details = validatePayload(cmd.type, cmd.payload);
   if (cmd.type === "created") details.push({ path: "type", reason: "hàng đã có — tạo hàng bằng POST /listings" });
