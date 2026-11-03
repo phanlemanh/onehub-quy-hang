@@ -3,8 +3,8 @@
  * hàng 68, người ở màn xem trước) cũng ra cùng khuôn, và `validatePlan` từ chối khoá lạ ở mọi cấp như khuôn sự kiện của
  * ADR-0008. `planFromDictionary` là chế độ nền không AI: từ điển tiêu đề → dò theo giá trị → giữ làm ghi chú.
  */
-import { readableShare } from "./classify";
-import { FIELD_CLASS, isStandardField, type StandardField } from "./fields";
+import { classifyColumns, readableShare, type ColumnClassification } from "./classify";
+import { FIELD_CLASS, FIELD_LABEL, isStandardField, type StandardField } from "./fields";
 import type { Table } from "./grid";
 import { lookupHeader, priceUnitOfHeader, type CompanyHeader } from "./headers";
 import {
@@ -69,9 +69,14 @@ function kiemPhep(t: unknown, path: string, out: PlanError[]) {
   if (CAN_THAM_SO.includes(t.name)) for (const k of Object.keys(cho)) if (!Object.hasOwn(params, k)) out.push({ path: `${path}.params.${k}`, reason: "thiếu" });
 }
 
+/** Tên đích để nêu trong lỗi: nhãn của trường chuẩn, hay chính chuỗi đích. */
+const tenDich = (t: string) => (isStandardField(t) ? `${FIELD_LABEL[t]} (${t})` : t);
+
 /** Kiểm khuôn kế hoạch trên đúng bảng nó định áp. Rỗng là hợp lệ. */
-export function validatePlan(plan: unknown, table: Table): PlanError[] {
+export function validatePlan(plan: unknown, table: Table, opts: DictionaryPlanOptions = {}): PlanError[] {
   const out: PlanError[] = [];
+  // Lớp của cột theo bộ phân loại (bất biến 2): cột lớp nguồn chỉ vào trường lớp nguồn hay bỏ có lý do (luật 38, Ngoài-4).
+  const lop: readonly ColumnClassification[] = classifyColumns(table, opts.companyHeaders);
   if (!laDoiTuong(plan)) return [{ path: "", reason: "cần một đối tượng" }];
   khoaLa(plan, KHOA_GOC, "", out);
   const hr = plan.headerRow;
@@ -88,8 +93,14 @@ export function validatePlan(plan: unknown, table: Table): PlanError[] {
     const t = c.target;
     const tOk = isStandardField(t) || t === "keep_as_note" || t === "ignore_with_reason" || (typeof t === "string" && /^custom:\S.{0,59}$/.test(t));
     if (!tOk) out.push({ path: `${p}.target`, reason: "đích lạ" });
-    if (t === "ignore_with_reason" && !isRowIndexColumn(table.rows.map((r) => r.cells[i] ?? null)) && table.rows.some((r) => r.cells[i] !== null))
+    const laNguon = lop[i]?.cls === "source";
+    if (t === "ignore_with_reason" && !laNguon && !isRowIndexColumn(table.rows.map((r) => r.cells[i] ?? null)) && table.rows.some((r) => r.cells[i] !== null))
       out.push({ path: `${p}.target`, reason: "cột có dữ liệu không được bỏ — giữ làm ghi chú hay trường riêng" });
+    if (laNguon && tOk && t !== "ignore_with_reason" && !(isStandardField(t) && FIELD_CLASS[t] === "source"))
+      out.push({ path: `${p}.target`, reason: `cột lớp nguồn «${table.headers[i] ?? ""}» không được ghép vào ${tenDich(t as string)} — chỉ vào trường lớp nguồn hay bỏ có lý do` });
+    const vaoNguon = laNguon || (isStandardField(t) && FIELD_CLASS[t] === "source");
+    if (vaoNguon && c.valueMap !== undefined)
+      out.push({ path: `${p}.valueMap`, reason: `cột lớp nguồn «${table.headers[i] ?? ""}» không mang bảng quy đổi — giá trị nguyên văn sẽ nằm trong kế hoạch đã lưu` });
     if (c.transform !== undefined) kiemPhep(c.transform, `${p}.transform`, out);
     if (c.valueMap !== undefined && (!laDoiTuong(c.valueMap) || !Object.values(c.valueMap).every((v) => typeof v === "string")))
       out.push({ path: `${p}.valueMap`, reason: "cần ánh xạ chữ → chữ" });

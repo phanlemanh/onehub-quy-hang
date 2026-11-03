@@ -85,14 +85,26 @@ function diemTieuDe(dong: readonly Cell[]): number {
   return dong.filter((c) => laChu(c) && lookupHeader(c) !== null).length;
 }
 
-/** Hai dòng (trên, dưới) là tiêu đề hai tầng: trên có ≥ 2 ô chữ, mọi ô không trống của cả hai là chữ, và dưới có ô chữ đứng dưới ô trống của trên. */
+/**
+ * Hai dòng (trên, dưới) là tiêu đề hai tầng: trên có ≥ 2 ô chữ, mọi ô không trống của cả hai là chữ, dưới có ô chữ đứng dưới
+ * ô trống của trên, VÀ dưới có dáng tiêu đề — có ô trống dưới một ô tiêu đề (ô gộp dọc) hay có ô khớp từ điển tiêu đề. Thiếu
+ * vế cuối thì dòng dữ liệu đầu đứng dưới một ô tiêu đề trống bị nhận nhầm là tầng dưới (luật 38, Ngoài-5).
+ */
 function haiTang(tren: readonly Cell[] | undefined, duoi: readonly Cell[] | undefined): boolean {
   if (!tren || !duoi) return false;
   const conTren = tren.filter((c) => !rong(c));
   const conDuoi = duoi.filter((c) => !rong(c));
   if (conTren.length < 2 || conDuoi.length === 0) return false;
   if (!conTren.every(laChu) || !conDuoi.every(laChu)) return false;
-  return duoi.some((c, i) => laChu(c) && rong(tren[i]));
+  if (!duoi.some((c, i) => laChu(c) && rong(tren[i]))) return false;
+  return tren.some((c, i) => laChu(c) && rong(duoi[i])) || duoi.some((c) => laChu(c) && lookupHeader(c) !== null);
+}
+
+/** Tên cột theo chữ cái như bảng tính: 0 → A, 25 → Z, 26 → AA. */
+function chuCot(i: number): string {
+  let s = "";
+  for (let n = i + 1; n > 0; n = Math.floor((n - 1) / 26)) s = String.fromCharCode(65 + ((n - 1) % 26)) + s;
+  return s;
 }
 
 const LA_DONG_TONG = /^(tong|tong cong|cong|total|sum)\b/;
@@ -131,7 +143,7 @@ export function readTable(grid: Grid): Table {
       headers.push(nhom ? `${nhom} / ${ch}` : ch);
     } else {
       nhom = p ? "" : nhom;
-      headers.push(p || ch || `(cột ${i + 1})`);
+      headers.push(p || ch || `Cột ${chuCot(i)}`);
     }
   }
   const rows: TableRow[] = [];
