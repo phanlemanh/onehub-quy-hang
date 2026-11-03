@@ -86,3 +86,16 @@ test("ảnh bìa — đối chứng đỏ: bản bỏ lọc ngăn trượt ca (c
   const sai = taoNguonAnhBia(f, { chon: (ds) => ds });
   await assert.rejects(async () => assert.equal(await sai.anhBia("Toà A", "A-01.01"), null, "Nội bộ không bao giờ là ảnh bìa"), /Nội bộ/);
 });
+
+test("ảnh bìa (h): mất mạng không nhớ — có mạng lại thì hỏi lại và ra ảnh bìa", async () => {
+  let coMang = false;
+  const { f, goi } = fetchGia(() => {
+    if (!coMang) throw new TypeError("Failed to fetch");
+    return json(BA_GUI);
+  });
+  const n = taoNguonAnhBia(f);
+  assert.equal(await n.anhBia("Toà A", "A-01.01"), null);
+  coMang = true;
+  assert.equal(await n.anhBia("Toà A", "A-01.01"), "/api/v1/units/photos/g1/thumb");
+  assert.equal(goi.length, 2);
+});
