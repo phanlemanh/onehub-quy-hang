@@ -203,3 +203,17 @@ test("ngày có thật: không lỗi", () => {
   }
   assert.equal(so, NGAY_CO_THAT.length, "số lần thử phải bằng ma trận viết trước");
 });
+
+test("gấp: xác nhận theo ngày trong file", () => {
+  // Hàng 65 (luật 11): ngày ghi trong file thắng lúc ghi; không có ngày thì lúc ghi như cũ.
+  const coNgay = foldListing(day([TAO, ["owner_confirmed", { confirmedAt: "2026-06-01" }, "2026-10-20T09:00:00.000Z"]]));
+  assert.equal(coNgay.lastConfirmedAt, "2026-06-01T00:00:00.000Z");
+  const khong = foldListing(day([TAO, ["owner_confirmed", {}, "2026-10-20T09:00:00.000Z"]]));
+  assert.equal(khong.lastConfirmedAt, "2026-10-20T09:00:00.000Z", "đối chứng: không ngày thì lúc ghi");
+  const sau = foldListing(day([TAO, ["owner_confirmed", { confirmedAt: "2026-12-01" }, "2026-10-20T09:00:00.000Z"]]));
+  assert.equal(sau.lastConfirmedAt, "2026-10-20T09:00:00.000Z", "ngày sau lúc ghi không bao giờ thắng");
+
+  assert.deepEqual(validatePayload("owner_confirmed", { confirmedAt: "2026-06-01" }, { today: HOM_NAY }), []);
+  assert.deepEqual(validatePayload("owner_confirmed", { confirmedAt: "2026-10-21" }, { today: HOM_NAY }), [{ path: "confirmedAt", reason: "ngày xác nhận sau hôm nay" }]);
+  assert.deepEqual(validatePayload("owner_confirmed", { confirmedAt: "01/06/2026" }), [{ path: "confirmedAt", reason: NGAY_SAI_DANG }]);
+});

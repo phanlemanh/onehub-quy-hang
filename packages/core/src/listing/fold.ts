@@ -78,7 +78,12 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
     default:
       break;
   }
-  if (e.confirmedWithOwner && (!s.lastConfirmedAt || e.occurredAt > s.lastConfirmedAt)) s.lastConfirmedAt = e.occurredAt;
+  if (e.confirmedWithOwner) {
+    // Xác nhận theo ngày ghi trong file (luật 11, hàng 65): `confirmedAt` thắng lúc ghi, nhưng không bao giờ sau lúc ghi.
+    const ngay = e.type === "owner_confirmed" && typeof e.payload.confirmedAt === "string" ? `${e.payload.confirmedAt}T00:00:00.000Z` : null;
+    const luc = ngay && ngay <= e.occurredAt ? ngay : e.occurredAt;
+    if (!s.lastConfirmedAt || luc > s.lastConfirmedAt) s.lastConfirmedAt = luc;
+  }
   s.version = e.seq;
   return s;
 }
