@@ -33,6 +33,20 @@ jobs:
       - run: npm run test:hooks
       - run: npm run build
 
+  # «Phần nội bộ không ra trang khách» (bất biến 4) — bộ kiểm rò rỉ của luật ẩn, check bắt buộc trước mỗi lần phát hành
+  # (hàng 31). Gồm bài của packages/core/src/redaction và mọi *.ro-ri.test.ts(x) của cửa ra.
+  ro-ri:
+    name: ro-ri
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:ro-ri
+
   # «Công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành (ADR-0001 §3).
   isolation:
     name: isolation
@@ -125,7 +139,7 @@ jobs:
   deploy:
     name: deploy
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [check, isolation, secrets, gate]
+    needs: [check, isolation, secrets, gate, ro-ri]
     runs-on: ubuntu-latest
     environment: production
     concurrency:
@@ -152,7 +166,7 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [check, isolation, secrets, gate]
+    needs: [check, isolation, secrets, gate, ro-ri]
     runs-on: ubuntu-latest
     steps:
       - name: Mọi job phải xanh

@@ -116,7 +116,8 @@ export const TRUONG_RA: Readonly<Record<NguoiNhan, readonly KhoaRa[]>> = {
 export function nguonRaTheoNguoiNhan(truongRa: Readonly<Record<NguoiNhan, readonly KhoaRa[]>> = TRUONG_RA) {
   const ra = {} as Record<NguoiNhan, KhoaCanNoiBo[]>;
   for (const [nn, ds] of Object.entries(truongRa) as [NguoiNhan, readonly KhoaRa[]][]) {
-    ra[nn] = [...new Set(ds.flatMap((k) => NGUON_RA[k]))];
+    // Khoá ra chưa có nguồn khai thì coi chính nó là khoá bản vào — để bảng lớp gọi đúng tên khoá ấy.
+    ra[nn] = [...new Set(ds.flatMap((k) => NGUON_RA[k] ?? [k as KhoaCanNoiBo]))];
   }
   return ra;
 }

@@ -101,6 +101,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 - **Trục 1 — ai trong sàn thấy hàng**: Chỉ tôi → Nhóm → Toàn sàn. Lead và hàng chưa khoá nguồn mặc định «Chỉ tôi»; «Sẵn sàng bán» đưa lên «Toàn sàn».
 - **Trục 2 — hàng ra ngoài bằng cửa nào**: không ra · gửi tay (link, ảnh + tin, bảng hàng) · đăng Platform.
 - **Lớp trường, phủ cả hai trục**: chủ nhà, số điện thoại, giá đáy, ảnh sổ chỉ đầu chủ giữ căn và trưởng nhóm thấy; không bao giờ ra ngoài sàn. Mỗi lần mở số chủ là một sự kiện.
+- **Luật ẩn một chỗ cho mọi cửa ra** — Dựng 03/11 (hàng 31): trang khách, gửi ảnh + tin, phát hàng lấy dữ liệu từ cùng một luật ở lõi, chỉ các trường được ra theo người nhận (khách riêng không có mã căn, chỉ toà + tầng cao / thấp; Đang giao dịch giữ giá, Tạm ngưng tách khỏi «không còn»); không liên hệ nào ra ngoài; bộ kiểm rò rỉ là check bắt buộc trước phát hành, kể cả quét mã nguồn trang.
 - **Quyền cấu hình tách khỏi quyền xem nguồn**: quản trị sàn không tự động thấy chủ nhà.
 - **Quyền là lớp phủ trên cùng một màn**: đầu khách mở đúng hồ sơ căn đó, phần chủ nhà thay bằng «Xin dẫn xem» và «Liên hệ đầu chủ».
 - **Nhiều sàn trên một nền** — Đã chốt 28/10: mỗi sàn một vùng riêng; chỉ danh mục là dùng chung. Hệ thống biết hai sàn cùng giữ một căn nhưng không cho bên này thấy hàng bên kia. Cách ly đặt ở kho dữ liệu; kiểm thử «sàn này không thấy gì của sàn kia» là cổng bắt buộc trước mỗi lần phát hành.
