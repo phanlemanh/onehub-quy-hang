@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c3c1fff1df0ac05ec5ef00aad717ad6553a6bd34
+verified_commit: c4573d3e5742993e96d111e8e37d3e1155ba30bc
 human_signoff:
 ---
 
@@ -281,3 +281,7 @@ Round 1: mọi eval đạt (E1-E16, E18 máy; E17 hội đồng đề xuất PAS
 ### Re-pin lần 1 — 2026-11-03, do gộp main (PR #97, #98) sau lượt chấm
 run_id: repin-20261103T141032Z-96991
 sha: c3c1fff1df0ac05ec5ef00aad717ad6553a6bd34 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E7, E8, E9, E10, E11, E12, E13, E17 · AC không có chốt máy: AC-6, AC-8
+
+### Re-pin lần 2 — 2026-11-03, do gộp main (PR #99) trong lúc giữ lượt gộp
+run_id: repin-20261103T142823Z-41375
+sha: c4573d3e5742993e96d111e8e37d3e1155ba30bc · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E7, E8, E9, E10, E11, E12, E13, E17 · diff chạm vật đo ngoài làn máy: E17 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-6, AC-8
