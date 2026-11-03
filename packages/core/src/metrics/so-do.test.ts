@@ -13,7 +13,7 @@ import { nhomCuaCan } from "../today/hang-doi";
 import { boMacDinh } from "../today/mac-dinh";
 import { DANH_SACH_SO_DO, type MucDanhSach } from "./danh-sach";
 import type { DauVaoSoDo, DongSoDo, HangVao, LeadVao, MetricCode } from "./kieu";
-import { boMau, docGoiMau, DUONG_BO_NAP, thuTuLenh } from "./mau.fixture";
+import { boMau, docGoiMau, DUONG_BO_NAP, THU_TU_LENH, thuTuLenh } from "./mau.fixture";
 import { tinhSoDo } from "./so-do";
 
 const TU = "2026-11-03T00:00:00Z";
@@ -386,13 +386,12 @@ test("bộ mẫu: không thông tin chủ nhà", () => {
 test("bộ mẫu: bộ chuyển theo bộ nạp", () => {
   const boNap = readFileSync(DUONG_BO_NAP, "utf8");
   const boChuyen = readFileSync(fileURLToPath(new URL("./mau.fixture.ts", import.meta.url)), "utf8");
-  const lenhNap = thuTuLenh(boNap);
-  assert.equal(lenhNap.length, 6);
-  assert.deepEqual(thuTuLenh(boChuyen), lenhNap);
+  assert.deepEqual(thuTuLenh(boNap), [...THU_TU_LENH], "bộ nạp đổi chuỗi lệnh — sửa bộ chuyển cho khớp");
+  assert.deepEqual(thuTuLenh(boChuyen), [...THU_TU_LENH], "bộ chuyển lệch chuỗi lệnh của bộ nạp");
   // Chiều đỏ: bộ nạp thêm một lệnh → thứ tự lệnh lệch.
   const napDoi = boNap.replace('await lenh({ type: "status_changed", payload: { to: "Active" } });', 'await lenh({ type: "status_changed", payload: { to: "Active" } });\n        await lenh({ type: "owner_confirmed", payload: {} });');
   assert.notEqual(napDoi, boNap, "bản sao nguồn bộ nạp phải thật sự đổi");
-  assert.notDeepEqual(thuTuLenh(boChuyen), thuTuLenh(napDoi), "bộ nạp thêm owner_confirmed thì ca gác phải lệch");
+  assert.notDeepEqual(thuTuLenh(napDoi), [...THU_TU_LENH], "bộ nạp thêm owner_confirmed thì ca gác phải lệch");
 });
 
 // ---- E10 · AC-10 ----

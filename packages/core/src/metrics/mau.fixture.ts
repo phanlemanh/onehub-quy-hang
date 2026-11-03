@@ -103,6 +103,9 @@ export function boMau(batDau: string, goi: GoiMau = docGoiMau()): BoMau {
   return { hang, lead, danhMuc: goi.danhMuc, maCuaHang };
 }
 
+/** Thứ tự loại lệnh `lenh` sau lệnh tạo hàng, như `napTrongSo` của bộ nạp và như bộ chuyển trên — ca kiểm so cả hai tệp với nó. */
+export const THU_TU_LENH = ["price_changed", "status_changed", "details_changed", "status_changed", "status_changed", "status_changed"] as const;
+
 /** Thứ tự loại lệnh của các lời gọi `lenh` trong một tệp nguồn — bộ nạp viết `lenh({ type: "…"`, bộ chuyển viết `lenh("…"`. */
 export function thuTuLenh(nguon: string): string[] {
   return [...nguon.matchAll(/\blenh\(\s*(?:\{\s*type:\s*)?"([a-z_]+)"/g)].map((m) => m[1]!);
