@@ -5,7 +5,7 @@ slug: ghi-thiet-bi-va-mat-mang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db, api, core]
-status: approved
+status: implemented
 design_doc: _acceptance/ghi-thiet-bi-va-mat-mang/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
