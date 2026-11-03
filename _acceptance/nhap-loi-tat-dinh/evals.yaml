@@ -1,0 +1,86 @@
+schema_version: 1
+feature_slug: nhap-loi-tat-dinh
+# Một lệnh máy: `executors.test.core` (node --test của packages/core, mẫu src/**/*.test.ts). exit 0 của lệnh chung KHÔNG đủ:
+# mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt,
+# «ok», không «# SKIP»/«# TODO». Ma trận viết tay nằm ở tệp ca của từng test (không suy từ hàm đang kiểm); bộ thử (file bẩn
+# + đáp án) sinh ở packages/core/test/import/ từ du-lieu-mau.json của hàng 5, đáp án lấy từ dữ liệu mẫu, không từ bộ đọc.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «đọc bảng: tiêu đề ở dòng 4, hai tầng, bỏ dòng trống và dòng tổng» có mặt và ok — trên ban-tieu-de: headerRow bằng đáp án (chỉ số dòng 3, 0-based), tiêu đề của nhóm hai tầng bằng chuỗi «<cha> / <con>» của đáp án, rows.length === 40, danh sách số dòng gốc của dòng dữ liệu deepEqual đáp án (không chứa số dòng của dòng trống giữa bảng và dòng «Tổng cộng»). Ca «csv: UTF-8 BOM và Windows-1258 ra cùng bảng mau-a» có mặt và ok — giải mã hai dạng byte, đọc bảng, mỗi ô (chữ) bằng ô cùng chỗ của bảng đọc từ mau-a.xlsx sau String() và NFC; đếm số ô so bằng 41×13. Ca «giải mã: vectơ byte Windows-1258 viết tay» có mặt và ok — mảng byte viết tay theo bảng mã chuẩn windows-1258 (dấu thanh là byte tổ hợp tách rời, ví dụ «Tòa», «Đông Nam», «Đã bán»), giải mã bằng decodeText, assert.equal với chuỗi NFC viết sẵn trong tệp ca — KHÔNG gọi normalize trên đầu ra; byte không sinh bằng bộ mã hoá của bộ thử. Chiều đỏ: giới hạn tìm tiêu đề ở dòng 0 → ca đầu đỏ nêu headerRow; bỏ nhánh Windows-1258 → ca csv đỏ nêu ô đầu tiên lệch; bỏ bước NFC trong decodeText → ca vectơ byte đỏ."
+    paths: [packages/core/src/import/**, packages/core/test/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «phân loại: ma trận cột ra đúng lớp» có mặt và ok — duyệt ma trận cột viết tay (mỗi lớp trong sáu lớp tạm ít nhất một cột; mỗi kiểu số 0/+84/84 × cách/chấm/gạch; email; giấy tờ 9 và 12 chữ số; cột một ô số dưới 30% → free_text; cột ≥ 30% số → source), mỗi cột một lần so, đếm bằng độ dài ma trận, thông điệp assert nêu tiêu đề cột và lớp ra. Ca «phân loại: cột hai file mẫu» có mặt và ok — mọi cột của mau-a (13) và mau-b (16) ra đúng lớp trong bảng đáp án viết tay. Chiều đỏ: hạ ngưỡng số điện thoại về 100% → ca đỏ nêu cột «Liên hệ» hay cột số lẫn."
+    paths: [packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hồ sơ cột: không giá trị nguồn trên mau-a, mau-b, ban-nguon-giau» có mặt và ok — danh sách cấm dựng từ du-lieu-mau.json (mọi chuNha.ten, chuNha.soDienThoai, lead.ten, lead.soDienThoai, mỗi số ở ba dạng: nguyên văn, chuẩn 0xxxxxxxxx, lõi 9 chữ số cuối; mỗi tên nguyên văn) cộng mọi giá trị cấy của ban-nguon-giau (mỗi số +84 có cách ở ba dạng: nguyên văn, chuẩn 0…, lõi 9 chữ số; mỗi email nguyên văn và chữ thường; mỗi số giấy tờ); số phần tử danh sách cấm assert bằng con số tính từ đáp án (3 × số điện thoại + số tên + 2 × số email + số giấy tờ) — cấm theo đáp án của bộ sinh, không theo bộ dò; với từng file JSON.stringify(hồ sơ) không chứa phần tử nào (mỗi phần tử một lần so, thông điệp nêu file và chuỗi lọt); mọi cột lớp ngoài catalog/shareable_listing không có khoá values; mọi values có độ dài ≤ 300. Ca «hồ sơ cột: cột được mở vẫn mang giá trị» có mặt và ok — hồ sơ mau-a có values của cột «Mã căn» chứa «A-01.03» và của «Phí CN» chứa «BP» (đối chứng dương, chặn hồ sơ rỗng qua được). Chiều đỏ: dựng hồ sơ coi mọi cột là catalog → ca đầu đỏ nêu chuỗi lọt đầu tiên; hồ sơ ghi mẫu số đã chuẩn hoá vào hình dạng → ca đầu đỏ nêu dạng 0…"
+    paths: [packages/core/src/import/**, packages/core/test/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «ghép mẫu: mau-a 13/13, mau-b 16/16» có mặt và ok — đọc packages/db/seed/mau/mau-a.xlsx và mau-b.xlsx từ đĩa (đường suy từ import.meta.url, không hằng gốc), ghép tất định, so target từng cột với bảng đáp án viết tay theo nghĩa của bộ ghi hàng 5 (mau-file.mjs), đếm đúng 13 và 16, mọi cột có target, ignore_with_reason chỉ ở «STT», validatePlan ra []. Chiều đỏ: xoá đồng nghĩa «PN» khỏi từ điển tiêu đề → ca đỏ nêu cột «PN» và đích ra."
+    paths: [packages/core/src/import/**, packages/core/test/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; mười một ca «thực đơn: <phép>» (price, fee_condition, area, unit_code, floor, bedrooms, direction, status, date, phone, text) có mặt và ok — mỗi ca duyệt ma trận viết tay của phép (đầu vào, tham số, kết cục đúng), mỗi dòng một lần so deepEqual cả giá trị lẫn loại kết cục và có/không lý do, đếm bằng độ dài ma trận, thông điệp nêu đầu vào. Tối thiểu: price nhận «4,65» (ty) → 4650000000 giữ nguyên, «4650tr» (ty) → 4650000000 máy sửa, «4.65 BP» → giá + feeInclusion included máy sửa, «4.6–4.8» và «TL» và «thu về 4.2» → cần người; unit_code «a1-03» → A-01.03 máy sửa, «A-01.03» giữ nguyên, «A-16.01» → cần người «chưa có trong danh mục»; date «12/3» → cần người, số ngày Excel → ISO, ngày sau ctx.today → chặn; phone «+84 900 000 012» → 0900000012. Quan hệ với bộ đọc của hàng 9 và hàng 18 (không chỉ ma trận): với mỗi dòng của ma trận unit_code, giá trị ra (khi keep/fixed) bằng lookupUnit(buildCatalogIndex(danh mục mẫu), đầu vào).unit.unitNumber và kết cục not_in_catalog/unreadable của lookupUnit ⇔ needs_person; với mỗi dòng của ma trận phone, giá trị ra bằng normalizePhone(đầu vào) và needs_person ⇔ normalizePhone ra null. Chiều đỏ: price không tách điều kiện phí → ca price đỏ nêu «4.65 BP»."
+    paths: [packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kế hoạch: khuôn chặt từ chối từng chỗ hỏng» có mặt và ok — mỗi kế hoạch hỏng viết tay (khoá lạ ở gốc, ở cột, ở transform; phép ngoài thực đơn; tham số sai; ignore_with_reason trên cột dữ liệu không phải số thứ tự) ra ít nhất một lỗi có path bằng đáp án, đếm bằng độ dài ma trận; kế hoạch hợp lệ ra []. Ca «áp kế hoạch: tất định từng byte, bốn dấu, lý do» có mặt và ok — áp hai lần trên ban-ma-can, JSON.stringify hai lần bằng nhau; mỗi ô có mark ∈ {keep, fixed, needs_person, blocked}, mark khác keep có reason không rỗng. Ca «áp kế hoạch: danh mục lệch và trùng mã» có mặt và ok — ô Toà/DT lệch danh mục ra needs_person với reason chứa cả giá trị file và giá trị danh mục; hai dòng cùng mã chuẩn đều needs_person, reason nêu số dòng kia. Chiều đỏ: bỏ kiểm khoá lạ ở cấp transform → ca khuôn đỏ nêu path columns[0].transform.<khoá>."
+    paths: [packages/core/src/import/**, packages/core/test/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «chuẩn hoá một cửa: ma trận chữ gõ tay» có mặt và ok — ma trận viết tay (ít nhất «dong nam», «ĐN», «Đ-N» → Đông Nam; «bp», «BP», «Đã gồm phí» → included; «Đang gd», «cọc» → Pending; «a1-03» → A-01.03; «4,65 tỷ» → 4650000000), mỗi dòng một lần so, đếm bằng độ dài; với mọi chữ trong ma trận giá, kết quả listPrice (đơn vị dong) bằng docGia của cùng chữ. Ca «chuẩn hoá một cửa: từ điển của sàn» có mặt và ok — «Đang deal» ra needs_person khi ctx không có từ điển, ra Pending khi ctx.companyAliases có dòng ấy. Ca «chuẩn hoá một cửa: áp kế hoạch dùng cùng bộ» có mặt và ok — với mọi ô keep/fixed của mau-b và ban-gia sau áp kế hoạch, giá trị ô deepEqual normalizeValue(trường của cột, chữ gốc, cùng ngữ cảnh).value; đếm số ô so > 0. Áp cho mọi ô của cả bốn dấu (trừ ô có lý do lệch danh mục hay trùng mã — hai luật cấp dòng của applyPlan): dấu và giá trị (hay lý do) của ô deepEqual outcome của normalizeValue; số ô so = số ô đủ điều kiện, assert bằng nhau. Chiều đỏ: viết bộ đọc giá riêng trong apply → ca cuối đỏ."
+    paths: [packages/core/src/import/**, packages/core/test/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «bộ thử: sinh hai lần cùng byte» có mặt và ok — sinh trọn bộ hai lần, JSON (lưới + đáp án; csv dạng byte hex) bằng nhau. Ca «bộ thử: đáp án đủ và theo dữ liệu mẫu» có mặt và ok — mỗi file bẩn: đáp án có headerRow, target cho mọi cột, giá trị đúng cho mọi ô của mọi dòng dữ liệu; mỗi lỗi cấy có row, column và (value hoặc ask: true); giá trị đúng của mọi cột có đích trường chuẩn đối chiếu với du-lieu-mau.json (đọc riêng tệp JSON trong test) qua bảng ghép tay «đích → cách lấy từ hàng/căn/chủ nhà/người» viết trong tệp ca: so từng ô, số lần so = số cột có đích × số dòng của từng file (đếm và assert); ô ngày (trường không có trong du-lieu-mau) so với bảng ngày viết tay theo chỉ số dòng trong tệp ca. Ca «bộ thử: bộ sinh không nhập mã đang kiểm» có mặt và ok — các tệp dưới packages/core/test/import không có lời nhập nào trỏ vào packages/core/src/import (quét chữ), đếm số tệp > 0. Ca «bộ thử: chỉ dữ liệu mẫu» có mặt và ok — mọi chuỗi trúng bộ dò số điện thoại trong mọi file sinh chuẩn hoá ra /^0900000\\d{3}$/; mọi giá trị cột tên người mang «[Mẫu]». Chiều đỏ: cấy một số 0912 345 678 vào bộ sinh (bản sao) → ca cuối đỏ nêu chuỗi."
+    paths: [packages/core/test/import/**, packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «số nền: tệp đã commit bằng lần tính lại» có mặt và ok — đọc _acceptance/nhap-loi-tat-dinh/so-nen.json (đường suy từ import.meta.url), tính lại bằng cùng hàm của lệnh đo, deepEqual; tệp có cho mỗi file của bộ thử và cho dòng cộng dồn bốn số đo (ghepCot, loiDuocSua, loiLot, hoiNguoi) mỗi số dạng {tu, mau}, và roNguon.tu === 0 ở mọi file; ghepCot của mau-a và mau-b là tu === mau. Ca «số nền: định nghĩa số đo trên bảng nhỏ viết tay» có mặt và ok — một bảng 3 dòng với đáp án viết tay ra đúng bốn tử và mẫu tính tay. Chiều đỏ: sửa một số trong so-nen.json → ca đầu đỏ nêu khoá lệch."
+    paths: [packages/core/test/import/**, packages/core/src/import/**, _acceptance/nhap-loi-tat-dinh/so-nen.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «lõi nhập không I/O: quét tệp mã» có mặt và ok — liệt kê mọi .ts không phải .test.ts dưới packages/core/src/import (đếm > 0, nêu số tệp), mỗi lời nhập là đường tương đối giải về trong packages/core/src, không tệp nào chứa node:, fetch(, process., Date.now(, new Date() không đối số. Ca «lõi nhập không I/O: bộ quét bắt lời vi phạm» có mặt và ok — bộ quét chạy trên ma trận chuỗi viết tay — mỗi loại AC-10 kê ít nhất một phần tử: import từ \"node:fs\", import từ \"xlsx\", import(\"xlsx\") động, require(\"fs\"), fetch(, process.env, Date.now(), new Date(), new Date không ngoặc — mỗi chuỗi ra đúng một vi phạm nêu lời, số assert bằng độ dài ma trận; và trên các chuỗi sạch (import tương đối, new Date(x)) ra 0. Chiều đỏ: thêm `import { readFileSync } from \"node:fs\"` vào một tệp mã (bản sao) → ca đầu đỏ nêu tệp."
+    paths: [packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
