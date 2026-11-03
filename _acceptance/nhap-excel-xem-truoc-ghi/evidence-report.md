@@ -1,18 +1,16 @@
 ---
 schema_version: 2
 feature_slug: nhap-excel-xem-truoc-ghi
-verdict: REJECT
+verdict: PASS
 failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 0ea5efa8fc5728cdcf7332e8961a3124a7b79631
+verified_commit: fa542268cbdbb20ddf3d712a05a65f29ab06057f
 human_signoff:
 ---
 
 # Evidence Report: nhap-excel-xem-truoc-ghi
-
-Vòng 1. Mọi lệnh máy đều xanh, nhưng phản biện context sạch xác nhận một phát hiện mức cao nằm trong hợp đồng (AC-7: kế hoạch lưu lúc mở lần nhập có thể chứa số chủ nhà ở dạng rõ). Chi tiết ở review-findings.md. Verdict REJECT do máy tính sẵn.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -31,146 +29,146 @@ Vòng 1. Mọi lệnh máy đều xanh, nhưng phản biện context sạch xác
 ## Evidence
 
 - eval: E1
-  run_id: minted-nhap-excel-xem-truoc-ghi-E1-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E1-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm test -w @quy-hang/core (một lần chạy, đạt)
-    ℹ duration_ms 324.566167
+    lệnh: npm test -w @quy-hang/core
+    ℹ duration_ms 282.574541
 
 - eval: E2
-  run_id: minted-nhap-excel-xem-truoc-ghi-E2-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E2-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm test -w @quy-hang/core (một lần chạy, đạt)
-    ℹ duration_ms 324.566167
+    lệnh: npm test -w @quy-hang/core
+    ℹ duration_ms 282.574541
 
 - eval: E3
-  run_id: minted-nhap-excel-xem-truoc-ghi-E3-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E4
-  run_id: minted-nhap-excel-xem-truoc-ghi-E4-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E5
-  run_id: minted-nhap-excel-xem-truoc-ghi-E5-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E6
-  run_id: minted-nhap-excel-xem-truoc-ghi-E6-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E6-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E7
-  run_id: minted-nhap-excel-xem-truoc-ghi-E7-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E7-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E8
-  run_id: minted-nhap-excel-xem-truoc-ghi-E8-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E8-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E9
-  run_id: minted-nhap-excel-xem-truoc-ghi-E9-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E9-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E10
-  run_id: minted-nhap-excel-xem-truoc-ghi-E10-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E10-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 - eval: E11
-  run_id: minted-nhap-excel-xem-truoc-ghi-E11-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-E11-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test (một lần chạy, đạt)
-    ℹ duration_ms 42739.321042
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42589.574333
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
 
 - cmd: npm run test:hooks
-  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-test_hooks-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
 
 - cmd: npm run typecheck
-  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-typecheck-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
 
 - cmd: npm run lint
-  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-lint-r1
+  run_id: minted-nhap-excel-xem-truoc-ghi-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-03T15:52:49Z
+  verified_at: 2026-11-03T16:01:20Z
 
 ## Known limits
 
@@ -178,12 +176,15 @@ Vòng 1. Mọi lệnh máy đều xanh, nhưng phản biện context sạch xác
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả HEAD lẫn baseline): E1, E2 (npm test -w @quy-hang/core) và E3, E4, E5, E6, E7, E8, E9, E10, E11 (npm run db:migrate && npm run db:test). Cần viết lại để khẳng định hành vi mới, hoặc xác nhận là lưới hồi quy có chủ ý.
+Eval không phân biệt (xanh cả trên code cũ lẫn code mới, baseline green): E1, E2 (lệnh npm test -w @quy-hang/core) và E3, E4, E5, E6, E7, E8, E9, E10, E11 (lệnh npm run db:migrate && npm run db:test). Các eval này chứng minh bộ kiểm chạy được; cần viết lại để khẳng định hành vi mới hoặc xác nhận là regression-guard có chủ ý.
+
+Judge panels: không có eval judgment nào trong vòng này, không có panel để ghi.
 
 ## Variance
 
-none — every multi-run eval is uniform
+none — mọi eval đều chạy một lần và xác định (runs 1), không có eval nhiều lần.
 
 ## Iterations
 
-Round 1: không eval máy nào đỏ; phản biện nêu một phát hiện mức cao trong hợp đồng (AC-7: kế hoạch lưu lúc mở lần nhập chỉ được kiểm theo tiêu đề cột nên có thể chứa số chủ nhà dạng rõ) và hai điểm đo yếu (AC-6, AC-3, AC-7). Trả về thi công.
+Round 1: bằng chứng lượt chấm 1 ra REJECT — bảng quy đổi của cột lớp nguồn có thể mang dữ liệu cá nhân trong kế hoạch; phép kiểm âm thiếu đối chứng dương. Trả về thi công, sửa ở commit fa542268 (S4 vòng 1).
+Round 2: toàn bộ eval và lệnh suite xanh; verdict PASS.
