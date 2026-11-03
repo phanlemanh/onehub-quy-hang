@@ -23,7 +23,8 @@ Postgres dãy D: `quy-hang-db-dkn-D` cổng 5575 (`DATABASE_URL` trong `.env.loc
   · `packages/core/src/metrics/so-do.ts` (nối hai mã) · `packages/core/src/metrics/danh-sach.ts` (bỏ `thieu` hai mã) ·
   `packages/core/src/metrics/thiet-bi-mat-mang.test.ts` (mới) · `packages/core/src/metrics/so-do.test.ts` (ca «chưa có sự
   kiện» sáu → bốn mã, Hỏi-1) · `_acceptance/so-do-hai-tuan-thu/evals.yaml` (E8 khai `status: not-run` +
-  `superseded_by: ghi-thiet-bi-va-mat-mang#AC-9`, Hỏi-1) cùng một dòng sổ `gate2` của hàng 52 nêu Hỏi-1.
+  `superseded_by: ghi-thiet-bi-va-mat-mang#AC-9`, Hỏi-1) cùng một dòng sổ `gate2` của hàng 52 nêu Hỏi-1 — dòng ấy ghi rõ mỗi hàng sau (34, 35, 43) cho một mã ra số sẽ lại
+  đổi ca «chưa có sự kiện» ấy (giám sát 03/11).
 - Verify: `npm test -w @quy-hang/core` và `npm run typecheck`.
 - Phục vụ: E8, E9.
 
@@ -31,8 +32,10 @@ Postgres dãy D: `quy-hang-db-dkn-D` cổng 5575 (`DATABASE_URL` trong `.env.loc
 
 - Files: `packages/api/src/listings/store.ts` (`ghiSuKien` nhận `device`, `madeOffline`; `toEvent`, `loadEvents` đọc hai
   cột) · `packages/api/src/listings/routes.ts` (đọc đầu `x-quy-hang-device`, khoá `madeOffline` của `Command`) ·
-  `packages/api/src/sync/routes.ts` (mới: `POST /api/v1/sync/offline-sessions`) · `packages/api/src/app.ts` (đăng ký) ·
+  `packages/api/src/sync/routes.ts` (mới: `POST /api/v1/sync/offline-sessions`) · `packages/api/src/app.ts` (đăng ký) · `packages/api/src/app.test.ts` (một dòng đường mới) ·
   `packages/api/test-db/thiet-bi-mat-mang.test.ts` (mới).
+- Giám sát 03/11: `app.ts` là tệp dùng chung (luật 12) — chỉ thêm dòng đăng ký; bài ghim danh sách đường API ở
+  `packages/api/src/app.test.ts` thêm dòng của đường mới (chỉ thêm). Đường nội bộ có đăng nhập, không thuộc luật 39.
 - Verify: `npm test -w @quy-hang/api` và `npm run db:test` (Postgres dãy).
 - Phục vụ: E3, E4.
 
