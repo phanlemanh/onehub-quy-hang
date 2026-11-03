@@ -2207,6 +2207,7 @@ test("lần nhập: A không thấy, không ghi được lần nhập và dòng 
       /row-level security|violates foreign key/,
     );
     assert.equal((await c.query("update imports set status = 'committed' where id = $1", [IMPORT_B])).rowCount, 0, "không sửa lần nhập của B");
+    assert.equal((await c.query("update imports set status = 'committed' where id = $1", [IMPORT_A])).rowCount, 1, "đối chứng: sửa được lần nhập của chính A");
     await expectError(
       c,
       `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, import_id)

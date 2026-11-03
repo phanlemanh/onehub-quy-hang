@@ -4,6 +4,7 @@
  * ADR-0008. `planFromDictionary` là chế độ nền không AI: từ điển tiêu đề → dò theo giá trị → giữ làm ghi chú.
  */
 import { classifyColumns, readableShare, type ColumnClassification } from "./classify";
+import { detectPersonal } from "./detect";
 import { FIELD_CLASS, FIELD_LABEL, isStandardField, type StandardField } from "./fields";
 import type { Table } from "./grid";
 import { lookupHeader, priceUnitOfHeader, type CompanyHeader } from "./headers";
@@ -98,6 +99,10 @@ export function validatePlan(plan: unknown, table: Table, opts: DictionaryPlanOp
       out.push({ path: `${p}.target`, reason: "cột có dữ liệu không được bỏ — giữ làm ghi chú hay trường riêng" });
     if (laNguon && tOk && t !== "ignore_with_reason" && !(isStandardField(t) && FIELD_CLASS[t] === "source"))
       out.push({ path: `${p}.target`, reason: `cột lớp nguồn «${table.headers[i] ?? ""}» không được ghép vào ${tenDich(t as string)} — chỉ vào trường lớp nguồn hay bỏ có lý do` });
+    // Khoá hay giá trị của bảng quy đổi mang dáng số điện thoại, email, số giấy tờ thì không vào kế hoạch đã lưu, dù cột
+    // nào — lúc mở lần nhập chưa có dòng để bộ phân loại nhận ra cột lớp nguồn theo giá trị (S4 vòng 1, AC-7).
+    if (laDoiTuong(c.valueMap) && Object.entries(c.valueMap).some(([k, v]) => detectPersonal(k) !== null || (typeof v === "string" && detectPersonal(v) !== null)))
+      out.push({ path: `${p}.valueMap`, reason: `bảng quy đổi của cột «${table.headers[i] ?? ""}» có số điện thoại, email hay số giấy tờ — không lưu vào kế hoạch` });
     const vaoNguon = laNguon || (isStandardField(t) && FIELD_CLASS[t] === "source");
     if (vaoNguon && c.valueMap !== undefined)
       out.push({ path: `${p}.valueMap`, reason: `cột lớp nguồn «${table.headers[i] ?? ""}» không mang bảng quy đổi — giá trị nguyên văn sẽ nằm trong kế hoạch đã lưu` });

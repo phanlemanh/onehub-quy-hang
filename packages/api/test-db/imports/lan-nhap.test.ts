@@ -224,6 +224,9 @@ test("lần nhập: căn có hàng mở", async () => {
   assert.equal(await bao(), baoTruoc + 2, "đầu chủ giữ căn được báo hai tin bổ sung (H2, H3)");
   assert.equal(kq.rows[2]!.reason, LY_DO_DONG_NHAP.khongDoc);
   const than = JSON.stringify(kq);
+  // Đối chứng dương: phép dò bắt được id hàng khi thân trả có nó (dòng cập nhật H1 mang id H1).
+  assert.ok(than.includes(h1), "phép dò thấy id H1 ở dòng cập nhật");
+  assert.equal(kq.rows[2]!.listingId, undefined, "dòng H3 không mang id hàng");
   for (const lo of [h3, s.dauChuB.userId]) assert.ok(!than.includes(lo), `thân trả không chứa ${lo}`);
   assert.equal(kq.rows[3]!.reason, "trùng dòng 2 trong file");
 });
@@ -262,6 +265,19 @@ test("lần nhập: thân trả không mang nguồn", async () => {
   than.push(JSON.stringify(await ghi(s.dauChu.cookie, mo.id, rows, true)));
   than.push(JSON.stringify(await ghi(s.dauChu.cookie, mo.id, rows)));
   than.push(await (await send("GET", `/api/v1/imports/${mo.id}`, undefined, s.dauChu.cookie)).text());
+  // Đối chứng dương trong cùng ca: chính lần nhập này đưa chủ nhà tới đúng chỗ của nó (listing_owners).
+  const daGhi = (JSON.parse(than[2]!) as KetQua).rows[0]!;
+  assert.equal(daGhi.action, "create");
+  const chu = await appPool.query<{ owner_name: string; enc: boolean }>("select owner_name, owner_phone_enc is not null enc from listing_owners where listing_id = $1", [daGhi.listingId]);
+  assert.deepEqual(chu.rows, [{ owner_name: "[Tên]", enc: true }]);
+  // Kế hoạch có bảng quy đổi mang số (cột tiêu đề lạ, lúc mở chưa có dòng) bị từ chối, không lưu.
+  const bang = readTable([["Toà", "Mã căn", "LH"]]);
+  const plan = planFromDictionary(bang);
+  plan.columns[2] = { ...plan.columns[2]!, valueMap: { "0900 000 001": "gọi sau" } };
+  const truocMo = await dem("imports", "company_id = $1", [s.companyId]);
+  const tuChoi = await send("POST", "/api/v1/imports", { fileName: "[Tệp LH].xlsx", fileHash: "b".repeat(64), fileKind: "xlsx", headers: bang.headers, headerRow: 0, plan, units: [] }, s.dauChu.cookie);
+  assert.deepEqual([tuChoi.status, ((await tuChoi.json()) as { error: string }).error], [422, API_ERRORS.importPlanInvalid.code]);
+  assert.equal(await dem("imports", "company_id = $1", [s.companyId]), truocMo, "kế hoạch mang số không được lưu");
   const kh = await appPool.query<{ plan: string }>("select plan::text plan from imports where id = $1", [mo.id]);
   const dr = await appPool.query<{ t: string }>("select row_to_json(r)::text t from import_rows r where import_id = $1", [mo.id]);
   for (const [nhan, t] of [...than.map((t, i) => [`thân trả ${i}`, t]), ["imports.plan", kh.rows[0]!.plan], ...dr.rows.map((r) => ["import_rows", r.t])]) {

@@ -56,8 +56,8 @@ test("kế hoạch: cột lớp nguồn không mang bảng quy đổi", () => {
   const goc = planFromDictionary(bang);
   const coMap: ImportPlan = { ...goc, columns: goc.columns.map((c, k) => (k === 1 ? { ...c, valueMap: { "0900 000 001": "0900 000 009" } } : c)) };
   const loi = validatePlan(coMap, bang);
-  assert.deepEqual(loi.map((e) => e.path), ["columns[1].valueMap"], "đúng một lỗi ở bảng quy đổi của cột số chủ");
-  assert.match(loi[0]!.reason, /«Số chủ».*bảng quy đổi/);
+  assert.ok(loi.length > 0 && loi.every((e) => e.path === "columns[1].valueMap"), "lỗi chỉ ở bảng quy đổi của cột số chủ");
+  assert.ok(loi.some((e) => /«Số chủ» không mang bảng quy đổi/.test(e.reason)), "lỗi nêu cột lớp nguồn không mang bảng quy đổi");
   assert.deepEqual(validatePlan(goc, bang), [], "đối chứng: cùng cột không bảng quy đổi thì qua");
 });
 
@@ -93,4 +93,16 @@ test("áp: ô tên thuộc tính hệ thống không sập", () => {
   for (const k of [0, 1, 2]) assert.equal(o[k]!.mark, "needs_person", `ô «${String(o[k]!.raw)}» thành ô cần người`);
   assert.equal(o[3]!.mark, "fixed", "đối chứng: ô có trong bảng quy đổi ra máy sửa");
   assert.equal(o[3]!.value, "Active");
+});
+
+test("kế hoạch: bảng quy đổi mang dữ liệu cá nhân bị chặn kể cả khi chưa có dòng", () => {
+  // Lúc mở lần nhập máy chủ chỉ có tiêu đề: cột «LH» tiêu đề lạ, bộ phân loại chưa thấy giá trị để xếp lớp nguồn.
+  const bang = readTable([["Mã căn", "LH"]]);
+  const goc = planFromDictionary(bang);
+  const voi = (valueMap: Record<string, string>): ImportPlan => ({ ...goc, columns: goc.columns.map((c, k) => (k === 1 ? { ...c, valueMap } : c)) });
+  const loi = validatePlan(voi({ "0900 000 001": "x" }), bang);
+  assert.deepEqual(loi.map((e) => e.path), ["columns[1].valueMap"]);
+  assert.match(loi[0]!.reason, /«LH».*số điện thoại/);
+  assert.deepEqual(validatePlan(voi({ x: "0900000001" }), bang).map((e) => e.path), ["columns[1].valueMap"], "giá trị cũng không mang số");
+  assert.deepEqual(validatePlan(voi({ "gọi sau": "x" }), bang), [], "đối chứng: bảng quy đổi chữ thường thì qua");
 });
