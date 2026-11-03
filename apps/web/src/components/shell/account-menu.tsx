@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { thanDangXuat } from "@/lib/push/dang-ky";
 import {
-import { dangXuatTrenMay } from "./dang-xuat-tren-may";
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -20,6 +19,7 @@ import { dangXuatTrenMay } from "./dang-xuat-tren-may";
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { dangXuatTrenMay } from "./dang-xuat-tren-may";
 
 // Menu tài khoản — chuyển thể NavUser của app-shell-8: tên sàn đang làm, sáng/tối, đăng xuất.
 const THEMES = [
