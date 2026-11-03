@@ -1,0 +1,38 @@
+{
+  "feature_plain": "Chủ kho có một bảng số đo cho hai tuần thử, tính thẳng từ những gì đội đã làm trên app; số đo nào chưa có dữ liệu thì bảng nói rõ còn thiếu gì, không ghi số 0.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ có đúng một dòng số đo cho mỗi ô của bảng «Đo trong hai tuần thử» (trừ Sheet cũ), theo đúng thứ tự trong Tham chiếu."},
+    {"id": "AC-2", "p": "Sẽ đếm tỉ lệ căn đang mở được xác nhận với chủ trong N ngày — mặc định 14, đúng ranh «Cần gọi lại» của Hôm nay."},
+    {"id": "AC-3", "p": "Sẽ đếm tỉ lệ căn đang mở đủ cả năm mục của danh sách hỏi; chưa có căn nào thì để trống, không ghi 0%."},
+    {"id": "AC-4", "p": "Sẽ đếm tỉ lệ mã căn gõ vào (lúc tạo hàng và ở ô nhận lead) mà danh mục tự điền được; mã khớp nhiều căn tính là chưa điền được."},
+    {"id": "AC-5", "p": "Sẽ đo thời gian từ lúc nhập lead tới cuộc gọi đầu (phút) và tới Sẵn sàng bán (ngày): trung vị, cả dãy số, và số lead chưa tới — tách chưa chia, đã chia, đã trả lại."},
+    {"id": "AC-6", "p": "Sẽ đếm số lead bị chặn vì trùng, tách trùng căn và trùng chủ."},
+    {"id": "AC-7", "p": "Sẽ đếm số căn được gọi điều chỉnh giá lúc đang nằm trong nhóm «Nên gọi điều chỉnh giá» của Hôm nay — mỗi căn tính một lần."},
+    {"id": "AC-8", "p": "Sẽ ghi rõ «chưa có sự kiện» và nêu thiếu gì cho sáu số đo chưa đo được, không bao giờ ghi số 0 thay."},
+    {"id": "AC-9", "p": "Sẽ chạy được trên dữ liệu mẫu của sàn thử, ra cùng một kết quả mỗi lần, và không lộ thông tin chủ nhà nào."},
+    {"id": "AC-10", "p": "Sẽ chỉ tính việc xảy ra trong kỳ đo, tình trạng căn lấy tại cuối kỳ, và không phụ thuộc giờ của máy."}
+  ],
+  "scope_plain": "Vòng này chỉ dựng phần tính; chưa có màn để xem số.",
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG làm màn số liệu hay đường đọc từ cơ sở dữ liệu — hàng sau."},
+    {"id": "OOS-2", "p": "KHÔNG đặt ngưỡng cho số đo nào — anh đặt ở Cổng Đáng trước hai tuần thử."},
+    {"id": "OOS-3", "p": "KHÔNG đo «số ngày Sheet cũ không được sửa»."},
+    {"id": "OOS-4", "p": "KHÔNG thêm sự kiện mới (khách hỏi, Gửi, phát, mở link, quan tâm, thiết bị, mất mạng) — việc của hàng khác."},
+    {"id": "OOS-5", "p": "KHÔNG mở lối dùng bảng số đo từ gói khác — thêm khi có nơi dùng."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Mỗi dòng của bảng Tham chiếu đều có số đo (AC-1); bảy số đo được có ca riêng (AC-2…AC-7), sáu dòng thiếu dữ liệu nói rõ (AC-8)."},
+    {"i": 1, "p": "Đủ ba nguồn: việc trên căn, lead, danh mục — và ca không có dữ liệu (AC-8)."},
+    {"i": 2, "p": "Việc trước kỳ, trong kỳ và đúng lúc hết kỳ đều có ca (AC-10, AC-5)."},
+    {"i": 3, "p": "Các ca biên: chưa có căn nào, dãy rỗng hay chẵn, đúng ngày thứ 14, đúng ngưỡng nhóm (AC-2, AC-3, AC-5, AC-7)."},
+    {"i": 4, "p": "Không lộ chủ nhà và không phụ thuộc giờ máy (AC-9, AC-10)."},
+    {"i": 5, "p": "Để sau: màn và đường đọc; không bao giờ ở hàng này: ngưỡng."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Câu «sống» của ô cơ hội đòi mọi số đo ra từ dữ liệu, nhưng 6/13 chưa có dữ liệu — máy đã chuyển thành Hỏi-1 cho anh quyết, không tự coi là đạt."},
+    {"i": 1, "p": "Dữ liệu mẫu trong ca kiểm chép tay theo bộ nạp — đã thêm ca gác báo đỏ khi bộ nạp đổi lệnh; còn giới hạn: đổi nội dung lệnh mà giữ thứ tự thì ca gác không bắt."},
+    {"i": 2, "p": "Thiết kế chưa nói kết quả kiểm trùng lead nằm ở đâu — đã ghi rõ: cột kết quả của lead, mọi lead kể cả lead trùng đều được lưu."},
+    {"i": 3, "p": "Căn cứ cho việc tra mã không kèm toà trích sai chỗ — đã thay bằng chính ô nhận lead (tra mã trước, rồi mới bảo chọn toà) và đếm thêm mã gõ ở ô nhận lead."},
+    {"i": 4, "p": "Số «lead chưa gọi» gộp nhiều nghĩa — đã tách ba phần: chưa chia, đã chia, đã trả lại."}
+  ]
+}
