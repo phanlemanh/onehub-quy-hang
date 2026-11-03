@@ -73,7 +73,7 @@ evals:
     criterion: AC-9
     executor: script
     cmd: config:executors.script.ro_ri
-    expected: "exit 0; dòng tổng kết của node --test có pass > 0 và fail 0; có ca «cửa ra có trang thì có tệp kiểm»: quét apps/web/src/app và packages/api/src/public trên cây thật → không lỗi; trên cây mẫu trong thư mục tạm, ma trận viết trước 6 ô: `s/[ma]/page.tsx` không tệp kiểm → đỏ nêu URL /s/[ma]; `(khach)/s/[ma]/page.tsx` (nhóm route) không tệp kiểm → đỏ nêu /s/[ma]; có `trang.ro-ri.test.ts` gọi canMoi và timRoRi → hết lỗi; tệp `trang.ro-ri.test.ts` rỗng (không gọi hai hàm) → đỏ, thông điệp nêu tệp; `(app)/inventory/page.tsx` (không phải cửa ra) không tệp kiểm → không lỗi; `packages/api/src/public/share/route.ts` không tệp kiểm → đỏ nêu /api/v1/public/share."
+    expected: "exit 0; dòng tổng kết của node --test có pass > 0 và fail 0; có ca «cửa ra có trang thì có tệp kiểm»: quét apps/web/src/app trên cây thật → không lỗi; trên cây mẫu trong thư mục tạm, ma trận viết trước 6 ô: `s/[ma]/page.tsx` không tệp kiểm → đỏ nêu URL /s/[ma]; `(khach)/s/[ma]/page.tsx` (nhóm route) không tệp kiểm → đỏ nêu /s/[ma]; có `trang.ro-ri.test.ts` gọi canMoi và timRoRi → hết lỗi; tệp `trang.ro-ri.test.ts` rỗng (không gọi hai hàm) → đỏ, thông điệp nêu tệp; `(app)/inventory/page.tsx` (không phải cửa ra) không tệp kiểm → không lỗi; `packages/api/src/public/share/routes.ts` khai route `/api/v1/public/share` không tệp kiểm → KHÔNG lỗi (route API công khai là rào của hàng 35, rào hàng này chỉ đọc trang web)."
     paths: ["packages/core/src/redaction/**", "package.json", "apps/web/src/app/s/**", "apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/exports/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 

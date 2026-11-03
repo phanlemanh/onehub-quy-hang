@@ -5,7 +5,7 @@ slug: luat-an-va-kiem-ro-ri
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [core, ci]
-status: implemented
+status: draft
 design_doc: _acceptance/luat-an-va-kiem-ro-ri/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -57,9 +57,10 @@ executor), `eslint.config.mjs` (hai dòng của `b324429`, tin G-0311-6).
   trường cùng dạng; cùng văn bản không có mồi thì không trúng.
 - AC-9: Given kho sau khi gộp, When CI chạy, Then job `ro-ri` chạy bộ kiểm rò rỉ (`npm run test:ro-ri`) và là điều kiện của
   `ci-ok` và `deploy`; bản kho có một trường nội bộ cố tình thêm vào danh sách được ra thì lệnh ấy thoát khác 0 và nêu tên
-  trường; một trang hay route có URL của cửa ra (`/s/…`, `/shares/new`, `/exports`, `/api/v1/public/…` — kể cả nằm trong
-  nhóm route) mà không có tệp `*.ro-ri.test.ts` gọi `canMoi` và `timRoRi` ở thư mục của nó hay thư mục cha tới gốc cửa thì
-  lệnh ấy đỏ, nêu URL.
+  trường; một trang web của bàn làm việc hay trang khách (`apps/web/src/app`) có URL của cửa ra (`/s/…`, `/shares/new`,
+  `/exports` — kể cả nằm trong nhóm route) mà không có tệp `*.ro-ri.test.ts` gọi `canMoi` và `timRoRi` ở thư mục của nó hay
+  thư mục cha tới gốc app thì lệnh ấy đỏ, nêu URL. Route API công khai (`/api/v1/public/…`, `/api/v1/s/…`) không thuộc rào
+  của hàng này — xem Out of scope.
 - AC-10: Given checkout có thư mục `.acceptance-runs/` chứa tệp `.mjs` lỗi lint, When chạy lint của kho, Then lint bỏ qua
   thư mục ấy và vẫn quét mã kho (một tệp lỗi lint trong `packages/` vẫn bị bắt).
 
@@ -94,6 +95,10 @@ Never: lớp `source` ở bất kỳ cửa nào — bất biến 2.
 - Dựng trang khách, luồng Gửi, Phát hàng, tin soạn sẵn — hàng 35, 34, 43; các hàng ấy dựng trên `banRaNgoai` và thêm tệp
   `*.ro-ri.test.ts` cạnh trang của mình.
 - Đọc cấu hình sàn từ `company_settings` và API công khai cho trang khách — hàng 35 (API truyền cấu hình vào lõi).
+- Rào cửa ra cho route API công khai — hàng 35, hàng dựng route công khai đầu tiên: rào ấy đọc danh sách route thật đã
+  đăng ký trên app API (trong `packages/api`), không đoán URL từ chữ trong mã. Hai lượt chấm của hàng này cho thấy đoán
+  từ chữ (cây thư mục ở lượt 1, chuỗi sau `path:` ở lượt 2) luôn sót một kiểu khai; lõi cũng không được phụ thuộc vào gói
+  API. Lúc thu phạm vi, kho chưa có route `/api/v1/public/…` hay `/api/v1/s/…` nào.
 - Mức chia nhóm môi giới (#15, #16) — hàng 44; số điện thoại người gửi trên trang khách — Cổng Phạm vi hàng 35.
 - Trường riêng bật từng trường khi phát hàng cho đội khác — hàng 43, 47; nhà ngoài khu (#14) — chờ ADR-0016 Hỏi-3.
 - Đăng Platform — sau bản đầu.
@@ -104,3 +109,4 @@ Never: lớp `source` ở bất kỳ cửa nào — bất biến 2.
 - Giới hạn đã biết: rào cửa ra (AC-9) đo việc có tệp kiểm và tệp ấy gọi bộ kiểm; việc trang dựng từ `banRaNgoai` được đo
   gián tiếp — trang đi vòng mà cầm giá trị nội bộ thì lượt quét mồi trên mã nguồn trang đỏ. Hàng 35 là hàng đầu tiên
   chạy rào trên một trang thật.
+- Thu phạm vi 03/11 sau lượt chấm 2 (dừng vá): AC-9 bỏ nhánh route API, nhánh ấy sang hàng 35.
