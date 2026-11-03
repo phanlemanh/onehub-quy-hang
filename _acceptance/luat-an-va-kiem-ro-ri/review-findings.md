@@ -1,40 +1,40 @@
-# Review findings: luat-an-va-kiem-ro-ri (round 1)
+# Review findings: luat-an-va-kiem-ro-ri (round 2)
 
 ## Trong hợp đồng
 
-- **Rào cửa ra không bắt được route API công khai viết theo khuôn Hono của kho**
-  file: `packages/core/src/redaction/rao-cua-ra.ts:10`
-  severity: medium
+- **Rào cửa ra bỏ sót route API công khai viết theo khuôn BASE + template literal, khuôn chiếm đa số trong packages/api**
   AC: AC-9
-  source: conventions
-  detail: Nhánh API của `timCuaRaThieuKiem` chỉ nhận ra một trang khi tên tệp khớp `^(page|route)\.(tsx?|jsx?)$` dưới `packages/api/src/public`, rồi suy URL `/api/v1/public/<thư mục>` từ cây thư mục. Nhưng kho không dựng API kiểu đó. Mọi route Hono nằm ở `packages/api/src/<miền>/routes.ts` (catalog, contacts, leads, listings, owners, photos, push, today, jobs…). Mỗi tệp có hàm `register*Routes` được `app.ts` gọi, và URL do code khai báo chứ không suy từ đường dẫn. Phía Next, cả API đi qua một catch-all duy nhất là `apps/web/src/app/api/v1/[[...route]]/route.ts`. Rào tính URL của tệp này là `/api/v1/[[...route]]`, không khớp tiền tố `/api/v1/public/` nào. Hệ quả: khi có cửa ra công khai cho trang khách viết theo đúng khuôn của kho, tức `packages/api/src/public/routes.ts` gắn vào `app.ts`, tên `routes.ts` không khớp `route.ts`, nên rào không thấy và không đòi bài kiểm rò rỉ nào. Bài E9 chỉ chứng minh được trên cây mẫu dựng tay `packages/api/src/public/share/route.ts`, một khuôn không có ở đâu trong kho. Như vậy rào của bất biến 4 cho tiền tố `/api/v1/public/` chỉ có trên giấy. Cần đối chiếu theo cách kho thật sự gắn route: tìm đường khai báo trong `register*Routes`/`app.ts`, hoặc bắt buộc một tệp hay một quy ước cụ thể cho route công khai và kiểm luôn quy ước đó.
-
-- **Bộ kiểm rò rỉ bỏ sót số điện thoại đứng sau một dãy số khác (regex giới hạn độ dài)**
-  file: `packages/core/src/redaction/kiem-ro-ri.ts:423`
+  file: `packages/core/src/redaction/rao-cua-ra.ts:21`
   severity: high
-  AC: AC-8
-  source: bugs
-  detail: Regex số điện thoại là `/\+?\d[\d\s.\-()]{7,20}\d/g`, dài tối đa 22 ký tự. Lớp ký tự cho phép cả dấu cách và dấu chấm, nên một dãy số đứng ngay trước (ví dụ giá ghi kiểu nhóm ba) gộp vào cùng một lần khớp. Lần khớp bị cắt ở giữa số điện thoại, phần còn lại quá ngắn để khớp lần nữa. Đã chạy thử: `timRoRi("Giá 4.250.000.000 0900 000 073", [{truong:'ownerPhone', giaTri:'0900 000 073', kieu:'so_dien_thoai'}])` trả `[]`, tức báo không rò dù số chủ nhà nằm nguyên trong văn bản. Đây đúng là dạng của tin soạn sẵn hay dòng xuất file mà bộ kiểm định quét, nên bài kiểm báo xanh oan cho một lỗ rò thông tin chủ nhà (bất biến 2 và 4). Nên bỏ giới hạn trên của dãy số (giống DAY_SO_TIEN), vì bước sau chỉ so `includes` trên dãy chữ số.
+  source: conventions
+  detail: `duongApiKhai` chỉ bắt chuỗi literal mở đầu bằng `/api/v1/`, đứng ngay sau `path:` hoặc `.get(`/`.post(`... Nhưng khuôn chuẩn của kho là khai `const BASE = "/api/v1/<nhánh>"` rồi viết ``path: `${BASE}/...` `` hoặc `path: BASE`. Kho có tám tệp đi theo khuôn này: app.ts, thanh-vien.ts, leads/listings/contacts/catalog/owners/photos routes.ts. Riêng today/routes.ts viết path literal. app.ts còn dựng BASE bằng `/api/${API_VERSION}`, nên trong mã không có chữ `v1` literal. Chạy thử: `duongApiKhai('const BASE = "/api/v1/public/shares"; createRoute({ path: `${BASE}/{code}` }); createRoute({ path: BASE })')` trả về `[]`. Hệ quả: một route `/api/v1/public/...` hay `/api/v1/s/...` viết đúng khuôn của kho sẽ lọt rào mà không cần tệp `*.ro-ri.test.ts`, tức bất biến 4 (mỗi cửa ra có bài kiểm rò rỉ) bị lách. Lỗi lượt 1 chỉ được sửa cho khuôn literal ít gặp. Ca thử trong cua-ra.test.ts (`ROUTE_CONG_KHAI`) cũng chỉ dùng path literal nên không lộ ra lỗ này. Hướng sửa: giải hằng `const X = "..."` và template `${X}` trong tệp trước khi so tiền tố, hoặc đổi sang soi tuyến đã đăng ký trên app OpenAPI lúc chạy. Thêm ô ma trận cho khuôn BASE.
 
-- **Rào cửa ra không bao giờ bắt được route API công khai**
-  file: `packages/core/src/redaction/rao-cua-ra.ts:783`
-  severity: medium
+- **Rào cửa ra bỏ sót route API viết theo khuôn chung của kho (`const BASE` + `path: ${BASE}/…`): không báo, không lỗi**
   AC: AC-9
+  file: `packages/core/src/redaction/rao-cua-ra.ts:21`
+  severity: high
   source: bugs
-  detail: Rào chỉ tính tệp tên `page|route.(ts|tsx|js|jsx)` dưới `packages/api/src/public`. Nhưng API của kho là Hono: route khai `path: "/api/v1/..."` trong mã, tệp tên `routes.ts` (ví dụ packages/api/src/listings/routes.ts, push/routes.ts). Từ phía Next, mọi API đi qua một route bắt hết là `apps/web/src/app/api/v1/[[...route]]/route.ts`, URL tính ra là `/api/v1/[[...route]]`, không khớp tiền tố `/api/v1/public/`. Vì vậy một route `/api/v1/public/...` thêm đúng theo quy ước của kho (`packages/api/src/public/x/routes.ts`, hay `path` khai trong một routes.ts bất kỳ) bị rào bỏ qua mà không báo gì: tiền tố `/api/v1/public/` trong TIEN_TO_CUA_RA thực tế không được thi hành.
+  detail: `duongApiKhai` chỉ bắt chuỗi literal bắt đầu bằng `/api/v1/` đứng ngay sau `path:` hay `.get(`. Khuôn route chủ đạo của kho là khai `const BASE = "/api/v1/..."` rồi viết `path: BASE` hoặc ``path: `${BASE}/{id}` ``. Bằng chứng: leads/routes.ts:33,87,105; listings/routes.ts:18,73,89; contacts, catalog, owners, photos, thanh-vien.ts và app.ts (``BASE = `/api/${API_VERSION}` ``). Chỉ today/routes.ts viết literal. Gặp ``path: `${BASE}/{code}` `` thì chuỗi bắt đầu bằng `$`, còn `path: BASE` là tên biến, nên regex không khớp; dòng `const BASE = "/api/v1/public/shares"` cũng không khớp vì không đứng sau `path:`. Vì vậy một route công khai mới ở `packages/api/src/public/routes.ts` viết đúng khuôn của kho và thiếu tệp `*.ro-ri.test.ts` sẽ làm `timCuaRaThieuKiem` trả `[]`: rào báo đạt trong khi cửa ra chưa được kiểm (sai im lặng). Bản cũ quét theo cây thư mục `packages/api/src/public` nên vẫn bắt được trường hợp này. Bài kiểm cua-ra.test.ts chỉ dùng mồi literal nên không lộ ra. Gợi ý: giải hằng `BASE`/template trước khi so, hoặc giữ thêm cách quét theo thư mục `public/` làm lưới đỡ.
 
-- **Nhận nhầm trang thật là trang chỗ giữ khi trang có import viết nhiều dòng**
-  file: `packages/core/src/redaction/rao-cua-ra.ts:812`
-  severity: low
+- **Hình dạng 2 — fixture viết tay đúng khuôn của bên đọc: route API công khai ở E9 khai path bằng chuỗi literal, trong khi kho thật khai qua hằng BASE**
   AC: AC-9
-  source: bugs
-  detail: `laChoGiu` chỉ đọc import viết trên một dòng (`/^import .* from "([^"]+)";?$/gm`). Lấy một trang cửa ra vừa dựng `<Placeholder` vừa nhập dữ liệu bằng import nhiều dòng (`import {\n banRaNgoai,\n ...\n} from "@quy-hang/core/redaction";`): `nhap` chỉ còn import của placeholder, nên `every` ra true. Trang bị coi là chỗ giữ và bỏ qua mà không báo, dù đang cầm dữ liệu. Import chỉ để chạy (`import "x";`) cũng lọt theo cách này.
+  file: `packages/core/src/redaction/cua-ra.test.ts:24`
+  severity: high
+  source: measurement
+  detail: Fixture `ROUTE_CONG_KHAI` (dòng 24) viết đường bằng chuỗi literal `path: "/api/v1/public/shares/{code}"`. Ba ô mới của ma trận 12 ô dùng fixture này hoặc khuôn literal tương tự: «route API công khai khuôn Hono của kho không tệp kiểm», «route API công khai có tệp kiểm đạt» và «route API nội bộ ... `createRoute({ path: "/api/v1/listings" })`». Ô thứ hai trong `E9 URL bỏ nhóm route` gọi `duongApiKhai` cũng chỉ đưa vào chuỗi literal. Đây đúng là khuôn regex của bên đọc `duongApiKhai` nhận: dấu nháy rồi `/api/v1/` ngay sau `path:` hoặc `.get(`. Phần lớn kho khai route theo kiểu khác: `const BASE = "/api/v1/..."` rồi `path: BASE` hoặc ``path: `${BASE}/...` ``. Kiểu này có ở listings/routes.ts:18,73,89; leads, contacts, catalog, owners, photos, thanh-vien.ts và app.ts:32. Chạy thử regex trên ``path: `${BASE}/{code}` `` và `path: BASE`: cả hai trả `[]`. Một cửa ra công khai viết theo khuôn chủ đạo của kho vẫn lọt rào và không bị đòi bài kiểm rò rỉ, trong khi ô ma trận tên «khuôn Hono của kho» vẫn xanh. Fixture không lấy từ cách các tệp `routes.ts` thật khai đường (round-trip từ phía viết), nên phép đo chỉ chứng minh regex đọc được khuôn tác giả tự viết. Lỗi lượt 1 vì vậy chưa thật sự được đo lại.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hình dạng 5 — tuyên quét LỚP dạng mã hoá nhưng ma trận đếm tay 16, thiếu phần tử «ket_hop» của chính bảng dạng**
+- **Gốc nhánh API dời lên `packages/api/src`: một tệp kiểm ở gốc src miễn kiểm cho mọi route cửa ra**
+  Người dùng thấy gì: Một bài kiểm rò rỉ đặt ở thư mục gốc của API có thể khiến mọi cửa ra mới được coi là đã kiểm dù chưa có bài kiểm riêng. Cửa ra mới có thể lọt mà không ai bị nhắc viết bài kiểm.
+  Căn cứ: Hậu quả là rào lỏng hơn dự định nhưng chỉ xảy ra khi có người cố ý đặt tệp kiểm ở chỗ đó, không làm lộ dữ liệu ngay, và sửa sau không đắt.
+  file: `packages/core/src/redaction/rao-cua-ra.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 5 — tuyên quét LỚP dạng mã hoá nhưng ma trận đếm tay 16, thiếu phần tử «ket_hop» của chính bảng dạng (r1)**
   Người dùng thấy gì: Bài kiểm chưa thử trường hợp văn bản bị mã hoá chồng nhiều lớp, nên nếu phần xử lý đó hỏng thì bài kiểm vẫn báo xanh. Các dạng mã hoá đơn lẻ vẫn được kiểm đủ.
   Căn cứ: Chưa có dữ liệu nào bị lộ, chỉ là một đường kiểm chưa được đo; thêm ca kiểm sau này rẻ và không ảnh hưởng người dùng hiện tại.
   file: `packages/core/src/redaction/khong-ro.test.ts`
