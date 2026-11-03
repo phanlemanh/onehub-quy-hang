@@ -2161,3 +2161,39 @@ test("liên hệ khách: ngữ cảnh số của nhu cầu", { skip }, async () 
     await c.query("set local role quy_hang_app");
   });
 });
+
+// Hàng 38 (tab-toi, AC-9): dấu «máy bị báo mất» ở schema identity — vai API của công ty không đọc, không ghi được.
+/** Trả tên bảng khi vai quy_hang_app đọc hay ghi được dấu; null khi cả hai bị từ chối. */
+async function dauMoChoApi(c) {
+  for (const sql of [
+    "select * from identity.reported_device",
+    "insert into identity.reported_device (token_hash, user_id, expires_at) values (repeat('a', 64), 'x', now() + interval '1 day')",
+  ]) {
+    await c.query("savepoint dau");
+    try {
+      await c.query(sql);
+      await c.query("rollback to savepoint dau");
+      return "identity.reported_device";
+    } catch (e) {
+      await c.query("rollback to savepoint dau");
+      if (!/permission denied/.test(String(e?.message))) throw e;
+    }
+  }
+  return null;
+}
+
+test("máy bị báo: quy_hang_app không đọc, không ghi được identity.reported_device", { skip }, async () => {
+  await asCompany(COMPANY_A, async (c) => {
+    assert.equal(await dauMoChoApi(c), null);
+  });
+});
+
+test("máy bị báo: chiều đỏ — cấp quyền bảng dấu cho quy_hang_app thì ca nêu tên bảng", { skip }, async () => {
+  await asCompany(COMPANY_A, async (c) => {
+    await c.query("reset role");
+    await c.query("grant usage on schema identity to quy_hang_app");
+    await c.query("grant select, insert on identity.reported_device to quy_hang_app");
+    await c.query("set local role quy_hang_app");
+    assert.equal(await dauMoChoApi(c), "identity.reported_device");
+  });
+});
