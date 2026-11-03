@@ -86,8 +86,8 @@ evals:
       - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-khach, mở /inventory, chờ thẻ; ghi số căn ở thanh đầu."
       - "Bật ghi mạng (read_network_requests hay DevTools) từ đây tới hết bước lọc."
       - "Bấm «Lọc» → chụp evidence/E8-ngan.png; ghi tên năm mục theo thứ tự và các lựa chọn của Phòng ngủ, Toà, Hướng"
-      - "Giá từ 2 đến 5 → ghi chữ nút «Xem n căn»; thêm Phòng ngủ = 2PN → ghi; thêm Toà = toà đầu → ghi; bấm «Xem n căn» → chụp evidence/E8-loc.png; ghi mã, giá, phòng ngủ, toà của mọi thẻ còn lại (tối đa 10)"
-      - "Đối chiếu: dung-b.mjs in đáp án đếm cho bộ lọc «2–5 tỷ · 2PN · toà đầu», tính bằng vòng lặp riêng trên thân GET /api/v1/listings ghép danh mục của chính nó (không import mã trong inventory/cards/) — ghi cạnh số trên nút"
+      - "Giá từ 2 đến 5 → ghi chữ nút «Xem n căn»; thêm Phòng ngủ = 2PN → ghi; thêm Toà = Toà A → ghi; bấm «Xem n căn» → chụp evidence/E8-loc.png; ghi mã, giá, phòng ngủ, toà của mọi thẻ còn lại (tối đa 10)"
+      - "Đối chiếu: dung-b.mjs in đáp án đếm cho bộ lọc «2–5 tỷ · 2PN · Toà A», tính bằng vòng lặp riêng trên thân GET /api/v1/listings ghép danh mục của chính nó (không import mã trong inventory/cards/) — ghi cạnh số trên nút"
       - "Ghi mọi yêu cầu mạng phát sinh trong lúc lọc (phương thức + đường)"
     expected: "Năm mục đúng thứ tự Giá · Phòng ngủ · Toà · Diện tích · Hướng. Mỗi lần thêm mục số trên nút giảm hoặc giữ; số cuối bằng đáp án dung-b.mjs in; mọi thẻ còn lại có giá 2–5 tỷ, 2PN, thuộc toà đã chọn. Không yêu cầu /api/v1/listings hay /api/v1/catalog nào phát sinh do lọc (yêu cầu ảnh /api/v1/units/photos cho thẻ mới tới màn được phép — ghi riêng)."
     paths: ["apps/web/src/app/(app)/inventory/cards/**", "apps/web/src/components/bo-cuc/ngan-noi.tsx"]
