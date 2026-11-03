@@ -88,7 +88,7 @@ test("áp: ô tên thuộc tính hệ thống không sập", () => {
   const goc = planFromDictionary(bang);
   const plan: ImportPlan = { ...goc, columns: goc.columns.map((c, k) => (k === 1 ? { ...c, valueMap: { còn: "Đang bán" } } : c)) };
   assert.deepEqual(validatePlan(plan, bang), []);
-  const kq = applyPlan(bang, plan, {});
+  const kq = applyPlan(bang, plan, { today: "2026-11-03" });
   const o = kq.rows.map((r) => r.cells[1]!);
   for (const k of [0, 1, 2]) assert.equal(o[k]!.mark, "needs_person", `ô «${String(o[k]!.raw)}» thành ô cần người`);
   assert.equal(o[3]!.mark, "fixed", "đối chứng: ô có trong bảng quy đổi ra máy sửa");
