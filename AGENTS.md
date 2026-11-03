@@ -37,8 +37,9 @@ docs/adr/         quyết định kiến trúc của kho này
 
 - **Mọi kết nối là một thoả thuận** (`packages/core/src/agreements.ts`), không viết riêng từng bên. Invest, Platform
   hay công ty khác đều là bên của một loại kết nối.
-- **Không đọc cơ sở dữ liệu của OneHub Invest**, không mở cửa cho Invest gọi vào. Invest đẩy dữ liệu theo khuôn ở
-  `packages/connect`; khuôn `.strict()` — khoá lạ bị từ chối.
+- **Không đọc cơ sở dữ liệu của OneHub Invest**, không gọi sang Invest — Invest không có cửa vào. Invest đẩy dữ liệu
+  theo khuôn ở `packages/connect`; khuôn `.strict()` — khoá lạ bị từ chối. Chiều ngược duy nhất là «xác nhận danh mục»
+  (ADR-0017 §6 sửa đổi 03/11): máy thu Invest kéo từ hộp thư đi của Quỹ hàng bằng token máy, theo thoả thuận từng sàn.
 - **Dữ liệu cá nhân thật không vào kho**: không tên, số điện thoại thật trong test, fixture, docs. Dùng `[Tên]`,
   `0900 000 0xx`.
 - **Schema chỉ đổi bằng migration mới** trong `packages/db/migrations/NNN_*.sql`; không sửa migration đã commit.

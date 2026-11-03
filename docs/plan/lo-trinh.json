@@ -2157,6 +2157,219 @@
         "apps/web/src/components/shell/app-shell.tsx",
         "apps/web/src/components/shell/*.test.ts"
       ]
+    },
+    {
+      "ma": "94",
+      "cau_giao": "Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển",
+      "vai": "nen",
+      "tieu_chi": 11,
+      "vi_sao": "Issue #94 việc 1; ADR-0017 §5 của Invest (loại kết nối «nguồn danh mục và thị trường»). Khuôn v1 (hàng 10) chỉ chở danh mục; DN5 của Invest đợi khuôn này. Độ chắc là điều kiện để hàng 100 không điền sẵn giá trị chưa chắc",
+      "hang": "T3",
+      "du_lieu": "sinh-gia",
+      "dung_tren": [
+        "10"
+      ],
+      "slug": "khuon-nguon-danh-muc-v2",
+      "bat_khi": "Gói v2 mẫu sinh từ khuôn nạp được, chạy lại không nhân đôi; gói v1 cũ vẫn nạp; khoá lạ, đường dẫn bài gốc, tên miền, ảnh tin bị từ chối cả gói; gói số thị trường sau thay gói trước của cùng khu; tắt thoả thuận thì dừng nhận; bộ kiểm cách ly xanh",
+      "nhom": "xac-nhan",
+      "ghi_chu": "Giữ 11 tiêu chí: Invest ghim một số phiên bản — tách v2 làm hai hàng thì DN5 phải ghim hai lần (v2 rồi v3)",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN1"
+      ],
+      "vung": [
+        "packages/connect/src/catalog-feed*",
+        "packages/api/src/catalog/feeds*",
+        "packages/db/migrations/**"
+      ]
+    },
+    {
+      "ma": "95",
+      "cau_giao": "Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Issue #94 việc 2; ADR-0017 §6 sửa đổi 03/11. DN6 của Invest đợi khuôn này. Trần hiện tại chỉ chặn lớp nguồn; giá chốt vẫn mở được bằng điều khoản riêng nên loại kết nối này cần trần riêng",
+      "hang": "T3",
+      "dung_tren": [
+        "10"
+      ],
+      "slug": "khuon-xac-nhan-danh-muc",
+      "bat_khi": "Mỗi trường trong danh sách «không bao giờ có» (chủ nhà, số điện thoại, giá đáy, ảnh sổ, giá chốt, trạng thái hàng) và mọi chữ tự do làm luật ẩn từ chối; thoả thuận loại này mang lớp giao dịch hay lớp khác bị lõi và ràng buộc cơ sở dữ liệu cùng từ chối; mã công ty, mã người mờ ổn định theo từng bên nhận và không giải ngược được",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN2"
+      ],
+      "vung": [
+        "packages/connect/src/catalog-confirmation*",
+        "packages/core/src/agreements*",
+        "packages/core/src/confirmation/**",
+        "packages/db/migrations/**"
+      ]
+    },
+    {
+      "ma": "96",
+      "cau_giao": "Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi",
+      "vai": "nen",
+      "tieu_chi": 8,
+      "vi_sao": "Issue #94 việc 3 (máy thu kéo bằng token máy); ADR-0015 để sau «khoá máy cho Invest tự đẩy». Lớp đăng nhập tách khỏi hộp thư theo luật 3",
+      "hang": "T3",
+      "dung_tren": [
+        "10"
+      ],
+      "slug": "token-may-ket-noi",
+      "bat_khi": "Token hiện một lần, lưu dạng băm; token của thoả thuận này không gọi được loại kết nối hay chiều khác, không chạm dữ liệu sàn khác; thu hồi hay tắt thoả thuận thì lời gọi kế nhận 401/403; mỗi lời gọi một dòng nhật ký",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN4"
+      ],
+      "vung": [
+        "packages/api/src/auth/**",
+        "packages/api/src/catalog/feeds*",
+        "packages/db/migrations/**"
+      ]
+    },
+    {
+      "ma": "97",
+      "cau_giao": "Máy thu của bên kia kéo sự kiện xác nhận danh mục từ hộp thư đi bằng token máy, theo số thứ tự, chỉ của sàn có thoả thuận đang bật; kéo lại không trùng, không sót, và khi máy thu tắt thì sự kiện nằm chờ",
+      "vai": "nen",
+      "tieu_chi": 10,
+      "vi_sao": "Issue #94 việc 3; ADR-0017 §6 sửa đổi: Invest không nhận webhook và không có cửa vào, nên Quỹ hàng giữ sự kiện và mở API kéo thay vì giao qua webhook như ADR-0017 §4",
+      "hang": "T3",
+      "dung_tren": [
+        "95",
+        "96"
+      ],
+      "slug": "hop-thu-xac-nhan",
+      "bat_khi": "Kéo từ con trỏ bất kỳ ra đúng dãy sự kiện sau nó; kéo lại cùng con trỏ ra cùng kết quả; bảng hộp thư chỉ có cột lớp danh mục và cơ sở dữ liệu từ chối dòng mang trường cấm; token sàn A không kéo được sự kiện sàn B (ca cách ly); sự kiện ghi khi máy thu không kéo vẫn còn ở lần kéo sau",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN5"
+      ],
+      "vung": [
+        "packages/api/src/connect/**",
+        "packages/db/tests/**",
+        "packages/db/migrations/**"
+      ]
+    },
+    {
+      "ma": "98",
+      "cau_giao": "Quản trị sàn mở Cài đặt sàn, thấy thoả thuận «xác nhận danh mục» của sàn mình, bật hay tắt nó và đọc nhật ký ai đổi lúc nào; tắt thì hộp thư đi ngừng nhận sự kiện mới ngay",
+      "vai": "Quản trị sàn",
+      "tieu_chi": 8,
+      "vi_sao": "Issue #94 việc 4 «thoả thuận từng sàn, bật tắt được, có nhật ký»; điều kiện rà pháp lý trước sàn đầu tiên ngoài đội (ADR-0017 «Còn mở») thành danh sách vận hành mở, máy chặn",
+      "hang": "T3",
+      "dung_tren": [
+        "97"
+      ],
+      "slug": "thoa-thuan-xac-nhan-theo-san",
+      "bat_khi": "Bật, tắt ghi một dòng nhật ký người và lúc; tắt thì lệnh sinh sự kiện kế không ghi gì; sàn chưa nằm trong danh sách vận hành mở thì nút bật bị khoá kèm lý do; vai khác quản trị sàn không đổi được",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN6"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/settings/**",
+        "packages/api/src/agreements/**",
+        "packages/db/migrations/**"
+      ]
+    },
+    {
+      "ma": "99",
+      "cau_giao": "Đầu chủ gõ mã căn, mở Bảng hàng hay hồ sơ căn và thấy thuộc tính căn đọc từ vùng danh mục dùng chung — danh mục đã nhận từ nguồn danh mục — thay cho gói mẫu cố định; căn chưa có vẫn đi đường mã ngoài danh mục",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "vi_sao": "ADR-0015 Hỏi-3 để «hàng kế»: mọi chỗ đọc danh mục vẫn đọc gói mẫu. Không có hàng này thì danh mục Invest vào mà không ai thấy",
+      "hang": "T2",
+      "dung_tren": [
+        "10"
+      ],
+      "slug": "doc-vung-danh-muc",
+      "bat_khi": "Nạp một gói danh mục qua cửa nhận rồi gõ mã căn trong gói thì thấy đúng thuộc tính của gói; Bảng hàng ghép đúng loại căn, diện tích theo toà + mã; không còn chỗ đọc SAMPLE_CATALOG ngoài dữ liệu mẫu",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN9"
+      ],
+      "vung": [
+        "packages/api/src/catalog/**",
+        "apps/web/src/app/(app)/inventory/**",
+        "apps/web/src/app/(app)/units/[code]/**"
+      ]
+    },
+    {
+      "ma": "100",
+      "cau_giao": "Đầu chủ nhập thuộc tính cho căn chưa có trong danh mục hay có giá trị chưa chắc, hoặc bấm «Báo sai thông tin căn» chọn trường và nhập giá trị đúng, và thấy lời của sàn lưu cạnh giá trị danh mục; giá trị danh mục chưa chắc không điền sẵn",
+      "vai": "Đầu chủ",
+      "tieu_chi": 10,
+      "vi_sao": "Issue #94 việc 4 «không điền sẵn giá trị chưa chắc, để lời xác nhận không bị mớm». Bảng listings không có chỗ cho thuộc tính căn do sàn nhập; «Báo sai» của hàng 17 hiện soạn tin qua bảng chia sẻ",
+      "hang": "T3",
+      "dung_tren": [
+        "94",
+        "99"
+      ],
+      "slug": "thuoc-tinh-can-cua-san",
+      "bat_khi": "Ba ca — căn ngoài danh mục, giá trị «Suy ra», giá trị sai — đều lưu là lời của sàn, chỉ sàn ấy thấy (ca cách ly); ô có giá trị chưa chắc để trống kèm gợi ý, không điền sẵn; báo sai chỉ chọn từ danh sách trường đóng; giá trị «Đã xác minh» vẫn tự điền như cũ",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN7"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/**",
+        "packages/api/src/units/**",
+        "packages/db/migrations/**"
+      ]
+    },
+    {
+      "ma": "101",
+      "cau_giao": "Mỗi lần người của sàn nhập, sửa hay báo sai thuộc tính căn, một sự kiện xác nhận danh mục ghi vào hộp thư đi trong cùng giao dịch khi sàn có thoả thuận đang bật; giá trị nhận nguyên từ danh mục không sinh sự kiện",
+      "vai": "nen",
+      "tieu_chi": 9,
+      "vi_sao": "Issue #94 việc 4 «môi giới chọn hoặc tạo căn để làm việc thì sinh sự kiện»; bản thiết kế Invest §6.1 — xác nhận là sản phẩm phụ của công việc, không việc giao riêng, không màn đi đếm",
+      "hang": "T3",
+      "dung_tren": [
+        "97",
+        "100"
+      ],
+      "slug": "sinh-xac-nhan-tu-cong-viec",
+      "bat_khi": "Nhập một giá trị thì đúng một sự kiện; lệnh lỗi thì không sự kiện nào; thoả thuận tắt thì không sự kiện; mở hồ sơ hay tạo hàng trên căn danh mục mà không nhập gì thì không sự kiện; sự kiện qua được khuôn hàng 95",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN8"
+      ],
+      "vung": [
+        "packages/api/src/connect/**",
+        "packages/api/src/units/**"
+      ]
+    },
+    {
+      "ma": "102",
+      "cau_giao": "Đầu chủ mở hồ sơ căn và thấy, cạnh thuộc tính căn, số thị trường của toà và loại căn kèm mốc đo, và các tin rao công khai đã khớp căn với giá, điều kiện phí, ngày đăng — không có đường dẫn bài gốc hay tên nguồn",
+      "vai": "Đầu chủ",
+      "tieu_chi": 9,
+      "vi_sao": "Issue #94 việc 5 «tra căn khi giao dịch» (Invest ROADMAP §3 mục 28: tra căn nằm ở Quỹ hàng). Tham chiếu §4: tin rao ngoài chỉ đầu chủ thấy, đối chiếu, không phát ra",
+      "hang": "T2",
+      "du_lieu": "gia",
+      "dung_tren": [
+        "94",
+        "99"
+      ],
+      "slug": "tra-can-thi-truong",
+      "bat_khi": "Trên gói mẫu sinh từ khuôn hàng 94: hồ sơ căn hiện dải giá đang rao, trung vị và mốc đo; tin rao đã khớp căn hiện cho đầu chủ và trưởng nhóm, không cho đầu khách; số cũ hơn ngưỡng hiện rõ là cũ; căn không có số hiện trạng thái trống",
+      "nhom": "xac-nhan",
+      "dot": "xac-nhan-danh-muc-0311",
+      "phu": [
+        "XN10"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/**",
+        "packages/api/src/catalog/**"
+      ]
     }
   ],
   "chan_troi": [
@@ -2349,6 +2562,26 @@
         "CK5"
       ],
       "mo_lai_khi": "Ba vòng đầu đi trang ba lối đã ký Cổng Phạm vi, và ít nhất một lần chủ kho chọn khác lời khuyên của máy hay một lệch lọt ghi ở lech-lot.md cho màn đã qua trang ba lối"
+    },
+    {
+      "ma": "H18",
+      "dot": "xac-nhan-danh-muc-0311",
+      "cau_giao": "Người của sàn khai khung toà — số tầng, tầng bị bỏ, danh sách trục — trong lúc làm việc",
+      "ly_do": "Quỹ hàng chưa có màn nhìn toà theo trục × tầng, và lát đầu không làm màn đi đếm (issue #94). Khuôn hàng 95 vẫn chở loại sự kiện khung toà",
+      "phu": [
+        "XN3"
+      ],
+      "mo_lai_khi": "Bảng hàng có cách xem lưới theo toà, hoặc hàng 101 đã giao và Invest báo khung toà là chỗ thiếu của lát đầu"
+    },
+    {
+      "ma": "H19",
+      "dot": "xac-nhan-danh-muc-0311",
+      "cau_giao": "Nhập bảng hàng sinh sự kiện thuộc tính căn cho phần lớp danh mục",
+      "ly_do": "Nhập không AI (hàng 64–67) còn trong đợt dau-khach-nhap; cỡ lô sự kiện từ một lần nhập chưa đo được",
+      "phu": [
+        "XN11"
+      ],
+      "mo_lai_khi": "Hàng 65 và 101 đã giao, và số sự kiện từ công việc của hai tuần cho thấy cỡ lô"
     }
   ],
   "da_bac": []
