@@ -39,3 +39,36 @@ wall: 1570s
 - **claude-haiku-5-5**: 7 agent · 15 calls · out 10,311 · in 30 · cache_read 104,254 · cache_create 103,927
 - **<synthetic>**: 1 agent · 1 calls · out 0 · in 0 · cache_read 0 · cache_create 0
 
+### S4 round 2 — wf_8754b0fb-93c (13 agent, 18,519 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| synthesize:report | claude-sonnet-5-5 | 2 | 3,810 | 4 | 24,632 | 23 |
+| review:bugs | claude-opus-5-5 | 6 | 2,466 | 14 | 97,428 | 29 |
+| review:conventions | claude-opus-5-5 | 8 | 2,379 | 16 | 145,730 | 30 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 2,150 | 4 | 15,363 | 72 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 1,612 | 4 | 12,223 | 11 |
+| review:measurement | claude-opus-5-5 | 4 | 1,209 | 10 | 49,670 | 16 |
+| triage | claude-sonnet-5-5 | 2 | 1,055 | 4 | 13,549 | 11 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 888 | 4 | 15,353 | 10 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 800 | 4 | 15,365 | 7 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 649 | 4 | 15,351 | 15 |
+| machine:npm run lint | claude-haiku-5-5 | 3 | 622 | 8 | 31,665 | 15 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 543 | 4 | 15,371 | 24 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 336 | 4 | 11,015 | 5 |
+
+
+wall: 218s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| machine | 7 | 7,264 | 120,691 | 171 | 12:15:03 | 12:17:54 |
+| review | 3 | 6,054 | 292,828 | 30 | 12:15:03 | 12:15:33 |
+| triage | 1 | 1,055 | 13,549 | 11 | 12:17:56 | 12:18:07 |
+| capture | 1 | 336 | 11,015 | 6 | 12:18:09 | 12:18:15 |
+| synthesize | 1 | 3,810 | 24,632 | 23 | 12:18:17 | 12:18:41 |
+
+- **claude-sonnet-5-5**: 3 agent · 6 calls · out 5,201 · in 12 · cache_read 49,196 · cache_create 70,953
+- **claude-opus-5-5**: 3 agent · 18 calls · out 6,054 · in 40 · cache_read 292,828 · cache_create 67,111
+- **claude-haiku-5-5**: 7 agent · 15 calls · out 7,264 · in 32 · cache_read 120,691 · cache_create 92,410
+

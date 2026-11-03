@@ -5,7 +5,7 @@ slug: nhap-loi-tat-dinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-03-nhap-loi-tat-dinh-design.md
 approved_by:
 approved_at:
@@ -119,3 +119,16 @@ Data Dictionary [NGÀNH: RESO DD 2.0].
   gốc ở `hang-viec.json`) cộng thiết kế, kế hoạch và trang Đối chiếu ngành (chỉ thêm mục) — khai bằng `hang vung` ở S1.
 - Test chạy trong `npm test -w @quy-hang/core` (mẫu `src/**/*.test.ts`), nên ca kiểm đặt ở `src/import/*.test.ts` và nhập
   bộ thử từ `test/import/`.
+- Ngoài-1 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu một ô trong file nhập có đúng chữ như «constructor» hay «toString» và sàn có dùng từ điển riêng, ô đó có thể bị đọc sai mà không báo, hoặc lần đọc file bị dừng giữa chừng. Chữ như vậy hiếm khi xuất hiện trong bảng hàng thật. — `packages/core/src/import/normalize.ts`
+- Ngoài-3 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu một kế hoạch ghép hai cột của file vào cùng một trường (ví dụ hai cột mã căn), cột thứ hai không bị đối chiếu danh mục hay kiểm trùng, nên có thể lọt giá trị chưa được soát. — `packages/core/src/import/plan.ts`
+- Ngoài-6 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Khi giá chào và giá đáy cùng ghi điều kiện phí khác nhau, phí của căn có thể lấy theo giá đáy của chủ nhà thay vì giá chào, và không có cảnh báo cần người xem. — `packages/core/src/import/apply.ts`
+- Ngoài-7 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Kế hoạch ghép sai, như hai cột cùng một trường hoặc dùng cách đọc không hợp với trường, vẫn được chấp nhận và ô ra giá trị chữ ở chỗ đáng lẽ là số mà không báo cần người. — `packages/core/src/import/plan.ts`
+- Ngoài-8 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Số tầng hay số phòng ngủ vô lý viết dạng chữ (ví dụ tầng 250) được nhận như đúng, còn viết dạng số thì được đánh dấu cần người xem. — `packages/core/src/import/transforms.ts`
+- Ngoài-10 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Các con số đo chất lượng nhập dùng để quyết định bước sau có thể đẹp hơn thực tế nếu có dòng bị mất trọn khi đọc file, vì dòng mất không bị tính là lỗi. — `packages/core/test/import/do.ts`
+- Ngoài-12 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm tự động chưa chắc bắt được trường hợp ai đó viết riêng một cách đọc giá khác cách đọc chung, nên khó phát hiện nếu hai nơi dần lệch nhau. — `packages/core/src/import/normalize.test.ts`
+- Ngoài-13 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm tự động chấp nhận lý do cảnh báo ghi cả hai toà mà không so với toà đúng trong danh mục, nên có thể không bắt được lời giải thích sai. — `packages/core/src/import/apply.test.ts`
+- Ngoài-14 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm tự động chỉ xác nhận có vài mẫu thông tin chủ nhà bị chặn, chưa chắc mọi mẫu đã cấy đều được kiểm. — `packages/core/src/import/profile.test.ts`
+- Ngoài-15 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm chưa soi trực tiếp file thử được tạo ra, nên nếu có tên người thật lọt vào file thử thì có thể không bị phát hiện. — `packages/core/src/import/bo-thu.test.ts`
+- Ngoài-16 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm bảo đảm bộ tạo file thử độc lập với mã đang kiểm chỉ quét hai tệp cố định, nên tệp thử thêm sau này có thể không bị quét. — `packages/core/src/import/bo-thu.test.ts`
+- Ngoài-17 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm chưa đếm xem đáp án có đủ đích cho mọi cột, nên đáp án thiếu vài cột cuối vẫn có thể lọt. — `packages/core/src/import/bo-thu.test.ts`
+- Ngoài-18 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu sau này tên hai file mẫu đổi hay bị bỏ, phép kiểm phân loại cột sẽ vẫn báo xanh dù không kiểm gì. — `packages/core/src/import/classify.test.ts`
