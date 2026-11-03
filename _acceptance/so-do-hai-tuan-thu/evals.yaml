@@ -1,0 +1,85 @@
+schema_version: 1
+feature_slug: so-do-hai-tuan-thu
+# Lệnh máy: executors.test.core (lõi thuần, không cần Postgres). Người chấm đối chiếu tên ca nêu trong `expected` với dòng
+# reporter của node --test: có mặt, ok, không SKIP. Mọi ca nằm ở packages/core/src/metrics/so-do.test.ts; bộ chuyển dữ liệu
+# mẫu ở packages/core/src/metrics/mau.fixture.ts. Mỗi ca có cặp hai chiều trên cùng đầu vào (chiều đỏ ghi trong expected).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «danh sách: khớp từng ô Số đo của Tham chiếu §11» có mặt và ok — ca đọc docs/product/tham-chieu.md (đường suy từ vị trí tệp kiểm), tách bảng «Đo trong hai tuần thử», bỏ dòng Sheet cũ, và so: tập ô §11 (8 ô, assert số) bằng tập chữ ghép từ dongThamChieu của các mã (assert deepEqual), không mã nào trỏ ô ngoài §11 hay ô Sheet cũ; ca «danh sách: một dòng mỗi mã, theo thứ tự §11» ok — bảng số đo trên đầu vào rỗng có đúng 13 dòng (assert số), mã không trùng, thứ tự nhóm theo thứ tự ô §11. Chiều đỏ: thêm một mã trỏ chữ không có trong §11 (hay đổi một chữ của dongThamChieu) trên bản sao danh sách → ca so tập báo đúng ô lệch."
+    paths: [packages/core/src/metrics/**, docs/product/tham-chieu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «xác nhận trong N ngày: ranh 14 ngày» có mặt và ok — ma trận viết trước 4 hàng mở (xác nhận cách den 13 ngày, 14 ngày, chưa xác nhận, xác nhận trong kỳ) cộng 1 hàng Đã bán và 1 hàng Ngừng bán đều mới xác nhận: N vắng → tu 2 / mau 4 (căn 13 ngày và căn trong kỳ vào; căn 14 ngày không), Đã bán và Ngừng bán không vào mẫu; N = 7 → tu 1 / mau 4; theoTrangThai mang tu/mau của từng trạng thái (assert số); ca đối chiếu với freshness: mọi hàng của ma trận vào tử số đúng khi freshness(…).needsCallBack là false (N = 14). Chiều đỏ: đổi so sánh thành ageDays <= N → căn 14 ngày vào tử số, ca ranh đỏ với thông điệp nêu căn 14 ngày."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mức đủ cao nhất: chỉ hàng đủ năm mục» có mặt và ok — ba hàng mở (đủ năm mục; thiếu tài chính; đủ bốn phần mô tả mà chưa có giá — dựng bằng sự kiện thật, gấp bằng foldListing) → tu 1 / mau 3; ca «mức đủ cao nhất: mẫu 0» ok — đầu vào không hàng mở → mau 0, phanTram null (assert strictEqual null, không 0). Chiều đỏ: tính đủ bằng filled >= 4 → hàng thiếu tài chính vào tử số, ca đỏ."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mã tự điền: tra bằng lookupUnit của lõi» có mặt và ok — trên danh mục mẫu cộng một danh mục thử có mã trùng hai toà, ma trận viết trước 8 lần gõ (created có mã trong danh mục; created mã viết thường của cùng căn; created mã ngoài danh mục; unit_number_assigned có mã trong danh mục; created mã ra nhiều căn; created không mã; lead có mã trong danh mục; lead không mã) cộng 1 lần gõ trước tu: tu 4 / mau 6, chiTiet found 4, ambiguous 1, not_in_catalog 1 (assert deepEqual); hàng và lead không mã, mã gõ trước kỳ không vào mẫu. Chiều đỏ: tính nhiều căn là tự điền đúng (status khác not_in_catalog) → tu 5, ca đỏ nêu mã nhiều căn."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «lead → cuộc gọi đầu: thời lượng và trung vị» có mặt và ok — ma trận viết trước 7 lead trong kỳ: gọi sau 5, 3, 12 phút; chưa gọi; gọi sau den; căn trùng có mốc gọi; đã bỏ có mốc gọi (lead chưa gọi chưa chia; lead gọi sau den đã chia; thêm một lead đã trả lại chưa gọi) → n 3, giaTri [3, 5, 12], trungVi 5, chua 3, chiTiet {chuaChia 1, daChia 1, traLai 1} (assert deepEqual); thêm một lead gọi sau 8 phút → dãy chẵn, trungVi 6.5; ca «lead → Sẵn sàng bán: ngày» ok — lên bảng sau 2 ngày và 5 ngày 12 giờ → giaTri [2, 5.5], trungVi 3.75, lead lên bảng sau den tính là chưa; ca dãy rỗng → trungVi null. Chiều đỏ: không lọc căn trùng → n 4, ca đỏ."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «lead trùng bị chặn: tách căn và chủ» có mặt và ok — lead trong kỳ: 2 căn trùng, 1 chủ trùng, 3 mới; ngoài kỳ: 1 căn trùng trước tu, 1 chủ trùng đúng lúc den → so 3, chiTiet {unit_has_open_listing: 2, owner_has_agent: 1} (assert deepEqual). Chiều đỏ: bỏ lọc kỳ → so 5, ca đỏ."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «đợt hai: căn ở nhóm điều chỉnh giá lúc gọi» có mặt và ok — trên hàng mẫu: căn Đang bán mốc giá 12 ngày trước, ghi owner_confirmed hai lần và price_changed một lần trong kỳ; căn Đang bán mốc giá 5 ngày trước được hạ giá; căn Tạm giữ mốc 30 ngày được xác nhận → so 1 (assert số; căn đầu đếm một lần); với nguongDieuChinhGia 5 → so 2; ca đối chiếu: mỗi sự kiện được đếm thì nhomCuaCan(boMacDinh(nguong), dữ kiện trước sự kiện, người ghi, lúc ghi).code là price_adjustment. Chiều đỏ: xét nhóm trên trạng thái SAU sự kiện (đã gấp cả sự kiện ấy) → căn đầu đã rời nhóm vì vừa xác nhận, so 0, ca đỏ nêu căn đầu."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «chưa có sự kiện: sáu mã nói rõ thiếu gì» có mặt và ok — trên đầu vào rỗng và trên bộ mẫu: đúng sáu mã (inquiry_to_send, sheet_publishes, customer_link_opens, customer_interest, actions_by_device_role, mobile_offline — assert deepEqual tập) có trangThai chua-co-su-kien, thieu là chữ không rỗng, dòng không có khoá so/tu/mau/trungVi; bảy mã còn lại trên đầu vào rỗng có trangThai do-duoc với mau 0 hay n 0 hay so 0. Chiều đỏ: trả so 0 cho sheet_publishes → ca đỏ nêu mã."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «bộ mẫu hàng 5: số ghim» có mặt và ok — bộ chuyển đọc packages/db/seed/mau/du-lieu-mau.json, mỗi hàng thành chuỗi lệnh của nap-ban-that.ts (tạo → giá → Ngừng bán | chi tiết → Đang bán → đích), mỗi sự kiện qua validatePayload của lõi không lỗi; kỳ [2026-11-03T00:00:00Z, 2026-11-17T00:00:00Z): hàng mở 30, xác nhận 0/30, mức đủ 0/30, tự điền 47/47, lead trùng 2 (1 căn, 1 chủ), lead gọi đầu n 0 chua 11 chiTiet {chuaChia 10, daChia 1, traLai 0}, đợt hai 0 (assert số); ca «bộ mẫu: bộ chuyển theo bộ nạp» ok — đọc packages/db/seed/nap-ban-that.ts (đường suy từ vị trí tệp kiểm), rút thứ tự loại lệnh của các lời gọi lenh({ type: … }) và so deepEqual với THU_TU_LENH của bộ chuyển; chiều đỏ trên bản sao chuỗi nguồn có thêm một lời gọi lenh owner_confirmed → ca so đỏ nêu loại lệnh lệch; den 2026-11-04T00:00:00Z → xác nhận 30/30; hai lần tính deepEqual; ca «bộ mẫu: không thông tin chủ nhà» ok — duyệt sâu đầu ra: không khoá nào thuộc SOURCE_KEYS của lõi, không chuỗi dạng số điện thoại 0900 000 0xx. Chiều đỏ: bộ chuyển bỏ lệnh giá → 6 hàng Chưa đủ không còn lần xác nhận, den 2026-11-04 ra 24/30 thay 30/30, ca đỏ."
+    paths: [packages/core/src/metrics/**, packages/db/seed/mau/du-lieu-mau.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kỳ đo: nửa mở và gấp tới den» có mặt và ok — hàng chuyển Đã bán đúng lúc den vẫn là hàng mở ở kết quả; sự kiện giá sau den không đổi mức đủ; mã gõ đúng lúc tu vào, đúng lúc den không vào (assert số); ca «kỳ đo: không đọc đồng hồ» ok — tính bảng số đo, đổi Date.now và new Date() (mock.timers của node:test, đặt năm 2030), tính lại → deepEqual. Chiều đỏ: lọc bằng <= den → mã gõ lúc den vào, ca đỏ."
+    paths: [packages/core/src/metrics/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
