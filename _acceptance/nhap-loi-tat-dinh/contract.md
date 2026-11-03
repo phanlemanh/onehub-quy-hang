@@ -5,7 +5,7 @@ slug: nhap-loi-tat-dinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-03-nhap-loi-tat-dinh-design.md
 approved_by:
 approved_at:
@@ -132,3 +132,17 @@ Data Dictionary [NGÀNH: RESO DD 2.0].
 - Ngoài-16 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm bảo đảm bộ tạo file thử độc lập với mã đang kiểm chỉ quét hai tệp cố định, nên tệp thử thêm sau này có thể không bị quét. — `packages/core/src/import/bo-thu.test.ts`
 - Ngoài-17 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Phép kiểm chưa đếm xem đáp án có đủ đích cho mọi cột, nên đáp án thiếu vài cột cuối vẫn có thể lọt. — `packages/core/src/import/bo-thu.test.ts`
 - Ngoài-18 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu sau này tên hai file mẫu đổi hay bị bỏ, phép kiểm phân loại cột sẽ vẫn báo xanh dù không kiểm gì. — `packages/core/src/import/classify.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-03:
+  - Ngoài-1: Nếu một ô trong file nhập có đúng chữ như «constructor» hay «toString» và sàn có dùng từ điển riêng, ô đó có thể bị đọc sai mà không báo, hoặc lần đọc file bị dừng giữa chừng. Chữ như vậy hiếm khi xuất hiện trong bảng hàng thật.
+  - Ngoài-3: Nếu một kế hoạch ghép hai cột của file vào cùng một trường (ví dụ hai cột mã căn), cột thứ hai không bị đối chiếu danh mục hay kiểm trùng, nên có thể lọt giá trị chưa được soát.
+  - Ngoài-6: Khi giá chào và giá đáy cùng ghi điều kiện phí khác nhau, phí của căn có thể lấy theo giá đáy của chủ nhà thay vì giá chào, và không có cảnh báo cần người xem.
+  - Ngoài-7: Kế hoạch ghép sai, như hai cột cùng một trường hoặc dùng cách đọc không hợp với trường, vẫn được chấp nhận và ô ra giá trị chữ ở chỗ đáng lẽ là số mà không báo cần người.
+  - Ngoài-8: Số tầng hay số phòng ngủ vô lý viết dạng chữ (ví dụ tầng 250) được nhận như đúng, còn viết dạng số thì được đánh dấu cần người xem.
+  - Ngoài-10: Các con số đo chất lượng nhập dùng để quyết định bước sau có thể đẹp hơn thực tế nếu có dòng bị mất trọn khi đọc file, vì dòng mất không bị tính là lỗi.
+  - Ngoài-12: Phép kiểm tự động chưa chắc bắt được trường hợp ai đó viết riêng một cách đọc giá khác cách đọc chung, nên khó phát hiện nếu hai nơi dần lệch nhau.
+  - Ngoài-13: Phép kiểm tự động chấp nhận lý do cảnh báo ghi cả hai toà mà không so với toà đúng trong danh mục, nên có thể không bắt được lời giải thích sai.
+  - Ngoài-14: Phép kiểm tự động chỉ xác nhận có vài mẫu thông tin chủ nhà bị chặn, chưa chắc mọi mẫu đã cấy đều được kiểm.
+  - Ngoài-15: Phép kiểm chưa soi trực tiếp file thử được tạo ra, nên nếu có tên người thật lọt vào file thử thì có thể không bị phát hiện.
+  - Ngoài-16: Phép kiểm bảo đảm bộ tạo file thử độc lập với mã đang kiểm chỉ quét hai tệp cố định, nên tệp thử thêm sau này có thể không bị quét.
+  - Ngoài-17: Phép kiểm chưa đếm xem đáp án có đủ đích cho mọi cột, nên đáp án thiếu vài cột cuối vẫn có thể lọt.
+  - Ngoài-18: Nếu sau này tên hai file mẫu đổi hay bị bỏ, phép kiểm phân loại cột sẽ vẫn báo xanh dù không kiểm gì.
