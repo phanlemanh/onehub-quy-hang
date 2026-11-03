@@ -1,0 +1,43 @@
+{
+  "feature_plain": "Đầu khách lưu được khách của mình: một khách hai số vẫn là một người, mọi link gửi cho khách gắn vào đúng người ấy, và đổi đầu khách không mất lịch sử gửi.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ kiểm khuôn nhu cầu khách (Mua, Thuê, Cả hai; khu, toà, phòng ngủ, diện tích, giá) và không bao giờ đưa số hay mã liên hệ vào bản đầu khách xem."},
+    {"id": "AC-2", "p": "Sẽ khoá dữ liệu nhu cầu khách và link đã gửi theo sàn và theo người: chỉ đầu khách giữ, người gửi và trưởng nhóm thấy."},
+    {"id": "AC-3", "p": "Sẽ cho đầu khách lưu khách bằng tên và số; số đã có trong sàn thì gắn vào đúng người ấy mà đầu khách không biết người ấy có là chủ nhà hay không; mỗi khách mới ghi một mốc «khách hỏi»."},
+    {"id": "AC-4", "p": "Sẽ cho thêm số thứ hai vào cùng khách, và khách tạo lại bằng số thứ hai vẫn là cùng một người."},
+    {"id": "AC-5", "p": "Sẽ ghi mỗi link gửi khách (bộ căn đã lên bảng, tối đa 30 căn) gắn vào nhu cầu khách và người gửi; hai link cho cùng một khách hai số đếm về một người."},
+    {"id": "AC-6", "p": "Sẽ giấu nhu cầu khách và link gửi khỏi đầu khách khác, đầu chủ, telesales, quản trị; đầu khách không đọc được hồ sơ liên hệ của khách."},
+    {"id": "AC-7", "p": "Sẽ cho đóng nhu cầu khách, và cho trưởng nhóm chuyển khách sang đầu khách khác mà mọi link cũ đi theo, công gửi vẫn của người đã gửi."},
+    {"id": "AC-8", "p": "Sẽ giữ một chủ nhà vừa là khách là một người: phía chủ vẫn kín như cũ, đầu chủ thấy thêm loại Người mua nhưng không thấy nhu cầu khách."},
+    {"id": "AC-9", "p": "Sẽ dựng phần link được ra trang khách chỉ gồm mã link, kiểu người nhận, danh sách căn và người gửi — không tên khách, không số."},
+    {"id": "AC-10", "p": "Sẽ ghi các điều trên vào Tham chiếu, quyết định kiến trúc về liên hệ và trang đối chiếu ngành."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Sẽ KHÔNG dựng lịch xem và xin dẫn xem — chờ buổi phỏng vấn đầu khách; chỉ ghi luật lịch xem sau này gắn vào nhu cầu khách."},
+    {"id": "OOS-2", "p": "Sẽ KHÔNG cho đầu khách mở lại số khách trong ứng dụng."},
+    {"id": "OOS-3", "p": "Sẽ KHÔNG dựng màn nào: màn Gửi, trang khách, Đã gửi, Hôm nay của đầu khách là các việc sau, dựng trên dữ liệu này."},
+    {"id": "OOS-4", "p": "Sẽ KHÔNG làm luật ẩn từng trường của căn trên trang khách — việc của hàng luật ẩn và bộ kiểm rò rỉ."},
+    {"id": "OOS-5", "p": "Sẽ KHÔNG làm gộp tay hai liên hệ, trường riêng của nhu cầu khách, hay lọc Bảng hàng theo nhu cầu."},
+    {"id": "OOS-6", "p": "Sẽ KHÔNG làm luật chia công giữa hai đầu khách cùng phục vụ một khách."}
+  ],
+  "scope_plain": "Những phần này cắt ra hoặc thuộc việc khác:",
+  "coverage_plain": [
+    {"i": 0, "p": "Mọi lối khách vào: đầu khách lưu khách, thêm số, khách vốn là chủ nhà, khách sau này thành chủ qua lead (AC-3 lưu khách, AC-4 thêm số, AC-8 khách vừa là chủ)."},
+    {"i": 1, "p": "Mọi kiểu số: một số, hai số một người, số đã thuộc người khác, số của chủ nhà (AC-3, AC-4, AC-8)."},
+    {"i": 2, "p": "Mọi loại giao dịch: Mua, Thuê, Cả hai, và khách đồng thời là chủ (AC-1 khuôn, AC-3, AC-8)."},
+    {"i": 3, "p": "Người phục vụ: một đầu khách, hai đầu khách cùng khách, chuyển đầu khách (AC-4, AC-7 chuyển và đóng; Hỏi-1)."},
+    {"i": 4, "p": "Link gửi: cho khách riêng, cho nhóm môi giới, hai link một người, căn không gửi được (AC-5 ghi link, AC-9 phần ra ngoài)."},
+    {"i": 5, "p": "Ai xem: từng vai trong sàn, sàn khác, người chưa đăng nhập — mỗi vai một dòng đo (AC-2 khoá dữ liệu, AC-3, AC-6 ai thấy)."},
+    {"i": 6, "p": "Chỗ có thể lộ: số, hồ sơ chủ nhà cho đầu khách, liên hệ trên trang khách, dò số qua lối lưu khách (đóng) và qua lối thêm số (mở có chủ đích, Hỏi-6)."},
+    {"i": 7, "p": "Vòng đời nhu cầu khách: mở, chuyển đầu khách, đóng (AC-3, AC-7, AC-8)."},
+    {"i": 8, "p": "Mọi lớp đều có phép đo: lõi, cơ sở dữ liệu, API, tài liệu."},
+    {"i": 9, "p": "Bỏ có tên: không có màn nào để đo; lịch xem chờ Hỏi-4."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Lối thêm số thứ hai báo «số đã có người khác» nên đầu khách dò được số nào đã có trong sàn, kể cả số chủ — đã đưa thành Hỏi-6 cho anh chọn, sửa câu thiết kế cho khớp và thêm dòng đo hai lời báo giống hệt nhau."},
+    {"i": 1, "p": "Trần 30 căn một link chưa có căn cứ mà ghi như máy đã quyết — đã đưa thành Hỏi-7; hai dòng căn cứ khác được trích lại nguyên văn từ Tham chiếu."},
+    {"i": 2, "p": "Phép đo link thiếu ca căn nháp của chính người gửi — đã thêm ca và đổi chiều đỏ cho đúng lối hỏng."},
+    {"i": 3, "p": "Không có cách đóng nhu cầu khách mà phép đo lại cần đóng — đã thêm lối đóng (đầu khách giữ, trưởng nhóm) vào AC-7 và phép đo."},
+    {"i": 4, "p": "Tiêu chí và phép đo nói ngược nhau về số lượng số đầu chủ thấy — đã sửa tiêu chí cho khớp và thêm bước số thứ hai."}
+  ]
+}
