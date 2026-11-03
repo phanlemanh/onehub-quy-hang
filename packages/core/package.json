@@ -16,7 +16,8 @@
     "./today": "./src/today/index.ts",
     "./push": "./src/push/index.ts",
     "./redaction": "./src/redaction/index.ts",
-    "./sharing": "./src/sharing/index.ts"
+    "./sharing": "./src/sharing/index.ts",
+    "./thiet-bi": "./src/thiet-bi/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",

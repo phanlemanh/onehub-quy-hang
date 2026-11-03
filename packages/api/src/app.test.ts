@@ -94,6 +94,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/push/public-key",
     "POST /api/v1/me/push-subscriptions",
     "DELETE /api/v1/me/push-subscriptions",
+    // Hàng 38: tab Tôi — máy đang đăng nhập, báo mất máy.
+    "GET /api/v1/me/devices",
+    "POST /api/v1/me/devices/report-lost",
     // Hàng mo-so-lead.
     "POST /api/v1/leads/{leadId}/phone-reveal",
     // Hàng 30: gọi từ máy tính.
