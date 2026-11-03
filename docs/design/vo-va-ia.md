@@ -161,7 +161,16 @@ lại «Hiểu là…», hỏi lại khi giá đổi quá 20% hay đổi phí, h
 đổi hàng loạt là hàng 16; nhóm Toà → Loại căn theo cách của
 `data-grid-grouping-2` bằng dòng con của lưới, đổi được sang Toà hay Không nhóm; nút «Góc nhìn ▾» đầu thanh công cụ lưu bộ
 lọc, cột hiện, sắp xếp, cách nhóm thành góc nhìn **trên máy theo người và sàn** — góc nhìn của đội để một hàng sau. Dưới
-`md` là khối báo bảng thẻ của mục 32.
+`md` là bảng thẻ của mục 32 (đoạn dưới).
+
+**Đã chuyển thể (hàng 32, 03/11) — Bảng hàng thẻ, điện thoại.** Khe `dienThoai` của `KhungBangHang` ở cùng địa chỉ
+`/inventory`, mã ở `apps/web/src/app/(app)/inventory/cards/`. `product-grid-4`: giữ ô ảnh vuông `Item` muted bên trái, dòng
+tiêu đề + giá chung chân chữ, hàng ba thông số `dl` trên vạch mảnh; đổi tiêu đề → mã căn, giá → «4,65 tỷ» kèm điều kiện phí,
+bỏ câu chuyện, ba thông số → Diện tích · Phòng ngủ · Hướng, huy hiệu → «Đang giao dịch», tim → ô chọn khi chọn nhiều (giữ
+lâu 500 ms hay nút «Chọn»), dải đầu chương → dòng nhóm toà; ảnh vuông thu còn `w-28` cho khổ 375. `filter-sidebar-5`: Sheet →
+`NganNoi` (ngăn đáy), năm mục Giá · Phòng ngủ · Toà · Diện tích · Hướng (Hỏi-1 của hàng 32), thanh trượt giá → hai ô số theo
+tỷ, thẻ lọc đang chạy cũng hiện trên danh sách; bỏ màu, cỡ, chất liệu, hãng, sao. Chỉ căn Đang bán và Đang giao dịch; danh
+sách cuộn ảo; ảnh bìa hỏi API ảnh từng căn khi thẻ tới màn.
 
 ## 3. Chỗ hở — không có khối, ghép từ thành phần
 

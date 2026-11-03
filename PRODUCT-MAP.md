@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>26 việc"]
+  GD --> B["Sắp mở vòng<br/>22 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>20 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>45 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>49 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -24,7 +24,6 @@ flowchart TD
 
 ## Sắp mở vòng
 
-- Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn (`bang-hang-dang-the`)
 - Mỗi sàn giữ cấu hình riêng: đổi một điểm qua một lệnh API thành sự kiện chỉ thêm ghi người và vai, sàn chưa đổi thì nhận mặc định của sổ, đối tượng tạo sau lần đổi mang số mới còn đối tượng cũ giữ số lúc tạo, và sàn khác không đọc hay đổi được (`cau-hinh-theo-san`)
 - Đầu khách mở Đã gửi và thấy từng link: lượt khách mở, căn được quan tâm, căn vừa đổi kèm «Gợi ý căn thay»; tắt được link (`da-gui`)
 - Người trong sàn đăng nhập trên một thẻ theo khối auth-15: chỉ mã một lần qua email, không nút Google, Apple hay GitHub, giữ chân điều khoản; chọn sàn và chưa gắn sàn đi cùng khuôn; luồng đăng nhập, phiên và luật vào đúng sàn của hàng 6 giữ nguyên (`dang-nhap-auth-15`)
@@ -35,15 +34,12 @@ flowchart TD
 - Trưởng nhóm mở Hôm nay và thấy lead quá hạn để chia lại, hàng cũ theo từng đầu chủ, và ngoại lệ máy không tự quyết được (`hom-nay-truong-nhom`)
 - Đầu chủ mở Hôm nay và đọc mỗi việc trên một dòng: tên căn, cột «Vì sao hôm nay» hai tầng — lý do chữ đậm, hạn đỏ khi quá, vàng khi còn dưới 15 phút — và giá; làm việc đầu của nhóm bằng đúng một nút, một chạm; việc còn lại nằm trong ⋯; hàng đợi, luật mỗi căn một hàng đợi và ghi kết quả của hàng 22 giữ nguyên (`lam-lai-hom-nay-dau-chu`)
 - Telesales nhập lead trên điện thoại: thiếu một mục thì chưa gửi được, gửi xong theo dõi được bốn nấc (`lead-dien-thoai`)
-- Đầu khách lưu khách là một liên hệ loại Người mua hoặc Người thuê, gắn nhu cầu, Lần gửi và lịch xem vào liên hệ ấy; một khách hai số vẫn là một người; số khách không ra trang khách (`lien-he-khach`)
 - Đầu khách chọn căn, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với link, ảnh và tin soạn sẵn; người tự bấm gửi trong Zalo (`luong-gui`)
 - Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file; chủ nhà và số trong file thành liên hệ chủ nhà của sàn (hàng 85) qua cùng đường kiểm trùng theo liên hệ (`nhap-excel-xem-truoc-ghi`)
 - Đầu chủ hoàn tác cả một lần nhập; căn đã có người sửa sau đó được liệt kê, không bị gỡ (`nhap-hoan-tac`)
-- Lõi đọc một bảng hàng bẩn và nói được từng cột là gì, từng ô ra giá trị chuẩn nào hay vì sao không đọc được — không cần AI — trên bộ file thử có đáp án (`nhap-loi-tat-dinh`)
 - Đầu chủ nhập lại file cùng mẫu và thấy máy ghép sẵn như lần trước, kể cả cách gọi riêng của sàn (`nhap-nho-mau`)
 - Đầu chủ phát góc nhìn đang lọc ra ảnh, PDF hay Excel theo mẫu, kèm bài chép theo kênh; không cột nội bộ nào ra ngoài (`phat-hang`)
 - Mọi điểm sàn chỉnh được khai ở một sổ của lõi — khoá, kiểu, mặc định, khoảng cho phép, ai đổi, áp cho mới hay tính lại, lớp dữ liệu — và luật của lõi nhận cấu hình làm tham số thay vì đọc hằng số (`so-diem-bien-thien`)
-- Số đo của hai tuần thử đọc được từ sự kiện của sàn thử: tỉ lệ xác nhận, mức đủ, mã tự điền, lead đến cuộc gọi đầu, lần phát, lượt mở, thao tác theo thiết bị và vai, lần mất mạng trên điện thoại (`so-do-hai-tuan-thu`)
 - Người dùng điện thoại cài Quỹ hàng lên màn hình chính, bật thông báo; đăng xuất hay báo mất máy thì dữ liệu trên máy bị xoá sạch (`tab-toi`)
 - Khách mở link từ Zalo và thấy bộ căn mang tên sàn, giá sống kèm «giá xác nhận X ngày trước», căn đã cọc tự mờ, chạm «Quan tâm» được (`trang-khach-rieng`)
 - Vá đổi giá căn Đã bán: máy chủ từ chối lệnh đổi giá trên căn Đã bán với lý do rõ, kể cả khi bản trên máy đã mới; bộ đồng bộ đưa lệnh ấy vào «Cần xem» (`va-doi-gia-can-da-ban`)
@@ -58,6 +54,7 @@ flowchart TD
 - Lưới bảng hàng 5.000 dòng × 20 cột cuộn, sửa trên ô và dán 500 ô từ Excel mà không giật trên máy tính văn phòng (`bai-thu-luoi-5000-dong`)
 - Link trang khách dán vào Zalo hiện ảnh xem trước, và lượt Zalo tự lấy ảnh không bị tính là khách mở (`bai-thu-zalo`)
 - Kho có bản đồ khuôn cho các nhóm màn đã có — Cài đặt sàn, Xác thực, trang tạm, trạng thái trống · lỗi · báo — và mỗi nhóm một khuôn có khe mà mọi màn của nhóm dựng qua (`ban-do-khuon-nhom-da-co`)
+- Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn (`bang-hang-dang-the`)
 - Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn (`bang-hang-kieu-sheet`)
 - Lệnh chốt bán với ngày bán không có thật (như 30 tháng 2) bị từ chối với lỗi nêu đúng trường ngày bán, không phải lỗi hệ thống (`bao-ro-ngay-ban-sai`)
 - Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác (`can-trung-ma-hai-toa`)
@@ -77,6 +74,7 @@ flowchart TD
 - Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi (`khu-va-loai-hinh`)
 - Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
 - Mỗi người làm việc với sàn là một liên hệ (RESO Contacts) — một người, nhiều số, nhiều loại liên hệ, một người giữ; lead và hàng gắn vào liên hệ chủ nhà (`lien-he`)
+- Đầu khách lưu khách là một liên hệ loại Người mua hoặc Người thuê, gắn nhu cầu và Lần gửi vào liên hệ ấy qua nhu cầu khách; một khách hai số vẫn là một người; số khách không ra trang khách (`lien-he-khach`)
 - Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện (`loi-hang-va-su-kien`)
 - Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện (`lop-truong-nguon`)
 - Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách) (`luat-an-va-kiem-ro-ri`)
@@ -86,9 +84,11 @@ flowchart TD
 - Một nút chạy tay trên GitHub Actions nạp đủ dữ liệu mẫu (hàng sáu trạng thái, chủ nhà số mã hoá, lead có ca trùng, người phụ trách, tài khoản chủ kho) vào «[Mẫu] Sàn thử» trên bản thật, chạy lại không đổi gì, gỡ chỉ đúng sàn mẫu (`nap-mau-ban-that`)
 - Gói danh mục Invest đẩy sang theo khuôn phiên bản 1 được nhận vào vùng danh mục dùng chung khi thoả thuận đang bật; gói sai khuôn hay thoả thuận tắt bị từ chối (`nhan-danh-muc-invest`)
 - Bảng hàng và hồ sơ đọc từ kho trên máy nên lọc, cuộn, mở hồ sơ không chờ mạng; sửa ghi trên máy trước, rớt mạng vài phút không mất thay đổi (`nhanh-tuc-thi`)
+- Lõi đọc một bảng hàng bẩn và nói được từng cột là gì, từng ô ra giá trị chuẩn nào hay vì sao không đọc được — không cần AI — trên bộ file thử có đáp án (`nhap-loi-tat-dinh`)
 - Telesales nhập lead đủ năm mục trên máy tính và thấy ngay kết quả kiểm trùng: không trùng, đã có đầu chủ, hay căn đã có hàng mở (`o-nhan-lead`)
 - Một màn của nhóm dựng ngoài khuôn làm bài kiểm của kho đỏ và gọi đúng tên tệp cùng khối cấm; chỉ sửa tài liệu hay hồ sơ thì bài kiểm im (`rang-giu-khuon`)
 - Đầu chủ bấm «Sẵn sàng bán» và căn lên bảng hàng chung ngay khi máy kiểm đủ giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; thiếu thì chỉ đúng chỗ thiếu (`san-sang-ban`)
+- Số đo của hai tuần thử đọc được từ sự kiện của sàn thử: tỉ lệ xác nhận, mức đủ, mã tự điền, lead đến cuộc gọi đầu, lần phát, lượt mở, thao tác theo thiết bị và vai, lần mất mạng trên điện thoại (`so-do-hai-tuan-thu`)
 - Sửa hàng loạt: đầu chủ tích nhiều căn trên Bảng hàng rồi đổi trạng thái hay đánh dấu đã gọi cho tất cả trong một lần, máy kể trước căn nào không đổi được (`sua-hang-loat`)
 - Đầu chủ sửa giá, phí, trạng thái ngay trên ô; giá luôn kèm điều kiện phí, máy nói lại «Hiểu là…», sửa là vừa xác nhận với chủ nhà, hoàn tác được (`sua-tren-o`)
 - Kho có bộ chuẩn giao diện trước màn sản phẩm đầu tiên: thành phần ReUI, skill giao diện của kho, lint giao diện có mức nợ, sàn thiết kế M1 (`tang-5-giao-dien`)

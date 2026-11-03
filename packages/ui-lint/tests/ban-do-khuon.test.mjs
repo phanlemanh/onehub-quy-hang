@@ -102,6 +102,10 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["bang-hang.tsx", "bulk/thanh.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
   ),
+  // Bảng hàng thẻ trên điện thoại (hàng 32): bảng thẻ, ngăn lọc, thẻ căn.
+  ...["cards/bang-the.tsx", "cards/ngan-loc.tsx", "cards/the-can.tsx"].map(
+    (p) => `${W}/app/(app)/inventory/${p}`,
+  ),
   // Trang thử ẩn của bộ đồng bộ (hàng 13) — ngoại lệ của trang tạm, vẫn thuộc nhận diện của nhóm trạng thái.
   ...["page.tsx", "trang-thu.tsx"].map((p) => `${W}/app/(app)/proto/nhanh-tuc-thi/${p}`),
   ...["page.tsx", "trang-mau.tsx"].map((p) => `${W}/app/(app)/proto/o-nhan-lead/${p}`),
@@ -133,6 +137,8 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/error.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
+  // Bảng hàng thẻ (hàng 32): lỗi tải lần đầu, trống, lọc rỗng.
+  ...Array(3).fill(`${W}/app/(app)/inventory/cards/bang-the.tsx`),
   `${W}/app/(app)/inventory/khung.tsx`,
   // Lead của tôi (hàng 27): lỗi và trống của vùng Lead đã nhập.
   ...Array(2).fill(`${W}/app/(app)/leads/mine/lead-da-nhap.tsx`),
@@ -352,7 +358,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 7 tệp theo khuôn · 15 ngoại lệ · 0 lệch",
-      "trang-thai: 57 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 60 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

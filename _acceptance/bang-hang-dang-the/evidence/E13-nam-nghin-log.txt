@@ -1,0 +1,12 @@
+API do-cuon: 5000 hàng, Đang bán 1750, Đang giao dịch 625, lên thẻ 2375
+API nhóm toà (thứ tự gặp đầu): Toà A=1000; Toà B=1375
+Toà cuối Toà B; căn cuối theo thứ tự API: B-15.05-M1079 (Toà B); căn có chỉ số nạp lớn nhất trong toà cuối: B-15.05-M4999
+Lúc đầu: [data-the-can] trong DOM = 12; tiêu đề số căn: 2375 căn
+  [chup] E13-nam-nghin-dau.png
+Cuộn 1012 bước (300px); scrollHeight 304248px
+Dòng nhóm gom được: Toà A=1000; Toà B=1375 → tổng 2375
+[data-the-can] trong DOM: nhỏ nhất 11, lớn nhất 19 suốt lúc cuộn; số thẻ khác nhau từng xuất hiện 2375
+Cuối cuộn: [data-the-can] trong DOM = 11; thẻ cuối «B-15.05-M1079 · Toà B»
+Vị trí thẻ cuối trong khung nhìn: {"top":588,"bottom":716,"vh":812}
+  [chup] E13-nam-nghin-cuoi.png
+KẾT: lúc đầu 12 / cuối 11 trong 1–40: true; tổng dòng nhóm 2375 vs lên thẻ 2375 khớp: true; thẻ cuối DOM «B-15.05-M1079 · Toà B» vs API «B-15.05-M1079 · Toà B»

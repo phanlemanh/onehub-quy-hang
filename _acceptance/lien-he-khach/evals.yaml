@@ -1,0 +1,93 @@
+schema_version: 1
+feature_slug: lien-he-khach
+# Lệnh máy: `executors.test.core` (kiểm thuần packages/core) và `executors.test.isolation` (bộ cách ly + packages/api/test-db,
+# cần DATABASE_URL tới Postgres dãy L, cổng 5571). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter
+# liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Người,
+# hàng lấy từ bộ mẫu hàng 5 qua đường ghi thật; số là số mẫu `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/contacts/prospects.test.ts có mặt và ok: «nhu cầu khách: loại giao dịch ra loại liên hệ» — bảng viết trước ba dòng purchase/lease/purchase_or_lease → [Buyer]/[Tenant]/[Buyer, Tenant], đếm ba lần so; «nhu cầu khách: khuôn nhập» — bảng viết trước (thân đúng đủ khoá → ok; khoá lạ ở gốc; khoá lạ trong tiêu chí; số sai khuôn; loại giao dịch ngoài thực đơn; BedroomsTotalMin âm; ListPriceMax không phải số; tên rỗng) → ok hay đúng path lỗi, deepEqual, đếm bằng số dòng; «nhu cầu khách: tên loại sự kiện» — PROSPECT_EVENT_TYPES deepEqual [inquiry_received, phone_added, reassigned, closed] viết trước; «nhu cầu khách: bản xem không số» — prospectView trên bản ghi có phoneEnc, phoneHash, contactId ra Object.keys deepEqual danh sách viết trước và JSON không chứa giá trị của ba trường ấy, đối chứng dương: chuỗi JSON của bản ghi gốc chứa chúng. Chiều đỏ: thêm contactId vào danh sách khoá của bản xem → ca bản xem đỏ nêu khoá thừa."
+    paths: [packages/core/src/contacts/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs các ca của hàng 86 có mặt và ok: «liên hệ khách: bốn bảng mới nằm trong phép kiểm luật theo dòng» (relrowsecurity, relforcerowsecurity deepEqual bảng prospects, prospect_events, shares, share_listings); «liên hệ khách: sàn B không đọc, không ghi nhu cầu, sự kiện và Lần gửi của sàn A» với đối chứng dưới A có dòng; «liên hệ khách: vai API không ghi thẳng bốn bảng» — insert, update, delete đều permission denied, kể cả update, delete prospect_events; «liên hệ khách: ai đọc nhu cầu và Lần gửi» — bảng viết trước (đầu khách giữ, đầu khách giữ đã mất vai, người gửi không giữ nhu cầu, trưởng nhóm, đầu khách khác, đầu chủ, telesales, quản trị) × (nhu cầu, Lần gửi) → thấy/không thấy, đếm bằng số dòng; «liên hệ khách: khán giả và nhu cầu đi cặp» — Lần gửi client thiếu nhu cầu và agents có nhu cầu đều bị ràng buộc từ chối, đối chứng hai cặp đúng được; «liên hệ khách: mã link duy nhất toàn hệ» — cùng mã ở sàn B bị từ chối; «liên hệ khách: ngữ cảnh số của nhu cầu» — enc_context prospects:<sàn>:<id> được, prospectz:… bị từ chối; ca có sẵn «lược đồ: mọi cột chữ tên chứa phone bị ràng buộc is null» vẫn ok. Chiều đỏ: bỏ điều kiện người giữ trong luật đọc nhu cầu → dòng «đầu khách khác» thấy, ca đỏ nêu dòng."
+    paths: [packages/db/migrations/021_*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/lien-he-khach.test.ts có mặt và ok: «liên hệ khách: số mới tạo liên hệ khách» — ba nhu cầu số mới Mua, Thuê, Cả hai: đọc thẳng bảng (vai chủ) thấy ba liên hệ mới, loại deepEqual bảng viết trước, owner_member_user_id null, mỗi liên hệ một số mang enc_context prospects:<sàn>:<id nhu cầu>, prospects.contact_id đúng; «liên hệ khách: số của chủ nhà gắn liên hệ có sẵn» — đầu chủ 1 ghi chủ nhà số A, đầu khách tạo nhu cầu số A: đếm liên hệ của sàn không đổi, contact_id bằng liên hệ chủ, người giữ vẫn đầu chủ 1, Object.keys thân trả deepEqual Object.keys thân trả của ca số mới; «liên hệ khách: khách hỏi ghi một sự kiện» — sau mỗi nhu cầu mới đọc thẳng prospect_events (vai chủ): đúng một dòng type inquiry_received, actor_user_id = người gọi, actor_roles chứa buyer_agent, payload không có chín chữ số liền (máy dò, đối chứng dương trên chuỗi cài sẵn), đếm bằng số nhu cầu; lần gọi bị 403 không thêm dòng nào (đếm trước/sau bằng nhau); «liên hệ khách: ai tạo được nhu cầu» — bảng viết trước (đầu khách 201, đầu chủ 403, telesales 403, trưởng nhóm không vai Đầu khách 403, không cookie 401, khoá lạ 400, số sai khuôn 400) → mã HTTP, đếm bằng số dòng; thân trả 201 không có khoá contactId, phone, phoneHash và máy dò chín chữ số liền không bắt số nào, đối chứng dương cùng máy dò bắt chuỗi cài sẵn. Chiều đỏ: tạo liên hệ mới cho mọi nhu cầu → ca «số của chủ nhà» đỏ nêu số đếm."
+    paths: [packages/api/src/contacts/**, packages/db/migrations/021_*.sql, packages/api/test-db/lien-he-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ khách: một khách hai số» có mặt và ok — đầu khách 1 tạo nhu cầu số A, thêm số B (201, đếm số của liên hệ = 2), đầu khách 2 tạo nhu cầu số B: hai nhu cầu cùng contact_id, đếm liên hệ của sàn không đổi; bảng viết trước (thêm lại số B → 200 và số đếm vẫn 2; thêm số C của một liên hệ khách khác → 409; thêm số D của liên hệ chủ nhà do đầu chủ giữ → 409; đầu khách 2 thêm số vào nhu cầu của đầu khách 1 → 404) → mã HTTP và số đếm, đếm bốn lần so; thân trả của hai dòng 409 deepEqual nhau và không có khoá contactId (Hỏi-6); số của liên hệ khác không đổi sau 409. Chiều đỏ: thêm số tạo liên hệ mới thay vì vào liên hệ của nhu cầu → ca đỏ nêu hai contact_id khác nhau."
+    paths: [packages/api/src/contacts/**, packages/db/migrations/021_*.sql, packages/api/test-db/lien-he-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ khách: hai Lần gửi một người» có mặt và ok — từ hai nhu cầu của ca một khách hai số, đầu khách tạo hai Lần gửi khách riêng với căn đã lên bảng của bộ mẫu: 201, đọc thẳng bảng join shares → prospects ra cùng một contact_id, sender_user_id = người gọi, hai mã khớp ^[A-Za-z0-9_-]{12}$ và khác nhau; GET /api/v1/prospects/{id}/shares ra đúng mã Lần gửi theo thứ tự mới trước (deepEqual); Lần gửi agents không nhu cầu 201; ca «liên hệ khách: Lần gửi bị từ chối» — bảng viết trước (nhu cầu của đầu khách khác → 404; nhu cầu đã đóng → 404; căn «Chỉ tôi» của đầu chủ → 400; căn «Chỉ tôi» do chính người gửi tạo → 400; căn của sàn khác → 400; mã căn không có → 400; căn trùng → 400; 31 căn → 400; khán giả lạ → 400; client thiếu nhu cầu → 400) → mã HTTP, đếm bằng số dòng, và đếm shares không đổi. Chiều đỏ: kiểm căn bằng luật đọc của người gửi thay vì nấc «Toàn sàn» → dòng «Chỉ tôi do chính người gửi tạo» ra 201, ca đỏ nêu dòng."
+    paths: [packages/api/src/contacts/**, packages/core/src/sharing/**, packages/db/migrations/021_*.sql, packages/api/test-db/lien-he-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ khách: ai thấy nhu cầu và Lần gửi qua API» có mặt và ok — bảng viết trước (đầu khách giữ, trưởng nhóm, người gửi không giữ nhu cầu, đầu khách khác, đầu chủ, telesales, quản trị, người sàn khác) × (GET /api/v1/prospects/{id} mã HTTP, GET /api/v1/prospects/{id}/shares số dòng) deepEqual, đếm bằng số dòng; ca «liên hệ khách: đầu khách không đọc liên hệ» — GET /api/v1/contacts/{id} của đầu khách cho liên hệ chỉ khách và cho liên hệ vừa khách vừa chủ đều 404, đối chứng dương: trưởng nhóm 200 cả hai. Chiều đỏ: mở luật đọc nhu cầu cho mọi vai Đầu khách → dòng «đầu khách khác» ra 200, ca đỏ nêu dòng."
+    paths: [packages/api/src/contacts/**, packages/db/migrations/021_*.sql, packages/api/test-db/lien-he-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ khách: đóng nhu cầu» có mặt và ok — bảng viết trước (đầu khách giữ đóng → 200, closed_at có mốc, prospect_events thêm đúng một dòng closed, GET nhu cầu 200 với mốc đóng và danh sách Lần gửi không đổi; đóng lại → 409; trưởng nhóm đóng nhu cầu khác → 200; đầu khách khác đóng → 404; đầu chủ đóng → 404) → mã HTTP, đếm bằng số dòng; ca «liên hệ khách: đổi đầu khách giữ lịch sử» có mặt và ok — đầu khách 1 có nhu cầu và hai Lần gửi; trưởng nhóm PATCH sang đầu khách 2 → 200; đầu khách 2 GET nhu cầu 200 và danh sách Lần gửi ra đúng hai mã cũ, sender_user_id của hai Lần gửi vẫn đầu khách 1; prospect_events thêm đúng một dòng reassigned với payload người cũ, người mới; đầu khách 1 GET nhu cầu 404 nhưng GET danh sách Lần gửi của mình (đọc thẳng bảng bằng vai API dưới phiên đầu khách 1) vẫn ra hai dòng; bảng viết trước (đích là đầu chủ không vai Đầu khách → 400; đầu khách 2 tự PATCH → 404; khoá lạ → 400) → mã HTTP, đếm ba lần so. Chiều đỏ: PATCH đổi luôn sender_user_id → ca đỏ nêu người gửi."
+    paths: [packages/api/src/contacts/**, packages/db/migrations/021_*.sql, packages/api/test-db/lien-he-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ khách: chủ thành khách vẫn một người» có mặt và ok — đầu chủ 1 ghi chủ nhà số A; đầu khách tạo nhu cầu Mua số A; GET /api/v1/contacts/{id} của đầu chủ 1: contactTypes deepEqual [Seller, Buyer], ownerMemberUserId = đầu chủ 1, phoneCount không đổi (cùng số), Object.keys deepEqual CONTACT_VIEW_KEYS (không khoá nào về nhu cầu); đầu khách thêm số B vào nhu cầu ấy → GET của đầu chủ 1 ra phoneCount trước + 1, vẫn không khoá nhu cầu; isOwnerContact của lõi đúng; ca «liên hệ khách: khách thành chủ qua lead» — đầu khách tạo nhu cầu số K mới, telesales nhập lead số K: outcome new, đếm liên hệ của sàn không đổi, contact_types deepEqual [Seller, Buyer], prospects của K không đổi (deepEqual trước/sau); ca «liên hệ khách: giữ loại khách khi còn nhu cầu» — bảng viết trước (trưởng nhóm PATCH contacts bỏ Buyer khi nhu cầu Mua mở → 400; đóng nhu cầu qua POST /api/v1/prospects/{id}/close rồi bỏ → 200) → mã HTTP. Bộ ca lien-he.test.ts, lien-he-chuyen.test.ts, va-lien-he.test.ts của hàng 85 vẫn ok. Chiều đỏ: bỏ vế giữ loại khách trong app.set_contact_types → dòng đầu ra 200, ca đỏ nêu dòng."
+    paths: [packages/api/src/contacts/**, packages/db/migrations/021_*.sql, packages/api/test-db/lien-he-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/sharing/sharing.test.ts có mặt và ok: «Lần gửi: phong bì công khai» — publicEnvelope trên bản ghi đầy đủ (người gửi, nhu cầu, liên hệ, tên khách [Tên], số 0900 000 0xx, tiêu chí) ra Object.keys deepEqual SHARE_PUBLIC_KEYS viết trước [code, audience, listingIds, senderUserId], listingIds giữ thứ tự; chuỗi JSON không chứa tên khách, mã nhu cầu, mã liên hệ, số và máy dò chín chữ số liền không bắt gì; đối chứng dương: cùng máy dò trên JSON của bản ghi gốc bắt được số; «Lần gửi: khuôn nhập» — bảng viết trước (client có nhu cầu + 1 căn → ok; khán giả lạ; client thiếu nhu cầu; agents có nhu cầu; 0 căn; 31 căn; căn trùng; mã căn không phải uuid; khoá lạ) → ok hay đúng path lỗi, đếm bằng số dòng; «Lần gửi: mã link» — newShareCode khớp ^[A-Za-z0-9_-]{12}$ và 1000 lần sinh không trùng. Chiều đỏ: thêm prospectId vào SHARE_PUBLIC_KEYS → ca phong bì đỏ nêu khoá thừa."
+    paths: [packages/core/src/sharing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «liên hệ khách: tài liệu khớp lõi» trong packages/core/src/contacts/prospects.test.ts có mặt và ok — đọc docs/product/tham-chieu.md: bảng §4 có dòng mở đầu «| Nhu cầu khách |» và dòng «| Lần gửi |» chứa «nhu cầu khách»; mục Sổ quyết định có dòng bắt đầu «| 03/11 |» chứa «hàng 86»; bảng §15 có «Prospecting» và «SavedSearch»; mỗi khoá tiêu chí của lõi (PROSPECT_CRITERIA_KEYS) có mặt nguyên văn trong Tham chiếu; đọc docs/adr/0021-lien-he.md: có tiêu đề «Sửa đổi 03/11 — liên hệ khách», có câu chứa «người giữ» và «đầu khách», có «lịch xem»; đọc docs/product/doi-chieu-nganh.md: có «Prospecting». Chiều đỏ: đổi tên một khoá tiêu chí trong lõi → ca đỏ nêu khoá thiếu trong Tham chiếu."
+    paths: [docs/product/tham-chieu.md, docs/adr/0021-lien-he.md, docs/product/doi-chieu-nganh.md, packages/core/src/contacts/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

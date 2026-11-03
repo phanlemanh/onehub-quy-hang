@@ -1,0 +1,226 @@
+{
+  "ghi_chu": "Số nền chế độ tất định (không AI) của lõi nhập, hàng 64 — tính bằng packages/core/test/import/do.ts; ghi lại bằng `node --import tsx packages/core/test/import/ghi-so-nen.ts`. Ngưỡng do Cổng Đáng hàng 68 đặt.",
+  "hom_nay": "2026-11-03",
+  "tep": {
+    "mau-a": {
+      "ghepCot": {
+        "tu": 13,
+        "mau": 13
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 520
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 520
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "mau-b": {
+      "ghepCot": {
+        "tu": 16,
+        "mau": 16
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 600
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 640
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "ban-tieu-de": {
+      "ghepCot": {
+        "tu": 11,
+        "mau": 12
+      },
+      "loiDuocSua": {
+        "tu": 8,
+        "mau": 8
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 440
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 480
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "ban-gia": {
+      "ghepCot": {
+        "tu": 5,
+        "mau": 5
+      },
+      "loiDuocSua": {
+        "tu": 36,
+        "mau": 36
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 188
+      },
+      "hoiNguoi": {
+        "tu": 12,
+        "mau": 200
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "ban-ma-can": {
+      "ghepCot": {
+        "tu": 10,
+        "mau": 10
+      },
+      "loiDuocSua": {
+        "tu": 25,
+        "mau": 25
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 345
+      },
+      "hoiNguoi": {
+        "tu": 15,
+        "mau": 400
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "ban-ngay-trang-thai": {
+      "ghepCot": {
+        "tu": 7,
+        "mau": 7
+      },
+      "loiDuocSua": {
+        "tu": 44,
+        "mau": 44
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 269
+      },
+      "hoiNguoi": {
+        "tu": 11,
+        "mau": 280
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "ban-nguon-giau": {
+      "ghepCot": {
+        "tu": 10,
+        "mau": 10
+      },
+      "loiDuocSua": {
+        "tu": 3,
+        "mau": 3
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 397
+      },
+      "hoiNguoi": {
+        "tu": 3,
+        "mau": 400
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 255
+      }
+    },
+    "ban-csv-utf8": {
+      "ghepCot": {
+        "tu": 13,
+        "mau": 13
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 520
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 520
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    },
+    "ban-csv": {
+      "ghepCot": {
+        "tu": 13,
+        "mau": 13
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 520
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 520
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      }
+    }
+  },
+  "cong": {
+    "ghepCot": {
+      "tu": 98,
+      "mau": 99
+    },
+    "loiDuocSua": {
+      "tu": 116,
+      "mau": 116
+    },
+    "loiLot": {
+      "tu": 0,
+      "mau": 3799
+    },
+    "hoiNguoi": {
+      "tu": 41,
+      "mau": 3960
+    },
+    "roNguon": {
+      "tu": 0,
+      "mau": 1575
+    }
+  }
+}
