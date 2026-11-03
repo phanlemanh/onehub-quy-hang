@@ -3,6 +3,8 @@
 **Mục tiêu:** tab Tôi thật cho mọi vai, và đường «báo mất máy» xoá kho của người bị báo trên máy bị báo — qua tin đẩy
 `xoa-may` (máy có mạng) hoặc lần đầu máy chạm máy chủ (401 `device_reported_lost`), trong khi hết phiên thường giữ nguyên.
 
+**Duyệt:** Manh Phan 03/11/2026 (Gate 1.5).
+
 **Căn cứ:** `contract.md` (đã duyệt 03/11), `evals.yaml`, `design.md`, sổ `decisions.jsonl` (Hỏi-1 … Hỏi-4 theo khuyến
 nghị). Migration số **029** (giám sát giữ chỗ, H-6). Chạm `(auth)/login` và `packages/api/src/auth` đã gửi `cham-tep`
 (H-8, H-9).
