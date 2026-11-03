@@ -5,7 +5,7 @@ slug: bang-hang-dang-the
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, docs]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-11-03
 design_doc: _acceptance/bang-hang-dang-the/design.md
@@ -100,3 +100,5 @@ Quét bằng morphological-scan (preset entity-feature), bốn trục — chi ti
   ở `docs/design/vo-va-ia.md`). `tham-chieu.md`, `catalog.md` chỉ thêm dòng (luật 12 của đợt).
 - Luật 33 của đợt: lưới khuôn của kit 2.37.0 có thể báo oan tệp thuộc hai nhóm ở vùng inventory — ghi «báo oan — giới hạn
   kit 2.37.0» trong báo cáo bằng chứng, không sửa bản đồ khuôn để lưới im.
+- Ngoài-1 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu đầu khách đổi bìa, xoá ảnh hoặc dời ảnh sang ngăn Nội bộ trong hồ sơ rồi lùi về bảng thẻ, thẻ có thể vẫn hiện ảnh bìa cũ hoặc ô trống cho tới khi tải lại trang. — `apps/web/src/app/(app)/inventory/cards/the-can.tsx:22`
+- Ngoài-2 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu bảng đang trống rồi căn mới về qua đồng bộ khi đang mở, chỉ hiện khoảng vài thẻ đầu và cuộn không hiện thêm thẻ. Phải đổi bộ lọc hoặc mở rồi đóng hồ sơ mới đủ thẻ. — `apps/web/src/app/(app)/inventory/cards/bang-the.tsx:103`

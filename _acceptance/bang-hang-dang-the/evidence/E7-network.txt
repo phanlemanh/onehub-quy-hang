@@ -1,0 +1,5 @@
+# E7 network (app origin localhost:3492, khong gom static)
+GET /inventory 200; GET /api/v1/catalog 200 x4; GET /api/v1/listings 200 x2; GET /api/v1/units/photos?toa&ma 200 x11; GET /api/v1/units/photos/<id>/thumb 200 x11
+Khong co request FAIL-eligible loi (>=400).
+static note-only: GET /favicon.ico 404
+console error note: Hydration failed (server HTML != client) xuat hien o log .playwright-mcp/console-2026-11-03T12-45-40-042Z.log L8; 1 Issue badge tren man 1440
