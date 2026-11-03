@@ -195,6 +195,13 @@ test("lần nhập: căn có hàng mở", async () => {
   const h3 = await hangCo(s.dauChuB.cookie, m3, false);
   const sk = async (id: string) => dem("listing_events", "listing_id = $1", [id]);
   const [n2, n3] = [await sk(h2), await sk(h3)];
+  // Đầu chủ giữ H2, H3 có một máy nhận thông báo (hàng 26): tin bổ sung báo về đúng người ấy.
+  await appPool.query(
+    "insert into push_subscriptions (company_id, user_id, endpoint, p256dh, auth) values ($1, $2, 'https://push.example.test/e6', $3, $4)",
+    [s.companyId, s.dauChuB.userId, "B".repeat(87), "a".repeat(22)],
+  );
+  const bao = () => dem("push_outbox", "company_id = $1 and user_id = $2", [s.companyId, s.dauChuB.userId]);
+  const baoTruoc = await bao();
   const { id, rows } = await lanNhap(s.dauChu.cookie, [
     { ma: m1, gia: "4,2 tỷ" },
     { ma: m2, so: "0900 000 061" },
@@ -214,6 +221,7 @@ test("lần nhập: căn có hàng mở", async () => {
     [h2],
   );
   assert.deepEqual(lead.rows, [{ outcome: "unit_has_open_listing", matched_agent_user_id: s.dauChuB.userId }], "tin bổ sung gửi đầu chủ giữ H2");
+  assert.equal(await bao(), baoTruoc + 2, "đầu chủ giữ căn được báo hai tin bổ sung (H2, H3)");
   assert.equal(kq.rows[2]!.reason, LY_DO_DONG_NHAP.khongDoc);
   const than = JSON.stringify(kq);
   for (const lo of [h3, s.dauChuB.userId]) assert.ok(!than.includes(lo), `thân trả không chứa ${lo}`);

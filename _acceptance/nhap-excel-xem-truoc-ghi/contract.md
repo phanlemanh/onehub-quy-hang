@@ -5,7 +5,7 @@ slug: nhap-excel-xem-truoc-ghi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-03-nhap-excel-xem-truoc-ghi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
