@@ -18,6 +18,8 @@ const scope = (configs, files) => configs.map((c) => ({ ...c, files }));
 
 export default defineConfig([
   globalIgnores(["**/node_modules/**", "**/.next/**", "**/dist/**", "**/next-env.d.ts"]),
+  // Thư mục đợt Điều phối – Thợ chỉ có trên máy (git bỏ qua): bộ lõi chép từ kit, không phải mã của kho.
+  globalIgnores([".acceptance-runs/**"]),
   // Mã ReUI cài nguyên bản bằng shadcn CLI: không sửa tay, nên không lint (như onehub-invest). components/ui vẫn
   // chạy luật Next; chỉ luật quy-hang-ui bỏ qua nó (dưới).
   globalIgnores(["apps/web/src/components/reui/**"]),
