@@ -107,7 +107,7 @@ Một chỗ cho mọi luật. Cột «Giữ bằng» nói luật ấy có máy k
 | B1 | Cách ly giữa công ty | Mọi bảng của công ty bật và ép luật theo dòng; API chạy bằng vai không phải chủ bảng | AGENTS bất biến 1; ADR-0005 | Bộ kiểm cách ly, bắt buộc trước mỗi lần phát hành; check `isolation` |
 | B2 | Thông tin chủ nhà không rời công ty | Lớp `source` có trần `never_leaves_company`, chặn thêm ở cơ sở dữ liệu | Bất biến 2; ADR-0010, ADR-0013 | Ràng buộc cơ sở dữ liệu; bộ ca của lõi; ổ khoá T3 |
 | B3 | Người luôn bấm gửi | Không gửi Zalo cá nhân, không đăng nhóm, không tự trả lời; chỉ mở bảng chia sẻ | Bất biến 3 | Không có đường tích hợp; luật chữ |
-| B4 | Phần nội bộ không ra trang khách | Dữ liệu ra ngoài dựng từ luật ẩn ở lõi, không ẩn ở giao diện | Bất biến 4 | Bộ kiểm rò rỉ (hàng 31, chưa dựng); tới khi ấy là luật chữ |
+| B4 | Phần nội bộ không ra trang khách | Dữ liệu ra ngoài dựng từ luật ẩn ở lõi, không ẩn ở giao diện | Bất biến 4 | Bộ kiểm rò rỉ (hàng 31, job CI `ro-ri`) |
 | A1 | SaaS dọc theo ngành | Kiến trúc dựng cơ chế, vận hành chọn chính sách; không đối tượng tự tạo, không công thức | Kiến trúc §0; ADR-0017 của onehub-invest | Luật chữ |
 | A2 | Mọi kết nối là một thoả thuận | Invest, Platform hay công ty khác đều là bên của một loại kết nối, mở tới trần của lớp dữ liệu | AGENTS; `agreements.ts` | Bộ ca của lõi; ổ khoá T3 |
 | A3 | RESO trước | Tên trường và giá trị theo RESO Data Dictionary khi có; đặc trưng Việt Nam mới đặt tên riêng | AGENTS; ADR-0016; Tham chiếu §15 | Luật chữ; đối chiếu RESO ở bước thiết kế |

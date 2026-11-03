@@ -1,0 +1,7 @@
+Nguon: performance resource entries (fetch/xhr) tren trang /units/B-08.04, origin http://localhost:3492 (may dev day B). Khong co console error doc duoc (driver CDP, khong hook console).
+/api/v1/catalog 200
+/api/v1/catalog 200
+/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.04 200
+/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.04 200
+/api/v1/listings/01cad69f-2bec-44b4-bb82-0356d768674b 200
+/api/v1/listings 200

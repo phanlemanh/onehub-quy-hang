@@ -1,0 +1,28 @@
+{
+ "links": [],
+ "cards": [
+  "01cad69f-2bec-44b4-bb82-0356d768674b|",
+  "2c86552b-01ba-4389-805f-6f539f65811d|",
+  "36e9eb79-282e-417a-b7c4-6ee68a7e5157|",
+  "3dea2060-1d5e-466a-a39d-5166bebc53d9|",
+  "4648d09c-64ba-4a6d-a240-a11817d209aa|"
+ ],
+ "cardText": "Đang giao dịch\nB-08.04\n4,53 tỷ\nBao phí\nDiện tích\n—\nPhòng ngủ\n—\nHướng\n—",
+ "afterTap": "/inventory",
+ "ma": "B-08.04",
+ "href": "/units/B-08.04",
+ "top": "Căn B-08.04\n[Mẫu] Dự án căn hộ thử · Toà B · Căn hộ\nB-08.04\nĐang giao dịch\nXác nhận hôm nay\n4,53 tỷ\nBao phí\nx\nMức đủ thông tin · thiếu Nội thất, Tài chính\n3/5\nẢNH\nGửi được (1)\nTự có từ mã\nNội bộ\nẢnh thật · 03/11/2026\nBìa\nTHUỘC TÍNH CĂN\nBáo sai thông tin căn\nLoại căn\n2PN\nDiện tích\n82,3 m²\nTầng\n8\nHướn",
+ "header": [
+  "[Mẫu] Sàn thửGõ mã căn…⌘K+ LeadĐã đồng bộ · 22:37DA",
+  "Căn B-08.04"
+ ],
+ "url": "/units/B-08.04",
+ "net": [
+  "/api/v1/catalog 200",
+  "/api/v1/catalog 200",
+  "/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.04 200",
+  "/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.04 200",
+  "/api/v1/listings/01cad69f-2bec-44b4-bb82-0356d768674b 200",
+  "/api/v1/listings 200"
+ ]
+}

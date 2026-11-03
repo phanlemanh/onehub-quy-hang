@@ -2,7 +2,6 @@
 
 import {
   type Home,
-  HOME_LABEL,
   homeOfPath,
   isSecondColumnOpen,
   type Navigation,
@@ -25,6 +24,7 @@ import { MobileHeader, MobileTabBar } from "./mobile-shell";
 import { type LoiMenuTao, MenuTao } from "./menu-tao";
 import { Notifications } from "./notifications";
 import { SecondColumn, SecondColumnToggle } from "./second-column";
+import { titleOf } from "./tieu-de";
 import { UnitJumpButton, UnitJumpDialog, useUnitJumpKeys } from "./unit-jump";
 
 // Vỏ chung mọi màn sau đăng nhập (ADR-0002): một mã, hai vỏ theo bề rộng. Từ md là vỏ máy tính — khối app-shell-8 đã
@@ -51,22 +51,6 @@ function writeRemembered(key: string, open: boolean) {
   }
   all[key] = open;
   document.cookie = `${SECOND_COLUMN_COOKIE}=${encodeURIComponent(JSON.stringify(all))}; path=/; max-age=31536000; samesite=lax`;
-}
-
-const PAGE_TITLE: Record<string, string> = {
-  "/me": "Tôi",
-  "/leads/new": "Lead",
-  "/imports/new": "Nhập Excel",
-  "/exports/new": "Phát hàng",
-  "/viewings": "Lịch xem",
-};
-
-function titleOf(pathname: string, home: Home | null): string {
-  const unit = /^\/units\/([^/]+)/.exec(pathname);
-  if (unit) return `Căn ${decodeURIComponent(unit[1] ?? "")}`;
-  if (PAGE_TITLE[pathname]) return PAGE_TITLE[pathname];
-  if (home === "shares") return "Gửi";
-  return home ? HOME_LABEL[home] : "Quỹ hàng";
 }
 
 function DesktopHeader({

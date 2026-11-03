@@ -1,0 +1,83 @@
+schema_version: 1
+feature_slug: va-tieu-de-goi
+# Lệnh máy: executors.test.web (hàm tiêu đề thuần ở apps/web/src/components/shell/tieu-de.test.ts), executors.script lint,
+# typecheck, design_floor, executors.design.khuon. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có
+# mặt, ok, không SKIP.
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps) — dùng lại chỗ thử dãy B của hồ sơ bang-hang-dang-the:
+#   node --env-file-if-exists=.env.local --import tsx _acceptance/bang-hang-dang-the/thu/dung-b.mjs
+#   → Postgres dãy B (cổng 5572) đã migrate, sàn và người mẫu đã nạp, máy chủ dev cổng 3492.
+#   Phiên: node _acceptance/bang-hang-dang-the/thu/phien.mjs dau-chu-1@mau.quy-hang.test in JSON cookie
+#   `qh.session_token` và `qh_san` cho localhost:3492 (Đầu chủ mẫu — vai listing_agent, mở được chế độ cuộc gọi).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các ca «tiêu đề: chế độ cuộc gọi là «Ghi cuộc gọi»» và «tiêu đề: không đường nào dưới /units/call cho «Căn call»» có mặt và ok. Ca thứ nhất là ma trận viết trước ba đường /units/call, /units/call/, /units/call/dial — mỗi đường một assert bằng đúng chuỗi «Ghi cuộc gọi». Ca thứ hai duyệt các đường /units/call, /units/call/, /units/call/dial, /units/call/xyz và assert không đường nào cho tiêu đề bắt đầu bằng «Căn ». Chiều đỏ (lượt phá-thử ở S3): bỏ nhánh cuộc gọi khỏi hàm tiêu đề thì cả hai ca đỏ với thông điệp nêu đường và «Căn call»."
+    paths: ["apps/web/src/components/shell/tieu-de.ts", "apps/web/src/components/shell/tieu-de.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các ca «tiêu đề: trang một căn là «Căn <mã>»», «tiêu đề: mã phần trăm hỏng không ném lỗi» và «tiêu đề: đường khác giữ như trước» có mặt và ok. Ca thứ nhất là ma trận A-04.06 → «Căn A-04.06», B-15.05 → «Căn B-15.05», `A%2004` → «Căn A 04» (giải mã phần trăm). Ca thứ hai: `/units/%E0` cho «Căn %E0» và không ném. Ca thứ ba là bảng viết trước đủ năm đường của bảng tên trang (/me «Tôi», /leads/new «Lead», /imports/new «Nhập Excel», /exports/new «Phát hàng», /viewings «Lịch xem»), cộng bảng viết trước đủ năm nhà của lõi (today → HOME_LABEL.today, inventory → HOME_LABEL.inventory, shares → «Gửi», team → HOME_LABEL.team, settings → HOME_LABEL.settings) và một assert số nhà trong bảng bằng số khoá của HOME_LABEL, cộng không nhà → «Quỹ hàng» và /units trần (không nhà) → «Quỹ hàng»; mỗi phần tử một assert. Chiều đỏ: đổi một nhãn trong bảng tên trang thì ca thứ ba đỏ nêu đúng đường ấy."
+    paths: ["apps/web/src/components/shell/tieu-de.ts", "apps/web/src/components/shell/tieu-de.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Đặt phiên dau-chu-1 (phien.mjs), mở http://localhost:3492/today, chờ danh sách."
+      - "Bấm nút «Ghi cuộc gọi» đầu tiên trên một dòng lead. Ghi địa chỉ trang (phải là /units/call?lead=…). Đọc chữ thanh trên của vỏ điện thoại (phần tử header hiện ở khổ dưới md) → chụp evidence/E3-cuoc-goi.png."
+      - "Về /today, bấm «Ghi cuộc gọi» trên một dòng căn ở nhóm ép giá. Ghi địa chỉ (phải là /units/call?hang=…), đọc chữ thanh trên → chụp evidence/E3-ep-gia.png."
+      - "Mở http://localhost:3492/units/call/dial?lead=<mã lead vừa ghi> → đọc chữ thanh trên → chụp evidence/E3-quay-so.png."
+      - "Tìm trong văn bản toàn trang của cả ba màn chữ «Căn call»."
+    expected: "Thanh trên của vỏ điện thoại ở cả ba màn (khai thác ?lead=, ép giá ?hang=, quay số) ghi đúng «Ghi cuộc gọi»; không màn nào có chữ «Căn call» ở bất kỳ đâu."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/units/call/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E4
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-chu-1, mở http://localhost:3492/inventory, chạm một căn để có mã căn thật (hoặc dùng mã dung-b.mjs in), rồi mở http://localhost:3492/units/<mã căn>."
+      - "Đọc chữ thanh trên của vỏ điện thoại → chụp evidence/E4-ho-so.png."
+    expected: "Thanh trên ghi «Căn <mã căn>» đúng mã vừa mở, như trước hàng này."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/units/[code]/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; bài quét khuôn in dòng «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch» (có mặt, không SKIP); bước kiểm chuẩn in «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/components/shell/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
