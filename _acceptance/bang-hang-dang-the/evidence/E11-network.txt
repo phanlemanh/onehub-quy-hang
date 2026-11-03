@@ -1,0 +1,2 @@
+# E11 network (origin localhost:3492, playwright browser_network_requests /api/; console errors: 0)
+All /api/v1 requests (catalog, listings, units/photos, listings/<id>) returned 200; no failures. Static: 284 not listed.

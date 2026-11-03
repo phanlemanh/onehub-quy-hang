@@ -33,8 +33,9 @@ function useCotTheoUrl() {
 }
 
 /**
- * Điện thoại (dưới `md`): Bảng hàng dạng thẻ chưa dựng (mục 32) — có hồ sơ đang mở theo URL thì hồ sơ toàn màn, như
- * `/units/<mã>`; lối của hàng chưa có mã căn từ Hôm nay tới đây (ADR-0026). Không có thì khối báo cũ.
+ * Điện thoại (dưới `md`): có hồ sơ đang mở theo URL thì hồ sơ toàn màn, như `/units/<mã>`; lối của hàng chưa có mã căn
+ * từ Hôm nay tới đây (ADR-0026). Không có thì trả `bao` — bảng thẻ của mục 32 (`inventory/cards/bang-the.tsx`) trao `null`
+ * và tự dựng bảng thẻ bên cạnh.
  */
 export function HoSoDienThoai({ nguoi, san, bao }: { nguoi: string; san: string; bao: ReactNode }) {
   const { chon, duong, dongHref } = useCotTheoUrl();
