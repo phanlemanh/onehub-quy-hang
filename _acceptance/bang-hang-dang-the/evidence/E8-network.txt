@@ -1,0 +1,5 @@
+# E8 network (app origin localhost:3492, raw: E8-net-raw.txt)
+Tai trang /inventory (truoc khi bam Loc): GET /api/v1/catalog x4, GET /api/v1/units/photos?toa&ma x11 (Toa B), thumb x11, GET /api/v1/listings x1.
+Trong luc loc (lan 1: Loc -> 2-5 ty -> 2PN -> Toa A -> Xem 4 can): anh cho the moi tai man (Toa A): GET /api/v1/units/photos?toa=Toa+A&ma=A-15.04|A-13.03|A-11.02|A-08.03 + thumb x3 (duoc phep, ghi rieng). Co 1 GET /api/v1/listings cuoi (#297).
+Lan 2 (do rieng bang page.on('request'), Xoa loc roi loc lai y het): 0 request /api/ trong 3s sau Xoa loc; 0 request /api/ trong 3s sau Xem 4 can; sau do de yen 8s -> 1 GET /api/v1/listings o ~12s sau => la lam moi nen dinh ky, khong do loc (khong do thao tac nao).
+Request FAIL-eligible loi (>=400): khong co. Console error: 0.

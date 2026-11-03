@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>25 việc"]
+  GD --> B["Sắp mở vòng<br/>22 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>20 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>46 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>49 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -24,7 +24,6 @@ flowchart TD
 
 ## Sắp mở vòng
 
-- Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn (`bang-hang-dang-the`)
 - Mỗi sàn giữ cấu hình riêng: đổi một điểm qua một lệnh API thành sự kiện chỉ thêm ghi người và vai, sàn chưa đổi thì nhận mặc định của sổ, đối tượng tạo sau lần đổi mang số mới còn đối tượng cũ giữ số lúc tạo, và sàn khác không đọc hay đổi được (`cau-hinh-theo-san`)
 - Đầu khách mở Đã gửi và thấy từng link: lượt khách mở, căn được quan tâm, căn vừa đổi kèm «Gợi ý căn thay»; tắt được link (`da-gui`)
 - Người trong sàn đăng nhập trên một thẻ theo khối auth-15: chỉ mã một lần qua email, không nút Google, Apple hay GitHub, giữ chân điều khoản; chọn sàn và chưa gắn sàn đi cùng khuôn; luồng đăng nhập, phiên và luật vào đúng sàn của hàng 6 giữ nguyên (`dang-nhap-auth-15`)
@@ -35,8 +34,6 @@ flowchart TD
 - Trưởng nhóm mở Hôm nay và thấy lead quá hạn để chia lại, hàng cũ theo từng đầu chủ, và ngoại lệ máy không tự quyết được (`hom-nay-truong-nhom`)
 - Đầu chủ mở Hôm nay và đọc mỗi việc trên một dòng: tên căn, cột «Vì sao hôm nay» hai tầng — lý do chữ đậm, hạn đỏ khi quá, vàng khi còn dưới 15 phút — và giá; làm việc đầu của nhóm bằng đúng một nút, một chạm; việc còn lại nằm trong ⋯; hàng đợi, luật mỗi căn một hàng đợi và ghi kết quả của hàng 22 giữ nguyên (`lam-lai-hom-nay-dau-chu`)
 - Telesales nhập lead trên điện thoại: thiếu một mục thì chưa gửi được, gửi xong theo dõi được bốn nấc (`lead-dien-thoai`)
-- Đầu khách lưu khách là một liên hệ loại Người mua hoặc Người thuê, gắn nhu cầu, Lần gửi và lịch xem vào liên hệ ấy; một khách hai số vẫn là một người; số khách không ra trang khách (`lien-he-khach`)
-- Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách) (`luat-an-va-kiem-ro-ri`)
 - Đầu khách chọn căn, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với link, ảnh và tin soạn sẵn; người tự bấm gửi trong Zalo (`luong-gui`)
 - Đầu chủ thả file bảng hàng cũ, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi; căn đã có hàng mở thành tin bổ sung, độ tươi theo ngày trong file; chủ nhà và số trong file thành liên hệ chủ nhà của sàn (hàng 85) qua cùng đường kiểm trùng theo liên hệ (`nhap-excel-xem-truoc-ghi`)
 - Đầu chủ hoàn tác cả một lần nhập; căn đã có người sửa sau đó được liệt kê, không bị gỡ (`nhap-hoan-tac`)
@@ -61,6 +58,7 @@ flowchart TD
 - Lưới bảng hàng 5.000 dòng × 20 cột cuộn, sửa trên ô và dán 500 ô từ Excel mà không giật trên máy tính văn phòng (`bai-thu-luoi-5000-dong`)
 - Link trang khách dán vào Zalo hiện ảnh xem trước, và lượt Zalo tự lấy ảnh không bị tính là khách mở (`bai-thu-zalo`)
 - Kho có bản đồ khuôn cho các nhóm màn đã có — Cài đặt sàn, Xác thực, trang tạm, trạng thái trống · lỗi · báo — và mỗi nhóm một khuôn có khe mà mọi màn của nhóm dựng qua (`ban-do-khuon-nhom-da-co`)
+- Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn (`bang-hang-dang-the`)
 - Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn (`bang-hang-kieu-sheet`)
 - Lệnh chốt bán với ngày bán không có thật (như 30 tháng 2) bị từ chối với lỗi nêu đúng trường ngày bán, không phải lỗi hệ thống (`bao-ro-ngay-ban-sai`)
 - Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác (`can-trung-ma-hai-toa`)
@@ -80,8 +78,10 @@ flowchart TD
 - Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi (`khu-va-loai-hinh`)
 - Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
 - Mỗi người làm việc với sàn là một liên hệ (RESO Contacts) — một người, nhiều số, nhiều loại liên hệ, một người giữ; lead và hàng gắn vào liên hệ chủ nhà (`lien-he`)
+- Đầu khách lưu khách là một liên hệ loại Người mua hoặc Người thuê, gắn nhu cầu và Lần gửi vào liên hệ ấy qua nhu cầu khách; một khách hai số vẫn là một người; số khách không ra trang khách (`lien-he-khach`)
 - Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện (`loi-hang-va-su-kien`)
 - Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện (`lop-truong-nguon`)
+- Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách) (`luat-an-va-kiem-ro-ri`)
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
 - Mở sàn cho công ty mới trùng tên với sàn đang chạy thì được một sàn riêng; người của sàn mới không thấy dữ liệu sàn cũ (`mo-san-trung-ten`)
 - Quản trị sàn mời người vào sàn, đặt vai và khu phụ trách; một người giữ được nhiều vai (`moi-nguoi-vai-khu`)
