@@ -370,6 +370,7 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
             {ls.dong.map((d, i) => (
               <TimelineItem key={i} step={i + 1} className="group-data-[orientation=vertical]/timeline:ms-6">
                 <TimelineHeader>
+                  {/* eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- lớp của ví dụ timeline ReUI chép nguyên: chiều cao vạch nối giữa hai mốc, không phải kích thước trang */}
                   <TimelineSeparator className="group-data-[orientation=vertical]/timeline:-left-5 group-data-[orientation=vertical]/timeline:h-[calc(100%-1rem-0.25rem)] group-data-[orientation=vertical]/timeline:translate-y-5" />
                   <TimelineTitle className="text-sm">
                     {d.viec}

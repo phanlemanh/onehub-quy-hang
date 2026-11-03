@@ -166,11 +166,88 @@ test("người không thấy nguồn: ba lời gọi không lộ trường ngu�
       assert.equal(res.status, 200, `${ten} ${duong}`);
       const than = await res.json();
       assert.deepEqual(findSourceLeaks(than, MAU), [], `${ten} ${duong}`);
-      if (duong === chuNha(h)) assert.deepEqual(than, { visible: false, listingAgentUserId: a.dauChu.userId }, ten);
+      if (duong === chuNha(h)) assert.deepEqual(than, { visible: false, listingAgentUserId: a.dauChu.userId, listingAgentName: await tenNguoi(a.dauChu.userId) }, ten);
       soThan++;
     }
   }
   assert.equal(soThan, 12);
+});
+
+/** Tên người dùng như `identity.user` lưu — cái API phải trả ở `listingAgentName`. */
+const tenNguoi = async (userId: string) => (await identityPool.query<{ name: string }>('select name from "user" where id = $1', [userId])).rows[0]!.name;
+const KHOA_LIEN_LAC = ["email", "phone", "ownerPhone", "listingAgentEmail", "listingAgentPhone"];
+const coKhoa = (v: unknown, khoa: string[]): string[] => {
+  if (!v || typeof v !== "object") return [];
+  return Object.entries(v).flatMap(([k, con]) => [...(khoa.includes(k) ? [k] : []), ...coKhoa(con, khoa)]);
+};
+
+test("chủ nhà: người không thấy nguồn nhận tên đầu chủ", async () => {
+  const a = await SAN;
+  const h = await taoHang(a.dauChu.cookie);
+  assert.equal((await send("PUT", chuNha(h), CHU, a.dauChu.cookie)).status, 200);
+  for (const m of MAU) assert.ok(m.length > 0);
+  // Đối chứng dương: thân của trưởng nhóm có nguồn, cùng hàm quét bắt được.
+  assert.notDeepEqual(findSourceLeaks(await json(await send("GET", chuNha(h), undefined, a.truongNhom.cookie)), MAU), []);
+  const ten = await tenNguoi(a.dauChu.userId);
+  assert.ok(ten.length > 0);
+  for (const [nhan, ai] of [["đầu khách", a.dauKhach], ["đầu chủ không giữ", a.dauChuKhac]] as const) {
+    const res = await send("GET", chuNha(h), undefined, ai.cookie);
+    assert.equal(res.status, 200, nhan);
+    const than = (await res.json()) as Record<string, unknown>;
+    assert.equal(than.visible, false, nhan);
+    assert.equal(than.listingAgentUserId, a.dauChu.userId, nhan);
+    assert.equal(than.listingAgentName, ten, nhan);
+    assert.deepEqual(findSourceLeaks(than, MAU), [], nhan);
+    assert.deepEqual(coKhoa(than, KHOA_LIEN_LAC), [], nhan);
+  }
+});
+
+test("chủ nhà: căn chưa ai giữ", async () => {
+  const a = await SAN;
+  const h = await taoHang(a.dauChu.cookie);
+  const res = await send("GET", chuNha(h), undefined, a.dauKhach.cookie);
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { visible: false, listingAgentUserId: null, listingAgentName: null });
+});
+
+test("chủ nhà: người thấy nguồn như trước", async () => {
+  const a = await SAN;
+  const h = await taoHang(a.dauChu.cookie);
+  assert.equal((await send("PUT", chuNha(h), CHU, a.dauChu.cookie)).status, 200);
+  for (const ai of [a.dauChu, a.truongNhom]) {
+    const res = await send("GET", chuNha(h), undefined, ai.cookie);
+    assert.equal(res.status, 200);
+    assert.deepEqual(await res.json(), { visible: true, ownerName: TEN, floorPrice: GIA_DAY, hasPhone: true });
+  }
+});
+
+test("đầu khách: kéo bảng hàng và hồ sơ không chở nguồn", async () => {
+  const a = await SAN;
+  const h = await taoHang(a.dauChu.cookie);
+  assert.equal((await send("PUT", chuNha(h), CHU, a.dauChu.cookie)).status, 200);
+  await appPool.query(
+    `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+     select gen_random_uuid(), company_id, building_name, unit_number, 'internal', 'image/jpeg', 1000, 10, 10, 'bai-kiem' from listings where id = $1`,
+    [h],
+  );
+  for (const m of MAU) assert.ok(m.length > 0);
+  assert.notDeepEqual(findSourceLeaks(await json(await send("GET", chuNha(h), undefined, a.truongNhom.cookie)), MAU), []);
+  const anh = `/api/v1/units/photos?toa=${encodeURIComponent("[Toà mẫu]")}&ma=A-1201`;
+  const duong = ["/api/v1/listings", `/api/v1/listings/${h}`, anh, chuNha(h)];
+  let soDuong = 0;
+  for (const d of duong) {
+    const res = await send("GET", d, undefined, a.dauKhach.cookie);
+    assert.equal(res.status, 200, d);
+    const than = await res.json();
+    assert.deepEqual(findSourceLeaks(than, MAU), [], d);
+    if (d === anh) {
+      const ds = than as { anh: { compartment: string }[]; noiBo: string };
+      assert.equal(ds.noiBo, "an");
+      assert.deepEqual(ds.anh.filter((p) => p.compartment === "internal"), []);
+    }
+    soDuong++;
+  }
+  assert.equal(soDuong, 4);
 });
 
 test("mở số: n lời gọi thành đúng n sự kiện", async () => {
