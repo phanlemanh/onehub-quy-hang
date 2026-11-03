@@ -27,6 +27,8 @@ const HONG: [string, (k: KeHoach) => void, string][] = [
   ["khoá lạ ở phép", (k) => ((k.columns[2]!.transform as Record<string, unknown>).script = "x"), "columns[2].transform.script"],
   ["phép ngoài thực đơn", (k) => (k.columns[1]!.transform = { name: "eval" }), "columns[1].transform.name"],
   ["tham số lạ", (k) => (k.columns[2]!.transform = { name: "price", params: { unit: "ty", round: "up" } } as never), "columns[2].transform.params.round"],
+  ["tham số trùng tên thuộc tính hệ thống", (k) => (k.columns[1]!.transform = { name: "status", params: { toString: "x" } } as never), "columns[1].transform.params.toString"],
+  ["tham số «constructor»", (k) => (k.columns[2]!.transform = { name: "price", params: { unit: "ty", constructor: "x" } } as never), "columns[2].transform.params.constructor"],
   ["tham số sai giá trị", (k) => (k.columns[2]!.transform = { name: "price", params: { unit: "usd" } }), "columns[2].transform.params.unit"],
   ["thiếu tham số bắt buộc", (k) => (k.columns[2]!.transform = { name: "price" } as never), "columns[2].transform.params.unit"],
   ["bỏ cột có dữ liệu", (k) => (k.columns[3]!.target = "ignore_with_reason"), "columns[3].target"],

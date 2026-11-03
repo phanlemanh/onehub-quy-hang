@@ -61,11 +61,12 @@ function kiemPhep(t: unknown, path: string, out: PlanError[]) {
   const params = t.params ?? {};
   if (!laDoiTuong(params)) return void out.push({ path: `${path}.params`, reason: "cần một đối tượng" });
   for (const [k, v] of Object.entries(params)) {
-    const nhan = cho[k];
+    // Tra bằng `Object.hasOwn`: khoá trùng tên thuộc tính hệ thống («toString», «constructor») vẫn là khoá lạ, không làm sập.
+    const nhan = Object.hasOwn(cho, k) ? cho[k] : undefined;
     if (!nhan) out.push({ path: `${path}.params.${k}`, reason: "khoá lạ" });
     else if (typeof v !== "string" || !nhan.includes(v)) out.push({ path: `${path}.params.${k}`, reason: `cần một trong: ${nhan.join(", ")}` });
   }
-  if (CAN_THAM_SO.includes(t.name)) for (const k of Object.keys(cho)) if (!(k in params)) out.push({ path: `${path}.params.${k}`, reason: "thiếu" });
+  if (CAN_THAM_SO.includes(t.name)) for (const k of Object.keys(cho)) if (!Object.hasOwn(params, k)) out.push({ path: `${path}.params.${k}`, reason: "thiếu" });
 }
 
 /** Kiểm khuôn kế hoạch trên đúng bảng nó định áp. Rỗng là hợp lệ. */
