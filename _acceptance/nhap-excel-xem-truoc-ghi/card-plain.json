@@ -1,0 +1,29 @@
+{
+ "feature_plain": "Một lần nhập file bảng hàng ghi vào sổ hàng đúng như khi đầu chủ tạo tay — căn mới, cập nhật căn mình giữ, báo đầu chủ khác khi căn đã có người giữ, giữ kín chủ nhà và số — và bản xem thử nói trước đúng điều lần ghi sẽ làm. Màn Nhập Excel là hàng sau.",
+ "will_do": [
+  {"id":"AC-2","p":"Sẽ chặn kế hoạch ghép cột chủ nhà, số chủ hay giá đáy vào chỗ người khác đọc được, và sửa hai lỗi đọc file của bản trước (tiêu đề có ô trống, ô chữ lạ)."},
+  {"id":"AC-3","p":"Sẽ giữ lần nhập của sàn này kín với sàn khác ngay ở cơ sở dữ liệu; dòng nhập không giữ lại ô gốc của file."},
+  {"id":"AC-4","p":"Sẽ tạo mỗi căn mới qua đúng đường tạo hàng thường: ở Chưa đủ để rao, chỉ người nhập thấy, người nhập giữ căn."},
+  {"id":"AC-6","p":"Sẽ cập nhật căn mình đang giữ; căn người khác giữ thì gửi tin bổ sung cho người ấy, không đụng hàng; dòng lặp căn trong file thì bỏ dòng sau."},
+  {"id":"AC-7","p":"Sẽ đưa chủ nhà và số trong file vào liên hệ chủ nhà của sàn ở dạng mã hoá; số đã có thì gắn đúng liên hệ cũ."},
+  {"id":"AC-8","p":"Sẽ tính độ tươi theo ngày xác nhận ghi trong file; không có ngày thì căn là «chưa xác nhận»."},
+  {"id":"AC-9","p":"Sẽ cho Đầu chủ và Trưởng nhóm nhập; Trưởng nhóm gán đầu chủ cho từng dòng."},
+  {"id":"AC-10","p":"Sẽ cho xem thử trả đúng con số và hành động mà lần ghi sẽ làm, kể cả khi file chia nhiều gói, và xem thử không ghi gì."}
+ ],
+ "wont_do": [
+  {"id":"AC-1","p":"Sẽ KHÔNG để một dòng ra hai hành động: mỗi dòng đúng một trong tạo, cập nhật, tin bổ sung, bỏ — kèm lý do."},
+  {"id":"AC-5","p":"Sẽ KHÔNG nhân đôi căn khi gửi lại một gói; gói quá 200 dòng bị từ chối; một dòng lỗi không chặn cả gói."},
+  {"id":"OOS-1","p":"Chưa có màn Nhập Excel — hàng sau (man-nhap-excel)."},
+  {"id":"OOS-2","p":"Chưa hoàn tác cả lần nhập — hàng 66."},
+  {"id":"OOS-3","p":"Chưa nhớ mẫu file của sàn, chưa có AI — hàng 67–71."},
+  {"id":"OOS-4","p":"Chưa gộp hai dòng trùng thành một — giữ dòng đầu, màn sau cho chọn."},
+  {"id":"OOS-5","p":"Dòng trùng căn người khác giữ mà thiếu số hay giá: không gửi tin bổ sung, chỉ ghi lý do."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Phạm vi hẹp hơn điều đã duyệt ở Cổng Đáng (ô cơ hội nói xem trước và ghi không tách được) — đưa thành Hỏi-4 cho anh."},
+  {"i":1,"p":"Hàng Trưởng nhóm nhập cho đầu chủ khác: đầu chủ giữ căn không đọc được hàng ấy theo luật hiện tại — đưa thành Hỏi-5 cho anh."},
+  {"i":2,"p":"Bài kiểm chặn cột chủ nhà chỉ thử cột số — đã mở rộng sang tên chủ và giá đáy, và kiểm cả kế hoạch đã lưu."},
+  {"i":3,"p":"Căn lặp ở hai gói khác nhau có thể làm xem thử lệch với ghi — đã chốt xét trùng trên cả file và thêm bài kiểm hai gói."},
+  {"i":4,"p":"Khi Trưởng nhóm nhập, máy so nhầm người giữ căn — đã sửa: so với đầu chủ của dòng, thêm ca kiểm."}
+ ]
+}
