@@ -5,7 +5,7 @@ slug: va-doi-gia-can-da-ban
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-03-va-doi-gia-can-da-ban-design.md
 approved_by:
 approved_at:
@@ -58,3 +58,4 @@ máy chủ, «Cần xem»].
 - Vùng: `packages/core/src/listing/**`, `packages/api/src/listings/**` cộng hai tệp kiểm mới
   (`packages/api/test-db/doi-gia-da-ban/**`, `apps/web/src/lib/sync/test-db/doi-gia-da-ban.db-test.mts`) — yêu cầu `cham-tep`
   G-1.
+- Ngoài-1 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Tài liệu API công bố cho bên ngoài chưa nhắc rằng đổi giá một căn Đã bán sẽ bị từ chối. Hệ thống vẫn từ chối đúng và trả lý do rõ, chỉ là người đọc tài liệu không biết trước. — `packages/api/src/listings/routes.ts`
