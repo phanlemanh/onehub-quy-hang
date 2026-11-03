@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: e9e76698aea78bfca65ba485e52466ea41571de1
+verified_commit: 04d10eb5b3da1b4763d1c02c49cd3bf3f8e594ba
 human_signoff: Manh Phan 2026-11-03
 ---
 
@@ -187,3 +187,7 @@ none — every multi-run eval is uniform
 
 Round 1: eval ban dau chay xanh; ca E1, E3 den E10 duoc carry-forward sang round 2.
 Round 2: E2 chay lai sau khi bo sung ma tran vai API (S4 vong 1) — xanh; cac lenh suite xanh.
+
+### Re-pin lần 1 — 2026-11-03, do hoá cũ do gộp main vào nhánh (code nhập liệu của hàng khác)
+run_id: repin-20261103T141647Z-62966
+sha: 04d10eb5b3da1b4763d1c02c49cd3bf3f8e594ba · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng
