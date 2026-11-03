@@ -93,3 +93,12 @@ evals:
     expected: "exit 0; ca «lần nhập: xem thử bằng ghi» ok — một file chia hai gói (dòng 2–4 và 5–8) trên bộ dựng của E6 cộng hai dòng mới, một dòng chặn và căn X ở dòng 2 và dòng 6 (hai gói khác nhau): chụp đếm listings, listing_events, leads, contacts, import_rows, listing_owners; POST /rows dryRun true cho cả hai gói (gói 1 chưa ghi) → đếm sau bằng đếm trước (6 assert); rồi POST /rows dryRun false gói 1 rồi gói 2 → mảng {row, action, reason} và summary của xem thử và ghi deepEqual từng gói (trừ listingId mới); dòng 6 ra skip «trùng dòng 2» ở cả xem thử lẫn ghi; đếm listings của căn X bằng 1. Chiều đỏ: xem thử chạy nhánh đếm riêng không qua quyetDongNhap → lệch ở dòng tin bổ sung, ca đỏ nêu dòng."
     paths: [packages/core/src/import/**, packages/api/src/imports/**, packages/api/test-db/imports/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca lõi «ai thấy hàng: đầu chủ giữ căn đọc hàng Chỉ tôi» trong packages/core/src/visibility (executor core chạy trong suite) ok — ma trận viết tay người đọc 4 [người tạo, đầu chủ giữ căn khác người tạo, thành viên khác, sàn khác] × mức 2 [Chỉ tôi, Sàn] = 8 phần tử, assert từng phần tử, đếm 8; Chỉ tôi: người tạo true, đầu chủ giữ true, thành viên khác false. Ca test-db «lần nhập: hàng Trưởng nhóm nhập hiện cho đầu chủ giữ căn» — team_lead nhập 1 dòng gán Đầu chủ A: GET /listings/{id} bởi A ra 200, bởi Đầu khách cùng sàn ra 404, bởi Đầu chủ B ra 404. Chiều đỏ: bỏ vế đầu chủ giữ căn trong canRead → A nhận 404, ca đỏ nêu A."
+    paths: [packages/core/src/visibility/**, packages/api/src/imports/**, packages/api/src/listings/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

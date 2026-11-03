@@ -5,10 +5,10 @@ slug: nhap-excel-xem-truoc-ghi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-03-nhap-excel-xem-truoc-ghi-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-03
 ---
 
 # Acceptance Contract: nhap-excel-xem-truoc-ghi
@@ -64,6 +64,9 @@ Source input: `docs/plan/lo-trinh.json` hàng 65 · `_acceptance/nhap-excel-xem-
   «chưa có đầu chủ giữ căn»; dòng file ghi Đã bán hay Ngừng hẳn không nhập. (cross-layer)
 - AC-10: Given cùng một file chia nhiều gói, When gửi bản xem thử mọi gói rồi gửi bản ghi từng gói, Then hành động và đếm
   của bản xem thử bằng đúng của bản ghi, và bản xem thử không để lại hàng, sự kiện, lead, liên hệ hay dòng nhập nào. (cross-layer)
+- AC-11: Given hàng «Chỉ tôi» mà người tạo khác đầu chủ giữ căn (Trưởng nhóm nhập cho Đầu chủ A), When A hay một thành viên
+  khác của sàn đọc hàng, Then lõi trục ai thấy hàng cho A đọc được, thành viên khác vẫn không; hàng «Chỉ tôi» thường (người
+  tạo giữ căn) đọc như cũ. (cross-layer)
 
 ## Coverage
 
@@ -71,7 +74,7 @@ Quét không gian tiêu chí (preset entity-feature × test-matrix, skill morpho
 
 - Trục **hành động một dòng**: tạo | cập nhật | tin bổ sung | bỏ (sáu lý do) [thước CE: luật 20, ADR-0011 qđ 11, §6 — AC-1, AC-4, AC-6, AC-9]
 - Trục **lớp dữ liệu chạm**: catalog | shareable_listing | company_internal | source [thước CE: bất biến 2, `FIELD_CLASS` — AC-2a, AC-7]
-- Trục **người nhập**: Đầu chủ | Trưởng nhóm | vai khác | sàn khác [thước CE: ADR-0011 qđ 11, bất biến 1 — AC-3, AC-9]
+- Trục **người nhập**: Đầu chủ | Trưởng nhóm | vai khác | sàn khác [thước CE: ADR-0011 qđ 11, bất biến 1 — AC-3, AC-9, AC-11]
 - Trục **lặp và lỗi**: lần đầu | gửi lại | gói quá cỡ | một dòng lỗi | xem thử | nhiều gói [thước CE: §6 «gửi lại không nhân đôi» — AC-5, AC-10]
 - Trục **độ tươi**: có ngày hợp lệ | ngày ngoài khoảng | không cột ngày [thước CE: luật 11 — AC-8]
 - Ba lỗi hàng 64 (luật 38) — AC-2.
@@ -87,7 +90,7 @@ Quét không gian tiêu chí (preset entity-feature × test-matrix, skill morpho
 ## Notes
 
 - Vùng: `packages/api/src/imports/**`, `packages/db/migrations/024_*.sql`, `packages/core/src/import/**`,
-  `packages/core/test/import/**`; chạm thêm (yêu cầu `cham-tep` G-5, giám sát duyệt): `packages/core/src/listing/{events,fold}.ts`
+  `packages/core/test/import/**`; chạm thêm (yêu cầu `cham-tep` G-5, giám sát duyệt; `packages/core/src/visibility/**` xin thêm cho AC-11): `packages/core/src/listing/{events,fold}.ts`
   (+ test), `packages/api/src/{app,errors}.ts` (+ test), `packages/api/src/leads/store.ts` (tách phần ghi, không đổi hành
   vi), `packages/api/src/listings/store.ts` (`import_id`), `packages/api/test-db/imports/**`, `packages/db/tests/isolation.test.mjs`,
   `docs/product/{tham-chieu,doi-chieu-nganh}.md` (chỉ thêm dòng), `docs/plan/lo-trinh.json` (thêm hàng `man-nhap-excel`).
