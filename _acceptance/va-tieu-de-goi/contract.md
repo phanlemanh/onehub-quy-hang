@@ -5,7 +5,7 @@ slug: va-tieu-de-goi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-03-va-tieu-de-goi-design.md
 approved_by:
 approved_at:
@@ -65,3 +65,6 @@ Quét bằng morphological-scan (preset entity-feature), hai trục:
 
 - Chạm tệp: `apps/web/src/components/shell/app-shell.tsx` (đổi dòng nhập), tệp mới `apps/web/src/components/shell/tieu-de.ts`
   và bài kiểm `tieu-de.test.ts` — vùng của hàng đã khai thêm `tieu-de.ts`.
+- Ngoài-1 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Nếu đang mở danh sách thẻ hàng lúc còn trống rồi có căn mới về, danh sách có thể vẫn trắng dù đầu trang báo có căn. Tải lại trang là hiện đủ. — `apps/web/src/app/(app)/inventory/cards/bang-the.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Bài kiểm của bộ số đo có thể vẫn xanh dù bộ mẫu lệch khỏi bộ nạp thật, nên số liệu mẫu có thể sai mà không ai báo. Người dùng cuối không thấy ngay. — `packages/core/src/metrics/so-do.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-03, đề xuất S4 known-limits): Bài kiểm có thể báo xanh dù thật ra không quét được gì, nên có thể không bắt được lỗi nhập nhầm mã về sau. Người dùng cuối không bị ảnh hưởng trực tiếp. — `packages/core/src/import/bo-thu.test.ts`
