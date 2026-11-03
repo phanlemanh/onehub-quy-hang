@@ -109,3 +109,12 @@ sequenceDiagram
   Note over D: khép lượt: endedAt = t3, queuedOps = 1 → hộp gửi
   D->>S: POST /api/v1/sync/offline-sessions (201; gửi lại → 200, không trùng)
 ```
+
+## Eval cũ được thay (Hỏi-1, chủ kho duyệt 03/11)
+
+| Eval cũ | Tiêu chí mới đo lại nó |
+|---|---|
+| so-do-hai-tuan-thu/E8 | ghi-thiet-bi-va-mat-mang#AC-9 (ca «chưa có sự kiện: bốn mã nói rõ thiếu gì», eval E9) |
+
+Ca «chưa có sự kiện: sáu mã» của hàng 52 rời `so-do.test.ts`, thay bằng ca bốn mã ở `thiet-bi-mat-mang.test.ts`. Mỗi hàng
+sau cho một trong bốn mã còn lại ra số (34, 35, 43, 86) sẽ lại đổi ca ấy theo cùng cách.

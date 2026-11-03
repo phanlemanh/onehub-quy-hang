@@ -1949,3 +1949,73 @@ test("vết mở số lead: chỉ thêm", { skip }, async () => {
     assert.equal(so, 5);
   });
 });
+
+// ---- Lượt mất mạng (028_thiet_bi_va_mat_mang, E2) ----
+const LUOT_MM = `insert into offline_sessions (company_id, user_id, device, started_at, ended_at, queued_ops)
+                 values ($1, $2, $3, $4, $5, $6)`;
+
+test("offline_sessions: sàn khác không đọc, không ghi hộ", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relrowsecurity r, c.relforcerowsecurity f from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname = 'offline_sessions'`,
+    );
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+
+  await asUser(null, null, async (c) => {
+    // Vai chủ dựng: hai lượt của A (U1, U2), một lượt của B (U2).
+    await c.query("reset role");
+    for (const [san, nguoi, bd] of [
+      [COMPANY_A, USER_1, "2026-11-03T08:00:00Z"],
+      [COMPANY_A, USER_2, "2026-11-03T08:10:00Z"],
+      [COMPANY_B, USER_2, "2026-11-03T08:20:00Z"],
+    ]) {
+      await c.query(LUOT_MM, [san, nguoi, "mobile", bd, "2026-11-03T09:00:00Z", 1]);
+    }
+    await c.query("set local role quy_hang_app");
+    await c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [USER_1, COMPANY_A]);
+
+    // Đọc: đúng hai lượt của A, không lượt nào của B.
+    const doc = await c.query("select company_id, user_id from offline_sessions order by started_at");
+    assert.equal(doc.rowCount, 2, "U1 ở sàn A phải đọc đúng hai lượt của A");
+    assert.deepEqual(doc.rows, [
+      { company_id: COMPANY_A, user_id: USER_1 },
+      { company_id: COMPANY_A, user_id: USER_2 },
+    ]);
+    assert.equal((await c.query("select 1 from offline_sessions where company_id = $1", [COMPANY_B])).rowCount, 0);
+
+    // Đối chứng dương: ghi lượt của chính mình ở A được.
+    await c.query(LUOT_MM, [COMPANY_A, USER_1, "desktop", "2026-11-03T10:00:00Z", "2026-11-03T10:01:00Z", 0]);
+    assert.equal((await c.query("select 1 from offline_sessions where user_id = $1", [USER_1])).rowCount, 2);
+
+    // Ghi hộ: sàn B, hay người khác trong A → luật theo dòng từ chối (42501).
+    const BANG = [
+      ["company_id của sàn B", [COMPANY_B, USER_1, "mobile", "2026-11-03T11:00:00Z", "2026-11-03T11:01:00Z", 1]],
+      ["user_id người khác", [COMPANY_A, USER_2, "mobile", "2026-11-03T11:00:00Z", "2026-11-03T11:01:00Z", 1]],
+    ];
+    let so = 0;
+    for (const [ten, params] of BANG) {
+      await c.query("savepoint mm");
+      let err = null;
+      try {
+        await c.query(LUOT_MM, params);
+      } catch (e) {
+        err = e;
+      }
+      await c.query("rollback to savepoint mm");
+      assert.ok(err, `ghi hộ «${ten}» được nhận — ${ten} được ghi`);
+      assert.equal(err.code, "42501", `ghi hộ «${ten}»: mã lỗi ${err.code} (${err.message})`);
+      so++;
+    }
+    assert.equal(so, 2);
+
+    // Vai API không sửa, không xoá lượt.
+    await expectError(c, "update offline_sessions set queued_ops = 9", [], /permission denied/);
+    await expectError(c, "delete from offline_sessions", [], /permission denied/);
+  });
+});

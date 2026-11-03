@@ -90,6 +90,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/leads/{leadId}/phone-reveal",
     // Hàng 30: gọi từ máy tính.
     "POST /api/v1/leads/{leadId}/phone-dial",
+    // Hàng ghi-thiet-bi-va-mat-mang: lượt mất mạng của bộ đồng bộ.
+    "POST /api/v1/sync/offline-sessions",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

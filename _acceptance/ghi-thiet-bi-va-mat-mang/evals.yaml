@@ -65,7 +65,7 @@ evals:
     criterion: AC-8
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; ca «thiết bị theo vai: đếm từng ô, không rõ để riêng» có mặt trong packages/core/src/metrics/thiet-bi-mat-mang.test.ts và ok — ma trận viết trước: 3 sự kiện điện thoại (vai listing_agent; một người hai vai listing_agent+team_lead), 2 máy tính (buyer_agent), 1 không rõ, 1 điện thoại ngoài kỳ → trangThai do-duoc, kieu ti-le, tu 3 / mau 5, chiTiet mobile·listing_agent 2, mobile·team_lead 1, desktop·buyer_agent 2, khong-ro 1, tong 6 (assert deepEqual); sự kiện ngoài kỳ không vào. Chiều đỏ: tính mau gồm cả không rõ → ca đỏ nêu mau 6."
+    expected: "exit 0; ca «thiết bị theo vai: đếm từng ô, không rõ để riêng» có mặt trong packages/core/src/metrics/thiet-bi-mat-mang.test.ts và ok — ma trận viết trước: 3 sự kiện điện thoại (2 của người vai listing_agent, 1 của người vai team_lead), 2 máy tính (buyer_agent), 1 không rõ, 1 điện thoại ngoài kỳ → trangThai do-duoc, kieu ti-le, tu 3 / mau 5, chiTiet mobile·listing_agent 2, mobile·team_lead 1, desktop·buyer_agent 2, khong-ro 1, tong 6 (assert deepEqual); sự kiện ngoài kỳ không vào; ma trận thứ hai cùng ca cho luật người nhiều vai và không vai: 1 sự kiện điện thoại của người hai vai listing_agent+team_lead và 1 máy tính của người không vai → tu 1 / mau 2, chiTiet mobile·listing_agent 1, mobile·team_lead 1, desktop·khong-vai 1, khong-ro 0, tong 2 (assert deepEqual). Chiều đỏ: tính mau gồm cả không rõ → ca đỏ nêu mau 6."
     paths: [packages/core/src/metrics/**, packages/core/src/listing/events.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
