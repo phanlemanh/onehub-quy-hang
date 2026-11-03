@@ -238,6 +238,20 @@ test("lead → cuộc gọi đầu: thời lượng và trung vị", () => {
   assert.deepEqual([chan.giaTri, chan.trungVi], [[3, 5, 8, 12], 6.5]);
 });
 
+test("lead → cuộc gọi đầu: tình trạng tại den", () => {
+  const sauDen = "2026-11-17T01:00:00.000Z";
+  const ds = [
+    lead("chiaSauDen", { matchedAgentUserId: "dau-chu-1", routedAt: sauDen }), // chưa ai giữ tại den
+    lead("boSauDen", { matchedAgentUserId: "dau-chu-1", routedAt: sauPhut(T, 1), discardedAt: sauDen }), // còn trong nhóm của kỳ
+    lead("boTrongKy", { matchedAgentUserId: "dau-chu-1", routedAt: sauPhut(T, 1), discardedAt: sauPhut(T, 30), firstCalledAt: sauPhut(T, 2) }), // rời nhóm
+    lead("traSauDen", { matchedAgentUserId: "dau-chu-1", routedAt: sauPhut(T, 1), returnedAt: sauDen }), // chưa trả lại tại den
+    lead("chuTrung", { outcome: "owner_has_agent", matchedAgentUserId: "dau-chu-2" }), // về đầu chủ ngay lúc nhập
+  ];
+  const r = dong(tinh({ lead: ds }), "lead_to_first_call");
+  assert.ok(r.trangThai === "do-duoc" && r.kieu === "thoi-luong");
+  assert.deepEqual({ n: r.n, chua: r.chua, chiTiet: r.chiTiet }, { n: 0, chua: 4, chiTiet: { chuaChia: 1, daChia: 3, traLai: 0 } }, "chia, bỏ, trả lại sau den không đổi số của kỳ");
+});
+
 test("lead → Sẵn sàng bán: ngày", () => {
   const ds = [
     lead("b2", { firstCalledAt: sauPhut(T, 5), boardAt: sauPhut(T, 2 * 1440) }),
