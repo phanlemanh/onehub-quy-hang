@@ -5,8 +5,10 @@ import {
   docCauHinhSanSang,
   KHOA_ANH_THAT_TOI_THIEU,
   foldListing,
+  kiemDoiGia,
   kiemGanMaCan,
   lyDoCanDangMo,
+  LY_DO_DOI_GIA_DA_BAN,
   LY_DO_MA_CAN_DA_CO,
   validatePayload,
   WINS_IMMEDIATELY,
@@ -158,6 +160,8 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // Hàng đã có mã: từ chối bằng chính sự thật ấy, trước phép so phiên bản — máy đang giữ bản cũ (gắn lúc mất mạng) nhận lý
   // do «đã có mã» thay cho «đụng nhau» (ADR-0026).
   if (type === "unit_number_assigned" && kiemGanMaCan(foldListing(events))) return { error: API_ERRORS.unitNumberAlreadySet, reason: LY_DO_MA_CAN_DA_CO };
+  // Căn Đã bán không đổi giá (luật của lõi): cũng xét trước phép so phiên bản — máy giữ bản cũ nhận đúng lý do «đã bán».
+  if (type === "price_changed" && kiemDoiGia(foldListing(events))) return { error: API_ERRORS.priceLockedClosed, reason: LY_DO_DOI_GIA_DA_BAN };
 
   const thangNgay = type === "status_changed" && WINS_IMMEDIATELY.includes(payload.to as never);
   if (!thangNgay && cmd.expectedVersion !== version) return { error: API_ERRORS.versionConflict };

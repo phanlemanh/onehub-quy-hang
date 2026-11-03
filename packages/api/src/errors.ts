@@ -64,6 +64,8 @@ export const API_ERRORS = {
   // Gắn mã căn (ADR-0026).
   unitNumberAlreadySet: { code: "unit-number-already-set", status: 422 },
   unitAlreadyListed: { code: "unit-already-listed", status: 422 },
+  // Căn Đã bán không đổi giá (va-doi-gia-can-da-ban).
+  priceLockedClosed: { code: "price-locked-closed", status: 422 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;
