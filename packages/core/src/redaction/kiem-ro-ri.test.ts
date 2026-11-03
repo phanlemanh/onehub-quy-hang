@@ -1,4 +1,5 @@
-// E8 (hàng 31) — bộ quét văn bản bắt mồi ở mọi dạng mã hoá. Ma trận viết tay: 16 dạng × (có mồi, bỏ mồi). Văn bản mẫu
+// E8 (hàng 31) — bộ quét văn bản bắt mồi ở mọi dạng mã hoá. Ma trận viết tay: 16 dạng × (có mồi, bỏ mồi), cộng hai ô số
+// điện thoại đứng sát sau một dãy số khác (lượt chấm 1, t2). Văn bản mẫu
 // là HTML có script, thuộc tính, chú thích như mã nguồn một trang; mồi đặt vào đúng chỗ dạng ấy hay gặp.
 import assert from "node:assert/strict";
 import { test } from "node:test";
@@ -38,6 +39,8 @@ const MA_TRAN: O[] = [
   { dang: "so_gach", moi: so, vanBan: trang({ thuocTinh: "tel:0900-000-073" }), boMoi: trang({}) },
   { dang: "so_cong_84", moi: so, vanBan: trang({ than: "+84 900 000 073" }), boMoi: trang({}) },
   { dang: "so_84", moi: so, vanBan: trang({ script: '{"p":"84900000073"}' }), boMoi: trang({}) },
+  { dang: "so_cach", moi: so, vanBan: trang({ than: "Giá 4.250.000.000 0900 000 073" }), boMoi: trang({ than: "Giá 4.250.000.000" }) },
+  { dang: "so_cong_84", moi: so, vanBan: trang({ than: "Giá 4.250.000.000 +84 900 000 073" }), boMoi: trang({ than: "Giá 4.250.000.000" }) },
   { dang: "so_tien_ngan", moi: tien, vanBan: trang({ than: "Giá đáy 9.876.543.211 đ" }), boMoi: trang({}) },
 ];
 
@@ -55,13 +58,26 @@ function kiemMaTran(tim: (vanBan: string, moi: readonly GiaTriMoi[]) => RoRi[]):
   return loi;
 }
 
-test("E8 quét văn bản mọi dạng — 16 dạng × (có mồi, bỏ mồi)", () => {
-  assert.equal(MA_TRAN.length, 16);
+test("E8 quét văn bản mọi dạng — 16 dạng × (có mồi, bỏ mồi), số sát dãy số khác", () => {
+  assert.equal(MA_TRAN.length, 18);
+  assert.equal(new Set(MA_TRAN.map((o) => o.dang)).size, 16);
   assert.deepEqual(kiemMaTran(timRoRi), []);
 });
 
 test("E8 số ngắn không là mồi — văn bản có «12» không trúng", () => {
   assert.deepEqual(timRoRi(trang({ than: "Tầng 12, 2 PN" }), [so, tien, chu(TEN)]), []);
+});
+
+test("E8 chiều đỏ — bộ quét có trần độ dài dãy số thì bỏ sót số sau giá", () => {
+  // Bản sao bộ dò số của lượt 1: dãy số có trần 22 ký tự, xét dạng trên cả lần khớp.
+  const coTran = (t: string, m: readonly GiaTriMoi[]): RoRi[] => [
+    ...timRoRi(t, m.filter((x) => x.kieu !== "so_dien_thoai")),
+    ...m
+      .filter((x) => x.kieu === "so_dien_thoai")
+      .filter((x) => [...t.matchAll(/\+?\d[\d\s.\-()]{7,20}\d/g)].some(([c]) => c.replace(/\D/g, "").includes(String(x.giaTri).replace(/\D/g, ""))))
+      .map((x) => ({ truong: x.truong, dang: "so_cach" as const })),
+  ];
+  assert.match(kiemMaTran(coTran).join(" | "), /so_cach: có mồi/);
 });
 
 test("E8 chiều đỏ — bộ quét không giải thực thể HTML, bộ quét không đổi +84", () => {

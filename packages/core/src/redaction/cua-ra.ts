@@ -15,4 +15,4 @@ export type NguoiNhan = (typeof NGUOI_NHAN)[number];
  * Đầu URL của các trang, route là cửa ra. Rào `timCuaRaThieuKiem` (rao-cua-ra.ts) bắt mỗi trang có URL bắt đầu bằng một
  * tiền tố ở đây phải có bài kiểm rò rỉ của riêng nó.
  */
-export const TIEN_TO_CUA_RA = ["/s/", "/shares/new", "/exports", "/api/v1/public/"] as const;
+export const TIEN_TO_CUA_RA = ["/s/", "/shares/new", "/exports", "/api/v1/public/", "/api/v1/s/"] as const;

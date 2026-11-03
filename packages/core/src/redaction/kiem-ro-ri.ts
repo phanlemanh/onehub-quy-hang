@@ -76,22 +76,37 @@ function timChu(vanBan: string, kim: string): DangMaHoa | null {
   return null;
 }
 
-const DAY_SO_DIEN_THOAI = /\+?\d[\d\s.\-()]{7,20}\d/g;
+// Không đặt trần độ dài: dãy số khác đứng sát (giá viết nhóm ba) dính vào cùng một lần khớp; số được tìm trên dãy chữ số
+// rồi xét dạng trên đúng đoạn chứa nó.
+const DAY_SO_DIEN_THOAI = /\+?\d[\d\s.\-()]*\d/g;
 const DAY_SO_TIEN = /\d[\d.,\s]*\d/g;
+
+/** Đoạn của `c` chứa chữ số thứ `tu` tới `den` (theo dãy chữ số của `c`). */
+function doanChuaSo(c: string, tu: number, den: number): string {
+  const viTri = [...c].flatMap((ch, i) => (/\d/.test(ch) ? [i] : []));
+  return c.slice(viTri[tu], viTri[den]! + 1);
+}
 
 function timSoDienThoai(vanBan: string, so: string): DangMaHoa | null {
   const dich = normalizePhone(so) ?? so.replace(/\D/g, "");
   const dich84 = `84${dich.slice(1)}`;
   for (const t of [vanBan, giaiHet(vanBan)]) {
-    for (const [c] of t.matchAll(DAY_SO_DIEN_THOAI)) {
+    for (const m of t.matchAll(DAY_SO_DIEN_THOAI)) {
+      const c = m[0];
       const d = c.replace(/\D/g, "");
-      if (d.includes(dich)) {
-        if (/[.]/.test(c)) return "so_cham";
-        if (/-/.test(c)) return "so_gach";
-        if (/\s/.test(c)) return "so_cach";
+      const i = d.indexOf(dich);
+      if (i >= 0) {
+        const doan = doanChuaSo(c, i, i + dich.length - 1);
+        if (/[.]/.test(doan)) return "so_cham";
+        if (/-/.test(doan)) return "so_gach";
+        if (/\s/.test(doan)) return "so_cach";
         return "so_lien";
       }
-      if (d.includes(dich84)) return c.includes("+") ? "so_cong_84" : "so_84";
+      const j = d.indexOf(dich84);
+      if (j >= 0) {
+        // Dấu «+» ngay trước số 84 (bỏ khoảng trắng) là cách viết +84.
+        return /\+\s*$/.test(c.slice(0, c.length - doanChuaSo(c, j, d.length - 1).length)) ? "so_cong_84" : "so_84";
+      }
     }
   }
   return null;
