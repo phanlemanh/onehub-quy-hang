@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 1fc1ee2ece5afdf9ed3e9664b893d269487e8be4
+verified_commit: 285f4040f9d66d53524bf147abb856b523955f9d
 human_signoff:
 ---
 
@@ -107,3 +107,7 @@ Round 2: E1, E2, E3 và toàn bộ lệnh suite xanh trên commit 7bff7dd; verdi
 ### Re-pin lần 1 — 2026-11-03, do gộp nhánh chính (PR #98, #100) sau lượt chấm
 run_id: repin-20261103T141337Z-52750
 sha: 1fc1ee2ece5afdf9ed3e9664b893d269487e8be4 · suites: 7 lệnh exit 0 · evals: 3/3 eval máy đạt kỳ vọng
+
+### Re-pin lần 2 — 2026-11-03, do gộp nhánh chính (PR #99): cộng dồn mã lỗi
+run_id: repin-20261103T143057Z-51920
+sha: 285f4040f9d66d53524bf147abb856b523955f9d · suites: 7 lệnh exit 0 · evals: 3/3 eval máy đạt kỳ vọng
