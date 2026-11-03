@@ -1,0 +1,216 @@
+schema_version: 1
+feature_slug: bang-hang-dang-the
+# Lệnh máy: executors.test.web (phần thuần của bảng thẻ ở apps/web/src/app/(app)/inventory/cards/*.test.ts), executors.script
+# lint, typecheck, design_floor. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có mặt, ok, không SKIP.
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps):
+#   node --env-file-if-exists=.env.local --import tsx _acceptance/bang-hang-dang-the/thu/dung-b.mjs
+#   → Postgres dãy B (cổng 5572, luật 7 của đợt) đã migrate; sàn và người mẫu của hàng 5; hàng mẫu nạp QUA API ở đủ sáu
+#     trạng thái, ảnh thật ở ngăn Gửi được cho một căn, ảnh chỉ ở ngăn Nội bộ cho một căn, một hàng chưa mã căn; máy chủ dev
+#     cổng 3492, nhật ký .acceptance-runs/bang-hang-dang-the/web-b.log. In bảng: email ↔ vai, số căn Đang bán / Đang giao
+#     dịch người ấy thấy, mã của các căn ảnh, đáp án đếm cho các bộ lọc mẫu.
+#   Thêm `--nhan 5000` để nhân hàng mẫu tới 5.000 căn (mã mẫu). Phiên: node --env-file-if-exists=.env.local --import tsx
+#   _acceptance/bang-hang-dang-the/thu/phien.mts <email> in cookie `qh.session_token` và `qh_san` cho localhost:3492.
+#   Tắt: dung-b.mjs --tat (chỉ kill PID nó đã ghi).
+# Khổ điện thoại: 375x812, mô phỏng thiết bị cảm ứng. Giữ lâu = pointerdown, chờ, pointerup trên cùng điểm (chuột hay chạm).
+evals:
+  - id: E1
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; the.test.ts ca «lọc nhu cầu — ma trận năm mục»: dữ liệu là hàng mẫu packages/db/seed/mau/du-lieu-mau.json ghép danh mục của chính tệp ấy bằng ghepDanhMuc (đường suy từ vị trí tệp kiểm, không chép tay); ma trận viết trước năm mục × hai ca (Giá từ–đến tỷ: 2–5 và chỉ «từ 6»; Phòng ngủ: [2PN] và [Studio, 3PN]; Toà: một toà và hai toà; Diện tích: 50–80 và «đến 60»; Hướng: một hướng và hai hướng) = 10 assert, mỗi assert so số căn của locNhuCau với đáp án đếm độc lập viết bằng vòng for trong tệp kiểm (không gọi hàm đang đo); ca giao ba mục ra đúng giao ba tập; nhu cầu rỗng ra đủ số căn đầu vào; ô «từ» lớn hơn «đến» lọc như đã đổi chỗ; giá đọc «2,5» như 2.5 tỷ; bốn assert giá trị rỗng viết trước trên bản sao có căn thiếu giá, thiếu diện tích, thiếu hướng, loại căn «Chưa rõ» — ba căn đầu không khớp mục tương ứng khi mục ấy đang lọc (và vẫn khớp khi mục ấy không lọc), căn «Chưa rõ» khớp khi Phòng ngủ chọn «Chưa rõ». Đối chứng đỏ trong cùng tệp: một bản locNhuCau bỏ điều kiện Hướng (dựng bằng tham số thử) làm ca Hướng đỏ với thông điệp gọi tên «Hướng»."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**", "apps/web/src/app/(app)/inventory/ghep-danh-muc.ts", "apps/web/src/app/(app)/inventory/cot.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; the.test.ts ca «căn lên thẻ» và «nhóm theo toà»: ma trận sáu StandardStatus viết trước (Incomplete, Active, Pending, Closed, Hold, Withdrawn) → lenThe ra đúng [false, true, true, false, false, false] — sáu assert; nhomTheoToa trên hàng mẫu ghép danh mục: tên các dòng nhóm bằng tập toà của các căn lên thẻ, số căn mỗi dòng bằng đáp án đếm độc lập, tổng các dòng bằng số căn lên thẻ, thứ tự căn trong một toà giữ thứ tự đầu vào; mảng phẳng «dòng nhóm + thẻ» bắt đầu bằng một dòng nhóm và mỗi thẻ đứng sau dòng nhóm của toà mình. Đối chứng đỏ: lenThe nhận thêm Hold thì ca ma trận đỏ gọi tên «Hold»."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; the.test.ts ca «chọn được»: chonDuoc trên sáu StandardStatus viết trước ra đúng chỉ Active true — sáu assert; bộ chọn (hàm thuần doiChon) — tích một căn Active thêm nó, tích lại bỏ nó, tích căn Pending không đổi tập (trả lại đúng tập cũ), batDauChon với căn Pending không vào chế độ chọn; đếm số đã chọn khớp kích thước tập. Đối chứng đỏ: chonDuoc trả true cho Pending thì ca «tích căn Pending không đổi tập» đỏ với thông điệp gọi tên «Đang giao dịch»."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; giu-lau.test.ts trên máy trạng thái thuần với đồng hồ giả (thời điểm truyền vào, không setTimeout thật): ma trận viết trước sáu ca — (a) xuống, 499 ms, lên → «cham»; (b) xuống, 500 ms → «giu-lau», rồi lên → không «cham»; (c) xuống, dời 11 px ở 200 ms, 600 ms → «huy», không «giu-lau»; (d) xuống, dời 9 px, 500 ms → «giu-lau»; (e) xuống, cuộn ở 300 ms → «huy»; (f) xuống, pointercancel → «huy» — mỗi ca assert đúng chuỗi sự kiện ra. Đối chứng đỏ: ngưỡng đổi thành 300 ms (tham số thử) làm ca (a) đỏ với thông điệp gọi tên ngưỡng."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    layer: backend-effect
+    expected: "exit 0; anh-bia.test.ts với fetch giả đếm lời gọi: danh sách ảnh dựng bằng đúng khuôn UnitPhoto của packages/core/photos — (a) ba ảnh Gửi được, ảnh thứ hai là bìa → url `/api/v1/units/photos/<id ảnh bìa>/thumb`; (b) chưa chọn bìa → ảnh Gửi được đầu theo thứ tự; (c) chỉ ảnh Nội bộ (kể cả Nội bộ là bìa) → null; (d) không ảnh → null; (e) căn chưa mã căn → null và fetch được gọi 0 lần; (f) fetch ném lỗi (mất mạng) hay trả 401 → null, không ném; (g) gọi hai lần cùng toà + mã → fetch 1 lần. Chọn ảnh đi qua anhRaNgoai của lõi (assert so với chính anhRaNgoai trên cùng dữ liệu). Đối chứng đỏ: bản chọn ảnh bỏ lọc ngăn (tham số thử) làm ca (c) đỏ với thông điệp gọi tên «Nội bộ»."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**", "packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; the.test.ts ca «thẻ lọc»: theLoc trên nhu cầu đủ năm mục viết trước ra đúng danh sách chữ «2–5 tỷ», «Từ 6 tỷ», «2PN», «Toà A», «50–80 m²», «Đông Nam» (khớp chuỗi) theo thứ tự Giá · Phòng ngủ · Toà · Diện tích · Hướng; mỗi thẻ lọc có khoá riêng; bỏ một thẻ (hàm boTheLoc) trả nhu cầu chỉ thiếu đúng mục/giá trị ấy (so sâu với nhu cầu mong đợi viết tay); bỏ hết → nhu cầu rỗng, theLoc ra mảng rỗng; nhu cầu rỗng → không thẻ lọc. Đối chứng đỏ: boTheLoc bỏ cả mục khi chỉ một giá trị của mục nhiều-giá-trị bị bỏ thì ca «bỏ một hướng trong hai» đỏ."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Đặt phiên dau-khach (phien.mts), mở http://localhost:3492/inventory, chờ thẻ."
+      - "Chụp evidence/E7-the.png. Ghi: có chữ «dựng ở mục 32» không; tên và số căn của mọi dòng nhóm toà; với 3 thẻ đầu: mã căn, giá, chữ phí, ba thông số (nhãn + giá trị), có ô ảnh bên trái không"
+      - "Gọi GET /api/v1/listings trong trang (fetch cùng phiên) → đếm số căn Active và Pending; so với tổng số căn của các dòng nhóm; ghi mọi StandardStatus của các mã căn đang có thẻ (đối chiếu từ thân API)"
+      - "Đo document.documentElement.scrollWidth và clientWidth"
+      - "Tìm một thẻ Đang giao dịch (dung-b.mjs in mã) → chụp evidence/E7-dang-giao-dich.png; ghi huy hiệu; giữ lâu thẻ ấy 700 ms → ghi có vào chế độ chọn không, ô chọn trên thẻ có bật được không"
+      - "Giữ lâu một thẻ Đang bán 700 ms → ghi chữ thanh đầu → chụp evidence/E7-chon.png"
+      - "Chuyển khổ 1440x900, tải lại → chụp evidence/E7-may-tinh.png; ghi có lưới (tiêu đề cột) không"
+    expected: "Không còn chữ «dựng ở mục 32». Mỗi dòng nhóm có tên toà và số căn; tổng số căn các dòng = số căn Active + Pending API trả; mọi thẻ đều Active hoặc Pending. Thẻ có ô ảnh trái, mã căn, giá dạng «x,xx tỷ» hay «xxx triệu», chữ phí, ba thông số Diện tích · Phòng ngủ · Hướng. scrollWidth <= clientWidth. Thẻ Đang giao dịch có huy hiệu «Đang giao dịch», giữ lâu không vào chế độ chọn; thẻ Đang bán giữ lâu → «1 căn đã chọn». Khổ 1440: lưới có tiêu đề cột của hàng 14."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/bang-co-ho-so.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-khach, mở /inventory, chờ thẻ; ghi số căn ở thanh đầu."
+      - "Bật ghi mạng (read_network_requests hay DevTools) từ đây tới hết bước lọc."
+      - "Bấm «Lọc» → chụp evidence/E8-ngan.png; ghi tên năm mục theo thứ tự và các lựa chọn của Phòng ngủ, Toà, Hướng"
+      - "Giá từ 2 đến 5 → ghi chữ nút «Xem n căn»; thêm Phòng ngủ = 2PN → ghi; thêm Toà = Toà A → ghi; bấm «Xem n căn» → chụp evidence/E8-loc.png; ghi mã, giá, phòng ngủ, toà của mọi thẻ còn lại (tối đa 10)"
+      - "Đối chiếu: dung-b.mjs in đáp án đếm cho bộ lọc «2–5 tỷ · 2PN · Toà A», tính bằng vòng lặp riêng trên thân GET /api/v1/listings ghép danh mục của chính nó (không import mã trong inventory/cards/) — ghi cạnh số trên nút"
+      - "Ghi mọi yêu cầu mạng phát sinh trong lúc lọc (phương thức + đường)"
+    expected: "Năm mục đúng thứ tự Giá · Phòng ngủ · Toà · Diện tích · Hướng. Mỗi lần thêm mục số trên nút giảm hoặc giữ; số cuối bằng đáp án dung-b.mjs in; mọi thẻ còn lại có giá 2–5 tỷ, 2PN, thuộc toà đã chọn. Không yêu cầu /api/v1/listings hay /api/v1/catalog nào phát sinh do lọc (yêu cầu ảnh /api/v1/units/photos cho thẻ mới tới màn được phép — ghi riêng)."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**", "apps/web/src/components/bo-cuc/ngan-noi.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812. Phiên dau-khach, mở /inventory; lọc Giá 2–5, Hướng = hai hướng đầu → Xem."
+      - "Chụp evidence/E9-the-loc.png; ghi chữ mọi thẻ lọc ở đầu danh sách và số căn"
+      - "Bấm × trên thẻ lọc của hướng thứ nhất → ghi thẻ lọc còn lại và số căn"
+      - "Bấm «Xoá lọc» → ghi thẻ lọc và số căn (so với số lúc chưa lọc)"
+      - "Lọc Giá từ 900 → chụp evidence/E9-loc-rong.png; ghi chữ và nút; bấm nút ấy → ghi số căn"
+    expected: "Thẻ lọc «2–5 tỷ» và hai thẻ hướng; bỏ hướng thứ nhất chỉ mất đúng thẻ ấy, thẻ giá và hướng thứ hai còn, số căn tăng hoặc giữ. «Xoá lọc» → không thẻ lọc, số căn bằng lúc chưa lọc. «Từ 900 tỷ» → «Không căn nào khớp nhu cầu» kèm «Xoá lọc»; bấm → danh sách đủ."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-khach, mở /inventory."
+      - "Giữ thẻ Đang bán thứ nhất 300 ms rồi thả → ghi: địa chỉ trang, có chế độ chọn không (sau đó lùi nếu hồ sơ đã mở)"
+      - "Giữ thẻ thứ nhất, dời 30 px trong 200 ms đầu, giữ tới 800 ms rồi thả → ghi có chế độ chọn không, địa chỉ"
+      - "Giữ thẻ thứ nhất 700 ms rồi thả → ghi chữ thanh đầu, địa chỉ (không được đổi sang ?unit=) → chụp evidence/E10-giu-lau.png"
+      - "Chạm thẻ Đang bán thứ hai và thứ ba → ghi chữ thanh đầu; chạm lại thẻ thứ hai → ghi; chụp evidence/E10-ba-the.png"
+      - "Bấm «Bỏ chọn» → ghi thanh đầu, có ô chọn trên thẻ không"
+      - "Bấm «Bỏ chọn». Bật mô phỏng cảm ứng (Emulation.setTouchEmulationEnabled) và gắn trong trang bộ nghe contextmenu ghi defaultPrevented. Chạm thật qua CDP (Input.dispatchTouchEvent touchStart, chờ 800 ms, touchEnd) trên ô ảnh của thẻ thứ nhất → ghi: thanh đầu, contextmenu có xảy ra và defaultPrevented, window.getSelection().toString(), có menu hay hộp xem trước nào hiện (chụp evidence/E10-cham-that.png). Bấm «Bỏ chọn», lặp trên chữ mã căn của thẻ thứ hai"
+      - "Dùng bàn phím: Tab tới nút «Chọn», Enter → ghi thanh đầu; Tab tới một thẻ, Space hoặc Enter → ghi số đã chọn"
+    expected: "300 ms rồi thả: không chế độ chọn (là một chạm — hồ sơ mở là đúng). Dời 30 px: không chế độ chọn, không mở hồ sơ. 700 ms: «1 căn đã chọn», địa chỉ không đổi. Hai thẻ thêm → «3 căn đã chọn»; bỏ thẻ thứ hai → «2 căn đã chọn». «Bỏ chọn» → thanh đầu trở lại số căn, không ô chọn. Chạm thật 800 ms trên ảnh và trên chữ mã căn: mỗi lần «1 căn đã chọn»; contextmenu nếu xảy ra thì defaultPrevented true; selection rỗng; không menu hay hộp xem trước. Bàn phím: «Chọn» vào chế độ chọn; Space/Enter trên thẻ tích nó → «1 căn đã chọn»."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-khach, mở /inventory; lọc Giá từ 2 → Xem."
+      - "Giữ lâu một thẻ Đang bán 700 ms (vào chế độ chọn), chạm một thẻ khác → ghi địa chỉ (không được mở hồ sơ); bấm «Bỏ chọn»"
+      - "Cuộn danh sách xuống khoảng 1.500 px → ghi mã căn của thẻ đầu đang thấy và vị trí cuộn (scrollY hay scrollTop của vùng cuộn)"
+      - "Chạm một thẻ (ngoài chế độ chọn) → chụp evidence/E11-ho-so.png; ghi địa chỉ (unit, toa, lan) và mã căn trên hồ sơ"
+      - "Trên hồ sơ (phiên dau-khach) ghi: có tên chủ nhà, số điện thoại, giá đáy, ảnh sổ hay ảnh ngăn Nội bộ nào hiện không (ngăn Nội bộ khoá thì ghi chữ khoá)"
+      - "Bấm lùi của trình duyệt → chụp evidence/E11-lui.png; ghi: thẻ lọc, mã căn của thẻ đầu đang thấy, vị trí cuộn"
+    expected: "Trong chế độ chọn chạm thẻ không đổi địa chỉ. Ngoài chế độ chọn chạm thẻ → địa chỉ có unit=<mã>, toa=<toà>, lan=<lần rao> của đúng căn, hồ sơ hiện mã ấy; không tên, số chủ nhà, giá đáy, ảnh sổ hay ảnh Nội bộ (ngăn Nội bộ, nếu có, hiện chữ khoá). Lùi về: thẻ lọc «Từ 2 tỷ» còn, thẻ đầu đang thấy là cùng mã (vị trí cuộn lệch ≤ 100 px)."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E12
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B (in mã căn có ảnh bìa, căn chỉ ảnh Nội bộ, căn không ảnh, hàng chưa mã căn). Khổ 375x812. Phiên dau-khach, mở /inventory; bật ghi mạng."
+      - "Lọc Toà = toà của căn có ảnh bìa → cuộn tới thẻ ấy → chụp evidence/E12-anh-bia.png; ghi src của ảnh trên thẻ"
+      - "Tìm thẻ căn chỉ ảnh Nội bộ và thẻ căn không ảnh → chụp evidence/E12-anh-trong.png; ghi có thẻ img nào trong ô ảnh không, src nếu có"
+      - "Gọi GET /api/v1/units/photos?toa=…&ma=… của căn chỉ Nội bộ trong trang → ghi id các ảnh Nội bộ; so với mọi src ảnh đang có trên trang"
+      - "Ghi các yêu cầu /api/v1/units/photos đã phát sinh: có yêu cầu nào thiếu ma= hay ma rỗng không"
+      - "Bật offline (DevTools), cuộn tới thẻ chưa từng tới màn → ghi ô ảnh; chạm thẻ ấy → ghi có mở hồ sơ không"
+    expected: "Thẻ ảnh bìa có img src kết thúc bằng /photos/<id>/thumb với id là ảnh bìa ngăn Gửi được của căn ấy. Căn chỉ Nội bộ và căn không ảnh: ô ảnh trống có biểu tượng, không img. Không src nào trên trang trỏ id ảnh Nội bộ. Không yêu cầu ảnh nào không có mã căn. Offline: ô ảnh trống, thẻ vẫn mở được hồ sơ."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**", "packages/api/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E13
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Ma trận viết trước bốn trạng thái × hai giao diện = 8 ô, khổ 375x812; mỗi ô một ảnh evidence/E13-<trạng thái>-<sáng|tối>.png và tỉ lệ tương phản chữ chính và chữ nút (getComputedStyle)"
+      - "dang-tai: dau-khach, xoá IndexedDB của trang, Slow 3G, tải lại /inventory → chụp ngay; ghi mô tả khung chờ"
+      - "trong: đăng nhập trong@mau.quy-hang.test (sàn không có căn) → ghi chữ"
+      - "loi: dau-khach, mở trang khi có mạng, xoá IndexedDB, chặn riêng /api/v1/listings* và /api/v1/catalog* (Network.setBlockedURLs), tải lại → ghi chữ và nút; gỡ chặn, bấm Thử lại → ghi kết quả"
+      - "the: dau-khach bình thường → chụp"
+      - "Lặp bốn ô ở giao diện còn lại (menu tài khoản → sáng/tối)"
+      - "Năm nghìn: dung-b.mjs --nhan 5000 (sàn «[Mẫu] Sàn đo cuộn»); đăng nhập do-cuon@mau.quy-hang.test, khổ 375x812, mở /inventory → đếm phần tử [data-the-can] trong DOM và cộng số căn của mọi dòng nhóm → ghi; cuộn tới cuối → ghi mã căn của thẻ cuối và số [data-the-can] trong DOM"
+    expected: "Đang tải: khung chờ hình thẻ, không chữ «Loading». Trống: «Chưa có căn nào trên bảng hàng chung». Lỗi: «Chưa tải được bảng hàng» + «Thử lại»; có mạng bấm Thử lại → thẻ hiện. 8 ô: tương phản ≥ 4,5:1 — mỗi ô một đạt/trượt. Năm nghìn: số [data-the-can] trong DOM nằm trong 1–40 cả lúc đầu và lúc cuối, trong khi các dòng nhóm cộng đủ số căn Đang bán + Đang giao dịch dung-b.mjs in cho sàn đo cuộn (đối chứng: danh sách lớn hơn DOM); thẻ cuối là căn cuối của toà cuối theo dung-b.mjs."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E14
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; bước kiểm chuẩn in «khuôn: … 0 lệch» (hoặc chỉ báo oan đã ghi ở luật 33 của đợt — người chấm ghi tên tệp bị báo) và không lỗi danh mục (hai khối mới có dòng ở catalog.md)."
+    paths: ["apps/web/src/**", ".agents/skills/quy-hang-ui/catalog.md", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E15
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E16
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E17
+    criterion: AC-9
+    executor: judgment
+    inputs:
+      - design/patterns/bang-hang.md
+      - docs/design/vo-va-ia.md
+      - .agents/skills/quy-hang-ui/catalog.md
+      - docs/product/tham-chieu.md
+    question: "Đọc bốn tệp. (1) design/patterns/bang-hang.md có nói khe điện thoại của khuôn trình bảng thẻ (hàng 32) thay vì khối báo, và các khoá nhan_dien, ngoai_le, ngoai_le_han y nguyên như trước (so với mô tả trong câu hỏi: nhan_dien gồm inventory/page.tsx và views/**/page.tsx; ngoai_le rỗng)? (2) vo-va-ia.md §2 còn câu «Dưới md là khối báo bảng thẻ của mục 32» không (không được còn), và có đoạn «Đã chuyển thể (hàng 32)» nói product-grid-4, filter-sidebar-5 đã đổi gì? (3) catalog.md bảng «Khối đã chuyển thể» có dòng @reui/product-grid-4 và @reui/filter-sidebar-5 đủ chín ô, nhóm bang-hang? (4) tham-chieu.md §12 có dòng ngày 03/11 của hàng 32 nói bảng thẻ ở /inventory dưới md, chỉ căn Đang bán/Đang giao dịch, năm mục lọc, giữ lâu để chọn? Trả lời từng câu có/không kèm câu trích."
+    expected: "Cả bốn câu «có» kèm câu trích; (2) câu cũ không còn."
+    paths: ["design/patterns/bang-hang.md", "docs/design/vo-va-ia.md", ".agents/skills/quy-hang-ui/catalog.md", "docs/product/tham-chieu.md"]
+    evidence_required: [run_id, verifier, verified_at]
+
+  - id: E18
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "design/patterns/trang-thai.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/bang-co-ho-so.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang, trang-thai, trang-tam. Lệch chỉ vì tệp thuộc hai nhóm (giới hạn «cắt trước» của kit 2.37.0, luật 33 của đợt) là báo oan — người chấm ghi tên tệp bị báo, không tính là lệch thật."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

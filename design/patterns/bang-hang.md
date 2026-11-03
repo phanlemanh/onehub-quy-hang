@@ -18,8 +18,9 @@ nằm trong khe `children`. Khối đích `data-grid-editing-6` (`docs/design/vo
 `apps/web/src/app/(app)/inventory/bang-hang.tsx`; nhóm dòng theo cách của `data-grid-grouping-2`.
 
 **Dùng khi** màn trình tập hàng của sàn dạng bảng kiểu Sheet trên máy tính — Bảng hàng, một góc nhìn đã lưu; sau này
-trang nhóm môi giới chỉ đọc (mục 44) dùng lại lưới này. **Không dùng** cho hồ sơ một căn (cột phải, mục 17), cho bảng
-thẻ trên điện thoại (mục 32 — dưới `md` khuôn hiện khối báo), hay cho bảng phụ trong màn khác.
+trang nhóm môi giới chỉ đọc (mục 44) dùng lại lưới này. Dưới `md` khuôn trao khe `dienThoai`: bảng thẻ của mục 32
+(`apps/web/src/app/(app)/inventory/cards/`, chuyển thể `product-grid-4` + `filter-sidebar-5`) ở cùng địa chỉ. **Không dùng**
+cho hồ sơ một căn (cột phải, mục 17), hay cho bảng phụ trong màn khác.
 
 ## Luật
 

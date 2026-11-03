@@ -1,0 +1,38 @@
+{
+  "feature_plain": "Đầu khách mở Bảng hàng trên điện thoại thấy các căn đang bán thành thẻ có ảnh, lọc theo đúng nhu cầu của khách, và giữ lâu một thẻ để gom nhiều căn.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiện Bảng hàng trên điện thoại thành thẻ nhóm theo toà — mỗi thẻ có ảnh, mã căn, giá, diện tích, phòng ngủ, hướng — chỉ gồm căn Đang bán và Đang giao dịch; máy tính vẫn là bảng như cũ."},
+    {"id": "AC-2", "p": "Sẽ gắn nhãn «Đang giao dịch» lên căn đã cọc và không cho chọn căn ấy để gửi."},
+    {"id": "AC-3", "p": "Sẽ cho đặt nhu cầu khách (giá, phòng ngủ, toà, diện tích, hướng) và chỉ còn căn khớp mọi điều, ngay cả khi mất mạng."},
+    {"id": "AC-4", "p": "Sẽ hiện mỗi điều đang lọc thành một thẻ nhỏ bỏ được từng cái, có nút xoá hết, và báo rõ khi không căn nào khớp."},
+    {"id": "AC-5", "p": "Sẽ vào chế độ chọn khi giữ một thẻ nửa giây, chạm thêm để gom căn, đếm số đã chọn — không bật menu hay bôi chữ của điện thoại; có nút «Chọn» cho người không giữ lâu được."},
+    {"id": "AC-6", "p": "Sẽ mở hồ sơ căn khi chạm thẻ và lùi về đúng chỗ cũ với bộ lọc còn nguyên; hồ sơ không hiện thông tin chủ nhà."},
+    {"id": "AC-7", "p": "Sẽ hiện ảnh bìa ở ngăn gửi được cho khách, không bao giờ hiện ảnh nội bộ; căn chưa có ảnh hay khi mất mạng thì ô ảnh để trống."},
+    {"id": "AC-8", "p": "Sẽ có màn chờ, màn trống, màn lỗi kèm «Thử lại», và vẫn mượt với năm nghìn căn ở cả nền sáng lẫn tối."},
+    {"id": "AC-9", "p": "Sẽ giữ sạch các lưới kiểm giao diện và cập nhật bản đồ màn, danh mục khối, tài liệu sản phẩm."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không làm nút gửi, xem trước trang khách và mở bảng chia sẻ — việc của hàng Gửi (34)."},
+    {"id": "OOS-2", "p": "Không làm hồ sơ căn riêng cho đầu khách — hàng 33; hôm nay chạm thẻ mở hồ sơ đang có."},
+    {"id": "OOS-3", "p": "Không lưu nhu cầu theo từng khách, không lưu góc nhìn trên điện thoại."},
+    {"id": "OOS-4", "p": "Không làm đường lấy ảnh bìa hàng loạt ở máy chủ — mỗi thẻ tự hỏi ảnh của mình."},
+    {"id": "OOS-5", "p": "Không sửa dữ liệu căn trên điện thoại."}
+  ],
+  "scope_plain": "Năm việc để hàng khác hay vòng sau:",
+  "coverage_plain": [
+    {"i": 0, "p": "Nấc của căn: căn Đang bán và Đang giao dịch lên thẻ, bốn nấc còn lại không — đối chiếu bảng trạng thái của sản phẩm (AC-1, AC-2 — căn nào lên thẻ)."},
+    {"i": 1, "p": "Điều lọc: năm điều khách hay hỏi, đối chiếu bộ lọc của trang nhà đất lớn; bốn điều khác chờ Hỏi-1 (AC-3, AC-4 — lọc và thẻ lọc)."},
+    {"i": 2, "p": "Cử chỉ: chạm, giữ lâu, giữ rồi kéo, bàn phím — theo cách chọn nhiều quen thuộc trên điện thoại (AC-5, AC-6 — chọn và mở hồ sơ)."},
+    {"i": 3, "p": "Mạng và ảnh: có ảnh bìa, chỉ ảnh nội bộ, không ảnh, căn chưa mã, mất mạng, chưa tải lần nào (AC-7, AC-8 — ảnh và trạng thái)."},
+    {"i": 4, "p": "Phần làm ngay phủ đủ bốn trục trên, cộng lưới kiểm giao diện và tài liệu (AC-9)."},
+    {"i": 5, "p": "Để sau: thêm điều lọc nội thất, pháp lý, tầng, tình trạng; lưu nhu cầu theo khách; sắp xếp thẻ; lấy ảnh hàng loạt; góc nhìn trên điện thoại."},
+    {"i": 6, "p": "Không bao giờ: thẻ cho căn chưa rao, đã bán, tạm ngừng hay ngừng hẳn — chúng không thuộc bảng hàng chung."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Chọn bộ điều lọc là quyết định sản phẩm, tài liệu chưa chốt — máy đã chuyển thành câu hỏi Hỏi-1 cho anh thay vì tự quyết."},
+    {"i": 1, "p": "Giữ lâu trên điện thoại thật có thể bật menu lưu ảnh hay bôi chữ — đã thêm vào tiêu chí và thêm bước thử bằng chạm thật."},
+    {"i": 2, "p": "Phép đếm thẻ năm nghìn căn và màn lỗi có thể đo sai — đã ghim cách đếm, thêm đối chứng, đổi cách tạo lỗi để thấy đúng màn của app."},
+    {"i": 3, "p": "Chưa nói đầu khách thấy gì trên hồ sơ trước hàng 33 — đã ghi rõ hồ sơ không có thông tin chủ nhà và thêm bước kiểm trên tài khoản đầu khách."},
+    {"i": 4, "p": "Căn thiếu giá, diện tích, hướng khi lọc chưa có luật — đã chốt: thiếu thì không khớp điều ấy, phòng ngủ có lựa chọn «Chưa rõ»; thêm bốn ca kiểm."}
+  ]
+}

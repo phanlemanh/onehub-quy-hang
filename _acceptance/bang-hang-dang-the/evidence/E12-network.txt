@@ -1,0 +1,3 @@
+E12 network (origin localhost:3492, playwright browser_network_requests /api/; raw: E12-net-raw.txt)
+units/photos? requests: 98, all with non-empty ma=; non-200 /api/ requests before offline: see below
+Offline phase: console errors from fetch failures (expected, offline emulation).
