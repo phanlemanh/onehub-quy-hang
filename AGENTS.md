@@ -32,6 +32,8 @@ docs/adr/         quyết định kiến trúc của kho này
 3. **Người luôn là người bấm gửi.** Không tích hợp gửi tin qua Zalo cá nhân, không đăng vào nhóm, không tự trả lời.
    Chỉ mở bảng chia sẻ của thiết bị.
 4. **Phần nội bộ không ra trang khách.** Dữ liệu ra ngoài được dựng từ luật ẩn ở `packages/core`, không ẩn ở giao diện.
+   Luật ẩn là `banRaNgoai` (`@quy-hang/core/redaction`); bộ kiểm rò rỉ (`npm run test:ro-ri`, job `ro-ri`) là check bắt
+   buộc, và trang cửa ra nào cũng có tệp `*.ro-ri.test.ts` quét mồi trên mã nguồn trang.
 
 ## Luật làm việc
 
@@ -62,7 +64,7 @@ docs/adr/         quyết định kiến trúc của kho này
 - **Claude Code** `.claude/`: hook chặn sửa migration đã commit và ghi `.env*`; hook cuối lượt kiểm kiểu + lint tệp vừa
   đổi; luật theo đường dẫn ở `.claude/rules/`; skill `/verify`, `/new-migration`. Cài đặt nạp lúc mở phiên — đổi
   `.claude/settings.json` thì mở phiên mới.
-- **CI**: check bắt buộc duy nhất là `ci-ok`, xanh khi `check`, `isolation`, `secrets`, `gate` cùng xanh.
+- **CI**: check bắt buộc duy nhất là `ci-ok`, xanh khi `check`, `isolation`, `secrets`, `gate`, `ro-ri` cùng xanh.
 - **Cổng nghiệm thu** (Acceptance-Gate Kit, `_acceptance/config.yaml`): đổi code ngoài T1 phải kèm hồ sơ
   `_acceptance/<slug>/`, T2/T3 phải có người ký; T3 là cơ sở dữ liệu, trần lớp dữ liệu, thoả thuận, `packages/connect`
   và các rào. Tính năng mới đi `/feature-loop:feature-loop`. Job `gate` lấy kit theo tag `KIT_TAG` trong `ci.yml`

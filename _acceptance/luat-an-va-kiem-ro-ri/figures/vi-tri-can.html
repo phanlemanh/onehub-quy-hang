@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vị trí căn theo người nhận</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #eb6c36;
+      --font-sans: 'Geist', system-ui, sans-serif; --font-serif: 'Instrument Serif', 'Lora', serif; --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .frame { max-width: 1240px; width: 100%; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.25; margin-bottom: 0.35rem; }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Luồng quyết định · Hỏi-1 · AC-3 AC-4</p>
+    <h1>Gửi căn đi, người nhận thấy vị trí đến đâu?</h1>
+    <p class="subtitle">Xét từ trái sang; mỗi bản ra dừng ở đúng một lá. Luật 24 — sàn mặc định bật ẩn mã căn (#13).</p>
+    <svg viewBox="0 0 1280 624" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Vị trí căn theo người nhận</title>
+      <desc id="d">Từ bản đầy đủ của căn, rẽ theo người nhận. Nhóm môi giới nhận mã căn, trục, số tầng, UPI, toà. Khách riêng: nếu sàn tắt ẩn mã căn (#13, mặc định bật) thì nhận cùng bản đầy đủ như nhóm môi giới; nếu bật thì xét danh mục có số tầng của toà không — không có thì chỉ toà; có thì so tầng với nửa số tầng toà (Hỏi-1): lớn hơn thì Toà · Tầng cao, còn lại Toà · Tầng thấp. Ở mọi nhánh không có chủ nhà, số, giá đáy, liên hệ, người giữ, ảnh nội bộ — trần lớp, không cấu hình nào mở.</desc>
+      <defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="1280" height="624" fill="#f5f5f5"/>
+
+<!-- Mũi tên (vẽ trước hộp) -->
+<line x1="172" y1="280" x2="202" y2="280" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="404" y1="280" x2="482" y2="280" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="684" y1="280" x2="762" y2="280" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="964" y1="280" x2="1042" y2="280" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 304 220 L 304 96 Q 304 88 312 88 L 322 88" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 584 220 L 584 96 Q 584 88 576 88 L 566 88" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="864" y1="340" x2="864" y2="410" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="1144" y1="220" x2="1144" y2="118" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="1144" y1="340" x2="1144" y2="410" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- Điểm đầu -->
+<rect x="32" y="248" width="140" height="64" rx="20" fill="#f5f5f5"/><rect x="32" y="248" width="140" height="64" rx="20" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="102" y="284" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bản đầy đủ của căn</text>
+
+<!-- Câu hỏi 1: người nhận -->
+<polygon points="304,220 404,280 304,340 204,280" fill="#f5f5f5"/><polygon points="304,220 404,280 304,340 204,280" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="304" y="284" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Người nhận?</text>
+
+<!-- Câu hỏi 2: ẩn mã căn -->
+<polygon points="584,220 684,280 584,340 484,280" fill="#f5f5f5"/><polygon points="584,220 684,280 584,340 484,280" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="584" y="276" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Sàn bật ẩn mã căn?</text>
+<text x="584" y="294" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="middle">(#13, mặc định bật)</text>
+
+<!-- Câu hỏi 3: số tầng toà -->
+<polygon points="864,220 964,280 864,340 764,280" fill="#f5f5f5"/><polygon points="864,220 964,280 864,340 764,280" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="864" y="276" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Danh mục có số tầng</text>
+<text x="864" y="292" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">của toà?</text>
+
+<!-- Câu hỏi 4: Hỏi-1 (tiêu điểm) -->
+<polygon points="1144,220 1244,280 1144,340 1044,280" fill="#f5f5f5"/><polygon points="1144,220 1244,280 1144,340 1044,280" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="1144" y="262" fill="#ba4513" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">HỎI-1</text>
+<text x="1144" y="282" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tầng &gt; nửa số</text>
+<text x="1144" y="298" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">tầng toà?</text>
+
+<!-- Lá: bản đầy đủ vị trí -->
+<rect x="324" y="60" width="240" height="56" rx="6" fill="#f5f5f5"/><rect x="324" y="60" width="240" height="56" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<text x="444" y="84" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mã căn, trục, số tầng, UPI, toà</text>
+<text x="444" y="102" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="middle">unitNumber · stack · floor · upi</text>
+
+<!-- Lá: chỉ toà -->
+<rect x="784" y="412" width="160" height="56" rx="6" fill="#f5f5f5"/><rect x="784" y="412" width="160" height="56" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<text x="864" y="436" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chỉ toà</text>
+<text x="864" y="454" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="middle">floorBand: null</text>
+
+<!-- Lá: tầng cao -->
+<rect x="1064" y="60" width="160" height="56" rx="6" fill="#f5f5f5"/><rect x="1064" y="60" width="160" height="56" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<text x="1144" y="84" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Toà · Tầng cao</text>
+<text x="1144" y="102" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="middle">floorBand: high</text>
+
+<!-- Lá: tầng thấp -->
+<rect x="1064" y="412" width="160" height="56" rx="6" fill="#f5f5f5"/><rect x="1064" y="412" width="160" height="56" rx="6" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<text x="1144" y="436" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Toà · Tầng thấp</text>
+<text x="1144" y="454" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="middle">floorBand: low</text>
+
+<!-- Nhãn mũi tên (có nền che, cách đường 8px) -->
+<rect x="408" y="256" width="72" height="16" rx="2" fill="#f5f5f5"/>
+<text x="444" y="268" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÁCH RIÊNG</text>
+<rect x="312" y="152" width="80" height="16" rx="2" fill="#f5f5f5"/>
+<text x="352" y="164" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NHÓM MÔI GIỚI</text>
+<rect x="548" y="152" width="28" height="16" rx="2" fill="#f5f5f5"/>
+<text x="562" y="164" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TẮT</text>
+<rect x="708" y="256" width="32" height="16" rx="2" fill="#f5f5f5"/>
+<text x="724" y="268" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BẬT</text>
+<rect x="992" y="256" width="24" height="16" rx="2" fill="#f5f5f5"/>
+<text x="1004" y="268" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+<rect x="872" y="368" width="40" height="16" rx="2" fill="#f5f5f5"/>
+<text x="892" y="380" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+<rect x="1152" y="152" width="24" height="16" rx="2" fill="#f5f5f5"/>
+<text x="1164" y="164" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+<rect x="1152" y="368" width="40" height="16" rx="2" fill="#f5f5f5"/>
+<text x="1172" y="380" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+
+<!-- Ghi chú dưới hình: trần lớp ở mọi nhánh -->
+<rect x="32" y="500" width="1216" height="44" rx="6" fill="#f5f5f5"/><rect x="32" y="500" width="1216" height="44" rx="6" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="48" y="526" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.12em">MỌI NHÁNH · AC-3</text>
+<text x="196" y="526" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Ở mọi nhánh: không chủ nhà, số, giá đáy, liên hệ, người giữ, ảnh nội bộ — trần lớp, không cấu hình nào mở</text>
+
+<!-- Chú giải -->
+<line x1="32" y1="572" x2="1248" y2="572" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="32" y="600" fill="#4f5d75" font-size="9" font-weight="400" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">CHÚ GIẢI</text>
+<polygon points="124,588 140,596 124,604 108,596" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="152" y="600" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Câu rẽ</text>
+<rect x="212" y="588" width="28" height="16" rx="2" fill="rgba(45,49,66,0.04)" stroke="#2d3142" stroke-width="1"/>
+<text x="248" y="600" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Vị trí ra trong bản gửi</text>
+<polygon points="400,588 416,596 400,604 384,596" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+<text x="428" y="600" fill="#4f5d75" font-size="10" font-weight="400" font-family="'Geist', sans-serif" text-anchor="start">Hỏi-1 — điểm chờ quyết</text>
+<text x="1248" y="600" fill="#2d3142" font-size="10" font-weight="500" font-family="'Geist', sans-serif" text-anchor="end">AC-4 vị trí theo người nhận · AC-3 không rò ở mọi nhánh</text>
+    </svg>
+  </main>
+</body>
+</html>
