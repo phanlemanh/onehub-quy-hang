@@ -1,8 +1,9 @@
 /**
  * Rào cửa ra (hàng 31, luật 23): mỗi trang hay route có URL của một cửa ra phải có bài kiểm rò rỉ của riêng nó — một tệp
- * `*.ro-ri.test.ts(x)` gọi `canMoi` và `timRoRi` trên mã nguồn trang. Trang web: URL suy từ cây `apps/web/src/app`. Route
- * API: kho khai đường đầy đủ trong mã (`path: "/api/v1/…"` của các tệp `routes.ts`), nên rào đọc chính đường khai ấy. Rào
- * đọc cây thư mục nên chỉ bài kiểm nhập tệp này; mã chạy trên trình duyệt không nhập nó (không có trong `index.ts`).
+ * `*.ro-ri.test.ts(x)` gọi `canMoi` và `timRoRi` trên mã nguồn trang. URL suy từ cây `apps/web/src/app`. Route API công
+ * khai không thuộc rào này: hàng 35 dựng rào ấy trên danh sách route đã đăng ký của app API (đoán URL từ chữ trong mã luôn
+ * sót một kiểu khai). Rào đọc cây thư mục nên chỉ bài kiểm nhập tệp này; mã chạy trên trình duyệt không nhập nó (không
+ * có trong `index.ts`).
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
@@ -15,13 +16,6 @@ const TEP_KIEM = /\.ro-ri\.test\.tsx?$/;
 export function urlCuaTrang(duongTuGoc: string): string {
   const doan = duongTuGoc.split(/[\\/]/).filter((d) => d && !TRANG.test(d) && !/^\(.*\)$/.test(d));
   return `/${doan.join("/")}`;
-}
-
-/** Đường API khai trong một tệp mã: chuỗi bắt đầu `/api/v1/` đứng sau `path:` hay làm đối số đầu của `.get(`, `.post(`… */
-export function duongApiKhai(ma: string): string[] {
-  const ra = new Set<string>();
-  for (const m of ma.matchAll(/(?:\bpath\s*:\s*|\.(?:get|post|put|patch|delete|all|on|route)\(\s*)["'`](\/api\/v1\/[^"'`]*)["'`]/g)) ra.add(m[1]!);
-  return [...ra];
 }
 
 const laCuaRa = (url: string) => TIEN_TO_CUA_RA.some((t) => url === t.replace(/\/$/, "") || url.startsWith(t));
@@ -56,10 +50,10 @@ const tepKiemDat = (p: string) => {
   return /\bcanMoi\s*\(/.test(ma) && /\btimRoRi\s*\(/.test(ma);
 };
 
-/** Thư mục `tep` hay một thư mục cha tới `gocNhanh` có tệp kiểm đạt. */
-function coKiem(tep: string, gocNhanh: string, thuMucCoKiem: ReadonlySet<string>): boolean {
+/** Thư mục `tep` hay một thư mục cha tới `gocApp` có tệp kiểm đạt. */
+function coKiem(tep: string, gocApp: string, thuMucCoKiem: ReadonlySet<string>): boolean {
   let d = tep.slice(0, tep.lastIndexOf(sep));
-  while (d.length >= gocNhanh.length) {
+  while (d.length >= gocApp.length) {
     if (thuMucCoKiem.has(d)) return true;
     d = d.slice(0, d.lastIndexOf(sep));
   }
@@ -70,9 +64,8 @@ const thuMucKiem = (tep: readonly string[]) =>
   new Set(tep.filter((p) => TEP_KIEM.test(p) && tepKiemDat(p)).map((p) => p.slice(0, p.lastIndexOf(sep))));
 
 /**
- * Cửa ra chưa có bài kiểm rò rỉ đạt. Trang web đọc ở `<goc>/apps/web/src/app`; route API đọc mọi tệp mã dưới
- * `<goc>/packages/api/src` khai đường bắt đầu bằng một tiền tố cửa ra. Một cửa ra đạt khi thư mục của tệp, hay một thư mục
- * cha tới gốc của nhánh, có tệp kiểm đạt.
+ * Trang cửa ra chưa có bài kiểm rò rỉ đạt, đọc ở `<goc>/apps/web/src/app`. Một trang đạt khi thư mục của nó, hay một thư
+ * mục cha tới gốc app, có tệp kiểm đạt.
  */
 export function timCuaRaThieuKiem(goc: string): { url: string; tep: string }[] {
   const thieu: { url: string; tep: string }[] = [];
@@ -84,15 +77,6 @@ export function timCuaRaThieuKiem(goc: string): { url: string; tep: string }[] {
     const url = urlCuaTrang(relative(gocWeb, p));
     if (!laCuaRa(url) || laChoGiu(p)) continue;
     if (!coKiem(p, gocWeb, kiemWeb)) thieu.push({ url, tep: relative(goc, p) });
-  }
-  const gocApi = join(goc, "packages", "api", "src");
-  const tepApi = duyet(gocApi);
-  const kiemApi = thuMucKiem(tepApi);
-  for (const p of tepApi) {
-    if (!/\.(ts|tsx|js|mjs)$/.test(p) || /\.test\.[cm]?[jt]sx?$/.test(p)) continue;
-    for (const url of duongApiKhai(readFileSync(p, "utf8"))) {
-      if (laCuaRa(url) && !coKiem(p, gocApi, kiemApi)) thieu.push({ url, tep: relative(goc, p) });
-    }
   }
   return thieu;
 }

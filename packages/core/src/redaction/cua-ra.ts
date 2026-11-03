@@ -12,7 +12,8 @@ export const NGUOI_NHAN = ["khach_rieng", "nhom_moi_gioi"] as const;
 export type NguoiNhan = (typeof NGUOI_NHAN)[number];
 
 /**
- * Đầu URL của các trang, route là cửa ra. Rào `timCuaRaThieuKiem` (rao-cua-ra.ts) bắt mỗi trang có URL bắt đầu bằng một
- * tiền tố ở đây phải có bài kiểm rò rỉ của riêng nó.
+ * Đầu URL của các trang web là cửa ra. Rào `timCuaRaThieuKiem` (rao-cua-ra.ts) bắt mỗi trang có URL bắt đầu bằng một
+ * tiền tố ở đây phải có bài kiểm rò rỉ của riêng nó. Route API công khai (`/api/v1/public/…`) có rào riêng ở hàng 35, đọc
+ * danh sách route đã đăng ký trên app API.
  */
-export const TIEN_TO_CUA_RA = ["/s/", "/shares/new", "/exports", "/api/v1/public/", "/api/v1/s/"] as const;
+export const TIEN_TO_CUA_RA = ["/s/", "/shares/new", "/exports"] as const;
