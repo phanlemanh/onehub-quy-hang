@@ -1,0 +1,94 @@
+schema_version: 1
+feature_slug: luat-an-va-kiem-ro-ri
+# Mọi eval là máy: hàng này không có màn (surfaces: core, ci). Bản mồi `canMoi()` là MỘT fixture dùng chung cho E1–E8 —
+# mỗi cặp hai chiều chạy trên cùng mồi. Mồi không chứa dữ liệu thật: tên `[Tên] …`, số `0900 000 0xx`.
+# executors.script.ro_ri = npm run test:ro-ri (job CI ro-ri); executors.script.lint_bo_qua = các bài ở
+# _acceptance/luat-an-va-kiem-ro-ri/thu/ (rào lint, nối CI, bài phá thử trên bản sao lõi trong thư mục tạm).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «một hàm cho mọi cửa» có mặt và ok — ma trận viết trước 3 cửa × 2 người nhận = 6 ô: khoá của bản ra ⊆ TRUONG_RA[người nhận] (6 assert); bản vào thêm lúc chạy khoá lạ `ghiChuNoiBo` mang giá trị mồi → không ô nào có khoá ấy hay giá trị ấy (6 assert); cùng người nhận, ba cửa ra bản ra deepEqual nhau (2 assert). Chiều đỏ trên cùng mồi: bản sao hàm ra dựng bằng chép cả bản vào rồi xoá khoá cấm → ca khoá lạ đỏ, thông điệp nêu `ghiChuNoiBo`."
+    paths: ["packages/core/src/redaction/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «bảng lớp trọn» có mặt và ok — kiemBangLop(bảng thật) = []; khoá của canMoi() (đếm lúc chạy) = khoá của LOP_TRUONG (deepEqual, đã sắp); mọi khoá của TRUONG_RA ở cả hai người nhận có lớp với trần external hay by_agreement. Round-trip với bảng gốc của lõi: với mọi khoá của OWNER_FIELDS, SOURCE_KEYS (hàng 11) lớp ở LOP_TRUONG trùng lớp gốc, đọc từ chính các bảng ấy (import, không chép tay); lớp của photos theo COMPARTMENT_CLASS; danh sách khoá chưa có bảng gốc viết trước và deepEqual. Chiều đỏ trên cùng mồi: bản sao OWNER_FIELDS đổi ownerName sang company_internal → đúng một lỗi, thông điệp nêu `ownerName`; bản vào có khoá `ghiChuNoiBo` không có trong LOP_TRUONG → đúng một lỗi, thông điệp chứa `ghiChuNoiBo` và «chưa xếp lớp»; thêm vào danh sách được ra của khách riêng một khoá của từng lớp không ra — company_internal (holderName), custom_field (customFields), transaction (closePrice), behavior (khoá mồi lớp behavior của bảng sao), source (ownerPhone) — 5 assert, mỗi thông điệp nêu khoá và lớp."
+    paths: ["packages/core/src/redaction/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «không rò ở mọi tổ hợp» có mặt và ok — 3 cửa × 2 người nhận × 4 cấu hình (gồm CAU_HINH_MO_NHAT) = 24 ô, mỗi ô timRoRi(JSON bản ra, giaTriMoi) = [] (24 assert). Đối chứng dương trên cùng mồi: timRoRi(JSON của chính bản vào) trúng đủ mọi mồi — số trường trúng = số mồi đếm từ bảng lớp (khoá lớp source, company_internal, transaction, custom_field, cộng mồi liên hệ, ảnh nội bộ), so deepEqual danh sách trường viết trước. Chiều đỏ: ba bản sao hàm ra, mỗi bản chép thêm một trường (`ownerPhone`, `floorPrice`, `holderName`) → mỗi bản đúng một trúng, thông điệp nêu tên trường."
+    paths: ["packages/core/src/redaction/**", "packages/core/src/data-classes.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mã căn theo người nhận» có mặt và ok — khách riêng, cấu hình mặc định, ở 3 cửa: khoá của bản ra deepEqual danh sách viết trước theo Hỏi-3 [buildingName, floorBand, livingArea, bedroomsTotal, directionFaces, propertyType, propertySubType, furnished, legalStatus, occupantType, financing, availability, listPrice, feeInclusion, confirmedAgeDays, photos, companyName, senderName] (3 assert, khoá vắng theo trạng thái loại theo bảng E7); không khoá unitNumber, upi, stack, floor (12 assert) và timRoRi(JSON, [unitNumber, upi, stack của mồi]) = [] (3 assert); floorBand theo bảng viết trước: tầng 12/15 → high, 8/15 → high, 7/15 → low, 1/15 → low, tầng 5 khi số tầng toà null → null (5 assert). Đối chứng dương trên cùng mồi: nhóm môi giới và khách riêng khi privateHidesUnitNumber = false → timRoRi trúng unitNumber, upi, stack (2 × 3 assert) và có khoá floor. Chiều đỏ: bản sao hàm ra bỏ điều kiện ẩn mã căn → ca khách riêng mặc định đỏ, thông điệp nêu `unitNumber`."
+    paths: ["packages/core/src/redaction/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «liên hệ không ra ngoài» có mặt và ok — mồi có hai liên hệ: Chủ bán ([Tên] mồi, 0900 000 071) và chỉ Người mua ([Tên] mồi khác, 0900 000 072), mỗi liên hệ một mã riêng; ở 24 ô (cửa × người nhận × cấu hình): timRoRi trên JSON bản ra với mồi tên, số, mã liên hệ = [] (24 assert), bản ra không có khoá `contacts`. Đối chứng dương: mỗi số của hai liên hệ viết ở sáu dạng (liền, cách, chấm, gạch, +84, 84) nhúng vào một chuỗi → trúng đúng trường liên hệ ấy, dạng «số điện thoại» — 2 × 6 = 12 assert. Chiều đỏ: bản sao hàm ra chép tên người mua → đỏ, thông điệp nêu trường liên hệ."
+    paths: ["packages/core/src/redaction/**", "packages/core/src/contacts/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «ảnh chỉ ngăn Gửi được» có mặt và ok — mồi có 3 ảnh Gửi được (thứ tự 2, 0, 1; ảnh thứ tự 1 là bìa, ảnh thứ tự 2 là ảnh mẫu) và 2 ảnh Nội bộ mang mã mồi: bản ra có đúng 3 ảnh, mã theo thứ tự [bìa, thứ tự 0, thứ tự 2] (deepEqual viết trước), nhãn [«Ảnh thật · <ngày>», «Ảnh thật · <ngày>», «Ảnh mẫu»], mỗi ảnh đúng bốn khoá id, label, width, height; timRoRi với mã hai ảnh nội bộ = [] ở 24 ô. Chiều đỏ: bản sao hàm ra lấy mọi ảnh không qua anhRaNgoai → đỏ, thông điệp nêu mã ảnh nội bộ."
+    paths: ["packages/core/src/redaction/**", "packages/core/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «trạng thái, giá, độ tươi» có mặt và ok — bảng viết trước theo Hỏi-4, 6 trạng thái × (availability, có listPrice, có feeInclusion) = 18 assert: Active → available, có, có; Pending → under_contract, có, có; Hold → paused, không, không; Closed, Withdrawn, Incomplete → unavailable, không, không; ở mọi trạng thái bản ra không có khoá standardStatus, closePrice, closeDate, withdrawnReason, lastConfirmedAt (6 assert) và timRoRi với mồi giá chốt, ngày bán = []; confirmedAgeDays bằng đúng freshness(lastConfirmedAt, today).ageDays của lõi hàng (round-trip, gọi hàm thật) ở ba ô viết trước: 2026-10-24T09:00:00Z với today 2026-11-03 → 10; 2026-11-02T23:30:00Z với today 2026-11-03 → 1; 2026-11-03T00:10:00Z với today 2026-11-03 → 0; showConfirmedAge = false → không khoá confirmedAgeDays; chưa từng xác nhận → null. Chiều đỏ: bản sao bảng đổi Hold → available thì ô Hold đỏ, thông điệp nêu trạng thái; bản sao tính ngày bằng giờ trôi thì ô đầu ra 9, thông điệp nêu ô."
+    paths: ["packages/core/src/redaction/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «quét văn bản mọi dạng» có mặt và ok — ma trận viết trước 15 dạng: nguyên văn, thực thể HTML thập phân, thập lục phân, có tên (&amp;), thoát JSON \\uXXXX, mã hoá URL, Unicode NFD (mồi NFC), Unicode NFC (mồi NFD), hoa thường khác, số điện thoại liền, cách, chấm, gạch, +84, 84; cộng số tiền có dấu chấm ngăn nghìn; mỗi dạng một cặp trên cùng văn bản mẫu (HTML có script, thuộc tính, chú thích): có mồi → đúng một trúng, nêu trường và dạng; bỏ mồi → [] — 2 × 16 = 32 assert. Số ngắn (tầng 12) không là mồi: quét văn bản có «12» không trúng. Chiều đỏ: bản sao timRoRi bỏ bước giải thực thể HTML → ô thập phân đỏ, thông điệp nêu dạng; bản sao bỏ đổi +84 → ô +84 đỏ."
+    paths: ["packages/core/src/redaction/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; dòng tổng kết của node --test có pass > 0 và fail 0; có ca «cửa ra có trang thì có tệp kiểm»: quét apps/web/src/app trên cây thật → không lỗi; trên cây mẫu trong thư mục tạm, ma trận viết trước 6 ô: `s/[ma]/page.tsx` không tệp kiểm → đỏ nêu URL /s/[ma]; `(khach)/s/[ma]/page.tsx` (nhóm route) không tệp kiểm → đỏ nêu /s/[ma]; có `trang.ro-ri.test.ts` gọi canMoi và timRoRi → hết lỗi; tệp `trang.ro-ri.test.ts` rỗng (không gọi hai hàm) → đỏ, thông điệp nêu tệp; `(app)/inventory/page.tsx` (không phải cửa ra) không tệp kiểm → không lỗi; `packages/api/src/public/share/routes.ts` khai route `/api/v1/public/share` không tệp kiểm → KHÔNG lỗi (route API công khai là rào của hàng 35, rào hàng này chỉ đọc trang web)."
+    paths: ["packages/core/src/redaction/**", "package.json", "apps/web/src/app/s/**", "apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/exports/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9b
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint_bo_qua
+    expected: "exit 0; bài «CI nối ro-ri» ok — đọc .github/workflows/ci.yml: có job `ro-ri` chạy `npm run test:ro-ri`, `ro-ri` nằm trong needs của `ci-ok` và của `deploy`, script `test:ro-ri` có trong package.json gốc (4 assert); bản sao ci.yml bỏ ro-ri khỏi needs của ci-ok → bộ đọc đỏ, thông điệp nêu `ci-ok`. Bài «phá thử» ok — chép packages/core/src vào thư mục tạm ngoài cây kho, thêm `holderName` vào danh sách được ra của khách riêng, chạy đúng lệnh của script test:ro-ri trên bản sao → mã thoát khác 0 và đầu ra chứa `holderName`; bản sao không sửa → mã 0 (đối chứng dương)."
+    paths: [".github/workflows/ci.yml", "package.json", "packages/core/src/redaction/**", "_acceptance/luat-an-va-kiem-ro-ri/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint_bo_qua
+    expected: "exit 0; bài «lint bỏ qua thư mục đợt» ok — ESLint của kho (eslint.config.mjs): isPathIgnored('.acceptance-runs/x/loi/a.mjs') = true; lintText mã có lỗi lint với filePath 'packages/core/src/redaction/x.ts' → số lỗi > 0 (mã kho vẫn bị quét); đối chứng: bản sao cấu hình trong thư mục tạm bỏ hai dòng của b324429 → isPathIgnored cùng đường = false, thông điệp nêu `.acceptance-runs`."
+    paths: ["eslint.config.mjs", "_acceptance/luat-an-va-kiem-ro-ri/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
