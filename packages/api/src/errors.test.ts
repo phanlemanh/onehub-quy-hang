@@ -74,8 +74,12 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     notABuyerAgent: ["not-a-buyer-agent", 400],
     buyerTypeRequired: ["buyer-type-required", 400],
     listingNotShareable: ["listing-not-shareable", 400],
+    // nhap-excel-xem-truoc-ghi (hàng 65a).
+    importRoleRequired: ["import-role-required", 403],
+    importPlanInvalid: ["import-plan-invalid", 422],
+    importBatchTooLarge: ["import-batch-too-large", 422],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 57);
+  assert.equal(Object.keys(API_ERRORS).length, 60);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);
