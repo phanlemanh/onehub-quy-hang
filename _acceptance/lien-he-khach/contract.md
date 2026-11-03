@@ -5,7 +5,7 @@ slug: lien-he-khach
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-03-lien-he-khach-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -138,3 +138,9 @@ Quét morphological-scan, preset entity-feature, cho thực thể «khách của
 - Tệp ngoài vùng xin ở yêu cầu `cham-tep` L-1: `packages/api/src/errors.ts`, `packages/core/package.json`,
   `packages/api/test-db/lien-he-khach.test.ts`, `packages/db/tests/isolation.test.mjs`, `docs/adr/0021-lien-he.md`,
   `docs/product/doi-chieu-nganh.md` — chỉ thêm dòng.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-03:
+  - Ngoài-1: Bài kiểm sàn khác không ghi được vào nhu cầu khách chưa chứng chắc là luật cách ly đang chặn.
+  - Ngoài-2: Ô «đầu khách đã mất vai» của ma trận đọc chưa có căn mẫu nên chưa thật sự thử.
+  - Ngoài-3: Một phép thử cách ly giữa hai sàn có thể xanh vì lý do khác (thiếu vai).
+  - Ngoài-4: Bảng Lần gửi bị từ chối chỉ kiểm mã 400, chưa kiểm đúng lý do từ chối.
+  - Ngoài-5: Bài kiểm tài liệu chỉ xem từ khoá có mặt, chưa xem câu có đúng nghĩa.
