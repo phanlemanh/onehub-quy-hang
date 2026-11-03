@@ -76,6 +76,14 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/leads/{leadId}/listing",
     "GET /api/v1/contacts/{contactId}",
     "PATCH /api/v1/contacts/{contactId}",
+    // lien-he-khach (hàng 86).
+    "POST /api/v1/prospects",
+    "GET /api/v1/prospects/{prospectId}",
+    "PATCH /api/v1/prospects/{prospectId}",
+    "POST /api/v1/prospects/{prospectId}/phones",
+    "POST /api/v1/prospects/{prospectId}/close",
+    "GET /api/v1/prospects/{prospectId}/shares",
+    "POST /api/v1/shares",
     // Hàng 22: Hôm nay của đầu chủ.
     "GET /api/v1/company/settings/queue",
     "PUT /api/v1/company/settings/queue",

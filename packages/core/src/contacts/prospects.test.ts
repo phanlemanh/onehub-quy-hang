@@ -1,7 +1,10 @@
 // Nhu cầu khách ở lõi (hàng 86: AC-1, AC-10). Khách là liên hệ Buyer / Tenant; nhu cầu khách theo RESO Prospecting.
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { test } from "node:test";
 import {
+  PROSPECT_CRITERIA_KEYS,
   PROSPECT_EVENT_TYPES,
   PROSPECT_VIEW_KEYS,
   prospectView,
@@ -87,4 +90,24 @@ test("nhu cầu khách: bản xem không số", () => {
   const json = JSON.stringify(v);
   for (const x of [MA_LIEN_HE, "0900000011", "dauvet-bi-mat"]) assert.ok(!json.includes(x), `bản xem lộ ${x}`);
   assert.deepEqual(v.contactTypes, ["Buyer", "Tenant"]);
+});
+
+const GOC = join(import.meta.dirname, "../../../..");
+
+test("liên hệ khách: tài liệu khớp lõi", () => {
+  const tc = readFileSync(join(GOC, "docs/product/tham-chieu.md"), "utf8");
+  const dong = tc.split("\n");
+  const lanGui = dong.find((d) => d.startsWith("| Lần gửi |"));
+  assert.ok(dong.some((d) => d.startsWith("| Nhu cầu khách |")), "Tham chiếu §4 thiếu dòng «Nhu cầu khách»");
+  assert.ok(lanGui?.includes("nhu cầu khách"), "dòng «Lần gửi» không nói gắn nhu cầu khách");
+  assert.ok(dong.some((d) => d.startsWith("| 03/11 |") && d.includes("hàng 86")), "Sổ quyết định thiếu dòng 03/11 của hàng 86");
+  const tri = tc.slice(tc.indexOf("## 15. Tri thức ngành và RESO"));
+  for (const x of ["Prospecting", "SavedSearch"]) assert.ok(tri.includes(x), `§15 thiếu ${x}`);
+  for (const k of PROSPECT_CRITERIA_KEYS) assert.ok(tc.includes(k), `Tham chiếu thiếu khoá tiêu chí ${k}`);
+  const adr = readFileSync(join(GOC, "docs/adr/0021-lien-he.md"), "utf8");
+  const sua = adr.slice(adr.indexOf("## Sửa đổi 03/11 — liên hệ khách"));
+  assert.ok(adr.includes("## Sửa đổi 03/11 — liên hệ khách"), "ADR-0021 thiếu mục sửa đổi");
+  assert.ok(sua.split("\n").some((d) => d.toLowerCase().includes("người giữ") && d.includes("đầu khách")), "mục sửa đổi không nói người giữ ≠ đầu khách");
+  assert.ok(/[Ll]ịch xem/.test(sua), "mục sửa đổi không nói lịch xem");
+  assert.ok(readFileSync(join(GOC, "docs/product/doi-chieu-nganh.md"), "utf8").includes("Prospecting"), "Đối chiếu ngành thiếu Prospecting");
 });

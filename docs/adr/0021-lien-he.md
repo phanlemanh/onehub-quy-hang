@@ -46,3 +46,23 @@ mang lớp nguồn — hàng 47 phải nới quyết định ấy có chủ đí
 - `listing_owners` còn giữ tên, số theo từng hàng cạnh liên hệ; dời hẳn sang bảng nối theo RESO `ContactListings` là việc sau.
 - Chữ «liên hệ» nay là đối tượng; nút «Liên hệ đầu chủ» trên hồ sơ của đầu khách (hàng 33) va chữ — hàng 33 hỏi đổi nhãn.
 - Liên hệ khách (Người mua, Người thuê gắn Lần gửi, lịch xem) là hàng 86; nguồn lead, quan hệ giữa liên hệ, thẻ là hàng sau.
+
+## Sửa đổi 03/11 — liên hệ khách (hàng 86)
+
+Manh Phan duyệt Cổng Phạm vi hồ sơ `lien-he-khach` 03/11, Hỏi-1..7 theo khuyến nghị. Migration `021`.
+
+1. **Khách là liên hệ** mang `Buyer` hay `Tenant`; không bảng người thứ hai. Việc của một đầu khách với một khách là một
+   **nhu cầu khách** (`prospects`, RESO `Prospecting`): liên hệ, đầu khách giữ, tên khách đầu khách gõ, Mua · Thuê · Cả
+   hai, tiêu chí theo tên trường RESO (`SavedSearch`).
+2. **Người giữ liên hệ không phải đầu khách.** Liên hệ khách mới không có người giữ; người giữ vẫn là của phía chủ nhà
+   (quyết định 5) — kiểm trùng lead đi qua nó, nên đặt đầu khách vào đó thì lead sau của cùng người chia nhầm về đầu khách.
+3. **Đầu khách không đọc liên hệ.** Đầu khách làm việc qua bản xem nhu cầu khách — không số, không mã liên hệ; liên hệ vừa
+   khách vừa chủ trọn lớp nguồn (quyết định 3). Tạo nhu cầu bằng số của chủ nhà trả cùng một thân như số mới; thêm số đã
+   thuộc liên hệ khác báo 409 một thân cho mọi liên hệ (Hỏi-6: đầu khách biết số ấy đã có trong sàn).
+4. **Lần gửi gắn nhu cầu khách** (khách riêng) hay không gắn (nhóm môi giới); người gửi là chỗ ghi công và không đổi khi
+   trưởng nhóm chuyển nhu cầu sang đầu khách khác; chỉ căn đã lên bảng, tối đa 30 (Hỏi-7). Phần ra trang khách là phong bì
+   của lõi (`@quy-hang/core/sharing`): mã link, khán giả, căn, người gửi.
+5. **Lịch xem** khi dựng gắn nhu cầu khách (Hỏi-4: chưa dựng, chờ phỏng vấn đầu khách — Tham chiếu §13).
+6. **Còn nhu cầu khách đang mở** thì liên hệ giữ loại khách tương ứng; đóng nhu cầu (đầu khách giữ, trưởng nhóm) rồi mới
+   bỏ được.
+7. Nhu cầu khách mở ghi sự kiện `inquiry_received` («khách hỏi») — mốc đầu của số đo «khách hỏi → gửi được căn».
