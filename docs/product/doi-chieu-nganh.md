@@ -56,6 +56,7 @@ giữ.
 
 | Sản phẩm | Cách làm | Cấu hình ở đâu | Nguồn |
 | --- | --- | --- | --- |
+| RESO | `Prospecting` tách việc gửi căn cho một khách (`ContactKey`, `OwnerMemberKey`, `SavedSearchKey`) khỏi con người `Contacts` — Quỹ hàng dùng nó cho nhu cầu khách của đầu khách (hàng 86) | Thành viên giữ từng bản ghi | [dd.reso.org Prospecting](https://dd.reso.org/DD2.0/Prospecting/) |
 | Follow Up Boss | Một người nhiều số; nhãn số có bộ đặt sẵn và cho gõ nhãn mới | Nhãn: **Người**, sửa trên hồ sơ | [Phone Number Labels](https://help.followupboss.com/hc/en-us/articles/4402372233495-Phone-Number-Labels) |
 | Follow Up Boss | Trường riêng bốn kiểu (ngày, chữ, số, chọn) | Chỉ **chủ tài khoản**; tạo xong không đổi kiểu được | [Custom Fields](https://help.followupboss.com/hc/en-us/articles/360015273733-Custom-Fields) |
 | KW Command | Lead và Contact là cùng một bản ghi, đổi qua lại bằng ô «Mark as Lead»; Owner, Assignee, Collaborators | Nhãn số **Cố định** Home/Mobile/Work/Other | [Contacts Overview](https://documentation.kw.com/html/kellercloud/command/contacts/overview-contacts.html), [Detail Fields](https://answers.kw.com/hc/en-us/articles/360015702354-Contact-and-Lead-Detail-Fields) |

@@ -67,10 +67,17 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     // dien-ma-can-cho-hang (ADR-0026).
     unitNumberAlreadySet: ["unit-number-already-set", 422],
     unitAlreadyListed: ["unit-already-listed", 422],
+    // lien-he-khach (hàng 86).
+    buyerAgentRequired: ["buyer-agent-required", 403],
+    phoneOwnedElsewhere: ["phone-owned-elsewhere", 409],
+    prospectClosed: ["prospect-closed", 409],
+    notABuyerAgent: ["not-a-buyer-agent", 400],
+    buyerTypeRequired: ["buyer-type-required", 400],
+    listingNotShareable: ["listing-not-shareable", 400],
     // va-doi-gia-can-da-ban.
     priceLockedClosed: ["price-locked-closed", 422],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 52);
+  assert.equal(Object.keys(API_ERRORS).length, 58);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

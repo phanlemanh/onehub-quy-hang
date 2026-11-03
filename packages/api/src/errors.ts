@@ -64,6 +64,13 @@ export const API_ERRORS = {
   // Gắn mã căn (ADR-0026).
   unitNumberAlreadySet: { code: "unit-number-already-set", status: 422 },
   unitAlreadyListed: { code: "unit-already-listed", status: 422 },
+  // Liên hệ khách (hàng 86, ADR-0021 sửa đổi 03/11).
+  buyerAgentRequired: { code: "buyer-agent-required", status: 403 },
+  phoneOwnedElsewhere: { code: "phone-owned-elsewhere", status: 409 },
+  prospectClosed: { code: "prospect-closed", status: 409 },
+  notABuyerAgent: { code: "not-a-buyer-agent", status: 400 },
+  buyerTypeRequired: { code: "buyer-type-required", status: 400 },
+  listingNotShareable: { code: "listing-not-shareable", status: 400 },
   // Căn Đã bán không đổi giá (va-doi-gia-can-da-ban).
   priceLockedClosed: { code: "price-locked-closed", status: 422 },
 } as const;
