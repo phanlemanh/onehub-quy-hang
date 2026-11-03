@@ -206,3 +206,11 @@ evals:
     expected: "Cả bốn câu «có» kèm câu trích; (2) câu cũ không còn."
     paths: ["design/patterns/bang-hang.md", "docs/design/vo-va-ia.md", ".agents/skills/quy-hang-ui/catalog.md", "docs/product/tham-chieu.md"]
     evidence_required: [run_id, verifier, verified_at]
+
+  - id: E18
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "design/patterns/trang-thai.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/bang-co-ho-so.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang, trang-thai, trang-tam. Lệch chỉ vì tệp thuộc hai nhóm (giới hạn «cắt trước» của kit 2.37.0, luật 33 của đợt) là báo oan — người chấm ghi tên tệp bị báo, không tính là lệch thật."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
