@@ -222,6 +222,20 @@ Quỹ hàng: bốn kết quả gọi cố định ở mọi màn (§5); danh sá
 hoặc gõ tự do (KW), hoặc là một stage do sàn đặt (Follow Up Boss). Kịch bản do người dùng viết (Lofty) hoặc hãng soạn sẵn
 (REDX). Checklist theo stage của KW gần nhất với «danh sách hỏi».
 
+## 11. Nhập file bảng tính
+
+Quỹ hàng: bộ ghép tất định (từ điển tiêu đề dựng sẵn + từ điển của sàn) ghép cột, người duyệt ở màn xem trước; cột không
+khớp giữ làm ghi chú nội bộ hay trường riêng, không bỏ (ADR-0011, hàng 64). Tra ngày 03/11 — cả hai sản phẩm dưới đây
+nhập **liên hệ**; nhập **bảng hàng** từ file của sàn **chưa kiểm**.
+
+| Sản phẩm | Cách làm | Cấu hình ở đâu | Nguồn |
+| --- | --- | --- | --- |
+| Follow Up Boss | CSV, người chọn trường cho từng cột; cột không khớp vào Notes (kèm tiêu đề) hoặc thành Custom Field; một ô một giá trị | **Người** ghép mỗi lần nhập | [Import Contacts](https://help.followupboss.com/hc/en-us/articles/4402323033751) |
+| Lofty | CSV/bảng tính, máy tự ghép rồi người soát cả cột đã «matched»; 10.000 dòng một lượt | **Người** soát | [Lead Import](https://help.lofty.com/hc/en-us/articles/360001710831) |
+
+**Bài học:** ngành để người ghép hay soát từng lần; chưa thấy sản phẩm nào nhớ cách ghép theo sàn hay che dữ liệu cá nhân
+trước khi xử lý (chưa kiểm). Quỹ hàng nhớ theo sàn (hàng 67) và che trước khi có gì rời trình duyệt (bất biến 2).
+
 ## Sản phẩm Việt Nam
 
 Tra bằng tiếng Việt ngày 01/11. Trang chính thức chỉ liệt kê tính năng ở mức tiếp thị. Không sản phẩm nào công bố gọi theo
