@@ -98,6 +98,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/leads/{leadId}/phone-reveal",
     // Hàng 30: gọi từ máy tính.
     "POST /api/v1/leads/{leadId}/phone-dial",
+    // Hàng 34: khách đang mở của đầu khách cho màn Gửi.
+    "GET /api/v1/prospects",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
