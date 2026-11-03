@@ -58,11 +58,12 @@ nguồn của `confirmedAt` ở ADR-0011 quyết định 8). Đích của một 
 
 Sáu lớp tạm: `source` · `person_name` · `free_text` · `catalog` · `shareable_listing` · `unknown`. Thứ tự quyết, nghiêng
 về che: (1) bộ dò chạy trên MỌI ô của mọi cột — số điện thoại Việt Nam (0/+84/84, chín chữ số sau đầu số, ngăn bằng cách,
-chấm, gạch), email, số giấy tờ 9/12 chữ số; cột có ≥ 30% ô trúng số điện thoại → `source`; cột có ô trúng bộ dò mà dưới
+chấm, gạch), email, số giấy tờ 9/12 chữ số; cột có ≥ 30% ô trúng bộ dò (số, email, giấy tờ) → `source`; cột có ô trúng bộ dò mà dưới
 30% → `free_text` (một ô «chủ … 0900 000 0xx» trong Ghi chú là đủ); (2) tiêu đề trong từ điển nguồn → `source`, từ điển
-người → `person_name`, ghi chú → `free_text`; (3) ≥ 50% ô có dáng họ tên (2–5 chữ, viết hoa đầu, không số) →
-`person_name`; (4) chữ dài trung bình > 25 ký tự → `free_text`; (5) tiêu đề hay giá trị khớp trường danh mục / hàng chia
-sẻ được → lớp đó; (6) còn lại `unknown`. Ngưỡng 30% / 50% / 25 ký tự ghi thành hằng có tên, có test.
+người → `person_name`, ghi chú → `free_text`; (3) ≥ 50% ô có dáng họ tên (2–5 chữ, viết hoa đầu, không số, chữ đầu là một họ
+phổ biến hay nhãn «[…]») → `person_name`; (4) chữ dài trung bình > 25 ký tự → `free_text`; (5) tiêu đề hay giá trị khớp trường danh mục / hàng chia
+sẻ được → lớp đó; (6) còn lại `unknown`. Ngưỡng 30% / 50% / 25 ký tự ghi thành hằng có tên, có test. Chuỗi chữ số tận cùng năm số 0 trở lên là
+dáng số tiền, không tính là số điện thoại hay giấy tờ (giá đồng 9–11 chữ số).
 
 ### Hồ sơ cột (`profile.ts`)
 
