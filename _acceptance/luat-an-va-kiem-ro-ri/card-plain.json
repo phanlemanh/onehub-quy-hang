@@ -1,0 +1,39 @@
+{
+  "feature_plain": "Mọi thứ đi ra ngoài sàn — trang khách, ảnh + tin gửi Zalo, bảng hàng phát ra — được dựng từ một bộ luật ẩn duy nhất, và một bài kiểm bắt buộc trong CI chặn phát hành nếu có thông tin nội bộ (chủ nhà, số, giá đáy, liên hệ, ảnh sổ) lọt ra, kể cả lọt trong mã nguồn trang.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cho cả ba cửa ra (gửi link, gửi ảnh + tin, phát hàng) lấy dữ liệu từ cùng một luật ẩn; chỉ trường có trong danh sách được ra của người nhận mới ra, trường lạ thêm sau tự động bị giữ lại."},
+    {"id": "AC-2", "p": "Sẽ báo đỏ, nêu tên trường, khi ai đó thêm một trường chưa xếp lớp dữ liệu, đưa một trường nội bộ vào danh sách được ra, hoặc đổi lớp trường chủ nhà / ngăn ảnh ở lõi mà luật ẩn không đổi theo."},
+    {"id": "AC-4", "p": "Sẽ ẩn mã căn, trục, số tầng, mã định danh khi gửi khách riêng — khách chỉ thấy toà và «tầng cao / tầng thấp» (Hỏi-1) cùng đặc điểm căn đã chọn (Hỏi-3); nhóm môi giới, hoặc sàn tắt «ẩn mã căn», thấy đủ."},
+    {"id": "AC-5", "p": "Sẽ không đưa ra ngoài bất kỳ liên hệ nào — tên, số (mọi cách viết), loại — kể cả liên hệ chỉ là người mua."},
+    {"id": "AC-6", "p": "Sẽ chỉ đưa ra ảnh ngăn Gửi được, ảnh bìa đầu, có nhãn «Ảnh thật · ngày» hay «Ảnh mẫu»; ảnh ngăn Nội bộ không để lại dấu vết nào."},
+    {"id": "AC-7", "p": "Sẽ cho khách thấy tình trạng và giá theo bảng Hỏi-4 (còn hàng · đã cọc · tạm ngưng · không còn), không bao giờ giá chốt, ngày bán, lý do ngừng; «giá xác nhận X ngày trước» ra đúng số ngày bàn làm việc đang hiện."},
+    {"id": "AC-8", "p": "Sẽ bắt được thông tin nội bộ trong bất kỳ văn bản nào — mã nguồn trang, tin soạn sẵn, dòng xuất file — kể cả khi bị mã hoá kiểu HTML, JSON, URL, đổi dạng dấu tiếng Việt, hay số điện thoại viết cách, chấm, gạch, +84."},
+    {"id": "AC-9", "p": "Sẽ chạy bài kiểm rò rỉ thành một bước bắt buộc của CI (không xanh thì không vào nhánh chính, không phát hành); trang nào của cửa ra mà chưa có bài kiểm rò rỉ của riêng nó thì CI đỏ, nêu địa chỉ trang."},
+    {"id": "AC-10", "p": "Sẽ để bước kiểm lint bỏ qua thư mục đợt chỉ có trên máy, mà vẫn quét đủ mã của kho."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG để giá trị nội bộ nào lọt ra ở bất kỳ tổ hợp nào: 3 cửa × 2 người nhận × 4 cách cài trang khách, kể cả cách cài mở nhất; cố tình chép một trường nội bộ ra thì bài kiểm đỏ và gọi tên trường."},
+    {"id": "OOS-1", "p": "KHÔNG dựng trang khách, luồng Gửi, Phát hàng hay tin soạn sẵn — các hàng 35, 34, 43 dựng trên luật này và tự thêm bài kiểm rò rỉ cho trang của mình."},
+    {"id": "OOS-2", "p": "KHÔNG đọc cài đặt trang khách của sàn hay mở đường API công khai — hàng 35 làm, rồi truyền cài đặt vào luật ẩn."},
+    {"id": "OOS-3", "p": "KHÔNG làm mức chia trên trang nhóm môi giới (hàng 44); số điện thoại người gửi trên trang khách hỏi ở hàng 35."},
+    {"id": "OOS-4", "p": "KHÔNG mở trường riêng ra ngoài (bật từng trường khi phát hàng là hàng 43, 47); KHÔNG làm địa chỉ nhà ngoài khu (đang chờ quyết)."},
+    {"id": "OOS-5", "p": "KHÔNG làm Đăng Platform — sau bản đầu."}
+  ],
+  "scope_plain": "Hàng này là nền: luật ẩn và bài kiểm, chưa có màn nào. Những việc dưới đây thuộc hàng khác.",
+  "coverage_plain": [
+    {"i": 0, "p": "Người nhận: khách riêng và nhóm môi giới đều được kiểm — phần vị trí căn khác nhau ở AC-4 (ẩn mã căn)."},
+    {"i": 1, "p": "Cửa ra: cả ba cửa (gửi link, ảnh + tin, phát hàng) đi qua cùng luật và cùng bài kiểm; Đăng Platform để sau."},
+    {"i": 2, "p": "Loại dữ liệu: đủ bảy lớp dữ liệu của lõi, cộng liên hệ và ảnh hai ngăn — mỗi lớp không được ra có giá trị mồi riêng trong bài kiểm (AC-3 không rò, AC-2 bảng lớp)."},
+    {"i": 3, "p": "Cách cài trang khách: cả bốn tổ hợp của «hiện tuổi xác nhận» và «ẩn mã căn», gồm cách cài mở nhất."},
+    {"i": 4, "p": "Cách thông tin lọt vào văn bản: sáu kiểu mã hoá và sáu cách viết số điện thoại (AC-8) — danh sách này máy dựng từ cách trình duyệt mã hoá chữ, chưa đo trên trang thật nên đang là giả định chờ anh gạch."},
+    {"i": 5, "p": "Trạng thái hàng: đủ sáu trạng thái chuẩn, mỗi trạng thái một dòng trong bảng tình trạng và giá (AC-7)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy đã tự quyết «khách riêng vẫn thấy diện tích, phòng ngủ, hướng» trong khi luật 24 chỉ nói về vị trí — đây là đánh đổi của anh (khách cần thông tin, sàn cần giữ khách). Đã chuyển thành Hỏi-3, tiêu chí và bài đo viết theo khuyến nghị, chờ anh chọn."},
+    {"i": 1, "p": "Máy đã tự quyết khách thấy giá căn đã cọc và gộp «tạm ngưng» vào «không còn» — luật 25, 26 không nói vậy. Đã chuyển thành Hỏi-4 (khuyến nghị tách «tạm ngưng»). Cách đếm «X ngày trước» nay dùng đúng phép đếm của bàn làm việc, nên hai bên không lệch số."},
+    {"i": 2, "p": "Rào bắt trang cửa ra phải có bài kiểm rò rỉ dễ bị né (đặt trang trong nhóm route, hay bài kiểm rỗng). Đã sửa: nhận cửa ra theo địa chỉ trang, bài kiểm phải thật sự gọi bộ quét, thêm chỗ cho đường API công khai; việc trang có dựng từ luật ẩn hay không được đo gián tiếp bằng lượt quét mồi."},
+    {"i": 3, "p": "Bài đo cách viết số điện thoại gộp một ô, có thể bỏ sót «+84». Đã tách đủ sáu cách viết, mỗi cách một cặp trúng / không trúng, và chạy trên cả hai số liên hệ."},
+    {"i": 4, "p": "Bảng lớp của luật ẩn có thể lệch với bảng gốc của lõi (trường chủ nhà, ngăn ảnh) mà không ai biết. Đã thêm bài so trực tiếp với bảng gốc, và bài đỏ đủ năm lớp không được ra."}
+  ],
+  "decisions_plain": []
+}
