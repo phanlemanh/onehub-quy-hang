@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7bff7dd057ab3bc8370a83d67e56e240e9efbc7b
+verified_commit: 1fc1ee2ece5afdf9ed3e9664b893d269487e8be4
 human_signoff:
 ---
 
@@ -103,3 +103,7 @@ none — every multi-run eval is uniform
 
 Round 1: E2 failed — lệnh db:migrate + db:test dừng lỗi ở ca «số đo: ngày lead → Sẵn sàng bán trên bộ mẫu» (leads-mine.test.ts), thừa một hàng có khoảng ngày 0.0. Returned to implementation.
 Round 2: E1, E2, E3 và toàn bộ lệnh suite xanh trên commit 7bff7dd; verdict PASS.
+
+### Re-pin lần 1 — 2026-11-03, do gộp nhánh chính (PR #98, #100) sau lượt chấm
+run_id: repin-20261103T141337Z-52750
+sha: 1fc1ee2ece5afdf9ed3e9664b893d269487e8be4 · suites: 7 lệnh exit 0 · evals: 3/3 eval máy đạt kỳ vọng
