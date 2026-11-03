@@ -1,0 +1,132 @@
+schema_version: 1
+feature_slug: tab-toi
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; dòng tổng kết node --test pass > 0, fail 0; ma trận viết trước 5 vai × (điện thoại, máy tính) = 10 ô: hàm dựng nhóm dòng của tab Tôi trả đúng sáu nhóm theo thứ tự hồ sơ · sàn · cài · thông báo · máy · đăng xuất ở mọi ô; người một sàn không có «Đổi sàn», người hai sàn có; chiều đỏ: bản sao hàm bỏ nhóm «máy» → ô đỏ nêu tên nhóm thiếu; trang /me không còn nhập Placeholder."
+    paths: ["apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E1b
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên khổ điện thoại 390×844 và máy tính 1440×900, đăng nhập bằng tài khoản mẫu, mở /me: thấy sáu nhóm dòng đúng thứ tự, tab Tôi đang chọn ở thanh dưới điện thoại; chụp mỗi khổ một ảnh; với tài khoản mẫu một máy: dòng máy có «Chỉ có máy này», không nút «Báo mất máy», chụp một ảnh; với tài khoản mẫu ba máy: có nút, bấm mở hộp hỏi «Đăng xuất mọi máy khác và xoá dữ liệu Quỹ hàng trên các máy ấy?» kiểu nguy hiểm, xác nhận thì hiện «Đã đăng xuất 2 máy khác» và danh sách chỉ còn «Máy này», chụp hộp hỏi và kết quả; mở /login?bi-bao-mat=1 thấy lời «Máy này đã bị báo mất — dữ liệu Quỹ hàng trên máy đã xoá», chụp một ảnh."
+    paths: ["apps/web/src/app/(app)/me/**", "apps/web/src/app/(auth)/login/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận viết trước 4 trạng thái cài × kết quả: đã cài (standalone) → «Đã cài» không nút; có lời mời cài → nút «Cài» và bấm gọi prompt() đúng một lần; iPhone/iPad Safari chưa cài → ba bước; trình duyệt khác → «Mở bằng Chrome hay Safari để cài»; số assert = 4; chiều đỏ: bản sao hàm phân loại xét iPhone trước «đã cài» → ô «đã cài trên iPhone» đỏ nêu trạng thái."
+    paths: ["apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận viết trước 7 trạng thái của phanLoai → nhãn dòng thông báo, số assert = 7, nhãn rút từ cùng bảng nhãn với dải bật Hôm nay (không chép chữ); «chưa bật» có nút «Bật» gọi batThongBao với lời gọi giả, trả «da-bat» thì dòng đổi sang đã bật; chiều đỏ: bảng nhãn thiếu «loi-luu» → ô đỏ nêu trạng thái."
+    paths: ["apps/web/src/app/(app)/me/**", "apps/web/src/lib/push/**", "apps/web/src/app/(app)/today/dai-bat.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; nút Đăng xuất của tab Tôi gọi cùng hàm đăng xuất của menu tài khoản: với bộ đồng bộ giả có n = 0 và n = 2 thay đổi chờ — n = 2 hỏi đúng 2, «Ở lại» không gọi sign-out và kho còn, «Vẫn đăng xuất» xoá kho của người và gửi sign-out kèm pushEndpoint; kho của người thứ hai trên cùng máy giả còn nguyên; chiều đỏ: bản sao gửi sign-out trước khi xoá kho rồi mạng lỗi → kho còn, ca đỏ nêu «kho chưa xoá»."
+    paths: ["apps/web/src/app/(app)/me/**", "apps/web/src/lib/sync/**", "apps/web/src/components/shell/account-menu.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trên Postgres dãy: người X có phiên còn sống trên 3 máy (userAgent iPhone Safari, Android Chrome, Mac Chrome) và một phiên đã hết hạn, người Y có 1 phiên; GET /api/v1/me/devices bằng phiên máy Mac của X trả đúng 3 dòng (không có phiên hết hạn), loại máy iPhone · Android · máy tính, mỗi dòng có lần dùng gần nhất bằng updatedAt của phiên, đúng một dòng current = máy Mac, không dòng nào của Y; không trường mã phiên (token) nào trong thân trả; chiều đỏ: bản sao truy vấn không lọc theo người → ca đỏ nêu «lộ phiên người khác». Kèm ma trận thuần loaiMay(userAgent) 6 chuỗi mẫu → 4 loại trong bộ test.web."
+    paths: ["packages/api/src/me/**", "packages/api/src/app.ts", "apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trên Postgres dãy: X thành viên sàn S1, S2, phiên trên A, B, C, đăng ký thông báo A, B ở S1 và C ở S2, Y có phiên và đăng ký ở S1; POST /api/v1/me/devices/report-lost từ A kèm pushEndpoint của A → phiên B, C hết (get-session bằng token B, C trả null), đăng ký B ở S1 và C ở S2 bị gỡ, đăng ký A còn, phiên và đăng ký của Y còn, A get-session còn; bảng dấu có đúng 2 dòng, cột băm khớp sha256 của token B, C và không cột nào chứa token thật; chiều đỏ: bản sao không gỡ ở sàn thứ hai → ca đỏ nêu «đăng ký C ở S2 còn»."
+    paths: ["packages/api/src/me/**", "packages/api/src/push/**", "packages/api/src/app.ts", "packages/db/migrations/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trên Postgres dãy: sau báo mất từ A, lời gọi bằng token B tới GET /api/v1/me, một đường đọc của bộ đồng bộ và một đường ghi đều trả 401 thân có code device_reported_lost; token đã hết hạn thường (không dấu) trả 401 không mang code ấy; đăng nhập mới trên B rồi gọi /api/v1/me trả 200. Chiều đỏ: bản sao bỏ kiểm dấu → ca đỏ nêu «401 không mã»."
+    paths: ["packages/api/src/me/**", "packages/api/src/auth/**", "packages/api/src/app.ts", "packages/db/migrations/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; với kho IndexedDB giả có hai kho Quỹ hàng (người bị báo X, người khác Z) đều có bản kéo, lịch sử và một thay đổi chờ, và một đăng ký đẩy giả: bộ đồng bộ nhận 401 có code device_reported_lost kèm mã người X → hàm xoá máy chạy: kho của X không còn, kho của Z còn nguyên từng bản ghi (Hỏi-4), đăng ký đẩy bị huỷ, trạng thái trả về chuyển /login?bi-bao-mat=1; vỏ đọc /api/v1/me nhận cùng mã → chuyển cùng đích; màn đăng nhập có tham số ấy gọi hàm xoá máy rồi hiện lời đã khai; chiều đỏ: bản sao xoá mọi kho Quỹ hàng → kho của Z mất, ca đỏ nêu «kho người khác bị xoá»; bản sao không xoá gì → ca đỏ nêu «kho X còn»."
+    paths: ["apps/web/src/lib/sync/**", "apps/web/src/lib/push/**", "apps/web/src/app/(auth)/login/**", "apps/web/src/components/shell/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca của dong-bo-tu-lanh AC-2 (máy chủ trả 401 không mã cho mọi lời gọi) vẫn đạt nguyên văn: ba thao tác ở lại hàng đợi, chỉ báo «Hết phiên · đăng nhập lại để gửi 3 thay đổi», không kho nào bị xoá; thêm ca đối chứng cùng kho giả: 401 có code device_reported_lost → kho bị xoá; cặp hai ca cùng một kho giả, khác đúng một trường code."
+    paths: ["apps/web/src/lib/sync/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; migrate từ trống lên số mới chạy xanh; bộ kiểm cách ly có ca mới: bảng dấu ở schema identity, vai quy_hang_app select và insert đều bị từ chối (permission denied); expires_at của dấu bằng lúc thu cộng SESSION_EXPIRES_SEC đọc từ chính hằng cấu hình phiên (assert không chép số 30), nên không nhỏ hơn expiresAt của phiên bị thu; dấu có expires_at quá hạn thì lời gọi bằng token ấy trả 401 không mang device_reported_lost; chiều đỏ thứ hai: bản sao đặt hạn dấu ngắn hơn hạn phiên → ca đỏ nêu «dấu hết trước phiên»; chiều đỏ trên bản sao migration có grant select cho quy_hang_app → ca đỏ nêu tên bảng."
+    paths: ["packages/db/migrations/**", "packages/db/tests/**", "packages/api/src/me/**", "packages/api/src/auth/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "design/patterns/trang-tam.md", "design/patterns/xac-thuc.md", "apps/web/src/app/(app)/me/**", "apps/web/src/app/(auth)/*/page.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai, trang-tam, xac-thuc mà hồ sơ chạm (màn Tôi, màn đăng nhập, vỏ)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận viết trước cho dòng máy đang đăng nhập: k = 1 → dòng «Chỉ có máy này», không nút «Báo mất máy»; k = 3 → ba dòng, nút có, «Máy này» đúng một dòng; đang báo mất → nút chờ; báo mất xong với 2 máy bị thu → lời «Đã đăng xuất 2 máy khác» và một dòng; lỗi đọc → TrangThai lỗi có «Thử lại»; số assert = 5; ma trận thuần loaiMay(userAgent) 6 chuỗi mẫu → iPhone, iPhone (iPad báo Mac có chạm), Android, máy tính (Mac), máy tính (Windows), máy khác; chiều đỏ: bản sao hiện nút khi k = 1 → ô đỏ nêu «k = 1 có nút»."
+    paths: ["apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7c
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên máy chủ dev nối Postgres dãy: trình duyệt A và trình duyệt B (hai hồ sơ trình duyệt) cùng đăng nhập tài khoản mẫu X; B nạp bảng hàng để có kho trên máy và tạo một thay đổi chờ khi tắt mạng giả; trên B ghi kho của một người mẫu khác Z bằng công cụ trang. A bấm «Báo mất máy» và xác nhận. B điều hướng tới /today bằng cookie cũ: đích cuối là /login?bi-bao-mat=1 với lời đã khai; đọc IndexedDB của B bằng công cụ trang: không còn kho quy-hang-sync của X, kho của Z còn. Đối chứng: trình duyệt C đăng nhập X, phiên C bị xoá thẳng ở cơ sở dữ liệu (hết hạn giả, không qua báo mất), C điều hướng /today → /login không tham số và kho của X trên C còn. Chụp mỗi đích một ảnh, ghi kết quả đọc IndexedDB."
+    paths: ["apps/web/src/app/(auth)/login/**", "apps/web/src/components/shell/**", "apps/web/src/lib/sync/**", "packages/api/src/me/**", "packages/api/src/auth/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm xử lý tin đẩy của service worker gọi thẳng với self giả: tin tag xoa-may mang mã người X → xoá kho quy-hang-sync:X, kho của người khác còn, hiện đúng một thông báo «Quỹ hàng đã đăng xuất trên máy này»; tin thông báo lead thường (tag khác) → không xoá kho nào, hiện thông báo lead như cũ; chiều đỏ: bản sao bỏ nhánh xoa-may → ca đỏ nêu «kho X còn sau tin xoá»."
+    paths: ["apps/web/public/sw.js", "apps/web/src/lib/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E11b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trên Postgres dãy với bộ gửi đẩy giả ghi thứ tự: báo mất từ A khi B có đăng ký ở S1 và C không có → bộ gửi nhận đúng một tin cho endpoint B, payload đúng bốn khoá title, body, url, tag với tag xoa-may, và lần gửi xảy ra trước khi dòng đăng ký B bị xoá; bộ gửi ném lỗi → phiên B, C vẫn bị thu và đăng ký B vẫn bị gỡ, lời gọi trả 200; chiều đỏ: bản sao gỡ đăng ký trước rồi mới gửi → ca đỏ nêu «B không nhận lệnh»."
+    paths: ["packages/api/src/me/**", "packages/api/src/push/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]

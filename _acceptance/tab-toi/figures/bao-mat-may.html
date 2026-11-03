@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo mất máy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 0.35rem;
+    }
+    .subtitle { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Sơ đồ luồng · Hỏi-2 · AC-6 · AC-7 · AC-8 · AC-9</p>
+    <h1>Máy bị báo mất tự xoá dữ liệu lần đầu chạm máy chủ</h1>
+    <p class="subtitle">Hết phiên thường vẫn giữ thay đổi chờ như đã ký. Máy không bao giờ mở lại thì không xoá được — nhưng cũng không đọc được gì mới, vì phiên đã bị thu.</p>
+    <svg viewBox="0 0 1168 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Báo mất máy</title>
+      <desc id="d">Ba làn: máy đang bấm, máy chủ, máy bị báo. Bước 1, máy đang bấm bấm Báo mất máy và xác nhận đăng xuất mọi máy khác; máy này giữ phiên. Bước 2, máy chủ thu phiên mọi máy khác, gỡ thông báo của các máy ấy, ghi dấu máy bị báo giữ 30 ngày. Bước 3, lần sau máy bị báo mở trang hay đồng bộ, chạm máy chủ. Bước 4, máy chủ từ chối phiên đã thu và soi dấu. Có dấu: bước 5, máy bị báo xoá mọi dữ liệu Quỹ hàng kể cả thay đổi chưa gửi, huỷ thông báo, xoá phiên; bước 6, màn đăng nhập báo máy này đã bị báo mất, dữ liệu trên máy đã xoá. Không dấu, tức hết phiên thường: giữ thay đổi chờ, không xoá gì; màn Hết phiên, đăng nhập lại thì gửi tiếp.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+        </marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+        </marker>
+      </defs>
+      <rect width="1168" height="580" fill="#f5f5f5"/>
+
+      <!-- Lanes -->
+      <line x1="24" y1="16" x2="1144" y2="16" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="24" y1="128" x2="1144" y2="128" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="24" y1="256" x2="1144" y2="256" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="24" y1="504" x2="1144" y2="504" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="152" y1="16" x2="152" y2="504" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="32" y="44" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">MÁY ĐANG BẤM</text>
+      <text x="32" y="60" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">máy người còn giữ</text>
+      <text x="32" y="156" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">MÁY CHỦ</text>
+      <text x="32" y="172" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Quỹ hàng</text>
+      <text x="32" y="284" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">MÁY BỊ BÁO</text>
+      <text x="32" y="300" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">máy đã mất</text>
+
+      <!-- Comparison band divider -->
+      <line x1="168" y1="384" x2="744" y2="384" stroke="rgba(45,49,66,0.20)" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <line x1="768" y1="384" x2="1144" y2="384" stroke="rgba(45,49,66,0.20)" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <text x="168" y="404" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">SO SÁNH · HẾT PHIÊN THƯỜNG</text>
+
+      <!-- Connectors (drawn before boxes) -->
+      <path d="M 256 112 L 256 184 Q 256 192 264 192 L 366 192" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+      <path d="M 456 232 L 456 312 Q 456 320 464 320 L 566 320" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <line x1="656" y1="280" x2="656" y2="234" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+      <path d="M 744 176 L 848 176 Q 856 176 856 184 L 856 278" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <path d="M 744 208 L 748 208 Q 756 208 756 216 L 756 444 Q 756 452 764 452 L 766 452" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <line x1="944" y1="320" x2="966" y2="320" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="944" y1="452" x2="966" y2="452" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+      <!-- Connector labels -->
+      <rect x="476" y="292" width="76" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="514" y="301" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LẦN MỞ SAU</text>
+      <rect x="772" y="156" width="56" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="800" y="165" fill="#ba4513" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ DẤU</text>
+      <rect x="684" y="420" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="746" y="429" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">KHÔNG DẤU</text>
+
+      <!-- 1 · Máy đang bấm -->
+      <rect x="168" y="32" width="176" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="168" y="32" width="176" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="180" y="52" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">BƯỚC 1</text>
+      <text x="180" y="72" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Bấm «Báo mất máy»</text>
+      <text x="180" y="88" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Xác nhận đăng xuất máy khác</text>
+      <text x="180" y="102" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Máy này vẫn giữ phiên</text>
+
+      <!-- 2 · Máy chủ thu phiên -->
+      <rect x="368" y="152" width="176" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="368" y="152" width="176" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="380" y="172" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">BƯỚC 2</text>
+      <text x="380" y="192" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Thu phiên mọi máy khác</text>
+      <text x="380" y="208" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Gỡ thông báo của các máy ấy</text>
+      <text x="380" y="222" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Ghi dấu «bị báo», giữ 30 ngày</text>
+
+      <!-- 3 · Máy bị báo chạm máy chủ -->
+      <rect x="568" y="280" width="176" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="568" y="280" width="176" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="580" y="300" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">BƯỚC 3</text>
+      <text x="580" y="320" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Mở trang hay đồng bộ</text>
+      <text x="580" y="336" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Lần đầu chạm máy chủ</text>
+      <text x="580" y="350" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">sau khi bị báo</text>
+
+      <!-- 4 · Máy chủ soi dấu -->
+      <rect x="568" y="152" width="176" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="568" y="152" width="176" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="580" y="172" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">BƯỚC 4</text>
+      <text x="580" y="192" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Từ chối phiên đã thu</text>
+      <text x="580" y="208" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Soi dấu «bị báo» của phiên</text>
+      <text x="580" y="222" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Có dấu: kèm lời «máy mất»</text>
+
+      <!-- 5 · Xoá dữ liệu (focal) -->
+      <rect x="768" y="280" width="176" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="768" y="280" width="176" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="780" y="300" fill="#ba4513" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">BƯỚC 5</text>
+      <text x="780" y="320" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Xoá mọi dữ liệu Quỹ hàng</text>
+      <text x="780" y="336" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Kể cả thay đổi chưa gửi</text>
+      <text x="780" y="350" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Huỷ thông báo · xoá phiên</text>
+
+      <!-- 6 · Màn đăng nhập -->
+      <rect x="968" y="280" width="176" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="968" y="280" width="176" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="980" y="300" fill="#4f5d75" font-size="8" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.12em">BƯỚC 6</text>
+      <text x="980" y="320" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Màn đăng nhập báo</text>
+      <text x="980" y="336" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">«Máy này đã bị báo mất —</text>
+      <text x="980" y="350" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">dữ liệu trên máy đã xoá»</text>
+
+      <!-- So sánh · hết phiên thường -->
+      <rect x="768" y="420" width="176" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="768" y="420" width="176" height="64" rx="6" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="780" y="446" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Giữ thay đổi chờ</text>
+      <text x="780" y="464" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Không xoá gì trên máy</text>
+
+      <rect x="968" y="420" width="176" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="968" y="420" width="176" height="64" rx="6" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="980" y="446" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Màn «Hết phiên»</text>
+      <text x="980" y="464" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Đăng nhập lại thì gửi tiếp</text>
+
+      <!-- Legend -->
+      <line x1="24" y1="528" x2="1144" y2="528" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="24" y="556" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+      <rect x="112" y="544" width="28" height="16" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="148" y="556" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Điều mới: máy bị báo tự xoá</text>
+      <rect x="304" y="544" width="28" height="16" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="340" y="556" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Bước của luồng báo mất</text>
+      <rect x="476" y="544" width="28" height="16" rx="2" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="512" y="556" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Hết phiên thường · như đã ký, không đổi</text>
+      <line x1="720" y1="552" x2="748" y2="552" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="756" y="556" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Chờ máy mở lại · nhánh so sánh</text>
+    </svg>
+  </main>
+</body>
+</html>
