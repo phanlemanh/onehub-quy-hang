@@ -14,7 +14,8 @@
     "./contacts": "./src/contacts/index.ts",
     "./photos": "./src/photos/index.ts",
     "./today": "./src/today/index.ts",
-    "./push": "./src/push/index.ts"
+    "./push": "./src/push/index.ts",
+    "./sharing": "./src/sharing/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
