@@ -1,0 +1,32 @@
+{
+  "feature_plain": "Đầu khách chọn vài căn trên Bảng hàng, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với tin soạn sẵn có link và ảnh — người tự bấm gửi trong Zalo.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiện thanh «n căn · Xem trước · Gửi» ở đáy Bảng hàng khi đã chọn căn, bấm là sang màn Gửi giữ đúng thứ tự chọn."},
+    {"id": "AC-2", "p": "Sẽ cho chọn gửi khách riêng (chỉ khách đang mở của chính mình, không lộ số khách) hay gửi nhóm môi giới."},
+    {"id": "AC-3", "p": "Sẽ cho tạo «Khách mới» ngay trong màn Gửi rồi chọn luôn khách ấy, và máy chủ thật nhận đúng lời gọi đó."},
+    {"id": "AC-4", "p": "Sẽ mở xem trước toàn màn đúng trang khách thấy: khách riêng không thấy mã căn, nhóm môi giới thấy mã."},
+    {"id": "AC-5", "p": "Sẽ kiểm bằng máy rằng trang xem trước, tin và ảnh gửi đi không mang thông tin nội bộ hay chủ nhà nào."},
+    {"id": "AC-6", "p": "Sẽ soạn sẵn tin theo mẫu mặc định, có link, người sửa được trước khi gửi."},
+    {"id": "AC-7", "p": "Sẽ tạo đúng một link cho mỗi lần bấm Gửi, rồi mở bảng chia sẻ với tin có link và tối đa 10 ảnh bìa — máy không gửi gì hộ."},
+    {"id": "AC-8", "p": "Sẽ chuyển thành «Chép tin» trên máy không có bảng chia sẻ; người huỷ bảng chia sẻ thì không báo lỗi."},
+    {"id": "AC-10", "p": "Sẽ ghi khuôn của nhóm màn Gửi để các màn sau của nhóm đi theo, và cập nhật Tham chiếu."}
+  ],
+  "wont_do": [
+    {"id": "AC-9", "p": "Chặn gửi khi mất mạng hay chưa chọn người nhận; căn quá 14 ngày chỉ nhắc gọi trước; căn không còn bán bị loại kèm lý do; lỗi tạo link giữ nguyên lựa chọn."},
+    {"id": "OOS-1", "p": "KHÔNG dựng trang khách công khai — link gửi đi chỉ mở được trang khi hàng 35 xong."},
+    {"id": "OOS-2", "p": "KHÔNG dựng Đã gửi và đếm lượt mở, lượt quan tâm (hàng 35, 36)."},
+    {"id": "OOS-3", "p": "KHÔNG chọn căn trên lưới Bảng hàng máy tính, không che vùng ảnh, không nấc tầng khi chưa biết số tầng toà."},
+    {"id": "OOS-4", "p": "KHÔNG cho sàn tự chỉnh mẫu tin và số ảnh ở vòng này (chờ màn Cài đặt sàn)."},
+    {"id": "OOS-5", "p": "KHÔNG gửi tin, đăng nhóm hay tự trả lời thay người."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đã quét đủ các bước (chọn · người nhận · xem trước · tin · chia sẻ · dự phòng) × ba kiểu người nhận × bốn tình huống máy × ba kiểu căn; ô nào cũng có tiêu chí. Phần dữ liệu ra khách kiểm trên đủ mọi cấu hình ẩn của hàng 31."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Lời gọi tạo khách và tạo link chỉ được kiểm trên máy chủ giả — đã sửa: máy dựng lời gọi ở một chỗ và một bài kiểm đưa đúng lời gọi ấy vào máy chủ thật."},
+    {"i": 1, "p": "Thiếu ba tình huống: chưa chọn người nhận, bấm Gửi hai lần, máy chủ báo lỗi — đã thêm vào tiêu chí và bài kiểm."},
+    {"i": 2, "p": "Máy tự giữ cứng hai kiểu người nhận và số ảnh mỗi căn — đã đưa thành câu hỏi cho anh (Hỏi-3, Hỏi-4)."},
+    {"i": 3, "p": "Gộp hàng này trước trang khách thì link gửi đi chưa mở được — đưa thành Hỏi-5 cho anh quyết (cờ hay không)."},
+    {"i": 4, "p": "Nhiều chỗ trên màn chưa có người nhìn kiểm — đã mở rộng bài kiểm trên bản chạy (khách mới, sửa tin, chép tin, nhắc 14 ngày)."}
+  ]
+}

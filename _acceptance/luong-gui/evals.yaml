@@ -1,0 +1,115 @@
+schema_version: 1
+feature_slug: luong-gui
+# Lệnh máy: `executors.test.web` (kiểm thuần apps/web, node:test), `executors.test.core`, `executors.script.ro_ri`
+# (luật ẩn + mọi *.ro-ri.test.ts), `executors.test.isolation` (packages/api/test-db, cần DATABASE_URL tới Postgres dãy L,
+# cổng 5571). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu
+# từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu là bộ mẫu hàng 5 và căn mồi hàng 31.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/cards/thanh-gui.test.ts có mặt và ok: «thanh gửi: hiện khi có căn chọn» — bảng viết trước (0 căn → không thanh; 1 căn → «1 căn»; 4 căn → «4 căn») deepEqual, đếm bằng số dòng; «thanh gửi: đường sang màn Gửi giữ thứ tự chọn» — chọn c3, c1, c2 → /shares/new?can=c3,c1,c2 và Xem trước thêm xem=1, đối chứng dương: thứ tự khác cho chuỗi khác. Chiều đỏ: sắp id trước khi ghép → ca thứ tự đỏ nêu chuỗi nhận được."
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/luong-gui.test.ts có mặt và ok: «luồng gửi: danh sách khách của đầu khách» — đầu khách 1 có hai nhu cầu mở và một đã đóng, đầu khách 2 có một: GET /api/v1/prospects của đầu khách 1 trả đúng hai id (deepEqual tập viết trước), của đầu khách 2 trả một; bảng viết trước (đầu chủ 403, telesales 403, không cookie 401) → mã HTTP, đếm bằng số dòng; mỗi phần tử Object.keys deepEqual PROSPECT_VIEW_KEYS và JSON thân trả không có contactId, phone, và máy dò chín chữ số liền không bắt gì, đối chứng dương: máy dò bắt chuỗi cài sẵn. Chiều đỏ: bỏ lọc closed_at → ca đỏ nêu id nhu cầu đã đóng."
+    paths: [packages/api/src/contacts/**, packages/api/test-db/luong-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/new/gui.test.ts có mặt và ok: «gửi: khách mới tạo nhu cầu rồi chọn» — fetch giả ghi lời gọi: nhập tên, số 0900 000 011, Mua → đúng một POST /api/v1/prospects với thân deepEqual {displayName, phone, need:\"purchase\", criteria:{}}, người nhận sau đó là id trả về; số sai khuôn → không gọi, báo lỗi đúng trường. Chiều đỏ: không chọn khách vừa tạo → ca đỏ nêu người nhận rỗng."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «luồng gửi: thân do lõi dựng được API thật nhận» trong packages/api/test-db/luong-gui.test.ts có mặt và ok — thân Khách mới lấy từ thanKhachMoi (hàm thật của packages/core/src/sharing/tin.ts, không viết tay) gửi vào app Hono thật dưới đầu khách mẫu → 201, đọc thẳng prospects (vai chủ) thấy nhu cầu mới của người gọi; thân Lần gửi lấy từ thanLanGui cho khách riêng (nhu cầu vừa tạo) và cho nhóm môi giới → 201 cả hai; đối chứng âm trong cùng ca: thân thanKhachMoi thêm một khoá lạ → 400 nêu khoá. Chiều đỏ: đổi need của thanKhachMoi thành «buy» → ca đỏ nêu 400."
+    paths: [packages/core/src/sharing/**, packages/api/src/contacts/**, packages/api/test-db/luong-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/new/xem-truoc.test.ts có mặt và ok: «xem trước: dựng từ bản ra của người nhận» — cùng một căn mẫu có unitNumber «[Mã]-1203»: renderToString trang xem trước cho khách riêng không chứa «[Mã]-1203» và chứa tên toà, cho nhóm môi giới chứa «[Mã]-1203» (đối chứng dương); hai chuỗi khác nhau; dữ liệu trang đi qua banRaNgoai (trang gọi bằng bản ra, không bằng ListingView — kiểu của prop là CanRaNgoai). Chiều đỏ: truyền nguoiNhan cố định nhom_moi_gioi → ca khách riêng đỏ nêu mã lộ."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/new/gui.ro-ri.test.ts có mặt và ok: «rò rỉ: trang xem trước, tin và gói chia sẻ» — với canMoi() và mọi NGUOI_NHAN × CAU_HINH_TAT_CA: renderToString trang xem trước, tin soạn sẵn và JSON gói chia sẻ (text, tên tệp) đều qua timRoRi trả rỗng; đối chứng dương: timRoRi trên JSON của căn mồi gốc bắt được giá trị nguồn; đếm số ô bằng NGUOI_NHAN.length × CAU_HINH_TAT_CA.length. Ca có sẵn «cửa ra: cây thật không có trang ra ngoài thiếu bài kiểm» (packages/core/src/redaction/cua-ra.test.ts) vẫn ok. Chiều đỏ: thêm holderName của căn vào tin → ca rò rỉ đỏ nêu giá trị và vị trí."
+    paths: ["apps/web/src/app/(app)/shares/new/**", packages/core/src/sharing/**, packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/sharing/tin.test.ts có mặt và ok: «tin gửi: dựng từ bản ra» — bảng viết trước (khách riêng hai căn; nhóm môi giới hai căn; căn không giá) → chuỗi tin deepEqual chuỗi viết trước, có link đúng một lần; tin khách riêng không chứa mã căn của căn mẫu, tin nhóm môi giới chứa (đối chứng dương); «tin gửi: trần ảnh» — TRAN_ANH_CHIA_SE bằng 10 và chonAnhChiaSe trên 12 căn mỗi căn hai ảnh ra đúng 10 tệp, mỗi căn tối đa một. Chiều đỏ: bỏ dòng link → ca đỏ nêu chuỗi thiếu link."
+    paths: [packages/core/src/sharing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/new/gui.test.ts có mặt và ok: «gửi: một Lần gửi rồi một bảng chia sẻ» — fetch giả và navigator.share giả ghi lời gọi: bấm Gửi khách riêng ba căn → đúng một POST /api/v1/shares thân deepEqual {audience:\"client\", prospectId, listingIds:[thứ tự chọn]}, rồi đúng một lời share với text chứa «/s/<mã trả về>» và không có trường url, files ≤ 10; tổng lời gọi mạng ngoài ảnh đúng một (đếm); nhóm môi giới → audience agents, prospectId null. Chiều đỏ: gọi share trước khi tạo Lần gửi → ca đỏ nêu thứ tự lời gọi."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «luồng gửi: Lần gửi ghi đúng căn và người nhận» trong packages/api/test-db/luong-gui.test.ts có mặt và ok — đầu khách tạo Lần gửi khách riêng ba căn Đang bán của bộ mẫu qua POST /api/v1/shares: đọc thẳng shares, share_listings (vai chủ) thấy đúng một dòng shares với sender = người gọi, prospect_id đúng, created_at không rỗng, share_listings đúng ba dòng theo position 0..2 deepEqual thứ tự gửi. Chiều đỏ: đảo thứ tự listingIds → ca đỏ nêu position."
+    paths: [packages/api/src/contacts/**, packages/api/test-db/luong-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/new/gui.test.ts có mặt và ok: «gửi: dự phòng khi không có bảng chia sẻ» — bảng viết trước bốn dòng (không navigator.share + chép được → «Đã chép», clipboard nhận đúng tin; không navigator.share + chép lỗi → hiện tin để chép tay; canShare({files}) false → share chỉ với text, không files; share ném AbortError → không báo lỗi) → kết cục deepEqual, đếm bằng số dòng; mỗi dòng Lần gửi được tạo đúng một lần. Chiều đỏ: coi AbortError là lỗi → dòng huỷ đỏ nêu kết cục."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/new/gui.test.ts có mặt và ok: «gửi: căn gửi được và nhắc» — bảng viết trước (Active xác nhận 3 ngày → gửi, không nhắc; Active 15 ngày → gửi, nhắc «Gọi xác nhận trước»; Active chưa từng xác nhận → gửi, nhắc; Pending → loại, lý do; Closed → loại, lý do; id không có trên máy → loại) deepEqual, đếm bằng số dòng; «gửi: khi nào nút Gửi mở» — bảng viết trước (mất mạng → tắt «Gửi cần mạng»; chưa người nhận → tắt «Chọn người nhận»; Khách riêng chưa chọn khách → tắt «Chọn người nhận»; danh sách rỗng → tắt; đủ → mở) deepEqual, mỗi dòng tắt bấm không gọi fetch (đếm 0), đối chứng dương: dòng đủ gọi đúng một lần; «gửi: bấm hai lần và lỗi máy chủ» — bấm Gửi hai lần trong lúc POST chưa trả → đúng một POST /api/v1/shares; POST trả 500 → thông điệp «Chưa tạo được link — thử lại» ghim nguyên văn, người nhận, danh sách căn và tin deepEqual trước khi bấm. Chiều đỏ: ngưỡng 14 thành 15 → dòng 15 ngày đỏ."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; lint quy-hang-ui in «chuẩn giao diện: đạt», mức nợ trần 0 không tăng; design/patterns/gui.md tồn tại với bo_cuc «luong-nhieu-buoc» (hay tên bố cục ADR-0024 tương ứng) và nhan_dien gồm apps/web/src/app/(app)/shares/new/**; bản đồ khuôn đếm thêm một nhóm; docs/product/tham-chieu.md có dòng luồng Gửi chứa «Đã dựng (hàng 34)» (grep ghim, in dòng ra output). Chiều đỏ: xoá gui.md → lưới khuôn báo màn ngoài bản đồ, lint đỏ nêu tệp."
+    paths: [design/patterns/**, "apps/web/src/app/(app)/shares/new/**", docs/product/tham-chieu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Đăng nhập đầu khách mẫu trên bản chạy, khổ 375: Bảng hàng thẻ giữ lâu chọn hai căn → thấy thanh «2 căn · Xem trước · Gửi»; bấm Xem trước → màn Gửi, chọn Khách riêng, ngăn xem trước toàn màn không có mã căn, đổi sang Nhóm môi giới thấy mã căn; Khách mới (tên mẫu, 0900 000 011, Mua) → khách được chọn; sửa một chữ trong tin → tin giữ chữ đã sửa; căn quá 14 ngày mang «Gọi xác nhận trước», căn không còn bán hiện lý do; khổ 1280 không có bảng chia sẻ → bấm Gửi thấy «Chép tin» rồi «Đã chép»; mất mạng (giả lập offline) → nút Gửi «Gửi cần mạng»; ảnh chụp từng bước vào evidence/."
+    paths: ["apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
