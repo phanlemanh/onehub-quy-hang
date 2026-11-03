@@ -56,3 +56,10 @@ hoàn lại: `npm test -w @quy-hang/web` 380/380 ok.
 | 3 | bỏ vế (b): `gui.ts` và `dong-bo.ts` không gắn dấu khi lượt gửi dừng vì mất mạng | `mat-mang.test.ts` | đỏ — «mất mạng: máy vừa rớt mạng»: lệnh của Z thiếu khoá madeOffline (thân `{"type":"details_changed",…,"expectedVersion":1}`); 4 ca khác ok |
 | 4 | `dong-bo.ts`: mở lượt ở mọi lượt thử mất mạng (không xét `offlineSince`) | `mat-mang.test.ts` | đỏ — «lượt mất mạng: mở một lần…»: `lượt phải mở ở t1, không ở t2 (2026-10-31T03:00:30.000Z)`; ca «tải lại trang giữa lượt» cũng đỏ |
 | 5 | `dong-bo.ts`: mở lượt với `ops` = độ dài hàng đợi (đếm cả thao tác có từ trước) | `mat-mang.test.ts` | đỏ — «lượt mất mạng: mở một lần…»: `queuedOps phải là 2 (không đếm thao tác có từ trước), nhận 3` |
+
+## Task 5 (vòng chính)
+
+| Phá | Kết quả |
+|---|---|
+| Bỏ đầu `x-quy-hang-device` khỏi hàm gọi thử của bài | ca «điện thoại mất mạng: sự kiện và lượt về cơ sở dữ liệu» đỏ — «sự kiện mới: …"device":null…» |
+| Hoàn lại | 1/1 xanh |
