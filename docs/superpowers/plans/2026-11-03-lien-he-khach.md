@@ -1,6 +1,6 @@
 # Kế hoạch — Liên hệ khách (hàng 86, T3)
 
-Hợp đồng: `_acceptance/lien-he-khach/contract.md` (duyệt Manh Phan 03/11, Hỏi-1..7 theo khuyến nghị). Thiết kế:
+Hợp đồng: `_acceptance/lien-he-khach/contract.md` (duyệt Manh Phan 03/11, Hỏi-1..7 theo khuyến nghị). Kế hoạch: duyệt Manh Phan 03/11 (Gate 1.5). Thiết kế:
 `docs/superpowers/specs/2026-11-03-lien-he-khach-design.md`. Tệp ngoài vùng duyệt ở yêu cầu L-1. Migration `021`.
 Postgres dãy L: `quy-hang-db-dkn-L`, cổng 5571 (`.env.local`).
 
