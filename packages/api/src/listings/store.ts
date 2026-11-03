@@ -28,7 +28,15 @@ import { API_ERRORS, type ApiErrorEntry } from "../errors";
  */
 
 export type Ctx = { userId: string; companyId: string };
-export type Command = { type: unknown; payload: unknown; expectedVersion?: number; confirmedWithOwner?: boolean };
+export type Command = {
+  type: unknown;
+  payload: unknown;
+  expectedVersion?: number;
+  confirmedWithOwner?: boolean;
+  /** Lệnh do một lần nhập file gửi (hàng 65a): sự kiện mang mã lần nhập và không bao giờ tính là xác nhận với chủ — trừ
+   * `owner_confirmed` mang ngày trong file. Chỉ lối nhập của máy chủ đặt khoá này; route lệnh hàng không nhận nó. */
+  importId?: string;
+};
 export type Refusal = {
   error: ApiErrorEntry;
   details?: PayloadError[];
@@ -122,23 +130,23 @@ export async function factsOf(tx: pg.PoolClient, listingId: string, events: read
   return { ...factsFromEvents(events), listingAgentUserId: rows[0]?.user_id ?? null };
 }
 
-async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type: EventType, payload: object, confirmed: boolean) {
+async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type: EventType, payload: object, confirmed: boolean, importId: string | null = null) {
   const { rows } = await tx.query<EventRow>(
-    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
-     values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id(), $5, $6)
+    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, import_id)
+     values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id(), $5, $6, $7)
      returning seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at`,
-    [listingId, seq, type, JSON.stringify(payload), await vaiLucLam(tx), confirmed],
+    [listingId, seq, type, JSON.stringify(payload), await vaiLucLam(tx), confirmed, importId],
   );
   return toEvent(rows[0]!);
 }
 
 const giaTri = (s: ListingState) => KHOA.map((k) => s[k]);
 
-export async function createListing(tx: pg.PoolClient, payload: unknown): Promise<Applied | Refusal> {
+export async function createListing(tx: pg.PoolClient, payload: unknown, opts: { importId?: string } = {}): Promise<Applied | Refusal> {
   const details = validatePayload("created", payload);
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const listingId = randomUUID();
-  const event = await ghiSuKien(tx, listingId, 1, "created", payload as object, false);
+  const event = await ghiSuKien(tx, listingId, 1, "created", payload as object, false, opts.importId ?? null);
   const state = foldListing([event]);
   const facts = factsFromEvents([event]);
   await tx.query(
@@ -160,7 +168,7 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   const events = await loadEvents(tx, listingId);
   if (!canRead(viewer, await factsOf(tx, listingId, events))) return { error: API_ERRORS.notFound };
 
-  const details = validatePayload(cmd.type, cmd.payload);
+  const details = validatePayload(cmd.type, cmd.payload, { today: new Date().toISOString().slice(0, 10) });
   if (cmd.type === "created") details.push({ path: "type", reason: "hàng đã có — tạo hàng bằng POST /listings" });
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const type = cmd.type as EventType;
@@ -192,7 +200,9 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
     if (trung) return { error: API_ERRORS.unitAlreadyListed, reason: lyDoCanDangMo(trung.status), conflictListingId: trung.id };
   }
 
-  const event = await ghiSuKien(tx, listingId, version + 1, type, payload, confirmsWithOwner(type, cmd.confirmedWithOwner));
+  // Lệnh của lần nhập: không xác nhận với chủ (luật 11) — chỉ `owner_confirmed` mang ngày trong file mới là xác nhận.
+  const xacNhan = cmd.importId ? type === "owner_confirmed" : confirmsWithOwner(type, cmd.confirmedWithOwner);
+  const event = await ghiSuKien(tx, listingId, version + 1, type, payload, xacNhan, cmd.importId ?? null);
   const state = foldListing([...events, event]);
   const facts = factsFromEvents([...events, event]);
   await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);
