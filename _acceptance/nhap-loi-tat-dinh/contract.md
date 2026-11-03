@@ -5,7 +5,7 @@ slug: nhap-loi-tat-dinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-03-nhap-loi-tat-dinh-design.md
 approved_by:
 approved_at:
