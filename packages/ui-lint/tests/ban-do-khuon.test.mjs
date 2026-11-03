@@ -69,6 +69,7 @@ const BANG = {
       `${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`,
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
       `${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`,
+      `${W}/app/(app)/proto/luong-gui/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
@@ -114,6 +115,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/cot-ho-so-can/${p}`),
   // Hôm nay của đầu chủ (hàng 22): trang ba lối, vùng đầu chủ và khuôn của /today.
   ...["ba-loi.tsx", "hang-doi.tsx", "page.tsx", "reui.tsx", "trong-kho.tsx", "ve-moi.tsx"].map((p) => `${W}/app/(app)/proto/hom-nay-dau-chu/${p}`),
+  // Luồng Gửi (hàng 34): trang ba lối của nhóm Gửi.
+  ...["ba-loi.tsx", "chung.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/luong-gui/${p}`),
   // Chế độ cuộc gọi (hàng 28): trang ba lối và màn thật.
   ...["cuoc-goi.tsx", "dial/nut-quay-so.tsx", "dial/page.tsx", "dial/trang-quay-so.tsx", "khoi.tsx", "khung.tsx", "page.tsx", "push/ep-gia.tsx"].map((p) => `${W}/app/(app)/units/call/${p}`),
   // Thông báo lead (hàng 26): dải bật thông báo ở đầu /today.
@@ -357,7 +360,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 7 tệp theo khuôn · 15 ngoại lệ · 0 lệch",
+      "trang-tam: 7 tệp theo khuôn · 16 ngoại lệ · 0 lệch",
       "trang-thai: 60 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
