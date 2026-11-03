@@ -5,8 +5,10 @@ slug: luat-an-va-kiem-ro-ri
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [core, ci]
-status: draft
+status: approved
 design_doc: _acceptance/luat-an-va-kiem-ro-ri/design.md
+approved_by: Manh Phan
+approved_at: 2026-11-03
 ---
 
 # Acceptance Contract: luat-an-va-kiem-ro-ri
