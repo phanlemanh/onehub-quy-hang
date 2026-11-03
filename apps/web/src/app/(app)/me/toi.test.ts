@@ -78,7 +78,7 @@ test("E3 bảy trạng thái thông báo nói đúng chữ của bảng chung v�
 });
 
 test("E3 chiều đỏ: bảng chữ thiếu «loi-luu» thì ô đỏ nêu trạng thái", () => {
-  const { "loi-luu": _bo, ...thieu } = NHAN_THONG_BAO;
+  const thieu = Object.fromEntries(Object.entries(NHAN_THONG_BAO).filter(([k]) => k !== "loi-luu"));
   assert.deepEqual(kiemThongBao(thieu), ["loi-luu"]);
 });
 
