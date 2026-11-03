@@ -2067,6 +2067,7 @@ test("liên hệ khách: sàn B không đọc, không ghi nhu cầu, sự kiện
 test("liên hệ khách: vai API không ghi thẳng bốn bảng", { skip }, async () => {
   await withLienHeKhach(async (c) => {
     await lamNguoi(c, LK.TN, COMPANY_A);
+    let so = 0;
     for (const sql of [
       "insert into prospects (company_id, contact_id, owner_member_user_id, display_name, need, created_by) values ($1, gen_random_uuid(), 'x', 'x', 'purchase', 'x')",
       "update prospects set owner_member_user_id = 'x' where company_id = $1",
@@ -2077,11 +2078,15 @@ test("liên hệ khách: vai API không ghi thẳng bốn bảng", { skip }, asy
       "insert into shares (company_id, code, sender_user_id, audience) values ($1, 'maZ000000001', 'x', 'agents')",
       "update shares set sender_user_id = 'x' where company_id = $1",
       "delete from shares where company_id = $1",
+      "insert into share_listings (company_id, share_id, listing_id, position) values ($1, gen_random_uuid(), gen_random_uuid(), 1)",
       "update share_listings set position = 1 where company_id = $1",
       "delete from share_listings where company_id = $1",
     ]) {
       await expectError(c, sql, [COMPANY_A], /permission denied/);
+      so++;
     }
+    // Ma trận viết trước: bốn bảng × chèn, sửa, xoá.
+    assert.equal(so, 12);
     assert.equal((await c.query("select 1 from prospect_events where prospect_id = $1", [LKP.A])).rowCount, 1, "đối chứng: trưởng nhóm đọc được sự kiện");
   });
 });
