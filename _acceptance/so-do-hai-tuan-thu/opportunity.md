@@ -28,5 +28,6 @@ Số đo hai tuần thử gần nhất (Tham chiếu §11): mọi số đo của
 
 - Câu hỏi phép đo trả lời: [đề xuất] đã đạt «Mỗi số đo ở Tham chiếu §11, trừ «số ngày Sheet cũ không được sửa», ra từ một truy vấn trên sự kiện, chạy trên dữ liệu mẫu» chưa?
 - Kết quả nào là SỐNG: [đề xuất] Mỗi số đo ở Tham chiếu §11, trừ «số ngày Sheet cũ không được sửa», ra từ một truy vấn trên sự kiện, chạy trên dữ liệu mẫu
+  - Sửa ở Cổng Phạm vi 2026-11-03 (Hỏi-1, Manh Phan duyệt theo khuyến nghị): mỗi số đo ở Tham chiếu §11, trừ «số ngày Sheet cũ không được sửa», ra từ một truy vấn trên sự kiện chạy trên dữ liệu mẫu, HOẶC nói rõ sự kiện còn thiếu — không ra số 0.
 - Kết quả nào là CHẾT: [đề xuất] chưa đạt «Mỗi số đo ở Tham chiếu §11, trừ «số ngày Sheet cũ không được sửa», ra từ một truy vấn trên sự kiện, chạy trên dữ liệu mẫu» khi hết timebox
 - Timebox: …
