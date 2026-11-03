@@ -57,7 +57,9 @@ hàng (hàng 64–67) còn trong đợt dau-khach-nhap; mở lại khi hai đầ
   và ở ràng buộc của bảng `agreements` (migration mới). Danh sách «không bao giờ có» của issue (chủ nhà, số, giá đáy, ảnh
   sổ, giá chốt, trạng thái hàng) là ca kiểm đỏ của luật ẩn. Cổng Phạm vi trình cách giảm tín hiệu «sàn đang làm hàng
   căn này»: mã công ty, mã người mờ theo từng bên nhận; không trỏ hàng; không sinh sự kiện chỉ vì tạo hàng; mốc thời gian
-  thô. Khuôn chở cả ba loại sự kiện kể cả khung toà.
+  thô. Khuôn chở cả ba loại sự kiện kể cả khung toà. Đề xuất trình cùng Cổng Phạm vi: ô «sàn đã xác minh chủ với sổ»
+  (có / không, ngày xác minh; không tên, không số) để Invest biết căn có chủ thật mà chủ nhà vẫn ở lại sàn — chủ kho chốt
+  03/11 không làm công tắc theo trường cho lớp nguồn.
 - **Hàng 96** là lớp đăng nhập máy, tách khỏi hộp thư (luật 3). Token hiện một lần, lưu dạng băm, phạm vi là loại kết nối
   và chiều của thoả thuận; mỗi lời gọi một dòng nhật ký. Áp cho cửa nhận `POST /api/v1/catalog/feeds` (bỏ «để sau» của
   ADR-0015) và cho API kéo của hàng 97.
