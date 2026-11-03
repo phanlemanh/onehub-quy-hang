@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: ccec6ed4d9994a0bc3f972cc2cf3cef0a877dbac
+verified_commit: b9acbd85054bda481bdfae2ea997e379650a976a
 human_signoff: Manh Phan 2026-11-03
 ---
 
@@ -189,3 +189,7 @@ none — mọi eval chạy một lần, deterministic, không có phương sai.
 Round 1: hồ sơ dựng lần đầu, E10 chạy ở round này (run_id r1), còn lại chuyển sang các round sau.
 Round 2: lượt chấm REJECT, dừng vá vì cùng lớp lỗi AC-9 (route API công khai).
 Round 3: phạm vi AC-9 thu lại chỉ còn trang web (route API công khai sang hàng 35); mọi eval và lệnh suite xanh; E10 mang từ round 1.
+
+### Re-pin lần 1 — 2026-11-03, do gộp nhánh chính vào nhánh trước khi gộp PR
+run_id: repin-20261103T144143Z-42874
+sha: b9acbd85054bda481bdfae2ea997e379650a976a · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng
