@@ -41,21 +41,25 @@ Source input: `docs/plan/lo-trinh.json` hàng `ghi-thiet-bi-va-mat-mang` · `_ac
 - AC-4: Given một người đã đăng nhập ở sàn đang làm, When gửi `POST /api/v1/sync/offline-sessions` với lượt hợp lệ, gửi lại
   đúng lượt ấy, gửi lượt có `endedAt` trước `startedAt`, thiết bị lạ, khoá lạ, hay chưa đăng nhập, Then lần đầu trả 201
   và ghi một dòng của chính người ấy ở sàn ấy; lần gửi lại trả 200, không thêm dòng; ba ca sai khuôn trả 400 không ghi gì;
-  chưa đăng nhập trả 401.
-- AC-5: Given bộ đồng bộ trên máy, When bề rộng cửa sổ dưới 768px, đúng 768px và trên 768px, Then hàm thiết bị trả
-  `mobile`, `desktop`, `desktop` — cùng mốc `md` vỏ dùng đổi bố cục; và hàm gọi API của trình duyệt gửi đầu
-  `x-quy-hang-device` mang giá trị ấy ở mọi lời gọi.
+  chưa đăng nhập trả 401, chưa gắn sàn trả 403 — cả hai không ghi gì.
+- AC-5: Given bộ đồng bộ trên máy, When cạnh ngắn của màn hình thiết bị dưới 768px, đúng 768px và trên 768px — kể cả
+  điện thoại xoay ngang (cạnh dài 844px, cạnh ngắn 390px) — Then hàm thiết bị trả `mobile`, `desktop`, `desktop`, và
+  điện thoại xoay ngang vẫn là `mobile` (Hỏi-2); hàm gọi API của trình duyệt gửi đầu `x-quy-hang-device` mang giá trị ấy
+  ở mọi lời gọi.
 - AC-6: Given lần thử gần nhất của bộ đồng bộ là mất mạng, When người sửa một căn trên máy, rồi có mạng lại và hàng đợi
-  được gửi, Then thao tác ấy mang `madeOffline: true` trong lệnh gửi máy chủ; thao tác ghi lúc có mạng không mang khoá ấy;
+  được gửi, Then thao tác ấy mang `madeOffline: true` trong lệnh gửi máy chủ; thao tác ghi lúc lần thử gần nhất còn có mạng mà lần
+  gửi đầu của nó gặp mất mạng cũng mang `madeOffline: true` (máy vừa rớt mạng); thao tác ghi và gửi được lúc có mạng không
+  mang khoá ấy;
   luật gửi theo căn, đúng thứ tự, gửi lại không trùng của hàng 13/61 không đổi.
 - AC-7: Given bộ đồng bộ đang có mạng, When một lượt thử gặp mất mạng, các lượt sau vẫn mất mạng, rồi một lượt có mạng lại,
   Then lượt mất mạng mở đúng một lần ở giờ lượt thử mất mạng đầu, khép ở giờ lượt có mạng lại với số thao tác ghi lúc mất
   mạng, và được gửi qua đường lượt mất mạng đúng một lần; gửi lỗi thì lượt ở lại trong kho trên máy và gửi lại ở lượt kế,
   không gửi hai dòng; tải lại trang giữa chừng không làm mất lượt đang mở.
-- AC-8: Given sự kiện của hàng trong kỳ `[tu, den)` mang thiết bị máy tính, điện thoại và không rõ, của người các vai, When
-  tính `actions_by_device_role`, Then số đo ra «đo được» với tử là thao tác trên điện thoại, mẫu là thao tác có thiết bị,
-  chi tiết đếm từng ô thiết bị × vai (người nhiều vai đếm vào mỗi vai), thao tác không rõ thiết bị đếm riêng và không vào
-  mẫu; sự kiện ngoài kỳ không vào.
+- AC-8: Given sự kiện của hàng trong kỳ `[tu, den)` — mọi sự kiện của hàng là thao tác của một người (bảng sự kiện đòi
+  người làm) — mang thiết bị máy tính, điện thoại và không rõ, của người các vai, When tính `actions_by_device_role`, Then
+  số đo ra «đo được» với tử là thao tác trên điện thoại, mẫu là thao tác có thiết bị, chi tiết đếm từng ô thiết bị × vai
+  (người nhiều vai đếm vào mỗi vai), `khong-ro` đếm thao tác không rõ thiết bị (không vào mẫu) và `tong` là mọi thao tác
+  trong kỳ — tỉ lệ có thiết bị của ngưỡng đọc được bằng `(tong − khong-ro) / tong`; sự kiện ngoài kỳ không vào.
 - AC-9: Given lượt mất mạng của điện thoại và máy tính, trong và ngoài kỳ, và sự kiện `madeOffline` trong kỳ, When tính
   `mobile_offline`, Then số đo ra «đo được» với số lượt mất mạng điện thoại bắt đầu trong kỳ, chi tiết tổng phút, lượt dài
   nhất và số thao tác làm lúc mất mạng trên điện thoại trong kỳ; lượt máy tính và lượt ngoài kỳ không vào; và bảng số đo
@@ -82,10 +86,13 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay the
 
 - Thước SỐNG «hai số đo thôi trả "chưa có sự kiện" và ra số trên dữ liệu mẫu» · số từ: bảng số đo lõi (AC-8, AC-9) · bảo
   đảm bởi: AC-8, AC-9, AC-10.
-- Thước SỐNG «≥ 95% sự kiện thao tác ghi sau phát hành mang thiết bị» và thước CHẾT «dưới 80% sau 3 ngày» · số từ: chi tiết
-  `khong-ro` của `actions_by_device_role` trên sự kiện thật của sàn thử (AC-8 tách riêng «không rõ») · bảo đảm bởi: AC-3
+- Thước SỐNG «≥ 95% sự kiện thao tác ghi sau phát hành mang thiết bị» và thước CHẾT «dưới 80% sau 3 ngày» · số từ:
+  `(tong − khong-ro) / tong` trong chi tiết `actions_by_device_role` (AC-8), chạy hàm lõi trên sự kiện của sàn thử với kỳ
+  `[phát hành, phát hành + 3 ngày)` — chạy tay: chưa có đường đọc số đo (Out of scope, như hàng 52) · bảo đảm bởi: AC-3
   (máy chủ ghi), AC-5 (máy gửi mọi lời gọi).
-- Thước CHẾT «thao tác lúc mất mạng về máy chủ mà mất dấu» · số từ: `made_offline` (AC-3) · bảo đảm bởi: AC-6, AC-10.
+- Thước CHẾT «thao tác lúc mất mạng về máy chủ mà mất dấu» · không đo trực tiếp được trên sàn thử (máy chủ không biết thao
+  tác nào lẽ ra mang dấu); đo ở bài thử: AC-6 (hai đường gắn dấu, gồm máy vừa rớt mạng) và AC-10 (dấu về tới cơ sở dữ
+  liệu) — giới hạn đã khai.
 
 ## Out of scope
 
@@ -99,6 +106,7 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay the
 
 - Bất biến chạm: (1) cách ly — bảng mới bật luật theo dòng, ca trong `isolation.test.mjs` (AC-2); (2) chủ nhà — không cột
   nào thuộc lớp `source`, khuôn đường mới `.strict()` (AC-4); (3), (4) không chạm.
+- Hỏi-2: thiết bị theo cạnh ngắn màn hình (loại máy) hay theo bề rộng cửa sổ (bố cục) — xem sổ quyết định.
 - Hỏi-1: hàng 52 đã ký AC-8 «sáu mã chưa có sự kiện»; AC-9 của hàng này đổi thành bốn mã. Ca kiểm và eval E8 của hàng 52
   phải đổi theo — xem sổ quyết định.
 - Dãy D: Postgres `quy-hang-db-dkn-D` cổng 5575 (luật đợt 7).

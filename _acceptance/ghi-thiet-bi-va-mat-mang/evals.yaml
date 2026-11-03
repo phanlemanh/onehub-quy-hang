@@ -33,7 +33,7 @@ evals:
     criterion: AC-4
     executor: test
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «lượt mất mạng: ghi một lần, gửi lại không trùng» có mặt trong packages/api/test-db/thiet-bi-mat-mang.test.ts và ok — lượt hợp lệ trả 201, đọc lại đúng một dòng với user_id của người gửi và company_id của sàn đang làm; gửi lại y hệt trả 200 và vẫn một dòng (assert đếm). Ca «lượt mất mạng: khuôn sai và chưa đăng nhập» ok — endedAt trước startedAt, device 'tablet', khoá lạ 'ownerPhone' đều 400 và bảng không thêm dòng; không cookie trả 401. Chiều đỏ: bỏ on conflict do nothing → lần gửi lại trả 500 hoặc thêm dòng, ca đỏ nêu số dòng."
+    expected: "exit 0; ca «lượt mất mạng: ghi một lần, gửi lại không trùng» có mặt trong packages/api/test-db/thiet-bi-mat-mang.test.ts và ok — lượt hợp lệ trả 201, đọc lại đúng một dòng với user_id của người gửi và company_id của sàn đang làm; gửi lại y hệt trả 200 và vẫn một dòng (assert đếm). Ca «lượt mất mạng: khuôn sai và chưa đăng nhập» ok — endedAt trước startedAt, device 'tablet', khoá lạ 'ownerPhone' đều 400 và bảng không thêm dòng; không cookie trả 401; người đăng nhập chưa gắn sàn trả 403 và bảng không thêm dòng. Chiều đỏ: bỏ on conflict do nothing → lần gửi lại trả 500 hoặc thêm dòng, ca đỏ nêu số dòng."
     paths: [packages/api/src/sync/**, packages/api/src/app.ts, packages/api/test-db/thiet-bi-mat-mang.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -41,7 +41,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «thiết bị: mốc 768 như vỏ» có mặt trong apps/web/src/lib/sync/thiet-bi.test.ts và ok — thietBi(375), thietBi(767), thietBi(768), thietBi(1280) trả mobile, mobile, desktop, desktop (4 assert); ca «thiết bị: hàm gọi API gửi đầu» ok — goiFetch với fetch giả và bề rộng giả 390 gửi đầu x-quy-hang-device: mobile, với 1440 gửi desktop, trên cả GET và POST. Chiều đỏ: đổi mốc thành <= 768 → ca mốc đỏ nêu 768 ra mobile."
+    expected: "exit 0; ca «thiết bị: cạnh ngắn màn hình, mốc 768» có mặt trong apps/web/src/lib/sync/thiet-bi.test.ts và ok — ma trận viết trước (rộng×cao màn hình): 390×844, 844×390 (điện thoại xoay ngang), 767×1024, 768×1024, 1024×768, 1440×900 → mobile, mobile, mobile, desktop, desktop, desktop (6 assert); ca «thiết bị: hàm gọi API gửi đầu» ok — goiFetch với fetch giả và màn hình giả 390×844 gửi đầu x-quy-hang-device: mobile, với 1440×900 gửi desktop, trên cả GET và POST. Chiều đỏ: đổi mốc thành <= 768 → ca đỏ nêu 768×1024 ra mobile; đo bằng cạnh rộng thay cạnh ngắn → ca đỏ nêu 844×390 ra desktop."
     paths: [apps/web/src/lib/sync/thiet-bi.ts, apps/web/src/lib/sync/goi-fetch.ts, apps/web/src/lib/sync/thiet-bi.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -49,7 +49,7 @@ evals:
     criterion: AC-6
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «mất mạng: thao tác ghi lúc mất mạng mang madeOffline» có mặt trong apps/web/src/lib/sync/mat-mang.test.ts và ok — trên máy chủ giả (may-chu-gia.test-helpers.ts): một lượt thử mất mạng, sửa căn X, có mạng lại, gửi → lệnh của X tới máy chủ mang madeOffline true; sửa căn Y lúc có mạng → lệnh của Y không có khoá madeOffline (assert vắng khoá, không chỉ false); các bài của dong-bo.test.ts và tu-lanh.test.ts vẫn ok. Chiều đỏ: gán madeOffline theo navigator.onLine thay lastAttempt → ca đỏ nêu lệnh của X thiếu khoá."
+    expected: "exit 0; ca «mất mạng: thao tác ghi lúc mất mạng mang madeOffline» có mặt trong apps/web/src/lib/sync/mat-mang.test.ts và ok — trên máy chủ giả (may-chu-gia.test-helpers.ts): một lượt thử mất mạng, sửa căn X, có mạng lại, gửi → lệnh của X tới máy chủ mang madeOffline true; sửa căn Y lúc có mạng và gửi được → lệnh của Y không có khoá madeOffline (assert vắng khoá, không chỉ false); ca «mất mạng: máy vừa rớt mạng» ok — không dựng sẵn lượt thử lỗi: lần thử gần nhất ok, sửa căn Z, lượt gửi kế ném lỗi mạng, lượt sau có mạng → lệnh của Z tới máy chủ mang madeOffline true; các bài của dong-bo.test.ts và tu-lanh.test.ts vẫn ok. Chiều đỏ: chỉ gắn dấu theo lastAttempt lúc ghi (bỏ vế lần gửi đầu gặp mất mạng) → ca máy vừa rớt mạng đỏ nêu lệnh của Z thiếu khoá."
     paths: [apps/web/src/lib/sync/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -57,7 +57,7 @@ evals:
     criterion: AC-7
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «lượt mất mạng: mở một lần, khép khi có mạng, gửi một lần» có mặt trong apps/web/src/lib/sync/mat-mang.test.ts và ok — đồng hồ giả: lượt thử mất mạng ở t1, mất mạng ở t2, có mạng ở t3 → máy chủ giả nhận đúng một lượt startedAt t1, endedAt t3, queuedOps bằng số thao tác ghi trong lượt (assert số); ca «lượt mất mạng: gửi lỗi thì giữ, gửi lại không trùng» ok — đường lượt trả 503 một lần rồi 201 → lượt ở lại hộp gửi sau lần đầu, gửi ở lượt kế, máy chủ có một dòng; ca «lượt mất mạng: tải lại trang giữa lượt» ok — dựng lại bộ đồng bộ trên cùng kho khi lượt đang mở → lượt vẫn mở với startedAt t1 và khép đúng. Chiều đỏ: mở lượt ở mọi lượt thử mất mạng (không xét offlineSince) → ca đầu đỏ nêu startedAt là t2."
+    expected: "exit 0; ca «lượt mất mạng: mở một lần, khép khi có mạng, gửi một lần» có mặt trong apps/web/src/lib/sync/mat-mang.test.ts và ok — đồng hồ giả: 1 thao tác chờ gửi có từ trước lượt, lượt thử mất mạng ở t1, ghi 2 thao tác lúc mất mạng, mất mạng ở t2, có mạng ở t3 → máy chủ giả nhận đúng một lượt startedAt t1, endedAt t3, queuedOps 2 (assert số, không đếm thao tác có từ trước); lượt mất mạng không thao tác nào → queuedOps 0; ca «lượt mất mạng: gửi lỗi thì giữ, gửi lại không trùng» ok — đường lượt trả 503 một lần rồi 201 → lượt ở lại hộp gửi sau lần đầu, gửi ở lượt kế, máy chủ có một dòng; ca «lượt mất mạng: tải lại trang giữa lượt» ok — dựng lại bộ đồng bộ trên cùng kho khi lượt đang mở → lượt vẫn mở với startedAt t1 và khép đúng. Chiều đỏ: mở lượt ở mọi lượt thử mất mạng (không xét offlineSince) → ca đầu đỏ nêu startedAt là t2; đếm queuedOps bằng cả hàng đợi → ca đầu đỏ nêu 3."
     paths: [apps/web/src/lib/sync/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -65,7 +65,7 @@ evals:
     criterion: AC-8
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; ca «thiết bị theo vai: đếm từng ô, không rõ để riêng» có mặt trong packages/core/src/metrics/thiet-bi-mat-mang.test.ts và ok — ma trận viết trước: 3 sự kiện điện thoại (vai listing_agent; một người hai vai listing_agent+team_lead), 2 máy tính (buyer_agent), 1 không rõ, 1 điện thoại ngoài kỳ → trangThai do-duoc, kieu ti-le, tu 3 / mau 5, chiTiet mobile·listing_agent 2, mobile·team_lead 1, desktop·buyer_agent 2, khong-ro 1 (assert deepEqual); sự kiện ngoài kỳ không vào. Chiều đỏ: tính mau gồm cả không rõ → ca đỏ nêu mau 6."
+    expected: "exit 0; ca «thiết bị theo vai: đếm từng ô, không rõ để riêng» có mặt trong packages/core/src/metrics/thiet-bi-mat-mang.test.ts và ok — ma trận viết trước: 3 sự kiện điện thoại (vai listing_agent; một người hai vai listing_agent+team_lead), 2 máy tính (buyer_agent), 1 không rõ, 1 điện thoại ngoài kỳ → trangThai do-duoc, kieu ti-le, tu 3 / mau 5, chiTiet mobile·listing_agent 2, mobile·team_lead 1, desktop·buyer_agent 2, khong-ro 1, tong 6 (assert deepEqual); sự kiện ngoài kỳ không vào. Chiều đỏ: tính mau gồm cả không rõ → ca đỏ nêu mau 6."
     paths: [packages/core/src/metrics/**, packages/core/src/listing/events.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

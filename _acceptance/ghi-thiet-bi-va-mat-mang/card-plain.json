@@ -1,0 +1,38 @@
+{
+  "feature_plain": "Mỗi thao tác trên căn ghi lại người làm dùng máy tính hay điện thoại, và điện thoại báo về những lần mất mạng cùng thao tác làm lúc đó — để hai số đo của hai tuần thử («thao tác theo thiết bị và vai», «mất mạng trên điện thoại») ra số thay vì «chưa có sự kiện».",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ thêm vào sổ sự kiện của căn hai ô: thiết bị (máy tính · điện thoại · không rõ) và dấu «làm lúc mất mạng»; thêm sổ lượt mất mạng — cả hai chỉ thêm, không sửa, không xoá được."},
+    {"id": "AC-2", "p": "Sẽ giữ lượt mất mạng của sàn nào ở sàn ấy: sàn khác không đọc được, không ai ghi hộ người khác."},
+    {"id": "AC-3", "p": "Sẽ ghi đúng thiết bị máy báo lên cho mọi lần tạo và sửa căn; máy không báo hay báo lạ thì ghi «không rõ» mà vẫn nhận thao tác."},
+    {"id": "AC-4", "p": "Sẽ nhận lượt mất mạng điện thoại gửi về đúng một lần, gửi lại không thành hai dòng; lượt sai giờ, sai thiết bị, có ô lạ, chưa đăng nhập hay chưa vào sàn đều bị từ chối."},
+    {"id": "AC-5", "p": "Sẽ coi máy có cạnh ngắn màn hình dưới 768px là điện thoại — điện thoại xoay ngang vẫn là điện thoại — và báo thiết bị ở mọi lời gọi."},
+    {"id": "AC-6", "p": "Sẽ đánh dấu «làm lúc mất mạng» cho thao tác ghi khi đang mất mạng, kể cả thao tác vừa ghi đúng lúc máy rớt mạng; thao tác lúc có mạng không mang dấu."},
+    {"id": "AC-7", "p": "Sẽ ghi mỗi lần mất mạng thành một lượt (bắt đầu, kết thúc, số thao tác làm trong lúc đó), gửi khi có mạng lại, gửi hỏng thì giữ gửi sau, tải lại trang không mất."},
+    {"id": "AC-8", "p": "Sẽ cho số đo «thao tác theo thiết bị và vai» ra tỉ lệ điện thoại, đếm từng ô thiết bị × vai, tách riêng thao tác không rõ thiết bị để đọc được tỉ lệ có thiết bị."},
+    {"id": "AC-9", "p": "Sẽ cho số đo «mất mạng trên điện thoại» ra số lượt, tổng phút, lượt dài nhất và số thao tác lúc mất mạng; bảng số đo còn bốn dòng «chưa có sự kiện»."},
+    {"id": "AC-10", "p": "Sẽ chứng trên cơ sở dữ liệu thật: điện thoại mất mạng, sửa giá, có mạng lại → sự kiện mang «điện thoại» + dấu mất mạng, và có đúng một lượt mất mạng."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG ghi thiết bị cho lead, liên hệ, ảnh, thông báo — chỉ thao tác trên căn."},
+    {"id": "OOS-2", "p": "KHÔNG làm màn hay đường đọc số đo — số đọc bằng cách chạy tay hàm lõi, như hàng 52."},
+    {"id": "OOS-3", "p": "KHÔNG đặt ngưỡng cho hai số đo — anh đặt ở cổng của hàng đọc số."},
+    {"id": "OOS-4", "p": "KHÔNG đo mất mạng ngắn hơn nhịp thử 15–30 giây, hay lúc trang đang đóng."},
+    {"id": "OOS-5", "p": "KHÔNG tách máy tính bảng — máy cạnh ngắn từ 768px tính là máy tính."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Bốn lớp của đường ghi đều có tiêu chí: cơ sở dữ liệu (AC-1, AC-2), máy chủ (AC-3, AC-4), bộ đồng bộ trên máy (AC-5–AC-7), số đo (AC-8, AC-9), và một bài đi xuyên cả bốn (AC-10)."},
+    {"i": 1, "p": "Mọi giá trị thiết bị đều thử: điện thoại, máy tính, không báo, báo lạ, và đúng mốc 768px (AC-3, AC-5)."},
+    {"i": 2, "p": "Mọi khúc của một lần mất mạng đều thử: mở, kéo dài, khép, gửi hỏng rồi gửi lại, tải lại trang giữa chừng (AC-6, AC-7)."},
+    {"i": 3, "p": "Bất biến: cách ly sàn (AC-2), sổ chỉ thêm (AC-1), không thông tin chủ nhà (AC-4), một đường ghi (AC-3)."},
+    {"i": 4, "p": "Kỳ đo: sự kiện và lượt trong kỳ vào số, ngoài kỳ không (AC-8, AC-9)."},
+    {"i": 5, "p": "Để sau: thiết bị trên lead, liên hệ, ảnh. Không làm ở đây: ngưỡng."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy đã tự chọn «điện thoại = cửa sổ hẹp dưới 768px», nhưng căn cứ không đủ quyết: điện thoại xoay ngang ở công trường sẽ bị đếm là máy tính. Đã chuyển thành Hỏi-2 cho anh, khuyến nghị đo theo cạnh ngắn màn hình."},
+    {"i": 1, "p": "Thao tác ghi đúng lúc máy vừa rớt mạng (trước khi bộ đồng bộ kịp biết) sẽ mất dấu «làm lúc mất mạng». Đã sửa: lần gửi đầu gặp mất mạng cũng gắn dấu, có bài kiểm riêng."},
+    {"i": 2, "p": "Ngưỡng 95% / 80% chưa có cách đọc. Đã sửa: số đo tách «không rõ» và «tổng» để tính tỉ lệ; ngưỡng «mất dấu» khai là không đo trực tiếp được trên sàn thử, chỉ chứng ở bài thử."},
+    {"i": 3, "p": "Thiếu ca người chưa vào sàn gửi lượt mất mạng. Đã thêm."},
+    {"i": 4, "p": "Bài đếm số thao tác trong lượt chưa ghim số viết trước. Đã ghim: 2 thao tác trong lượt + 1 có từ trước ra 2."}
+  ],
+  "scope_plain": "Năm việc để ngoài hàng này:"
+}

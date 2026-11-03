@@ -40,10 +40,13 @@ Bốn lớp, đúng đường ghi đang có (một đường ghi — ADR-0008; b
    - Sự kiện API trả (`GET /listings/:id`) mang thêm `device` và `madeOffline` để lõi đọc chung một khuôn.
 
 3. **Bộ đồng bộ trên máy** (`apps/web/src/lib/sync/`, cham-tep D-7 đã duyệt).
-   - `thietBi(rongPx)` thuần: `< 768` → `mobile`, còn lại `desktop` — đúng mốc `md` mà vỏ dùng để đổi bố cục máy tính /
-     điện thoại (`app-shell.tsx`). `goiFetch` gửi đầu `x-quy-hang-device` đọc lúc gọi.
-   - Thao tác ghi trên máy khi lần thử gần nhất là mất mạng (`lastAttempt === "mang"`) mang `madeOffline: true` trong
-     `PendingOp`; lúc gửi, bộ gửi chép khoá ấy vào lệnh. Thao tác ghi lúc có mạng không mang khoá.
+   - `thietBi(canhNganPx)` thuần: cạnh ngắn của màn hình (`min(screen.width, screen.height)`) `< 768` → `mobile`, còn
+     lại `desktop` — cùng con số `md` của vỏ, nhưng đo loại máy chứ không đo cửa sổ, nên điện thoại xoay ngang vẫn là
+     điện thoại (Hỏi-2). `goiFetch` gửi đầu `x-quy-hang-device` đọc lúc gọi.
+   - Thao tác mang `madeOffline: true` trong `PendingOp` khi (a) ghi lúc lần thử gần nhất là mất mạng
+     (`lastAttempt === "mang"`), hoặc (b) lần gửi đầu của nó gặp mất mạng (máy vừa rớt mạng — lượt gửi dừng vì mất mạng
+     thì mọi thao tác chưa gửi trong hàng đợi chưa từng gửi được nhận dấu). Lúc gửi, bộ gửi chép khoá ấy vào lệnh. Thao
+     tác ghi và gửi được lúc có mạng không mang khoá.
    - Lượt mất mạng: lần thử chuyển sang `mang` mà ngăn chưa có `offlineSince` → ghi `offlineSince` = giờ lần thử ấy và
      thiết bị lúc ấy. Lần thử kế không phải `mang` → khép lượt (`endedAt` = giờ lần thử ấy, `queuedOps` = số thao tác
      `madeOffline` ghi trong lượt), đẩy vào `offlineOutbox` của ngăn, xoá `offlineSince`. Mỗi lượt thử có mạng gửi
@@ -61,8 +64,8 @@ Bốn lớp, đúng đường ghi đang có (một đường ghi — ADR-0008; b
 
 ## Căn cứ các lựa chọn
 
-- Thiết bị = bố cục máy tính hay điện thoại theo mốc `md` (768px): Tham chiếu §9 «màn tự đổi theo thiết bị và vai», vỏ
-  đổi bố cục ở `md`. Máy tính bảng rộng ≥ 768px tính là máy tính — đúng màn người ấy thấy.
+- Thiết bị = loại máy theo cạnh ngắn màn hình, mốc 768px (Hỏi-2 — chủ kho chọn ở Cổng Phạm vi): «điện thoại» của §11 là
+  máy cầm tay ra công trường; xoay ngang không đổi loại máy. Máy tính bảng cạnh ngắn ≥ 768px tính là máy tính.
 - Chỉ ghi sự kiện của hàng: dòng `thieu` của hàng 52 nói đúng «Sự kiện có vai người làm nhưng không ghi thiết bị»; lead,
   liên hệ, ảnh có đường ghi riêng — để hàng sau.
 - Lượt mất mạng do máy báo khi có mạng lại: máy chủ không thấy lúc máy mất mạng; chỉ bộ đồng bộ biết (hàng 13).
@@ -79,3 +82,30 @@ Bốn lớp, đúng đường ghi đang có (một đường ghi — ADR-0008; b
 ## Đặc tả UX
 
 Không chạm màn (xem sổ: bỏ đặc-tả-UX). Không chữ UI mới.
+
+## Hình: Hỏi-2
+
+```mermaid
+flowchart LR
+  M[Máy của người làm] --> A{Đo theo gì?}
+  A -->|Cạnh ngắn màn hình < 768px — khuyến nghị| B[Điện thoại xoay ngang 844×390 → điện thoại]
+  A -->|Bề rộng cửa sổ < 768px — mốc md| C[Điện thoại xoay ngang 844×390 → máy tính]
+  B --> D[Số đo mất mạng điện thoại đếm đủ]
+  C --> E[Lượt mất mạng lúc xoay ngang rơi khỏi số đo]
+```
+
+## Hình: lượt mất mạng
+
+```mermaid
+sequenceDiagram
+  participant N as Người
+  participant D as Bộ đồng bộ trên máy
+  participant S as Máy chủ
+  D->>S: lượt thử (t1) — lỗi mạng
+  Note over D: mở lượt: offlineSince = t1
+  N->>D: sửa giá căn (madeOffline)
+  D->>S: lượt thử (t2) — lỗi mạng, lượt vẫn mở
+  D->>S: lượt thử (t3) — có mạng: gửi thao tác (madeOffline: true, x-quy-hang-device)
+  Note over D: khép lượt: endedAt = t3, queuedOps = 1 → hộp gửi
+  D->>S: POST /api/v1/sync/offline-sessions (201; gửi lại → 200, không trùng)
+```
