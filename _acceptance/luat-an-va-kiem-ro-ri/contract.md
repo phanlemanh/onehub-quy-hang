@@ -5,7 +5,7 @@ slug: luat-an-va-kiem-ro-ri
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [core, ci]
-status: verified
+status: signed-off
 design_doc: _acceptance/luat-an-va-kiem-ro-ri/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -110,3 +110,9 @@ Never: lớp `source` ở bất kỳ cửa nào — bất biến 2.
   gián tiếp — trang đi vòng mà cầm giá trị nội bộ thì lượt quét mồi trên mã nguồn trang đỏ. Hàng 35 là hàng đầu tiên
   chạy rào trên một trang thật.
 - Thu phạm vi 03/11 sau lượt chấm 2 (dừng vá): AC-9 bỏ nhánh route API, nhánh ấy sang hàng 35.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-03:
+  - Ngoài-1: Bản dịch thẻ Cổng Phạm vi từng ghi rào phủ cả đường API công khai; đã sửa chữ, phạm vi thật ở Out of scope.
+  - Ngoài-2: Ô kiểm «đường API công khai không thuộc rào trang web» đạt theo cách dựng, không chứng được ranh giới ấy.
+  - Ngoài-3: Khi tệp kiểm rỗng, bài kiểm chưa ghim rằng thông báo chỉ đúng tệp cần sửa (địa chỉ trang thì có ghim).
+  - Ngoài-4: Lỗ «tệp kiểm ở gốc API miễn kiểm mọi route» thuộc nhánh route API đã gỡ; hàng 35 dựng rào ấy thì tránh lại.
+  - Ngoài-5: Bộ kiểm rò rỉ chưa thử văn bản bị mã hoá chồng nhiều lớp; các dạng đơn lẻ kiểm đủ.
