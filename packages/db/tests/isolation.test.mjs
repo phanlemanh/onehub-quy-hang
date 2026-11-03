@@ -1949,3 +1949,215 @@ test("vết mở số lead: chỉ thêm", { skip }, async () => {
     assert.equal(so, 5);
   });
 });
+
+// ---- Liên hệ khách (021_lien_he_khach, hàng 86: AC-2) ----
+const LK = {
+  DK1: "u-lk-dau-khach-1",
+  DK2: "u-lk-dau-khach-2",
+  MAT: "u-lk-mat-vai", // đầu khách giữ cũ đã mất vai Đầu khách
+  GUI: "u-lk-nguoi-gui", // người gửi không giữ nhu cầu
+  TN: "u-lk-truong-nhom",
+  DC: "u-lk-dau-chu",
+  TS: "u-lk-telesales",
+  QT: "u-lk-quan-tri",
+  B: "u-lk-nguoi-b",
+};
+const LKC = { A: "00000000-0000-4000-8000-0000000007a1", B: "00000000-0000-4000-8000-0000000007b1" }; // liên hệ khách
+const LKP = { A: "00000000-0000-4000-8000-0000000007a2", M: "00000000-0000-4000-8000-0000000007a3", B: "00000000-0000-4000-8000-0000000007b2" }; // nhu cầu
+const LKS = { A: "00000000-0000-4000-8000-0000000007a4", M: "00000000-0000-4000-8000-0000000007a5", B: "00000000-0000-4000-8000-0000000007b4" }; // Lần gửi
+const LKL = { A: "00000000-0000-4000-8000-0000000007a6", B: "00000000-0000-4000-8000-0000000007b6" }; // hàng đã lên bảng
+const BON_BANG = ["prospects", "prospect_events", "shares", "share_listings"];
+
+async function withLienHeKhach(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [LK.DK1, COMPANY_A, ["buyer_agent"]],
+      [LK.DK2, COMPANY_A, ["buyer_agent"]],
+      [LK.MAT, COMPANY_A, ["telesales"]],
+      [LK.GUI, COMPANY_A, ["telesales"]],
+      [LK.TN, COMPANY_A, ["team_lead"]],
+      [LK.DC, COMPANY_A, ["listing_agent"]],
+      [LK.TS, COMPANY_A, ["telesales"]],
+      [LK.QT, COMPANY_A, ["company_admin"]],
+      [LK.B, COMPANY_B, ["buyer_agent", "team_lead", "listing_agent"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    for (const [k, san, giu] of [["A", COMPANY_A, LK.DK1], ["B", COMPANY_B, LK.B]]) {
+      await c.query("insert into contacts (company_id, id, contact_types, created_by) values ($1, $2, '{Buyer}', 'x')", [san, LKC[k]]);
+      await c.query(
+        "insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, is_primary, added_by) values ($1, $2, $3, $4, $5, true, 'x')",
+        [san, LKC[k], banMa(), randomBytes(32), `prospects:${san}:${LKP[k]}`],
+      );
+      await c.query(
+        "insert into prospects (company_id, id, contact_id, owner_member_user_id, display_name, need, created_by) values ($1, $2, $3, $4, '[Tên]', 'purchase', $4)",
+        [san, LKP[k], LKC[k], giu],
+      );
+      await c.query(
+        "insert into prospect_events (company_id, prospect_id, type, actor_user_id, actor_roles) values ($1, $2, 'inquiry_received', $3, '{buyer_agent}')",
+        [san, LKP[k], giu],
+      );
+      await c.query(
+        `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+         values ($1, $2, 1, 'created', '{"buildingName":"[Toà A]"}', 'x', '{listing_agent}', false),
+                ($1, $2, 2, 'status_changed', '{"to":"Active"}', 'x', '{listing_agent}', false)`,
+        [san, LKL[k]],
+      );
+      await c.query("insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, '[Toà A]', 'Active', 2)", [LKL[k], san]);
+      await c.query(
+        "insert into shares (company_id, id, code, sender_user_id, audience, prospect_id) values ($1, $2, $3, $4, 'client', $5)",
+        [san, LKS[k], `ma${k}0000000001`.slice(0, 12), k === "A" ? LK.GUI : LK.B, LKP[k]],
+      );
+      await c.query("insert into share_listings (company_id, share_id, listing_id, position) values ($1, $2, $3, 0)", [san, LKS[k], LKL[k]]);
+    }
+    // Nhu cầu của đầu khách đã mất vai, và Lần gửi của nó (người gửi DK1).
+    await c.query(
+      "insert into prospects (company_id, id, contact_id, owner_member_user_id, display_name, need, created_by) values ($1, $2, $3, $4, '[Tên]', 'lease', $4)",
+      [COMPANY_A, LKP.M, LKC.A, LK.MAT],
+    );
+    await c.query("insert into shares (company_id, id, code, sender_user_id, audience, prospect_id) values ($1, $2, 'maM000000001', $3, 'client', $4)", [COMPANY_A, LKS.M, LK.DK1, LKP.M]);
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+
+test("liên hệ khách: bốn bảng mới nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query("select relname, relrowsecurity r, relforcerowsecurity f from pg_class where relname = any ($1) order by relname", [BON_BANG]);
+    assert.deepEqual(rows, [
+      { relname: "prospect_events", r: true, f: true },
+      { relname: "prospects", r: true, f: true },
+      { relname: "share_listings", r: true, f: true },
+      { relname: "shares", r: true, f: true },
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("liên hệ khách: sàn B không đọc, không ghi nhu cầu, sự kiện và Lần gửi của sàn A", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    for (const bang of BON_BANG) assert.ok((await c.query(`select 1 from ${bang} where company_id = $1`, [COMPANY_A])).rowCount >= 1, `đối chứng dưới A rỗng: ${bang}`);
+    for (const ai of [LK.TN, LK.B]) {
+      await lamNguoi(c, ai, COMPANY_B);
+      for (const bang of BON_BANG) {
+        assert.equal((await c.query(`select 1 from ${bang} where company_id = $1`, [COMPANY_A])).rowCount, 0, `${bang} của A lộ sang B (${ai})`);
+      }
+      await expectError(c, "select app.add_prospect_phone($1, $2, $3)", [LKP.A, randomBytes(32), banMa()], /không có nhu cầu khách này/);
+      await expectError(c, "select app.close_prospect($1)", [LKP.A], /không có nhu cầu khách này/);
+      await expectError(c, "select app.reassign_prospect($1, $2)", [LKP.A, LK.B], /không có nhu cầu khách này/);
+      await expectError(c, "select app.create_share(gen_random_uuid(), 'maX000000001', 'client', $1, $2)", [LKP.A, [LKL.B]], /không có nhu cầu khách này|cần vai Đầu khách/);
+    }
+    const sau = await chuChay(c, "select owner_member_user_id, closed_at from prospects where id = $1", [LKP.A], [LK.B, COMPANY_B]);
+    assert.deepEqual(sau.rows[0], { owner_member_user_id: LK.DK1, closed_at: null }, "B đổi được nhu cầu của A");
+  });
+});
+
+test("liên hệ khách: vai API không ghi thẳng bốn bảng", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    let so = 0;
+    for (const sql of [
+      "insert into prospects (company_id, contact_id, owner_member_user_id, display_name, need, created_by) values ($1, gen_random_uuid(), 'x', 'x', 'purchase', 'x')",
+      "update prospects set owner_member_user_id = 'x' where company_id = $1",
+      "delete from prospects where company_id = $1",
+      "insert into prospect_events (company_id, prospect_id, type, actor_user_id, actor_roles) values ($1, gen_random_uuid(), 'closed', 'x', '{}')",
+      "update prospect_events set type = 'closed' where company_id = $1",
+      "delete from prospect_events where company_id = $1",
+      "insert into shares (company_id, code, sender_user_id, audience) values ($1, 'maZ000000001', 'x', 'agents')",
+      "update shares set sender_user_id = 'x' where company_id = $1",
+      "delete from shares where company_id = $1",
+      "insert into share_listings (company_id, share_id, listing_id, position) values ($1, gen_random_uuid(), gen_random_uuid(), 1)",
+      "update share_listings set position = 1 where company_id = $1",
+      "delete from share_listings where company_id = $1",
+    ]) {
+      await expectError(c, sql, [COMPANY_A], /permission denied/);
+      so++;
+    }
+    // Ma trận viết trước: bốn bảng × chèn, sửa, xoá.
+    assert.equal(so, 12);
+    assert.equal((await c.query("select 1 from prospect_events where prospect_id = $1", [LKP.A])).rowCount, 1, "đối chứng: trưởng nhóm đọc được sự kiện");
+  });
+});
+
+test("liên hệ khách: ai đọc nhu cầu và Lần gửi", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    // [dòng, người, nhu cầu, Lần gửi, thấy nhu cầu, thấy Lần gửi]
+    const BANG = [
+      ["đầu khách giữ", LK.DK1, LKP.A, LKS.A, true, true],
+      ["đầu khách giữ đã mất vai", LK.MAT, LKP.M, LKS.M, false, false],
+      ["người gửi không giữ nhu cầu", LK.GUI, LKP.A, LKS.A, false, true],
+      ["trưởng nhóm", LK.TN, LKP.A, LKS.A, true, true],
+      ["đầu khách khác", LK.DK2, LKP.A, LKS.A, false, false],
+      ["đầu chủ", LK.DC, LKP.A, LKS.A, false, false],
+      ["telesales", LK.TS, LKP.A, LKS.A, false, false],
+      ["quản trị", LK.QT, LKP.A, LKS.A, false, false],
+    ];
+    let so = 0;
+    for (const [ten, ai, p, s, mongP, mongS] of BANG) {
+      await lamNguoi(c, ai, COMPANY_A);
+      const thayP = (await c.query("select 1 from prospects where id = $1", [p])).rowCount === 1;
+      const thayE = (await c.query("select 1 from prospect_events where prospect_id = $1", [p])).rowCount >= 1;
+      const thayS = (await c.query("select 1 from shares where id = $1", [s])).rowCount === 1;
+      const thayL = (await c.query("select 1 from share_listings where share_id = $1", [s])).rowCount === 1;
+      assert.deepEqual([thayP, thayS, thayL], [mongP, mongS, mongS], `dòng «${ten}»`);
+      if (p === LKP.A) assert.equal(thayE, mongP, `dòng «${ten}»: sự kiện đi theo nhu cầu`);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+    assert.equal(so, 8);
+  });
+});
+
+test("liên hệ khách: khán giả và nhu cầu đi cặp", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await c.query("reset role");
+    const chen = (ma, aud, p) => c.query("insert into shares (company_id, code, sender_user_id, audience, prospect_id) values ($1, $2, 'x', $3, $4)", [COMPANY_A, ma, aud, p]);
+    for (const [ten, ma, aud, p] of [["client thiếu nhu cầu", "maC000000001", "client", null], ["agents có nhu cầu", "maC000000002", "agents", LKP.A]]) {
+      await c.query("savepoint sp");
+      await assert.rejects(chen(ma, aud, p), /shares_audience_prospect/, ten);
+      await c.query("rollback to savepoint sp");
+    }
+    assert.equal((await chen("maC000000003", "client", LKP.A)).rowCount, 1, "đối chứng: client có nhu cầu bị chặn");
+    assert.equal((await chen("maC000000004", "agents", null)).rowCount, 1, "đối chứng: agents không nhu cầu bị chặn");
+    await c.query("set local role quy_hang_app");
+  });
+});
+
+test("liên hệ khách: mã link duy nhất toàn hệ", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await c.query("reset role");
+    await c.query("savepoint sp");
+    await assert.rejects(
+      c.query("insert into shares (company_id, code, sender_user_id, audience) values ($1, $2, 'x', 'agents')", [COMPANY_B, "maA000000000"]),
+      /shares_code_unique/,
+    );
+    await c.query("rollback to savepoint sp");
+    assert.equal((await c.query("insert into shares (company_id, code, sender_user_id, audience) values ($1, 'maU000000001', 'x', 'agents')", [COMPANY_B])).rowCount, 1, "đối chứng: mã mới bị chặn");
+    await c.query("set local role quy_hang_app");
+  });
+});
+
+test("liên hệ khách: ngữ cảnh số của nhu cầu", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await c.query("reset role");
+    const chen = (ctx) =>
+      c.query("insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, is_primary, added_by) values ($1, $2, $3, $4, $5, false, 'x')", [COMPANY_A, LKC.A, banMa(), randomBytes(32), ctx]);
+    assert.equal((await chen(`prospects:${COMPANY_A}:${LKP.A}`)).rowCount, 1, "ngữ cảnh prospects bị chặn");
+    await c.query("savepoint sp");
+    await assert.rejects(chen(`prospectz:${COMPANY_A}:${LKP.A}`), /contact_phones_enc_context_check/);
+    await c.query("rollback to savepoint sp");
+    await c.query("set local role quy_hang_app");
+  });
+});

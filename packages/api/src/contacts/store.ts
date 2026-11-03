@@ -53,6 +53,8 @@ export async function patchContact(tx: pg.PoolClient, id: string, payload: unkno
     const code = (e as { code?: string }).code;
     if (code === "P0002") return { error: API_ERRORS.notFound };
     if (code === "22023") return { error: API_ERRORS.ownerTypeRequired };
+    // Hàng 86: còn nhu cầu khách đang mở cần Người mua / Người thuê.
+    if (code === "23514") return { error: API_ERRORS.buyerTypeRequired };
     throw e;
   }
   return (await readContact(tx, id))!;
