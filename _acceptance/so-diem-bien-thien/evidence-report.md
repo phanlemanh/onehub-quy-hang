@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 9618a27d2ad2b104a6c94f7ccff843e37845708e
+verified_commit: 21bceb4bdecdff4f3a8fd46f14ee57d3c9f0e0a9
 human_signoff: Manh Phan 2026-11-04
 ---
 
@@ -191,3 +191,7 @@ Round 2: toàn bộ eval E1-E9, E9b, E9c, E9d và ba lệnh suite xanh; verdict 
 ### Re-pin lần 1 — 2026-11-04, do hoá cũ do gộp main vào nhánh trước chữ ký
 run_id: repin-20261104T023958Z-60341
 sha: 9618a27d2ad2b104a6c94f7ccff843e37845708e · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng
+
+### Re-pin lần 2 — 2026-11-04, do hoá cũ do gộp main (PR #105, #108) sau chữ ký
+run_id: repin-20261104T032742Z-54494
+sha: 21bceb4bdecdff4f3a8fd46f14ee57d3c9f0e0a9 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng
