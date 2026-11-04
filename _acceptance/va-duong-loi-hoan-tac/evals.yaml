@@ -5,7 +5,11 @@ feature_slug: va-duong-loi-hoan-tac
 # mặt, ok, không SKIP. Tiêm lỗi trong bài kiểm: hàm `sua` giả trả { ok:false, loi:{kind:"kho"} } hay ném Error theo mã căn.
 # Dựng chung cho ui-check (gọi là «DỰNG B»): node --env-file-if-exists=.env.local --import tsx
 #   _acceptance/bang-hang-dang-the/thu/dung-b.mjs → Postgres dãy B (5572), máy chủ dev 3492, người mẫu đã nạp.
-#   Phiên: node _acceptance/bang-hang-dang-the/thu/phien.mjs dau-chu-2@mau.quy-hang.test (Đầu chủ giữ nhiều căn Đang bán).
+#   Sau DỰNG B chạy node _acceptance/ho-so-can-dien-thoai/thu/gan-giu.mjs: dau-chu-1 giữ A-04.06 (Đang bán) và B-09.01
+#   (Tạm ngưng); dau-chu-2 giữ các căn Toàn sàn còn lại. Phiên: node _acceptance/bang-hang-dang-the/thu/phien.mjs <email>.
+#   E6 và E7 chạy song song trên cùng máy chủ: E6 chỉ dùng phiên dau-chu-1 trên A-04.06 và B-09.01; E7 chỉ dùng phiên
+#   dau-chu-2 trên căn Toà B. Không dựng lại dữ liệu bằng lời gọi API thẳng giữa các bước — lần ghi chen ngoài màn làm phiên
+#   bản trên máy cũ và căn vào «Cần xem».
 evals:
   - id: E1
     criterion: AC-1
@@ -52,11 +56,11 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440x900. Phiên dau-chu-2, mở http://localhost:3492/inventory, chờ lưới. Chọn một căn Đang bán, sửa ô Giá (gõ giá khác, Enter, xác nhận) → chụp evidence/E6-da-doi.png khi thông báo «Đã đổi giá …» có nút «Hoàn tác»."
+      - "DỰNG B. Khổ 1440x900. Phiên dau-chu-1, mở http://localhost:3492/inventory, chờ lưới. Chọn căn A-04.06 (Đang bán), sửa ô Giá (gõ giá khác, Enter, xác nhận) → chụp evidence/E6-da-doi.png khi thông báo «Đã đổi giá …» có nút «Hoàn tác»."
       - "Lấy id căn vừa sửa (GET /api/v1/listings, theo mã căn). Trước khi bấm Hoàn tác, chạy trong trang (tiêm đúng MỘT lần ghi hỏng của lệnh bù căn ấy, các lần ghi khác của kho không bị đụng): const HONG = new Set(['<id căn>']); const goc = IDBObjectStore.prototype.put; IDBObjectStore.prototype.put = function (v, k) { const q = (v && v.queue) || []; const l = q[q.length - 1]; if (l && HONG.has(l.listingId) && l.type === 'price_changed') { HONG.delete(l.listingId); throw new DOMException('tiem loi', 'QuotaExceededError'); } return goc.apply(this, arguments); }. Bấm «Hoàn tác» → chụp evidence/E6-hong.png; ghi chữ thông báo và có nút «Hoàn tác» không."
       - "Lượt (a): bấm «Hoàn tác» trên thông báo lỗi ấy (lần ghi này lành) → chụp evidence/E6-lai-nut.png; ghi chữ thông báo và giá trên lưới. Bấm vào lưới cho có tiêu điểm, nhấn Ctrl+Z → ghi chữ thông báo."
-      - "Lượt (b): sửa ô Giá của một căn Đang bán khác, tiêm lại như bước hai cho id căn ấy, bấm «Hoàn tác» trên thông báo → thông báo lỗi; bấm vào lưới cho có tiêu điểm, nhấn Ctrl+Z → chụp evidence/E6-lai-phim.png; ghi chữ thông báo và giá trên lưới. Nhấn Ctrl+Z thêm một lần → ghi chữ thông báo."
-    expected: "Lượt (a) hỏng: thông báo lỗi «Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại» có nút «Hoàn tác»; bấm lại bằng nút: «Đã hoàn tác giá …», giá trên lưới về giá cũ; bấm thêm Ctrl+Z ra đúng «Đã hoàn tác rồi». Lượt (b) hỏng rồi thử lại bằng Ctrl+Z: «Đã hoàn tác giá …» và giá về; Ctrl+Z thêm một lần ra đúng «Đã hoàn tác rồi»."
+      - "Lượt (b): sửa ô Giá của căn B-09.01, tiêm lại như bước hai cho id căn ấy, bấm «Hoàn tác» trên thông báo → thông báo lỗi; bấm vào lưới cho có tiêu điểm, nhấn Ctrl+Z → chụp evidence/E6-lai-phim.png; ghi chữ thông báo và giá trên lưới. Nhấn Ctrl+Z thêm một lần → ghi chữ thông báo."
+    expected: "Lượt (a) hỏng: thông báo lỗi «Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại» có nút «Hoàn tác»; bấm lại bằng nút: «Đã hoàn tác giá …», giá trên lưới về giá cũ; Ctrl+Z thêm một lần không làm gì — không thông báo, giá không đổi (luật đã ký: AC-6 của va-sua-tren-o «bản ghi ấy đã dùng thì Ctrl+Z không làm gì»). Lượt (b) hỏng rồi thử lại bằng Ctrl+Z: «Đã hoàn tác giá …» và giá về; Ctrl+Z thêm một lần không làm gì — không thông báo, giá không đổi."
     paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
 
@@ -65,7 +69,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG B. Khổ 1440x900. Phiên dau-chu-2, mở http://localhost:3492/inventory. Tích 5 căn Đang bán (ghi mã), đổi trạng thái hàng loạt sang «Tạm ngưng», chờ thông báo có «Hoàn tác» → chụp evidence/E7-lo.png."
+      - "DỰNG B. Khổ 1440x900. Phiên dau-chu-2, mở http://localhost:3492/inventory. Tích 5 căn Đang bán của Toà B (ghi mã; nếu Toà B không đủ 5 căn Đang bán thì ghi số có và tích hết), đổi trạng thái hàng loạt sang «Tạm ngưng», chờ thông báo có «Hoàn tác» → chụp evidence/E7-lo.png."
       - "Lấy id của căn thứ hai và thứ tư trong 5 căn đã tích (GET /api/v1/listings, theo mã căn). Trước khi bấm Hoàn tác, chạy trong trang (tiêm đúng một lần ghi hỏng cho lệnh bù của mỗi căn ấy, các lần ghi khác của kho không bị đụng): const HONG = new Set(['<id 2>', '<id 4>']); const goc = IDBObjectStore.prototype.put; IDBObjectStore.prototype.put = function (v, k) { const q = (v && v.queue) || []; const l = q[q.length - 1]; if (l && HONG.has(l.listingId) && l.type === 'status_changed') { HONG.delete(l.listingId); throw new DOMException('tiem loi', 'QuotaExceededError'); } return goc.apply(this, arguments); }. Bấm «Hoàn tác» → chụp evidence/E7-mot-phan.png; ghi tiêu đề, mô tả và nút của thông báo, và trạng thái 5 căn trên lưới."
       - "Bấm «Hoàn tác» trên thông báo lỗi (các lần ghi sau lành) → chụp evidence/E7-lai.png; ghi chữ thông báo và trạng thái 5 căn."
     expected: "Lần một: thông báo «Đã hoàn tác 3 căn · 2 căn chưa hoàn tác được», mô tả kể đúng hai mã căn (khớp hai căn vẫn «Tạm ngưng» và đang tích trên lưới) kèm lý do, có nút «Hoàn tác»; lần hai: «Đã hoàn tác 2 căn» và cả 5 căn về «Đang bán»; mã kể ở lần một là căn thứ hai và thứ tư."
