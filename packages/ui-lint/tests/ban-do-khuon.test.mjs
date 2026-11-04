@@ -72,7 +72,6 @@ const BANG = {
       `${W}/app/(app)/me/page.tsx`,
       `${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`,
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
-      `${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
@@ -89,7 +88,7 @@ const BANG = {
   // Hàng 17: Hồ sơ căn, nhóm màn mới — trang ba lối là màn mẫu tới khi màn thật rời trang tạm.
   "ho-so-can": { theoKhuon: [`${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`, `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`, `${W}/app/(app)/units/[code]/page.tsx`], ngoaiLe: [] },
   // Hàng 22: Hôm nay của đầu chủ, nhóm màn mới — /today theo vai và trang ba lối của nó.
-  "hom-nay-dau-chu": { theoKhuon: [`${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`, `${W}/app/(app)/today/page.tsx`], ngoaiLe: [] },
+  "hom-nay-dau-chu": { theoKhuon: [`${W}/app/(app)/today/page.tsx`], ngoaiLe: [] },
   // Hàng 42: Hôm nay của trưởng nhóm, nhóm màn mới — vùng dựng KhungTruongNhom; /today thuộc nhóm hom-nay-dau-chu.
   "hom-nay-truong-nhom": { theoKhuon: [`${W}/app/(app)/today/truong-nhom.tsx`], ngoaiLe: [`${W}/app/(app)/today/page.tsx`] },
   // Hàng 28: Chế độ cuộc gọi, nhóm màn mới — trang ba lối và màn thật /units/call.
@@ -128,8 +127,6 @@ const NHAN_DIEN_TRANG_THAI = [
   // Hồ sơ căn (hàng 17): trang ba lối và khuôn của nhóm; mục Ảnh và trang bấm được của nó (hàng 18).
   ...["mau-anh.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/anh-can-ba-ngan/${p}`),
   ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/cot-ho-so-can/${p}`),
-  // Hôm nay của đầu chủ (hàng 22): trang ba lối, vùng đầu chủ và khuôn của /today.
-  ...["ba-loi.tsx", "hang-doi.tsx", "page.tsx", "reui.tsx", "trong-kho.tsx", "ve-moi.tsx"].map((p) => `${W}/app/(app)/proto/hom-nay-dau-chu/${p}`),
   // Màn Gửi (hàng 34): khuôn, màn, trang khách xem trước.
   ...["khung.tsx", "man-gui.tsx", "page.tsx", "trang-khach.tsx"].map((p) => `${W}/app/(app)/shares/new/${p}`),
   // Chế độ cuộc gọi (hàng 28): trang ba lối và màn thật.
@@ -179,8 +176,7 @@ const CHO_TRANG_THAI = [
   // Tôi (hàng 38): lỗi đọc danh sách máy.
   `${W}/app/(app)/me/man-toi.tsx`,
   `${W}/app/(app)/not-found.tsx`,
-  // Hôm nay của đầu chủ (hàng 22): trống của trang ba lối; báo bộ đã lưu, báo bộ mặc định, lỗi tải lead, trống của vùng.
-  `${W}/app/(app)/proto/hom-nay-dau-chu/hang-doi.tsx`,
+  // Hôm nay của đầu chủ (hàng 22): báo bộ đã lưu, báo bộ mặc định, lỗi tải lead, trống của vùng.
   // Cài đặt sàn → Người dùng (vào vỏ ở hàng 91).
   `${W}/app/(app)/settings/users/page.tsx`,
   `${W}/app/(app)/settings/users/quan-nguoi.tsx`,
