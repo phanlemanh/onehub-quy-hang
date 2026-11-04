@@ -8,8 +8,9 @@
     "hom-nay-dau-chu": "407f2b30e4fa5e6f0a198bc615a387944282dae8",
     "lead-cua-toi": "ba8b8ad108e79a168f9a7e2bc8de7708f4b39d86",
     "o-nhan-lead": "1c04799a0a71e883dab3a2018b716c61e7577dd6",
+    "toi": "95ed23d6b8311dfc933b5c13d6eed18966f85dce",
     "trang-mau": "2002381900302d8a416305d80503bc02e2dcb179",
-    "trang-tam": "72a996bd903720e1b6515ec7155c9fe412d4911a",
+    "trang-tam": "e8b37b60e80e6b5c87dba06b0f8a721a49712a7b",
     "trang-thai": "0631cc5715db28d17a4f93f58625a132439754a4",
     "xac-thuc": "c925796ead64c523495d416d5a323bdfb1819369"
   },
@@ -21,6 +22,7 @@
     "hom-nay-dau-chu": "design/patterns/hom-nay-dau-chu.md",
     "lead-cua-toi": "design/patterns/lead-cua-toi.md",
     "o-nhan-lead": "design/patterns/o-nhan-lead.md",
+    "toi": "design/patterns/toi.md",
     "trang-mau": "design/patterns/trang-mau.md",
     "trang-tam": "design/patterns/trang-tam.md",
     "trang-thai": "design/patterns/trang-thai.md",

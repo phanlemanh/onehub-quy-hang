@@ -1,3 +1,4 @@
+// ĐÃ DÙNG XONG: trang /proto/tab-toi gỡ sau khi chủ kho chọn lối ReUI (04/11); sáu ảnh nằm ở ../ba-loi/. Giữ để truy vết.
 // Chụp trang ba lối của tab Tôi (hàng 38) ở khổ 1440 và 375 trên máy dev dãy H (cổng 3494). Dùng lại trình duyệt CDP của
 // hồ sơ bang-hang-kieu-sheet (Chrome có sẵn, không playwright). Phiên của tài khoản mẫu truyền qua QH_COOKIE («a=b; c=d»).
 //   QH_COOKIE='qh.session_token=…' node _acceptance/tab-toi/thu/chup-ba-loi.mjs

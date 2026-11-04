@@ -73,7 +73,6 @@ const BANG = {
       `${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
-      `${W}/app/(app)/proto/tab-toi/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
       `${W}/app/(app)/settings/users/page.tsx`,
       `${W}/app/(app)/today/page.tsx`,
@@ -91,7 +90,7 @@ const BANG = {
   // Hàng 28: Chế độ cuộc gọi, nhóm màn mới — trang ba lối và màn thật /units/call.
   "cuoc-goi": { theoKhuon: [`${W}/app/(app)/units/call/dial/page.tsx`, `${W}/app/(app)/units/call/page.tsx`], ngoaiLe: [] },
   // Hàng 38: Tôi, nhóm màn mới — màn thật /me và trang ba lối của nó.
-  toi: { theoKhuon: [`${W}/app/(app)/me/page.tsx`, `${W}/app/(app)/proto/tab-toi/page.tsx`], ngoaiLe: [] },
+  toi: { theoKhuon: [`${W}/app/(app)/me/page.tsx`], ngoaiLe: [] },
 };
 const NHAN_DIEN_TRANG_THAI = [
   ...TRANG_TAM.slice(0, 3),
@@ -123,9 +122,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["cuoc-goi.tsx", "dial/nut-quay-so.tsx", "dial/page.tsx", "dial/trang-quay-so.tsx", "khoi.tsx", "khung.tsx", "page.tsx", "push/ep-gia.tsx"].map((p) => `${W}/app/(app)/units/call/${p}`),
   // Thông báo lead (hàng 26): dải bật thông báo ở đầu /today.
   ...["dai-bat.tsx", "hom-nay-dau-chu.tsx", "khung.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
-  // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; trang ba lối; khối báo máy bị báo ở đăng nhập.
+  // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; khối báo máy bị báo ở đăng nhập.
   ...["khung.tsx", "man-toi.tsx", "toi-that.tsx"].map((p) => `${W}/app/(app)/me/${p}`),
-  ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/tab-toi/${p}`),
   `${W}/app/(auth)/login/may-bi-bao.tsx`,
   ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/o-ma-can.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
@@ -369,9 +367,9 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "hom-nay-dau-chu: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "toi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 6 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
+      "trang-tam: 6 tệp theo khuôn · 16 ngoại lệ · 0 lệch",
       "trang-thai: 62 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);

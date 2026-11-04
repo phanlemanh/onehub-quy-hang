@@ -2,7 +2,7 @@
 nhom: toi
 doi_tuong: [tai-khoan, may-dang-nhap]
 khuon: { ten: KhungToi, nhap: "@/app/(app)/me/khung" }
-nhan_dien: ["apps/web/src/app/(app)/me/page.tsx", "apps/web/src/app/(app)/proto/tab-toi/page.tsx"]
+nhan_dien: ["apps/web/src/app/(app)/me/page.tsx"]
 mau_dang_chay: { tep: "apps/web/src/app/(app)/me/page.tsx", duong: "/me", trang_thai: [mac-dinh, mot-may, dang-doc, loi, da-bao] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]

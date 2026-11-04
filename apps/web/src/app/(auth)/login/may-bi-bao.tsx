@@ -23,5 +23,7 @@ export function KhoiMayBiBao({ userId }: { userId: string }) {
       huy = true;
     };
   }, [userId]);
-  return xong ? <TrangThai kind="notice" {...LOI_BI_BAO} /> : <TrangThai kind="notice" title="Đang xoá dữ liệu Quỹ hàng trên máy…" />;
+  return (
+    <TrangThai kind="notice" title={xong ? LOI_BI_BAO.title : "Đang xoá dữ liệu Quỹ hàng trên máy…"} description={xong ? LOI_BI_BAO.description : undefined} />
+  );
 }
