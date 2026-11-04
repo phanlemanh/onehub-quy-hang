@@ -191,8 +191,8 @@ const CHO_TRANG_THAI = [
   // «Sẵn sàng bán» (hàng 23): danh sách «Còn thiếu»; lời báo «Chưa gửi được» (va-san-sang-ban).
   `${W}/app/(app)/units/ready/nut-san-sang.tsx`,
   `${W}/app/(app)/units/ready/nut-san-sang.tsx`,
-  // Máy bị báo mất (hàng 38): khối báo ở màn đăng nhập.
-  `${W}/app/(auth)/login/may-bi-bao.tsx`,
+  // Máy bị báo mất (hàng 38): khối báo ở màn đăng nhập; hàng 93 thêm khối «chưa xoá được» khi xoá hỏng.
+  ...Array(2).fill(`${W}/app/(auth)/login/may-bi-bao.tsx`),
   // Hàng 91: lỗi gốc app, lỗi toàn cục; rỗng · lỗi · ngoại tuyến của màn mẫu; không thấy gốc app.
   `${W}/app/error.tsx`,
   `${W}/app/global-error.tsx`,
@@ -379,7 +379,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 6 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
-      "trang-thai: 69 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 70 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

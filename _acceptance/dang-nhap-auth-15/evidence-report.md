@@ -1,0 +1,245 @@
+---
+schema_version: 2
+feature_slug: dang-nhap-auth-15
+verdict: REJECT
+failed_evals: ["E9"]
+reason:
+verified_by: fresh-context verification subagent
+enforcement_mode: strict
+bypass_used: false
+verified_commit: 60aeee74d56318a735d4cc6108e0ad625d9b017a
+human_signoff:
+---
+
+# Evidence Report: dang-nhap-auth-15
+
+| Eval | Criterion | Executor | Verdict |
+|---|---|---|---|
+| E1 | AC-1 | ui-check | PASS |
+| E2 | AC-2 | ui-check | PASS |
+| E3 | AC-3 | ui-check | PASS |
+| E4 | AC-4 | test | PASS |
+| E5 | AC-5 | script | PASS |
+| E6 | AC-6 | script | PASS |
+| E7 | AC-6 | script | PASS |
+| E8 | AC-6 | script | PASS |
+| E9 | AC-7 | test | FAIL |
+| E10 | AC-7 | script | PASS |
+| E11 | AC-8 | ui-check | PASS |
+| E12 | AC-6 | script | PASS |
+| E13 | AC-7 | script | PASS |
+| E14 | AC-9 | test | PASS |
+
+## Evidence
+
+- eval: E1
+  run_id: minted-dang-nhap-auth-15-E1-r1
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-04T07:35:19Z
+  screenshot: evidence/E1-step1.png
+  observed: |
+    1440 (E1-step1.png = E1-1440.png): nền sáng. Đầu trang giữa: ô vuông bo góc màu tối (gần đen = màu chính) chứa biểu tượng hộp (Boxes) cạnh chữ «Quỹ hàng». Tiêu đề «Đăng nhập Quỹ hàng». Nhãn «Email», ô nhập có biểu tượng thư bên trái, placeholder ban@san.vn, lời dặn «Quỹ hàng gửi mã 6 số tới email này.» dưới ô, nút «Gửi mã» (kèm mũi tên) rộng bằng ô (cùng x 544–896). Chân trang: «Sàn của bạn dùng Quỹ hàng theo điều khoản trong hợp đồng đã ký.» Không viền/thẻ bao quanh form, không nút dịch vụ khác. 375 (E1-step2.png = E1-375.png): cùng bố cục một cột, dấu hiệu Boxes + «Quỹ hàng» ở đầu, ô và nút cùng rộng 327px (x 24–351), chân trang đúng câu chốt xuống dòng hai dòng, không cuộn ngang (scrollWidth 375).
+  network_observed: no-app-traffic
+  output: |
+    Console: không có lỗi; network: chỉ tải trang + tài nguyên tĩnh, không fetch/XHR app.
+    Lưu ý: dev_server.url trong config.yaml là 3460 nhưng task chỉ định 3492, dùng 3492.
+    Frame đã lưu: E1-1440.png, E1-375.png, E1-step1.png, E1-step2.png.
+
+- eval: E2
+  run_id: minted-dang-nhap-auth-15-E2-r1
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-04T07:35:19Z
+  screenshot: evidence/E2-ma-sai.png
+  observed: |
+    E2-ma-sai.png (375 rộng, sáng): dấu «Quỹ hàng» đầu trang; tiêu đề «Đăng nhập Quỹ hàng»; nhãn «Mã 6 số» và ô có biểu tượng chìa chứa 000000 đều đỏ; ngay dưới ô là lời dặn xám «Đã gửi mã tới dau-khach@mau.quy-hang.test», dưới nữa chữ đỏ «Mã không đúng. Thử lại.»; rồi nút «Vào →» đặc và nút «Đổi email»; chân trang điều khoản. Khớp Expected (lỗi ngay dưới ô mã, dưới lời dặn). E2-step3-doi-email.png: về bước Email: nhãn «Email», ô thư chứa dau-khach@mau.quy-hang.test, lời dặn «Quỹ hàng gửi mã 6 số tới email này.», nút «Gửi mã →»: khớp «Đổi email đưa về ô Email». E2-vao.png: URL /today, đầu trang «Hôm nay» cùng biểu tượng tìm kiếm/đám mây/chuông, thẻ «Màn này đang dựng», thanh dưới Hôm nay/Bảng hàng/Gửi/Tôi; không còn form đăng nhập. Tên «[Mẫu] Sàn thử» không hiện trên khung hình điện thoại (chỉ có trong header ẩn của vỏ máy tính), ghi nhận như lưu ý.
+  network_observed: clean
+  output: |
+    5. Vỏ sàn: trang /today có vỏ điện thoại; chữ «[Mẫu] Sàn thử» có trong DOM (header của vỏ máy tính) nhưng header đó ẩn ở 375 nên tên sàn không thấy trên màn điện thoại: ghi chú, xét đạt vì vỏ của sàn dựng đúng.
+    6. Mạng: gửi mã thành công, mã sai bị từ chối đúng kỳ vọng, gửi lại và nhập mã đúng thì vào /today; không lỗi máy chủ.
+    Frames lưu: E2-ma-sai.png, E2-step3-doi-email.png, E2-vao.png, E2-network.txt.
+
+- eval: E3
+  run_id: E3-dang-nhap-auth-15
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-04T07:35:19Z
+  screenshot: evidence/E3-chon-san.png
+  observed: |
+    E3-chon-san.png (1440x900, /select-company, hai-san@): dấu hiệu «Quỹ hàng» đầu trang, tiêu đề «Chọn sàn làm việc», hai nút «[Mẫu] Sàn thử» và «[Mẫu] Sàn thứ hai» (rộng 352px, bằng cột), nút «Đăng xuất» cùng rộng 352px, chân «Sàn của bạn dùng Quỹ hàng theo điều khoản trong hợp đồng đã ký.», không thẻ viền. E3-step2.png: sau khi bấm «[Mẫu] Sàn thứ hai» URL thành /settings/users, vỏ ứng dụng hiện «[Mẫu] Sàn thứ hai» ở góc trên trái, trang «Người của sàn [Mẫu] Sàn thứ hai»; /api/v1/me báo activeCompany là Sàn thứ hai. E3-chua-gan.png (/no-company, chua-gan@): dấu hiệu «Quỹ hàng», tiêu đề «Chưa thuộc sàn nào», câu «Tài khoản chua-gan@mau.quy-hang.test chưa thuộc sàn nào. Nhờ quản trị sàn mời bạn.», nút «Đăng xuất», chân điều khoản như trên. Bấm «Đăng xuất» thì về http://localhost:3492/login. Lưu ý: lần chạy đầu chụp step2 lúc dev server đang biên dịch (trang trắng ở URL /); chạy lại chờ 6 giây thì đủ vỏ, đã ghi đè E3-step2.png.
+  network_observed: clean
+  output: |
+    Tiêu đề, hai nút sàn, Đăng xuất và chân điều khoản khớp CHAN_DIEU_KHOAN trong khung.tsx; nút rộng 352px bằng cột.
+    Bấm «[Mẫu] Sàn thứ hai» vào /settings/users, vỏ mang tên sàn thứ hai; /no-company đúng nguyên văn; Đăng xuất về /login.
+    Frame: E3-chon-san.png, E3-step1.png, E3-step2.png, E3-chua-gan.png, E3-step3.png; network: E3-network.txt.
+
+- eval: E4
+  run_id: minted-dang-nhap-auth-15-E4-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.test.web
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    npm test -w @quy-hang/web
+    ℹ duration_ms 2465.850583
+
+- eval: E5
+  run_id: minted-dang-nhap-auth-15-E5-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.script.dang_nhap_auth_15
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    node --test "_acceptance/dang-nhap-auth-15/thu/*.test.mjs"
+    ℹ duration_ms 179.71825
+
+- eval: E6
+  run_id: minted-dang-nhap-auth-15-E6-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.design.khuon
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    design-floor-khuon.mjs --kiem --root .
+    5 tệp giao diện ngoài bản đồ
+
+- eval: E7
+  run_id: minted-dang-nhap-auth-15-E7-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.script.lint
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    npm run lint
+    chuẩn giao diện: đạt
+
+- eval: E8
+  run_id: minted-dang-nhap-auth-15-E8-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.script.typecheck
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    npm run typecheck
+    (không dòng lỗi)
+
+- eval: E9
+  run_id: minted-dang-nhap-auth-15-E9-r1
+  exit_code: 1
+  baseline: green
+  verifier: config:executors.test.ui_lint
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    npm test -w @quy-hang/ui-lint — tests/ban-do-khuon.test.mjs dòng 370: so sánh sâu hai danh sách dòng tóm tắt khuôn không khớp.
+    Thực tế: 'trang-thai: 70 chỗ theo khuôn · 0 ngoại lệ · 0 lệch'
+    Mong đợi: 'trang-thai: 69 chỗ theo khuôn · 0 ngoại lệ · 0 lệch'
+    Các nhóm khác (bang-hang, cai-dat-san, cuoc-goi, gui, trang-tam, xac-thuc) khớp.
+
+- eval: E10
+  run_id: minted-dang-nhap-auth-15-E10-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.script.giao_dien
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    node packages/ui-lint/kiem-chuan.mjs
+    chuẩn giao diện: đạt
+
+- eval: E11
+  run_id: minted-dang-nhap-auth-15-E11-r1
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-04T07:35:19Z
+  screenshot: evidence/E11-dang-nhap-1440-toi.png
+  observed: |
+    Đã mở từng ảnh bằng Read. (1) dang-nhap-1440-toi: nền gần đen, logo Quỹ hàng, tiêu đề «Đăng nhập Quỹ hàng» trắng, nhãn Email trắng, ô email có viền sáng và biểu tượng thư, lời dặn xám sáng, nút «Gửi mã» nền xám sáng chữ tối, chân điều khoản xám đọc được. (2) dang-nhap-toi 375: cùng bố cục một cột, ô có viền phân biệt nền, nút rộng trọn cột, chân điều khoản hai dòng đọc được, không cuộn ngang. (3) ma-loi-toi: nhãn «Mã 6 số» và mã 000000 màu đỏ-cam sáng, viền ô, dòng «Đã gửi mã tới telesales@…» xám, «Mã không đúng. Thử lại.» đỏ sáng đọc rõ dưới ô, nút Vào xám và «Đổi email» có viền, chân đọc được. (4) chon-san-toi: tiêu đề trắng, hai nút sàn và Đăng xuất có nền/viền hơi sáng hơn nền trang, chữ trắng đọc được. (5) chua-gan-toi: tiêu đề, đoạn văn trắng, nút Đăng xuất có viền, chân đọc được. Không có chữ tối trên nền tối; mọi scrollWidth ở 375 = 375. Khớp Expected.
+  network_observed: clean
+  output: |
+    Chân điều khoản có ở cả 5 màn, chữ xám sáng đọc được.
+    Network (E11-network.txt): không request hỏng; một lỗi console từ nhập mã sai chủ đích, khớp expected.
+    Frame: E11-dang-nhap-1440-toi.png, E11-dang-nhap-toi.png, E11-ma-loi-toi.png, E11-chon-san-toi.png, E11-chua-gan-toi.png.
+
+- eval: E12
+  run_id: minted-dang-nhap-auth-15-E12-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.script.design_floor
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    design-floor-s4.mjs --root .
+    (không dòng báo mã màu thô)
+
+- eval: E13
+  run_id: minted-dang-nhap-auth-15-E13-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.script.dang_nhap_auth_15
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    node --test "_acceptance/dang-nhap-auth-15/thu/*.test.mjs"
+    ℹ duration_ms 179.71825
+
+- eval: E14
+  run_id: minted-dang-nhap-auth-15-E14-r1
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.test.web
+  verified_at: 2026-11-04T07:35:19Z
+  output: |
+    npm test -w @quy-hang/web
+    ℹ duration_ms 2465.850583
+
+### Lệnh suite (hồi quy)
+
+- cmd: npm test -w @quy-hang/core
+  run_id: minted-dang-nhap-auth-15-SUITE-npm_test_w_quy_hang_core-r1
+  exit_code: 0
+  verified_at: 2026-11-04T07:35:19Z
+
+- cmd: npm test -w @quy-hang/api
+  run_id: minted-dang-nhap-auth-15-SUITE-npm_test_w_quy_hang_api-r1
+  exit_code: 0
+  verified_at: 2026-11-04T07:35:19Z
+
+- cmd: npm test -w @quy-hang/connect
+  run_id: minted-dang-nhap-auth-15-SUITE-npm_test_w_quy_hang_connect-r1
+  exit_code: 0
+  verified_at: 2026-11-04T07:35:19Z
+
+- cmd: npm run test:hooks
+  run_id: minted-dang-nhap-auth-15-SUITE-test_hooks-r1
+  exit_code: 0
+  verified_at: 2026-11-04T07:35:19Z
+
+## Known limits
+
+## Ngoài hợp đồng
+
+## Analyst
+
+Eval không phân biệt (xanh trên cả nhánh lẫn nền): 
+- E4, E14 (npm test -w @quy-hang/web)
+- E5, E13 (node --test _acceptance/dang-nhap-auth-15/thu/*.test.mjs)
+- E6 (design-floor-khuon --kiem)
+- E7 (npm run lint)
+- E8 (npm run typecheck)
+- E10 (kiem-chuan.mjs)
+- E12 (design-floor-s4)
+
+Cần viết lại để khẳng định hành vi mới, hoặc xác nhận là lưới hồi quy có chủ ý.
+
+Lệnh fail không gắn eval: không có. Lệnh fail duy nhất, npm test -w @quy-hang/ui-lint, gắn với E9.
+
+## Variance
+
+none — mọi eval nhiều lần chạy đều đồng nhất (mọi eval chạy một lần, tất định).
+
+## Iterations
+
+Round 1: E9 failed — bộ kiểm ban-do-khuon đếm nhóm trang-thai là 70 chỗ theo khuôn, trong khi phép thử mong đợi 69. Returned to implementation.
+
