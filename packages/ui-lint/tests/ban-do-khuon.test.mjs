@@ -394,7 +394,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "ho-so-can: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "hom-nay-dau-chu: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "hom-nay-dau-chu: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-truong-nhom: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "nhap-excel: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -402,8 +402,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 4 tệp theo khuôn · 18 ngoại lệ · 0 lệch",
-      "trang-thai: 90 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 4 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
+      "trang-thai: 89 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
