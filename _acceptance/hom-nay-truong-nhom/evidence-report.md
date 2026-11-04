@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 98314823ba049d8684db0a31b458eb3d7e2bd218
+verified_commit: d125388a43f97b861df9d0eaa6e43f754760b0cd
 human_signoff: Manh Phan 2026-11-04
 ---
 
@@ -208,3 +208,7 @@ none — mọi eval nhiều lần chạy đều đồng đều (không eval nào
 Round 1: E1-E5, E8, E9 chạy lần gốc (hồ sơ gốc); các eval này được mang tiếp sang các round sau.
 Round 2: E6 failed — lệnh chụp không chọn được đầu chủ để giao lại; E11 xanh. Returned to implementation.
 Round 3: lệnh chụp E6 sửa chọn đầu chủ còn chọn được; E6, E7, E10 và bảy lệnh suite chạy lại, xanh; E1-E5, E8, E9, E11 mang tiếp (delta không chạm paths). Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-04, do hoá cũ do gộp main (PR #112) sau chữ ký
+run_id: repin-20261104T075507Z-43686
+sha: d125388a43f97b861df9d0eaa6e43f754760b0cd · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6 (E6 không khai paths), E7 (E7 không khai paths), E10 (E10 không khai paths) · AC không có chốt máy: AC-6
