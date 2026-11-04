@@ -99,7 +99,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «voided: nguồn lần đổi vẫn trả sự kiện gỡ» có mặt và ok — lần nhập tạo hai hàng; ghi nhớ phiên bản lần đổi của sàn trước khi hoàn tác; hoàn tác; gọi đường lần đổi (lan-doi) từ phiên bản ấy → kết quả có sự kiện voided của từng hàng (2 assert); đối chứng: GET /api/v1/listings không trả hai hàng ấy (2 assert). Chiều đỏ: lan-doi lọc voided → ca đỏ nêu hàng đầu."
+    expected: "exit 0; ca «voided: lệnh sửa lên hàng đã gỡ bị từ chối như hàng không có» có mặt và ok — lần nhập tạo hai hàng; ghi nhớ phiên bản từng hàng trước khi hoàn tác; hoàn tác; POST /api/v1/listings/{id}/events (details_changed, expectedVersion = phiên bản sau hoàn tác) cho từng hàng → 404 not-found (2 assert), không sự kiện mới (đếm trước = sau, 2 assert); GET /api/v1/listings/{id} → 404 (2 assert); đối chứng dương: hàng tạo tay của sàn nhận cùng lệnh → 200 (assert). Chiều đỏ: applyCommand không xét voided → ca đỏ nêu hàng đầu."
     paths: [packages/api/src/listings/**, packages/api/src/imports/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -107,8 +107,8 @@ evals:
     criterion: AC-7
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «đồng bộ trên máy: hàng voided ra khỏi danh sách» có mặt và ok — kho máy có hai hàng; áp một sự kiện voided kéo về cho hàng 1 (đường ap-tren-may thật) → danh sách hàng của máy chỉ còn hàng 2 (assert), hàng 1 không còn sự kiện tạm nào chờ gửi (assert); đối chứng: sự kiện price_changed cho hàng 2 vẫn giữ hàng 2 (assert). Chiều đỏ: ap-tren-may bỏ qua loại lạ → hàng 1 còn, ca đỏ nêu hàng 1."
-    paths: [apps/web/src/lib/sync/**, packages/core/src/listing/**]
+    expected: "exit 0; ca «đồng bộ trên máy: hàng đã gỡ ra khỏi máy» có mặt và ok — kho máy có hai hàng và một lệnh sửa đang chờ gửi cho hàng 1; máy chủ giả (may-chu-gia) trả GET /api/v1/listings chỉ có hàng 2 và 404 cho lệnh lên hàng 1; chạy một vòng đồng bộ thật (dong-bo) → danh sách hàng của máy chỉ còn hàng 2 (assert), lịch sử hàng 1 bị bỏ (assert), lệnh chờ của hàng 1 rời hàng đợi gửi sang «cần xem» với lý do «căn không còn đọc được» và không gửi lặp ở vòng kế (3 assert); đối chứng: hàng 2 giữ nguyên (assert). Chiều đỏ: máy chủ giả vẫn trả hàng 1 trong danh sách → ca đỏ nêu hàng 1."
+    paths: [apps/web/src/lib/sync/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E8

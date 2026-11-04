@@ -54,7 +54,7 @@ Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`, `[Tên sàn]`.
 - **AC-7 — `voided` là cờ, không phải trạng thái.** Given dãy sự kiện có `voided` · When gấp lại (lõi, bảng `listings`, bộ
   đồng bộ trên máy) · Then trạng thái chuẩn giữ nguyên, `voided = true`; xoá trắng bảng `listings` rồi gấp lại ra đúng bảng
   cũ (cả cột `voided`); lệnh sửa thường (`applyCommand`) không ghi được `voided`; payload có khoá lạ bị từ chối; bộ đồng bộ
-  trên máy bỏ hàng `voided` khỏi danh sách — nguồn lần đổi máy kéo về vẫn trả sự kiện `voided`, chỉ danh sách đọc lọc;
+  trên máy bỏ hàng `voided` khỏi danh sách ở lượt kéo kế, và lệnh sửa máy gửi lên hàng đã gỡ bị từ chối như hàng không có;
   lần nhập sau cùng căn tạo hàng mới thay vì cập nhật hàng đã gỡ.
 - **AC-8 — Lối vào hoàn tác trên màn.** Given người nhập vừa ghi xong hay quay lại màn Nhập sau đó · When nhìn bước 5 và
   danh sách «Lần nhập gần đây» ở bước 1 · Then bước 5 có nút «Hoàn tác lần nhập này», danh sách có tối đa 10 lần nhập đã

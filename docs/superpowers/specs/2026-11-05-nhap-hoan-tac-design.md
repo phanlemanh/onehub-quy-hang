@@ -38,10 +38,11 @@ thứ bảy**: không đi qua `TRANSITIONS`, `standardStatus` giữ nguyên, l�
 Sự kiện `voided` chỉ ghi được qua đường hoàn tác lần nhập: `applyCommand` từ chối nó như từ chối `created`; store hàng có
 hàm riêng `voidListing` (một đường ghi — `mot-duong-ghi.test.ts` vẫn đứng).
 
-Hàng `voided` ra khỏi **mọi danh sách đọc**: Bảng hàng (`GET /listings`), Hôm nay của đầu khách, Đã gửi, kiểm trùng
-hàng mở (`hangMo`, `hangMoCungCan` — lần nhập sau cùng căn tạo hàng mới). **Nguồn lần đổi (`lan-doi.ts`) KHÔNG lọc**: nó
-vẫn trả sự kiện `voided` để máy đang ngoại tuyến kéo về và bộ đồng bộ trên máy (`ap-tren-may.ts`) bỏ hàng khỏi kho máy —
-lọc ở đó thì hàng đã gỡ nằm mãi trên máy. Trang khách (`public/store.ts`) coi hàng `voided` như căn không còn (dữ liệu ra ngoài
+Hàng `voided` ra khỏi **mọi danh sách đọc**: Bảng hàng (`GET /listings`, cũng là nguồn bộ đồng bộ trên máy kéo về —
+`keoVe` thay cả danh sách, nên lượt kéo kế bỏ hàng đã gỡ khỏi máy), Hôm nay của đầu khách, Đã gửi,
+kiểm trùng hàng mở (`hangMo`, `hangMoCungCan` — lần nhập sau cùng căn tạo hàng mới). Đọc một hàng và lệnh
+sửa (`applyCommand`) lên hàng đã gỡ trả 404 như hàng không có: máy đang giữ lệnh chờ cho hàng ấy chuyển lệnh sang «cần xem» («căn không còn đọc được» — đường có sẵn của bộ gửi), không gửi lặp.
+Trang khách (`public/store.ts`) coi hàng `voided` như căn không còn (dữ liệu ra ngoài
 dựng từ lõi, bất biến 4). Cột `listings.voided` (migration 025) để lọc; gấp lại từ sự kiện ra đúng cột (AC-8 của hàng lõi).
 
 ### 3.2 Kế hoạch hoàn tác — hàm thuần ở lõi
