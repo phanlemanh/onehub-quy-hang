@@ -56,7 +56,7 @@ const demSuKien = async (code: string, type: string) =>
 /** Bản ra kỳ vọng của một căn: đọc thẳng hàng, danh mục, ảnh gửi được bằng kết nối chủ rồi dựng bằng banRaNgoai của lõi. */
 async function banKyVong(id: string, nguoiNhan: "khach_rieng" | "nhom_moi_gioi", congTy: string, nguoiGui: string): Promise<CanRaNgoai> {
   const l = (await appPool.query("select * from listings where id = $1", [id])).rows[0];
-  const cu = (await appPool.query("select * from catalog_units where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2)", [l.building_name, l.unit_number])).rows[0];
+  const cu = (await appPool.query("select * from catalog_units where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2) order by measured_at desc limit 1", [l.building_name, l.unit_number])).rows[0];
   const anh = (
     await appPool.query(
       "select * from unit_photos where company_id = $1 and building_name = $2 and app.unit_key(unit_number) = app.unit_key($3) and removed_at is null and compartment = 'shareable' order by display_order, added_at",

@@ -165,7 +165,7 @@ test("đã gửi: tắt link", async () => {
   const g2 = await lanGui(s, "dk1", "nhom_moi_gioi", [await hang(s)]);
   const tat = (k: string, id: string) => send("POST", `/api/v1/shares/${id}/disable`, undefined, ck(s, k));
   const doc = async (id: string) => (await appPool.query<{ d: Date | null }>("select disabled_at d from shares where id = $1", [id])).rows[0]!.d;
-  const BANG: [string, () => Promise<Response>, number[], string, boolean][] = [
+  const BANG: [string, () => Response | Promise<Response>, number[], string, boolean][] = [
     ["đầu khách khác cùng sàn", () => tat("dk2", g.id), [403, 404], g.id, false],
     ["telesales", () => tat("ts", g.id), [403], g.id, false],
     ["người gửi", () => tat("dk1", g.id), [200], g.id, true],
