@@ -1,0 +1,119 @@
+schema_version: 1
+feature_slug: lead-dien-thoai
+# Lệnh máy: executors.design.khuon, executors.test.ui_lint, executors.test.web. ui-check mở máy chủ dev của chỗ thử dãy D
+# (Postgres 5575 nạp sàn mẫu, máy dev 3476) bằng _acceptance/lead-dien-thoai/thu/dung-d.mjs, Chrome không đầu qua CDP
+# (_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs), khổ 390 × 844 trừ E8. Tắt bằng dung-d.mjs --tat khi chấm xong, không pkill.
+# KHÔNG bật máy dev nào khác (kể cả lệnh của executors.ui-check): Next chỉ cho một máy dev mỗi thư mục; dung-d.mjs tự tắt máy
+# dev khác của chính worktree này rồi dựng máy 3476. Mọi phép nhìn màn dùng máy 3476 của dung-d.mjs.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/dung-d.mjs rồi node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e1 --ra _acceptance/lead-dien-thoai/evidence"
+      - "Đối chiếu dòng e1: cuonNgang = false (scrollWidth ≤ clientWidth), soMuc = 5, inputModeSo = tel, inputModeGia = numeric, coPhanDaNhap = true; xem ảnh E1-nhap-390.png"
+    target: "http://localhost:3476/leads/new"
+    expected: "Telesales mẫu khổ 390: phần «Nhập lead» một cột năm mục, không cuộn ngang, ô số bàn phím tel, ô giá bàn phím số, nút Gửi trong khung nhìn; có phần «Lead đã nhập» trong cùng tab. Chiều đỏ ghim: cuonNgang = true hay soMuc ≠ 5 là FAIL nêu tên trường."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e2 --ra _acceptance/lead-dien-thoai/evidence — ma trận viết trước năm ca, mỗi ca bỏ trống đúng một mục (số, căn/toà, nhu cầu, giá, thời gian) rồi bấm Gửi"
+      - "Đối chiếu dòng e2: mỗi ca loiO = đúng ô bỏ trống và soPostLead = 0; ca đối chứng điền đủ → soPostLead = 1"
+    target: "http://localhost:3476/leads/new"
+    expected: "Năm ca thiếu: lỗi dưới đúng ô, không lời gọi POST /api/v1/leads nào (đếm bằng sự kiện mạng của CDP); đối chứng dương điền đủ gửi đúng một lời gọi."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e3 --ra _acceptance/lead-dien-thoai/evidence"
+      - "Đối chiếu dòng e3: coKetQua = true, coLoiTheoDoi = true; sau một nhịp chia (POST /api/v1/jobs/lead-tick, như máy chạy mỗi phút) và bấm lối: dau.dong chứa toà vừa gửi, dau.nac = «Đã gửi»"
+    target: "http://localhost:3476/leads/new"
+    expected: "Gửi đủ năm mục: kết quả kiểm trùng và lối «Xem ở Lead đã nhập»; bấm lối thấy lead vừa gửi ở đầu, nấc Đã gửi. Ảnh E3-ket-qua-390.png, E3-da-nhap-390.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e4 --ra _acceptance/lead-dien-thoai/evidence — mở tab Lead (/leads/new) khổ 390, bấm sang phần «Lead đã nhập»; giữa các lần đọc, đầu chủ mẫu nhận, ghi gọi, rồi đưa lead lên bảng (POST /api/v1/leads/{id}/listing) qua lối API thật"
+      - "Đối chiếu dòng e4: nacTruoc = «Đã gửi», nacSauNhan = «Đã nhận», nacSauGoi = «Đã gọi», nacSauLenBang = «Lên bảng»; cuonNgang = false; coSoChu = false (thân trang không chứa số mồi 0900 000 0xx của lead), coMaHang = false"
+    target: "http://localhost:3476/leads/new"
+    expected: "Khổ 390, phần «Lead đã nhập» của tab Lead: một cột, đủ bốn nấc đổi theo đầu chủ; không số chủ, không mã hàng trong thân trang (đối chứng dương: số mồi có trong thân POST lúc nhập). Ảnh mỗi nấc."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e5 --ra _acceptance/lead-dien-thoai/evidence — điền đủ, đặt CDP Network.emulateNetworkConditions offline, bấm Gửi; bật lại mạng, bấm Gửi"
+      - "Đối chiếu dòng e5: lucMat.thongBao chứa «Chưa gửi được», lucMat.muc giữ đủ năm giá trị đã điền; coMangChuaBam.soLeadMoi = 0 (bật mạng, chờ 3 giây, chưa bấm — máy không tự gửi); sauKhiBam.soLeadMoi = 1"
+    target: "http://localhost:3476/leads/new"
+    expected: "Mất mạng: báo chưa gửi, năm mục giữ nguyên; có mạng lại chưa bấm thì không lead nào mới (máy không tự gửi); bấm Gửi: đúng một lead mới (đếm GET /api/v1/leads trước/sau). Ảnh E5-mat-mang-390.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e6 --ra _acceptance/lead-dien-thoai/evidence — mở tab Lead (/leads/new) khổ 390, đặt offline, bấm sang phần «Lead đã nhập»; rồi bật lại mạng, không tải lại trang; lặp lại cùng ca trên /leads/mine"
+      - "Đối chiếu dòng e6: lucMat.coChuaCoLead = false, lucMat.coThuLai = true, lucMat.coDaiMatMang = true; sauKhiCoMang.coDaiMatMang = false; sau khi bấm Thử lại soDong ≥ 1"
+    target: "http://localhost:3476/leads/new"
+    expected: "Cả phần trong tab Lead lẫn /leads/mine — mất mạng lúc mở: báo không tải được kèm Thử lại, không «Chưa có lead nào»; có mạng lại dải mất mạng tắt, Thử lại tải được danh sách. Ảnh E6-mat-mang-390.png, E6-co-mang-390.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7a
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/o-nhan-lead.md", "design/patterns/lead-cua-toi.md", "apps/web/src/app/(app)/leads/new/**", "apps/web/src/app/(app)/leads/mine/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm o-nhan-lead và lead-cua-toi"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    paths: ["design/patterns/**", "docs/design/vo-va-ia.md", "packages/ui-lint/**", "apps/web/src/app/(app)/proto/**"]
+    expected: "exit 0; ca «chỗ hở: cây thật không còn cảnh báo chỗ tạm» và các ca khuôn có mặt và ok; không còn dòng «ngoại lệ có hạn» nào trỏ lead-dien-thoai (đếm trên đầu ra npm run lint ở bước chấm, đối chứng: trước hàng này có hai dòng); design/patterns/o-nhan-lead.md không còn chuỗi «form-2» trong phần mô tả khuôn; apps/web/src/app/(app)/proto/o-nhan-lead/ không tồn tại."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e9 --ra _acceptance/lead-dien-thoai/evidence — ma trận viết trước bốn ca khổ 390: đầu chủ mẫu, người mua hàng mẫu (buyer_agent), telesales mới chưa có lead, telesales có lead với lời gọi GET /api/v1/leads bị giữ chậm 3 giây (CDP Fetch)"
+      - "Đối chiếu dòng e9: dauChu.coForm = true; muaHang.coForm = false và muaHang.coBaoVai = true; moi.coChuaCoLead = true; dangTai.coKhungCho = true và dangTai.trang = false"
+    target: "http://localhost:3476/leads/new"
+    expected: "Đầu chủ thấy ô nhập; vai không có «+ Lead» thấy khối báo vai, không biểu mẫu (đối chứng dương: telesales thấy biểu mẫu ở E1); telesales mới thấy «Chưa có lead nào»; lúc đang tải thấy khung chờ, không khung trắng. Ảnh mỗi ca."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e8 --ra _acceptance/lead-dien-thoai/evidence — khổ 1440 × 900"
+      - "Đối chiếu dòng e8: soMuc = 5, soCotBang = 3, cuonNgang = false"
+    target: "http://localhost:3476/leads/new"
+    expected: "Máy tính: năm mục như hàng 24, bảng Lead đã nhập ba cột như hàng 27. Ảnh E8-nhap-1440.png, E8-da-nhap-1440.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]

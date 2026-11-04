@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { TrangThai } from "@/components/trang-thai";
 import { getApi, readMe } from "@/lib/api";
 
+import { chanMucSan } from "../cai-dat";
 import { MucCaiDat } from "../khung";
 import { QuanNguoi, type Khu, type ThanhVien } from "./quan-nguoi";
 
@@ -17,6 +18,8 @@ export default async function NguoiDung() {
   if (!me) redirect("/login");
   if (me.companies.length === 0) redirect("/no-company");
   if (!me.activeCompany) redirect("/select-company");
+  const chan = chanMucSan(me.activeCompany.roles);
+  if (chan) redirect(chan);
   const api = getApi();
   const res = await api.request("http://quy-hang.local/api/v1/company/members", { headers: { cookie } });
   return (

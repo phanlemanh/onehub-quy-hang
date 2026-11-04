@@ -60,3 +60,32 @@ test("trang khách: quan tâm một chạm", async () => {
   assert.equal(g2.loi.length, 2, "bấm lại sau lỗi phải gọi lại");
   assert.equal(NHAN_QUAN_TAM[t2], "Đã báo quan tâm");
 });
+
+test("trang khách: quan tâm khi trình duyệt chặn lưu trữ", async () => {
+  const { khoMay, NutQuanTam } = await import("./quan-tam");
+  const { createElement: h } = await import("react");
+  const { renderToStaticMarkup } = await import("react-dom/server");
+  const chan = Object.defineProperty({}, "localStorage", {
+    get() {
+      throw new DOMException("chặn lưu trữ", "SecurityError");
+    },
+  }) as { localStorage: Storage };
+  assert.equal(khoMay(chan), null, "getter ném mà khoMay không trả null");
+  // Đối chứng: window thường trả đúng kho.
+  const thuong = { localStorage: { getItem: () => null, setItem: () => {} } as unknown as Storage };
+  assert.equal(khoMay(thuong), thuong.localStorage);
+  // taoQuanTam với kho null vẫn gửi một lần, mã máy đúng khuôn.
+  const { goi, loi } = ghi();
+  await taoQuanTam({ goi, kho: null, code: MA, listingId: "L1", doi: () => {} })();
+  assert.equal(loi.length, 1);
+  assert.match(String((loi[0]!.than as { visitor: string }).visitor), /^[A-Za-z0-9_-]{8,64}$/);
+  // Dựng nút khi window chặn lưu trữ: không ném.
+  const g = globalThis as { window?: unknown };
+  const cu = g.window;
+  g.window = chan;
+  try {
+    assert.doesNotThrow(() => renderToStaticMarkup(h(NutQuanTam, { code: MA, listingId: "L1" })));
+  } finally {
+    g.window = cu;
+  }
+});

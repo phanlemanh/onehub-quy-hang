@@ -1,0 +1,24 @@
+{
+  "man": "Hôm nay — vùng Đầu khách (hàng 37) — tin theo ngày: khách phản ứng, căn vừa đổi, căn mới khớp bộ đã gửi; chạm tin mở Lần gửi hay luồng Gửi",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích ở vo-va-ia §2 dòng «Hôm nay, đầu khách» (solution-crm-5: dòng hoạt động nhóm theo ngày). Mốc thời gian dọc cho đầu khách thấy ngay cái gì mới nhất trong ngày; biểu tượng và nhãn màu tách ba loại tin trong một lần nhìn; mỗi tin một khung có tên, giờ và chi tiết, chạm cả khung là làm tiếp. Bỏ lọc theo người như thiết kế đã chốt."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Danh sách dòng Item",
+      "dong_co": "Dùng thành phần Item đã có (như màn Gửi, Đã gửi): mỗi tin một dòng — nhãn loại, người nhận hay tên căn, chi tiết, giờ bên phải; ngày tách bằng đường kẻ.",
+      "danh_doi": "Nhãn loại và tên chung một hàng nên tên căn dài bị cắt sớm trên điện thoại; chi tiết bị cắt một dòng; không có mốc thời gian nên khó thấy nhịp trong ngày; không theo khối đích."
+    },
+    "reui": {
+      "nhan": "solution-crm-5: dòng hoạt động theo ngày",
+      "dong_co": "Khối đích của vo-va-ia: đầu nhóm ngày kèm số tin, mốc thời gian dọc có biểu tượng từng loại, nhãn màu «Khách phản ứng» · «Vừa đổi» · «Căn mới», khung tin có tên, giờ, chi tiết; trống là «Chưa có gì mới trong 7 ngày» kèm «Gửi căn».",
+      "danh_doi": "Mỗi tin cao hơn hai lối kia nên một màn điện thoại thấy ít tin hơn; bỏ lọc theo người và lọc loại của khối; phần gấp mở của khối thành chạm thẳng vì mỗi tin là một lối đi tiếp."
+    },
+    "ve-moi": {
+      "nhan": "Thẻ tin theo sheet-7",
+      "dong_co": "Mượn dòng thông báo của sheet-7 (biểu tượng trái, tiêu đề, nhãn loại bên phải, chi tiết hai dòng, giờ dưới) xếp mỗi tin một khung — đọc như hộp thông báo quen thuộc.",
+      "danh_doi": "sheet-7 là ngăn thông báo trượt, không phải trang dòng tin nên phải ghép lại; không có mốc thời gian; không theo khối đích; khung rời từng tin tốn chỗ mà không thêm thông tin."
+    }
+  }
+}

@@ -46,6 +46,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/imports",
     "POST /api/v1/imports/{importId}/rows",
     "GET /api/v1/imports/agents",
+    "GET /api/v1/imports/templates",
     "GET /api/v1/imports/{importId}",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",

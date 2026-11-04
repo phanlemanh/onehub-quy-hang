@@ -193,7 +193,7 @@ cảnh báo có tên khi hạn là ngày đã tới — mỗi cảnh báo là m�
 | Luồng Gửi | Thẻ `product-grid-4` giữ lâu để chọn → thanh chọn nhiều của `wishlist-1` dính đáy («4 căn · Xem trước · Gửi») → `Drawer` toàn màn xem trước chính trang khách → nút mở bảng chia sẻ của máy. Không tích hợp gửi tin | `select products and share preview sheet` → không có | Quét khối Pro bằng CLI 02/11: thanh chọn có trong `wishlist-1`; không khối nào nối chọn nhiều với xem trước trang khách rồi mở chia sẻ — phần xem trước và chia sẻ ghép | khi dựng luồng Gửi (hàng 34) |
 | Chọn sàn sau đăng nhập | Cột giữa trang của khuôn `Khung` (auth-15, hàng 93), mỗi sàn một nút; đích là danh sách `Item` (tên sàn + vai); trong app dùng bộ chọn sàn của vỏ | `workspace picker list after sign in` → không có | Kết quả là đăng nhập nhiều cách và quản nhãn; không khối nào chọn không gian làm việc sau đăng nhập | khi ReUI có khối chọn không gian làm việc |
 | Hàng đợi có hạn | Badge hạn (`destructive-light` khi quá hạn); sắp theo hạn ở tầng dữ liệu | `task queue with due date overdue badge` → data-grid-grouping-1 | Từ 02/11 hạn là ô hai tầng của `data-grid-base-5` (cột SLA: «Quá 14 phút» / «Còn 18 phút» kèm câu giải thích) trong dòng `solution-agents-2` của Hôm nay, đầu chủ — chi tiết trong khối, không là ô riêng | khi làm lại Hôm nay, đầu chủ theo `solution-agents-2` (hàng mới) |
-| Ô nhận lead (hàng 24) | Bậc 6 — ghép `Frame` (khuôn `KhungLead`) + `Field` + `Input` + `Select` + `ToggleGroup` + `Button`, kết quả kiểm trùng qua `TrangThai`, hỏi lại «Bỏ lead này» bằng `AlertDialog` — **bản ghép là khối đích** (02/11). Điện thoại (hàng 51) một cột. Cột phải `list-11` chuyển thể ở hàng 27 (`apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx`, khuôn `KhungLeadCuaToi`; Hôm nay của telesales dùng cùng vùng) | `new lead intake form with duplicate check` → form-2 | Xem bằng khoá Pro 02/11 (quét bằng CLI): `form-2` là khối cấu hình trang thanh toán, không thêm gì cho bản ghép; `dialog-16` xếp người theo % khớp — trái luật trùng tất định (Tham chiếu §12 mục 20) và telesales không được thấy hàng | khi hàng 51 (lead-dien-thoai) gộp |
+| Ô nhận lead (hàng 24, 51) | Bậc 6 — ghép `Frame` (khuôn `KhungLead`) + `Field` + `Input` + `Select` + `ToggleGroup` + `Button`, kết quả kiểm trùng qua `TrangThai`, hỏi lại «Bỏ lead này» bằng `AlertDialog` — **bản ghép là khối đích** (02/11). Điện thoại (hàng 51) một cột. Cột phải `list-11` chuyển thể ở hàng 27 (`apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx`, khuôn `KhungLeadCuaToi`; Hôm nay của telesales dùng cùng vùng) | `new lead intake form with duplicate check` → form-2 | Xem bằng khoá Pro 02/11 (quét bằng CLI): `form-2` là khối cấu hình trang thanh toán, không thêm gì cho bản ghép; `dialog-16` xếp người theo % khớp — trái luật trùng tất định (Tham chiếu §12 mục 20) và telesales không được thấy hàng. Hàng 51 đã chuyển trang sang bố cục Đọc, điện thoại một cột | khi ReUI có khối nhập một bản ghi kèm kiểm trùng |
 | Mục Ảnh của hồ sơ căn (hàng 18) | Bậc 6 — ghép `Tabs` + `Sortable` dạng lưới theo ví dụ `c-sortable-7` + `DropdownMenu` + `AlertDialog` + `Dialog` + `TrangThai` trong FramePanel của hồ sơ (`units/photos/muc-anh.tsx`) | `image upload dropzone gallery reorder` → c-file-upload-7 | Khối upload ảnh dựng trên Card — trái luật một họ khung (Card trong Frame); vùng thả và dán ghép từ thành phần đã cài | khi ReUI có khối upload ảnh dựng trên Frame |
 
 ## 4. Tránh
@@ -219,3 +219,16 @@ cảnh báo có tên khi hạn là ngày đã tới — mỗi cảnh báo là m�
   qua cờ kiểu chặt — Cổng Phạm vi hàng 14). Chưa cài: `filters`, `cascader`, `event-calendar`, `use-file-upload` (mã ReUI nguyên bản đỏ `noUncheckedIndexedAccess` của kho —
   hàng đầu tiên cần chúng quyết nới cờ cho `apps/web` hay chuyển thể bản cài); `use-copy-to-clipboard` không có trên kho
   ReUI; `@tanstack/*`, `date-fns` cài cùng khối cần chúng.
+
+## 6. Sửa đổi 04/11 — khu Cài đặt một chỗ
+
+Hồ sơ `_acceptance/cai-dat-hop-nhat/` (chủ kho chọn làm ở Cổng Đáng, duyệt phạm vi 04/11). Các dòng ở §1–§2 nói «Cài đặt
+sàn» giữ nguyên làm sử; điều đang đúng là:
+
+- Cột biểu tượng: nhà «Cài đặt» cho mọi vai có cột nhà, ở đáy. Quản trị sàn mở vào Người dùng, vai khác vào Cá nhân.
+- Cột thứ hai của Cài đặt: nhóm «Cá nhân» (một mục, ai cũng thấy) và nhóm «Sàn [Tên]» (bảy mục, chỉ quản trị sàn).
+- Mục «Cá nhân» (`/settings/personal`) là nội dung tab Tôi của hàng 38 (khối `settings-2`). Tab Tôi trên điện thoại, mục
+  «Cá nhân» của menu tài khoản và địa chỉ cũ `/me` cùng mở nó. Menu tài khoản của quản trị có thêm «Cài đặt sàn».
+- Tab điện thoại của người chỉ quản trị giữ «Cài đặt sàn · Tôi»; tab sáng theo đường, không bao giờ cả hai.
+- Người không quản trị mở địa chỉ một mục sàn: máy chủ chuyển về Cá nhân kèm câu báo «Mục này chỉ quản trị sàn mở được».
+- Bố cục Đọc rộng tối đa 48rem, sát cột mục lục (ADR-0024 sửa đổi 04/11).

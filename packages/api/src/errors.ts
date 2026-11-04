@@ -71,6 +71,8 @@ export const API_ERRORS = {
   notABuyerAgent: { code: "not-a-buyer-agent", status: 400 },
   buyerTypeRequired: { code: "buyer-type-required", status: 400 },
   listingNotShareable: { code: "listing-not-shareable", status: 400 },
+  // Căn Đã bán không đổi giá (va-doi-gia-can-da-ban).
+  priceLockedClosed: { code: "price-locked-closed", status: 422 },
   // Lần nhập file bảng hàng (hàng 65a, ADR-0011).
   importRoleRequired: { code: "import-role-required", status: 403 },
   importPlanInvalid: { code: "import-plan-invalid", status: 422 },

@@ -89,9 +89,13 @@ const BO_CUC_NHOM = {
   "bang-hang": "tran",
   "cai-dat-san": "doc",
   "cuoc-goi": "ho-so",
+  // Đã gửi (hàng 36): «Danh sách → chi tiết» theo thiết kế đã duyệt ở Cổng Phạm vi; vo-va-ia.md §2 ghi «Dòng tin».
+  "da-gui": "danh-sach-chi-tiet",
   gui: "luong-nhieu-buoc",
   "ho-so-can": "ho-so",
   "hom-nay-dau-chu": "tran",
+  // Hôm nay của đầu khách (hàng 37): «Dòng tin» theo vo-va-ia.md §2.
+  "hom-nay-dau-khach": "dong-tin",
   "hom-nay-truong-nhom": "bang-dieu-khien",
   "lead-cua-toi": "danh-sach-chi-tiet",
   "o-nhan-lead": "doc",

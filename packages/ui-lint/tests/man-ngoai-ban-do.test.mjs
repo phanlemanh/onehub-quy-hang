@@ -150,7 +150,7 @@ describe("màn ngoài bản đồ — chấm theo vòng và kiem-chuan (E5)", ()
       assert.equal(chay(d, "--base", ref).status, 0);
       const k = kc(d);
       assert.equal(k.status, 0, k.stdout + k.stderr);
-      assert.ok(k.stdout.split("\n").includes("khuôn: 16 nhóm · 0 lỗi đọc · 0 lệch"), k.stdout);
+      assert.ok(k.stdout.split("\n").includes("khuôn: 18 nhóm · 0 lỗi đọc · 0 lệch"), k.stdout);
     }));
 
   it("vòng chỉ thêm một màn ngoài bản đồ → --base đỏ nêu tệp, không lối «không tệp nào đổi»; kiem-chuan đỏ nêu tệp", () =>

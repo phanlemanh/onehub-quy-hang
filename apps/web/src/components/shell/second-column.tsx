@@ -16,6 +16,7 @@ import {
   SplitIcon,
   TagIcon,
   TextCursorInputIcon,
+  UserIcon,
   UsersIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -23,6 +24,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
 import { SU_KIEN_MO_LUU, useGocNhinCuaToi } from "@/app/(app)/inventory/goc-nhin-react";
+import { cotCaiDat, MUC_SAN } from "@/app/(app)/settings/cai-dat";
 import { mucDangChon, mucHomNay } from "@/app/(app)/today/mo-nhom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -43,15 +45,25 @@ export const TODAY_ITEMS: Item[] = mucHomNay(BO_NHOM_MAC_DINH).map((m) => ({ ...
 
 const TEAM: Item[] = [{ label: "Tổng quan", href: "/team", icon: UsersIcon }];
 
-export const SETTINGS_ITEMS: Item[] = [
-  { label: "Người dùng", href: "/settings/users", icon: UsersIcon },
-  { label: "Cách gọi", href: "/settings/labels", icon: TagIcon },
-  { label: "Trường riêng", href: "/settings/fields", icon: TextCursorInputIcon },
-  { label: "Trạng thái", href: "/settings/statuses", icon: ListChecksIcon },
-  { label: "Luật chia lead", href: "/settings/lead-routing", icon: SplitIcon },
-  { label: "Thuế phí", href: "/settings/fees", icon: PercentIcon },
-  { label: "Mẫu nhập", href: "/settings/templates", icon: FileSpreadsheetIcon },
-];
+// Biểu tượng của từng mục Cài đặt; nhóm và mục do `cotCaiDat` quyết (hàng cai-dat-hop-nhat).
+const ICON_CAI_DAT: Record<string, LucideIcon> = {
+  "/settings/personal": UserIcon,
+  "/settings/users": UsersIcon,
+  "/settings/labels": TagIcon,
+  "/settings/fields": TextCursorInputIcon,
+  "/settings/statuses": ListChecksIcon,
+  "/settings/lead-routing": SplitIcon,
+  "/settings/fees": PercentIcon,
+  "/settings/templates": FileSpreadsheetIcon,
+};
+
+const coIcon = (m: { label: string; href: string }): Item => ({ ...m, icon: ICON_CAI_DAT[m.href] ?? ListChecksIcon });
+
+/** Bảy mục sàn kèm biểu tượng — trang mẫu sống và bài kiểm đọc danh sách này. */
+export const SETTINGS_ITEMS: Item[] = MUC_SAN.map(coIcon);
+
+/** Người xem cột Cài đặt: vai ở sàn đang làm và tên sàn (nhóm «Sàn [Tên]»). */
+export type CaiDatCua = { roles: readonly string[]; tenSan: string };
 
 function SectionTitle({ children }: { children: string }) {
   return <p className="px-3 pt-2 pb-1 text-xs font-medium text-muted-foreground uppercase">{children}</p>;
@@ -122,9 +134,27 @@ function InventoryColumn() {
   );
 }
 
-function ColumnContent({ home }: { home: Home }) {
+function SettingsColumn({ caiDat }: { caiDat: CaiDatCua }) {
+  const nhom = cotCaiDat(caiDat.roles, caiDat.tenSan);
+  return (
+    <ScrollArea className="h-full">
+      <nav className="flex flex-col py-1" aria-label={HOME_LABEL.settings}>
+        {nhom.map((n, i) => (
+          <div key={n.tieuDe}>
+            {i > 0 && <Separator className="my-2" />}
+            <SectionTitle>{n.tieuDe}</SectionTitle>
+            <NavList items={n.muc.map(coIcon)} />
+          </div>
+        ))}
+      </nav>
+    </ScrollArea>
+  );
+}
+
+function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
   if (home === "inventory") return <InventoryColumn />;
-  const items = home === "shares" ? SHARES : home === "today" ? TODAY_ITEMS : home === "team" ? TEAM : SETTINGS_ITEMS;
+  if (home === "settings") return <SettingsColumn caiDat={caiDat} />;
+  const items = home === "shares" ? SHARES : home === "today" ? TODAY_ITEMS : TEAM;
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col py-1" aria-label={HOME_LABEL[home]}>
@@ -135,7 +165,7 @@ function ColumnContent({ home }: { home: Home }) {
   );
 }
 
-export function SecondColumn({ home, open }: { home: Home; open: boolean }) {
+export function SecondColumn({ home, open, caiDat }: { home: Home; open: boolean; caiDat: CaiDatCua }) {
   return (
     <aside
       data-slot="second-column"
@@ -148,7 +178,7 @@ export function SecondColumn({ home, open }: { home: Home; open: boolean }) {
       )}
     >
       <div className="flex w-(--sidebar-width-inner) shrink-0 flex-col overflow-hidden" inert={!open}>
-        <ColumnContent home={home} />
+        <ColumnContent home={home} caiDat={caiDat} />
       </div>
     </aside>
   );

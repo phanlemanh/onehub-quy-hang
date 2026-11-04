@@ -1,0 +1,1 @@
+driver: node script (CDP headless Chrome), khong co read_network_requests. Script crash tai POST /api/v1/listings/{id}/events -> 400 missing-requirement unitNumber (buoc Len bang).

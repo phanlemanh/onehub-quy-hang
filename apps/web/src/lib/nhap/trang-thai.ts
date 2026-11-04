@@ -1,5 +1,5 @@
 import { navigationFor } from "@quy-hang/core";
-import { normalizeValue, type AppliedRow, type Cell, type ImportContext, type ImportPlan, type PlanTarget, type StandardField } from "@quy-hang/core/import";
+import { hocCachGoi, isStandardField, normalizeValue, type AppliedRow, type Cell, type ImportContext, type ImportPlan, type PlanTarget, type StandardField } from "@quy-hang/core/import";
 
 import { apLai, coTheTiepGhep, doiDich, type Ong } from "./duong-ong";
 
@@ -38,6 +38,8 @@ export type TrangThaiNhap = {
   xemThu: XemThu | null;
   /** Thế hệ của dữ liệu lần nhập — tăng ở mọi thao tác đổi; kết quả chờ máy mang thế hệ lúc gửi. */
   the: number;
+  /** Số ô cùng chữ đổi theo lần sửa ô vừa rồi (hàng 67, Hỏi-2) — null khi lần sửa chỉ đổi một ô. */
+  soOTheo: number | null;
 };
 
 export type GoiDong = { row: number; cells: Cell[]; agentUserId?: string; skip?: boolean };
@@ -47,11 +49,11 @@ export const coQuyen = (vai: readonly string[]) => navigationFor(vai).actions.in
 export const canChonDauChu = (vai: readonly string[]) => vai.includes("team_lead");
 
 export function taoTrangThai(vai: readonly string[]): TrangThaiNhap {
-  return { vai, buoc: 1, tep: null, ong: null, dauChu: null, bo: new Set(), xemThu: null, the: 0 };
+  return { vai, buoc: 1, tep: null, ong: null, dauChu: null, bo: new Set(), xemThu: null, the: 0, soOTheo: null };
 }
 
 /** Mọi thao tác đổi dữ liệu của lần nhập đi qua đây: tăng thế hệ và bỏ bản xem thử. */
-const doi = (s: TrangThaiNhap, patch: Partial<TrangThaiNhap>): TrangThaiNhap => ({ ...s, ...patch, xemThu: null, the: s.the + 1 });
+const doi = (s: TrangThaiNhap, patch: Partial<TrangThaiNhap>): TrangThaiNhap => ({ ...s, soOTheo: null, ...patch, xemThu: null, the: s.the + 1 });
 
 export function napTep(s: TrangThaiNhap, tep: TepChon, ong: Ong): TrangThaiNhap {
   return doi(s, { tep, ong, bo: new Set(), buoc: 1 });
@@ -96,9 +98,32 @@ export function doiDichCot(s: TrangThaiNhap, cot: number, dich: PlanTarget, ctx:
 }
 
 /** Sửa một ô: đổi giá trị thô của ô trong bảng rồi áp lại kế hoạch. */
+/**
+ * Sửa một ô ở bước xem trước. Ô «cần người» ở cột lớp danh mục hay hàng chia sẻ được, sửa thành giá trị lõi nhận: thêm cặp
+ * «nguyên văn → giá trị» vào bảng quy đổi của cột trong kế hoạch — mọi ô cùng chữ của cột đổi theo, lần nhập sau nhớ (hàng
+ * 67, Hỏi-2). Cột nguồn, tên người, chữ tự do, chưa rõ: chỉ đổi ô ấy, kế hoạch không đổi (ADR-0011 quyết định 6).
+ */
 export function suaO(s: TrangThaiNhap, source: number, cot: number, raw: string, ctx: ImportContext): TrangThaiNhap {
   if (!s.ong) return s;
   const o = s.ong;
+  const gocDong = o.table.rows.find((r) => r.source === source);
+  const goc = gocDong?.cells[cot] ?? null;
+  const col = o.plan.columns[cot];
+  const oDong = o.dong.find((d) => d.source === source)?.cells[cot];
+  const lop = o.lop[cot]?.cls;
+  const moi = raw.trim();
+  if (col && typeof goc === "string" && goc.trim() && moi && oDong?.mark === "needs_person" && hocCachGoi(lop, col.target) && isStandardField(col.target)) {
+    const nhan = normalizeValue(col.target, moi, { ...ctx, transform: col.transform });
+    if (nhan.mark === "keep" || nhan.mark === "fixed") {
+      const khoa = goc.trim();
+      const columns = o.plan.columns.map((c, i) => (i === cot ? { ...c, valueMap: { ...(c.valueMap ?? {}), [khoa]: moi } } : c));
+      // Ô được sửa mang chữ mới như mọi lần sửa; ô cùng chữ còn lại đọc qua bảng quy đổi.
+      const rows = o.table.rows.map((r) => (r.source !== source ? r : { ...r, cells: r.cells.map((c, i) => (i === cot ? moi : c)) }));
+      const ong = apLai({ ...o.table, rows }, o.lop, o.profile, { ...o.plan, columns }, ctx);
+      const k = o.table.rows.filter((r) => r.source !== source && typeof r.cells[cot] === "string" && (r.cells[cot] as string).trim() === khoa).length;
+      return doi(s, { ong, soOTheo: k });
+    }
+  }
   const rows = o.table.rows.map((r) => (r.source !== source ? r : { ...r, cells: r.cells.map((c, i) => (i === cot ? (raw.trim() === "" ? null : raw) : c)) }));
   return doi(s, { ong: apLai({ ...o.table, rows }, o.lop, o.profile, o.plan, ctx) });
 }
@@ -117,6 +142,13 @@ export const nhanXemThu = (hienTai: TrangThaiNhap, theLucGui: number, xemThu: Xe
   hienTai.the === theLucGui ? daXemThu(hienTai, xemThu) : hienTai;
 
 export const sangBuoc = (s: TrangThaiNhap, buoc: number): TrangThaiNhap => ({ ...s, buoc });
+
+export type DangChay = { dangDoc: boolean; dangXemThu: boolean; dangGhi: boolean };
+/** Thanh bước chọn được một bước đã qua khi máy chủ không chạy gì — như nút Quay lại (Ngoài-3 Màn Nhập Excel). */
+export const coTheChonBuoc = (s: TrangThaiNhap, so: number, chay: DangChay): boolean =>
+  !chay.dangDoc && !chay.dangXemThu && !chay.dangGhi && so >= 1 && so < s.buoc;
+/** Bấm một bước trên thanh bước: sang bước ấy khi được, còn không giữ nguyên. */
+export const chonBuoc = (s: TrangThaiNhap, so: number, chay: DangChay): TrangThaiNhap => (coTheChonBuoc(s, so, chay) ? sangBuoc(s, so) : s);
 
 /** Các dòng gửi máy chủ: ô thô (đã sửa) theo đúng thứ tự tiêu đề; dòng bỏ mang `skip`; Trưởng nhóm gắn đầu chủ. */
 export function goiDong(s: TrangThaiNhap): GoiDong[] {

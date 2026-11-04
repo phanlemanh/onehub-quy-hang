@@ -4,6 +4,8 @@ import {
   classifyColumns,
   FIELD_LABEL,
   isStandardField,
+  apMau,
+  LY_DO_THEO_MAU,
   phepCho,
   planFromDictionary,
   readTable,
@@ -11,6 +13,7 @@ import {
   type AppliedRow,
   type ColumnClass,
   type ColumnProfile,
+  type CotMau,
   type Grid,
   type ImportContext,
   type ImportPlan,
@@ -45,14 +48,18 @@ export function demDau(dong: readonly AppliedRow[]): DemDau {
   return d;
 }
 
-/** Chạy trọn đường ống trên một lưới. */
-export function chayOng(grid: Grid, ctx: ImportContext): Ong {
+/** Chạy trọn đường ống trên một lưới. Có mẫu của sàn (hàng 67) thì cột đã nhớ ghép theo mẫu, cột chưa gặp theo từ điển. */
+export function chayOng(grid: Grid, ctx: ImportContext, mau: readonly CotMau[] = []): Ong {
   const table = readTable(grid);
   const lop = classifyColumns(table);
   const profile = buildProfile(table, lop).columns;
-  const plan = planFromDictionary(table);
+  const plan = mau.length ? apMau(table, mau, ctx).plan : planFromDictionary(table);
   return apLai(table, lop, profile, plan, ctx);
 }
+
+/** Cột đang ghép theo mẫu đã nhớ (dải báo «Ghép theo mẫu đã nhớ — N/M cột», nhãn «theo mẫu»). */
+export const cotTheoMau = (ong: Ong): number[] =>
+  ong.plan.columns.map((c, i) => (c.reason.startsWith(LY_DO_THEO_MAU) ? i : -1)).filter((i) => i >= 0);
 
 /** Áp lại kế hoạch (sau khi người đổi đích cột hay sửa ô). Lỗi khuôn của `validatePlan` khoá bước ghép (máy chủ cũng từ
  *  chối kế hoạch ấy), nhưng dấu vẫn tính để màn và lõi ra cùng số trên mọi tệp. */
