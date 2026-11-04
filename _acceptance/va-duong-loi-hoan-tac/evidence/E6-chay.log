@@ -1,0 +1,18 @@
+[A-13.01] giá trước: 3,09 tỷ
+toast sau sửa A: [{"t":"Đã đổi giá A-13.01 / Tính là vừa xác nhận với chủ nhà / Hoàn tác","btn":["Hoàn tác"]}]
+id A: 4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd giá API: 3100000000 ver 9
+tiêm: ok
+toast sau Hoàn tác (hỏng): [{"t":"Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-13.01 / Hoàn tác","btn":["Hoàn tác"]}]
+(a) toast sau bấm lại nút: [{"t":"Đã hoàn tác giá A-13.01","btn":[]}]
+(a) giá lưới A: "3,09 tỷ"
+(a) toast sau Ctrl+Z: [{"t":"Đã hoàn tác giá A-13.01","btn":[]}]  | đã thấy: ["Đã đổi giá A-13.01 / Tính là vừa xác nhận với chủ nhà / Hoàn tác","Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-13.01 / Hoàn tác","Đã hoàn tác giá A-13.01"]
+[A-02.01] giá trước: 2,4 tỷ
+toast sau sửa B: [{"t":"Đã đổi giá A-02.01 / Tính là vừa xác nhận với chủ nhà / Hoàn tác","btn":["Hoàn tác"]}]
+id B: e4d2cf1a-28ef-4131-b309-dbb4f9d91339 giá API: 2500000000
+tiêm: ok
+(b) toast sau Hoàn tác (hỏng): [{"t":"Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-02.01 / Hoàn tác","btn":["Hoàn tác"]}]
+(b) toast trước Ctrl+Z: [{"t":"Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-02.01 / Hoàn tác","btn":["Hoàn tác"]}]
+(b) toast sau Ctrl+Z: [{"t":"Đã hoàn tác giá A-02.01","btn":[]},{"t":"Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-02.01 / Hoàn tác","btn":["Hoàn tác"]}]  | đã thấy: ["Đã đổi giá A-02.01 / Tính là vừa xác nhận với chủ nhà / Hoàn tác","Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-02.01 / Hoàn tác","Đã hoàn tác giá A-02.01"]
+(b) giá lưới B: "2,4 tỷ"
+(b) toast sau Ctrl+Z thêm: [{"t":"Đã hoàn tác giá A-02.01","btn":[]},{"t":"Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-02.01 / Hoàn tác","btn":["Hoàn tác"]}]  | đã thấy: ["Đã đổi giá A-02.01 / Tính là vừa xác nhận với chủ nhà / Hoàn tác","Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại — giá A-02.01 / Hoàn tác","Đã hoàn tác giá A-02.01"]
+giá API cuối A: 3090000000 B: 2400000000 | trước A: 3,09 tỷ B: 2,4 tỷ

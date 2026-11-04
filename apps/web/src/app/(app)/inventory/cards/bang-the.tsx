@@ -10,7 +10,7 @@
  * bảng thẻ ẩn chứ không gỡ, nên lùi về giữ lọc và vị trí cuộn.
  */
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { CheckSquareIcon, SlidersHorizontalIcon } from "lucide-react";
+import { CheckSquareIcon, EyeIcon, Share2Icon, SlidersHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -25,6 +25,7 @@ import type { DongBang } from "../cot";
 import { useDanhMuc } from "../danh-muc";
 import { chiMuc, ghepDanhMuc } from "../ghep-danh-muc";
 import { HangTheLoc, NganLoc } from "./ngan-loc";
+import { chuThanhGui, duongGui } from "./thanh-gui";
 import { DongNhomToa, TheCan } from "./the-can";
 import { batDauChon, doiChon, giuChonHopLe, lenThe, locNhuCau, NHU_CAU_RONG, nhomTheoToa, phang, theLoc, type NhuCau } from "./the";
 
@@ -45,7 +46,7 @@ function useDanhSachTrenMay() {
   return { hang, daKeo: listings !== null, loiMang: lastAttempt === "mang", thuLai: () => void bd.thuNgay() };
 }
 
-/** Chọn nhiều căn trên bảng thẻ — hàng 34 (Gửi) đọc `chon` để dựng thanh «n căn · Xem trước · Gửi». */
+/** Chọn nhiều căn trên bảng thẻ — thanh Gửi (hàng 34) đọc `chon` để dựng «n căn · Xem trước · Gửi». */
 export function useChonCan(dong: readonly DongBang[]) {
   const [tho, setTho] = useState<ReadonlySet<string>>(new Set());
   const [dangChon, setDangChon] = useState(false);
@@ -220,6 +221,22 @@ function BangThe({ san, an }: { san: string; an: boolean }) {
         />
       )}
       <NganLoc key={lanMo} mo={locMo} onMo={setLocMo} dong={len} nc={nc} onAp={setNc} />
+      {/* Thanh Gửi (hàng 34): thanh chọn của wishlist-1 dời xuống đáy và dính — căn theo thứ tự chọn sang màn Gửi. */}
+      {chuThanhGui(chon.chon.size) ? (
+        <div className="bg-background sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t py-3" role="region" aria-label="Gửi căn đã chọn">
+          <span className="text-foreground text-sm font-medium tabular-nums">{chuThanhGui(chon.chon.size)}</span>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" nativeButton={false} render={<Link href={duongGui(chon.chon, true)} />}>
+              <EyeIcon data-icon="inline-start" aria-hidden="true" />
+              Xem trước
+            </Button>
+            <Button size="sm" nativeButton={false} render={<Link href={duongGui(chon.chon)} />}>
+              <Share2Icon data-icon="inline-start" aria-hidden="true" />
+              Gửi
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

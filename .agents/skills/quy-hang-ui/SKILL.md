@@ -171,6 +171,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | khuôn | Khuôn Bảng hàng | `design/patterns/bang-hang.md` |
 | khuôn | Khuôn Cài đặt sàn — bố cục Đọc | `design/patterns/cai-dat-san.md` |
 | khuôn | Khuôn Chế độ cuộc gọi | `design/patterns/cuoc-goi.md` |
+| khuôn | Khuôn Gửi — bố cục Luồng nhiều bước | `design/patterns/gui.md` |
 | khuôn | Khuôn Hồ sơ căn | `design/patterns/ho-so-can.md` |
 | khuôn | Khuôn Hôm nay của đầu chủ — bố cục Tràn | `design/patterns/hom-nay-dau-chu.md` |
 | khuôn | Khuôn Hôm nay của trưởng nhóm — bố cục Bảng điều khiển | `design/patterns/hom-nay-truong-nhom.md` |

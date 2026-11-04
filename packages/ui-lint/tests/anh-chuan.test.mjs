@@ -89,6 +89,7 @@ const BO_CUC_NHOM = {
   "bang-hang": "tran",
   "cai-dat-san": "doc",
   "cuoc-goi": "ho-so",
+  gui: "luong-nhieu-buoc",
   "ho-so-can": "ho-so",
   "hom-nay-dau-chu": "tran",
   "hom-nay-truong-nhom": "bang-dieu-khien",

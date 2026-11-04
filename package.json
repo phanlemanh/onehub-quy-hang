@@ -16,7 +16,7 @@
     "lint": "eslint . && node packages/ui-lint/check-bare-disables.mjs && node packages/ui-lint/muc-no.mjs && node packages/ui-lint/kiem-chuan.mjs",
     "test": "npm run test --workspaces --if-present",
     "test:hooks": "bash .claude/hooks/tests/run.sh",
-    "test:ro-ri": "node --import tsx --test \"packages/core/src/redaction/**/*.test.ts\" \"apps/web/src/**/*.ro-ri.test.ts\" \"apps/web/src/**/*.ro-ri.test.tsx\" \"packages/api/src/**/*.ro-ri.test.ts\"",
+    "test:ro-ri": "TSX_TSCONFIG_PATH=apps/web/tsconfig.test.json node --import tsx --test \"packages/core/src/redaction/**/*.test.ts\" \"apps/web/src/**/*.ro-ri.test.ts\" \"apps/web/src/**/*.ro-ri.test.tsx\" \"packages/api/src/**/*.ro-ri.test.ts\"",
     "db:migrate": "npm run migrate -w @quy-hang/db",
     "db:test": "npm run test:isolation -w @quy-hang/db && npm run test:db -w @quy-hang/api"
   },
