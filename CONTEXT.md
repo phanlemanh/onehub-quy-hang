@@ -29,6 +29,8 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Thành viên sàn | `company_member` | Một người thuộc một sàn; một người thuộc được nhiều sàn | — |
 | Sàn đang làm | `active company` (cookie `qh_san`) | Sàn mà mọi lời gọi của người đang chạy trong đó; người nhiều sàn chọn ở màn Chọn sàn | — |
 | Mã đăng nhập | `otp` | Mã 6 số gửi qua email để đăng nhập | «Mật khẩu» |
+| Mật khẩu tạm | `temp password` (`password_state.kind = 'tam'`) | Mật khẩu máy sinh do quản trị sàn cấp, 72 giờ, chỉ mở màn «Đặt mật khẩu mới» | «Mật khẩu một lần», «OTP» |
+| Mật khẩu | `password` (`identity.account` `credential`) | Mật khẩu người tự đặt, cửa đăng nhập thứ hai cạnh mã đăng nhập | — |
 | Vai | `role` | Một trong năm: Telesales `telesales`, Đầu chủ `listing_agent`, Đầu khách `buyer_agent`, Trưởng nhóm `team_lead`, Quản trị sàn `company_admin`; một người giữ được nhiều vai | — |
 | Quản trị sàn | `company_admin` | Vai cấu hình sàn và quản người; không tự thấy chủ nhà | — |
 | Vùng | `zone` | Toà hay phân khu do sàn tự đặt tên để chia việc; gắn danh mục sau | «Khu» (khu là khu chứa căn) |
