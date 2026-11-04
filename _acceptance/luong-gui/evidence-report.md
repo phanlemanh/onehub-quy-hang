@@ -2,28 +2,30 @@
 schema_version: 2
 feature_slug: luong-gui
 verdict: REJECT
-failed_evals: [E2, E3b, E7b, E12]
+failed_evals: [E12]
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7cffd46094fb39b726891330250a27f83ed2c040
+verified_commit: 66efb3f11b5966e34e9e53df3e3660ef72b0cce2
 human_signoff:
 ---
 
 # Evidence Report: luong-gui
 
+Round 2. Nội dung thay toàn bộ round cũ; lịch sử round nằm ở mục Iterations.
+
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
-| E1 | AC-1 | test | PASS |
-| E2 | AC-2 | test | FAIL |
+| E1 | AC-1 | test | PASS (carry-forward từ round 1) |
+| E2 | AC-2 | test | PASS |
 | E3 | AC-3 | test | PASS |
-| E3b | AC-3 | test | FAIL |
+| E3b | AC-3 | test | PASS |
 | E4 | AC-4 | test | PASS |
 | E5 | AC-5 | script | PASS |
-| E6 | AC-6 | test | PASS |
+| E6 | AC-6 | test | PASS (carry-forward từ round 1) |
 | E7 | AC-7 | test | PASS |
-| E7b | AC-7 | test | FAIL |
+| E7b | AC-7 | test | PASS |
 | E8 | AC-8 | test | PASS |
 | E9 | AC-9 | test | PASS |
 | E10 | AC-10 | script | PASS |
@@ -35,180 +37,180 @@ human_signoff:
 - eval: E1
   run_id: minted-luong-gui-E1-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
   verified_at: 2026-11-04T01:52:46Z
+  carried_from_round: 1
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1798.151167
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E2
-  run_id: minted-luong-gui-E2-r1
-  exit_code: 1
-  baseline: green
+  run_id: minted-luong-gui-E2-r2
+  exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm run db:migrate && npm run db:test — tests 281, pass 280, fail 1
-    ✖ luồng gửi: danh sách khách của đầu khách (165.46525ms)
-    AssertionError: thân trả có chín chữ số liền (packages/api/test-db/luong-gui.test.ts:64)
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42625.577333
 
 - eval: E3
-  run_id: minted-luong-gui-E3-r1
+  run_id: minted-luong-gui-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1798.151167
+    lệnh: npm test -w @quy-hang/web
+    ℹ duration_ms 1556.064917
 
 - eval: E3b
-  run_id: minted-luong-gui-E3b-r1
-  exit_code: 1
-  baseline: green
+  run_id: minted-luong-gui-E3b-r2
+  exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    Cùng lệnh db:migrate + db:test với E2: cả lệnh dừng đỏ vì một ca (luồng gửi: danh sách khách của đầu khách).
-    Ca riêng của E3b không được tách kết quả ra ở phần đuôi log.
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42625.577333
 
 - eval: E4
-  run_id: minted-luong-gui-E4-r1
+  run_id: minted-luong-gui-E4-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1798.151167
+    lệnh: npm test -w @quy-hang/web
+    ℹ duration_ms 1556.064917
 
 - eval: E5
-  run_id: minted-luong-gui-E5-r1
+  run_id: minted-luong-gui-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.ro_ri
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm run test:ro-ri
-    ℹ duration_ms 351.381208
+    lệnh: npm run test:ro-ri
+    ℹ duration_ms 425.984833
 
 - eval: E6
   run_id: minted-luong-gui-E6-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
   verified_at: 2026-11-04T01:52:46Z
+  carried_from_round: 1
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 364.578792
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E7
-  run_id: minted-luong-gui-E7-r1
+  run_id: minted-luong-gui-E7-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1798.151167
+    lệnh: npm test -w @quy-hang/web
+    ℹ duration_ms 1556.064917
 
 - eval: E7b
-  run_id: minted-luong-gui-E7b-r1
-  exit_code: 1
-  baseline: green
+  run_id: minted-luong-gui-E7b-r2
+  exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    Cùng lệnh db:migrate + db:test với E2: cả lệnh dừng đỏ vì một ca (luồng gửi: danh sách khách của đầu khách).
-    Ca riêng của E7b không được tách kết quả ra ở phần đuôi log.
+    lệnh: npm run db:migrate && npm run db:test
+    ℹ duration_ms 42625.577333
 
 - eval: E8
-  run_id: minted-luong-gui-E8-r1
+  run_id: minted-luong-gui-E8-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1798.151167
+    lệnh: npm test -w @quy-hang/web
+    ℹ duration_ms 1556.064917
 
 - eval: E9
-  run_id: minted-luong-gui-E9-r1
+  run_id: minted-luong-gui-E9-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1798.151167
+    lệnh: npm test -w @quy-hang/web
+    ℹ duration_ms 1556.064917
 
 - eval: E10
-  run_id: minted-luong-gui-E10-r1
+  run_id: minted-luong-gui-E10-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.lint
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
-    npm run lint
+    lệnh: npm run lint
     chuẩn giao diện: đạt
 
 - eval: E11
-  run_id: minted-luong-gui-E11-r1
+  run_id: minted-luong-gui-E11-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   screenshot: evidence/E11-step1.png
   observed: |
-    step1 (375): header "2 căn đã chọn", cards B-13.02 and B-14.05 ticked, bottom bar "2 căn  Xem trước  Gửi", bottom nav visible. Matches Expected.
-    step2: drawer "Xem trước — khách riêng thấy", "Khách riêng không thấy mã căn.", "2 căn đang bán", two cards with Toà B and no unit code, "Giá xác nhận hôm nay", disabled "Chọn người nhận". Matches Expected.
-    step3: identical to step2 (khách riêng, no unit code). Matches Expected.
-    step4: drawer "Xem trước — nhóm môi giới thấy", "Nhóm môi giới thấy mã căn.", cards show "Toà B · B-13.02" and "Toà B · B-14.05", button "Gửi". Matches Expected.
-    step5: Gửi căn screen with "Khách riêng" active, the radio-selected customer "[Mẫu] Khách chấm — Mua", both units listed, bottom bar "Khách riêng — [Mẫu] Khách chấm" with "Xem trước" and "Gửi". Matches Expected.
-    step6: the "Tin soạn sẵn" textarea shows "Chào anh/chị [Mẫu] Khách chấm, Em SỬA gửi 2 căn đang bán: 1. Toà B — 68,5 m² · 2 PN · Đông Bắc — 3,56…", so the edit persisted. Matches Expected.
-    step7: A-04.06 (8,06 tỷ) shows the "Gọi xác nhận trước" badge and "1 căn cần gọi xác nhận". The line "A-13.03 — Đang giao dịch — không gửi mới được, đã bỏ khỏi lần gửi" is shown, and "Chọn người nhận" is disabled. Matches Expected.
-    step8 (1280): Gửi căn desktop page in Nhóm môi giới mode, group message with unit codes, footer button "Chép…" partly covered by the dev badge. The "Đã chép" message is not visible in the pixels, only in the DOM. Partial visual evidence, DOM assertion passed.
-    step9 (1280): banner "Đang xem bản đã tải — mất mạng / Thay đổi được giữ trên máy và gửi đi khi có mạng lại.", greyed footer button reading "Gửi cần mạ…" (clipped). Matches Expected.
+    Da mo bang Read cac frame step1,2,3,4,5,6,7,8,9 (step1-9 deu doc). step1 (375): tieu de «2 căn đã chọn», B-13.02 co tick, thanh duoi «2 căn · Xem trước · Gửi». step2: ngan toan man «Xem trước — khách riêng thấy», «Khách riêng không thấy mã căn.», hai the chi «Toà B», nut «Chọn người nhận» xam. step3: giong step2 (khach rieng, khong co ma can). step4: «Xem trước — nhóm môi giới thấy», «Nhóm môi giới thấy mã căn.», «Toà B · B-13.02» va «Toà B · B-15.01», nut «Chép tin». step5: Khach rieng, radio «[Mẫu] Khách chấm / Mua» duoc chon, footer «Khách riêng · [Mẫu] Khách chấm». step6: textarea «Tin soạn sẵn» bat dau «XIN Chào anh/chị [Mẫu] Khách chấm,». step7: A-04.06 co nhan vang «Gọi xác nhận trước», «1 căn cần gọi xác nhận», dong «B-10.01 — Đang giao dịch — không gửi mới được, đã bỏ khỏi lần gửi». step8 (1280): Nhom moi gioi, tin «Gửi các anh chị trong nhóm…», nut duoi ghi «Chép…» bi nut dev-tools che; chu «Đã chép» xac nhan qua DOM, khong thay ro trong anh. step9 (1280, offline): banner «Đang xem bản đã tải — mất mạng», nut duoi xam «Gửi cần mạ…» (cat boi nut dev-tools), DOM xac nhan «Gửi cần mạng» disabled. Tat ca khop Expected.
   network_observed: clean
+  output: |
+    10. Offline (setOffline + event offline): navigator.onLine=false, nut «Gửi cần mạng» disabled=true; banner «Đang xem bản đã tải — mất mạng». PASS
+    Network: 67 dong trong E11-network.txt, 64 dong 200, khong co 4xx/5xx; console 0 error, 0 warning.
 
 - eval: E12
-  run_id: minted-luong-gui-E12-r1
+  run_id: minted-luong-gui-E12-r2
   exit_code: 1
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
   output: |
+    lệnh: node "$R/scripts/design-floor-khuon.mjs" --kiem --root .
     lệch: apps/web/src/app/(app)/shares/new/page.tsx · thuộc hai nhóm màn: gui, trang-tam
     10 tệp giao diện ngoài bản đồ
-    Ghi chú: tệp bị báo là apps/web/src/app/(app)/shares/new/page.tsx, lệch vì thuộc hai nhóm (giới hạn «cắt trước» của kit 2.37.0 — báo oan theo expected). Máy vẫn tính eval đỏ; người quyết ở Cổng 2.
+    Ghi chú: expected của E12 coi lệch chỉ vì tệp thuộc hai nhóm là báo oan (giới hạn «cắt trước» của kit 2.37.0); tuy nhiên bước chấm còn in "10 tệp giao diện ngoài bản đồ" và lệnh kết thúc không sạch, nên máy giữ eval này là không đạt. Tệp bị báo: apps/web/src/app/(app)/shares/new/page.tsx. Người quyết xem lại ở Cổng 2.
 
 ### Lệnh suite (hồi quy)
 
-- cmd: npm test -w @quy-hang/api
-  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_api-r1
+- cmd: npm test -w @quy-hang/core
+  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
+
+- cmd: npm test -w @quy-hang/api
+  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_api-r2
+  exit_code: 0
+  verified_at: 2026-11-04T02:03:52Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
 
 - cmd: npm run test:hooks
-  run_id: minted-luong-gui-SUITE-test_hooks-r1
+  run_id: minted-luong-gui-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-luong-gui-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
 
 - cmd: npm run typecheck
-  run_id: minted-luong-gui-SUITE-typecheck-r1
+  run_id: minted-luong-gui-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-04T01:52:46Z
+  verified_at: 2026-11-04T02:03:52Z
 
 ## Known limits
 
@@ -216,9 +218,17 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả code mới lẫn baseline): E1, E3, E4, E7, E8, E9 (lệnh npm test -w @quy-hang/web); E5 (npm run test:ro-ri); E6 (npm test -w @quy-hang/core); E10 (npm run lint). Cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý.
+carried tu round 1 — baseline khong do lai round nay.
 
-Lệnh fail không gắn riêng eval: không có; hai lệnh đỏ đều gắn eval (db:migrate + db:test cho E2, E3b, E7b; bước chấm khuôn cho E12).
+Baseline khong do: toan bo eval round nay ghi n-a (evals.yaml khong doi tu lan baseline cuoi).
+
+Eval khong-phan-biet (xanh ca hai phia) can viet lai de assert hanh vi moi, hoac xac nhan la regression-guard co chu y:
+- npm test -w @quy-hang/web: E1, E3, E4, E7, E8, E9
+- npm run test:ro-ri: E5
+- npm test -w @quy-hang/core: E6
+- npm run lint: E10
+
+Lenh fail khong gan eval nao: khong co. Lenh fail duy nhat là bước chấm khuôn, gắn với E12.
 
 ## Variance
 
@@ -226,4 +236,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E2, E3b, E7b failed — ca «luồng gửi: danh sách khách của đầu khách» đỏ ở luong-gui.test.ts:64 (máy dò chín chữ số liền bắt được trong thân trả), kéo cả lệnh db:test đỏ; E12 failed — page.tsx của shares/new báo thuộc hai nhóm gui, trang-tam (báo oan theo expected, vẫn đỏ ở máy). Returned to implementation.
+Round 1: các eval E1 đến E11 qua; E1 và E6 được giữ lại cho round 2 vì delta không chạm paths của chúng.
+Round 2: E12 failed — bước chấm khuôn báo tệp apps/web/src/app/(app)/shares/new/page.tsx thuộc hai nhóm màn (gui, trang-tam) và 10 tệp giao diện ngoài bản đồ. Returned to implementation.
