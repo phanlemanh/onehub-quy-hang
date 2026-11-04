@@ -1,6 +1,6 @@
 // Chỗ thử dãy D cho phép nhìn màn của hàng 92 (E1, E4, E5, E6, E9; khuôn từ hàng 51): Postgres dãy D (5575) nạp sàn mẫu, máy dev tạm cổng 3476,
-// phiên đăng nhập của telesales, hai đầu chủ, đầu khách và một telesales mới chưa nhập lead nào (tạo ở đây, email miền
-// mẫu). Lead do phép nhìn màn nhập qua màn thật. Dữ liệu nhãn mẫu, số 0900 000 0xx.
+// phiên đăng nhập của telesales, hai đầu chủ, đầu khách và một đầu chủ mới không có việc nào (tạo ở đây, email miền
+// mẫu). Ba lead dựng sẵn: quá hạn nhận, sắp hạn, đã nhận (ghi lead.json). Dữ liệu nhãn mẫu, số 0900 000 0xx.
 //   node _acceptance/lam-lai-hom-nay-dau-chu/thu/dung-d.mjs          # dựng (chạy lại: dùng lại máy dev)
 //   node _acceptance/lam-lai-hom-nay-dau-chu/thu/dung-d.mjs --tat    # tắt máy dev (theo PID đã ghi; không pkill)
 import { spawn, spawnSync } from "node:child_process";
@@ -129,7 +129,11 @@ try {
   };
   const [lQua, lSap, lNhan] = [await lead(0), await lead(1), await lead(2)];
   await fetch(`${URL_GOC}/api/v1/jobs/lead-tick`, { method: "POST", headers: { ...h, authorization: `Bearer ${JOB}` } });
-  await fetch(`${URL_GOC}/api/v1/leads/${lNhan}/accept`, { method: "POST", headers: { ...h, cookie: ck["dau-chu-1"] } });
+  // Nhịp chia xoay vòng giữa hai đầu chủ của Toà A: ghim cả ba lead về đầu chủ 1 (chỗ thử), rồi nhận qua API thật.
+  const dc1 = (await db.query(`select id from identity."user" where email = $1`, [mail("dau-chu-1")])).rows[0].id;
+  await db.query("update leads set matched_agent_user_id = $1, routed_at = coalesce(routed_at, now()) where id = any($2)", [dc1, [lQua, lSap, lNhan]]);
+  const nhan = await fetch(`${URL_GOC}/api/v1/leads/${lNhan}/accept`, { method: "POST", headers: { ...h, cookie: ck["dau-chu-1"] } });
+  if (nhan.status !== 200) throw new Error(`nhận lead mẫu: ${nhan.status}`);
   await db.query("update leads set routed_at = now() - interval '20 minutes' where id = $1", [lQua]);
   await db.query("update leads set routed_at = now() - interval '5 minutes' where id = $1", [lSap]);
   writeFileSync(path.join(CHAY, "lead.json"), JSON.stringify({ qua: lQua, sap: lSap, daNhan: lNhan }));
