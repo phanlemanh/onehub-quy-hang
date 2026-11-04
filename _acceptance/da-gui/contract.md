@@ -5,7 +5,7 @@ slug: da-gui
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-da-gui-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -82,3 +82,8 @@ dòng ở AC-3; bốn mục hàng 35 mỗi mục một AC (AC-8, AC-9, AC-10).
 - Bất biến chạm: 1 (hàm tắt link), 2 (không lớp `source`, không số khách), 3 (gợi ý chỉ mở luồng Gửi), 4 (trang khách và rào
   route công khai).
 - Migration số 032 (giám sát giữ chỗ theo luật đợt 25, trả lời L-22).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: Bài kiểm «giá lúc gửi» chỉ đo ở lõi, chưa đo qua đường ghi rồi đọc lại; một lần làm hỏng ở bên đọc cho căn chưa có giá lúc gửi có thể không bị bắt.
+  - Ngoài-2: Ba đường của màn Đã gửi chưa có trong tài liệu API cho bên ngoài.
+  - Ngoài-4: Bài kiểm «không lộ tên chủ nhà» ở Đã gửi không thể báo đỏ; tên chủ lọt ra sau này chỉ được các bài quét khác bắt.
+  - Ngoài-5: Bài kiểm «không lộ giá đáy» không xác nhận giá đáy đã được lưu, nên có thể xanh mà không đo gì.

@@ -7,8 +7,8 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7b86eb25d02c198a553fdb77e606baf9fcbdb260
-human_signoff:
+verified_commit: d718f24c87570b165d878efd4d56eefeb5a7dd73
+human_signoff: Manh Phan 2026-11-04
 ---
 
 # Evidence Report: da-gui
@@ -243,3 +243,7 @@ none — every multi-run eval is uniform
 
 Round 1: tat ca eval PASS; ghi nhan cac muc ngoai hop dong va hai loi trong hop dong (AC-7, AC-3) o review.
 Round 2: S4 vong 1 — sua tat link tu choi phien khong nguoi (migration 033) va gia luc gui; E1, E2, E3, E4, E4b, E5, E6b, E7 chay lai, PASS; cac eval con lai carry-forward tu round 1.
+
+### Re-pin lần 1 — 2026-11-04, do gộp nhánh chính (hàng 67) sau lượt chấm 2, trước commit chữ ký
+run_id: repin-20261104T133219Z-57054
+sha: d718f24c87570b165d878efd4d56eefeb5a7dd73 · suites: 7 lệnh exit 0 · evals: 16/16 eval máy đạt kỳ vọng · ngoài làn máy: E6b
