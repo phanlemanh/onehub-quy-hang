@@ -3,6 +3,8 @@
 **Mục tiêu:** đầu chủ, trưởng nhóm xuất bảng hàng đang lọc ra bài Zalo, bài Facebook, Excel, ảnh, PDF qua hộp thoại bốn
 bước trên bảng hàng; mọi đầu ra qua luật ẩn ở lõi; mỗi lần xuất ghi ở máy chủ và đếm vào «Số lần xuất bảng hàng».
 
+**Duyệt:** Manh Phan 04/11/2026 (Gate 1.5).
+
 **Căn cứ:** `contract.md` (duyệt 04/11), `evals.yaml`, `design.md`, sổ `decisions.jsonl` (Hỏi-1 … Hỏi-4 theo khuyến
 nghị; tên «Xuất bảng hàng»). Migration số **030** (luật đợt 25). Tệp dùng chung đã đổi nhãn qua H-15.
 
