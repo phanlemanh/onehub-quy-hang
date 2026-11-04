@@ -2,6 +2,8 @@
  * Sáu trạng thái chuẩn của hàng (Tham chiếu §5, RESO `StandardStatus`) và luật chuyển (hàng 8, ADR-0008).
  * Sàn thêm nhãn, không thêm nghĩa: không có trạng thái thứ bảy.
  */
+import { macDinhSo } from "../config/giai";
+
 export const STANDARD_STATUSES = ["Incomplete", "Active", "Pending", "Closed", "Hold", "Withdrawn"] as const;
 export type StandardStatus = (typeof STANDARD_STATUSES)[number];
 
@@ -74,7 +76,7 @@ export type TransitionCheck =
 const co = (v: unknown) => v !== undefined && v !== null && v !== "";
 
 /** Số ảnh thật tối thiểu để vào Đang bán khi sàn chưa đặt (hàng 23, điều khoá K7 của Sổ điểm biến thiên). */
-export const MAC_DINH_ANH_THAT_TOI_THIEU = 1;
+export const MAC_DINH_ANH_THAT_TOI_THIEU = macDinhSo("listing.ready_min_real_photos");
 
 /**
  * Điều kiện vào từng trạng thái. Vào Đang bán: giá kèm điều kiện phí (thay cho giá về tay tới hàng 28), ảnh thật, pháp lý,

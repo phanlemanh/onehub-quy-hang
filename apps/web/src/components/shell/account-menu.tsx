@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { dangXuatTrenMay } from "./dang-xuat-tren-may";
 
 // Menu tài khoản — chuyển thể NavUser của app-shell-8: tên sàn đang làm, sáng/tối, đăng xuất.
 const THEMES = [
@@ -106,14 +107,15 @@ export function AccountMenuKhung({ email, companyName, dangXuat }: { email: stri
           <DropdownMenuItem
             onClick={async () => {
               // Còn thay đổi chưa gửi thì hỏi; đăng xuất luôn xoá kho trên máy của người này (luật 32).
-              if (!(await dangXuat())) return;
-              await fetch("/api/v1/auth/sign-out", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: await thanDangXuat(),
+              await dangXuatTrenMay({
+                dangXuat,
+                than: thanDangXuat,
+                goi: fetch,
+                ve: () => {
+                  router.replace("/login");
+                  router.refresh();
+                },
               });
-              router.replace("/login");
-              router.refresh();
             }}
           >
             <LogOutIcon aria-hidden="true" />

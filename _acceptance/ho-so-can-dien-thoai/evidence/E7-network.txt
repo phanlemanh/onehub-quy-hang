@@ -1,0 +1,18 @@
+E7 network (CDP, fetch hook; khổ 375x812, phiên dau-khach, origin http://localhost:3492)
+A-04.06 GET /api/v1/catalog [200]
+A-04.06 GET /api/v1/catalog [200]
+A-04.06 GET /api/v1/listings [200]
+A-04.06 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 [200] body=không có kind internal: {"anh":[{"id":"03c3601c-28b1-4d43-ad9d-bae1b5832a9b","buildingName":"Toà A","unitNumber":"A-04.06","compartment":"shareable","displayOrder":0,"isCover":false,"i
+A-04.06 GET /api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 [200]
+A-04.06 GET /api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner [200]
+A-04.06 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 [200] body=không có kind internal: {"anh":[{"id":"03c3601c-28b1-4d43-ad9d-bae1b5832a9b","buildingName":"Toà A","unitNumber":"A-04.06","compartment":"shareable","displayOrder":0,"isCover":false,"i
+A-04.06 GET /api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner [200]
+A-06.03 GET /api/v1/catalog [200]
+A-06.03 GET /api/v1/catalog [200]
+A-06.03 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-06.03 [200] body=không có kind internal: {"anh":[],"noiBo":"an","suaDuoc":false}
+A-06.03 GET /api/v1/listings/b11e51dc-d439-4380-b4c5-15dc77572647/owner [200]
+A-06.03 GET /api/v1/listings/b11e51dc-d439-4380-b4c5-15dc77572647 [200]
+A-06.03 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-06.03 [200] body=không có kind internal: {"anh":[],"noiBo":"an","suaDuoc":false}
+A-06.03 GET /api/v1/listings [200]
+A-06.03 GET /api/v1/listings/b11e51dc-d439-4380-b4c5-15dc77572647/owner [200]
+Không request lỗi; không third-party; console lỗi: không quan sát (không đọc kênh console).

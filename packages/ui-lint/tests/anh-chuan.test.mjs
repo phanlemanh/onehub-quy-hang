@@ -94,6 +94,7 @@ const BO_CUC_NHOM = {
   "hom-nay-dau-chu": "tran",
   "lead-cua-toi": "danh-sach-chi-tiet",
   "o-nhan-lead": "doc",
+  toi: "doc",
   "trang-tam": "doc",
 };
 

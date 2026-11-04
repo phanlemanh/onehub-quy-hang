@@ -62,6 +62,7 @@ export function apTrenMay(
   }
   if (type === "unit_number_assigned" && kiemGanMaCan(hienTai)) return { ok: false, loi: { kind: "invalid-payload", errors: [{ path: "unitNumber", reason: LY_DO_MA_CAN_DA_CO }] } };
   const expectedVersion = coSo !== undefined && coSo < hienTai.version ? coSo : hienTai.version;
-  const op: PendingOp = { opId, listingId, type, payload, expectedVersion, clientSeq: n.nextSeq, createdAt: now };
+  // Lần thử gần nhất là mất mạng: thao tác ghi lúc mất mạng, mang dấu tới máy chủ (AC-6).
+  const op: PendingOp = { opId, listingId, type, payload, expectedVersion, clientSeq: n.nextSeq, createdAt: now, ...(n.lastAttempt === "mang" && { madeOffline: true }) };
   return { ok: true, op, ngan: { ...n, queue: [...n.queue, op], nextSeq: n.nextSeq + 1 } };
 }

@@ -2,6 +2,7 @@
  * Giá chủ nhận về tay (hàng 28, luật 12): giá bao phí trừ ba khoản thuế phí tính trên chính giá ấy; giá không bao phí là
  * giá về tay. Tỉ lệ viết bằng phần vạn để mọi phép tính là số nguyên đồng — không số thực, không lệch một đồng.
  */
+import { macDinhSo } from "../config/giai";
 import type { FeeInclusion } from "./types";
 
 export const KHOAN_BAO_PHI = ["thue_tncn", "le_phi_truoc_ba", "moi_gioi"] as const;
@@ -13,7 +14,12 @@ export type TiLeBaoPhi = Record<MaKhoan, number>;
  * Mặc định của sàn (Hỏi-3, Cổng Phạm vi 02/11): thuế thu nhập cá nhân 2%, lệ phí trước bạ 0,5%, môi giới 1%. Ba khoá
  * `fee.*` (#9–#11) ở Sổ điểm biến thiên — quản trị sàn đặt ở hàng 49; tới lúc ấy mọi màn đọc hằng này.
  */
-export const TI_LE_BAO_PHI_MAC_DINH: TiLeBaoPhi = { thue_tncn: 200, le_phi_truoc_ba: 50, moi_gioi: 100 };
+const phanVan = (khoa: string) => Math.round(macDinhSo(khoa) * 100);
+export const TI_LE_BAO_PHI_MAC_DINH: TiLeBaoPhi = {
+  thue_tncn: phanVan("fee.personal_income_tax_pct"),
+  le_phi_truoc_ba: phanVan("fee.registration_fee_pct"),
+  moi_gioi: phanVan("fee.brokerage_pct"),
+};
 
 /** Nhãn mặc định của ba khoản — một chỗ có tên tới khi có sổ từ vựng (hàng 90). */
 export const NHAN_KHOAN: Record<MaKhoan, string> = {

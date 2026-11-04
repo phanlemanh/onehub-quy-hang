@@ -1,0 +1,101 @@
+schema_version: 1
+feature_slug: so-diem-bien-thien
+# Lệnh máy: executors.test.core (node --test của lõi). Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter
+# của node --test: có mặt, ok, không SKIP. Mỗi ca có cặp hai chiều trên cùng đầu vào (chiều đỏ ghi trong expected): bộ
+# kiểm sổ nhận sổ làm tham số, nên chiều đỏ là cùng hàm chạy trên bản sao sổ có một dòng hỏng, thông điệp ghim khoá.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «sổ ở mã: mỗi dòng đủ cột và đúng khuôn» có mặt trong packages/core/src/config/so.test.ts và ok — kiemSo(SO_DIEM) trả mảng lỗi rỗng; ma trận viết trước, mỗi dòng của SO_DIEM một assert (số assert = số dòng sổ): số thứ tự, khoá giá trị đơn khớp ^[a-z_]+(\\.([a-z_]+|<[^>]+>))+$ (khoá map được một đoạn, như custom_fields #22), vai khác rỗng và trong ROLES, hiệu lực trong {moi, tinh_lai, lan_sau}, lớp trong DATA_CLASSES, tình trạng trong {mo, de_xuat}, mặc định của dòng không phải map qua kiemGiaTri của chính khoá. Chiều đỏ cùng ca: kiemSo trên bản sao sổ có (a) khoá trùng, (b) số thứ tự trùng, (c) vai 'boss', (d) mặc định ngoài khoảng — mỗi bản sao trả đúng một lỗi, thông điệp mở đầu bằng khoá của dòng hỏng."
+    paths: [packages/core/src/config/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «sổ khớp: tài liệu và mã hai chiều» có mặt trong packages/core/src/config/so-khop.test.ts và ok — đọc docs/architecture/so-diem-bien-thien.md (đường suy từ vị trí tệp test, không hằng gốc kho), rút mọi dòng bảng phần A có khoá trong backtick; số dòng rút được bằng số dòng SO_DIEM và khác 0; soKhop(doc, SO_DIEM) trả mảng lỗi rỗng. Chiều đỏ cùng ca, cùng hàm soKhop, ma trận viết trước mười ca (mỗi ca ra đúng một lỗi, thông điệp ghim khoá và tên cột): (a) bỏ một dòng khỏi chữ tài liệu → «chỉ có ở mã»; (b) thêm dòng khoá 'demo.extra' vào chữ tài liệu → «chỉ có ở tài liệu» nêu 'demo.extra'; trên chữ tài liệu đổi của một dòng: (c) số thứ tự, (d) chữ đầu cột Kiểu, (e) lớp, (f) tình trạng Mở → Đề xuất, (g) hiệu lực «mới» → «tính lại», (h) Ai đổi «Quản trị sàn» → «Trưởng nhóm», (i) mặc định int của queue.call_back_after_days 14 → 15, (j) khoảng «7–30» → «7–31» — số ca đỏ cột = tám = số cột được so."
+    paths: [packages/core/src/config/**, docs/architecture/so-diem-bien-thien.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «không điểm nào lớp nguồn» có mặt trong packages/core/src/config/so.test.ts và ok — mọi dòng SO_DIEM có lớp khác 'source' (một assert mỗi dòng), và mọi dòng phần A rút từ sổ tài liệu có cột lớp khác 'source'. Chiều đỏ cùng ca: kiemSo trên bản sao sổ đặt lop 'source' cho price.change_confirm_pct trả lỗi mở đầu 'price.change_confirm_pct' và nêu 'source'."
+    paths: [packages/core/src/config/**, docs/architecture/so-diem-bien-thien.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kiemGiaTri: hai điểm và hai biên mọi khoá giá trị đơn» có mặt trong packages/core/src/config/khuon.test.ts và ok — ma trận sinh từ SO_DIEM, mỗi khoá giá trị đơn (không map) đủ các ca có nghĩa với kiểu của nó: mặc định nhận; int/decimal có khoảng — min, max, một giá trị giữa nhận, min−1 (decimal: min−0,01) và max+1 bị từ chối; enum — mỗi giá trị nhận, 'khac' bị từ chối; set — tập con một phần tử nhận, tập rỗng và phần tử lạ bị từ chối; bool — true, false nhận, 'co' bị từ chối; text — chữ 40 ký tự nhận, 41 bị từ chối; sai kiểu (chuỗi cho int) bị từ chối; mọi lỗi có thông điệp bắt đầu bằng đúng khoá (assert startsWith). Ca «kiemGiaTri: khoá lạ, map, nhãn chở số, ràng buộc chéo» ok — 'demo.khong_co' từ chối nêu 'demo.khong_co'; 'queue.groups' từ chối nêu 'có bảng riêng'; labels.field.unitNumber nhận 'Mã căn', từ chối 'gọi 0900 000 001' và 'a@b.vn' nêu khoá; lead_routing.first_call_minutes = 10 khi cấu hình đang áp có accept_minutes 15 bị từ chối nêu 'lead_routing.first_call_minutes', = 15 nhận. Chiều đỏ là chính các ca từ chối đi cặp với ca nhận trên cùng khoá."
+    paths: [packages/core/src/config/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «giaiCauHinh: mặc định, ghi đè, dòng hỏng, khoá lạ, map» có mặt trong packages/core/src/config/giai.test.ts và ok — giaiCauHinh([]) cho cauHinh bằng mặc định của sổ ở mọi khoá giá trị đơn (một assert mỗi khoá) và loi rỗng; [{key:'queue.call_back_after_days', value:20}] cho 20 ở khoá ấy, mọi khoá khác bằng mặc định, loi rỗng; [{key:'queue.call_back_after_days', value:99}] giữ 14 và loi đúng một mục bắt đầu 'queue.call_back_after_days'; [{key:'demo.la', value:1}] cho một lỗi nêu 'demo.la'; [{key:'queue.groups', value:[]}] cho loi rỗng và cauHinh không có khoá queue.groups."
+    paths: [packages/core/src/config/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «freshness nhận cấu hình: mặc định, giá trị khác, hai biên» có mặt trong packages/core/src/config/luat-nhan-cau-hinh.test.ts và ok — không truyền cấu hình: tuổi 13 ngày needsCallBack false, 14 ngày true; truyền cauHinh có queue.call_back_after_days 7 / 20 / 30: tuổi N−1 false, N true ở cả ba (6 assert); cauHinh dựng bằng giaiCauHinh từ dòng sàn, không dựng tay. Ca «freshness» cũ trong packages/core/src/listing/listing.test.ts vẫn ok không sửa."
+    paths: [packages/core/src/listing/freshness.ts, packages/core/src/config/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «canHoiLai nhận cấu hình: mặc định, giá trị khác, hai biên» có mặt trong packages/core/src/config/luat-nhan-cau-hinh.test.ts và ok — giá cũ 1 000 000 000: không truyền cấu hình, giá mới +20% hoi false, +21% hoi true; N lấy từ min, max của dòng price.change_confirm_pct trong SO_DIEM và một giá trị giữa (không viết số tay), cấu hình dựng bằng giaiCauHinh: +N% false, +(N+1)% true ở cả ba (6 assert); assert thêm min = 5, max = 50 khớp sổ tài liệu; đổi feeInclusion từ included sang excluded cùng giá vẫn hoi true dưới cả bốn cấu hình."
+    paths: [packages/core/src/pricing/hoi-lai.ts, packages/core/src/config/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «chia lead và hàng đợi lấy số, khoảng từ sổ» có mặt trong packages/core/src/config/luat-nhan-cau-hinh.test.ts và ok — readLeadRoutingSettings([]) cho acceptMinutes 15, firstCallMinutes 30; readLeadRoutingSettings với accept 1 và first_call 1440 nhận; applyLeadRoutingPatch(DEFAULT_LEAD_ROUTING, {acceptMinutes: 0}) và {acceptMinutes: 1441} trả ok false với error chứa 'lead_routing.accept_minutes'; {firstCallMinutes: 0} và {firstCallMinutes: 1441} trả error chứa 'lead_routing.first_call_minutes' (4 ca từ chối đi cặp với 2 ca nhận). Ca «hạn lead đọc từ cấu hình ở hai biên» ok — cấu hình đọc bằng readLeadRoutingSettings từ dòng sàn với accept 1, first_call 1440: unroutedDue với acceptMinutes từ cấu hình false ở 0 phút 59 giây, true ở đúng 1 phút; dueAlerts không có first_call_overdue ở 1439 phút, có ở 1440 phút. QUEUE_DEFAULT_DAYS bằng {priceAdjustment: mặc định #5, callBack: mặc định #4} của SO_DIEM và QUEUE_DAY_RANGES.price_adjustment / call_back bằng khoảng #5 / #4. Bộ ca routing.test.ts và today của lõi vẫn ok không sửa kỳ vọng."
+    paths: [packages/core/src/routing/**, packages/core/src/today/**, packages/core/src/config/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hằng số mặc định lấy số từ sổ» có mặt trong packages/core/src/config/hang-so.test.ts và ok — bảng viết trước mười dòng (hằng → khoá): CALL_BACK_AFTER_DAYS → queue.call_back_after_days; MUC_HOI_LAI_DOI_GIA_PHAN_TRAM → price.change_confirm_pct; DEFAULT_LEAD_ROUTING (bốn trường) → bốn khoá lead_routing.*; DEADLINE_MINUTES → khoảng của lead_routing.accept_minutes; QUEUE_DEFAULT_DAYS; QUEUE_DAY_RANGES hai nhóm mặc định; MAC_DINH_ANH_THAT_TOI_THIEU và KHOANG_ANH_THAT_TOI_THIEU → listing.ready_min_real_photos; CAU_HINH_MAC_DINH của luật ẩn → customer_page.show_confirmed_age, customer_page.private_hides_unit_number; TI_LE_BAO_PHI_MAC_DINH (phần vạn) → fee.personal_income_tax_pct, fee.registration_fee_pct, fee.brokerage_pct (×100) — hàm soHangSo(sổ) trả danh sách lệch, trên SO_DIEM rỗng, số dòng bảng = mười. Chiều đỏ cùng ca: soHangSo trên bản sao sổ đổi mặc định của price.change_confirm_pct thành 25 trả đúng một lệch nêu 'MUC_HOI_LAI_DOI_GIA_PHAN_TRAM' và 'price.change_confirm_pct'."
+    paths: [packages/core/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0 — bộ kiểm của API vẫn xanh sau khi hằng số lõi lấy số từ sổ (người gọi không đổi)."
+    paths: [packages/core/src/**, packages/api/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9c
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0 — bộ kiểm của gói kết nối vẫn xanh sau khi gói lõi thêm zod và hằng số lấy số từ sổ."
+    paths: [packages/core/**, packages/connect/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9d
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 — kiểm kiểu toàn kho (lõi, API, kết nối, web, db) xanh: chỗ gọi freshness, canHoiLai và các hằng ở api, web không đổi kiểu."
+    paths: [packages/**, apps/web/src/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

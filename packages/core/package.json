@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./listing": "./src/listing/index.ts",
+    "./import": "./src/import/index.ts",
     "./access": "./src/access/index.ts",
     "./visibility": "./src/visibility/index.ts",
     "./dedupe": "./src/dedupe/index.ts",
@@ -16,10 +17,15 @@
     "./today": "./src/today/index.ts",
     "./push": "./src/push/index.ts",
     "./redaction": "./src/redaction/index.ts",
-    "./sharing": "./src/sharing/index.ts"
+    "./sharing": "./src/sharing/index.ts",
+    "./config": "./src/config/index.ts",
+    "./thiet-bi": "./src/thiet-bi/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
     "test": "node --import tsx --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
   }
 }

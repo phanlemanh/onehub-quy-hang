@@ -1,0 +1,112 @@
+{
+ "A-04.06": {
+  "text": "Gửi được (3)\nTự có từ mã",
+  "btns": [
+   "Gửi được (3)",
+   "Tự có từ mã"
+  ],
+  "imgs": [],
+  "locks": 0,
+  "draggable": 0,
+  "fileInputs": [],
+  "hasKhoa": false,
+  "hasNoiBo": false,
+  "net": [
+   {
+    "u": "/api/v1/catalog",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/catalog",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/listings",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06",
+    "s": 200,
+    "b": "{\"anh\":[{\"id\":\"03c3601c-28b1-4d43-ad9d-bae1b5832a9b\",\"buildingName\":\"Toà A\",\"unitNumber\":\"A-04.06\",\"compartment\":\"shareable\",\"displayOrder\":0,\"isCover\":false,\"isSample\":false,\"takenAt\":null,\"addedAt\":\"2026-11-03T12:07:05.921Z\",\"contentType\":\"image/png\",\"width\":640,\"height\":480},{\"id\":\"6fed0b5e-31d3-4dd1-89b2-4eae25be88db\",\"buildingName\":\"Toà A\",\"unitNumber\":\"A-04.06\",\"compartment\":\"shareable\",\"displayOrder\":1,\"isCover\":true,\"isSample\":false,\"takenAt\":null,\"addedAt\":\"2026-11-03T12:07:07.563Z\",\"contentType\":\"image/png\",\"width\":640,\"height\":480},{\"id\":\"dc34d654-3dc7-405f-9d7f-7dafe69eb4e4\",\"buildingName\":\"Toà A\",\"unitNumber\":\"A-04.06\",\"compartment\":\"shareable\",\"displayOrder\":2,\"isCover\":false,\"isSample\":false,\"takenAt\":null,\"addedAt\":\"2026-11-03T12:07:07.584Z\",\"contentType\":\"image/png\",\"width\":640,\"height\":480}],\"noiBo\":\"an\",\"suaDuoc\":false}"
+   },
+   {
+    "u": "/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06",
+    "s": 200,
+    "b": "{\"anh\":[{\"id\":\"03c3601c-28b1-4d43-ad9d-bae1b5832a9b\",\"buildingName\":\"Toà A\",\"unitNumber\":\"A-04.06\",\"compartment\":\"shareable\",\"displayOrder\":0,\"isCover\":false,\"isSample\":false,\"takenAt\":null,\"addedAt\":\"2026-11-03T12:07:05.921Z\",\"contentType\":\"image/png\",\"width\":640,\"height\":480},{\"id\":\"6fed0b5e-31d3-4dd1-89b2-4eae25be88db\",\"buildingName\":\"Toà A\",\"unitNumber\":\"A-04.06\",\"compartment\":\"shareable\",\"displayOrder\":1,\"isCover\":true,\"isSample\":false,\"takenAt\":null,\"addedAt\":\"2026-11-03T12:07:07.563Z\",\"contentType\":\"image/png\",\"width\":640,\"height\":480},{\"id\":\"dc34d654-3dc7-405f-9d7f-7dafe69eb4e4\",\"buildingName\":\"Toà A\",\"unitNumber\":\"A-04.06\",\"compartment\":\"shareable\",\"displayOrder\":2,\"isCover\":false,\"isSample\":false,\"takenAt\":null,\"addedAt\":\"2026-11-03T12:07:07.584Z\",\"contentType\":\"image/png\",\"width\":640,\"height\":480}],\"noiBo\":\"an\",\"suaDuoc\":false}"
+   },
+   {
+    "u": "/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner",
+    "s": 200,
+    "b": ""
+   }
+  ]
+ },
+ "A-06.03": {
+  "text": "Gửi được (0)\nTự có từ mã",
+  "btns": [
+   "Gửi được (0)",
+   "Tự có từ mã"
+  ],
+  "imgs": [],
+  "locks": 0,
+  "draggable": 0,
+  "fileInputs": [],
+  "hasKhoa": false,
+  "hasNoiBo": false,
+  "net": [
+   {
+    "u": "/api/v1/catalog",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/catalog",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-06.03",
+    "s": 200,
+    "b": "{\"anh\":[],\"noiBo\":\"an\",\"suaDuoc\":false}"
+   },
+   {
+    "u": "/api/v1/listings/b11e51dc-d439-4380-b4c5-15dc77572647/owner",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/listings/b11e51dc-d439-4380-b4c5-15dc77572647",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-06.03",
+    "s": 200,
+    "b": "{\"anh\":[],\"noiBo\":\"an\",\"suaDuoc\":false}"
+   },
+   {
+    "u": "/api/v1/listings",
+    "s": 200,
+    "b": ""
+   },
+   {
+    "u": "/api/v1/listings/b11e51dc-d439-4380-b4c5-15dc77572647/owner",
+    "s": 200,
+    "b": ""
+   }
+  ]
+ }
+}

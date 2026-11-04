@@ -1,0 +1,108 @@
+{
+ "feature_plain": "Người dùng có tab Tôi: cài Quỹ hàng lên màn hình chính, bật thông báo, xem các máy đang đăng nhập; đăng xuất hay báo mất máy thì dữ liệu Quỹ hàng trên máy ấy bị xoá sạch, kể cả máy không mở app.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ thay trang chỗ giữ «Tôi» bằng màn thật cho mọi vai, sáu nhóm dòng: hồ sơ, sàn (có «Đổi sàn» khi thuộc nhiều sàn), cài lên màn hình chính, thông báo, máy đang đăng nhập, đăng xuất."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ nói đúng cách cài theo từng máy: đã cài thì «Đã cài»; Android hay Chrome máy tính có nút «Cài»; iPhone thì ba bước của Safari; trình duyệt khác thì chỉ sang Chrome hay Safari."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ hiện trạng thái thông báo giống hệt dải bật ở Hôm nay, có nút «Bật» khi chưa bật."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ đăng xuất từ tab Tôi đúng như đăng xuất ở menu tài khoản: hỏi khi còn thay đổi chưa gửi, xoá dữ liệu của người đó trên máy, không đụng dữ liệu người khác."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ liệt các máy đang đăng nhập (loại máy, lần dùng gần nhất, «Máy này»); chỉ một máy thì không có nút «Báo mất máy»."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ cho bấm «Báo mất máy»: đăng xuất mọi máy khác của người, gỡ thông báo các máy ấy ở mọi sàn, máy đang bấm vẫn dùng tiếp (Hỏi-1)."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ xoá dữ liệu Quỹ hàng của người bị báo trên máy bị báo ngay lần đầu máy ấy mở trang hay đồng bộ, rồi về màn đăng nhập với lời «Máy này đã bị báo mất»; dữ liệu của người khác trên máy ấy giữ nguyên (Hỏi-2, Hỏi-4)."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ giữ nguyên cách làm khi chỉ hết phiên đăng nhập thường: không xoá gì, thay đổi chưa gửi vẫn chờ và gửi tiếp khi đăng nhập lại, như hàng 61 đã ký."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ lưu dấu «máy bị báo» ở máy chủ bằng mã băm, chỉ phần danh tính đọc được, hạn đúng bằng hạn đăng nhập."
+  },
+  {
+   "id": "AC-10",
+   "p": "Sẽ gửi lệnh xoá qua thông báo tới máy bị báo trước khi gỡ thông báo của nó, để máy có mạng mà không ai mở Quỹ hàng vẫn tự xoá (Hỏi-3)."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "OOS-1",
+   "p": "KHÔNG cho chọn từng máy để báo mất hay đặt tên máy — để sau bản đầu."
+  },
+  {
+   "id": "OOS-2",
+   "p": "KHÔNG cho quản trị sàn đăng xuất thành viên hay gỡ thành viên — việc của màn cài đặt sàn."
+  },
+  {
+   "id": "OOS-3",
+   "p": "KHÔNG sửa email, tên, ảnh đại diện, sáng/tối ở tab Tôi — để sau."
+  },
+  {
+   "id": "OOS-4",
+   "p": "KHÔNG xoá được dữ liệu trên máy chưa bật thông báo mà không bao giờ mở lại — web không có đường tới máy ấy; chờ app gốc."
+  },
+  {
+   "id": "OOS-5",
+   "p": "KHÔNG đổi dải bật thông báo ở Hôm nay hay lời hướng dẫn cài lúc đăng nhập đầu."
+  }
+ ],
+ "scope_plain": "Hàng này dựng màn «Tôi» và đường báo mất máy; các việc dưới đây để hàng khác hay để sau.",
+ "coverage_plain": [
+  {
+   "i": 0,
+   "p": "Loại máy (iPhone, Android, máy tính, đã cài): mỗi loại có cách cài và trạng thái thông báo riêng — AC-2, AC-3."
+  },
+  {
+   "i": 1,
+   "p": "Việc trên màn (xem, cài, bật thông báo, xem máy, báo mất, đăng xuất): mỗi việc một tiêu chí — AC-1, AC-4, AC-5, AC-6."
+  },
+  {
+   "i": 2,
+   "p": "Cách phiên kết thúc (tự đăng xuất, bị báo mất từ máy khác, hết hạn thường): ba cách ba hành vi, có bài kiểm so hai cách cuối — AC-4, AC-7, AC-8, AC-10."
+  },
+  {
+   "i": 3,
+   "p": "Vai (đầu chủ, đầu khách, trưởng nhóm, telesales, quản trị sàn): ai cũng có cùng màn Tôi — AC-1."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Máy đã ghi «không còn cách nào xoá máy không mở trang», nhưng vẫn còn cách gửi lệnh xoá qua thông báo trước khi gỡ. Đã chuyển thành câu hỏi cho anh (Hỏi-3), hợp đồng viết theo khuyến nghị gửi lệnh."
+  },
+  {
+   "i": 1,
+   "p": "Xoá «mọi dữ liệu trên trình duyệt» sẽ xoá cả việc dở của đồng nghiệp trên máy văn phòng dùng chung. Đã tách thành câu hỏi riêng (Hỏi-4), khuyến nghị chỉ xoá dữ liệu của người bị báo."
+  },
+  {
+   "i": 2,
+   "p": "Chưa có bài kiểm đi đúng đường thật: máy bị báo mở một trang bằng đăng nhập cũ. Đã thêm bài kiểm trên trình duyệt thật, kèm đối chứng hết phiên thường."
+  },
+  {
+   "i": 3,
+   "p": "Phần nhìn thấy của danh sách máy (một máy không có nút, hộp hỏi, lời sau khi báo) chưa có bài kiểm. Đã thêm ma trận trạng thái và ảnh chụp."
+  },
+  {
+   "i": 4,
+   "p": "Hạn của dấu «máy bị báo» chưa được chứng khớp hạn đăng nhập. Đã sửa: hạn dấu đọc từ chính cấu hình đăng nhập, bài kiểm đỏ khi dấu hết trước."
+  }
+ ]
+}

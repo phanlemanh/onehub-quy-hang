@@ -42,6 +42,7 @@ phép», là đề xuất của phiên này, chốt ở Cổng Phạm vi của h
 | 4 | `queue.call_back_after_days` | «Cần gọi lại» sau số ngày chưa xác nhận | `int` ngày | 14 | 7–30 | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 18; `CALL_BACK_AFTER_DAYS` ở `packages/core/src/listing/freshness.ts` (main) | 48 |
 | 5 | `queue.price_negotiation_after_days` | «Nên gọi ép giá» sau số ngày | `int` ngày | 10 | 7–14 | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 18 (khoảng 7–14 đã chốt); §13 câu phỏng vấn | 48 |
 | 6 | `share.stale_warning_days` | Nhắc gọi trước khi gửi căn chưa xác nhận | `int` ngày | 14 | 7–30 | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 25 | — (theo #4 tới khi có màn) |
+| 36 | `queue.groups` | Bộ nhóm của Hôm nay đầu chủ (nhãn, điều kiện, ngưỡng từng nhóm) | `map` — bộ nhóm, kiểm ở `today/kiem.ts` | bộ năm nhóm dựng sẵn (`BO_NHOM_MAC_DINH`); ngưỡng hai nhóm mặc định từ #4, #5 | nhóm mặc định giữ khoảng #4, #5; nhóm sàn tự tạo 1–90 ngày | Quản trị sàn | — | tính lại | company_internal | Mở | Hàng 22 (`today/mac-dinh.ts`, `QUEUE_GROUPS_KEY`); lối ghi `PUT /api/v1/company/settings/queue` | 48 |
 
 ### A3. Giá và phí — luật 7, 12, 13, §13, hàng 15, 28, 49
 
@@ -50,8 +51,8 @@ phép», là đề xuất của phiên này, chốt ở Cổng Phạm vi của h
 | 7 | `price.change_confirm_pct` | Đổi giá quá bao nhiêu % thì hỏi lại | `int` % | 20 | 5–50 | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 7; ADR-0011 quyết định 1 (luật kiểm của lần nhập) | 49 |
 | 8 | `fee.inclusion` | Định nghĩa «Bao phí» | `set{personalIncomeTax, registrationFee, brokerageFee}` | cả ba | tập con khác rỗng | Quản trị sàn | — | mới — giá bao phí mang định nghĩa lúc tính | company_internal | Mở | §13 (chốt 29/10), luật 13 | 49 |
 | 9 | `fee.brokerage_pct` | Phí môi giới | `decimal` % | 1 | 0–5 | Quản trị sàn | Đầu chủ sửa từng căn | mới | company_internal | Mở | §13 (chốt 29/10); hàng 28 đọc mặc định ở `TI_LE_BAO_PHI_MAC_DINH` (`pricing/ve-tay.ts`), đầu chủ sửa cho một lần tính trên màn cuộc gọi, chưa lưu | 49 |
-| 10 | `fee.personal_income_tax_pct` | Thuế thu nhập cá nhân khi chuyển nhượng | `decimal` % | 2 (mặc định tạm của hàng 28, `TI_LE_BAO_PHI_MAC_DINH`) — kiểm lại văn bản ở hàng 49 | ±0 quanh số luật trừ khi luật đổi | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
-| 11 | `fee.registration_fee_pct` | Lệ phí trước bạ | `decimal` % | 0,5 (như #10) | như #10 | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
+| 10 | `fee.personal_income_tax_pct` | Thuế thu nhập cá nhân khi chuyển nhượng | `decimal` % | 2 (mặc định tạm của hàng 28, `TI_LE_BAO_PHI_MAC_DINH`) — kiểm lại văn bản ở hàng 49 | 2–2 — chỉ đúng số luật tới hàng 49 (Hỏi-1 hàng 81, 04/11) | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
+| 11 | `fee.registration_fee_pct` | Lệ phí trước bạ | `decimal` % | 0,5 (như #10) | 0,5–0,5 — như #10 | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
 
 ### A4. Trang khách và gửi — luật 24, 26, §13, hàng 31, 35, 44
 
@@ -63,7 +64,7 @@ nội bộ hay nguồn ra trang khách (bất biến 2, 4) — bộ kiểm rò r
 | 12 | `customer_page.show_confirmed_age` | Hiện «giá xác nhận X ngày trước» cho khách | `bool` | có | — | Quản trị sàn | — | tính lại | company_internal | Mở | §13 (chốt 29/10) | — |
 | 13 | `customer_page.private_hides_unit_number` | Gửi khách riêng ẩn mã căn, chỉ toà + tầng cao / thấp | `bool` | có | — | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 24 (chốt 28/10), §7 «cách hiện trên trang khách là mặc định» | — |
 | 14 | `customer_page.off_compound_address` | Khách riêng thấy gì với nhà ngoài khu | `enum{street_ward, ward_only}` | `street_ward` | hai giá trị; không mở số nhà, hẻm, toạ độ cho khách riêng | Quản trị sàn | — | tính lại | company_internal | Đề xuất | ADR-0016 Hỏi-3 | — |
-| 15 | `broker_page.commission_split_pct` | Mức chia trên trang nhóm môi giới | `decimal` % | chưa có số — đặt ở Cổng Phạm vi hàng 44 | 0–100 | Quản trị sàn | Người gửi sửa theo bộ | mới — bộ gửi mang mức lúc gửi | company_internal | Mở | §13 (chốt 29/10) | 44 |
+| 15 | `broker_page.commission_split_pct` | Mức chia trên trang nhóm môi giới | `decimal` % | trống — chưa có số, đặt ở Cổng Phạm vi hàng 44 (Hỏi-1 hàng 81) | 0–100 | Quản trị sàn | Người gửi sửa theo bộ | mới — bộ gửi mang mức lúc gửi | company_internal | Mở | §13 (chốt 29/10) | 44 |
 | 16 | `broker_page.hide_commission_split` | Sàn ẩn mức chia | `bool` | không | — | Quản trị sàn | — | tính lại | company_internal | Mở | §13 (chốt 29/10) | 44 |
 | 17 | `customer_page.interest_button` | Nút «Quan tâm» trên trang khách | `bool` | có | — | Quản trị sàn | — | tính lại | company_internal | Mở | §13 «giữ» (29/10), §7 | — |
 
@@ -82,7 +83,7 @@ nội bộ hay nguồn ra trang khách (bất biến 2, 4) — bộ kiểm rò r
 
 | # | Khoá | Điểm | Kiểu | Mặc định | Khoảng | Ai đổi | Ghi đè | Hiệu lực | Lớp | Tình trạng | Nguồn | Màn |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 24 | `ai.monthly_budget_usd` | Trần chi phí AI mỗi tháng | `decimal` USD | 10 | 0 – trần nền tảng (vận hành đặt) | Quản trị sàn | — | tính lại | company_internal | Mở | ADR-0011 quyết định 10 | 68 |
+| 24 | `ai.monthly_budget_usd` | Trần chi phí AI mỗi tháng | `decimal` USD | 10 | 0–10 — tới khi hàng 68 đặt trần nền tảng (Hỏi-1 hàng 81, 04/11) | Quản trị sàn | — | tính lại | company_internal | Mở | ADR-0011 quyết định 10 | 68 |
 | 25 | `import.templates` | Mẫu file nhập đã nhớ | `map` — bảng `import_templates` | không có | không chứa giá trị cột nguồn hay cột tên người | Đầu chủ, trưởng nhóm tạo khi nhập; quản trị sàn sửa | — | áp cho lần nhập sau | company_internal | Mở | ADR-0011 quyết định 6 | 67, 50 |
 | 26 | `export.templates` | Mẫu bảng hàng khi phát hàng | `map` | mẫu dựng sẵn | cột chỉ chọn trong tập luật ẩn cho phép | Quản trị sàn | Đầu chủ chọn mẫu khi phát | áp cho lần phát sau | company_internal | Mở | Hàng 43, 50 | 50 |
 | 27 | `share.post_templates` | Mẫu bài theo kênh | `map` | mẫu dựng sẵn | chỗ điền chỉ lấy trường luật ẩn cho phép | Quản trị sàn | Người gửi sửa bài trước khi chia sẻ | áp cho lần gửi sau | company_internal | Mở | Hàng 34, 43, 50 | 50 |
@@ -133,12 +134,13 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K19 | Link không tự hết hạn ở bản đầu | Chốt 29/10 cho bản đầu | §13 |
 | K20 | Mã căn của hàng gắn một lần; đã có thì khoá | Nghĩa chuẩn để so — thuộc tính căn, ảnh gắn theo toà + mã | ADR-0026 quyết định 1; hồ sơ `dien-ma-can-cho-hang` Hỏi-3 |
 | K21 | Mỗi sàn tối đa một hàng đang mở trên một căn — gắn mã trùng bị chặn | Nghĩa chuẩn để so; «đang mở» là `OPEN_STATUSES` của lõi | §4; ADR-0026 quyết định 4 |
+| K22 | Dòng nhập file trỏ căn đã có hàng mở mà người khác giữ thành tin bổ sung, không ghi đè hàng (Lofty cho chủ tài khoản chọn cách đè) | Quyền và an toàn — người giữ căn không bị người khác ghi đè | Luật 20; hàng 65a Hỏi-2 (chủ kho duyệt 03/11); `quyetDongNhap` ở `packages/core/src/import/dong.ts` |
 
 ## Đếm
 
-- **29 điểm** ở phần A (#1–#27, #3a và #33 của hàng 23): 27 «Mở» (Tham chiếu, ADR hay lời chủ kho đã chốt là mặc định của sàn), 2
-  «Đề xuất» (#14, #20). Cột «Khoảng» là đề xuất của phiên này, chốt ở Cổng Phạm vi của hàng màn. 6 trong 29 là đối tượng
-  cấu hình có bảng riêng (`map`: #19, #21, #22, #25, #26, #27); 23 là giá trị đơn.
+- **30 điểm** ở phần A (#1–#27, #3a, #33 của hàng 23 và #36 của hàng 22): 28 «Mở» (Tham chiếu, ADR hay lời chủ kho đã chốt là mặc định của sàn), 2
+  «Đề xuất» (#14, #20). Cột «Khoảng» là đề xuất của phiên này, chốt ở Cổng Phạm vi của hàng màn. 7 trong 30 là đối tượng
+  cấu hình có bảng riêng (`map`: #19, #21, #22, #25, #26, #27, #36); 23 là giá trị đơn.
 - **Đã có trong mã hay nhánh**: 3 điểm (#1, #2 ở nhánh hàng 25; #4 ở `main`) — đều khai một chỗ, chưa đọc theo sàn.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.

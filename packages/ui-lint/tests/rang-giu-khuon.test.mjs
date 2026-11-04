@@ -83,7 +83,7 @@ describe("E1 — tiêm khối cấm vào tệp màn của mỗi nhóm → đúng
   const CA = [
     ["settings/thu/page.tsx mới nhập Frame", `${W}/app/(app)/settings/thu/page.tsx`, NHAP("Frame", "@/components/reui/frame") + "export default function P() {\n  return null;\n}\n", "Frame", "cai-dat-san", "MucCaiDat"],
     ["trang đăng nhập nhập Card", `${W}/app/(auth)/login/page.tsx`, null, "Card", "xac-thuc", "Khung"],
-    ["trang tạm Của tôi nhập Empty", `${W}/app/(app)/me/page.tsx`, null, "Empty", "trang-tam", "Placeholder"],
+    ["trang tạm Đội nhập Empty", `${W}/app/(app)/team/page.tsx`, null, "Empty", "trang-tam", "Placeholder"],
     ["quan-nguoi.tsx nhập Alert", `${W}/app/(app)/settings/users/quan-nguoi.tsx`, null, "Alert", "trang-thai", "TrangThai"],
   ];
   const TU = { Card: "@/components/ui/card", Empty: "@/components/ui/empty", Alert: "@/components/reui/alert" };
@@ -161,7 +161,7 @@ describe("E5 — bài quét khuôn trong kiem-chuan", () => {
     voi({ kiemChuan: true }, (d) => {
       const lanh = spawnSync(process.execPath, [KIEM_CHUAN, "--root", d], { encoding: "utf8" });
       assert.equal(lanh.status, 0, lanh.stderr);
-      assert.ok(lanh.stdout.split("\n").includes("khuôn: 12 nhóm · 0 lỗi đọc · 0 lệch"), lanh.stdout);
+      assert.ok(lanh.stdout.split("\n").includes("khuôn: 13 nhóm · 0 lỗi đọc · 0 lệch"), lanh.stdout);
       const U = `${W}/app/(app)/settings/users/page.tsx`;
       sua(d, U, "return (\n    <MucCaiDat", 'return (\n    <main className="min-h-svh">\n    <MucCaiDat');
       sua(d, U, "</MucCaiDat>\n  );", "</MucCaiDat>\n    </main>\n  );");

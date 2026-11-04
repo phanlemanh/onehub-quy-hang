@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lớp phủ hay dựng lại</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Lora',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+    body { font-family:var(--font-sans); background:var(--color-paper); color:var(--color-ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .frame { max-width:960px; width:100%; }
+    .eyebrow { font-family:var(--font-mono); font-size:0.66rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-muted); margin-bottom:0.5rem; }
+    h1 { font-family:var(--font-serif); font-size:clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.25; margin-bottom:0.35rem; }
+    .subtitle { color:var(--color-muted); font-size:0.9rem; line-height:1.5; margin-bottom:1.25rem; max-width:80ch; }
+    svg { width:100%; display:block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">So sánh hai phương án · Hỏi-3 · AC-1, AC-7</p>
+    <h1>Hồ sơ căn của Đầu khách: lớp phủ trên màn đang có hay dựng lại</h1>
+    <p class="subtitle">Lớp phủ (khuyến nghị) giữ một màn cho mọi vai, chỉ đổi điều Đầu khách thấy và để việc dựng lại theo product-detail-5 thành hàng riêng. Dựng lại ngay kéo theo trang ba lối, nhóm khuôn mới và cả màn Đầu chủ — hàng lớn gấp đôi.</p>
+    <svg viewBox="0 0 960 528" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Hỏi-3: lớp phủ trên màn đang có hay dựng lại theo product-detail-5</title>
+      <desc id="d">Hồ sơ căn của Đầu khách trên điện thoại rẽ hai phương án. Trái, khuyến nghị: lớp phủ trên màn đang có — một màn cho mọi vai; Đầu khách ẩn ngăn Nội bộ, Sẵn sàng bán, sửa ảnh và thêm nút hỏi dính đáy; product-detail-5 thành hàng riêng cho 33, 40–41. Phải: dựng lại theo product-detail-5 ngay — trang ba lối trước Cổng Phạm vi; nhóm khuôn mới; đổi cả màn Đầu chủ trên điện thoại; hàng lớn gấp đôi.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="960" height="528" fill="#f5f5f5"/>
+
+      <!-- Connectors -->
+      <path d="M432,80 L432,96 Q432,104 424,104 L144,104 Q136,104 136,112 L136,130" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <path d="M528,80 L528,96 Q528,104 536,104 L540,104 Q548,104 548,112 L548,130" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+      <!-- Root -->
+      <rect x="304" y="24" width="352" height="56" rx="6" fill="#f5f5f5"/>
+      <rect x="304" y="24" width="352" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="480" y="48" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Hồ sơ căn của Đầu khách trên điện thoại</text>
+      <text x="480" y="66" fill="#636b80" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">hàng 33</text>
+
+      <!-- Left: Lớp phủ (recommended) -->
+      <rect x="48" y="136" width="176" height="16" fill="none" stroke="#eb6c36" stroke-width="0.8" rx="2"/>
+      <text x="136" y="148" fill="#ba4513" font-size="9" letter-spacing="0.08em" font-family="'Geist Mono', monospace" text-anchor="middle">PHƯƠNG ÁN A · KHUYẾN NGHỊ</text>
+      <text x="48" y="180" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="start">Lớp phủ trên màn đang có (khuyến nghị)</text>
+      <rect x="48" y="196" width="408" height="196" rx="8" fill="#f5f5f5"/>
+      <rect x="48" y="196" width="408" height="196" rx="8" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="436" y="188" fill="#636b80" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">3 bước</text>
+
+      <circle cx="76" cy="228" r="10" fill="none" stroke="#2d3142" stroke-width="1"/>
+      <text x="76" y="232" fill="#2d3142" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">1</text>
+      <text x="100" y="232" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Một màn cho mọi vai</text>
+      <line x1="64" y1="252" x2="440" y2="252" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+
+      <circle cx="76" cy="280" r="10" fill="none" stroke="#2d3142" stroke-width="1"/>
+      <text x="76" y="284" fill="#2d3142" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">2</text>
+      <text x="100" y="284" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Đầu khách: ẩn ngăn Nội bộ, Sẵn sàng bán, sửa ảnh;</text>
+      <text x="100" y="302" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">thêm nút hỏi dính đáy</text>
+      <line x1="64" y1="324" x2="440" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+
+      <circle cx="76" cy="352" r="10" fill="none" stroke="#2d3142" stroke-width="1"/>
+      <text x="76" y="356" fill="#2d3142" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">3</text>
+      <text x="100" y="356" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">product-detail-5 thành hàng riêng cho 33, 40–41</text>
+
+      <!-- Right: Dựng lại -->
+      <rect x="504" y="136" width="88" height="16" fill="none" stroke="rgba(45,49,66,0.40)" stroke-width="0.8" rx="2"/>
+      <text x="548" y="148" fill="#4f5d75" font-size="9" letter-spacing="0.08em" font-family="'Geist Mono', monospace" text-anchor="middle">PHƯƠNG ÁN B</text>
+      <text x="504" y="180" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="start">Dựng lại theo product-detail-5 ngay</text>
+      <rect x="504" y="196" width="408" height="228" rx="8" fill="#f5f5f5"/>
+      <rect x="504" y="196" width="408" height="228" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="892" y="188" fill="#636b80" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">4 bước</text>
+
+      <circle cx="532" cy="228" r="10" fill="none" stroke="#4f5d75" stroke-width="1"/>
+      <text x="532" y="232" fill="#4f5d75" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">1</text>
+      <text x="556" y="232" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Trang ba lối trước Cổng Phạm vi</text>
+      <line x1="520" y1="252" x2="896" y2="252" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+
+      <circle cx="532" cy="280" r="10" fill="none" stroke="#4f5d75" stroke-width="1"/>
+      <text x="532" y="284" fill="#4f5d75" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">2</text>
+      <text x="556" y="284" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Nhóm khuôn mới</text>
+      <line x1="520" y1="304" x2="896" y2="304" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+
+      <circle cx="532" cy="332" r="10" fill="none" stroke="#4f5d75" stroke-width="1"/>
+      <text x="532" y="336" fill="#4f5d75" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">3</text>
+      <text x="556" y="336" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Đổi cả màn Đầu chủ trên điện thoại</text>
+      <line x1="520" y1="356" x2="896" y2="356" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+
+      <circle cx="532" cy="384" r="10" fill="none" stroke="#4f5d75" stroke-width="1"/>
+      <text x="532" y="388" fill="#4f5d75" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">4</text>
+      <text x="556" y="388" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="start">Hàng lớn gấp đôi</text>
+
+      <!-- Legend -->
+      <line x1="48" y1="464" x2="912" y2="464" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="48" y="496" fill="#4f5d75" font-size="9" letter-spacing="0.14em" font-family="'Geist Mono', monospace" text-anchor="start">CHÚ GIẢI</text>
+      <rect x="136" y="484" width="40" height="16" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4" rx="4"/>
+      <text x="188" y="496" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">Phương án khuyến nghị</text>
+      <path d="M384,492 L416,492" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <text x="428" y="496" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">phương án thay thế</text>
+    </svg>
+  </main>
+</body>
+</html>

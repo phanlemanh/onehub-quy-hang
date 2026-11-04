@@ -38,20 +38,22 @@ test("đối chứng đỏ: so bằng ≥ thì ca «tăng đúng 20%» bị bắ
 });
 
 test("ngưỡng khai một chỗ, chú thích «mặc định của sàn»", () => {
+  // Từ hàng 81 con số sống ở sổ điểm biến thiên (config/so.ts); hằng ở hoi-lai.ts lấy số từ sổ, không viết lại.
   const goc = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-  const tep = readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "hoi-lai.ts"), "utf8");
-  const dong = tep.split("\n");
-  const i = dong.findIndex((d) => d.includes("export const MUC_HOI_LAI_DOI_GIA_PHAN_TRAM = 20"));
-  assert.ok(i > 0, "có dòng khai hằng");
-  assert.match(dong.slice(Math.max(0, i - 4), i).join("\n"), /[Mm]ặc định của sàn/, "chú thích ngay trên dòng khai");
+  const dong = readFileSync(path.join(goc, "config", "so.ts"), "utf8").split("\n");
+  const i = dong.findIndex((d) => d.includes('khoa: "price.change_confirm_pct"') && /macDinh: 20\b/.test(d));
+  assert.ok(i > 0, "sổ có dòng price.change_confirm_pct mặc định 20");
+  const hoiLai = readFileSync(path.join(goc, "pricing", "hoi-lai.ts"), "utf8");
+  assert.match(hoiLai, /MUC_HOI_LAI_DOI_GIA_PHAN_TRAM = macDinhSo\(KHOA_HOI_LAI_DOI_GIA\)/, "hằng lấy số từ sổ");
+  assert.match(hoiLai, /[Mm]ặc định của sàn/, "chú thích «mặc định của sàn» cạnh hằng");
   const tat: string[] = [];
   const quet = (d: string) => {
     for (const ten of readdirSync(d)) {
       const p = path.join(d, ten);
       if (statSync(p).isDirectory()) quet(p);
-      else if (p.endsWith(".ts") && !p.endsWith(".test.ts") && /change_confirm_pct|HOI_LAI[A-Z_]*\s*=\s*\d/.test(readFileSync(p, "utf8"))) tat.push(path.relative(goc, p));
+      else if (p.endsWith(".ts") && !p.endsWith(".test.ts") && /HOI_LAI[A-Z_]*\s*=\s*\d/.test(readFileSync(p, "utf8"))) tat.push(path.relative(goc, p));
     }
   };
   quet(goc);
-  assert.deepEqual(tat, ["pricing/hoi-lai.ts"]);
+  assert.deepEqual(tat, [], "không tệp nào viết lại con số ngưỡng hỏi lại");
 });

@@ -10,10 +10,13 @@ import type { BoLoc } from "./doc";
 import { taoBoDongBo, type BoDongBo } from "./dong-bo";
 import { goiFetch } from "./goi-fetch";
 import { taoKhoIndexedDb } from "./kho-indexeddb";
+import { bocGoiBiBao, dichBiBao, xoaMayBiBao } from "./may-bi-bao";
 import { canHoiKhiDangXuat } from "./trang-thai";
 
 type Ctx = {
   bd: BoDongBo;
+  /** Vai của người ở sàn đang làm — màn đọc cờ của lớp phủ quyền (hàng 33) từ đây, không tự đoán. */
+  vai: readonly string[];
   /** Đăng xuất: còn thay đổi chờ thì hỏi; đồng ý (hay không có gì chờ) thì xoá sạch kho trên máy. Trả `false` khi người ở lại. */
   dangXuat(): Promise<boolean>;
   hoi: { n: number; tra: (ok: boolean) => void } | null;
@@ -30,7 +33,18 @@ const BoDongBoCtx = createContext<Ctx | null>(null);
 export function BoDongBoProvider({ userId, companyId, companyIds, roles, children }: { userId: string; companyId: string; companyIds: string[]; roles: string[]; children: ReactNode }) {
   const kho = useMemo(() => taoKhoIndexedDb(userId), [userId]);
   const vai = roles.join(",");
-  const bd = useMemo(() => taoBoDongBo({ goi: goiFetch, kho, me: { userId, roles: vai ? vai.split(",") : [] }, companyId }), [kho, userId, companyId, vai]);
+  const bd = useMemo(() => {
+    // Máy bị báo mất (hàng 38): khép bộ đồng bộ trước, rồi xoá kho của người bị báo và về màn đăng nhập.
+    let ban: BoDongBo | null = null;
+    const goi = bocGoiBiBao(goiFetch, async (u) => {
+      await ban?.dongHan();
+      await xoaMayBiBao(u);
+      window.location.replace(dichBiBao(u));
+    });
+    ban = taoBoDongBo({ goi, kho, me: { userId, roles: vai ? vai.split(",") : [] }, companyId });
+    return ban;
+  }, [kho, userId, companyId, vai]);
+  const dsVai = useMemo(() => (vai ? vai.split(",") : []), [vai]);
   const [hoi, setHoi] = useState<Ctx["hoi"]>(null);
   const [canXemMo, moCanXem] = useState(false);
   const [nhapLai, setNhapLai] = useState<Ctx["nhapLai"]>({});
@@ -76,7 +90,7 @@ export function BoDongBoProvider({ userId, companyId, companyIds, roles, childre
       return con;
     });
 
-  return <BoDongBoCtx.Provider value={{ bd, dangXuat, hoi, canXemMo, moCanXem, nhapLai, suaLai, daDienLai }}>{children}</BoDongBoCtx.Provider>;
+  return <BoDongBoCtx.Provider value={{ bd, vai: dsVai, dangXuat, hoi, canXemMo, moCanXem, nhapLai, suaLai, daDienLai }}>{children}</BoDongBoCtx.Provider>;
 }
 
 export function useBoDongBo(): Ctx {

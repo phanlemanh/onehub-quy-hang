@@ -13,7 +13,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Khu | `subdivisionName`, `subdivisionKey` (RESO `SubdivisionName`) | Khu dân cư, khu đô thị hay khu của chủ đầu tư chứa căn; danh mục dùng chung | «Dự án» |
 | Loại hình | `propertyType` / `propertySubType` (RESO) | Loại của căn, giá trị RESO nguyên văn: căn hộ `Residential` / `Condominium`, nhà phố `Residential` / `Townhouse`, biệt thự `Residential` / `Single Family Residence`, đất `Land` / `Unimproved Land`; nhãn riêng của sàn («Shophouse», «Liền kề») neo vào đây; loại hình nào dùng trường nào đọc từ một bảng của lõi | Loại hình ngoài bốn cặp |
 | Lead | `lead` · RESO `ContactType = Lead` | Trạng thái của một liên hệ chưa nói chuyện hai chiều (KW «Mark as Lead»); bản ghi lead của Quỹ hàng là cơ hội phía bán ở pha đầu gắn liên hệ ấy, từ telesales hay đầu chủ tự nhập — không phải hàng | «Hàng ở nấc đầu» |
-| Liên hệ | `contact` (RESO `Contacts`) | Đối tượng: một người làm việc với sàn — một người, nhiều số, một hay nhiều loại liên hệ, một người giữ (ADR-0021). Va chữ với nút «Liên hệ đầu chủ» của hồ sơ đầu khách (hàng 33 hỏi đổi nhãn) | «Danh bạ» |
+| Liên hệ | `contact` (RESO `Contacts`) | Đối tượng: một người làm việc với sàn — một người, nhiều số, một hay nhiều loại liên hệ, một người giữ (ADR-0021). Nút của hồ sơ đầu khách mang nhãn «Hỏi đầu chủ» để không va chữ (hàng 33, 04/11) | «Danh bạ» |
 | Loại liên hệ | `contact_types` (RESO `ContactType`) | Chủ bán `Seller` · Chủ cho thuê `Landlord` · Người mua `Buyer` · Người thuê `Tenant`; một người mang được nhiều loại; mang Chủ bán hay Chủ cho thuê là lớp nguồn | — |
 | Người giữ | `owner_member_user_id` (RESO `OwnerMemberKey`) | Đầu chủ giữ một liên hệ chủ nhà; chưa có người giữ thì chỉ trưởng nhóm thấy | «Chủ sở hữu» |
 | Đầu chủ | `listing_agent` *(đề xuất, RESO `ListAgent`)* | Người giữ nguồn chủ nhà của căn | «Người giữ» |
@@ -73,7 +73,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Từ điển giá trị | `company_value_aliases` *(đề xuất)* | Cách viết riêng của sàn neo vào giá trị chuẩn («BP» → Bao phí); học từ lựa chọn của người, quản trị sàn duyệt | — |
 | Xử lý bằng AI | `ai_processing` *(đề xuất)* | Loại kết nối: gửi hồ sơ cột đã che cho nhà cung cấp AI lập kế hoạch nhập; sàn bật / tắt; không bao giờ mở lớp nguồn | «Tích hợp AI» |
 | Cấu hình sàn | `company_settings` *(đề xuất)* | Giá trị sàn đặt cho một điểm sàn chỉnh được; sàn chưa đặt thì nhận mặc định dựng sẵn; mỗi lần đổi là một sự kiện ghi người và vai (ADR-0018) | «Tuỳ biến» |
-| Điểm sàn chỉnh được | `config key` *(đề xuất)* | Một dòng của sổ điểm biến thiên: khoá, kiểu, mặc định, khoảng, ai đổi, hiệu lực, lớp dữ liệu (`docs/architecture/so-diem-bien-thien.md`) | — |
+| Điểm sàn chỉnh được | `DiemSo` (sổ: `SO_DIEM`, `packages/core/src/config/so.ts`) | Một dòng của sổ điểm biến thiên: khoá, kiểu, mặc định, khoảng, ai đổi, hiệu lực, lớp dữ liệu (`docs/architecture/so-diem-bien-thien.md`); sổ ở mã và sổ ở tài liệu khớp nhau bằng bộ kiểm của lõi | — |
 
 ## Chọn chữ
 
