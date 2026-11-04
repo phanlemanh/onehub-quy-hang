@@ -2,3 +2,4 @@
 export * from "./kieu";
 export * from "./danh-sach";
 export * from "./so-do";
+export * from "./xuat";

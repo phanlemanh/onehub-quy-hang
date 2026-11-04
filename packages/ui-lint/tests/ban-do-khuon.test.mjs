@@ -41,7 +41,6 @@ function voi(fn) {
 
 const NHOM = ["bang-hang", "cai-dat-san", "cuoc-goi", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-truong-nhom", "lead-cua-toi", "o-nhan-lead", "toi", "trang-mau", "trang-tam", "trang-thai", "xac-thuc"];
 const TRANG_TAM = [
-  "exports/new",
   "imports/new",
   "me",
   "shares",
@@ -61,7 +60,8 @@ const BANG = {
   "trang-tam": {
     // Hàng 91: Cài đặt sàn vào vỏ — mục chưa dựng là trang tạm; trang chuyển hướng và Người dùng là ngoại lệ.
     // Hàng 38: Tôi rời trang tạm sang nhóm toi.
-    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/")), `${W}/app/(app)/settings/[section]/page.tsx`].sort(),
+    // Hàng 43: /exports/new chỉ chuyển hướng về bảng hàng (hộp thoại Xuất bảng hàng), nằm ngoài vỏ (app) — rời nhóm.
+    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/") && !t.includes("/exports/")), `${W}/app/(app)/settings/[section]/page.tsx`].sort(),
     ngoaiLe: [
       `${W}/app/(app)/inventory/page.tsx`,
       `${W}/app/(app)/inventory/views/[id]/page.tsx`,
@@ -108,7 +108,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["khung.tsx", "nguon-that.tsx", "o-lead.tsx", "page.tsx"].map((p) => `${W}/app/(app)/leads/new/${p}`),
   ...TRANG_TAM.slice(3),
   // Bảng hàng (hàng 14): màn, khuôn và các thành phần của nó; trình sửa trên ô (hàng 15).
-  ...["bang-hang.tsx", "bulk/thanh.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
+  // Hộp thoại Xuất bảng hàng (hàng 43).
+  ...["bang-hang.tsx", "bulk/thanh.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "phat-hang/hop-thoai.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
   ),
   // Bảng hàng thẻ trên điện thoại (hàng 32): bảng thẻ, ngăn lọc, thẻ căn.
@@ -138,6 +139,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ),
   // Hàng 91: lỗi và không thấy ở gốc app; trang mẫu sống.
   ...["error.tsx", "global-error.tsx", "not-found.tsx"].map((p) => `${W}/app/${p}`),
+  // Hàng 43: trang chuyển hướng /exports/new ngoài vỏ (app).
+  `${W}/app/exports/new/page.tsx`,
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
@@ -154,6 +157,8 @@ const CHO_TRANG_THAI = [
   // Bảng hàng thẻ (hàng 32): lỗi tải lần đầu, trống, lọc rỗng.
   ...Array(3).fill(`${W}/app/(app)/inventory/cards/bang-the.tsx`),
   `${W}/app/(app)/inventory/khung.tsx`,
+  // Hộp thoại Xuất bảng hàng (hàng 43): «Cột không ra ngoài», lỗi dựng, đã chép/tải, chưa ghi, lỗi chép/tải.
+  ...Array(5).fill(`${W}/app/(app)/inventory/phat-hang/hop-thoai.tsx`),
   // Lead của tôi (hàng 27): lỗi và trống của vùng Lead đã nhập.
   ...Array(2).fill(`${W}/app/(app)/leads/mine/lead-da-nhap.tsx`),
   ...Array(5).fill(`${W}/app/(app)/leads/new/o-lead.tsx`),
@@ -384,8 +389,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 6 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
-      "trang-thai: 72 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 5 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
+      "trang-thai: 77 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
