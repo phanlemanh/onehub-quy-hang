@@ -5,10 +5,10 @@ slug: dang-nhap-auth-15
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: draft
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-auth-15-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-04
 ---
 
 # Acceptance Contract: dang-nhap-auth-15
