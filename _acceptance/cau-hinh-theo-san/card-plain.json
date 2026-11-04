@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Mỗi sàn giữ cấu hình riêng (hạn lead, ngưỡng gọi lại, mức hỏi lại giá…): quản trị sàn đổi qua một lệnh, mỗi lần đổi ghi vào nhật ký ai đổi, vai gì, lúc nào; sàn chưa đổi dùng số mặc định; lead đã chia giữ hạn cũ.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cho mọi người trong sàn xem cấu hình đang áp; sàn chưa đổi thấy số mặc định, sàn A đổi thì sàn B không bị ảnh hưởng."},
+    {"id": "AC-2", "p": "Sẽ cho quản trị sàn đổi một hay nhiều điểm trong một lần; mỗi điểm đổi thêm một dòng nhật ký ghi người, vai và lúc."},
+    {"id": "AC-6", "p": "Sẽ ghi nhật ký cho mọi lối đổi cấu hình — cả lối chia lead và lối hàng đợi đang có — và không ai sửa hay xoá được nhật ký; cấu hình đặt từ trước cũng được ghi bù một dòng."},
+    {"id": "AC-8", "p": "Sẽ giữ hạn cũ cho lead đã chia; lead chia sau lần đổi mới mang hạn mới."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Chặn trưởng nhóm, đầu chủ, telesales đổi cấu hình; chưa đăng nhập thì không đổi được."},
+    {"id": "AC-4", "p": "Chặn giá trị sai hay ngoài khoảng, báo đúng điểm sai, và không ghi phần nào của lần đổi ấy."},
+    {"id": "AC-5", "p": "Sẽ KHÔNG áp im lặng một cặp hạn trái luật (hạn nhận dài hơn hạn gọi): lần đổi bị từ chối, dòng cũ trái luật thì được báo."},
+    {"id": "AC-7", "p": "Chặn ở cơ sở dữ liệu mọi dòng cấu hình thuộc lớp thông tin chủ nhà."},
+    {"id": "AC-9", "p": "Chặn sàn khác đọc hay đổi cấu hình và nhật ký của sàn mình."},
+    {"id": "OOS-1", "p": "KHÔNG làm màn Cài đặt sàn — đó là hàng 45–49."},
+    {"id": "OOS-2", "p": "KHÔNG làm màn xem lịch sử đổi cấu hình — nhật ký có sẵn, màn đọc nó đi cùng hàng 45–49."},
+    {"id": "OOS-3", "p": "KHÔNG đổi nhãn trường, trường riêng và các bảng cấu hình nhiều dòng qua lối chung — mỗi loại có hàng riêng."},
+    {"id": "OOS-4", "p": "KHÔNG gộp hai lối đổi cũ (chia lead, hàng đợi) vào lối chung — chúng tự vào nhật ký."},
+    {"id": "OOS-5", "p": "KHÔNG làm bộ đệm cấu hình — mỗi lần dùng đọc thẳng như hôm nay."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đã soát theo năm nhóm ca bắt buộc của quyết định cấu hình theo sàn, không chạy quét tự động."},
+    {"i": 1, "p": "Lối đổi: lối chung mới, hai lối cũ, ghi thẳng vào cơ sở dữ liệu, và dòng có từ trước — mỗi lối có tiêu chí (AC-2, AC-4, AC-5, AC-6, AC-7, AC-9)."},
+    {"i": 2, "p": "Người gọi: quản trị, trưởng nhóm, đầu chủ, telesales, chưa đăng nhập, người sàn khác (AC-1, AC-2, AC-3, AC-9)."},
+    {"i": 3, "p": "Giá trị: mặc định, trong khoảng, đúng biên, ngoài biên, sai kiểu, điểm lạ, điểm chưa mở (AC-1, AC-4)."},
+    {"i": 4, "p": "Cặp hạn: cặp đúng, đổi một nửa sai, đổi cả cặp cùng lúc, dòng cũ sai lúc đọc và lúc chia lead (AC-5)."},
+    {"i": 5, "p": "Hiệu lực: lead trước và sau lần đổi (AC-8); đọc thấy ngay số mới (AC-1)."},
+    {"i": 6, "p": "Bất biến: sàn khác không thấy (AC-9), không dòng nào là thông tin chủ nhà (AC-7)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc chọn «dừng chia lead» hay «chia theo hạn mặc định và báo» khi gặp cặp hạn sai có sẵn là quyết định của anh, máy đã ghi nhầm là tự quyết — nay thành Hỏi-1."},
+    {"i": 1, "p": "Hai lý do bỏ việc không đứng vững: bỏ ghi bù nhật ký cho cấu hình cũ (thật ra kiểm được) và bỏ quét độ phủ — đã sửa: có ghi bù kèm ca kiểm, lý do bỏ quét viết lại."},
+    {"i": 2, "p": "Cặp hạn sai có sẵn chỉ được đo ở lõi, chưa đo trên đường chia lead thật — đã thêm ca chia lead thật."},
+    {"i": 3, "p": "Hai lối đổi cũ chỉ đếm dòng nhật ký, chưa kiểm người và vai — đã thêm."},
+    {"i": 4, "p": "Phép thử chặn sửa, xoá nhật ký có thể xanh nhờ quyền chặn trước — đã thêm ca bằng quyền chủ bảng, ghim đúng lời chặn."}
+  ]
+}

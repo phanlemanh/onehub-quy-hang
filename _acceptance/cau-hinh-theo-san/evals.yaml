@@ -1,0 +1,93 @@
+schema_version: 1
+feature_slug: cau-hinh-theo-san
+# Lệnh máy: executors.test.isolation (migrate + bộ cách ly + test-db của api — cần DATABASE_URL tới Postgres dãy D) và
+# executors.test.core. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter của node --test: có mặt, ok,
+# không SKIP. Mọi ca API dựng sàn, người và lead qua lối API thật; chỉ ca chặn ở cơ sở dữ liệu dùng kết nối vai API.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: đọc mặc định, sàn B không đổi theo A» có mặt trong packages/api/test-db/cau-hinh-theo-san.test.ts và ok — tập khoá trả về deepEqual tập rút từ SO_DIEM của lõi (điểm không map, không họ khoá <…>, tinhTrang mo — rút bằng mã, không viết tay) và mỗi dòng value deepEqual macDinh của sổ, source «default», tập trường deepEqual {key, value, source, updatedBy, updatedAt}; errors rỗng. Sau PATCH của quản trị A đặt lead_routing.accept_minutes = 20: sàn A đọc 20 (đọc bằng telesales A — vai không quản trị), source «company», updatedBy = mã quản trị A; sàn B (đọc bằng thành viên B) vẫn 15, source «default». Chiều đỏ cùng ca: đọc của A trước PATCH là 15 (đối chứng rằng 20 đến từ lần đổi)."
+    paths: [packages/api/src/settings/**, packages/core/src/config/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: mỗi khoá một sự kiện ghi người và vai» có mặt và ok — đếm sự kiện của sàn A trước và sau mỗi lệnh: PATCH một khoá (queue.call_back_after_days = 20) → đúng +1, sự kiện deepEqual {key, value: 20, actor_user_id: mã quản trị A, actor_roles chứa company_admin} và at không rỗng; PATCH hai khoá (price.change_confirm_pct = 30, share.stale_warning_days = 10) → đúng +2, một sự kiện mỗi khoá (deepEqual tập khoá); bản hiện hành company_settings mang ba giá trị mới. Chiều đỏ cùng ca: lệnh 400 (khoá lạ) → +0 sự kiện."
+    paths: [packages/api/src/settings/**, packages/db/migrations/026_*.sql, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: vai khác 403, chưa đăng nhập 401» có mặt và ok — ma trận viết trước năm người gọi × một giá trị hợp lệ (lead_routing.accept_minutes = 20): quản trị sàn 200 (đối chứng dương, chạy cuối), trưởng nhóm, đầu chủ, telesales 403 mã adminRequired, không cookie 401 — năm assert mã; sau bốn lời bị từ chối bản hiện hành của khoá vẫn vắng và số sự kiện không đổi (assert trước đối chứng dương)."
+    paths: [packages/api/src/settings/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: giá trị sai 400 nêu khoá, nguyên khối» có mặt và ok — ma trận viết trước tám thân lệnh của quản trị A: khoá không có trong sổ (queue.khong_co), khoá map (queue.groups), họ khoá (labels.field.unitNumber), khoá chưa mở (customer_page.off_compound_address), sai kiểu (lead_routing.accept_minutes = \"20\"), dưới biên (queue.call_back_after_days = min-1), trên biên (= max+1), lệnh hai khoá một đúng một sai ({share.stale_warning_days hợp lệ, lead_routing.accept_minutes = 0}) — mỗi ca 400 mã invalidSettings và reason chứa đúng chuỗi khoá sai (assert includes khoá, và với ca hai khoá reason không chứa khoá đúng); sau tám ca số sự kiện và bản hiện hành không đổi (khoá đúng của ca hai khoá vẫn vắng). min/max rút bằng khoangCua của lõi, không viết số tay. Đối chứng dương cùng ca: PATCH min rồi max của queue.call_back_after_days → 200 cả hai."
+    paths: [packages/api/src/settings/**, packages/core/src/config/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5a
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: một nửa cặp hạn trái luật bị từ chối (Ngoài-5 hàng 81)» có mặt và ok — sàn A hạn gọi mặc định 30: PATCH chỉ lead_routing.accept_minutes = 60 → 400 invalidSettings, reason chứa cả «lead_routing.accept_minutes» và «lead_routing.first_call_minutes», số sự kiện không đổi, GET vẫn trả 15/30; PATCH cả cặp {accept 45, first_call 60} cùng lệnh → 200 (đối chứng dương), GET trả 45/60, +2 sự kiện; rồi PATCH chỉ first_call = 40 (nhỏ hơn hạn nhận 45) → 400 nêu cả hai khoá (chiều thứ hai của cặp)."
+    paths: [packages/api/src/settings/**, packages/core/src/config/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «cặp hạn trái luật ở lối đọc: báo, không áp im lặng» có mặt trong packages/core/src/config/luat-nhan-cau-hinh.test.ts và ok — cùng fixture dòng sàn: (1) [{accept_minutes: 60}] → giaiCauHinh trả lỗi chứa cả hai khoá «lead_routing.accept_minutes» và «lead_routing.first_call_minutes», cauHinh của hai khoá deepEqual mặc định của sổ (15/30); readLeadRoutingSettings theo Hỏi-1 — (a, khuyến nghị) trả acceptMinutes/firstCallMinutes deepEqual 15/30; (b) ném Error có thông điệp chứa cả hai khoá; kiemGiaTri(accept_minutes, 60, {first_call_minutes: 30}) trả ok: false nêu cả hai khoá. (2) đối chứng dương [{accept_minutes: 20}] (hạn gọi mặc định 30) → loi rỗng, accept 20; readLeadRoutingSettings trả 20/30. (3) [{accept 45},{first_call 60}] → loi rỗng, cả hai áp."
+    paths: [packages/core/src/config/**, packages/core/src/routing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5c
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: dòng cặp hạn trái luật có sẵn — GET báo, lead không mang 60/30» có mặt trong packages/api/test-db/cau-hinh-theo-san.test.ts và ok — kết nối chủ (DATABASE_URL) chèn thẳng dòng company_settings lead_routing.accept_minutes = 60 cho sàn A (không qua lối kiểm); GET của thành viên A: hai khoá deepEqual 15/30, source «default», errors có một phần tử chứa cả hai khoá; telesales nhập lead qua POST /api/v1/leads, chạy POST /api/v1/jobs/lead-tick, đọc accept_minutes/first_call_minutes của lead: theo Hỏi-1 — (a, khuyến nghị) deepEqual 15/30; (b) lead chưa đóng dấu (null/null) và nhịp trả lỗi nêu hai khoá. Assert lead KHÔNG mang accept 60 ở cả hai lối. Đối chứng dương cùng ca: thay dòng thành accept 20 (chèn thẳng) → lead mới mang 20/30, GET errors rỗng."
+    paths: [packages/api/src/settings/**, packages/core/src/config/**, packages/core/src/routing/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; bốn ca có mặt và ok. (a) packages/db/tests/isolation.test.mjs «company_settings_events: vai API không sửa, không xoá, không chèn thẳng» — kết nối vai quy_hang_app sàn A: update, delete, insert thẳng một sự kiện → permission denied; đối chứng dương: select sự kiện của A đọc được, upsert company_settings của quản trị A làm số sự kiện +1. (b) cùng tệp «company_settings_events: chủ bảng cũng không sửa, không xoá» — kết nối chủ (DATABASE_URL): update và delete một sự kiện → lỗi có thông điệp đúng chuỗi raise của trigger chặn sửa xoá (assert regex chuỗi ấy, KHÔNG nhận permission denied); đối chứng dương: chủ select được dòng. (c) packages/api/test-db/cau-hinh-theo-san.test.ts «cấu hình sàn: ba lối ghi đều vào nhật ký, ghi người và vai» — PUT /api/v1/company/settings/lead-routing hai khoá → đúng +2 sự kiện, mỗi sự kiện deepEqual {key, value bằng giá trị đã PUT, actor_user_id mã quản trị A} và actor_roles chứa company_admin, at không rỗng; PUT /api/v1/company/settings/queue → đúng +1 sự kiện queue.groups cùng các trường ấy; PATCH lối chung một khoá → +1 cùng các trường. (d) cùng tệp «cấu hình sàn: dòng có trước 026 được chép bù» — cơ sở dữ liệu tạm: chạy từng tệp migration số < 026 và ghi vào bảng sổ migration như migrate.mjs, chèn hai dòng company_settings, rồi chạy packages/db/scripts/migrate.mjs — đúng 2 sự kiện, mỗi sự kiện deepEqual {key, value, actor_user_id = updated_by} và at = updated_at của dòng; đối chứng: trước khi chạy 026 bảng sự kiện không tồn tại."
+    paths: [packages/db/migrations/026_*.sql, packages/db/tests/isolation.test.mjs, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: không dòng nào lớp source» có mặt trong packages/db/tests/isolation.test.mjs và ok — quản trị A chèn company_settings với data_class 'source' → lỗi ràng buộc check gọi tên ràng buộc data_class của company_settings (assert regex tên ràng buộc); cùng dòng với data_class 'company_internal' → được (đối chứng dương); kết nối chủ chèn thẳng company_settings_events với data_class 'source' → lỗi gọi tên ràng buộc data_class của company_settings_events, cùng dòng 'company_internal' → được (đối chứng dương); và ở packages/api/test-db/cau-hinh-theo-san.test.ts ca «cấu hình sàn: lớp theo sổ» — sau PATCH lối chung, data_class của dòng company_settings và của sự kiện bằng lop của khoá trong SO_DIEM (rút bằng mã)."
+    paths: [packages/db/migrations/026_*.sql, packages/db/tests/isolation.test.mjs, packages/api/src/settings/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cấu hình sàn: lead cũ giữ hạn 15, lead mới mang 20» có mặt trong packages/api/test-db/cau-hinh-theo-san.test.ts và ok — telesales nhập lead L1 qua POST /api/v1/leads, nhịp chia POST /api/v1/jobs/lead-tick đóng dấu; quản trị PATCH lead_routing.accept_minutes = 20 qua lối chung; nhập L2, nhịp chia; đọc accept_minutes của hai lead: L1 = 15, L2 = 20 (assert cả hai). Chiều đỏ cùng ca: L1 đọc ngay sau nhịp đầu đã là 15 (đối chứng rằng số được đóng dấu lúc chia, không đọc lại sau đổi)."
+    paths: [packages/api/src/settings/**, packages/api/src/routing/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok trong packages/db/tests/isolation.test.mjs: «company_settings_events: bảng bật và ép luật theo dòng» (relrowsecurity và relforcerowsecurity đều true, deepEqual) và «company_settings_events: sàn khác không đọc, không ghi hộ» — với sự kiện của A đã có (đối chứng dương: A đọc thấy ≥ 1): người sàn B đọc sự kiện và company_settings của A → 0 dòng; B upsert company_settings với company_id của A → lỗi luật theo dòng; số sự kiện của A không đổi. Chiều đỏ: ca «company_settings_events: chiều đỏ — luật đọc không lọc sàn thì ca đọc chéo nêu tên bảng» theo khuôn ca chiều đỏ có sẵn của bảng exports."
+    paths: [packages/db/migrations/026_*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
