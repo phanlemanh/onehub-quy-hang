@@ -1,0 +1,116 @@
+schema_version: 1
+feature_slug: man-nhap-excel
+# Phần máy của màn sống ở `apps/web/src/lib/nhap/**` (hàm thuần: đọc tệp, đường ống, trạng thái năm bước, gọi API) để
+# kiểm được bằng node:test — bộ kiểm web không có DOM. Màn React chỉ nối trạng thái với khối; mắt người chấm ở E9.
+# exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng tên ca nêu trong `expected` — có mặt, «ok», không
+# «# SKIP»/«# TODO». Fixture tệp sinh từ bộ thử thật của hàng 64 (`packages/core/test/import/sinh.ts`) và từ `exceljs`
+# (bên ghi thật), không dựng tay khuôn bên đọc. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đọc tệp: bộ thử hàng 64 ra đúng lưới lõi» có mặt và ok — với MỌI tệp của sinhBoThu() (đếm số tệp so ≥ 8 và bằng số phần tử của bộ thử, assert), lưới bộ đọc của màn deepEqual lưới lõi (docXlsx cho mau-a/mau-b, decodeText+parseCsv cho csv); ca «đọc tệp: xlsx nén nhiều trang tính» — tệp do exceljs ghi (hai trang «Toà A», «Toà B», chuỗi dùng chung, số, ngày) đọc theo tên trang ra đúng lưới viết tay (2 assert deepEqual) và danh sách tên trang đúng; ca «đọc tệp: mọi dạng ô của exceljs» — một trang do exceljs ghi có đủ bảy dạng ô (công thức có kết quả lưu sẵn, chữ định dạng richText, liên kết, đúng/sai, ô lỗi #N/A, ngày, tiêu đề gộp hai tầng) → mỗi dạng một assert so với giá trị viết tay (kết quả công thức, chữ phẳng, chữ hiển thị của liên kết, chữ đúng/sai, null cho ô lỗi, ngày theo khuôn lõi đọc, ô gộp lặp chữ tiêu đề trên như docXlsx), đếm số assert = 7; ca «đọc tệp: lỗi có tên» — năm đầu vào viết tay (.xls theo tên và chữ ký OLE, byte rác đuôi .xlsx, tệp 10 MB + 1 byte, xlsx 5.001 dòng, csv rỗng) → mỗi ca trả {loi} với chữ tiếng Việt viết tay (5 assert deepEqual), không ném; đối chứng dương: tệp đúng 5.000 dòng đọc được. Chiều đỏ: bỏ chặn cỡ → ca lỗi đỏ nêu «tệp 10 MB + 1 byte»."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đường ống: màn ra đúng dấu của lõi» có mặt và ok — với mọi tệp của sinhBoThu(), dấu từng ô (mark, reason) và đếm theo bốn dấu do đường ống của màn trả deepEqual đầu ra của packages/core/test/import/do.ts `chay()` trên cùng tệp và cùng ngữ cảnh (today, catalog mẫu) — một assert mỗi tệp, đếm số tệp so = số tệp bộ thử; ca «đường ống: đếm theo dấu khớp số nền» — tổng bốn dấu trên bộ thử bằng số trong _acceptance/nhap-loi-tat-dinh/so-nen.json (đọc tệp, không chép số); ca «đường ống: ngưỡng Cổng Đáng trên tệp mẫu» — với mau-a và mau-b: tỷ lệ ô cần người do đường ống màn trả ≤ 10% và tỷ lệ lỗi lọt so với đáp án của bộ thử (hàm đo của do.ts) ≤ 0,5% — mỗi tệp hai assert, ngưỡng viết tay trong test, số đọc từ chạy thật. Chiều đỏ: đường ống của màn bỏ catalog → ca đầu đỏ nêu tên tệp ban-ma-can."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «ghép cột: cột nguồn sang trường ngoài lớp nguồn bị chặn» có mặt và ok — bảng dựng bằng readTable từ lưới viết tay có ba cột lớp nguồn (số chủ 0900 000 0xx, tên chủ [Tên], giá đáy); ma trận viết tay 3 cột × 3 đích sai (privateRemarks, keep_as_note, listPrice) → trạng thái ghép có lỗi nêu cột và tên trường, `coTheTiep` = false (9 assert); 3 cột × 2 đích đúng (trường nguồn của chính cột, ignore_with_reason) → không lỗi, `coTheTiep` = true (6 assert, đối chứng dương); đếm số lần so = 15. Ca «ghép cột: ô mẫu cột nguồn chỉ hình dạng» — mẫu của ba cột nguồn không chứa chuỗi giá trị nào của các ô ấy (assert theo từng giá trị) và bằng chữ hình dạng viết tay («số điện thoại · 10 chữ số»…); đối chứng: cột danh mục hiện giá trị thật. Chiều đỏ: bỏ che mẫu → ca thứ hai đỏ nêu «0900 000 0»."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «xem trước: sửa ô tính lại dấu và giá trị gửi» có mặt và ok — trên bảng từ tệp ban-gia của bộ thử, sửa một ô giá «cần người» thành «3,2 tỷ» → mark của ô đổi khỏi needs_person, và gói dòng dựng cho API mang «3,2 tỷ» ở đúng chỉ số cột (assert deepEqual cells); sửa ô mã căn «chặn» thành mã có trong danh mục → mark khác blocked; ca «xem trước: bỏ dòng gửi skip» — bỏ dòng 3 → phần tử dòng 3 của gói có skip: true, các dòng khác không có khoá skip (assert); ca «xem trước: đổi gì sau xem thử thì khoá ghi» — trạng thái sau bản xem thử có `coTheGhi` = true; sau sửa ô → false; sau bỏ dòng → false; xem thử lại → true (4 assert theo thứ tự). Chiều đỏ: không xoá kết quả xem thử khi sửa → ca thứ ba đỏ nêu «sau sửa ô»."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «nhập: xem thử bằng ghi trên 450 dòng» có mặt và ok trên Postgres dãy — sàn mới, Đầu chủ mới; tệp 450 dòng dựng bằng exceljs từ căn của danh mục mẫu (dòng mã ngoài danh mục, dòng căn đã có hàng của người khác dựng qua đường ghi thật) với ma trận trùng viết tay: một cặp cùng gói (dòng 5, 6), một cặp vắt gói 1–2 (10, 210), một cặp vắt gói 2–3 (390, 420); hành động từng dòng của bản xem thử deepEqual hành động khi ghi theo số dòng (6 assert cho sáu dòng của ma trận, dòng sau mỗi cặp là bỏ «trùng dòng n»); màn gọi đúng hàm API của lib/nhap: mở lần nhập, xem thử 3 gói (200·200·50), đếm bốn số; đếm listings của sàn trước/sau xem thử bằng nhau và import_rows của lần nhập = 0 (2 assert); rồi ghi 3 gói → tổng summary deepEqual bốn số của bản xem thử, số listings tăng đúng bằng số căn mới (2 assert). Chiều đỏ: gói ghi gửi khác gói xem thử (bỏ dòng cuối) → ca đỏ nêu «xem thử ≠ ghi»."
+    paths: [apps/web/src/lib/nhap/**, packages/api/src/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «rò nguồn: mở lần nhập không mang giá trị nguồn» có mặt và ok — chạy đủ năm bước của trạng thái màn với tệp có cột số chủ 0900 000 0xx (ba cách viết: 0900000012, 0900 000 012, +84900000012), tên chủ [Tên chủ mẫu], giá đáy 3200000000 qua fetch giả ghi lại mọi yêu cầu; thân POST /api/v1/imports: findSourceLeaks (lõi) trả rỗng VÀ không chuỗi nào trong danh sách giá trị mẫu viết tay có mặt (assert từng giá trị); đối chứng dương: thân gói POST /imports/{id}/rows CÓ mang 0900 000 012 trong cells (chứng fetch giả bắt được thân thật); ca «rò nguồn: chỉ gọi địa chỉ đã khai» — tập địa chỉ đã gọi ⊆ {/api/v1/imports, /api/v1/imports/{id}/rows, /api/v1/imports/{id}, /api/v1/catalog, /api/v1/imports/agents} (assert theo từng yêu cầu). Chiều đỏ: kế hoạch mang valueMap của cột số chủ → ca đầu đỏ nêu 0900 000 012."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «nhập: lỗi mạng giữa gói, thử lại không nhân đôi» có mặt và ok trên Postgres dãy — tệp 300 dòng (2 gói); bộ gửi của màn với fetch bọc làm gói 2 ném lỗi mạng SAU khi máy chủ đã ghi (lần 1) → trạng thái màn: gói 1 xong, gói 2 lỗi, `thuLai` khả dụng (3 assert); bấm thử lại → gửi lại đúng 100 dòng của gói 2 (assert số dòng và số thứ tự dòng); đếm listings tạo bởi lần nhập (listing_events có import_id) = số căn mới của bản xem thử (assert); đối chứng: cùng tệp không lỗi mạng ra cùng số. Chiều đỏ: thử lại mở lần nhập mới → ca đỏ nêu «nhân đôi»."
+    paths: [apps/web/src/lib/nhap/**, packages/api/src/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; trong packages/api/test-db/imports ca «đầu chủ của sàn: chỉ vai nhập, chỉ mã và tên» có mặt và ok — GET /api/v1/imports/agents: Đầu chủ và Trưởng nhóm của sàn A nhận 200, danh sách deepEqual tập Đầu chủ của A viết tay (mỗi phần tử đúng hai khoá userId, name); vai Đầu khách nhận 403 import-role-required; Đầu chủ của sàn B không có trong danh sách của A (đối chứng cách ly). Chiều đỏ: route trả cả email → ca đầu đỏ nêu khoá thừa."
+    paths: [packages/api/src/imports/**, apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «quyền: vai khác không gọi API nhập» có mặt và ok — trạng thái màn với vai [buyer_agent] ra «không có quyền» và fetch giả ghi 0 yêu cầu (2 assert); đối chứng dương: vai [listing_agent] vào bước tải tệp. Ca «quyền: Trưởng nhóm chọn một đầu chủ cho cả tệp» — vai [team_lead] chưa chọn đầu chủ → `coTheTiep` false; chọn X → mọi dòng của gói dòng mang agentUserId X (assert từng dòng); vai [listing_agent] → không dòng nào mang agentUserId. Chiều đỏ: bỏ kiểm vai → ca đầu đỏ nêu buyer_agent."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8c
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «nhập: Trưởng nhóm nhập hộ đầu chủ» có mặt và ok trên Postgres dãy — sàn A có Trưởng nhóm T và Đầu chủ X, sàn B có Đầu chủ Y; T chọn X qua danh sách đầu chủ đọc từ máy chủ, xem thử rồi ghi 2 gói qua hàm API của lib/nhap; mọi hàng tạo ra có đầu chủ giữ căn là X, không phải T (assert theo từng hàng), số hàng tạo bằng số căn mới của bản xem thử; đối chứng âm: agentUserId là Y (sàn B) → mọi dòng bỏ với lý do hằng LY_DO_DONG_NHAP.chuaDauChu của lõi (assert chữ nhập từ hằng). Chiều đỏ: bộ gửi bỏ agentUserId → ca đỏ nêu «đầu chủ giữ căn là T»."
+    paths: [apps/web/src/lib/nhap/**, packages/api/src/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên màn đang chạy, đăng nhập Đầu chủ của sàn thử, mở /imports/new, chọn tệp mẫu mau-b.xlsx của sàn thử. Chụp ở 1440 và 375: (1) bước ghép cột — các cột đã ghép sẵn, cột lớp nguồn hiện hình dạng; (2) xem trước — lưới có dấu giữ nguyên/máy sửa/cần người/chặn và lý do khi rê; (3) trùng — bảng từng dòng có hành động và lý do; (4) tóm tắt — câu «Ghi N căn mới, cập nhật M, tin bổ sung K, bỏ J»; (5) kết quả sau ghi có nút Mở Bảng hàng; (6) đăng nhập Đầu khách mở /imports/new thấy trạng thái không có quyền; (7) tệp .xls → lỗi qua khuôn trạng thái kèm hướng dẫn lưu thành .xlsx; (8) tệp không có dòng → trạng thái rỗng; (9) bỏ mọi dòng → «Không dòng nào sẽ được ghi», nút ghi khoá; (10) lỗi mạng giữa gói (tắt mạng của trình duyệt) → «Thử lại gói n»; (11) Trưởng nhóm: ô chọn đầu chủ, chưa chọn thì Tiếp khoá; (12) rời trang giữa chừng → hộp hỏi xác nhận. Mỗi khung ghi vào _acceptance/man-nhap-excel/evidence/E9-*.png."
+    paths: [apps/web/src/app/(app)/imports/**, apps/web/src/components/khoi/solution-crm-6/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; dòng «khuôn: … · 0 lệch» và nhóm nhap-excel có trong bản đồ; kiểm chuẩn «đạt» (danh mục có dòng solution-crm-6, bản đồ hệ thiết kế khớp). Chiều đỏ: xoá dòng solution-crm-6 khỏi catalog.md → kiểm chuẩn đỏ nêu solution-crm-6."
+    paths: [apps/web/src/**, design/patterns/**, .agents/skills/quy-hang-ui/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel; màn /imports/new nằm trong nhan_dien của nhóm."
+    paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/**", "apps/web/src/app/(app)/proto/man-nhap-excel/page.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
