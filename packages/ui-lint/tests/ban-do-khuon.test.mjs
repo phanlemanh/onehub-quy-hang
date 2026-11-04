@@ -63,7 +63,8 @@ const BANG = {
     // Hàng man-nhap-excel: Nhập Excel rời trang tạm sang nhóm nhap-excel.
     // Hàng 43: /exports/new chỉ chuyển hướng về bảng hàng (hộp thoại Xuất bảng hàng), nằm ngoài vỏ (app) — rời nhóm.
     // Hàng 36: Đã gửi rời trang tạm sang nhóm da-gui.
-    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/") && !t.includes("/imports/") && !t.includes("/exports/") && !t.includes("/shares/")), `${W}/app/(app)/settings/[section]/page.tsx`].sort(),
+    // Hàng cai-dat-hop-nhat: trang mục settings/[section] dựng thêm Cá nhân (nhóm toi) — ngoại lệ có lý do của trang tạm.
+    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/") && !t.includes("/imports/") && !t.includes("/exports/") && !t.includes("/shares/"))].sort(),
     ngoaiLe: [
       `${W}/app/(app)/imports/new/page.tsx`,
       `${W}/app/(app)/inventory/page.tsx`,
@@ -76,6 +77,7 @@ const BANG = {
       `${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
+      `${W}/app/(app)/settings/[section]/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
       `${W}/app/(app)/settings/users/page.tsx`,
       `${W}/app/(app)/shares/new/page.tsx`,
@@ -101,7 +103,8 @@ const BANG = {
   "da-gui": { theoKhuon: [`${W}/app/(app)/shares/page.tsx`], ngoaiLe: [] },
   gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [] },
   // Hàng 38: Tôi, nhóm màn mới — màn thật /me và trang ba lối của nó.
-  toi: { theoKhuon: [`${W}/app/(app)/me/page.tsx`], ngoaiLe: [] },
+  // Hàng cai-dat-hop-nhat: Cá nhân dựng KhungToi; /me chỉ chuyển về /settings/personal.
+  toi: { theoKhuon: [`${W}/app/(app)/settings/personal/ca-nhan.tsx`], ngoaiLe: [`${W}/app/(app)/me/page.tsx`] },
   // Hàng man-nhap-excel: Nhập Excel, nhóm màn mới — màn thật /imports/new.
   "nhap-excel": { theoKhuon: [`${W}/app/(app)/imports/new/page.tsx`], ngoaiLe: [] },
   // Hàng 35: Trang khách, nhóm màn mới — trang công khai /s/<mã>, ngoài (app).
@@ -160,7 +163,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "khung.tsx", "page.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "khung.tsx", "page.tsx", "personal/ca-nhan.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -189,6 +192,7 @@ const CHO_TRANG_THAI = [
   // Hôm nay của đầu chủ (hàng 22): trống của trang ba lối; báo bộ đã lưu, báo bộ mặc định, lỗi tải lead, trống của vùng.
   `${W}/app/(app)/proto/hom-nay-dau-chu/hang-doi.tsx`,
   // Cài đặt sàn → Người dùng (vào vỏ ở hàng 91).
+  `${W}/app/(app)/settings/personal/ca-nhan.tsx`,
   `${W}/app/(app)/settings/users/page.tsx`,
   `${W}/app/(app)/settings/users/quan-nguoi.tsx`,
   `${W}/app/(app)/settings/users/quan-nguoi.tsx`,
@@ -291,10 +295,10 @@ describe("E2 — bộ đọc từ chối bản đồ sai khuôn, gọi tên tệ
     ["dòng ngoài tập con", `${P}/trang-thai.md`, "doi_tuong: [trong, loi, bao]", "doi_tuong:\n  - trong", "trang-thai.md: dòng 4: ngoài tập con đọc được"],
     [
       "một tệp thuộc hai nhóm màn",
-      `${P}/cai-dat-san.md`,
-      ', { tep: "apps/web/src/app/(app)/settings/[section]/page.tsx", ly_do: "Mục chưa dựng (mục 45–50 của lộ trình) đi khuôn trang tạm; mỗi mục dựng thật thì có trang riêng dựng MucCaiDat." }',
+      `${P}/trang-tam.md`,
+      ', { tep: "apps/web/src/app/(app)/settings/users/page.tsx", ly_do: "Màn thật Người dùng (hàng 7, hàng 91) — thuộc nhóm cai-dat-san." }',
       "",
-      "tệp «apps/web/src/app/(app)/settings/[section]/page.tsx» thuộc hai nhóm",
+      "tệp «apps/web/src/app/(app)/settings/users/page.tsx» thuộc hai nhóm",
     ],
   ];
   for (const [ten, tep, cu, moi, ghim] of CA)
@@ -415,11 +419,11 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "nhap-excel: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 3 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 99 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 20 ngoại lệ · 0 lệch",
+      "trang-thai: 100 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

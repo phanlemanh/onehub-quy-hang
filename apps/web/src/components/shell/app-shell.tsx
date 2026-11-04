@@ -98,7 +98,7 @@ function DesktopHeader({
         <MenuTao actions={nav.actions} loi={menuTao} />
         {chiBao}
         <Notifications />
-        {taiKhoan ?? <AccountMenuKhung email={user.email} companyName={user.activeCompany.name} dangXuat={async () => false} />}
+        {taiKhoan ?? <AccountMenuKhung email={user.email} companyName={user.activeCompany.name} roles={user.activeCompany.roles ?? []} dangXuat={async () => false} />}
       </div>
     </header>
   );
@@ -173,7 +173,7 @@ export function AppShell({
         <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.mobileActions} />
 
         <div className="relative flex min-h-0 flex-1">
-          {hasColumn && home && <SecondColumn home={home} open={columnOpen} />}
+          {hasColumn && home && <SecondColumn home={home} open={columnOpen} caiDat={{ roles: user.activeCompany.roles ?? [], tenSan: user.activeCompany.name }} />}
           {hasColumn && <SecondColumnToggle open={columnOpen} onToggle={toggleColumn} />}
           {/* Lề thuộc bố cục (ADR-0024): màn dựng qua BoCuc tự giữ lề; màn chưa chuyển (ngoại lệ có hạn) giữ lề cũ của vỏ.
               Bỏ nhánh lề cũ khi màn cuối rời ngoại lệ. */}

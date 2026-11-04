@@ -186,17 +186,20 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 
 - **Một địa chỉ cho một thứ; màn tự đổi theo thiết bị và vai.** Bảng hàng trên máy tính là bảng kiểu Sheet, trên điện thoại là thẻ; Hôm nay của đầu chủ là hàng đợi, của đầu khách là dòng phản ứng của khách. Link mở trên máy nào cũng đúng chỗ. Một người nhiều vai thấy hợp các nhà của mọi vai.
 - **Máy tính** — ba tầng:
-  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · menu Tạo · chuông báo · tài khoản. **Menu Tạo** (hàng 91): việc tạo đầu của vai là nút chính một chạm, các việc còn lại (Lead · Nhập Excel · Xuất bảng hàng theo vai) trong menu; vai không có việc tạo không thấy nút; màn không đặt nút tạo riêng. Điện thoại: nút «+» trên thanh trên chỉ mở «+ Lead» (không Nhập Excel, Xuất bảng hàng); telesales nhận lead bằng tab Lead nên không có nút «+».
-  - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị, ở đáy).
+  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · menu Tạo · chuông báo · tài khoản. Menu tài khoản có «Cá nhân» (mọi vai) và «Cài đặt sàn» (quản trị sàn). **Menu Tạo** (hàng 91): việc tạo đầu của vai là nút chính một chạm, các việc còn lại (Lead · Nhập Excel · Xuất bảng hàng theo vai) trong menu; vai không có việc tạo không thấy nút; màn không đặt nút tạo riêng. Điện thoại: nút «+» trên thanh trên chỉ mở «+ Lead» (không Nhập Excel, Xuất bảng hàng); telesales nhận lead bằng tab Lead nên không có nút «+».
+  - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt (mọi vai có cột nhà, ở đáy; quản trị sàn mở vào Người dùng, vai khác vào Cá nhân — 04/11).
   - **Cột thứ hai luôn có và mặc định mở** ở mọi nhà (hàng 91, chủ kho 02/11); ai gập thì máy nhớ theo người, sàn, nhà. Góc nhìn đã lưu vẫn một chạm ở nút «Góc nhìn» đầu thanh công cụ của bảng.
-  - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay → các hàng đợi của bộ nhóm · Đội → Tổng quan.
+  - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt → nhóm «Cá nhân» (ai cũng thấy) và nhóm «Sàn [Tên]» bảy mục (chỉ quản trị sàn) · Hôm nay → các hàng đợi của bộ nhóm · Đội → Tổng quan.
   - **Mọi màn có đường dẫn** (nhà › màn) ở đầu màn; điện thoại chỉ hiện mục cha làm lối về «‹ cha» (hàng 91). Điều khiển cấp màn (chọn kỳ, khoảng ngày) và nút nằm bên phải đầu màn; cạnh tiêu đề chỉ có nhãn.
   - Hồ sơ căn trượt ra trong ngăn bên phải đè lên bảng, bảng vẫn bấm được — bấm dòng khác thì ngăn đổi hồ sơ (hàng 91, theo `sheet-9`); mở toàn màn khi cần, toàn màn là một cột căn giữa.
-- **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Xuất bảng hàng.
+- **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Tab Tôi mở Cài đặt › Cá nhân. Không có Đội, Cài đặt sàn, Nhập Excel, Xuất bảng hàng.
 - **Telesales**: không cột nhà, không ô gõ mã căn. Máy tính: thanh trên chỉ có Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
 - **Mở app vào Hôm nay**; người chỉ giữ vai quản trị vào Cài đặt sàn.
 - **Người chỉ giữ vai Quản trị sàn trên điện thoại** có hai tab Cài đặt sàn · Tôi — ngoại lệ của dòng điện thoại, vì
-  không có nhà nào khác (chốt ở Cổng Phạm vi vỏ ứng dụng, 31/10).
+  không có nhà nào khác (chốt ở Cổng Phạm vi vỏ ứng dụng, 31/10). Tab sáng theo đường: Cá nhân → Tôi, mục sàn → Cài đặt sàn.
+- **Khu Cài đặt một chỗ** (04/11): nhóm «Cá nhân» (hồ sơ, sàn, cài, thông báo, máy đang đăng nhập, đăng xuất — áp cho tài
+  khoản ở mọi sàn; cài và thông báo trên máy này) và nhóm «Sàn [Tên]» (chỉ quản trị, chỉ áp cho sàn đang làm). Người
+  không quản trị mở địa chỉ một mục sàn thì về Cá nhân kèm câu báo «Mục này chỉ quản trị sàn mở được».
 - **Ô «Gõ mã căn» chỉ ở vai có Bảng hàng** (Đầu chủ, Đầu khách, Trưởng nhóm); Telesales và người chỉ quản trị sàn không
   có (chốt 31/10). Cột thứ hai mở hay gập được nhớ theo người, sàn đang làm và nhà.
 - **Trang khách và đăng nhập không có vỏ.** Trang khách là một link công khai, không đăng nhập, mang tên sàn và người gửi.
@@ -207,12 +210,13 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 | Bảng hàng | — | Có | Có | Có | — |
 | Đã gửi (điện thoại: Gửi) | — | — | Có | Có, cả nhóm | — |
 | Đội | — | — | — | Có | — |
-| Cài đặt sàn | — | — | — | — | Có |
+| Cài đặt (nhóm Cá nhân) | Qua menu tài khoản | Có | Có | Có | Có |
+| Cài đặt (nhóm Sàn) | — | — | — | — | Có |
 | + Lead | Có | Có | — | Có | — |
 | Nhập Excel | — | Có | — | Có | — |
 | Xuất bảng hàng | — | Có | — | Có | — |
 
-Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng — có hàng gì, ở đâu? · Đã gửi — khách đang phản ứng ra sao? · Đội — đội đang chạy thế nào? · Cài đặt sàn — sàn gọi tên và chạy theo luật nào?
+Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng — có hàng gì, ở đâu? · Đã gửi — khách đang phản ứng ra sao? · Đội — đội đang chạy thế nào? · Cài đặt — tôi và sàn của tôi chạy theo luật nào?
 
 | Đường dẫn | Màn |
 | --- | --- |
@@ -227,8 +231,9 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | /exports/new | Xuất bảng hàng |
 | /team | Đội |
 | /settings/labels · /fields · /statuses · /lead-routing · /fees · /templates | Cài đặt sàn |
-| /settings · /settings/users | Cài đặt sàn (mở vào Người dùng) · Người dùng |
-| /me | Tôi (tab điện thoại; menu tài khoản trên máy tính) |
+| /settings · /settings/users | Cài đặt (mở vào mục đầu theo quyền) · Người dùng |
+| /settings/personal | Cá nhân (tab Tôi trên điện thoại; menu tài khoản, cột Cài đặt trên máy tính) |
+| /me | chuyển về /settings/personal |
 | /s/\<mã link> | Trang khách |
 
 ## 10. Danh mục màn và ưu tiên
@@ -384,6 +389,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 04/11 | Hôm nay của trưởng nhóm (máy tính, bố cục Bảng điều khiển): ba ô Lead quá hạn · Ngoại lệ (lead chưa chia được) · Hàng cũ (căn cần gọi lại, chỉ căn toàn sàn); hàng đợi lead quá hạn giao lại một nút; bảng theo đầu chủ. Phạm vi cả sàn (chưa có Nhóm). Người hai vai thấy bảng điều khiển trên, hàng đợi của mình dưới. Điện thoại: một dòng «mở trên máy tính» | Hàng 42 `hom-nay-truong-nhom`, ADR-0024 |
 | 04/11 | Cấu hình theo sàn có nhật ký: một lối đọc cho mọi thành viên và một lối đổi nguyên khối cho quản trị sàn; mỗi lần đổi — qua bất kỳ lối nào — một sự kiện chỉ thêm ghi người và vai, cấu hình có từ trước được ghi bù; cơ sở dữ liệu chặn lớp nguồn. Cặp hạn trái luật không áp im lặng: đổi một nửa bị từ chối; dòng trái luật có sẵn thì chia lead theo mặc định 15/30 và báo ở lối đọc (chủ kho chọn ở Cổng Phạm vi) | Hàng 82 `cau-hinh-theo-san`, ADR-0018, luật đợt 46 |
 | 04/11 | Lead đã trả lại thì đầu chủ cũ không ghi «đã gọi lần đầu» được nữa (máy chủ trả như lead không còn của người gọi, mốc nhận và mốc gọi giữ nguyên); số đo dòng vào đếm một chủ nhà bị trả lại rồi gửi lại một lần — kỳ và thời lượng tính từ lúc nhập lead đầu chuỗi, «lead → cuộc gọi đầu» tới cuộc gọi sớm nhất trong chuỗi (kể cả của đầu chủ cũ), «lead → Sẵn sàng bán» tới lúc lead cuối lên bảng — cùng cách với số đo của cơ sở dữ liệu (luật 37 · Ngoài-5 hàng 52) | migration 023 · `_acceptance/va-moc-goi-dau-lead-tra-lai/` |
+| 04/11 | Khu Cài đặt một chỗ (chủ kho, Cổng Đáng và Cổng Phạm vi hàng cai-dat-hop-nhat): nhà «Cài đặt» cho mọi vai có cột nhà, nhóm «Cá nhân» (nội dung tab Tôi, ai cũng thấy) và nhóm «Sàn [Tên]» (chỉ quản trị); tab Tôi, menu tài khoản và /me mở Cá nhân; người không quản trị mở mục sàn về Cá nhân kèm câu báo (Hỏi-1); bố cục Đọc rộng tối đa 48rem sát cột mục lục. Đổi vỏ 31/10, §9 và ADR-0024 bằng mục sửa đổi | `_acceptance/cai-dat-hop-nhat/` |
 
 ## 13. Chỗ cần chốt
 

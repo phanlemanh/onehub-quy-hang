@@ -1,0 +1,114 @@
+schema_version: 1
+feature_slug: cai-dat-hop-nhat
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ma trận viết trước 7 tổ hợp vai (telesales · đầu chủ · đầu khách · trưởng nhóm · quản trị · quản trị + đầu chủ · telesales + đầu chủ) × navigationFor: mọi tổ hợp có cột nhà mang «settings» ở cuối homes, telesales một mình homes rỗng; HOME_LABEL.settings = «Cài đặt»; số assert = 7 + 1; chiều đỏ: bản sao bảng HOMES bỏ «settings» khỏi đầu chủ → ô «đầu chủ» đỏ nêu tên vai."
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/navigation.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm thuần dựng cột Cài đặt (nhóm, mục) gọi với 6 tổ hợp vai × tên sàn mẫu «[Mẫu] Sàn A»: mọi tổ hợp có nhóm «Cá nhân» một mục /settings/personal; chỉ tổ hợp có company_admin có nhóm «Sàn [Mẫu] Sàn A» với đúng bảy mục theo thứ tự Người dùng · Cách gọi · Trường riêng · Trạng thái · Luật chia lead · Thuế phí · Mẫu nhập; số assert = 6; cột thứ hai dựng từ chính hàm này (bài quét mã nguồn second-column.tsx gọi nó); chiều đỏ: bản sao hàm trả nhóm sàn cho đầu chủ → ô đỏ nêu vai."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; lối vào Cài đặt theo vai: hàm đích của nhà Cài đặt trả /settings/users cho mọi tổ hợp có company_admin, /settings/personal cho tổ hợp khác (ma trận 6 ô, số assert = 6); TAB_PATH.me = /settings/personal; nhãn tab me giữ «Tôi»; chiều đỏ: bản sao hàm trả /settings/users cho trưởng nhóm → ô đỏ nêu vai."
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/navigation.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm mục menu tài khoản theo vai: mọi vai có «Cá nhân» href /settings/personal, chỉ tổ hợp có company_admin có thêm «Cài đặt sàn» href /settings/users (6 tổ hợp, số assert = 6), menu không còn href /me; trang /me chỉ gọi redirect('/settings/personal'); trang /settings chuyển theo hàm đích của lõi (không tự rẽ theo tên vai); hàm chọn tab của người chỉ quản trị (tab settings + me) ma trận 4 đường × 2 tab viết trước: /settings/personal → me sáng, settings tắt · /settings/users → settings sáng, me tắt · /settings/labels → settings sáng · /me → me sáng (số assert = 8); nhãn tab settings = «Cài đặt sàn», nhãn nhà settings = «Cài đặt»; chiều đỏ: bản sao hàm chọn tab so tiền tố /settings → ô /settings/personal đỏ nêu «cả hai tab sáng»."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/me/**", "apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trang /settings/personal dựng ManToi/ToiThat của me/ (nhập, không chép), đường dẫn đầu màn [Cài đặt, Cá nhân]; nhomDong vẫn trả sáu nhóm theo thứ tự hồ sơ · sàn · cài · thông báo · máy · đăng xuất (bài kiểm hàng 38 giữ xanh); không tệp nào ngoài me/ định nghĩa lại NHAN_NHOM; chiều đỏ: bản sao trang tự dựng danh sách dòng → bài quét đỏ nêu tệp."
+    paths: ["apps/web/src/app/(app)/settings/personal/**", "apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm chặn mục sàn ở máy chủ (vai, đường) → null hay /settings/personal?chi-quan-tri=1; ma trận viết trước 5 vai không quản trị × 2 đường (/settings/users, /settings/labels) = 10 ô ra /settings/personal?chi-quan-tri=1, và quản trị × 2 đường ra null; số assert = 12; trang Cá nhân có tham số ấy thì dựng câu báo «Mục này chỉ quản trị sàn mở được» (TrangThai báo), không tham số thì không; mọi page.tsx dưới settings/ trừ personal gọi hàm chặn (bài quét liệt kê tệp, không danh sách tay); chiều đỏ: bản sao bỏ lời gọi ở users/page.tsx → bài quét đỏ nêu tệp."
+    paths: ["apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; chữ phạm vi rút từ một bảng: mục Cá nhân «Áp cho tài khoản của bạn ở mọi sàn», mục sàn «Chỉ áp cho sàn [Mẫu] Sàn A» khi tên sàn mẫu, đường dẫn [Cài đặt, Sàn [Mẫu] Sàn A, <mục>]; mô tả dòng cài và thông báo chứa «trên máy này», dòng hồ sơ và máy không chứa; chiều đỏ: bảng đổi chữ mục sàn → ô đỏ nêu mục; bài quét: mọi page.tsx dưới settings/ lấy câu phạm vi từ chính bảng ấy (liệt kê tệp bằng máy, không danh sách tay), chiều đỏ: bản sao một trang bỏ lời gọi → bài quét đỏ nêu tệp."
+    paths: ["apps/web/src/app/(app)/settings/**", "apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài kiểm bố cục: gốc thân của «doc» mang max-w-(--container-doc) và không mang mx-auto; «ho-so», «dong-tin» giữ max-w + mx-auto; các bố cục khác không max-w; --container-doc = 48rem trong globals.css; chiều đỏ: bản sao gốc «doc» mang mx-auto → ô đỏ nêu bố cục."
+    paths: ["apps/web/src/components/bo-cuc/**", "apps/web/src/app/globals.css"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ma trận 7 tổ hợp vai × tabs: chỉ quản trị một mình có «settings» và «me»; mọi tổ hợp khác không có «settings»; mọi tổ hợp có «me»; số assert = 7; chiều đỏ: bản sao thêm «settings» cho quản trị + đầu chủ → ô đỏ nêu tổ hợp."
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/navigation.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.cai_dat_tai_lieu
+    expected: "exit 0; bài kiểm tài liệu: vo-va-ia.md, 0024-he-bo-cuc.md mỗi tệp có một mục sửa đổi chứa «04/11» và «cai-dat-hop-nhat», và chữ quyết định cũ vẫn còn nguyên (so với bản ở diffBase); Tham chiếu §9 có hàng nhà Cài đặt cho mọi vai có cột nhà, §12 có một dòng 04/11 trỏ _acceptance/cai-dat-hop-nhat/; CONTEXT.md có «Cài đặt» và «Cá nhân»; chiều đỏ: bản sao vo-va-ia.md bỏ mục sửa đổi → ô đỏ nêu tệp."
+    paths: ["docs/design/vo-va-ia.md", "docs/adr/0024-he-bo-cuc.md", "docs/product/tham-chieu.md", "CONTEXT.md", "_acceptance/cai-dat-hop-nhat/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/toi.md", "apps/web/src/app/(app)/me/page.tsx", "apps/web/src/app/(app)/settings/personal/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm toi"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/cai-dat-hop-nhat/thu/dung-h.mjs (Postgres 5574, máy dev 3494; in PID — dừng bằng --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/cai-dat-hop-nhat/thu/chay-ui.mjs --ra _acceptance/cai-dat-hop-nhat/evidence — Chrome không đầu, mỗi bước in một dòng JSON và chụp ảnh E11-*.png"
+      - "Đối chiếu dòng e11-ca-nhan-1440: duongDan = [Cài đặt, Cá nhân], phamVi = «Áp cho tài khoản của bạn ở mọi sàn», dòng cài và thông báo chứa «trên máy này», beRongThan ≤ 768, lechTrai ≤ 1 (mép trái thân sát vùng nội dung), khoangNhanNut ≤ 768, cot có «Cá nhân» và không có nhóm «Sàn», soLanBam (từ /today qua biểu tượng Cài đặt) ≤ 2; xem ảnh E11-ca-nhan-1440.png"
+      - "Đối chiếu e11-doc-1440: với /leads/new (Ô nhận lead), /settings/users (quản trị) và một trang tạm (/settings/labels), mỗi màn beRongThan ≤ 768 và lechTrai ≤ 1; xem ba ảnh E11-doc-*.png"
+      - "Đối chiếu e11-quan-tri-1440 (tài khoản quản trị mẫu: biểu tượng Cài đặt mở /settings/users, cột có «Cá nhân» và «Sàn [Mẫu]…» bảy mục, đầu màn «Chỉ áp cho sàn …»), e11-chan (đầu chủ mở /settings/users về /settings/personal, câu báo «Mục này chỉ quản trị sàn mở được»), e11-menu (đầu chủ: menu tài khoản chỉ «Cá nhân», soLanBam ≤ 2; quản trị: menu có «Cá nhân» và «Cài đặt sàn», tới /settings/users soLanBam ≤ 2); xem ảnh tương ứng"
+      - "Đối chiếu e11-dien-thoai-390: tab «Tôi» đang chọn ở /settings/personal, sáu nhóm dòng, beRongThan = bề rộng màn trừ lề; e11-quan-tri-390: người chỉ quản trị có tab «Cài đặt sàn» và «Tôi», ở /settings/personal chỉ «Tôi» sáng, ở /settings/users chỉ «Cài đặt sàn» sáng; xem ảnh E11-dien-thoai-390.png và E11-quan-tri-390-*.png"
+    expected: "Trên máy tính 1440×900 với đầu chủ mẫu: biểu tượng Cài đặt ở đáy cột nhà mở «Cá nhân», đường dẫn «Cài đặt › Cá nhân», sáu nhóm dòng, thân không rộng quá 768px và sát cột mục lục, cột chỉ nhóm «Cá nhân»; với quản trị mẫu: biểu tượng mở Người dùng, cột có hai nhóm; đầu chủ gõ /settings/users về Cá nhân; menu tài khoản «Cá nhân» mở Cá nhân; trên điện thoại 390×844 tab «Tôi» mở Cá nhân và đang chọn; mỗi cảnh một ảnh."
+    paths: ["apps/web/src/app/(app)/settings/**", "apps/web/src/app/(app)/me/**", "apps/web/src/components/shell/**", "apps/web/src/components/bo-cuc/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]

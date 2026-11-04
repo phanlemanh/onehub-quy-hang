@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "cn";
-import { LogOutIcon, MonitorIcon, MoonIcon, PaletteIcon, SunIcon, UserIcon } from "lucide-react";
+import { LogOutIcon, MonitorIcon, MoonIcon, PaletteIcon, SettingsIcon, SunIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -9,6 +9,7 @@ import { useSyncExternalStore } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { mucTaiKhoan } from "@/app/(app)/settings/cai-dat";
 import { thanDangXuat } from "@/lib/push/dang-ky";
 import {
   DropdownMenu,
@@ -66,7 +67,18 @@ function ThemeSegmentedToggle() {
 }
 
 /** Thân menu tài khoản, không đọc bộ đồng bộ — vỏ thật nối `dangXuat` của bộ đồng bộ ở `app-shell-dong-bo.tsx`. */
-export function AccountMenuKhung({ email, companyName, dangXuat }: { email: string; companyName: string; dangXuat: () => Promise<boolean> }) {
+export function AccountMenuKhung({
+  email,
+  companyName,
+  roles,
+  dangXuat,
+}: {
+  email: string;
+  companyName: string;
+  /** Vai ở sàn đang làm — quản trị có thêm mục «Cài đặt sàn» (hàng cai-dat-hop-nhat). */
+  roles: readonly string[];
+  dangXuat: () => Promise<boolean>;
+}) {
   const router = useRouter();
   const initials = email.slice(0, 2).toUpperCase();
 
@@ -89,10 +101,12 @@ export function AccountMenuKhung({ email, companyName, dangXuat }: { email: stri
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem render={<Link href="/me" />}>
-            <UserIcon aria-hidden="true" />
-            Tôi
-          </DropdownMenuItem>
+          {mucTaiKhoan(roles).map((m, i) => (
+            <DropdownMenuItem key={m.href} render={<Link href={m.href} />}>
+              {i === 0 ? <UserIcon aria-hidden="true" /> : <SettingsIcon aria-hidden="true" />}
+              {m.label}
+            </DropdownMenuItem>
+          ))}
 
           <DropdownMenuItem closeOnClick={false} className="cursor-default focus:bg-transparent!">
             <PaletteIcon aria-hidden="true" />
