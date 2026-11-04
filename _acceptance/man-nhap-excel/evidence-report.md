@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 36265a3aa869488c32ea7a564a55f95d8ce48519
+verified_commit: 477bc4ea0a5b89100fbf24b06e60bc8dd113fe3c
 human_signoff: Manh Phan 2026-11-04
 ---
 
@@ -218,3 +218,7 @@ none — every multi-run eval is uniform
 Round 1: lượt chấm đầu, sửa theo kết quả (xem lịch sử commit của nhánh).
 Round 2: sửa nhận bản xem thử về muộn chỉ khi trạng thái chưa đổi; E9 xem trước trên tệp bẩn; thẻ Cổng chưa ký được.
 Round 3: đổi khuôn — số thế hệ cho mọi kết quả chờ máy; mọi eval và lệnh suite đều xanh trên HEAD 36265a3a. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-04, do hoá cũ do gộp nhánh chính sau vòng 3
+run_id: repin-20261104T091121Z-10582
+sha: 477bc4ea0a5b89100fbf24b06e60bc8dd113fe3c · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E9 · AC không có chốt máy: AC-9
