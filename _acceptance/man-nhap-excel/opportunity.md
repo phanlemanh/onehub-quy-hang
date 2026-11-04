@@ -3,10 +3,10 @@ schema_version: 1
 slug: man-nhap-excel
 feature: Đầu chủ thả file bảng hàng cũ (xlsx, csv) vào màn Nhập Excel, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi qua đường ghi lần nhập của hàng 65; xem thử nói đủ «ghi N căn mới, cập nhật M, tin bổ sung K, bỏ J»
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided              # discovery | decided | archived
+decision: build        # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-04T03:32:02Z    # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
