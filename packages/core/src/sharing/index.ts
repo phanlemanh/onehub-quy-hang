@@ -4,7 +4,6 @@
  * chép đúng khoá viết trước — không bao giờ nhu cầu, liên hệ, tên khách hay số (bất biến 4). Luật ẩn trường của căn là hàng
  * 31 (`../redaction`). Nhập qua `@quy-hang/core/sharing`.
  */
-import { randomBytes } from "node:crypto";
 import type { PayloadError } from "../listing/events";
 
 /** Khách riêng (`client`, bắt buộc một nhu cầu khách) · nhóm môi giới (`agents`, không nhu cầu) — Tham chiếu mục 24. */
@@ -40,9 +39,13 @@ export function validateShareInput(payload: unknown): { ok: true; value: ShareIn
   return { ok: true, value: { audience: aud as ShareAudience, prospectId: aud === "client" ? (pid as string) : null, listingIds: (ds as string[]).map((x) => x.toLowerCase()) } };
 }
 
-/** Mã link `/s/<mã>`: 12 ký tự base64url (72 bit ngẫu nhiên). */
+/**
+ * Mã link `/s/<mã>`: 12 ký tự base64url (72 bit ngẫu nhiên). Web Crypto (không `node:crypto`) để màn Gửi nhập được lối
+ * này ở trình duyệt (hàng 34) — chỉ API gọi hàm này.
+ */
 export function newShareCode(): string {
-  return randomBytes(9).toString("base64url");
+  const b = globalThis.crypto.getRandomValues(new Uint8Array(9));
+  return btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_");
 }
 export const SHARE_CODE = /^[A-Za-z0-9_-]{12}$/;
 
@@ -62,3 +65,5 @@ export type PublicEnvelope = { code: string; audience: ShareAudience; listingIds
 export function publicEnvelope(r: ShareRecord): PublicEnvelope {
   return { code: r.code, audience: r.audience, listingIds: [...r.listingIds], senderUserId: r.senderUserId };
 }
+
+export * from "./tin";
