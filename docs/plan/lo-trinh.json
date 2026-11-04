@@ -2391,6 +2391,15 @@
       "cau_giao": "Dựng lại hồ sơ căn trên điện thoại theo khối đích product-detail-5, dùng chung cho 33, 40–41 — đứng trên 33; nguồn: Hỏi-3 Cổng Phạm vi hàng 33, chủ kho 04/11",
       "slug": "ho-so-dien-thoai-product-detail-5",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-03"
+    },
+    {
+      "ma": "cai-dat-hop-nhat",
+      "cau_giao": "Mọi người dùng có một khu Cài đặt duy nhất: nhóm «Cá nhân» (hồ sơ, cài lên màn hình chính, thông báo, máy đang đăng nhập, đăng xuất — ai cũng thấy) và nhóm «Sàn [Tên]» (người dùng, cách gọi, trường, luật chia lead — chỉ quản trị); hai đường vào: menu tài khoản hay tab Tôi trên điện thoại vào «Cá nhân», biểu tượng Cài đặt trên cột nhà vào mục đầu theo quyền; nội dung đứng cạnh cột mục lục nên không trải hết bề rộng màn.",
+      "slug": "cai-dat-hop-nhat",
+      "vi_sao": "Chủ kho đồng ý ở phiên H 04/11 khi xem Cổng Bằng chứng hàng 38: màn Tôi quá rộng trên máy tính, Tôi/Cá nhân nên thuộc Cài đặt; giám sát ghi hàng (H-13), sau 38 và 43, trước 92.",
+      "sau": [
+        "38"
+      ]
     }
   ],
   "chan_troi": [

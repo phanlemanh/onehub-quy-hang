@@ -40,7 +40,8 @@ export const TAB_PATH: Record<Tab, string> = {
   send: "/shares",
   lead: "/leads/new",
   settings: "/settings",
-  me: "/me",
+  // Tab Tôi là đường vào «Cá nhân» của khu Cài đặt (hàng cai-dat-hop-nhat).
+  me: "/settings/personal",
 };
 
 export const ACTION_PATH: Record<Action, string> = {
@@ -49,12 +50,13 @@ export const ACTION_PATH: Record<Action, string> = {
   export: "/exports/new",
 };
 
-// Bảng §9, mỗi vai một dòng.
+// Bảng §9, mỗi vai một dòng. Mọi vai có cột nhà có nhà Cài đặt (hàng cai-dat-hop-nhat): nhóm Cá nhân ai cũng thấy,
+// nhóm Sàn chỉ quản trị. Telesales không có cột nhà nên vào Cài đặt qua menu tài khoản.
 const HOMES: Record<Role, Home[]> = {
   telesales: ["today"],
-  listing_agent: ["today", "inventory"],
-  buyer_agent: ["today", "inventory", "shares"],
-  team_lead: ["today", "inventory", "shares", "team"],
+  listing_agent: ["today", "inventory", "settings"],
+  buyer_agent: ["today", "inventory", "shares", "settings"],
+  team_lead: ["today", "inventory", "shares", "team", "settings"],
   company_admin: ["settings"],
 };
 
@@ -112,13 +114,47 @@ export function navigationFor(roles: readonly string[]): Navigation {
   };
 }
 
+/** Mục Cá nhân của khu Cài đặt — đích của tab Tôi, menu tài khoản và nhà Cài đặt với vai không quản trị. */
+export const PERSONAL_SETTINGS_PATH = "/settings/personal";
+/** Mục đầu của nhóm Sàn — Người dùng. */
+export const COMPANY_SETTINGS_PATH = "/settings/users";
+
+/** Người có quản Cài đặt của sàn đang làm không — nhóm «Sàn» của khu Cài đặt chỉ cho người này. */
+export function canManageCompany(roles: readonly string[]): boolean {
+  return roles.includes("company_admin");
+}
+
+/** Nhà Cài đặt mở vào mục đầu theo quyền: quản trị sàn vào Người dùng, vai khác vào Cá nhân. */
+export function settingsLanding(roles: readonly string[]): string {
+  return canManageCompany(roles) ? COMPANY_SETTINGS_PATH : PERSONAL_SETTINGS_PATH;
+}
+
+/**
+ * Tab dưới đang chọn của một đường — đúng một tab, hay null. Cá nhân nằm dưới /settings nhưng thuộc tab Tôi; mục sàn
+ * thuộc tab Cài đặt sàn. Đường khớp dài nhất thắng, nên hai tab không bao giờ cùng sáng.
+ */
+export function activeTab(pathname: string, tabs: readonly Tab[]): Tab | null {
+  const khop = (duong: string) => pathname === duong || pathname.startsWith(`${duong}/`);
+  if (tabs.includes("me") && (khop(PERSONAL_SETTINGS_PATH) || khop("/me"))) return "me";
+  let best: Tab | null = null;
+  let len = -1;
+  for (const tab of tabs) {
+    const duong = TAB_PATH[tab];
+    if (tab !== "me" && khop(duong) && duong.length > len) {
+      best = tab;
+      len = duong.length;
+    }
+  }
+  return best;
+}
+
 /** Tên nhà trên màn — nhãn của CONTEXT.md; ô gõ mã căn khớp chữ gõ với tên này. */
 export const HOME_LABEL: Record<Home, string> = {
   today: "Hôm nay",
   inventory: "Bảng hàng",
   shares: "Đã gửi",
   team: "Đội",
-  settings: "Cài đặt sàn",
+  settings: "Cài đặt",
 };
 
 /** Nhà mà một đường thuộc về — để vỏ biết đang ở nhà nào. Hồ sơ căn thuộc Bảng hàng, Lịch xem thuộc Đã gửi. */

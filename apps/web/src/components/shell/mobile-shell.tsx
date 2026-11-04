@@ -1,6 +1,6 @@
 "use client";
 
-import { type Action, type Navigation, TAB_PATH } from "@quy-hang/core";
+import { type Action, activeTab, type Navigation, TAB_PATH } from "@quy-hang/core";
 import { cn } from "cn";
 import { SearchIcon } from "lucide-react";
 import Link from "next/link";
@@ -63,7 +63,7 @@ export function MobileTabBar({ nav, className }: { nav: Navigation; className?: 
       {nav.tabs.map((tab) => {
         const { label, icon: Icon } = TAB_LABEL[tab];
         const path = TAB_PATH[tab];
-        const active = pathname === path || pathname.startsWith(`${path}/`);
+        const active = activeTab(pathname, nav.tabs) === tab;
         return (
           <Link
             key={tab}

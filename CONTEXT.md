@@ -55,6 +55,8 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Đã gửi · Gửi | `shares` | Link đã gửi và lịch xem; trên điện thoại là tab Gửi, gồm cả nút gửi mới | — |
 | Đội | `team` | Nhà của trưởng nhóm: đội đang chạy thế nào | — |
 | Cài đặt sàn | `settings` | Nhà của quản trị sàn: sàn gọi tên và chạy theo luật nào | — |
+| Cài đặt | `settings` | Khu cài đặt một chỗ (04/11): nhóm «Cá nhân» ai cũng thấy, nhóm «Sàn [Tên]» chỉ quản trị sàn; nhà của mọi vai có cột nhà | «Cài đặt» cho dữ liệu sàn — dùng «Cấu hình của sàn» |
+| Cá nhân | `personal` | Mục của khu Cài đặt áp cho tài khoản ở mọi sàn: hồ sơ, sàn, cài lên màn hình chính, thông báo, máy đang đăng nhập, đăng xuất; tab Tôi trên điện thoại mở nó | «Tôi» trên máy tính |
 | Tôi | `me` | Tab tài khoản trên điện thoại | — |
 | Gõ mã căn | `unitJump` | Ô mở thẳng hồ sơ căn hoặc nhảy tới nhà bằng bàn phím; chỉ vai có Bảng hàng | — |
 | Hồ sơ căn | `/units/<mã>` | Toàn bộ thông tin của một căn; trên máy tính mở thành cột phải cạnh Bảng hàng | — |
