@@ -10,6 +10,9 @@ feature_slug: va-duong-loi-hoan-tac
 #   E6 và E7 chạy song song trên cùng máy chủ: E6 chỉ dùng phiên dau-chu-1 trên A-04.06 và B-09.01; E7 chỉ dùng phiên
 #   dau-chu-2 trên căn Toà B. Không dựng lại dữ liệu bằng lời gọi API thẳng giữa các bước — lần ghi chen ngoài màn làm phiên
 #   bản trên máy cũ và căn vào «Cần xem».
+#   Mỗi bài ui-check mở một hồ sơ trình duyệt MỚI (ngữ cảnh sạch, không dùng lại hồ sơ của bài hay lượt khác): kho trên máy
+#   (IndexedDB) của localhost:3492 còn hàng đợi và phiên bản cũ thì lần ghi thành xung đột (409). Trước bước một, xác nhận
+#   bằng indexedDB.databases() rằng chưa có kho nào. Nút «Hoàn tác» trên thông báo sống 10 giây — bấm trong thời hạn ấy.
 evals:
   - id: E1
     criterion: AC-1

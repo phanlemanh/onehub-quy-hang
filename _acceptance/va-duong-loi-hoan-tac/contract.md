@@ -36,7 +36,8 @@ Source input: hàng 88 của `docs/plan/lo-trinh.json` · ô cơ hội `_accepta
   lõi (không còn thấy, chuyển không hợp lệ, thiếu điều kiện) kể vào «không hoàn tác được» và không bấm lại.
 - AC-3: Given một lần sửa giá hay trạng thái trên ô có thông báo «Hoàn tác», When lệnh bù không ghi được, Then thông báo
   lỗi nói lý do và mang nút «Hoàn tác»; bấm nút ấy hay Ctrl/Cmd+Z thử lại đúng lần sửa ấy (không ra «Đã hoàn tác rồi»);
-  thử lại thành công thì lần bấm sau ra «Đã hoàn tác rồi».
+  thử lại thành công thì bấm nút ấy lần nữa ra «Đã hoàn tác rồi», còn Ctrl/Cmd+Z sau đó không làm gì (luật đã ký ở AC-6
+  của va-sua-tren-o: bản ghi đã dùng thì Ctrl/Cmd+Z không làm gì).
 - AC-4: Given bốn chỗ ghi sau khi ô sửa đã đóng — lưu trên ô, hoàn tác trên ô, ghi lô, hoàn tác lô — When lần ghi ném lỗi
   bất ngờ (không phải lỗi kho đã biết), Then màn hiện thông báo lỗi nêu căn và chữ «Lỗi bất ngờ — chưa lưu được, thử lại»;
   không chỗ nào im lặng; không lỗi chưa bắt nào ra trình duyệt; cả bốn chỗ gọi lần ghi qua cùng một hàm bọc.
