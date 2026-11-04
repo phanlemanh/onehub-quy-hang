@@ -83,7 +83,7 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     // phat-hang (hàng 43).
     exportRoleRequired: ["export-role-required", 403],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 61);
+  assert.equal(Object.keys(API_ERRORS).length, 62);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);
