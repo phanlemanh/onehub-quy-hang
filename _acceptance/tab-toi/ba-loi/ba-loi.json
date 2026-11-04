@@ -1,0 +1,24 @@
+{
+  "man": "Tab Tôi (hàng 38)",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích settings-2 chủ kho chọn lại 02/11 (vo-va-ia.md dòng «Tôi»): mỗi dòng một biểu tượng, một câu trạng thái và một nút ở bên phải, nên trên điện thoại sáu nhóm đọc liền một cột mà nút vẫn ở ngay dưới chữ; nút «Báo mất máy» đứng riêng ở dòng máy, không lẫn vào đăng xuất."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Khung settings-3 đã chuyển thể (khuôn Cài đặt sàn) — nhãn bên trái, nội dung và nút bên phải",
+      "dong_co": "Không cài khối mới: dùng lại khung Bố cục Đọc của Cài đặt sàn, cùng dáng với các mục cấu hình.",
+      "danh_doi": "Đọc như một mục cấu hình của sàn chứ không như tài khoản của tôi; trên máy tính nửa trái trống, nút nằm lệch xa nhãn."
+    },
+    "reui": {
+      "nhan": "settings-2 chuyển thể — dòng có biểu tượng, chữ trạng thái, nút bên phải trong một khung",
+      "dong_co": "Khối đích của màn Tôi; dáng «Privacy & Preferences» của ReUI vừa khít sáu nhóm dòng, mỗi dòng một việc.",
+      "danh_doi": "Thêm một khối chuyển thể (settings-2) vào danh mục; bỏ huy hiệu Pro/Beta và bóng màu thô của ô biểu tượng theo luật giao diện."
+    },
+    "ve-moi": {
+      "nhan": "Ghép mỗi nhóm một khung riêng xếp chồng — tiêu đề, mô tả, nút ở chân khung",
+      "dong_co": "Mỗi nhóm tách hẳn, dễ thêm nội dung dài cho một nhóm (danh sách máy) mà không đẩy nhóm khác.",
+      "danh_doi": "Sáu khung chồng nhau dài gấp đôi trên điện thoại, nút xa chữ; tự ghép nên phải thêm dòng «Chỗ hở» kèm hạn xem lại."
+    }
+  }
+}

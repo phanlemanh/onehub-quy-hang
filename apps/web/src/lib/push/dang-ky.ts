@@ -142,3 +142,11 @@ export async function thanDangXuat(): Promise<string> {
     return "{}";
   }
 }
+
+/** Huỷ đăng ký đẩy trên trình duyệt này, không gọi máy chủ (máy bị báo mất, hàng 38: máy chủ đã gỡ đăng ký). */
+export async function huyDangKyTrenMay(): Promise<void> {
+  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
+  const reg = await navigator.serviceWorker.getRegistration("/");
+  const sub = reg ? await reg.pushManager.getSubscription() : null;
+  if (sub) await sub.unsubscribe().catch(() => false);
+}
