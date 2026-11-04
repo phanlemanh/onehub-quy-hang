@@ -109,6 +109,17 @@ evals:
     criterion: AC-4
     executor: ui-check
     layer: ui-observed
+    steps:
+      - "Postgres dãy L (cổng 5571) đã có bộ mẫu hàng 5 + bản thật hàng 87. Lùi last_confirmed_at của một căn Đang bán 15 ngày: docker exec quy-hang-db-dkn-L psql -U postgres -c \"update listings set last_confirmed_at = now() - interval '15 days' where id = (select id from listings where standard_status = 'Active' order by unit_number limit 1)\""
+      - "Chạy máy chủ chấm: DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres npm run dev -w @quy-hang/web -- -p 3462 (ghi PID, dừng bằng kill <PID> khi xong)"
+      - "Khổ 375: đăng nhập http://localhost:3462/login bằng dau-khach@mau.quy-hang.test, mã 6 số đọc từ dòng [ma-dang-nhap] của nhật ký máy chủ"
+      - "Mở /inventory, bấm «Chọn», tích hai căn Đang bán → chụp evidence/E11-step1.png: thanh «2 căn · Xem trước · Gửi» ở đáy"
+      - "Bấm «Xem trước» → màn /shares/new mở ngăn xem trước → chụp evidence/E11-step2.png; đóng ngăn, chọn «Khách riêng», mở «Xem trước» → chụp evidence/E11-step3.png: không có mã căn; đổi sang «Nhóm môi giới», mở lại → chụp evidence/E11-step4.png: có mã căn"
+      - "Chọn «Khách riêng» → «Khách mới»: tên «[Mẫu] Khách chấm», số 0900 000 011, Mua → «Lưu và chọn» → chụp evidence/E11-step5.png: khách được chọn"
+      - "Sửa một chữ trong «Tin soạn sẵn» → chụp evidence/E11-step6.png: tin giữ chữ đã sửa"
+      - "Mở /shares/new?can=<id căn đã lùi 15 ngày>,<id một căn Đang giao dịch> (lấy id bằng psql) → chụp evidence/E11-step7.png: nhãn «Gọi xác nhận trước» và dòng lý do của căn không còn bán"
+      - "Khổ 1280 (navigator.share không có): chọn Nhóm môi giới, bấm «Chép tin» → chụp evidence/E11-step8.png: «Đã chép» (hay «Chưa chép được — chọn tin và chép tay» khi trình duyệt chặn bộ nhớ tạm)"
+      - "Giả lập mất mạng (offline) → chụp evidence/E11-step9.png: nút Gửi tắt với chữ «Gửi cần mạng»"
     cmd: config:executors.ui-check
     expected: "Đăng nhập đầu khách mẫu trên bản chạy, khổ 375: Bảng hàng thẻ giữ lâu chọn hai căn → thấy thanh «2 căn · Xem trước · Gửi»; bấm Xem trước → màn Gửi, chọn Khách riêng, ngăn xem trước toàn màn không có mã căn, đổi sang Nhóm môi giới thấy mã căn; Khách mới (tên mẫu, 0900 000 011, Mua) → khách được chọn; sửa một chữ trong tin → tin giữ chữ đã sửa; căn quá 14 ngày mang «Gọi xác nhận trước», căn không còn bán hiện lý do; khổ 1280 không có bảng chia sẻ → bấm Gửi thấy «Chép tin» rồi «Đã chép»; mất mạng (giả lập offline) → nút Gửi «Gửi cần mạng»; ảnh chụp từng bước vào evidence/."
     paths: ["apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/inventory/cards/**"]
