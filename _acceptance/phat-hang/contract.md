@@ -5,8 +5,10 @@ slug: phat-hang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: draft
+status: approved
 design_doc: _acceptance/phat-hang/design.md
+approved_by: Manh Phan
+approved_at: 2026-11-04
 ---
 
 # Acceptance Contract: phat-hang
