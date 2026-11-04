@@ -1,0 +1,4 @@
+E9 network (Playwright, phien dau-khach, 375x812, A-04.06 + A-08.03)
+Online: GET /api/v1/catalog, listings, units/photos, listings/{id}/owner, listings/{id} -> 200. Khong POST nao luc cham nut (buoc 2, 3, 4, 5).
+Offline (route abort /api/**, co chu y): 8 request /api bi huy net::ERR_INTERNET_DISCONNECTED (catalog x2, photos x2, owner x2, listings/{id}, listings) = do chan chu dong, khong phai loi app. Console 8 "Failed to load resource" cung nguon. pageerror: khong.
+Khi offline trang hien banner do «Khong tai duoc anh» (khu Anh) + toast «Mat mang · dang xem ban tren may».

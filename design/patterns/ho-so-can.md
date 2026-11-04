@@ -7,9 +7,8 @@ mau_dang_chay: { tep: "apps/web/src/app/(app)/units/[code]/page.tsx", duong: "/u
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card, Placeholder]
 ngoai_le: []
-luat: [KH-hs-mot-khung, KH-hs-tren-may, KH-hs-khoa-thuoc-tinh, KH-hs-anh-noi-bo]
+luat: [KH-hs-mot-khung, KH-hs-tren-may, KH-hs-khoa-thuoc-tinh, KH-hs-anh-noi-bo, KH-hs-lop-phu]
 bo_cuc: ho-so
-ngoai_le_han: [{ tep: "apps/web/src/app/(app)/units/[code]/page.tsx", han: ho-so-can-dien-thoai, ly_do: "Hồ sơ căn chuyển sang bố cục Hồ sơ ở hàng 33." }, { tep: "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", han: ho-so-can-dien-thoai, ly_do: "Hồ sơ căn chuyển sang bố cục Hồ sơ ở hàng 33." }, { tep: "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx", han: ho-so-can-dien-thoai, ly_do: "Hồ sơ căn chuyển sang bố cục Hồ sơ ở hàng 33." }]
 ---
 # Hồ sơ căn
 
@@ -20,11 +19,13 @@ Bảng hàng (`units/ho-so/bang-co-ho-so.tsx`); trang ba lối `proto/cot-ho-so-
 Bằng chứng.
 
 **Dùng khi** màn trình hồ sơ một căn: thuộc tính tự điền, lần rao, lịch sử. **Không dùng** cho Bảng hàng (nhóm
-`bang-hang`), chế độ cuộc gọi (hàng 28) hay hồ sơ căn của đầu khách trên điện thoại (hàng 33 — khối đích riêng).
+`bang-hang`) hay chế độ cuộc gọi (hàng 28). Hồ sơ căn của Đầu khách trên điện thoại (hàng 33) là **lớp phủ trên cùng
+khuôn** này, không phải khối đích riêng; dựng lại theo `product-detail-5` là hàng riêng.
 
 ## Luật
 
-- **KH-hs-mot-khung** — Hồ sơ toàn màn là đúng một `Frame` (qua `KhungHoSoCan`); ở cột phải nó là một `FramePanel`
+- **KH-hs-mot-khung** — Hồ sơ toàn màn dựng trong bố cục Hồ sơ (`<BoCuc kieu="ho-so">`) và là đúng một `Frame` (qua
+  `KhungHoSoCan`); ở cột phải nó là một `FramePanel`
   trong Frame của Bảng hàng (`KhungHoSoCan cot`), không lồng Frame trong Frame; không `Card`, không `Placeholder`.
 - **KH-hs-tren-may** — Hồ sơ đọc kho trên máy (bộ đồng bộ, hàng 13) và danh mục đã giữ trên máy; lịch sử qua
   `useHoSoHang`, mất mạng thì xem bản đã tải.
@@ -32,4 +33,9 @@ Bằng chứng.
   thẳng API, không qua bộ đồng bộ, không vào kho trên máy; ngăn nội bộ API trả no-store. Ẩn ngăn nội bộ do API và luật
   theo dòng quyết — mục chỉ trình điều API trả. Trang bấm được `proto/anh-can-ba-ngan` đi cùng khuôn, gỡ khi màn thật
   qua Cổng Bằng chứng.
+- **KH-hs-lop-phu** — Quyền là lớp phủ trên cùng màn (hàng 33): `lopPhuHoSo` ở `packages/core/src/access` trả bốn cờ
+  (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút «Hỏi đầu chủ»), không rẽ theo tên vai. Hồ sơ đọc hai cờ Sẵn sàng bán và nút
+  hỏi; ngăn Nội bộ và sửa ảnh của mục Ảnh vẫn do API ảnh trả (`noiBo`, `suaDuoc` — KH-hs-anh-noi-bo), cùng luật
+  `canSeeSource` / `canSeeUnitInternal` nên khớp hai cờ còn lại. Người không thấy nguồn: không thẻ Nội bộ, không ổ khoá;
+  nút «Hỏi đầu chủ» dính đáy chỉ mở bảng chia sẻ của máy.
 - **KH-hs-khoa-thuoc-tinh** — Thuộc tính căn từ danh mục là chữ khoá, không ô sửa; sai thì «Báo sai thông tin căn».

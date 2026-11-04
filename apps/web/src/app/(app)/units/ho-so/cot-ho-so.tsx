@@ -2,10 +2,13 @@
 
 // Hồ sơ căn (hàng 17) — chuyển thể `solution-crm-4` thành cột (Cổng Phạm vi, Hỏi-2): giá + mức đủ đầu cột, thuộc tính căn,
 // lần rao, dòng thời gian lịch sử. Đọc kho trên máy và danh mục đã giữ; lịch sử kéo ở nền và giữ trên máy (hàng 13).
+// Quyền là lớp phủ trên cùng màn (hàng 33): màn đọc cờ của `lopPhuHoSo` ở lõi, không rẽ theo tên vai.
+import { lopPhuHoSo } from "@quy-hang/core/access";
 import { Maximize2, X } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
 
+import { ChoTai } from "@/components/bo-cuc/cho-tai";
 import { Badge } from "@/components/reui/badge";
 import {
   Timeline,
@@ -21,7 +24,6 @@ import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
 import type { ListingView } from "@/lib/sync/types";
 import { useDanhMuc } from "../../inventory/danh-muc";
@@ -29,6 +31,7 @@ import { MucAnhCan } from "../photos/muc-anh-can";
 import { dauCuaCan, hienNutSanSang, type Dich } from "../ready/san-sang";
 import { NEO_MUC_ANH, NutSanSang } from "../ready/nut-san-sang";
 import { NutBaoSai } from "./nut-bao-sai";
+import { NutHoiDauChu } from "./nut-hoi-dau-chu";
 import {
   cacLanRao,
   chonLanRao,
@@ -146,7 +149,7 @@ export function CotHoSo(props: HoSoProps) {
 }
 
 function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, "chon"> & { chon: ChonCan; chuaMa?: ListingView | null }) {
-  const { bd } = useBoDongBo();
+  const { bd, vai } = useBoDongBo();
   const ds = useDanhSachHang();
   const ngan = bd.ngan();
   const ngoaiTuyen = useNgoaiTuyen();
@@ -181,15 +184,7 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, 
   }, [bd, ids]);
 
   if (ngan.listings === null) {
-    return (
-      <div className="flex flex-col gap-3 p-4" aria-busy="true" aria-label="Đang tải hồ sơ căn">
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-10 w-32" />
-        {Array.from({ length: 6 }, (_, i) => (
-          <Skeleton key={i} className="h-5 w-full" />
-        ))}
-      </div>
-    );
+    return <ChoTai kieu="ho-so" />;
   }
 
   const nutDong = dongHref ? (
@@ -242,6 +237,8 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, 
   const dong = dongLichSu(lichSu, nguoi);
   const dangXem = lan.find((r) => r.id === can.id)!;
   const dichThieu = dauCuaCan(thieuCua, can.id);
+  const dauChu = can.listAgentKey ?? null;
+  const co = lopPhuHoSo({ userId: nguoi, roles: vai }, dauChu);
   const tuoi = can.freshness as { confirmed?: boolean; ageDays?: number } | undefined;
   const loaiHinh = tt?.kind === "co" ? tt.truong.find(([k]) => k === "Loại hình")?.[1] : null;
   const dauCot = [tt?.kind === "co" ? tt.khu : null, tim.toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · ");
@@ -311,8 +308,8 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, 
       </Muc>
       <Separator />
       <Muc tieuDe={dangXem.dangMo ? "Lần rao đang mở" : "Lần rao đang xem"}>
-        {/* Mọi hàng thấy trên máy là hàng người xem sửa được (hàng 8, 12); máy chủ vẫn xét quyền. */}
-        {dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang key={can.id} hang={can} toa={tim.toa} ma={chon.ma} onThieu={baoThieu} /> : null}
+        {/* Cờ của lớp phủ (hàng 33): người không giữ căn không có «Sẵn sàng bán»; máy chủ vẫn xét quyền. */}
+        {co.sanSang && dangXem.dangMo && hienNutSanSang(can.standardStatus, true) ? <NutSanSang key={can.id} hang={can} toa={tim.toa} ma={chon.ma} onThieu={baoThieu} /> : null}
         <CapGiaTri ds={p.truong.map(([k, v]): [string, string] => (danhDauChuaCo(k, dichThieu) ? [k, "Chưa có · điền ở Bảng hàng"] : [k, v]))} />
       </Muc>
       <Separator />
@@ -350,15 +347,13 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, 
             </Button>
           </div>
         ) : ttls.kind === "dang-tai" ? (
-          <div className="flex flex-col gap-2" aria-busy="true" aria-label="Đang tải lịch sử">
-            <Skeleton className="h-5 w-full" />
-            <Skeleton className="h-5 w-2/3" />
-          </div>
+          <TrangThai kind="loading" title="Đang tải lịch sử" />
         ) : (
           <Timeline defaultValue={dong.length}>
             {dong.map((d, i) => (
               <TimelineItem key={i} step={i + 1} className="group-data-[orientation=vertical]/timeline:ms-6">
                 <TimelineHeader>
+                  {/* eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- lớp của ví dụ timeline ReUI chép nguyên: chiều cao vạch nối giữa hai mốc, không phải kích thước trang */}
                   <TimelineSeparator className="group-data-[orientation=vertical]/timeline:-left-5 group-data-[orientation=vertical]/timeline:h-[calc(100%-1rem-0.25rem)] group-data-[orientation=vertical]/timeline:translate-y-5" />
                   <TimelineTitle className="text-sm">
                     {d.viec}
@@ -376,6 +371,7 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, 
           </Timeline>
         )}
       </Muc>
+      {co.hoiDauChu && !chuaMa ? <NutHoiDauChu key={can.id} listingId={can.id} dauChu={dauChu} ma={chon.ma} toa={tim.toa} /> : null}
     </div>
   );
 }

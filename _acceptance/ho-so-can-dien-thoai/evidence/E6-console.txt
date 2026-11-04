@@ -1,0 +1,5 @@
+Total messages: 49 (Errors: 2, Warnings: 0)
+Returning 2 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3492/api/v1/units/photos/08607b6c-03cd-4d89-837c-b2db18798892/thumb:0
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3492/api/v1/units/photos/9895fa75-34eb-4adf-90d3-59ae071ee685/thumb:0
