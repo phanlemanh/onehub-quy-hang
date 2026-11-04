@@ -1,0 +1,5 @@
+E6 network (Playwright, ctx moi: cookie + IndexedDB da xoa; indexedDB.databases() truoc khi dung = [] ), 04/11/2026
+Request toi http://localhost:3492/api/v1/*: toan bo [200] OK (catalog, listings, units/photos, listings/{id}, POST listings/{id}/events x5 cho A-04.06 va B-09.01). Khong co 4xx/5xx, khong co connection error.
+POST events A-04.06 id 3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6: sua gia, (lan hoan tac a thanh cong) => ver 11 -> 12; B-09.01 id 11a58e54-929e-4a9b-a04b-e322acdc5166: sua gia (v10), hoan tac Ctrl+Z (v11).
+Console errors (2, dev-only, khong phai network): (1) Base UI nativeButton warning tai BangCoHoSo; (2) Hydration mismatch cua lan tai trang (DataGrid skeleton/aria-busy). Khong co loi nao ve fetch/XHR. Loi tiem 'tiem loi' (QuotaExceededError) bi app bat, khong ra console.
+Third-party: khong thay.
