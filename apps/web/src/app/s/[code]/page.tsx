@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { getApi } from "@/lib/api";
-import { docThan } from "./doc";
+import { docTrang } from "./doc";
 import { KhungTrangKhach } from "./khung";
 import { dauCua, NoiDungTrangKhach } from "./trang";
 
@@ -14,11 +14,12 @@ export const metadata: Metadata = { title: "Bộ căn", robots: { index: false, 
 export default async function Page({ params, searchParams }: { params: Promise<{ code: string }>; searchParams: Promise<{ can?: string }> }) {
   const { code } = await params;
   const { can } = await searchParams;
-  const than = await docThan(code, (u, i) => getApi().request(u, i));
+  const kq = await docTrang(code, (u, i) => getApi().request(u, i));
+  const than = kq.kieu === "mo" ? kq.than : null;
   const viTri = can != null && /^\d+$/.test(can) ? Number(can) : undefined;
   return (
     <KhungTrangKhach dau={dauCua(than)}>
-      <NoiDungTrangKhach code={code} than={than} can={viTri} />
+      <NoiDungTrangKhach code={code} than={than} can={viTri} loiTam={kq.kieu === "loi-tam"} />
     </KhungTrangKhach>
   );
 }
