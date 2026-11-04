@@ -29,7 +29,20 @@ import { BUOC_CAI_IOS } from "@/lib/push/nhan";
 import { NHAN_LOAI_MAY, type LoaiMay } from "@quy-hang/core/thiet-bi";
 import type { TrangThaiThietBi } from "@/lib/push/dang-ky";
 import { PHAM_VI_MAY } from "@/app/(app)/settings/cai-dat";
-import { coNutBaoMat, dongThongBao, HOI_BAO_MAT, LOI_DA_BAO, NHAN_CAI, nhomDong, type MaNhom, type TrangThaiCai, type TrangThaiMay } from "./toi";
+import {
+  coNutBaoMat,
+  dongThongBao,
+  HOI_BAO_MAT,
+  LOI_DA_BAO,
+  NHAN_CAI,
+  NHAN_MAT_KHAU,
+  nhomDong,
+  nutMatKhau,
+  type MaNhom,
+  type TrangThaiCai,
+  type TrangThaiMatKhau,
+  type TrangThaiMay,
+} from "./toi";
 
 export type Loi = "trong-kho" | "reui" | "ve-moi";
 export type MayDong = { id: string; kind: LoaiMay; browser: string; lastUsedAt: string; current: boolean };
@@ -44,8 +57,17 @@ export type DuLieuToi = {
   dsMay: MayDong[];
   /** Lần đăng xuất trước không tới được máy chủ (luật 55). */
   dangXuatLoi?: boolean;
+  /** Dòng «Mật khẩu» trong nhóm Hồ sơ (dang-nhap-mat-khau); vắng khi chưa đọc xong. */
+  matKhau?: TrangThaiMatKhau;
 };
-export type HanhDongToi = { cai(): void; batThongBao(): void; baoMat(): void; thuLaiMay(): void; dangXuat(): void };
+export type HanhDongToi = {
+  cai(): void;
+  batThongBao(): void;
+  baoMat(): void;
+  thuLaiMay(): void;
+  dangXuat(): void;
+  moMatKhau?(): void;
+};
 
 const ICON: Record<MaNhom, ReactNode> = {
   "ho-so": <UserIcon aria-hidden="true" />,
@@ -74,7 +96,22 @@ function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
   return nhomDong({ companies: Array.from({ length: du.soSan }) }).map((n): Dong => {
     switch (n.ma) {
       case "ho-so":
-        return { ma: n.ma, nhan: n.nhan, moTa: du.email };
+        return {
+          ma: n.ma,
+          nhan: n.nhan,
+          moTa: (
+            <span className="flex flex-col gap-0.5">
+              {du.email}
+              <span>Mật khẩu: {du.matKhau ? NHAN_MAT_KHAU[du.matKhau] : "đang kiểm…"}</span>
+            </span>
+          ),
+          hanhDong:
+            du.matKhau && hd.moMatKhau ? (
+              <Button size="sm" variant="outline" onClick={hd.moMatKhau}>
+                {nutMatKhau(du.matKhau)}
+              </Button>
+            ) : undefined,
+        };
       case "san":
         return {
           ma: n.ma,
@@ -132,7 +169,7 @@ function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
           ma: n.ma,
           nhan: n.nhan,
           moTa: du.dangXuatLoi ? (
-            <span role="alert" className="text-destructive">
+            <span className="text-destructive">
               {CHUA_DANG_XUAT}
             </span>
           ) : (

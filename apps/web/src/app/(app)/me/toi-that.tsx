@@ -8,8 +8,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { dangXuatTrenMay } from "@/components/shell/dang-xuat-tren-may";
 import { batThongBao, docTrangThai, thanDangXuat, type TrangThaiThietBi } from "@/lib/push/dang-ky";
 import { useBoDongBo } from "@/lib/sync/react";
+import { HopMatKhau } from "./hop-mat-khau";
 import { ManToi, type Loi, type MayDong } from "./man-toi";
-import { phanLoaiCai, trangThaiDongMay, type TrangThaiCai } from "./toi";
+import { phanLoaiCai, trangThaiDongMay, type TrangThaiCai, type TrangThaiMatKhau } from "./toi";
 
 type LoiMoiCai = Event & { prompt(): Promise<void> };
 
@@ -35,6 +36,12 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
   const [dang, setDang] = useState<"doc" | "san" | "bao" | "xong" | "loi">("doc");
   const [daThu, setDaThu] = useState(0);
   const [dangXuatLoi, setDangXuatLoi] = useState(false);
+  const [matKhau, setMatKhau] = useState<TrangThaiMatKhau | undefined>(undefined);
+  const [moMatKhau, setMoMatKhau] = useState(false);
+  const docMatKhau = useCallback(async () => {
+    const r = await fetch("/api/v1/me", { cache: "no-store" }).catch(() => null);
+    if (r?.ok) setMatKhau(((await r.json()) as { password: TrangThaiMatKhau }).password);
+  }, []);
 
   const tinhCai = useCallback(() => setCai(phanLoaiCai({ daCai: daCai(), coLoiMoi: loiMoi.current !== null, ios: laIos() })), []);
   /** Đọc danh sách máy; trạng thái «đang đọc» do nơi gọi đặt (mặc định lúc mở màn). */
@@ -60,13 +67,15 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
     void Promise.resolve().then(tinhCai);
     void docTrangThai().then(setThongBao);
     void Promise.resolve().then(docMay);
+    void Promise.resolve().then(docMatKhau);
     return () => window.removeEventListener("beforeinstallprompt", nghe);
-  }, [tinhCai, docMay]);
+  }, [tinhCai, docMay, docMatKhau]);
 
   return (
-    <ManToi
+    <>
+      <ManToi
       loi={loi}
-      du={{ email, tenSan, soSan, cai, thongBao, dsMay, may: trangThaiDongMay({ dang, soMay: dsMay.length, daThu }), dangXuatLoi }}
+      du={{ email, tenSan, soSan, cai, thongBao, dsMay, may: trangThaiDongMay({ dang, soMay: dsMay.length, daThu }), dangXuatLoi, matKhau }}
       hd={{
         cai: () => {
           void loiMoi.current?.prompt().finally(() => {
@@ -101,6 +110,7 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
           setDang("doc");
           void docMay();
         },
+        moMatKhau: () => setMoMatKhau(true),
         dangXuat: () => {
           // Máy chủ lỗi hay mất mạng thì ở lại và báo (luật 55); lần thử lại không hỏi xoá kho lần hai.
           void dangXuatTrenMay({
@@ -115,6 +125,10 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
           }).then((kq) => setDangXuatLoi(kq === "loi"));
         },
       }}
-    />
+      />
+      {matKhau ? (
+        <HopMatKhau mo={moMatKhau} trangThai={matKhau} onClose={() => setMoMatKhau(false)} onXong={() => void docMatKhau()} />
+      ) : null}
+    </>
   );
 }

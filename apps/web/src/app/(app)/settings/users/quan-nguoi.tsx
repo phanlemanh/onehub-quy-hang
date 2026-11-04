@@ -11,6 +11,7 @@ import { PeopleTab } from "@/components/khoi/solution-users-8/people-tab";
 import { ConfirmDialog, TeamAccess, type Tab } from "@/components/khoi/solution-users-8/team-access";
 import { ZonesTab } from "@/components/khoi/solution-users-8/zones-tab";
 import { TrangThai } from "@/components/trang-thai";
+import { HopMatKhauTam, type KetQuaCap } from "./hop-mat-khau-tam";
 import { nhanVai, VAI } from "@/lib/vai";
 
 export type Khu = Vung;
@@ -61,6 +62,10 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
   const [bo, setBo] = useState<ThanhVien | null>(null);
   const [loiBo, setLoiBo] = useState("");
 
+  const [cap, setCap] = useState<ThanhVien | null>(null);
+  const [loiCap, setLoiCap] = useState<{ kind: "error" | "notice"; title: string } | null>(null);
+  const [ketQuaCap, setKetQuaCap] = useState<KetQuaCap | null>(null);
+
   const [tenKhu, setTenKhu] = useState("");
   const [loiKhu, setLoiKhu] = useState("");
 
@@ -90,6 +95,16 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
     if (!res.ok) return setLoiBo(await loiCua(res));
     setBo(null);
     lamMoi();
+  }
+  // Cấp mật khẩu tạm (dang-nhap-mat-khau): hỏi trước, rồi hiện mật khẩu một lần. Người còn ở sàn khác tự đặt trong Cá nhân.
+  async function xacNhanCap() {
+    if (!cap) return;
+    const res = await goi("POST", `/members/${cap.userId}/temp-password`);
+    if (res.status === 409) return setLoiCap({ kind: "notice", title: `${cap.email} còn ở sàn khác nên tự đặt mật khẩu trong Cá nhân.` });
+    if (!res.ok) return setLoiCap({ kind: "error", title: await loiCua(res) });
+    const { tempPassword } = (await res.json()) as { tempPassword: string };
+    setKetQuaCap({ email: cap.email, tempPassword });
+    setCap(null);
   }
   async function themKhu(e: FormEvent) {
     e.preventDefault();
@@ -136,6 +151,10 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
               setBo(m);
               setLoiBo("");
             },
+            onIssuePassword: (m) => {
+              setCap(m);
+              setLoiCap(null);
+            },
           }}
         />
       }
@@ -180,6 +199,19 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             onConfirm={() => void xacNhanBo()}
             error={loiBo && <TrangThai kind="error" title={loiBo} />}
           />
+          <ConfirmDialog
+            confirm={
+              cap && {
+                title: `Cấp mật khẩu tạm cho ${cap.email}?`,
+                description: `Mật khẩu cũ thôi dùng và ${cap.email} bị đăng xuất ở mọi máy.`,
+                action: "Cấp mật khẩu",
+              }
+            }
+            onOpenChange={(o) => !o && setCap(null)}
+            onConfirm={() => void xacNhanCap()}
+            error={loiCap && <TrangThai kind={loiCap.kind} title={loiCap.title} />}
+          />
+          <HopMatKhauTam ketQua={ketQuaCap} onClose={() => setKetQuaCap(null)} />
         </>
       }
     />
