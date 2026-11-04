@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import type { StandardStatus } from "@quy-hang/core/listing";
 import type { AnhRa, CanRaNgoai } from "@quy-hang/core/redaction";
 import type { ListingView } from "@/lib/sync/types";
-import { LOI_TAO_LINK, LY_DO_KHONG_CO, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, type BangChiaSe, type GoiApi, type KetGui } from "./gui";
+import { khoaTin, LOI_TAO_LINK, LY_DO_KHONG_CO, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, tinDangDung, type BangChiaSe, type GoiApi, type KetGui } from "./gui";
 
 const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
 const PID = id(900);
@@ -158,6 +158,25 @@ describe("màn Gửi", () => {
       if (nutGui(t).mo) await bo.gui({ nguoiNhan: "khach_rieng", prospectId: PID, listingIds: [id(1)], tin: TIN, ban: ban(1) });
       assert.equal(m.loi.length, nutGui(t).mo ? 1 : 0, `«${ten}»: số lời gọi`);
     }
+  });
+
+  it("gửi: tin sửa tay bỏ khi đổi người nhận, khách hay căn", () => {
+    const TU_DONG = "tin dựng từ bản ra";
+    const goc = khoaTin("nhom_moi_gioi", null, [id(1), id(2)]);
+    const sua = { khoa: goc, tin: "Gửi nhóm — Toà · Z-97.53 (đã sửa)" };
+    const bang: [string, string, string][] = [
+      ["không đổi gì", goc, sua.tin],
+      ["đổi sang khách riêng", khoaTin("khach_rieng", PID, [id(1), id(2)]), TU_DONG],
+      ["đổi khách", khoaTin("nhom_moi_gioi", PID, [id(1), id(2)]), TU_DONG],
+      ["bỏ một căn", khoaTin("nhom_moi_gioi", null, [id(1)]), TU_DONG],
+      ["đổi thứ tự căn", khoaTin("nhom_moi_gioi", null, [id(2), id(1)]), TU_DONG],
+    ];
+    assert.equal(bang.length, 5, "số dòng bảng viết trước");
+    assert.deepEqual(
+      bang.map(([ten, k]) => [ten, tinDangDung(sua, k, TU_DONG)]),
+      bang.map(([ten, , m]) => [ten, m]),
+    );
+    assert.equal(tinDangDung(null, goc, TU_DONG), TU_DONG, "chưa sửa thì tin tự soạn");
   });
 
   it("gửi: bấm hai lần và lỗi máy chủ", async () => {

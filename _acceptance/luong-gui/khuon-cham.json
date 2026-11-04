@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "den": "7cffd46094fb39b726891330250a27f83ed2c040",
+  "base": "a7779e3501da3149aeb5934b9b7042aca6f56fbe",
+  "ghim": null,
+  "theo_khuon": [
+    "apps/web/src/app/(app)/inventory/cards/bang-the.tsx",
+    "apps/web/src/app/(app)/shares/new/khung.tsx",
+    "apps/web/src/app/(app)/shares/new/man-gui.tsx",
+    "apps/web/src/app/(app)/shares/new/trang-khach.tsx"
+  ],
+  "lech_moi": [
+    {
+      "tep": "apps/web/src/app/(app)/shares/new/page.tsx",
+      "khoi": "hai nhóm màn",
+      "loai": "quan-he",
+      "nhom": "gui, trang-tam",
+      "so": 1,
+      "tu": 0,
+      "den_so": 1
+    }
+  ],
+  "no_cu": [],
+  "khong_do": [],
+  "ngoai_ban_do": 10,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "gui",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "lead-cua-toi",
+    "o-nhan-lead",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}

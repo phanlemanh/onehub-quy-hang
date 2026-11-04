@@ -29,8 +29,11 @@ const danhSach = async (s: San, k: string) => {
   const r = await send("GET", "/api/v1/prospects", undefined, ck(s, k));
   return { status: r.status, text: await r.text() };
 };
-/** Máy dò số: chín chữ số liền (số khách dạng nào cũng có chín chữ số cuối liền nhau khi bỏ dấu cách). */
-const doChinSo = (than: string) => /\d{9}/.test(than.replace(/[\s.-]/g, ""));
+/**
+ * Máy dò số: chín chữ số cuối của từng số khách đã lưu, tìm trên thân đã bỏ mọi ký tự không phải chữ số — số viết cách
+ * nào cũng bắt. Dò theo số đã biết (nếp hàng 86), không theo «chín chữ số bất kỳ»: mã UUID ghép lại có thể ra chín chữ số.
+ */
+const doSo = (than: string, so: readonly string[]) => so.filter((x) => than.replace(/\D/g, "").includes(x.replace(/\D/g, "").slice(-9)));
 const hangLenBang = async (s: San) => {
   const id = await hangCoChu(s, "dc1", maMoi(s), soMoi(s));
   await lenBang(s, "dc1", id);
@@ -40,12 +43,13 @@ const hangLenBang = async (s: San) => {
 // ---- AC-2 ----
 test("luồng gửi: danh sách khách của đầu khách", async () => {
   const s = await sanMoi(MOT);
-  const a = await taoNhuCau(s, "dk1", soMoi(s));
-  const b = await taoNhuCau(s, "dk1", soMoi(s));
-  const dong = await taoNhuCau(s, "dk1", soMoi(s));
+  const so = [soMoi(s), soMoi(s), soMoi(s), soMoi(s)];
+  const a = await taoNhuCau(s, "dk1", so[0]!);
+  const b = await taoNhuCau(s, "dk1", so[1]!);
+  const dong = await taoNhuCau(s, "dk1", so[2]!);
   const r0 = await send("POST", `/api/v1/prospects/${dong}/close`, undefined, ck(s, "dk1"));
   assert.equal(r0.status, 200, await r0.clone().text());
-  const c = await taoNhuCau(s, "dk2", soMoi(s));
+  const c = await taoNhuCau(s, "dk2", so[3]!);
 
   const ds1 = await danhSach(s, "dk1");
   assert.equal(ds1.status, 200, ds1.text);
@@ -60,8 +64,8 @@ test("luồng gửi: danh sách khách của đầu khách", async () => {
 
   for (const p of v1) assert.deepEqual(Object.keys(p), [...PROSPECT_VIEW_KEYS], "khoá của một phần tử");
   for (const k of ["contactId", "contact_id", "phone"]) assert.ok(!ds1.text.includes(`"${k}"`), `thân trả có khoá ${k}`);
-  assert.ok(doChinSo("ghi 0900 000 011"), "đối chứng dương: máy dò không bắt chuỗi cài sẵn");
-  assert.ok(!doChinSo(ds1.text) && !doChinSo(ds2.text), "thân trả có chín chữ số liền");
+  assert.deepEqual(doSo(`ghi ${so[0]!.replace(/ /g, ".")}`, so), [so[0]], "đối chứng dương: máy dò không bắt số cài sẵn");
+  assert.deepEqual([...doSo(ds1.text, so), ...doSo(ds2.text, so)], [], "thân trả mang số khách");
 
   const BANG: [string, string, number][] = [
     ["trưởng nhóm", ck(s, "tn"), 403],

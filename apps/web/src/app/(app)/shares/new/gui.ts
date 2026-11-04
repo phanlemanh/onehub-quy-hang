@@ -107,6 +107,17 @@ export function nutGui(t: TrangThaiNut): { mo: boolean; chu: string } {
   return { mo: true, chu: "Gửi" };
 }
 
+/** Khoá của tin soạn sẵn: người nhận, khách, căn theo thứ tự. */
+export const khoaTin = (nguoiNhan: NguoiNhan | null, khachId: string | null, ids: readonly string[]) => `${nguoiNhan ?? ""}|${khachId ?? ""}|${ids.join(",")}`;
+
+/**
+ * Tin đang dùng: tin người sửa tay chỉ giữ khi khoá không đổi; đổi người nhận, khách hay căn thì tin dựng lại từ bản ra của
+ * đúng người nhận — tin sửa cho nhóm môi giới (có mã căn) không đi sang khách riêng (bất biến 4, AC-6).
+ */
+export function tinDangDung(sua: { khoa: string; tin: string } | null, khoa: string, tuDong: string): string {
+  return sua && sua.khoa === khoa ? sua.tin : tuDong;
+}
+
 /** Tên tệp ảnh trong gói chia sẻ — theo vị trí, không mang mã căn hay mã ảnh. */
 export const tenTepAnh = (i: number) => `can-${i + 1}.jpg`;
 

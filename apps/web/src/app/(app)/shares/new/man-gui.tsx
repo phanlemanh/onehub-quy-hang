@@ -31,7 +31,7 @@ import type { ListingView } from "@/lib/sync/types";
 import { dinhDangGia, FEE_LABEL } from "../../inventory/cot";
 import { useDanhMuc } from "../../inventory/danh-muc";
 import { chiMuc } from "../../inventory/ghep-danh-muc";
-import { canNoiBoTu, docCanChon, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, type KetGui, type NguoiGui } from "./gui";
+import { canNoiBoTu, docCanChon, khoaTin, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, tinDangDung, type KetGui, type NguoiGui } from "./gui";
 import { TrangKhach } from "./trang-khach";
 
 const ANH = "/api/v1/units/photos";
@@ -192,7 +192,7 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
   const [nguoiNhan, setNguoiNhan] = useState<NguoiNhan | null>(null);
   const [khachId, setKhachId] = useState<string | null>(null);
   const [khach, setKhach] = useState<ProspectView[] | null>(null);
-  const [tinSua, setTinSua] = useState<string | null>(null);
+  const [tinSua, setTinSua] = useState<{ khoa: string; tin: string } | null>(null);
   const [ket, setKet] = useState<KetGui | null>(null);
   const [dangTao, setDangTao] = useState(false);
 
@@ -214,7 +214,8 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
 
   const tenKhach = khach?.find((k) => k.id === khachId)?.displayName ?? null;
   const tinTuDong = nguoiNhan ? soanTin({ ban, nguoiNhan, tenKhach }) : "";
-  const tin = tinSua ?? tinTuDong;
+  const khoa = khoaTin(nguoiNhan, khachId, canGui.map((c) => c.id));
+  const tin = tinDangDung(tinSua, khoa, tinTuDong);
 
   const boGui = useMemo(
     () =>
@@ -371,7 +372,7 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
       {nguoiNhan ? (
         <section className="flex flex-col gap-2" aria-label="Tin soạn sẵn">
           <h2 className="text-foreground text-base font-semibold tracking-tight">Tin soạn sẵn</h2>
-          <Textarea rows={8} value={tin} onChange={(e) => setTinSua(e.target.value)} aria-label="Tin soạn sẵn" />
+          <Textarea rows={8} value={tin} onChange={(e) => setTinSua({ khoa, tin: e.target.value })} aria-label="Tin soạn sẵn" />
           <p className="text-muted-foreground text-xs">Link vào chỗ [link] khi bấm Gửi. Sửa được trước khi gửi.</p>
         </section>
       ) : null}
