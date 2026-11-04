@@ -5,7 +5,7 @@ slug: cai-dat-hop-nhat
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: _acceptance/cai-dat-hop-nhat/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -89,3 +89,9 @@ bằng mục sửa đổi: vỏ 31/10, Tham chiếu §9, ADR-0024 (`design.md` �
 ## Notes
 
 - Lựa chọn máy đã quyết: `design.md` §6; sổ quyết định dòng S1.
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu máy chủ gặp lỗi lúc đăng xuất, người dùng vẫn thấy mình đã ra màn đăng nhập nhưng tài khoản có thể vẫn còn mở. Trên máy dùng chung, người kế tiếp có thể vào thẳng tài khoản cũ. — `apps/web/src/components/shell/dang-xuat-tren-may.ts`
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sau khi báo mất máy, nếu việc tải lại danh sách máy bị lỗi thì màn vẫn hiện danh sách cũ. Người dùng có thể tưởng các máy kia chưa bị đăng xuất. — `apps/web/src/app/(app)/me/toi-that.tsx`
+- Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm phân quyền mục sàn chưa thật sự thử từng đường vào và thiếu một tổ hợp vai. Nếu sau này có lỗi riêng ở một đường, bài kiểm có thể không bắt được. — `apps/web/src/app/(app)/settings/cai-dat.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chưa chứng minh được câu báo «Mục này chỉ quản trị sàn mở được» hiện đúng lúc và ẩn đúng lúc. Nếu có lỗi đọc nhầm điều kiện, người dùng có thể thấy câu báo sai chỗ mà bài kiểm vẫn xanh. — `apps/web/src/app/(app)/settings/cai-dat.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chống việc chép lại nhãn sáu nhóm ở nhiều nơi có thể không bắt được vi phạm thật. Về sau nhãn có thể lệch nhau giữa các màn mà không ai hay. — `apps/web/src/app/(app)/settings/cai-dat.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chưa chắc bắt được trường hợp dòng hồ sơ hay dòng máy bị ghi nhầm «trên máy này». Nếu có, người dùng sẽ đọc nhầm phạm vi của cài đặt đó. — `apps/web/src/app/(app)/settings/cai-dat.test.ts`
