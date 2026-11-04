@@ -35,4 +35,4 @@
 
 ### Task 3: Sổ thiết kế — phục vụ E9, E10, E13 · independent: false
 - [x] Dòng Chỗ hở rời §3, dòng catalog `@reui/auth-15`, `xac-thuc.md`, `kiem-chuan.test.mjs` (12 dòng, 2 cảnh báo).
-- [ ] `/verify`, commit, `implemented`.
+- [x] `/verify`, commit, `implemented`.
