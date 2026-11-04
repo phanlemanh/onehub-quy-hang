@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "den": "fcec45d72c86dcd8794a35695a8b2e2d6edac45c",
+  "base": "a7779e3501da3149aeb5934b9b7042aca6f56fbe",
+  "ghim": {
+    "bang-hang": "9ead1c19b2acd04235c022477746d851e3e6c58d",
+    "cai-dat-san": "64eebbf141906b8639a6eb01d6f7b8eee9558c49",
+    "cuoc-goi": "fd30d8e69d3f572a7ffa7819c8b72f3303944a8d",
+    "ho-so-can": "0de282a234aa9eaea03d9526fa834b17505dc2d5",
+    "hom-nay-dau-chu": "407f2b30e4fa5e6f0a198bc615a387944282dae8",
+    "lead-cua-toi": "ba8b8ad108e79a168f9a7e2bc8de7708f4b39d86",
+    "o-nhan-lead": "1c04799a0a71e883dab3a2018b716c61e7577dd6",
+    "trang-mau": "2002381900302d8a416305d80503bc02e2dcb179",
+    "trang-tam": "72a996bd903720e1b6515ec7155c9fe412d4911a",
+    "trang-thai": "0631cc5715db28d17a4f93f58625a132439754a4",
+    "xac-thuc": "c925796ead64c523495d416d5a323bdfb1819369"
+  },
+  "theo_khuon": [
+    "apps/web/src/app/(app)/proto/cot-ho-so-can/ba-loi.tsx",
+    "apps/web/src/app/(app)/units/call/dial/trang-quay-so.tsx",
+    "apps/web/src/app/(app)/units/call/khoi.tsx",
+    "apps/web/src/app/(app)/units/call/push/ep-gia.tsx",
+    "apps/web/src/app/(app)/units/ho-so/bang-co-ho-so.tsx",
+    "apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx",
+    "apps/web/src/app/(app)/units/ho-so/khung.tsx",
+    "apps/web/src/app/(app)/units/ho-so/nut-hoi-dau-chu.tsx",
+    "apps/web/src/app/(app)/units/photos/muc-anh.tsx",
+    "apps/web/src/app/(app)/units/photos/redact/trinh-che.tsx"
+  ],
+  "lech_moi": [],
+  "no_cu": [],
+  "khong_do": [],
+  "ngoai_ban_do": 12,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "lead-cua-toi",
+    "o-nhan-lead",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}

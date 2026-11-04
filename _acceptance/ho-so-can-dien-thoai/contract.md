@@ -5,7 +5,7 @@ slug: ho-so-can-dien-thoai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, docs]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-11-04
 design_doc: docs/superpowers/specs/2026-11-03-ho-so-can-dien-thoai-design.md
@@ -87,3 +87,5 @@ Quét bằng morphological-scan (preset entity-feature), ba trục:
 - Chạm ngoài vùng khai của hàng (`apps/web/src/app/units/mobile/**` không có trên cây): vùng thật khai lại ở Cổng Phạm vi —
   `apps/web/src/app/(app)/units/ho-so`, `units/photos`, `units/[code]`, `proto/cot-ho-so-can`, `proto/anh-can-ba-ngan`,
   `packages/core/src/access`, `packages/api/src/owners`, `design/patterns/ho-so-can.md`.
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Người dùng không thấy khác biệt nào: ngăn Nội bộ và quyền sửa ảnh vẫn hiện đúng theo vai. Chỉ có tài liệu luật nói một đằng, mã chạy một nẻo, nên người sửa sau này có thể hiểu nhầm nguồn quyết quyền. — `packages/core/src/access/lop-phu-ho-so.ts`
+- Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chưa chứng minh chắc rằng ảnh nội bộ thật sự bị giấu khỏi Đầu khách, nên nếu sau này có lỗi làm lộ ảnh nội bộ, bài kiểm có thể vẫn báo xanh. Hiện chưa thấy ảnh nào bị lộ. — `packages/api/test-db/owners.test.ts`

@@ -1,3 +1,4 @@
-E8 network (playwright response listener, phien dau-khach, /units/A-11.03):
-GET /api/v1/catalog 200 (x2); GET /api/v1/listings 200. Khong request that bai, khong third-party. Console: khong doc loi.
-Doi chung duong: khong dat duoc (khong can co mau nguon + nut); dau-khach khong thay A-11.03 (Private).
+E8 network (CDP fetch hook, phien dau-khach, /units/B-09.01, 375x812; X = B-09.01 id 11a58e54-929e-4a9b-a04b-e322acdc5166)
+GET /api/v1/catalog 200 (x2); GET /api/v1/listings 200; GET /api/v1/units/photos?toa=...&ma=B-09.01 200 (x2);
+GET /api/v1/listings/{id}/owner 200 (x2, than 114 byte, visible:false); GET /api/v1/listings/{id} 200; GET thumb anh 200.
+Khong request that bai, khong third-party. Console: khong doc (driver CDP khong bat console). Than tra ve day du: E8-net-raw.json
