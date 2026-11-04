@@ -168,8 +168,9 @@ const NHAN_DIEN_TRANG_THAI = [
 const CHO_TRANG_THAI = [
   // Hàng 91: lỗi và không thấy cấp nhóm (app).
   `${W}/app/(app)/error.tsx`,
-  // Nhập Excel (hàng man-nhap-excel): đọc tệp, lỗi, không dòng nào ghi, xem thử, ghi, xong; không quyền ở trang.
-  ...Array(10).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
+  // Nhập Excel (hàng man-nhap-excel): đọc tệp, lỗi, không dòng nào ghi, xem thử, ghi, xong; không quyền ở trang. Hàng 67:
+  // dải «ghép theo mẫu», báo không đọc được mẫu, báo ô đổi theo.
+  ...Array(13).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
   `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
@@ -418,7 +419,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 3 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 96 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 99 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
