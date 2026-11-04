@@ -97,6 +97,12 @@ test("đã gửi: danh sách theo người xem", async () => {
   assert.deepEqual(v1.map((x) => x.id), [g2.id, g1.id], "đầu khách 1: của mình, mới trước");
   assert.deepEqual((await ds(s, "dk2")).map((x) => x.id), [g3.id]);
   assert.deepEqual((await ds(s, "tn")).map((x) => x.id).sort(), [g1.id, g2.id, g3.id].sort(), "trưởng nhóm thấy cả sàn");
+  // Khách của dk2 chuyển sang dk1 phụ trách: luật dòng cho dk1 đọc Lần gửi g3 (khách của mình), nhưng Đã gửi của dk1 chỉ gồm
+  // link dk1 gửi — ca duy nhất lọc người gửi ở API giữ, nên bỏ lọc ấy thì ca đỏ. Chuyển bằng vai chủ (chưa có đường chuyển).
+  await appPool.query("update prospects set owner_member_user_id = $1 where id = (select prospect_id from shares where id = $2)", [s.nguoi.dk1!.userId, g3.id]);
+  assert.deepEqual((await ds(s, "dk1")).map((x) => x.id), [g2.id, g1.id], "đầu khách 1 thấy link người khác gửi cho khách nay của mình");
+  const thay = await appPool.query("select 1 from shares where id = $1", [g3.id]);
+  assert.equal(thay.rowCount, 1, "đối chứng: Lần gửi g3 còn đó");
   assert.deepEqual(v1.map((x) => [x.recipient, x.listingCount]), [["Nhóm môi giới", 1], ["[Tên] dk1", 2]]);
   for (const x of v1) assert.ok((x.covers as string[]).length <= 4, "bìa quá bốn ảnh");
   const BANG: [string, string, number][] = [["đầu chủ", ck(s, "dc1"), 403], ["telesales", ck(s, "ts"), 403], ["không cookie", "", 401]];
