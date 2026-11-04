@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: d1735f3988d2cccec327f479a2baea4b7b3429fd
+verified_commit: fb9152941146f0204d8d4ba2e4319045bc962524
 human_signoff:
 ---
 
@@ -135,3 +135,7 @@ sha: 47e6f51990ffb61611029f38e2646eaa157f4e01 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 8 — 2026-11-04, do gộp nhánh chính (main mới sau #120) — giám sát giữ luồng gộp
 run_id: repin-20261104T132133Z-19986
 sha: d1735f3988d2cccec327f479a2baea4b7b3429fd · suites: 7 lệnh exit 0 · evals: 3/3 eval máy đạt kỳ vọng
+
+### Re-pin lần 9 — 2026-11-04, do gộp nhánh chính trước khi gộp #101 (luật 57)
+run_id: repin-20261104T150925Z-93660
+sha: fb9152941146f0204d8d4ba2e4319045bc962524 · suites: 7 lệnh exit 0 · evals: 3/3 eval máy đạt kỳ vọng
