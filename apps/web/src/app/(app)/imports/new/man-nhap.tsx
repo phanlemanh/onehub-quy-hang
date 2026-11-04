@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon, ArrowRightIcon, RotateCcwIcon } from "lucide-react";
 import type { CatalogData } from "@quy-hang/core";
@@ -24,9 +24,10 @@ import {
   chonDauChu,
   coTheGhi,
   coTheTiep,
+  batDauDoc,
+  nhanTep,
   nhanXemThu,
   doiDichCot,
-  napTep,
   sangBuoc,
   suaO,
   taoTrangThai,
@@ -70,7 +71,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
   }, [vai]);
 
   // Rời trang giữa chừng thì trình duyệt hỏi lại.
-  const ghi = tienDoCho(ghiDo, s.xemThu);
+  const ghi = tienDoCho(ghiDo, s);
   const dangDo = s.tep !== null && !(ghi && xongGhi(ghi));
   useEffect(() => {
     if (!dangDo) return;
@@ -79,17 +80,30 @@ export function ManNhap({ vai }: { vai: string[] }) {
     return () => window.removeEventListener("beforeunload", hoi);
   }, [dangDo]);
 
+  // Trạng thái mới nhất cho việc chờ máy lấy thế hệ lúc gửi (khuôn thế hệ ở lib/nhap/trang-thai).
+  const moiNhat = useRef(s);
+  useEffect(() => {
+    moiNhat.current = s;
+  }, [s]);
+
   async function nap(ten: string, bytes: Uint8Array, trang?: string) {
     if (!ctx) return;
+    const batDau = batDauDoc(moiNhat.current);
+    moiNhat.current = batDau;
+    setS(batDau);
     setDangDoc(true);
     setLoiTep(null);
-    const doc = await docTep(ten, bytes, trang);
-    setDangDoc(false);
-    if ("loi" in doc) return setLoiTep(doc.loi);
-    setTepGoc({ ten, bytes, trangCo: doc.trang });
-    setS((cu) => napTep(cu, { ten, bam: "", loai: doc.loai, trang: doc.trangChon }, chayOng(doc.grid, ctx)));
-    const bam = await bamTep(bytes);
-    setS((cu) => (cu.tep ? { ...cu, tep: { ...cu.tep, bam } } : cu));
+    try {
+      const doc = await docTep(ten, bytes, trang);
+      if ("loi" in doc) return setLoiTep(doc.loi);
+      const bam = await bamTep(bytes);
+      setTepGoc({ ten, bytes, trangCo: doc.trang });
+      setS((cu) => nhanTep(cu, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, chayOng(doc.grid, ctx)));
+    } catch {
+      setLoiTep("Không đọc được tệp này — thử chọn lại.");
+    } finally {
+      setDangDoc(false);
+    }
   }
 
   async function xemThu(t: TrangThaiNhap) {
@@ -98,7 +112,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
     setTienDoXem(null);
     if (laLoi(kq)) return setLoiXem(kq.loi);
     setS((cu) => {
-      const moi = nhanXemThu(cu, t, kq);
+      const moi = nhanXemThu(cu, t.the, kq);
       if (moi !== cu) setXemCu(kq);
       return moi;
     });

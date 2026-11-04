@@ -89,11 +89,11 @@ export async function xemThuTatCa(f: Fetch, s: TrangThaiNhap, onGoi?: (i: number
 
 /** Tiến độ ghi: gói đã ghi giữ nguyên kết quả; gói lỗi thì dừng, «Thử lại» gửi lại đúng gói ấy (máy chủ trả kết quả cũ
  *  cho dòng đã ghi, không nhân đôi). */
-export type TienDoGhi = { importId: string; goi: GoiDong[][]; xong: KetQuaGoi[]; loi: (LoiGoi & { goi: number }) | null };
+export type TienDoGhi = { importId: string; the: number; goi: GoiDong[][]; xong: KetQuaGoi[]; loi: (LoiGoi & { goi: number }) | null };
 
 export function batDauGhi(s: TrangThaiNhap): TienDoGhi | LoiGoi {
   if (!s.xemThu) return { loi: "Chưa xem thử." };
-  return { importId: s.xemThu.importId, goi: chiaGoi(goiDong(s)), xong: [], loi: null };
+  return { importId: s.xemThu.importId, the: s.the, goi: chiaGoi(goiDong(s)), xong: [], loi: null };
 }
 
 export async function ghiTiep(f: Fetch, t: TienDoGhi, onGoi?: (t: TienDoGhi) => void): Promise<TienDoGhi> {
@@ -107,10 +107,10 @@ export async function ghiTiep(f: Fetch, t: TienDoGhi, onGoi?: (t: TienDoGhi) => 
   return cur;
 }
 
-/** Tiến độ ghi chỉ dùng tiếp cho đúng lần nhập của bản xem thử đang có — xem thử lại (lần nhập mới) hay bỏ bản xem thử thì
- *  tiến độ cũ bỏ đi, không gửi lại gói cũ tới lần nhập cũ. */
-export const tienDoCho = (t: TienDoGhi | null, xemThu: XemThu | null): TienDoGhi | null =>
-  t && xemThu && t.importId === xemThu.importId ? t : null;
+/** Tiến độ ghi chỉ dùng tiếp cho đúng thế hệ và đúng lần nhập của bản xem thử đang có — đổi gì sau đó (thế hệ mới) hay xem
+ *  thử lại (lần nhập mới) thì tiến độ cũ bỏ đi, không gửi gói cũ tới lần nhập cũ. */
+export const tienDoCho = (t: TienDoGhi | null, s: TrangThaiNhap): TienDoGhi | null =>
+  t && s.xemThu && t.importId === s.xemThu.importId && t.the === s.the ? t : null;
 
 export const xongGhi = (t: TienDoGhi) => t.loi === null && t.xong.length === t.goi.length;
 export const tongGhi = (t: TienDoGhi): TongKet => tong(t.xong.flatMap((g) => g.rows));

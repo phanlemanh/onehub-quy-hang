@@ -7,6 +7,9 @@ import { apLai, coTheTiepGhep, doiDich, type Ong } from "./duong-ong";
  * Trạng thái năm bước của màn Nhập Excel (hàng man-nhap-excel) — hàm thuần, màn React chỉ giữ và hiện. Luật: quyền theo
  * bảng vai của lõi; Trưởng nhóm chọn một đầu chủ cho cả tệp (Hỏi-2, Cổng Phạm vi 04/11); sửa ô là đổi giá trị thô rồi áp
  * lại kế hoạch; đổi gì sau bản xem thử thì bỏ bản xem thử — nút ghi chỉ mở trên đúng các dòng đã xem thử.
+ *
+ * Khuôn thế hệ (dừng-vá S4 lượt 2, chủ kho chọn «Đổi khuôn»): mọi thao tác đổi dữ liệu của lần nhập tăng `the`; mọi việc chờ
+ * máy (đọc tệp, xem thử, ghi) ghi lại `the` lúc gửi đi và kết quả chỉ được nhận khi `the` hiện tại còn bằng số ấy.
  */
 
 export const BUOC = [
@@ -33,6 +36,8 @@ export type TrangThaiNhap = {
   dauChu: string | null;
   bo: ReadonlySet<number>;
   xemThu: XemThu | null;
+  /** Thế hệ của dữ liệu lần nhập — tăng ở mọi thao tác đổi; kết quả chờ máy mang thế hệ lúc gửi. */
+  the: number;
 };
 
 export type GoiDong = { row: number; cells: Cell[]; agentUserId?: string; skip?: boolean };
@@ -42,14 +47,24 @@ export const coQuyen = (vai: readonly string[]) => navigationFor(vai).actions.in
 export const canChonDauChu = (vai: readonly string[]) => vai.includes("team_lead");
 
 export function taoTrangThai(vai: readonly string[]): TrangThaiNhap {
-  return { vai, buoc: 1, tep: null, ong: null, dauChu: null, bo: new Set(), xemThu: null };
+  return { vai, buoc: 1, tep: null, ong: null, dauChu: null, bo: new Set(), xemThu: null, the: 0 };
 }
+
+/** Mọi thao tác đổi dữ liệu của lần nhập đi qua đây: tăng thế hệ và bỏ bản xem thử. */
+const doi = (s: TrangThaiNhap, patch: Partial<TrangThaiNhap>): TrangThaiNhap => ({ ...s, ...patch, xemThu: null, the: s.the + 1 });
 
 export function napTep(s: TrangThaiNhap, tep: TepChon, ong: Ong): TrangThaiNhap {
-  return { ...s, tep, ong, bo: new Set(), xemThu: null, buoc: 1 };
+  return doi(s, { tep, ong, bo: new Set(), buoc: 1 });
 }
 
-export const chonDauChu = (s: TrangThaiNhap, userId: string | null): TrangThaiNhap => ({ ...s, dauChu: userId, xemThu: null });
+/** Người chọn tệp (hay trang tính) mới: thế hệ mới — kết quả đọc của tệp trước về muộn bị bỏ. */
+export const batDauDoc = (s: TrangThaiNhap): TrangThaiNhap => doi(s, {});
+
+/** Nhận kết quả đọc tệp chỉ khi không có thao tác nào sau lúc bắt đầu đọc. */
+export const nhanTep = (hienTai: TrangThaiNhap, theLucDoc: number, tep: TepChon, ong: Ong): TrangThaiNhap =>
+  hienTai.the === theLucDoc ? napTep(hienTai, tep, ong) : hienTai;
+
+export const chonDauChu = (s: TrangThaiNhap, userId: string | null): TrangThaiNhap => doi(s, { dauChu: userId });
 
 /** Bước hiện tại cho bấm Tiếp không. */
 export function coTheTiep(s: TrangThaiNhap): boolean {
@@ -77,7 +92,7 @@ export function coTheGhi(s: TrangThaiNhap): boolean {
 
 export function doiDichCot(s: TrangThaiNhap, cot: number, dich: PlanTarget, ctx: ImportContext): TrangThaiNhap {
   if (!s.ong) return s;
-  return { ...s, ong: doiDich(s.ong, cot, dich, ctx), xemThu: null };
+  return doi(s, { ong: doiDich(s.ong, cot, dich, ctx) });
 }
 
 /** Sửa một ô: đổi giá trị thô của ô trong bảng rồi áp lại kế hoạch. */
@@ -85,23 +100,22 @@ export function suaO(s: TrangThaiNhap, source: number, cot: number, raw: string,
   if (!s.ong) return s;
   const o = s.ong;
   const rows = o.table.rows.map((r) => (r.source !== source ? r : { ...r, cells: r.cells.map((c, i) => (i === cot ? (raw.trim() === "" ? null : raw) : c)) }));
-  return { ...s, ong: apLai({ ...o.table, rows }, o.lop, o.profile, o.plan, ctx), xemThu: null };
+  return doi(s, { ong: apLai({ ...o.table, rows }, o.lop, o.profile, o.plan, ctx) });
 }
 
 export function boDong(s: TrangThaiNhap, source: number, bo = true): TrangThaiNhap {
   const set = new Set(s.bo);
   if (bo) set.add(source);
   else set.delete(source);
-  return { ...s, bo: set, xemThu: null };
+  return doi(s, { bo: set });
 }
 
 export const daXemThu = (s: TrangThaiNhap, xemThu: XemThu): TrangThaiNhap => ({ ...s, xemThu });
-/** Nhận bản xem thử về muộn chỉ khi trạng thái hiện tại vẫn là đúng trạng thái đã gửi đi xem thử — người đổi đích cột, sửa ô,
+/** Nhận bản xem thử về muộn chỉ khi không có thao tác đổi nào sau lúc gửi đi (thế hệ còn khớp) — người đổi đích cột, sửa ô,
  *  bỏ dòng hay đổi đầu chủ trong lúc chờ thì bỏ kết quả ấy (nút ghi chỉ mở trên đúng các dòng đã xem thử). */
-export function nhanXemThu(hienTai: TrangThaiNhap, daGui: TrangThaiNhap, xemThu: XemThu): TrangThaiNhap {
-  const khop = hienTai.ong === daGui.ong && hienTai.bo === daGui.bo && hienTai.dauChu === daGui.dauChu && hienTai.tep === daGui.tep;
-  return khop ? daXemThu(hienTai, xemThu) : hienTai;
-}
+export const nhanXemThu = (hienTai: TrangThaiNhap, theLucGui: number, xemThu: XemThu): TrangThaiNhap =>
+  hienTai.the === theLucGui ? daXemThu(hienTai, xemThu) : hienTai;
+
 export const sangBuoc = (s: TrangThaiNhap, buoc: number): TrangThaiNhap => ({ ...s, buoc });
 
 /** Các dòng gửi máy chủ: ô thô (đã sửa) theo đúng thứ tự tiêu đề; dòng bỏ mang `skip`; Trưởng nhóm gắn đầu chủ. */

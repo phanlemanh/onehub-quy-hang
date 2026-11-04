@@ -7,8 +7,8 @@ import { decodeText, parseCsv, type Grid, type ImportContext } from "@quy-hang/c
 
 import { danhMucMau, HOM_NAY, sinhBoThu } from "../../../../../packages/core/test/import/sinh";
 import { chayOng } from "./duong-ong";
-import { tienDoCho, xemThuTatCa, type Fetch, type TienDoGhi } from "./goi-api";
-import { boDong, chonDauChu, coQuyen, coTheGhi, coTheTiep, daXemThu, goiDong, napTep, nhanXemThu, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
+import { batDauGhi, tienDoCho, xemThuTatCa, type Fetch, type TienDoGhi } from "./goi-api";
+import { batDauDoc, boDong, chonDauChu, coQuyen, coTheGhi, coTheTiep, daXemThu, doiDichCot, goiDong, napTep, nhanTep, nhanXemThu, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
 
 const CTX: ImportContext = { today: HOM_NAY, catalog: danhMucMau() };
 const TEP = { ten: "bang-hang.csv", bam: "a".repeat(64), loai: "csv" as const, trang: null };
@@ -130,22 +130,40 @@ test("rò nguồn: chỉ gọi địa chỉ đã khai", async () => {
   for (const d of ds) assert.ok(DUOC.some((re) => re.test(d.url)), d.url);
 });
 
-test("ghi: tiến độ cũ không dùng cho bản xem thử mới", () => {
-  const XT = (importId: string) => ({ importId, rows: [], summary: { create: 1, update: 0, supplement: 0, skip: 0 } });
-  const t: TienDoGhi = { importId: "lan-1", goi: [[{ row: 1, cells: [] }]], xong: [], loi: { loi: "x", goi: 1 } };
-  assert.equal(tienDoCho(t, XT("lan-1")), t, "cùng lần nhập: dùng tiếp tiến độ");
-  assert.equal(tienDoCho(t, XT("lan-2")), null, "xem thử lại ra lần nhập mới: tiến độ cũ gửi gói cũ tới lần nhập cũ");
-  assert.equal(tienDoCho(t, null), null, "bỏ dòng sau xem thử: tiến độ cũ còn dùng");
-});
-
-test("xem thử: kết quả về muộn không gắn vào trạng thái đã đổi", () => {
+test("khuôn thế hệ: mọi thao tác đổi × mọi kết quả chờ máy", () => {
   const XT = { importId: "lan-1", rows: [{ row: 2, action: "create" as const, reason: "x" }], summary: { create: 1, update: 0, supplement: 0, skip: 0 } };
-  const gui = voi(["listing_agent"], tuTep("ban-gia"));
-  assert.equal(coTheGhi(nhanXemThu(gui, gui, XT)), true, "trạng thái không đổi: nhận bản xem thử");
-  const CA: [string, TrangThaiNhap][] = [
-    ["sửa ô trong lúc chờ", suaO(gui, gui.ong!.table.rows[0]!.source, 0, "Toà B", CTX)],
-    ["bỏ dòng trong lúc chờ", boDong(gui, gui.ong!.table.rows[1]!.source)],
-    ["đổi đầu chủ trong lúc chờ", chonDauChu(gui, "user-y")],
+  const goc = voi(["team_lead"], tuTep("ban-gia"));
+  const tepKhac = chayOng(tuTep("ban-ma-can"), CTX);
+  const TEP_KHAC = { ...TEP, ten: "khac.csv" };
+  // Sáu thao tác đổi dữ liệu của lần nhập — viết tay, mỗi phần tử một thao tác.
+  const DOI: [string, (s: TrangThaiNhap) => TrangThaiNhap][] = [
+    ["đổi đích cột", (s) => doiDichCot(s, 0, "keep_as_note", CTX)],
+    ["sửa ô", (s) => suaO(s, s.ong!.table.rows[0]!.source, 0, "Toà B", CTX)],
+    ["bỏ dòng", (s) => boDong(s, s.ong!.table.rows[1]!.source)],
+    ["đổi đầu chủ", (s) => chonDauChu(s, "user-y")],
+    ["chọn tệp khác", (s) => batDauDoc(s)],
+    ["nạp tệp khác", (s) => napTep(s, TEP_KHAC, tepKhac)],
   ];
-  for (const [ten, doi] of CA) assert.equal(coTheGhi(nhanXemThu(doi, gui, XT)), false, `${ten}: nút ghi mở trên dữ liệu chưa xem thử`);
+  // Ba loại kết quả chờ máy: mỗi loại trả true khi kết quả cũ (gửi ở trạng thái `gui`) được nhận vào trạng thái `nay`.
+  const CHO: [string, (gui: TrangThaiNhap, nay: TrangThaiNhap) => boolean][] = [
+    ["bản xem thử", (gui, nay) => coTheGhi(nhanXemThu(nay, gui.the, XT))],
+    ["tiến độ ghi", (gui, nay) => {
+      const t = batDauGhi(daXemThu(gui, XT)) as TienDoGhi;
+      return tienDoCho(t, { ...nay, xemThu: XT }) !== null;
+    }],
+    ["kết quả đọc tệp", (gui, nay) => nhanTep(nay, gui.the, TEP_KHAC, tepKhac) !== nay],
+  ];
+  let so = 0;
+  for (const [tenCho, nhan] of CHO) {
+    assert.equal(nhan(goc, goc), true, `đối chứng: không đổi gì thì ${tenCho} được nhận`);
+    so++;
+    for (const [tenDoi, f] of DOI) {
+      assert.equal(nhan(goc, f(goc)), false, `${tenDoi} trong lúc chờ: ${tenCho} cũ vẫn được nhận`);
+      so++;
+    }
+  }
+  assert.equal(so, CHO.length * (DOI.length + 1));
+  assert.equal(so, 21);
+  // Đi bước (Lùi, Tiếp) không phải thao tác đổi dữ liệu: bản xem thử vẫn được nhận.
+  assert.equal(coTheGhi(nhanXemThu(sangBuoc(goc, 3), goc.the, XT)), true, "đi bước làm mất bản xem thử");
 });
