@@ -1,0 +1,33 @@
+{
+  "feature_plain": "Ba màn trước khi vào sàn (đăng nhập, chọn sàn, chưa gắn sàn) đổi sang khối auth-15 anh đã chọn: một cột giữa trang, dấu Quỹ hàng trên đầu, chân điều khoản ở đáy, chỉ đăng nhập bằng mã email — cách đăng nhập không đổi.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiện màn đăng nhập một cột giữa trang trên máy tính và điện thoại: dấu Quỹ hàng, tiêu đề «Đăng nhập Quỹ hàng», ô email có biểu tượng, nút «Gửi mã», câu điều khoản ở đáy — không nút Google, Apple, GitHub."},
+    {"id": "AC-2", "p": "Sẽ giữ nguyên cách đăng nhập: gửi mã, gõ mã; mã sai báo ngay dưới ô mã; mã đúng vào thẳng sàn."},
+    {"id": "AC-3", "p": "Sẽ cho màn chọn sàn và màn chưa gắn sàn dùng cùng khung mới; chọn sàn nào vào đúng sàn ấy; Đăng xuất về màn đăng nhập."},
+    {"id": "AC-4", "p": "Sẽ giữ đủ những gì hàng 6 và hàng 38 đã có: báo máy bị báo mất, tự điền mã trên điện thoại, nút gửi lại mã khi hết hạn, báo xin mã quá nhiều lần."},
+    {"id": "AC-6", "p": "Sẽ qua đủ kiểm kiểu, lint giao diện và bài quét khuôn, không lệch khuôn nhóm xác thực."},
+    {"id": "AC-7", "p": "Sẽ gạch dòng «chỗ tạm» của màn đăng nhập khỏi sổ thiết kế (bớt đúng một cảnh báo quá hạn) và ghi khối auth-15 vào danh mục khối đã dùng."},
+    {"id": "AC-8", "p": "Sẽ đọc được ở nền tối và không cuộn ngang trên điện thoại."}
+  ],
+  "wont_do": [
+    {"id": "AC-5", "p": "Sẽ KHÔNG đụng phần đăng nhập phía máy chủ — không tệp nào dưới packages/api/src/auth đổi."},
+    {"id": "OOS-1", "p": "KHÔNG làm trang điều khoản, chính sách hay liên kết hỗ trợ ở chân trang."},
+    {"id": "OOS-2", "p": "KHÔNG đổi luồng, phiên, giới hạn gửi mã hay đường đăng nhập của hàng 6."},
+    {"id": "OOS-3", "p": "KHÔNG đổi danh sách chọn sàn thành dạng có vai — chỗ tạm ấy vẫn mở."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Trục màn: đăng nhập (bước email, bước mã), chọn sàn, chưa gắn sàn — đủ ba màn của khuôn xác thực."},
+    {"i": 1, "p": "Trục trạng thái: mặc định, đang gửi, lỗi gắn ô, máy bị báo — theo bảng trạng thái của thiết kế."},
+    {"i": 2, "p": "Trục khổ và nền: 1440 và 375, sáng và tối."},
+    {"i": 3, "p": "Phần làm ngay: ba màn ở hai khổ (AC-1, AC-3), mã sai (AC-2), các trạng thái hàng 6 trong mã (AC-4), nền tối và điện thoại (AC-8)."},
+    {"i": 4, "p": "Để sau: trang điều khoản có liên kết; danh sách chọn sàn kèm vai."},
+    {"i": 5, "p": "Không bao giờ: nút đăng nhập Google, Apple, GitHub."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Câu ở chân trang là lời pháp lý hiện cho người dùng thật, máy không được tự chốt — đã chuyển thành Hỏi-1 cho anh, đánh dấu khó đảo; bản chạy đang dùng câu khuyến nghị không có chữ «đồng ý»."},
+    {"i": 1, "p": "Dấu hiệu đầu màn và tiêu đề là chuyện gu và nghĩa — dấu hiệu thành Hỏi-2; tiêu đề trả về đúng chữ cũ «Đăng nhập Quỹ hàng»."},
+    {"i": 2, "p": "Các trạng thái cũ (tự điền mã, gửi lại mã, quá nhiều lần) chưa có bài đo — đã thêm ca kiểm; riêng màn máy bị báo không dựng lại trên màn vì cần báo mất máy thật, mã nguồn được kiểm thay."},
+    {"i": 3, "p": "Việc gạch sổ thiết kế chỉ đo bằng «không thấy lỗi» — đã thêm bài so với nhánh chính (bớt đúng một dòng) và kiểm dòng danh mục đủ chín ô, ảnh có thật."},
+    {"i": 4, "p": "Nền tối mới đo một khổ — đã thêm 1440 tối và bước mã sai ở điện thoại nền tối."}
+  ]
+}

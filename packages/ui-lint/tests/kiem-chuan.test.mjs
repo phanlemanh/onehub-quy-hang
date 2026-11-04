@@ -197,10 +197,12 @@ describe("vết chọn khối — Chỗ hở", () => {
   const bangThat = () => readFileSync(join(ROOT, VVI), "utf8").split("## 3. Chỗ hở")[1].split(/\n## /)[0];
   const dongThat = () => bangThat().split("\n").filter((l) => /^\| /.test(l)).slice(2).map((l) => l.trim().slice(1, -1).split("|").map((o) => o.trim()));
 
-  it("chỗ hở: cây thật đủ năm ô cho 13 dòng", () => {
+  it("chỗ hở: cây thật đủ năm ô cho 12 dòng", () => {
     const dong = dongThat();
     // Hàng 91: dòng «Người dùng (Cài đặt sàn, tạm)» rời bảng — Người dùng nay chạy khối solution-users-8.
-    assert.equal(dong.length, 13);
+    // Hàng 93: dòng «Đăng nhập, chọn sàn, chưa gắn sàn (tạm)» rời bảng — ba màn nay chạy khối auth-15.
+    assert.equal(dong.length, 12);
+    assert.equal(dong.filter((o) => o[0].startsWith("Đăng nhập, chọn sàn, chưa gắn sàn")).length, 0);
     for (const o of dong) {
       assert.equal(o.length, 5, o[0]);
       for (const c of o) assert.ok(c !== "" && !/^[—–-]$/.test(c), `${o[0]}: ô rỗng`);
@@ -251,12 +253,13 @@ describe("vết chọn khối — Chỗ hở", () => {
       }
     }));
 
-  it("chỗ hở: cây thật có ba cảnh báo chỗ tạm", () => {
+  it("chỗ hở: cây thật có hai cảnh báo chỗ tạm", () => {
     const r = kiemChuan(ROOT, { homNay: HOM_NAY });
     assert.deepEqual(r.loi, []);
-    assert.equal(r.canhBao.length, 3);
-    for (const ten of ["Đăng nhập", "Ô nhận lead", "Trống · lỗi · báo"])
+    assert.equal(r.canhBao.length, 2);
+    for (const ten of ["Ô nhận lead", "Trống · lỗi · báo"])
       assert.equal(r.canhBao.filter((c) => c.includes(`«${ten}`)).length, 1, ten);
+    assert.equal(r.canhBao.filter((c) => c.includes("«Đăng nhập")).length, 0, "Đăng nhập");
   });
 });
 

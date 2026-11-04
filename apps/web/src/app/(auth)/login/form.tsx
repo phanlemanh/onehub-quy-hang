@@ -1,10 +1,14 @@
 "use client";
 
+import { ArrowRightIcon, KeyRoundIcon, MailIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+
+// Ô email và ô mã theo `@reui/auth-15` (hàng 93): InputGroup có biểu tượng đầu ô, lời dặn dưới ô, nút rộng trọn cột.
+// Luồng, chữ lỗi và đường API giữ nguyên hàng 6.
 
 type Buoc = "email" | "ma";
 type Loi = "" | "invalid-code" | "code-expired" | "too-many-requests" | "khac";
@@ -64,55 +68,82 @@ export function FormDangNhap() {
   if (buoc === "email") {
     return (
       <form
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
           void guiMa();
         }}
       >
-        <Field data-invalid={loi ? true : undefined}>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" required autoComplete="email" autoFocus value={email} onChange={(e) => setEmail(e.target.value)} />
-          {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
-        </Field>
-        <Button type="submit" disabled={dangGui}>
+        <FieldGroup className="gap-4">
+          <Field className="gap-2" data-invalid={loi ? true : undefined}>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <InputGroup className="bg-background">
+              <InputGroupAddon>
+                <MailIcon aria-hidden="true" className="size-4" />
+              </InputGroupAddon>
+              <InputGroupInput
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                autoFocus
+                placeholder="ban@san.vn"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </InputGroup>
+            <FieldDescription>Quỹ hàng gửi mã 6 số tới email này.</FieldDescription>
+            {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
+          </Field>
+        </FieldGroup>
+        <Button type="submit" className="w-full" disabled={dangGui}>
           {dangGui ? "Đang gửi…" : "Gửi mã"}
+          <ArrowRightIcon aria-hidden="true" data-icon="inline-end" />
         </Button>
       </form>
     );
   }
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={vao}>
-      <p className="text-sm text-muted-foreground">Đã gửi mã tới {email.trim()}</p>
-      <Field data-invalid={loi ? true : undefined}>
-        <FieldLabel htmlFor="ma">Mã 6 số</FieldLabel>
-        <Input
-          id="ma"
-          autoFocus
-          required
-          inputMode="numeric"
-          autoComplete="one-time-code"
-          pattern="\d{6}"
-          maxLength={6}
-          value={ma}
-          onChange={(e) => setMa(e.target.value.replace(/\D/g, ""))}
-        />
-        {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
-      </Field>
-      <div className="flex flex-wrap gap-2">
+    <form className="flex flex-col gap-5" onSubmit={vao}>
+      <FieldGroup className="gap-4">
+        <Field className="gap-2" data-invalid={loi ? true : undefined}>
+          <FieldLabel htmlFor="ma">Mã 6 số</FieldLabel>
+          <InputGroup className="bg-background">
+            <InputGroupAddon>
+              <KeyRoundIcon aria-hidden="true" className="size-4" />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="ma"
+              autoFocus
+              required
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="\d{6}"
+              maxLength={6}
+              value={ma}
+              onChange={(e) => setMa(e.target.value.replace(/\D/g, ""))}
+            />
+          </InputGroup>
+          <FieldDescription>Đã gửi mã tới {email.trim()}</FieldDescription>
+          {loi && <FieldError role="alert">{CHU_LOI[loi]}</FieldError>}
+        </Field>
+      </FieldGroup>
+      <div className="flex flex-col gap-3">
         {loi === "code-expired" ? (
-          <Button type="button" disabled={dangGui} onClick={() => void guiMa()}>
+          <Button type="button" className="w-full" disabled={dangGui} onClick={() => void guiMa()}>
             Gửi lại mã
           </Button>
         ) : (
-          <Button type="submit" disabled={dangGui}>
+          <Button type="submit" className="w-full" disabled={dangGui}>
             {dangGui ? "Đang vào…" : "Vào"}
+            <ArrowRightIcon aria-hidden="true" data-icon="inline-end" />
           </Button>
         )}
         <Button
           type="button"
           variant="outline"
+          className="w-full"
           onClick={() => {
             setBuoc("email");
             setLoi("");
