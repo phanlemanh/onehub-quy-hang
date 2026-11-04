@@ -1,0 +1,1 @@
+UI E6 fail: chon=khong-thay-muc, 12->12, 19->19

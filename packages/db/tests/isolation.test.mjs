@@ -2352,3 +2352,85 @@ test("offline_sessions: sàn khác không đọc, không ghi hộ", { skip }, as
     await expectError(c, "delete from offline_sessions", [], /permission denied/);
   });
 });
+
+// ---- Lần xuất bảng hàng (030_lan_xuat, hàng 43 phat-hang, E8) ----
+const LAN_XUAT = `insert into exports (company_id, user_id, format, recipient, listing_count) values ($1, $2, $3, $4, $5)`;
+
+/** Vai chủ dựng một lần xuất của A (U1) và một của B (U2), rồi chuyển sang vai API là U1 ở sàn A. */
+async function dungLanXuat(c) {
+  await c.query("reset role");
+  await c.query(LAN_XUAT, [COMPANY_A, USER_1, "post_zalo", "nhom_moi_gioi", 3]);
+  await c.query(LAN_XUAT, [COMPANY_B, USER_2, "xlsx", "khach_rieng", 2]);
+  await c.query("set local role quy_hang_app");
+  await c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [USER_1, COMPANY_A]);
+}
+
+/** Trả tên bảng khi người ở sàn A đọc được lần xuất của sàn B; null khi không. */
+async function docCheoLanXuat(c) {
+  const { rowCount } = await c.query("select 1 from exports where company_id = $1", [COMPANY_B]);
+  return rowCount > 0 ? "exports" : null;
+}
+
+test("exports: bảng bật và ép luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relrowsecurity r, c.relforcerowsecurity f from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname = 'exports'`,
+    );
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("exports: sàn khác không đọc, không ghi hộ; vai API không sửa, không xoá", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    await dungLanXuat(c);
+
+    // Đọc: đúng lần xuất của A, không lần nào của B.
+    const doc = await c.query("select company_id, user_id from exports");
+    assert.deepEqual(doc.rows, [{ company_id: COMPANY_A, user_id: USER_1 }]);
+    assert.equal(await docCheoLanXuat(c), null, "sàn A đọc được lần xuất của sàn B");
+
+    // Đối chứng dương: ghi lần xuất của chính mình ở A được.
+    await c.query(LAN_XUAT, [COMPANY_A, USER_1, "pdf", "khach_rieng", 1]);
+    assert.equal((await c.query("select 1 from exports")).rowCount, 2);
+
+    // Ghi hộ: sàn B, hay người khác trong A → luật theo dòng từ chối (42501).
+    const BANG = [
+      ["company_id của sàn B", [COMPANY_B, USER_1, "png", "khach_rieng", 1]],
+      ["user_id người khác", [COMPANY_A, USER_2, "png", "khach_rieng", 1]],
+    ];
+    let so = 0;
+    for (const [ten, params] of BANG) {
+      await c.query("savepoint lx");
+      let err = null;
+      try {
+        await c.query(LAN_XUAT, params);
+      } catch (e) {
+        err = e;
+      }
+      await c.query("rollback to savepoint lx");
+      assert.ok(err, `ghi hộ «${ten}» được nhận — ${ten} được ghi`);
+      assert.equal(err.code, "42501", `ghi hộ «${ten}»: mã lỗi ${err.code} (${err.message})`);
+      so++;
+    }
+    assert.equal(so, 2);
+
+    // Vai API không sửa, không xoá lần xuất.
+    await expectError(c, "update exports set listing_count = 9", [], /permission denied/);
+    await expectError(c, "delete from exports", [], /permission denied/);
+  });
+});
+
+test("exports: chiều đỏ — luật đọc không lọc sàn thì ca đọc chéo nêu tên bảng", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    await c.query("reset role");
+    await c.query("drop policy exports_read on exports");
+    await c.query("create policy exports_read on exports for select using (true)");
+    await dungLanXuat(c);
+    assert.equal(await docCheoLanXuat(c), "exports");
+  });
+});

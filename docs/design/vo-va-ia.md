@@ -21,7 +21,7 @@ bộ chọn dạng đường dẫn, ô tìm ⌘K, nút tạo, chuông.
 | --- | --- |
 | Bộ chọn Org / App / Env | Sàn (chỉ hiện khi người thuộc hơn một sàn) / Dự án. Bỏ bộ chọn thứ ba |
 | Ô tìm ⌘K giữa thanh trên | «Gõ mã căn»: gõ mã → mở hồ sơ căn; gõ tên nhà → nhảy nhà. Phím `/` và ⌘K |
-| Nút «Create» | «+ Lead» (nút chính); thêm «Nhập Excel», «Phát hàng» dạng viền, ẩn theo vai |
+| Nút «Create» | «+ Lead» (nút chính); thêm «Nhập Excel», «Xuất bảng hàng» dạng viền, ẩn theo vai |
 | Chuông + ngăn thông báo | Báo lead mới, lead quá hạn, khách mở link |
 | Cột biểu tượng | Hôm nay · Bảng hàng · Đã gửi · Đội · Cài đặt sàn (ở đáy) — theo bảng vai ở Tham chiếu §9 |
 | Cột thứ hai theo nhà (`INNER_NAV`) | Bảng hàng: góc nhìn của đội, của tôi, «+ Lưu góc nhìn» · Đã gửi: Link đã gửi, Lịch xem · Cài đặt sàn: các mục cài đặt · Hôm nay: các hàng đợi của bộ nhóm · Đội: Tổng quan |
@@ -37,7 +37,7 @@ tối, nặng).
 **Đã chuyển thể (hàng 53, 31/10)** — tệp ở `apps/web/src/components/shell/`, thư mục cài `components/blocks/` không giữ.
 Đổi so với khối: Org → bộ chọn Sàn (một sàn thì chỉ hiện tên), bỏ App và Env; chưa có bộ chọn Dự án (kho chưa có danh
 mục dự án — hiện khi kết nối danh mục về); ô tìm → «Gõ mã căn» (`command`, ⌘K và `/`, chỉ vai có Bảng hàng); «Create» →
-các nút + Lead · Nhập Excel · Phát hàng theo vai; menu tài khoản rời chân cột lên thanh trên (tên sàn, Tôi, sáng/tối,
+các nút + Lead · Nhập Excel · Xuất bảng hàng theo vai; menu tài khoản rời chân cột lên thanh trên (tên sàn, Tôi, sáng/tối,
 đăng xuất); ngăn thông báo trống tới khi có nguồn; tay nắm cột thứ hai và nút tìm dùng `Button` của kho thay thẻ
 `<button>` trần; nhà, tab và nút đọc `navigationFor` của `packages/core`. Cột thứ hai nhớ mở/gập bằng cookie `qh_cot2`
 theo người, sàn đang làm và nhà. Danh mục: `.agents/skills/quy-hang-ui/catalog.md` «Khối đã chuyển thể».
@@ -128,7 +128,7 @@ chính, phần còn lại ghép. «Bố cục»: một trong bảy bố cục c�
 | Hôm nay, trưởng nhóm | TN1 · 42 | Dashboard grid | Bảng điều khiển | [`dashboard-6`](https://reui.io/preview/radix/dashboard-6) bỏ vùng biểu đồ | trọn | Ba ô số: lead quá hạn, hàng cũ, ngoại lệ; bảng theo người (ca → đầu chủ, thanh phủ → tỉ lệ hàng tươi); hàng đợi ngoại lệ kèm nút làm ngay; tăng giảm bằng Badge `-light`; bỏ biểu đồ nên không cài recharts | `stats-7` + `data-grid-grouping-2` (khối của bố cục ở ADR-0024) |
 | Ô nhận lead + bốn nấc | L1–L5 · 24, 27, 51 | Frame stack | Đọc | ghép (khuôn `KhungLead`) + [`list-11`](https://reui.io/preview/radix/list-11) | vùng ×2 | Năm mục; kiểm trùng hiện bằng `Alert` dưới ô; cột phải là lead đã nhập với Badge bốn nấc; điện thoại (hàng 51) một cột, cột phải thành tab Lead. Bản ghép là đích (xem «Chỗ hở») | — (`dialog-16` loại: xếp người theo % khớp, trái luật trùng tất định) |
 | Nhập Excel | N1, N2 · 20–21 | Wizard | Luồng nhiều bước | [`solution-crm-6`](https://reui.io/preview/radix/solution-crm-6) | trọn | Năm bước giữ: tải · ghép cột · xem trước · trùng · tóm tắt; đọc tệp thật tự viết (khối dùng số mẫu); ghép theo mẫu file của sàn | `wizard-5` |
-| Phát hàng | D · 43 | Wizard dialog | Luồng nhiều bước | [`dialog-5`](https://reui.io/preview/radix/dialog-5) (thư viện mẫu) | vùng | Thẻ mẫu → mẫu bài của sàn (Zalo · Facebook · file Excel); chọn mẫu → xem trước → chép bài / xuất file; lấy lựa chọn từ bảng hàng; không đăng thay người | — (`dialog-13` loại: form tạo dự án, không có bước chọn mẫu) |
+| Xuất bảng hàng | D · 43 | Wizard dialog | Luồng nhiều bước | [`dialog-5`](https://reui.io/preview/radix/dialog-5) (thư viện mẫu) | vùng | Thẻ mẫu → mẫu bài của sàn (Zalo · Facebook · file Excel); chọn mẫu → xem trước → chép bài / xuất file; lấy lựa chọn từ bảng hàng; không đăng thay người | — (`dialog-13` loại: form tạo dự án, không có bước chọn mẫu) |
 | Cài đặt sàn | S1–S6 · 45–50, 7 | Vertical rail settings | Đọc | rail = cột thứ hai của vỏ; mục: [`settings-3`](https://reui.io/preview/radix/settings-3), người dùng [`solution-users-8`](https://reui.io/preview/radix/solution-users-8), trạng thái `c-sortable-5` | vùng | Mỗi mục một Frame; luật chia lead ghép (xem «Chỗ hở») | `profile-1`, `settings-9` |
 | Đăng nhập | — · 6, 93 | Auth card | — (ngoài vỏ) | [`auth-15`](https://reui.io/preview/radix/auth-15) | trọn | Bỏ nút Google/Apple/GitHub (kho chỉ đăng nhập bằng mã email, ADR-0005); giữ chân điều khoản; chuyển thể vào khuôn `Khung` ở hàng 93 (chọn sàn, chưa gắn sàn đi cùng) | `auth-19` |
 | Bảng hàng thẻ, điện thoại | M4 · 32 | — | Tràn (thành thẻ) | [`product-grid-4`](https://reui.io/preview/radix/product-grid-4) + ngăn lọc [`filter-sidebar-5`](https://reui.io/preview/radix/filter-sidebar-5) | vùng ×2 | Thẻ ngang: ảnh trái, mã căn + giá phải, hàng ba thông số Diện tích · Phòng ngủ · Hướng (`LivingArea`, `BedroomsTotal`, `DirectionFaces`); bỏ mô tả; tim → ô chọn khi giữ lâu; dòng nhóm → tên toà; ngăn lọc thành `Drawer` đáy | `wishlist-1` (dòng ảnh nhỏ, dày hơn) |

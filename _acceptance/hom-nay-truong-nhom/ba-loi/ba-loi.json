@@ -1,0 +1,24 @@
+{
+  "man": "Hôm nay của Trưởng nhóm (hàng 42)",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích dashboard-6 chủ kho chọn lại 02/11 (vo-va-ia.md dòng «Hôm nay, trưởng nhóm»): ba ô số vừa một màn, bảng theo đầu chủ và hàng đợi giao lại đứng cạnh nhau nên trưởng nhóm thấy cả lead cần giao lẫn người đang để hàng cũ mà không cuộn."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "stats-7 và data-grid đã cài — ba ô số, hàng đợi dạng bảng, bảng theo đầu chủ xếp chồng",
+      "dong_co": "Không thêm khối mới: dùng đúng hai khối ADR-0024 gán cho bố cục Bảng điều khiển.",
+      "danh_doi": "Ba khối xếp chồng dọc nên bảng theo đầu chủ rơi xuống dưới màn đầu; hàng đợi chiếm cả chiều ngang cho bốn cột."
+    },
+    "reui": {
+      "nhan": "dashboard-6 chuyển thể, bỏ biểu đồ — ô số có biểu tượng, bảng theo đầu chủ có thanh tươi, hàng đợi giao lại bên phải",
+      "dong_co": "Khối đích của màn; vùng «Coverage Review» và «Action Queue» khớp đúng bảng theo người và hàng đợi việc của trưởng nhóm.",
+      "danh_doi": "Thêm một khối chuyển thể (dashboard-6) vào danh mục; bỏ biểu đồ, bộ chọn ngày, xuất file vì kho không cài recharts, date-fns, sonner."
+    },
+    "ve-moi": {
+      "nhan": "Ghép mỗi khối một khung xếp chồng — số to, hàng đợi dạng danh sách, bảng theo đầu chủ cuối",
+      "dong_co": "Đơn giản, chữ to, mỗi lead một dòng hai tầng dễ đọc.",
+      "danh_doi": "Dài, phải cuộn mới thấy bảng theo đầu chủ; tự ghép nên thêm dòng «Chỗ hở» kèm hạn xem lại."
+    }
+  }
+}
