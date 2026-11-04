@@ -7,7 +7,7 @@ const PAGE_TITLE: Record<string, string> = {
   "/me": "Tôi",
   "/leads/new": "Lead",
   "/imports/new": "Nhập Excel",
-  "/exports/new": "Phát hàng",
+  "/exports/new": "Xuất bảng hàng",
   "/viewings": "Lịch xem",
 };
 

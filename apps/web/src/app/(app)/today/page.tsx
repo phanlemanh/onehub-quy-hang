@@ -13,19 +13,22 @@ import { DaiBatThongBao } from "./dai-bat";
 import { HomNayDauChu } from "./hom-nay-dau-chu";
 import { KhungHomNay } from "./khung";
 import { baoNgoaiDauChu, docNhomThamSo } from "./mo-nhom";
+import HomNayTruongNhom from "./truong-nhom";
+import { vungTheoVai } from "./truong-nhom-trang-thai";
 
 export const dynamic = "force-dynamic";
 
-// Hôm nay theo vai (Tham chiếu §10): Đầu chủ thấy Hôm nay của đầu chủ (hàng 22, khuôn KhungHomNay); telesales thấy vùng
-// «Lead đã nhập» (hàng 27, khuôn KhungLeadCuaToi) — người hai vai thấy cả hai, đầu chủ trước; vai khác giữ chỗ tạm tới
-// Hôm nay của trưởng nhóm (hàng 42). Dải bật thông báo lead (hàng 26) đứng đầu cho đầu chủ và trưởng nhóm — trưởng nhóm
-// thấy dải cả khi đang ở trang giữ chỗ. Người không có vai Đầu chủ mở một hàng đợi từ cột thứ hai thì đầu màn báo một
-// dòng (va-he-bo-cuc, Hỏi-1: báo rõ) — cột liệt bộ nhóm mặc định nên dòng báo đọc nhãn từ cùng bộ ấy.
+// Hôm nay theo vai (Tham chiếu §10), vùng xếp bằng `vungTheoVai`: Trưởng nhóm thấy bảng điều khiển trên cùng (hàng 42,
+// khuôn KhungTruongNhom); Đầu chủ thấy Hôm nay của đầu chủ (hàng 22) — người có cả hai vai thấy hàng đợi của mình dưới
+// bảng điều khiển; telesales thấy vùng «Lead đã nhập» (hàng 27, khuôn KhungLeadCuaToi) sau vùng đầu chủ; vai khác giữ chỗ
+// tạm. Dải bật thông báo lead (hàng 26) đứng đầu cho đầu chủ và trưởng nhóm. Người không có vai Đầu chủ mở một hàng đợi
+// từ cột thứ hai thì đầu màn báo một dòng (va-he-bo-cuc, Hỏi-1: báo rõ) — cột liệt bộ nhóm mặc định nên dòng báo đọc nhãn
+// từ cùng bộ ấy.
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const me = await readMe((await headers()).get("cookie") ?? "");
   const vai = me?.activeCompany?.roles ?? [];
   const dauChu = me?.activeCompany && vai.includes("listing_agent") ? { nguoi: me.user.id, san: me.activeCompany.id } : null;
-  const telesales = vai.includes("telesales");
+  const vung = vungTheoVai(vai);
   const nhanDay = Boolean(me?.activeCompany) && (vai.includes("listing_agent") || vai.includes("team_lead"));
   const q = await searchParams;
   const thamSo = new URLSearchParams(Object.entries(q).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : [])));
@@ -40,13 +43,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         </Frame>
       ) : null}
       {nhanDay ? <DaiBatThongBao /> : null}
-      {dauChu ? <HomNayDauChu nguoi={dauChu.nguoi} san={dauChu.san} /> : null}
-      {telesales ? (
-        <KhungLeadCuaToi>
-          <LeadDaNhapThat />
-        </KhungLeadCuaToi>
-      ) : null}
-      {!dauChu && !telesales ? <Placeholder path="/today" trongKhung /> : null}
+      {vung.map((v) =>
+        v === "truong-nhom" ? (
+          <HomNayTruongNhom key={v} />
+        ) : v === "dau-chu" && dauChu ? (
+          <HomNayDauChu key={v} nguoi={dauChu.nguoi} san={dauChu.san} />
+        ) : v === "telesales" ? (
+          <KhungLeadCuaToi key={v}>
+            <LeadDaNhapThat />
+          </KhungLeadCuaToi>
+        ) : null,
+      )}
+      {vung.length === 0 ? <Placeholder path="/today" trongKhung /> : null}
     </KhungHomNay>
   );
 }

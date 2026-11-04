@@ -110,6 +110,11 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/sync/offline-sessions",
     // Hàng 35: trang khách — ghi lượt mở, lượt quan tâm (route đọc và route ảnh không khai OpenAPI).
     "POST /api/v1/public/shares/{code}/events",
+    // Hàng 42: Hôm nay trưởng nhóm.
+    "GET /api/v1/team/lead-queue",
+    "GET /api/v1/team/listing-agents",
+    // Hàng 43 (phat-hang): lần xuất bảng hàng.
+    "POST /api/v1/exports",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
