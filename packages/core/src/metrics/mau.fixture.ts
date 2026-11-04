@@ -97,6 +97,7 @@ export function boMau(batDau: string, goi: GoiMau = docGoiMau()): BoMau {
       boardAt: null,
       returnedAt: null,
       resubmittedAt: null,
+      resubmittedLeadId: null,
       discardedAt: null,
     };
   });
