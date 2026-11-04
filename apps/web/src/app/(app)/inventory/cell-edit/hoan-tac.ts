@@ -4,7 +4,7 @@
  * lần đặt giá đầu cũng không (lõi không nhận «chưa có giá»). Trình sửa dùng cùng hàm để báo trước «Không hoàn tác được».
  */
 import { TRANSITIONS } from "@quy-hang/core/listing";
-import type { HangSua, Lenh } from "./lenh";
+import { moTaLoi, type GhiFn, type HangSua, type Lenh } from "./lenh";
 
 export type Truoc = Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">;
 
@@ -65,9 +65,35 @@ export function taoSoHoanTac() {
     },
     /** Nút «Hoàn tác» trên thông báo: đúng bản ghi của thông báo ấy. */
     dungNut: dung,
+    /**
+     * Lệnh bù của bản ghi không ghi được: bản ghi thôi «đã dùng» để bấm lại (va-duong-loi-hoan-tac). Ctrl/Cmd+Z lại trỏ nó,
+     * trừ khi đã có lần sửa thành công mới hơn — phím luôn trỏ lần sửa gần nhất.
+     */
+    traLai(b: BanGhiHoanTac) {
+      b.daDung = false;
+      ganNhat ??= b;
+    },
     /** Ctrl/Cmd+Z: bản ghi gần nhất; null khi không còn gì để hoàn tác (phím không làm gì). */
     dungPhim(phienBan: (id: string) => number | undefined): KetQuaDung | null {
       return ganNhat ? dung(ganNhat, phienBan) : null;
     },
   };
+}
+
+export type SoHoanTac = ReturnType<typeof taoSoHoanTac>;
+
+export type ThongBaoHoanTac = { loai: "thanh-cong"; chu: string } | { loai: "loi"; chu: string; thuLai: BanGhiHoanTac | null };
+
+/**
+ * Chạy một lần bấm hoàn tác trên ô: bộ giữ đã từ chối thì báo lý do; lệnh bù ghi được thì «Đã hoàn tác …»; hỏng thì trả
+ * bản ghi lại cho bộ giữ và đưa bản ghi ra để thông báo lỗi mang nút «Hoàn tác» bấm lại đúng lần sửa ấy. Lệnh bù mang
+ * phiên bản vừa xét: một lần kéo về chen giữa thì thành xung đột, không ghi đè lặng lần sửa sau.
+ */
+export async function chayHoanTac(so: Pick<SoHoanTac, "traLai">, kq: KetQuaDung, sua: GhiFn): Promise<ThongBaoHoanTac> {
+  if (!kq.ok) return { loai: "loi", chu: kq.loi, thuLai: null };
+  const g = kq.banGhi;
+  const ketQua = await sua(g.id, g.lenh.type, g.lenh.payload, g.phienBanSau);
+  if (ketQua.ok) return { loai: "thanh-cong", chu: `Đã hoàn tác ${g.nhan}` };
+  so.traLai(g);
+  return { loai: "loi", chu: `${KHONG_HOAN_TAC}: ${moTaLoi(ketQua.loi)} — ${g.nhan}`, thuLai: g };
 }

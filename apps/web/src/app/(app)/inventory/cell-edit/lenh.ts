@@ -2,7 +2,7 @@
  * Dựng lệnh từ trình sửa trên ô (hàng 15). Thuần — không React: trình sửa, hoàn tác và bài kiểm cùng đọc. Mỗi lệnh là một
  * sự kiện của lõi (luật 8); giá luôn đi cùng điều kiện phí (luật 7) vì mọi đường đều dựng `price_changed` đủ hai khoá.
  */
-import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
+import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type EventType, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
 import { FEE_LABEL, STATUS_LABEL } from "../cot";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
@@ -98,7 +98,40 @@ const NHAN_THIEU = NHAN_DIEU_KIEN;
 export const nhanThieu = nhanDieuKien;
 
 /** Câu báo khi máy không áp được lần sửa (trình sửa ô) — điều thiếu đi qua bảng nhãn của lõi. */
-export function moTaLoi(l: LoiTrenMay): string {
+/** Lỗi của một lần ghi như màn thấy: lỗi của bộ đồng bộ, hay lỗi bất ngờ mà `ghiAnToan` bắt được (va-duong-loi-hoan-tac). */
+export type LoiGhi = LoiTrenMay | { kind: "bat-ngo" };
+
+export const LOI_BAT_NGO = "Lỗi bất ngờ — chưa lưu được, thử lại";
+
+/**
+ * Bọc hàm ghi của bộ đồng bộ: lỗi ném ra (không phải lỗi kho đã biết) thành `{ ok: false, loi: { kind: "bat-ngo" } }`, để
+ * lần ghi sau khi ô sửa đã đóng không bao giờ mất lặng qua `void` (Known limits Ngoài-3 của va-sua-tren-o).
+ */
+export function ghiAnToan<A extends unknown[], T>(sua: (...a: A) => Promise<T>): (...a: A) => Promise<T | { ok: false; loi: { kind: "bat-ngo" } }> {
+  return async (...a) => {
+    try {
+      return await sua(...a);
+    } catch {
+      return { ok: false, loi: { kind: "bat-ngo" } };
+    }
+  };
+}
+
+/** Kết cục một lần ghi như màn thấy, và hàm ghi đã bọc `ghiAnToan` mà các hàm điều phối nhận. */
+export type KetQuaGhi = { ok: true; op: { expectedVersion: number } } | { ok: false; loi: LoiGhi };
+export type GhiFn = (listingId: string, type: EventType, payload: Record<string, unknown>, coSo?: number) => Promise<KetQuaGhi>;
+
+/** Lưu một lần sửa trên ô khi ô đã đóng: lỗi nào cũng thành chữ nêu căn, không lỗi nào ném ra. */
+export async function chayLuuO(sua: GhiFn, id: string, lenh: Lenh, coSo: number | undefined, nhan: string): Promise<{ ok: true; phienBanSau: number } | { ok: false; chu: string }> {
+  const kq = await sua(id, lenh.type, lenh.payload, coSo);
+  return kq.ok ? { ok: true, phienBanSau: kq.op.expectedVersion + 1 } : { ok: false, chu: `${moTaLoi(kq.loi)} — ${nhan}` };
+}
+
+/** Lỗi kho và lỗi bất ngờ có thể lành khi thử lại; lỗi của lõi thì không. */
+export const thuLaiDuoc = (l: LoiGhi): boolean => l.kind === "kho" || l.kind === "bat-ngo";
+
+export function moTaLoi(l: LoiGhi): string {
+  if (l.kind === "bat-ngo") return LOI_BAT_NGO;
   if (l.kind === "missing-requirement") return `Thiếu ${l.missing.map(nhanThieu).join(", ")}`;
   if (l.kind === "invalid-transition") return l.reason;
   if (l.kind === "not-found") return "Không còn thấy hàng này";

@@ -3,7 +3,9 @@
  * kiểm cùng đọc. Mỗi căn một sự kiện (không có API ghi lô); căn không đổi được không ghi và được kể tên trước khi ghi.
  */
 import { checkTransition, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
-import type { HangSua, Lenh } from "../cell-edit/lenh";
+import { lenhHoanTac } from "../cell-edit/hoan-tac";
+import { LOI_BAT_NGO, type GhiFn, type HangSua, type Lenh } from "../cell-edit/lenh";
+import type { MucLo } from "./hoan-tac-lo";
 import { STATUS_LABEL } from "../cot";
 
 export type KhongDoi = { id: string; maCan: string; lyDo: string };
@@ -89,3 +91,24 @@ export function gomKetQua(loai: LoaiLo, ghi: readonly { id: string; ok: boolean 
   const dau = loai === "trang-thai" ? `Đã đổi trạng thái ${duoc.length} căn` : `Đã đánh dấu đã gọi ${duoc.length} căn`;
   return { thongBao: hong.length ? `${dau} · ${hong.length} căn chưa ghi được` : dau, boTich: duoc, conTich: [...hong, ...khongDoi.map((k) => k.id)] };
 }
+
+/**
+ * Ghi một lô: mỗi căn một lần ghi qua hàm đã bọc `ghiAnToan`, không lần nào ném ra. Trả kết quả từng căn cho `gomKetQua`,
+ * mục của bản ghi hoàn tác (chỉ lô đổi trạng thái — «đã gọi» không đảo được) và mã căn gặp lỗi bất ngờ để thông báo kể ra.
+ */
+export async function chayGhiLo(sua: GhiFn, hang: readonly HangSua[], lenh: Lenh | typeof LENH_DA_GOI): Promise<{ ketQua: { id: string; ok: boolean }[]; muc: MucLo[]; batNgo: string[] }> {
+  const ketQua: { id: string; ok: boolean }[] = [];
+  const muc: MucLo[] = [];
+  const batNgo: string[] = [];
+  for (const h of hang) {
+    const kq = await sua(h.id, lenh.type, lenh.payload);
+    ketQua.push({ id: h.id, ok: kq.ok });
+    // Phiên bản căn ngay sau lần ghi: căn đổi phiên bản nữa là có lần sửa sau, hoàn tác lô bỏ qua nó (hàng 16 AC-7).
+    if (kq.ok && lenh.type === "status_changed") muc.push({ id: h.id, lenh: lenhHoanTac(h, lenh), phienBanSau: kq.op.expectedVersion + 1, nhan: h.unitNumber ?? h.id });
+    if (!kq.ok && kq.loi.kind === "bat-ngo") batNgo.push(h.unitNumber ?? h.id);
+  }
+  return { ketQua, muc, batNgo };
+}
+
+/** Dòng mô tả của thông báo ghi lô khi có căn gặp lỗi bất ngờ; null khi không có. */
+export const moTaBatNgo = (batNgo: readonly string[]): string | null => (batNgo.length ? `${LOI_BAT_NGO}: ${batNgo.join(", ")}` : null);
