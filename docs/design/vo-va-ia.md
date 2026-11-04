@@ -220,3 +220,16 @@ cảnh báo có tên khi hạn là ngày đã tới — mỗi cảnh báo là m�
   qua cờ kiểu chặt — Cổng Phạm vi hàng 14). Chưa cài: `filters`, `cascader`, `event-calendar`, `use-file-upload` (mã ReUI nguyên bản đỏ `noUncheckedIndexedAccess` của kho —
   hàng đầu tiên cần chúng quyết nới cờ cho `apps/web` hay chuyển thể bản cài); `use-copy-to-clipboard` không có trên kho
   ReUI; `@tanstack/*`, `date-fns` cài cùng khối cần chúng.
+
+## 6. Sửa đổi 04/11 — khu Cài đặt một chỗ
+
+Hồ sơ `_acceptance/cai-dat-hop-nhat/` (chủ kho chọn làm ở Cổng Đáng, duyệt phạm vi 04/11). Các dòng ở §1–§2 nói «Cài đặt
+sàn» giữ nguyên làm sử; điều đang đúng là:
+
+- Cột biểu tượng: nhà «Cài đặt» cho mọi vai có cột nhà, ở đáy. Quản trị sàn mở vào Người dùng, vai khác vào Cá nhân.
+- Cột thứ hai của Cài đặt: nhóm «Cá nhân» (một mục, ai cũng thấy) và nhóm «Sàn [Tên]» (bảy mục, chỉ quản trị sàn).
+- Mục «Cá nhân» (`/settings/personal`) là nội dung tab Tôi của hàng 38 (khối `settings-2`). Tab Tôi trên điện thoại, mục
+  «Cá nhân» của menu tài khoản và địa chỉ cũ `/me` cùng mở nó. Menu tài khoản của quản trị có thêm «Cài đặt sàn».
+- Tab điện thoại của người chỉ quản trị giữ «Cài đặt sàn · Tôi»; tab sáng theo đường, không bao giờ cả hai.
+- Người không quản trị mở địa chỉ một mục sàn: máy chủ chuyển về Cá nhân kèm câu báo «Mục này chỉ quản trị sàn mở được».
+- Bố cục Đọc rộng tối đa 48rem, sát cột mục lục (ADR-0024 sửa đổi 04/11).

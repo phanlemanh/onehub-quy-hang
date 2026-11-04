@@ -5,6 +5,7 @@ import { type Home, HOME_LABEL } from "@quy-hang/core";
 
 const PAGE_TITLE: Record<string, string> = {
   "/me": "Tôi",
+  "/settings/personal": "Tôi",
   "/leads/new": "Lead",
   "/imports/new": "Nhập Excel",
   "/exports/new": "Xuất bảng hàng",
