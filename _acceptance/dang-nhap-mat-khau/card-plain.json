@@ -1,0 +1,39 @@
+{
+  "feature_plain": "Người trong sàn vào được Quỹ hàng bằng email và mật khẩu khi thư mã không tới: quản trị sàn cấp mật khẩu tạm, người đặt mật khẩu của mình rồi mới vào; mã 6 số vẫn dùng như cũ.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ cho quản trị sàn cấp mật khẩu tạm máy sinh, hiện đúng một lần, đăng xuất người ấy ở mọi máy; mật khẩu không bao giờ nằm trong nhật ký hay sự kiện."},
+    {"id":"AC-2","p":"Sẽ chặn quản trị cấp mật khẩu cho người còn ở sàn khác, và khoá mật khẩu do sàn cấp khi người ấy vào thêm sàn khác."},
+    {"id":"AC-3","p":"Sẽ đưa người đăng nhập bằng mật khẩu tạm thẳng tới «Đặt mật khẩu mới», không vào được bàn làm việc; mật khẩu tạm hết hạn sau 72 giờ."},
+    {"id":"AC-4","p":"Sẽ nhận mật khẩu mới từ 15 ký tự (có dấu cách, chữ có dấu), từ chối mật khẩu dễ đoán kèm lý do, rồi cho vào."},
+    {"id":"AC-5","p":"Sẽ cho đăng nhập hằng ngày bằng email và mật khẩu; sai mật khẩu hay email lạ cùng một câu lỗi; mã 6 số vẫn chạy."},
+    {"id":"AC-6","p":"Sẽ bắt chờ sau 5 lần sai trong 15 phút, và khoá mật khẩu sau 20 lần sai liên tiếp tới khi quản trị cấp lại."},
+    {"id":"AC-7","p":"Sẽ cho tự đổi mật khẩu ở Cá nhân (đăng xuất máy khác), và «Báo mất máy» khoá luôn mật khẩu."},
+    {"id":"AC-8","p":"Sẽ đóng mọi đường của thư viện đăng nhập tự đăng ký, quên hay đặt lại mật khẩu qua thư."},
+    {"id":"AC-9","p":"Sẽ hiện đúng chữ ở mọi trạng thái của bốn màn (đăng nhập, đặt mật khẩu, Người dùng, Cá nhân) trên điện thoại và máy tính."},
+    {"id":"AC-10","p":"Sẽ báo «Chưa đăng xuất được» kèm «Thử lại» khi máy chủ lỗi hay mất mạng, không đưa người về màn đăng nhập."},
+    {"id":"AC-11","p":"Sẽ để kiểm kiểu, lint, các bộ test, bộ kiểm cách ly, rò rỉ và build đều xanh; ghi quyết định vào ADR-0005 và Tham chiếu."}
+  ],
+  "wont_do": [
+    {"id":"OOS-1","p":"KHÔNG có lệnh vận hành cấp lại mật khẩu cho chính quản trị sàn (Hỏi-4) — quản trị quên vẫn vào bằng mã."},
+    {"id":"OOS-2","p":"KHÔNG có tên đăng nhập khác email, yếu tố thứ hai, hay mật khẩu ngắn hơn 15 ký tự."},
+    {"id":"OOS-3","p":"KHÔNG cho sàn tự chỉnh luật mật khẩu ở hàng này (Hỏi-3)."},
+    {"id":"OOS-4","p":"KHÔNG có màn xem lịch sử cấp và đổi mật khẩu; sự kiện chỉ ghi lại."},
+    {"id":"OOS-5","p":"KHÔNG xác minh tên miền gửi thư mã — việc vận hành riêng."}
+  ],
+  "coverage_plain": [
+    {"i":0,"p":"Ai cấp cho ai: quản trị với người chỉ ở sàn mình, người ở hai sàn, người vào thêm sàn sau, người ngoài sàn, người không quản trị (AC-1, AC-2, AC-7)."},
+    {"i":1,"p":"Mật khẩu đang ở trạng thái nào: chưa có, tạm còn hay hết hạn, đặt lần đầu, tự đổi, bị khoá vì thử sai, báo mất máy hay vào sàn khác (AC-3, AC-6, AC-7)."},
+    {"i":2,"p":"Lối vào nào: đăng nhập mật khẩu, đặt lần đầu, đổi ở Cá nhân, quản trị cấp, các đường có sẵn của thư viện, mã 6 số (AC-3 tới AC-5, AC-8)."},
+    {"i":3,"p":"Đăng xuất kết cục ra sao: máy chủ trả lời, lỗi, mất mạng, thử lại được (AC-10)."},
+    {"i":4,"p":"Mỗi trục trên có tiêu chí phủ trọn; chữ người thấy đo ở AC-9."},
+    {"i":5,"p":"Để sau: lệnh vận hành cấp lại cho quản trị, tên đăng nhập khác email, yếu tố thứ hai, sàn siết luật, màn lịch sử."},
+    {"i":6,"p":"Không bao giờ: quên mật khẩu qua thư, vai quản trị toàn hệ thống của thư viện, chặn «chỉ ở sàn mình» ở màn thay cho cơ sở dữ liệu, gửi mật khẩu ra dịch vụ ngoài."}
+  ],
+  "gap_probe_plain": [
+    {"i":0,"p":"Quản trị A có thể tự đăng nhập bằng mật khẩu tạm trước người được cấp rồi giữ lối vào; người ấy vào thêm sàn B là quản trị A vào được B. Đã sửa: mật khẩu do sàn cấp bị khoá khi người vào sàn khác, có ca kiểm cả chiều giữ."},
+    {"i":1,"p":"Mật khẩu tạm «dùng một lần» làm người tải lại trang là kẹt, phải tìm quản trị lần hai. Đã đưa thành Hỏi-5, soạn theo khuyến nghị «dùng lại tới khi đặt xong hay hết 72 giờ»."},
+    {"i":2,"p":"Dòng «Mật khẩu» ở nhóm nào của Cá nhân là chỗ người tìm, máy không tự quyết được. Đã đưa thành Hỏi-6."},
+    {"i":3,"p":"Ngưỡng chết «mật khẩu lộ ở nhật ký hay trang» mới đo ở lúc cấp. Đã thêm phép quét nhật ký cho mọi đường mang mật khẩu và kiểm địa chỉ, lịch sử trình duyệt."},
+    {"i":4,"p":"Phép nhìn màn chưa đi đủ mọi trạng thái ở hai khổ. Đã viết trước bảng trạng thái × hai khổ, đếm đủ ảnh."}
+  ]
+}

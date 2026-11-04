@@ -1,0 +1,206 @@
+schema_version: 1
+feature_slug: dang-nhap-mat-khau
+# Lệnh máy: executors.test.isolation (npm run db:migrate && npm run db:test — bộ kiểm cách ly + mọi tệp
+# packages/api/test-db/**/*.test.ts, cần DATABASE_URL tới Postgres dãy B: postgres://postgres:quyhang@localhost:5572/postgres),
+# executors.test.api (đơn vị của packages/api), executors.test.web (đơn vị của apps/web), executors.script.dang_nhap_mat_khau
+# (_acceptance/dang-nhap-mat-khau/thu/*.test.mjs), executors.script typecheck, lint, build, ro_ri. Người chấm đối chiếu tên
+# ca nêu trong `expected` với dòng reporter: có mặt, ok, không SKIP.
+# Dựng chung cho ui-check («DỰNG B»): node --env-file-if-exists=.env.local --import tsx
+#   _acceptance/bang-hang-dang-the/thu/dung-b.mjs → Postgres dãy B (5572), máy chủ dev 3492, người mẫu đã nạp; rồi
+#   node _acceptance/dang-nhap-auth-15/thu/nguoi-mau.mjs (hai-san@mau.quy-hang.test thuộc hai sàn). Phiên có sẵn:
+#   node _acceptance/bang-hang-dang-the/thu/phien.mjs <email> in JSON cookie «qh.session_token» (localhost:3492).
+#   Mỗi bài ui-check mở một hồ sơ trình duyệt MỚI (ngữ cảnh sạch) và chỉ dùng email của bài mình.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/cap-mat-khau.test.ts: ca «cấp mật khẩu: quản trị cấp cho người chỉ ở sàn mình» — 200, tempPassword 16 ký tự thuộc bảng chữ khai ở packages/api/src/auth, chia bốn nhóm, expiresAt cách lúc gọi 72 giờ (±1 phút); đọc bằng kết nối chủ: identity.account providerId «credential» có password bắt đầu bằng dạng băm scrypt của thư viện và KHÁC tempPassword, mọi identity.session của người ấy đã xoá, identity.password_events có đúng một dòng kind «cap» với actor, user, company đúng; ca «cấp mật khẩu: không bản rõ ở đâu» quét mọi cột chữ của ba bảng identity.password_* và account, cùng mọi dòng stdout/stderr bắt được của máy chủ thử trong lần gọi, không chứa tempPassword; ca «cấp mật khẩu: không quản trị → 403», ca «cấp mật khẩu: người ngoài sàn → 404». Chiều đỏ (phá-thử S3, có vật): evidence/E1-pha-thu.log ghi lần cho đường cấp in thân trả lời ra nhật ký thì ca «không bản rõ ở đâu» đỏ."
+    paths: ["packages/api/src/auth/**", "packages/db/migrations/034_*.sql", "packages/api/test-db/dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/san-khac.test.ts: ca «cấp mật khẩu: người ở hai sàn → 409» — quản trị sàn A gọi cho người thuộc A và B: 409, mã lỗi user_in_other_company, thân lỗi không chứa tên hay id của sàn B; account, session, password_events của người ấy y như trước lời gọi; ca «cấp mật khẩu: gọi thẳng hàm bằng vai API cũng bị từ chối» — gọi app.cap_mat_khau_tam qua appPool với ngữ cảnh quản trị A cho người ở A và B ra lỗi, không đổi gì; ca «cấp mật khẩu: mời đồng thời phải chờ khoá» — mở giao dịch giữ khoá của hàm cho người u, chèn company_members (sàn B, u) ở kết nối khác thì bị chặn tới khi giao dịch kia kết thúc (đo bằng pg_locks hay thời gian chờ có trần), sau đó hàm gọi lại cho u ra 409; ca «vào sàn khác: mật khẩu gốc sàn cấp bị vô hiệu» — bảng viết trước ba hình (mật khẩu tạm chưa dùng · đặt lần đầu từ mật khẩu tạm · tự đổi ở Cá nhân sau đặt lần đầu), mỗi hình: người chỉ ở A, chèn company_members (sàn B) qua đường mời của API, lời mời 2xx, rồi đăng nhập bằng mật khẩu ấy: hai hình đầu 403 password_disabled kèm sự kiện vo-hieu-san-khac, hình ba (đối chứng dương) có phiên; assert số hình = 3. Chiều đỏ (phá-thử S3): bỏ điều kiện «không thuộc sàn khác» khỏi 034 thì ca «người ở hai sàn → 409» đỏ; bỏ bước vô hiệu trong trigger thì hình «đặt lần đầu từ mật khẩu tạm» đỏ."
+    paths: ["packages/db/migrations/034_*.sql", "packages/api/src/auth/**", "packages/api/test-db/dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/dang-nhap-tam.test.ts: ca «đăng nhập tạm: không phiên» — POST /api/v1/auth/sign-in/email bằng email + mật khẩu tạm: 200, thân có mustChange true và changeToken, không header set-cookie mang qh.session_token, GET /api/v1/me không cookie ra 401, identity.session của người ấy rỗng; ca «đăng nhập tạm: dùng lại trước khi đặt xong» — đăng nhập tạm lần hai ra changeToken mới, POST /api/v1/auth/password/first bằng changeToken lần một ra 403, bằng changeToken lần hai ra 200; sau đó đăng nhập bằng mật khẩu tạm ra 401 invalid_email_or_password; ca «đăng nhập tạm: quá 72 giờ → 403 temp_password_expired» (lùi temp_expires_at bằng kết nối chủ); ca «đăng nhập tạm: sai mật khẩu tạm → 401 invalid_email_or_password» (không lộ trạng thái tạm)."
+    paths: ["packages/api/src/auth/**", "packages/api/src/app.ts", "packages/api/test-db/dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/dat-lan-dau.test.ts: ca «đặt lần đầu: nhận rồi có phiên» — POST /api/v1/auth/password/first với changeToken và một mật khẩu 15 ký tự có dấu cách và chữ có dấu: 200, set-cookie qh.session_token, phiên hết hạn sau 30 ngày (±1 phút), GET /api/v1/me bằng cookie ấy 200, password_state kind «tu-dat», password_events có «dat-lan-dau»; ca «đặt lần đầu: mã đổi không dùng lại» — gọi lại cùng changeToken ra 403; ca «đặt lần đầu: từ chối có lý do» — mật khẩu 14 ký tự ra 400 kèm mã lý do độ dài, mật khẩu chứa phần trước «@» của email ra 400 kèm mã lý do ngữ cảnh, và changeToken vẫn dùng được sau lần từ chối."
+    paths: ["packages/api/src/auth/**", "packages/api/test-db/dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/dang-nhap-tu-dat.test.ts: ca «đăng nhập mật khẩu: đúng có phiên 30 ngày», ca «đăng nhập mật khẩu: sai và email lạ cùng một lỗi» — hai lời gọi cùng status 401 và thân JSON bằng nhau từng byte; ca «đăng nhập mật khẩu: mã 6 số vẫn chạy» — gửi mã, đọc mã từ bộ gửi thử, đăng nhập bằng mã ra phiên; ca «đăng nhập mật khẩu: tự đăng ký 404» — POST /api/v1/auth/sign-up/email ra 404 và identity.user không thêm dòng. Bộ kiểm hiện có packages/api/test-db/auth.test.ts và session.test.ts vẫn xanh."
+    paths: ["packages/api/src/auth/**", "packages/api/src/app.ts", "packages/api/test-db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/gioi-han-thu.test.ts: ca «giới hạn thử: 5 sai trong 15 phút» — 5 lần sai rồi lần 6 bằng mật khẩu đúng ra 429 password_rate_limited; ca «giới hạn thử: email lạ cũng đếm» — 5 lần với email không tài khoản, lần 6 ra 429 cùng thân lỗi; ca «giới hạn thử: 20 liên tiếp thì vô hiệu» — 20 lần sai (dọn identity.password_failures giữa các cửa sổ bằng kết nối chủ để vượt giới hạn 15 phút), rồi mật khẩu đúng ra 403 password_disabled, password_events có «khoa-20»; quản trị cấp lại thì đăng nhập tạm được; ca «giới hạn thử: đúng giữa chừng thì về 0» — 19 sai, 1 đúng, 19 sai nữa vẫn đăng nhập được. Chiều đỏ (phá-thử S3): đếm cửa sổ chỉ cho email có tài khoản thì ca «email lạ cũng đếm» đỏ."
+    paths: ["packages/api/src/auth/**", "packages/db/migrations/034_*.sql", "packages/api/test-db/dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/doi-mat-khau.test.ts: ca «đổi mật khẩu: cần mật khẩu hiện tại» — người có mật khẩu tự đặt, phiên ở hai máy: PUT /api/v1/me/password sai currentPassword ra 403, đúng ra 200; phiên máy kia sau đó GET /api/v1/me ra 401, phiên máy này 200; password_events có «doi»; ca «đổi mật khẩu: chưa có thì đặt không cần» — người chỉ vào bằng mã đặt được không có currentPassword; ca «đổi mật khẩu: cùng luật độ dài» — 14 ký tự ra 400; ca «báo mất máy: vô hiệu mật khẩu» — POST /api/v1/me/report-lost từ máy giữ lại, rồi đăng nhập bằng mật khẩu cũ đúng ra 403 password_disabled, password_events có «vo-hieu-bao-mat», bộ kiểm packages/api/test-db/tab-toi/thiet-bi.test.ts vẫn xanh."
+    paths: ["packages/api/src/auth/**", "packages/api/src/me/**", "packages/api/test-db/dang-nhap-mat-khau/**", "packages/api/test-db/tab-toi/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; bài kiểm bảng xếp loại đường trong packages/api/src/auth (cạnh duong-gui-ma.test.ts): ca «xếp loại: mọi đường lõi chạm mật khẩu có loại» đọc danh sách đường của bản better-auth đã cài (đường lõi lẫn đường plugin), lọc các đường có password, sign-up, verification-email, verify-email, assert mỗi đường có đúng một loại trong bảng (bọc hay 404); bảng viết trước có ít nhất /sign-up/email, /sign-in/email, /change-password, /request-password-reset, /reset-password, /reset-password/:token, /verify-password, /send-verification-email, /verify-email; đối chứng: bảng thiếu /change-password thì ca đỏ nêu đúng đường ấy."
+    paths: ["packages/api/src/auth/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; packages/api/test-db/dong-duong-gui-ma/dong-duong-gui-ma.test.ts xanh với ca mới «đường lõi mật khẩu đóng»: mỗi đường 404 của bảng nhận 10 lần POST có trường password và email, status 404, bộ gửi thử không nhận thư nào, identity.otp_requests và identity.password_failures không thêm dòng; các ca có từ hàng 55 vẫn xanh."
+    paths: ["packages/api/src/auth/**", "packages/api/test-db/dong-duong-gui-ma/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Dựng trạng thái bằng node --env-file-if-exists=.env.local --import tsx _acceptance/dang-nhap-mat-khau/thu/dung-trang-thai.mjs <email> <trạng-thái> (dựng ở S3; in mật khẩu thử ra stdout của lệnh, không ra trang). Ma trận viết trước, đi ĐỦ từng ô × hai khổ 375x812 và 1280x800, mỗi ô một hồ sơ trình duyệt mới và một ảnh evidence/E10-<ST>-<khổ>.png: (1) ST-dang-nhap-mat-khau — dau-chu-1@mau.quy-hang.test trạng thái tu-dat, /login, gõ email, bấm «Dùng mật khẩu»; (2) ST-dang-nhap-sai — gõ mật khẩu sai, bấm đăng nhập; (3) ST-dang-nhap-cho — trạng thái cho (5 lần sai trong 15 phút) rồi gõ mật khẩu đúng; (4) ST-dang-nhap-khoa — trạng thái khoa-20, gõ mật khẩu đúng; (5) ST-dang-nhap-tam-het — trạng thái tam-het-han, gõ mật khẩu tạm; (6) ST-dat-mat-khau-mac-dinh — trạng thái tam, gõ mật khẩu tạm, đăng nhập; ghi URL và history.length cùng mọi mục location.href sau bước này; (7) ST-dat-mat-khau-tu-choi — gõ «matkhau», lưu; (8) ST-dat-mat-khau-het-phien — tải lại trang /dat-mat-khau; bấm nút về đăng nhập, gõ lại mật khẩu tạm, ghi URL."
+      - "Ô (9) suôn sẻ, khổ 375x812: từ ô (6), gõ «ba con mèo ngủ trưa», bấm «Lưu và vào Quỹ hàng» → ghi URL, chụp evidence/E10-vao-375.png. Đếm số ảnh evidence/E10-ST-*.png và ghi lại."
+    expected: "Số ảnh ST = 8 trạng thái × 2 khổ = 16. Chữ từng ô đúng bảng trạng thái của Đặc tả UX trong thiết kế: (1) ô email, ô mật khẩu, nút «Đăng nhập» và nút quay về mã; (2) «Email hoặc mật khẩu không đúng» ngay dưới ô mật khẩu; (3) «Thử lại sau ít phút» dưới ô mật khẩu; (4) «Mật khẩu đã bị khoá — đăng nhập bằng mã rồi đặt mật khẩu mới trong Cá nhân, hay nhờ quản trị sàn cấp lại»; (5) «Mật khẩu tạm đã hết hạn — nhờ quản trị sàn cấp lại»; (6) URL /dat-mat-khau, ô mật khẩu có nút hiện/ẩn, câu gợi ý 15 ký tự, nút «Lưu và vào Quỹ hàng»; URL và mọi mục lịch sử đã ghi không chứa changeToken hay mật khẩu; (7) lý do dưới ô; (8) «Phiên đặt mật khẩu đã hết — đăng nhập lại bằng mật khẩu tạm» kèm nút về đăng nhập, và đăng nhập lại bằng mật khẩu tạm đưa về /dat-mat-khau (việc tiếp theo làm được thật); (9) URL rời /dat-mat-khau vào trang trong vỏ. Không ô nào tràn ngang ở 375. Đối chứng: vào được vỏ bằng mật khẩu tạm mà không qua /dat-mat-khau, hay thiếu ảnh của một ô, là FAIL."
+    paths: ["apps/web/src/app/(auth)/**", "apps/web/src/proxy.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; bộ kiểm cách ly packages/db/tests/isolation.test.mjs xanh trên cơ sở dữ liệu đã migrate tới 034 (không ca nào SKIP), có ca mới «quy_hang_app không đọc ghi identity.password_state, password_failures, password_events» (select, insert, update đều ra lỗi quyền) và ca «cap_mat_khau_tam: quản trị sàn A không cấp được cho người cũng ở sàn B» chạy bằng vai quy_hang_app."
+    paths: ["packages/db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; bài kiểm luật mật khẩu trong packages/api/src/auth: bảng viết trước ít nhất mười dòng mật khẩu × kết quả — 14 ký tự (từ chối, độ dài), 15 ký tự chữ thường (nhận), 129 ký tự (từ chối, độ dài), 128 ký tự (nhận), có dấu cách và chữ có dấu 15 ký tự (nhận), một ký tự lặp 15 lần (từ chối, dễ đoán), «123456789012345» (từ chối, dãy), «qwertyuiopasdfgh» (từ chối, dãy bàn phím), chứa phần trước «@» của email (từ chối, ngữ cảnh), «quyhangquyhang1» (từ chối, ngữ cảnh), một dòng của danh sách phổ biến đóng gói (từ chối, phổ biến); assert số dòng bảng ≥ 10 và độ dài tính theo ký tự Unicode, không theo byte. Ca «mật khẩu tạm: bảng chữ và độ dài» sinh 1000 mật khẩu tạm, mỗi cái 16 ký tự thuộc bảng chữ, không trùng."
+    paths: ["packages/api/src/auth/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài kiểm cạnh apps/web/src/components/shell/dang-xuat-tren-may.ts: bảng viết trước bốn kết cục — người ở lại («o-lai», không gọi máy chủ), máy chủ 200 («xong», về đăng nhập), máy chủ 500 («loi», không về), fetch ném lỗi mạng («loi», không về) — và ca «thử lại sau lỗi thì xong»; mỗi ca assert kho đã xoá trước lời gọi máy chủ (thứ tự lời gọi ghi trong bộ giả). Chiều đỏ (phá-thử S3): trả «xong» khi máy chủ 500 thì ca «máy chủ 500» đỏ."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(auth)/dang-xuat.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Hồ sơ trình duyệt mới, phiên dau-chu-2@mau.quy-hang.test, khổ 375x812. Mở http://localhost:3492/settings/personal. Chặn mạng của trang với /api/v1/auth/sign-out (route của trình duyệt trả lỗi mạng), bấm «Đăng xuất» (xác nhận nếu có hộp) → chụp evidence/E14-loi.png, ghi URL."
+      - "Gỡ chặn, bấm «Thử lại» → ghi URL, chụp evidence/E14-xong.png. Hồ sơ trình duyệt mới, phiên hai-san@mau.quy-hang.test chưa chọn sàn: mở /, chặn như trên, bấm «Đăng xuất» ở màn chọn sàn → chụp evidence/E14-chon-san.png."
+    expected: "Lỗi: «Chưa đăng xuất được» kèm nút «Thử lại», URL vẫn /settings/personal; thử lại sau khi gỡ chặn: URL /login. Màn chọn sàn: cùng câu và nút. Đối chứng: bị đưa về /login khi máy chủ không trả lời là FAIL."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(auth)/**", "apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E15
+    criterion: AC-11
+    executor: script
+    cmd: config:executors.script.dang_nhap_mat_khau
+    expected: "exit 0; tệp _acceptance/dang-nhap-mat-khau/thu/*.test.mjs: ca «migration: 034 là tệp mới» — đúng một tệp packages/db/migrations/034_*.sql, có ba bảng identity.password_state, password_failures, password_events, hàm app.cap_mat_khau_tam security definer, thu quyền của public và quy_hang_app trên ba bảng, cấp execute hàm cho quy_hang_app; ca «migration: không sửa migration đã commit» — từ merge-base với origin/main (hay main) tới HEAD chỉ có tệp thêm mới dưới packages/db/migrations; ca «tài liệu: ADR, khuôn, Tham chiếu» — docs/adr/0005-dang-nhap-theo-san.md có tiêu đề mục chứa «Bổ sung 04/11» và «mật khẩu», design/patterns/xac-thuc.md nêu «Đặt mật khẩu mới», docs/product/tham-chieu.md §12 có dòng chứa «dang-nhap-mat-khau»; đối chứng: danh sách viết trước có «M packages/db/migrations/002_dang_nhap_theo_san.sql» thì ca không-sửa đỏ nêu đúng tệp ấy."
+    paths: ["packages/db/migrations/**", "docs/adr/0005-*.md", "design/patterns/xac-thuc.md", "docs/product/tham-chieu.md", "_acceptance/dang-nhap-mat-khau/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E16
+    criterion: AC-11
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0; không dòng lỗi kiểu."
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E17
+    criterion: AC-11
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «chuẩn giao diện: đạt»; mức nợ giao diện không tăng."
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E18
+    criterion: AC-11
+    executor: script
+    cmd: config:executors.script.build
+    expected: "exit 0; build của apps/web và các gói xong không lỗi."
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E19
+    criterion: AC-11
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ kiểm rò rỉ xanh, không ca SKIP."
+    paths: ["packages/core/src/redaction/**", "apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E20
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bộ test đơn vị apps/web xanh, gồm apps/web/src/app/(app)/me/toi.test.ts còn assert sáu nhóm dòng theo thứ tự cũ và dòng «Mật khẩu» nằm trong nhóm theo Hỏi-6 (khuyến nghị «Hồ sơ»)."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E21
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/dang-nhap-mat-khau/nhat-ky.test.ts: bắt mọi dòng console và stdout, stderr của máy chủ thử trong từng lời gọi; bảng viết trước chín lời gọi × một assert — cấp mật khẩu tạm; đăng nhập mật khẩu đúng; sai; bằng mật khẩu tạm; đặt lần đầu nhận; đặt lần đầu từ chối 400; đổi ở Cá nhân nhận; đổi từ chối 400; đổi sai mật khẩu hiện tại 403 — mỗi lời gọi assert không dòng nào chứa mật khẩu thử, mật khẩu tạm hay changeToken của lời gọi ấy; assert số dòng bảng = 9; đối chứng dương: cùng bộ bắt ghi được một dòng console.error có chuỗi mồi do ca tự in. Chiều đỏ (phá-thử S3, có vật): evidence/E21-pha-thu.log ghi lần cho đường đặt lần đầu in thân yêu cầu khi từ chối thì ca của đúng lời gọi ấy đỏ và nêu tên đường."
+    paths: ["packages/api/src/auth/**", "packages/api/src/me/**", "packages/api/src/app.ts", "packages/api/test-db/dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E22
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Ma trận viết trước, mỗi ô × hai khổ 375x812 và 1280x800, mỗi ô một hồ sơ trình duyệt mới và một ảnh evidence/E22-<ST>-<biến thể>-<khổ>.png. Người dùng, phiên quan-tri@mau.quy-hang.test, /settings/users: (1) ST-cap-mat-khau-hoi — trên dòng dau-chu-2@mau.quy-hang.test bấm «Cấp mật khẩu»; (2) ST-cap-mat-khau-ket-qua — bấm cấp, ghi mật khẩu tạm trên hộp, đóng hộp, mở lại việc trên dòng ấy và ghi hộp còn hiện mật khẩu cũ không; (3) ST-cap-mat-khau-san-khac — trên dòng hai-san@mau.quy-hang.test bấm «Cấp mật khẩu», cấp."
+      - "Cá nhân, /settings/personal, dựng trạng thái bằng _acceptance/dang-nhap-mat-khau/thu/dung-trang-thai.mjs: (4) ST-toi-mat-khau-dong ba biến thể — telesales@mau.quy-hang.test chưa có mật khẩu (chua-dat), trạng thái tu-dat (da-dat), trạng thái bao-mat-may (da-khoa); ghi tên các nhóm dòng theo thứ tự và nhóm chứa dòng «Mật khẩu»; (5) ST-toi-mat-khau-hop hai biến thể — mở hộp ở biến thể da-dat (doi) và chua-dat (dat), ghi các ô của hộp."
+    expected: "Số ảnh = (1 + 1 + 1 + 3 + 2) × 2 khổ = 16. (1) hộp hỏi nói mật khẩu cũ thôi dùng và người bị đăng xuất ở mọi máy; (2) mật khẩu tạm 16 ký tự chia bốn nhóm, nút «Chép», câu trao tay và hạn 72 giờ; mở lại không thấy mật khẩu cũ; (3) «… còn ở sàn khác nên tự đặt mật khẩu trong Cá nhân», không tên sàn khác; (4) sáu nhóm (Hồ sơ, Sàn, Cài lên màn hình chính, Thông báo lead, Máy đang đăng nhập, Đăng xuất), dòng «Mật khẩu» trong nhóm theo Hỏi-6 (dòng sổ gate1 hay seal; khuyến nghị Hồ sơ) với chữ «Chưa đặt» / «Đã đặt» / «Đã khoá — đặt mật khẩu mới»; (5) hộp doi có ô mật khẩu hiện tại và ô mật khẩu mới, hộp dat chỉ có ô mật khẩu mới. Không hộp nào tràn ngang ở 375. Thiếu ảnh của một ô là FAIL."
+    paths: ["apps/web/src/app/(app)/settings/users/**", "apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
