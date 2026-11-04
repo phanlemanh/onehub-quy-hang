@@ -1,6 +1,6 @@
 // Đã gửi (hàng 36): đọc Lần gửi của người xem và tắt link. Chạy trong phiên người xem (`withCompany`) — luật đọc của `shares`
 // (người gửi, trưởng nhóm) áp ở cơ sở dữ liệu; đầu khách còn lọc thêm theo chính mình. Không đọc bảng chủ nhà, không số khách.
-import { goiYCanThay, vuaDoi, type CanSoSanh, type SuKienDoi, type VuaDoi } from "@quy-hang/core/sharing";
+import { giaLucGui, goiYCanThay, vuaDoi, type CanSoSanh, type SuKienDoi, type VuaDoi } from "@quy-hang/core/sharing";
 import type { StandardStatus } from "@quy-hang/core/listing";
 import type pg from "pg";
 
@@ -91,10 +91,9 @@ export async function readShare(tx: pg.PoolClient, me: string, laTruongNhom: boo
         [c.id, r.created_at],
       )
     ).rows;
-    const giaTruoc = su.filter((e) => e.truoc && e.type === "price_changed" && "listPrice" in e.payload).at(-1)?.payload.listPrice as number | undefined;
     const sau: SuKienDoi[] = su.filter((e) => !e.truoc);
-    const giaLucGui = giaTruoc ?? (c.list_price == null ? null : Number(c.list_price));
-    const changed = vuaDoi(giaLucGui, sau);
+    const gia = giaLucGui(su.filter((e) => e.truoc));
+    const changed = vuaDoi(gia, sau);
     let suggestions: CanTrongLink["suggestions"] = [];
     if (changed) {
       ungVien ??= (
@@ -104,7 +103,7 @@ export async function readShare(tx: pg.PoolClient, me: string, laTruongNhom: boo
             where l.company_id = app.current_company_id() and l.standard_status = 'Active'`,
         )
       ).rows.map((u) => ({ id: u.id, buildingName: u.building_name, bedroomsTotal: u.bedrooms_total, listPrice: u.list_price == null ? null : Number(u.list_price), standardStatus: u.standard_status, name: ten(u.building_name, u.unit_number) }));
-      const goc: CanSoSanh = { id: c.id, buildingName: c.building_name, bedroomsTotal: c.bedrooms_total, listPrice: giaLucGui, standardStatus: c.standard_status };
+      const goc: CanSoSanh = { id: c.id, buildingName: c.building_name, bedroomsTotal: c.bedrooms_total, listPrice: gia, standardStatus: c.standard_status };
       const theoId = new Map(ungVien.map((u) => [u.id, u]));
       suggestions = goiYCanThay(goc, ungVien, trongLink).map((sid) => ({ id: sid, name: theoId.get(sid)!.name, listPrice: theoId.get(sid)!.listPrice }));
     }

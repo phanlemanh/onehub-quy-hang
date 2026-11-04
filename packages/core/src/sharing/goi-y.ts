@@ -32,6 +32,15 @@ export type VuaDoi = { price: { from: number | null; to: number | null } } | { s
 export type SuKienDoi = { type: string; payload: Record<string, unknown> };
 
 /**
+ * Giá rao lúc gửi từ các sự kiện TRƯỚC lúc gửi: giá chỉ đặt bằng `price_changed`, nên không có sự kiện ấy thì lúc gửi căn chưa
+ * có giá — không lấy giá hiện tại của hàng (giá ấy có thể đặt sau lúc gửi, và «vừa đổi» sẽ so giá mới với chính nó).
+ */
+export function giaLucGui(truocLucGui: readonly SuKienDoi[]): number | null {
+  const gia = [...truocLucGui].reverse().find((e) => e.type === "price_changed" && "listPrice" in e.payload);
+  return gia ? ((gia.payload.listPrice as number | null) ?? null) : null;
+}
+
+/**
  * Căn «vừa đổi» từ các sự kiện của nó SAU lúc gửi (đã lọc ở bên đọc): đổi trạng thái thắng đổi giá; chỉ `status_changed`
  * và `price_changed` (giá rao) được tính — sự kiện khác (chi tiết, giá đáy ở lớp nguồn) không làm căn «vừa đổi».
  */

@@ -1,7 +1,7 @@
 // Luật «Gợi ý căn thay» và «vừa đổi» (hàng 36: AC-3, AC-4). Bảng viết trước.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { goiYCanThay, vuaDoi, type CanSoSanh } from "./goi-y";
+import { giaLucGui, goiYCanThay, vuaDoi, type CanSoSanh } from "./goi-y";
 
 const goc: CanSoSanh = { id: "goc", buildingName: "Toà A", bedroomsTotal: 2, listPrice: 3_000_000_000, standardStatus: "Pending" };
 const c = (id: string, buildingName: string, bedroomsTotal: number, listPrice: number, standardStatus: CanSoSanh["standardStatus"] = "Active"): CanSoSanh => ({ id, buildingName, bedroomsTotal, listPrice, standardStatus });
@@ -34,4 +34,11 @@ test("vừa đổi: chỉ giá rao và trạng thái sau lúc gửi", () => {
   ];
   assert.equal(BANG.length, 6, "số dòng bảng viết trước");
   for (const [ten, su, mong] of BANG) assert.deepEqual(vuaDoi(3_200_000_000, su), mong, ten);
+});
+
+test("giá lúc gửi: chỉ từ đổi giá trước lúc gửi — căn chưa có giá lúc gửi rồi được đặt giá thì «vừa đổi» trống → mới", () => {
+  const dat = (listPrice: number) => ({ type: "price_changed", payload: { listPrice, feeInclusion: "included" } });
+  assert.equal(giaLucGui([]), null, "chưa có đổi giá nào trước lúc gửi");
+  assert.equal(giaLucGui([dat(3_000_000_000), { type: "details_changed", payload: {} }, dat(3_200_000_000)]), 3_200_000_000, "lần đổi giá cuối trước lúc gửi");
+  assert.deepEqual(vuaDoi(giaLucGui([]), [dat(3_200_000_000)]), { price: { from: null, to: 3_200_000_000 } });
 });

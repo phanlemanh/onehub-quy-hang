@@ -1,0 +1,9 @@
+36. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [201] Created
+37. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [200] OK
+71. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [200] OK
+72. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [200] OK
+73. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [201] Created
+109. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [200] OK
+110. [POST] http://localhost:3462/api/v1/public/shares/mY6xfRnNBCtD/events => [200] OK
+
+Note: 137 static requests not shown, run with "static" option to see them.
