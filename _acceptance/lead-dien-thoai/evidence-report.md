@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: ea8791153c4d5845e10f8e3a5a8295edd03ad7e3
+verified_commit: 3fa054d73767a42c81f6226a058bcfee477095ec
 human_signoff:
 ---
 
@@ -192,3 +192,7 @@ Round 3: mọi eval PASS (E7a, E7b carry-forward) — chỗ thử tự dọn má
 ### Re-pin lần 1 — 2026-11-04, do gộp main sau máy thông
 run_id: repin-20261104T124515Z-50261
 sha: ea8791153c4d5845e10f8e3a5a8295edd03ad7e3 · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · ngoài làn máy: E1 (E1 không khai paths), E2 (E2 không khai paths), E3 (E3 không khai paths), E4 (E4 không khai paths), E5 (E5 không khai paths), E6 (E6 không khai paths), E9 (E9 không khai paths), E8 (E8 không khai paths) · AC không có chốt máy: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-8
+
+### Re-pin lần 2 — 2026-11-04, do gộp main lần hai (luật 51)
+run_id: repin-20261104T133555Z-71011
+sha: 3fa054d73767a42c81f6226a058bcfee477095ec · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · ngoài làn máy: E1 (E1 không khai paths), E2 (E2 không khai paths), E3 (E3 không khai paths), E4 (E4 không khai paths), E5 (E5 không khai paths), E6 (E6 không khai paths), E9 (E9 không khai paths), E8 (E8 không khai paths) · AC không có chốt máy: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-8
