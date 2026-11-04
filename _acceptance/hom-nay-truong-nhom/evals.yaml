@@ -52,7 +52,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "Dựng chỗ thử dãy D: node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs (Postgres 5575 nạp sàn mẫu, máy dev 3476, thêm ba lead mới: chưa chia được, quá hạn nhận, quá hạn gọi; dòng cuối in hangDoi) — tắt bằng node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs --tat khi chấm xong, không pkill"
-      - "Chạy node _acceptance/hom-nay-truong-nhom/thu/chay-ui.mjs --e6 --ra _acceptance/hom-nay-truong-nhom/evidence — Chrome không đầu đăng nhập trưởng nhóm mẫu, bấm «Giao lại» ở dòng «Quá hạn nhận», chọn [Mẫu] Đầu chủ 2; in dòng e6-truoc, e6-sau, e6-ket-qua"
+      - "Chạy node _acceptance/hom-nay-truong-nhom/thu/chay-ui.mjs --e6 --ra _acceptance/hom-nay-truong-nhom/evidence — Chrome không đầu đăng nhập trưởng nhóm mẫu, bấm «Giao lại» ở dòng «Quá hạn nhận», chọn đầu chủ đầu tiên còn chọn được (người đang giữ lead bị tắt); in dòng e6-truoc, e6-sau, e6-ket-qua"
       - "Đối chiếu e6-ket-qua: chon bắt đầu «da-chon:», leadQuaHanSau = leadQuaHanTruoc − 1, soGiaoLaiSau = soGiaoLaiTruoc − 1; xem hai ảnh E6-truoc-1440.png, E6-sau-1440.png"
     target: "http://localhost:3462/today"
     expected: "Đăng nhập trưởng nhóm của sàn mẫu (khoá lead đã quá hạn): thấy dòng lead quá hạn; bấm «Giao lại», chọn một đầu chủ, xác nhận → dòng biến mất và ô «Lead quá hạn» giảm 1. Chụp trước/sau."

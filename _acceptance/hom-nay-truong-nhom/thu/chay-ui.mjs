@@ -62,7 +62,8 @@ try {
     })()`);
     await ngu(800);
     const chon = await t.tinh(`(() => {
-      const muc = [...document.querySelectorAll("[role=option], [cmdk-item], [data-slot=command-item]")].find((e) => e.innerText.includes("Đầu chủ 2") && e.getAttribute("aria-disabled") !== "true" && e.getAttribute("data-disabled") !== "true");
+      // Chọn đầu chủ đầu tiên còn chọn được — người đang giữ lead bị tắt trong hộp, và lead trên chỗ thử có thể đã đổi người.
+      const muc = [...document.querySelectorAll("[role=option], [cmdk-item], [data-slot=command-item]")].find((e) => e.getAttribute("aria-disabled") !== "true" && e.getAttribute("data-disabled") !== "true");
       if (!muc) return "khong-thay-muc:" + [...document.querySelectorAll("[role=option], [cmdk-item], [data-slot=command-item]")].map((e) => e.innerText).join("|");
       muc.click(); return "da-chon:" + muc.innerText.split("\\n")[0];
     })()`);
