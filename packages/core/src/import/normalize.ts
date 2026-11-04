@@ -16,7 +16,9 @@ export type NormalizeOptions = ImportContext & {
 export function normalizeValue(field: StandardField, raw: Cell, opts: NormalizeOptions): Outcome {
   const t = opts.transform ?? FIELD_TRANSFORM[field];
   if (opts.valueMap && typeof raw === "string") {
-    const mapped = opts.valueMap[raw.trim()];
+    // Tra bằng `Object.hasOwn`: ô «constructor», «toString» không được trả hàm của nguyên mẫu (luật 38, Ngoài-2).
+    const khoa = raw.trim();
+    const mapped = Object.hasOwn(opts.valueMap, khoa) ? opts.valueMap[khoa] : undefined;
     if (mapped !== undefined) {
       const r = runTransform(t, mapped, opts);
       if (r.mark === "keep") return { ...r, mark: "fixed", reason: `kế hoạch đọc «${raw.trim()}» là «${mapped}»` };

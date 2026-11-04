@@ -58,7 +58,7 @@ const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
     closeDate: [false, ngay],
     withdrawnReason: [false, motTrong(WITHDRAWN_REASONS)],
   },
-  owner_confirmed: {},
+  owner_confirmed: { confirmedAt: [false, ngay] },
   unit_number_assigned: { unitNumber: [true, maCan] },
 };
 
@@ -70,8 +70,9 @@ function khoaLong(v: unknown, path: string, out: PayloadError[]) {
   }
 }
 
-/** Kiểm payload theo khuôn chặt của loại sự kiện. Rỗng là hợp lệ. */
-export function validatePayload(type: unknown, payload: unknown): PayloadError[] {
+/** Kiểm payload theo khuôn chặt của loại sự kiện. Rỗng là hợp lệ. `today` (YYYY-MM-DD, từ ngoài vào — lõi không đọc đồng hồ)
+ * chặn ngày xác nhận sau hôm nay. */
+export function validatePayload(type: unknown, payload: unknown, opts: { today?: string } = {}): PayloadError[] {
   if (typeof type !== "string" || !(EVENT_TYPES as readonly string[]).includes(type)) return [{ path: "type", reason: "loại sự kiện lạ" }];
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return [{ path: "payload", reason: "cần một đối tượng" }];
   const khuon = KHUON[type as EventType];
@@ -93,6 +94,9 @@ export function validatePayload(type: unknown, payload: unknown): PayloadError[]
   }
   for (const [k, [batBuoc]] of Object.entries(khuon)) if (batBuoc && !(k in payload)) out.push({ path: k, reason: "thiếu" });
   if (type === "details_changed" && Object.keys(payload).length === 0) out.push({ path: "payload", reason: "không có phần nào đổi" });
+  const xn = (payload as Record<string, unknown>).confirmedAt;
+  if (type === "owner_confirmed" && opts.today && typeof xn === "string" && !out.length && xn > opts.today)
+    out.push({ path: "confirmedAt", reason: "ngày xác nhận sau hôm nay" });
   return out;
 }
 

@@ -86,3 +86,27 @@ test("quyền đọc: vai không đổi kết quả", () => {
   }
   assert.equal(canRead({ userId: "u-khac", roles: ["company_admin", "team_lead"] }, facts("Private")), false, "vai company_admin + team_lead mở được Chỉ tôi");
 });
+
+test("ai thấy hàng: đầu chủ giữ căn đọc hàng Chỉ tôi", () => {
+  // Hàng 65a AC-11 — viết tay: người đọc × mức. Người tạo là Trưởng nhóm, đầu chủ giữ căn là người khác.
+  const rieng: VisibilityFacts = { creatorUserId: "u-truong-nhom", statusesReached: [], listingAgentUserId: "u-dau-chu-a" };
+  const san: VisibilityFacts = { ...rieng, statusesReached: ["Active"] };
+  const CA: [string, string, VisibilityFacts, boolean][] = [
+    ["người tạo", "u-truong-nhom", rieng, true],
+    ["đầu chủ giữ căn", "u-dau-chu-a", rieng, true],
+    ["thành viên khác", "u-dau-khach", rieng, false],
+    ["sàn khác (chặn ở cơ sở dữ liệu, luật không mở)", "u-san-b", rieng, false],
+    ["người tạo", "u-truong-nhom", san, true],
+    ["đầu chủ giữ căn", "u-dau-chu-a", san, true],
+    ["thành viên khác", "u-dau-khach", san, true],
+    ["sàn khác (chặn ở cơ sở dữ liệu)", "u-san-b", san, true],
+  ];
+  let soLan = 0;
+  for (const [ten, userId, f, mong] of CA) {
+    assert.equal(canRead({ userId, roles: ["listing_agent"] }, f), mong, `${ten} · ${visibilityOf(f)}`);
+    soLan++;
+  }
+  assert.equal(soLan, 8);
+  // Đối chứng: chưa ai giữ căn (`null`) không mở cho ai ngoài người tạo.
+  assert.equal(canRead({ userId: "u-dau-chu-a", roles: [] }, { ...rieng, listingAgentUserId: null }), false);
+});

@@ -76,8 +76,12 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     listingNotShareable: ["listing-not-shareable", 400],
     // va-doi-gia-can-da-ban.
     priceLockedClosed: ["price-locked-closed", 422],
+    // nhap-excel-xem-truoc-ghi (hàng 65a).
+    importRoleRequired: ["import-role-required", 403],
+    importPlanInvalid: ["import-plan-invalid", 422],
+    importBatchTooLarge: ["import-batch-too-large", 422],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 58);
+  assert.equal(Object.keys(API_ERRORS).length, 61);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

@@ -233,6 +233,12 @@ nhập **liên hệ**; nhập **bảng hàng** từ file của sàn **chưa ki�
 | Follow Up Boss | CSV, người chọn trường cho từng cột; cột không khớp vào Notes (kèm tiêu đề) hoặc thành Custom Field; một ô một giá trị | **Người** ghép mỗi lần nhập | [Import Contacts](https://help.followupboss.com/hc/en-us/articles/4402323033751) |
 | Lofty | CSV/bảng tính, máy tự ghép rồi người soát cả cột đã «matched»; 10.000 dòng một lượt | **Người** soát | [Lead Import](https://help.lofty.com/hc/en-us/articles/360001710831) |
 
+Dòng trùng bản ghi đã có (tra 03/11, hàng 65): Follow Up Boss không đổi người giữ và giai đoạn của liên hệ đã có, báo
+Added · Updated · Duplicate, dòng lặp trong tệp được gộp ([nguồn](https://help.followupboss.com/hc/en-us/articles/4402323033751));
+Lofty giữ người giữ và giai đoạn của bản ghi đã có, cập nhật trường khác, **chủ tài khoản chỉnh cách đè** ở cài đặt, hoàn
+tác lần nhập trong 24 giờ ([nguồn](https://help.lofty.com/hc/en-us/articles/360054872172)). Quỹ hàng: căn có hàng mở của
+người khác thành tin bổ sung, không đè (luật 20).
+
 **Bài học:** ngành để người ghép hay soát từng lần; chưa thấy sản phẩm nào nhớ cách ghép theo sàn hay che dữ liệu cá nhân
 trước khi xử lý (chưa kiểm). Quỹ hàng nhớ theo sàn (hàng 67) và che trước khi có gì rời trình duyệt (bất biến 2).
 

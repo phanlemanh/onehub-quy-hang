@@ -73,6 +73,10 @@ export const API_ERRORS = {
   listingNotShareable: { code: "listing-not-shareable", status: 400 },
   // Căn Đã bán không đổi giá (va-doi-gia-can-da-ban).
   priceLockedClosed: { code: "price-locked-closed", status: 422 },
+  // Lần nhập file bảng hàng (hàng 65a, ADR-0011).
+  importRoleRequired: { code: "import-role-required", status: 403 },
+  importPlanInvalid: { code: "import-plan-invalid", status: 422 },
+  importBatchTooLarge: { code: "import-batch-too-large", status: 422 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

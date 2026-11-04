@@ -30,12 +30,21 @@ import { API_ERRORS, type ApiErrorEntry } from "../errors";
  */
 
 export type Ctx = { userId: string; companyId: string };
-export type Command = { type: unknown; payload: unknown; expectedVersion?: number; confirmedWithOwner?: boolean; madeOffline?: boolean };
+export type Command = {
+  type: unknown;
+  payload: unknown;
+  expectedVersion?: number;
+  confirmedWithOwner?: boolean;
+  madeOffline?: boolean;
+  /** Lệnh do một lần nhập file gửi (hàng 65a): sự kiện mang mã lần nhập và không bao giờ tính là xác nhận với chủ — trừ
+   * `owner_confirmed` mang ngày trong file. Chỉ lối nhập của máy chủ đặt khoá này; route lệnh hàng không nhận nó. */
+  importId?: string;
+};
 /** Thiết bị máy khai ở đầu `x-quy-hang-device` (hàng ghi-thiet-bi-va-mat-mang); vắng hay lạ là `null` — «không rõ». */
 export type Device = "desktop" | "mobile" | null;
 export const docThietBi = (v: string | undefined): Device => (v === "desktop" || v === "mobile" ? v : null);
-/** Cách lệnh được ghi: máy nào, có làm lúc mất mạng không. */
-export type CachGhi = { device: Device; madeOffline: boolean };
+/** Cách lệnh được ghi: máy nào, có làm lúc mất mạng không, và lần nhập nào gửi (hàng 65a; vắng là không qua lần nhập). */
+export type CachGhi = { device: Device; madeOffline: boolean; importId?: string | null };
 const GHI_KHONG_RO: CachGhi = { device: null, madeOffline: false };
 export type Refusal = {
   error: ApiErrorEntry;
@@ -121,14 +130,25 @@ export const FACTS_SQL = {
      where e.company_id = app.current_company_id() and e.listing_id = l.id and e.seq = 1)`,
   statusesReached: `array(select distinct e.payload->>'to' from listing_events e
      where e.company_id = app.current_company_id() and e.listing_id = l.id and e.type = 'status_changed')`,
+  listingAgentUserId: `(select a.user_id from listing_agent_assignments a
+     where a.company_id = app.current_company_id() and a.listing_id = l.id order by a.seq desc limit 1)`,
 };
+
+/** Dữ kiện ai thấy hàng của một hàng: gấp từ dãy sự kiện, cộng đầu chủ đang giữ căn (bảng gán — không ở dãy sự kiện). */
+export async function factsOf(tx: pg.PoolClient, listingId: string, events: readonly ListingEvent[]): Promise<VisibilityFacts> {
+  const { rows } = await tx.query<{ user_id: string }>(
+    "select user_id from listing_agent_assignments where company_id = app.current_company_id() and listing_id = $1 order by seq desc limit 1",
+    [listingId],
+  );
+  return { ...factsFromEvents(events), listingAgentUserId: rows[0]?.user_id ?? null };
+}
 
 async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type: EventType, payload: object, confirmed: boolean, cach: CachGhi) {
   const { rows } = await tx.query<EventRow>(
-    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, device, made_offline)
-     values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id(), $5, $6, $7, $8)
+    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, device, made_offline, import_id)
+     values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id(), $5, $6, $7, $8, $9)
      returning seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at, device, made_offline`,
-    [listingId, seq, type, JSON.stringify(payload), await vaiLucLam(tx), confirmed, cach.device, cach.madeOffline],
+    [listingId, seq, type, JSON.stringify(payload), await vaiLucLam(tx), confirmed, cach.device, cach.madeOffline, cach.importId ?? null],
   );
   return toEvent(rows[0]!);
 }
@@ -159,9 +179,9 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // Trục ai thấy hàng (hàng 12): không đọc được thì như hàng không có — xét trước phiên bản và khuôn để mã lỗi không lộ
   // hàng có thật (AC-5).
   const events = await loadEvents(tx, listingId);
-  if (!canRead(viewer, factsFromEvents(events))) return { error: API_ERRORS.notFound };
+  if (!canRead(viewer, await factsOf(tx, listingId, events))) return { error: API_ERRORS.notFound };
 
-  const details = validatePayload(cmd.type, cmd.payload);
+  const details = validatePayload(cmd.type, cmd.payload, { today: new Date().toISOString().slice(0, 10) });
   if (cmd.type === "created") details.push({ path: "type", reason: "hàng đã có — tạo hàng bằng POST /listings" });
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const type = cmd.type as EventType;
@@ -195,9 +215,12 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
     if (trung) return { error: API_ERRORS.unitAlreadyListed, reason: lyDoCanDangMo(trung.status), conflictListingId: trung.id };
   }
 
-  const event = await ghiSuKien(tx, listingId, version + 1, type, payload, confirmsWithOwner(type, cmd.confirmedWithOwner), {
+  // Lệnh của lần nhập: không xác nhận với chủ (luật 11) — chỉ `owner_confirmed` mang ngày trong file mới là xác nhận.
+  const xacNhan = cmd.importId ? type === "owner_confirmed" : confirmsWithOwner(type, cmd.confirmedWithOwner);
+  const event = await ghiSuKien(tx, listingId, version + 1, type, payload, xacNhan, {
     device,
     madeOffline: cmd.madeOffline === true,
+    importId: cmd.importId ?? null,
   });
   const state = foldListing([...events, event]);
   const facts = factsFromEvents([...events, event]);
