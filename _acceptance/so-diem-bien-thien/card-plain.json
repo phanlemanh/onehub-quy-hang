@@ -1,36 +1,3 @@
 {
-  "feature_plain": "Mọi con số và lựa chọn sàn chỉnh được (hạn lead, ngày gọi lại, mức đổi giá phải hỏi lại, phí, cách hiện trang khách…) được khai ở một sổ duy nhất trong lõi, khớp với sổ trong tài liệu; luật của lõi nhận các số ấy làm đầu vào thay vì tự giữ hằng số — để hàng 82 cho mỗi sàn chỉnh mà không phải sửa luật.",
-  "will_do": [
-    {"id": "AC-1", "p": "Sẽ có sổ trong lõi, mỗi điểm đủ: khoá, kiểu, mặc định, khoảng cho phép, vai được đổi, hiệu lực, lớp dữ liệu, tình trạng — và mặc định của mỗi điểm hợp với chính khoảng của nó."},
-    {"id": "AC-2", "p": "Sẽ đối chiếu hai chiều sổ trong lõi với sổ trong tài liệu: thiếu một khoá hay lệch một cột (kể cả vai được đổi và khoảng) là đỏ, nêu đúng khoá và cột."},
-    {"id": "AC-4", "p": "Sẽ kiểm mọi giá trị sàn gửi lên theo sổ: nhận mặc định, giá trị khác trong khoảng và hai biên; từ chối giá trị ngoài khoảng, sai kiểu, khoá lạ, nhãn chở số điện thoại hay email, hạn gọi ngắn hơn hạn nhận — lỗi luôn nêu đúng khoá."},
-    {"id": "AC-6", "p": "Sẽ cho luật «cần gọi lại» nhận số ngày từ cấu hình: không truyền gì vẫn là 14 ngày như cũ; đặt 7, 20 hay 30 thì đổi đúng từ ngày ấy."},
-    {"id": "AC-8", "p": "Sẽ cho chia lead và hàng đợi Hôm nay lấy số, khoảng từ sổ: hạn 15/30 phút như cũ, nhận 1 và 1440 phút, từ chối 0 và 1441 nêu khoá; luật xét quá hạn báo đúng ở biên."},
-    {"id": "AC-9", "p": "Sẽ cho mười hằng số mặc định đang rải ở các hàng lấy số từ sổ; mọi bộ kiểm cũ của lõi, API, kết nối và kiểm kiểu toàn kho vẫn xanh."}
-  ],
-  "wont_do": [
-    {"id": "AC-3", "p": "Sẽ KHÔNG có điểm nào thuộc lớp thông tin chủ nhà — sổ có dòng như vậy bị bộ kiểm chặn, nêu khoá."},
-    {"id": "AC-5", "p": "Sẽ KHÔNG để một giá trị hỏng của sàn làm sập luật: điểm ấy giữ mặc định và báo lỗi nêu khoá; khoá lạ báo lỗi; đối tượng có bảng riêng (bộ nhóm hàng đợi) bỏ qua."},
-    {"id": "AC-7", "p": "Sẽ KHÔNG đổi luật hỏi lại khi đổi giá ở mặc định (20%); đặt trong khoảng 5–50 thì đổi đúng mức ấy; đổi điều kiện phí vẫn luôn hỏi."},
-    {"id": "OOS-1", "p": "KHÔNG làm bảng và nhật ký cấu hình theo sàn, lệnh API đọc/đổi — hàng 82."},
-    {"id": "OOS-2", "p": "KHÔNG cho API hay việc nền đọc cấu hình của từng sàn — hôm nay mọi sàn vẫn chạy bằng mặc định, hàng 82 nối."},
-    {"id": "OOS-3", "p": "KHÔNG làm màn Cài đặt sàn — hàng 45–50."},
-    {"id": "OOS-4", "p": "KHÔNG tính giá về tay theo tỉ lệ phí riêng của sàn — hàng 49."},
-    {"id": "OOS-5", "p": "KHÔNG đưa phần ứng viên và điều khoá của sổ vào mã — chúng không có giá trị để kiểm."}
-  ],
-  "coverage_plain": [
-    {"i": 0, "p": "Mỗi cột của sổ có kiểm (AC-1 đủ cột, AC-2 khớp tài liệu) — đủ khi bộ khớp đỏ đúng cột cho từng cột được so."},
-    {"i": 1, "p": "Mọi loại điểm — số nguyên, số thập phân, có/không, chọn một, tập con, chữ, đối tượng có bảng riêng, họ khoá — đều có ca (AC-1, AC-4, AC-5)."},
-    {"i": 2, "p": "Mỗi điểm đo ở mặc định, giá trị khác, hai biên, ngay ngoài biên, sai kiểu, khoá lạ, ràng buộc chéo (AC-4, AC-6, AC-7, AC-8)."},
-    {"i": 3, "p": "Bốn nguồn số — sổ tài liệu, sổ mã, hằng đang dùng, giá trị của sàn — luôn ra cùng một số (AC-2, AC-5, AC-9)."},
-    {"i": 4, "p": "Bất biến: không điểm nào lớp chủ nhà (AC-3); nhãn sàn gõ không chở được số điện thoại, email (AC-4)."},
-    {"i": 5, "p": "Để sau: đọc theo sàn ở API, bảng, nhật ký (hàng 82); màn (45–50). Không bao giờ ở hàng này: phần ứng viên và điều khoá vào mã."}
-  ],
-  "gap_probe_plain": [
-    {"i": 0, "p": "Máy từng tự chọn con số cho bốn khoảng mà sổ tài liệu chỉ ghi bằng chữ (thuế, lệ phí, trần AI, mức chia, tự nhận) và không có gì đo lại — đã chuyển thành Hỏi-1 cho anh, và bộ khớp nay so cả cột khoảng."},
-    {"i": 1, "p": "Bộ khớp chỉ có ca đỏ cho vài cột — đã viết đủ ca đỏ cho mọi cột được so."},
-    {"i": 2, "p": "Chưa đo gói kết nối và kiểm kiểu toàn kho, chiều đỏ của phép so hằng số nằm ngoài ca — đã thêm hai phép đo và đưa chiều đỏ vào ca."},
-    {"i": 3, "p": "Máy tự dịch «ai được đổi» sang mã vai mà không ghi, không đo — đã ghi căn cứ (nhãn vai ở từ vựng) và cho bộ khớp so cột vai."},
-    {"i": 4, "p": "Hạn lead chỉ đo phần đọc cấu hình, chưa đo luật báo quá hạn; khoảng đổi giá chưa nêu — đã đo luật quá hạn ở hai biên và ghi khoảng 5–50."}
-  ]
+  "feature_plain": "Mọi con số và lựa chọn sàn chỉnh được (hạn lead, ngày gọi lại, mức đổi giá phải hỏi lại, phí, cách hiện trang khách…) nay khai ở một sổ duy nhất trong lõi, khớp hai chiều với sổ trong tài liệu; luật của lõi nhận các số ấy làm đầu vào — hôm nay mọi sàn vẫn chạy bằng mặc định như cũ, hàng 82 sẽ cho từng sàn chỉnh."
 }
