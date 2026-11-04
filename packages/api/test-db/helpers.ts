@@ -46,6 +46,7 @@ export async function createLoneUser(email: string): Promise<string> {
 
 export async function cleanup() {
   await identityPool.query(`delete from identity.otp_requests where email like $1`, [`t-${RUN}-%`]);
+  await identityPool.query(`delete from identity.password_failures where email like $1`, [`t-${RUN}-%`]);
   await identityPool.query(`delete from identity.verification where identifier like $1`, [`%t-${RUN}-%`]);
   await identityPool.query(`delete from identity."user" where email like $1`, [`t-${RUN}-%`]);
   await appPool.query(`delete from companies where name like $1`, [`%${RUN}%`]);

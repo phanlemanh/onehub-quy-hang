@@ -6,12 +6,15 @@ import {
   AUTH_BASE_PATH,
   AUTH_DISABLED_PATHS,
   COOKIE_PREFIX,
+  MAT_KHAU_MAX,
+  MAT_KHAU_MIN,
   OTP_ALLOWED_ATTEMPTS,
   OTP_EXPIRES_SEC,
   OTP_ALLOWED_TYPE,
   OTP_LENGTH,
   OTP_SEND_PATHS,
   OTP_TYPE_NOT_ALLOWED,
+  PASSWORD_WRAPPED_PATHS,
   SESSION_EXPIRES_SEC,
   SESSION_UPDATE_AGE_SEC,
 } from "./constants";
@@ -43,7 +46,14 @@ export function createAuth(o: CreateAuthOptions) {
     disabledPaths: AUTH_DISABLED_PATHS,
     advanced: { cookiePrefix: COOKIE_PREFIX },
     session: { expiresIn: SESSION_EXPIRES_SEC, updateAge: SESSION_UPDATE_AGE_SEC },
-    emailAndPassword: { enabled: false },
+    // Mật khẩu do sàn cấp (dang-nhap-mat-khau): không tự đăng ký; đăng nhập đi đường bọc của Quỹ hàng, các đường lõi
+    // khác của họ mật khẩu bị tắt (duong-mat-khau.ca.ts).
+    emailAndPassword: {
+      enabled: true,
+      disableSignUp: true,
+      minPasswordLength: MAT_KHAU_MIN,
+      maxPasswordLength: MAT_KHAU_MAX,
+    },
     plugins: [
       emailOTP({
         otpLength: OTP_LENGTH,
@@ -56,6 +66,9 @@ export function createAuth(o: CreateAuthOptions) {
     ],
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
+        // Đường mật khẩu đã bọc chỉ chạy khi Quỹ hàng gọi từ máy chủ (auth.api, không có yêu cầu HTTP): một biến thể
+        // địa chỉ lọt qua đường bọc tới thẳng thư viện thì 404, không được đăng nhập bằng mật khẩu tạm.
+        if (PASSWORD_WRAPPED_PATHS.includes(ctx.path) && ctx.request) throw new APIError("NOT_FOUND");
         if (!OTP_SEND_PATHS.includes(ctx.path)) return;
         // Kiểu mã khác đăng nhập bị từ chối trước khi đếm: không gửi thư, không đốt lượt xin mã.
         if (ctx.body?.type !== OTP_ALLOWED_TYPE) {
