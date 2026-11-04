@@ -23,7 +23,9 @@ function nhanhChinh() {
     try {
       git("rev-parse", "--verify", "--quiet", `${ref}^{commit}`);
       return ref;
-    } catch {}
+    } catch {
+      // ref này không có, thử ref kế
+    }
   }
   return null;
 }
@@ -62,7 +64,7 @@ test("sổ: catalog có dòng auth-15 đủ chín ô", () => {
   // Đối chứng: bản sao dòng mất ô Màn thì thước nêu tên ô; ảnh trỏ tệp không có thì nêu đường ảnh.
   const dong = catalog.split("\n").find((l) => l.startsWith("| `@reui/auth-15` |"));
   const o = dong.split("|");
-  const matO = [...o.slice(0, 6), "  ", ...o.slice(7)].join("|");
+  const matO = [...o.slice(0, 5), "  ", ...o.slice(6)].join("|"); // o[0] là chuỗi rỗng trước dấu | đầu, o[5] là ô Màn
   assert.ok(loiDongAuth15(catalog.replace(dong, matO), coTep).includes("ô rỗng: Màn"));
   assert.ok(loiDongAuth15(catalog, () => false).some((l) => l.startsWith("ảnh chuẩn không có: ")));
 });

@@ -21,7 +21,7 @@ function tepAuth(thuMuc = GOC): string[] {
 
 const OAUTH = /Google|Apple|GitHub/;
 /** Tên tệp (tương đối (auth)) có chữ OAuth trong nguồn. */
-const coOauth = (nguon: Record<string, string>) => Object.keys(nguon).filter((t) => OAUTH.test(nguon[t]));
+const coOauth = (nguon: Record<string, string>) => Object.keys(nguon).filter((t) => OAUTH.test(nguon[t] ?? ""));
 
 test("khung: màn đăng nhập giữ khối máy bị báo và hai đường API", () => {
   const trang = doc("login/page.tsx");
@@ -44,7 +44,7 @@ test("khung: không chữ OAuth", () => {
   const nguon = Object.fromEntries(tepAuth().map((p) => [p.slice(GOC.length), readFileSync(p, "utf8")]));
   assert.ok(Object.keys(nguon).length >= 7, "quét được các tệp của (auth)");
   // Chú thích chuyển thể nêu tên nút đã bỏ: chỉ khung.tsx được nhắc, và chỉ trong dòng chú thích.
-  const ma = { ...nguon, "khung.tsx": nguon["khung.tsx"].split("\n").filter((l) => !l.trimStart().startsWith("//")).join("\n") };
+  const ma: Record<string, string> = { ...nguon, "khung.tsx": (nguon["khung.tsx"] ?? "").split("\n").filter((l) => !l.trimStart().startsWith("//")).join("\n") };
   assert.deepEqual(coOauth(ma), []);
   // Đối chứng: chữ nút OAuth chèn vào một bản sao thì thước bắt được và nêu đúng tệp.
   assert.deepEqual(coOauth({ ...ma, "login/form.tsx": `${ma["login/form.tsx"]}\n<Button>Continue with Google</Button>` }), ["login/form.tsx"]);

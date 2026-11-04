@@ -18,7 +18,9 @@ function nhanhChinh() {
     try {
       git("rev-parse", "--verify", "--quiet", `${ref}^{commit}`);
       return ref;
-    } catch {}
+    } catch {
+      // ref này không có, thử ref kế
+    }
   }
   return null;
 }
