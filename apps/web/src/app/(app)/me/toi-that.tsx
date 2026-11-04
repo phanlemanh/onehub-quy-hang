@@ -34,6 +34,7 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
   const [dsMay, setDsMay] = useState<MayDong[]>([]);
   const [dang, setDang] = useState<"doc" | "san" | "bao" | "xong" | "loi">("doc");
   const [daThu, setDaThu] = useState(0);
+  const [dangXuatLoi, setDangXuatLoi] = useState(false);
 
   const tinhCai = useCallback(() => setCai(phanLoaiCai({ daCai: daCai(), coLoiMoi: loiMoi.current !== null, ios: laIos() })), []);
   /** Đọc danh sách máy; trạng thái «đang đọc» do nơi gọi đặt (mặc định lúc mở màn). */
@@ -65,7 +66,7 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
   return (
     <ManToi
       loi={loi}
-      du={{ email, tenSan, soSan, cai, thongBao, dsMay, may: trangThaiDongMay({ dang, soMay: dsMay.length, daThu }) }}
+      du={{ email, tenSan, soSan, cai, thongBao, dsMay, may: trangThaiDongMay({ dang, soMay: dsMay.length, daThu }), dangXuatLoi }}
       hd={{
         cai: () => {
           void loiMoi.current?.prompt().finally(() => {
@@ -101,15 +102,17 @@ export function ToiThat({ loi, email, tenSan, soSan }: { loi: Loi; email: string
           void docMay();
         },
         dangXuat: () => {
+          // Máy chủ lỗi hay mất mạng thì ở lại và báo (luật 55); lần thử lại không hỏi xoá kho lần hai.
           void dangXuatTrenMay({
             dangXuat,
+            daXoa: dangXuatLoi,
             than: thanDangXuat,
             goi: fetch,
             ve: () => {
               router.replace("/login");
               router.refresh();
             },
-          });
+          }).then((kq) => setDangXuatLoi(kq === "loi"));
         },
       }}
     />

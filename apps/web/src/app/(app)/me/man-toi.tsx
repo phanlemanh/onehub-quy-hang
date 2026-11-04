@@ -12,6 +12,7 @@ import { SettingField } from "@/components/khoi/settings-3/setting-field";
 import { PrivacySettings } from "@/components/khoi/settings-2/privacy-settings";
 import { SettingRow } from "@/components/khoi/settings-2/setting-row";
 import { Frame, FrameDescription, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
+import { CHUA_DANG_XUAT } from "@/components/shell/dang-xuat-tren-may";
 import { TrangThai } from "@/components/trang-thai";
 import {
   AlertDialog,
@@ -41,6 +42,8 @@ export type DuLieuToi = {
   thongBao: TrangThaiThietBi;
   may: TrangThaiMay;
   dsMay: MayDong[];
+  /** Lần đăng xuất trước không tới được máy chủ (luật 55). */
+  dangXuatLoi?: boolean;
 };
 export type HanhDongToi = { cai(): void; batThongBao(): void; baoMat(): void; thuLaiMay(): void; dangXuat(): void };
 
@@ -128,10 +131,16 @@ function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
         return {
           ma: n.ma,
           nhan: n.nhan,
-          moTa: "Xoá dữ liệu Quỹ hàng của bạn trên máy này",
+          moTa: du.dangXuatLoi ? (
+            <span role="alert" className="text-destructive">
+              {CHUA_DANG_XUAT}
+            </span>
+          ) : (
+            "Xoá dữ liệu Quỹ hàng của bạn trên máy này"
+          ),
           hanhDong: (
             <Button size="sm" variant="outline" onClick={hd.dangXuat}>
-              Đăng xuất
+              {du.dangXuatLoi ? "Thử lại" : "Đăng xuất"}
             </Button>
           ),
         };
