@@ -1,1 +1,1 @@
-driver CDP chay-ui.mjs; khong co duong doc network
+driver: CDP chrome (chay-ui.mjs), khong co read_network_requests -> n-a (driver)

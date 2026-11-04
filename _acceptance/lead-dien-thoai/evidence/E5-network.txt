@@ -1,1 +1,1 @@
-driver: CDP script tu viet (chay-ui.mjs), khong co duong doc network/console ben ngoai; n-a (driver)
+n-a (driver): chay-ui.mjs dung CDP rieng, khong doc duoc danh sach network; dem POST/GET leads qua API.

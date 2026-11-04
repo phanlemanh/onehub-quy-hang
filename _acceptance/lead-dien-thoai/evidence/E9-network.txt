@@ -1,1 +1,1 @@
-n-a (driver): chay-ui.mjs dung CDP rieng, khong xuat nhat ky network/console
+app-origin traffic: khong doc duoc network qua driver CDP rieng (script); chi doi chieu DOM

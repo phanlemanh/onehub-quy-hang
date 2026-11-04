@@ -5,7 +5,7 @@ slug: lead-dien-thoai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-04-lead-dien-thoai-design.md
 approved_by:
 approved_at:
@@ -114,3 +114,18 @@ Không chạm `apps/web/src/app/(app)/today/**`.
 - Thử trên máy thật bằng máy chấm — đi yêu cầu `can-nguoi` cho chủ kho (luật đợt 16).
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi chỗ thử không tắt được máy dev cũ, người chấm chỉ thấy câu báo chung là máy dev không lên sau vài phút chờ, không biết nguyên nhân thật. Người dùng cuối không bị ảnh hưởng. — `_acceptance/lead-dien-thoai/thu/dung-d.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bấm «Xem ở Lead đã nhập» trên máy tính phải tải lại cả trang thay vì chuyển mượt, và người dùng đọc màn hình bằng công cụ hỗ trợ có thể nghe nhầm đây là nút thay vì liên kết. — `apps/web/src/app/(app)/leads/new/o-lead.tsx`
+- Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi mất mạng, đầu màn hình nói thay đổi sẽ tự gửi khi có mạng lại, nhưng lead nhập mới không tự gửi. Người dùng tin dải báo có thể đóng màn và lead không bao giờ được gửi. — `apps/web/src/app/(app)/leads/new/khung.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu đang xem «Lead đã nhập» trên điện thoại rồi xoay ngang hoặc kéo rộng màn, thân trang trống và không có lối quay lại ô nhập cho tới khi tải lại trang. — `apps/web/src/app/(app)/leads/new/tab-lead.tsx`
+- Ngoài-5 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi phiên đăng nhập hết hạn lúc gửi lead, màn báo máy chủ không trả lời và bảo thử lại sau, trong khi gửi lại mãi vẫn hỏng cho tới khi đăng nhập lại. — `apps/web/src/app/(app)/leads/new/nguon-that.tsx`
+- Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Phép thử tự động chưa thật sự kiểm xem màn «Lead đã nhập» có lộ mã hàng hay không, nên lời hứa không hiện mã hàng mới được tuyên chứ chưa được chứng minh. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
+- Ngoài-7 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Phép thử kiểm số chủ nhà không lộ trên màn chưa có ca đối chứng chứng tỏ nó bắt được số khi số thật sự hiện, nên kết quả «không lộ» có thể tin chưa đủ. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
+- Ngoài-8 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Phép thử chưa phân biệt được lead vừa gửi với các lead cũ cùng toà, nên chưa chứng minh chắc lead mới thật sự nằm đầu danh sách. — `_acceptance/lead-dien-thoai/evals.yaml`
+- Ngoài-9 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Lối «Xem ở Lead đã nhập» vẫn bấm được và dẫn đúng chỗ, nhưng mỗi lần bấm tải lại cả trang nên hơi chậm hơn các lối khác. — `apps/web/src/app/(app)/leads/new/o-lead.tsx`
+- Ngoài-10 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi phiên đăng nhập hết hạn hoặc vai bị gỡ quyền nhập lead, màn báo máy chủ không trả lời và bảo thử lại, nên người dùng có thể thử mãi không được. — `apps/web/src/app/(app)/leads/new/nguon-that.tsx`
+- Ngoài-11 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sau khi gửi xong một lead rồi nhập lead thứ hai còn thiếu mục, màn cuộn xuống kết quả của lead trước nên telesales trên điện thoại không thấy ngay lỗi dưới ô thiếu. — `apps/web/src/app/(app)/leads/new/o-lead.tsx`
+- Ngoài-13 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài thử có thể báo đạt dù lead vừa gửi không thật sự nằm đầu danh sách, nên lỗi hiển thị đó có thể lọt mà không ai biết. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
+- Ngoài-14 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài thử kiểm không lộ số chủ nhà có thể không bắt được số nếu nó hiện dưới dạng khác, nên một lần rò số có thể không bị phát hiện. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
+- Ngoài-15 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài thử có thể báo đạt dù năm mục bị xếp hai cột hoặc nút Gửi nằm ngoài màn lúc mở, nên lỗi bố cục trên điện thoại có thể lọt. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
