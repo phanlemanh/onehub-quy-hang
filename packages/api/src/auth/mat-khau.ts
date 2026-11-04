@@ -4,7 +4,7 @@ import { randomInt } from "node:crypto";
 import { BANG_CHU_TAM, MAT_KHAU_MAX, MAT_KHAU_MIN, MAT_KHAU_TAM_DO_DAI } from "./constants";
 import { MAT_KHAU_PHO_BIEN } from "./mat-khau-pho-bien";
 
-export type LyDoTuChoi = "password_too_short" | "password_too_long" | "password_common" | "password_guessable";
+export type LyDoTuChoi = "password-too-short" | "password-too-long" | "password-common" | "password-guessable";
 export type KetQuaKiem = { ok: true } | { ok: false; code: LyDoTuChoi };
 
 /** NFC trước khi đếm, kiểm và băm — cùng mật khẩu gõ từ hai bàn phím (dựng sẵn hay tổ hợp) phải khớp nhau. */
@@ -39,10 +39,10 @@ function coDayPhim(s: string): boolean {
 /** Kiểm một mật khẩu người tự đặt. `email` để chặn mật khẩu chứa phần trước «@». */
 export function kiemMatKhau(pw: string, email: string): KetQuaKiem {
   const n = [...chuanHoa(pw)].length;
-  if (n < MAT_KHAU_MIN) return { ok: false, code: "password_too_short" };
-  if (n > MAT_KHAU_MAX) return { ok: false, code: "password_too_long" };
+  if (n < MAT_KHAU_MIN) return { ok: false, code: "password-too-short" };
+  if (n > MAT_KHAU_MAX) return { ok: false, code: "password-too-long" };
   const t = tron(pw);
-  if (MAT_KHAU_PHO_BIEN.has(t)) return { ok: false, code: "password_common" };
+  if (MAT_KHAU_PHO_BIEN.has(t)) return { ok: false, code: "password-common" };
   const ten = tron(email.split("@")[0] ?? "");
   const deDoan =
     new Set(t).size <= 1 ||
@@ -50,7 +50,7 @@ export function kiemMatKhau(pw: string, email: string): KetQuaKiem {
     coDayPhim(t) ||
     t.includes("quyhang") ||
     (ten.length >= 3 && t.includes(ten));
-  return deDoan ? { ok: false, code: "password_guessable" } : { ok: true };
+  return deDoan ? { ok: false, code: "password-guessable" } : { ok: true };
 }
 
 /** Mật khẩu tạm 16 ký tự ngẫu nhiên mật mã từ BANG_CHU_TAM — liền một chuỗi; chia nhóm chỉ khi hiển thị. */

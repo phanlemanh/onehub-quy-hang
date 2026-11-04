@@ -9,20 +9,20 @@ const DAI_128 = "Mây trôi lững lờ qua đồi xa; ".repeat(10).slice(0, 128
 const NFD = "Hà Nội đẹp".normalize("NFD");
 
 const BANG: [ten: string, pw: string, ket: "nhận" | LyDoTuChoi][] = [
-  ["7 ký tự", "bienxan", "password_too_short"],
+  ["7 ký tự", "bienxan", "password-too-short"],
   ["8 ký tự chữ thường", "bientrua", "nhận"],
-  ["129 ký tự", DAI_128 + "x", "password_too_long"],
+  ["129 ký tự", DAI_128 + "x", "password-too-long"],
   ["128 ký tự", DAI_128, "nhận"],
   ["có dấu cách và chữ có dấu 8 ký tự", "mưa rơi!", "nhận"],
-  ["một ký tự lặp 8 lần", "aaaaaaaa", "password_guessable"],
-  ["dãy số", "12345678", "password_common"],
-  ["dãy số không có trong danh sách", "23456789", "password_guessable"],
-  ["dãy bàn phím", "qwertyui", "password_common"],
-  ["dãy bàn phím giữa chữ khác", "nhaqwertyzz", "password_guessable"],
-  ["chứa phần trước «@» của email", "Ten-Thu-2026!", "password_guessable"],
-  ["chứa quỹ hàng", "quyhangquyhang1", "password_guessable"],
-  ["quỹ hàng có dấu và cách", "Quỹ Hàng của tôi", "password_guessable"],
-  ["một dòng của danh sách phổ biến", "matkhau123", "password_common"],
+  ["một ký tự lặp 8 lần", "aaaaaaaa", "password-guessable"],
+  ["dãy số", "12345678", "password-common"],
+  ["dãy số không có trong danh sách", "23456789", "password-guessable"],
+  ["dãy bàn phím", "qwertyui", "password-common"],
+  ["dãy bàn phím giữa chữ khác", "nhaqwertyzz", "password-guessable"],
+  ["chứa phần trước «@» của email", "Ten-Thu-2026!", "password-guessable"],
+  ["chứa quỹ hàng", "quyhangquyhang1", "password-guessable"],
+  ["quỹ hàng có dấu và cách", "Quỹ Hàng của tôi", "password-guessable"],
+  ["một dòng của danh sách phổ biến", "matkhau123", "password-common"],
   ["chữ có dấu tổ hợp (NFD) 10 ký tự", NFD, "nhận"],
 ];
 
@@ -37,7 +37,7 @@ test("luật mật khẩu: bảng viết trước", () => {
 test("luật mật khẩu: độ dài đếm theo ký tự Unicode, không theo byte", () => {
   // «ữữữữữữữ»: 7 ký tự nhưng 21 byte UTF-8 — vẫn ngắn.
   assert.equal(Buffer.byteLength("ữữữữữữữ"), 21);
-  assert.deepEqual(kiemMatKhau("ữữữữữữữ", EMAIL), { ok: false, code: "password_too_short" });
+  assert.deepEqual(kiemMatKhau("ữữữữữữữ", EMAIL), { ok: false, code: "password-too-short" });
   // NFD dài hơn theo đơn vị mã nhưng đếm sau NFC.
   assert.equal([...chuanHoa(NFD)].length, 10);
   assert.equal(chuanHoa(NFD), chuanHoa("Hà Nội đẹp".normalize("NFC")));
