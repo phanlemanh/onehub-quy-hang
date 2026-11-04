@@ -5,7 +5,7 @@ slug: hom-nay-truong-nhom
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, core, ui]
-status: machine-cleared
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-hom-nay-truong-nhom-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -96,3 +96,12 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu mở màn lúc mạng đang chập chờn, trưởng nhóm có thể thấy câu «Không lead nào quá hạn» dù máy chưa đọc được gì, trong khi các ô số hiện dấu gạch. Họ có thể tưởng không có việc cần chia lại. — `apps/web/src/app/(app)/today/truong-nhom.tsx`
 - Ngoài-7 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Đầu chủ chưa nhập tên sẽ hiện thành ô trống trong bảng theo đầu chủ và ở dòng lead quá hạn, thay vì mã ngắn như ở ô chọn Giao lại. Trưởng nhóm khó biết đó là ai. — `packages/api/src/team/routes.ts`
 - Ngoài-8 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chưa chứng minh được rằng tên chủ nhà không lọt vào hàng đợi của trưởng nhóm, nên nếu sau này có lỗi rò tên thì bài kiểm sẽ không báo. Hiện chưa có dấu hiệu tên bị lộ. — `packages/api/test-db/hom-nay-truong-nhom.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: ô «Hàng cũ» đếm theo ngưỡng gọi lại mặc định, chưa đọc ngưỡng riêng của sàn.
+  - Ngoài-2: bài kiểm trạng thái mất mạng và lỗi không đi qua phần nối của màn.
+  - Ngoài-3: bài kiểm vắng tên chủ nhà trên hàng đợi chưa có đối chứng trên chính lead.
+  - Ngoài-4: vùng trưởng nhóm còn bề rộng tối đa và thẻ main lồng nhau, lệch mép với dải bên dưới trên màn rộng.
+  - Ngoài-5: mạng trở lại thì màn vẫn báo mất mạng và tắt nút Giao lại tới khi tải lại trang.
+  - Ngoài-6: mở màn lúc mất mạng thì hàng đợi báo «Không lead nào quá hạn» dù chưa đọc được.
+  - Ngoài-7: đầu chủ chưa đặt tên hiện ô trống ở bảng theo người và dòng hàng đợi.
+  - Ngoài-8: mồi tên chủ nhà của bài kiểm hàng đợi không nằm trên lead nào nên kiểm vắng tên luôn đạt.
