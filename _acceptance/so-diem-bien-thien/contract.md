@@ -5,7 +5,7 @@ slug: so-diem-bien-thien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-04-so-diem-bien-thien-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
