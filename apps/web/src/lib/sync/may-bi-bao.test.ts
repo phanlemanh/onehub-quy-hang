@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { taoBoDongBo } from "./dong-bo";
 import { taoKhoBoNho } from "./kho";
-import { bocGoiBiBao, dichBiBao, maNguoiBiBao, xoaMayBiBao, type XoaMayDeps } from "./may-bi-bao";
+import { bocGoiBiBao, dichBiBao, maNguoiBiBao, nguoiCanXoa, xoaMayBiBao, type XoaMayDeps } from "./may-bi-bao";
 import { mayChuGia } from "./may-chu-gia.test-helpers";
 
 const ME = { userId: "u-x", roles: ["listing_agent"] };
@@ -96,4 +96,18 @@ test("mã người bị báo: chỉ 401 mang đúng mã và mã người", () =>
   assert.equal(maNguoiBiBao({ status: 403, body: { error: "device_reported_lost", userId: "u-x" } }), null);
   assert.equal(maNguoiBiBao({ status: 401, body: { error: "device_reported_lost" } }), null);
   assert.equal(maNguoiBiBao({ status: 401, body: null }), null);
+});
+
+test("màn đăng nhập chỉ xoá kho khi máy chủ xác nhận dấu bị báo của đúng người; đường dẫn trần không xoá được", () => {
+  const CA: [string, Parameters<typeof nguoiCanXoa>[0], string | null, string | null][] = [
+    ["phiên bị báo của X, đường dẫn X", { "bi-bao-mat": "1", u: "u-x" }, "u-x", "u-x"],
+    ["đường dẫn X gửi tới máy không bị báo", { "bi-bao-mat": "1", u: "u-x" }, null, null],
+    ["đường dẫn X tới máy bị báo của Z", { "bi-bao-mat": "1", u: "u-x" }, "u-z", null],
+    ["thiếu cờ", { u: "u-x" }, "u-x", null],
+  ];
+  const kiem = (f: typeof nguoiCanXoa) => CA.filter(([, q, may, mong]) => f(q, may) !== mong).map(([ten]) => ten);
+  assert.deepEqual(kiem(nguoiCanXoa), []);
+  // Chiều đỏ: bản tin đường dẫn như trước thì máy không bị báo cũng mất kho.
+  const hong: typeof nguoiCanXoa = (q) => (q["bi-bao-mat"] === "1" && typeof q.u === "string" ? q.u : null);
+  assert.deepEqual(kiem(hong), ["đường dẫn X gửi tới máy không bị báo", "đường dẫn X tới máy bị báo của Z"]);
 });

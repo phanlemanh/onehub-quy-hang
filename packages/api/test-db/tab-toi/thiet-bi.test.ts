@@ -2,6 +2,8 @@
 // người khác cùng sàn. Gửi đẩy đi qua bộ gửi giả ghi thứ tự — không gọi dịch vụ đẩy thật.
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
+import { NextRequest, NextResponse } from "next/server";
+import { refreshSessionCookie } from "../../../../apps/web/src/lib/session-refresh";
 import { SESSION_EXPIRES_SEC } from "../../src/auth/constants";
 import { bamPhien, docDau, ghiDau, maPhienTuCookie } from "../../src/auth/may-bi-bao";
 import { createApi } from "../../src/app";
@@ -187,6 +189,20 @@ test("E7 máy bị báo chạm máy chủ: 401 mang device_reported_lost ở /me
   // Đăng nhập lại trên B dùng bình thường.
   const moi = await dangNhap(mail("e7-x"), UA.iphone);
   assert.equal((await send("GET", "/api/v1/me", moi)).status, 200);
+});
+
+test("E7 bước chặn đầu của trang giữ cookie của phiên bị báo cho màn đăng nhập; hết phiên thường vẫn xoá cookie", async () => {
+  const d = await dung("e7-coc");
+  await send("POST", "/api/v1/me/devices/report-lost", d.A, {});
+  const cookieXoa = async (cookie: string) =>
+    (await refreshSessionCookie(new NextRequest(`${BASE_URL}/today`, { headers: { cookie } }), NextResponse.next(), app)).headers
+      .getSetCookie()
+      .filter((c) => c.includes("session_token"));
+  assert.deepEqual(await cookieXoa(d.B), [], "phiên bị báo mà trang vẫn xoá cookie — màn đăng nhập không còn biết máy bị báo");
+  // Đối chứng: phiên của Y bị xoá thẳng (hết phiên thường) → better-auth xoá cookie như cũ.
+  await identityPool.query("delete from identity.session where token = $1", [maPhienTuCookie(d.Y)]);
+  const xoaY = await cookieXoa(d.Y);
+  assert.ok(xoaY.length > 0 && xoaY.every((c) => /Max-Age=0/i.test(c)), `hết phiên thường mà cookie không bị xoá: ${xoaY.join(" | ")}`);
 });
 
 test("E9 hạn dấu bằng lúc thu cộng hạn phiên; dấu quá hạn không làm máy bị xoá; chiều đỏ dấu ngắn hơn phiên", async () => {

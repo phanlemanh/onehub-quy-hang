@@ -13,6 +13,14 @@ export const DEVICE_REPORTED_LOST = "device_reported_lost";
 /** Đích sau khi xoá: màn đăng nhập mang lời «Máy này đã bị báo mất». */
 export const dichBiBao = (userId: string) => `/login?bi-bao-mat=1&u=${encodeURIComponent(userId)}`;
 
+/**
+ * Người cần xoá kho ở màn đăng nhập: chỉ khi máy chủ xác nhận phiên trên CHÍNH máy này mang dấu bị báo của đúng người
+ * trong đường dẫn. Đường dẫn trần (`?bi-bao-mat=1&u=…`) gửi từ nơi khác không xoá được kho của ai, kể cả thay đổi chưa gửi.
+ */
+export function nguoiCanXoa(q: { "bi-bao-mat"?: unknown; u?: unknown }, biBaoTuMayChu: string | null): string | null {
+  return q["bi-bao-mat"] === "1" && typeof q.u === "string" && q.u !== "" && q.u === biBaoTuMayChu ? q.u : null;
+}
+
 /** Mã người bị báo khi phản hồi là 401 mang mã máy bị báo; còn lại null. */
 export function maNguoiBiBao(r: { status: number; body: unknown }): string | null {
   if (r.status !== 401 || !r.body || typeof r.body !== "object") return null;

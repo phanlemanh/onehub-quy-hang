@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import { TrangThai } from "@/components/trang-thai";
 import { xoaMayBiBao } from "@/lib/sync/may-bi-bao";
 
-export const LOI_BI_BAO = "Máy này đã bị báo mất — dữ liệu Quỹ hàng trên máy đã xoá";
+// Tiêu đề của khối báo (ReUI Alert) chỉ một dòng: câu của AC-7 tách thành tiêu đề và lời mô tả để không bị cắt trên điện thoại.
+export const LOI_BI_BAO = { title: "Máy này đã bị báo mất", description: "Dữ liệu Quỹ hàng trên máy đã xoá" } as const;
 
 export function KhoiMayBiBao({ userId }: { userId: string }) {
   const [xong, setXong] = useState(false);
@@ -22,5 +23,5 @@ export function KhoiMayBiBao({ userId }: { userId: string }) {
       huy = true;
     };
   }, [userId]);
-  return <TrangThai kind="notice" title={xong ? LOI_BI_BAO : "Đang xoá dữ liệu Quỹ hàng trên máy này…"} />;
+  return xong ? <TrangThai kind="notice" {...LOI_BI_BAO} /> : <TrangThai kind="notice" title="Đang xoá dữ liệu Quỹ hàng trên máy…" />;
 }

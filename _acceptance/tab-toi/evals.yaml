@@ -14,6 +14,12 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/tab-toi/thu/dung-h.mjs (Postgres 5574, máy dev 3494; in PID — dừng bằng node _acceptance/tab-toi/thu/dung-h.mjs --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/tab-toi/thu/chay-ui.mjs --e1b --ra _acceptance/tab-toi/evidence — mỗi «máy» là một Chrome không đầu với hồ sơ riêng; lệnh in mỗi bước một dòng JSON (đã thấy gì) và chụp ảnh E1b-*.png"
+      - "Đối chiếu dòng e1b-mot-may-390 và e1b-mot-may-1440: thuTu.dung = true (sáu nhóm Hồ sơ · Sàn · Cài · Thông báo · Máy · Đăng xuất theo thứ tự), chiCoMayNay = true, coNutBaoMat = false, dangChon có «Tôi»; xem hai ảnh E1b-mot-may-*.png"
+      - "Đối chiếu e1b-ba-may (ba máy, có nút «Báo mất máy»), e1b-hop-hoi (chữ hộp hỏi đúng câu đã khai, nút xác nhận kiểu destructive), e1b-da-bao («Đã đăng xuất 2 máy khác», chỉ còn «Máy này»); xem ba ảnh tương ứng"
+      - "Đối chiếu e1b-man-bao: máy Android bị báo mở /today về /login?bi-bao-mat=1 và hiện lời máy bị báo mất, dữ liệu đã xoá; xem ảnh E1b-man-bao-390.png"
     expected: "Trên khổ điện thoại 390×844 và máy tính 1440×900, đăng nhập bằng tài khoản mẫu, mở /me: thấy sáu nhóm dòng đúng thứ tự, tab Tôi đang chọn ở thanh dưới điện thoại; chụp mỗi khổ một ảnh; với tài khoản mẫu một máy: dòng máy có «Chỉ có máy này», không nút «Báo mất máy», chụp một ảnh; với tài khoản mẫu ba máy: có nút, bấm mở hộp hỏi «Đăng xuất mọi máy khác và xoá dữ liệu Quỹ hàng trên các máy ấy?» kiểu nguy hiểm, xác nhận thì hiện «Đã đăng xuất 2 máy khác» và danh sách chỉ còn «Máy này», chụp hộp hỏi và kết quả; mở /login?bi-bao-mat=1 thấy lời «Máy này đã bị báo mất — dữ liệu Quỹ hàng trên máy đã xoá», chụp một ảnh."
     paths: ["apps/web/src/app/(app)/me/**", "apps/web/src/app/(auth)/login/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
@@ -111,6 +117,13 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/tab-toi/thu/dung-h.mjs (dùng lại máy dev 3494 nếu đang chạy)"
+      - "Chạy node _acceptance/tab-toi/thu/chay-ui.mjs --e7c --ra _acceptance/tab-toi/evidence — ba Chrome hồ sơ riêng A, B, C cùng đăng nhập người mẫu X"
+      - "Đối chiếu e7c-b-truoc: kho của B có quy-hang-sync:<X> (soCho = 1 thay đổi chờ đặt lúc tắt mạng giả) và quy-hang-sync:z-mau-e7c của người khác Z"
+      - "Đối chiếu e7c-a-da-bao: A bấm «Báo mất máy», xác nhận, thấy «Đã đăng xuất … máy khác»"
+      - "Đối chiếu e7c-b-sau: B mở /today bằng cookie cũ → url /login?bi-bao-mat=1&u=<X>, kho chỉ còn quy-hang-sync:z-mau-e7c; xem ảnh E7c-b-sau-390.png"
+      - "Đối chiếu e7c-c-doi-chung: phiên C xoá thẳng ở cơ sở dữ liệu (xoaPhien.daXoa = 1) → url /login không tham số, khoSau vẫn còn quy-hang-sync:<X> như khoTruoc; xem ảnh E7c-c-sau-390.png"
     expected: "Trên máy chủ dev nối Postgres dãy: trình duyệt A và trình duyệt B (hai hồ sơ trình duyệt) cùng đăng nhập tài khoản mẫu X; B nạp bảng hàng để có kho trên máy và tạo một thay đổi chờ khi tắt mạng giả; trên B ghi kho của một người mẫu khác Z bằng công cụ trang. A bấm «Báo mất máy» và xác nhận. B điều hướng tới /today bằng cookie cũ: đích cuối là /login?bi-bao-mat=1 với lời đã khai; đọc IndexedDB của B bằng công cụ trang: không còn kho quy-hang-sync của X, kho của Z còn. Đối chứng: trình duyệt C đăng nhập X, phiên C bị xoá thẳng ở cơ sở dữ liệu (hết hạn giả, không qua báo mất), C điều hướng /today → /login không tham số và kho của X trên C còn. Chụp mỗi đích một ảnh, ghi kết quả đọc IndexedDB."
     paths: ["apps/web/src/app/(auth)/login/**", "apps/web/src/components/shell/**", "apps/web/src/lib/sync/**", "packages/api/src/me/**", "packages/api/src/auth/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
