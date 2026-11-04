@@ -1,276 +1,174 @@
-NETWORK (CDP Network domain)
-{"url":"http://localhost:3492/inventory","method":"GET","type":"Document","status":200}
-{"url":"http://localhost:3492/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css","method":"GET","type":"Stylesheet","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/manifest.webmanifest","method":"GET","type":"Manifest","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_1anvha4rlo79g._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_1bj9ps6apokuo._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_1y5l-kud9pt6s._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_drawer_0_4bb8bkpmi10._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_1axlho38regs0._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_internals_1l88rrr5k8_28._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_1nc4crjayg17u._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_00ecwwfw3lcbq._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/_1d-iqqqbayd8i._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/_019q2kglz__79._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_lib_vai_ts_1pyilr3co8cvn._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_0zs-tj5w7mqeo._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/packages_core_src_08g46evct4zrt._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/_0c-t42dbxpgtu._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_react-resizable-panels_dist_react-resizable-panels_0chim-r0s13l6.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40dnd-kit_core_dist_core_esm_0i-bf15xqk6tl.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_components_1v2tpyywmxrme._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_1h73ghx9-scb8._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_11gcnic_hiavz._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40tanstack_table-core_dist_0o17k3b-tj3z5._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_0-r-260b_rmdl._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/favicon.ico","method":"GET","type":"Other","status":404}
-{"url":"http://localhost:3492/icons/icon-192.png","method":"GET","type":"Other","status":200}
-{"url":"http://localhost:3492/manifest.webmanifest","method":"GET","type":"Manifest","status":200}
-{"url":"http://localhost:3492/icons/icon-192.png","method":"GET","type":"Other","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/__nextjs_font/geist-latin.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/__nextjs_original-stack-frames","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos/a5717f23-90c8-4744-8d0b-b421605f699a/thumb","method":"GET","type":"Image","status":200}
-{"url":"http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd/events","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd/events","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos/9895fa75-34eb-4adf-90d3-59ae071ee685/thumb","method":"GET","type":"Image","status":404}
-{"url":"http://localhost:3492/api/v1/listings/a54c7f40-2e26-4bd7-9fea-6451d4312d5b","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/inventory","method":"GET","type":"Document","status":200}
-{"url":"http://localhost:3492/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css","method":"GET","type":"Stylesheet","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_1anvha4rlo79g._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_1bj9ps6apokuo._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_1y5l-kud9pt6s._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_drawer_0_4bb8bkpmi10._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_1nc4crjayg17u._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_1axlho38regs0._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_00ecwwfw3lcbq._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_internals_1l88rrr5k8_28._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/manifest.webmanifest","method":"GET","type":"Manifest","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/_0c-t42dbxpgtu._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/_019q2kglz__79._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/_1d-iqqqbayd8i._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_lib_vai_ts_1pyilr3co8cvn._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_0zs-tj5w7mqeo._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/packages_core_src_08g46evct4zrt._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_react-resizable-panels_dist_react-resizable-panels_0chim-r0s13l6.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_components_1v2tpyywmxrme._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40tanstack_table-core_dist_0o17k3b-tj3z5._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40dnd-kit_core_dist_core_esm_0i-bf15xqk6tl.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_11gcnic_hiavz._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_0-r-260b_rmdl._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_1h73ghx9-scb8._.js","method":"GET","type":"Script","status":200}
-{"url":"http://localhost:3492/__nextjs_font/geist-latin.woff2","method":"GET","type":"Font","status":200}
-{"url":"http://localhost:3492/icons/icon-192.png","method":"GET","type":"Other","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/__nextjs_original-stack-frames","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/manifest.webmanifest","method":"GET","type":"Manifest","status":200}
-{"url":"http://localhost:3492/icons/icon-192.png","method":"GET","type":"Other","status":200}
-{"url":"http://localhost:3492/__nextjs_original-stack-frames","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos/75fae1d4-2def-4829-9445-da7b7e195d67/thumb","method":"GET","type":"Image","status":404}
-{"url":"http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339/events","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/units/photos/9895fa75-34eb-4adf-90d3-59ae071ee685/thumb","method":"GET","type":"Image","status":404}
-{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/a54c7f40-2e26-4bd7-9fea-6451d4312d5b","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339/events","method":"POST","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
-{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+22268. [POST] http://localhost:3492/api/v1/listings/144ac851-2f3b-40cb-a7e3-6cffee6d3c49/events => [200] OK
+22269. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22270. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22271. [POST] http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd/events => [200] OK
+22272. [POST] http://localhost:3492/api/v1/listings/a54c7f40-2e26-4bd7-9fea-6451d4312d5b/events => [200] OK
+22273. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22274. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22275. [POST] http://localhost:3492/api/v1/listings/144ac851-2f3b-40cb-a7e3-6cffee6d3c49/events => [200] OK
+22276. [POST] http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd/events => [200] OK
+22277. [POST] http://localhost:3492/api/v1/listings/a54c7f40-2e26-4bd7-9fea-6451d4312d5b/events => [200] OK
+22322. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22323. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22324. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22325. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
+22326. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
+22327. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04 => [200] OK
+22328. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05 => [200] OK
+22329. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
+22330. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
+22331. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+22332. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02 => [200] OK
+22333. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
+22334. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
+22335. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
+22336. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
+22337. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
+22338. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
+22339. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
+22340. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
+22341. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
+22342. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
+22343. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
+22344. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
+22345. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
+22346. [POST] http://localhost:3492/__nextjs_original-stack-frames => [200] OK
+22347. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
+22348. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
+22349. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
+22350. [POST] http://localhost:3492/api/v1/listings/144ac851-2f3b-40cb-a7e3-6cffee6d3c49/events => [200] OK
+22351. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22352. [POST] http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd/events => [200] OK
+22353. [POST] http://localhost:3492/api/v1/listings/9033f765-350e-409b-bbe3-76e988b0cd76/events => [200] OK
+22354. [POST] http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339/events => [200] OK
+22355. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22356. [POST] http://localhost:3492/api/v1/listings/144ac851-2f3b-40cb-a7e3-6cffee6d3c49/events => [200] OK
+22357. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22358. [POST] http://localhost:3492/api/v1/listings/144ac851-2f3b-40cb-a7e3-6cffee6d3c49/events => [409] Conflict
+22359. [GET] http://localhost:3492/api/v1/listings/144ac851-2f3b-40cb-a7e3-6cffee6d3c49 => [200] OK
+22360. [POST] http://localhost:3492/api/v1/listings/9033f765-350e-409b-bbe3-76e988b0cd76/events => [200] OK
+22361. [POST] http://localhost:3492/api/v1/listings/4d9e60bb-edf9-4b48-8ebb-ad2c2d06f2bd/events => [200] OK
+22362. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22363. [POST] http://localhost:3492/api/v1/listings/e4d2cf1a-28ef-4131-b309-dbb4f9d91339/events => [200] OK
+22364. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22365. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22366. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22367. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22368. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22369. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22370. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22371. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22372. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22373. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22374. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22419. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22420. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22421. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22422. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
+22423. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
+22424. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04 => [200] OK
+22425. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05 => [200] OK
+22426. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
+22427. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
+22428. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+22429. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02 => [200] OK
+22430. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
+22431. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
+22432. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
+22433. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
+22434. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
+22435. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
+22436. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
+22437. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
+22438. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
+22439. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
+22440. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
+22441. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
+22442. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
+22443. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
+22444. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
+22445. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
+22446. [POST] http://localhost:3492/__nextjs_original-stack-frames => [200] OK
+22447. [POST] http://localhost:3492/__nextjs_original-stack-frames => [200] OK
+22448. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+22449. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22450. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22451. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+22452. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22453. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22454. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22455. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22459. [POST] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/events => [200] OK
+22460. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22461. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22462. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22463. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22464. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22465. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22466. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22467. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22512. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22513. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22514. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22515. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
+22516. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
+22517. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04 => [200] OK
+22518. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05 => [200] OK
+22519. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
+22520. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
+22521. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+22522. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02 => [200] OK
+22523. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
+22524. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
+22525. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
+22526. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
+22527. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
+22528. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
+22529. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
+22530. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
+22531. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
+22532. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
+22533. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
+22534. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
+22535. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
+22536. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
+22537. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
+22538. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
+22539. [POST] http://localhost:3492/__nextjs_original-stack-frames => [200] OK
+22540. [POST] http://localhost:3492/__nextjs_original-stack-frames => [200] OK
+22541. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+22542. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22543. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22544. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 => [200] OK
+22545. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22546. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22547. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22548. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22552. [POST] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/events => [200] OK
+22553. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22554. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22555. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22556. [POST] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/events => [200] OK
+22557. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 => [200] OK
+22558. [GET] http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner => [200] OK
+22559. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22561. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22562. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-09.01 => [200] OK
+22563. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/owner => [200] OK
+22564. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22565. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20B&ma=B-09.01 => [200] OK
+22566. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/owner => [200] OK
+22567. [GET] http://localhost:3492/api/v1/catalog => [200] OK
+22568. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
+22569. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
+22571. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22572. [POST] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/events => [200] OK
+22573. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
+22574. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/owner => [200] OK
+22575. [GET] http://localhost:3492/api/v1/listings => [200] OK
+22576. [POST] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/events => [200] OK
+22577. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
+22578. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/owner => [200] OK
+22579. [GET] http://localhost:3492/api/v1/listings => [200] OK
 
-CONSOLE errors/warnings
-error: Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
-    at PopoverTrigger (http://localhost:3492/_next/static/chunks/apps_web_src_components_1v2tpyywmxrme._.js:10242:214)
-    at useSuaTrenO (http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js:4346:223)
-    at BangHang (http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js:458:236)
-    at BangCoHoSo (http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js:6236:229)
-    at Page (about://React/Server/file:///Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/elated-bhabha-2c0741/apps/web/.next/dev/server/chunks/ssr/%5Broot-of-the-server%5D__0-ne4ojevqs08._.js?85:145:270)
-exception: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <div className={undefined} style={{...}}>
-      <BangHang nguoi="f65e021c-4..." san="d7bea24b-d..." dangMo={null} onMoCan={function BangCoHoSo.useCallback[moCan]}>
-        <TooltipProvider delay={200}>
-          <TooltipProvider data-slot="tooltip-pr..." delay={200}>
-            <FloatingDelayGroup delay={{open:200, ...}} timeoutMs={400}>
-              <DataGrid table={{...}} recordCount={37} onRowClick={function} i18n={{labels:{...}}} ...>
-                <DataGridProvider table={{...}} loadingMode="skeleton" tableLayout={{dense:true, ...}} ...>
-                  <FramePanel ref={{current:null}} className="p-0" ...>
-                    <div className="relative o..." data-slot="frame-panel" ref={{current:null}} ...>
-                      <div
-+                       className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-he..."
--                       className="flex flex-col gap-2 p-4"
--                       aria-busy="true"
--                       aria-label="Đang tải bảng hàng"
-                      >
-                        ...
-                          <MenuTrigger data-slot="dropdown-m..." render={<Button>}>
-                            <Button type="button" variant="outline" onClick={function} onMouseDown={function} ...>
-                              <Button data-slot="dropdown-m..." className={"group/bu..."} type="button" ...>
-+                               <button
-+                                 type="button"
-+                                 onClick={function}
-+                                 onMouseDown={function}
-+                                 onKeyDown={function}
-+                                 onKeyUp={function}
-+                                 onPointerDown={function}
-+                                 tabIndex={0}
-+                                 disabled={false}
-+                                 data-slot="dropdown-menu-trigger"
-+                                 onFocus={function}
-+                                 onPointerEnter={function}
-+                                 aria-haspopup="menu"
-+                                 aria-expanded={false}
-+                                 aria-controls={undefined}
-+                                 id="base-ui-_R_qb6n6atpeuqknelb_"
-+                                 ref={function}
-+                                 className={"group/button inline-flex shrink-0 items-center justify-center rounded-l..."}
-+                               >
--                               <div className="flex gap-2">
-                        ...
-                      ...
-              ...
-
-    at throwOnHydrationMismatch (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:3142:56)
-    at beginWork (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:6616:918)
-    at runWithFiberInDEV (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:777:74)
-    at performUnitOfWork (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9440:97)
-    at workLoopConcurrentByScheduler (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9436:58)
-    at renderRootConcurrent (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9419:71)
-    at performWorkOnRoot (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:8947:150)
-    at performWorkOnRootViaSchedulerTask (http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:10140:9)
-    at MessagePort.performWorkUntilDeadline (http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js:1864:64)
-error: Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
-    at PopoverTrigger (http://localhost:3492/_next/static/chunks/apps_web_src_components_1v2tpyywmxrme._.js:10242:214)
-    at useSuaTrenO (http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js:4346:223)
-    at BangHang (http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js:458:236)
-    at BangCoHoSo (http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js:6236:229)
-    at Page (about://React/Server/file:///Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/elated-bhabha-2c0741/apps/web/.next/dev/server/chunks/ssr/%5Broot-of-the-server%5D__0-ne4ojevqs08._.js?85:145:270)
+Note: 140 static requests not shown, run with "static" option to see them.
