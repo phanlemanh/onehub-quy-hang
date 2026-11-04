@@ -5,7 +5,7 @@ slug: cau-hinh-theo-san
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-cau-hinh-theo-san-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -122,3 +122,5 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 ## Notes
 
 - Mặc định của sổ giữ đúng số cũ (luật đợt 23): gọi lại 14 ngày, hỏi lại 20%, hạn lead 15/30 phút.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: Sàn đã có sẵn cặp hạn nhận và hạn gọi trái luật từ dữ liệu cũ thì quản trị đổi một nửa cặp vẫn được báo thành công mà số mới không có hiệu lực; lead vẫn chạy theo hạn mặc định 15/30 phút, gỡ bằng cách đặt cả hai hạn cùng lúc.
