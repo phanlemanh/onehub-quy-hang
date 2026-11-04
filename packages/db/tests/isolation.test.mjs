@@ -2578,3 +2578,51 @@ test("company_settings_events: chiều đỏ — luật đọc không lọc sàn
     assert.equal(await docCheoNhatKy(c), "company_settings_events");
   });
 });
+
+// ---- Đã gửi (hàng 36, migration 032): hàm tắt link ----
+// Lần gửi A (người gửi LK.GUI, sàn A), M (người gửi LK.DK1, sàn A) và B (sàn B) dựng sẵn ở withLienHeKhach.
+test("đã gửi: hàm tắt link không vượt sàn, không vượt người", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    const tat = async (id) => (await chuChay(c, "select disabled_at from shares where id = $1", [id], null)).rows[0].disabled_at;
+    // Người gửi của sàn A tắt Lần gửi của sàn B → lỗi, B vẫn mở.
+    await lamNguoi(c, LK.GUI, COMPANY_A);
+    await expectError(c, "select app.disable_share($1)", [LKS.B], /không có Lần gửi này/);
+    // Đầu khách khác của sàn A tắt Lần gửi A (của LK.GUI) → lỗi.
+    await lamNguoi(c, LK.DK2, COMPANY_A);
+    await expectError(c, "select app.disable_share($1)", [LKS.A], /không được tắt link này/);
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    assert.equal(await tat(LKS.A), null, "đầu khách khác tắt được link");
+    // Người gửi tắt Lần gửi A → được; tắt lại → lỗi riêng.
+    await lamNguoi(c, LK.GUI, COMPANY_A);
+    await c.query("select app.disable_share($1)", [LKS.A]);
+    await expectError(c, "select app.disable_share($1)", [LKS.A], /link đã tắt/);
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    assert.notEqual(await tat(LKS.A), null, "người gửi không tắt được link");
+    // Trưởng nhóm sàn A tắt Lần gửi M (của LK.DK1) → được.
+    await c.query("select app.disable_share($1)", [LKS.M]);
+    assert.notEqual(await tat(LKS.M), null, "trưởng nhóm không tắt được link của sàn mình");
+    // Trưởng nhóm sàn B (LK.B) tắt Lần gửi của sàn A → lỗi.
+    await lamNguoi(c, LK.B, COMPANY_B);
+    await expectError(c, "select app.disable_share($1)", [LKS.M], /không có Lần gửi này/);
+    // Vai API không update thẳng bảng.
+    await expectError(c, "update shares set disabled_at = now() where company_id = $1", [COMPANY_B], /permission denied/);
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    assert.equal(await tat(LKS.B), null, "Lần gửi của sàn B bị tắt");
+  });
+});
+
+test("đã gửi: phiên có sàn mà không người không tắt được link (migration 033)", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    const tat = async (id) => (await chuChay(c, "select disabled_at from shares where id = $1", [id], null)).rows[0].disabled_at;
+    // app.user_id rỗng, app.company_id là sàn B: trước bản vá phép so người ra NULL và hàm tắt được Lần gửi B.
+    await lamNguoi(c, "", COMPANY_B);
+    await expectError(c, "select app.disable_share($1)", [LKS.B], /không được tắt link này/);
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    assert.equal(await tat(LKS.B), null, "phiên không người tắt được Lần gửi B");
+    // Đối chứng: trưởng nhóm sàn B (LK.B) vẫn tắt được Lần gửi của sàn mình.
+    await lamNguoi(c, LK.B, COMPANY_B);
+    await c.query("select app.disable_share($1)", [LKS.B]);
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    assert.notEqual(await tat(LKS.B), null, "trưởng nhóm sàn B không tắt được link của sàn mình");
+  });
+});
