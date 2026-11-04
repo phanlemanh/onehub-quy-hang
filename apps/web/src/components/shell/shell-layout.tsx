@@ -3,7 +3,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { readMe } from "@/lib/api";
+import { readMeHayBiBao } from "@/lib/api";
 import { AppShellDongBo } from "./app-shell-dong-bo";
 import { SECOND_COLUMN_COOKIE } from "./cookie";
 
@@ -27,8 +27,11 @@ function rememberedFor(raw: string | undefined, userId: string, companyId: strin
 
 /** Dựng vỏ ở máy chủ cho mọi màn sau đăng nhập; chưa đăng nhập hay chưa có sàn thì đưa về màn tương ứng. */
 export async function ShellLayout({ children }: { children: ReactNode }) {
-  const me = await readMe((await headers()).get("cookie") ?? "");
-  if (!me) redirect("/login");
+  const doc = await readMeHayBiBao((await headers()).get("cookie") ?? "");
+  // Máy bị báo mất (hàng 38): màn đăng nhập xoá kho của người bị báo trên máy này.
+  if (doc && "biBao" in doc) redirect(`/login?bi-bao-mat=1&u=${encodeURIComponent(doc.biBao)}`);
+  if (!doc) redirect("/login");
+  const { me } = doc;
   if (me.companies.length === 0) redirect("/no-company");
   if (!me.activeCompany) redirect("/select-company");
 

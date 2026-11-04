@@ -9,8 +9,8 @@ import { Frame, FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { batThongBao, docTrangThai, type TrangThaiThietBi } from "@/lib/push/dang-ky";
+import { BUOC_CAI_IOS, MO_THONG_BAO, NHAN_THONG_BAO } from "@/lib/push/nhan";
 
-const BUOC_CAI = ["Bấm nút Chia sẻ ở thanh dưới của Safari", "Chọn «Thêm vào MH chính»", "Mở Quỹ hàng từ màn hình chính rồi bật thông báo"];
 
 export function DaiBatThongBao() {
   const [tt, setTt] = useState<TrangThaiThietBi>("dang-kiem");
@@ -27,7 +27,7 @@ export function DaiBatThongBao() {
   }, []);
 
   if (tt === "dang-kiem" || tt === "da-bat") return null;
-  if (tt === "tu-choi") return <p className="text-muted-foreground text-sm">Thông báo đang tắt trong trình duyệt</p>;
+  if (tt === "tu-choi") return <p className="text-muted-foreground text-sm">{NHAN_THONG_BAO["tu-choi"]}</p>;
 
   // Thiết bị đã bật mà máy chủ chưa lưu (va-thong-bao-lead, Hỏi-1): cùng khối báo lỗi của lần bấm hỏng.
   const coLoi = loi || tt === "loi-luu";
@@ -44,26 +44,26 @@ export function DaiBatThongBao() {
     tt === "ios-chua-cai" ? (
       <TrangThai
         kind="notice"
-        title="Cài Quỹ hàng lên màn hình chính để nhận thông báo lead"
+        title={NHAN_THONG_BAO["ios-chua-cai"]}
         description={
           <ol className="list-decimal ps-5">
-            {BUOC_CAI.map((b) => (
+            {BUOC_CAI_IOS.map((b) => (
               <li key={b}>{b}</li>
             ))}
           </ol>
         }
       />
     ) : tt === "chua-cau-hinh" ? (
-      <TrangThai kind="notice" title="Thông báo chưa được cấu hình" description="Máy chủ chưa sẵn sàng gửi thông báo lead." />
+      <TrangThai kind="notice" title={NHAN_THONG_BAO["chua-cau-hinh"]} description={MO_THONG_BAO["chua-cau-hinh"]} />
     ) : tt === "khong-ho-tro" ? (
-      <TrangThai kind="notice" title="Trình duyệt này không nhận được thông báo" description="Mở Quỹ hàng bằng Chrome, Edge hay Safari bản mới." />
+      <TrangThai kind="notice" title={NHAN_THONG_BAO["khong-ho-tro"]} description={MO_THONG_BAO["khong-ho-tro"]} />
     ) : (
       <TrangThai
         kind={coLoi ? "error" : "notice"}
-        title={coLoi ? "Chưa bật được thông báo — thử lại" : "Bật thông báo lead"}
+        title={coLoi ? NHAN_THONG_BAO["loi-luu"] : NHAN_THONG_BAO["chua-bat"]}
         description={
           <span className="flex flex-col items-start gap-2">
-            <span>Nhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng.</span>
+            <span>{MO_THONG_BAO["chua-bat"]}</span>
             <Button size="sm" onClick={bat} disabled={dangBat}>
               <BellRingIcon data-icon="inline-start" />
               Bật thông báo

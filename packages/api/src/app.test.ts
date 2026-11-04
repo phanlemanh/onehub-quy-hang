@@ -43,6 +43,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/listings",
     "GET /api/v1/listings/{listingId}",
     "POST /api/v1/listings/{listingId}/events",
+    "POST /api/v1/imports",
+    "POST /api/v1/imports/{importId}/rows",
+    "GET /api/v1/imports/{importId}",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
@@ -94,6 +97,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/push/public-key",
     "POST /api/v1/me/push-subscriptions",
     "DELETE /api/v1/me/push-subscriptions",
+    // Hàng 38: tab Tôi — máy đang đăng nhập, báo mất máy.
+    "GET /api/v1/me/devices",
+    "POST /api/v1/me/devices/report-lost",
     // Hàng mo-so-lead.
     "POST /api/v1/leads/{leadId}/phone-reveal",
     // Hàng 30: gọi từ máy tính.

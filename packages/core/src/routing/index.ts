@@ -2,6 +2,7 @@
  * Chia lead và hạn (Tham chiếu §8 luật 20, hàng 25, ADR-0017). Cơ sở dữ liệu chở dữ kiện (hàng chờ chia, ứng viên, mốc
  * hạn, cấu hình của sàn); luật chọn người, thực đơn cách chia và xét hạn nằm ở đây. Nhập qua `@quy-hang/core/routing`.
  */
+import { khoangCua, macDinhSo, CAU_HINH_SAN_MAC_DINH } from "../config/giai";
 import type { Role } from "../navigation";
 
 /** Thực đơn cách chia — sàn chọn một; không kịch bản tự viết. */
@@ -30,14 +31,14 @@ export type LeadRoutingSettings = {
  * lần đầu (luật 20), lời báo cho trưởng nhóm. Chỗ khai duy nhất; SQL và lối API không chép lại con số.
  */
 export const DEFAULT_LEAD_ROUTING: LeadRoutingSettings = {
-  strategy: "zone_round_robin",
-  acceptMinutes: 15,
-  firstCallMinutes: 30,
-  alertTo: "team_lead",
+  strategy: CAU_HINH_SAN_MAC_DINH["lead_routing.strategy"] as RoutingStrategyKey,
+  acceptMinutes: macDinhSo("lead_routing.accept_minutes"),
+  firstCallMinutes: macDinhSo("lead_routing.first_call_minutes"),
+  alertTo: CAU_HINH_SAN_MAC_DINH["lead_routing.alert_to"] as AlertAudience,
 };
 
-/** Khoảng phút sàn được đặt cho mỗi hạn: từ 1 phút tới một ngày. */
-export const DEADLINE_MINUTES = { min: 1, max: 1440 } as const;
+/** Khoảng phút sàn được đặt cho mỗi hạn: từ 1 phút tới một ngày — khoảng của sổ (#1; #2 cùng khoảng). */
+export const DEADLINE_MINUTES = khoangCua("lead_routing.accept_minutes");
 
 /** Khoá trong bảng cấu hình theo sàn (`company_settings`): «<nhóm>.<khoá>», giá trị JSON. */
 export const LEAD_ROUTING_KEYS = {
@@ -52,11 +53,11 @@ const TRUONG = Object.keys(LEAD_ROUTING_KEYS) as Truong[];
 
 /** Lỗi của một giá trị cấu hình, hoặc null khi hợp lệ. */
 function loiTruong(t: Truong, v: unknown): string | null {
-  if (t === "strategy") return ROUTING_STRATEGIES.includes(v as RoutingStrategyKey) ? null : "strategy ngoài thực đơn";
-  if (t === "alertTo") return ALERT_AUDIENCES.includes(v as AlertAudience) ? null : "alertTo ngoài thực đơn";
-  return Number.isInteger(v) && (v as number) >= DEADLINE_MINUTES.min && (v as number) <= DEADLINE_MINUTES.max
-    ? null
-    : `${t} phải là số phút nguyên từ ${DEADLINE_MINUTES.min} tới ${DEADLINE_MINUTES.max}`;
+  const khoa = LEAD_ROUTING_KEYS[t];
+  if (t === "strategy") return ROUTING_STRATEGIES.includes(v as RoutingStrategyKey) ? null : `${khoa}: ngoài thực đơn`;
+  if (t === "alertTo") return ALERT_AUDIENCES.includes(v as AlertAudience) ? null : `${khoa}: ngoài thực đơn`;
+  const { min, max } = khoangCua(khoa);
+  return Number.isInteger(v) && (v as number) >= min && (v as number) <= max ? null : `${khoa}: phải là số phút nguyên từ ${min} tới ${max}`;
 }
 
 /** Cấu hình của sàn từ các dòng `company_settings`: khoá vắng lấy mặc định, khoá nhóm khác bỏ qua, giá trị hỏng thì ném. */
@@ -66,7 +67,7 @@ export function readLeadRoutingSettings(rows: readonly { key: string; value: unk
     const dong = rows.find((r) => r.key === LEAD_ROUTING_KEYS[t]);
     if (!dong) continue;
     const loi = loiTruong(t, dong.value);
-    if (loi) throw new Error(`cấu hình ${LEAD_ROUTING_KEYS[t]} hỏng: ${loi}`);
+    if (loi) throw new Error(`cấu hình hỏng — ${loi}`);
     (ra as Record<Truong, unknown>)[t] = dong.value;
   }
   return ra;
@@ -89,7 +90,8 @@ export function applyLeadRoutingPatch(current: LeadRoutingSettings, input: unkno
     if (loi) return { ok: false, error: loi };
   }
   const settings = { ...current, ...vao } as LeadRoutingSettings;
-  if (settings.firstCallMinutes < settings.acceptMinutes) return { ok: false, error: "hạn gọi ngắn hơn hạn nhận" };
+  if (settings.firstCallMinutes < settings.acceptMinutes)
+    return { ok: false, error: `${LEAD_ROUTING_KEYS.firstCallMinutes}: hạn gọi ngắn hơn hạn nhận` };
   return { ok: true, settings, rows: TRUONG.filter((t) => t in vao).map((t) => ({ key: LEAD_ROUTING_KEYS[t], value: vao[t] })) };
 }
 

@@ -19,6 +19,35 @@ async function xuLyBamThongBao(url, clientsApi, origin) {
   return "mo-moi";
 }
 
+/**
+ * Tin «xoá máy» (hàng 38, AC-10): người báo mất máy từ máy khác, máy chủ đẩy tin `tag: "xoa-may"` tới đăng ký của máy này
+ * trước khi gỡ nó. Xoá kho của đúng người bị báo (mã người trong `url`; tên kho như `tenCoSo` của lib/sync/kho-indexeddb),
+ * huỷ đăng ký đẩy, rồi hiện thông báo — Web Push bắt hiện. Hàm thuần nhận `idb`, `pushManager`, `hien` được đưa vào —
+ * bài kiểm gọi thẳng nó (apps/web/src/lib/sync/sw-xoa-may.test.ts).
+ */
+async function xuLyTinXoaMay(p, idb, pushManager, hien) {
+  let u = null;
+  try {
+    u = new URL(p.url, "https://quy-hang.local").searchParams.get("u");
+  } catch {
+    u = null;
+  }
+  if (u) {
+    await new Promise((xong) => {
+      const r = idb.deleteDatabase(`quy-hang-sync:${u}`);
+      r.onsuccess = r.onerror = r.onblocked = () => xong();
+    });
+  }
+  try {
+    const sub = pushManager ? await pushManager.getSubscription() : null;
+    if (sub) await sub.unsubscribe();
+  } catch {
+    // máy chủ đã gỡ đăng ký; huỷ ở trình duyệt hỏng thì thôi
+  }
+  await hien(p.title, { body: typeof p.body === "string" ? p.body : "", tag: "xoa-may", icon: "/icons/icon-192.png" });
+  return u ? "da-xoa" : "khong-ma";
+}
+
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
 
@@ -30,6 +59,12 @@ self.addEventListener("push", (event) => {
     p = null;
   }
   if (!p || typeof p.title !== "string") return;
+  if (p.tag === "xoa-may") {
+    event.waitUntil(
+      xuLyTinXoaMay(p, self.indexedDB, self.registration.pushManager, (t, o) => self.registration.showNotification(t, o)),
+    );
+    return;
+  }
   event.waitUntil(
     self.registration.showNotification(p.title, {
       body: typeof p.body === "string" ? p.body : "",

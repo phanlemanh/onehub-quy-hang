@@ -1,0 +1,1 @@
+Driver: Chrome CDP rieng (chay-ui.mjs), khong co read_network_requests -> n-a (driver). Log may chu: /var/folders/6x/1dlzszm51wzbt20dn5y1lgzh0000gn/T/quy-hang-tab-toi/web-h.log (cac GET/POST 200).

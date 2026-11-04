@@ -10,6 +10,7 @@ import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
+import { registerImportRoutes } from "./imports/routes";
 import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
@@ -23,6 +24,8 @@ import { registerPhotoRoutes } from "./photos/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
 import type { PushSender } from "./push/gui";
+import { chanMayBiBao } from "./auth/may-bi-bao";
+import { registerDeviceRoutes } from "./me/routes";
 import { registerPushRoutes, registerPushSignOut } from "./push/routes";
 
 /**
@@ -88,6 +91,8 @@ export function createApi(deps: ApiDeps) {
   registerPushSignOut(api, deps);
   // Danh tính: gửi mã, nhập mã, đăng xuất, đọc phiên — better-auth giữ trọn.
   api.on(["GET", "POST"], `${AUTH_BASE_PATH}/*`, (c) => auth.handler(c.req.raw));
+  // Máy bị báo mất (hàng 38): 401 của phiên đã bị thu qua «Báo mất máy» mang mã riêng để máy ấy xoá kho của người.
+  api.use(`${BASE}/*`, chanMayBiBao(deps.identityPool));
 
   const viewer = async (c: Context) => (await auth.api.getSession({ headers: c.req.raw.headers }))?.user ?? null;
 
@@ -162,6 +167,7 @@ export function createApi(deps: ApiDeps) {
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
+  registerImportRoutes(api, deps);
   registerCatalogRoutes(api, deps);
   registerFeedRoutes(api, deps);
   registerCatalogReadAll(api, deps);
@@ -172,6 +178,7 @@ export function createApi(deps: ApiDeps) {
   registerContactRoutes(api, deps);
   registerJobRoutes(api, deps);
   registerPushRoutes(api, deps);
+  registerDeviceRoutes(api, deps);
   registerPhotoRoutes(api, deps, deps.khoAnh);
   registerSyncRoutes(api, deps);
 
