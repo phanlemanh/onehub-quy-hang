@@ -3,13 +3,13 @@
  * nhớ đích, phép biến đổi, bảng quy đổi của lần ghi mới nhất. Khớp theo từng cột — cột chưa gặp đi từ điển. Bộ nhớ không
  * bao giờ giữ giá trị của cột nguồn hay cột tên người: bảng quy đổi chỉ được nhớ trên trường chuẩn không thuộc lớp nguồn.
  */
-import { applyPlan, type ImportContext } from "../apply";
+import { applyPlan } from "../apply";
 import { classifyColumns, type ColumnClass } from "../classify";
 import { FIELD_CLASS, isStandardField } from "../fields";
 import type { Table } from "../grid";
 import { headerKey, priceUnitOfHeader } from "../headers";
 import { planFromDictionary, validatePlan, type ImportPlan, type PlanColumn, type PlanTarget } from "../plan";
-import type { Transform } from "../transforms";
+import type { ImportContext, Transform } from "../transforms";
 
 /** Một cột đã nhớ — đúng các khoá này, không ô, không dòng, không tên tệp. */
 export type CotMau = {
