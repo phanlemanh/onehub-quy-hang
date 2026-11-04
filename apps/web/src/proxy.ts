@@ -8,8 +8,12 @@ import { refreshSessionCookie, SESSION_COOKIES } from "./lib/session-refresh";
 // Bản chính thức (`VERCEL_ENV=production`) không mở nó (Hỏi-1 hàng 91).
 const TRANG_MAU = "/mau/he-bo-cuc";
 
+// Trang khách `/s/<mã>` (hàng 35) là link công khai khách mở từ Zalo — không đăng nhập, dữ liệu dựng từ luật ẩn của lõi.
+const TRANG_KHACH = "/s/";
+
 function moKhongPhien(path: string): boolean {
   if (path === "/login") return true;
+  if (path.startsWith(TRANG_KHACH)) return true;
   if (process.env.VERCEL_ENV === "production") return false;
   return path === TRANG_MAU || path.startsWith(`${TRANG_MAU}/`);
 }
