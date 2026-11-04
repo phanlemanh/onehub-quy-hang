@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Đầu chủ nhập lại tệp bảng hàng cùng mẫu thì màn ghép sẵn mọi cột như lần nhập trước, kể cả cách sàn gọi riêng các giá trị — không phải chỉnh lại từng lần.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ nhận ra từng tiêu đề cột đã gặp ở lần nhập đã ghi trước và ghép y như lần đó, kể cả khi đổi thứ tự cột; tiêu đề mới thì ghép như bây giờ; hai lần khác nhau thì lần mới nhất thắng."},
+    {"id": "AC-2", "p": "Sẽ tự bỏ cách ghép đã nhớ của một cột nếu nó không còn hợp với dữ liệu tệp mới, nói lý do, các cột khác vẫn theo mẫu."},
+    {"id": "AC-3", "p": "Sẽ KHÔNG giữ trong bộ nhớ bất kỳ số điện thoại, giá đáy hay tên chủ nhà nào — cột ấy chỉ nhớ nó đi vào trường nào."},
+    {"id": "AC-4", "p": "Sẽ cho Đầu chủ và Trưởng nhóm đọc mẫu đã nhớ của sàn mình; chỉ lần nhập đã ghi mới thành mẫu; vai khác và sàn khác không thấy."},
+    {"id": "AC-5", "p": "Sẽ làm trọn vòng: ghi lần một có chỉnh tay, nhập lần hai cùng mẫu thì màn ghép đúng như lần một đã ghi, ô từng sửa không còn hỏi lại."},
+    {"id": "AC-6", "p": "Sẽ biến một lần sửa ô ở cột danh mục thành cách gọi riêng của cột đó (các ô cùng chữ đổi theo, màn báo số ô) — không học ở cột chủ nhà, tên người hay ghi chú tự do."},
+    {"id": "AC-7", "p": "Sẽ báo ở bước ghép cột «Ghép theo mẫu đã nhớ — N/M cột» và gắn nhãn từng cột; đọc mẫu lỗi thì vẫn nhập được như cũ."},
+    {"id": "AC-8", "p": "Sẽ khoá thanh bước khi máy chủ đang xem thử hay đang ghi, như nút Quay lại (mục Ngoài-3 anh chọn mở hợp đồng mới)."},
+    {"id": "AC-9", "p": "Sẽ coi mọi phản hồi lỗi của máy chủ là lỗi, kể cả dạng lạ, không báo «đã ghi» sai (mục Ngoài-7)."},
+    {"id": "AC-11", "p": "Sẽ có lệnh đo ba số mỗi lần nhập — bao nhiêu cột theo mẫu, bao nhiêu cột người phải đổi — để Cổng Giá trị có số."},
+    {"id": "AC-10", "p": "Sẽ đi đúng khuôn màn nhập đã duyệt, không nợ giao diện."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG làm màn quản mẫu (sửa, xoá, đặt tên mẫu) — để hàng 50."},
+    {"id": "OOS-2", "p": "KHÔNG làm từ điển cách gọi chung của sàn ở Cài đặt sàn — để hàng 45/70."},
+    {"id": "OOS-3", "p": "KHÔNG dùng AI cho cột chưa nhớ — để hàng 68."},
+    {"id": "OOS-4", "p": "KHÔNG nhớ dòng tiêu đề, trang tính hay đầu chủ được chọn khi nhập hộ."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Mức khớp: không khớp · khớp một phần · khớp trọn · mẫu hết hợp lệ — AC-1, AC-2, AC-7."},
+    {"i": 1, "p": "Ai ghép: từ điển · mẫu · người đổi cột · người sửa ô — AC-1, AC-5, AC-6."},
+    {"i": 2, "p": "Loại cột: danh mục · chia sẻ được · chữ tự do · chủ nhà · tên người — AC-3, AC-6."},
+    {"i": 3, "p": "Lần nhập đã ghi hay chỉ xem thử — AC-4."},
+    {"i": 4, "p": "Ai đọc mẫu: Đầu chủ · Trưởng nhóm · vai khác · sàn khác — AC-4."},
+    {"i": 5, "p": "Máy chủ đang chạy hay trả lỗi lạ — AC-8, AC-9."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc «sửa một ô thì các ô cùng chữ đổi theo» máy đã tự quyết mà không có căn cứ — nay thành Hỏi-2 cho anh, kèm số ô đổi theo hiện trên màn."},
+    {"i": 1, "p": "Bỏ phép đo giá trị là quyết định của anh, không phải máy — nay thành Hỏi-3 kèm ngưỡng đề xuất và tiêu chí đo."},
+    {"i": 2, "p": "Bài chụp màn có thể mượn dữ liệu cũ của lần chấm trước — đã sửa: mỗi lần chụp dùng sàn mới tinh."},
+    {"i": 3, "p": "Chưa kiểm ở tầng máy chủ rằng tên chủ nhà không lọt vào mẫu — đã thêm ca kiểm."},
+    {"i": 4, "p": "Chưa rõ cột ghi chú tự do có được học không — đã chốt: không học, có ca kiểm."}
+  ]
+}
