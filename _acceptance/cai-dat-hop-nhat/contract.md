@@ -5,7 +5,7 @@ slug: cai-dat-hop-nhat
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: _acceptance/cai-dat-hop-nhat/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -89,6 +89,13 @@ bằng mục sửa đổi: vỏ 31/10, Tham chiếu §9, ADR-0024 (`design.md` �
 ## Notes
 
 - Lựa chọn máy đã quyết: `design.md` §6; sổ quyết định dòng S1.
+- Ngoài-1 (đăng xuất lỗi máy chủ, chủ kho chọn mở hợp đồng mới) → dang-nhap-mat-khau, luật 55 (giám sát trả H-19).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-2: Báo mất máy xong mà tải lại danh sách máy lỗi thì màn vẫn hiện danh sách cũ, không báo; tải lại trang thì đúng.
+  - Ngoài-3: Bài kiểm chặn mục sàn chưa thử riêng từng đường vào và thiếu tổ hợp telesales kèm đầu chủ.
+  - Ngoài-4: Bài kiểm câu báo «Mục này chỉ quản trị sàn mở được» chỉ đọc mã, chưa dựng trang có và không có tham số.
+  - Ngoài-5: Bài quét chống chép lại nhãn sáu nhóm ngoài màn Tôi chưa có đối chứng chứng minh nó bắt được vi phạm.
+  - Ngoài-6: Bài kiểm «trên máy này» đọc mã nguồn, chưa dựng dòng thật; dòng hồ sơ hay máy ghi nhầm có thể lọt.
 - Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu máy chủ gặp lỗi lúc đăng xuất, người dùng vẫn thấy mình đã ra màn đăng nhập nhưng tài khoản có thể vẫn còn mở. Trên máy dùng chung, người kế tiếp có thể vào thẳng tài khoản cũ. — `apps/web/src/components/shell/dang-xuat-tren-may.ts`
 - Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sau khi báo mất máy, nếu việc tải lại danh sách máy bị lỗi thì màn vẫn hiện danh sách cũ. Người dùng có thể tưởng các máy kia chưa bị đăng xuất. — `apps/web/src/app/(app)/me/toi-that.tsx`
 - Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm phân quyền mục sàn chưa thật sự thử từng đường vào và thiếu một tổ hợp vai. Nếu sau này có lỗi riêng ở một đường, bài kiểm có thể không bắt được. — `apps/web/src/app/(app)/settings/cai-dat.test.ts`
