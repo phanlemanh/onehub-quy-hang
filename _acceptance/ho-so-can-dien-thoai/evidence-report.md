@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fcec45d72c86dcd8794a35695a8b2e2d6edac45c
+verified_commit: fbf878e456648f509f230ba143dd8d5f6a839616
 human_signoff:
 ---
 
@@ -244,3 +244,7 @@ Panel E15 đề xuất PASS; human_override để trống cho người quyết �
 
 Round 1: E8, E9, E10 failed — nút «Hỏi đầu chủ» chưa dính đáy, dữ liệu dựng cho S4 thiếu, đối chứng ảnh nội bộ và luật lớp phủ chưa đủ. Returned to implementation.
 Round 2: toàn bộ eval PASS trên HEAD fcec45d7 sau bản sửa lượt 1; E2 mang từ round 1 (delta không chạm paths).
+
+### Re-pin lần 1 — 2026-11-04, do gộp main vào nhánh (PR #106)
+run_id: repin-20261104T021027Z-23787
+sha: fbf878e456648f509f230ba143dd8d5f6a839616 · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E6, E7, E8, E9, E10, E15 · diff chạm vật đo ngoài làn máy: E8, E15 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-1, AC-2, AC-6
