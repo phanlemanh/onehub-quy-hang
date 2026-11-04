@@ -22,7 +22,7 @@ import {
   boDong,
   canChonDauChu,
   chonDauChu,
-  coTheChonBuoc,
+  chonBuoc,
   coTheGhi,
   coTheTiep,
   batDauDoc,
@@ -180,7 +180,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
   );
 
   return (
-    <KhungBuoc tieuDe="Nhập Excel" moTa={moTa} nhan="Bảng hàng" buoc={BUOC} hienTai={s.buoc} dangChay={dangDoc || tienDoXem !== null || dangGhi} onChonBuoc={(so) => coTheChonBuoc({ dangDoc, dangXemThu: tienDoXem !== null, dangGhi }) && setS(sangBuoc(s, so))} chan={chan}>
+    <KhungBuoc tieuDe="Nhập Excel" moTa={moTa} nhan="Bảng hàng" buoc={BUOC} hienTai={s.buoc} dangChay={dangDoc || tienDoXem !== null || dangGhi} onChonBuoc={(so) => setS(chonBuoc(s, so, { dangDoc, dangXemThu: tienDoXem !== null, dangGhi }))} chan={chan}>
       {s.buoc === 1 ? (
         <section className="flex flex-col gap-6" aria-label="Tải tệp">
           <Field>

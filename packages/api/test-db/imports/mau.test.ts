@@ -64,6 +64,7 @@ test("mẫu của sàn: chỉ lần đã ghi, mới nhất thắng, cách ly", a
     cot("Trạng thái", "standardStatus", { transform: { name: "status" }, valueMap: { "đã cọc rồi": "Đã cọc" } }),
     cot("SĐT chủ", "ownerPhone", { transform: { name: "phone" }, valueMap: { "0900 000 012": "0900 000 099" } }),
     cot("Tên chủ", "ownerName", { valueMap: { "[Tên chủ mẫu]": "[Tên]" } }),
+    cot("Đầu chủ", "listAgentName", { valueMap: { "[Tên đầu chủ mẫu]": "[Tên]" } }),
   ], "committed", "2026-11-01T01:00:00Z");
   const lan2 = await lanNhap(A.companyId, A.dauChu.userId, [cot("Trạng thái", "keep_as_note")], "committed", "2026-11-03T01:00:00Z");
   await lanNhap(A.companyId, A.dauChu.userId, [cot("Ghi chú", "privateRemarks")], "planned", "2026-11-04T01:00:00Z");
@@ -85,8 +86,9 @@ test("mẫu của sàn: chỉ lần đã ghi, mới nhất thắng, cách ly", a
   assert.ok(theo("SĐT chủ"), "cột nguồn của lần 1 có trong mẫu");
   assert.ok(!("valueMap" in theo("SĐT chủ")!), "cột nguồn không mang bảng quy đổi");
   assert.ok(!("valueMap" in theo("Tên chủ")!), "«ten chu» không mang bảng quy đổi");
+  assert.ok(!("valueMap" in theo("Đầu chủ")!), "«dau chu» (tên người, không lớp nguồn) không mang bảng quy đổi");
   const than = JSON.stringify(ds);
-  for (const v of ["0900 000 0", "[Tên chủ mẫu]"]) assert.ok(!than.includes(v), `thân chứa «${v}»`);
+  for (const v of ["0900 000 0", "[Tên chủ mẫu]", "[Tên đầu chủ mẫu]"]) assert.ok(!than.includes(v), `thân chứa «${v}»`);
   assert.equal(theo("SĐT chủ")?.importId, lan1);
 
   // Đối chứng dương: cột trạng thái của lần 1 (ở sàn khác cùng dữ liệu) giữ bảng quy đổi.

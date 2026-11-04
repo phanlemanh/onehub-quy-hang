@@ -8,7 +8,7 @@ import type { Grid, ImportContext } from "@quy-hang/core/import";
 import { danhMucMau, HOM_NAY } from "../../../../../packages/core/test/import/sinh";
 import { chayOng } from "./duong-ong";
 import { batDauGhi, ghiTiep, laLoi, moLanNhap, xemThuTatCa, type Fetch } from "./goi-api";
-import { coTheChonBuoc, daXemThu, napTep, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
+import { chonBuoc, coTheChonBuoc, daXemThu, napTep, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
 
 const CTX: ImportContext = { today: HOM_NAY, catalog: danhMucMau() };
 const TEP = { ten: "bang-hang.csv", bam: "a".repeat(64), loai: "csv" as const, trang: null };
@@ -16,8 +16,8 @@ const voi = (g: Grid): TrangThaiNhap => napTep(taoTrangThai(["listing_agent"]), 
 
 // Ba ô «đã cọc rồi» ở cột trạng thái, ba ô cùng chữ ở cột ghi chú; thêm cột số chủ, tên chủ, chữ tự do, chưa rõ.
 const LUOI: Grid = [
-  ["Mã căn", "Toà", "Trạng thái", "Ghi chú", "SĐT chủ", "Tên chủ", "Mô tả", "Nhãn"],
-  ["A-01.01", "Toà A", "đã cọc rồi", "đã cọc rồi", "gọi sau", "[Tên chủ mẫu]", "căn góc, view hồ, chủ nhà dễ tính", "x1"],
+  ["Mã căn", "Toà", "Trạng thái", "Ghi chú", "Hướng", "Tên chủ", "Mô tả", "Nhãn"],
+  ["A-01.01", "Toà A", "đã cọc rồi", "đã cọc rồi", "0900 000 011", "[Tên chủ mẫu]", "căn góc, view hồ, chủ nhà dễ tính", "x1"],
   ["A-01.02", "Toà A", "đã cọc rồi", "đã cọc rồi", "0900 000 012", "[Tên chủ mẫu]", "đã cọc rồi, chờ ký", "x2"],
   ["A-01.03", "Toà A", "đã cọc rồi", "đã cọc rồi", "0900 000 013", "[Tên chủ mẫu]", "tầng cao, thoáng mát cả ngày", "x3"],
   ["A-01.04", "Toà A", "đã cọc rồi", "Còn", "0900 000 014", "[Tên chủ mẫu]", "nội thất cơ bản, vào ở ngay", "x4"],
@@ -44,11 +44,15 @@ test("xem trước: sửa ô thành cách gọi của cột", () => {
 
   // Bốn lớp cột không học × sửa một ô: kế hoạch không đổi, chỉ ô ấy đổi.
   const KHONG_HOC: [string, string, string][] = [
-    ["nguồn", "SĐT chủ", "0900 000 099"], // ô «gọi sau» cần người: chỉ lớp cột chặn việc học
+    ["nguồn", "Hướng", "Đông"], // cột lớp nguồn mang đích giá trị đóng, ô «cần người»: chỉ lớp cột chặn việc học
     ["tên người", "Tên chủ", "[Tên]"],
     ["chữ tự do", "Mô tả", "Đã cọc"],
     ["chưa rõ", "Nhãn", "Đã cọc"],
   ];
+  const huong = o.table.headers.indexOf("Hướng");
+  assert.equal(o.lop[huong]!.cls, "source");
+  assert.equal(o.plan.columns[huong]!.target, "directionFaces");
+  assert.equal(o.dong[0]!.cells[huong]!.mark, "needs_person");
   let so = 0;
   for (const [lop, h, moi] of KHONG_HOC) {
     const i = o.table.headers.indexOf(h);
@@ -69,18 +73,22 @@ test("thanh bước: khoá khi máy chủ đang chạy", () => {
     ["đang xem thử", { dangDoc: false, dangXemThu: true, dangGhi: false }],
     ["đang ghi", { dangDoc: false, dangXemThu: false, dangGhi: true }],
   ] as const;
+  const RANH = { dangDoc: false, dangXemThu: false, dangGhi: false };
   let so = 0;
   for (const [ten, chay] of CHAY)
     for (const dich of [1, 2]) {
-      assert.equal(coTheChonBuoc(chay), false, `${ten}: bước ${dich} không được chọn`);
+      assert.equal(coTheChonBuoc(s, dich, chay), false, `${ten}: bước ${dich} không được chọn`);
+      assert.equal(chonBuoc(s, dich, chay).buoc, 3, `${ten}: bấm bước ${dich} vẫn ở bước 3`);
       so++;
     }
-  assert.equal(coTheChonBuoc({ dangDoc: false, dangXemThu: false, dangGhi: false }), true);
-  assert.equal(sangBuoc(s, 2).buoc, 2);
+  // Đối chứng dương qua cùng cổng: rảnh thì bước đã qua chọn được và trạng thái sang đúng bước ấy; bước chưa tới thì không.
+  assert.equal(coTheChonBuoc(s, 2, RANH), true);
+  assert.equal(chonBuoc(s, 2, RANH).buoc, 2);
+  assert.equal(chonBuoc(s, 4, RANH).buoc, 3, "bước chưa tới không chọn được");
   so += 2;
   assert.equal(so, 8);
   const man = readFileSync(new URL("../../app/(app)/imports/new/man-nhap.tsx", import.meta.url), "utf8");
-  assert.match(man, /onChonBuoc=\{\(so\) => coTheChonBuoc\(/, "màn phải chặn thanh bước qua coTheChonBuoc");
+  assert.match(man, /onChonBuoc=\{\(so\) => setS\(chonBuoc\(s, so, \{ dangDoc, dangXemThu: tienDoXem !== null, dangGhi \}\)\)\}/, "màn phải chặn thanh bước qua chonBuoc với đủ ba cờ chạy");
 });
 
 test("gọi API: thân lỗi không phải chuỗi vẫn là lỗi", async () => {

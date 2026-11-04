@@ -42,9 +42,10 @@ export const TRUONG_CACH_GOI: readonly StandardField[] = ["standardStatus", "fee
 export const hocCachGoi = (cls: ColumnClass | undefined, target: PlanTarget): boolean =>
   cls !== undefined && LOP_HOC_DUOC.includes(cls) && isStandardField(target) && TRUONG_CACH_GOI.includes(target);
 
-/** Bảng quy đổi được nhớ chỉ khi đích là trường chuẩn không thuộc lớp nguồn. */
+/** Bảng quy đổi được nhớ chỉ khi đích là trường giá trị đóng (cùng luật với việc học ở màn): không nguồn, không tên người
+ *  (Đầu chủ), không số của từng căn — bộ nhớ không giữ giá trị nào ngoài cách gọi của danh sách đóng. */
 function nhoBangQuyDoi(target: PlanTarget): boolean {
-  return isStandardField(target) && FIELD_CLASS[target] !== "source";
+  return isStandardField(target) && FIELD_CLASS[target] !== "source" && TRUONG_CACH_GOI.includes(target);
 }
 
 /** Rút mẫu từ một kế hoạch đã ghi. `headers` là tiêu đề của lần nhập (bảng `imports.header_row`), cùng thứ tự với cột. */

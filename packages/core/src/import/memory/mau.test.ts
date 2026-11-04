@@ -122,25 +122,29 @@ const validate = (p: ImportPlan, t: Table) => validatePlan(p, t);
 
 test("nhớ mẫu: mẫu không mang giá trị nguồn, tên người", () => {
   const t = readTable([
-    ["SĐT chủ", "Tên chủ", "Giá đáy", "Trạng thái"],
-    ["0900000012", "[Tên chủ mẫu]", 3100000000, "đã cọc rồi"],
-    ["0900 000 013", "[Tên chủ mẫu]", 3200000000, "Còn"],
+    ["SĐT chủ", "Tên chủ", "Giá đáy", "Đầu chủ", "Trạng thái"],
+    ["0900000012", "[Tên chủ mẫu]", 3100000000, "[Tên đầu chủ mẫu]", "đã cọc rồi"],
+    ["0900 000 013", "[Tên chủ mẫu]", 3200000000, "[Tên đầu chủ mẫu]", "Còn"],
   ]);
   const tuDien = planFromDictionary(t);
   const plan: ImportPlan = {
     ...tuDien,
     columns: tuDien.columns.map((c) =>
-      c.column === "Trạng thái" ? { ...c, valueMap: { "đã cọc rồi": "Đã cọc" } } : c.column === "Tên chủ" ? { ...c, valueMap: { "[Tên chủ mẫu]": "[Tên]" } } : c,
+      c.column === "Trạng thái"
+        ? { ...c, valueMap: { "đã cọc rồi": "Đã cọc" } }
+        : // Chèn thẳng (đi vòng validatePlan) bảng quy đổi mang giá trị mồi vào mọi cột không được nhớ.
+          { ...c, valueMap: { [String(t.rows[0]!.cells[t.headers.indexOf(c.column)])]: "[Tên]" } },
     ),
   };
   const mau = taoMau(plan, t.headers, { importId: "lan-1", at: "2026-11-01T00:00:00Z" });
-  for (const h of ["SĐT chủ", "Tên chủ", "Giá đáy"]) {
+  assert.equal(tuDien.columns[t.headers.indexOf("Đầu chủ")]!.target, "listAgentName");
+  for (const h of ["SĐT chủ", "Tên chủ", "Giá đáy", "Đầu chủ"]) {
     const c = mau.find((m) => m.headerKey === khoaMau(h))!;
     assert.ok(!("valueMap" in c), `«${h}» không được mang bảng quy đổi`);
   }
   assert.deepEqual(mau.find((m) => m.headerKey === khoaMau("Trạng thái"))!.valueMap, { "đã cọc rồi": "Đã cọc" });
   const chu = JSON.stringify(mau);
-  for (const v of ["0900000012", "0900 000 013", "[Tên chủ mẫu]", "3100000000", "3200000000"]) assert.ok(!chu.includes(v), `mẫu chứa «${v}»`);
+  for (const v of ["0900000012", "0900 000 013", "[Tên chủ mẫu]", "[Tên đầu chủ mẫu]", "3100000000", "3200000000"]) assert.ok(!chu.includes(v), `mẫu chứa «${v}»`);
 });
 
 test("đo mẫu: ba số từ kế hoạch đã lưu", () => {

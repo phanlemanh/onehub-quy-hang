@@ -143,8 +143,12 @@ export const nhanXemThu = (hienTai: TrangThaiNhap, theLucGui: number, xemThu: Xe
 
 export const sangBuoc = (s: TrangThaiNhap, buoc: number): TrangThaiNhap => ({ ...s, buoc });
 
-/** Thanh bước bấm được khi máy chủ không chạy gì — như nút Quay lại (Ngoài-3 Màn Nhập Excel). */
-export const coTheChonBuoc = (chay: { dangDoc: boolean; dangXemThu: boolean; dangGhi: boolean }): boolean => !chay.dangDoc && !chay.dangXemThu && !chay.dangGhi;
+export type DangChay = { dangDoc: boolean; dangXemThu: boolean; dangGhi: boolean };
+/** Thanh bước chọn được một bước đã qua khi máy chủ không chạy gì — như nút Quay lại (Ngoài-3 Màn Nhập Excel). */
+export const coTheChonBuoc = (s: TrangThaiNhap, so: number, chay: DangChay): boolean =>
+  !chay.dangDoc && !chay.dangXemThu && !chay.dangGhi && so >= 1 && so < s.buoc;
+/** Bấm một bước trên thanh bước: sang bước ấy khi được, còn không giữ nguyên. */
+export const chonBuoc = (s: TrangThaiNhap, so: number, chay: DangChay): TrangThaiNhap => (coTheChonBuoc(s, so, chay) ? sangBuoc(s, so) : s);
 
 /** Các dòng gửi máy chủ: ô thô (đã sửa) theo đúng thứ tự tiêu đề; dòng bỏ mang `skip`; Trưởng nhóm gắn đầu chủ. */
 export function goiDong(s: TrangThaiNhap): GoiDong[] {
