@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b7e3f29c13752f614c3ffc788f44b7269e4c0b1a
+verified_commit: 444d9cc80df42839a2e84d24e3ef5122656a20ec
 human_signoff: Manh Phan 2026-11-04
 ---
 
@@ -217,3 +217,7 @@ none — moi eval chay mot lan, deterministic, khong co pass_rate hon hop.
 
 Round 1: E10, E10b failed (ghim khuôn lệch bản đã commit), E11 kẹt tải lần đầu. Returned to implementation.
 Round 2: ghim lại bản đồ khuôn theo bản đã commit, kịch bản E11 mở lại trang khi máy dev kẹt; mọi eval và lệnh suite xanh, verdict PASS.
+
+### Re-pin lần 1 — 2026-11-04, do gộp main sau chữ ký (xung đột bảng đếm, luật 51)
+run_id: repin-20261104T134249Z-58342
+sha: 444d9cc80df42839a2e84d24e3ef5122656a20ec · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E11
