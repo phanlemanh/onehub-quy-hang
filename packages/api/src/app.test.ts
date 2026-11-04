@@ -104,6 +104,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/leads/{leadId}/phone-reveal",
     // Hàng 30: gọi từ máy tính.
     "POST /api/v1/leads/{leadId}/phone-dial",
+    // Hàng 34: khách đang mở của đầu khách cho màn Gửi.
+    "GET /api/v1/prospects",
     // Hàng ghi-thiet-bi-va-mat-mang: lượt mất mạng của bộ đồng bộ.
     "POST /api/v1/sync/offline-sessions",
     // Hàng 43 (phat-hang): lần xuất bảng hàng.

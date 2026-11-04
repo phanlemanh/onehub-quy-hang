@@ -19,10 +19,14 @@
     "./redaction": "./src/redaction/index.ts",
     "./sharing": "./src/sharing/index.ts",
     "./export": "./src/export/index.ts",
+    "./config": "./src/config/index.ts",
     "./thiet-bi": "./src/thiet-bi/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
     "test": "node --import tsx --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
   }
 }

@@ -73,7 +73,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Từ điển giá trị | `company_value_aliases` *(đề xuất)* | Cách viết riêng của sàn neo vào giá trị chuẩn («BP» → Bao phí); học từ lựa chọn của người, quản trị sàn duyệt | — |
 | Xử lý bằng AI | `ai_processing` *(đề xuất)* | Loại kết nối: gửi hồ sơ cột đã che cho nhà cung cấp AI lập kế hoạch nhập; sàn bật / tắt; không bao giờ mở lớp nguồn | «Tích hợp AI» |
 | Cấu hình sàn | `company_settings` *(đề xuất)* | Giá trị sàn đặt cho một điểm sàn chỉnh được; sàn chưa đặt thì nhận mặc định dựng sẵn; mỗi lần đổi là một sự kiện ghi người và vai (ADR-0018) | «Tuỳ biến» |
-| Điểm sàn chỉnh được | `config key` *(đề xuất)* | Một dòng của sổ điểm biến thiên: khoá, kiểu, mặc định, khoảng, ai đổi, hiệu lực, lớp dữ liệu (`docs/architecture/so-diem-bien-thien.md`) | — |
+| Điểm sàn chỉnh được | `DiemSo` (sổ: `SO_DIEM`, `packages/core/src/config/so.ts`) | Một dòng của sổ điểm biến thiên: khoá, kiểu, mặc định, khoảng, ai đổi, hiệu lực, lớp dữ liệu (`docs/architecture/so-diem-bien-thien.md`); sổ ở mã và sổ ở tài liệu khớp nhau bằng bộ kiểm của lõi | — |
 
 ## Chọn chữ
 
