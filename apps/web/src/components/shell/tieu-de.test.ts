@@ -38,7 +38,7 @@ describe("tiêu đề vỏ điện thoại", () => {
       ["/me", "Tôi"],
       ["/leads/new", "Lead"],
       ["/imports/new", "Nhập Excel"],
-      ["/exports/new", "Phát hàng"],
+      ["/exports/new", "Xuất bảng hàng"],
       ["/viewings", "Lịch xem"],
     ];
     for (const [d, t] of TRANG) assert.equal(titleOf(d, "today"), t, `đường ${d}`);

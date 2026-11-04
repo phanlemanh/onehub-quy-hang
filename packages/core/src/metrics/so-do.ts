@@ -10,6 +10,7 @@ import { goiDieuChinhGia, maCanTuDien, mucDuCaoNhat, trangThaiTaiDen, xacNhanTro
 import type { DauVaoSoDo, DongSoDo, GiaTriSoDo, MetricCode } from "./kieu";
 import { leadTrungBiChan, thoiLuongLead } from "./lead";
 import { matMangDienThoai, thietBiTheoVai } from "./thiet-bi";
+import { soLanXuat } from "./xuat";
 
 export function tinhSoDo(v: DauVaoSoDo): DongSoDo[] {
   const ky: Ky = { tu: Date.parse(v.tu), den: Date.parse(v.den) };
@@ -24,6 +25,8 @@ export function tinhSoDo(v: DauVaoSoDo): DongSoDo[] {
     lead_to_ready: () => thoiLuongLead(v.lead, ky, (l) => l.boardAt, "ngay"),
     duplicate_leads_blocked: () => leadTrungBiChan(v.lead, ky),
     price_adjustment_calls: () => goiDieuChinhGia(v.hang, ky, v.nguongDieuChinhGia),
+    // Vắng `lanXuat` là rỗng, như `matMang`: sự kiện xuất đã có từ hàng 43, «chưa có sự kiện» chỉ dành cho mã chưa có nguồn.
+    sheet_publishes: () => soLanXuat(v.lanXuat ?? [], ky),
     actions_by_device_role: () => thietBiTheoVai(v.hang, ky),
     mobile_offline: () => matMangDienThoai(v.hang, v.matMang ?? [], ky),
   };
