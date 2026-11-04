@@ -29,7 +29,7 @@ thiết bị; «căn mồi» = `canMoi()` của hàng 31.
 
 ## Criteria
 
-- **AC-1** (cross-layer) — Given đầu khách đã chọn n căn «Đang bán» trên Bảng hàng thẻ, When nhìn đáy màn, Then thấy thanh
+- **AC-1** — Given đầu khách đã chọn n căn «Đang bán» trên Bảng hàng thẻ, When nhìn đáy màn, Then thấy thanh
   dính đáy «n căn · Xem trước · Gửi»; bấm Gửi hay Xem trước mở `/shares/new?can=<id…>` với đúng các căn theo thứ tự chọn,
   Xem trước mở thẳng ngăn xem trước; bỏ chọn hết thì thanh biến mất.
 - **AC-2** (cross-layer) — Given đầu khách mở màn Gửi, When chọn «Khách riêng», Then danh sách chỉ gồm các nhu cầu khách
