@@ -5,10 +5,10 @@ slug: da-gui
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-04-da-gui-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-04
 ---
 
 # Acceptance Contract: da-gui
