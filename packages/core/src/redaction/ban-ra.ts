@@ -3,6 +3,7 @@
  * chỉ chép khoá có trong danh sách được ra của người nhận — khoá nào không có trong danh sách thì không ra, kể cả khoá
  * thêm sau này. Cấu hình của sàn chỉ chọn cách hiện TRONG trần, không mở trường nội bộ nào.
  */
+import { macDinhBool } from "../config/giai";
 import { freshness } from "../listing/freshness";
 import type { StandardStatus } from "../listing/status";
 import { anhRaNgoai, nhanAnh } from "../photos";
@@ -11,7 +12,10 @@ import type { CanNoiBo, KhoaCanNoiBo } from "./lop-truong";
 
 /** Sổ điểm biến thiên A4: #12 `customer_page.show_confirmed_age`, #13 `customer_page.private_hides_unit_number`. */
 export type CauHinhRa = { showConfirmedAge: boolean; privateHidesUnitNumber: boolean };
-export const CAU_HINH_MAC_DINH: CauHinhRa = { showConfirmedAge: true, privateHidesUnitNumber: true };
+export const CAU_HINH_MAC_DINH: CauHinhRa = {
+  showConfirmedAge: macDinhBool("customer_page.show_confirmed_age"),
+  privateHidesUnitNumber: macDinhBool("customer_page.private_hides_unit_number"),
+};
 /** Mọi khoá về phía hiện nhiều nhất — bộ kiểm rò rỉ chạy cả trên cấu hình này (ADR-0018 quyết định 6). */
 export const CAU_HINH_MO_NHAT: CauHinhRa = { showConfirmedAge: true, privateHidesUnitNumber: false };
 export const CAU_HINH_TAT_CA: readonly CauHinhRa[] = [true, false].flatMap((showConfirmedAge) =>
