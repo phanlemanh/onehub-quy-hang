@@ -5,10 +5,10 @@ slug: dang-nhap-auth-15
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: draft
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-auth-15-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-04
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: dang-nhap-auth-15
@@ -45,9 +45,9 @@ Source input: hàng 93 của `docs/plan/lo-trinh.json` · ô cơ hội `_accepta
 - AC-6: Given cây sau hàng này, When chạy kiểm kiểu, lint (luật `quy-hang-ui`, mức nợ 0, kiểm chuẩn), quét khuôn nhóm
   `xac-thuc` và sàn thiết kế M1, Then đều xanh, không dòng «lệch:» nào cho ba màn.
 - AC-7: Given sổ thiết kế sau hàng này so với nhánh chính, When kiểm chuẩn đọc nó, Then dòng «Chỗ hở» «Đăng nhập, chọn
-  sàn, chưa gắn sàn (tạm)» có ở nhánh chính và không còn ở nhánh này (bảng Chỗ hở bớt đúng một dòng, còn 12), cảnh báo hạn
-  còn đúng hai («Ô nhận lead», «Trống · lỗi · báo»), bảng «Khối đã chuyển thể» của `catalog.md` có dòng `@reui/auth-15` đủ
-  chín ô không rỗng với ảnh chuẩn có trong kho, và `khung.tsx` mang chú thích «chuyển thể … auth-15».
+  sàn, chưa gắn sàn (tạm)» có ở nhánh chính và không còn ở nhánh này (bảng Chỗ hở bớt đúng một dòng, còn 11), kiểm chuẩn
+  không còn cảnh báo hạn nào và không cảnh báo nào nhắc «Đăng nhập», bảng «Khối đã chuyển thể» của `catalog.md` có dòng
+  `@reui/auth-15` đủ chín ô không rỗng với ảnh chuẩn có trong kho, và `khung.tsx` mang chú thích «chuyển thể … auth-15».
 - AC-8: Given ba màn ở chế độ tối (1440 và 375) và bước mã ở khổ 375, When hiện, Then chữ, ô, nút và lỗi đọc được trên
   nền tối và không màn nào cuộn ngang.
 
@@ -73,7 +73,9 @@ Ngưỡng của ô cơ hội: «Ba màn đăng nhập, chọn sàn, chưa gắn 
 
 - Thước: ba màn trên khuôn Khung theo auth-15, không OAuth · số từ: E1, E3, E4, E6 · bảo đảm bởi: AC-1, AC-3, AC-4, AC-6
 - Thước: không đổi tệp nào dưới packages/api/src/auth · số từ: E5 · bảo đảm bởi: AC-5
-- Thước: Chỗ hở rời §3, bớt đúng một cảnh báo hạn · số từ: E9, E10, E13 · bảo đảm bởi: AC-7
+- Thước: Chỗ hở rời §3, bớt đúng một cảnh báo hạn · số từ: E9, E10, E13 · bảo đảm bởi: AC-7 (từ 04/11 hàng 34 đổi hạn
+  dòng Đăng nhập sang điều kiện nên nó thôi cảnh báo trước hàng này; thước đo phần còn lại: dòng rời bảng, bảng bớt đúng
+  một dòng, không cảnh báo nào nhắc Đăng nhập)
 
 ## Out of scope
 

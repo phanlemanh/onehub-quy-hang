@@ -93,7 +93,7 @@ evals:
     criterion: AC-7
     executor: test
     cmd: config:executors.test.ui_lint
-    expected: "exit 0; ca «chỗ hở: cây thật đủ năm ô cho 12 dòng» assert bảng Chỗ hở của vo-va-ia.md §3 có đúng 12 dòng và không dòng nào bắt đầu «Đăng nhập, chọn sàn, chưa gắn sàn»; ca «chỗ hở: cây thật có hai cảnh báo chỗ tạm» assert đúng hai cảnh báo hạn, mỗi «Ô nhận lead» và «Trống · lỗi · báo» một cái, và không cảnh báo nào nhắc «Đăng nhập»."
+    expected: "exit 0; ca «chỗ hở: cây thật đủ năm ô cho 11 dòng» assert bảng Chỗ hở của vo-va-ia.md §3 có đúng 11 dòng và không dòng nào bắt đầu «Đăng nhập, chọn sàn, chưa gắn sàn»; ca «chỗ hở: cây thật không còn cảnh báo chỗ tạm» assert kiểm chuẩn không cảnh báo hạn nào, kèm đối chứng ngày 2099-01-01 vẫn không cảnh báo «Đăng nhập» hay «Ô nhận lead»."
     paths: ["packages/ui-lint/**", "docs/design/vo-va-ia.md"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
