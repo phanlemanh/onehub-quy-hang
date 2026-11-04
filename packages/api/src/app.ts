@@ -20,6 +20,7 @@ import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
+import { registerSyncRoutes } from "./sync/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
 import type { PushSender } from "./push/gui";
 import { chanMayBiBao } from "./auth/may-bi-bao";
@@ -177,6 +178,7 @@ export function createApi(deps: ApiDeps) {
   registerPushRoutes(api, deps);
   registerDeviceRoutes(api, deps);
   registerPhotoRoutes(api, deps, deps.khoAnh);
+  registerSyncRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",
