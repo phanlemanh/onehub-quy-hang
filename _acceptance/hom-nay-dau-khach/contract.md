@@ -5,7 +5,7 @@ slug: hom-nay-dau-khach
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-hom-nay-dau-khach-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -82,3 +82,5 @@ một AC (AC-2, AC-3, AC-4) có ca link đã tắt; mỗi đích chạm có dòn
 - Phần nối vào `/today/page.tsx` và `vungTheoVai` chờ hàng 92 gộp (hàng 37 «sau: 36, 92»). Eval E6b (chụp vùng trên `/today`) chạy sau khi phần nối có; lớp chọn vùng theo vai đo riêng ở E1b.
 - Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Ảnh minh hoạ vùng Đầu khách trên điện thoại chỉ cho thấy hai loại tin, tin «Khách phản ứng» có thể nằm dưới phần bị cắt. Người dùng không gặp lỗi gì; chỉ là bằng chứng chụp chưa đủ để chứng minh ba loại tin cùng hiện. — `_acceptance/hom-nay-dau-khach/evidence/E6b-step1.png`
 - Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Hiếm khi mạng hoặc máy chủ trung gian trả về nội dung hỏng, vùng Đầu khách ở Hôm nay sẽ hiện khung chờ mãi, không báo lỗi và không có nút thử lại. Người dùng phải tự tải lại trang. — `apps/web/src/app/(app)/today/buyer/vung.tsx`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-3: Ở ca hiếm máy chủ báo thành công nhưng nội dung hỏng, vùng Đầu khách hiện khung chờ mãi; đầu khách tải lại trang là hết.
