@@ -16,6 +16,9 @@ export type LeadVao = LeadStageFacts & { id: string; createdAt: string; unitNumb
 /** Một lượt mất mạng bộ đồng bộ trên máy gửi về: từ lúc mất tới lúc có mạng lại, kèm số thao tác chờ gửi trong lượt. */
 export type LuotMatMang = { device: "desktop" | "mobile"; startedAt: string; endedAt: string; queuedOps: number };
 
+/** Một lần xuất bảng hàng (hàng 43), như bảng `exports` giữ: chỉ lúc xuất — không kèm bộ lọc, kênh hay nội dung. */
+export type LanXuat = { createdAt: string };
+
 export type DauVaoSoDo = {
   /** ISO 8601 — kỳ đo nửa mở `[tu, den)`. */
   tu: string;
@@ -29,6 +32,8 @@ export type DauVaoSoDo = {
   nguongDieuChinhGia?: number;
   /** Lượt mất mạng của sàn, như `offline_sessions` giữ; vắng là rỗng. */
   matMang?: readonly LuotMatMang[];
+  /** Lần xuất bảng hàng của sàn (hàng 43); vắng là rỗng — như `matMang`, nguồn đã có thì kỳ không có lần nào ra 0. */
+  lanXuat?: readonly LanXuat[];
 };
 
 export const METRIC_CODES = [

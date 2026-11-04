@@ -31,7 +31,6 @@ export const DANH_SACH_SO_DO: readonly MucDanhSach[] = [
     o: "Số lần xuất bảng hàng; số link khách mở, số lượt quan tâm",
     manh: "Số lần xuất bảng hàng",
     traLoi: PHAT_RA,
-    thieu: "Chưa có sự kiện lần xuất bảng hàng (xuất bảng hàng, hàng 43).",
   },
   {
     ma: "customer_link_opens",
