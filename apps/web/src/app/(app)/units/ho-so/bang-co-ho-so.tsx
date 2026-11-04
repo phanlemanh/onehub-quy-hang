@@ -43,7 +43,7 @@ export function HoSoDienThoai({ nguoi, san, bao }: { nguoi: string; san: string;
   const dienThoai = useIsMobile();
   if (!chon || !dienThoai) return bao;
   return (
-    <KhungHoSoCan>
+    <KhungHoSoCan nhung>
       <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} />
     </KhungHoSoCan>
   );

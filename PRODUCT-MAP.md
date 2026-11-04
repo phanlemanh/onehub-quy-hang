@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>21 việc"]
+  GD --> B["Sắp mở vòng<br/>20 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>20 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>51 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>52 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -28,7 +28,6 @@ flowchart TD
 - Đầu khách mở Đã gửi và thấy từng link: lượt khách mở, căn được quan tâm, căn vừa đổi kèm «Gợi ý căn thay»; tắt được link (`da-gui`)
 - Người trong sàn đăng nhập trên một thẻ theo khối auth-15: chỉ mã một lần qua email, không nút Google, Apple hay GitHub, giữ chân điều khoản; chọn sàn và chưa gắn sàn đi cùng khuôn; luồng đăng nhập, phiên và luật vào đúng sàn của hàng 6 giữ nguyên (`dang-nhap-auth-15`)
 - Trưởng nhóm tích nhiều căn trên Bảng hàng rồi đổi đầu chủ một lần: chọn từ danh sách thành viên mang vai Đầu chủ của sàn, hộp hỏi kể đủ căn và người giữ cũ, đổi đầu chủ của hàng thì đổi luôn người giữ liên hệ chủ nhà theo luật một chủ một đầu chủ, hoàn tác được (`doi-dau-chu-hang-loat`)
-- Đầu khách mở hồ sơ căn trên điện thoại và thấy giá, ảnh gửi được, lần xác nhận gần nhất; phần chủ nhà thay bằng «Liên hệ đầu chủ» (`ho-so-can-dien-thoai`)
 - Đầu chủ mở Hôm nay trên điện thoại, gọi lại một chạm và ghi kết quả bằng một tay (`hom-nay-dau-chu-dien-thoai`)
 - Đầu khách mở Hôm nay trên điện thoại và thấy khách vừa phản ứng, căn đã gửi vừa đổi, căn mới lên bảng khớp các bộ đã gửi (`hom-nay-dau-khach`)
 - Trưởng nhóm mở Hôm nay và thấy lead quá hạn để chia lại, hàng cũ theo từng đầu chủ, và ngoại lệ máy không tự quyết được (`hom-nay-truong-nhom`)
@@ -70,6 +69,7 @@ flowchart TD
 - Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá (`goi-ep-gia-dot-hai`)
 - Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
 - Mọi màn sau đăng nhập chọn một trong bảy bố cục có tên với sáu vùng chuẩn, chờ tải theo hình bố cục, rỗng · lỗi · ngoại tuyến một luật, ba khổ và một menu Tạo trên vỏ; trang mẫu sống không cần cơ sở dữ liệu hay đăng nhập cho ảnh chuẩn để đối chiếu màn mới; răng lint và bản đồ hệ thiết kế giữ luật (`he-bo-cuc`)
+- Đầu khách mở hồ sơ căn trên điện thoại và thấy giá, ảnh gửi được, lần xác nhận gần nhất; phần chủ nhà thay bằng «Liên hệ đầu chủ» (`ho-so-can-dien-thoai`)
 - Đầu chủ mở app vào Hôm nay và thấy các hàng đợi của mình theo bộ nhóm của sàn — mặc định lead mới, nên gọi ép giá, cần gọi lại, thiếu thông tin, mới đổi — mỗi căn ở đúng một hàng đợi, lý do bằng chữ, ghi kết quả gọi một chạm; sàn tự định nghĩa nhóm từ bộ điều kiện đóng (`hom-nay-dau-chu`)
 - Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi (`khu-va-loai-hinh`)
 - Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
