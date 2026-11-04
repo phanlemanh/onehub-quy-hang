@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: e69a93be821def0ef0e6189acfe27d8f499d812b
+verified_commit: 9f11468ccab053007af8814c8ca52b467f047228
 human_signoff:
 ---
 
@@ -249,3 +249,7 @@ Round 2: E7 và E9 chạy lại, cùng qua; 12 eval còn lại carry-forward t�
 ### Re-pin lần 1 — 2026-11-04, do gộp nhánh chính vào nhánh trước khi mở PR hàng 93
 run_id: repin-20261104T090121Z-81487
 sha: e69a93be821def0ef0e6189acfe27d8f499d812b · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E1, E2, E3, E11 · AC không có chốt máy: AC-1, AC-2, AC-3, AC-8
+
+### Re-pin lần 2 — 2026-11-04, do gộp nhánh chính lần hai trước khi gộp PR #116
+run_id: repin-20261104T091805Z-18299
+sha: 9f11468ccab053007af8814c8ca52b467f047228 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E1, E2, E3, E11 · AC không có chốt máy: AC-1, AC-2, AC-3, AC-8
