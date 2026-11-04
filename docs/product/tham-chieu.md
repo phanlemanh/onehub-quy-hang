@@ -74,7 +74,7 @@ Hai kết nối trên là thoả thuận đang bật, không phải dây cứng:
 | Nhu cầu khách | Một đầu khách phục vụ một khách (RESO `Prospecting`): liên hệ của khách (loại Người mua · Người thuê), tên khách đầu khách gõ, Mua · Thuê · Cả hai, tiêu chí `SubdivisionName` · `BuildingName` · `BedroomsTotalMin` · `LivingAreaMin` · `ListPriceMax` · `LeaseAmountMax` · `Note`; mở ghi «khách hỏi» | Đầu khách giữ + trưởng nhóm | Khách hai số là một người; đầu khách không đọc liên hệ (liên hệ vừa là chủ trọn lớp nguồn); trưởng nhóm chuyển khách thì Lần gửi đi theo, công vẫn của người gửi; lịch xem khi dựng gắn nhu cầu khách |
 | Góc nhìn | Bộ lọc + cột + cách xem đã lưu | Người hoặc cả đội | Thay các tab của Sheet |
 | Tin rao ngoài | Tin công khai Invest thu được, đã khớp căn | Chỉ đọc, chỉ đầu chủ thấy | Đối chiếu, không phát ra |
-| Cấu hình sàn | Cách gọi riêng, trường riêng, trạng thái riêng, luật chia lead, thuế phí, mẫu | Sàn | Mọi thay đổi vào nhật ký, không sửa số đã lưu |
+| Cấu hình sàn | Cách gọi riêng, trường riêng, trạng thái riêng, luật chia lead, thuế phí, mẫu | Sàn | Mọi thay đổi vào nhật ký (mỗi lần đổi một sự kiện chỉ thêm ghi người và vai — hàng 82), không sửa số đã lưu |
 
 **Căn và lần rao tách theo nhịp đổi.** Thuộc tính căn (diện tích, phòng ngủ, hướng, vị trí tách từ mã) gần như không đổi. Phần của lần rao (giá + điều kiện phí, nội thất, pháp lý, tài chính, tình trạng sử dụng, đầu chủ, mức hiển thị, ghi chú) đổi hằng tuần. Độ tươi, mức đủ thông tin và lịch sử trả giá đều tính từ sự kiện, không ai phải điền.
 
@@ -379,6 +379,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 04/11 | Đổi nhãn nút «Phát hàng» thành «Xuất bảng hàng» (chủ kho, Cổng Phạm vi hàng 43): nút trên bảng hàng và menu Tạo, từ vựng, số đo «Số lần xuất bảng hàng»; «phát hàng» vẫn là tên khối sản phẩm thứ ba (ADR-0022); tên trong mã giữ `export`, `sheet_publishes` | `_acceptance/phat-hang/` |
 | 04/11 | Sổ điểm biến thiên ở mã: 30 điểm sàn chỉnh được khai một chỗ ở `packages/core/src/config/` (khoá, kiểu, mặc định, khoảng, vai, hiệu lực, lớp), khớp hai chiều với sổ ở tài liệu bằng bộ kiểm của lõi; luật nhận cấu hình làm tham số, hằng số đang có lấy số từ sổ. Khoảng viết bằng chữ chốt theo Hỏi-1: thuế, lệ phí chỉ đúng số luật tới hàng 49; trần AI 0–10 USD tới hàng 68; mức chia trống tới hàng 44; tự nhận từ điển mặc định tắt | Hàng 81 `so-diem-bien-thien`, ADR-0018, [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md) |
 | 04/11 | Hôm nay của trưởng nhóm (máy tính, bố cục Bảng điều khiển): ba ô Lead quá hạn · Ngoại lệ (lead chưa chia được) · Hàng cũ (căn cần gọi lại, chỉ căn toàn sàn); hàng đợi lead quá hạn giao lại một nút; bảng theo đầu chủ. Phạm vi cả sàn (chưa có Nhóm). Người hai vai thấy bảng điều khiển trên, hàng đợi của mình dưới. Điện thoại: một dòng «mở trên máy tính» | Hàng 42 `hom-nay-truong-nhom`, ADR-0024 |
+| 04/11 | Cấu hình theo sàn có nhật ký: một lối đọc cho mọi thành viên và một lối đổi nguyên khối cho quản trị sàn; mỗi lần đổi — qua bất kỳ lối nào — một sự kiện chỉ thêm ghi người và vai, cấu hình có từ trước được ghi bù; cơ sở dữ liệu chặn lớp nguồn. Cặp hạn trái luật không áp im lặng: đổi một nửa bị từ chối; dòng trái luật có sẵn thì chia lead theo mặc định 15/30 và báo ở lối đọc (chủ kho chọn ở Cổng Phạm vi) | Hàng 82 `cau-hinh-theo-san`, ADR-0018, luật đợt 46 |
 
 ## 13. Chỗ cần chốt
 

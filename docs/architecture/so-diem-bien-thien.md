@@ -24,6 +24,13 @@ phép», là đề xuất của phiên này, chốt ở Cổng Phạm vi của h
 | Tình trạng | **Mở** — Tham chiếu đã chốt là mặc định của sàn · **Đề xuất** — ADR đề xuất, chờ Cổng Phạm vi · **Ứng viên** — chưa mở, chờ điều kiện (ADR-0018 quyết định 7) · **Khoá** — khai để biết là không mở |
 | Màn | Hàng lộ trình đưa màn chỉnh điểm ấy; `—` là chưa có màn, sàn nhận mặc định |
 
+**Đọc và đổi (hàng 82).** `GET /api/v1/company/settings` trả mọi điểm giá trị đơn đã mở (không `map`, không họ khoá)
+cho mọi thành viên sàn, kèm lỗi của dòng hỏng; `PATCH /api/v1/company/settings` đổi một hay nhiều điểm nguyên khối, vai
+theo cột «Ai đổi». Mỗi lần ghi `company_settings` — qua lối chung hay lối riêng của #1–#3a, #36 — thêm một sự kiện chỉ
+thêm vào `company_settings_events` (khoá, giá trị, lớp, người, vai, lúc; trigger của migration 026). Ràng buộc «không nhỏ
+hơn» xét hai chiều: đổi một nửa làm cặp trái luật thì bị từ chối nêu hai khoá; dòng trái luật có sẵn thì cả cặp về mặc
+định và lỗi hiện ở lối đọc (luật đợt 46).
+
 ## A. Điểm mở và đề xuất
 
 ### A1. Lead — luật 20, hàng 25, 48

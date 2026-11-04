@@ -76,8 +76,11 @@ test("kiemGiaTri: hai điểm và hai biên mọi khoá giá trị đơn", () =>
     if (d.coTheTrong) nhan.push(null);
     else tuChoi.push(null);
     // Ràng buộc chéo («không nhỏ hơn» khoá khác) xét với khoá kia ở biên dưới — để biên của chính khoá này đo được.
+    // Chiều ngược: khoá được khoá khác trỏ tới xét với khoá kia ở biên trên.
     const goc = d.khongNhoHon;
-    const dangAp = goc ? { [goc]: (SO_DIEM.find((x) => x.khoa === goc)!.kieu as { min: number }).min } : {};
+    const bien = (khoa: string, b: "min" | "max") => (SO_DIEM.find((x) => x.khoa === khoa)!.kieu as { min: number; max: number })[b];
+    const dangAp: Record<string, number> = goc ? { [goc]: bien(goc, "min") } : {};
+    for (const phu of SO_DIEM.filter((x) => x.khongNhoHon === d.khoa)) dangAp[phu.khoa] = bien(phu.khoa, "max");
     for (const v of nhan) {
       const kq = kiemGiaTri(goi, v, dangAp);
       assert.equal(kq.ok, true, `${goi} phải nhận ${JSON.stringify(v)}: ${kq.ok ? "" : kq.loi}`);

@@ -86,24 +86,40 @@ export function khuonCua(d: DiemSo): z.ZodTypeAny | null {
 
 export type KetQuaKiem = { ok: true; khoa: string; giaTri: unknown } | { ok: false; khoa: string; loi: string };
 
+/** Lỗi của một cặp `khongNhoHon` trái luật — luôn nêu cả hai khoá. */
+export function loiCap(phu: string, vPhu: number, goc: string, vGoc: number): string {
+  return `${phu} không nhỏ hơn ${goc}: ${phu} = ${vPhu} < ${goc} = ${vGoc}`;
+}
+
 /**
  * Kiểm một giá trị sàn gửi cho một khoá. `cauHinh` là cấu hình đang áp của sàn (khoá → giá trị), dùng cho ràng buộc chéo
- * như «hạn gọi không nhỏ hơn hạn nhận»; vắng thì so với mặc định của sổ.
+ * như «hạn gọi không nhỏ hơn hạn nhận»; vắng thì so với mặc định của sổ. `cheo: false` chỉ kiểm khuôn và khoảng — cho
+ * bộ giải xét cặp trên cấu hình cuối.
  */
 export function kiemGiaTri(
   khoa: string,
   giaTri: unknown,
   cauHinh: Readonly<Record<string, unknown>> = {},
   so: readonly DiemSo[] = SO_DIEM,
+  cheo = true,
 ): KetQuaKiem {
   const d = timDiem(khoa, so);
   if (!d) return { ok: false, khoa, loi: `${khoa}: không có trong sổ điểm biến thiên` };
   const khuon = khuonCua(d);
   if (!khuon) return { ok: false, khoa, loi: `${khoa}: có bảng riêng, không đổi qua giá trị đơn` };
   if (!khuon.safeParse(giaTri).success) return { ok: false, khoa, loi: `${khoa}: ${moTaKhuon(d)}, nhận ${JSON.stringify(giaTri)}` };
-  if (d.khongNhoHon !== undefined && typeof giaTri === "number") {
-    const goc = d.khongNhoHon in cauHinh ? cauHinh[d.khongNhoHon] : timDiem(d.khongNhoHon, so)?.macDinh;
-    if (typeof goc === "number" && giaTri < goc) return { ok: false, khoa, loi: `${khoa}: không nhỏ hơn ${d.khongNhoHon} (${goc}), nhận ${giaTri}` };
+  if (cheo && typeof giaTri === "number") {
+    // Ràng buộc chéo xét cả hai chiều: khoá phụ thuộc không nhỏ hơn khoá nó trỏ, và khoá được trỏ không lớn hơn khoá
+    // phụ thuộc đang áp (luật đợt 46 — một nửa của cặp hạn không được làm cặp trái luật).
+    const dangAp = (k: string) => (k in cauHinh ? cauHinh[k] : timDiem(k, so)?.macDinh);
+    if (d.khongNhoHon !== undefined) {
+      const goc = dangAp(d.khongNhoHon);
+      if (typeof goc === "number" && giaTri < goc) return { ok: false, khoa, loi: loiCap(khoa, giaTri, d.khongNhoHon, goc) };
+    }
+    for (const phu of so.filter((x) => x.khongNhoHon === khoa)) {
+      const v = dangAp(phu.khoa);
+      if (typeof v === "number" && v < giaTri) return { ok: false, khoa, loi: loiCap(phu.khoa, v, khoa, giaTri) };
+    }
   }
   return { ok: true, khoa, giaTri };
 }
