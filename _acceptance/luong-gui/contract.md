@@ -5,7 +5,7 @@ slug: luong-gui
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-03-luong-gui-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -97,3 +97,11 @@ liệu ra × người nhận phủ bởi AC-5 trên ma trận đủ `CUA_RA × N
   Gửi mới bị báo «thuộc hai nhóm màn: gui, trang-tam» (kit#480). E12 chấp nhận mã 1 chỉ khi E13 xanh — E13 bảo đảm đó là
   dòng lệch duy nhất, lệch khác vẫn đỏ. Kit vá thì bỏ mã 1 ở E12 và bỏ E13.
 - Chủ kho thử thật trên điện thoại (mở bảng chia sẻ, dán vào Zalo) đi qua yêu cầu `can-nguoi` gom cùng hàng 35 (luật đợt 16).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: E13 có thể đối chiếu một bản bộ kiểm khuôn khác bản E12 dùng khi phiên chấm khai đường kit riêng.
+  - Ngoài-2: Trưởng nhóm mở màn Gửi, chọn Khách riêng thấy «chưa có khách» thay vì được báo vai này không gửi cho khách riêng.
+  - Ngoài-3: Đầu chủ chọn căn trên Bảng hàng thẻ vẫn thấy thanh Gửi dù vai này không vào được màn Gửi.
+  - Ngoài-4: Tham chiếu có hai dòng cho cùng màn Gửi.
+  - Ngoài-5: Lỗi tải danh sách khách (mất mạng, từ chối) hiện thành «chưa có khách» và không tự thử lại.
+  - Ngoài-6: Ảnh căn trên màn Gửi bị tải lại nhiều lần.
+  - Ngoài-7: Bài kiểm «nút Gửi mờ không gọi mạng» tự dựng lại điều kiện thay vì đo trên màn thật.
