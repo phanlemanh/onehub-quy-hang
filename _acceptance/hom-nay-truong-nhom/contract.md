@@ -5,7 +5,7 @@ slug: hom-nay-truong-nhom
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, core, ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-04-hom-nay-truong-nhom-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -88,3 +88,11 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Bất biến chạm: (1) cách ly — hai lối mới đọc qua luật theo dòng, ca sàn khác ở AC-1, AC-3; (2) chủ nhà — hai lối không
   trả trường lớp `source` (AC-1, AC-3); (3), (4) không chạm.
 - Dãy D, đợt `dau-khach-nhap`.
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu sàn đổi số ngày coi là hàng cũ, bài kiểm vẫn xanh dù ô «Hàng cũ» trên màn trưởng nhóm có thể vẫn đếm theo số ngày mặc định. Trưởng nhóm có thể thấy con số không khớp với cấu hình của sàn mà không ai được báo. — `apps/web/src/app/(app)/today/truong-nhom.test.ts`
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu phần nối giữa kết quả tải và trạng thái màn bị sai, màn có thể báo lỗi thay vì «mất mạng» (hoặc ngược lại) mà bài kiểm vẫn xanh. Trưởng nhóm khi mất mạng có thể thấy thông báo không đúng hoặc nút giao không tắt. — `apps/web/src/app/(app)/today/truong-nhom.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm khẳng định danh sách lead quá hạn không lộ tên chủ nhà, nhưng lead trong bài kiểm không hề có tên đó nên khẳng định này luôn đúng. Nếu sau này có thay đổi làm lộ tên chủ nhà ra danh sách, bài kiểm sẽ không bắt được. — `packages/api/test-db/hom-nay-truong-nhom.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Trên màn hình rộng, vùng của trưởng nhóm bị thu hẹp và căn giữa nên lệch mép với các dải bên dưới. Người dùng dùng đọc màn hình có thể nghe vùng nội dung chính bị khai báo hai lần. — `apps/web/src/components/khoi/dashboard-6/coverage-dashboard.tsx`
+- Ngoài-5 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sau khi mạng trở lại, màn của trưởng nhóm vẫn báo đang mất mạng và các nút Giao lại vẫn tắt. Phải tải lại trang mới giao được. — `apps/web/src/app/(app)/today/truong-nhom.tsx`
+- Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu mở màn lúc mạng đang chập chờn, trưởng nhóm có thể thấy câu «Không lead nào quá hạn» dù máy chưa đọc được gì, trong khi các ô số hiện dấu gạch. Họ có thể tưởng không có việc cần chia lại. — `apps/web/src/app/(app)/today/truong-nhom.tsx`
+- Ngoài-7 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Đầu chủ chưa nhập tên sẽ hiện thành ô trống trong bảng theo đầu chủ và ở dòng lead quá hạn, thay vì mã ngắn như ở ô chọn Giao lại. Trưởng nhóm khó biết đó là ai. — `packages/api/src/team/routes.ts`
+- Ngoài-8 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chưa chứng minh được rằng tên chủ nhà không lọt vào hàng đợi của trưởng nhóm, nên nếu sau này có lỗi rò tên thì bài kiểm sẽ không báo. Hiện chưa có dấu hiệu tên bị lộ. — `packages/api/test-db/hom-nay-truong-nhom.test.ts`

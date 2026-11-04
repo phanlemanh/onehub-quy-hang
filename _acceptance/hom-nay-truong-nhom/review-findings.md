@@ -1,26 +1,28 @@
-# Review findings: hom-nay-truong-nhom (round 2)
+# Review findings: hom-nay-truong-nhom (round 3)
 
 ## Trong hợp đồng
+
+Không có finding.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hình 1 — đo khả năng của hàm thuần thay vì đầu ra của màn: ô «Hàng cũ» theo cấu hình 20 ngày**
+- **Hình 1 — đo khả năng của hàm thuần thay vì đầu ra của màn: ô «Hàng cũ» theo cấu hình 20 ngày (r2)**
   Người dùng thấy gì: Nếu sàn đổi số ngày coi là hàng cũ, bài kiểm vẫn xanh dù ô «Hàng cũ» trên màn trưởng nhóm có thể vẫn đếm theo số ngày mặc định. Trưởng nhóm có thể thấy con số không khớp với cấu hình của sàn mà không ai được báo.
   Căn cứ: Chỉ ảnh hưởng một con số hiển thị, không mất hay lộ dữ liệu, trưởng nhóm tự nhận ra được khi đối chiếu; sửa sau rẻ vì chỉ là nối cấu hình và thêm bài kiểm.
   file: `apps/web/src/app/(app)/today/truong-nhom.test.ts`
   severity: high
   Đề xuất: known-limits
 
-- **Hình 2 — cầu nối nguồn sang trạng thái viết tay trong test, không đi qua bộ nối của màn**
+- **Hình 2 — cầu nối nguồn sang trạng thái viết tay trong test, không đi qua bộ nối của màn (r2)**
   Người dùng thấy gì: Nếu phần nối giữa kết quả tải và trạng thái màn bị sai, màn có thể báo lỗi thay vì «mất mạng» (hoặc ngược lại) mà bài kiểm vẫn xanh. Trưởng nhóm khi mất mạng có thể thấy thông báo không đúng hoặc nút giao không tắt.
   Căn cứ: Hậu quả nhẹ, chỉ sai chữ báo trạng thái, không mất hay lộ dữ liệu; tải lại là hết; bổ sung bài kiểm qua màn thật sau này không đắt.
   file: `apps/web/src/app/(app)/today/truong-nhom.test.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình 4 — assert âm vắng «[Tên]» trên hàng đợi vô nghĩa: lead không mang tên mồi, còn đối chứng dương đọc một vật khác**
+- **Hình 4 — assert âm vắng «[Tên]» trên hàng đợi vô nghĩa: lead không mang tên mồi, còn đối chứng dương đọc một vật khác (r2)**
   Người dùng thấy gì: Bài kiểm khẳng định danh sách lead quá hạn không lộ tên chủ nhà, nhưng lead trong bài kiểm không hề có tên đó nên khẳng định này luôn đúng. Nếu sau này có thay đổi làm lộ tên chủ nhà ra danh sách, bài kiểm sẽ không bắt được.
   Căn cứ: Hiện chưa có dấu hiệu lộ thật, chỉ là lưới an toàn yếu cho thông tin chủ nhà vốn nhạy cảm; sửa rẻ nhưng nên làm sớm vì lỗi lộ nếu xảy ra sẽ khó thu hồi.
   file: `packages/api/test-db/hom-nay-truong-nhom.test.ts`
