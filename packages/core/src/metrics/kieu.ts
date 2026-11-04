@@ -10,8 +10,11 @@ import type { StandardStatus } from "../listing/status";
 /** Một hàng: dãy sự kiện đủ của nó, như `listing_events` giữ. */
 export type HangVao = { id: string; events: readonly ListingEvent[] };
 
-/** Một lead: dữ kiện nấc (cột của `leads` cộng mốc lên bảng), lúc nhập và mã căn đã gõ ở ô nhận lead (vắng là `null`). */
-export type LeadVao = LeadStageFacts & { id: string; createdAt: string; unitNumber: string | null };
+/**
+ * Một lead: dữ kiện nấc (cột của `leads` cộng mốc lên bảng), lúc nhập, mã căn đã gõ ở ô nhận lead (vắng là `null`) và lead
+ * gửi lại của nó (`resubmitted_lead_id`, vắng là `null`) — mối nối của chuỗi gửi lại (luật 37).
+ */
+export type LeadVao = LeadStageFacts & { id: string; createdAt: string; unitNumber: string | null; resubmittedLeadId: string | null };
 
 /** Một lượt mất mạng bộ đồng bộ trên máy gửi về: từ lúc mất tới lúc có mạng lại, kèm số thao tác chờ gửi trong lượt. */
 export type LuotMatMang = { device: "desktop" | "mobile"; startedAt: string; endedAt: string; queuedOps: number };
