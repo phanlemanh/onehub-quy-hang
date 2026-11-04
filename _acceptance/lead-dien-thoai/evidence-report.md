@@ -2,12 +2,13 @@
 schema_version: 2
 feature_slug: lead-dien-thoai
 verdict: BLOCKED
-failed_evals: ["E3","E4"]
-reason: "ui-check:E8 — Lệnh E8 không chạy được vì chỗ thử dãy D chưa dựng. chay-ui.mjs mã cứng http://localhost:3476, không dùng 3460. Cổng 3476 không có máy nào, nên chờ thân trang quá 120 giây rồi văng «hết giờ chờ» ở dòng 44, cả hai lần chạy. dung-d.mjs thất bại với «máy dev không lên» vì máy dev 3460 do verifier tự bật (PID 76372) đang giữ thư mục apps/web và Next chặn bản thứ hai. Hệ thống từ chối lệnh kill PID 76372 (phân loại tự động); verifier không lách. Cần người cho phép tắt máy 3460 (hoặc tự tắt) rồi chạy lại dung-d.mjs và E8."
+failed_evals: []
+reason: |
+  Tám eval ui-check (E2, E3, E4, E5, E6, E9, E8) không chạy được vì chỗ thử dãy D (máy dev cổng 3476 do dung-d.mjs dựng) không lên: một máy next dev có sẵn (PID 48719, cổng 3460, cùng thư mục apps/web) giữ khoá, Next từ chối máy thứ hai. Verifier không tắt máy không phải của mình; chưa có kết quả đối chứng nào cho các eval này. Chi tiết từng eval ở mục «Bị chặn» trong Evidence.
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 35e93598e38a059463933c10d75fcda8fe2b5104
+verified_commit: 988bda469d62649321ee3ec92af589d137fbac9a
 human_signoff:
 ---
 
@@ -15,120 +16,38 @@ human_signoff:
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
-| E1 | AC-1 | ui-check | PASS |
-| E2 | AC-2 | ui-check | PASS |
-| E3 | AC-3 | ui-check | REJECT |
-| E4 | AC-4 | ui-check | REJECT |
-| E5 | AC-5 | ui-check | PASS |
-| E6 | AC-6 | ui-check | PASS |
 | E7a | AC-7 | script | PASS |
-| E7b | AC-7 | test | PASS |
+| E7b | AC-7 | test | PASS (carry-forward từ round 1) |
+| E1 | AC-1 | ui-check | PASS |
+| E2 | AC-2 | ui-check | BLOCKED |
+| E3 | AC-3 | ui-check | BLOCKED |
+| E4 | AC-4 | ui-check | BLOCKED |
+| E5 | AC-5 | ui-check | BLOCKED |
+| E6 | AC-6 | ui-check | BLOCKED |
+| E9 | AC-9 | ui-check | BLOCKED |
 | E8 | AC-8 | ui-check | BLOCKED |
-| E9 | AC-9 | ui-check | PASS |
-
-Lệnh fail không gắn eval: không có. Lệnh fail có gắn eval: ui-check:E3 (E3), ui-check:E4 (E4). Review incomplete (finder chết): không có.
 
 ## Evidence
 
-- eval: E1
-  run_id: minted-lead-dien-thoai-E1-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E1-step1.png
-  observed: |
-    Frame E1-nhap-390.png (copy là E1-step1.png), khổ 390x844, đã mở bằng Read: tiêu đề «Ô nhận lead», hai tab «Nhập lead» (đang chọn) và «Lead đã nhập». Dưới là một cột năm mục: Số chủ nhà; Căn hoặc toà; Nhu cầu; Giá; Thời gian muốn ra hàng. Không thấy thanh cuộn ngang, không bị cắt ngang. Nút «Gửi lead» nằm sát đáy ngay trên thanh tab dưới, thấy trong khung nhìn. Khớp Expected.
-  network_observed: n-a (driver)
-  output: |
-    Lần 1 và 2 của chay-ui.mjs văng lỗi scrollIntoView (undefined): trang dev tự tải lại liên tục lúc biên dịch; thử lại tới khi trang ổn định thì ra dòng e1. Coi là nhiễu môi trường dev, không phải lỗi sản phẩm.
-    Assertion: cuonNgang=false PASS; soMuc=5 PASS; inputModeSo=tel PASS; inputModeGia=numeric PASS; coPhanDaNhap=true PASS; nutGuiBamDuoc=true PASS (nút top 770, bottom 802, rộng 316, viewport cao 844).
-    Network: driver CDP không đọc được network, E1-network.txt ghi n-a (driver).
-
-- eval: E2
-  run_id: minted-lead-dien-thoai-E2-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E2-step1.png
-  observed: |
-    E2-step1.png (390px, ca bỏ trống số chủ nhà, đọc trực tiếp): ô «Số chủ nhà» viền đỏ, dưới có dòng lỗi đỏ «Cần số điện thoại Việt Nam 10 chữ số». Các ô Căn hoặc toà (Toà A), Nhu cầu (Bán), Giá 3.200.000.000, Thời gian đều đã điền, không có lỗi đỏ ở ô nào khác. Khớp Expected: lỗi dưới đúng ô bỏ trống.
-  network_observed: n-a (driver)
-  output: |
-    Assertion: (1) 5 ca mỗi ca loiO đúng một ô và là ô bỏ trống: PASS. (2) 5 ca soPostLead=0: PASS. (3) đối chứng điền đủ soPostLead=1: PASS. (4) frame đối chiếu: PASS.
-    Lưu ý: soPostLead đếm bằng lớp bọc fetch trong trang, không phải sự kiện mạng CDP như Expected nói; E2-network.txt ghi rõ không có dump CDP. Phương pháp đo yếu hơn lời Expected.
-
-- eval: E3
-  run_id: minted-lead-dien-thoai-E3-r1
-  exit_code: 1
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E3-ket-qua-390.png
-  observed: |
-    E3-ket-qua-390.png: tab «Nhập lead» khổ 390 sau khi gửi. Ở đáy, sau thanh nav, chỉ thấy phần đầu thẻ kết quả «Không trùng — lead chờ chia theo luật của sàn» (bị cắt). Lối «Xem ở Lead đã nhập» không thấy trong khung nhìn, nên ảnh không cho thấy kết quả cùng lối như Expected. E3-da-nhap-390.png: tab «Lead đã nhập», dòng đầu «Toà A · chỉ biết toà», «Bán · 3,2 tỷ, đã bao phí», «17:30», nấc «Đã gửi» — khớp Expected ở bước sau.
-  network_observed: n-a (driver)
-  output: |
-    Cổng 3460 không có máy dùng được (thiếu DATABASE_URL), nên chạy dung-d.mjs (chỗ thử 3476) rồi chay-ui.mjs --e3; tắt máy bằng dung-d --tat.
-    Dòng e3: coKetQua=true PASS; coLoiTheoDoi=true PASS; ketQuaTrongKhung=false FAIL (nút «Xem ở Lead đã nhập» không nằm trong khung 390x844 ở khung kết quả).
-    Sau khi tick lead và bấm lối: dau.nac="Đã gửi" PASS; dau.dong bắt đầu bằng "Toà A · chỉ biết toà ... 17:30 ... Đã gửi" PASS.
-    Eval không đạt vì khung 1 mâu thuẫn Expected: kết quả bị cắt, lối không thấy trên màn dù DOM có.
-
-- eval: E4
-  run_id: minted-lead-dien-thoai-E4-r1
-  exit_code: 1
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E4-da-gui-390.png
-  observed: |
-    Đã mở lại 3 frame mới của lần chạy này. E4-da-gui-390.png: khổ 390, một cột, tab «Lead đã nhập», lead mới nhất (17:31) có nấc «Đã gửi». E4-da-nhan-390.png: cùng lead đổi thành «Đã nhận». E4-da-goi-390.png: lead 17:32 hiện «Đã gọi». Cả ba không thấy số điện thoại hay mã hàng, không cuộn ngang. Frame thứ tư E4-len-bang-390.png không được tạo mới (file trong thư mục là bản cũ lúc 16:58, không dùng làm bằng chứng); nấc «Lên bảng» chưa được kiểm.
-  network_observed: n-a (driver)
-  output: |
-    PASS: nacTruoc «Đã gửi»; nacSauNhan «Đã nhận»; nacSauGoi «Đã gọi».
-    FAIL: script văng ở bước Lên bảng, chưa in dòng JSON e4. Lỗi: POST /api/v1/listings/<id>/events trả 400 {"error":"missing-requirement","missing":["unitNumber"]}. Lead mẫu «chỉ biết toà» nên hàng tạo từ lead không có số căn, chuyển sang Active bị từ chối. Có thể là lỗi bộ thử (không điền unitNumber trước khi đổi trạng thái), chưa chắc là lỗi app.
-    CHƯA KIỂM: nacSauLenBang, cuonNgang tổng, coSoChu tổng, coMaHang, đối chứng dương số mồi trong thân POST.
-    Đã tắt máy dev 3476 do verifier dựng.
-
-- eval: E5
-  run_id: minted-lead-dien-thoai-E5-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E5-step1.png
-  observed: |
-    E5-mat-mang-390.png (390px): form Nhập lead còn nguyên số chủ nhà, Toà A, nhu cầu Bán, giá 3.200.000.000 chọn Bao phí, thời gian Ngay; nút Gửi lead; ở đáy khối báo đỏ «Chưa gửi được — mất mạng». Khớp Expected. E5-gui-lai-390.png: sau khi bật mạng và bấm Gửi, form trống, bên dưới hiện thẻ kết quả «Chủ nhà đã có đầu chủ [Mẫu] Đầu chủ 1 — lea…»; khớp đếm đúng một lead mới.
-  network_observed: n-a (driver)
-  output: |
-    Frame: E5-step1.png (= E5-mat-mang-390.png), E5-step2.png (= E5-gui-lai-390.png).
-    Dọn: tắt máy 3476 bằng dung-d.mjs --tat; máy 3460 do verifier bật đã tắt. Script không chạy qua đường dẫn 3460 như đề nêu; đã ghi nhận lệch này.
-    chay-ui trả dòng JSON thành công, không stack trace.
-
-- eval: E6
-  run_id: minted-lead-dien-thoai-E6-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E6-mat-mang-390.png
-  observed: |
-    E6-tab-mat-mang-390 (tab Lead, khoảng 390): dải «Đang xem bản đã tải — mất mạng», tab «Lead đã nhập» đang chọn, khung báo đỏ «Không tải được lead đã nhập» kèm nút «Thử lại»; không có chữ «Chưa có lead nào». E6-tab-co-mang-390: dải mất mạng tắt, danh sách 41 dòng lead sau khi bấm Thử lại. E6-trang-mat-mang-390 (/leads/mine): dải mất mạng, khung lỗi, nút «Thử lại», không «Chưa có lead nào». E6-trang-co-mang-390: dải tắt, bảng 41 dòng. Khớp Expected cả hai ca.
-  network_observed: n-a (driver)
-  output: |
-    tab.lucMat = {coChuaCoLead:false, coThuLai:true, coDaiMatMang:true}; tab.sauKhiCoMang = {coDaiMatMang:false, soDong:41}; trang.lucMat và trang.sauKhiCoMang cùng giá trị.
-    Assertion cả 2 ca: lucMat.coChuaCoLead=false PASS; coThuLai=true PASS; coDaiMatMang=true PASS; sauKhiCoMang.coDaiMatMang=false PASS; soDong>=1 (41) PASS.
-    Network: E6-network.txt (driver CDP, không đọc được network).
-
 - eval: E7a
-  run_id: minted-lead-dien-thoai-E7a-r1
+  run_id: minted-lead-dien-thoai-E7a-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
   output: |
     6 tệp giao diện ngoài bản đồ
+
+- eval: E1
+  run_id: minted-lead-dien-thoai-E1-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-04T11:02:38Z
+  screenshot: evidence/E1-step1.png
+  observed: |
+    E1-nhap-390.png (khung 390 rong, da mo bang Read): tieu de «Lead», «O nhan lead», thanh tab «Nhap lead» (dang chon) / «Lead da nhap» o cung tab. Mot cot, nam muc xep doc: So chu nha (o 0900 000 000), Can hoac toa (ma can + chon Toa), Nhu cau (Ban / Cho thue / Ca hai), Gia (o Gia chu muon + Bao phi / Khong bao phi), Thoi gian muon ra hang (Ngay / Trong 1 thang / 1-3 thang / Chua dinh). Nut «Gui lead» nam o day khung nhin, ngay tren thanh dieu huong, khong thay cuon ngang. Khop Expected. E1-step1.png la ban chup cung phep do (khac byte nhung cung noi dung luong), khong mo thuan nhat de doc rieng ngoai viec cmp thay khac byte.
+  network_observed: n-a (driver)
 
 - eval: E7b
   run_id: minted-lead-dien-thoai-E7b-r1
@@ -136,69 +55,80 @@ Lệnh fail không gắn eval: không có. Lệnh fail có gắn eval: ui-check:
   baseline: n-a
   verifier: config:executors.test.ui_lint
   verified_at: 2026-11-04T10:14:44Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 33247.2015
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
-- eval: E9
-  run_id: minted-lead-dien-thoai-E9-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  screenshot: evidence/E9-step1.png
-  observed: |
-    step1 (đầu chủ, 390px): «Ô nhận lead» với tab Nhập lead / Lead đã nhập; form đủ Số chủ nhà, Căn hoặc toà, Nhu cầu, Giá, Thời gian; nút Gửi lead ở đáy. step2 (buyer_agent): không form, chỉ thẻ «Vai của bạn không nhập lead». step3 (telesales mới): tab Lead đã nhập hiện trạng thái rỗng «Chưa có lead nào» kèm gợi ý «+ Lead». step4 (đang tải, GET /leads giữ 3 giây): thẻ «Lead đã nhập» với dòng khung chờ, không phải khung trắng. Khớp Expected.
-  network_observed: n-a (driver)
-  output: |
-    Cổng 3460 không có máy; script dùng chỗ thử riêng ở 3476 (dung-d.mjs, tắt bằng --tat).
-    Dòng e9: dauChu.coForm=true PASS; muaHang.coForm=false PASS; muaHang.coBaoVai=true PASS; moi.coChuaCoLead=true PASS; dangTai.coKhungCho=true PASS; dangTai.trang=false PASS.
-    Đối chứng dương (telesales thấy form ở E1) không chạy lại trong eval này; từng ca ghi coForm true cho dauChu, moi, dangTai.
+### Bị chặn (không chạy được, không phải kết quả đánh giá tính năng)
 
-- eval: E8
-  run_id: minted-lead-dien-thoai-E8-r1
-  exit_code: 1
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T10:14:44Z
-  network_observed: n-a (driver)
-  output: |
-    Không chạy được. Chưa kiểm assertion nào (soMuc = 5, soCotBang = 3, cuonNgang = false).
-    chay-ui.mjs --e8 lỗi hai lần cùng «hết giờ chờ» tại cdp.mjs:134, gọi từ chay-ui.mjs:44 (hàm mo, dòng 248). Không có dòng JSON e8.
-    Bốn file E8-*.png trong evidence có giờ sửa 17:10, cũ hơn lượt này; không dùng làm bằng chứng, chưa mở xem.
-    Máy dev 3460 do verifier bật vẫn đang chạy, chưa tắt được. Postgres dãy D (5575) đang chạy. Cổng 3476 không có máy.
-    Chưa ghi E8-network.txt.
+- ui-check:E2 — chay-ui.mjs đặt cứng URL chỗ thử http://localhost:3476, không dùng http://localhost:3460 của config. Máy dev dãy D ở 3476 đã chết (.acceptance-runs/lead-dien-thoai/web-d51.pid không còn tiến trình) và dung-d.mjs không dựng lại được: `next dev` thứ hai cùng thư mục bị chặn vì máy dev 3460 do tôi khởi động đang giữ khoá. Lệnh kill máy 3460 bị bộ phân loại quyền từ chối nên tôi dừng, không lách. Chưa có kết quả đối chứng nào cho E2; không đoán đạt hay hỏng.
+  - run_id: minted-lead-dien-thoai-E2-r2
+  - screenshot: evidence/E2-step1.png
+  - observed: |
+      Đã mở E2-step1.png: màn "Ô nhận lead" 390px, ô "Số chủ nhà" trống viền đỏ, dòng lỗi đỏ "Cần số điện thoại Việt Nam 10 chữ số" ngay dưới ô, các ô còn lại đã điền (Toà A, Bán, 3.200.000.000, Ngay). Khung này cho thấy ca thiếu số có lỗi đúng ô, nhưng soPostLead chưa đo được vì script chết trước khi in dòng e2. Bốn ca thiếu còn lại và ca đối chứng chưa chạy, nên chưa đủ chứng cứ đạt.
+  - network_observed: n-a (tool-error: script không in dòng e2, không có dump mạng CDP)
+  - baseline: n-a
+- ui-check:E3 — Chỗ thử dãy D không dựng được. chay-ui.mjs chạy trên máy dev cổng 3476, do dung-d.mjs dựng. dung-d.mjs báo «máy dev không lên» vì Next 16 từ chối chạy hai máy dev cùng một thư mục. Một next dev có sẵn (PID 48719, cổng 3460, thư mục apps/web của chính worktree này) đang chiếm. Tôi không tự khởi động máy đó nên không được tắt. Máy 3460 cũng hỏng: /api/v1/health trả 500, trang gốc trả 307.
+  - run_id: minted-lead-dien-thoai-E3-r2
+  - network_observed: n-a (driver)
+  - baseline: n-a
+- ui-check:E4 — Không chạy được. chay-ui.mjs gắn cứng http://localhost:3476, là chỗ thử dãy D do dung-d.mjs dựng bằng `next dev -p 3476` trong cùng thư mục apps/web. Máy dev có sẵn ở cổng 3460 (PID 48719) đã giữ khoá thư mục này, nên Next từ chối bản thứ hai ("Another next dev server is already running"). Cổng 3476 không lên, mọi lệnh gọi từ chay-ui.mjs bị ECONNREFUSED. Tôi không tắt máy 3460 vì nó có sẵn từ trước, và không sửa code. Chạy lại được khi máy dev 3460 tắt hoặc chỗ thử được tách riêng.
+  - run_id: minted-lead-dien-thoai-E4-r2
+  - network_observed: n-a (tool-error: không chạy được, chỗ thử cổng 3476 không lên)
+  - baseline: n-a
+- ui-check:E5 — Không chạy được phép nhìn E5. chay-ui.mjs trỏ vào máy thử dãy D ở cổng 3476 (dung-d.mjs dựng), nhưng cổng 3476 không có máy nào. Dựng lại bằng dung-d.mjs thì next dev ở 3460 (PID 48719, có sẵn, không phải tôi bật) chặn: "Another next dev server is already running" — cùng thư mục apps/web, Next chỉ cho một máy dev. Máy 3460 lại trả 500 ở /login và /api/v1/health. Tôi không tắt máy không phải của mình nên dừng ở đây.
+  - run_id: minted-lead-dien-thoai-E5-r2
+  - network_observed: n-a (driver)
+  - baseline: n-a
+- ui-check:E6 — Không chạy được E6. chay-ui.mjs đọc máy dev dãy D ở cổng 3476 (URL_GOC cố định) cùng phiên đăng nhập do dung-d.mjs dựng. Cổng 3476 không có gì, và dung-d.mjs không dựng được vì Next báo "Another next dev server is already running" (PID 48719, cổng 3460, thư mục apps/web của worktree này). Đó là máy dev có sẵn, không phải tôi bật nên tôi không tắt. Cổng 3460 chỉ trả 307 sang /login nên cũng không thay được. Muốn chạy phải tắt máy dev 48719 rồi chạy lại dung-d.mjs.
+  - run_id: minted-lead-dien-thoai-E6-r2
+  - network_observed: n-a (driver)
+  - baseline: n-a
+- ui-check:E9 — Không chạy được E9. chay-ui.mjs mã cứng máy dev của chỗ thử ở http://localhost:3476, không dùng 3460. Cổng 3476 không có máy nào nghe. Máy 3476 do dung-d.mjs dựng không lên được vì một máy next dev khác (PID 48719) đang giữ cổng 3460 cho cùng thư mục apps/web. Máy 3460 là máy có sẵn, không phải tôi khởi động, nên tôi không tắt. Đây là vấn đề môi trường (máy dev thừa), không phải kết quả đánh giá tính năng.
+  - run_id: minted-lead-dien-thoai-E9-r2
+  - network_observed: n-a (tool-error: máy dev 3476 không chạy, trang không tải được)
+  - baseline: n-a
+- ui-check:E8 — Không chạy được bước 1. Script chay-ui.mjs mở cổng 3476, không phải 3460. Cổng 3476 do dung-d.mjs dựng, và dung-d.mjs thất bại ("máy dev không lên") vì Next 16 từ chối chạy máy dev thứ hai trong cùng thư mục apps/web: một next-server PID 48719 đã giữ cổng 3460 từ trước, không do verifier khởi động. Tôi không tắt máy đó vì không phải của tôi. Khi chạy trực tiếp, chay-ui.mjs --e8 hết giờ chờ (chạy hai lần) ở điều kiện trang có [data-bo-cuc-goc], và không in dòng e8 nào, nên không có soMuc, soCotBang hay cuonNgang để đối chiếu.
+  - run_id: minted-lead-dien-thoai-E8-r2
+  - network_observed: n-a (driver)
+  - baseline: n-a
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
 
 - cmd: npm run test:hooks
-  run_id: minted-lead-dien-thoai-SUITE-test_hooks-r1
+  run_id: minted-lead-dien-thoai-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
+
+- cmd: npm test -w @quy-hang/ui-lint
+  run_id: minted-lead-dien-thoai-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  exit_code: 0
+  verified_at: 2026-11-04T11:02:38Z
 
 - cmd: npm run typecheck
-  run_id: minted-lead-dien-thoai-SUITE-typecheck-r1
+  run_id: minted-lead-dien-thoai-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
 
 - cmd: npm run lint
-  run_id: minted-lead-dien-thoai-SUITE-lint-r1
+  run_id: minted-lead-dien-thoai-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-04T10:14:44Z
+  verified_at: 2026-11-04T11:02:38Z
 
 ## Known limits
 
@@ -208,8 +138,7 @@ Lệnh fail không gắn eval: không có. Lệnh fail có gắn eval: ui-check:
 
 carried tu round 1 — baseline khong do lai round nay
 
-Eval không phân biệt (xanh cả trên HEAD lẫn baseline, chứng minh harness chứ không phải feature; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
-- E7b (npm test -w @quy-hang/ui-lint)
+Eval không phân biệt (pass cả trên HEAD lẫn baseline): E7b (lệnh npm test -w @quy-hang/ui-lint).
 
 ## Variance
 
@@ -217,4 +146,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E3, E4 failed, E8 blocked — E3: kết quả và lối «Xem ở Lead đã nhập» không nằm trong khung 390 sau khi gửi; E4: bước Lên bảng bị từ chối vì thiếu unitNumber nên nấc Lên bảng chưa kiểm; E8: chỗ thử dãy D không dựng được vì máy dev 3460 chiếm apps/web. Returned to implementation.
+Round 1: lượt chấm lại ghi BLOCKED do máy dev thừa; E3, E4 đỏ. Returned to implementation.
+Round 2: BLOCKED — E7a, E1 đạt, E7b carry-forward; E2, E3, E4, E5, E6, E9, E8 không chạy được vì chỗ thử cổng 3476 không dựng được (máy dev có sẵn PID 48719 giữ khoá thư mục apps/web). Cần tắt máy đó hoặc tách chỗ thử rồi chấm lại.

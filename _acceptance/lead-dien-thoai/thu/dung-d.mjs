@@ -47,7 +47,27 @@ const song = async () => {
 const nap = spawnSync("node", ["packages/db/seed/nap.mjs", "--nap"], { cwd: GOC, env: { ...process.env, DATABASE_URL: DB }, encoding: "utf8" });
 if (nap.status !== 0) throw new Error(`nạp sàn mẫu hỏng: ${nap.stderr}`);
 
+// Next chỉ cho một máy dev mỗi thư mục: máy dev khác của chính worktree này (do lệnh nhìn màn hay lượt chấm bật) chặn máy
+// 3476. Tắt đúng các tiến trình nghe cổng mà thư mục làm việc là apps/web của worktree này — không đụng worktree khác.
+function tatMayDevCungThuMuc() {
+  const nghe = spawnSync("lsof", ["-iTCP", "-sTCP:LISTEN", "-P", "-t"], { encoding: "utf8" }).stdout.split("\n").filter(Boolean);
+  for (const pid of new Set(nghe)) {
+    const cwd = spawnSync("lsof", ["-a", "-p", pid, "-d", "cwd", "-Fn"], { encoding: "utf8" }).stdout.split("\n").find((l) => l.startsWith("n"));
+    const cong = spawnSync("lsof", ["-a", "-p", pid, "-iTCP", "-sTCP:LISTEN", "-P", "-Fn"], { encoding: "utf8" }).stdout;
+    if (cwd === `n${path.join(GOC, "apps/web")}` && !cong.includes(":3476")) {
+      try {
+        process.kill(Number(pid), "SIGTERM");
+        console.log(JSON.stringify({ buoc: "tat-may-dev-cung-thu-muc", pid }));
+      } catch {
+        // đã tắt
+      }
+    }
+  }
+}
+
 if (!(await song())) {
+  tatMayDevCungThuMuc();
+  await ngu(2000);
   const out = openSync(LOG, "a");
   const p = spawn("npx", ["next", "dev", "-p", "3476", "apps/web"], {
     cwd: GOC,

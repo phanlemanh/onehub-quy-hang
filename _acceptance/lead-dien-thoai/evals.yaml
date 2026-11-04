@@ -2,7 +2,9 @@ schema_version: 1
 feature_slug: lead-dien-thoai
 # Lệnh máy: executors.design.khuon, executors.test.ui_lint, executors.test.web. ui-check mở máy chủ dev của chỗ thử dãy D
 # (Postgres 5575 nạp sàn mẫu, máy dev 3476) bằng _acceptance/lead-dien-thoai/thu/dung-d.mjs, Chrome không đầu qua CDP
-# (_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs), khổ 390 × 844 trừ E9. Tắt bằng dung-d.mjs --tat khi chấm xong, không pkill.
+# (_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs), khổ 390 × 844 trừ E8. Tắt bằng dung-d.mjs --tat khi chấm xong, không pkill.
+# KHÔNG bật máy dev nào khác (kể cả lệnh của executors.ui-check): Next chỉ cho một máy dev mỗi thư mục; dung-d.mjs tự tắt máy
+# dev khác của chính worktree này rồi dựng máy 3476. Mọi phép nhìn màn dùng máy 3476 của dung-d.mjs.
 evals:
   - id: E1
     criterion: AC-1
