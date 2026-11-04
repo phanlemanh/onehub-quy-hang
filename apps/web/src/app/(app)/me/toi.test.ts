@@ -119,12 +119,12 @@ test("E4 đăng xuất ở tab Tôi: hỏi khi còn 2 thay đổi; «Ở lại»
     });
     assert.deepEqual(hoi, n > 0 ? [2] : []);
     if (!dongY) {
-      assert.equal(kq, false);
+      assert.equal(kq, "o-lai");
       assert.equal(m.goiQua.length, 0, "ở lại mà vẫn gọi sign-out");
       assert.ok(m.kho.has("u-x|s"));
       continue;
     }
-    assert.equal(kq, true);
+    assert.equal(kq, "xong");
     assert.ok(!m.kho.has("u-x|s"), "kho chưa xoá");
     assert.ok(m.kho.has("u-z|s"), "kho người khác bị xoá");
     assert.deepEqual(m.goiQua.map((g) => g.url), ["/api/v1/auth/sign-out"]);
