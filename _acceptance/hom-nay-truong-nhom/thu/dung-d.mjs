@@ -29,7 +29,9 @@ if (process.argv.includes("--tat")) {
     } catch {
       try {
         process.kill(pid, "SIGTERM");
-      } catch {}
+      } catch {
+        // tiến trình đã tắt
+      }
     }
     console.log(`đã tắt máy dev PID ${pid}`);
   }
@@ -85,7 +87,9 @@ const goi = async (cookie, method, p, body) => {
   let b = null;
   try {
     b = JSON.parse(t);
-  } catch {}
+  } catch {
+    // thân không phải JSON — giữ null
+  }
   if (!r.ok) throw new Error(`${method} ${p} → ${r.status} ${t.slice(0, 200)}`);
   return b;
 };
