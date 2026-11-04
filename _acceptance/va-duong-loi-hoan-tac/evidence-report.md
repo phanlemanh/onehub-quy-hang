@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 77c1893f628ac89e1522711a1cda0ff7be20188f
+verified_commit: d0220c8bf08554db0276d659434af8ef6c1bdf94
 human_signoff:
 ---
 
@@ -191,3 +191,7 @@ Round 1: E6, E7 failed — bai cham giao dien khong khop Expected. Returned to i
 Round 2: E6, E7 failed — nhat ky mang dung chung giua hai bai chay song song, ho so trinh duyet chua sach. Returned to implementation.
 Round 3: tat ca eval PASS — E6, E7 chay lai tren trinh duyet sach; E1-E5, E8-E11 mang sang tu round 1.
 
+
+### Re-pin lần 1 — 2026-11-04, do gộp nhánh chính vào nhánh trước khi gộp PR #110
+run_id: repin-20261104T050319Z-63125
+sha: d0220c8bf08554db0276d659434af8ef6c1bdf94 · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E6, E7 · AC không có chốt máy: AC-6
