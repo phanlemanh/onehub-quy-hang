@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: cd8d9f470abe3bc4baeb2ec3f29a4ac5f93c1da9
-human_signoff:
+human_signoff: Manh Phan 2026-11-04
 ---
 
 # Evidence Report: tab-toi

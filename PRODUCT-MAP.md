@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>20 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>49 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>50 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -45,10 +45,6 @@ flowchart TD
 - Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng (`va-duong-loi-hoan-tac`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
 - Vá tiêu đề Cuộc gọi: trên điện thoại, đầu trang của màn ghi cuộc gọi hiện «Ghi cuộc gọi» thay vì «Căn call»; trang của một căn vẫn hiện mã căn như cũ (`va-tieu-de-goi`)
-
-## Đang làm
-
-- Người dùng điện thoại cài Quỹ hàng lên màn hình chính, bật thông báo; đăng xuất hay báo mất máy thì dữ liệu trên máy bị xoá sạch (`tab-toi`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
@@ -94,6 +90,7 @@ flowchart TD
 - Số đo của hai tuần thử đọc được từ sự kiện của sàn thử: tỉ lệ xác nhận, mức đủ, mã tự điền, lead đến cuộc gọi đầu, lần phát, lượt mở, thao tác theo thiết bị và vai, lần mất mạng trên điện thoại (`so-do-hai-tuan-thu`)
 - Sửa hàng loạt: đầu chủ tích nhiều căn trên Bảng hàng rồi đổi trạng thái hay đánh dấu đã gọi cho tất cả trong một lần, máy kể trước căn nào không đổi được (`sua-hang-loat`)
 - Đầu chủ sửa giá, phí, trạng thái ngay trên ô; giá luôn kèm điều kiện phí, máy nói lại «Hiểu là…», sửa là vừa xác nhận với chủ nhà, hoàn tác được (`sua-tren-o`)
+- Người dùng điện thoại cài Quỹ hàng lên màn hình chính, bật thông báo; đăng xuất hay báo mất máy thì dữ liệu trên máy bị xoá sạch (`tab-toi`)
 - Kho có bộ chuẩn giao diện trước màn sản phẩm đầu tiên: thành phần ReUI, skill giao diện của kho, lint giao diện có mức nợ, sàn thiết kế M1 (`tang-5-giao-dien`)
 - Chủ sản phẩm duyệt Cổng Phạm vi của một vòng chạm ô chưa có khuôn trên trang so ba lối — Trong kho, ReUI, Vẽ mới — dựng bằng lệnh, cùng khổ 1440 và 375, mỗi lối một câu đánh đổi, lời khuyên ghim trên trang; vòng có ô chưa có khuôn mà bỏ bước phân kỳ thì bài chấm đỏ, vòng chỉ đi khuôn sẵn thì không cần trang (`the-ba-loi`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)

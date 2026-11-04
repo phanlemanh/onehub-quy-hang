@@ -5,7 +5,7 @@ slug: tab-toi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: verified
+status: signed-off
 design_doc: _acceptance/tab-toi/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -98,3 +98,10 @@ hạn đã biết).
 ## Notes
 
 - Hỏi-1 … Hỏi-4: `design.md` §3, §4; sổ quyết định. Hỏi-3, Hỏi-4 sinh từ phản biện context sạch (`gap-probe.md`).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: Trình duyệt lỗi lúc xoá dữ liệu trên máy bị báo mất thì màn đăng nhập vẫn báo «đã xoá», dù dữ liệu còn trên máy.
+  - Ngoài-2: Máy chủ trục trặc đúng lúc máy bị báo mất kết nối lại thì máy ấy bị coi như hết phiên thường; dữ liệu chỉ bị xoá ở lần kết nối sau.
+  - Ngoài-3: Việc xoá dữ liệu trong app của máy bị báo mất gặp lỗi thì màn vẫn mở, không báo và không thử lại tới khi tải lại trang.
+  - Ngoài-4: Bài kiểm sáu nhóm dòng nói thử mọi vai và thiết bị nhưng thực ra chỉ thử hai tình huống một sàn, hai sàn.
+  - Ngoài-5: Bài kiểm không so chữ thông báo ở tab Tôi với dải bật ở Hôm nay, nên hai nơi lệch chữ về sau sẽ không bị bắt.
+  - Ngoài-6: Bài kiểm thứ tự đăng xuất không bắt được lỗi đảo thứ tự (gửi đăng xuất trước khi xoá dữ liệu trên máy).
