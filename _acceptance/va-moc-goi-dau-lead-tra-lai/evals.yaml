@@ -1,0 +1,81 @@
+schema_version: 1
+feature_slug: va-moc-goi-dau-lead-tra-lai
+# Lệnh máy: executors.test.isolation (npm run db:migrate && npm run db:test — bộ kiểm cách ly + mọi tệp
+# packages/api/test-db/**/*.test.ts, cần DATABASE_URL tới Postgres dãy B: postgres://postgres:quyhang@localhost:5572/postgres),
+# executors.test.core (packages/core node --test), executors.script.va_moc_goi_dau
+# (_acceptance/va-moc-goi-dau-lead-tra-lai/thu/*.test.mjs), executors.script typecheck, lint. Người chấm đối chiếu tên ca
+# nêu trong `expected` với dòng reporter: có mặt, ok, không SKIP.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/va-moc-goi-dau-lead-tra-lai/goi-dau.test.ts, bảng viết trước năm trạng thái lead × kết quả gọi first-call: ca «gọi đầu: lead đã trả lại → 404, mốc không đổi» (dc1 nhận lead, trả lại, gọi first-call: status 404, mã lỗi notFound; đọc bằng kết nối chủ first_called_at và accepted_at bằng đúng giá trị đọc ngay trước lời gọi), ca «gọi đầu: đang giữ chưa nhận → 200, ghi cả nhận» (first_called_at khác null, accepted_at = first_called_at), ca «gọi đầu: đang giữ đã nhận → 200, giữ mốc nhận» (accepted_at không đổi), ca «gọi đầu: đã gọi rồi → 409», ca «gọi đầu: lead của người khác → 404»; một assert số dòng bảng = 5. Chiều đỏ (phá-thử S3, có vật): tệp _acceptance/va-moc-goi-dau-lead-tra-lai/evidence/E1-pha-thu.log ghi diff bỏ «and returned_at is null» khỏi 023, mã thoát khác 0 và dòng reporter đỏ của ca «gọi đầu: lead đã trả lại → 404, mốc không đổi»."
+    paths: ["packages/db/migrations/023_*.sql", "packages/api/src/routing/**", "packages/api/test-db/va-moc-goi-dau-lead-tra-lai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.va_moc_goi_dau
+    expected: "exit 0; ca «migration: 023 định nghĩa lại mark_first_call» đọc packages/db/migrations/023_*.sql (đúng một tệp): có «create or replace function app.mark_first_call(p_lead uuid) returns void», điều kiện «returned_at is null», «revoke all on function app.mark_first_call(uuid) from public» và «grant execute on function app.mark_first_call(uuid) to quy_hang_app»; ca «migration: không sửa migration đã commit» liệt tệp đổi dưới packages/db/migrations từ merge-base với origin/main (hay main) tới HEAD, assert chỉ có tệp thêm mới (A), không tệp sửa hay xoá; đối chứng: bản sao nội dung 023 bỏ điều kiện returned_at thì ca đỏ nêu «returned_at is null»; danh sách viết trước có «M packages/db/migrations/011_chia_lead_va_han.sql» thì ca đỏ nêu đúng tệp ấy."
+    paths: ["packages/db/migrations/**", "_acceptance/va-moc-goi-dau-lead-tra-lai/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; bộ kiểm cách ly packages/db/tests/isolation.test.mjs xanh trên cơ sở dữ liệu đã migrate tới 023 (không ca nào SKIP), gồm ca hiện có mong «không có lead này của người gọi» cho mark_first_call."
+    paths: ["packages/db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; tệp packages/core/src/metrics/chuoi-gui-lai.test.ts, bảng viết trước sáu hình chuỗi × hai số đo (lead_to_first_call, lead_to_ready), giá trị mong theo định nghĩa chốt ở Hỏi-1 (decisions.jsonl): «không gửi lại», «gửi lại một lần trước mốc», «gửi lại hai lần», «gửi lại sau mốc» (tại den lead đầu đếm traLai, lead gửi lại không đếm), «lead đầu nhập trước kỳ, gửi lại trong kỳ» (không thuộc kỳ), «lead đầu đã gọi rồi trả lại, gửi lại, người mới gọi sau»; một assert số hình = 6 và mỗi ô so n, giaTri, chiTiet. Chiều đỏ (phá-thử S3): bỏ bước nối chuỗi trong thoiLuongLead thì ca «gửi lại một lần trước mốc» đỏ."
+    paths: ["packages/core/src/metrics/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «số đo: lõi và lead_board_metric cùng định nghĩa chuỗi» trong packages/api/test-db/va-moc-goi-dau-lead-tra-lai/so-do-chung.test.ts nạp qua API ba chủ nhà — x lên bảng thường, z trả lại rồi gửi lại thành z2 lên bảng, v trả lại hai lần rồi v3 lên bảng — đọc hàng lead từ cơ sở dữ liệu (id, created_at, các mốc, resubmitted_lead_id, board_at từ app.lead_board_at_all) thành LeadVao, assert resubmittedLeadId khác null ở z, v, v2, chạy tinhSoDo của @quy-hang/core cho lead_to_ready và app.lead_board_metric trên một khoảng chứa trọn mọi lần nhập và lên bảng: assert tập lead cuối chuỗi bằng nhau và đúng ba phần tử viết trước (x, z2, v3), số ngày từng chuỗi bằng nhau, lõi n = 3; đối chứng: chạy lõi trên dữ liệu mà resubmittedLeadId bị xoá thì n = 3 + số lead đã gửi lại và ca nêu «đếm hai lần»."
+    paths: ["packages/core/src/metrics/**", "packages/api/test-db/va-moc-goi-dau-lead-tra-lai/**", "packages/db/migrations/015_lead_bon_nac.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.va_moc_goi_dau
+    expected: "exit 0; ca «chập chờn: mốc đầu khoảng đo từ đồng hồ cơ sở dữ liệu» đọc khối ca «số đo: ngày lead → Sẵn sàng bán trên bộ mẫu» trong packages/api/test-db/leads-mine.test.ts: có lời gọi clock_timestamp() gán cho tu, không còn «const tu = new Date()», và mảng kỳ vọng [x 3.0, y 5.0, z2 6.0] giữ nguyên; đối chứng: bản sao khối với «const tu = new Date()» thì ca đỏ nêu «Date()»."
+    paths: ["packages/api/test-db/leads-mine.test.ts", "_acceptance/va-moc-goi-dau-lead-tra-lai/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0; không dòng «error TS»."
+    paths: ["packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; «mức nợ giao diện: 0/0»; «chuẩn giao diện: đạt»."
+    paths: ["packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; bộ test đơn vị của packages/api xanh."
+    paths: ["packages/api/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
