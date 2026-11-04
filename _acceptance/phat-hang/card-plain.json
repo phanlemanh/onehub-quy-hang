@@ -1,23 +1,71 @@
 {
- "feature_plain": "Đầu chủ và trưởng nhóm xuất danh sách căn đang lọc trên bảng hàng ra bài Zalo, bài Facebook, Excel, ảnh hay PDF trong vài bấm; không cột nội bộ nào ra ngoài, và mỗi lần xuất được đếm vào số đo hai tuần thử.",
+ "feature_plain": "Đầu chủ và trưởng nhóm xuất danh sách căn đang lọc trên bảng hàng ra bài Zalo, bài Facebook, Excel, ảnh hay PDF trong bốn bước; luật ẩn bỏ mọi cột nội bộ, và mỗi lần xuất được đếm vào «Số lần xuất bảng hàng».",
  "will_do": [
-  {"id":"AC-1","p":"Sẽ có nút «Xuất bảng hàng» trên bảng hàng (máy tính, đầu chủ và trưởng nhóm): có căn đang tích thì xuất các căn ấy, không tích thì xuất mọi căn đang lọc; menu Tạo cũng mở được."},
-  {"id":"AC-2","p":"Sẽ có năm mẫu và hai người nhận; ảnh và hai mẫu bài khoá khi quá 30 căn; quay lại bước trước được."},
-  {"id":"AC-3","p":"Sẽ ra đúng các cột đang hiện mà luật ẩn cho phép, giữ thứ tự cột và dòng; cột bị bỏ được nêu tên."},
-  {"id":"AC-4","p":"Sẽ chép bài đúng khuôn từng kênh vào bộ nhớ tạm; người tự dán và bấm gửi, máy không đăng thay."},
-  {"id":"AC-5","p":"Sẽ tải Excel một sheet mở được ở ứng dụng bảng tính, đúng như bảng đã xem trước."},
-  {"id":"AC-6","p":"Sẽ tải ảnh bảng (tới 30 căn) hay PDF nhiều trang, chữ tiếng Việt đọc đúng."},
-  {"id":"AC-7","p":"Sẽ chặn mọi thông tin nội bộ (chủ nhà, số điện thoại, giá đáy, người giữ, trường riêng…) ở cả năm mẫu và hai người nhận; khách riêng không thấy mã căn."},
-  {"id":"AC-8","p":"Sẽ ghi mỗi lần xuất ở máy chủ (ai, mẫu nào, cho ai, bao nhiêu căn, lúc nào) — không lưu nội dung; ghi hỏng thì bài hay file vẫn có."},
-  {"id":"AC-9","p":"Sẽ tính «Số lần xuất bảng hàng» của hai tuần thử từ các lần xuất, thay cho dòng «chưa có sự kiện»."}
+  {
+   "id": "AC-1",
+   "p": "Sẽ có nút «Xuất bảng hàng» trên bảng hàng (máy tính, đầu chủ và trưởng nhóm): có căn đang tích thì xuất các căn ấy, không tích thì xuất mọi căn đang lọc; menu Tạo cũng mở được."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ có năm mẫu và hai người nhận; ảnh và hai mẫu bài khoá khi quá 30 căn; quay lại bước trước được."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ ra đúng các cột đang hiện mà luật ẩn cho phép, giữ thứ tự cột và dòng; cột bị bỏ được nêu tên."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ chép bài đúng khuôn từng kênh vào bộ nhớ tạm; người tự dán và bấm gửi, máy không đăng thay."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ tải Excel một sheet mở được ở ứng dụng bảng tính, đúng như bảng đã xem trước."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ tải ảnh bảng (tới 30 căn) hay PDF nhiều trang, chữ tiếng Việt đọc đúng."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ chặn mọi thông tin nội bộ (chủ nhà, số điện thoại, giá đáy, người giữ, trường riêng…) ở cả năm mẫu và hai người nhận; khách riêng không thấy mã căn."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ ghi mỗi lần xuất ở máy chủ (ai, mẫu nào, cho ai, bao nhiêu căn, lúc nào) — không lưu nội dung; ghi hỏng thì bài hay file vẫn có."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ tính «Số lần xuất bảng hàng» của hai tuần thử từ các lần xuất, thay cho dòng «chưa có sự kiện»."
+  }
  ],
  "wont_do": [
-  {"id":"OOS-1","p":"Sàn chưa tự chỉnh mẫu bài, mẫu file — để hàng Cài đặt sàn."},
-  {"id":"OOS-2","p":"Chưa kèm trường riêng của sàn khi xuất."},
-  {"id":"OOS-3","p":"PDF chưa có chữ chọn, tìm được (trừ khi anh đổi Hỏi-3)."},
-  {"id":"OOS-4","p":"Không có Xuất bảng hàng trên điện thoại."},
-  {"id":"OOS-5","p":"Chưa lưu nội dung đã xuất, chưa có màn «Đã xuất»."},
-  {"id":"OOS-6","p":"Lần xuất ghi hỏng lúc mất mạng không gửi lại sau."},
-  {"id":"OOS-7","p":"Không mở đường nào cho bên ngoài sàn gọi vào."}
+  {
+   "id": "OOS-1",
+   "p": "Sàn chưa tự chỉnh mẫu bài, mẫu file — để hàng Cài đặt sàn."
+  },
+  {
+   "id": "OOS-2",
+   "p": "Chưa kèm trường riêng của sàn khi xuất."
+  },
+  {
+   "id": "OOS-3",
+   "p": "PDF chưa có chữ chọn, tìm được (trừ khi anh đổi Hỏi-3)."
+  },
+  {
+   "id": "OOS-4",
+   "p": "Không có Xuất bảng hàng trên điện thoại."
+  },
+  {
+   "id": "OOS-5",
+   "p": "Chưa lưu nội dung đã xuất, chưa có màn «Đã xuất»."
+  },
+  {
+   "id": "OOS-6",
+   "p": "Lần xuất ghi hỏng lúc mất mạng không gửi lại sau."
+  },
+  {
+   "id": "OOS-7",
+   "p": "Không mở đường nào cho bên ngoài sàn gọi vào."
+  }
  ]
 }
