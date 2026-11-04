@@ -2372,6 +2372,12 @@
       ]
     },
     {
+      "ma": "man-nhap-excel",
+      "cau_giao": "Đầu chủ thả file bảng hàng cũ (xlsx, csv) vào màn Nhập Excel, thấy từng ô sẽ ghi gì — giữ nguyên, máy sửa, cần người, chặn — sửa rồi bấm ghi qua đường ghi lần nhập của hàng 65; xem thử nói đủ «ghi N căn mới, cập nhật M, tin bổ sung K, bỏ J»",
+      "slug": "man-nhap-excel",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-03"
+    },
+    {
       "ma": "ghi-thiet-bi-va-mat-mang",
       "cau_giao": "Ghi thiết bị (máy tính hay điện thoại) vào sự kiện của thao tác, và ghi lượt mất mạng cùng thao tác lúc mất mạng trên điện thoại về máy chủ, để hai số đo §11 «thao tác theo thiết bị và vai» và «mất mạng trên điện thoại» đo được trong hai tuần thử",
       "slug": "ghi-thiet-bi-va-mat-mang",

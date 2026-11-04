@@ -2198,6 +2198,91 @@ test("máy bị báo: chiều đỏ — cấp quyền bảng dấu cho quy_hang_
   });
 });
 
+// ---- Lần nhập (024_lan_nhap, hàng 65a) ----
+const IMPORT_A = "00000000-0000-4000-8000-0000000065a1";
+const IMPORT_B = "00000000-0000-4000-8000-0000000065b1";
+const BAM = "a".repeat(64);
+
+/** Thêm mỗi sàn một lần nhập và một dòng nhập bằng vai chủ, trên dựng của `withListings`. */
+async function withImports(companyId, fn) {
+  return withListings(companyId, async (c) => {
+    await c.query("reset role");
+    await c.query(
+      `insert into imports (company_id, id, created_by, created_roles, file_name, file_hash, file_kind, header_row, plan)
+       values ($1, $3, $5, '{listing_agent}', '[Tệp A].xlsx', $7, 'xlsx', '0', '{}'),
+              ($2, $4, $6, '{listing_agent}', '[Tệp B].xlsx', $7, 'xlsx', '0', '{}')`,
+      [COMPANY_A, COMPANY_B, IMPORT_A, IMPORT_B, USER_1, USER_2, BAM],
+    );
+    await c.query(
+      `insert into import_rows (company_id, import_id, row_number, action, reason, listing_id)
+       values ($1, $3, 2, 'create', 'căn mới', $5), ($2, $4, 2, 'create', 'căn mới', $6)`,
+      [COMPANY_A, COMPANY_B, IMPORT_A, IMPORT_B, LISTING_A, LISTING_B],
+    );
+    await c.query("set local role quy_hang_app");
+    return fn(c);
+  });
+}
+
+test("lần nhập: A không thấy, không ghi được lần nhập và dòng nhập của B", { skip }, async () => {
+  await withImports(COMPANY_A, async (c) => {
+    // Đối chứng: lần nhập và dòng nhập của chính A đọc được.
+    assert.deepEqual((await c.query("select id from imports")).rows.map((r) => r.id), [IMPORT_A]);
+    assert.deepEqual((await c.query("select import_id from import_rows")).rows.map((r) => r.import_id), [IMPORT_A]);
+    assert.equal((await c.query("select 1 from imports where id = $1", [IMPORT_B])).rowCount, 0, "không đọc lần nhập của B");
+    assert.equal((await c.query("select 1 from import_rows where import_id = $1", [IMPORT_B])).rowCount, 0, "không đọc dòng nhập của B");
+    await expectError(
+      c,
+      "insert into import_rows (company_id, import_id, row_number, action, reason) values ($1, $2, 3, 'skip', 'x')",
+      [COMPANY_B, IMPORT_B],
+      /row-level security/,
+    );
+    await expectError(
+      c,
+      "insert into import_rows (company_id, import_id, row_number, action, reason) values ($1, $2, 3, 'skip', 'x')",
+      [COMPANY_A, IMPORT_B],
+      /row-level security|violates foreign key/,
+    );
+    assert.equal((await c.query("update imports set status = 'committed' where id = $1", [IMPORT_B])).rowCount, 0, "không sửa lần nhập của B");
+    assert.equal((await c.query("update imports set status = 'committed' where id = $1", [IMPORT_A])).rowCount, 1, "đối chứng: sửa được lần nhập của chính A");
+    await expectError(
+      c,
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, import_id)
+       values ($1, $2, 2, 'owner_confirmed', '{}', $3, '{listing_agent}', false, $4)`,
+      [COMPANY_A, LISTING_A, USER_1, IMPORT_B],
+      /violates foreign key/,
+    );
+    // Đối chứng: sự kiện mang lần nhập của chính A thì ghi được.
+    await c.query(
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, import_id)
+       values ($1, $2, 2, 'owner_confirmed', '{}', $3, '{listing_agent}', false, $4)`,
+      [COMPANY_A, LISTING_A, USER_1, IMPORT_A],
+    );
+  });
+});
+
+test("lần nhập: dòng nhập không giữ ô nguyên văn", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      "select column_name from information_schema.columns where table_schema = 'public' and table_name = 'import_rows' order by ordinal_position",
+    );
+    assert.deepEqual(rows.map((r) => r.column_name), [
+      "company_id",
+      "import_id",
+      "row_number",
+      "action",
+      "reason",
+      "listing_id",
+      "lead_id",
+      "listing_version_before",
+      "created_at",
+    ]);
+  } finally {
+    await client.end();
+  }
+});
+
 // ---- Lượt mất mạng (028_thiet_bi_va_mat_mang, E2) ----
 const LUOT_MM = `insert into offline_sessions (company_id, user_id, device, started_at, ended_at, queued_ops)
                  values ($1, $2, $3, $4, $5, $6)`;

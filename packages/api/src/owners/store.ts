@@ -1,9 +1,9 @@
 import { canSeeSource, ownerView, validateOwnerInput, type OwnerView, type Viewer } from "@quy-hang/core/access";
 import type { PayloadError } from "@quy-hang/core/listing";
-import { canRead, factsFromEvents } from "@quy-hang/core/visibility";
+import { canRead } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
-import { loadEvents } from "../listings/store";
+import { factsOf, loadEvents } from "../listings/store";
 import { dauVetSo, giaiMaSo, maHoaSo, nguCanhChuNha, type KhoaSoChu } from "./ma-hoa";
 
 /**
@@ -41,7 +41,7 @@ async function nguoiXem(tx: pg.PoolClient): Promise<Viewer> {
 async function moHang(tx: pg.PoolClient, listingId: string): Promise<Viewer | null> {
   if (!(await khoaHang(tx, listingId))) return null;
   const viewer = await nguoiXem(tx);
-  return canRead(viewer, factsFromEvents(await loadEvents(tx, listingId))) ? viewer : null;
+  return canRead(viewer, await factsOf(tx, listingId, await loadEvents(tx, listingId))) ? viewer : null;
 }
 
 /** Đầu chủ giữ căn: dòng gán mới nhất; chưa ai giữ → `null`. */

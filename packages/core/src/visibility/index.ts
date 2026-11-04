@@ -13,7 +13,12 @@ export type Visibility = (typeof VISIBILITY_LEVELS)[number];
  * Dữ kiện luật cần: người tạo hàng và các trạng thái hàng từng tới. Hai lối vào cho cùng dữ kiện — gấp từ dãy sự kiện
  * (`factsFromEvents`) hay một câu SQL gom từ bảng sự kiện — rồi đều qua `visibilityOf`/`canRead`: luật chỉ nằm ở đây.
  */
-export type VisibilityFacts = { creatorUserId: string; statusesReached: readonly string[] };
+export type VisibilityFacts = {
+  creatorUserId: string;
+  statusesReached: readonly string[];
+  /** Đầu chủ đang giữ căn (dòng gán mới nhất) — vắng hay `null` khi chưa ai giữ. Không ở dãy sự kiện: lối SQL mang vào. */
+  listingAgentUserId?: string | null;
+};
 
 export function factsFromEvents(events: readonly ListingEvent[]): VisibilityFacts {
   const ds = [...events].sort((a, b) => a.seq - b.seq);
@@ -32,9 +37,14 @@ export function visibilityOf(facts: VisibilityFacts): Visibility {
 export type Viewer = { userId: string; roles: readonly string[] };
 
 /**
- * Người tạo luôn đọc được hàng của mình; người khác cùng sàn chỉ đọc hàng «Toàn sàn» — vai nào cũng vậy (quản trị sàn
- * không tự thấy nguồn, Tham chiếu §6). Sàn khác đã bị chặn ở cơ sở dữ liệu.
+ * Người tạo luôn đọc được hàng của mình; đầu chủ giữ căn cũng vậy — hàng Trưởng nhóm nhập cho một đầu chủ (hàng 65a, AC-11)
+ * là «Chỉ tôi» của Trưởng nhóm mà đầu chủ ấy giữ. Người khác cùng sàn chỉ đọc hàng «Toàn sàn» — vai nào cũng vậy (quản trị
+ * sàn không tự thấy nguồn, Tham chiếu §6). Sàn khác đã bị chặn ở cơ sở dữ liệu.
  */
 export function canRead(viewer: Viewer, facts: VisibilityFacts): boolean {
-  return viewer.userId === facts.creatorUserId || visibilityOf(facts) === "Company";
+  return (
+    viewer.userId === facts.creatorUserId ||
+    (!!facts.listingAgentUserId && viewer.userId === facts.listingAgentUserId) ||
+    visibilityOf(facts) === "Company"
+  );
 }
