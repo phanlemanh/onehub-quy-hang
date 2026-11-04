@@ -5,7 +5,7 @@ slug: phat-hang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: verified
+status: signed-off
 design_doc: _acceptance/phat-hang/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -83,3 +83,6 @@ Hàng 43 của lộ trình (dãy H, đợt `dau-khach-nhap`), mã phạm vi P6; 
 ## Notes
 
 - Hỏi-1 … Hỏi-4: `design.md` §7; sổ quyết định.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-2: Bài kiểm không so chữ thông báo ở tab Tôi với dải bật ở Hôm nay, nên hai nơi lệch chữ về sau sẽ không bị bắt.
+  - Ngoài-3: Bài kiểm hoàn tác khi ghi lỗi chỉ soi hai chỗ sửa hàng đã liệt kê; chỗ sửa hàng khác thiếu lớp bảo vệ sẽ không bị bắt.
