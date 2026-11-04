@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luồng xuất bảng hàng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f5f5f5;
+      --color-ink: #2d3142;
+      --color-muted: #4f5d75;
+      --font-sans: 'Geist', system-ui, sans-serif;
+      --font-serif: 'Instrument Serif', 'Lora', serif;
+      --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); padding: 1.5rem 2rem; }
+    .frame { max-width: 1280px; width: 100%; margin: 0 auto; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400;
+      letter-spacing: -0.02em; line-height: 1.3; color: var(--color-ink); margin-bottom: 1rem; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Wireflow · Xuất bảng hàng · Hỏi-1 + Hỏi-3 · AC-1 … AC-8</p>
+    <h1>Xuất bảng hàng: từ bảng hàng đang lọc, bốn bước, rồi chép bài hay tải file</h1>
+<svg viewBox="0 0 1280 864" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Luồng Xuất bảng hàng: từ bảng hàng qua bốn bước hộp thoại tới chép bài hay tải file và ghi lần xuất">
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+</defs>
+<rect x="0" y="0" width="100%" height="100%" fill="#f5f5f5"/>
+<line x1="520" y1="240" x2="580" y2="240" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+<line x1="508" y1="136" x2="580" y2="136" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<line x1="880" y1="240" x2="940" y2="240" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M1088 360 V396 Q1088 404 1080 404 H248 Q240 404 240 412 V440" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<line x1="440" y1="600" x2="500" y2="600" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M780 568 H804 Q812 568 812 560 V522 Q812 514 820 514 H880" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+<path d="M780 632 H804 Q812 632 812 640 V678 Q812 686 820 686 H880" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<rect x="534" y="220" width="32" height="12" fill="#f5f5f5" rx="2"/>
+<text x="550" y="229" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BẤM</text>
+<rect x="524" y="116" width="52" height="12" fill="#f5f5f5" rx="2"/>
+<text x="550" y="125" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">MENU TẠO</text>
+<rect x="894" y="220" width="32" height="12" fill="#f5f5f5" rx="2"/>
+<text x="910" y="229" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TIẾP</text>
+<rect x="404" y="384" width="32" height="12" fill="#f5f5f5" rx="2"/>
+<text x="420" y="393" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TIẾP</text>
+<rect x="454" y="580" width="32" height="12" fill="#f5f5f5" rx="2"/>
+<text x="470" y="589" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TIẾP</text>
+<rect x="822" y="494" width="52" height="12" fill="#f5f5f5" rx="2"/>
+<text x="848" y="503" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">GHI ĐƯỢC</text>
+<rect x="822" y="666" width="52" height="12" fill="#f5f5f5" rx="2"/>
+<text x="848" y="675" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">GHI HỎNG</text>
+<rect x="40" y="40" width="480" height="320" fill="#f5f5f5" rx="6"/>
+<rect x="40" y="40" width="480" height="320" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<path d="M40 60 V46 Q40 40 46 40 H514 Q520 40 520 46 V60 Z" fill="#ececec"/>
+<line x1="40" y1="60" x2="520" y2="60" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="48" y="54" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng — máy tính</text>
+<text x="512" y="54" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">/inventory</text>
+<rect x="40.5" y="60" width="32" height="299.5" fill="#ececec"/>
+<line x1="72" y1="60" x2="72" y2="360" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="50" y="72" width="12" height="12" fill="rgba(45,49,66,0.25)" rx="3"/>
+<rect x="50" y="96" width="12" height="12" fill="#2d3142" rx="3"/>
+<rect x="50" y="120" width="12" height="12" fill="rgba(45,49,66,0.25)" rx="3"/>
+<rect x="50" y="144" width="12" height="12" fill="rgba(45,49,66,0.25)" rx="3"/>
+<rect x="50" y="168" width="12" height="12" fill="rgba(45,49,66,0.25)" rx="3"/>
+<rect x="50" y="192" width="12" height="12" fill="rgba(45,49,66,0.25)" rx="3"/>
+<line x1="176" y1="60" x2="176" y2="360" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="84" y="80" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<text x="84" y="104" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Tất cả căn</text>
+<text x="84" y="124" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Đang bán</text>
+<rect x="80" y="132" width="92" height="18" fill="rgba(45,49,66,0.07)" rx="3"/>
+<text x="84" y="144" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Góc nhìn: [Mẫu] Toà A</text>
+<text x="84" y="164" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Đã rút</text>
+<line x1="176" y1="88" x2="520" y2="88" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="188" y="68" width="152" height="12" fill="rgba(45,49,66,0.06)" rx="3" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="196" y="77" fill="#636b80" font-size="7" font-family="'Geist', sans-serif">Tìm căn, toà…</text>
+<rect x="460" y="66" width="48" height="16" fill="#ffffff" rx="3" stroke="#2d3142" stroke-width="1"/>
+<text x="484" y="77" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600" text-anchor="middle">+ Tạo ▾</text>
+<rect x="188" y="100" width="100" height="16" fill="rgba(45,49,66,0.06)" rx="8" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="196" y="111" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif">Toà: [Mẫu] Toà A ×</text>
+<text x="294" y="111" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">2 căn đã tích</text>
+<rect x="344" y="98" width="76" height="20" fill="#eb6c36" rx="3"/>
+<text x="382" y="111" fill="#ffffff" font-size="8" font-family="'Geist', sans-serif" font-weight="600" text-anchor="middle">Xuất bảng hàng</text>
+<rect x="188" y="132" width="320" height="20" fill="#ececec" rx="2"/>
+<rect x="194" y="138" width="8" height="8" fill="#ffffff" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="208" y="145" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif" font-weight="600">Mã căn</text>
+<text x="280" y="145" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif" font-weight="600">Diện tích</text>
+<text x="344" y="145" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif" font-weight="600">Giá</text>
+<text x="408" y="145" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif" font-weight="600">Người giữ</text>
+<text x="476" y="145" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif" font-weight="600">Lý do rút</text>
+<rect x="188" y="156" width="320" height="18" fill="rgba(235,108,54,0.08)" rx="2"/>
+<rect x="194" y="161" width="8" height="8" fill="#2d3142" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<path d="M195.5 165 L197.5 167 L200.5 163" fill="none" stroke="#ffffff" stroke-width="1"/>
+<text x="208" y="168" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-08.03</text>
+<text x="280" y="168" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">68 m²</text>
+<text x="344" y="168" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">3,2 tỷ</text>
+<text x="408" y="168" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">[Mẫu]</text>
+<text x="476" y="168" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">—</text>
+<line x1="188" y1="175" x2="508" y2="175" stroke="rgba(45,49,66,0.12)" stroke-width="0.6"/>
+<rect x="188" y="176" width="320" height="18" fill="rgba(235,108,54,0.08)" rx="2"/>
+<rect x="194" y="181" width="8" height="8" fill="#2d3142" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<path d="M195.5 185 L197.5 187 L200.5 183" fill="none" stroke="#ffffff" stroke-width="1"/>
+<text x="208" y="188" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-08.05</text>
+<text x="280" y="188" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">72 m²</text>
+<text x="344" y="188" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">3,4 tỷ</text>
+<text x="408" y="188" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">[Mẫu]</text>
+<text x="476" y="188" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">—</text>
+<line x1="188" y1="195" x2="508" y2="195" stroke="rgba(45,49,66,0.12)" stroke-width="0.6"/>
+<rect x="194" y="201" width="8" height="8" fill="#ffffff" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="208" y="208" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-12.01</text>
+<text x="280" y="208" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">54 m²</text>
+<text x="344" y="208" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">2,6 tỷ</text>
+<text x="408" y="208" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">[Mẫu]</text>
+<text x="476" y="208" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">—</text>
+<line x1="188" y1="215" x2="508" y2="215" stroke="rgba(45,49,66,0.12)" stroke-width="0.6"/>
+<rect x="194" y="221" width="8" height="8" fill="#ffffff" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="208" y="228" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-15.02</text>
+<text x="280" y="228" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">81 m²</text>
+<text x="344" y="228" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">3,9 tỷ</text>
+<text x="408" y="228" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">[Mẫu]</text>
+<text x="476" y="228" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">—</text>
+<line x1="188" y1="235" x2="508" y2="235" stroke="rgba(45,49,66,0.12)" stroke-width="0.6"/>
+<rect x="194" y="241" width="8" height="8" fill="#ffffff" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="208" y="248" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-17.06</text>
+<text x="280" y="248" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">68 m²</text>
+<text x="344" y="248" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">3,3 tỷ</text>
+<text x="408" y="248" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">[Mẫu]</text>
+<text x="476" y="248" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">—</text>
+<line x1="188" y1="255" x2="508" y2="255" stroke="rgba(45,49,66,0.12)" stroke-width="0.6"/>
+<rect x="194" y="261" width="8" height="8" fill="#ffffff" rx="1.5" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+<text x="208" y="268" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-21.04</text>
+<text x="280" y="268" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">96 m²</text>
+<text x="344" y="268" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">4,8 tỷ</text>
+<text x="408" y="268" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">[Mẫu]</text>
+<text x="476" y="268" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">—</text>
+<line x1="188" y1="275" x2="508" y2="275" stroke="rgba(45,49,66,0.12)" stroke-width="0.6"/>
+<rect x="424" y="86" width="84" height="64" fill="#ffffff" rx="4" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="432" y="100" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Căn mới</text>
+<text x="432" y="116" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Lead mới</text>
+<rect x="428" y="126" width="76" height="18" fill="rgba(45,49,66,0.07)" rx="3"/>
+<text x="432" y="138" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng</text>
+<text x="40" y="378" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">AC-1 · nút tắt khi 0 căn: «Không có căn nào để xuất»</text>
+<rect x="580" y="40" width="300" height="320" fill="#f5f5f5" rx="6"/>
+<rect x="580" y="40" width="300" height="320" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<path d="M580 60 V46 Q580 40 586 40 H874 Q880 40 880 46 V60 Z" fill="#ececec"/>
+<line x1="580" y1="60" x2="880" y2="60" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="588" y="54" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Bước 1 · Mẫu</text>
+<text x="872" y="54" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">trên /inventory</text>
+<rect x="580.5" y="60" width="20" height="299.5" fill="#ececec"/>
+<rect x="586" y="68" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="586" y="84" width="8" height="8" fill="#2d3142" rx="2"/>
+<rect x="586" y="100" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="586" y="116" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="586" y="132" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<line x1="656" y1="60" x2="656" y2="360" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="604" y="74" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<rect x="604" y="84" width="44" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<rect x="602" y="92" width="50" height="12" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="606" y="96" width="36" height="4" fill="rgba(45,49,66,0.30)" rx="2"/>
+<rect x="604" y="112" width="40" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<line x1="656" y1="80" x2="880" y2="80" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="664" y="66" width="72" height="8" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="832" y="64" width="40" height="12" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="852" y="73" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="500" text-anchor="middle">+ Tạo</text>
+<rect x="664" y="88" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="664" y="104" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="664" y="120" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="664" y="136" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="664" y="152" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="664" y="168" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="664" y="184" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<path d="M580.5 60 H879.5 V354 Q879.5 359.5 874 359.5 H586 Q580.5 359.5 580.5 354 Z" fill="rgba(45,49,66,0.16)"/>
+<rect x="604" y="84" width="252" height="256" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="616" y="102" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng · 2 căn</text>
+<text x="844" y="102" fill="#636b80" font-size="10" font-family="'Geist', sans-serif" text-anchor="end">×</text>
+<text x="616" y="120" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="600">1 Mẫu</text>
+<line x1="616" y1="124" x2="640" y2="124" stroke="#2d3142" stroke-width="1.2"/>
+<text x="648" y="120" fill="#636b80" font-size="7" font-family="'Geist', sans-serif" opacity="0.7">2 Người nhận</text>
+<text x="708" y="120" fill="#636b80" font-size="7" font-family="'Geist', sans-serif" opacity="0.7">3 Xem trước</text>
+<text x="764" y="120" fill="#636b80" font-size="7" font-family="'Geist', sans-serif" opacity="0.7">4 Chép · Tải</text>
+<line x1="604" y1="128" x2="856" y2="128" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="616" y="140" width="68" height="40" fill="#ffffff" rx="4" stroke="#2d3142" stroke-width="1.4"/>
+<rect x="624" y="148" width="12" height="12" fill="#2d3142" rx="2"/>
+<text x="624" y="172" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bài Zalo</text>
+<rect x="692" y="140" width="68" height="40" fill="#ffffff" rx="4" stroke="rgba(45,49,66,0.25)" stroke-width="0.8"/>
+<rect x="700" y="148" width="12" height="12" fill="rgba(45,49,66,0.12)" rx="2"/>
+<text x="700" y="172" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Bài Facebook</text>
+<rect x="768" y="140" width="68" height="40" fill="#ffffff" rx="4" stroke="rgba(45,49,66,0.25)" stroke-width="0.8"/>
+<rect x="776" y="148" width="12" height="12" fill="rgba(45,49,66,0.12)" rx="2"/>
+<text x="776" y="172" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Excel</text>
+<rect x="616" y="188" width="68" height="40" fill="#ffffff" rx="4" stroke="rgba(45,49,66,0.25)" stroke-width="0.8"/>
+<rect x="624" y="196" width="12" height="12" fill="rgba(45,49,66,0.12)" rx="2"/>
+<text x="624" y="220" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Ảnh</text>
+<rect x="692" y="188" width="68" height="40" fill="#ffffff" rx="4" stroke="rgba(45,49,66,0.25)" stroke-width="0.8"/>
+<rect x="700" y="196" width="12" height="12" fill="rgba(45,49,66,0.12)" rx="2"/>
+<text x="700" y="220" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">PDF</text>
+<text x="616" y="252" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">Quá 30 căn: khoá Bài Zalo, Bài Facebook, Ảnh</text>
+<text x="616" y="264" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif" font-style="italic">«Quá 30 căn — dùng Excel hay PDF»</text>
+<line x1="604" y1="312" x2="856" y2="312" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="800" y="316" width="44" height="16" fill="#2d3142" rx="3"/>
+<text x="822" y="327" fill="#ffffff" font-size="7" font-family="'Geist', sans-serif" font-weight="600" text-anchor="middle">Tiếp</text>
+<text x="580" y="378" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">AC-2 · lối phụ /exports/new → /inventory?phat-hang=1</text>
+<rect x="940" y="40" width="300" height="320" fill="#f5f5f5" rx="6"/>
+<rect x="940" y="40" width="300" height="320" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<path d="M940 60 V46 Q940 40 946 40 H1234 Q1240 40 1240 46 V60 Z" fill="#ececec"/>
+<line x1="940" y1="60" x2="1240" y2="60" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="948" y="54" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Bước 2 · Người nhận</text>
+<text x="1232" y="54" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">trên /inventory</text>
+<rect x="940.5" y="60" width="20" height="299.5" fill="#ececec"/>
+<rect x="946" y="68" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="946" y="84" width="8" height="8" fill="#2d3142" rx="2"/>
+<rect x="946" y="100" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="946" y="116" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="946" y="132" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<line x1="1016" y1="60" x2="1016" y2="360" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="964" y="74" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<rect x="964" y="84" width="44" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<rect x="962" y="92" width="50" height="12" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="966" y="96" width="36" height="4" fill="rgba(45,49,66,0.30)" rx="2"/>
+<rect x="964" y="112" width="40" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<line x1="1016" y1="80" x2="1240" y2="80" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="1024" y="66" width="72" height="8" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="1192" y="64" width="40" height="12" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="1212" y="73" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="500" text-anchor="middle">+ Tạo</text>
+<rect x="1024" y="88" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="1024" y="104" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="1024" y="120" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="1024" y="136" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="1024" y="152" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="1024" y="168" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="1024" y="184" width="208" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<path d="M940.5 60 H1239.5 V354 Q1239.5 359.5 1234 359.5 H946 Q940.5 359.5 940.5 354 Z" fill="rgba(45,49,66,0.16)"/>
+<rect x="964" y="84" width="252" height="256" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="976" y="102" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng · 2 căn</text>
+<text x="1204" y="102" fill="#636b80" font-size="10" font-family="'Geist', sans-serif" text-anchor="end">×</text>
+<text x="976" y="120" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">1 Mẫu</text>
+<text x="1008" y="120" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="600">2 Người nhận</text>
+<line x1="1008" y1="124" x2="1060" y2="124" stroke="#2d3142" stroke-width="1.2"/>
+<text x="1068" y="120" fill="#636b80" font-size="7" font-family="'Geist', sans-serif" opacity="0.7">3 Xem trước</text>
+<text x="1124" y="120" fill="#636b80" font-size="7" font-family="'Geist', sans-serif" opacity="0.7">4 Chép · Tải</text>
+<line x1="964" y1="128" x2="1216" y2="128" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="976" y="140" width="228" height="44" fill="#ffffff" rx="4" stroke="#2d3142" stroke-width="1.4"/>
+<circle cx="992" cy="156" r="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<circle cx="992" cy="156" r="2.5" fill="#2d3142"/>
+<text x="1004" y="159" fill="#2d3142" font-size="9" font-family="'Geist', sans-serif" font-weight="600">Nhóm môi giới</text>
+<text x="1004" y="173" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">chọn sẵn</text>
+<rect x="976" y="192" width="228" height="44" fill="#ffffff" rx="4" stroke="rgba(45,49,66,0.25)" stroke-width="0.8"/>
+<circle cx="992" cy="208" r="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="1004" y="211" fill="#2d3142" font-size="9" font-family="'Geist', sans-serif" font-weight="600">Khách riêng</text>
+<text x="1004" y="225" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">ẩn mã căn — chỉ toà, tầng cao / thấp</text>
+<line x1="964" y1="312" x2="1216" y2="312" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="1104" y="316" width="48" height="16" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="1128" y="327" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" text-anchor="middle">Quay lại</text>
+<rect x="1160" y="316" width="44" height="16" fill="#2d3142" rx="3"/>
+<text x="1182" y="327" fill="#ffffff" font-size="7" font-family="'Geist', sans-serif" font-weight="600" text-anchor="middle">Tiếp</text>
+<text x="940" y="378" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">AC-2 · AC-7</text>
+<rect x="40" y="440" width="400" height="320" fill="#f5f5f5" rx="6"/>
+<rect x="40" y="440" width="400" height="320" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<path d="M40 460 V446 Q40 440 46 440 H434 Q440 440 440 446 V460 Z" fill="#ececec"/>
+<line x1="40" y1="460" x2="440" y2="460" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="48" y="454" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Bước 3 · Xem trước</text>
+<text x="432" y="454" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">trên /inventory</text>
+<rect x="40.5" y="460" width="20" height="299.5" fill="#ececec"/>
+<rect x="46" y="468" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="46" y="484" width="8" height="8" fill="#2d3142" rx="2"/>
+<rect x="46" y="500" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="46" y="516" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="46" y="532" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<line x1="116" y1="460" x2="116" y2="760" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="64" y="474" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<rect x="64" y="484" width="44" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<rect x="62" y="492" width="50" height="12" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="66" y="496" width="36" height="4" fill="rgba(45,49,66,0.30)" rx="2"/>
+<rect x="64" y="512" width="40" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<line x1="116" y1="480" x2="440" y2="480" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="124" y="466" width="72" height="8" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="392" y="464" width="40" height="12" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="412" y="473" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="500" text-anchor="middle">+ Tạo</text>
+<rect x="124" y="488" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="124" y="504" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="124" y="520" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="124" y="536" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="124" y="552" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="124" y="568" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="124" y="584" width="308" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<path d="M40.5 460 H439.5 V754 Q439.5 759.5 434 759.5 H46 Q40.5 759.5 40.5 754 Z" fill="rgba(45,49,66,0.16)"/>
+<rect x="64" y="484" width="352" height="256" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="76" y="502" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng · 2 căn</text>
+<text x="404" y="502" fill="#636b80" font-size="10" font-family="'Geist', sans-serif" text-anchor="end">×</text>
+<text x="76" y="520" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">1 Mẫu</text>
+<text x="108" y="520" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">2 Người nhận</text>
+<text x="168" y="520" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="600">3 Xem trước</text>
+<line x1="168" y1="524" x2="216" y2="524" stroke="#2d3142" stroke-width="1.2"/>
+<text x="224" y="520" fill="#636b80" font-size="7" font-family="'Geist', sans-serif" opacity="0.7">4 Chép · Tải</text>
+<line x1="64" y1="528" x2="416" y2="528" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="76" y="544" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Bài Zalo · Nhóm môi giới · 2 căn</text>
+<rect x="76" y="552" width="328" height="60" fill="#f5f5f5" rx="4" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="84" y="572" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-08.03 · 68 m² · 3,2 tỷ</text>
+<text x="84" y="588" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace">A-08.05 · 72 m² · 3,4 tỷ</text>
+<text x="84" y="604" fill="#636b80" font-size="7" font-family="'Geist', sans-serif">(Excel · Ảnh · PDF: xem trước dạng bảng)</text>
+<rect x="76" y="620" width="328" height="20" fill="rgba(235,108,54,0.08)" rx="3"/>
+<text x="84" y="633" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Cột không ra ngoài: Người giữ, Lý do rút</text>
+<text x="76" y="656" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">Cột theo thứ tự góc nhìn, dòng theo quy sắp của góc nhìn</text>
+<text x="76" y="668" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">Trường riêng của sàn không kèm</text>
+<line x1="64" y1="712" x2="416" y2="712" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="304" y="716" width="48" height="16" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="328" y="727" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" text-anchor="middle">Quay lại</text>
+<rect x="360" y="716" width="44" height="16" fill="#2d3142" rx="3"/>
+<text x="382" y="727" fill="#ffffff" font-size="7" font-family="'Geist', sans-serif" font-weight="600" text-anchor="middle">Tiếp</text>
+<text x="40" y="778" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">AC-3 · AC-7 — luật ẩn ở lõi, không ẩn ở giao diện</text>
+<rect x="500" y="440" width="280" height="320" fill="#f5f5f5" rx="6"/>
+<rect x="500" y="440" width="280" height="320" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<path d="M500 460 V446 Q500 440 506 440 H774 Q780 440 780 446 V460 Z" fill="#ececec"/>
+<line x1="500" y1="460" x2="780" y2="460" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="508" y="454" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Bước 4 · Chép · Tải</text>
+<text x="772" y="454" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">trên /inventory</text>
+<rect x="500.5" y="460" width="20" height="299.5" fill="#ececec"/>
+<rect x="506" y="468" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="506" y="484" width="8" height="8" fill="#2d3142" rx="2"/>
+<rect x="506" y="500" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="506" y="516" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="506" y="532" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<line x1="576" y1="460" x2="576" y2="760" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="524" y="474" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<rect x="524" y="484" width="44" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<rect x="522" y="492" width="50" height="12" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="526" y="496" width="36" height="4" fill="rgba(45,49,66,0.30)" rx="2"/>
+<rect x="524" y="512" width="40" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<line x1="576" y1="480" x2="780" y2="480" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="584" y="466" width="72" height="8" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="732" y="464" width="40" height="12" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="752" y="473" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="500" text-anchor="middle">+ Tạo</text>
+<rect x="584" y="488" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="584" y="504" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="584" y="520" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="584" y="536" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="584" y="552" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="584" y="568" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="584" y="584" width="188" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<path d="M500.5 460 H779.5 V754 Q779.5 759.5 774 759.5 H506 Q500.5 759.5 500.5 754 Z" fill="rgba(45,49,66,0.16)"/>
+<rect x="524" y="484" width="232" height="256" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="536" y="502" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng · 2 căn</text>
+<text x="744" y="502" fill="#636b80" font-size="10" font-family="'Geist', sans-serif" text-anchor="end">×</text>
+<text x="536" y="520" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">1 Mẫu</text>
+<text x="568" y="520" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">2 Người nhận</text>
+<text x="628" y="520" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">3 Xem trước</text>
+<text x="684" y="520" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="600">4 Chép · Tải</text>
+<line x1="684" y1="524" x2="732" y2="524" stroke="#2d3142" stroke-width="1.2"/>
+<line x1="524" y1="528" x2="756" y2="528" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="536" y="544" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">Bài Zalo · Nhóm môi giới · 2 căn</text>
+<rect x="536" y="556" width="88" height="24" fill="#2d3142" rx="3"/>
+<text x="580" y="572" fill="#ffffff" font-size="9" font-family="'Geist', sans-serif" font-weight="600" text-anchor="middle">Chép bài</text>
+<rect x="632" y="556" width="88" height="24" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8" stroke-dasharray="3,2"/>
+<text x="676" y="572" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">Tải file</text>
+<text x="536" y="596" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">Bài → «Chép bài» · Excel, Ảnh, PDF → «Tải file»</text>
+<text x="536" y="616" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">Người tự dán và bấm gửi —</text>
+<text x="536" y="628" fill="#4f5d75" font-size="7" font-family="'Geist', sans-serif">không gửi, không đăng thay</text>
+<text x="536" y="652" fill="#636b80" font-size="7" font-family="'Geist Mono', monospace">xong → POST /api/v1/exports</text>
+<line x1="524" y1="712" x2="756" y2="712" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="644" y="716" width="48" height="16" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="668" y="727" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" text-anchor="middle">Quay lại</text>
+<text x="500" y="778" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">AC-4 · AC-5 · AC-6</text>
+<rect x="880" y="440" width="360" height="152" fill="#f5f5f5" rx="6"/>
+<rect x="880" y="440" width="360" height="152" fill="#ffffff" rx="6" stroke="#eb6c36" stroke-width="1.4"/>
+<path d="M880 460 V446 Q880 440 886 440 H1234 Q1240 440 1240 446 V460 Z" fill="#ececec"/>
+<line x1="880" y1="460" x2="1240" y2="460" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="888" y="454" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xong · ghi được</text>
+<text x="1232" y="454" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">201</text>
+<rect x="880.5" y="460" width="20" height="131.5" fill="#ececec"/>
+<rect x="886" y="468" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="886" y="484" width="8" height="8" fill="#2d3142" rx="2"/>
+<rect x="886" y="500" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="886" y="516" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="886" y="532" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<line x1="956" y1="460" x2="956" y2="592" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="904" y="474" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<rect x="904" y="484" width="44" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<rect x="902" y="492" width="50" height="12" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="906" y="496" width="36" height="4" fill="rgba(45,49,66,0.30)" rx="2"/>
+<rect x="904" y="512" width="40" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<line x1="956" y1="480" x2="1240" y2="480" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="964" y="466" width="72" height="8" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="1192" y="464" width="40" height="12" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="1212" y="473" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="500" text-anchor="middle">+ Tạo</text>
+<rect x="964" y="488" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="504" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="520" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="536" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="552" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="568" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<path d="M880.5 460 H1239.5 V586 Q1239.5 591.5 1234 591.5 H886 Q880.5 591.5 880.5 586 Z" fill="rgba(45,49,66,0.16)"/>
+<rect x="904" y="484" width="312" height="100" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="916" y="502" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng · 2 căn</text>
+<text x="1204" y="502" fill="#636b80" font-size="10" font-family="'Geist', sans-serif" text-anchor="end">×</text>
+<line x1="904" y1="512" x2="1216" y2="512" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="916" y="528" fill="#2d3142" font-size="9" font-family="'Geist', sans-serif" font-weight="600">✓ Đã chép bài</text>
+<text x="916" y="542" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">hay «Đã tải bang-hang-&lt;ngày&gt;.xlsx»</text>
+<text x="916" y="560" fill="#636b80" font-size="7" font-family="'Geist', sans-serif">Một lần xuất ghi cho sàn: người, mẫu, người nhận,</text>
+<text x="916" y="572" fill="#636b80" font-size="7" font-family="'Geist', sans-serif">số căn, lúc xuất — không nội dung, không danh sách căn</text>
+<rect x="880" y="608" width="360" height="152" fill="#f5f5f5" rx="6"/>
+<rect x="880" y="608" width="360" height="152" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<path d="M880 628 V614 Q880 608 886 608 H1234 Q1240 608 1240 614 V628 Z" fill="#ececec"/>
+<line x1="880" y1="628" x2="1240" y2="628" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="888" y="622" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xong · ghi hỏng</text>
+<text x="1232" y="622" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">mất mạng</text>
+<rect x="880.5" y="628" width="20" height="131.5" fill="#ececec"/>
+<rect x="886" y="636" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="886" y="652" width="8" height="8" fill="#2d3142" rx="2"/>
+<rect x="886" y="668" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="886" y="684" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<rect x="886" y="700" width="8" height="8" fill="rgba(45,49,66,0.25)" rx="2"/>
+<line x1="956" y1="628" x2="956" y2="760" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="904" y="642" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">Bảng hàng</text>
+<rect x="904" y="652" width="44" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<rect x="902" y="660" width="50" height="12" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="906" y="664" width="36" height="4" fill="rgba(45,49,66,0.30)" rx="2"/>
+<rect x="904" y="680" width="40" height="4" fill="rgba(45,49,66,0.14)" rx="2"/>
+<line x1="956" y1="648" x2="1240" y2="648" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<rect x="964" y="634" width="72" height="8" fill="rgba(45,49,66,0.08)" rx="2"/>
+<rect x="1192" y="632" width="40" height="12" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="1212" y="641" fill="#2d3142" font-size="7" font-family="'Geist', sans-serif" font-weight="500" text-anchor="middle">+ Tạo</text>
+<rect x="964" y="656" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="672" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="688" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="704" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="720" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<rect x="964" y="736" width="268" height="8" fill="rgba(45,49,66,0.07)" rx="2"/>
+<path d="M880.5 628 H1239.5 V754 Q1239.5 759.5 1234 759.5 H886 Q880.5 759.5 880.5 754 Z" fill="rgba(45,49,66,0.16)"/>
+<rect x="904" y="652" width="312" height="100" fill="#ffffff" rx="6" stroke="rgba(45,49,66,0.40)" stroke-width="1"/>
+<text x="916" y="670" fill="#2d3142" font-size="10" font-family="'Geist', sans-serif" font-weight="600">Xuất bảng hàng · 2 căn</text>
+<text x="1204" y="670" fill="#636b80" font-size="10" font-family="'Geist', sans-serif" text-anchor="end">×</text>
+<line x1="904" y1="680" x2="1216" y2="680" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="916" y="696" fill="#2d3142" font-size="9" font-family="'Geist', sans-serif" font-weight="600">✓ Đã chép bài</text>
+<text x="916" y="710" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">bài hay file vẫn có; lần xuất này không được đếm</text>
+<rect x="916" y="720" width="288" height="20" fill="rgba(45,49,66,0.06)" rx="3" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+<text x="924" y="733" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif" font-weight="600">⚠ Chưa ghi được lần xuất</text>
+<text x="880" y="778" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">AC-8 · AC-9 — đếm «Số lần xuất bảng hàng»</text>
+<line x1="40" y1="808" x2="1240" y2="808" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="828" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+<line x1="120" y1="824" x2="152" y2="824" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+<text x="160" y="828" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">đường chính: nút «Xuất bảng hàng» và màn kết</text>
+<line x1="400" y1="824" x2="432" y2="824" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<text x="440" y="828" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">lối phụ, chuyển hàng, ghi hỏng</text>
+<rect x="632" y="816" width="24" height="16" fill="#ffffff" rx="3" stroke="rgba(45,49,66,0.35)" stroke-width="1"/>
+<rect x="632.5" y="816.5" width="5" height="15" fill="#ececec"/>
+<text x="664" y="828" fill="#4f5d75" font-size="8" font-family="'Geist', sans-serif">màn có vỏ: cột biểu tượng · cột Bảng hàng · thanh trên «+ Tạo»; hộp thoại mở trên bảng hàng</text>
+<text x="40" y="852" fill="#636b80" font-size="8" font-family="'Geist', sans-serif">Dữ liệu mẫu: nhãn [Mẫu], mã căn dạng A-08.03 — không tên, không số điện thoại thật.</text>
+</svg>
+  </div>
+</body>
+</html>

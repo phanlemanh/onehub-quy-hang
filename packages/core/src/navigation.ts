@@ -18,7 +18,7 @@ export interface Navigation {
   tabs: Tab[];
   /** Nút của thanh trên (máy tính). */
   actions: Action[];
-  /** Việc tạo trên điện thoại (nút «+»): §9 — điện thoại không có Nhập Excel, Phát hàng; vai có tab Lead không lặp nút. */
+  /** Việc tạo trên điện thoại (nút «+»): §9 — điện thoại không có Nhập Excel, Xuất bảng hàng; vai có tab Lead không lặp nút. */
   mobileActions: Action[];
   /** Đường mở đầu khi vào `/`. */
   landing: string;
@@ -67,7 +67,7 @@ const ACTIONS: Record<Role, Action[]> = {
   company_admin: [],
 };
 
-/** Việc tạo có trên điện thoại (§9: không có Nhập Excel, Phát hàng). */
+/** Việc tạo có trên điện thoại (§9: không có Nhập Excel, Xuất bảng hàng). */
 const MOBILE_ACTIONS: Action[] = ["new_lead"];
 
 const HOME_ORDER: Home[] = ["today", "inventory", "shares", "team", "settings"];

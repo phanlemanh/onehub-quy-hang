@@ -22,7 +22,7 @@ test("Telesales: không cột nhà, không ô gõ mã căn, điện thoại Hôm
   assert.equal(nav.landing, "/today");
 });
 
-test("Đầu chủ: Hôm nay, Bảng hàng; + Lead, Nhập Excel, Phát hàng", () => {
+test("Đầu chủ: Hôm nay, Bảng hàng; + Lead, Nhập Excel, Xuất bảng hàng", () => {
   const nav = navigationFor(["listing_agent"]);
   assert.deepEqual(nav.homes, ["today", "inventory"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "me"]);
@@ -38,7 +38,7 @@ test("Đầu khách: thêm Đã gửi, không nút nào", () => {
   assert.equal(nav.unitJump, true);
 });
 
-test("Trưởng nhóm: thêm Đội; + Lead, Nhập Excel (ADR-0011), Phát hàng; điện thoại không có Đội", () => {
+test("Trưởng nhóm: thêm Đội; + Lead, Nhập Excel (ADR-0011), Xuất bảng hàng; điện thoại không có Đội", () => {
   const nav = navigationFor(["team_lead"]);
   assert.deepEqual(nav.homes, ["today", "inventory", "shares", "team"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
@@ -134,7 +134,7 @@ test("Năm vai × sáu trường khớp bảng §9 (30 so sánh)", () => {
   assert.deepEqual(diffTable(SECTION_9), []);
 });
 
-test("Đối chứng đỏ: bảng giả thiếu «Phát hàng» của Trưởng nhóm → hàm so gọi tên vai và nút", () => {
+test("Đối chứng đỏ: bảng giả thiếu «Xuất bảng hàng» của Trưởng nhóm → hàm so gọi tên vai và nút", () => {
   const fake = { ...SECTION_9, team_lead: { ...SECTION_9.team_lead, actions: ["new_lead"] as Action[] } };
   const diff = diffTable(fake);
   assert.equal(diff.length, 1);

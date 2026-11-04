@@ -34,7 +34,7 @@ export const TAB_LABEL: Record<Tab, { label: string; icon: LucideIcon }> = {
 export const ACTION_LABEL: Record<Action, { label: string; icon: LucideIcon }> = {
   new_lead: { label: "+ Lead", icon: PhoneIncomingIcon },
   import: { label: "Nhập Excel", icon: FileSpreadsheetIcon },
-  export: { label: "Phát hàng", icon: UploadIcon },
+  export: { label: "Xuất bảng hàng", icon: UploadIcon },
 };
 
 export const NOTIFICATION_ICON = BellIcon;

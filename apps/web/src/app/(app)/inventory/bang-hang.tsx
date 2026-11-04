@@ -10,7 +10,7 @@
  * lưu. Dữ liệu từ kho trên máy (hàng 13): lọc, nhóm, sắp không gọi mạng.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useTable,
   type ColumnDef,
@@ -22,7 +22,8 @@ import {
   type Updater,
 } from "@tanstack/react-table";
 import { elementScroll, observeElementOffset, observeElementRect } from "@tanstack/react-virtual";
-import { FileSpreadsheetIcon, FilterIcon, LayoutListIcon } from "lucide-react";
+import { FileSpreadsheetIcon, FileUpIcon, FilterIcon, LayoutListIcon } from "lucide-react";
+import { navigationFor } from "@quy-hang/core";
 
 import { Badge } from "@/components/reui/badge";
 import { DataGrid, DataGridContainer, dataGridFeatures, type DataGridFeatures } from "@/components/reui/data-grid/data-grid";
@@ -50,6 +51,8 @@ import { nhomDong, type CachNhom, type DongLuoi } from "./nhom";
 import { ChonCot, ChonNhom, HopGocNhin, MenuGocNhin, type CheDoHop } from "./thanh-cong-cu";
 import { COT_SUA, useSuaTrenO } from "./cell-edit/tren-o";
 import { OTich, OTichHet, TichProvider, useSuaHangLoat } from "./bulk/thanh";
+import { HopThoaiXuat, type MoXuat } from "./phat-hang/hop-thoai";
+import { tapCanXuat } from "./phat-hang/tap-can";
 
 // Dán, xoá, kéo điền nhiều ô là hàng sau (hàng 16 chỉ tích căn): lưới gửi lô ghi thì bỏ qua — chỉ trình sửa trên ô ghi.
 const BO_QUA_GHI_LOAT = () => undefined;
@@ -102,6 +105,9 @@ const STATUS_BADGE: Record<DongBang["standardStatus"], "success-light" | "info-l
   Hold: "warning-light",
   Withdrawn: "destructive-light",
 };
+
+/** Ngày theo máy người xuất (YYYY-MM-DD) — gọi lúc bấm, không lúc dựng. */
+const homNay = () => new Date().toLocaleDateString("sv-SE");
 
 type Feat = DataGridFeatures;
 type DefCot = ColumnDef<Feat, DongLuoi>;
@@ -238,12 +244,18 @@ export function BangHang({
   gocNhinId,
   dangMo = null,
   onMoCan,
+  vai = [],
+  tenSan = "",
 }: {
   nguoi: string;
   san: string;
   gocNhinId?: string;
   dangMo?: string | null;
   onMoCan?: (d: DongBang) => void;
+  /** Vai ở sàn đang làm — nút «Xuất bảng hàng» theo `navigationFor(vai).actions` (hàng 43). */
+  vai?: readonly string[];
+  /** Tên sàn — dòng đầu bài Facebook của Xuất bảng hàng. */
+  tenSan?: string;
 }) {
   useDatPhamVi(nguoi, san);
   const router = useRouter();
@@ -360,6 +372,26 @@ export function BangHang({
   );
 
   const cachXem: CachXem = { loc, cot, sap, nhom };
+
+  // Xuất bảng hàng (hàng 43): căn đang tích trong các căn đang hiện, không thì mọi căn đang hiện — theo thứ tự góc nhìn.
+  const coXuat = navigationFor(vai).actions.includes("export");
+  const tapXuat = useMemo(() => tapCanXuat(daLoc, loat.ctx.tich), [daLoc, loat.ctx.tich]);
+  const [moXuat, setMoXuat] = useState<MoXuat | null>(null);
+  const moHopXuat = useCallback(() => {
+    if (tapXuat.tat) return;
+    setMoXuat({ dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "" });
+  }, [tapXuat, cot, tenSan, setMoXuat]);
+  // Menu Tạo trỏ `/exports/new` → `/inventory?phat-hang=1`: mở hộp thoại một lần với cách xem đang có.
+  const q = useSearchParams();
+  const daMoTuMenu = useRef(false);
+  useEffect(() => {
+    if (daMoTuMenu.current || !coXuat || !daKeo || q.get("phat-hang") !== "1") return;
+    daMoTuMenu.current = true;
+    moHopXuat();
+    const m = new URLSearchParams(q.toString());
+    m.delete("phat-hang");
+    window.history.replaceState(null, "", `${window.location.pathname}${m.size ? `?${m}` : ""}`);
+  }, [q, coXuat, daKeo, moHopXuat]);
   const doi = gocNhin ? daDoi(cachXem, gocNhin) : false;
   const soLoc = soOLocDangChay(loc);
 
@@ -404,6 +436,15 @@ export function BangHang({
           ) : null}
         </Toggle>
         <ChonCot value={cot} onChange={setCot} />
+        {coXuat ? (
+          <div className="hidden items-center gap-1.5 md:flex">
+            {tapXuat.tat ? <span className="text-muted-foreground text-xs">{tapXuat.loi}</span> : null}
+            <Button type="button" variant="outline" size="sm" disabled={tapXuat.tat} onClick={moHopXuat}>
+              <FileUpIcon data-icon="inline-start" aria-hidden="true" />
+              Xuất bảng hàng
+            </Button>
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -500,6 +541,7 @@ export function BangHang({
         </DataGrid>
         {suaTrenO.trinhSua}
         {loat.hop}
+        {moXuat ? <HopThoaiXuat mo={moXuat} onDong={() => setMoXuat(null)} /> : null}
         {hop ? (
           <HopGocNhin
             cheDo={hop}
