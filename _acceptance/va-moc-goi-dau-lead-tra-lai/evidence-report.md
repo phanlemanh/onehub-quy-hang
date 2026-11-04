@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 27ca5e776347f8294704f289ee6dcc50d268b7ef
-human_signoff:
+human_signoff: Manh Phan 2026-11-04
 ---
 
 # Evidence Report: va-moc-goi-dau-lead-tra-lai
