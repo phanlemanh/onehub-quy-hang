@@ -50,6 +50,7 @@ const hang = (id: string, toa: string, ma: string | null, s: Partial<ListingView
   closeDate: null,
   withdrawnReason: null,
   lastConfirmedAt: null,
+  voided: false,
   version: 3,
   ...s,
 });

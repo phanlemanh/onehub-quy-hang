@@ -71,6 +71,7 @@ export const STATE_COLUMNS: Readonly<Record<keyof ListingState, string>> = {
   closeDate: "close_date",
   withdrawnReason: "withdrawn_reason",
   lastConfirmedAt: "last_confirmed_at",
+  voided: "voided",
   version: "version",
 };
 const KHOA = Object.keys(STATE_COLUMNS) as (keyof ListingState)[];

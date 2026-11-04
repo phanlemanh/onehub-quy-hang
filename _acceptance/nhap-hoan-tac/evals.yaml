@@ -81,7 +81,7 @@ evals:
     criterion: AC-7
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; ca «sự kiện voided: cờ khi gấp, không phải trạng thái» có mặt và ok — ma trận sáu trạng thái chuẩn × một dãy kết thúc bằng voided → foldListing giữ standardStatus (6 assert) và voided true (6 assert); dãy không voided → voided false (assert); validatePayload('voided', {}) rỗng lỗi, ('voided', {x:1}) báo khoá lạ (2 assert); TRANSITIONS không có khoá hay giá trị 'voided' (assert); đếm = 15. Chiều đỏ: gấp voided thành standardStatus 'Withdrawn' → ca đỏ nêu trạng thái đầu bị đổi."
+    expected: "exit 0; ca «sự kiện voided: cờ khi gấp, không phải trạng thái» có mặt và ok — ma trận sáu trạng thái chuẩn × một dãy kết thúc bằng voided → foldListing giữ standardStatus (6 assert) và voided true (6 assert); dãy không voided → voided false (assert); validatePayload('voided', {}) rỗng lỗi, ('voided', {x:1}) báo khoá lạ (2 assert); TRANSITIONS không có khoá hay giá trị 'voided' (assert); đếm = 16. Chiều đỏ: gấp voided thành standardStatus 'Withdrawn' → ca đỏ nêu trạng thái đầu bị đổi."
     paths: [packages/core/src/listing/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
