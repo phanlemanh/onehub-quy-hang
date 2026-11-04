@@ -10,6 +10,7 @@ import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
+import { registerImportRoutes } from "./imports/routes";
 import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
@@ -162,6 +163,7 @@ export function createApi(deps: ApiDeps) {
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
+  registerImportRoutes(api, deps);
   registerCatalogRoutes(api, deps);
   registerFeedRoutes(api, deps);
   registerCatalogReadAll(api, deps);

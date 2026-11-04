@@ -69,6 +69,15 @@ async function canEnterLead(tx: pg.PoolClient): Promise<boolean> {
  */
 export async function createLead(tx: pg.PoolClient, payload: unknown, intoContact: string | null = null): Promise<LeadRecord | Refusal> {
   if (!(await canEnterLead(tx))) return { error: API_ERRORS.leadRoleRequired };
+  return ghiLead(tx, payload, intoContact);
+}
+
+/**
+ * Phần ghi của lead — khuôn, kiểm trùng (luật 20), liên hệ của số, báo đầu chủ khớp — không xét vai của người gọi. Lối nhập
+ * file (hàng 65a) đi đây cho dòng căn đã có hàng mở: tin bổ sung là đúng lead «căn đã có hàng mở», không có đường ghi lead
+ * thứ hai. Lối vào của telesales là `createLead`, có kiểm vai.
+ */
+export async function ghiLead(tx: pg.PoolClient, payload: unknown, intoContact: string | null = null): Promise<LeadRecord | Refusal> {
   const kiem = validateLeadInput(payload);
   if (!kiem.ok) return { error: API_ERRORS.invalidPayload, details: kiem.errors };
   const v = kiem.value;

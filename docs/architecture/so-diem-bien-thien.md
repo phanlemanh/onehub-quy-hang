@@ -134,6 +134,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K19 | Link không tự hết hạn ở bản đầu | Chốt 29/10 cho bản đầu | §13 |
 | K20 | Mã căn của hàng gắn một lần; đã có thì khoá | Nghĩa chuẩn để so — thuộc tính căn, ảnh gắn theo toà + mã | ADR-0026 quyết định 1; hồ sơ `dien-ma-can-cho-hang` Hỏi-3 |
 | K21 | Mỗi sàn tối đa một hàng đang mở trên một căn — gắn mã trùng bị chặn | Nghĩa chuẩn để so; «đang mở» là `OPEN_STATUSES` của lõi | §4; ADR-0026 quyết định 4 |
+| K22 | Dòng nhập file trỏ căn đã có hàng mở mà người khác giữ thành tin bổ sung, không ghi đè hàng (Lofty cho chủ tài khoản chọn cách đè) | Quyền và an toàn — người giữ căn không bị người khác ghi đè | Luật 20; hàng 65a Hỏi-2 (chủ kho duyệt 03/11); `quyetDongNhap` ở `packages/core/src/import/dong.ts` |
 
 ## Đếm
 

@@ -1,6 +1,6 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 import { completeness, foldListing, freshness, type ListingState } from "@quy-hang/core/listing";
-import { canRead, factsFromEvents, visibilityOf, type VisibilityFacts } from "@quy-hang/core/visibility";
+import { canRead, visibilityOf, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "../app";
@@ -9,7 +9,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { NO_QUEUE_FACTS, readQueueFacts } from "./lan-doi";
-import { applyCommand, createListing, docThietBi, FACTS_SQL, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
+import { applyCommand, createListing, docThietBi, FACTS_SQL, factsOf, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
 
 /**
  * Hàng và lệnh đổi hàng (ADR-0008). Trục ai thấy hàng (hàng 12): hàng «Chỉ tôi» chỉ người tạo đọc và gửi lệnh được, người
@@ -125,15 +125,19 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
         // Đọc bản tính bằng đúng tên cột của STATE_COLUMNS; số và ngày về đúng kiểu của bản tính.
         const cot = Object.entries(STATE_COLUMNS).map(([k, col]) => `${col === "list_price" || col === "close_price" ? `${col}::float8` : col === "close_date" ? `${col}::text` : col} as "${k}"`);
         const { rows } = await tx.query(
-          `select l.id, ${cot.join(", ")}, ${FACTS_SQL.creatorUserId} as "creatorUserId", ${FACTS_SQL.statusesReached} as "statusesReached"
+          `select l.id, ${cot.join(", ")}, ${FACTS_SQL.creatorUserId} as "creatorUserId", ${FACTS_SQL.statusesReached} as "statusesReached", ${FACTS_SQL.listingAgentUserId} as "listingAgentUserId"
            from listings l where l.company_id = app.current_company_id() order by l.id`,
         );
         const nguoiXem = await viewerOf(tx, ctx.userId);
         // Người giữ và lần đổi cuối (hàng 22) — tính lúc đọc từ bảng gán và bảng sự kiện.
         const hangDoi = await readQueueFacts(tx);
         return rows.flatMap((r: Record<string, unknown>) => {
-          const { id, creatorUserId, statusesReached, ...s } = r;
-          const facts: VisibilityFacts = { creatorUserId: String(creatorUserId), statusesReached: statusesReached as string[] };
+          const { id, creatorUserId, statusesReached, listingAgentUserId, ...s } = r;
+          const facts: VisibilityFacts = {
+            creatorUserId: String(creatorUserId),
+            statusesReached: statusesReached as string[],
+            listingAgentUserId: (listingAgentUserId as string | null) ?? null,
+          };
           if (!canRead(nguoiXem, facts)) return [];
           const st = { ...s, lastConfirmedAt: s.lastConfirmedAt instanceof Date ? s.lastConfirmedAt.toISOString() : null } as ListingState;
           return [{ ...view(String(id), st, facts), ...(hangDoi.get(String(id)) ?? NO_QUEUE_FACTS) }];
@@ -156,13 +160,18 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if ("code" in ctx) return tra(c, ctx);
       const { listingId } = c.req.valid("param");
       if (!/^[0-9a-f-]{36}$/i.test(listingId)) return tra(c, API_ERRORS.notFound);
-      const kq = await withCompany(appPool, ctx, async (tx) => ({
-        events: await loadEvents(tx, listingId),
-        nguoiXem: await viewerOf(tx, ctx.userId),
-        hangDoi: (await readQueueFacts(tx, [listingId])).get(listingId) ?? NO_QUEUE_FACTS,
-      }));
-      if (!kq.events.length) return tra(c, API_ERRORS.notFound);
-      const facts = factsFromEvents(kq.events);
+      const kq = await withCompany(appPool, ctx, async (tx) => {
+        const events = await loadEvents(tx, listingId);
+        return {
+          events,
+          // Dữ kiện ai thấy hàng cộng đầu chủ giữ căn (hàng 65a, AC-11).
+          facts: events.length ? await factsOf(tx, listingId, events) : null,
+          nguoiXem: await viewerOf(tx, ctx.userId),
+          hangDoi: (await readQueueFacts(tx, [listingId])).get(listingId) ?? NO_QUEUE_FACTS,
+        };
+      });
+      if (!kq.facts) return tra(c, API_ERRORS.notFound);
+      const facts = kq.facts;
       // «Chỉ tôi» của người khác: cùng câu trả lời với hàng không có (AC-4).
       if (!canRead(kq.nguoiXem, facts)) return tra(c, API_ERRORS.notFound);
       return c.json({ ...view(listingId, foldListing(kq.events), facts), ...kq.hangDoi, events: kq.events }, 200);
