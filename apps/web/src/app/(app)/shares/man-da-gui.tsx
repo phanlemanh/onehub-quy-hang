@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { NganNoi } from "@/components/bo-cuc";
-import { taoTatLink, type LanGuiChiTiet, type LanGuiTom, type TrangThaiTat } from "./da-gui";
-import { ChiTietLanGui, DanhSachDaGui, type TrangThaiMan } from "./danh-sach";
+import { docLanTuThamSo, taiChiTiet, taoTatLink, type LanGuiTom, type TrangThaiChiTiet, type TrangThaiTat } from "./da-gui";
+import { DanhSachDaGui, NganChiTiet, type TrangThaiMan } from "./danh-sach";
 
 const goi = (u: string, i: RequestInit) => fetch(u, i);
 
@@ -16,12 +16,13 @@ async function docDanhSach(): Promise<TrangThaiMan> {
   return { kieu: "xong", ds: (await r.json()) as LanGuiTom[] };
 }
 
-/** Đã gửi (hàng 36): tải danh sách, chạm thẻ mở ngăn chi tiết, tắt link qua hộp xác nhận. */
+/** Đã gửi (hàng 36): tải danh sách, chạm thẻ mở ngăn chi tiết, tắt link qua hộp xác nhận; `?lan=<id>` mở thẳng một link (hàng 37). */
 export function ManDaGui() {
   const [tt, setTt] = useState<TrangThaiMan>({ kieu: "dang-tai" });
   const [lan, setLan] = useState(0);
   const [chon, setChon] = useState<string | null>(null);
-  const [ct, setCt] = useState<LanGuiChiTiet | null>(null);
+  const [ct, setCt] = useState<TrangThaiChiTiet>({ kieu: "dang-tai" });
+  const [lanCt, setLanCt] = useState(0);
   const [tat, setTat] = useState<TrangThaiTat>("mo");
 
   useEffect(() => {
@@ -37,20 +38,27 @@ export function ManDaGui() {
   };
 
   useEffect(() => {
+    const id = docLanTuThamSo(new URLSearchParams(window.location.search).get("lan"));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- đọc ?lan= một lần lúc vào màn: địa chỉ chỉ có ở máy khách
+    if (id) setChon(id);
+  }, []);
+
+  useEffect(() => {
     if (!chon) return;
     let huy = false;
-    void fetch(`/api/v1/shares/${chon}`, { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((v) => !huy && setCt(v as LanGuiChiTiet | null))
-      .catch(() => !huy && setCt(null));
+    void taiChiTiet(goi, chon).then((v) => !huy && setCt(v));
     return () => {
       huy = true;
     };
-  }, [chon, lan]);
+  }, [chon, lan, lanCt]);
   const mo = (id: string) => {
-    setCt(null);
+    setCt({ kieu: "dang-tai" });
     setTat("mo");
     setChon(id);
+  };
+  const thuLaiCt = () => {
+    setCt({ kieu: "dang-tai" });
+    setLanCt((n) => n + 1);
   };
 
   // Hộp xác nhận nằm ở ChiTietLanGui (AlertDialog): tới đây là người đã bấm «Tắt link» trong hộp.
@@ -63,8 +71,8 @@ export function ManDaGui() {
   return (
     <>
       <DanhSachDaGui tt={tt} onMo={mo} onThuLai={taiLai} />
-      <NganNoi mo={chon !== null} onMo={(m) => !m && setChon(null)} tieuDe={ct?.recipient ?? "Link đã gửi"}>
-        {ct ? <ChiTietLanGui l={ct} tat={tat} onTat={() => void tatRoiTai()} /> : null}
+      <NganNoi mo={chon !== null} onMo={(m) => !m && setChon(null)} tieuDe={ct.kieu === "xong" ? ct.ct.recipient : "Link đã gửi"}>
+        <NganChiTiet tt={ct} tat={tat} onTat={() => void tatRoiTai()} onThuLai={thuLaiCt} />
       </NganNoi>
     </>
   );

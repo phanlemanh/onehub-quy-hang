@@ -1,0 +1,116 @@
+schema_version: 1
+feature_slug: hom-nay-dau-khach
+# Lệnh máy: `executors.test.isolation` (packages/api/test-db và packages/db/tests, DATABASE_URL tới Postgres dãy L cổng 5571),
+# `executors.test.web`, `executors.test.core`, `executors.test.ui_lint`, `executors.design.khuon`. exit 0 của lệnh chung
+# KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có
+# mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu: bộ dựng sàn thử qua đường ghi thật, số `0900 000 0xx`, tên «[Tên]». Mỗi lệnh ghi
+# trong bài test-db assert mã trả về; mỗi phép quét âm tính có đối chứng dương trên chính giá trị đã cài (bài học hàng 36,
+# Ngoài-4/5).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/hom-nay-dau-khach.test.ts có mặt và ok: «hôm nay đầu khách: tin theo người xem» — đầu khách 1 và đầu khách 2 mỗi người gửi một link, khách mở cả hai: GET /api/v1/today/buyer của đầu khách 1 chỉ có tin mang Lần gửi của mình (deepEqual tập shareId viết trước), của đầu khách 2 tương tự; người có cả vai Đầu khách và Đầu chủ nhận 200; bảng viết trước (đầu chủ chỉ một vai 403, telesales 403, trưởng nhóm không vai Đầu khách 403, không cookie 401) → mã HTTP, đếm bằng số dòng; tin xếp mới trước và mang ngày giờ Việt Nam (ca 23:30 UTC rơi vào ngày Việt Nam hôm sau, viết trước); thân trả không có khoá phone, contactId, ownerName, ownerPhone, floorPrice, không có số khách đã biết và không có tên chủ nhà đã cài (đối chứng dương: máy dò bắt số và tên chủ đã cài khi chèn vào một chuỗi mẫu). Chiều đỏ: bỏ lọc người gửi → ca đỏ nêu shareId thừa."
+    paths: [packages/api/src/today-buyer/**, packages/api/test-db/hom-nay-dau-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/today/truong-nhom.test.ts (bộ kiểm có sẵn của vungTheoVai) có mặt và ok: «hôm nay theo vai: vùng Đầu khách» — bảng viết trước tập vai → các vùng hiện theo thứ tự: [buyer_agent] → [dau-khach]; [buyer_agent, listing_agent] → [dau-chu, dau-khach]; [team_lead] → [truong-nhom] (không dau-khach); [team_lead, buyer_agent] → [truong-nhom, dau-khach]; [telesales] → [telesales]; mỗi dòng một assert deepEqual, đếm bằng số dòng. Chiều đỏ: bỏ vùng dau-khach khỏi bảng chọn → dòng [buyer_agent] đỏ."
+    paths: ["apps/web/src/app/(app)/today/truong-nhom-trang-thai.ts", "apps/web/src/app/(app)/today/truong-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hôm nay đầu khách: một tin phản ứng mỗi Lần gửi mỗi ngày» trong packages/api/test-db/hom-nay-dau-khach.test.ts có mặt và ok — link ba căn; qua route công khai thật của hàng 35 hai máy mở, máy A quan tâm căn 1 và 3: đúng MỘT tin kind reaction cho Lần gửi ấy, opens 2, tên căn quan tâm deepEqual [căn 1, căn 3] theo thứ tự gửi, giờ bằng created_at mới nhất của share_events (đọc bằng vai chủ). Đối chứng: một lượt mở dời sang ngày hôm trước bằng vai chủ thành tin thứ hai ở ngày ấy; sự kiện cũ hơn 7 ngày không sinh tin. Chiều đỏ: mỗi sự kiện một tin → ca đỏ nêu số tin."
+    paths: [packages/api/src/today-buyer/**, packages/core/src/today/dau-khach.ts, packages/api/test-db/hom-nay-dau-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hôm nay đầu khách: căn đã gửi vừa đổi» trong packages/api/test-db/hom-nay-dau-khach.test.ts có mặt và ok — link hai căn; sau lúc gửi đổi giá căn 1 qua lệnh thật (assert 200) và đưa căn 2 sang Pending: hai tin kind changed deepEqual [{price:{from:3200000000,to:2900000000}}, {status:{to:\"Pending\"}}] kèm người nhận; một link thứ hai đã tắt có căn đổi giá → không tin; đổi giá đáy của căn 1 qua PUT owner (assert 200, đọc lại floor_price bằng vai chủ thấy đã lưu) → không thêm tin và thân không mang giá đáy. Chiều đỏ: bỏ lọc link đã tắt → ca đỏ nêu Lần gửi đã tắt."
+    paths: [packages/api/src/today-buyer/**, packages/core/src/today/dau-khach.ts, packages/api/test-db/hom-nay-dau-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/today/dau-khach.test.ts có mặt và ok: «khớp bộ đã gửi» — bảng viết trước (toà A 2 PN 3,0 tỷ trong bộ): ứng viên toà A 2 PN 3,2 tỷ khớp; toà A 2 PN 3,6 tỷ không (ngoài ±15%); toà A 3 PN 3,0 tỷ không; toà B 2 PN 3,0 tỷ không; căn đã trong bộ không; căn lên Đang bán TRƯỚC lúc gửi không; căn khớp hai bộ của cùng đầu khách → MỘT tin, người nhận deepEqual [người nhận bộ 1, người nhận bộ 2]; căn trong bộ không có giá lúc gửi → không làm gốc khớp; căn Pending rồi trở lại Đang bán sau lúc gửi → khớp — mỗi dòng một assert, đếm bằng số dòng; «dựng tin» — đầu vào viết trước (phản ứng, vừa đổi, căn mới, link đã tắt) cho ra danh sách tin deepEqual danh sách viết trước, nhóm theo ngày Việt Nam. Chiều đỏ: bỏ điều kiện số phòng ngủ → dòng 3 PN đỏ."
+    paths: [packages/core/src/today/dau-khach.ts, packages/core/src/today/dau-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hôm nay đầu khách: căn mới khớp bộ đã gửi» trong packages/api/test-db/hom-nay-dau-khach.test.ts có mặt và ok — đầu khách 1 gửi bộ một căn toà A 2 PN 3,0 tỷ; SAU lúc gửi đầu chủ đưa lên Đang bán (lệnh thật, assert 200): căn toà A 2 PN 3,1 tỷ, căn toà A 2 PN 4,0 tỷ, căn toà B 2 PN 3,0 tỷ: đúng một tin kind new_match mang id căn 3,1 tỷ và người nhận của bộ; đầu khách 2 (không gửi bộ nào) không có tin new_match; tắt bộ của đầu khách 1 → tin new_match không còn. Chiều đỏ: bỏ lọc toà → ca đỏ nêu căn toà B."
+    paths: [packages/api/src/today-buyer/**, packages/core/src/today/dau-khach.ts, packages/api/test-db/hom-nay-dau-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/today/buyer/dau-khach.test.ts có mặt và ok: «hôm nay đầu khách: đích chạm» — bảng viết trước ba dòng (reaction → /shares?lan=<shareId>; changed → /shares?lan=<shareId>; new_match → /shares/new?can=<listingId>), mỗi dòng một assert trên href dựng từ tin, đếm bằng số dòng; và trong apps/web/src/app/(app)/shares/da-gui.test.ts «đã gửi: mở thẳng một Lần gửi từ ?lan=» — tham số hợp lệ chọn đúng id, tham số sai dạng bị bỏ (deepEqual null). Chiều đỏ: đích reaction trỏ /shares không tham số → ca đỏ."
+    paths: ["apps/web/src/app/(app)/today/buyer/**", "apps/web/src/app/(app)/shares/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/today/buyer/dau-khach.test.ts có mặt và ok: «hôm nay đầu khách: trạng thái vùng» — dựng bằng createElement từng trạng thái (đang tải, trống, lỗi, có tin) và assert chuỗi dựng: trống có «Chưa có gì mới trong 7 ngày» và nút «Gửi căn»; lỗi có «Chưa tải được — thử lại» và nút «Thử lại»; đang tải dùng khung chờ của bố cục; có tin hiện nhóm ngày «Hôm nay» và nhãn ba loại. Chiều đỏ: trống không nút → ca đỏ."
+    paths: ["apps/web/src/app/(app)/today/buyer/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Postgres dãy L (5571) có bộ mẫu; máy chủ dev ở cổng của executors.ui-check; đăng nhập Đầu khách mẫu, gửi một link khách riêng hai căn qua /shares/new, mở link ở cửa sổ không đăng nhập và chạm «Quan tâm» một căn; đổi giá một căn trong link và đưa lên Đang bán một căn cùng toà cùng số phòng ngủ giá gần (lệnh thật của đầu chủ mẫu)"
+      - "Khổ 375, đăng nhập Đầu khách: mở /today → chụp evidence/E6b-step1.png: vùng Đầu khách, nhóm «Hôm nay», ba tin: Khách phản ứng, Vừa đổi, Căn mới"
+      - "Chạm tin Khách phản ứng → chụp evidence/E6b-step2.png: Đã gửi mở ngăn chi tiết đúng Lần gửi"
+      - "Quay lại, chạm tin Căn mới → chụp evidence/E6b-step3.png: màn Gửi với căn ấy đã chọn"
+      - "Đăng nhập đầu khách mẫu chưa gửi gì → chụp evidence/E6b-step4.png: «Chưa có gì mới trong 7 ngày» + «Gửi căn»"
+      - "Đăng nhập lại Đầu khách mẫu, mở /shares?lan=00000000-0000-4000-8000-000000000000 (id không có) → chụp evidence/E6b-step5.png: ngăn chi tiết hiện «Chưa tải được — thử lại» và nút «Thử lại», không trống"
+    cmd: config:executors.ui-check
+    expected: "Khổ 375: vùng Đầu khách ở Hôm nay hiện ba tin của ba loại trong nhóm «Hôm nay»; chạm tin phản ứng mở đúng chi tiết Lần gửi; chạm tin căn mới mở Gửi với căn ấy; người chưa gửi gì thấy trạng thái trống có nút; mở Đã gửi với id không có thì ngăn chi tiết báo lỗi kèm thử lại; không cuộn ngang; ảnh chụp từng bước vào evidence/."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/shares/**", packages/api/src/today-buyer/**]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/da-gui.test.ts có mặt và ok: «đã gửi: ngăn chi tiết khi đang tải và tải lỗi» — dựng ChiTietLanGui với trạng thái đang tải → có khung chờ, không rỗng; trạng thái lỗi → có «Chưa tải được — thử lại» và nút «Thử lại»; và bộ tải chi tiết thuần phân ba ca viết trước (200 → mở, 404 → lỗi, 500 → lỗi, mạng ném → lỗi) deepEqual bảng, đếm bằng số dòng. Chiều đỏ: coi !ok là null như bản cũ → ca đỏ (nguồn «Ngoài-3 hàng 36»)."
+    paths: ["apps/web/src/app/(app)/shares/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; packages/ui-lint đủ ca, gồm bảng viết trước nhóm `hom-nay-dau-khach` (một tệp theo khuôn: apps/web/src/app/(app)/today/buyer/vung.tsx) và «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch» đếm lại từ cây; `npm run lint` của kho xanh."
+    paths: [packages/ui-lint/**, design/patterns/hom-nay-dau-khach.md, "apps/web/src/app/(app)/today/buyer/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/hom-nay-dau-khach.md", "apps/web/src/app/(app)/today/buyer/**", "apps/web/src/app/(app)/shares/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» mới nào cho tệp của vòng."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

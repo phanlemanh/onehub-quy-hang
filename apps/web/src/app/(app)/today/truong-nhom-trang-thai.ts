@@ -9,7 +9,7 @@ import type { DauChuCuaSan, DongLeadTruongNhom } from "./nguon";
 
 // ——— Vùng của /today theo vai ———
 
-export type VungHomNay = "truong-nhom" | "dau-chu" | "telesales";
+export type VungHomNay = "truong-nhom" | "dau-chu" | "telesales" | "dau-khach";
 
 /**
  * Vùng của `/today` theo vai, thứ tự từ trên xuống. Trưởng nhóm: bảng điều khiển trên cùng; người có cả vai Đầu chủ thấy
@@ -20,6 +20,8 @@ export function vungTheoVai(roles: readonly string[]): VungHomNay[] {
   if (roles.includes("team_lead")) ra.push("truong-nhom");
   if (roles.includes("listing_agent")) ra.push("dau-chu");
   if (roles.includes("telesales")) ra.push("telesales");
+  // Hàng 37: vùng Đầu khách sau các vùng sẵn có.
+  if (roles.includes("buyer_agent")) ra.push("dau-khach");
   return ra;
 }
 

@@ -4,8 +4,8 @@ import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DongCan } from "./chi-tiet";
-import { hrefCanThay, taoTatLink, type CanTrongLink, type Goi, type TrangThaiTat, type VuaDoi } from "./da-gui";
-import { CHU, ChiTietLanGui, DanhSachDaGui } from "./danh-sach";
+import { docLanTuThamSo, hrefCanThay, taiChiTiet, taoTatLink, type CanTrongLink, type Goi, type GoiDoc, type TrangThaiTat, type VuaDoi } from "./da-gui";
+import { CHU, ChiTietLanGui, DanhSachDaGui, NganChiTiet } from "./danh-sach";
 
 const can = (changed: VuaDoi, suggestions: CanTrongLink["suggestions"] = []): CanTrongLink => ({ id: "L1", name: "Toà A · A-12.01", listPrice: 2_900_000_000, standardStatus: "Active", interest: 2, changed, suggestions });
 const dung = (c: CanTrongLink) => renderToStaticMarkup(h(DongCan, { c }));
@@ -72,4 +72,39 @@ test("đã gửi: trạng thái màn", () => {
   for (const [tt, mong] of BANG) assert.ok(renderToStaticMarkup(h(DanhSachDaGui, { tt })).includes(mong), `${tt.kieu}: thiếu «${mong}»`);
   assert.ok(renderToStaticMarkup(h(DanhSachDaGui, { tt: { kieu: "xong", ds: [] } })).includes('href="/inventory/cards"'), "trống mà thiếu lối đi gửi");
   assert.deepEqual([CHU.trong, CHU.loi, CHU.khongVai], ["Chưa gửi link nào", "Chưa tải được — thử lại", "Đầu khách và trưởng nhóm xem được Đã gửi"]);
+});
+
+// ---- Hàng 37: AC-5 (mở thẳng từ Hôm nay), AC-7 (nguồn «Ngoài-3 hàng 36») ----
+test("đã gửi: mở thẳng một Lần gửi từ ?lan=", () => {
+  const ID = "0b6d3c1e-2f4a-4b5c-8d9e-0f1a2b3c4d5e";
+  const BANG: [string | null, string | null][] = [
+    [ID, ID],
+    ["abc", null],
+    ["", null],
+    [null, null],
+    [`${ID}x`, null],
+  ];
+  assert.equal(BANG.length, 5, "số dòng bảng viết trước");
+  for (const [q, mong] of BANG) assert.deepEqual(docLanTuThamSo(q), mong, String(q));
+});
+
+test("đã gửi: ngăn chi tiết khi đang tải và tải lỗi", async () => {
+  const dung = (tt: Parameters<typeof NganChiTiet>[0]["tt"]) => renderToStaticMarkup(h(NganChiTiet, { tt, tat: "mo" }));
+  const cho = dung({ kieu: "dang-tai" });
+  assert.ok(cho.includes('aria-busy="true"') && cho.includes(CHU.dangTaiChiTiet), "đang tải mà ngăn trống");
+  const loi = dung({ kieu: "loi" });
+  assert.ok(loi.includes("Chưa tải được — thử lại") && /<button[^>]*>Thử lại<\/button>/.test(loi), "lỗi thiếu chữ hay nút «Thử lại»");
+  const CT = { id: "S1", audience: "client", recipient: "[Tên]", listingCount: 0, covers: [], createdAt: "2026-11-04T00:00:00Z", disabledAt: null, opens: 0, interests: 0, lastOpenedAt: null, mine: true, listings: [] };
+  const goi = (kq: number | "nem"): GoiDoc => async () => {
+    if (kq === "nem") throw new TypeError("mất mạng");
+    return { ok: kq < 300, status: kq, json: async () => CT };
+  };
+  const BANG: [number | "nem", string][] = [
+    [200, "xong"],
+    [404, "loi"],
+    [500, "loi"],
+    ["nem", "loi"],
+  ];
+  assert.equal(BANG.length, 4, "số dòng bảng viết trước");
+  assert.deepEqual(await Promise.all(BANG.map(async ([kq]) => (await taiChiTiet(goi(kq), "S1")).kieu)), BANG.map(([, m]) => m));
 });

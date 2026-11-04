@@ -4,3 +4,4 @@ export * from "./mac-dinh";
 export * from "./hang-doi";
 export * from "./kiem";
 export * from "./hang-cu";
+export * from "./dau-khach";
