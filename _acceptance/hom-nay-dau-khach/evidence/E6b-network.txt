@@ -1,37 +1,31 @@
-863. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
-864. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
-907. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-908. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-909. [GET] http://localhost:3491/api/v1/listings => [200] OK
-910. [GET] http://localhost:3491/shares?lan=d5ccee86-3ada-4d69-9fde-48667ae1c893&_rsc=ELSQ6suIFecjpRld => [200] OK
-915. [GET] http://localhost:3491/api/v1/shares => [200] OK
-916. [GET] http://localhost:3491/api/v1/shares => [200] OK
-917. [GET] http://localhost:3491/api/v1/shares/d5ccee86-3ada-4d69-9fde-48667ae1c893 => [200] OK
-968. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-969. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-970. [GET] http://localhost:3491/api/v1/listings => [200] OK
-971. [GET] http://localhost:3491/shares/new?can=42dc957d-a08c-4e47-a5c3-6f1d53b836a8&_rsc=ELSQ6suIFecjpRld => [200] OK
-976. [GET] http://localhost:3491/api/v1/catalog => [200] OK
-977. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-978. [GET] http://localhost:3491/api/v1/catalog => [200] OK
-979. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-980. [GET] http://localhost:3491/api/v1/catalog => [200] OK
-981. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-982. [GET] http://localhost:3491/api/v1/catalog => [200] OK
-983. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-985. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
-986. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
-987. [GET] http://localhost:3491/api/v1/listings => [401] Unauthorized
-988. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
-1031. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-1032. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-1033. [GET] http://localhost:3491/api/v1/listings => [200] OK
-1034. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
-1035. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
-1036. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
-1074. [GET] http://localhost:3491/api/v1/shares => [200] OK
-1075. [GET] http://localhost:3491/api/v1/shares => [200] OK
-1076. [GET] http://localhost:3491/api/v1/shares/00000000-0000-4000-8000-000000000000 => [404] Not Found
-1077. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1247. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1248. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1249. [GET] http://localhost:3491/api/v1/shares/19cd4756-8ef3-4ad9-a5de-f7d44070d689 => [200] OK
+1250. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1301. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1302. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1303. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1304. [GET] http://localhost:3491/shares/new?can=644c2a57-94b5-4588-bccf-242a12b2fbe6&_rsc=ELSQ6suIFecjpRld => [200] OK
+1309. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1310. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1311. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1312. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1313. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1314. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1315. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1316. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1318. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+1351. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+1352. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+1395. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1396. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1397. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1398. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+1431. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+1432. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+1470. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1471. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1472. [GET] http://localhost:3491/api/v1/shares/00000000-0000-4000-8000-000000000000 => [404] Not Found
+1473. [GET] http://localhost:3491/api/v1/listings => [200] OK
 
-Note: 214 static requests not shown, run with "static" option to see them.
+Note: 220 static requests not shown, run with "static" option to see them.
