@@ -7,6 +7,7 @@ import { canHoiLai } from "../pricing/hoi-lai";
 import { applyLeadRoutingPatch, DEFAULT_LEAD_ROUTING, dueAlerts, readLeadRoutingSettings, unroutedDue } from "../routing";
 import { QUEUE_DAY_RANGES, QUEUE_DEFAULT_DAYS } from "../today/mac-dinh";
 import { giaiCauHinh, khoangCua, macDinhSo } from "./giai";
+import { kiemGiaTri } from "./khuon";
 
 const cauHinh = (key: string, value: unknown) => {
   const kq = giaiCauHinh([{ key, value }]);
@@ -90,4 +91,46 @@ test("hạn lead đọc từ cấu hình ở hai biên", () => {
   const fact = { leadId: "l1", deadlineFrom: tu, acceptMinutes: c.acceptMinutes, firstCallMinutes: c.firstCallMinutes, acceptedAt: tu, firstCalledAt: null, raised: [] };
   assert.equal(dueAlerts(fact, luc(1439 * 60)).includes("first_call_overdue"), false);
   assert.equal(dueAlerts(fact, luc(1440 * 60)).includes("first_call_overdue"), true);
+});
+
+// Hàng 82 (E5b, luật đợt 46 — Ngoài-5 hàng 81): một nửa của cặp hạn làm cặp trái luật thì báo, không áp im lặng.
+test("cặp hạn trái luật ở lối đọc: báo, không áp im lặng", () => {
+  const NHAN = "lead_routing.accept_minutes";
+  const GOI = "lead_routing.first_call_minutes";
+  const md = [macDinhSo(NHAN), macDinhSo(GOI)];
+  assert.deepEqual(md, [15, 30]);
+  const hai = (s: string) => s.includes(NHAN) && s.includes(GOI);
+
+  // (1) chỉ đặt hạn nhận 60, hạn gọi mặc định 30.
+  const sai = [{ key: NHAN, value: 60 }];
+  const g = giaiCauHinh(sai);
+  assert.equal(g.loi.length, 1, g.loi.join(" | "));
+  assert.ok(hai(g.loi[0]!), g.loi[0]);
+  assert.deepEqual([g.cauHinh[NHAN], g.cauHinh[GOI]], md);
+  const r = readLeadRoutingSettings(sai);
+  assert.deepEqual([r.acceptMinutes, r.firstCallMinutes], md);
+  const k = kiemGiaTri(NHAN, 60, { [GOI]: 30 });
+  assert.equal(k.ok, false);
+  if (!k.ok) assert.ok(hai(k.loi), k.loi);
+  const k2 = kiemGiaTri(GOI, 10, { [NHAN]: 15 });
+  assert.equal(k2.ok, false);
+  if (!k2.ok) assert.ok(hai(k2.loi), k2.loi);
+  // Thứ tự dòng không quyết kết quả: hạn gọi 40 đứng trước hạn nhận 60.
+  const nguoc = giaiCauHinh([{ key: GOI, value: 40 }, { key: NHAN, value: 60 }]);
+  assert.ok(nguoc.loi.length === 1 && hai(nguoc.loi[0]!), nguoc.loi.join(" | "));
+  assert.deepEqual([nguoc.cauHinh[NHAN], nguoc.cauHinh[GOI]], md);
+
+  // (2) đối chứng dương: hạn nhận 20, hạn gọi mặc định 30.
+  const dung = [{ key: NHAN, value: 20 }];
+  assert.deepEqual(giaiCauHinh(dung).loi, []);
+  assert.equal(giaiCauHinh(dung).cauHinh[NHAN], 20);
+  const r2 = readLeadRoutingSettings(dung);
+  assert.deepEqual([r2.acceptMinutes, r2.firstCallMinutes], [20, 30]);
+  assert.equal(kiemGiaTri(NHAN, 20, { [GOI]: 30 }).ok, true);
+
+  // (3) đặt cả cặp 45 / 60.
+  const cap = giaiCauHinh([{ key: NHAN, value: 45 }, { key: GOI, value: 60 }]);
+  assert.deepEqual(cap.loi, []);
+  assert.deepEqual([cap.cauHinh[NHAN], cap.cauHinh[GOI]], [45, 60]);
+  assert.equal(kiemGiaTri(NHAN, 45, { [GOI]: 60 }).ok, true);
 });

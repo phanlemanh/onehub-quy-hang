@@ -70,6 +70,12 @@ export function readLeadRoutingSettings(rows: readonly { key: string; value: unk
     if (loi) throw new Error(`cấu hình hỏng — ${loi}`);
     (ra as Record<Truong, unknown>)[t] = dong.value;
   }
+  // Cặp hạn trái luật (một nửa đặt riêng) không áp: hai hạn về mặc định, lead vẫn chia; lỗi hiện ở bộ đọc cấu hình chung
+  // của sàn (hàng 82, Hỏi-1 = a — luật đợt 46).
+  if (ra.firstCallMinutes < ra.acceptMinutes) {
+    ra.acceptMinutes = DEFAULT_LEAD_ROUTING.acceptMinutes;
+    ra.firstCallMinutes = DEFAULT_LEAD_ROUTING.firstCallMinutes;
+  }
   return ra;
 }
 
