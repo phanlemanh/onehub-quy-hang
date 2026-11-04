@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6ce33622b681bd01602556dbef61286b1e47da33
+verified_commit: 7b86eb25d02c198a553fdb77e606baf9fcbdb260
 human_signoff:
 ---
 
@@ -36,206 +36,186 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-da-gui-E1-r1
+  run_id: minted-da-gui-E1-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
+    ℹ duration_ms 52618.53325
 
 - eval: E2
-  run_id: minted-da-gui-E2-r1
+  run_id: minted-da-gui-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
+    ℹ duration_ms 52618.53325
 
 - eval: E3
-  run_id: minted-da-gui-E3-r1
+  run_id: minted-da-gui-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
+    ℹ duration_ms 52618.53325
+
+- eval: E4b
+  run_id: minted-da-gui-E4b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-04T12:47:34Z
+  output: |
+    ℹ duration_ms 52618.53325
+
+- eval: E5
+  run_id: minted-da-gui-E5-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-04T12:47:34Z
+  output: |
+    ℹ duration_ms 52618.53325
+
+- eval: E7
+  run_id: minted-da-gui-E7-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-04T12:47:34Z
+  output: |
+    ℹ duration_ms 52618.53325
+
+- eval: E4
+  run_id: minted-da-gui-E4-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.core
+  verified_at: 2026-11-04T12:47:34Z
+  output: |
+    ℹ duration_ms 641.849583
+
+- eval: E6b
+  run_id: minted-da-gui-E6b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-04T12:47:34Z
+  screenshot: evidence/E6b-step1.png
+  observed: |
+    E6b-step1.png (375x812, /shares): tiêu đề «Link đã gửi». Lưới thẻ hai cột; mỗi thẻ có bìa ảnh ghép lưới, tên người nhận, «N căn · giờ», «mở · quan tâm», «Mở gần nhất giờ». Thẻ đầu: «[Mẫu] Khách chấm», 3 căn · 19:53 04-11, 1 mở, 1 quan tâm, Mở gần nhất 19:53 04-11. Thẻ thứ hai mang nhãn «Đã tắt» (link cũ của lượt trước), điều này đúng với dữ liệu. Khớp Expected bước 1.
+    E6b-step2.png: sheet chi tiết «[Mẫu] Khách chấm» với ba căn. Toà A · A-08.03: 4,5 tỷ · 1 quan tâm, chip «Vừa đổi giá: 4,8 tỷ → 4,5 tỷ»; dưới là «Gợi ý căn thay» với Toà B · B-14.04 (4,61 tỷ · Gửi căn này) và Toà B · B-14.05 (4,36 tỷ · Gửi căn này). Toà A · A-04.06: 8,06 tỷ · 0 quan tâm; Toà A · A-10.05: 6,97 tỷ · 0 quan tâm; nút «Tắt link» ở đáy. Khớp Expected bước 2.
+    E6b-step2b.png: màn «Gửi căn» với lối «Bảng hàng», «Gửi cho ai» (Khách riêng, Nhóm môi giới), «Căn sẽ gửi: 1 căn đang bán» chỉ có Toà B B-14.04, 82,3 m² · 2 PN · Tây Nam, 4,61 tỷ, Bao phí. Căn gợi ý đã được chọn. Khớp Expected bước 2b.
+    E6b-step3.png: sau xác nhận, sheet chi tiết vẫn mở nên thẻ ở nền mờ; hai thẻ đầu ở nền đều mang nhãn «Đã tắt» (thẻ đầu vừa tắt). Toast ở đáy: «Đã tắt — khách mở link sẽ thấy «Link không còn mở được»». DOM xác nhận article đầu bắt đầu bằng «Đã tắt». Khớp Expected bước 3.
+    E6b-step4.png: cửa sổ không đăng nhập, trang trắng với một hộp thông báo ở đầu: «Link không còn mở được — hỏi lại người gửi». Khớp Expected bước 4.
+  network_observed: clean
 
 - eval: E3b
   run_id: minted-da-gui-E3b-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.web
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1971.096209
-
-- eval: E4
-  run_id: minted-da-gui-E4-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.core
-  verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 640.420958
-
-- eval: E4b
-  run_id: minted-da-gui-E4b-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
-
-- eval: E5
-  run_id: minted-da-gui-E5-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E5b
   run_id: minted-da-gui-E5b-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.web
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1971.096209
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E6
   run_id: minted-da-gui-E6-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.web
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1971.096209
-
-- eval: E6b
-  run_id: minted-da-gui-E6b-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-04T12:01:25Z
-  screenshot: evidence/E6b-step1.png
-  observed: |
-    step1 (375x812, /shares): lưới thẻ link, mỗi thẻ có bìa ghép ảnh căn, người nhận «[Mẫu] Khách chấm» với «3 căn · 19:05 04-11», «1 mở», «1 quan tâm», «Mở gần nhất 19:05 04-11»; thẻ khác «Chưa mở» khi 0 mở. Khớp Expected. step2 (bottom sheet «[Mẫu] Khách chấm»): A-04.06 8,06 tỷ 0 quan tâm; A-08.03 4,8 tỷ 0 quan tâm, chip «Vừa đổi giá: 4,95 tỷ → 4,8 tỷ», nhóm «Gợi ý căn thay» với B-14.04 4,61 tỷ và B-14.05 4,36 tỷ kèm «Gửi căn này»; A-06.03 5,55 tỷ 1 quan tâm; nút «Tắt link» ở đáy. Khớp. step2b: màn «Gửi căn» /shares/new?can=<id> với đúng một căn B-14.04 đã chọn (4,61 tỷ); goBack về chi tiết vẫn có «Tắt link». Khớp. step3: sau xác nhận «Tắt link này?» → thẻ đầu có nhãn «Đã tắt» (huy hiệu trên bìa, mờ sau sheet) và dòng «Đã tắt — khách mở link sẽ thấy «Link không còn mở được»». Khớp. step4 (cửa sổ ẩn danh): chỉ có dòng «Link không còn mở được — hỏi lại người gửi». Khớp.
-  network_observed: clean
-  output: |
-    Dãy Postgres L cổng 5571; dev server cổng 3462 đã tắt sau chạy. Gửi link ba căn qua /shares/new, trang khách mở link và quan tâm một căn. Các bước 1-4 đạt; trang khách báo «Link không còn mở được — hỏi lại người gửi».
-    Lưu ý chuẩn bị (không sửa code): thêm một sự kiện đổi giá 4,95 → 4,8 tỷ sau lúc gửi bằng vai chủ, và chèn fixture catalog_units 2PN vì dãy L có danh mục rỗng nên «Gợi ý căn thay» không có ứng viên. Người ký cần biết hai điều kiện này.
-    Frames: E6b-step1.png, E6b-step2.png, E6b-step2b.png, E6b-step3.png, E6b-step4.png; mạng: E6b-network.txt trong _acceptance/da-gui/evidence/.
-
-- eval: E7
-  run_id: minted-da-gui-E7-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E8
   run_id: minted-da-gui-E8-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.web
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1971.096209
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E9
   run_id: minted-da-gui-E9-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.web
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 1971.096209
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E9b
   run_id: minted-da-gui-E9b-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.isolation
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 74062.297375
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E10
   run_id: minted-da-gui-E10-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.script.ro_ri
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm run test:ro-ri
-    ℹ duration_ms 739.439625
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E10b
   run_id: minted-da-gui-E10b-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.ui_lint
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 23417.137667
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E11
   run_id: minted-da-gui-E11-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.design.khuon
   verified_at: 2026-11-04T12:01:25Z
-  output: |
-    design-floor-khuon.mjs --kiem --root .
-    12 tệp giao diện ngoài bản đồ
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-da-gui-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-da-gui-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-da-gui-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-da-gui-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
 
 - cmd: npm run test:hooks
-  run_id: minted-da-gui-SUITE-test_hooks-r1
+  run_id: minted-da-gui-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
+
+- cmd: npm test -w @quy-hang/ui-lint
+  run_id: minted-da-gui-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  exit_code: 0
+  verified_at: 2026-11-04T12:47:34Z
 
 - cmd: npm run typecheck
-  run_id: minted-da-gui-SUITE-typecheck-r1
+  run_id: minted-da-gui-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
 
 - cmd: npm run lint
-  run_id: minted-da-gui-SUITE-lint-r1
+  run_id: minted-da-gui-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-04T12:01:25Z
+  verified_at: 2026-11-04T12:47:34Z
 
 ## Known limits
 
@@ -243,15 +223,17 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả HEAD lẫn baseline diffBase; chứng minh harness chứ chưa chứng minh feature, nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
-- `npm run db:migrate && npm run db:test`: E1, E2, E3, E4b, E5, E7, E9b
-- `npm test -w @quy-hang/web`: E3b, E5b, E6, E8, E9
-- `npm test -w @quy-hang/core`: E4
-- `npm run test:ro-ri`: E10
-- `npm test -w @quy-hang/ui-lint`: E10b
-- bước chấm khuôn design-floor-khuon: E11
+carried tu round 1 — baseline khong do lai round nay
 
-Baseline không đo: E6b (ui-check, không chạy được trên baseline) và năm lệnh suite không gắn eval.
+Baseline khong do: moi eval round nay ghi baseline n-a.
+
+Eval khong-phan-biet (pass tren ca HEAD lan baseline round 1; nen viet lai de assert hanh vi moi hoac xac nhan la regression-guard co chu y):
+- npm run db:migrate && npm run db:test: E1, E2, E3, E4b, E5, E7, E9b
+- npm test -w @quy-hang/web: E3b, E5b, E6, E8, E9
+- npm test -w @quy-hang/core: E4
+- npm run test:ro-ri: E10
+- npm test -w @quy-hang/ui-lint: E10b
+- node design-floor-khuon.mjs --kiem: E11
 
 ## Variance
 
@@ -259,4 +241,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval đạt (17/17), không có eval hỏng; không có mục phán đoán chờ người. Hai điều kiện chuẩn bị của E6b (sự kiện đổi giá và fixture danh mục) ghi ở khối E6b.
+Round 1: tat ca eval PASS; ghi nhan cac muc ngoai hop dong va hai loi trong hop dong (AC-7, AC-3) o review.
+Round 2: S4 vong 1 — sua tat link tu choi phien khong nguoi (migration 033) va gia luc gui; E1, E2, E3, E4, E4b, E5, E6b, E7 chay lai, PASS; cac eval con lai carry-forward tu round 1.
