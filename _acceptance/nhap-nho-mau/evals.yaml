@@ -25,6 +25,7 @@ evals:
   - id: E3
     criterion: AC-3
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.core
     expected: "exit 0; ca «nhớ mẫu: mẫu không mang giá trị nguồn, tên người» có mặt và ok — lưới viết tay có cột số chủ (0900000012, 0900 000 013), tên chủ ([Tên chủ mẫu]), giá đáy, cột trạng thái; kế hoạch có bảng quy đổi trên cột trạng thái và (chèn thẳng, đi vòng validatePlan) trên cột tên chủ → taoMau trả cột nguồn và cột tên người chỉ có {headerKey, target}, không khoá valueMap (assert từng cột), cột trạng thái giữ bảng quy đổi (đối chứng dương); JSON.stringify của mẫu không chứa chuỗi giá trị nào trong danh sách viết tay (assert từng giá trị). Chiều đỏ: taoMau giữ valueMap mọi cột → ca đỏ nêu «[Tên chủ mẫu]»."
     paths: [packages/core/src/import/memory/**]
