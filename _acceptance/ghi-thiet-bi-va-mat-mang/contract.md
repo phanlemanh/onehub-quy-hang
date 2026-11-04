@@ -5,7 +5,7 @@ slug: ghi-thiet-bi-va-mat-mang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db, api, core]
-status: verified
+status: signed-off
 design_doc: _acceptance/ghi-thiet-bi-va-mat-mang/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-03
@@ -110,3 +110,7 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay the
 - Hỏi-1: hàng 52 đã ký AC-8 «sáu mã chưa có sự kiện»; AC-9 của hàng này đổi thành bốn mã. Ca kiểm và eval E8 của hàng 52
   phải đổi theo — xem sổ quyết định.
 - Dãy D: Postgres `quy-hang-db-dkn-D` cổng 5575 (luật đợt 7).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: lượt mất mạng bị máy chủ từ chối (đồng hồ điện thoại chỉnh lùi) ở lại máy và gửi lại mỗi nhịp, số đo thiếu lượt đó.
+  - Ngoài-2: máy không báo khi một lượt mất mạng bị từ chối vĩnh viễn, nên không ai biết số đo thiếu lượt.
+  - Ngoài-4: bài thử xuyên lớp tự gắn loại thiết bị, nên nếu code điện thoại thôi gửi đúng thiết bị thì bài ấy vẫn xanh.
