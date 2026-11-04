@@ -210,7 +210,8 @@ export function OLead({
   useEffect(() => {
     if (dangGui || !(ketQua || loiMang)) return;
     if (ketQua) soRef.current?.focus({ preventScroll: true });
-    baoRef.current?.scrollIntoView({ block: "nearest" });
+    // Giữa khung nhìn: thanh tab dưới của điện thoại che đáy màn.
+    baoRef.current?.scrollIntoView({ block: "center" });
   }, [ketQua, loiMang, dangGui]);
 
   async function boLead() {

@@ -129,7 +129,7 @@ try {
     // Lead mới của telesales về Toà A (đầu chủ 1 phụ trách); đầu chủ nhận, gọi, đưa lên bảng qua lối API thật.
     const so = soMau();
     let maHang = null; // mã hàng tạo từ lead — có sau bước lên bảng; đối chứng dương: đầu chủ đọc được mã ấy qua lối của mình
-    const lead = await api("telesales", "POST", "/api/v1/leads", { ownerPhone: so, buildingName: "Toà A", need: "sale", listPrice: 3_200_000_000, feeInclusion: "included", desiredListingTime: "now" });
+    const lead = await api("telesales", "POST", "/api/v1/leads", { ownerPhone: so, buildingName: "Toà A", unitNumber: `A-${30 + Math.floor(Math.random() * 60)}.${String(Math.floor(Math.random() * 90) + 10)}`, need: "sale", listPrice: 3_200_000_000, feeInclusion: "included", desiredListingTime: "now" });
     await nhip();
     const doc = async (ten) => {
       const t = await mo("telesales", "/leads/new");
@@ -156,7 +156,7 @@ try {
     await db.connect();
     await db.query(
       `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
-       select gen_random_uuid(), company_id, building_name, coalesce(unit_number, 'E4-' || left(id::text, 6)), 'shareable', 'image/jpeg', 1000, 10, 10, 'cho-thu-51'
+       select gen_random_uuid(), company_id, building_name, unit_number, 'shareable', 'image/jpeg', 1000, 10, 10, 'cho-thu-51'
        from listings where id = $1`,
       [hang.id],
     );
