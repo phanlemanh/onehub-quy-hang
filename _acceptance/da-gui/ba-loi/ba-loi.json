@@ -1,0 +1,24 @@
+{
+  "man": "Đã gửi (hàng 36) — từng link: lượt mở, căn được quan tâm, căn vừa đổi kèm «Gợi ý căn thay»; tắt link",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích ở vo-va-ia §2 dòng «Đã gửi» (wishlist-4: mỗi link một thẻ bìa bốn ảnh căn, bấm thẻ mở dòng phản ứng). Bìa ảnh cho đầu khách nhận ra bộ căn nào đã gửi cho ai trong một lần nhìn trên điện thoại; huy hiệu «Đã tắt» ở góc bìa; lượt mở · quan tâm và giờ mở gần nhất nằm ngay dưới tên người nhận."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Danh sách dòng Item",
+      "dong_co": "Dùng thành phần Item đã có (như màn Gửi): mỗi link một dòng — người nhận, số căn, giờ gửi, giờ mở gần nhất, lượt mở · quan tâm.",
+      "danh_doi": "Không ảnh nên khó nhận ra bộ căn; dòng dài xuống hai hàng trên điện thoại; không theo khối đích."
+    },
+    "reui": {
+      "nhan": "wishlist-4: thẻ bìa bốn ảnh",
+      "dong_co": "Khối đích của vo-va-ia: lưới thẻ bìa 2×2 ảnh căn, huy hiệu trạng thái link, người nhận, số căn · giờ gửi, lượt mở · quan tâm, giờ mở gần nhất; chạm thẻ mở chi tiết các căn với «Vừa đổi», «Gợi ý căn thay», «Tắt link».",
+      "danh_doi": "Thẻ cao nên mỗi màn điện thoại chỉ thấy bốn link; link một căn có bìa thưa ba ô trống; nút chia sẻ, xoá của khối bỏ."
+    },
+    "ve-moi": {
+      "nhan": "Bảng list-11",
+      "dong_co": "Bảng năm cột (người nhận, căn, mở, quan tâm, mở gần nhất) — so nhiều link nhanh nhất trên máy tính.",
+      "danh_doi": "Trên điện thoại năm cột chật, phải cắt cột; không thấy căn nào trong link; không có chỗ cho «Đã tắt» và «Vừa đổi»."
+    }
+  }
+}

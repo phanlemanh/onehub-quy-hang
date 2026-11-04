@@ -1,0 +1,32 @@
+{
+  "feature_plain": "Sau khi gửi căn, đầu khách mở Đã gửi là biết khách nào đã mở link, thích căn nào, căn nào vừa đổi giá hay đã có người cọc — và gửi ngay căn thay, hoặc tắt link.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiện mỗi link đã gửi thành một thẻ (người nhận, số căn, bìa ảnh), mới trước; đầu khách thấy link của mình, trưởng nhóm thấy của cả sàn, vai khác bị chặn; không số khách, không gì của chủ nhà."},
+    {"id": "AC-2", "p": "Sẽ cho thấy số lượt mở, số lượt quan tâm, giờ mở gần nhất của mỗi link và số quan tâm của từng căn — đếm từ đúng các lượt trang khách đã ghi."},
+    {"id": "AC-3", "p": "Sẽ gắn nhãn «Vừa đổi» cho căn đổi giá hay đổi trạng thái sau lúc gửi (giá cũ → mới, đã cọc, không còn); căn không đổi không có nhãn."},
+    {"id": "AC-4", "p": "Sẽ đưa «Gợi ý căn thay» cho căn vừa đổi: tối đa ba căn đang bán, chưa có trong link, cùng số phòng ngủ, giá chênh không quá 15%, cùng toà trước; chạm là mở màn Gửi với căn ấy."},
+    {"id": "AC-5", "p": "Sẽ cho tắt link (hỏi xác nhận trước); tắt xong thẻ mang «Đã tắt» và khách mở link chỉ thấy «Link không còn mở được»; người không có quyền thì không tắt được."},
+    {"id": "AC-6", "p": "Sẽ có đủ trạng thái màn: chưa gửi link nào (kèm nút đi gửi), đang tải, lỗi tải có thử lại, vai không xem được."},
+    {"id": "AC-7", "p": "Sẽ ghi việc tắt link qua đúng một đường của cơ sở dữ liệu, không vượt sàn, không vượt người — có ca trong bộ kiểm cách ly."},
+    {"id": "AC-9", "p": "Sẽ sửa trang khách: khi máy chủ trục trặc tạm thời thì báo «Chưa mở được — thử lại sau», không báo nhầm là link đã tắt (mục Ngoài-4 của hàng 35)."},
+    {"id": "AC-10", "p": "Sẽ làm rào cửa ra công khai chạy bài kiểm rò rỉ trên dữ liệu thật mà mỗi đường trả ra, không dò tên đường trong chú thích (Ngoài-8 hàng 35); thêm khuôn nhóm Đã gửi, giữ lint xanh, ghi Tham chiếu «Đã dựng»."}
+  ],
+  "wont_do": [
+    {"id": "AC-8", "p": "Sẽ KHÔNG để trang khách vỡ khi trình duyệt chặn lưu trữ: nút «Quan tâm» vẫn chạy (Ngoài-1/5 của hàng 35)."},
+    {"id": "OOS-1", "p": "KHÔNG báo đầu khách lúc khách mở hay quan tâm — thuộc Hôm nay của đầu khách (hàng 37)."},
+    {"id": "OOS-2", "p": "KHÔNG làm lịch xem, xin dẫn xem — chờ phỏng vấn (P1)."},
+    {"id": "OOS-3", "p": "KHÔNG bật lại link đã tắt, không sửa bộ căn của link đã gửi — gửi link mới."},
+    {"id": "OOS-4", "p": "KHÔNG cho sàn chỉnh luật gợi ý căn thay — chờ màn Cài đặt sàn."},
+    {"id": "OOS-5", "p": "KHÔNG tự nối hai số đo «số link khách mở», «số lượt quan tâm» vào bảng số đo — giám sát nối."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Quét đủ sáu trục: ai xem (người gửi · đầu khách khác · trưởng nhóm · vai khác · sàn khác) × link (mở · đã tắt) × phản ứng (chưa mở · đã mở · có quan tâm) × căn (không đổi · đổi giá · đổi trạng thái) × việc (xem · tắt · gửi căn thay) × lớp (màn · API · cơ sở dữ liệu · trang khách). Mỗi người xem có ca, mỗi trạng thái căn có dòng, bốn mục của hàng 35 mỗi mục một tiêu chí."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Chưa kiểm phần chi tiết một link có lộ số khách hay dữ liệu chủ nhà không, và chưa chặn việc đổi giá đáy làm căn «vừa đổi» — đã thêm cả hai."},
+    {"i": 1, "p": "Bài đo sửa «báo nhầm link tắt» chỉ đo ở giao diện; nếu máy chủ vẫn trả «không có» khi trục trặc thì lỗi cũ còn — đã thêm bài đo phía máy chủ."},
+    {"i": 2, "p": "Chưa đo việc chạm «Gợi ý căn thay» mở đúng màn Gửi với căn ấy — đã thêm một ca và một bước chụp màn."},
+    {"i": 3, "p": "«Cả đội» của trưởng nhóm chưa được định nghĩa — kho chưa có «nhóm», nên ghi rõ là cả sàn và thêm ca trưởng nhóm sàn khác bị từ chối."},
+    {"i": 4, "p": "Ô cơ hội chưa có ngưỡng số — đã ghi rằng anh đặt ngưỡng và thời hạn trước hai tuần thử, còn dữ liệu đếm thì đã có."}
+  ]
+}
