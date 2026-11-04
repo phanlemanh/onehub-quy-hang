@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b7e32db9c67b0713dd12d3eb1c553f0dbcc0dfe8
+verified_commit: 7ffa9021f8ca247da46769fc72744fd29bd9a6aa
 human_signoff: Manh Phan 2026-11-04
 ---
 
@@ -232,3 +232,7 @@ none — every multi-run eval is uniform
 Round 1: E1, E6 chạy lần đầu (đạt); phần còn lại của bộ eval chạy ở round 2.
 Round 2: E2–E5, E7–E11 đạt; E12 đỏ do báo oan khuôn của kit 2.37.0 (kit#480).
 Round 3: E12 đạt có giới hạn (chủ kho chốt 04/11) cùng E13 xanh; E1–E11 mang từ round trước, suite hồi quy xanh.
+
+### Re-pin lần 1 — 2026-11-04, do hoá cũ do gộp nhánh chính sau chữ ký
+run_id: repin-20261104T051923Z-33166
+sha: 7ffa9021f8ca247da46769fc72744fd29bd9a6aa · suites: 7 lệnh exit 0 · evals: 14/14 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E12=1 · ngoài làn máy: E11
