@@ -1,0 +1,97 @@
+schema_version: 1
+feature_slug: hom-nay-truong-nhom
+# Lệnh máy: executors.test.isolation (migrate + bộ cách ly + test-db của api — cần DATABASE_URL tới Postgres dãy D),
+# executors.test.core, executors.test.web, executors.design.khuon. ui-check mở máy chủ dev cổng 3462 (executors.ui-check)
+# với sàn mẫu. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter của node --test: có mặt, ok, không SKIP.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hàng đợi trưởng nhóm: đúng ba lead đang mở» có mặt trong packages/api/test-db/hom-nay-truong-nhom.test.ts và ok — ma trận viết trước bảy lead (chưa chia được, quá hạn nhận chưa nhận, nhận rồi quá hạn gọi chưa gọi, trong hạn, đã nhận và gọi, đã trả lại, lead sàn khác) dựng qua lối API thật của hàng 7/25 (nhập lead, nhịp chia, nhận, gọi, trả lại); đồng hồ đặt qua tham số now của nhịp; GET /api/v1/team/lead-queue trả đúng ba dòng với kind unrouted, accept_overdue, first_call_overdue (assert deepEqual danh sách leadId + kind theo thứ tự quá hạn lâu nhất trước); mỗi dòng có tập khoá deepEqual tập viết trước {leadId, kind, buildingName, unitNumber, agentUserId, dueAt}; lead dựng với số mồi 0900 000 0xx và tên mồi [Tên] — thân JSON tuần tự hoá của lối không chứa hai chuỗi mồi (đối chứng dương: chuỗi mồi có mặt khi đọc lead qua lối đọc chủ nhà của hàng 7 bằng đầu chủ giữ). Chiều đỏ cùng ca: gọi trước khi đồng hồ qua hạn → hai lead quá hạn không có mặt (đối chứng: hàng đợi chỉ có unrouted)."
+    paths: [packages/api/src/team/**, packages/api/test-db/hom-nay-truong-nhom.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hàng đợi trưởng nhóm: vai khác không đọc» có mặt và ok — ma trận viết trước hai lối × năm người gọi (trưởng nhóm, đầu chủ, telesales, quản trị sàn, không cookie): trưởng nhóm 200 ở cả hai lối (đối chứng dương), ba vai khác 403, không cookie 401 — mười assert mã; thân 403/401 không chứa leadId nào."
+    paths: [packages/api/src/team/**, packages/api/test-db/hom-nay-truong-nhom.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đầu chủ để giao: tên, nghỉ, lead mở» có mặt và ok — sàn có ba đầu chủ (một đánh dấu nghỉ qua POST /company/members/{id}/leave, một nhận hai lead) và một telesales; sàn khác có một đầu chủ; GET /api/v1/team/listing-agents trả đúng ba dòng (deepEqual tập userId), onLeave đúng người, openLeads = 2 đúng người, 0 người còn lại; mỗi dòng có tập khoá deepEqual tập viết trước {userId, displayName, onLeave, openLeads}; thân JSON không chứa email mồi của thành viên. Chiều đỏ cùng ca: telesales không có mặt, đầu chủ sàn khác không có mặt (assert vắng theo userId)."
+    paths: [packages/api/src/team/**, packages/api/test-db/hom-nay-truong-nhom.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «hàng cũ theo người: đếm theo sổ» có mặt trong packages/core/src/today/hang-cu.test.ts và ok — bảng viết trước tám căn của ba người giữ và một căn chưa có người giữ, trạng thái Active/Pending/Closed/Withdrawn, ngày xác nhận 13, 14, 20 ngày trước và chưa xác nhận: với cấu hình mặc định và với queue.call_back_after_days = 20 (dựng bằng giaiCauHinh), mỗi người một dòng {mo, canGoiLai, tiLeTuoi} deepEqual bảng kỳ vọng viết tay (số dòng = số người + 1); căn Closed/Withdrawn không đếm; dòng «Chưa có người giữ» có mặt. Chiều đỏ cùng ca: cấu hình 20 làm căn 14 ngày rời canGoiLai (assert số đổi)."
+    paths: [packages/core/src/today/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «giao lại từ hàng đợi: lead rời hàng đợi, cơ sở dữ liệu ghi người mới» có mặt và ok — lead quá hạn nhận ở hàng đợi; POST /api/v1/leads/{id}/assign (trưởng nhóm, người nhận đầu chủ khác) 200; đọc lại bằng kết nối chủ: matched_agent_user_id = người mới, reassign_count tăng 1, routed_at = lúc giao; GET /api/v1/team/lead-queue không còn lead ấy ở now = lúc giao + hạn nhận − 1 phút, và có lại lead ấy (accept_overdue) ở now = lúc giao + hạn nhận nếu chưa nhận. Lead căn trùng (viết trước) qua cùng lối: 400, code lead-not-assignable; matched_agent_user_id không đổi (assert bằng giá trị trước)."
+    paths: [packages/api/src/team/**, packages/api/test-db/hom-nay-truong-nhom.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    expected: "Đăng nhập trưởng nhóm của sàn mẫu (khoá lead đã quá hạn): thấy dòng lead quá hạn; bấm «Giao lại», chọn một đầu chủ, xác nhận → dòng biến mất và ô «Lead quá hạn» giảm 1. Chụp trước/sau."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    expected: "Trưởng nhóm (không vai Đầu chủ), khổ 1440×900: bố cục Bảng điều khiển; ba ô «Lead quá hạn», «Ngoại lệ», «Hàng cũ» có số; hàng đợi lead quá hạn; bảng theo đầu chủ có thanh tỉ lệ tươi; không chữ «Đang dựng» của Placeholder. Đối chiếu số ô với GET /api/v1/team/lead-queue đếm theo kind trên cùng phiên."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hôm nay trưởng nhóm: sáu trạng thái» có mặt trong apps/web/src/app/(app)/today/truong-nhom.test.ts và ok — ma trận viết trước sáu trạng thái (dang-tai, mac-dinh, trong, loi, mat-mang, giao-loi) dựng hàm trạng thái của màn từ nguồn giả: mỗi trạng thái trả đúng chữ đã khai (assert từng chuỗi) và cờ nút giao (tắt ở mat-mang, dang-tai); số assert = sáu × hai. Ca «ô Hàng cũ bằng tổng cần gọi lại» ok — dựng ô từ bảng tám căn của E4: số ô = tổng canGoiLai mọi dòng (kể cả «Chưa có người giữ»); cấu hình 20 làm số ô đổi đúng như tổng mới. Chiều đỏ cùng ca: nguồn trả lỗi mạng → trạng thái mat-mang chứ không mac-dinh."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «/today xếp vùng theo vai» có mặt trong apps/web/src/app/(app)/today/truong-nhom.test.ts và ok — ma trận viết trước bốn tổ hợp vai (chỉ đầu chủ, chỉ trưởng nhóm, cả hai, telesales) → danh sách vùng hiện ra (hàm xếp vùng của trang, thuần): chỉ đầu chủ → [dau-chu]; chỉ trưởng nhóm → [truong-nhom]; cả hai → theo Hỏi-2; telesales → như trước. Bốn assert deepEqual."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    expected: "Trưởng nhóm ở khổ 390×844: thấy dòng «Hôm nay của trưởng nhóm mở trên máy tính», không bảng điều khiển. Chụp."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0 — lưới khuôn xanh trên tệp vòng chạm: nhóm hom-nay-truong-nhom có mặt và nhận diện tệp màn mới; nhóm hom-nay-dau-chu không còn ngoai_le_han hẹn hom-nay-truong-nhom. Chiều đỏ: bản sao bản đồ bỏ nhóm mới → lưới nêu tệp màn không thuộc nhóm nào."
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
