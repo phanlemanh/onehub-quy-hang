@@ -5,7 +5,7 @@ slug: nhap-nho-mau
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-04-nhap-nho-mau-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -95,3 +95,4 @@ Quét không gian tiêu chí (preset entity-feature × test-matrix, skill morpho
   `packages/api/src/imports/**`, `packages/api/test-db/imports/**`; `apps/web/src/app/imports/templates/**` của hàng không
   dùng (màn quản mẫu để hàng 50).
 - Nguồn Ngoài-3/Ngoài-7: Màn Nhập Excel (man-nhap-excel), Cổng Bằng chứng 04/11, luật 50 của đợt dau-khach-nhap.
+- Ngoài-8 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Việc khoá thanh bước khi máy chủ đang chạy được kiểm bằng cách đọc mã, không chạy thật trên màn; đổi cách viết mã có thể làm bài kiểm đỏ oan. — `apps/web/src/lib/nhap/nho-mau.test.ts`

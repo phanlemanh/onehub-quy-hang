@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "den": "10a4f702d976a1a4667d6dc6a6cdb8002c0669d7",
+  "base": "0debbca91a61a505717bf0964930b4dcf1e2887e",
+  "ghim": {
+    "bang-hang": "9ead1c19b2acd04235c022477746d851e3e6c58d",
+    "cai-dat-san": "64eebbf141906b8639a6eb01d6f7b8eee9558c49",
+    "cuoc-goi": "fd30d8e69d3f572a7ffa7819c8b72f3303944a8d",
+    "gui": "069afc550a93a99aae08ca30bb7ab920705407e5",
+    "ho-so-can": "8e99b3a4c5e525d9686ae0470b9205ad7f811869",
+    "hom-nay-dau-chu": "897ed00098398c30c34ddb8bccfbb699f16fc8c3",
+    "hom-nay-truong-nhom": "23826bb095a54035b0ffe693638b2487b8ab95d5",
+    "lead-cua-toi": "ba8b8ad108e79a168f9a7e2bc8de7708f4b39d86",
+    "nhap-excel": "3ac84b9c7a70151d7937340552286bae53959999",
+    "o-nhan-lead": "1c04799a0a71e883dab3a2018b716c61e7577dd6",
+    "toi": "95ed23d6b8311dfc933b5c13d6eed18966f85dce",
+    "trang-khach": "685f059b351e1fad28a7ae1c47a42c2a6f89cc30",
+    "trang-mau": "2002381900302d8a416305d80503bc02e2dcb179",
+    "trang-tam": "8d85ebdb81c79491f01944c9f89ede55a5729712",
+    "trang-thai": "0631cc5715db28d17a4f93f58625a132439754a4",
+    "xac-thuc": "c1e403cbe766892ed73b18ff5bdcc3f81f2f3fe0"
+  },
+  "theo_khuon": [
+    "apps/web/src/app/(app)/imports/new/man-nhap.tsx"
+  ],
+  "lech_moi": [],
+  "no_cu": [],
+  "khong_do": [],
+  "ngoai_ban_do": 1,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "gui",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "hom-nay-truong-nhom",
+    "lead-cua-toi",
+    "nhap-excel",
+    "o-nhan-lead",
+    "toi",
+    "trang-khach",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}

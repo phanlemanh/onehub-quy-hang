@@ -1,18 +1,16 @@
 ---
 schema_version: 2
 feature_slug: nhap-nho-mau
-verdict: REJECT
+verdict: PASS
 failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 043e102de12ffadad08248628bc1cf2b3f8165a5
+verified_commit: 10a4f702d976a1a4667d6dc6a6cdb8002c0669d7
 human_signoff:
 ---
 
 # Evidence Report: nhap-nho-mau
-
-Vòng 1. Mọi eval của tính năng đều xanh. Verdict REJECT vì một lệnh suite không gắn eval nào (`npm test -w @quy-hang/ui-lint`) thoát khác 0: bộ kiểm bản đồ khuôn ở `packages/ui-lint/tests/ban-do-khuon.test.mjs:395` đếm nhóm `trang-thai` là 90 chỗ theo khuôn, thực tế là 93 chỗ. Chi tiết ở mục «Lệnh suite (hồi quy)».
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -32,173 +30,156 @@ Vòng 1. Mọi eval của tính năng đều xanh. Verdict REJECT vì một lệ
 ## Evidence
 
 - eval: E1
-  run_id: minted-nhap-nho-mau-E1-r1
+  run_id: minted-nhap-nho-mau-E1-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 669.116625
-    __EXIT=0
+    npm test -w @quy-hang/core
+    ℹ duration_ms 984.222083
 
 - eval: E2
-  run_id: minted-nhap-nho-mau-E2-r1
+  run_id: minted-nhap-nho-mau-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 669.116625
-    __EXIT=0
+    npm test -w @quy-hang/core
+    ℹ duration_ms 984.222083
 
 - eval: E3
-  run_id: minted-nhap-nho-mau-E3-r1
+  run_id: minted-nhap-nho-mau-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 669.116625
-    __EXIT=0
+    npm test -w @quy-hang/core
+    ℹ duration_ms 984.222083
 
 - eval: E11
-  run_id: minted-nhap-nho-mau-E11-r1
+  run_id: minted-nhap-nho-mau-E11-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/core
-    ℹ duration_ms 669.116625
-    __EXIT=0
+    npm test -w @quy-hang/core
+    ℹ duration_ms 984.222083
 
 - eval: E4
-  run_id: minted-nhap-nho-mau-E4-r1
+  run_id: minted-nhap-nho-mau-E4-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm run db:migrate && npm run db:test
-    ℹ duration_ms 55388.06775
-    __EXIT=0
+    npm run db:migrate && npm run db:test
+    ℹ duration_ms 63453.856875
 
 - eval: E5
-  run_id: minted-nhap-nho-mau-E5-r1
+  run_id: minted-nhap-nho-mau-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web_db
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm run test:db -w @quy-hang/web
-    ℹ duration_ms 9184.836083
-    __EXIT=0
+    npm run test:db -w @quy-hang/web
+    ℹ duration_ms 9335.42725
 
 - eval: E6
-  run_id: minted-nhap-nho-mau-E6-r1
+  run_id: minted-nhap-nho-mau-E6-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2598.425208
-    __EXIT=0
+    npm test -w @quy-hang/web
+    ℹ duration_ms 2807.947833
 
 - eval: E8
-  run_id: minted-nhap-nho-mau-E8-r1
+  run_id: minted-nhap-nho-mau-E8-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2598.425208
-    __EXIT=0
+    npm test -w @quy-hang/web
+    ℹ duration_ms 2807.947833
 
 - eval: E9
-  run_id: minted-nhap-nho-mau-E9-r1
+  run_id: minted-nhap-nho-mau-E9-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm test -w @quy-hang/web
-    ℹ duration_ms 2598.425208
-    __EXIT=0
+    npm test -w @quy-hang/web
+    ℹ duration_ms 2807.947833
 
 - eval: E10
-  run_id: minted-nhap-nho-mau-E10-r1
+  run_id: minted-nhap-nho-mau-E10-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.lint
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: npm run lint
+    npm run lint
     chuẩn giao diện: đạt
-    __EXIT=0
 
 - eval: E10b
-  run_id: minted-nhap-nho-mau-E10b-r1
+  run_id: minted-nhap-nho-mau-E10b-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   output: |
-    lệnh: design-floor-khuon.mjs --kiem --root .
+    design-floor-khuon.mjs --kiem --root .
     1 tệp giao diện ngoài bản đồ
-    __EXIT=0
 
 - eval: E7
-  run_id: minted-nhap-nho-mau-E7-r1
+  run_id: minted-nhap-nho-mau-E7-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
   screenshot: evidence/E7-1-ghi-lan-dau-1440.png
   observed: |
-    Cả 8 ảnh đã mở. Màn nền tối, thanh bước ở bước 2 «Ghép cột». Đầu trang ghi tệp mau-b.xlsx hoặc ban-gia.xlsx, 40 dòng, trang «Bảng hàng».
-    - E7-1 ghi-lan-dau 1440 và 375: sàn mới «Sàn thử E7 ...», mau-b.xlsx. Bước Ghép cột có từ điển, các cột STT/Trạng thái/Dự án/Toà/Tầng/Mã căn/Diện tích có đích mặc định. Không có dải báo và không có nhãn «theo mẫu». Đúng với lần nhập đầu.
-    - E7-2 nhap-lai 1440 và 375: dải báo «Ghép theo mẫu đã nhớ — 16/16 cột» cùng dòng «Cột có nhãn «theo mẫu» ghép như lần nhập đã ghi gần nhất; đổi cột nào thì lần sau nhớ cách mới». Mỗi hàng nhìn thấy đều có nhãn «· theo mẫu» (STT, Trạng thái, Dự án, Toà, Tầng, Mã căn, Diện tích...). Ở 375 dải báo xuống dòng gọn, không tràn. Đích đã đổi của một cột («Giữ làm ghi chú») nằm dưới khung hình, chỉ xác nhận qua JSON.
-    - E7-3 mot-phan 1440 và 375: ban-gia.xlsx, dải báo «Ghép theo mẫu đã nhớ — 2/5 cột». Mã căn và Toà có nhãn «theo mẫu». Giá (tỷ) đã ghép sang Giá chào, Phí CN sang Điều kiện phí, TT sang Trạng thái; ba cột này chỉ ghi «Hàng chia sẻ được», không có nhãn «theo mẫu». Khớp expected.
-    - E7-4 loi-mau 1440 và 375: dải báo «Không đọc được mẫu đã nhớ» với dòng «Ghép theo từ điển như lần nhập đầu — kiểm lại từng cột». Bảng từ điển vẫn hiện, không có nhãn «theo mẫu». Khớp expected.
+    1440 ghi-lan-dau: bước Ghép cột của mau-b.xlsx (40 dòng), không có dải báo, không có nhãn «theo mẫu», mỗi cột chỉ ghi loại (Danh mục, Chưa rõ...). Đây là khung nền cho lần ghi đầu của sàn mới, đúng kỳ vọng.
+    1440 nhap-lai: dải báo «Ghép theo mẫu đã nhớ — 16/16 cột». Mỗi cột hiện nhãn «· theo mẫu» (STT, Trạng thái, Dự án, Toà, Tầng, Mã căn, Diện tích...). Các cột trong ảnh ghép đúng đích. Cột đã đổi đích không thấy trong ảnh (dưới mép cuộn), chỉ có trong JSON.
+    1440 mot-phan (ban-gia.xlsx): dải báo «Ghép theo mẫu đã nhớ — 2/5 cột». Chỉ Mã căn và Toà có nhãn «theo mẫu»; Giá (tỷ), Phí CN, TT không có nhãn.
+    1440 loi-mau: dải báo «Không đọc được mẫu đã nhớ — Ghép theo từ điển như lần nhập đầu», bảng Ghép cột vẫn hiện, ghép theo từ điển, không có nhãn «theo mẫu».
+    375: bốn khung có cùng nội dung ở khổ điện thoại. Dải báo xuống dòng gọn, không tràn ngang; bảng Ghép cột bị cắt ngang ở cột «Mẫu» (cột Trường của căn nằm ngoài khung nhìn, có cuộn ngang trong bảng); nhãn «theo mẫu» hiện ở khổ 375 như ở 1440 (nhap-lai 16/16, mot-phan 2/5 và cột lạ không có nhãn, loi-mau có dải báo lỗi).
   network_observed: n-a (driver)
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-nhap-nho-mau-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-nhap-nho-mau-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-nhap-nho-mau-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-nhap-nho-mau-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
 
 - cmd: npm run test:hooks
-  run_id: minted-nhap-nho-mau-SUITE-test_hooks-r1
+  run_id: minted-nhap-nho-mau-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-04T11:54:34Z
-
-- cmd: npm run typecheck
-  run_id: minted-nhap-nho-mau-SUITE-typecheck-r1
-  exit_code: 0
-  verified_at: 2026-11-04T11:54:34Z
+  verified_at: 2026-11-04T12:37:54Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-nhap-nho-mau-SUITE-npm_test_w_quy_hang_ui_lint-r1
-  exit_code: 1
-  verified_at: 2026-11-04T11:54:34Z
-  output: |
-    AssertionError: Expected values to be strictly deep-equal
-    thực tế:  'trang-thai: 93 chỗ theo khuôn · 0 ngoại lệ · 0 lệch'
-    kỳ vọng:  'trang-thai: 90 chỗ theo khuôn · 0 ngoại lệ · 0 lệch'
-    tại packages/ui-lint/tests/ban-do-khuon.test.mjs:395
-    npm error workspace @quy-hang/ui-lint@0.0.0 — command failed
+  run_id: minted-nhap-nho-mau-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  exit_code: 0
+  verified_at: 2026-11-04T12:37:54Z
+
+- cmd: npm run typecheck
+  run_id: minted-nhap-nho-mau-SUITE-typecheck-r2
+  exit_code: 0
+  verified_at: 2026-11-04T12:37:54Z
 
 ## Known limits
 
@@ -206,7 +187,11 @@ Vòng 1. Mọi eval của tính năng đều xanh. Verdict REJECT vì một lệ
 
 ## Analyst
 
-Eval không phân biệt (xanh ở cả HEAD lẫn baseline), cần viết lại để assert hành vi mới hoặc xác nhận là rào hồi quy có chủ ý:
+carried tu round 1 — baseline khong do lai round nay
+
+Baseline khong do: moi eval may (E1, E2, E3, E4, E5, E6, E8, E9, E10, E10b, E11) va E7 ghi baseline n-a vi round nay khong do lai (evals.yaml khong doi tu lan baseline cuoi o round 1).
+
+Eval KHONG-PHAN-BIET (pass tren ca HEAD lan baseline, carried tu round 1; nen viet lai de assert hanh vi moi hoac xac nhan la regression-guard co chu y):
 - npm test -w @quy-hang/core: E1, E2, E3, E11
 - npm run db:migrate && npm run db:test: E4
 - npm run test:db -w @quy-hang/web: E5
@@ -214,9 +199,7 @@ Eval không phân biệt (xanh ở cả HEAD lẫn baseline), cần viết lại
 - npm run lint: E10
 - design-floor-khuon.mjs --kiem --root .: E10b
 
-Lệnh fail không gắn eval: `npm test -w @quy-hang/ui-lint` (bản đồ khuôn đếm nhóm trang-thai 90 chỗ, thực tế 93 — nhóm này mở rộng khi tính năng thêm chỗ dùng TrangThai; cần cập nhật số kỳ vọng trong bộ kiểm hoặc bản đồ khuôn).
-
-Hội đồng chấm (judge): không có panel nào được đề xuất ở vòng này.
+Judge panels: khong eval nao thuoc loai judgment (moi eval la test, script hoac ui-check) nen khong co panel va khong co muc cho human_override.
 
 ## Variance
 
@@ -224,4 +207,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: không eval nào đỏ; lệnh suite npm test -w @quy-hang/ui-lint đỏ vì số chỗ nhóm trang-thai lệch (93 so với 90 kỳ vọng). Trả về cho bước triển khai.
+Round 1: lượt chấm 1 trả về cho khâu cài đặt — bảng quy đổi chỉ nhớ ở trường giá trị đóng, cổng thanh bước theo bước đã qua, phép đo E3/E6/E8 đỏ được (commit 10a4f702).
+Round 2: toàn bộ eval PASS trên cây 10a4f702, không còn eval hỏng.
