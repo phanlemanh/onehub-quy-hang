@@ -69,7 +69,6 @@ const BANG = {
       `${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`,
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
       `${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`,
-      `${W}/app/(app)/proto/luong-gui/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/proto/o-nhan-lead/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
@@ -89,8 +88,8 @@ const BANG = {
   "hom-nay-dau-chu": { theoKhuon: [`${W}/app/(app)/proto/hom-nay-dau-chu/page.tsx`, `${W}/app/(app)/today/page.tsx`], ngoaiLe: [] },
   // Hàng 28: Chế độ cuộc gọi, nhóm màn mới — trang ba lối và màn thật /units/call.
   "cuoc-goi": { theoKhuon: [`${W}/app/(app)/units/call/dial/page.tsx`, `${W}/app/(app)/units/call/page.tsx`], ngoaiLe: [] },
-  // Hàng 34: Gửi, nhóm màn mới — màn thật /shares/new; trang ba lối là ngoại lệ.
-  gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [`${W}/app/(app)/proto/luong-gui/page.tsx`] },
+  // Hàng 34: Gửi, nhóm màn mới — màn thật /shares/new (trang ba lối đã gỡ).
+  gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [] },
 };
 const NHAN_DIEN_TRANG_THAI = [
   ...TRANG_TAM.slice(0, 3),
@@ -118,8 +117,6 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/cot-ho-so-can/${p}`),
   // Hôm nay của đầu chủ (hàng 22): trang ba lối, vùng đầu chủ và khuôn của /today.
   ...["ba-loi.tsx", "hang-doi.tsx", "page.tsx", "reui.tsx", "trong-kho.tsx", "ve-moi.tsx"].map((p) => `${W}/app/(app)/proto/hom-nay-dau-chu/${p}`),
-  // Luồng Gửi (hàng 34): trang ba lối của nhóm Gửi.
-  ...["ba-loi.tsx", "chung.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/luong-gui/${p}`),
   // Màn Gửi (hàng 34): khuôn, màn, trang khách xem trước.
   ...["khung.tsx", "man-gui.tsx", "page.tsx", "trang-khach.tsx"].map((p) => `${W}/app/(app)/shares/new/${p}`),
   // Chế độ cuộc gọi (hàng 28): trang ba lối và màn thật.
@@ -363,13 +360,13 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "gui: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
+      "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "ho-so-can: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-dau-chu: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 7 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
+      "trang-tam: 7 tệp theo khuôn · 16 ngoại lệ · 0 lệch",
       "trang-thai: 67 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
