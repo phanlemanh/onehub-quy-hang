@@ -5,7 +5,7 @@ evals:
     criterion: AC-1
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ma trận viết trước bốn ô cho hàm chọn tập căn phát (đã tích k = 2 trong 5 căn hiện → đúng 2 căn theo thứ tự góc nhìn; k = 0 → cả 5 căn; 0 căn hiện → tắt kèm lời «Không có căn nào để phát»; căn đã tích mà bộ lọc nay ẩn → không vào tập) — mỗi ô một assert; năm vai × hai khổ: chỉ đầu chủ, trưởng nhóm trên máy tính có nút; trang /exports/new chuyển về /inventory?phat-hang=1 và không còn nhập Placeholder; chiều đỏ: bản sao hàm bỏ điều kiện «đã tích» → ô k = 2 đỏ nêu «lấy cả căn không tích»."
+    expected: "exit 0; ma trận viết trước bốn ô cho hàm chọn tập căn xuất (đã tích k = 2 trong 5 căn hiện → đúng 2 căn theo thứ tự góc nhìn; k = 0 → cả 5 căn; 0 căn hiện → tắt kèm lời «Không có căn nào để xuất»; căn đã tích mà bộ lọc nay ẩn → không vào tập) — mỗi ô một assert; năm vai × hai khổ: chỉ đầu chủ, trưởng nhóm trên máy tính có nút; trang /exports/new chuyển về /inventory?phat-hang=1 và không còn nhập Placeholder; chiều đỏ: bản sao hàm bỏ điều kiện «đã tích» → ô k = 2 đỏ nêu «lấy cả căn không tích»."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/exports/**", "packages/core/src/navigation.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -14,7 +14,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
-    expected: "Trên máy tính 1440×900, đăng nhập đầu chủ mẫu, mở bảng hàng: lọc còn một toà, tích hai căn, bấm «Phát hàng» — hộp thoại mở, bước 1 có năm mẫu, bước 2 Nhóm môi giới chọn sẵn, bước 3 xem trước đúng hai căn đã tích và dòng «Cột không ra ngoài» khi góc nhìn có cột nội bộ; đi tới bước 3 rồi «Quay lại» hai bước, đổi sang Khách riêng, đi tiếp → xem trước theo người nhận mới (không mã căn), người nhận không mất khi quay lại; bỏ tích, mở lại → xem trước đủ các căn đang lọc; lọc ra 31 căn, mở «Phát hàng» → ba thẻ Bài Zalo, Bài Facebook, Ảnh khoá kèm lời «Quá 30 căn — dùng Excel hay PDF»; mở «Phát hàng» từ menu Tạo → về bảng hàng và hộp thoại mở; khổ điện thoại 390×844 không có nút. Chụp mỗi bước một ảnh."
+    expected: "Trên máy tính 1440×900, đăng nhập đầu chủ mẫu, mở bảng hàng: lọc còn một toà, tích hai căn, bấm «Xuất bảng hàng» — hộp thoại mở, bước 1 có năm mẫu, bước 2 Nhóm môi giới chọn sẵn, bước 3 xem trước đúng hai căn đã tích và dòng «Cột không ra ngoài» khi góc nhìn có cột nội bộ; đi tới bước 3 rồi «Quay lại» hai bước, đổi sang Khách riêng, đi tiếp → xem trước theo người nhận mới (không mã căn), người nhận không mất khi quay lại; bỏ tích, mở lại → xem trước đủ các căn đang lọc; lọc ra 31 căn, mở «Xuất bảng hàng» → ba thẻ Bài Zalo, Bài Facebook, Ảnh khoá kèm lời «Quá 30 căn — dùng Excel hay PDF»; mở «Xuất bảng hàng» từ menu Tạo → về bảng hàng và hộp thoại mở; khổ điện thoại 390×844 không có nút. Chụp mỗi bước một ảnh."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/exports/**", "apps/web/src/components/shell/menu-tao.tsx"]
     evidence_required: [screenshot, observed, verifier, verified_at]
 
@@ -38,7 +38,7 @@ evals:
     criterion: AC-4
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; trên ba căn mẫu: bài Zalo có đúng ba dòng căn (mỗi dòng một căn, không dòng trống giữa), bài Facebook có dòng đầu là tên sàn rồi ba khối cách nhau một dòng trống; cả hai không ký tự nào thuộc dải biểu tượng cảm xúc, không dấu * hay _ bao chữ; giá theo định dạng bảng hàng; hàm chép gọi bộ nhớ tạm đúng một lần với đúng bài và không gọi mạng nào ngoài ghi lần phát; chiều đỏ: bản sao chèn biểu tượng vào bài → ca đỏ nêu ký tự lạ."
+    expected: "exit 0; trên ba căn mẫu: bài Zalo có đúng ba dòng căn (mỗi dòng một căn, không dòng trống giữa), bài Facebook có dòng đầu là tên sàn rồi ba khối cách nhau một dòng trống; cả hai không ký tự nào thuộc dải biểu tượng cảm xúc, không dấu * hay _ bao chữ; giá theo định dạng bảng hàng; hàm chép gọi bộ nhớ tạm đúng một lần với đúng bài và không gọi mạng nào ngoài ghi lần xuất; chiều đỏ: bản sao chèn biểu tượng vào bài → ca đỏ nêu ký tự lạ."
     paths: ["packages/core/src/export/**", "apps/web/src/app/(app)/inventory/phat-hang/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -63,7 +63,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
-    expected: "Trên máy tính, phát 12 căn của bộ mẫu ra Ảnh rồi ra PDF: tệp bang-hang-<ngày>.png mở được, là ảnh bảng như xem trước, chữ tiếng Việt có dấu đọc đúng (toà, tình trạng, phí); tệp .pdf mở bằng trình xem PDF của trình duyệt, một trang, cùng nội dung; đối chứng dưới ngưỡng: phát đúng 30 căn → thẻ Ảnh không khoá (should-not-fire), ảnh tải được đủ 30 dòng; phát 31 căn: thẻ Ảnh khoá với lời «Quá 30 căn — dùng Excel hay PDF», PDF ra hai trang. Chụp ảnh tệp đã mở."
+    expected: "Trên máy tính, xuất 12 căn của bộ mẫu ra Ảnh rồi ra PDF: tệp bang-hang-<ngày>.png mở được, là ảnh bảng như xem trước, chữ tiếng Việt có dấu đọc đúng (toà, tình trạng, phí); tệp .pdf mở bằng trình xem PDF của trình duyệt, một trang, cùng nội dung; đối chứng dưới ngưỡng: phát đúng 30 căn → thẻ Ảnh không khoá (should-not-fire), ảnh tải được đủ 30 dòng; phát 31 căn: thẻ Ảnh khoá với lời «Quá 30 căn — dùng Excel hay PDF», PDF ra hai trang. Chụp ảnh tệp đã mở."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "packages/core/src/export/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
 
@@ -71,7 +71,7 @@ evals:
     criterion: AC-7
     executor: script
     cmd: config:executors.script.ro_ri
-    expected: "exit 0; bài kiểm rò rỉ của hộp thoại phát hàng (tệp *.ro-ri.test.ts dưới apps/web/src/app/(app)/inventory/phat-hang) dựng căn mồi bằng canMoi, chuyển qua đúng hàm chuyển dòng bảng hàng → căn của trang rồi hàm phát của lõi, cho cả 5 mẫu × 2 người nhận × các cấu hình ra = mọi ô; timRoRi trên bài, mọi ô bảng xem trước, chữ trong tệp xlsx (sau giải nén), danh sách chữ đưa cho bộ vẽ ảnh/PDF và nhãn «Cột không ra ngoài» → 0 rò rỉ; khách riêng ở cấu hình ẩn mã căn: không mã căn, không số tầng; cùng tệp quét mã nguồn mọi tệp của hộp thoại: chữ vẽ ra chỉ lấy từ kết quả hàm phát của lõi, không tệp nào đọc khoá nội bộ của căn (chủ nhà, giá đáy, người giữ, lý do rút, trường riêng…) ngoài hàm chuyển dòng; rào cửa ra không còn miễn /exports (trang chuyển hướng) và nhận tệp kiểm; chiều đỏ hai ca: bản sao hàm phát đọc thẳng dòng thay vì bản đã ẩn → ca đỏ nêu trường lọt (chủ nhà); bản sao tệp hộp thoại chèn một lần đọc trường nội bộ → ca quét nguồn đỏ nêu tên tệp."
+    expected: "exit 0; bài kiểm rò rỉ của hộp thoại xuất bảng hàng (tệp *.ro-ri.test.ts dưới apps/web/src/app/(app)/inventory/phat-hang) dựng căn mồi bằng canMoi, chuyển qua đúng hàm chuyển dòng bảng hàng → căn của trang rồi hàm xuất của lõi, cho cả 5 mẫu × 2 người nhận × các cấu hình ra = mọi ô; timRoRi trên bài, mọi ô bảng xem trước, chữ trong tệp xlsx (sau giải nén), danh sách chữ đưa cho bộ vẽ ảnh/PDF và nhãn «Cột không ra ngoài» → 0 rò rỉ; khách riêng ở cấu hình ẩn mã căn: không mã căn, không số tầng; cùng tệp quét mã nguồn mọi tệp của hộp thoại: chữ vẽ ra chỉ lấy từ kết quả hàm xuất của lõi, không tệp nào đọc khoá nội bộ của căn (chủ nhà, giá đáy, người giữ, lý do rút, trường riêng…) ngoài hàm chuyển dòng; rào cửa ra không còn miễn /exports (trang chuyển hướng) và nhận tệp kiểm; chiều đỏ hai ca: bản sao hàm xuất đọc thẳng dòng thay vì bản đã ẩn → ca đỏ nêu trường lọt (chủ nhà); bản sao tệp hộp thoại chèn một lần đọc trường nội bộ → ca quét nguồn đỏ nêu tên tệp."
     paths: ["apps/web/src/app/(app)/exports/**", "apps/web/src/app/(app)/inventory/phat-hang/**", "packages/core/src/export/**", "packages/core/src/redaction/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -80,7 +80,7 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
-    expected: "Trên máy dev nối Postgres dãy với bộ mẫu có chủ nhà, số điện thoại mẫu và giá đáy ở lớp nguồn: đầu chủ giữ căn (người thấy được nguồn trên hồ sơ) phát mọi căn của mình ra Excel và Bài Zalo cho Nhóm môi giới rồi cho Khách riêng; đọc tệp xlsx tải về (giải nén) và bài trong bộ nhớ tạm: không có tên chủ nhà, số 0900 000 0xx mẫu, giá đáy nào của các căn ấy; bản Khách riêng không có mã căn. Ghi kết quả dò từng chuỗi."
+    expected: "Trên máy dev nối Postgres dãy với bộ mẫu có chủ nhà, số điện thoại mẫu và giá đáy ở lớp nguồn: đầu chủ giữ căn (người thấy được nguồn trên hồ sơ) xuất mọi căn của mình ra Excel và Bài Zalo cho Nhóm môi giới rồi cho Khách riêng; đọc tệp xlsx tải về (giải nén) và bài trong bộ nhớ tạm: không có tên chủ nhà, số 0900 000 0xx mẫu, giá đáy nào của các căn ấy; bản Khách riêng không có mã căn. Ghi kết quả dò từng chuỗi."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/lib/sync/**", "packages/core/src/export/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
 
@@ -97,7 +97,7 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
-    expected: "Trên máy dev nối Postgres dãy: đếm dòng bảng exports của sàn trước; trong hộp thoại thật bấm «Chép bài» (Bài Zalo, Nhóm môi giới, 3 căn) rồi «Tải file» (Excel, Khách riêng, 3 căn) → bảng exports thêm đúng 2 dòng với format post_zalo/xlsx, recipient nhom_moi_gioi/khach_rieng, listing_count 3, đúng người và sàn; hàm số đo của lõi chạy trên các dòng đọc từ bảng cho kỳ chứa hai lần ấy ra sheet_publishes = 2 (đọc bằng lệnh thử của hồ sơ, không viết tay lần phát). Ghi số đếm trước, sau và số đo."
+    expected: "Trên máy dev nối Postgres dãy: đếm dòng bảng exports của sàn trước; trong hộp thoại thật bấm «Chép bài» (Bài Zalo, Nhóm môi giới, 3 căn) rồi «Tải file» (Excel, Khách riêng, 3 căn) → bảng exports thêm đúng 2 dòng với format post_zalo/xlsx, recipient nhom_moi_gioi/khach_rieng, listing_count 3, đúng người và sàn; hàm số đo của lõi chạy trên các dòng đọc từ bảng cho kỳ chứa hai lần ấy ra sheet_publishes = 2 (đọc bằng lệnh thử của hồ sơ, không viết tay lần xuất). Ghi số đếm trước, sau và số đo."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "packages/api/src/exports/**", "packages/core/src/metrics/**", "packages/db/migrations/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
 
@@ -105,7 +105,7 @@ evals:
     criterion: AC-8
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; hàm xong-lần-phát của hộp thoại với lời gọi giả: ghi thành công → báo «Đã chép bài» hay «Đã tải <tên tệp>» và gọi ghi đúng một lần với mẫu, người nhận, số căn; ghi trả lỗi hay mất mạng → bài vẫn trong bộ nhớ tạm, file vẫn tải, kèm dòng «Chưa ghi được lần phát», không thử lại; chép hay tải hỏng → không ghi lần phát; chiều đỏ: bản sao ghi trước khi chép → ca «chép hỏng» đỏ nêu lần phát ghi oan."
+    expected: "exit 0; hàm xong-lần-xuất của hộp thoại với lời gọi giả: ghi thành công → báo «Đã chép bài» hay «Đã tải <tên tệp>» và gọi ghi đúng một lần với mẫu, người nhận, số căn; ghi trả lỗi hay mất mạng → bài vẫn trong bộ nhớ tạm, file vẫn tải, kèm dòng «Chưa ghi được lần xuất», không thử lại; chép hay tải hỏng → không ghi lần xuất; chiều đỏ: bản sao ghi trước khi chép → ca «chép hỏng» đỏ nêu lần xuất ghi oan."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -113,7 +113,7 @@ evals:
     criterion: AC-9
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; tinhSoDo với các lần phát mẫu: kỳ [tu, den) chứa 3 lần → sheet_publishes = 3; lần đúng lúc tu được tính, đúng lúc den không tính; kỳ trống → 0 (không phải «chưa có sự kiện»); danh sách số đo không còn thieu ở sheet_publishes, các mã khác giữ nguyên; tên hằng loại sự kiện khớp hằng hàng 52 đọc; chiều đỏ: bản sao tính cả cận trên → ca cận đỏ nêu số 4."
+    expected: "exit 0; tinhSoDo với các lần xuất mẫu: kỳ [tu, den) chứa 3 lần → sheet_publishes = 3; lần đúng lúc tu được tính, đúng lúc den không tính; kỳ trống → 0 (không phải «chưa có sự kiện»); danh sách số đo không còn thieu ở sheet_publishes, các mã khác giữ nguyên; tên hằng loại sự kiện khớp hằng hàng 52 đọc; chiều đỏ: bản sao tính cả cận trên → ca cận đỏ nêu số 4."
     paths: ["packages/core/src/metrics/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 
@@ -122,5 +122,5 @@ evals:
     executor: script
     cmd: config:executors.design.khuon
     paths: ["design/patterns/bang-hang.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/exports/**"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang, trang-tam mà hồ sơ chạm (bảng hàng, hộp thoại phát hàng, trang /exports/new)"
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang, trang-tam mà hồ sơ chạm (bảng hàng, hộp thoại xuất bảng hàng, trang /exports/new)"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
