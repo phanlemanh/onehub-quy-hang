@@ -197,11 +197,12 @@ describe("vết chọn khối — Chỗ hở", () => {
   const bangThat = () => readFileSync(join(ROOT, VVI), "utf8").split("## 3. Chỗ hở")[1].split(/\n## /)[0];
   const dongThat = () => bangThat().split("\n").filter((l) => /^\| /.test(l)).slice(2).map((l) => l.trim().slice(1, -1).split("|").map((o) => o.trim()));
 
-  it("chỗ hở: cây thật đủ năm ô cho 12 dòng", () => {
+  it("chỗ hở: cây thật đủ năm ô cho 11 dòng", () => {
     const dong = dongThat();
     // Hàng 91: dòng «Người dùng (Cài đặt sàn, tạm)» rời bảng — Người dùng nay chạy khối solution-users-8.
+    // Luật đợt 44 (L-14, hàng 34): dòng «Trống · lỗi · báo» rời bảng — TrangThai đã chuyển thể empty-state-1/2.
     // Hàng 93: dòng «Đăng nhập, chọn sàn, chưa gắn sàn (tạm)» rời bảng — ba màn nay chạy khối auth-15.
-    assert.equal(dong.length, 12);
+    assert.equal(dong.length, 11);
     assert.equal(dong.filter((o) => o[0].startsWith("Đăng nhập, chọn sàn, chưa gắn sàn")).length, 0);
     for (const o of dong) {
       assert.equal(o.length, 5, o[0]);
@@ -253,13 +254,15 @@ describe("vết chọn khối — Chỗ hở", () => {
       }
     }));
 
-  it("chỗ hở: cây thật có hai cảnh báo chỗ tạm", () => {
+  it("chỗ hở: cây thật không còn cảnh báo chỗ tạm", () => {
+    // Luật đợt 44 (L-14, hàng 34): Ô nhận lead xem lại khi hàng 51 gộp — hạn là điều kiện, không ngày; dòng Đăng nhập
+    // rời bảng ở hàng 93.
     const r = kiemChuan(ROOT, { homNay: HOM_NAY });
     assert.deepEqual(r.loi, []);
-    assert.equal(r.canhBao.length, 2);
-    for (const ten of ["Ô nhận lead", "Trống · lỗi · báo"])
-      assert.equal(r.canhBao.filter((c) => c.includes(`«${ten}`)).length, 1, ten);
-    assert.equal(r.canhBao.filter((c) => c.includes("«Đăng nhập")).length, 0, "Đăng nhập");
+    assert.deepEqual(r.canhBao, []);
+    // Đối chứng dương: ngày xa hơn mọi hạn ngày còn lại vẫn không cảnh báo hai dòng điều kiện.
+    for (const ten of ["Đăng nhập", "Ô nhận lead"])
+      assert.equal(kiemChuan(ROOT, { homNay: "2099-01-01" }).canhBao.filter((c) => c.includes(`«${ten}`)).length, 0, ten);
   });
 });
 

@@ -1,0 +1,24 @@
+{
+  "man": "Gửi (hàng 34) — chọn người nhận, căn, tin soạn sẵn; xem trước trang khách; mở bảng chia sẻ",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích ở vo-va-ia §2 dòng «Gửi» (thanh chọn của wishlist-1 dính đáy «n căn · Xem trước · Gửi»); dòng căn của wishlist-1 có ảnh nhỏ, dòng chấm ngăn và huy hiệu tín hiệu nên nhắc «Gọi xác nhận trước» và «Khách thấy: Toà · nấc tầng» nằm ngay trên căn; trên điện thoại cả luồng gọn trong một màn cuộn, thanh gửi luôn ở đáy."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Khuôn Luồng nhiều bước + thẻ Bảng hàng",
+      "dong_co": "Dùng lại nguyên khuôn Luồng nhiều bước của trang mẫu (settings-3 xếp chồng, cột phụ Xem trước) và thẻ product-grid-4 đã chuyển thể ở hàng 32 — không thêm khối mới.",
+      "danh_doi": "Thẻ cao 128px nên bốn căn đẩy tin soạn sẵn xuống rất xa; nhắc «Gọi xác nhận trước» và «Bỏ căn» phải dựng thêm dưới thẻ; Frame lồng nhiều lớp làm màn điện thoại nặng."
+    },
+    "reui": {
+      "nhan": "wishlist-1: dòng chọn + thanh chọn dính đáy",
+      "dong_co": "Khối đích của vo-va-ia: dòng căn theo wishlist-1 (ảnh nhỏ, toà, mã, thông số chấm ngăn, huy hiệu tín hiệu) và thanh chọn «n căn · Xem trước · Gửi» dời xuống đáy.",
+      "danh_doi": "Bố cục phẳng không Frame — khác các màn vận hành khác dùng Frame; phần người nhận và tin là ghép (wishlist-1 không có), cần giữ đúng nhịp chữ của khối."
+    },
+    "ve-moi": {
+      "nhan": "Frame + Tabs ba bước",
+      "dong_co": "Ghép Frame + Tabs: Người nhận · Căn · Tin trong một khung, chân khung là thanh gửi — màn ngắn nhất, mỗi lần một bước.",
+      "danh_doi": "Căn và tin nằm sau tab nên người không thấy cùng lúc điều sắp gửi; nhắc «Gọi xác nhận trước» bị giấu ở tab 2; thêm lượt chạm, trái câu giao «gửi trong một phút»."
+    }
+  }
+}
