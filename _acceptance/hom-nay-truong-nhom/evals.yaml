@@ -50,6 +50,10 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy D: node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs (Postgres 5575 nạp sàn mẫu, máy dev 3476, thêm ba lead mới: chưa chia được, quá hạn nhận, quá hạn gọi; dòng cuối in hangDoi) — tắt bằng node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs --tat khi chấm xong, không pkill"
+      - "Chạy node _acceptance/hom-nay-truong-nhom/thu/chay-ui.mjs --e6 --ra _acceptance/hom-nay-truong-nhom/evidence — Chrome không đầu đăng nhập trưởng nhóm mẫu, bấm «Giao lại» ở dòng «Quá hạn nhận», chọn [Mẫu] Đầu chủ 2; in dòng e6-truoc, e6-sau, e6-ket-qua"
+      - "Đối chiếu e6-ket-qua: chon bắt đầu «da-chon:», leadQuaHanSau = leadQuaHanTruoc − 1, soGiaoLaiSau = soGiaoLaiTruoc − 1; xem hai ảnh E6-truoc-1440.png, E6-sau-1440.png"
     target: "http://localhost:3462/today"
     expected: "Đăng nhập trưởng nhóm của sàn mẫu (khoá lead đã quá hạn): thấy dòng lead quá hạn; bấm «Giao lại», chọn một đầu chủ, xác nhận → dòng biến mất và ô «Lead quá hạn» giảm 1. Chụp trước/sau."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -59,6 +63,10 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy D: node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs (Postgres 5575 nạp sàn mẫu, máy dev 3476, thêm ba lead mới: chưa chia được, quá hạn nhận, quá hạn gọi; dòng cuối in hangDoi) — tắt bằng node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs --tat khi chấm xong, không pkill"
+      - "Chạy node _acceptance/hom-nay-truong-nhom/thu/chay-ui.mjs --e7 --ra _acceptance/hom-nay-truong-nhom/evidence — in dòng e7 (số ba ô, cờ coGiaoLai, coTheoNguoi, coToanSan, coPlaceholder) và chụp E7-bang-dieu-khien-1440.png"
+      - "Đối chiếu: «Lead quá hạn» = số dòng accept_overdue + first_call_overdue và «Ngoại lệ» = số dòng unrouted của hangDoi do dung-d.mjs in ở lượt dựng ngay trước; coPlaceholder = false, coToanSan = true; xem ảnh: bảng theo đầu chủ có thanh tỉ lệ tươi"
     target: "http://localhost:3462/today"
     expected: "Trưởng nhóm (không vai Đầu chủ), khổ 1440×900: bố cục Bảng điều khiển; ba ô «Lead quá hạn», «Ngoại lệ», «Hàng cũ» có số; hàng đợi lead quá hạn; bảng theo đầu chủ có thanh tỉ lệ tươi; không chữ «Đang dựng» của Placeholder. Đối chiếu số ô với GET /api/v1/team/lead-queue đếm theo kind trên cùng phiên."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -84,6 +92,10 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy D: node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs (Postgres 5575 nạp sàn mẫu, máy dev 3476, thêm ba lead mới: chưa chia được, quá hạn nhận, quá hạn gọi; dòng cuối in hangDoi) — tắt bằng node _acceptance/hom-nay-truong-nhom/thu/dung-d.mjs --tat khi chấm xong, không pkill"
+      - "Chạy node _acceptance/hom-nay-truong-nhom/thu/chay-ui.mjs --e10 --ra _acceptance/hom-nay-truong-nhom/evidence — khổ 390×844, chụp E10-dien-thoai-390.png"
+      - "Đối chiếu dòng e10: moMayTinh = true, coGiaoLai = false; xem ảnh"
     target: "http://localhost:3462/today"
     expected: "Trưởng nhóm ở khổ 390×844: thấy dòng «Hôm nay của trưởng nhóm mở trên máy tính», không bảng điều khiển. Chụp."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
