@@ -72,6 +72,7 @@ export function TrinhChe({ anh, nguon, urlGoc, onDong, onDaLuu }: { anh: UnitPho
     <Dialog open onOpenChange={(mo) => (!mo && !dangLuu ? onDong() : null)}>
       {/* Ngoại lệ có hạn của ADR-0024 (va-che-vung-anh): bề rộng hộp và trần cao khung vẽ đặt tay tới khi trình che chuyển
           sang ngăn nổi của hệ bố cục (hàng 91). Dưới sm giữ bề rộng mặc định của hộp trên điện thoại. */}
+      {/* eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- bề rộng hộp của trình che vùng ảnh (va-che-vung-anh), tới khi trình che sang ngăn nổi của hệ bố cục */}
       <DialogContent className="sm:max-w-[min(64rem,calc(100%-2rem))]">
         <DialogHeader>
           <DialogTitle>Che vùng</DialogTitle>
@@ -84,6 +85,7 @@ export function TrinhChe({ anh, nguon, urlGoc, onDong, onDaLuu }: { anh: UnitPho
             width={hien.w}
             height={hien.h}
             aria-label="Ảnh để vẽ vùng che"
+            // eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- trần cao và rộng của khung vẽ che vùng theo ảnh, không phải kích thước trang
             className="mx-auto block h-auto max-h-[calc(100dvh-13rem)] w-auto max-w-full cursor-crosshair touch-none rounded-md border"
             onPointerDown={(e) => (e.currentTarget.setPointerCapture(e.pointerId), setKeo({ a: diem(e), b: diem(e) }))}
             onPointerMove={(e) => (keo ? setKeo({ a: keo.a, b: diem(e) }) : null)}

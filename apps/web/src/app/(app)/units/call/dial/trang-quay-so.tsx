@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
+// eslint-disable-next-line quy-hang-ui/no-raw-skeleton -- chờ tải một FramePanel của trang quay số theo hình của nó; ChoTai chỉ có hình cả trang
 import { Skeleton } from "@/components/ui/skeleton";
 import { goiFetch } from "@/lib/sync/goi-fetch";
 import { chuSo, telHref } from "../../../today/mo-so";

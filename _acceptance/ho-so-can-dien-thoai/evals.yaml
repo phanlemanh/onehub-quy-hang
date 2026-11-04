@@ -1,0 +1,161 @@
+schema_version: 1
+feature_slug: ho-so-can-dien-thoai
+# Lệnh máy: executors.test.core (lớp phủ hồ sơ và tin hỏi ở packages/core/src/access), executors.test.web (cách mở hỏi đầu
+# chủ ở apps/web/src/app/(app)/units/ho-so), executors.test.isolation (API trên Postgres dãy — gồm test:db của gói api),
+# executors.script lint, typecheck, design_floor, executors.design.khuon. Người chấm đối chiếu tên ca nêu trong `expected`
+# với dòng reporter: có mặt, ok, không SKIP.
+# Dựng chung cho mọi eval ui-check (gọi là «DỰNG B» trong steps) — chỗ thử dãy B của hồ sơ bang-hang-dang-the:
+#   node --env-file-if-exists=.env.local --import tsx _acceptance/bang-hang-dang-the/thu/dung-b.mjs
+#   → Postgres dãy B (cổng 5572) đã migrate, sàn và người mẫu đã nạp, ảnh thật ở ngăn Gửi được của A-04.06 (bìa là ảnh thứ
+#     hai), ảnh chỉ Nội bộ ở A-06.03; máy chủ dev cổng 3492.
+#   Phiên: node _acceptance/bang-hang-dang-the/thu/phien.mjs <email> in JSON cookie `qh.session_token`, `qh_san`.
+#   Người: dau-khach@mau.quy-hang.test (Đầu khách), dau-chu-1@… (Đầu chủ — giữ một phần căn), truong-nhom@… (Trưởng nhóm).
+#   Mẫu nguồn để quét rò: tên và số chủ nhà mẫu của căn đang mở đọc bằng phiên truong-nhom qua GET /api/v1/listings/{id}/owner.
+evals:
+  - id: E1
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «lớp phủ hồ sơ: ma trận người xem» là bảng viết trước năm người xem × hai tình huống giữ (Đầu khách, Đầu chủ giữ căn, Đầu chủ không giữ, Trưởng nhóm, Quản trị sàn không vai khác; căn có người giữ / chưa ai giữ) — mỗi ô một assert deepEqual đủ bốn cờ noiBo, sanSang, suaAnh, hoiDauChu; một assert số ô = 10. Chiều đỏ (phá-thử S3): cho Đầu khách noiBo = true thì ca đỏ nêu đúng ô «Đầu khách · có người giữ»."
+    paths: ["packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «tin hỏi đầu chủ: chữ và đường» assert bằng đúng chuỗi «Hỏi về căn A-04.06 · Toà A» và đường có tham số unit bằng đúng mã căn đã mã hoá (đọc bằng URLSearchParams: unit = «A-04.06»; không đòi tham số khác) cho một căn mẫu; ca «tin hỏi đầu chủ: không chở nguồn» dựng tin từ một hàng mẫu có đủ khoá nguồn rồi assert ba mẫu khác rỗng và findSourceLeaks(tin, [tên chủ mẫu, số chủ mẫu, giá đáy mẫu]) rỗng, kèm đối chứng dương: chèn tên chủ vào tin thì findSourceLeaks khác rỗng."
+    paths: ["packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong test:db của gói api, ca «chủ nhà: người không thấy nguồn nhận tên đầu chủ» cho Đầu khách và Đầu chủ không giữ: status 200, visible false, listingAgentUserId đúng, listingAgentName đúng tên người dùng của đầu chủ giữ, findSourceLeaks(thân, mẫu) rỗng, không khoá email hay phone nào — mẫu nguồn (tên, số, giá đáy) assert khác rỗng và đối chứng dương: findSourceLeaks(thân của trưởng nhóm, mẫu) khác rỗng; ca «chủ nhà: căn chưa ai giữ» trả listingAgentName null; ca «chủ nhà: người thấy nguồn như trước» cho đầu chủ giữ và trưởng nhóm trả visible true với ownerName; ca sàn khác bị từ chối như trước. Bộ kiểm cách ly vẫn xanh."
+    paths: ["packages/api/src/owners/**", "packages/api/test-db/**", "packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đầu khách: kéo bảng hàng và hồ sơ không chở nguồn» gọi mọi đường mà hồ sơ đọc với phiên Đầu khách (danh sách hàng của bộ đồng bộ, lịch sử hàng, danh sách ảnh, chủ nhà) và assert findSourceLeaks(thân, mẫu) rỗng ở từng đường — một assert mỗi đường, số đường = 4; mẫu assert khác rỗng, đối chứng dương: thân chủ nhà của trưởng nhóm cho findSourceLeaks khác rỗng; danh sách ảnh trả noiBo «an» và không ảnh ngăn internal."
+    paths: ["packages/api/src/**", "packages/api/test-db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hỏi đầu chủ: chọn cách mở» là bảng viết trước ba tình huống máy (có navigator.share và canShare → «chia-se»; không share mà có clipboard → «chep»; không cả hai → «khong»), mỗi tình huống một assert; ca «hỏi đầu chủ: căn chưa ai giữ» assert nút tắt với chữ «Căn chưa có đầu chủ giữ»; ca «hỏi đầu chủ: nhãn» assert hằng nhãn nút bằng đúng nhãn chủ kho chọn ở Hỏi-2 (ghi vào sổ ở Cổng Phạm vi)."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-khach, mở http://localhost:3492/inventory, chờ thẻ; ghi mã căn và giá trên thẻ A-04.06 (lọc Toà A nếu cần)."
+      - "Chạm thẻ A-04.06 → chờ hồ sơ toàn màn → chụp evidence/E6-ho-so.png. Ghi: mã căn, chữ giá, chữ điều kiện phí, dòng lần xác nhận, tiêu đề các mục có mặt."
+      - "Mở thẳng http://localhost:3492/units/A-04.06 → chụp evidence/E6-toan-man.png; ghi cùng các mục trên."
+      - "Đo document.documentElement.scrollWidth và clientWidth ở cả hai màn."
+    expected: "Hai màn hiện mã A-04.06, giá dạng «x,xx tỷ» trùng thẻ, chữ điều kiện phí, dòng «Xác nhận N ngày trước» hay «Chưa xác nhận với chủ nhà», mục thuộc tính và lần rao; scrollWidth <= clientWidth."
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/cards/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812. Phiên dau-khach, bật ghi mạng, mở http://localhost:3492/units/A-04.06, cuộn tới mục Ảnh → chụp evidence/E7-anh.png. Ghi tên mọi thẻ ngăn, có ổ khoá hay chữ «chỉ người giữ căn» không, có nút thêm, xoá ảnh hay tay kéo không, ảnh đầu ngăn Gửi được có id bìa dung-b.mjs in không."
+      - "Mở http://localhost:3492/units/A-06.03 (chỉ ảnh Nội bộ) → chụp evidence/E7-chi-noi-bo.png; ghi các ngăn và ảnh hiện."
+      - "Liệt kê mọi lời gọi mạng tới /photos của hai lượt mở và thân trả về: có ảnh nào kind internal không."
+    expected: "Có ngăn «Gửi được» và «Tự có từ mã»; ngăn Nội bộ đúng như chủ kho chọn ở Hỏi-4 (khuyến nghị: không thẻ «Nội bộ», không ổ khoá, không lời «chỉ người giữ căn»); không nút thêm, xoá, kéo; ảnh đầu Gửi được của A-04.06 là ảnh bìa; A-06.03 không ảnh nào hiện ở Gửi được; không thân trả về nào chứa ảnh internal."
+    paths: ["apps/web/src/app/(app)/units/photos/**", "apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812. Đối chứng dương: phiên dau-chu-1 tìm một căn mình giữ mà hồ sơ hiện nút «Sẵn sàng bán» (GET /api/v1/listings, listAgentKey = id của mình, trạng thái Chưa đủ để rao; mở từng căn tới khi thấy nút) → chụp evidence/E8-giu-co-nut.png, ghi mã căn X. Không căn nào có nút → ghi «không có đối chứng» và eval không đạt."
+      - "Đọc mẫu nguồn của X: phiên truong-nhom gọi GET /api/v1/listings/{id}/owner → ghi ownerName, có số không, floorPrice; mở số bằng POST …/owner/phone-reveal nếu có số. Tên và số mẫu phải khác rỗng."
+      - "Phiên dau-khach, bật ghi mạng, mở http://localhost:3492/units/X → chụp evidence/E8-ho-so.png. Ghi: có nút «Sẵn sàng bán» không, có ô sửa lần rao hay ảnh không, có «Báo sai thông tin căn» không."
+      - "Tìm trong văn bản toàn trang và trong mọi thân trả về mạng của lượt mở: tên chủ nhà mẫu, chuỗi số của số chủ, giá đáy mẫu, chữ «Chủ nhà»."
+    expected: "Đối chứng: dau-chu-1 thấy «Sẵn sàng bán» ở X và mẫu nguồn của X khác rỗng. Đầu khách ở X: không «Sẵn sàng bán», không ô sửa lần rao hay ảnh; có «Báo sai thông tin căn»; không chuỗi mẫu nguồn nào trong trang hay trong thân trả về; không mục «Chủ nhà»."
+    paths: ["apps/web/src/app/(app)/units/**", "packages/api/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E9
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 375x812 cảm ứng. Phiên dau-khach. Trước khi tải trang, đặt navigator.share = (d) => { window.__chia = d; return Promise.resolve(); } và navigator.canShare = () => true. Mở http://localhost:3492/units/A-04.06 → chụp evidence/E9-nut.png. Ghi chữ nút ở đáy màn và vị trí (dính đáy khi cuộn)."
+      - "Chạm nút → đọc window.__chia (title, text, url) → chụp evidence/E9-sau-cham.png. Ghi có lời gọi mạng POST nào trong lúc chạm không."
+      - "Tải lại với navigator.share = undefined (giữ clipboard) → chạm nút → ghi toast và nội dung clipboard."
+      - "Mất mạng: sau khi hồ sơ đã hiện một lần, chặn mọi yêu cầu tới /api (DevTools offline), tải lại hay mở lại qua bảng thẻ → chạm nút → đọc window.__chia, chụp evidence/E9-ngoai-tuyen.png."
+      - "Tìm qua GET /api/v1/listings một căn có listAgentKey rỗng; nếu có, mở hồ sơ của nó → chụp evidence/E9-chua-giu.png; nếu không có, ghi «sàn mẫu không có căn chưa giữ» (ca này đã đo ở E5)."
+    expected: "Nút dính đáy mang đúng chuỗi «<nhãn chủ kho chọn ở Hỏi-2> · <tên đầu chủ giữ căn>»; chạm gọi navigator.share với text chứa «Hỏi về căn A-04.06 · Toà A» và url tới /inventory?unit=A-04.06; không POST nào khi chạm; khi không có share thì toast «Đã chép tin hỏi» và clipboard chứa cùng tin; mất mạng: nút không tên, chạm vẫn gọi navigator.share với text chứa «Hỏi về căn A-04.06 · Toà A», không treo, không báo lỗi; căn chưa giữ (nếu có) hiện nút mờ «Căn chưa có đầu chủ giữ»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E10
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Phiên dau-chu-1, khổ 375x812: mở hồ sơ một căn dau-chu-1 giữ (GET /api/v1/listings, listAgentKey = id của mình; ưu tiên căn Chưa đủ để rao hay đủ điều kiện Sẵn sàng bán) → chụp evidence/E10-giu-375.png. Ghi các ngăn ảnh, có nút Sẵn sàng bán (khi căn đủ điều kiện), có thêm ảnh, có nút hỏi đầu chủ không."
+      - "Cùng căn ở khổ 1440x900 trên /inventory?unit=… → chụp evidence/E10-giu-1440.png; ghi như trên."
+      - "Phiên dau-chu-1 mở một căn KHÔNG giữ ở 375 → chụp evidence/E10-khong-giu.png; ghi có nút hỏi đầu chủ không, có ngăn Nội bộ không."
+      - "Phiên truong-nhom mở A-04.06 ở 375 → chụp evidence/E10-truong-nhom.png; ghi các ngăn ảnh và có nút hỏi không."
+    expected: "Đầu chủ giữ căn ở cả hai khổ: có ngăn Nội bộ, sửa ảnh, Sẵn sàng bán khi căn đủ điều kiện, không nút hỏi. Đầu chủ không giữ: có nút hỏi; ngăn Nội bộ theo Hỏi-4. Trưởng nhóm: có ngăn Nội bộ, không nút hỏi."
+    paths: ["apps/web/src/app/(app)/units/**", "packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E11
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/ho-so-can.md", "design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can hay trang-thai; ho-so-can.md không còn khoá ngoai_le_han nào trỏ hạn ho-so-can-dien-thoai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; bài quét khuôn in «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch»; «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**", "packages/core/src/**", "packages/api/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E15
+    criterion: AC-8
+    executor: judgment
+    inputs: ["docs/product/tham-chieu.md", "CONTEXT.md", "design/patterns/ho-so-can.md", "_acceptance/ho-so-can-dien-thoai/decisions.jsonl"]
+    question: "Đọc bốn tệp. (1) tham-chieu.md §12 có dòng ngày 03/11 nói hồ sơ căn của Đầu khách là lớp phủ trên cùng màn, có nút hỏi đầu chủ mở bảng chia sẻ của máy không? (2) Nhãn nút hỏi đầu chủ ở tham-chieu.md (§4, §8 nếu có) và CONTEXT.md có trùng đúng nhãn mà dòng sổ quyết định của Hỏi-2 (lời chủ kho ở Cổng Phạm vi) ghi không — không chỗ nào còn nhãn kia? (3) ho-so-can.md có nói hồ sơ Đầu khách trên điện thoại là lớp phủ trên cùng khuôn (không còn câu «khối đích riêng» cho hàng 33) không? Trả lời có/không từng câu, kèm câu trích."
+    expected: "Cả ba câu «có», mỗi câu có câu trích."
+    paths: ["docs/product/tham-chieu.md", "CONTEXT.md", "design/patterns/ho-so-can.md"]
+    evidence_required: [verdict, rationale]

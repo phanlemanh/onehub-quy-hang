@@ -30,10 +30,18 @@ const loi = {
 };
 const OwnerView = z.union([
   z.object({ visible: z.literal(true), ownerName: z.string(), floorPrice: z.number().nullable(), hasPhone: z.boolean() }),
-  z.object({ visible: z.literal(false), listingAgentUserId: z.string().nullable() }),
+  // Người không thấy nguồn: đầu chủ giữ căn và tên người dùng của họ — không email, không số (hàng 33, AC-5).
+  z.object({ visible: z.literal(false), listingAgentUserId: z.string().nullable(), listingAgentName: z.string().nullable() }),
 ]);
 
-export function registerOwnerRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps) {
+/** Tên người dùng của đầu chủ giữ căn (`identity.user`); chưa ai giữ hay không tìm thấy → `null`. */
+async function tenDauChu(identityPool: pg.Pool, userId: string | null): Promise<string | null> {
+  if (userId === null) return null;
+  const { rows } = await identityPool.query<{ name: string }>('select name from "user" where id = $1', [userId]);
+  return rows[0]?.name ?? null;
+}
+
+export function registerOwnerRoutes(api: OpenAPIHono, { appPool, identityPool, auth }: ApiDeps) {
   // Khoá số chủ đọc một lần lúc dựng: bản thật thiếu khoá thì ném ở đây, API không dựng (hàng 62, ADR-0013).
   const khoa = khoaSoChu();
 
@@ -64,8 +72,13 @@ export function registerOwnerRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
   }
 
   api.openapi(
-    createRoute({ method: "get", path: `${BASE}/owner`, summary: "Chủ nhà của hàng — người không thấy nguồn chỉ nhận đầu chủ giữ căn", request: params, responses: { 200: ok("Chủ nhà", OwnerView), ...loi } }),
-    (c) => chay(c, (tx, id) => getOwner(tx, id)) as never,
+    createRoute({ method: "get", path: `${BASE}/owner`, summary: "Chủ nhà của hàng — người không thấy nguồn chỉ nhận đầu chủ giữ căn và tên của họ", request: params, responses: { 200: ok("Chủ nhà", OwnerView), ...loi } }),
+    (c) =>
+      chay(c, async (tx, id) => {
+        const v = await getOwner(tx, id);
+        if (isRefusal(v) || v.visible) return v;
+        return { ...v, listingAgentName: await tenDauChu(identityPool, v.listingAgentUserId) };
+      }) as never,
   );
   api.openapi(
     createRoute({ method: "put", path: `${BASE}/owner`, summary: "Ghi chủ nhà; hàng chưa ai giữ thì đầu chủ ghi đầu tiên giữ căn", request: { ...params, ...json(z.record(z.unknown())) }, responses: { 200: ok("Chủ nhà", OwnerView), ...loi } }),
