@@ -5,10 +5,10 @@ slug: trang-khach-rieng
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-04-trang-khach-rieng-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-04
 ---
 
 # Acceptance Contract: trang-khach-rieng
