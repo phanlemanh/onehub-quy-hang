@@ -1,0 +1,41 @@
+{
+  "feature_plain": "Người vừa nhập file bảng hàng mà thấy sai thì bấm một nút để gỡ cả lần nhập: căn mới tạo ra khỏi Quỹ hàng, căn có sẵn về giá cũ; căn đã có người sửa sau đó thì giữ nguyên và được liệt kê.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ gỡ mọi căn lần nhập tạo ra khỏi Bảng hàng, Hôm nay, Đã gửi và kiểm trùng, giữ nguyên lịch sử; link đã gửi khách báo căn không còn."},
+    {"id": "AC-2", "p": "Sẽ trả giá và điều kiện phí cũ cho căn có sẵn mà lần nhập đã đổi giá, không tính đó là một lần xác nhận với chủ nhà."},
+    {"id": "AC-5", "p": "Sẽ cho xem trước «gỡ bao nhiêu căn, trả giá bao nhiêu căn, bao nhiêu căn không làm được» rồi người mới bấm xác nhận; không có gì để gỡ thì nút tắt, lỗi giữa chừng thì báo bấm lại."},
+    {"id": "AC-6", "p": "Sẽ cho bấm lại khi lần hoàn tác đứt giữa chừng mà không gỡ trùng; chỉ chính người nhập hoàn tác được, sàn khác không thấy."},
+    {"id": "AC-7", "p": "Sẽ coi căn đã gỡ là một cờ chứ không phải trạng thái mới; máy đang ngoại tuyến cũng bỏ căn ấy; nhập lại cùng căn thì tạo căn mới."},
+    {"id": "AC-8", "p": "Sẽ có nút «Hoàn tác lần nhập này» ngay sau khi ghi và danh sách 10 lần nhập gần đây của người ấy ở màn Nhập, ở máy tính và điện thoại."},
+    {"id": "AC-11", "p": "Sẽ chờ mẫu đã nhớ tải xong mới ghép cột khi người chọn file quá nhanh, báo «Đang tải mẫu đã nhớ…»; tải lỗi thì ghép thường và báo rõ."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG gỡ căn đã có người sửa sau lần nhập (kể cả chính người nhập), mà liệt kê toà, mã căn và lý do."},
+    {"id": "AC-4", "p": "Sẽ KHÔNG thu lại tin bổ sung đã gửi, không hạ độ tươi theo ngày trong file, không xoá giá của căn trước đó chưa có giá — mỗi thứ được liệt kê kèm lý do."},
+    {"id": "AC-9", "p": "Sẽ KHÔNG học thành cách gọi khi người sửa một ô bị báo xung đột (phí trong ô giá, lệch danh mục) — chỉ đổi đúng ô ấy."},
+    {"id": "AC-10", "p": "Sẽ KHÔNG để hai cột của file cùng vào một trường: cột theo mẫu giữ trường, cột kia hỏi lại người."},
+    {"id": "OOS-1", "p": "Không hoàn tác từng dòng hay một phần lần nhập."},
+    {"id": "OOS-2", "p": "Không cho Trưởng nhóm hoàn tác lần nhập của người khác."},
+    {"id": "OOS-3", "p": "Không gỡ liên hệ chủ nhà mà lần nhập đã tạo — liên hệ ở lại sàn."},
+    {"id": "OOS-4", "p": "Không khôi phục một căn đã gỡ."},
+    {"id": "OOS-5", "p": "Không hạ độ tươi, không thu lại tin bổ sung (theo Hỏi-1, Hỏi-2)."},
+    {"id": "OOS-6", "p": "Không làm màn lịch sử lần nhập đầy đủ — để hàng 50."}
+  ],
+  "scope_plain": "Phần để ngoài vòng này:",
+  "coverage_plain": [
+    {"i": 0, "p": "Đủ bốn loại dòng của một lần nhập: tạo căn, cập nhật căn có sẵn, tin bổ sung, bỏ qua (AC-1, AC-2, AC-4)."},
+    {"i": 1, "p": "Đủ các thứ lần nhập ghi lên căn: tạo, đổi giá, xác nhận theo ngày, đổi trạng thái (AC-1, AC-2, AC-4)."},
+    {"i": 2, "p": "Đủ các tình huống sau lần nhập: chưa ai sửa, người khác sửa, chính người nhập sửa, căn đã bán (AC-3)."},
+    {"i": 3, "p": "Đủ các lần bấm: xem trước, ghi, đứt giữa chừng rồi bấm lại, bấm lại khi đã xong (AC-5, AC-6)."},
+    {"i": 4, "p": "Đủ người gọi: người nhập, người khác cùng sàn, Trưởng nhóm, sàn khác, vai không được nhập (AC-6)."},
+    {"i": 5, "p": "Đủ chỗ đọc căn đã gỡ: Bảng hàng, Hôm nay, Đã gửi, kiểm trùng, trang khách, máy ngoại tuyến, gấp lại bảng (AC-1, AC-7)."},
+    {"i": 6, "p": "Ba lỗi chuyển từ hàng 67: ô xung đột với ô giá trị lạ, mẫu đứng trước hay sau từ điển, mẫu chưa tải, đã tải, lỗi (AC-9, AC-10, AC-11)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc bỏ phép đo giá trị được ghi như thể không có lựa chọn nào khác, trong khi máy vẫn đề xuất được ngưỡng — đã chuyển thành câu hỏi Hỏi-5 cho anh."},
+    {"i": 1, "p": "Máy đã tự chốt hai điều người dùng sẽ thấy: thế nào là «đã có người sửa sau», và căn đã gửi link có bị gỡ không — đã chuyển thành câu hỏi Hỏi-4."},
+    {"i": 2, "p": "Nếu nguồn đồng bộ cũng lọc căn đã gỡ thì máy ngoại tuyến không bao giờ biết căn đã gỡ — đã sửa thiết kế và thêm bài thử trên cơ sở dữ liệu."},
+    {"i": 3, "p": "Ba lý do «không hoàn tác được» chỉ được thử trên dữ liệu viết tay — đã thêm bài thử đi qua đường ghi thật."},
+    {"i": 4, "p": "Các trạng thái của hộp xác nhận (không có gì để gỡ, đang ghi, lỗi giữa chừng, huỷ) chưa được ghim — đã thêm vào tiêu chí và bài thử."}
+  ]
+}

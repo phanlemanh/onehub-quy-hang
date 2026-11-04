@@ -1,0 +1,173 @@
+schema_version: 1
+feature_slug: nhap-hoan-tac
+# Kế hoạch hoàn tác là hàm thuần ở `packages/core/src/listing/**` (node:test của core); đường ghi ở
+# `packages/api/src/imports/undo/**` chấm trên Postgres dãy qua bộ kiểm `packages/api/test-db/imports/` (executor isolation);
+# màn ở `apps/web/src/lib/nhap/**` (node:test của web, không DOM) và màn đang chạy (ui-check).
+# exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng tên ca nêu trong `expected` — có mặt, «ok», không
+# «# SKIP»/«# TODO». Lần nhập trong mọi ca test-db ghi bằng đường thật (POST /imports rồi POST /imports/{id}/rows), không
+# chèn dòng `import_rows` hay sự kiện bằng tay — trừ chỗ ghi rõ. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/imports ca «hoàn tác: gỡ hàng lần nhập tạo» có mặt và ok — sàn mới, Đầu chủ mới ghi một lần nhập ba dòng tạo hàng (một ở Chưa đủ để rao, một Đang bán, một Giữ chỗ — trạng thái đọc lại từ bảng listings trước khi hoàn tác, 3 assert); đếm sự kiện từng hàng trước (n_i); POST /api/v1/imports/{id}/undo → mỗi hàng có đúng n_i + 1 sự kiện, sự kiện cuối loại voided payload {} (3×2 assert), các sự kiện cũ giống hệt trước (deepEqual dãy cũ, 3 assert), listings.standard_status không đổi (3 assert), listings.voided = true (3 assert); GET /api/v1/listings của Đầu chủ không còn ba id (assert); Hôm nay của đầu khách (store today-buyer) và Đã gửi (da-gui) không trả ba id (2 assert — hàng Đang bán đã được gửi một link trước khi hoàn tác); trang khách của link ấy (public store) báo căn không còn, không trả giá hay toà (assert); đối chứng dương: hàng thứ tư của sàn tạo tay (không qua lần nhập) vẫn ở cả ba danh sách (3 assert). Chiều đỏ: bỏ lọc voided ở GET /listings → ca đỏ nêu id hàng Đang bán."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/api/src/today-buyer/**, packages/api/src/da-gui/**, packages/api/src/public/**, packages/core/src/listing/**, packages/db/migrations/025_*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hoàn tác: trả giá cũ cho hàng có sẵn» có mặt và ok — hàng có sẵn của Đầu chủ (tạo tay, giá 3 tỷ, excluded, đã xác nhận lúc T0); lần nhập cập nhật căn ấy giá 3,2 tỷ, included, không cột ngày; hoàn tác → sự kiện cuối của hàng là price_changed {listPrice: 3000000000, feeInclusion: 'excluded'} (deepEqual, assert), confirmed_with_owner = false (assert), import_id null (assert), listings.last_confirmed_at = T0 (assert), listings.list_price = 3000000000 (assert). Đối chứng: lần nhập thứ hai cho hàng khác có cột ngày → owner_confirmed của lần nhập giữ nguyên, last_confirmed_at không đổi sau hoàn tác (assert) và kết quả có dòng «Độ tươi theo ngày trong file vẫn giữ» (assert). Chiều đỏ: sự kiện bù để confirmedWithOwner mặc định → ca đỏ nêu last_confirmed_at."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kế hoạch hoàn tác: đã sửa sau thì không gỡ» có mặt và ok trong packages/core/src/listing/hoan-tac-nhap.test.ts — dãy sự kiện dựng bằng hàm gấp thật (foldListing trên dãy tạo bằng tay theo khuôn validatePayload, mỗi sự kiện qua validatePayload, assert rỗng lỗi); ma trận viết tay hai hành động (tạo, cập nhật đổi giá) × bốn loại sự kiện sau lần nhập (details_changed, price_changed, status_changed sang Closed, owner_confirmed) × hai người ghi (người nhập, người khác) → mỗi ô kết cục da-sua-sau, lyDo «Đã có người sửa sau lần nhập» (16 assert); đối chứng dương: hai hành động không có sự kiện sau → go và tra-gia (2 assert); đếm = 18. Chiều đỏ: chỉ coi sự kiện của người khác là sửa sau → 8 ô người nhập đỏ, thông điệp nêu «người nhập»."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hoàn tác: căn sửa sau lần nhập được liệt kê, không gỡ» có mặt và ok — lần nhập tạo hai hàng H1, H2 và đổi giá hàng có sẵn H3; sau lần nhập Đầu chủ khác (đầu chủ giữ H3 thì chính người nhập) đổi chi tiết H1 qua PATCH thường và người nhập đổi giá H3; hoàn tác → H1, H3 không có sự kiện mới (đếm trước = sau, 2 assert), H2 có voided (assert); kết quả liệt kê đúng hai dòng {toà, mã căn, lyDo: 'Đã có người sửa sau lần nhập'} cho H1, H3 (deepEqual, assert). Chiều đỏ: bỏ kiểm phiên bản → ca đỏ nêu H1."
+    paths: [packages/api/src/imports/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «kế hoạch hoàn tác: phần không hoàn tác được» có mặt và ok — ma trận viết tay bốn dòng: supplement (lead_id có) → tin-bo-sung «Tin bổ sung đã gửi — không thu lại»; update chỉ owner_confirmed → khong-doi «Độ tươi theo ngày trong file vẫn giữ»; update đổi giá khi dãy tới listing_version_before không có price_changed → khong-tra-duoc «Trước lần nhập căn chưa có giá»; skip → bo-qua, không vào danh sách liệt kê (4 assert kết cục + 3 assert lý do nguyên văn + 1 assert danh sách liệt kê đúng 3 dòng); không kết cục nào trong bốn sinh lệnh ghi (assert lenh rỗng ×4); đếm = 12. Chiều đỏ: update đổi giá không kiểm giá trước → ca đỏ nêu «chưa có giá»."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hoàn tác: phần không hoàn tác được qua đường ghi thật» có mặt và ok — hàng có sẵn H1 chưa có giá (tạo tay) và H2 có giá do Đầu chủ khác giữ (để dòng thành tin bổ sung); lần nhập ghi bằng POST /imports rồi /rows bốn dòng: tin bổ sung cho H2, dòng cho căn của người nhập chỉ có cột ngày (không giá), dòng đổi giá cho H1, một dòng bỏ qua (thiếu toà); đọc import_rows trước hoàn tác: action lần lượt supplement, update, update, skip (assert); POST /undo → danh sách liệt kê deepEqual ba dòng với lý do nguyên văn «Tin bổ sung đã gửi — không thu lại», «Độ tươi theo ngày trong file vẫn giữ», «Trước lần nhập căn chưa có giá» (assert), không dòng nào của dòng bỏ qua (assert), tổng sự kiện của sàn trước = sau (assert), lead của tin bổ sung còn nguyên (assert). Chiều đỏ: kế hoạch không kiểm giá trước lần nhập → H1 nhận price_changed, ca đỏ nêu «chưa có giá»."
+    paths: [packages/api/src/imports/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hoàn tác: xem thử không ghi, ghi khớp xem thử» có mặt và ok — lần nhập có hai dòng tạo, một dòng đổi giá, một tin bổ sung; POST /undo {dryRun:true} → {go:2, traGia:1, khongDuoc:1, danhSach:[1 dòng]} (deepEqual, assert), tổng số sự kiện của sàn trước = sau (assert), imports.status vẫn committed (assert); POST /undo → kết quả có cùng go, traGia, khongDuoc và cùng danh sách căn (deepEqual với xem thử, assert), tổng sự kiện tăng đúng 3 (assert). Chiều đỏ: dryRun ghi rồi không rollback → ca đỏ nêu «trước = sau»."
+    paths: [packages/api/src/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «hoàn tác: một lần, gọi lại được, chỉ người nhập» có mặt và ok — (a) đứt giữa chừng: lần nhập ba dòng tạo; bộ kiểm làm đứt lần ghi sau dòng 2 bằng móc thử của store (biến thử, không đổi mã đường ghi thật) → H1, H2 có voided, H3 chưa, imports.status committed (4 assert); gọi lại → H3 có voided, H1, H2 vẫn đúng một voided (đếm voided mỗi hàng = 1, 3 assert), imports.status undone, undone_by = người nhập (2 assert); gọi lại lần ba → không sự kiện mới (tổng trước = sau, assert), kết quả deepEqual lần hai (assert); (b) người: Đầu chủ khác cùng sàn và Trưởng nhóm cùng sàn gọi /undo và /undo dryRun → 404 (4 assert); Đầu chủ sàn B → 404 (assert); Đầu khách sàn A → 403 import-role-required (assert); đếm = 15. Chiều đỏ: bỏ kiểm undo_outcome đã có → H1 có hai voided, ca đỏ nêu H1."
+    paths: [packages/api/src/imports/**, packages/db/migrations/025_*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «sự kiện voided: cờ khi gấp, không phải trạng thái» có mặt và ok — ma trận sáu trạng thái chuẩn × một dãy kết thúc bằng voided → foldListing giữ standardStatus (6 assert) và voided true (6 assert); dãy không voided → voided false (assert); validatePayload('voided', {}) rỗng lỗi, ('voided', {x:1}) báo khoá lạ (2 assert); TRANSITIONS không có khoá hay giá trị 'voided' (assert); đếm = 15. Chiều đỏ: gấp voided thành standardStatus 'Withdrawn' → ca đỏ nêu trạng thái đầu bị đổi."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «voided: gấp lại bảng, lệnh thường không ghi được, kiểm trùng» có mặt và ok — sau hoàn tác một lần nhập: chụp listings của sàn, xoá trắng rồi gấp lại từ sự kiện (đường gấp lại có sẵn của bộ kiểm hàng lõi) → deepEqual bản chụp kể cả cột voided (assert); POST lệnh {type:'voided'} qua đường sửa thường → 4xx, không sự kiện mới (2 assert); lần nhập mới cùng toà, mã căn của hàng đã gỡ → import_rows.action = create và listing_id khác id đã gỡ (2 assert). Chiều đỏ: hangMo không lọc voided → dòng thành update, ca đỏ nêu «create»."
+    paths: [packages/api/src/listings/**, packages/api/src/imports/**, packages/db/migrations/025_*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7d
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «voided: nguồn lần đổi vẫn trả sự kiện gỡ» có mặt và ok — lần nhập tạo hai hàng; ghi nhớ phiên bản lần đổi của sàn trước khi hoàn tác; hoàn tác; gọi đường lần đổi (lan-doi) từ phiên bản ấy → kết quả có sự kiện voided của từng hàng (2 assert); đối chứng: GET /api/v1/listings không trả hai hàng ấy (2 assert). Chiều đỏ: lan-doi lọc voided → ca đỏ nêu hàng đầu."
+    paths: [packages/api/src/listings/**, packages/api/src/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đồng bộ trên máy: hàng voided ra khỏi danh sách» có mặt và ok — kho máy có hai hàng; áp một sự kiện voided kéo về cho hàng 1 (đường ap-tren-may thật) → danh sách hàng của máy chỉ còn hàng 2 (assert), hàng 1 không còn sự kiện tạm nào chờ gửi (assert); đối chứng: sự kiện price_changed cho hàng 2 vẫn giữ hàng 2 (assert). Chiều đỏ: ap-tren-may bỏ qua loại lạ → hàng 1 còn, ca đỏ nêu hàng 1."
+    paths: [apps/web/src/lib/sync/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «màn nhập: lần nhập gần đây và nút hoàn tác» có mặt và ok — hàm thuần của lib/nhap dựng danh sách từ thân GET /api/v1/imports giả (12 lần, lộn thứ tự, hai lần undone) → 10 dòng mới nhất trước (assert số và thứ tự), dòng undone có nhãn «Đã hoàn tác» và coNut false (2 assert), dòng còn lại coNut true (assert); bốn trạng thái danh sách (đang tải, trống, lỗi, có dòng) ra đúng khoá trạng thái (4 assert); bước 5 sau ghi xong có hanhDong «Hoàn tác lần nhập này» (assert); hàm gọi API huyHoanTac/xemThuHoanTac gửi đúng địa chỉ /api/v1/imports/{id}/undo và thân {dryRun:true} (2 assert); hộp xác nhận (hàm thuần trạng thái hộp): kế hoạch go=0, traGia=0 → nút xác nhận tắt và chữ «Không có căn nào hoàn tác được» (2 assert), đang ghi → nút khoá (assert), lỗi giữa chừng → chữ nguyên văn «Hoàn tác chưa xong — bấm lại để làm tiếp» và nút mở lại (2 assert), huỷ → không lời gọi /undo nào ngoài xem thử (assert trên danh sách địa chỉ đã gọi). Chiều đỏ: không sắp theo ngày → ca đỏ nêu dòng đầu."
+    paths: ["apps/web/src/app/(app)/imports/**", apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên màn đang chạy của dãy G (Postgres 5573, máy dev 3493), sàn mới và Đầu chủ mới: (1) /imports/new bước 1 trống → «Chưa có lần nhập nào»; (2) ghi một lần nhập mau-b.xlsx → bước 5 có nút «Hoàn tác lần nhập này»; bấm → hộp xác nhận hiện «Gỡ N căn khỏi Quỹ hàng · Trả giá cũ cho 0 căn · 0 căn không hoàn tác được» với N = số dòng tạo; (3) xác nhận → báo xong, Bảng hàng (/inventory) không còn các căn ấy; (4) quay /imports/new → danh sách «Lần nhập gần đây» có dòng ấy mang nhãn «Đã hoàn tác», không nút; (5) ghi lần nhập thứ hai, sửa một căn ở Bảng hàng rồi mở hộp hoàn tác → danh sách K căn có căn đã sửa với «Đã có người sửa sau lần nhập»; (6) lỗi giữa chừng (máy chủ thử trả lỗi sau dòng đầu bằng biến thử) → hộp hiện «Hoàn tác chưa xong — bấm lại để làm tiếp», bấm lại thì xong. Chụp mỗi khung ở 1440 và 375 vào _acceptance/nhap-hoan-tac/evidence/E8b-*.png."
+    steps:
+      - "Dựng chỗ thử dãy G: node _acceptance/man-nhap-excel/thu/dung-g.mjs (dừng bằng --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/nhap-hoan-tac/thu/chup-hoan-tac.mjs --ca trong, --ca sau-ghi, --ca xac-nhan, --ca da-hoan-tac, --ca da-sua-sau, --ca loi-giua-chung ở --kho 1440 và --kho 375 — lệnh tự đăng nhập người mẫu, in mỗi khung một dòng JSON và chụp E8b-*.png"
+      - "Đối chiếu từng dòng JSON với expected và xem từng ảnh ở hai khổ"
+    paths: ["apps/web/src/app/(app)/imports/**", apps/web/src/lib/nhap/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «xem trước: sửa ô xung đột không học thành cách gọi» có mặt và ok — lưới viết tay có cột Điều kiện phí với ba ô «bao phí» (giá trị lạ, needs_person) và ô giá chứa «3 tỷ bao phí» cùng mâu thuẫn hai cột phí (needs_person vì xung đột), cùng một cột Toà với ô lệch danh mục; lý do needs_person đọc từ normalizeValue của lõi (assert lý do xung đột khác lý do giá trị lạ trước khi sửa); ma trận ba loại ô xung đột (phí trong ô giá, lệch danh mục, mâu thuẫn hai cột) × sửa ô → valueMap của cột deepEqual trước khi sửa (3 assert), ô cùng chữ ở dòng khác giữ mark (3 assert), soOTheo = 0 (3 assert); đối chứng dương: sửa ô «bao phí» giá trị lạ → valueMap có khoá «bao phí» và hai ô cùng chữ đổi mark (3 assert); kế hoạch gửi máy chủ sau ba lần sửa xung đột không chứa chuỗi nguyên văn của các ô ấy trong valueMap (assert); đếm = 13. Chiều đỏ: suaO học mọi ô needs_person như hàng 67 → ca đỏ nêu «phí trong ô giá»."
+    paths: [apps/web/src/lib/nhap/**, packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «nhớ mẫu: hai cột không cùng đích ở cả hai thứ tự» có mặt và ok — lưới có cột «Giá chào» (mẫu nhớ → listPrice) và cột «Giá» (từ điển → listPrice), dựng bằng sinhBoThu/planFromDictionary thật; hai thứ tự (mẫu trước từ điển, từ điển trước mẫu) → cột theo mẫu giữ đích listPrice và reason «theo mẫu» (2 assert), cột kia target chưa rõ, confidence low, câu hỏi chứa «trùng đích với cột theo mẫu «Giá chào»» (2×3 assert), validatePlan rỗng lỗi (2 assert), không cột nào khác đích listPrice (2 assert); đối chứng dương: tệp chỉ có cột mẫu → không câu hỏi trùng (assert); đếm = 13. Chiều đỏ: khử trùng chỉ xét cột theo mẫu đứng sau → thứ tự mẫu-trước đỏ, thông điệp nêu «mẫu trước»."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «màn nhập: chọn tệp trước khi mẫu tải xong» có mặt và ok — luồng của lib/nhap với docMau là lời hứa điều khiển tay: chọn tệp khi lời hứa còn treo → trạng thái mang daiBao «Đang tải mẫu đã nhớ…» và chưa có kế hoạch (2 assert); giải lời hứa bằng mẫu khớp trọn → kế hoạch deepEqual kế hoạch khi mẫu đã có sẵn trước lúc chọn tệp (assert), daiBao «Ghép theo mẫu đã nhớ — M/M cột» (assert); nhánh lời hứa bị từ chối → kế hoạch deepEqual planFromDictionary (assert) và daiBao «Không đọc được mẫu đã nhớ» (assert); đếm = 6. Chiều đỏ: chayOng không chờ docMau → ca đỏ nêu «Đang tải mẫu»."
+    paths: ["apps/web/src/app/(app)/imports/new/**", apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; dòng «khuôn: … · 0 lệch»; nhóm nhap-excel «… tệp theo khuôn · 0 ngoại lệ · 0 lệch»; kiểm chuẩn «đạt». Chiều đỏ: hộp xác nhận dựng bằng lớp phủ fixed inset-0 tự viết thay AlertDialog → luật no-native-dialogs đỏ nêu tệp."
+    paths: ["apps/web/src/app/(app)/imports/**", apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12b
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/new/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

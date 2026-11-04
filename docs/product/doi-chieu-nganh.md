@@ -239,6 +239,11 @@ Lofty giữ người giữ và giai đoạn của bản ghi đã có, cập nh�
 tác lần nhập trong 24 giờ ([nguồn](https://help.lofty.com/hc/en-us/articles/360054872172)). Quỹ hàng: căn có hàng mở của
 người khác thành tin bổ sung, không đè (luật 20).
 
+Hoàn tác lần nhập (tra 05/11, hàng 66): Follow Up Boss liệt lần nhập ở Admin › Import, «xoá lần nhập» xoá cả liên hệ và
+ghi chú của lần ấy, kể cả ghi chú gắn vào liên hệ đã có ([nguồn](https://help.followupboss.com/hc/en-us/articles/4402323239063));
+Lofty hoàn tác trong 24 giờ (nguồn trên). Cả hai không cho cấu hình. Quỹ hàng: sự kiện bù, giữ lịch sử, căn đã sửa sau lần
+nhập thì liệt kê, không gỡ (ADR-0011 quyết định 8).
+
 **Bài học:** ngành để người ghép hay soát từng lần; chưa thấy sản phẩm nào nhớ cách ghép theo sàn hay che dữ liệu cá nhân
 trước khi xử lý (chưa kiểm). Quỹ hàng nhớ theo sàn (hàng 67) và che trước khi có gì rời trình duyệt (bất biến 2).
 
