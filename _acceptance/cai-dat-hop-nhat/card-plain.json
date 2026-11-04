@@ -1,36 +1,111 @@
 {
- "feature_plain": "Mọi người dùng có một khu Cài đặt: nhóm «Cá nhân» ai cũng thấy, nhóm «Sàn» chỉ quản trị; vào từ cột nhà, menu tài khoản hay tab Tôi; nội dung không còn trải hết màn máy tính.",
+ "feature_plain": "Mọi người dùng có một khu Cài đặt: nhóm «Cá nhân» ai cũng thấy, nhóm «Sàn» chỉ quản trị; vào từ cột nhà, menu tài khoản hay tab Tôi; nội dung rộng tối đa 48rem cạnh cột mục lục.",
  "will_do": [
-  {"id":"AC-1","p":"Sẽ có nhà «Cài đặt» ở đáy cột nhà cho mọi vai có cột nhà; telesales vẫn không có cột nhà."},
-  {"id":"AC-2","p":"Sẽ chia cột mục lục Cài đặt thành «Cá nhân» (ai cũng thấy) và «Sàn [tên sàn]» bảy mục (chỉ quản trị sàn)."},
-  {"id":"AC-3","p":"Sẽ đưa mọi đường vào tới đúng chỗ: biểu tượng Cài đặt theo quyền, menu tài khoản «Cá nhân» (quản trị thêm «Cài đặt sàn»), tab Tôi và địa chỉ cũ /me về Cá nhân."},
-  {"id":"AC-4","p":"Sẽ dựng mục «Cá nhân» bằng đúng sáu nhóm dòng của màn Tôi hàng 38, không có bản thứ hai."},
-  {"id":"AC-6","p":"Sẽ ghi phạm vi ngay dưới tiêu đề: Cá nhân áp cho tài khoản ở mọi sàn, mục sàn chỉ cho sàn đang làm, cài và thông báo «trên máy này»."},
-  {"id":"AC-8","p":"Sẽ giữ điện thoại như cũ: chỉ người chỉ mang vai quản trị có tab «Cài đặt sàn» cạnh «Tôi», và chỉ một tab sáng."},
-  {"id":"AC-9","p":"Sẽ ghi ba quyết định bị đổi bằng mục sửa đổi ngày 04/11 (vỏ, Tham chiếu §9, ADR-0024), không viết đè, và thêm từ vựng."}
+  {
+   "id": "AC-1",
+   "p": "Sẽ có nhà «Cài đặt» ở đáy cột nhà cho mọi vai có cột nhà; telesales vẫn không có cột nhà."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ chia cột mục lục Cài đặt thành «Cá nhân» (ai cũng thấy) và «Sàn [tên sàn]» bảy mục (chỉ quản trị sàn)."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ đưa mọi đường vào tới đúng chỗ: biểu tượng Cài đặt theo quyền, menu tài khoản «Cá nhân» (quản trị thêm «Cài đặt sàn»), tab Tôi và địa chỉ cũ /me về Cá nhân."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ dựng mục «Cá nhân» bằng đúng sáu nhóm dòng của màn Tôi hàng 38, không có bản thứ hai."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ ghi phạm vi ngay dưới tiêu đề: Cá nhân áp cho tài khoản ở mọi sàn, mục sàn chỉ cho sàn đang làm, cài và thông báo «trên máy này»."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ giữ điện thoại như cũ: chỉ người chỉ mang vai quản trị có tab «Cài đặt sàn» cạnh «Tôi», và chỉ một tab sáng."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ ghi ba quyết định bị đổi bằng mục sửa đổi ngày 04/11 (vỏ, Tham chiếu §9, ADR-0024), không viết đè, và thêm từ vựng."
+  }
  ],
  "wont_do": [
-  {"id":"AC-5","p":"Chặn người không quản trị mở địa chỉ mục sàn: máy chủ chuyển về Cá nhân kèm câu báo «Mục này chỉ quản trị sàn mở được» (Hỏi-1)."},
-  {"id":"AC-7","p":"Sẽ KHÔNG để màn Đọc trải hết bề rộng: thân tối đa 48rem, sát cột mục lục — áp cho mọi màn Đọc, kể cả Ô nhận lead."},
-  {"id":"OOS-1","p":"Không thêm mục Cá nhân mới (sáng/tối, ngôn ngữ, tên hiển thị) — hàng sau."},
-  {"id":"OOS-2","p":"Không làm nội dung thật của sáu mục sàn còn là trang tạm — hàng 45–50."},
-  {"id":"OOS-3","p":"Không thêm cột nhà cho telesales — telesales vào qua menu tài khoản."},
-  {"id":"OOS-4","p":"Không thêm mục sàn trên điện thoại cho quản trị kèm vai khác — giữ quyết định cũ của vỏ."},
-  {"id":"OOS-5","p":"Không đổi API Cài đặt sàn — chỉ giao diện."}
+  {
+   "id": "AC-5",
+   "p": "Chặn người không quản trị mở địa chỉ mục sàn: máy chủ chuyển về Cá nhân kèm câu báo «Mục này chỉ quản trị sàn mở được» (Hỏi-1)."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ KHÔNG để màn Đọc trải hết bề rộng: thân tối đa 48rem, sát cột mục lục — áp cho mọi màn Đọc, kể cả Ô nhận lead."
+  },
+  {
+   "id": "OOS-1",
+   "p": "Không thêm mục Cá nhân mới (sáng/tối, ngôn ngữ, tên hiển thị) — hàng sau."
+  },
+  {
+   "id": "OOS-2",
+   "p": "Không làm nội dung thật của sáu mục sàn còn là trang tạm — hàng 45–50."
+  },
+  {
+   "id": "OOS-3",
+   "p": "Không thêm cột nhà cho telesales — telesales vào qua menu tài khoản."
+  },
+  {
+   "id": "OOS-4",
+   "p": "Không thêm mục sàn trên điện thoại cho quản trị kèm vai khác — giữ quyết định cũ của vỏ."
+  },
+  {
+   "id": "OOS-5",
+   "p": "Không đổi API Cài đặt sàn — chỉ giao diện."
+  }
  ],
  "coverage_plain": [
-  {"i":0,"p":"Sáu tổ hợp vai, từ telesales tới quản trị kèm vai khác, đều được thử nhà, cột, đường vào và chặn (AC-1, 2, 3, 5, 8)."},
-  {"i":1,"p":"Năm đường vào — cột nhà, menu tài khoản, tab Tôi, /me, gõ thẳng địa chỉ mục sàn — đều có ô đo (AC-3, AC-5)."},
-  {"i":2,"p":"Hai khổ máy tính 1440 và điện thoại 390 đo trên màn thật (AC-7, AC-8)."},
-  {"i":3,"p":"Ba phạm vi — tài khoản, sàn đang làm, máy này — có chữ ghim và đo trên màn (AC-6)."},
-  {"i":4,"p":"Bốn loại màn Đọc đo bề rộng trên màn thật, kể cả Ô nhận lead (AC-7)."},
-  {"i":5,"p":"Ba quyết định đã niêm và từ vựng có bài kiểm tài liệu (AC-9)."}
+  {
+   "i": 0,
+   "p": "Sáu tổ hợp vai, từ telesales tới quản trị kèm vai khác, đều được thử nhà, cột, đường vào và chặn (AC-1, 2, 3, 5, 8)."
+  },
+  {
+   "i": 1,
+   "p": "Năm đường vào — cột nhà, menu tài khoản, tab Tôi, /me, gõ thẳng địa chỉ mục sàn — đều có ô đo (AC-3, AC-5)."
+  },
+  {
+   "i": 2,
+   "p": "Hai khổ máy tính 1440 và điện thoại 390 đo trên màn thật (AC-7, AC-8)."
+  },
+  {
+   "i": 3,
+   "p": "Ba phạm vi — tài khoản, sàn đang làm, máy này — có chữ ghim và đo trên màn (AC-6)."
+  },
+  {
+   "i": 4,
+   "p": "Bốn loại màn Đọc đo bề rộng trên màn thật, kể cả Ô nhận lead (AC-7)."
+  },
+  {
+   "i": 5,
+   "p": "Ba quyết định đã niêm và từ vựng có bài kiểm tài liệu (AC-9)."
+  }
  ],
  "gap_probe_plain": [
-  {"i":0,"p":"Máy đã tự quyết người không quản trị gõ địa chỉ mục sàn thì thấy gì — đó là việc người quyết; nay thành Hỏi-1, nháp theo khuyến nghị «về Cá nhân kèm câu báo»."},
-  {"i":1,"p":"Ngưỡng «hai lần bấm» chưa có đường đo và quản trị đi từ menu mất ba lần; đã thêm «Cài đặt sàn» vào menu quản trị và mục Đường đo."},
-  {"i":2,"p":"Tab điện thoại của người chỉ quản trị có thể sáng cả hai và nhãn cũ bị đổi; đã giữ nhãn «Cài đặt sàn» và đo tab nào sáng."},
-  {"i":3,"p":"Việc mọi màn Đọc hẹp lại (kể cả Ô nhận lead) chưa có dòng sổ và chưa đo trên màn thật; đã ghi sổ và đo ba màn."},
-  {"i":4,"p":"Câu phạm vi chỉ được đo trong bảng chữ, chưa đo trên màn; đã thêm bài quét và đo trên màn thật."}
+  {
+   "i": 0,
+   "p": "Máy đã tự quyết người không quản trị gõ địa chỉ mục sàn thì thấy gì — đó là việc người quyết; nay thành Hỏi-1, nháp theo khuyến nghị «về Cá nhân kèm câu báo»."
+  },
+  {
+   "i": 1,
+   "p": "Ngưỡng «hai lần bấm» chưa có đường đo và quản trị đi từ menu mất ba lần; đã thêm «Cài đặt sàn» vào menu quản trị và mục Đường đo."
+  },
+  {
+   "i": 2,
+   "p": "Tab điện thoại của người chỉ quản trị có thể sáng cả hai và nhãn cũ bị đổi; đã giữ nhãn «Cài đặt sàn» và đo tab nào sáng."
+  },
+  {
+   "i": 3,
+   "p": "Việc mọi màn Đọc hẹp lại (kể cả Ô nhận lead) chưa có dòng sổ và chưa đo trên màn thật; đã ghi sổ và đo ba màn."
+  },
+  {
+   "i": 4,
+   "p": "Câu phạm vi chỉ được đo trong bảng chữ, chưa đo trên màn; đã thêm bài quét và đo trên màn thật."
+  }
  ]
 }
