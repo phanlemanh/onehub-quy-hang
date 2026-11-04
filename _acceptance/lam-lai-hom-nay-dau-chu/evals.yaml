@@ -1,0 +1,105 @@
+schema_version: 1
+feature_slug: lam-lai-hom-nay-dau-chu
+# Lệnh máy: executors.test.web, executors.test.core, executors.design.khuon, executors.test.ui_lint. ui-check trên chỗ thử
+# dãy D (_acceptance/lam-lai-hom-nay-dau-chu/thu/dung-d.mjs: Postgres 5575 nạp sàn mẫu, máy dev 3476; tự tắt máy dev khác
+# của worktree), Chrome không đầu qua CDP. KHÔNG bật máy dev nào khác; tắt bằng dung-d.mjs --tat khi xong.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lam-lai-hom-nay-dau-chu/thu/dung-d.mjs rồi node _acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs --e1 --ra _acceptance/lam-lai-hom-nay-dau-chu/evidence"
+      - "Đối chiếu dòng e1: tieuDeCot deepEqual [Việc, Vì sao hôm nay, Giá, Hành động]; mọi dòng việc có hai tầng ở cột Việc và ở cột Vì sao (dòng trên chữ đậm: font-weight ≥ 600); mỗi dòng đúng 1 nút hiện ngoài ⋯ cộng 1 nút mở ⋯; mọi nút chính kiểu viền và bề rộng bằng nhau (một giá trị duy nhất); nhãn nút chính của mỗi dòng bằng nhãn theo bảng của AC-3 cho loại việc ấy; chỗ thử có việc quá hạn, còn dưới 15 phút và không hạn: màu chữ đã tính của ô hạn lần lượt bằng màu token destructive, warning; việc không hạn có cột Vì sao đúng một tầng"
+    target: "http://localhost:3476/today"
+    expected: "Đầu chủ mẫu 1440: bốn cột đúng tên, mỗi dòng hai tầng, lý do chữ đậm, một nút viền cùng bề rộng, màu hạn đúng mốc. Ảnh E1-hom-nay-1440.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «mucHan: đỏ khi quá, vàng dưới 15 phút, thường từ 15 phút» có mặt trong apps/web/src/app/(app)/today/viec-dong.test.ts và ok — ma trận viết trước năm ca (quá 1 phút → qua; còn 14:59 → sap; còn đúng 15:00 → thuong; còn 2 giờ → thuong; không hạn → khong), năm assert deepEqual; chiều đỏ cùng ca: đổi ngưỡng thành 10 phút thì ca 14:59 ra thuong (đối chứng rằng ngưỡng 15 phút là thứ được đo)."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «nutCuaViec: đúng một nút chính, mọi việc khác vào ⋯» có mặt trong apps/web/src/app/(app)/today/viec-dong.test.ts và ok — ma trận viết trước: mỗi nhóm của BO_NHOM_MAC_DINH × căn, và lead nấc sent, accepted, called (số ca = số nhóm + 3); mỗi ca chinh deepEqual nút kỳ vọng theo bảng của AC-3 (lead sent «Nhận», accepted «Đã gọi», căn «Còn · giữ giá») và tập (chinh ∪ phu) deepEqual tập việc của hàng 22 cho loại ấy (rút từ hàm cũ của NutViec, không viết tay hai lần) và phu chứa Trả lại, Đổi giá, trạng thái, Mở hồ sơ khi loại việc có chúng; chiều đỏ cùng ca: bỏ một việc khỏi phu thì assert tập nêu đúng tên việc thiếu."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs --e4 --ra _acceptance/lam-lai-hom-nay-dau-chu/evidence — chỗ thử có lead đã gửi cho đầu chủ mẫu 1"
+      - "Đối chiếu dòng e4: nutTruoc = «Nhận», coHopThoai = false sau khi bấm, nutSau = «Đã gọi», GET /api/v1/leads/assigned cho lead ấy có acceptedAt ≠ null"
+    target: "http://localhost:3476/today"
+    expected: "Bấm Nhận một chạm: lead nhận ngay, không hộp thoại, nút chính đổi sang việc kế. Ảnh trước/sau."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs --e5 --ra _acceptance/lam-lai-hom-nay-dau-chu/evidence"
+      - "Đối chiếu dòng e5: thuTuNhom deepEqual thứ tự nhóm có việc của GET /api/v1/company/settings/queue; mỗi đầu nhóm có số = số dòng của nhóm; bấm đầu nhóm đầu tiên → số dòng hiện của nhóm = 0, bấm lại → bằng số ban đầu; không căn nào ở hai nhóm (tập id dòng không trùng)"
+    target: "http://localhost:3476/today"
+    expected: "Nhóm theo bộ nhóm, đếm đúng, thu gọn và mở lại được, mỗi căn một nhóm. Ảnh thu gọn và mở."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs --e6 --ra _acceptance/lam-lai-hom-nay-dau-chu/evidence — bốn ca: lời tải giữ chậm 3 giây (khung chờ), đầu chủ 2 không việc (trống), lời tải trả lỗi (Fetch chặn), mất mạng rồi có mạng lại"
+      - "Đối chiếu dòng e6: dangTai.coKhungCho = true; trong.coLoiBangHang = true; loi.coThuLai = true; matMang.coDai = true và coMang.coDai = false (không tải lại trang)"
+    target: "http://localhost:3476/today"
+    expected: "Bốn trạng thái như hàng 22; dải mất mạng tắt khi có mạng lại. Ảnh mỗi ca."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7a
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/hom-nay-dau-chu.md", "apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/proto/hom-nay-dau-chu/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm hom-nay-dau-chu"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    paths: ["design/patterns/**", "packages/ui-lint/**", ".agents/skills/quy-hang-ui/catalog.md", "apps/web/src/app/(app)/proto/**"]
+    expected: "exit 0; các ca khuôn và catalog có mặt và ok; catalog.md có dòng bắt đầu «| `@reui/solution-agents-2`»; apps/web/src/app/(app)/proto/hom-nay-dau-chu/ không tồn tại; design/patterns/hom-nay-dau-chu.md không còn chuỗi «data-grid-grouping-1» trong phần mô tả và có cả «solution-agents-2» lẫn «data-grid-base-5» (đối chứng dương)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs --e9 --ra _acceptance/lam-lai-hom-nay-dau-chu/evidence — một lead đã nhận và một căn của đầu chủ mẫu 1"
+      - "Đối chiếu dòng e9: traLaiHuy.coHopThoai = true và leadConTrongHangDoi = true; traLaiXacNhan.leadConTrongHangDoi = false và GET /api/v1/leads/assigned không còn lead ấy; moHoSo.duong chứa mã căn của dòng"
+    target: "http://localhost:3476/today"
+    expected: "Trả lại luôn hỏi lại, huỷ giữ nguyên, xác nhận rời hàng đợi; Mở hồ sơ đúng căn. Ảnh trình đơn ⋯ và hộp hỏi lại."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/today/**"]
+    expected: "exit 0; các tệp test mo-nhom.test.ts, ly-do.test.ts, mo-lead.test.ts, mo-so.test.ts của apps/web/src/app/(app)/today có mặt, số ca của mỗi tệp không ít hơn trên origin/main (đếm dòng ✔ theo tệp), và ok."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
