@@ -5,7 +5,7 @@
  */
 import { applyPlan } from "../apply";
 import { classifyColumns, type ColumnClass } from "../classify";
-import { FIELD_CLASS, isStandardField } from "../fields";
+import { FIELD_CLASS, isStandardField, type StandardField } from "../fields";
 import type { Table } from "../grid";
 import { headerKey, priceUnitOfHeader } from "../headers";
 import { planFromDictionary, validatePlan, type ImportPlan, type PlanColumn, type PlanTarget } from "../plan";
@@ -33,6 +33,14 @@ export function khoaMau(header: string): string {
 
 /** Lớp cột mà sửa ô của người được học thành cách gọi của cột (ADR-0011: không nguồn, không tên người). */
 export const LOP_HOC_DUOC: readonly ColumnClass[] = ["catalog", "shareable_listing"];
+
+/** Trường có danh sách giá trị đóng — chỉ ở đây một chữ của sàn là «cách gọi» của một giá trị chuẩn. Giá, diện tích,
+ *  tầng… là số của từng căn: sửa một ô không được lan sang ô cùng chữ (ô «liên hệ» của căn khác không cùng giá). */
+export const TRUONG_CACH_GOI: readonly StandardField[] = ["standardStatus", "feeInclusion", "directionFaces", "buildingName", "subdivisionName"];
+
+/** Cột học được cách gọi khi người sửa ô: đúng lớp và đúng trường giá trị đóng. */
+export const hocCachGoi = (cls: ColumnClass | undefined, target: PlanTarget): boolean =>
+  cls !== undefined && LOP_HOC_DUOC.includes(cls) && isStandardField(target) && TRUONG_CACH_GOI.includes(target);
 
 /** Bảng quy đổi được nhớ chỉ khi đích là trường chuẩn không thuộc lớp nguồn. */
 function nhoBangQuyDoi(target: PlanTarget): boolean {

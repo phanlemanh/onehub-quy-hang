@@ -1,3 +1,4 @@
+import type { CotMau } from "@quy-hang/core/import";
 import type { GoiDong, KetQuaDong, TongKet, TrangThaiNhap, XemThu } from "./trang-thai";
 import { canCuaTep, coQuyen, goiDong } from "./trang-thai";
 
@@ -39,8 +40,10 @@ async function goi<T>(f: Fetch, url: string, init: RequestInit): Promise<T | Loi
     return { loi: LOI_MANG };
   }
   if (!res.ok) {
-    const b = (await res.json().catch(() => ({}))) as { error?: string };
-    return { loi: b.error ?? `Máy chủ trả ${res.status}`, status: res.status };
+    const b = (await res.json().catch(() => ({}))) as { error?: unknown };
+    // Lỗi kiểm thân mặc định của máy chủ mang `error` là đối tượng — vẫn là lỗi, chữ cho người đọc (Ngoài-7 Màn Nhập Excel).
+    const loi = typeof b.error === "string" && b.error ? b.error : `Máy chủ từ chối yêu cầu (mã ${res.status}).`;
+    return { loi, status: res.status };
   }
   return (await res.json()) as T;
 }
@@ -117,3 +120,8 @@ export const tongGhi = (t: TienDoGhi): TongKet => tong(t.xong.flatMap((g) => g.r
 
 /** Đầu chủ của sàn cho Trưởng nhóm chọn (Hỏi-2). */
 export const docDauChu = (f: Fetch) => goi<{ userId: string; name: string }[]>(f, "/api/v1/imports/agents", { method: "GET" });
+
+/** Mẫu file của sàn (hàng 67): cột đã nhớ từ các lần nhập đã ghi. Lỗi thì màn ghép theo từ điển và báo một dòng. */
+export async function docMau(f: Fetch): Promise<CotMau[] | LoiGoi> {
+  return goi<CotMau[]>(f, "/api/v1/imports/templates", { method: "GET" });
+}
