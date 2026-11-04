@@ -1,0 +1,4 @@
+E3 network (playwright, 2 lan chay). App-origin localhost:3492: moi response 200 (select-company, /api/v1/me/company POST 200, /?_rsc 200, no-company 200, /api/v1/auth/sign-out POST 200, /login 200, static chunks/fonts 200).
+Lan chay 1: 1 console.error "Failed to load resource: 404" khong kem URL, khong co response 404 nao tren app-origin duoc ghi (nghi tai nguyen tinh dev/favicon, note-only).
+Lan chay 2 (chon san -> /settings/users, doi 6s): khong co response >=400.
+Third-party: khong co.

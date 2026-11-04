@@ -1,0 +1,1 @@
+driver = node chup-man.mjs (playwright script), khong co browser tool doc network; networkObserved=n-a (driver). loi-mang la loi mang chu y (offline) theo de.

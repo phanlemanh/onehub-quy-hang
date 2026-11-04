@@ -129,3 +129,4 @@ Không chạm `apps/web/src/app/(app)/today/**`.
 - Ngoài-13 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài thử có thể báo đạt dù lead vừa gửi không thật sự nằm đầu danh sách, nên lỗi hiển thị đó có thể lọt mà không ai biết. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
 - Ngoài-14 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài thử kiểm không lộ số chủ nhà có thể không bắt được số nếu nó hiện dưới dạng khác, nên một lần rò số có thể không bị phát hiện. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
 - Ngoài-15 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài thử có thể báo đạt dù năm mục bị xếp hai cột hoặc nút Gửi nằm ngoài màn lúc mở, nên lỗi bố cục trên điện thoại có thể lọt. — `_acceptance/lead-dien-thoai/thu/chay-ui.mjs`
+- Thử tay trên điện thoại thật (luật đợt 16): gom vào mục kiểm tay ở Cổng Bằng chứng hàng 36 (giám sát trả D-15); vấp gì chủ kho ghi lúc ký, giám sát chuyển về dãy D.

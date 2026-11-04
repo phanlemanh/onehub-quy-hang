@@ -1,0 +1,9 @@
+Network (chrome-devtools, isolated context, 375x812), app-origin http://localhost:3492
+GET  /login [200] x3 (tai trang; 2 lan sau do la nap lai khi dat initScript/emulate)
+POST /api/v1/auth/email-otp/send-verification-otp [200]
+POST /api/v1/auth/sign-in/email-otp [400]   <- ma sai 000000, DUNG nhu expected (hien "Ma khong dung. Thu lai.")
+POST /api/v1/auth/email-otp/send-verification-otp [200]
+POST /api/v1/auth/sign-in/email-otp [200]   <- ma dung 319780
+GET  /?_rsc=... [200] x2 ; GET /today?_rsc=... [200] x2 ; GET /api/v1/listings [200]
+Console error: "Failed to load resource: 400 (BAD_REQUEST)" = cung POST ma sai o tren.
+Ghi chu: may dev 3492 vong lap "reloadPage: HMR hash mismatch" (stale-patch 16.4.2 vs 16.4.5) lam trang tai lai lien tuc; da chan thong diep reloadPage cua WebSocket HMR bang initScript de form hydrate duoc. Khong anh huong API.
