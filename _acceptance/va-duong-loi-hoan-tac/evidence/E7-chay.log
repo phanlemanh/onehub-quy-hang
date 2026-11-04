@@ -1,0 +1,14 @@
+API Toà B Active: ["B-03.04","B-15.05","B-14.06","B-13.02","B-14.05","B-15.01"]
+tích: 5 căn đã chọn mã theo thứ tự tích: B-15.01, B-03.04, B-13.02, B-15.05, B-14.06
+căn thứ 2: B-03.04 2c86552b-01ba-4389-805f-6f539f65811d | căn thứ 4: B-15.05 3dea2060-1d5e-466a-a39d-5166bebc53d9
+trước đổi 5 căn trên lưới: [{"ma":"B-15.01","tt":"Đang bán","tich":null},{"ma":"B-03.04","tt":"Đang bán","tich":null},{"ma":"B-13.02","tt":"Đang bán","tich":null},{"ma":"B-15.05","tt":"Đang bán","tich":null},{"ma":"B-14.06","tt":"Đang bán","tich":null}]
+menu chọn: Tạm ngừng
+hộp xác nhận: Đổi 5 căn sang Tạm ngừng /  / Mỗi căn một lần sửa, tính là vừa xác nhận với chủ nhà. /  / Thôi / Đổi
+toast sau đổi: [{"t":"Đã đổi trạng thái 5 căn / Hoàn tác","btn":["Hoàn tác"]}]
+sau đổi 5 căn trên lưới: [{"ma":"B-15.01","tt":null,"tich":null},{"ma":"B-03.04","tt":null,"tich":null},{"ma":"B-13.02","tt":null,"tich":null},{"ma":"B-15.05","tt":null,"tich":null},{"ma":"B-14.06","tt":null,"tich":null}]
+tiêm: ok
+toast lần 1: [{"t":"Đã hoàn tác 3 căn · 2 căn chưa hoàn tác được / B-03.04 (Máy chưa lưu được lần sửa — thử lại) · B-15.05 (Máy chưa lưu được lần sửa — thử lại) / Hoàn tác","btn":["Hoàn tác"]}]
+sau Hoàn tác lần 1 5 căn trên lưới: [{"ma":"B-15.01","tt":"Đang bán","tich":null},{"ma":"B-03.04","tt":null,"tich":null},{"ma":"B-13.02","tt":"Đang bán","tich":null},{"ma":"B-15.05","tt":null,"tich":null},{"ma":"B-14.06","tt":"Đang bán","tich":null}]
+toast lần 2: [{"t":"Đã hoàn tác 2 căn","btn":[]}]
+sau Hoàn tác lần 2 5 căn trên lưới: [{"ma":"B-15.01","tt":"Đang bán","tich":null},{"ma":"B-03.04","tt":"Đang bán","tich":null},{"ma":"B-13.02","tt":"Đang bán","tich":null},{"ma":"B-15.05","tt":"Đang bán","tich":null},{"ma":"B-14.06","tt":"Đang bán","tich":null}]
+API cuối: [["B-03.04","Active"],["B-15.05","Hold"],["B-14.06","Active"],["B-13.02","Active"],["B-15.01","Active"]]

@@ -21,8 +21,8 @@ import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
-import { KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, hieuLaGia, hieuLaGiaChot, homNay, moTaLoi, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
+import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
+import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -35,7 +35,8 @@ type ChoXacNhan = Extract<KetQuaLenh, { ok: true }>;
 
 
 export function useSuaTrenO() {
-  const sua = useSuaHang();
+  // Mọi lần ghi sau khi ô sửa đóng đi qua hàm bọc: lỗi bất ngờ thành thông báo, không mất lặng (va-duong-loi-hoan-tac).
+  const sua = ghiAnToan(useSuaHang());
   const docPhienBan = useDocPhienBan();
   const [phien, setPhien] = useState<Phien | null>(null);
   const [so] = useState(taoSoHoanTac);
@@ -50,35 +51,38 @@ export function useSuaTrenO() {
     setPhien({ hang, cot: cot as CotSua, chuDau, coSo: docPhienBan(hang.id), o: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : { top: 0, left: 0, width: 0, height: 0 } });
   }, [docPhienBan]);
 
-  /** Ghi lệnh bù của bản ghi đã được bộ giữ cho dùng; bị từ chối thì báo, không ghi gì. Lệnh bù không tạo bản ghi mới. */
+  /**
+   * Ghi lệnh bù của bản ghi đã được bộ giữ cho dùng; bị từ chối thì báo, không ghi gì. Lệnh bù không tạo bản ghi mới.
+   * Lệnh bù hỏng thì bản ghi về lại bộ giữ: thông báo lỗi mang nút «Hoàn tác», Ctrl/Cmd+Z cũng thử lại (va-duong-loi-hoan-tac).
+   */
   const hoanTac = useCallback(
-    async (kq: KetQuaDung) => {
-      if (!kq.ok) {
-        toast.error(kq.loi);
-        return;
-      }
-      const g = kq.banGhi;
-      // Lệnh bù mang phiên bản vừa xét: một lần kéo về chen giữa lúc xét và lúc ghi thì thành xung đột, vào «Cần xem»,
-      // không ghi đè lặng lần sửa sau (AC-5).
-      const ketQua = await sua(g.id, g.lenh.type, g.lenh.payload, g.phienBanSau);
-      if (ketQua.ok) toast.success(`Đã hoàn tác ${g.nhan}`);
-      else toast.error(`${KHONG_HOAN_TAC}: ${moTaLoi(ketQua.loi)}`);
+    (kq: KetQuaDung) => {
+      const chay = async (k: KetQuaDung): Promise<void> => {
+        const tb = await chayHoanTac(so, k, sua);
+        if (tb.loai === "thanh-cong") {
+          toast.success(tb.chu);
+          return;
+        }
+        const thuLai = tb.thuLai;
+        toast.error(tb.chu, thuLai ? { duration: 10_000, action: { label: "Hoàn tác", onClick: () => void chay(so.dungNut(thuLai, docPhienBan)) } } : undefined);
+      };
+      return chay(kq);
     },
-    [sua],
+    [so, sua, docPhienBan],
   );
 
   const ghi = useCallback(
     async (hang: DongBang, cot: CotSua, kq: ChoXacNhan, coSo: number | undefined) => {
       setPhien(null);
-      const ketQua = await sua(hang.id, kq.lenh.type, kq.lenh.payload, coSo);
+      const nhan = `${NHAN_COT[cot]} ${hang.unitNumber ?? ""}`.trim();
+      const ketQua = await chayLuuO(sua, hang.id, kq.lenh, coSo, nhan);
       if (!ketQua.ok) {
-        toast.error(moTaLoi(ketQua.loi));
+        toast.error(ketQua.chu);
         return;
       }
-      const nhan = `${NHAN_COT[cot]} ${hang.unitNumber ?? ""}`.trim();
       const bu = lenhHoanTac(hang, kq.lenh);
       // Phiên bản căn ngay sau lần ghi này: căn đổi phiên bản nữa là có lần sửa sau, thông báo này thôi hoàn tác (AC-5).
-      const banGhi: BanGhiHoanTac | null = so.ghi(bu ? { id: hang.id, nhan, lenh: bu, phienBanSau: ketQua.op.expectedVersion + 1 } : null);
+      const banGhi: BanGhiHoanTac | null = so.ghi(bu ? { id: hang.id, nhan, lenh: bu, phienBanSau: ketQua.phienBanSau } : null);
       toast(`Đã đổi ${nhan}`, {
         description: banGhi ? XAC_NHAN : `${XAC_NHAN} · ${KHONG_HOAN_TAC}`,
         duration: 10_000,
