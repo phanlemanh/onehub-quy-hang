@@ -143,7 +143,7 @@ test("trang khách: quan tâm ghi đúng căn, từ chối căn lạ", async () 
   const code = await lanGui(s, "khach_rieng", [a!, b!]);
   await lenh(s, b!, { type: "status_changed", payload: { to: "Pending" } });
   const qt = (listingId: string, visitor = "may-khach-AAAA", type: string = SU_KIEN_LAN_GUI.quanTam) => baoSuKien(code, { type, visitor, listingId });
-  const BANG: [string, () => Promise<Response>, number, number][] = [
+  const BANG: [string, () => Response | Promise<Response>, number, number][] = [
     ["căn trong Lần gửi đang bán", () => qt(a!), 201, 1],
     ["lặp cùng máy", () => qt(a!), 200, 1],
     ["căn không thuộc Lần gửi", () => qt(ngoai!), 409, 1],
