@@ -283,7 +283,7 @@ async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportR
   let version: number;
   let versionBefore: number | undefined;
   if (quyet.action === "create") {
-    const tao = chac(await createListing(tx, { buildingName: d.toa, ...(d.ma !== null && { unitNumber: String(d.ma) }) }, { importId: d.importId }));
+    const tao = chac(await createListing(tx, { buildingName: d.toa, ...(d.ma !== null && { unitNumber: String(d.ma) }) }, { device: null, madeOffline: false, importId: d.importId }));
     [id, version] = [tao.listingId, tao.state.version];
     if (d.laDauChu && d.dauChu === viewer.userId) {
       await tx.query(

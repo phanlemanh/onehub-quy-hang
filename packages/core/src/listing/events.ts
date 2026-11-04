@@ -119,4 +119,8 @@ export type ListingEvent = {
   confirmedWithOwner: boolean;
   /** ISO 8601. */
   occurredAt: string;
+  /** Thiết bị của lời gọi ghi (máy tính hay điện thoại); `null` hay vắng là không rõ — sự kiện ghi trước khi có cột. */
+  device?: "desktop" | "mobile" | null;
+  /** Thao tác làm lúc mất mạng, gửi về khi có mạng lại; vắng là không. */
+  madeOffline?: boolean;
 };

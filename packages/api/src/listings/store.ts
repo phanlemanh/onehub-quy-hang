@@ -33,10 +33,17 @@ export type Command = {
   payload: unknown;
   expectedVersion?: number;
   confirmedWithOwner?: boolean;
+  madeOffline?: boolean;
   /** Lệnh do một lần nhập file gửi (hàng 65a): sự kiện mang mã lần nhập và không bao giờ tính là xác nhận với chủ — trừ
    * `owner_confirmed` mang ngày trong file. Chỉ lối nhập của máy chủ đặt khoá này; route lệnh hàng không nhận nó. */
   importId?: string;
 };
+/** Thiết bị máy khai ở đầu `x-quy-hang-device` (hàng ghi-thiet-bi-va-mat-mang); vắng hay lạ là `null` — «không rõ». */
+export type Device = "desktop" | "mobile" | null;
+export const docThietBi = (v: string | undefined): Device => (v === "desktop" || v === "mobile" ? v : null);
+/** Cách lệnh được ghi: máy nào, có làm lúc mất mạng không, và lần nhập nào gửi (hàng 65a; vắng là không qua lần nhập). */
+export type CachGhi = { device: Device; madeOffline: boolean; importId?: string | null };
+const GHI_KHONG_RO: CachGhi = { device: null, madeOffline: false };
 export type Refusal = {
   error: ApiErrorEntry;
   details?: PayloadError[];
@@ -75,6 +82,8 @@ type EventRow = {
   actor_roles: string[];
   confirmed_with_owner: boolean;
   occurred_at: Date;
+  device: "desktop" | "mobile" | null;
+  made_offline: boolean;
 };
 const toEvent = (r: EventRow): ListingEvent => ({
   seq: r.seq,
@@ -84,11 +93,13 @@ const toEvent = (r: EventRow): ListingEvent => ({
   actorRoles: r.actor_roles,
   confirmedWithOwner: r.confirmed_with_owner,
   occurredAt: r.occurred_at.toISOString(),
+  device: r.device,
+  madeOffline: r.made_offline,
 });
 
 export async function loadEvents(tx: pg.PoolClient, listingId: string): Promise<ListingEvent[]> {
   const { rows } = await tx.query<EventRow>(
-    `select seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at
+    `select seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at, device, made_offline
      from listing_events where company_id = app.current_company_id() and listing_id = $1 order by seq`,
     [listingId],
   );
@@ -130,23 +141,23 @@ export async function factsOf(tx: pg.PoolClient, listingId: string, events: read
   return { ...factsFromEvents(events), listingAgentUserId: rows[0]?.user_id ?? null };
 }
 
-async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type: EventType, payload: object, confirmed: boolean, importId: string | null = null) {
+async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type: EventType, payload: object, confirmed: boolean, cach: CachGhi) {
   const { rows } = await tx.query<EventRow>(
-    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, import_id)
-     values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id(), $5, $6, $7)
-     returning seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at`,
-    [listingId, seq, type, JSON.stringify(payload), await vaiLucLam(tx), confirmed, importId],
+    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, device, made_offline, import_id)
+     values (app.current_company_id(), $1, $2, $3, $4, app.current_user_id(), $5, $6, $7, $8, $9)
+     returning seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at, device, made_offline`,
+    [listingId, seq, type, JSON.stringify(payload), await vaiLucLam(tx), confirmed, cach.device, cach.madeOffline, cach.importId ?? null],
   );
   return toEvent(rows[0]!);
 }
 
 const giaTri = (s: ListingState) => KHOA.map((k) => s[k]);
 
-export async function createListing(tx: pg.PoolClient, payload: unknown, opts: { importId?: string } = {}): Promise<Applied | Refusal> {
+export async function createListing(tx: pg.PoolClient, payload: unknown, cach: CachGhi = GHI_KHONG_RO): Promise<Applied | Refusal> {
   const details = validatePayload("created", payload);
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const listingId = randomUUID();
-  const event = await ghiSuKien(tx, listingId, 1, "created", payload as object, false, opts.importId ?? null);
+  const event = await ghiSuKien(tx, listingId, 1, "created", payload as object, false, cach);
   const state = foldListing([event]);
   const facts = factsFromEvents([event]);
   await tx.query(
@@ -157,7 +168,7 @@ export async function createListing(tx: pg.PoolClient, payload: unknown, opts: {
   return { listingId, state, event, facts };
 }
 
-export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId: string, cmd: Command): Promise<Applied | Refusal> {
+export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId: string, cmd: Command, device: Device = null): Promise<Applied | Refusal> {
   // Khoá theo hàng: lệnh thứ hai trên cùng hàng đứng chờ, rồi thấy phiên bản mới — không bao giờ hai lệnh cùng một seq.
   const hang = await tx.query<{ version: number }>("select version from listings where id = $1 for update", [listingId]);
   if (!hang.rowCount) return { error: API_ERRORS.notFound };
@@ -202,7 +213,11 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
 
   // Lệnh của lần nhập: không xác nhận với chủ (luật 11) — chỉ `owner_confirmed` mang ngày trong file mới là xác nhận.
   const xacNhan = cmd.importId ? type === "owner_confirmed" : confirmsWithOwner(type, cmd.confirmedWithOwner);
-  const event = await ghiSuKien(tx, listingId, version + 1, type, payload, xacNhan, cmd.importId ?? null);
+  const event = await ghiSuKien(tx, listingId, version + 1, type, payload, xacNhan, {
+    device,
+    madeOffline: cmd.madeOffline === true,
+    importId: cmd.importId ?? null,
+  });
   const state = foldListing([...events, event]);
   const facts = factsFromEvents([...events, event]);
   await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);

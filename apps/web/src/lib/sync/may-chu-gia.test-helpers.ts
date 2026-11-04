@@ -1,6 +1,8 @@
 // Máy chủ giả cho ca kiểm thuần: giữ dãy sự kiện mỗi căn, áp đúng ba luật của API thật (phiên bản, «thắng ngay», bảng
 // chuyển trạng thái của lõi), có công tắc mất mạng và mất phản hồi. Bài kiểm trên API thật nằm ở test-db/.
 // Hàng 61: công tắc trả mã (401, 5xx, 4xx) theo phương thức và căn, ghi rồi trả 503, cấy khoá nguồn vào bản kéo.
+// Hàng 52: ghi lại thân lệnh sự kiện nhận được (xem khoá `madeOffline`) và nhận đường lượt mất mạng như API thật — 201 lần
+// đầu, gửi lại cùng `startedAt` + thiết bị trả 200 không thêm dòng; công tắc trả 503 một lần.
 import { checkTransition, foldListing, WINS_IMMEDIATELY, type ListingEvent } from "@quy-hang/core/listing";
 import type { Goi } from "./types";
 
@@ -18,6 +20,11 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
     return ma.get(`${method} ${c}`) ?? ma.get(`* ${c}`) ?? (id ? (ma.get(`${method} *`) ?? ma.get("* *")) : ma.get("* *"));
   };
   const goiQua: { method: string; path: string }[] = [];
+  /** Thân các lệnh `POST /listings/<id>/events` máy chủ nhận được, đúng thứ tự. */
+  const lenhNhan: { listingId: string; body: Record<string, unknown> }[] = [];
+  /** Các dòng lượt mất mạng máy chủ đã ghi. */
+  const luotMatMang: Record<string, unknown>[] = [];
+  let luot503LanToi = false;
   const view = (id: string) => ({ id, ...foldListing(can.get(id)!), visibility: "Company" as const });
   const ghi = (id: string, actorUserId: string, type: ListingEvent["type"], payload: Record<string, unknown>) => {
     const ds = can.get(id)!;
@@ -26,6 +33,16 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
   const goi: Goi = async (method, path, body) => {
     goiQua.push({ method, path });
     if (matMang) throw new Error("mất mạng");
+    if (method === "POST" && path === "/api/v1/sync/offline-sessions") {
+      if (luot503LanToi) {
+        luot503LanToi = false;
+        return { status: 503, body: null };
+      }
+      const b = body as Record<string, unknown>;
+      if (luotMatMang.some((x) => x.startedAt === b.startedAt && x.device === b.device)) return { status: 200, body: b };
+      luotMatMang.push(structuredClone(b));
+      return { status: 201, body: b };
+    }
     const m = path.match(/^\/api\/v1\/listings(?:\/([^/]+))?(\/events)?$/);
     const id = m?.[1];
     const ep = maCua(method, id);
@@ -34,6 +51,7 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
     if (method === "GET" && !id) return { status: 200, body: [...can.keys()].filter((x) => !an(x)).map((x) => (cayNguon ? { ...view(x), ownerPhone: "0900 000 012" } : view(x))) };
     if (!id || !can.has(id) || an(id)) return { status: 404, body: { error: "not-found" } };
     if (method === "GET") return { status: 200, body: { ...view(id), events: can.get(id) } };
+    lenhNhan.push({ listingId: id, body: structuredClone(body) as Record<string, unknown> });
     const c = body as { type: ListingEvent["type"]; payload: Record<string, unknown>; expectedVersion: number };
     const hien = foldListing(can.get(id)!);
     const thang = c.type === "status_changed" && WINS_IMMEDIATELY.includes(c.payload.to as never);
@@ -56,6 +74,12 @@ export function mayChuGia(o: { userId: string; chiToiCuaNguoiKhac?: string[] }) 
   return {
     goi,
     goiQua,
+    lenhNhan,
+    luotMatMang,
+    /** Lần gửi lượt mất mạng tới: máy chủ trả 503, không ghi. */
+    luot503LanToi: () => {
+      luot503LanToi = true;
+    },
     can,
     tao(id: string, toa: string, actorUserId = o.userId) {
       can.set(id, []);
