@@ -1,0 +1,35 @@
+{
+  "feature_plain": "Đầu khách mở một căn trên điện thoại thì thấy đủ để gửi khách — giá, lần chủ nhà xác nhận gần nhất, ảnh gửi được — và hỏi được đầu chủ đang giữ căn, mà không bao giờ thấy chủ nhà.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ mở hồ sơ toàn màn từ thẻ hay từ địa chỉ căn, có mã, giá kèm điều kiện phí, dòng «Xác nhận N ngày trước», thuộc tính và lần rao, không cuộn ngang."},
+    {"id": "AC-2", "p": "Sẽ chỉ cho Đầu khách xem ảnh Gửi được (bìa đứng đầu) và Tự có từ mã, không nút thêm, xoá, kéo ảnh; ngăn Nội bộ theo câu Hỏi-4."},
+    {"id": "AC-4", "p": "Sẽ có nút hỏi đầu chủ dính đáy, mang tên người giữ căn; chạm là mở bảng chia sẻ của máy với tin «Hỏi về căn <mã> · <toà>», người tự chọn người nhận và bấm gửi."},
+    {"id": "AC-5", "p": "Sẽ để máy chủ trả tên đầu chủ giữ căn cho người không thấy chủ nhà — không email, không số, không gì của chủ nhà."},
+    {"id": "AC-6", "p": "Sẽ giữ nguyên hồ sơ của Đầu chủ giữ căn và Trưởng nhóm: ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, không nút hỏi."},
+    {"id": "AC-7", "p": "Sẽ chuyển trang căn toàn màn và hai trang mẫu sang bố cục Hồ sơ, đúng hạn bản đồ khuôn đã đặt cho hàng này."},
+    {"id": "AC-8", "p": "Sẽ giữ kiểm kiểu, lint và sàn thiết kế xanh, và ghi Tham chiếu, từ vựng, bản đồ khuôn theo lời anh ở Hỏi-2."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG cho Đầu khách thấy nút Sẵn sàng bán, ô sửa, hay bất kỳ chữ nào của chủ nhà — tên, số, giá đáy, ảnh sổ — cả trên màn lẫn trong dữ liệu máy tải về."},
+    {"id": "OOS-1", "p": "KHÔNG dựng lại hồ sơ theo khối product-detail-5 ở hàng này (theo Hỏi-3)."},
+    {"id": "OOS-2", "p": "KHÔNG làm «Xin dẫn xem» và lịch xem — chờ buổi phỏng vấn."},
+    {"id": "OOS-3", "p": "KHÔNG làm thanh «n căn · Xem trước · Gửi» — đó là hàng 34."},
+    {"id": "OOS-4", "p": "KHÔNG lưu số điện thoại nhân viên, KHÔNG gửi tin thay người."}
+  ],
+  "scope_plain": "Bốn câu dưới là của anh; máy đã soạn hồ sơ theo khuyến nghị của từng câu.",
+  "coverage_plain": [
+    {"i": 0, "p": "Đã quét ba trục: người xem × phần hồ sơ × tình huống căn và máy."},
+    {"i": 1, "p": "Người xem: Đầu khách, Đầu chủ giữ, Đầu chủ không giữ, Trưởng nhóm, người sàn khác — đo ở AC-3, AC-5, AC-6."},
+    {"i": 2, "p": "Phần hồ sơ: đầu, ảnh ba ngăn, thuộc tính, lần rao kèm Sẵn sàng bán, lịch sử, phần chủ nhà thay bằng nút hỏi — đo ở AC-1, AC-2, AC-3, AC-4."},
+    {"i": 3, "p": "Tình huống: có người giữ, chưa ai giữ, chưa xác nhận, mất mạng, máy không có bảng chia sẻ — đo ở AC-4, AC-5."},
+    {"i": 4, "p": "Để sau: dựng lại theo product-detail-5, Xin dẫn xem, số nhân viên, thông báo trong ứng dụng."},
+    {"i": 5, "p": "Không bao giờ: Đầu khách thấy chủ nhà, số chủ, giá đáy, ảnh sổ."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy từng tự quyết bỏ hẳn ngăn Nội bộ với người không giữ căn — đó là đánh đổi trải nghiệm, nay thành câu Hỏi-4 cho anh."},
+    {"i": 1, "p": "Lúc mất mạng nút hỏi chưa được đo — đã thêm vào AC-4 và bài nhìn màn E9."},
+    {"i": 2, "p": "Các phép thử «không thấy» thiếu đối chứng — đã thêm bước người giữ căn thấy nút, và mẫu chủ nhà phải khác rỗng."},
+    {"i": 3, "p": "Chưa đo nhãn nút thật trên màn khớp lời anh — đã ghim ở E9 và một bài kiểm hằng nhãn."},
+    {"i": 4, "p": "Một bài đòi tham số thừa và đường đo gán lệch — đã sửa."}
+  ]
+}

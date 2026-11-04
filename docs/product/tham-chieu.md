@@ -104,7 +104,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 - **Lớp trường, phủ cả hai trục**: chủ nhà, số điện thoại, giá đáy, ảnh sổ chỉ đầu chủ giữ căn và trưởng nhóm thấy; không bao giờ ra ngoài sàn. Mỗi lần mở số chủ là một sự kiện.
 - **Luật ẩn một chỗ cho mọi cửa ra** — Dựng 03/11 (hàng 31): trang khách, gửi ảnh + tin, phát hàng lấy dữ liệu từ cùng một luật ở lõi, chỉ các trường được ra theo người nhận (khách riêng không có mã căn, chỉ toà + tầng cao / thấp; Đang giao dịch giữ giá, Tạm ngưng tách khỏi «không còn»); không liên hệ nào ra ngoài; bộ kiểm rò rỉ là check bắt buộc trước phát hành, kể cả quét mã nguồn trang; rào «mỗi trang cửa ra có bài kiểm riêng» phủ trang web, rào cho route API công khai dựng ở hàng 35.
 - **Quyền cấu hình tách khỏi quyền xem nguồn**: quản trị sàn không tự động thấy chủ nhà.
-- **Quyền là lớp phủ trên cùng một màn**: đầu khách mở đúng hồ sơ căn đó, phần chủ nhà thay bằng «Xin dẫn xem» và «Liên hệ đầu chủ».
+- **Quyền là lớp phủ trên cùng một màn** — Dựng 04/11 (hàng 33): đầu khách mở đúng hồ sơ căn đó; phần chỉ người giữ căn vắng (không ngăn ảnh Nội bộ, không «Sẵn sàng bán», không sửa ảnh), thay bằng nút «Hỏi đầu chủ» mang tên đầu chủ giữ căn, mở bảng chia sẻ của máy. «Xin dẫn xem» chờ phỏng vấn (§13).
 - **Nhiều sàn trên một nền** — Đã chốt 28/10: mỗi sàn một vùng riêng; chỉ danh mục là dùng chung. Hệ thống biết hai sàn cùng giữ một căn nhưng không cho bên này thấy hàng bên kia. Cách ly đặt ở kho dữ liệu; kiểm thử «sàn này không thấy gì của sàn kia» là cổng bắt buộc trước mỗi lần phát hành.
 
 ## 7. Mỗi sàn một cách gọi, dữ liệu một chuẩn
@@ -247,7 +247,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Bảng hàng | Vị trí: lưới toà | Máy tính | 3 | Sau | P2 |
 | Bảng hàng | Vị trí: bản đồ lô thấp tầng | Máy tính | chưa phác | Sau | P2 |
 | Hồ sơ căn | Cột hồ sơ, ảnh | Đầu chủ · máy tính | 2, M5 | Bản đầu | P0 |
-| Hồ sơ căn | Màn hồ sơ; với đầu khách phần chủ nhà thay bằng «Xin dẫn xem» | Đầu khách · điện thoại | M3 (vẽ cho đầu chủ) | Bản đầu | P0 |
+| Hồ sơ căn | Màn hồ sơ; với đầu khách phần chủ nhà thay bằng nút «Hỏi đầu chủ» (hàng 33, 04/11); «Xin dẫn xem» chờ phỏng vấn (§13) | Đầu khách · điện thoại | M3 (vẽ cho đầu chủ) | Bản đầu | P0 |
 | Hồ sơ căn | Chế độ cuộc gọi: khai thác, ép giá | Đầu chủ · máy tính | KD1, KD2 | Bản đầu | P0 |
 | Hồ sơ căn | Đổi giá / trạng thái nhanh | Đầu chủ · điện thoại | M2 | Bản đầu | P1 |
 | Hồ sơ căn | Chế độ cuộc gọi trên điện thoại | Đầu chủ · điện thoại | K1–K4 | Dự phòng | P2 |
@@ -371,6 +371,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 03/11 | Liên hệ khách (hàng 86): đầu khách lưu khách bằng tên và số — khách là liên hệ loại Người mua · Người thuê, việc của đầu khách với khách là một nhu cầu khách (RESO `Prospecting`) mang tên khách đầu khách gõ (Hỏi-2), Mua · Thuê · Cả hai và tiêu chí theo tập trường RESO cố định (Hỏi-3); số đã có trong sàn — kể cả số chủ nhà — thì gắn đúng người ấy mà đầu khách không biết, liên hệ khách không có người giữ; hai đầu khách cùng một khách thì mỗi người một nhu cầu riêng, không báo cho nhau, trưởng nhóm thấy cả hai (Hỏi-1); thêm số đã thuộc người khác báo «không thêm được» (Hỏi-6). Lần gửi gắn nhu cầu khách hay nhóm môi giới, tối đa 30 căn đã lên bảng (Hỏi-7), người gửi là chỗ ghi công; trưởng nhóm chuyển khách thì Lần gửi đi theo; trang khách chỉ nhận mã link, căn, người gửi. Mở nhu cầu ghi «khách hỏi» cho số đo hai tuần thử. Lịch xem chưa dựng — chờ phỏng vấn (Hỏi-4); đầu khách không mở lại số khách (Hỏi-5) | ADR-0021 (sửa đổi 03/11) · `_acceptance/lien-he-khach/` |
 | 03/11 | Đường ghi lần nhập file (hàng 65a): Đầu chủ và Trưởng nhóm mở lần nhập rồi gửi từng gói ≤ 200 dòng, xem thử hay ghi — xem thử đi cùng đường rồi lùi, nên con số bằng lần ghi. Mỗi dòng đúng một việc: căn mới (Chưa đủ để rao, «Chỉ tôi»), cập nhật căn mình giữ, tin bổ sung (lead «căn đã có hàng mở») cho căn người khác giữ, hay bỏ kèm lý do; dòng lặp căn trong file giữ dòng đầu. Chủ nhà và số vào liên hệ chủ nhà ở dạng bản mã; ngày xác nhận theo file (mốc 2 năm), không có thì «chưa xác nhận». Đầu chủ giữ căn đọc được hàng «Chỉ tôi» Trưởng nhóm nhập cho mình (Hỏi-5). Màn Nhập Excel là hàng `man-nhap-excel` | ADR-0011 · `_acceptance/nhap-excel-xem-truoc-ghi/` · `docs/architecture/nhap-du-lieu.md` §6 |
 | 03/11 | Thiết bị và lượt mất mạng cho số đo hai tuần thử: mỗi thao tác trên căn ghi máy tính hay điện thoại (điện thoại = máy có cạnh ngắn màn hình dưới 768px, xoay ngang vẫn là điện thoại; máy không báo thì «không rõ») và dấu «làm lúc mất mạng»; bộ đồng bộ ghi mỗi lần mất mạng thành một lượt (bắt đầu, kết thúc, số thao tác) và gửi khi có mạng lại, gửi lại không trùng. Hai số đo §11 «thao tác theo thiết bị và vai», «mất mạng trên điện thoại» ra số; còn bốn số đo chờ sự kiện của hàng 34, 35, 43, 86. Lead, liên hệ, ảnh chưa ghi thiết bị (chủ kho duyệt Hỏi-1, Hỏi-2) | `_acceptance/ghi-thiet-bi-va-mat-mang/` |
+| 04/11 | Hồ sơ căn của Đầu khách trên điện thoại (hàng 33): quyền là lớp phủ trên cùng màn hồ sơ căn đang có — màn đọc bốn cờ ở lõi (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút hỏi), không rẽ theo tên vai. Người không giữ căn (Đầu khách, Đầu chủ không giữ) không thấy thẻ Nội bộ nào, không ổ khoá (Hỏi-4); nút «Hỏi đầu chủ» (Hỏi-2) dính đáy mang tên đầu chủ giữ căn, chạm mở bảng chia sẻ của máy với tin «Hỏi về căn <mã> · <toà>» và đường tới hồ sơ trong sàn (Hỏi-1); không có bảng chia sẻ thì chép tin; căn chưa ai giữ thì nút mờ «Căn chưa có đầu chủ giữ». API chủ nhà trả thêm tên người dùng của đầu chủ giữ căn, không email, không số. Dựng lại theo `product-detail-5` tách hàng riêng — lùi quyết định 02/11 «Giữ: 33 product-detail-5» (Hỏi-3) | `_acceptance/ho-so-can-dien-thoai/` · `design/patterns/ho-so-can.md` |
 
 ## 13. Chỗ cần chốt
 
@@ -407,7 +408,7 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 
 - [ ] Đầu khách xin dẫn xem thế nào hôm nay, mất bao lâu, ai cầm chìa khoá. Xin dẫn xem và lịch xem chờ câu này.
 - [ ] Telesales đang dùng công cụ gì, có chịu nhập thẳng vào Quỹ hàng không; lead marketing đến từ đâu.
-- [ ] Đầu khách có lúc nào cần số chủ nhà; khi đó ai mở hộ. Tới khi có câu trả lời: không, đầu khách bấm «Liên hệ đầu chủ».
+- [ ] Đầu khách có lúc nào cần số chủ nhà; khi đó ai mở hộ. Tới khi có câu trả lời: không, đầu khách bấm «Hỏi đầu chủ».
 - [ ] Ngưỡng ngày điều chỉnh giá có khác theo loại căn, mức giá không. Tới khi có câu trả lời: 10 ngày, sàn chỉnh trong 7–14.
 - [ ] Hai chỗ bị gạch trong ghi chép (trùng chủ nhà; telesales ghi sơ sài) đã hết đau, hay gạch vì lý do khác.
 

@@ -4,8 +4,8 @@
 // đang mở. Ghép theo ví dụ ReUI `c-sortable-7` (Sortable dạng lưới) trong FramePanel của hồ sơ — khối upload có Card trái
 // luật một họ khung. Ảnh không đi qua bộ đồng bộ, không vào kho trên máy (luật khuôn KH-hs-anh-noi-bo); quyền và ẩn nội
 // bộ do API và luật theo dòng quyết, mục này chỉ trình điều API trả.
-import { CHU_CAN_MANG, CHU_DANH_MUC_TRONG, CHU_NOI_BO_KHOA, NHAN_NGAN, nhanAnh, sapXep, type Compartment, type UnitPhoto } from "@quy-hang/core/photos";
-import { ImagePlus, Lock, MoreHorizontal } from "lucide-react";
+import { CHU_CAN_MANG, CHU_DANH_MUC_TRONG, NHAN_NGAN, nhanAnh, sapXep, type Compartment, type UnitPhoto } from "@quy-hang/core/photos";
+import { ImagePlus, MoreHorizontal } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type DragEvent } from "react";
 
 import { Badge } from "@/components/reui/badge";
@@ -248,22 +248,22 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
             {NHAN_NGAN.shareable} ({soLuong("shareable")})
           </TabsTrigger>
           <TabsTrigger value="catalog">{NHAN_NGAN.catalog}</TabsTrigger>
-          <TabsTrigger value="internal" onDragOver={ds.noiBo === "thay" ? choThaVao : undefined} onDrop={(e) => tha(e, "internal")}>
-            {ds.noiBo === "an" ? <Lock /> : null}
-            {NHAN_NGAN.internal}
-            {ds.noiBo === "thay" ? ` (${soLuong("internal")})` : null}
-          </TabsTrigger>
+          {/* Người không giữ căn: không có thẻ Nội bộ, không ổ khoá (hàng 33, Hỏi-4) — nút «Hỏi đầu chủ» là lối hỏi giấy tờ. */}
+          {ds.noiBo === "thay" ? (
+            <TabsTrigger value="internal" onDragOver={choThaVao} onDrop={(e) => tha(e, "internal")}>
+              {NHAN_NGAN.internal} ({soLuong("internal")})
+            </TabsTrigger>
+          ) : null}
         </TabsList>
         <TabsContent value="shareable">{luoi("shareable")}</TabsContent>
         <TabsContent value="catalog">
           <TrangThai kind="notice" title={NHAN_NGAN.catalog} description={CHU_DANH_MUC_TRONG} />
         </TabsContent>
-        <TabsContent value="internal">
-          {ds.noiBo === "an" ? <TrangThai kind="notice" title="Ngăn nội bộ" description={CHU_NOI_BO_KHOA} /> : luoi("internal")}
-        </TabsContent>
+        {ds.noiBo === "thay" ? <TabsContent value="internal">{luoi("internal")}</TabsContent> : null}
       </Tabs>
 
       <Dialog open={xem !== null} onOpenChange={(o) => !o && setXem(null)}>
+        {/* eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- bề rộng hộp xem ảnh gốc, không phải kích thước trang */}
         <DialogContent className="max-w-4xl">
           <DialogTitle>{xem ? `${toaMa} · ${nhanAnh(xem)}` : ""}</DialogTitle>
           {/* eslint-disable-next-line @next/next/no-img-element -- byte gốc qua API có kiểm quyền */}

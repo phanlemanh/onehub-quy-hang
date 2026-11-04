@@ -1,0 +1,16 @@
+E10 network (Chrome CDP, performance resource entries)
+## giu-375
+9 app requests, failing: 0
+
+## giu-1440
+33 app requests, failing: 0
+
+## khong-giu
+9 app requests, failing: 1
+404 /api/v1/units/photos/08607b6c-03cd-4d89-837c-b2db18798892/thumb
+## truong-nhom
+9 app requests, failing: 0
+
+## giu-bsh-375
+7 app requests, failing: 0
+

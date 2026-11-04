@@ -1,0 +1,4 @@
+E6 network (playwright, 375x812, phien dau-khach)
+/units/A-04.06 app-scope: all 200 (catalog, units/photos, listings, listings/{id}, listings/{id}/owner x2, thumbs 3x200).
+Console errors (2): 404 GET /api/v1/units/photos/08607b6c-.../thumb and /9895fa75-.../thumb — anh thumb (static asset, note-only) khi load /inventory (the cua can khac).
+Third-party: none. Failed XHR/fetch: none.
