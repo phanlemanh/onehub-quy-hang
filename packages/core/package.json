@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./listing": "./src/listing/index.ts",
+    "./import": "./src/import/index.ts",
     "./access": "./src/access/index.ts",
     "./visibility": "./src/visibility/index.ts",
     "./dedupe": "./src/dedupe/index.ts",

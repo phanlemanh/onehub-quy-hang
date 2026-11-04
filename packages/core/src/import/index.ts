@@ -11,3 +11,4 @@ export * from "./classify";
 export * from "./profile";
 export * from "./plan";
 export * from "./apply";
+export * from "./dong";

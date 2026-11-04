@@ -1,0 +1,104 @@
+schema_version: 1
+feature_slug: nhap-excel-xem-truoc-ghi
+# Ba lệnh máy: executors.test.core (lõi), executors.test.isolation (migrate + bộ kiểm cách ly + packages/api/test-db trên
+# Postgres dãy G, cổng 5573). exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng tên ca nêu trong `expected` — có
+# mặt, «ok», không «# SKIP»/«# TODO». Chữ lý do sống ở MỘT chỗ (hằng của lõi `packages/core/src/import/dong.ts`); test-db
+# nhập hằng ấy, không chép chữ. Fixture dòng dựng bằng lõi thật (`readTable` + `planFromDictionary` trên lưới viết tay
+# của bộ mẫu `[Tên]`, `0900 000 0xx`), không dựng tay khuôn bên đọc.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «quyết dòng: ma trận đủ tổ hợp» có mặt và ok — ma trận viết tay liệt mọi tổ hợp của sáu trục dữ kiện (bỏ dòng 2 × ô chặn 2 × trùng 2 × trạng thái file 3 [khác, Closed, Withdrawn] × đầu chủ của dòng hợp lệ 2 × hàng mở 4 [không, người giữ hiệu lực, người khác đọc được, không đọc được]) = 192 phần tử, mỗi phần tử một assert.deepEqual {action, reason} với đáp án viết tay theo thứ tự xét của bảng thiết kế; đếm số lần so = 192 và assert. Ca «quyết dòng: lý do là hằng của lõi» — Object.values(LY_DO_DONG_NHAP) deepEqual danh sách viết tay đúng các chữ lý do của bảng thiết kế (không đếm bằng chính số hằng). Chiều đỏ: đảo thứ tự xét trùng-trước-chặn → ca đầu đỏ nêu tổ hợp (chặn ∧ trùng)."
+    paths: [packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ba ca có mặt và ok. (a) «kế hoạch: cột lớp nguồn chỉ vào trường lớp nguồn» — bảng dựng bằng readTable từ lưới viết tay có ba cột lớp nguồn (số chủ 0900 000 0xx, tên chủ [Tên], giá đáy); ma trận viết tay 3 cột × 4 đích sai (privateRemarks, keep_as_note, custom:x, listPrice) → validatePlan trả lỗi có path chỉ cột và reason nêu tên trường (12 assert); 3 cột × 2 đích đúng (trường lớp nguồn của chính cột, ignore_with_reason) → không lỗi (6 assert, đối chứng dương); đếm số lần so = 18 và assert. Ca «kế hoạch: cột lớp nguồn không mang bảng quy đổi» — cột ownerPhone mang valueMap {\"0900 000 001\": ...} → lỗi nêu cột; đối chứng: cùng cột không valueMap → không lỗi. (b) «lưới: tiêu đề có ô trống giữ dòng đầu» — lưới [[\"Mã căn\",\"\",\"Giá\"],[\"A-01\",\"x\",\"3 tỷ\"],…] → table.rows[0].source = 1 và headers[1] = «Cột B»; đối chứng: lưới hai tầng thật vẫn nhận hai tầng. (c) «áp: ô tên thuộc tính hệ thống không sập» — ba ô constructor, toString, __proto__ ở cột có valueMap → applyPlan không ném, mỗi ô mark needs_person (3 assert); đối chứng: ô có trong valueMap ra fixed. Chiều đỏ: bỏ Object.hasOwn → (c) ném TypeError hay ra fixed; bỏ luật lớp nguồn → (a) đỏ nêu privateRemarks."
+    paths: [packages/core/src/import/**, packages/core/test/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ca «mọi bảng dữ liệu đều bật và ép luật theo dòng» vẫn ok và nay liệt imports, import_rows; ca mới «lần nhập: A không thấy, không ghi được lần nhập và dòng nhập của B» ok — dưới vai quy_hang_app đặt sàn A: select từ imports/import_rows của B ra 0 dòng (2 assert), insert import_rows trỏ import_id của B bị từ chối (mã 42501 hoặc vi phạm khoá ngoài, assert mã), update imports của B ảnh hưởng 0 dòng, insert listing_events với import_id của B bị từ chối. Ca «dòng nhập không giữ ô nguyên văn» — đọc information_schema.columns của import_rows, tập cột bằng đúng danh sách viết tay (assert deepEqual). Chiều đỏ: migration bỏ force row level security trên import_rows → ca đầu đỏ nêu import_rows."
+    paths: [packages/db/migrations/024_*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lần nhập: dòng mới thành hàng qua một cửa» có mặt và ok trong packages/api/test-db/imports/ — Đầu chủ POST /api/v1/imports rồi POST /imports/{id}/rows 3 dòng mới: đếm listings tăng đúng 3; mỗi hàng GET /listings/{id} ra standardStatus Incomplete; mỗi hàng không hiện với một Đầu khách cùng sàn (404) và hiện với người nhập; listing_agent_assignments của hàng là người nhập; mọi listing_events của 3 hàng có import_id = id lần nhập và confirmed_with_owner = false (đếm theo truy vấn, assert bằng số sự kiện). Dòng file ghi Đang bán thiếu ảnh → hàng Incomplete, import_rows.reason nêu điều kiện thiếu. Ca «một cửa» của packages/api/src/one-door.test.ts vẫn ok (executor core/api chạy trong suite). Chiều đỏ: imports store chèn thẳng vào listings → one-door đỏ; bỏ import_id khi ghi → ca đầu đỏ nêu sự kiện thiếu."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lần nhập: gửi lại gói không nhân đôi» ok — gửi gói 4 dòng (2 mới, 1 tin bổ sung, 1 có chủ nhà) hai lần: sau lần hai, đếm listings, listing_events, leads, contacts, import_rows bằng sau lần một (5 assert) và thân trả lần hai deepEqual lần một. Ca «lần nhập: gói quá 200 dòng bị từ chối» — 201 dòng → 422 mã import-batch-too-large, đếm import_rows không đổi; đối chứng 200 dòng → 200. Ca «lần nhập: một dòng lỗi không lùi gói» — gói 3 dòng mà dòng giữa có giá âm sau chuẩn hoá → 2 hàng tạo, dòng giữa action skip với reason của lõi. Chiều đỏ: bỏ khoá duy nhất (import_id,row_number) → ca đầu đỏ nêu listings tăng gấp đôi."
+    paths: [packages/api/src/imports/**, packages/db/migrations/024_*.sql, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lần nhập: căn có hàng mở» ok — dựng sẵn ba hàng mở qua API: H1 do người nhập giữ, H2 do Đầu chủ khác giữ (hàng đã Đang bán, đọc được), H3 «Chỉ tôi» của Đầu chủ khác; gói 4 dòng trỏ H1 (giá mới), H2, H3, và một dòng lặp mã căn của dòng 1. Then: H1 có thêm đúng một sự kiện price_changed mang import_id, GET ra giá mới; H2 không thêm sự kiện, leads có đúng một lead outcome unit_has_open_listing matched_listing_id = H2, matched_agent_user_id = người giữ H2, và một dòng báo lead về người ấy (bảng báo của hàng 26); H3 không thêm sự kiện, dòng trả reason === LY_DO hằng «căn đã có hàng của người khác trong sàn» và JSON.stringify của thân trả không chứa id H3, tên toà-căn ngoài chính dòng, user id của người giữ (assert không chứa từng chuỗi); dòng lặp action skip reason «trùng dòng 1». Đối chứng: căn không hàng mở → create. Chiều đỏ: bỏ nhánh không-đọc-được (coi như đọc được) → ca đỏ vì thân trả chứa id H3."
+    paths: [packages/core/src/import/**, packages/api/src/imports/**, packages/api/src/leads/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lần nhập: chủ nhà qua cửa chủ nhà» ok — dòng có ô chủ «[Tên]» và số 0900 000 001: listing_owners của hàng có owner_phone null, owner_phone_enc và owner_phone_hash khác null, contact_id khác null; dòng thứ hai (căn khác) cùng số 0900 000 001 → cùng contact_id, đếm contacts tăng đúng 1 qua cả gói; một liên hệ có sẵn mang số 0900 000 002 (tạo qua lead trước) → dòng mang số ấy gắn đúng liên hệ có sẵn. Ca «lần nhập: thân trả không mang nguồn» — JSON.stringify mọi thân trả của POST /imports, /rows (xem thử và ghi), GET /imports/{id} không chứa chuỗi 0900000001, «0900 000 001» hay «[Tên]» (assert từng chuỗi); sau gói ghi, imports.plan::text và mọi cột text, jsonb của import_rows (đọc bằng vai chủ) cũng không chứa ba chuỗi ấy (assert từng chuỗi × từng cột); đối chứng dương: listing_owners.owner_name của hàng bằng «[Tên]» (nguồn có tới đúng chỗ của nó). Chiều đỏ: ghi owner_phone thô → bat_rang_buoc chặn hoặc ca đỏ nêu owner_phone khác null."
+    paths: [packages/api/src/imports/**, packages/api/src/owners/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca lõi «gấp: xác nhận theo ngày trong file» trong listing.test.ts (executor core chạy trong suite) ok — owner_confirmed {confirmedAt: \"2026-06-01\"} gấp ra lastConfirmedAt 2026-06-01, không có confirmedAt thì occurredAt; validatePayload từ chối confirmedAt sau occurredAt. Ca test-db «lần nhập: độ tươi theo ngày trong file» ok — ba dòng: ngày 01/06/2026 → GET hàng lastConfirmedAt bắt đầu 2026-06-01 và đúng một owner_confirmed; ngày sau hôm nay và ngày trước hôm nay 2 năm + 1 ngày → dòng có ô cần người ở cột Ngày xác nhận, hàng không có owner_confirmed; file không cột ngày → lastConfirmedAt null. Không hàng nào của lần nhập có lastConfirmedAt bằng ngày hôm nay (assert trên cả gói). Chiều đỏ: lệnh nhập để confirmedWithOwner mặc định → ca đỏ nêu hàng có lastConfirmedAt hôm nay."
+    paths: [packages/core/src/listing/**, packages/core/src/import/**, packages/api/src/imports/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lần nhập: ai được nhập» ok — ma trận vai viết tay: listing_agent, team_lead → 201 khi mở lần nhập; buyer_agent, telesales, company_admin (không kèm hai vai trên) → 403 mã import-role-required (đếm 5 vai, assert 5). Ca «lần nhập: trưởng nhóm gán đầu chủ» — team_lead gửi 5 dòng: agentUserId là Đầu chủ A cùng sàn, căn chưa có hàng → listing_agent_assignments là A (và mức hiện theo câu trả lời Hỏi-5, assert khi đã chốt); căn có hàng mở A giữ → update trên hàng ấy, không lead; căn có hàng mở B giữ → supplement tới B; agentUserId là Đầu khách → skip reason «chưa có đầu chủ giữ căn»; agentUserId của sàn khác → cùng lý do. Ca «lần nhập: file ghi đã bán, ngừng không nhập» — dòng Closed, Withdrawn → skip lý do hằng, đếm listings không đổi. Chiều đỏ: bỏ kiểm vai → ca đầu đỏ nêu buyer_agent 201."
+    paths: [packages/core/src/import/**, packages/api/src/imports/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «lần nhập: xem thử bằng ghi» ok — một file chia hai gói (dòng 2–4 và 5–8) trên bộ dựng của E6 cộng hai dòng mới, một dòng chặn và căn X ở dòng 2 và dòng 6 (hai gói khác nhau): chụp đếm listings, listing_events, leads, contacts, import_rows, listing_owners; POST /rows dryRun true cho cả hai gói (gói 1 chưa ghi) → đếm sau bằng đếm trước (6 assert); rồi POST /rows dryRun false gói 1 rồi gói 2 → mảng {row, action, reason} và summary của xem thử và ghi deepEqual từng gói (trừ listingId mới); dòng 6 ra skip «trùng dòng 2» ở cả xem thử lẫn ghi; đếm listings của căn X bằng 1. Chiều đỏ: xem thử chạy nhánh đếm riêng không qua quyetDongNhap → lệch ở dòng tin bổ sung, ca đỏ nêu dòng."
+    paths: [packages/core/src/import/**, packages/api/src/imports/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca lõi «ai thấy hàng: đầu chủ giữ căn đọc hàng Chỉ tôi» trong packages/core/src/visibility (executor core chạy trong suite) ok — ma trận viết tay người đọc 4 [người tạo, đầu chủ giữ căn khác người tạo, thành viên khác, sàn khác] × mức 2 [Chỉ tôi, Sàn] = 8 phần tử, assert từng phần tử, đếm 8; Chỉ tôi: người tạo true, đầu chủ giữ true, thành viên khác false. Ca test-db «lần nhập: hàng Trưởng nhóm nhập hiện cho đầu chủ giữ căn» — team_lead nhập 1 dòng gán Đầu chủ A: GET /listings/{id} bởi A ra 200, bởi Đầu khách cùng sàn ra 404, bởi Đầu chủ B ra 404. Chiều đỏ: bỏ vế đầu chủ giữ căn trong canRead → A nhận 404, ca đỏ nêu A."
+    paths: [packages/core/src/visibility/**, packages/api/src/imports/**, packages/api/src/listings/**, packages/api/test-db/imports/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
