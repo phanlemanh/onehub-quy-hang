@@ -24,3 +24,4 @@
 {"ts":"2026-11-04T05:10:32Z","sha":"af421c478deea0ee2c406d49f33fe98ef4e96c46","round":1,"kind":"round-tally","verdict":"REJECT","expected":13,"returned":13,"blocked":0}
 {"ts":"2026-11-04T05:10:32Z","sha":"af421c478deea0ee2c406d49f33fe98ef4e96c46","round":1,"kind":"chot-truong-nguoi","human_signoff":0,"human_override":0,"bypass_ack":0,"verified_at":17}
 {"ts": "2026-11-04T05:16:26Z", "kind": "ghi-chu", "round": 1, "note": "đỏ theo ngày — luật 44: npm test -w @quy-hang/ui-lint đỏ ở rang-giu-khuon E5 và man-ngoai-ban-do E5 (hạn «Chỗ hở» 2026-10-30 ở vo-va-ia.md §3, đỏ cả trên main 1c3a1ed0); không sửa ngoài vùng."}
+{"ts": "2026-11-04T05:17:24Z", "kind": "ghi-chu", "round": 1, "note": "lượt 1 REJECT do suite đỏ theo ngày — luật 44 (ui-lint rang-giu-khuon E5, man-ngoai-ban-do E5); lint của hồ sơ đã sửa ở 64336445. Lượt 2 dừng giữa chừng theo giám sát (D-0411-4): chờ PR hàng 34 (commit 25bbf21d) gộp rồi gộp origin/main và chạy lượt 2 một lần."}
