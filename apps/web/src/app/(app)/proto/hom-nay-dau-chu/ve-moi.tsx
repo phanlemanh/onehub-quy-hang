@@ -32,7 +32,7 @@ export function VeMoi() {
   const [chon, setChon] = useState<NhomId>("lead-moi");
   const tab = hd.nhom.some((n) => n.id === chon) ? chon : hd.nhom[0]?.id;
   return (
-    <section aria-label="Hôm nay" className="flex w-full max-w-4xl flex-col">
+    <section aria-label="Hôm nay" className="flex w-full flex-col">
       <Frame className="@container w-full">
         <FramePanel className="flex flex-col gap-3">
           <div className="flex flex-wrap items-baseline justify-between gap-2">

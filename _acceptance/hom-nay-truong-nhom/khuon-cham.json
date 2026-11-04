@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "den": "98314823ba049d8684db0a31b458eb3d7e2bd218",
+  "base": "a66f796bb305be7f8af00b37bf2fcb95fbba2048",
+  "ghim": null,
+  "theo_khuon": [
+    "apps/web/src/app/(app)/proto/hom-nay-dau-chu/reui.tsx",
+    "apps/web/src/app/(app)/proto/hom-nay-dau-chu/trong-kho.tsx",
+    "apps/web/src/app/(app)/proto/hom-nay-dau-chu/ve-moi.tsx",
+    "apps/web/src/app/(app)/today/dai-bat.tsx",
+    "apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx",
+    "apps/web/src/app/(app)/today/khung.tsx",
+    "apps/web/src/app/(app)/today/truong-nhom.tsx"
+  ],
+  "lech_moi": [],
+  "no_cu": [
+    {
+      "tep": "apps/web/src/app/(app)/today/page.tsx",
+      "khoi": "hai nhóm màn",
+      "loai": "quan-he",
+      "nhom": "hom-nay-dau-chu, hom-nay-truong-nhom, lead-cua-toi, trang-tam",
+      "so": 1
+    }
+  ],
+  "khong_do": [],
+  "ngoai_ban_do": 11,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "gui",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "hom-nay-truong-nhom",
+    "lead-cua-toi",
+    "o-nhan-lead",
+    "toi",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}

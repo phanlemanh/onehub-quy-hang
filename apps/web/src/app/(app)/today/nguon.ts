@@ -50,3 +50,57 @@ export async function ghiLead(id: string, viec: LeadAction): Promise<{ ok: true 
   if (r.status === 404) return { ok: false, loi: "Không còn thấy lead này." };
   return { ok: false, loi: "Chưa ghi được — thử lại." };
 }
+
+// ——— Hôm nay của trưởng nhóm (hàng 42) ———
+
+/** Dòng của hàng đợi trưởng nhóm như `GET /api/v1/team/lead-queue` trả — không số, không tên chủ nhà. */
+export type DongLeadTruongNhom = {
+  leadId: string;
+  kind: "unrouted" | "accept_overdue" | "first_call_overdue";
+  buildingName: string;
+  unitNumber: string | null;
+  agentUserId: string | null;
+  dueAt: string;
+};
+
+/** Đầu chủ của sàn như `GET /api/v1/team/listing-agents` trả. */
+export type DauChuCuaSan = { userId: string; displayName: string; onLeave: boolean; openLeads: number };
+
+/** Kết quả đọc: lời gọi ném lỗi (mất mạng) tách khỏi máy chủ trả lỗi — màn chọn «mất mạng» hay «không tải được». */
+export type KetQuaDoc<T> = { ok: true; items: T[] } | { ok: false; mang: boolean };
+
+async function docItems<T>(url: string, f: typeof fetch): Promise<KetQuaDoc<T>> {
+  const r = await f(url, { cache: "no-store", credentials: "same-origin" }).catch(() => null);
+  if (!r) return { ok: false, mang: true };
+  if (!r.ok) return { ok: false, mang: false };
+  const j = (await r.json().catch(() => null)) as { items?: unknown } | null;
+  return Array.isArray(j?.items) ? { ok: true, items: j.items as T[] } : { ok: false, mang: false };
+}
+
+/** Hàng đợi lead quá hạn và chưa chia được của sàn. */
+export const layHangDoiTruongNhom = (f: typeof fetch = fetch) => docItems<DongLeadTruongNhom>("/api/v1/team/lead-queue", f);
+
+/** Đầu chủ của sàn để giao lại. */
+export const layDauChuCuaSan = (f: typeof fetch = fetch) => docItems<DauChuCuaSan>("/api/v1/team/listing-agents", f);
+
+const LOI_GIAO: Record<string, string> = {
+  "lead-not-assignable": "Không giao được lead căn trùng.",
+  "not-a-listing-agent": "Người nhận không phải đầu chủ của sàn.",
+  "team-lead-required": "Chỉ trưởng nhóm giao lại được lead.",
+  "not-found": "Không còn thấy lead này.",
+};
+
+/** Giao lại một lead cho một đầu chủ. Lỗi trả câu để hiện dưới dòng; dòng giữ nguyên. */
+export async function giaoLaiLead(leadId: string, agentUserId: string, f: typeof fetch = fetch): Promise<{ ok: true } | { ok: false; loi: string }> {
+  const r = await f(`/api/v1/leads/${encodeURIComponent(leadId)}/assign`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ agentUserId }),
+  }).catch(() => null);
+  if (!r) return { ok: false, loi: "Mất mạng — chưa giao được, thử lại khi có mạng." };
+  if (r.ok) return { ok: true };
+  if (r.status === 401) return { ok: false, loi: "Hết phiên đăng nhập — đăng nhập lại rồi thử." };
+  const j = (await r.json().catch(() => null)) as { error?: string } | null;
+  return { ok: false, loi: (j?.error && LOI_GIAO[j.error]) || "Chưa giao được — thử lại." };
+}
