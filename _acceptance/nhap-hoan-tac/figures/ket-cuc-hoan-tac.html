@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kết cục hoàn tác</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #f5f5f5;
+      --color-ink:    #2d3142;
+      --color-muted:  #4f5d75;
+      --font-sans:    'Geist', system-ui, sans-serif;
+      --font-serif:   'Instrument Serif', 'Lora', serif;
+      --font-mono:    'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      padding: 2rem 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .frame { max-width: 1144px; width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .sub { color: var(--color-muted); font-size: 0.875rem; line-height: 1.45; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 760px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Hoàn tác lần nhập · Hình tại điểm quyết định</p>
+    <h1>Mỗi dòng của lần nhập rẽ bảy nhánh khi hoàn tác</h1>
+    <p class="sub">Rẽ theo hành động của dòng. Hai hình viền cam là Hỏi-4: có sự kiện sau lần nhập thì không gỡ, chỉ liệt kê. Phủ AC-1..AC-4.</p>
+
+    <svg viewBox="0 0 1144 664" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cây kết cục hoàn tác của một dòng trong lần nhập">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- ===== Arrows (behind nodes) ===== -->
+      <!-- tạo căn → điểm gộp -->
+      <path d="M184 268 H196 Q204 268 204 260 V140 Q204 132 212 132" fill="none" stroke="#4f5d75" stroke-width="1.2"/>
+      <!-- cập nhật → điểm gộp -->
+      <path d="M184 280 H208 Q216 280 216 272 V136" fill="none" stroke="#4f5d75" stroke-width="1.2"/>
+      <!-- điểm gộp → Hỏi-4 -->
+      <line x1="220" y1="132" x2="248" y2="132" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Hỏi-4: có → không gỡ -->
+      <path d="M352 80 V60 Q352 52 360 52 H832" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Hỏi-4: không · tạo căn → gỡ -->
+      <line x1="456" y1="132" x2="832" y2="132" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Hỏi-4: không · cập nhật → đổi giá? -->
+      <line x1="352" y1="184" x2="352" y2="252" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- đổi giá? có → trước đó có giá? -->
+      <line x1="432" y1="292" x2="504" y2="292" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- trước đó có giá? có giá → trả giá cũ -->
+      <path d="M592 248 V220 Q592 212 600 212 H832" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- trước đó có giá? chưa có giá → liệt kê -->
+      <line x1="680" y1="292" x2="832" y2="292" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- đổi giá? chỉ xác nhận ngày → liệt kê độ tươi -->
+      <path d="M352 332 V364 Q352 372 360 372 H832" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- tin bổ sung -->
+      <path d="M184 296 H236 Q244 296 244 304 V460 Q244 468 252 468 H832" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- bỏ qua -->
+      <path d="M184 308 H220 Q228 308 228 316 V540 Q228 548 236 548 H832" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- ===== Arrow labels ===== -->
+      <rect x="144" y="188" width="56" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="196" y="197" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">TẠO CĂN</text>
+      <rect x="224" y="188" width="56" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="228" y="197" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.08em">CẬP NHẬT</text>
+
+      <rect x="588" y="32" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="600" y="41" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CÓ</text>
+      <rect x="592" y="112" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="644" y="121" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">KHÔNG · TẠO CĂN</text>
+      <rect x="360" y="212" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="364" y="221" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.08em">KHÔNG · CẬP NHẬT</text>
+      <rect x="456" y="268" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="468" y="277" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CÓ</text>
+      <rect x="688" y="188" width="56" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="716" y="197" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CÓ GIÁ</text>
+      <rect x="712" y="268" width="80" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="752" y="277" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CHƯA CÓ GIÁ</text>
+      <rect x="540" y="348" width="120" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="600" y="357" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CHỈ XÁC NHẬN NGÀY</text>
+      <rect x="496" y="440" width="88" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="540" y="453" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">TIN BỔ SUNG</text>
+      <rect x="512" y="524" width="56" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="540" y="533" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">BỎ QUA</text>
+
+      <!-- ===== Gốc ===== -->
+      <rect x="24" y="256" width="160" height="64" rx="20" fill="#f5f5f5"/>
+      <rect x="24" y="256" width="160" height="64" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="104" y="292" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Một dòng của lần nhập</text>
+
+      <!-- điểm gộp -->
+      <circle cx="216" cy="132" r="4" fill="#2d3142"/>
+
+      <!-- ===== Quyết định Hỏi-4 (focal 1) ===== -->
+      <polygon points="352,80 456,132 352,184 248,132" fill="#f5f5f5"/>
+      <polygon points="352,80 456,132 352,184 248,132" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="352" y="128" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Có sự kiện nào</text>
+      <text x="352" y="144" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">sau lần nhập?</text>
+      <text x="336" y="40" fill="#4f5d75" font-size="12" font-style="italic" font-family="'Instrument Serif', 'Lora', serif" text-anchor="end">kể cả người nhập, kể cả xác nhận</text>
+      <text x="336" y="56" fill="#ba4513" font-size="9" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.08em">HỎI-4</text>
+
+      <!-- ===== Quyết định: đổi giá? ===== -->
+      <polygon points="352,252 432,292 352,332 272,292" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="352" y="296" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đổi giá?</text>
+
+      <!-- ===== Quyết định: trước đó có giá? ===== -->
+      <polygon points="592,248 680,292 592,336 504,292" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="592" y="288" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Trước đó</text>
+      <text x="592" y="304" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">có giá?</text>
+
+      <!-- ===== Kết cục ===== -->
+      <!-- L1 focal 2: không gỡ -->
+      <rect x="832" y="24" width="288" height="56" rx="20" fill="#f5f5f5"/>
+      <rect x="832" y="24" width="288" height="56" rx="20" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="976" y="48" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Không gỡ — liệt kê:</text>
+      <text x="976" y="64" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đã có người sửa sau lần nhập</text>
+
+      <!-- L2: gỡ (có ghi) -->
+      <rect x="832" y="104" width="288" height="56" rx="20" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="976" y="128" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gỡ khỏi Quỹ hàng</text>
+      <text x="976" y="144" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">(sự kiện voided)</text>
+
+      <!-- L3: trả giá cũ (có ghi) -->
+      <rect x="832" y="184" width="288" height="56" rx="20" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="976" y="216" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Trả giá cũ</text>
+
+      <!-- L4 -->
+      <rect x="832" y="264" width="288" height="56" rx="20" fill="#f5f5f5"/>
+      <rect x="832" y="264" width="288" height="56" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="976" y="288" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Liệt kê: Trước lần nhập</text>
+      <text x="976" y="304" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">căn chưa có giá</text>
+
+      <!-- L5 -->
+      <rect x="832" y="344" width="288" height="56" rx="20" fill="#f5f5f5"/>
+      <rect x="832" y="344" width="288" height="56" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="976" y="368" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Liệt kê: Độ tươi theo ngày</text>
+      <text x="976" y="384" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">trong file vẫn giữ (Hỏi-1)</text>
+
+      <!-- L6 -->
+      <rect x="832" y="440" width="288" height="56" rx="20" fill="#f5f5f5"/>
+      <rect x="832" y="440" width="288" height="56" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="976" y="464" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Liệt kê: Tin bổ sung đã gửi —</text>
+      <text x="976" y="480" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">không thu lại (Hỏi-2)</text>
+
+      <!-- L7 -->
+      <rect x="832" y="520" width="288" height="56" rx="20" fill="#f5f5f5"/>
+      <rect x="832" y="520" width="288" height="56" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="976" y="552" fill="#4f5d75" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Không làm gì, không liệt kê</text>
+
+      <!-- ===== Legend ===== -->
+      <line x1="24" y1="604" x2="1120" y2="604" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="24" y="624" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+      <polygon points="112,632 124,638 112,644 100,638" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="132" y="642" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Quyết định</text>
+      <circle cx="212" cy="638" r="4" fill="#2d3142"/>
+      <text x="224" y="642" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Điểm gộp</text>
+      <rect x="292" y="632" width="24" height="12" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="324" y="642" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Kết cục có ghi vào Quỹ hàng</text>
+      <rect x="472" y="632" width="24" height="12" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="504" y="642" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Kết cục không ghi, chỉ liệt kê</text>
+      <rect x="664" y="632" width="24" height="12" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="696" y="642" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Hỏi-4 — chủ kho quyết ở Cổng Phạm vi</text>
+    </svg>
+  </div>
+</body>
+</html>
