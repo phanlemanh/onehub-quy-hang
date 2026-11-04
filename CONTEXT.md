@@ -65,7 +65,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Cần xem | `needsReview` | Căn có thay đổi chờ mà máy chủ không nhận (hai người cùng sửa, căn đã cọc/đã bán, bị từ chối); người chọn lối | «Xung đột» trên màn |
 | Chỉ báo đồng bộ | `SyncIndicator` | Chữ trên thanh trên nói đang ở đâu: Đã đồng bộ, Đang gửi, Mất mạng, Cần xem | Chỉ màu không chữ |
 | Nhập Excel | `import` | Nút đưa hàng vào từ bảng tính | — |
-| Phát hàng | `export` | Nút đưa hàng ra ngoài sàn | — |
+| Xuất bảng hàng | `export` | Nút đưa bảng hàng đang lọc ra bài chép theo kênh, Excel, ảnh, PDF (chủ kho đổi tên 04/11) | «Phát hàng» (tên cũ của nút; «phát hàng» vẫn là tên khối sản phẩm, ADR-0022) |
 | Chủ nhà (của hàng) | `listing_owner` | Tên, số, giá đáy của chủ nhà một hàng; lớp `source`, chỉ đầu chủ giữ căn và trưởng nhóm thấy (ADR-0010) | «Người bán» |
 | Mở số chủ | `owner_phone_reveal` | Lần bấm xem số đầy đủ của chủ nhà; mỗi lần là một sự kiện ghi người, vai, lúc | «Xem số» |
 | Lần nhập | `imports` (bảng) | Một lần đưa file bảng hàng vào: kế hoạch, kết quả từng dòng, hoàn tác được cả lần (ADR-0011) | — |

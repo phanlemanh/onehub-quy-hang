@@ -83,13 +83,14 @@ test("mất mạng điện thoại: lượt trong kỳ và thao tác lúc mất 
   assert.deepEqual(r.chiTiet, { tongPhut: 35, daiNhatPhut: 25, thaoTacLucMatMang: 3 });
 });
 
-const BON_MA_THIEU = ["inquiry_to_send", "sheet_publishes", "customer_link_opens", "customer_interest"];
+// «Số lần xuất bảng hàng» đo được từ hàng 43 (xuat.test.ts) — còn ba mã thiếu.
+const BA_MA_THIEU = ["inquiry_to_send", "customer_link_opens", "customer_interest"];
 
-test("chưa có sự kiện: bốn mã nói rõ thiếu gì", () => {
+test("chưa có sự kiện: ba mã nói rõ thiếu gì", () => {
   const mau = boMau("2026-11-03T01:00:00.000Z");
   for (const rows of [tinh({}), tinh({ hang: mau.hang, lead: mau.lead })]) {
     const thieu = rows.filter((r) => r.trangThai === "chua-co-su-kien");
-    assert.deepEqual(thieu.map((r) => r.ma).sort(), [...BON_MA_THIEU].sort());
+    assert.deepEqual(thieu.map((r) => r.ma).sort(), [...BA_MA_THIEU].sort());
     for (const r of thieu) {
       assert.ok(r.trangThai === "chua-co-su-kien" && r.thieu.trim().length > 0, `${r.ma}: thiếu câu «thiếu»`);
       for (const k of ["so", "tu", "mau", "trungVi", "n"]) assert.ok(!(k in r), `${r.ma} không được mang số (${k})`);
@@ -97,7 +98,7 @@ test("chưa có sự kiện: bốn mã nói rõ thiếu gì", () => {
     for (const ma of ["actions_by_device_role", "mobile_offline"] as const) assert.equal(dong(rows, ma).trangThai, "do-duoc", `${ma} đo được`);
   }
   for (const r of tinh({})) {
-    if (BON_MA_THIEU.includes(r.ma)) continue;
+    if (BA_MA_THIEU.includes(r.ma)) continue;
     assert.equal(r.trangThai, "do-duoc", `${r.ma} đo được trên đầu vào rỗng`);
     if (r.trangThai !== "do-duoc") continue;
     if (r.kieu === "ti-le") assert.equal(r.mau, 0);

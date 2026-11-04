@@ -49,7 +49,7 @@ export function HoSoDienThoai({ nguoi, san, bao }: { nguoi: string; san: string;
   );
 }
 
-export function BangCoHoSo({ nguoi, san }: { nguoi: string; san: string }) {
+export function BangCoHoSo({ nguoi, san, vai, tenSan }: { nguoi: string; san: string; vai?: readonly string[]; tenSan?: string }) {
   const { chon: chonUrl, path, qs, duong, dongHref } = useCotTheoUrl();
   const chon = useIsMobile() ? null : chonUrl;
 
@@ -64,7 +64,7 @@ export function BangCoHoSo({ nguoi, san }: { nguoi: string; san: string }) {
   return (
     <ResizablePanelGroup orientation="horizontal" id="bang-co-ho-so">
       <ResizablePanel id="bang" minSize="35%">
-        <BangHang nguoi={nguoi} san={san} dangMo={chon ? (laChonHang(chon) ? chon.hang : chon.lan) : null} onMoCan={moCan} />
+        <BangHang nguoi={nguoi} san={san} dangMo={chon ? (laChonHang(chon) ? chon.hang : chon.lan) : null} onMoCan={moCan} vai={vai} tenSan={tenSan} />
       </ResizablePanel>
       {chon ? (
         <>

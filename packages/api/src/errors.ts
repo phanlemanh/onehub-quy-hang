@@ -77,6 +77,8 @@ export const API_ERRORS = {
   importRoleRequired: { code: "import-role-required", status: 403 },
   importPlanInvalid: { code: "import-plan-invalid", status: 422 },
   importBatchTooLarge: { code: "import-batch-too-large", status: 422 },
+  // Xuất bảng hàng (hàng 43): chỉ đầu chủ, trưởng nhóm.
+  exportRoleRequired: { code: "export-role-required", status: 403 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

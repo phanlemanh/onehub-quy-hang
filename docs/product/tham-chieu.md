@@ -53,7 +53,7 @@ Ghi nhận này đổi bốn chỗ:
 Telesales tìm chủ nhà → đầu chủ biến cuộc gọi thành căn sẵn sàng bán → bảng hàng chung của sàn → đầu khách đem đi bán → khách.
 
 - **Ba cửa vào, một đích**: lead (telesales nhập hoặc đầu chủ tự nhập) · nhập Excel · nhận căn từ tin đã thu (Sau). Cả ba qua cùng một bước kiểm trùng theo căn và theo chủ nhà.
-- **Ba cửa ra**: Gửi (link, ảnh + tin) · Phát hàng (bảng hàng ra ảnh, PDF, Excel) · Đăng Platform (Sau). Cùng một bộ luật ẩn, cùng ghi công.
+- **Ba cửa ra**: Gửi (link, ảnh + tin) · Xuất bảng hàng (ra bài chép, ảnh, PDF, Excel) · Đăng Platform (Sau). Cùng một bộ luật ẩn, cùng ghi công.
 - **Hai hệ thống nối vào, đều một chiều**. Invest → Quỹ hàng: danh mục căn, số thị trường tổng hợp, tin rao công khai để đối chiếu; không số AirDNA, không danh mục S08 nguyên văn. Quỹ hàng → Platform: chỉ căn đầu chủ chọn đăng, đủ mức thông tin, đã bỏ phần nội bộ.
 
 Hai kết nối trên là thoả thuận đang bật, không phải dây cứng: Invest đẩy vào, Platform nhận hàng ra và đưa khách về. Chiều giá chốt về Invest đang tắt; bật là quyết định kinh doanh có điều khoản với sàn.
@@ -129,7 +129,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 1. Vị trí bất khả xâm phạm: toà, tầng, trục không đổi chỗ; lọc trên bản vị trí là tô sáng, không giấu.
 2. Cách xem chính theo loại hàng: thứ cấp là danh sách, sơ cấp là lưới.
 3. Dày như Sheet; một căn một hồ sơ — cuộc gọi, ảnh, đổi giá, lịch xem là phần hay chế độ của hồ sơ, không có trang thứ hai.
-4. Bộ lọc và căn đang chọn đi theo người khi đổi cách xem hay sang Gửi, Phát hàng.
+4. Bộ lọc và căn đang chọn đi theo người khi đổi cách xem hay sang Gửi, Xuất bảng hàng.
 5. Dùng đúng chữ của nghề; chữ trên màn là «đầu chủ», không «người giữ».
 
 **Sửa và nhập**
@@ -186,13 +186,13 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 
 - **Một địa chỉ cho một thứ; màn tự đổi theo thiết bị và vai.** Bảng hàng trên máy tính là bảng kiểu Sheet, trên điện thoại là thẻ; Hôm nay của đầu chủ là hàng đợi, của đầu khách là dòng phản ứng của khách. Link mở trên máy nào cũng đúng chỗ. Một người nhiều vai thấy hợp các nhà của mọi vai.
 - **Máy tính** — ba tầng:
-  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · menu Tạo · chuông báo · tài khoản. **Menu Tạo** (hàng 91): việc tạo đầu của vai là nút chính một chạm, các việc còn lại (Lead · Nhập Excel · Phát hàng theo vai) trong menu; vai không có việc tạo không thấy nút; màn không đặt nút tạo riêng. Điện thoại: nút «+» trên thanh trên chỉ mở «+ Lead» (không Nhập Excel, Phát hàng); telesales nhận lead bằng tab Lead nên không có nút «+».
+  - Thanh trên: chọn sàn (chỉ hiện khi người thuộc hơn một sàn) / chọn khu · ô «Gõ mã căn» ở giữa · menu Tạo · chuông báo · tài khoản. **Menu Tạo** (hàng 91): việc tạo đầu của vai là nút chính một chạm, các việc còn lại (Lead · Nhập Excel · Xuất bảng hàng theo vai) trong menu; vai không có việc tạo không thấy nút; màn không đặt nút tạo riêng. Điện thoại: nút «+» trên thanh trên chỉ mở «+ Lead» (không Nhập Excel, Xuất bảng hàng); telesales nhận lead bằng tab Lead nên không có nút «+».
   - Cột nhà bằng biểu tượng: Hôm nay · Bảng hàng · Đã gửi · Đội (trưởng nhóm) · Cài đặt sàn (quản trị, ở đáy).
   - **Cột thứ hai luôn có và mặc định mở** ở mọi nhà (hàng 91, chủ kho 02/11); ai gập thì máy nhớ theo người, sàn, nhà. Góc nhìn đã lưu vẫn một chạm ở nút «Góc nhìn» đầu thanh công cụ của bảng.
   - Cột thứ hai theo nhà: Bảng hàng → góc nhìn của đội, góc nhìn của tôi, «+ Lưu góc nhìn», chân cột là độ tươi của bảng · Đã gửi → Link đã gửi · Lịch xem · Cài đặt sàn → các mục cài đặt · Hôm nay → các hàng đợi của bộ nhóm · Đội → Tổng quan.
   - **Mọi màn có đường dẫn** (nhà › màn) ở đầu màn; điện thoại chỉ hiện mục cha làm lối về «‹ cha» (hàng 91). Điều khiển cấp màn (chọn kỳ, khoảng ngày) và nút nằm bên phải đầu màn; cạnh tiêu đề chỉ có nhãn.
   - Hồ sơ căn trượt ra trong ngăn bên phải đè lên bảng, bảng vẫn bấm được — bấm dòng khác thì ngăn đổi hồ sơ (hàng 91, theo `sheet-9`); mở toàn màn khi cần, toàn màn là một cột căn giữa.
-- **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Phát hàng.
+- **Điện thoại**: thanh trên mảnh (tên nhà · gõ mã căn · chuông); bốn tab dưới — Hôm nay · Bảng hàng · Gửi · Tôi. Gửi gồm Đã gửi và nút gửi mới. Không có Đội, Cài đặt sàn, Nhập Excel, Xuất bảng hàng.
 - **Telesales**: không cột nhà, không ô gõ mã căn. Máy tính: thanh trên chỉ có Hôm nay và «+ Lead». Điện thoại: Hôm nay · Lead · Tôi.
 - **Mở app vào Hôm nay**; người chỉ giữ vai quản trị vào Cài đặt sàn.
 - **Người chỉ giữ vai Quản trị sàn trên điện thoại** có hai tab Cài đặt sàn · Tôi — ngoại lệ của dòng điện thoại, vì
@@ -210,7 +210,7 @@ Vỏ và cách xếp nhà chọn từ kho ReUI — Đã chốt 30/10 (ADR-0002);
 | Cài đặt sàn | — | — | — | — | Có |
 | + Lead | Có | Có | — | Có | — |
 | Nhập Excel | — | Có | — | Có | — |
-| Phát hàng | — | Có | — | Có | — |
+| Xuất bảng hàng | — | Có | — | Có | — |
 
 Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng — có hàng gì, ở đâu? · Đã gửi — khách đang phản ứng ra sao? · Đội — đội đang chạy thế nào? · Cài đặt sàn — sàn gọi tên và chạy theo luật nào?
 
@@ -224,7 +224,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | /imports/new · /imports/\<id> | Nhập Excel |
 | /shares · /shares/new | Đã gửi · luồng Gửi |
 | /viewings | Lịch xem |
-| /exports/new | Phát hàng |
+| /exports/new | Xuất bảng hàng |
 | /team | Đội |
 | /settings/labels · /fields · /statuses · /lead-routing · /fees · /templates | Cài đặt sàn |
 | /settings · /settings/users | Cài đặt sàn (mở vào Người dùng) · Người dùng |
@@ -258,7 +258,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Cửa ra | Luồng Gửi — Đã dựng (hàng 34): chọn trên Bảng hàng thẻ → xem trước đúng trang khách → mở bảng chia sẻ; theo dõi là Đã gửi (hàng 36) | Đầu khách · điện thoại | G1–G3 | Bản đầu | P0 |
 | Cửa ra | Trang khách: khách riêng | Khách · điện thoại | T1–T3 | Bản đầu | P0 |
 | Cửa ra | Trang khách: nhóm môi giới | Môi giới sàn khác · máy tính | T4 | Bản đầu | P1 |
-| Cửa ra | Phát hàng | Đầu chủ, trưởng nhóm · máy tính | D | Bản đầu | P1 |
+| Cửa ra | Xuất bảng hàng | Đầu chủ, trưởng nhóm · máy tính | D | Bản đầu | P1 |
 | Đã gửi | Link đã gửi, lượt mở, quan tâm | Đầu khách · điện thoại | G4 | Bản đầu | P0 |
 | Đã gửi | Xin dẫn xem, lịch xem | Đầu khách ↔ đầu chủ | chưa phác, chờ phỏng vấn | Bản đầu | P1 |
 | Đã gửi | Bản máy tính | Máy tính | chưa phác | Bản đầu | P2 |
@@ -275,7 +275,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 - **Khai thác**: thẻ lead mức nhẹ (giá so toà, chủ còn căn nào), màn cuộc gọi có danh sách hỏi, máy tính giá bao phí ↔ giá về tay, ảnh căn ba ngăn, «Sẵn sàng bán» một chạm.
 - **Giữ tươi**: hàng đợi gọi lại và điều chỉnh giá, kết quả gọi một chạm, lịch sử trả giá, sửa hàng loạt, trạng thái có tên và lịch sử, mức đủ tự tính.
 - **Tìm**: bảng kiểu Sheet, lọc mọi cột, góc nhìn đã lưu, nhóm theo toà rồi loại căn, cột hồ sơ; bảng hàng dạng thẻ trên điện thoại.
-- **Phát**: luồng Gửi, trang khách hai cách hiện, link sống, phát bảng hàng, chép bài theo mẫu kênh.
+- **Phát**: luồng Gửi, trang khách hai cách hiện, link sống, xuất bảng hàng, chép bài theo mẫu kênh.
 - **Sàn và đội**: tách sàn, vai và quyền theo khu, lớp trường, lịch sử ai sửa gì; cách gọi riêng, trạng thái riêng, trường riêng tối thiểu, luật chia lead, thuế phí.
 
 **Cố ý không làm ở bản đầu**: tự đăng hay tự trả lời Zalo · quản lý khách mua đầy đủ · bản vị trí (lưới, bản đồ lô) · máy đọc chữ (bóc tin rao, tách nhãn ghi chú) · đồng bộ lên Platform · hoa hồng, hợp đồng, thanh toán · ngoại tuyến thật (đo trước) · bộ gõ.
@@ -290,7 +290,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Thời gian khách hỏi → gửi được căn | Việc thật có nhanh hơn không? |
 | Thời gian lead → cuộc gọi đầu; số ngày lead → Sẵn sàng bán; số lead trùng bị chặn | Dòng vào có chạy không? |
 | Số căn gọi điều chỉnh giá đợt hai | Hàng ngộp có được chăm không? |
-| Số lần phát bảng hàng; số link khách mở, số lượt quan tâm | Hàng có được phát ra từ đây không? |
+| Số lần xuất bảng hàng; số link khách mở, số lượt quan tâm | Hàng có được phát ra từ đây không? |
 | Tỉ lệ thao tác trên máy tính / điện thoại theo vai | Ghi nhận thiết bị theo vai có đúng không? |
 | Số lần mất mạng và thao tác lúc mất mạng trên điện thoại | Có cần ngoại tuyến thật không? |
 
@@ -375,6 +375,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 03/11 | Thiết bị và lượt mất mạng cho số đo hai tuần thử: mỗi thao tác trên căn ghi máy tính hay điện thoại (điện thoại = máy có cạnh ngắn màn hình dưới 768px, xoay ngang vẫn là điện thoại; máy không báo thì «không rõ») và dấu «làm lúc mất mạng»; bộ đồng bộ ghi mỗi lần mất mạng thành một lượt (bắt đầu, kết thúc, số thao tác) và gửi khi có mạng lại, gửi lại không trùng. Hai số đo §11 «thao tác theo thiết bị và vai», «mất mạng trên điện thoại» ra số; còn bốn số đo chờ sự kiện của hàng 34, 35, 43, 86. Lead, liên hệ, ảnh chưa ghi thiết bị (chủ kho duyệt Hỏi-1, Hỏi-2) | `_acceptance/ghi-thiet-bi-va-mat-mang/` |
 | 03/11 | Tab Tôi (hàng 38): sáu nhóm dòng cho mọi vai — hồ sơ, sàn, cài lên màn hình chính, thông báo, máy đang đăng nhập, đăng xuất; «Báo mất máy» một nút đăng xuất mọi máy khác của người ấy ở mọi sàn (không chọn từng máy ở bản đầu); máy bị báo xoá dữ liệu Quỹ hàng của đúng người ấy (kể cả thay đổi chưa gửi) — qua tin đẩy gửi trước khi gỡ đăng ký, hay lần đầu chạm máy chủ, hay mở thẳng trang; kho của người khác trên cùng máy giữ nguyên; hết phiên thường vẫn giữ hàng đợi. Trên máy tính Tôi mở từ menu tài khoản (gom vào khu Cài đặt hợp nhất là hàng sau) | `_acceptance/tab-toi/` |
 | 04/11 | Hồ sơ căn của Đầu khách trên điện thoại (hàng 33): quyền là lớp phủ trên cùng màn hồ sơ căn đang có — màn đọc bốn cờ ở lõi (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút hỏi), không rẽ theo tên vai. Người không giữ căn (Đầu khách, Đầu chủ không giữ) không thấy thẻ Nội bộ nào, không ổ khoá (Hỏi-4); nút «Hỏi đầu chủ» (Hỏi-2) dính đáy mang tên đầu chủ giữ căn, chạm mở bảng chia sẻ của máy với tin «Hỏi về căn <mã> · <toà>» và đường tới hồ sơ trong sàn (Hỏi-1); không có bảng chia sẻ thì chép tin; căn chưa ai giữ thì nút mờ «Căn chưa có đầu chủ giữ». API chủ nhà trả thêm tên người dùng của đầu chủ giữ căn, không email, không số. Dựng lại theo `product-detail-5` tách hàng riêng — lùi quyết định 02/11 «Giữ: 33 product-detail-5» (Hỏi-3) | `_acceptance/ho-so-can-dien-thoai/` · `design/patterns/ho-so-can.md` |
+| 04/11 | Đổi nhãn nút «Phát hàng» thành «Xuất bảng hàng» (chủ kho, Cổng Phạm vi hàng 43): nút trên bảng hàng và menu Tạo, từ vựng, số đo «Số lần xuất bảng hàng»; «phát hàng» vẫn là tên khối sản phẩm thứ ba (ADR-0022); tên trong mã giữ `export`, `sheet_publishes` | `_acceptance/phat-hang/` |
 | 04/11 | Sổ điểm biến thiên ở mã: 30 điểm sàn chỉnh được khai một chỗ ở `packages/core/src/config/` (khoá, kiểu, mặc định, khoảng, vai, hiệu lực, lớp), khớp hai chiều với sổ ở tài liệu bằng bộ kiểm của lõi; luật nhận cấu hình làm tham số, hằng số đang có lấy số từ sổ. Khoảng viết bằng chữ chốt theo Hỏi-1: thuế, lệ phí chỉ đúng số luật tới hàng 49; trần AI 0–10 USD tới hàng 68; mức chia trống tới hàng 44; tự nhận từ điển mặc định tắt | Hàng 81 `so-diem-bien-thien`, ADR-0018, [Sổ điểm biến thiên](../architecture/so-diem-bien-thien.md) |
 
 ## 13. Chỗ cần chốt
@@ -438,7 +439,7 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 | Góc nhìn | Bộ lọc + cột + cách xem đã lưu | «Tab» |
 | Lần gửi · Đã gửi | Một link đã gửi · nhà theo dõi các link | — |
 | Trang khách · Link sống | Trang công khai từ link; giá và trạng thái theo bảng hàng | — |
-| Phát hàng | Xuất bảng hàng ra ảnh, PDF, Excel | — |
+| Xuất bảng hàng | Đưa bảng hàng đang lọc ra bài chép theo kênh, ảnh, PDF, Excel | «Phát hàng» (tên cũ, đổi 04/11) |
 | Cách gọi riêng · Trường riêng | Tên của sàn trên trường chuẩn · trường mới của sàn | — |
 
 ## 15. Tri thức ngành và RESO
