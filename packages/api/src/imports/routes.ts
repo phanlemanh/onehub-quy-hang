@@ -9,7 +9,7 @@ import { SAMPLE_CATALOG } from "../catalog/sample";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
-import { isRefusal, openImport, readImport, writeBatch, type BatchResult, type OpenImportInput, type Refusal } from "./store";
+import { dauChuCuaSan, isRefusal, openImport, readImport, writeBatch, type BatchResult, type OpenImportInput, type Refusal } from "./store";
 
 /**
  * Lần nhập file bảng hàng (hàng 65a, ADR-0011): mở lần nhập với kế hoạch, gửi từng gói ≤ 200 dòng (xem thử hay ghi), đọc
@@ -56,7 +56,7 @@ class XemThu {
   constructor(readonly ketQua: BatchResult) {}
 }
 
-export function registerImportRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps, catalog: CatalogData = SAMPLE_CATALOG) {
+export function registerImportRoutes(api: OpenAPIHono, { appPool, auth, identityPool }: ApiDeps, catalog: CatalogData = SAMPLE_CATALOG) {
   const khoa = khoaSoChu();
 
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
@@ -111,6 +111,25 @@ export function registerImportRoutes(api: OpenAPIHono, { appPool, auth }: ApiDep
       });
       if (isRefusal(kq)) return tra(c, kq) as never;
       return c.json(kq, 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "get",
+      path: `${BASE}/agents`,
+      summary: "Đầu chủ của sàn đang làm — để Trưởng nhóm chọn người giữ căn khi nhập hộ; chỉ vai nhập, chỉ mã người và tên",
+      responses: { 200: ok("Đầu chủ", z.array(z.object({ userId: z.string(), name: z.string() }))), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return c.json({ error: ctx.code }, ctx.status as 400) as never;
+      const ids = await withCompany(appPool, ctx, (tx) => dauChuCuaSan(tx));
+      if (isRefusal(ids)) return tra(c, ids) as never;
+      const ten = ids.length
+        ? new Map((await identityPool.query<{ id: string; name: string }>('select id, name from identity."user" where id = any($1::text[])', [ids])).rows.map((r) => [r.id, r.name]))
+        : new Map<string, string>();
+      return c.json(ids.map((userId) => ({ userId, name: ten.get(userId) ?? userId })), 200);
     },
   );
 
