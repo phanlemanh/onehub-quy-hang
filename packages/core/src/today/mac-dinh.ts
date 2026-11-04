@@ -3,15 +3,19 @@
  * nghĩa (tiếng Anh, không đổi theo sàn); nhãn là tên gọi mặc định — sàn đổi tên trong bộ của mình. Khi sổ từ vựng
  * (hàng 90, ADR-0023) xong, nhãn dời vào sổ ấy.
  */
+import { khoangCua, macDinhSo } from "../config/giai";
 import type { BoNhom } from "./kieu";
 
-/** Ngưỡng mặc định của sàn (luật 18): gọi điều chỉnh giá sau 10 ngày, gọi lại sau 14 ngày chưa xác nhận. */
-export const QUEUE_DEFAULT_DAYS = { priceAdjustment: 10, callBack: 14 } as const;
+/** Ngưỡng mặc định của sàn (luật 18): gọi điều chỉnh giá sau 10 ngày, gọi lại sau 14 ngày — số lấy từ sổ (#5, #4). */
+export const QUEUE_DEFAULT_DAYS = {
+  priceAdjustment: macDinhSo("queue.price_negotiation_after_days"),
+  callBack: macDinhSo("queue.call_back_after_days"),
+} as const;
 
-/** Khoảng sàn được đặt (Hỏi-4): hai nhóm mặc định giữ khoảng đã chốt, nhóm sàn tự tạo 1–90 ngày. */
+/** Khoảng sàn được đặt (Hỏi-4): hai nhóm mặc định giữ khoảng của sổ (#5, #4), nhóm sàn tự tạo 1–90 ngày. */
 export const QUEUE_DAY_RANGES = {
-  price_adjustment: { min: 7, max: 14 },
-  call_back: { min: 7, max: 30 },
+  price_adjustment: khoangCua("queue.price_negotiation_after_days"),
+  call_back: khoangCua("queue.call_back_after_days"),
   khac: { min: 1, max: 90 },
 } as const;
 
