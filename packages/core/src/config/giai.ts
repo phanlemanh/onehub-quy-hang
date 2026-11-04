@@ -5,7 +5,7 @@
 import { kiemGiaTri, timDiem } from "./khuon";
 import { SO_DIEM, type DiemSo } from "./so";
 
-/** Cấu hình đã giải: khoá → giá trị, chỉ các điểm giá trị đơn (không `map`, không họ khoá). */
+/** Cấu hình đã giải: khoá → giá trị của các điểm giá trị đơn (không `map`); khoá họ (`labels.field.unitNumber`) có mặt khi sàn đặt. */
 export type CauHinhSan = Readonly<Record<string, unknown>>;
 
 const laDiemDon = (d: DiemSo) => d.kieu.loai !== "map" && !d.khoa.includes("<");
@@ -21,7 +21,7 @@ export type KetQuaGiai = { cauHinh: CauHinhSan; loi: string[] };
 
 /**
  * Dòng hợp lệ thay đúng điểm ấy; dòng hỏng giữ mặc định và thêm một lỗi nêu khoá (một ô hỏng không làm sập luật); khoá
- * lạ thành lỗi; khoá `map` và họ khoá (nhãn riêng) có bộ đọc riêng nên bỏ qua.
+ * lạ thành lỗi; khoá `map` có bộ đọc riêng nên bỏ qua; khoá họ hợp lệ giữ dưới đúng khoá cụ thể.
  */
 export function giaiCauHinh(dong: readonly { key: string; value: unknown }[], so: readonly DiemSo[] = SO_DIEM): KetQuaGiai {
   const cauHinh: Record<string, unknown> = { ...macDinhCua(so) };
@@ -30,7 +30,7 @@ export function giaiCauHinh(dong: readonly { key: string; value: unknown }[], so
   for (const r of dong) {
     const d = timDiem(r.key, so);
     if (!d) loi.push(`${r.key}: không có trong sổ điểm biến thiên`);
-    else if (laDiemDon(d)) cho.push(r);
+    else if (d.kieu.loai !== "map") cho.push(r);
   }
   // Ràng buộc chéo xét trên giá trị đã giải của khoá kia, nên khoá được trỏ tới đặt trước.
   const truoc = (r: { key: string }) => (so.some((d) => d.khongNhoHon === r.key) ? 0 : 1);

@@ -26,6 +26,18 @@ test("giaiCauHinh: mặc định, ghi đè, dòng hỏng, khoá lạ, map", () =
   assert.equal(la.loi.length, 1);
   assert.ok(la.loi[0]!.startsWith("demo.la"), la.loi[0]);
 
+  // Khoá họ: giá trị hợp lệ giữ dưới khoá cụ thể; hỏng thì lỗi nêu khoá, không có mặt trong cấu hình.
+  const ho = giaiCauHinh([
+    { key: "custom_fields.f1.share_with_partners", value: true },
+    { key: "labels.field.unitNumber", value: "Mã căn" },
+    { key: "custom_fields.f2.share_with_partners", value: "co" },
+  ]);
+  assert.equal(ho.cauHinh["custom_fields.f1.share_with_partners"], true);
+  assert.equal(ho.cauHinh["labels.field.unitNumber"], "Mã căn");
+  assert.equal("custom_fields.f2.share_with_partners" in ho.cauHinh, false);
+  assert.equal(ho.loi.length, 1);
+  assert.ok(ho.loi[0]!.startsWith("custom_fields.f2.share_with_partners"), ho.loi[0]);
+
   const map = giaiCauHinh([{ key: "queue.groups", value: [] }]);
   assert.deepEqual(map.loi, []);
   assert.equal("queue.groups" in map.cauHinh, false);
