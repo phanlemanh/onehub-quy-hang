@@ -9,7 +9,7 @@ import { SAMPLE_CATALOG } from "../catalog/sample";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
-import { dauChuCuaSan, isRefusal, openImport, readImport, writeBatch, type BatchResult, type OpenImportInput, type Refusal } from "./store";
+import { dauChuCuaSan, isRefusal, mauCuaSan, openImport, readImport, writeBatch, type BatchResult, type OpenImportInput, type Refusal } from "./store";
 
 /**
  * Lần nhập file bảng hàng (hàng 65a, ADR-0011): mở lần nhập với kế hoạch, gửi từng gói ≤ 200 dòng (xem thử hay ghi), đọc
@@ -130,6 +130,30 @@ export function registerImportRoutes(api: OpenAPIHono, { appPool, auth, identity
         ? new Map((await identityPool.query<{ id: string; name: string }>('select id, name from identity."user" where id = any($1::text[])', [ids])).rows.map((r) => [r.id, r.name]))
         : new Map<string, string>();
       return c.json(ids.map((userId) => ({ userId, name: ten.get(userId) ?? userId })), 200);
+    },
+  );
+
+  const CotMau = z.object({
+    headerKey: z.string(),
+    target: z.string(),
+    transform: z.object({ name: z.string(), params: z.record(z.unknown()).optional() }).optional(),
+    valueMap: z.record(z.string()).optional(),
+    importId: z.string(),
+    at: z.string(),
+  });
+  api.openapi(
+    createRoute({
+      method: "get",
+      path: `${BASE}/templates`,
+      summary: "Mẫu file của sàn: cột đã nhớ từ các lần nhập đã ghi (hàng 67) — vai nhập, không ô nào của tệp",
+      responses: { 200: ok("Cột đã nhớ", z.array(CotMau)), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return c.json({ error: ctx.code }, ctx.status as 400) as never;
+      const kq = await withCompany(appPool, ctx, (tx) => mauCuaSan(tx));
+      if (isRefusal(kq)) return tra(c, kq) as never;
+      return c.json(kq, 200);
     },
   );
 

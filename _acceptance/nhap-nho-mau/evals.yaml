@@ -1,0 +1,108 @@
+schema_version: 1
+feature_slug: nhap-nho-mau
+# Lõi của bộ nhớ là hàm thuần ở `packages/core/src/import/memory/**` (node:test của core); màn nối bộ nhớ ở
+# `apps/web/src/lib/nhap/**` (node:test của web, không DOM); đường đọc mẫu ở `packages/api/src/imports/**` (Postgres dãy).
+# exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng tên ca nêu trong `expected` — có mặt, «ok», không
+# «# SKIP»/«# TODO». Kế hoạch «đã nhớ» trong mọi ca sinh bằng đường thật (planFromDictionary + doiDich, hay ghi qua API),
+# không viết tay khuôn bên đọc. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «nhớ mẫu: tiêu đề đã gặp lấy đúng kế hoạch đã nhớ» có mặt và ok — với mau-a và mau-b của bộ thử hàng 64 (sinhBoThu): kế hoạch nhớ = planFromDictionary của tệp rồi đổi đích một cột viết tay (keep_as_note → privateRemarks không thuộc nguồn) và thêm bảng quy đổi viết tay cho cột trạng thái; dựng mẫu từ kế hoạch ấy (taoMau) rồi áp lên CÙNG lưới đã đảo thứ tự cột → từng cột có tiêu đề trong mẫu deepEqual {target, transform, valueMap} của kế hoạch nhớ (một assert mỗi cột, đếm = số cột của tệp, assert) và reason mở đầu «theo mẫu»; ca «nhớ mẫu: cột mới đi từ điển» — thêm hai cột tiêu đề lạ vào lưới → hai cột ấy deepEqual cột tương ứng của planFromDictionary trên lưới mới, không «theo mẫu»; ca «nhớ mẫu: lần mới nhất thắng» — hai mẫu cùng tiêu đề khác đích (at 2026-11-01 và 2026-11-03) → nhận đích của mẫu 03/11 bất kể thứ tự truyền vào (2 assert, đảo thứ tự). Chiều đỏ: áp mẫu theo vị trí cột thay vì khoá tiêu đề → ca đầu đỏ nêu tên cột đầu tiên bị đảo."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «nhớ mẫu: cột không hợp lệ về từ điển» có mặt và ok — mẫu nhớ cột «Giá» với phép đổi đơn vị giá (tỷ) đọc từ kế hoạch thật của mau-a; tệp mới có cột «Giá» toàn chữ («liên hệ», «thoả thuận») → kế hoạch dựng ra qua validatePlan rỗng lỗi (assert), cột «Giá» deepEqual cột của planFromDictionary và reason có «mẫu không còn hợp lệ»; các cột còn lại vẫn «theo mẫu» (assert từng cột); ma trận viết tay ba lý do vô hiệu (phép biến đổi sai kiểu ô, đích lớp nguồn cho cột không phải nguồn, bảng quy đổi trên cột nguồn) × một cột mỗi lý do → 3 assert về từ điển, đối chứng dương: cùng mẫu trên tệp hợp lệ → 3 cột theo mẫu. Chiều đỏ: bỏ bước validatePlan sau áp mẫu → ca đầu đỏ nêu «Giá»."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «nhớ mẫu: mẫu không mang giá trị nguồn, tên người» có mặt và ok — lưới viết tay có cột số chủ (0900000012, 0900 000 013), tên chủ ([Tên chủ mẫu]), giá đáy, cột trạng thái; kế hoạch có bảng quy đổi trên cột trạng thái và (chèn thẳng, đi vòng validatePlan) trên cột tên chủ → taoMau trả cột nguồn và cột tên người chỉ có {headerKey, target}, không khoá valueMap (assert từng cột), cột trạng thái giữ bảng quy đổi (đối chứng dương); JSON.stringify của mẫu không chứa chuỗi giá trị nào trong danh sách viết tay (assert từng giá trị). Chiều đỏ: taoMau giữ valueMap mọi cột → ca đỏ nêu «[Tên chủ mẫu]»."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/imports ca «mẫu của sàn: chỉ lần đã ghi, mới nhất thắng, cách ly» có mặt và ok — sàn A: lần nhập 1 đã ghi (cột «Trạng thái» → standardStatus), lần nhập 2 đã ghi sau (cột «Trạng thái» → keep_as_note), lần nhập 3 chỉ xem thử (dryRun, cột «Ghi chú» → privateRemarks); GET /api/v1/imports/templates bởi Đầu chủ của A → «trang thai» mang đích của lần 2 (assert), «ghi chu» không có (lần 3 không dạy, assert), mỗi phần tử đúng các khoá {headerKey, target, transform?, valueMap?, importId, at} (assert khoá từng phần tử); Trưởng nhóm của A nhận cùng danh sách (assert); Đầu khách của A nhận 403 import-role-required (assert); Đầu chủ của sàn B nhận danh sách rỗng (cách ly, assert); cột lớp nguồn của lần 1 có trong danh sách nhưng không mang valueMap và thân không chứa 0900 000 0 (assert); lần 1 có cột «Tên chủ» mà kế hoạch lưu trong bảng imports mang valueMap {"[Tên chủ mẫu]":"[Tên]"} (ghi thẳng vào bảng bằng vai chủ bảng của bộ kiểm, đi vòng validatePlan) → phần tử «ten chu» không có khoá valueMap (assert) và thân không chứa «[Tên chủ mẫu]» (assert); đối chứng dương: phần tử «trang thai» giữ valueMap (assert). Chiều đỏ: bỏ điều kiện status = committed → ca đỏ nêu «ghi chu»."
+    paths: [packages/api/src/imports/**, packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web_db
+    expected: "exit 0; ca «nhớ mẫu: nhập lại là ghép sẵn» có mặt và ok trên Postgres dãy — sàn mới, Đầu chủ mới; tệp 1 dựng bằng exceljs từ căn của danh mục mẫu, có cột trạng thái mang một giá trị cách gọi riêng («đã cọc rồi») lõi không nhận; màn (hàm của lib/nhap) đổi đích một cột rồi sửa ô «đã cọc rồi» thành «Đã cọc» ở bước xem trước, xem thử và ghi qua API; tệp 2 cùng tiêu đề, khác thứ tự cột, có «đã cọc rồi» ở dòng khác → màn đọc mẫu qua GET /imports/templates rồi dựng kế hoạch: từng cột nhớ được deepEqual {target, transform, valueMap} của kế hoạch tệp 1 đã ghi (đọc từ bảng imports, assert từng cột), ô «đã cọc rồi» của tệp 2 có mark khác needs_person (assert). Đối chứng âm: tệp 1 chỉ xem thử không ghi → tệp 2 dựng ra bằng từ điển (cột đổi đích không theo mẫu, assert). Chiều đỏ: màn không gọi GET /imports/templates → ca đỏ nêu cột đổi đích."
+    paths: [apps/web/src/lib/nhap/**, packages/api/src/imports/**, packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «xem trước: sửa ô thành cách gọi của cột» có mặt và ok — bảng từ tệp ban-trang-thai của bộ thử hàng 64 (hoặc lưới viết tay có ba ô «đã cọc rồi» trong cột trạng thái và ba ô cùng nguyên văn ở cột ghi chú); sửa ô đầu của cột trạng thái thành «Đã cọc» → kế hoạch có valueMap của cột trạng thái chứa khoá nguyên văn ấy (assert), cả ba ô cùng nguyên văn của cột đổi mark khỏi needs_person (3 assert), cột ghi chú không đổi (assert); trạng thái màn có soOTheo = 3 cho dòng báo «Đã đổi theo 3 ô cùng chữ» (assert); ma trận viết tay bốn lớp cột không học (nguồn: số chủ; tên người: tên chủ; chữ tự do: ghi chú; chưa rõ) × sửa một ô → plan deepEqual plan trước khi sửa (4 assert) và chỉ ô ấy đổi (4 assert); đếm = 13. Chiều đỏ: gấp vào valueMap cả cột tên người → ca đỏ nêu «tên người»."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    cmd: config:executors.ui-check
+    expected: "Trên màn đang chạy của dãy G (Postgres 5573, máy dev 3493), mỗi lần chạy dựng một sàn mới và Đầu chủ mới (in số lần nhập đã ghi của sàn trước bước (1), phải bằng 0): (1) ghi một lần nhập mau-b.xlsx có đổi đích một cột; (2) mở /imports/new, chọn lại mau-b.xlsx → bước Ghép cột có dải báo «Ghép theo mẫu đã nhớ — M/M cột» và nhãn «theo mẫu» ở từng cột, cột đã đổi đích hiện đích đã đổi; (3) tệp ban-gia.xlsx (thêm cột lạ) → dải báo «N/M cột» với N < M, cột lạ không có nhãn; (4) API mẫu trả lỗi (máy chủ tắt đường mẫu bằng biến thử) → màn vẫn tới bước Ghép cột theo từ điển và hiện «Không đọc được mẫu đã nhớ». Chụp mỗi khung ở 1440 và 375 vào _acceptance/nhap-nho-mau/evidence/E7-*.png."
+    steps:
+      - "Dựng chỗ thử dãy G: node _acceptance/man-nhap-excel/thu/dung-g.mjs (dừng bằng --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/nhap-nho-mau/thu/chup-mau.mjs --ca ghi-lan-dau rồi --ca nhap-lai, --ca mot-phan, --ca loi-mau ở --kho 1440 và --kho 375 — lệnh tự đăng nhập người mẫu, in mỗi khung một dòng JSON (kèm soLanDaGhiTruoc của sàn mới) và chụp E7-*.png"
+      - "Đối chiếu từng dòng JSON (soLanDaGhiTruoc = 0, daiBao, soCotTheoMau, tongCot, nhanTheoMau, baoLoiMau) với expected và xem từng ảnh ở hai khổ"
+    paths: ["apps/web/src/app/(app)/imports/**", apps/web/src/lib/nhap/**]
+    evidence_required: [screenshot, observed]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «thanh bước: khoá khi máy chủ đang chạy» có mặt và ok — ma trận viết tay ba trạng thái chạy (đang đọc tệp, đang xem thử, đang ghi) × hai bước đích (bước trước, bước sau đã qua) → coTheChonBuoc false (6 assert); đối chứng dương: không chạy gì → true cho bước đã qua (assert) và trạng thái sau khi chọn đúng bước ấy; đếm = 8; ca kiểm nối: man-nhap.tsx truyền onChonBuoc qua coTheChonBuoc (đọc nguồn tệp, assert có lời gọi). Chiều đỏ: coTheChonBuoc bỏ cờ đang ghi → ca đỏ nêu «đang ghi»."
+    paths: ["apps/web/src/app/(app)/imports/new/**", apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «gọi API: thân lỗi không phải chuỗi vẫn là lỗi» có mặt và ok — fetch giả trả 400 {success:false, error:{name:'ZodError', issues:[…]}} cho POST /api/v1/imports → moLanNhap trả laLoi true với chữ tiếng Việt không rỗng (2 assert), xemThuTatCa không gọi địa chỉ nào chứa «undefined» (assert trên danh sách địa chỉ đã gọi); cùng thân lỗi cho gói 2 của ghiTiep → tiến độ có loi, xong không tăng, gói 2 không nằm trong xong (3 assert); đối chứng dương: 400 {error:'import-plan-invalid'} vẫn ra lỗi như cũ (assert). Chiều đỏ: goi trả {loi: b.error} không đổi kiểu → ca đỏ nêu «undefined»."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «đo mẫu: ba số từ kế hoạch đã lưu» có mặt và ok — ma trận viết tay ba kế hoạch (toàn theo mẫu; một phần, một cột người đổi đích; toàn từ điển) dựng bằng apMau và doiDich thật → doMau trả {theoMau, nguoiDoi, tong} deepEqual số viết tay (3 assert); kế hoạch không mang ô nên hàm không nhận lưới (kiểu chữ ký, assert số tham số = 1); lệnh _acceptance/nhap-nho-mau/thu/do-mau.mjs --help thoát 0. Chiều đỏ: doMau đếm reason «người chọn» vào theoMau → ca đỏ nêu kế hoạch thứ hai."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; dòng «khuôn: … · 0 lệch»; nhóm nhap-excel «1 tệp theo khuôn · 0 ngoại lệ · 0 lệch» trong bài quét; kiểm chuẩn «đạt». Chiều đỏ: dải báo dựng bằng <div role=alert> tự viết thay TrangThai → luật quy-hang-ui đỏ nêu tệp man-nhap.tsx."
+    paths: ["apps/web/src/app/(app)/imports/**", apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/new/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon, ArrowRightIcon, RotateCcwIcon } from "lucide-react";
 import type { CatalogData } from "@quy-hang/core";
-import { FIELD_LABEL, STANDARD_FIELDS, type ImportContext, type PlanTarget } from "@quy-hang/core/import";
+import { FIELD_LABEL, STANDARD_FIELDS, type CotMau, type ImportContext, type PlanTarget } from "@quy-hang/core/import";
 
 import { BangGhepCot, DongTomTat, MucTomTat, type LuaChon } from "@/components/khoi/solution-crm-6/buoc";
 import { KhungBuoc } from "@/components/khoi/solution-crm-6/khung-buoc";
@@ -15,13 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { bamTep, docTep } from "@/lib/nhap/doc-tep";
-import { chayOng, loiTheoCot, mauCot, nhanLop } from "@/lib/nhap/duong-ong";
-import { batDauGhi, docDauChu, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type TienDoGhi } from "@/lib/nhap/goi-api";
+import { chayOng, cotTheoMau, loiTheoCot, mauCot, nhanLop } from "@/lib/nhap/duong-ong";
+import { batDauGhi, docDauChu, docMau, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type TienDoGhi } from "@/lib/nhap/goi-api";
 import {
   BUOC,
   boDong,
   canChonDauChu,
   chonDauChu,
+  chonBuoc,
   coTheGhi,
   coTheTiep,
   batDauDoc,
@@ -60,12 +61,18 @@ export function ManNhap({ vai }: { vai: string[] }) {
   const [xemCu, setXemCu] = useState<XemThu | null>(null);
   const [ghiDo, setGhi] = useState<TienDoGhi | null>(null);
   const [dangGhi, setDangGhi] = useState(false);
+  // Mẫu file của sàn (hàng 67): đọc một lần khi mở màn; lỗi thì ghép theo từ điển và báo một dòng.
+  const [mau, setMau] = useState<CotMau[]>([]);
+  const [loiMau, setLoiMau] = useState(false);
 
   useEffect(() => {
     fetch("/api/v1/catalog")
       .then((r) => (r.ok ? r.json() : null))
       .then((catalog: CatalogData | null) => setCtx({ today: homNay(), ...(catalog ? { catalog } : {}) }))
       .catch(() => setCtx({ today: homNay() }));
+    docMau(fetch)
+      .then((ds) => (laLoi(ds) ? setLoiMau(true) : setMau(ds)))
+      .catch(() => setLoiMau(true));
     if (canChonDauChu(vai))
       docDauChu(fetch).then((ds) => !laLoi(ds) && setDauChu(ds.map((d) => ({ value: d.userId, label: d.name }))));
   }, [vai]);
@@ -98,7 +105,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
       if ("loi" in doc) return setLoiTep(doc.loi);
       const bam = await bamTep(bytes);
       setTepGoc({ ten, bytes, trangCo: doc.trang });
-      setS((cu) => nhanTep(cu, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, chayOng(doc.grid, ctx)));
+      setS((cu) => nhanTep(cu, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, chayOng(doc.grid, ctx, mau)));
     } catch {
       setLoiTep("Không đọc được tệp này — thử chọn lại.");
     } finally {
@@ -137,6 +144,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
   };
 
   const loiCot = useMemo(() => (s.ong ? loiTheoCot(s.ong.loi) : new Map<number, string>()), [s.ong]);
+  const theoMau = useMemo(() => (s.ong ? cotTheoMau(s.ong) : []), [s.ong]);
   const moTa = s.tep && s.ong ? `${s.tep.ten} · ${s.ong.table.rows.length.toLocaleString("vi-VN")} dòng${s.tep.trang ? ` · trang «${s.tep.trang}»` : ""}` : "Chưa chọn tệp";
   const daXong = ghi !== null && xongGhi(ghi);
 
@@ -172,7 +180,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
   );
 
   return (
-    <KhungBuoc tieuDe="Nhập Excel" moTa={moTa} nhan="Bảng hàng" buoc={BUOC} hienTai={s.buoc} dangChay={dangDoc || tienDoXem !== null || dangGhi} onChonBuoc={(so) => setS(sangBuoc(s, so))} chan={chan}>
+    <KhungBuoc tieuDe="Nhập Excel" moTa={moTa} nhan="Bảng hàng" buoc={BUOC} hienTai={s.buoc} dangChay={dangDoc || tienDoXem !== null || dangGhi} onChonBuoc={(so) => setS(chonBuoc(s, so, { dangDoc, dangXemThu: tienDoXem !== null, dangGhi }))} chan={chan}>
       {s.buoc === 1 ? (
         <section className="flex flex-col gap-6" aria-label="Tải tệp">
           <Field>
@@ -211,13 +219,19 @@ export function ManNhap({ vai }: { vai: string[] }) {
         </section>
       ) : null}
 
+      {s.buoc === 2 && s.ong && loiMau ? (
+        <TrangThai kind="notice" title="Không đọc được mẫu đã nhớ" description="Ghép theo từ điển như lần nhập đầu — kiểm lại từng cột." />
+      ) : null}
+      {s.buoc === 2 && s.ong && theoMau.length ? (
+        <TrangThai kind="notice" title={`Ghép theo mẫu đã nhớ — ${theoMau.length}/${s.ong.table.headers.length} cột`} description="Cột có nhãn «theo mẫu» ghép như lần nhập đã ghi gần nhất; đổi cột nào thì lần sau nhớ cách mới." />
+      ) : null}
       {s.buoc === 2 && s.ong ? (
         <BangGhepCot
           cot={s.ong.table.headers.map((h, i) => ({
             ma: String(i),
             tieuDe: h,
             mau: mauCot(s.ong!.profile[i]!),
-            lop: nhanLop(s.ong!.lop[i]!.cls),
+            lop: theoMau.includes(i) ? `${nhanLop(s.ong!.lop[i]!.cls)} · theo mẫu` : nhanLop(s.ong!.lop[i]!.cls),
             dich: s.ong!.plan.columns[i]!.target,
             loi: loiCot.get(i),
           }))}
@@ -227,6 +241,9 @@ export function ManNhap({ vai }: { vai: string[] }) {
         />
       ) : null}
 
+      {s.buoc === 3 && s.ong && ctx && s.soOTheo ? (
+        <TrangThai kind="notice" title={`Đã đổi theo ${s.soOTheo} ô cùng chữ`} description="Các ô cùng chữ trong cột nhận cùng giá trị — soát lại trước khi ghi; lần nhập sau nhớ cách gọi này." />
+      ) : null}
       {s.buoc === 3 && s.ong && ctx ? (
         <BangXemTruoc ong={s.ong} bo={s.bo} onSua={(src, cot, raw) => setS(suaO(s, src, cot, raw, ctx))} onBo={(src, bo) => setS(boDong(s, src, bo))} />
       ) : null}
