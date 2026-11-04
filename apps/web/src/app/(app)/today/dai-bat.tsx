@@ -74,7 +74,7 @@ export function DaiBatThongBao() {
     );
 
   return (
-    <section aria-label="Thông báo lead" className="flex w-full max-w-7xl min-w-0 flex-col">
+    <section aria-label="Thông báo lead" className="flex w-full min-w-0 flex-col">
       <Frame className="w-full min-w-0">
         <FramePanel className="p-0!">{noiDung}</FramePanel>
       </Frame>

@@ -12,3 +12,4 @@ export * from "./profile";
 export * from "./plan";
 export * from "./apply";
 export * from "./dong";
+export * from "./memory/mau";

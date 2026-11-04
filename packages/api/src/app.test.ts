@@ -45,6 +45,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/{listingId}/events",
     "POST /api/v1/imports",
     "POST /api/v1/imports/{importId}/rows",
+    "GET /api/v1/imports/agents",
+    "GET /api/v1/imports/templates",
     "GET /api/v1/imports/{importId}",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",
@@ -108,8 +110,16 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/prospects",
     // Hàng ghi-thiet-bi-va-mat-mang: lượt mất mạng của bộ đồng bộ.
     "POST /api/v1/sync/offline-sessions",
+    // Hàng 35: trang khách — ghi lượt mở, lượt quan tâm (route đọc và route ảnh không khai OpenAPI).
+    "POST /api/v1/public/shares/{code}/events",
+    // Hàng 42: Hôm nay trưởng nhóm.
+    "GET /api/v1/team/lead-queue",
+    "GET /api/v1/team/listing-agents",
     // Hàng 43 (phat-hang): lần xuất bảng hàng.
     "POST /api/v1/exports",
+    // Hàng 82: cấu hình theo sàn qua lối chung.
+    "GET /api/v1/company/settings",
+    "PATCH /api/v1/company/settings",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

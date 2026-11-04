@@ -2,7 +2,7 @@
  * Giải cấu hình của một sàn (ADR-0018 quyết định 2, 3): mặc định của sổ ⊕ các dòng `{ key, value }` của sàn. Lõi không đọc
  * cơ sở dữ liệu — người gọi đưa dòng vào, luật nhận cấu hình đã giải làm tham số.
  */
-import { kiemGiaTri, timDiem } from "./khuon";
+import { kiemGiaTri, loiCap, timDiem } from "./khuon";
 import { SO_DIEM, type DiemSo } from "./so";
 
 /** Cấu hình đã giải: khoá → giá trị của các điểm giá trị đơn (không `map`); khoá họ (`labels.field.unitNumber`) có mặt khi sàn đặt. */
@@ -32,12 +32,24 @@ export function giaiCauHinh(dong: readonly { key: string; value: unknown }[], so
     if (!d) loi.push(`${r.key}: không có trong sổ điểm biến thiên`);
     else if (d.kieu.loai !== "map") cho.push(r);
   }
-  // Ràng buộc chéo xét trên giá trị đã giải của khoá kia, nên khoá được trỏ tới đặt trước.
-  const truoc = (r: { key: string }) => (so.some((d) => d.khongNhoHon === r.key) ? 0 : 1);
-  for (const r of [...cho].sort((a, b) => truoc(a) - truoc(b))) {
-    const kq = kiemGiaTri(r.key, r.value, cauHinh, so);
+  // Mỗi dòng chỉ kiểm khuôn và khoảng; cặp chéo xét một lần trên cấu hình cuối, để thứ tự dòng không quyết kết quả.
+  const macDinh = macDinhCua(so);
+  for (const r of cho) {
+    const kq = kiemGiaTri(r.key, r.value, {}, so, false);
     if (kq.ok) cauHinh[r.key] = r.value;
     else loi.push(kq.loi);
+  }
+  // Cặp trái luật (một nửa đặt riêng, như hạn nhận dài hơn hạn gọi mặc định) không áp im lặng: cả cặp về mặc định, báo
+  // lỗi nêu hai khoá (luật đợt 46, Ngoài-5 hàng 81).
+  for (const d of so) {
+    if (d.khongNhoHon === undefined) continue;
+    const vPhu = cauHinh[d.khoa];
+    const vGoc = cauHinh[d.khongNhoHon];
+    if (typeof vPhu === "number" && typeof vGoc === "number" && vPhu < vGoc) {
+      loi.push(`${loiCap(d.khoa, vPhu, d.khongNhoHon, vGoc)} — cặp về mặc định`);
+      cauHinh[d.khoa] = macDinh[d.khoa];
+      cauHinh[d.khongNhoHon] = macDinh[d.khongNhoHon];
+    }
   }
   return { cauHinh, loi };
 }

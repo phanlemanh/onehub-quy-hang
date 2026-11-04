@@ -1,0 +1,166 @@
+schema_version: 1
+feature_slug: trang-khach-rieng
+# Lệnh máy: `executors.test.isolation` (packages/api/test-db và packages/db/tests, cần DATABASE_URL tới Postgres dãy L,
+# cổng 5571), `executors.test.web` (kiểm thuần apps/web, node:test), `executors.test.api`, `executors.script.ro_ri` (luật
+# ẩn + mọi *.ro-ri.test.ts). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người
+# chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu: bộ mẫu hàng 5 qua
+# đường ghi thật, số `0900 000 0xx`, tên «[Tên]»; căn mồi `canMoi()` của hàng 31.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/trang-khach.test.ts có mặt và ok: «trang khách: route đọc trả bản ra theo thứ tự gửi» — đầu khách mẫu tạo Lần gửi khách riêng ba căn theo thứ tự c3, c1, c2 qua POST /api/v1/shares thật; GET /api/v1/public/shares/{code} không cookie → 200; companyName, senderName deepEqual giá trị của sàn và người gửi; mảng căn dài 3 và theo đúng thứ tự gửi (so bằng bản ra kỳ vọng dựng từ banRaNgoai cho từng căn, deepEqual từng phần tử); với mỗi căn Object.keys là tập con của truongRa(\"khach_rieng\", CAU_HINH_MAC_DINH), đếm bằng số căn. Đối chứng dương: cùng ca với Lần gửi nhóm môi giới thì mỗi căn có unitNumber. Chiều đỏ: trả thẳng hàng nội bộ thay bản ra → ca đỏ nêu khoá thừa."
+    paths: [packages/api/src/public/**, packages/api/test-db/trang-khach.test.ts, packages/db/migrations/031_*.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/proxy.test.ts có mặt và ok: «bộ chặn: trang khách mở không phiên» — bảng viết trước không cookie (/s/AbCdEfGhIjKl → đi tiếp, không chuyển hướng; /s/Zz_-0123abcd → đi tiếp; /today → chuyển về /login; /shares/new → chuyển về /login; /sx → chuyển về /login), mỗi dòng một assert trên header location của kết quả proxy thật, đếm bằng số dòng. Chiều đỏ: bỏ dòng mở /s/ → ca đỏ nêu /s/<mã> bị chuyển về /login."
+    paths: [apps/web/src/proxy.ts, apps/web/src/proxy.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/trang.test.ts có mặt và ok: «trang khách: người nhận quyết mã căn» — dựng trang (createElement + renderToStaticMarkup) từ bản ra của căn mồi cho khach_rieng và nhom_moi_gioi: chuỗi mã căn và trục của căn mồi vắng ở khach_rieng, có ở nhom_moi_gioi; tên toà có ở cả hai; «trang khách: giá xác nhận» — bảng viết trước confirmedAgeDays 0 → «Giá xác nhận hôm nay», 3 → «Giá xác nhận 3 ngày trước», vắng → không có chữ «Giá xác nhận», đếm bằng số dòng. Chiều đỏ: dựng tên căn từ unitNumber bất kể người nhận → ca đỏ nêu mã căn thấy ở khách riêng."
+    paths: ["apps/web/src/app/s/**", "apps/web/src/app/(app)/shares/new/trang-khach.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/trang.test.ts có mặt và ok: «trang khách: căn theo trạng thái» — bảng viết trước bốn dòng (available → không mờ, có giá, có nút «Quan tâm»; under_contract → mờ, nhãn «Đã có người đặt cọc», có giá, không nút; paused → mờ, «Tạm ngưng», không giá, không nút; unavailable → mờ, «Không còn», không giá, không nút), mỗi dòng một assert trên chuỗi dựng của đúng thẻ căn ấy, đếm bằng số dòng; thứ tự căn giữ nguyên. Chiều đỏ: bỏ lọc nút Quan tâm theo trạng thái → ca đỏ nêu trạng thái có nút thừa."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trang khách: giá và trạng thái sống» trong packages/api/test-db/trang-khach.test.ts có mặt và ok — đọc route công khai, rồi đổi giá một căn qua đường ghi thật của lõi hàng và đưa một căn sang Đang giao dịch, đọc lại: listPrice mới, availability under_contract cho căn thứ hai; header Cache-Control của route chứa no-store. Chiều đỏ: đệm kết quả theo mã → ca đỏ nêu giá cũ."
+    paths: [packages/api/src/public/**, packages/api/test-db/trang-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3c
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/trang.test.ts có mặt và ok: «trang khách: trang không đệm» — import module trang thật: export dynamic deepEqual \"force-dynamic\" và lời đọc route trong trang truyền cache: \"no-store\" (fetch giả ghi tuỳ chọn của lời gọi); «trang khách: chỉ trang thật dưới /s/» — đọc thư mục apps/web/src/app/s: danh sách mục con deepEqual [\"[code]\"] (trang ba lối đã gỡ). Chiều đỏ: bỏ force-dynamic → ca đỏ nêu giá trị dynamic; để lại thư mục ba-loi → ca đỏ nêu ba-loi."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/su-kien.test.ts có mặt và ok: «trang khách: lượt mở gửi một lần sau khi chạy» — fetch giả ghi lời gọi, kho máy giả: gọi báo mở hai lần trong cùng phiên → đúng một POST /api/v1/public/shares/<mã>/events với thân deepEqual {type:\"link_opened\", visitor:<mã máy>}; mã máy sinh một lần và giữ trong kho máy giả (lần hai đọc lại cùng giá trị); kho máy ném lỗi → vẫn gửi với mã máy tạm, không ném. Chiều đỏ: bỏ cờ đã gửi → ca đỏ nêu hai lời gọi."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trang khách: lượt mở ghi một dòng mỗi máy mỗi ngày» trong packages/api/test-db/trang-khach.test.ts có mặt và ok — GET route đọc (như máy chủ trang hay Zalo lấy xem trước) không ghi dòng share_events nào (đếm 0, đọc bằng vai chủ); POST events link_opened với mã máy A → 1 dòng đúng company_id, share_id, và type bằng đúng hằng SU_KIEN_LAN_GUI.mo của @quy-hang/core/sharing (import, không viết chuỗi); lặp cùng A → vẫn 1; mã máy B → 2. Đối chứng dương: đếm đọc ra 2 sau B. Chiều đỏ: ghi lượt mở trong route đọc → ca đỏ nêu số dòng sau GET."
+    paths: [packages/api/src/public/**, packages/api/test-db/trang-khach.test.ts, packages/db/migrations/031_*.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/su-kien.test.ts có mặt và ok: «trang khách: quan tâm một chạm» — fetch giả: chạm Quan tâm căn L1 → đúng một POST với thân deepEqual {type:\"interest\", listingId:\"L1\", visitor:<mã máy>}, trạng thái nút thành «Đã báo quan tâm»; chạm lại → không gọi thêm; fetch ném lỗi mạng → trạng thái «Chưa gửi được — thử lại», nút bấm lại được và lần sau gọi lại. Chiều đỏ: không khoá sau lần đầu → ca đỏ nêu hai lời gọi."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trang khách: quan tâm ghi đúng căn, từ chối căn lạ» trong packages/api/test-db/trang-khach.test.ts có mặt và ok — bảng viết trước (căn trong Lần gửi đang bán → 201, đếm dòng có type bằng hằng SU_KIEN_LAN_GUI.quanTam của @quy-hang/core/sharing +1; lặp cùng mã máy → 200, không thêm; căn không thuộc Lần gửi → 4xx, không thêm; căn thuộc Lần gửi nhưng Đang giao dịch → 4xx, không thêm; type lạ → 400), mỗi dòng một assert mã HTTP và một assert số dòng interest, đếm bằng số dòng. Chiều đỏ: bỏ kiểm căn thuộc Lần gửi → ca đỏ nêu căn lạ được ghi."
+    paths: [packages/api/src/public/**, packages/api/test-db/trang-khach.test.ts, packages/db/migrations/031_*.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trang khách: link tắt và mã sai» trong packages/api/test-db/trang-khach.test.ts có mặt và ok — bảng viết trước (mã đúng khuôn nhưng không có, mã sai khuôn, Lần gửi đặt disabled_at bằng vai chủ, Lần gửi mà người gửi đã bị gỡ khỏi sàn bằng đường ghi thành viên thật) × (GET đọc → 404 và thân không chứa tên sàn, tên người gửi, tên toà; POST events link_opened → 404, không thêm dòng); đếm bằng số dòng × hai route. Đối chứng dương: cùng Lần gửi trước khi tắt → 200. Chiều đỏ: bỏ lọc disabled_at → ca đỏ nêu 200."
+    paths: [packages/api/src/public/**, packages/api/test-db/trang-khach.test.ts, packages/db/migrations/031_*.sql]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/trang.test.ts có mặt và ok: «trang khách: link không mở được» — dựng trạng thái 404 → chuỗi chứa «Link không còn mở được — hỏi lại người gửi» và không chứa tên sàn mẫu hay tên toà mẫu. Chiều đỏ: hiện đầu trang khi 404 → ca đỏ nêu tên sàn."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trang khách: ảnh chỉ của bản ra» trong packages/api/test-db/trang-khach.test.ts có mặt và ok — căn trong Lần gửi có một ảnh ngăn gửi được và một ảnh ngăn nội bộ (thêm qua đường ghi ảnh thật với kho ảnh giả của bộ kiểm); bảng viết trước (ảnh gửi được của căn trong Lần gửi → 200; ảnh nội bộ cùng căn → 404; ảnh gửi được của căn ngoài Lần gửi → 404; ảnh đúng nhưng mã của Lần gửi khác cùng sàn → 404; mã không có → 404), đếm bằng số dòng. Chiều đỏ: bỏ kiểm ngăn → ca đỏ nêu ảnh nội bộ trả 200."
+    paths: [packages/api/src/public/**, packages/api/src/photos/**, packages/api/test-db/trang-khach.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; có mặt và ok: (1) «rò rỉ: route đọc công khai» trong packages/api/src/public/doc.ro-ri.test.ts — dựng thân route đọc từ căn mồi cho mọi NGUOI_NHAN × CAU_HINH_TAT_CA bằng đúng hàm dựng thân của route (không viết lại), timRoRi trả rỗng cho từng tổ hợp, đếm bằng số tổ hợp; đối chứng dương: chèn một giá trị nội bộ của căn mồi vào thân → timRoRi bắt; (2) bài rò rỉ cạnh trang apps/web/src/app/s/[code]/*.ro-ri.test.ts gọi canMoi( và timRoRi(, và timCuaRaThieuKiem sạch; (3) «rào route công khai: mọi route có bài rò rỉ» trong packages/api/src/public/rao-route.test.ts — đọc danh sách route đã đăng ký trên app Hono thật (createApp), lọc tiền tố /api/v1/public/, mỗi route phải có một tệp *.ro-ri.test.ts dưới packages/api/src nêu đúng đường ấy; danh sách route đọc được không rỗng và chứa ba route của hàng này; đối chứng đỏ: app thử đăng ký thêm một route /api/v1/public/thu không có bài → hàm rào trả đúng route ấy. Chiều đỏ: xoá dòng nêu route ảnh khỏi bài rò rỉ → rào đỏ nêu route ảnh."
+    paths: [packages/api/src/public/**, "apps/web/src/app/s/**", packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có mặt và ok: share_events nằm trong danh sách bảng của bộ kiểm (enable + force row level security, chủ bảng không phải quy_hang_app); ca «trang khách: hàm theo mã không vượt sàn» — dưới vai quy_hang_app của sàn A: hàm tìm theo mã với mã của sàn B trả đúng một dòng của B chỉ gồm các cột company_id, share_id, sender_user_id, audience, active (Object.keys deepEqual danh sách viết trước); mã sai trả 0 dòng; select thẳng share_events của sàn B trả 0 dòng; insert thẳng vào share_events bị từ chối (chỉ ghi qua hàm). Chiều đỏ: bỏ force row level security trên share_events → bộ kiểm đỏ nêu bảng."
+    paths: [packages/db/migrations/031_*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; packages/ui-lint/tests/ban-do-khuon.test.mjs có nhóm trang-khach trong danh sách nhóm viết trước, khuôn đọc được, màn mẫu apps/web/src/app/s/[code]/page.tsx theo khuôn, 0 lệch; kiem-chuan in «chuẩn giao diện: đạt»; docs/product/tham-chieu.md có dòng «Trang khách: khách riêng — Đã dựng (hàng 35)». Chiều đỏ: trang không trả khuôn ở gốc → bài khuôn đỏ nêu tệp."
+    paths: ["design/patterns/**", "apps/web/src/app/s/**", packages/ui-lint/**, docs/product/tham-chieu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Postgres dãy L (5571) có bộ mẫu (seed/nap.mjs --nap); máy chủ dev của kho ở cổng của executors.ui-check; đăng nhập Đầu khách mẫu, tạo Lần gửi khách riêng bốn căn qua /shares/new (một căn đưa sang Đang giao dịch bằng psql vai chủ), lấy mã link"
+      - "Đăng xuất, khổ 375: mở /s/<mã> → chụp evidence/E11-step1.png: đầu trang tên sàn · người gửi, bốn căn, không mã căn, giá và «Giá xác nhận …»"
+      - "Cuộn tới căn đã cọc → chụp evidence/E11-step2.png: thẻ mờ, nhãn «Đã có người đặt cọc», không nút Quan tâm"
+      - "Chạm «Quan tâm» ở căn đang bán → chụp evidence/E11-step3.png: nút thành «Đã báo quan tâm»"
+      - "Chạm một căn mở chi tiết → chụp evidence/E11-step4.png: ảnh, thông số, giá, nút Quan tâm"
+      - "Mở /s/AAAAAAAAAAAA → chụp evidence/E11-step5.png: «Link không còn mở được — hỏi lại người gửi», không tên sàn"
+    cmd: config:executors.ui-check
+    expected: "Khổ 375, không đăng nhập: trang khách hiện tên sàn · người gửi, bộ căn theo thứ tự, không mã căn với khách riêng, giá và «Giá xác nhận …»; căn đã cọc mờ với nhãn và không nút; chạm Quan tâm thành «Đã báo quan tâm»; chi tiết căn mở được; mã sai hiện câu link không mở được, không tên sàn; ảnh chụp từng bước vào evidence/."
+    paths: ["apps/web/src/app/s/**", packages/api/src/public/**]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E12
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-khach.md", "design/patterns/trang-thai.md", "apps/web/src/app/s/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-khach, trang-thai. Trang khách nằm ngoài (app) nên không thuộc nhóm trang-tam."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

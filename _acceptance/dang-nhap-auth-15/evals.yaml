@@ -1,0 +1,142 @@
+schema_version: 1
+feature_slug: dang-nhap-auth-15
+# Lệnh máy: executors.test.web (apps/web, node --test: (auth)/khung.test.ts), executors.script.dang_nhap_auth_15
+# (_acceptance/dang-nhap-auth-15/thu/*.test.mjs), executors.test.ui_lint (packages/ui-lint/tests/kiem-chuan.test.mjs),
+# executors.script lint, typecheck, giao_dien, design_floor, executors.design.khuon. Người chấm đối chiếu tên ca nêu trong
+# `expected` với dòng reporter: có mặt, ok, không SKIP.
+# Dựng chung cho ui-check («DỰNG B»): node --env-file-if-exists=.env.local --import tsx
+#   _acceptance/bang-hang-dang-the/thu/dung-b.mjs → Postgres dãy B (5572), máy chủ dev 3492, người mẫu đã nạp; rồi
+#   node _acceptance/dang-nhap-auth-15/thu/nguoi-mau.mjs → hai-san@mau.quy-hang.test thuộc hai sàn, chua-gan@mau.quy-hang.test
+#   không thuộc sàn nào. Phiên có sẵn: node _acceptance/bang-hang-dang-the/thu/phien.mjs <email> in JSON cookie
+#   «qh.session_token» (đặt cho localhost:3492; KHÔNG đặt «qh_san»). Mã đăng nhập dev: dòng «[ma-dang-nhap] <email> <mã>» cuối
+#   cùng của nhật ký máy dev (đường in ở dòng đầu của DỰNG B). Mỗi email chỉ xin được 5 mã trong 15 phút.
+#   Mỗi bài ui-check mở một hồ sơ trình duyệt MỚI (ngữ cảnh sạch, không cookie của bài hay lượt khác) và chỉ dùng email
+#   của bài mình: E1 không đăng nhập; E2 dau-khach@mau.quy-hang.test; E3 hai-san@… và chua-gan@…; E11 telesales@mau.quy-hang.test cho bước
+#   mã, hai-san@… và chua-gan@… chỉ mở trang.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Hồ sơ trình duyệt mới, chưa đăng nhập. Khổ 1440x900, nền sáng: mở http://localhost:3492/login → chụp evidence/E1-1440.png."
+      - "Khổ 375x812: tải lại → chụp evidence/E1-375.png. Đọc chữ trang (document.body.innerText) và ghi lại nguyên văn."
+    expected: "Cả hai khổ: dấu hiệu theo câu trả lời Hỏi-2 của Cổng Phạm vi (decisions.jsonl, dòng gate1 hay seal) cạnh chữ «Quỹ hàng» ở đầu trang; tiêu đề «Đăng nhập Quỹ hàng»; ô có nhãn «Email», biểu tượng thư bên trái ô, lời dặn «Quỹ hàng gửi mã 6 số tới email này.» dưới ô; nút «Gửi mã» rộng bằng ô; chân trang đúng câu chốt ở Hỏi-1 (bằng giá trị CHAN_DIEU_KHOAN trong apps/web/src/app/(auth)/khung.tsx). Chữ trang không chứa Google, Apple, GitHub, «tiếp tục với» hay «continue with». Form không nằm trong khung có viền (không thẻ bao quanh). Đối chứng: thấy một nút đăng nhập bằng dịch vụ khác, hay chân trang thiếu câu, là FAIL."
+    paths: ["apps/web/src/app/(auth)/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E2
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Hồ sơ trình duyệt mới, khổ 375x812. Mở http://localhost:3492/login, gõ dau-khach@mau.quy-hang.test, bấm «Gửi mã» → chờ ô «Mã 6 số»."
+      - "Gõ 000000 (mã sai), bấm «Vào» → chụp evidence/E2-ma-sai.png; ghi chữ lỗi và vị trí của nó so với ô mã."
+      - "Bấm «Đổi email» → ghi màn đang ở bước nào; gõ lại dau-khach@mau.quy-hang.test, «Gửi mã»; đọc mã mới nhất của email ấy trong nhật ký máy dev, gõ, bấm «Vào» → chờ trang đổi, ghi URL và chụp evidence/E2-vao.png."
+    expected: "Mã sai: chữ «Mã không đúng. Thử lại.» nằm ngay dưới ô mã, dưới lời dặn «Đã gửi mã tới dau-khach@mau.quy-hang.test». «Đổi email» đưa về ô Email. Mã đúng: URL rời /login về trang trong ứng dụng (đường gốc / hay nhà của vai, ví dụ /today), có vỏ của sàn «[Mẫu] Sàn thử». Đối chứng: mã sai mà vẫn vào được, hay lỗi hiện ở chỗ khác ô mã, là FAIL."
+    paths: ["apps/web/src/app/(auth)/login/**", "apps/web/src/app/(auth)/khung.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B (gồm nguoi-mau.mjs). Hồ sơ trình duyệt mới, khổ 1440x900. Đặt cookie qh.session_token của hai-san@mau.quy-hang.test (phien.mjs), không đặt qh_san. Mở http://localhost:3492/select-company → chụp evidence/E3-chon-san.png; ghi các nút."
+      - "Bấm nút «[Mẫu] Sàn thứ hai» → chờ trang đổi; ghi URL và tên sàn trên vỏ."
+      - "Hồ sơ trình duyệt mới khác. Đặt cookie của chua-gan@mau.quy-hang.test. Mở http://localhost:3492/no-company → chụp evidence/E3-chua-gan.png; ghi chữ. Bấm «Đăng xuất» → ghi URL."
+    expected: "Chọn sàn: dấu hiệu «Quỹ hàng», tiêu đề «Chọn sàn làm việc», hai nút «[Mẫu] Sàn thử» và «[Mẫu] Sàn thứ hai» rộng trọn cột, nút «Đăng xuất», chân điều khoản như AC-1. Bấm «[Mẫu] Sàn thứ hai» thì vào trang trong ứng dụng có vỏ mang tên «[Mẫu] Sàn thứ hai». Chưa gắn: dấu hiệu, tiêu đề «Chưa thuộc sàn nào», câu «Tài khoản chua-gan@mau.quy-hang.test chưa thuộc sàn nào. Nhờ quản trị sàn mời bạn.», chân điều khoản; «Đăng xuất» đưa về /login. Đối chứng: vào nhầm sàn hay khung khác AC-1 là FAIL."
+    paths: ["apps/web/src/app/(auth)/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «khung: màn đăng nhập giữ khối máy bị báo và hai đường API» assert login/page.tsx dựng <KhoiMayBiBao trước <FormDangNhap và form.tsx chứa đúng hai đường /email-otp/send-verification-otp, /sign-in/email-otp; ca «khung: không Frame, không Card» assert khung.tsx không nhập @/components/reui/frame hay @/components/ui/card; ca «khung: không chữ OAuth» quét mọi tệp dưới (auth) không có Google|Apple|GitHub, kèm đối chứng: chèn «Continue with Google» vào bản sao chuỗi nguồn thì thước bắt được và nêu tên tệp; ca «khung: chân điều khoản» assert CHAN_DIEU_KHOAN bằng đúng câu chốt ở Hỏi-1 và khung.tsx dựng nó trong <footer>; ca «khung: trạng thái của hàng 6 còn đủ» assert form.tsx có ô mã inputMode=\"numeric\", maxLength={6}, autoComplete=\"one-time-code\", ô email autoFocus, chữ «Đang gửi…» trên nút disabled={dangGui}, nhánh loi === \"code-expired\" dựng nút «Gửi lại mã», và CHU_LOI giữ đủ bốn khoá (invalid-code, code-expired, too-many-requests, khac) với chữ của hàng 6 — bảng viết trước bốn khoá, một assert mỗi khoá, một assert số khoá = 4; đối chứng: bản sao nguồn bỏ autoComplete one-time-code thì ca đỏ và nêu «one-time-code»."
+    paths: ["apps/web/src/app/(auth)/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.dang_nhap_auth_15
+    expected: "exit 0; ca «auth: không tệp nào dưới packages/api/src/auth đổi so với nhánh chính» liệt tệp đổi từ merge-base với origin/main (hay main) tới HEAD và assert không tệp nào bắt đầu bằng packages/api/src/auth/; ca đối chứng «auth: thước bắt được tệp đổi» đưa danh sách viết trước có packages/api/src/auth/sender.ts vào cùng hàm lọc thì thước đỏ và nêu đúng tệp ấy; không tìm được nhánh chính thì ca đỏ, không bỏ qua."
+    paths: ["packages/api/src/auth/**", "_acceptance/dang-nhap-auth-15/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/xac-thuc.md", "apps/web/src/app/(auth)/*/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm xac-thuc"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch»; «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**", "packages/ui-lint/**", ".agents/skills/quy-hang-ui/**", "docs/design/vo-va-ia.md"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0; không dòng «error TS»."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; ca «chỗ hở: cây thật đủ năm ô cho 11 dòng» assert bảng Chỗ hở của vo-va-ia.md §3 có đúng 11 dòng và không dòng nào bắt đầu «Đăng nhập, chọn sàn, chưa gắn sàn»; ca «chỗ hở: cây thật không còn cảnh báo chỗ tạm» assert kiểm chuẩn không cảnh báo hạn nào, kèm đối chứng ngày 2099-01-01 vẫn không cảnh báo «Đăng nhập» hay «Ô nhận lead»."
+    paths: ["packages/ui-lint/**", "docs/design/vo-va-ia.md"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.dang_nhap_auth_15
+    expected: "exit 0; ca «sổ: Chỗ hở Đăng nhập rời bảng, bớt đúng một dòng» đọc docs/design/vo-va-ia.md ở merge-base với nhánh chính và ở HEAD: assert bản nhánh chính có dòng bắt đầu «| Đăng nhập, chọn sàn, chưa gắn sàn (tạm) |», bản HEAD không có, và số dòng bảng §3 HEAD = nhánh chính − 1; ca «sổ: catalog có dòng auth-15 đủ chín ô» assert catalog.md có đúng một dòng «| `@reui/auth-15` |» với chín ô không rỗng, ô Ảnh chuẩn trỏ tệp PNG có trong kho, ô Tệp đang dùng nêu apps/web/src/app/(auth)/khung.tsx; đối chứng: bản sao dòng thiếu một ô thì ca đỏ và nêu tên ô, ảnh trỏ tệp không có thì ca đỏ và nêu đường ảnh."
+    paths: ["docs/design/vo-va-ia.md", ".agents/skills/quy-hang-ui/catalog.md", "_acceptance/dang-nhap-auth-15/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.giao_dien
+    expected: "exit 0; dòng «chuẩn giao diện: đạt»; không dòng lỗi «catalog.md khối auth-15»; output không có dòng «chỗ hở «Đăng nhập, chọn sàn, chưa gắn sàn (tạm)»»."
+    paths: [".agents/skills/quy-hang-ui/catalog.md", "docs/design/vo-va-ia.md", "apps/web/src/app/(auth)/khung.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B (gồm nguoi-mau.mjs). Hồ sơ trình duyệt mới, nền tối (prefers-color-scheme: dark). Khổ 1440x900: mở /login → chụp evidence/E11-dang-nhap-1440-toi.png. Khổ 375x812: tải lại → chụp evidence/E11-dang-nhap-toi.png; ghi document.documentElement.scrollWidth."
+      - "Vẫn 375 tối: gõ telesales@mau.quy-hang.test, «Gửi mã», gõ 000000, «Vào» → chụp evidence/E11-ma-loi-toi.png; ghi scrollWidth và chữ lỗi."
+      - "Đặt cookie hai-san@… (không qh_san), mở /select-company → chụp evidence/E11-chon-san-toi.png; ghi scrollWidth. Xoá cookie, đặt cookie chua-gan@…, mở /no-company → chụp evidence/E11-chua-gan-toi.png; ghi scrollWidth."
+    expected: "Năm ảnh nền tối: chữ sáng trên nền tối đọc được, ô và nút có viền hay nền phân biệt được với nền trang, chữ lỗi «Mã không đúng. Thử lại.» đọc được dưới ô mã, chân điều khoản đọc được; mọi scrollWidth ở khổ 375 bằng 375. Đối chứng: chữ tối trên nền tối hay scrollWidth lớn hơn 375 là FAIL."
+    paths: ["apps/web/src/app/(auth)/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E12
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; sàn M1 không báo mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/app/(auth)/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «máy bị báo: xoá lành ra «xong», xoá hỏng ra «loi»» (hàm xoá giả ném DOMException thì chayXoa trả loi, không xong); ca «máy bị báo: thử lại sau lần hỏng thì xoá lại và ra «xong»» (hàm giả hỏng lần đầu, lành lần hai: loi rồi xong, gọi đúng hai lần); ca «máy bị báo: chữ và nhánh của khối» assert LOI_CHUA_XOA.description bằng đúng «Chưa xoá được dữ liệu Quỹ hàng trên máy — thử lại», khác chữ đã xoá, nguồn may-bi-bao.tsx không còn .catch(() => {}), dựng LOI_CHUA_XOA khi ketQua là loi và có nút «Thử lại»; đối chứng: bản cũ nuốt lỗi thì thước nêu đủ ba lý do."
+    paths: ["apps/web/src/app/(auth)/login/may-bi-bao.tsx", "apps/web/src/lib/sync/may-bi-bao.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

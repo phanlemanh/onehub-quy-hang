@@ -17,10 +17,13 @@ import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
 import { registerContactRoutes } from "./contacts/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
+import { registerSettingsRoutes } from "./settings/routes";
+import { registerTeamRoutes } from "./team/routes";
 import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
+import { registerPublicRoutes } from "./public/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import { registerExportRoutes } from "./exports/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
@@ -176,11 +179,16 @@ export function createApi(deps: ApiDeps) {
   registerTodayRoutes(api, deps);
   registerLeadRoutes(api, deps);
   registerRoutingRoutes(api, deps);
+  // Hàng 82: cấu hình theo sàn qua lối chung, có nhật ký.
+  registerSettingsRoutes(api, deps);
+  // Hàng 42: Hôm nay trưởng nhóm — hàng đợi lead quá hạn, đầu chủ để giao.
+  registerTeamRoutes(api, deps);
   registerContactRoutes(api, deps);
   registerJobRoutes(api, deps);
   registerPushRoutes(api, deps);
   registerDeviceRoutes(api, deps);
   registerPhotoRoutes(api, deps, deps.khoAnh);
+  registerPublicRoutes(api, deps, deps.khoAnh);
   registerSyncRoutes(api, deps);
   registerExportRoutes(api, deps);
 

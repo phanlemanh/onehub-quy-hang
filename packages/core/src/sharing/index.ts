@@ -67,3 +67,4 @@ export function publicEnvelope(r: ShareRecord): PublicEnvelope {
 }
 
 export * from "./tin";
+export * from "./trang-khach";

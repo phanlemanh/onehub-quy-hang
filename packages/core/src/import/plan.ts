@@ -115,8 +115,9 @@ export function validatePlan(plan: unknown, table: Table, opts: DictionaryPlanOp
   return out;
 }
 
-/** Phép cho một trường trên đúng cột: đơn vị giá từ tiêu đề hay độ lớn cả cột; thứ tự ngày theo cả cột. */
-function phepCho(field: StandardField, header: string, cells: readonly Cell[]): Transform {
+/** Phép cho một trường trên đúng cột: đơn vị giá từ tiêu đề hay độ lớn cả cột; thứ tự ngày theo cả cột. Màn Nhập Excel gọi
+ * khi người đổi đích một cột (hàng man-nhap-excel). */
+export function phepCho(field: StandardField, header: string, cells: readonly Cell[]): Transform {
   if (field === "listPrice" || field === "floorPrice") {
     const dv = priceUnitOfHeader(header);
     if (dv) return { name: "price", params: { unit: dv } };
