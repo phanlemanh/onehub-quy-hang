@@ -4,6 +4,7 @@
  */
 import type { EventType, ListingEvent, ListingState } from "@quy-hang/core/listing";
 import type { BoNhom, LanDoi } from "@quy-hang/core/today";
+import type { ThietBi } from "./thiet-bi";
 
 /**
  * Hàng như `GET /api/v1/listings` trả: bản tính + độ tươi, mức đủ, nấc của trục ai thấy hàng, người giữ và lần đổi giá,
@@ -34,6 +35,8 @@ export type PendingOp = {
   expectedVersion: number;
   clientSeq: number;
   createdAt: string;
+  /** Thao tác ghi lúc mất mạng, hay lần gửi đầu gặp mất mạng (máy vừa rớt mạng) — bộ gửi chép khoá vào lệnh (AC-6). */
+  madeOffline?: boolean;
 };
 
 /** Căn có thao tác chờ mà máy chủ không nhận — chờ người chọn lối. */
@@ -65,7 +68,15 @@ export type Ngan = {
   nextSeq: number;
   /** Bộ nhóm Hôm nay đã lưu — mất mạng hay lỗi đọc thì màn chia theo bộ này. Ngăn cũ chưa có khoá này đọc là `null`. */
   queueSet?: BoNhomDaLuu | null;
+  /** Lượt mất mạng đang mở (AC-7): giờ lượt thử mất mạng đầu, thiết bị lúc ấy, số thao tác ghi lúc mất mạng. Ngăn cũ
+   * thiếu khoá đọc là chưa mở. */
+  offlineSince?: { at: string; device: ThietBi; ops: number } | null;
+  /** Lượt mất mạng đã khép, chờ gửi `POST /api/v1/sync/offline-sessions`. Ngăn cũ thiếu khoá đọc là rỗng. */
+  offlineOutbox?: LuotMatMang[];
 };
+
+/** Một lượt mất mạng đã khép — đúng khuôn thân lệnh của đường lượt mất mạng. */
+export type LuotMatMang = { startedAt: string; endedAt: string; device: ThietBi; queuedOps: number };
 
 export const nganTrong = (): Ngan => ({ listings: null, history: {}, queue: [], review: [], lastPullAt: null, lastAttempt: null, nextSeq: 1, queueSet: null });
 
