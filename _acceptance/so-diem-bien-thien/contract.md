@@ -5,7 +5,7 @@ slug: so-diem-bien-thien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-04-so-diem-bien-thien-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -94,3 +94,7 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Thêm `zod` vào gói lõi theo ADR-0018 quyết định 1 — sổ quyết định.
 - Sổ tài liệu thêm dòng #36 `queue.groups` mà hàng 22 đã ghi vào mã — sổ quyết định.
 - Dãy D, đợt `dau-khach-nhap`.
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu một dòng cấu hình của sàn mang đúng chữ mẫu chưa thay tên (còn đoạn trong ngoặc nhọn), hệ thống nhận im lặng thay vì báo lỗi. Giá trị đó nằm trong cấu hình nhưng không áp cho trường thật nào. — `packages/core/src/config/giai.ts`
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Một khoá mẫu chưa được thay bằng mã thật (ví dụ trường tuỳ chỉnh) vẫn được nhận như hợp lệ, không có cảnh báo. Người cấu hình có thể tưởng đã đặt xong trong khi chưa áp cho trường nào. — `packages/core/src/config/giai.ts`
+- Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sàn có thể đặt thời gian nhận lead dài hơn thời gian gọi khách mà hệ thống không báo lỗi, làm cấu hình tự mâu thuẫn. — `packages/core/src/config/khuon.ts`
+- Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu sau này thêm hoặc bớt một cách chia lead ở một nơi mà quên nơi kia, hai đường kiểm sẽ cho kết quả khác nhau cho cùng một cài đặt. — `packages/core/src/routing/index.ts`
