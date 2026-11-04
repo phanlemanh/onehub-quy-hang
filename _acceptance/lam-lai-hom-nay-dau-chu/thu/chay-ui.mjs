@@ -17,7 +17,6 @@ const iRa = process.argv.indexOf("--ra");
 const RA = path.resolve(GOC, iRa > 0 ? process.argv[iRa + 1] : "_acceptance/lam-lai-hom-nay-dau-chu/evidence");
 mkdirSync(RA, { recursive: true });
 const phien = JSON.parse(readFileSync(path.join(CHAY, "phien.json"), "utf8"));
-const lead = JSON.parse(readFileSync(path.join(CHAY, "lead.json"), "utf8"));
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const h = { "content-type": "application/json", origin: URL_GOC };
 const api = async (ai, duong) => (await fetch(`${URL_GOC}${duong}`, { headers: { ...h, cookie: phien.cookie[ai] } })).json();
