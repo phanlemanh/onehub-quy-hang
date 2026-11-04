@@ -173,7 +173,8 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | khuôn | Khuôn Chế độ cuộc gọi | `design/patterns/cuoc-goi.md` |
 | khuôn | Khuôn Gửi — bố cục Luồng nhiều bước | `design/patterns/gui.md` |
 | khuôn | Khuôn Hồ sơ căn | `design/patterns/ho-so-can.md` |
-| khuôn | Khuôn Hôm nay của đầu chủ | `design/patterns/hom-nay-dau-chu.md` |
+| khuôn | Khuôn Hôm nay của đầu chủ — bố cục Tràn | `design/patterns/hom-nay-dau-chu.md` |
+| khuôn | Khuôn Hôm nay của trưởng nhóm — bố cục Bảng điều khiển | `design/patterns/hom-nay-truong-nhom.md` |
 | khuôn | Khuôn Lead của tôi | `design/patterns/lead-cua-toi.md` |
 | khuôn | Khuôn Nhập Excel | `design/patterns/nhap-excel.md` |
 | khuôn | Khuôn Ô nhận lead | `design/patterns/o-nhan-lead.md` |

@@ -109,6 +109,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/prospects",
     // Hàng ghi-thiet-bi-va-mat-mang: lượt mất mạng của bộ đồng bộ.
     "POST /api/v1/sync/offline-sessions",
+    // Hàng 42: Hôm nay trưởng nhóm.
+    "GET /api/v1/team/lead-queue",
+    "GET /api/v1/team/listing-agents",
     // Hàng 43 (phat-hang): lần xuất bảng hàng.
     "POST /api/v1/exports",
   ].sort();

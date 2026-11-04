@@ -130,7 +130,7 @@ export function ReUI() {
   });
 
   return (
-    <section aria-label="Hôm nay" className="flex w-full max-w-7xl flex-col">
+    <section aria-label="Hôm nay" className="flex w-full flex-col">
       <Frame stacked className="w-full">
         <FramePanel className="flex items-center justify-between gap-2 p-3.5!">
           <h2 className="text-foreground text-base font-medium">Hôm nay</h2>
