@@ -1,0 +1,17 @@
+# Phá thử E1 — 2026-11-04T12:46:44Z: nạp bản 023 bỏ dòng «and returned_at is null» vào Postgres dãy B rồi chạy goi-dau.test.ts
+## diff
+17d16
+<         and returned_at is null
+## mã thoát: 1
+✔ gọi đầu: bảng năm trạng thái đủ (0.352542ms)
+✖ gọi đầu: lead đã trả lại → 404, mốc không đổi (172.680666ms)
+✔ gọi đầu: đang giữ chưa nhận → 200, ghi cả nhận (76.109833ms)
+✔ gọi đầu: đang giữ đã nhận → 200, giữ mốc nhận (68.965292ms)
+✔ gọi đầu: đã gọi rồi → 409 (58.933042ms)
+✔ gọi đầu: lead của người khác → 404 (55.432041ms)
+ℹ pass 5
+ℹ fail 1
+✖ failing tests:
+✖ gọi đầu: lead đã trả lại → 404, mốc không đổi (172.680666ms)
+## sau khôi phục: ℹ pass 6
+## sau khôi phục: ℹ fail 0

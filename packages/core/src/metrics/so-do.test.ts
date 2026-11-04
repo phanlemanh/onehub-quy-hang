@@ -55,6 +55,7 @@ const lead = (id: string, o: Partial<LeadVao>): LeadVao => ({
   boardAt: null,
   returnedAt: null,
   resubmittedAt: null,
+  resubmittedLeadId: null,
   discardedAt: null,
   ...o,
 });
