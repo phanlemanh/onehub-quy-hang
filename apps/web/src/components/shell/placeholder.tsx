@@ -23,7 +23,6 @@ const PLACEHOLDER: Record<string, Info> = {
   "/leads/new": { title: "Lead", question: "Nhận lead chủ nhà", rows: "mục 24 (máy tính), 51 (điện thoại)" },
   "/imports/new": { title: "Nhập Excel", question: "Đưa hàng vào từ bảng tính", rows: "mục 20" },
   "/exports/new": { title: "Phát hàng", question: "Đưa hàng ra ngoài sàn", rows: "mục 43" },
-  "/me": { title: "Tôi", question: "Tài khoản, sàn đang làm, cài app", rows: "mục 38" },
 };
 
 export function placeholderFor(path: string): Info {

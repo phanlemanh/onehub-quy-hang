@@ -48,3 +48,17 @@ export async function readMe(cookie: string): Promise<Me | null> {
   const res = await getApi().request("http://quy-hang.local/api/v1/me", { headers: { cookie } });
   return res.status === 200 ? ((await res.json()) as Me) : null;
 }
+
+/**
+ * Như `readMe`, kèm ca máy bị báo mất (hàng 38): 401 mang mã `device_reported_lost` trả mã người bị báo để vỏ chuyển sang
+ * màn đăng nhập xoá kho của người ấy.
+ */
+export async function readMeHayBiBao(cookie: string): Promise<{ me: Me } | { biBao: string } | null> {
+  const res = await getApi().request("http://quy-hang.local/api/v1/me", { headers: { cookie } });
+  if (res.status === 200) return { me: (await res.json()) as Me };
+  if (res.status === 401) {
+    const b = (await res.json().catch(() => null)) as { error?: string; userId?: string } | null;
+    if (b?.error === "device_reported_lost" && b.userId) return { biBao: b.userId };
+  }
+  return null;
+}
