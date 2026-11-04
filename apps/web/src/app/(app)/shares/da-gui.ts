@@ -6,7 +6,7 @@ export type LanGuiTom = { id: string; audience: "client" | "agents"; recipient: 
 export type CanTrongLink = { id: string; name: string; listPrice: number | null; standardStatus: string; interest: number; changed: VuaDoi; suggestions: { id: string; name: string; listPrice: number | null }[] };
 export type LanGuiChiTiet = LanGuiTom & { listings: CanTrongLink[] };
 
-const NHAN_TRANG_THAI: Readonly<Record<string, string>> = { Pending: "Đã có người đặt cọc", Hold: "Tạm ngưng", Closed: "Không còn", Withdrawn: "Không còn", Incomplete: "Không còn", Active: "Đang bán lại" };
+export const NHAN_TRANG_THAI: Readonly<Record<string, string>> = { Pending: "Đã có người đặt cọc", Hold: "Tạm ngưng", Closed: "Không còn", Withdrawn: "Không còn", Incomplete: "Không còn", Active: "Đang bán lại" };
 
 /** Nhãn «Vừa đổi» của một căn trong link; không đổi → null. */
 export function nhanVuaDoi(changed: VuaDoi): string | null {

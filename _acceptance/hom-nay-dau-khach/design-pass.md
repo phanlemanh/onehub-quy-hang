@@ -32,7 +32,8 @@ màn thật dựng bằng khuôn `KhungHomNayDauKhach` ở S3.
 | Vẽ mới | `ba-loi/ve-moi-1440.png` | `ba-loi/ve-moi-375.png` |
 
 Không khung nào cuộn ngang (độ rộng trang 375 ở khổ điện thoại); không khung nào có số điện thoại. Ảnh chụp trong khung
-trình duyệt của app (khổ 1440 thu về 800 px khi lưu). Chụp bằng Playwright trên Chrome treo ở lần mở trang đầu (máy đang
+trình duyệt của app: khung trả khổ 1440 ở 800 px nên ảnh 1440 là bản phóng lại về đúng bề rộng (chữ mờ hơn bản
+chụp thẳng); khổ 375 chụp ở độ nét gấp đôi rồi thu về 375. Trang ba lối dựng bằng `doi-chieu.mjs --dung-ba-loi`. Chụp bằng Playwright trên Chrome treo ở lần mở trang đầu (máy đang
 chịu áp lực bộ nhớ) nên đổi sang khung trình duyệt; vòng nạp lại ~75 ms ở 375 thấy lúc trước không lặp lại trong khung này.
 
 ## Findings
