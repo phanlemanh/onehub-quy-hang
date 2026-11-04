@@ -233,6 +233,10 @@ test("đầu khách: kéo bảng hàng và hồ sơ không chở nguồn", async
   for (const m of MAU) assert.ok(m.length > 0);
   assert.notDeepEqual(findSourceLeaks(await json(await send("GET", chuNha(h), undefined, a.truongNhom.cookie)), MAU), []);
   const anh = `/api/v1/units/photos?toa=${encodeURIComponent("[Toà mẫu]")}&ma=A-1201`;
+  // Đối chứng dương: ảnh nội bộ vừa chèn hiện ra ở cùng đường cho người giữ căn.
+  const anhGiu = (await json(await send("GET", anh, undefined, a.dauChu.cookie))) as unknown as { anh: { compartment: string }[]; noiBo: string };
+  assert.equal(anhGiu.noiBo, "thay");
+  assert.equal(anhGiu.anh.filter((p) => p.compartment === "internal").length, 1);
   const duong = ["/api/v1/listings", `/api/v1/listings/${h}`, anh, chuNha(h)];
   let soDuong = 0;
   for (const d of duong) {

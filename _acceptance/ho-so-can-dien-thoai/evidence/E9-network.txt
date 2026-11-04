@@ -1,0 +1,28 @@
+E9 network (playwright, phien dau-khach)
+GET /api/v1/catalog
+GET /api/v1/catalog
+GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+GET /api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner
+GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+GET /api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner
+REQFAILED http://localhost:3492/api/v1/catalog net::ERR_INTERNET_DISCONNECTED
+REQFAILED http://localhost:3492/api/v1/catalog net::ERR_INTERNET_DISCONNECTED
+REQFAILED http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 net::ERR_INTERNET_DISCONNECTED
+REQFAILED http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner net::ERR_INTERNET_DISCONNECTED
+REQFAILED http://localhost:3492/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 net::ERR_INTERNET_DISCONNECTED
+REQFAILED http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6/owner net::ERR_INTERNET_DISCONNECTED
+GET /api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6
+GET /api/v1/listings
+REQFAILED http://localhost:3492/api/v1/listings/3be49d0a-5e2c-4e26-9a72-7fb2aefcdaf6 net::ERR_INTERNET_DISCONNECTED
+REQFAILED http://localhost:3492/api/v1/listings net::ERR_INTERNET_DISCONNECTED
+GET /api/v1/listings
+GET /api/v1/catalog
+GET /api/v1/catalog
+GET /api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.04
+GET /api/v1/units/photos?toa=To%C3%A0%20B&ma=B-08.04
+GET /api/v1/listings/01cad69f-2bec-44b4-bb82-0356d768674b
+GET /api/v1/listings
+GET /api/v1/units/photos/16bff0f9-df8e-4725-abf4-7fe76396a281/thumb
+console errors: ["Failed to load resource: the server responded with a status of 404 (Not Found)","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED","Failed to load resource: net::ERR_INTERNET_DISCONNECTED"]
+Tom tat: khi cham nut (online) khong co request POST/api nao (danh sach rong). GET /api/v1/listings 200. Offline: /api bi chan co chu dich (net::ERR_INTERNET_DISCONNECTED, khong tinh la loi app). 1 console 404 resource khong xac dinh (khong lap lai o lan do rieng, khong co 4xx /api).
+Do cuon (375x812): nut Hoi dau chu moi cuon 300px thi top lui 300px (1661->1361->1061->761): KHONG dinh day; chi hien khi cuon het noi dung.

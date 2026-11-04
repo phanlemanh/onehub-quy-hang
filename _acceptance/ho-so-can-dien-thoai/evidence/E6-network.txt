@@ -1,0 +1,9 @@
+E6 network (nguon: PerformanceResourceTiming cua trang /units/A-04.06 sau khi tai; driver CDP khong gan listener failed-request)
+Console errors: khong thu (driver khong doc console) ; request app-origin localhost:3492 thay duoc deu 200:
+fetch /api/v1/catalog 200 (x2)
+fetch /api/v1/units/photos?toa=Toa A&ma=A-04.06 200 (x2)
+fetch /api/v1/listings/3be49d0a-.../owner 200 (x2)
+fetch /api/v1/listings/3be49d0a-... 200
+fetch /api/v1/listings 200
+img /api/v1/units/photos/{6fed0b5e,03c3601c,dc34d654}/thumb 200
+Khong co request that bai/4xx/5xx trong tap thay duoc. Man /inventory luc cham the: khong ghi rieng.

@@ -33,7 +33,9 @@ khuôn** này, không phải khối đích riêng; dựng lại theo `product-de
   thẳng API, không qua bộ đồng bộ, không vào kho trên máy; ngăn nội bộ API trả no-store. Ẩn ngăn nội bộ do API và luật
   theo dòng quyết — mục chỉ trình điều API trả. Trang bấm được `proto/anh-can-ba-ngan` đi cùng khuôn, gỡ khi màn thật
   qua Cổng Bằng chứng.
-- **KH-hs-lop-phu** — Quyền là lớp phủ trên cùng màn (hàng 33): màn đọc bốn cờ của `lopPhuHoSo` ở
-  `packages/core/src/access` (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút «Hỏi đầu chủ»), không rẽ theo tên vai. Người không
-  thấy nguồn: không thẻ Nội bộ, không ổ khoá; nút «Hỏi đầu chủ» dính đáy chỉ mở bảng chia sẻ của máy.
+- **KH-hs-lop-phu** — Quyền là lớp phủ trên cùng màn (hàng 33): `lopPhuHoSo` ở `packages/core/src/access` trả bốn cờ
+  (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút «Hỏi đầu chủ»), không rẽ theo tên vai. Hồ sơ đọc hai cờ Sẵn sàng bán và nút
+  hỏi; ngăn Nội bộ và sửa ảnh của mục Ảnh vẫn do API ảnh trả (`noiBo`, `suaDuoc` — KH-hs-anh-noi-bo), cùng luật
+  `canSeeSource` / `canSeeUnitInternal` nên khớp hai cờ còn lại. Người không thấy nguồn: không thẻ Nội bộ, không ổ khoá;
+  nút «Hỏi đầu chủ» dính đáy chỉ mở bảng chia sẻ của máy.
 - **KH-hs-khoa-thuoc-tinh** — Thuộc tính căn từ danh mục là chữ khoá, không ô sửa; sai thì «Báo sai thông tin căn».

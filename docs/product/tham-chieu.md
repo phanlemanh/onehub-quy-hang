@@ -247,7 +247,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Bảng hàng | Vị trí: lưới toà | Máy tính | 3 | Sau | P2 |
 | Bảng hàng | Vị trí: bản đồ lô thấp tầng | Máy tính | chưa phác | Sau | P2 |
 | Hồ sơ căn | Cột hồ sơ, ảnh | Đầu chủ · máy tính | 2, M5 | Bản đầu | P0 |
-| Hồ sơ căn | Màn hồ sơ; với đầu khách phần chủ nhà thay bằng «Xin dẫn xem» | Đầu khách · điện thoại | M3 (vẽ cho đầu chủ) | Bản đầu | P0 |
+| Hồ sơ căn | Màn hồ sơ; với đầu khách phần chủ nhà thay bằng nút «Hỏi đầu chủ» (hàng 33, 04/11); «Xin dẫn xem» chờ phỏng vấn (§13) | Đầu khách · điện thoại | M3 (vẽ cho đầu chủ) | Bản đầu | P0 |
 | Hồ sơ căn | Chế độ cuộc gọi: khai thác, ép giá | Đầu chủ · máy tính | KD1, KD2 | Bản đầu | P0 |
 | Hồ sơ căn | Đổi giá / trạng thái nhanh | Đầu chủ · điện thoại | M2 | Bản đầu | P1 |
 | Hồ sơ căn | Chế độ cuộc gọi trên điện thoại | Đầu chủ · điện thoại | K1–K4 | Dự phòng | P2 |

@@ -18,7 +18,8 @@ export function KhungHoSoCan({ cot = false, nhung = false, children }: { cot?: b
   }
   const khung = (
     <Frame className="w-full">
-      <FramePanel className="flex flex-col p-0" aria-label="Hồ sơ căn">
+      {/* overflow-visible: FramePanel cắt tràn mặc định, làm nút «Hỏi đầu chủ» không dính đáy khung nhìn (hàng 33, S4 E9). */}
+      <FramePanel className="flex flex-col overflow-visible p-0" aria-label="Hồ sơ căn">
         {children}
       </FramePanel>
     </Frame>

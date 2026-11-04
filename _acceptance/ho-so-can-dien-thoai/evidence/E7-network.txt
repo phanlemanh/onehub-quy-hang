@@ -1,0 +1,3 @@
+Lượt A-04.06: GET /api/v1/units/photos?toa=Toà A&ma=A-04.06 [200] x2; body: 3 ảnh compartment=shareable (id 03c3601c..., 6fed0b5e... isCover=true, dc34d654...), noiBo:"an", suaDuoc:false. Không ảnh internal. thumb GET x3 [200].
+Lượt A-06.03: GET /api/v1/units/photos?toa=Toà A&ma=A-06.03 [200] x2; body {"anh":[],"noiBo":"an","suaDuoc":false}. Không ảnh internal. Còn: catalog x2, listings/{id}, listings [200].
+Không request lỗi, không console lỗi quan sát; không third-party.
