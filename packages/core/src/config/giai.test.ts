@@ -42,13 +42,21 @@ test("giaiCauHinh: mặc định, ghi đè, dòng hỏng, khoá lạ, map", () =
   assert.deepEqual(map.loi, []);
   assert.equal("queue.groups" in map.cauHinh, false);
 
-  // Ràng buộc chéo xét trên giá trị đã giải của sàn, không trên mặc định.
+  // Ràng buộc chéo xét trên cấu hình đã giải của sàn, không trên mặc định: cặp 25 / 20 trái luật thì cả cặp về mặc định
+  // và một lỗi nêu hai khoá (hàng 82 — không giữ một nửa của cặp).
   const cheo = giaiCauHinh([
     { key: "lead_routing.first_call_minutes", value: 20 },
     { key: "lead_routing.accept_minutes", value: 25 },
   ]);
-  assert.equal(cheo.cauHinh["lead_routing.accept_minutes"], 25);
+  assert.equal(cheo.cauHinh["lead_routing.accept_minutes"], 15);
   assert.equal(cheo.cauHinh["lead_routing.first_call_minutes"], 30);
   assert.equal(cheo.loi.length, 1);
-  assert.ok(cheo.loi[0]!.startsWith("lead_routing.first_call_minutes"), cheo.loi[0]);
+  assert.ok(cheo.loi[0]!.includes("lead_routing.first_call_minutes") && cheo.loi[0]!.includes("lead_routing.accept_minutes"), cheo.loi[0]);
+  // Cặp 25 / 40 hợp luật: cả hai áp (đối chứng dương).
+  const dung = giaiCauHinh([
+    { key: "lead_routing.first_call_minutes", value: 40 },
+    { key: "lead_routing.accept_minutes", value: 25 },
+  ]);
+  assert.deepEqual(dung.loi, []);
+  assert.equal(dung.cauHinh["lead_routing.accept_minutes"], 25);
 });
