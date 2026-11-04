@@ -2434,3 +2434,91 @@ test("exports: chiều đỏ — luật đọc không lọc sàn thì ca đọc 
     assert.equal(await docCheoLanXuat(c), "exports");
   });
 });
+
+// ---- Nhật ký cấu hình sàn (026_cau_hinh_su_kien, hàng 82 cau-hinh-theo-san: E6, E7, E9) ----
+const CHEN_CAU_HINH = "insert into company_settings (company_id, key, value, updated_by, data_class) values ($1, $2, $3::jsonb, $4, $5)";
+const demSuKien = (c, quayVe) =>
+  docChu(c, "select count(*)::int n from company_settings_events where company_id = $1", [COMPANY_A], quayVe).then((r) => r[0].n);
+/** Trả tên bảng khi người ở sàn B đọc được nhật ký của sàn A; null khi không. */
+async function docCheoNhatKy(c) {
+  const { rowCount } = await c.query("select 1 from company_settings_events where company_id = $1", [COMPANY_A]);
+  return rowCount > 0 ? "company_settings_events" : null;
+}
+
+test("company_settings_events: bảng bật và ép luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select c.relrowsecurity r, c.relforcerowsecurity f from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relname = 'company_settings_events'`,
+    );
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("company_settings_events: vai API không sửa, không xoá, không chèn thẳng", { skip }, async () => {
+  await withChia(async (c) => {
+    await lamNguoi(c, QT_A, COMPANY_A);
+    // Đối chứng dương: quản trị A đọc được nhật ký của A (dòng dựng sẵn của withChia sinh một sự kiện).
+    assert.ok((await c.query("select 1 from company_settings_events")).rowCount >= 1, "nhật ký của A rỗng");
+    const truoc = await demSuKien(c, [QT_A, COMPANY_A]);
+    await expectError(c, "update company_settings_events set value = '1'", [], /permission denied/);
+    await expectError(c, "delete from company_settings_events", [], /permission denied/);
+    await expectError(
+      c,
+      "insert into company_settings_events (company_id, key, value, data_class, actor_user_id) values ($1, 'queue.call_back_after_days', '20', 'company_internal', $2)",
+      [COMPANY_A, QT_A],
+      /permission denied/,
+    );
+    // Đối chứng dương: ghi cấu hình qua bảng hiện hành thêm đúng một sự kiện.
+    await c.query(CHEN_CAU_HINH, [COMPANY_A, "queue.call_back_after_days", "20", QT_A, "company_internal"]);
+    assert.equal(await demSuKien(c, [QT_A, COMPANY_A]), truoc + 1);
+  });
+});
+
+test("company_settings_events: chủ bảng cũng không sửa, không xoá", { skip }, async () => {
+  await withChia(async (c) => {
+    await c.query("reset role");
+    assert.ok((await c.query("select 1 from company_settings_events where company_id = $1", [COMPANY_A])).rowCount >= 1, "chủ không thấy sự kiện");
+    await expectError(c, "update company_settings_events set value = '1' where company_id = $1", [COMPANY_A], /nhật ký cấu hình chỉ thêm, không sửa, không xoá/);
+    await expectError(c, "delete from company_settings_events where company_id = $1", [COMPANY_A], /nhật ký cấu hình chỉ thêm, không sửa, không xoá/);
+  });
+});
+
+test("cấu hình sàn: không dòng nào lớp source", { skip }, async () => {
+  await withChia(async (c) => {
+    await lamNguoi(c, QT_A, COMPANY_A);
+    await expectError(c, CHEN_CAU_HINH, [COMPANY_A, "queue.call_back_after_days", "20", QT_A, "source"], /company_settings_data_class_check/);
+    assert.equal((await c.query(CHEN_CAU_HINH, [COMPANY_A, "queue.call_back_after_days", "20", QT_A, "company_internal"])).rowCount, 1);
+    await c.query("reset role");
+    const chenSuKien = "insert into company_settings_events (company_id, key, value, data_class, actor_user_id) values ($1, 'queue.call_back_after_days', '20', $2, $3)";
+    await expectError(c, chenSuKien, [COMPANY_A, "source", QT_A], /company_settings_events_data_class_check/);
+    assert.equal((await c.query(chenSuKien, [COMPANY_A, "company_internal", QT_A])).rowCount, 1);
+  });
+});
+
+test("company_settings_events: sàn khác không đọc, không ghi hộ", { skip }, async () => {
+  await withChia(async (c) => {
+    await lamNguoi(c, QT_A, COMPANY_A);
+    assert.ok((await c.query("select 1 from company_settings_events")).rowCount >= 1, "đối chứng: A không thấy nhật ký của mình");
+    const truoc = await demSuKien(c, [NG_B, COMPANY_B]);
+    assert.equal(await docCheoNhatKy(c), null);
+    assert.equal((await c.query("select 1 from company_settings where company_id = $1", [COMPANY_A])).rowCount, 0, "company_settings của A lộ sang B");
+    await expectError(c, CHEN_CAU_HINH, [COMPANY_A, "queue.call_back_after_days", "20", NG_B, "company_internal"], /row-level security/);
+    assert.equal(await demSuKien(c, [NG_B, COMPANY_B]), truoc);
+  });
+});
+
+test("company_settings_events: chiều đỏ — luật đọc không lọc sàn thì ca đọc chéo nêu tên bảng", { skip }, async () => {
+  await withChia(async (c) => {
+    await c.query("reset role");
+    await c.query("drop policy company_settings_events_read on company_settings_events");
+    await c.query("create policy company_settings_events_read on company_settings_events for select using (true)");
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, NG_B, COMPANY_B);
+    assert.equal(await docCheoNhatKy(c), "company_settings_events");
+  });
+});
