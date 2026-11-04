@@ -2,8 +2,15 @@
 //   node _acceptance/dang-nhap-mat-khau/thu/dung-trang-thai.mjs <email> <trạng-thái>
 // Trạng thái: tam · tam-het · cho · xoa-cho · khoa · tu-dat · khong · vo-hieu. «tam» và «tu-dat» in mật khẩu thử ra stdout.
 import { randomInt } from "node:crypto";
-import { hashPassword } from "better-auth/crypto";
+import { createRequire } from "node:module";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import pg from "pg";
+
+// better-auth nằm ở gói API, không ở gốc kho: tìm nó từ packages/api để băm đúng như máy chủ.
+const GOC = path.resolve(import.meta.dirname, "../../..");
+const timTuApi = createRequire(path.join(GOC, "packages/api/package.json"));
+const { hashPassword } = await import(pathToFileURL(timTuApi.resolve("better-auth/crypto")).href);
 
 const [email, tt] = process.argv.slice(2);
 const TT = ["tam", "tam-het", "cho", "xoa-cho", "khoa", "tu-dat", "khong", "vo-hieu"];
