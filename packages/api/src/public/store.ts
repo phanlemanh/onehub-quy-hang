@@ -42,7 +42,7 @@ type DongCan = ListingState & {
 };
 
 /** Căn của Lần gửi theo `position`, dựng thành `CanNoiBo` trong phiên người gửi; căn người gửi không còn đọc được thì bỏ. */
-async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: string): Promise<CanNoiBo[]> {
+async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: string): Promise<{ id: string; can: CanNoiBo }[]> {
   const cot = Object.entries(STATE_COLUMNS).map(
     ([k, col]) => `${col === "list_price" || col === "close_price" ? `l.${col}::float8` : col === "close_date" ? `l.${col}::text` : `l.${col}`} as "${k}"`,
   );
@@ -62,12 +62,12 @@ async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: stri
     [s.companyId, s.shareId],
   );
   const nguoiXem = await viewerOf(tx, s.senderUserId);
-  const ra: CanNoiBo[] = [];
+  const ra: { id: string; can: CanNoiBo }[] = [];
   for (const r of rows) {
     const facts: VisibilityFacts = { creatorUserId: r.creatorUserId, statusesReached: r.statusesReached, listingAgentUserId: r.listingAgentUserId };
     if (!canRead(nguoiXem, facts)) continue;
     const anh: UnitPhoto[] = r.unitNumber ? (await listPhotos(tx, r.buildingName, r.unitNumber)).anh.filter((a) => a.compartment === "shareable") : [];
-    ra.push({
+    ra.push({ id: r.id, can: {
       buildingName: r.buildingName,
       livingArea: r.livingArea,
       bedroomsTotal: r.bedroomsTotal,
@@ -103,7 +103,7 @@ async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: stri
       floorPrice: null,
       titleDeedPhoto: null,
       contacts: [],
-    });
+    } });
   }
   return ra;
 }
@@ -114,11 +114,16 @@ async function tenNguoiGui(identityPool: pg.Pool, userId: string): Promise<strin
   return rows[0]?.name ?? "";
 }
 
-/** Thân trang khách của một Lần gửi còn mở; `today` là `YYYY-MM-DD` UTC. */
-export async function docTrangKhach(deps: { appPool: pg.Pool; identityPool: pg.Pool }, s: LanGuiTheoMa, today: string): Promise<ThanTrangKhach> {
+export type ThanRoute = ThanTrangKhach & { listingIds: string[] };
+
+/**
+ * Thân trang khách của một Lần gửi còn mở; `today` là `YYYY-MM-DD` UTC. `listingIds` (cùng thứ tự với `can`) là mã hàng để
+ * trang báo «Quan tâm» đúng căn — chuỗi UUID không mang nghĩa, không thuộc lớp nguồn; mọi giá trị căn vẫn chỉ là bản ra.
+ */
+export async function docTrangKhach(deps: { appPool: pg.Pool; identityPool: pg.Pool }, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
   const ten = await tenNguoiGui(deps.identityPool, s.senderUserId);
-  const can = await withCompany(deps.appPool, { userId: s.senderUserId, companyId: s.companyId }, (tx) => canCuaLanGui(tx, s, ten));
-  return thanTrangKhach({ can, audience: s.audience, today });
+  const ds = await withCompany(deps.appPool, { userId: s.senderUserId, companyId: s.companyId }, (tx) => canCuaLanGui(tx, s, ten));
+  return { ...thanTrangKhach({ can: ds.map((d) => d.can), audience: s.audience, today }), listingIds: ds.map((d) => d.id) };
 }
 
 export type GhiSuKien = { inserted: boolean } | { loi: "khong-co" | "khong-ghi-duoc" | "than-sai" };
