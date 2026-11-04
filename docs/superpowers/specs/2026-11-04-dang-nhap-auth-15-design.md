@@ -59,6 +59,7 @@ Ba màn đứng trước lúc người có sàn — đăng nhập, chọn sàn, 
 | ST-dang-nhap-ma | Đăng nhập | Ô «Mã 6 số» có biểu tượng khoá, lời dặn «Đã gửi mã tới <email>», «Vào →», «Đổi email» | Gõ mã, vào |
 | ST-dang-nhap-loi | Đăng nhập | Lỗi dưới đúng ô (mã sai · hết hạn · quá nhiều lần · lỗi khác), lời dặn vẫn còn | Gõ lại · Gửi lại mã · Đổi email |
 | ST-dang-nhap-bi-bao | Đăng nhập | Khối báo «Máy này đã bị báo mất» trên ô email | Đăng nhập lại |
+| ST-dang-nhap-bi-bao-loi | Đăng nhập | Khối lỗi «Chưa xoá được dữ liệu Quỹ hàng trên máy — thử lại» kèm nút «Thử lại» (AC-9) | Thử lại |
 | ST-chon-san-mac-dinh | Chọn sàn làm việc | Mỗi sàn một nút rộng trọn cột, Đăng xuất | Bấm sàn |
 | ST-chua-gan-mac-dinh | Chưa thuộc sàn nào | Câu «Tài khoản <email> chưa thuộc sàn nào…», Đăng xuất | Đăng xuất |
 <!-- UX-STATE-TABLE>>> -->

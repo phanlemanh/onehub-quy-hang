@@ -5,10 +5,10 @@ slug: dang-nhap-auth-15
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: draft
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-auth-15-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-04
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: dang-nhap-auth-15
@@ -50,6 +50,10 @@ Source input: hàng 93 của `docs/plan/lo-trinh.json` · ô cơ hội `_accepta
   `@reui/auth-15` đủ chín ô không rỗng với ảnh chuẩn có trong kho, và `khung.tsx` mang chú thích «chuyển thể … auth-15».
 - AC-8: Given ba màn ở chế độ tối (1440 và 375) và bước mã ở khổ 375, When hiện, Then chữ, ô, nút và lỗi đọc được trên
   nền tối và không màn nào cuộn ngang.
+- AC-9: Given máy bị báo mất mở màn đăng nhập (khối «Máy này đã bị báo mất» của hàng 38), When xoá dữ liệu Quỹ hàng trên
+  máy thất bại, Then khối báo lỗi «Chưa xoá được dữ liệu Quỹ hàng trên máy — thử lại» kèm nút «Thử lại», không báo «đã xoá»;
+  bấm «Thử lại» chạy lại lần xoá, lần lành thì báo «Dữ liệu Quỹ hàng trên máy đã xoá». Nguồn: Ngoài-1 của tab-toi (hàng 43),
+  chủ kho chọn mở hợp đồng mới 04/11.
 
 ## Coverage
 
@@ -65,6 +69,8 @@ Quét bằng morphological-scan (preset test-matrix), ba trục:
 - Later: trang điều khoản và chính sách có liên kết từ chân trang · danh sách chọn sàn kèm vai (dòng Chỗ hở «Chọn sàn sau
   đăng nhập» vẫn mở).
 - Never: nút đăng nhập Google, Apple, GitHub (ADR-0005).
+- Ngoài vùng của hàng: lỗi xoá kho bị nuốt trong vỏ ứng dụng (`lib/sync/may-bi-bao.ts`, Ngoài-3 của tab-toi) — chỉ phần
+  màn đăng nhập vào hàng này (AC-9).
 
 ## Đường đo
 

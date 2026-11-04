@@ -132,3 +132,11 @@ evals:
     expected: "exit 0; sàn M1 không báo mã màu thô trên tệp giao diện vòng chạm."
     paths: ["apps/web/src/app/(auth)/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «máy bị báo: xoá lành ra «xong», xoá hỏng ra «loi»» (hàm xoá giả ném DOMException thì chayXoa trả loi, không xong); ca «máy bị báo: thử lại sau lần hỏng thì xoá lại và ra «xong»» (hàm giả hỏng lần đầu, lành lần hai: loi rồi xong, gọi đúng hai lần); ca «máy bị báo: chữ và nhánh của khối» assert LOI_CHUA_XOA.description bằng đúng «Chưa xoá được dữ liệu Quỹ hàng trên máy — thử lại», khác chữ đã xoá, nguồn may-bi-bao.tsx không còn .catch(() => {}), dựng LOI_CHUA_XOA khi ketQua là loi và có nút «Thử lại»; đối chứng: bản cũ nuốt lỗi thì thước nêu đủ ba lý do."
+    paths: ["apps/web/src/app/(auth)/login/may-bi-bao.tsx", "apps/web/src/lib/sync/may-bi-bao.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
