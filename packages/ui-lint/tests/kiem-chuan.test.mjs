@@ -253,7 +253,8 @@ describe("vết chọn khối — Chỗ hở", () => {
     }));
 
   it("chỗ hở: cây thật không còn cảnh báo chỗ tạm", () => {
-    // Luật đợt 44 (L-14, hàng 34): Đăng nhập và Ô nhận lead xem lại khi hàng 93, hàng 51 gộp — hạn là điều kiện, không ngày.
+    // Luật đợt 44 (L-14, hàng 34): Đăng nhập xem lại khi hàng 93 gộp; Ô nhận lead (hàng 51 đã gộp, luật đợt 30) xem lại khi
+    // ReUI có khối nhập một bản ghi kèm kiểm trùng — hạn là điều kiện, không ngày.
     const r = kiemChuan(ROOT, { homNay: HOM_NAY });
     assert.deepEqual(r.loi, []);
     assert.deepEqual(r.canhBao, []);

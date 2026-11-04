@@ -33,9 +33,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+import { useXemDaNhap } from "./tab-lead";
+
 /** Ba lời gọi của ô nhận lead — màn thật gọi API, trang mẫu (design-pass) đưa bản giả. */
 export type NguonLead = {
-  gui: (body: unknown) => Promise<{ ok: true; lead: LeadResultView } | { ok: false; loi: Record<string, string> } | { ok: false; mang: true }>;
+  gui: (
+    body: unknown,
+  ) => Promise<{ ok: true; lead: LeadResultView } | { ok: false; loi: Record<string, string> } | { ok: false; mang: true } | { ok: false; mayChu: true }>;
   bo: (id: string) => Promise<boolean>;
   traMa: (ma: string) => Promise<{ buildingName: string; unitNumber: string } | { khong: string }>;
 };
@@ -70,7 +74,9 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
   const [dangGui, setDangGui] = useState(false);
   const dangGuiRef = useRef(false);
   const [ketQua, setKetQua] = useState<LeadResultView | null>(null);
-  const [loiMang, setLoiMang] = useState(false);
+  // Lỗi gửi không do ô: mất mạng (lời gọi không tới máy chủ) hay máy chủ không trả lời — hai câu khác nhau.
+  const [loiMang, setLoiMang] = useState<"mang" | "may-chu" | null>(null);
+  const xemDaNhap = useXemDaNhap();
 
   const sua = (k: string) =>
     loi[k] &&
@@ -129,7 +135,7 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
         return;
       }
       setLoi({});
-      setLoiMang(false);
+      setLoiMang(null);
       setKetQua(null);
       await guiThan(than);
     } finally {
@@ -150,7 +156,8 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
       setGia("");
       setPhi("");
       setThoiGian("");
-    } else if ("mang" in r) setLoiMang(true);
+    } else if ("mang" in r) setLoiMang("mang");
+    else if ("mayChu" in r) setLoiMang("may-chu");
     else setLoi(Object.fromEntries(Object.entries(r.loi).map(([k, v]) => [k, LOI_CHU[k] ?? v])));
   }
 
@@ -242,13 +249,31 @@ export function OLead({ toa, nguon }: { toa: readonly string[]; nguon: NguonLead
       </FieldGroup>
 
       <div>
-        <Button type="submit" disabled={dangGui}>
+        <Button type="submit" className="max-md:w-full" disabled={dangGui}>
           {dangGui ? "Đang kiểm trùng…" : "Gửi lead"}
         </Button>
       </div>
 
-      {loiMang && <TrangThai kind="error" title="Chưa gửi được — kiểm mạng rồi gửi lại" description="Chữ đã gõ vẫn còn trong các ô." />}
+      {loiMang === "mang" && (
+        <TrangThai kind="error" title="Chưa gửi được — mất mạng" description="Năm mục vẫn còn trong các ô. Có mạng lại thì bấm «Gửi lead»." />
+      )}
+      {loiMang === "may-chu" && (
+        <TrangThai kind="error" title="Chưa gửi được — máy chủ không trả lời" description="Năm mục vẫn còn trong các ô. Thử «Gửi lead» lại sau ít phút." />
+      )}
       {ketQua && <KetQua lead={ketQua} onBo={boLead} />}
+      {ketQua && (
+        // Điện thoại trong tab Lead: đổi sang phần «Lead đã nhập»; máy tính (hay ngoài tab): sang /leads/mine.
+        <div>
+          {xemDaNhap && (
+            <Button type="button" variant="outline" className="w-full md:hidden" onClick={xemDaNhap}>
+              Xem ở Lead đã nhập
+            </Button>
+          )}
+          <Button variant="outline" className={xemDaNhap ? "max-md:hidden" : undefined} render={<a href="/leads/mine" />}>
+            Xem ở Lead đã nhập
+          </Button>
+        </div>
+      )}
     </form>
   );
 }
