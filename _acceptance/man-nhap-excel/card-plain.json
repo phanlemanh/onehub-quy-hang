@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Đầu chủ — hay Trưởng nhóm nhập hộ — chọn một tệp bảng hàng cũ trên máy, thấy trước từng ô và từng dòng sẽ thành gì trên Quỹ hàng, sửa chỗ cần, rồi bấm ghi; tệp không rời máy người nhập.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ đọc được tệp .xlsx (kể cả nhiều trang tính) và .csv ngay trên máy người nhập, ra đúng lưới mà lõi đọc; tệp .xls, tệp hỏng, tệp quá 10 MB hay quá 5.000 dòng thì báo lỗi bằng chữ, không sập."},
+    {"id": "AC-2", "p": "Sẽ đánh dấu từng ô giữ nguyên · máy sửa · cần người · chặn bằng đúng luật của lõi — màn không có luật riêng."},
+    {"id": "AC-3", "p": "Sẽ cho đổi trường của từng cột; cột số chủ, tên chủ, giá đáy ghép sai chỗ thì báo đỏ dưới cột và khoá Tiếp; ô mẫu của cột chủ nhà chỉ hiện hình dạng, không hiện số."},
+    {"id": "AC-4", "p": "Sẽ cho sửa ô và bỏ dòng ở bước xem trước; đổi gì sau bản xem thử thì phải xem thử lại mới ghi được."},
+    {"id": "AC-5", "p": "Sẽ bảo đảm con số trên nút ghi bằng đúng con số máy chủ ghi ra, kể cả khi dòng trùng nằm ở hai gói khác nhau; bản xem thử không để lại gì."},
+    {"id": "AC-6", "p": "Sẽ KHÔNG gửi số chủ, tên chủ, giá đáy ra ngoài đường ghi của lần nhập — lúc mở lần nhập không có giá trị nào của chủ nhà đi lên máy chủ."},
+    {"id": "AC-7", "p": "Sẽ cho «Thử lại» đúng gói bị lỗi mạng mà không nhân đôi căn."},
+    {"id": "AC-8", "p": "Sẽ cho Đầu chủ và Trưởng nhóm vào, vai khác thấy «không có quyền»; Trưởng nhóm chọn một đầu chủ cho cả tệp và căn mới thuộc người đó."},
+    {"id": "AC-9", "p": "Sẽ cho thấy đủ năm bước và các trạng thái rỗng, lỗi, không quyền trên màn đang chạy ở khổ máy tính và điện thoại."},
+    {"id": "AC-10", "p": "Sẽ đứng trong nhóm khuôn mới «Nhập Excel», lưới giao diện 0 lệch, 0 nợ."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không có AI lập kế hoạch ghép ở hàng này — máy ghép bằng từ điển, người soát."},
+    {"id": "OOS-2", "p": "Không nhớ mẫu nhập của sàn, không hoàn tác cả lần nhập — hai hàng sau."},
+    {"id": "OOS-3", "p": "Không đọc Google Sheets và tệp .xls (Hỏi-1)."},
+    {"id": "OOS-4", "p": "Không tiếp tục lần nhập dở sau khi đóng trang; hai dòng trùng trong tệp thì dòng sau bỏ, không gộp."},
+    {"id": "OOS-5", "p": "Không thêm lối vào Nhập Excel trên điện thoại."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Năm bước của luồng đều có tiêu chí và bài đo (AC-1, 3, 4, 5, 9)."},
+    {"i": 1, "p": "Bảy dạng tệp — xlsx một và nhiều trang, csv hai bảng mã, .xls, tệp hỏng, quá cỡ (AC-1)."},
+    {"i": 2, "p": "Bốn lớp dữ liệu, riêng lớp chủ nhà không ra ngoài đường ghi (AC-3, AC-6)."},
+    {"i": 3, "p": "Ba kiểu người nhập: Đầu chủ, Trưởng nhóm, vai khác (AC-8)."},
+    {"i": 4, "p": "Mạng thông, lỗi giữa gói, thử lại không nhân đôi (AC-5, AC-7)."},
+    {"i": 5, "p": "Hai khổ màn 1440 và 375 (AC-9)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Trưởng nhóm nhập hộ chưa có bài đi qua máy chủ thật — đã thêm bài trên Postgres: căn mới phải thuộc đầu chủ được chọn."},
+    {"i": 1, "p": "Dòng trùng nằm ở hai gói khác nhau có thể làm số xem thử lệch số ghi — đã thêm ma trận ba cặp trùng (cùng gói, vắt gói)."},
+    {"i": 2, "p": "Bộ đọc chưa được thử với ô công thức, chữ định dạng, liên kết, ô lỗi, ô gộp — đã thêm đủ bảy dạng ô."},
+    {"i": 3, "p": "Ngưỡng «cần người ≤ 10%», «lỗi lọt ≤ 0,5%» chưa có bài so — đã thêm bài so trên hai tệp mẫu."},
+    {"i": 4, "p": "Bài nhìn màn mới chụp một trạng thái — đã thêm sáu khung: .xls, tệp rỗng, không dòng nào ghi, lỗi mạng, chọn đầu chủ, rời trang."}
+  ]
+}
