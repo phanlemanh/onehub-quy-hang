@@ -5,10 +5,10 @@ slug: luong-gui
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: draft
 design_doc: docs/superpowers/specs/2026-11-03-luong-gui-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-04
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: luong-gui
@@ -93,4 +93,7 @@ liệu ra × người nhận phủ bởi AC-5 trên ma trận đủ `CUA_RA × N
 
 - Bất biến chạm: 3 (người bấm gửi), 4 (phần nội bộ không ra trang khách). Không bảng mới, không đổi lớp dữ liệu.
 - Hỏi-4 (người nhận giữ cứng hai loại) và Hỏi-5 (lối vào Gửi trước khi trang khách 35 gộp) ở thiết kế.
+- Giới hạn đã khai (chủ kho chốt 04/11 sau lượt chấm 2): bước chấm khuôn của kit 2.37.0 không xét `ngoai_le`, nên trang
+  Gửi mới bị báo «thuộc hai nhóm màn: gui, trang-tam» (kit#480). E12 chấp nhận mã 1 chỉ khi E13 xanh — E13 bảo đảm đó là
+  dòng lệch duy nhất, lệch khác vẫn đỏ. Kit vá thì bỏ mã 1 ở E12 và bỏ E13.
 - Chủ kho thử thật trên điện thoại (mở bảng chia sẻ, dán vào Zalo) đi qua yêu cầu `can-nguoi` gom cùng hàng 35 (luật đợt 16).

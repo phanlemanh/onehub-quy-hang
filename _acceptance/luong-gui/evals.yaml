@@ -129,6 +129,15 @@ evals:
     criterion: AC-10
     executor: script
     cmd: config:executors.design.khuon
+    expected_exit: 1
     paths: ["design/patterns/gui.md", "design/patterns/trang-thai.md", "design/patterns/trang-tam.md", "design/patterns/bang-hang.md", "apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/inventory/cards/**"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm gui, trang-thai, trang-tam, bang-hang. Lệch chỉ vì tệp thuộc hai nhóm (giới hạn «cắt trước» của kit 2.37.0 — bộ đọc không xét ngoai_le; luật 33, 45 của đợt) là báo oan — người chấm ghi tên tệp bị báo, không tính là lệch thật."
+    expected: "exit 1 (đạt có giới hạn, chủ kho chốt 04/11): bước chấm khuôn của kit 2.37.0 không xét ngoai_le nên báo trang Gửi mới «thuộc hai nhóm màn: gui, trang-tam» — báo oan, kit#480. Mã 1 chỉ được chấp nhận cùng E13 xanh: E13 bảo đảm dòng lệch duy nhất là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E13."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-10
+    executor: script
+    cmd: node _acceptance/luong-gui/kiem-khuon-e12.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/inventory/cards/**", "_acceptance/luong-gui/kiem-khuon-e12.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/shares/new/page.tsx · thuộc hai nhóm màn: gui, trang-tam» và bài in «E13: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E12 và bài E13, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
