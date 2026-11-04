@@ -3,13 +3,16 @@ import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
 import {
   applyPlan,
   dongDauMoiCan,
+  gopMau,
   khoaCan,
   kiemNgayXacNhan,
   LY_DO_DONG_NHAP,
   quyetDongNhap,
+  taoMau,
   validatePlan,
   type AppliedRow,
   type Cell,
+  type CotMau,
   type ImportPlan,
   type ImportRowAction,
   type OpenListingFact,
@@ -149,6 +152,23 @@ export async function dauChuCuaSan(tx: pg.PoolClient): Promise<string[] | Refusa
     "select user_id from company_members where company_id = app.current_company_id() and 'listing_agent' = any (roles) order by user_id",
   );
   return rows.map((r) => r.user_id);
+}
+
+/** Mẫu file của sàn (hàng 67, ADR-0011 quyết định 6): rút từ kế hoạch của các lần nhập ĐÃ GHI, mỗi khoá tiêu đề giữ cột
+ *  của lần mới nhất. Lõi bỏ bảng quy đổi ở cột nguồn và cột không phải trường chuẩn — thân không mang ô nào của tệp. */
+export async function mauCuaSan(tx: pg.PoolClient): Promise<CotMau[] | Refusal> {
+  const nguoi = await vaiNguoiGui(tx);
+  if (!nguoi.roles.some((v) => VAI_NHAP.includes(v))) return { error: API_ERRORS.importRoleRequired };
+  // Tiêu đề của lần nhập nằm trong kế hoạch đã lưu (`plan.headers`, xem openImport), cùng thứ tự với cột.
+  const { rows } = await tx.query<{ id: string; plan: ImportPlan & { headers?: unknown }; created_at: Date }>(
+    "select id, plan, created_at from imports where company_id = app.current_company_id() and status = 'committed' order by created_at desc limit 50",
+  );
+  const mau = rows.flatMap((r) => {
+    const headers = Array.isArray(r.plan?.headers) ? r.plan.headers.map((h) => String(h ?? "")) : [];
+    if (!Array.isArray(r.plan?.columns)) return [];
+    return taoMau(r.plan, headers, { importId: r.id, at: r.created_at.toISOString() });
+  });
+  return [...gopMau(mau).values()].sort((a, b) => a.headerKey.localeCompare(b.headerKey));
 }
 
 export async function writeBatch(
