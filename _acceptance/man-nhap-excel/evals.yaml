@@ -95,6 +95,11 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy G: node _acceptance/man-nhap-excel/thu/dung-g.mjs (Postgres 5573, máy dev 3493; dừng bằng --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/man-nhap-excel/thu/chup-man.mjs --ca luong --ghi --kho 1440 rồi --kho 375 — lệnh tự đăng nhập người mẫu, đi năm bước với mau-b.xlsx, in mỗi bước một dòng JSON và chụp E9-1-tai … E9-6-xong vào _acceptance/man-nhap-excel/evidence"
+      - "Chạy cùng lệnh với --ca xls, rong, khong-quyen, bo-het, loi-mang, truong-nhom, roi-trang ở --kho 1440 và 375 (roi-trang chỉ in JSON, không ảnh)"
+      - "Đối chiếu từng dòng JSON với expected (cotNguonChiHinhDang, cau tóm tắt, coLoiVeBangHang, huongDanLuuLai, tepRong, coOChonTep=false, tiepKhoa, nutThuLai, tiepKhoaKhiChuaChon, trinhDuyetHoiLai) và xem từng ảnh E9-*.png ở hai khổ"
     expected: "Trên màn đang chạy, đăng nhập Đầu chủ của sàn thử, mở /imports/new, chọn tệp mẫu mau-b.xlsx của sàn thử. Chụp ở 1440 và 375: (1) bước ghép cột — các cột đã ghép sẵn, cột lớp nguồn hiện hình dạng; (2) xem trước — lưới có dấu giữ nguyên/máy sửa/cần người/chặn và lý do khi rê; (3) trùng — bảng từng dòng có hành động và lý do; (4) tóm tắt — câu «Ghi N căn mới, cập nhật M, tin bổ sung K, bỏ J»; (5) kết quả sau ghi có nút Mở Bảng hàng; (6) đăng nhập Đầu khách mở /imports/new thấy trạng thái không có quyền; (7) tệp .xls → lỗi qua khuôn trạng thái kèm hướng dẫn lưu thành .xlsx; (8) tệp không có dòng → trạng thái rỗng; (9) bỏ mọi dòng → «Không dòng nào sẽ được ghi», nút ghi khoá; (10) lỗi mạng giữa gói (tắt mạng của trình duyệt) → «Thử lại gói n»; (11) Trưởng nhóm: ô chọn đầu chủ, chưa chọn thì Tiếp khoá; (12) rời trang giữa chừng → hộp hỏi xác nhận. Mỗi khung ghi vào _acceptance/man-nhap-excel/evidence/E9-*.png."
     paths: [apps/web/src/app/(app)/imports/**, apps/web/src/components/khoi/solution-crm-6/**]
     evidence_required: [screenshot, observed]

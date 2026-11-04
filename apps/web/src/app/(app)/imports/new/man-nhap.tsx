@@ -32,6 +32,7 @@ import {
   taoTrangThai,
   type TongKet,
   type TrangThaiNhap,
+  type XemThu,
 } from "@/lib/nhap/trang-thai";
 
 import { BangTrung, BangXemTruoc } from "./bang";
@@ -54,6 +55,8 @@ export function ManNhap({ vai }: { vai: string[] }) {
   const [tepGoc, setTepGoc] = useState<{ ten: string; bytes: Uint8Array; trangCo: string[] } | null>(null);
   const [tienDoXem, setTienDoXem] = useState<string | null>(null);
   const [loiXem, setLoiXem] = useState<string | null>(null);
+  // Bản xem thử gần nhất vẫn hiện sau khi người bỏ thêm dòng — nút ghi chỉ mở lại khi xem thử lại.
+  const [xemCu, setXemCu] = useState<XemThu | null>(null);
   const [ghi, setGhi] = useState<TienDoGhi | null>(null);
   const [dangGhi, setDangGhi] = useState(false);
 
@@ -93,6 +96,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
     const kq = await xemThuTatCa(fetch, t, (i, n) => setTienDoXem(`Đang hỏi máy chủ… gói ${i}/${n}`));
     setTienDoXem(null);
     if (laLoi(kq)) return setLoiXem(kq.loi);
+    setXemCu(kq);
     setS((cu) => daXemThu(cu, kq));
   }
 
@@ -225,17 +229,26 @@ export function ManNhap({ vai }: { vai: string[] }) {
             }
           />
         ) : s.xemThu ? (
-          <BangTrung xemThu={s.xemThu} bo={s.bo} onBo={(src) => setS(boDong(s, src))} />
+          <div className="flex flex-col gap-4">
+            {!coTheGhi(s) ? (
+              <TrangThai kind="notice" title="Không dòng nào sẽ được ghi" description="Mọi dòng đều bị bỏ — xem lý do từng dòng dưới đây, hay lùi lại sửa ô." />
+            ) : null}
+            <BangTrung xemThu={s.xemThu} bo={s.bo} onBo={(src) => setS(boDong(s, src))} />
+          </div>
         ) : (
-          <TrangThai
-            kind="notice"
-            title="Đã đổi sau bản xem thử"
-            hanhDong={
-              <Button variant="outline" onClick={() => void xemThu(s)}>
-                Xem thử lại
-              </Button>
-            }
-          />
+          <div className="flex flex-col gap-4">
+            <TrangThai
+              kind="notice"
+              title="Đã đổi sau bản xem thử"
+              description="Xem thử lại để có con số mới trước khi ghi."
+              hanhDong={
+                <Button variant="outline" onClick={() => void xemThu(s)}>
+                  Xem thử lại
+                </Button>
+              }
+            />
+            {xemCu ? <BangTrung xemThu={xemCu} bo={s.bo} onBo={(src) => setS(boDong(s, src))} /> : null}
+          </div>
         )
       ) : null}
 
