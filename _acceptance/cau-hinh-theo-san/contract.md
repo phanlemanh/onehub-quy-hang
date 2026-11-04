@@ -5,10 +5,10 @@ slug: cau-hinh-theo-san
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-04-cau-hinh-theo-san-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-04
 ---
 
 # Acceptance Contract: cau-hinh-theo-san
@@ -60,7 +60,7 @@ Source input: `docs/plan/lo-trinh.json` hàng 82 · `_acceptance/cau-hinh-theo-s
   When quản trị chỉ đặt hạn nhận 60 phút; hoặc gửi cả hạn nhận 45 và hạn gọi 60 trong cùng lệnh; hoặc bộ đọc cấu hình gặp
   dòng sàn chỉ đặt hạn nhận 60 (dòng có từ trước, không qua lối kiểm),
   Then lần đặt một nửa bị 400 nêu cả hai khoá; lần gửi cả cặp được nhận; đọc cấu hình (`GET`) trả cặp mặc định 15/30 kèm
-  lỗi nêu cả hai khoá; lead vào nhịp chia mang hạn theo Hỏi-1 (khuyến nghị: 15/30) — không lối nào áp hạn nhận 60 cùng
+  lỗi nêu cả hai khoá; lead vào nhịp chia mang hạn 15/30 (Hỏi-1, chủ kho duyệt ở Cổng Phạm vi) — không lối nào áp hạn nhận 60 cùng
   hạn gọi 30.
 
 - **AC-6** — Nhật ký chỉ thêm, mọi lối ghi đều vào nhật ký.

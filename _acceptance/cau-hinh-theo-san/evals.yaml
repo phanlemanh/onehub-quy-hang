@@ -48,7 +48,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; ca «cặp hạn trái luật ở lối đọc: báo, không áp im lặng» có mặt trong packages/core/src/config/luat-nhan-cau-hinh.test.ts và ok — cùng fixture dòng sàn: (1) [{accept_minutes: 60}] → giaiCauHinh trả lỗi chứa cả hai khoá «lead_routing.accept_minutes» và «lead_routing.first_call_minutes», cauHinh của hai khoá deepEqual mặc định của sổ (15/30); readLeadRoutingSettings theo Hỏi-1 — (a, khuyến nghị) trả acceptMinutes/firstCallMinutes deepEqual 15/30; (b) ném Error có thông điệp chứa cả hai khoá; kiemGiaTri(accept_minutes, 60, {first_call_minutes: 30}) trả ok: false nêu cả hai khoá. (2) đối chứng dương [{accept_minutes: 20}] (hạn gọi mặc định 30) → loi rỗng, accept 20; readLeadRoutingSettings trả 20/30. (3) [{accept 45},{first_call 60}] → loi rỗng, cả hai áp."
+    expected: "exit 0; ca «cặp hạn trái luật ở lối đọc: báo, không áp im lặng» có mặt trong packages/core/src/config/luat-nhan-cau-hinh.test.ts và ok — cùng fixture dòng sàn: (1) [{accept_minutes: 60}] → giaiCauHinh trả lỗi chứa cả hai khoá «lead_routing.accept_minutes» và «lead_routing.first_call_minutes», cauHinh của hai khoá deepEqual mặc định của sổ (15/30); readLeadRoutingSettings (Hỏi-1 = a) trả acceptMinutes/firstCallMinutes deepEqual 15/30, không ném; kiemGiaTri(accept_minutes, 60, {first_call_minutes: 30}) trả ok: false nêu cả hai khoá. (2) đối chứng dương [{accept_minutes: 20}] (hạn gọi mặc định 30) → loi rỗng, accept 20; readLeadRoutingSettings trả 20/30. (3) [{accept 45},{first_call 60}] → loi rỗng, cả hai áp."
     paths: [packages/core/src/config/**, packages/core/src/routing/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -56,7 +56,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «cấu hình sàn: dòng cặp hạn trái luật có sẵn — GET báo, lead không mang 60/30» có mặt trong packages/api/test-db/cau-hinh-theo-san.test.ts và ok — kết nối chủ (DATABASE_URL) chèn thẳng dòng company_settings lead_routing.accept_minutes = 60 cho sàn A (không qua lối kiểm); GET của thành viên A: hai khoá deepEqual 15/30, source «default», errors có một phần tử chứa cả hai khoá; telesales nhập lead qua POST /api/v1/leads, chạy POST /api/v1/jobs/lead-tick, đọc accept_minutes/first_call_minutes của lead: theo Hỏi-1 — (a, khuyến nghị) deepEqual 15/30; (b) lead chưa đóng dấu (null/null) và nhịp trả lỗi nêu hai khoá. Assert lead KHÔNG mang accept 60 ở cả hai lối. Đối chứng dương cùng ca: thay dòng thành accept 20 (chèn thẳng) → lead mới mang 20/30, GET errors rỗng."
+    expected: "exit 0; ca «cấu hình sàn: dòng cặp hạn trái luật có sẵn — GET báo, lead không mang 60/30» có mặt trong packages/api/test-db/cau-hinh-theo-san.test.ts và ok — kết nối chủ (DATABASE_URL) chèn thẳng dòng company_settings lead_routing.accept_minutes = 60 cho sàn A (không qua lối kiểm); GET của thành viên A: hai khoá deepEqual 15/30, source «default», errors có một phần tử chứa cả hai khoá; telesales nhập lead qua POST /api/v1/leads, chạy POST /api/v1/jobs/lead-tick, đọc accept_minutes/first_call_minutes của lead: (Hỏi-1 = a) deepEqual 15/30 — lead KHÔNG mang accept 60. Đối chứng dương cùng ca: thay dòng thành accept 20 (chèn thẳng) → lead mới mang 20/30, GET errors rỗng."
     paths: [packages/api/src/settings/**, packages/core/src/config/**, packages/core/src/routing/**, packages/api/test-db/cau-hinh-theo-san.test.ts]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

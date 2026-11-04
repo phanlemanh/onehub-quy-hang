@@ -81,7 +81,7 @@ sổ (`DiemSo.lop`); hai lối cũ để mặc định — đúng lớp của b�
   quyết): (a, khuyến nghị) `readLeadRoutingSettings` áp cùng luật — cặp về 15/30, lead vẫn chia, lỗi hiện ở GET; (b) ném
   lỗi nêu hai khoá như ô hỏng hôm nay — nhịp chia của sàn dừng tới khi quản trị sửa cặp. Giá: (a) lead chạy theo hạn mặc
   định mà quản trị có thể không để ý lỗi tới khi mở cấu hình; (b) telesales của sàn không nhận lead nào trong lúc ấy.
-  Bản nháp viết theo (a).
+  Chủ kho duyệt (a) ở Cổng Phạm vi 04/11.
 - So: (B) chỉ chặn ở lối ghi — dòng trái luật vẫn có thể tới từ dữ liệu cũ hay ghi tay; luật 46 đòi «bị từ chối hoặc
   báo». (C) bộ đọc tự sửa (kéo hạn gọi lên bằng hạn nhận) — áp một số không ai đặt. Chọn (A).
 
