@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
 import { Progress } from "@/components/ui/progress";
+// eslint-disable-next-line quy-hang-ui/no-raw-skeleton -- chờ tải từng vùng trong Frame của chế độ cuộc gọi, theo hình của vùng; ChoTai chỉ có hình cả trang
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";

@@ -14,6 +14,8 @@ import { canHoiKhiDangXuat } from "./trang-thai";
 
 type Ctx = {
   bd: BoDongBo;
+  /** Vai của người ở sàn đang làm — màn đọc cờ của lớp phủ quyền (hàng 33) từ đây, không tự đoán. */
+  vai: readonly string[];
   /** Đăng xuất: còn thay đổi chờ thì hỏi; đồng ý (hay không có gì chờ) thì xoá sạch kho trên máy. Trả `false` khi người ở lại. */
   dangXuat(): Promise<boolean>;
   hoi: { n: number; tra: (ok: boolean) => void } | null;
@@ -31,6 +33,7 @@ export function BoDongBoProvider({ userId, companyId, companyIds, roles, childre
   const kho = useMemo(() => taoKhoIndexedDb(userId), [userId]);
   const vai = roles.join(",");
   const bd = useMemo(() => taoBoDongBo({ goi: goiFetch, kho, me: { userId, roles: vai ? vai.split(",") : [] }, companyId }), [kho, userId, companyId, vai]);
+  const dsVai = useMemo(() => (vai ? vai.split(",") : []), [vai]);
   const [hoi, setHoi] = useState<Ctx["hoi"]>(null);
   const [canXemMo, moCanXem] = useState(false);
   const [nhapLai, setNhapLai] = useState<Ctx["nhapLai"]>({});
@@ -76,7 +79,7 @@ export function BoDongBoProvider({ userId, companyId, companyIds, roles, childre
       return con;
     });
 
-  return <BoDongBoCtx.Provider value={{ bd, dangXuat, hoi, canXemMo, moCanXem, nhapLai, suaLai, daDienLai }}>{children}</BoDongBoCtx.Provider>;
+  return <BoDongBoCtx.Provider value={{ bd, vai: dsVai, dangXuat, hoi, canXemMo, moCanXem, nhapLai, suaLai, daDienLai }}>{children}</BoDongBoCtx.Provider>;
 }
 
 export function useBoDongBo(): Ctx {
