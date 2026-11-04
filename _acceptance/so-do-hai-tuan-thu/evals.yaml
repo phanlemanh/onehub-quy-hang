@@ -64,6 +64,8 @@ evals:
     criterion: AC-8
     executor: test
     cmd: config:executors.test.core
+    status: not-run
+    superseded_by: ghi-thiet-bi-va-mat-mang#AC-9
     expected: "exit 0; ca «chưa có sự kiện: sáu mã nói rõ thiếu gì» có mặt và ok — trên đầu vào rỗng và trên bộ mẫu: đúng sáu mã (inquiry_to_send, sheet_publishes, customer_link_opens, customer_interest, actions_by_device_role, mobile_offline — assert deepEqual tập) có trangThai chua-co-su-kien, thieu là chữ không rỗng, dòng không có khoá so/tu/mau/trungVi; bảy mã còn lại trên đầu vào rỗng có trangThai do-duoc với mau 0 hay n 0 hay so 0. Chiều đỏ: trả so 0 cho sheet_publishes → ca đỏ nêu mã."
     paths: [packages/core/src/metrics/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -9,7 +9,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { NO_QUEUE_FACTS, readQueueFacts } from "./lan-doi";
-import { applyCommand, createListing, FACTS_SQL, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
+import { applyCommand, createListing, docThietBi, FACTS_SQL, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
 
 /**
  * Hàng và lệnh đổi hàng (ADR-0008). Trục ai thấy hàng (hàng 12): hàng «Chỉ tôi» chỉ người tạo đọc và gửi lệnh được, người
@@ -42,6 +42,8 @@ const Command = z
     payload: z.record(z.unknown()),
     expectedVersion: z.number().int().optional(),
     confirmedWithOwner: z.boolean().optional(),
+    /** Thao tác ghi trên máy lúc mất mạng (hàng ghi-thiet-bi-va-mat-mang). */
+    madeOffline: z.boolean().optional(),
   })
   .strict();
 
@@ -78,7 +80,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
     async (c) => {
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
-      const kq = await withCompany(appPool, ctx, (tx) => createListing(tx, c.req.valid("json")));
+      const kq = await withCompany(appPool, ctx, (tx) => createListing(tx, c.req.valid("json"), { device: docThietBi(c.req.header("x-quy-hang-device")), madeOffline: false }));
       return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts), 201);
     },
   );
@@ -98,7 +100,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if (!/^[0-9a-f-]{36}$/i.test(listingId)) return tra(c, API_ERRORS.notFound);
       // Bị từ chối thì huỷ cả giao dịch: không sự kiện nào, bản tính không đổi.
       const kq = await withCompany(appPool, ctx, async (tx) => {
-        const r = await applyCommand(tx, await viewerOf(tx, ctx.userId), listingId, c.req.valid("json"));
+        const r = await applyCommand(tx, await viewerOf(tx, ctx.userId), listingId, c.req.valid("json"), docThietBi(c.req.header("x-quy-hang-device")));
         if (isRefusal(r)) throw r;
         return r;
       }).catch((e: unknown) => {

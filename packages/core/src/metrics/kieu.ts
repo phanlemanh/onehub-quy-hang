@@ -13,6 +13,9 @@ export type HangVao = { id: string; events: readonly ListingEvent[] };
 /** Một lead: dữ kiện nấc (cột của `leads` cộng mốc lên bảng), lúc nhập và mã căn đã gõ ở ô nhận lead (vắng là `null`). */
 export type LeadVao = LeadStageFacts & { id: string; createdAt: string; unitNumber: string | null };
 
+/** Một lượt mất mạng bộ đồng bộ trên máy gửi về: từ lúc mất tới lúc có mạng lại, kèm số thao tác chờ gửi trong lượt. */
+export type LuotMatMang = { device: "desktop" | "mobile"; startedAt: string; endedAt: string; queuedOps: number };
+
 export type DauVaoSoDo = {
   /** ISO 8601 — kỳ đo nửa mở `[tu, den)`. */
   tu: string;
@@ -24,6 +27,8 @@ export type DauVaoSoDo = {
   soNgayXacNhan?: number;
   /** Ngưỡng ngày của nhóm «Nên gọi điều chỉnh giá»; vắng là `QUEUE_DEFAULT_DAYS.priceAdjustment`. */
   nguongDieuChinhGia?: number;
+  /** Lượt mất mạng của sàn, như `offline_sessions` giữ; vắng là rỗng. */
+  matMang?: readonly LuotMatMang[];
 };
 
 export const METRIC_CODES = [

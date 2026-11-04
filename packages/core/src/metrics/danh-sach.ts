@@ -52,13 +52,11 @@ export const DANH_SACH_SO_DO: readonly MucDanhSach[] = [
     o: "Tỉ lệ thao tác trên máy tính / điện thoại theo vai",
     manh: "Tỉ lệ thao tác trên máy tính / điện thoại theo vai",
     traLoi: "Ghi nhận thiết bị theo vai có đúng không?",
-    thieu: "Sự kiện có vai người làm nhưng không ghi thiết bị (máy tính hay điện thoại); chưa hàng nào ghi thiết bị.",
   },
   {
     ma: "mobile_offline",
     o: "Số lần mất mạng và thao tác lúc mất mạng trên điện thoại",
     manh: "Số lần mất mạng và thao tác lúc mất mạng trên điện thoại",
     traLoi: "Có cần ngoại tuyến thật không?",
-    thieu: "Bộ đồng bộ trên máy biết lượt mất mạng nhưng không gửi về máy chủ; chưa hàng nào ghi lượt mất mạng.",
   },
 ];
