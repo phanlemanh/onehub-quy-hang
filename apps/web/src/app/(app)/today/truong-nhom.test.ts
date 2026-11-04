@@ -138,3 +138,18 @@ describe("hôm nay trưởng nhóm", () => {
     assert.deepEqual(vungTheoVai(["team_lead", "listing_agent"]), ["truong-nhom", "dau-chu"]);
   });
 });
+
+// Hàng 37 (E1b): vùng Đầu khách xếp sau các vùng sẵn có; trưởng nhóm không có vai Đầu khách thì không có vùng này.
+describe("hôm nay theo vai: vùng Đầu khách", () => {
+  it("bảng vai → vùng", () => {
+    const BANG: [string[], string[]][] = [
+      [["buyer_agent"], ["dau-khach"]],
+      [["buyer_agent", "listing_agent"], ["dau-chu", "dau-khach"]],
+      [["team_lead"], ["truong-nhom"]],
+      [["team_lead", "buyer_agent"], ["truong-nhom", "dau-khach"]],
+      [["telesales"], ["telesales"]],
+    ];
+    assert.equal(BANG.length, 5, "số dòng bảng viết trước");
+    for (const [vai, mong] of BANG) assert.deepEqual(vungTheoVai(vai), mong, vai.join("+"));
+  });
+});

@@ -9,6 +9,7 @@ import { readMe } from "@/lib/api";
 
 import { KhungLeadCuaToi } from "../leads/mine/khung";
 import { LeadDaNhapThat } from "../leads/mine/nguon-that";
+import VungDauKhach from "./buyer/vung";
 import { DaiBatThongBao } from "./dai-bat";
 import { HomNayDauChu } from "./hom-nay-dau-chu";
 import { KhungHomNay } from "./khung";
@@ -52,6 +53,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
           <KhungLeadCuaToi key={v}>
             <LeadDaNhapThat />
           </KhungLeadCuaToi>
+        ) : v === "dau-khach" ? (
+          <VungDauKhach key={v} />
         ) : null,
       )}
       {vung.length === 0 ? <Placeholder path="/today" trongKhung /> : null}
