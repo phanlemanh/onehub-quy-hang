@@ -6,8 +6,8 @@
 
 ```mermaid
 flowchart TD
-  A["Đang cân nhắc cơ hội<br/>1 việc"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>7 việc"]
+  A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
+  GD --> B["Sắp mở vòng<br/>8 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
@@ -22,12 +22,9 @@ flowchart TD
 > đã đủ và đúng chưa · **Cổng Bằng chứng** đã làm đúng thứ đã hứa chưa ·
 > **Cổng Giá trị** thứ đã giao có ăn thua không.
 
-## Đang cân nhắc cơ hội
-
-- Người trong sàn đăng nhập được bằng email và mật khẩu tạm do sàn cấp, đổi mật khẩu ở lần đầu; mã 6 số qua email vẫn là cửa thứ nhất, đường quên mật khẩu qua thư vẫn đóng; đăng xuất mà máy chủ lỗi hay mất mạng thì báo «Chưa đăng xuất được» và cho thử lại. (`dang-nhap-mat-khau`)
-
 ## Sắp mở vòng
 
+- Người trong sàn đăng nhập được bằng email và mật khẩu tạm do sàn cấp, đổi mật khẩu ở lần đầu; mã 6 số qua email vẫn là cửa thứ nhất, đường quên mật khẩu qua thư vẫn đóng; đăng xuất mà máy chủ lỗi hay mất mạng thì báo «Chưa đăng xuất được» và cho thử lại. (`dang-nhap-mat-khau`)
 - Trưởng nhóm tích nhiều căn trên Bảng hàng rồi đổi đầu chủ một lần: chọn từ danh sách thành viên mang vai Đầu chủ của sàn, hộp hỏi kể đủ căn và người giữ cũ, đổi đầu chủ của hàng thì đổi luôn người giữ liên hệ chủ nhà theo luật một chủ một đầu chủ, hoàn tác được (`doi-dau-chu-hang-loat`)
 - Đầu chủ mở Hôm nay trên điện thoại, gọi lại một chạm và ghi kết quả bằng một tay (`hom-nay-dau-chu-dien-thoai`)
 - Đầu khách mở Hôm nay trên điện thoại và thấy khách vừa phản ứng, căn đã gửi vừa đổi, căn mới lên bảng khớp các bộ đã gửi (`hom-nay-dau-khach`)

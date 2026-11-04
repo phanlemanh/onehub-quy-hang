@@ -3,10 +3,10 @@ schema_version: 1
 slug: dang-nhap-mat-khau
 feature: Người trong sàn đăng nhập được bằng email và mật khẩu tạm do sàn cấp, đổi mật khẩu ở lần đầu; mã 6 số qua email vẫn là cửa thứ nhất, đường quên mật khẩu qua thư vẫn đóng; đăng xuất mà máy chủ lỗi hay mất mạng thì báo «Chưa đăng xuất được» và cho thử lại.
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided              # discovery | decided | archived
+decision: build   # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-04T16:02:07Z   # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
@@ -29,11 +29,11 @@ Hạng T3 (danh tính, schema `identity`, rào gửi mã, bộ kiểm cách ly),
 
 ## Ngưỡng chết / ngưỡng UAT
 
-- Câu hỏi phép đo trả lời: [đề xuất] người trong sàn có vào được Quỹ hàng khi thư mã không tới không, mà không mở
+- Câu hỏi phép đo trả lời: người trong sàn có vào được Quỹ hàng khi thư mã không tới không, mà không mở
   thêm lối nào để quản trị sàn này chiếm tài khoản ở sàn khác?
-- Kết quả nào là SỐNG: [đề xuất] trong phiên nghiệm thu, một quản trị cấp mật khẩu tạm cho một người chỉ thuộc sàn mình;
+- Kết quả nào là SỐNG: trong phiên nghiệm thu, một quản trị cấp mật khẩu tạm cho một người chỉ thuộc sàn mình;
   người ấy đăng nhập bằng email và mật khẩu tạm, đặt mật khẩu mới rồi vào vỏ, không cần thư; mã 6 số vẫn dùng được; quản
   trị không cấp được mật khẩu cho người cũng thuộc sàn khác; đăng xuất lúc mất mạng báo «Chưa đăng xuất được».
-- Kết quả nào là CHẾT: [đề xuất] người không nhận được thư mã vẫn không vào được, hoặc quản trị sàn A đặt được mật khẩu
+- Kết quả nào là CHẾT: người không nhận được thư mã vẫn không vào được, hoặc quản trị sàn A đặt được mật khẩu
   cho người thuộc sàn B, hoặc mật khẩu (tạm hay tự đặt) xuất hiện ở nhật ký, sự kiện hay trang nào.
-- Timebox: [đề xuất] một vòng T3, đo ở phiên nghiệm thu ngay sau khi gộp.
+- Timebox: một vòng T3, đo ở phiên nghiệm thu ngay sau khi gộp.
