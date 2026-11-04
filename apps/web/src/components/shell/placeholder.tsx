@@ -1,4 +1,5 @@
 import { HammerIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { BoCuc, DauMan, type DuongDan } from "@/components/bo-cuc";
 import { Frame, FramePanel } from "@/components/reui/frame";
@@ -34,11 +35,20 @@ export function placeholderFor(path: string): Info {
 }
 
 function duongDanCua(path: string, title: string): [DuongDan, DuongDan] {
-  if (path.startsWith("/settings/")) return [{ nhan: "Cài đặt sàn", href: "/settings" }, { nhan: title }];
+  if (path.startsWith("/settings/")) return [{ nhan: "Cài đặt", href: "/settings" }, { nhan: title }];
   return [{ nhan: "Quỹ hàng", href: "/" }, { nhan: title }];
 }
 
-export function Placeholder({ path, trongKhung = false }: { path: string; trongKhung?: boolean }) {
+export function Placeholder({
+  path,
+  trongKhung = false,
+  phamVi,
+}: {
+  path: string;
+  trongKhung?: boolean;
+  /** Câu phạm vi của mục Cài đặt chưa dựng («Chỉ áp cho sàn [Tên]», hàng cai-dat-hop-nhat) — đứng trước câu hỏi của màn. */
+  phamVi?: ReactNode;
+}) {
   const p = placeholderFor(path);
   const than = (
     <Frame className="w-full">
@@ -54,7 +64,7 @@ export function Placeholder({ path, trongKhung = false }: { path: string; trongK
   );
   if (trongKhung) return than;
   return (
-    <BoCuc kieu="doc" dauMan={<DauMan duongDan={duongDanCua(path, p.title)} tieuDe={p.title} moTa={p.question} />}>
+    <BoCuc kieu="doc" dauMan={<DauMan duongDan={duongDanCua(path, p.title)} tieuDe={p.title} moTa={phamVi ? <>{phamVi} · {p.question}</> : p.question} />}>
       {than}
     </BoCuc>
   );

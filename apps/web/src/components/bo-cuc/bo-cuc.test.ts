@@ -81,11 +81,22 @@ describe("bố cục", () => {
       assert.match(goc, /\bgap-khung\b/, kieu);
       assert.ok(!/(^|\s)px-/.test(goc), `${kieu}: px- ở gốc`);
       const maxW = goc.split(/\s+/).filter((c) => c.startsWith("max-w-"));
-      assert.deepEqual(maxW, kieu === "ho-so" || kieu === "dong-tin" ? ["max-w-(--container-doc)"] : [], `${kieu}: max-w ở gốc`);
+      assert.deepEqual(maxW, kieu === "ho-so" || kieu === "dong-tin" || kieu === "doc" ? ["max-w-(--container-doc)"] : [], `${kieu}: max-w ở gốc`);
+      // Đọc đứng sát cột mục lục (ADR-0024 sửa đổi 04/11); Hồ sơ, Dòng tin căn giữa.
+      assert.equal(goc.split(/\s+/).includes("mx-auto"), kieu === "ho-so" || kieu === "dong-tin", `${kieu}: mx-auto ở gốc`);
     }
     const css = readFileSync(join(ROOT, "apps/web/src/app/globals.css"), "utf8");
     assert.deepEqual(tokenThieu(css), []);
     assert.deepEqual(tokenThieu(css.replace("--container-doc:", "--container-khac:")), ["--container-doc"]);
+  });
+
+  it("Đọc hẹp: đối chứng đỏ — gốc «doc» mang mx-auto thì bài so gọi tên bố cục", () => {
+    const lech = (goc: string, kieu: string) =>
+      goc.split(/\s+/).includes("mx-auto") !== (kieu === "ho-so" || kieu === "dong-tin") ? [`${kieu}: mx-auto ở gốc`] : [];
+    assert.deepEqual(lech("flex p-trang gap-khung max-w-(--container-doc)", "doc"), []);
+    assert.deepEqual(lech("flex p-trang gap-khung mx-auto max-w-(--container-doc)", "doc"), ["doc: mx-auto ở gốc"]);
+    const css = readFileSync(join(ROOT, "apps/web/src/app/globals.css"), "utf8");
+    assert.match(css, /--container-doc:\s*48rem/);
   });
 
   it("bóc tách: mỗi ô một nhãn", () => {

@@ -196,3 +196,14 @@ sha: ea8791153c4d5845e10f8e3a5a8295edd03ad7e3 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 2 — 2026-11-04, do gộp main lần hai (luật 51)
 run_id: repin-20261104T133555Z-71011
 sha: 3fa054d73767a42c81f6226a058bcfee477095ec · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · ngoài làn máy: E1 (E1 không khai paths), E2 (E2 không khai paths), E3 (E3 không khai paths), E4 (E4 không khai paths), E5 (E5 không khai paths), E6 (E6 không khai paths), E9 (E9 không khai paths), E8 (E8 không khai paths) · AC không có chốt máy: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-8
+
+## Kiểm tay trên điện thoại (chủ kho, luật đợt 16 — D-15)
+
+Thử trên bản xem trước của PR #117: https://onehub-quy-hang-git-claude-lea-b18446-phanlemanh-8330s-projects.vercel.app
+(địa chỉ bám nhánh `claude/lead-dien-thoai`, luôn là bản mới nhất của PR). Mở bằng điện thoại thật, đăng nhập tài khoản
+telesales của sàn mẫu. Vấp gì thì ghi vào câu ký; không chặn gộp.
+
+- [ ] Trên bản xem trước của PR #117 (https://onehub-quy-hang-git-claude-lea-b18446-phanlemanh-8330s-projects.vercel.app), đăng nhập telesales mẫu, tab Lead → «Nhập lead», nhập một lead đủ năm mục, bấm Gửi: thấy kết quả và nút «Xem ở Lead đã nhập».
+- [ ] Bỏ trống một mục, bấm Gửi: thấy lỗi ngay dưới đúng ô đó.
+- [ ] Bật chế độ máy bay, bấm Gửi: thấy «Chưa gửi được — mất mạng», năm mục còn nguyên; tắt chế độ máy bay, bấm Gửi lại.
+- [ ] Mở «Lead đã nhập»: thấy lead vừa nhập và nấc của nó.

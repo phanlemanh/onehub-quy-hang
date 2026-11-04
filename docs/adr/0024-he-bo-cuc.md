@@ -146,3 +146,11 @@ bố cục dòng tin (Hôm nay của đầu khách, Đã gửi) mà đề xuất
 - **Lệnh dựng màn** sinh khung màn từ khối — tiện nhưng không chặn màn tự chia vùng; hạ thành tiện ích, răng mới là chỗ giữ.
 - **Ảnh chuẩn chụp từ màn thật** — khoá vào dữ liệu dãy và đăng nhập, đã từng ra ảnh đen; trang mẫu sống rẻ và tất định.
 - **Để từng hàng tự sửa bố cục khi tới lượt** — rẻ trước mắt, nhưng là đúng cách đã sinh ra các chỗ lệch hôm nay.
+
+## Sửa đổi 04/11 — Đọc hẹp
+
+Hồ sơ `_acceptance/cai-dat-hop-nhat/` (chủ kho chọn cách B «Đọc hẹp» ở Cổng Đáng 04/11). Dòng «Đọc … (gỡ max-width ở gốc
+khối)» của quyết định 2 giữ nguyên làm sử; điều đang đúng: thân của bố cục Đọc rộng tối đa `--container-doc` (48rem), mép
+trái sát vùng nội dung (cạnh cột mục lục), không căn giữa. Áp cho mọi màn Đọc — mục Cài đặt, Cá nhân, Ô nhận lead, trang
+tạm; Hồ sơ và Dòng tin giữ 48rem căn giữa. Không thêm bố cục thứ tám. Điện thoại giữ. Bề rộng vẫn thuộc bố cục: màn không
+tự đặt.

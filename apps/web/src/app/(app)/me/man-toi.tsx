@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { BUOC_CAI_IOS } from "@/lib/push/nhan";
 import { NHAN_LOAI_MAY, type LoaiMay } from "@quy-hang/core/thiet-bi";
 import type { TrangThaiThietBi } from "@/lib/push/dang-ky";
+import { PHAM_VI_MAY } from "@/app/(app)/settings/cai-dat";
 import { coNutBaoMat, dongThongBao, HOI_BAO_MAT, LOI_DA_BAO, NHAN_CAI, nhomDong, type MaNhom, type TrangThaiCai, type TrangThaiMay } from "./toi";
 
 export type Loi = "trong-kho" | "reui" | "ve-moi";
@@ -56,6 +57,16 @@ const lanCuoi = (iso: string) => new Date(iso).toLocaleString("vi-VN", { dateSty
 
 type Dong = { ma: MaNhom; nhan: string; moTa: ReactNode; hanhDong?: ReactNode };
 
+/** Dòng chỉ áp cho máy đang dùng (cài, thông báo) ghi rõ «Trên máy này» trước mô tả (hàng cai-dat-hop-nhat). */
+function trenMayNay(moTa: ReactNode): ReactNode {
+  return (
+    <span className="flex flex-col gap-0.5">
+      <span className="text-xs text-muted-foreground">{PHAM_VI_MAY}</span>
+      {moTa}
+    </span>
+  );
+}
+
 function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
   return nhomDong({ companies: Array.from({ length: du.soSan }) }).map((n): Dong => {
     switch (n.ma) {
@@ -76,7 +87,7 @@ function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
         return {
           ma: n.ma,
           nhan: n.nhan,
-          moTa:
+          moTa: trenMayNay(
             du.cai === "ios-ba-buoc" ? (
               <ol className="list-decimal ps-5">
                 {BUOC_CAI_IOS.map((b) => (
@@ -86,6 +97,7 @@ function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
             ) : (
               NHAN_CAI[du.cai]
             ),
+          ),
           hanhDong:
             du.cai === "co-nut" ? (
               <Button size="sm" onClick={hd.cai}>
@@ -98,7 +110,7 @@ function dungDong(du: DuLieuToi, hd: HanhDongToi, moHoi: () => void): Dong[] {
         return {
           ma: n.ma,
           nhan: n.nhan,
-          moTa: d?.nhan ?? "Đang kiểm…",
+          moTa: trenMayNay(d?.nhan ?? "Đang kiểm…"),
           hanhDong: d?.coNut ? (
             <Button size="sm" onClick={hd.batThongBao}>
               Bật

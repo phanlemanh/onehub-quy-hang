@@ -87,3 +87,26 @@ test("trang khách: chỉ trang thật dưới /s/", () => {
   const goc = join(dirname(fileURLToPath(import.meta.url)), "..");
   assert.deepEqual(readdirSync(goc).sort(), ["[code]"]);
 });
+
+test("trang khách: lỗi tạm khác link tắt", async () => {
+  const { docTrang } = await import("./doc");
+  const { LOI_TAM } = await import("./trang");
+  const BANG: [string, () => Response, "khong-con" | "loi-tam"][] = [
+    ["404", () => new Response("{}", { status: 404 }), "khong-con"],
+    ["500", () => new Response("x", { status: 500 }), "loi-tam"],
+    ["503", () => new Response("x", { status: 503 }), "loi-tam"],
+    ["fetch ném", () => { throw new TypeError("mất mạng"); }, "loi-tam"],
+  ];
+  assert.equal(BANG.length, 4, "số dòng bảng viết trước");
+  for (const [ten, tra, mong] of BANG) {
+    const kq = await docTrang(MA, tra);
+    assert.equal(kq.kieu, mong, ten);
+    const chu = renderToStaticMarkup(h(TrangKhachCongKhai, { code: MA, than: null, loiTam: kq.kieu === "loi-tam" }));
+    if (mong === "khong-con") assert.ok(chu.includes(LINK_TAT), `${ten}: thiếu câu link không còn`);
+    else {
+      assert.ok(chu.includes(LOI_TAM), `${ten}: thiếu «${LOI_TAM}»`);
+      assert.ok(!chu.includes("Link không còn mở được"), `${ten}: báo nhầm link tắt`);
+    }
+  }
+  assert.equal(LOI_TAM, "Chưa mở được — thử lại sau");
+});

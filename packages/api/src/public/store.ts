@@ -9,7 +9,8 @@ import { canRead, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { withCompany } from "../db";
 import { FACTS_SQL, STATE_COLUMNS, viewerOf } from "../listings/store";
-import { listPhotos } from "../photos/store";
+import type { KhoAnh, KhoAnhVang } from "../photos/kho";
+import { listPhotos, readPhoto } from "../photos/store";
 
 export type LanGuiTheoMa = { companyId: string; shareId: string; senderUserId: string; audience: ShareAudience };
 
@@ -56,7 +57,7 @@ async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: stri
        from share_listings sl
        join listings l on l.company_id = sl.company_id and l.id = sl.listing_id
        join companies co on co.id = sl.company_id
-       left join catalog_units cu on cu.building_name = l.building_name and app.unit_key(cu.unit_number) = app.unit_key(l.unit_number)
+       left join lateral (select c1.upi, c1.stack, c1.floor, c1.living_area, c1.bedrooms_total, c1.direction_faces, c1.property_type, c1.property_sub_type from catalog_units c1 where c1.building_name = l.building_name and app.unit_key(c1.unit_number) = app.unit_key(l.unit_number) order by c1.measured_at desc limit 1) cu on true
       where sl.company_id = $1 and sl.share_id = $2
       order by sl.position`,
     [s.companyId, s.shareId],
@@ -120,10 +121,43 @@ export type ThanRoute = ThanTrangKhach & { listingIds: string[] };
  * Thân trang khách của một Lần gửi còn mở; `today` là `YYYY-MM-DD` UTC. `listingIds` (cùng thứ tự với `can`) là mã hàng để
  * trang báo «Quan tâm» đúng căn — chuỗi UUID không mang nghĩa, không thuộc lớp nguồn; mọi giá trị căn vẫn chỉ là bản ra.
  */
-export async function docTrangKhach(deps: { appPool: pg.Pool; identityPool: pg.Pool }, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
-  const ten = await tenNguoiGui(deps.identityPool, s.senderUserId);
-  const ds = await withCompany(deps.appPool, { userId: s.senderUserId, companyId: s.companyId }, (tx) => canCuaLanGui(tx, s, ten));
+export async function docTrangKhach(nguon: Pick<NguonCongKhai, "docCan">, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
+  const ds = await nguon.docCan(s);
   return { ...thanTrangKhach({ can: ds.map((d) => d.can), audience: s.audience, today }), listingIds: ds.map((d) => d.id) };
+}
+
+export type AnhCongKhai = { kind: "byte"; bytes: Buffer; type: string } | { kind: "link"; url: string } | "khong-co" | "chua-cau-hinh";
+
+/**
+ * Nguồn dữ liệu của ba route công khai. Bản thật đọc cơ sở dữ liệu; bài rò rỉ của rào route (Ngoài-8 hàng 35) truyền nguồn
+ * mang căn mồi để chạy đúng handler của route trên app — thân vẫn dựng bằng `thanTrangKhach` trong `docTrangKhach`.
+ */
+export type NguonCongKhai = {
+  timLanGui(code: string): Promise<LanGuiTheoMa | null>;
+  /** Căn nội bộ của Lần gửi theo thứ tự gửi, kèm mã hàng — chỉ đi vào `thanTrangKhach`, không trả thẳng ra ngoài. */
+  docCan(s: LanGuiTheoMa): Promise<{ id: string; can: CanNoiBo }[]>;
+  ghiSuKien(code: string, type: string, listingId: string | null, visitor: string): Promise<GhiSuKien>;
+  /** Byte một ảnh của Lần gửi; route chỉ gọi với id đã có trong bản ra. */
+  docAnh(s: LanGuiTheoMa, photoId: string): Promise<AnhCongKhai>;
+};
+
+export function nguonThat(deps: { appPool: pg.Pool; identityPool: pg.Pool }, kho: KhoAnh | KhoAnhVang): NguonCongKhai {
+  const tx = <T>(s: LanGuiTheoMa, f: (c: pg.PoolClient) => Promise<T>) => withCompany(deps.appPool, { userId: s.senderUserId, companyId: s.companyId }, f);
+  return {
+    timLanGui: (code) => timLanGui(deps.appPool, code),
+    async docCan(s) {
+      const ten = await tenNguoiGui(deps.identityPool, s.senderUserId);
+      return tx(s, (c) => canCuaLanGui(c, s, ten));
+    },
+    ghiSuKien: (code, type, listingId, visitor) => ghiSuKien(deps.appPool, code, type, listingId, visitor),
+    async docAnh(s, id) {
+      if (kho.ten === "vang") return "chua-cau-hinh";
+      const k = kho;
+      const kq = await tx(s, (c) => readPhoto(c, k, s.companyId, id, "original"));
+      if ("error" in kq || kq.noiBo || !kq.doc) return "khong-co";
+      return kq.doc.kind === "link" ? { kind: "link", url: kq.doc.url } : { kind: "byte", bytes: kq.doc.bytes, type: kq.type };
+    },
+  };
 }
 
 export type GhiSuKien = { inserted: boolean } | { loi: "khong-co" | "khong-ghi-duoc" | "than-sai" };

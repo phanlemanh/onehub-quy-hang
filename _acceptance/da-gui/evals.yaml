@@ -1,0 +1,157 @@
+schema_version: 1
+feature_slug: da-gui
+# Lệnh máy: `executors.test.isolation` (packages/api/test-db và packages/db/tests, cần DATABASE_URL tới Postgres dãy L,
+# cổng 5571), `executors.test.web`, `executors.test.core`, `executors.script.ro_ri`. exit 0 của lệnh chung KHÔNG đủ: mỗi
+# eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok»,
+# không «# SKIP»/«# TODO». Dữ liệu: bộ dựng sàn thử qua đường ghi thật, số `0900 000 0xx`, tên «[Tên]».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/da-gui.test.ts có mặt và ok: «đã gửi: danh sách theo người xem» — đầu khách 1 gửi hai link (khách riêng, nhóm môi giới), đầu khách 2 gửi một: GET /api/v1/shares của đầu khách 1 trả đúng hai id mới trước (deepEqual danh sách viết trước), của đầu khách 2 trả một, của trưởng nhóm trả ba; bảng viết trước (đầu chủ 403, telesales 403, không cookie 401) → mã HTTP, đếm bằng số dòng; mỗi phần tử có recipient deepEqual tên nhu cầu khách hay «Nhóm môi giới», listingCount đúng, covers dài ≤ 4; thân trả không có khoá phone, contactId, ownerName, ownerPhone, floorPrice và máy dò số theo số khách đã biết không bắt gì, đối chứng dương: máy dò bắt số cài sẵn; cùng phép quét (khoá cấm + máy dò số + tên chủ nhà mẫu) trên thân GET /api/v1/shares/{id} của từng link cũng rỗng. Chiều đỏ: bỏ lọc theo người xem → ca đỏ nêu id thừa."
+    paths: [packages/api/src/da-gui/**, packages/api/test-db/da-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đã gửi: lượt mở và quan tâm đúng sự kiện» trong packages/api/test-db/da-gui.test.ts có mặt và ok — link ba căn; qua route công khai thật của hàng 35: hai máy mở (A, B), máy A quan tâm căn 1 và 3, máy B quan tâm căn 1: GET /api/v1/shares trả opens 2, interests 3, lastOpenedAt bằng created_at mới nhất của dòng link_opened (đọc bằng vai chủ); GET /api/v1/shares/{id} trả interest theo thứ tự gửi deepEqual [2, 0, 1]. Đối chứng: link chưa ai mở trả opens 0, lastOpenedAt null. Chiều đỏ: đếm cả dòng interest vào opens → ca đỏ nêu số mở."
+    paths: [packages/api/src/da-gui/**, packages/api/test-db/da-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đã gửi: căn vừa đổi sau lúc gửi» trong packages/api/test-db/da-gui.test.ts có mặt và ok — link ba căn; sau lúc gửi đổi giá căn 1 qua lệnh thật (3,2 tỷ → 2,9 tỷ), đưa căn 2 sang Đang giao dịch, căn 3 giữ nguyên: chi tiết trả changed theo thứ tự deepEqual [{price:{from:3200000000,to:2900000000}}, {status:{to:\"Pending\"}}, null]. Đối chứng: đổi giá căn 3 TRƯỚC lúc gửi (bộ dựng) không làm nó «vừa đổi»; đổi giá đáy (lớp nguồn) của căn 3 SAU lúc gửi cũng không làm nó «vừa đổi» và thân chi tiết không mang giá đáy. Chiều đỏ: lấy mọi sự kiện không lọc theo created_at của Lần gửi → ca đỏ nêu căn 3."
+    paths: [packages/api/src/da-gui/**, packages/api/test-db/da-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/da-gui.test.ts có mặt và ok: «đã gửi: nhãn vừa đổi» — bảng viết trước bốn dòng (changed null → không nhãn; price 3,2 tỷ → 2,9 tỷ → «Vừa đổi giá: 3,2 tỷ → 2,9 tỷ»; status Pending → «Đã có người đặt cọc»; status Closed → «Không còn»), mỗi dòng một assert trên chuỗi dựng của đúng dòng căn, đếm bằng số dòng; «đã gửi: gợi ý căn thay mở luồng Gửi» — dòng căn thay có href deepEqual /shares/new?can=<id căn thay>. Chiều đỏ: hiện nhãn khi changed null → ca đỏ."
+    paths: ["apps/web/src/app/(app)/shares/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/sharing/goi-y.test.ts có mặt và ok: «gợi ý căn thay: luật dựng sẵn» — căn gốc 2 PN giá 3,0 tỷ toà A; ứng viên viết trước tám căn (cùng toà 2 PN 3,1 tỷ; khác toà 2 PN 2,9 tỷ; cùng toà 2 PN 2,6 tỷ ngoài ±15%; cùng toà 3 PN; đang giao dịch; đã có trong link; khác toà 2 PN 3,4 tỷ; cùng toà 2 PN 2,95 tỷ) → goiYCanThay trả đúng id theo thứ tự deepEqual [cùng toà 2,95; cùng toà 3,1; khác toà 2,9], tối đa ba; danh sách ứng viên rỗng → []. Chiều đỏ: bỏ lọc trạng thái → ca đỏ nêu căn đang giao dịch."
+    paths: [packages/core/src/sharing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đã gửi: gợi ý căn thay qua API» trong packages/api/test-db/da-gui.test.ts có mặt và ok — căn 1 trong link đổi giá sau lúc gửi; trên bảng có thêm hai căn Đang bán cùng số phòng ngủ giá trong ±15% và một căn ngoài khoảng: chi tiết của căn 1 có suggestions là đúng hai id ấy (tập viết trước), không có căn ngoài khoảng, không có căn đã trong link; căn không đổi có suggestions rỗng. Chiều đỏ: gợi ý cho cả căn không đổi → ca đỏ."
+    paths: [packages/api/src/da-gui/**, packages/core/src/sharing/**, packages/api/test-db/da-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «đã gửi: tắt link» trong packages/api/test-db/da-gui.test.ts có mặt và ok — bảng viết trước (đầu khách khác cùng sàn → 404/403 và disabled_at vẫn null; telesales → 403; người gửi → 200 và disabled_at khác null; tắt lại → 409; trưởng nhóm tắt link của đầu khách trong đội → 200 theo Hỏi-2), mỗi dòng một assert mã HTTP và một assert đọc disabled_at bằng vai chủ, đếm bằng số dòng; sau khi tắt GET /api/v1/public/shares/{code} trả 404 và GET /api/v1/shares trả disabledAt khác null cho link ấy. Chiều đỏ: bỏ kiểm người gửi trong hàm → ca đỏ nêu đầu khách khác tắt được."
+    paths: [packages/api/src/da-gui/**, packages/db/migrations/032_*.sql, packages/api/test-db/da-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/da-gui.test.ts có mặt và ok: «đã gửi: tắt link một lần» — fetch giả: bấm Tắt link rồi xác nhận → đúng một POST /api/v1/shares/<id>/disable, trạng thái thành «Đã tắt»; huỷ xác nhận → không gọi; link đã tắt → không có nút tắt; 409 → giữ nhãn «Đã tắt», không báo lỗi. Chiều đỏ: gọi trước khi xác nhận → ca đỏ."
+    paths: ["apps/web/src/app/(app)/shares/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/shares/da-gui.test.ts có mặt và ok: «đã gửi: trạng thái màn» — bảng viết trước bốn trạng thái (trống → «Chưa gửi link nào» và liên kết /inventory/cards; lỗi → «Chưa tải được — thử lại»; đang tải → khung xương data-slot skeleton; vai không xem → «Đầu khách và trưởng nhóm xem được Đã gửi»), mỗi dòng một assert trên chuỗi dựng, đếm bằng số dòng. Chiều đỏ: lỗi tải hiện như danh sách trống → ca đỏ nêu trạng thái lỗi."
+    paths: ["apps/web/src/app/(app)/shares/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Postgres dãy L (5571) có bộ mẫu; máy chủ dev ở cổng của executors.ui-check; đăng nhập Đầu khách mẫu, gửi một link khách riêng ba căn qua /shares/new, mở link ở cửa sổ không đăng nhập và chạm «Quan tâm» một căn; đổi giá một căn bằng psql vai chủ"
+      - "Khổ 375, đăng nhập Đầu khách: mở /shares → chụp evidence/E6b-step1.png: thẻ link có bìa ảnh, người nhận, số căn, lượt mở · quan tâm, giờ mở gần nhất"
+      - "Chạm thẻ → chụp evidence/E6b-step2.png: chi tiết các căn, số quan tâm từng căn, nhãn «Vừa đổi» và «Gợi ý căn thay» ở căn đổi giá"
+      - "Chạm một «Gợi ý căn thay» → chụp evidence/E6b-step2b.png: màn Gửi mở với căn ấy đã chọn; quay lại chi tiết"
+      - "Bấm «Tắt link», xác nhận → chụp evidence/E6b-step3.png: nhãn «Đã tắt»"
+      - "Mở link ở cửa sổ không đăng nhập → chụp evidence/E6b-step4.png: «Link không còn mở được — hỏi lại người gửi»"
+    cmd: config:executors.ui-check
+    expected: "Khổ 375: Đã gửi hiện thẻ link với lượt mở · quan tâm; chi tiết có số quan tâm từng căn, căn đổi giá mang «Vừa đổi» và «Gợi ý căn thay»; tắt link xong thẻ mang «Đã tắt» và trang khách báo link không còn mở được; ảnh chụp từng bước vào evidence/."
+    paths: ["apps/web/src/app/(app)/shares/**", packages/api/src/da-gui/**]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có mặt và ok: ca «đã gửi: hàm tắt link không vượt sàn, không vượt người» — dưới vai quy_hang_app: người gửi của sàn A tắt Lần gửi của sàn B → lỗi, disabled_at của B vẫn null (đọc bằng vai chủ); đầu khách khác của sàn A tắt Lần gửi A → lỗi; người gửi tắt Lần gửi A → disabled_at khác null; trưởng nhóm của sàn A tắt Lần gửi khác của sàn A → được; trưởng nhóm của sàn B tắt Lần gửi của sàn A → lỗi, disabled_at vẫn null; update shares thẳng → permission denied. Chiều đỏ: bỏ điều kiện company_id trong hàm → ca đỏ nêu B bị tắt."
+    paths: [packages/db/migrations/032_*.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/su-kien.test.ts có mặt và ok: «trang khách: quan tâm khi trình duyệt chặn lưu trữ» — hàm lấy kho của nút Quan tâm (khoMay) với window giả có getter localStorage ném SecurityError → trả null, không ném; taoQuanTam với kho null → vẫn POST một lần với visitor đúng khuôn; renderToStaticMarkup NutQuanTam khi getter ném → không ném. Chiều đỏ: đọc thẳng window.localStorage → ca đỏ nêu SecurityError."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/trang.test.ts có mặt và ok: «trang khách: lỗi tạm khác link tắt» — bảng viết trước (404 → docThan trả null, trang hiện «Link không còn mở được — hỏi lại người gửi»; 500 và 503 → trang hiện «Chưa mở được — thử lại sau», không có chữ «Link không còn mở được»; fetch ném lỗi → như 500), mỗi dòng một assert trên chuỗi dựng, đếm bằng số dòng. Chiều đỏ: coi mọi !ok là null → ca 500 đỏ."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trang khách: route đọc tách lỗi máy chủ với link không còn» trong packages/api/test-db/da-gui.test.ts có mặt và ok — app thật với pool trỏ cơ sở dữ liệu không nối được: GET /api/v1/public/shares/{code} trả mã 5xx (không phải 404); app thật bình thường: mã không có và link đã tắt trả 404. Đối chứng dương: link mở trả 200. Chiều đỏ: bắt mọi lỗi rồi trả 404 → ca đỏ nêu mã 404 khi cơ sở dữ liệu hỏng."
+    paths: [packages/api/src/public/**, packages/api/test-db/da-gui.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; có mặt và ok trong packages/api/src/public/rao-route.test.ts: «rào route công khai: bài rò rỉ chạy trên đầu ra» — với mỗi route dưới /api/v1/public/ của app Hono thật, tệp *.ro-ri.test.ts đăng ký bài qua hàm khai (khaiBaiRoRi(route, ...)) được nạp và chạy, và bài ấy gọi route trên app (không đọc chuỗi tệp); đối chứng đỏ: một tệp chỉ nhắc đường route trong chú thích → rào vẫn nêu route thiếu bài; app thử thêm route /api/v1/public/thu không bài → rào nêu đúng route ấy. Và «rò rỉ: route đọc công khai trên app» — dựng dữ liệu căn mồi qua kho thử, gọi GET /api/v1/public/shares/{code} trên app, timRoRi trên thân trả rỗng cho mọi người nhận, đối chứng dương: chèn giá trị nội bộ vào thân thì bắt. Chiều đỏ: bài rò rỉ không gọi route → rào đỏ nêu route."
+    paths: [packages/api/src/public/**, packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; packages/ui-lint/tests/ban-do-khuon.test.mjs có nhóm da-gui trong danh sách nhóm viết trước, màn mẫu apps/web/src/app/(app)/shares/page.tsx theo khuôn, 0 lệch; kiem-chuan in «chuẩn giao diện: đạt»; docs/product/tham-chieu.md có dòng «Đã gửi — Đã dựng (hàng 36)». Chiều đỏ: trang không trả khuôn ở gốc → bài khuôn đỏ nêu tệp."
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/shares/**", packages/ui-lint/**, docs/product/tham-chieu.md]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/da-gui.md", "design/patterns/trang-tam.md", "design/patterns/trang-thai.md", "apps/web/src/app/(app)/shares/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào. Lệch chỉ vì trang /shares cũ có sẵn trên nhánh chính và thuộc hai nhóm (trang-tam và da-gui) là nợ cũ theo kit 2.37.0 (luật đợt 33, 45), không làm thoát 1; dòng «lệch:» mới là lệch thật."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
