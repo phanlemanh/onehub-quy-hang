@@ -1,0 +1,37 @@
+863. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+864. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+907. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+908. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+909. [GET] http://localhost:3491/api/v1/listings => [200] OK
+910. [GET] http://localhost:3491/shares?lan=d5ccee86-3ada-4d69-9fde-48667ae1c893&_rsc=ELSQ6suIFecjpRld => [200] OK
+915. [GET] http://localhost:3491/api/v1/shares => [200] OK
+916. [GET] http://localhost:3491/api/v1/shares => [200] OK
+917. [GET] http://localhost:3491/api/v1/shares/d5ccee86-3ada-4d69-9fde-48667ae1c893 => [200] OK
+968. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+969. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+970. [GET] http://localhost:3491/api/v1/listings => [200] OK
+971. [GET] http://localhost:3491/shares/new?can=42dc957d-a08c-4e47-a5c3-6f1d53b836a8&_rsc=ELSQ6suIFecjpRld => [200] OK
+976. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+977. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+978. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+979. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+980. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+981. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+982. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+983. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+985. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+986. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+987. [GET] http://localhost:3491/api/v1/listings => [401] Unauthorized
+988. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+1031. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1032. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1033. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1034. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+1035. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+1036. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+1074. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1075. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1076. [GET] http://localhost:3491/api/v1/shares/00000000-0000-4000-8000-000000000000 => [404] Not Found
+1077. [GET] http://localhost:3491/api/v1/listings => [200] OK
+
+Note: 214 static requests not shown, run with "static" option to see them.

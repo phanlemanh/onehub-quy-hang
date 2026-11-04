@@ -92,6 +92,13 @@ const ngayVN = (d: Date) => new Date(d.getTime() + 7 * 3_600_000).toISOString().
 test("hôm nay đầu khách: tin theo người xem", async () => {
   const s = await sanMoi(MOT);
   const a = await hang(s);
+  // Chủ nhà của căn mang tên và số riêng đã cài — máy dò quét đúng hai giá trị ấy trên thân trả.
+  const TEN_CHU = "[Tên] Chủ căn E1";
+  const soChu = soMoi(s);
+  const r0 = await send("PUT", `/api/v1/listings/${a}/owner`, { ownerName: TEN_CHU, ownerPhone: soChu, floorPrice: 2.7 * TY }, ck(s, "dc1"));
+  assert.equal(r0.status, 200, await r0.clone().text());
+  const daCai = (await appPool.query<{ n: string }>("select owner_name n from listing_owners where listing_id = $1", [a])).rows[0];
+  assert.equal(daCai?.n, TEN_CHU, "tên chủ đã cài");
   const g1 = await lanGui(s, "dk1", [a]);
   const g2 = await lanGui(s, "dk2", [a]);
   const g3 = await lanGui(s, "dkdc", [a]);
@@ -126,9 +133,12 @@ test("hôm nay đầu khách: tin theo người xem", async () => {
 
   const than = JSON.stringify(ds);
   for (const k of KHOA_CAM) assert.ok(!than.includes(`"${k}"`), `thân có khoá ${k}`);
+  const doChu = (t: string) => [...(t.includes(TEN_CHU) ? [TEN_CHU] : []), ...(t.replace(/\D/g, "").includes(soChu.replace(/\D/g, "").slice(-9)) ? [soChu] : [])];
   assert.deepEqual(doSo(than), [], "thân mang số khách");
-  assert.ok(!than.includes("[Tên] Chủ"), "thân mang tên chủ nhà");
-  assert.deepEqual(doSo(`ghi ${so[0]}`), [so[0]], "đối chứng dương: máy dò bắt số đã cài");
+  assert.deepEqual(doChu(than), [], "thân mang tên hay số chủ nhà");
+  assert.ok(!than.includes(String(2.7 * TY)), "thân mang giá đáy");
+  assert.deepEqual(doSo(`ghi ${so[0]}`), [so[0]], "đối chứng dương: máy dò bắt số khách đã cài");
+  assert.deepEqual(doChu(`chủ ${TEN_CHU} · ${soChu}`), [TEN_CHU, soChu], "đối chứng dương: máy dò bắt tên và số chủ đã cài");
 });
 
 // ---- AC-2 ----
