@@ -177,6 +177,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | khuôn | Khuôn Hôm nay của đầu chủ — bố cục Tràn | `design/patterns/hom-nay-dau-chu.md` |
 | khuôn | Khuôn Hôm nay của trưởng nhóm — bố cục Bảng điều khiển | `design/patterns/hom-nay-truong-nhom.md` |
 | khuôn | Khuôn Lead của tôi | `design/patterns/lead-cua-toi.md` |
+| khuôn | Khuôn Nhập Excel | `design/patterns/nhap-excel.md` |
 | khuôn | Khuôn Ô nhận lead | `design/patterns/o-nhan-lead.md` |
 | khuôn | Khuôn Tôi — bố cục Đọc | `design/patterns/toi.md` |
 | khuôn | Khuôn trang mẫu sống | `design/patterns/trang-mau.md` |
