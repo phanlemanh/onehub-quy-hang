@@ -1,0 +1,24 @@
+{
+  "man": "Trang khách (hàng 35) — khách mở link từ Zalo: bộ căn mang tên sàn, giá sống, căn đã cọc mờ, chạm «Quan tâm»",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích ở vo-va-ia §2 dòng «Trang khách» (wishlist-3 cho bộ căn, product-detail-5 cho chi tiết, bỏ giỏ). Ảnh vuông hai cột cho khách thấy nhiều căn trong một lần nhìn trên điện thoại; huy hiệu ở góc ảnh nói ngay căn nào đã cọc hay tạm ngưng; nút «Quan tâm» là hành động chính của mỗi thẻ, đúng chỗ nút giỏ của khối."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "TrangKhach của xem trước (hàng 34)",
+      "dong_co": "Dùng nguyên thành phần TrangKhach đang chạy trong ngăn xem trước của màn Gửi — trang khách và xem trước là một, không thêm khối mới.",
+      "danh_doi": "Một cột thẻ to: bốn căn đã dài hơn hai màn điện thoại; chưa có chỗ cho nhãn trạng thái, nút «Quan tâm» và trang chi tiết — đều phải dựng thêm."
+    },
+    "reui": {
+      "nhan": "wishlist-3 + product-detail-5, bỏ giỏ",
+      "dong_co": "Khối đích của vo-va-ia: lưới thẻ ảnh vuông có huy hiệu trạng thái, dòng toà, tên căn theo người nhận, giá và «Giá xác nhận …», nút «Quan tâm»; chạm thẻ mở chi tiết kiểu product-detail-5 (ảnh lớn, thông số, hộp giá + nút chính).",
+      "danh_doi": "Dòng toà nhắc lại trong tên căn ở khách riêng (tên chỉ có toà + nấc tầng); ảnh vuông cắt ảnh ngang của căn; khối chi tiết của ReUI có carousel và đánh giá — carousel chưa cài, đánh giá bỏ."
+    },
+    "ve-moi": {
+      "nhan": "Danh sách dòng một cột",
+      "dong_co": "Ghép Item một cột: ảnh nhỏ, tên, thông số, giá lớn bên phải, nút tim — trang ngắn nhất, đọc như bảng giá.",
+      "danh_doi": "Ảnh nhỏ nên khách khó phân biệt căn; nút tim không chữ dễ bị bỏ qua; không theo khối đích nên không có khối ReUI để giữ nhịp khi trang lớn thêm."
+    }
+  }
+}

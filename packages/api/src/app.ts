@@ -23,6 +23,7 @@ import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
+import { registerPublicRoutes } from "./public/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import { registerExportRoutes } from "./exports/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
@@ -187,6 +188,7 @@ export function createApi(deps: ApiDeps) {
   registerPushRoutes(api, deps);
   registerDeviceRoutes(api, deps);
   registerPhotoRoutes(api, deps, deps.khoAnh);
+  registerPublicRoutes(api, deps, deps.khoAnh);
   registerSyncRoutes(api, deps);
   registerExportRoutes(api, deps);
 
