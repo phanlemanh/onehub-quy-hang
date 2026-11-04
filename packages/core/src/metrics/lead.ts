@@ -25,23 +25,55 @@ export const leadCanGoi = (l: LeadVao, ky: Ky) => l.outcome !== "unit_has_open_l
 /** Lúc lead về một đầu chủ: mốc chia; lead chủ trùng về đầu chủ ngay lúc nhập nên không có mốc chia. */
 const lucChia = (l: LeadVao) => l.routedAt ?? (l.matchedAgentUserId !== null ? l.createdAt : null);
 
+/** Một chủ nhà qua chuỗi gửi lại: lead đầu (lúc nhập của chuỗi), lead cuối (mốc hiện tại) và cuộc gọi đầu sớm nhất. */
+export type ChuoiLead = { dau: LeadVao; cuoi: LeadVao; goiDau: string | null };
+
+const somHon = (a: string | null, b: string | null) => (a === null ? b : b === null ? a : Date.parse(b) < Date.parse(a) ? b : a);
+
 /**
- * Thời lượng từ lúc nhập tới một mốc của lead; mốc vắng hay từ `den` trở đi là chưa tới. «Chưa» tách ba phần — đã trả lại,
- * chưa chia, đã chia — đều xét tại `den` (việc từ `den` trở đi không đổi số), để ngưỡng đặt trên phần nào cũng được.
+ * Chuỗi gửi lại (luật 37 · Ngoài-5 hàng 52): lead trả lại rồi gửi lại nối qua `resubmittedLeadId` là một chủ nhà. Xét tại
+ * `den`: lead đã gửi lại trước `den` nối vào lead nó trỏ tới; mỗi chuỗi một phần tử, kèm cuộc gọi đầu sớm nhất của mọi lead
+ * trong chuỗi (kể cả cuộc gọi của đầu chủ đã trả lại). Lead trỏ tới không có trong dữ liệu vào thì chuỗi dừng ở lead trước.
  */
-export function thoiLuongLead(lead: readonly LeadVao[], ky: Ky, moc: (l: LeadVao) => string | null, donVi: "phut" | "ngay"): GiaTriSoDo {
+export function chuoiGuiLai(lead: readonly LeadVao[], ky: Ky): ChuoiLead[] {
+  const theoId = new Map(lead.map((l) => [l.id, l]));
+  const tiep = (l: LeadVao) => (l.resubmittedLeadId !== null && truocDen(ky, l.resubmittedAt) ? (theoId.get(l.resubmittedLeadId) ?? null) : null);
+  const coTruoc = new Set(lead.map(tiep).filter((n): n is LeadVao => n !== null).map((n) => n.id));
+  const ra: ChuoiLead[] = [];
+  for (const dau of lead) {
+    if (coTruoc.has(dau.id)) continue;
+    let cuoi = dau;
+    let goiDau = dau.firstCalledAt;
+    const da = new Set([dau.id]);
+    for (let n = tiep(cuoi); n !== null && !da.has(n.id); n = tiep(cuoi)) {
+      da.add(n.id);
+      cuoi = n;
+      goiDau = somHon(goiDau, n.firstCalledAt);
+    }
+    ra.push({ dau, cuoi, goiDau });
+  }
+  return ra;
+}
+
+/**
+ * Thời lượng từ lúc nhập tới một mốc, mỗi chủ nhà một lần (chuỗi gửi lại): kỳ và gốc thời gian là lúc nhập lead đầu chuỗi,
+ * trạng thái lấy ở lead cuối. Mốc vắng hay từ `den` trở đi là chưa tới. «Chưa» tách ba phần — đã trả lại, chưa chia, đã
+ * chia — đều xét tại `den` (việc từ `den` trở đi không đổi số), để ngưỡng đặt trên phần nào cũng được.
+ */
+export function thoiLuongLead(lead: readonly LeadVao[], ky: Ky, moc: (c: ChuoiLead) => string | null, donVi: "phut" | "ngay"): GiaTriSoDo {
   const don = donVi === "phut" ? PHUT_MS : NGAY_MS;
   const giaTri: number[] = [];
   const chiTiet = { chuaChia: 0, daChia: 0, traLai: 0 };
-  for (const l of lead) {
-    if (!trongKy(ky, l.createdAt) || !leadCanGoi(l, ky)) continue;
-    const m = moc(l);
+  for (const c of chuoiGuiLai(lead, ky)) {
+    const l = c.cuoi;
+    if (!trongKy(ky, c.dau.createdAt) || !leadCanGoi(l, ky)) continue;
+    const m = moc(c);
     if (m === null || Date.parse(m) >= ky.den) {
       if (truocDen(ky, l.returnedAt)) chiTiet.traLai++;
       else if (truocDen(ky, lucChia(l))) chiTiet.daChia++;
       else chiTiet.chuaChia++;
     }
-    else giaTri.push(motChuSo((Date.parse(m) - Date.parse(l.createdAt)) / don));
+    else giaTri.push(motChuSo((Date.parse(m) - Date.parse(c.dau.createdAt)) / don));
   }
   giaTri.sort((a, b) => a - b);
   const chua = chiTiet.chuaChia + chiTiet.daChia + chiTiet.traLai;
