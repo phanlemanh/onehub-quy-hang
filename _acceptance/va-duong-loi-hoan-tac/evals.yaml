@@ -1,0 +1,112 @@
+schema_version: 1
+feature_slug: va-duong-loi-hoan-tac
+# Lệnh máy: executors.test.web (apps/web, node --test: cell-edit/*.test.ts, bulk/*.test.ts), executors.script lint,
+# typecheck, design_floor, executors.design.khuon. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có
+# mặt, ok, không SKIP. Tiêm lỗi trong bài kiểm: hàm `sua` giả trả { ok:false, loi:{kind:"kho"} } hay ném Error theo mã căn.
+# Dựng chung cho ui-check (gọi là «DỰNG B»): node --env-file-if-exists=.env.local --import tsx
+#   _acceptance/bang-hang-dang-the/thu/dung-b.mjs → Postgres dãy B (5572), máy chủ dev 3492, người mẫu đã nạp.
+#   Sau DỰNG B chạy node _acceptance/ho-so-can-dien-thoai/thu/gan-giu.mjs: dau-chu-1 giữ A-04.06 (Đang bán) và B-09.01
+#   (Tạm ngưng); dau-chu-2 giữ các căn Toàn sàn còn lại. Phiên: node _acceptance/bang-hang-dang-the/thu/phien.mjs <email>.
+#   E6 và E7 chạy song song trên cùng máy chủ: E6 chỉ dùng phiên dau-chu-1 trên A-04.06 và B-09.01; E7 chỉ dùng phiên
+#   dau-chu-2 trên căn Toà B. Không dựng lại dữ liệu bằng lời gọi API thẳng giữa các bước — lần ghi chen ngoài màn làm phiên
+#   bản trên máy cũ và căn vào «Cần xem».
+#   Mỗi bài ui-check mở một hồ sơ trình duyệt MỚI (ngữ cảnh sạch, không dùng lại hồ sơ của bài hay lượt khác): kho trên máy
+#   (IndexedDB) của localhost:3492 còn hàng đợi và phiên bản cũ thì lần ghi thành xung đột (409). Trước bước một, xác nhận
+#   bằng indexedDB.databases() rằng chưa có kho nào. Nút «Hoàn tác» trên thông báo sống 10 giây — bấm trong thời hạn ấy.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hoàn tác lô: 2 trong 5 căn không ghi được» dùng `sua` giả trả lỗi kho cho đúng hai mã căn viết trước: assert loại thông báo là trung tính (không phải thành công, không phải lỗi — cùng loại với ghi lô một phần của hàng 16), tiêu đề bằng đúng «Đã hoàn tác 3 căn · 2 căn chưa hoàn tác được», mô tả chứa hai mã căn ấy mỗi mã kèm «Máy chưa lưu được lần sửa — thử lại» và KHÔNG chứa mã của ba căn đã về, danh sách id cần tích lại bằng đúng hai id hỏng; ca «hoàn tác lô: liệt tối đa năm mã» với 7 căn hỏng assert đúng năm mã rồi «và 2 căn khác» và danh sách tích lại đủ 7 id. Chiều đỏ (phá-thử S3): để hàm dựng thông báo trả loại thành công khi có căn hỏng thì ca đỏ nêu «loại thông báo»."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/cell-edit/lenh.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hoàn tác lô: bấm lại chỉ ghi căn chưa về» — lượt một như E1, lượt hai dùng bản ghi lô thông báo trả về với `sua` giả ghi được: assert danh sách id nhận lệnh bù ở lượt hai bằng đúng hai id hỏng (không id nào trong ba căn đã về), thông báo «Đã hoàn tác 2 căn»; bấm lượt ba ra «Đã hoàn tác rồi»; ca «hoàn tác lô: căn chưa về có lần sửa sau» — một trong hai căn hỏng đổi phiên bản trước lượt hai: assert chỉ một lệnh bù và thông báo chứa «1 căn đã có lần sửa sau — bỏ qua»; ca «hoàn tác lô: loại lỗi nào được bấm lại» là bảng viết trước năm loại lỗi (kho, bat-ngo, not-found, invalid-transition, missing-requirement) × {vào bản ghi bấm lại, kể vào «không hoàn tác được»}: kho và bat-ngo vào bản ghi bấm lại, ba loại lỗi lõi không — mỗi loại một assert, một assert số loại = 5."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hoàn tác ô: lệnh bù hỏng giữ bản ghi» — bộ giữ bản ghi, dungNut rồi traLai: assert lần dungNut kế trả ok (không «Đã hoàn tác rồi»), dungPhim (Ctrl/Cmd+Z) trả đúng bản ghi ấy; sau lần thành công dungNut ra «Đã hoàn tác rồi»; ca «hoàn tác ô: chạy lệnh bù» với `sua` giả hỏng rồi lành: assert kết quả lần một là lỗi kèm lý do và bản ghi còn dùng được, lần hai thành công. Chiều đỏ (phá-thử S3): bỏ lời gọi traLai thì ca đỏ nêu «Đã hoàn tác rồi»."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «ghi an toàn: lỗi bất ngờ thành lỗi có tên» là bảng viết trước bốn chỗ ghi (lưu trên ô, hoàn tác trên ô, ghi lô, hoàn tác lô) × `sua` giả ném TypeError: mỗi ô một assert rằng hàm điều phối của chỗ ấy trả (không ném) kết cục lỗi có chữ «Lỗi bất ngờ — chưa lưu được, thử lại» và mã căn; một assert số ô = 4. Đối chứng dương: `sua` giả trả lỗi kho thì chữ là «Máy chưa lưu được lần sửa — thử lại», không phải chữ lỗi bất ngờ. Ca «ghi an toàn: mọi chỗ gọi đi qua hàm bọc» đọc mã nguồn tren-o.tsx và thanh.tsx: mỗi tệp đúng một chỗ lấy hàm ghi là `ghiAnToan(useSuaHang())`, số `useSuaHang()` không bọc = 0 — kèm đối chứng: chèn một `useSuaHang()` trần vào bản sao chuỗi nguồn thì ca đỏ nêu tên tệp."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**", "apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các ca có sẵn của hoan-tac.test.ts và hoan-tac-lo.test.ts vẫn ok (không SKIP, không đổi tên); ca «hoàn tác lô: mọi căn về như cũ» assert loại thông báo thành công và chữ bằng đúng «Đã hoàn tác 5 căn», cùng ca có lần sửa sau và không đảo được ra đúng chuỗi của chuHoanTacLo cũ."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**", "apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Phiên dau-chu-1, mở http://localhost:3492/inventory, chờ lưới. Chọn căn A-04.06 (Đang bán), sửa ô Giá (gõ giá khác, Enter, xác nhận) → chụp evidence/E6-da-doi.png khi thông báo «Đã đổi giá …» có nút «Hoàn tác»."
+      - "Lấy id căn vừa sửa (GET /api/v1/listings, theo mã căn). Trước khi bấm Hoàn tác, chạy trong trang (tiêm đúng MỘT lần ghi hỏng của lệnh bù căn ấy, các lần ghi khác của kho không bị đụng): const HONG = new Set(['<id căn>']); const goc = IDBObjectStore.prototype.put; IDBObjectStore.prototype.put = function (v, k) { const q = (v && v.queue) || []; const l = q[q.length - 1]; if (l && HONG.has(l.listingId) && l.type === 'price_changed') { HONG.delete(l.listingId); throw new DOMException('tiem loi', 'QuotaExceededError'); } return goc.apply(this, arguments); }. Bấm «Hoàn tác» → chụp evidence/E6-hong.png; ghi chữ thông báo và có nút «Hoàn tác» không."
+      - "Lượt (a): bấm «Hoàn tác» trên thông báo lỗi ấy (lần ghi này lành) → chụp evidence/E6-lai-nut.png; ghi chữ thông báo và giá trên lưới. Bấm vào lưới cho có tiêu điểm, nhấn Ctrl+Z → ghi chữ thông báo."
+      - "Lượt (b): sửa ô Giá của căn B-09.01, tiêm lại như bước hai cho id căn ấy, bấm «Hoàn tác» trên thông báo → thông báo lỗi; bấm vào lưới cho có tiêu điểm, nhấn Ctrl+Z → chụp evidence/E6-lai-phim.png; ghi chữ thông báo và giá trên lưới. Nhấn Ctrl+Z thêm một lần → ghi chữ thông báo."
+    expected: "Lượt (a) hỏng: thông báo lỗi «Không hoàn tác được: Máy chưa lưu được lần sửa — thử lại» có nút «Hoàn tác»; bấm lại bằng nút: «Đã hoàn tác giá …», giá trên lưới về giá cũ; Ctrl+Z thêm một lần không làm gì — không thông báo, giá không đổi (luật đã ký: AC-6 của va-sua-tren-o «bản ghi ấy đã dùng thì Ctrl+Z không làm gì»). Lượt (b) hỏng rồi thử lại bằng Ctrl+Z: «Đã hoàn tác giá …» và giá về; Ctrl+Z thêm một lần không làm gì — không thông báo, giá không đổi."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E7
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG B. Khổ 1440x900. Phiên dau-chu-2, mở http://localhost:3492/inventory. Tích 5 căn Đang bán của Toà B (ghi mã; nếu Toà B không đủ 5 căn Đang bán thì ghi số có và tích hết), đổi trạng thái hàng loạt sang «Tạm ngưng», chờ thông báo có «Hoàn tác» → chụp evidence/E7-lo.png."
+      - "Lấy id của căn thứ hai và thứ tư trong 5 căn đã tích (GET /api/v1/listings, theo mã căn). Trước khi bấm Hoàn tác, chạy trong trang (tiêm đúng một lần ghi hỏng cho lệnh bù của mỗi căn ấy, các lần ghi khác của kho không bị đụng): const HONG = new Set(['<id 2>', '<id 4>']); const goc = IDBObjectStore.prototype.put; IDBObjectStore.prototype.put = function (v, k) { const q = (v && v.queue) || []; const l = q[q.length - 1]; if (l && HONG.has(l.listingId) && l.type === 'status_changed') { HONG.delete(l.listingId); throw new DOMException('tiem loi', 'QuotaExceededError'); } return goc.apply(this, arguments); }. Bấm «Hoàn tác» → chụp evidence/E7-mot-phan.png; ghi tiêu đề, mô tả và nút của thông báo, và trạng thái 5 căn trên lưới."
+      - "Bấm «Hoàn tác» trên thông báo lỗi (các lần ghi sau lành) → chụp evidence/E7-lai.png; ghi chữ thông báo và trạng thái 5 căn."
+    expected: "Lần một: thông báo «Đã hoàn tác 3 căn · 2 căn chưa hoàn tác được», mô tả kể đúng hai mã căn (khớp hai căn vẫn «Tạm ngưng» và đang tích trên lưới) kèm lý do, có nút «Hoàn tác»; lần hai: «Đã hoàn tác 2 căn» và cả 5 căn về «Đang bán»; mã kể ở lần một là căn thứ hai và thứ tư."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**", "apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E8
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch»; «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/(app)/inventory/**/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

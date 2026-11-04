@@ -24,10 +24,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
-import { lenhHoanTac } from "../cell-edit/hoan-tac";
+import { ghiAnToan } from "../cell-edit/lenh";
 import { STATUS_LABEL, WITHDRAWN_LABEL, type DongBang } from "../cot";
-import { chuHoanTacLo, dungLo, type BanGhiLo, type MucLo } from "./hoan-tac-lo";
-import { demLocAn, gomKetQua, hangCuaLo, LENH_DA_GOI, lenhTrangThai, nacMenu, xetDaGoi, xetDoiTrangThai, type XetLo } from "./lo";
+import { chayHoanTacLo, type BanGhiLo } from "./hoan-tac-lo";
+import { chayGhiLo, demLocAn, gomKetQua, hangCuaLo, LENH_DA_GOI, lenhTrangThai, moTaBatNgo, nacMenu, xetDaGoi, xetDoiTrangThai, type XetLo } from "./lo";
 
 type Tich = { tich: ReadonlySet<string>; dangHien: readonly string[]; doi: (id: string, co: boolean) => void; chonHet: (co: boolean) => void };
 
@@ -55,7 +55,8 @@ type Hoi = { loai: "trang-thai"; to: StandardStatus } | { loai: "da-goi" };
 const TOI_DA_KE = 8;
 
 export function useSuaHangLoat(moiHang: readonly DongBang[], dangHien: readonly DongBang[]) {
-  const sua = useSuaHang();
+  // Mọi lần ghi của lô đi qua hàm bọc: lỗi bất ngờ thành thông báo, không mất lặng (va-duong-loi-hoan-tac).
+  const sua = ghiAnToan(useSuaHang());
   const docPhienBan = useDocPhienBan();
   const [tich, setTich] = useState<ReadonlySet<string>>(() => new Set());
   const [hoi, setHoi] = useState<Hoi | null>(null);
@@ -81,16 +82,21 @@ export function useSuaHangLoat(moiHang: readonly DongBang[], dangHien: readonly 
 
   const xet: XetLo | null = hoi ? (hoi.loai === "da-goi" ? xetDaGoi(lo) : xetDoiTrangThai(lo, hoi.to, { lyDo })) : null;
 
+  // Căn chưa hoàn tác được tích lại trên lưới và thông báo kể mã căn, lý do; nút «Hoàn tác» bấm lại đúng căn hỏng vì kho
+  // hay lỗi bất ngờ (va-duong-loi-hoan-tac — nếp ghi lô một phần của hàng 16).
   const hoanTacLo = useCallback(
-    async (b: BanGhiLo) => {
-      const kq = dungLo(b, docPhienBan);
-      if (!kq.ok) {
-        toast.error(kq.loi);
-        return;
-      }
-      let duoc = 0;
-      for (const x of kq.bu) if ((await sua(x.id, x.lenh.type, x.lenh.payload, x.coSo)).ok) duoc++;
-      toast.success(chuHoanTacLo(kq, duoc));
+    (b: BanGhiLo) => {
+      const chay = async (lo: BanGhiLo): Promise<void> => {
+        const tb = await chayHoanTacLo(lo, docPhienBan, sua);
+        if (tb.tichLai.length) setTich((cu) => new Set([...cu, ...tb.tichLai]));
+        if (tb.loai === "thanh-cong") toast.success(tb.chu);
+        else if (tb.loai === "loi") toast.error(tb.chu);
+        else {
+          const thuLai = tb.thuLai;
+          toast(tb.chu, { description: tb.moTa, duration: 10_000, action: thuLai ? { label: "Hoàn tác", onClick: () => void chay(thuLai) } : undefined });
+        }
+      };
+      return chay(b);
     },
     [sua, docPhienBan],
   );
@@ -99,24 +105,18 @@ export function useSuaHangLoat(moiHang: readonly DongBang[], dangHien: readonly 
     if (!hoi || !xet || !xet.doiDuoc.length) return;
     setDangGhi(true);
     const lenh = hoi.loai === "da-goi" ? LENH_DA_GOI : lenhTrangThai(hoi.to, lyDo);
-    const ketQua: { id: string; ok: boolean }[] = [];
-    const muc: MucLo[] = [];
-    for (const h of xet.doiDuoc) {
-      const kq = await sua(h.id, lenh.type, lenh.payload);
-      ketQua.push({ id: h.id, ok: kq.ok });
-      // Phiên bản căn ngay sau lần ghi: căn đổi phiên bản nữa là có lần sửa sau, hoàn tác lô bỏ qua nó (AC-7).
-      if (kq.ok && hoi.loai === "trang-thai" && lenh.type === "status_changed") muc.push({ id: h.id, lenh: lenhHoanTac(h, lenh), phienBanSau: kq.op.expectedVersion + 1 });
-    }
+    const { ketQua, muc, batNgo } = await chayGhiLo(sua, xet.doiDuoc, lenh);
     const gom = gomKetQua(hoi.loai, ketQua, xet.khongDoi);
+    const moTa = moTaBatNgo(batNgo) ?? undefined;
     setTich((cu) => new Set([...cu].filter((id) => !gom.boTich.includes(id))));
     setHoi(null);
     setLyDo(undefined);
     setDangGhi(false);
-    if (!gom.boTich.length) toast.error(gom.thongBao);
+    if (!gom.boTich.length) toast.error(gom.thongBao, { description: moTa });
     else if (muc.length) {
       const b: BanGhiLo = { muc, daDung: false };
-      toast(gom.thongBao, { duration: 10_000, action: { label: "Hoàn tác", onClick: () => void hoanTacLo(b) } });
-    } else toast(gom.thongBao, { description: hoi.loai === "da-goi" ? "Còn / giữ giá · không hoàn tác được" : undefined });
+      toast(gom.thongBao, { description: moTa, duration: 10_000, action: { label: "Hoàn tác", onClick: () => void hoanTacLo(b) } });
+    } else toast(gom.thongBao, { description: [hoi.loai === "da-goi" ? "Còn / giữ giá · không hoàn tác được" : null, moTa].filter(Boolean).join(" · ") || undefined });
   }, [hoi, xet, lyDo, sua, hoanTacLo]);
 
   const menu = nacMenu(lo);
