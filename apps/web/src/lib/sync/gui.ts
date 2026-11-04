@@ -78,6 +78,12 @@ export function lyDoTuChoi(body: unknown, status: number): string {
   return b.reason ?? (b.missing ? `thiếu ${b.missing.map(nhanDieuKien).join(", ")}` : (b.error ?? `máy chủ trả ${status}`));
 }
 
+/**
+ * Lượt gửi dừng vì mất mạng: máy vừa rớt mạng — mọi thao tác chưa gửi được còn trong hàng đợi mà chưa có dấu nhận
+ * `madeOffline` (AC-6, vế b). Thao tác đã mang dấu giữ nguyên.
+ */
+export const danDauMatMang = (queue: PendingOp[]): PendingOp[] => queue.map((op) => (op.madeOffline ? op : { ...op, madeOffline: true }));
+
 /** `lan`: kết cục của lượt — `mang`/`phien` dừng cả lô; `may-chu` khi ít nhất một căn gặp 5xx (căn khác vẫn gửi). */
 export async function guiHangDoi(goi: Goi, n: Ngan, me: Me): Promise<{ ngan: Ngan; daGui: number; lan: LanThu }> {
   let ngan: Ngan = { ...n, queue: [...n.queue], review: [...n.review] };
@@ -98,7 +104,9 @@ export async function guiHangDoi(goi: Goi, n: Ngan, me: Me): Promise<{ ngan: Nga
       const daNhan = new Set<number>();
       for (let i = 0; i < ops.length; i++) {
         const op = ops[i]!;
-        const r = await goiAnToan(goi, "POST", `/api/v1/listings/${listingId}/events`, { type: op.type, payload: op.payload, expectedVersion: op.expectedVersion });
+        // Khoá `madeOffline` chỉ đi khi thao tác mang dấu — vắng khoá là ghi lúc có mạng (AC-6).
+        const lenh = { type: op.type, payload: op.payload, expectedVersion: op.expectedVersion, ...(op.madeOffline && { madeOffline: true }) };
+        const r = await goiAnToan(goi, "POST", `/api/v1/listings/${listingId}/events`, lenh);
         if (r.status === 200) {
           ngan = { ...ngan, queue: ngan.queue.filter((o) => o.opId !== op.opId) };
           capNhat(r.body as ListingView);
@@ -129,7 +137,7 @@ export async function guiHangDoi(goi: Goi, n: Ngan, me: Me): Promise<{ ngan: Nga
       }
     }
   } catch (e) {
-    if (e instanceof MatMang) return { ngan: { ...ngan, lastAttempt: "mang" }, daGui, lan: "mang" };
+    if (e instanceof MatMang) return { ngan: { ...ngan, queue: danDauMatMang(ngan.queue), lastAttempt: "mang" }, daGui, lan: "mang" };
     if (e instanceof HetPhien) return { ngan: { ...ngan, lastAttempt: "phien" }, daGui, lan: "phien" };
     throw e;
   }

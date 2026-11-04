@@ -9,12 +9,13 @@
 import type { EventType } from "@quy-hang/core/listing";
 import { apTrenMay, type LoiTrenMay } from "./ap-tren-may";
 import { locDanhSach, moHoSo, type BoLoc } from "./doc";
-import { guiHangDoi } from "./gui";
+import { danDauMatMang, guiHangDoi } from "./gui";
 import type { LocalStore } from "./kho";
 import { keoLichSu, keoVe, LoiKeo } from "./keo";
 import { dongHoThat, taoNhip, type DongHo } from "./mang";
+import { thietBiCuaMay, type ThietBi } from "./thiet-bi";
 import { suyChiBao } from "./trang-thai";
-import { nganTrong, type BoNhomDaLuu, type Goi, type LanThu, type Me, type Ngan } from "./types";
+import { nganTrong, type BoNhomDaLuu, type Goi, type LanThu, type LuotMatMang, type Me, type Ngan } from "./types";
 import { boThayDoi, giuCuaToi, layBanMoi, suaLai } from "./xu-ly-can-xem";
 
 export type BoDongBo = ReturnType<typeof taoBoDongBo>;
@@ -22,8 +23,32 @@ export type BoDongBo = ReturnType<typeof taoBoDongBo>;
 /** Kho trên máy (IndexedDB) ném lỗi khi đọc hay ghi. */
 class LoiKho extends Error {}
 
-export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: string; dongHo?: DongHo; taoMa?: () => string; nhip?: boolean }) {
+/**
+ * Lượt mất mạng (AC-7) theo kết cục `lan` của lượt thử ở giờ `luc`: mất mạng mà chưa mở → mở (giờ lượt thử ấy, thiết bị
+ * lúc ấy, 0 thao tác); kết cục khác mất mạng mà đang mở → khép, đẩy vào hộp gửi. Mất mạng khi đang mở: giữ nguyên — lượt
+ * mở đúng một lần ở lượt thử mất mạng đầu.
+ */
+function luotMatMang(n: Ngan, lan: LanThu, luc: string, thietBi: () => ThietBi): Ngan {
+  const mo = n.offlineSince ?? null;
+  if (lan === "mang") return mo ? n : { ...n, offlineSince: { at: luc, device: thietBi(), ops: 0 } };
+  if (!mo) return n;
+  const luot: LuotMatMang = { startedAt: mo.at, endedAt: luc, device: mo.device, queuedOps: mo.ops };
+  return { ...n, offlineSince: null, offlineOutbox: [...(n.offlineOutbox ?? []), luot] };
+}
+
+export function taoBoDongBo(o: {
+  goi: Goi;
+  kho: LocalStore;
+  me: Me;
+  companyId: string;
+  dongHo?: DongHo;
+  taoMa?: () => string;
+  nhip?: boolean;
+  /** Thiết bị lúc mở lượt mất mạng — bài kiểm tiêm; trình duyệt đọc màn hình (thiet-bi.ts). */
+  thietBi?: () => ThietBi;
+}) {
   const dongHo = o.dongHo ?? dongHoThat;
+  const thietBi = o.thietBi ?? thietBiCuaMay;
   const taoMa = o.taoMa ?? (() => crypto.randomUUID());
   let companyId = o.companyId;
   let dem: Ngan = nganTrong();
@@ -84,15 +109,32 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
   }
 
   async function mot() {
+    const cid = companyId; // một lô thuộc đúng sàn lúc bắt đầu, kể cả khi người đổi sàn giữa chừng
     try {
-      await motLuot();
+      const lan = await motLuot(cid, nay());
+      if (lan !== "mang" && lan !== "phien") await guiHopLuot(cid);
     } catch (e) {
       if (!(e instanceof LoiKho)) throw e;
     }
   }
 
-  async function motLuot() {
-    const cid = companyId; // một lô thuộc đúng sàn lúc bắt đầu, kể cả khi người đổi sàn giữa chừng
+  /** Gửi các lượt mất mạng đã khép (AC-7): 2xx thì bỏ khỏi hộp; lỗi giữ lại cho lượt sau; mất mạng thì thôi. */
+  async function guiHopLuot(cid: string) {
+    for (const luot of (await docKho(cid)).offlineOutbox ?? []) {
+      let status: number;
+      try {
+        status = (await o.goi("POST", "/api/v1/sync/offline-sessions", luot)).status;
+      } catch {
+        return;
+      }
+      if (status !== 200 && status !== 201) continue;
+      await doi(cid, (n) => ({ ...n, offlineOutbox: (n.offlineOutbox ?? []).filter((x) => !(x.startedAt === luot.startedAt && x.device === luot.device)) }));
+    }
+  }
+
+  /** Một lượt thử ở giờ `luc`; trả kết cục đã ghi vào `lastAttempt`. Mỗi lần ghi kết cục cũng mở / khép lượt mất mạng. */
+  async function motLuot(cid: string, luc: string): Promise<LanThu> {
+    const luot = (n: Ngan) => luotMatMang(n, n.lastAttempt ?? "ok", luc, thietBi);
     const dau = await doc(cid);
     let lanGui: LanThu = "ok";
     if (dau.queue.length > 0) {
@@ -103,17 +145,21 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
       const kq = await guiHangDoi(o.goi, dau, o.me);
       const xuLy = new Set(dau.queue.filter((x) => !kq.ngan.queue.some((y) => y.opId === x.opId)).map((x) => x.opId));
       const reviewMoi = kq.ngan.review.filter((r) => !dau.review.some((d) => d.listingId === r.listingId));
-      await doi(cid, (n) => ({
-        ...n,
-        queue: n.queue.filter((x) => !xuLy.has(x.opId)),
-        review: [...n.review, ...reviewMoi],
-        listings: kq.ngan.listings,
-        history: { ...n.history, ...kq.ngan.history },
-        lastAttempt: kq.ngan.lastAttempt,
-      }));
+      await doi(cid, (n) => {
+        const con = n.queue.filter((x) => !xuLy.has(x.opId));
+        // Lượt dừng vì mất mạng: mọi thao tác chưa gửi được còn trong hàng đợi nhận dấu (máy vừa rớt mạng, AC-6).
+        return luot({
+          ...n,
+          queue: kq.lan === "mang" ? danDauMatMang(con) : con,
+          review: [...n.review, ...reviewMoi],
+          listings: kq.ngan.listings,
+          history: { ...n.history, ...kq.ngan.history },
+          lastAttempt: kq.ngan.lastAttempt,
+        });
+      });
       if (cid === companyId) dangGui = 0;
       // Mất mạng hay hết phiên: lần kéo cũng sẽ hỏng như vậy — dừng, chỉ báo giữ nguyên nhân của lượt gửi.
-      if (kq.lan === "mang" || kq.lan === "phien") return;
+      if (kq.lan === "mang" || kq.lan === "phien") return kq.lan;
       lanGui = kq.lan;
       // Căn vừa gửi mà đã có lịch sử trên máy: kéo lại lịch sử để hồ sơ thấy đúng các sự kiện vừa lên.
       const daGuiCan = new Set(dau.queue.filter((x) => xuLy.has(x.opId)).map((x) => x.listingId));
@@ -125,11 +171,12 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
     } catch (e) {
       if (e instanceof LoiKho) throw e;
       const lan: LanThu = e instanceof LoiKeo ? e.lan : "mang";
-      await doi(cid, (n) => ({ ...n, lastAttempt: lan }));
-      return;
+      await doi(cid, (n) => luot({ ...n, lastAttempt: lan }));
+      return lan;
     }
     // Kéo được mà một căn vẫn đang gặp 5xx khi gửi: chỉ báo giữ «máy chủ trục trặc» tới khi căn ấy lên.
-    await doi(cid, (n) => ({ ...n, listings: keo.listings, history: { ...keo.history, ...pick(n.history, keo) }, lastPullAt: keo.lastPullAt, lastAttempt: lanGui }));
+    await doi(cid, (n) => luot({ ...n, listings: keo.listings, history: { ...keo.history, ...pick(n.history, keo) }, lastPullAt: keo.lastPullAt, lastAttempt: lanGui }));
+    return lanGui;
   }
   const pick = (h: Ngan["history"], keo: Ngan) => Object.fromEntries(Object.entries(h).filter(([id]) => keo.listings?.some((l) => l.id === id)));
 
@@ -188,7 +235,9 @@ export function taoBoDongBo(o: { goi: Goi; kho: LocalStore; me: Me; companyId: s
         const n = await docKho(companyId);
         const kq = apTrenMay(n, listingId, type, payload, nay(), taoMa(), coSo);
         if (!kq.ok) return kq;
-        await doi(companyId, (m) => ({ ...m, queue: [...m.queue, kq.op], nextSeq: Math.max(m.nextSeq, kq.op.clientSeq + 1) }));
+        // Thao tác ghi lúc mất mạng trong lượt đang mở: đếm vào lượt (chỉ thao tác ghi trong lượt, AC-7).
+        const mo = (m: Ngan) => (kq.op.madeOffline && m.offlineSince ? { offlineSince: { ...m.offlineSince, ops: m.offlineSince.ops + 1 } } : {});
+        await doi(companyId, (m) => ({ ...m, ...mo(m), queue: [...m.queue, kq.op], nextSeq: Math.max(m.nextSeq, kq.op.clientSeq + 1) }));
         void thuNgay();
         return kq;
       } catch (e) {

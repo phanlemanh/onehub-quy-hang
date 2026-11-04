@@ -321,29 +321,7 @@ test("đợt hai: căn ở nhóm điều chỉnh giá lúc gọi", () => {
   assert.equal(nhom?.code, "price_adjustment");
 });
 
-// ---- E8 · AC-8 ----
-
-const SAU_MA_THIEU = ["inquiry_to_send", "sheet_publishes", "customer_link_opens", "customer_interest", "actions_by_device_role", "mobile_offline"];
-
-test("chưa có sự kiện: sáu mã nói rõ thiếu gì", () => {
-  const mau = boMau("2026-11-03T01:00:00.000Z");
-  for (const rows of [tinh({}), tinh({ hang: mau.hang, lead: mau.lead })]) {
-    const thieu = rows.filter((r) => r.trangThai === "chua-co-su-kien");
-    assert.deepEqual(thieu.map((r) => r.ma).sort(), [...SAU_MA_THIEU].sort());
-    for (const r of thieu) {
-      assert.ok(r.trangThai === "chua-co-su-kien" && r.thieu.trim().length > 0, `${r.ma}: thiếu câu «thiếu»`);
-      for (const k of ["so", "tu", "mau", "trungVi", "n"]) assert.ok(!(k in r), `${r.ma} không được mang số (${k})`);
-    }
-  }
-  for (const r of tinh({})) {
-    if (SAU_MA_THIEU.includes(r.ma)) continue;
-    assert.equal(r.trangThai, "do-duoc", `${r.ma} đo được trên đầu vào rỗng`);
-    if (r.trangThai !== "do-duoc") continue;
-    if (r.kieu === "ti-le") assert.equal(r.mau, 0);
-    if (r.kieu === "dem") assert.equal(r.so, 0);
-    if (r.kieu === "thoi-luong") assert.equal(r.n, 0);
-  }
-});
+// ---- E8 · AC-8 ---- ca «chưa có sự kiện» (bốn mã) chuyển sang thiet-bi-mat-mang.test.ts (ghi-thiet-bi-va-mat-mang Hỏi-1).
 
 // ---- E9 · AC-9 ----
 

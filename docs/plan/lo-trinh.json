@@ -2370,6 +2370,15 @@
         "apps/web/src/app/(app)/units/ho-so/**",
         "packages/api/src/catalog/**"
       ]
+    },
+    {
+      "ma": "ghi-thiet-bi-va-mat-mang",
+      "cau_giao": "Ghi thiết bị (máy tính hay điện thoại) vào sự kiện của thao tác, và ghi lượt mất mạng cùng thao tác lúc mất mạng trên điện thoại về máy chủ, để hai số đo §11 «thao tác theo thiết bị và vai» và «mất mạng trên điện thoại» đo được trong hai tuần thử",
+      "slug": "ghi-thiet-bi-va-mat-mang",
+      "vi_sao": "Hỏi-1 Cổng Phạm vi hàng 52, chủ kho duyệt 03/11: mở một hàng nhỏ cho hai sự kiện chưa hàng nào ghi (thiết bị của thao tác, lượt mất mạng trên điện thoại)",
+      "dung_tren": [
+        "52"
+      ]
     }
   ],
   "chan_troi": [
