@@ -21,8 +21,8 @@ export function tinhSoDo(v: DauVaoSoDo): DongSoDo[] {
     confirmed_within_n_days: () => xacNhanTrongNNgay(states, ky, v.soNgayXacNhan ?? CALL_BACK_AFTER_DAYS),
     top_completeness: () => mucDuCaoNhat(states),
     unit_code_autofill: () => maCanTuDien(v.hang, v.lead, v.danhMuc, ky),
-    lead_to_first_call: () => thoiLuongLead(v.lead, ky, (l) => l.firstCalledAt, "phut"),
-    lead_to_ready: () => thoiLuongLead(v.lead, ky, (l) => l.boardAt, "ngay"),
+    lead_to_first_call: () => thoiLuongLead(v.lead, ky, (c) => c.goiDau, "phut"),
+    lead_to_ready: () => thoiLuongLead(v.lead, ky, (c) => c.cuoi.boardAt, "ngay"),
     duplicate_leads_blocked: () => leadTrungBiChan(v.lead, ky),
     price_adjustment_calls: () => goiDieuChinhGia(v.hang, ky, v.nguongDieuChinhGia),
     // Vắng `lanXuat` là rỗng, như `matMang`: sự kiện xuất đã có từ hàng 43, «chưa có sự kiện» chỉ dành cho mã chưa có nguồn.

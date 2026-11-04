@@ -450,6 +450,8 @@ test("rò: không số chủ", async () => {
 /** Lùi lúc nhập lead bằng kết nối chủ: lead lên bảng đúng `ngay` ngày sau lúc nhập. */
 const lui = (id: string, boardAt: Date, ngay: number) =>
   appPool.query("update leads set created_at = $2::timestamptz - make_interval(days => $3) where id = $1", [id, boardAt, ngay]);
+/** Mốc đầu khoảng đo lấy từ đồng hồ của Postgres — cùng đồng hồ ghi `listing_events.occurred_at` (luật 40). */
+const dongHoCsdl = async () => (await appPool.query("select clock_timestamp() as t")).rows[0].t as Date;
 const soDo = async (san: San, tu: Date, den: Date) =>
   (await appPool.query("select * from app.lead_board_metric($1, $2, $3)", [san.companyId, tu, den])).rows as Record<string, unknown>[];
 
@@ -462,7 +464,7 @@ test("số đo: ngày lead → Sẵn sàng bán trên bộ mẫu", async () => {
   const w = await leadVe(s, soW, "Toà A", maMoi(s)); // hàng 23: lên bảng cần mã căn
   await lenTuLead(s, w);
   await new Promise((r) => setTimeout(r, 20));
-  const tu = new Date();
+  const tu = await dongHoCsdl();
   const [soX, soY, soZ, soZ2] = [soMoi(s), soMoi(s), soMoi(s), soMoi(s)];
   const x = await leadVe(s, soX, "Toà A", maMoi(s));
   const y = (await nhap(s, nam(soY, "Toà A", maMoi(s)), "ts2")).id;
@@ -506,7 +508,7 @@ test("số đo: ngày lead → Sẵn sàng bán trên bộ mẫu", async () => {
 
 test("số đo: chuỗi gửi lại hai lần", async () => {
   const s = await sanMoi({ ts: { vai: ["telesales"] }, dc1: { vai: ["listing_agent"], khu: ["Toà A"] } });
-  const tu = new Date();
+  const tu = await dongHoCsdl();
   const z = await leadVe(s, soMoi(s), "Toà A", maMoi(s)); // hàng 23: lên bảng cần mã căn
   assert.equal((await tra(s, z, "dc1")).status, 200);
   const z2 = ((await (await guiLai(s, z, { ownerPhone: soMoi(s) })).json()) as View).id;
