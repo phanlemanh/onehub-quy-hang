@@ -1,3 +1,4 @@
+import { khoangCua } from "../config/giai";
 import { MAC_DINH_ANH_THAT_TOI_THIEU } from "./status";
 
 /**
@@ -5,7 +6,7 @@ import { MAC_DINH_ANH_THAT_TOI_THIEU } from "./status";
  * không bỏ được — khoảng bắt đầu từ 1 giữ nghĩa «Đang bán» của điều khoá K7.
  */
 export const KHOA_ANH_THAT_TOI_THIEU = "listing.ready_min_real_photos";
-export const KHOANG_ANH_THAT_TOI_THIEU = { min: 1, max: 20 } as const;
+export const KHOANG_ANH_THAT_TOI_THIEU = khoangCua(KHOA_ANH_THAT_TOI_THIEU);
 
 export type CauHinhSanSang = { minRealPhotos: number; loi: string | null };
 
