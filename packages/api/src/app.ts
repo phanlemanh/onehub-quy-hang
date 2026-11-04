@@ -24,6 +24,7 @@ import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
 import { registerPublicRoutes } from "./public/routes";
+import { registerDaGuiRoutes } from "./da-gui/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import { registerExportRoutes } from "./exports/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
@@ -189,6 +190,7 @@ export function createApi(deps: ApiDeps) {
   registerDeviceRoutes(api, deps);
   registerPhotoRoutes(api, deps, deps.khoAnh);
   registerPublicRoutes(api, deps, deps.khoAnh);
+  registerDaGuiRoutes(api, deps);
   registerSyncRoutes(api, deps);
   registerExportRoutes(api, deps);
 

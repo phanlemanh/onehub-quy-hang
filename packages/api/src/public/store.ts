@@ -56,7 +56,7 @@ async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: stri
        from share_listings sl
        join listings l on l.company_id = sl.company_id and l.id = sl.listing_id
        join companies co on co.id = sl.company_id
-       left join catalog_units cu on cu.building_name = l.building_name and app.unit_key(cu.unit_number) = app.unit_key(l.unit_number)
+       left join lateral (select c1.upi, c1.stack, c1.floor, c1.living_area, c1.bedrooms_total, c1.direction_faces, c1.property_type, c1.property_sub_type from catalog_units c1 where c1.building_name = l.building_name and app.unit_key(c1.unit_number) = app.unit_key(l.unit_number) order by c1.measured_at desc limit 1) cu on true
       where sl.company_id = $1 and sl.share_id = $2
       order by sl.position`,
     [s.companyId, s.shareId],
