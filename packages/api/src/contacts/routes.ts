@@ -7,7 +7,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { isRefusal, type Refusal } from "../leads/store";
-import { addProspectPhone, closeProspect, createProspect, createShare, listProspectShares, readProspect, reassignProspect } from "./prospects";
+import { addProspectPhone, closeProspect, createProspect, createShare, listMyOpenProspects, listProspectShares, readProspect, reassignProspect } from "./prospects";
 import { patchContact, readContact } from "./store";
 
 /** Liên hệ (hàng 85, ADR-0021): xem bản của lõi (không số) và sửa loại liên hệ. */
@@ -88,6 +88,16 @@ export function registerContactRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if ("code" in ctx) return tra(c, ctx);
       const kq = await withCompany(appPool, ctx, (tx) => createProspect(tx, c.req.valid("json")));
       return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 201);
+    },
+  );
+
+  api.openapi(
+    createRoute({ method: "get", path: P, summary: "Khách đang mở của chính đầu khách gọi, mới trước — không số, không mã liên hệ (màn Gửi)", responses: { 200: ok("Nhu cầu khách", z.array(Prospect)), ...loiNhuCau } }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const kq = await withCompany(appPool, ctx, (tx) => listMyOpenProspects(tx));
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 200);
     },
   );
 

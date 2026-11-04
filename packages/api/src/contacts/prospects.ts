@@ -68,6 +68,31 @@ export async function readProspect(tx: pg.PoolClient, id: string): Promise<Prosp
   });
 }
 
+/**
+ * Khách đang mở của chính đầu khách gọi (hàng 34, màn Gửi): nhu cầu do người ấy giữ, chưa đóng, mới trước — bản của lõi,
+ * không số, không mã liên hệ. Vai khác đầu khách bị từ chối (403), kể cả trưởng nhóm: danh sách là «khách của tôi».
+ */
+export async function listMyOpenProspects(tx: pg.PoolClient): Promise<ProspectView[] | Refusal> {
+  if (!(await rolesOf(tx)).includes("buyer_agent")) return { error: API_ERRORS.buyerAgentRequired };
+  const { rows } = await tx.query<ProspectRow>(
+    `select id, display_name, need, criteria, owner_member_user_id, closed_at, created_at
+     from prospects
+     where company_id = app.current_company_id() and owner_member_user_id = app.current_user_id() and closed_at is null
+     order by created_at desc, id desc`,
+  );
+  return rows.map((r) =>
+    prospectView({
+      id: r.id,
+      displayName: r.display_name,
+      need: r.need,
+      criteria: r.criteria,
+      ownerMemberUserId: r.owner_member_user_id,
+      closedAt: null,
+      createdAt: r.created_at.toISOString(),
+    }),
+  );
+}
+
 async function sanDangLam(tx: pg.PoolClient): Promise<string> {
   return (await tx.query<{ c: string }>("select app.current_company_id() c")).rows[0]!.c;
 }
