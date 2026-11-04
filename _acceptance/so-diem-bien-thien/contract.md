@@ -5,7 +5,7 @@ slug: so-diem-bien-thien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-so-diem-bien-thien-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -98,3 +98,8 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Một khoá mẫu chưa được thay bằng mã thật (ví dụ trường tuỳ chỉnh) vẫn được nhận như hợp lệ, không có cảnh báo. Người cấu hình có thể tưởng đã đặt xong trong khi chưa áp cho trường nào. — `packages/core/src/config/giai.ts`
 - Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sàn có thể đặt thời gian nhận lead dài hơn thời gian gọi khách mà hệ thống không báo lỗi, làm cấu hình tự mâu thuẫn. — `packages/core/src/config/khuon.ts`
 - Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu sau này thêm hoặc bớt một cách chia lead ở một nơi mà quên nơi kia, hai đường kiểm sẽ cho kết quả khác nhau cho cùng một cài đặt. — `packages/core/src/routing/index.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-1: dòng cấu hình mang khoá mẫu còn ngoặc nhọn của nhãn trường được nhận im lặng thay vì báo lỗi.
+  - Ngoài-2: khoá trường riêng chưa thay mã thật được nhận như hợp lệ, không cảnh báo.
+  - Ngoài-3: đổi hạn nhận lead lên dài hơn hạn gọi qua bộ kiểm của sổ không bị chặn — chỉ chiều đổi hạn gọi được kiểm.
+  - Ngoài-4: danh sách cách chia lead và người nhận báo khai hai chỗ (sổ và luật chia lead), chưa có gì giữ khớp.
