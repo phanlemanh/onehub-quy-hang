@@ -124,3 +124,11 @@ evals:
     expected: "Đăng nhập đầu khách mẫu trên bản chạy, khổ 375: Bảng hàng thẻ giữ lâu chọn hai căn → thấy thanh «2 căn · Xem trước · Gửi»; bấm Xem trước → màn Gửi, chọn Khách riêng, ngăn xem trước toàn màn không có mã căn, đổi sang Nhóm môi giới thấy mã căn; Khách mới (tên mẫu, 0900 000 011, Mua) → khách được chọn; sửa một chữ trong tin → tin giữ chữ đã sửa; căn quá 14 ngày mang «Gọi xác nhận trước», căn không còn bán hiện lý do; khổ 1280 không có bảng chia sẻ → bấm Gửi thấy «Chép tin» rồi «Đã chép»; mất mạng (giả lập offline) → nút Gửi «Gửi cần mạng»; ảnh chụp từng bước vào evidence/."
     paths: ["apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/inventory/cards/**"]
     evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E12
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/gui.md", "design/patterns/trang-thai.md", "design/patterns/trang-tam.md", "design/patterns/bang-hang.md", "apps/web/src/app/(app)/shares/new/**", "apps/web/src/app/(app)/inventory/cards/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm gui, trang-thai, trang-tam, bang-hang. Lệch chỉ vì tệp thuộc hai nhóm (giới hạn «cắt trước» của kit 2.37.0 — bộ đọc không xét ngoai_le; luật 33, 45 của đợt) là báo oan — người chấm ghi tên tệp bị báo, không tính là lệch thật."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
