@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 126ad29b57c3f1301c191b92936b2ea54b8566da
+verified_commit: e69a93be821def0ef0e6189acfe27d8f499d812b
 human_signoff:
 ---
 
@@ -56,7 +56,7 @@ Round 2. Round này chạy lại E7 và E9 (delta chạm paths của hai eval n�
   run_id: minted-dang-nhap-auth-15-E1-r1
   exit_code: 0
   baseline: n-a
-  verifier: executors.ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-04T07:35:19Z
   carried_from_round: 1
   # carry-forward tu round 1 — delta khong cham paths cua eval
@@ -69,7 +69,7 @@ Round 2. Round này chạy lại E7 và E9 (delta chạm paths của hai eval n�
   run_id: minted-dang-nhap-auth-15-E2-r1
   exit_code: 0
   baseline: n-a
-  verifier: executors.ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-04T07:35:19Z
   carried_from_round: 1
   # carry-forward tu round 1 — delta khong cham paths cua eval
@@ -82,7 +82,7 @@ Round 2. Round này chạy lại E7 và E9 (delta chạm paths của hai eval n�
   run_id: E3-dang-nhap-auth-15
   exit_code: 0
   baseline: n-a
-  verifier: executors.ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-04T07:35:19Z
   carried_from_round: 1
   # carry-forward tu round 1 — delta khong cham paths cua eval
@@ -150,7 +150,7 @@ Round 2. Round này chạy lại E7 và E9 (delta chạm paths của hai eval n�
   run_id: minted-dang-nhap-auth-15-E11-r1
   exit_code: 0
   baseline: n-a
-  verifier: executors.ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-04T07:35:19Z
   carried_from_round: 1
   # carry-forward tu round 1 — delta khong cham paths cua eval
@@ -245,3 +245,7 @@ none — every multi-run eval is uniform
 Round 1: E9 failed — phép đếm chỗ TrangThai trong bộ kiểm ui-lint chưa tính khối «chưa xoá được» thêm ở may-bi-bao.tsx. Returned to implementation.
 Round 2: E7 và E9 chạy lại, cùng qua; 12 eval còn lại carry-forward từ round 1. Tất cả PASS.
 
+
+### Re-pin lần 1 — 2026-11-04, do gộp nhánh chính vào nhánh trước khi mở PR hàng 93
+run_id: repin-20261104T090121Z-81487
+sha: e69a93be821def0ef0e6189acfe27d8f499d812b · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E1, E2, E3, E11 · AC không có chốt máy: AC-1, AC-2, AC-3, AC-8
