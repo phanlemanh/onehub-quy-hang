@@ -5,10 +5,10 @@ slug: va-moc-goi-dau-lead-tra-lai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-04-va-moc-goi-dau-lead-tra-lai-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-04
 ---
 
 # Acceptance Contract: va-moc-goi-dau-lead-tra-lai
