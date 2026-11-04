@@ -24,7 +24,7 @@ import {
   chonDauChu,
   coTheGhi,
   coTheTiep,
-  daXemThu,
+  nhanXemThu,
   doiDichCot,
   napTep,
   sangBuoc,
@@ -97,8 +97,11 @@ export function ManNhap({ vai }: { vai: string[] }) {
     const kq = await xemThuTatCa(fetch, t, (i, n) => setTienDoXem(`Đang hỏi máy chủ… gói ${i}/${n}`));
     setTienDoXem(null);
     if (laLoi(kq)) return setLoiXem(kq.loi);
-    setXemCu(kq);
-    setS((cu) => daXemThu(cu, kq));
+    setS((cu) => {
+      const moi = nhanXemThu(cu, t, kq);
+      if (moi !== cu) setXemCu(kq);
+      return moi;
+    });
   }
 
   async function ghiCac(t: TienDoGhi) {
@@ -127,7 +130,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
     <Button render={<Link href="/inventory" />}>Mở Bảng hàng</Button>
   ) : (
     <>
-      {s.buoc > 1 && !dangGhi ? (
+      {s.buoc > 1 && !dangGhi && tienDoXem === null ? (
         <Button type="button" variant="outline" onClick={() => setS(sangBuoc(s, s.buoc - 1))}>
           <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
           Lùi

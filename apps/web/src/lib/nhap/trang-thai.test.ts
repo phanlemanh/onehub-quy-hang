@@ -8,7 +8,7 @@ import { decodeText, parseCsv, type Grid, type ImportContext } from "@quy-hang/c
 import { danhMucMau, HOM_NAY, sinhBoThu } from "../../../../../packages/core/test/import/sinh";
 import { chayOng } from "./duong-ong";
 import { tienDoCho, xemThuTatCa, type Fetch, type TienDoGhi } from "./goi-api";
-import { boDong, chonDauChu, coQuyen, coTheGhi, coTheTiep, daXemThu, goiDong, napTep, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
+import { boDong, chonDauChu, coQuyen, coTheGhi, coTheTiep, daXemThu, goiDong, napTep, nhanXemThu, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
 
 const CTX: ImportContext = { today: HOM_NAY, catalog: danhMucMau() };
 const TEP = { ten: "bang-hang.csv", bam: "a".repeat(64), loai: "csv" as const, trang: null };
@@ -136,4 +136,16 @@ test("ghi: tiến độ cũ không dùng cho bản xem thử mới", () => {
   assert.equal(tienDoCho(t, XT("lan-1")), t, "cùng lần nhập: dùng tiếp tiến độ");
   assert.equal(tienDoCho(t, XT("lan-2")), null, "xem thử lại ra lần nhập mới: tiến độ cũ gửi gói cũ tới lần nhập cũ");
   assert.equal(tienDoCho(t, null), null, "bỏ dòng sau xem thử: tiến độ cũ còn dùng");
+});
+
+test("xem thử: kết quả về muộn không gắn vào trạng thái đã đổi", () => {
+  const XT = { importId: "lan-1", rows: [{ row: 2, action: "create" as const, reason: "x" }], summary: { create: 1, update: 0, supplement: 0, skip: 0 } };
+  const gui = voi(["listing_agent"], tuTep("ban-gia"));
+  assert.equal(coTheGhi(nhanXemThu(gui, gui, XT)), true, "trạng thái không đổi: nhận bản xem thử");
+  const CA: [string, TrangThaiNhap][] = [
+    ["sửa ô trong lúc chờ", suaO(gui, gui.ong!.table.rows[0]!.source, 0, "Toà B", CTX)],
+    ["bỏ dòng trong lúc chờ", boDong(gui, gui.ong!.table.rows[1]!.source)],
+    ["đổi đầu chủ trong lúc chờ", chonDauChu(gui, "user-y")],
+  ];
+  for (const [ten, doi] of CA) assert.equal(coTheGhi(nhanXemThu(doi, gui, XT)), false, `${ten}: nút ghi mở trên dữ liệu chưa xem thử`);
 });

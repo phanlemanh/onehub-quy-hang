@@ -96,6 +96,12 @@ export function boDong(s: TrangThaiNhap, source: number, bo = true): TrangThaiNh
 }
 
 export const daXemThu = (s: TrangThaiNhap, xemThu: XemThu): TrangThaiNhap => ({ ...s, xemThu });
+/** Nhận bản xem thử về muộn chỉ khi trạng thái hiện tại vẫn là đúng trạng thái đã gửi đi xem thử — người đổi đích cột, sửa ô,
+ *  bỏ dòng hay đổi đầu chủ trong lúc chờ thì bỏ kết quả ấy (nút ghi chỉ mở trên đúng các dòng đã xem thử). */
+export function nhanXemThu(hienTai: TrangThaiNhap, daGui: TrangThaiNhap, xemThu: XemThu): TrangThaiNhap {
+  const khop = hienTai.ong === daGui.ong && hienTai.bo === daGui.bo && hienTai.dauChu === daGui.dauChu && hienTai.tep === daGui.tep;
+  return khop ? daXemThu(hienTai, xemThu) : hienTai;
+}
 export const sangBuoc = (s: TrangThaiNhap, buoc: number): TrangThaiNhap => ({ ...s, buoc });
 
 /** Các dòng gửi máy chủ: ô thô (đã sửa) theo đúng thứ tự tiêu đề; dòng bỏ mang `skip`; Trưởng nhóm gắn đầu chủ. */

@@ -1,6 +1,6 @@
 // Đi màn Nhập Excel trên máy dev dãy G (cổng 3493) và chụp — dùng cho bước dựng (nhìn màn) và cho eval ui-check E9. Tự
 // đăng nhập người mẫu qua dung-g.mjs; mỗi ca in một dòng JSON «đã thấy gì» và chụp ảnh E9-<ca>-<khổ>.png.
-//   node _acceptance/man-nhap-excel/thu/chup-man.mjs --kho 1440 [--ghi] [--ca luong|xls|rong|khong-quyen|bo-het|loi-mang|truong-nhom|roi-trang] [--ra <thư mục>]
+//   node _acceptance/man-nhap-excel/thu/chup-man.mjs --kho 1440 [--ghi] [--ca luong|xem-truoc-ban|xls|rong|khong-quyen|bo-het|loi-mang|truong-nhom|roi-trang] [--ra <thư mục>]
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -15,6 +15,8 @@ const { values: a } = parseArgs({ options: { kho: { type: "string", default: "14
 const RA = a.ra ?? path.join(GOC, "_acceptance/man-nhap-excel/evidence");
 const KHO = Number(a.kho);
 const MAU_B = path.join(GOC, "packages/db/seed/mau/mau-b.xlsx");
+// Tệp bẩn sinh từ bộ thử hàng 64 (thu/sinh-tep-ban.mts): bước xem trước có ô máy sửa, cần người.
+const BAN = path.join(GOC, "_acceptance/man-nhap-excel/thu/ban-gia.xlsx");
 mkdirSync(RA, { recursive: true });
 
 function cookieCua(email) {
@@ -89,6 +91,22 @@ try {
         ghiNhan("6-xong", { coLoiVeBangHang: (await chu()).includes("Mở Bảng hàng") });
         await chup("6-xong");
       }
+      break;
+    }
+    case "xem-truoc-ban": {
+      await moMan("dau-chu-1@mau.quy-hang.test");
+      await chonTep(BAN);
+      await thay("ban-gia.xlsx ·");
+      for (const cho of ["Cột trong tệp", "Từng ô sẽ ghi gì"]) {
+        await bam("Tiếp");
+        await thay(cho);
+      }
+      const c = await chu();
+      ghiNhan("xem-truoc-ban", { coMaySua: /Máy sửa\s*[1-9]/.test(c), coCanNguoi: /Cần người\s*[1-9]/.test(c), coOSua: await t.tinh("document.querySelectorAll('td input').length > 0") });
+      await chup("3b-xem-truoc-ban");
+      await t.tinh(`(() => { const s = document.querySelector("[role=switch]"); if (s) s.click(); return true; })()`);
+      await ngu(400);
+      await chup("3c-chi-can-nguoi");
       break;
     }
     case "xls":
