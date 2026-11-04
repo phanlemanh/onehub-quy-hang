@@ -257,6 +257,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Cửa ra | Gửi: chọn → xem trước → chia sẻ → theo dõi | Đầu khách · điện thoại | G1–G4 | Bản đầu | P0 |
 | Cửa ra | Luồng Gửi — Đã dựng (hàng 34): chọn trên Bảng hàng thẻ → xem trước đúng trang khách → mở bảng chia sẻ; theo dõi là Đã gửi (hàng 36) | Đầu khách · điện thoại | G1–G3 | Bản đầu | P0 |
 | Cửa ra | Trang khách: khách riêng | Khách · điện thoại | T1–T3 | Bản đầu | P0 |
+| Cửa ra | Trang khách: khách riêng — Đã dựng (hàng 35): link `/s/<mã>` mở không đăng nhập, bộ căn và chi tiết theo lối ReUI, giá và trạng thái sống, căn đã cọc mờ đi, «Quan tâm» một chạm; lượt mở và lượt quan tâm ghi thành sự kiện cho số đo | Khách · điện thoại | T1–T3 | Bản đầu | P0 |
 | Cửa ra | Trang khách: nhóm môi giới | Môi giới sàn khác · máy tính | T4 | Bản đầu | P1 |
 | Cửa ra | Phát hàng | Đầu chủ, trưởng nhóm · máy tính | D | Bản đầu | P1 |
 | Đã gửi | Link đã gửi, lượt mở, quan tâm | Đầu khách · điện thoại | G4 | Bản đầu | P0 |

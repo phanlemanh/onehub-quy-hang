@@ -172,6 +172,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | khuôn | Khuôn Cài đặt sàn — bố cục Đọc | `design/patterns/cai-dat-san.md` |
 | khuôn | Khuôn Chế độ cuộc gọi | `design/patterns/cuoc-goi.md` |
 | khuôn | Khuôn Gửi — bố cục Luồng nhiều bước | `design/patterns/gui.md` |
+| khuôn | Khuôn Trang khách — bố cục Danh sách → chi tiết, không vỏ | `design/patterns/trang-khach.md` |
 | khuôn | Khuôn Hồ sơ căn | `design/patterns/ho-so-can.md` |
 | khuôn | Khuôn Hôm nay của đầu chủ | `design/patterns/hom-nay-dau-chu.md` |
 | khuôn | Khuôn Lead của tôi | `design/patterns/lead-cua-toi.md` |

@@ -8,16 +8,15 @@ import { TheCan } from "./the-can";
 
 export const LINK_TAT = "Link không còn mở được — hỏi lại người gửi";
 
-export function TrangKhachCongKhai({ code, than, can }: { code: string; than: ThanTrang | null; can?: number }) {
-  if (!than)
-    return (
-      <KhungTrangKhach>
-        <TrangThai kind="notice" title={LINK_TAT} />
-      </KhungTrangKhach>
-    );
+/** Đầu trang của khuôn: tên sàn, người gửi, số căn — link không mở được thì không có đầu trang (không lộ sàn). */
+export const dauCua = (than: ThanTrang | null) => (than ? { san: than.companyName, nguoi: than.senderName, soCan: than.can.length } : undefined);
+
+/** Nội dung trong khuôn: bộ căn, chi tiết một căn (`?can=<thứ tự>`), hay câu link không mở được. */
+export function NoiDungTrangKhach({ code, than, can }: { code: string; than: ThanTrang | null; can?: number }) {
+  if (!than) return <TrangThai kind="notice" title={LINK_TAT} />;
   const mot = can != null ? than.can[can] : undefined;
   return (
-    <KhungTrangKhach dau={{ san: than.companyName, nguoi: than.senderName, soCan: than.can.length }}>
+    <>
       <BaoMo code={code} />
       {mot ? (
         <ChiTiet b={mot} code={code} listingId={than.listingIds[can!]} />
@@ -28,6 +27,15 @@ export function TrangKhachCongKhai({ code, than, can }: { code: string; than: Th
           ))}
         </div>
       )}
+    </>
+  );
+}
+
+/** Trọn trang (khuôn + nội dung) — page.tsx dựng đúng cấu trúc này với khuôn ở gốc. */
+export function TrangKhachCongKhai(p: { code: string; than: ThanTrang | null; can?: number }) {
+  return (
+    <KhungTrangKhach dau={dauCua(p.than)}>
+      <NoiDungTrangKhach {...p} />
     </KhungTrangKhach>
   );
 }
