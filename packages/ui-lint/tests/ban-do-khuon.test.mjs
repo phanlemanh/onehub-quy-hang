@@ -196,8 +196,8 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/settings/users/page.tsx`,
   `${W}/app/(app)/settings/users/quan-nguoi.tsx`,
   `${W}/app/(app)/settings/users/quan-nguoi.tsx`,
-  // Màn Đã gửi (hàng 36): vai không xem, trống, lỗi tải, lỗi tắt link.
-  ...Array(4).fill(`${W}/app/(app)/shares/danh-sach.tsx`),
+  // Màn Đã gửi (hàng 36): vai không xem, trống, lỗi tải, lỗi tắt link; ngăn chi tiết đang tải, lỗi tải (hàng 37).
+  ...Array(6).fill(`${W}/app/(app)/shares/danh-sach.tsx`),
   // Màn Gửi (hàng 34): đang tải, chưa chọn căn, không còn căn, lỗi tạo link, đã chép, đã tạo link; không có tab Gửi.
   ...Array(6).fill(`${W}/app/(app)/shares/new/man-gui.tsx`),
   `${W}/app/(app)/shares/new/page.tsx`,
@@ -426,7 +426,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 3 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 101 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 103 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

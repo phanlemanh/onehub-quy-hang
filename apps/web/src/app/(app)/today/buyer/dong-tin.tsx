@@ -83,7 +83,7 @@ export function DongTinDauKhach({ trang, homNay, onThuLai }: { trang: TrangThaiV
         title={CHU.trong}
         description={CHU.trongMoTa}
         hanhDong={
-          <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/inventory" />}>
+          <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/inventory/cards" />}>
             {CHU.guiCan}
           </Button>
         }

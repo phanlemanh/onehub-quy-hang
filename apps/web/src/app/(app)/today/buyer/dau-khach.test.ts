@@ -35,7 +35,7 @@ test("hôm nay đầu khách: trạng thái vùng", () => {
   const dung = (trang: TrangThaiVung) => renderToStaticMarkup(h(DongTinDauKhach, { trang, homNay: "2026-11-04" }));
   const trong = dung({ kieu: "xong", ds: [] });
   assert.ok(trong.includes("Chưa có gì mới trong 7 ngày"), "trống thiếu chữ");
-  assert.ok(/<a[^>]*href="\/inventory"[^>]*>[^<]*Gửi căn/.test(trong), "trống thiếu nút «Gửi căn»");
+  assert.ok(/<a[^>]*href="\/inventory\/cards"[^>]*>[^<]*Gửi căn/.test(trong), "trống thiếu nút «Gửi căn»");
   const loi = dung({ kieu: "loi" });
   assert.ok(loi.includes("Chưa tải được — thử lại"), "lỗi thiếu chữ");
   assert.ok(/<button[^>]*>Thử lại<\/button>/.test(loi), "lỗi thiếu nút «Thử lại»");

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { DongCan } from "./chi-tiet";
-import type { LanGuiChiTiet, LanGuiTom, TrangThaiTat } from "./da-gui";
+import type { LanGuiChiTiet, LanGuiTom, TrangThaiChiTiet, TrangThaiTat } from "./da-gui";
 import { TheLanGui } from "./the-lan-gui";
 
 export type TrangThaiMan =
@@ -29,6 +29,7 @@ export const CHU = {
   trong: "Chưa gửi link nào",
   loi: "Chưa tải được — thử lại",
   khongVai: "Đầu khách và trưởng nhóm xem được Đã gửi",
+  dangTaiChiTiet: "Đang tải link",
 } as const;
 
 export function DanhSachDaGui({
@@ -78,6 +79,35 @@ export function DanhSachDaGui({
       ))}
     </div>
   );
+}
+
+/** Ngăn chi tiết theo trạng thái tải: không bao giờ trống — đang tải có khung chờ, lỗi có «Thử lại» (Ngoài-3 hàng 36). */
+export function NganChiTiet({
+  tt,
+  tat,
+  onTat,
+  onThuLai,
+}: {
+  tt: TrangThaiChiTiet;
+  tat: TrangThaiTat;
+  onTat?: () => void;
+  onThuLai?: () => void;
+}) {
+  if (tt.kieu === "dang-tai")
+    return <TrangThai kind="loading" title={CHU.dangTaiChiTiet} />;
+  if (tt.kieu === "loi")
+    return (
+      <TrangThai
+        kind="error"
+        title={CHU.loi}
+        hanhDong={
+          <Button type="button" variant="outline" onClick={onThuLai}>
+            Thử lại
+          </Button>
+        }
+      />
+    );
+  return <ChiTietLanGui l={tt.ct} tat={tat} onTat={onTat} />;
 }
 
 export function ChiTietLanGui({

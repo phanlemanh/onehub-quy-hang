@@ -43,4 +43,22 @@ export function taoTatLink(dep: { goi: Goi; xacNhan: () => boolean; id: string; 
   };
 }
 
+/** `?lan=<id>` mở thẳng một Lần gửi (từ Hôm nay, hàng 37): chỉ nhận mã dạng uuid; sai dạng hay vắng → null. */
+export function docLanTuThamSo(q: string | null): string | null {
+  return q && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(q) ? q : null;
+}
+
+export type TrangThaiChiTiet = { kieu: "dang-tai" } | { kieu: "loi" } | { kieu: "xong"; ct: LanGuiChiTiet };
+export type GoiDoc = (url: string, init: RequestInit) => Promise<{ ok: boolean; status: number; json: () => Promise<unknown> }>;
+
+/** Tải chi tiết một Lần gửi: 200 → mở; mọi mã khác (404, 5xx) và mất mạng → lỗi kèm thử lại (Ngoài-3 hàng 36). */
+export async function taiChiTiet(goi: GoiDoc, id: string): Promise<TrangThaiChiTiet> {
+  try {
+    const r = await goi(`/api/v1/shares/${encodeURIComponent(id)}`, { cache: "no-store" });
+    return r.ok ? { kieu: "xong", ct: (await r.json()) as LanGuiChiTiet } : { kieu: "loi" };
+  } catch {
+    return { kieu: "loi" };
+  }
+}
+
 export const thoiGian = (iso: string) => new Date(iso).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" });
