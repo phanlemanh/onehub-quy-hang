@@ -5,7 +5,7 @@ slug: man-nhap-excel
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-man-nhap-excel-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -102,3 +102,13 @@ Quét không gian tiêu chí (preset entity-feature × test-matrix, skill morpho
 - Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi bản xem thử cũ báo lỗi muộn, thông báo lỗi đó có thể che mất bản xem thử mới hợp lệ. — `apps/web/src/app/(app)/imports/new/man-nhap.tsx:113`
 - Ngoài-8 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi không tải được danh mục toà nhà, màn vẫn chạy không báo gì và số liệu xem trước có thể lệch so với kết quả máy chủ. — `apps/web/src/app/(app)/imports/new/man-nhap.tsx:68`
 - Ngoài-9 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm tự động cho việc bỏ dòng có thể vẫn xanh dù dòng bỏ không được gửi đúng, nên có thể lọt lỗi mà không ai biết. — `apps/web/src/lib/nhap/trang-thai.test.ts:57`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-2: Người được mời chưa đổi tên có thể hiện email ở chỗ ghi tên trong danh sách Đầu chủ.
+  - Ngoài-4: Danh sách Đầu chủ không tải được thì Trưởng nhóm kẹt ở bước đầu, không lời giải thích, phải tải lại trang.
+  - Ngoài-5: Máy chủ trả dữ liệu lạ thì màn có thể hiện mãi dòng đang hỏi máy chủ hoặc khoá nút ghi tới khi tải lại trang.
+  - Ngoài-6: Lỗi muộn của bản xem thử cũ có thể che bản xem thử mới; bấm xem thử lại là được.
+  - Ngoài-8: Danh mục toà nhà không tải được thì bản xem trước có thể lệch kết quả máy chủ, không có lời báo.
+  - Ngoài-9: Bài kiểm việc bỏ dòng chưa chứng dòng bỏ có mặt trong gói gửi.
+- Hai mục chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 2026-11-04 — Ngoài-3 (bấm thanh bước giữa lúc xem thử hay ghi)
+  và Ngoài-7 (lỗi máy chủ dạng lạ bị coi là đã ghi) — gộp vào hàng 67 nhap-nho-mau → hàng 67, luật 50 của đợt
+  dau-khach-nhap; không mở hàng mới.
