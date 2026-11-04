@@ -114,18 +114,21 @@ try {
     const t = await mo("telesales", "/leads/new");
     await dien(t);
     await gui(t);
+    await ngu(800);
     const c = await chu(t);
+    const ketQuaTrongKhung = await t.tinh(`(() => { const b = [...document.querySelectorAll("button")].find((x) => x.offsetParent !== null && x.textContent.trim() === "Xem ở Lead đã nhập"); if (!b) return false; const r = b.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })()`);
     await chup(t, "E3-ket-qua-390");
     await nhip();
     await bam(t, "Xem ở Lead đã nhập");
     await ngu(2000);
     await chup(t, "E3-da-nhap-390");
-    in1({ ca: "e3", coKetQua: /Không trùng|đã có đầu chủ|đã có hàng mở/.test(c), coLoiTheoDoi: c.includes("Xem ở Lead đã nhập"), dau: await nacDau(t) });
+    in1({ ca: "e3", ketQuaTrongKhung, coKetQua: /Không trùng|đã có đầu chủ|đã có hàng mở/.test(c), coLoiTheoDoi: c.includes("Xem ở Lead đã nhập"), dau: await nacDau(t) });
     t.dong();
   }
   if (arg("--e4")) {
     // Lead mới của telesales về Toà A (đầu chủ 1 phụ trách); đầu chủ nhận, gọi, đưa lên bảng qua lối API thật.
     const so = soMau();
+    let maHang = null; // mã hàng tạo từ lead — có sau bước lên bảng; đối chứng dương: đầu chủ đọc được mã ấy qua lối của mình
     const lead = await api("telesales", "POST", "/api/v1/leads", { ownerPhone: so, buildingName: "Toà A", need: "sale", listPrice: 3_200_000_000, feeInclusion: "included", desiredListingTime: "now" });
     await nhip();
     const doc = async (ten) => {
@@ -135,7 +138,7 @@ try {
       const d = await nacDau(t);
       const c = await t.tinh("document.body.innerHTML");
       await chup(t, ten);
-      const kq = { nac: d?.nac, cuonNgang: await cuonNgang(t), coSoChu: c.includes(so) || c.includes(so.replace(/\s/g, "")) };
+      const kq = { nac: d?.nac, cuonNgang: await cuonNgang(t), coSoChu: c.includes(so) || c.includes(so.replace(/\s/g, "")), coMaHang: !!maHang && c.includes(maHang) };
       t.dong();
       return kq;
     };
@@ -144,9 +147,30 @@ try {
     const sauNhan = await doc("E4-da-nhan-390");
     await api("dau-chu-1", "POST", `/api/v1/leads/${lead.id}/first-call`);
     const sauGoi = await doc("E4-da-goi-390");
-    await api("dau-chu-1", "POST", `/api/v1/leads/${lead.id}/listing`);
+    // Lên bảng = hàng tạo từ lead sang Đang bán (lõi hàng 27, app.lead_board_at_all): tạo hàng từ lead, đủ giá, pháp lý,
+    // một ảnh thật (dòng ảnh thêm bằng kết nối chủ như themAnhThat của bộ kiểm API), rồi đổi trạng thái qua lối thật.
+    const hang = await api("dau-chu-1", "POST", `/api/v1/leads/${lead.id}/listing`);
+    maHang = hang.id;
+    const pg = (await import("pg")).default;
+    const db = new pg.Client({ connectionString: "postgres://postgres:quyhang@localhost:5575/postgres" });
+    await db.connect();
+    await db.query(
+      `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+       select gen_random_uuid(), company_id, building_name, coalesce(unit_number, 'E4-' || left(id::text, 6)), 'shareable', 'image/jpeg', 1000, 10, 10, 'cho-thu-51'
+       from listings where id = $1`,
+      [hang.id],
+    );
+    await db.end();
+    let v = (await api("dau-chu-1", "GET", `/api/v1/listings/${hang.id}`)).version;
+    for (const [type, payload] of [
+      ["price_changed", { listPrice: 3_200_000_000, feeInclusion: "included" }],
+      ["details_changed", { legalStatus: "pink_book", occupantType: "vacant" }],
+      ["status_changed", { to: "Active" }],
+    ]) {
+      v = (await api("dau-chu-1", "POST", `/api/v1/listings/${hang.id}/events`, { type, payload, expectedVersion: v, confirmedWithOwner: true })).version;
+    }
     const sauLenBang = await doc("E4-len-bang-390");
-    in1({ ca: "e4", outcome: lead.outcome, nacTruoc: truoc.nac, nacSauNhan: sauNhan.nac, nacSauGoi: sauGoi.nac, nacSauLenBang: sauLenBang.nac, cuonNgang: [truoc, sauNhan, sauGoi, sauLenBang].some((x) => x.cuonNgang), coSoChu: [truoc, sauNhan, sauGoi, sauLenBang].some((x) => x.coSoChu) });
+    in1({ ca: "e4", outcome: lead.outcome, nacTruoc: truoc.nac, nacSauNhan: sauNhan.nac, nacSauGoi: sauGoi.nac, nacSauLenBang: sauLenBang.nac, cuonNgang: [truoc, sauNhan, sauGoi, sauLenBang].some((x) => x.cuonNgang), coSoChu: [truoc, sauNhan, sauGoi, sauLenBang].some((x) => x.coSoChu), coMaHang: sauLenBang.coMaHang, doiChungMaHang: !!(await api("dau-chu-1", "GET", `/api/v1/listings/${maHang}`)).id });
   }
   if (arg("--e5")) {
     const t = await mo("telesales", "/leads/new");
@@ -186,6 +210,7 @@ try {
       const lucMat = { coChuaCoLead: c.includes("Chưa có lead nào"), coThuLai: c.includes("Thử lại"), coDaiMatMang: c.includes("mất mạng") };
       await chup(t, `E6-${ten}-mat-mang-390`);
       await matMang(t, false);
+      await t.tinh("(window.__cham = 0, true)");
       await ngu(1500);
       c = await chu(t);
       const coDaiSau = c.includes("Đang xem bản đã tải — mất mạng");
