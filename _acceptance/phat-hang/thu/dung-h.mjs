@@ -9,7 +9,7 @@
 //   node _acceptance/phat-hang/thu/dung-h.mjs --tat                    tắt máy chủ dev lệnh này đã bật (chỉ kill PID đã ghi)
 // Chỉ người mẫu …@mau.quy-hang.test; mỗi lần cấp phiên xoá bộ đếm xin mã của email ấy trên Postgres thử.
 import { execFileSync, spawn } from "node:child_process";
-import { existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, openSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -130,5 +130,18 @@ if (!(await song())) {
     if (i > 180) throw new Error(`máy chủ dev không lên — xem ${LOG}`);
     await ngu(1000);
   }
+}
+// 3. Hâm nóng bảng hàng: lần dựng đầu của máy dev (Turbopack) có lúc làm trang /inventory tự tải lại liên tục và kẹt «Đang
+// tải lần đầu» (đo 04/11: hết ngay sau một lần dựng lại). Mở /inventory bằng phiên người mẫu cho máy dev dựng route, chạm giờ
+// sửa tệp bảng hàng (nội dung không đổi) để nó dựng lại một lần, chờ dựng xong.
+{
+  const out = execFileSync("node", [fileURLToPath(import.meta.url), "--phien", "dau-chu-1@mau.quy-hang.test"], { cwd: GOC }).toString();
+  const cookie = JSON.parse(out).cookie.map((c) => `${c.name}=${c.value}`).join("; ");
+  await fetch(`${URL_GOC}/inventory`, { headers: { cookie } }).then((r) => r.text()).catch(() => "");
+  const tep = path.join(GOC, "apps/web/src/app/(app)/inventory/bang-hang.tsx");
+  const nay = new Date();
+  utimesSync(tep, nay, nay);
+  await ngu(10000);
+  await fetch(`${URL_GOC}/inventory`, { headers: { cookie } }).then((r) => r.text()).catch(() => "");
 }
 console.log(JSON.stringify({ url: URL_GOC, log: LOG, pid: existsSync(PID) ? Number(readFileSync(PID, "utf8")) : null }));

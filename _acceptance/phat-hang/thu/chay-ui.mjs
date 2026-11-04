@@ -57,8 +57,18 @@ const chup = async (t, ten) => {
 
 /** Mở bảng hàng, chờ có nút «Xuất bảng hàng» bấm được (lần kéo đầu của bộ đồng bộ có thể vẽ lại trang một lượt). */
 async function moBang(t, duong = "/inventory") {
-  await t.di(duong);
-  await t.cho(`(() => { const b = ${NUT("Xuất bảng hàng")}; return !!b; })()`, 240000);
+  // Nhiều trình khách cùng một máy dev (lượt chấm chạy song song các bài giao diện) có lúc làm lần kéo đầu kẹt ở «Đang tải
+  // lần đầu»: mở lại trang, tối đa ba lần, mỗi lần chờ 80 giây — rồi mới báo hỏng.
+  for (let lan = 1; ; lan++) {
+    await t.di(duong);
+    try {
+      await t.cho(`(() => { const b = ${NUT("Xuất bảng hàng")}; return !!b; })()`, 80000);
+      break;
+    } catch (e) {
+      if (lan >= 3) throw e;
+      ghi("mo-lai-bang-hang", { lan, ly_do: "kẹt «Đang tải lần đầu» quá 80 giây" });
+    }
+  }
   await anPortal(t);
   await ngu(1500);
 }
