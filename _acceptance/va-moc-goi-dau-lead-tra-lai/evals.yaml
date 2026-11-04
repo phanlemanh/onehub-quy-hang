@@ -79,3 +79,12 @@ evals:
     expected: "exit 0; bộ test đơn vị của packages/api xanh."
     paths: ["packages/api/src/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; trong packages/api/test-db/va-moc-goi-dau-lead-tra-lai/goi-dau.test.ts (cùng bảng năm trạng thái của E1): ca «gọi đầu: đang giữ chưa nhận → 200, ghi cả nhận» (first_called_at khác null, accepted_at = first_called_at đọc bằng kết nối chủ), ca «gọi đầu: đang giữ đã nhận → 200, giữ mốc nhận», ca «gọi đầu: đã gọi rồi → 409» (mã already-called, mốc không đổi), ca «gọi đầu: lead của người khác → 404» (mã not-found, mốc không đổi); bốn ca có mặt, ok, không SKIP."
+    paths: ["packages/db/migrations/023_*.sql", "packages/api/src/routing/**", "packages/api/test-db/va-moc-goi-dau-lead-tra-lai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
