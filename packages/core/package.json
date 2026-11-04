@@ -18,6 +18,7 @@
     "./push": "./src/push/index.ts",
     "./redaction": "./src/redaction/index.ts",
     "./sharing": "./src/sharing/index.ts",
+    "./export": "./src/export/index.ts",
     "./thiet-bi": "./src/thiet-bi/index.ts"
   },
   "scripts": {
