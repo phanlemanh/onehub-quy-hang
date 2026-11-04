@@ -140,6 +140,17 @@ async function hangMo(tx: pg.PoolClient, toa: string, ma: string | null) {
 const laTuChoi = (r: unknown): r is RefusalHang => !!r && typeof r === "object" && "error" in r;
 
 /** Ghi một gói (hay xem thử — route lùi giao dịch). Gửi lại dòng đã ghi trả đúng kết quả cũ. */
+/** Đầu chủ của sàn đang làm cho Trưởng nhóm chọn khi nhập hộ (hàng man-nhap-excel, Hỏi-2): chỉ vai nhập đọc được, chỉ mã
+ *  người — tên đọc ở route qua bảng tài khoản. */
+export async function dauChuCuaSan(tx: pg.PoolClient): Promise<string[] | Refusal> {
+  const nguoi = await vaiNguoiGui(tx);
+  if (!nguoi.roles.some((v) => VAI_NHAP.includes(v))) return { error: API_ERRORS.importRoleRequired };
+  const { rows } = await tx.query<{ user_id: string }>(
+    "select user_id from company_members where company_id = app.current_company_id() and 'listing_agent' = any (roles) order by user_id",
+  );
+  return rows.map((r) => r.user_id);
+}
+
 export async function writeBatch(
   tx: pg.PoolClient,
   importId: string,

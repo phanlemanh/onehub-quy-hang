@@ -1,0 +1,24 @@
+{
+  "man": "Nhập Excel (hàng man-nhap-excel)",
+  "khuyen": {
+    "loi": "reui",
+    "ly_do": "Đúng khối đích solution-crm-6 đã chốt ở vo-va-ia.md: dải năm bước đánh số cho người nhập biết mình đang ở đâu trong một việc dài, bảng ghép có ô chọn trường ngay trên dòng và chữ đỏ dưới đúng cột sai, chân khung giữ Lùi/Tiếp cố định; trên điện thoại luồng mở ngăn toàn màn như mọi Luồng nhiều bước."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Khung settings-3 đã chuyển thể (khuôn Cài đặt sàn) — mỗi cột một dòng cài đặt, nhãn bên trái, trường bên phải",
+      "dong_co": "Không cài khối mới: dùng lại khung mục cài đặt mà trang mẫu Luồng nhiều bước đang dùng.",
+      "danh_doi": "Không có dải bước nên người nhập không thấy còn mấy bước; đổi trường phải mở thêm một lớp, và chỗ hiện lỗi cột không có sẵn."
+    },
+    "reui": {
+      "nhan": "solution-crm-6 chuyển thể — Frame xếp tầng, dải năm bước đánh số, bảng ghép cột có ô chọn trường, chân Lùi/Tiếp",
+      "dong_co": "Khối đích của màn Nhập Excel; năm bước của khối trùng đúng năm bước tải · ghép · xem trước · trùng · tóm tắt.",
+      "danh_doi": "Thêm một khối chuyển thể vào danh mục; bỏ bước tải giả, khoá trùng và lựa chọn ghi đè của khối (luật trùng của sàn quyết ở máy chủ), chấm màu thô của huy hiệu thành biến thể Badge."
+    },
+    "ve-moi": {
+      "nhan": "Một trang không chia bước — ghép cột, đếm theo dấu và nút ghi xếp chồng trong một khung",
+      "dong_co": "Thấy hết trên một trang, không phải bấm Tiếp; hợp tệp nhỏ ít cột.",
+      "danh_doi": "Tệp hàng trăm dòng làm trang dài, nút ghi trôi xuống đáy; xem thử trên máy chủ không có chỗ đứng rõ trước khi ghi; tự ghép nên phải thêm dòng «Chỗ hở» kèm hạn xem lại."
+    }
+  }
+}

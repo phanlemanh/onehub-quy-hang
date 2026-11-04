@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit -p .",
     "dev:q": "next dev -p 3461",
     "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test \"src/**/*.test.ts\"",
-    "test:db": "node --env-file-if-exists=../../.env.local --import tsx --test \"src/lib/sync/test-db/*.db-test.mts\""
+    "test:db": "node --env-file-if-exists=../../.env.local --import tsx --test \"src/lib/sync/test-db/*.db-test.mts\" \"src/lib/nhap/test-db/*.db-test.mts\""
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -25,6 +25,7 @@
     "cmdk": "^1.1.1",
     "cn": "^0.5.0",
     "date-fns": "^4.4.0",
+    "exceljs": "^4.4.0",
     "hono": "^4.6.0",
     "lucide-react": "^1.64.0",
     "next": "16.4.2",

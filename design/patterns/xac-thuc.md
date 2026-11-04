@@ -18,12 +18,13 @@ dưới `apps/web/src/app/(auth)/` và trả `<Khung title="…">…</Khung>` �
 **Không dùng** cho màn nào nằm trong vỏ (đã có sàn): trang «Tôi», đổi sàn trong ứng dụng, hồ sơ cá nhân đi khuôn của nhóm
 mình. Trang khách `/s/<mã>` không có vỏ nhưng cũng không thuộc nhóm này — nó đi họ thẻ (card).
 
-Khuôn tạm, ghép `Frame` hẹp giữa trang (bậc 6 của thang dùng lại); khối đích `auth-15` chuyển thể vào chính `Khung` ở
-việc riêng (ADR-0005), màn của nhóm không đổi.
+Khuôn là khối `@reui/auth-15` chuyển thể vào chính `Khung` (hàng 93): dấu hiệu Quỹ hàng trên đầu, một cột hẹp giữa trang
+với tiêu đề lớn, chân điều khoản ở đáy; không nút đăng nhập bằng dịch vụ khác (ADR-0005). Màn của nhóm chỉ điền `title`,
+`description` và phần thân.
 
 ## Luật
 
-- **KH-xt-khong-vo** — Màn xác thực không có vỏ: không cột nhà, không thanh trên; chỉ một khung hẹp giữa trang, nên
-  không dựng `Frame` hay `Card` trực tiếp trong trang.
+- **KH-xt-khong-vo** — Màn xác thực không có vỏ: không cột nhà, không thanh trên; chỉ một cột hẹp giữa trang do `Khung`
+  dựng, nên không dựng `Frame` hay `Card` trực tiếp trong trang.
 - **KH-xt-loi-gan-o** — Lỗi do người gõ (mã sai, email sai dạng) gắn dưới đúng ô bằng `FieldError`; lỗi không gắn ô nào
   đi khuôn `trang-thai`.

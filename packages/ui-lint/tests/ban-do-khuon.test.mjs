@@ -39,7 +39,7 @@ function voi(fn) {
   }
 }
 
-const NHOM = ["bang-hang", "cai-dat-san", "cuoc-goi", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-truong-nhom", "lead-cua-toi", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-tam", "trang-thai", "xac-thuc"];
+const NHOM = ["bang-hang", "cai-dat-san", "cuoc-goi", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-truong-nhom", "lead-cua-toi", "nhap-excel", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-tam", "trang-thai", "xac-thuc"];
 const TRANG_TAM = [
   "imports/new",
   "me",
@@ -60,9 +60,11 @@ const BANG = {
   "trang-tam": {
     // Hàng 91: Cài đặt sàn vào vỏ — mục chưa dựng là trang tạm; trang chuyển hướng và Người dùng là ngoại lệ.
     // Hàng 38: Tôi rời trang tạm sang nhóm toi.
+    // Hàng man-nhap-excel: Nhập Excel rời trang tạm sang nhóm nhap-excel.
     // Hàng 43: /exports/new chỉ chuyển hướng về bảng hàng (hộp thoại Xuất bảng hàng), nằm ngoài vỏ (app) — rời nhóm.
-    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/") && !t.includes("/exports/")), `${W}/app/(app)/settings/[section]/page.tsx`].sort(),
+    theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/") && !t.includes("/imports/") && !t.includes("/exports/")), `${W}/app/(app)/settings/[section]/page.tsx`].sort(),
     ngoaiLe: [
+      `${W}/app/(app)/imports/new/page.tsx`,
       `${W}/app/(app)/inventory/page.tsx`,
       `${W}/app/(app)/inventory/views/[id]/page.tsx`,
       `${W}/app/(app)/leads/mine/page.tsx`,
@@ -96,6 +98,8 @@ const BANG = {
   gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [] },
   // Hàng 38: Tôi, nhóm màn mới — màn thật /me và trang ba lối của nó.
   toi: { theoKhuon: [`${W}/app/(app)/me/page.tsx`], ngoaiLe: [] },
+  // Hàng man-nhap-excel: Nhập Excel, nhóm màn mới — màn thật /imports/new.
+  "nhap-excel": { theoKhuon: [`${W}/app/(app)/imports/new/page.tsx`], ngoaiLe: [] },
   // Hàng 35: Trang khách, nhóm màn mới — trang công khai /s/<mã>, ngoài (app).
   "trang-khach": { theoKhuon: [`${W}/app/s/[code]/page.tsx`], ngoaiLe: [] },
 };
@@ -134,6 +138,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["dai-bat.tsx", "hom-nay-dau-chu.tsx", "khung.tsx", "truong-nhom.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
   // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; khối báo máy bị báo ở đăng nhập.
   ...["khung.tsx", "man-toi.tsx", "toi-that.tsx"].map((p) => `${W}/app/(app)/me/${p}`),
+  // Nhập Excel (hàng man-nhap-excel): khuôn, màn và bảng của nó.
+  ...["khung.tsx", "new/bang.tsx", "new/man-nhap.tsx"].map((p) => `${W}/app/(app)/imports/${p}`),
   `${W}/app/(auth)/login/may-bi-bao.tsx`,
   ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
@@ -156,6 +162,9 @@ const NHAN_DIEN_TRANG_THAI = [
 const CHO_TRANG_THAI = [
   // Hàng 91: lỗi và không thấy cấp nhóm (app).
   `${W}/app/(app)/error.tsx`,
+  // Nhập Excel (hàng man-nhap-excel): đọc tệp, lỗi, không dòng nào ghi, xem thử, ghi, xong; không quyền ở trang.
+  ...Array(10).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
+  `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
   // Bảng hàng thẻ (hàng 32): lỗi tải lần đầu, trống, lọc rỗng.
@@ -205,8 +214,8 @@ const CHO_TRANG_THAI = [
   // «Sẵn sàng bán» (hàng 23): danh sách «Còn thiếu»; lời báo «Chưa gửi được» (va-san-sang-ban).
   `${W}/app/(app)/units/ready/nut-san-sang.tsx`,
   `${W}/app/(app)/units/ready/nut-san-sang.tsx`,
-  // Máy bị báo mất (hàng 38): khối báo ở màn đăng nhập.
-  `${W}/app/(auth)/login/may-bi-bao.tsx`,
+  // Máy bị báo mất (hàng 38): khối báo ở màn đăng nhập; hàng 93 thêm khối «chưa xoá được» khi xoá hỏng.
+  ...Array(2).fill(`${W}/app/(auth)/login/may-bi-bao.tsx`),
   // Hàng 91: lỗi gốc app, lỗi toàn cục; rỗng · lỗi · ngoại tuyến của màn mẫu; không thấy gốc app.
   `${W}/app/error.tsx`,
   `${W}/app/global-error.tsx`,
@@ -247,7 +256,7 @@ describe("E1 — bản đồ thật: bốn tệp đủ khoá §11.3", () => {
   it("đối chứng: bản sao mất một tệp nhóm thì danh sách nhóm thiếu đúng tên ấy", () =>
     voi((d) => {
       unlinkSync(join(d, "design/patterns/trang-tam.md"));
-      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "cuoc-goi", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-truong-nhom", "lead-cua-toi", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-thai", "xac-thuc"]);
+      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "cuoc-goi", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-truong-nhom", "lead-cua-toi", "nhap-excel", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-thai", "xac-thuc"]);
     }));
 });
 
@@ -392,12 +401,13 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "hom-nay-dau-chu: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-truong-nhom: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
+      "nhap-excel: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "o-nhan-lead: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 5 tệp theo khuôn · 17 ngoại lệ · 0 lệch",
-      "trang-thai: 78 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 4 tệp theo khuôn · 18 ngoại lệ · 0 lệch",
+      "trang-thai: 90 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
