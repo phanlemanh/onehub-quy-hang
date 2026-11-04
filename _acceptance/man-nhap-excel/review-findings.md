@@ -1,99 +1,74 @@
+# Review findings: man-nhap-excel (round 3)
+
 ## Trong hợp đồng
 
-- **Bản xem thử cũ được gắn vào trạng thái đã đổi: nút Ghi mở trên dữ liệu chưa xem thử**
-  AC: AC-4
-  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx:101`
-  severity: high
-  source: bugs
-  detail: xemThu() chạy bất đồng bộ với ảnh chụp `t`. Trong lúc nó chạy, nút «Lùi» vẫn hiện (chỉ ẩn khi dangGhi) và các bước trước vẫn bấm chọn được, nên người dùng có thể lùi lại để đổi đích cột, sửa ô hay bỏ dòng. Mỗi thao tác này đặt xemThu=null. Khi lời gọi xong, `setS((cu) => daXemThu(cu, kq))` gắn kết quả của trạng thái CŨ vào trạng thái MỚI mà không kiểm hai trạng thái còn khớp nhau. Hệ quả: coTheGhi bật và bước 5 hiện tổng kết cũ. Khi ghi, batDauGhi lại gửi goiDong(s) của trạng thái mới tới importId đã mở bằng kế hoạch và danh sách căn cũ. Điều này phá đúng bất biến mà trang-thai.ts tự nêu: «nút ghi chỉ mở trên đúng các dòng đã xem thử». Bấm «Xem thử lại» hai lần liền cũng đua nhau theo cùng cách. Cách sửa: chỉ nhận kết quả khi `cu.ong === t.ong && cu.bo === t.bo && cu.dauChu === t.dauChu`, hoặc dùng một mã thế hệ.
-  rationale: AC-4 đòi sau mọi thay đổi nút ghi khoá tới khi xem thử lại; đua trạng thái làm nút ghi mở trên dữ liệu chưa xem thử.
+(không có)
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **GET /imports/agents trả email đầu chủ cho cả người không phải quản trị (trường name thực chất là email)**
-  Người dùng thấy gì: Một đầu chủ khi chọn người nhập hộ có thể thấy địa chỉ email của các đầu chủ khác trong cùng sàn, trong khi trước đây chỉ quản trị sàn thấy.
-  Căn cứ: Chỉ lộ trong nội bộ một sàn và chỉ cho người có vai nhập, nên hậu quả vừa phải; không mất dữ liệu nhưng đã lộ thì không thu hồi được.
-  file: `packages/api/src/imports/routes.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Truy vấn bảng tài khoản viết thẳng trong route, không qua hàm dùng chung ở accounts.ts**
-  Người dùng thấy gì: Người dùng không thấy khác biệt nào; chỉ khiến việc bảo trì về sau khó theo dõi hơn một chút.
-  Căn cứ: Không ảnh hưởng người dùng và không mất dữ liệu; chi phí dọn sau rẻ nhưng lợi ích cũng rất nhỏ.
-  file: `packages/api/src/imports/routes.ts`
+- **Chú thích của writeBatch bị tách khỏi hàm: dauChuCuaSan chen vào giữa**
+  Người dùng thấy gì: Người dùng không thấy gì khác đi; chỉ là một dòng chú thích nằm sai chỗ, người đọc mã có thể hiểu nhầm.
+  Căn cứ: Không ảnh hưởng người dùng hay dữ liệu, sửa lúc nào cũng được nên không đáng mở việc riêng.
+  file: `packages/api/src/imports/store.ts:142`
   severity: low
   Đề xuất: wont-fix
 
-- **Chú thích của writeBatch giờ nằm trơ, không gắn vào hàm nào**
-  Người dùng thấy gì: Người dùng không bị ảnh hưởng; chỉ là phần giải thích trong mã bị đặt sai chỗ.
-  Căn cứ: Hoàn toàn không tác động tới người dùng hay dữ liệu, chỉ gây nhầm lẫn nhỏ cho người đọc mã.
-  file: `packages/api/src/imports/store.ts`
-  severity: low
-  Đề xuất: wont-fix
-
-- **Lỗi tải danh sách đầu chủ bị nuốt: Trưởng nhóm kẹt ở bước 1 mà không có thông báo**
-  Người dùng thấy gì: Nếu mạng chập chờn lúc mở màn, Trưởng nhóm thấy nút Tiếp tắt mà không có lời báo lỗi hay cách thử lại, phải tự tải lại trang.
-  Căn cứ: Không mất dữ liệu và người dùng tự gỡ được bằng cách tải lại trang, nhưng gây bối rối vì không có thông báo.
-  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx`
-  severity: medium
-  Đề xuất: known-limits
-
-- **nap() không có try/finally: nếu đọc tệp ném lỗi thì vòng quay kẹt và ô chọn tệp khoá mãi**
-  Người dùng thấy gì: Với tệp lạ hoặc khi tải thành phần đọc tệp bị hỏng, màn có thể quay mãi «Đang đọc tệp» và không cho chọn tệp khác cho tới khi tải lại trang.
-  Căn cứ: Ít gặp, không mất dữ liệu và tải lại trang là xong; sửa không đắt nhưng chưa nằm trong tiêu chí đã chốt.
-  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx`
-  severity: medium
-  Đề xuất: known-limits
-
-- **goi(): phản hồi 2xx mà thân không phải JSON thì ném ra ngoài, làm màn kẹt ở trạng thái đang chạy**
-  Người dùng thấy gì: Nếu máy chủ trả phản hồi bất thường, màn có thể treo ở trạng thái đang hỏi hoặc đang ghi và nút ghi khoá cho tới khi tải lại trang.
-  Căn cứ: Rất hiếm xảy ra; gói đã ghi không nhân đôi khi gửi lại nên tải lại và thử lại là an toàn.
-  file: `apps/web/src/lib/nhap/goi-api.ts`
+- **Route đọc thẳng bảng identity."user" thay vì đi qua hàm dùng chung ở auth/accounts.ts**
+  Người dùng thấy gì: Với người được mời mà chưa đổi tên, danh sách Đầu chủ có thể hiện địa chỉ email ở chỗ ghi tên.
+  Căn cứ: Chỉ là hiển thị hơi xấu cho một số tài khoản, không lộ dữ liệu ngoài công ty và không mất dữ liệu.
+  file: `packages/api/src/imports/routes.ts:130`
   severity: low
   Đề xuất: known-limits
 
-- **Lỗi tải danh mục rơi im lặng về chế độ không có danh mục: màn và máy chủ ra số khác nhau**
-  Người dùng thấy gì: Nếu danh mục không tải được, các dấu ô và số đếm ở bước ghép có thể lệch với kết quả xem thử của máy chủ mà người dùng không được báo.
-  Căn cứ: Bước xem thử trên máy chủ vẫn cho số đúng trước khi ghi nên không ghi sai dữ liệu; chỉ gây khó hiểu và người dùng tự thử lại được.
-  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx`
+- **Clicking the step bar skips the lock that Back respects while the server is previewing or writing**
+  Người dùng thấy gì: Trong lúc máy đang xem thử hoặc đang ghi, người dùng bấm quay lại một bước trước rồi sửa ô thì phần còn lại vẫn được ghi theo bản cũ, màn hình mất thanh tiến độ.
+  Căn cứ: Có thể ghi vào hàng những dòng người dùng tưởng đã sửa hoặc bỏ, tuy chỉ xảy ra khi cố tình bấm giữa lúc ghi; sửa rẻ nhưng nên được xét như một việc riêng.
+  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx:175`
+  severity: medium
+  Đề xuất: new-contract
+
+- **Failure to load the listing agent list is swallowed: a team lead is stuck at step 1 with no message**
+  Người dùng thấy gì: Nếu danh sách Đầu chủ không tải được, Trưởng nhóm kẹt ở bước đầu, nút Tiếp tắt mà không có lời giải thích hay nút thử lại.
+  Căn cứ: Người dùng tự gỡ được bằng cách tải lại trang, không mất dữ liệu, và lỗi này hiếm gặp.
+  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx:70`
+  severity: medium
+  Đề xuất: known-limits
+
+- **An exception after a successful response leaves the spinner stuck and the write button locked for good**
+  Người dùng thấy gì: Nếu máy chủ trả về dữ liệu lạ, màn có thể hiện mãi dòng đang hỏi máy chủ hoặc nút ghi bị khoá cho đến khi tải lại trang.
+  Căn cứ: Hiếm xảy ra, tải lại trang là gỡ được và gửi lại không nhân đôi hàng nên không mất hay hỏng dữ liệu.
+  file: `apps/web/src/lib/nhap/goi-api.ts:45`
   severity: low
   Đề xuất: known-limits
 
-- **Shape 3 (asserts a value is present when the promise is a relation between values): the duplicate-row check only looks for 'skip' and never checks the reason «trùng dòng n»**
-  Người dùng thấy gì: Bài kiểm có thể không phát hiện nếu dòng trùng bị bỏ vì lý do khác với lý do trùng, nên lỗi hiển thị lý do có thể lọt qua.
-  Căn cứ: Không ảnh hưởng người dùng trực tiếp ngay hôm nay, chỉ giảm độ chắc của lưới kiểm; bổ sung sau rẻ.
-  file: `apps/web/src/lib/nhap/test-db/nhap.db-test.mts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Shape 4 (negative-only assertion): after editing the cell, the test only checks the mark is no longer needs_person and never pins the resulting mark**
-  Người dùng thấy gì: Bài kiểm có thể không bắt được trường hợp ô sau khi sửa bị đánh dấu sai sang loại khác, nên lỗi dấu ô có thể lọt qua.
-  Căn cứ: Chỉ làm lưới kiểm lỏng hơn, không gây mất dữ liệu; thêm kiểm sau rất rẻ.
-  file: `apps/web/src/lib/nhap/trang-thai.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Shape 5 (claims a class but tests one point): «vai khác không gọi API nhập» covers only buyer_agent**
-  Người dùng thấy gì: Bài kiểm chỉ thử một vai không có quyền nên một vai khác có thể được vào nhầm mà không bị bắt.
-  Căn cứ: Chỉ giảm độ chắc của lưới kiểm; quyền thực tế vẫn do máy chủ chặn, thêm các vai vào bài kiểm rất rẻ.
-  file: `apps/web/src/lib/nhap/trang-thai.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Shape 5 (claims a class but tests one point): «cột nguồn sang trường ngoài lớp nguồn bị chặn» tries only 3 wrong targets**
-  Người dùng thấy gì: Bài kiểm chỉ thử vài đích sai nên có đích khác cho phép chuyển cột chủ nhà ra ngoài mà không bị bắt.
-  Căn cứ: Chỉ là lưới kiểm chưa phủ hết; luật chặn nằm ở lõi dùng chung nên rủi ro thật thấp và bổ sung kiểm rẻ.
-  file: `apps/web/src/lib/nhap/duong-ong.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Shape 4 (negative-only assertion): «bỏ dòng gửi skip» checks skip:true only when row 3 happens to be in the payload**
-  Người dùng thấy gì: Bài kiểm có thể vẫn qua dù dòng bị bỏ không còn được gửi kèm dấu bỏ, nên lỗi bỏ dòng có thể lọt qua.
-  Căn cứ: Chỉ làm lưới kiểm lỏng hơn, không ảnh hưởng người dùng trực tiếp; thêm một dòng kiểm là đủ.
-  file: `apps/web/src/lib/nhap/trang-thai.test.ts`
+- **An outdated preview error still gets shown and hides the newer preview**
+  Người dùng thấy gì: Khi bản xem thử cũ báo lỗi muộn, thông báo lỗi đó có thể che mất bản xem thử mới hợp lệ.
+  Căn cứ: Chỉ gây nhầm lẫn tạm thời, người dùng bấm xem thử lại là được, không mất dữ liệu.
+  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx:113`
   severity: low
+  Đề xuất: known-limits
+
+- **`laLoi` misses error bodies whose `error` is not a string, so they are treated as success**
+  Người dùng thấy gì: Nếu máy chủ từ chối một gói vì dữ liệu sai khuôn, màn có thể coi như gói đã ghi xong và báo hoàn tất dù chưa ghi gì.
+  Căn cứ: Có thể báo xong sai khiến người dùng tưởng đã nhập đủ, nhưng chỉ xảy ra khi gói gửi sai khuôn mà màn bình thường không tạo ra; sửa rẻ.
+  file: `apps/web/src/lib/nhap/goi-api.ts:43`
+  severity: low
+  Đề xuất: new-contract
+
+- **If the catalog fails to load, the screen silently runs without it, and the client-computed building/unit list can differ from the server's**
+  Người dùng thấy gì: Khi không tải được danh mục toà nhà, màn vẫn chạy không báo gì và số liệu xem trước có thể lệch so với kết quả máy chủ.
+  Căn cứ: Chỉ xảy ra khi mạng hay danh mục lỗi, bản ghi cuối vẫn do máy chủ quyết định nên không ghi sai dữ liệu; người dùng tải lại được.
+  file: `apps/web/src/app/(app)/imports/new/man-nhap.tsx:68`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình dạng 4 — assertion âm-tính-một-mình: ca «bỏ dòng gửi skip» không chứng dòng 3 có mặt trong gói**
+  Người dùng thấy gì: Bài kiểm tự động cho việc bỏ dòng có thể vẫn xanh dù dòng bỏ không được gửi đúng, nên có thể lọt lỗi mà không ai biết.
+  Căn cứ: Người dùng chưa gặp lỗi gì, chỉ là lưới an toàn mỏng hơn; thêm một dòng kiểm rất rẻ khi tiện.
+  file: `apps/web/src/lib/nhap/trang-thai.test.ts:57`
+  severity: medium
   Đề xuất: known-limits
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

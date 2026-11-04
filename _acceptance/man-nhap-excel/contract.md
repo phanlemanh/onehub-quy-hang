@@ -5,7 +5,7 @@ slug: man-nhap-excel
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-04-man-nhap-excel-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -96,3 +96,9 @@ Quét không gian tiêu chí (preset entity-feature × test-matrix, skill morpho
   `package-lock.json` (chỉ `npm install exceljs -w apps/web`), thành phần cài bằng shadcn CLI, `design/patterns/trang-tam.md`
   (ngoại lệ), `.agents/skills/quy-hang-ui/catalog.md`, `docs/design/vo-va-ia.md`, `CONTEXT.md`, `docs/product/tham-chieu.md`
   (chỉ thêm dòng).
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Với người được mời mà chưa đổi tên, danh sách Đầu chủ có thể hiện địa chỉ email ở chỗ ghi tên. — `packages/api/src/imports/routes.ts:130`
+- Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu danh sách Đầu chủ không tải được, Trưởng nhóm kẹt ở bước đầu, nút Tiếp tắt mà không có lời giải thích hay nút thử lại. — `apps/web/src/app/(app)/imports/new/man-nhap.tsx:70`
+- Ngoài-5 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu máy chủ trả về dữ liệu lạ, màn có thể hiện mãi dòng đang hỏi máy chủ hoặc nút ghi bị khoá cho đến khi tải lại trang. — `apps/web/src/lib/nhap/goi-api.ts:45`
+- Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi bản xem thử cũ báo lỗi muộn, thông báo lỗi đó có thể che mất bản xem thử mới hợp lệ. — `apps/web/src/app/(app)/imports/new/man-nhap.tsx:113`
+- Ngoài-8 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi không tải được danh mục toà nhà, màn vẫn chạy không báo gì và số liệu xem trước có thể lệch so với kết quả máy chủ. — `apps/web/src/app/(app)/imports/new/man-nhap.tsx:68`
+- Ngoài-9 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm tự động cho việc bỏ dòng có thể vẫn xanh dù dòng bỏ không được gửi đúng, nên có thể lọt lỗi mà không ai biết. — `apps/web/src/lib/nhap/trang-thai.test.ts:57`
