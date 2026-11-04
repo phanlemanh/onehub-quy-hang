@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3fa054d73767a42c81f6226a058bcfee477095ec
+verified_commit: bbfc1fedde89e130633d9b009370d856772f4b02
 human_signoff:
 ---
 
@@ -207,3 +207,7 @@ telesales của sàn mẫu. Vấp gì thì ghi vào câu ký; không chặn gộ
 - [ ] Bỏ trống một mục, bấm Gửi: thấy lỗi ngay dưới đúng ô đó.
 - [ ] Bật chế độ máy bay, bấm Gửi: thấy «Chưa gửi được — mất mạng», năm mục còn nguyên; tắt chế độ máy bay, bấm Gửi lại.
 - [ ] Mở «Lead đã nhập»: thấy lead vừa nhập và nấc của nó.
+
+### Re-pin lần 3 — 2026-11-04, do gộp main sau #101 (luật 57)
+run_id: repin-20261104T233451Z-64066
+sha: bbfc1fedde89e130633d9b009370d856772f4b02 · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · ngoài làn máy: E1 (E1 không khai paths), E2 (E2 không khai paths), E3 (E3 không khai paths), E4 (E4 không khai paths), E5 (E5 không khai paths), E6 (E6 không khai paths), E9 (E9 không khai paths), E8 (E8 không khai paths) · AC không có chốt máy: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-8
