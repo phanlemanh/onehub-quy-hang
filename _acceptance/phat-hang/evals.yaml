@@ -14,6 +14,10 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/phat-hang/thu/dung-h.mjs rồi node _acceptance/phat-hang/thu/nap-hang.mjs (Postgres 5574, máy dev 3494, 40 hàng mẫu có chủ nhà mẫu; dừng bằng node _acceptance/phat-hang/thu/dung-h.mjs --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/phat-hang/thu/chay-ui.mjs --e1b --ra _acceptance/phat-hang/evidence — Chrome không đầu, đầu chủ mẫu dau-chu-1; mỗi bước in một dòng JSON và chụp ảnh E1b-*.png"
+      - "Đối chiếu e1b-buoc-3-hai-can (2 căn đã tích, dòng «Cột không ra ngoài» nêu cột nội bộ), e1b-quay-lai-khach-rieng (veBuoc1 = true, nguoiNhan Khách riêng, không cột Mã căn, Mã căn vào dòng bỏ cột), e1b-khong-tich (cả 33 căn, ba thẻ khoá), e1b-menu-tao (về /inventory, hộp thoại mở), e1b-dien-thoai (coNutHien = false); xem các ảnh tương ứng"
     expected: "Trên máy tính 1440×900, đăng nhập đầu chủ mẫu, mở bảng hàng: lọc còn một toà, tích hai căn, bấm «Xuất bảng hàng» — hộp thoại mở, bước 1 có năm mẫu, bước 2 Nhóm môi giới chọn sẵn, bước 3 xem trước đúng hai căn đã tích và dòng «Cột không ra ngoài» khi góc nhìn có cột nội bộ; đi tới bước 3 rồi «Quay lại» hai bước, đổi sang Khách riêng, đi tiếp → xem trước theo người nhận mới (không mã căn), người nhận không mất khi quay lại; bỏ tích, mở lại → xem trước đủ các căn đang lọc; lọc ra 31 căn, mở «Xuất bảng hàng» → ba thẻ Bài Zalo, Bài Facebook, Ảnh khoá kèm lời «Quá 30 căn — dùng Excel hay PDF»; mở «Xuất bảng hàng» từ menu Tạo → về bảng hàng và hộp thoại mở; khổ điện thoại 390×844 không có nút. Chụp mỗi bước một ảnh."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/exports/**", "apps/web/src/components/shell/menu-tao.tsx"]
     evidence_required: [screenshot, observed, verifier, verified_at]
@@ -63,6 +67,10 @@ evals:
     executor: ui-check
     layer: ui-observed
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/phat-hang/thu/dung-h.mjs rồi node _acceptance/phat-hang/thu/nap-hang.mjs (Postgres 5574, máy dev 3494, 40 hàng mẫu có chủ nhà mẫu; dừng bằng node _acceptance/phat-hang/thu/dung-h.mjs --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/phat-hang/thu/chay-ui.mjs --e6b --ra _acceptance/phat-hang/evidence — tải Ảnh và PDF của 12 căn, Ảnh của đúng 30 căn (đối chứng dưới ngưỡng), PDF của 33 căn (trên ngưỡng); tệp lưu thành E6b-*.png, E6b-*.pdf"
+      - "Mở E6b-12-can.png, E6b-30-can.png (ảnh bảng, chữ có dấu), E6b-12-can.pdf (1 trang), E6b-tren-30-can.pdf (2 trang); đối chiếu dòng e6b-*-buoc-1: khoaAnh = false ở 12 và 30 căn, true ở 33 căn"
     expected: "Trên máy tính, xuất 12 căn của bộ mẫu ra Ảnh rồi ra PDF: tệp bang-hang-<ngày>.png mở được, là ảnh bảng như xem trước, chữ tiếng Việt có dấu đọc đúng (toà, tình trạng, phí); tệp .pdf mở bằng trình xem PDF của trình duyệt, một trang, cùng nội dung; đối chứng dưới ngưỡng: phát đúng 30 căn → thẻ Ảnh không khoá (should-not-fire), ảnh tải được đủ 30 dòng; phát 31 căn: thẻ Ảnh khoá với lời «Quá 30 căn — dùng Excel hay PDF», PDF ra hai trang. Chụp ảnh tệp đã mở."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "packages/core/src/export/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
@@ -80,6 +88,10 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/phat-hang/thu/dung-h.mjs rồi node _acceptance/phat-hang/thu/nap-hang.mjs (Postgres 5574, máy dev 3494, 40 hàng mẫu có chủ nhà mẫu; dừng bằng node _acceptance/phat-hang/thu/dung-h.mjs --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/phat-hang/thu/chay-ui.mjs --e7b --ra _acceptance/phat-hang/evidence — xuất Excel và Bài Zalo cho Nhóm môi giới rồi Khách riêng; bài bắt từ lệnh chép của trang, tệp xlsx đọc bằng packages/db/seed/doc-xlsx.py; chữ ra lưu E7b-*.txt"
+      - "Đối chiếu bốn dòng e7b-*: ro = [] (không tên chủ nhà, số 0900 000 0xx, giá đáy nào của hàng dau-chu-1 nạp bởi nap-hang.mjs), soMaCan = 0 ở hai ca Khách riêng; mở các tệp E7b-*.txt"
     expected: "Trên máy dev nối Postgres dãy với bộ mẫu có chủ nhà, số điện thoại mẫu và giá đáy ở lớp nguồn: đầu chủ giữ căn (người thấy được nguồn trên hồ sơ) xuất mọi căn của mình ra Excel và Bài Zalo cho Nhóm môi giới rồi cho Khách riêng; đọc tệp xlsx tải về (giải nén) và bài trong bộ nhớ tạm: không có tên chủ nhà, số 0900 000 0xx mẫu, giá đáy nào của các căn ấy; bản Khách riêng không có mã căn. Ghi kết quả dò từng chuỗi."
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/lib/sync/**", "packages/core/src/export/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
@@ -97,6 +109,10 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/phat-hang/thu/dung-h.mjs rồi node _acceptance/phat-hang/thu/nap-hang.mjs (Postgres 5574, máy dev 3494, 40 hàng mẫu có chủ nhà mẫu; dừng bằng node _acceptance/phat-hang/thu/dung-h.mjs --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/phat-hang/thu/chay-ui.mjs --e8c --ra _acceptance/phat-hang/evidence — đếm dòng exports trước (dung-h.mjs --lan-xuat), chép Bài Zalo cho Nhóm môi giới 3 căn, tải Excel cho Khách riêng 3 căn, đếm sau; số đo tính bằng _acceptance/phat-hang/thu/so-do.ts (hàm đếm của lõi) trên đúng các dòng mới"
+      - "Đối chiếu e8c-bang-exports: sau − trước = 2, them gồm post_zalo/nhom_moi_gioi/3 và xlsx/khach_rieng/3, soDo.sheet_publishes.so = 2; xem E8c-sau-1440.png"
     expected: "Trên máy dev nối Postgres dãy: đếm dòng bảng exports của sàn trước; trong hộp thoại thật bấm «Chép bài» (Bài Zalo, Nhóm môi giới, 3 căn) rồi «Tải file» (Excel, Khách riêng, 3 căn) → bảng exports thêm đúng 2 dòng với format post_zalo/xlsx, recipient nhom_moi_gioi/khach_rieng, listing_count 3, đúng người và sàn; hàm số đo của lõi chạy trên các dòng đọc từ bảng cho kỳ chứa hai lần ấy ra sheet_publishes = 2 (đọc bằng lệnh thử của hồ sơ, không viết tay lần xuất). Ghi số đếm trước, sau và số đo."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "packages/api/src/exports/**", "packages/core/src/metrics/**", "packages/db/migrations/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
