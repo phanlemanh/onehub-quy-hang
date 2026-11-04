@@ -2352,3 +2352,59 @@ test("offline_sessions: sàn khác không đọc, không ghi hộ", { skip }, as
     await expectError(c, "delete from offline_sessions", [], /permission denied/);
   });
 });
+
+// ---- Trang khách (hàng 35, migration 031): sự kiện của Lần gửi và hai hàm theo mã link ----
+// Lần gửi A (mã maA000000000, người gửi LK.GUI của sàn A) và B (maB000000000, sàn B) dựng sẵn ở withLienHeKhach.
+
+test("trang khách: share_events nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query("select relname, relrowsecurity r, relforcerowsecurity f from pg_class where relname = 'share_events'");
+    assert.deepEqual(rows, [{ relname: "share_events", r: true, f: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("trang khách: hàm theo mã không vượt sàn", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    // Hàm theo mã trả đúng một dòng của Lần gửi B, chỉ các cột viết trước — không cột căn, không cột nguồn.
+    const b = await c.query("select * from app.share_by_code('maB000000000')");
+    assert.equal(b.rowCount, 1, "mã của sàn B phải ra đúng một dòng");
+    assert.deepEqual(Object.keys(b.rows[0]), ["company_id", "share_id", "sender_user_id", "audience", "active"]);
+    assert.deepEqual([b.rows[0].company_id, b.rows[0].share_id, b.rows[0].active], [COMPANY_B, LKS.B, true]);
+    // Mã sai, mã sai khuôn, chuỗi liệt kê: không dòng nào.
+    for (const ma of ["maQ000000001", "%", "maB00000000", "' or true --"]) {
+      assert.equal((await c.query("select * from app.share_by_code($1)", [ma])).rowCount, 0, `mã «${ma}» ra dòng`);
+    }
+    // Ghi sự kiện cho mã của B: dòng thuộc sàn B, A không đọc được; B đọc được.
+    assert.equal((await c.query("select app.record_share_event('maB000000000', 'link_opened', null, 'may-thu-0001') as r")).rows[0].r, true);
+    assert.equal((await c.query("select 1 from share_events where share_id = $1", [LKS.B])).rowCount, 0, "share_events của B lộ sang A");
+    await lamNguoi(c, LK.B, COMPANY_B);
+    assert.equal((await c.query("select 1 from share_events where share_id = $1", [LKS.B])).rowCount, 1, "đối chứng: B đọc sự kiện của mình");
+    // Mã sai thì không ghi được.
+    await expectError(c, "select app.record_share_event('maQ000000001', 'link_opened', null, 'may-thu-0001')", [], /không có Lần gửi này/);
+    // Vai API không ghi thẳng bảng.
+    for (const sql of [
+      "insert into share_events (company_id, share_id, type, visitor) values ($1, gen_random_uuid(), 'link_opened', 'may-thu-0002')",
+      "update share_events set visitor = 'may-thu-0003' where company_id = $1",
+      "delete from share_events where company_id = $1",
+    ]) await expectError(c, sql, [COMPANY_B], /permission denied/);
+  });
+});
+
+test("trang khách: link tắt hay người gửi rời sàn thì không mở được", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.TN, COMPANY_A);
+    assert.equal((await c.query("select active from app.share_by_code('maA000000000')")).rows[0].active, true, "đối chứng: Lần gửi A đang mở");
+    // Người gửi bị gỡ khỏi sàn (vai chủ).
+    await chuChay(c, "delete from company_members where company_id = $1 and user_id = $2", [COMPANY_A, LK.GUI], [LK.TN, COMPANY_A]);
+    assert.equal((await c.query("select active from app.share_by_code('maA000000000')")).rows[0].active, false, "người gửi rời sàn mà link vẫn mở");
+    await expectError(c, "select app.record_share_event('maA000000000', 'link_opened', null, 'may-thu-0001')", [], /không có Lần gửi này/);
+    // Link B đặt disabled_at (vai chủ).
+    await chuChay(c, "update shares set disabled_at = now() where id = $1", [LKS.B], [LK.TN, COMPANY_A]);
+    assert.equal((await c.query("select active from app.share_by_code('maB000000000')")).rows[0].active, false, "link đã tắt mà vẫn mở");
+  });
+});
