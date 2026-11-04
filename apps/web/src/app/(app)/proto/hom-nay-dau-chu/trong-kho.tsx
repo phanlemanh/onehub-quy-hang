@@ -44,7 +44,7 @@ function DongViec({ v, hd }: { v: Viec; hd: HangDoi }) {
 export function TrongKho() {
   const hd = useHangDoi();
   return (
-    <section aria-label="Hôm nay" className="flex w-full max-w-3xl flex-col">
+    <section aria-label="Hôm nay" className="flex w-full flex-col">
       <Frame stacked className="@container w-full">
         <FramePanel className="flex items-center justify-between gap-2 p-3.5!">
           <h2 className="text-foreground text-base font-medium">Hôm nay</h2>

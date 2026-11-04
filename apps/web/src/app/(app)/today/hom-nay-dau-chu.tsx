@@ -12,6 +12,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
 
+import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
 import { DataGrid, DataGridContainer, dataGridFeatures, type DataGridFeatures } from "@/components/reui/data-grid/data-grid";
 import { DataGridTable, DataGridTableRowExpand } from "@/components/reui/data-grid/data-grid-table";
@@ -19,7 +20,6 @@ import { Frame, FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useBoDongBo, useDanhSachHang, useSuaHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../inventory/danh-muc";
 import { chiMuc } from "../inventory/ghep-danh-muc";
@@ -273,28 +273,10 @@ function taoCot(hd: HanhDong, rong: boolean): DefCot[] {
 
 /** Đang tải: đúng bố cục — thanh đầu, ba dòng nhóm, mỗi nhóm hai dòng việc. */
 function DangTai() {
+  // Chờ tải theo hình bố cục Tràn của /today (ADR-0024 §4) — không ghép khung xương tay.
   return (
-    <FramePanel className="flex flex-col gap-3 p-3.5!" aria-busy="true" aria-label="Đang tải Hôm nay">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="flex flex-col gap-2.5">
-          <div className="flex items-center gap-2">
-            <Skeleton className="size-5" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="h-5 w-7" />
-          </div>
-          {[0, 1].map((j) => (
-            <div key={j} className="flex items-center justify-between gap-4 ps-9">
-              <div className="flex flex-col gap-1.5">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-3.5 w-24" />
-              </div>
-              <Skeleton className="hidden h-4 w-40 lg:block" />
-              <Skeleton className="hidden h-4 w-28 lg:block" />
-              <Skeleton className="hidden h-8 w-56 lg:block" />
-            </div>
-          ))}
-        </div>
-      ))}
+    <FramePanel className="p-3.5!" aria-label="Đang tải Hôm nay">
+      <ChoTai kieu="tran" />
     </FramePanel>
   );
 }
@@ -557,7 +539,7 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
   );
 
   return (
-    <section aria-label="Hôm nay của đầu chủ" className="flex w-full max-w-7xl min-w-0 flex-col">
+    <section aria-label="Hôm nay của đầu chủ" className="flex w-full min-w-0 flex-col">
       <Frame stacked className="w-full min-w-0">
         <FramePanel className="flex items-center justify-between gap-2 p-3.5!">
           <h2 className="text-foreground text-base font-medium">Hôm nay</h2>
