@@ -13,9 +13,9 @@ import { AppShell } from "./app-shell";
 // Vỏ thật của mọi màn sau đăng nhập: AppShell cộng bộ đồng bộ (chỉ báo, đăng xuất có hỏi, bảng căn cần xem). Tách khỏi
 // AppShell để trang mẫu sống (hàng 91) dựng vỏ mà không nhập lớp đồng bộ — đồ thị nhập của nó không chạm lớp gọi API.
 
-function TaiKhoan({ email, companyName }: { email: string; companyName: string }) {
+function TaiKhoan({ email, companyName, roles }: { email: string; companyName: string; roles: readonly string[] }) {
   const { dangXuat } = useBoDongBo();
-  return <AccountMenuKhung email={email} companyName={companyName} dangXuat={dangXuat} />;
+  return <AccountMenuKhung email={email} companyName={companyName} roles={roles} dangXuat={dangXuat} />;
 }
 
 type Props = Omit<ComponentProps<typeof AppShell>, "chiBao" | "chiBaoGon" | "taiKhoan" | "phuVo" | "mau" | "nhaMau" | "menuTao">;
@@ -33,7 +33,7 @@ export function AppShellDongBo({ user, ...p }: Props) {
         user={user}
         chiBao={<ChiBaoDongBo />}
         chiBaoGon={<ChiBaoDongBo gon />}
-        taiKhoan={<TaiKhoan email={user.email} companyName={user.activeCompany.name} />}
+        taiKhoan={<TaiKhoan email={user.email} companyName={user.activeCompany.name} roles={user.activeCompany.roles ?? []} />}
         phuVo={
           <>
             <BangCanXem />

@@ -96,7 +96,12 @@ export function BoCuc({ kieu, dauMan, children, cotPhu, trangThai = "san-sang", 
       data-bo-cuc-goc={kieu}
       data-bo-cuc={kieu}
       data-mat-do={tt.mat_do}
-      className={cn("flex w-full min-w-0 flex-1 flex-col gap-khung p-trang", (kieu === "dong-tin" || kieu === "ho-so") && "mx-auto max-w-(--container-doc)")}
+      className={cn(
+        "flex w-full min-w-0 flex-1 flex-col gap-khung p-trang",
+        (kieu === "dong-tin" || kieu === "ho-so") && "mx-auto max-w-(--container-doc)",
+        // Đọc giữ bề rộng đọc, đứng sát cột mục lục bên trái (ADR-0024 sửa đổi 04/11, hàng cai-dat-hop-nhat).
+        kieu === "doc" && "max-w-(--container-doc)",
+      )}
     >
       {kieu === "luong-nhieu-buoc" ? (
         // Điện thoại: cả luồng nằm trong ngăn phủ toàn màn (ADR-0024 §5); máy tính giữ trong trang.

@@ -27,7 +27,8 @@ export const TAB_LABEL: Record<Tab, { label: string; icon: LucideIcon }> = {
   inventory: HOME_ITEM.inventory,
   send: { label: "Gửi", icon: SendIcon },
   lead: { label: "Lead", icon: PhoneIncomingIcon },
-  settings: HOME_ITEM.settings,
+  // Tab điện thoại của người chỉ quản trị giữ nhãn «Cài đặt sàn» (Hỏi-2 của vỏ): «Tôi» đã là Cá nhân của khu Cài đặt.
+  settings: { label: "Cài đặt sàn", icon: SettingsIcon },
   me: { label: "Tôi", icon: UserIcon },
 };
 
