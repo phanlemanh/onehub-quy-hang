@@ -1,0 +1,8 @@
+console errors: Failed to load resource: 400 (BAD_REQUEST)  [POST /api/v1/auth/email-otp/sign-in/email-otp, ma 000000 sai co chu dich]
+requestfailed: none
+app requests (non _next):
+200 GET /login (x2)
+200 POST /api/v1/auth/email-otp/send-verification-otp
+400 POST /api/v1/auth/sign-in/email-otp  (expected: ma sai)
+200 GET /select-company
+200 GET /no-company

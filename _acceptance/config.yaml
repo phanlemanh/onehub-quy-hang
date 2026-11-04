@@ -48,6 +48,7 @@ executors:
     product_map_kit: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/product-map.mjs\" --root . --check"   # như product_map, chạy được ở lượt chấm (không có CLAUDE_PLUGIN_ROOT)
     ro_ri: "npm run test:ro-ri"   # luat-an-va-kiem-ro-ri: bộ kiểm rò rỉ của luật ẩn — cùng lệnh job CI ro-ri (E9)
     lint_bo_qua: "node --test \"_acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs\""   # luat-an-va-kiem-ro-ri: lint bỏ qua thư mục đợt, CI nối ro-ri, phá thử trên bản sao lõi (E9b, E10)
+    dang_nhap_auth_15: "node --test \"_acceptance/dang-nhap-auth-15/thu/*.test.mjs\""   # dang-nhap-auth-15 AC-5: không tệp nào dưới packages/api/src/auth đổi so với nhánh chính, cặp hai chiều
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
