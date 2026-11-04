@@ -1,0 +1,44 @@
+{
+ "hrefs": [
+  "/units/call?lead=4434bce1-1464-49e7-b7fc-a05e02f2d4a4",
+  "/units/call?lead=472ae44b-f529-420c-a4c5-7d253566a280",
+  "/units/call?lead=7e9f9ef2-35e8-4d72-8fb1-9f039cd6e1fa",
+  "/units/call?lead=a6643f4e-b2e2-4c24-bb07-72d765e57d87",
+  "/units/call?lead=b5ab0560-c919-4686-aa1d-6f8f65ed631a",
+  "/units/call?lead=bc3613e6-cd09-4d81-af35-e956fd798291",
+  "/units/call?lead=bcc275df-fa20-407e-beab-20fa8b0f18f2",
+  "/units/call?lead=c3d60031-e537-4657-8d80-ea96b791316a",
+  "/units/call?lead=e629d311-9654-4b3a-bf4b-479146af1218",
+  "/units/call?lead=834be2cc-ad15-47ae-9878-23414ae0cd53"
+ ],
+ "s1_today": {
+  "url": "/today",
+  "header": [
+   "Hôm nay"
+  ],
+  "canCall": false,
+  "title": "Quỹ hàng"
+ },
+ "s2": {
+  "url": "/units/call?lead=4434bce1-1464-49e7-b7fc-a05e02f2d4a4",
+  "header": [
+   "Ghi cuộc gọi"
+  ],
+  "canCall": false,
+  "title": ""
+ },
+ "s2_net": [
+  "/api/v1/catalog 200",
+  "/api/v1/company/settings/queue 200",
+  "/api/v1/leads/assigned 200",
+  "/api/v1/catalog 200",
+  "/api/v1/company/settings/queue 200",
+  "/api/v1/leads/assigned 200",
+  "/api/v1/push/public-key 200",
+  "/api/v1/push/public-key 200",
+  "/api/v1/listings 200"
+ ],
+ "hasHang": false,
+ "hrefs3": "(không có link hang= trên /today: dau-chu-1 chưa có căn ở nhóm ép giá)",
+ "err": "Error: lỗi trong trang: TypeError: Cannot read properties of null (reading 'innerText')\n    at <anonymous>:1:248\n    at <anonymous>:1:353"
+}
