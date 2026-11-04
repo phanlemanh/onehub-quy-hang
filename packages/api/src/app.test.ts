@@ -115,6 +115,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/team/listing-agents",
     // Hàng 43 (phat-hang): lần xuất bảng hàng.
     "POST /api/v1/exports",
+    // Hàng 82: cấu hình theo sàn qua lối chung.
+    "GET /api/v1/company/settings",
+    "PATCH /api/v1/company/settings",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
