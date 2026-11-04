@@ -11,7 +11,7 @@ export default async function Page() {
   if (!me?.activeCompany) redirect("/login");
   return (
     <KhungBangHang title="Bảng hàng" dienThoai={() => <BangTheDienThoai nguoi={me.user.id} san={me.activeCompany!.id} />}>
-      <BangCoHoSo nguoi={me.user.id} san={me.activeCompany.id} />
+      <BangCoHoSo nguoi={me.user.id} san={me.activeCompany.id} vai={me.activeCompany.roles} tenSan={me.activeCompany.name} />
     </KhungBangHang>
   );
 }

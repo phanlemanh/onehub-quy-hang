@@ -54,7 +54,7 @@ export function registerExportRoutes(api: OpenAPIHono, { appPool, auth }: ApiDep
     async (c) => {
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
-      if (!ctx.roles.some((v) => VAI_XUAT.includes(v))) return tra(c, API_ERRORS.listingAgentRequired);
+      if (!ctx.roles.some((v) => VAI_XUAT.includes(v))) return tra(c, API_ERRORS.exportRoleRequired);
       const kq = LanXuat.safeParse(c.req.valid("json"));
       if (!kq.success) {
         const details = kq.error.issues.map((i) => ({ path: i.path.join(".") || "body", reason: i.message }));

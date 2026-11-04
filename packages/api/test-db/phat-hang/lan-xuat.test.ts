@@ -68,7 +68,7 @@ test("E8 trưởng nhóm ghi được; vai khác 403, không ghi dòng", async (
     const k = await nguoi(`k${roles.join("") || "trong"}`, roles);
     const x = await goi("POST", "/api/v1/exports", { format: "pdf", recipient: "khach_rieng", listingCount: 2 }, k.cookie);
     assert.equal(x.status, 403, `vai ${roles.join(",") || "trống"}: ${x.status}`);
-    assert.deepEqual(await x.json(), { error: API_ERRORS.listingAgentRequired.code });
+    assert.deepEqual(await x.json(), { error: API_ERRORS.exportRoleRequired.code });
     assert.equal(await demDong(k.companyId), 0, `vai ${roles.join(",") || "trống"} ghi được lần xuất`);
   }
 });

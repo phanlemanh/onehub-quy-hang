@@ -22,7 +22,6 @@ const PLACEHOLDER: Record<string, Info> = {
   "/settings/templates": { title: "Mẫu nhập", question: "Bảng tính mẫu của sàn", rows: "mục 50" },
   "/leads/new": { title: "Lead", question: "Nhận lead chủ nhà", rows: "mục 24 (máy tính), 51 (điện thoại)" },
   "/imports/new": { title: "Nhập Excel", question: "Đưa hàng vào từ bảng tính", rows: "mục 20" },
-  "/exports/new": { title: "Xuất bảng hàng", question: "Đưa bảng hàng ra bài, Excel, ảnh, PDF", rows: "mục 43" },
 };
 
 export function placeholderFor(path: string): Info {
