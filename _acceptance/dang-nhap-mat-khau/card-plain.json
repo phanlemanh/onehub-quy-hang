@@ -4,7 +4,7 @@
     {"id":"AC-1","p":"Sẽ cho quản trị sàn cấp mật khẩu tạm máy sinh, hiện đúng một lần, đăng xuất người ấy ở mọi máy; mật khẩu không bao giờ nằm trong nhật ký hay sự kiện."},
     {"id":"AC-2","p":"Sẽ chặn quản trị cấp mật khẩu cho người còn ở sàn khác, và khoá mật khẩu do sàn cấp khi người ấy vào thêm sàn khác."},
     {"id":"AC-3","p":"Sẽ đưa người đăng nhập bằng mật khẩu tạm thẳng tới «Đặt mật khẩu mới», không vào được bàn làm việc; mật khẩu tạm hết hạn sau 72 giờ."},
-    {"id":"AC-4","p":"Sẽ nhận mật khẩu mới từ 15 ký tự (có dấu cách, chữ có dấu), từ chối mật khẩu dễ đoán kèm lý do, rồi cho vào."},
+    {"id":"AC-4","p":"Sẽ nhận mật khẩu mới từ 8 ký tự (có dấu cách, chữ có dấu), từ chối mật khẩu dễ đoán kèm lý do, rồi cho vào."},
     {"id":"AC-5","p":"Sẽ cho đăng nhập hằng ngày bằng email và mật khẩu; sai mật khẩu hay email lạ cùng một câu lỗi; mã 6 số vẫn chạy."},
     {"id":"AC-6","p":"Sẽ bắt chờ sau 5 lần sai trong 15 phút, và khoá mật khẩu sau 20 lần sai liên tiếp tới khi quản trị cấp lại."},
     {"id":"AC-7","p":"Sẽ cho tự đổi mật khẩu ở Cá nhân (đăng xuất máy khác), và «Báo mất máy» khoá luôn mật khẩu."},
@@ -15,7 +15,7 @@
   ],
   "wont_do": [
     {"id":"OOS-1","p":"KHÔNG có lệnh vận hành cấp lại mật khẩu cho chính quản trị sàn (Hỏi-4) — quản trị quên vẫn vào bằng mã."},
-    {"id":"OOS-2","p":"KHÔNG có tên đăng nhập khác email, yếu tố thứ hai, hay mật khẩu ngắn hơn 15 ký tự."},
+    {"id":"OOS-2","p":"KHÔNG có tên đăng nhập khác email, yếu tố thứ hai, hay mật khẩu ngắn hơn 8 ký tự."},
     {"id":"OOS-3","p":"KHÔNG cho sàn tự chỉnh luật mật khẩu ở hàng này (Hỏi-3)."},
     {"id":"OOS-4","p":"KHÔNG có màn xem lịch sử cấp và đổi mật khẩu; sự kiện chỉ ghi lại."},
     {"id":"OOS-5","p":"KHÔNG xác minh tên miền gửi thư mã — việc vận hành riêng."}

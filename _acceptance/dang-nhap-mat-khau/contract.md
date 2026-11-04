@@ -41,9 +41,9 @@ Source input: ô cơ hội `_acceptance/dang-nhap-mat-khau/opportunity.md` (Cổ
   «phải đặt mật khẩu mới» và mã đổi (15 phút), **không** đặt cookie phiên (mọi đường cần phiên vẫn 401); đăng nhập lại
   bằng cùng mật khẩu tạm trước khi đặt xong ra mã đổi mới và mã cũ hết dùng (Hỏi-5); đặt xong thì mật khẩu tạm ra 401
   `invalid_email_or_password`; mật khẩu tạm quá 72 giờ ra 403 `temp_password_expired`.
-- AC-4 (cross-layer): Given mã đổi còn hạn, When m gửi mật khẩu mới, Then mật khẩu dưới 15 hay trên 128 ký tự, có trong
+- AC-4 (cross-layer): Given mã đổi còn hạn, When m gửi mật khẩu mới, Then mật khẩu dưới 8 hay trên 128 ký tự, có trong
   danh sách phổ biến của kho, hay dễ đoán theo ngữ cảnh (chứa phần trước «@» của email, «quỹ hàng», một ký tự lặp, dãy
-  bàn phím hay dãy số) bị từ chối kèm lý do; mật khẩu 15 ký tự có dấu cách và chữ tiếng Việt có dấu được nhận; nhận rồi
+  bàn phím hay dãy số) bị từ chối kèm lý do; mật khẩu 8 ký tự có dấu cách và chữ tiếng Việt có dấu được nhận; nhận rồi
   thì API đặt cookie phiên (30 ngày trượt như mã 6 số), ghi sự kiện `dat-lan-dau`, mã đổi không dùng lại được.
 - AC-5 (cross-layer): Given m đã tự đặt mật khẩu, When m đăng nhập bằng email + mật khẩu đúng, Then có phiên như đăng nhập
   bằng mã; mật khẩu sai và email không có tài khoản cùng ra 401 `invalid_email_or_password` với cùng thân lỗi; đăng nhập
@@ -114,7 +114,7 @@ nhật ký, sự kiện hay trang nào».
 
 - Đội vận hành cấp lại mật khẩu cho chính quản trị sàn bằng công cụ mở sàn — hàng sau; hôm nay quản trị quên mật khẩu
   vẫn vào bằng mã 6 số.
-- Tên đăng nhập không phải email, yếu tố thứ hai, mật khẩu dưới 15 ký tự.
+- Tên đăng nhập không phải email, yếu tố thứ hai, mật khẩu dưới 8 ký tự.
 - Sàn tự chỉnh luật mật khẩu (Hỏi-3 quyết giữ cứng hay không; cho sàn siết thêm là hàng sau).
 - Màn đọc lịch sử sự kiện mật khẩu; sự kiện chỉ ghi ở `identity`.
 - Xác minh tên miền gửi ở Resend (việc vận hành của ADR-0009, không thuộc hàng).

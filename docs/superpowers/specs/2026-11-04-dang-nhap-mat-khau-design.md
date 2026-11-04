@@ -14,7 +14,7 @@ mất mạng thì báo «Chưa đăng xuất được» và cho thử lại.
 
 ## 2. Luật mật khẩu (sáu luật đề xuất ở §4 của bản đánh giá — trình Cổng Phạm vi, Hỏi-1)
 
-1. Mật khẩu người tự đặt: 15–128 ký tự, nhận dấu cách và chữ có dấu, không luật trộn loại ký tự, không ép đổi định kỳ;
+1. Mật khẩu người tự đặt: 8–128 ký tự, nhận dấu cách và chữ có dấu, không luật trộn loại ký tự, không ép đổi định kỳ;
    từ chối khi khớp danh sách mật khẩu phổ biến đóng gói trong kho, hay khi là chuỗi dễ đoán theo ngữ cảnh (chứa phần
    trước «@» của email, «quỹ hàng» / «quyhang», một ký tự lặp, dãy bàn phím hay dãy số). Không gọi ra ngoài.
 2. Mật khẩu tạm: máy sinh ngẫu nhiên 16 ký tự từ bảng chữ không dễ nhầm, chia bốn nhóm; hết hạn sau 72 giờ; chỉ mở
@@ -61,7 +61,7 @@ mất mạng thì báo «Chưa đăng xuất được» và cho thử lại.
 
 ### 3.2 API
 
-- `createAuth` bật `emailAndPassword` với `disableSignUp: true`, `minPasswordLength: 15`, `maxPasswordLength: 128`.
+- `createAuth` bật `emailAndPassword` với `disableSignUp: true`, `minPasswordLength: 8`, `maxPasswordLength: 128`.
 - **Bảng xếp loại đường mở rộng sang lõi thư viện**: `/sign-up/email`, `/change-password`, `/request-password-reset`,
   `/reset-password`, `/reset-password/:token`, `/verify-password`, `/send-verification-email`, `/verify-email` vào
   `AUTH_DISABLED_PATHS` (404 trước bộ xử lý). `/sign-in/email` không đi thẳng thư viện: Hono đăng ký nó trước đường
@@ -94,7 +94,7 @@ mất mạng thì báo «Chưa đăng xuất được» và cho thử lại.
   «Thử lại sau ít phút»; vô hiệu → «Mật khẩu đã bị khoá — đăng nhập bằng mã rồi đặt mật khẩu mới trong Cá nhân, hay nhờ quản trị
   sàn cấp lại»; tạm hết hạn → «Mật khẩu tạm đã hết hạn — nhờ quản trị sàn cấp lại».
 - **Đặt mật khẩu mới** (`(auth)/dat-mat-khau`, mới, trong `Khung`): một ô mật khẩu có nút hiện/ẩn, câu gợi ý «Ít nhất
-  15 ký tự — ba bốn từ tiếng Việt có dấu là dễ nhớ», nút «Lưu và vào Quỹ hàng». Không có mã đổi (mở thẳng địa chỉ,
+  8 ký tự — một câu ngắn có dấu là dễ nhớ», nút «Lưu và vào Quỹ hàng». Không có mã đổi (mở thẳng địa chỉ,
   tải lại trang) → báo «Phiên đặt mật khẩu đã hết — đăng nhập lại bằng mật khẩu tạm» kèm nút về đăng nhập; mã
   đổi chỉ ở bộ nhớ trang, không vào địa chỉ, lịch sử hay kho trình duyệt. Proxy cho địa chỉ này đi như
   `/login`.
@@ -124,7 +124,7 @@ bản đánh giá §3 (Getfly CRM).
 
 | Năng lực | RESO | Salesforce | Follow Up Boss | Ta định làm | Ta cứng — họ cấu hình |
 | --- | --- | --- | --- | --- | --- |
-| Độ dài tối thiểu | — | Quản trị chỉnh, mặc định 8 | 10 ký tự; chỉnh được không — chưa kiểm | 15, cứng (NIST, mật khẩu là yếu tố duy nhất) | **Có** (Salesforce) → Hỏi-3 |
+| Độ dài tối thiểu | — | Quản trị chỉnh, mặc định 8 | 10 ký tự; chỉnh được không — chưa kiểm | 8, cứng (chủ kho chọn 05/11; NIST 800-63B-4 đòi 15 khi mật khẩu là yếu tố duy nhất — bù bằng giới hạn thử và danh sách chặn) | **Có** (Salesforce) → Hỏi-3 |
 | Khoá sau thử sai | — | Quản trị chỉnh số lần; thời gian khoá mặc định 15 phút | chưa kiểm | 5 lần / 15 phút; 20 lần liên tiếp thì vô hiệu, cứng | **Có** (Salesforce) → Hỏi-3 |
 | Hạn mật khẩu tạm | — | chưa kiểm | không có mật khẩu tạm | 72 giờ, cứng | chưa kiểm → Hỏi-3 |
 | Ai cấp lại khi quên | — | Quản trị đặt lại, đổi ở lần đầu (bản đánh giá §3) | Người tự đặt lại qua thư | Quản trị sàn; không qua thư | Không |
@@ -190,7 +190,7 @@ Sổ điểm biến thiên; cho sàn **siết** thêm (dài hơn, ít lần th�
 | ST-dang-nhap-khoa | Đăng nhập | «Mật khẩu đã bị khoá — đăng nhập bằng mã rồi đặt mật khẩu mới trong Cá nhân, hay nhờ quản trị sàn cấp lại» | Dùng mã / nhờ quản trị |
 | ST-dang-nhap-tam-het | Đăng nhập | «Mật khẩu tạm đã hết hạn — nhờ quản trị sàn cấp lại» | Nhờ quản trị |
 | ST-dat-mat-khau-mac-dinh | Đặt mật khẩu mới | Ô mật khẩu có nút hiện/ẩn, câu gợi ý, nút «Lưu và vào Quỹ hàng» | Gõ, lưu |
-| ST-dat-mat-khau-tu-choi | Đặt mật khẩu mới | Lý do dưới ô («Cần ít nhất 15 ký tự», «Mật khẩu quá dễ đoán») | Gõ lại |
+| ST-dat-mat-khau-tu-choi | Đặt mật khẩu mới | Lý do dưới ô («Cần ít nhất 8 ký tự», «Mật khẩu quá dễ đoán») | Gõ lại |
 | ST-dat-mat-khau-het-phien | Đặt mật khẩu mới | «Phiên đặt mật khẩu đã hết — đăng nhập lại bằng mật khẩu tạm», nút về đăng nhập | Đăng nhập lại bằng mật khẩu tạm |
 | ST-cap-mat-khau-hoi | Người dùng | Hộp hỏi nói mật khẩu cũ thôi dùng, đăng xuất mọi máy | Cấp / Huỷ |
 | ST-cap-mat-khau-ket-qua | Người dùng | Mật khẩu tạm, nút «Chép», câu trao tay và hạn 72 giờ | Chép, đóng |
