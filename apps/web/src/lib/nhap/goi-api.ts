@@ -45,7 +45,7 @@ async function goi<T>(f: Fetch, url: string, init: RequestInit): Promise<T | Loi
   return (await res.json()) as T;
 }
 
-export const laLoi = (x: unknown): x is LoiGoi => !!x && typeof x === "object" && "loi" in x;
+export const laLoi = (x: unknown): x is LoiGoi => !!x && typeof x === "object" && typeof (x as { loi?: unknown }).loi === "string";
 
 /** Mở một lần nhập — thân chỉ mang lớp danh mục và kế hoạch, không ô thô. */
 export async function moLanNhap(f: Fetch, s: TrangThaiNhap): Promise<{ id: string } | LoiGoi> {

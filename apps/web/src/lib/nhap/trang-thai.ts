@@ -1,5 +1,5 @@
 import { navigationFor } from "@quy-hang/core";
-import type { AppliedRow, Cell, ImportContext, PlanTarget, StandardField } from "@quy-hang/core/import";
+import { normalizeValue, type AppliedRow, type Cell, type ImportContext, type ImportPlan, type PlanTarget, type StandardField } from "@quy-hang/core/import";
 
 import { apLai, coTheTiepGhep, doiDich, type Ong } from "./duong-ong";
 
@@ -111,9 +111,16 @@ export function goiDong(s: TrangThaiNhap): GoiDong[] {
   }));
 }
 
-/** Giá trị đã chuẩn của một trường trên dòng — cùng cách đọc của đường ghi máy chủ (hàng 65a). */
-function giaTri(dong: AppliedRow, field: StandardField): string | null {
+/** Giá trị đã chuẩn của một trường trên dòng — cùng cách đọc của đường ghi máy chủ (hàng 65a). Ô mã căn lõi đánh dấu trùng
+ *  trong tệp (`by: "duplicate"`) bị xoá giá trị; máy chủ áp từng dòng riêng nên vẫn thấy mã ấy — màn chuẩn lại ô bằng chính
+ *  phép của cột để máy chủ xét trùng trên cả tệp. */
+function giaTri(dong: AppliedRow, field: StandardField, plan: ImportPlan, ctx: ImportContext): string | null {
   const o = dong.cells.find((c) => c.target === field);
+  if (o && o.by === "duplicate") {
+    const cot = plan.columns.find((c) => c.target === field);
+    const kq = normalizeValue(field, o.raw, { ...ctx, transform: cot?.transform });
+    return "value" in kq && kq.value !== null && kq.value !== undefined ? String(kq.value) : null;
+  }
   if (o && (o.mark === "keep" || o.mark === "fixed")) return o.value === null || o.value === undefined ? null : String(o.value);
   const e = dong.extra[field];
   return e === undefined || e === null ? null : String(e);
@@ -121,5 +128,7 @@ function giaTri(dong: AppliedRow, field: StandardField): string | null {
 
 /** Toà và mã căn của mọi dòng (lớp danh mục) — máy chủ xét trùng trên cả tệp, không theo gói. */
 export function canCuaTep(s: TrangThaiNhap): { row: number; buildingName: string | null; unitNumber: string | null }[] {
-  return (s.ong?.dong ?? []).map((d) => ({ row: d.source, buildingName: giaTri(d, "buildingName"), unitNumber: giaTri(d, "unitNumber") }));
+  const o = s.ong;
+  if (!o) return [];
+  return o.dong.map((d) => ({ row: d.source, buildingName: giaTri(d, "buildingName", o.plan, o.ctx), unitNumber: giaTri(d, "unitNumber", o.plan, o.ctx) }));
 }

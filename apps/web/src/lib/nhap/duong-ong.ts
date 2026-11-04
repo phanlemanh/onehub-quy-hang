@@ -35,6 +35,8 @@ export type Ong = {
   loi: PlanError[];
   dong: AppliedRow[];
   dem: DemDau;
+  /** Ngữ cảnh đã áp (hôm nay, danh mục) — để tính lại đúng như lần áp. */
+  ctx: ImportContext;
 };
 
 export function demDau(dong: readonly AppliedRow[]): DemDau {
@@ -57,7 +59,7 @@ export function chayOng(grid: Grid, ctx: ImportContext): Ong {
 export function apLai(table: Table, lop: Ong["lop"], profile: ColumnProfile[], plan: ImportPlan, ctx: ImportContext): Ong {
   const loi = validatePlan(plan, table);
   const dong = applyPlan(table, plan, ctx).rows;
-  return { table, lop, profile, plan, loi, dong, dem: demDau(dong) };
+  return { table, lop, profile, plan, loi, dong, dem: demDau(dong), ctx };
 }
 
 /** Cột mới của kế hoạch khi người đổi đích: phép biến đổi do lõi chọn cho đúng trường và đúng cột. */
