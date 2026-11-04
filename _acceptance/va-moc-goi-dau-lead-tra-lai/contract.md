@@ -33,9 +33,10 @@ của đợt · `_acceptance/so-do-hai-tuan-thu/review-findings.md` Ngoài-5.
   lại `app.mark_first_call(uuid)` cùng chữ ký, giữ thu quyền của `public` và cấp `quy_hang_app`; không migration đã
   commit nào đổi; bộ kiểm cách ly xanh.
 - AC-4: Given số đo lõi `lead_to_first_call` và `lead_to_ready`, When trong kỳ có lead trả lại rồi gửi lại (một hay hai
-  lần), Then theo định nghĩa chốt ở Hỏi-1: chuỗi ấy (cùng một chủ nhà) đếm đúng một lần, thuộc kỳ theo lúc nhập lead đầu
-  chuỗi, thời lượng tính từ lúc nhập lead đầu chuỗi tới mốc Hỏi-1 chọn; lead đã gửi lại không vào phần «chưa · đã trả
-  lại»; xét tại mốc cuối kỳ (lead gửi lại sau mốc ấy thì tại mốc vẫn đếm là đã trả lại).
+  lần), Then (luật 37 · Ngoài-5 hàng 52) chuỗi ấy — cùng một chủ nhà — đếm đúng một lần, thuộc kỳ theo lúc nhập lead
+  đầu chuỗi; «lead → cuộc gọi đầu» tính từ lúc nhập lead đầu tới cuộc gọi sớm nhất trong chuỗi (kể cả cuộc gọi của đầu
+  chủ đã trả lại), «lead → Sẵn sàng bán» tính tới lúc lead cuối chuỗi lên bảng; lead đã gửi lại không vào phần «chưa · đã
+  trả lại»; xét tại mốc cuối kỳ (lead gửi lại sau mốc ấy thì tại mốc vẫn đếm là đã trả lại).
 - AC-5 (cross-layer): Given cùng một bộ lead nạp qua API (lead thường, chuỗi trả lại rồi gửi lại một và hai lần, lên
   bảng), When chạy số đo lõi `lead_to_ready` và `app.lead_board_metric` trên một khoảng chứa trọn mọi lần nhập và lên
   bảng, Then hai bên ra cùng tập chủ nhà (lead cuối chuỗi) và cùng số ngày cho từng chuỗi.

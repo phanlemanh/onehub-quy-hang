@@ -35,7 +35,7 @@ evals:
     criterion: AC-4
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; tệp packages/core/src/metrics/chuoi-gui-lai.test.ts, bảng viết trước sáu hình chuỗi × hai số đo (lead_to_first_call, lead_to_ready), giá trị mong theo định nghĩa chốt ở Hỏi-1 (decisions.jsonl): «không gửi lại», «gửi lại một lần trước mốc», «gửi lại hai lần», «gửi lại sau mốc» (tại den lead đầu đếm traLai, lead gửi lại không đếm), «lead đầu nhập trước kỳ, gửi lại trong kỳ» (không thuộc kỳ), «lead đầu đã gọi rồi trả lại, gửi lại, người mới gọi sau»; một assert số hình = 6 và mỗi ô so n, giaTri, chiTiet. Chiều đỏ (phá-thử S3): bỏ bước nối chuỗi trong thoiLuongLead thì ca «gửi lại một lần trước mốc» đỏ."
+    expected: "exit 0; tệp packages/core/src/metrics/chuoi-gui-lai.test.ts, bảng viết trước sáu hình chuỗi × hai số đo (lead_to_first_call, lead_to_ready), giá trị mong theo luật 37 (cuộc gọi sớm nhất trong chuỗi, lên bảng của lead cuối, từ lúc nhập lead đầu): «không gửi lại», «gửi lại một lần trước mốc», «gửi lại hai lần», «gửi lại sau mốc» (tại den lead đầu đếm traLai, lead gửi lại không đếm), «lead đầu nhập trước kỳ, gửi lại trong kỳ» (không thuộc kỳ), «lead đầu đã gọi rồi trả lại, gửi lại, người mới gọi sau» (lead_to_first_call = thời lượng tới cuộc gọi của đầu chủ cũ); một assert số hình = 6 và mỗi ô so n, giaTri, chiTiet. Chiều đỏ (phá-thử S3): bỏ bước nối chuỗi trong thoiLuongLead thì ca «gửi lại một lần trước mốc» đỏ; lấy cuộc gọi của lead cuối thay cho cuộc gọi sớm nhất thì ca «lead đầu đã gọi rồi trả lại» đỏ."
     paths: ["packages/core/src/metrics/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

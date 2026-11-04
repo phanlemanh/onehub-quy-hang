@@ -35,7 +35,7 @@ Hàng `va-moc-goi-dau-lead-tra-lai` (T3, dãy B, migration giữ chỗ 023). Ô 
 - Không đổi giao diện (luật 31: vá ở máy chủ). Không đổi `app.lead_board_metric`, `lead_board_at_all`.
 - Không đổi luật trả lại (đầu chủ vẫn trả được tới khi lên bảng, kể cả đã gọi — Hỏi-4 hàng 27).
 
-## Ví dụ một chuỗi (Hỏi-1)
+## Ví dụ một chuỗi (luật 37 — cột «Khuyến nghị» là định nghĩa đã chốt)
 
 ```mermaid
 timeline
