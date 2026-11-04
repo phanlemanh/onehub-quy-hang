@@ -25,7 +25,7 @@ export default async function Page() {
     return (
       <KhungLead>
         <VungNhapLead>
-          <TrangThai kind="notice" title="Telesales, đầu chủ và trưởng nhóm nhập được lead." />
+          <TrangThai kind="notice" title="Vai của bạn không nhập lead" description="Telesales, đầu chủ và trưởng nhóm nhập được lead." />
         </VungNhapLead>
       </KhungLead>
     );

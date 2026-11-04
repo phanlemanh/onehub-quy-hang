@@ -35,7 +35,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/lead-dien-thoai/thu/chay-ui.mjs --e3 --ra _acceptance/lead-dien-thoai/evidence"
-      - "Đối chiếu dòng e3: coKetQua = true, coLoiTheoDoi = true, sau khi bấm lối: dongDau chứa toà và căn vừa gửi, nacDau = «Đã gửi»"
+      - "Đối chiếu dòng e3: coKetQua = true, coLoiTheoDoi = true; sau một nhịp chia (POST /api/v1/jobs/lead-tick, như máy chạy mỗi phút) và bấm lối: dau.dong chứa toà vừa gửi, dau.nac = «Đã gửi»"
     target: "http://localhost:3476/leads/new"
     expected: "Gửi đủ năm mục: kết quả kiểm trùng và lối «Xem ở Lead đã nhập»; bấm lối thấy lead vừa gửi ở đầu, nấc Đã gửi. Ảnh E3-ket-qua-390.png, E3-da-nhap-390.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
