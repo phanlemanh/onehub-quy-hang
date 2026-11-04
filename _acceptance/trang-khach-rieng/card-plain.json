@@ -1,0 +1,33 @@
+{
+  "feature_plain": "Khách mở link đầu khách gửi qua Zalo là thấy ngay bộ căn của sàn: giá đang đúng, mới xác nhận lúc nào, căn nào đã có người cọc — và chạm «Quan tâm» một lần là người gửi biết.",
+  "will_do": [
+    {"id": "AC-3", "p": "Sẽ làm mờ căn đã cọc (vẫn có giá, nhãn «Đã có người đặt cọc»), căn tạm ngưng hay không còn (không giá); ba loại này không có nút Quan tâm; giá và trạng thái luôn là của lúc mở, không lấy bản cũ."},
+    {"id": "AC-4", "p": "Sẽ đếm một lượt mở khi trang thật sự chạy trên máy khách — Zalo tự tải trang để lấy ảnh xem trước thì không tính; cùng một máy mở lại trong ngày không đếm thêm."},
+    {"id": "AC-5", "p": "Sẽ ghi một lượt «Quan tâm» cho đúng căn khi khách chạm, nút đổi thành «Đã báo quan tâm»; cùng máy chạm lại không ghi thêm; căn không thuộc bộ hay không còn bán thì không ghi được."},
+    {"id": "AC-7", "p": "Sẽ chỉ trả ảnh nằm trong phần khách được thấy của chính link ấy — ảnh nội bộ, ảnh căn khác, ảnh của link khác đều không lấy được."},
+    {"id": "AC-8", "p": "Sẽ chặn ở CI mọi đường dữ liệu công khai chưa có bài kiểm rò rỉ của riêng nó (rào giao từ hàng 31), và kiểm trang lẫn đường đọc không lộ giá trị nội bộ nào."},
+    {"id": "AC-9", "p": "Sẽ cách ly bảng sự kiện mới theo sàn như mọi bảng; hàm tìm link theo mã chỉ trả đúng một link, không liệt kê, không lộ sàn khác — có ca trong bộ kiểm cách ly."},
+    {"id": "AC-10", "p": "Sẽ thêm khuôn nhóm «trang khách» vào bản đồ khuôn, giữ lint giao diện xanh, ghi Tham chiếu «Đã dựng (hàng 35)», và gỡ trang ba lối sau khi anh chọn lối."}
+  ],
+  "wont_do": [
+    {"id": "AC-1", "p": "Sẽ KHÔNG bắt khách đăng nhập: link mở thẳng, hiện «<tên sàn> · <người gửi> gửi» và đúng các căn theo thứ tự gửi; mọi chữ khách thấy dựng qua luật ẩn của lõi."},
+    {"id": "AC-2", "p": "Sẽ KHÔNG hiện mã căn, trục, tầng số cho khách riêng (chỉ toà và tầng cao/thấp); nhóm môi giới mới thấy mã căn."},
+    {"id": "AC-6", "p": "Chặn link đã tắt, mã không có, hay link của người đã rời sàn: trang chỉ nói «Link không còn mở được — hỏi lại người gửi», không tên sàn, không căn."},
+    {"id": "OOS-1", "p": "KHÔNG làm nút tắt link cho người gửi — thuộc màn Đã gửi (hàng 36); trang đã tôn trọng link bị tắt."},
+    {"id": "OOS-2", "p": "KHÔNG báo người gửi lúc khách mở hay quan tâm — hàng 36, 37 đọc sự kiện hàng này ghi."},
+    {"id": "OOS-3", "p": "KHÔNG làm mức chia trên trang nhóm môi giới (hàng 44) và không hiện số điện thoại người gửi (Hỏi-2)."},
+    {"id": "OOS-4", "p": "KHÔNG chặn lạm dụng theo địa chỉ máy ở bản đầu — chỉ chặn trùng theo máy và kiểm mã link."},
+    {"id": "OOS-5", "p": "KHÔNG đọc cấu hình trang khách riêng của từng sàn — dùng mặc định tới khi có màn Cài đặt sàn."},
+    {"id": "OOS-6", "p": "KHÔNG tự nối hai số đo «số link khách mở», «số lượt quan tâm» vào bảng số đo — giám sát nối theo đúng tên sự kiện hàng này ghi."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Quét đủ năm trục: ai mở (khách riêng · nhóm môi giới · Zalo lấy xem trước) × link (bật · tắt · mã sai) × căn (đang bán · đã cọc · tạm ngưng · không còn) × việc (mở · xem chi tiết · quan tâm · lấy ảnh) × lớp (trang · ba đường công khai · bảng). Mỗi đường công khai có một tiêu chí hành vi và một tiêu chí rò rỉ; mỗi trạng thái căn có một dòng ở AC-3."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Máy đã tự quyết «link tắt thì giấu tên sàn» mà Tham chiếu chỉ chốt «người gửi tắt được link» — đã đổi thành câu hỏi Hỏi-5 cho anh."},
+    {"i": 1, "p": "Chưa nói link của người đã rời sàn mở ra sao, mà trang đọc căn bằng quyền của chính người gửi — đã thành Hỏi-6, thêm vào AC-6 và một ca kiểm."},
+    {"i": 2, "p": "Tên sự kiện lượt mở viết hai kiểu ở hai tài liệu, có thể làm số «link khách mở» đứng ở 0 — đã thống nhất và ghim bằng đúng tên mà bảng số đo sẽ đọc."},
+    {"i": 3, "p": "Lời hứa «trang không lấy bản cũ» chỉ được đo ở đường dữ liệu, chưa đo ở trang — đã thêm một bài đo trang và gắn tiêu chí là xuyên tầng."},
+    {"i": 4, "p": "Trang ba lối dùng dữ liệu mẫu có thể bị bỏ quên trên link công khai — tiêu chí giờ đòi gỡ nó, và một bài đo thư mục chỉ còn trang khách thật."}
+  ]
+}
