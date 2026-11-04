@@ -5,7 +5,7 @@ slug: dang-nhap-auth-15
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-auth-15-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -93,3 +93,7 @@ Ngưỡng của ô cơ hội: «Ba màn đăng nhập, chọn sàn, chưa gắn 
 
 - Vùng của hàng: `apps/web/src/app/(auth)/**`, `design/patterns/xac-thuc.md`, `.agents/skills/quy-hang-ui/catalog.md`,
   `docs/design/vo-va-ia.md`, `packages/ui-lint/tests/kiem-chuan.test.mjs`.
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Hồ sơ nghiệm thu có một dòng ghi nhầm địa chỉ của yêu cầu nhập mã sai, nên người đọc hồ sơ có thể phân vân. Người dùng cuối không bị ảnh hưởng gì. — `_acceptance/dang-nhap-auth-15/evidence/E11-network.txt`
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Hồ sơ nghiệm thu ghi sai địa chỉ ở dòng lỗi, mâu thuẫn với dòng bên dưới, nên khó đối chiếu lỗi với đúng yêu cầu. Người dùng cuối không thấy gì khác. — `_acceptance/dang-nhap-auth-15/evidence/E11-network.txt`
+- Ngoài-3 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Người dùng không thấy gì khác đi. Chỉ là khi chạy lại bộ kiểm của hồ sơ này sau khi đã gộp vào nhánh chính, một phép kiểm sẽ báo đỏ dù màn đăng nhập không hỏng. — `_acceptance/dang-nhap-auth-15/thu/so-thiet-ke.test.mjs`
+- Ngoài-4 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Nếu sau này ai đó thêm một loại lỗi thứ năm vào màn đăng nhập, bộ kiểm vẫn báo xanh nên có thể không ai nhận ra loại lỗi mới chưa được rà. — `apps/web/src/app/(auth)/khung.test.ts`
