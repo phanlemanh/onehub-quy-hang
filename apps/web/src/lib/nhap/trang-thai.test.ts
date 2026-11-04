@@ -7,7 +7,7 @@ import { decodeText, parseCsv, type Grid, type ImportContext } from "@quy-hang/c
 
 import { danhMucMau, HOM_NAY, sinhBoThu } from "../../../../../packages/core/test/import/sinh";
 import { chayOng } from "./duong-ong";
-import { xemThuTatCa, type Fetch } from "./goi-api";
+import { tienDoCho, xemThuTatCa, type Fetch, type TienDoGhi } from "./goi-api";
 import { boDong, chonDauChu, coQuyen, coTheGhi, coTheTiep, daXemThu, goiDong, napTep, sangBuoc, suaO, taoTrangThai, type TrangThaiNhap } from "./trang-thai";
 
 const CTX: ImportContext = { today: HOM_NAY, catalog: danhMucMau() };
@@ -128,4 +128,12 @@ test("rò nguồn: chỉ gọi địa chỉ đã khai", async () => {
   const DUOC = [/^\/api\/v1\/imports$/, /^\/api\/v1\/imports\/[0-9a-f-]{36}\/rows$/, /^\/api\/v1\/imports\/[0-9a-f-]{36}$/, /^\/api\/v1\/catalog$/, /^\/api\/v1\/imports\/agents$/];
   assert.ok(ds.length > 0);
   for (const d of ds) assert.ok(DUOC.some((re) => re.test(d.url)), d.url);
+});
+
+test("ghi: tiến độ cũ không dùng cho bản xem thử mới", () => {
+  const XT = (importId: string) => ({ importId, rows: [], summary: { create: 1, update: 0, supplement: 0, skip: 0 } });
+  const t: TienDoGhi = { importId: "lan-1", goi: [[{ row: 1, cells: [] }]], xong: [], loi: { loi: "x", goi: 1 } };
+  assert.equal(tienDoCho(t, XT("lan-1")), t, "cùng lần nhập: dùng tiếp tiến độ");
+  assert.equal(tienDoCho(t, XT("lan-2")), null, "xem thử lại ra lần nhập mới: tiến độ cũ gửi gói cũ tới lần nhập cũ");
+  assert.equal(tienDoCho(t, null), null, "bỏ dòng sau xem thử: tiến độ cũ còn dùng");
 });

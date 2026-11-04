@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Spinner } from "@/components/ui/spinner";
 import { bamTep, docTep } from "@/lib/nhap/doc-tep";
 import { chayOng, loiTheoCot, mauCot, nhanLop } from "@/lib/nhap/duong-ong";
-import { batDauGhi, docDauChu, ghiTiep, laLoi, tongGhi, xemThuTatCa, xongGhi, type TienDoGhi } from "@/lib/nhap/goi-api";
+import { batDauGhi, docDauChu, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type TienDoGhi } from "@/lib/nhap/goi-api";
 import {
   BUOC,
   boDong,
@@ -57,7 +57,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
   const [loiXem, setLoiXem] = useState<string | null>(null);
   // Bản xem thử gần nhất vẫn hiện sau khi người bỏ thêm dòng — nút ghi chỉ mở lại khi xem thử lại.
   const [xemCu, setXemCu] = useState<XemThu | null>(null);
-  const [ghi, setGhi] = useState<TienDoGhi | null>(null);
+  const [ghiDo, setGhi] = useState<TienDoGhi | null>(null);
   const [dangGhi, setDangGhi] = useState(false);
 
   useEffect(() => {
@@ -70,6 +70,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
   }, [vai]);
 
   // Rời trang giữa chừng thì trình duyệt hỏi lại.
+  const ghi = tienDoCho(ghiDo, s.xemThu);
   const dangDo = s.tep !== null && !(ghi && xongGhi(ghi));
   useEffect(() => {
     if (!dangDo) return;

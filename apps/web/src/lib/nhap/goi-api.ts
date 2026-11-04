@@ -107,6 +107,11 @@ export async function ghiTiep(f: Fetch, t: TienDoGhi, onGoi?: (t: TienDoGhi) => 
   return cur;
 }
 
+/** Tiến độ ghi chỉ dùng tiếp cho đúng lần nhập của bản xem thử đang có — xem thử lại (lần nhập mới) hay bỏ bản xem thử thì
+ *  tiến độ cũ bỏ đi, không gửi lại gói cũ tới lần nhập cũ. */
+export const tienDoCho = (t: TienDoGhi | null, xemThu: XemThu | null): TienDoGhi | null =>
+  t && xemThu && t.importId === xemThu.importId ? t : null;
+
 export const xongGhi = (t: TienDoGhi) => t.loi === null && t.xong.length === t.goi.length;
 export const tongGhi = (t: TienDoGhi): TongKet => tong(t.xong.flatMap((g) => g.rows));
 

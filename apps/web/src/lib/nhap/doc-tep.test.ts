@@ -6,7 +6,8 @@ import ExcelJS from "exceljs";
 import { decodeText, parseCsv, type Grid } from "@quy-hang/core/import";
 
 import { docXlsx } from "../../../../../packages/core/test/import/doc-xlsx";
-import { sinhBoThu } from "../../../../../packages/core/test/import/sinh";
+import { MAU_URL, sinhBoThu } from "../../../../../packages/core/test/import/sinh";
+import { readFileSync } from "node:fs";
 import { CO_TOI_DA, DONG_TOI_DA, docTep, LOI_DOC, oTuExcel, type TepDoc } from "./doc-tep";
 
 /** So lưới bỏ đuôi trống: ô null cuối dòng và dòng trống cuối lưới không mang nghĩa với `readTable`. */
@@ -54,6 +55,15 @@ test("đọc tệp: bộ thử hàng 64 ra đúng lưới lõi", async () => {
   }
   assert.ok(so >= 8, `bộ thử chỉ có ${so} tệp`);
   assert.equal(so, bo.length);
+  // Hai tệp xlsx mẫu của bộ thử đọc thẳng từ đĩa: bộ đọc của màn (exceljs) ra đúng lưới của bộ đọc thử của lõi.
+  let xlsx = 0;
+  for (const [ten, url] of Object.entries(MAU_URL)) {
+    const bytes = new Uint8Array(readFileSync(url));
+    const doc = tepDoc(await docTep(`${ten}.xlsx`, bytes));
+    assert.deepEqual(chuan(doc.grid), chuan(docXlsx(bytes)), `${ten}.xlsx`);
+    xlsx++;
+  }
+  assert.equal(xlsx, 2, "bộ thử phải có đúng hai tệp xlsx mẫu");
 });
 
 test("đọc tệp: xlsx nén nhiều trang tính", async () => {

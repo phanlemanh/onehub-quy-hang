@@ -94,6 +94,7 @@ const BO_CUC_NHOM = {
   "lead-cua-toi": "danh-sach-chi-tiet",
   "o-nhan-lead": "doc",
   toi: "doc",
+  "nhap-excel": "luong-nhieu-buoc",
   "trang-tam": "doc",
 };
 

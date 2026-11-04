@@ -117,5 +117,5 @@ evals:
     executor: script
     cmd: config:executors.design.khuon
     expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel; màn /imports/new nằm trong nhan_dien của nhóm."
-    paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/**", "apps/web/src/app/(app)/proto/man-nhap-excel/page.tsx"]
+    paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
