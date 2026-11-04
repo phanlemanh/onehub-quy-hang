@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: cd8d9f470abe3bc4baeb2ec3f29a4ac5f93c1da9
+verified_commit: 73033e0d7b36bee44c621eb3ebb86994e79439a1
 human_signoff: Manh Phan 2026-11-04
 ---
 
@@ -241,3 +241,7 @@ none — every multi-run eval is uniform
 
 Round 1: bo eval E1 den E11b chay lan dau, 7 muc ngoai hop dong duoc ghi lai trong review-findings.md; sua o commit cd8d9f47.
 Round 2: chay lai E7b, E10, E1b, E7c va cac lenh suite tren commit cd8d9f47; cac eval con lai mang tu round 1. Tat ca dat.
+
+### Re-pin lần 1 — 2026-11-04, do gộp origin/main trước khi mở PR
+run_id: repin-20261104T022715Z-49309
+sha: 73033e0d7b36bee44c621eb3ebb86994e79439a1 · suites: 7 lệnh exit 0 · evals: 14/14 eval máy đạt kỳ vọng · ngoài làn máy: E1b, E7c · diff chạm vật đo ngoài làn máy: E7c — chưa chứng lại, đi vòng S4 delta
