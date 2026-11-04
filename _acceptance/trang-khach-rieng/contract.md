@@ -5,7 +5,7 @@ slug: trang-khach-rieng
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-04-trang-khach-rieng-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-04
@@ -104,3 +104,9 @@ có dòng ở AC-3.
 - Migration số 031 (giám sát giữ chỗ theo luật đợt 25, trả lời L-20).
 - Chủ kho thử thật trên điện thoại (mở link từ Zalo, chạm Quan tâm) gom cùng luồng Gửi hàng 34 trong yêu cầu L-19 (luật
   đợt 16).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-04:
+  - Ngoài-2: Mã link có ký tự lạ thì lượt mở hay lượt quan tâm có thể không được ghi.
+  - Ngoài-6: Căn vừa hết bán sau khi khách mở trang thì nút «Quan tâm» báo «thử lại» mãi.
+  - Ngoài-7: Lần gửi không còn căn nào xem được thì đầu trang trống tên sàn, người gửi và hiện «Gửi bạn 0 căn».
+  - Ngoài-9: Bài rò rỉ route đọc đo hàm dựng thân ở lõi, chưa đo thân route thật trả ra.
+  - Ngoài-10: Bài rò rỉ trang chưa có đối chứng rằng trang dựng ra nội dung căn.
