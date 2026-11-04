@@ -70,3 +70,22 @@ export const suKien = async (userId: string) =>
   (await identityPool.query<{ kind: string }>("select kind from identity.password_events where user_id = $1 order by id", [userId])).rows.map((r) => r.kind);
 export const soPhien = async (userId: string) =>
   Number((await identityPool.query<{ n: string }>(`select count(*) as n from identity.session where "userId" = $1`, [userId])).rows[0]!.n);
+
+/** Bắt mọi dòng console và stdout, stderr trong lúc chạy `fn` — để quét mật khẩu lọt vào nhật ký. */
+export async function batNhatKy<T>(fn: () => Promise<T>): Promise<{ kq: T; dong: string[] }> {
+  const dong: string[] = [];
+  const goc = { log: console.log, info: console.info, warn: console.warn, error: console.error, debug: console.debug };
+  const out = process.stdout.write.bind(process.stdout);
+  const err = process.stderr.write.bind(process.stderr);
+  const ghi = (...a: unknown[]) => void dong.push(a.map((x) => (typeof x === "string" ? x : JSON.stringify(x, Object.getOwnPropertyNames(x ?? {})) ?? String(x))).join(" "));
+  for (const k of Object.keys(goc) as (keyof typeof goc)[]) console[k] = ghi;
+  process.stdout.write = ((s: string | Uint8Array) => (dong.push(String(s)), true)) as typeof process.stdout.write;
+  process.stderr.write = ((s: string | Uint8Array) => (dong.push(String(s)), true)) as typeof process.stderr.write;
+  try {
+    return { kq: await fn(), dong };
+  } finally {
+    Object.assign(console, goc);
+    process.stdout.write = out;
+    process.stderr.write = err;
+  }
+}
