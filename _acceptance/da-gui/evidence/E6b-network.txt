@@ -1,0 +1,13 @@
+E6b network dump (playwright, khổ 375, http://localhost:3462) — luồng /shares đã đăng nhập (tab 0, các request cuối)
+708. [GET] /api/v1/shares => [200] OK
+710. [GET] /api/v1/listings => [200] OK
+718. [GET] /api/v1/shares/711f292b-be0b-4dd1-9b5f-b8ebd983d52c => [200] OK
+757-760. [GET] /api/v1/catalog => [200] OK
+761-762. [GET] /api/v1/units/photos?toa=Toà B&ma=B-14.04 => [200] OK
+803-805. [GET] /api/v1/shares, /api/v1/listings => [200] OK
+813. [GET] /api/v1/shares/711f292b-... => [200] OK
+814. [POST] /api/v1/shares/711f292b-.../disable => [200] OK
+815-817. [GET] /api/v1/shares, /api/v1/shares/711f292b-..., /api/v1/listings => [200] OK
+(129 request tĩnh không liệt kê)
+Cửa sổ không đăng nhập (tab khach): không có request XHR app ngoài tài nguyên tĩnh; /s/r2lHhSU3UaPr => HTML 200 chứa "Link không còn mở được — hỏi lại người gửi".
+Console errors: 0 ở cả hai tab. Console warning: 1 (aria-hidden trên phần tử đang giữ focus, a11y của sheet; không phải lỗi mạng).

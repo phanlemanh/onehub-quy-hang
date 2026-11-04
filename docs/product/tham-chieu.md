@@ -261,6 +261,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Cửa ra | Trang khách: nhóm môi giới | Môi giới sàn khác · máy tính | T4 | Bản đầu | P1 |
 | Cửa ra | Xuất bảng hàng | Đầu chủ, trưởng nhóm · máy tính | D | Bản đầu | P1 |
 | Đã gửi | Link đã gửi, lượt mở, quan tâm | Đầu khách · điện thoại | G4 | Bản đầu | P0 |
+| Đã gửi | Đã gửi — Đã dựng (hàng 36): mỗi link một thẻ (người nhận, số căn, bìa ảnh, lượt mở · quan tâm, giờ mở gần nhất); chi tiết các căn theo thứ tự gửi, «Vừa đổi» giá cũ → mới hay trạng thái mới, «Gợi ý căn thay» tối đa ba căn mở luồng Gửi; «Tắt link» cho người gửi hay trưởng nhóm của sàn — khách mở link đã tắt thấy «Link không còn mở được» | Đầu khách, trưởng nhóm · điện thoại và máy tính | G4 | Bản đầu | P0 |
 | Đã gửi | Xin dẫn xem, lịch xem | Đầu khách ↔ đầu chủ | chưa phác, chờ phỏng vấn | Bản đầu | P1 |
 | Đã gửi | Bản máy tính | Máy tính | chưa phác | Bản đầu | P2 |
 | Đội | Phễu, hàng theo người, bàn giao | Trưởng nhóm · máy tính | chưa phác | Sau | P2 |
