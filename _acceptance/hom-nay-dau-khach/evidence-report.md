@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 8a2066bc9b16a2a9d0d35f590e2ed3bcb720eda0
+verified_commit: 371f4b8502909836c1598761381709e892ab8408
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -211,3 +211,7 @@ none — every multi-run eval is uniform
 
 Round 1: E6b failed — một mục trong hợp đồng chưa đạt ở lượt chấm đầu. Returned to implementation.
 Round 2: toàn bộ eval đạt (E6b chạy lại, các eval còn lại mang từ round 1 hoặc chạy lại), verdict PASS.
+
+### Re-pin lần 1 — 2026-11-04, do gộp main sau chữ ký làm bằng chứng cũ
+run_id: repin-20261104T231019Z-10920
+sha: 371f4b8502909836c1598761381709e892ab8408 · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · ngoài làn máy: E6b
