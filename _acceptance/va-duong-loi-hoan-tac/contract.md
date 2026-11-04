@@ -5,7 +5,7 @@ slug: va-duong-loi-hoan-tac
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-04-va-duong-loi-hoan-tac-design.md
 approved_by:
 approved_at:
