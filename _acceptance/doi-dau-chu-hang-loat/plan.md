@@ -1,5 +1,7 @@
 # Kế hoạch thi công — doi-dau-chu-hang-loat (hàng 89, T3)
 
+Duyệt kế hoạch (Gate 1.5): Manh Phan, 2026-11-05.
+
 Hợp đồng: `contract.md` (duyệt 05/11, Hỏi-1 và Hỏi-2 theo khuyến nghị). Thiết kế: `design.md`. Sáu task làm tuần tự
 trong phiên chính, vì task sau dùng giao diện của task trước. Postgres của dãy H ở cổng 5574.
 
