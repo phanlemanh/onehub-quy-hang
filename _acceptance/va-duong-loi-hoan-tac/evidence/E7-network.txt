@@ -1,63 +1,95 @@
-# E7 network (playwright, app-scope /api/v1) — lượt chấm này
-22759. [POST] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/events => [200] OK
-22761. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/owner => [200] OK
-22762. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
-22763. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22764. [POST] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/events => [409] Conflict
-22765. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
-22766. [POST] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/events => [200] OK
-22767. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166 => [200] OK
-22768. [GET] http://localhost:3492/api/v1/listings/11a58e54-929e-4a9b-a04b-e322acdc5166/owner => [200] OK
-22769. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22770. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22771. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22816. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22817. [GET] http://localhost:3492/api/v1/catalog => [200] OK
-22818. [GET] http://localhost:3492/api/v1/catalog => [200] OK
-22819. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
-22820. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
-22821. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04 => [200] OK
-22822. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05 => [200] OK
-22823. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
-22824. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
-22825. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-22826. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02 => [200] OK
-22827. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
-22828. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
-22829. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
-22830. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
-22831. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
-22832. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
-22833. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
-22834. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
-22835. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
-22836. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
-22837. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
-22838. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
-22839. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
-22840. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
-22841. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
-22842. [GET] http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
-22844. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22845. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22846. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22847. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22848. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22849. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22850. [POST] http://localhost:3492/api/v1/listings/2c86552b-01ba-4389-805f-6f539f65811d/events => [200] OK
-22851. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22852. [POST] http://localhost:3492/api/v1/listings/36e9eb79-282e-417a-b7c4-6ee68a7e5157/events => [200] OK
-22853. [POST] http://localhost:3492/api/v1/listings/3dea2060-1d5e-466a-a39d-5166bebc53d9/events => [200] OK
-22854. [POST] http://localhost:3492/api/v1/listings/9940329b-2d08-44e0-819f-664d034bc9e7/events => [200] OK
-22855. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22856. [POST] http://localhost:3492/api/v1/listings/2c86552b-01ba-4389-805f-6f539f65811d/events => [200] OK
-22857. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22858. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22859. [POST] http://localhost:3492/api/v1/listings/2c86552b-01ba-4389-805f-6f539f65811d/events => [409] Conflict
-22860. [GET] http://localhost:3492/api/v1/listings/2c86552b-01ba-4389-805f-6f539f65811d => [200] OK
-22861. [POST] http://localhost:3492/api/v1/listings/3dea2060-1d5e-466a-a39d-5166bebc53d9/events => [200] OK
-22862. [GET] http://localhost:3492/api/v1/listings => [200] OK
-22863. [GET] http://localhost:3492/api/v1/listings => [200] OK
-Note: 89 static requests not shown, run with "static" option to see them.
+NETWORK (CDP Network domain)
+{"url":"http://localhost:3492/inventory","method":"GET","type":"Document","status":200}
+{"url":"http://localhost:3492/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2","method":"GET","type":"Font","status":200}
+{"url":"http://localhost:3492/_next/static/media/53b9e256198e5412-s.p.390ncx5urfkfu.woff2","method":"GET","type":"Font","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0qva5cupmdgep._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/%5Broot-of-the-server%5D__1gd3zoaf9-j1s._.css","method":"GET","type":"Stylesheet","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/manifest.webmanifest","method":"GET","type":"Manifest","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_1anvha4rlo79g._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_1bj9ps6apokuo._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/turbopack-apps_web_06rkbud3pyrlm._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_components_1mh8emxbnewtl._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_1y5l-kud9pt6s._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_floating-ui-react_0lairv2pbvuhu._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_drawer_0_4bb8bkpmi10._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_menu_0xddncbrb9ljj._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_1axlho38regs0._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_00ecwwfw3lcbq._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_1nc4crjayg17u._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/_1d-iqqqbayd8i._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_internals_1l88rrr5k8_28._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/_019q2kglz__79._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_lib_vai_ts_1pyilr3co8cvn._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/packages_core_src_08g46evct4zrt._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_0zs-tj5w7mqeo._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/_0c-t42dbxpgtu._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_react-resizable-panels_dist_react-resizable-panels_0chim-r0s13l6.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/media/7178b3e590c64307-s.21jp631_3pja2.woff2","method":"GET","type":"Font","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40dnd-kit_core_dist_core_esm_0i-bf15xqk6tl.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_app_(app)_086ydzzlyu_ip._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40tanstack_table-core_dist_0o17k3b-tj3z5._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_%40base-ui_react_1h73ghx9-scb8._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_components_1v2tpyywmxrme._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/node_modules_0-r-260b_rmdl._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/apps_web_src_11gcnic_hiavz._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js","method":"GET","type":"Script","status":200}
+{"url":"http://localhost:3492/favicon.ico","method":"GET","type":"Other","status":404}
+{"url":"http://localhost:3492/icons/icon-192.png","method":"GET","type":"Other","status":200}
+{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/manifest.webmanifest","method":"GET","type":"Manifest","status":200}
+{"url":"http://localhost:3492/icons/icon-192.png","method":"GET","type":"Other","status":200}
+{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/catalog","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/2c86552b-01ba-4389-805f-6f539f65811d/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/3dea2060-1d5e-466a-a39d-5166bebc53d9/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/4648d09c-64ba-4a6d-a240-a11817d209aa/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/9472816f-df92-4a67-80a6-881c439af27f/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/a4ee7a35-a5e2-48c9-9a4b-00a5921d450a/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/4648d09c-64ba-4a6d-a240-a11817d209aa/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/9472816f-df92-4a67-80a6-881c439af27f/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/a4ee7a35-a5e2-48c9-9a4b-00a5921d450a/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings/2c86552b-01ba-4389-805f-6f539f65811d/events","method":"POST","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
+{"url":"http://localhost:3492/api/v1/listings","method":"GET","type":"Fetch","status":200}
 
-# console errors (rút gọn): 409 trên listings/11a58e54-… (B-09.01, phiên E6 song song) và listings/2c86552b-… (B-03.04, căn của E7); 400 ×4 trên events của 144ac851/4d9e60bb/e4d2cf1a/9033f765 (E6); 409 trên 144ac851 (E6); Base UI nativeButton ×3, hydration mismatch ×n (cảnh báo dev)
+CONSOLE errors/warnings
+

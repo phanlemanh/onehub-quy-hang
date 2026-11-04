@@ -5,7 +5,7 @@ slug: va-duong-loi-hoan-tac
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-04-va-duong-loi-hoan-tac-design.md
 approved_by:
 approved_at:
@@ -82,3 +82,13 @@ Quét bằng morphological-scan (preset test-matrix), ba trục:
 ## Notes
 
 - Vùng của hàng: `apps/web/src/app/(app)/inventory/cell-edit/**`, `apps/web/src/app/(app)/inventory/bulk/**`.
+- Ngoài-1 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Thẻ trình người ký hiện cả bảy tiêu chí là chưa đạt, trong khi thật ra chỉ hai tiêu chí còn trượt. Người ký có thể hiểu sai phạm vi lỗi, nhưng tính năng cho người dùng không bị ảnh hưởng. — `_acceptance/va-duong-loi-hoan-tac/card.html`
+- Ngoài-2 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Hai bài chấm chạy cùng lúc làm lỗi của bài này lọt sang bài kia, nên kết quả chấm có thể báo trượt oan. Người dùng thật không gặp điều này. — `_acceptance/va-duong-loi-hoan-tac/evals.yaml`
+- Ngoài-5 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Trong tình huống hiếm (sửa hai căn, một lần không hoàn tác được, rồi bấm lại ở thông báo cũ hỏng), phím Ctrl/Cmd+Z có thể hoàn tác nhầm lần sửa của căn cũ thay vì lần sửa gần nhất. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.ts`
+- Ngoài-6 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi xảy ra lỗi bất ngờ, người dùng vẫn thấy thông báo «thử lại», nhưng đội kỹ thuật không có dấu vết để tìm nguyên nhân nếu lỗi cứ lặp lại. — `apps/web/src/app/(app)/inventory/cell-edit/lenh.ts`
+- Ngoài-9 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Khi hoàn tác một lần sửa trên ô thất bại vì luật nghiệp vụ (ví dụ căn không còn hợp lệ để chuyển), thông báo vẫn mời bấm Hoàn tác lại dù chắc chắn lại hỏng. Người dùng chỉ mất vài lần bấm vô ích và vẫn thấy lý do. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.ts`
+- Ngoài-10 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Trong một tình huống hiếm (bấm nút Hoàn tác ở thông báo cũ bị hỏng sau khi đã có lần sửa mới hơn không hoàn tác được), phím Ctrl/Cmd+Z có thể hoàn tác lần sửa cũ thay vì lần gần nhất. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.ts`
+- Ngoài-12 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Sau khi bấm Hoàn tác trên thông báo cũ bị hỏng, phím Ctrl/Cmd+Z có thể quay về lần sửa cũ thay vì lần sửa gần nhất, và nếu hai lần sửa khác căn thì có thể đổi nhầm căn. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac.ts`
+- Ngoài-13 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Một bài kiểm tự động chưa chắc bắt được lỗi nếu sau này ghi lô báo nhầm câu chữ lỗi kho; người dùng hiện chưa gặp lỗi nào. — `apps/web/src/app/(app)/inventory/cell-edit/hoan-tac-loi.test.ts`
+- Ngoài-14 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm tự động dùng dữ liệu dựng sẵn thay vì dữ liệu do chức năng ghi lô thật tạo ra, nên nếu bên ghi điền sai mã căn thì bài vẫn xanh và thông báo có thể kể sai căn. — `apps/web/src/app/(app)/inventory/bulk/hoan-tac-lo-loi.test.ts`
+- Ngoài-15 (máy định tuyến 2026-11-04, đề xuất S4 known-limits): Bài kiểm chưa kiểm hết các ô của bảng loại lỗi, nên một căn hỏng có thể bị đếm hai lần trong tiêu đề thông báo mà bài vẫn xanh. — `apps/web/src/app/(app)/inventory/bulk/hoan-tac-lo-loi.test.ts`
