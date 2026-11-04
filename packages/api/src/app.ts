@@ -24,6 +24,7 @@ import { registerJobRoutes } from "./jobs/routes";
 import { registerMemberRoutes } from "./thanh-vien";
 import { registerPhotoRoutes } from "./photos/routes";
 import { registerPublicRoutes } from "./public/routes";
+import type { NguonCongKhai } from "./public/store";
 import { registerDaGuiRoutes } from "./da-gui/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import { registerExportRoutes } from "./exports/routes";
@@ -52,6 +53,8 @@ export type ApiDeps = {
   khoAnh?: KhoAnh | KhoAnhVang;
   /** Bộ gửi thông báo lead (ADR-0025); vắng thì gửi bằng `web-push` — test truyền bộ gửi giả ghi lại. */
   pushSender?: PushSender;
+  /** Nguồn dữ liệu của route công khai trang khách; vắng thì đọc cơ sở dữ liệu — bài rò rỉ của rào route truyền nguồn mồi. */
+  nguonCongKhai?: NguonCongKhai;
 };
 
 const Health = z
