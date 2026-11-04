@@ -1,0 +1,31 @@
+{
+ "feature_plain": "Đầu khách mở tab Hôm nay trên điện thoại là thấy ngay, theo từng ngày, khách nào vừa mở hay quan tâm link mình gửi, căn nào trong link vừa đổi giá hay trạng thái, và căn nào mới lên bảng khớp bộ đã gửi — chạm một tin là làm tiếp.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ chỉ hiện tin về link của chính người xem trong 7 ngày gần nhất, nhóm theo ngày giờ Việt Nam; người không có vai Đầu khách không thấy vùng và bị từ chối nếu gọi thẳng; không lộ số khách hay thông tin chủ nhà."},
+  {"id":"AC-2","p":"Sẽ gom mọi lượt mở và «Quan tâm» của một link trong một ngày thành MỘT tin «Khách phản ứng»: người nhận, số lượt mở, căn được quan tâm, giờ gần nhất."},
+  {"id":"AC-3","p":"Sẽ báo «Vừa đổi» khi căn trong link còn mở đổi giá rao hay trạng thái sau lúc gửi; đổi giá đáy và link đã tắt không sinh tin."},
+  {"id":"AC-4","p":"Sẽ báo «Căn mới» khi căn vừa lên Đang bán khớp một căn trong bộ đã gửi (cùng toà, cùng số phòng ngủ, giá ±15%); một căn khớp nhiều bộ là một tin liệt mọi người nhận."},
+  {"id":"AC-5","p":"Sẽ mở đúng chi tiết link ở Đã gửi khi chạm tin phản ứng hay vừa đổi, và mở luồng Gửi với căn ấy khi chạm tin căn mới — máy không tự gửi gì."},
+  {"id":"AC-6","p":"Sẽ có đủ ba trạng thái: đang tải, trống («Chưa có gì mới trong 7 ngày» kèm «Gửi căn»), và lỗi kèm nút thử lại."},
+  {"id":"AC-7","p":"Sẽ vá ngăn chi tiết của Đã gửi (mục anh chọn mở việc mới ở cổng hàng 36): khi đang tải hay tải lỗi thì hiện khung chờ hay «Chưa tải được — thử lại», không bao giờ trống."},
+  {"id":"AC-8","p":"Sẽ dựng vùng bằng khuôn màn riêng của nhóm mới, qua kiểm giao diện, không cuộn ngang trên điện thoại, và ghi «Đã dựng» vào Tham chiếu."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"KHÔNG làm lịch xem và xin dẫn xem — chờ phỏng vấn người dùng."},
+  {"id":"OOS-2","p":"KHÔNG đánh dấu đã đọc hay đếm tin chưa đọc trên tab."},
+  {"id":"OOS-3","p":"KHÔNG đẩy thông báo khi khách phản ứng — việc riêng sau thông báo lead."},
+  {"id":"OOS-4","p":"KHÔNG cho sàn chỉnh luật khớp, số ngày hay loại tin ở vòng này — bộ mặc định dựng sẵn, chỉnh ở Cài đặt sàn sau."},
+  {"id":"OOS-5","p":"KHÔNG đọc vùng này khi mất mạng."},
+  {"id":"OOS-6","p":"KHÔNG nối số đo vào bảng số đo — việc của giám sát đợt."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Đã quét đủ các tổ hợp: ai xem (người gửi, đầu khách khác, trưởng nhóm không vai đầu khách, người nhiều vai) × ba loại tin × link mở hay đã tắt × trong hay ngoài 7 ngày × xem hay chạm × lõi, API, màn — mỗi người xem có ca ở AC-1, mỗi loại tin một tiêu chí có ca link đã tắt, mỗi đích chạm có ca ở AC-5."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Căn cứ cắt «lịch xem» trích sai câu (câu trích lại liệt lịch xem vào màn chính) — đã thay bằng câu quyết đúng ở Cổng Đáng «mục lịch xem chờ điều kiện»; phần cắt vẫn hiện để anh ký."},
+  {"i":1,"p":"Chưa có phép đo cho việc chọn vùng theo vai trên màn — đã thêm bài kiểm bảng vai → vùng; ảnh chụp vùng trên Hôm nay chạy sau khi phần nối có."},
+  {"i":2,"p":"Luật «Căn mới» bỏ ngỏ ba ca rìa (căn khớp hai bộ, căn trong bộ không có giá lúc gửi, căn trở lại Đang bán) — đã ghim cả ba vào tiêu chí và bài kiểm, Hỏi-2 nêu lại kèm ba ca."},
+  {"i":3,"p":"Đường đo đếm «sau lần mở Hôm nay» mà không ghi lần mở — đã đổi sang đo bằng dữ liệu đã có (lên Đang bán → lần gửi đầu có căn ấy); ngưỡng số và hạn thử anh đặt trước hai tuần thử."},
+  {"i":4,"p":"Vá ngăn chi tiết thiếu phép đo trên màn thật — đã thêm bước chụp mở một link không còn và thấy báo lỗi kèm «Thử lại»."}
+ ]
+}
