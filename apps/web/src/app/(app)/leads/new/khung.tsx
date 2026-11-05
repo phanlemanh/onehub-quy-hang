@@ -1,16 +1,25 @@
 import type { ReactNode } from "react";
 
-import { Frame, FrameDescription, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
+import { BoCuc, DauMan } from "@/components/bo-cuc";
+import { Frame, FramePanel } from "@/components/reui/frame";
 
-// Khuôn của nhóm `o-nhan-lead` (design/patterns/o-nhan-lead.md): ô nhận lead là một Frame trong cột nội dung của vỏ,
-// ghép theo khối đích `form-2` (vo-va-ia §2). Cột phải «lead đã nhập + bốn nấc» (`list-11`) là hàng 27.
+// Khuôn của nhóm `o-nhan-lead` (design/patterns/o-nhan-lead.md): trang đi bố cục Đọc (ADR-0024, hàng 51) — đầu màn «Ô nhận
+// lead», thân là các vùng, mỗi vùng một Frame. Bản ghép là khối đích (vo-va-ia §2, chủ kho 02/11). Điện thoại một cột.
 export function KhungLead({ children }: { children: ReactNode }) {
   return (
-    <Frame className="w-full max-w-3xl">
-      <FrameHeader>
-        <FrameTitle>Ô nhận lead</FrameTitle>
-        <FrameDescription>Năm mục bắt buộc. Gửi là máy kiểm trùng theo số chủ nhà và theo căn.</FrameDescription>
-      </FrameHeader>
+    <BoCuc
+      kieu="doc"
+      dauMan={<DauMan duongDan={[{ nhan: "Quỹ hàng", href: "/" }, { nhan: "Ô nhận lead" }]} tieuDe="Ô nhận lead" moTa="Năm mục bắt buộc. Gửi là máy kiểm trùng theo số chủ nhà và theo căn." />}
+    >
+      {children}
+    </BoCuc>
+  );
+}
+
+/** Vùng nhập: đúng một Frame quanh biểu mẫu (KH-ol-mot-khung). */
+export function VungNhapLead({ children }: { children: ReactNode }) {
+  return (
+    <Frame className="w-full">
       <FramePanel>{children}</FramePanel>
     </Frame>
   );

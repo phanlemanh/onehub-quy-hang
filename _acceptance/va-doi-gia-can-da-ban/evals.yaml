@@ -1,0 +1,32 @@
+schema_version: 1
+feature_slug: va-doi-gia-can-da-ban
+# Ba lệnh máy: executors.test.core (lõi), executors.test.isolation (packages/api/test-db trên Postgres dãy G, cổng 5573),
+# executors.test.web_db (bộ đồng bộ nói với API thật trên cùng Postgres). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi
+# `output` liệt tên ca; người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO».
+# Hằng lý do sống ở MỘT chỗ (LY_DO_DOI_GIA_DA_BAN của lõi); test-db và test của bộ đồng bộ nhập hằng ấy, không chép chữ.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «đổi giá: chỉ căn Đã bán bị từ chối» có mặt và ok — duyệt ma trận viết tay sáu trạng thái (Incomplete, Active, Pending, Closed, Hold, Withdrawn), mỗi phần tử một lần so, số lần so bằng 6 (đếm và assert), và assert ma trận phủ đúng STANDARD_STATUSES (cùng tập); Closed ra DOI_GIA_DA_BAN, năm trạng thái kia ra null, thông điệp nêu trạng thái. Ca «đổi giá: lý do tiếng Việt» có mặt và ok — assert.equal(LY_DO_DOI_GIA_DA_BAN, \"Căn đã bán không đổi giá — giá chốt đã ghi\") (đúng câu đã duyệt, viết tay trong tệp ca). Chiều đỏ: kiemDoiGia luôn trả null → ca đầu đỏ nêu Closed."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; ca «đổi giá căn Đã bán: 422 nêu lý do, không ghi» có mặt và ok trong packages/api/test-db/doi-gia-da-ban/ — hàng đưa tới Closed qua lệnh API (status_changed có closePrice, closeDate); POST /api/v1/listings/{id}/events {type: price_changed, payload: {listPrice, feeInclusion}} hai lần — expectedVersion bằng phiên bản hiện tại, rồi bằng phiên bản cũ hơn — mỗi lần status 422 và thân deepEqual {error: API_ERRORS.priceLockedClosed.code, reason: LY_DO_DOI_GIA_DA_BAN} — API_ERRORS.priceLockedClosed.code bằng DOI_GIA_DA_BAN của lõi (dựng từ hằng thật, không chép chữ); trước và sau: đếm listing_events của hàng, cột version và list_price của bảng listings bằng nhau. Ca «đổi giá ở năm trạng thái khác: nhận» có mặt và ok — hàng ở Incomplete, Active, Pending, Hold, Withdrawn (mỗi trạng thái một hàng, đếm 5) đổi giá trả 200 và GET đọc lại listPrice mới. Chiều đỏ: bỏ dòng xét kiemDoiGia trong applyCommand → ca đầu đỏ với status 200 ở lần gửi đúng phiên bản; cho kiemDoiGia của lõi từ chối thêm Withdrawn (bản sao) → ca thứ hai đỏ nêu Withdrawn (chứng máy chủ đọc luật từ lõi, không tự viết)."
+    paths: [packages/core/src/listing/**, packages/api/src/listings/**, packages/api/src/errors.ts, packages/api/test-db/doi-gia-da-ban/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; ca «đồng bộ: đổi giá căn Đã bán vào Cần xem» có mặt và ok trong apps/web/src/lib/sync/test-db/doi-gia-da-ban.db-test.mts — ca (a) máy đã mới: hàng đưa tới Closed qua API bởi cùng người, bộ đồng bộ (kho bộ nhớ) khoiDong rồi sua(id, price_changed) rồi thuNgay → bd.canXem() đúng một mục cho hàng với kind «tu-choi» và reason === LY_DO_DOI_GIA_DA_BAN (nhập từ @quy-hang/core/listing); ca (b) máy cũ: khoiDong kéo hàng còn Active, NGƯỜI KHÁC đưa hàng tới Closed qua API, rồi sua price_changed và thuNgay → canXem đúng một mục kind «da-ban». Cả hai ca: hàng đợi rỗng, trạng thái và giá hàng trên máy bằng GET của máy chủ, đếm sự kiện máy chủ không đổi qua lần gửi. Đối chứng cùng tệp: hàng Active đổi giá qua bộ đồng bộ → máy chủ ghi giá mới, canXem không có hàng ấy. Chiều đỏ: bỏ dòng xét trong applyCommand → ca (a) đỏ nêu canXem rỗng."
+    paths: [packages/core/src/listing/**, packages/api/src/listings/**, apps/web/src/lib/sync/test-db/doi-gia-da-ban.db-test.mts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

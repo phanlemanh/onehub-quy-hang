@@ -74,6 +74,8 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     notABuyerAgent: ["not-a-buyer-agent", 400],
     buyerTypeRequired: ["buyer-type-required", 400],
     listingNotShareable: ["listing-not-shareable", 400],
+    // va-doi-gia-can-da-ban.
+    priceLockedClosed: ["price-locked-closed", 422],
     // nhap-excel-xem-truoc-ghi (hàng 65a).
     importRoleRequired: ["import-role-required", 403],
     importPlanInvalid: ["import-plan-invalid", 422],
@@ -93,7 +95,7 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     passwordCommon: ["password-common", 400],
     passwordGuessable: ["password-guessable", 400],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 72);
+  assert.equal(Object.keys(API_ERRORS).length, 73);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

@@ -94,6 +94,8 @@ const BO_CUC_NHOM = {
   gui: "luong-nhieu-buoc",
   "ho-so-can": "ho-so",
   "hom-nay-dau-chu": "tran",
+  // Hôm nay của đầu khách (hàng 37): «Dòng tin» theo vo-va-ia.md §2.
+  "hom-nay-dau-khach": "dong-tin",
   "hom-nay-truong-nhom": "bang-dieu-khien",
   "lead-cua-toi": "danh-sach-chi-tiet",
   "o-nhan-lead": "doc",

@@ -26,6 +26,7 @@ import { registerPhotoRoutes } from "./photos/routes";
 import { registerPublicRoutes } from "./public/routes";
 import type { NguonCongKhai } from "./public/store";
 import { registerDaGuiRoutes } from "./da-gui/routes";
+import { registerTodayBuyerRoutes } from "./today-buyer/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import { registerExportRoutes } from "./exports/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
@@ -201,6 +202,7 @@ export function createApi(deps: ApiDeps) {
   registerPhotoRoutes(api, deps, deps.khoAnh);
   registerPublicRoutes(api, deps, deps.khoAnh);
   registerDaGuiRoutes(api, deps);
+  registerTodayBuyerRoutes(api, deps);
   registerSyncRoutes(api, deps);
   registerExportRoutes(api, deps);
 

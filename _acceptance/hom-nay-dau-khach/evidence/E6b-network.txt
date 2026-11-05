@@ -1,0 +1,31 @@
+1247. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1248. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1249. [GET] http://localhost:3491/api/v1/shares/19cd4756-8ef3-4ad9-a5de-f7d44070d689 => [200] OK
+1250. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1301. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1302. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1303. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1304. [GET] http://localhost:3491/shares/new?can=644c2a57-94b5-4588-bccf-242a12b2fbe6&_rsc=ELSQ6suIFecjpRld => [200] OK
+1309. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1310. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1311. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1312. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1313. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1314. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1315. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+1316. [GET] http://localhost:3491/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.05 => [200] OK
+1318. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+1351. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+1352. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+1395. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1396. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+1397. [GET] http://localhost:3491/api/v1/listings => [200] OK
+1398. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+1431. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+1432. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+1470. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1471. [GET] http://localhost:3491/api/v1/shares => [200] OK
+1472. [GET] http://localhost:3491/api/v1/shares/00000000-0000-4000-8000-000000000000 => [404] Not Found
+1473. [GET] http://localhost:3491/api/v1/listings => [200] OK
+
+Note: 220 static requests not shown, run with "static" option to see them.
