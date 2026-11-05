@@ -3,10 +3,10 @@ schema_version: 1
 slug: bang-hang-theo-loai-hinh
 feature: Đầu chủ mở bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và thấy cột, hồ sơ căn đúng trường của từng loại — không cột tầng, trục cho đất
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided                # discovery | decided | archived
+decision: build # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-05T12:56:24Z    # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive

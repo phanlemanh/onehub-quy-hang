@@ -3,10 +3,10 @@ schema_version: 1
 slug: token-may-ket-noi
 feature: Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided                # discovery | decided | archived
+decision: build # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-05T12:56:24Z    # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
