@@ -11,6 +11,8 @@ import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerImportRoutes } from "./imports/routes";
+import { registerAiRoutes } from "./imports/ai/routes";
+import type { KhachAi } from "./imports/ai/claude";
 import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
@@ -60,6 +62,8 @@ export type ApiDeps = {
   pushSender?: PushSender;
   /** Nguồn dữ liệu của route công khai trang khách; vắng thì đọc cơ sở dữ liệu — bài rò rỉ của rào route truyền nguồn mồi. */
   nguonCongKhai?: NguonCongKhai;
+  /** Khách gọi Claude cho «Xử lý bằng AI» (hàng 68); vắng thì theo môi trường (`ANTHROPIC_API_KEY`), `null` = không có khoá. */
+  khachAi?: KhachAi | null;
 };
 
 const Health = z
@@ -185,6 +189,8 @@ export function createApi(deps: ApiDeps) {
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
+  // Trước route lần nhập: «/imports/ai» không được rơi vào «/imports/{importId}».
+  registerAiRoutes(api, deps);
   registerImportRoutes(api, deps);
   registerCatalogRoutes(api, deps);
   registerFeedRoutes(api, deps);
