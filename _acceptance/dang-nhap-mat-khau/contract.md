@@ -141,3 +141,5 @@ nhật ký, sự kiện hay trang nào».
   - Ngoài-8: mất mạng lúc đăng nhập bằng mật khẩu thì không hiện câu báo lỗi, chỉ thấy nút bật lại.
   - Ngoài-9: phép kiểm «không đổi lối đăng nhập» của hồ sơ dang-nhap-auth-15 đo theo nhánh đang đứng, đỏ oan trên nhánh này
     và xanh vô điều kiện sau khi gộp.
+- Mở hợp đồng mới — chọn ở Cổng Bằng chứng 2026-11-05: Ngoài-6 (vào sàn khác mà phiên cũ còn sống) và Ngoài-7 (đổi mật
+  khẩu ở Cá nhân không giới hạn lần đoán) → va-dang-nhap-mat-khau, luật 64.
