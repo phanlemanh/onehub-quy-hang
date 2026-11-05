@@ -5,7 +5,7 @@ slug: luat-chia-lead
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: verified
 approved_by:
 approved_at:
 veto_state: mo
@@ -141,3 +141,20 @@ KW Command, Lofty, BoldTrail — docs/product/doi-chieu-nganh.md]`.
 
 - Luật đợt 69 nói 48 «cũng đọc danh bạ thành viên để chọn người nhận lead»: câu giao không có chọn người cụ thể; màn đọc
   danh bạ ở máy chủ để ghi tên người đổi lần cuối. Hai mục vá nằm ở hook danh bạ của Bảng hàng.
+- Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi chấm lại từ bản chính của kho, lượt chấm có thể đo nhầm mã của một bản làm việc khác. Người dùng cuối không bị ảnh hưởng, chỉ độ tin cậy của số đo chấm. — `_acceptance/luat-chia-lead/thu/dung-d.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu không đọc được bộ nhóm Hôm nay của sàn, hai ô ngưỡng vẫn mở sửa và không có báo gì. Sàn có bộ nhóm riêng có thể lưu ngưỡng mà không có tác dụng. — `apps/web/src/app/(app)/settings/lead-routing/page.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài kiểm có thể không bắt được nếu sau này Bảng hàng tự đọc lại danh bạ liên tục khi hỏng. Hiện người dùng chưa thấy lỗi nào. — `apps/web/src/app/(app)/inventory/danh-ba.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài kiểm chỉ canh được một phần các nhãn trên màn, nên sau này ai đó viết tay thêm một nhãn riêng có thể không bị phát hiện. Hiện nhãn trên màn vẫn đúng. — `apps/web/src/app/(app)/settings/lead-routing/luat.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Lượt chấm có thể báo đạt dù ô Đầu chủ của căn đích vẫn hiện «…», miễn tên xuất hiện ở chỗ khác trên trang. Người dùng cuối chưa thấy lỗi. — `_acceptance/luat-chia-lead/thu/chay-ui.mjs`
+- Ngoài-9 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu máy chủ trả danh bạ sai dạng (rất hiếm), Bảng hàng có thể vỡ thay vì báo lỗi kèm Thử lại. — `apps/web/src/app/(app)/inventory/danh-ba.ts`
+- Ngoài-10 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi không đọc được bộ nhóm Hôm nay riêng của sàn, quản trị vẫn sửa được hai ngưỡng và thấy «Đã lưu», nhưng giá trị không có hiệu lực. — `apps/web/src/app/(app)/settings/lead-routing/page.tsx`
+- Ngoài-11 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Quản trị đang ở sàn nhưng chưa đặt tên sẽ bị ghi là «Đã rời sàn» ở dòng nguồn của luật. — `apps/web/src/app/(app)/settings/lead-routing/luat.ts`
+- Ngoài-12 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Căn gán cho người vừa vào sàn có thể tạm ghi «Đã rời sàn» cho tới khi danh bạ đọc lại xong; nếu đọc lại hỏng thì chữ sai còn nằm đó kèm báo lỗi. — `apps/web/src/app/(app)/inventory/danh-ba.ts`
+- Ngoài-14 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Hiện Bảng hàng không tự thử lại danh bạ, nhưng nếu sau này ai đó đổi cách đọc thì bài kiểm có thể không bắt được. — `apps/web/src/app/(app)/inventory/danh-ba.test.ts`
+- Ngoài-15 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nhãn trên màn hiện đúng, nhưng sau này nếu ai viết tay một nhãn lệch thì bài kiểm có thể không bắt được. — `apps/web/src/app/(app)/settings/lead-routing/luat.test.ts`
+- Ngoài-16 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Kịch bản thử có thể báo đạt dù ô Đầu chủ của đúng căn chưa chắc hiện tên. — `_acceptance/luat-chia-lead/thu/chay-ui.mjs`
+- Ngoài-17 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi một căn vừa gán cho người mới vào sàn, cột Đầu chủ có thể ghi nhầm «Đã rời sàn» trong lúc danh bạ đang đọc lại hoặc đọc lại bị lỗi. Tải lại trang hoặc bấm Thử lại thì hiện đúng tên. — `apps/web/src/app/(app)/inventory/danh-ba.ts`
+- Ngoài-18 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Chữ «Đã rời sàn» được khai ở hai nơi nên sau này sửa chữ ở một màn có thể lệch với màn kia. Hiện người dùng chưa thấy khác biệt nào. — `apps/web/src/app/(app)/settings/lead-routing/luat.ts`
+- Ngoài-21 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu việc đọc bộ nhóm Hôm nay lỗi mà sàn có bộ nhóm riêng, hai ngưỡng vẫn mở sửa và báo «Đã lưu» nhưng không có tác dụng. Quản trị không được báo gì về lần đọc lỗi. — `apps/web/src/app/(app)/settings/lead-routing/page.tsx`
+- Ngoài-23 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài thử giao diện có thể báo đạt dù ô Đầu chủ của căn được gán vẫn hiện «…», vì nó chỉ tìm tên ở bất kỳ đâu trên trang. Người dùng không bị ảnh hưởng trực tiếp, nhưng bằng chứng nghiệm thu yếu hơn. — `_acceptance/luat-chia-lead/thu/chay-ui.mjs`
+- Ngoài-24 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài thử có thể báo «vai khác không thấy mục Luật chia lead» là đạt dù thực ra nó không tìm đúng chỗ để thấy mục đó. Người dùng không bị ảnh hưởng trực tiếp, nhưng khẳng định về quyền yếu hơn. — `_acceptance/luat-chia-lead/thu/chay-ui.mjs`

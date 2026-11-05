@@ -6,33 +6,54 @@
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Bộ bắt tín hiệu mới thoát ngay, bỏ qua bước trả lại cơ sở dữ liệu: chỗ thử dãy D bị hỏng âm thầm cho mọi lượt sau**
-  Người dùng thấy gì: Không ảnh hưởng người dùng thật. Nếu lượt chấm bị ngắt giữa chừng, chỗ thử có thể còn sót quyền sai và các lượt chấm sau báo lỗi giả như thể sản phẩm hỏng.
-  Căn cứ: Chỉ ảnh hưởng chỗ thử nội bộ, không mất dữ liệu thật, và người chấm tự dựng lại chỗ thử được nên ghi lại hạn chế là đủ.
-  file: `_acceptance/luat-chia-lead/thu/chay-ui.mjs`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 6 (đường hardcode, đo cây khác): chỗ thử dùng lại bất kỳ máy dev nào đang nghe cổng 3495 mà không kiểm nó chạy từ cây đang chấm**
-  Người dùng thấy gì: Kết quả chấm có thể đến từ bản mã của nhánh khác nếu máy đó đang chiếm sẵn cổng, nên bằng chứng nghiệm thu có thể không phản ánh đúng bản đang kiểm.
-  Căn cứ: Không ảnh hưởng người dùng thật nhưng làm bằng chứng kém tin cậy; tránh được bằng cách tắt máy dev khác trước khi chấm.
+- **Kiểm 'máy dev đúng cây này' cho lọt khi chạy từ bản checkout chính, vì các worktree nằm trong cây của nó**
+  Người dùng thấy gì: Khi chấm lại từ bản chính của kho, lượt chấm có thể đo nhầm mã của một bản làm việc khác. Người dùng cuối không bị ảnh hưởng, chỉ độ tin cậy của số đo chấm.
+  Căn cứ: Chỉ ảnh hưởng công cụ chấm nội bộ, không mất hay lộ dữ liệu của sàn, và chỉ xảy ra khi chạy từ bản chính; người chấm tự tránh được.
   file: `_acceptance/luat-chia-lead/thu/dung-d.mjs`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình dạng 3 (assert «chuỗi có mặt» trong khi lời hứa là quan hệ): E10b dò tên đầu chủ trên cả trang thay vì trong ô Đầu chủ của căn đã gán**
-  Người dùng thấy gì: Phép kiểm cột Đầu chủ có thể báo đạt dù ô của căn đúng vẫn hiện «…», nên một lỗi hiển thị có thể lọt qua kiểm thử.
-  Căn cứ: Là lỗ hổng của phép kiểm chứ chưa phải lỗi người dùng thấy; sửa phép đo không đắt nhưng không chặn việc phát hành.
+- **A save that fixes only one half of a broken deadline pair returns 200 and shows a success toast, but the stored setting still doesn't apply**
+  Người dùng thấy gì: Khi sàn có cặp hạn sai từ trước và quản trị chỉ sửa một hạn, màn báo đã lưu nhưng luật vẫn chạy theo mặc định. Quản trị tưởng đã đổi mà lead mới vẫn theo hạn cũ.
+  Căn cứ: Gây hiểu nhầm có thật nhưng chỉ với sàn đã có dữ liệu cặp hạn hỏng, không mất dữ liệu, và quản trị sửa được bằng cách lưu cả hai hạn; sửa cần thêm luật màn nên nên làm việc riêng.
+  file: `apps/web/src/app/(app)/settings/lead-routing/luat-chia-lead.tsx`
+  severity: medium
+  Đề xuất: new-contract
+
+- **If reading the Hôm nay group set fails, the error is swallowed and the two thresholds unlock as if the default set were in use**
+  Người dùng thấy gì: Nếu không đọc được bộ nhóm Hôm nay của sàn, hai ô ngưỡng vẫn mở sửa và không có báo gì. Sàn có bộ nhóm riêng có thể lưu ngưỡng mà không có tác dụng.
+  Căn cứ: Cần đồng thời đọc hỏng và sàn có bộ nhóm riêng, hiếm gặp; không mất dữ liệu và tải lại là thấy đúng trạng thái.
+  file: `apps/web/src/app/(app)/settings/lead-routing/page.tsx`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 4 (âm-tính-một-mình) cộng hình dạng 1 (đo mã nguồn thay vì đầu ra): bài E10a coi việc không có hẹn giờ là bằng chứng hook không tự thử lại**
+  Người dùng thấy gì: Bài kiểm có thể không bắt được nếu sau này Bảng hàng tự đọc lại danh bạ liên tục khi hỏng. Hiện người dùng chưa thấy lỗi nào.
+  Căn cứ: Chỉ là lưới an toàn yếu hơn mong muốn, hành vi hiện tại không sai với người dùng; gia cố bài kiểm rẻ và làm sau được.
+  file: `apps/web/src/app/(app)/inventory/danh-ba.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 5 (tuyên quét cả lớp nhưng chỉ có vài ca): bài E8b nói màn không viết nhãn riêng nhưng chỉ dò 3 trên 7 nhãn**
+  Người dùng thấy gì: Bài kiểm chỉ canh được một phần các nhãn trên màn, nên sau này ai đó viết tay thêm một nhãn riêng có thể không bị phát hiện. Hiện nhãn trên màn vẫn đúng.
+  Căn cứ: Không ảnh hưởng người dùng hôm nay, chỉ giảm độ canh về sau; bổ sung dò nhãn rẻ và làm lúc nào cũng được.
+  file: `apps/web/src/app/(app)/settings/lead-routing/luat.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 3 (chỉ kiểm chuỗi có mặt trong khi lời hứa là một quan hệ): E10b kiểm tên đầu chủ có ở đâu đó trên trang, không kiểm ô của căn đã gán**
+  Người dùng thấy gì: Lượt chấm có thể báo đạt dù ô Đầu chủ của căn đích vẫn hiện «…», miễn tên xuất hiện ở chỗ khác trên trang. Người dùng cuối chưa thấy lỗi.
+  Căn cứ: Chỉ làm bằng chứng chấm lỏng, không mất dữ liệu và không đổi hành vi; siết kịch bản đo là việc rẻ nhưng không cản bàn giao.
   file: `_acceptance/luat-chia-lead/thu/chay-ui.mjs`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình dạng 3 (assert «chuỗi có mặt» trong khi lời hứa là quan hệ): E5b ca 400 không ghi lại lý do máy chủ trả nên không đối chiếu được với chữ trong dòng**
-  Người dùng thấy gì: Bằng chứng chưa chứng minh chữ báo lỗi trên màn đúng là lý do máy chủ trả, nên nếu màn tự đặt câu báo khác thì phép kiểm vẫn qua.
-  Căn cứ: Rủi ro chỉ ở độ chắc của bằng chứng, người dùng thật không mất gì; bổ sung đối chứng sau là rẻ.
-  file: `_acceptance/luat-chia-lead/thu/chay-ui.mjs`
-  severity: medium
-  Đề xuất: known-limits
+- **Hình dạng 2 (fixture viết tay đúng khuôn bên đọc, không lấy từ nguồn): danh sách sáu khoá của bài 403 chép tay từ KHOA_MAN và không có phép so**
+  Người dùng thấy gì: Nếu sau này màn thêm hay đổi một mục luật, bài kiểm quyền vẫn xanh trên danh sách cũ. Người dùng hôm nay không bị ảnh hưởng.
+  Căn cứ: Rủi ro chỉ có khi màn đổi về sau và lúc đó đã phải xem lại bài kiểm; chi phí theo dõi vượt hậu quả.
+  file: `packages/api/test-db/luat-chia-lead.test.ts`
+  severity: low
+  Đề xuất: wont-fix
 
 - **E2b: eval ghi lý do có dấu hai chấm, còn bài kiểm lặng lẽ nới khuôn thành «dấu cách hoặc hai chấm» (r1)**
   Người dùng thấy gì: Người dùng không thấy khác biệt nào: lý do báo lỗi vẫn hiện đúng dòng. Chỉ có tài liệu nghiệm thu mô tả lệch chút so với bài kiểm.
@@ -169,4 +190,4 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
 
 ## Chưa adversarial-verify (refuter chết)
 
-⚠ Cụm ngoài vùng phủ: 4/4 lỗi rơi vào file không bộ đo nào phủ (_acceptance/luat-chia-lead/thu/chay-ui.mjs, _acceptance/luat-chia-lead/thu/dung-d.mjs) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.
+⚠ Cụm ngoài vùng phủ: 2/7 lỗi rơi vào file không bộ đo nào phủ (_acceptance/luat-chia-lead/thu/dung-d.mjs, _acceptance/luat-chia-lead/thu/chay-ui.mjs) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.

@@ -1,1 +1,1 @@
-Driver CDP noi bo chay-ui.mjs; khong co duong doc network tu tool. Ket qua: e6 JSON cua script. n-a (driver)
+driver: node script chay-ui.mjs (CDP Chrome rieng, chi mo origin localhost:3495); khong co doc network tu tool -> n-a (driver)
