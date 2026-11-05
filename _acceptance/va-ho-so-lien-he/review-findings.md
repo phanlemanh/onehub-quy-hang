@@ -1,21 +1,21 @@
 ## Trong hợp đồng
 
-- **Bấm «Xem thêm» hai lần nhanh nay làm lặp cùng một trang trong danh sách (lỗi mới do bản vá)**
-  AC: AC-2
-  file: `apps/web/src/app/(app)/contacts/vung.tsx:96`
-  severity: medium
-  source: bugs
-  detail: Hàm them() không có cờ đang tải, và nút «Xem thêm» (danh-sach.tsx:226-230) không bị khoá khi yêu cầu còn đang chạy. Bấm hai lần trước khi trang thứ hai về thì có hai lời gọi docDanhSach cùng con trỏ `trang.tiep`, cùng `luotDs` và cùng `khoa`, nên duocNoi() cho qua cả hai. Bản vá đổi việc nối sang dạng hàm `setDs((cu) => ... [...cu.ds, ...kq.items])`, nên lần về thứ hai nối thêm đúng các mục đó vào danh sách đã nối. Kết quả: cùng các dòng hiện hai lần (khoá React bị trùng ở LuoiLienHe/TheLienHe), và bộ đếm «N+ liên hệ» sai. Code cũ dùng `[...ds.ds, ...kq.items]` từ closure, nên hai lần về cho ra cùng một mảng và không lặp. Lối sửa: thêm cờ đang tải (ref) trong them(), hoặc bỏ qua khi trang.tiep đã khác con trỏ lúc gửi, hoặc lọc trùng theo id khi nối.
-  rationale: AC-2 đòi khi không đổi bộ lọc thì «Xem thêm» gửi đúng con trỏ và nối trang «như trước»; bấm đúp trước đây không lặp dòng, nay lặp, nên hành vi cũ bị lùi.
-
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-(không có mục nào)
+- **The test of the old rule never runs the double-click scenario, so its check always passes**
+  Người dùng thấy gì: Bài kiểm có một phép so với luật cũ luôn cho cùng kết quả, nên nó không chứng minh được luật cũ từng nối trang hai lần. Người dùng không bị ảnh hưởng, chỉ là bằng chứng kiểm kém chặt hơn lời ghi.
+  Căn cứ: Nhẹ: người dùng không thấy gì sai, chỉ là một đối chứng trong bài kiểm yếu, và phần chặn thật đã được thử bằng cách bỏ phép so rồi thấy bài kiểm đỏ.
+  file: `apps/web/src/app/(app)/contacts/xem-them.test.ts`
+  severity: low
+  Đề xuất: known-limits
 
-## Chưa adversarial-verify (refuter chết)
-
-(không có mục nào)
+- **Hình 2 (fixture viết tay đúng khuôn bên đọc): ca «bấm hai lần» tự viết lại vòng cập nhật con trỏ của màn thay vì chạy đúng đường của vung.tsx**
+  Người dùng thấy gì: Nếu sau này ai đó sửa màn Liên hệ làm hỏng việc cập nhật vị trí trang, bấm «Xem thêm» hai lần nhanh có thể làm hiện trùng dòng mà bài kiểm vẫn xanh. Hiện tại màn chạy đúng, chỉ chưa có bài kiểm chạm đúng đường ấy.
+  Căn cứ: Nhẹ: không mất dữ liệu, nếu có trùng dòng thì tải lại là hết, và hiện chưa có lỗi thật; chỉ là lưới an toàn cho thay đổi tương lai còn thủng.
+  file: `apps/web/src/app/(app)/contacts/xem-them.test.ts`
+  severity: medium
+  Đề xuất: known-limits
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

@@ -3,10 +3,11 @@ schema_version: 2
 feature_slug: va-ho-so-lien-he
 verdict: PASS
 failed_evals: []
+reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 69c7b9ec91ce865c5086c9e9880135466855e0e7
+verified_commit: 6c5d4dbaa8b1de6e8064ac975f6ba22ddbe2158a
 human_signoff:
 ---
 
@@ -26,102 +27,100 @@ human_signoff:
 - eval: E1
   run_id: minted-va-ho-so-lien-he-E1-r1
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.isolation
   verified_at: 2026-11-05T11:47:09Z
+  carried_from_round: 1
   output: |
-    npm run db:migrate && npm run db:test
-    duration_ms 102922.192
-    Ca «liên hệ: ma trận vai trên bốn đường đọc» chạy và ok.
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E2
-  run_id: minted-va-ho-so-lien-he-E2-r1
+  run_id: minted-va-ho-so-lien-he-E2-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
   output: |
-    npm test -w @quy-hang/web
-    duration_ms 4119.209875
-    Bốn ca trong xem-them.test.ts chạy và ok.
+    ℹ duration_ms 3107.895417
 
 - eval: E3
-  judged_by: judge-subagent (fresh context), ba góc nhìn
+  judged_by: judge panel (domain-correctness, operational-feasibility, spec-alignment)
   verdict: PASS
+  verified_at: 2026-11-05T11:54:00Z
+  rationale: |
+    Ba vế đúng trên ba tệp: them() lấy con trỏ chỉ qua conTroXemThem, khoá và tham số cùng nguồn, nối qua duocNoi bằng setDs((cu)=>...), JSX và chữ giống bản gốc.
   judges:
-    - domain-correctness: PASS — (1) them() lấy con trỏ chỉ qua conTroXemThem(trang, khoa, ds.kieu === "xong"). khoa dựng bằng khoaLoc từ q, loai, dau và lan của cùng lần vẽ, và docDanhSach dùng q.trim(), loai, dau của cùng lần vẽ đó. (2) Trang về chỉ nối khi duocNoi trả đúng, so lượt và khoá lúc gửi với luotDs.current và khoaHienTai.current. Danh sách nối bằng setDs((cu) => ...) nên không dùng ds.ds trong closure. setTrang đặt khoa là guiLuc.khoa, và lượt đọc đầu đặt khoaLuot. (3) JSX của KhungLienHe, HoSoNguoi, DanhSachLienHe, các prop và mọi chuỗi chữ giống hệt vung-goc.tsx.txt. Chỉ khác import, trạng thái trang, ref khoaHienTai, khoá bộ lọc và them().
-    - operational-feasibility: PASS — (1) them() lấy con trỏ chỉ qua conTroXemThem(trang, khoa, ds.kieu===&quot;xong&quot;). khoa dựng bằng khoaLoc từ q, loai, dau, lan của đúng lần vẽ mà docDanhSach dùng (q.trim(), loai, dau). (2) Trang về chỉ nối khi duocNoi(guiLuc, hiện tại) trả đúng, và nối bằng setDs((cu)=>…[...cu.ds,…]), không dùng ds.ds trong closure. setTrang luôn ghi khoa của lượt gửi (guiLuc.khoa), và trang đầu ghi khoaLuot tính từ cùng tham số với lệnh đọc. (3) So với bản gốc, JSX của KhungLienHe, HoSoNguoi, DanhSachLienHe cùng prop và mọi chuỗi chữ giữ nguyên. Chỉ khác ở them(), state cursor đổi thành trang, ref khoaHienTai, khoaLuot và import.
-    - spec-alignment: PASS — (1) them() lấy con trỏ chỉ qua conTroXemThem(trang, khoa, ds.kieu==="xong"). khoa dựng bằng khoaLoc({q, type: loai, status: dau, lan}) trong cùng lần vẽ với q.trim(), loai và dau của docDanhSach. (2) Trang về chỉ nối khi duocNoi(guiLuc, {luot, khoa: khoaHienTai.current}) đúng, và nối bằng setDs((cu)=>...) chứ không dùng ds.ds trong closure. Trang cuối luôn là setTrang({khoa: khoaLuot hoặc guiLuc.khoa, tiep}). (3) JSX của KhungLienHe, HoSoNguoi, DanhSachLienHe cùng prop và mọi chuỗi chữ giống hệt vung-goc.tsx.txt. Khác biệt chỉ là import xem-them, state trang thay cursor, khoa/khoaHienTai/khoaLuot, effect ghi setTrang và them().
-  verified_at: 2026-11-05T11:47:09Z
+    - domain-correctness: PASS — them() lấy con trỏ chỉ qua conTroXemThem(trang, khoa, ds.kieu==="xong"); khoá dựng bằng khoaLoc({q, type: loai, status: dau, lan}) cùng lần vẽ với q.trim(), loai, dau của docDanhSach. Trang về chỉ nối khi duocNoi khớp lượt, khoá và con trỏ trang cuối hiện tại; bấm hai lần thì lần về sau bị bỏ. Nối dùng setDs((cu)=>…), setTrang đặt khoa của lượt đã được duocNoi xác nhận. JSX của KhungLienHe, HoSoNguoi, DanhSachLienHe, prop và chuỗi chữ giống bản gốc.
+    - operational-feasibility: PASS — them() chỉ lấy con trỏ qua conTroXemThem; khoá dựng bằng khoaLoc từ q, loai, dau, lan cùng lần vẽ với docDanhSach. duocNoi so lượt, khoá và con trỏ gửi với tiepHienTai.current nên bấm hai lần thì trang về sau bị bỏ. Nối dùng setDs((cu) => ...). Hai chỗ đặt trang cuối đều mang khoá của lượt đọc sinh ra nó. JSX và chuỗi chữ giống hệt vung-goc.tsx.txt.
+    - spec-alignment: PASS — them() chỉ lấy con trỏ qua conTroXemThem(trang, khoa, ...); khoá dựng bằng khoaLoc({q, type: loai, status: dau, lan}), docDanhSach dùng cùng nguồn. duocNoi so con trỏ lúc gửi với tiepHienTai.current, cập nhật ngay sau lần nối đầu nên trang về lần hai bị bỏ. Nối dùng setDs((cu) => ...). setTrang gán khoa từ guiLuc.khoa đã so với khoaHienTai.current. JSX, prop và chuỗi chữ giống hệt bản gốc.
   human_override:  # chi nguoi ghi
 
 - eval: E4
-  run_id: minted-va-ho-so-lien-he-E4-r1
+  run_id: minted-va-ho-so-lien-he-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
   output: |
-    design-floor-khuon --kiem
     2 tệp giao diện ngoài bản đồ
 
 - eval: E5
-  run_id: minted-va-ho-so-lien-he-E5-r1
+  run_id: minted-va-ho-so-lien-he-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.script.design_floor
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
   output: |
-    design-floor-s4 --root .
-    Sàn thiết kế M1 không chặn tệp nào.
+    sàn thiết kế M1 không chặn tệp giao diện nào
 
 - eval: E6
-  run_id: minted-va-ho-so-lien-he-E6-r1
+  run_id: E6-ui-2026-11-05
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
   screenshot: evidence/E6-step1.png
   observed: |
-    E6-step1.png: 1440 wide, /contacts?type=Seller, left menu highlights "Chủ bán", header "50+ liên hệ", every row labelled Chủ bán (e.g. "[Tên] Thử xem thêm 29" down to 17 visible), held by Đầu chủ 1. The Xem thêm button is below the fold (confirmed by DOM and wait). E6-step2.png: after clicking Xem thêm the list is longer (page scrolled down to the appended rows, e.g. "[Mẫu] Chủ nhà 03/29/06...", "[Chưa có tên] Lead" rows). Every visible row has the Chủ bán label and the "Chủ bán" filter stays highlighted; rows went from 50 to 58 (+8). So the page was appended with no filter change, which matches Expected for step 2. E6-step3.png: URL type=Landlord, "Chủ cho thuê" highlighted, "0 liên hệ", empty state "Không tìm thấy «Chủ cho thuê»". Network log: (a) no request carried a Seller cursor together with type=Landlord; the Seller-cursor requests all had type=Seller, and the Landlord request had no cursor. (b) No row on screen is labelled only Chủ bán; the list is empty. This matches Expected for step 3, with the caveat that the Landlord list is empty in this data.
+    E6-step1.png: trang Liên hệ, mục «Chủ bán» đang chọn, tiêu đề «50+ liên hệ», các dòng là «[Tên] Thử xem thêm 29…17», cột Loại đều là «Chủ bán», người giữ [Mẫu] Đầu chủ 1. Nút «Xem thêm» nằm dưới danh sách, ngoài khung hình trên màn 1440x900 nhưng có trong DOM (đã chờ được). Khớp đối chứng.
+    E6-step2.png: sau khi bấm «Xem thêm», danh sách cuộn xuống các dòng nối thêm ([Mẫu] Chủ nhà 03, 29, 06, 11, các dòng «[Chưa có tên] Lead»…), mọi dòng nhìn thấy đều mang nhãn «Chủ bán». Đếm bằng tiêu đề: 50+ thành 58 liên hệ, tức 50 thành 58 dòng. Khớp Expected bước 2.
+    E6-step3.png: sau khi giữ phản hồi cursor 2 giây, chạm «Chủ cho thuê» rồi bấm Xem thêm cũ, chờ 3 giây: mục «Chủ cho thuê» được chọn, tiêu đề «0 liên hệ», trạng thái trống «Không tìm thấy «Chủ cho thuê»». Không có dòng nào, kể cả dòng chỉ mang nhãn Chủ bán. (a) Không có yêu cầu nào mang cursor Chủ bán kèm type=Landlord, hai yêu cầu cursor đều là type=Seller. (b) Không có dòng nào chỉ mang nhãn Chủ bán trên màn. Khớp Expected bước 3.
   network_observed: clean
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-ho-so-lien-he-SUITE-test_hooks-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-ho-so-lien-he-SUITE-typecheck-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 - cmd: npm run lint
-  run_id: minted-va-ho-so-lien-he-SUITE-lint-r1
+  run_id: minted-va-ho-so-lien-he-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T11:47:09Z
+  verified_at: 2026-11-05T11:54:00Z
 
 ## Known limits
 
@@ -129,7 +128,7 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả bản đang kiểm lẫn bản nền): E1 (npm run db:migrate && npm run db:test), E2 (npm test -w @quy-hang/web), E4 (design-floor-khuon --kiem), E5 (design-floor-s4). Cần viết lại để khẳng định hành vi mới, hoặc xác nhận đây là lưới hồi quy có chủ ý. E6 baseline: n-a.
+Eval không phân biệt (xanh cả trên nhánh lẫn baseline): E2 (npm test -w @quy-hang/web), E4 (design-floor-khuon), E5 (design-floor-s4). Cần viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý.
 
 ## Variance
 
@@ -137,4 +136,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval xanh; chưa có vòng sửa.
+Round 1: các eval chạy lần đầu, chưa đạt đủ — thợ sửa «Xem thêm» bấm hai lần chỉ nối trang một lần (S4 lượt 1, AC-2). Returned to implementation.
+Round 2: E2, E4, E5, E6 và bảy lệnh suite xanh; E1 carry-forward từ round 1; E3 do hội đồng chấm, đạt.
