@@ -1,0 +1,182 @@
+schema_version: 1
+feature_slug: luat-chia-lead
+# Lệnh máy: executors.test.web, executors.test.core, executors.test.api_db (Postgres dãy D 5575), executors.design.khuon,
+# executors.design.floor. ui-check trên chỗ thử dãy D (_acceptance/luat-chia-lead/thu/dung-d.mjs: Postgres 5575 nạp sàn mẫu,
+# máy dev 3477, phiên quản trị sàn, trưởng nhóm, đầu chủ mẫu), Chrome không đầu qua CDP; chay-ui.mjs ghi dòng quan sát
+# JSON và ảnh vào thư mục --ra. Tắt máy dev bằng dung-d.mjs --tat khi xong. Tạo phẩm của lượt chấm ra .acceptance-runs/.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/luat-chia-lead/thu/dung-d.mjs rồi node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e1 --ra _acceptance/luat-chia-lead/evidence — chỗ thử đặt Hạn nhận lead của sàn mẫu = 20 bằng phiên quản trị trước khi mở"
+      - "Đối chiếu dòng e1 (khổ 1440x900, phiên quản trị): tenDong là đúng mảng viết trước [«Cách chia lead không trùng», «Hạn nhận lead», «Hạn gọi lần đầu», «Báo lead quá hạn cho ai», «"Cần gọi lại" sau số ngày chưa xác nhận», «"Nên gọi ép giá" sau số ngày»] (so bằng ten của sổ điểm); giaTri bằng items của GET /api/v1/company/settings cùng phiên; chữ nguồn của dòng Hạn nhận lead bằng đúng «Đã đổi · <tên quản trị mẫu đọc từ identity.user> · <dd/mm của ngày đặt>»; năm dòng còn lại có chữ nguồn bằng đúng «Mặc định»; chiều đỏ cùng ca: trước khi đặt 20 (ảnh E1-truoc.png) dòng Hạn nhận lead ghi «Mặc định»"
+    target: "http://localhost:3477/settings/lead-routing"
+    expected: "Sáu dòng đúng tên và thứ tự, giá trị khớp lối chung, dòng đã đổi mang «Đã đổi» kèm người và ngày, dòng khác «Mặc định». Ảnh E1-1440.png, E1-truoc.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2a
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e2 --ra _acceptance/luat-chia-lead/evidence — chỗ thử đưa sàn mẫu về mặc định, đếm sự kiện cấu hình của sàn trước, mở màn bằng phiên quản trị, gõ Hạn nhận lead 25, chọn Cách chia Kho chung, bấm Lưu"
+      - "Đối chiếu dòng e2: thân PATCH đã gửi (bắt qua CDP Network) có đúng hai khoá lead_routing.accept_minutes=25 và lead_routing.strategy=open_pool; toast bằng đúng «Đã lưu · áp cho lead mới từ bây giờ»; sau tải lại trang ô Hạn nhận lead = 25 và Cách chia ghi «Kho chung»; GET /api/v1/company/settings trả hai giá trị ấy; soSuKienSau − soSuKienTruoc = 2 và cả hai dòng mới có người = quản trị mẫu, vai chứa company_admin"
+      - "Ca chỉ đổi điểm áp ngay (dòng e2-ngay): đổi «Cần gọi lại» 14 → 20, Lưu → toast bằng đúng «Đã lưu», không chứa «lead mới»"
+      - "Ca Hoàn lại (dòng e2-hoan-lai): đổi Hạn gọi lần đầu và Báo lead quá hạn cho ai, bấm Hoàn lại → giá trị mọi ô bằng items của GET cùng lúc; số yêu cầu PATCH trong ca = 0"
+    target: "http://localhost:3477/settings/lead-routing"
+    expected: "Lưu một lần gửi đúng hai khoá; toast theo hiệu lực của khoá đã đổi; tải lại giữ 25 và Kho chung; nhật ký thêm hai sự kiện ghi người và vai; Hoàn lại về giá trị đang áp, không gửi gì. Ảnh E2-sau-luu.png, E2-hoan-lai.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/luat-chia-lead.test.ts", "packages/api/src/settings/**"]
+    expected: "exit 0; ca «luật chia lead: lưu sáu điểm nguyên khối, mỗi khoá một sự kiện» trong packages/api/test-db/luat-chia-lead.test.ts có mặt và ok — PATCH sáu khoá của màn trong một lần: GET trả đúng sáu giá trị, nhật ký thêm đúng sáu dòng mỗi dòng ghi người và vai company_admin; chiều đỏ cùng ca: PATCH năm khoá đúng cộng queue.call_back_after_days = 6 → 400, reason khớp /^(lead_routing|queue)\\.[a-z_]+: / và mở đầu bằng «queue.call_back_after_days: », GET vẫn giá trị cũ, nhật ký không thêm dòng nào; cặp hạn trái luật (first_call 10, accept 15) → reason mở đầu «lead_routing.first_call_minutes: » (cùng khuôn mà màn gắn lý do vào dòng)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/luat-chia-lead.test.ts", "packages/api/src/settings/**", "packages/api/src/routing/**"]
+    expected: "exit 0; ca «luật chia lead: đổi qua lối màn chỉ áp cho lead mới» có mặt và ok — lead A chia trước theo mặc định mang routing_strategy zone_round_robin, accept 15, first_call 30; sau PATCH {lead_routing.strategy: company_round_robin, accept_minutes: 20, first_call_minutes: 40} lead B vào sau mang company_round_robin/20/40 và lead A đọc lại vẫn zone_round_robin/15/30 (deepEqual hai bộ viết tay); chiều đỏ cùng ca: assert trên lead A nêu «lead đã chia đổi theo luật mới» khi khác."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/settings/lead-routing/**", "packages/core/src/config/so.ts"]
+    expected: "exit 0; ca «luật chia lead: câu hiệu lực đọc từ sổ» trong một tệp test của apps/web/src/app/(app)/settings/lead-routing có mặt và ok — ma trận viết trước sáu khoá → câu (ba khoá moi mở đầu «Áp cho lead mới», ba khoá tinh_lai mở đầu «Áp ngay»), deepEqual; chiều đỏ cùng ca: hàm câu hiệu lực nhận một bản sao sổ đổi hieuLuc của lead_routing.accept_minutes sang tinh_lai thì câu của khoá ấy đổi sang «Áp ngay» (câu đọc từ sổ, không viết riêng theo khoá)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5a
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/settings/lead-routing/**", "packages/core/src/config/**"]
+    expected: "exit 0; ca «luật chia lead: kiểm ô trước khi lưu» có mặt và ok — ma trận viết trước: accept 0, 1441, 15.5, chuỗi rỗng → lỗi gắn khoá lead_routing.accept_minutes; first_call 10 khi accept 15 → lỗi gắn lead_routing.first_call_minutes nêu hạn nhận; call_back 6 và 31, price 15 → lỗi gắn đúng khoá; bộ đúng (15/30/14/10) → không lỗi và nút Lưu bật; bộ có lỗi → Lưu khoá và danh sách khoá gửi rỗng; ca «luật chia lead: lý do 400 về đúng dòng»: reason lấy từ chính kiemGiaTri của lõi (bên viết lý do mà máy chủ trả, không viết tay) cho cặp hạn trái luật và «Cần gọi lại» 6 → gắn đúng dòng first_call và call_back; reason không mở đầu bằng khoá nào của màn gắn báo chung; chiều đỏ: bỏ kiểm cặp thì ca first_call 10 nêu «hạn gọi nhỏ hơn hạn nhận vẫn lưu»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e5 --ra _acceptance/luat-chia-lead/evidence — phiên quản trị gõ Hạn nhận lead 0, rồi Hạn gọi lần đầu 10 với Hạn nhận 15"
+      - "Đối chiếu dòng e5: mỗi ca có phần tử báo lỗi (data-slot=field-error hay role=alert) trong đúng dòng của ô; nút Lưu có thuộc tính disabled; số yêu cầu PATCH tới /api/v1/company/settings trong lúc ấy = 0"
+      - "Ca 400 thật (dòng e5-400): gõ Hạn gọi lần đầu 40, qua CDP Fetch sửa thân PATCH đi ra thành {lead_routing.first_call_minutes: 10} để máy chủ thật trả 400 → lý do máy chủ trả nằm trong dòng Hạn gọi lần đầu; ô Hạn gọi lần đầu vẫn là 40; GET không đổi"
+      - "Ca 403 thật (dòng e5-403): mở màn bằng quản trị, chỗ thử gỡ vai company_admin của quản trị mẫu trên Postgres, gõ Hạn nhận lead 22, Lưu → trang có «Chỉ quản trị sàn đổi được luật này», ô vẫn 22; chỗ thử trả lại vai sau ca"
+      - "Ca mạng hỏng (dòng e5-mang): CDP Fetch.failRequest cho PATCH → trang có báo lỗi kèm nút «Thử lại», ô vẫn giá trị vừa gõ; bỏ chặn, bấm Thử lại → toast «Đã lưu»"
+    target: "http://localhost:3477/settings/lead-routing"
+    expected: "Ô sai: báo dưới đúng ô, Lưu khoá, không gửi; 400 thật về đúng dòng; 403 báo đúng câu; mạng hỏng báo kèm Thử lại; giá trị đang gõ giữ ở cả ba. Ảnh E5-o-sai.png, E5-400.png, E5-403.png, E5-mang.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E6a
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e6 --ra _acceptance/luat-chia-lead/evidence — phiên trưởng nhóm và phiên đầu chủ"
+      - "Đối chiếu dòng e6: với mỗi phiên, cột mục lục của /settings/personal không có liên kết href=/settings/lead-routing; mở thẳng /settings/lead-routing kết thúc ở /settings/personal?chi-quan-tri=1 và trang có chữ «Mục này chỉ quản trị sàn mở được»; đối chứng dương cùng ca: phiên quản trị mở thẳng ở lại /settings/lead-routing"
+    target: "http://localhost:3477/settings/lead-routing"
+    expected: "Vai khác không thấy mục, mở thẳng thì về Cá nhân kèm câu báo; quản trị ở lại. Ảnh E6-truong-nhom.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/luat-chia-lead.test.ts", "packages/api/src/settings/**"]
+    expected: "exit 0; ca «luật chia lead: vai khác 403 với từng khoá của màn» có mặt và ok — trưởng nhóm, đầu chủ, telesales PATCH từng khoá trong sáu khoá → 403 (18 assert từ ma trận viết trước), GET sau đó trả giá trị cũ, nhật ký không thêm dòng; đối chứng dương cùng ca: quản trị PATCH cùng khoá → 200."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7a
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/settings/lead-routing/**"]
+    expected: "exit 0; ca «luật chia lead: ba trạng thái đặc biệt» có mặt và ok — hàm trạng thái màn nhận (cấu hình, bộ nhóm): bộ nhóm source company → hai khoá ngưỡng khoá và câu «Sàn đang dùng bộ nhóm Hôm nay riêng — ngưỡng đặt trong bộ ấy»; source default → không khoá; errors ['lead_routing.first_call_minutes: …'] → báo nêu «Hạn gọi lần đầu» và «mặc định»; errors rỗng → không báo; cấu hình null (tải hỏng) → trạng thái lỗi; chiều đỏ cùng ca: source company mà hàm không khoá thì assert nêu «ngưỡng lưu mà không áp»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e7 --ra _acceptance/luat-chia-lead/evidence — (a) chỗ thử ghi bộ nhóm Hôm nay riêng hợp lệ bằng PUT /api/v1/company/settings/queue; (b) chỗ thử chèn thẳng hai dòng company_settings trái luật (accept 60, first_call 30) như dòng có từ trước; (c) chặn tải cấu hình qua CDP Fetch rồi bỏ chặn; dọn bộ nhóm riêng và hai dòng trái luật sau ca"
+      - "Đối chiếu dòng e7: (a) hai ô ngưỡng có disabled, trang có chữ «Sàn đang dùng bộ nhóm Hôm nay riêng»; (b) errors của GET thật không rỗng và báo trên đầu khung có «Hạn gọi lần đầu» (hay «Hạn nhận lead») và «mặc định»; (c) trang có chữ «Chưa tải được luật chia lead» và nút «Thử lại»; bấm Thử lại sau khi bỏ chặn thì có đủ sáu dòng"
+    target: "http://localhost:3477/settings/lead-routing"
+    expected: "Bộ nhóm riêng khoá hai dòng ngưỡng kèm báo; dòng trái luật có sẵn hiện báo nêu điểm đang chạy mặc định; tải hỏng hiện lỗi kèm Thử lại, thử lại tải được. Ảnh E7-bo-nhom.png, E7-dong-hong.png, E7-loi-tai.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    paths: ["packages/core/src/routing/**"]
+    expected: "exit 0; ca «nhãn cách chia và người đọc lời báo» trong packages/core/src/routing/nhan.test.ts có mặt và ok — deepEqual với hai bảng viết tay (năm cách chia theo CONTEXT.md dòng «Cách chia»: Theo vùng, lần lượt · Lần lượt toàn sàn · Theo vùng, ít lead đang mở · Kho chung · Trưởng nhóm chia tay; hai người đọc: Trưởng nhóm · Trưởng nhóm và quản trị sàn); khoá của bảng nhãn bằng đúng ROUTING_STRATEGIES và ALERT_AUDIENCES; chiều đỏ cùng ca: bảng thiếu một khoá thì assert nêu tên khoá thiếu."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/settings/lead-routing/**"]
+    expected: "exit 0; ca «luật chia lead: chữ màn theo từ vựng» có mặt và ok — quét mọi tệp .ts/.tsx (trừ .test.ts) dưới apps/web/src/app/(app)/settings/lead-routing: không chuỗi «Cảnh báo», không «Luật chia» ngoài lời nhập MUC_SAN, nhãn lựa chọn nhập từ @quy-hang/core (không mảng nhãn viết trong màn); chiều đỏ cùng ca: quét một chuỗi mẫu chứa «Cảnh báo» thì hàm quét trả đúng tệp và chữ."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/cot.ts", "apps/web/src/app/(app)/inventory/danh-ba.ts", "apps/web/src/app/(app)/inventory/dau-chu.test.ts"]
+    expected: "exit 0; ca «cột Đầu chủ: bản danh bạ giữ trên máy không kết luận Đã rời sàn» trong apps/web/src/app/(app)/inventory/dau-chu.test.ts có mặt và ok — ma trận viết trước: danh bạ chỉ từ máy (moi=false) + người lạ → «…»; danh bạ máy chủ (moi=true) + người lạ → «Đã rời sàn»; cả hai + người có tên → tên; null → «…»; chiều đỏ cùng ca: hàm cũ (không xét moi) cho ca đầu ra «Đã rời sàn» và assert nêu «bản giữ trên máy kết luận người đã rời sàn»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10a
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/danh-ba.ts", "apps/web/src/app/(app)/inventory/danh-ba.test.ts"]
+    expected: "exit 0; ca «danh bạ: đọc hỏng báo lỗi, thử lại đọc lại» trong apps/web/src/app/(app)/inventory/danh-ba.test.ts có mặt và ok — hàm đọc danh bạ với fetch giả: trả 500 → trạng thái loi; ném lỗi mạng → loi; sau thuLai với fetch lành → trạng thái xong, danh bạ moi=true, số lần gọi fetch tăng đúng 1; không có hẹn giờ nào được đặt (không tự thử lại); chiều đỏ cùng ca: bản nuốt lỗi (không đặt loi) cho ca 500 ra trạng thái khác loi và assert nêu «lỗi đọc danh bạ bị nuốt»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e10 --ra _acceptance/luat-chia-lead/evidence — phiên đầu chủ mẫu, xoá bản danh bạ giữ trên máy, chặn GET /api/v1/company/member-names qua CDP Fetch (trả 503), mở /inventory; rồi bỏ chặn, bấm Thử lại"
+      - "Đối chiếu dòng e10: lúc chặn trang có chữ «Chưa đọc được danh bạ thành viên» và nút «Thử lại»; sau bấm Thử lại: chữ báo không còn, ô Đầu chủ của căn gán đầu chủ mẫu hiện tên (không «…»); số lần gọi member-names trong 10 giây chờ lúc chặn ≤ 2 (không tự thử lại theo nhịp)"
+    target: "http://localhost:3477/inventory"
+    expected: "Đọc hỏng hiện báo kèm Thử lại; thử lại khi lối lành thì báo mất, tên hiện. Ảnh E10-loi.png, E10-sau-thu-lai.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san (lệch chỉ vì ngoai_le không khoi là báo oan — giới hạn kit 2.37.0, luật đợt 33)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/settings/lead-routing/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
