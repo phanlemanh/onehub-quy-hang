@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 87cc01d7706e42f961ce8a6cbf564027bb1d84a5
+verified_commit: 9f857731aa79012a25eb123d692c9c9fdebfabce
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -248,3 +248,7 @@ none — every multi-run eval is uniform (mọi eval chạy một lượt, xác 
 Round 1: E10b chưa đạt — returned to implementation.
 Round 2–3: E10b chạy lại và đạt; các eval AC-1 đến AC-9 chốt ở round 1–2 (được mang tiếp sang round 4 vì delta không chạm paths).
 Round 4: tất cả eval đạt, E10d đạt có giới hạn đã khai trước, kèm E10e xanh; verified_at của các eval chạy ở round 4 ghi theo ngày chạy vì nhật ký chạy chưa có dòng round 4 lúc soạn.
+
+### Re-pin lần 1 — 2026-11-05, do gộp nhánh chính sau chữ ký
+run_id: repin-20261105T095845Z-98836
+sha: 9f857731aa79012a25eb123d692c9c9fdebfabce · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10d=1 · ngoài làn máy: E10b · diff chạm vật đo ngoài làn máy: E10b — chưa chứng lại, đi vòng S4 delta
