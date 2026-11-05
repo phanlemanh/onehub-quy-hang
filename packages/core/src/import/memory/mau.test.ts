@@ -159,3 +159,34 @@ test("đo mẫu: ba số từ kế hoạch đã lưu", () => {
   assert.deepEqual(doMau(tuDien), { theoMau: 0, nguoiDoi: 0, tong: n });
   assert.equal(doMau.length, 1);
 });
+
+// Ngoài-4 của hàng 67 (hàng 66 nhap-hoan-tac, AC-10, E10): cột theo mẫu và cột theo từ điển cùng đích — ở cả hai thứ tự.
+test("nhớ mẫu: hai cột không cùng đích ở cả hai thứ tự", () => {
+  // Mẫu sinh bằng đường thật: lần trước người đổi cột «Cột X» (từ điển không nhận ra) thành listPrice.
+  const truoc = readTable([["Toà", "Mã căn", "Cột X"], ["Toà A", "A-01.01", "3 tỷ"]]);
+  const tuDienTruoc = planFromDictionary(truoc);
+  assert.notEqual(tuDienTruoc.columns[2]!.target, "listPrice", "tiền đề: từ điển không nhận «Cột X» là giá");
+  const mau = taoMau(doi(tuDienTruoc, "Cột X", "listPrice"), truoc.headers, { importId: "lan-1", at: "2026-11-01T00:00:00Z" });
+  let dem = 0;
+  for (const [thuTu, tieuDe] of [
+    ["mẫu trước", ["Toà", "Mã căn", "Cột X", "Giá"]],
+    ["từ điển trước", ["Toà", "Mã căn", "Giá", "Cột X"]],
+  ] as const) {
+    const table = readTable([[...tieuDe], ["Toà A", "A-01.01", "3 tỷ", "3,1 tỷ"]]);
+    const { plan } = apMau(table, mau, CTX);
+    const iMau = tieuDe.indexOf("Cột X");
+    const iTuDien = tieuDe.indexOf("Giá");
+    assert.equal(plan.columns[iMau]!.target, "listPrice", `${thuTu}: cột theo mẫu giữ đích`);
+    assert.ok(plan.columns[iMau]!.reason.startsWith(LY_DO_THEO_MAU), `${thuTu}: cột theo mẫu mang nhãn theo mẫu`);
+    assert.equal(plan.columns[iTuDien]!.target, "keep_as_note", `${thuTu}: cột từ điển trùng đích về chưa rõ`);
+    assert.equal(plan.columns[iTuDien]!.confidence, "low", `${thuTu}: cột trùng đích cần người chọn`);
+    assert.ok(plan.questions.some((q) => q.includes("trùng đích với cột theo mẫu «Cột X»")), `${thuTu}: câu hỏi trùng đích`);
+    assert.deepEqual(validatePlan(plan, table), [], `${thuTu}: kế hoạch hợp lệ`);
+    assert.equal(plan.columns.filter((c) => c.target === "listPrice").length, 1, `${thuTu}: một cột giá`);
+    dem += 6;
+  }
+  const chiMau = apMau(readTable([["Toà", "Mã căn", "Cột X"], ["Toà A", "A-01.01", "3 tỷ"]]), mau, CTX).plan;
+  assert.ok(!chiMau.questions.some((q) => q.includes("trùng đích")), "đối chứng: không cột trùng thì không câu hỏi trùng");
+  dem++;
+  assert.equal(dem, 13);
+});

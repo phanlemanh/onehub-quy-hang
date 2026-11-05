@@ -177,7 +177,7 @@ test("hoàn tác: căn đã gỡ ra khỏi Hôm nay, Đã gửi, trang khách", 
   assert.ok(homNayIds.includes(conId), "đối chứng: Hôm nay còn căn kia");
   const ct = (await (await send("GET", `/api/v1/shares/${lanGui.id}`, undefined, s.dauKhach.cookie)).json()) as { listings: { id: string }[] };
   assert.deepEqual(ct.listings.map((l) => l.id), [conId], "Đã gửi không còn căn đã gỡ");
-  const trang = await send("GET", `/api/v1/public/shares/${lanGui.code}`);
+  const trang = await send("GET", `/api/v1/public/shares/${lanGui.code}`, undefined);
   assert.equal(trang.status, 200);
   const than = JSON.stringify(await trang.json());
   assert.ok(than.includes("unavailable"), "trang khách báo căn không còn");
