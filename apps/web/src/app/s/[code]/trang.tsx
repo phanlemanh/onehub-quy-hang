@@ -21,11 +21,11 @@ export function NoiDungTrangKhach({ code, than, can, loiTam = false }: { code: s
     <>
       <BaoMo code={code} />
       {mot ? (
-        <ChiTiet b={mot} code={code} listingId={than.listingIds[can!]} />
+        <ChiTiet b={mot} code={code} listingId={than.listingIds[can!]} tv={than.tuVung} />
       ) : (
         <div className="grid grid-cols-2 gap-x-3 gap-y-6 p-4 sm:grid-cols-3">
           {than.can.map((b, i) => (
-            <TheCan key={i} b={b} i={i} code={code} listingId={than.listingIds[i]} />
+            <TheCan key={i} b={b} i={i} code={code} listingId={than.listingIds[i]} tv={than.tuVung} />
           ))}
         </div>
       )}

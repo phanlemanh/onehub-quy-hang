@@ -5,6 +5,7 @@
  *
  * Nhập tương đối và qua `@quy-hang/core` — không `@/…` — để bộ kiểm rò rỉ ở gốc kho chạy được tệp này.
  */
+import type { TuVung } from "@quy-hang/core/labels";
 import type { CanNoiBo, CauHinhRa, NguoiNhan } from "@quy-hang/core/redaction";
 import { xuatBang, type BanXuat, type CotBangHang, type CotGocNhin, type MauXuat } from "@quy-hang/core/export";
 import type { CotId, DongBang } from "../cot";
@@ -83,6 +84,8 @@ export type TuyChonTrang = NguCanh & {
   /** Cột đang hiện của góc nhìn, theo thứ tự góc nhìn. */
   cot: readonly CotId[];
   cauHinh?: CauHinhRa;
+  /** Cách gọi riêng của sàn (hàng 45, từ `GET /api/v1/company/labels`) — lõi cắt về phần ra ngoài. */
+  tuVung?: TuVung;
 };
 
 /**
@@ -96,6 +99,6 @@ export function banXuatTuDong(dong: readonly DongBang[], tuy: TuyChonTrang): Ban
   const cot: CotGocNhin[] = tuy.cot.map(cotLoi);
   return xuatBang(
     dong.map((d) => dongSangCan(d, tuy)),
-    { mau: tuy.mau, nguoiNhan: tuy.nguoiNhan, cauHinh: tuy.cauHinh, cot, today: tuy.today, tenSan: tuy.tenSan },
+    { mau: tuy.mau, nguoiNhan: tuy.nguoiNhan, cauHinh: tuy.cauHinh, cot, today: tuy.today, tenSan: tuy.tenSan, tuVung: tuy.tuVung },
   );
 }
