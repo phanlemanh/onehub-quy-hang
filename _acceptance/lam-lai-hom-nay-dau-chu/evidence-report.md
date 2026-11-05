@@ -2,18 +2,18 @@
 schema_version: 2
 feature_slug: lam-lai-hom-nay-dau-chu
 verdict: REJECT
-failed_evals: ["E7a","E1"]
+failed_evals: ["E1"]
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 4b219f0059445b06f4b323bbc156e0ed1afe4222
+verified_commit: b4e2b4043d138af2504c90a01e79d91f837c432c
 human_signoff:
 ---
 
 # Evidence Report: lam-lai-hom-nay-dau-chu
 
-Round 1. Hai eval trượt (E7a, E1); các eval còn lại xanh.
+Vòng 2. Một eval hỏng: E1 (AC-1). Nút chính của năm dòng căn «Thiếu thông tin» vẫn là «Đổi giá, trạng thái · Mở hồ sơ», trong khi AC-3 xếp việc này vào ⋯. Lỗi này đã được ghi ở vòng 1 và chưa sửa.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -23,171 +23,164 @@ Round 1. Hai eval trượt (E7a, E1); các eval còn lại xanh.
 | E4 | AC-4 | ui-check | PASS |
 | E5 | AC-5 | ui-check | PASS |
 | E6 | AC-6 | ui-check | PASS |
-| E7a | AC-7 | script | FAIL |
-| E7b | AC-7 | test | PASS |
+| E7a | AC-7 | script | PASS |
+| E7b | AC-7 | test | PASS (mang từ vòng 1) |
 | E8 | AC-8 | test | PASS |
 | E9 | AC-9 | ui-check | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-lam-lai-hom-nay-dau-chu-E1-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E1-r2
   exit_code: 1
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   screenshot: evidence/E1-hom-nay-1440.png
   observed: |
-    Frame duy nhất E1-hom-nay-1440.png (đã mở bằng Read): bàn làm việc tối, thẻ «Bật thông báo lead», khối «Hôm nay · 34 việc», nhóm «Lead mới 26». Mỗi dòng có hai tầng ở cột Việc (tên căn đậm, «Bán» nhạt) và hai tầng ở cột Vì sao (dòng trên chữ đậm «Đã gửi · nhập hh:mm», dòng dưới đỏ «Quá hạn nhận …»), cột Giá «3,2 tỷ, đã bao phí», một nút viền «Nhận» cùng bề rộng và một nút ⋯. NHƯNG ảnh không có hàng tiêu đề nào: không thấy chữ «Việc», «Vì sao hôm nay», «Giá», «Hành động» ở đầu bảng. Mâu thuẫn với Expected «bốn cột đúng tên».
+    I opened E1-hom-nay-1440.png (1440 wide, dark theme). The page is Hôm nay with the "54 việc" counter. The header row shows four columns named Việc, Vì sao hôm nay, Giá, Hành động. Under the "Lead mới 46" group, each row has two tiers. The Việc column has "Toà A · A-20.01" over "Bán". The Vì sao column has a bold "Đã gửi · nhập 13:12" over a red "Quá hạn nhận 18 giờ 36 phút". The Giá column shows "3,2 tỷ, đã bao phí". The Hành động column has one outlined «Nhận» button of equal width plus a ⋯ button on every visible row. This matches Expected for the visible rows. The screenshot cuts off before the "Cần gọi lại" and "Thiếu thông tin" groups, so I read the label mismatch for those groups from the JSON dump of the e1 line, not from the image.
   network_observed: n-a (driver)
   output: |
-    Chạy dung-d.mjs (máy dev thử cổng 3476) rồi chay-ui.mjs --e1 --ra evidence; máy thử đã tắt sau khi chạy.
-    Đạt: 34 dòng, mỗi dòng 4 ô; một nút ngoài ở cả 34 dòng (cộng một nút ⋯); viền solid, bề rộng 144 duy nhất; hai tầng ở cột Việc; chữ đậm 600 ở mọi dòng; màu quá hạn khớp token destructive; màu «còn 10 phút» khớp token warning.
-    Trượt 1: tieuDeCot không có trong đầu ra; khối solution-agents-2 dựng với renderHeader={false}, ảnh xác nhận không có hàng tiêu đề, không so được với [Việc, Vì sao hôm nay, Giá, Hành động].
-    Trượt 2: nhãn nút chính của 4 dòng căn là «Đổi giá, trạng thái · Mở hồ sơ», không khớp bảng AC-3 (căn phải «Còn · giữ giá»). Dòng lead «Nhận» và «Đã gọi» khớp.
-    Ghi chú: dòng «Hạn nhận còn 15 phút» cũng tô màu warning trong khi AC-2 nói đúng 15 phút là thường.
+    Dòng e1 (54 dòng): tieuDeCot đúng [Việc, Vì sao hôm nay, Giá, Hành động]; mỗi dòng hai tầng ở cột Việc; mỗi dòng đúng một nút ngoài ⋯; nút chính viền liền, rộng 144; 49 dòng có hạn hai tầng, 5 dòng không hạn một tầng; màu quá hạn = token destructive, dưới 15 phút = token warning.
+    LỆCH: nhãn nút chính theo bảng AC-3. Dòng căn «Cần gọi lại» (3 dòng) hiện «Còn · giữ giá» (đúng). Năm dòng căn «Thiếu thông tin» hiện «Đổi giá, trạng thái · Mở hồ sơ», mà AC-3 xếp việc này vào ⋯. Dòng lead «Nhận» / «Đã gọi» đúng.
+    Cùng lỗi với vòng 1 của S4 (evidence-report.md vòng trước, dòng 47), chưa sửa.
 
 - eval: E2
-  run_id: minted-lam-lai-hom-nay-dau-chu-E2-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 3752.802708
+    ℹ duration_ms 2206.431791
 
 - eval: E3
-  run_id: minted-lam-lai-hom-nay-dau-chu-E3-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 3752.802708
+    ℹ duration_ms 2206.431791
 
 - eval: E4
-  run_id: minted-lam-lai-hom-nay-dau-chu-E4-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E4-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T00:00:37Z
-  screenshot: evidence/E4-truoc-1440.png
+  verified_at: 2026-11-05T00:17:48Z
+  screenshot: evidence/E4-step1.png
   observed: |
-    E4-truoc-1440.png: trang Hôm nay của đầu chủ, 38 việc, nhóm «Lead mới» 30. Dòng đầu (Toà A · A-20.01, Bán) hiện «Đã gửi · nhập 12:12 / Quá hạn nhận 19 giờ 21 phút», nút chính «Nhận». E4-sau-1440.png: cùng dòng đầu đổi thành «Đã nhận · nhập 12:12 / Quá hạn gọi 19 giờ 6 phút», nút chính đổi thành «Đã gọi»; không có hộp thoại/modal nào trên màn; các dòng khác vẫn «Nhận». Khớp Expected (nhận một chạm, không hộp thoại, nút đổi sang việc kế).
+    E4-step1.png (truoc, 1440x900, Hôm nay cua dau chu mau 1, nen toi): tieu de «Hôm nay», 57 viec, nhom «Lead mới 49»; dong dau «Toà A · A-20.01», trang thai «Đã gửi · nhập 13:12 / Quá hạn nhận 18 giờ 38 phút», nut chinh cot Hành động = «Nhận»; cac dong khac cung nut «Nhận». E4-step2.png (sau khi bam): cung man hinh, khong co hop thoai/dialog nao; dong dau doi thanh «Đã nhận · nhập 13:12 / Quá hạn gọi 18 giờ 23 phút» va nut chinh doi thanh «Đã gọi»; cac dong con lai van «Nhận». Khop Expected: nhan mot cham, khong hop thoai, nut chinh doi sang viec ke.
   network_observed: n-a (driver)
   output: |
-    chay-ui.mjs --e4 trên máy thử cổng 3476 (dựng bằng dung-d.mjs, đã tắt sau khi xong).
-    nutTruoc «Nhận», coHopThoai false, nutSau «Đã gọi»; GET /api/v1/leads/assigned cho lead vừa bấm có stage accepted và acceptedAt khác null.
+    Dòng e4: nutTruoc «Nhận», coHopThoai false, nutSau «Đã gọi». Lead vừa bấm đọc lại qua API lead giao: stage accepted, acceptedAt khác null.
 
 - eval: E5
-  run_id: minted-lam-lai-hom-nay-dau-chu-E5-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E5-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   screenshot: evidence/E5-thu-gon-1440.png
   observed: |
-    E5-thu-gon-1440.png: trang Hom nay "42 viec"; dau nhom "Lead moi 34" dang thu gon (mui ten phai, khong dong nao duoi), "Can goi lai 3" mo voi 3 dong, "Thieu thong tin 5" mo voi 5 dong. E5-mo-lai-1440.png: "Lead moi 34" mo, hien cac dong lead (Toa A - A-20.01, Da gui/Da nhan, Nhan/Da goi...). Khop Expected.
+    E5-thu-gon-1440.png: bảng "Hôm nay · 60 việc"; đầu nhóm "Lead mới" 52 có mũi tên đóng (>) và không hiện dòng nào dưới nó; "Cần gọi lại" 3 mở với 3 dòng; "Thiếu thông tin" 5 mở với 5 dòng. E5-mo-lai-1440.png: "Lead mới" 52 mở (mũi tên xuống), các dòng căn A-20.01, chỉ biết toà... hiện dưới đầu nhóm. Khớp Expected: nhóm theo bộ nhóm, đếm đúng, thu gọn và mở lại được.
   network_observed: n-a (driver)
   output: |
-    chay-ui.mjs --e5 trên máy thử cổng 3476 (dung-d.mjs, đã tắt sau khi chạy).
-    Thứ tự nhóm khớp thứ tự nhóm có việc trong cấu hình hàng đợi; đếm 34/3/5, tổng 42 bằng số dòng; bấm đầu nhóm đầu: số dòng giảm 34 (còn 8), bấm lại: về 42; không căn nào ở hai nhóm.
+    Bấm lại: 60 = số ban đầu. Mã dòng trùng giữa các nhóm = 0.
 
 - eval: E6
-  run_id: minted-lam-lai-hom-nay-dau-chu-E6-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E6-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   screenshot: evidence/E6-step1.png
   observed: |
-    step1 (dang tai): trang Hom nay voi tieu de "Hom nay" va luoi khung cho xam (skeleton) 5 cot x 9 dong, chua co dong lead nao. step2 (trong, dau chu 2 khong viec): "0 viec", bieu tuong hop thu, "Hom nay khong con viec" va nut/lien ket "Mo Bang hang" (href /inventory). step3 (loi): "8 viec" cung khoi do "Chua tai duoc lead giao cho ban / Cac nhom can van doc tu may" kem nut "Thu lai", cac nhom Can goi lai/Thieu thong tin van hien tu may. step4 (mat mang): dai tren cung "Dang xem ban da tai — mat mang / Thay doi duoc giu tren may va gui di khi co mang lai", danh sach 46 viec van hien. Sau khi co mang lai dai tat. Khop Expected, moi ca co anh.
+    step1 (loading, request held 3s): the "Hôm nay" card has a header and a skeleton of 5 column headings and 9 grey placeholder rows. There is no real data. This matches the loading state. step2 (head of floor 2, no tasks): the card shows "0 việc" and an empty state with an inbox icon, "Hôm nay không còn việc" and a "Mở Bảng hàng" button. There is no error banner and no table. This matches the empty state. step3 (lead request returned 500): the card shows "8 việc" and a red-tinted banner "Chưa tải được lead giao cho bạn / Các nhóm căn vẫn đọc từ máy." with a "Thử lại" button. Below it is the table with the 4 column headings Việc, Vì sao hôm nay, Giá, Hành động, and the groups "Cần gọi lại 3" and "Thiếu thông tin 5" still shown. This matches the error state, with a retry button and the rest of the table kept. step4 (offline): a banner at the top reads "Đang xem bản đã tải — mất mạng / Thay đổi được giữ trên máy và gửi đi khi có mạng lại.", above the notification strip and the table (63 việc, group "Lead mới 55"). This matches the offline banner. In step3 the "Hành động" column text is cramped (for example "Đổi giá, trạng thái · Mở hồ sơ" overlaps the ⋯ button) in the Thiếu thông tin rows. This is a cosmetic point outside AC-6's four checks, noted only. All four states match the Expected.
   network_observed: n-a (driver)
   output: |
-    chay-ui.mjs --e6 trên máy thử cổng 3476 (đã tắt sau khi chạy).
-    dangTai.coKhungCho true; trong.coLoiBangHang true; loi.coThuLai true; matMang.coDai true; coMang.coDai false (không tải lại trang).
+    Các khẳng định đều đạt: dangTai.coKhungCho true; trong.coLoiBangHang true; loi.coThuLai true; matMang.coDai true; coMang.coDai false (dải tắt khi có mạng lại, không tải lại trang). Ca có mạng lại không có ảnh riêng, chỉ có dòng JSON.
 
 - eval: E7a
-  run_id: minted-lam-lai-hom-nay-dau-chu-E7a-r1
-  exit_code: 1
-  baseline: green
+  run_id: minted-lam-lai-hom-nay-dau-chu-E7a-r2
+  exit_code: 0
+  baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   output: |
-    sai: design/patterns/trang-tam.md: ngoai_le trỏ tệp không có: apps/web/src/app/(app)/proto/hom-nay-dau-chu/page.tsx
-    sai: design/patterns/trang-tam.md: ngoai_le trỏ tệp không có: apps/web/src/app/(app)/proto/o-nhan-lead/page.tsx
-    bản đồ nhóm cai-dat-san, hom-nay-dau-chu, lead-cua-toi, o-nhan-lead, toi, trang-tam đổi sau khi ghim — chấm theo bản ghim
     5 tệp giao diện ngoài bản đồ
 
 - eval: E7b
   run_id: minted-lam-lai-hom-nay-dau-chu-E7b-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.ui_lint
   verified_at: 2026-11-05T00:00:37Z
-  output: |
-    npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 24990.045792
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E8
-  run_id: minted-lam-lai-hom-nay-dau-chu-E8-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E8-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 3752.802708
+    ℹ duration_ms 2206.431791
 
 - eval: E9
-  run_id: minted-lam-lai-hom-nay-dau-chu-E9-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-E9-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
   screenshot: evidence/E9-step1.png
   observed: |
-    E9-step1.png (= E9-menu-1440.png): man Hom nay 1440, dong dau co nhan "Da nhan", nut "Da goi"; menu ⋯ mo ra ba muc "Ghi cuoc goi", "Tra lai · So khong lien lac duoc", "Mo so". E9-step2.png (= E9-hoi-lai-1440.png): hop thoai nen mo "Tra lai lead nay?" voi "Ly do: So khong lien lac duoc. Lead ve telesales de sua so va gui lai." va hai nut "Giu lai" / "Tra lai". Khop Expected (tra lai luon hoi lai; co anh trinh don ⋯ va hop hoi lai).
+    E9-step1.png: trang Hôm nay của đầu chủ (63 việc, nhóm Lead mới). Dòng đầu có nút «Đã gọi» (lead đã nhận), trình đơn ⋯ đang mở với ba mục: «Ghi cuộc gọi», «Trả lại · Số không liên lạc được», «Mở số». E9-step2.png: nền mờ, hộp hỏi lại «Trả lại lead này?» có dòng «Lý do: Số không liên lạc được. Lead về telesales để sửa số và gửi lại.» và hai nút «Giữ lại», «Trả lại». Khớp Expected: trả lại luôn hỏi lại, ảnh trình đơn ⋯ và hộp hỏi lại đủ. Rời hàng đợi sau xác nhận và mở hồ sơ đúng căn được dòng JSON e9 chứng, không có ảnh riêng.
   network_observed: n-a (driver)
   output: |
-    chay-ui.mjs --e9 trên máy thử cổng 3476 (đã tắt sau khi chạy).
-    Hộp hỏi lại có mặt; bấm Giữ lại thì lead còn; xác nhận thì lead rời hàng đợi và GET /api/v1/leads/assigned không còn mã lead; Mở hồ sơ dẫn tới địa chỉ chứa mã căn của dòng.
+    Hai khung đã lưu: E9-step1.png (trình đơn ⋯), E9-step2.png (hộp hỏi lại).
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
 
 - cmd: npm run test:hooks
-  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-test_hooks-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
+
+- cmd: npm test -w @quy-hang/ui-lint
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  exit_code: 0
+  verified_at: 2026-11-05T00:17:48Z
 
 - cmd: npm run typecheck
-  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-typecheck-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T00:00:37Z
+  verified_at: 2026-11-05T00:17:48Z
 
 - cmd: npm run lint
-  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-lint-r1
+  run_id: minted-lam-lai-hom-nay-dau-chu-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T00:00:37Z
-
-Lệnh trượt không gắn eval: không có. Hai lệnh trượt (chấm khuôn thiết kế và ui-check E1) đều đã gắn với E7a và E1.
+  verified_at: 2026-11-05T00:17:48Z
 
 ## Known limits
 
@@ -195,16 +188,19 @@ Lệnh trượt không gắn eval: không có. Hai lệnh trượt (chấm khuô
 
 ## Analyst
 
-Eval không phân biệt (xanh cả trên HEAD lẫn baseline), chỉ chứng minh bộ đo chứ không chứng minh tính năng; nên viết lại để assert hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý:
-- E2, E3, E8 (lệnh npm test -w @quy-hang/web)
-- E7b (lệnh npm test -w @quy-hang/ui-lint)
+carried tu round 1 — baseline khong do lai round nay.
 
-Baseline không đo: E1, E4, E5, E6, E9 là eval giao diện mới, chạy trên mã cũ không có nghĩa. Lệnh suite không liệt kê.
+Lệnh fail không gắn eval: ui-check:E1 (gắn E1, xem khối Evidence).
+
+Eval không phân biệt (xanh trên cả bản mới lẫn bản cũ, chứng minh khung chạy chứ chưa chứng minh tính năng; nên viết lại để assert hành vi mới hoặc xác nhận là hàng rào hồi quy có chủ ý):
+- npm test -w @quy-hang/web: E2, E3, E8
+- npm test -w @quy-hang/ui-lint: E7b
 
 ## Variance
 
-none — mọi eval nhiều lần chạy đều đồng nhất (mọi eval chỉ chạy một lần, xác định)
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E7a, E1 trượt. E7a: bản đồ nhóm đổi sau khi ghim, hai ngoại lệ trong trang-tam.md trỏ tệp proto đã xoá, 5 tệp giao diện ngoài bản đồ. E1: bảng tắt hàng tiêu đề nên không có tên bốn cột, và nhãn nút chính của dòng căn lệch bảng AC-3. Trả về giai đoạn hiện thực.
+Round 1: E1, E7a failed — nút chính của dòng căn «Thiếu thông tin» sai nhãn so với AC-3, chỗ thử E1 chưa in tên cột. Returned to implementation (commit b4e2b404).
+Round 2: E1 failed — bốn cột, hai tầng, nút viền và màu hạn đã đúng; E7a nay xanh; còn lại nhãn nút chính của năm dòng căn «Thiếu thông tin» là «Đổi giá, trạng thái · Mở hồ sơ» thay vì «Còn · giữ giá», việc kia phải nằm trong ⋯. Returned to implementation.
