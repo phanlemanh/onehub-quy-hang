@@ -165,6 +165,14 @@ evals:
     paths: [apps/web/src/lib/nhap/**, packages/core/src/import/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/import/memory/mau.test.ts hai ca có mặt và ok (giám sát duyệt lối B, G-0511-6). Ca «nhớ mẫu: cột vào trường nguồn theo lớp — chiều che thêm» — ma trận khai bằng Record<ColumnClass, …> sáu lớp, lớp của mỗi bảng thử kiểm bằng classifyColumns (6 assert); mẫu đưa cột vào ownerName được nhận và kế hoạch hợp lệ khi lớp là source, person_name, unknown (3×2 assert), bị từ chối với lý do «không mang dữ liệu nguồn mà mẫu đưa vào ownerName» khi lớp là catalog, shareable_listing, free_text (3 assert). Ca «nhớ mẫu: giá trị đã vào trường nguồn không ra trang khách hay đường xuất» — cột «Họ tên CSH» theo mẫu vào ownerName, applyPlan ra đúng tên, banRaNgoai của luật ẩn trên canMoi mang tên ấy không chứa tên ở mọi cửa ra × người nhận (CUA_RA × NGUOI_NHAN, đếm khớp). Chiều đỏ: LOP_VAO_NGUON chỉ còn source → ca person_name đỏ nêu «mẫu vào Chủ nhà phải được nhận»."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
   - id: E11
     criterion: AC-11
     executor: test
