@@ -236,6 +236,10 @@ cần cắt thêm thì nên cắt sửa tên và số ở bản đầu, chỉ gi
 - Tỷ lệ lần mở số đi từ hồ sơ so với từ dòng lead.
 - Số chủ nhà có từ hai căn trở lên hiện đúng một hồ sơ.
 
+> **Cập nhật 05/11 (luật đợt 62):** vỏ danh sách – chi tiết của 103 dựng trên lối C (cột hồ sơ kéo chia, cao hết vùng làm
+> việc, hàng 105). 103 không sửa `components/bo-cuc/**`; phần vỏ nối vào BoCuc sau khi 105 gộp. Đổi chữ Lead/Cơ hội trên
+> màn là hàng 106, sau 103.
+>
 > **Cập nhật 05/11:** chủ kho chọn «Áp ba lớp» — Lead là dấu trên người, việc là Cơ hội, hàng sinh khi cơ hội bán Lên
 > bảng (`lead-va-lien-he.md`, ADR-0021 sửa đổi 05/11). Mục 5 đã sửa theo đó.
 
