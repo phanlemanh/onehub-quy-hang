@@ -169,6 +169,13 @@ evals:
     layer: ui-observed
     cmd: config:executors.ui-check
     target: "http://localhost:3462/settings/labels"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới 039, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/labels, chụp evidence/E11-step1.png (đủ cột nhà, cột thứ hai Cài đặt với mục «Cách gọi» sáng)"
+      - "Gõ «Phí CN» ở dòng Điều kiện phí, «BP» ở dòng «Điều kiện phí · Bao phí», bấm Lưu → chụp evidence/E11-step2.png (khối «Đã lưu cách gọi»); tải lại → hai ô giữ chữ"
+      - "Gõ «Gọi 0900 000 001» vào dòng Pháp lý → chụp evidence/E11-step3.png (ô viền đỏ, câu lỗi, Lưu khoá); xoá chữ ấy"
+      - "Bấm «Trả về mặc định» ở dòng Điều kiện phí, Lưu, tải lại → chụp evidence/E11-step4.png (ô trống, mô tả «Đang dùng tên mặc định»); rồi gõ lại «Phí CN», Lưu (cho E12–E14)"
+      - "Khổ 375: mở /settings/labels → chụp evidence/E11-step5.png, không cuộn ngang"
     expected: "Đăng nhập quản trị sàn thử, mở Cài đặt › Sàn › Cách gọi: một Frame, đường dẫn «Cài đặt › Sàn [Tên] › Cách gọi», câu «Chỉ áp cho sàn [Tên]»; hai nhóm «Tên trường» và «Giá trị riêng»; gõ «Phí CN» ở dòng Điều kiện phí, «BP» ở dòng Đã gồm phí, bấm Lưu → câu «Đã lưu cách gọi»; tải lại thấy hai ô giữ chữ; gõ \"0900 000 001\" vào một ô → ô viền đỏ, câu lỗi, Lưu khoá; xoá chữ lỗi, bấm «Trả về mặc định» ở dòng Điều kiện phí, Lưu, tải lại → ô ấy trống, mô tả «Đang dùng tên mặc định». Chụp màn 1440 và 390."
     paths: ["apps/web/src/app/(app)/settings/labels/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -179,6 +186,11 @@ evals:
     layer: ui-observed
     cmd: config:executors.ui-check
     target: "http://localhost:3462/inventory"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới 039, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11 (sàn còn «Phí CN», «BP»). Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /inventory, chờ bảng tải xong → chụp evidence/E12-step1.png: tiêu đề cột «Phí CN», căn bao phí hiện «BP»"
+      - "Mở ô lọc của cột Phí CN → chụp evidence/E12-step2.png: lựa chọn «BP» và «Không bao phí»; chọn «BP» → số căn trên đầu bảng bằng số căn bao phí"
+      - "Khổ 375: mở /inventory → chụp evidence/E12-step3.png: thẻ căn bao phí hiện «BP»"
     expected: "Sau E11 (sàn đã đặt «Phí CN», «BP»), đầu chủ mở Bảng hàng: tiêu đề cột «Phí CN», căn bao phí hiện «BP»; mở ô lọc cột phí thấy lựa chọn «BP»; khổ 390 thẻ căn hiện «BP». Chụp 1440 và 390."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -189,6 +201,11 @@ evals:
     layer: ui-observed
     cmd: config:executors.ui-check
     target: "http://localhost:3462/s/{code}"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới 039, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11. Đăng nhập dau-khach@mau.quy-hang.test; trong trang, dùng fetch: GET /api/v1/listings (hay đọc Bảng hàng) lấy id một căn Đang bán bao phí; POST /api/v1/prospects {displayName:\"[Tên] Khách thử 45\", phone:\"0900 000 045\", need:\"purchase\", criteria:{}} lấy id; POST /api/v1/shares {audience:\"client\", prospectId:<id>, listingIds:[<id căn>]} lấy code"
+      - "Khổ 390: mở /s/<code> (không cần phiên) → chụp evidence/E13-step1.png: «BP» cạnh giá"
+      - "Mở chi tiết căn (?can=0) → chụp evidence/E13-step2.png: dòng nhãn Pháp lý (tên riêng nếu sàn đặt, không thì «Pháp lý»); không chữ nào của nhãn lý do ngừng"
     expected: "Lần gửi khách riêng của sàn thử gồm một căn bao phí: trang /s/<mã> hiện «BP» cạnh giá; mở chi tiết thấy nhãn riêng của Pháp lý; không có chữ nào của nhãn lý do ngừng. Chụp 390."
     paths: ["apps/web/src/app/s/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -199,6 +216,9 @@ evals:
     layer: ui-observed
     cmd: config:executors.ui-check
     target: "http://localhost:3462/inventory"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới 039, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11. Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /inventory, tích hai căn (một bao phí), mở Phát hàng (nút hay /exports/new), chọn người nhận nhóm môi giới → chụp evidence/E14-step1.png: khung xem trước có tiêu đề cột «Phí CN», ô căn bao phí «BP», không cột lý do ngừng"
     expected: "Sau E11 (sàn đặt «Phí CN», «BP»), đầu chủ tích hai căn trên Bảng hàng, mở Phát hàng, chọn người nhận nhóm môi giới: khung xem trước của hộp thoại có tiêu đề cột «Phí CN» và ô căn bao phí «BP»; không có cột lý do ngừng. Chụp 1440."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
