@@ -55,3 +55,27 @@ khẩu» trả 400 `code-type-not-allowed`, không gửi thư, không tính vào
 ba đường quên và đặt lại mật khẩu (kho không có mật khẩu), hai đường đổi email (chưa có đổi email) — `AUTH_DISABLED_PATHS`.
 Hằng ở `packages/api/src/auth/constants.ts`; bảng xếp loại mọi đường của plugin ở `packages/api/src/auth/duong-gui-ma.ca.ts`
 — nâng better-auth mà có đường hay lối gửi mã chưa xếp loại thì bài kiểm đỏ.
+
+## Bổ sung 04/11 — mật khẩu do sàn cấp
+
+Chủ kho chọn lối A ở bản đánh giá `docs/plan/danh-gia-dang-nhap-tai-khoan.md` (04/11), qua Cổng Đáng («build»), Cổng Phạm
+vi (05/11, sửa độ dài tối thiểu còn 8 ký tự) và duyệt kế hoạch — hồ sơ `_acceptance/dang-nhap-mat-khau/`. Mã 6 số qua
+email vẫn là cửa thứ nhất, không đổi gì. Thêm cửa thứ hai:
+
+- **Mật khẩu tạm do quản trị sàn cấp** ở màn Người dùng: máy sinh 16 ký tự, hiện đúng một lần, hết hạn sau 72 giờ, thu
+  mọi phiên của người được cấp. Chỉ cấp được cho người **chỉ thuộc sàn mình**; luật nằm ở hàm cơ sở dữ liệu
+  `app.cap_mat_khau_tam` (migration 034), có khoá tư vấn chung với lời mời vào sàn. Mật khẩu có gốc sàn cấp thôi dùng khi
+  người vào một sàn khác sàn đã cấp; mật khẩu người tự đổi ở Cá nhân giữ nguyên.
+- **Đăng nhập bằng mật khẩu tạm không tạo phiên** — chỉ cấp mã đổi (15 phút) cho màn «Đặt mật khẩu mới»; mật khẩu tạm
+  dùng lại được tới khi đặt xong hay hết hạn. Đặt xong mới có phiên (30 ngày như mã 6 số).
+- **Luật mật khẩu**: 8–128 ký tự Unicode, nhận dấu cách và chữ có dấu, không luật trộn loại, không ép đổi định kỳ; từ
+  chối mật khẩu phổ biến (danh sách đóng gói) và chuỗi dễ đoán theo ngữ cảnh. NIST SP 800-63B-4 đòi 15 ký tự khi mật khẩu
+  là yếu tố duy nhất; phần bù là giới hạn thử và danh sách chặn.
+- **Giới hạn thử ở cơ sở dữ liệu**: 5 lần sai / 15 phút theo email (email lạ cũng đếm) thì chờ; 20 lần sai liên tiếp thì
+  vô hiệu tới khi cấp lại hay tự đặt lại ở Cá nhân. Email lạ và mật khẩu sai nhận cùng câu lỗi, cùng mã.
+- **Quên mật khẩu thì xin quản trị cấp lại** — không có đường quên mật khẩu qua thư. Đường lõi của better-auth chạm mật
+  khẩu, đăng ký hay thư xác minh trả 404 (`AUTH_DISABLED_PATHS`); `/sign-in/email` đi đường bọc của Quỹ hàng, gọi thẳng
+  thư viện thì 404. Bảng xếp loại: `packages/api/src/auth/duong-mat-khau.ca.ts`.
+- **Đổi mật khẩu ở Cá nhân** thu mọi phiên khác; «Báo mất máy» vô hiệu mật khẩu. Mỗi lần cấp, đổi, vô hiệu, khoá ghi một
+  dòng `identity.password_events`, không bao giờ ghi mật khẩu.
+

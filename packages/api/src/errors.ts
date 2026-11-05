@@ -81,6 +81,19 @@ export const API_ERRORS = {
   importUndoIncomplete: { code: "import-undo-incomplete", status: 503 },
   // Xuất bảng hàng (hàng 43): chỉ đầu chủ, trưởng nhóm.
   exportRoleRequired: { code: "export-role-required", status: 403 },
+  // Mật khẩu do sàn cấp (hàng dang-nhap-mat-khau) — hợp đồng viết mã bằng gạch dưới, kho giữ gạch nối. Email lạ và mật khẩu sai chung
+  // một mã; các mã riêng chỉ trả khi mật khẩu đúng.
+  invalidEmailOrPassword: { code: "invalid-email-or-password", status: 401 },
+  passwordRateLimited: { code: "password-rate-limited", status: 429 },
+  passwordDisabled: { code: "password-disabled", status: 403 },
+  tempPasswordExpired: { code: "temp-password-expired", status: 403 },
+  changeTokenInvalid: { code: "change-token-invalid", status: 403 },
+  invalidCurrentPassword: { code: "invalid-current-password", status: 403 },
+  userInOtherCompany: { code: "user-in-other-company", status: 409 },
+  passwordTooShort: { code: "password-too-short", status: 400 },
+  passwordTooLong: { code: "password-too-long", status: 400 },
+  passwordCommon: { code: "password-common", status: 400 },
+  passwordGuessable: { code: "password-guessable", status: 400 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

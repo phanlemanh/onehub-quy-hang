@@ -9,7 +9,11 @@ import type { PushPayload } from "@quy-hang/core/push";
 import { loaiMay, trinhDuyet } from "@quy-hang/core/thiet-bi";
 import type { ApiDeps } from "../app";
 import { listCompanies } from "../auth/company";
+import { hashPassword, verifyPassword } from "better-auth/crypto";
+import { loiLuat } from "../auth/dang-nhap-mat-khau";
 import { ghiDau } from "../auth/may-bi-bao";
+import { chuanHoa, kiemMatKhau } from "../auth/mat-khau";
+import { coMatKhauDung, datTuDoi, docTheoNguoi, thuPhien, voHieuBaoMat } from "../auth/trang-thai-mat-khau";
 import { withCompany } from "../db";
 import { API_ERRORS } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
@@ -119,8 +123,39 @@ export function registerDeviceRoutes(api: OpenAPIHono, deps: ApiDeps) {
           }
         });
       }
+      // Máy mất có thể đang nhớ mật khẩu: mật khẩu thôi dùng, người vào lại bằng mã rồi đặt mới (dang-nhap-mat-khau).
+      await voHieuBaoMat(identityPool, v.userId);
       if (khac.length > 0) await auth.api.revokeOtherSessions({ headers });
       return c.json({ revoked: khac.length }, 200);
     },
   );
+
+  // Đặt hay đổi mật khẩu của chính mình (dang-nhap-mat-khau, AC-7). Có mật khẩu dùng được thì phải đúng mật khẩu hiện
+  // tại; chưa có, mật khẩu tạm hay đã vô hiệu thì đặt không cần — người đã vào bằng mã. Thu mọi phiên khác, giữ phiên này.
+  // Thân mang mật khẩu: đọc tay, không in.
+  api.put("/api/v1/me/password", async (c) => {
+    const headers = c.req.raw.headers;
+    const phien = await auth.api.getSession({ headers });
+    if (!phien) return c.json({ error: API_ERRORS.unauthenticated.code }, 401);
+    const than: unknown = await c.req.json().catch(() => null);
+    const moi = (than as { newPassword?: unknown } | null)?.newPassword;
+    const hienTai = (than as { currentPassword?: unknown } | null)?.currentPassword;
+    if (typeof moi !== "string" || moi.length > 1024 || (hienTai !== undefined && typeof hienTai !== "string")) {
+      return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
+    }
+    const tk = await docTheoNguoi(identityPool, phien.user.id);
+    if (tk && coMatKhauDung(tk)) {
+      const dung = typeof hienTai === "string" && hienTai.length <= 1024 && (await verifyPassword({ hash: tk.hash!, password: chuanHoa(hienTai) }));
+      if (!dung) return c.json({ error: API_ERRORS.invalidCurrentPassword.code }, 403);
+    }
+    const pw = chuanHoa(moi);
+    const kq = kiemMatKhau(pw, phien.user.email);
+    if (!kq.ok) {
+      const l = loiLuat(kq.code);
+      return c.json({ error: l.code }, l.status as 400);
+    }
+    await datTuDoi(identityPool, { userId: phien.user.id, hash: await hashPassword(pw) });
+    await thuPhien(identityPool, phien.user.id, phien.session.token);
+    return c.json({ password: "co" as const }, 200);
+  });
 }

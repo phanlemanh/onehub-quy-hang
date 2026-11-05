@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
+import { toast, Toaster } from "sonner";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { dangXuatTrenMay } from "./dang-xuat-tren-may";
+import { CHUA_DANG_XUAT, dangXuatTrenMay } from "./dang-xuat-tren-may";
+
+const KHUNG_DANG_XUAT = "dang-xuat";
 
 // Menu tài khoản — chuyển thể NavUser của app-shell-8: tên sàn đang làm, sáng/tối, đăng xuất.
 const THEMES = [
@@ -81,8 +84,26 @@ export function AccountMenuKhung({
 }) {
   const router = useRouter();
   const initials = email.slice(0, 2).toUpperCase();
+  // Máy chủ lỗi hay mất mạng thì ở lại màn và báo kèm «Thử lại» (luật 55); thử lại không hỏi xoá kho lần hai.
+  const chayDangXuat = async (daXoa: boolean) => {
+    const kq = await dangXuatTrenMay({
+      dangXuat,
+      daXoa,
+      than: thanDangXuat,
+      goi: fetch,
+      ve: () => {
+        router.replace("/login");
+        router.refresh();
+      },
+    });
+    if (kq === "loi") {
+      toast.error(CHUA_DANG_XUAT, { toasterId: KHUNG_DANG_XUAT, action: { label: "Thử lại", onClick: () => void chayDangXuat(true) } });
+    }
+  };
 
   return (
+    <>
+    <Toaster id={KHUNG_DANG_XUAT} position="bottom-center" />
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Tài khoản" />}>
         <Avatar className="size-6 rounded-md">
@@ -119,17 +140,9 @@ export function AccountMenuKhung({
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
-            onClick={async () => {
+            onClick={() => {
               // Còn thay đổi chưa gửi thì hỏi; đăng xuất luôn xoá kho trên máy của người này (luật 32).
-              await dangXuatTrenMay({
-                dangXuat,
-                than: thanDangXuat,
-                goi: fetch,
-                ve: () => {
-                  router.replace("/login");
-                  router.refresh();
-                },
-              });
+              void chayDangXuat(false);
             }}
           >
             <LogOutIcon aria-hidden="true" />
@@ -138,5 +151,6 @@ export function AccountMenuKhung({
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   );
 }

@@ -1,0 +1,4 @@
+# phá-thử E15: bỏ dòng dang-nhap-mat-khau ở Tham chiếu §12
+✖ tài liệu: ADR, khuôn, Tham chiếu (0.878167ms)
+✖ tài liệu: ADR, khuôn, Tham chiếu (0.878167ms)
+  AssertionError [ERR_ASSERTION]: §12 thiếu dòng dang-nhap-mat-khau

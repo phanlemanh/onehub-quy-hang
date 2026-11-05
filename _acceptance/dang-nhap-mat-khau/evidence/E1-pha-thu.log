@@ -1,0 +1,7 @@
+# phá-thử E1: đường cấp in thân trả lời ra nhật ký
+✖ cấp mật khẩu: không bản rõ ở đâu (63.029667ms)
+✖ failing tests:
+✖ cấp mật khẩu: không bản rõ ở đâu (63.029667ms)
+  AssertionError [ERR_ASSERTION]: mật khẩu tạm lọt vào nhật ký
+    actual: false,
+    expected: true,

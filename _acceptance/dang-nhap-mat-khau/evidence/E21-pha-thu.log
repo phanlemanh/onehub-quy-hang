@@ -1,0 +1,7 @@
+# phá-thử E21: đường đặt lần đầu in thân yêu cầu khi từ chối
+✖ nhật ký: chín lời gọi mang mật khẩu không in mật khẩu (528.484875ms)
+✖ failing tests:
+✖ nhật ký: chín lời gọi mang mật khẩu không in mật khẩu (528.484875ms)
+  AssertionError [ERR_ASSERTION]: đặt lần đầu từ chối 400: nhật ký có chuỗi bí mật
+    actual: 'password/first từ chối {"changeToken":"[đã che]","newPassword":"ngắn!"}',
+    expected: undefined,
