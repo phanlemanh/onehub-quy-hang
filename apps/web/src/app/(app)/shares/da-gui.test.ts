@@ -70,7 +70,7 @@ test("đã gửi: trạng thái màn", () => {
   ];
   assert.equal(BANG.length, 4, "số dòng bảng viết trước");
   for (const [tt, mong] of BANG) assert.ok(renderToStaticMarkup(h(DanhSachDaGui, { tt })).includes(mong), `${tt.kieu}: thiếu «${mong}»`);
-  assert.ok(renderToStaticMarkup(h(DanhSachDaGui, { tt: { kieu: "xong", ds: [] } })).includes('href="/inventory/cards"'), "trống mà thiếu lối đi gửi");
+  assert.ok(renderToStaticMarkup(h(DanhSachDaGui, { tt: { kieu: "xong", ds: [] } })).includes('href="/inventory"'), "trống mà thiếu lối đi gửi");
   assert.deepEqual([CHU.trong, CHU.loi, CHU.khongVai], ["Chưa gửi link nào", "Chưa tải được — thử lại", "Đầu khách và trưởng nhóm xem được Đã gửi"]);
 });
 
