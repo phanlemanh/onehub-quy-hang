@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 8b00788735be1d6b51211631e460826d539cfe37
+verified_commit: 1588470abe71c69414eebaa7c6527950d53901a3
 human_signoff:
 ---
 
@@ -254,3 +254,7 @@ none — every multi-run eval is uniform
 
 Round 1: E10b, E10d failed — E10b không đạt ở lượt chấm đầu (cơ hội trỏ hồ sơ căn lệch tham số), E10d báo oan của kit#485 chưa được khai; một mục trong hợp đồng. Returned to implementation.
 Round 2: toàn bộ eval đạt (E1b, E6, E9 mang từ round 1); E10b chạy lại và đạt, E10d đạt có giới hạn kèm E10e xanh. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main trước Cổng Bằng chứng
+run_id: repin-20261105T063220Z-26827
+sha: 1588470abe71c69414eebaa7c6527950d53901a3 · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10d=1 · ngoài làn máy: E10b
