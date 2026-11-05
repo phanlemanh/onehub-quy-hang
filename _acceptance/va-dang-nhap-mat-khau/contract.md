@@ -5,7 +5,7 @@ slug: va-dang-nhap-mat-khau
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: docs/superpowers/specs/2026-11-05-va-dang-nhap-mat-khau-design.md
@@ -65,3 +65,9 @@ Cổng Bằng chứng 05/11.
 - Vùng: `ranh_gioi` của hàng cộng phần khai ở Cổng Phạm vi (migration `packages/db/migrations/038_*.sql`, bộ kiểm cách ly
   `packages/db/tests/isolation.test.mjs`, đường đổi `packages/api/src/me/routes.ts`, bộ kiểm cơ sở dữ liệu
   `packages/api/test-db/va-dang-nhap-mat-khau/**`, tài liệu ADR-0005 và Tham chiếu).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: người đã bị khoá mật khẩu vì lý do khác (báo mất máy, vào sàn khác) mà gõ sai đủ 20 lần bị ghi nhầm là «khoá do
+    sai 20 lần» và mất các phiên đăng nhập bằng mã mở sau đó.
+  - Ngoài-2: ở lần gõ sai mật khẩu hiện tại thứ 20 khi đổi, người bị đăng xuất mà màn vẫn báo «Mật khẩu hiện tại không đúng»;
+    thử lại chỉ thấy «Có lỗi, thử lại sau ít phút».
+  - Ngoài-3: bài kiểm màn đăng nhập (khung.test.ts) dò chữ trong mã nguồn, có thể xanh dù màn thật hiển thị sai trạng thái.
