@@ -29,6 +29,7 @@ import {
   type BanXuat,
   type MauXuat,
 } from "@quy-hang/core/export";
+import type { TuVung } from "@quy-hang/core/labels";
 import type { NguoiNhan } from "@quy-hang/core/redaction";
 
 import { HopBuoc, type BuocHop } from "@/components/khoi/dialog-5/hop-buoc";
@@ -152,6 +153,8 @@ export type MoXuat = {
   today: string;
   tenSan: string;
   tenNguoiGui: string;
+  /** Cách gọi riêng của sàn (hàng 45). */
+  tuVung?: TuVung;
 };
 
 export function HopThoaiXuat({ mo, onDong }: { mo: MoXuat; onDong: () => void }) {
@@ -167,7 +170,7 @@ export function HopThoaiXuat({ mo, onDong }: { mo: MoXuat; onDong: () => void })
   const dung = useMemo((): { ban: BanXuat } | { loi: string } => {
     void lanDung;
     try {
-      return { ban: banXuatTuDong(mo.dong, { mau, nguoiNhan, cot: mo.cot, today: mo.today, tenSan: mo.tenSan, tenNguoiGui: mo.tenNguoiGui }) };
+      return { ban: banXuatTuDong(mo.dong, { mau, nguoiNhan, cot: mo.cot, today: mo.today, tenSan: mo.tenSan, tenNguoiGui: mo.tenNguoiGui, tuVung: mo.tuVung }) };
     } catch (e) {
       return { loi: e instanceof Error ? e.message : String(e) };
     }
