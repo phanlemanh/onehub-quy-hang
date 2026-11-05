@@ -23,6 +23,7 @@ import { NutHoiDauChu } from "../nut-hoi-dau-chu";
 import { KhongNhieu, LoiTaiDau, NutDong, NutToanMan, PhanLichSu, type HanhDongHoSo, type KheHoSo } from "../than-cot";
 import { CapGiaTri, doiUrl, Muc, ngay } from "../than-chung";
 import { AnhLon, useAnhCan, type TrangThaiAnh } from "./anh-lon";
+import { ChupAnh, useSoDaTai } from "./chup-anh";
 
 /** Số việc lịch sử thân điện thoại trình trước «Xem cả». */
 export const LICH_SU_GON = 3;
@@ -98,7 +99,11 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
   return (
     <div className="flex flex-col" data-slot="ho-so-can" data-than="dien-thoai">
       <div className="flex flex-col gap-4 p-4">
-        <AnhLon anh={anh} co={m.co} urlAnh={urlAnh} />
+        <div className="relative">
+          <AnhLon anh={anh} co={m.co} urlAnh={urlAnh} />
+          {/* Chụp ảnh khi đi xem nhà (hàng 41): chỉ khi API ảnh cho sửa — người giữ căn và trưởng nhóm. */}
+          {anh.kind === "co" && anh.ds.suaDuoc && !chuaMa ? <ChupAnh toa={m.toa} ma={m.ma} thayNoiBo={anh.ds.noiBo === "thay"} /> : null}
+        </div>
         <div className="flex flex-col gap-1" data-khoi="ten">
           <div className="flex min-h-7 items-center justify-between gap-2">
             <Badge variant={m.dangXem.dangMo ? "success-light" : "outline"}>{m.dangXem.trangThai}</Badge>
@@ -222,7 +227,7 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
 export function ThanDienThoaiCan({ m, khe, hd }: { m: MoHinhHoSo; khe: KheHoSo; hd: HanhDongHoSo }) {
   const toa = m.kind === "co" ? m.toa : "";
   const ma = m.kind === "co" && !m.chuaMa ? m.ma : null;
-  const anh = useAnhCan(toa, ma);
+  const anh = useAnhCan(toa, ma, useSoDaTai(toa, ma));
   const urlAnh = (id: string) => nguonApi(toa, ma ?? "").urlAnh(id, "original");
   return <ThanDienThoai m={m} khe={khe} hd={hd} anh={anh} urlAnh={urlAnh} />;
 }

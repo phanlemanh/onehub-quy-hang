@@ -73,8 +73,8 @@ export function AnhLon({ anh, co, urlAnh }: { anh: TrangThaiAnh; co: Pick<CoHoSo
   );
 }
 
-/** Danh sách ảnh của căn, đọc một lần khi mở hồ sơ hay đổi căn — cùng đường API của mục Ảnh. */
-export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
+/** Danh sách ảnh của căn, đọc khi mở hồ sơ, đổi căn hay có ảnh chụp vừa tải lên — cùng đường API của mục Ảnh. */
+export function useAnhCan(toa: string, ma: string | null, lanTai = 0): TrangThaiAnh {
   const [kq, setKq] = useState<{ khoa: string; anh: TrangThaiAnh } | null>(null);
   const khoa = `${toa}|${ma ?? ""}`;
   useEffect(() => {
@@ -89,7 +89,8 @@ export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
     return () => {
       huy = true;
     };
-  }, [toa, ma, khoa]);
+    // lanTai: ảnh vừa chụp lên máy chủ (hàng 41) — đọc lại để khung lớn có ảnh mới, giữ bản cũ tới khi có bản mới.
+  }, [toa, ma, khoa, lanTai]);
   if (!ma) return { kind: "chua-ma" };
   return kq?.khoa === khoa ? kq.anh : { kind: "dang-tai" };
 }
