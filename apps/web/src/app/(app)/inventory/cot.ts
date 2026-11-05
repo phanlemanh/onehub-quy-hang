@@ -107,24 +107,26 @@ export const COT_MAC_DINH: readonly CotId[] = COT.map((c) => c.id).filter((id) =
 export const DA_ROI_SAN = "Đã rời sàn";
 
 /**
- * Danh bạ đầu chủ của sàn: mã người → tên hiển thị. `null` khi máy chưa đọc được danh bạ (chưa tải, mất mạng, vai không
- * được đọc) — lúc ấy không kết luận «Đã rời sàn».
+ * Danh bạ thành viên của sàn: mã người → tên hiển thị (`GET /api/v1/company/member-names`, mọi vai, hàng 105). `null` khi
+ * máy chưa có danh bạ nào (lần mở đầu chưa đọc xong, chưa từng đọc được) — lúc ấy không kết luận «Đã rời sàn».
  */
 export type DanhBaDauChu = ReadonlyMap<string, string> | null;
 
-/** Mã ngắn của người khi chưa biết tên — như «Hôm nay» của trưởng nhóm (`maNgan`). */
-const maNgan = (userId: string) => userId.slice(0, 8);
+/** Chưa có danh bạ trên máy: ô chờ, không đoán. */
+export const CHO_DANH_BA = "…";
+/** Thành viên chưa đặt tên hiển thị. */
+export const CHUA_DAT_TEN = "Chưa đặt tên";
 
 /**
- * Chữ ô «Đầu chủ»: chưa gán → «—»; gán người có trong danh bạ → tên (tên trống thì mã ngắn); gán người không còn trong
- * danh bạ → «Đã rời sàn»; chưa đọc được danh bạ → mã ngắn của người giữ.
+ * Chữ ô «Đầu chủ»: chưa gán → «—»; gán thành viên của sàn → tên; gán người không còn là thành viên → «Đã rời sàn»; máy
+ * chưa có danh bạ → «…».
  */
 export function chuDauChu(listAgentKey: string | null | undefined, danhBa: DanhBaDauChu): string {
   if (!listAgentKey) return "—";
-  if (danhBa === null) return maNgan(listAgentKey);
+  if (danhBa === null) return CHO_DANH_BA;
   const ten = danhBa.get(listAgentKey);
   if (ten === undefined) return DA_ROI_SAN;
-  return ten.trim() || maNgan(listAgentKey);
+  return ten.trim() || CHUA_DAT_TEN;
 }
 
 /** «4,65 tỷ» · «950 triệu» · «—». */

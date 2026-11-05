@@ -293,7 +293,7 @@ export function BangHang({
   const idx = useMemo(() => chiMuc(danhMuc), [danhMuc]);
   // Cột «Đầu chủ» (hàng 105): người giữ của hàng đối với danh bạ đầu chủ của sàn; lượt kéo đổi người giữ thì ô đổi theo.
   const nguoiGiu = useMemo(() => hang.map((l) => l.listAgentKey), [hang]);
-  const danhBa = useDanhBaDauChu(nguoiGiu);
+  const danhBa = useDanhBaDauChu(san, nguoiGiu);
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap), [dong, loc, sap]);
   const loat = useSuaHangLoat(dong, daLoc);

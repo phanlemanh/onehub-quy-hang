@@ -62,10 +62,10 @@ describe("cột Đầu chủ", () => {
     assert.notEqual(oCua("u-da-nghi"), oCua(null), "người đã rời sàn không được lẫn với căn chưa gán");
   });
 
-  it("cột Đầu chủ: chưa đọc được danh bạ thì không kết luận «Đã rời sàn»", () => {
-    assert.equal(chuDauChu("u-da-nghi-0000", null), "u-da-ngh");
+  it("cột Đầu chủ: chưa có danh bạ trên máy thì không kết luận «Đã rời sàn»", () => {
+    assert.equal(chuDauChu("u-da-nghi", null), "…");
     assert.equal(chuDauChu(null, null), "—");
-    assert.equal(chuDauChu("u-dau-chu-1", new Map([["u-dau-chu-1", " "]])), "u-dau-ch");
+    assert.equal(chuDauChu("u-dau-chu-1", new Map([["u-dau-chu-1", " "]])), "Chưa đặt tên");
     // Dòng dựng ngoài Bảng hàng (không trao danh bạ) không có cột ấy.
     assert.ok(!("dau-chu" in ghepDanhMuc(hang("u-dau-chu-1"), new Map())));
   });

@@ -68,9 +68,10 @@ export function kiemTaiLieu(doc, adrGoc) {
   if (!/^bo_cuc: danh-sach-chi-tiet$/m.test(daoBangHang)) loi.push(`${BANG_HANG}: bo_cuc không là danh-sach-chi-tiet`);
 
   // Hỏi-2 chốt giữ cứng → Sổ điểm biến thiên có một dòng điều khoá cho kiểu mở chi tiết, kèm lý do.
+  // Chỉ đọc dòng chốt Hỏi-2 — dòng khác của sổ không phải việc của bài này.
   const hoi2 = doc(SO_QUYET_DINH)
     .split('\n')
-    .filter(Boolean)
+    .filter((d) => d.includes('"decision":"Hỏi-2'))
     .map((d) => JSON.parse(d))
     .find((d) => typeof d.decision === 'string' && d.decision.startsWith('Hỏi-2'));
   if (hoi2 && /giữ cứng/.test(hoi2.decision)) {
