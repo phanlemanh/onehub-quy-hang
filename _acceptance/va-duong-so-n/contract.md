@@ -5,9 +5,9 @@ slug: va-duong-so-n
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: verified
-approved_by: Manh Phan
-approved_at: 2026-11-06
+status: draft
+approved_by:
+approved_at:
 design_doc: _acceptance/va-duong-so-n/design.md
 ---
 
@@ -43,6 +43,9 @@ Source input: `docs/plan/lo-trinh.json` hàng va-duong-so-n · `_acceptance/va-d
 - AC-5: Given 86 cách viết của bộ thử hàng 73 và ảnh khoá chụp bằng bộ đọc trước khi vá (`anh-truoc-va.json`), When đọc bằng
   bộ đọc sau vá, Then mọi cách viết ra đúng số nhà, tên đường, tên đường chuẩn hoá, khoá và trạng thái của ảnh; bộ kiểm của
   hàng 75 vẫn xanh trong cùng lượt.
+- AC-6: Given chữ cái «D» đứng một mình trước «số N» mà không phải viết tắt của «Đường» («Lô D số 12 Nguyễn Trãi», «Khu D
+  số 12 Nguyễn Trãi», «Block D, số 12 Nguyễn Trãi», «lô d số 12 Nguyễn Trãi»), When tách số nhà, Then số nhà là 12 như bộ đọc
+  hàng 75; còn «Đ. số 5», «Đ số 5», «đ số 5» (viết tắt bằng chữ «đ» hay có dấu chấm) vẫn là tên đường số.
 
 ## Coverage
 
@@ -81,3 +84,6 @@ Core: A×B ở AC-1 · B(không số) ở AC-2 · C×khác đường ở AC-3 ·
 
 - Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Hiện người dùng không gặp gì. Về sau, khi gói được mở ra, một lập trình viên có thể dùng nhầm hàm phá thử và dựng lại lỗi «Đường số N» bị đọc thành số nhà. — `packages/core/src/address/chuan-hoa.ts`
 - Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Cùng một đường viết «số 05 nối dài» hay «số 5 nối dài» có thể ra hai khoá, nên có thể bị coi là hai đường khác nhau khi kiểm trùng. Hai nhà khác nhau không bao giờ bị gộp nhầm. — `packages/core/src/address/chuan-hoa.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-2: Hàm dùng để phá thử của bộ tách số nhà đang lộ ra ngoài gói địa chỉ; cần ẩn trước khi hàng 76 mở gói cho bên gọi.
+  - Ngoài-3: «Đường số 05 nối dài» và «Đường số 5 nối dài» ra hai khoá khác nhau — một nhà có thể ra hai khoá, không bao giờ hai nhà ra một khoá.

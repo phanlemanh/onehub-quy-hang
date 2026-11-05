@@ -215,3 +215,35 @@ test("AC-5 khoá cũ không đổi — phá thử: ảnh bản sao đổi khoá 
   anh[0]!.khoa = "79|26740|mau 1|46";
   assert.deepEqual(kiemAnh(anh), ["đổi so với trước vá: DC-001: khoa"]);
 });
+
+// ---------- AC-6: chữ cái «D» đứng một mình không phải tiền tố đường ----------
+
+const LO_D = ["Lô D số 12 Nguyễn Trãi", "Khu D số 12 Nguyễn Trãi", "Block D, số 12 Nguyễn Trãi", "lô d số 12 Nguyễn Trãi"];
+const VIET_TAT_D = ["Đ. số 5", "Đ số 5", "đ số 5"];
+
+function kiemLoD(tach: BoTach): string[] {
+  const loi: string[] = [];
+  for (const chu of LO_D) {
+    const r = tach(chu);
+    const cu = boTruocVa(chu);
+    if (r.streetNumber !== "12" || r.streetName !== cu.streetName) loi.push(`mất số nhà sau chữ D: ${chu}`);
+  }
+  for (const duong of VIET_TAT_D) {
+    const r = tach(`12 ${duong}`);
+    if (r.streetNumber !== "12" || r.streetName !== duong) loi.push(`viết tắt «đ» không còn là tên đường: ${duong}`);
+  }
+  return loi;
+}
+
+test("AC-6 chữ cái D đứng một mình không phải tiền tố đường", () => {
+  assert.deepEqual(kiemLoD(tachSoNha), []);
+  const kq = docDiaChi(`Lô D số 12 Nguyễn Trãi${XA}`);
+  assert.equal(kq.streetNumber, "12");
+  assert.equal(kq.trangThai, "chuan");
+  console.log(`AC-6: ${LO_D.length} địa chỉ lô/khu/block D, ${VIET_TAT_D.length} viết tắt «đ»`);
+});
+
+test("AC-6 chữ cái D — phá thử: bộ tách nhận mọi «d» là tiền tố thì đỏ", () => {
+  const boNhanMoiD: BoTach = (phan) => tachSoNhaVoi(phan, (t) => ["duong", "pho", "d", "dg"].includes(t));
+  assert.deepEqual(kiemLoD(boNhanMoiD), LO_D.map((c) => `mất số nhà sau chữ D: ${c}`));
+});

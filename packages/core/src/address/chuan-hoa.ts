@@ -20,9 +20,14 @@ export function dangSo(s: string): string {
 
 const TIEN_TO_DUONG = new Set(["duong", "pho", "d", "dg"]);
 
-/** Chữ (dạng so sánh) là tiền tố đường: «đường», «phố», «đ», «đg». */
-export function laTienToDuong(t: string): boolean {
-  return TIEN_TO_DUONG.has(t);
+/**
+ * Chữ (dạng so sánh) là tiền tố đường: «đường», «phố», «đ», «đg». Khi có chữ gốc, «d» trơn chỉ là tiền tố khi viết bằng chữ
+ * «đ» hay có dấu chấm («Đ.», «đ», «D.») — chữ cái «D» đứng một mình là ký hiệu lô, khu, block («Lô D số 12»).
+ */
+export function laTienToDuong(t: string, goc?: string): boolean {
+  if (!TIEN_TO_DUONG.has(t)) return false;
+  if (t === "d" && goc !== undefined) return /^[đĐ]/.test(goc) || goc.endsWith(".");
+  return true;
 }
 
 /** Số của đường số: một con số, có thể kèm một chữ cái — «5», «05», «5a». */
@@ -77,7 +82,7 @@ export function tachSoNha(phan: string): TachSoNha {
  * Bộ tách với hàm nhận tiền tố đường truyền vào — `tachSoNha` dùng bộ tiền tố thật; hàm luôn sai cho lại đúng hành vi
  * trước khi vá «Đường số N» (bộ kiểm dùng để phá thử).
  */
-export function tachSoNhaVoi(phan: string, laTienTo: (t: string) => boolean): TachSoNha {
+export function tachSoNhaVoi(phan: string, laTienTo: (t: string, goc: string) => boolean): TachSoNha {
   const goc = phan.replace(/,/g, " ").replace(/\s*\/\s*/g, "/").trim().split(/\s+/).filter(Boolean);
   const so = goc.map((t) => dangSo(t));
   const dung = new Array<boolean>(goc.length).fill(false);
@@ -89,7 +94,7 @@ export function tachSoNhaVoi(phan: string, laTienTo: (t: string) => boolean): Ta
   for (let i = 0; i < so.length; i++) {
     const t = so[i]!;
     const ke = so[i + 1];
-    const truocLaTienTo = i > 0 && laTienTo(so[i - 1]!);
+    const truocLaTienTo = i > 0 && laTienTo(so[i - 1]!, goc[i - 1]!);
     if ((t === "so" || t === "sn") && !truocLaTienTo && ke !== undefined && DUONG_SO.test(ke)) {
       soNha = goc[i + 1]!;
       dung[i] = dung[i + 1] = true;

@@ -45,3 +45,11 @@ evals:
     paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-6 chữ cái D đứng một mình không phải tiền tố đường» xanh: 4 địa chỉ viết trước («Lô D số 12 Nguyễn Trãi», «Khu D số 12 Nguyễn Trãi», «Block D, số 12 Nguyễn Trãi», «lô d số 12 Nguyễn Trãi») → streetNumber «12» và streetName bằng đúng kết quả của bộ tách trước vá (tachSoNhaVoi(phan, () => false)); «12 Đ. số 5», «12 Đ số 5», «12 đ số 5» → số nhà 12, tên đường đúng chữ gõ; docDiaChi(«Lô D số 12 Nguyễn Trãi, Phường Bến Thành, TP.HCM») ra streetNumber 12, trangThai chuan; phá thử: bộ tách nhận mọi «d» là tiền tố (hành vi lượt 1) → hàm kiểm trả đúng 4 dòng «mất số nhà sau chữ D: <địa chỉ>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
