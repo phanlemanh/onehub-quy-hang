@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: a03549a184b648013026a50bceee882de19b7ba6
+verified_commit: 30965fd7d49958597003e0aaff61a1f3b81ec0f2
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -177,3 +177,7 @@ none — every multi-run eval is uniform
 Round 1: chấm lượt 1 cho ra các việc sửa (đối chứng dương E4, thước E10, gỡ trang ba lối, ghim lại khuôn) — đã sửa ở commit a03549a1 và quay lại chấm.
 Round 2: mọi eval E1-E7, E9, E10 đạt; E8 không chạy theo hồ sơ; các lệnh suite xanh.
 
+
+### Re-pin lần 1 — 2026-11-05, do gộp main sau chữ ký Cổng Bằng chứng
+run_id: repin-20261105T162444Z-40280
+sha: 30965fd7d49958597003e0aaff61a1f3b81ec0f2 · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng · không chạy theo hồ sơ: E8 · ngoài làn máy: E9, E10 · AC không có chốt máy: AC-8
