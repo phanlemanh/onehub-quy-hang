@@ -11,8 +11,13 @@ import pg from "pg";
 
 const GOC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const CHAY = path.join(GOC, ".acceptance-runs/luat-chia-lead");
-const LOG = path.join(CHAY, "web-d48.log");
-const PID = path.join(CHAY, "web-d48.pid");
+// Nhật ký và PID của máy dev nằm NGOÀI kho: Turbopack canh cả gốc kho, nên nhật ký trong kho tự nuôi vòng
+// «Compiled → trang tải lại → thêm dòng nhật ký → Compiled» (S4 vòng 1: E1, E10b kẹt «Đang tải lần đầu»). Đường cố
+// định theo tên worktree để mọi tác tử chấm (TMPDIR mỗi phiên khác nhau) cùng tìm thấy máy dev đã dựng.
+const NGOAI = path.join("/tmp", `quy-hang-d48-${path.basename(GOC)}`);
+mkdirSync(NGOAI, { recursive: true });
+const LOG = path.join(NGOAI, "web-d48.log");
+const PID = path.join(NGOAI, "web-d48.pid");
 const CONG = 3495;
 const URL_GOC = `http://localhost:${CONG}`;
 const DB = "postgres://postgres:quyhang@localhost:5575/postgres";

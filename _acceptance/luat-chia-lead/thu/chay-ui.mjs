@@ -4,6 +4,7 @@
 // mạng, chặn danh bạ. Lỗi phía máy chủ là lỗi thật trên Postgres dãy D: gỡ vai quản trị (403), thu quyền đọc bảng cấu hình
 // của vai API (tải hỏng), chèn dòng cặp hạn trái luật — mỗi ca trả lại như cũ sau khi đo.
 //   node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e1 --e2 --e5 --e6 --e7 --e10 --ra <thư mục>
+import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -49,9 +50,42 @@ const BOC = `(() => { try { Object.defineProperty(navigator, "serviceWorker", { 
     }
     return f(u, o); }; })()`;
 
+// S4 vòng 1: tab đóng bằng t.dong() chỉ ngắt CDP, tab vẫn mở trang của máy dev; chrome.dong() gửi SIGTERM mà Chrome không
+// đầu vẫn sống (cha chết → mồ côi). Tab mồ côi giữ kênh HMR, mỗi lần máy dev dựng lại thì tải lại và kéo tab chấm của lượt
+// sau vào vòng «Compiled → tải lại» (E1, E10b kẹt «Đang tải lần đầu»). Nên: đóng hẳn từng tab, ghi PID Chrome lúc dựng
+// (con trực tiếp của tiến trình này) và cuối lượt chắc chắn nó đã tắt — luật đợt 8: chỉ kill PID mình đã ghi.
 const chrome = await moChrome();
+const PID_CHROME = spawnSync("ps", ["-axo", "pid=,ppid=,command="], { encoding: "utf8" })
+  .stdout.split("\n")
+  .map((l) => l.trim().split(/\s+/))
+  .filter(([, ppid, ...cmd]) => Number(ppid) === process.pid && cmd.join(" ").includes("--headless=new"))
+  .map(([pid]) => Number(pid));
+const conSong = (pid) => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+};
+// Tác tử chấm hết giờ thì giết tiến trình này — finally không chạy, nên tắt Chrome ngay trong bộ bắt tín hiệu.
+for (const tin of ["SIGTERM", "SIGINT", "SIGHUP"])
+  process.on(tin, () => {
+    for (const pid of PID_CHROME.filter(conSong)) process.kill(pid, "SIGKILL");
+    process.exit(128 + ({ SIGHUP: 1, SIGINT: 2, SIGTERM: 15 })[tin]);
+  });
+async function tatChrome() {
+  chrome.dong();
+  for (let i = 0; i < 20 && PID_CHROME.some(conSong); i++) await ngu(150);
+  for (const pid of PID_CHROME.filter(conSong)) process.kill(pid, "SIGKILL");
+}
 async function mo(ai, { w = 1440, hgt = 900, duong = "/settings/lead-routing", cho = "[data-khoa]", truocTai } = {}) {
   const t = await chrome.trang(w, hgt);
+  const ngat = t.dong.bind(t);
+  t.dong = () => {
+    t.gui("Page.close").catch(() => {});
+    setTimeout(ngat, 300);
+  };
   await t.gui("Page.addScriptToEvaluateOnNewDocument", { source: BOC });
   if (truocTai) await t.gui("Page.addScriptToEvaluateOnNewDocument", { source: truocTai });
   for (const c of phien.cookie[ai].split(";").map((s) => s.trim()).filter(Boolean)) {
@@ -355,6 +389,6 @@ try {
     t.dong();
   }
 } finally {
-  chrome.dong();
+  await tatChrome();
   await db.end();
 }
