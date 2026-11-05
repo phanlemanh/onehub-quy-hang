@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { cleanup, cookieOf, identityPool } from "../helpers";
-import { batNhatKy, dangNhapMk, loiCua, nguoiCoMatKhau, req, send, soPhien, suKien } from "../dang-nhap-mat-khau/chung";
+import { batNhatKy, dangNhapMk, loiCua, nguoiCoMatKhau, send, soPhien, suKien } from "../dang-nhap-mat-khau/chung";
 
 after(cleanup);
 
