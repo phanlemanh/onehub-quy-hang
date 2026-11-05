@@ -120,9 +120,13 @@ test("AC-3 chưa có trong danh mục: báo rõ, nói dãy có hay không", () =
 test("AC-4 hai lô không ra một", () => {
   assert.equal(new Set(LO.map((l) => l.unitNumber)).size, LO.length);
   assert.deepEqual(kiemMaTran().filter((l) => l.startsWith("hai lô ra một")), []);
-  // Phá thử: cách đọc bản sao bỏ số của dãy — LK1 và LK2 không còn tách được.
-  const loiDay: LotCodeRule = { ...RULE, blockPattern: "[A-Z]{2}" };
-  assert.ok(kiemMaTran(buildLotIndex(KHU, [loiDay])).length > 0);
+  // Phá thử: chỉ mục bản sao gộp lô LK2-02 vào lô LK1-02 — phép đo phải bắt đúng «hai lô ra một».
+  const gop = buildLotIndex(KHU);
+  const lots = gop.subdivisions[0]!.lots;
+  lots.set("LK2-02", lots.get("LK1-02")!);
+  const loi = kiemMaTran(gop);
+  assert.ok(loi.includes("hai lô ra một: LK2-02 → LK1-02"), loi.join("; "));
+  assert.deepEqual(loi.filter((l) => !l.startsWith("hai lô ra một")), []);
 });
 
 test("AC-5 không đọc được và mã gần trúng: không đoán lô", () => {
