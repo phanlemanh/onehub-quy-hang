@@ -41,3 +41,5 @@ PNG khối màu của `packages/db/seed/anh-mau.mjs`); dev server bật bằng `
 - Nút «Chụp ảnh» mang số ảnh chờ (vòng vàng) khi đóng ngăn; trạng thái từng ảnh đọc được ở 375 không cần cuộn với ba ảnh.
 - Ảnh lớn đọc lại danh sách sau mỗi ảnh tải xong — đóng Ngoài-3 của hồ sơ trước cho đường chụp.
 - Chưa chụp: cảnh đầu khách không có nút (E12), tải lại trang khi còn ảnh chờ (cần kho trên máy — bước dựng).
+- Bản bấm được mở ngăn với «Gửi được» đã chọn sẵn — đó là lối (a) của Hỏi-2; máy khuyên lối (b) không mặc định, dựng ở bước
+  dựng sau khi chủ kho trả lời ở Cổng Phạm vi.

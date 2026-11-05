@@ -16,7 +16,8 @@ design_doc: _acceptance/chup-anh-dien-thoai/design.md
 Hàng 41 của lộ trình (dãy H, đợt `dau-khach-nhap`), T2: không migration, không đổi trần lớp dữ liệu, thoả thuận hay
 `packages/connect`; có đổi nhỏ ở API ảnh (`packages/api/src/photos`, nhận mã ảnh của máy khách). Ô cơ hội: `opportunity.md`
 (chủ kho «build» 05/11). Đứng trên hồ sơ căn điện thoại (`ho-so-dien-thoai-product-detail-5`) và mục Ảnh (hàng 18, ADR-0014).
-Hỏi-1 (ảnh chờ trên máy khi mất mạng, kể cả ngăn Nội bộ) quyết ở Cổng Phạm vi; AC-4, AC-6 viết theo khuyến nghị của máy.
+Hỏi-1 (ảnh chờ trên máy khi mất mạng, kể cả ngăn Nội bộ) và Hỏi-2 (ngăn mặc định khi mở ngăn chụp) quyết ở Cổng Phạm vi;
+AC-2, AC-4, AC-6 viết theo khuyến nghị của máy.
 
 ## Criteria
 
@@ -25,7 +26,7 @@ Hỏi-1 (ảnh chờ trên máy khi mất mạng, kể cả ngăn Nội bộ) qu
   nguồn (đầu khách, đầu chủ không giữ) hay căn chưa có mã, Then không có nút; và máy chủ từ chối thêm ảnh của người ấy dù gọi
   thẳng API — màn chỉ đọc cờ API, không tự quyết quyền.
 - AC-2 (cross-layer): Given ngăn «Chụp ảnh» đang mở, When người chọn ngăn rồi chụp, Then ảnh vào đúng toà + mã căn và đúng ngăn
-  đang chọn lúc chụp (mặc định «Gửi được»; «Nội bộ» chỉ có khi API trả `noiBo: "thay"`); đổi ngăn sau khi chụp không đổi ngăn
+  đang chọn lúc chụp (ngăn mặc định khi mở ngăn theo Hỏi-2; «Nội bộ» chỉ có khi API trả `noiBo: "thay"`); đổi ngăn sau khi chụp không đổi ngăn
   của ảnh đã chụp; ảnh lên máy chủ mang đúng ngăn ấy.
 - AC-3: Given ảnh vừa chụp, When ảnh qua kiểm tệp của lõi, Then ảnh vào hàng chờ ngay (người không phải chờ tải), máy tải ở nền
   theo thứ tự chụp kể cả khi người đóng ngăn hay rời hồ sơ; mỗi ảnh mang một trong bốn trạng thái «Chờ mạng» · «Đang tải lên» ·
@@ -34,7 +35,8 @@ Hỏi-1 (ảnh chờ trên máy khi mất mạng, kể cả ngăn Nội bộ) qu
 - AC-4 (cross-layer): Given máy mất mạng, When người chụp N ảnh, Then cả N ảnh nằm chờ trên máy, giữ qua tải lại trang và
   đóng mở app; When có mạng lại (sự kiện mạng hay nhịp thử 15 giây), Then máy tự tải đủ N ảnh, không mất ảnh nào; gửi lại sau
   khi mất phản hồi không sinh ảnh thứ hai (mã ảnh tạo lúc chụp, máy chủ nhận mã của máy khách ở cả hai bản kho; trả 409 thì
-  máy đối chiếu danh sách ảnh của căn).
+  máy đối chiếu danh sách ảnh của căn); When máy chủ trả 401 hay phiên hết, Then ảnh giữ «Chờ» trên máy và tải tiếp sau khi chính
+  người ấy đăng nhập lại — chỉ đăng xuất chủ động hay máy bị báo mất mới xoá hàng chờ (AC-6).
 - AC-5 (cross-layer): Given ảnh chụp vào ngăn «Nội bộ» (sổ đỏ, giấy tờ), When ảnh đã lên máy chủ, Then ảnh thuộc lớp `source`
   theo lõi; người không thấy nguồn không thấy ảnh ấy trong danh sách ảnh và không đọc được byte của nó; trang khách, link gửi và
   bộ kiểm rò rỉ không có ảnh ấy — ẩn ở lõi, API và luật theo dòng, không ở giao diện (bất biến 2, 4).
@@ -64,14 +66,13 @@ Hỏi-1 (ảnh chờ trên máy khi mất mạng, kể cả ngăn Nội bộ) qu
 
 Ô cơ hội có ngưỡng; mỗi thước một dòng — số từ đâu, AC nào bảo đảm:
 - Ảnh vào đúng ngăn của căn (đích 100%): số ảnh có `building_name`, `unit_number`, `compartment` khớp căn và ngăn lúc chụp /
-  số ảnh chụp — đếm ở bài kiểm E2 và trên chỗ thử E11 (`unit_photos` + `unit_photo_events` loại `added`); UAT: đầu chủ đếm ở
-  mục Ảnh. AC-2.
-- Không mất ảnh khi mất mạng (đích 0 ảnh mất): số khoá trong hàng chờ lúc chụp − số ảnh lên máy chủ sau khi có mạng — đếm ở bài
-  kiểm E4 và trên chỗ thử E12 (đếm dòng `unit_photos` của căn trước/sau); UAT: chụp N ảnh ở chế độ máy bay, mở mạng, đếm N. AC-4.
-- Không ảnh trùng khi gửi lại (đích 0): số dòng `unit_photos` mỗi mã ảnh máy khách — E12. AC-4.
-- Ảnh sổ đỏ không ra ngoài (đích 0 mồi): số phản hồi chứa mã ảnh Nội bộ khi đầu khách mở hồ sơ, trang khách `/s/<mã>` —
-  E12, bộ kiểm rò rỉ `npm run test:ro-ri`. AC-5.
-- Không phải chờ tải (đích: ảnh hiện trong «Ảnh vừa chụp» ngay sau khi chụp, trước khi lời gọi mạng nào xong) — E3. AC-3.
+  số ảnh chụp — bài kiểm E2 (ma trận ngăn) và chỗ thử E14 (`unit_photos` + sự kiện `added`); UAT: đầu chủ đếm ở mục Ảnh. AC-2.
+- Không mất ảnh khi mất mạng (đích 0 ảnh mất): số ảnh chụp − số dòng `unit_photos` mới của căn sau khi có mạng — bài kiểm E4 và
+  chỗ thử E15, E18 (đóng ngăn, rời hồ sơ); UAT: chụp N ảnh ở chế độ máy bay, mở mạng, đếm N. AC-3, AC-4.
+- Không ảnh trùng khi gửi lại (đích 0): số dòng `unit_photos` mỗi mã ảnh máy khách — bài kiểm E5 và chỗ thử E15. AC-4.
+- Ảnh sổ đỏ không ra ngoài (đích 0 mồi): số phản hồi, trang khách chứa mã ảnh Nội bộ — E6 (lõi), E16 (chỗ thử, có link gửi
+  thật), E17 (bộ kiểm rò rỉ). AC-5.
+- Không phải chờ tải (đích: ảnh hiện trong «Ảnh vừa chụp» trước khi lời gọi mạng nào xong) — E3. AC-3.
 
 ## Coverage
 
@@ -79,6 +80,8 @@ Quét không gian tiêu chí năm trục (skill `morphological-scan`, preset ent
 - Vai theo cờ API: sửa được (giữ căn, trưởng nhóm) · không sửa (đầu khách, đầu chủ không giữ) · căn chưa mã → AC-1.
 - Ngăn: Gửi được · Nội bộ (có / không có theo cờ) → AC-2, AC-5, AC-6.
 - Mạng: có · mất trước khi chụp · mất giữa lúc tải · mất phản hồi sau khi máy chủ ghi · có lại → AC-3, AC-4.
+- Phiên: còn · hết (401) rồi đăng nhập lại · đăng xuất chủ động · máy bị báo mất · người khác đăng nhập cùng máy → AC-4, AC-6.
+- Ngăn mặc định khi mở ngăn (lần đầu · lần hai) → AC-2 (theo Hỏi-2).
 - Vòng đời ảnh chờ: chụp · chờ · đang tải · đã tải · lỗi · thử lại · đóng app · đăng xuất / máy bị báo mất → AC-3, AC-4, AC-6.
 - Dữ liệu ảnh: có EXIF · không EXIF · tệp hỏng / quá cỡ → AC-3, AC-7.
 - Hiển thị: ngăn chụp · ảnh lớn · mục Ảnh · khuôn, lint → AC-8, AC-9, AC-10.
@@ -87,7 +90,7 @@ ma trận viết trước trong bài kiểm. Later/Never: Background Sync, nhậ
 
 ## Notes
 
-- Lựa chọn máy đã quyết: `design.md` §4; sổ quyết định dòng S1. Câu chỉ người: Hỏi-1.
+- Lựa chọn máy đã quyết: `design.md` §4; sổ quyết định dòng S1. Câu chỉ người: Hỏi-1, Hỏi-2.
 - Đổi điều đang đúng → sửa `docs/product/tham-chieu.md` §12 (dòng 01/11 Ảnh căn ba ngăn, «thêm ảnh cần mạng», «Nội bộ không
   lưu trên máy») và luật khuôn KH-hs-anh-noi-bo trong cùng PR (luật đợt 6).
 - Vùng mã thật khác ranh giới cũ ở `hang-viec.json` (`apps/web/src/app/units/mobile/photos/**` không tồn tại) → `cham-tep` ở

@@ -29,8 +29,9 @@ không bao giờ ra trang khách). Nguồn: trang tri thức `wiki/dot/ban-dau-2
 Đầu chủ giữ căn (hay trưởng nhóm) đứng ở căn, mở hồ sơ căn trên điện thoại:
 
 1. Ảnh lớn đầu màn có nút «Chụp ảnh» (chỉ khi API cho sửa ảnh của căn; căn chưa có mã thì không có).
-2. Chạm → ngăn nổi từ đáy «Chụp ảnh · <mã>»: chọn ngăn **Gửi được** (mặc định) hay **Nội bộ** (sổ, hợp đồng, giấy tờ — chỉ
-   người giữ căn và trưởng nhóm xem) → «Mở máy ảnh» mở máy ảnh của máy.
+2. Chạm → ngăn nổi từ đáy «Chụp ảnh · <mã>»: chọn ngăn **Gửi được** hay **Nội bộ** (sổ, hợp đồng, giấy tờ — chỉ
+   người giữ căn và trưởng nhóm xem) → «Mở máy ảnh» mở máy ảnh của máy. Ngăn mặc định khi mở ngăn theo Hỏi-2 (máy khuyên:
+   không mặc định, «Mở máy ảnh» chỉ bật sau khi chạm chọn).
 3. Chụp xong, ảnh hiện ngay trong «Ảnh vừa chụp» với trạng thái; người chụp tiếp hay đóng ngăn đi việc khác — máy tải ở
    nền theo thứ tự chụp, kể cả khi đã rời hồ sơ.
 4. Mất mạng: ảnh mang «Chờ mạng — tự tải khi có mạng», ngăn báo «Mất mạng»; nút «Chụp ảnh» mang số ảnh đang chờ. Có mạng lại
@@ -61,7 +62,7 @@ Ghi ở `decisions.jsonl` (dòng S1):
 - Quyền chụp = cờ `suaDuoc` của API ảnh (đầu chủ giữ căn, trưởng nhóm — Hỏi-4 hàng 18); ngăn Nội bộ chỉ khi API trả
   `noiBo: "thay"`.
 - Tải đúng đường của mục Ảnh (`nguonApi`), không đường API mới.
-- Chọn ngăn trước khi chụp; ngăn gắn vào ảnh lúc chụp, đổi ngăn sau không đổi ảnh đã chụp.
+- Chọn ngăn trước khi chụp; ngăn gắn vào ảnh lúc chụp, đổi ngăn sau không đổi ảnh đã chụp. Ngăn mặc định khi mở ngăn là Hỏi-2 (chỉ người).
 - Mở máy ảnh của máy (`<input capture="environment">`), không tự dựng máy ảnh trong app.
 - Ngày chụp: EXIF, vắng thì ngày lúc chụp trên máy — không phải ngày tải lên.
 - Gửi lại không trùng: mã ảnh tạo lúc chụp, API nhận mã của máy khách ở cả hai bản kho; 409 thì đối chiếu danh sách.
@@ -70,6 +71,8 @@ Ghi ở `decisions.jsonl` (dòng S1):
 Câu chỉ người có (lên thẻ Cổng Phạm vi): **Hỏi-1** — cho ảnh chụp lúc mất mạng chờ trên máy, kể cả ảnh Nội bộ (lùi một phần
 Hỏi-5 hàng 18 và «Nội bộ không lưu trên máy»). Máy khuyên: cho chờ, ảnh Nội bộ nằm trong kho chờ riêng của người chụp, xoá
 ngay khi máy chủ xác nhận, xoá khi đăng xuất hay máy bị báo mất, không vào kho đồng bộ.
+**Hỏi-2** — ngăn mặc định khi mở ngăn chụp (Gửi được · không mặc định · Nội bộ · nhớ lần trước). Máy khuyên: không mặc
+định — «Mở máy ảnh» chỉ bật sau khi người chạm chọn ngăn, để ảnh sổ không tự tải vào Gửi được vì quên chọn.
 
 ## 5. Đối chiếu ngành
 
@@ -98,7 +101,8 @@ ngay khi máy chủ xác nhận, xoá khi đăng xuất hay máy bị báo mất
 - Biên: người không giữ căn (không nút) · căn chưa có mã (không nút; mục Ảnh nhắc gắn mã) · ngăn Nội bộ chỉ khi API cho ·
   tệp không phải ảnh hay quá 10 MB (không vào hàng chờ, báo tên tệp) · chụp nhiều ảnh liền · đóng app khi còn ảnh chờ.
 - Lỗi & quay lại: mất mạng → ảnh «Chờ mạng», tự tải khi có mạng; máy chủ không nhận (hết quyền, căn đổi người giữ) →
-  «Không tải được — thử lại» kèm «Thử lại»; hết phiên → ảnh giữ chờ tới khi đăng nhập lại.
+  «Không tải được — thử lại» kèm «Thử lại»; hết phiên (401) → ảnh giữ chờ, tải tiếp khi chính người ấy đăng nhập lại (AC-4);
+  đăng xuất chủ động hay máy bị báo mất → xoá hàng chờ (AC-6).
 
 ### 2. Kiểm kê màn
 
@@ -111,7 +115,7 @@ ngay khi máy chủ xác nhận, xoá khi đăng xuất hay máy bị báo mất
 <!-- <<<UX-STATE-TABLE -->
 | Trạng thái | Màn | Hiển thị gì | Người làm gì tiếp |
 |---|---|---|---|
-| ST-chup-chon-ngan | Ngăn «Chụp ảnh» | Hai nút ngăn «Gửi được» · «Nội bộ» (ổ khoá), lời của ngăn đang chọn, «Mở máy ảnh» dính đáy | chọn ngăn, mở máy ảnh |
+| ST-chup-chon-ngan | Ngăn «Chụp ảnh» | Hai nút ngăn «Gửi được» · «Nội bộ» (ổ khoá), lời của ngăn đang chọn, «Mở máy ảnh» dính đáy (mặc định theo Hỏi-2) | chọn ngăn, mở máy ảnh |
 | ST-chup-trong | Ngăn «Chụp ảnh» | «Chưa chụp ảnh nào cho căn này.» | mở máy ảnh |
 | ST-chup-dang-tai | Ngăn «Chụp ảnh» | Bản nhẹ + ngăn + «Đang tải lên…» | chụp tiếp, đóng ngăn |
 | ST-chup-cho-mang | Ngăn «Chụp ảnh» | Khối «Mất mạng — Ảnh chờ trên máy và tự tải lên khi có mạng»; mỗi ảnh «Chờ mạng — tự tải khi có mạng»; nút «Chụp ảnh» mang số ảnh chờ | chụp tiếp, đi việc khác |
@@ -123,7 +127,8 @@ ngay khi máy chủ xác nhận, xoá khi đăng xuất hay máy bị báo mất
 ### 4. Hành vi
 
 - Chỉ có trên thân điện thoại (dưới 768 px, `chonThan`); máy tính giữ kéo thả, dán ở mục Ảnh.
-- Ngăn gắn vào ảnh lúc chụp; mặc định «Gửi được» mỗi lần mở ngăn.
+- Ngăn gắn vào ảnh lúc chụp; ngăn mặc định mỗi lần mở ngăn theo Hỏi-2 (máy khuyên: chưa chọn ngăn nào, «Mở máy ảnh» mờ tới khi chạm chọn).
+- Hết phiên (401): ảnh giữ «Chờ», tải tiếp khi chính người ấy đăng nhập lại; chỉ đăng xuất chủ động hay máy bị báo mất mới xoá hàng chờ.
 - Thứ tự tải = thứ tự chụp; một ảnh lỗi không chặn ảnh sau; mất mạng thì dừng cả lô, giữ nguyên hàng chờ.
 - Nút chạm từ 44 px («Mở máy ảnh» cao 44 px, kín bề ngang ở chân ngăn).
 
