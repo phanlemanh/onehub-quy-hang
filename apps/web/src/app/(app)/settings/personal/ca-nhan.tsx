@@ -1,6 +1,7 @@
 import { KhungToi } from "@/app/(app)/me/khung";
 import { ToiThat } from "@/app/(app)/me/toi-that";
 import { TrangThai } from "@/components/trang-thai";
+import { LienHeTrenToi } from "@/app/(app)/contacts/tren-toi";
 import { BAO_CHI_QUAN_TRI } from "../cai-dat";
 
 // Cài đặt › Cá nhân (hàng cai-dat-hop-nhat): đúng sáu nhóm dòng của tab Tôi hàng 38, dựng qua khuôn Tôi. Đích của tab
@@ -12,6 +13,7 @@ export default function CaNhan({ biChan, email, tenSan, soSan }: { biChan: boole
     <KhungToi>
       {biChan && <TrangThai kind="notice" title={BAO_CHI_QUAN_TRI} />}
       <ToiThat loi="reui" email={email} tenSan={tenSan} soSan={soSan} />
+      <LienHeTrenToi />
     </KhungToi>
   );
 }

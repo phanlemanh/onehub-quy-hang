@@ -5,7 +5,7 @@ export const ROLES = ["telesales", "listing_agent", "buyer_agent", "team_lead", 
 export type Role = (typeof ROLES)[number];
 
 /** Nhà của cột biểu tượng trên máy tính, theo thứ tự hiện. */
-export type Home = "today" | "inventory" | "shares" | "team" | "settings";
+export type Home = "today" | "inventory" | "shares" | "contacts" | "team" | "settings";
 /** Tab dưới trên điện thoại, theo thứ tự hiện. */
 export type Tab = "today" | "inventory" | "send" | "lead" | "settings" | "me";
 /** Nút của thanh trên máy tính. */
@@ -30,6 +30,7 @@ export const HOME_PATH: Record<Home, string> = {
   today: "/today",
   inventory: "/inventory",
   shares: "/shares",
+  contacts: "/contacts",
   team: "/team",
   settings: "/settings",
 };
@@ -54,9 +55,9 @@ export const ACTION_PATH: Record<Action, string> = {
 // nhóm Sàn chỉ quản trị. Telesales không có cột nhà nên vào Cài đặt qua menu tài khoản.
 const HOMES: Record<Role, Home[]> = {
   telesales: ["today"],
-  listing_agent: ["today", "inventory", "settings"],
+  listing_agent: ["today", "inventory", "contacts", "settings"],
   buyer_agent: ["today", "inventory", "shares", "settings"],
-  team_lead: ["today", "inventory", "shares", "team", "settings"],
+  team_lead: ["today", "inventory", "shares", "contacts", "team", "settings"],
   company_admin: ["settings"],
 };
 
@@ -72,7 +73,8 @@ const ACTIONS: Record<Role, Action[]> = {
 /** Việc tạo có trên điện thoại (§9: không có Nhập Excel, Xuất bảng hàng). */
 const MOBILE_ACTIONS: Action[] = ["new_lead"];
 
-const HOME_ORDER: Home[] = ["today", "inventory", "shares", "team", "settings"];
+// Liên hệ (hàng 103, Hỏi-1): nhà thứ sáu, chỉ vai đọc được liên hệ — Đầu chủ, Trưởng nhóm (ADR-0021 qđ 3).
+export const HOME_ORDER: Home[] = ["today", "inventory", "shares", "contacts", "team", "settings"];
 const ACTION_ORDER: Action[] = ["new_lead", "import", "export"];
 const TAB_ORDER: Tab[] = ["today", "inventory", "send", "lead", "settings", "me"];
 
@@ -158,6 +160,7 @@ export const HOME_LABEL: Record<Home, string> = {
   today: "Hôm nay",
   inventory: "Bảng hàng",
   shares: "Đã gửi",
+  contacts: "Liên hệ",
   team: "Đội",
   settings: "Cài đặt",
 };
@@ -168,6 +171,7 @@ export function homeOfPath(path: string): Home | null {
   if (first === "/today") return "today";
   if (first === "/inventory" || first === "/units") return "inventory";
   if (first === "/shares" || first === "/viewings") return "shares";
+  if (first === "/contacts") return "contacts";
   if (first === "/team") return "team";
   if (first === "/settings") return "settings";
   return null;
@@ -177,10 +181,12 @@ export function homeOfPath(path: string): Home | null {
  * Cột thứ hai của từng nhà trên máy tính (§9): `true` = có cột, mặc định mở. Mọi nhà có cột thứ hai và mặc định mở
  * (chủ kho 02/11, hàng 91: «Mặc định luôn giữ và có sub nav»); người gập thì nhớ theo người, sàn, nhà.
  */
-export const SECOND_COLUMN_OPEN_BY_DEFAULT: Partial<Record<Home, boolean>> = {
+// Record đủ mọi nhà (luật đợt 68): thêm một nhà mà quên khai cột thứ hai là lỗi biên dịch, không lặng lẽ mất cột.
+export const SECOND_COLUMN_OPEN_BY_DEFAULT: Record<Home, boolean> = {
   today: true,
   inventory: true,
   shares: true,
+  contacts: true,
   team: true,
   settings: true,
 };

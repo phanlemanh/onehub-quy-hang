@@ -5,6 +5,7 @@ import {
   activeTab,
   canReassignListingAgents,
   HOME_LABEL,
+  HOME_ORDER,
   homeOfPath,
   isSecondColumnOpen,
   type Navigation,
@@ -30,7 +31,7 @@ test("Telesales: không cột nhà, không ô gõ mã căn, điện thoại Hôm
 
 test("Đầu chủ: Hôm nay, Bảng hàng; + Lead, Nhập Excel, Xuất bảng hàng", () => {
   const nav = navigationFor(["listing_agent"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "contacts", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "me"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.equal(nav.unitJump, true);
@@ -46,7 +47,7 @@ test("Đầu khách: thêm Đã gửi, không nút nào", () => {
 
 test("Trưởng nhóm: thêm Đội; + Lead, Nhập Excel (ADR-0011), Xuất bảng hàng; điện thoại không có Đội", () => {
   const nav = navigationFor(["team_lead"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "team", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "contacts", "team", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.deepEqual(nav.mobileActions, ["new_lead"]);
@@ -63,7 +64,7 @@ test("Chỉ Quản trị sàn: mở vào Cài đặt sàn, điện thoại Cài 
 
 test("Nhiều vai nhận hợp các nhà; quản trị kèm vai khác mở vào Hôm nay, điện thoại không có Cài đặt sàn", () => {
   const nav = navigationFor(["team_lead", "company_admin"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "team", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "contacts", "team", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.equal(nav.landing, "/today");
@@ -71,7 +72,7 @@ test("Nhiều vai nhận hợp các nhà; quản trị kèm vai khác mở vào 
 
 test("Telesales kèm Đầu chủ có cột nhà và tab Bảng hàng thay tab Lead", () => {
   const nav = navigationFor(["telesales", "listing_agent"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "contacts", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "me"]);
 });
 
@@ -85,7 +86,7 @@ type Row = Pick<Navigation, "homes" | "tabs" | "actions" | "mobileActions" | "la
 const SECTION_9: Record<Role, Row> = {
   telesales: { homes: [], tabs: ["today", "lead", "me"], actions: ["new_lead"], mobileActions: [], landing: "/today", unitJump: false },
   listing_agent: {
-    homes: ["today", "inventory", "settings"],
+    homes: ["today", "inventory", "contacts", "settings"],
     tabs: ["today", "inventory", "me"],
     actions: ["new_lead", "import", "export"],
     mobileActions: ["new_lead"],
@@ -101,7 +102,7 @@ const SECTION_9: Record<Role, Row> = {
     unitJump: true,
   },
   team_lead: {
-    homes: ["today", "inventory", "shares", "team", "settings"],
+    homes: ["today", "inventory", "shares", "contacts", "team", "settings"],
     tabs: ["today", "inventory", "send", "me"],
     actions: ["new_lead", "import", "export"],
     mobileActions: ["new_lead"],
@@ -156,7 +157,7 @@ test("Đối chứng đỏ: bảng giả cho Đầu chủ Nhập Excel trên đi
 
 test("Đầu chủ + Đầu khách nhận hợp nhà và nút", () => {
   const nav = navigationFor(["listing_agent", "buyer_agent"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "contacts", "settings"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
 });
@@ -202,8 +203,9 @@ test("Nhà của đường: hồ sơ căn thuộc Bảng hàng, Lịch xem thu�
 });
 
 test("cột thứ hai: mọi nhà, mặc định mở", () => {
-  // Ma trận viết trước: đủ năm nhà của §9 (hàng 91, «Mặc định luôn giữ và có sub nav»).
-  const NHA = ["today", "inventory", "shares", "team", "settings"] as const;
+  // Lặp theo HOME_ORDER (luật đợt 68): nhà mới tự vào phép kiểm; ma trận viết trước kèm theo để HOME_ORDER không tự rỗng đi.
+  const NHA = HOME_ORDER;
+  assert.deepEqual([...NHA], ["today", "inventory", "shares", "contacts", "team", "settings"]);
   let dem = 0;
   for (const h of NHA) {
     assert.equal(isSecondColumnOpen(h, undefined), true, `${h}: mặc định phải mở`);
@@ -211,7 +213,7 @@ test("cột thứ hai: mọi nhà, mặc định mở", () => {
     assert.equal(isSecondColumnOpen(h, true), true, `${h}: người mở thì nhớ`);
     dem++;
   }
-  assert.equal(dem, 5);
+  assert.equal(dem, NHA.length);
 });
 
 test("Khoá nhớ tách theo người, sàn và nhà", () => {

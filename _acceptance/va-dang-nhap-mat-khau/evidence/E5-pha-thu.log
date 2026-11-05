@@ -1,0 +1,5 @@
+# phá-thử E5: bỏ thu phiên khi khoá ở lần sai thứ 20
+✖ đổi: lần sai thứ 20 khoá và thu mọi phiên (350.567875ms)
+✖ khoá qua đăng nhập cũng thu mọi phiên (252.975ms)
+✖ failing tests:
+✖ đổi: lần sai thứ 20 khoá và thu mọi phiên (350.567875ms)

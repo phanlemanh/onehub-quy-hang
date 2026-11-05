@@ -39,7 +39,7 @@ function voi(fn) {
   }
 }
 
-const NHOM = ["bang-hang", "cai-dat-san", "cuoc-goi", "da-gui", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-dau-khach", "hom-nay-truong-nhom", "lead-cua-toi", "nhap-excel", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-tam", "trang-thai", "xac-thuc"];
+const NHOM = ["bang-hang", "cai-dat-san", "cuoc-goi", "da-gui", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-dau-khach", "hom-nay-truong-nhom", "lead-cua-toi", "lien-he", "nhap-excel", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-tam", "trang-thai", "xac-thuc"];
 const TRANG_TAM = [
   "imports/new",
   "me",
@@ -66,6 +66,7 @@ const BANG = {
     // Hàng cai-dat-hop-nhat: trang mục settings/[section] dựng thêm Cá nhân (nhóm toi) — ngoại lệ có lý do của trang tạm.
     theoKhuon: [...TRANG_TAM.filter((t) => !t.includes("/today/") && !t.includes("/me/") && !t.includes("/imports/") && !t.includes("/exports/") && !t.includes("/shares/"))].sort(),
     ngoaiLe: [
+      `${W}/app/(app)/contacts/page.tsx`,
       `${W}/app/(app)/imports/new/page.tsx`,
       `${W}/app/(app)/inventory/page.tsx`,
       `${W}/app/(app)/inventory/views/[id]/page.tsx`,
@@ -101,6 +102,8 @@ const BANG = {
   "da-gui": { theoKhuon: [`${W}/app/(app)/shares/page.tsx`], ngoaiLe: [] },
   // Hàng 37: Hôm nay của đầu khách, nhóm màn mới — vùng dựng KhungHomNayDauKhach (nối vào /today sau hàng 92).
   "hom-nay-dau-khach": { theoKhuon: [`${W}/app/(app)/today/buyer/vung.tsx`], ngoaiLe: [] },
+  // Hàng 103: Màn Liên hệ, nhóm màn mới — vùng dựng KhungLienHe.
+  "lien-he": { theoKhuon: [`${W}/app/(app)/contacts/vung.tsx`], ngoaiLe: [] },
   gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [] },
   // Hàng 38: Tôi, nhóm màn mới — màn thật /me và trang ba lối của nó.
   // Hàng cai-dat-hop-nhat: Cá nhân dựng KhungToi; /me chỉ chuyển về /settings/personal.
@@ -147,6 +150,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["cuoc-goi.tsx", "dial/nut-quay-so.tsx", "dial/page.tsx", "dial/trang-quay-so.tsx", "khoi.tsx", "khung.tsx", "page.tsx", "push/ep-gia.tsx"].map((p) => `${W}/app/(app)/units/call/${p}`),
   // Hôm nay của đầu khách (hàng 37): dòng tin, khuôn, vùng.
   ...["buyer/dong-tin.tsx", "buyer/khung.tsx", "buyer/vung.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
+  // Màn Liên hệ (hàng 103): danh sách, hồ sơ, khuôn, trang, mục trên Tôi, vùng.
+  ...["danh-sach.tsx", "ho-so.tsx", "khung.tsx", "page.tsx", "tren-toi.tsx", "vung.tsx"].map((p) => `${W}/app/(app)/contacts/${p}`),
   // Thông báo lead (hàng 26): dải bật thông báo ở đầu /today; Hôm nay của trưởng nhóm (hàng 42).
   ...["dai-bat.tsx", "hom-nay-dau-chu.tsx", "khung.tsx", "truong-nhom.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
   // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; khối báo máy bị báo ở đăng nhập.
@@ -173,6 +178,10 @@ const NHAN_DIEN_TRANG_THAI = [
   ),
 ];
 const CHO_TRANG_THAI = [
+  // Màn Liên hệ (hàng 103): lỗi tải, người khác giữ, không khớp, trống; lỗi hồ sơ; vai không xem ở trang.
+  ...Array(4).fill(`${W}/app/(app)/contacts/danh-sach.tsx`),
+  `${W}/app/(app)/contacts/ho-so.tsx`,
+  `${W}/app/(app)/contacts/page.tsx`,
   // Hàng 91: lỗi và không thấy cấp nhóm (app).
   `${W}/app/(app)/error.tsx`,
   // Nhập Excel (hàng man-nhap-excel): đọc tệp, lỗi, không dòng nào ghi, xem thử, ghi, xong; không quyền ở trang. Hàng 67:
@@ -288,7 +297,7 @@ describe("E1 — bản đồ thật: bốn tệp đủ khoá §11.3", () => {
   it("đối chứng: bản sao mất một tệp nhóm thì danh sách nhóm thiếu đúng tên ấy", () =>
     voi((d) => {
       unlinkSync(join(d, "design/patterns/trang-tam.md"));
-      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "cuoc-goi", "da-gui", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-dau-khach", "hom-nay-truong-nhom", "lead-cua-toi", "nhap-excel", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-thai", "xac-thuc"]);
+      assert.deepEqual(docBanDo(d).nhom.map((g) => g.data.nhom).sort(), ["bang-hang", "cai-dat-san", "cuoc-goi", "da-gui", "gui", "ho-so-can", "hom-nay-dau-chu", "hom-nay-dau-khach", "hom-nay-truong-nhom", "lead-cua-toi", "lien-he", "nhap-excel", "o-nhan-lead", "toi", "trang-khach", "trang-mau", "trang-thai", "xac-thuc"]);
     }));
 });
 
@@ -435,13 +444,14 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "hom-nay-dau-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-truong-nhom: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
+      "lien-he: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "nhap-excel: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "o-nhan-lead: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 18 ngoại lệ · 0 lệch",
-      "trang-thai: 114 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
+      "trang-thai: 120 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

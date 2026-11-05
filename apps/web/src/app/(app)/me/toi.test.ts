@@ -10,6 +10,7 @@ import type { TrangThaiThietBi } from "@/lib/push/dang-ky";
 import { NHAN_THONG_BAO } from "@/lib/push/nhan";
 import {
   canMatKhauHienTai,
+  loiHopMatKhau,
   coNutBaoMat,
   dongThongBao,
   LOI_DA_BAO,
@@ -227,3 +228,19 @@ describe("dòng Mật khẩu", () => {
     }
   });
 });
+
+// va-dang-nhap-mat-khau (E7): mã lỗi máy chủ → câu dưới đúng ô của hộp mật khẩu (hàm hộp thật nhập).
+describe("hộp mật khẩu: mã lỗi → câu", () => {
+  it("bảng viết trước", () => {
+    const bang: [string, "hien-tai" | "moi", string][] = [
+      ["password-rate-limited", "hien-tai", "Thử lại sau ít phút"],
+      ["invalid-current-password", "hien-tai", "Mật khẩu hiện tại không đúng"],
+      ["password-too-short", "moi", "Cần ít nhất 8 ký tự"],
+    ];
+    assert.equal(bang.length, 3);
+    for (const [ma, o, cau] of bang) assert.deepEqual(loiHopMatKhau(ma), { o, cau }, ma);
+    const hop = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "hop-mat-khau.tsx"), "utf8");
+    assert.match(hop, /loiHopMatKhau\(code\)/, "hộp không dùng hàm ánh xạ");
+  });
+});
+

@@ -1,0 +1,35 @@
+111. [GET] http://localhost:3491/api/v1/listings => [200] OK
+112. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+113. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+114. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+157. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+158. [GET] http://localhost:3491/api/v1/company/settings/queue => [200] OK
+159. [GET] http://localhost:3491/api/v1/leads/assigned => [200] OK
+160. [GET] http://localhost:3491/api/v1/catalog => [200] OK
+161. [GET] http://localhost:3491/api/v1/company/settings/queue => [200] OK
+162. [GET] http://localhost:3491/api/v1/leads/assigned => [200] OK
+163. [GET] http://localhost:3491/api/v1/listings => [200] OK
+164. [GET] http://localhost:3491/api/v1/push/public-key => [200] OK
+165. [GET] http://localhost:3491/api/v1/push/public-key => [200] OK
+203. [GET] http://localhost:3491/api/v1/listings => [200] OK
+204. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+205. [GET] http://localhost:3491/api/v1/contacts?q=Ch%E1%BB%A7+th%E1%BB%AD+103 => [200] OK
+206. [GET] http://localhost:3491/api/v1/contacts/55256652-accd-47ce-b052-29a5621ad6e5/profile => [200] OK
+207. [POST] http://localhost:3491/api/v1/contacts/55256652-accd-47ce-b052-29a5621ad6e5/phones/1915301e-7137-46ea-9e52-7b176d81b6e6/reveal => [200] OK
+208. [POST] http://localhost:3491/api/v1/contacts/lookup-phone => [200] OK
+209. [GET] http://localhost:3491/api/v1/listings => [200] OK
+247. [GET] http://localhost:3491/api/v1/listings => [200] OK
+248. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+249. [GET] http://localhost:3491/api/v1/contacts/55256652-accd-47ce-b052-29a5621ad6e5/profile => [200] OK
+250. [GET] http://localhost:3491/api/v1/listings => [200] OK
+251. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
+252. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+295. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+296. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+297. [GET] http://localhost:3491/api/v1/listings => [200] OK
+298. [POST] http://localhost:3491/api/v1/sync/offline-sessions => [201] Created
+299. [GET] http://localhost:3491/api/v1/contacts => [403] Forbidden
+300. [GET] http://localhost:3491/contacts => [200] OK
+338. [GET] http://localhost:3491/api/v1/listings => [200] OK
+
+Note: 205 static requests not shown, run with "static" option to see them.

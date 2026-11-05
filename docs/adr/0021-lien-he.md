@@ -80,3 +80,21 @@ nguyên làm sử cho lối giao lại cũ; điều đang đúng cho lối mới
    (bảng gán chỉ thêm dòng — Hỏi-2).
 3. **Lối gán một căn** (`PUT /listings/{id}/listing-agent`) giữ nguyên hành vi cũ ở điểm 5 (Hỏi-1). Lệch một chủ hai đầu
    chủ do lối này vẫn hiện ở danh sách liên hệ nhiều đầu chủ của trưởng nhóm.
+
+## Sửa đổi 05/11 — ba lớp theo Keller Williams (hàng 103)
+
+Manh Phan chọn «Áp ba lớp» 05/11, ở phần khám phá của hàng 103 (`_acceptance/man-lien-he/lead-va-lien-he.md`). Dữ liệu và
+migration không đổi; đổi nghĩa và chữ trên màn.
+
+1. **Lead là dấu trên người, một nghĩa duy nhất**: liên hệ chưa nói chuyện hai chiều (KW «Mark as Lead», RESO
+   `ContactType = Lead`). Vẫn suy bằng máy theo quyết định 7. Lead không bao giờ hiện trên Bảng hàng.
+2. **Việc với một người là một Cơ hội** (KW Opportunity), bốn loại: Bán `Listing` · Cho thuê `Landlord` (phía chủ) và Mua
+   `Buyer` · Thuê `Tenant` (phía khách). Pha theo KW: Cultivate → Appointment → Active → Under Contract → Closed.
+3. **Cơ hội phía chủ là bản ghi telesales hay đầu chủ nhập** (bảng `leads`, giữ tên mã): Đã gửi, Đã nhận thuộc Cultivate;
+   Đã gọi thuộc Appointment; Lên bảng mở Active. Sau Lên bảng, pha đọc từ trạng thái hàng (Đang giao dịch → Under Contract,
+   Đã bán / Đã thuê → Closed).
+4. **Cơ hội phía khách là nhu cầu khách** (`prospects`, sửa đổi 03/11); lịch xem khi dựng thuộc Appointment.
+5. **Hàng** là căn trên Bảng hàng, sinh khi cơ hội bán Lên bảng; Bảng hàng giữ nguyên là trung tâm của Quỹ hàng.
+6. Nút «+ Lead» giữ chữ: nhập lead là thêm một người mang dấu Lead kèm một cơ hội phía chủ. Nhãn pha trên màn và chữ «Lead
+   của tôi» chốt ở Cổng Phạm vi hàng 103.
+7. Chưa đổi: «Sửa số và gửi lại» vẫn tạo bản ghi mới (ADR-0020 quyết định 4); nấc nuôi người (Met / Haven't Met) là hàng sau.

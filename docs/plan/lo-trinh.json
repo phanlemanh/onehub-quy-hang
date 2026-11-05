@@ -623,7 +623,8 @@
       "vung": [
         "packages/api/src/imports/ai/**",
         "packages/core/src/agreements.ts"
-      ]
+      ],
+      "bat_khi": "Trên bộ file mẫu lạ có đáp án, sàn bật «Xử lý bằng AI» thì máy ghép đúng phần lớn cột hơn số nền của hàng 64, mỗi đề xuất có lý do và người duyệt trước khi ghi; số chủ nhà, giá đáy không rời công ty sang dịch vụ AI; tắt AI hay hết trần thì nhập như không có AI, không lỗi; Cổng Đáng gác hàng nếu nền 64 đã đạt mọi ngưỡng"
     },
     {
       "ma": "69",
@@ -646,7 +647,8 @@
       "vung": [
         "packages/api/src/imports/ai/cells/**",
         "apps/web/src/app/imports/cells/**"
-      ]
+      ],
+      "bat_khi": "Trên bộ ô lạ có đáp án (giá dải, «thu về 4.2», trạng thái lạ), đầu chủ thấy mỗi ô một đề xuất kèm lý do và chọn một chạm; đề xuất sai thì sửa tay được; không ô nào tự ghi khi người chưa chọn; thông tin chủ nhà không rời công ty"
     },
     {
       "ma": "70",
@@ -1104,7 +1106,8 @@
       ],
       "vung": [
         "apps/web/src/app/units/mobile/quick-edit/**"
-      ]
+      ],
+      "bat_khi": "Sau cuộc gọi, đầu chủ đổi giá hay trạng thái một căn trên điện thoại trong vài chạm theo đúng luật sửa giá; giá mới hiện ở Bảng hàng và trang khách đang mở; đổi trái luật thì máy chặn và nói lý do; dòng thời gian của căn ghi ai đổi, lúc nào"
     },
     {
       "ma": "41",
@@ -1125,7 +1128,8 @@
       ],
       "vung": [
         "apps/web/src/app/units/mobile/photos/**"
-      ]
+      ],
+      "bat_khi": "Đầu chủ đứng ở căn, chụp ảnh ngay trên điện thoại và ảnh vào đúng ngăn của căn đó; mất mạng thì ảnh chờ và tự tải lên khi có mạng, không mất ảnh nào; ảnh sổ đỏ vào lớp nguồn, không bao giờ ra trang khách"
     },
     {
       "ma": "42",
@@ -1304,7 +1308,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/labels/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn đổi tên hiển thị một trường chuẩn và thêm một giá trị riêng neo vào giá trị chuẩn, rồi cùng một căn hiện đúng chữ mới ở Bảng hàng, ở đội khác và trên trang khách; lọc và đếm vẫn theo giá trị chuẩn; không neo thì không lưu được; sàn khác vẫn thấy tên mặc định"
     },
     {
       "ma": "46",
@@ -1325,7 +1330,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/statuses/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn thêm nhãn «Giữ chỗ» neo vào một trong sáu trạng thái chuẩn, căn mang nhãn ấy nhận đúng luật và màu của trạng thái neo ở Bảng hàng, Hôm nay và trang khách; không neo thì không lưu được; xoá nhãn đang dùng thì máy hỏi trạng thái thay; báo cáo vẫn đếm theo sáu trạng thái chuẩn"
     },
     {
       "ma": "47",
@@ -1370,7 +1376,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/lead-routing/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn đổi cách chia lead, hạn nhận, hạn gọi và ngưỡng hai hàng đợi của Hôm nay trong Cài đặt hợp nhất; lead mới đến sau lúc đổi theo luật mới, lead đã chia giữ luật cũ; màn dùng nhãn đã chốt ở Cổng Phạm vi 103; vai khác không đổi được"
     },
     {
       "ma": "49",
@@ -1391,7 +1398,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/fees/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn; giá tính sau lúc đổi dùng tỉ lệ mới, giá đã lưu giữ nguyên kèm ngày tính; người xem giá thấy giá ấy tính theo tỉ lệ của ngày nào; sàn khác không bị ảnh hưởng"
     },
     {
       "ma": "50",
@@ -1413,7 +1421,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/templates/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn mở trong Cài đặt hợp nhất (nhóm Sàn) thấy đủ mẫu file nhập đã nhớ, mẫu bảng hàng và mẫu bài theo kênh của sàn mình, sửa hay xoá một mẫu thì lần nhập và bài kế tiếp dùng bản mới, lần nhập đã xong không đổi; vai khác không mở được màn; sàn khác không thấy mẫu của nhau"
     },
     {
       "ma": "51",
@@ -1672,7 +1681,8 @@
       "vung": [
         "packages/core/src/catalog/**",
         "packages/api/src/catalog/**"
-      ]
+      ],
+      "bat_khi": "Trên bộ mã lô thử có đáp án của hàng 73, đầu chủ gõ mã lô kiểu nào cũng được thì ra đúng lô và tự điền khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền như mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ, không đoán; hai lô khác nhau không bao giờ ra cùng một lô"
     },
     {
       "ma": "75",
@@ -2443,6 +2453,42 @@
         "docs/design/vo-va-ia.md",
         "docs/adr/0024-he-bo-cuc.md",
         "docs/product/tham-chieu.md"
+      ]
+    },
+    {
+      "ma": "va-dang-nhap-mat-khau",
+      "cau_giao": "Vá hai kẽ an toàn của mật khẩu do sàn cấp (Ngoài-6, Ngoài-7 của hàng 104): người vào sàn khác thì phiên cũ cũng bị thu khi mật khẩu gốc sàn cấp bị vô hiệu; đổi mật khẩu ở Cá nhân đếm lần sai mật khẩu hiện tại chung bộ đếm với đăng nhập.",
+      "slug": "va-dang-nhap-mat-khau",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-05"
+    },
+    {
+      "ma": "103",
+      "cau_giao": "Người trong sàn mở màn «Liên hệ»: danh sách liên hệ lọc theo loại (Chủ bán · Chủ cho thuê · Người mua · Người thuê) và hồ sơ một người — các số theo luật lớp nguồn (số chủ nhà không hiện cho người không được đọc), các căn, lead, nhu cầu khách và Lần gửi gắn với người ấy — mỗi vai chỉ thấy phần quyền của mình.",
+      "slug": "man-lien-he",
+      "vi_sao": "Chủ kho 05/11 ở phiên giám sát, nguyên văn «Mở màn liên hệ», sau khi giám sát báo hàng 85 chỉ dựng phần dữ liệu và luật, chưa có màn «Liên hệ» riêng (luật đợt 58). Đọc mới đặt ở packages/api/src/contacts/read/**, không sửa tệp có sẵn của contacts (hàng 89 đang sửa).",
+      "sau": [
+        "85"
+      ]
+    },
+    {
+      "ma": "106",
+      "cau_giao": "Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên.",
+      "slug": "doi-chu-lead-co-hoi",
+      "vi_sao": "Chủ kho 05/11 chọn «Áp ba lớp» ở khám phá hàng 103 (ADR-0021 sửa đổi 05/11): Lead là dấu trên người, việc với người là Cơ hội. Luật đợt 61–62: hàng đang chạy không đổi chữ giữa chừng; đổi một lượt cho cả main sau mọi hàng có màn đang chạy, kể cả 39.",
+      "sau": [
+        "103",
+        "105",
+        "39"
+      ],
+      "bat_khi": "Không màn nào của bàn làm việc còn gọi việc với một người là «lead»: danh sách, bộ lọc, Hôm nay, hồ sơ người và hồ sơ căn dùng «Cơ hội» với đúng nhãn pha đã chốt ở Cổng Phạm vi 103; «Lead» chỉ còn là dấu trên liên hệ; nút «+ Lead», «Gửi lead» giữ; CONTEXT.md và Tham chiếu khớp chữ trên màn; dữ liệu và API không đổi"
+    },
+    {
+      "ma": "va-ho-so-lien-he",
+      "cau_giao": "Vá màn Liên hệ: bộ kiểm vai phủ đường xem hồ sơ và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp)",
+      "slug": "va-ho-so-lien-he",
+      "vi_sao": "Chủ kho chọn «mở hợp đồng mới» cho Ngoài-22 ở Cổng Bằng chứng hàng 103 (05/11); kèm phát hiện thấp AC-2 ký cùng 103. Hàng vá, không mã: đã quyết, chạy ngay (luật đợt 72).",
+      "sau": [
+        "103"
       ]
     }
   ],

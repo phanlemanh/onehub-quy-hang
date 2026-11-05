@@ -78,4 +78,8 @@ email vẫn là cửa thứ nhất, không đổi gì. Thêm cửa thứ hai:
   thư viện thì 404. Bảng xếp loại: `packages/api/src/auth/duong-mat-khau.ca.ts`.
 - **Đổi mật khẩu ở Cá nhân** thu mọi phiên khác; «Báo mất máy» vô hiệu mật khẩu. Mỗi lần cấp, đổi, vô hiệu, khoá ghi một
   dòng `identity.password_events`, không bao giờ ghi mật khẩu.
+- **Vá 05/11 (hàng `va-dang-nhap-mat-khau`, luật 64 của đợt dau-khach-nhap)** — chủ kho chọn «mở hợp đồng mới» cho hai kẽ
+  ở Cổng Bằng chứng hàng 104: người vào sàn khác mà mật khẩu gốc sàn cấp bị khoá thì mọi phiên của người cũng bị thu
+  trong cùng giao dịch lời mời (migration 038); đổi mật khẩu ở Cá nhân đếm sai chung bộ đếm với đăng nhập (5 / 15 phút
+  theo email, 20 liên tiếp), và khoá ở lần sai thứ 20 — qua đường nào — thu mọi phiên của người, kể cả phiên đang gọi.
 

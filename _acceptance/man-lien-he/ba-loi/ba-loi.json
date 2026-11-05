@@ -1,0 +1,24 @@
+{
+  "man": "Liên hệ — hồ sơ người (hàng 103) — cột hồ sơ cạnh danh sách: đầu hồ sơ, Số (che, Hiện số, Gọi), Cơ hội (pha), Căn, Dòng thời gian",
+  "khuyen": {
+    "loi": "trong-kho",
+    "ly_do": "Cùng khuôn với hồ sơ căn (solution-crm-4 đã chuyển thể, bố cục Hồ sơ chủ kho chọn 02/11): người dùng đọc hồ sơ người như hồ sơ căn, các mục in hoa xếp chồng, cuộn một mạch thấy cả Số, Cơ hội, Căn và Dòng thời gian — không phải chạm tab. Gọi được trong ba chạm (dòng → Hiện số → Gọi). Dùng lại thành phần đã có, không thêm khối mới."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Hồ sơ một cột theo khuôn hồ sơ căn",
+      "dong_co": "Dùng lại DauHoSo · MucHoSo · CapGiaTri của solution-crm-4 (hồ sơ căn): đầu hồ sơ, rồi các mục Số · Cơ hội · Căn · Dòng thời gian xếp chồng, ngăn bằng đường kẻ; pha của cơ hội là nhãn màu bên phải.",
+      "danh_doi": "Hồ sơ dài khi người có nhiều cơ hội và sự kiện — phải cuộn; dòng thời gian ở cuối nên ít được thấy."
+    },
+    "reui": {
+      "nhan": "Đầu hồ sơ + tab Cơ hội · Căn · Dòng thời gian",
+      "dong_co": "Đầu hồ sơ và Số luôn ở trên; ba tab của ReUI (Tabs) tách Cơ hội, Căn, Dòng thời gian (Timeline) — màn ngắn, không cuộn dài.",
+      "danh_doi": "Phải chạm tab mới thấy Căn hay Dòng thời gian (thêm một chạm); số đếm trên tab dễ bị bỏ qua; trên điện thoại ba tab chật."
+    },
+    "ve-moi": {
+      "nhan": "Cơ hội xếp theo pha thành ô",
+      "dong_co": "Cơ hội rải vào bốn ô theo pha (Mới · Đã gọi · Đang chào · Đang giao dịch) như bảng việc mini — nhìn một lần biết người này đang ở đâu.",
+      "danh_doi": "Ô pha trống chiếm chỗ; tên căn dài bị cắt trong ô; không theo khuôn nào đang có trong kho, phải dựng tay; mất khối Căn riêng."
+    }
+  }
+}

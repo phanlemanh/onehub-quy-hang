@@ -85,6 +85,10 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 85 (ADR-0021).
     "POST /api/v1/leads/{leadId}/listing",
     "GET /api/v1/contacts/{contactId}",
+    "GET /api/v1/contacts",
+    "GET /api/v1/contacts/{contactId}/profile",
+    "POST /api/v1/contacts/lookup-phone",
+    "POST /api/v1/contacts/{contactId}/phones/{phoneId}/reveal",
     "PATCH /api/v1/contacts/{contactId}",
     // lien-he-khach (hàng 86).
     "POST /api/v1/prospects",

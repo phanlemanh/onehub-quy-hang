@@ -1,0 +1,171 @@
+schema_version: 1
+feature_slug: man-lien-he
+# Lệnh máy: `executors.test.isolation` (packages/api/test-db và packages/db/tests, DATABASE_URL tới Postgres dãy L cổng 5571),
+# `executors.test.core`, `executors.test.web`, `executors.test.ui_lint`, `executors.design.khuon`. exit 0 của lệnh chung KHÔNG
+# đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok»,
+# không «# SKIP»/«# TODO». Dữ liệu: bộ dựng sàn thử qua đường ghi thật (nhập lead, ghi chủ nhà, mở nhu cầu khách), số
+# `0900 000 0xx`, tên «[Tên]». Mỗi lệnh ghi trong bài test-db assert mã trả về; mỗi phép quét âm tính có đối chứng dương trên
+# chính giá trị đã cài.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/man-lien-he.test.ts có mặt và ok: «liên hệ: danh sách theo quyền» — sàn thử có đầu chủ 1 giữ hai chủ, đầu chủ 2 giữ một chủ, một khách của đầu khách: GET /api/v1/contacts của đầu chủ 1 trả đúng tập id hai chủ của mình (deepEqual tập viết trước), của đầu chủ 2 trả đúng một, của trưởng nhóm trả cả bốn; bảng viết trước (telesales 403, đầu khách 403, quản trị sàn không vai khác 403, không cookie 401) → mã HTTP, đếm bằng số dòng; mỗi dòng có name, contactTypes, status (lead|contact), holderName, phoneCount, openOpportunities, listingCount; thân trả không có khoá phone, phoneEnc, floorPrice, không có số đã cài và giá đáy đã cài (đối chứng dương: máy dò bắt số và giá đáy đã cài khi chèn vào chuỗi mẫu). Chiều đỏ: bỏ điều kiện người giữ khỏi đường đọc → ca đỏ nêu id thừa."
+    paths: [packages/api/src/contacts/read/**, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/navigation.test.ts có mặt và ok: «điều hướng: nhà Liên hệ» — bảng viết trước tập vai → có nhà contacts hay không: [listing_agent] có; [team_lead] có; [telesales] không; [buyer_agent] không; [company_admin] không; [buyer_agent, listing_agent] có; mỗi dòng một assert, đếm bằng số dòng. Chiều đỏ: bỏ điều kiện vai → dòng [buyer_agent] đỏ."
+    paths: [packages/core/src/navigation.ts, packages/core/src/navigation.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: lọc, tìm tên, phân trang» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — bảng viết trước truy vấn → tập id: type=Seller; type=Landlord; type=Buyer; status=lead; status=contact; q=«nguyen» khớp tên «[Tên] Nguyễn A» (không dấu); q không khớp → rỗng; mỗi dòng một assert deepEqual tập, đếm bằng số dòng; sàn 120 liên hệ: duyệt hết các trang bằng cursor ra đúng 120 id khác nhau (không trùng, không sót) và trang đầu đúng 50. Chiều đỏ: bỏ cursor ổn định → ca đỏ nêu id trùng."
+    paths: [packages/api/src/contacts/read/**, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: tìm theo số» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — bảng viết trước người xem × số → thân: đầu chủ 1 tìm số chủ mình giữ (viết 0900 000 011 và +84 900 000 011) → {contactId} đúng; đầu chủ 1 tìm số chủ đầu chủ 2 giữ → {held:true, holderName:«[Tên] Đầu chủ 2»} và thân không có contactId, tên chủ, số; số không có → {found:false}; số của liên hệ sàn B → {found:false} cùng thân; đầu khách → 403; và bảng viết trước dùng chung cho ba đường (GET profile, POST lookup-phone, POST reveal), đếm bằng số dòng: người giữ còn vai Đầu chủ → đọc được; người giữ đã mất vai Đầu chủ (đổi sang Đầu khách bằng đường ghi thật) → không; đầu chủ khác → không; trưởng nhóm → đọc được; telesales → không; đầu khách → không; quản trị sàn không vai khác → không; người hai vai Đầu khách + Đầu chủ không giữ → không; không cookie → 401; mỗi dòng assert kết quả cả ba đường cùng nhau; phương thức là POST và URL không chứa chữ số của số. Chiều đỏ: trả contactId cho số người khác giữ → ca đỏ nêu khoá thừa."
+    paths: [packages/api/src/contacts/read/**, packages/db/migrations/036_man_lien_he.sql, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: hồ sơ không có số rõ» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — chủ hai số (số chính 0900 000 021, số thêm 0900 000 022 nhãn Work): GET /api/v1/contacts/{id}/profile của người giữ trả name, contactTypes, status, holderName và phones deepEqual [{label, isPrimary:true, tail:\"021\"}, {label:\"Work\", isPrimary:false, tail:\"022\"}] (thứ tự viết trước, có phoneId); thân không chứa «0900000021», «0900000022», «900000021», «900000022» (đối chứng dương: máy dò bắt khi chèn số vào chuỗi mẫu); đầu chủ khác → 404. Chiều đỏ: trả số đầy đủ trong phones → ca đỏ nêu số."
+    paths: [packages/api/src/contacts/read/**, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: mở số ghi sự kiện» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — người giữ POST /api/v1/contacts/{id}/phones/{phoneId}/reveal → 200, phone == số đã cài, header Cache-Control chứa no-store; đọc bằng vai chủ: contact_phone_reveals có đúng một dòng mới (revealed_by = người giữ, contact_id, phone_id đúng); phoneId của liên hệ khác → 404, và bảng viết trước dùng chung cho ba đường (GET profile, POST lookup-phone, POST reveal), đếm bằng số dòng: người giữ còn vai Đầu chủ → đọc được; người giữ đã mất vai Đầu chủ (đổi sang Đầu khách bằng đường ghi thật) → không; đầu chủ khác → không; trưởng nhóm → đọc được; telesales → không; đầu khách → không; quản trị sàn không vai khác → không; người hai vai Đầu khách + Đầu chủ không giữ → không; không cookie → 401; mỗi dòng assert kết quả cả ba đường cùng nhau — dòng «không» nhận 404 với thân giống hệt nhau và số dòng sự kiện không đổi; trưởng nhóm → 200 và thêm một dòng. Chiều đỏ: bỏ kiểm vai trong hàm (chỉ so người giữ) → dòng «người giữ đã mất vai» đỏ."
+    paths: [packages/api/src/contacts/read/**, packages/db/migrations/036_man_lien_he.sql, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/contacts/co-hoi.test.ts có mặt và ok: «cơ hội: bảng pha» — bảng viết trước đầu vào → pha: lead sent → cultivate; accepted → cultivate; called → appointment; on_board + hàng Incomplete → active; on_board + Active → active; on_board + Pending → under_contract; on_board + Closed → closed; returned → closed_out; discarded → closed_out; on_board + Withdrawn → closed_out; prospect mở → cultivate; prospect đóng → closed_out; mỗi dòng một assert, đếm bằng số dòng; nhãn mặc định ở một chỗ (PHA_NHAN) deepEqual {cultivate:«Mới», appointment:«Đã gọi», active:«Đang chào», under_contract:«Đang giao dịch», closed:«Đã chốt», closed_out:«Đã đóng»}. Chiều đỏ: đọc pha on_board từ lead thay vì từ hàng → dòng Pending đỏ."
+    paths: [packages/core/src/contacts/co-hoi.ts, packages/core/src/contacts/co-hoi.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: chủ nhiều căn một hồ sơ» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — một chủ (cùng số) có ba lead nhập qua đường ghi thật: lead 1 đầu chủ tạo hàng và đưa Sẵn sàng bán (Lên bảng), lead 2 đã gọi, lead 3 mới; và một hàng thứ hai ghi chủ nhà cùng số: GET profile trả opportunities deepEqual tập viết trước [{side:seller, need, unit, phase:active, listingCode}, {phase:appointment}, {phase:cultivate}] và listings đúng hai mã; đếm listing_owners theo contact_id bằng vai chủ ra 2 và GET /contacts liệt chủ ấy đúng một dòng với listingCount 2; thêm lead thứ tư đã Trả lại: openOpportunities ở dòng danh sách == số phần tử opportunities của hồ sơ có pha khác closed_out (3, viết trước), cùng người xem. Chiều đỏ: tách liên hệ theo hàng → ca đỏ nêu hai dòng."
+    paths: [packages/api/src/contacts/read/**, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: cơ hội phía khách chỉ trưởng nhóm» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — một người vừa là chủ (đầu chủ 1 giữ) vừa có nhu cầu khách của đầu khách 1 với hai Lần gửi: profile của trưởng nhóm có opportunities phía buyer {need, agentName, phase:cultivate, shareCount:2}; profile của đầu chủ 1 không có phần tử side buyer nào và không có khoá agentName của đầu khách; openOpportunities của người ấy ở danh sách của đầu chủ bằng số cơ hội phía chủ mở (viết trước), ở danh sách của trưởng nhóm cộng thêm cơ hội phía khách mở. Chiều đỏ: bỏ điều kiện vai trưởng nhóm → ca đỏ nêu phần tử buyer ở đầu chủ."
+    paths: [packages/api/src/contacts/read/**, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «liên hệ: dòng thời gian» trong packages/api/test-db/man-lien-he.test.ts có mặt và ok — sau chuỗi việc viết trước (nhập lead, nhận, gọi, tạo hàng, đổi giá rao, đổi giá đáy, mở số, mở nhu cầu khách) profile.timeline của trưởng nhóm có các kind theo thứ tự mới trước deepEqual danh sách viết trước, KHÔNG có sự kiện đổi giá đáy; của đầu chủ không có kind prospect_*; không phần tử nào mang số hay giá đáy đã cài (đối chứng dương trên chuỗi mẫu); hơn 50 sự kiện thì đúng 50. Chiều đỏ: thêm sự kiện giá đáy → ca đỏ nêu kind."
+    paths: [packages/api/src/contacts/read/**, packages/api/test-db/man-lien-he.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có mặt và ok các ca của 036: contact_phone_reveals bật enable + force row level security; vai quy_hang_app ở sàn A gọi app.contact_lookup_by_phone_hash với dấu vết số của sàn B → rỗng, gọi app.contact_phone_for_reveal với liên hệ sàn B → lỗi hay rỗng và contact_phone_reveals không thêm dòng; đối chứng dương: cùng gọi trong sàn A với liên hệ sàn A trả kết quả và thêm đúng một dòng; select contact_phone_reveals của sàn B từ sàn A → 0 dòng. Chiều đỏ: bỏ lọc app.current_company_id() trong hàm → ca đỏ nêu sàn B."
+    paths: [packages/db/migrations/036_man_lien_he.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/lien-he.test.ts có mặt và ok: «liên hệ: trạng thái màn» — dựng bằng createElement từng trạng thái viết trước (đang tải, trống, không khớp, người khác giữ, lỗi, hồ sơ có dữ liệu, hồ sơ không số, số đã hiện, mở số lỗi) và assert chuỗi dựng: trống có «Chưa có liên hệ nào»; người khác giữ có «Đã có trong sàn» và tên người giữ; lỗi có «Chưa tải được — thử lại» và nút «Thử lại»; số đã hiện có href tel:; mở số lỗi giữ số che; đếm bằng số dòng; «liên hệ: ô tìm» — bảng viết trước chuỗi → lối: «0900 000 011» → so; «+84900000011» → so; «Nguyễn» → ten; «0900» → ten (dưới chín chữ số). Chiều đỏ: bỏ nút Thử lại → dòng lỗi đỏ."
+    paths: ["apps/web/src/app/(app)/contacts/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Số chủ của bộ mẫu mã hoá bằng khoá khác khoá của máy chủ dev (dữ liệu mẫu không mở số, không tìm theo số được) — nên DỰNG DỮ LIỆU CỦA LƯỢT qua chính máy chủ đang chạy: đăng nhập Đầu chủ 1 mẫu, dùng fetch trong trang gọi POST /api/v1/listings rồi PUT /api/v1/listings/{id}/owner hai lần (hai căn Toà A, cùng một số mới 0900 000 09x, ownerName «[Tên] Chủ thử 103») để có một chủ nhiều căn; đăng nhập Đầu chủ 2 mẫu làm như vậy với một số mới khác cho một chủ của Đầu chủ 2"
+      - "Khổ 1440: mở /contacts → chụp evidence/E10b-step1.png: danh sách có cột tên, loại, người giữ, cơ hội, căn; nhà Liên hệ sáng trên cột nhà"
+      - "Đăng nhập lại Đầu chủ 1, mở /contacts, gõ «Chủ thử 103», chạm dòng → chụp evidence/E10b-step2.png: cột hồ sơ có Số (che, ba số cuối), Căn (≥2) và mục Cơ hội, Dòng thời gian"
+      - "Chạm «Hiện số» → chụp evidence/E10b-step3.png: số rõ và nút Gọi; ghi vào observed số chạm từ nhà Liên hệ tới lúc chạm Gọi (không tính gõ tìm), so với 3"
+      - "Gõ số mới của chủ Đầu chủ 2 giữ (dựng ở bước đầu) → chụp evidence/E10b-step4.png: «đã có trong sàn — [Tên] đang giữ», không tên chủ, không số"
+      - "Khổ 375: mở /contacts, chạm một dòng → chụp evidence/E10b-step5.png: hồ sơ mở ngăn từ đáy, không cuộn ngang"
+      - "Đăng nhập Đầu khách mẫu → chụp evidence/E10b-step6.png: không có nhà hay mục Liên hệ"
+    cmd: config:executors.ui-check
+    expected: "Danh sách và hồ sơ hiện đúng khối; trên máy tính từ nhà Liên hệ tới Gọi đếm được tối đa 3 chạm (số ghi trong observed); số người khác giữ chỉ báo đã có; điện thoại không cuộn ngang; đầu khách không thấy Liên hệ."
+    paths: ["apps/web/src/app/(app)/contacts/**", packages/api/src/contacts/read/**, packages/core/src/navigation.ts]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E10c
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; packages/ui-lint đủ ca, gồm bảng viết trước nhóm `lien-he` (tệp theo khuôn: apps/web/src/app/(app)/contacts/vung.tsx) và «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch» đếm lại từ cây; `npm run lint` của kho xanh; git diff của vòng không chạm apps/web/src/components/bo-cuc/**."
+    paths: [packages/ui-lint/**, design/patterns/lien-he.md, "apps/web/src/app/(app)/contacts/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10d
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    expected_exit: 1
+    paths: ["design/patterns/lien-he.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/contacts/**"]
+    expected: "exit 1 (đạt có giới hạn, giám sát trả L-0511-4, luật 33): bước chấm khuôn của kit 2.37.0 bỏ qua ngoai_le không có khoá khoi nên báo trang Liên hệ mới «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» — báo oan, kit#485. Mã 1 chỉ được chấp nhận cùng E10e xanh: E10e bảo đảm dòng lệch duy nhất là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E10e."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10e
+    criterion: AC-10
+    executor: script
+    cmd: node _acceptance/man-lien-he/kiem-khuon-e10d.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/contacts/**", "_acceptance/man-lien-he/kiem-khuon-e10d.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» và bài in «E10e: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E10d và bài E10e, vẫn thoát 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/lien-he.test.ts có mặt và ok: «liên hệ: cột thứ hai chọn đúng mục theo URL» — bảng viết trước bảy dòng chuỗi tham số → mục đang chọn ('' → /contacts; type=Seller, Landlord, Buyer, Tenant → mục cùng loại; status=lead → /contacts?status=lead; q=abc → /contacts), đếm bằng số dòng, và CONTACTS_ITEMS có đúng sáu mục; «cột thứ hai: mỗi nhà có ít nhất một mục» — lặp theo HOME_ORDER, soMucCot(nhà) ≥ 1 cho mọi nhà, đếm bằng HOME_ORDER.length, có nhà contacts. Chiều đỏ: bỏ khoá contacts khỏi SECOND_COLUMN_OPEN_BY_DEFAULT → npm run typecheck đỏ (thiếu thuộc tính contacts); bỏ nhánh contacts khỏi soMucCot → lỗi biên dịch ở nhánh never."
+    paths: ["apps/web/src/components/shell/second-column.tsx", "apps/web/src/app/(app)/contacts/**", packages/core/src/navigation.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11b
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/navigation.test.ts có mặt và ok: «cột thứ hai: mọi nhà, mặc định mở» — lặp theo HOME_ORDER (deepEqual danh sách viết trước sáu nhà gồm contacts), mỗi nhà mặc định mở, người gập thì nhớ, đếm bằng HOME_ORDER.length."
+    paths: [packages/core/src/navigation.ts, packages/core/src/navigation.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

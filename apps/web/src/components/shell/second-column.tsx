@@ -5,6 +5,7 @@ import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import { cn } from "cn";
 import {
   CalendarClockIcon,
+  ContactIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   FileSpreadsheetIcon,
@@ -44,6 +45,55 @@ const SHARES: Item[] = [
 export const TODAY_ITEMS: Item[] = mucHomNay(BO_NHOM_MAC_DINH).map((m) => ({ ...m, icon: ListChecksIcon }));
 
 const TEAM: Item[] = [{ label: "Tổng quan", href: "/team", icon: UsersIcon }];
+
+// Liên hệ (hàng 103): lọc theo loại liên hệ và dấu Lead — mỗi mục là đường `/contacts?…` màn Liên hệ đọc lại.
+export const CONTACTS_ITEMS: Item[] = [
+  { label: "Tất cả liên hệ", href: "/contacts", icon: ContactIcon },
+  { label: "Chủ bán", href: "/contacts?type=Seller", icon: ContactIcon },
+  { label: "Chủ cho thuê", href: "/contacts?type=Landlord", icon: ContactIcon },
+  { label: "Người mua", href: "/contacts?type=Buyer", icon: ContactIcon },
+  { label: "Người thuê", href: "/contacts?type=Tenant", icon: ContactIcon },
+  { label: "Lead", href: "/contacts?status=lead", icon: ContactIcon },
+];
+
+/** Mục đang chọn của cột Liên hệ: khớp đúng cặp `type`, `status` của URL (mục không tham số khi cả hai vắng). */
+export function mucLienHeDangChon(qs: URLSearchParams): string {
+  const loai = qs.get("type");
+  const dau = qs.get("status");
+  const khop = CONTACTS_ITEMS.find(({ href }) => {
+    const t = new URLSearchParams(href.split("?")[1] ?? "");
+    return t.get("type") === loai && t.get("status") === dau;
+  });
+  return khop?.href ?? CONTACTS_ITEMS[0]!.href;
+}
+
+function ContactsColumn() {
+  const dangChon = mucLienHeDangChon(useSearchParams());
+  return (
+    <ScrollArea className="h-full">
+      <nav className="flex flex-col gap-0.5 px-2 py-1" aria-label={HOME_LABEL.contacts}>
+        <SectionTitle>{HOME_LABEL.contacts}</SectionTitle>
+        {CONTACTS_ITEMS.map(({ label, href, icon: Icon }) => (
+          <Button
+            key={href}
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={<Link href={href} />}
+            aria-current={href === dangChon ? "page" : undefined}
+            className={cn(
+              "w-full justify-start gap-2.5 font-normal",
+              href === dangChon ? "bg-accent font-medium text-accent-foreground" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Icon className="size-4 shrink-0 opacity-70" aria-hidden="true" />
+            <span className="truncate">{label}</span>
+          </Button>
+        ))}
+      </nav>
+    </ScrollArea>
+  );
+}
 
 // Biểu tượng của từng mục Cài đặt; nhóm và mục do `cotCaiDat` quyết (hàng cai-dat-hop-nhat).
 const ICON_CAI_DAT: Record<string, LucideIcon> = {
@@ -151,10 +201,29 @@ function SettingsColumn({ caiDat }: { caiDat: CaiDatCua }) {
   );
 }
 
-function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
-  if (home === "inventory") return <InventoryColumn />;
-  if (home === "settings") return <SettingsColumn caiDat={caiDat} />;
-  const items = home === "shares" ? SHARES : home === "today" ? TODAY_ITEMS : TEAM;
+/** Số mục cố định của cột thứ hai theo nhà — rẽ đủ mọi nhà (luật đợt 68); bài kiểm đòi mỗi nhà ít nhất một mục. */
+export function soMucCot(home: Home, caiDat: CaiDatCua): number {
+  switch (home) {
+    case "today":
+      return TODAY_ITEMS.length;
+    case "inventory":
+      return 1; // «+ Lưu góc nhìn» luôn có; góc nhìn đã lưu thêm vào
+    case "shares":
+      return SHARES.length;
+    case "contacts":
+      return CONTACTS_ITEMS.length;
+    case "team":
+      return TEAM.length;
+    case "settings":
+      return cotCaiDat(caiDat.roles, caiDat.tenSan).reduce((n, g) => n + g.muc.length, 0);
+    default: {
+      const thieu: never = home;
+      return thieu;
+    }
+  }
+}
+
+function DanhSachMuc({ home, items }: { home: Home; items: Item[] }) {
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col py-1" aria-label={HOME_LABEL[home]}>
@@ -163,6 +232,28 @@ function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
       </nav>
     </ScrollArea>
   );
+}
+
+// Rẽ đủ mọi nhà, nhánh `never` (luật đợt 68): nhà mới mà quên cột là lỗi biên dịch, không rơi về mục của Đội.
+function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
+  switch (home) {
+    case "inventory":
+      return <InventoryColumn />;
+    case "settings":
+      return <SettingsColumn caiDat={caiDat} />;
+    case "contacts":
+      return <ContactsColumn />;
+    case "shares":
+      return <DanhSachMuc home={home} items={SHARES} />;
+    case "today":
+      return <DanhSachMuc home={home} items={TODAY_ITEMS} />;
+    case "team":
+      return <DanhSachMuc home={home} items={TEAM} />;
+    default: {
+      const thieu: never = home;
+      return thieu;
+    }
+  }
 }
 
 export function SecondColumn({ home, open, caiDat }: { home: Home; open: boolean; caiDat: CaiDatCua }) {
