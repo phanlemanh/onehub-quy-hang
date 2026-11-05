@@ -2400,6 +2400,17 @@
       "sau": [
         "38"
       ]
+    },
+    {
+      "ma": "va-gui-can-da-go",
+      "cau_giao": "Căn đã gỡ khi hoàn tác lần nhập không vào được Lần gửi mới và không ghi được sự kiện gửi (Quan tâm) ở tầng cơ sở dữ liệu",
+      "slug": "va-gui-can-da-go",
+      "vi_sao": "Ngoài-2 của hàng 66 — chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 05/11 (luật 65 của đợt)",
+      "vai": "Đầu khách",
+      "hang": "T3",
+      "dung_tren": [
+        "66"
+      ]
     }
   ],
   "chan_troi": [

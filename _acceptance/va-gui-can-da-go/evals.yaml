@@ -1,0 +1,39 @@
+schema_version: 1
+feature_slug: va-gui-can-da-go
+# Hai hàm của cơ sở dữ liệu chấm trên Postgres dãy: qua API (packages/api/test-db/va-gui-can-da-go/) và gọi thẳng hàm
+# (packages/db/tests/isolation.test.mjs). Căn đã gỡ dựng bằng đường thật: căn lên Đang bán qua lệnh hàng rồi gỡ qua cửa
+# voidListing của store hàng (cùng cửa đường hoàn tác lần nhập gọi). Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «gửi căn đã gỡ: Lần gửi mới bị từ chối» có mặt và ok trong packages/api/test-db/va-gui-can-da-go/ — hai căn Đang bán của Đầu chủ, gỡ căn A qua voidListing; Đầu khách POST /api/v1/shares {audience:'agents', listingIds:[A,B]} → 400 {error:'listing-not-shareable'} (2 assert), số dòng shares và share_listings của sàn trước = sau (2 assert); đối chứng: POST với [B] → 201 và share_listings có đúng B (2 assert). Chiều đỏ: hàm create_share không xét voided → ca đỏ nêu «listing-not-shareable»."
+    paths: [packages/db/migrations/037_*, packages/api/test-db/va-gui-can-da-go/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «gửi căn đã gỡ: khách không quan tâm được» có mặt và ok — Lần gửi có hai căn Đang bán A, B tạo trước; gỡ A; POST /api/v1/public/shares/{mã}/events {type:'interest', listingId:A} → 409 (assert), share_events của Lần gửi loại interest cho A = 0 (assert); đối chứng: interest cho B → 200 và một dòng (2 assert), link_opened → 200 (assert). Chiều đỏ: record_share_event không xét voided → ca đỏ nêu «409»."
+    paths: [packages/db/migrations/037_*, packages/api/test-db/va-gui-can-da-go/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ca «gửi căn đã gỡ (037): hàm chặn ở tầng dữ liệu» có mặt và ok — dưới vai quy_hang_app của sàn A với vai buyer_agent: app.create_share với căn đã gỡ (voided = true, từng có status_changed → Active) → lỗi mã 22023 (assert), không dòng shares mới (assert); app.record_share_event('interest') trên Lần gửi có căn đã gỡ → 23514 (assert), số share_events của Lần gửi trước = sau (assert); đối chứng dương: căn chưa gỡ cùng lời gọi → create_share qua, record_share_event trả true (2 assert); sàn B gọi create_share với căn của sàn A → 22023 (assert). Chiều đỏ: bỏ điều kiện voided trong 037 → ca đỏ nêu «22023»."
+    paths: [packages/db/migrations/037_*, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; npm run db:migrate chạy trước bộ kiểm không lỗi; ca «gửi căn đã gỡ (037): hàm giữ chữ ký và quyền» có mặt và ok — pg_proc của app.create_share và app.record_share_event: prosecdef = true (2 assert), proconfig chứa search_path= (2 assert), danh sách vai có quyền execute trên mỗi hàm (pg_proc.proacl) chỉ gồm chủ hàm và quy_hang_app (2 assert), quy_hang_app có quyền (2 assert); chạy migrate lần hai trong cùng ca không áp 037 lại (schema_migrations có đúng một dòng 037, assert). Chiều đỏ: 037 bỏ security definer → ca đỏ nêu «prosecdef»."
+    paths: [packages/db/migrations/037_*, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
