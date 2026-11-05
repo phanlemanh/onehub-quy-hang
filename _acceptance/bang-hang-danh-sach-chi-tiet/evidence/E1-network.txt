@@ -1,0 +1,2 @@
+driver CDP noi bo (chay-ui.mjs), khong co read_network_requests; network: n-a (driver)
+console trinh duyet (log may dev 3477): 0 loi o 1440x900; 1 'Hydration failed' o 1280x800 (console, khong phai fetch/XHR) -> chi ghi chu

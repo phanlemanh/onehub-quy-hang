@@ -160,12 +160,13 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | đối chiếu | Một tổ hợp ở đúng khổ — máy chụp ảnh chuẩn mở thẳng địa chỉ này | `apps/web/src/app/mau/he-bo-cuc/xem/page.tsx` |
 | bố cục | BoCuc: bảy bố cục giữ lề, đầu màn, xếp thân và cột phụ; không dựng Frame | `apps/web/src/components/bo-cuc/bo-cuc.tsx` |
 | bố cục | ChoTai: chờ tải theo hình của từng bố cục — chỗ duy nhất dựng Skeleton | `apps/web/src/components/bo-cuc/cho-tai.tsx` |
+| bố cục | CotKeoChia: cột chi tiết kéo chia cạnh thân của Danh sách – chi tiết (app-shell-11, 38%, 28–50%) — nhóm panel luôn dựng | `apps/web/src/components/bo-cuc/cot-keo-chia.tsx` |
 | bố cục | Dải ngoại tuyến ở đầu màn, nội dung đã tải giữ nguyên | `apps/web/src/components/bo-cuc/dai-ngoai-tuyen.tsx` |
 | bố cục | DauMan: đường dẫn luôn có, tiêu đề, điều khiển cấp màn và nút bên phải | `apps/web/src/components/bo-cuc/dau-man.tsx` |
 | bố cục | Cửa nhập của hệ bố cục cho màn | `apps/web/src/components/bo-cuc/index.ts` |
 | bố cục | Ma trận bảy bố cục × vùng, bản điện thoại, chia nút — một nguồn cho bố cục, test và bài quét | `apps/web/src/components/bo-cuc/ma-tran.ts` |
 | bố cục | LuongToanMan: Luồng nhiều bước trên điện thoại mở ngăn phủ toàn màn, đóng là quay lại | `apps/web/src/components/bo-cuc/luong-toan-man.tsx` |
-| bố cục | NganNoi: ngăn inset bên phải (sheet-9), điện thoại ngăn từ đáy hay phủ toàn màn — chỗ duy nhất gọi Sheet, Drawer | `apps/web/src/components/bo-cuc/ngan-noi.tsx` |
+| bố cục | NganNoi: ngăn inset bên phải (sheet-9) cho ngăn báo, lọc trên điện thoại, Luồng nhiều bước; điện thoại ngăn từ đáy hay phủ toàn màn — chỗ duy nhất gọi Sheet, Drawer | `apps/web/src/components/bo-cuc/ngan-noi.tsx` |
 | bố cục | TrangThai: rỗng (empty-state-1), tìm không ra (empty-state-2), lỗi, báo, chờ tải nhỏ | `apps/web/src/components/trang-thai.tsx` |
 | đối chiếu | Kê ảnh chuẩn: mỗi ảnh một dòng địa chỉ, khổ, commit | `design/anh-chuan/ke.json` |
 | khuôn | Khuôn Bảng hàng | `design/patterns/bang-hang.md` |
@@ -191,6 +192,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | sổ | ADR hệ bố cục | `docs/adr/0024-he-bo-cuc.md` |
 | sổ | Nháp hiện trạng cổng chọn khối | `docs/design/cong-chon-khoi-hien-trang.md` |
 | sổ | Lệch lọt qua lưới khuôn — mỗi lần chủ sản phẩm thấy một dòng | `docs/design/lech-lot.md` |
+| đối chiếu | Đánh giá ngăn hồ sơ căn cạnh Bảng hàng (05/11): ba lối, số đo, khảo sát ReUI Pro và ngành | `docs/design/danh-gia-ngan-chi-tiet-can.md` |
 | chọn khối | Vỏ, IA, khối đích và bố cục của từng màn, chỗ hở | `docs/design/vo-va-ia.md` |
 | kiểm | Lệnh bài quét khuôn: mỗi nhóm một dòng tóm tắt | `packages/ui-lint/ban-do-khuon.mjs` |
 | kiểm | Chặn tắt luật không lý do | `packages/ui-lint/check-bare-disables.mjs` |

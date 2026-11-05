@@ -1,0 +1,2 @@
+Driver: chay-ui.mjs (Chrome khong dau qua CDP rieng, khong qua browser tool co read_network_requests). Khong co dump network/console tu driver. networkObserved = n-a (driver).
+Ghi chu (lan chay E2 13:39, 1280x800): driver bao loiTrinhDuyet=1 (1 dong "[browser] Uncaught Error: Hydration failed" them vao log may dev 3477); o 1440x900 loiTrinhDuyet=0. Khong thuoc assertion cua eval E2.

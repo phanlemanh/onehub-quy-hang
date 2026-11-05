@@ -1,0 +1,18 @@
+---
+slug: bang-hang-danh-sach-chi-tiet
+at: 2026-11-05T04:21:16Z
+verdict: findings
+p0: 0
+p1: 3
+p2: 2
+---
+
+## Findings
+
+| Sev | Artifact | Thiếu gì | Kịch bản fail | Thước đo | Xử lý |
+|---|---|---|---|---|---|
+| P1 | evals | E3 đo «bảng không dựng lại» bằng MutationObserver đặt trên chính gốc bảng, đếm = 0; không có đối chứng dương, không nói đếm loại biến đổi nào | Nếu cả gốc bảng bị gắn lại khi đổi nhánh ngăn nổi sang cột kéo chia, observer còn bám nút cũ đã tách khỏi cây nên đếm 0, E3 xanh oan (lọc, nhóm nằm ở URL vẫn còn). Ngược lại, việc đánh dấu dòng đang mở đổi thuộc tính làm số đếm khác 0, E3 đỏ oan | Ghim tham chiếu nút gốc bảng trước khi mở và so `===` với nút sau mỗi bước (mở, đổi căn, đóng); hoặc observer đặt trên phần tử cha với childList + subtree, chỉ đếm việc gỡ hay thêm chính gốc bảng. Thêm chiều đỏ: ép gắn lại bảng thì ca đỏ gọi tên «bảng dựng lại» | fixed: E3 so trùng nút gốc bảng qua mỗi bước, có chiều đỏ --dung-lai |
+| P1 | contract | Trạng thái chờ tải và lỗi tải hồ sơ trong cột (ST-bang-hang-cho-tai, ST-bang-hang-loi-ho-so, kèm «Thử lại») cùng dải ngoại tuyến có ở thiết kế và ở trục Coverage «lỗi tải», nhưng không AC nào nói Then, không eval nào đo | Khung chờ và lỗi vốn dựng trong ngăn nổi; khi chuyển sang panel, hồ sơ lỗi làm trống cột hoặc lỗi lan làm sập cả nhóm panel, bảng mất theo. E1 đến E9 đều xanh vì chỉ chạy đường suôn sẻ | Thêm một AC: hồ sơ lỗi tải thì cột hiện câu lỗi kèm nút «Thử lại», bảng vẫn bấm được dòng khác; chờ tải thì cột hiện khung chờ. Eval ui-check chặn yêu cầu hồ sơ trên chỗ thử dãy D, đối chiếu nút «Thử lại» có mặt trong cột và elementFromPoint ở một dòng bảng là chính dòng ấy | fixed: thêm AC-10 và E10 (chờ tải, lỗi, Thử lại, bảng vẫn dùng được) |
+| P1 | evals | E7a tự quyết nghĩa người dùng thấy: căn có `listAgentKey` trỏ thành viên đã rời sàn hiện «—», giống hệt căn chưa gán. Không dòng sổ, không câu trong thiết kế hay AC-7 chốt điều này (cùng kiểu [cai-dat-hop-nhat#F1]) | Trưởng nhóm thấy «—», tưởng căn chưa ai giữ, gán đi hay bỏ qua, trong khi căn đang kẹt ở người đã nghỉ; E7a xanh vì đúng ma trận máy tự viết, phiên nghiệm thu mới lộ | Ghi một Hỏi chỉ-người ở sổ S1 (khuyến nghị: hiện nhãn riêng, ví dụ «Đã rời sàn», khác «—»); AC-7 thêm ca thành viên rời sàn; E7a và E7b ghim đúng chữ đã chốt | human-gate1: Hỏi-3 trong sổ, AC-7/E7a/E7b ghim «Đã rời sàn» theo khuyến nghị |
+| P2 | evals | AC-5 và ngưỡng SỐNG ở opportunity.md nêu ngăn nổi giữ cho ba việc: ngăn báo, lọc điện thoại, luồng nhiều bước; ca đối chứng của E5 chỉ kiểm luồng nhiều bước và ngăn báo | Đổi prop `chiTiet` của BoCuc làm lọc trên điện thoại thôi mở ngăn nổi (hay mở thành cột kéo chia ở khổ hẹp); E5 xanh, E6 chỉ xem bảng thẻ và `?unit=` nên cũng không bắt | Thêm ca đối chứng thứ ba vào E5: dựng lọc điện thoại thì có phần tử của NganNoi và không có resizable panel group; hoặc E6 bấm nút Lọc ở khổ 375 và đối chiếu ngăn nổi mở | fixed: E5 đối chứng thêm lọc trên điện thoại |
+| P2 | contract | Hỏi-2 khuyến nghị giữ cứng kiểu mở chi tiết và «ghi một dòng điều khoá ở Sổ điểm biến thiên» (luật ADR-0022 bắt buộc khi giữ cứng), nhưng AC-8 và E8 không có tệp sổ điểm biến thiên trong danh sách tài liệu | Chủ kho chọn giữ cứng ở Cổng Phạm vi, PR gộp mà không có dòng điều khoá; E8 xanh, chỗ giữ cứng không có lý do ghi lại, phạm luật thiết kế đối chiếu ngành | AC-8 thêm điều kiện theo kết quả Hỏi-2: nếu giữ cứng thì `docs/architecture/so-diem-bien-thien.md` có dòng điều khoá kiểu mở chi tiết nêu lý do nền tảng; E8 thêm ca có chiều đỏ (bản sao xoá dòng ấy thì ca đỏ gọi tên «Sổ điểm biến thiên») | fixed: AC-8 và E8 kiểm dòng điều khoá ở Sổ điểm biến thiên khi Hỏi-2 chốt giữ cứng |

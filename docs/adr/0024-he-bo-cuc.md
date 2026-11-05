@@ -154,3 +154,24 @@ khối)» của quyết định 2 giữ nguyên làm sử; điều đang đúng:
 trái sát vùng nội dung (cạnh cột mục lục), không căn giữa. Áp cho mọi màn Đọc — mục Cài đặt, Cá nhân, Ô nhận lead, trang
 tạm; Hồ sơ và Dòng tin giữ 48rem căn giữa. Không thêm bố cục thứ tám. Điện thoại giữ. Bề rộng vẫn thuộc bố cục: màn không
 tự đặt.
+
+## Sửa đổi 05/11 — Danh sách – chi tiết là cột kéo chia
+
+Hồ sơ `_acceptance/bang-hang-danh-sach-chi-tiet/` (hàng 105; chủ kho chọn lối C ở phiên đánh giá 05/11, nguyên văn «Chọn
+C» — `docs/design/danh-gia-ngan-chi-tiet-can.md`). Chữ của quyết định 2 và 13 ở trên giữ nguyên làm sử; điều đang đúng:
+
+- **Quyết định 2** — khối nguồn của «Danh sách – chi tiết» đổi từ ngăn trượt phải `sheet-9` sang **`app-shell-11` cột kéo
+  chia + ruột `solution-crm-4`**: chi tiết là một cột đứng cạnh thân, mặc định 38% bề rộng vùng làm việc, kéo 28–50%,
+  thân giữ tối thiểu 35%; cột cao từ đỉnh vùng làm việc (ngang mép trên khung của thân) tới đáy, ngoài khung của thân;
+  thân co sang trái, không lớp phủ, thanh trên của vỏ không bị che. Gốc của bố cục cao bằng vùng làm việc khi màn có chi
+  tiết — trang không cuộn, thân cuộn trong khối của nó. Nhóm panel luôn dựng nên thân không dựng lại khi cột mở, đổi
+  bản ghi hay đóng. Dựng ở `BoCuc kieu="danh-sach-chi-tiet"` có `chiTiet` (`components/bo-cuc/cot-keo-chia.tsx`).
+- **Quyết định 13** — «Giữ: hồ sơ mở cạnh bảng» nay là **cột kéo chia cao hết vùng làm việc, bảng vẫn bấm được** (không
+  còn ngăn inset trượt phải).
+- **Ngăn nổi giữ** cho ngăn báo, lọc trên điện thoại và Luồng nhiều bước (vùng thứ sáu của quyết định 3 không đổi). Ma
+  trận vùng của quyết định 3 («Cột phụ: hồ sơ kéo chia») nay khớp quyết định 2.
+- Điện thoại không đổi (quyết định 5): Bảng hàng giữ bảng thẻ và hồ sơ toàn màn; màn khác mở chi tiết ở ngăn từ đáy.
+- Bảng hàng là màn đầu dựng trên bố cục này và rời ngoại lệ có hạn của khuôn `bang-hang`; Lead đã nhập và Đã gửi khai
+  bố cục này nhưng chưa mở chi tiết — không đổi. Màn danh sách – chi tiết sau (103, 79, 99, 100, 102) dựng trên cột này.
+- Kiểu mở chi tiết cố định theo bố cục, sàn không chọn (Hỏi-2) — dòng điều khoá ở `docs/architecture/so-diem-bien-thien.md`.
+  Không thêm bố cục thứ tám.
