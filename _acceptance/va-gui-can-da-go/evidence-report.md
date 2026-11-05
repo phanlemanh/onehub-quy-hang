@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3732ed3bad23ef65bd8ca147524405320a1931b8
+verified_commit: f82915125caf2b997d4e42325f5a936bc09a9cfb
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -124,3 +124,7 @@ none — mọi eval chạy một lần, deterministic, không có pass_rate hỗ
 Round 1: bốn phát hiện trong hợp đồng ở AC-4 (E4 chưa chạy migrate lần hai, search_path chỉ kiểm có khoá) — trả về implementation.
 Round 2: sửa xong bốn phát hiện; một phát hiện ngoài hợp đồng do sửa vòng 1 (bộ kiểm cách ly chạy migrate) — trả về implementation.
 Round 3: ca migrate hai lần chuyển sang cơ sở dữ liệu tạm, bộ kiểm cách ly chỉ đọc; E1-E4 và toàn bộ lệnh suite xanh, không còn phát hiện.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main vào nhánh trước khi gộp PR #128
+run_id: repin-20261105T073232Z-55150
+sha: f82915125caf2b997d4e42325f5a936bc09a9cfb · suites: 7 lệnh exit 0 · evals: 4/4 eval máy đạt kỳ vọng
