@@ -132,6 +132,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 82: cấu hình theo sàn qua lối chung.
     "GET /api/v1/company/settings",
     "PATCH /api/v1/company/settings",
+    "GET /api/v1/company/import-templates",
+    "PUT /api/v1/company/import-templates/{headerKey}",
+    "DELETE /api/v1/company/import-templates/{headerKey}",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

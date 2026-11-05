@@ -118,8 +118,17 @@ evals:
     criterion: AC-9
     executor: script
     cmd: config:executors.design.khuon
-    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/templates/**"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san"
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/templates/**"]
+    expected: "exit 1 (đạt có giới hạn, giám sát trả L-39, luật 33): bước chấm khuôn của kit 2.37.0 bỏ qua ngoai_le không có khoá khoi nên báo màn Mẫu nhập «lệch: apps/web/src/app/(app)/settings/templates/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» dù trang-tam.md đã khai ngoại lệ — báo oan, kit#485. Mã 1 chỉ được chấp nhận cùng E10e xanh. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E10e."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10e
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/mau-nhap-va-bai/kiem-khuon-e10.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/templates/**", "_acceptance/mau-nhap-va-bai/kiem-khuon-e10.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng báo oan đã khai và bài in «E10e: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E10 và bài E10e, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E11
