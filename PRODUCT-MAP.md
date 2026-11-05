@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>21 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>81 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>82 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -43,10 +43,6 @@ flowchart TD
 - Môi giới sàn khác mở link bảng hàng và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; tải Excel hay ảnh bảng hàng được (`trang-nhom-moi-gioi`)
 - Quản trị sàn thêm nhãn trạng thái riêng như «Giữ chỗ», bắt buộc neo vào một trong sáu trạng thái chuẩn và nhận luật, màu của trạng thái đó (`trang-thai-rieng`)
 - Quản trị sàn tạo trường riêng kiểu có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở bảng hàng, lọc được, không ra trang khách; cùng cơ chế áp cho liên hệ: trường riêng theo loại liên hệ (chủ nhà, người mua, người thuê…), trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
-
-## Đang làm
-
-- Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được và thấy thuộc tính lô tự điền — khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền — như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ (`go-ma-lo`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
@@ -78,6 +74,7 @@ flowchart TD
 - Bộ dữ liệu mẫu của một sàn thử — một dự án căn hộ, hai mẫu file bảng hàng Excel, lead và chủ nhà giả — sinh từ khuôn của bảng hàng thật, mọi bản ghi mang nhãn mẫu (`du-lieu-mau-san-thu`)
 - Bộ dữ liệu mẫu thứ hai — một khu thấp tầng có dãy và lô nhà phố, biệt thự, đất; nhà và đất ngoài khu ở vài phường; một file bảng hàng thấp tầng bẩn có đáp án; lead và chủ nhà giả — sinh từ khuôn, mọi bản ghi mang nhãn mẫu (`du-lieu-mau-thap-tang`)
 - Ghi thiết bị (máy tính hay điện thoại) vào sự kiện của thao tác, và ghi lượt mất mạng cùng thao tác lúc mất mạng trên điện thoại về máy chủ, để hai số đo §11 «thao tác theo thiết bị và vai» và «mất mạng trên điện thoại» đo được trong hai tuần thử (`ghi-thiet-bi-va-mat-mang`)
+- Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được và thấy thuộc tính lô tự điền — khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền — như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ (`go-ma-lo`)
 - Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá (`goi-ep-gia-dot-hai`)
 - Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
 - Mọi màn sau đăng nhập chọn một trong bảy bố cục có tên với sáu vùng chuẩn, chờ tải theo hình bố cục, rỗng · lỗi · ngoại tuyến một luật, ba khổ và một menu Tạo trên vỏ; trang mẫu sống không cần cơ sở dữ liệu hay đăng nhập cho ảnh chuẩn để đối chiếu màn mới; răng lint và bản đồ hệ thiết kế giữ luật (`he-bo-cuc`)

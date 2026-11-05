@@ -5,7 +5,7 @@ slug: go-ma-lo
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: _acceptance/go-ma-lo/design.md
@@ -80,3 +80,5 @@ lô của sàn (hàng 76); dãy trong khuôn Invest (LH11). Never: đoán lô g�
 - Đổi bộ tra căn hộ hay đường `/catalog/units`.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi sau này thêm một khu mới mà cách đọc mã khai lệch với danh mục, đầu chủ gõ đúng mã vẫn bị báo lô chưa có, và không ai nhận ra lỗi cấu hình. Hiện chưa ai gặp vì chỉ có khu mẫu đã kiểm. — `packages/core/src/catalog/lot-lookup.ts`

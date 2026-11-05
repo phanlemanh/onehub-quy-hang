@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c8da5f24ba8e1e3a661f47b9a6c2dfe97f3861b9
+verified_commit: a995f4149ff761e29a5923960e42e54baf0d3af3
 human_signoff:
 ---
 
@@ -28,121 +28,121 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-go-ma-lo-E1-r1
+  run_id: minted-go-ma-lo-E1-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E2
-  run_id: minted-go-ma-lo-E2-r1
+  run_id: minted-go-ma-lo-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E3
-  run_id: minted-go-ma-lo-E3-r1
+  run_id: minted-go-ma-lo-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E4
-  run_id: minted-go-ma-lo-E4-r1
+  run_id: minted-go-ma-lo-E4-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E5
-  run_id: minted-go-ma-lo-E5-r1
+  run_id: minted-go-ma-lo-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E6
-  run_id: minted-go-ma-lo-E6-r1
+  run_id: minted-go-ma-lo-E6-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E7
-  run_id: minted-go-ma-lo-E7-r1
+  run_id: minted-go-ma-lo-E7-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E8
-  run_id: minted-go-ma-lo-E8-r1
+  run_id: minted-go-ma-lo-E8-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/core, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 1069.925625
+    npm test -w @quy-hang/core
+    ℹ duration_ms 1022.426459
 
 - eval: E9
-  run_id: minted-go-ma-lo-E9-r1
+  run_id: minted-go-ma-lo-E9-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.api
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
   output: |
-    npm test -w @quy-hang/api, một lần chạy, đạt 1/1, không phương sai
-    duration_ms 60849.904292
+    npm test -w @quy-hang/api
+    ℹ duration_ms 60967.409625
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-go-ma-lo-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-go-ma-lo-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
 
 - cmd: npm run test:hooks
-  run_id: minted-go-ma-lo-SUITE-test_hooks-r1
+  run_id: minted-go-ma-lo-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-go-ma-lo-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-go-ma-lo-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
 
 - cmd: npm run typecheck
-  run_id: minted-go-ma-lo-SUITE-typecheck-r1
+  run_id: minted-go-ma-lo-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
 
 - cmd: npm run lint
-  run_id: minted-go-ma-lo-SUITE-lint-r1
+  run_id: minted-go-ma-lo-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T14:56:02Z
+  verified_at: 2026-11-05T16:02:11Z
 
 ## Known limits
 
@@ -150,14 +150,17 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả HEAD lẫn baseline, chứng minh harness chứ không phải tính năng; nên viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý):
-- npm test -w @quy-hang/core: E1, E2, E3, E4, E5, E6, E7, E8
-- npm test -w @quy-hang/api: E9
+carried tu round 1 — baseline khong do lai round nay.
+
+Baseline khong do: E1, E2, E3, E4, E5, E6, E7, E8, E9 (evals.yaml khong doi tu lan baseline cuoi, round 1; field baseline cua tung eval ghi n-a).
+
+Eval KHONG-PHAN-BIET (pass tren ca HEAD lan baseline — carried tu round 1): lenh `npm test -w @quy-hang/core` (E1, E2, E3, E4, E5, E6, E7, E8) và lệnh `npm test -w @quy-hang/api` (E9). Cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý.
 
 ## Variance
 
-none — mọi eval nhiều lần chạy đều đồng đều (mọi eval chạy một lần, xác định)
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval E1-E9 và các lệnh suite đều đạt. Không có mục cần người phán xét.
+Round 1: carried — lịch sử round 1 nằm ở evidence cũ; baseline đo ở round 1.
+Round 2: E1–E9 đều xanh, năm lệnh suite xanh; không eval nào lỗi. Verdict PASS.
