@@ -7,7 +7,7 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>12 việc"]
+  GD --> B["Sắp mở vòng<br/>21 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
@@ -24,18 +24,27 @@ flowchart TD
 
 ## Sắp mở vòng
 
+- Đầu chủ mở bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và thấy cột, hồ sơ căn đúng trường của từng loại — không cột tầng, trục cho đất (`bang-hang-theo-loai-hinh`)
 - Quản trị sàn đổi tên hiển thị của trường chuẩn và thêm giá trị riêng neo vào giá trị chuẩn; cùng một căn hiện đúng ở bảng hàng, đội khác và trang khách (`cach-goi-rieng`)
+- Hàng tạo được trên lô thấp tầng trong khu và trên nhà, đất ngoài khu định danh bằng địa chỉ chuẩn; căn ngoài khu là bản ghi của sàn, sàn khác không thấy, và hàng cũ gấp lại ra đúng như trước (`can-ngoai-khu`)
+- Đầu chủ gõ «dong nam», «bp», «Đang gd» ở ô bất kỳ và thấy máy gợi giá trị chuẩn; lựa chọn thành đề xuất từ điển của sàn; quản trị sàn duyệt và xem sức khoẻ dữ liệu (`chuan-hoa-moi-cua`)
 - Đầu chủ chụp ảnh khi đi xem nhà ngay trên điện thoại và ảnh vào đúng ngăn của căn, tải lên ở nền (`chup-anh-dien-thoai`)
 - Lõi đọc một địa chỉ Việt Nam gõ kiểu nào cũng được ra địa chỉ chuẩn và khoá địa chỉ, đổi tên phường cũ ra phường mới, và nói thiếu phần nào khi không đọc chắc — không gọi dịch vụ ngoài (`dia-chi-chuan`)
+- Đầu chủ gõ mã căn, mở Bảng hàng hay hồ sơ căn và thấy thuộc tính căn đọc từ vùng danh mục dùng chung — danh mục đã nhận từ nguồn danh mục — thay cho gói mẫu cố định; căn chưa có vẫn đi đường mã ngoài danh mục (`doc-vung-danh-muc`)
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
 - Đầu chủ đổi giá hoặc trạng thái nhanh trên điện thoại sau cuộc gọi, theo đúng luật sửa giá (`doi-gia-nhanh`)
 - Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được và thấy thuộc tính lô tự điền — khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền — như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ (`go-ma-lo`)
+- Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
+- Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Quản trị sàn đổi cách chia lead, hạn nhận và hạn gọi, ngưỡng hai hàng đợi của Hôm nay; đổi chỉ áp cho lead mới (`luat-chia-lead`)
 - Quản trị sàn xem và sửa mẫu file nhập đã nhớ, mẫu bảng hàng và mẫu bài theo kênh (`mau-nhap-va-bai`)
 - Đầu chủ thấy ô máy không đọc được — giá dải, «thu về 4.2», trạng thái lạ — có đề xuất kèm lý do và chọn một chạm (`nhap-o-la`)
 - Đầu chủ thả file mẫu lạ khi sàn đã bật «Xử lý bằng AI» và thấy máy ghép gần hết, mỗi đề xuất kèm lý do; tắt hay hết trần thì vẫn nhập như không có AI (`nhap-tac-tu-ke-hoach`)
 - Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn; giá đã lưu giữ nguyên kèm ngày tính (`thue-phi`)
+- Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
+- Môi giới sàn khác mở link bảng hàng và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; tải Excel hay ảnh bảng hàng được (`trang-nhom-moi-gioi`)
 - Quản trị sàn thêm nhãn trạng thái riêng như «Giữ chỗ», bắt buộc neo vào một trong sáu trạng thái chuẩn và nhận luật, màu của trạng thái đó (`trang-thai-rieng`)
+- Quản trị sàn tạo trường riêng kiểu có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở bảng hàng, lọc được, không ra trang khách; cùng cơ chế áp cho liên hệ: trường riêng theo loại liên hệ (chủ nhà, người mua, người thuê…), trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
