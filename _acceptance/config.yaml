@@ -58,7 +58,7 @@ executors:
     va_dang_nhap_mat_khau: "node --test \"_acceptance/va-dang-nhap-mat-khau/thu/*.test.mjs\""
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
-    floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
+    floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm
     khuon: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-khuon.mjs\" --kiem --root ."   # hàng 32: lưới khuôn S4 của kit 2.37.0 (giám sát duyệt B-0311-2)
 feature_loop:
   ui_standards_skill: quy-hang-ui   # tang-5-giao-dien: .agents/skills/quy-hang-ui (nạp qua .claude/skills/quy-hang-ui)

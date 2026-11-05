@@ -674,7 +674,8 @@
       "vung": [
         "packages/core/src/import/normalize/**",
         "apps/web/src/app/(app)/settings/labels/**"
-      ]
+      ],
+      "bat_khi": "Đầu chủ gõ «dong nam», «bp», «Đang gd» ở ô bất kỳ thì thấy máy gợi đúng giá trị chuẩn; chọn gợi ý thành đề xuất từ điển của sàn chờ quản trị sàn duyệt; quản trị sàn xem được sức khoẻ dữ liệu (bao nhiêu ô lạ, đã neo bao nhiêu); bộ chuẩn hoá dùng chung với lõi nhập, không gọi dịch vụ ngoài"
     },
     {
       "ma": "71",
@@ -1191,7 +1192,8 @@
       ],
       "vung": [
         "apps/web/src/app/s/broker/**"
-      ]
+      ],
+      "bat_khi": "Môi giới sàn khác mở link bảng hàng không cần đăng nhập và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; sàn ẩn mức chia thì không hiện; tải Excel hay ảnh bảng hàng ra đúng những cột ấy; không số chủ nhà, giá đáy hay ghi chú nội bộ nào lọt ra, dựng từ luật ẩn ở lõi"
     },
     {
       "ma": "81",
@@ -1354,7 +1356,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/fields/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn tạo trường riêng có / không hoặc chọn một chỉ sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở Bảng hàng, lọc được, không bao giờ ra trang khách; liên hệ có trường riêng theo loại, trường của liên hệ chủ nhà mang lớp nguồn và không rời công ty; sàn khác không thấy trường của nhau"
     },
     {
       "ma": "48",
@@ -1805,7 +1808,8 @@
       "vung": [
         "apps/web/src/app/(app)/inventory/**",
         "apps/web/src/app/(app)/units/**"
-      ]
+      ],
+      "bat_khi": "Đầu chủ mở Bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và mỗi loại hiện đúng bộ cột và bộ trường hồ sơ của nó — đất không có cột tầng hay trục; dựng trên bố cục danh sách – chi tiết của hàng 105; trang thử nhanh-tuc-thi hết ngoại lệ có hạn"
     },
     {
       "ma": "80",
@@ -2489,6 +2493,85 @@
       "vi_sao": "Chủ kho chọn «mở hợp đồng mới» cho Ngoài-22 ở Cổng Bằng chứng hàng 103 (05/11); kèm phát hiện thấp AC-2 ký cùng 103. Hàng vá, không mã: đã quyết, chạy ngay (luật đợt 72).",
       "sau": [
         "103"
+      ]
+    },
+    {
+      "ma": "danh-muc-xa-day-du",
+      "cau_giao": "Danh mục đơn vị hành chính cấp xã đầy đủ cho lõi địa chỉ: 3.321 xã theo Phụ lục II Quyết định 19/2025/QĐ-TTg, bảng phường cũ → mới cả nước theo các nghị quyết sắp xếp cấp xã, tên tỉnh cũ → mới; đối chiếu lại mã 34 tỉnh và 4 phường TP.HCM của hàng 75 trước khi hàng 76 lưu khoá. Chủ kho chọn nguồn và cho phép tải (Hỏi-1 hàng 75, duyệt 05/11).",
+      "slug": "danh-muc-xa-day-du",
+      "vi_sao": "Chủ kho duyệt Cổng Phạm vi hàng 75 (05/11), Hỏi-1 theo khuyến nghị: hàng 75 giao bộ đọc, 34 tỉnh và phần trích TP.HCM; danh mục cấp xã đầy đủ thành hàng dữ liệu riêng, chủ kho chọn nguồn và cho phép tải ở Cổng Phạm vi của hàng này. Hàng không mã: đã quyết.",
+      "sau": [
+        "75"
+      ],
+      "vung": [
+        "packages/core/src/address/**"
+      ]
+    },
+    {
+      "ma": "va-duong-so-n",
+      "cau_giao": "Bộ đọc địa chỉ đọc đúng tên đường dạng «Đường số N»: chữ «số» trong tên đường không bị lấy làm số nhà, hai đường «Đường số 5» và «Đường số 7» không bao giờ ra cùng khoá, «Số 10 Đường số 5» ra số nhà 10. Phải xong trước khi hàng 76 lưu khoá.",
+      "slug": "va-duong-so-n",
+      "vi_sao": "Ngoài-2 hàng 75 dia-chi-chuan: chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng (05/11). Hàng vá, không mã: đã quyết; chạy trước 76 để khoá địa chỉ đúng rồi mới được lưu.",
+      "sau": [
+        "75"
+      ],
+      "vung": [
+        "packages/core/src/address/**"
+      ]
+    },
+    {
+      "ma": "va-link-gui-can",
+      "cau_giao": "Đầu khách bấm «Gửi căn» ở màn Đã gửi hay ở Hôm nay đầu khách thì mở đúng nơi chọn căn để gửi, không rơi vào trang không có (/inventory/cards).",
+      "slug": "va-link-gui-can",
+      "vi_sao": "Phiên rà soát tạo/xem/sửa/xoá (PR #139) thấy hai nút «Gửi căn» trỏ /inventory/cards, đường không có trang (shares/danh-sach.tsx, today/buyer/dong-tin.tsx); chủ kho mở phiên vá từ thẻ đề xuất 05/11. Hàng vá, không mã: đã quyết.",
+      "vung": [
+        "apps/web/src/app/(app)/shares/**",
+        "apps/web/src/app/(app)/today/buyer/**"
+      ]
+    },
+    {
+      "ma": "mau-bang-hang-va-bai",
+      "cau_giao": "Quản trị sàn xem và sửa mẫu bảng hàng (cột và thứ tự khi xuất) và mẫu bài theo kênh trong màn Mẫu của Cài đặt › Sàn; sửa hay xoá một mẫu thì lần xuất và lần gửi kế dùng bản mới, lần đã xong không đổi.",
+      "slug": "mau-bang-hang-va-bai",
+      "vi_sao": "Tách từ hàng 50 mau-nhap-va-bai: chủ kho duyệt Cổng Phạm vi 05/11 theo khuyến nghị Hỏi-1 (mẫu bảng hàng + mẫu bài theo kênh sang hàng kế). Hàng không mã: đã quyết (Cổng Đáng 50 đã ký cả ba loại mẫu).",
+      "sau": [
+        "50"
+      ],
+      "vung": [
+        "packages/core/src/export/**",
+        "packages/core/src/sharing/**",
+        "apps/web/src/app/(app)/settings/templates/**"
+      ]
+    },
+    {
+      "ma": "bang-quyen-theo-vai",
+      "cau_giao": "Mọi thao tác ghi đọc quyền từ một bảng quyền thao tác × vai ở lõi. Trước hết: chỉ người có nhà Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm) đọc và sửa được hàng; Telesales và Quản trị sàn chỉ thấy kết quả lead và cấu hình; đưa hàng lên «Đang bán» theo đúng cờ «Sẵn sàng bán» ở mọi lối; luật theo dòng của hàng và sự kiện hàng xét vai, không chỉ cách ly công ty.",
+      "slug": "bang-quyen-theo-vai",
+      "vi_sao": "Chỗ hở G1 (kèm G7 phần hàng) của rà soát tạo/xem/sửa/xoá và phân quyền (docs/plan/ra-soat-crud-phan-quyen.md, PR #139): sửa giá, phí, trạng thái hàng «Toàn sàn» không kiểm vai, lệch luật 21 và bảng nhà theo vai §9. Chủ kho 05/11 «Mở G1 ngay», đọc §12 31/10 «mọi thành viên sàn sửa được» là «mọi thành viên có Bảng hàng». Hàng vá, không mã: đã quyết.",
+      "vai": "Trưởng nhóm",
+      "hang": "T3",
+      "bat_khi": "Bảng quyền viết trước, lấy bảng hai của tài liệu rà soát làm nháp, như bang-xem-nguon.json. Bộ kiểm gọi từng thao tác ghi bằng từng vai, ở API và luật theo dòng, và đếm khớp từng ô. Telesales và Quản trị sàn nhận «không có hàng này». Lệnh đưa lên Đang bán từ ô Trạng thái của Đầu khách bị từ chối như nút đã ẩn. Sổ điểm có dòng khoá trỏ về bảng",
+      "vung": [
+        "packages/core/src/access/**",
+        "packages/api/src/listings/**",
+        "apps/web/src/app/(app)/inventory/cell-edit/**",
+        "packages/db/migrations/046_*",
+        "packages/db/tests/isolation.test.mjs"
+      ]
+    },
+    {
+      "ma": "ban-mau-khai-dia-chi",
+      "cau_giao": "Mỗi trang bản mẫu khai một địa chỉ màn thật nó đứng thay; vỏ lấy nhà, tiêu đề điện thoại, tab dưới và mục sáng cột thứ hai theo địa chỉ ấy (nâng nhaMau của hàng 91 từ nhà lên địa chỉ, trang trong khu làm việc khai được); bộ quét bản đồ khuôn coi khu proto là khu bản mẫu riêng (ra khỏi nhận diện Trang tạm, khỏi khai ngoại lệ từng trang) và đỏ khi trang bản mẫu không khai địa chỉ; sổ design-pass ghi địa chỉ thật cạnh đường chạy.",
+      "slug": "ban-mau-khai-dia-chi",
+      "vi_sao": "Rà soát bản mẫu (docs/plan/ra-soat-ban-mau.md §3, PR #141): bản mẫu design-pass ở /proto/{slug} không thuộc nhà nào nên vỏ không dựng cột thứ hai, ảnh trình chủ kho thiếu cột (lặp ở hàng 91, 45). Chủ kho duyệt khuyến nghị ở phiên rà soát, nguyên văn «Duyệt, mở hàng» (05/11). Hàng không mã: đã quyết. Xong thì bỏ luật đợt 73.",
+      "hang": "T2",
+      "bat_khi": "Bản mẫu ở khu proto chụp ra đủ thanh trên, nhà sáng, cột thứ hai có mục sáng, tiêu đề và tab điện thoại như màn thật; bản mẫu thiếu khai địa chỉ thì lint đỏ; không đổi _acceptance/config.yaml",
+      "vung": [
+        "apps/web/src/components/shell/**",
+        "packages/core/src/navigation*",
+        "packages/ui-lint/**",
+        "design/patterns/trang-tam.md",
+        "apps/web/src/app/(app)/proto/**"
       ]
     }
   ],

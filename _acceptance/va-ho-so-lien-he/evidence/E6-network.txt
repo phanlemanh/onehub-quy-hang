@@ -1,0 +1,8 @@
+E6 network log (playwright, app origin http://localhost:3462; Postgres L 5571). t in ms from step-3 start
+step2: GET /api/v1/contacts?type=Seller 200 ; GET /api/v1/contacts?type=Seller&cursor=... 200 -> header "50+ lien he" -> "58 lien he"
+step3: 5107 click Xem them #1 -> req+HELD Seller&cursor=MTc5Mzc1... (2s hold)
+ 5148 click "Chu cho thue" (+41ms) -> URL type=Landlord ; stale Xem them button still on screen
+ 5206 click Xem them #2 (+99ms) -> req+HELD Seller&cursor=MTc5Mzc1... (type=Seller, NOT Landlord)
+ 5549 req GET /api/v1/contacts?type=Landlord ; 5569 res 200 (0 items)
+ 7111/7207 released ; 7140/7237 res 200 Seller&cursor (pages returned after switch)
+No request carried cursor + type=Landlord. All contacts requests 200. Screen: 0 lien he, empty state, no rows.
