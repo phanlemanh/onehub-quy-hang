@@ -91,6 +91,7 @@ evals:
   - id: E7
     criterion: AC-7
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.web
     expected: "exit 0; trong apps/web/src/lib/nhap/de-xuat.test.ts ca «đề xuất chờ duyệt khoá Tiếp» có mặt và ok — trạng thái đường ống sau khi gộp đề xuất cho 3 cột: choDuyet = 3 chỉ số (assert), coTheTiep false kèm thông điệp «Còn 3 cột máy đề xuất chưa duyệt» (2 assert); đồng ý một cột → choDuyet 2 (assert); đổi đích một cột → choDuyet 1, cột ấy reason «người chọn ở bước ghép cột» (2 assert); đồng ý mọi đề xuất → choDuyet rỗng, coTheTiep true (2 assert); kế hoạch không đổi đích ở bước đồng ý (deepEqual targets trước/sau, assert); hàm ghi (xemThuTatCa/ghiTiep giả) không được gọi khi choDuyet khác rỗng (assert đếm 0). Chiều đỏ: coTheTiep bỏ kiểm choDuyet → assert coTheTiep false đỏ."
     paths: [apps/web/src/lib/nhap/**]
@@ -160,6 +161,7 @@ evals:
   - id: E10
     criterion: AC-10
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.web
     expected: "exit 0; trong apps/web/src/lib/nhap/de-xuat.test.ts ca «nhập lại cùng mẫu không gọi AI» có mặt và ok — chạy đường ống trên la-b-viet-tat với đề xuất ghi sẵn, đồng ý mọi đề xuất, dựng mẫu bằng taoMau như lúc ghi xong (luồng hàng 67); chạy lại cùng file với mẫu ấy → mọi cột có khoá mẫu mang reason bắt đầu «theo mẫu» và không cột nào độ tin thấp (assert mỗi cột; cột «#» số thứ tự không có khoá mẫu, máy bỏ có lý do), dungGoiDeXuat trả không cột chưa ghép (assert), hàm gọi đề xuất giả đếm 0 (assert); mẫu (JSON) không chứa chuỗi cấm nào của đáp án la-b-viet-tat (assert, nêu chuỗi trúng). Chiều đỏ: bỏ điều kiện «còn cột chưa ghép» trước khi gọi → đếm 1, đỏ."
     paths: [apps/web/src/lib/nhap/**, packages/core/src/import/**]

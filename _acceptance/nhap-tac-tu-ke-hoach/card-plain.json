@@ -1,37 +1,129 @@
 {
   "feature_plain": "Sàn bật «Xử lý bằng AI» thì khi Đầu chủ thả một bảng hàng kiểu lạ, máy đề xuất cách ghép các cột còn chưa ghép được, mỗi đề xuất kèm lý do để người duyệt; sàn tắt, hết trần hay AI lỗi thì nhập vẫn chạy như bây giờ.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ ghép đúng ít nhất 95% cột trên bốn bảng hàng kiểu lạ (hôm nay máy chỉ ghép đúng 44,8%) và để lọt sai không quá 0,5% ô (hôm nay 3,6%)."},
-    {"id": "AC-4", "p": "Sẽ coi việc gửi sang AI là một thoả thuận của sàn, chỉ mở mã căn, toà, diện tích, giá, phí, trạng thái — thông tin chủ nhà bị chặn cả ở phần mềm lẫn ở cơ sở dữ liệu."},
-    {"id": "AC-5", "p": "Sẽ cho Quản trị sàn bật, tắt «Xử lý bằng AI» và thấy tháng này đã dùng bao nhiêu tiền; vai khác không bật tắt được."},
-    {"id": "AC-6", "p": "Sẽ kiểm từng đề xuất của AI trước khi tới màn: đề xuất sai chỉ bỏ đúng cột ấy, đề xuất đúng vẫn giữ, mỗi cột máy đề xuất mang lý do."},
-    {"id": "AC-7", "p": "Sẽ hiện huy hiệu «Máy đề xuất» kèm lý do ở từng cột và khoá nút Tiếp cho tới khi người đồng ý hay sửa hết — không ghi gì trước khi duyệt."},
-    {"id": "AC-9", "p": "Sẽ ghi sổ chi phí mỗi lần gọi AI và ngừng gọi khi sàn chạm trần tháng (mặc định 10 USD), sàn khác không đọc được sổ."},
-    {"id": "AC-11", "p": "Sẽ chỉ cho Đầu chủ và Trưởng nhóm — người được nhập — dùng đề xuất của AI, theo đúng sàn đang chọn."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ ghép đúng ít nhất 95% cột trên bốn bảng hàng kiểu lạ (hôm nay máy chỉ ghép đúng 44,8%) và để lọt sai không quá 0,5% ô (hôm nay 3,6%)."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ coi việc gửi sang AI là một thoả thuận của sàn, chỉ mở mã căn, toà, diện tích, giá, phí, trạng thái — thông tin chủ nhà bị chặn cả ở phần mềm lẫn ở cơ sở dữ liệu."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ cho Quản trị sàn bật, tắt «Xử lý bằng AI» và thấy tháng này đã dùng bao nhiêu tiền; vai khác không bật tắt được."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ kiểm từng đề xuất của AI trước khi tới màn: đề xuất sai chỉ bỏ đúng cột ấy, đề xuất đúng vẫn giữ, mỗi cột máy đề xuất mang lý do."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ hiện huy hiệu «Máy đề xuất» kèm lý do ở từng cột và khoá nút Tiếp cho tới khi người đồng ý hay sửa hết — không ghi gì trước khi duyệt."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ ghi sổ chi phí mỗi lần gọi AI và ngừng gọi khi sàn chạm trần tháng (mặc định 10 USD), sàn khác không đọc được sổ."
+    },
+    {
+      "id": "AC-11",
+      "p": "Sẽ chỉ cho Đầu chủ và Trưởng nhóm — người được nhập — dùng đề xuất của AI, theo đúng sàn đang chọn."
+    }
   ],
   "wont_do": [
-    {"id": "AC-2", "p": "Sẽ KHÔNG gửi sang AI tên chủ nhà, số điện thoại, giá đáy, ghi chú hay tên người — chỉ tiêu đề và hình dạng của các cột ấy."},
-    {"id": "AC-3", "p": "Chặn lần hai ở máy chủ: gói nào lọt số điện thoại, email, số giấy tờ hay tên người thì không gửi, ghi sự cố không kèm chữ nào của gói."},
-    {"id": "AC-8", "p": "Sẽ KHÔNG làm hỏng việc nhập khi AI không dùng được: màn nói một dòng lý do và người ghép tay phần còn lại như hôm nay."},
-    {"id": "AC-10", "p": "Sẽ KHÔNG gọi lại AI khi nhập lại cùng kiểu bảng hàng — máy dùng cách ghép đã nhớ."},
-    {"id": "OOS-1", "p": "Chưa làm tác tử nhiều lượt có công cụ — bản này hỏi AI một lần; chỉ mở khi số đo hụt."},
-    {"id": "OOS-2", "p": "Chưa đề xuất cho từng ô lạ còn lại (giá dải, «thu về 4.2») — đó là hàng 69 ngay sau."},
-    {"id": "OOS-3", "p": "Chưa có màn sửa trần chi phí hay màn sổ chi phí chi tiết theo lần nhập."},
-    {"id": "OOS-4", "p": "Chưa dọn từ điển bằng AI hay chuẩn hoá mọi ô gõ tay (hàng 70, 71)."},
-    {"id": "OOS-5", "p": "Việc ngoài phần mềm vẫn của người: mở tài khoản Claude API của OneHub, đặt khoá lên máy chủ thật, người pháp lý rà trước sàn đầu tiên ngoài đội."}
+    {
+      "id": "AC-2",
+      "p": "Sẽ KHÔNG gửi sang AI tên chủ nhà, số điện thoại, giá đáy, ghi chú hay tên người — chỉ tiêu đề và hình dạng của các cột ấy."
+    },
+    {
+      "id": "AC-3",
+      "p": "Chặn lần hai ở máy chủ: gói nào lọt số điện thoại, email, số giấy tờ hay tên người thì không gửi, ghi sự cố không kèm chữ nào của gói."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ KHÔNG làm hỏng việc nhập khi AI không dùng được: màn nói một dòng lý do và người ghép tay phần còn lại như hôm nay."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ KHÔNG gọi lại AI khi nhập lại cùng kiểu bảng hàng — máy dùng cách ghép đã nhớ."
+    },
+    {
+      "id": "OOS-1",
+      "p": "Chưa làm tác tử nhiều lượt có công cụ — bản này hỏi AI một lần; chỉ mở khi số đo hụt."
+    },
+    {
+      "id": "OOS-2",
+      "p": "Chưa đề xuất cho từng ô lạ còn lại (giá dải, «thu về 4.2») — đó là hàng 69 ngay sau."
+    },
+    {
+      "id": "OOS-3",
+      "p": "Chưa có màn sửa trần chi phí hay màn sổ chi phí chi tiết theo lần nhập."
+    },
+    {
+      "id": "OOS-4",
+      "p": "Chưa dọn từ điển bằng AI hay chuẩn hoá mọi ô gõ tay (hàng 70, 71)."
+    },
+    {
+      "id": "OOS-5",
+      "p": "Việc ngoài phần mềm vẫn của người: mở tài khoản Claude API của OneHub, đặt khoá lên máy chủ thật, người pháp lý rà trước sàn đầu tiên ngoài đội."
+    }
   ],
   "coverage_plain": [
-    {"i": 0, "p": "Mọi loại cột khi tới bước đề xuất — đã ghép theo mẫu, theo từ điển, hay chưa ghép thuộc từng loại thông tin — đều có tiêu chí nói cột ấy gửi gì (AC-1 số đo, AC-2 không rò, AC-6 kiểm, AC-10 nhập lại)."},
-    {"i": 1, "p": "Mọi tình trạng AI của sàn — chưa bật, đang bật, tạm ngừng, hết trần, thiếu khoá, AI lỗi, quá giờ, trả sai khuôn — đều có ca kiểm (AC-4, AC-5, AC-8, AC-9)."},
-    {"i": 2, "p": "Mọi kiểu đề xuất sai mà AI có thể trả về đều có một ca riêng chứng chỉ cột ấy bị bỏ (AC-6)."},
-    {"i": 3, "p": "Mọi người gọi — Đầu chủ, Trưởng nhóm, Quản trị sàn, Đầu khách, chưa đăng nhập, sàn khác — đều có ca kiểm quyền (AC-5, AC-11)."},
-    {"i": 4, "p": "Ba lớp chặn thông tin chủ nhà — trình duyệt dựng gói, máy chủ quét lại, cơ sở dữ liệu ràng buộc — mỗi lớp một tiêu chí (AC-2, AC-3, AC-4)."}
+    {
+      "i": 0,
+      "p": "Mọi loại cột khi tới bước đề xuất — đã ghép theo mẫu, theo từ điển, hay chưa ghép thuộc từng loại thông tin — đều có tiêu chí nói cột ấy gửi gì (AC-1 số đo, AC-2 không rò, AC-6 kiểm, AC-10 nhập lại)."
+    },
+    {
+      "i": 1,
+      "p": "Mọi tình trạng AI của sàn — chưa bật, đang bật, tạm ngừng, hết trần, thiếu khoá, AI lỗi, quá giờ, trả sai khuôn — đều có ca kiểm (AC-4, AC-5, AC-8, AC-9)."
+    },
+    {
+      "i": 2,
+      "p": "Mọi kiểu đề xuất sai mà AI có thể trả về đều có một ca riêng chứng chỉ cột ấy bị bỏ (AC-6)."
+    },
+    {
+      "i": 3,
+      "p": "Mọi người gọi — Đầu chủ, Trưởng nhóm, Quản trị sàn, Đầu khách, chưa đăng nhập, sàn khác — đều có ca kiểm quyền (AC-5, AC-11)."
+    },
+    {
+      "i": 4,
+      "p": "Ba lớp chặn thông tin chủ nhà — trình duyệt dựng gói, máy chủ quét lại, cơ sở dữ liệu ràng buộc — mỗi lớp một tiêu chí (AC-2, AC-3, AC-4)."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Ô cơ hội ghi «gác hàng nếu nền 64 đạt mọi ngưỡng», mà máy lại tự đổi sang đo trên bộ bảng lạ do máy dựng và ghi là máy quyết. Đã xử: thiết kế nay trình số của cả hai bộ, và câu «đọc nền trên bộ nào để quyết gác» thành câu hỏi cho anh (Hỏi-3)."},
-    {"i": 1, "p": "Đề xuất dùng để đo AC-1 lẽ ra do chính phiên đã thấy đáp án viết — tức tự chấm bài mình. Đã sửa: đề xuất phải do một tác tử mới, chỉ đọc gói đã che và lời nhắc của mã, lập ra; bài đo kiểm cả hai dấu ấy."},
-    {"i": 2, "p": "Máy chủ quét dáng họ tên cả ở tiêu đề có thể chặn mọi bảng kiểu lạ (tiêu đề viết hoa đầu giống tên người), khiến AI không bao giờ chạy mà bài kiểm vẫn xanh. Đã sửa: chỉ quét dáng họ tên ở giá trị, thêm ca chứng 13 bảng thật không bị chặn."},
-    {"i": 3, "p": "Ma trận kiểm loại cột viết tay có thể thiếu khi sau này thêm loại cột mới. Đã sửa: ma trận ràng vào danh sách loại cột của mã, thiếu là kiểm kiểu đỏ."},
-    {"i": 4, "p": "Dải báo «Chưa dùng được AI» là thứ người nhìn thấy mà chưa có ca chụp màn. Đã thêm ca chụp ở hai khổ màn hình."}
+    {
+      "i": 0,
+      "p": "Ô cơ hội ghi «gác hàng nếu nền 64 đạt mọi ngưỡng», mà máy lại tự đổi sang đo trên bộ bảng lạ do máy dựng và ghi là máy quyết. Đã xử: thiết kế nay trình số của cả hai bộ, và câu «đọc nền trên bộ nào để quyết gác» thành câu hỏi cho anh (Hỏi-3)."
+    },
+    {
+      "i": 1,
+      "p": "Đề xuất dùng để đo AC-1 lẽ ra do chính phiên đã thấy đáp án viết — tức tự chấm bài mình. Đã sửa: đề xuất phải do một tác tử mới, chỉ đọc gói đã che và lời nhắc của mã, lập ra; bài đo kiểm cả hai dấu ấy."
+    },
+    {
+      "i": 2,
+      "p": "Máy chủ quét dáng họ tên cả ở tiêu đề có thể chặn mọi bảng kiểu lạ (tiêu đề viết hoa đầu giống tên người), khiến AI không bao giờ chạy mà bài kiểm vẫn xanh. Đã sửa: chỉ quét dáng họ tên ở giá trị, thêm ca chứng 13 bảng thật không bị chặn."
+    },
+    {
+      "i": 3,
+      "p": "Ma trận kiểm loại cột viết tay có thể thiếu khi sau này thêm loại cột mới. Đã sửa: ma trận ràng vào danh sách loại cột của mã, thiếu là kiểm kiểu đỏ."
+    },
+    {
+      "i": 4,
+      "p": "Dải báo «Chưa dùng được AI» là thứ người nhìn thấy mà chưa có ca chụp màn. Đã thêm ca chụp ở hai khổ màn hình."
+    }
+  ],
+  "decisions_plain": [
+    {
+      "id": "d-20261105T160037Z-30",
+      "p": "Đã chấp nhận hai bài kiểm bố cục đạt có giới hạn: bộ kiểm của kit báo nhầm trang «Xử lý bằng AI» thuộc hai nhóm màn. Đổi lại, một bài kèm bảo đảm đó là chỗ lệch duy nhất, lệch thật khác vẫn đỏ. Giám sát đã duyệt (G-0511-9); kit vá thì gỡ."
+    },
+    {
+      "id": "d-20261105T160037Z-31",
+      "p": "Vòng 1 bị trả nên đã sửa đúng các lỗi trong hợp đồng: gói gửi AI chặn khoá lạ, thoả thuận hết hạn thì không gửi, màn Nhập không kẹt chờ và nói lý do khi không dùng được AI, khổ điện thoại không cắt chữ. Đổi lại, sáu lỗi ngoài hợp đồng để anh quyết ở cổng này."
+    },
+    {
+      "id": "d-20261105T172638Z-32",
+      "p": "Đã khai hai phép đo sẵn có (người duyệt trước khi ghi, nhập lại không gọi AI) là phép đo tác động phía máy chủ để cổng trước gộp nhận. Đổi lại, hai phép đo này kiểm lời gọi ở lớp màn bằng hàm giả, không chạy qua máy chủ thật."
+    }
   ]
 }
