@@ -1,0 +1,1824 @@
+{
+  "phienBan": 1,
+  "hatGiong": 20261105,
+  "nhan": "Mẫu",
+  "san": {
+    "ten": "[Mẫu] Sàn thử",
+    "nhan": "Mẫu"
+  },
+  "donViHanhChinh": {
+    "nguon": "Nghị quyết 1685/NQ-UBTVQH15 ngày 16/6/2025 của Ủy ban Thường vụ Quốc hội về sắp xếp đơn vị hành chính cấp xã của Thành phố Hồ Chí Minh — đọc qua trang Wikipedia tiếng Việt «Quận 1», chưa đọc văn bản gốc",
+    "ngay": "2026-11-05"
+  },
+  "nguoi": [
+    {
+      "khoa": "dau-chu-thap-tang",
+      "ten": "[Mẫu] Đầu chủ thấp tầng",
+      "vai": [
+        "listing_agent"
+      ],
+      "khu": [
+        "Khu thấp tầng"
+      ],
+      "email": "dau-chu-thap-tang@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    },
+    {
+      "khoa": "dau-chu-nha-le",
+      "ten": "[Mẫu] Đầu chủ nhà lẻ",
+      "vai": [
+        "listing_agent"
+      ],
+      "khu": [
+        "Nhà ngoài khu"
+      ],
+      "email": "dau-chu-nha-le@mau.quy-hang.test",
+      "nhan": "Mẫu"
+    }
+  ],
+  "vung": [
+    {
+      "ten": "Khu thấp tầng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ten": "Nhà ngoài khu",
+      "nhan": "Mẫu"
+    }
+  ],
+  "danhMucThapTang": {
+    "provider": "[Mẫu] Nguồn danh mục thử",
+    "measuredAt": "2026-11-05T00:00:00+07:00",
+    "subdivisions": [
+      {
+        "subdivisionKey": "mau-khu-thap-tang",
+        "subdivisionName": "[Mẫu] Khu thấp tầng thử",
+        "complexName": null,
+        "blocks": [
+          {
+            "blockKey": "LK1",
+            "blockName": "Dãy LK1",
+            "nhanSan": "Liền kề",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:LK1-01",
+                "unitNumber": "LK1-01",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Đông",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-02",
+                "unitNumber": "LK1-02",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-03",
+                "unitNumber": "LK1-03",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Nam",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-04",
+                "unitNumber": "LK1-04",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Nam",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-05",
+                "unitNumber": "LK1-05",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-06",
+                "unitNumber": "LK1-06",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây Nam",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-07",
+                "unitNumber": "LK1-07",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Đông Nam",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-08",
+                "unitNumber": "LK1-08",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây Bắc",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-09",
+                "unitNumber": "LK1-09",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Bắc",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK1-10",
+                "unitNumber": "LK1-10",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Đông",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              }
+            ]
+          },
+          {
+            "blockKey": "LK2",
+            "blockName": "Dãy LK2",
+            "nhanSan": "Liền kề",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:LK2-01",
+                "unitNumber": "LK2-01",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Bắc",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-02",
+                "unitNumber": "LK2-02",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Đông Nam",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-03",
+                "unitNumber": "LK2-03",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Nam",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-04",
+                "unitNumber": "LK2-04",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Nam",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-05",
+                "unitNumber": "LK2-05",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Nam",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-06",
+                "unitNumber": "LK2-06",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Bắc",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-07",
+                "unitNumber": "LK2-07",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây Bắc",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-08",
+                "unitNumber": "LK2-08",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây Nam",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-09",
+                "unitNumber": "LK2-09",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 360,
+                "bedroomsTotal": 4,
+                "directionFaces": "Tây Bắc",
+                "lotSizeArea": 100,
+                "storiesTotal": 4,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:LK2-10",
+                "unitNumber": "LK2-10",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 292,
+                "bedroomsTotal": 4,
+                "directionFaces": "Bắc",
+                "lotSizeArea": 81,
+                "storiesTotal": 4,
+                "frontageLength": 4.5,
+                "accessRoadWidth": 12
+              }
+            ]
+          },
+          {
+            "blockKey": "SH1",
+            "blockName": "Dãy SH1",
+            "nhanSan": "Shophouse",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:SH1-01",
+                "unitNumber": "SH1-01",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 540,
+                "bedroomsTotal": 5,
+                "directionFaces": "Tây Bắc",
+                "lotSizeArea": 120,
+                "storiesTotal": 5,
+                "frontageLength": 6,
+                "accessRoadWidth": 24
+              },
+              {
+                "upi": "urn:onehub:upi:mau:SH1-02",
+                "unitNumber": "SH1-02",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 540,
+                "bedroomsTotal": 5,
+                "directionFaces": "Tây Nam",
+                "lotSizeArea": 120,
+                "storiesTotal": 5,
+                "frontageLength": 6,
+                "accessRoadWidth": 24
+              },
+              {
+                "upi": "urn:onehub:upi:mau:SH1-03",
+                "unitNumber": "SH1-03",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 540,
+                "bedroomsTotal": 5,
+                "directionFaces": "Tây",
+                "lotSizeArea": 120,
+                "storiesTotal": 5,
+                "frontageLength": 6,
+                "accessRoadWidth": 24
+              },
+              {
+                "upi": "urn:onehub:upi:mau:SH1-04",
+                "unitNumber": "SH1-04",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 540,
+                "bedroomsTotal": 5,
+                "directionFaces": "Tây Nam",
+                "lotSizeArea": 120,
+                "storiesTotal": 5,
+                "frontageLength": 6,
+                "accessRoadWidth": 24
+              },
+              {
+                "upi": "urn:onehub:upi:mau:SH1-05",
+                "unitNumber": "SH1-05",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 540,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông Nam",
+                "lotSizeArea": 120,
+                "storiesTotal": 5,
+                "frontageLength": 6,
+                "accessRoadWidth": 24
+              },
+              {
+                "upi": "urn:onehub:upi:mau:SH1-06",
+                "unitNumber": "SH1-06",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Townhouse",
+                "livingArea": 540,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông Nam",
+                "lotSizeArea": 120,
+                "storiesTotal": 5,
+                "frontageLength": 6,
+                "accessRoadWidth": 24
+              }
+            ]
+          },
+          {
+            "blockKey": "BT1",
+            "blockName": "Dãy BT1",
+            "nhanSan": "Biệt thự",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:BT1-01",
+                "unitNumber": "BT1-01",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 300,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông Nam",
+                "lotSizeArea": 200,
+                "storiesTotal": 3,
+                "frontageLength": 10,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-02",
+                "unitNumber": "BT1-02",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 450,
+                "bedroomsTotal": 5,
+                "directionFaces": "Nam",
+                "lotSizeArea": 300,
+                "storiesTotal": 3,
+                "frontageLength": 12,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-03",
+                "unitNumber": "BT1-03",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 300,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông",
+                "lotSizeArea": 200,
+                "storiesTotal": 3,
+                "frontageLength": 10,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-04",
+                "unitNumber": "BT1-04",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 450,
+                "bedroomsTotal": 5,
+                "directionFaces": "Tây Nam",
+                "lotSizeArea": 300,
+                "storiesTotal": 3,
+                "frontageLength": 12,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-05",
+                "unitNumber": "BT1-05",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 300,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông",
+                "lotSizeArea": 200,
+                "storiesTotal": 3,
+                "frontageLength": 10,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-06",
+                "unitNumber": "BT1-06",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 450,
+                "bedroomsTotal": 5,
+                "directionFaces": "Bắc",
+                "lotSizeArea": 300,
+                "storiesTotal": 3,
+                "frontageLength": 12,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-07",
+                "unitNumber": "BT1-07",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 300,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông Bắc",
+                "lotSizeArea": 200,
+                "storiesTotal": 3,
+                "frontageLength": 10,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:BT1-08",
+                "unitNumber": "BT1-08",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Residential",
+                "propertySubType": "Single Family Residence",
+                "livingArea": 450,
+                "bedroomsTotal": 5,
+                "directionFaces": "Đông",
+                "lotSizeArea": 300,
+                "storiesTotal": 3,
+                "frontageLength": 12,
+                "accessRoadWidth": 12
+              }
+            ]
+          },
+          {
+            "blockKey": "DN1",
+            "blockName": "Dãy DN1",
+            "nhanSan": "Đất nền",
+            "units": [
+              {
+                "upi": "urn:onehub:upi:mau:DN1-01",
+                "unitNumber": "DN1-01",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 100,
+                "storiesTotal": null,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-02",
+                "unitNumber": "DN1-02",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 108,
+                "storiesTotal": null,
+                "frontageLength": 6,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-03",
+                "unitNumber": "DN1-03",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 100,
+                "storiesTotal": null,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-04",
+                "unitNumber": "DN1-04",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 108,
+                "storiesTotal": null,
+                "frontageLength": 6,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-05",
+                "unitNumber": "DN1-05",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 100,
+                "storiesTotal": null,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-06",
+                "unitNumber": "DN1-06",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 108,
+                "storiesTotal": null,
+                "frontageLength": 6,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-07",
+                "unitNumber": "DN1-07",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 100,
+                "storiesTotal": null,
+                "frontageLength": 5,
+                "accessRoadWidth": 12
+              },
+              {
+                "upi": "urn:onehub:upi:mau:DN1-08",
+                "unitNumber": "DN1-08",
+                "stack": null,
+                "floor": null,
+                "propertyType": "Land",
+                "propertySubType": "Unimproved Land",
+                "livingArea": null,
+                "bedroomsTotal": null,
+                "directionFaces": null,
+                "lotSizeArea": 108,
+                "storiesTotal": null,
+                "frontageLength": 6,
+                "accessRoadWidth": 12
+              }
+            ]
+          }
+        ],
+        "nhan": "Mẫu"
+      }
+    ]
+  },
+  "canNgoaiKhu": [
+    {
+      "ma": "NK-01",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Đông",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 16,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Sài Gòn",
+        "streetName": "Đường Mẫu 1",
+        "streetNumber": "45"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-02",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Tây Bắc",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 8,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Sài Gòn",
+        "streetName": "Đường Mẫu 1",
+        "streetNumber": "45A"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-03",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Nam",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 8,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Sài Gòn",
+        "streetName": "Đường Mẫu 1",
+        "streetNumber": "45/12"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-04",
+      "propertyType": "Residential",
+      "propertySubType": "Single Family Residence",
+      "livingArea": 192,
+      "bedroomsTotal": 5,
+      "directionFaces": "Đông Bắc",
+      "lotSizeArea": 128,
+      "storiesTotal": 3,
+      "frontageLength": 8,
+      "accessRoadWidth": 12,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Sài Gòn",
+        "streetName": "Đường Mẫu 1",
+        "streetNumber": "45/12/3"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-05",
+      "propertyType": "Land",
+      "propertySubType": "Unimproved Land",
+      "livingArea": null,
+      "bedroomsTotal": null,
+      "directionFaces": null,
+      "lotSizeArea": 60,
+      "storiesTotal": null,
+      "frontageLength": 4,
+      "accessRoadWidth": 8,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Tân Định",
+        "streetName": "Đường Mẫu 2",
+        "streetNumber": "120/7"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-06",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Tây",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 12,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Tân Định",
+        "streetName": "Đường Mẫu 2",
+        "streetNumber": "88"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-07",
+      "propertyType": "Residential",
+      "propertySubType": "Single Family Residence",
+      "livingArea": 192,
+      "bedroomsTotal": 5,
+      "directionFaces": "Tây Nam",
+      "lotSizeArea": 128,
+      "storiesTotal": 3,
+      "frontageLength": 8,
+      "accessRoadWidth": 16,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Tân Định",
+        "streetName": "Đường Mẫu 2",
+        "streetNumber": "88/5/2"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-08",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Bắc",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 12,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Bến Thành",
+        "streetName": "Đường Mẫu 3",
+        "streetNumber": "17"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-09",
+      "propertyType": "Land",
+      "propertySubType": "Unimproved Land",
+      "livingArea": null,
+      "bedroomsTotal": null,
+      "directionFaces": null,
+      "lotSizeArea": 60,
+      "storiesTotal": null,
+      "frontageLength": 4,
+      "accessRoadWidth": 8,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Bến Thành",
+        "streetName": "Đường Mẫu 3",
+        "streetNumber": "17/9"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-10",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Bắc",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 16,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Bến Thành",
+        "streetName": "Đường Mẫu 4",
+        "streetNumber": "203/14"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-11",
+      "propertyType": "Residential",
+      "propertySubType": "Single Family Residence",
+      "livingArea": 192,
+      "bedroomsTotal": 5,
+      "directionFaces": "Tây",
+      "lotSizeArea": 128,
+      "storiesTotal": 3,
+      "frontageLength": 8,
+      "accessRoadWidth": 8,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Cầu Ông Lãnh",
+        "streetName": "Đường Mẫu 5",
+        "streetNumber": "61"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-12",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Đông Nam",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 16,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Cầu Ông Lãnh",
+        "streetName": "Đường Mẫu 5",
+        "streetNumber": "61/3/8"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-13",
+      "propertyType": "Land",
+      "propertySubType": "Unimproved Land",
+      "livingArea": null,
+      "bedroomsTotal": null,
+      "directionFaces": null,
+      "lotSizeArea": 60,
+      "storiesTotal": null,
+      "frontageLength": 4,
+      "accessRoadWidth": 12,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Cầu Ông Lãnh",
+        "streetName": "Đường Mẫu 6",
+        "streetNumber": "9B"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "NK-14",
+      "propertyType": "Residential",
+      "propertySubType": "Townhouse",
+      "livingArea": 230,
+      "bedroomsTotal": 4,
+      "directionFaces": "Đông Nam",
+      "lotSizeArea": 64,
+      "storiesTotal": 4,
+      "frontageLength": 4,
+      "accessRoadWidth": 16,
+      "diaChi": {
+        "stateOrProvince": "Thành phố Hồ Chí Minh",
+        "wardName": "Cầu Ông Lãnh",
+        "streetName": "Đường Mẫu 6",
+        "streetNumber": "150/22"
+      },
+      "nhan": "Mẫu"
+    }
+  ],
+  "chuNha": [
+    {
+      "ma": "CNT-01",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 01",
+      "soDienThoai": "0900 000 043",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-02",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 02",
+      "soDienThoai": "0900 000 044",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-03",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 03",
+      "soDienThoai": "0900 000 045",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-04",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 04",
+      "soDienThoai": "0900 000 046",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-05",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 05",
+      "soDienThoai": "0900 000 047",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-06",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 06",
+      "soDienThoai": "0900 000 048",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-07",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 07",
+      "soDienThoai": "0900 000 049",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-08",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 08",
+      "soDienThoai": "0900 000 050",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-09",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 09",
+      "soDienThoai": "0900 000 051",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-10",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 10",
+      "soDienThoai": "0900 000 052",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-11",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 11",
+      "soDienThoai": "0900 000 053",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-12",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 12",
+      "soDienThoai": "0900 000 054",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-13",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 13",
+      "soDienThoai": "0900 000 055",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-14",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 14",
+      "soDienThoai": "0900 000 056",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-15",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 15",
+      "soDienThoai": "0900 000 057",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-16",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 16",
+      "soDienThoai": "0900 000 058",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-17",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 17",
+      "soDienThoai": "0900 000 059",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-18",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 18",
+      "soDienThoai": "0900 000 060",
+      "dauChu": "dau-chu-thap-tang",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-19",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 19",
+      "soDienThoai": "0900 000 061",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-20",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 20",
+      "soDienThoai": "0900 000 062",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-21",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 21",
+      "soDienThoai": "0900 000 063",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-22",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 22",
+      "soDienThoai": "0900 000 064",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-23",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 23",
+      "soDienThoai": "0900 000 065",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-24",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 24",
+      "soDienThoai": "0900 000 066",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-25",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 25",
+      "soDienThoai": "0900 000 067",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-26",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 26",
+      "soDienThoai": "0900 000 068",
+      "dauChu": "dau-chu-nha-le",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-27",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 27",
+      "soDienThoai": "0900 000 069",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-28",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 28",
+      "soDienThoai": "0900 000 070",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "CNT-29",
+      "ten": "[Mẫu] Chủ nhà thấp tầng 29",
+      "soDienThoai": "0900 000 071",
+      "dauChu": "dau-chu-1",
+      "nhan": "Mẫu"
+    }
+  ],
+  "hang": [
+    {
+      "ma": "HT-01",
+      "loai": "lo",
+      "maCan": "BT1-01",
+      "upi": "urn:onehub:upi:mau:BT1-01",
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Pending",
+      "gia": 36200000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-01",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-02",
+      "loai": "lo",
+      "maCan": "BT1-04",
+      "upi": "urn:onehub:upi:mau:BT1-04",
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Active",
+      "gia": 70200000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-01",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-03",
+      "loai": "lo",
+      "maCan": "BT1-05",
+      "upi": "urn:onehub:upi:mau:BT1-05",
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Active",
+      "gia": 26400000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-02",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-04",
+      "loai": "lo",
+      "maCan": "BT1-06",
+      "upi": "urn:onehub:upi:mau:BT1-06",
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Incomplete",
+      "gia": 72000000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-02",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-05",
+      "loai": "lo",
+      "maCan": "BT1-08",
+      "upi": "urn:onehub:upi:mau:BT1-08",
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Withdrawn",
+      "gia": 47100000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-03",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-06",
+      "loai": "lo",
+      "maCan": "DN1-04",
+      "upi": "urn:onehub:upi:mau:DN1-04",
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Pending",
+      "gia": 16200000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-03",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-07",
+      "loai": "lo",
+      "maCan": "DN1-05",
+      "upi": "urn:onehub:upi:mau:DN1-05",
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Pending",
+      "gia": 9800000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-04",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-08",
+      "loai": "lo",
+      "maCan": "DN1-06",
+      "upi": "urn:onehub:upi:mau:DN1-06",
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Active",
+      "gia": 9200000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-04",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-09",
+      "loai": "lo",
+      "maCan": "DN1-07",
+      "upi": "urn:onehub:upi:mau:DN1-07",
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Withdrawn",
+      "gia": 11400000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-05",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-10",
+      "loai": "lo",
+      "maCan": "LK1-02",
+      "upi": "urn:onehub:upi:mau:LK1-02",
+      "propertySubType": "Townhouse",
+      "trangThai": "Withdrawn",
+      "gia": 18100000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-05",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-11",
+      "loai": "lo",
+      "maCan": "LK1-03",
+      "upi": "urn:onehub:upi:mau:LK1-03",
+      "propertySubType": "Townhouse",
+      "trangThai": "Hold",
+      "gia": 18300000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-06",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-12",
+      "loai": "lo",
+      "maCan": "LK1-04",
+      "upi": "urn:onehub:upi:mau:LK1-04",
+      "propertySubType": "Townhouse",
+      "trangThai": "Active",
+      "gia": 11800000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-06",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-13",
+      "loai": "lo",
+      "maCan": "LK1-05",
+      "upi": "urn:onehub:upi:mau:LK1-05",
+      "propertySubType": "Townhouse",
+      "trangThai": "Active",
+      "gia": 18400000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-07",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-14",
+      "loai": "lo",
+      "maCan": "LK1-07",
+      "upi": "urn:onehub:upi:mau:LK1-07",
+      "propertySubType": "Townhouse",
+      "trangThai": "Closed",
+      "gia": 13400000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-08",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-15",
+      "loai": "lo",
+      "maCan": "LK1-08",
+      "upi": "urn:onehub:upi:mau:LK1-08",
+      "propertySubType": "Townhouse",
+      "trangThai": "Closed",
+      "gia": 17800000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-09",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-16",
+      "loai": "lo",
+      "maCan": "LK1-10",
+      "upi": "urn:onehub:upi:mau:LK1-10",
+      "propertySubType": "Townhouse",
+      "trangThai": "Incomplete",
+      "gia": 11700000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-10",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-17",
+      "loai": "lo",
+      "maCan": "LK2-01",
+      "upi": "urn:onehub:upi:mau:LK2-01",
+      "propertySubType": "Townhouse",
+      "trangThai": "Pending",
+      "gia": 21100000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-11",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-18",
+      "loai": "lo",
+      "maCan": "LK2-02",
+      "upi": "urn:onehub:upi:mau:LK2-02",
+      "propertySubType": "Townhouse",
+      "trangThai": "Withdrawn",
+      "gia": 15100000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-12",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-19",
+      "loai": "lo",
+      "maCan": "LK2-05",
+      "upi": "urn:onehub:upi:mau:LK2-05",
+      "propertySubType": "Townhouse",
+      "trangThai": "Active",
+      "gia": 12400000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-13",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-20",
+      "loai": "lo",
+      "maCan": "LK2-09",
+      "upi": "urn:onehub:upi:mau:LK2-09",
+      "propertySubType": "Townhouse",
+      "trangThai": "Closed",
+      "gia": 12700000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-14",
+      "ghiChu": "Xem nhà cuối tuần",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-21",
+      "loai": "lo",
+      "maCan": "LK2-10",
+      "upi": "urn:onehub:upi:mau:LK2-10",
+      "propertySubType": "Townhouse",
+      "trangThai": "Incomplete",
+      "gia": 17500000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-15",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-22",
+      "loai": "lo",
+      "maCan": "SH1-02",
+      "upi": "urn:onehub:upi:mau:SH1-02",
+      "propertySubType": "Townhouse",
+      "trangThai": "Incomplete",
+      "gia": 23500000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-16",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-23",
+      "loai": "lo",
+      "maCan": "SH1-05",
+      "upi": "urn:onehub:upi:mau:SH1-05",
+      "propertySubType": "Townhouse",
+      "trangThai": "Pending",
+      "gia": 24100000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-17",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-24",
+      "loai": "lo",
+      "maCan": "SH1-06",
+      "upi": "urn:onehub:upi:mau:SH1-06",
+      "propertySubType": "Townhouse",
+      "trangThai": "Withdrawn",
+      "gia": 16600000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-thap-tang",
+      "chuNha": "CNT-18",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-25",
+      "loai": "ngoai-khu",
+      "maCan": "NK-01",
+      "upi": null,
+      "propertySubType": "Townhouse",
+      "trangThai": "Hold",
+      "gia": 11900000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-19",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-26",
+      "loai": "ngoai-khu",
+      "maCan": "NK-04",
+      "upi": null,
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Incomplete",
+      "gia": 25000000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-19",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-27",
+      "loai": "ngoai-khu",
+      "maCan": "NK-05",
+      "upi": null,
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Active",
+      "gia": 6800000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-20",
+      "ghiChu": "Nhà trống, có chìa",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-28",
+      "loai": "ngoai-khu",
+      "maCan": "NK-06",
+      "upi": null,
+      "propertySubType": "Townhouse",
+      "trangThai": "Active",
+      "gia": 11600000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-20",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-29",
+      "loai": "ngoai-khu",
+      "maCan": "NK-07",
+      "upi": null,
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Closed",
+      "gia": 19500000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-21",
+      "ghiChu": "Xem nhà cuối tuần",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-30",
+      "loai": "ngoai-khu",
+      "maCan": "NK-08",
+      "upi": null,
+      "propertySubType": "Townhouse",
+      "trangThai": "Active",
+      "gia": 10400000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-22",
+      "ghiChu": "Xem nhà cuối tuần",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-31",
+      "loai": "ngoai-khu",
+      "maCan": "NK-09",
+      "upi": null,
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Active",
+      "gia": 7700000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-23",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-32",
+      "loai": "ngoai-khu",
+      "maCan": "NK-11",
+      "upi": null,
+      "propertySubType": "Single Family Residence",
+      "trangThai": "Active",
+      "gia": 24100000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-24",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-33",
+      "loai": "ngoai-khu",
+      "maCan": "NK-13",
+      "upi": null,
+      "propertySubType": "Unimproved Land",
+      "trangThai": "Hold",
+      "gia": 6400000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-25",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-34",
+      "loai": "ngoai-khu",
+      "maCan": "NK-14",
+      "upi": null,
+      "propertySubType": "Townhouse",
+      "trangThai": "Incomplete",
+      "gia": 12100000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-nha-le",
+      "chuNha": "CNT-26",
+      "ghiChu": "Chủ cần bán nhanh",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-35",
+      "loai": "can-ho",
+      "maCan": "A-03.02",
+      "upi": "urn:onehub:upi:mau:A-03.02",
+      "propertySubType": "Condominium",
+      "trangThai": "Hold",
+      "gia": 3500000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CNT-27",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-36",
+      "loai": "can-ho",
+      "maCan": "A-06.06",
+      "upi": "urn:onehub:upi:mau:A-06.06",
+      "propertySubType": "Condominium",
+      "trangThai": "Closed",
+      "gia": 8200000000,
+      "dieuKienPhi": "bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CNT-27",
+      "ghiChu": "Gần chợ",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-37",
+      "loai": "can-ho",
+      "maCan": "A-13.02",
+      "upi": "urn:onehub:upi:mau:A-13.02",
+      "propertySubType": "Condominium",
+      "trangThai": "Hold",
+      "gia": 3800000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CNT-28",
+      "ghiChu": "",
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "HT-38",
+      "loai": "can-ho",
+      "maCan": "A-14.01",
+      "upi": "urn:onehub:upi:mau:A-14.01",
+      "propertySubType": "Condominium",
+      "trangThai": "Active",
+      "gia": 2900000000,
+      "dieuKienPhi": "khong_bao_phi",
+      "dauChu": "dau-chu-1",
+      "chuNha": "CNT-29",
+      "ghiChu": "Sổ hồng riêng",
+      "nhan": "Mẫu"
+    }
+  ],
+  "lead": [
+    {
+      "ma": "LT-01",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 01",
+      "soDienThoai": "0900 000 072",
+      "ca": "biet-lo",
+      "maLo": "LK1-01",
+      "dapAn": {
+        "can": "LK1-01"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "LT-02",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 02",
+      "soDienThoai": "0900 000 073",
+      "ca": "chi-biet-day",
+      "day": "BT1",
+      "dapAn": {
+        "can": null,
+        "day": "BT1"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "LT-03",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 03",
+      "soDienThoai": "0900 000 074",
+      "ca": "ngoai-khu-du",
+      "diaChi": "45A Đường Mẫu 1, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+      "dapAn": {
+        "can": "NK-02"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "LT-04",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 04",
+      "soDienThoai": "0900 000 075",
+      "ca": "ngoai-khu-thieu-so",
+      "diaChi": "Đường Mẫu 1, P. Sài Gòn",
+      "dapAn": {
+        "can": null,
+        "streetName": "Đường Mẫu 1",
+        "wardName": "Sài Gòn",
+        "thieu": [
+          "streetNumber"
+        ]
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "LT-05",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 05",
+      "soDienThoai": "0900 000 076",
+      "ca": "trung-lo-mo",
+      "maLo": "BT1-01",
+      "dapAn": {
+        "can": "BT1-01",
+        "trungHangMo": "HT-01"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "LT-06",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 06",
+      "soDienThoai": "0900 000 077",
+      "ca": "trung-nha-ngoai-khu-mo",
+      "diaChi": "45 Đường Mẫu 1, P. Bến Nghé, Q.1, TP.HCM",
+      "dapAn": {
+        "can": "NK-01",
+        "trungHangMo": "HT-25"
+      },
+      "nhan": "Mẫu"
+    },
+    {
+      "ma": "LT-07",
+      "ten": "[Mẫu] Chủ nhà mới thấp tầng 07",
+      "soDienThoai": "0900 000 043",
+      "ca": "trung-so-chu",
+      "day": "LK2",
+      "dapAn": {
+        "can": null,
+        "day": "LK2",
+        "trungChuNha": "CNT-01"
+      },
+      "nhan": "Mẫu"
+    }
+  ]
+}
