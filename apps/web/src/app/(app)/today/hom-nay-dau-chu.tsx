@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useBoDongBo, useDanhSachHang, useSuaHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../inventory/danh-muc";
 import { chiMuc } from "../inventory/ghep-danh-muc";
@@ -41,6 +42,8 @@ import { canHomNay, chuGiaPhi, chuGio, chuGioNgay, chuHan, chuLoai, lyDo, type C
 import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { docNhomThamSo, timNhom } from "./mo-nhom";
 import { chuSo, moSo, telHref } from "./mo-so";
+import { DanhSachDienThoai, type NhomThe, type TheDong } from "./mobile/danh-sach";
+import { moSoChu } from "./mobile/mo-so-chu";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
 import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
 
@@ -518,7 +521,42 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
 
   const dangTai = ngan.listings === null || taiBo.kind === "dang" || taiLead.kind === "dang";
 
-  const than = dangTai ? (
+  // ——— Điện thoại (hàng 39): thẻ hai tầng thay lưới, cùng nhóm và cùng bộ việc ———
+  const dienThoai = useIsMobile();
+  const theCua = (v: Viec): TheDong => {
+    const h = hanCua(v, bayGio);
+    const lamCan = (c: CanHomNay, m: string) =>
+      m === "con-giu-gia" ? { onClick: () => hd.conGiuGia(c) } : m === "doi-gia-trang-thai" ? (c.unitNumber ? { onClick: () => hd.moHoSo(c) } : { href: duongHangChuaMa(c.id) }) : { href: `/units/call?hang=${encodeURIComponent(c.id)}` };
+    const lamLead = (l: LeadGiao, m: string) =>
+      m === "nhan" ? { onClick: () => hd.lead(l, "accept") } : m === "da-goi" ? { onClick: () => hd.lead(l, "first_call") } : m === "tra-lai" ? { onClick: () => hd.lead(l, "return") } : { href: `/units/call?lead=${encodeURIComponent(l.id)}` };
+    return {
+      id: v.id,
+      tren: tieuDe(v),
+      duoi: [lyDoChu(v), chuGiaViec(v)].filter(Boolean).join(" · "),
+      han: h && h.muc !== "khong" ? h : null,
+      dong: viecDong(v),
+      coSo: v.kind === "lead" || v.can.listAgentKey === nguoi,
+      ban: dangGhi.has(v.id),
+      loi: loi[v.id],
+      lam: (m) => (v.kind === "can" ? lamCan(v.can, m) : lamLead(v.lead, m)),
+      ghiKetQua: (m) => {
+        const viec = m === "da-goi" ? "da-goi" : m === "tra-lai" ? "tra-lai" : m;
+        const h2 = v.kind === "can" ? lamCan(v.can, viec) : lamLead(v.lead, viec);
+        if (h2.onClick) h2.onClick();
+        else if (h2.href) window.location.assign(h2.href);
+      },
+      soCu: soDaMo[v.id] ?? null,
+      moSo: () => (v.kind === "lead" ? moSo(v.lead.id) : moSoChu(v.can.id)),
+      daMo: (so) => setSoDaMo((m) => ({ ...m, [v.id]: so })),
+    };
+  };
+  const nhomThe: NhomThe[] = nhom.map((g) => ({ ma: g.nhom.code, nhan: g.nhom.label, badge: badgeNhom(g.nhom), the: g.viec.map(theCua) }));
+
+  const than = dienThoai ? (
+    <FramePanel className="p-0!">
+      <DanhSachDienThoai trangThai={dangTai ? "dang" : "co"} nhom={nhomThe} coMang={!ngoaiTuyen} onThuLai={thuLai} trong={taiLead.kind === "loi" ? null : <HetViec />} />
+    </FramePanel>
+  ) : dangTai ? (
     <DangTai />
   ) : tong === 0 ? (
     taiLead.kind === "loi" ? null : (

@@ -21,7 +21,7 @@ evals:
     criterion: AC-3
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ma trận viết trước 6 loại dòng (lead mới · lead đã nhận chưa gọi · căn nên gọi điều chỉnh giá · căn cần gọi lại · căn thiếu thông tin · căn mới đổi) × 2 (có số gọi được · không có số) = 12 ô: nút mép phải đúng bảng của AC-3, bộ việc trong ⋯ cộng nút mép phải bằng đúng bộ việc của viecCuaDong máy tính (cộng «Gọi» khi có số); số assert = 12; chiều đỏ: bản sao luôn đặt «Gọi» làm nút chính → ô nêu loại dòng."
+    expected: "exit 0; ma trận viết trước 6 loại dòng (lead mới · lead đã nhận chưa gọi · căn nên gọi điều chỉnh giá · căn cần gọi lại · căn thiếu thông tin · căn mới đổi) × 2 (có số gọi được · không có số) = 12 ô: nút mép phải đúng bảng của AC-3, bộ việc trong ⋯ cộng nút mép phải bằng đúng bộ việc của viecCuaDong máy tính, «Mở số» của lead thay bằng «Gọi» (cộng «Gọi» khi có số); số assert = 12; chiều đỏ: bản sao luôn đặt «Gọi» làm nút chính → ô nêu loại dòng."
     paths: ["apps/web/src/app/(app)/today/mobile/**", "apps/web/src/app/(app)/today/viec-dong.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
 

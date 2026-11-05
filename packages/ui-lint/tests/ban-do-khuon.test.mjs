@@ -127,6 +127,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ),
   // Hộp hỏi đổi đầu chủ hàng loạt (hàng 89).
   `${W}/app/(app)/inventory/bulk/hop-doi-dau-chu.tsx`,
+  // Hôm nay của đầu chủ trên điện thoại (hàng 39): danh sách thẻ, ngăn kết quả cuộc gọi.
+  `${W}/app/(app)/today/mobile/danh-sach.tsx`,
   // Bảng hàng thẻ trên điện thoại (hàng 32): bảng thẻ, ngăn lọc, thẻ căn.
   ...["cards/bang-the.tsx", "cards/ngan-loc.tsx", "cards/the-can.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
@@ -217,6 +219,8 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/today/hom-nay-dau-chu.tsx`,
   // Hôm nay của trưởng nhóm (hàng 42): dòng «mở trên máy tính» của khuôn; mất mạng, lỗi tải hàng đợi.
   `${W}/app/(app)/today/khung.tsx`,
+  // Hôm nay đầu chủ trên điện thoại (hàng 39): danh sách thẻ — lỗi tải qua TrangThai.
+  `${W}/app/(app)/today/mobile/danh-sach.tsx`,
   `${W}/app/(app)/today/page.tsx`,
   ...Array(2).fill(`${W}/app/(app)/today/truong-nhom.tsx`),
   // Chế độ cuộc gọi (hàng 28): không thấy lead, lỗi tải lead.
@@ -434,7 +438,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 18 ngoại lệ · 0 lệch",
-      "trang-thai: 113 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 114 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

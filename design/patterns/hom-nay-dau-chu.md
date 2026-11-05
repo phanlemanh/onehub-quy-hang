@@ -7,7 +7,7 @@ mau_dang_chay: { tep: "apps/web/src/app/(app)/today/page.tsx", duong: "/today", 
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
 ngoai_le: []
-luat: [KH-hn-theo-vai, KH-hn-mot-khung, KH-hn-bo-nhom, KH-hn-tren-may, KH-hn-ba-trang-thai]
+luat: [KH-hn-theo-vai, KH-hn-mot-khung, KH-hn-bo-nhom, KH-hn-tren-may, KH-hn-ba-trang-thai, KH-hn-dien-thoai]
 bo_cuc: tran
 ---
 # Hôm nay của đầu chủ
@@ -22,7 +22,8 @@ của `/today` xếp theo vai trong bố cục Tràn (`BoCuc kieu="tran"`, ADR-0
 
 **Dùng khi** màn trình hàng đợi việc của một người theo bộ nhóm của sàn. **Không dùng** cho Bảng hàng (nhóm
 `bang-hang`), vùng Lead đã nhập của telesales (nhóm `lead-cua-toi` — đặt vào khuôn này ở `/today`), Hôm nay của trưởng
-nhóm (nhóm `hom-nay-truong-nhom` — đặt vào khuôn này ở `/today`, trên vùng đầu chủ) hay bản điện thoại (hàng 39).
+nhóm (nhóm `hom-nay-truong-nhom` — đặt vào khuôn này ở `/today`, trên vùng đầu chủ). Bản điện thoại của vùng đầu chủ
+(hàng 39) nằm trong khuôn này — luật `KH-hn-dien-thoai`.
 
 ## Luật
 
@@ -38,3 +39,6 @@ nhóm (nhóm `hom-nay-truong-nhom` — đặt vào khuôn này ở `/today`, tr�
   kèm chữ báo.
 - **KH-hn-ba-trang-thai** — Vùng có trống («Hôm nay không còn việc» và một hành động mở Bảng hàng), đang tải (`ChoTai`
   của bố cục Tràn) và lỗi tải lead (nói nguyên nhân, «Thử lại», nhóm căn vẫn hiện); trống, lỗi và báo đi qua `TrangThai`.
+- **KH-hn-dien-thoai** — Dưới 768 px vùng đầu chủ dựng danh sách thẻ (`today/mobile/danh-sach.tsx`) thay lưới, trong cùng
+  `FramePanel` của vùng: cùng nhóm, cùng thứ tự, cùng bộ việc (`today/mobile/goi.ts` đọc `viec-dong.ts`); thẻ hai tầng
+  `OHaiTang`, một nút ở mép phải, ⋯ và «Kết quả cuộc gọi» là ngăn đáy qua `NganNoi` với dòng chạm `Item` (hàng 39).
