@@ -1,3 +1,6 @@
-E15 network (app-origin http://localhost:3462): GET /api/v1/listings, /catalog, /company/settings/queue, /leads/assigned, /listings/{id} all 200; PUT /company/statuses 200; POST /listings/{id}/events 200.
-Only non-200: my own probe POST /api/auth/sign-out -> 404 (wrong path, not app traffic); one RSC prefetch ERR_ABORTED (navigation cancel); ws /_next/hmr failures (dev HMR, static/dev-tool).
-Console: HMR websocket errors only.
+E15 network (app-origin http://localhost:3462), driver playwright. Chi tiet tho: E15-network-raw.txt
+- Luong /today cuoi (dau-chu-1): GET /api/v1/listings, /catalog, /company/settings/queue, /leads/assigned, /push/public-key -> 200 het.
+- sign-in/email-otp POST 200 (cac lan dang nhap); PUT /company/statuses 200 (dat nhan Giu cho, setup E11); POST /listings/{id}/events status_changed 200.
+- net::ERR_ABORTED tren GET /api/v1/* : huy do dieu huong (page.goto khi trang dang tai), khong phai loi may chu.
+- 409 version-conflict tren POST /listings/{id}/events: lan goi setup dau cua verifier thieu expectedVersion (may chu tu choi dung luat); goi lai voi expectedVersion -> 200. Khong thuoc luong trang /today.
+- Console error: favicon.ico 404 (static, note-only); 409 noi tren.

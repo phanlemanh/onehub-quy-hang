@@ -190,6 +190,7 @@ evals:
     target: "http://localhost:3462/settings/statuses"
     steps:
       - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Dọn trước (bài chụp tự đủ, không phụ thuộc lượt trước): đăng nhập quan-tri@mau.quy-hang.test, dùng fetch GET /api/v1/company/statuses rồi PUT /api/v1/company/statuses {labels:[], replace:{<mọi mã đang có>: null}} — sàn thử không còn nhãn riêng nào, mọi căn về nhãn mặc định; ghi số mã đã gỡ vào observed."
       - "Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/statuses, chụp evidence/E11-step1.png (đủ cột nhà, cột thứ hai Cài đặt với mục «Trạng thái» sáng; sáu nhóm có huy hiệu màu)"
       - "Ở nhóm Đang giao dịch bấm «Thêm nhãn», gõ «Giữ chỗ», bấm Lưu → chụp evidence/E11-step2.png (câu «Đã lưu trạng thái»); tải lại → nhãn còn dưới nhóm"
       - "Thêm nhãn «Đang bán» ở nhóm Tạm ngừng → chụp evidence/E11-step3.png (ô viền đỏ, câu lỗi trùng tên, Lưu khoá); xoá dòng ấy"
@@ -223,10 +224,10 @@ evals:
     target: "http://localhost:3462/settings/statuses"
     steps:
       - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
-      - "Sau E12 (một căn mang «Giữ chỗ»). Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/statuses → dòng «Giữ chỗ» hiện số căn 1; bấm gỡ → chụp evidence/E13-step1.png: hộp «1 căn đang là «Giữ chỗ». Chuyển chúng sang:» với lựa chọn «Đang giao dịch»"
+      - "Sau E12 (một căn mang «Giữ chỗ»). Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/statuses → dòng «Giữ chỗ» hiện số căn n (n ≥ 1 — bằng số căn đang mang nhãn, đối chiếu GET /api/v1/company/statuses inUse); bấm gỡ → chụp evidence/E13-step1.png: hộp «n căn đang là «Giữ chỗ». Chuyển chúng sang:» với lựa chọn «Đang giao dịch» và chỉ các nhãn còn lại cùng nhóm"
       - "Chọn «Đang giao dịch», xác nhận, Lưu → chụp evidence/E13-step2.png: «Đã lưu trạng thái», nhóm Đang giao dịch không còn «Giữ chỗ»"
-      - "Mở /inventory → chụp evidence/E13-step3.png: căn ấy hiện «Đang giao dịch»"
-    expected: "Sau E12, quản trị gỡ «Giữ chỗ» đang được một căn mang: màn hỏi nhãn thay, chọn «Đang giao dịch», Lưu → nhãn biến mất khỏi nhóm; Bảng hàng hiện căn ấy «Đang giao dịch». Chụp 1440."
+      - "Mở /inventory → chụp evidence/E13-step3.png: không căn nào hiện «Giữ chỗ»; căn đã đổi ở E12 (ghi mã căn ở observed của E12) hiện «Đang giao dịch»"
+    expected: "Sau E12, quản trị gỡ «Giữ chỗ» đang được n căn mang (n đọc từ màn, khớp inUse của API): màn hỏi nhãn thay, chọn «Đang giao dịch», Lưu → nhãn biến mất khỏi nhóm; Bảng hàng không còn căn nào hiện «Giữ chỗ», căn đã đổi ở E12 hiện «Đang giao dịch». Chụp 1440."
     paths: ["apps/web/src/app/(app)/settings/statuses/**", "apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
