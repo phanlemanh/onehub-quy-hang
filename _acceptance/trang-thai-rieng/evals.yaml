@@ -111,7 +111,7 @@ evals:
     criterion: AC-6
     executor: test
     cmd: config:executors.test.core
-    expected: "exit 0; trong packages/core/src/statuses/statuses.test.ts có mặt và ok: «trạng thái riêng: đếm theo chuẩn» — tiLeHangMo trên bản hàng viết trước (hai Pending/giu_cho, một Pending/null, một Active) cho theoTrangThai có đúng sáu khoá STANDARD_STATUSES, Pending 3, Active 1; và hàng đợi Hôm nay dựng từ luật mặc định (mac-dinh.ts) xếp căn Pending/giu_cho cùng nhóm với căn Pending/null. Chiều đỏ: đếm theo nhanCuaCan → ca đỏ nêu khoá thứ bảy."
+    expected: "exit 0; trong packages/core/src/statuses/statuses.test.ts có mặt và ok: «trạng thái riêng: đếm theo chuẩn» — tiLeHangMo trên bản hàng viết trước (hai Pending/giu_cho, một Pending/null, một Active) cho theoTrangThai chỉ mang khoá thuộc STANDARD_STATUSES (không khoá thứ bảy — tiLeHangMo chỉ ghi trạng thái có căn), đúng hai khoá Active và Pending, Pending 3, Active 1; và hàng đợi Hôm nay dựng từ luật mặc định (mac-dinh.ts) xếp căn Pending/giu_cho cùng nhóm với căn Pending/null. Chiều đỏ: đếm theo nhanCuaCan → ca đỏ nêu khoá thứ bảy."
     paths: [packages/core/src/metrics/**, packages/core/src/today/**, packages/core/src/statuses/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
