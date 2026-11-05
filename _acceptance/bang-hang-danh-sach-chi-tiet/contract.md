@@ -5,7 +5,7 @@ slug: bang-hang-danh-sach-chi-tiet
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-05-bang-hang-danh-sach-chi-tiet-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -127,3 +127,15 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Ngoài-14 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Phép đo «trang không cuộn» chưa từng được thử trên một trang thật sự cuộn để chứng tỏ nó biết báo đỏ. Màn hình người dùng thấy vẫn đúng. — `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
 - Ngoài-15 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Chưa có số đo của bản cũ để đối chiếu bề rộng khung hồ sơ trên điện thoại, nên khẳng định «giống như trước» chưa được chứng minh bằng số. Người dùng không thấy lỗi. — `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
 - Ngoài-16 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài kiểm xác nhận «bảng vẫn đủ dòng» bằng chữ đếm trên thanh công cụ thay vì đếm dòng hiển thị thật. Người dùng hiện không bị ảnh hưởng. — `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-2: Người chấm chạy lại đúng lệnh ghi trong hồ sơ sẽ không có phần so với nhánh chính, nên phép kiểm đối chứng có thể bị bỏ qua mà không ai hay. Người dùng cuối không bị ảnh hưởng.
+  - Ngoài-4: Phép kiểm trang không cuộn có thể báo đạt dù đáy bảng hay cột hồ sơ bị cắt mất một phần ở một số khổ màn. Nếu có thì người dùng sẽ không thấy hết phần dưới của bảng hoặc hồ sơ.
+  - Ngoài-5: Phép so bề rộng với nhánh chính có thể vô tình so với một máy thử cũ, nên báo đạt dù không đối chiếu đúng bản gốc. Người dùng cuối không bị ảnh hưởng.
+  - Ngoài-6: Khi vừa mở trang Bảng hàng, trình duyệt báo lỗi ngầm và dựng lại bảng một lần ở máy người dùng; người dùng có thể thấy khung chờ nháy nhẹ. Hồ sơ nghiệm thu thì ghi nhầm là không có lỗi.
+  - Ngoài-7: Người dùng không thấy gì khác: cột Đầu chủ vẫn hiện và hoạt động bình thường. Chỉ là cách đặt tên bên trong lệch quy ước của kho.
+  - Ngoài-11: Khi sắp theo Đầu chủ, các căn chưa gán nằm ở đầu hoặc cuối danh sách thay vì luôn xuống cuối như các cột khác. Hơi khó đọc nhưng không sai dữ liệu.
+  - Ngoài-12: Hai thành viên trùng tên sẽ nằm chung một lựa chọn lọc, nên lọc ra căn của cả hai. Góc nhìn đã lưu theo tên cũng có thể ra rỗng nếu người ấy đổi tên.
+  - Ngoài-13: Một bài kiểm tự động chỉ đọc nhãn chứ không thử thật giới hạn kéo của cột hồ sơ, nên về sau ai sửa giới hạn có thể không bị bắt. Người dùng hiện nay không thấy lỗi.
+  - Ngoài-14: Phép đo «trang không cuộn» chưa từng được thử trên một trang thật sự cuộn để chứng tỏ nó biết báo đỏ. Màn hình người dùng thấy vẫn đúng.
+  - Ngoài-15: Chưa có số đo của bản cũ để đối chiếu bề rộng khung hồ sơ trên điện thoại, nên khẳng định «giống như trước» chưa được chứng minh bằng số. Người dùng không thấy lỗi.
+  - Ngoài-16: Bài kiểm xác nhận «bảng vẫn đủ dòng» bằng chữ đếm trên thanh công cụ thay vì đếm dòng hiển thị thật. Người dùng hiện không bị ảnh hưởng.
