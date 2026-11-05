@@ -1,0 +1,34 @@
+{
+  "feature_plain": "Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được («lk1 02», «LK1.04», «lô 6 dãy BT1») thì Quỹ hàng ra đúng lô và tự điền khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ, không đoán.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ đọc đúng cả 24 ô mã lô viết lộn xộn trong bảng hàng mẫu của hàng 73 và tự điền đúng thuộc tính lô."},
+    {"id":"AC-2","p":"Sẽ nhận 12 kiểu viết mã lô (gạch, cách, chấm, viết liền, thiếu số 0, «lô … dãy …»…) cho mọi lô của khu mẫu."},
+    {"id":"AC-3","p":"Sẽ báo «chưa có trong danh mục» khi mã đọc được mà không có lô ấy, nói rõ dãy có hay không."},
+    {"id":"AC-7","p":"Sẽ chỉ trả thuộc tính danh mục của lô — không giá, không chủ nhà; trường không hợp loại hình thì để trống."},
+    {"id":"AC-8","p":"Sẽ kiểm cách đọc mã của khu khớp với chính danh mục của khu."},
+    {"id":"AC-9","p":"Sẽ có đường tra mã lô ở API, cùng cửa vào như tra mã căn; tra mã căn hộ giữ nguyên như cũ."}
+  ],
+  "wont_do": [
+    {"id":"AC-4","p":"Sẽ KHÔNG bao giờ để hai lô khác nhau ra cùng một lô."},
+    {"id":"AC-5","p":"Sẽ KHÔNG đoán lô cho chữ không đọc được hay mã gần giống như «LK1-02A»."},
+    {"id":"AC-6","p":"Sẽ KHÔNG chọn hộ khi hai khu cùng có một mã lô — đưa cả hai để người chọn."},
+    {"id":"OOS-1","p":"KHÔNG làm ô gõ mã lô trên màn — hàng 77."},
+    {"id":"OOS-2","p":"KHÔNG lưu lô của sàn vào cơ sở dữ liệu — hàng 76."},
+    {"id":"OOS-3","p":"KHÔNG đổi khuôn danh mục Invest gửi sang để có cấp dãy — mục chờ LH11."},
+    {"id":"OOS-4","p":"KHÔNG đổi bộ tra mã căn hộ."}
+  ],
+  "scope_plain": "Vòng này là bộ đọc mã lô ở lõi và một đường tra ở API; chưa có màn.",
+  "coverage_plain": [
+    {"i":0,"p":"Mọi kiểu gõ mã lô, kể cả viết liền và đảo thứ tự — AC-1, AC-2, AC-5."},
+    {"i":1,"p":"Đủ năm kết cục: ra lô, chưa có trong danh mục, không đọc được, nhiều lô, khu không có — AC-3, AC-5, AC-6."},
+    {"i":2,"p":"Đủ ba loại hình thấp tầng: liền kề (cả shophouse), biệt thự, đất nền — AC-1, AC-7."},
+    {"i":3,"p":"Cả lõi lẫn đường API — AC-9."}
+  ],
+  "gap_probe_plain": [
+    {"i":0,"p":"Việc có cho người dùng thật thấy lô [Mẫu] hay không là việc chỉ anh quyết, không phải nếp có sẵn. Đã đưa thành Hỏi-1."},
+    {"i":1,"p":"Lý do tách đường tra lô khỏi đường tra căn ghi chưa đúng. Đã ghi lại theo ADR-0016: người chọn loại hình trước khi gõ mã, và hẹn xét lại ở hàng 77."},
+    {"i":2,"p":"Hai khu cùng có một mã lô thì một số kiểu viết có thể bị chọn hộ một khu. Đã sửa cách tra và đo mọi kiểu viết."},
+    {"i":3,"p":"Chưa kiểm mã gần giống như «LK1-02A». Đã thêm bài kiểm: không bao giờ ra lô có sẵn."},
+    {"i":4,"p":"Bài kiểm «trường không hợp loại hình để trống» chỉ soi một lô. Đã mở ra mọi lô và mọi trường."}
+  ]
+}
