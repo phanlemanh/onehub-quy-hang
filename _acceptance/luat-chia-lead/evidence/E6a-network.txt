@@ -1,0 +1,1 @@
+Driver: Chrome headless qua CDP (chay-ui.mjs), khong co duong doc network cua browser tool. networkObserved = n-a (driver). Dong e6: {"ca":"e6","truong-nhom":{"coMucTrongCot":false,"url":"/settings/personal?chi-quan-tri=1","bao":true},"dau-chu-1":{"coMucTrongCot":false,"url":"/settings/personal?chi-quan-tri=1","bao":true},"quan-tri":{"url":"/settings/lead-routing"}}
