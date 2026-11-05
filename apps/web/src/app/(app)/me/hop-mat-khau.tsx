@@ -25,17 +25,10 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { canMatKhauHienTai, nutMatKhau, type TrangThaiMatKhau } from "./toi";
+import { canMatKhauHienTai, loiHopMatKhau, nutMatKhau, type TrangThaiMatKhau } from "./toi";
 
 // Hộp đặt hay đổi mật khẩu ở Cá nhân (dang-nhap-mat-khau, ST-toi-mat-khau-hop): «Đã đặt» thì hỏi mật khẩu hiện tại và
 // mật khẩu mới; chưa đặt hay đã khoá thì chỉ mật khẩu mới — người đã vào bằng mã. Lỗi gắn dưới ô.
-const CHU_LOI: Record<string, string> = {
-  "password-too-short": "Cần ít nhất 8 ký tự",
-  "password-too-long": "Mật khẩu dài quá 128 ký tự",
-  "password-common": "Mật khẩu quá dễ đoán",
-  "password-guessable": "Mật khẩu quá dễ đoán",
-};
-
 function OMatKhau({
   id,
   nhan,
@@ -135,9 +128,9 @@ export function HopMatKhau({
       const code =
         ((await res.json().catch(() => ({}))) as { error?: string }).error ??
         "";
-      if (code === "invalid-current-password")
-        setLoiHienTai("Mật khẩu hiện tại không đúng");
-      else setLoiMoi(CHU_LOI[code] ?? "Có lỗi, thử lại sau ít phút.");
+      const loi = loiHopMatKhau(code);
+      if (loi.o === "hien-tai") setLoiHienTai(loi.cau);
+      else setLoiMoi(loi.cau);
     } catch {
       setLoiMoi("Có lỗi, thử lại sau ít phút.");
     } finally {

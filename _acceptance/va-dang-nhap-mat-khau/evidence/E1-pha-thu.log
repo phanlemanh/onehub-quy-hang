@@ -1,0 +1,5 @@
+# phá-thử E1: bỏ câu xoá phiên khỏi hàm trigger
+✖ vào sàn khác: thu phiên khi vô hiệu mật khẩu gốc sàn cấp (13.453125ms)
+✖ vào sàn khác: phiên của người khác không bị đụng (12.088542ms)
+✖ vào sàn khác: thu phiên khi vô hiệu mật khẩu gốc sàn cấp (13.453125ms)
+  AssertionError [ERR_ASSERTION]: hình «tạm chưa dùng»: phiên còn sau khi vào sàn khác

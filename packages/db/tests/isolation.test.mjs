@@ -2892,3 +2892,47 @@ test("mật khẩu: mời lại vào đúng sàn đã cấp không vô hiệu; b
     assert.equal((await trangThaiMk(c, MK.CHI_A)).disabled_reason, "vao-san-khac");
   });
 });
+
+// Hàng va-dang-nhap-mat-khau (migration 038): vô hiệu mật khẩu gốc sàn cấp vì vào sàn khác thì thu mọi phiên của người.
+async function themPhien(c, userId, n) {
+  for (let i = 0; i < n; i++) {
+    await chuChay(
+      c,
+      `insert into identity.session (id, "expiresAt", token, "updatedAt", "userId") values ($1, now() + interval '30 days', $1, now(), $2)`,
+      [`phien-${userId}-${i}-${randomBytes(4).toString("hex")}`, userId],
+      null,
+    );
+  }
+}
+const soPhienMk = async (c, u) => (await chuChay(c, `select count(*)::int n from identity.session where "userId" = $1`, [u], null)).rows[0].n;
+
+test("vào sàn khác: thu phiên khi vô hiệu mật khẩu gốc sàn cấp", { skip }, async () => {
+  const hinh = [
+    { ten: "tạm chưa dùng", kind: "tam" },
+    { ten: "đặt lần đầu từ tạm", kind: "tu-dat" },
+  ];
+  assert.equal(hinh.length, 2);
+  for (const h of hinh) {
+    await withMatKhau(async (c) => {
+      await c.query(`select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A]);
+      await chuChay(c, "update identity.password_state set kind = $2 where user_id = $1", [MK.CHI_A, h.kind], null);
+      await themPhien(c, MK.CHI_A, 2);
+      await chuChay(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{telesales}')", [COMPANY_B, MK.CHI_A], null);
+      assert.equal((await trangThaiMk(c, MK.CHI_A)).disabled_reason, "vao-san-khac", `hình «${h.ten}»`);
+      assert.equal(await soPhienMk(c, MK.CHI_A), 0, `hình «${h.ten}»: phiên còn sau khi vào sàn khác`);
+      const sk = await chuChay(c, "select count(*)::int n from identity.password_events where user_id = $1 and kind = 'vo-hieu-san-khac'", [MK.CHI_A], null);
+      assert.equal(sk.rows[0].n, 1, `hình «${h.ten}»: sự kiện`);
+    });
+  }
+});
+
+test("vào sàn khác: phiên của người khác không bị đụng", { skip }, async () => {
+  await withMatKhau(async (c) => {
+    await c.query(`select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A]);
+    await themPhien(c, MK.CHI_A, 1);
+    await themPhien(c, MK.NGOAI, 2);
+    await chuChay(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{telesales}')", [COMPANY_B, MK.CHI_A], null);
+    assert.equal(await soPhienMk(c, MK.CHI_A), 0);
+    assert.equal(await soPhienMk(c, MK.NGOAI), 2, "phiên của người thứ ba bị xoá");
+  });
+});

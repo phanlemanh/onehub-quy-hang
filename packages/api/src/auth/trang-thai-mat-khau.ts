@@ -97,7 +97,12 @@ export async function ghiSai(pool: pg.Pool, email: string, userId: string | null
      where user_id = $1 returning failed_streak`,
     [userId, SAI_LIEN_TIEP_KHOA],
   );
-  if (rows[0]?.failed_streak === SAI_LIEN_TIEP_KHOA) await ghiSuKien(pool, { userId, kind: "khoa-20", actorUserId: null });
+  if (rows[0]?.failed_streak === SAI_LIEN_TIEP_KHOA) {
+    await ghiSuKien(pool, { userId, kind: "khoa-20", actorUserId: null });
+    // Khoá mà giữ phiên thì phiên ấy đặt mật khẩu mới không cần mật khẩu cũ (đã vô hiệu thì đặt không cần) — khoá thành
+    // lối vòng. Thu mọi phiên của người, kể cả phiên vừa gọi (va-dang-nhap-mat-khau, AC-4).
+    await thuPhien(pool, userId);
+  }
 }
 
 export async function xoaChuoiSai(pool: pg.Pool, userId: string): Promise<void> {

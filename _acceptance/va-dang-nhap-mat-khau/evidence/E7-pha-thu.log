@@ -1,0 +1,4 @@
+# phá-thử E7: bỏ dòng ánh xạ password-rate-limited
+  ✖ bảng viết trước (1.35125ms)
+✖ bảng viết trước (1.35125ms)
+  AssertionError [ERR_ASSERTION]: password-rate-limited
