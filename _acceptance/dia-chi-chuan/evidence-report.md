@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: f864ad5d4e4cd319730b8208dabfe4c4192feb26
+verified_commit: 72c92fa45fd6e2364fefa21ef0e287eb3eea0b6f
 human_signoff:
 ---
 
@@ -164,3 +164,7 @@ none — mọi eval chạy một lần, xác định, không có phương sai.
 ## Iterations
 
 Round 1: E1-E9 đạt, lệnh suite đạt; verdict PASS.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main vào nhánh để gỡ xung đột PR #138
+run_id: repin-20261105T132554Z-82084
+sha: 72c92fa45fd6e2364fefa21ef0e287eb3eea0b6f · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng
