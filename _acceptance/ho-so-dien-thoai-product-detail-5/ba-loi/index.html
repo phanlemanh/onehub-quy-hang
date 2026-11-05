@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ba lối · Hồ sơ căn trên điện thoại</title>
+<style>
+  :root { --bg:#fafafa; --fg:#171717; --muted:#737373; --line:#e5e5e5; --card:#fff; --pin:#ecfdf5; --pin-line:#10b981; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0a0a0a; --fg:#fafafa; --muted:#a3a3a3; --line:#262626; --card:#171717; --pin:#052e1c; --pin-line:#34d399; } }
+  body { margin:0; padding:24px 16px; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width:1300px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+  h1 { font-size:22px; margin:0; } p { margin:0; color:var(--muted); }
+  .khuyen { border:1px solid var(--pin-line); background:var(--pin); border-radius:10px; padding:12px 14px; color:var(--fg); }
+  .luoi { display:grid; grid-template-columns:1fr 1.6fr 1fr; gap:16px; align-items:start; }
+  @media (max-width: 900px) { .luoi { grid-template-columns:1fr; } }
+  section { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:10px; min-width:0; }
+  section.chon { border-color:var(--pin-line); box-shadow:0 0 0 2px var(--pin-line); }
+  h2 { font-size:17px; margin:0; } .nhan { font-size:12px; color:var(--muted); }
+  figure { margin:0; display:flex; flex-direction:column; gap:4px; min-width:0; }
+  figcaption { font-size:12px; color:var(--muted); }
+  img { width:100%; max-width:375px; height:auto; border:1px solid var(--line); border-radius:6px; display:block; }
+  .hai { display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:start; }
+  @media (max-width: 520px) { .hai { grid-template-columns:1fr; } }
+  dl { margin:0; display:grid; grid-template-columns:5.5rem 1fr; gap:4px 8px; font-size:14px; } dt { color:var(--muted); } dd { margin:0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Hồ sơ căn trên điện thoại — ba lối</h1>
+  <p>Cùng dữ liệu mẫu, khổ 375, chụp trọn trang. Màn chỉ có trên điện thoại (khổ dưới 768 px) nên không có ảnh 1440. Nút
+    chính dính đáy theo vai: đầu khách «Hỏi đầu chủ», đầu chủ giữ căn «Ghi cuộc gọi». Bản chạy:
+    /proto/ho-so-dien-thoai?loi=…&amp;vai=… trên máy dev dãy H.</p>
+  <div class="khuyen"><strong>Máy khuyên: ReUI</strong> — khối đích chủ kho đã chọn 02/11 (giữ ở Hỏi-3 hàng 33), đã có bản
+    chuyển thể ở trang khách nên dùng lại được.</div>
+  <div class="luoi">
+    <section>
+      <h2>Trong kho</h2>
+      <span class="nhan">Hồ sơ căn đang chạy (solution-crm-4 chuyển thành cột): đầu → Giá và mức đủ → Ảnh → Thuộc tính căn →
+        Lần rao → Các lần rao → Lịch sử → «Hỏi đầu chủ» dính đáy cho người không giữ căn</span>
+      <figure><img src="trong-kho-375.png" alt="Trong kho, khổ 375, vai đầu khách"><figcaption>Đầu khách</figcaption></figure>
+      <dl><dt>Động cơ</dt><dd>Đúng màn đang chạy hôm nay: không dựng gì mới, người dùng đã quen thứ tự mục.</dd>
+        <dt>Đánh đổi</dt><dd>Dài nhất (gần 1.800 px ở 375): ảnh nhỏ, thông số chính chìm trong bảng thuộc tính, lịch sử đầy đủ nằm tận đáy; đầu chủ giữ căn không có nút chính dính đáy.</dd></dl>
+    </section>
+    <section class="chon">
+      <h2>ReUI · khuyên</h2>
+      <span class="nhan">product-detail-5 dựng lại từ bản chuyển thể của trang khách: ảnh lớn lướt ngang → mã căn · toà + Diện
+        tích · Phòng ngủ · Hướng → hộp giá (giá, phí, mức đủ, xác nhận) → Thuộc tính căn, Lần rao, Lịch sử gọn → một nút
+        dính đáy. Không có phần chủ nhà.</span>
+      <div class="hai">
+        <figure><img src="reui-375.png" alt="ReUI, khổ 375, vai đầu khách"><figcaption>Đầu khách — «Hỏi đầu chủ»</figcaption></figure>
+        <figure><img src="reui-375-dau-chu.png" alt="ReUI, khổ 375, vai đầu chủ"><figcaption>Đầu chủ giữ căn — «Ghi cuộc gọi»</figcaption></figure>
+      </div>
+      <dl><dt>Động cơ</dt><dd>Khối đích đã chọn cho màn: ảnh lớn, tên căn với ba thông số chính rồi hộp giá — đọc được căn ngay màn đầu, cùng dáng trang khách.</dd>
+        <dt>Đánh đổi</dt><dd>Ảnh lớn đẩy giá xuống nửa dưới màn đầu; lịch sử chỉ hiện ba việc gần nhất (chạm «Xem cả» mới thấy hết), mức đủ là phần thêm ngoài khối gốc.</dd></dl>
+    </section>
+    <section>
+      <h2>Vẽ mới</h2>
+      <span class="nhan">Ghép Tabs + Badge + Timeline: đầu màn gọn (mã căn, giá, mức đủ) rồi ba ngăn Tổng quan · Ảnh ·
+        Lịch sử, nút dính đáy</span>
+      <figure><img src="ve-moi-375.png" alt="Vẽ mới, khổ 375, vai đầu khách"><figcaption>Đầu khách</figcaption></figure>
+      <dl><dt>Động cơ</dt><dd>Ngắn nhất: mã căn và giá ngay đầu màn, mỗi ngăn vừa khoảng một màn, không cuộn dài.</dd>
+        <dt>Đánh đổi</dt><dd>Ảnh và lịch sử nằm sau một chạm; tự ghép nên phải ghi «Chỗ hở» kèm hạn xem lại, và lệch dáng với trang khách.</dd></dl>
+    </section>
+  </div>
+</main>
+</body>
+</html>
