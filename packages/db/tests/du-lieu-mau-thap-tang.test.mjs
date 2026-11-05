@@ -713,7 +713,9 @@ async function trongGiaoDich(fn) {
   const c = new pg.Client({ connectionString: URL_DB });
   await c.connect();
   try {
-    await c.query("begin");
+    // Repeatable read: ảnh chụp năm bảng chỉ thấy dòng của chính giao dịch này — dòng mà tệp kiểm khác (isolation.test.mjs
+    // không lấy khoá sàn mẫu) commit giữa hai lần chụp không lọt vào phép chênh (S4 r1, t3).
+    await c.query("begin isolation level repeatable read");
     await xoaMau(c); // cơ sở dữ liệu sạch dữ liệu mẫu trong giao dịch — hoàn lại cuối ca
     return await fn(c);
   } finally {
