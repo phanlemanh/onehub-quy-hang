@@ -71,6 +71,7 @@ export const STATE_COLUMNS: Readonly<Record<keyof ListingState, string>> = {
   closeDate: "close_date",
   withdrawnReason: "withdrawn_reason",
   lastConfirmedAt: "last_confirmed_at",
+  voided: "voided",
   version: "version",
 };
 const KHOA = Object.keys(STATE_COLUMNS) as (keyof ListingState)[];
@@ -86,6 +87,7 @@ type EventRow = {
   occurred_at: Date;
   device: "desktop" | "mobile" | null;
   made_offline: boolean;
+  import_id?: string | null;
 };
 const toEvent = (r: EventRow): ListingEvent => ({
   seq: r.seq,
@@ -106,6 +108,16 @@ export async function loadEvents(tx: pg.PoolClient, listingId: string): Promise<
     [listingId],
   );
   return rows.map(toEvent);
+}
+
+/** Dãy sự kiện kèm lần nhập đã ghi từng sự kiện — cho hoàn tác cả lần nhập (hàng 66); không ra API đọc hàng. */
+export async function loadEventsNhap(tx: pg.PoolClient, listingId: string): Promise<(ListingEvent & { importId: string | null })[]> {
+  const { rows } = await tx.query<EventRow>(
+    `select seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner, occurred_at, device, made_offline, import_id
+     from listing_events where company_id = app.current_company_id() and listing_id = $1 order by seq`,
+    [listingId],
+  );
+  return rows.map((r) => ({ ...toEvent(r), importId: r.import_id ?? null }));
 }
 
 /** Vai của người đang làm ở sàn đang làm — ghi vào sự kiện (Tham chiếu §4: ghi người và vai lúc làm). */
@@ -180,9 +192,12 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // hàng có thật (AC-5).
   const events = await loadEvents(tx, listingId);
   if (!canRead(viewer, await factsOf(tx, listingId, events))) return { error: API_ERRORS.notFound };
+  // Hàng đã gỡ khi hoàn tác lần nhập (hàng 66): như hàng không có — máy giữ lệnh chờ chuyển lệnh sang «cần xem».
+  if (foldListing(events).voided) return { error: API_ERRORS.notFound };
 
   const details = validatePayload(cmd.type, cmd.payload, { today: new Date().toISOString().slice(0, 10) });
   if (cmd.type === "created") details.push({ path: "type", reason: "hàng đã có — tạo hàng bằng POST /listings" });
+  if (cmd.type === "voided") details.push({ path: "type", reason: "gỡ hàng chỉ qua hoàn tác lần nhập" });
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const type = cmd.type as EventType;
   const payload = cmd.payload as Record<string, unknown>;
@@ -228,6 +243,23 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   return { listingId, state, event, facts };
 }
 
+/**
+ * Gỡ hàng khi hoàn tác cả lần nhập (hàng 66, ADR-0011 quyết định 8): một sự kiện `voided` — cờ khi gấp, không đổi trạng
+ * thái, không xác nhận với chủ nhà, không mang `import_id`. Chỉ đường hoàn tác lần nhập gọi; lệnh thường không ghi được loại này.
+ */
+export async function voidListing(tx: pg.PoolClient, listingId: string, expectedVersion: number): Promise<Applied | Refusal> {
+  const hang = await tx.query<{ version: number }>("select version from listings where id = $1 for update", [listingId]);
+  if (!hang.rowCount) return { error: API_ERRORS.notFound };
+  const version = hang.rows[0]!.version;
+  if (version !== expectedVersion) return { error: API_ERRORS.versionConflict };
+  const events = await loadEvents(tx, listingId);
+  const event = await ghiSuKien(tx, listingId, version + 1, "voided", {}, false, GHI_KHONG_RO);
+  const state = foldListing([...events, event]);
+  const facts = factsFromEvents([...events, event]);
+  await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);
+  return { listingId, state, event, facts };
+}
+
 /** Ảnh thật của căn (ngăn Gửi được, không ảnh mẫu, chưa xoá) và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */
 async function nguCanhAnh(tx: pg.PoolClient, hang: ListingState): Promise<{ realPhotoCount: number; minRealPhotos: number }> {
   const { rows } = await tx.query<{ n: number }>(
@@ -247,7 +279,7 @@ async function nguCanhAnh(tx: pg.PoolClient, hang: ListingState): Promise<{ real
 async function hangMoCungCan(tx: pg.PoolClient, listingId: string, toa: string, ma: string): Promise<{ id: string; status: StandardStatus } | null> {
   const { rows } = await tx.query<{ id: string; status: StandardStatus }>(
     `select id, standard_status as status from listings
-     where id <> $1 and building_name = $2 and app.unit_key(unit_number) = app.unit_key($3) and standard_status = any($4)
+     where id <> $1 and building_name = $2 and app.unit_key(unit_number) = app.unit_key($3) and standard_status = any($4) and not voided
      order by id limit 1`,
     [listingId, toa, ma, OPEN_STATUSES],
   );

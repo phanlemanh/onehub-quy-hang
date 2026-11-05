@@ -21,6 +21,8 @@ export type ListingState = {
   withdrawnReason: string | null;
   /** ISO 8601 của lần xác nhận gần nhất với chủ nhà; chưa từng xác nhận là `null`. */
   lastConfirmedAt: string | null;
+  /** Hàng đã gỡ khỏi Quỹ hàng khi hoàn tác lần nhập (`voided`) — cờ, không phải trạng thái; lịch sử giữ nguyên. */
+  voided: boolean;
   /** = `seq` của sự kiện cuối. */
   version: number;
 };
@@ -43,6 +45,7 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
     closeDate: null,
     withdrawnReason: null,
     lastConfirmedAt: null,
+    voided: false,
     version: 0,
   };
   return ds.reduce(stepListing, s);
@@ -74,6 +77,9 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
       break;
     case "unit_number_assigned":
       s.unitNumber = p.unitNumber as string;
+      break;
+    case "voided":
+      s.voided = true;
       break;
     default:
       break;

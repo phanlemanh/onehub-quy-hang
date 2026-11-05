@@ -77,6 +77,8 @@ export const API_ERRORS = {
   importRoleRequired: { code: "import-role-required", status: 403 },
   importPlanInvalid: { code: "import-plan-invalid", status: 422 },
   importBatchTooLarge: { code: "import-batch-too-large", status: 422 },
+  /** Hoàn tác lần nhập đứt giữa chừng (hàng 66): phần đã làm giữ nguyên, gọi lại làm tiếp. */
+  importUndoIncomplete: { code: "import-undo-incomplete", status: 503 },
   // Xuất bảng hàng (hàng 43): chỉ đầu chủ, trưởng nhóm.
   exportRoleRequired: { code: "export-role-required", status: 403 },
   // Mật khẩu do sàn cấp (hàng dang-nhap-mat-khau) — hợp đồng viết mã bằng gạch dưới, kho giữ gạch nối. Email lạ và mật khẩu sai chung

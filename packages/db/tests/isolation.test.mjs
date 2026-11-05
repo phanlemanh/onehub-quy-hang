@@ -2277,10 +2277,30 @@ test("lần nhập: dòng nhập không giữ ô nguyên văn", { skip }, async 
       "lead_id",
       "listing_version_before",
       "created_at",
+      "undo_outcome",
+      "undone_at",
     ]);
   } finally {
     await client.end();
   }
+});
+
+test("hoàn tác lần nhập (025): A không đánh dấu hoàn tác lần nhập hay dòng nhập của B", { skip }, async () => {
+  await withImports(COMPANY_A, async (c) => {
+    assert.equal(
+      (await c.query("update imports set status = 'undone', undone_at = now(), undone_by = $2 where id = $1", [IMPORT_B, USER_1])).rowCount,
+      0,
+      "không hoàn tác lần nhập của B",
+    );
+    assert.equal((await c.query("update import_rows set undo_outcome = 'go', undone_at = now() where import_id = $1", [IMPORT_B])).rowCount, 0, "không ghi kết cục dòng của B");
+    // Đối chứng: lần nhập và dòng của chính A thì ghi được.
+    assert.equal((await c.query("update import_rows set undo_outcome = 'go', undone_at = now() where import_id = $1", [IMPORT_A])).rowCount, 1);
+    assert.equal(
+      (await c.query("update imports set status = 'undone', undone_at = now(), undone_by = $2 where id = $1", [IMPORT_A, USER_1])).rowCount,
+      1,
+    );
+    await expectError(c, "update import_rows set undo_outcome = 'xoa' where import_id = $1", [IMPORT_A], /violates check constraint/);
+  });
 });
 
 // ---- Lượt mất mạng (028_thiet_bi_va_mat_mang, E2) ----

@@ -13,6 +13,9 @@ export const EVENT_TYPES = [
   "owner_confirmed",
   // Gắn mã căn cho hàng tạo khi mới biết toà (ADR-0026) — một lần, chỉ khi hàng chưa có mã.
   "unit_number_assigned",
+  // Gỡ hàng do lần nhập tạo khi hoàn tác cả lần nhập (ADR-0011 quyết định 8): cờ khi gấp, không phải trạng thái thứ bảy;
+  // chỉ đường hoàn tác lần nhập ghi được.
+  "voided",
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 
@@ -60,6 +63,7 @@ const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
   },
   owner_confirmed: { confirmedAt: [false, ngay] },
   unit_number_assigned: { unitNumber: [true, maCan] },
+  voided: {},
 };
 
 export type PayloadError = { path: string; reason: string };

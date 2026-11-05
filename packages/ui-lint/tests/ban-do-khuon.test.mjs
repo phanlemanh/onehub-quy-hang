@@ -147,7 +147,7 @@ const NHAN_DIEN_TRANG_THAI = [
   // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; khối báo máy bị báo ở đăng nhập.
   ...["hop-mat-khau.tsx", "khung.tsx", "man-toi.tsx", "toi-that.tsx"].map((p) => `${W}/app/(app)/me/${p}`),
   // Nhập Excel (hàng man-nhap-excel): khuôn, màn và bảng của nó.
-  ...["khung.tsx", "new/bang.tsx", "new/man-nhap.tsx"].map((p) => `${W}/app/(app)/imports/${p}`),
+  ...["khung.tsx", "new/bang.tsx", "new/hoan-tac.tsx", "new/man-nhap.tsx"].map((p) => `${W}/app/(app)/imports/${p}`),
   `${W}/app/(auth)/login/may-bi-bao.tsx`,
   ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "dat-mat-khau/form.tsx", "dat-mat-khau/page.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
@@ -172,7 +172,10 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/error.tsx`,
   // Nhập Excel (hàng man-nhap-excel): đọc tệp, lỗi, không dòng nào ghi, xem thử, ghi, xong; không quyền ở trang. Hàng 67:
   // dải «ghép theo mẫu», báo không đọc được mẫu, báo ô đổi theo.
-  ...Array(13).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
+  // Hàng 66: lần nhập gần đây (đang tải, lỗi, trống) và hộp hoàn tác (đang xem trước, lỗi).
+  ...Array(5).fill(`${W}/app/(app)/imports/new/hoan-tac.tsx`),
+  // Hàng 66: hai dải mẫu gộp thành một dải đọc từ daiBaoMau.
+  ...Array(12).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
   `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
@@ -427,7 +430,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 18 ngoại lệ · 0 lệch",
-      "trang-thai: 107 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 111 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
