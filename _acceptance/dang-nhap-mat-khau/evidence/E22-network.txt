@@ -1,218 +1,161 @@
-# E22 network/console (playwright, app origin http://localhost:3460; chỉ request app-origin không phải asset tĩnh)
-# bảng B (người dùng)
-## E22-ST-cap-mat-khau-hoi-375.png
-GET /login 200
-console-error Failed to load resource: the server responded with a status of 404 (Not Found)
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
+# E22 network/console (CDP headless Chrome, app origin http://localhost:3460; chỉ request app-origin không phải asset tĩnh; lỗi asset tĩnh ghi chú)
+## E22-ST-cap-mat-khau-hoi-375
 GET /settings/users 200
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/listings 200
-## E22-ST-cap-mat-khau-ket-qua-375.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
+## E22-ST-cap-mat-khau-ket-qua-375
 GET /settings/users 200
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_0kx4jc4zit26u._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_zod_v3_075f2benxcdnj._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0u40shsjduv5x._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_019q2kglz__79._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_1d-iqqqbayd8i._.js net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/listings 200
-POST /api/v1/company/members/f65e021c-46d0-43dc-b297-5c2db61bb39e/temp-password 200
-## E22-ST-cap-mat-khau-san-khac-375.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
+POST /api/v1/company/members/d1f94548-7b37-422c-b3c5-fb2c722648d4/temp-password 200
+## E22-ST-cap-mat-khau-san-khac-375
 GET /settings/users 200
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_0kx4jc4zit26u._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_zod_v3_075f2benxcdnj._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0u40shsjduv5x._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_019q2kglz__79._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_1d-iqqqbayd8i._.js net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/listings 200
-POST /api/v1/company/members/82a99c05-c009-47d5-bdce-d83487a3d586/temp-password 409
-console-error Failed to load resource: the server responded with a status of 409 (Conflict)
-## E22-ST-cap-mat-khau-hoi-1280.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
+POST /api/v1/company/members/6ab0ef60-49e5-47ec-a896-d3b395e359d7/temp-password 409   <-- >=400
+## E22-ST-toi-mat-khau-dong-chua-dat-375
+GET /settings/personal 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
+GET /api/v1/me/devices 200
+GET /api/v1/me/devices 200
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/listings 200
+## E22-ST-toi-mat-khau-dong-da-dat-375
+GET /settings/personal 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
+GET /api/v1/me/devices 200
+GET /api/v1/me/devices 200
+GET /api/v1/me 200
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/listings 200
+## E22-ST-toi-mat-khau-dong-da-khoa-375
+GET /settings/personal 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
+GET /api/v1/me/devices 200
+GET /api/v1/me/devices 200
+GET /api/v1/me 200
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/listings 200
+## E22-ST-toi-mat-khau-hop-doi-375
+GET /settings/personal 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
+GET /api/v1/me/devices 200
+GET /api/v1/me/devices 200
+GET /api/v1/me 200
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/listings 200
+## E22-ST-toi-mat-khau-hop-dat-375
+GET /settings/personal 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
+GET /api/v1/me/devices 200
+GET /api/v1/me/devices 200
+GET /api/v1/me 200
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/listings 200
+## E22-ST-cap-mat-khau-hoi-1280
 GET /settings/users 200
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_0kx4jc4zit26u._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_zod_v3_075f2benxcdnj._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0u40shsjduv5x._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_019q2kglz__79._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_1d-iqqqbayd8i._.js net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/listings 200
-## E22-ST-cap-mat-khau-ket-qua-1280.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
+## E22-ST-cap-mat-khau-ket-qua-1280
 GET /settings/users 200
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_0kx4jc4zit26u._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_zod_v3_075f2benxcdnj._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0u40shsjduv5x._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_019q2kglz__79._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_1d-iqqqbayd8i._.js net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/listings 200
-POST /api/v1/company/members/f65e021c-46d0-43dc-b297-5c2db61bb39e/temp-password 200
-## E22-ST-cap-mat-khau-san-khac-1280.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings?_rsc=2Md0sTUZcnjCijMr 200
+POST /api/v1/company/members/d1f94548-7b37-422c-b3c5-fb2c722648d4/temp-password 200
+## E22-ST-cap-mat-khau-san-khac-1280
 GET /settings/users 200
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_0kx4jc4zit26u._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_zod_v3_075f2benxcdnj._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0u40shsjduv5x._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_019q2kglz__79._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_1d-iqqqbayd8i._.js net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/listings 200
-POST /api/v1/company/members/82a99c05-c009-47d5-bdce-d83487a3d586/temp-password 409
-console-error Failed to load resource: the server responded with a status of 409 (Conflict)
-# bảng Cá nhân
-## E22-ST-toi-mat-khau-dong-chua-dat-375.png
-GET /login 200
-console-error Failed to load resource: the server responded with a status of 404 (Not Found)
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
+POST /api/v1/company/members/6ab0ef60-49e5-47ec-a896-d3b395e359d7/temp-password 409   <-- >=400
+## E22-ST-toi-mat-khau-dong-chua-dat-1280
 GET /settings/personal 200
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_internals_1l88rrr5k8_28._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0frvksgg9eaxs._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_zod_v3_075f2benxcdnj._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0u40shsjduv5x._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/_1c6cwdh-69r5u._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40tanstack_table-core_dist_0o17k3b-tj3z5._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40base-ui_react_0yhnm5_zgra1z._.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_react-resizable-panels_dist_react-resizable-panels_0chim-r0s13l6.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_%40dnd-kit_core_dist_core_esm_0i-bf15xqk6tl.js net::ERR_ABORTED
-FAILED http://localhost:3460/_next/static/chunks/node_modules_0e7i8in3uzm-w._.js net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/__nextjs_font/geist-latin.woff2 net::ERR_ABORTED
-GET /api/v1/me 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/me/devices 200
-GET /api/v1/push/public-key 200
+GET /api/v1/me/devices 200
+GET /api/v1/me 200
+GET /api/v1/me 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
 GET /api/v1/listings 200
-## E22-ST-toi-mat-khau-dong-da-dat-375.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
+## E22-ST-toi-mat-khau-dong-da-dat-1280
 GET /settings/personal 200
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/listings net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
+GET /api/v1/me/devices 200
 GET /api/v1/me/devices 200
 GET /api/v1/me 200
 GET /api/v1/me 200
-GET /api/v1/me/devices 200
-GET /api/v1/push/public-key 200
-GET /api/v1/push/public-key 200
 GET /api/v1/listings 200
-## E22-ST-toi-mat-khau-dong-da-khoa-375.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /api/v1/leads 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+## E22-ST-toi-mat-khau-dong-da-khoa-1280
 GET /settings/personal 200
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/listings net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/me/devices 200
 GET /api/v1/me/devices 200
 GET /api/v1/me 200
 GET /api/v1/me 200
-GET /api/v1/push/public-key 200
-GET /api/v1/push/public-key 200
 GET /api/v1/listings 200
-## E22-ST-toi-mat-khau-dong-chua-dat-1280.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+## E22-ST-toi-mat-khau-hop-doi-1280
 GET /settings/personal 200
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/me/devices 200
 GET /api/v1/me/devices 200
 GET /api/v1/me 200
 GET /api/v1/me 200
-GET /api/v1/push/public-key 200
 GET /api/v1/listings 200
-GET /api/v1/push/public-key 200
-## E22-ST-toi-mat-khau-dong-da-dat-1280.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /api/v1/leads 200
-GET /api/v1/leads 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400
+## E22-ST-toi-mat-khau-hop-dat-1280
 GET /settings/personal 200
-FAILED http://localhost:3460/api/v1/listings net::ERR_ABORTED
+GET /manifest.webmanifest 200
+(note, static/asset) GET /favicon.ico 404
+GET /manifest.webmanifest 200
 GET /api/v1/me/devices 200
 GET /api/v1/me/devices 200
 GET /api/v1/me 200
 GET /api/v1/me 200
-GET /api/v1/push/public-key 200
 GET /api/v1/listings 200
-GET /api/v1/push/public-key 200
-## E22-ST-toi-mat-khau-dong-da-khoa-1280.png
-GET /login 200
-POST /api/v1/auth/sign-in/email 200
-GET /?_rsc=qYT2Wy2QR8kXuUU6 200
-GET /?_rsc=q3mOO9BClNZHexY7 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /today?_rsc=2Md0sTUZcnjCijMr 200
-GET /settings/personal 200
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/leads net::ERR_ABORTED
-FAILED http://localhost:3460/api/v1/listings net::ERR_ABORTED
-GET /api/v1/me/devices 200
-GET /api/v1/me/devices 200
-GET /api/v1/me 200
-GET /api/v1/me 200
-GET /api/v1/push/public-key 200
-GET /api/v1/listings 200
-GET /api/v1/push/public-key 200
+GET /api/v1/push/public-key 500   <-- >=400
+GET /api/v1/push/public-key 500   <-- >=400

@@ -1,6 +1,26 @@
-# E10 network/console (playwright, app origin http://localhost:3460; chỉ pha c8 và c9 được gắn bộ nghe)
-FAIL-eligible 500: c9 GET /api/v1/push/public-key 500 (x2) — sau vào /today; môi trường thử không đặt khoá push (trang hiện «Thông báo chưa được cấu hình»)
-c8 (đăng nhập lại sau hết phiên): mọi request /login, /api/v1/auth/sign-in/email, /dat-mat-khau, 200
-c9: POST /api/v1/auth/password/first 200; /today, /api/v1/leads/assigned, listings, catalog 200
-console: c8-375/c8-1280 error "Base UI: A component that acts as a button expected a native <button> because nativeButton prop is true ... at Button" (dev overlay '1 Issue' ở /dat-mat-khau hết phiên, nút «Về đăng nhập» là link)
-console: c9 2x "Failed to load resource: 500" (push/public-key)
+# E10 network/console (playwright, app origin http://localhost:3460; mọi pha, chỉ ghi response /api >=400, requestfailed, console error)
+c1 console-error: Failed to load resource: the server responded with a status of 404 (Not Found)
+c2 POST /api/v1/auth/sign-in/email 401
+c2 console-error: Failed to load resource: the server responded with a status of 401 (Unauthorized)
+c3 POST /api/v1/auth/sign-in/email 429
+c3 console-error: Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+c4 POST /api/v1/auth/sign-in/email 403
+c4 console-error: Failed to load resource: the server responded with a status of 403 (Forbidden)
+c5 POST /api/v1/auth/sign-in/email 403
+c5 console-error: Failed to load resource: the server responded with a status of 403 (Forbidden)
+c6 POST /api/v1/auth/password/first 400
+c6 console-error: Failed to load resource: the server responded with a status of 400 (Bad Request)
+c9 GET /api/v1/push/public-key 500
+c9 console-error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+c9 GET /api/v1/push/public-key 500
+c9 console-error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+c2 POST /api/v1/auth/sign-in/email 401
+c2 console-error: Failed to load resource: the server responded with a status of 401 (Unauthorized)
+c3 POST /api/v1/auth/sign-in/email 429
+c3 console-error: Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+c4 POST /api/v1/auth/sign-in/email 403
+c4 console-error: Failed to load resource: the server responded with a status of 403 (Forbidden)
+c5 POST /api/v1/auth/sign-in/email 403
+c5 console-error: Failed to load resource: the server responded with a status of 403 (Forbidden)
+c6 POST /api/v1/auth/password/first 400
+c6 console-error: Failed to load resource: the server responded with a status of 400 (Bad Request)
