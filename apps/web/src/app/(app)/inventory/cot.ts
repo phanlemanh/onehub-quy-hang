@@ -31,6 +31,11 @@ export type DongBang = {
   withdrawnReason: string | null;
   /** RESO `PropertySubType` từ danh mục (hàng 22) — không phải cột của bảng. */
   propertySubType?: string | null;
+  /**
+   * Cột «Đầu chủ» (hàng 105, nguồn AC-4 hàng 89): chữ ô đã tính từ `listAgentKey` (RESO `ListAgentKey`) của hàng đối với
+   * danh bạ đầu chủ của sàn — `chuDauChu`. Chỉ đọc; dòng dựng ngoài Bảng hàng không có khoá này.
+   */
+  "dau-chu"?: string;
 };
 
 export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType">;
@@ -85,6 +90,7 @@ export const COT: readonly Cot[] = [
   { id: "financing", label: "Tài chính", kind: "chu", size: 130, filterHint: "Chứa…" },
   { id: "occupantType", label: "Tình trạng sử dụng", kind: "chu", size: 170, filterHint: "Chứa…" },
   { id: "confirmedAgeDays", label: "Xác nhận", kind: "so", size: 130, filterHint: "<14 (ngày)" },
+  { id: "dau-chu", label: "Đầu chủ", kind: "chon", size: 150, filterHint: "Mọi đầu chủ" },
   { id: "completeness", label: "Mức đủ", kind: "so", size: 100, filterHint: ">=3" },
   { id: "visibility", label: "Ai thấy", kind: "chon", size: 120, filterHint: "Mọi nấc" },
   { id: "closePrice", label: "Giá chốt", kind: "so", size: 120, filterHint: "<=5 (tỷ)", scale: TY },
@@ -96,6 +102,30 @@ export const COT_THEO_ID = new Map(COT.map((c) => [c.id, c]));
 /** Ba cột ẩn mặc định, bật trong menu cột. */
 export const COT_AN_MAC_DINH: readonly CotId[] = ["closePrice", "closeDate", "withdrawnReason"];
 export const COT_MAC_DINH: readonly CotId[] = COT.map((c) => c.id).filter((id) => !COT_AN_MAC_DINH.includes(id));
+
+/** Căn có đầu chủ không còn trong sàn (Hỏi-3 hàng 105) — khác «—» của căn chưa gán. */
+export const DA_ROI_SAN = "Đã rời sàn";
+
+/**
+ * Danh bạ đầu chủ của sàn: mã người → tên hiển thị. `null` khi máy chưa đọc được danh bạ (chưa tải, mất mạng, vai không
+ * được đọc) — lúc ấy không kết luận «Đã rời sàn».
+ */
+export type DanhBaDauChu = ReadonlyMap<string, string> | null;
+
+/** Mã ngắn của người khi chưa biết tên — như «Hôm nay» của trưởng nhóm (`maNgan`). */
+const maNgan = (userId: string) => userId.slice(0, 8);
+
+/**
+ * Chữ ô «Đầu chủ»: chưa gán → «—»; gán người có trong danh bạ → tên (tên trống thì mã ngắn); gán người không còn trong
+ * danh bạ → «Đã rời sàn»; chưa đọc được danh bạ → mã ngắn của người giữ.
+ */
+export function chuDauChu(listAgentKey: string | null | undefined, danhBa: DanhBaDauChu): string {
+  if (!listAgentKey) return "—";
+  if (danhBa === null) return maNgan(listAgentKey);
+  const ten = danhBa.get(listAgentKey);
+  if (ten === undefined) return DA_ROI_SAN;
+  return ten.trim() || maNgan(listAgentKey);
+}
 
 /** «4,65 tỷ» · «950 triệu» · «—». */
 export function dinhDangGia(dong: number | null): string {
