@@ -50,7 +50,8 @@ export function kiemSanSang(hang: HangSua, soAnhThat: number, toiThieu = MAC_DIN
     if (!thieu.some((t) => t.nhan === d.nhan)) thieu.push(d);
   }
   if (thieu.length) return { thieu, lenh: null };
-  const kq = dungLenhTrangThai(hang, "Active");
+  // Nút chỉ hiện theo cờ «Sẵn sàng bán» của lõi (lopPhuHoSo.sanSang, bảng quyền của hàng) — nên cờ ở đây là true.
+  const kq = dungLenhTrangThai(hang, "Active", {}, true);
   if (!kq.ok || !("lenh" in kq)) throw new Error("Sẵn sàng bán: đủ điều mà trình sửa ô không dựng được lệnh");
   return { thieu: [], lenh: kq.lenh };
 }

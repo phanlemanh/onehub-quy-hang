@@ -1,0 +1,33 @@
+346. [GET] http://localhost:3462/api/v1/listings => [200] OK
+347. [GET] http://localhost:3462/api/v1/me/devices => [200] OK
+348. [GET] http://localhost:3462/api/v1/me => [200] OK
+349. [GET] http://localhost:3462/api/v1/me/devices => [200] OK
+350. [GET] http://localhost:3462/api/v1/me => [200] OK
+351. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
+352. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
+353. [POST] http://localhost:3462/api/v1/auth/sign-out => [200] OK
+354. [GET] http://localhost:3462/login?_rsc=doNLcCl_o4f6IMJm => [200] OK
+359. [GET] http://localhost:3462/login?_rsc=2PWn4eNgFwgEGU5W => [200] OK
+362. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+363. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+364. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+365. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+366. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+367. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+369. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+370. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+371. [GET] http://localhost:3462/api/v1/listings => [200] OK
+415. [GET] http://localhost:3462/api/v1/listings => [200] OK
+416. [PUT] http://localhost:3462/api/v1/company/labels => [200] OK
+417. [GET] http://localhost:3462/api/v1/listings => [200] OK
+457. [GET] http://localhost:3462/api/v1/listings => [200] OK
+458. [GET] http://localhost:3462/api/v1/listings => [200] OK
+459. [GET] http://localhost:3462/api/v1/listings => [200] OK
+460. [PUT] http://localhost:3462/api/v1/company/labels => [200] OK
+500. [GET] http://localhost:3462/api/v1/listings => [200] OK
+501. [POST] http://localhost:3462/__nextjs_original-stack-frames => [200] OK
+502. [PUT] http://localhost:3462/api/v1/company/labels => [200] OK
+542. [GET] http://localhost:3462/api/v1/listings => [200] OK
+582. [GET] http://localhost:3462/api/v1/listings => [200] OK
+
+Note: 209 static requests not shown, run with "static" option to see them.console: 1 hydration warning (caret-color injected by Playwright)

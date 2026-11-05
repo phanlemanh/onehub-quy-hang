@@ -30,6 +30,8 @@ async function login(email: string): Promise<string> {
 async function sanMoi(ten: string) {
   const email = mail(`hang-${ten.toLowerCase()}`);
   const s = await openCompany(`[Sàn ${RUN} ${ten}]`, email);
+  // Từ 046 chỉ người có Bảng hàng tạo, sửa được hàng (bang-quyen-theo-vai): người mở sàn kiêm Đầu chủ vì bài đưa hàng lên Đang bán.
+  await appPool.query("update company_members set roles = roles || '{listing_agent}' where company_id = $1 and user_id = $2", [s.companyId, s.userId]);
   return { ...s, cookie: `${await login(email)}; qh_san=${s.companyId}` };
 }
 
@@ -71,7 +73,7 @@ test("lệnh đổi hàng: mỗi lệnh ghi đúng một sự kiện và bản t
       [h.id],
     );
     assert.deepEqual(rows.map((r) => r.seq), Array.from({ length: i + 2 }, (_, k) => k + 1), `sau ${b.type}: seq liền`);
-    assert.deepEqual([rows.at(-1)!.actor_user_id, rows.at(-1)!.actor_roles], [a.userId, ["company_admin"]], "người và vai lúc làm");
+    assert.deepEqual([rows.at(-1)!.actor_user_id, rows.at(-1)!.actor_roles], [a.userId, ["company_admin", "listing_agent"]], "người và vai lúc làm");
     const events = await suKien(h.id);
     const mong = foldListing(events);
     assert.deepEqual(chuanHoa(await banTinh(h.id)), chuanHoa(veCot(mong)), `sau ${b.type}: bản tính khớp hàm gấp`);

@@ -1,6 +1,8 @@
 // Đọc và ghi của trang khách `/s/<mã>` (hàng 35). Không phiên: tìm Lần gửi qua `app.share_by_code` (migration 031), rồi
 // đọc căn TRONG PHIÊN CỦA NGƯỜI GỬI — luật theo dòng của mọi bảng căn vẫn áp như khi người ấy mở bảng hàng. Mọi dữ liệu
 // ra dựng bằng `thanTrangKhach` của lõi (bản ra `banRaNgoai`, bất biến 4); không cột lớp `source` nào được đọc ở đây.
+import { boTuVung, type DongNhan } from "@quy-hang/core/labels";
+import { dongNhanCuaSan } from "../labels/store";
 import type { ListingState } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import type { CanNoiBo } from "@quy-hang/core/redaction";
@@ -122,9 +124,11 @@ export type ThanRoute = ThanTrangKhach & { listingIds: string[] };
  * Thân trang khách của một Lần gửi còn mở; `today` là `YYYY-MM-DD` UTC. `listingIds` (cùng thứ tự với `can`) là mã hàng để
  * trang báo «Quan tâm» đúng căn — chuỗi UUID không mang nghĩa, không thuộc lớp nguồn; mọi giá trị căn vẫn chỉ là bản ra.
  */
-export async function docTrangKhach(nguon: Pick<NguonCongKhai, "docCan">, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
+export async function docTrangKhach(nguon: Pick<NguonCongKhai, "docCan" | "docNhan">, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
   const ds = await nguon.docCan(s);
-  return { ...thanTrangKhach({ can: ds.map((d) => d.can), audience: s.audience, today }), listingIds: ds.map((d) => d.id) };
+  // Cách gọi riêng của sàn gửi (hàng 45): lõi cắt về phần theo khoá ra của người nhận.
+  const tuVung = boTuVung(nguon.docNhan ? await nguon.docNhan(s) : []).tuVung;
+  return { ...thanTrangKhach({ can: ds.map((d) => d.can), audience: s.audience, today, tuVung }), listingIds: ds.map((d) => d.id) };
 }
 
 export type AnhCongKhai = { kind: "byte"; bytes: Buffer; type: string } | { kind: "link"; url: string } | "khong-co" | "chua-cau-hinh";
@@ -137,6 +141,8 @@ export type NguonCongKhai = {
   timLanGui(code: string): Promise<LanGuiTheoMa | null>;
   /** Căn nội bộ của Lần gửi theo thứ tự gửi, kèm mã hàng — chỉ đi vào `thanTrangKhach`, không trả thẳng ra ngoài. */
   docCan(s: LanGuiTheoMa): Promise<{ id: string; can: CanNoiBo }[]>;
+  /** Dòng cách gọi riêng của sàn gửi (hàng 45) — chỉ đi vào `thanTrangKhach`, lõi cắt về phần ra ngoài. Vắng = chưa đặt. */
+  docNhan?(s: LanGuiTheoMa): Promise<DongNhan[]>;
   ghiSuKien(code: string, type: string, listingId: string | null, visitor: string): Promise<GhiSuKien>;
   /** Byte một ảnh của Lần gửi; route chỉ gọi với id đã có trong bản ra. */
   docAnh(s: LanGuiTheoMa, photoId: string): Promise<AnhCongKhai>;
@@ -150,6 +156,7 @@ export function nguonThat(deps: { appPool: pg.Pool; identityPool: pg.Pool }, kho
       const ten = await tenNguoiGui(deps.identityPool, s.senderUserId);
       return tx(s, (c) => canCuaLanGui(c, s, ten));
     },
+    docNhan: (s) => tx(s, dongNhanCuaSan),
     ghiSuKien: (code, type, listingId, visitor) => ghiSuKien(deps.appPool, code, type, listingId, visitor),
     async docAnh(s, id) {
       if (kho.ten === "vang") return "chua-cau-hinh";

@@ -88,7 +88,7 @@ test("E4 đối chứng đỏ: lệnh chỉ có điều kiện phí bị bắt, 
 });
 
 test("Đã bán đọc giá chốt bằng cùng bộ đọc", () => {
-  const kq = dungLenhTrangThai(HANG, "Closed", { giaChot: "4,5 tỷ", ngayBan: "2026-11-01" });
+  const kq = dungLenhTrangThai(HANG, "Closed", { giaChot: "4,5 tỷ", ngayBan: "2026-11-01" }, true);
   assert.ok(kq.ok);
   assert.deepEqual(kq.lenh, { type: "status_changed", payload: { to: "Closed", closePrice: 4_500_000_000, closeDate: "2026-11-01" } });
   assert.equal(kq.hieuLa, "Hiểu là: giá chốt 4,5 tỷ");
@@ -107,7 +107,7 @@ function choHienGia(dong: number, chuGo: string, viet?: (d: number) => string): 
   const lenh = dungLenhGia(HANG, chuGo, "included");
   assert.ok(lenh.ok);
   assert.equal(lenh.lenh.type === "price_changed" && lenh.lenh.payload.listPrice, dong, `lệnh mang listPrice ${dong}`);
-  const chot = dungLenhTrangThai(HANG, "Closed", { giaChot: chuGo, ngayBan: "2026-11-01" });
+  const chot = dungLenhTrangThai(HANG, "Closed", { giaChot: chuGo, ngayBan: "2026-11-01" }, true);
   assert.ok(chot.ok);
   assert.equal(chot.lenh.type === "status_changed" && chot.lenh.payload.closePrice, dong, `lệnh mang closePrice ${dong}`);
   return {
@@ -159,12 +159,12 @@ test("E7 hàng 23: nhãn thiếu đủ điều — «ảnh thật», «mã căn�
   const { nhanThieu } = await import("./lenh");
   const du = { ...HANG, listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant", standardStatus: "Incomplete" as const };
   // Ngữ cảnh có số ảnh (như hồ sơ căn đưa) → báo đúng nhãn.
-  const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active");
+  const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active", {}, true);
   assert.deepEqual(coSo, { ok: false, loi: "Chưa lên Đang bán được: thiếu ảnh thật" });
-  const khongMa = dungLenhTrangThai({ ...du, unitNumber: null }, "Active");
+  const khongMa = dungLenhTrangThai({ ...du, unitNumber: null }, "Active", {}, true);
   assert.deepEqual(khongMa, { ok: false, loi: "Chưa lên Đang bán được: thiếu mã căn" });
   // Bảng hàng không có số ảnh (Hỏi-2) → không báo ảnh, lệnh dựng được, máy chủ xét.
-  assert.equal(dungLenhTrangThai(du, "Active").ok, true);
+  assert.equal(dungLenhTrangThai(du, "Active", {}, true).ok, true);
   assert.equal(nhanThieu("realPhoto"), "ảnh thật");
   assert.equal(nhanThieu("unitNumber"), "mã căn");
   assert.equal(nhanThieu("dieu-la"), "dieu-la", "điều lạ giữ nguyên tên");

@@ -20,6 +20,7 @@
     "./sharing": "./src/sharing/index.ts",
     "./export": "./src/export/index.ts",
     "./config": "./src/config/index.ts",
+    "./labels": "./src/labels/index.ts",
     "./thiet-bi": "./src/thiet-bi/index.ts"
   },
   "scripts": {

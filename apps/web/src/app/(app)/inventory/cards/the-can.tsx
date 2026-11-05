@@ -14,7 +14,9 @@ import { cn } from "cn";
 import { Badge } from "@/components/reui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Item } from "@/components/ui/item";
-import { CHUA_RO, FEE_LABEL, chuCuaO, dinhDangGia, type DongBang } from "../cot";
+import { nhanTruong } from "@quy-hang/core/labels";
+import { CHUA_RO, chuCuaO, dinhDangGia, type DongBang } from "../cot";
+import { useTuVung } from "../tu-vung";
 import { taoNguonAnhBia } from "./anh-bia";
 import { taoGiuLau, NGUONG_GIU_LAU, type SuKien } from "./giu-lau";
 import { chonDuoc } from "./the";
@@ -97,6 +99,7 @@ export function TheCan({
   onTich: (d: DongBang) => void;
   onGiuLau: (d: DongBang) => void;
 }) {
+  const tv = useTuVung();
   const [anh, anhHong] = useAnhBia(d.buildingName, d.unitNumber);
   const duoc = chonDuoc(d);
   const cham = () => (dangChon ? onTich(d) : onMo(d));
@@ -153,13 +156,13 @@ export function TheCan({
           <h3 className={cn("text-foreground min-w-0 truncate text-lg leading-snug font-medium tracking-tight", !d.unitNumber && "text-muted-foreground")}>{ma}</h3>
           <div className="flex shrink-0 flex-col items-end">
             <span className="text-foreground text-base font-semibold tabular-nums">{dinhDangGia(d.listPrice)}</span>
-            {d.feeInclusion ? <span className="text-muted-foreground text-xs">{FEE_LABEL[d.feeInclusion] ?? d.feeInclusion}</span> : null}
+            {d.feeInclusion ? <span className="text-muted-foreground text-xs">{chuCuaO(d, "feeInclusion", tv)}</span> : null}
           </div>
         </div>
         <dl className="border-border/60 grid grid-cols-3 gap-x-3 gap-y-2 border-t pt-3">
-          <ThongSo nhan="Diện tích" giaTri={chuCuaO(d, "livingArea")} />
+          <ThongSo nhan={nhanTruong(tv, "livingArea", "Diện tích")} giaTri={chuCuaO(d, "livingArea")} />
           <ThongSo nhan="Phòng ngủ" giaTri={d.unitType === CHUA_RO ? "—" : d.unitType} />
-          <ThongSo nhan="Hướng" giaTri={chuCuaO(d, "directionFaces")} />
+          <ThongSo nhan={nhanTruong(tv, "directionFaces", "Hướng")} giaTri={chuCuaO(d, "directionFaces")} />
         </dl>
       </div>
     </article>

@@ -5,13 +5,15 @@
  * bấm «Sẵn sàng bán» để nhận căn như trước hàng này.
  */
 import { canSeeSource, type Viewer } from "./can-see-source";
+import { duocLamVoiHang } from "./quyen-hang";
 
 export type CoHoSo = { noiBo: boolean; sanSang: boolean; suaAnh: boolean; hoiDauChu: boolean };
 
 export function lopPhuHoSo(viewer: Viewer, listingAgentUserId: string | null): CoHoSo {
-  if (canSeeSource(viewer, listingAgentUserId)) return { noiBo: true, sanSang: true, suaAnh: true, hoiDauChu: false };
-  const nhanCan = listingAgentUserId === null && viewer.roles.includes("listing_agent");
-  return { noiBo: false, sanSang: nhanCan, suaAnh: false, hoiDauChu: true };
+  // «Sẵn sàng bán» đọc cùng luật với API và luật theo dòng (bảng quyền của hàng, hàng bang-quyen-theo-vai).
+  const sanSang = duocLamVoiHang(viewer, "dua_len_dang_ban", listingAgentUserId);
+  if (canSeeSource(viewer, listingAgentUserId)) return { noiBo: true, sanSang, suaAnh: true, hoiDauChu: false };
+  return { noiBo: false, sanSang, suaAnh: false, hoiDauChu: true };
 }
 
 /**
