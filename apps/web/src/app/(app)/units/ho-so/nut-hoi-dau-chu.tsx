@@ -12,7 +12,8 @@ import { CHU_DA_CHEP, docTenDauChu, moHoi, nutHoi } from "./hoi-dau-chu";
 
 const KHUNG_BAO = "hoi-dau-chu";
 
-export function NutHoiDauChu({ listingId, dauChu, ma, toa }: { listingId: string; dauChu: string | null; ma: string; toa: string }) {
+/** `lon`: nút chính dính đáy của thân điện thoại — vùng chạm 44 px (AC-5 hồ sơ ho-so-dien-thoai-product-detail-5). */
+export function NutHoiDauChu({ listingId, dauChu, ma, toa, lon = false }: { listingId: string; dauChu: string | null; ma: string; toa: string; lon?: boolean }) {
   const [ten, setTen] = useState<{ id: string; ten: string | null } | null>(null);
   useEffect(() => {
     if (dauChu === null) return;
@@ -35,7 +36,7 @@ export function NutHoiDauChu({ listingId, dauChu, ma, toa }: { listingId: string
 
   return (
     <div className="sticky bottom-0 z-10 flex flex-col border-t bg-background p-4" data-slot="hoi-dau-chu">
-      <Button className="w-full" disabled={nut.tat} onClick={cham}>
+      <Button className={lon ? "h-11 w-full" : "w-full"} size={lon ? "lg" : "default"} disabled={nut.tat} onClick={cham}>
         {nut.tat ? null : <MessageCircleQuestion />}
         {nut.chu}
       </Button>

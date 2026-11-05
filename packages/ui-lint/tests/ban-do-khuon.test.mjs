@@ -160,7 +160,7 @@ const NHAN_DIEN_TRANG_THAI = [
   // Nhập Excel (hàng man-nhap-excel): khuôn, màn và bảng của nó.
   ...["khung.tsx", "new/bang.tsx", "new/hoan-tac.tsx", "new/man-nhap.tsx"].map((p) => `${W}/app/(app)/imports/${p}`),
   `${W}/app/(auth)/login/may-bi-bao.tsx`,
-  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
+  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/dien-thoai/anh-lon.tsx", "ho-so/dien-thoai/than-dien-thoai.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "ho-so/than-chung.tsx", "ho-so/than-cot.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "dat-mat-khau/form.tsx", "dat-mat-khau/page.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -246,7 +246,9 @@ const CHO_TRANG_THAI = [
   // Hồ sơ căn (hàng 17): khung xương và «không có / nhiều căn» của cột, kết quả chia sẻ của báo sai; chờ tải lịch sử (hàng 33).
   // Hàng 105: lỗi dựng hồ sơ ở cột kéo chia (bảng vẫn dùng được), lượt kéo đầu hỏng kèm «Thử lại».
   `${W}/app/(app)/units/ho-so/bang-co-ho-so.tsx`,
-  ...["cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
+  // Hồ sơ ho-so-dien-thoai-product-detail-5: thân cột tách khỏi cot-ho-so.tsx (năm chỗ dời sang than-cot.tsx); thân điện thoại
+  // có «Không thấy căn» kèm đường về Bảng hàng.
+  ...["dien-thoai/than-dien-thoai.tsx", "nut-bao-sai.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
   // Mục Ảnh (hàng 18): lỗi tải, trống của ngăn, thẻ Tự có từ mã (ngăn nội bộ khoá bỏ ở hàng 33 — không thẻ).
   ...Array(3).fill(`${W}/app/(app)/units/photos/muc-anh.tsx`),
   // Trình che vùng ảnh (hàng 19): ảnh không mở được, lưu lỗi.
@@ -453,7 +455,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 20 ngoại lệ · 0 lệch",
-      "trang-thai: 125 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 126 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

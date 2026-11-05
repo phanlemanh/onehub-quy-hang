@@ -1,0 +1,78 @@
+schema_version: 1
+feature_slug: go-ma-lo
+# Ca lõi ở packages/core/src/catalog/*.test.ts (npm test -w @quy-hang/core), ca đường API ở packages/api/src/catalog/*.test.ts
+# (npm test -w @quy-hang/api, bộ đăng nhập và kho giả — không Postgres). Mỗi ca mang đúng tên «AC-n …». Mỗi phép đo là một hàm
+# kiểm thuần trả lỗi: đối chứng dương trên vật lành ra rỗng, phá thử trên bản sao ra đúng thông điệp ghim. Bộ thử đọc từ
+# packages/db/seed/mau-thap-tang/ (vật hàng 73), đường suy từ vị trí tệp kiểm.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 bộ thử hàng 73» xanh: đọc bang-hang-thap-tang.xlsx bằng doc-xlsx.py (python3 -I), lấy cột «Mã lô / mã căn» của mọi dòng mà đáp án ghi mã lô thấp tầng (đếm = 24, in ra); mỗi ô qua lookupLot trên danh mục thấp tầng mẫu (danhMucThapTang) ra found với unitNumber bằng đáp án, và subdivisionName, blockName, propertySubType, lotSizeArea, storiesTotal, frontageLength bằng đúng lô ấy đọc thẳng từ du-lieu-mau-thap-tang.json (không qua bộ tra); phá thử: hàm kiểm nhận kết quả bản sao đổi lotSizeArea một lô → «thuộc tính lệch danh mục: BT1-04 lotSizeArea»; đổi đáp án một ô sang lô khác → «ra sai lô: dòng <n>»"
+    paths: ["packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 ma trận kiểu viết» xanh: ma trận viết trước 12 kiểu (gạch «LK1-02», cách «LK1 02», chấm «LK1.02», gạch chéo «LK1/02», gạch dưới «LK1_02», liền «LK102», thiếu 0 «LK1-2», chữ thường «lk1-02», thừa khoảng trắng «  LK1 -  02 », «lô 2 dãy LK1», «dãy LK1 lô 02», «Lô LK1-02») sinh cho MỌI lô của khu mẫu (42 lô × 12 = 504 dòng, số assert = số dòng, đếm in ra) → found đúng lô; phá thử: cách đọc bản sao lotWidth 1 → hàm kiểm trả «kiểu viết không đọc ra lô: liền LK102»"
+    paths: ["packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-3 chưa có trong danh mục» xanh: ma trận viết trước «LK1-15», «lk1 15», «BT1-09», «DN1.20» (dãy có, lô không) → not_in_catalog, read đúng một mục {subdivisionKey: mau-khu-thap-tang, blockKey, unitNumber mã chuẩn, blockKnown: true}; «LK9-01», «SH2-03» (dãy không có) → not_in_catalog với blockKnown: false; mọi dòng không có khoá unit hay candidates; phá thử: hàm kiểm nhận kết quả bản sao trả found LK1-05 cho «LK1-15» → «mã ngoài danh mục ra lô khác: LK1-15»"
+    paths: ["packages/core/src/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-4 hai lô không ra một» xanh: mã chuẩn của 42 lô đôi một khác nhau; với mọi lô A và mọi kiểu của ma trận E2, kết quả found (nếu có) có upi bằng upi của A — đếm cặp lệch = 0 trên 504 lần tra; phá thử: cách đọc bản sao bỏ số dãy khỏi blockPattern ([A-Z]{2}) → hàm kiểm trả «hai lô ra một: LK1-02 → LK2-02» hoặc «kiểu viết không đọc ra lô» cho lô của LK2"
+    paths: ["packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-5 không đọc được» xanh: ma trận viết trước «», «   », «12», «ABC», «A-12.06», «LK» → unreadable với examples đúng một mục mỗi khu ({subdivisionKey, subdivisionName, example: «LK1-01»}); ma trận gần trúng viết trước «LK1-02A», «LK1-020», «LK1-102», «LK12-01», «LK1-02-1», «LK1-02 xyz» → không dòng nào found (unreadable hay not_in_catalog), số assert = số dòng (đếm in ra); đối chứng «LK1-02» → found; danh mục lô rỗng → unreadable với examples []; phá thử: hàm kiểm nhận kết quả bản sao found LK1-02 cho «LK1-02A» → «mã khác ra lô có sẵn: LK1-02A → LK1-02»; found cho «12» → «đoán lô cho chữ không đọc được: 12»"
+    paths: ["packages/core/src/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-6 trùng mã hai khu» xanh: hai cấu hình danh mục thử — khu mẫu cộng bản sao của nó đổi subdivisionKey thành mau-khu-thap-tang-2 (upi đổi theo), (a) khu 2 có dòng cách đọc riêng, (b) khu 2 không có cách đọc — với MỌI kiểu viết của ma trận E2 cho LK1-02 (12 dòng × 2 cấu hình = 24 lần tra, đếm in ra) → ambiguous với đúng 2 ứng viên khác subdivisionKey, sắp theo subdivisionKey; tra kèm subdivisionKey mau-khu-thap-tang-2 → found đúng lô của khu ấy; tra kèm khu «khong-co» → unknown_subdivision; phá thử: hàm kiểm nhận kết quả bản sao chọn sẵn ứng viên đầu (found) → «chọn hộ khi trùng mã: lk1 02»"
+    paths: ["packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-7 thân trả đúng trường» xanh: với found của MỌI lô trong khu mẫu (42) và mọi ứng viên ambiguous của E6: tập khoá bằng đúng LOT_ATTRIBUTE_FIELDS (so như tập); LOT_ATTRIBUTE_CLASS gán «catalog» cho đúng các trường ấy; không khoá nào khớp /price|gia|owner|chuNha|phone|note|ghiChu/i; ma trận lô × trường loại hình (TYPED_UNIT_FIELDS): trường không thuộc PROPERTY_SUBTYPE_FIELDS[loại hình].fields là null, trường thuộc bằng đúng giá trị đọc thẳng từ du-lieu-mau-thap-tang.json (đếm ô in ra); SH1-01 có blockLabel «Shophouse»; phá thử: kết quả bản sao thêm khoá listPrice → «trường ngoài danh sách: listPrice»; bỏ null hoá livingArea của DN1-01 (gán 100) → «trường không dùng có giá trị: DN1-01 livingArea»"
+    paths: ["packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-8 cách đọc khớp danh mục» xanh: checkLotRuleAgainstSubdivision(LOT_CODE_RULES của khu mẫu, khu mẫu) trả [] trên 42 lô (đếm in ra); phá thử: danh mục bản sao chuyển một lô LK1-03 sang dãy LK2 → trả mục {unitNumber: LK1-03, field: block}; cách đọc bản sao template «{d}{l}» → mục field unitNumber cho mọi lô"
+    paths: ["packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; ca «AC-9 đường tra lô» xanh: OpenAPIHono + registerLotRoutes với khu thấp tầng mẫu truyền vào, bộ đăng nhập giả và kho giả (pool.connect trả client có query; câu đọc companies trả một sàn hoặc không sàn nào): GET /api/v1/catalog/lots/LK1-02 không phiên → 401 {error: unauthenticated}; có phiên, không sàn → 403 {error: no-company}; hai thân trả và mã ấy bằng đúng của GET /api/v1/catalog/units/A-12.06 qua createApi với cùng bộ giả; có phiên và sàn: «lk1%2002» → 200 found, unit.unitNumber «LK1-02», unit.blockName «Dãy LK1», tập khoá unit bằng LOT_ATTRIBUTE_FIELDS; «LK1-15» → 200 not_in_catalog; «ABC» → 200 unreadable; createApi mặc định (danh mục lô theo Hỏi-1) với «LK1-02» → 200 unreadable examples []; /api/v1/catalog/units/A-12.06 có phiên và sàn → 200 found unit.unitNumber «A-12.06»; tài liệu OpenAPI của createApi có đường /api/v1/catalog/lots/{code}; phá thử: hàm kiểm thân trả nhận bản sao thêm khoá listPrice vào unit → «trường ngoài danh sách: listPrice»"
+    paths: ["packages/api/src/catalog/**", "packages/core/src/catalog/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
