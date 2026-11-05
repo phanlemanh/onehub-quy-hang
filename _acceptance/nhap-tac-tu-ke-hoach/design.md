@@ -18,8 +18,18 @@ nghĩa: **mọi tiêu đề nằm ngoài từ điển dựng sẵn** (`lookupHea
 | la-b-dong-nghia | 7/16 | 0/600 | 0 | 10/16 | 0 |
 | **Cộng** | **26/58 = 44,8%** | **80/2240 = 3,6%** | 0 | **36/58** | 0 |
 
-So với ngưỡng Kiến trúc §9 (ghép cột ≥ 95% trên file bẩn, lỗi lọt ≤ 0,5%): **nền hụt hai ngưỡng** — không gác hàng
-(ADR-0011 qđ 7: «nền hụt ngưỡng nào thì tác tử phải đưa đúng ngưỡng đó qua mà lỗi lọt không tăng»). Máy đúng nhờ bộ dò
+Số nền của chính bộ thử hàng 64 (`_acceptance/nhap-loi-tat-dinh/so-nen.json`), cùng ngưỡng:
+
+| Bộ | Ghép cột (≥ 95%) | Lỗi được sửa (≥ 80%) | Lỗi lọt (≤ 0,5%) | Hỏi người (≤ 10%) | Rò nguồn (0) |
+| --- | --- | --- | --- | --- | --- |
+| Bộ thử hàng 64 (9 file) | 98/99 = 99,0% · riêng `ban-tieu-de` 11/12 = 91,7% | 116/116 = 100% | 0/3799 = 0% | 41/3960 = 1,0% | 0 |
+| Bộ lạ của hàng này (4 file) | 26/58 = 44,8% | — (không cấy lỗi ô) | 80/2240 = 3,6% | 0 | 0 |
+
+**Hai bộ nói khác nhau, và chọn bộ nào là câu của chủ kho (Hỏi-3).** Ô cơ hội đã ký ghi luật gác theo «nền 64»; tính
+cộng cả bộ, nền 64 đạt mọi ngưỡng (chỉ một file `ban-tieu-de` hụt ghép cột khi tính riêng) — theo chữ ấy thì gác. Nhưng bộ
+64 dựng từ chính các cách gọi mà từ điển đã biết, còn câu giao của hàng là **file mẫu lạ**; trên bộ lạ nền hụt hai ngưỡng
+(ADR-0011 qđ 7: «nền hụt ngưỡng nào thì tác tử phải đưa đúng ngưỡng đó qua mà lỗi lọt không tăng»). Máy khuyên đo trên
+bộ lạ, không gác; lối khác là gác hàng theo đúng chữ ô cơ hội. Máy đúng nhờ bộ dò
 theo giá trị (mã căn, số điện thoại, trạng thái, phí, hướng); mọi cột còn lại về «Giữ làm ghi chú», độ tin thấp. «Hỏi
 người» bằng 0 vì cột không ghép được không thành ô cần người mà thành ghi chú — phần việc tay nằm ở cột «để người ghép
 tay» (62%). Lỗi lọt 40 ô ở hai file mẫu A là cột chủ nhà rơi vào ghi chú nội bộ. Số ghi ở `so-nen-la.json`.
@@ -53,8 +63,10 @@ gộp đề xuất vào kế hoạch (core: gopDeXuat) → người duyệt → 
 - Cột chưa ghép thuộc lớp `catalog` hay `shareable_listing`: thêm các giá trị khác nhau đã qua bộ che của hồ sơ (≤ 300).
 - Cột chưa ghép lớp `source`, `person_name`, `free_text`, `unknown`: chỉ tiêu đề và hình dạng (mặc định che, ADR qđ 2).
 
-**Máy chủ quét lại** (chặn hai lần): mọi chuỗi trong gói — tiêu đề và giá trị — qua đúng hai bộ dò mà hồ sơ dùng để che
-(`detectPersonal`: số điện thoại Việt Nam, email, số giấy tờ; `looksLikePersonName` cho giá trị). Trúng một chuỗi là không
+**Máy chủ quét lại** (chặn hai lần): mọi chuỗi trong gói qua đúng các bộ dò mà hồ sơ dùng để che — tiêu đề qua
+`detectPersonal` (số điện thoại Việt Nam, email, số giấy tờ); giá trị qua `detectPersonal` và `looksLikePersonName`. Dáng
+họ tên KHÔNG quét ở tiêu đề: tiêu đề viết hoa đầu («Unit Code», «Khối Tháp») trùng dáng họ tên, quét thì mọi gói của file
+lạ bị chặn và tác tử không bao giờ chạy; tên người trong tiêu đề là việc của từ điển và bộ phân loại. Trúng một chuỗi là không
 gửi, ghi một dòng `ai_usage` kết quả `blocked_pii` kèm loại trúng (không chuỗi nào), trả chế độ tất định. Giá trị gắn cho
 cột không phải `catalog`/`shareable_listing` → 400 (khuôn), không gọi.
 
@@ -87,10 +99,17 @@ ghép khác → lần sau cùng mẫu mọi cột khớp mẫu, không còn cộ
 
 ## 4. Đo
 
-`thu/do-tac-tu.ts` chạy trên bộ lạ và bộ thử hàng 64: dựng gói như trình duyệt, nạp **đề xuất ghi sẵn** cho đúng gói ấy
-(băm gói khớp, không thì đỏ «gói đổi — ghi lại đề xuất»), qua `kiemDeXuat` + `gopDeXuat` + `applyPlan`, coi người chấp
-nhận mọi đề xuất (ca xấu nhất cho lỗi lọt), tính bốn số đo bằng `do.ts` của hàng 64. Đề xuất ghi sẵn lập bằng cách nào là
-Hỏi-1. Có `ANTHROPIC_API_KEY` thì `--that` gọi API thật và ghi đề xuất, tiền, thời gian. CI và bộ kiểm rò dùng khách giả.
+`thu/do-tac-tu.ts` chạy trên bộ lạ và bộ thử hàng 64: dựng gói như trình duyệt, cho gói qua `quetGoi` của máy chủ (gói
+bị chặn là đỏ — đường thật sẽ không gọi Claude), nạp **đề xuất ghi sẵn** cho đúng gói ấy (băm gói khớp, không thì đỏ «gói
+đổi — ghi lại đề xuất»), qua `kiemDeXuat` + `gopDeXuat` + `applyPlan`, coi người chấp nhận mọi đề xuất (ca xấu nhất cho lỗi
+lọt), tính bốn số đo bằng `do.ts` của hàng 64. Có `ANTHROPIC_API_KEY` thì `--that` gọi API thật và ghi đề xuất, tiền, thời
+gian. CI và bộ kiểm rò dùng khách giả.
+
+**Đề xuất ghi sẵn không do người dựng tính năng viết** (bên làm khác bên chấm): `thu/lap-de-xuat.ts` in cho từng file đúng
+hai thứ mà máy chủ sẽ gửi — lời nhắc cố định (hằng trong `claude.ts`) và JSON gói — rồi một tác tử **context sạch** (không
+đọc kho, không thấy đáp án hay tiêu đề gốc) nhận đúng hai thứ ấy và trả JSON theo khuôn đầu ra; tệp đề xuất ghi băm lời
+nhắc, băm gói và câu «lập bởi tác tử context sạch, ngày …». E1 so băm lời nhắc với hằng trong mã. Đây vẫn là cùng họ mô
+hình ngoài API thật — số thật qua API là điều kiện của phiên nghiệm thu (Hỏi-1).
 
 ## 5. Đối chiếu ngành (ADR-0022)
 
@@ -121,7 +140,7 @@ liệu Ivandt (import process).
 | Màn | MỘT việc của màn | Vào từ / ra tới |
 | --- | --- | --- |
 | Nhập Excel — bước Ghép cột | Duyệt cách máy ghép từng cột | Tải tệp / Xem trước |
-| Cài đặt › Sàn — khối «Xử lý bằng AI» (Hỏi-2) | Quản trị sàn bật, tắt và xem đã dùng bao nhiêu | Cột Cài đặt / — |
+| Cài đặt › Sàn › Xử lý bằng AI (`/settings/ai`, mục mới cuối cột Sàn — Hỏi-2) | Quản trị sàn bật, tắt và xem đã dùng bao nhiêu | Cột Cài đặt / — |
 
 ### 3. Bảng trạng thái
 
@@ -177,6 +196,7 @@ Lời giao: `packages/api/src/imports/ai/**`, `packages/core/src/agreements.ts`,
 `packages/core/src/import/ai/**` (gói, kiểm, gộp — dùng chung trình duyệt và máy chủ), `packages/core/src/agreements.test.ts`,
 `packages/api/src/imports/routes.ts` (một dòng đăng ký), `packages/api/src/app.ts` (một khoá `deps`, luật 12 chỉ thêm),
 `packages/db/tests/isolation.test.mjs` (ca cách ly `ai_usage`), `apps/web/src/lib/nhap/**` (gọi và gộp đề xuất),
-`apps/web/src/components/khoi/solution-crm-6/**` (huy hiệu, lý do), `apps/web/src/app/(app)/settings/templates/**` (trang
-mục Mẫu nhập dựng `MucCaiDat` với khối Hỏi-2 — theo `ngoai_le` của `design/patterns/cai-dat-san.md`: mục dựng thật có trang riêng),
-`docs/product/tham-chieu.md` (Sổ quyết định, luật 6 của đợt).
+`apps/web/src/components/khoi/solution-crm-6/**` (huy hiệu, lý do), `apps/web/src/app/(app)/settings/ai/**` (trang mục
+mới dựng `MucCaiDat` — Hỏi-2), `apps/web/src/app/(app)/settings/cai-dat.ts` và `cai-dat.test.ts` (thêm mục thứ tám vào cột Sàn),
+`apps/web/src/components/shell/second-column.tsx` (biểu tượng của mục), `docs/product/tham-chieu.md` (Sổ quyết định, danh sách mục §9 — luật 6 của đợt). Mục «Mẫu nhập» (`settings/templates`) là màn của hàng 50, dãy L — hàng
+này không chạm (giám sát góp vào G-22).

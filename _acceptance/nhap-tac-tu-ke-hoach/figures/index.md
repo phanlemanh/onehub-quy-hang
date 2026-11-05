@@ -5,6 +5,7 @@
 | Đường đi của dữ liệu: cột nào ra khỏi Quỹ hàng, chặn ở đâu (sổ S1: gói chỉ cột chưa ghép, máy chủ quét lại, thoả thuận, dự phòng) | 6 bước nối tiếp, 3 nhánh rẽ (chặn · lỗi · qua) | `duong-di-du-lieu.html` / `.png` |
 | Hỏi-1 — số đo AC-1 bằng đề xuất ghi sẵn hay khoá API thật | dưới ngưỡng: 2 lối thay thế, không có bước nối tiếp | — |
 | Hỏi-2 — chỗ đặt công tắc «Xử lý bằng AI» | dưới ngưỡng: 2 lối thay thế, không có bước nối tiếp | — |
+| Hỏi-3 — gác hay không: đọc nền trên bộ lạ hay bộ thử hàng 64 | dưới ngưỡng: 2 lối thay thế; số hai bộ ở bảng thiết kế §1 | — |
 
 ## Đề bài: duong-di-du-lieu
 

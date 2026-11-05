@@ -26,17 +26,18 @@ Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`, `[Tên sàn]`.
 ## Criteria
 
 - **AC-1 — Ghép gần hết trên file mẫu lạ.** Given bộ bốn file mẫu lạ có đáp án (mọi tiêu đề ngoài từ điển, kiểm bằng máy)
-  và đề xuất của Claude cho đúng gói đề xuất mà mã dựng từ mỗi file (băm gói khớp) · When áp đề xuất qua kiểm, gộp và áp kế
-  hoạch, coi người đồng ý mọi đề xuất · Then cộng bộ lạ: ghép cột đúng ≥ 95% (nền 44,8%), lỗi lọt ≤ 0,5% (nền 3,6%), ô cần
+  và đề xuất ghi sẵn cho đúng gói đề xuất mà mã dựng từ mỗi file (băm gói khớp), lập bởi tác tử context sạch chỉ đọc gói và
+  lời nhắc cố định của mã (băm lời nhắc khớp hằng trong mã) · When cho gói qua quét lại của máy chủ (không gói nào bị chặn)
+  rồi áp đề xuất qua kiểm, gộp và áp kế hoạch, coi người đồng ý mọi đề xuất · Then cộng bộ lạ: ghép cột đúng ≥ 95% (nền 44,8%), lỗi lọt ≤ 0,5% (nền 3,6%), ô cần
   người ≤ 10%, rò nguồn 0; trên bộ thử hàng 64 không số đo nào tệ hơn số nền đã commit. Số ghi ở `so-do-tac-tu.json`.
 - **AC-2 — Gói gửi đi không chứa nguồn hay dữ liệu cá nhân.** Given mọi file của bộ thử hàng 64 (gồm `ban-nguon-giau`:
   số chủ trong ghi chú, cột liên hệ, tên chủ trong cột toà, số +84) và bộ lạ · When mã dựng gói đề xuất · Then không chuỗi
   cấm nào của đáp án có trong gói; cột lớp `source`, `person_name`, `free_text`, `unknown` không mang giá trị; chỉ cột chưa
   ghép lớp `catalog`/`shareable_listing` mang giá trị; cột đã ghép chỉ mang tiêu đề, hình dạng và đích.
-- **AC-3 — Máy chủ chặn lần hai.** (cross-layer) Given một gói giả có số điện thoại (mọi kiểu viết), email, số giấy tờ hay
-  dáng họ tên trong tiêu đề hay giá trị, và một gói gắn giá trị cho cột lớp nguồn · When gửi tới đường đề xuất · Then khách
+- **AC-3 — Máy chủ chặn lần hai.** (cross-layer) Given một gói giả có số điện thoại (mọi kiểu viết), email hay số giấy tờ trong
+  tiêu đề hay giá trị, hoặc dáng họ tên trong giá trị, và một gói gắn giá trị cho cột lớp nguồn · When gửi tới đường đề xuất · Then khách
   AI không được gọi; gói có dữ liệu cá nhân trả chế độ tất định kèm lý do và ghi một dòng `ai_usage` kết quả `blocked_pii`
-  không chứa chuỗi nào của gói; gói gắn giá trị sai lớp hay có khoá lạ trả 400; gói sạch thì khách được gọi đúng một lần.
+  không chứa chuỗi nào của gói; gói gắn giá trị sai lớp hay có khoá lạ trả 400; gói sạch thì khách được gọi đúng một lần; gói dựng từ mọi file của bộ thử hàng 64 và bộ lạ không bị chặn.
 - **AC-4 — Thoả thuận «Xử lý bằng AI».** (cross-layer) Given lõi và cơ sở dữ liệu sau migration 035 · When tạo thoả thuận
   `ai_processing` · Then nhận được với chiều ra, bên kia `anthropic`, lớp `catalog` + `shareable_listing`; thêm `source`
   bị từ chối ở lõi (`agreementErrors`, `mayFlow`) và ở ràng buộc cơ sở dữ liệu; loại kết nối lạ vẫn bị ràng buộc `kind` từ
@@ -96,12 +97,10 @@ việc Anthropic (vận hành). Never: tác tử đọc dòng hay ô nguồn (tr
 
 ## Đường đo
 
-| Thước của ô cơ hội | Số từ đâu | AC bảo đảm |
-| --- | --- | --- |
-| Máy ghép đúng phần lớn cột hơn nền hàng 64 trên file mẫu lạ | `so-do-tac-tu.json` so `so-nen-la.json` (lệnh `thu/do-tac-tu.ts`) | AC-1 |
-| Mỗi đề xuất có lý do và người duyệt trước khi ghi | lý do sau tiền tố «Máy đề xuất» ở kế hoạch gộp; khoá Tiếp ở màn | AC-6, AC-7 |
-| Số chủ nhà, giá đáy không rời công ty sang dịch vụ AI | bộ kiểm rò trên gói đề xuất; dòng `blocked_pii` | AC-2, AC-3 |
-| Tắt AI hay hết trần thì nhập như không có AI | ca không AI ở màn và đường đề xuất | AC-8, AC-9 |
+- Máy ghép đúng phần lớn cột hơn nền trên file mẫu lạ · số từ `so-do-tac-tu.json` so `so-nen-la.json` (lệnh `thu/do-tac-tu.ts`; `--that` qua API thật ở phiên nghiệm thu) · AC-1
+- Mỗi đề xuất có lý do và người duyệt trước khi ghi · số từ lý do mang tiền tố «Máy đề xuất» trong kế hoạch gộp và khoá Tiếp ở màn · AC-6, AC-7
+- Số chủ nhà, giá đáy không rời công ty sang dịch vụ AI · số từ bộ kiểm rò trên gói đề xuất và số dòng `ai_usage` kết quả `blocked_pii` · AC-2, AC-3
+- Tắt AI hay hết trần thì nhập như không có AI · số từ ca không AI ở màn và đường đề xuất, dòng `ai_usage` theo kết quả · AC-8, AC-9
 
 ## Out of scope
 
@@ -115,5 +114,9 @@ việc Anthropic (vận hành). Never: tác tử đọc dòng hay ô nguồn (tr
 ## Notes
 
 - Nguồn: hàng 68 lộ trình (`docs/plan/lo-trinh.json`), ô cơ hội đã ký «build» 05/11.
+- Hỏi-3 (gác hay không): bộ thử hàng 64 đạt mọi ngưỡng tính cộng; bộ lạ hụt ghép cột và lỗi lọt — máy khuyên đo trên bộ
+  lạ (câu giao là «file mẫu lạ»), lối khác là gác theo đúng chữ ô cơ hội «nền 64». Bảng hai bộ ở thiết kế §1.
+- Số đo AC-1 là của cùng họ mô hình chạy ngoài API thật; số qua API thật (`thu/do-tac-tu.ts --that`, cùng ngưỡng) là điều
+  kiện của phiên nghiệm thu.
 - Known limits đề xuất: một lần gọi có thể vượt trần tháng tối đa một lần gọi (≤ ~1,3 USD theo Kiến trúc §7) vì tiền chỉ
   biết sau khi gọi; chi phí và thời gian thật mỗi lần nhập chỉ đo được khi có khoá (Hỏi-1).
