@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7e91413c024683653d69d3ccaafcfefcb260420c
+verified_commit: ac665385e609f58366910a10a2cf0b070aedb9a5
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -285,3 +285,7 @@ Round 2: chạy lại E1, E2a, E5b, E6a, E7b, E10b, E11, E13 và bảy lệnh su
 ### Re-pin lần 1 — 2026-11-05, do thêm phép đo phía máy chủ E5c, E7c cho hai tiêu chí xuyên lớp
 run_id: repin-20261105T224630Z-83145
 sha: 7e91413c024683653d69d3ccaafcfefcb260420c · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E11=1 · ngoài làn máy: E1 (E1 không khai paths), E2a (E2a không khai paths), E5b (E5b không khai paths), E6a (E6a không khai paths), E7b (E7b không khai paths), E10b (E10b không khai paths)
+
+### Re-pin lần 2 — 2026-11-05, do gộp nhánh chính vào nhánh
+run_id: repin-20261105T233834Z-82343
+sha: ac665385e609f58366910a10a2cf0b070aedb9a5 · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E11=1 · ngoài làn máy: E1 (E1 không khai paths), E2a (E2a không khai paths), E5b (E5b không khai paths), E6a (E6a không khai paths), E7b (E7b không khai paths), E10b (E10b không khai paths)
