@@ -1,0 +1,36 @@
+{
+  "feature_plain": "Đội có một bộ dữ liệu giả thứ hai — một khu nhà thấp tầng chia dãy và lô, cùng nhà và đất lẻ ngoài khu ở vài phường TP Hồ Chí Minh — kèm một file bảng hàng bẩn và đáp án, để các việc gõ mã lô, đọc địa chỉ, nhập file thấp tầng đo được trên dữ liệu có nhãn.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ sinh lại ra đúng từng byte mỗi lần chạy; tệp trong kho lệch thì lệnh kiểm báo đỏ (AC-1, tất định)."},
+    {"id": "AC-2", "p": "Sẽ chỉ dùng tên tỉnh, phường có trong một bảng trích danh mục hành chính ghi rõ nguồn nghị quyết và ngày đọc, có cả phường cũ gộp trọn và phường cũ bị tách (AC-2, danh mục hành chính)."},
+    {"id": "AC-3", "p": "Sẽ có một khu thấp tầng chia dãy và lô gồm nhà phố, biệt thự, đất, mỗi lô mang đúng trường của loại hình mình (AC-3, khu thấp tầng)."},
+    {"id": "AC-4", "p": "Sẽ có nhà và đất ngoài khu ở ít nhất ba phường, địa chỉ luôn là «Đường Mẫu N» với số nhà mặt đường và trong hẻm nhiều cấp (AC-4, nhà ngoài khu)."},
+    {"id": "AC-5", "p": "Sẽ có bộ địa chỉ viết nhiều kiểu — tên phường cũ, kiểu hẻm khác nhau, viết tắt, thiếu số nhà — mỗi cách viết kèm đáp án đúng nhà nào (AC-5, địa chỉ thử)."},
+    {"id": "AC-6", "p": "Sẽ có một file bảng hàng thấp tầng ghi kiểu sàn, bẩn có chủ đích, kèm đáp án từng ô và từng lỗi cấy (AC-6, file bẩn)."},
+    {"id": "AC-7", "p": "Sẽ có hàng phủ sáu trạng thái và bốn loại hình, chủ nhà, và bảy ca lead mẫu gồm cả ca trùng, đúng luật một căn một hàng mở (AC-7, hàng và lead)."},
+    {"id": "AC-8", "p": "Sẽ KHÔNG có tên người, số điện thoại hay địa chỉ thật nào; mọi bản ghi mang nhãn mẫu (AC-8, không dữ liệu thật)."},
+    {"id": "AC-9", "p": "Sẽ nạp được phần người và vùng phụ trách vào sàn mẫu trên máy, chạy lại không đổi gì, và một lệnh xoá gỡ sạch cả hai bộ mẫu (AC-9, nạp và xoá)."}
+  ],
+  "scope_plain": "Những việc dưới đây để hàng khác làm, hàng này chỉ chuẩn bị dữ liệu cho chúng:",
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không chép danh mục hành chính đầy đủ cả nước và không dựng bộ đọc địa chỉ — việc của hàng 75."},
+    {"id": "OOS-2", "p": "Không dựng ô gõ mã lô — việc của hàng 74."},
+    {"id": "OOS-3", "p": "Chưa đưa lô, nhà ngoài khu và hàng thấp tầng vào cơ sở dữ liệu — chờ hàng 76 mở chỗ chứa."},
+    {"id": "OOS-4", "p": "Không đổi khuôn danh mục nhận từ OneHub Invest để có cấp dãy — đang chờ ở mục riêng."},
+    {"id": "OOS-5", "p": "Không đổi nút nạp dữ liệu mẫu trên bản thật — bản thật vẫn chỉ có khu căn hộ."},
+    {"id": "OOS-6", "p": "Không gỡ riêng được phần thấp tầng khỏi sàn mẫu trên máy — lệnh xoá gỡ cả hai bộ cùng lúc."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Ba cách gọi một căn — trong toà (bộ căn hộ cũ), trong khu theo dãy và lô, ngoài khu theo địa chỉ — đều có dữ liệu (AC-3, AC-4)."},
+    {"i": 1, "p": "Đủ bốn loại hình chuẩn — căn hộ, nhà phố, biệt thự, đất — trong hàng và trong file (AC-6, AC-7)."},
+    {"i": 2, "p": "Mọi loại vật — danh mục, hàng, chủ nhà, lead, file bẩn, địa chỉ thử, dòng trong cơ sở dữ liệu — đều có tiêu chí (AC-1 đến AC-9)."},
+    {"i": 3, "p": "Mọi kiểu viết lệch mà các hàng sau cần đo — phường mới, phường cũ, kiểu hẻm, viết tắt, thiếu phần, số kiểu sàn — đều có đáp án (AC-5, AC-6)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Lý do nạp chung một sàn mẫu ghi chưa đúng: lý do thật là trùng chéo giữa hai bộ chỉ đo được trong cùng một sàn. Đã ghi lại lý do và thêm vào phần không làm: không gỡ riêng được phần thấp tầng."},
+    {"i": 1, "p": "Bài kiểm địa chỉ chưa so chữ của từng cách viết với đúng nhà đích, nên in nhầm số nhà của nhà bên cạnh vẫn lọt. Đã thêm phép so số nhà, số đường, phường với nhà đích."},
+    {"i": 2, "p": "Bài kiểm file bẩn chưa so từng ô thật trong file với đáp án, nên ghi lệch dòng vẫn lọt. Đã thêm phép giải từng ô theo nhãn lỗi và so với đáp án."},
+    {"i": 3, "p": "Bài quét tên đường thật chỉ bắt chuỗi có chữ «Đường». Đã đổi sang quét danh sách cho phép: ngoài số nhà, «Đường Mẫu N» và tên trong bảng trích thì không được còn chữ nào."},
+    {"i": 4, "p": "Bài kiểm nạp và xoá chỉ thử trên máy trống. Đã thêm trường hợp máy đã có sẵn bộ căn hộ: vẫn chỉ một sàn mẫu, hai bộ cùng có mặt."}
+  ]
+}
