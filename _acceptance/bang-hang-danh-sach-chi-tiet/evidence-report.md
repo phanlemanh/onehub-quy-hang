@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fa28a64d3466d04693297ed10160ebb83c29038a
+verified_commit: d783ab655d4a5f065562c768ce3ab82c3138e896
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -228,3 +228,7 @@ none — every multi-run eval is uniform
 Round 1: REJECT — Tham chiếu dẫn sai điều khoá (ghi K23, thực tế K26, AC-8) và E7c vướng hạ tầng cơ sở dữ liệu thử. Returned to implementation.
 Round 2: REJECT — mọi eval máy xanh, nhưng review có hai mục trong hợp đồng: E4 (AC-4) chỉ đo một chiều, chưa có chiều đỏ; E6 (AC-6) không so bề rộng hồ sơ với nhánh chính. Chi tiết ở review-findings.md. Ghi chú: verified_at của eval round 2 là giờ xấp xỉ lúc soạn báo cáo, kết quả máy không kèm dấu thời gian riêng.
 Round 3: PASS — E1, E2, E3, E4, E6, E7b, E10 chạy lại và xanh (E4 có chiều đỏ trên nhánh chính, E6 so bề rộng với nhánh chính); bảy lệnh suite xanh; E5, E7a, E7c, E8, E9a, E9b, E9c mang theo từ round trước. Ghi chú: verified_at của eval round 3 là giờ xấp xỉ, kết quả máy không kèm dấu thời gian riêng.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main trước khi gộp PR #127
+run_id: repin-20261105T075006Z-53984
+sha: d783ab655d4a5f065562c768ce3ab82c3138e896 · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng · ngoài làn máy: E1 (E1 không khai paths), E2 (E2 không khai paths), E3 (E3 không khai paths), E4 (E4 không khai paths), E6 (E6 không khai paths), E7b (E7b không khai paths), E10 (E10 không khai paths) · AC không có chốt máy: AC-1, AC-2, AC-3, AC-4, AC-6, AC-10
