@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Lead và Liên hệ</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">:root{--bg:#fafaf9;--fg:#1c1917;--muted:#57534e;--line:#e7e5e4;--head:#f5f5f4;--accent:#0f766e}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1917;--fg:#f5f5f4;--muted:#a8a29e;--line:#44403c;--head:#292524;--accent:#5eead4}}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;max-width:60rem;margin:0 auto;padding:24px 16px}
+h1{font-size:1.6rem;margin-top:0}h2{font-size:1.25rem;border-bottom:1px solid var(--line);padding-bottom:.3rem;margin-top:2rem}h3{font-size:1.05rem}
+p,li{color:var(--fg)}code{font-size:.9em;background:var(--head);padding:0 .25em;border-radius:3px}
+table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.9rem;margin:1rem 0}
+th,td{border:1px solid var(--line);padding:.4rem .55rem;vertical-align:top;text-align:left}th{background:var(--head)}
+strong{color:var(--fg)}a{color:var(--accent)}
+pre{overflow-x:auto;background:var(--head);padding:.75rem;border-radius:6px;font-size:.8rem;line-height:1.4}
+</style>
+</head>
+<body>
+<h1 id="lead-nằm-ở-đâu-liên-hệ-hay-bảng-hàng-đối-chiếu-keller-williams-và-ngành">Lead
+nằm ở đâu: Liên hệ hay Bảng hàng — đối chiếu Keller Williams và
+ngành</h1>
+<p>Ngày 05/11. Đây là phần khám phá của hàng 103, viết theo câu hỏi của
+chủ kho: «Xem cách sắp xếp Leads trong Contact của Keller Williams,
+Follow Up Boss, Boomtownroi… phân tích kỹ lưỡng nguyên lý gốc và đề xuất
+lại». Chủ kho nghiêng về định nghĩa của Keller Williams.</p>
+<p><strong>Quyết định:</strong> chủ kho chọn «Áp ba lớp» ngày 05/11. Đã
+ghi ở ADR-0021 (sửa đổi 05/11), CONTEXT.md và Tham chiếu §12, §14.</p>
+<h2 id="trả-lời-ngắn">Trả lời ngắn</h2>
+<ul>
+<li><strong>Lead không thuộc Bảng hàng, cũng không phải một thứ riêng
+nằm cạnh Liên hệ.</strong> Theo Keller Williams, lead là một <strong>dấu
+trên người</strong>: người ấy đã có trong danh bạ nhưng chưa có tương
+tác. Việc làm với người ấy, như bán một căn hay mua một căn, là một đối
+tượng khác: <strong>Cơ hội</strong> (Opportunity).</li>
+<li><strong>Quỹ hàng mới theo Keller Williams được một nửa.</strong>
+<ul>
+<li>Đã theo: liên hệ là người, «Lead» là trạng thái của người. Hàng 85
+làm phần này.</li>
+<li>Chưa theo: bản ghi mà telesales nhập vẫn mang tên «lead». Thực chất
+bản ghi ấy là <strong>cơ hội phía chủ ở pha đầu</strong>: chủ này muốn
+bán căn kia, giá chừng này. Vì vậy cùng một chữ «Lead» đang mang hai
+nghĩa. Mục Thuật ngữ của Tham chiếu còn ghi lead là «hàng ở nấc đầu», là
+nghĩa thứ ba.</li>
+</ul></li>
+<li><strong>Đề xuất:</strong> theo Keller Williams trọn vẹn, gồm ba lớp:
+<ul>
+<li><strong>Liên hệ</strong> là người, có dấu <strong>Lead / Liên
+hệ</strong>.</li>
+<li><strong>Cơ hội</strong> là việc với người, có bốn loại: Bán · Cho
+thuê · Mua · Thuê.</li>
+<li><strong>Hàng</strong> là căn trên Bảng hàng. Cơ hội bán đi tới «Lên
+bảng» thì sinh ra hàng.</li>
+</ul></li>
+</ul>
+<h2 id="năm-sản-phẩm-và-một-chuẩn-xếp-lead-ra-sao">1. Năm sản phẩm và
+một chuẩn xếp lead ra sao</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sản phẩm</th>
+<th>Lead là bản ghi riêng hay dấu trên người</th>
+<th>Bản ghi người</th>
+<th>Nấc của người</th>
+<th>Đối tượng việc</th>
+<th>Phía chủ, căn rao</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Keller Williams Command</strong></td>
+<td>Dấu: ô «Mark as Lead» trên Contact; bỏ dấu là thành contact</td>
+<td>Contact</td>
+<td>Captured / Connected; cách vận hành MREA chia Met / Haven’t Met</td>
+<td><strong>Opportunity</strong>, pha cố định Cultivate → Appointment →
+Active → Under Contract → Closed</td>
+<td>Loại Opportunity <strong>Listing</strong> (cạnh Buyer, Tenant,
+Landlord); Client + Co-Seller</td>
+</tr>
+<tr class="even">
+<td>Follow Up Boss</td>
+<td>Dấu: stage «Lead» (hệ thống giữ) trên Person</td>
+<td>Person</td>
+<td>Lead, Nurture, Closed, Past Client, Sphere, Trash…</td>
+<td>Deal (pipeline, nhiều người)</td>
+<td>Pipeline do đội tự đặt</td>
+</tr>
+<tr class="odd">
+<td>BoomTown</td>
+<td>Một bản ghi «lead» duy nhất, không có contact riêng</td>
+<td>Lead</td>
+<td>New, Qualify, Hot, Nurture, Watch + Archive, Trash</td>
+<td>Transaction trên hồ sơ</td>
+<td>Transaction phía Seller: Pre-Listing → Active-Listing → Under
+Contract → Closed</td>
+</tr>
+<tr class="even">
+<td>kvCORE / BoldTrail</td>
+<td>Dấu: status trên Contact</td>
+<td>Contact</td>
+<td>Sphere → Prospect → New Lead → Active Lead → Client → Contract →
+Closed</td>
+<td>Giao dịch từ hệ thống giao dịch nối vào</td>
+<td>Lead type Seller</td>
+</tr>
+<tr class="odd">
+<td>Lofty</td>
+<td>Dấu: stage trên Lead</td>
+<td>Lead</td>
+<td>Do đội đặt, từ New Leads tới Closed</td>
+<td>Transaction gắn lead</td>
+<td>chưa kiểm được</td>
+</tr>
+<tr class="even">
+<td>RESO DD 2.0</td>
+<td><code>ContactType = Lead</code> trên Contacts, chọn được nhiều giá
+trị</td>
+<td>Contacts</td>
+<td>ContactStatus chỉ có Active / Inactive / …</td>
+<td>Không thuộc Contacts</td>
+<td><code>ContactType</code> Seller / Landlord</td>
+</tr>
+<tr class="odd">
+<td><em>Đối chứng:</em> Salesforce</td>
+<td><strong>Bản ghi riêng</strong>, «Convert» một chiều sang Contact +
+Opportunity</td>
+<td>Lead → Contact</td>
+<td>Lead Status</td>
+<td>Opportunity</td>
+<td>Không có sẵn cho ngành</td>
+</tr>
+</tbody>
+</table>
+<p>Salesforce là ngoại lệ duy nhất. Chính Salesforce phải thêm «Person
+Account» cho khách cá nhân, và tài liệu của họ lấy môi giới bất động sản
+làm ví dụ.</p>
+<p><strong>Keller Williams định nghĩa</strong> (trang tổng quan Contacts
+của Command):</p>
+<ul>
+<li>Lead là người mình có rất ít thông tin, giao tiếp một chiều.</li>
+<li>Contact là người đã cho phép, ngầm hay rõ, để giữ liên lạc lâu
+dài.</li>
+<li>Có tương tác thì lead chuyển thành contact. Trong Command đây là một
+thao tác tay: bỏ ô Mark as Lead.</li>
+</ul>
+<p><strong>Nguồn chính:</strong></p>
+<ul>
+<li>Keller Williams:
+<ul>
+<li>documentation.kw.com — overview-contacts, contacts-info-fields,
+overview-opportunities, opportunity-fields, lead-routing-contacts,
+claim-lead-pool.</li>
+<li>ideas.kw.com: Command không có loại cơ hội «giới thiệu».</li>
+</ul></li>
+<li>Follow Up Boss: docs.followupboss.com (people-post, events-post,
+stages-get, deals-post, ponds-get).</li>
+<li>BoomTown: intercom.help/boomtown (lead-profile-overview,
+transactions-overview, my-deals); intercom.help/bthelpcenter
+(lead-central); help.boomtownroi.com/?p=323.</li>
+<li>kvCORE: help.insiderealestate.com/285957;
+intercom.help/kvcore/9380473.</li>
+<li>Lofty: help.lofty.com/115002890651;
+developer.lofty.com/concepts/leads.</li>
+<li>RESO: dd.reso.org/DD2.0/Contacts/ContactType.</li>
+<li>Salesforce: help.salesforce.com leads_convert;
+developer.salesforce.com, mục personaccounts.</li>
+</ul>
+<p><strong>Chưa kiểm được</strong> (trang trợ giúp sau đăng nhập trả lỗi
+403, tài liệu đào tạo PDF chưa tách được chữ):</p>
+<ul>
+<li>Keller Williams có viết thành luật «trao đổi hai chiều» không.</li>
+<li>SmartPlans, Collaborators của Keller Williams.</li>
+<li>Bộ nấc mặc định đầy đủ của Follow Up Boss và BoomTown.</li>
+</ul>
+<h2 id="nguyên-lý-gốc">2. Nguyên lý gốc</h2>
+<p>Tám nguyên lý dưới đây lặp lại ở hầu hết các sản phẩm. Ghi kèm sản
+phẩm nào có.</p>
+<ol type="1">
+<li><strong>Một người là một bản ghi.</strong> «Lead» là nhãn trên
+người, không phải thực thể riêng. Có ở Keller Williams, Follow Up Boss,
+BoomTown, kvCORE, Lofty, RESO.
+<ul>
+<li><em>Vì sao:</em> nghề môi giới sống bằng quan hệ lâu dài. Một người
+hôm nay hỏi bán, năm sau hỏi mua, rồi giới thiệu người quen. Tách lead
+ra thì mỗi lần như vậy sinh một bản ghi mới, và lịch sử quan hệ vỡ
+ra.</li>
+</ul></li>
+<li><strong>Lead thành liên hệ khi có tương tác hai phía, không phải khi
+có giao dịch.</strong>
+<ul>
+<li>Keller Williams: «once engagement occurs».</li>
+<li>kvCORE: phản hồi đầu tiên thì tự lên Active Lead.</li>
+</ul></li>
+<li><strong>Việc là đối tượng riêng, trỏ về người.</strong> Opportunity,
+Deal, Transaction đều tách khỏi người, và một việc có thể gắn nhiều
+người (Client + Co-Seller của Keller Williams).
+<ul>
+<li><em>Vì sao:</em> một người có nhiều việc, mỗi việc có pha, giá trị
+và người làm riêng.</li>
+</ul></li>
+<li><strong>Phía chủ là một loại việc, không phải một loại
+người.</strong> Keller Williams để Listing ngang hàng Buyer, Tenant,
+Landlord. Một người vừa bán vừa mua vẫn là một người.</li>
+<li><strong>Nấc của người khác pha của việc.</strong>
+<ul>
+<li>Người có nấc của quan hệ: Captured / Connected, Met / Haven’t
+Met.</li>
+<li>Việc có pha của giao dịch: Cultivate → Closed.</li>
+<li>Hai trục này không trộn vào nhau.</li>
+</ul></li>
+<li><strong>Nguồn ghi một lần, mỗi lần hỏi mới là một sự kiện trên người
+đã có.</strong> Follow Up Boss nhận lead qua «Events» và tự gộp theo số
+hay email. BoomTown giữ nguyên nguồn gốc của lead.</li>
+<li><strong>Người giữ khác người làm việc.</strong>
+<ul>
+<li>Keller Williams: Owner của liên hệ khác Assignees của cơ hội. Lead
+chưa ai nhận rơi vào lead pool để «Claim».</li>
+<li>Follow Up Boss: assignedUser, collaborators, Pond.</li>
+<li>BoomTown: ba vai riêng là Buyer Agent, Listing Agent, Lender.</li>
+</ul></li>
+<li><strong>Danh bạ là tài sản nuôi dài hạn, không chỉ là phễu.</strong>
+Keller Williams có Met / Haven’t Met, 8x8, 33 Touch. Follow Up Boss và
+kvCORE có Sphere, Past Client.
+<ul>
+<li>Không xoá người, chỉ lưu trữ hay bỏ vào thùng rác, và khôi phục
+được.</li>
+</ul></li>
+</ol>
+<h2 id="quỹ-hàng-đang-đứng-ở-đâu">3. Quỹ hàng đang đứng ở đâu</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nguyên lý</th>
+<th>Quỹ hàng hôm nay</th>
+<th>Khớp?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1. Một người một bản ghi, Lead là nhãn</td>
+<td>Liên hệ là người; «Lead / Liên hệ» suy từ dữ kiện
+(<code>contactStatus</code>, ADR-0021 qđ 7)</td>
+<td><strong>Khớp</strong></td>
+</tr>
+<tr class="even">
+<td>2. Lead thành liên hệ khi có tương tác</td>
+<td>Thành «Liên hệ» khi một lead của họ có cuộc gọi đầu hoặc họ đã có
+hàng</td>
+<td>Khớp, và làm bằng máy chứ không bấm tay như Keller Williams</td>
+</tr>
+<tr class="odd">
+<td>3. Việc là đối tượng riêng trỏ về người</td>
+<td>Phía khách: <strong>nhu cầu khách</strong> là việc riêng (hàng 86),
+khớp. Phía chủ: việc vẫn mang tên <strong>«lead»</strong> (bảng
+<code>leads</code>, bốn nấc ADR-0020)</td>
+<td><strong>Lệch tên</strong></td>
+</tr>
+<tr class="even">
+<td>4. Phía chủ là loại việc</td>
+<td><code>need</code> của lead (bán · cho thuê) suy ra loại liên hệ Chủ
+bán · Chủ cho thuê</td>
+<td>Khớp về dữ liệu, lệch về tên</td>
+</tr>
+<tr class="odd">
+<td>5. Nấc người ≠ pha việc</td>
+<td>Bốn nấc lead (Đã gửi → Đã nhận → Đã gọi → Lên bảng) là pha của việc,
+nhưng cùng mang chữ «Lead» với nấc của người</td>
+<td><strong>Trộn chữ</strong></td>
+</tr>
+<tr class="even">
+<td>6. Hỏi mới là sự kiện trên người</td>
+<td>«Sửa số và gửi lại» thêm số vào cùng người (hàng 85), nhưng
+<strong>tạo một bản ghi lead mới</strong> (ADR-0020 qđ 4)</td>
+<td>Một nửa</td>
+</tr>
+<tr class="odd">
+<td>7. Người giữ khác người làm</td>
+<td>Người giữ liên hệ (đầu chủ) ≠ đầu chủ của từng lead; giao lại hàng
+không tự đổi người giữ (Hỏi-3 01/11). Chia lead + «Nhận» ≈ lead pool +
+Claim</td>
+<td><strong>Khớp</strong></td>
+</tr>
+<tr class="even">
+<td>8. Danh bạ là tài sản nuôi</td>
+<td>Chưa có: không có nấc nuôi, không có người cũ</td>
+<td>Chưa làm</td>
+</tr>
+</tbody>
+</table>
+<p>Tham chiếu §15 đã ghi phần ánh xạ: bốn nấc lead ứng với Cultivate →
+Active của Keller Williams, và nhu cầu khách ứng với đường ống Buyers.
+Như vậy về dữ liệu, Quỹ hàng <strong>đã là mô hình Keller
+Williams</strong>. Chỗ lệch nằm ở <strong>tên gọi</strong>: «lead» vừa
+là dấu trên người, vừa là việc phía chủ. Chữ ấy còn lệch thêm ở mục
+Thuật ngữ §14 («Lead = hàng ở nấc đầu»).</p>
+<p><strong>Thiệt hại cụ thể nếu giữ nguyên:</strong></p>
+<ul>
+<li>Màn Liên hệ 103 phải hiện hai thứ cùng tên «Lead»: dấu cạnh tên
+người, và danh sách «lead» của người ấy. Hai thứ ấy khác nghĩa.</li>
+<li>Số đo «số ngày lead → Sẵn sàng bán» đang đếm theo việc. Nhưng câu
+«người này còn là lead không» lại hỏi về người. Hỏi «có bao nhiêu lead»
+sẽ ra hai con số khác nhau.</li>
+<li>Phía khách đã gọi là «nhu cầu khách». Phía chủ vẫn gọi là «lead».
+Hai việc cùng loại mà hai kiểu tên, nên trưởng nhóm khó đọc hai phía như
+một.</li>
+</ul>
+<h2 id="đề-xuất-ba-lớp-theo-keller-williams">4. Đề xuất: ba lớp theo
+Keller Williams</h2>
+<pre><code>Liên hệ (người)            dấu: Lead · Liên hệ           loại: Chủ bán · Chủ cho thuê · Người mua · Người thuê
+   │ người giữ: một đầu chủ (Owner)
+   ├── Cơ hội bán / cho thuê  (Opportunity Listing · Landlord)      người làm: đầu chủ được chia (Assignee)
+   │      Cultivate ── Appointment ── Active ── Under Contract ── Closed
+   │      Đã gửi·Đã nhận   Đã gọi       Lên bảng   Đang giao dịch    Đã bán / Đã thuê
+   │                                      │
+   │                                      └── Hàng trên Bảng hàng (từ Lên bảng trở đi, pha đọc từ trạng thái hàng)
+   └── Cơ hội mua / thuê  (Opportunity Buyer · Tenant) = nhu cầu khách     người làm: đầu khách
+          Cultivate ── Appointment ── Active ── Under Contract ── Closed
+          Khách hỏi     Lịch xem        Lần gửi   …                 …</code></pre>
+<p><strong>Cụ thể:</strong></p>
+<ol type="1">
+<li><strong>Lead = dấu trên người, không gì khác.</strong>
+<ul>
+<li>«Lead» trên màn chỉ còn một nghĩa: người chưa nói chuyện hai chiều.
+Giữ cách suy bằng máy đã có, vì nó tốt hơn ô bấm tay của Keller
+Williams.</li>
+<li>Nút «+ Lead» của telesales giữ nguyên chữ. Theo đúng Keller
+Williams, nhập lead là thêm một <strong>người mang dấu Lead</strong>,
+kèm một <strong>cơ hội bán</strong> chứa căn và giá chủ muốn.</li>
+</ul></li>
+<li><strong>Việc phía chủ gọi là «Cơ hội»</strong>, loại Bán hoặc Cho
+thuê. Bảng <code>leads</code> và bốn nấc giữ nguyên dữ liệu, chỉ đổi tên
+nghĩa:
+<ul>
+<li>Đã gửi, Đã nhận thuộc pha <strong>Cultivate</strong>.</li>
+<li>Đã gọi thuộc pha <strong>Appointment</strong>.</li>
+<li>Lên bảng thuộc pha <strong>Active</strong>.</li>
+<li>Sau «Lên bảng», pha của cơ hội đọc từ trạng thái hàng: Đang giao
+dịch thuộc Under Contract, Đã bán / Đã thuê thuộc Closed.</li>
+</ul>
+Nhờ vậy số đo theo pha chạy được từ lúc nhập tới lúc bán.</li>
+<li><strong>Nhu cầu khách là cơ hội loại Mua hoặc Thuê.</strong>
+<ul>
+<li>Hiện nay đã đúng như vậy về dữ liệu (hàng 86). Chỉ cần ghi rõ nó là
+cơ hội và gắn pha.</li>
+<li>Lịch xem về sau nằm ở pha Appointment, đúng chỗ Keller Williams đặt
+nó.</li>
+</ul></li>
+<li><strong>Hàng vẫn là trung tâm của Quỹ hàng.</strong>
+<ul>
+<li>Keller Williams Command là sổ của môi giới. Quỹ hàng là sổ hàng của
+sàn, nên Bảng hàng giữ nguyên.</li>
+<li>Hàng là <strong>cơ hội bán ở pha Active trở đi, cộng dữ liệu
+căn</strong>.</li>
+<li>Lead không bao giờ hiện trên Bảng hàng.</li>
+</ul></li>
+<li><strong>Màn Liên hệ (103) dựng theo ba lớp:</strong>
+<ul>
+<li>Danh sách lọc theo dấu Lead / Liên hệ và theo loại.</li>
+<li>Hồ sơ một người có một khối <strong>«Cơ hội»</strong> liệt cả phía
+chủ lẫn phía khách, mỗi cơ hội mang pha. Hàng hiện khi cơ hội đã Lên
+bảng.</li>
+<li>Hai phía đọc như nhau.</li>
+</ul></li>
+</ol>
+<p><strong>Không đề xuất làm ngay</strong>, vì mỗi điều đổi một quyết
+định đã niêm và nên đi hàng riêng:</p>
+<ul>
+<li><strong>Gửi lại số thành sự kiện trên cùng cơ hội</strong>, thay vì
+tạo lead mới (nguyên lý 6).
+<ul>
+<li>Đây là đổi ADR-0020 qđ 4.</li>
+<li>Số đo «số ngày lead → Sẵn sàng bán» đã đi ngược chuỗi gửi lại, nên
+con số hiện vẫn đúng.</li>
+</ul></li>
+<li><strong>Nấc nuôi cho người</strong> (Met / Haven’t Met, người cũ,
+Sphere) và nhịp chạm 8x8 / 33 Touch (nguyên lý 8). Thuộc hàng «Việc kế
+và danh sách lưu» đã đề xuất.</li>
+<li><strong>Đổi tên bảng và mã nguồn</strong> (<code>leads</code> thành
+tên cơ hội).
+<ul>
+<li>Tốn nhiều, chạm T3, mà không đổi gì cho người dùng.</li>
+<li>Đề xuất giữ tên mã, chỉ đổi <strong>nghĩa và chữ trên màn</strong>,
+ghi trong CONTEXT.md.</li>
+</ul></li>
+</ul>
+<h2 id="cái-giá-và-rủi-ro">5. Cái giá và rủi ro</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Đổi gì</th>
+<th>Giá</th>
+<th>Rủi ro nếu không đổi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CONTEXT.md, Tham chiếu §14, §15: «Lead» một nghĩa, thêm «Cơ
+hội»</td>
+<td>Một lần sửa tài liệu, trong PR 103</td>
+<td>Ba nghĩa của «Lead» tiếp tục lan sang màn mới</td>
+</tr>
+<tr class="even">
+<td>Chữ trên màn: «Lead của tôi» → «Lead tôi đã nhập» (người + cơ hội),
+nấc đọc là pha cơ hội</td>
+<td>Sửa chữ ở Hôm nay của telesales và đầu chủ</td>
+<td>Telesales đọc «Lên bảng» như trạng thái của người</td>
+</tr>
+<tr class="odd">
+<td>Màn 103 có khối «Cơ hội» chung hai phía</td>
+<td>Nằm trong phạm vi 103, không thêm mã đọc ngoài phần đã có</td>
+<td>Hồ sơ người phải ghép hai kiểu danh sách khác tên</td>
+</tr>
+<tr class="even">
+<td>Không đổi tên bảng, không đổi dữ liệu</td>
+<td>Không tốn gì</td>
+<td>Mã và chữ trên màn lệch tên, phải ghi ở CONTEXT.md</td>
+</tr>
+</tbody>
+</table>
+<p>Người dùng Việt Nam quen nói «lead chủ nhà» theo nghĩa việc phía chủ.
+Đề xuất này giữ chữ «Lead» ở nút nhập. Chỗ đổi là chữ trên màn hồ sơ và
+danh sách: danh sách việc gọi là «Cơ hội», còn dấu cạnh tên người vẫn là
+«Lead». Phiên nghiệm thu cần kiểm xem telesales và đầu chủ có đọc được
+hai chữ này không.</p>
+</body>
+</html>

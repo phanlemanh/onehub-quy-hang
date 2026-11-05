@@ -94,3 +94,4 @@ export function contactView(r: ContactRecord, canSee: boolean): ContactView | { 
 
 // Liên hệ khách (hàng 86): nhu cầu khách của đầu khách gắn liên hệ.
 export * from "./prospects";
+export * from "./co-hoi";
