@@ -2558,6 +2558,21 @@
         "packages/db/migrations/046_*",
         "packages/db/tests/isolation.test.mjs"
       ]
+    },
+    {
+      "ma": "ban-mau-khai-dia-chi",
+      "cau_giao": "Mỗi trang bản mẫu khai một địa chỉ màn thật nó đứng thay; vỏ lấy nhà, tiêu đề điện thoại, tab dưới và mục sáng cột thứ hai theo địa chỉ ấy (nâng nhaMau của hàng 91 từ nhà lên địa chỉ, trang trong khu làm việc khai được); bộ quét bản đồ khuôn coi khu proto là khu bản mẫu riêng (ra khỏi nhận diện Trang tạm, khỏi khai ngoại lệ từng trang) và đỏ khi trang bản mẫu không khai địa chỉ; sổ design-pass ghi địa chỉ thật cạnh đường chạy.",
+      "slug": "ban-mau-khai-dia-chi",
+      "vi_sao": "Rà soát bản mẫu (docs/plan/ra-soat-ban-mau.md §3, PR #141): bản mẫu design-pass ở /proto/{slug} không thuộc nhà nào nên vỏ không dựng cột thứ hai, ảnh trình chủ kho thiếu cột (lặp ở hàng 91, 45). Chủ kho duyệt khuyến nghị ở phiên rà soát, nguyên văn «Duyệt, mở hàng» (05/11). Hàng không mã: đã quyết. Xong thì bỏ luật đợt 73.",
+      "hang": "T2",
+      "bat_khi": "Bản mẫu ở khu proto chụp ra đủ thanh trên, nhà sáng, cột thứ hai có mục sáng, tiêu đề và tab điện thoại như màn thật; bản mẫu thiếu khai địa chỉ thì lint đỏ; không đổi _acceptance/config.yaml",
+      "vung": [
+        "apps/web/src/components/shell/**",
+        "packages/core/src/navigation*",
+        "packages/ui-lint/**",
+        "design/patterns/trang-tam.md",
+        "apps/web/src/app/(app)/proto/**"
+      ]
     }
   ],
   "chan_troi": [
