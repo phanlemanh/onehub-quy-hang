@@ -5,9 +5,9 @@ slug: go-ma-lo
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: draft
-approved_by:
-approved_at:
+status: approved
+approved_by: Manh Phan
+approved_at: 2026-11-05
 design_doc: _acceptance/go-ma-lo/design.md
 ---
 
