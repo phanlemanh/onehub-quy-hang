@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "den": "d602323c1bc22c1e0cb1e5233ebbad9f00328a53",
+  "base": "e878a4adf56b2be8da9e4aecb9f42bf4ec676f41",
+  "ghim": {
+    "bang-hang": "478a18b1ed8ca2501bbc45fcbf206a13857627ab",
+    "cai-dat-san": "cfa238c20935717f5c5853a30463fba1b5985767",
+    "cuoc-goi": "fd30d8e69d3f572a7ffa7819c8b72f3303944a8d",
+    "da-gui": "c2819efe92181b7f8a49d654def0a608a3685793",
+    "gui": "069afc550a93a99aae08ca30bb7ab920705407e5",
+    "ho-so-can": "dd39ac9d5cab3218f244f6e3e795221843a2f267",
+    "hom-nay-dau-chu": "93e9af2eac7c3c1b545ddd9356991ef7bd733692",
+    "hom-nay-dau-khach": "e07019d48a488b69a7077f78eb747253ee184a36",
+    "hom-nay-truong-nhom": "23826bb095a54035b0ffe693638b2487b8ab95d5",
+    "lead-cua-toi": "df7d243e3a720ea01c1366c6cbb25c0ee6e44c76",
+    "lien-he": "f0c8347285a564af1967e9cc92cea0dc5beda1bf",
+    "nhap-excel": "3ac84b9c7a70151d7937340552286bae53959999",
+    "o-nhan-lead": "7c144e1425e6925273984792609c5b516a927e7b",
+    "toi": "471fc93898cb13fdf785e0ed2d44f3daac399e75",
+    "trang-khach": "685f059b351e1fad28a7ae1c47a42c2a6f89cc30",
+    "trang-mau": "2002381900302d8a416305d80503bc02e2dcb179",
+    "trang-tam": "c832d3aeeec79f16214aae997de9eb570f6f2aa4",
+    "trang-thai": "0631cc5715db28d17a4f93f58625a132439754a4",
+    "xac-thuc": "d453147b477de96ebb7049bbfec3b17654bbdc3d"
+  },
+  "theo_khuon": [
+    "apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx"
+  ],
+  "lech_moi": [],
+  "no_cu": [
+    {
+      "tep": "apps/web/src/app/(app)/inventory/page.tsx",
+      "khoi": "hai nhóm màn",
+      "loai": "quan-he",
+      "nhom": "bang-hang, trang-tam",
+      "so": 1
+    }
+  ],
+  "khong_do": [],
+  "ngoai_ban_do": 7,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "da-gui",
+    "gui",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "hom-nay-dau-khach",
+    "hom-nay-truong-nhom",
+    "lead-cua-toi",
+    "lien-he",
+    "nhap-excel",
+    "o-nhan-lead",
+    "toi",
+    "trang-khach",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}

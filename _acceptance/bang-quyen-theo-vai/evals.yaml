@@ -104,7 +104,7 @@ evals:
   - id: E11
     criterion: AC-6
     executor: script
-    cmd: config:executors.design.floor
+    cmd: config:executors.script.design_floor
     expected: "exit 0; sàn thiết kế S4 không in vi phạm nào (mã màu thô) cho tệp giao diện vòng chạm dưới apps/web/src/app/(app)/inventory/cell-edit/. Chiều đỏ: một lớp màu hex thô trong tren-o.tsx → lệnh in vi phạm và thoát khác 0."
     paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
