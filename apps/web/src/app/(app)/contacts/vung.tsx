@@ -30,11 +30,14 @@ export default function VungLienHe() {
   const [daMo, setDaMo] = useState<SoDaMo>({});
   const [lanHs, setLanHs] = useState(0);
   const hen = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Lượt đọc danh sách: «Xem thêm» về muộn sau khi bộ lọc đã đổi thì bỏ, không đè danh sách mới.
+  const luotDs = useRef(0);
 
   // Danh sách: gõ xong 250 ms mới đọc; chuỗi số từ chín chữ số đi lối tìm theo số (POST, số không vào URL).
   useEffect(() => {
     let huy = false;
     if (hen.current) clearTimeout(hen.current);
+    luotDs.current++;
     hen.current = setTimeout(async () => {
       setDs({ kieu: "dang-tai" });
       if (q.trim() && luaTim(q) === "so") {
@@ -79,8 +82,9 @@ export default function VungLienHe() {
 
   async function them() {
     if (!cursor || ds.kieu !== "xong") return;
+    const luot = luotDs.current;
     const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau, cursor });
-    if (!kq) return;
+    if (!kq || luot !== luotDs.current) return;
     setDs({
       kieu: "xong",
       ds: [...ds.ds, ...kq.items],

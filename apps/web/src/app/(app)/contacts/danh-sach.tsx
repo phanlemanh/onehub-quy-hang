@@ -1,17 +1,29 @@
 "use client";
 
+import { useTable, type ColumnDef, type SortingState } from "@tanstack/react-table";
 import { ContactIcon, SearchIcon } from "lucide-react";
+import { useState } from "react";
 
 import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
-import { Frame, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
+import { DataGrid, dataGridFeatures, type DataGridFeatures } from "@/components/reui/data-grid/data-grid";
+import { DataGridColumnHeader } from "@/components/reui/data-grid/data-grid-column-header";
+import { DataGridScrollArea } from "@/components/reui/data-grid/data-grid-scroll-area";
+import { DataGridTable } from "@/components/reui/data-grid/data-grid-table";
+import { Frame, FrameDescription, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 import { CHU, NHAN_LOAI, type DongLienHe } from "./lien-he";
+
+// chuyển thể solution-crm-3 (ReUI Pro, chủ kho 05/11 chọn lối «Lai» ở trang ba lối hàng 103): lưới liên hệ trong Frame —
+// ô người (chữ đầu + tên + dòng phụ), ô người giữ, cột đếm; bỏ Filters, chọn hàng loạt, Log Email, Add Contact (lọc loại và
+// Lead ở cột thứ hai). Dưới md bảng thành danh sách thẻ một cột.
 
 export type TrangThaiDs =
   | { kieu: "dang-tai" }
@@ -20,13 +32,155 @@ export type TrangThaiDs =
   | { kieu: "xong"; ds: DongLienHe[]; con: boolean };
 
 const LOAI = ["Seller", "Landlord", "Buyer", "Tenant"] as const;
+const TAT_CA = "tat-ca";
+const TABLE_LAYOUT = { headerSticky: true, dense: true, rowBorder: true, headerBackground: false };
 
-/** Thân danh sách: ô tìm, lọc loại, bảng; trống · không khớp · người khác giữ · lỗi đi qua `TrangThai`. */
+/** Chữ đầu của hai từ chữ cuối tên («[Tên] Chủ A» → «CA», bỏ từ số); không tên thì «?». */
+export function chuDau(ten: string | null): string {
+  const tu = (ten ?? "").replace(/[[\]]/g, "").trim().split(/\s+/).filter((t) => /^\p{L}/u.test(t));
+  if (!tu.length) return "?";
+  return tu
+    .slice(-2)
+    .map((t) => t[0]!.toLocaleUpperCase("vi"))
+    .join("");
+}
+
+const tenCua = (d: DongLienHe) => d.name ?? "[Chưa có tên]";
+const loaiCua = (d: DongLienHe) => d.contactTypes.map((t) => NHAN_LOAI[t] ?? t).join(" · ");
+
+function ONguoi({ d, onChon }: { d: DongLienHe; onChon: (id: string) => void }) {
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <Avatar className="size-8 shrink-0">
+        <AvatarFallback>{chuDau(d.name)}</AvatarFallback>
+      </Avatar>
+      <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Button variant="link" size="sm" className="text-foreground h-auto min-w-0 truncate p-0 font-medium" onClick={(e) => (e.stopPropagation(), onChon(d.id))}>
+            {tenCua(d)}
+          </Button>
+          {d.status === "lead" ? <Badge variant="warning-light">{CHU.lead}</Badge> : null}
+        </div>
+        <div className="text-muted-foreground line-clamp-1 text-xs">{loaiCua(d) || "—"}</div>
+      </div>
+    </div>
+  );
+}
+
+function ONguoiGiu({ ten }: { ten: string | null }) {
+  if (!ten) return <span className="text-muted-foreground">—</span>;
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <Avatar className="size-6 shrink-0">
+        <AvatarFallback className="text-xs">{chuDau(ten)}</AvatarFallback>
+      </Avatar>
+      <span className="text-foreground min-w-0 truncate text-sm">{ten}</span>
+    </div>
+  );
+}
+
+function taoCot(onChon: (id: string) => void): ColumnDef<DataGridFeatures, DongLienHe>[] {
+  return [
+    {
+      id: "ten",
+      accessorFn: tenCua,
+      header: ({ column }) => <DataGridColumnHeader column={column} title="Tên" />,
+      cell: ({ row }) => <ONguoi d={row.original} onChon={onChon} />,
+      size: 280,
+    },
+    {
+      id: "loai",
+      accessorFn: loaiCua,
+      header: ({ column }) => <DataGridColumnHeader column={column} title="Loại" />,
+      cell: ({ row }) => (
+        <div className="flex flex-wrap gap-1">
+          {row.original.contactTypes.map((t) => (
+            <Badge key={t} variant="outline">
+              {NHAN_LOAI[t] ?? t}
+            </Badge>
+          ))}
+        </div>
+      ),
+      size: 200,
+    },
+    {
+      id: "nguoiGiu",
+      accessorFn: (d) => d.holderName ?? "",
+      header: ({ column }) => <DataGridColumnHeader column={column} title="Người giữ" />,
+      cell: ({ row }) => <ONguoiGiu ten={row.original.holderName} />,
+      size: 200,
+    },
+    {
+      id: "coHoi",
+      accessorKey: "openOpportunities",
+      header: ({ column }) => <DataGridColumnHeader column={column} title="Cơ hội mở" />,
+      cell: ({ row }) => <span className="tabular-nums">{row.original.openOpportunities}</span>,
+      size: 110,
+    },
+    {
+      id: "can",
+      accessorKey: "listingCount",
+      header: ({ column }) => <DataGridColumnHeader column={column} title="Căn" />,
+      cell: ({ row }) => <span className="tabular-nums">{row.original.listingCount}</span>,
+      size: 80,
+    },
+  ];
+}
+
+/** Lưới trên máy tính; sắp xếp chỉ mở khi đã tải hết, để thứ tự không lừa người xem khi còn trang chưa tải. */
+function LuoiLienHe({ ds, con, onChon }: { ds: DongLienHe[]; con: boolean; onChon: (id: string) => void }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const table = useTable({
+    features: dataGridFeatures,
+    columns: taoCot(onChon),
+    data: ds,
+    getRowId: (d) => d.id,
+    state: { sorting: con ? [] : sorting, pagination: { pageIndex: 0, pageSize: Math.max(ds.length, 1) } },
+    enableSorting: !con,
+    onSortingChange: setSorting,
+  });
+  return (
+    <DataGrid table={table} recordCount={ds.length} onRowClick={(d) => onChon(d.id)} tableLayout={TABLE_LAYOUT}>
+      <DataGridScrollArea>
+        <DataGridTable />
+      </DataGridScrollArea>
+    </DataGrid>
+  );
+}
+
+/** Danh sách thẻ một cột dưới md. */
+function TheLienHe({ ds, onChon }: { ds: DongLienHe[]; onChon: (id: string) => void }) {
+  return (
+    <ItemGroup className="gap-2 p-3">
+      {ds.map((d) => (
+        <Item key={d.id} variant="outline" size="sm" onClick={() => onChon(d.id)} className="cursor-pointer">
+          <ItemMedia>
+            <Avatar className="size-8">
+              <AvatarFallback>{chuDau(d.name)}</AvatarFallback>
+            </Avatar>
+          </ItemMedia>
+          <ItemContent className="min-w-0">
+            <ItemTitle className="min-w-0">
+              <Button variant="link" size="sm" className="text-foreground h-auto min-w-0 truncate p-0 font-medium" onClick={(e) => (e.stopPropagation(), onChon(d.id))}>
+                {tenCua(d)}
+              </Button>
+              {d.status === "lead" ? <Badge variant="warning-light">{CHU.lead}</Badge> : null}
+            </ItemTitle>
+            <ItemDescription className="line-clamp-2">
+              {[loaiCua(d), d.holderName, `${d.openOpportunities} cơ hội · ${d.listingCount} căn`].filter(Boolean).join(" · ")}
+            </ItemDescription>
+          </ItemContent>
+        </Item>
+      ))}
+    </ItemGroup>
+  );
+}
+
+/** Thân danh sách: ô tìm (và chọn loại trên điện thoại), lưới; trống · không khớp · người khác giữ · lỗi đi qua `TrangThai`. */
 export function DanhSachLienHe({
   tt,
   q,
   loai,
-  chon,
   onQ,
   onLoai,
   onChon,
@@ -63,33 +217,12 @@ export function DanhSachLienHe({
   else
     than = (
       <>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Tên</TableHead>
-              <TableHead>Loại</TableHead>
-              <TableHead>Người giữ</TableHead>
-              <TableHead className="text-right">Cơ hội mở</TableHead>
-              <TableHead className="text-right">Căn</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tt.ds.map((d) => (
-              <TableRow key={d.id} data-state={chon === d.id ? "selected" : undefined} onClick={() => onChon(d.id)} className="cursor-pointer">
-                <TableCell className="font-medium">
-                  <Button variant="link" size="sm" className="h-auto p-0" onClick={() => onChon(d.id)}>
-                    {d.name ?? "[Chưa có tên]"}
-                  </Button>{" "}
-                  {d.status === "lead" ? <Badge variant="warning-light">{CHU.lead}</Badge> : null}
-                </TableCell>
-                <TableCell>{d.contactTypes.map((t) => NHAN_LOAI[t] ?? t).join(" · ")}</TableCell>
-                <TableCell>{d.holderName ?? "—"}</TableCell>
-                <TableCell className="text-right tabular-nums">{d.openOpportunities}</TableCell>
-                <TableCell className="text-right tabular-nums">{d.listingCount}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="hidden md:block">
+          <LuoiLienHe ds={tt.ds} con={tt.con} onChon={onChon} />
+        </div>
+        <div className="md:hidden">
+          <TheLienHe ds={tt.ds} onChon={onChon} />
+        </div>
         {tt.con ? (
           <div className="flex justify-center p-3">
             <Button size="sm" variant="outline" onClick={onThem}>
@@ -99,25 +232,40 @@ export function DanhSachLienHe({
         ) : null}
       </>
     );
+  const dem = tt.kieu === "xong" ? `${tt.ds.length}${tt.con ? "+" : ""} liên hệ` : null;
   return (
-    <Frame>
-      <FrameHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <FrameTitle>{CHU.tieuDe}</FrameTitle>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <ToggleGroup value={loai ? [loai] : []} onValueChange={(v: string[]) => onLoai(v[0] ?? "")} variant="outline" size="sm">
-            {LOAI.map((l) => (
-              <ToggleGroupItem key={l} value={l}>
-                {NHAN_LOAI[l]}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-          <div className="relative">
+    <Frame spacing="sm" className="w-full min-w-0">
+      <FrameHeader className="flex-row items-center justify-between gap-3">
+        <div className="flex flex-col gap-0.5">
+          <FrameTitle>{CHU.tieuDe}</FrameTitle>
+          {dem ? <FrameDescription className="text-xs">{dem}</FrameDescription> : null}
+        </div>
+      </FrameHeader>
+      <FramePanel className="p-0 shadow-none">
+        <div className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-header-py)">
+          <div className="relative min-w-0 flex-1">
             <SearchIcon className="text-muted-foreground pointer-events-none absolute top-2.5 left-2 size-4" aria-hidden="true" />
             <Input className="pl-8" placeholder={CHU.timGoi} value={q} onChange={(e) => onQ(e.target.value)} aria-label={CHU.timGoi} />
           </div>
+          <div className="md:hidden">
+            <Select value={loai || TAT_CA} onValueChange={(v) => onLoai(v && v !== TAT_CA ? String(v) : "")}>
+              <SelectTrigger aria-label="Loại">
+                <SelectValue>{(v: string) => (v === TAT_CA ? "Mọi loại" : (NHAN_LOAI[v] ?? v))}</SelectValue>
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value={TAT_CA}>Mọi loại</SelectItem>
+                {LOAI.map((l) => (
+                  <SelectItem key={l} value={l}>
+                    {NHAN_LOAI[l]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </FrameHeader>
-      <FramePanel className="p-0">{than}</FramePanel>
+        <Separator />
+        {than}
+      </FramePanel>
     </Frame>
   );
 }

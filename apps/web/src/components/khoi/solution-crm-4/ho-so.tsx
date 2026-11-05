@@ -128,8 +128,8 @@ export function MucHoSo({ tieuDe, phai, id, children }: { tieuDe: string; phai?:
 export function CapGiaTri({ ds }: { ds: [string, ReactNode][] }) {
   return (
     <dl className="grid grid-cols-[var(--spacing-ho-so-nhan)_1fr] gap-x-3 gap-y-2 text-sm">
-      {ds.map(([k, v]) => (
-        <div key={k} className="contents">
+      {ds.map(([k, v], i) => (
+        <div key={`${i}-${k}`} className="contents">
           <dt className="text-muted-foreground">{k}</dt>
           <dd>{v}</dd>
         </div>
