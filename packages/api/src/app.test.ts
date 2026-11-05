@@ -122,6 +122,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/team/listing-agents",
     // Hàng 43 (phat-hang): lần xuất bảng hàng.
     "POST /api/v1/exports",
+    "POST /api/v1/listings/agent-reassignments",
+    "POST /api/v1/listings/agent-reassignments/preview",
+    "POST /api/v1/listings/agent-reassignments/{id}/undo",
     // Hàng 82: cấu hình theo sàn qua lối chung.
     "GET /api/v1/company/settings",
     "PATCH /api/v1/company/settings",

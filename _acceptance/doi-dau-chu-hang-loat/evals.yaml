@@ -1,0 +1,135 @@
+schema_version: 1
+feature_slug: doi-dau-chu-hang-loat
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ma trận viết trước 6 tổ hợp vai (trưởng nhóm · đầu chủ · đầu khách · telesales · quản trị · trưởng nhóm + đầu chủ) × hàm quyền đổi đầu chủ của lõi: đúng hai tổ hợp có team_lead trả true; số assert = 6; chiều đỏ: bản sao hàm trả true cho đầu chủ → ô đỏ nêu tổ hợp."
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/navigation.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thanh sửa hàng loạt dựng mục «Đổi đầu chủ» khi và chỉ khi hàm quyền của lõi trả true (bài quét mã nguồn thanh: lời gọi hàm quyền bọc mục, không so tên vai ở màn); hàm trạng thái nút: mất mạng → tắt kèm «Cần mạng để đổi đầu chủ», có mạng → bật; chiều đỏ: bản sao thanh so chuỗi 'team_lead' → bài quét đỏ nêu tệp."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E1c
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; trên Postgres dãy: ma trận viết trước 6 tổ hợp vai (trưởng nhóm · đầu chủ · đầu khách · telesales · quản trị · trưởng nhóm + đầu chủ) × 3 lệnh (xem trước, đổi, hoàn tác) = 18 ô: đúng 6 ô của hai tổ hợp có team_lead đi qua (2xx), 12 ô còn lại 403; số assert = 18; chiều đỏ: bản sao hàm cho quản trị qua → ô đỏ nêu vai và lệnh."
+    paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trên Postgres dãy (packages/api/test-db): POST /api/v1/listings/agent-reassignments với userId không mang vai listing_agent → 400 nêu userId; userId của người sàn khác → 400; userId hợp lệ → 201; thân có khoá lạ → 400; chiều đỏ: bản sao bỏ kiểm vai người nhận → ca «sai vai» đỏ nêu userId."
+    paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; dữ liệu mẫu 2 chủ nhà (liên hệ C1 giữ 3 căn, C2 giữ 2 căn) + 1 căn khác chủ: preview với 1 căn của C1 và 1 căn của C2 trả đúng 5 căn (2 đã tích, 3 «cùng chủ nhà»), đầu chủ cũ từng căn khớp bảng gán, contacts = 2; căn khác chủ không có; cài tên và số riêng cho từng chủ («[Tên] C1-mau», «[Tên] C2-mau», 0900 000 011, 0900 000 012) rồi quét đúng bốn giá trị ấy (cả dạng không khoảng trắng) trên thân trả về: không có; đối chứng dương: chuỗi mẫu có chèn một giá trị phải bị bắt và nêu giá trị; chiều đỏ: bản sao truy vấn bỏ phần kéo theo → ca đỏ nêu «thiếu 3 căn cùng chủ nhà»."
+    paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; cùng dữ liệu mẫu: POST đổi sang đầu chủ D2 → mọi 5 căn có dòng gán mới nhất là D2, căn đã do D2 giữ không thêm dòng (đếm dòng gán trước/sau), 2 liên hệ có owner_member_user_id = D2, trả {id, listings: 5, contacts: 2}; lỗi giữa chừng (ép lỗi ở căn thứ 3 qua bản sao hàm) → không dòng nào đổi (giao dịch); chiều đỏ: bản sao hàm không đổi người giữ liên hệ → ca đỏ nêu liên hệ C1."
+    paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm dựng thông báo kết quả trả «Đã đổi đầu chủ 5 căn, 2 liên hệ» với hành động «Hoàn tác», thời lượng 10 000 ms; hàm dựng hộp hỏi từ bản xem trước liệt mọi căn, đánh dấu «cùng chủ nhà» đúng các căn không tích; chiều đỏ: bản sao bỏ dấu «cùng chủ nhà» → ô đỏ nêu mã căn."
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4c
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web_db
+    layer: backend-effect
+    expected: "exit 0; trên Postgres dãy với API thật: bộ đồng bộ của trưởng nhóm đã kéo 5 căn (đầu chủ D1), gọi đổi sang D2, kéo một lần nữa (không dựng lại kho): kho trên máy có listAgentKey = D2 ở đúng 5 căn; chiều đỏ: bản sao hàm đổi không ghi sự kiện cho bộ đồng bộ → lần kéo vẫn D1, ô đỏ nêu mã căn."
+    paths: ["packages/api/src/listings/**", "apps/web/src/lib/sync/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ma trận viết trước 6 ô sau một lần đổi D1→D2: (a) căn còn D2 → về D1; (b) căn đã đổi tiếp sang D3 → giữ D3, đếm bỏ qua; (c) căn trước chưa có đầu chủ → giữ D2 và liên hệ cùng chủ của nó cũng giữ D2, đếm vào «chưa có đầu chủ» với lời riêng; (d) liên hệ còn D2, chủ không có căn ô (c) → về người giữ cũ; (e) liên hệ đã đổi tiếp sang D3 → giữ D3, đếm bỏ qua; (f) liên hệ trước chưa có người giữ và mọi căn của chủ về D1 → về null; trả {restored, skipped, keptNoPriorAgent} đúng số; hoàn tác lần hai → 409; số assert = 6 + 2; chiều đỏ: bản sao hoàn tác không xét người giữ hiện tại → ô (b) đỏ nêu căn."
+    paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; bộ kiểm cách ly: hai bảng lần đổi bật và ép luật theo dòng (ca tổng và ca liệt tên); người sàn B không đọc lần đổi của A; preview/đổi/hoàn tác với mã căn hay mã lần đổi của A khi đang ở sàn B → 404 (API) và không dòng nào của A đổi; vai quy_hang_app không insert/update/delete thẳng bảng lần đổi (42501), không update contacts.owner_member_user_id; người không phải trưởng nhóm gọi ba hàm → từ chối (403 ở API); chiều đỏ: bản sao luật select không lọc sàn → ca đọc chéo đỏ nêu bảng."
+    paths: ["packages/db/migrations/027_*.sql", "packages/db/tests/**", "packages/api/test-db/doi-dau-chu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; tập sau kéo theo 201 căn → preview và đổi trả 400 với lời «Tối đa 200 căn một lần», đếm dòng gán trước/sau bằng nhau; 200 căn → 201; chiều đỏ: bản sao trần 201 → ca 201 căn đỏ."
+    paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.doi_dau_chu_tai_lieu
+    expected: "exit 0; ADR-0021 có mục «Sửa đổi 05/11» trỏ doi-dau-chu-hang-loat, nói lối hàng loạt đổi người giữ và lối gán một căn giữ nguyên, chữ cũ (bản ở nhánh chính) là tiền tố; Tham chiếu §12 có dòng 05/11 trỏ _acceptance/doi-dau-chu-hang-loat/; chiều đỏ: bản sao ADR bỏ mục sửa đổi → ô đỏ nêu tệp."
+    paths: ["docs/adr/0021-lien-he.md", "docs/product/tham-chieu.md", "_acceptance/doi-dau-chu-hang-loat/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs (Postgres 5574, máy dev 3494, nạp 2 chủ nhà mẫu với 5 căn của đầu chủ D1; in PID — dừng bằng --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/doi-dau-chu-hang-loat/thu/chay-ui.mjs --ra _acceptance/doi-dau-chu-hang-loat/evidence — Chrome không đầu, mỗi cảnh một dòng JSON và ảnh E9-*.png"
+      - "Đối chiếu e9-hop-hoi: trưởng nhóm tích 1 căn mỗi chủ, chọn D2, hộp hỏi kể đủ 5 căn, 3 căn đánh dấu «cùng chủ nhà», người giữ cũ D1, «2 liên hệ»; dung-h.mjs --mau ghi chủ nhà của 5 căn qua PUT …/owner ([Tên] C1-mau 0900000091 cho 3 căn, [Tên] C2-mau 0900000092 cho 2 căn); không tên hay số nào trong đó (số ở cả dạng liền và dạng «0900 000 091») có trong chữ hộp hỏi (loChuNha rỗng), và đối chứng dương: mồi cài tạm vào hộp hỏi bị chính bài đọc ấy bắt (doiChungDuong true)"
+      - "Đối chiếu e9-sau-doi: KHÔNG tải lại hay điều hướng trang giữa lúc xác nhận và lúc chụp (dấu đặt trên window ngay trước khi bấm còn nguyên: khongTaiLai true; đối chứng e9-doi-chung-tai-lai: tải lại thật thì dấu mất, dauConSauTaiLai false); thông báo «Đã đổi đầu chủ 5 căn, 2 liên hệ» hiện kèm «Hoàn tác» (dòng ghi số giây chờ). Bảng hàng chưa có cột Đầu chủ (cột là hàng sau); đầu chủ mới về dữ liệu trên máy do E4c chứng"
+      - "Đối chiếu e9-sau-doi-db (đọc bảng gán và contacts qua dung-h.mjs --doc), e9-hoan-tac (5 căn và 2 liên hệ về D1), e9-dau-chu (đầu chủ D1 đăng nhập, tích căn, không có «Đổi đầu chủ»)"
+    expected: "Trên máy tính 1440×900 với trưởng nhóm mẫu: tích 2 căn của 2 chủ nhà mẫu, bấm «Đổi đầu chủ», chọn đầu chủ D2: hộp hỏi kể đủ 5 căn kèm người giữ cũ, đánh dấu căn cùng chủ nhà, nói 2 liên hệ; xác nhận: thông báo «Đã đổi đầu chủ 5 căn, 2 liên hệ», trang không tải lại, bảng gán và contacts ghi D2; bấm «Hoàn tác»: 5 căn và 2 liên hệ về D1; đầu chủ mẫu đăng nhập không thấy lệnh; mỗi cảnh một ảnh."
+    paths: ["apps/web/src/app/(app)/inventory/**", "packages/api/src/listings/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E9b
+    criterion: AC-4
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    steps:
+      - "Cùng lượt với E9: sau cảnh e9-sau-doi chạy node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs --doc in JSON đầu chủ hiện tại của 5 căn và người giữ của 2 liên hệ mẫu từ Postgres dãy"
+    expected: "Sau khi đổi trên màn: Postgres ghi D2 là đầu chủ mới nhất của đúng 5 căn và người giữ của đúng 2 liên hệ; sau Hoàn tác ghi lại D1 cho cả 7 dòng."
+    paths: ["packages/api/src/listings/**", "packages/db/migrations/027_*.sql"]
+    evidence_required: [screenshot, observed, verifier, verified_at]

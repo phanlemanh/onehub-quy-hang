@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
   type Action,
   activeTab,
+  canReassignListingAgents,
   HOME_LABEL,
   homeOfPath,
   isSecondColumnOpen,
@@ -325,4 +326,24 @@ test("Đối chứng đỏ: so tiền tố /settings → /settings/personal sán
   const tienTo = (path: string, tabs: readonly Tab[]) => tabs.filter((t) => path === TAB_PATH[t] || path.startsWith(`${TAB_PATH[t].split("/").slice(0, 2).join("/")}/`));
   const lech = lechTabSang(tienTo);
   assert.ok(lech.includes("/settings/personal: settings sáng — cả hai tab sáng"), JSON.stringify(lech));
+});
+
+// Đổi đầu chủ hàng loạt (hàng 89, E1) — ma trận viết trước 6 tổ hợp vai.
+const DOI_DAU_CHU: [string, string[], boolean][] = [
+  ["trưởng nhóm", ["team_lead"], true],
+  ["đầu chủ", ["listing_agent"], false],
+  ["đầu khách", ["buyer_agent"], false],
+  ["telesales", ["telesales"], false],
+  ["quản trị", ["company_admin"], false],
+  ["trưởng nhóm + đầu chủ", ["team_lead", "listing_agent"], true],
+];
+const lechDoiDauChu = (f: (roles: string[]) => boolean) => DOI_DAU_CHU.flatMap(([ten, roles, mong]) => (f(roles) === mong ? [] : [ten]));
+
+test("Đổi đầu chủ hàng loạt: chỉ hai tổ hợp có Trưởng nhóm (6 ô)", () => {
+  assert.equal(DOI_DAU_CHU.length, 6);
+  assert.deepEqual(lechDoiDauChu(canReassignListingAgents), []);
+});
+
+test("Đối chứng đỏ: hàm giả cho đầu chủ đổi → gọi tên tổ hợp", () => {
+  assert.deepEqual(lechDoiDauChu((r) => canReassignListingAgents(r) || r.includes("listing_agent")), ["đầu chủ"]);
 });

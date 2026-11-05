@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import { ghiAnToan } from "../cell-edit/lenh";
 import { STATUS_LABEL, WITHDRAWN_LABEL, type DongBang } from "../cot";
+import { useDoiDauChu } from "./hop-doi-dau-chu";
 import { chayHoanTacLo, type BanGhiLo } from "./hoan-tac-lo";
 import { chayGhiLo, demLocAn, gomKetQua, hangCuaLo, LENH_DA_GOI, lenhTrangThai, moTaBatNgo, nacMenu, xetDaGoi, xetDoiTrangThai, type XetLo } from "./lo";
 
@@ -120,6 +121,8 @@ export function useSuaHangLoat(moiHang: readonly DongBang[], dangHien: readonly 
   }, [hoi, xet, lyDo, sua, hoanTacLo]);
 
   const menu = nacMenu(lo);
+  // Đổi đầu chủ (hàng 89): chỉ hiện khi lõi cho phép theo vai — quyết ở `canReassignListingAgents`, không so tên vai ở đây.
+  const doiDauChu = useDoiDauChu(tich, moiHang, () => setTich(new Set()));
 
   const thanh: ReactNode = tich.size ? (
     <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Sửa hàng loạt">
@@ -144,6 +147,7 @@ export function useSuaHangLoat(moiHang: readonly DongBang[], dangHien: readonly 
       <Button type="button" variant="outline" size="sm" onClick={() => setHoi({ loai: "da-goi" })}>
         Đánh dấu đã gọi
       </Button>
+      {doiDauChu.nut}
       <Button type="button" variant="ghost" size="sm" onClick={() => setTich(new Set())}>
         Bỏ chọn
       </Button>
@@ -202,5 +206,5 @@ export function useSuaHangLoat(moiHang: readonly DongBang[], dangHien: readonly 
     </AlertDialog>
   );
 
-  return { ctx, thanh, hop };
+  return { ctx, thanh, hop: <>{hop}{doiDauChu.hop}</> };
 }

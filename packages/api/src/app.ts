@@ -29,6 +29,7 @@ import { registerDaGuiRoutes } from "./da-gui/routes";
 import { registerTodayBuyerRoutes } from "./today-buyer/routes";
 import { registerSyncRoutes } from "./sync/routes";
 import { registerExportRoutes } from "./exports/routes";
+import { registerAgentReassignmentRoutes } from "./listings/doi-dau-chu-routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
 import type { PushSender } from "./push/gui";
 import { chanMayBiBao } from "./auth/may-bi-bao";
@@ -205,6 +206,7 @@ export function createApi(deps: ApiDeps) {
   registerTodayBuyerRoutes(api, deps);
   registerSyncRoutes(api, deps);
   registerExportRoutes(api, deps);
+  registerAgentReassignmentRoutes(api, deps);
 
   api.doc(`${BASE}/openapi.json`, {
     openapi: "3.0.0",

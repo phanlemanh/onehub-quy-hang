@@ -81,6 +81,9 @@ export const API_ERRORS = {
   importUndoIncomplete: { code: "import-undo-incomplete", status: 503 },
   // Xuất bảng hàng (hàng 43): chỉ đầu chủ, trưởng nhóm.
   exportRoleRequired: { code: "export-role-required", status: 403 },
+  // Đổi đầu chủ hàng loạt (hàng 89): trần 200 căn một lần; một lần đổi hoàn tác một lần (vai: teamLeadRequired).
+  reassignmentTooLarge: { code: "reassignment-too-large", status: 400 },
+  reassignmentUndone: { code: "reassignment-undone", status: 409 },
   // Mật khẩu do sàn cấp (hàng dang-nhap-mat-khau) — hợp đồng viết mã bằng gạch dưới, kho giữ gạch nối. Email lạ và mật khẩu sai chung
   // một mã; các mã riêng chỉ trả khi mật khẩu đúng.
   invalidEmailOrPassword: { code: "invalid-email-or-password", status: 401 },

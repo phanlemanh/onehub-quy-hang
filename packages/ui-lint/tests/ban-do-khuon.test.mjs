@@ -125,6 +125,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["bang-hang.tsx", "bulk/thanh.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "phat-hang/hop-thoai.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
   ),
+  // Hộp hỏi đổi đầu chủ hàng loạt (hàng 89).
+  `${W}/app/(app)/inventory/bulk/hop-doi-dau-chu.tsx`,
   // Bảng hàng thẻ trên điện thoại (hàng 32): bảng thẻ, ngăn lọc, thẻ căn.
   ...["cards/bang-the.tsx", "cards/ngan-loc.tsx", "cards/the-can.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
