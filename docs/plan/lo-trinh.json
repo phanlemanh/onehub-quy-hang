@@ -2625,6 +2625,18 @@
         "packages/api/src/settings/**",
         "packages/api/test-db/luat-chia-lead-cap-han-hong/**"
       ]
+    },
+    {
+      "ma": "doi-trang-thai-lo-theo-co",
+      "cau_giao": "Thao tác «Đổi trạng thái» hàng loạt ở Bảng hàng chỉ mời «Đang bán» cho người có cờ Sẵn sàng bán theo bảng quyền theo vai; người không đủ cờ không thấy lựa chọn ấy, không còn căn rơi vào «Cần xem» vì máy chủ chặn sau khi đã mời.",
+      "slug": "doi-trang-thai-lo-theo-co",
+      "vi_sao": "Ngoài-11 của hàng bang-quyen-theo-vai (G1, PR #147, _acceptance/bang-quyen-theo-vai/review-findings.md): inventory/bulk/lo.ts vẫn mời «Đang bán» cho người thiếu cờ. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy Q). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Người thiếu cờ Sẵn sàng bán mở Đổi trạng thái hàng loạt không thấy «Đang bán»; người đủ cờ thấy và đổi được; bài kiểm phủ cả hai vai",
+      "vung": [
+        "apps/web/src/app/(app)/inventory/bulk/**",
+        "packages/core/src/access/quyen-hang*"
+      ]
     }
   ],
   "chan_troi": [
