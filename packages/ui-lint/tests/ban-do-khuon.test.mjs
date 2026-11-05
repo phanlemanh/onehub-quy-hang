@@ -51,7 +51,7 @@ const TRANG_TAM = [
 const BANG = {
   "xac-thuc": { theoKhuon: ["dat-mat-khau", "login", "no-company", "select-company"].map((p) => `${W}/app/(auth)/${p}/page.tsx`), ngoaiLe: [] },
   "cai-dat-san": {
-    theoKhuon: [`${W}/app/(app)/settings/users/page.tsx`],
+    theoKhuon: [`${W}/app/(app)/settings/ai/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/(app)/settings/[section]/page.tsx`, `${W}/app/(app)/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
@@ -77,6 +77,7 @@ const BANG = {
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/settings/[section]/page.tsx`,
+      `${W}/app/(app)/settings/ai/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
       `${W}/app/(app)/settings/users/page.tsx`,
       `${W}/app/(app)/shares/new/page.tsx`,
@@ -172,7 +173,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "khung.tsx", "page.tsx", "personal/ca-nhan.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "khung.tsx", "page.tsx", "personal/ca-nhan.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -189,7 +190,8 @@ const CHO_TRANG_THAI = [
   // Hàng 66: lần nhập gần đây (đang tải, lỗi, trống) và hộp hoàn tác (đang xem trước, lỗi).
   ...Array(5).fill(`${W}/app/(app)/imports/new/hoan-tac.tsx`),
   // Hàng 66: hai dải mẫu gộp thành một dải đọc từ daiBaoMau.
-  ...Array(12).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
+  // Hàng 68: dải «Máy đang đề xuất cách ghép…» và dải «Chưa dùng được AI».
+  ...Array(14).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
   `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
@@ -206,6 +208,8 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/me/man-toi.tsx`,
   `${W}/app/(app)/not-found.tsx`,
   // Hôm nay của đầu chủ (hàng 22): báo bộ đã lưu, báo bộ mặc định, lỗi tải lead, trống của vùng.
+  // Cài đặt sàn → Xử lý bằng AI (hàng 68): lỗi đọc, đang đọc, hết trần, chưa sẵn sàng, lỗi đổi.
+  ...Array(5).fill(`${W}/app/(app)/settings/ai/cong-tac.tsx`),
   // Cài đặt sàn → Người dùng (vào vỏ ở hàng 91).
   `${W}/app/(app)/settings/personal/ca-nhan.tsx`,
   `${W}/app/(app)/settings/users/page.tsx`,
@@ -435,7 +439,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 2 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -450,8 +454,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 120 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 20 ngoại lệ · 0 lệch",
+      "trang-thai: 127 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

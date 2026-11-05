@@ -5,6 +5,7 @@ import { AlertCircleIcon } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/reui/alert";
 import { Badge } from "@/components/reui/badge";
+import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -47,18 +48,21 @@ function ChonDich({ id, value, options, onDoi }: { id: string; value: string; op
   );
 }
 
-export type CotGhep = { ma: string; tieuDe: string; mau: string; lop: string; dich: string; loi?: string };
+/** `deXuat` (hàng 68): cột do máy đề xuất — lý do của máy và người đã đồng ý chưa. */
+export type CotGhep = { ma: string; tieuDe: string; mau: string; lop: string; dich: string; loi?: string; deXuat?: { lyDo: string; daDongY: boolean } };
 
 export function BangGhepCot({
   cot,
   options,
   canhBao,
   onDoi,
+  onDongY,
 }: {
   cot: readonly CotGhep[];
   options: readonly LuaChon[];
   canhBao?: { tieuDe: string; moTa: ReactNode } | null;
   onDoi: (ma: string, dich: string) => void;
+  onDongY?: (ma: string) => void;
 }) {
   return (
     <section className="flex flex-col gap-6" aria-labelledby="nhap-ghep-cot">
@@ -93,6 +97,17 @@ export function BangGhepCot({
                   <Field data-invalid={Boolean(c.loi)} className="gap-1.5">
                     <ChonDich id={`nhap-dich-${c.ma}`} value={c.dich} options={options} onDoi={(v) => onDoi(c.ma, v)} />
                     {c.loi ? <FieldError>{c.loi}</FieldError> : null}
+                    {c.deXuat ? (
+                      <span className="flex flex-wrap items-center gap-2">
+                        <Badge variant={c.deXuat.daDongY ? "secondary" : "info-light"}>{c.deXuat.daDongY ? "Đã đồng ý" : "Máy đề xuất"}</Badge>
+                        {!c.deXuat.daDongY && onDongY ? (
+                          <Button type="button" size="sm" variant="outline" onClick={() => onDongY(c.ma)}>
+                            Đồng ý
+                          </Button>
+                        ) : null}
+                        <span className="text-muted-foreground w-full text-xs break-words">{c.deXuat.lyDo}</span>
+                      </span>
+                    ) : null}
                   </Field>
                 </TableCell>
               </TableRow>
