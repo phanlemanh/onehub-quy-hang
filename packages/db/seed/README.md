@@ -59,9 +59,34 @@ Trên bản thật chạy bằng nút, không chạy ở máy:
 3. Đăng nhập bản thật, chọn «[Mẫu] Sàn thử».
 4. Gỡ: cùng nút, `viec: go`, `xac_nhan: [Mẫu] Sàn thử`.
 
+## Bộ mẫu thấp tầng (hàng 73)
+
+Bộ thứ hai cho căn thấp tầng trong khu (khu → dãy → lô, ADR-0016 quyết định 3) và nhà, đất ngoài khu định danh bằng địa
+chỉ chuẩn (quyết định 5). Tên đường luôn «Đường Mẫu N», số nhà sinh; tỉnh và phường lấy từ bảng trích
+`don-vi-hanh-chinh-mau.mjs` (một tỉnh, bốn phường mới, mười phường cũ Quận 1 cũ — nguồn Nghị quyết 1685/NQ-UBTVQH15, chưa
+đọc văn bản gốc; danh mục đầy đủ là việc hàng 75). Căn hộ của bộ này là căn của danh mục hàng 5: hàng 5 sinh lại thì sinh
+lại bộ này.
+
+| Tệp trong `mau-thap-tang/` | Là gì |
+| --- | --- |
+| `du-lieu-mau-thap-tang.json` | Khu «[Mẫu] Khu thấp tầng thử» năm dãy 42 lô (nhà phố, shophouse, biệt thự, đất nền), 14 căn ngoài khu ở bốn phường, 29 chủ nhà, 38 hàng phủ sáu trạng thái và bốn loại hình, 7 lead theo bảy ca, hai đầu chủ và hai vùng |
+| `bang-hang-thap-tang.xlsx` | Bảng hàng thấp tầng ghi kiểu sàn, bẩn có chủ đích: tiêu đề ở dòng ba, nhãn loại hình của sàn, mã lô lệch dạng, «5x20», «1 trệt 3 lầu», «12,5 tỷ», «Thỏa thuận», số điện thoại chấm, liền, «+84», địa chỉ viết tên phường cũ |
+| `dap-an-thap-tang.json` | Đáp án file bẩn (dòng tiêu đề · đích từng cột · giá trị đúng từng ô · lỗi cấy mang nhãn) và bộ địa chỉ thử tám kiểu viết, mỗi cách viết kèm căn đích và địa chỉ chuẩn |
+
+```bash
+node packages/db/seed/sinh-thap-tang.mjs            # sinh lại ba tệp (cùng hạt giống ra cùng từng byte)
+node packages/db/seed/sinh-thap-tang.mjs --kiem     # so tệp trong kho với đầu ra sinh lại; lệch thì thoát 1
+node packages/db/seed/nap-thap-tang.mjs --nap       # hai đầu chủ và hai vùng vào «[Mẫu] Sàn thử»; chạy lại không đổi
+node packages/db/seed/nap.mjs --xoa                 # một lệnh gỡ cả hai bộ mẫu
+```
+
+Chung một sàn với bộ hàng 5 vì kiểm trùng và luật một hàng mở mỗi căn chỉ chạy trong một công ty — không gỡ riêng được
+phần thấp tầng. Lô, căn ngoài khu, hàng, chủ nhà, lead nằm trong tệp, chờ hàng 76. Nút nạp bản thật không đổi.
+
 ## Kiểm
 
 ```bash
 node --import tsx --test "packages/db/seed/*.test.mjs"   # cần python3; vắng DATABASE_URL thì dùng Postgres dãy T (5547)
 node --import tsx --test "packages/db/seed/*.test.ts"    # bộ nạp bản thật — cần DATABASE_URL tới Postgres đã áp migration
+node --test packages/db/tests/du-lieu-mau-thap-tang.test.mjs   # bộ mẫu thấp tầng (trong npm run db:test) — cần DATABASE_URL
 ```

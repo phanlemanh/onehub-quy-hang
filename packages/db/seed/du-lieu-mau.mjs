@@ -31,7 +31,7 @@ const PHAN_BO = { Active: 14, Incomplete: 6, Pending: 5, Hold: 5, Closed: 5, Wit
 const GHI_CHU = ["Chủ cần bán nhanh", "Có sổ hồng", "Xem nhà sau 18 giờ", "Nhà trống, có chìa", "Nội thất cơ bản", ""];
 
 /** mulberry32: bộ sinh số giả ngẫu nhiên 32 bit, đủ cho dữ liệu mẫu. */
-function boSinh(hat) {
+export function boSinh(hat) {
   let a = hat >>> 0;
   const so = () => {
     a = (a + 0x6d2b79f5) >>> 0;
