@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>21 việc"]
+  GD --> B["Sắp mở vòng<br/>20 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>21 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>80 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>81 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -29,7 +29,6 @@ flowchart TD
 - Hàng tạo được trên lô thấp tầng trong khu và trên nhà, đất ngoài khu định danh bằng địa chỉ chuẩn; căn ngoài khu là bản ghi của sàn, sàn khác không thấy, và hàng cũ gấp lại ra đúng như trước (`can-ngoai-khu`)
 - Đầu chủ gõ «dong nam», «bp», «Đang gd» ở ô bất kỳ và thấy máy gợi giá trị chuẩn; lựa chọn thành đề xuất từ điển của sàn; quản trị sàn duyệt và xem sức khoẻ dữ liệu (`chuan-hoa-moi-cua`)
 - Đầu chủ chụp ảnh khi đi xem nhà ngay trên điện thoại và ảnh vào đúng ngăn của căn, tải lên ở nền (`chup-anh-dien-thoai`)
-- Lõi đọc một địa chỉ Việt Nam gõ kiểu nào cũng được ra địa chỉ chuẩn và khoá địa chỉ, đổi tên phường cũ ra phường mới, và nói thiếu phần nào khi không đọc chắc — không gọi dịch vụ ngoài (`dia-chi-chuan`)
 - Đầu chủ gõ mã căn, mở Bảng hàng hay hồ sơ căn và thấy thuộc tính căn đọc từ vùng danh mục dùng chung — danh mục đã nhận từ nguồn danh mục — thay cho gói mẫu cố định; căn chưa có vẫn đi đường mã ngoài danh mục (`doc-vung-danh-muc`)
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
 - Đầu chủ đổi giá hoặc trạng thái nhanh trên điện thoại sau cuộc gọi, theo đúng luật sửa giá (`doi-gia-nhanh`)
@@ -69,6 +68,7 @@ flowchart TD
 - Đăng nhập bằng mật khẩu do sàn cấp: quản trị cấp mật khẩu tạm, người đặt mật khẩu mới trước khi vào vỏ, quên thì quản trị cấp lại; mã 6 số qua email giữ nguyên; đăng xuất lỗi thì báo và cho thử lại (`dang-nhap-mat-khau`)
 - Người trong sàn đăng nhập và vào đúng vùng dữ liệu của sàn mình; chưa gắn sàn thì không thấy gì (`dang-nhap-theo-san`)
 - Đầu chủ gõ mã căn và thấy thuộc tính căn tự điền theo cách đọc mã của dự án; mã chưa có trong danh mục thì báo rõ (`danh-muc-go-ma-can`)
+- Lõi đọc một địa chỉ Việt Nam gõ kiểu nào cũng được ra địa chỉ chuẩn và khoá địa chỉ, đổi tên phường cũ ra phường mới, và nói thiếu phần nào khi không đọc chắc — không gọi dịch vụ ngoài (`dia-chi-chuan`)
 - Trưởng nhóm đổi đầu chủ cho nhiều căn một lần, kéo theo mọi căn và liên hệ của cùng chủ nhà, hoàn tác được (`doi-dau-chu-hang-loat`)
 - Đầu chủ sửa căn lúc máy chủ trục trặc ngắn hay hết phiên thì thay đổi tự gửi lại khi máy chủ trả lời được, chỉ báo đồng bộ nói đúng vì sao chưa gửi, và căn đang ở Cần xem sửa tiếp hay xử lý không kẹt, không đảo thứ tự hai lần sửa (`dong-bo-tu-lanh`)
 - Mọi đường gửi mã đăng nhập đi qua cùng giới hạn 5 lần xin mã trong 15 phút cho mỗi email; đường quên mật khẩu của plugin không còn phục vụ (`dong-duong-gui-ma-thua`)
