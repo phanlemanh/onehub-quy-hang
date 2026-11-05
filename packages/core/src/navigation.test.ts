@@ -4,6 +4,7 @@ import {
   type Action,
   activeTab,
   HOME_LABEL,
+  HOME_ORDER,
   homeOfPath,
   isSecondColumnOpen,
   type Navigation,
@@ -201,8 +202,9 @@ test("Nhà của đường: hồ sơ căn thuộc Bảng hàng, Lịch xem thu�
 });
 
 test("cột thứ hai: mọi nhà, mặc định mở", () => {
-  // Ma trận viết trước: đủ sáu nhà của §9 (hàng 91, «Mặc định luôn giữ và có sub nav»; Liên hệ hàng 103).
-  const NHA = ["today", "inventory", "shares", "contacts", "team", "settings"] as const;
+  // Lặp theo HOME_ORDER (luật đợt 68): nhà mới tự vào phép kiểm; ma trận viết trước kèm theo để HOME_ORDER không tự rỗng đi.
+  const NHA = HOME_ORDER;
+  assert.deepEqual([...NHA], ["today", "inventory", "shares", "contacts", "team", "settings"]);
   let dem = 0;
   for (const h of NHA) {
     assert.equal(isSecondColumnOpen(h, undefined), true, `${h}: mặc định phải mở`);
@@ -210,7 +212,7 @@ test("cột thứ hai: mọi nhà, mặc định mở", () => {
     assert.equal(isSecondColumnOpen(h, true), true, `${h}: người mở thì nhớ`);
     dem++;
   }
-  assert.equal(dem, 6);
+  assert.equal(dem, NHA.length);
 });
 
 test("Khoá nhớ tách theo người, sàn và nhà", () => {

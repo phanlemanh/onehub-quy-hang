@@ -65,3 +65,17 @@ test("liên hệ: cột thứ hai chọn đúng mục theo URL", async () => {
   for (const [qs, mong] of BANG) assert.equal(mucLienHeDangChon(new URLSearchParams(qs)), mong, qs || "trống");
   assert.equal(CONTACTS_ITEMS.length, 6);
 });
+
+test("cột thứ hai: mỗi nhà có ít nhất một mục", async () => {
+  const { HOME_ORDER } = await import("@quy-hang/core");
+  const { soMucCot } = await import("@/components/shell/second-column");
+  // Lặp theo HOME_ORDER (luật đợt 68): nhà mới tự vào phép kiểm; cột Cài đặt đọc theo người xem không quản trị.
+  const caiDat = { roles: ["listing_agent"], tenSan: "[Tên sàn]" };
+  let so = 0;
+  for (const h of HOME_ORDER) {
+    assert.ok(soMucCot(h, caiDat) >= 1, `nhà ${h}: cột thứ hai không có mục`);
+    so++;
+  }
+  assert.equal(so, HOME_ORDER.length);
+  assert.ok(HOME_ORDER.includes("contacts"), "thiếu nhà Liên hệ");
+});

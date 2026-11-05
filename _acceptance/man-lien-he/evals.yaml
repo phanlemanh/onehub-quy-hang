@@ -153,3 +153,19 @@ evals:
     paths: ["design/patterns/**", "apps/web/src/app/(app)/contacts/**", "_acceptance/man-lien-he/kiem-khuon-e10d.mjs"]
     expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» và bài in «E10e: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E10d và bài E10e, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/lien-he.test.ts có mặt và ok: «liên hệ: cột thứ hai chọn đúng mục theo URL» — bảng viết trước bảy dòng chuỗi tham số → mục đang chọn ('' → /contacts; type=Seller, Landlord, Buyer, Tenant → mục cùng loại; status=lead → /contacts?status=lead; q=abc → /contacts), đếm bằng số dòng, và CONTACTS_ITEMS có đúng sáu mục; «cột thứ hai: mỗi nhà có ít nhất một mục» — lặp theo HOME_ORDER, soMucCot(nhà) ≥ 1 cho mọi nhà, đếm bằng HOME_ORDER.length, có nhà contacts. Chiều đỏ: bỏ khoá contacts khỏi SECOND_COLUMN_OPEN_BY_DEFAULT → npm run typecheck đỏ (thiếu thuộc tính contacts); bỏ nhánh contacts khỏi soMucCot → lỗi biên dịch ở nhánh never."
+    paths: ["apps/web/src/components/shell/second-column.tsx", "apps/web/src/app/(app)/contacts/**", packages/core/src/navigation.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11b
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/navigation.test.ts có mặt và ok: «cột thứ hai: mọi nhà, mặc định mở» — lặp theo HOME_ORDER (deepEqual danh sách viết trước sáu nhà gồm contacts), mỗi nhà mặc định mở, người gập thì nhớ, đếm bằng HOME_ORDER.length."
+    paths: [packages/core/src/navigation.ts, packages/core/src/navigation.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

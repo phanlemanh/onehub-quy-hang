@@ -60,6 +60,10 @@ lead; «cơ hội phía khách» = nhu cầu khách; «pha» = bảng pha ở l�
   `components/bo-cuc/**`, hồ sơ dựng khuôn nhóm mới `design/patterns/lien-he.md`, có đủ trạng thái tải · trống · không khớp ·
   người khác giữ · lỗi (qua `TrangThai`), `npm run lint` xanh, điện thoại 375 không cuộn ngang, Tham chiếu ghi «Màn Liên hệ —
   Đã dựng (hàng 103)».
+- **AC-11** (thêm sau Cổng Phạm vi, luật đợt 68 — chủ kho duyệt khi ký) — Given nhà Liên hệ trên máy tính, When mở, Then
+  cột thứ hai mặc định mở với sáu mục Tất cả liên hệ · Chủ bán · Chủ cho thuê · Người mua · Người thuê · Lead, mục đang chọn
+  khớp bộ lọc trên URL (`?type=`, `?status=`) và bảng lọc theo đó; mọi nhà của vỏ có cột thứ hai với ít nhất một mục, và
+  thêm một nhà mà quên khai cột là lỗi biên dịch, không lặng lẽ rơi về mục của nhà khác.
 
 ## Coverage
 

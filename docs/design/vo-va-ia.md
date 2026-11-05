@@ -24,7 +24,7 @@ bộ chọn dạng đường dẫn, ô tìm ⌘K, nút tạo, chuông.
 | Nút «Create» | «+ Lead» (nút chính); thêm «Nhập Excel», «Xuất bảng hàng» dạng viền, ẩn theo vai |
 | Chuông + ngăn thông báo | Báo lead mới, lead quá hạn, khách mở link |
 | Cột biểu tượng | Hôm nay · Bảng hàng · Đã gửi · Đội · Cài đặt sàn (ở đáy) — theo bảng vai ở Tham chiếu §9 |
-| Cột thứ hai theo nhà (`INNER_NAV`) | Bảng hàng: góc nhìn của đội, của tôi, «+ Lưu góc nhìn» · Đã gửi: Link đã gửi, Lịch xem · Cài đặt sàn: các mục cài đặt · Hôm nay: các hàng đợi của bộ nhóm · Đội: Tổng quan |
+| Cột thứ hai theo nhà (`INNER_NAV`) | Bảng hàng: góc nhìn của đội, của tôi, «+ Lưu góc nhìn» · Đã gửi: Link đã gửi, Lịch xem · Cài đặt sàn: các mục cài đặt · Hôm nay: các hàng đợi của bộ nhóm · Liên hệ: Tất cả liên hệ, Chủ bán, Chủ cho thuê, Người mua, Người thuê, Lead (hàng 103) · Đội: Tổng quan |
 | Thẻ chân cột (`footer`) | Bảng hàng: độ tươi (tỉ lệ căn xác nhận trong N ngày). Nhà khác: bỏ |
 | Gập cột thứ hai (tay nắm ở mép cột) | **Mọi nhà có cột thứ hai và mặc định mở** (hàng 91, chủ kho 02/11 — thay luật gập sẵn ở Bảng hàng, Hôm nay, hồ sơ căn của 30/10). Người gập thì nhớ theo người, theo sàn, theo nhà |
 

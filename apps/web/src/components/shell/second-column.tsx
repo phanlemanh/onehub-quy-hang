@@ -201,11 +201,29 @@ function SettingsColumn({ caiDat }: { caiDat: CaiDatCua }) {
   );
 }
 
-function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
-  if (home === "inventory") return <InventoryColumn />;
-  if (home === "settings") return <SettingsColumn caiDat={caiDat} />;
-  if (home === "contacts") return <ContactsColumn />;
-  const items = home === "shares" ? SHARES : home === "today" ? TODAY_ITEMS : TEAM;
+/** Số mục cố định của cột thứ hai theo nhà — rẽ đủ mọi nhà (luật đợt 68); bài kiểm đòi mỗi nhà ít nhất một mục. */
+export function soMucCot(home: Home, caiDat: CaiDatCua): number {
+  switch (home) {
+    case "today":
+      return TODAY_ITEMS.length;
+    case "inventory":
+      return 1; // «+ Lưu góc nhìn» luôn có; góc nhìn đã lưu thêm vào
+    case "shares":
+      return SHARES.length;
+    case "contacts":
+      return CONTACTS_ITEMS.length;
+    case "team":
+      return TEAM.length;
+    case "settings":
+      return cotCaiDat(caiDat.roles, caiDat.tenSan).reduce((n, g) => n + g.muc.length, 0);
+    default: {
+      const thieu: never = home;
+      return thieu;
+    }
+  }
+}
+
+function DanhSachMuc({ home, items }: { home: Home; items: Item[] }) {
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col py-1" aria-label={HOME_LABEL[home]}>
@@ -214,6 +232,28 @@ function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
       </nav>
     </ScrollArea>
   );
+}
+
+// Rẽ đủ mọi nhà, nhánh `never` (luật đợt 68): nhà mới mà quên cột là lỗi biên dịch, không rơi về mục của Đội.
+function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
+  switch (home) {
+    case "inventory":
+      return <InventoryColumn />;
+    case "settings":
+      return <SettingsColumn caiDat={caiDat} />;
+    case "contacts":
+      return <ContactsColumn />;
+    case "shares":
+      return <DanhSachMuc home={home} items={SHARES} />;
+    case "today":
+      return <DanhSachMuc home={home} items={TODAY_ITEMS} />;
+    case "team":
+      return <DanhSachMuc home={home} items={TEAM} />;
+    default: {
+      const thieu: never = home;
+      return thieu;
+    }
+  }
 }
 
 export function SecondColumn({ home, open, caiDat }: { home: Home; open: boolean; caiDat: CaiDatCua }) {
