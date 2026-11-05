@@ -222,3 +222,11 @@ evals:
     expected: "Sau E11 (sàn đặt «Phí CN», «BP»), đầu chủ tích hai căn trên Bảng hàng, mở Phát hàng, chọn người nhận nhóm môi giới: khung xem trước của hộp thoại có tiêu đề cột «Phí CN» và ô căn bao phí «BP»; không có cột lý do ngừng. Chụp 1440."
     paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E15
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 0 (đạt có giới hạn đã biết, luật 33 của đợt, như E10d hồ sơ man-lien-he): với nhóm cai-dat-san, dòng «lệch:» duy nhất được nhận là dòng báo oan «lệch: apps/web/src/app/(app)/settings/labels/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» — design/patterns/trang-tam.md đã khai ngoại lệ cho tệp ấy (có ly_do), bộ chấm khuôn của kit 2.37.0 bỏ qua ngoại lệ không mang khoá khoi (kit#485), còn bộ đọc bản đồ của kho từ chối khoá khoi. Mọi dòng «lệch:» khác của nhóm cai-dat-san là đỏ. Kit vá thì bỏ câu giới hạn này."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
