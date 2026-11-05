@@ -26,11 +26,13 @@ test("gói đề xuất không chứa chuỗi cấm", () => {
 });
 
 test("mồi rò: số chủ trong ghi chú và cột không tiêu đề chứa số +84 không ra gói", () => {
+  // Cột «Ký hiệu» (danh mục, ngoài từ điển) là đối chứng dương trên CÙNG gói: giá trị được phép phải có mặt.
   const grid: Grid = [
-    ["Mã căn", "Toà", "Giá (tỷ)", "Ghi chú", ""],
-    ["A-01.03", "Toà A", 4.65, "chủ [Tên] 0900 000 011", "+84 90 000 0012"],
-    ["A-01.05", "Toà A", 5.1, "xem nhà sau 18 giờ", "+84 90 000 0013"],
+    ["Mã căn", "Toà", "Giá (tỷ)", "Ghi chú", "", "Ký hiệu"],
+    ["A-01.03", "Toà A", 4.65, "chủ [Tên] 0900 000 011", "+84 90 000 0012", "B-02.01"],
+    ["A-01.05", "Toà A", 5.1, "xem nhà sau 18 giờ", "+84 90 000 0013", "B-02.03"],
   ];
   const goi = JSON.stringify(goiCua(grid));
   for (const s of ["0900 000 011", "0900000011", "+84 90 000 0012", "90 000 0012", "[Tên]"]) assert.ok(!goi.includes(s), `gói chứa «${s}»`);
+  for (const s of ["Ghi chú", "Ký hiệu", "B-02.01", "B-02.03"]) assert.ok(goi.includes(s), `gói thiếu «${s}» — đối chứng dương: gói không rỗng giá trị`);
 });

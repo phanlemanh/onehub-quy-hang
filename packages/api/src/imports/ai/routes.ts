@@ -9,7 +9,7 @@ import { withCompany } from "../../db";
 import { API_ERRORS, type ApiErrorEntry } from "../../errors";
 import { khachMacDinh, LoiAi, MO_HINH, TRAN_MS, type KhachAi, type TraLoiAi } from "./claude";
 import { tinhTien } from "./gia";
-import { batTat, docTinhTrang, ghiDongAi, giaTriQuaThoaThuan, VAI_GOI, type DongAi } from "./store";
+import { batTat, docTinhTrang, ghiDongAi, giaTriQuaThoaThuan, thoaThuanMo, VAI_GOI, type DongAi } from "./store";
 
 /**
  * «Xử lý bằng AI» (hàng 68, ADR-0011 quyết định 1–5, 10, 11). `POST /plan` nhận gói đề xuất (hồ sơ cột đã che, dựng trên
@@ -22,6 +22,7 @@ const BASE = "/api/v1/imports/ai";
 export const LY_DO = {
   chuaBat: "Sàn chưa bật Xử lý bằng AI",
   tamNgung: "Xử lý bằng AI đang tạm ngừng",
+  hetHieuLuc: "Thoả thuận Xử lý bằng AI chưa hay hết hiệu lực",
   thieuKhoa: "AI chưa sẵn sàng trên máy chủ",
   hetTran: "Hết trần AI tháng này",
   loi: "AI đang lỗi, thử lại sau",
@@ -86,7 +87,8 @@ export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
       if (!tt.vai.some((v) => VAI_GOI.includes(v))) return tra(c, API_ERRORS.importRoleRequired);
       if (!tt.thoaThuan) return tatDinh(c, LY_DO.chuaBat);
       if (tt.thoaThuan.status !== "active") return tatDinh(c, LY_DO.tamNgung);
-      if (!giaTriQuaThoaThuan(goi, tt.thoaThuan, ctx.companyId)) return tra(c, API_ERRORS.invalidPayload, "giá trị ngoài lớp thoả thuận mở");
+      if (!thoaThuanMo(tt.thoaThuan, tt.at)) return tatDinh(c, LY_DO.hetHieuLuc);
+      if (!giaTriQuaThoaThuan(goi, tt.thoaThuan, tt.at)) return tra(c, API_ERRORS.invalidPayload, "giá trị ngoài lớp thoả thuận mở");
       const goiAi = khach();
       if (!goiAi) return tatDinh(c, LY_DO.thieuKhoa);
       if (tt.daDungUsd >= tt.tranUsd) return tatDinh(c, LY_DO.hetTran);
@@ -138,7 +140,7 @@ export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
       const laQuanTri = tt.vai.includes("company_admin");
       return c.json(
         {
-          bat: tt.thoaThuan?.status === "active",
+          bat: !!tt.thoaThuan && thoaThuanMo(tt.thoaThuan, tt.at),
           tamNgung: !!tt.thoaThuan && tt.thoaThuan.status !== "active",
           sanSang: khach() !== null,
           conTran: tt.daDungUsd < tt.tranUsd,

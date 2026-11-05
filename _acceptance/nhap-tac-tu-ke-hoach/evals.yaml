@@ -186,14 +186,32 @@ evals:
     criterion: AC-7
     executor: script
     cmd: config:executors.design.khuon
+    expected_exit: 1
     paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/new/page.tsx"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel. Báo oan do giới hạn kit 2.37.0 (ngoai_le không khoi, luật 33/45 của đợt) ghi riêng, không tính lệch thật."
+    expected: "exit 1 (đạt có giới hạn, giám sát trả G-0511-9 theo lối L-0511-4, luật 33): bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel; lệnh chung thoát 1 chỉ vì kit 2.37.0 bỏ qua ngoai_le của trang-tam nên báo «lệch: apps/web/src/app/(app)/settings/ai/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» — báo oan, kit#485. Mã 1 chỉ được chấp nhận cùng E12b xanh: E12b bảo đảm dòng lệch duy nhất là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E12b."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12b
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/nhap-tac-tu-ke-hoach/kiem-khuon.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/imports/**", "apps/web/src/app/(app)/settings/**", "_acceptance/nhap-tac-tu-ke-hoach/kiem-khuon.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/settings/ai/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» và bài in «E12b/E13b: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E12, E13 và bài này, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E13
     criterion: AC-5
     executor: script
     cmd: config:executors.design.khuon
+    expected_exit: 1
     paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san — trang mục Mẫu nhập dựng MucCaiDat như mọi mục đã dựng thật. Báo oan do giới hạn kit 2.37.0 ghi riêng."
+    expected: "exit 1 (đạt có giới hạn, giám sát trả G-0511-9 theo lối L-0511-4, luật 33): trang mục «Xử lý bằng AI» dựng MucCaiDat như mọi mục đã dựng thật, bước chấm khuôn không in lệch khối nào cho nhóm cai-dat-san; dòng duy nhất là «lệch: apps/web/src/app/(app)/settings/ai/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» — báo oan của kit 2.37.0 (bỏ qua ngoai_le của trang-tam, như settings/users), kit#485. Mã 1 chỉ được chấp nhận cùng E13b xanh. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E13b."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13b
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/nhap-tac-tu-ke-hoach/kiem-khuon.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**", "_acceptance/nhap-tac-tu-ke-hoach/kiem-khuon.mjs"]
+    expected: "exit 0; như E12b (cùng bài, cùng năm đối chứng): dòng «lệch:»/«sai:» duy nhất của bước chấm khuôn là «lệch: apps/web/src/app/(app)/settings/ai/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam», bài in «E12b/E13b: chỉ có dòng báo oan đã khai»; lệch thêm ở nhóm cai-dat-san làm bài đỏ."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

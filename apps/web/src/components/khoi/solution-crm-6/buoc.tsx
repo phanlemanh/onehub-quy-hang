@@ -90,15 +90,9 @@ export function BangGhepCot({
                   <span className="flex flex-col gap-1">
                     <span className="font-medium">{c.tieuDe}</span>
                     <span className="text-muted-foreground text-xs">{c.lop}</span>
-                  </span>
-                </TableCell>
-                <TableCell className="text-muted-foreground align-top">{c.mau}</TableCell>
-                <TableCell className="align-top">
-                  <Field data-invalid={Boolean(c.loi)} className="gap-1.5">
-                    <ChonDich id={`nhap-dich-${c.ma}`} value={c.dich} options={options} onDoi={(v) => onDoi(c.ma, v)} />
-                    {c.loi ? <FieldError>{c.loi}</FieldError> : null}
+                    {/* Đề xuất của máy ở cột đầu: khổ điện thoại bảng cuộn ngang, cột đầu luôn trong khung nhìn. */}
                     {c.deXuat ? (
-                      <span className="flex flex-wrap items-center gap-2">
+                      <span className="flex flex-wrap items-center gap-2 pt-1 whitespace-normal">
                         <Badge variant={c.deXuat.daDongY ? "secondary" : "info-light"}>{c.deXuat.daDongY ? "Đã đồng ý" : "Máy đề xuất"}</Badge>
                         {!c.deXuat.daDongY && onDongY ? (
                           <Button type="button" size="sm" variant="outline" onClick={() => onDongY(c.ma)}>
@@ -108,6 +102,13 @@ export function BangGhepCot({
                         <span className="text-muted-foreground w-full text-xs break-words">{c.deXuat.lyDo}</span>
                       </span>
                     ) : null}
+                  </span>
+                </TableCell>
+                <TableCell className="text-muted-foreground align-top">{c.mau}</TableCell>
+                <TableCell className="align-top">
+                  <Field data-invalid={Boolean(c.loi)} className="gap-1.5">
+                    <ChonDich id={`nhap-dich-${c.ma}`} value={c.dich} options={options} onDoi={(v) => onDoi(c.ma, v)} />
+                    {c.loi ? <FieldError>{c.loi}</FieldError> : null}
                   </Field>
                 </TableCell>
               </TableRow>

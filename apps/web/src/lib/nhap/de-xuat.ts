@@ -20,21 +20,48 @@ export const cauTatDinh = (lyDo: string) => `Chưa dùng được AI: ${lyDo} �
 export const cauChoDuyet = (n: number) => `Còn ${n} cột máy đề xuất chưa duyệt`;
 const LOI_MANG = "không gửi được tới máy chủ";
 
+/** Trạng thái AI màn đọc được: `"loi"` khi không đọc được (máy chủ hay mạng), không phải «tắt». */
+export type AiMan = TrangThaiAi | "loi";
+export const KHONG_DOC_TRANG_THAI = "không đọc được trạng thái AI";
+
+const conChuaGhep = (ong: Ong) => cotChuaGhep(dungGoiDeXuat(ong.profile, ong.plan)).length > 0;
+
 /** Có nên hỏi máy không: sàn đã bật, còn trần, máy chủ sẵn sàng, và file còn cột chưa ghép. */
-export function canHoi(ong: Ong, ai: TrangThaiAi | null): boolean {
-  if (!ai || !ai.bat || !ai.sanSang || !ai.conTran) return false;
-  return cotChuaGhep(dungGoiDeXuat(ong.profile, ong.plan)).length > 0;
+export function canHoi(ong: Ong, ai: AiMan | null): boolean {
+  if (!ai || ai === "loi" || !ai.bat || !ai.sanSang || !ai.conTran) return false;
+  return conChuaGhep(ong);
 }
 
-/** Hỏi đường đề xuất cho đúng gói của `ong`, gộp kết quả. Không cột chưa ghép → không gọi. */
+/**
+ * Sàn đã bật AI (hay không đọc được trạng thái) mà máy không hỏi được — một dòng lý do cho màn, như khi máy chủ trả tất
+ * định. Sàn chưa bật hay đang tạm ngừng, hay tệp không còn cột chưa ghép → `null`: màn như hàng 65, không dòng nào.
+ */
+export function lyDoKhongHoi(ong: Ong, ai: AiMan | null): string | null {
+  if (!ai || !conChuaGhep(ong)) return null;
+  if (ai === "loi") return cauTatDinh(KHONG_DOC_TRANG_THAI);
+  if (!ai.bat) return null;
+  if (!ai.sanSang) return cauTatDinh("AI chưa sẵn sàng trên máy chủ");
+  if (!ai.conTran) return cauTatDinh("Hết trần AI tháng này");
+  return null;
+}
+
+/**
+ * Hỏi đường đề xuất cho đúng gói của `ong`, gộp kết quả. Không cột chưa ghép → không gọi. Không ném: lỗi bất kỳ trên đường
+ * (thân trả lời hỏng, mạng đứt giữa chừng, gộp lỗi) thành dải tất định, kế hoạch nền giữ nguyên — dải chờ không kẹt.
+ */
 export async function hoiDeXuat(ong: Ong, hoi: HoiDeXuat, phien: number): Promise<{ ong: Ong; tt: TrangThaiDeXuat }> {
   const goi = dungGoiDeXuat(ong.profile, ong.plan);
   if (cotChuaGhep(goi).length === 0) return { ong, tt: ttDau(phien) };
-  const kq = await hoi(goi);
-  if (!("cheDo" in kq)) return { ong, tt: { ...ttDau(phien), baoTatDinh: cauTatDinh(LOI_MANG) } };
-  if (kq.cheDo === "tat-dinh") return { ong, tt: { ...ttDau(phien), baoTatDinh: cauTatDinh(kq.lyDo) } };
-  const plan = gopDeXuat(ong.table, ong.plan, { deXuat: kq.deXuat, loi: kq.loi });
-  return { ong: apLai(ong.table, ong.lop, ong.profile, plan, ong.ctx), tt: { ...ttDau(phien), choDuyet: kq.deXuat.map((d) => d.cot) } };
+  const tatDinh = (lyDo: string) => ({ ong, tt: { ...ttDau(phien), baoTatDinh: cauTatDinh(lyDo) } });
+  try {
+    const kq = await hoi(goi);
+    if (!kq || typeof kq !== "object" || !("cheDo" in kq)) return tatDinh(LOI_MANG);
+    if (kq.cheDo === "tat-dinh") return tatDinh(kq.lyDo);
+    const plan = gopDeXuat(ong.table, ong.plan, { deXuat: kq.deXuat, loi: kq.loi });
+    return { ong: apLai(ong.table, ong.lop, ong.profile, plan, ong.ctx), tt: { ...ttDau(phien), choDuyet: kq.deXuat.map((d) => d.cot) } };
+  } catch {
+    return tatDinh(LOI_MANG);
+  }
 }
 
 /** Kết quả về muộn của tệp đã bỏ. */

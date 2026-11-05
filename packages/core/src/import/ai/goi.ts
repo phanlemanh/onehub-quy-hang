@@ -86,13 +86,13 @@ export function kiemKhuonGoi(v: unknown): { goi: GoiDeXuat } | { loi: string } {
     if (!Number.isInteger(c.cot) || (c.cot as number) < 0 || daCo.has(c.cot as number)) return { loi: `${p}.cot cần số cột không trùng` };
     daCo.add(c.cot as number);
     if (typeof c.tieuDe !== "string" || c.tieuDe.length > 200) return { loi: `${p}.tieuDe cần chữ ≤ 200 ký tự` };
-    if (typeof c.lop !== "string" || !(c.lop in LOP_COT)) return { loi: `${p}.lop lạ` };
+    if (typeof c.lop !== "string" || !Object.hasOwn(LOP_COT, c.lop)) return { loi: `${p}.lop lạ` };
     if (!laDoiTuong(c.hinhDang)) return { loi: `${p}.hinhDang cần một đối tượng` };
     for (const [kh, kieu] of Object.entries(KHOA_HINH)) {
       const g = c.hinhDang[kh];
       if (kieu === "so" ? typeof g !== "number" || !Number.isFinite(g) : !LOP_KY_TU.includes(g as string)) return { loi: `${p}.hinhDang.${kh} sai kiểu` };
     }
-    if (Object.keys(c.hinhDang).some((x) => !(x in KHOA_HINH))) return { loi: `${p}.hinhDang có khoá lạ` };
+    if (Object.keys(c.hinhDang).some((x) => !Object.hasOwn(KHOA_HINH, x))) return { loi: `${p}.hinhDang có khoá lạ` };
     if (c.dich !== undefined && !dichHopLe(c.dich)) return { loi: `${p}.dich lạ` };
     if (c.giaTri !== undefined) {
       if (c.dich !== undefined) return { loi: `${p}: cột đã ghép không mang giá trị` };

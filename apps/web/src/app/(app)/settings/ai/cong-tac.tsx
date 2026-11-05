@@ -71,7 +71,7 @@ export function CongTacAi() {
       ) : null}
       {(tt.bat && (!tt.conTran || !tt.sanSang)) || loiDoi ? (
         <div className="flex flex-col gap-3 px-4 pb-4">
-          {tt.bat && !tt.conTran ? <TrangThai kind="notice" title="Đã hết trần tháng này — nhập đang chạy không AI" /> : null}
+          {tt.bat && !tt.conTran ? <TrangThai kind="notice" title="Hết trần AI" description="Đã hết trần tháng này — nhập đang chạy không AI." /> : null}
           {tt.bat && !tt.sanSang ? <TrangThai kind="notice" title="AI chưa sẵn sàng trên máy chủ" description="Nhập vẫn chạy, cột chưa ghép để người ghép tay." /> : null}
           {loiDoi ? <TrangThai kind="error" title={loiDoi} /> : null}
         </div>

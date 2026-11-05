@@ -23,7 +23,9 @@ cpSync(path.join(GOC, "_acceptance/nhap-tac-tu-ke-hoach/de-xuat"), AI_GIA, { rec
 let dangChay = false;
 try {
   dangChay = (await fetch("http://localhost:3493/api/v1/health")).ok;
-} catch {}
+} catch {
+  // máy dev chưa chạy: bật mới
+}
 if (dangChay) throw new Error("máy dev 3493 đang chạy — tắt bằng --tat rồi bật lại để máy chủ nhận QH_AI_GIA");
 const out = execFileSync("node", [DUNG_G], { cwd: GOC, env: { ...process.env, QH_AI_GIA: AI_GIA }, stdio: ["ignore", "pipe", "inherit"] }).toString();
 console.log(JSON.stringify({ ...JSON.parse(out.trim().split("\n").at(-1)), aiGia: AI_GIA }));

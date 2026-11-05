@@ -125,6 +125,25 @@ test("thoả thuận ai_processing ở cơ sở dữ liệu", async () => {
   assert.equal(dem.n, 0);
   await them("ai_processing", "{catalog,shareable_listing}");
   assert.equal((await deXuat(appVoi(khach), GOI, s.dauChu.cookie)).body?.cheDo, "ai");
+  assert.equal(dem.n, 1);
+  // Thoả thuận đọc nguyên hàng: hết hạn hay chưa tới ngày hiệu lực thì không gọi, dù trạng thái vẫn «active».
+  const hieuLuc = (dat: string) =>
+    appPool.query(`update agreements set ${dat} where company_id = $1 and kind = 'ai_processing'`, [s.companyId]);
+  const CUA_SO = [
+    ["hết hạn", "valid_from = now() - interval '2 days', valid_until = now() - interval '1 minute'"],
+    ["chưa tới ngày", "valid_from = now() + interval '1 day', valid_until = null"],
+  ] as const;
+  for (const [ten, dat] of CUA_SO) {
+    await hieuLuc(dat);
+    assert.deepEqual((await deXuat(appVoi(khach), GOI, s.dauChu.cookie)).body, { cheDo: "tat-dinh", lyDo: LY_DO.hetHieuLuc }, ten);
+    assert.equal(dem.n, 1, `${ten}: khách AI bị gọi`);
+    const tt = (await (await send(APP, "GET", "/api/v1/imports/ai", undefined, s.dauChu.cookie)).json()) as { bat: boolean };
+    assert.equal(tt.bat, false, `${ten}: trạng thái vẫn báo bật`);
+  }
+  await hieuLuc("valid_from = now() - interval '1 minute', valid_until = null");
+  // Đối chứng dương: trả cửa sổ ngày về thì gọi lại được.
+  assert.equal((await deXuat(appVoi(khach), GOI, s.dauChu.cookie)).body?.cheDo, "ai");
+  assert.equal(dem.n, 2);
 });
 
 test("bật tắt Xử lý bằng AI", async () => {
@@ -155,7 +174,11 @@ test("bật tắt Xử lý bằng AI", async () => {
     assert.equal(r.status, 403, ten);
     assert.equal(((await r.json()) as { error: string }).error, API_ERRORS.adminRequired.code);
   }
-  await send(APP, "PUT", "/api/v1/imports/ai/agreement", { bat: false }, B.quanTri.cookie);
+  // Quản trị sàn B bật rồi tắt: lời gọi chạy (204) và chỉ đổi hàng của sàn B.
+  assert.equal((await bat(B)).status, 204);
+  assert.equal((await send(APP, "PUT", "/api/v1/imports/ai/agreement", { bat: false }, B.quanTri.cookie)).status, 204);
+  const hangB = (await appPool.query<{ status: string }>("select status from agreements where company_id = $1 and kind = 'ai_processing'", [B.companyId])).rows;
+  assert.deepEqual(hangB.map((x) => x.status), ["paused"], "lời gọi của sàn B không tới hàng của sàn B");
   assert.equal((await hang())[0]!.status, "active", "quản trị sàn B đổi được thoả thuận của sàn A");
 });
 
@@ -235,6 +258,17 @@ test("trần chi phí theo sàn", async () => {
   assert.equal((await deXuat(app, GOI, T.dauChu.cookie)).body?.cheDo, "ai", "dòng tháng trước (giờ VN) bị tính");
   await appPool.query("insert into company_settings (company_id, key, value, updated_by) values ($1, 'ai.monthly_budget_usd', '0', 'u-mau')", [T.companyId]);
   assert.deepEqual((await deXuat(app, GOI, T.dauChu.cookie)).body, { cheDo: "tat-dinh", lyDo: LY_DO.hetTran }, "trần 0");
+  await appPool.query("delete from company_settings where company_id = $1 and key = 'ai.monthly_budget_usd'", [T.companyId]);
+  assert.equal((await deXuat(app, GOI, T.dauChu.cookie)).body?.cheDo, "ai", "bỏ trần 0 thì về trần mặc định");
+  // Đối chứng dương của ranh tháng: dòng 15 USD lúc 00:30 giờ VN ngày 1 tháng này — UTC vẫn là tháng trước — PHẢI được
+  // tính. Bản tính theo UTC bỏ dòng này và đỏ ở đây (dòng 23:30 ở trên thì cả hai bản đều bỏ).
+  await appPool.query(
+    `insert into ai_usage (company_id, user_id, model, cost_usd, result, created_at)
+     values ($1, 'u-mau', 'claude-opus-5-5', 15, 'ok',
+             (date_trunc('month', now() at time zone 'Asia/Ho_Chi_Minh') + interval '30 minutes') at time zone 'Asia/Ho_Chi_Minh')`,
+    [T.companyId],
+  );
+  assert.deepEqual((await deXuat(app, GOI, T.dauChu.cookie)).body, { cheDo: "tat-dinh", lyDo: LY_DO.hetTran }, "dòng 00:30 ngày 1 giờ VN không được tính vào tháng này");
   // Chỉ thêm: vai API không sửa, không xoá.
   const c = await appPool.connect();
   try {

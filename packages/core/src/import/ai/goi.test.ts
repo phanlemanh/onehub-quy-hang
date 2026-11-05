@@ -62,3 +62,20 @@ test("khuôn máy chủ: từ chối khoá lạ, giá trị ở cột sai lớp,
     assert.ok("loi" in r && re.test(r.loi), `${ten}: ${JSON.stringify(r)}`);
   }
 });
+
+test("khuôn máy chủ: khoá kế thừa của Object không lọt (lop, hinhDang) — gói đi qua JSON như thân lời gọi", () => {
+  const plan: ImportPlan = { headerRow: 0, columns: [cotKeHoach(0, true)], questions: [] };
+  const goi = dungGoiDeXuat([cotHoSo(0, "catalog")], plan);
+  // Đối chứng dương: cùng gói qua JSON vẫn được nhận — ca đỏ dưới đây đỏ vì khoá kế thừa, không vì đường JSON.
+  assert.ok("goi" in kiemKhuonGoi(JSON.parse(JSON.stringify(goi))), "gói thật qua JSON được nhận");
+  const KE_THUA = ["toString", "constructor", "valueOf", "hasOwnProperty", "__proto__"];
+  for (const k of KE_THUA) {
+    const lop = JSON.parse(JSON.stringify({ cot: [{ ...goi.cot[0], lop: k, giaTri: undefined }] }));
+    const r1 = kiemKhuonGoi(lop);
+    assert.ok("loi" in r1 && /lop lạ/.test(r1.loi), `lop «${k}» bị từ chối: ${JSON.stringify(r1)}`);
+    // Thân JSON thô: «__proto__» thành khoá riêng của đối tượng khi JSON.parse, như máy chủ nhận.
+    const tho = JSON.stringify({ cot: [{ ...goi.cot[0], giaTri: undefined }] }).replace('"hinhDang":{', `"hinhDang":{"${k}":"0900 000 001 [Tên]",`);
+    const r2 = kiemKhuonGoi(JSON.parse(tho));
+    assert.ok("loi" in r2 && /hinhDang có khoá lạ/.test(r2.loi), `hinhDang.${k} bị từ chối: ${JSON.stringify(r2)}`);
+  }
+});

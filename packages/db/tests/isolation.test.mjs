@@ -3072,10 +3072,12 @@ test("thoả thuận ai_processing: nhận loại mới, vẫn chặn nguồn v�
     await c.query("rollback to savepoint truoc_vai");
     // Ràng buộc (vai chủ, không luật dòng): nhận loại mới; nguồn và loại lạ vẫn bị từ chối.
     await c.query("reset role");
-    await them("{catalog,shareable_listing}");
+    // Nguồn bị chặn TRƯỚC khi sàn có thoả thuận AI nào — mục «một thoả thuận mỗi sàn» chưa thể là lý do từ chối.
     await c.query("savepoint nguon");
-    await assert.rejects(them("{catalog,source}"), /agreements_never_source|agreements_mot_thoa_thuan_ai/);
+    await assert.rejects(them("{catalog,source}"), /agreements_never_source/);
     await c.query("rollback to savepoint nguon");
+    // Đối chứng dương: cùng câu chèn, bỏ lớp nguồn, được nhận.
+    await them("{catalog,shareable_listing}");
     await c.query("savepoint la");
     await assert.rejects(them("{catalog}", "ai_magic"), /agreements_kind_check/);
     await c.query("rollback to savepoint la");

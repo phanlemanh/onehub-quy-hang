@@ -6,7 +6,7 @@ import { isStandardField, khoaMau, taoMau, type GoiDeXuat, type ImportContext } 
 import { sinhBoLa } from "../../../../../_acceptance/nhap-tac-tu-ke-hoach/thu/bo-la";
 import { danhMucMau, HOM_NAY } from "../../../../../packages/core/test/import/sinh";
 import { chayOng, doiDich } from "./duong-ong";
-import { canHoi, cauTatDinh, coTheTiepGhepAi, dongY, dongYHet, hoiDeXuat, khiDoiDich, laKetQuaCu, sangXemTruoc, type HoiDeXuat, type KetQuaGoiDeXuat, type TrangThaiAi } from "./de-xuat";
+import { canHoi, cauTatDinh, coTheTiepGhepAi, dongY, dongYHet, hoiDeXuat, khiDoiDich, laKetQuaCu, lyDoKhongHoi, sangXemTruoc, type HoiDeXuat, type KetQuaGoiDeXuat, type TrangThaiAi } from "./de-xuat";
 
 const CTX: ImportContext = { today: HOM_NAY, catalog: danhMucMau() };
 const AI_BAT: TrangThaiAi = { bat: true, tamNgung: false, sanSang: true, conTran: true, tranThangUsd: 10, daDungUsd: null, laQuanTri: false };
@@ -63,7 +63,31 @@ test("màn khi AI không dùng được", async () => {
   }
   const mang = await hoiDeXuat(ong0, async () => ({ loi: "x" }), 1);
   assert.equal(mang.tt.baoTatDinh, cauTatDinh("không gửi được tới máy chủ"));
-  for (const ai of [null, { ...AI_BAT, bat: false }, { ...AI_BAT, sanSang: false }, { ...AI_BAT, conTran: false }]) assert.equal(canHoi(ong0, ai), false, JSON.stringify(ai));
+  for (const ai of [null, "loi" as const, { ...AI_BAT, bat: false }, { ...AI_BAT, sanSang: false }, { ...AI_BAT, conTran: false }]) assert.equal(canHoi(ong0, ai), false, JSON.stringify(ai));
+  // Lỗi ném ra trên đường (thân trả lời hỏng, gộp lỗi) không kẹt dải chờ: dải tất định, kế hoạch nền giữ nguyên.
+  for (const [ten, hoi] of [
+    ["thân trả lời hỏng", async () => { throw new SyntaxError("Unexpected end of JSON input"); }],
+    ["đề xuất sai dạng", async () => ({ cheDo: "ai", deXuat: null, loi: [] }) as unknown as KetQuaGoiDeXuat],
+    ["trả rỗng", async () => null as unknown as KetQuaGoiDeXuat],
+  ] as [string, HoiDeXuat][]) {
+    const r = await hoiDeXuat(ong0, hoi, 1);
+    assert.deepEqual(r.ong.plan, ong0.plan, `${ten}: kế hoạch nền giữ nguyên`);
+    assert.deepEqual([r.tt.dangHoi, r.tt.baoTatDinh, r.tt.choDuyet], [false, cauTatDinh("không gửi được tới máy chủ"), []], ten);
+    assert.equal(coTheTiepGhepAi(r.ong, r.tt).thongDiep, null, `${ten}: Tiếp không bị dải chờ khoá`);
+  }
+  // Sàn đã bật mà máy không hỏi được: màn nói một dòng lý do (ma trận viết tay); sàn chưa bật hay tạm ngừng thì im.
+  const BAO: [string, TrangThaiAi | "loi" | null, string | null][] = [
+    ["không đọc được trạng thái", "loi", cauTatDinh("không đọc được trạng thái AI")],
+    ["thiếu khoá", { ...AI_BAT, sanSang: false }, cauTatDinh("AI chưa sẵn sàng trên máy chủ")],
+    ["hết trần", { ...AI_BAT, conTran: false }, cauTatDinh("Hết trần AI tháng này")],
+    ["chưa bật", { ...AI_BAT, bat: false }, null],
+    ["tạm ngừng", { ...AI_BAT, bat: false, tamNgung: true }, null],
+    ["hỏi được", AI_BAT, null],
+  ];
+  for (const [ten, ai, cau] of BAO) assert.equal(lyDoKhongHoi(ong0, ai), cau, ten);
+  // Tệp không còn cột chưa ghép: không có gì để AI làm, không dòng nào dù hết trần.
+  const day = chayOng([["Toà", "Mã căn", "Giá"], ["Toà A", "A-01.01", "3,5 tỷ"]], CTX);
+  assert.equal(lyDoKhongHoi(day, { ...AI_BAT, conTran: false }), null);
 });
 
 test("nhập lại cùng mẫu không gọi AI", async () => {

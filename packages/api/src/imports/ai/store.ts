@@ -12,14 +12,31 @@ import type { DungLuong } from "./claude";
 export const VAI_GOI = ["listing_agent", "team_lead"];
 export const KHOA_TRAN = "ai.monthly_budget_usd";
 
-export type ThoaThuanAi = { id: string; status: "active" | "paused" | "ended"; dataClasses: string[]; validFrom: Date; approvedBy: string };
-export type TinhTrangAi = { vai: string[]; thoaThuan: ThoaThuanAi | null; tranUsd: number; daDungUsd: number };
+/** Thoả thuận `ai_processing` đọc nguyên hàng từ cơ sở dữ liệu — không dựng lại trường nào bằng hằng (như danh mục ở catalog/feeds). */
+export type ThoaThuanAi = Agreement;
+export type TinhTrangAi = { vai: string[]; thoaThuan: ThoaThuanAi | null; tranUsd: number; daDungUsd: number; at: Date };
+
+type DongThoaThuan = {
+  id: string;
+  company_id: string;
+  kind: Agreement["kind"];
+  direction: Agreement["direction"];
+  counterparty: string;
+  data_classes: Agreement["dataClasses"];
+  valid_from: Date;
+  valid_until: Date | null;
+  status: Agreement["status"];
+  approved_by: string;
+  special_terms: boolean;
+};
 
 export async function docTinhTrang(tx: pg.PoolClient): Promise<TinhTrangAi> {
   const vai = await rolesOf(tx);
+  const at = (await tx.query<{ now: Date }>("select now() as now")).rows[0]!.now;
   const t = (
-    await tx.query<{ id: string; status: ThoaThuanAi["status"]; data_classes: string[]; valid_from: Date; approved_by: string }>(
-      "select id, status, data_classes, valid_from, approved_by from agreements where company_id = app.current_company_id() and kind = 'ai_processing'",
+    await tx.query<DongThoaThuan>(
+      `select id, company_id, kind, direction, counterparty, data_classes, valid_from, valid_until, status, approved_by, special_terms
+       from agreements where company_id = app.current_company_id() and kind = 'ai_processing'`,
     )
   ).rows[0];
   const dong = (await tx.query<{ key: string; value: unknown }>("select key, value from company_settings where company_id = app.current_company_id() and key = $1", [KHOA_TRAN])).rows;
@@ -36,32 +53,45 @@ export async function docTinhTrang(tx: pg.PoolClient): Promise<TinhTrangAi> {
   );
   return {
     vai,
-    thoaThuan: t ? { id: t.id, status: t.status, dataClasses: t.data_classes, validFrom: t.valid_from, approvedBy: t.approved_by } : null,
+    thoaThuan: t
+      ? {
+          id: t.id,
+          companyId: t.company_id,
+          kind: t.kind,
+          direction: t.direction,
+          counterparty: t.counterparty,
+          dataClasses: t.data_classes,
+          validFrom: t.valid_from,
+          validUntil: t.valid_until,
+          status: t.status,
+          approvedBy: t.approved_by,
+          specialTerms: t.special_terms,
+        }
+      : null,
     tranUsd,
     daDungUsd,
+    at,
   };
 }
 
+const LUONG = { kind: "ai_processing", direction: "outbound" } as const;
+
+/**
+ * Thoả thuận mở được luồng ra Anthropic lúc `at`: đúng loại, đúng chiều, đang hiệu lực, trong cửa sổ ngày — qua `mayFlow`
+ * như mọi kết nối. Tiêu đề và hình dạng cột (gửi cho mọi cột) tính là lớp danh mục, nên gói không mang giá trị nào vẫn
+ * phải qua cửa này.
+ */
+export function thoaThuanMo(t: ThoaThuanAi, at: Date): boolean {
+  return mayFlow(t, "catalog", { at, ...LUONG }).ok;
+}
+
 /** Mỗi cột mang giá trị phải được thoả thuận mở cho lớp của nó (ADR-0017: mọi kết nối là một thoả thuận). */
-export function giaTriQuaThoaThuan(goi: GoiDeXuat, t: ThoaThuanAi, companyId: string, at = new Date()): boolean {
-  const a: Agreement = {
-    id: t.id,
-    companyId,
-    kind: "ai_processing",
-    direction: "outbound",
-    counterparty: "anthropic",
-    dataClasses: t.dataClasses as Agreement["dataClasses"],
-    validFrom: t.validFrom,
-    validUntil: null,
-    status: t.status,
-    approvedBy: t.approvedBy,
-    specialTerms: false,
-  };
+export function giaTriQuaThoaThuan(goi: GoiDeXuat, t: ThoaThuanAi, at: Date): boolean {
   return goi.cot
     .filter((c) => c.giaTri?.length)
     .every((c) => {
       const lop = c.lop === "catalog" || c.lop === "shareable_listing" ? c.lop : isStandardField(c.dich) ? FIELD_CLASS[c.dich] : null;
-      return lop !== null && mayFlow(a, lop, { at, kind: "ai_processing", direction: "outbound" }).ok;
+      return lop !== null && mayFlow(t, lop, { at, ...LUONG }).ok;
     });
 }
 
