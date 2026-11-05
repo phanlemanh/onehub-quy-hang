@@ -1,30 +1,23 @@
-187. [GET] http://localhost:3491/api/v1/contacts => [200] OK
-226. [GET] http://localhost:3491/api/v1/listings => [200] OK
-227. [GET] http://localhost:3491/api/v1/contacts => [200] OK
-228. [GET] http://localhost:3491/api/v1/contacts/fdb74a33-275b-4c83-8e67-ea8e610da326/profile => [500] Internal Server Error
-229. [GET] http://localhost:3491/api/v1/contacts/ee85a40c-4a92-468f-92a9-462eac44b21c/profile => [500] Internal Server Error
-230. [GET] http://localhost:3491/api/v1/contacts/e508d03f-c0c3-4cd0-ba35-c94d8c75600d/profile => [500] Internal Server Error
-231. [GET] http://localhost:3491/api/v1/contacts => [200] OK
-232. [GET] http://localhost:3491/api/v1/contacts/e29455eb-a539-4dcc-a0a1-de7d029409bc/profile => [500] Internal Server Error
-233. [GET] http://localhost:3491/api/v1/contacts/dc1c7026-7d0c-4dbc-b14c-a74903d6fd1f/profile => [500] Internal Server Error
-234. [GET] http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile => [500] Internal Server Error
-235. [GET] http://localhost:3491/api/v1/listings => [200] OK
-236. [GET] http://localhost:3491/api/v1/contacts?q=0900%20000%20001 => [200] OK
-275. [GET] http://localhost:3491/api/v1/listings => [200] OK
-276. [POST] http://localhost:3491/api/v1/contacts/lookup-phone => [200] OK
-315. [GET] http://localhost:3491/api/v1/listings => [200] OK
-316. [GET] http://localhost:3491/api/v1/contacts => [200] OK
-317. [GET] http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile => [500] Internal Server Error
-318. [POST] http://localhost:3491/api/v1/auth/sign-out => [200] OK
-352. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
-353. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
-354. [GET] http://localhost:3491/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
-355. [GET] http://localhost:3491/?_rsc=q3mOO9BClNZHexY7 => [200] OK
-356. [GET] http://localhost:3491/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
-357. [GET] http://localhost:3491/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
-384. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-385. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
-386. [GET] http://localhost:3491/api/v1/listings => [200] OK
-425. [GET] http://localhost:3491/api/v1/listings => [200] OK
+455. [GET] http://localhost:3491/api/v1/listings => [200] OK
+456. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+457. [GET] http://localhost:3491/api/v1/listings => [200] OK
+496. [GET] http://localhost:3491/api/v1/listings => [200] OK
+497. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+498. [GET] http://localhost:3491/api/v1/listings => [200] OK
+499. [GET] http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile => [200] OK
+538. [GET] http://localhost:3491/api/v1/listings => [200] OK
+539. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+578. [GET] http://localhost:3491/api/v1/listings => [200] OK
+579. [GET] http://localhost:3491/api/v1/contacts => [200] OK
+580. [GET] http://localhost:3491/api/v1/listings => [200] OK
+581. [POST] http://localhost:3491/__nextjs_original-stack-frames => [200] OK
+648. [POST] http://localhost:3491/api/v1/auth/email-otp/send-verification-otp => [200] OK
+649. [POST] http://localhost:3491/api/v1/auth/sign-in/email-otp => [200] OK
+693. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+694. [GET] http://localhost:3491/api/v1/today/buyer => [200] OK
+695. [GET] http://localhost:3491/api/v1/listings => [200] OK
 
-Note: 211 static requests not shown, run with "static" option to see them.
+Note: 228 static requests not shown, run with "static" option to see them.
+=== Nhat ky may chu dev (cong 3491): cac dong API khong phai 2xx ===
+(het)
+=== Ghi chu: loi console 'm is not defined' do doan JS do thu tu bom vao trang (MutationObserver go loi), khong phai ma san pham; favicon 404 la tinh ===

@@ -5,7 +5,7 @@ slug: man-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-05-man-lien-he-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -93,3 +93,4 @@ mở số, AC-8 dòng thời gian; lịch xem chưa dựng); cross-cutting quy�
 - Bất biến chạm: 1 (hàm `security definer` mới — lọc sàn trong hàm, ca cách ly), 2 (số chỉ trả cho người đọc được, không ra
   ngoài công ty, ghi sự kiện), 4 không chạm (không trang khách).
 - Lối C: vỏ dùng bố cục đang có; khi hàng 105 gộp, cột hồ sơ tự thành cột kéo chia — không sửa 103.
+- Known limits (máy ghi theo giám sát, L-0511-4): bước chấm khuôn của kit 2.37.0 báo «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» — báo oan kit#485, luật 33; E10d đạt có giới hạn mã 1, E10e giữ mọi lệch khác đỏ. Bỏ khi kit vá.
