@@ -103,7 +103,7 @@ evals:
     criterion: AC-6
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; trong apps/web/src/app/(app)/inventory/trang-thai-rieng.test.ts có mặt và ok: «bảng hàng: lọc theo trạng thái chuẩn» — năm dòng viết tay (id 1 Pending/giu_cho, 2 Pending/null, 3 Active, 4 Pending/giu_cho, 5 Hold): lựa chọn ô lọc cột Trạng thái deepEqual [{value:\"Pending\",label:\"Đang giao dịch\"},{value:\"Active\",label:\"Đang bán\"},{value:\"Hold\",label:\"Tạm ngừng\"}] (không lựa chọn «Giữ chỗ»); lọc chọn Pending giữ đúng id [1,2,4]. Chiều đỏ: giaTriChon của cột Trạng thái trả mã nhãn → ca đỏ nêu id 2."
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/trang-thai-rieng.test.ts có mặt và ok: «bảng hàng: lọc theo trạng thái chuẩn» — năm dòng viết tay (id 1 Pending/giu_cho, 2 Pending/null, 3 Active, 4 Pending/giu_cho, 5 Hold): lựa chọn ô lọc cột Trạng thái, sắp theo value, deepEqual [{value:\"Active\",label:\"Đang bán\"},{value:\"Hold\",label:\"Tạm ngừng\"},{value:\"Pending\",label:\"Đang giao dịch\"}] (không lựa chọn «Giữ chỗ»; thứ tự hiện là thứ tự chữ có từ hàng 45, không đổi); lọc chọn Pending giữ đúng id [1,2,4]. Chiều đỏ: giaTriChon của cột Trạng thái trả mã nhãn → ca đỏ nêu id 2."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
