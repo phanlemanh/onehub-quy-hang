@@ -5,7 +5,7 @@ slug: cach-goi-rieng
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-05-cach-goi-rieng-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05T13:38:07Z
@@ -40,9 +40,10 @@ ký 05/11).
   (cross-layer)
 - AC-4: Given sàn A đã đặt «Phí CN» và «BP», When đầu chủ của sàn A mở Bảng hàng, Then tiêu đề cột phí là «Phí CN» và ô
   phí của một căn có giá trị chuẩn `included` hiện «BP» — trên máy tính và thẻ điện thoại. (cross-layer)
-- AC-5: Given Bảng hàng của sàn A có ba căn `included` và hai căn `excluded`, When lọc cột phí chọn «BP» và nhóm theo cột
-  phí, Then bộ lọc giữ đúng ba căn có giá trị chuẩn `included` và dòng đếm của nhóm là 3 và 2 — lọc và đếm theo giá trị
-  chuẩn, chữ riêng chỉ là chữ hiện.
+- AC-5: Given Bảng hàng của sàn A có ba căn `included` và hai căn `excluded`, và sàn đặt tên riêng «BP» cho `included`,
+  When lọc cột phí chọn «BP», Then bộ lọc giữ đúng ba căn có giá trị chuẩn `included` và số căn sau lọc (dòng tổng, số
+  căn của nhóm Toà) là 3; đổi tên riêng không làm đổi kết quả lọc hay số căn — lọc và đếm theo giá trị chuẩn, chữ riêng
+  chỉ là chữ hiện. (Lời sửa 05/11, chủ kho chọn «Sửa theo khuyến nghị»: Bảng hàng không có kiểu nhóm theo cột phí.)
 - AC-6: Given sàn A đã đặt nhãn riêng, When đầu chủ phát hàng cho nhóm môi giới (bản xuất) hay gửi một Lần gửi cho nhóm
   môi giới, Then bản xuất có tiêu đề cột và chữ ô phí theo tên riêng của sàn, và trang `/s/<mã>` nhóm môi giới mở thấy
   «BP» ở căn `included`. (cross-layer)

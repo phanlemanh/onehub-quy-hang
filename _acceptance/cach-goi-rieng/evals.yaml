@@ -69,7 +69,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; trong apps/web/src/app/(app)/inventory/tu-vung.test.ts có mặt và ok: «bảng hàng: lọc và đếm theo giá trị chuẩn» — năm dòng viết trước (ba included, hai excluded) với từ vựng included «BP»: lựa chọn của ô lọc cột phí deepEqual [{value:\"excluded\",label:\"Không bao phí\"},{value:\"included\",label:\"BP\"}]; lọc chọn included giữ đúng ba id viết trước; nhóm theo cột phí ra hai nhóm khoá included (3) và excluded (2), nhãn nhóm «BP»; đổi từ vựng sang «Bao phí SC» không đổi id giữ lại hay số đếm. Chiều đỏ: lọc so chuCuaO thay giaTriChon → ca đỏ nêu id."
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/tu-vung.test.ts có mặt và ok: «bảng hàng: lọc và đếm theo giá trị chuẩn» — năm dòng viết tay (ba included, hai excluded, cùng Toà A) với từ vựng included «BP»: lựa chọn của ô lọc cột phí deepEqual [{value:\"included\",label:\"BP\"},{value:\"excluded\",label:\"Không bao phí\"}]; lọc chọn included giữ đúng ba id viết trước [1,3,5]; nhóm theo Toà trên dòng đã lọc ra một nhóm «Toà A» số căn 3; đổi từ vựng sang «Bao phí SC» không đổi id giữ lại, giá trị lựa chọn hay số căn. Chiều đỏ: lựa chọn và chữ ô bỏ qua từ vựng → ca đỏ nêu «BP»."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
