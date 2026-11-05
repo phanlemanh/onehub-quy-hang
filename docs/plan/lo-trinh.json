@@ -2573,6 +2573,16 @@
         "design/patterns/trang-tam.md",
         "apps/web/src/app/(app)/proto/**"
       ]
+    },
+    {
+      "ma": "va-cdp-tat-chrome",
+      "cau_giao": "Công cụ chụp màn dùng chung của các lượt chấm (cdp.mjs) luôn tắt Chrome do chính nó mở, kể cả khi tác tử chấm hết giờ hay bị ngắt: ghi PID, bắt tín hiệu thoát, dọn hồ sơ tạm; không còn Chrome chạy ẩn mồ côi sau lượt chấm.",
+      "slug": "va-cdp-tat-chrome",
+      "vi_sao": "Dãy B báo 05/11 (B-0511-?): _acceptance/bang-hang-kieu-sheet/thu/cdp.mjs chỉ p.kill() ở nhánh đóng thường nên Chrome chạy ẩn sót lại khi tác tử chấm hết giờ — bốn cái mồ côi giữ ~850 MB lúc máy báo áp lực bộ nhớ mức 2. Theo khuôn sửa chỗ thử của dãy D (a82b6f0b). Hàng vá kỹ thuật, không mã: giám sát quyết (chủ kho giao giám sát tự quyết việc kỹ thuật).",
+      "hang": "T2",
+      "vung": [
+        "_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs"
+      ]
     }
   ],
   "chan_troi": [
