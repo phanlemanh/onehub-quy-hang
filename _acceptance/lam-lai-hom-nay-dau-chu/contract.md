@@ -5,7 +5,7 @@ slug: lam-lai-hom-nay-dau-chu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-04-lam-lai-hom-nay-dau-chu-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -106,3 +106,14 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Ô tìm, lọc «cần chú ý», nút mật độ của khối `solution-agents-2`.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài thử tự kiểm xem việc thiếu có bị báo đúng tên hay không thì luôn báo xanh, nên nếu sau này một việc bị rớt khỏi nút chính hoặc menu ⋯ thì bài thử này có thể không bắt được lỗi. Người dùng không thấy gì khác đi ở màn hình hôm nay. — `apps/web/src/app/(app)/today/viec-dong.test.ts`
+- Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài thử về nút chính của từng nhóm căn tính đáp án theo đúng cách mã tính, nên nếu có ngày nhãn nút chính bị đổi sai thì bài thử có thể vẫn xanh. Hiện tại người dùng vẫn thấy nút chính đúng trên màn Hôm nay. — `apps/web/src/app/(app)/today/viec-dong.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Chọn Ghi cuộc gọi, Đổi giá hay Mở hồ sơ trong menu ⋯ làm cả trang tải lại thay vì chuyển mượt, nên chậm hơn một nhịp và phải nạp lại bàn làm việc. — `apps/web/src/components/khoi/solution-agents-2/o-dong.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Màn hình không thay đổi với người dùng, nhưng bước chấm tay không kiểm được tên bốn cột nên có thể ghi nhận là đạt khi chưa đối chiếu tên cột. — `_acceptance/lam-lai-hom-nay-dau-chu/evals.yaml`
+- Ngoài-5 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Việc trả lại lead có thể chưa được kiểm là đã ghi thật ở máy chủ, chỉ kiểm dòng đã biến mất trên màn. — `_acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs`
+- Ngoài-6 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Sát hai mốc, chữ có thể ghi «còn 15 phút» mà ô tô vàng, hoặc «còn 0 phút» mà ô tô đỏ, khiến đầu chủ thấy hơi mâu thuẫn trong vài chục giây. — `apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx`
+- Ngoài-9 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bước chấm có thể báo đạt dù bấm Nhận chưa ghi đúng lead ấy, nếu sàn mẫu đã có sẵn lead đã nhận. — `_acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs`
+- Ngoài-10 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Việc trả lại lead chưa được xác nhận là đã ghi ở máy chủ, chỉ thấy dòng biến khỏi màn. — `_acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs`
+- Ngoài-11 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bước chấm không đối chiếu được nút chính có đúng nhãn theo từng loại việc, nên một nhãn sai có thể không bị bắt. — `_acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs`
+- Ngoài-12 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu số việc ghi trên hai đầu nhóm lệch bù trừ nhau thì bước chấm vẫn báo đạt, và đầu chủ có thể thấy số sai trên một nhóm. — `_acceptance/lam-lai-hom-nay-dau-chu/thu/chay-ui.mjs`
