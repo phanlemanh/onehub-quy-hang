@@ -77,3 +77,17 @@ export const NHAN_MAT_KHAU: Readonly<Record<TrangThaiMatKhau, string>> = {
 /** Nút của dòng: có mật khẩu dùng được thì đổi (hộp hỏi mật khẩu hiện tại), không thì đặt. */
 export const nutMatKhau = (t: TrangThaiMatKhau) => (t === "co" ? "Đổi mật khẩu" : "Đặt mật khẩu");
 export const canMatKhauHienTai = (t: TrangThaiMatKhau) => t === "co";
+
+// Mã lỗi máy chủ → câu dưới ô của hộp mật khẩu. Phải chờ (va-dang-nhap-mat-khau: đổi mật khẩu đếm sai chung với đăng
+// nhập) và sai mật khẩu hiện tại gắn ô mật khẩu hiện tại; luật mật khẩu mới gắn ô mật khẩu mới.
+export type LoiHopMatKhau = { o: "hien-tai" | "moi"; cau: string };
+const LOI_HOP: Readonly<Record<string, LoiHopMatKhau>> = {
+  "password-rate-limited": { o: "hien-tai", cau: "Thử lại sau ít phút" },
+  "invalid-current-password": { o: "hien-tai", cau: "Mật khẩu hiện tại không đúng" },
+  "password-too-short": { o: "moi", cau: "Cần ít nhất 8 ký tự" },
+  "password-too-long": { o: "moi", cau: "Mật khẩu dài quá 128 ký tự" },
+  "password-common": { o: "moi", cau: "Mật khẩu quá dễ đoán" },
+  "password-guessable": { o: "moi", cau: "Mật khẩu quá dễ đoán" },
+};
+export const loiHopMatKhau = (code: string): LoiHopMatKhau => LOI_HOP[code] ?? { o: "moi", cau: "Có lỗi, thử lại sau ít phút." };
+

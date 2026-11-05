@@ -2444,6 +2444,12 @@
         "docs/adr/0024-he-bo-cuc.md",
         "docs/product/tham-chieu.md"
       ]
+    },
+    {
+      "ma": "va-dang-nhap-mat-khau",
+      "cau_giao": "Vá hai kẽ an toàn của mật khẩu do sàn cấp (Ngoài-6, Ngoài-7 của hàng 104): người vào sàn khác thì phiên cũ cũng bị thu khi mật khẩu gốc sàn cấp bị vô hiệu; đổi mật khẩu ở Cá nhân đếm lần sai mật khẩu hiện tại chung bộ đếm với đăng nhập.",
+      "slug": "va-dang-nhap-mat-khau",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-05"
     }
   ],
   "chan_troi": [
