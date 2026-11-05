@@ -18,7 +18,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.test.isolation
-    expected: "exit 0; ca «gửi căn đã gỡ: khách không quan tâm được» có mặt và ok — Lần gửi có hai căn Đang bán A, B tạo trước; gỡ A; POST /api/v1/public/shares/{mã}/events {type:'interest', listingId:A} → 409 (assert), share_events của Lần gửi loại interest cho A = 0 (assert); đối chứng: interest cho B → 200 và một dòng (2 assert), link_opened → 200 (assert). Chiều đỏ: record_share_event không xét voided → ca đỏ nêu «409»."
+    expected: "exit 0; ca «gửi căn đã gỡ: khách không quan tâm được» có mặt và ok — Lần gửi có hai căn Đang bán A, B tạo trước; gỡ A; POST /api/v1/public/shares/{mã}/events {type:'interest', listingId:A} → 409 (assert), share_events của Lần gửi loại interest cho A = 0 (assert); đối chứng: interest cho B → 201 và một dòng (2 assert), link_opened → 201 (assert). Chiều đỏ: record_share_event không xét voided → ca đỏ nêu «409»."
     paths: [packages/db/migrations/037_*, packages/api/test-db/va-gui-can-da-go/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
