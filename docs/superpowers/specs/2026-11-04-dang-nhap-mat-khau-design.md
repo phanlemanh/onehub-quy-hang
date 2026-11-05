@@ -95,13 +95,13 @@ mất mạng thì báo «Chưa đăng xuất được» và cho thử lại.
   sàn cấp lại»; tạm hết hạn → «Mật khẩu tạm đã hết hạn — nhờ quản trị sàn cấp lại».
 - **Đặt mật khẩu mới** (`(auth)/dat-mat-khau`, mới, trong `Khung`): một ô mật khẩu có nút hiện/ẩn, câu gợi ý «Ít nhất
   8 ký tự — một câu ngắn có dấu là dễ nhớ», nút «Lưu và vào Quỹ hàng». Không có mã đổi (mở thẳng địa chỉ,
-  tải lại trang) → báo «Phiên đặt mật khẩu đã hết — đăng nhập lại bằng mật khẩu tạm» kèm nút về đăng nhập; mã
+  tải lại trang) → báo «Phiên đặt mật khẩu đã hết» với mô tả «Đăng nhập lại bằng mật khẩu tạm.» kèm nút về đăng nhập; mã
   đổi chỉ ở bộ nhớ trang, không vào địa chỉ, lịch sử hay kho trình duyệt. Proxy cho địa chỉ này đi như
   `/login`.
 - **Người dùng** (`settings/users`): mỗi dòng thêm việc «Cấp mật khẩu». Bấm → hộp hỏi `AlertDialog` «Cấp mật khẩu tạm
   cho [Tên]? Mật khẩu cũ thôi dùng và [Tên] bị đăng xuất ở mọi máy.» → hộp kết quả hiện mật khẩu tạm một lần, nút «Chép»,
-  câu «Trao tận tay cho [Tên]. Mật khẩu hết hạn sau 72 giờ, đóng hộp này là không xem lại được.» 409 → câu «[Tên] còn ở
-  sàn khác nên tự đặt mật khẩu trong Cá nhân.»
+  câu «Trao tận tay cho [Tên]. Mật khẩu hết hạn sau 72 giờ, đóng hộp này là không xem lại được.» 409 → tiêu đề «[Tên] còn ở
+  sàn khác», mô tả «Người này tự đặt mật khẩu trong Cá nhân.»
 - **Cá nhân** (`me`): dòng «Mật khẩu» nằm trong nhóm «Hồ sơ» (Hỏi-6; lối khác: nhóm «Máy đang đăng nhập») — không thêm
   nhóm thứ bảy (luật KH-toi-sau-nhom giữ sáu nhóm).
   Chữ dòng theo `password`: «Chưa đặt» / «Đã đặt» / «Đã khoá — đặt mật khẩu mới»; nút «Đặt mật khẩu» hay «Đổi mật
@@ -191,10 +191,10 @@ Sổ điểm biến thiên; cho sàn **siết** thêm (dài hơn, ít lần th�
 | ST-dang-nhap-tam-het | Đăng nhập | «Mật khẩu tạm đã hết hạn — nhờ quản trị sàn cấp lại» | Nhờ quản trị |
 | ST-dat-mat-khau-mac-dinh | Đặt mật khẩu mới | Ô mật khẩu có nút hiện/ẩn, câu gợi ý, nút «Lưu và vào Quỹ hàng» | Gõ, lưu |
 | ST-dat-mat-khau-tu-choi | Đặt mật khẩu mới | Lý do dưới ô («Cần ít nhất 8 ký tự», «Mật khẩu quá dễ đoán») | Gõ lại |
-| ST-dat-mat-khau-het-phien | Đặt mật khẩu mới | «Phiên đặt mật khẩu đã hết — đăng nhập lại bằng mật khẩu tạm», nút về đăng nhập | Đăng nhập lại bằng mật khẩu tạm |
+| ST-dat-mat-khau-het-phien | Đặt mật khẩu mới | Tiêu đề «Phiên đặt mật khẩu đã hết», mô tả «Đăng nhập lại bằng mật khẩu tạm.», nút về đăng nhập | Đăng nhập lại bằng mật khẩu tạm |
 | ST-cap-mat-khau-hoi | Người dùng | Hộp hỏi nói mật khẩu cũ thôi dùng, đăng xuất mọi máy | Cấp / Huỷ |
 | ST-cap-mat-khau-ket-qua | Người dùng | Mật khẩu tạm, nút «Chép», câu trao tay và hạn 72 giờ | Chép, đóng |
-| ST-cap-mat-khau-san-khac | Người dùng | «[Tên] còn ở sàn khác nên tự đặt mật khẩu trong Cá nhân» | Đóng |
+| ST-cap-mat-khau-san-khac | Người dùng | Tiêu đề «[Tên] còn ở sàn khác», mô tả «Người này tự đặt mật khẩu trong Cá nhân.» | Đóng |
 | ST-toi-mat-khau-dong | Cá nhân | Dòng «Mật khẩu» trong nhóm Hồ sơ: Chưa đặt / Đã đặt / Đã khoá | Mở hộp |
 | ST-toi-mat-khau-hop | Cá nhân | Hộp đổi: ô mật khẩu hiện tại (khi «Đã đặt») và ô mật khẩu mới; hộp đặt: chỉ ô mới | Lưu / Huỷ |
 | ST-dang-xuat-loi | Menu tài khoản, Cá nhân, chọn sàn | «Chưa đăng xuất được» kèm «Thử lại» | Thử lại |
