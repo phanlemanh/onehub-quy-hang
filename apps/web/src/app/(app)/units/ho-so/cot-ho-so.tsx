@@ -183,7 +183,24 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa }: Omit<HoSoProps, 
     };
   }, [bd, ids]);
 
+  // Kho trên máy chưa có hàng: lượt kéo đầu đang chạy thì khung chờ của bố cục; lượt kéo hỏng thì lỗi kèm «Thử lại» ngay
+  // trong cột (AC-10 hàng 105) — bảng bên cạnh giữ trạng thái của nó.
   if (ngan.listings === null) {
+    if (ngan.lastAttempt !== null && ngan.lastAttempt !== "ok")
+      return (
+        <div className="p-4">
+          <TrangThai
+            kind="error"
+            title="Chưa tải được hồ sơ căn"
+            description={ngoaiTuyen || ngan.lastAttempt === "mang" ? "Cần mạng cho lần tải đầu trên máy này." : "Thử lại sau giây lát."}
+            hanhDong={
+              <Button type="button" variant="outline" size="sm" onClick={() => void bd.thuNgay()}>
+                Thử lại
+              </Button>
+            }
+          />
+        </div>
+      );
     return <ChoTai kieu="ho-so" />;
   }
 

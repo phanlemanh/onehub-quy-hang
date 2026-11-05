@@ -4,13 +4,34 @@ import { BoCuc } from "@/components/bo-cuc";
 import { Frame, FramePanel } from "@/components/reui/frame";
 
 // Khuôn của nhóm `ho-so-can` (design/patterns/ho-so-can.md): hồ sơ một căn toàn màn (`/units/<mã>`) dựng trong bố cục «Hồ
-// sơ» của ADR-0024 (hàng 33) — một cột căn giữa, thân là đúng một Frame; ở cột phải của Bảng hàng (`/inventory?unit=`) nó
-// là một FramePanel trong Frame của Bảng hàng, cạnh lưới; trên điện thoại trong Bảng hàng thẻ (`nhung`) là Frame trần vì
-// trang Bảng hàng giữ lề. Lối dựng bên trong: `solution-crm-4` chuyển thành cột (Cổng Phạm vi hàng 17, Hỏi-2).
-export function KhungHoSoCan({ cot = false, nhung = false, children }: { cot?: boolean; nhung?: boolean; children: ReactNode }) {
+// sơ» của ADR-0024 (hàng 33) — một cột căn giữa, thân là đúng một Frame. Cạnh Bảng hàng (`/inventory?unit=`, `cotPhu`) nó
+// là đúng một Frame cao hết cột kéo chia của bố cục «Danh sách – chi tiết» (sửa đổi 05/11, hàng 105), thân cuộn riêng; ở
+// cột phải của Hôm nay, đầu chủ (`cot`) nó là một FramePanel trong Frame của Hôm nay, cạnh lưới; trên điện thoại trong
+// Bảng hàng thẻ (`nhung`) là Frame trần vì trang Bảng hàng giữ lề. Lối dựng bên trong: `solution-crm-4` chuyển thành cột
+// (Cổng Phạm vi hàng 17, Hỏi-2).
+export function KhungHoSoCan({
+  cot = false,
+  cotPhu = false,
+  nhung = false,
+  children,
+}: {
+  cot?: boolean;
+  cotPhu?: boolean;
+  nhung?: boolean;
+  children: ReactNode;
+}) {
+  if (cotPhu) {
+    return (
+      <Frame dense className="h-full min-h-0 w-full">
+        <FramePanel className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0" aria-label="Hồ sơ căn" data-slot="cot-ho-so">
+          {children}
+        </FramePanel>
+      </Frame>
+    );
+  }
   if (cot) {
     return (
-      // eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- cột phải cuộn riêng trong Frame của Bảng hàng (trên máy tính): cao bằng phần còn lại của khung Bảng hàng, không phải trang của hồ sơ
+      // eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- cột phải cuộn riêng trong Frame của Hôm nay, đầu chủ (trên máy tính): cao bằng phần còn lại của khung, không phải trang của hồ sơ
       <FramePanel className="flex h-[calc(100svh-10.5rem)] min-h-96 flex-col overflow-y-auto p-0" aria-label="Hồ sơ căn">
         {children}
       </FramePanel>

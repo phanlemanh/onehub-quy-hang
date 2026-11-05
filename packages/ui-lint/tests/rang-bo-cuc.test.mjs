@@ -95,7 +95,9 @@ describe("răng của hệ bố cục", () => {
   });
 
   it("răng: vùng của màn còn ngoại lệ có hạn được bỏ qua", () => {
-    assert.deepEqual(loi("no-raw-skeleton", `${W}/app/(app)/inventory/bang-hang.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n'), []);
+    // Bảng hàng rời ngoại lệ ở hàng 105 (Danh sách – chi tiết) — vùng của nó chịu luật; trang thử nhanh-tuc-thi còn ngoại lệ.
+    assert.deepEqual(loi("no-raw-skeleton", `${W}/app/(app)/proto/nhanh-tuc-thi/trang-thu.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n'), []);
+    assert.equal(loi("no-raw-skeleton", `${W}/app/(app)/inventory/bang-hang.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n').length, 1);
     assert.equal(loi("no-raw-skeleton", `${W}/app/(app)/shares/page.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n').length, 1);
   });
 
@@ -114,27 +116,29 @@ describe("răng của hệ bố cục", () => {
   it("ngoại lệ có hạn", () => {
     const that = kiemBoCuc(ROOT, docBanDo(ROOT));
     assert.ok(that.han.length > 0);
-    const h = that.han.find((x) => x.tep === `${W}/app/(app)/inventory/page.tsx`);
-    assert.equal(dongHan(h), `ngoại lệ có hạn: ${W}/app/(app)/inventory/page.tsx → hàng 79 (bang-hang-theo-loai-hinh)`);
+    const h = that.han.find((x) => x.tep === `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`);
+    assert.equal(dongHan(h), `ngoại lệ có hạn: ${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx → hàng 79 (bang-hang-theo-loai-hinh)`);
+    // Bảng hàng dựng Danh sách – chi tiết (hàng 105): không còn ngoại lệ có hạn.
+    assert.ok(!that.han.some((x) => x.tep.startsWith(`${W}/app/(app)/inventory/`)), "Bảng hàng còn ngoại lệ có hạn");
     // Hàng đã gộp chọn từ hồ sơ signed-off thật của lộ trình.
     const daGop = [...docLoTrinh(ROOT).values()].find((x) => x.daGop);
     assert.ok(daGop, "lộ trình phải có ít nhất một hàng đã gộp");
     voi((d) => {
       sua(d, BANG_HANG, HAN_79, `han: ${daGop.slug}`);
       const l = lechCua(d);
-      assert.equal(l.length, 3, JSON.stringify(l));
+      assert.equal(l.length, 1, JSON.stringify(l));
       for (const x of l) assert.match(x, new RegExp(`hạn đã tới — hàng ${daGop.ma} \\(${daGop.slug}\\)`));
     });
     voi((d) => {
       sua(d, BANG_HANG, HAN_79, "han: hang-khong-co");
       const l = lechCua(d);
-      assert.equal(l.length, 3, JSON.stringify(l));
+      assert.equal(l.length, 1, JSON.stringify(l));
       for (const x of l) assert.match(x, /hạn lạ «hang-khong-co»/);
     });
     voi((d) => {
       sua(d, BANG_HANG, HAN_79, "han: he-bo-cuc");
       const l = lechCua(d);
-      assert.equal(l.length, 3, JSON.stringify(l));
+      assert.equal(l.length, 1, JSON.stringify(l));
       for (const x of l) assert.match(x, /hạn lạ «he-bo-cuc»/);
     });
   });

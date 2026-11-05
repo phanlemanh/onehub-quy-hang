@@ -8,8 +8,8 @@ khe_bat_buoc: [title, children]
 cam_ngoai_khuon: [Frame, FrameHeader, Card, Placeholder]
 ngoai_le: []
 luat: [KH-bh-mot-khung, KH-bh-tren-may, KH-bh-chi-doc]
-bo_cuc: tran
-ngoai_le_han: [{ tep: "apps/web/src/app/(app)/inventory/page.tsx", han: bang-hang-theo-loai-hinh, ly_do: "Bảng hàng chuyển sang bố cục Tràn ở hàng 79." }, { tep: "apps/web/src/app/(app)/inventory/views/[id]/page.tsx", han: bang-hang-theo-loai-hinh, ly_do: "Bảng hàng chuyển sang bố cục Tràn ở hàng 79." }, { tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", han: bang-hang-theo-loai-hinh, ly_do: "Bảng hàng chuyển sang bố cục Tràn ở hàng 79." }]
+bo_cuc: danh-sach-chi-tiet
+ngoai_le_han: [{ tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", han: bang-hang-theo-loai-hinh, ly_do: "Trang thử của bộ đồng bộ, gỡ hay chuyển ở hàng 79." }]
 ---
 # Bảng hàng
 
