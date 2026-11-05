@@ -44,7 +44,7 @@ for (const [tu, sang, duoc] of CHUYEN) {
 test("trình sửa báo «Không hoàn tác được» bằng cùng hàm", () => {
   const hang: HangSua = { id: "h", unitNumber: "x", listPrice: 4_500_000_000, feeInclusion: "excluded", standardStatus: "Active", legalStatus: "a", occupantType: "b" };
   for (const [tu, sang, duoc] of CHUYEN.filter(([t]) => t === "Active")) {
-    const kq = dungLenhTrangThai({ ...hang, standardStatus: tu }, sang, { giaChot: "4 tỷ", lyDo: "unreachable" });
+    const kq = dungLenhTrangThai({ ...hang, standardStatus: tu }, sang, { giaChot: "4 tỷ", lyDo: "unreachable" }, true);
     assert.ok(kq.ok, `${tu}→${sang}`);
     assert.equal(kq.khongHoanTac, !duoc, `${tu}→${sang}`);
   }
