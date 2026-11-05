@@ -194,6 +194,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | sổ | Nháp hiện trạng cổng chọn khối | `docs/design/cong-chon-khoi-hien-trang.md` |
 | sổ | Lệch lọt qua lưới khuôn — mỗi lần chủ sản phẩm thấy một dòng | `docs/design/lech-lot.md` |
 | đối chiếu | Đánh giá ngăn hồ sơ căn cạnh Bảng hàng (05/11): ba lối, số đo, khảo sát ReUI Pro và ngành | `docs/design/danh-gia-ngan-chi-tiet-can.md` |
+| đối chiếu | Nháp đánh giá bộ máy hướng dẫn máy làm thiết kế (02/11): giỏi cấm, kém cho sẵn — chưa phải điều đang đúng | `docs/design/danh-gia-setup-thiet-ke.md` |
 | chọn khối | Vỏ, IA, khối đích và bố cục của từng màn, chỗ hở | `docs/design/vo-va-ia.md` |
 | kiểm | Lệnh bài quét khuôn: mỗi nhóm một dòng tóm tắt | `packages/ui-lint/ban-do-khuon.mjs` |
 | kiểm | Chặn tắt luật không lý do | `packages/ui-lint/check-bare-disables.mjs` |
