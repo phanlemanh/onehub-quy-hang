@@ -19,7 +19,7 @@ import { sinhBoLa } from "./bo-la";
 export const DE_XUAT_DIR = new URL("../de-xuat/", import.meta.url);
 export const LAP_BOI = "lập bởi tác tử context sạch";
 export const KHONG_GOI = "không gọi — không cột chưa ghép";
-export type TepDeXuat = { ten: string; bamGoi: string; bamLoiNhac: string; lapBoi: string; ngay: string; dauRa: unknown };
+export type TepDeXuat = { ten: string; tieuDe: string[]; bamGoi: string; bamLoiNhac: string; lapBoi: string; ngay: string; dauRa: unknown };
 
 export function boDo() {
   const ctx = { today: HOM_NAY, catalog: danhMucMau() };
@@ -44,7 +44,7 @@ async function main() {
   for (const { t, goi } of boDo()) {
     const co = cotChuaGhep(goi).length > 0;
     const dauRa = co ? JSON.parse(readFileSync(join(thuMuc, `${t.ten}.dau-ra.json`), "utf8")) : { de_xuat: [] };
-    const tep: TepDeXuat = { ten: t.ten, bamGoi: await bamGoi(goi), bamLoiNhac: bamLn, lapBoi: co ? LAP_BOI : KHONG_GOI, ngay, dauRa };
+    const tep: TepDeXuat = { ten: t.ten, tieuDe: goi.cot.map((c) => c.tieuDe), bamGoi: await bamGoi(goi), bamLoiNhac: bamLn, lapBoi: co ? LAP_BOI : KHONG_GOI, ngay, dauRa };
     writeFileSync(new URL(`${tep.bamGoi}.json`, DE_XUAT_DIR), JSON.stringify(tep, null, 2) + "\n");
   }
 }

@@ -1,5 +1,23 @@
 {
   "ten": "la-b-viet-tat",
+  "tieuDe": [
+    "#",
+    "T.Trạng",
+    "Tên DA",
+    "Tháp",
+    "Vị trí tầng",
+    "Căn hộ số",
+    "DT sàn (m²)",
+    "P.Ngủ",
+    "H.BC",
+    "Giá đăng (VNĐ)",
+    "Phí GD",
+    "CTV",
+    "Họ tên CSH",
+    "ĐTLL",
+    "Ghi nhận",
+    "Loại"
+  ],
   "bamGoi": "a3a5011ac1912bc507de9feb9b8eded3fbb755475e1f57f916988146a440fe8d",
   "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
   "lapBoi": "lập bởi tác tử context sạch",

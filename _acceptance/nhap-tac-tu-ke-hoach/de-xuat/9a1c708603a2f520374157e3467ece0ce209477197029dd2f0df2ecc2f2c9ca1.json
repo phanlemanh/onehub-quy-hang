@@ -1,5 +1,23 @@
 {
   "ten": "la-b-dong-nghia",
+  "tieuDe": [
+    "Thứ tự",
+    "Tình hình bán",
+    "Khu đô thị",
+    "Khối tháp",
+    "Tầng thứ",
+    "Mã sản phẩm",
+    "Diện tích sàn (m²)",
+    "Số buồng ngủ",
+    "Hướng mặt tiền",
+    "Giá thả (VNĐ)",
+    "Phí giao dịch",
+    "Nhân sự phụ trách",
+    "Chủ sở hữu",
+    "Hotline chủ",
+    "Diễn giải",
+    "Nhóm"
+  ],
   "bamGoi": "9a1c708603a2f520374157e3467ece0ce209477197029dd2f0df2ecc2f2c9ca1",
   "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
   "lapBoi": "lập bởi tác tử context sạch",

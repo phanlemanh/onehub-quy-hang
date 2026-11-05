@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { SettingField } from "@/components/khoi/settings-3/setting-field";
 import { Switch } from "@/components/ui/switch";
 import type { TrangThaiAi } from "@/lib/nhap/de-xuat";
 import { batTatAi, docTrangThaiAi, laLoi } from "@/lib/nhap/goi-api";
@@ -53,26 +53,29 @@ export function CongTacAi() {
     await doc();
   };
 
+  const daDung = tt.daDungUsd?.toLocaleString("vi-VN", { maximumFractionDigits: 2 }) ?? "0";
   return (
-    <div className="flex flex-col gap-4">
-      <Field orientation="horizontal" className="items-start justify-between gap-4">
-        <span className="flex flex-col gap-1">
-          <FieldLabel htmlFor="xu-ly-bang-ai">Xử lý bằng AI</FieldLabel>
-          <FieldDescription>
-            Khi nhập bảng hàng, máy gửi tiêu đề, dạng cột và giá trị mã căn, giá, phí, trạng thái để AI đề xuất cách ghép. Không
-            gửi chủ nhà, số điện thoại, giá đáy, ghi chú hay tên người.
-          </FieldDescription>
-        </span>
+    <>
+      <SettingField
+        title="Xử lý bằng AI"
+        labelFor="xu-ly-bang-ai"
+        description="Khi nhập bảng hàng, máy gửi tiêu đề, dạng cột và giá trị mã căn, giá, phí, trạng thái để AI đề xuất cách ghép. Không gửi chủ nhà, số điện thoại, giá đáy, ghi chú hay tên người."
+        last={!tt.bat}
+      >
         <Switch id="xu-ly-bang-ai" checked={tt.bat} disabled={dangDoi} onCheckedChange={(v) => void doi(Boolean(v))} />
-      </Field>
-      {tt.bat && tt.daDungUsd !== null ? (
-        <p className="text-muted-foreground text-sm">
-          Tháng này đã dùng {tt.daDungUsd.toLocaleString("vi-VN", { maximumFractionDigits: 2 })} / {tt.tranThangUsd.toLocaleString("vi-VN")} USD
-        </p>
+      </SettingField>
+      {tt.bat ? (
+        <SettingField title="Chi phí AI" description={`Tháng này đã dùng ${daDung} / ${tt.tranThangUsd.toLocaleString("vi-VN")} USD`} last>
+          <span className="text-sm font-medium tabular-nums">{daDung} USD</span>
+        </SettingField>
       ) : null}
-      {tt.bat && !tt.conTran ? <TrangThai kind="notice" title="Đã hết trần tháng này — nhập đang chạy không AI" /> : null}
-      {tt.bat && !tt.sanSang ? <TrangThai kind="notice" title="AI chưa sẵn sàng trên máy chủ" description="Nhập vẫn chạy, cột chưa ghép để người ghép tay." /> : null}
-      {loiDoi ? <TrangThai kind="error" title={loiDoi} /> : null}
-    </div>
+      {(tt.bat && (!tt.conTran || !tt.sanSang)) || loiDoi ? (
+        <div className="flex flex-col gap-3 px-4 pb-4">
+          {tt.bat && !tt.conTran ? <TrangThai kind="notice" title="Đã hết trần tháng này — nhập đang chạy không AI" /> : null}
+          {tt.bat && !tt.sanSang ? <TrangThai kind="notice" title="AI chưa sẵn sàng trên máy chủ" description="Nhập vẫn chạy, cột chưa ghép để người ghép tay." /> : null}
+          {loiDoi ? <TrangThai kind="error" title={loiDoi} /> : null}
+        </div>
+      ) : null}
+    </>
   );
 }

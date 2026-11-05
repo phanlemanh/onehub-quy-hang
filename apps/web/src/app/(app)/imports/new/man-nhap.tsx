@@ -119,13 +119,15 @@ export function ManNhap({ vai }: { vai: string[] }) {
       const bam = await bamTep(bytes);
       setTepGoc({ ten, bytes, trangCo: doc.trang });
       const { ong } = await ghepKhiCoMau(doc.grid, ctx, mauHua.current ?? Promise.resolve([]));
-      setS((cu) => nhanTep(cu, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, ong));
-      if (!canHoi(ong, ai)) return setDx(ttDau(batDau.the));
-      setDx({ ...ttDau(batDau.the), dangHoi: true });
-      const kq = await hoiDeXuat(ong, (g) => deXuatGhep(fetch, g), batDau.the);
-      // Kết quả của tệp đã bỏ (người chọn tệp khác giữa chừng) không gộp vào tệp mới.
-      if (moiNhat.current.the !== batDau.the) return;
-      setS((cu) => (cu.the === batDau.the ? { ...cu, ong: kq.ong } : cu));
+      const sau = nhanTep(moiNhat.current, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, ong);
+      moiNhat.current = sau;
+      setS(sau);
+      if (sau.the === batDau.the || !canHoi(ong, ai)) return setDx(ttDau(sau.the));
+      setDx({ ...ttDau(sau.the), dangHoi: true });
+      const kq = await hoiDeXuat(ong, (g) => deXuatGhep(fetch, g), sau.the);
+      // Kết quả về muộn: người đã chọn tệp khác hay đổi gì ở tệp này trong lúc chờ (thế hệ đã tăng) thì bỏ, gỡ dải chờ.
+      if (moiNhat.current.the !== sau.the) return setDx((cu) => (cu.phien === sau.the ? ttDau(sau.the) : cu));
+      setS((cu) => (cu.the === sau.the ? { ...cu, ong: kq.ong } : cu));
       setDx(kq.tt);
     } catch {
       setLoiTep("Không đọc được tệp này — thử chọn lại.");

@@ -1,5 +1,17 @@
 {
   "ten": "ban-ma-can",
+  "tieuDe": [
+    "STT",
+    "Mã căn",
+    "Toà",
+    "Tầng",
+    "DT",
+    "PN",
+    "Hướng",
+    "Giá chào (VNĐ)",
+    "Điều kiện phí",
+    "Trạng thái"
+  ],
   "bamGoi": "bb6dcf32d7c59d46f5f87a3b708b4c92897e29e1b1e18281108a2aad03c75617",
   "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
   "lapBoi": "không gọi — không cột chưa ghép",

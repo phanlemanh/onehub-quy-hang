@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { bamGoi, KHUON_DE_XUAT, LOI_NHAC, type GoiDeXuat } from "@quy-hang/core/import";
 
@@ -65,16 +65,26 @@ export function khachClaude(env: NodeJS.ProcessEnv = process.env, f: typeof fetc
 }
 
 /**
- * Khách giả cho chỗ thử trên máy dev (ba ca nhìn màn của hàng 68): đọc đề xuất ghi sẵn `<thư mục>/<băm gói>.json`
- * (`dauRa` của tệp). Chỉ bật khi `QH_AI_GIA` có VÀ `NODE_ENV` khác `production` — bản thật không bao giờ trả đề xuất ghi sẵn.
- * `QH_AI_GIA_LOI=1` thì ném lỗi nhà cung cấp (ca «AI lỗi» của màn).
+ * Khách giả cho chỗ thử trên máy dev (ba ca nhìn màn của hàng 68): đọc đề xuất ghi sẵn trong thư mục `QH_AI_GIA` — tệp
+ * `<băm gói>.json`, không có thì tệp mang đúng bộ tiêu đề của gói (tệp xlsx đọc ở trình duyệt có thể khác kiểu ô với lưới
+ * dựng trong bộ thử). Chỉ bật khi `QH_AI_GIA` có VÀ `NODE_ENV` khác `production` — bản thật không bao giờ trả đề xuất ghi
+ * sẵn. Tệp cờ trong thư mục: `.loi` → ném lỗi nhà cung cấp (ca «AI lỗi»), `.cham` (số mili giây) → chờ rồi mới trả.
  */
 export function khachGia(env: NodeJS.ProcessEnv = process.env): KhachAi | null {
   const thuMuc = env.QH_AI_GIA;
   if (!thuMuc || env.NODE_ENV === "production") return null;
-  return async (goi) => {
-    if (env.QH_AI_GIA_LOI === "1") throw new LoiAi("provider_error", "khách giả ở chế độ lỗi");
-    const tep = JSON.parse(await readFile(join(thuMuc, `${await bamGoi(goi)}.json`), "utf8")) as { dauRa: unknown };
+  return async (goi, tin) => {
+    const cham = await readFile(join(thuMuc, ".cham"), "utf8").then(Number).catch(() => 0);
+    if (cham > 0) await new Promise((r, j) => { const h = setTimeout(r, cham); tin.addEventListener("abort", () => (clearTimeout(h), j(tin.reason))); });
+    if (await readFile(join(thuMuc, ".loi")).then(() => true, () => false)) throw new LoiAi("provider_error", "khách giả ở chế độ lỗi");
+    const tieuDe = JSON.stringify(goi.cot.map((c) => c.tieuDe));
+    let tep: { dauRa: unknown; tieuDe?: string[] } | null = await readFile(join(thuMuc, `${await bamGoi(goi)}.json`), "utf8").then(JSON.parse, () => null);
+    if (!tep)
+      for (const f of (await readdir(thuMuc)).filter((x) => x.endsWith(".json"))) {
+        const t = JSON.parse(await readFile(join(thuMuc, f), "utf8")) as { dauRa: unknown; tieuDe?: string[] };
+        if (JSON.stringify(t.tieuDe) === tieuDe) tep = t;
+      }
+    if (!tep) throw new LoiAi("provider_error", "khách giả không có đề xuất cho gói này");
     return { json: tep.dauRa, model: `${MO_HINH} (ghi sẵn)`, usage: { input_tokens: 0, output_tokens: 0 } };
   };
 }
