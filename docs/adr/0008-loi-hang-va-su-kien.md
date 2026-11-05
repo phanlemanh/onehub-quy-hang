@@ -47,6 +47,12 @@ Chủ nhà, số chủ, giá đáy, mở số; gán đầu chủ cho hàng (đi 
 căn»; quyền theo vai và trục «Chỉ tôi → Nhóm → Toàn sàn»; hoàn tác; nhãn trạng thái riêng của sàn; ảnh; gắn mã căn danh
 mục; mọi màn.
 
+## Sửa đổi 05/11 — sự kiện `voided` (hàng 66)
+
+Theo ADR-0011 quyết định 8: thêm loại sự kiện `voided` (payload `{}`) — một cờ khi gấp (`ListingState.voided`, cột
+`listings.voided`), không phải trạng thái thứ bảy, không đi qua bảng chuyển, không xác nhận với chủ nhà. Chỉ đường hoàn tác
+lần nhập ghi được; lệnh sửa thường từ chối nó, và mọi lệnh lên hàng đã gỡ trả như hàng không có. Migration 025.
+
 ## Hệ quả
 
 - Màn bảng hàng, hồ sơ căn, Hôm nay, màn cuộc gọi đọc `GET /api/v1/listings` và gửi lệnh qua một đường.

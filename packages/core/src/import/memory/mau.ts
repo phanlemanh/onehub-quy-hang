@@ -92,6 +92,9 @@ export type KetQuaApMau = { plan: ImportPlan; theoMau: number[]; veTuDien: { cot
  * Cột theo mẫu mà kế hoạch không hợp lệ trên bảng này (`validatePlan`), mà đưa cột không phải nguồn vào trường nguồn, hay
  * đọc ra nhiều ô hỏng hơn từ điển — về từ điển kèm lý do. Kế hoạch trả về luôn qua `validatePlan` như kế hoạch từ điển.
  */
+/** Lý do của cột về «chưa rõ» vì trùng đích với một cột theo mẫu. */
+export const LY_DO_TRUNG_MAU = "trùng đích với cột theo mẫu";
+
 export function apMau(table: Table, mau: readonly CotMau[], ctx: ImportContext, tuDien: ImportPlan = planFromDictionary(table)): KetQuaApMau {
   const nho = gopMau(mau);
   const lop = classifyColumns(table);
@@ -121,20 +124,28 @@ export function apMau(table: Table, mau: readonly CotMau[], ctx: ImportContext, 
     if (!sai) break;
     ve(sai.i, sai.e.reason);
   }
-  // Trùng đích: cột theo mẫu thứ hai cùng đích với một cột trước về từ điển.
-  const dung = new Map<string, number>();
-  columns.forEach((c, i) => {
-    if (!isStandardField(c.target)) return;
-    if (dung.has(c.target) && c.reason.startsWith(LY_DO_THEO_MAU)) ve(i, `trùng đích ${c.target} với cột «${table.headers[dung.get(c.target)!] ?? ""}»`);
-    else dung.set(c.target, i);
-  });
   for (const i of theo()) {
     const voiMau = { ...tuDien, columns };
     const m = oHong(table, voiMau, ctx, i);
     // Mẫu đọc hỏng nhiều ô hơn từ điển, hay hỏng quá nửa số ô có giá trị: mẫu không hợp với dữ liệu của tệp này.
     if (m.hong > oHong(table, tuDien, ctx, i).hong || m.hong * 2 > m.co) ve(i, `phép đã nhớ đọc không được ${m.hong}/${m.co} ô của tệp này`);
   }
-  const plan: ImportPlan = { ...tuDien, columns, questions: columns.filter((c) => c.confidence === "low").map((c) => `Cột «${c.column}» là gì?`) };
+  // Trùng đích (Ngoài-4 hàng 67): cột theo mẫu giữ đích người đã chọn lần trước, bất kể thứ tự cột; cột theo mẫu thứ hai về
+  // từ điển; cột nào còn trùng đích thì về «chưa rõ» kèm câu hỏi — cùng nếp cột trùng đích của `planFromDictionary`.
+  const nhom = new Map<string, number[]>();
+  columns.forEach((c, i) => isStandardField(c.target) && nhom.set(c.target, [...(nhom.get(c.target) ?? []), i]));
+  for (const [dich, ds] of nhom) {
+    const giu = ds.find((i) => columns[i]!.reason.startsWith(LY_DO_THEO_MAU));
+    if (ds.length < 2 || giu === undefined) continue;
+    const tenGiu = table.headers[giu] ?? "";
+    for (const i of ds.filter((i) => i !== giu)) {
+      if (columns[i]!.reason.startsWith(LY_DO_THEO_MAU)) ve(i, `trùng đích ${dich} với cột «${tenGiu}»`);
+      if (columns[i]!.target === dich)
+        columns[i] = { column: columns[i]!.column, target: "keep_as_note", confidence: "low", reason: `${LY_DO_TRUNG_MAU} «${tenGiu}» — giữ làm ghi chú, cần người chọn` };
+    }
+  }
+  const hoi = (c: PlanColumn) => (c.reason.startsWith(LY_DO_TRUNG_MAU) ? `Cột «${c.column}» ${c.reason.split(" — ")[0]}` : `Cột «${c.column}» là gì?`);
+  const plan: ImportPlan = { ...tuDien, columns, questions: columns.filter((c) => c.confidence === "low").map(hoi) };
   return { plan, theoMau: theo(), veTuDien };
 }
 

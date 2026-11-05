@@ -2400,6 +2400,12 @@
       "sau": [
         "38"
       ]
+    },
+    {
+      "ma": "104",
+      "cau_giao": "Người trong sàn đăng nhập được bằng email và mật khẩu tạm do sàn cấp, đổi mật khẩu ở lần đầu; mã 6 số qua email vẫn là cửa thứ nhất, đường quên mật khẩu qua thư vẫn đóng; đăng xuất mà máy chủ lỗi hay mất mạng thì báo «Chưa đăng xuất được» và cho thử lại.",
+      "slug": "dang-nhap-mat-khau",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-04"
     }
   ],
   "chan_troi": [

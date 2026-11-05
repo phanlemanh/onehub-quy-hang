@@ -80,12 +80,25 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     importRoleRequired: ["import-role-required", 403],
     importPlanInvalid: ["import-plan-invalid", 422],
     importBatchTooLarge: ["import-batch-too-large", 422],
+    importUndoIncomplete: ["import-undo-incomplete", 503],
     // phat-hang (hàng 43).
     exportRoleRequired: ["export-role-required", 403],
     reassignmentTooLarge: ["reassignment-too-large", 400],
     reassignmentUndone: ["reassignment-undone", 409],
+    // dang-nhap-mat-khau.
+    invalidEmailOrPassword: ["invalid-email-or-password", 401],
+    passwordRateLimited: ["password-rate-limited", 429],
+    passwordDisabled: ["password-disabled", 403],
+    tempPasswordExpired: ["temp-password-expired", 403],
+    changeTokenInvalid: ["change-token-invalid", 403],
+    invalidCurrentPassword: ["invalid-current-password", 403],
+    userInOtherCompany: ["user-in-other-company", 409],
+    passwordTooShort: ["password-too-short", 400],
+    passwordTooLong: ["password-too-long", 400],
+    passwordCommon: ["password-common", 400],
+    passwordGuessable: ["password-guessable", 400],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 64);
+  assert.equal(Object.keys(API_ERRORS).length, 76);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

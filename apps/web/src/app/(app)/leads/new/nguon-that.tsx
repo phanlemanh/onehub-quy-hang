@@ -18,7 +18,7 @@ const nguon: NguonLead = {
       const j = (await res.json()) as { details?: { path: string; reason: string }[] };
       return { ok: false, loi: Object.fromEntries((j.details ?? []).map((d) => [d.path, d.reason])) };
     }
-    return { ok: false, mang: true };
+    return { ok: false, mayChu: true };
   },
   async bo(id) {
     const res = await fetch(`/api/v1/leads/${id}/discard`, { method: "POST" }).catch(() => null);

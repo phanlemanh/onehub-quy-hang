@@ -126,7 +126,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
         const cot = Object.entries(STATE_COLUMNS).map(([k, col]) => `${col === "list_price" || col === "close_price" ? `${col}::float8` : col === "close_date" ? `${col}::text` : col} as "${k}"`);
         const { rows } = await tx.query(
           `select l.id, ${cot.join(", ")}, ${FACTS_SQL.creatorUserId} as "creatorUserId", ${FACTS_SQL.statusesReached} as "statusesReached", ${FACTS_SQL.listingAgentUserId} as "listingAgentUserId"
-           from listings l where l.company_id = app.current_company_id() order by l.id`,
+           from listings l where l.company_id = app.current_company_id() and not l.voided order by l.id`,
         );
         const nguoiXem = await viewerOf(tx, ctx.userId);
         // Người giữ và lần đổi cuối (hàng 22) — tính lúc đọc từ bảng gán và bảng sự kiện.
@@ -170,7 +170,8 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
           hangDoi: (await readQueueFacts(tx, [listingId])).get(listingId) ?? NO_QUEUE_FACTS,
         };
       });
-      if (!kq.facts) return tra(c, API_ERRORS.notFound);
+      // Hàng đã gỡ khi hoàn tác lần nhập (hàng 66) như hàng không có.
+      if (!kq.facts || foldListing(kq.events).voided) return tra(c, API_ERRORS.notFound);
       const facts = kq.facts;
       // «Chỉ tôi» của người khác: cùng câu trả lời với hàng không có (AC-4).
       if (!canRead(kq.nguoiXem, facts)) return tra(c, API_ERRORS.notFound);

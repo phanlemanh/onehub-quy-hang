@@ -52,6 +52,7 @@ executors:
     lint_bo_qua: "node --test \"_acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs\""   # luat-an-va-kiem-ro-ri: lint bỏ qua thư mục đợt, CI nối ro-ri, phá thử trên bản sao lõi (E9b, E10)
     dang_nhap_auth_15: "node --test \"_acceptance/dang-nhap-auth-15/thu/*.test.mjs\""   # dang-nhap-auth-15 AC-5: không tệp nào dưới packages/api/src/auth đổi so với nhánh chính, cặp hai chiều
     va_moc_goi_dau: "node --test \"_acceptance/va-moc-goi-dau-lead-tra-lai/thu/*.test.mjs\""   # va-moc-goi-dau-lead-tra-lai AC-3, AC-6: migration 023 và không sửa migration đã commit; mốc ca chập chờn từ đồng hồ cơ sở dữ liệu
+    dang_nhap_mat_khau: "node --test \"_acceptance/dang-nhap-mat-khau/thu/*.test.mjs\""   # dang-nhap-mat-khau AC-11: migration 034 mới, không sửa migration đã commit, ADR-0005, khuôn xác thực, Tham chiếu
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm

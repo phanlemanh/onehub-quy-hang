@@ -69,7 +69,7 @@ export async function docVaoDungTin(tx: pg.PoolClient, me: string, bay: Date): P
          join lateral (select max(e.occurred_at) as active_at from listing_events e
                         where e.company_id = l.company_id and e.listing_id = l.id and e.type = 'status_changed' and e.payload ->> 'to' = 'Active') a on true
          ${DONG_CAN}
-        where l.company_id = app.current_company_id() and l.standard_status = 'Active' and a.active_at >= $1`,
+        where l.company_id = app.current_company_id() and l.standard_status = 'Active' and not l.voided and a.active_at >= $1`,
       [tu],
     )
   ).rows.map((r) => ({ id: r.id, name: ten(r.building_name, r.unit_number), buildingName: r.building_name, bedroomsTotal: r.bedrooms_total, listPrice: r.list_price == null ? null : Number(r.list_price), activeAt: r.active_at.toISOString() }));
