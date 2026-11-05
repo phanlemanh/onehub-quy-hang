@@ -2518,6 +2518,16 @@
       "vung": [
         "packages/core/src/address/**"
       ]
+    },
+    {
+      "ma": "va-link-gui-can",
+      "cau_giao": "Đầu khách bấm «Gửi căn» ở màn Đã gửi hay ở Hôm nay đầu khách thì mở đúng nơi chọn căn để gửi, không rơi vào trang không có (/inventory/cards).",
+      "slug": "va-link-gui-can",
+      "vi_sao": "Phiên rà soát tạo/xem/sửa/xoá (PR #139) thấy hai nút «Gửi căn» trỏ /inventory/cards, đường không có trang (shares/danh-sach.tsx, today/buyer/dong-tin.tsx); chủ kho mở phiên vá từ thẻ đề xuất 05/11. Hàng vá, không mã: đã quyết.",
+      "vung": [
+        "apps/web/src/app/(app)/shares/**",
+        "apps/web/src/app/(app)/today/buyer/**"
+      ]
     }
   ],
   "chan_troi": [
