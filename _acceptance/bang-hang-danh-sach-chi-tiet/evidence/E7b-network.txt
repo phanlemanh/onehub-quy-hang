@@ -1,1 +1,1 @@
-Driver: script CDP tu viet (chay-ui.mjs --e7), khong co duong doc network/console -> n-a (driver). Khong thu thap duoc request that bai.
+Driver: CDP script chay-ui.mjs (khong doc duoc network/console) -> n-a (driver). Phep gan qua API: PUT /api/v1/listings/<id>/listing-agent => 200.
