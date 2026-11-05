@@ -6,6 +6,7 @@
  * do · giá, hạn tô màu như máy tính; một nút cố định ở mép phải; ⋯ và «Kết quả cuộc gọi» là ngăn đáy qua `NganNoi`.
  * Ghép từ `OHaiTang` (khối đã chuyển thể), `Button`, `Item` (dòng chạm cao của ngăn) — không tự vẽ thành phần.
  */
+import { RETURN_REASON_LABEL } from "@quy-hang/core/dedupe";
 import { MoreHorizontalIcon, PhoneIcon, RotateCwIcon } from "lucide-react";
 import { useState, type ComponentProps, type ReactNode } from "react";
 import { cn } from "cn";
@@ -14,6 +15,16 @@ import { Badge } from "@/components/reui/badge";
 import { ChoTai, NganNoi } from "@/components/bo-cuc";
 import { OHaiTang } from "@/components/khoi/solution-agents-2";
 import { TrangThai } from "@/components/trang-thai";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Item,
@@ -37,6 +48,7 @@ import {
   type MaViecDT,
   type MucKetQua,
 } from "./goi";
+import { bamViec, chonKetQua } from "./hanh-dong";
 
 type BadgeVariant = ComponentProps<typeof Badge>["variant"];
 export const LOI_CAN_MANG = "Cần mạng để mở số";
@@ -120,33 +132,39 @@ function DongCham({
   );
 }
 
-const nhanCua = (m: MaViecDT) => (m === "goi" ? NHAN_GOI : NHAN_VIEC[m]);
+/** Nhãn như máy tính: «Trả lại» luôn kèm lý do. */
+export const NHAN_TRA_LAI = `Trả lại · ${RETURN_REASON_LABEL}`;
+const nhanCua = (m: MaViecDT) => (m === "goi" ? NHAN_GOI : m === "tra-lai" ? NHAN_TRA_LAI : NHAN_VIEC[m]);
+const nhanKetQua = (m: MucKetQua) => (m === "tra-lai" ? NHAN_TRA_LAI : NHAN_KET_QUA[m]);
+const diToi = (href: string) => window.location.assign(href);
 
 /** Thẻ hai tầng của một việc: một nút ở mép phải, ⋯ mở ngăn đáy kể việc còn lại. */
 export function TheViec({
   t,
   coMang,
   onGoi,
+  hoiTraLai,
 }: {
   t: TheDong;
   coMang: boolean;
   onGoi: () => void;
+  hoiTraLai: () => void;
 }) {
   const [moKhac, setMoKhac] = useState(false);
   const { chinh, phu } = nutDienThoai(t.dong, t.coSo);
-  const lamCua = (m: MaViecDT) => (m === "goi" ? { onClick: onGoi } : t.lam(m));
+  const lienKet = (m: MaViecDT) => (m === "goi" || m === "tra-lai" ? undefined : t.lam(m).href);
   const tatCua = (m: MaViecDT) => t.ban || (m === "goi" && !coMang);
   const loiGoi =
     !coMang && (chinh === "goi" || phu.includes("goi")) ? LOI_CAN_MANG : null;
   const nut = chinh
     ? (() => {
-        const h = lamCua(chinh);
-        return h.href ? (
+        const href = lienKet(chinh);
+        return href ? (
           <Button
             size="sm"
             variant="outline"
             nativeButton={false}
-            render={<a href={h.href} />}
+            render={<a href={href} />}
           >
             {nhanCua(chinh)}
           </Button>
@@ -156,7 +174,7 @@ export function TheViec({
             variant="outline"
             disabled={tatCua(chinh)}
             title={chinh === "goi" && loiGoi ? loiGoi : undefined}
-            onClick={h.onClick}
+            onClick={() => bamViec(chinh, { lam: t.lam, goi: onGoi, hoiTraLai, diToi })}
           >
             {chinh === "goi" && (
               <PhoneIcon data-icon="inline-start" aria-hidden="true" />
@@ -198,12 +216,7 @@ export function TheViec({
         </Button>
       </div>
       <NganNoi mo={moKhac} onMo={setMoKhac} tieuDe={t.tren} moTa="Việc khác">
-        <ViecKhac
-          t={t}
-          coMang={coMang}
-          onGoi={onGoi}
-          xong={() => setMoKhac(false)}
-        />
+        <ViecKhac t={t} coMang={coMang} onGoi={onGoi} hoiTraLai={hoiTraLai} xong={() => setMoKhac(false)} />
       </NganNoi>
     </li>
   );
@@ -214,20 +227,20 @@ export function ViecKhac({
   t,
   coMang,
   onGoi,
+  hoiTraLai,
   xong,
 }: {
   t: TheDong;
   coMang: boolean;
   onGoi: () => void;
+  hoiTraLai: () => void;
   xong: () => void;
 }) {
   const { phu } = nutDienThoai(t.dong, t.coSo);
-  const lamCua = (m: MaViecDT) => (m === "goi" ? { onClick: onGoi } : t.lam(m));
   const tatCua = (m: MaViecDT) => t.ban || (m === "goi" && !coMang);
   return (
     <ItemGroup className="gap-2 p-3.5" aria-label="Việc khác">
       {phu.map((m) => {
-        const h = lamCua(m);
         return (
           <DongCham
             key={m}
@@ -235,8 +248,7 @@ export function ViecKhac({
             tat={tatCua(m)}
             onCham={() => {
               xong();
-              if (h.onClick) h.onClick();
-              else if (h.href) window.location.assign(h.href);
+              bamViec(m, { lam: t.lam, goi: onGoi, hoiTraLai, diToi });
             }}
           >
             <ItemContent>
@@ -257,20 +269,22 @@ export function NganKetQua({
   t,
   mo,
   onMo,
+  hoiTraLai,
 }: {
   t: TheDong;
   mo: boolean;
   onMo: (mo: boolean) => void;
+  hoiTraLai: () => void;
 }) {
   return (
     <NganNoi mo={mo} onMo={onMo} tieuDe="Kết quả cuộc gọi" moTa={t.tren}>
-      <KetQuaCuocGoi t={t} xong={() => onMo(false)} />
+      <KetQuaCuocGoi t={t} hoiTraLai={hoiTraLai} xong={() => onMo(false)} />
     </NganNoi>
   );
 }
 
 /** Thân ngăn «Kết quả cuộc gọi» — tách ra để bài kiểm dựng thật được (ngăn dùng cổng của trình duyệt). */
-export function KetQuaCuocGoi({ t, xong }: { t: TheDong; xong: () => void }) {
+export function KetQuaCuocGoi({ t, hoiTraLai, xong }: { t: TheDong; hoiTraLai: () => void; xong: () => void }) {
   return (
     <ItemGroup className="gap-2 p-3.5" aria-label="Kết quả cuộc gọi">
       {ketQuaCua(t.dong).map((m) => (
@@ -278,13 +292,10 @@ export function KetQuaCuocGoi({ t, xong }: { t: TheDong; xong: () => void }) {
           key={m}
           data-ket-qua={m}
           tat={t.ban}
-          onCham={() => {
-            xong();
-            if (m !== "khong-nghe") t.ghiKetQua(m);
-          }}
+          onCham={() => chonKetQua(m, { ghiKetQua: t.ghiKetQua, hoiTraLai, xong })}
         >
           <ItemContent>
-            <ItemTitle>{NHAN_KET_QUA[m]}</ItemTitle>
+            <ItemTitle>{nhanKetQua(m)}</ItemTitle>
             <ItemDescription>{MO_TA_KET_QUA[m]}</ItemDescription>
           </ItemContent>
         </DongCham>
@@ -325,6 +336,8 @@ export function DanhSachDienThoai({
   const [loiGoi, setLoiGoi] = useState<Record<string, string>>({});
   const [khoa] = useState(taoKhoaGoi);
   const [dangGoi, setDangGoi] = useState<ReadonlySet<string>>(new Set());
+  // «Trả lại» hỏi lại trước như máy tính (hàng 92): dòng đang chờ xác nhận.
+  const [hoiTra, setHoiTra] = useState<TheDong | null>(null);
 
   if (trangThai === "dang") return <ChoTai kieu="tran" />;
   if (trangThai === "loi")
@@ -393,12 +406,32 @@ export function DanhSachDienThoai({
                 t={{ ...t, ban: t.ban || dangGoi.has(t.id), loi: loiGoi[t.id] || t.loi }}
                 coMang={coMang}
                 onGoi={() => goi(t)}
+                hoiTraLai={() => setHoiTra(t)}
               />
             ))}
           </ul>
         </section>
       ))}
-      {theNgan ? <NganKetQua t={theNgan} mo onMo={dongNgan} /> : null}
+      {theNgan ? <NganKetQua t={theNgan} mo onMo={dongNgan} hoiTraLai={() => setHoiTra(theNgan)} /> : null}
+      <AlertDialog open={hoiTra !== null} onOpenChange={(mo) => !mo && setHoiTra(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Trả lại lead này?</AlertDialogTitle>
+            <AlertDialogDescription>Lý do: {RETURN_REASON_LABEL}. Lead về telesales để sửa số và gửi lại.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Giữ lại</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                hoiTra?.ghiKetQua("tra-lai");
+                setHoiTra(null);
+              }}
+            >
+              Trả lại
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

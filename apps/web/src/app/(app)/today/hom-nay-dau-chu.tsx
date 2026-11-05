@@ -7,7 +7,7 @@
 import { NEED_LABELS, RETURN_REASON_LABEL, LEAD_STAGE_LABELS, type LeadState } from "@quy-hang/core/dedupe";
 import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type BoNhom, type LeadAction, type Nhom } from "@quy-hang/core/today";
 import { useTable, type ColumnDef, type ExpandedState, type Row } from "@tanstack/react-table";
-import { InboxIcon, RotateCwIcon } from "lucide-react";
+import { RotateCwIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
@@ -43,6 +43,8 @@ import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { docNhomThamSo, timNhom } from "./mo-nhom";
 import { chuSo, moSo, telHref } from "./mo-so";
 import { DanhSachDienThoai, type NhomThe, type TheDong } from "./mobile/danh-sach";
+import { dungNhomThe } from "./mobile/hanh-dong";
+import { HetViec } from "./mobile/het-viec";
 import { moSoChu } from "./mobile/mo-so-chu";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
 import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
@@ -279,21 +281,6 @@ function DangTai() {
     <FramePanel className="p-3.5!" aria-label="Đang tải Hôm nay">
       <ChoTai kieu="tran" />
     </FramePanel>
-  );
-}
-
-function HetViec() {
-  return (
-    <TrangThai
-      kind="empty"
-      icon={InboxIcon}
-      title="Hôm nay không còn việc"
-      description={
-        <Button variant="outline" size="sm" className="mt-2" nativeButton={false} render={<Link href="/inventory" />}>
-          Mở Bảng hàng
-        </Button>
-      }
-    />
   );
 }
 
@@ -550,7 +537,7 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
       daMo: (so) => setSoDaMo((m) => ({ ...m, [v.id]: so })),
     };
   };
-  const nhomThe: NhomThe[] = nhom.map((g) => ({ ma: g.nhom.code, nhan: g.nhom.label, badge: badgeNhom(g.nhom), the: g.viec.map(theCua) }));
+  const nhomThe: NhomThe[] = dungNhomThe(nhom, theCua, badgeNhom);
 
   const than = dienThoai ? (
     <FramePanel className="p-0!">
