@@ -1,0 +1,82 @@
+schema_version: 1
+feature_slug: hom-nay-dau-chu-dien-thoai
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm rẽ khổ: dưới 768 px → bản điện thoại, từ 768 → lưới (ma trận viết trước 5 khổ 375 · 390 · 767 · 768 · 1440, số assert = 5); danh sách thẻ dựng thật (renderToStaticMarkup) từ một bộ nhóm mẫu 5 nhóm có đúng thứ tự nhóm của chiaNhom như lưới máy tính, không có phần tử lưới; chiều đỏ: bản sao đảo hai nhóm → bộ so nêu tên nhóm lệch."
+    paths: ["apps/web/src/app/(app)/today/mobile/**", "apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thẻ dựng thật cho ma trận 3 mốc hạn (quá · còn dưới 15 phút · còn lâu) × 2 loại dòng (căn · lead) = 6 ô: dòng trên là tên, dòng dưới là lý do · giá, lớp màu hạn đúng mucHan của máy tính; chiều đỏ: bản sao bỏ màu hạn → ô đỏ nêu mốc."
+    paths: ["apps/web/src/app/(app)/today/mobile/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận viết trước 6 loại dòng (lead mới · lead đã nhận chưa gọi · căn nên gọi điều chỉnh giá · căn cần gọi lại · căn thiếu thông tin · căn mới đổi) × 2 (có số gọi được · không có số) = 12 ô: nút mép phải đúng bảng của AC-3, bộ việc trong ⋯ cộng nút mép phải bằng đúng bộ việc của viecCuaDong máy tính, «Mở số» của lead thay bằng «Gọi» (cộng «Gọi» khi có số); số assert = 12; chiều đỏ: bản sao luôn đặt «Gọi» làm nút chính → ô nêu loại dòng."
+    paths: ["apps/web/src/app/(app)/today/mobile/**", "apps/web/src/app/(app)/today/viec-dong.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm gọi một chạm với lời gọi máy chủ bơm vào: lead → POST …/leads/{id}/phone-reveal; căn mình giữ → POST …/listings/{id}/owner/phone-reveal; thứ tự ghi nhận đúng mở số → mở tel: (href = tel: số trả về) → mở ngăn kết quả; mở số lỗi → không mở tel:, báo lỗi; căn người khác giữ → không có lệnh Gọi; chạm lần đầu đúng một lần gọi máy chủ, chạm lại cùng dòng dùng lại số (không gọi máy chủ lần hai); chiều đỏ: bản sao mở tel: trước khi mở số → bộ so nêu thứ tự."
+    paths: ["apps/web/src/app/(app)/today/mobile/**", "apps/web/src/app/(app)/today/mo-so.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ngăn kết quả dựng thật cho 3 loại dòng (lead nhóm có trả lại · lead nhóm không trả lại · căn): đúng bộ nút như AC-5 theo thứ tự, mỗi nút kín bề ngang; hàm nhớ ngăn trên máy: ghi dòng khi chạm Gọi, đọc lại sau khi dựng lại (giả tải lại) cho đúng dòng, xoá khi chọn kết quả; chọn «Không nghe máy» không gọi hàm ghi nào; chọn việc khác gọi đúng hàm của nút cùng tên ở máy tính; chiều đỏ: bản sao «Không nghe máy» ghi «Đã gọi» → bộ so nêu nút."
+    paths: ["apps/web/src/app/(app)/today/mobile/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thẻ dựng với cờ mất mạng: «Gọi» có disabled và lời «Cần mạng để mở số»; đối chứng dương có mạng: «Gọi» bật, không lời; «Còn · giữ giá» trên thẻ gọi hàm ghi của kho trên máy (cùng hàm máy tính dùng) cả khi mất mạng; chiều đỏ: bản sao bỏ cờ mất mạng → ô nêu nút."
+    paths: ["apps/web/src/app/(app)/today/mobile/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; danh sách thẻ dựng thật ở ba trạng thái: đang tải → khung chờ hai tầng (qua ChoTai), trống → TrangThai có đúng một hành động, lỗi → có «Thử lại»; đối chứng: có việc → không trạng thái nào trong ba."
+    paths: ["apps/web/src/app/(app)/today/mobile/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "Dựng chỗ thử dãy H: node _acceptance/hom-nay-dau-chu-dien-thoai/thu/dung-h.mjs (Postgres 5574, máy dev 3494 chạy webpack, nạp cho dau-chu-1 ít nhất mười việc: một lead mẫu số 0900 000 091, căn mẫu dau-chu-1 giữ với số chủ 0900 000 092, và một căn do dau-chu-2 giữ; in PID — dừng bằng --tat khi chấm xong, không pkill)"
+      - "Chạy node _acceptance/hom-nay-dau-chu-dien-thoai/thu/chay-ui.mjs --ra _acceptance/hom-nay-dau-chu-dien-thoai/evidence — Chrome không đầu, mỗi cảnh một dòng JSON và ảnh E8-*.png"
+      - "Đối chiếu e8-the (375×812): có thẻ, không có lưới, thẻ đầu có hai tầng, tổng việc ≥ 10 và số thẻ nằm trọn trong khung nhìn ≥ 7"
+      - "Đối chiếu e8-goi: chạm «Gọi» ở lead mẫu → href tel: mang 0900000091, số lần mở số của lead trên Postgres tăng đúng 1 (dung-h.mjs --doc), ngăn «Kết quả cuộc gọi» mở ở nửa dưới màn, mỗi nút đo cao thật ≥ 48 px; e8-quay-lai: phát trang ẩn rồi hiện, rồi tải lại trang — cả hai lần ngăn vẫn mở cho đúng lead ấy; chạm «Gọi» lần hai cùng lead không tăng số lần mở số"
+      - "Đối chiếu e8-goi-can: chạm «Gọi» ở căn mẫu dau-chu-1 giữ → href tel: mang 0900000092, số lần mở số chủ của căn tăng đúng 1; căn do dau-chu-2 giữ không có «Gọi», và gọi thẳng lối mở số chủ của căn ấy bị từ chối"
+      - "Đối chiếu e8-da-goi: chọn «Đã gọi» → lead mẫu có lần gọi đầu trên Postgres; e8-giu-gia: chạm «Còn · giữ giá» ở căn mẫu → căn có xác nhận còn; e8-may-tinh (1440×900): vẫn thấy lưới"
+    expected: "Trên điện thoại 375×812 với đầu chủ mẫu: thẻ hai tầng, khoảng tám việc một màn; chạm «Gọi» ở lead mẫu mở tel: đúng số và máy chủ ghi đúng một lần mở số; ngăn kết quả mở ở nửa dưới màn; «Đã gọi» ghi lần gọi đầu; «Còn · giữ giá» ghi xác nhận; máy tính 1440 vẫn là lưới; mỗi cảnh một ảnh."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/hom-nay-dau-chu.md", "apps/web/src/app/(app)/today/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm hom-nay-dau-chu"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
