@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 170f9bccb54d7ee4c06a6c89291a87ff5aacb2f5
+verified_commit: 7e91413c024683653d69d3ccaafcfefcb260420c
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -281,3 +281,7 @@ none — every multi-run eval is uniform
 
 Round 1: bộ eval gốc chạy và được ghi vào nhật ký; các eval kiểm thử E2b, E3, E4, E5a, E6b, E7a, E8, E8b, E9, E10a, E12 mang kết quả từ round này.
 Round 2: chạy lại E1, E2a, E5b, E6a, E7b, E10b, E11, E13 và bảy lệnh suite; các mục còn lại carry-forward từ round 1 vì delta không chạm paths của chúng. Verdict PASS, E11 đạt có giới hạn (xem Known limits).
+
+### Re-pin lần 1 — 2026-11-05, do thêm phép đo phía máy chủ E5c, E7c cho hai tiêu chí xuyên lớp
+run_id: repin-20261105T224630Z-83145
+sha: 7e91413c024683653d69d3ccaafcfefcb260420c · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E11=1 · ngoài làn máy: E1 (E1 không khai paths), E2a (E2a không khai paths), E5b (E5b không khai paths), E6a (E6a không khai paths), E7b (E7b không khai paths), E10b (E10b không khai paths)
