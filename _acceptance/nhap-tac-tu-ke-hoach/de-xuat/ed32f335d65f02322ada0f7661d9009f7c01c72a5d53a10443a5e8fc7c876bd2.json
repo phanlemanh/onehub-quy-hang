@@ -1,0 +1,74 @@
+{
+  "ten": "la-a-dong-nghia",
+  "bamGoi": "ed32f335d65f02322ada0f7661d9009f7c01c72a5d53a10443a5e8fc7c876bd2",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 1,
+        "dich": "buildingName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Khối nhà» là tên toà, chỉ có 2 giá trị chữ lặp lại trên 40 dòng đúng như cột toà."
+      },
+      {
+        "cot": 2,
+        "dich": "livingArea",
+        "phep": {
+          "name": "area",
+          "kind": "thong_thuy"
+        },
+        "ly_do": "Tiêu đề «Diện tích sử dụng» là diện tích căn, toàn số; diện tích sử dụng căn hộ thường tính theo thông thủy."
+      },
+      {
+        "cot": 3,
+        "dich": "bedroomsTotal",
+        "phep": {
+          "name": "bedrooms"
+        },
+        "ly_do": "«Kiểu căn hộ» chỉ chứa một chữ số với 3 giá trị khác nhau, khớp cách ghi số phòng ngủ (1PN, 2PN, 3PN)."
+      },
+      {
+        "cot": 5,
+        "dich": "listPrice",
+        "phep": {
+          "name": "price",
+          "unit": "ty"
+        },
+        "ly_do": "Tiêu đề «Giá niêm yết (tỷ)» là giá chào, ghi rõ đơn vị tỷ đồng."
+      },
+      {
+        "cot": 8,
+        "dich": "ownerName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "«Người ký gửi» là chủ nhà gửi bán, có 30 giá trị khác nhau khớp với 30 số ở cột điện thoại chủ nhà."
+      },
+      {
+        "cot": 10,
+        "dich": "listAgentName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "«Môi giới phụ trách» là người của sàn giữ căn, chỉ 2 tên lặp lại trên 40 dòng nên là đầu chủ."
+      },
+      {
+        "cot": 11,
+        "dich": "privateRemarks",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "«Thông tin thêm» là chữ tự do, có ô trống, phù hợp làm ghi chú nội bộ."
+      },
+      {
+        "cot": 12,
+        "dich": "keep_as_note",
+        "ly_do": "«Phân loại» chỉ có một giá trị chữ ngắn cho mọi dòng, không rõ ứng với trường nào nên giữ làm ghi chú."
+      }
+    ]
+  }
+}

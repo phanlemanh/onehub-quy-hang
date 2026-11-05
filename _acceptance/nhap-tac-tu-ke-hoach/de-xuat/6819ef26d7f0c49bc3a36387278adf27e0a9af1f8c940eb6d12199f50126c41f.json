@@ -1,0 +1,19 @@
+{
+  "ten": "ban-tieu-de",
+  "bamGoi": "6819ef26d7f0c49bc3a36387278adf27e0a9af1f8c940eb6d12199f50126c41f",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 8,
+        "dich": "ownerName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Liên hệ chủ / Tên» nằm cùng nhóm với cột số điện thoại chủ, có 30 giá trị khác nhau dạng chữ như tên người, nên là tên chủ nhà."
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ten": "ban-csv",
+  "bamGoi": "f08e907c1c4c77a67fbce07261b2732836ba7ae03840725d4cc03479cd88ce1c",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 12,
+        "dich": "keep_as_note",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Nhãn» không chỉ rõ trường nào và cả cột chỉ có một giá trị ngắn, nên giữ làm ghi chú để không mất dữ liệu."
+      }
+    ]
+  }
+}
