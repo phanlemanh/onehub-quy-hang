@@ -2,16 +2,17 @@
 schema_version: 2
 feature_slug: doi-dau-chu-hang-loat
 verdict: REJECT
-failed_evals: ["E9"]
-reason:
+failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b5b2d1b19d6c67fe05cf69a9a82977f870a41ae0
+verified_commit: 8bcbc1d7601f6709708a8856aa5e8537a01df7c0
 human_signoff:
 ---
 
 # Evidence Report: doi-dau-chu-hang-loat
+
+Vòng 2. Mọi eval máy và eval giao diện đều chạy xong và đạt. Verdict tổng là REJECT vì phép đo của vài eval còn yếu (xem `review-findings.md`, mục «Trong hợp đồng»). Các lỗi đo ấy trả về cho khâu viết lại bài kiểm, không phải eval hỏng.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -28,204 +29,181 @@ human_signoff:
 | E7 | AC-7 | test | PASS |
 | E8 | AC-8 | script | PASS |
 | E8b | AC-1 | script | PASS |
-| E9 | AC-9 | ui-check | FAIL |
+| E9 | AC-9 | ui-check | PASS |
 | E9b | AC-4 | ui-check | PASS |
-
-Lệnh fail không gắn eval: ui-check:E9 (cùng eval E9, đã tính ở trên).
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-doi-dau-chu-hang-loat-E1-r1
+  run_id: minted-doi-dau-chu-hang-loat-E1-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 726.971125
+    ℹ duration_ms 1456.438167
 
 - eval: E1b
-  run_id: minted-doi-dau-chu-hang-loat-E1b-r1
+  run_id: minted-doi-dau-chu-hang-loat-E1b-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 2958.022959
+    ℹ duration_ms 3438.435417
 
 - eval: E4b
-  run_id: minted-doi-dau-chu-hang-loat-E4b-r1
+  run_id: minted-doi-dau-chu-hang-loat-E4b-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 2958.022959
+    ℹ duration_ms 3438.435417
 
 - eval: E1c
-  run_id: minted-doi-dau-chu-hang-loat-E1c-r1
+  run_id: minted-doi-dau-chu-hang-loat-E1c-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E2
-  run_id: minted-doi-dau-chu-hang-loat-E2-r1
+  run_id: minted-doi-dau-chu-hang-loat-E2-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E3
-  run_id: minted-doi-dau-chu-hang-loat-E3-r1
+  run_id: minted-doi-dau-chu-hang-loat-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E4
-  run_id: minted-doi-dau-chu-hang-loat-E4-r1
+  run_id: minted-doi-dau-chu-hang-loat-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E5
-  run_id: minted-doi-dau-chu-hang-loat-E5-r1
+  run_id: minted-doi-dau-chu-hang-loat-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E6
-  run_id: minted-doi-dau-chu-hang-loat-E6-r1
+  run_id: minted-doi-dau-chu-hang-loat-E6-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E7
-  run_id: minted-doi-dau-chu-hang-loat-E7-r1
+  run_id: minted-doi-dau-chu-hang-loat-E7-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 59114.63075
+    ℹ duration_ms 65983.878708
 
 - eval: E4c
-  run_id: minted-doi-dau-chu-hang-loat-E4c-r1
+  run_id: minted-doi-dau-chu-hang-loat-E4c-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web_db
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    npm run test:db -w @quy-hang/web
-    ℹ duration_ms 10458.812792
+    ℹ duration_ms 9470.874792
 
 - eval: E8
-  run_id: minted-doi-dau-chu-hang-loat-E8-r1
+  run_id: minted-doi-dau-chu-hang-loat-E8-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.script.doi_dau_chu_tai_lieu
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    node --test "_acceptance/doi-dau-chu-hang-loat/thu/*.test.mjs"
-    ℹ duration_ms 71.286708
+    ℹ duration_ms 118.926667
 
 - eval: E8b
-  run_id: minted-doi-dau-chu-hang-loat-E8b-r1
+  run_id: minted-doi-dau-chu-hang-loat-E8b-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
   output: |
-    design-floor-khuon --kiem
     4 tệp giao diện ngoài bản đồ
 
 - eval: E9
-  run_id: minted-doi-dau-chu-hang-loat-E9-r1
-  exit_code: 1
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-05T01:33:29Z
-  screenshot: evidence/E9-hop-hoi.png
-  observed: |
-    E9-hop-hoi.png: modal "Đổi đầu chủ 5 căn", sub "Mọi căn cùng chủ nhà đi theo · 2 liên hệ chủ nhà đổi người giữ.", selector [Mẫu] Đầu chủ 2, năm dòng Toà A A-04.06, A-10.05, A-06.03, A-08.03, A-11.02 mỗi dòng "đang giữ: [Mẫu] Đầu chủ 1", ba dòng cuối gắn "cùng chủ nhà"; nút Thôi / Đổi đầu chủ; không có tên hay số chủ nhà. Khớp Expected.
-    E9-sau-doi.png: bảng 26/26 căn, thông báo "Đã đổi đầu chủ 5 căn, 2 liên hệ" kèm Hoàn tác; cột đầu chủ nằm ngoài màn hình bên phải nên KHÔNG thấy bảng hiện D2 trong ảnh.
-    E9-hoan-tac.png: thông báo "Đã trả lại người giữ cũ cho 7 căn và liên hệ" (số 7 khác cách nói 5 căn + 2 liên hệ của Expected; dữ liệu DB cho D1 đủ 5 căn và 2 liên hệ).
-    E9-dau-chu.png: đăng nhập đầu chủ, 1 căn đã chọn, thanh có Đổi trạng thái / Đánh dấu đã gọi / Bỏ chọn, không có «Đổi đầu chủ».
-    Vế Expected «bảng hiện D2 ở cả 5 căn» không có bằng chứng trong ảnh hay đầu ra kịch bản (kịch bản chỉ đo thời gian đến khi thông báo hiện, không đọc cột đầu chủ của bảng) nên eval không đạt.
-  network_observed: n-a (driver)
-  output: |
-    Frames: E9-hop-hoi.png, E9-sau-doi.png, E9-hoan-tac.png, E9-dau-chu.png.
-    PASS e9-hop-hoi, e9-sau-doi toast (không tải lại trang), e9-sau-doi-db (D2 x5, liên hệ D2 x2), e9-hoan-tac data (D1 x5, D1 x2), e9-dau-chu (không có nút Đổi đầu chủ).
-    Thiếu bằng chứng: bước 4 và Expected «bảng hiện D2 ở cả 5 căn»; E9-sau-doi.png cắt trước cột đầu chủ, 5 căn đổi không hiện trong khung.
-
-- eval: E9b
-  run_id: minted-doi-dau-chu-hang-loat-E9b-r1
+  run_id: minted-doi-dau-chu-hang-loat-E9-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
+  screenshot: evidence/E9-hop-hoi.png
+  observed: |
+    E9-hop-hoi.png: nền bảng bị làm mờ, hộp «Đổi đầu chủ 5 căn», mô tả «Mọi căn cùng chủ nhà đi theo · 2 liên hệ chủ nhà đổi người giữ.», ô chọn «[Mẫu] Đầu chủ 2», 5 dòng căn (A-04.06, A-10.05, A-06.03, A-08.03, A-11.02), mỗi dòng «đang giữ: [Mẫu] Đầu chủ 1», 3 dòng cuối có «cùng chủ nhà»; nút Thôi và Đổi đầu chủ; không thấy tên hay số chủ nhà. E9-sau-doi.png: bảng hàng hiện lại, không có cột Đầu chủ, thông báo «Đã đổi đầu chủ 5 căn, 2 liên hệ» kèm nút «Hoàn tác» ở góc dưới. E9-hoan-tac.png: thông báo «Đã trả lại người giữ cũ: 7 mục (căn và liên hệ)», bảng 26 căn. E9-dau-chu.png: đăng nhập là DA (đầu chủ), tích 1 căn, thanh lệnh chỉ có «Đổi trạng thái», «Đánh dấu đã gọi», «Bỏ chọn», không có «Đổi đầu chủ». Khớp Expected.
+  network_observed: n-a (driver)
+
+- eval: E9b
+  run_id: minted-doi-dau-chu-hang-loat-E9b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-05T04:33:03Z
   screenshot: evidence/E9b-step1.png
   observed: |
-    Frame E9b-step1.png (sau đổi): bảng hàng, hộp xác nhận đang mờ dần, toast góc dưới "Đã đổi đầu chủ 5 căn, 2 liên hệ" kèm nút Hoàn tác, không tải lại trang. Frame E9b-step2.png (sau Hoàn tác): bảng hàng, toast "Đã trả lại người giữ cũ cho 7 căn và liên hệ". Khớp Expected. Dòng --doc sau đổi: dauChu D2 x5, nguoiGiu D2 x2. Sau Hoàn tác: dauChu D1 x5, nguoiGiu D1 x2.
+    E9b-step1.png (copy of E9-sau-doi.png): the inventory table is on screen, 26 rows, with no reload. A toast at the bottom right reads "Đã đổi đầu chủ 5 căn, 2 liên hệ" and has a "Hoàn tác" button. E9b-step2.png (copy of E9-hoan-tac.png): same table, and the toast area at the bottom shows a faded "Đã trả lại người giữ cũ: 7 mục (căn và liên hệ)". The table has no Đầu chủ column, as the eval's steps say it should not yet. The frames only show the toasts. The Postgres values come from the --doc JSON in the chay-ui.mjs output.
   network_observed: n-a (driver)
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-doi-dau-chu-hang-loat-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-doi-dau-chu-hang-loat-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-doi-dau-chu-hang-loat-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-doi-dau-chu-hang-loat-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
 
 - cmd: npm run test:hooks
-  run_id: minted-doi-dau-chu-hang-loat-SUITE-test_hooks-r1
+  run_id: minted-doi-dau-chu-hang-loat-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-doi-dau-chu-hang-loat-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-doi-dau-chu-hang-loat-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
 
 - cmd: npm run typecheck
-  run_id: minted-doi-dau-chu-hang-loat-SUITE-typecheck-r1
+  run_id: minted-doi-dau-chu-hang-loat-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
 
 - cmd: npm run lint
-  run_id: minted-doi-dau-chu-hang-loat-SUITE-lint-r1
+  run_id: minted-doi-dau-chu-hang-loat-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:33:29Z
+  verified_at: 2026-11-05T04:33:03Z
 
 ## Known limits
 
@@ -233,22 +211,21 @@ Lệnh fail không gắn eval: ui-check:E9 (cùng eval E9, đã tính ở trên)
 
 ## Analyst
 
-Không có eval dạng judgment trong hợp đồng này nên không có bảng giám khảo.
+Eval không phân biệt (xanh cả trên mã cũ lẫn mã mới; chứng minh bộ đo chứ chưa chứng minh tính năng, cần viết lại để khẳng định hành vi mới hoặc xác nhận là rào hồi quy có chủ ý):
+- `npm test -w @quy-hang/core`: E1
+- `npm test -w @quy-hang/web`: E1b, E4b
+- `npm run db:migrate && npm run db:test`: E1c, E2, E3, E4, E5, E6, E7
+- `npm run test:db -w @quy-hang/web`: E4c
+- `node --test "_acceptance/doi-dau-chu-hang-loat/thu/*.test.mjs"`: E8
+- lệnh chấm khuôn thiết kế (`design-floor-khuon.mjs --kiem`): E8b
 
-Eval không phân biệt (xanh trên cả bản nhánh lẫn baseline; chứng minh khung đo chứ chưa chứng minh tính năng, nên viết lại để khẳng định hành vi mới hoặc xác nhận là rào hồi quy có chủ ý):
-- E1 (npm test -w @quy-hang/core)
-- E1b, E4b (npm test -w @quy-hang/web)
-- E1c, E2, E3, E4, E5, E6, E7 (npm run db:migrate && npm run db:test)
-- E4c (npm run test:db -w @quy-hang/web)
-- E8 (node --test thư mục thu)
-- E8b (design-floor-khuon --kiem)
-
-Baseline không đo: E9, E9b (baseline n-a).
+Baseline không đo: E9, E9b (eval giao diện, không chạy được trên mã cũ).
 
 ## Variance
 
-none — every multi-run eval is uniform
+none — mọi eval nhiều lần chạy đều đồng đều (mọi eval chạy một lần, tất định).
 
 ## Iterations
 
-Round 1: E9 failed — vế «bảng hiện D2 ở cả 5 căn» không có bằng chứng: kịch bản không đọc cột đầu chủ của bảng và ảnh sau đổi cắt trước cột đó. Returned to implementation.
+Round 1: lượt chấm đầu REJECT, số đo chưa đủ (commit a0e83ad4); AC-4 thu theo chủ kho, cột Đầu chủ hàng sau.
+Round 2: mọi eval máy và giao diện đạt; verdict REJECT do các lỗi phép đo trong hợp đồng (bài quét rò rỉ chủ nhà ở E9 quét sai giá trị và thiếu đối chứng dương, ca ba hàm chỉ kiểm hai, hai bài đo bằng regex mã nguồn, bài nút tắt thiếu đối chứng). Trả về khâu viết lại bài kiểm.
