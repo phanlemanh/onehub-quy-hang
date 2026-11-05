@@ -1,0 +1,7 @@
+{"canh":"e9-hop-hoi","tieuDe":"Đổi đầu chủ 5 căn","moTa":"Mọi căn cùng chủ nhà đi theo · 2 liên hệ chủ nhà đổi người giữ.","soDong":5,"cungChu":3,"nguoiGiuCu":["[Mẫu] Đầu chủ 1"],"tenD1":"[Mẫu] Đầu chủ 1","soMoi":6,"loChuNha":[],"doiChungDuong":true}
+{"canh":"e9-sau-doi","thongBao":"Đã đổi đầu chủ 5 căn, 2 liên hệ\nHoàn tác","giay":0.8,"khongTaiLai":true}
+{"canh":"e9-sau-doi-db","dauChu":["D2","D2","D2","D2","D2"],"nguoiGiu":["D2","D2"]}
+{"canh":"e9-hoan-tac","thongBao":"Đã trả lại người giữ cũ: 7 mục (căn và liên hệ)","db":{"dauChu":["D1","D1","D1","D1","D1"],"nguoiGiu":["D1","D1"]}}
+{"canh":"e9-doi-chung-tai-lai","dauConSauTaiLai":false}
+{"canh":"e9-dau-chu","coThanh":true,"coLenh":false}
+__EXIT=0
