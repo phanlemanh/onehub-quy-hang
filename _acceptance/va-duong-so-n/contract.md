@@ -41,8 +41,8 @@ Source input: `docs/plan/lo-trinh.json` hàng va-duong-so-n · `_acceptance/va-d
   khoá `79|26743|so 5|12`; tên đường không có chữ «số» («Đường 5», «Đường 3 Tháng 2», «Đường 30/4») giữ dạng chuẩn hoá
   như hàng 75.
 - AC-5: Given 86 cách viết của bộ thử hàng 73 và ảnh khoá chụp bằng bộ đọc trước khi vá (`anh-truoc-va.json`), When đọc bằng
-  bộ đọc sau vá, Then mọi cách viết ra đúng số nhà, tên đường, tên đường chuẩn hoá, khoá và trạng thái của ảnh; bộ kiểm
-  AC-1…AC-7 của hàng 75 vẫn xanh trong cùng lượt.
+  bộ đọc sau vá, Then mọi cách viết ra đúng số nhà, tên đường, tên đường chuẩn hoá, khoá và trạng thái của ảnh; bộ kiểm của
+  hàng 75 vẫn xanh trong cùng lượt.
 
 ## Coverage
 
