@@ -5,7 +5,7 @@ slug: nhap-tac-tu-ke-hoach
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: _acceptance/nhap-tac-tu-ke-hoach/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -125,3 +125,10 @@ việc Anthropic (vận hành). Never: tác tử đọc dòng hay ô nguồn (tr
   và hình dạng, không đề xuất được quy đổi giá trị cho các cột ấy — công cụ «xin giá trị» thuộc vòng tác tử nhiều lượt (OOS-1).
 - Known limits đề xuất: một lần gọi có thể vượt trần tháng tối đa một lần gọi (≤ ~1,3 USD theo Kiến trúc §7) vì tiền chỉ
   biết sau khi gọi; chi phí và thời gian thật mỗi lần nhập chỉ đo được khi có khoá (Hỏi-1).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Hai biến môi trường của AI (khoá Claude, bảng giá) chưa khai trong tệp mẫu; người dựng máy mới không thấy ghi chú nên AI âm thầm tắt.
+  - Ngoài-5: Trong lúc chờ AI trả lời (tối đa bốn phút) ô chọn tệp bị khoá và màn vẫn ghi «Đang đọc tệp» dù đã đọc xong.
+  - Ngoài-6: Khi máy chủ cố ý từ chối gói, người dùng được báo là lỗi mạng chứ không thấy lý do thật; nhập tay vẫn chạy.
+  - Ngoài-7: Con số «máy ghép đúng bao nhiêu phần trăm» dựa trên nhãn tự khai về tác tử độc lập; số qua API thật kiểm lại ở phiên nghiệm thu.
+  - Ngoài-8: Bài kiểm «AI tắt thì không gọi đề xuất» chỉ kiểm hàm điều kiện, chưa đếm lời gọi thật; bỏ nhầm dòng chặn thì bộ kiểm vẫn xanh.
+  - Ngoài-9: Ảnh chụp Xem trước chỉ cho thấy đã sang được trang, chưa chứng minh cột máy đề xuất ghép đúng đích.
