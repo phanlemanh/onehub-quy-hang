@@ -22,6 +22,12 @@ export function dungHop(x: XemTruoc, maCan: (id: string) => string, ten: (userId
 
 export const chuDaDoi = (kq: { listings: number; contacts: number }) => `Đã đổi đầu chủ ${kq.listings} căn, ${kq.contacts} liên hệ`;
 
+/** Tuỳ chọn của thông báo sau khi đổi: sống 10 giây, nút «Hoàn tác» gọi hoàn tác đúng lần đổi ấy. */
+export const thongBaoDoi = (id: string, tenNhan: string, hoanTac: (id: string, tenNhan: string) => unknown) => ({
+  duration: THOI_GIAN_HOAN_TAC,
+  action: { label: "Hoàn tác", onClick: () => void hoanTac(id, tenNhan) },
+});
+
 /** Thông báo sau hoàn tác: số đã trả, số bỏ qua vì đổi tiếp, và lời riêng cho căn trước chưa có đầu chủ (Hỏi-2). */
 export function chuHoanTac(kq: { restored: number; skipped: number; keptNoPriorAgent: number }, tenNhan: string): { chu: string; moTa: string | null } {
   const moTa = [

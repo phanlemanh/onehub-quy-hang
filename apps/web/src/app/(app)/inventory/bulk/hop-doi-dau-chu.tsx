@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useBoDongBo } from "@/lib/sync/react";
 import type { DongBang } from "../cot";
-import { chayDoi, chayHoanTac, doiDauChu, dungHop, hoanTacDoi, THOI_GIAN_HOAN_TAC, trangThaiNut, xemTruoc, type XemTruoc } from "./doi-dau-chu";
+import { chayDoi, chayHoanTac, doiDauChu, dungHop, hoanTacDoi, thongBaoDoi, trangThaiNut, xemTruoc, type XemTruoc } from "./doi-dau-chu";
 
 const nghe = (bao: () => void) => {
   window.addEventListener("online", bao);
@@ -43,6 +43,24 @@ export function NutDoiDauChu({ vai, coMang, onMo, quyen = canReassignListingAgen
     <Button type="button" variant="outline" size="sm" disabled={nut.tat} title={nut.loi ?? undefined} onClick={onMo}>
       Đổi đầu chủ
     </Button>
+  );
+}
+
+/** Ô chọn người nhận: Select nhận danh sách mục để nút chọn hiện tên đầu chủ, không hiện mã người. */
+export function ChonNguoiNhan({ dauChu, nhan, onDoi }: { dauChu: readonly DauChuCuaSan[]; nhan: string | null; onDoi: (id: string | null) => void }) {
+  return (
+    <Select value={nhan} items={dauChu.map((d) => ({ value: d.userId, label: d.displayName }))} onValueChange={(v) => onDoi((v as string | null) ?? null)}>
+      <SelectTrigger aria-label="Đầu chủ mới">
+        <SelectValue placeholder="Chọn đầu chủ mới" />
+      </SelectTrigger>
+      <SelectContent>
+        {dauChu.map((d) => (
+          <SelectItem key={d.userId} value={d.userId}>
+            {d.displayName}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
 
@@ -99,7 +117,7 @@ export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBa
         setMo(false);
         setNhan(null);
         xong();
-        toast(chu, { duration: THOI_GIAN_HOAN_TAC, action: { label: "Hoàn tác", onClick: () => void hoanTac(id, tenNhan) } });
+        toast(chu, thongBaoDoi(id, tenNhan, hoanTac));
       },
       keo: () => bd.thuNgay(),
     });
@@ -121,18 +139,7 @@ export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBa
               {hop ? `Mọi căn cùng chủ nhà đi theo · ${hop.soLienHe} liên hệ chủ nhà đổi người giữ.` : loi ?? "Đang tải các căn sẽ đổi…"}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Select value={nhan} items={dauChu.map((d) => ({ value: d.userId, label: d.displayName }))} onValueChange={(v) => setNhan((v as string | null) ?? null)}>
-            <SelectTrigger aria-label="Đầu chủ mới">
-              <SelectValue placeholder="Chọn đầu chủ mới" />
-            </SelectTrigger>
-            <SelectContent>
-              {dauChu.map((d) => (
-                <SelectItem key={d.userId} value={d.userId}>
-                  {d.displayName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <ChonNguoiNhan dauChu={dauChu} nhan={nhan} onDoi={setNhan} />
           {hop ? (
             <ul className="flex max-h-60 flex-col gap-0.5 overflow-y-auto text-xs" aria-label="Căn sẽ đổi">
               {hop.dong.map((d) => (

@@ -2632,6 +2632,7 @@ const DD = {
   L1: "00000000-0000-4000-8000-000000000891", // căn A của chủ K1, đầu chủ DC1
   L2: "00000000-0000-4000-8000-000000000892", // căn A của chủ K1, đầu chủ DC1
   LB: "00000000-0000-4000-8000-000000000893", // căn B, chủ KB
+  DK: "u-dd-dau-khach", // đầu khách sàn A
 };
 async function withDoiDauChu(fn) {
   await withLienHe(async (c) => {
@@ -2688,12 +2689,23 @@ test("đổi đầu chủ: sàn B không đọc, không đổi, không hoàn tá
 
 test("đổi đầu chủ: chỉ trưởng nhóm gọi được ba hàm", { skip }, async () => {
   await withDoiDauChu(async (c) => {
-    for (const ai of [LH.DC1, LH.TS, LH.QT]) {
+    await c.query("reset role");
+    await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [DD.DK, `${DD.DK}@example.test`]);
+    await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, '{buyer_agent}')", [COMPANY_A, DD.DK]);
+    await c.query("set local role quy_hang_app");
+    // Một lần đổi thật của trưởng nhóm để có mã cho ô hoàn tác.
+    await lamNguoi(c, LH.TN, COMPANY_A);
+    const lan = (await c.query("select app.reassign_listing_agents($1, $2) id", [[DD.L1], LH.DC2])).rows[0].id;
+    // Bốn vai không phải trưởng nhóm × ba hàm.
+    for (const ai of [LH.DC1, LH.TS, LH.QT, DD.DK]) {
       await lamNguoi(c, ai, COMPANY_A);
       await expectError(c, "select * from app.preview_listing_agent_reassignment($1)", [[DD.L1]], /không có quyền đổi đầu chủ/);
       await expectError(c, "select app.reassign_listing_agents($1, $2)", [[DD.L1], LH.DC2], /không có quyền đổi đầu chủ/);
+      await expectError(c, "select * from app.undo_listing_agent_reassignment($1)", [lan], /không có lần đổi này/);
     }
+    // Đối chứng dương: trưởng nhóm gọi được cả ba.
     await lamNguoi(c, LH.TN, COMPANY_A);
     assert.equal((await c.query("select * from app.preview_listing_agent_reassignment($1)", [[DD.L1]])).rowCount, 2, "đối chứng: trưởng nhóm xem trước được, căn cùng chủ đi theo");
+    assert.equal((await c.query("select * from app.undo_listing_agent_reassignment($1)", [lan])).rowCount, 1, "đối chứng: trưởng nhóm hoàn tác được");
   });
 });

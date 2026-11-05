@@ -17,9 +17,9 @@ mkdirSync(RA, { recursive: true });
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const dung = (...x) => JSON.parse(execFileSync("node", [DUNG, ...x], { cwd: GOC }).toString());
 const cookie = (email) => dung("--phien", email).cookie.map((c) => `${c.name}=${c.value}`);
-const MOC_CHU = ["[Mẫu] Chủ nhà X", "[Mẫu] Chủ nhà Y"];
-
 const mau = dung("--mau");
+// Mồi rò rỉ: tên và số chủ nhà thật của 5 căn (dung-h.mjs --mau ghi qua API), số ở cả dạng liền và dạng tách nhóm.
+const MOC_CHU = mau.chu.flatMap((c) => [c.ten, c.so, c.so.replace(/^(\d{4})(\d{3})(\d{3})$/, "$1 $2 $3")]);
 const X = mau.can.slice(0, 3);
 const Y = mau.can.slice(3);
 const ra = (canh, du) => console.log(JSON.stringify({ canh, ...du }));
@@ -94,7 +94,11 @@ try {
   await ngu(500);
   const hop = await tn.tinh(docHop);
   const lo = MOC_CHU.filter((m) => hop.text.includes(m));
-  ra("e9-hop-hoi", { tieuDe: hop.tieuDe, moTa: hop.moTa, soDong: hop.dong.length, cungChu: hop.dong.filter((x) => x.includes("cùng chủ nhà")).length, nguoiGiuCu: [...new Set(hop.dong.map((x) => x.split("đang giữ: ")[1]?.split(" · ")[0]))], tenD1, loChuNha: lo });
+  // Đối chứng dương: cài tạm một mồi vào hộp hỏi rồi đọc lại bằng đúng docHop — bài quét phải bắt được nó.
+  await tn.tinh(`(() => { const s = document.createElement("span"); s.id = "moi-ro-ri"; s.textContent = ${JSON.stringify(MOC_CHU[0])}; document.querySelector('[role="alertdialog"]').appendChild(s); })()`);
+  const batDuoc = (await tn.tinh(docHop)).text.includes(MOC_CHU[0]);
+  await tn.tinh(`document.getElementById("moi-ro-ri")?.remove()`);
+  ra("e9-hop-hoi", { tieuDe: hop.tieuDe, moTa: hop.moTa, soDong: hop.dong.length, cungChu: hop.dong.filter((x) => x.includes("cùng chủ nhà")).length, nguoiGiuCu: [...new Set(hop.dong.map((x) => x.split("đang giữ: ")[1]?.split(" · ")[0]))], tenD1, soMoi: MOC_CHU.length, loChuNha: lo, doiChungDuong: batDuoc });
   await chup(tn, "hop-hoi");
 
   // 2. Đổi — không tải lại trang; mở lại hộp để đọc «đang giữ».

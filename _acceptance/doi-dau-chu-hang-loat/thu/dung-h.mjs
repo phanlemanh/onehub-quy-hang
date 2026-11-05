@@ -1,8 +1,8 @@
 // Chỗ thử của Đổi đầu chủ hàng loạt (hàng 89) trên máy dãy H của đợt dau-khach-nhap (Postgres 5574 container
 // quy-hang-db-dkn-H, dev 3494) — dùng cho eval ui-check E9, E9b. Khuôn lấy từ _acceptance/cai-dat-hop-nhat/thu/dung-h.mjs.
 //   node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs        dựng Postgres + migrate + người mẫu + hàng mẫu + máy chủ dev
-//   node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs --mau  dựng lại bộ mẫu của E9: 2 chủ nhà mẫu (3 + 2 căn đang bán của
-//                                                               dau-chu-1), đầu chủ và người giữ về dau-chu-1; in JSON
+//   node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs --mau  dựng lại bộ mẫu của E9: 2 chủ nhà mẫu ghi qua API (3 + 2 căn đang bán
+//                                                               của dau-chu-1, tên và số ở CHU_MAU), đầu chủ và người giữ về dau-chu-1; in JSON
 //   node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs --doc  in JSON đầu chủ hiện tại của 5 căn và người giữ của 2 liên hệ
 //   node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs --phien <email> --ua <UA>  đăng nhập MỚI một máy giả
 //                                                                     → in JSON {url, cookie: [{name,value}], token}
@@ -26,6 +26,11 @@ const DB_CONG = 5574;
 const CONTAINER = "quy-hang-db-dkn-H";
 const URL_GOC = `http://localhost:${CONG}`;
 const DATABASE_URL = `postgres://postgres:quyhang@localhost:${DB_CONG}/postgres`;
+/** Hai chủ nhà mẫu của E9 (tên, số) — kịch bản chay-ui.mjs quét đúng các giá trị này trong hộp hỏi. */
+const CHU_MAU = [
+  { ten: "[Tên] C1-mau", so: "0900000091" },
+  { ten: "[Tên] C2-mau", so: "0900000092" },
+];
 
 const { values: a } = parseArgs({
   options: { tat: { type: "boolean" }, phien: { type: "string" }, ua: { type: "string" }, moi: { type: "boolean" }, "xoa-phien": { type: "string" }, mau: { type: "boolean" }, doc: { type: "boolean" } },
@@ -61,12 +66,23 @@ if (a.mau) {
       and (select a.user_id from listing_agent_assignments a where a.listing_id = l.id order by a.seq desc limit 1) = '${d1}'
     order by l.unit_number limit 5) t`));
   if (can.length < 5) throw new Error(`cần 5 căn đang bán của dau-chu-1, có ${can.length}`);
-  const lh = [];
-  for (const ten of ["[Mẫu] Chủ nhà X", "[Mẫu] Chủ nhà Y"]) {
-    lh.push(psql(`insert into contacts (company_id, contact_types, owner_member_user_id, full_name, created_by) values ('${san}', '{Seller}', '${d1}', '${ten}', 'x') returning id`).split("\n")[0]);
+  // Chủ nhà ghi qua API như người dùng (PUT …/owner của dau-chu-1): cùng số thì máy chủ gắn cùng một liên hệ chủ nhà.
+  // Tên và số này là mồi của bài quét rò rỉ E9 (CHU_MAU) — số riêng, không trùng số nap-hang.mjs đã ghi (0900 000 010–0xx).
+  const ck = JSON.parse(execFileSync(process.execPath, [fileURLToPath(import.meta.url), "--phien", "dau-chu-1@mau.quy-hang.test"], { cwd: GOC }).toString())
+    .cookie.map((c) => `${c.name}=${c.value}`).join("; ");
+  for (const [i, c] of can.entries()) {
+    const chu = CHU_MAU[i < 3 ? 0 : 1];
+    const r = await fetch(`${URL_GOC}/api/v1/listings/${c.id}/owner`, {
+      method: "PUT",
+      headers: { "content-type": "application/json", origin: URL_GOC, cookie: ck },
+      body: JSON.stringify({ ownerName: chu.ten, ownerPhone: chu.so }),
+    });
+    if (r.status !== 200) throw new Error(`ghi chủ nhà ${c.ma} → ${r.status} ${await r.text()}`);
   }
-  can.forEach((c, i) => psql(`update listing_owners set contact_id = '${lh[i < 3 ? 0 : 1]}' where listing_id = '${c.id}'`));
-  const out = { san, d1, d2: idCua("dau-chu-2@mau.quy-hang.test"), can, lienHe: lh };
+  const lh = CHU_MAU.map((_, k) => psql(`select contact_id from listing_owners where listing_id = '${can[k === 0 ? 0 : 3].id}'`));
+  if (new Set(lh).size !== 2 || lh.some((x) => !x)) throw new Error(`liên hệ chủ nhà lạ: ${lh}`);
+  lh.forEach((k) => psql(`update contacts set owner_member_user_id = '${d1}' where id = '${k}'`));
+  const out = { san, d1, d2: idCua("dau-chu-2@mau.quy-hang.test"), can, lienHe: lh, chu: CHU_MAU };
   writeFileSync(MAU, JSON.stringify(out));
   console.log(JSON.stringify(out));
   process.exit(0);

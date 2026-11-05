@@ -7,8 +7,8 @@ import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { canReassignListingAgents } from "@quy-hang/core";
-import { chayDoi, chayHoanTac, chuDaDoi, chuHoanTac, dungHop, LOI_MAT_MANG, THOI_GIAN_HOAN_TAC, trangThaiNut, type XemTruoc } from "./doi-dau-chu";
-import { NutDoiDauChu } from "./hop-doi-dau-chu";
+import { chayDoi, chayHoanTac, chuDaDoi, chuHoanTac, dungHop, LOI_MAT_MANG, THOI_GIAN_HOAN_TAC, thongBaoDoi, trangThaiNut, type XemTruoc } from "./doi-dau-chu";
+import { ChonNguoiNhan, NutDoiDauChu } from "./hop-doi-dau-chu";
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const doc = (t: string) => readFileSync(join(DIR, t), "utf8");
@@ -38,6 +38,13 @@ test("E1b mất mạng: nút dựng ở trạng thái tắt kèm lời", () => {
   const html = renderToStaticMarkup(createElement(NutDoiDauChu, { vai: ["team_lead"], coMang: false, onMo: () => {} }));
   assert.match(html, /disabled=""/);
   assert.match(html, /title="Cần mạng để đổi đầu chủ"/);
+});
+
+test("E1b đối chứng dương: có mạng thì nút dựng ở trạng thái bật, không lời", () => {
+  const html = renderToStaticMarkup(createElement(NutDoiDauChu, { vai: ["team_lead"], coMang: true, onMo: () => {} }));
+  assert.match(html, /Đổi đầu chủ/);
+  assert.doesNotMatch(html, /disabled=""/);
+  assert.doesNotMatch(html, /title="/);
 });
 
 /** Nút «Đổi đầu chủ» dựng theo luật của lõi: hộp gọi canReassignListingAgents, thanh gắn nút của hộp, không so tên vai. */
@@ -106,7 +113,6 @@ test("E4b đối chứng đỏ: bản sao bỏ dấu «cùng chủ nhà» → n�
 test("E4b thông báo đổi 10 giây có «Hoàn tác»; hoàn tác ghi lời riêng cho căn chưa có đầu chủ", () => {
   assert.equal(chuDaDoi({ listings: 5, contacts: 2 }), "Đã đổi đầu chủ 5 căn, 2 liên hệ");
   assert.equal(THOI_GIAN_HOAN_TAC, 10_000);
-  assert.match(doc("hop-doi-dau-chu.tsx"), /duration: THOI_GIAN_HOAN_TAC, action: \{ label: "Hoàn tác"/);
   assert.deepEqual(chuHoanTac({ restored: 4, skipped: 2, keptNoPriorAgent: 1 }, "[Tên] Đầu chủ 2"), {
     chu: "Đã trả lại người giữ cũ: 4 mục (căn và liên hệ)",
     moTa: "Bỏ qua 2 căn hay liên hệ đã đổi tiếp sau đó · 1 căn trước chưa có đầu chủ nên giữ [Tên] Đầu chủ 2",
@@ -154,6 +160,33 @@ test("E4b hoàn tác: gọi máy chủ rồi mới kéo; lỗi thì không kéo"
   assert.deepEqual(h, ["hoan-tac"]);
 });
 
-test("ô chọn người nhận hiện tên đầu chủ, không hiện mã người (Select nhận danh sách mục)", () => {
-  assert.match(doc("hop-doi-dau-chu.tsx"), /<Select value=\{nhan\} items=\{dauChu\.map\(\(d\) => \(\{ value: d\.userId, label: d\.displayName \}\)\)\}/);
+test("E4b thông báo đổi: sống 10 giây, nút «Hoàn tác» gọi hoàn tác đúng lần đổi và người nhận", () => {
+  const goi: [string, string][] = [];
+  const tb = thongBaoDoi("lan-1", "[Tên] Đầu chủ 2", (id, ten) => void goi.push([id, ten]));
+  assert.equal(tb.duration, 10_000);
+  assert.equal(tb.action.label, "Hoàn tác");
+  assert.deepEqual(goi, [], "chưa bấm thì chưa hoàn tác");
+  tb.action.onClick();
+  assert.deepEqual(goi, [["lan-1", "[Tên] Đầu chủ 2"]]);
+});
+
+test("E4b hộp gửi thông báo đổi bằng thongBaoDoi (nối dây)", () => {
+  assert.match(doc("hop-doi-dau-chu.tsx"), /toast\(chu, thongBaoDoi\(id, tenNhan, hoanTac\)\)/);
+});
+
+const DAU_CHU = [
+  { userId: "00000000-0000-4000-8000-0000000000d1", displayName: "[Tên] Đầu chủ 1" },
+  { userId: "00000000-0000-4000-8000-0000000000d2", displayName: "[Tên] Đầu chủ 2" },
+];
+/** Chữ người dùng thấy trên nút chọn (ô select-value) của ô chọn đã dựng. */
+const oChon = (nhan: string | null, dauChu = DAU_CHU) =>
+  renderToStaticMarkup(createElement(ChonNguoiNhan, { dauChu: dauChu as never, nhan, onDoi: () => {} })).match(/data-slot="select-value"[^>]*>([^<]*)</)?.[1] ?? null;
+
+test("ô chọn người nhận (dựng thật) hiện tên đầu chủ đã chọn, không hiện mã người", () => {
+  assert.equal(oChon(DAU_CHU[1].userId), "[Tên] Đầu chủ 2");
+  assert.equal(oChon(null), "Chọn đầu chủ mới");
+});
+
+test("ô chọn người nhận đối chứng đỏ: danh sách không có người đã chọn → không hiện được tên", () => {
+  assert.notEqual(oChon(DAU_CHU[1].userId, [DAU_CHU[0]]), "[Tên] Đầu chủ 2");
 });
