@@ -24,7 +24,7 @@ export function HopMatKhauTam({ ketQua, onClose }: { ketQua: KetQuaCap | null; o
     <Dialog open={ketQua !== null} onOpenChange={(o) => !o && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Mật khẩu tạm của {ketQua?.email}</DialogTitle>
+          <DialogTitle className="pe-6">Mật khẩu tạm của {ketQua?.email}</DialogTitle>
           <DialogDescription>
             Trao tận tay cho {ketQua?.email}. Mật khẩu hết hạn sau 72 giờ, đóng hộp này là không xem lại được.
           </DialogDescription>

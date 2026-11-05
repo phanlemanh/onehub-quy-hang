@@ -21,8 +21,11 @@ export type DangXuatDeps = {
 /** «o-lai» khi người chọn ở lại; «loi» khi máy chủ trả lỗi hay không tới được — không về; «xong» thì đã về đăng nhập. */
 export async function dangXuatTrenMay(d: DangXuatDeps): Promise<KetCucDangXuat> {
   if (!d.daXoa && !(await d.dangXuat())) return "o-lai";
+  // Gọi `fetch` tách khỏi đối tượng deps: `d.goi(...)` gắn `this = d` và trình duyệt ném «Illegal invocation» — bản cũ
+  // nuốt lỗi ấy nên chưa từng gửi lệnh đăng xuất tới máy chủ (lượt chấm 1 của dang-nhap-mat-khau, E14).
+  const goi = d.goi;
   try {
-    const res = await d.goi("/api/v1/auth/sign-out", { method: "POST", headers: { "content-type": "application/json" }, body: await d.than() });
+    const res = await goi("/api/v1/auth/sign-out", { method: "POST", headers: { "content-type": "application/json" }, body: await d.than() });
     if (!res.ok) return "loi";
   } catch {
     return "loi";

@@ -44,4 +44,15 @@ describe("đăng xuất trên máy", () => {
     assert.equal(await dangXuatTrenMay({ ...g.deps, daXoa: true }), "xong");
     assert.deepEqual(g.thuTu, ["xoa-kho", "may-chu", "may-chu", "ve"]);
   });
+
+  it("gọi máy chủ không gắn this vào deps (fetch thật ném «Illegal invocation»)", async () => {
+    const g = boGia(200);
+    const goc = g.deps.goi;
+    g.deps.goi = function (this: unknown, ...a: Parameters<typeof fetch>) {
+      if (this === g.deps) throw new TypeError("Illegal invocation");
+      return goc(...a);
+    } as typeof fetch;
+    assert.equal(await dangXuatTrenMay(g.deps), "xong");
+    assert.deepEqual(g.thuTu, ["xoa-kho", "may-chu", "ve"]);
+  });
 });

@@ -1,0 +1,8 @@
+E14 network (playwright, 375x812, dev 3492 do dung-b khoi dong)
+Lan chay cuoi sau khi khoi dong lai dev server:
+B 200 GET /api/v1/me/devices x2; 200 GET /api/v1/me x2; 200 GET /api/v1/push/public-key x2; 200 GET /api/v1/listings
+Khong co request POST /api/v1/auth/sign-out nao (khong requestfailed, khong response) ca khi bi chan lan khi KHONG chan.
+Chay khong chan (hai-san, /): request sign-out = 0, trang hien "Chưa đăng xuất được"/"Thử lại", URL /select-company.
+Trong trang: const d={goi:fetch}; d.goi('/api/v1/health') -> TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation.
+Nguyen nhan: apps/web dang-xuat-tren-may.ts goi d.goi(...) voi goi: fetch khong bind (toi-that.tsx:120, tuong tu dang-xuat.tsx/account-menu.tsx).
+Luu y moi truong: lan dau bien dich route dev server lap tai trang (HMR) va /me/devices 500 "Session is not fresh" voi phien cu; da khoi dong lai + phien moi.

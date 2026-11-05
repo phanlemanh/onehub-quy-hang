@@ -13,7 +13,8 @@ import { layMaDoi, xoaMaDoi } from "@/lib/ma-doi";
 
 // Ô mật khẩu theo ô của màn đăng nhập (`@reui/auth-15`, hàng 93): InputGroup có biểu tượng đầu ô, nút hiện/ẩn cuối ô, lời
 // dặn dưới ô, lỗi gắn dưới ô (KH-xt-loi-gan-o). Độ dài và danh sách kiểm ở máy chủ; câu lý do theo mã trả về.
-export const HET_PHIEN = "Phiên đặt mật khẩu đã hết — đăng nhập lại bằng mật khẩu tạm";
+// Tiêu đề của TrangThai một dòng (bị cắt khi dài): câu ST-dat-mat-khau-het-phien tách tiêu đề và mô tả.
+export const HET_PHIEN = { title: "Phiên đặt mật khẩu đã hết", description: "Đăng nhập lại bằng mật khẩu tạm." };
 const CHU_LOI: Record<string, string> = {
   "password-too-short": "Cần ít nhất 8 ký tự",
   "password-too-long": "Mật khẩu dài quá 128 ký tự",
@@ -33,9 +34,10 @@ export function FormDatMatKhau() {
     return (
       <TrangThai
         kind="notice"
-        title={HET_PHIEN}
+        title={HET_PHIEN.title}
+        description={HET_PHIEN.description}
         hanhDong={
-          <Button size="sm" render={<Link href="/login" />}>
+          <Button size="sm" nativeButton={false} render={<Link href="/login" />}>
             Về đăng nhập
           </Button>
         }

@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { cleanup } from "../helpers";
-import { batNhatKy, capTam, dangNhapMk, datLanDau, nguoiCoMatKhau, sanCoNguoi, send } from "./chung";
+import { batNhatKy, capTam, dangNhapMk, datLanDau, loiCua, nguoiCoMatKhau, sanCoNguoi, send } from "./chung";
 
 after(cleanup);
 
@@ -13,21 +13,23 @@ test("nhật ký: chín lời gọi mang mật khẩu không in mật khẩu", a
   const b = await nguoiCoMatKhau(MK);
   let tam = "";
   let ma = "";
-  const bang: [ten: string, goi: () => Promise<Response>, bi: () => string[]][] = [
-    ["cấp mật khẩu tạm", async () => { const t = await capTam(a.qt, a.userId); tam = t.tempPassword; return t.res; }, () => [tam]],
-    ["đăng nhập mật khẩu đúng", () => dangNhapMk(b.email, MK), () => [MK]],
-    ["đăng nhập mật khẩu sai", () => dangNhapMk(b.email, "sai mất rồi nhé"), () => ["sai mất rồi nhé"]],
-    ["đăng nhập bằng mật khẩu tạm", async () => { const r = await dangNhapMk(a.email, tam); ma = ((await r.clone().json()) as { changeToken: string }).changeToken; return r; }, () => [tam, ma]],
-    ["đặt lần đầu từ chối 400", () => datLanDau(ma, "ngắn!"), () => [ma, "ngắn!"]],
-    ["đặt lần đầu nhận", () => datLanDau(ma, "mây trôi lững lờ"), () => [ma, "mây trôi lững lờ"]],
-    ["đổi ở Cá nhân từ chối 400", () => send("PUT", "/api/v1/me/password", { currentPassword: MK, newPassword: "ngắn!" }, b.cookie), () => [MK, "ngắn!"]],
-    ["đổi ở Cá nhân sai mật khẩu hiện tại 403", () => send("PUT", "/api/v1/me/password", { currentPassword: "không phải nó", newPassword: "nắng vàng trên phố" }, b.cookie), () => ["không phải nó", "nắng vàng trên phố"]],
-    ["đổi ở Cá nhân nhận", () => send("PUT", "/api/v1/me/password", { currentPassword: MK, newPassword: "nắng vàng trên phố" }, b.cookie), () => [MK, "nắng vàng trên phố"]],
+  // Mỗi dòng ghim kết cục nó mang tên (status và mã lỗi): dòng rơi nhầm nhánh thì đỏ, không để phép quét âm tính xanh suông.
+  const bang: [ten: string, goi: () => Promise<Response>, ket: [number, string | null], bi: () => string[]][] = [
+    ["cấp mật khẩu tạm", async () => { const t = await capTam(a.qt, a.userId); tam = t.tempPassword; return t.res; }, [200, null], () => [tam]],
+    ["đăng nhập mật khẩu đúng", async () => dangNhapMk(b.email, MK), [200, null], () => [MK]],
+    ["đăng nhập mật khẩu sai", async () => dangNhapMk(b.email, "sai mất rồi nhé"), [401, "invalid-email-or-password"], () => ["sai mất rồi nhé"]],
+    ["đăng nhập bằng mật khẩu tạm", async () => { const r = await dangNhapMk(a.email, tam); ma = ((await r.clone().json()) as { changeToken: string }).changeToken; return r; }, [200, null], () => [tam, ma]],
+    ["đặt lần đầu từ chối 400", async () => datLanDau(ma, "ngắn!"), [400, "password-too-short"], () => [ma, "ngắn!"]],
+    ["đặt lần đầu nhận", async () => datLanDau(ma, "mây trôi lững lờ"), [200, null], () => [ma, "mây trôi lững lờ"]],
+    ["đổi ở Cá nhân từ chối 400", async () => send("PUT", "/api/v1/me/password", { currentPassword: MK, newPassword: "ngắn!" }, b.cookie), [400, "password-too-short"], () => [MK, "ngắn!"]],
+    ["đổi ở Cá nhân sai mật khẩu hiện tại 403", async () => send("PUT", "/api/v1/me/password", { currentPassword: "không phải nó", newPassword: "nắng vàng trên phố" }, b.cookie), [403, "invalid-current-password"], () => ["không phải nó", "nắng vàng trên phố"]],
+    ["đổi ở Cá nhân nhận", async () => send("PUT", "/api/v1/me/password", { currentPassword: MK, newPassword: "nắng vàng trên phố" }, b.cookie), [200, null], () => [MK, "nắng vàng trên phố"]],
   ];
   assert.equal(bang.length, 9);
-  for (const [ten, goi, bi] of bang) {
+  for (const [ten, goi, [status, ma], bi] of bang) {
     const { kq, dong } = await batNhatKy(goi);
-    assert.ok(kq.status < 500, `${ten}: máy chủ lỗi ${kq.status}`);
+    assert.equal(kq.status, status, `${ten}: đi nhầm nhánh (status ${kq.status})`);
+    if (ma) assert.equal(await loiCua(kq), ma, `${ten}: đi nhầm nhánh (mã lỗi)`);
     for (const s of bi()) {
       assert.ok(s.length > 0, `${ten}: thiếu chuỗi để quét`);
       const lot = dong.find((d) => d.includes(s));

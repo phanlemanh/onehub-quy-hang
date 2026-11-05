@@ -63,7 +63,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
   const [loiBo, setLoiBo] = useState("");
 
   const [cap, setCap] = useState<ThanhVien | null>(null);
-  const [loiCap, setLoiCap] = useState<{ kind: "error" | "notice"; title: string } | null>(null);
+  const [loiCap, setLoiCap] = useState<{ kind: "error" | "notice"; title: string; description?: string } | null>(null);
   const [ketQuaCap, setKetQuaCap] = useState<KetQuaCap | null>(null);
 
   const [tenKhu, setTenKhu] = useState("");
@@ -100,7 +100,8 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
   async function xacNhanCap() {
     if (!cap) return;
     const res = await goi("POST", `/members/${cap.userId}/temp-password`);
-    if (res.status === 409) return setLoiCap({ kind: "notice", title: `${cap.email} còn ở sàn khác nên tự đặt mật khẩu trong Cá nhân.` });
+    // Tiêu đề TrangThai một dòng: tách câu ST-cap-mat-khau-san-khac thành tiêu đề và mô tả để không bị cắt.
+    if (res.status === 409) return setLoiCap({ kind: "notice", title: `${cap.email} còn ở sàn khác`, description: "Người này tự đặt mật khẩu trong Cá nhân." });
     if (!res.ok) return setLoiCap({ kind: "error", title: await loiCua(res) });
     const { tempPassword } = (await res.json()) as { tempPassword: string };
     setKetQuaCap({ email: cap.email, tempPassword });
@@ -209,7 +210,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             }
             onOpenChange={(o) => !o && setCap(null)}
             onConfirm={() => void xacNhanCap()}
-            error={loiCap && <TrangThai kind={loiCap.kind} title={loiCap.title} />}
+            error={loiCap && <TrangThai kind={loiCap.kind} title={loiCap.title} description={loiCap.description} />}
           />
           <HopMatKhauTam ketQua={ketQuaCap} onClose={() => setKetQuaCap(null)} />
         </>
