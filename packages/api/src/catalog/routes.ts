@@ -1,11 +1,9 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 import { buildCatalogIndex, lookupUnit, type CatalogData } from "@quy-hang/core";
-import type { Context } from "hono";
-import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "../app";
-import { resolveCompany } from "../auth/company";
-import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
-import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { API_ERRORS } from "../errors";
+import { taoCuaVao } from "./cua-vao";
+import { registerLotRoutes } from "./lots";
 import { SAMPLE_CATALOG } from "./sample";
 
 /**
@@ -46,15 +44,9 @@ const Lookup = z
 export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps, catalog: CatalogData = SAMPLE_CATALOG) {
   const index = buildCatalogIndex(catalog);
 
-  async function vao(c: Context): Promise<ApiErrorEntry | null> {
-    const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
-    if (!user) return API_ERRORS.unauthenticated;
-    const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
-    if (!r.active) return r.reason === API_ERRORS.selectCompany.code ? API_ERRORS.selectCompany : API_ERRORS.noCompany;
-    return null;
-  }
-
-  const tra = (c: Context, l: ApiErrorEntry) => c.json({ error: l.code }, l.status as 401);
+  const { vao, tra } = taoCuaVao({ appPool, auth });
+  // Đường tra mã lô thấp tầng (hàng 74) đi cùng đường tra căn, cùng cửa vào.
+  registerLotRoutes(api, { appPool, auth });
 
   api.openapi(
     createRoute({
