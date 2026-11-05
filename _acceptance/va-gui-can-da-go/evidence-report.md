@@ -7,7 +7,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 3732ed3bad23ef65bd8ca147524405320a1931b8
-human_signoff:
+human_signoff: Manh Phan 2026-11-05
 ---
 
 # Evidence Report: va-gui-can-da-go
