@@ -5,7 +5,7 @@ slug: cach-goi-rieng
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-05-cach-goi-rieng-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05T13:38:07Z
@@ -94,3 +94,9 @@ ký 05/11).
 - Migration 039 (giám sát cấp, yêu cầu B-15): nới check khoá `company_settings` nhận `labels.(field|value).<trường>`.
 - Lệnh máy cần `DATABASE_URL` tới Postgres dãy B (cổng 5572) cho bộ kiểm cách ly và bộ kiểm API trên cơ sở dữ liệu.
 - Dữ liệu thử: sàn thử dựng qua đường ghi thật, tên «[Tên]», số `0900 000 0xx`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-2: Tên riêng của sàn ghi là thông tin nội bộ nhưng vẫn hiện trên trang khách và bản phát hàng theo thiết kế; nhãn phân loại chưa khớp thực tế, không lộ dữ liệu nào.
+  - Ngoài-4: Một tên riêng đã lưu mà sau này không còn hợp lệ thì lặng lẽ về chữ mặc định, quản trị không được báo.
+  - Ngoài-5: Bài kiểm «mọi trang Bảng hàng đọc tên riêng» liệt kê tay hai trang; trang mới thêm sau có thể quên mà bài kiểm vẫn xanh.
+  - Ngoài-7: Bài kiểm màn Cách gọi chỉ dò chữ trong mã nguồn, không chạy thật việc chuyển người không phải quản trị đi; máy chủ vẫn từ chối ghi.
+  - Ngoài-8: Bài kiểm bản phát hàng đo mã nguồn hộp thoại, không đo tệp xuất ra; khâu truyền tên riêng từ Bảng hàng vào hộp thoại không có lưới tự động.
