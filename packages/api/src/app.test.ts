@@ -58,6 +58,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
     "PUT /api/v1/listings/{listingId}/listing-agent",
     "GET /api/v1/catalog/units/{code}",
+    // Hàng 74: gõ mã lô thấp tầng (yêu cầu X-5).
+    "GET /api/v1/catalog/lots/{code}",
     // Nhận danh mục Invest (ADR-0015).
     "POST /api/v1/catalog/feeds",
     // Hàng 14: Bảng hàng đọc cả danh mục một lần.

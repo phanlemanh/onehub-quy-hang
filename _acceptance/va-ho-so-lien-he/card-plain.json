@@ -1,0 +1,26 @@
+{
+ "feature_plain": "Vá màn Liên hệ: bộ kiểm quyền phủ đủ cả bốn đường xem thông tin chủ nhà, và «Xem thêm» không còn trộn người của bộ lọc cũ vào danh sách mới.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ kiểm từng người trong chín người (Đầu chủ, Trưởng nhóm, người đã mất vai Đầu chủ, vai khác, chưa đăng nhập) trên cả bốn đường — danh sách, tìm theo số, xem hồ sơ, mở số — theo bảng ai được xem chủ nhà nào ghi sẵn trong hợp đồng, đếm đủ 72 ô."},
+  {"id":"AC-2","p":"Sẽ chỉ gửi «Xem thêm» khi trang đang hiện thuộc đúng bộ lọc hiện tại, và bỏ trang về muộn sau khi bộ lọc đã đổi."},
+  {"id":"AC-3","p":"Sẽ dùng đúng luật ấy trên màn Liên hệ: đổi loại rồi bấm «Xem thêm» ngay, màn chỉ còn người của loại mới; chữ và bố cục màn không đổi."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"KHÔNG sửa bộ kiểm cũ của màn Liên hệ (hàng 103) — nằm ngoài vùng của hàng vá; bộ kiểm mới thay vai trò ấy."},
+  {"id":"OOS-2","p":"KHÔNG đổi ai được xem gì, API hay cơ sở dữ liệu — chỉ đo quyền và sửa «Xem thêm» trên màn."},
+  {"id":"OOS-3","p":"KHÔNG sửa «Xem thêm» khi mất mạng không báo, và dòng đang mở hồ sơ không được tô — anh đã ghi hai mục này là hạn chế đã biết ở hàng 103."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Đường xem chủ nhà: đủ bốn — danh sách, tìm theo số, xem hồ sơ, mở số (AC-1)."},
+  {"i":1,"p":"Người xem: chín người, gồm người đã mất vai Đầu chủ và người chưa đăng nhập (AC-1)."},
+  {"i":2,"p":"Chủ nhà: một của người còn vai Đầu chủ, một của người đã mất vai (AC-1)."},
+  {"i":3,"p":"«Xem thêm»: cùng bộ lọc, đổi loại/dấu/chữ tìm/thử lại, đang tải, hết trang (AC-2, AC-3)."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Bộ kiểm quyền bỏ sót đường danh sách — đã thêm, nay đủ bốn đường, 72 ô, thử phá thì đỏ."},
+  {"i":1,"p":"Bỏ lượt nhìn màn với lý do không đứng — đã thêm lượt nhìn màn có giữ chậm mạng để ép đúng kẽ hở."},
+  {"i":2,"p":"Kỳ vọng «ai được xem» do chính người làm tự viết trong bộ kiểm — đã đưa bảng kỳ vọng vào hợp đồng, có căn cứ ADR-0021."},
+  {"i":3,"p":"Bước đọc mã không có bản trước để so «không đổi giao diện» — đã kèm bản màn trước bản vá."},
+  {"i":4,"p":"Bước đọc mã chưa hỏi bộ lọc dùng để kiểm và bộ lọc gửi đi có cùng nguồn — đã thêm câu hỏi ấy."}
+ ]
+}

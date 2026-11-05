@@ -1,0 +1,89 @@
+schema_version: 1
+feature_slug: va-link-gui-can
+# Lệnh máy: executors.test.web (bài link-noi-bo.test.ts, da-gui.test.ts, dau-khach.test.ts), executors.script lint,
+# typecheck, design_floor, executors.design.khuon. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có
+# mặt, ok, không SKIP.
+# Dựng chung cho mọi eval ui-check («DỰNG»): chỗ thử riêng của hồ sơ, không tranh dãy của đợt —
+#   node _acceptance/va-link-gui-can/thu/dung.mjs
+#   → Postgres riêng (cổng 5581) đã migrate, sàn và người mẫu đã nạp (không hàng, không Lần gửi), máy chủ dev cổng 3460.
+#   Đăng nhập trong trình duyệt bằng email dau-khach@mau.quy-hang.test ở /login; mã 6 số đọc ở dòng cuối
+#   «[ma-dang-nhap] dau-khach@mau.quy-hang.test <mã>» của nhật ký mà dung.mjs in.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «đã gửi: trạng thái màn» có mặt và ok — assert trạng thái trống dựng ra `href=\"/inventory\"`; ca «link nội bộ: hai nút «Gửi căn» mở Bảng hàng» có mặt và ok — bảng viết trước hai tệp (shares/danh-sach.tsx, today/buyer/dong-tin.tsx), mỗi tệp đúng một link quét được và link ấy bằng đúng «/inventory». Chiều đỏ (lượt phá-thử ở S3: trả danh-sach.tsx về /inventory/cards): ca thứ nhất đỏ «trống mà thiếu lối đi gửi», ca thứ hai đỏ «app/(app)/shares/danh-sach.tsx:68 — nút «Gửi căn» phải mở /inventory»."
+    paths: ["apps/web/src/app/(app)/shares/**", "apps/web/src/app/link-noi-bo.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «hôm nay đầu khách: trạng thái vùng» có mặt và ok — assert trạng thái trống có thẻ `<a … href=\"/inventory\">` chứa «Gửi căn»; ca «link nội bộ: hai nút «Gửi căn» mở Bảng hàng» ok (phần dong-tin.tsx). Chiều đỏ (lượt phá-thử ở S3: trả dong-tin.tsx về /inventory/cards): ca thứ nhất đỏ «trống thiếu nút «Gửi căn»», ca «không link nào trỏ tới đường không có trang» đỏ nêu dong-tin.tsx:86."
+    paths: ["apps/web/src/app/(app)/today/buyer/**", "apps/web/src/app/link-noi-bo.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; sáu ca «link nội bộ: …» có mặt và ok: (1) «ma trận khớp đường viết trước» — đúng 19 dòng của bảng cây thật ở AC-3, mỗi dòng một assert; (2) «ma trận kiểu đường trên cây mẫu viết trước» — cây mẫu sáu tệp đi qua duongCuaTep, đúng 18 dòng của AC-3, mỗi dòng một assert; (3) «trích đường theo từng dạng link» — 11 dạng của AC-3, mỗi dạng một assert dòng và một assert đường, bốn mẫu ngoài không được trích, danh sách hỏng đúng mau.tsx:1…11; (4) «hai nút «Gửi căn» mở Bảng hàng»; (5) «không link nào trỏ tới đường không có trang» — đối chứng không rỗng (thấy /inventory, /shares, /login) và danh sách hỏng rỗng; (6) «chiều đỏ — mã trỏ /inventory/cards bị gọi tên». Chiều đỏ (lượt phá-thử ở S3): bỏ dạng router template khỏi bộ quét → ca (3) đỏ «bộ quét phải thấy đúng 11 link, thấy 9»; cho [[...x]] đòi ít nhất một đoạn → ca (2) đỏ «cây mẫu, đường /help: mong có trang»; trả hai nút về /inventory/cards → ca (5) đỏ liệt đúng danh-sach.tsx:68 và dong-tin.tsx:86."
+    paths: ["apps/web/src/app/link-noi-bo.test.ts", "apps/web/src/app/**/page.tsx", "apps/web/src/app/**/route.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG. Khổ 375x812 cảm ứng. Đăng nhập dau-khach@mau.quy-hang.test ở http://localhost:3460/login, rồi mở http://localhost:3460/shares, chờ trạng thái trống «Chưa gửi link nào» → chụp evidence/E4-da-gui-trong.png."
+      - "Bấm nút «Gửi căn». Chờ chữ «Chưa có căn nào trên bảng hàng chung» hiện (bảng thẻ tải từ kho trên máy, có lúc khung chờ). Ghi địa chỉ trang. Đọc văn bản HIỆN TRÊN MÀN (innerText của body — không đọc mã HTML nguồn, vì gói dữ liệu của Next mang sẵn chữ của trang lỗi) → chụp evidence/E4-bang-hang.png."
+      - "Đối chứng khổ: đặt khổ 1280x800, mở lại http://localhost:3460/shares, bấm «Gửi căn», đọc văn bản hiện trên màn → chụp evidence/E4-bang-hang-may-tinh.png."
+    expected: "Khổ 375: sau khi bấm, địa chỉ là /inventory; văn bản hiện trên màn không có «Không thấy trang này», có «Chưa có căn nào trên bảng hàng chung» và nút «Về Hôm nay» (dấu riêng của bảng thẻ), không có «Sàn chưa có hàng nào» (dấu của bảng hàng máy tính); thanh trên ghi «Bảng hàng». Khổ 1280: địa chỉ /inventory, có «Sàn chưa có hàng nào», không có «Chưa có căn nào trên bảng hàng chung»."
+    paths: ["apps/web/src/app/(app)/shares/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E5
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "DỰNG. Khổ 375x812 cảm ứng. Đăng nhập dau-khach@mau.quy-hang.test (như E4), mở http://localhost:3460/today, chờ vùng Đầu khách hiện «Chưa có gì mới trong 7 ngày» → chụp evidence/E5-hom-nay-trong.png."
+      - "Bấm nút «Gửi căn» của vùng ấy. Chờ chữ «Chưa có căn nào trên bảng hàng chung» hiện. Ghi địa chỉ, đọc văn bản HIỆN TRÊN MÀN (innerText của body, không đọc mã HTML nguồn) → chụp evidence/E5-bang-hang.png."
+    expected: "Sau khi bấm, địa chỉ là /inventory; văn bản hiện trên màn không có «Không thấy trang này», có «Chưa có căn nào trên bảng hàng chung» và nút «Về Hôm nay» (dấu riêng của bảng thẻ), không có «Sàn chưa có hàng nào»; thanh trên ghi «Bảng hàng»."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E6
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; bài quét khuôn in dòng «khuôn: <n> nhóm · 0 lỗi đọc · 0 lệch» (có mặt, không SKIP); bước kiểm chuẩn in «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/app/(app)/shares/**", "apps/web/src/app/(app)/today/buyer/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
