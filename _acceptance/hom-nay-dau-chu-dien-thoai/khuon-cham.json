@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "den": "e98a3f654b2d9f8b8359485943895327d2209fab",
+  "den": "6d323a883d62fe60351a6bd36b6bcbc3621398a0",
   "base": "06fd3fbb1ca897d82964c51ed15e9d282fb96a2f",
   "ghim": {
     "bang-hang": "478a18b1ed8ca2501bbc45fcbf206a13857627ab",
@@ -30,7 +30,7 @@
   "lech_moi": [],
   "no_cu": [],
   "khong_do": [],
-  "ngoai_ban_do": 8,
+  "ngoai_ban_do": 10,
   "nhom": [
     "bang-hang",
     "cai-dat-san",
