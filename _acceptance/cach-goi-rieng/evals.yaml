@@ -1,0 +1,195 @@
+schema_version: 1
+feature_slug: cach-goi-rieng
+# Lệnh máy: `executors.test.core`, `executors.test.web`, `executors.test.isolation` (bộ kiểm cách ly packages/db/tests VÀ
+# bộ kiểm API trên cơ sở dữ liệu packages/api/test-db — cần DATABASE_URL tới Postgres dãy B, cổng 5572),
+# `executors.script.ro_ri`. exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người
+# chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu: sàn thử qua đường ghi
+# thật, tên «[Tên]», số `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok: «cách gọi: đổi tên trường» — quản trị sàn A PUT /api/v1/company/labels với fields feeInclusion «Phí CN» → 200; GET trả phần tử feeInclusion deepEqual {field:\"feeInclusion\",label:\"Phí CN\",default:\"Điều kiện phí\",custom:true}; đọc bằng vai chủ: company_settings của A có đúng dòng key labels.field.feeInclusion value \"Phí CN\" data_class company_internal; company_settings_events có thêm đúng một sự kiện cho khoá ấy với actor_user_id là quản trị A (đếm trước/sau). Đối chứng: các trường khác vẫn custom:false. Chiều đỏ: PUT ghi khoá hai đoạn labels.feeInclusion → ca đỏ nêu khoá."
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/db/migrations/039_*.sql, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cách gọi: trả về mặc định» trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok — sàn A đã đặt «Phí CN» cho feeInclusion và «Sổ» cho legalStatus; đếm sự kiện từng khoá bằng vai chủ trước lượt; PUT chỉ mang legalStatus «Sổ» → 200; sau lượt: dòng labels.field.feeInclusion có value JSON null, company_settings_events có đúng một sự kiện mới cho labels.field.feeInclusion (value null, actor quản trị A) và 0 sự kiện mới cho labels.field.legalStatus (khoá không đổi không ghi lại); GET trả feeInclusion {label:\"Điều kiện phí\",custom:false}, legalStatus {label:\"Sổ\",custom:true}. Chiều đỏ: xoá dòng thay vì ghi null → ca đỏ nêu «không có sự kiện»; ghi lại mọi khoá → ca đỏ nêu legalStatus."
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/labels/labels.test.ts có mặt và ok: «từ vựng: kiểm giá trị riêng» — bảng viết trước bảy dòng, mỗi dòng một assert trên kết quả kiemNhanGiaTri, đếm bằng số dòng: {feeInclusion, included, \"BP\"} → ok; {feeInclusion, thiếu neo} → lỗi mở đầu labels.value.feeInclusion; {feeInclusion, neo \"maybe\"} → lỗi nêu tập included, excluded; {withdrawnReason, unreachable, \"Mất liên lạc\"} → ok; {listPrice (không phải tập đóng), ...} → lỗi; {feeInclusion, hai giá trị cùng chữ \"BP\"} → lỗi trùng; {standardStatus, ...} → lỗi (trạng thái là hàng 46). Chiều đỏ: bỏ kiểm neo → dòng thiếu neo đỏ."
+    paths: [packages/core/src/labels/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cách gọi: giá trị riêng có neo» trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok — PUT values [{field:feeInclusion,value:included,label:\"BP\"}] → 200, GET trả phần tử {field:\"feeInclusion\",value:\"included\",label:\"BP\",default:\"Đã gồm phí\",custom:true}; PUT cùng lượt một nhãn trường hợp lệ VÀ một giá trị riêng neo \"maybe\" → 400 thân nêu labels.value.feeInclusion, và đọc bằng vai chủ: số dòng labels.* của A không đổi (không ghi nửa chừng). Chiều đỏ: ghi từng khoá ngoài giao dịch → ca đỏ nêu dòng nhãn trường đã lọt."
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3c
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/settings/labels/cach-goi.test.ts có mặt và ok: «màn cách gọi: thân lưu và khoá Lưu» — từ trạng thái ô viết trước: ô feeInclusion «Phí CN», ô giá trị included «BP», ô legalStatus rỗng → thân PUT deepEqual {fields:[{field:\"feeInclusion\",label:\"Phí CN\"}],values:[{field:\"feeInclusion\",value:\"included\",label:\"BP\"}]} (ô rỗng không gửi = mặc định); ô chứa \"0900 000 001\" → loiCuaO trả câu lỗi và coTheLuu false; ô 41 ký tự → lỗi; ô chỉ khoảng trắng → coi như rỗng; từ ô «Phí CN», hàm của nút «Trả về mặc định» đưa ô về rỗng và thân PUT không có feeInclusion; ô gõ đúng chữ mặc định «Điều kiện phí» → thân không mang feeInclusion (trùng mặc định = mặc định). Chiều đỏ: nút trả về điền chữ mặc định vào thân → ca đỏ."
+    paths: ["apps/web/src/app/(app)/settings/labels/**", packages/core/src/labels/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/tu-vung.test.ts có mặt và ok: «bảng hàng: chữ theo từ vựng của sàn» — từ vựng viết trước {truong:{feeInclusion:\"Phí CN\"}, giaTri:{feeInclusion:{included:\"BP\"}, withdrawnReason:{unreachable:\"Mất liên lạc\"}}}: nhanCot(feeInclusion) = \"Phí CN\", nhanCot(listPrice) = \"Giá\" (mặc định của Bảng hàng); chuCuaO dòng included = \"BP\", dòng excluded = \"Không bao phí\" (chưa đặt → mặc định), withdrawnReason unreachable = \"Mất liên lạc\"; bảng ba dòng mỗi dòng một assert. Thẻ điện thoại: chữ phí của thẻ dựng từ cùng hàm cho ra \"BP\". Chiều đỏ: chuCuaO bỏ qua từ vựng → ca đỏ nêu \"Bao phí\"."
+    paths: ["apps/web/src/app/(app)/inventory/**", packages/core/src/labels/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/tu-vung.test.ts có mặt và ok: «bảng hàng: lọc và đếm theo giá trị chuẩn» — năm dòng viết trước (ba included, hai excluded) với từ vựng included «BP»: lựa chọn của ô lọc cột phí deepEqual [{value:\"excluded\",label:\"Không bao phí\"},{value:\"included\",label:\"BP\"}]; lọc chọn included giữ đúng ba id viết trước; nhóm theo cột phí ra hai nhóm khoá included (3) và excluded (2), nhãn nhóm «BP»; đổi từ vựng sang «Bao phí SC» không đổi id giữ lại hay số đếm. Chiều đỏ: lọc so chuCuaO thay giaTriChon → ca đỏ nêu id."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/export/tu-vung.test.ts có mặt và ok: «phát hàng: tiêu đề và ô theo từ vựng ra ngoài» — xuatBang hai căn (included, excluded) cho nhom_moi_gioi với tuVungRaNgoai của từ vựng viết trước {feeInclusion:\"Phí CN\", legalStatus:\"Sổ\", withdrawnReason:\"Lý do\"} + giá trị included «BP»: tiêu đề cột phí \"Phí CN\", ô căn 1 \"BP\", ô căn 2 \"Không bao phí\"; tiêu đề không có \"Lý do\" (cột không ra ngoài vẫn bị bỏ); không từ vựng → tiêu đề và ô deepEqual bản xuất trước vòng này (ảnh chụp viết trước). Chiều đỏ: xuatBang lấy nhãn từ từ vựng đủ thay vì phần ra ngoài → ca đỏ."
+    paths: [packages/core/src/export/**, packages/core/src/labels/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6c
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/phat-hang/tu-vung.test.ts có mặt và ok: «phát hàng: nối từ vựng của sàn» — đầu vào là thân GET /api/v1/company/labels dựng bằng đúng hàm bên ghi của API (bangNhan của @quy-hang/core/labels trên từ vựng «Phí CN», included «BP»), không viết tay TuVung; qua tuVungTuBang rồi hàm dựng bản xuất mà hộp thoại phát hàng gọi cho nhom_moi_gioi: tiêu đề cột phí \"Phí CN\", ô căn included \"BP\"; trang exports/new dùng cùng hàm (đọc mã nguồn trang: gọi tuVungTuBang và truyền vào hàm dựng). Chiều đỏ: bỏ tham số từ vựng → ca đỏ nêu \"Phí\"/\"Bao phí\"."
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/exports/new/**", packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cách gọi: nhóm môi giới thấy tên riêng» trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok — sàn A đặt «BP», Lần gửi audience nhóm môi giới gồm một căn included: GET /api/v1/public/shares/{code} trả nguoiNhan nhom_moi_gioi, tuVung.giaTri.feeInclusion.included = \"BP\", can[0].feeInclusion = \"included\" (giá trị chuẩn vẫn đi). Chiều đỏ: route không gắn tuVung → ca đỏ."
+    paths: [packages/api/src/public/**, packages/core/src/sharing/**, packages/core/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/labels/labels.test.ts có mặt và ok: «từ vựng: chỉ phần ra ngoài» — từ vựng viết trước đặt nhãn cho cả 15 trường và mọi giá trị riêng (lý do ngừng mang mồi MOI-LYDO); ma trận viết tay, không dựng từ truongRa: khach_rieng → {buildingName, unitNumber, livingArea, floor, directionFaces, listPrice, feeInclusion, furnished, legalStatus, financing, occupantType}; nhom_moi_gioi → cùng mười một khoá ấy; mỗi người nhận một assert deepEqual tập khoá trường và giaTri deepEqual chỉ feeInclusion; khách riêng ẩn mã căn → không unitNumber; chuỗi JSON phần ra không chứa MOI-LYDO. Đối chứng dương: chèn closePrice vào bản sao khoá ra của nhom_moi_gioi → ca đỏ nêu closePrice. TRUONG_DAT_TEN không chứa trường nào FIELD_CLASS là source (đối chứng dương: bản sao danh sách chèn ownerPhone → bắt). Chiều đỏ: trả nguyên từ vựng → ca đỏ nêu withdrawnReason."
+    paths: [packages/core/src/labels/**, packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/s/[code]/trang.test.ts có mặt và ok: «trang khách: chữ theo từ vựng» — thân viết trước có tuVung {truong:{legalStatus:\"Sổ\"}, giaTri:{feeInclusion:{included:\"BP\"}}}: thẻ căn included dựng chữ phí \"BP\", chi tiết có dòng nhãn \"Sổ\" thay \"Pháp lý\"; thân không có tuVung → \"Bao phí\" và \"Pháp lý\" như cũ. Chiều đỏ: thẻ giữ bảng PHI cứng → ca đỏ."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ kiểm rò rỉ (npm run test:ro-ri) xanh với các tệp *.ro-ri.test.ts của trang khách, route công khai, phát hàng; packages/api/src/public/doc.ro-ri.test.ts có mặt và ok ca «rò rỉ: từ vựng ra ngoài không mang nhãn nội bộ» — sàn đặt nhãn cho withdrawnReason chứa mồi «MOI-LYDO» và cho legalStatus: thân trả công khai không chứa mồi, có nhãn legalStatus. Chiều đỏ: gắn nguyên từ vựng → ca đỏ nêu mồi."
+    paths: [packages/api/src/public/**, packages/core/src/labels/**, "apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok: (1) packages/db/tests/isolation.test.mjs «cách gọi: dòng labels.* theo sàn» — quản trị A chèn labels.field.feeInclusion và labels.value.feeInclusion (đối chứng dương: A đọc được hai dòng); người sàn B đọc company_settings where key like 'labels.%' and company_id = A → 0 dòng; chèn khoá 'labels.field.Fee Inclusion' và 'labels.other.feeInclusion' → company_settings_key_check; ca cũ 'Lead Routing' vẫn bị check. (2) packages/api/test-db/cach-goi-rieng/nhan.test.ts «cách gọi: sàn khác thấy mặc định» — sàn A đặt «Phí CN»; quản trị sàn B GET /company/labels → mọi phần tử custom:false, feeInclusion «Điều kiện phí»; trang khách của Lần gửi sàn B không có tuVung hay tuVung rỗng. Chiều đỏ: bỏ lọc company_id ở đọc → ca (2) đỏ."
+    paths: [packages/db/migrations/039_*.sql, packages/db/tests/isolation.test.mjs, packages/api/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cách gọi: chỉ quản trị ghi, chữ sạch» trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok — bảng viết trước (đầu chủ → 403; trưởng nhóm → 403; không cookie → 401; quản trị với nhãn \"Gọi 0900 000 001\" → 400 nêu khoá; nhãn \"[Tên]@vidu.vn\" → 400; nhãn 41 ký tự → 400; quản trị nhãn hợp lệ → 200), mỗi dòng một assert mã HTTP và một assert số dòng labels.* của sàn đọc bằng vai chủ, đếm bằng số dòng; GET bằng đầu chủ → 200 (mọi vai đọc được). Chiều đỏ: bỏ kiểm vai ở store → ca đỏ nêu đầu chủ ghi được."
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; apps/web/src/app/(app)/settings/cai-dat.test.ts vẫn ok ca chặn mục sàn (chanMucSan trả đường Cá nhân kèm chi-quan-tri=1 cho vai không quản trị) và apps/web/src/app/(app)/settings/labels/cach-goi.test.ts có mặt và ok «màn cách gọi: trang gọi chặn mục sàn» — mã nguồn page.tsx của settings/labels gọi chanMucSan trước khi đọc API (đọc tệp, đối chứng dương trên trang users). Chiều đỏ: bỏ dòng chanMucSan khỏi bản sao trang → ca đỏ."
+    paths: ["apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các bộ kiểm có từ trước của Bảng hàng, phát hàng và trang khách (apps/web inventory/**, s/[code]/**) vẫn ok không đổi kỳ vọng nào; trong apps/web/src/app/(app)/inventory/tu-vung.test.ts có mặt và ok «bảng hàng: từ vựng rỗng là mặc định» — với TU_VUNG_RONG, nhanCot của mọi cột deepEqual nhãn COT viết trước và chuCuaO của năm dòng mẫu deepEqual chữ trước vòng này. Chiều đỏ: đổi nhãn mặc định một cột → ca đỏ nêu cột."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; bộ kiểm có từ trước của packages/core/src/export/** vẫn ok không đổi kỳ vọng; trong packages/core/src/labels/labels.test.ts có mặt và ok «từ vựng: sàn chưa đặt» — boTuVung([]) deepEqual {truong:{},giaTri:{}}; dòng hỏng (khoá lạ, giá trị số, neo lạ) bị bỏ qua và trả lỗi nêu khoá, không ném. Chiều đỏ: boTuVung ném ở dòng hỏng → ca đỏ."
+    paths: [packages/core/src/labels/**, packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/settings/labels"
+    expected: "Đăng nhập quản trị sàn thử, mở Cài đặt › Sàn › Cách gọi: một Frame, đường dẫn «Cài đặt › Sàn [Tên] › Cách gọi», câu «Chỉ áp cho sàn [Tên]»; hai nhóm «Tên trường» và «Giá trị riêng»; gõ «Phí CN» ở dòng Điều kiện phí, «BP» ở dòng Đã gồm phí, bấm Lưu → câu «Đã lưu cách gọi»; tải lại thấy hai ô giữ chữ; gõ \"0900 000 001\" vào một ô → ô viền đỏ, câu lỗi, Lưu khoá; xoá chữ lỗi, bấm «Trả về mặc định» ở dòng Điều kiện phí, Lưu, tải lại → ô ấy trống, mô tả «Đang dùng tên mặc định». Chụp màn 1440 và 390."
+    paths: ["apps/web/src/app/(app)/settings/labels/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E12
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/inventory"
+    expected: "Sau E11 (sàn đã đặt «Phí CN», «BP»), đầu chủ mở Bảng hàng: tiêu đề cột «Phí CN», căn bao phí hiện «BP»; mở ô lọc cột phí thấy lựa chọn «BP»; khổ 390 thẻ căn hiện «BP». Chụp 1440 và 390."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/s/{code}"
+    expected: "Lần gửi khách riêng của sàn thử gồm một căn bao phí: trang /s/<mã> hiện «BP» cạnh giá; mở chi tiết thấy nhãn riêng của Pháp lý; không có chữ nào của nhãn lý do ngừng. Chụp 390."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E14
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/inventory"
+    expected: "Sau E11 (sàn đặt «Phí CN», «BP»), đầu chủ tích hai căn trên Bảng hàng, mở Phát hàng, chọn người nhận nhóm môi giới: khung xem trước của hộp thoại có tiêu đề cột «Phí CN» và ô căn bao phí «BP»; không có cột lý do ngừng. Chụp 1440."
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
