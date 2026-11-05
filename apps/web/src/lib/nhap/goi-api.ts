@@ -133,8 +133,11 @@ export const docLanNhapGanDay = (f: Fetch) => goi<LanNhapCuaToi[]>(f, "/api/v1/i
 /** Xem thử hoàn tác — máy chủ không ghi gì (hàng 66, AC-5). */
 export const xemThuHoanTac = (f: Fetch, importId: string) => goi<KetQuaHoanTac>(f, `/api/v1/imports/${importId}/undo`, json("POST", { dryRun: true }));
 
-/** Hoàn tác cả lần nhập; đứt giữa chừng thì máy chủ trả `import-undo-incomplete` — gọi lại làm tiếp. */
+/**
+ * Hoàn tác cả lần nhập. Đứt giữa chừng (máy chủ trả `import-undo-incomplete`, hay mất mạng giữa lời gọi — phần đã làm có thể
+ * đã ghi) thì báo «chưa xong, bấm lại»: gọi lại chỉ làm dòng còn lại. Bị từ chối (403, 404) thì giữ lời của máy chủ.
+ */
 export async function hoanTacLanNhap(f: Fetch, importId: string): Promise<KetQuaHoanTac | LoiGoi> {
   const r = await goi<KetQuaHoanTac>(f, `/api/v1/imports/${importId}/undo`, json("POST", {}));
-  return laLoi(r) && r.status === 503 ? { ...r, loi: CHUA_XONG } : r;
+  return laLoi(r) && (r.status === undefined || r.status >= 500) ? { ...r, loi: CHUA_XONG } : r;
 }

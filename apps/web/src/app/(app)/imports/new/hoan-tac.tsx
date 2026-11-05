@@ -42,13 +42,9 @@ function DanhSach({ onHoanTac }: { onHoanTac: (importId: string) => void }) {
   const [ds, setDs] = useState<LanNhapCuaToi[] | null>(null);
   const [loi, setLoi] = useState(false);
   useEffect(() => {
-    let con = true;
     docLanNhapGanDay(fetch)
-      .then((r) => con && (laLoi(r) ? setLoi(true) : setDs(r)))
-      .catch(() => con && setLoi(true));
-    return () => {
-      con = false;
-    };
+      .then((r) => (laLoi(r) ? setLoi(true) : setDs(r)))
+      .catch(() => setLoi(true));
   }, []);
   const tt = trangThaiDanhSach(ds, loi);
   return (
