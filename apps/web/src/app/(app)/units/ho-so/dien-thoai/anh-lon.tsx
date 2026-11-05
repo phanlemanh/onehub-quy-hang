@@ -10,6 +10,7 @@ import { ImageIcon, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/reui/badge";
+import { useDocLaiKhiDaTai } from "../../photos/hang-cho-may";
 import type { DanhSachAnh } from "../../photos/muc-anh";
 import { nguonApi } from "../../photos/nguon-api";
 
@@ -73,9 +74,20 @@ export function AnhLon({ anh, co, urlAnh }: { anh: TrangThaiAnh; co: Pick<CoHoSo
   );
 }
 
+/**
+ * Ảnh khung lớn đang trình: kết quả đọc của đúng căn (đọc lại vì ảnh mới tải lên thì giữ kết quả cũ tới khi có kết quả mới,
+ * không về «Đang tải ảnh…» — AC-8); chưa đọc xong lần đầu thì đang tải.
+ */
+export function anhDangTrinh(kq: { khoa: string; anh: TrangThaiAnh } | null, khoa: string, ma: string | null): TrangThaiAnh {
+  if (!ma) return { kind: "chua-ma" };
+  return kq?.khoa === khoa ? kq.anh : { kind: "dang-tai" };
+}
+
 /** Danh sách ảnh của căn, đọc khi mở hồ sơ, đổi căn hay có ảnh chụp vừa tải lên — cùng đường API của mục Ảnh. */
-export function useAnhCan(toa: string, ma: string | null, lanTai = 0): TrangThaiAnh {
+export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
   const [kq, setKq] = useState<{ khoa: string; anh: TrangThaiAnh } | null>(null);
+  const [lanTai, setLanTai] = useState(0);
+  useDocLaiKhiDaTai(toa, ma, () => setLanTai((n) => n + 1));
   const khoa = `${toa}|${ma ?? ""}`;
   useEffect(() => {
     if (!ma) return;
@@ -91,6 +103,5 @@ export function useAnhCan(toa: string, ma: string | null, lanTai = 0): TrangThai
     };
     // lanTai: ảnh vừa chụp lên máy chủ (hàng 41) — đọc lại để khung lớn có ảnh mới, giữ bản cũ tới khi có bản mới.
   }, [toa, ma, khoa, lanTai]);
-  if (!ma) return { kind: "chua-ma" };
-  return kq?.khoa === khoa ? kq.anh : { kind: "dang-tai" };
+  return anhDangTrinh(kq, khoa, ma);
 }

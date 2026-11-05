@@ -63,7 +63,8 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     if (!b || typeof b.toa !== "string" || typeof b.ma !== "string" || !b.toa.trim() || !b.ma.trim() || typeof b.contentType !== "string" || typeof b.byteSize !== "number") {
       return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
     }
-    const v = { toa: b.toa.trim(), ma: b.ma.trim(), contentType: b.contentType, byteSize: b.byteSize };
+    if (b.photoId !== undefined && typeof b.photoId !== "string") return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
+    const v = { toa: b.toa.trim(), ma: b.ma.trim(), contentType: b.contentType, byteSize: b.byteSize, ...(typeof b.photoId === "string" ? { photoId: b.photoId } : {}) };
     return chay(c, (tx, ctx, k) => uploadUrl(tx, k, ctx.companyId, v));
   });
 
@@ -80,8 +81,11 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
       return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
     }
     const chung = { toa: f.toa.trim(), ma: f.ma.trim(), ngan: ngan as Compartment, takenAt, width: Math.round(w), height: Math.round(h), thumb: Buffer.from(await thumb.arrayBuffer()) };
-    // Có mã ảnh: bản gốc đã tải thẳng lên kho (bản Storage); không thì bản gốc đi trong thân yêu cầu.
-    const t: TepVao = photoId ? { ...chung, photoId } : { ...chung, original: Buffer.from(await (original as File).arrayBuffer()) };
+    // Có bản gốc trong thân (bản Postgres): mã ảnh, nếu có, là mã máy khách tạo lúc chụp (hàng 41). Không có bản gốc: bản gốc
+    // đã tải thẳng lên kho bằng link ký (bản Storage), mã là mã của link ấy.
+    const t: TepVao = original instanceof File
+      ? { ...chung, original: Buffer.from(await original.arrayBuffer()), ...(photoId ? { photoId } : {}) }
+      : { ...chung, photoId: photoId! };
     return chay(c, (tx, ctx, k) => addPhoto(tx, k, ctx.companyId, t), (c, kq) => c.json(kq, 201));
   });
 

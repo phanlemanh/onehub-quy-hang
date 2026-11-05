@@ -61,6 +61,10 @@ try {
   }
   await ngu(800);
   await chup("chon-ngan.png");
+  // Không ngăn mặc định (Cổng Phạm vi 06/11, Hỏi-2 b): «Mở máy ảnh» tắt tới khi chạm chọn ngăn.
+  console.log(JSON.stringify({ moMayTatTruocKhiChon: await t.tinh(`document.querySelector('[data-nut="mo-may-anh"]')?.disabled === true`) }));
+  await bam('[data-o="chon-ngan"] [value="shareable"], [data-o="chon-ngan"] button:nth-child(1)');
+  await ngu(300);
 
   // Mất mạng: hai ảnh Gửi được rồi một ảnh sổ vào Nội bộ — cả ba chờ trên máy.
   await t.gui("Network.emulateNetworkConditions", { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });

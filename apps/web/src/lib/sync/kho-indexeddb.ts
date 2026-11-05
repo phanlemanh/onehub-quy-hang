@@ -59,11 +59,24 @@ export function taoKhoIndexedDb(userId: string): LocalStore {
   };
 }
 
-/** Xoá kho trên máy của một người mà không cần mở nó — dùng ở màn ngoài vỏ (chọn sàn, chưa có sàn). */
-export function xoaKhoCuaNguoi(userId: string): Promise<void> {
+/**
+ * Kho ảnh chờ của một người (hàng 41 chup-anh-dien-thoai): ảnh chụp lúc mất mạng chờ ở đây, tách khỏi kho đồng bộ — ảnh
+ * không đi qua bộ đồng bộ. Tên đặt ở đây để mọi chỗ xoá kho của người xoá luôn kho này (AC-6).
+ */
+export const tenKhoAnhCho = (userId: string) => `quy-hang-anh-cho:${userId}`;
+
+function xoaCoSo(ten: string): Promise<void> {
   return new Promise((ok, loi) => {
-    const r = indexedDB.deleteDatabase(tenCoSo(userId));
+    const r = indexedDB.deleteDatabase(ten);
     r.onsuccess = () => ok();
     r.onerror = () => loi(r.error);
   });
+}
+
+/**
+ * Xoá kho trên máy của một người mà không cần mở nó — dùng ở màn ngoài vỏ (chọn sàn, chưa có sàn) và khi máy bị báo mất.
+ * Xoá cùng lúc kho đồng bộ và kho ảnh chờ của người ấy (hàng 41, AC-6); kho của người khác không bị đụng.
+ */
+export async function xoaKhoCuaNguoi(userId: string, xoa: (ten: string) => Promise<void> = xoaCoSo): Promise<void> {
+  await Promise.all([xoa(tenCoSo(userId)), xoa(tenKhoAnhCho(userId))]);
 }
