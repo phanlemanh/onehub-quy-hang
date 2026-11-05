@@ -20,7 +20,9 @@ test("trang khách: thân dựng từ bản ra theo thứ tự gửi", () => {
   for (const [audience, nguoiNhan] of BANG) {
     assert.equal(nguoiNhanCua(audience), nguoiNhan);
     const than = thanTrangKhach({ can: ba, audience, today: HOM_NAY });
-    assert.deepEqual(Object.keys(than), ["companyName", "senderName", "nguoiNhan", "can"], "khoá của thân");
+    assert.deepEqual(Object.keys(than), ["companyName", "senderName", "nguoiNhan", "can", "tuVung"], "khoá của thân");
+    // Hàng 45: sàn chưa đặt cách gọi → từ vựng ra ngoài rỗng.
+    assert.deepEqual(than.tuVung, { truong: {}, giaTri: {} }, `${audience}: từ vựng rỗng`);
     assert.deepEqual([than.companyName, than.senderName, than.nguoiNhan], [ba[0]!.companyName, ba[0]!.senderName, nguoiNhan]);
     assert.deepEqual(than.can, ba.map((c) => banRaNgoai(c, { cua: "gui_link", nguoiNhan, today: HOM_NAY })), `${audience}: bản ra, giữ thứ tự`);
     const duoc = truongRa(nguoiNhan, CAU_HINH_MAC_DINH);
