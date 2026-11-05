@@ -2506,6 +2506,18 @@
       "vung": [
         "packages/core/src/address/**"
       ]
+    },
+    {
+      "ma": "va-duong-so-n",
+      "cau_giao": "Bộ đọc địa chỉ đọc đúng tên đường dạng «Đường số N»: chữ «số» trong tên đường không bị lấy làm số nhà, hai đường «Đường số 5» và «Đường số 7» không bao giờ ra cùng khoá, «Số 10 Đường số 5» ra số nhà 10. Phải xong trước khi hàng 76 lưu khoá.",
+      "slug": "va-duong-so-n",
+      "vi_sao": "Ngoài-2 hàng 75 dia-chi-chuan: chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng (05/11). Hàng vá, không mã: đã quyết; chạy trước 76 để khoá địa chỉ đúng rồi mới được lưu.",
+      "sau": [
+        "75"
+      ],
+      "vung": [
+        "packages/core/src/address/**"
+      ]
     }
   ],
   "chan_troi": [
