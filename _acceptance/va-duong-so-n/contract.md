@@ -5,9 +5,9 @@ slug: va-duong-so-n
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: draft
-approved_by:
-approved_at:
+status: approved
+approved_by: Manh Phan
+approved_at: 2026-11-06
 design_doc: _acceptance/va-duong-so-n/design.md
 ---
 
