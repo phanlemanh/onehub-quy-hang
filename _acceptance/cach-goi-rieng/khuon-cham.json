@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "den": "a85d7d95b1278967b0e970cb9c7f22729b940d9b",
+  "den": "7d8ec27d7f0445f26450530e90292392dc9a670e",
   "base": "d98ea15cfa64047d0454aa5aca8e9da7196a118e",
   "ghim": {
     "bang-hang": "478a18b1ed8ca2501bbc45fcbf206a13857627ab",
@@ -52,10 +52,17 @@
       "loai": "quan-he",
       "nhom": "bang-hang, trang-tam",
       "so": 1
+    },
+    {
+      "tep": "apps/web/src/app/(app)/inventory/views/[id]/page.tsx",
+      "khoi": "hai nhóm màn",
+      "loai": "quan-he",
+      "nhom": "bang-hang, trang-tam",
+      "so": 1
     }
   ],
   "khong_do": [],
-  "ngoai_ban_do": 19,
+  "ngoai_ban_do": 20,
   "nhom": [
     "bang-hang",
     "cai-dat-san",

@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 feature_slug: cach-goi-rieng
-verdict: REJECT
-failed_evals: ["E15"]
+verdict: PASS
+failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: a85d7d95b1278967b0e970cb9c7f22729b940d9b
+verified_commit: 7d8ec27d7f0445f26450530e90292392dc9a670e
 human_signoff:
 ---
 
@@ -38,302 +38,322 @@ human_signoff:
 | E12 | AC-4 | ui-check | PASS |
 | E13 | AC-7 | ui-check | PASS |
 | E14 | AC-6 | ui-check | PASS |
-| E15 | AC-1 | script | FAIL |
-
-Eval thất bại: E15. Lệnh thất bại: chỉ một lệnh là bộ chấm khuôn của E15 (`design-floor-khuon.mjs --kiem --root .`); không có lệnh thất bại nào không gắn eval.
+| E15 | AC-1 | script | PASS (đạt có giới hạn) |
+| E15b | AC-1 | script | PASS |
 
 ## Evidence
 
+Lệnh `npm run db:migrate && npm run db:test` phủ E1, E2, E2b, E3b, E6b, E8, E9 (một lần chạy, một lần đạt, không phương sai).
+
 - eval: E1
-  run_id: minted-cach-goi-rieng-E1-r1
+  run_id: minted-cach-goi-rieng-E1-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — bộ kiểm cách ly và nhan.test.ts xanh
+    ℹ duration_ms 91501.005334
 
 - eval: E2
-  run_id: minted-cach-goi-rieng-E2-r1
+  run_id: minted-cach-goi-rieng-E2-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — ca «trả về mặc định» ok
+    ℹ duration_ms 91501.005334
 
 - eval: E2b
-  run_id: minted-cach-goi-rieng-E2b-r1
+  run_id: minted-cach-goi-rieng-E2b-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — ca «gỡ tên riêng đang được căn dùng» ok
+    ℹ duration_ms 91501.005334
 
 - eval: E3b
-  run_id: minted-cach-goi-rieng-E3b-r1
+  run_id: minted-cach-goi-rieng-E3b-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — ca «giá trị riêng có neo» ok
+    ℹ duration_ms 91501.005334
 
 - eval: E6b
-  run_id: minted-cach-goi-rieng-E6b-r1
+  run_id: minted-cach-goi-rieng-E6b-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — ca «nhóm môi giới thấy tên riêng» ok
+    ℹ duration_ms 91501.005334
 
 - eval: E8
-  run_id: minted-cach-goi-rieng-E8-r1
+  run_id: minted-cach-goi-rieng-E8-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — hai ca cách ly «labels.* theo sàn» và «sàn khác thấy mặc định» ok
+    ℹ duration_ms 91501.005334
 
 - eval: E9
-  run_id: minted-cach-goi-rieng-E9-r1
+  run_id: minted-cach-goi-rieng-E9-r2
   exit_code: 0
-  baseline: red
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 91263.418
+    npm run db:migrate && npm run db:test — ca «chỉ quản trị ghi, chữ sạch» ok
+    ℹ duration_ms 91501.005334
+
+Lệnh `npm test -w @quy-hang/core` phủ E3, E6, E7, E10b.
 
 - eval: E3
-  run_id: minted-cach-goi-rieng-E3-r1
+  run_id: minted-cach-goi-rieng-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 990.772125
+    npm test -w @quy-hang/core xanh
+    ℹ duration_ms 2508.640375
 
 - eval: E6
-  run_id: minted-cach-goi-rieng-E6-r1
+  run_id: minted-cach-goi-rieng-E6-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 990.772125
+    npm test -w @quy-hang/core xanh
+    ℹ duration_ms 2508.640375
 
 - eval: E7
-  run_id: minted-cach-goi-rieng-E7-r1
+  run_id: minted-cach-goi-rieng-E7-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 990.772125
+    npm test -w @quy-hang/core xanh
+    ℹ duration_ms 2508.640375
 
 - eval: E10b
-  run_id: minted-cach-goi-rieng-E10b-r1
+  run_id: minted-cach-goi-rieng-E10b-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 990.772125
+    npm test -w @quy-hang/core xanh
+    ℹ duration_ms 2508.640375
+
+Lệnh `npm test -w @quy-hang/web` phủ E3c, E4, E5, E6c, E7b, E9b, E10.
 
 - eval: E3c
-  run_id: minted-cach-goi-rieng-E3c-r1
+  run_id: minted-cach-goi-rieng-E3c-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E4
-  run_id: minted-cach-goi-rieng-E4-r1
+  run_id: minted-cach-goi-rieng-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E5
-  run_id: minted-cach-goi-rieng-E5-r1
+  run_id: minted-cach-goi-rieng-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E6c
-  run_id: minted-cach-goi-rieng-E6c-r1
+  run_id: minted-cach-goi-rieng-E6c-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E7b
-  run_id: minted-cach-goi-rieng-E7b-r1
+  run_id: minted-cach-goi-rieng-E7b-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E9b
-  run_id: minted-cach-goi-rieng-E9b-r1
+  run_id: minted-cach-goi-rieng-E9b-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E10
-  run_id: minted-cach-goi-rieng-E10-r1
+  run_id: minted-cach-goi-rieng-E10-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 3308.307375
+    npm test -w @quy-hang/web xanh
+    ℹ duration_ms 5113.790125
 
 - eval: E7c
-  run_id: minted-cach-goi-rieng-E7c-r1
+  run_id: minted-cach-goi-rieng-E7c-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.script.ro_ri
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    npm run test:ro-ri
-    ℹ duration_ms 1173.201708
+    npm run test:ro-ri xanh, gồm ca «rò rỉ: từ vựng ra ngoài không mang nhãn nội bộ»
+    ℹ duration_ms 1179.618708
 
 - eval: E15
-  run_id: minted-cach-goi-rieng-E15-r1
+  run_id: minted-cach-goi-rieng-E15-r2
   exit_code: 1
-  baseline: green
+  baseline: red
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   output: |
-    lệch: apps/web/src/app/(app)/settings/labels/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam
-    nợ cũ: apps/web/src/app/(app)/inventory/page.tsx · thuộc hai nhóm màn: bang-hang, trang-tam
-    19 tệp giao diện ngoài bản đồ
+    Bộ chấm khuôn của kit 2.37.0 báo oan một dòng cho trang Cách gọi (đã khai ngoại lệ, kit#485); E15b bảo đảm mọi dòng lệch đều là dòng báo oan ấy.
+    20 tệp giao diện ngoài bản đồ
+
+- eval: E15b
+  run_id: minted-cach-goi-rieng-E15b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: _acceptance/cach-goi-rieng/kiem-khuon-e15.mjs
+  verified_at: 2026-11-05T17:34:58Z
+  output: |
+    E15b: chỉ có dòng báo oan đã khai (1): lệch: apps/web/src/app/(app)/settings/labels/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam
 
 - eval: E11
-  run_id: minted-cach-goi-rieng-E11-r1
+  run_id: minted-cach-goi-rieng-E11-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   screenshot: evidence/E11-step1.png
   observed: |
-    step1 (1440): vỏ đủ cột nhà, cột Cài đặt với "Cách gọi" sáng, breadcrumb Cài đặt > Sàn [Mẫu] Sàn thử > Cách gọi, câu "Chỉ áp cho sàn [Mẫu] Sàn thử", khối "Tên của sàn" với nhóm "Tên trường", các dòng "Đang dùng tên mặc định". step2: nhóm "Giá trị riêng", ô "Điều kiện phí · Bao phí" = BP kèm nút "Trả về mặc định", cuối trang khối "Đã lưu cách gọi". step3: dòng Điều kiện phí = "Phí CN"; dòng Pháp lý có ô viền đỏ chứa "Gọi 0900 000 001". step4: khung xương đang tải, không dùng làm bằng chứng (ô trống xác nhận bằng DOM). step5 (375): một cột, thanh dưới "Cài đặt sàn/Tôi", không cuộn ngang.
+    step1 (1440): khung nhà, mục «Cách gọi» sáng ở cột Cài đặt, breadcrumb «Cài đặt › Sàn [Mẫu] Sàn thử › Cách gọi», câu «Chỉ áp cho sàn [Mẫu] Sàn thử», nhóm «Tên trường»; step2: nhóm «Giá trị riêng» dòng «Điều kiện phí · Bao phí» ô «BP» và khối «Đã lưu cách gọi».
+    step3: ô «Gọi 0900 000 001» viền đỏ, câu «Chứa số điện thoại», Lưu bị khoá. step4: sau Trả về mặc định + Lưu + tải lại, ô Điều kiện phí trống, mô tả «Đang dùng tên mặc định». step5 (375): các dòng xếp dọc, không cuộn ngang. Khớp Expected.
   network_observed: clean
 
 - eval: E12
-  run_id: minted-cach-goi-rieng-E12-r1
+  run_id: minted-cach-goi-rieng-E12-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   screenshot: evidence/E12-step1.png
   observed: |
-    step1 (1440, /inventory): bảng 44/44 căn; căn bao phí hiện «BP», căn không bao phí hiện «Không bao phí»; cột «Phí CN» có trong cây truy cập, bị cắt ở mép phải khung nhìn. step2: ô lọc cột «Phí CN» có ba lựa chọn «Mọi điều kiện», «BP», «Không bao phí». step2b: chọn «BP» thì đầu bảng «22 / 44 căn», khớp 22 căn included từ API. step3 (375): thẻ căn hiện «BP» dưới giá, căn không bao phí hiện «Không bao phí».
+    1440: lưới Bảng hàng có cột «Phí CN»; căn bao phí hiện «BP», căn còn lại «Không bao phí»; ô lọc cột phí có «Mọi điều kiện», «BP», «Không bao phí»; chọn BP còn 22 / 44 căn, mọi dòng hiện «BP».
+    375: thẻ căn hiện «BP» dưới giá. Khớp Expected (tiêu đề cột bị cắt mép phải ở step1 nhưng đầy đủ ở step2).
   network_observed: clean
 
 - eval: E13
-  run_id: minted-cach-goi-rieng-E13-r1
+  run_id: minted-cach-goi-rieng-E13-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   screenshot: evidence/E13-step1.png
   observed: |
-    step1 (390 rộng): đầu trang «[Mẫu] Sàn thử / [Mẫu] Đầu khách gửi bạn 1 căn»; một thẻ căn «Toà A», giá «7,95 tỷ» có «BP» chữ xám nhỏ cạnh giá, nút «Quan tâm». step2: chi tiết căn có hai dòng nhãn «Pháp lý» và «Hiện trạng», không có chữ nào của nhãn lý do ngừng.
+    Khổ 390: trang «[Mẫu] Sàn thử» có một thẻ căn Toà A, giá «7,95 tỷ» kèm «BP» chữ nhỏ cạnh giá. Chi tiết (step2) có dòng «Pháp lý» (tên mặc định vì sàn chưa đặt) và «Hiện trạng», không có chữ nào của nhãn lý do ngừng. Khớp Expected.
   network_observed: clean
 
 - eval: E14
-  run_id: minted-cach-goi-rieng-E14-r1
+  run_id: minted-cach-goi-rieng-E14-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
   screenshot: evidence/E14-step1.png
   observed: |
-    step1 (1440): hộp thoại «Xuất bảng hàng» bước 3 Xem trước, mẫu Bài Zalo, Nhóm môi giới, 2 căn; dạng dòng chữ, A-03.01 «Không bao phí», A-13.01 «BP»; mẫu này không có hàng tiêu đề. step2 (mẫu Excel): bảng xem trước có tiêu đề cột «Phí CN», A-13.01 = «BP», A-03.01 = «Không bao phí», không có cột lý do ngừng; banner «Cột không ra ngoài: Người giữ, Mức đủ, Ai thấy».
+    1440: hộp thoại «Xuất bảng hàng», bước «Xem trước», chân «2 căn · Excel · Nhóm môi giới». Bảng có cột «Phí CN»; A-03.01 hiện «Không bao phí», A-13.01 hiện «BP». Không có cột lý do ngừng. Khớp Expected.
   network_observed: clean
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-cach-goi-rieng-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-cach-goi-rieng-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-cach-goi-rieng-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-cach-goi-rieng-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
 
 - cmd: npm run test:hooks
-  run_id: minted-cach-goi-rieng-SUITE-test_hooks-r1
+  run_id: minted-cach-goi-rieng-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-cach-goi-rieng-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-cach-goi-rieng-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
 
 - cmd: npm run typecheck
-  run_id: minted-cach-goi-rieng-SUITE-typecheck-r1
+  run_id: minted-cach-goi-rieng-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
 
 - cmd: npm run lint
-  run_id: minted-cach-goi-rieng-SUITE-lint-r1
+  run_id: minted-cach-goi-rieng-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T15:03:51Z
+  verified_at: 2026-11-05T17:34:58Z
 
 ## Known limits
+
+- E15 (AC-1) dat-co-gioi-han: ma thoat 1 la ket qua DA KHAI TRUOC cua eval nay, khong phai mot luot truot. Lenh: R="${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}" && node "$R/scripts/design-floor-khuon.mjs" --kiem --root .
 
 ## Ngoài hợp đồng
 
 ## Analyst
 
-Eval không phân biệt (xanh cả trên bản cũ lẫn bản mới, chứng minh khung chạy chứ chưa chứng minh tính năng; cần viết lại để assert hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý):
+Eval không phân biệt (xanh ở cả code hiện tại lẫn baseline; chứng minh bộ chạy chứ chưa chứng minh tính năng, nên viết lại để assert hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý):
 
-- `npm test -w @quy-hang/core`: E3, E6, E7, E10b (baseline green)
-- `npm test -w @quy-hang/web`: E3c, E4, E5, E6c, E7b, E9b, E10 (baseline green)
-- `npm run test:ro-ri`: E7c (baseline green)
+- npm run db:migrate && npm run db:test: E1, E2, E2b, E3b, E6b, E8, E9
+- npm test -w @quy-hang/core: E3, E6, E7, E10b
+- npm test -w @quy-hang/web: E3c, E4, E5, E6c, E7b, E9b, E10
+- npm run test:ro-ri: E7c
 
-Ghi chú: E15 cũng xanh trên bản cũ (baseline green) và đỏ trên bản mới. Nguyên nhân đỏ là dòng «lệch:» của `settings/labels/page.tsx` thuộc hai nhóm màn cai-dat-san và trang-tam. Hợp đồng cho phép đúng dòng này (giới hạn kit#485), nhưng lệnh vẫn trả về thất bại nên không tính là đạt.
+Baseline khong do
+
+- node _acceptance/cach-goi-rieng/kiem-khuon-e15.mjs: bo qua baseline: tep _acceptance/cach-goi-rieng/kiem-khuon-e15.mjs co o cay dang kiem nhung chua co o merge-base d98ea15cfa64047d0454aa5aca8e9da7196a118e — eval moi, chay tren code cu khong phan biet gi
 
 ## Variance
 
@@ -341,4 +361,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E15 failed — bộ chấm khuôn báo «lệch» ở settings/labels/page.tsx (thuộc hai nhóm màn cai-dat-san, trang-tam); các eval còn lại đạt. Returned to implementation.
+Round 1: E15 bị REJECT ở S4 lượt 1 (ba phát hiện trong hợp đồng: cách xem đã lưu, thứ tự khoá doiNhan, E15). Returned to implementation.
+Round 2: toàn bộ eval đạt; E15 đạt có giới hạn (kit#485) cùng E15b xanh; không còn phát hiện trong hợp đồng.

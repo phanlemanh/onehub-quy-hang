@@ -1,117 +1,69 @@
-389. [GET] http://localhost:3462/api/v1/listings => [200] OK
-390. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-391. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
-392. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-393. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
-394. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
-395. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
-396. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
-397. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-398. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
-399. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
-400. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
-401. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
-402. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
-403. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
-404. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
-405. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
-406. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
-407. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
-408. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
-409. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
-410. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
-411. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
-412. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
-413. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
-415. [POST] http://localhost:3462/__nextjs_original-stack-frames => [200] OK
-450. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
-451. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
-452. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
-453. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
-454. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
-455. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
-485. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-486. [GET] http://localhost:3462/api/v1/company/settings/queue => [200] OK
-487. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
-488. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-489. [GET] http://localhost:3462/api/v1/company/settings/queue => [200] OK
-490. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
-491. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
-492. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
-493. [GET] http://localhost:3462/api/v1/listings => [200] OK
-539. [GET] http://localhost:3462/api/v1/listings => [200] OK
-540. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-541. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
-542. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-543. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
-544. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
-545. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
-546. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
-547. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-548. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
-549. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
-550. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
-551. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
-552. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
-553. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
-554. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
-555. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
-556. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
-557. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
-558. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
-559. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
-560. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
-561. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
-562. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
-563. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
-565. [POST] http://localhost:3462/__nextjs_original-stack-frames => [200] OK
-566. [GET] http://localhost:3462/api/v1/listings => [200] OK
-567. [GET] http://localhost:3462/api/v1/listings => [200] OK
-568. [GET] http://localhost:3462/api/v1/units/photos/9895fa75-34eb-4adf-90d3-59ae071ee685/thumb => [404] Not Found
-570. [GET] http://localhost:3462/api/v1/units/photos/8b4252e2-ec03-4ff9-860b-50162c5395df/thumb => [404] Not Found
-571. [GET] http://localhost:3462/api/v1/units/photos/75fae1d4-2def-4829-9445-da7b7e195d67/thumb => [404] Not Found
-572. [GET] http://localhost:3462/api/v1/units/photos/bfb457b3-2ed0-4737-a473-277550b6b8d9/thumb => [404] Not Found
-577. [GET] http://localhost:3462/api/v1/listings => [200] OK
-624. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-625. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
-626. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-627. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-628. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
-629. [GET] http://localhost:3462/api/v1/catalog => [200] OK
-630. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
-631. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
-632. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
-633. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
-634. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
-635. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
-636. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
-637. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
-638. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
-639. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
-640. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
-641. [GET] http://localhost:3462/api/v1/listings => [200] OK
-650. [GET] http://localhost:3462/api/v1/units/photos/08607b6c-03cd-4d89-837c-b2db18798892/thumb => [404] Not Found
+35. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+36. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+37. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+39. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+40. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+41. [GET] http://localhost:3462/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+71. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+72. [GET] http://localhost:3462/api/v1/company/settings/queue => [200] OK
+73. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
+74. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+75. [GET] http://localhost:3462/api/v1/company/settings/queue => [200] OK
+76. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
+77. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
+78. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
+79. [GET] http://localhost:3462/api/v1/listings => [200] OK
+125. [GET] http://localhost:3462/api/v1/listings => [200] OK
+126. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+127. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
+128. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+129. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
+130. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
+131. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
+132. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
+133. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+134. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
+135. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
+136. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
+137. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
+138. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
+139. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
+140. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.01 => [200] OK
+141. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-13.03 => [200] OK
+142. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 => [200] OK
+143. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-05.01 => [200] OK
+144. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 => [200] OK
+145. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-10.05 => [200] OK
+146. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 => [200] OK
+147. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.01 => [200] OK
+148. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-02.01 => [200] OK
+149. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 => [200] OK
+151. [POST] http://localhost:3462/__nextjs_original-stack-frames => [200] OK
+152. [GET] http://localhost:3462/api/v1/listings => [200] OK
+153. [GET] http://localhost:3462/api/v1/listings => [200] OK
+154. [GET] http://localhost:3462/api/v1/listings => [200] OK
+155. [GET] http://localhost:3462/api/v1/units/photos/9895fa75-34eb-4adf-90d3-59ae071ee685/thumb => [404] Not Found
+157. [GET] http://localhost:3462/api/v1/units/photos/8b4252e2-ec03-4ff9-860b-50162c5395df/thumb => [404] Not Found
+158. [GET] http://localhost:3462/api/v1/units/photos/75fae1d4-2def-4829-9445-da7b7e195d67/thumb => [404] Not Found
+159. [GET] http://localhost:3462/api/v1/units/photos/bfb457b3-2ed0-4737-a473-277550b6b8d9/thumb => [404] Not Found
+210. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+211. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
+212. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+213. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+214. [GET] http://localhost:3462/api/v1/company/member-names => [200] OK
+215. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+216. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04 => [200] OK
+217. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04 => [200] OK
+218. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06 => [200] OK
+219. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02 => [200] OK
+220. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05 => [200] OK
+221. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01 => [200] OK
+222. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01 => [200] OK
+223. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02 => [200] OK
+224. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.01 => [200] OK
+225. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 => [200] OK
+226. [GET] http://localhost:3462/api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 => [200] OK
+227. [GET] http://localhost:3462/api/v1/listings => [200] OK
+237. [GET] http://localhost:3462/api/v1/units/photos/08607b6c-03cd-4d89-837c-b2db18798892/thumb => [404] Not Found
 
-Note: 182 static requests not shown, run with "static" option to see them.---- console errors dump
-.playwright-mcp/console-2026-11-05T16-12-08-661Z.log:[     167ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/favicon.ico:0
-.playwright-mcp/console-2026-11-05T16-12-27-689Z.log:[     170ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/favicon.ico:0
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[    7740ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[    8742ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[    9744ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   10746ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   11748ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   16750ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   21753ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   26754ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   30290ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/api/v1/listings:0
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   31758ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   36761ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-13-55-140Z.log:[   41762ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=XFc4bzPwIXe__EdakEL1n' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-15-31-933Z.log:[   60804ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/api/v1/units/photos/9895fa75-34eb-4adf-90d3-59ae071ee685/thumb:0
-.playwright-mcp/console-2026-11-05T16-15-31-933Z.log:[   60817ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/api/v1/units/photos/8b4252e2-ec03-4ff9-860b-50162c5395df/thumb:0
-.playwright-mcp/console-2026-11-05T16-15-31-933Z.log:[   60817ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/api/v1/units/photos/bfb457b3-2ed0-4737-a473-277550b6b8d9/thumb:0
-.playwright-mcp/console-2026-11-05T16-15-31-933Z.log:[   60817ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/api/v1/units/photos/75fae1d4-2def-4829-9445-da7b7e195d67/thumb:0
-.playwright-mcp/console-2026-11-05T16-16-32-832Z.log:[     484ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3462/api/v1/units/photos/08607b6c-03cd-4d89-837c-b2db18798892/thumb:0
-.playwright-mcp/console-2026-11-05T16-16-32-832Z.log:[   37347ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=np6XxxJVfX7e7vX0LqysB' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-16-32-832Z.log:[   38351ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=np6XxxJVfX7e7vX0LqysB' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
-.playwright-mcp/console-2026-11-05T16-16-32-832Z.log:[   39354ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=np6XxxJVfX7e7vX0LqysB' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/stat
+Note: 171 static requests not shown, run with "static" option to see them.

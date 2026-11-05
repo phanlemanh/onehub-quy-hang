@@ -48,3 +48,48 @@ wall: 708s
 - **claude-sonnet-5-5**: 11 agent · 122 calls · out 53,632 · in 252 · cache_read 11,244,611 · cache_create 576,978
 - **claude-haiku-5-5**: 11 agent · 22 calls · out 15,342 · in 44 · cache_read 171,541 · cache_create 155,660
 
+### S4 round 2 — wf_b3b5e028-f4f (23 agent, 108,216 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| review:measurement | claude-opus-5-5 | 18 | 15,177 | 38 | 1,072,836 | 162 |
+| ui:E12 | claude-sonnet-5-5 | 36 | 12,910 | 74 | 4,202,242 | 264 |
+| review:conventions | claude-opus-5-5 | 21 | 11,224 | 44 | 1,231,434 | 138 |
+| synthesize:report | claude-sonnet-5-5 | 2 | 10,066 | 4 | 38,766 | 56 |
+| ui:E11 | claude-sonnet-5-5 | 30 | 9,501 | 62 | 3,229,834 | 268 |
+| review:bugs | claude-opus-5-5 | 11 | 8,788 | 22 | 493,528 | 99 |
+| ui:E13 | claude-sonnet-5-5 | 17 | 6,585 | 34 | 1,656,389 | 99 |
+| ui:E14 | claude-sonnet-5-5 | 28 | 6,496 | 58 | 3,223,244 | 133 |
+| baseline:diffBase | claude-sonnet-5-5 | 3 | 5,310 | 6 | 44,424 | 186 |
+| triage | claude-sonnet-5-5 | 2 | 3,443 | 4 | 17,783 | 24 |
+| machine:npm run db:migrate && npm run db:test | claude-haiku-5-5 | 2 | 2,394 | 4 | 15,836 | 109 |
+| machine:npm test -w @quy-hang/web | claude-haiku-5-5 | 2 | 2,171 | 4 | 15,832 | 14 |
+| machine:npm run test:ro-ri | claude-haiku-5-5 | 2 | 2,148 | 4 | 15,826 | 11 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 2,118 | 4 | 15,832 | 70 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 1,875 | 4 | 15,840 | 41 |
+| machine:npm run lint | claude-haiku-5-5 | 2 | 1,593 | 4 | 15,875 | 26 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 1,480 | 4 | 12,643 | 12 |
+| machine:R="${CLAUDE_PLUGIN_ROOT:-$(node packages | claude-haiku-5-5 | 2 | 1,030 | 4 | 15,911 | 10 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 958 | 4 | 15,822 | 9 |
+| machine:node _acceptance/cach-goi-rieng/kiem-khu | claude-haiku-5-5 | 2 | 950 | 4 | 15,860 | 10 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 901 | 4 | 15,834 | 5 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 761 | 4 | 15,879 | 18 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 337 | 4 | 11,856 | 5 |
+
+
+wall: 861s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| baseline | 1 | 5,310 | 44,424 | 186 | 17:38:29 | 17:41:35 |
+| ui | 4 | 35,492 | 12,311,709 | 771 | 17:38:29 | 17:51:19 |
+| machine | 12 | 18,379 | 186,990 | 193 | 17:38:29 | 17:41:41 |
+| review | 3 | 35,189 | 2,797,798 | 163 | 17:38:29 | 17:41:12 |
+| triage | 1 | 3,443 | 17,783 | 24 | 17:51:21 | 17:51:45 |
+| capture | 1 | 337 | 11,856 | 5 | 17:51:48 | 17:51:52 |
+| synthesize | 1 | 10,066 | 38,766 | 56 | 17:51:54 | 17:52:50 |
+
+- **claude-opus-5-5**: 3 agent · 50 calls · out 35,189 · in 104 · cache_read 2,797,798 · cache_create 268,099
+- **claude-sonnet-5-5**: 8 agent · 120 calls · out 54,648 · in 246 · cache_read 12,424,538 · cache_create 533,471
+- **claude-haiku-5-5**: 12 agent · 24 calls · out 18,379 · in 48 · cache_read 186,990 · cache_create 168,547
+

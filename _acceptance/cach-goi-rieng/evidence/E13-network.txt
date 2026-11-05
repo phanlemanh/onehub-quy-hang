@@ -1,6 +1,6 @@
-35. [POST] http://localhost:3462/api/v1/public/shares/PMwnsvB1pppN/events => [201] Created
-36. [POST] http://localhost:3462/api/v1/public/shares/PMwnsvB1pppN/events => [200] OK
-73. [POST] http://localhost:3462/api/v1/public/shares/PMwnsvB1pppN/events => [200] OK
-74. [POST] http://localhost:3462/api/v1/public/shares/PMwnsvB1pppN/events => [200] OK
-
-Note: 70 static requests not shown, run with "static" option to see them.
+E13 network (playwright, origin http://localhost:3462, khổ 390)
+POST /api/v1/public/shares/bRgbDJPVupFI/events => 200 (x2)
+Static requests 37 (không liệt kê, note-only)
+Console errors: không có (console log chỉ 2 mục thông tin mỗi trang)
+Failed requests app-scope: không
+Setup fetch (trong trang, có phiên): sign-in/email-otp 200, GET /listings 200, POST /prospects 201, POST /shares 201

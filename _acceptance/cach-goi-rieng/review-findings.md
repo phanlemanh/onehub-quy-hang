@@ -1,72 +1,67 @@
-# Review findings: cach-goi-rieng (round 1)
+# Review findings: cach-goi-rieng (round 2)
 
 ## Trong hợp đồng
 
-- **Saved views of Bảng hàng (/inventory/views/<id>) never get the company's labels**
-  AC: AC-4
-  file: `apps/web/src/app/(app)/inventory/views/[id]/page.tsx:14`
-  severity: medium
-  source: conventions
-  detail: This change makes the grid, the phone cards, the filter options, the cell editors and the export dialog read the company's labels through `useTuVung()`. The default value of that context is `TU_VUNG_RONG`. Only `inventory/page.tsx` was updated to call `GET /api/v1/company/labels` and wrap the screen in `<TuVungProvider>`. The saved-view page is the same Bảng hàng ("cùng bảng, áp cách xem đã lưu"), but it still renders `<BangHang>` and `<BangTheDienThoai>` with no provider. So when a company has set «Phí CN»/«BP», opening a saved view shows the built-in names again: column headers, fee cells, filter options, sort order by displayed text, and the export (phát hàng) opened from that view, because `moXuat.tuVung = tv` is empty. That breaks AC-4/AC-6 («đầu chủ mở Bảng hàng … tiêu đề cột phí là «Phí CN»», export uses the company's names) on a route that belongs to Bảng hàng. Fix: give this page the same server-side read and `TuVungProvider` wrapping as `inventory/page.tsx`, and add a test or eval for the saved-view route.
-
-- **doiNhan compares JSON.stringify output against jsonb read back from the database. jsonb reorders keys, so a field with two or more custom value names is rewritten and logged on every save**
-  AC: AC-2
-  file: `packages/core/src/labels/index.ts:196`
-  severity: medium
-  source: bugs
-  detail: `doiNhan` decides whether a key changed with `cu.get(r.key) !== JSON.stringify(r.value)`. The old value comes from `company_settings.value`, which is jsonb. Postgres jsonb does not keep key order: it sorts keys by length, then bytewise. The new map built in `dungDongNhan` follows the order of the request body, which is the order of `bangNhan`/TAP_DONG (included, excluded / sold_elsewhere, owner_changed_mind, unreachable). Example: feeInclusion {included:'BP', excluded:'KBP'} comes back from the DB as {"excluded":…,"included":…}. That string never equals the new one, even when nothing changed. Result: whenever a field has two or more custom value names, every press of «Lưu» upserts the `labels.value.<field>` row and trigger 026 writes one more audit event. This breaks the stated rule «khoá giữ nguyên không ghi lại (không thổi phồng nhật ký)». The DB test (packages/api/test-db/cach-goi-rieng/nhan.test.ts) only uses maps with one key, so it misses this. Fix: compare with key-order-independent deep equality, or sort keys before stringify.
-
-- **The saved-view page /inventory/views/[id] has no TuVungProvider, so the grid, phone cards and Phát hàng show default names instead of the company's custom names**
-  AC: AC-4
-  file: `apps/web/src/app/(app)/inventory/views/[id]/page.tsx:15`
-  severity: medium
-  source: bugs
-  detail: This round, `inventory/page.tsx` reads `GET /api/v1/company/labels` and wraps BangCoHoSo/BangTheDienThoai in `TuVungProvider`. The saved-view page still renders `<BangHang>` and `<BangTheDienThoai>` directly, with no provider. `useTuVung()` there returns the default `TU_VUNG_RONG`. On a saved view, everything uses the built-in labels: column headers (`nhanCot`), fee and withdrawal-reason cells, filter options, sorting, the cell editor, and the Phát hàng dialog (`moHopXuat` passes `tuVung: tv`, which is empty). So the same company sees «Phí CN»/«BP» on /inventory but «Phí»/«Bao phí» on /inventory/views/<id>, and exports from a saved view also come out with default names. There is no error and nothing is reported.
+Không có phát hiện nào.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Withdrawal-reason picker in the cell editor still shows built-in names while the grid shows the company's names**
-  Người dùng thấy gì: Khi sàn đặt tên riêng cho lý do ngừng, ô trong bảng hiện tên riêng nhưng danh sách chọn lý do vẫn hiện tên mặc định, nên cùng một lý do có hai tên khác nhau trên cùng màn.
-  Căn cứ: Chỉ lệch chữ hiện, không mất hay lộ dữ liệu, giá trị lưu vẫn đúng; người dùng vẫn chọn được đúng lý do và sửa sau rẻ.
-  file: `apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx`
-  severity: low
-  Đề xuất: known-limits
-
-- **Withdrawal-reason picker in the status editor (and the bulk bar) ignores custom names, so the cell and the picker show different words**
-  Người dùng thấy gì: Danh sách chọn lý do ngừng, ở ô sửa và ở thanh thao tác hàng loạt, vẫn hiện tên mặc định dù bảng đã hiện tên riêng của sàn, nên người dùng thấy hai cách gọi cho một lý do.
-  Căn cứ: Chỉ là chữ hiện lệch nhau, dữ liệu không mất hay lộ; người dùng vẫn thao tác đúng và sửa sau rẻ.
-  file: `apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx`
-  severity: low
-  Đề xuất: known-limits
-
-- **Duplicate-name check only compares labels that differ from the default, so one value can be renamed to another value's default name**
-  Người dùng thấy gì: Quản trị sàn có thể đặt cho một giá trị đúng tên mặc định của giá trị kia, khiến hai giá trị hiện cùng một chữ trên bảng, bộ lọc, bản phát hàng và trang khách, khó phân biệt.
-  Căn cứ: Gây nhầm lẫn khi đọc và lọc nhưng không mất dữ liệu, quản trị tự đổi tên lại được; sửa cần chốt luật trùng tên nên đáng làm riêng.
+- **Kiểm 'hai giá trị cùng tên' bỏ sót trường hợp trùng với tên mặc định của giá trị anh em trong cùng tập đóng**
+  Người dùng thấy gì: Quản trị có thể đặt cho một giá trị cái tên trùng với tên của giá trị còn lại. Khi đó bảng hàng, ô lọc và trang khách hiện hai lựa chọn khác nghĩa mà cùng một chữ, khách dễ hiểu nhầm.
+  Căn cứ: Gây nhầm lẫn thật cho khách và đội nhưng không mất dữ liệu, quản trị tự đổi lại tên được ngay; kiểm thêm ở lúc lưu là việc nhỏ nhưng nằm ngoài các tiêu chí đã duyệt.
   file: `packages/core/src/labels/index.ts`
-  severity: low
+  severity: medium
   Đề xuất: new-contract
 
-- **Hình dạng 1 — đo mã nguồn của hộp thoại thay vì đầu ra; đường nối từ Bảng hàng vào hộp thoại không được đo**
-  Người dùng thấy gì: Bài kiểm tra bản phát hàng dùng tên riêng chỉ đọc chữ trong mã, nên nếu sau này ai làm mất đoạn nối đó, bản phát hàng quay về tên mặc định mà bài kiểm tra vẫn báo xanh.
-  Căn cứ: Không ảnh hưởng người dùng hiện tại, chỉ làm lưới an toàn lỏng hơn; có thể bù sau bằng bài kiểm chạy thật.
-  file: `apps/web/src/app/(app)/inventory/phat-hang/tu-vung.test.ts`
+- **Nhãn khai lớp company_internal (trần company_only) nhưng được đưa ra trang khách công khai và bản phát hàng**
+  Người dùng thấy gì: Tên riêng của sàn được khai là thông tin nội bộ nhưng vẫn hiện cho khách xem theo đúng thiết kế. Khách không thấy thêm dữ liệu nhạy cảm nào, chỉ là cách ghi nhãn phân loại chưa khớp với thực tế.
+  Căn cứ: Không lộ thông tin chủ nhà hay dữ liệu ngoài ý muốn, kiểm rò rỉ vẫn xanh; chỉ là sai lệch ghi chép nên ghi lại như hạn chế đã biết.
+  file: `packages/core/src/sharing/trang-khach.ts`
+  severity: low
+  Đề xuất: known-limits
+
+- **Kiểm trùng tên giá trị riêng bỏ sót tên mặc định của giá trị chưa đổi: hai giá trị chuẩn có thể hiện cùng một chữ**
+  Người dùng thấy gì: Nếu quản trị đổi tên một giá trị thành đúng chữ của giá trị kia, cả hai cùng hiện một chữ. Khách có thể thấy căn không bao phí mà ghi là bao phí.
+  Căn cứ: Có thể làm khách hiểu sai thông tin phí, nhưng không mất dữ liệu và quản trị sửa lại được ngay; nên gộp xử lý cùng lỗi trùng tên liên quan.
+  file: `packages/core/src/labels/index.ts`
+  severity: medium
+  Đề xuất: new-contract
+
+- **Lỗi đọc dòng nhãn hỏng bị nuốt lặng ở mọi nơi gọi boTuVung**
+  Người dùng thấy gì: Nếu một tên riêng đã lưu sau này không còn hợp lệ, hệ thống lặng lẽ quay về chữ mặc định mà không báo cho ai. Quản trị không biết tên riêng của sàn đã biến mất.
+  Căn cứ: Hiếm xảy ra, không mất dữ liệu chủ nhà và căn vẫn hiện đúng bằng chữ mặc định; quản trị đặt lại tên được nên ghi hạn chế đã biết.
+  file: `packages/api/src/labels/store.ts`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình 5: tên ca nói «mọi trang» nhưng danh sách trang viết tay hai điểm, không liệt kê lớp**
+  Người dùng thấy gì: Một trang Bảng hàng mới thêm sau này có thể quên dùng tên riêng của sàn mà bài kiểm vẫn xanh. Người dùng sẽ thấy chữ mặc định ở trang đó.
+  Căn cứ: Chưa gây hại gì hôm nay; rủi ro chỉ có khi thêm trang mới và chỉ làm hiện chữ mặc định, không lộ hay mất dữ liệu.
+  file: `apps/web/src/app/(app)/inventory/tu-vung.test.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình dạng 1 — chỉ kiểm chuỗi `chanMucSan(` đứng trước chuỗi API trong mã nguồn, không kiểm trang có thật sự chặn**
-  Người dùng thấy gì: Bài kiểm tra việc chặn người không phải quản trị vào màn Cách gọi chỉ xem có lời gọi chặn trong mã, nên nếu việc chuyển hướng bị gỡ mà lời gọi còn, bài kiểm tra vẫn xanh.
-  Căn cứ: Hiện trang vẫn chặn đúng nên người dùng không bị ảnh hưởng; rủi ro chỉ là bỏ sót lỗi trong tương lai.
+- **Hình 3: hứa «đổi từ vựng không đổi các dòng được giữ» nhưng phép đo không truyền từ vựng vào (luôn đúng)**
+  Người dùng thấy gì: Một dòng trong bài kiểm không thật sự thử việc đổi tên riêng rồi lọc lại. Người dùng không thấy ảnh hưởng nào, chỉ là bài kiểm yếu hơn vẻ ngoài.
+  Căn cứ: Bộ lọc vốn không nhận tên riêng nên kết quả không thể đổi; sửa chỉ làm bài kiểm gọn hơn, không đổi trải nghiệm.
+  file: `apps/web/src/app/(app)/inventory/tu-vung.test.ts`
+  severity: low
+  Đề xuất: wont-fix
+
+- **Hình 3: chỉ kiểm chuỗi chanMucSan( đứng trước đường API, không kiểm việc chặn (redirect)**
+  Người dùng thấy gì: Bài kiểm không chắc chắn bắt được trường hợp trang quên chuyển người không phải quản trị đi chỗ khác. Hiện trang vẫn chuyển đúng.
+  Căn cứ: Phía máy chủ vẫn từ chối ghi, nên người không phải quản trị không sửa được gì; nhiều nhất là họ nhìn thấy màn trống.
   file: `apps/web/src/app/(app)/settings/labels/cach-goi.test.ts`
   severity: low
   Đề xuất: known-limits
 
-- **Hình dạng 5 — hồ sơ hứa «năm dòng mẫu» nhưng phép đo chỉ có một dòng**
-  Người dùng thấy gì: Bài kiểm tra sàn chưa đặt tên riêng chỉ thử một dòng mẫu thay vì năm, nên một vài giá trị như Không bao phí chưa được kiểm trực tiếp.
-  Căn cứ: Rủi ro rất thấp vì hành vi mặc định là đường đi đơn giản và đã được kiểm ở các ca khác; thêm dòng mẫu không đáng mở việc riêng.
-  file: `apps/web/src/app/(app)/inventory/tu-vung.test.ts`
+- **Hình 1: đo mã nguồn hộp thoại thay vì đầu ra; khâu Bảng hàng → mo.tuVung không được đo**
+  Người dùng thấy gì: Nếu sau này ai đó làm đứt khâu truyền tên riêng vào hộp thoại phát hàng, bản xuất sẽ ra chữ mặc định mà bài kiểm tự động không báo. Hiện bản xuất vẫn hiện đúng tên riêng.
+  Căn cứ: Chưa có lỗi thật, chỉ là lưới an toàn mỏng; nếu hỏng thì chỉ ra chữ mặc định chứ không lộ hay mất dữ liệu, và đã có bước nhìn màn bù lại.
+  file: `apps/web/src/app/(app)/inventory/phat-hang/tu-vung.test.ts`
   severity: low
-  Đề xuất: wont-fix
+  Đề xuất: known-limits
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
