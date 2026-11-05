@@ -1,71 +1,64 @@
+# Review findings: hom-nay-dau-chu-dien-thoai (round 3)
+
 ## Trong hợp đồng
 
-- **Trả lại trên điện thoại ghi luôn, bỏ qua hộp hỏi lại mà máy tính bắt buộc (hàng 92)**
-  file: apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx:531
-  severity: high
-  AC: AC-5
-  source: conventions
-  detail: Trên máy tính, NutViec ghi rõ «Trả lại luôn hỏi lại (hàng 92)». Bấm «Trả lại» chỉ mở AlertDialog (dòng 176 setHoiTraLai, dòng 200-208), có nêu lý do RETURN_REASON_LABEL; hd.lead(v.lead, "return") chỉ chạy khi người bấm xác nhận. Bản điện thoại tự dựng lại bảng việc trong theCua, có lamLead: `m === "tra-lai" ? { onClick: () => hd.lead(l, "return") }`. Bảng này được dùng cho cả ngăn ⋯ (ViecKhac) lẫn ngăn «Kết quả cuộc gọi» (ghiKetQua, gọi lamLead(v.lead, "tra-lai")). Vì vậy một chạm trên điện thoại trả ngay lead về telesales, không hỏi lại và không nêu lý do. Điều này trái luật đã ký của khuôn và trái KH-hn-dien-thoai («cùng bộ việc» với máy tính). Nhãn cũng mất «· lý do» (máy tính dòng 167 ghi `Trả lại · ${RETURN_REASON_LABEL}`). Gốc của lệch là việc sao lại bảng ánh xạ việc → hành động (lamCan/lamLead, dòng 528-531) thay vì dùng chung với NutViec.lam (dòng 168-178). Bài kiểm trong mobile/*.test.ts chỉ kiểm thứ tự mã việc, không kiểm có hỏi lại hay không, nên không bắt được lỗi này.
-  rationale: AC-5 đòi chọn một việc trong ngăn kết quả thì ghi như nút cùng tên ở máy tính; máy tính hỏi lại trước khi trả, điện thoại thì không.
-
-- **On phones, «Trả lại» returns the lead right away with no confirmation**
-  file: apps/web/src/app/(app)/today/hom-nay-dau-chu.tsx:531
-  severity: medium
-  AC: AC-5
-  source: bugs
-  detail: On desktop, «Trả lại» in NutViec (line 176) only calls setHoiTraLai(true). The lead is returned only after the user confirms in the AlertDialog «Trả lại lead này?», which states the reason. On phones, `lamLead` in `theCua` maps m === "tra-lai" straight to hd.lead(l, "return"). Both phone entry points therefore return the lead to telesales with one tap and no question: the «Trả lại» row in the ⋯ sheet (ViecKhac -> t.lam) and the «Trả lại» row in the «Kết quả cuộc gọi» sheet (ghiKetQua -> lamLead). In the call-result sheet, «Trả lại» sits right next to «Đã gọi» and «Không nghe máy», so a stray tap after a call (one-handed use is the whole point of this screen) silently sends the lead away. The lead then disappears from the list (setTaiLead filter) and cannot be undone. The contract (AC-5) says the result-sheet actions behave «như máy tính», and the desktop has a confirmation step.
-  rationale: Cùng lỗi với mục trên: nút Trả lại trong ngăn kết quả không hành xử như nút cùng tên ở máy tính (thiếu bước xác nhận), trái AC-5.
-
-- **Hình 2, fixture viết tay đúng khuôn bên đọc: E1 «đúng thứ tự nhóm của chiaNhom» chỉ đo lại thứ tự do bài kiểm tự đưa vào**
-  file: apps/web/src/app/(app)/today/mobile/danh-sach.test.ts:119
+- **Bài E1 «rẽ khổ» đo một hàm màn hình không dùng: laDienThoai/MOC_DIEN_THOAI không phải chỗ thật quyết định khổ**
+  file: `apps/web/src/app/(app)/today/mobile/goi.ts:9`
   severity: medium
   AC: AC-1
-  source: measurement
-  detail: NHOM5 là mảng NhomThe viết tay, đã xếp sẵn theo thứ tự mong. Assert `thuTuNhom(html) == NHOM5.map(g=>g.ma)` chỉ chứng minh DanhSachDienThoai giữ nguyên thứ tự đầu vào. Bài không cho dữ liệu đi qua chiaNhom hay qua phép dựng `nhomThe` ở hom-nay-dau-chu.tsx:553, là đường ghi thật. Chiều đỏ ở dòng 123-127 đảo chính đầu vào rồi so với NHOM5, nên gần như chắc đỏ với bất kỳ thành phần nào giữ thứ tự, và không bắt được lỗi xếp nhóm ở phía viết. Lời hứa của evals E1 (thứ tự như lưới máy tính, theo chiaNhom) chưa được đo.
-  rationale: AC-1 hứa cùng nhóm và thứ tự nhóm với máy tính; bài kiểm không đo được điều đó nên AC-1 chưa có bằng chứng.
+  source: conventions
+  detail: Màn chọn giữa điện thoại và máy tính bằng `useIsMobile()` (hom-nay-dau-chu.tsx, dòng ~506, `const dienThoai = useIsMobile()`), và hook này giữ mốc 768 riêng của nó. `laDienThoai` và `MOC_DIEN_THOAI` trong goi.ts chỉ được gọi ở goi.test.ts (grep ngoài các tệp test không ra chỗ dùng nào). Vì vậy bài «E1 rẽ khổ: dưới 768 là điện thoại… (5 khổ)» vẫn xanh kể cả khi `useIsMobile` hay màn đổi mốc hoặc đổi cách rẽ khổ. Bài này đo một bản sao của luật, trái với nguyên tắc của lượt S4-r2 là «mọi chạm qua hàm thuần, bài đo gọi thật». Mốc 768 cũng bị viết hai lần (goi.ts và hooks/use-mobile.ts). Cần cho màn rẽ khổ qua cùng một hàm hoặc hằng mà bài kiểm gọi, hoặc bỏ hàm này và đo thẳng `useIsMobile`.
+  rationale: AC-1 đòi màn rẽ đúng ở mốc 768 px, mà bài đo rẽ khổ chỉ đo một bản sao của luật nên không chứng minh được AC-1.
 
-- **Hình 1, đo chỉ dẫn thay vì đầu ra: E7 «trống → TrangThai có đúng một hành động» chỉ thấy lại chuỗi TRONG mà bài kiểm tự bơm vào**
-  file: apps/web/src/app/(app)/today/mobile/danh-sach.test.ts:132
-  severity: medium
-  AC: AC-7
+- **Hình dạng 1 — Đo CHỈ DẪN thay vì ĐẦU RA: E1 rẽ khổ đo hàm laDienThoai mà màn không đọc**
+  file: `apps/web/src/app/(app)/today/mobile/goi.test.ts:18`
+  severity: high
+  AC: AC-1
   source: measurement
-  detail: `dungDs` truyền `trong: createElement('p', null, 'TRONG')`. Thành phần chỉ trả nguyên `<>{trong}</>` (danh-sach.tsx:346), nên `assert.match(dungDs([], 'co'), /TRONG/)` chỉ đo việc đẩy prop đi qua. Nội dung trống thật (HetViec do hom-nay-dau-chu.tsx:557 truyền vào) chưa được dựng. Evals E7 hứa «TrangThai có đúng một hành động», nhưng không có assert nào đếm hành động hay kiểm TrangThai. Nhánh đang tải cũng chỉ khớp `data-cho-tai-kieu="tran"`, không kiểm «khung chờ hai tầng».
-  rationale: AC-7 hứa khung chờ hai tầng và trạng thái trống có một hành động; bài kiểm không đo các điều đó.
+  detail: Test «E1 rẽ khổ» (goi.test.ts:18-31) chạy ma trận 5 khổ 375/390/767/768/1440 qua `laDienThoai(r)` của goi.ts:10. Hàm này không được gọi ở đâu ngoài test (grep apps/web/src chỉ ra chỗ định nghĩa). Màn thật chọn bản điện thoại hay lưới bằng `const dienThoai = useIsMobile()` ở hom-nay-dau-chu.tsx:512, mà useIsMobile có mốc riêng `MOBILE_BREAKPOINT = 768` ở hooks/use-mobile. Vì vậy ma trận AC-1 chỉ kiểm một hàm phụ không nối vào đâu, không kiểm đường rẽ thật. Đổi mốc của useIsMobile hay bỏ hẳn nhánh rẽ thì E1 vẫn xanh.
+  rationale: Ma trận 5 khổ là bằng chứng cho AC-1 nhưng đo hàm không nối vào màn, nên đổi mốc thật vẫn xanh.
 
-- **Hình 3, assert «chuỗi có mặt» khi lời hứa là quan hệ: E5 «Không nghe máy không gọi hàm ghi» và «chọn việc gọi đúng hàm» không được đo**
-  file: apps/web/src/app/(app)/today/mobile/danh-sach.test.ts:96
+- **Hình dạng 2 — Fixture viết tay đúng khuôn bên đọc: hàm lam/ghiKetQua giả thay cho cách nối thật của màn**
+  file: `apps/web/src/app/(app)/today/mobile/danh-sach.test.ts:100`
   severity: medium
   AC: AC-5
   source: measurement
-  detail: Ở danh-sach.test.ts, bài E5 chỉ dựng tĩnh KetQuaCuocGoi rồi so danh sách `data-ket-qua`. Nó cũng khớp `role="button"` và kiểm không có `<button`. Lời hứa ở evals E5 lại là quan hệ giữa nút và lời gọi hàm: chọn «Không nghe máy» thì không gọi ghiKetQua (nhánh `if (m !== 'khong-nghe')` ở danh-sach.tsx:283), chọn việc khác thì gọi đúng hàm, và có chiều đỏ «bản sao Không nghe máy ghi Đã gọi». Bài không có assert nào bấm nút hay theo dõi `ghiKetQua`, cũng không có chiều đỏ đó. Tên bài hứa «dòng kín bề ngang» nhưng không assert nào kiểm bề ngang.
-  rationale: AC-5 hứa «Không nghe máy» không ghi gì và chọn việc thì ghi đúng; bài kiểm không đo quan hệ này.
-
-- **Hình 4, assertion âm tính đứng một mình: E6 «Còn · giữ giá gọi hàm ghi khi mất mạng» chỉ kiểm không có disabled**
-  file: apps/web/src/app/(app)/today/mobile/danh-sach.test.ts:87
-  severity: medium
-  AC: AC-6
-  source: measurement
-  detail: Tên bài và evals E6 hứa nút «Còn · giữ giá» GỌI hàm ghi của dòng cả khi mất mạng. Assert duy nhất về hành vi là `assert.doesNotMatch(nut, /disabled=""/)`, một assert âm tính. Bài không bấm nút, không đặt spy lên `lam` hay `ghiKetQua`, không có đối chứng dương là hàm đã được gọi, và không có chiều đỏ. Một nút không tắt nhưng gắn sai hàm, hoặc không gắn hàm nào, vẫn qua.
-  rationale: AC-6 hứa «Còn · giữ giá» ghi trên máy khi mất mạng; bài kiểm chỉ thấy nút không tắt, chưa chứng minh có ghi.
+  detail: evals E6 hứa «Còn · giữ giá» gọi hàm ghi của kho trên máy (cùng hàm máy tính dùng), và E5 hứa chọn việc khác gọi đúng hàm của nút cùng tên ở máy tính. lechBam (dòng 99-104) tự viết `lam: (x) => ... { onClick: () => g.push(`lam:${x}`) }`, còn lechChon (dòng 157) tự viết `ghiKetQua: (x) => g.push(`ghi:${x}`)`, rồi so với chuỗi `lam:con-giu-gia` hay `ghi:da-goi` do chính các hàm giả đó sinh ra. Cách nối thật từ mã việc sang hành động máy tính (lamCan/lamLead/ghiKetQua trong theCua ở hom-nay-dau-chu.tsx:514-534, ví dụ `con-giu-gia` → `hd.conGiuGia`) không đi qua test nào. Nếu theCua nối «Còn · giữ giá» sang hàm khác thì E5/E6 vẫn xanh.
+  rationale: AC-5 đòi chọn việc thì ghi như nút cùng tên ở máy tính, mà bài đo dùng hàm giả nên không chứng minh được việc nối thật.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Phone-reveal errors for a listing that is not yours or no longer exists all show «Căn chưa có số chủ»**
-  Người dùng thấy gì: Khi đầu chủ không còn giữ căn đó nữa, màn hình vẫn báo «căn chưa có số chủ» và bảo đi ghi số, nên họ hiểu sai nguyên nhân.
-  Căn cứ: Chỉ là lời báo sai nguyên nhân, không mất hay lộ dữ liệu, người dùng mở lại hồ sơ là thấy thực tế; sửa lời báo nhẹ nhưng ít gặp.
+- **moSoChu gộp 403 «không phải đầu chủ giữ căn» vào lời «Căn chưa có số chủ — mở hồ sơ để ghi số»**
+  Người dùng thấy gì: Nếu căn vừa được giao cho người khác mà màn chưa cập nhật, đầu chủ chạm «Gọi» sẽ nghe bảo căn chưa có số chủ, thay vì biết căn không còn của mình.
+  Căn cứ: Chỉ sai lời báo trong tình huống hiếm, không lộ số chủ và không mất dữ liệu; tải lại màn là thấy đúng, nên chấp nhận và ghi lại.
   file: `apps/web/src/app/(app)/today/mobile/mo-so-chu.ts`
   severity: low
   Đề xuất: known-limits
 
-- **Hình 4, assertion âm tính không ghim thông điệp: E4 «404 → lời chưa có số» chỉ assert ok=false**
-  Người dùng thấy gì: Bài kiểm chưa khẳng định đúng lời báo khi căn không có số, nên sau này lời báo có thể đổi sai mà không ai hay.
-  Căn cứ: Chỉ là chỗ kiểm còn lỏng ở một lời báo phụ, không ảnh hưởng dữ liệu hay thao tác của người dùng; ghi lại là đủ.
+- **moSoChu gộp 403 (không còn giữ căn) và 404 (không thấy căn) thành «Căn chưa có số chủ», đầu chủ được chỉ sai việc phải làm**
+  Người dùng thấy gì: Khi căn không còn của mình hoặc không còn tồn tại, đầu chủ vẫn bị bảo đi ghi số chủ, nên có thể mở hồ sơ một căn không phải việc của mình rồi mất công.
+  Căn cứ: Hậu quả nhẹ là chỉ dẫn gây nhầm, quyền truy cập vẫn bị chặn đúng và không lộ dữ liệu; người dùng tải lại là hết, sửa sau cũng không đắt.
+  file: `apps/web/src/app/(app)/today/mobile/mo-so-chu.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 4 — Assertion âm tính đứng một mình, không ghim thông điệp: mở số chủ trả 404**
+  Người dùng thấy gì: Nếu lời báo khi căn chưa có số chủ bị đổi nhầm sang lời khác, bài kiểm vẫn không báo động, nên người dùng có thể thấy câu sai mà không ai hay.
+  Căn cứ: Chỉ ảnh hưởng chữ báo lỗi trong tình huống hiếm, không mất dữ liệu; dễ phát hiện và sửa sau với chi phí thấp.
   file: `apps/web/src/app/(app)/today/mobile/goi.test.ts`
-  severity: low
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 4 — Chiều đỏ âm tính không ghim thông điệp: E1 bản sao đảo thứ tự nhóm**
+  Người dùng thấy gì: Bộ so thứ tự nhóm có thể chưa chứng minh được mình bắt đúng lỗi đảo nhóm, nên một lần đảo thứ tự giữa điện thoại và máy tính có thể lọt.
+  Căn cứ: Là điểm yếu của bài kiểm chứ không phải lỗi người dùng thấy ngay; chiều xanh vẫn so thứ tự thật, và vá sau rẻ.
+  file: `apps/web/src/app/(app)/today/mobile/danh-sach.test.ts`
+  severity: medium
   Đề xuất: known-limits
 
 ## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
+
