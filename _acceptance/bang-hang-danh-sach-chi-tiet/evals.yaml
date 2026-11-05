@@ -47,7 +47,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e4 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence"
-      - "Đối chiếu dòng e4: ở mỗi khổ 1440x900 và 1280x800, cả hồ sơ đóng và mở: document.scrollingElement.scrollHeight ≤ innerHeight; vùng cuộn bảng có scrollHeight > clientHeight (bảng cuộn trong khung). Chiều đỏ: dòng e4 kèm ca đối chứng trên nhánh chính (--ban-goc) ghi scrollHeight − innerHeight ≈ 16"
+      - "Đối chiếu dòng e4: ở mỗi khổ 1440x900 và 1280x800, cả hồ sơ đóng và mở: trangKhongCuon = true, tức cả document.scrollingElement lẫn vùng làm việc của vỏ có scrollHeight ≤ clientHeight; vùng cuộn bảng có scrollHeight > clientHeight (bảng cuộn trong khung). Chiều đỏ: dòng e4 kèm ca đối chứng trên nhánh chính (--ban-goc) ghi vùng làm việc dư > 0 (trang cuộn), và ca dương trên nhánh đang kiểm (chèn khối cao hơn chỗ trống) ra trangKhongCuon = false"
     target: "http://localhost:3477/inventory"
     expected: "Trang không cuộn ở hai khổ, đóng và mở; bảng cuộn trong khung."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
