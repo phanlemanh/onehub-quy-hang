@@ -1,0 +1,77 @@
+schema_version: 1
+feature_slug: dia-chi-chuan
+# Mọi eval chạy bộ kiểm lõi `npm test -w @quy-hang/core`; ca của hàng này nằm ở packages/core/src/address/*.test.ts, mỗi ca
+# mang đúng tên «AC-n …». Mỗi phép đo là một hàm kiểm thuần trả danh sách lỗi: đối chứng dương trên vật lành ra rỗng, phá thử
+# trên bản sao ra đúng thông điệp ghim. Bộ thử đọc từ packages/db/seed/mau-thap-tang/ (vật của hàng 73, không sinh lại).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 cùng nhà cùng khoá» xanh: với MỌI cách viết của bộ thử có đáp án wardName là chuỗi và thieu rỗng (tập đếm > 0, mỗi căn NK-01..NK-14 có ≥1), khoá đọc ra khác null và bằng khoaDiaChi dựng từ diaChi của canDich trong du-lieu-mau-thap-tang.json (tra mã tỉnh, mã xã qua danh mục lõi, không qua chuỗi viết); mọi cách viết cùng canDich cùng một khoá; phá thử bản sao: đổi số nhà trong chữ một cách viết (45/12 → 45/13) giữ canDich → hàm kiểm trả «khoá lệch căn đích: DC-…»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 khác nhà khác khoá» xanh: khoá dựng từ diaChi của 14 căn ngoài khu đôi một khác nhau; nhóm mọi cách viết có khoá theo khoá → mỗi nhóm đúng một canDich; ≥2 cặp gần trùng viết trước (NK-01/NK-02 45 vs 45A, NK-03/NK-04 45/12 vs 45/12/3) có khoá khác nhau; mọi cách viết kiểu thieu-so-nha và phuong-cu-tach có khoa === null (đếm > 0 mỗi kiểu); phá thử: bộ dựng khoá bản sao bỏ số nhà khỏi khoá → hàm kiểm trả «hai căn cùng khoá: NK-01, NK-02»; ép khoá cho một cách viết thiếu số nhà → «có khoá khi chưa đủ phần: DC-005»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-3 khớp đáp án» xanh: với ĐỦ 86 cách viết (số dòng so = số dòng đáp án, đếm in ra): stateOrProvince.ten bằng dapAn.stateOrProvince; wardName.ten bằng dapAn.wardName khi đáp án là chuỗi, hoặc wardName.canNguoiChon === true và tập tên ungVien bằng tập dapAn.wardName.ungVien; streetNumber bằng dapAn.streetNumber (kể cả null); tập thieu bằng tập dapAn.thieu; tenDuongChuan(streetName) bằng tenDuongChuan(dapAn.streetName); unparsedAddress === chu từng ký tự; trangThai bằng trạng thái suy từ đáp án (thieu khác rỗng → «thieu»; wardName là đối tượng → «can-nguoi-chon»; còn lại → «chuan»); phá thử bản sao đáp án: đổi wardName một dòng sang phường khác → hàm kiểm trả «lệch đáp án DC-…: wardName»; bỏ «streetNumber» khỏi thieu của một dòng thiếu số → «lệch đáp án DC-…: thieu»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-4 tên cũ vào trọn» xanh: ma trận viết trước — «P. Bến Nghé, Q.1» → Sài Gòn 26740 tuTenCu «Bến Nghé»; «P. Cầu Kho, Q.1» → Cầu Ông Lãnh 26758 tuTenCu «Cầu Kho»; «P. Tân Định, Q.1» → Tân Định 26737 tuTenCu «Tân Định»; «P. Bến Thành, Q.1» → Bến Thành 26743 tuTenCu «Bến Thành»; «Phường Phạm Ngũ Lão, Quận 1» → Bến Thành; «P. Cầu Ông Lãnh, TPHCM» (không quận cũ) → Cầu Ông Lãnh 26758 không tuTenCu, trangThai chuan; mỗi dòng có khoá khác null; phá thử danh mục bản sao: đổi vao của Bến Nghé thành [mã Tân Định] → hàm kiểm trả «tên cũ đọc sai xã mới: Bến Nghé»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-5 tên cũ bị tách» xanh: với mọi phường cũ trong danh mục có vao dài ≥2 (đếm = 3: Đa Kao, Nguyễn Thái Bình, Cầu Ông Lãnh) và với mọi cách viết phuong-cu-tach của bộ thử (đếm 14): trangThai === «can-nguoi-chon», wardName.canNguoiChon === true, wardName.tenCu đúng tên đã viết, tập mã ungVien bằng tập vao của phường cũ trong danh mục, khoa === null; phá thử danh mục bản sao: rút vao của Đa Kao còn một mã → ca đối chứng thấy đọc thành chuan với đúng xã ấy (chiều đảo), và hàm kiểm trên danh mục thật nhận một kết quả giả chọn sẵn ứng viên đầu → «chọn hộ khi bị tách: Đa Kao»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-6 nói thiếu phần nào» xanh: ma trận viết trước từ một địa chỉ đủ («45/12 Đường Mẫu 1, Phường Sài Gòn, TP.HCM») — bỏ tỉnh → thieu = [stateOrProvince], trangThai «thieu», wardName.canNguoiChon === true và MỌI phần tử ungVien có maTinh, tenTinh (Sài Gòn → 79 «Thành phố Hồ Chí Minh»), không suy tỉnh; bỏ phường → thieu = [wardName]; bỏ đường → thieu = [streetName]; bỏ số nhà → thieu = [streetNumber]; «hẻm 45 Đường Mẫu 1, …» (hẻm không số) → thieu = [streetNumber]; «Phường [Tên lạ]» → thieu = [wardName] và chuaCoTrongDanhMuc = [{phan: wardName, chu: «[Tên lạ]»}]; «Tỉnh [Tên lạ]» → chuaCoTrongDanhMuc có phan stateOrProvince; mọi dòng trangThai === «thieu» và khoa === null; ma trận tỉnh viết trước — «Thành phố Hồ Chí Minh», «TP. Hồ Chí Minh», «TP.HCM», «TPHCM», «TP HCM», «HCM», «Hồ Chí Minh» → 79; «Thành phố Hà Nội», «TP Hà Nội», «Hà Nội» → 01 (xã mẫu không có ở Hà Nội nên phường vào chuaCoTrongDanhMuc); «45 Đường Mẫu 1, Phường Sài Gòn, Sài Gòn» → thieu chứa stateOrProvince (Sài Gòn không phải tỉnh); «45 Đường Mẫu 1, Phường Tân Định, Tỉnh Bắc Ninh» → stateOrProvince 24, wardName null, chuaCoTrongDanhMuc có {phan: wardName, chu: «Tân Định»}, khoa null; số dòng ma trận = số assert (đếm in ra); dòng đủ đối chứng trangThai chuan, thieu rỗng; phá thử: bộ tìm xã bản sao bỏ lọc theo tỉnh → hàm kiểm trả «xã đọc ngoài tỉnh: Tân Định»; phá thử: hàm kiểm nhận kết quả bản sao có thieu rỗng cho dòng bỏ phường → «không nói thiếu: wardName»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-7 chuẩn hoá số nhà, tên đường, khoá» xanh: ma trận viết trước — «45/12/3», «45 / 12 / 3», «số 3 hẻm 45/12», «số 3, HXH 45/12», «số 3 hẻm xe hơi 45/12», «số 3 kiệt 45/12», «số 3 ngách 12 ngõ 45», «Số 3 Ngõ 45 Ngách 12» → 45/12/3; «45a» → 45A; «số 45» → 45; tên đường «Đường Mẫu 1», «đường  mẫu   1», «Duong Mau 1», «DUONG MAU 1», «Mẫu 1», «Phố Mẫu 1» → tenDuongChuan «mau 1»; khoaDiaChi(79, 26740, «Đường Mẫu 1», «45/12/3») === «79|26740|mau 1|45/12/3»; số dòng ma trận = số assert (đếm in ra); phá thử: bộ chuẩn hoá số nhà bản sao giữ nguyên thứ tự chữ (không đảo ngõ · ngách) → hàm kiểm trả «số nhà lệch: số 3 ngách 12 ngõ 45»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-8 danh mục» xanh: danh mục lõi có nguon cho tỉnh chứa «19/2025/QĐ-TTg», cho xã cũ → mới chứa «1685/NQ-UBTVQH15», mỗi nguồn có ngày đọc ISO; có phamVi khác rỗng; đúng 34 tỉnh, mã ^\\d{2}$ không trùng, có 79 «Thành phố Hồ Chí Minh» và 01 «Thành phố Hà Nội»; mã xã ^\\d{5}$ không trùng, maTinh mỗi xã có trong tỉnh; mọi mã trong vao của xã cũ có trong xa; ĐỐI CHIẾU hàng 73: nạp packages/db/seed/don-vi-hanh-chinh-mau.mjs — mọi tên tỉnh, phường mới, phường cũ có trong lõi và với mọi phường cũ, tập tên xã mới của vao lõi bằng tập vao bảng trích; phá thử bản sao danh mục: bỏ nguon → «danh mục thiếu nguồn», trùng mã xã → «mã xã trùng», thêm vào bảng trích bản sao một phường cũ trỏ sai xã mới → «bảng trích hàng 73 lệch danh mục lõi: <tên>»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/don-vi-hanh-chinh-mau.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-9 không mạng» xanh: tập tệp quét bằng ĐÚNG tập .ts không phải .test.ts dưới packages/core/src/address và tập ấy bằng {danh-muc.ts, chuan-hoa.ts, doc-dia-chi.ts, index.ts} (lệch thì đỏ «tập tệp quét lệch»); hàm quét đọc câu import/export … from, import( và require( theo TÊN MODULE (không dò chuỗi trần) và báo module thuộc {http, https, net, tls, dgram, dns, http2, undici, axios, node-fetch} kể cả tiền tố node:, cộng định danh gọi fetch(, XMLHttpRequest, WebSocket, EventSource, sendBeacon; đối chứng dương: chuỗi nguon chứa «https://vi.wikipedia.org/…» không bị báo; rồi thay globalThis.fetch bằng hàm ném, vá http.request, http.get, https.request, https.get, net.connect, tls.connect ném lỗi, đọc trọn 86 cách viết → mọi kết quả khớp đáp án như AC-3 và không hàm ném nào bị gọi; khôi phục sau ca; phá thử ghim thông điệp trên chuỗi nguồn bản sao: thêm «await fetch(\"https://x\")» → «gọi mạng: fetch(»; «import http from \"node:http\"» → «gọi mạng: node:http»; «await import(\"node:https\")» → «gọi mạng: node:https»; «require(\"http\")» → «gọi mạng: http»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
