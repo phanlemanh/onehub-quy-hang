@@ -5,7 +5,7 @@ slug: mau-nhap-va-bai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: _acceptance/mau-nhap-va-bai/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -85,3 +85,11 @@ nhập kế dùng bản mới, lần nhập đã xong không đổi; vai khác k
 - Vùng (giám sát L-33): `packages/db/migrations/045_*.sql`, `packages/db/tests/isolation.test.mjs`, `packages/api/src/templates/**`,
   `packages/api/src/imports/store.ts`, `packages/api/test-db/mau-nhap-va-bai/**`, `packages/core/src/import/memory/**`,
   `apps/web/src/lib/nhap/**`, `apps/web/src/app/(app)/settings/templates/**`; xin thêm `app.ts`, `docs/product/tham-chieu.md` (L-34).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Xoá một cột mẫu mà gặp lỗi mạng hay bị máy chủ từ chối thì hộp xác nhận vẫn đóng, cột còn nguyên, không có câu báo.
+  - Ngoài-2: Cùng lỗi với Ngoài-1 (phát hiện trùng): xoá không thành công trông như đã xoá, không báo lý do.
+  - Ngoài-3: Gọi thẳng API có thể lưu mẫu giá hay ngày thiếu tham số mà vẫn được báo thành công; lần nhập sau bỏ lặng mẫu đó.
+  - Ngoài-4: Bài kiểm chưa đo căn thật sự được ghi khi lần nhập đang mở ghi sau lần sửa mẫu; chỉ đọc lại kế hoạch đã lưu.
+  - Ngoài-5: Bài kiểm hoàn tác chỉ soát tập con và xanh cả khi không có căn nào để gỡ.
+  - Ngoài-6: Bài kiểm tiêu đề trùng chưa đo trường đích của lần ghi sau, chỉ đo nguồn.
+  - Ngoài-7: Bài kiểm chặn vai ở màn Mẫu nhập đọc chữ trong mã trang, không mở màn bằng từng vai.
