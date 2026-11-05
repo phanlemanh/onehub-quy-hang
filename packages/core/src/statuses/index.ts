@@ -173,3 +173,64 @@ export function nhanTuBang(than: { statuses?: readonly unknown[] } | null | unde
   }
   return ra;
 }
+
+/** Giá trị một dòng `labels.status.<mã>` của `company_settings`. */
+export type GiaTriNhan = { label: string; anchor: StandardStatus };
+/** Một dòng `company_settings` của họ nhãn trạng thái; `value: null` = đã gỡ. */
+export type DongTrangThai = { key: string; value: GiaTriNhan | null };
+
+/** Bộ nhãn đã kiểm (`kiemNhanTrangThai`) → dòng sẽ có trong `company_settings`, mỗi nhãn một dòng. */
+export function dongNhanTrangThai(nhan: readonly NhanTrangThai[]): { key: string; value: GiaTriNhan }[] {
+  return nhan.map((n) => ({ key: khoaNhan(n.ma), value: { label: n.label, anchor: n.anchor } }));
+}
+
+/** Chuỗi hoá bền với thứ tự khoá: jsonb trả khoá theo thứ tự của nó, thân gửi theo thứ tự của màn (như hàng 45). */
+function chuoiSap(v: unknown): string {
+  if (Array.isArray(v)) return `[${v.map(chuoiSap).join(",")}]`;
+  if (v !== null && typeof v === "object") {
+    const o = v as Record<string, unknown>;
+    return `{${Object.keys(o)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${chuoiSap(o[k])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(v) ?? "null";
+}
+
+/**
+ * Dòng cần ghi để bảng đang lưu (`daLuu`) thành bộ mới (`moi`): mã mới hay đổi chữ → dòng mới; mã đang sống (giá trị khác
+ * `null`) mà vắng trong bộ mới → `null` (gỡ — nhật ký vẫn có vết); mã giữ nguyên → không ghi (không thổi phồng nhật ký).
+ * Dòng ngoài họ `labels.status.*` của `daLuu` không đụng tới.
+ */
+export function doiNhanTrangThai(daLuu: readonly { key: string; value: unknown }[], moi: readonly NhanTrangThai[]): DongTrangThai[] {
+  const cu = new Map<string, string>();
+  for (const d of daLuu) {
+    if (typeof d?.key !== "string" || !d.key.startsWith(KHOA_TRANG_THAI) || !laMaNhan(d.key.slice(KHOA_TRANG_THAI.length))) continue;
+    cu.set(d.key, chuoiSap(d.value ?? null));
+  }
+  const ra: DongTrangThai[] = [];
+  const coMoi = new Set<string>();
+  for (const r of dongNhanTrangThai(moi)) {
+    coMoi.add(r.key);
+    if (cu.get(r.key) !== chuoiSap(r.value)) ra.push(r);
+  }
+  for (const [key, v] of cu) if (!coMoi.has(key) && v !== "null") ra.push({ key, value: null });
+  return ra;
+}
+
+/** Một dòng của thân `GET /api/v1/company/statuses`: trạng thái chuẩn, nhãn mặc định, nhãn riêng kèm số căn đang mang. */
+export type DongBangTrangThai = { status: StandardStatus; default: string; labels: { code: string; label: string; inUse: number }[] };
+
+/**
+ * Thân `GET /api/v1/company/statuses`: sáu dòng theo thứ tự chuẩn, mỗi dòng các nhãn riêng neo vào nó (khuôn `code`, đọc
+ * ngược bằng `nhanTuBang`). `inUse` theo mã — người gọi đếm căn trong sàn; mã vắng là 0.
+ */
+export function bangTrangThai(nhan: readonly NhanTrangThai[], inUse: Readonly<Record<string, number>>): { statuses: DongBangTrangThai[] } {
+  return {
+    statuses: STANDARD_STATUSES.map((s) => ({
+      status: s,
+      default: NHAN_TRANG_THAI_MAC_DINH[s],
+      labels: nhanCuaNeo(nhan, s).map((n) => ({ code: n.ma, label: n.label, inUse: Object.hasOwn(inUse, n.ma) ? (inUse[n.ma] ?? 0) : 0 })),
+    })),
+  };
+}
