@@ -1,4 +1,5 @@
 import type { CotMau } from "@quy-hang/core/import";
+import { CHUA_XONG, type KetQuaHoanTac, type LanNhapCuaToi } from "./hoan-tac";
 import type { GoiDong, KetQuaDong, TongKet, TrangThaiNhap, XemThu } from "./trang-thai";
 import { canCuaTep, coQuyen, goiDong } from "./trang-thai";
 
@@ -124,4 +125,16 @@ export const docDauChu = (f: Fetch) => goi<{ userId: string; name: string }[]>(f
 /** Mẫu file của sàn (hàng 67): cột đã nhớ từ các lần nhập đã ghi. Lỗi thì màn ghép theo từ điển và báo một dòng. */
 export async function docMau(f: Fetch): Promise<CotMau[] | LoiGoi> {
   return goi<CotMau[]>(f, "/api/v1/imports/templates", { method: "GET" });
+}
+
+/** Lần nhập đã ghi của người gọi, mới nhất trước (hàng 66, «Lần nhập gần đây»). */
+export const docLanNhapGanDay = (f: Fetch) => goi<LanNhapCuaToi[]>(f, "/api/v1/imports", { method: "GET" });
+
+/** Xem thử hoàn tác — máy chủ không ghi gì (hàng 66, AC-5). */
+export const xemThuHoanTac = (f: Fetch, importId: string) => goi<KetQuaHoanTac>(f, `/api/v1/imports/${importId}/undo`, json("POST", { dryRun: true }));
+
+/** Hoàn tác cả lần nhập; đứt giữa chừng thì máy chủ trả `import-undo-incomplete` — gọi lại làm tiếp. */
+export async function hoanTacLanNhap(f: Fetch, importId: string): Promise<KetQuaHoanTac | LoiGoi> {
+  const r = await goi<KetQuaHoanTac>(f, `/api/v1/imports/${importId}/undo`, json("POST", {}));
+  return laLoi(r) && r.status === 503 ? { ...r, loi: CHUA_XONG } : r;
 }
