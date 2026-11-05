@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "den": "abe133aae7680a2c58aa855d4f253b16de4a4d75",
+  "den": "87cc01d7706e42f961ce8a6cbf564027bb1d84a5",
   "base": "be1bf53f9592e7a1fda534ccaa781f1e6caf3d3f",
   "ghim": {
     "bang-hang": "9ead1c19b2acd04235c022477746d851e3e6c58d",
@@ -29,7 +29,8 @@
     "apps/web/src/app/(app)/contacts/khung.tsx",
     "apps/web/src/app/(app)/contacts/tren-toi.tsx",
     "apps/web/src/app/(app)/contacts/vung.tsx",
-    "apps/web/src/app/(app)/settings/personal/ca-nhan.tsx"
+    "apps/web/src/app/(app)/settings/personal/ca-nhan.tsx",
+    "apps/web/src/components/shell/second-column.tsx"
   ],
   "lech_moi": [
     {
@@ -44,7 +45,7 @@
   ],
   "no_cu": [],
   "khong_do": [],
-  "ngoai_ban_do": 8,
+  "ngoai_ban_do": 10,
   "nhom": [
     "bang-hang",
     "cai-dat-san",

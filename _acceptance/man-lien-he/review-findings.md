@@ -1,33 +1,76 @@
-# Review findings: man-lien-he (round 3)
+# Review findings: man-lien-he (round 4)
 
 ## Trong hợp đồng
 
-- **«Thêm» về trễ có thể ghi đè danh sách của bộ lọc mới bằng danh sách cũ**
-  file: `apps/web/src/app/(app)/contacts/vung.tsx:73`
-  severity: low
+- **Chặn «Xem thêm» về muộn còn hở trong 250 ms chờ gõ**
   AC: AC-2
+  file: apps/web/src/app/(app)/contacts/vung.tsx:85
+  severity: low
   source: bugs
-  detail: `them()` giữ `ds.ds`, `q` và `loai` từ lúc bấm, không có cờ `huy` như hai effect. Nếu người đổi ô tìm hay bộ lọc trong lúc trang kế còn đang tải, và trang kế về SAU kết quả của truy vấn mới, thì `setDs` ghi đè bằng danh sách cũ cộng trang kế cũ, còn `setCursor` đặt con trỏ cũ. Màn khi đó hiện danh sách không khớp ô tìm và bộ lọc đang thấy. Cũng là dòng có sẵn, không do đợt dời ngăn sang `chiTiet` gây ra. Riêng phần dời hồ sơ sang `cotPhu`/`chiTiet` của bố cục (khung.tsx, vung.tsx) thì đã đối chiếu với BoCuc: hành vi tương đương bản `NganNoi` cũ, không thấy lỗi mới.
+  detail: `luotDs` tăng ngay khi effect chạy (dòng 40). Nhưng `ds` vẫn ở trạng thái 'xong' với danh sách cũ và `cursor` cũ thêm 250 ms nữa, cho tới khi hẹn giờ gọi setDs('dang-tai'). Nếu người dùng bấm «Xem thêm» trong khoảng đó, `them()` ghi nhận lượt mới, nên lượt đã khớp, rồi gọi docDanhSach với q/loai mới nhưng cursor của bộ lọc cũ. Khi lần đọc này về sau lần đọc của effect (effect không tăng lượt thêm lần nữa), `luot === luotDs.current` vẫn đúng. Lúc đó setDs ghi đè danh sách mới bằng `ds.ds` cũ (lấy từ closure) cộng trang lạc lọc, và setCursor cũng bị đè. Đây đúng là tình huống mà commit nói đã chặn. Cách sửa: tăng `luotDs` (hoặc xoá cursor, chuyển ds sang 'dang-tai') ngay khi bộ lọc đổi, hoặc so lượt cả ở effect khi kết quả về.
+  rationale: AC-2 đòi lọc/gõ tên thì chỉ còn đúng liên hệ khớp và tải tiếp theo trang không trùng không sót; kẽ hở này có thể trộn trang của bộ lọc cũ vào danh sách mới.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Thẻ Cổng Bằng chứng và trang bằng chứng cũ hơn mã ở HEAD mà vẫn mời ký**
+- **Lưới Liên hệ không còn đánh dấu người đang mở hồ sơ; prop `chon` khai nhưng không dùng**
+  Người dùng thấy gì: Khi mở hồ sơ một người cạnh bảng, dòng của người đó không còn được tô nên khó biết đang xem ai trong danh sách dài. Dữ liệu và việc mở hồ sơ vẫn đúng.
+  Căn cứ: Chỉ làm giảm sự tiện theo dõi, không mất hay lộ dữ liệu, hồ sơ mở bên cạnh vẫn ghi rõ tên người nên người dùng không bị lạc.
+  file: `apps/web/src/app/(app)/contacts/danh-sach.tsx`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Cột Liên hệ chép lại nguyên khối markup của NavList thay vì dùng lại**
+  Người dùng thấy gì: Người dùng không thấy khác biệt gì hôm nay. Về sau nếu đổi kiểu mục ở cột thứ hai mà quên một chỗ, cột Liên hệ có thể trông lệch so với các màn khác.
+  Căn cứ: Không có hậu quả nào cho người dùng hiện tại, và nếu lệch thì chỉ là lệch giao diện, phát hiện bằng mắt và sửa rẻ khi đụng tới.
+  file: `apps/web/src/components/shell/second-column.tsx`
+  severity: low
+  Đề xuất: wont-fix
+
+- **Trên máy tính, lọc loại chỉ còn ở cột thứ hai; gập cột là mất lọc, điện thoại không có lọc Lead**
+  Người dùng thấy gì: Nếu người dùng gập cột bên trái trên máy tính, họ không còn chỗ chọn loại liên hệ; trên điện thoại thì không lọc được riêng nhóm Lead. Mở lại cột hoặc dùng máy tính là lọc được.
+  Căn cứ: Không mất dữ liệu và người dùng tự gỡ được bằng cách mở lại cột, còn lọc Lead trên điện thoại là nhu cầu phụ chưa được chốt nên chưa đáng sửa ngay.
+  file: `apps/web/src/app/(app)/contacts/danh-sach.tsx`
+  severity: low
+  Đề xuất: known-limits
+
+- **Lọc «Lead» không ra ai thì màn báo «Chưa có liên hệ nào» thay vì «không khớp»**
+  Người dùng thấy gì: Khi lọc Lead mà sàn không còn lead nào, màn nói «Chưa có liên hệ nào», dễ khiến người dùng tưởng sàn trống trong khi chỉ là bộ lọc không khớp.
+  Căn cứ: Gây hiểu nhầm nhẹ nhưng không mất hay lộ dữ liệu, bỏ lọc là thấy lại danh sách đầy đủ.
+  file: `apps/web/src/app/(app)/contacts/danh-sach.tsx`
+  severity: medium
+  Đề xuất: known-limits
+
+- **«Xem thêm» lỗi mạng thì lặng lẽ không làm gì**
+  Người dùng thấy gì: Khi mạng chập chờn lúc bấm «Xem thêm», nút không có phản ứng và không báo lỗi, người dùng không biết vì sao. Bấm lại hoặc tải lại trang là xong.
+  Căn cứ: Không mất hay lộ dữ liệu và người dùng tự thử lại được ngay, chỉ gây khó chịu nhẹ khi mạng yếu.
+  file: `apps/web/src/app/(app)/contacts/vung.tsx`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình dạng 1, đo chỉ dẫn thay vì đầu ra: «cột thứ hai: mỗi nhà có ít nhất một mục» kiểm hàm đếm soMucCot, không kiểm cột được dựng**
+  Người dùng thấy gì: Hiện người dùng không gặp lỗi gì. Nhưng nếu sau này có nhà nào bị dựng cột thứ hai rỗng thì bài kiểm vẫn báo xanh nên lỗi có thể lọt tới người dùng.
+  Căn cứ: Chưa có hậu quả thấy được hôm nay, rủi ro chỉ nằm ở lần đổi sau và lỗi cột rỗng sẽ lộ ra ngay khi mở màn nên sửa muộn vẫn rẻ.
+  file: `apps/web/src/app/(app)/contacts/lien-he.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Thẻ Cổng Bằng chứng và trang bằng chứng cũ hơn mã ở HEAD mà vẫn mời ký (r3 · tệp đã đổi)**
   Người dùng thấy gì: Thẻ trình ký đang nói «máy đã xong» nhưng ảnh và kết quả kiểm là của bản màn Liên hệ trước lần sửa cuối. Người ký có thể ký trên bằng chứng không khớp với bản đang nằm trên nhánh.
   Căn cứ: Màn hình không hỏng và người dùng cuối không bị ảnh hưởng, chỉ có bằng chứng trình ký lệch bản; chấm và chụp lại trước khi ký là rẻ và sửa được ngay.
   file: `_acceptance/man-lien-he/card.html`
   severity: medium
   Đề xuất: known-limits
 
-- **Trang bằng chứng nhúng ảnh của bản trước khi đổi bố cục hồ sơ**
+- **Trang bằng chứng nhúng ảnh của bản trước khi đổi bố cục hồ sơ (r3 · tệp đã đổi)**
   Người dùng thấy gì: Các ảnh trong trang bằng chứng chụp từ bản màn trước khi hồ sơ người được dời sang bố cục mới. Ảnh có thể trông giống nhưng chưa có lượt chụp nào chứng minh bản hiện tại giống như vậy.
   Căn cứ: Không ảnh hưởng người dùng cuối và chỉ cần chụp lại cùng lúc với việc chấm lại thẻ; hậu quả nhẹ, tự sửa được.
   file: `_acceptance/man-lien-he/evidence-page.html`
   severity: low
   Đề xuất: known-limits
 
-- **«Thêm» lỗi mạng thì im lặng: không báo, không thử lại**
+- **«Thêm» lỗi mạng thì im lặng: không báo, không thử lại (r3 · tệp đã đổi)**
   Người dùng thấy gì: Khi mạng chập chờn lúc bấm «Thêm» để xem thêm liên hệ, người dùng không thấy gì xảy ra và cũng không có nút thử lại. Họ phải tự bấm lại hoặc tải lại trang.
   Căn cứ: Không mất hay lộ dữ liệu, người dùng tự khắc phục bằng bấm lại hoặc tải lại trang; lỗi nhẹ và chỉ xảy ra khi mạng lỗi.
   file: `apps/web/src/app/(app)/contacts/vung.tsx`
@@ -62,7 +105,7 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: medium
   Đề xuất: known-limits
 
-- **Hình 3 (kèm hình 2): bài chỉ thấy chuỗi href viết tay có mặt, trong khi điều hứa là liên kết cơ hội mở được hồ sơ căn (r2)**
+- **Hình 3 (kèm hình 2): bài chỉ thấy chuỗi href viết tay có mặt, trong khi điều hứa là liên kết cơ hội mở được hồ sơ căn (r2 · tệp đã đổi)**
   Người dùng thấy gì: Người dùng hiện mở được hồ sơ căn từ cơ hội; chỉ có nguy cơ về sau nếu cách đọc liên kết đổi mà bài kiểm không báo.
   Căn cứ: Liên kết đang chạy đúng và nếu hỏng thì người dùng chỉ thấy bảng hàng không chọn căn, tự quay lại được, không mất dữ liệu; tăng độ chặt bài test không đáng công lúc này.
   file: `apps/web/src/app/(app)/contacts/lien-he.test.ts`
@@ -174,4 +217,4 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: low
   Đề xuất: known-limits
 
-⚠ Cụm ngoài vùng phủ: 2/4 lỗi rơi vào file không bộ đo nào phủ (_acceptance/man-lien-he/card.html, _acceptance/man-lien-he/evidence-page.html) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.
+Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
