@@ -3,6 +3,9 @@
 Ngày 05/11 · Người hỏi: chủ kho (Manh Phan) · Loại: đánh giá, chưa sửa mã, chưa mở hàng · Hình:
 [`danh-gia-ngan-chi-tiet-can/`](danh-gia-ngan-chi-tiet-can/)
 
+**Chủ kho chọn C (05/11, nguyên văn «Chọn C»).** Sửa ADR-0024 và Tham chiếu §12 đi cùng PR của hàng chuyển Bảng hàng
+(mục 5 «Nếu chọn C, đổi gì»); giám sát đợt xếp hàng.
+
 Câu hỏi, nguyên văn: «khuôn chi tiết căn (Sheet Detail) như trong screenshot nên nằm ngoài bố cục của bảng hàng, nghĩa là
 full chiều cao màn hình hay như hiện nay».
 
