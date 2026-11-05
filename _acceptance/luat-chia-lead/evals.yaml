@@ -2,7 +2,7 @@ schema_version: 1
 feature_slug: luat-chia-lead
 # Lệnh máy: executors.test.web, executors.test.core, executors.test.api_db (Postgres dãy D 5575), executors.design.khuon,
 # executors.design.floor. ui-check trên chỗ thử dãy D (_acceptance/luat-chia-lead/thu/dung-d.mjs: Postgres 5575 nạp sàn mẫu,
-# máy dev 3477, phiên quản trị sàn, trưởng nhóm, đầu chủ mẫu), Chrome không đầu qua CDP; chay-ui.mjs ghi dòng quan sát
+# máy dev 3495, phiên quản trị sàn, trưởng nhóm, đầu chủ mẫu), Chrome không đầu qua CDP; chay-ui.mjs ghi dòng quan sát
 # JSON và ảnh vào thư mục --ra. Tắt máy dev bằng dung-d.mjs --tat khi xong. Tạo phẩm của lượt chấm ra .acceptance-runs/.
 evals:
   - id: E1
@@ -13,7 +13,7 @@ evals:
     steps:
       - "node _acceptance/luat-chia-lead/thu/dung-d.mjs rồi node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e1 --ra _acceptance/luat-chia-lead/evidence — chỗ thử đặt Hạn nhận lead của sàn mẫu = 20 bằng phiên quản trị trước khi mở"
       - "Đối chiếu dòng e1 (khổ 1440x900, phiên quản trị): tenDong là đúng mảng viết trước [«Cách chia lead không trùng», «Hạn nhận lead», «Hạn gọi lần đầu», «Báo lead quá hạn cho ai», «"Cần gọi lại" sau số ngày chưa xác nhận», «"Nên gọi ép giá" sau số ngày»] (so bằng ten của sổ điểm); giaTri bằng items của GET /api/v1/company/settings cùng phiên; chữ nguồn của dòng Hạn nhận lead bằng đúng «Đã đổi · <tên quản trị mẫu đọc từ identity.user> · <dd/mm của ngày đặt>»; năm dòng còn lại có chữ nguồn bằng đúng «Mặc định»; chiều đỏ cùng ca: trước khi đặt 20 (ảnh E1-truoc.png) dòng Hạn nhận lead ghi «Mặc định»"
-    target: "http://localhost:3477/settings/lead-routing"
+    target: "http://localhost:3495/settings/lead-routing"
     expected: "Sáu dòng đúng tên và thứ tự, giá trị khớp lối chung, dòng đã đổi mang «Đã đổi» kèm người và ngày, dòng khác «Mặc định». Ảnh E1-1440.png, E1-truoc.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -27,7 +27,7 @@ evals:
       - "Đối chiếu dòng e2: thân PATCH đã gửi (bắt qua CDP Network) có đúng hai khoá lead_routing.accept_minutes=25 và lead_routing.strategy=open_pool; toast bằng đúng «Đã lưu · áp cho lead mới từ bây giờ»; sau tải lại trang ô Hạn nhận lead = 25 và Cách chia ghi «Kho chung»; GET /api/v1/company/settings trả hai giá trị ấy; soSuKienSau − soSuKienTruoc = 2 và cả hai dòng mới có người = quản trị mẫu, vai chứa company_admin"
       - "Ca chỉ đổi điểm áp ngay (dòng e2-ngay): đổi «Cần gọi lại» 14 → 20, Lưu → toast bằng đúng «Đã lưu», không chứa «lead mới»"
       - "Ca Hoàn lại (dòng e2-hoan-lai): đổi Hạn gọi lần đầu và Báo lead quá hạn cho ai, bấm Hoàn lại → giá trị mọi ô bằng items của GET cùng lúc; số yêu cầu PATCH trong ca = 0"
-    target: "http://localhost:3477/settings/lead-routing"
+    target: "http://localhost:3495/settings/lead-routing"
     expected: "Lưu một lần gửi đúng hai khoá; toast theo hiệu lực của khoá đã đổi; tải lại giữ 25 và Kho chung; nhật ký thêm hai sự kiện ghi người và vai; Hoàn lại về giá trị đang áp, không gửi gì. Ảnh E2-sau-luu.png, E2-hoan-lai.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -76,7 +76,7 @@ evals:
       - "Ca 400 thật (dòng e5-400): gõ Hạn gọi lần đầu 40, qua CDP Fetch sửa thân PATCH đi ra thành {lead_routing.first_call_minutes: 10} để máy chủ thật trả 400 → lý do máy chủ trả nằm trong dòng Hạn gọi lần đầu; ô Hạn gọi lần đầu vẫn là 40; GET không đổi"
       - "Ca 403 thật (dòng e5-403): mở màn bằng quản trị, chỗ thử gỡ vai company_admin của quản trị mẫu trên Postgres, gõ Hạn nhận lead 22, Lưu → trang có «Chỉ quản trị sàn đổi được luật này», ô vẫn 22; chỗ thử trả lại vai sau ca"
       - "Ca mạng hỏng (dòng e5-mang): CDP Fetch.failRequest cho PATCH → trang có báo lỗi kèm nút «Thử lại», ô vẫn giá trị vừa gõ; bỏ chặn, bấm Thử lại → toast «Đã lưu»"
-    target: "http://localhost:3477/settings/lead-routing"
+    target: "http://localhost:3495/settings/lead-routing"
     expected: "Ô sai: báo dưới đúng ô, Lưu khoá, không gửi; 400 thật về đúng dòng; 403 báo đúng câu; mạng hỏng báo kèm Thử lại; giá trị đang gõ giữ ở cả ba. Ảnh E5-o-sai.png, E5-400.png, E5-403.png, E5-mang.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -88,7 +88,7 @@ evals:
     steps:
       - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e6 --ra _acceptance/luat-chia-lead/evidence — phiên trưởng nhóm và phiên đầu chủ"
       - "Đối chiếu dòng e6: với mỗi phiên, cột mục lục của /settings/personal không có liên kết href=/settings/lead-routing; mở thẳng /settings/lead-routing kết thúc ở /settings/personal?chi-quan-tri=1 và trang có chữ «Mục này chỉ quản trị sàn mở được»; đối chứng dương cùng ca: phiên quản trị mở thẳng ở lại /settings/lead-routing"
-    target: "http://localhost:3477/settings/lead-routing"
+    target: "http://localhost:3495/settings/lead-routing"
     expected: "Vai khác không thấy mục, mở thẳng thì về Cá nhân kèm câu báo; quản trị ở lại. Ảnh E6-truong-nhom.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -115,9 +115,9 @@ evals:
     layer: ui-observed
     cmd: config:executors.ui-check
     steps:
-      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e7 --ra _acceptance/luat-chia-lead/evidence — (a) chỗ thử ghi bộ nhóm Hôm nay riêng hợp lệ bằng PUT /api/v1/company/settings/queue; (b) chỗ thử chèn thẳng hai dòng company_settings trái luật (accept 60, first_call 30) như dòng có từ trước; (c) chặn tải cấu hình qua CDP Fetch rồi bỏ chặn; dọn bộ nhóm riêng và hai dòng trái luật sau ca"
+      - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e7 --ra _acceptance/luat-chia-lead/evidence — (a) chỗ thử ghi bộ nhóm Hôm nay riêng hợp lệ bằng PUT /api/v1/company/settings/queue; (b) chỗ thử chèn thẳng hai dòng company_settings trái luật (accept 60, first_call 30) như dòng có từ trước; (c) thu quyền đọc bảng company_settings của vai API trên Postgres dãy D (cấu hình đọc ở máy chủ khi dựng trang), mở màn, trả quyền; dọn bộ nhóm riêng và hai dòng trái luật sau ca"
       - "Đối chiếu dòng e7: (a) hai ô ngưỡng có disabled, trang có chữ «Sàn đang dùng bộ nhóm Hôm nay riêng»; (b) errors của GET thật không rỗng và báo trên đầu khung có «Hạn gọi lần đầu» (hay «Hạn nhận lead») và «mặc định»; (c) trang có chữ «Chưa tải được luật chia lead» và nút «Thử lại»; bấm Thử lại sau khi bỏ chặn thì có đủ sáu dòng"
-    target: "http://localhost:3477/settings/lead-routing"
+    target: "http://localhost:3495/settings/lead-routing"
     expected: "Bộ nhóm riêng khoá hai dòng ngưỡng kèm báo; dòng trái luật có sẵn hiện báo nêu điểm đang chạy mặc định; tải hỏng hiện lỗi kèm Thử lại, thử lại tải được. Ảnh E7-bo-nhom.png, E7-dong-hong.png, E7-loi-tai.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
@@ -160,8 +160,8 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/luat-chia-lead/thu/chay-ui.mjs --e10 --ra _acceptance/luat-chia-lead/evidence — phiên đầu chủ mẫu, xoá bản danh bạ giữ trên máy, chặn GET /api/v1/company/member-names qua CDP Fetch (trả 503), mở /inventory; rồi bỏ chặn, bấm Thử lại"
-      - "Đối chiếu dòng e10: lúc chặn trang có chữ «Chưa đọc được danh bạ thành viên» và nút «Thử lại»; sau bấm Thử lại: chữ báo không còn, ô Đầu chủ của căn gán đầu chủ mẫu hiện tên (không «…»); số lần gọi member-names trong 10 giây chờ lúc chặn ≤ 2 (không tự thử lại theo nhịp)"
-    target: "http://localhost:3477/inventory"
+      - "Đối chiếu dòng e10: lúc chặn trang có chữ «Chưa đọc được danh bạ thành viên» và nút «Thử lại»; sau bấm Thử lại: chữ báo không còn, ô Đầu chủ của căn gán đầu chủ mẫu hiện tên (không «…»); số lần gọi member-names không tăng trong 10 giây chờ sau khi báo hiện (soLanGoiTrong10s = soLanGoiLucBao — không tự thử lại theo nhịp)"
+    target: "http://localhost:3495/inventory"
     expected: "Đọc hỏng hiện báo kèm Thử lại; thử lại khi lối lành thì báo mất, tên hiện. Ảnh E10-loi.png, E10-sau-thu-lai.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
