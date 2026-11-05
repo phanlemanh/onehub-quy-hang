@@ -3,10 +3,10 @@ schema_version: 1
 slug: go-ma-lo
 feature: Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được và thấy thuộc tính lô tự điền — khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền — như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided                # discovery | decided | archived
+decision: build # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-05T11:27:14Z    # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
