@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { NganNoi } from "@/components/bo-cuc";
-
 import { DanhSachLienHe, type TrangThaiDs } from "./danh-sach";
 import { KhungLienHe } from "./khung";
 import { HoSoNguoi, type SoDaMo, type TrangThaiHoSo } from "./ho-so";
@@ -32,7 +30,8 @@ export default function VungLienHe() {
         const kq = await timSo(q);
         if (huy) return;
         if (!kq) return setDs({ kieu: "loi" });
-        if ("held" in kq) return setDs({ kieu: "nguoi-khac-giu", holderName: kq.holderName });
+        if ("held" in kq)
+          return setDs({ kieu: "nguoi-khac-giu", holderName: kq.holderName });
         if ("found" in kq) return setDs({ kieu: "xong", ds: [], con: false });
         setDs({ kieu: "xong", ds: [], con: false });
         return chonNguoi(kq.contactId);
@@ -52,7 +51,9 @@ export default function VungLienHe() {
   useEffect(() => {
     if (!chon) return;
     let huy = false;
-    void docHoSo(chon).then((h) => !huy && setHs(h ? { kieu: "xong", hs: h } : { kieu: "loi" }));
+    void docHoSo(chon).then(
+      (h) => !huy && setHs(h ? { kieu: "xong", hs: h } : { kieu: "loi" }),
+    );
     return () => {
       huy = true;
     };
@@ -69,7 +70,11 @@ export default function VungLienHe() {
     if (!cursor || ds.kieu !== "xong") return;
     const kq = await docDanhSach({ q: q.trim(), type: loai, cursor });
     if (!kq) return;
-    setDs({ kieu: "xong", ds: [...ds.ds, ...kq.items], con: kq.nextCursor !== null });
+    setDs({
+      kieu: "xong",
+      ds: [...ds.ds, ...kq.items],
+      con: kq.nextCursor !== null,
+    });
     setCursor(kq.nextCursor);
   }
 
@@ -80,7 +85,25 @@ export default function VungLienHe() {
   }
 
   return (
-    <KhungLienHe>
+    <KhungLienHe
+      cotPhu={
+        <HoSoNguoi
+          tt={hs}
+          daMo={daMo}
+          onHienSo={(p) => void hienSo(p)}
+          onThuLai={() => {
+            setHs({ kieu: "dang-tai" });
+            setLanHs((n) => n + 1);
+          }}
+        />
+      }
+      chiTiet={{
+        mo: chon !== null,
+        onMo: (m) => !m && chonNguoi(null),
+        tieuDe:
+          hs.kieu === "xong" ? (hs.hs.contact.name ?? CHU.hoSo) : CHU.hoSo,
+      }}
+    >
       <DanhSachLienHe
         tt={ds}
         q={q}
@@ -92,12 +115,6 @@ export default function VungLienHe() {
         onThem={() => void them()}
         onThuLai={() => setLan((n) => n + 1)}
       />
-      <NganNoi phuBang mo={chon !== null} onMo={(m) => !m && chonNguoi(null)} tieuDe={hs.kieu === "xong" ? (hs.hs.contact.name ?? CHU.hoSo) : CHU.hoSo}>
-        <HoSoNguoi tt={hs} daMo={daMo} onHienSo={(p) => void hienSo(p)} onThuLai={() => {
-            setHs({ kieu: "dang-tai" });
-            setLanHs((n) => n + 1);
-          }} />
-      </NganNoi>
     </KhungLienHe>
   );
 }
