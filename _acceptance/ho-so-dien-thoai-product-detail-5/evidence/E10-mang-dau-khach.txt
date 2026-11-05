@@ -1,13 +1,6 @@
-### E10 mang — cho thu dai H (Postgres 5574, dev 3494), mo /units/A-01.06 @375x812, can id 1066089e-2d75-416e-a882-89914a1fca64
-### Luu y: vai dau-khach (seed co 'dau-khach@mau', khong co 'dau-khach-1'); dev 3494 vi cho thu E9 (config 3460 khong co may)
-
-## vai dau-khach — 29 phan hoi (Playwright, body doc day du voi json/text/js/html)
-/units/A-01.06 200 html 77335 | /api/v1/catalog 200 x2 | /api/v1/listings 200 | /api/v1/units/photos?toa=..&ma=A-01.06 200 x3 | /api/v1/units/photos/<id>/original,thumb 200 png | /api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64/owner 200 json 114 B x2 | /api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64 200 json 2231 B | + tai nguyen _next (js/css/font)
-  bait so-chu 0900000092 / ten-chu 'Chu nha 092' / gia-day 2900000000: 0 phan hoi
-  (ma 'floorPrice/ownerPhone/ownerName' chi khop o _next/static/chunks/*.js = ten bien trong ma nguon, khong phai du lieu)
-  /owner cho dau-khach: {"visible":false,"listingAgentUserId":"524f266e-04ee-4260-96de-31c76535a211","listingAgentName":"[Mẫu] Đầu chủ 1"}
-
-## vai dau-chu-1 — 25 phan hoi: /units/A-01.06 200 html 80278 B, catalog, listings, photos, /api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64 200 2231 B; KHONG goi /owner
-  bait so-chu 0900000092 / ten-chu 'Chu nha 092' / gia-day 2900000000: 0 phan hoi  => DOI CHUNG DUONG KHONG DAT khi chi mo trang
-  /owner tra rieng cho dau-chu-1 (curl, khong thuoc luc mo trang): {"visible":true,"ownerName":"[Mẫu] Chủ nhà 092","floorPrice":2900000000,"hasPhone":true}
-  (so chu 0900000092 khong lo qua /owner: chi hasPhone=true; so chi ra qua POST .../owner/phone-reveal)
+### E10 vai dau-khach (seed: dau-khach@mau.quy-hang.test; khong co dau-khach-1) - cho thu H, dev http://localhost:3494, /units/A-01.06 @375x812, can 1066089e-2d75-416e-a882-89914a1fca64
+Ghi 29 phan hoi (Playwright, doc body day du). Tat ca 200; requestfailed: 0; console error: 0.
+App API: /api/v1/catalog x2, /listings, /units/photos x3, /listings/<id>/owner, /listings/<id>, photos/<id>/thumb|original (png). Con lai _next static.
+Mồi 0900000092 / "Chủ nhà 092" / 2900000000 (va dang 0900 000 092): 0 phan hoi chua.
+/owner (114 B) khong chua moi. 
+POST /api/v1/listings/<id>/owner/phone-reveal bang phien dau-khach -> 403 {"error":"listing-agent-required"}, than khong chua moi.

@@ -1,1 +1,1 @@
-E10 network: moi request app-origin (localhost:3494) 200; khong 4xx/5xx; khong console loi duoc thu. Chi tiet trong E10-mang.txt
+E10 network: moi request app-origin (localhost:3494) 200 trong ca hai vai; khong requestfailed, khong console error; ngoai y dinh duy nhat: phone-reveal dau-khach 403 (dung expected). Chi tiet: E10-mang-dau-khach.txt, E10-mang-dau-chu-1.txt

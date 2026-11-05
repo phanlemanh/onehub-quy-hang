@@ -5,7 +5,7 @@ slug: ho-so-dien-thoai-product-detail-5
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: _acceptance/ho-so-dien-thoai-product-detail-5/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -68,3 +68,4 @@ Later/Never: đổi giá nhanh (40), chụp ảnh (41) → Out of scope.
 ## Notes
 
 - Lựa chọn máy đã quyết: `design.md` §4; sổ quyết định dòng S1.
+- Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Sau khi tải ảnh đầu tiên lên, khung ảnh lớn ở đầu hồ sơ vẫn báo «Chưa có ảnh» cho tới khi đóng rồi mở lại hồ sơ. Xoá ảnh cũng vậy, khung vẫn hiện ảnh cũ. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/anh-lon.tsx`
