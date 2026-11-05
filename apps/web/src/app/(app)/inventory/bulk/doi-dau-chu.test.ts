@@ -108,10 +108,10 @@ test("E4b thông báo đổi 10 giây có «Hoàn tác»; hoàn tác ghi lời r
   assert.equal(THOI_GIAN_HOAN_TAC, 10_000);
   assert.match(doc("hop-doi-dau-chu.tsx"), /duration: THOI_GIAN_HOAN_TAC, action: \{ label: "Hoàn tác"/);
   assert.deepEqual(chuHoanTac({ restored: 4, skipped: 2, keptNoPriorAgent: 1 }, "[Tên] Đầu chủ 2"), {
-    chu: "Đã trả lại người giữ cũ cho 4 căn và liên hệ",
+    chu: "Đã trả lại người giữ cũ: 4 mục (căn và liên hệ)",
     moTa: "Bỏ qua 2 căn hay liên hệ đã đổi tiếp sau đó · 1 căn trước chưa có đầu chủ nên giữ [Tên] Đầu chủ 2",
   });
-  assert.deepEqual(chuHoanTac({ restored: 3, skipped: 0, keptNoPriorAgent: 0 }, "x"), { chu: "Đã trả lại người giữ cũ cho 3 căn và liên hệ", moTa: null });
+  assert.deepEqual(chuHoanTac({ restored: 3, skipped: 0, keptNoPriorAgent: 0 }, "x"), { chu: "Đã trả lại người giữ cũ: 3 mục (căn và liên hệ)", moTa: null });
 });
 
 // E4b — thứ tự: kéo đồng bộ chỉ sau khi máy chủ nhận lệnh đổi, lệnh hoàn tác; lỗi thì không kéo.
@@ -148,7 +148,7 @@ test("E4b hoàn tác: gọi máy chủ rồi mới kéo; lỗi thì không kéo"
   const g: Ghi = [];
   const r = await chayHoanTac({ hoanTac: async () => (g.push("hoan-tac"), { ok: true as const, data: { restored: 7, skipped: 0, keptNoPriorAgent: 0 } }), keo: async () => void g.push("keo"), tenNhan: "x" });
   assert.deepEqual(g, ["hoan-tac", "keo"]);
-  assert.deepEqual(r, { ok: true, chu: "Đã trả lại người giữ cũ cho 7 căn và liên hệ", moTa: null });
+  assert.deepEqual(r, { ok: true, chu: "Đã trả lại người giữ cũ: 7 mục (căn và liên hệ)", moTa: null });
   const h: Ghi = [];
   await chayHoanTac({ hoanTac: async () => (h.push("hoan-tac"), { ok: false as const, loi: "Lần đổi này đã hoàn tác" }), keo: async () => void h.push("keo"), tenNhan: "x" });
   assert.deepEqual(h, ["hoan-tac"]);

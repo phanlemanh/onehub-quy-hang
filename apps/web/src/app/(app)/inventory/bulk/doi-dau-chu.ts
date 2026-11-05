@@ -28,7 +28,7 @@ export function chuHoanTac(kq: { restored: number; skipped: number; keptNoPriorA
     kq.skipped ? `Bỏ qua ${kq.skipped} căn hay liên hệ đã đổi tiếp sau đó` : null,
     kq.keptNoPriorAgent ? `${kq.keptNoPriorAgent} căn trước chưa có đầu chủ nên giữ ${tenNhan}` : null,
   ].filter(Boolean).join(" · ");
-  return { chu: `Đã trả lại người giữ cũ cho ${kq.restored} căn và liên hệ`, moTa: moTa || null };
+  return { chu: `Đã trả lại người giữ cũ: ${kq.restored} mục (căn và liên hệ)`, moTa: moTa || null };
 }
 
 const LOI: Record<string, string> = {
