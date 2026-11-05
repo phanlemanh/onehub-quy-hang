@@ -1,9 +1,11 @@
 // Bộ kiểm cách ly: «công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành.
 // Chạy trên Postgres thật đã áp migration. Mỗi ca trong một giao dịch rồi rollback, không để lại dữ liệu.
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import pg from "pg";
 
 const url = process.env.DATABASE_URL;
@@ -2437,12 +2439,20 @@ test("gửi căn đã gỡ (037): hàm giữ chữ ký và quyền", { skip }, a
     assert.deepEqual(rows.map((r) => r.proname), ["create_share", "record_share_event"]);
     for (const r of rows) {
       assert.equal(r.prosecdef, true, `${r.proname}: prosecdef`);
-      assert.ok((r.proconfig ?? []).some((x) => x.startsWith("search_path=")), `${r.proname}: search_path`);
+      assert.deepEqual(r.proconfig, ['search_path=""'], `${r.proname}: search_path rỗng`);
       assert.deepEqual([...r.duoc].sort(), [r.chu, "quy_hang_app"].sort(), `${r.proname}: chỉ chủ hàm và quy_hang_app được gọi`);
       assert.ok(r.duoc.includes("quy_hang_app"), `${r.proname}: quy_hang_app có quyền`);
     }
-    const m = await client.query("select count(*)::int n from schema_migrations where name like '037_%'");
-    assert.equal(m.rows[0].n, 1, "037 áp đúng một lần");
+    // Chạy bộ áp migration lần hai: 037 không áp lại — không in «đã áp 037», dòng sổ giữ nguyên giờ áp.
+    const so = "select name, applied_at from schema_migrations where name like '037_%'";
+    const truoc = (await client.query(so)).rows;
+    assert.equal(truoc.length, 1, "037 đã áp");
+    const ra = execFileSync(process.execPath, [fileURLToPath(new URL("../scripts/migrate.mjs", import.meta.url))], {
+      env: { ...process.env, DATABASE_URL: url },
+      encoding: "utf8",
+    });
+    assert.doesNotMatch(ra, /đã áp 037_/, "lần hai không áp 037 lại");
+    assert.deepEqual((await client.query(so)).rows, truoc, "sổ migration của 037 không đổi");
   } finally {
     await client.end();
   }
