@@ -147,6 +147,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K25 | Mật khẩu tạm hết hạn sau 72 giờ | Quyền và an toàn | ADR-0005 bổ sung 04/11; hồ sơ `dang-nhap-mat-khau` Hỏi-3 |
 | K26 | Kiểu mở chi tiết của Danh sách – chi tiết: cột kéo chia đứng cạnh bảng (38%, kéo 28–50%), cố định theo bố cục — sàn không chọn cạnh / nổi / trang như Notion cho chủ không gian chọn | Nền tảng — một bố cục cho mọi màn danh sách – chi tiết (hệ bố cục ADR-0024): một nhánh dựng, một bộ phép đo, ảnh chuẩn chung; thêm tham số sàn là ba nhánh dựng và phép đo cho mỗi nhánh | ADR-0024 sửa đổi 05/11; hàng 105 Hỏi-2 (chủ kho duyệt 05/11, `d-20261105T041953Z-5`) |
 | K27 | Ai mở được số của một liên hệ chủ nhà, và tìm theo số báo «đã có — [Tên] đang giữ»: người giữ còn vai Đầu chủ và trưởng nhóm; mỗi lần mở số là một sự kiện (KW cho Owner + Assignees, Follow Up Boss phân quyền theo vai) | Quyền và an toàn — bất biến 2, lớp nguồn | ADR-0021 qđ 3; hàng 103 Hỏi-6 (chủ kho duyệt Cổng Phạm vi 05/11), migration 036 |
+| K28 | Ai làm gì với hàng: bảng quyền thao tác × vai cố định ở lõi — xem, tạo, sửa chỉ người có Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm); đưa lên Đang bán theo cờ «Sẵn sàng bán»; Telesales, Quản trị sàn nhận «không có hàng này»; sàn không tự chỉnh ô nào (KW Command nấc quyền cố định, Follow Up Boss vai cố định) | Quyền và an toàn — bất biến 1 kề (luật theo dòng 046) | `access/bang-quyen-hang.json`; hàng `bang-quyen-theo-vai` Hỏi-1 (chủ kho duyệt Cổng Phạm vi 05/11), migration 046 |
 
 ## Đếm
 
@@ -157,7 +158,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **27 điều khoá** ở phần C (K27 của hàng 103).
+- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **28 điều khoá** ở phần C (K28 của hàng bang-quyen-theo-vai).
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.

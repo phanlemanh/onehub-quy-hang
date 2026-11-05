@@ -62,3 +62,25 @@ test("bảng quyền hàng: người có Bảng hàng là người có một tro
     assert.equal(lamViecVoiHang({ roles: vai }), mong, vai.join("+") || "không vai");
   }
 });
+
+// ---- Điều đang đúng đã ghi (AC-10) — đường tệp suy từ vị trí bài, không gốc cứng ----
+const docTep = (tuongDoi: string) => readFileSync(new URL(`../../../../${tuongDoi}`, import.meta.url), "utf8");
+
+/** Lỗi nếu Sổ điểm thiếu đúng một dòng khoá K28 trỏ về bảng quyền của hàng. */
+export function kiemK28(soDiem: string): string[] {
+  const dong = soDiem.split("\n").filter((l) => l.startsWith("| K28 |"));
+  if (dong.length !== 1) return [`K28: cần đúng một dòng, có ${dong.length}`];
+  return dong[0]!.includes("access/bang-quyen-hang.json") ? [] : ["K28: không trỏ access/bang-quyen-hang.json"];
+}
+
+test("bảng quyền hàng: điều đang đúng đã ghi", () => {
+  const soDiem = docTep("docs/architecture/so-diem-bien-thien.md");
+  assert.deepEqual(kiemK28(soDiem), []);
+  // Đối chứng đỏ trên bản sao: xoá dòng K28 thì bài gọi tên K28.
+  assert.match(kiemK28(soDiem.replace(/\n\| K28 \|[^\n]*/, "")).join(), /K28/);
+  const thamChieu = docTep("docs/product/tham-chieu.md");
+  const muc6 = thamChieu.slice(thamChieu.indexOf("## 6. Quyền"), thamChieu.indexOf("## 7."));
+  assert.ok(muc6.split("\n").some((l) => l.includes("bảng quyền") && l.includes("access/bang-quyen-hang.json")), "Tham chiếu §6 thiếu dòng bảng quyền");
+  const muc12 = thamChieu.slice(thamChieu.indexOf("## 12. Sổ quyết định"), thamChieu.indexOf("## 13."));
+  assert.ok(muc12.split("\n").some((l) => l.startsWith("| 05/11 |") && l.includes("mọi thành viên có Bảng hàng")), "Tham chiếu §12 thiếu dòng 05/11 đọc lại");
+});
