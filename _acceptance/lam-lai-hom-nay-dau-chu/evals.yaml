@@ -28,7 +28,7 @@ evals:
     criterion: AC-3
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; ca «nutCuaViec: đúng một nút chính, mọi việc khác vào ⋯» có mặt trong apps/web/src/app/(app)/today/viec-dong.test.ts và ok — ma trận viết trước: mỗi nhóm của BO_NHOM_MAC_DINH × căn, và lead nấc sent, accepted, called (số ca = số nhóm + 3); mỗi ca chinh deepEqual nút kỳ vọng theo bảng của AC-3 (lead sent «Nhận», accepted «Đã gọi», căn «Còn · giữ giá») và tập (chinh ∪ phu) deepEqual tập việc của hàng 22 cho loại ấy (rút từ hàm cũ của NutViec, không viết tay hai lần) và phu chứa Trả lại, Đổi giá, trạng thái, Mở hồ sơ khi loại việc có chúng; chiều đỏ cùng ca: bỏ một việc khỏi phu thì assert tập nêu đúng tên việc thiếu."
+    expected: "exit 0; ca «nutCuaViec: đúng một nút chính, mọi việc khác vào ⋯» có mặt trong apps/web/src/app/(app)/today/viec-dong.test.ts và ok — ma trận viết trước: mỗi nhóm của BO_NHOM_MAC_DINH × căn, và lead nấc sent, accepted, called (số ca = số nhóm + 3); mỗi ca chinh deepEqual nút kỳ vọng theo bảng của AC-3 (lead sent «Nhận», accepted «Đã gọi», căn của nhóm có owner_confirmed «Còn · giữ giá», căn của nhóm chỉ có open_record «Đổi giá, trạng thái · Mở hồ sơ») và tập (chinh ∪ phu) deepEqual tập việc của hàng 22 cho loại ấy (rút từ hàm cũ của NutViec, không viết tay hai lần) và phu chứa Trả lại, Đổi giá, trạng thái, Mở hồ sơ khi loại việc có chúng; chiều đỏ cùng ca: bỏ một việc khỏi phu thì assert tập nêu đúng tên việc thiếu."
     paths: ["apps/web/src/app/(app)/today/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

@@ -22,7 +22,7 @@ ghi gọi, trả lại, mở số). Dữ liệu và luật ở `nguon.ts`, `ly-d
 3. **Ô hạn** (một hàm thuần `mucHan(hanIso, bayGio)` trả `qua` · `sap` · `thuong` · `khong`): đỏ (`destructive`) khi đã quá,
    vàng (`warning`) khi còn dưới 15 phút, thường khi còn từ 15 phút; không hạn thì không dòng hạn.
 4. **Một nút một chạm** (ngưỡng đã ký ở ô cơ hội): hàm thuần `nutCuaViec(v)` trả `{ chinh, phu[] }`. Nút chính là việc đầu
-   của nhóm — lead đã gửi «Nhận», lead đã nhận «Đã gọi», căn «Còn · giữ giá» — một nút viền (`outline`) cùng bề rộng ở mọi
+   của nhóm — lead đã gửi «Nhận», lead đã nhận «Đã gọi», căn «Còn · giữ giá» (nhóm Thiếu thông tin chỉ có Mở hồ sơ nên nút chính là «Đổi giá, trạng thái · Mở hồ sơ») — một nút viền (`outline`) cùng bề rộng ở mọi
    dòng. Trình đơn ⋯ giữ mọi việc còn lại của hàng 22: Trả lại (có hỏi lại), Đổi giá, trạng thái, Mở hồ sơ, cùng Gọi, Gắn
    mã căn và Mở số — không việc nào mất. Nút chính làm việc ngay, không thêm hộp thoại.
 5. **Giữ nguyên**: hàng đợi, luật mỗi căn một hàng đợi, ghi kết quả, đang tải · trống · lỗi · mất mạng của hàng 22; dải mất

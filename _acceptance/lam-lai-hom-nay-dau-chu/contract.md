@@ -5,10 +5,10 @@ slug: lam-lai-hom-nay-dau-chu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: draft
 design_doc: docs/superpowers/specs/2026-11-04-lam-lai-hom-nay-dau-chu-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-05
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: lam-lai-hom-nay-dau-chu
@@ -38,9 +38,10 @@ Source input: `docs/plan/lo-trinh.json` hàng 92 · `_acceptance/lam-lai-hom-nay
 - **AC-3** — Đúng một nút, việc còn lại trong ⋯.
   Given mọi loại việc của hàng đợi (căn mỗi nhóm của bộ nhóm mặc định, lead đã gửi, đã nhận, đã gọi),
   When dựng cột Hành động,
-  Then mỗi dòng hiện đúng một nút viền cùng bề rộng, nhãn là việc đầu của nhóm (lead đã gửi «Nhận», lead đã nhận «Đã gọi»,
-  căn «Còn · giữ giá»); Trả lại (có hỏi lại), Đổi giá, trạng thái, Mở hồ sơ và mọi việc khác của hàng 22 nằm trong ⋯, không
-  việc nào mất.
+  Then mỗi dòng hiện đúng một nút viền cùng bề rộng, nhãn là việc đầu của nhóm theo hàng 22 (lead đã gửi «Nhận», lead đã
+  nhận «Đã gọi», căn của nhóm có việc xác nhận chủ nhà «Còn · giữ giá», căn của nhóm chỉ có Mở hồ sơ — Thiếu thông tin —
+  «Đổi giá, trạng thái · Mở hồ sơ»); mọi việc khác của hàng 22 cho dòng ấy — Trả lại (có hỏi lại), Đổi giá, trạng thái,
+  Mở hồ sơ — nằm trong ⋯, không việc nào mất và không nhóm nào nhận thêm việc hàng 22 không có.
 
 - **AC-4** — Một chạm.
   Given một lead đã gửi cho đầu chủ mẫu,
