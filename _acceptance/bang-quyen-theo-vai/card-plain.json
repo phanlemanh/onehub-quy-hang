@@ -1,36 +1,116 @@
 {
   "feature_plain": "Chỉ người làm việc với Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm) mới xem và sửa được hàng; Telesales và Quản trị sàn thôi thấy hàng; nút «Đang bán» chỉ mở cho đúng người có cờ «Sẵn sàng bán» — ở mọi lối, kể cả gọi thẳng vào dữ liệu.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ có một bảng quyền duy nhất (14 ca người × 4 việc với hàng = 56 ô) viết sẵn trước, và nút «Sẵn sàng bán» của hồ sơ căn đọc đúng bảng ấy."},
-    {"id": "AC-2", "p": "Sẽ cho Telesales và Quản trị sàn thấy Bảng hàng trống, mở một căn thì nhận «không có hàng này», gõ thẳng địa chỉ Bảng hàng thì về Hôm nay."},
-    {"id": "AC-3", "p": "Sẽ từ chối mọi lệnh sửa hay tạo hàng của Telesales và Quản trị sàn bằng «không có hàng này», không ghi gì."},
-    {"id": "AC-4", "p": "Sẽ để Đầu khách, Đầu chủ không giữ căn và Trưởng nhóm sửa giá, phí, trạng thái khác «Đang bán», chi tiết của hàng «Toàn sàn» như trước."},
-    {"id": "AC-5", "p": "Sẽ chỉ cho Trưởng nhóm, Đầu chủ giữ căn và Đầu chủ khi căn chưa ai giữ đưa hàng lên «Đang bán»; người khác nhận «cần đầu chủ», không ghi gì."},
-    {"id": "AC-6", "p": "Sẽ bỏ nấc «Đang bán» khỏi ô Trạng thái của Bảng hàng với người không đủ cờ, và chặn lệnh ấy ngay trên máy trước khi gửi."},
-    {"id": "AC-7", "p": "Sẽ chặn ngay ở cơ sở dữ liệu: Telesales, Quản trị sàn không đọc, không ghi được hàng và lịch sử hàng; người không đủ cờ không ghi được lần lên «Đang bán»."},
-    {"id": "AC-8", "p": "Sẽ có bộ kiểm gọi thật đủ 56 ô ở lối API và ở cơ sở dữ liệu, đếm khớp từng ô với bảng, lệch ô nào gọi tên ô ấy."},
-    {"id": "AC-10", "p": "Sẽ ghi điều đang đúng: dòng khoá K28 ở Sổ điểm biến thiên, một dòng ở Tham chiếu mục Quyền và một dòng ở Sổ quyết định."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ có một bảng quyền duy nhất (14 ca người × 4 việc với hàng = 56 ô) viết sẵn trước, và nút «Sẵn sàng bán» của hồ sơ căn đọc đúng bảng ấy."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ cho Telesales và Quản trị sàn thấy Bảng hàng trống, mở một căn thì nhận «không có hàng này», gõ thẳng địa chỉ Bảng hàng thì về Hôm nay."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ từ chối mọi lệnh sửa hay tạo hàng của Telesales và Quản trị sàn bằng «không có hàng này», không ghi gì."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ để Đầu khách, Đầu chủ không giữ căn và Trưởng nhóm sửa giá, phí, trạng thái khác «Đang bán», chi tiết của hàng «Toàn sàn» như trước."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ chỉ cho Trưởng nhóm, Đầu chủ giữ căn và Đầu chủ khi căn chưa ai giữ đưa hàng lên «Đang bán»; người khác nhận «cần đầu chủ», không ghi gì."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ bỏ nấc «Đang bán» khỏi ô Trạng thái của Bảng hàng với người không đủ cờ, và chặn lệnh ấy ngay trên máy trước khi gửi."
+    },
+    {
+      "id": "AC-7",
+      "p": "Sẽ chặn ngay ở cơ sở dữ liệu: Telesales, Quản trị sàn không đọc, không ghi được hàng và lịch sử hàng; người không đủ cờ không ghi được lần lên «Đang bán»."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ có bộ kiểm gọi thật đủ 56 ô ở lối API và ở cơ sở dữ liệu, đếm khớp từng ô với bảng, lệch ô nào gọi tên ô ấy."
+    },
+    {
+      "id": "AC-10",
+      "p": "Sẽ ghi điều đang đúng: dòng khoá K28 ở Sổ điểm biến thiên, một dòng ở Tham chiếu mục Quyền và một dòng ở Sổ quyết định."
+    }
   ],
   "wont_do": [
-    {"id": "AC-9", "p": "Sẽ KHÔNG làm gãy các lối đang chạy: lead thành hàng, nhập và hoàn tác file, kiểm trùng khi telesales nhập lead, kết quả lead của telesales, trang khách, đổi đầu chủ hàng loạt."},
-    {"id": "OOS-1", "p": "KHÔNG làm bảng quyền cho lead, liên hệ, nhu cầu khách, Lần gửi, vùng, cấu hình — các hàng G2–G6 thêm dòng vào cùng bảng khi mở."},
-    {"id": "OOS-2", "p": "KHÔNG đụng bảng thoả thuận kết nối — để một hàng vá riêng."},
-    {"id": "OOS-3", "p": "KHÔNG đưa nấc «Chỉ tôi» xuống cơ sở dữ liệu — giữ như quyết định của hàng 12."},
-    {"id": "OOS-4", "p": "KHÔNG thêm mã lỗi mới cho «không đủ cờ Đang bán» — dùng lại mã «cần đầu chủ» đang có (Hỏi-2)."},
-    {"id": "OOS-5", "p": "KHÔNG đổi ai được gỡ hàng — vẫn chỉ qua hoàn tác lần nhập; hàng G2 quyết."}
+    {
+      "id": "AC-9",
+      "p": "Sẽ KHÔNG làm gãy các lối đang chạy: lead thành hàng, nhập và hoàn tác file, kiểm trùng khi telesales nhập lead, kết quả lead của telesales, trang khách, đổi đầu chủ hàng loạt."
+    },
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG làm bảng quyền cho lead, liên hệ, nhu cầu khách, Lần gửi, vùng, cấu hình — các hàng G2–G6 thêm dòng vào cùng bảng khi mở."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG đụng bảng thoả thuận kết nối — để một hàng vá riêng."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG đưa nấc «Chỉ tôi» xuống cơ sở dữ liệu — giữ như quyết định của hàng 12."
+    },
+    {
+      "id": "OOS-4",
+      "p": "KHÔNG thêm mã lỗi mới cho «không đủ cờ Đang bán» — dùng lại mã «cần đầu chủ» đang có (Hỏi-2)."
+    },
+    {
+      "id": "OOS-5",
+      "p": "KHÔNG đổi ai được gỡ hàng — vẫn chỉ qua hoàn tác lần nhập; hàng G2 quyết."
+    }
   ],
   "scope_plain": "Vòng này chỉ phủ bốn việc với hàng; các đối tượng khác thêm vào cùng bảng sau.",
   "coverage_plain": [
-    {"i": 0, "p": "Đủ năm vai và ba ca kiêm vai (Quản trị kiêm Đầu chủ, Telesales kiêm Trưởng nhóm, Telesales kiêm Đầu khách) — AC-1, AC-8."},
-    {"i": 1, "p": "Đủ bốn quan hệ với căn: mình giữ, chưa ai giữ, người khác giữ, từng giữ mà đã đổi đầu chủ — chỗ quyết ai đưa được lên «Đang bán» (AC-5, AC-7)."},
-    {"i": 2, "p": "Đủ bốn việc: xem, tạo, sửa (mọi loại lệnh sửa của lõi, lặp theo danh sách của lõi), đưa lên «Đang bán» — AC-2..AC-5."},
-    {"i": 3, "p": "Đủ bốn lớp chặn: lõi (AC-1), API (AC-2..5), cơ sở dữ liệu (AC-7), màn Bảng hàng (AC-6, AC-2); bộ kiểm đếm khớp ở hai lớp giữa (AC-8)."}
+    {
+      "i": 0,
+      "p": "Đủ năm vai và ba ca kiêm vai (Quản trị kiêm Đầu chủ, Telesales kiêm Trưởng nhóm, Telesales kiêm Đầu khách) — AC-1, AC-8."
+    },
+    {
+      "i": 1,
+      "p": "Đủ bốn quan hệ với căn: mình giữ, chưa ai giữ, người khác giữ, từng giữ mà đã đổi đầu chủ — chỗ quyết ai đưa được lên «Đang bán» (AC-5, AC-7)."
+    },
+    {
+      "i": 2,
+      "p": "Đủ bốn việc: xem, tạo, sửa (mọi loại lệnh sửa của lõi, lặp theo danh sách của lõi), đưa lên «Đang bán» — AC-2..AC-5."
+    },
+    {
+      "i": 3,
+      "p": "Đủ bốn lớp chặn: lõi (AC-1), API (AC-2..5), cơ sở dữ liệu (AC-7), màn Bảng hàng (AC-6, AC-2); bộ kiểm đếm khớp ở hai lớp giữa (AC-8)."
+    }
   ],
   "gap_probe_plain": [
-    {"i": 0, "p": "Ba lựa chọn máy ghi «chỉ một lối» mà lối kia chưa chết — đã sửa: mã lỗi thành câu hỏi cho anh (Hỏi-2), lý do không sửa hàm ai-thấy-hàng ghi lại đúng, chặn trang Bảng hàng thì làm luôn trong vòng (giám sát đã cho chạm tệp)."},
-    {"i": 1, "p": "Bảng quyền thiếu hai ca nguy nhất của «Đang bán» (Đầu khách với căn chưa ai giữ; Đầu chủ từng giữ mà căn đã đổi) — đã thêm, bảng thành 14 ca, 56 ô, luật ghi rõ ngoặc."},
-    {"i": 2, "p": "Phép thử ô Trạng thái chưa chứng trình sửa thật truyền đúng cờ — đã sửa: cờ là tham số bắt buộc, kiểm kiểu đỏ nếu trình sửa quên truyền."},
-    {"i": 3, "p": "Phép thử «lối đang chạy không gãy» thiếu bộ đồng bộ của màn và thiếu phép đo «bài cũ chỉ thêm vai» — đã thêm cả hai, cộng danh sách sáu tệp bài cũ được giám sát cho chạm."},
-    {"i": 4, "p": "Cột «sửa» hứa mọi lệnh mà chỉ đo một lệnh — đã sửa: phép thử lặp theo danh sách loại lệnh của lõi; lệnh gỡ hàng có dòng lý do riêng."}
-  ]
+    {
+      "i": 0,
+      "p": "Ba lựa chọn máy ghi «chỉ một lối» mà lối kia chưa chết — đã sửa: mã lỗi thành câu hỏi cho anh (Hỏi-2), lý do không sửa hàm ai-thấy-hàng ghi lại đúng, chặn trang Bảng hàng thì làm luôn trong vòng (giám sát đã cho chạm tệp)."
+    },
+    {
+      "i": 1,
+      "p": "Bảng quyền thiếu hai ca nguy nhất của «Đang bán» (Đầu khách với căn chưa ai giữ; Đầu chủ từng giữ mà căn đã đổi) — đã thêm, bảng thành 14 ca, 56 ô, luật ghi rõ ngoặc."
+    },
+    {
+      "i": 2,
+      "p": "Phép thử ô Trạng thái chưa chứng trình sửa thật truyền đúng cờ — đã sửa: cờ là tham số bắt buộc, kiểm kiểu đỏ nếu trình sửa quên truyền."
+    },
+    {
+      "i": 3,
+      "p": "Phép thử «lối đang chạy không gãy» thiếu bộ đồng bộ của màn và thiếu phép đo «bài cũ chỉ thêm vai» — đã thêm cả hai, cộng danh sách sáu tệp bài cũ được giám sát cho chạm."
+    },
+    {
+      "i": 4,
+      "p": "Cột «sửa» hứa mọi lệnh mà chỉ đo một lệnh — đã sửa: phép thử lặp theo danh sách loại lệnh của lõi; lệnh gỡ hàng có dòng lý do riêng."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "E2b",
+      "q": "Người không làm Bảng hàng gõ thẳng địa chỉ thì về Hôm nay?",
+      "why": "Hội đồng ba người chấm đều đề xuất đạt: trang Bảng hàng hỏi lõi «người này có làm Bảng hàng không» rồi mới dựng bảng; người có vai vẫn vào như cũ."
+    }
+  ],
+  "analyst_plain": ""
 }
