@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fd2fd9ef54353a5c53b209601ddf8645d4261d8f
+verified_commit: b71bb4bb4f48620e32328e168c7e13afcc5e48b6
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -334,3 +334,7 @@ none — every multi-run eval is uniform
 
 Round 1: các vòng trước ghi trong run-log; xem lịch sử ở đó.
 Round 2: toàn bộ eval đạt; E12 và E13 đạt có giới hạn (xem Known limits), không finding trong hợp đồng.
+
+### Re-pin lần 1 — 2026-11-05, do hoá cũ do gộp nhánh chính trước chữ ký
+run_id: repin-20261105T221814Z-92714
+sha: b71bb4bb4f48620e32328e168c7e13afcc5e48b6 · suites: 7 lệnh exit 0 · evals: 20/20 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E12=1, E13=1 · ngoài làn máy: E5b, E7b, E8c · diff chạm vật đo ngoài làn máy: E5b — chưa chứng lại, đi vòng S4 delta
