@@ -59,3 +59,12 @@ evals:
     expected: "Bước 2: Xem thêm nối trang khi không đổi bộ lọc. Bước 3: không có yêu cầu Xem thêm nào mang cursor của bộ lọc Chủ bán kèm type=Landlord (hoặc có mà trang về không được nối), và màn chỉ còn dòng Chủ cho thuê — không dòng lạc lọc."
     paths: ["apps/web/src/app/(app)/contacts/**"]
     evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E7
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/man-lien-he/xem-them-may-chu.test.ts ca «liên hệ: xem thêm với con trỏ của loại cũ làm sót liên hệ của loại mới» có mặt và ok — 30 Chủ bán cũ, 3 Chủ cho thuê, 30 Chủ bán mới của một Đầu chủ: trang đầu Chủ bán 50 dòng còn con trỏ; đối chứng dương: cùng loại với con trỏ ấy đủ 60 Chủ bán, không trùng; danh sách màn tải sau khi đổi loại (type=Landlord, không con trỏ) đúng bằng tập 3 Chủ cho thuê, mọi dòng mang loại Chủ cho thuê; con trỏ Chủ bán gửi kèm type=Landlord thì máy chủ không trả dòng lạc loại nhưng sót cả 3 Chủ cho thuê (lý do màn không được gửi con trỏ của bộ lọc cũ). Chiều đỏ (đã phá thử): máy chủ bỏ lọc loại → ca đỏ nêu «Chủ bán qua hai trang phải đủ 60, không trùng»."
+    paths: [packages/api/test-db/man-lien-he/**, packages/api/src/contacts/read/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

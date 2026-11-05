@@ -5,7 +5,7 @@ slug: va-ho-so-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: machine-cleared
+status: implemented
 design_doc: _acceptance/va-ho-so-lien-he/design.md
 approved_by:
 approved_at:
