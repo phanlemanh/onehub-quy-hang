@@ -4,7 +4,8 @@
  * hàng sang `CanNoiBo` và chỉ vẽ `BanXuat`. Nhập qua `@quy-hang/core/export` — chạy được cả trong trình duyệt (không
  * nhập mô-đun Node nào).
  */
-import { banRaNgoai, CAU_HINH_MAC_DINH, type CauHinhRa, type KhoaRa } from "../redaction/ban-ra";
+import { nhanTruong, tuVungRaNgoai, type TuVung } from "../labels";
+import { banRaNgoai, CAU_HINH_MAC_DINH, truongRa, type CauHinhRa, type KhoaRa } from "../redaction/ban-ra";
 import type { NguoiNhan } from "../redaction/cua-ra";
 import type { CanNoiBo } from "../redaction/lop-truong";
 import { baiFacebook, baiZalo } from "./bai";
@@ -27,6 +28,8 @@ export type TuyChonXuat = {
   today: string;
   /** Dòng đầu của bài Facebook. */
   tenSan: string;
+  /** Cách gọi riêng của sàn gửi (hàng 45) — lõi cắt về phần theo khoá ra của người nhận trước khi dùng. */
+  tuVung?: TuVung;
 };
 
 export type BanXuat = {
@@ -48,15 +51,16 @@ export type BanXuat = {
 export function xuatBang(can: readonly CanNoiBo[], tuy: TuyChonXuat): BanXuat {
   const cauHinh = tuy.cauHinh ?? CAU_HINH_MAC_DINH;
   const { ra, boQua } = cotRa(tuy.cot, tuy.nguoiNhan, cauHinh);
+  const tv = tuVungRaNgoai(tuy.tuVung, truongRa(tuy.nguoiNhan, cauHinh));
   const dong = can.map((c) => {
     const ban = banRaNgoai(c, { cua: "phat_hang", nguoiNhan: tuy.nguoiNhan, cauHinh, today: tuy.today });
-    return ra.map((cot) => chuCuaO(ban, cot.khoa));
+    return ra.map((cot) => chuCuaO(ban, cot.khoa, tv));
   });
   const bang: BanXuat = {
     mau: tuy.mau,
     nguoiNhan: tuy.nguoiNhan,
     soCan: can.length,
-    cot: ra.map((c) => c.nhan),
+    cot: ra.map((c) => nhanTruong(tv, c.khoa, c.nhan)),
     khoa: ra.map((c) => c.khoa),
     dong,
     boQua,

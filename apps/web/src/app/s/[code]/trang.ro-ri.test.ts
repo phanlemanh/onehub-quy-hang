@@ -16,7 +16,7 @@ test("rò rỉ: trang khách công khai", () => {
   for (const nguoiNhan of NGUOI_NHAN) {
     for (const cauHinh of CAU_HINH_TAT_CA) {
       const b = banRaNgoai(can, { cua: "gui_link", nguoiNhan, cauHinh, today: HOM_NAY });
-      const than = { companyName: can.companyName, senderName: can.senderName, nguoiNhan, can: [b], listingIds: ["L0"] };
+      const than = { companyName: can.companyName, senderName: can.senderName, nguoiNhan, can: [b], listingIds: ["L0"], tuVung: { truong: {}, giaTri: {} } };
       const moi = giaTriMoi(can, nguoiNhan, cauHinh);
       for (const [ten, chiTiet] of [["bộ căn", undefined], ["chi tiết", 0]] as const) {
         const chu = renderToStaticMarkup(h(TrangKhachCongKhai, { code: "AbCdEfGhIjKl", than, can: chiTiet }));
