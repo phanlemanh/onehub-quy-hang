@@ -2597,6 +2597,20 @@
         "apps/web/src/app/(app)/units/ho-so/**",
         "apps/web/src/app/(app)/units/call/**"
       ]
+    },
+    {
+      "ma": "chan-trung-ten-gia-tri",
+      "cau_giao": "Cách gọi riêng: khi lưu tên riêng của một giá trị, chặn chữ trùng với tên đang hiện (tên riêng hoặc tên mặc định) của giá trị khác trong cùng tập đóng; quản trị thấy lý do ngay ở ô đang sửa, không có hai lựa chọn khác nghĩa mà cùng một chữ trên bảng hàng, ô lọc hay trang khách.",
+      "slug": "chan-trung-ten-gia-tri",
+      "vi_sao": "Ngoài-1 và Ngoài-3 của hàng 45 cach-goi-rieng (_acceptance/cach-goi-rieng/review-findings.md): kiểm trùng bỏ sót tên mặc định của giá trị anh em chưa đổi. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy B, yêu cầu B-16). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Lưu tên riêng trùng tên đang hiện của giá trị khác cùng tập (riêng hay mặc định) bị từ chối ở API và báo ngay ở ô sửa; tên không trùng lưu như cũ; bài kiểm phủ cả hai đường trùng",
+      "vung": [
+        "packages/core/src/labels/**",
+        "packages/api/src/labels/**",
+        "apps/web/src/app/(app)/settings/labels/**",
+        "packages/api/test-db/chan-trung-ten-gia-tri/**"
+      ]
     }
   ],
   "chan_troi": [
