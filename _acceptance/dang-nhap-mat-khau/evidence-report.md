@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c166d71ad89370454fce3a655d589846d805fa93
+verified_commit: 047bb789891094cb6430544bdfbd045c26326249
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -297,3 +297,7 @@ Round 1: các eval máy xanh, ba eval ui-check (E10, E14, E22) rớt ở lượt
 Round 2: chạy lại bộ eval test/script xanh; ba eval ui-check còn rớt. Returned to implementation.
 Round 3: carry-forward E13, E23 từ round 2; ba ui-check rớt, phạm vi được thu lại (AC-9 viết lại, AC-10 viết lại, ui-check ra Known limits).
 Round 4: sau thu phạm vi và ký lại Cổng Phạm vi, E13 và E23 chạy lại xanh, các eval còn lại carry-forward; toàn bộ PASS.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main sau chữ ký
+run_id: repin-20261105T044653Z-37050
+sha: 047bb789891094cb6430544bdfbd045c26326249 · suites: 7 lệnh exit 0 · evals: 20/20 eval máy đạt kỳ vọng
