@@ -20,21 +20,18 @@ export default async function Page() {
   );
   const tuVung = res.ok ? tuVungTuBang(await res.json()) : TU_VUNG_RONG;
   return (
-    <TuVungProvider tuVung={tuVung}>
-      <KhungBangHang
-        title="Bảng hàng"
-        hoSo={{ nguoi: me.user.id, san: me.activeCompany.id }}
-        dienThoai={
+    <KhungBangHang
+      title="Bảng hàng"
+      hoSo={{ nguoi: me.user.id, san: me.activeCompany.id }}
+      dienThoai={
+        <TuVungProvider tuVung={tuVung}>
           <BangTheDienThoai nguoi={me.user.id} san={me.activeCompany.id} />
-        }
-      >
-        <BangCoHoSo
-          nguoi={me.user.id}
-          san={me.activeCompany.id}
-          vai={me.activeCompany.roles}
-          tenSan={me.activeCompany.name}
-        />
-      </KhungBangHang>
-    </TuVungProvider>
+        </TuVungProvider>
+      }
+    >
+      <TuVungProvider tuVung={tuVung}>
+        <BangCoHoSo nguoi={me.user.id} san={me.activeCompany.id} vai={me.activeCompany.roles} tenSan={me.activeCompany.name} />
+      </TuVungProvider>
+    </KhungBangHang>
   );
 }

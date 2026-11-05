@@ -112,16 +112,10 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
         chan={
           <div className="flex w-full flex-col items-end gap-3">
             {luu.loai === "loi" ? <TrangThai kind="error" title="Chưa lưu được cách gọi" description={luu.cau} className="w-full" /> : null}
-            <div className="flex items-center gap-3">
-              {luu.loai === "da-luu" ? (
-                <span role="status" className="text-muted-foreground text-sm">
-                  Đã lưu cách gọi
-                </span>
-              ) : null}
-              <Button type="submit" disabled={!luuDuoc || luu.loai === "dang-luu"}>
-                {luu.loai === "dang-luu" ? "Đang lưu…" : "Lưu"}
-              </Button>
-            </div>
+            {luu.loai === "da-luu" ? <TrangThai kind="notice" title="Đã lưu cách gọi" description="Bảng hàng, bản phát hàng và trang khách dùng tên mới từ lần mở kế." className="w-full" /> : null}
+            <Button type="submit" disabled={!luuDuoc || luu.loai === "dang-luu"}>
+              {luu.loai === "dang-luu" ? "Đang lưu…" : "Lưu"}
+            </Button>
           </div>
         }
       >

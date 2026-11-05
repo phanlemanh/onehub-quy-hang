@@ -323,7 +323,7 @@ export function BangHang({
 
   const hangLoc = useMemo(
     () => ({ open: locMo, values: loc, invalid: sai, options: (id: CotId) => luaChon(dong, id, tv), setValue: datLoc, clearAll: xoaLoc }),
-    [locMo, loc, sai, dong, datLoc, xoaLoc],
+    [locMo, loc, sai, dong, datLoc, xoaLoc, tv],
   );
 
   const cotNhanNhom: CotId = cot.includes("buildingName") ? "buildingName" : (cot[0] ?? "unitNumber");
@@ -382,7 +382,7 @@ export function BangHang({
   const moHopXuat = useCallback(() => {
     if (tapXuat.tat) return;
     setMoXuat({ dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "", tuVung: tv });
-  }, [tapXuat, cot, tenSan, setMoXuat]);
+  }, [tapXuat, cot, tenSan, setMoXuat, tv]);
   // Menu Tạo trỏ `/exports/new` → `/inventory?phat-hang=1`: mở hộp thoại một lần với cách xem đang có.
   const q = useSearchParams();
   const daMoTuMenu = useRef(false);
