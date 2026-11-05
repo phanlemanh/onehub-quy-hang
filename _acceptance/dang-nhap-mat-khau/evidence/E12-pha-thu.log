@@ -1,0 +1,7 @@
+# phá-thử E12: đếm độ dài theo byte thay vì ký tự
+✖ luật mật khẩu: bảng viết trước (1.676875ms)
+✖ luật mật khẩu: độ dài đếm theo ký tự Unicode, không theo byte (0.84875ms)
+✖ failing tests:
+✖ luật mật khẩu: bảng viết trước (1.676875ms)
+  AssertionError [ERR_ASSERTION]: dòng «128 ký tự»
+✖ luật mật khẩu: độ dài đếm theo ký tự Unicode, không theo byte (0.84875ms)

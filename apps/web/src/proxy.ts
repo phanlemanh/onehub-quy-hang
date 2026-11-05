@@ -12,7 +12,8 @@ const TRANG_MAU = "/mau/he-bo-cuc";
 const TRANG_KHACH = "/s/";
 
 function moKhongPhien(path: string): boolean {
-  if (path === "/login") return true;
+  // Đặt mật khẩu mới (dang-nhap-mat-khau) đứng trước phiên: người vừa đăng nhập bằng mật khẩu tạm chưa có cookie.
+  if (path === "/login" || path === "/dat-mat-khau") return true;
   if (path.startsWith(TRANG_KHACH)) return true;
   if (process.env.VERCEL_ENV === "production") return false;
   return path === TRANG_MAU || path.startsWith(`${TRANG_MAU}/`);

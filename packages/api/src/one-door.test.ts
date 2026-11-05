@@ -9,7 +9,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 /** Tệp được phép: cửa của bảng công ty, và phần danh tính (chỉ chạm schema identity). */
-const ALLOWED = new Set(["db.ts", "auth/otp-limit.ts", "auth/accounts.ts", "auth/may-bi-bao.ts"]);
+const ALLOWED = new Set(["db.ts", "auth/otp-limit.ts", "auth/accounts.ts", "auth/may-bi-bao.ts", "auth/trang-thai-mat-khau.ts"]);
 const POOL_CALL = /\b\w*[Pp]ool\.(query|connect)\(|new\s+(?:pg\.)?(?:Pool|Client)\(/;
 
 export function scanQueries(dir: string): { file: string; line: number }[] {

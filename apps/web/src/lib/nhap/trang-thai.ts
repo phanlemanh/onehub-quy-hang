@@ -112,7 +112,9 @@ export function suaO(s: TrangThaiNhap, source: number, cot: number, raw: string,
   const oDong = o.dong.find((d) => d.source === source)?.cells[cot];
   const lop = o.lop[cot]?.cls;
   const moi = raw.trim();
-  if (col && typeof goc === "string" && goc.trim() && moi && oDong?.mark === "needs_person" && hocCachGoi(lop, col.target) && isStandardField(col.target)) {
+  // Chỉ ô «cần người» vì lõi không nhận chữ (`by: normalize`) mới thành cách gọi; ô xung đột (phí trong ô giá, lệch danh
+  // mục, trùng mã) chỉ đổi đúng ô ấy — Ngoài-3 hàng 67, AC-9 hàng 66.
+  if (col && typeof goc === "string" && goc.trim() && moi && oDong?.mark === "needs_person" && oDong.by === "normalize" && hocCachGoi(lop, col.target) && isStandardField(col.target)) {
     const nhan = normalizeValue(col.target, moi, { ...ctx, transform: col.transform });
     if (nhan.mark === "keep" || nhan.mark === "fixed") {
       const khoa = goc.trim();

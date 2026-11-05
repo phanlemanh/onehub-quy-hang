@@ -81,7 +81,8 @@ async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: stri
       floor: r.floor,
       // Danh mục chưa có số tầng toà: trang khách không có nấc tầng (như màn Gửi hàng 34).
       buildingFloorsTotal: null,
-      standardStatus: r.standardStatus,
+      // Căn đã gỡ khi hoàn tác lần nhập (hàng 66) ra trang khách như căn không còn: tình trạng «unavailable», không giá.
+      standardStatus: r.voided ? "Withdrawn" : r.standardStatus,
       listPrice: r.listPrice,
       feeInclusion: r.feeInclusion,
       furnished: r.furnished,
