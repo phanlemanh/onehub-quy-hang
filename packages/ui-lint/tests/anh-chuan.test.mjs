@@ -86,7 +86,8 @@ describe("ảnh chuẩn", () => {
 
 // Nhóm đơn vị màn dưới (app) khai bo_cuc — bảng viết trước theo cột «Bố cục» của vo-va-ia.md §2.
 const BO_CUC_NHOM = {
-  "bang-hang": "tran",
+  // Bảng hàng (hàng 105): «Danh sách – chi tiết» — hồ sơ căn là cột kéo chia cạnh bảng (ADR-0024 sửa đổi 05/11).
+  "bang-hang": "danh-sach-chi-tiet",
   "cai-dat-san": "doc",
   "cuoc-goi": "ho-so",
   // Đã gửi (hàng 36): «Danh sách → chi tiết» theo thiết kế đã duyệt ở Cổng Phạm vi; vo-va-ia.md §2 ghi «Dòng tin».

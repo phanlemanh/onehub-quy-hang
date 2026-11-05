@@ -13,7 +13,8 @@ import { hashPassword, verifyPassword } from "better-auth/crypto";
 import { loiLuat } from "../auth/dang-nhap-mat-khau";
 import { ghiDau } from "../auth/may-bi-bao";
 import { chuanHoa, kiemMatKhau } from "../auth/mat-khau";
-import { coMatKhauDung, datTuDoi, docTheoNguoi, thuPhien, voHieuBaoMat } from "../auth/trang-thai-mat-khau";
+import { SAI_TOI_DA } from "../auth/constants";
+import { coMatKhauDung, datTuDoi, demSai, docTheoNguoi, ghiSai, thuPhien, voHieuBaoMat, xoaChuoiSai } from "../auth/trang-thai-mat-khau";
 import { withCompany } from "../db";
 import { API_ERRORS } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
@@ -145,8 +146,15 @@ export function registerDeviceRoutes(api: OpenAPIHono, deps: ApiDeps) {
     }
     const tk = await docTheoNguoi(identityPool, phien.user.id);
     if (tk && coMatKhauDung(tk)) {
+      // Cùng bộ đếm với đăng nhập (va-dang-nhap-mat-khau): cửa sổ theo email, chuỗi sai của tài khoản; đủ 5 lần trong
+      // cửa sổ thì chờ, kể cả khi mật khẩu hiện tại đúng.
+      if ((await demSai(identityPool, tk.email)) >= SAI_TOI_DA) return c.json({ error: API_ERRORS.passwordRateLimited.code }, 429);
       const dung = typeof hienTai === "string" && hienTai.length <= 1024 && (await verifyPassword({ hash: tk.hash!, password: chuanHoa(hienTai) }));
-      if (!dung) return c.json({ error: API_ERRORS.invalidCurrentPassword.code }, 403);
+      if (!dung) {
+        await ghiSai(identityPool, tk.email, tk.userId);
+        return c.json({ error: API_ERRORS.invalidCurrentPassword.code }, 403);
+      }
+      await xoaChuoiSai(identityPool, tk.userId);
     }
     const pw = chuanHoa(moi);
     const kq = kiemMatKhau(pw, phien.user.email);

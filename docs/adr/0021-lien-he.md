@@ -67,6 +67,20 @@ Manh Phan duyệt Cổng Phạm vi hồ sơ `lien-he-khach` 03/11, Hỏi-1..7 th
    bỏ được.
 7. Nhu cầu khách mở ghi sự kiện `inquiry_received` («khách hỏi») — mốc đầu của số đo «khách hỏi → gửi được căn».
 
+## Sửa đổi 05/11 — đổi đầu chủ hàng loạt (hàng 89)
+
+Hồ sơ `_acceptance/doi-dau-chu-hang-loat/` (chủ kho chọn làm ở Cổng Đáng 02/11, duyệt phạm vi 05/11). Điểm 5 ở trên giữ
+nguyên làm sử cho lối giao lại cũ; điều đang đúng cho lối mới:
+
+1. **Đổi đầu chủ hàng loạt** (trưởng nhóm, trên Bảng hàng) giữ luật một chủ một đầu chủ: mọi căn khác có cùng liên hệ
+   chủ nhà đi theo, và người giữ của liên hệ chủ nhà đổi sang đầu chủ mới trong cùng một giao dịch
+   (`app.reassign_listing_agents`, migration 027). Mỗi lần đổi ghi người giữ cũ của từng căn và từng liên hệ.
+2. **Hoàn tác** một lần: trả người giữ cũ cho căn và liên hệ còn đang do người nhận giữ. Căn hay liên hệ đã đổi tiếp sau
+   đó thì giữ nguyên. Căn trước chưa có đầu chủ giữ người nhận, và liên hệ cùng chủ nhà với căn ấy cũng giữ người nhận
+   (bảng gán chỉ thêm dòng — Hỏi-2).
+3. **Lối gán một căn** (`PUT /listings/{id}/listing-agent`) giữ nguyên hành vi cũ ở điểm 5 (Hỏi-1). Lệch một chủ hai đầu
+   chủ do lối này vẫn hiện ở danh sách liên hệ nhiều đầu chủ của trưởng nhóm.
+
 ## Sửa đổi 05/11 — ba lớp theo Keller Williams (hàng 103)
 
 Manh Phan chọn «Áp ba lớp» 05/11, ở phần khám phá của hàng 103 (`_acceptance/man-lien-he/lead-va-lien-he.md`). Dữ liệu và

@@ -1,0 +1,109 @@
+schema_version: 1
+feature_slug: va-dang-nhap-mat-khau
+# Lệnh máy: executors.test.isolation (npm run db:migrate && npm run db:test — bộ kiểm cách ly + mọi tệp
+# packages/api/test-db/**/*.test.ts, cần DATABASE_URL tới Postgres dãy B: postgres://postgres:quyhang@localhost:5572/postgres),
+# executors.test.web (đơn vị của apps/web), executors.script.va_dang_nhap_mat_khau
+# (_acceptance/va-dang-nhap-mat-khau/thu/*.test.mjs), executors.script typecheck, lint, build, executors.design.khuon.
+# Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter: có mặt, ok, không SKIP.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; packages/db/tests/isolation.test.mjs có ca «vào sàn khác: thu phiên khi vô hiệu mật khẩu gốc sàn cấp» — bảng viết trước hai hình (tạm chưa dùng · đặt lần đầu từ tạm), mỗi hình: người chỉ ở sàn A có hai dòng identity.session, chèn company_members (sàn B) bằng vai chủ, đọc lại thấy password_state.disabled_reason «vao-san-khac», 0 dòng identity.session của người ấy, một sự kiện vo-hieu-san-khac; assert số hình = 2; và ca «vào sàn khác: phiên của người khác không bị đụng» — phiên của một người thứ ba vẫn còn. Chiều đỏ (phá-thử S3, có vật): evidence/E1-pha-thu.log ghi lần bỏ câu xoá phiên khỏi hàm trigger thì ca đầu đỏ nêu tên hình."
+    paths: ["packages/db/migrations/038_*.sql", "packages/db/tests/isolation.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/va-dang-nhap-mat-khau/vao-san-khac.test.ts: ca «vào sàn khác: phiên cũ bị thu qua đường mời của API» — người đặt lần đầu từ mật khẩu tạm ở sàn A, đăng nhập ở hai máy (hai cookie), quản trị sàn B mời người ấy qua POST /api/v1/company/members: 201; rồi bằng mỗi cookie cũ GET /api/v1/me ra 401 và PUT /api/v1/me/password (không currentPassword, newPassword hợp lệ) ra 401; identity.session của người ấy rỗng; đăng nhập bằng mã 6 số sau đó vào được."
+    paths: ["packages/db/migrations/038_*.sql", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; cùng tệp vao-san-khac.test.ts: ca «vào sàn khác: giữ phiên khi không có gì để khoá» — bảng viết trước ba hình (tự đổi ở Cá nhân · chưa có mật khẩu · mời lại vào đúng sàn đã cấp), mỗi hình: người có phiên mở, được thêm vào sàn (B, hoặc lại A với hình ba), rồi GET /api/v1/me bằng cookie cũ ra 200, số dòng identity.session không đổi, password_state.disabled_reason vẫn rỗng (hình «chưa có mật khẩu»: vẫn không có dòng password_state), và hình một, ba đăng nhập bằng mật khẩu cũ ra 200; assert số hình = 3."
+    paths: ["packages/db/migrations/038_*.sql", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; tệp packages/api/test-db/va-dang-nhap-mat-khau/doi-dem-sai.test.ts: ca «đổi: sai mật khẩu hiện tại thì ghi một lần sai» — PUT /api/v1/me/password sai currentPassword: 403 invalid-current-password, số dòng identity.password_failures của email tăng đúng 1, failed_streak tăng đúng 1; ca «đổi: 5 sai trong 15 phút thì chờ» — 5 lần sai rồi lần 6 với currentPassword đúng: 429 password-rate-limited và đăng nhập bằng mật khẩu cũ vẫn được (mật khẩu không đổi); ca «đổi: bộ đếm chung với đăng nhập» — 3 lần đăng nhập sai cộng 2 lần đổi sai rồi lần đổi đúng: 429; ca «đổi: chiều ngược — sai ở đổi thì đăng nhập chờ» — 5 lần đổi sai rồi đăng nhập bằng mật khẩu đúng: 429 password-rate-limited, đối chứng dương 4 lần đổi sai thì đăng nhập vào được. Chiều đỏ (phá-thử S3, có vật): evidence/E4-pha-thu.log ghi lần bỏ kiểm cửa sổ ở đường đổi thì ca «5 sai trong 15 phút thì chờ» đỏ."
+    paths: ["packages/api/src/me/routes.ts", "packages/api/src/auth/**", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; cùng tệp doi-dem-sai.test.ts: ca «đổi: lần sai thứ 20 khoá và thu mọi phiên» — đặt failed_streak = 19 bằng kết nối chủ (dọn cửa sổ), người có hai phiên; PUT /api/v1/me/password sai currentPassword: password_state.disabled_reason «khoa-20», sự kiện khoa-20, 0 dòng identity.session; rồi bằng cùng cookie PUT /api/v1/me/password không currentPassword ra 401 (không đặt được mật khẩu mới); ca «khoá qua đăng nhập cũng thu mọi phiên» — failed_streak = 19, người có một phiên, lần sai thứ 20 qua POST /api/v1/auth/sign-in/email: 401, disabled_reason «khoa-20», 0 dòng identity.session, cookie cũ PUT /api/v1/me/password không currentPassword ra 401. Chiều đỏ (phá-thử S3, có vật): evidence/E5-pha-thu.log ghi lần bỏ bước thu phiên khi khoá thì lời gọi đặt không currentPassword ra 200 và ca đỏ."
+    paths: ["packages/api/src/me/routes.ts", "packages/api/src/auth/**", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    layer: backend-effect
+    expected: "exit 0; cùng tệp doi-dem-sai.test.ts: ca «đổi: đúng giữa chừng thì về 0» — 3 lần sai rồi đúng: 200, failed_streak = 0; ca «đổi: không in mật khẩu ở nhánh mới» — bộ bắt nhật ký của packages/api/test-db/dang-nhap-mat-khau/chung.ts quanh ba lời gọi (403 sai, 429 chờ, lần sai khoá) ghim status và mã lỗi từng lời gọi, không dòng nào chứa currentPassword hay newPassword của lời gọi ấy; đối chứng dương: bộ bắt ghi được chuỗi mồi."
+    paths: ["packages/api/src/me/routes.ts", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; apps/web/src/app/(app)/me/toi.test.ts có ca «hộp mật khẩu: mã lỗi → câu» — bảng viết trước ánh xạ mã máy chủ → câu dưới ô: password-rate-limited → «Thử lại sau ít phút» (ô mật khẩu hiện tại), invalid-current-password → «Mật khẩu hiện tại không đúng» (ô mật khẩu hiện tại), password-too-short → «Cần ít nhất 8 ký tự» (ô mật khẩu mới); assert số dòng bảng = 3 và hàm ánh xạ là hàm hộp thật nhập."
+    paths: ["apps/web/src/app/(app)/me/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.va_dang_nhap_mat_khau
+    expected: "exit 0; tệp _acceptance/va-dang-nhap-mat-khau/thu/migration-tai-lieu.test.mjs: ca «migration: 038 là tệp mới, thay hàm trigger và xoá phiên» — đúng một tệp packages/db/migrations/038_*.sql, chứa «create or replace function app.vo_hieu_mat_khau_khi_vao_san» và «delete from identity.session»; ca «migration: không sửa migration đã commit» — diff từ merge-base với origin/main tới HEAD chỉ thêm tệp dưới packages/db/migrations, đối chứng viết trước một dòng «M …034_mat_khau.sql» thì hàm lọc nêu đúng tệp ấy; ca «tài liệu» — docs/adr/0005-dang-nhap-theo-san.md có chữ «va-dang-nhap-mat-khau», docs/product/tham-chieu.md §12 có dòng chứa «va-dang-nhap-mat-khau»."
+    paths: ["packages/db/migrations/**", "docs/adr/0005-*.md", "docs/product/tham-chieu.md", "_acceptance/va-dang-nhap-mat-khau/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0; không dòng lỗi kiểu."
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «chuẩn giao diện: đạt»; mức nợ giao diện không tăng."
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.build
+    expected: "exit 0; build của apps/web và các gói xong không lỗi."
+    paths: ["apps/web/**", "packages/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/toi.md", "apps/web/src/app/(app)/me/**", "apps/web/src/app/(app)/settings/personal/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm toi"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

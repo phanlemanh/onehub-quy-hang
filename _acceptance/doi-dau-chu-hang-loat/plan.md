@@ -1,0 +1,18 @@
+# Kế hoạch thi công — doi-dau-chu-hang-loat (hàng 89, T3)
+
+Duyệt kế hoạch (Gate 1.5): Manh Phan, 2026-11-05.
+
+Hợp đồng: `contract.md` (duyệt 05/11, Hỏi-1 và Hỏi-2 theo khuyến nghị). Thiết kế: `design.md`. Sáu task làm tuần tự
+trong phiên chính, vì task sau dùng giao diện của task trước. Postgres của dãy H ở cổng 5574.
+
+| Task | Việc | Tệp | Kiểm từng task | Phục vụ | independent |
+|---|---|---|---|---|---|
+| T1 | Migration 027: hai bảng «lần đổi đầu chủ» và «từng căn, từng liên hệ của lần đổi» (luật theo dòng, vai API chỉ đọc). Ba hàm security definer chỉ trưởng nhóm gọi: xem trước (kéo căn cùng chủ nhà, trần 200), đổi (thêm dòng gán, đổi người giữ liên hệ, ghi lần đổi; một giao dịch), hoàn tác (trả người giữ cũ nếu còn đang do người nhận giữ; căn trước chưa có đầu chủ và liên hệ cùng chủ giữ người nhận; một lần). Ca cách ly cho hai bảng và ba hàm | `packages/db/migrations/027_doi_dau_chu.sql`, `packages/db/tests/isolation.test.mjs` | `npm run db:migrate && npm run test:isolation -w @quy-hang/db` | E6 | false |
+| T2 | API: `POST /api/v1/listings/agent-reassignments/preview`, `POST /api/v1/listings/agent-reassignments`, `POST /api/v1/listings/agent-reassignments/{id}/undo`, thân strict. Lỗi: 403 vai, 400 người nhận sai hay quá 200 căn, 404 sàn khác, 409 hoàn tác lần hai. Bài kiểm trên Postgres: ma trận 6 vai × 3 lệnh, 5 căn của 2 chủ, 6 ô hoàn tác, quét bốn giá trị chủ nhà riêng, trần 200 | `packages/api/src/listings/doi-dau-chu.ts`, `packages/api/src/listings/doi-dau-chu-routes.ts`, `packages/api/src/app.ts`, `packages/api/src/errors.ts`, `packages/api/test-db/doi-dau-chu/*.test.ts` | `npm run test:db -w @quy-hang/api -- test-db/doi-dau-chu` | E1c, E2, E3, E4, E5, E7 | false |
+| T3 | Lõi: `canReassignListingAgents(roles)` cạnh `navigationFor`, bài kiểm 6 tổ hợp vai | `packages/core/src/navigation.ts`, `navigation.test.ts` | `npm test -w @quy-hang/core` | E1 | false |
+| T4 | Web: phần thuần `bulk/doi-dau-chu.ts` (trạng thái nút, dựng hộp hỏi từ bản xem trước có dấu «cùng chủ nhà», chữ thông báo đổi và hoàn tác, lời riêng Hỏi-2). Thanh sửa hàng loạt thêm «Đổi đầu chủ» khi lõi cho phép. Hộp hỏi chọn người nhận từ `GET /team/listing-agents`. Sau đổi và hoàn tác gọi bộ đồng bộ kéo lại. Bài kiểm web, bài web_db kéo lại không dựng kho | `apps/web/src/app/(app)/inventory/bulk/doi-dau-chu.ts`, `doi-dau-chu.tsx`, `thanh.tsx`, tests; `apps/web/src/lib/sync/test-db/doi-dau-chu.db-test.mts` | `npm test -w @quy-hang/web`, `npm run test:db -w @quy-hang/web` | E1b, E4b, E4c | false |
+| T5 | Tài liệu: ADR-0021 mục «Sửa đổi 05/11», Tham chiếu §12 một dòng 05/11. Bài kiểm tài liệu | `docs/adr/0021-lien-he.md`, `docs/product/tham-chieu.md`, `_acceptance/doi-dau-chu-hang-loat/thu/tai-lieu.test.mjs` | `node --test "_acceptance/doi-dau-chu-hang-loat/thu/*.test.mjs"` | E8 | false |
+| T6 | Chỗ thử giao diện: `dung-h.mjs` dựng máy dev dãy H, thêm cho bộ mẫu 2 chủ nhà có 5 căn của `dau-chu-1`, có `--doc` in đầu chủ và người giữ hiện tại. `chay-ui.mjs` chạy các cảnh của E9: hộp hỏi, sau đổi không tải lại trang, hoàn tác, đầu chủ không thấy lệnh | `_acceptance/doi-dau-chu-hang-loat/thu/` | chạy ở lượt chấm (máy dev chỉ bật khi chấm) | E9, E9b | false |
+
+Cuối: `npm run typecheck && npm run lint && npm test`, `npm run db:migrate && npm run db:test` trên Postgres dãy H.
+Bước chấm khuôn E8b chạy ở lượt chấm.

@@ -9,7 +9,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { COT_BANG_HANG, xuatBang } from "@quy-hang/core/export";
 import { CAU_HINH_MAC_DINH, canMoi, giaTriMoi, timRoRi } from "@quy-hang/core/redaction";
-import { banXuatTuDong, dongSangCan } from "./chuyen-dong";
+import { banXuatTuDong, cotLoi, dongSangCan } from "./chuyen-dong";
 import { dongMoi, kiemDuongTrang, MOI_COT, quetNguon, TODAY, vanBanRa, type HamTrang } from "./moi-xuat.test-helpers";
 
 const DAY = dirname(fileURLToPath(import.meta.url));
@@ -25,7 +25,7 @@ const tepHopThoai = () =>
   );
 
 test("E7 mọi cột của bảng hàng có dòng ở bảng cột của lõi", () => {
-  for (const id of MOI_COT) assert.ok(Object.prototype.hasOwnProperty.call(COT_BANG_HANG, id), id);
+  for (const id of MOI_COT) assert.ok(Object.prototype.hasOwnProperty.call(COT_BANG_HANG, cotLoi(id)), id);
 });
 
 test("E7 dòng mồi qua dongSangCan không mang khoá nội bộ nào của dòng lạ", () => {
@@ -41,7 +41,7 @@ test("E7 đường của trang — 5 mẫu × 2 người nhận × 4 cấu hình
 
 test("E7 lõi trên căn mồi đầy đủ với cột của bảng hàng: 0 rò rỉ", () => {
   // Cùng cột trang, nhưng căn mồi đủ mọi trường nội bộ (chủ nhà, liên hệ, trường riêng…) — lõi phải tự ẩn.
-  const viaLoi: HamTrang = (_dong, tuy) => xuatBang([canMoi()], { ...tuy, cot: [...tuy.cot] });
+  const viaLoi: HamTrang = (_dong, tuy) => xuatBang([canMoi()], { ...tuy, cot: tuy.cot.map(cotLoi) });
   assert.deepEqual(kiemDuongTrang(canMoi(), viaLoi), []);
 });
 
@@ -58,7 +58,7 @@ test("E7 khách riêng ẩn mã căn — không mã căn, không số tầng", (
     assert.ok(iTang >= 0 && ban.dong.every((d) => d[iTang] !== "12"), `${mau}: ô Tầng mang số tầng`);
   }
   // Lõi trên căn đủ số tầng toà: tầng cao / thấp thay chỗ.
-  const day = xuatBang([canMoi()], { mau: "xlsx", nguoiNhan: "khach_rieng", cot: [...MOI_COT], today: TODAY, tenSan: "[Tên sàn]" });
+  const day = xuatBang([canMoi()], { mau: "xlsx", nguoiNhan: "khach_rieng", cot: MOI_COT.map(cotLoi), today: TODAY, tenSan: "[Tên sàn]" });
   assert.equal(day.dong[0]![day.cot.indexOf("Tầng")], "Tầng cao");
 });
 

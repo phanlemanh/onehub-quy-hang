@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarIcon, InboxIcon, Maximize2Icon, SearchXIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { CalendarIcon, InboxIcon, Maximize2Icon, SearchXIcon, TrendingDownIcon, TrendingUpIcon, XIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { BoCuc, DauMan, type KieuBoCuc, type TrangThaiTai } from "@/components/bo-cuc";
@@ -14,6 +14,7 @@ import { Badge } from "@/components/reui/badge";
 import { Frame, FrameDescription, FrameFooter, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Input } from "@/components/ui/input";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -163,12 +164,21 @@ function KhungLuoiCan({ tieuDe, dem, nut, chon, onChon }: { tieuDe: string; dem:
   );
 }
 
-/** Hồ sơ một căn — giải phẫu hồ sơ căn đang chạy (khoi/solution-crm-4/ho-so.tsx), dùng chung cho toàn màn và cột cạnh bảng. */
-function HoSoCan({ can, trongNgan = false }: { can: CanMau; trongNgan?: boolean }) {
-  const Khung = trongNgan ? ThanHoSo : KhungHoSo;
+/** Cột kéo chia của Danh sách – chi tiết: hồ sơ là một Frame cao hết cột, thân cuộn riêng (hàng 105). */
+function KhungCot({ children }: { children: ReactNode }) {
+  return (
+    <Frame dense className="h-full min-h-0 w-full">
+      <KhungHoSo cot>{children}</KhungHoSo>
+    </Frame>
+  );
+}
+
+/** Hồ sơ một căn — giải phẫu hồ sơ căn đang chạy (khoi/solution-crm-4/ho-so.tsx), dùng chung cho toàn màn, cột cạnh bảng và ngăn từ đáy. */
+function HoSoCan({ can, kieu = "toan-man", nut }: { can: CanMau; kieu?: "toan-man" | "cot" | "ngan"; nut?: ReactNode }) {
+  const Khung = kieu === "ngan" ? ThanHoSo : kieu === "cot" ? KhungCot : KhungHoSo;
   return (
     <Khung>
-      <DauHoSo ngu="[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ" ten={can.ma} trangThai={can.trangThai} trangThaiTone={TONE[can.trangThai] ?? "info-light"} phu={`Xác nhận ${can.tuoi} trước`} />
+      <DauHoSo ngu="[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ" ten={can.ma} trangThai={can.trangThai} trangThaiTone={TONE[can.trangThai] ?? "info-light"} phu={`Xác nhận ${can.tuoi} trước`} nut={nut} />
       <SoChinh giaTri={can.gia} nhan="Bao phí" tienDo={{ co: 3, tren: 5, chu: "Mức đủ thông tin · thiếu Nội thất, Tài chính", nhanThanh: "Mức đủ thông tin" }} />
       <MucHoSo tieuDe="Thuộc tính căn" phai={<Button variant="ghost" size="sm">Báo sai thông tin căn</Button>}>
         <CapGiaTri
@@ -216,7 +226,8 @@ const DUONG: Record<KieuBoCuc, [{ nhan: string; href: string }, { nhan: string }
 };
 
 export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; trangThai: TrangThaiMau; dauMan?: LoiDauMan }) {
-  // Trang mẫu mở sẵn hồ sơ dòng đầu ở Danh sách – chi tiết để ảnh chuẩn thấy ngăn trượt phải.
+  // Trang mẫu mở sẵn hồ sơ dòng đầu ở Danh sách – chi tiết để ảnh chuẩn thấy cột kéo chia.
+  const dienThoai = useIsMobile();
   const [chon, setChon] = useState<string | undefined>(kieu === "danh-sach-chi-tiet" && trangThai === "mac-dinh" ? CAN_MAU[0]?.ma : undefined);
   const chung = { trangThai: sangTai(trangThai), ngoaiTuyen: trangThai === "ngoai-tuyen", loi: LOI };
   const duong = DUONG[kieu];
@@ -254,7 +265,22 @@ export function ManMau({ kieu, trangThai, dauMan = "reui" }: { kieu: KieuBoCuc; 
               </>
             ),
           }}
-          cotPhu={can && <HoSoCan can={can} trongNgan />}
+          cotPhu={
+            can &&
+            (dienThoai ? (
+              <HoSoCan can={can} kieu="ngan" />
+            ) : (
+              <HoSoCan
+                can={can}
+                kieu="cot"
+                nut={
+                  <Button variant="ghost" size="icon-sm" aria-label="Đóng hồ sơ" onClick={() => setChon(undefined)}>
+                    <XIcon aria-hidden="true" />
+                  </Button>
+                }
+              />
+            ))
+          }
         >
           <KhungLuoiCan tieuDe="Lead đã nhập" dem="37 lead · 6 hôm nay" chon={chon} onChon={setChon} />
         </BoCuc>
