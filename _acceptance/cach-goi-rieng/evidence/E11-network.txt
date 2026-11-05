@@ -1,0 +1,19 @@
+34. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+35. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+36. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+37. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+39. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+40. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+54. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+55. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+56. [GET] http://localhost:3462/api/v1/listings => [200] OK
+100. [GET] http://localhost:3462/api/v1/listings => [200] OK
+101. [PUT] http://localhost:3462/api/v1/company/labels => [200] OK
+140. [GET] http://localhost:3462/api/v1/listings => [200] OK
+141. [PUT] http://localhost:3462/api/v1/company/labels => [200] OK
+142. [GET] http://localhost:3462/api/v1/listings => [200] OK
+181. [GET] http://localhost:3462/api/v1/listings => [200] OK
+182. [PUT] http://localhost:3462/api/v1/company/labels => [200] OK
+221. [GET] http://localhost:3462/api/v1/listings => [200] OK
+
+Note: 204 static requests not shown, run with "static" option to see them.
