@@ -75,6 +75,7 @@ const BANG = {
       `${W}/app/(app)/me/page.tsx`,
       `${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`,
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
+      `${W}/app/(app)/proto/ho-so-dien-thoai/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/settings/[section]/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
@@ -90,7 +91,7 @@ const BANG = {
   // Hàng 14: Bảng hàng rời trang tạm, nhóm màn mới (luật đợt 18).
   "bang-hang": { theoKhuon: [`${W}/app/(app)/inventory/page.tsx`, `${W}/app/(app)/inventory/views/[id]/page.tsx`], ngoaiLe: [] },
   // Hàng 17: Hồ sơ căn, nhóm màn mới — trang ba lối là màn mẫu tới khi màn thật rời trang tạm.
-  "ho-so-can": { theoKhuon: [`${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`, `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`, `${W}/app/(app)/units/[code]/page.tsx`], ngoaiLe: [] },
+  "ho-so-can": { theoKhuon: [`${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`, `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`, `${W}/app/(app)/proto/ho-so-dien-thoai/page.tsx`, `${W}/app/(app)/units/[code]/page.tsx`], ngoaiLe: [] },
   // Hàng 22: Hôm nay của đầu chủ, nhóm màn mới — /today theo vai và trang ba lối của nó.
   "hom-nay-dau-chu": { theoKhuon: [`${W}/app/(app)/today/page.tsx`], ngoaiLe: [] },
   // Hàng 42: Hôm nay của trưởng nhóm, nhóm màn mới — vùng dựng KhungTruongNhom; /today thuộc nhóm hom-nay-dau-chu.
@@ -142,6 +143,8 @@ const NHAN_DIEN_TRANG_THAI = [
   // Hồ sơ căn (hàng 17): trang ba lối và khuôn của nhóm; mục Ảnh và trang bấm được của nó (hàng 18).
   ...["mau-anh.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/anh-can-ba-ngan/${p}`),
   ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/cot-ho-so-can/${p}`),
+  // Hồ sơ căn trên điện thoại (hồ sơ ho-so-dien-thoai-product-detail-5): trang ba lối.
+  ...["ba-loi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/proto/ho-so-dien-thoai/${p}`),
   // Màn Gửi (hàng 34): khuôn, màn, trang khách xem trước.
   ...["khung.tsx", "man-gui.tsx", "page.tsx", "trang-khach.tsx"].map((p) => `${W}/app/(app)/shares/new/${p}`),
   // Màn Đã gửi (hàng 36): khuôn, màn, danh sách, chi tiết, thẻ Lần gửi.
@@ -439,7 +442,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "ho-so-can: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "ho-so-can: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-dau-chu: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-dau-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-truong-nhom: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
@@ -450,7 +453,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 20 ngoại lệ · 0 lệch",
       "trang-thai: 120 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
