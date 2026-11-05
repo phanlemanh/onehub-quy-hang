@@ -5,8 +5,10 @@ slug: man-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-05-man-lien-he-design.md
+approved_by: Manh Phan
+approved_at: 2026-11-05
 ---
 
 # Acceptance Contract: man-lien-he
