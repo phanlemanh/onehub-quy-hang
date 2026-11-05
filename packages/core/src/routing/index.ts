@@ -230,3 +230,6 @@ export function dueAlerts(fact: DeadlineFact, now: Date): AlertKind[] {
   if (fact.firstCalledAt === null && now.getTime() >= tu + fact.firstCallMinutes * PHUT) den.push("first_call_overdue");
   return den.filter((k) => !fact.raised.includes(k));
 }
+
+/** Nhãn mặc định của thực đơn chia lead (hàng 48) — tới khi có sổ từ vựng. */
+export { ALERT_AUDIENCE_NHAN, ROUTING_STRATEGY_NHAN, type NhanCachChia } from "./nhan";

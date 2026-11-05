@@ -1,0 +1,1 @@
+Driver: CDP script chay-ui.mjs (khong co read_network_requests). Truy cap app-scope qua lop boc fetch trong trang: PATCH /api/v1/company/settings; soPatch=0 o ca e5; 400 that o ca e5-400; 403 that o e5-403; mang hong gia lap o e5-mang. Khong loi ngoai y muon.
