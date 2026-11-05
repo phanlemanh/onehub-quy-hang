@@ -25,21 +25,21 @@
     "dia_chi": "/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh",
     "kho": 1440,
     "giao_dien": "sang",
-    "commit": "13383b9f198cf92db7759b0f6d87ffb471ede2f5"
+    "commit": "54060b5ad460cafe389730a29b2653961df1b272"
   },
   {
     "tep": "danh-sach-chi-tiet-1024.png",
     "dia_chi": "/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh",
     "kho": 1024,
     "giao_dien": "sang",
-    "commit": "13383b9f198cf92db7759b0f6d87ffb471ede2f5"
+    "commit": "54060b5ad460cafe389730a29b2653961df1b272"
   },
   {
     "tep": "danh-sach-chi-tiet-375.png",
     "dia_chi": "/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh",
     "kho": 375,
     "giao_dien": "sang",
-    "commit": "13383b9f198cf92db7759b0f6d87ffb471ede2f5"
+    "commit": "54060b5ad460cafe389730a29b2653961df1b272"
   },
   {
     "tep": "doc-1440.png",
@@ -158,7 +158,7 @@
     "dia_chi": "/mau/he-bo-cuc/xem?bo-cuc=danh-sach-chi-tiet&trang-thai=mac-dinh",
     "kho": 1440,
     "giao_dien": "toi",
-    "commit": "13383b9f198cf92db7759b0f6d87ffb471ede2f5"
+    "commit": "54060b5ad460cafe389730a29b2653961df1b272"
   },
   {
     "tep": "doc-1440-toi.png",
