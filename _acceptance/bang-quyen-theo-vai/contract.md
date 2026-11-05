@@ -103,7 +103,7 @@ bộ kiểm có sẵn của hàng 12 trong AC-9); đường vào hàng (route, l
 AC-9).
 
 Later: bảng quyền cho lead, liên hệ, nhu cầu khách, Lần gửi, vùng, cấu hình (G2–G6). Never: ma trận quyền do sàn tự vẽ —
-cả KW lẫn Follow Up Boss đều cố định nghĩa vai (Hỏi-2). Mỗi dòng có dòng `descope` ở sổ.
+cả KW lẫn Follow Up Boss đều cố định nghĩa vai (Hỏi-1). Mỗi dòng có dòng `descope` ở sổ.
 
 ## Đường đo
 
@@ -120,7 +120,7 @@ cả KW lẫn Follow Up Boss đều cố định nghĩa vai (Hỏi-2). Mỗi dò
 - Bảng quyền cho lead, liên hệ, nhu cầu khách, Lần gửi, vùng, cấu hình — G2–G6 thêm vào bảng cùng khuôn khi mở.
 - Bảng thoả thuận (G7 phần hai) — hàng vá riêng của dãy nền.
 - Đưa trục «Chỉ tôi» xuống cơ sở dữ liệu (quyết định của hàng 12 giữ nguyên).
-- Mã lỗi mới cho «không đủ cờ Sẵn sàng bán» — dùng lại `listing-agent-required` (Hỏi-3).
+- Mã lỗi mới cho «không đủ cờ Sẵn sàng bán» — dùng lại `listing-agent-required` (Hỏi-2).
 - Ai được gỡ hàng (`voided`): giữ nguyên «chỉ qua hoàn tác lần nhập» (hàng 66); G2 quyết. Lệnh gỡ của người không có Bảng
   hàng vẫn nhận 404 ở AC-3.
 
