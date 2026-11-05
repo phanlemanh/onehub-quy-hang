@@ -11,9 +11,9 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs rồi node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e1 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence"
-      - "Đối chiếu dòng e1 ở mỗi khổ (1440x900, 1280x800): |cot.top − khung.top| ≤ 2; |cot.bottom − innerHeight| ≤ 2; cot.left ≥ khung.right (cột ngoài khung bảng); thanh trên của vỏ có cùng toạ độ trước và sau khi mở cột, và mọi nút của nó (+Lead, đồng bộ, chuông, tài khoản, ô gõ mã căn) có elementFromPoint ở tâm là chính nó; coLopPhu = false"
+      - "Đối chiếu dòng e1 ở mỗi khổ (1440x900, 1280x800): |cot.top − khung.top| ≤ 2; |cot.bottom − vungLamViec.bottom| ≤ 2 (vungLamViec: khung nội dung của vỏ, [data-slot=sidebar-inset] hay phần tử main); cot.left ≥ khung.right (cột ngoài khung bảng); thanh trên của vỏ có cùng toạ độ trước và sau khi mở cột, và mọi nút của nó (+Lead, đồng bộ, chuông, tài khoản, ô gõ mã căn) có elementFromPoint ở tâm là chính nó; coLopPhu = false"
     target: "http://localhost:3477/inventory"
-    expected: "Hồ sơ là cột bên phải ngoài khung «Bảng hàng», mép trên ngang khung, mép dưới chạm đáy khung nhìn, thanh trên không bị che, không lớp phủ. Ảnh E1-1440.png, E1-1280.png."
+    expected: "Hồ sơ là cột bên phải ngoài khung «Bảng hàng», mép trên ngang khung, mép dưới chạm đáy vùng làm việc của vỏ, thanh trên không bị che, không lớp phủ. Ảnh E1-1440.png, E1-1280.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
 
   - id: E2
@@ -86,7 +86,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.ui-check
     steps:
-      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e7 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — chỗ thử có căn gán dau-chu-1 và căn chưa gán"
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e7 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — chỗ thử có căn gán dau-chu-1 và căn chưa gán; người xem là dau-chu-2 (không phải trưởng nhóm)"
       - "Đối chiếu dòng e7: tiêu đề cột có «Đầu chủ»; ô của căn đã gán = tên dau-chu-1, ô của căn chưa gán = «—»; ô của căn gán cho người đã rời sàn mẫu = «Đã rời sàn»; sau PATCH gán căn ấy sang dau-chu-2 qua /api/v1 và một lần kéo đồng bộ, ô đổi thành tên dau-chu-2, performance.navigation không đổi (không tải lại); ẩn cột ở trình đơn Cột thì tiêu đề «Đầu chủ» biến mất"
     target: "http://localhost:3477/inventory"
     expected: "Cột Đầu chủ hiện đúng tên, «—» khi chưa gán, đổi theo lần gán mà không tải lại trang, ẩn được. Ảnh E7-cot-dau-chu.png."
@@ -135,3 +135,12 @@ evals:
     target: "http://localhost:3477/inventory"
     expected: "Chờ tải và lỗi nằm trong cột hồ sơ, bảng vẫn đủ dòng và dùng được, «Thử lại» đưa hồ sơ về. Ảnh E10-cho-tai.png, E10-loi.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api
+    paths: ["packages/api/src/**", "packages/api/test-db/**"]
+    expected: "exit 0; ca «tên thành viên: mọi vai của sàn đọc được, chỉ mã và tên» trong một tệp test của packages/api có mặt và ok — ma trận viết trước: đầu chủ, đầu khách, trưởng nhóm, telesales của sàn A đọc được danh sách thành viên sàn A (200), mỗi phần tử deepEqual tập khoá {id, name} (không email, không phone); người sàn B nhận danh sách không chứa thành viên nào của A; lời gọi không đăng nhập 401; chiều đỏ cùng ca: thêm khoá email vào phần tử trả về thì assert tập khoá nêu «email»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

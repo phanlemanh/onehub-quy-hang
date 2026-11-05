@@ -4,11 +4,11 @@ feature: "Đầu chủ mở hồ sơ căn từ Bảng hàng thì hồ sơ là m�
 slug: bang-hang-danh-sach-chi-tiet
 owner: phanlemanh@gmail.com
 risk_tier: T2
-surfaces: [ui]
-status: approved
+surfaces: [ui, api]
+status: draft
 design_doc: docs/superpowers/specs/2026-11-05-bang-hang-danh-sach-chi-tiet-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-05
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: bang-hang-danh-sach-chi-tiet
@@ -29,7 +29,7 @@ Source input: `docs/plan/lo-trinh.json` hàng 105 · `_acceptance/bang-hang-danh
   Given đầu chủ mẫu ở Bảng hàng, khổ 1440 × 900 và 1280 × 800,
   When bấm một dòng căn,
   Then hồ sơ căn mở thành một cột bên phải, ngoài khung «Bảng hàng»: mép trên cột ngang mép trên khung «Bảng hàng», mép dưới
-  cột chạm đáy khung nhìn; thanh trên của vỏ (gõ mã căn, +Lead, đồng bộ, chuông, tài khoản) giữ nguyên vị trí và không bị
+  cột chạm đáy vùng làm việc của vỏ (vỏ giữ lề và viền đáy của nó); thanh trên của vỏ (gõ mã căn, +Lead, đồng bộ, chuông, tài khoản) giữ nguyên vị trí và không bị
   che; không có lớp phủ.
 
 - **AC-2** — Bảng co sang trái, công cụ vẫn thấy, kéo chia được.
@@ -62,7 +62,9 @@ Source input: `docs/plan/lo-trinh.json` hàng 105 · `_acceptance/bang-hang-danh
 - **AC-7** — Cột Đầu chủ (nguồn AC-4 hàng 89). (cross-layer)
   Given sàn mẫu có căn đã gán đầu chủ và căn chưa gán,
   When mở Bảng hàng, rồi gán một căn sang đầu chủ khác qua API,
-  Then bảng có cột «Đầu chủ» hiện tên thành viên đang giữ căn, căn chưa gán hiện «—», căn có đầu chủ đã rời sàn hiện «Đã
+  Then mọi vai có Bảng hàng (đầu chủ, đầu khách, trưởng nhóm) đọc được tên thành viên của sàn mình qua một đường đọc chỉ trả
+  mã và tên (không email, không số điện thoại), người sàn khác không đọc được; bảng có cột «Đầu chủ» hiện tên thành viên
+  đang giữ căn, căn chưa gán hiện «—», căn có đầu chủ đã rời sàn hiện «Đã
   rời sàn» (Hỏi-3); sau một lần kéo của bộ đồng bộ, ô của căn vừa gán hiện tên người nhận mà không tải lại trang; cột ẩn
   được ở trình đơn Cột.
 
@@ -93,7 +95,8 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 - Trục khổ: 1440 × 900 | 1280 × 800 | 375 (AC-1, AC-2, AC-4, AC-6).
 - Trục trạng thái cột: đóng | mở | đổi căn | kéo chạm biên | chờ tải | lỗi tải (AC-1, AC-2, AC-3, AC-10).
 - Trục bố cục: danh sách – chi tiết (cột kéo chia) | ngăn báo, lọc điện thoại, luồng nhiều bước (ngăn nổi) (AC-5).
-- Trục dữ liệu cột Đầu chủ: đã gán | chưa gán | đầu chủ đã rời sàn | vừa gán lại (AC-7).
+- Trục dữ liệu cột Đầu chủ: đã gán | chưa gán | đầu chủ đã rời sàn | vừa gán lại | người xem là đầu chủ, đầu khách,
+  trưởng nhóm | người sàn khác (AC-7).
 - Trục tài liệu: ADR | Tham chiếu | thiết kế | khuôn (AC-8, AC-9).
 - Later: J / K đi căn trước · sau mà không đóng cột; nhớ bề rộng cột theo người. Never: lớp phủ chặn bảng khi hồ sơ mở.
 
