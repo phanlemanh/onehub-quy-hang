@@ -47,6 +47,7 @@ describe("tiêu đề vỏ điện thoại", () => {
       ["today", HOME_LABEL.today],
       ["inventory", HOME_LABEL.inventory],
       ["shares", "Gửi"],
+      ["contacts", HOME_LABEL.contacts],
       ["team", HOME_LABEL.team],
       ["settings", HOME_LABEL.settings],
     ];

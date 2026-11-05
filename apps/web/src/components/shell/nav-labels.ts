@@ -2,6 +2,7 @@ import { type Action, type Home, HOME_LABEL as HOME_NAME, type Tab } from "@quy-
 import {
   BellIcon,
   CalendarCheckIcon,
+  ContactIcon,
   FileSpreadsheetIcon,
   LayoutGridIcon,
   type LucideIcon,
@@ -18,6 +19,7 @@ export const HOME_ITEM: Record<Home, { label: string; icon: LucideIcon }> = {
   today: { label: HOME_NAME.today, icon: CalendarCheckIcon },
   inventory: { label: HOME_NAME.inventory, icon: LayoutGridIcon },
   shares: { label: HOME_NAME.shares, icon: SendIcon },
+  contacts: { label: HOME_NAME.contacts, icon: ContactIcon },
   team: { label: HOME_NAME.team, icon: UsersIcon },
   settings: { label: HOME_NAME.settings, icon: SettingsIcon },
 };
