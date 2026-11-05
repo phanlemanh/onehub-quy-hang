@@ -5,10 +5,10 @@ slug: bang-quyen-theo-vai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-05-bang-quyen-theo-vai-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-05
 ---
 
 # Acceptance Contract: bang-quyen-theo-vai
