@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: e6e75e3093cb2087f720431a447c3f6b28bf9857
+verified_commit: 3bcbea243b838573d9ffc912997f728c4493493d
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -246,3 +246,7 @@ Round 4: tất cả eval PASS, không còn eval đỏ; verdict PASS.
 ### Re-pin lần 1 — 2026-11-05, do gộp nhánh chính vào nhánh trước khi gộp PR 129
 run_id: repin-20261105T080320Z-72767
 sha: e6e75e3093cb2087f720431a447c3f6b28bf9857 · suites: 7 lệnh exit 0 · evals: 13/13 eval máy đạt kỳ vọng · ngoài làn máy: E9, E9b · diff chạm vật đo ngoài làn máy: E9, E9b — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-9
+
+### Re-pin lần 2 — 2026-11-05, do gộp nhánh chính lần ba trước khi gộp PR 129
+run_id: repin-20261105T081052Z-21233
+sha: 3bcbea243b838573d9ffc912997f728c4493493d · suites: 7 lệnh exit 0 · evals: 13/13 eval máy đạt kỳ vọng · ngoài làn máy: E9, E9b · diff chạm vật đo ngoài làn máy: E9 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-9
