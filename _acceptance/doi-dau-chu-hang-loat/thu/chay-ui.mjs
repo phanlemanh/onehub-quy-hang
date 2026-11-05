@@ -102,13 +102,15 @@ try {
   await chup(tn, "hop-hoi");
 
   // 2. Đổi — không tải lại trang; mở lại hộp để đọc «đang giữ».
-  await tn.tinh(`(() => { const b = [...document.querySelectorAll('[role="alertdialog"] button')].find((x) => x.innerText.trim() === "Đổi đầu chủ"); b?.click(); return !!b; })()`);
   const dau = Date.now();
+  // Dấu trên window đặt ngay trước khi bấm xác nhận: trang tải lại hay điều hướng thì dấu mất.
+  await tn.tinh(`window.__dauDoi = ${dau}`);
+  await tn.tinh(`(() => { const b = [...document.querySelectorAll('[role="alertdialog"] button')].find((x) => x.innerText.trim() === "Đổi đầu chủ"); b?.click(); return !!b; })()`);
   await tn.cho(`[...document.querySelectorAll("[data-sonner-toast]")].some((x) => x.innerText.includes("Đã đổi đầu chủ"))`, 30000);
   const thongBao = await tn.tinh(`[...document.querySelectorAll("[data-sonner-toast]")].map((x) => x.innerText.trim()).find((x) => x.includes("Đã đổi đầu chủ"))`);
   await chup(tn, "sau-doi");
   const db1 = dung("--doc");
-  ra("e9-sau-doi", { thongBao, giay: Math.round((Date.now() - dau) / 100) / 10, khongTaiLai: (await tn.tinh("performance.getEntriesByType('navigation').length")) === 1 });
+  ra("e9-sau-doi", { thongBao, giay: Math.round((Date.now() - dau) / 100) / 10, khongTaiLai: (await tn.tinh("window.__dauDoi ?? null")) === dau });
   ra("e9-sau-doi-db", db1);
 
   // 3. Hoàn tác trên thông báo.
@@ -117,6 +119,11 @@ try {
   const tbHoanTac = await tn.tinh(`[...document.querySelectorAll("[data-sonner-toast]")].map((x) => x.innerText.trim()).find((x) => x.includes("Đã trả lại"))`);
   await chup(tn, "hoan-tac");
   ra("e9-hoan-tac", { thongBao: tbHoanTac, db: dung("--doc") });
+  // Đối chứng dương cho ô khongTaiLai: tải lại thật thì dấu phải mất.
+  await tn.tinh("location.reload()");
+  await ngu(1500);
+  await tn.cho("document.readyState === 'complete'", 30000);
+  ra("e9-doi-chung-tai-lai", { dauConSauTaiLai: (await tn.tinh("window.__dauDoi ?? null")) !== null });
   tn.dong();
 
   // 4. Đầu chủ đăng nhập, tích căn: không có lệnh.

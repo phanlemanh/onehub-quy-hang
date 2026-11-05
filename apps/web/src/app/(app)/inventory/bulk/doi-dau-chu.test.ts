@@ -174,19 +174,18 @@ test("E4b hộp gửi thông báo đổi bằng thongBaoDoi (nối dây)", () =>
   assert.match(doc("hop-doi-dau-chu.tsx"), /toast\(chu, thongBaoDoi\(id, tenNhan, hoanTac\)\)/);
 });
 
-const DAU_CHU = [
-  { userId: "00000000-0000-4000-8000-0000000000d1", displayName: "[Tên] Đầu chủ 1" },
-  { userId: "00000000-0000-4000-8000-0000000000d2", displayName: "[Tên] Đầu chủ 2" },
-];
+const D1 = { userId: "00000000-0000-4000-8000-0000000000d1", displayName: "[Tên] Đầu chủ 1" };
+const D2 = { userId: "00000000-0000-4000-8000-0000000000d2", displayName: "[Tên] Đầu chủ 2" };
+const DAU_CHU = [D1, D2];
 /** Chữ người dùng thấy trên nút chọn (ô select-value) của ô chọn đã dựng. */
 const oChon = (nhan: string | null, dauChu = DAU_CHU) =>
   renderToStaticMarkup(createElement(ChonNguoiNhan, { dauChu: dauChu as never, nhan, onDoi: () => {} })).match(/data-slot="select-value"[^>]*>([^<]*)</)?.[1] ?? null;
 
 test("ô chọn người nhận (dựng thật) hiện tên đầu chủ đã chọn, không hiện mã người", () => {
-  assert.equal(oChon(DAU_CHU[1].userId), "[Tên] Đầu chủ 2");
+  assert.equal(oChon(D2.userId), "[Tên] Đầu chủ 2");
   assert.equal(oChon(null), "Chọn đầu chủ mới");
 });
 
 test("ô chọn người nhận đối chứng đỏ: danh sách không có người đã chọn → không hiện được tên", () => {
-  assert.notEqual(oChon(DAU_CHU[1].userId, [DAU_CHU[0]]), "[Tên] Đầu chủ 2");
+  assert.notEqual(oChon(D2.userId, [D1]), "[Tên] Đầu chủ 2");
 });
