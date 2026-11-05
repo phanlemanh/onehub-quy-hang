@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fa3ec594d827cc9a257178fa93139dbc322fb5b9
+verified_commit: 942e76185f1bf63e84284fa91772101770885085
 human_signoff:
 ---
 
@@ -149,3 +149,7 @@ none — mọi eval chạy một lần, xác định, không có phương sai.
 Round 1: AC-2 lỗi «Xem thêm» bấm hai lần nối trang hai lần — trả về triển khai, đã sửa.
 Round 2: PASS ở E2, E4, E5, E6 — hai mục ngoài hợp đồng ghi lại.
 Round 3: PASS — E1 và E7 chạy lại sau khi thêm ca E7 lớp máy chủ; E2, E4, E5, E6 mang sang từ round 2; E3 giữ panel round 2.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main có #134 trước khi gộp PR #136
+run_id: repin-20261105T124806Z-50682
+sha: 942e76185f1bf63e84284fa91772101770885085 · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · ngoài làn máy: E3, E6
