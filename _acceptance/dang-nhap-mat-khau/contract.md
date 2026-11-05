@@ -5,7 +5,7 @@ slug: dang-nhap-mat-khau
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-mat-khau-design.md

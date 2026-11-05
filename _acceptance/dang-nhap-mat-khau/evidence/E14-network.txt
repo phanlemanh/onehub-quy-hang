@@ -1,8 +1,0 @@
-E14 network (playwright, 375x812, dev 3460 - DB container quy-hang-db-L; 3492 khong len duoc vi next dev khoa 1 server/thu muc)
-Luot 1 dau-chu-2 /settings/personal:
- POST sign-in/email-otp 200; GET me/devices 200 x2; GET me 200 x2; GET listings 200
- GET push/public-key 500 x2 (app-origin; 'Thong bao chua duoc cau hinh' - khong lien quan sign-out)
- POST /api/v1/auth/sign-out -> FAIL net::ERR_FAILED (bi chan, dung y)
- sau go chan + Thu lai: POST /api/v1/auth/sign-out 200 -> URL /login
-Luot 2 hai-san /select-company: POST sign-out FAIL (bi chan, dung y); khong request khac fail.
-Console errors: khong doc rieng (driver run_code).
