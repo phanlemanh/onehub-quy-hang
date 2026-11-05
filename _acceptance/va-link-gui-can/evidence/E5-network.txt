@@ -1,0 +1,7 @@
+E5 network (playwright, app-origin, non-static):
+200 GET /inventory?_rsc
+200 GET /api/v1/catalog (x4)
+200 GET /api/v1/company/member-names (x2)
+200 POST /__nextjs_original-stack-frames
+Console error (1): Base UI nativeButton warning (not network)
+No failed requests.
