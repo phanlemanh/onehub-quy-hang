@@ -101,7 +101,9 @@ export const SO_DIEM: readonly DiemSo[] = [
   { so: "17", khoa: "customer_page.interest_button", ten: "Nút «Quan tâm» trên trang khách", kieu: { loai: "bool" }, macDinh: true, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: null },
   // A5. Cách gọi riêng, trạng thái riêng, trường riêng
   { so: "18", khoa: "labels.field.<trường chuẩn>", ten: "Tên hiển thị của một trường chuẩn", kieu: { loai: "text", toiDa: 40 }, macDinh: null, coTheTrong: true, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "45" },
-  { so: "19", khoa: "values.aliases", ten: "Giá trị riêng neo vào giá trị chuẩn", kieu: { loai: "map", bang: "company_value_aliases" }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "45, 70" },
+  { so: "19", khoa: "values.aliases", ten: "Giá trị riêng neo vào giá trị chuẩn", kieu: { loai: "map", bang: "company_value_aliases" }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "70" },
+  // Hàng 45 (Hỏi-1): tên hiện của từng giá trị chuẩn — chiều HIỆN; #19 là chiều VÀO (từ điển gõ tắt của hàng 70).
+  { so: "37", khoa: "labels.value.<trường chuẩn>", ten: "Tên hiển thị của các giá trị chuẩn của một trường tập đóng", kieu: { loai: "map", bang: "company_settings" }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "45" },
   // Hỏi-1: tắt (null) là mặc định; bật thì 2–10 người.
   { so: "20", khoa: "values.auto_accept_after_choices", ten: "Tự nhận đề xuất từ điển khi đủ số người cùng chọn", kieu: { loai: "int", donVi: "người", min: 2, max: 10 }, macDinh: null, coTheTrong: true, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "de_xuat", man: "70" },
   { so: "21", khoa: "labels.status.<nhãn>", ten: "Nhãn trạng thái riêng neo vào trạng thái chuẩn", kieu: { loai: "map", bang: null }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "46" },
