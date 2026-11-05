@@ -1,0 +1,163 @@
+schema_version: 1
+feature_slug: trang-nhom-moi-gioi
+# Lõi (thân trang môi giới, cột, định nghĩa phí, mức chia) chấm thuần ở packages/core. Route công khai, luồng Gửi, cài đặt
+# sàn và migration 048 chấm trên Postgres dãy qua API thật (packages/api/test-db/trang-nhom-moi-gioi/) và gọi thẳng bảng
+# (packages/db/tests/isolation.test.mjs). Tệp Excel và ảnh chấm thuần ở apps/web. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/trang-nhom-moi-gioi/ ca «môi giới: mở link thấy bảng» có mặt và ok — Đầu khách tạo Lần gửi nhóm môi giới ba căn Active qua POST /api/v1/shares; GET /api/v1/public/shares/<mã> không cookie → 200, nguoiNhan='nhom_moi_gioi', cot bằng đúng danh sách cột ra của lõi cho nhóm môi giới (so mảng), can theo thứ tự gửi (so mảng mã), mỗi căn có unitNumber khác rỗng; bảng viết trước ba trạng thái căn (Active · đã cọc · đã bán) trong cùng một bộ — mỗi dòng so khoá giá của căn trong thân với kết quả banRaNgoai của chính căn ấy (đã bán → không giá), đếm 3; đối chứng: Lần gửi khách riêng cùng căn → không có khoá cot. Chiều đỏ: route bỏ khoá cot → ca đỏ nêu «trang môi giới thiếu cột»."
+    paths: [packages/api/src/public/**, packages/core/src/sharing/**, packages/api/test-db/trang-nhom-moi-gioi/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/s/ khẳng định trang chọn cách hiện theo người nhận của thân: nhom_moi_gioi → bảng môi giới (thành phần của apps/web/src/app/s/broker/), khach_rieng → trang thẻ như cũ — bảng hai dòng, đếm 2; và bảng môi giới dựng tiêu đề cột đúng bằng than.cot (so mảng). Chiều đỏ: luôn trả trang thẻ → ca đỏ nêu «link nhóm môi giới chưa ra bảng»."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/sharing/ bảng ca viết trước của định nghĩa phí phủ trục «định nghĩa phí» (một khoản · hai khoản · đủ ba khoản · tên gọi riêng của sàn cho nhãn Bao phí): mỗi dòng so tên chuẩn và danh sách khoản bằng mảng mong đợi, đếm bằng số dòng bảng; đối chứng: người nhận khách riêng không có khoá dinhNghiaPhi. Chiều đỏ: bỏ đọc fee.inclusion (luôn đủ ba) → ca đỏ nêu «định nghĩa phí không theo sàn»."
+    paths: [packages/core/src/sharing/**, packages/core/src/labels/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «môi giới: định nghĩa phí chụp lúc gửi» có mặt và ok — Quản trị PATCH /api/v1/company/settings fee.inclusion = một khoản; Đầu khách gửi Lần gửi A cho nhóm môi giới → GET công khai của A kể đúng một khoản; Quản trị PATCH lại đủ ba → A vẫn kể một khoản (so mảng), Lần gửi B gửi sau kể đủ ba; một dòng shares chèn thẳng với fee_inclusion rỗng (Lần gửi trước 048) → kể theo cấu hình hiện tại. Chiều đỏ: route đọc cấu hình hiện tại thay bản chụp trên Lần gửi → ca đỏ nêu «định nghĩa phí của bộ đã gửi đổi theo sàn»."
+    paths: [packages/api/src/public/**, packages/core/src/sharing/**, packages/api/test-db/trang-nhom-moi-gioi/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «môi giới: mức chia của bộ» có mặt và ok — bảng viết trước trục mức chia: (mặc định 50, gửi không sửa) → trang 50 · (mặc định 50, gửi 40) → 40 · (mặc định trống, gửi trống) → không khoá mucChia · (gửi 40, rồi Quản trị đổi mặc định thành 30) → vẫn 40 · (khách riêng, gửi kèm 40) → 400 và không dòng shares mới; mỗi dòng một assert trên thân GET công khai, đếm bằng số dòng bảng; cột shares.commission_split_pct khớp giá trị gửi. Chiều đỏ: route đọc mặc định hiện tại của sàn thay giá trị lưu trên Lần gửi → ca đỏ nêu «bộ đã gửi đổi theo mặc định mới»."
+    paths: [packages/api/src/public/**, packages/api/src/contacts/**, packages/core/src/sharing/**, packages/db/migrations/048_*, packages/api/test-db/trang-nhom-moi-gioi/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/(app)/shares/new/ khẳng định: người nhận nhóm môi giới → thân POST mang commissionSplitPct bằng mặc định của sàn khi người gửi không sửa, bằng giá trị sửa khi sửa, vắng khi để trống; người nhận khách riêng → thân không có khoá ấy — bảng bốn dòng, đếm 4. Chiều đỏ: luôn gửi mặc định → ca đỏ nêu «sửa mức chia không vào Lần gửi»."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/sharing/ ca «ẩn mức chia ở lõi»: cùng Lần gửi có mức 40 — hide=false → mucChia=40; hide=true → khoá mucChia vắng hẳn (Object.hasOwn false) và JSON.stringify của thân không chứa '40' ở khoá nào liên quan mức chia; đối chứng dương ngay trong ca. Chiều đỏ: lõi trả mucChia kể cả khi ẩn → ca đỏ nêu «mức chia lọt khi sàn ẩn»."
+    paths: [packages/core/src/sharing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «môi giới: sàn ẩn mức chia» có mặt và ok — Lần gửi mức 40; Quản trị PATCH broker_page.hide_commission_split=true → GET công khai không có khoá mucChia (Object.hasOwn false); PATCH false → mucChia=40 trở lại. Chiều đỏ: route bỏ đọc hide → ca đỏ nêu «mức chia lọt khi sàn ẩn»."
+    paths: [packages/api/src/public/**, packages/core/src/sharing/**, packages/api/test-db/trang-nhom-moi-gioi/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/s/broker/ dựng Excel từ một thân mẫu ba căn bằng đúng hàm nút «Tải Excel» gọi, rồi đọc ngược tệp (round-trip qua bộ đọc xlsx): dòng tiêu đề cột bằng than.cot (so mảng), ba dòng căn theo thứ tự thân với giá trị ô bằng giá trị bảng trang (so từng ô), phần đầu có tên sàn, định nghĩa phí, mức chia; căn đã bán trong thân → ô giá rỗng như bảng trang; thân không có mucChia → phần đầu không có dòng mức chia (đối chứng). Chiều đỏ: bỏ một cột khi ghi → ca đỏ nêu «cột Excel lệch bảng trang»."
+    paths: ["apps/web/src/app/s/broker/**", packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/s/broker/ gọi đúng hàm vẽ của nút «Tải ảnh» trên một canvas giả ghi lại lệnh fillText, rồi khẳng định chữ tiêu đề cột được vẽ bằng than.cot (so mảng, không cột nào bị cắt) và có đủ dòng căn; và mô hình vẽ ảnh (danh sách dòng chữ mà bộ vẽ canvas nhận) dựng từ cùng thân: tiêu đề cột bằng than.cot, ba dòng căn theo thứ tự, phần đầu như Excel; thân ẩn mức chia → không dòng mức chia. Chiều đỏ: bộ vẽ bỏ cột cuối → ca đỏ nêu «cột ảnh lệch bảng trang»."
+    paths: ["apps/web/src/app/s/broker/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ rò rỉ có ca cho trang môi giới: thân route công khai (khaiBaiRoRi gọi route thật với nguồn mang căn mồi), mô hình Excel và mô hình ảnh dựng từ thân ấy, và tệp apps/web/src/app/s/broker/*.ro-ri.test.ts quét mồi trên mã nguồn trang — không chuỗi mồi nào (số chủ nhà, tên chủ, giá đáy, ảnh sổ, ghi chú nội bộ, người giữ) có mặt; đối chứng dương: mồi có mặt trong căn nội bộ đầu vào. Chiều đỏ: thân ghép một trường nội bộ ngoài banRaNgoai → ca đỏ nêu tên mồi lọt."
+    paths: ["apps/web/src/app/s/**", packages/api/src/public/**, packages/core/src/sharing/**, packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «môi giới: cài đặt sàn» có mặt và ok — Quản trị PATCH broker_page.commission_split_pct=45 và hide=true → 200, GET đọc lại đúng; 120 và -1 → 400 kèm lý do, giá trị cũ giữ nguyên; null → 200 (để trống); bảng vai viết trước (Đầu chủ, Trưởng nhóm, Telesales, Đầu khách) PATCH → 403, không cookie → 401, mỗi ô một assert, đếm 5. Chiều đỏ: bỏ kiểm khoảng → ca đỏ nêu «mức chia ngoài 0–100 lưu được»."
+    paths: [packages/api/src/settings/**, packages/core/src/config/**, packages/api/test-db/trang-nhom-moi-gioi/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài của apps/web/src/app/(app)/settings/ khẳng định mục «Trang môi giới» có trong cột Cài đặt sàn và trang của nó gọi chanMucSan rồi chuyển hướng (bài quét chung cai-dat.test.ts nhận trang mới); vai không quản trị → đường Cá nhân kèm chi-quan-tri=1, Quản trị → không chuyển. Chiều đỏ: trang bỏ chanMucSan → ca đỏ nêu tên trang thiếu chặn."
+    paths: ["apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ca «shares (048): mức chia» — bảng viết trước chèn qua app.create_share dưới vai quy_hang_app: khách riêng kèm mức 40 → lỗi ràng buộc ghim tên; fee_inclusion chứa khoản ngoài tập đóng → lỗi ràng buộc ghim tên; nhóm môi giới mức 120 → lỗi ràng buộc ghim tên; nhóm môi giới mức -1 → lỗi; đối chứng dương: nhóm môi giới mức 40 và mức null chèn được; quy_hang_app execute được hàm mới; sàn B không đọc được dòng của sàn A (đếm 0, đối chứng A đếm 1); và lệnh migrate chạy hai lần không áp lại 048. Chiều đỏ: bỏ ràng buộc khách riêng → ca đỏ nêu tên ràng buộc."
+    paths: [packages/db/migrations/048_*, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    setup:
+      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Dựng dữ liệu qua máy chủ đang chạy: Quản trị đặt mức chia mặc định 50 ở Cài đặt › Sàn › Trang môi giới; Đầu khách gửi ba căn cho nhóm môi giới, sửa mức thành 40; một Lần gửi khác cho khách riêng"
+    steps:
+      - "Mở link nhóm môi giới ở khổ máy tính khi chưa đăng nhập: đầu trang có tên sàn, người gửi, định nghĩa phí, «Mức chia: 40%»; bảng ba dòng có mã căn"
+      - "Bấm «Tải Excel» và «Tải ảnh»: hai tệp tải về (xem mạng hoặc tải xuống)"
+      - "Quản trị bật «Ẩn mức chia», mở lại link: không còn dòng mức chia"
+      - "Mở link khách riêng: trang thẻ như cũ"
+      - "Mở link nhóm môi giới ở khổ điện thoại: bảng cuộn ngang, khung không vỡ"
+      - "Mở ảnh PNG vừa tải và chụp lại: đủ tiêu đề cột như bảng trang, ba dòng căn, phần đầu có mức chia"
+      - "Trong bộ có một căn đã bán: dòng mờ, không giá"
+      - "Mở link đã tắt và một mã sai: thấy «Link không còn mở» trong khung trang"
+      - "Giả lỗi đọc (tắt API tạm hay chặn route trong công cụ trình duyệt): thấy «Chưa tải được — thử lại»"
+      - "Giả lỗi dựng tệp (chặn bộ ghi trong công cụ trình duyệt): câu báo tại nút tải, bảng vẫn còn"
+      - "Ở mục Trang môi giới nhập 120 rồi Lưu: lý do hiện dưới ô"
+      - "Mở /settings/broker-page bằng vai Đầu khách: về trang Cá nhân kèm câu báo chỉ Quản trị sàn"
+    cmd: config:executors.ui-check
+    expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console; mạng không có gọi tới đường nội bộ khi đang chưa đăng nhập"
+    paths: ["apps/web/src/app/s/**", "apps/web/src/app/(app)/settings/broker-page/**"]
+    evidence_required: [run_id, screenshot, observed]
+
+  - id: E10c
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/s/broker/ ghim chữ của từng trạng thái trong bảng trạng thái thiết kế — bảng viết trước sáu trạng thái trang môi giới (đang tải, có dữ liệu, ẩn mức chia, link tắt, lỗi tạm, tải lỗi) → chữ mong đợi, đếm 6; mỗi dòng dựng thành phần ở trạng thái ấy và tìm đúng chuỗi. Chiều đỏ: đổi chữ «Link không còn mở» → ca đỏ nêu tên trạng thái."
+    paths: ["apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0; lưới khuôn không báo lệch mới ở nhóm trang-khach và cai-dat-san cho tệp vòng chạm."
+    paths: ["apps/web/src/app/s/**", "apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
