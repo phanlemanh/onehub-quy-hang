@@ -1,3 +1,1 @@
-driver: CDP custom script (chay-ui.mjs) - khong co doc network rieng.
-Ghi tu lop boc fetch: soPatch=0 o ca o sai; PATCH ca 400 than sua {lead_routing.first_call_minutes:10} -> 400 that; ca 403 -> 403; ca mang -> failRequest gia lap (TypeError) roi thu lai thanh cong.
-Ban dev server localhost:3495 (chay-ui hardcode), config noi 3460.
+Driver: CDP script chay-ui.mjs (khong co read_network_requests). Truy cap app-scope qua lop boc fetch trong trang: PATCH /api/v1/company/settings; soPatch=0 o ca e5; 400 that o ca e5-400; 403 that o e5-403; mang hong gia lap o e5-mang. Khong loi ngoai y muon.

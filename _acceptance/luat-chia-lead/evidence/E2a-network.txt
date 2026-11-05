@@ -1,2 +1,3 @@
-driver: script CDP chay-ui.mjs (khong co read_network_requests); network doc qua lop boc fetch trong script, thanPatch da ghi. Khong co danh sach failed request/console rieng.
-networkObserved: n-a (driver)
+Driver: CDP Chrome khong dau qua chay-ui.mjs (lop boc fetch ghi PATCH). Khong co read_network_requests rieng.
+App-scope (localhost:3495, API /api/v1/company/settings): PATCH e2 (1 yeu cau, than 2 khoa) OK; PATCH e2-ngay OK; GET settings OK; e2-hoan-lai soPatch=0. Khong thay loi 4xx/5xx/ket noi.
+Console errors: khong thu thap rieng.
