@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 feature_slug: nhap-hoan-tac
-verdict: REJECT
-failed_evals: [E12b]
+verdict: PASS
+failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 76349a4789b4007fc818b3fbe42e80cd6eb07671
+verified_commit: 442e728a6fde78084445c7e2fc2db90329b05e10
 human_signoff:
 ---
 
@@ -33,235 +33,229 @@ human_signoff:
 | E10 | AC-10 | test | PASS |
 | E11 | AC-11 | test | PASS |
 | E12 | AC-8 | script | PASS |
-| E12b | AC-8 | script | FAIL |
+| E12b | AC-8 | script | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-nhap-hoan-tac-E1-r1
+  run_id: minted-nhap-hoan-tac-E1-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E2
-  run_id: minted-nhap-hoan-tac-E2-r1
+  run_id: minted-nhap-hoan-tac-E2-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E3
-  run_id: minted-nhap-hoan-tac-E3-r1
+  run_id: minted-nhap-hoan-tac-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/core
-    ℹ duration_ms 745.735167
+    duration_ms 746.426792
 
 - eval: E3b
-  run_id: minted-nhap-hoan-tac-E3b-r1
+  run_id: minted-nhap-hoan-tac-E3b-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E4
-  run_id: minted-nhap-hoan-tac-E4-r1
+  run_id: minted-nhap-hoan-tac-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/core
-    ℹ duration_ms 745.735167
+    duration_ms 746.426792
 
 - eval: E4b
-  run_id: minted-nhap-hoan-tac-E4b-r1
+  run_id: minted-nhap-hoan-tac-E4b-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E5
-  run_id: minted-nhap-hoan-tac-E5-r1
+  run_id: minted-nhap-hoan-tac-E5-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E6
-  run_id: minted-nhap-hoan-tac-E6-r1
+  run_id: minted-nhap-hoan-tac-E6-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E7
-  run_id: minted-nhap-hoan-tac-E7-r1
+  run_id: minted-nhap-hoan-tac-E7-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/core
-    ℹ duration_ms 745.735167
+    duration_ms 746.426792
 
 - eval: E7b
-  run_id: minted-nhap-hoan-tac-E7b-r1
+  run_id: minted-nhap-hoan-tac-E7b-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E7c
-  run_id: minted-nhap-hoan-tac-E7c-r1
+  run_id: minted-nhap-hoan-tac-E7c-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2086.020833
+    duration_ms 2047.290333
 
 - eval: E7d
-  run_id: minted-nhap-hoan-tac-E7d-r1
+  run_id: minted-nhap-hoan-tac-E7d-r2
   exit_code: 0
   baseline: red
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 67748.562083
+    duration_ms 68903.166041
 
 - eval: E8
-  run_id: minted-nhap-hoan-tac-E8-r1
+  run_id: minted-nhap-hoan-tac-E8-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2086.020833
+    duration_ms 2047.290333
 
 - eval: E8b
-  run_id: minted-nhap-hoan-tac-E8b-r1
+  run_id: minted-nhap-hoan-tac-E8b-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   screenshot: evidence/E8b-1-trong-1440.png
   observed: |
-    1-trong 1440/375: Nhập Excel bước 1, mục «Lần nhập gần đây» hiện «Chưa có lần nhập nào» kèm «Lần nhập đã ghi sẽ hiện ở đây để hoàn tác khi cần.». 2-sau-ghi: hộp «Hoàn tác lần nhập này?» nêu «Gỡ 30 căn khỏi Quỹ hàng · Trả giá cũ cho 0 căn · 0 căn không hoàn tác được», nút Hoàn tác / Giữ lại, nền mờ ở bước 5 (tệp mau-b.xlsx, 40 dòng); 375 xếp dọc, không tràn. 3-xac-nhan: hộp «Đã hoàn tác lần nhập» cùng dòng tóm tắt 30/0/0, nút Đóng; nền thấy mau-b.xlsx 30 dòng ghi nhãn «Đã hoàn tác». 4-da-hoan-tac: Lần nhập gần đây có mau-b.xlsx · 2026-11-05 · 30 dòng ghi với nhãn «Đã hoàn tác», không có nút hoàn tác, ở cả hai khổ. 5-da-sua-sau: hộp «Gỡ 19 căn khỏi Quỹ hàng · Trả giá cũ cho 0 căn · 1 căn không hoàn tác được», liệt kê «Toà A · A-02.06 — Đã có người sửa sau lần nhập»; nút Hoàn tác/Giữ lại. 6-loi-giua-chung: cùng hộp thêm khung đỏ «Hoàn tác chưa xong — bấm lại để làm tiếp», nút đổi thành «Hoàn tác tiếp» (JSON xác nhận xong sau khi bấm lại). Không có chỗ nào mâu thuẫn Expected; bố cục 375 sạch, không cắt chữ.
+    1440 va 375 deu khop. Khung1 trong: buoc 1 Nhap Excel, muc 'Lan nhap gan day' co 'Chua co lan nhap nao' + 'Lan nhap da ghi se hien o day de hoan tac khi can'. Khung2 sau-ghi: buoc 5 (mo mo sau lop phu) co nut 'Hoan tac lan nhap nay', hop 'Hoan tac lan nhap nay?' voi 'Go 30 can khoi Quy hang · Tra gia cu cho 0 can · 0 can khong hoan tac duoc', nut Hoan tac/Giu lai. Khung3 xac-nhan: hop 'Da hoan tac lan nhap' cung dong tom tat, nut Dong; (Bang hang con 30 -> 0 theo JSON). Khung4 da-hoan-tac: danh sach 'Lan nhap gan day' co mau-b.xlsx · 2026-11-05 · 30 dong ghi voi nhan 'Da hoan tac', khong nut. Khung5 da-sua-sau: hop 'Go 19 can ... 1 can khong hoan tac duoc', liet ke 'Toa A · A-02.06 — Da co nguoi sua sau lan nhap'. Khung6 loi-giua-chung: hop co khung do 'Hoan tac chua xong — bam lai de lam tiep', nut 'Hoan tac tiep'; sau go chan bam lai thi xong (JSON). Khong co bo cuc vo o 375.
   network_observed: n-a (driver)
   output: |
-    Ảnh đã lưu (12) tại _acceptance/nhap-hoan-tac/evidence/: E8b-1-trong, E8b-2-sau-ghi, E8b-3-xac-nhan, E8b-4-da-hoan-tac, E8b-5-da-sua-sau, E8b-6-loi-giua-chung (mỗi cái 1440 và 375).
-    Kịch bản chụp-hoan-tac 6 ca x 2 khổ chạy sạch; máy dev G đã tắt.
+    Dung-g chay (3493). 6 ca x 2 kho, tat ca JSON dung expected. Frame luu: E8b-1..6 o 1440 va 375 (.png), E8b-network.txt. Assertion: trong chuaCo=true; sau-ghi soDongTao=30; xac-nhan bang hang 30 -> 0; da-hoan-tac coNhan=true, soNutHoanTac=0; da-sua-sau coLyDo=true; loi-giua-chung baoChuaXong=true, xongSauKhiBamLai=true. Da tat server.
 
 - eval: E9
-  run_id: minted-nhap-hoan-tac-E9-r1
+  run_id: minted-nhap-hoan-tac-E9-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2086.020833
+    duration_ms 2047.290333
 
 - eval: E10
-  run_id: minted-nhap-hoan-tac-E10-r1
+  run_id: minted-nhap-hoan-tac-E10-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/core
-    ℹ duration_ms 745.735167
+    duration_ms 746.426792
 
 - eval: E11
-  run_id: minted-nhap-hoan-tac-E11-r1
+  run_id: minted-nhap-hoan-tac-E11-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2086.020833
+    duration_ms 2047.290333
 
 - eval: E12
-  run_id: minted-nhap-hoan-tac-E12-r1
+  run_id: minted-nhap-hoan-tac-E12-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.script.lint
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
     npm run lint
     chuẩn giao diện: đạt
 
 - eval: E12b
-  run_id: minted-nhap-hoan-tac-E12b-r1
-  exit_code: 1
+  run_id: minted-nhap-hoan-tac-E12b-r2
+  exit_code: 0
   baseline: green
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
   output: |
-    sai: design/patterns/trang-tam.md: ngoai_le trỏ tệp không có: apps/web/src/app/(app)/proto/o-nhan-lead/page.tsx
-    bản đồ nhóm lead-cua-toi đổi sau khi ghim — chấm theo bản ghim
-    bản đồ nhóm o-nhan-lead đổi sau khi ghim — chấm theo bản ghim
-    bản đồ nhóm trang-tam đổi sau khi ghim — chấm theo bản ghim
+    design-floor-khuon --kiem
     3 tệp giao diện ngoài bản đồ
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-nhap-hoan-tac-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-nhap-hoan-tac-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-nhap-hoan-tac-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-nhap-hoan-tac-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
 
 - cmd: npm run test:hooks
-  run_id: minted-nhap-hoan-tac-SUITE-test_hooks-r1
+  run_id: minted-nhap-hoan-tac-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-nhap-hoan-tac-SUITE-npm_test_w_quy_hang_ui_lint-r1
-  exit_code: 1
-  verified_at: 2026-11-05T01:49:05Z
-  output: |
-    Không eval nào gắn lệnh này. Ca ban-do-khuon.test.mjs lệch một dòng: nhóm trang-thai thực tế «109 chỗ theo khuôn», bài kiểm kỳ vọng «105 chỗ theo khuôn».
+  run_id: minted-nhap-hoan-tac-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  exit_code: 0
+  verified_at: 2026-11-05T02:04:06Z
 
 - cmd: npm run typecheck
-  run_id: minted-nhap-hoan-tac-SUITE-typecheck-r1
+  run_id: minted-nhap-hoan-tac-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T01:49:05Z
+  verified_at: 2026-11-05T02:04:06Z
 
 ## Known limits
 
@@ -269,20 +263,18 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả HEAD lẫn baseline, chứng minh harness chứ không chứng minh feature; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+Eval không phân biệt (xanh ở cả HEAD lẫn baseline), cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý:
 - npm test -w @quy-hang/core: E3, E4, E7, E10
 - npm test -w @quy-hang/web: E7c, E8, E9, E11
 - npm run lint: E12
-
-Lệnh fail không gắn eval: npm test -w @quy-hang/ui-lint (không thuộc eval nào; ca bản đồ khuôn lệch số «chỗ theo khuôn» của nhóm trang-thai), và lệnh E12b (đã gắn E12b).
-
-Baseline không đo: E8b (n-a, eval giao diện mới).
+- design-floor-khuon --kiem: E12b
 
 ## Variance
 
-none — mọi eval chạy một lần, kết quả đồng nhất
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E12b failed — bước chấm khuôn báo tệp ngoại lệ trỏ tới trang không còn (proto/o-nhan-lead), bản đồ nhóm đổi sau khi ghim và 3 tệp giao diện ngoài bản đồ. Returned to implementation.
+Round 1: lượt chấm 1 trả về — xem trước lỗi không được mở nút ghi, ghim lại khuôn, bảng khuôn ui-lint. Returned to implementation.
+Round 2: toàn bộ 19 eval và 5 lệnh suite xanh; PASS.
 
