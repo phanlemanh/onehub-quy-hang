@@ -23,7 +23,7 @@ cột sau» ở hàng 89 (`d-20261105T035554Z-21`).
    hơn ~16 điểm (đánh giá mục 2). Bảng cuộn trong khung, trang không cuộn.
 5. **Cột «Đầu chủ».** Bảng hàng có thêm cột «Đầu chủ»: tên thành viên đang giữ căn, đọc từ khoá đầu chủ của dòng trong kho
    trên máy (`listAgentKey`, hàng 89 d-20261104T235026Z-14) đối với danh sách thành viên của sàn; căn chưa có đầu chủ để trống
-   «—». Đổi đầu chủ (gán một căn hay hàng loạt) thì cột đổi theo một lần kéo của bộ đồng bộ, không tải lại trang. Cột mặc định
+   «—»; căn có đầu chủ đã rời sàn hiện «Đã rời sàn» (Hỏi-3). Đổi đầu chủ (gán một căn hay hàng loạt) thì cột đổi theo một lần kéo của bộ đồng bộ, không tải lại trang. Cột mặc định
    hiện, ẩn được ở trình đơn Cột như cột khác (Hỏi-1).
 6. **Điện thoại không đổi**: `?unit=` mở hồ sơ toàn màn, bảng thẻ giữ nguyên; phóng to vẫn mở `/units/<mã>`.
 7. **Tài liệu.** ADR-0024 thêm mục «Sửa đổi 05/11» (quyết định 2: khối nguồn danh sách – chi tiết `sheet-9` → `app-shell-11`

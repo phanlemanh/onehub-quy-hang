@@ -35,7 +35,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e3 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — lọc theo một toà, nhóm theo loại căn, cuộn tới giữa"
-      - "Đối chiếu dòng e3: sau mở, đổi căn, đóng — chuỗi lọc, chuỗi nhóm và scrollTop của vùng cuộn bảng bằng giá trị trước khi mở (|Δcuộn| ≤ 2); số lần gắn lại phần tử bảng (đếm bằng MutationObserver trên gốc bảng) = 0; dòng đang mở có data-state hay aria-selected đánh dấu"
+      - "Đối chiếu dòng e3: sau mở, đổi căn, đóng — chuỗi lọc, chuỗi nhóm và scrollTop của vùng cuộn bảng bằng giá trị trước khi mở (|Δcuộn| ≤ 2); nút gốc của bảng (phần tử [data-slot=data-grid] giữ trong window.__goc trước khi mở) vẫn là cùng một nút sau mỗi bước (window.__goc.isConnected và === phần tử hiện tại); chiều đỏ cùng ca: bản dựng lại bằng key đổi theo căn (--dung-lai) thì ca ghi conCungNut = false; dòng đang mở có data-state hay aria-selected đánh dấu"
     target: "http://localhost:3477/inventory"
     expected: "Lọc, nhóm, cuộn giữ nguyên qua mở, đổi căn, đóng; bảng không dựng lại; dòng đang mở có dấu."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -57,7 +57,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/components/bo-cuc/**", "apps/web/src/app/(app)/inventory/*.tsx", "apps/web/src/app/(app)/units/ho-so/**"]
-    expected: "exit 0; ca «danh-sach-chi-tiet: cột phụ là cột kéo chia» trong apps/web/src/components/bo-cuc/bo-cuc.test.ts có mặt và ok — dựng BoCuc kieu danh-sach-chi-tiet có cotPhu và chiTiet: có phần tử data-slot của resizable panel group, panel cot-phu có defaultSize 38 min 28 max 50, không có phần tử của NganNoi; ca đối chứng: luồng nhiều bước và ngăn báo vẫn dựng NganNoi; chiều đỏ cùng ca: dựng lại bằng nhánh ngăn nổi cũ thì assert nêu «cột phụ là ngăn nổi»."
+    expected: "exit 0; ca «danh-sach-chi-tiet: cột phụ là cột kéo chia» trong apps/web/src/components/bo-cuc/bo-cuc.test.ts có mặt và ok — dựng BoCuc kieu danh-sach-chi-tiet có cotPhu và chiTiet: có phần tử data-slot của resizable panel group, panel cot-phu có defaultSize 38 min 28 max 50, không có phần tử của NganNoi; ca đối chứng: luồng nhiều bước, ngăn báo và lọc trên điện thoại vẫn dựng NganNoi (ba ca); chiều đỏ cùng ca: dựng lại bằng nhánh ngăn nổi cũ thì assert nêu «cột phụ là ngăn nổi»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E6
@@ -77,7 +77,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/cot.ts*", "apps/web/src/app/(app)/inventory/*.test.ts"]
-    expected: "exit 0; ca «cột Đầu chủ: tên theo listAgentKey, chưa gán là —» có mặt trong một tệp test của apps/web/src/app/(app)/inventory và ok — ma trận viết trước ba ca (gán thành viên có tên → tên; listAgentKey null → «—»; listAgentKey trỏ thành viên không còn trong sàn → «—»), ba assert deepEqual; cột có id «dau-chu» và tiêu đề «Đầu chủ» trong danh sách cột ẩn được; chiều đỏ cùng ca: đổi listAgentKey của dòng thì ô đổi theo."
+    expected: "exit 0; ca «cột Đầu chủ: tên theo listAgentKey, chưa gán là —» có mặt trong một tệp test của apps/web/src/app/(app)/inventory và ok — ma trận viết trước ba ca (gán thành viên có tên → tên; listAgentKey null → «—»; listAgentKey trỏ thành viên không còn trong sàn → «Đã rời sàn»), ba assert deepEqual với chuỗi viết tay; cột có id «dau-chu» và tiêu đề «Đầu chủ» trong danh sách cột ẩn được; chiều đỏ cùng ca: đổi listAgentKey của dòng thì ô đổi theo."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E7b
@@ -87,7 +87,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e7 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — chỗ thử có căn gán dau-chu-1 và căn chưa gán"
-      - "Đối chiếu dòng e7: tiêu đề cột có «Đầu chủ»; ô của căn đã gán = tên dau-chu-1, ô của căn chưa gán = «—»; sau PATCH gán căn ấy sang dau-chu-2 qua /api/v1 và một lần kéo đồng bộ, ô đổi thành tên dau-chu-2, performance.navigation không đổi (không tải lại); ẩn cột ở trình đơn Cột thì tiêu đề «Đầu chủ» biến mất"
+      - "Đối chiếu dòng e7: tiêu đề cột có «Đầu chủ»; ô của căn đã gán = tên dau-chu-1, ô của căn chưa gán = «—»; ô của căn gán cho người đã rời sàn mẫu = «Đã rời sàn»; sau PATCH gán căn ấy sang dau-chu-2 qua /api/v1 và một lần kéo đồng bộ, ô đổi thành tên dau-chu-2, performance.navigation không đổi (không tải lại); ẩn cột ở trình đơn Cột thì tiêu đề «Đầu chủ» biến mất"
     target: "http://localhost:3477/inventory"
     expected: "Cột Đầu chủ hiện đúng tên, «—» khi chưa gán, đổi theo lần gán mà không tải lại trang, ẩn được. Ảnh E7-cot-dau-chu.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -97,7 +97,7 @@ evals:
     executor: script
     cmd: config:executors.script.bang_hang_dsct
     paths: ["docs/adr/0024-he-bo-cuc.md", "docs/product/tham-chieu.md", "docs/design/vo-va-ia.md", "design/patterns/ho-so-can.md", "design/patterns/bang-hang.md"]
-    expected: "exit 0; ca «tài liệu hết lệch» trong _acceptance/bang-hang-danh-sach-chi-tiet/thu/tai-lieu.test.mjs ok — ADR-0024 có tiêu đề «Sửa đổi 05/11» nêu app-shell-11 và solution-crm-4, đoạn quyết định 2 và 13 cũ còn nguyên văn (so với origin/main); Tham chiếu §12 có dòng 05/11 nêu cột kéo chia; vo-va-ia, ho-so-can.md, bang-hang.md có «kéo chia» và không còn «ngăn trượt»/«đè lên bảng» cho hồ sơ căn; bang-hang.md không còn ngoại lệ có hạn cho inventory/page.tsx; chiều đỏ cùng ca: bản sao xoá dòng 05/11 khỏi Tham chiếu thì ca đỏ gọi tên «Tham chiếu §12»."
+    expected: "exit 0; ca «tài liệu hết lệch» trong _acceptance/bang-hang-danh-sach-chi-tiet/thu/tai-lieu.test.mjs ok — ADR-0024 có tiêu đề «Sửa đổi 05/11» nêu app-shell-11 và solution-crm-4, đoạn quyết định 2 và 13 cũ còn nguyên văn (so với origin/main); Tham chiếu §12 có dòng 05/11 nêu cột kéo chia; vo-va-ia, ho-so-can.md, bang-hang.md có «kéo chia» và không còn «ngăn trượt»/«đè lên bảng» cho hồ sơ căn; bang-hang.md không còn ngoại lệ có hạn cho inventory/page.tsx; khi sổ quyết định có dòng chốt Hỏi-2 giữ cứng thì docs/architecture/so-diem-bien-thien.md có dòng điều khoá nêu «kiểu mở chi tiết» và lý do; chiều đỏ cùng ca: bản sao xoá dòng 05/11 khỏi Tham chiếu thì ca đỏ gọi tên «Tham chiếu §12»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E9a
@@ -123,3 +123,15 @@ evals:
     paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
     expected: "exit 0; ca «không chạm inventory/bulk» trong tai-lieu.test.mjs ok — git diff --name-only origin/main...HEAD không có tệp dưới apps/web/src/app/(app)/inventory/bulk/; chiều đỏ cùng ca: danh sách tệp giả có một tệp bulk thì ca đỏ gọi tên tệp ấy."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e10 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — bọc fetch lời đọc hồ sơ căn: giữ chậm 3 giây, rồi trả 500, rồi trả bình thường"
+      - "Đối chiếu dòng e10: lúc chậm cot có khung chờ ([data-cho-tai] hay aria-busy=true) và soDongBang bằng trước khi mở; lúc lỗi cot có chữ lỗi và nút «Thử lại», soDongBang bằng trước, bấm một dòng khác đổi căn được, chuỗi lọc giữ nguyên; bấm «Thử lại» sau khi trả bình thường → cot có tên căn"
+    target: "http://localhost:3477/inventory"
+    expected: "Chờ tải và lỗi nằm trong cột hồ sơ, bảng vẫn đủ dòng và dùng được, «Thử lại» đưa hồ sơ về. Ảnh E10-cho-tai.png, E10-loi.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]

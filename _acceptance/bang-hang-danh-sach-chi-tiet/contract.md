@@ -62,15 +62,17 @@ Source input: `docs/plan/lo-trinh.json` hàng 105 · `_acceptance/bang-hang-danh
 - **AC-7** — Cột Đầu chủ (nguồn AC-4 hàng 89). (cross-layer)
   Given sàn mẫu có căn đã gán đầu chủ và căn chưa gán,
   When mở Bảng hàng, rồi gán một căn sang đầu chủ khác qua API,
-  Then bảng có cột «Đầu chủ» hiện tên thành viên đang giữ căn, căn chưa gán hiện «—»; sau một lần kéo của bộ đồng bộ, ô của
-  căn vừa gán hiện tên người nhận mà không tải lại trang; cột ẩn được ở trình đơn Cột.
+  Then bảng có cột «Đầu chủ» hiện tên thành viên đang giữ căn, căn chưa gán hiện «—», căn có đầu chủ đã rời sàn hiện «Đã
+  rời sàn» (Hỏi-3); sau một lần kéo của bộ đồng bộ, ô của căn vừa gán hiện tên người nhận mà không tải lại trang; cột ẩn
+  được ở trình đơn Cột.
 
 - **AC-8** — Tài liệu hết lệch.
   Given cây sau thay đổi,
   When đọc ADR-0024, Tham chiếu §12, `vo-va-ia.md`, `design/patterns/ho-so-can.md`, `design/patterns/bang-hang.md`,
   Then ADR-0024 có mục «Sửa đổi 05/11» sửa quyết định 2 và 13 (khối nguồn `app-shell-11` cột kéo chia + ruột `solution-crm-4`)
   mà không viết đè chữ cũ; Tham chiếu §12 có dòng 05/11; ba tệp còn lại tả cột kéo chia cao hết vùng làm việc và không còn
-  chữ «ngăn trượt đè lên bảng» cho hồ sơ căn.
+  chữ «ngăn trượt đè lên bảng» cho hồ sơ căn; khi Hỏi-2 chốt giữ cứng, Sổ điểm biến thiên có một dòng điều khoá cho kiểu mở
+  chi tiết kèm lý do.
 
 - **AC-9** — Khuôn và vùng.
   Given cây sau thay đổi,
@@ -78,14 +80,20 @@ Source input: `docs/plan/lo-trinh.json` hàng 105 · `_acceptance/bang-hang-danh
   Then nhóm `bang-hang` và `ho-so-can` không lệch khuôn; catalog có dòng `@reui/app-shell-11`; diff không chạm
   `apps/web/src/app/(app)/inventory/bulk/**`.
 
+- **AC-10** — Hồ sơ chờ tải hay lỗi không kéo sập bảng.
+  Given hồ sơ căn đang mở và lời đọc hồ sơ bị giữ chậm, rồi trả lỗi,
+  When nhìn cột hồ sơ và bấm một dòng khác trên bảng,
+  Then lúc chậm cột hiện khung chờ của bố cục; lúc lỗi cột hiện lời lỗi kèm «Thử lại»; trong cả hai lúc bảng vẫn hiện đủ dòng,
+  bấm được và giữ lọc; bấm «Thử lại» sau khi lời đọc trở lại bình thường thì hồ sơ hiện ra.
+
 ## Coverage
 
 Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 
 - Trục khổ: 1440 × 900 | 1280 × 800 | 375 (AC-1, AC-2, AC-4, AC-6).
-- Trục trạng thái cột: đóng | mở | đổi căn | kéo chạm biên | lỗi tải (AC-1, AC-2, AC-3, design ST-*).
+- Trục trạng thái cột: đóng | mở | đổi căn | kéo chạm biên | chờ tải | lỗi tải (AC-1, AC-2, AC-3, AC-10).
 - Trục bố cục: danh sách – chi tiết (cột kéo chia) | ngăn báo, lọc điện thoại, luồng nhiều bước (ngăn nổi) (AC-5).
-- Trục dữ liệu cột Đầu chủ: đã gán | chưa gán | vừa gán lại (AC-7).
+- Trục dữ liệu cột Đầu chủ: đã gán | chưa gán | đầu chủ đã rời sàn | vừa gán lại (AC-7).
 - Trục tài liệu: ADR | Tham chiếu | thiết kế | khuôn (AC-8, AC-9).
 - Later: J / K đi căn trước · sau mà không đóng cột; nhớ bề rộng cột theo người. Never: lớp phủ chặn bảng khi hồ sơ mở.
 
@@ -104,4 +112,4 @@ Bỏ quét morphological-scan (sổ: «bỏ coverage-scan»); trục ghi tay:
 
 ## Notes
 
-- Hỏi-1, Hỏi-2: xem sổ quyết định (S1).
+- Hỏi-1, Hỏi-2, Hỏi-3: xem sổ quyết định (S1).
