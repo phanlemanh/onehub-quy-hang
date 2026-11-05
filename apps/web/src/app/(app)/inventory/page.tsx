@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { lamViecVoiHang } from "@quy-hang/core/access";
 
 import { readMe } from "@/lib/api";
 import { KhungBangHang } from "./khung";
@@ -12,6 +13,8 @@ export default async function Page() {
   const cookie = (await headers()).get("cookie") ?? "";
   const me = await readMe(cookie);
   if (!me?.activeCompany) redirect("/login");
+  // Bảng quyền của hàng (bang-quyen-theo-vai): người không có Bảng hàng — Telesales, Quản trị sàn — về Hôm nay.
+  if (!lamViecVoiHang({ roles: me.activeCompany.roles })) redirect("/today");
   // Cách gọi riêng của sàn (hàng 45): đọc ở máy chủ mỗi lần mở trang; đọc hỏng thì chữ dựng sẵn, bảng vẫn mở.
   const tuVung = await docTuVung(cookie);
   return (

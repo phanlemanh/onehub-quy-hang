@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ai đưa lên Đang bán</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1184px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+    }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Cây quyết định · Đưa hàng lên Đang bán</p>
+    <h1>Ai đưa được hàng lên «Đang bán»: một cây, ở nút, ô Trạng thái và API như nhau</h1>
+
+    <svg viewBox="0 0 1184 880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lệnh đưa lên Đang bán: người không có vai Bảng hàng nhận 404 không có hàng này; Trưởng nhóm ghi được; Đầu chủ giữ căn hoặc căn chưa ai giữ ghi được; Đầu khách kể cả khi căn chưa ai giữ, Đầu chủ khi người khác giữ kể cả người từng giữ mà căn đã đổi đầu chủ, nhận 403, không ghi gì, ô Trạng thái không có nấc Đang bán">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Mũi tên (vẽ trước nút) -->
+      <!-- Gốc → Rẽ 1 -->
+      <line x1="480" y1="96" x2="480" y2="144" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 1: không (trái) -->
+      <line x1="352" y1="208" x2="280" y2="208" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 1: có (xuống) -->
+      <line x1="480" y1="272" x2="480" y2="304" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 2: có (phải) -->
+      <line x1="608" y1="368" x2="760" y2="368" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 2: không (xuống) -->
+      <line x1="480" y1="432" x2="480" y2="464" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 3: có (phải rồi lên) -->
+      <path d="M608 528 H932 A8 8 0 0 0 940 520 V416" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 3: không (xuống) -->
+      <line x1="480" y1="592" x2="480" y2="656" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Nhãn mũi tên -->
+      <rect x="292" y="180" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="316" y="192" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">KHÔNG</text>
+
+      <rect x="488" y="280" width="28" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="492" y="292" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">CÓ</text>
+
+      <rect x="660" y="340" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="684" y="352" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+
+      <rect x="488" y="440" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="492" y="452" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">KHÔNG</text>
+
+      <rect x="740" y="500" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="764" y="512" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CÓ</text>
+
+      <rect x="488" y="616" width="48" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="492" y="628" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">KHÔNG</text>
+
+      <!-- Gốc -->
+      <rect x="320" y="32" width="320" height="64" rx="20" fill="#f5f5f5"/>
+      <rect x="320" y="32" width="320" height="64" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="480" y="60" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ai gửi lệnh đưa lên Đang bán?</text>
+      <text x="480" y="80" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">từ nút «Sẵn sàng bán», ô Trạng thái hay API</text>
+
+      <!-- Rẽ 1 -->
+      <polygon points="480,144 608,208 480,272 352,208" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="480" y="204" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Có vai của</text>
+      <text x="480" y="220" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bảng hàng?</text>
+
+      <!-- Rẽ 2 -->
+      <polygon points="480,304 608,368 480,432 352,368" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="480" y="364" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Có vai</text>
+      <text x="480" y="380" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Trưởng nhóm?</text>
+
+      <!-- Rẽ 3 -->
+      <polygon points="480,464 608,528 480,592 352,528" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="480" y="516" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đầu chủ, căn</text>
+      <text x="480" y="532" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">mình giữ hoặc</text>
+      <text x="480" y="548" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">chưa ai giữ?</text>
+
+      <!-- Kết cục: 404 -->
+      <rect x="40" y="160" width="240" height="96" rx="20" fill="#f5f5f5"/>
+      <rect x="40" y="160" width="240" height="96" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="160" y="188" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">404 · không có hàng này</text>
+      <text x="160" y="208" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">Telesales · Quản trị sàn</text>
+      <text x="160" y="224" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">xét trước mọi điều khác</text>
+      <text x="160" y="240" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-2 · AC-3</text>
+
+      <!-- Kết cục: ghi được (tâm điểm) -->
+      <rect x="760" y="320" width="360" height="96" rx="20" fill="#f5f5f5"/>
+      <rect x="760" y="320" width="360" height="96" rx="20" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="940" y="348" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ghi: hàng lên «Đang bán»</text>
+      <text x="940" y="368" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">Trưởng nhóm · Đầu chủ giữ căn · Đầu chủ khi căn chưa ai giữ</text>
+      <text x="940" y="384" fill="#ba4513" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">đúng cờ của nút «Sẵn sàng bán»</text>
+      <text x="940" y="400" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-5</text>
+
+      <!-- Kết cục: 403 -->
+      <rect x="300" y="656" width="360" height="144" rx="20" fill="#f5f5f5"/>
+      <rect x="300" y="656" width="360" height="144" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="480" y="684" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">403 · không ghi gì, trạng thái giữ nguyên</text>
+      <text x="480" y="704" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">Đầu khách · Đầu chủ khi người khác giữ</text>
+      <text x="480" y="720" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">Đầu khách kể cả căn chưa ai giữ</text>
+      <text x="480" y="736" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">Đầu chủ từng giữ mà căn đã đổi đầu chủ</text>
+      <text x="480" y="752" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">ô Trạng thái không có nấc «Đang bán»</text>
+      <text x="480" y="768" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">lệnh dựng tay bị từ chối trước khi gửi</text>
+      <text x="480" y="784" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-5 · AC-6</text>
+
+      <!-- Ghi chú biên -->
+      <text x="760" y="600" fill="#4f5d75" font-size="14" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">Kiêm vai: một vai đủ cờ là ghi được.</text>
+      <text x="760" y="620" fill="#4f5d75" font-size="14" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">Lệnh mang phiên bản cũ vẫn bị xét như vậy.</text>
+
+      <!-- Chú giải -->
+      <line x1="40" y1="832" x2="1144" y2="832" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="40" y="856" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.18em">CHÚ GIẢI</text>
+
+      <rect x="132" y="848" width="24" height="12" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="164" y="858" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Lệnh gửi vào, kết cục trả về</text>
+
+      <polygon points="352,854 364,848 376,854 364,860" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="384" y="858" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Câu hỏi về vai và người giữ căn</text>
+
+      <rect x="572" y="848" width="24" height="12" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="604" y="858" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Kết cục ghi được — duy nhất</text>
+    </svg>
+  </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 import { completeness, foldListing, freshness, type ListingState } from "@quy-hang/core/listing";
+import { lamViecVoiHang } from "@quy-hang/core/access";
 import { canRead, visibilityOf, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
@@ -13,7 +14,9 @@ import { applyCommand, createListing, docThietBi, FACTS_SQL, factsOf, isRefusal,
 
 /**
  * Hàng và lệnh đổi hàng (ADR-0008). Trục ai thấy hàng (hàng 12): hàng «Chỉ tôi» chỉ người tạo đọc và gửi lệnh được, người
- * khác nhận 404 như hàng không có; hàng «Toàn sàn» mọi thành viên của sàn đang làm đọc và gửi lệnh được (Hỏi-2).
+ * khác nhận 404 như hàng không có; hàng «Toàn sàn» mọi thành viên có Bảng hàng của sàn đang làm đọc và gửi lệnh được (Hỏi-2,
+ * đọc lại 05/11). Bảng quyền của hàng (bang-quyen-theo-vai): người không có Bảng hàng — Telesales, Quản trị sàn — thấy danh
+ * sách rỗng và nhận «không có hàng này» ở mọi đường; xét trước trục ai thấy hàng.
  */
 const BASE = "/api/v1/listings";
 
@@ -122,6 +125,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
       const ds = await withCompany(appPool, ctx, async (tx) => {
+        if (!lamViecVoiHang(await viewerOf(tx, ctx.userId))) return [];
         // Đọc bản tính bằng đúng tên cột của STATE_COLUMNS; số và ngày về đúng kiểu của bản tính.
         const cot = Object.entries(STATE_COLUMNS).map(([k, col]) => `${col === "list_price" || col === "close_price" ? `${col}::float8` : col === "close_date" ? `${col}::text` : col} as "${k}"`);
         const { rows } = await tx.query(
@@ -170,7 +174,8 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
           hangDoi: (await readQueueFacts(tx, [listingId])).get(listingId) ?? NO_QUEUE_FACTS,
         };
       });
-      // Hàng đã gỡ khi hoàn tác lần nhập (hàng 66) như hàng không có.
+      // Người không có Bảng hàng; hàng đã gỡ khi hoàn tác lần nhập (hàng 66) — như hàng không có.
+      if (!lamViecVoiHang(kq.nguoiXem)) return tra(c, API_ERRORS.notFound);
       if (!kq.facts || foldListing(kq.events).voided) return tra(c, API_ERRORS.notFound);
       const facts = kq.facts;
       // «Chỉ tôi» của người khác: cùng câu trả lời với hàng không có (AC-4).
