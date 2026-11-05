@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 27c7b24957dd60ddca542fe32d0fd9de30d1fbd8
+verified_commit: b9bc3ea5c291d4e9061be212262fc5bacd122081
 human_signoff:
 ---
 
@@ -279,3 +279,7 @@ none — mọi eval chạy một lần, xác định, kết quả đồng nhất
 
 Round 1: bộ chạy đầu bị chặn vì E11 thiếu biến kit; đổi E11 sang khoá có lối dự phòng, chấm lại ra PENDING-JUDGMENT, mọi eval đạt, có mục ngoài hợp đồng.
 Round 2: chạy lại nhóm eval bị delta chạm (E2, E3, E4, E5, E8a, E9, E9c) và các lệnh suite, tất cả đạt; E1, E6, E7, E8b, E10, E11, E6b, E9b, E12, E12b mang từ round 1; còn E2b chờ người chốt ở Gate 2.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main (#146, #144) sau lượt chấm S4-r2
+run_id: repin-20261105T182625Z-81645
+sha: b9bc3ea5c291d4e9061be212262fc5bacd122081 · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · ngoài làn máy: E2b
