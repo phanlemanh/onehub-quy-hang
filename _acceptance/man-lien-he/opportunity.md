@@ -10,13 +10,13 @@ decided_at:     # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
-lo_trinh_ma: man-lien-he
+lo_trinh_ma: 103
 lo_trinh_tep: docs/plan/lo-trinh.json
 ---
 
 ## Vấn đề & ai gặp
 
-Mở từ hàng man-lien-he của «Lộ trình onehub-quy-hang» (`docs/plan/lo-trinh.json`).
+Mở từ hàng 103 của «Lộ trình onehub-quy-hang» (`docs/plan/lo-trinh.json`).
 
 Người trong sàn mở màn «Liên hệ»: danh sách liên hệ lọc theo loại (Chủ bán · Chủ cho thuê · Người mua · Người thuê) và hồ sơ một người — các số theo luật lớp nguồn (số chủ nhà không hiện cho người không được đọc), các căn, lead, nhu cầu khách và Lần gửi gắn với người ấy — mỗi vai chỉ thấy phần quyền của mình.
 

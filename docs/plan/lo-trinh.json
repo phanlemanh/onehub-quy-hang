@@ -2402,7 +2402,7 @@
       ]
     },
     {
-      "ma": "man-lien-he",
+      "ma": "103",
       "cau_giao": "Người trong sàn mở màn «Liên hệ»: danh sách liên hệ lọc theo loại (Chủ bán · Chủ cho thuê · Người mua · Người thuê) và hồ sơ một người — các số theo luật lớp nguồn (số chủ nhà không hiện cho người không được đọc), các căn, lead, nhu cầu khách và Lần gửi gắn với người ấy — mỗi vai chỉ thấy phần quyền của mình.",
       "slug": "man-lien-he",
       "vi_sao": "Chủ kho 05/11 ở phiên giám sát, nguyên văn «Mở màn liên hệ», sau khi giám sát báo hàng 85 chỉ dựng phần dữ liệu và luật, chưa có màn «Liên hệ» riêng (luật đợt 58). Đọc mới đặt ở packages/api/src/contacts/read/**, không sửa tệp có sẵn của contacts (hàng 89 đang sửa).",
