@@ -51,7 +51,8 @@ const TRANG_TAM = [
 const BANG = {
   "xac-thuc": { theoKhuon: ["dat-mat-khau", "login", "no-company", "select-company"].map((p) => `${W}/app/(auth)/${p}/page.tsx`), ngoaiLe: [] },
   "cai-dat-san": {
-    theoKhuon: [`${W}/app/(app)/settings/users/page.tsx`],
+    // Hàng 45: màn Cách gọi.
+    theoKhuon: [`${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/(app)/settings/[section]/page.tsx`, `${W}/app/(app)/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
@@ -77,6 +78,8 @@ const BANG = {
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/settings/[section]/page.tsx`,
+      // Hàng 45: màn Cách gọi rời trang tạm.
+      `${W}/app/(app)/settings/labels/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
       `${W}/app/(app)/settings/users/page.tsx`,
       `${W}/app/(app)/shares/new/page.tsx`,
@@ -130,6 +133,9 @@ const NHAN_DIEN_TRANG_THAI = [
   ),
   // Hộp hỏi đổi đầu chủ hàng loạt (hàng 89).
   `${W}/app/(app)/inventory/bulk/hop-doi-dau-chu.tsx`,
+  // Cách gọi riêng (hàng 45): từ vựng của Bảng hàng; màn Cách gọi và thân của nó.
+  `${W}/app/(app)/inventory/tu-vung.tsx`,
+  ...["cach-goi.tsx", "page.tsx"].map((p) => `${W}/app/(app)/settings/labels/${p}`),
   // Hôm nay của đầu chủ trên điện thoại (hàng 39): danh sách thẻ, ngăn kết quả cuộc gọi.
   `${W}/app/(app)/today/mobile/danh-sach.tsx`,
   `${W}/app/(app)/today/mobile/het-viec.tsx`,
@@ -207,6 +213,9 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/not-found.tsx`,
   // Hôm nay của đầu chủ (hàng 22): báo bộ đã lưu, báo bộ mặc định, lỗi tải lead, trống của vùng.
   // Cài đặt sàn → Người dùng (vào vỏ ở hàng 91).
+  // Cách gọi (hàng 45): lỗi lưu, đã lưu; lỗi đọc ở trang.
+  ...Array(2).fill(`${W}/app/(app)/settings/labels/cach-goi.tsx`),
+  `${W}/app/(app)/settings/labels/page.tsx`,
   `${W}/app/(app)/settings/personal/ca-nhan.tsx`,
   `${W}/app/(app)/settings/users/page.tsx`,
   // dang-nhap-mat-khau: báo hay lỗi khi cấp mật khẩu tạm.
@@ -437,7 +446,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 2 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -452,8 +461,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 121 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 20 ngoại lệ · 0 lệch",
+      "trang-thai: 124 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

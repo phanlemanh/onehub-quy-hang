@@ -1177,6 +1177,26 @@ test("chia lead: cấu hình chỉ quản trị sàn ghi được, ghi đúng t�
   });
 });
 
+// ---- Cách gọi riêng (039_cach_goi_rieng, hàng 45: E8) ----
+test("cách gọi: dòng labels.* theo sàn", { skip }, async () => {
+  await withChia(async (c) => {
+    const chen = "insert into company_settings (company_id, key, value, updated_by) values ($1, $2, $3::jsonb, $4)";
+    await lamNguoi(c, QT_A, COMPANY_A);
+    await c.query(chen, [COMPANY_A, "labels.field.feeInclusion", '"Phí CN"', QT_A]);
+    await c.query(chen, [COMPANY_A, "labels.value.feeInclusion", '{"included":"BP"}', QT_A]);
+    // Đối chứng dương: quản trị A đọc được hai dòng nhãn của A.
+    const docNhan = () => c.query("select key from company_settings where company_id = $1 and key like 'labels.%' order by key", [COMPANY_A]);
+    assert.deepEqual((await docNhan()).rows.map((r) => r.key), ["labels.field.feeInclusion", "labels.value.feeInclusion"]);
+    // Sàn B không đọc được dòng nhãn nào của A.
+    await lamNguoi(c, NG_B, COMPANY_B);
+    assert.equal((await docNhan()).rowCount, 0, "sàn B đọc được nhãn của sàn A");
+    // Check khoá chỉ mở đúng hai họ nhãn, tên trường RESO camelCase.
+    for (const k of ["labels.field.Fee Inclusion", "labels.other.feeInclusion", "labels.field.FeeInclusion"]) {
+      await expectError(c, chen, [COMPANY_B, k, '"x"', NG_B], /company_settings_key_check/);
+    }
+  });
+});
+
 // ---- Lead bốn nấc (015_lead_bon_nac, hàng 27: AC-9) ----
 const BN_DC_A = "u-bn-dau-chu-a";
 const BN_TS_A = "u-bn-telesales-a";
