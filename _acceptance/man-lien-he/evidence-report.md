@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 9f857731aa79012a25eb123d692c9c9fdebfabce
+verified_commit: 86eb3177910942ec8a83e3de093942d7cba59950
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -252,3 +252,7 @@ Round 4: tất cả eval đạt, E10d đạt có giới hạn đã khai trước
 ### Re-pin lần 1 — 2026-11-05, do gộp nhánh chính sau chữ ký
 run_id: repin-20261105T095845Z-98836
 sha: 9f857731aa79012a25eb123d692c9c9fdebfabce · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10d=1 · ngoài làn máy: E10b · diff chạm vật đo ngoài làn máy: E10b — chưa chứng lại, đi vòng S4 delta
+
+### Re-pin lần 2 — 2026-11-05, do gộp nhánh chính lần hai sau chữ ký
+run_id: repin-20261105T100851Z-45895
+sha: 86eb3177910942ec8a83e3de093942d7cba59950 · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10d=1 · ngoài làn máy: E10b
