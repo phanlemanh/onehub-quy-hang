@@ -1,28 +1,49 @@
-# Review findings: bang-hang-danh-sach-chi-tiet (round 2)
+# Review findings: bang-hang-danh-sach-chi-tiet (round 3)
 
 ## Trong hợp đồng
 
-- **Hình dạng 4 (khẳng định âm một mình, không có đối chứng dương): E4 «trang không cuộn» được chấm PASS dù chưa từng chạy chiều đỏ**
-  file: `_acceptance/bang-hang-danh-sach-chi-tiet/evidence/E4-network.txt:1`
-  severity: high
-  AC: AC-4
-  source: measurement
-  detail: Bằng chứng E4 được làm lại ở vòng này (E4-step1/2.png, E4-network.txt) và vẫn chỉ đo một chiều: `trangKhongCuon: se.scrollHeight <= innerHeight` ở chay-ui.mjs dòng ~235–240, ra «4/4 pass». evals.yaml E4 bước 2 bắt buộc có chiều đỏ: «dòng e4 kèm ca đối chứng trên nhánh chính (--ban-goc) ghi scrollHeight − innerHeight ≈ 16». Báo cáo bằng chứng ghi thẳng «Chiều đo (--ban-goc …) KHÔNG chạy … ghi nhận chưa kiểm» và ở phần Analyst «chưa có bằng chứng phép đo trang không cuộn đỏ khi trang thật sự cuộn», nhưng bảng kết luận vẫn để E4 PASS. Thêm nữa, nhánh `--ban-goc` trong chay-ui.mjs dòng 233 chỉ in một dòng ghi chú (`in1({ ca: "e4-ban-goc", ghiChu: ... })`) mà không đo gì. Vì vậy dù có bật cờ này, chiều đỏ cũng không thể ra đỏ. Phép đo âm «scrollHeight ≤ innerHeight» vẫn xanh cả khi chọn sai phần tử cuộn (chẳng hạn trang cuộn trong `.overflow-y-auto` của vỏ chứ không phải ở `document.scrollingElement`). Không có ca dương nào chứng minh bộ đo phát hiện được lúc trang thật sự cuộn.
-  rationale: AC-4 đòi trang không cuộn ở hai khổ, hồ sơ đóng và mở; phép đo chỉ một chiều nên chưa chứng minh được AC-4 và có thể xanh sai.
-
-- **Hình dạng 3 (lời hứa là quan hệ giữa hai giá trị, nhưng chỉ kiểm từng giá trị riêng): bề rộng hồ sơ E6 không được so với nhánh chính**
-  file: `_acceptance/bang-hang-danh-sach-chi-tiet/evidence/E6-network.txt:1`
-  severity: medium
-  AC: AC-6
-  source: measurement
-  detail: evals.yaml E6 bước 2 hứa một quan hệ: khung hồ sơ ở khổ 375 «rộng bằng khung nhìn trừ lề trang hai bên ± 2, BẰNG bề rộng đo trên nhánh chính», tức là điện thoại không đổi so với main. Bằng chứng E6 làm lại ở vòng này (E6-step1/2.png, E6-the-375.png, E6-network.txt) và báo cáo ghi «Assertion 6: … không có số đo nhánh chính riêng để đối, nhưng kiểm đúng công thức khung nhìn trừ lề hai bên (343) khớp; không có mâu thuẫn», rồi vẫn chấm PASS. Bộ chạy (chay-ui.mjs, đoạn --e6) chỉ ghi `rongKhung`, `innerWidth` và `trai` của nhánh đang kiểm, không có số đo nào của main. Như vậy vế quan hệ «bằng nhánh chính», tức phần chứng minh không làm hỏng điện thoại, đã bị thay bằng một phép tự khớp với công thức. Nếu nhánh này làm đổi lề trang trên điện thoại, công thức vẫn khớp với lề mới và phép đo vẫn xanh.
-  rationale: AC-6 đòi điện thoại «như trước»; đó là quan hệ với nhánh chính, mà phép đo chỉ tự khớp công thức nên không chứng minh được điều này.
+Không có.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hồ sơ bằng chứng E3 bỏ qua 21–22 lỗi thật trên trình duyệt: cùng lúc ghi đếm được lỗi và kết luận log sạch**
+- **dung-d.mjs --ban-goc đọc PID_GOC vô điều kiện, hỏng khi máy dev nhánh chính 3478 đã chạy sẵn mà không do lệnh này dựng**
+  Người dùng thấy gì: Công cụ dựng máy thử đối chứng có thể báo hỏng khi máy thử đã được dựng tay từ trước. Người dùng cuối không thấy gì; chỉ người chạy nghiệm thu phải dựng lại.
+  Căn cứ: Chỉ ảnh hưởng người chạy nghiệm thu, không ảnh hưởng người dùng, và chạy lại hay dọn tệp là qua được; sửa không đáng công.
+  file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs`
+  severity: low
+  Đề xuất: wont-fix
+
+- **Lệnh đo E4 và E6 trong evals.yaml thiếu --ban-goc, nên chạy lại đúng như ghi thì không bao giờ có đối chứng nhánh chính mà câu đo đòi**
+  Người dùng thấy gì: Người chấm chạy lại đúng lệnh ghi trong hồ sơ sẽ không có phần so với nhánh chính, nên phép kiểm đối chứng có thể bị bỏ qua mà không ai hay. Người dùng cuối không bị ảnh hưởng.
+  Căn cứ: Không chạm người dùng và không mất dữ liệu; chỉ làm phép kiểm lại yếu đi, nên ghi lại là đủ và sửa sau rẻ.
+  file: `_acceptance/bang-hang-danh-sach-chi-tiet/evals.yaml`
+  severity: medium
+  Đề xuất: known-limits
+
+- **loiTrinhDuyet đếm dồn từ đầu ca, nên dòng e4 ở khổ 1280 gộp cả lỗi của khổ 1440**
+  Người dùng thấy gì: Trong biên bản đo, khổ màn nhỏ hơn bị ghi nhiều lỗi hơn thực tế, dễ gây hiểu nhầm khi đọc. Người dùng cuối không thấy khác biệt.
+  Căn cứ: Chỉ làm số liệu trong biên bản đọc lệch, không ảnh hưởng người dùng; lỗi thật đã được ghi ở khổ kia nên không mất thông tin.
+  file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
+  severity: low
+  Đề xuất: wont-fix
+
+- **Hình dạng 4 (khẳng định âm có ca dương nhưng ca dương không đi qua đường hỏng thật): E4 «trangKhongCuon» có thể xanh nhờ nội dung bị cắt, không phải nhờ vừa khung**
+  Người dùng thấy gì: Phép kiểm trang không cuộn có thể báo đạt dù đáy bảng hay cột hồ sơ bị cắt mất một phần ở một số khổ màn. Nếu có thì người dùng sẽ không thấy hết phần dưới của bảng hoặc hồ sơ.
+  Căn cứ: Chưa có bằng chứng bố cục thật bị cắt, chỉ là phép kiểm chưa đủ nhạy; tai lai trang hay đổi cỡ cửa sổ là xem được, và bổ sung ca kiểm sau không đắt.
+  file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 6 (đo cái đang chạy ở cổng cố định thay vì cây được khai): đối chứng nhánh chính dùng lại bất kỳ máy nào ở cổng 3478 nhưng in commit của thư mục --ban-goc**
+  Người dùng thấy gì: Phép so bề rộng với nhánh chính có thể vô tình so với một máy thử cũ, nên báo đạt dù không đối chiếu đúng bản gốc. Người dùng cuối không bị ảnh hưởng.
+  Căn cứ: Chỉ làm bằng chứng đối chứng kém tin cậy trong trường hợp hiếm khi máy thử cũ còn chạy; không động tới người dùng hay dữ liệu, ghi chú là đủ.
+  file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hồ sơ bằng chứng E3 bỏ qua 21–22 lỗi thật trên trình duyệt: cùng lúc ghi đếm được lỗi và kết luận log sạch (r2 · tệp đã đổi)**
   Người dùng thấy gì: Khi vừa mở trang Bảng hàng, trình duyệt báo lỗi ngầm và dựng lại bảng một lần ở máy người dùng; người dùng có thể thấy khung chờ nháy nhẹ. Hồ sơ nghiệm thu thì ghi nhầm là không có lỗi.
   Căn cứ: Hậu quả nhẹ: không mất dữ liệu, bảng vẫn hiện đủ sau khi dựng lại và tải lại trang là xong; lỗi có từ trước nên nên ghi vào hạn chế đã biết rồi xử lý riêng.
   file: `_acceptance/bang-hang-danh-sach-chi-tiet/evidence/E3-network.txt`
@@ -78,25 +99,25 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: medium
   Đề xuất: known-limits
 
-- **Hình dạng 4, khẳng định phủ định mà không có đối chứng: kịch bản E4 tuyên có ca đối chứng «--ban-goc» trên nhánh chính nhưng ca ấy không đo gì (r1)**
+- **Hình dạng 4, khẳng định phủ định mà không có đối chứng: kịch bản E4 tuyên có ca đối chứng «--ban-goc» trên nhánh chính nhưng ca ấy không đo gì (r1 · tệp đã đổi)**
   Người dùng thấy gì: Phép đo «trang không cuộn» chưa từng được thử trên một trang thật sự cuộn để chứng tỏ nó biết báo đỏ. Màn hình người dùng thấy vẫn đúng.
   Căn cứ: Không ảnh hưởng người dùng, chỉ làm độ tin cậy của bằng chứng thấp hơn lời hứa; bổ sung đối chứng tốn công trên nhánh chính nên ghi lại là đủ.
   file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình dạng 3, chỉ ghi giá trị trong khi lời hứa là quan hệ: E6 hứa «bằng bề rộng đo trên nhánh chính» nhưng không đo nhánh chính (r1)**
+- **Hình dạng 3, chỉ ghi giá trị trong khi lời hứa là quan hệ: E6 hứa «bằng bề rộng đo trên nhánh chính» nhưng không đo nhánh chính (r1 · tệp đã đổi)**
   Người dùng thấy gì: Chưa có số đo của bản cũ để đối chiếu bề rộng khung hồ sơ trên điện thoại, nên khẳng định «giống như trước» chưa được chứng minh bằng số. Người dùng không thấy lỗi.
   Căn cứ: Thuần là thiếu bằng chứng đối chiếu, không có hỏng hóc nào được thấy; ghi lại, sửa khi có dịp đo lại trên bản chính.
   file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
   severity: low
   Đề xuất: known-limits
 
-- **Hình dạng 1, đo nhãn đếm thay vì dòng thực vẽ: «soDongBang» của E10 đọc chữ «n / N căn» trên thanh công cụ, không đếm dòng bảng (r1)**
+- **Hình dạng 1, đo nhãn đếm thay vì dòng thực vẽ: «soDongBang» của E10 đọc chữ «n / N căn» trên thanh công cụ, không đếm dòng bảng (r1 · tệp đã đổi)**
   Người dùng thấy gì: Bài kiểm xác nhận «bảng vẫn đủ dòng» bằng chữ đếm trên thanh công cụ thay vì đếm dòng hiển thị thật. Người dùng hiện không bị ảnh hưởng.
   Căn cứ: Không có hỏng hóc nào được thấy, chỉ là bằng chứng gián tiếp; củng cố phép đo rẻ nhưng có thể làm khi chạm lại bài kiểm này.
   file: `_acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs`
   severity: low
   Đề xuất: known-limits
 
-⚠ Cụm ngoài vùng phủ: 3/3 lỗi rơi vào file không bộ đo nào phủ (_acceptance/bang-hang-danh-sach-chi-tiet/evidence/E3-network.txt, _acceptance/bang-hang-danh-sach-chi-tiet/evidence/E4-network.txt, _acceptance/bang-hang-danh-sach-chi-tiet/evidence/E6-network.txt) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.
+⚠ Cụm ngoài vùng phủ: 5/5 lỗi rơi vào file không bộ đo nào phủ (_acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs, _acceptance/bang-hang-danh-sach-chi-tiet/evals.yaml, _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.

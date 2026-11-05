@@ -1,1 +1,4 @@
 driver: CDP headless Chrome via chay-ui.mjs (no browser-tool network reader); no failed-request dump available
+app dev server log (apps/web, :3477, run window): all /api/v1/* GET 200; no 4xx/5xx seen in-run.
+browser errors counted by script: step1 1440x900 = 0; 1280x800 = 1 (React "Hydration failed" console error, not a failed request; same count 1 on main control at 1280x800).
+note (static image, note-only): app log has GET /api/v1/units/photos/<id>/thumb 404 (anh mau chua co tep), khong phai fetch/XHR nghiep vu.
