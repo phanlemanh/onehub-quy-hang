@@ -5,7 +5,7 @@ slug: man-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-05-man-lien-he-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -98,3 +98,30 @@ mở số, AC-8 dòng thời gian; lịch xem chưa dựng); cross-cutting quy�
   ngoài công ty, ghi sự kiện), 4 không chạm (không trang khách).
 - Lối C: vỏ dùng bố cục đang có; khi hàng 105 gộp, cột hồ sơ tự thành cột kéo chia — không sửa 103.
 - Known limits (máy ghi theo giám sát, L-0511-4): bước chấm khuôn của kit 2.37.0 báo «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» — báo oan kit#485, luật 33; E10d đạt có giới hạn mã 1, E10e giữ mọi lệch khác đỏ. Bỏ khi kit vá.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: Khi mở hồ sơ một người cạnh bảng, dòng của người đó không còn được tô nên khó biết đang xem ai trong danh sách dài.
+  - Ngoài-3: Nếu người dùng gập cột bên trái trên máy tính, họ không còn chỗ chọn loại liên hệ; trên điện thoại thì không lọc được riêng nhóm Lead.
+  - Ngoài-4: Khi lọc Lead mà sàn không còn lead nào, màn nói «Chưa có liên hệ nào», dễ khiến người dùng tưởng sàn trống trong khi chỉ là bộ lọc không khớp.
+  - Ngoài-5: Khi mạng chập chờn lúc bấm «Xem thêm», nút không có phản ứng và không báo lỗi, người dùng không biết vì sao.
+  - Ngoài-6: Hiện người dùng không gặp lỗi gì.
+  - Ngoài-7: Thẻ trình ký đang nói «máy đã xong» nhưng ảnh và kết quả kiểm là của bản màn Liên hệ trước lần sửa cuối.
+  - Ngoài-8: Các ảnh trong trang bằng chứng chụp từ bản màn trước khi hồ sơ người được dời sang bố cục mới.
+  - Ngoài-9: Khi mạng chập chờn lúc bấm «Thêm» để xem thêm liên hệ, người dùng không thấy gì xảy ra và cũng không có nút thử lại.
+  - Ngoài-10: Khi một số điện thoại không mở được vì lỗi dữ liệu, người dùng thấy báo «chưa mở được» nhưng sổ ghi mở số và dòng thời gian của hồ sơ vẫn hiện như đã mở số.
+  - Ngoài-11: Mỗi lần bấm «Hiện số» mà số hỏng vẫn để lại một dòng «đã mở số» trong nhật ký, dù người dùng không hề thấy số; bấm thử lại thì thêm dòng giả.
+  - Ngoài-12: Nếu khoá mã hoá bị cấu hình sai, màn Liên hệ chỉ lặng lẽ hiện số bị che hoặc báo không mở được, không ai phía vận hành biết có sự cố.
+  - Ngoài-13: Người dùng cuối không bị ảnh hưởng; chỉ là bài kiểm khuôn giao diện có thể bỏ sót nếu sau này ai đó xoá ngoại lệ của trang Liên hệ.
+  - Ngoài-15: Nếu ai đó tự sửa đường dẫn tải tiếp của danh sách, hệ thống báo lỗi chung thay vì báo yêu cầu sai.
+  - Ngoài-16: Với người có lead đã gọi, bị trả lại rồi gửi lại, bảng có thể ghi «Liên hệ» còn hồ sơ lại ghi «Lead».
+  - Ngoài-17: Chỉ lớp dịch vụ đang chặn các vai không được dùng; nếu có đường gọi thẳng vào cơ sở dữ liệu thì vai khác trong cùng sàn có thể dò ra ai đang giữ một số điện thoại.
+  - Ngoài-18: Bấm lại đúng dòng đang chọn, hoặc sửa số của người đang mở, làm hồ sơ quay mãi ở trạng thái đang tải và các số đã hiện bị che lại.
+  - Ngoài-19: Gõ số chưa đủ hoặc sai khuôn thì màn báo «Chưa tải được — thử lại» như bị lỗi mạng, bấm thử lại bao nhiêu lần cũng vậy.
+  - Ngoài-20: Tìm một số ra đúng người thì hồ sơ mở bên cạnh nhưng bảng bên trái lại ghi «Không tìm thấy».
+  - Ngoài-21: Với người có lead cũ đã gọi rồi gửi lại, bộ lọc «Liên hệ» xếp họ vào Liên hệ nhưng hồ sơ lại ghi «Lead».
+  - Ngoài-23: Phép kiểm dòng thời gian không lộ giá đáy chưa chứng minh được là nó bắt được lỗi, vì chưa có ca nào thật sự đưa giá đáy vào.
+  - Ngoài-24: Chưa có ca thử hồ sơ dài hơn 50 sự kiện, nên nếu giới hạn 50 bị bỏ thì bộ kiểm vẫn xanh.
+  - Ngoài-25: Bộ kiểm chưa đảm bảo các sự kiện trong dòng thời gian gán đúng mốc và đúng thứ tự, nên một sự kiện gán sai giờ vẫn có thể lọt.
+  - Ngoài-26: Bộ kiểm chưa chắc từng cơ hội mang đúng giai đoạn của nó, nên giai đoạn bị gán lệch giữa các cơ hội vẫn có thể lọt.
+  - Ngoài-27: Bộ kiểm chỉ thử người có một số, nên lỗi về nhãn hay thứ tự số chính và số phụ, hoặc lộ số phụ, có thể không bị bắt.
+  - Ngoài-28: Bộ kiểm chưa có người chỉ là khách, nên chưa thử được việc đầu chủ không thấy họ còn trưởng nhóm thì thấy.
+  - Ngoài-29: Phép thử chia trang chỉ dùng người không có số hay lead, nên chưa thử được ca một người hiện hai lần qua các trang khi có nhiều số.
