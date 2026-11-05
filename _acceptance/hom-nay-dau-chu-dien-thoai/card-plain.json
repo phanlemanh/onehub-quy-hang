@@ -1,0 +1,35 @@
+{
+  "feature_plain": "Đầu chủ mở Hôm nay trên điện thoại thấy việc thành thẻ, chạm «Gọi» một lần để gọi lại, rồi ghi kết quả bằng nút lớn ở đáy màn — cầm một tay vẫn làm được.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiện Hôm nay thành thẻ trên điện thoại, cùng nhóm và thứ tự với máy tính; máy tính vẫn là bảng."},
+    {"id": "AC-2", "p": "Sẽ cho mỗi thẻ hai tầng — tên ở trên, lý do · giá ở dưới, màu hạn như máy tính — khoảng bảy, tám thẻ một màn."},
+    {"id": "AC-3", "p": "Sẽ để một nút ở mép phải thẻ: «Gọi» ở dòng mà việc là gọi, nút như máy tính ở dòng khác; ⋯ mở ngăn đáy với việc còn lại."},
+    {"id": "AC-4", "p": "Sẽ gọi một chạm: máy chủ mở số rồi máy gọi; mỗi dòng mở số một lần như máy tính; căn người khác giữ không gọi được."},
+    {"id": "AC-5", "p": "Sẽ mở ngăn «Kết quả cuộc gọi» ở nửa dưới màn ngay khi chạm «Gọi» và giữ nó khi quay lại app, kể cả trang tải lại."},
+    {"id": "AC-6", "p": "Sẽ giữ thẻ khi mất mạng; «Gọi» tắt kèm lời, «Còn · giữ giá» vẫn ghi trên máy rồi gửi sau."},
+    {"id": "AC-7", "p": "Sẽ có khung chờ, trạng thái trống và lỗi «Thử lại» như máy tính."},
+    {"id": "AC-8", "p": "Sẽ chứng trên điện thoại thật 375: gọi lead mẫu đúng số, máy chủ ghi một lần mở số, «Đã gọi» và «Còn · giữ giá» ghi đúng."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không làm chế độ cuộc gọi trên điện thoại (hạ giá bằng phím, ba lối «Đã cọc / bán…») — hạ giá đi qua hồ sơ căn."},
+    {"id": "OOS-2", "p": "Không làm Hôm nay của trưởng nhóm, telesales, đầu khách trên điện thoại."},
+    {"id": "OOS-3", "p": "Không tự biết cuộc gọi đã xong — web không đọc được trạng thái cuộc gọi."},
+    {"id": "OOS-4", "p": "Không có kéo để làm mới hay vuốt thẻ."},
+    {"id": "OOS-5", "p": "Không đổi lối «Ghi cuộc gọi» sang chế độ cuộc gọi của máy tính — vẫn nằm trong ⋯."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Khổ màn từ 375 tới 1440 — điện thoại thẻ, từ 768 trở lên bảng (AC-1, AC-2)."},
+    {"i": 1, "p": "Sáu loại dòng: lead mới, lead chưa gọi, căn nên gọi điều chỉnh giá, cần gọi lại, thiếu thông tin, mới đổi (AC-3, AC-4)."},
+    {"i": 2, "p": "Số gọi được: lead của mình, căn mình giữ; căn người khác giữ và dòng không số thì không có «Gọi» (AC-4)."},
+    {"i": 3, "p": "Sáu kết quả trong ngăn: Đã gọi, Trả lại, Còn · giữ giá, Đổi giá · trạng thái, Không nghe máy (AC-5)."},
+    {"i": 4, "p": "Có mạng, mất mạng, mở số lỗi (AC-4, AC-6)."},
+    {"i": 5, "p": "Đang tải, trống, lỗi, có việc (AC-7)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Lựa chọn «ngăn mở ngay khi chạm Gọi» bị ghi như chỉ có một lối, trong khi lối «mở khi trang hiện lại» vẫn được — đã chuyển thành câu hỏi cho bạn (Hỏi-1)."},
+    {"i": 1, "p": "Ghi «mỗi chạm một lần mở số» mà máy tính chỉ mở số một lần mỗi dòng — đã sửa cho giống máy tính, căn cứ là mã màn máy tính."},
+    {"i": 2, "p": "Bài trên màn thật chỉ có hai việc nên «bảy thẻ một màn» luôn qua — đã nạp từ mười việc và đếm thẻ nằm trọn."},
+    {"i": 3, "p": "Chưa bài nào thử quay lại app hay tải lại trang xem ngăn còn không, chiều cao nút chưa đo thật — đã thêm cả hai."},
+    {"i": 4, "p": "Lối mở số chủ của căn chưa chạy thật — đã thêm cảnh gọi căn mẫu và đối chứng căn người khác giữ."}
+  ]
+}
