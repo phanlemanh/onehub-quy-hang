@@ -87,6 +87,34 @@ export async function chayGoi(d: {
   return { ok: true, so };
 }
 
+/**
+ * Khoá gọi theo dòng: trong lúc máy chủ chưa trả số, chạm «Gọi» lần nữa ở cùng dòng bị bỏ qua — mỗi dòng mở số một lần
+ * (AC-4), như máy tính tắt nút trong lúc mở số.
+ */
+export function taoKhoaGoi() {
+  const dang = new Set<string>();
+  return {
+    dang: (id: string) => dang.has(id),
+    /** Giữ khoá cho dòng; trả false khi dòng đang gọi. */
+    giu: (id: string) => (dang.has(id) ? false : (dang.add(id), true)),
+    nha: (id: string) => void dang.delete(id),
+  };
+}
+
+/** Gọi một chạm có khoá theo dòng: dòng đang gọi thì trả `null`, không gọi máy chủ lần nữa. */
+export async function goiCoKhoa(
+  khoa: ReturnType<typeof taoKhoaGoi>,
+  id: string,
+  d: Parameters<typeof chayGoi>[0],
+): Promise<Awaited<ReturnType<typeof chayGoi>> | null> {
+  if (!khoa.giu(id)) return null;
+  try {
+    return await chayGoi(d);
+  } finally {
+    khoa.nha(id);
+  }
+}
+
 /** Khoá nhớ ngăn đang mở trên máy (theo phiên trình duyệt), để quay lại app sau cuộc gọi — kể cả trang tải lại — vẫn còn. */
 export const KHOA_NGAN = "quy-hang:hom-nay:ngan-ket-qua";
 type Kho = Pick<Storage, "getItem" | "setItem" | "removeItem">;

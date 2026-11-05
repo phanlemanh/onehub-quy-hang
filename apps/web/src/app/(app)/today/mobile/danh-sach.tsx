@@ -25,13 +25,14 @@ import {
 import { LOI_MO_SO, type KetQuaMoSo } from "../mo-so";
 import { NHAN_VIEC, type MucHan, type ViecDong } from "../viec-dong";
 import {
-  chayGoi,
   docNganMo,
   ghiNganMo,
   ketQuaCua,
   NHAN_GOI,
   NHAN_KET_QUA,
+  goiCoKhoa,
   nutDienThoai,
+  taoKhoaGoi,
   xoaNganMo,
   type MaViecDT,
   type MucKetQua,
@@ -322,6 +323,8 @@ export function DanhSachDienThoai({
   // Quay lại app sau cuộc gọi — kể cả trang đã tải lại: ngăn của đúng dòng còn ghi trên máy thì mở lại.
   const [nganMo, setNganMo] = useState<string | null>(() => docNganMo(kho));
   const [loiGoi, setLoiGoi] = useState<Record<string, string>>({});
+  const [khoa] = useState(taoKhoaGoi);
+  const [dangGoi, setDangGoi] = useState<ReadonlySet<string>>(new Set());
 
   if (trangThai === "dang") return <ChoTai kieu="tran" />;
   if (trangThai === "loi")
@@ -343,8 +346,11 @@ export function DanhSachDienThoai({
   if (tatCa.length === 0) return <>{trong}</>;
 
   const goi = (t: TheDong) => {
+    // Đang mở số ở dòng này thì chạm lần nữa bị bỏ qua: mỗi dòng mở số một lần (AC-4).
+    if (khoa.dang(t.id)) return;
+    setDangGoi((s) => new Set(s).add(t.id));
     setLoiGoi((m) => ({ ...m, [t.id]: "" }));
-    void chayGoi({
+    void goiCoKhoa(khoa, t.id, {
       soCu: t.soCu,
       moSo: t.moSo,
       daMo: t.daMo,
@@ -353,10 +359,17 @@ export function DanhSachDienThoai({
         ghiNganMo(kho, t.id);
         setNganMo(t.id);
       },
-    }).then((kq) => {
-      if (!kq.ok)
-        setLoiGoi((m) => ({ ...m, [t.id]: kq.loi || LOI_MO_SO.khac }));
-    });
+    })
+      .then((kq) => {
+        if (kq && !kq.ok) setLoiGoi((m) => ({ ...m, [t.id]: kq.loi || LOI_MO_SO.khac }));
+      })
+      .finally(() => {
+        setDangGoi((s) => {
+          const con = new Set(s);
+          con.delete(t.id);
+          return con;
+        });
+      });
   };
   const dongNgan = (mo: boolean) => {
     if (mo) return;
@@ -377,7 +390,7 @@ export function DanhSachDienThoai({
             {g.the.map((t) => (
               <TheViec
                 key={t.id}
-                t={loiGoi[t.id] ? { ...t, loi: loiGoi[t.id] } : t}
+                t={{ ...t, ban: t.ban || dangGoi.has(t.id), loi: loiGoi[t.id] || t.loi }}
                 coMang={coMang}
                 onGoi={() => goi(t)}
               />

@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import type { KetQuaMoSo } from "../mo-so";
 import { viecCuaDong, type ViecDong } from "../viec-dong";
-import { chayGoi, docNganMo, ghiNganMo, ketQuaCua, laDienThoai, nutDienThoai, xoaNganMo, type MaViecDT } from "./goi";
+import { chayGoi, docNganMo, ghiNganMo, goiCoKhoa, ketQuaCua, laDienThoai, nutDienThoai, taoKhoaGoi, xoaNganMo, type MaViecDT } from "./goi";
 import { moSoChu } from "./mo-so-chu";
 
 const nhom = (code: string) => {
@@ -119,16 +119,49 @@ test("E4 mở số lỗi → không mở tel:, không mở ngăn, trả lời l�
   assert.deepEqual(g, []);
 });
 
-test("E4 đối chứng đỏ: bản sao mở tel: trước khi mở số → bộ so nêu thứ tự", async () => {
+/** Bộ so thứ tự: lần đầu mở số → tel: đúng số → mở ngăn; số lỗi thì không tel:, không ngăn. Chạy trên bản thật và bản sao. */
+async function lechThuTu(ham: typeof chayGoi): Promise<string[]> {
+  const out: string[] = [];
   const g: Ghi = [];
-  const saiThuTu = async (d: Parameters<typeof chayGoi>[0]) => {
-    d.moTel("tel:x");
+  const ghi = { daMo: () => {}, moTel: (h: string) => void g.push(h), moNgan: () => void g.push("ngan") };
+  await ham({ ...ghi, soCu: null, moSo: async () => (g.push("mo-so"), { ok: true, so: "0900000091" }) });
+  if (g.join(" → ") !== "mo-so → tel:0900000091 → ngan") out.push(`thứ tự ${g.join(" → ")}`);
+  g.length = 0;
+  await ham({ ...ghi, soCu: null, moSo: async () => (g.push("mo-so"), { ok: false, loi: "x" }) });
+  if (g.join(" → ") !== "mo-so") out.push(`mở số lỗi: ${g.join(" → ")}`);
+  return out;
+}
+test("E4 bộ so thứ tự trên bản thật: không lệch", async () => {
+  assert.deepEqual(await lechThuTu(chayGoi), []);
+});
+test("E4 đối chứng đỏ: bản sao mở tel: trước khi mở số → bộ so nêu thứ tự", async () => {
+  const saiThuTu: typeof chayGoi = async (d) => {
+    d.moTel("tel:0900000091");
     const kq = await d.moSo();
     d.moNgan();
-    return kq;
+    return kq.ok ? { ok: true, so: kq.so } : kq;
   };
-  await saiThuTu({ soCu: null, moSo: async () => (g.push("mo-so"), { ok: true, so: "0900000091" }), daMo: () => {}, moTel: () => void g.push("tel"), moNgan: () => void g.push("ngan") });
-  assert.notDeepEqual(g, ["mo-so", "tel", "ngan"], `thứ tự ${g.join(" → ")}`);
+  assert.deepEqual(await lechThuTu(saiThuTu), ["thứ tự tel:0900000091 → mo-so → ngan", "mở số lỗi: tel:0900000091 → mo-so → ngan"]);
+});
+
+test("E4 chạm «Gọi» hai lần khi số chưa về: máy chủ chỉ mở số một lần", async () => {
+  let goiMay = 0;
+  let tra: (v: KetQuaMoSo) => void = () => {};
+  const khoa = taoKhoaGoi();
+  const d = { soCu: null, moSo: () => (goiMay++, new Promise<KetQuaMoSo>((r) => (tra = r))), daMo: () => {}, moTel: () => {}, moNgan: () => {} };
+  const lan1 = goiCoKhoa(khoa, "lead:l1", d);
+  const lan2 = await goiCoKhoa(khoa, "lead:l1", d);
+  assert.equal(lan2, null, "lần chạm thứ hai bị bỏ qua");
+  tra({ ok: true, so: "0900000091" });
+  assert.equal((await lan1)?.ok, true);
+  assert.equal(goiMay, 1);
+  assert.equal(khoa.dang("lead:l1"), false, "xong thì nhả khoá");
+});
+test("E4 đối chứng đỏ: không khoá thì hai chạm mở số hai lần", async () => {
+  let goiMay = 0;
+  const d = { soCu: null, moSo: async (): Promise<KetQuaMoSo> => (goiMay++, { ok: true, so: "0900000091" }), daMo: () => {}, moTel: () => {}, moNgan: () => {} };
+  await Promise.all([chayGoi(d), chayGoi(d)]);
+  assert.equal(goiMay, 2);
 });
 
 test("E4 mở số chủ của căn: POST đúng lối mở số chủ, đọc ownerPhone; 404 → lời chưa có số", async () => {
