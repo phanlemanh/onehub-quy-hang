@@ -186,7 +186,7 @@ test("không AI vẫn nhập", async () => {
     throw e;
   };
   // Ma trận viết tay sáu ca: [tên, chuẩn bị sàn, khách, lý do, kết quả sổ mong đợi (null = không dòng)].
-  const CA: [string, (s: San) => Promise<unknown>, KhachAi | null, string, string | null][] = [
+  const CA: [string, (s: San) => unknown, KhachAi | null, string, string | null][] = [
     ["chưa có thoả thuận", async () => {}, khachGia().khach, LY_DO.chuaBat, null],
     ["thoả thuận tạm ngừng", async (s) => { await bat(s); await bat(s, false); }, khachGia().khach, LY_DO.tamNgung, null],
     ["thiếu khoá", (s) => bat(s), null, LY_DO.thieuKhoa, null],
