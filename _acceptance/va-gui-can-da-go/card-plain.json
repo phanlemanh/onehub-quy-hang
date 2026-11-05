@@ -1,0 +1,25 @@
+{
+  "feature_plain": "Căn đã gỡ khỏi Quỹ hàng khi hoàn tác lần nhập không còn vào được link gửi mới, và khách mở link cũ không bấm «Quan tâm» được cho căn ấy — chặn ngay ở cơ sở dữ liệu.",
+  "will_do": [
+    {"id": "AC-4", "p": "Sẽ thay hai hàm cơ sở dữ liệu mà vẫn giữ nguyên cách gọi, quyền và mã lỗi; chạy cập nhật hai lần không áp lại."}
+  ],
+  "wont_do": [
+    {"id": "AC-1", "p": "Sẽ KHÔNG cho tạo link gửi có căn đã gỡ — báo «căn không gửi được», link chỉ có căn còn lại vẫn tạo được."},
+    {"id": "AC-2", "p": "Sẽ KHÔNG ghi «Quan tâm» cho căn đã gỡ trong link cũ; căn còn lại và lượt mở link vẫn ghi được."},
+    {"id": "AC-3", "p": "Chặn ngay trong hàm cơ sở dữ liệu, kể cả khi gọi thẳng không qua API; sàn khác không gửi được căn của sàn này."},
+    {"id": "OOS-1", "p": "Không gỡ căn đã gỡ khỏi các link gửi cũ — trang khách đã báo căn không còn."},
+    {"id": "OOS-2", "p": "Không đụng các hàm cơ sở dữ liệu khác chỉ đọc nội bộ."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đủ hai hàm có thể đưa căn ra khách: tạo link gửi và ghi «Quan tâm» (đã soát mọi hàm đọc bảng hàng)."},
+    {"i": 1, "p": "Đủ hai loại căn: đã gỡ (bị chặn) và chưa gỡ (vẫn chạy như cũ)."},
+    {"i": 2, "p": "Đủ ba đường gọi: qua API, gọi thẳng hàm, và từ sàn khác."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc bỏ phép đo giá trị là quyết định của anh, không phải điều hiển nhiên — đã chuyển thành Hỏi-2."},
+    {"i": 1, "p": "Câu dẫn chứng cho cách sửa trước đây chỉ liên quan — đã thay bằng đúng mục anh chọn mở hợp đồng mới ở hàng 66."},
+    {"i": 2, "p": "Dùng lại mã lỗi chung hay mã riêng «căn đã gỡ» là một đánh đổi — đã chuyển thành Hỏi-1."},
+    {"i": 3, "p": "Chưa chứng minh không còn đường nào khác đưa căn ra ngoài — đã soát mọi hàm đọc bảng hàng và ghi vào hồ sơ."},
+    {"i": 4, "p": "Hai bài thử thiếu kiểm «không dòng nào được ghi» và kiểm quyền gọi hàm — đã bổ sung."}
+  ]
+}
