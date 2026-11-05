@@ -5,7 +5,7 @@ slug: va-ho-so-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/va-ho-so-lien-he/design.md
 approved_by:
 approved_at:
@@ -86,3 +86,5 @@ eval máy, một lượt nhìn màn và một eval đọc dưới đây.
   `_acceptance/man-lien-he/review-findings.md`, luật đợt 72.
 - Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài kiểm có một phép so với luật cũ luôn cho cùng kết quả, nên nó không chứng minh được luật cũ từng nối trang hai lần. Người dùng không bị ảnh hưởng, chỉ là bằng chứng kiểm kém chặt hơn lời ghi. — `apps/web/src/app/(app)/contacts/xem-them.test.ts`
 - Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu sau này ai đó sửa màn Liên hệ làm hỏng việc cập nhật vị trí trang, bấm «Xem thêm» hai lần nhanh có thể làm hiện trùng dòng mà bài kiểm vẫn xanh. Hiện tại màn chạy đúng, chỉ chưa có bài kiểm chạm đúng đường ấy. — `apps/web/src/app/(app)/contacts/xem-them.test.ts`
+- Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Lần thử trên màn Liên hệ khi đổi sang Chủ cho thuê chỉ chạy với danh sách trống, nên chưa chứng minh được màn hiện đúng các dòng Chủ cho thuê. Người dùng không thấy lỗi nào; chỉ là bằng chứng kiểm kém chặt hơn lời ghi. — `_acceptance/va-ho-so-lien-he/evidence/E6-network.txt`
+- Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Phép thử chỉ cho thấy màn không có dòng lạc, chưa cho thấy các dòng Chủ cho thuê hợp lệ vẫn hiện đầy đủ sau khi đổi loại. Nếu sau này có lỗi làm mất các dòng đó, phép thử này vẫn xanh. — `_acceptance/va-ho-so-lien-he/evidence/E6-network.txt`

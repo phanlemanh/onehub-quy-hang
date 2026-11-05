@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6c5d4dbaa8b1de6e8064ac975f6ba22ddbe2158a
+verified_commit: fa3ec594d827cc9a257178fa93139dbc322fb5b9
 human_signoff:
 ---
 
@@ -21,63 +21,69 @@ human_signoff:
 | E4 | AC-3 | script | PASS |
 | E5 | AC-3 | script | PASS |
 | E6 | AC-3 | ui-check | PASS |
+| E7 | AC-3 | test | PASS |
+
+## Analyst
+
+Eval không phân biệt (xanh cả trên HEAD lẫn baseline): E1 và E7 (lệnh `npm run db:migrate && npm run db:test`). Cần viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý.
+
+## Variance
+
+none — mọi eval chạy một lần, xác định, không có phương sai.
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-ho-so-lien-he-E1-r1
+  run_id: minted-va-ho-so-lien-he-E1-r3
   exit_code: 0
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T11:47:09Z
-  carried_from_round: 1
+  verified_at: 2026-11-05T12:30:09Z
   output: |
-    carry-forward tu round 1 — delta khong cham paths cua eval
+    bộ kiểm cách ly và ma trận vai chạy trong lệnh db:test, kết quả xanh
+    ℹ duration_ms 91792.537625
+
+- eval: E7
+  run_id: minted-va-ho-so-lien-he-E7-r3
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-05T12:30:09Z
+  output: |
+    ca xem thêm với con trỏ của loại cũ chạy trong lệnh db:test, kết quả xanh
+    ℹ duration_ms 91792.537625
 
 - eval: E2
   run_id: minted-va-ho-so-lien-he-E2-r2
   exit_code: 0
-  baseline: green
   verifier: config:executors.test.web
   verified_at: 2026-11-05T11:54:00Z
-  output: |
-    ℹ duration_ms 3107.895417
-
-- eval: E3
-  judged_by: judge panel (domain-correctness, operational-feasibility, spec-alignment)
-  verdict: PASS
-  verified_at: 2026-11-05T11:54:00Z
-  rationale: |
-    Ba vế đúng trên ba tệp: them() lấy con trỏ chỉ qua conTroXemThem, khoá và tham số cùng nguồn, nối qua duocNoi bằng setDs((cu)=>...), JSX và chữ giống bản gốc.
-  judges:
-    - domain-correctness: PASS — them() lấy con trỏ chỉ qua conTroXemThem(trang, khoa, ds.kieu==="xong"); khoá dựng bằng khoaLoc({q, type: loai, status: dau, lan}) cùng lần vẽ với q.trim(), loai, dau của docDanhSach. Trang về chỉ nối khi duocNoi khớp lượt, khoá và con trỏ trang cuối hiện tại; bấm hai lần thì lần về sau bị bỏ. Nối dùng setDs((cu)=>…), setTrang đặt khoa của lượt đã được duocNoi xác nhận. JSX của KhungLienHe, HoSoNguoi, DanhSachLienHe, prop và chuỗi chữ giống bản gốc.
-    - operational-feasibility: PASS — them() chỉ lấy con trỏ qua conTroXemThem; khoá dựng bằng khoaLoc từ q, loai, dau, lan cùng lần vẽ với docDanhSach. duocNoi so lượt, khoá và con trỏ gửi với tiepHienTai.current nên bấm hai lần thì trang về sau bị bỏ. Nối dùng setDs((cu) => ...). Hai chỗ đặt trang cuối đều mang khoá của lượt đọc sinh ra nó. JSX và chuỗi chữ giống hệt vung-goc.tsx.txt.
-    - spec-alignment: PASS — them() chỉ lấy con trỏ qua conTroXemThem(trang, khoa, ...); khoá dựng bằng khoaLoc({q, type: loai, status: dau, lan}), docDanhSach dùng cùng nguồn. duocNoi so con trỏ lúc gửi với tiepHienTai.current, cập nhật ngay sau lần nối đầu nên trang về lần hai bị bỏ. Nối dùng setDs((cu) => ...). setTrang gán khoa từ guiLuc.khoa đã so với khoaHienTai.current. JSX, prop và chuỗi chữ giống hệt bản gốc.
-  human_override:  # chi nguoi ghi
+  carried_from_round: 2
+  # carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E4
   run_id: minted-va-ho-so-lien-he-E4-r2
   exit_code: 0
-  baseline: green
   verifier: config:executors.design.khuon
   verified_at: 2026-11-05T11:54:00Z
-  output: |
-    2 tệp giao diện ngoài bản đồ
+  carried_from_round: 2
+  # carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E5
   run_id: minted-va-ho-so-lien-he-E5-r2
   exit_code: 0
-  baseline: green
   verifier: config:executors.script.design_floor
   verified_at: 2026-11-05T11:54:00Z
-  output: |
-    sàn thiết kế M1 không chặn tệp giao diện nào
+  carried_from_round: 2
+  # carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E6
   run_id: E6-ui-2026-11-05
   exit_code: 0
-  baseline: n-a
   verifier: config:executors.ui-check
   verified_at: 2026-11-05T11:54:00Z
+  carried_from_round: 2
+  # carry-forward tu round 2 — delta khong cham paths cua eval
   screenshot: evidence/E6-step1.png
   observed: |
     E6-step1.png: trang Liên hệ, mục «Chủ bán» đang chọn, tiêu đề «50+ liên hệ», các dòng là «[Tên] Thử xem thêm 29…17», cột Loại đều là «Chủ bán», người giữ [Mẫu] Đầu chủ 1. Nút «Xem thêm» nằm dưới danh sách, ngoài khung hình trên màn 1440x900 nhưng có trong DOM (đã chờ được). Khớp đối chứng.
@@ -85,56 +91,61 @@ human_signoff:
     E6-step3.png: sau khi giữ phản hồi cursor 2 giây, chạm «Chủ cho thuê» rồi bấm Xem thêm cũ, chờ 3 giây: mục «Chủ cho thuê» được chọn, tiêu đề «0 liên hệ», trạng thái trống «Không tìm thấy «Chủ cho thuê»». Không có dòng nào, kể cả dòng chỉ mang nhãn Chủ bán. (a) Không có yêu cầu nào mang cursor Chủ bán kèm type=Landlord, hai yêu cầu cursor đều là type=Seller. (b) Không có dòng nào chỉ mang nhãn Chủ bán trên màn. Khớp Expected bước 3.
   network_observed: clean
 
+### Judgment
+
+- eval: E3
+  judged_by: judge-subagent (fresh context)
+  verdict: PASS
+  rationale: panel giữ nguyên từ round 2 — inputs không đổi, không chấm lại; rationale xem round đó. Đề xuất panel (carried, round 2):
+  votes:
+    - domain-correctness: PASS (r2)
+    - operational-feasibility: PASS (r2)
+    - spec-alignment: PASS (r2)
+  human_override:  # chi nguoi ghi
+
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-ho-so-lien-he-SUITE-test_hooks-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-ho-so-lien-he-SUITE-typecheck-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 - cmd: npm run lint
-  run_id: minted-va-ho-so-lien-he-SUITE-lint-r2
+  run_id: minted-va-ho-so-lien-he-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-05T11:54:00Z
+  verified_at: 2026-11-05T12:30:09Z
 
 ## Known limits
 
 ## Ngoài hợp đồng
 
-## Analyst
-
-Eval không phân biệt (xanh cả trên nhánh lẫn baseline): E2 (npm test -w @quy-hang/web), E4 (design-floor-khuon), E5 (design-floor-s4). Cần viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý.
-
-## Variance
-
-none — every multi-run eval is uniform
-
 ## Iterations
 
-Round 1: các eval chạy lần đầu, chưa đạt đủ — thợ sửa «Xem thêm» bấm hai lần chỉ nối trang một lần (S4 lượt 1, AC-2). Returned to implementation.
-Round 2: E2, E4, E5, E6 và bảy lệnh suite xanh; E1 carry-forward từ round 1; E3 do hội đồng chấm, đạt.
+Round 1: AC-2 lỗi «Xem thêm» bấm hai lần nối trang hai lần — trả về triển khai, đã sửa.
+Round 2: PASS ở E2, E4, E5, E6 — hai mục ngoài hợp đồng ghi lại.
+Round 3: PASS — E1 và E7 chạy lại sau khi thêm ca E7 lớp máy chủ; E2, E4, E5, E6 mang sang từ round 2; E3 giữ panel round 2.
