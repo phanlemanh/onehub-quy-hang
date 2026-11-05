@@ -20,6 +20,7 @@ import {
   type StandardStatus,
 } from "@quy-hang/core/listing";
 import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
+import { boNhanTrangThai, kiemNhanSuKien, type NhanTrangThai } from "@quy-hang/core/statuses";
 import { canRead, factsFromEvents, type Viewer, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -61,6 +62,7 @@ export const STATE_COLUMNS: Readonly<Record<keyof ListingState, string>> = {
   buildingName: "building_name",
   unitNumber: "unit_number",
   standardStatus: "standard_status",
+  statusLabel: "status_label",
   listPrice: "list_price",
   feeInclusion: "fee_inclusion",
   furnished: "furnished",
@@ -182,7 +184,24 @@ export async function createListing(tx: pg.PoolClient, payload: unknown, cach: C
   return { listingId, state, event, facts };
 }
 
+/**
+ * Khoá bộ nhãn trạng thái của sàn (hàng 46): lượt lưu bộ nhãn giữ khoá riêng, lệnh mang nhãn giữ khoá chung — lệnh không
+ * đặt được mã mà lượt lưu đang gỡ. Lấy TRƯỚC khoá theo hàng để hai đường cùng thứ tự khoá, không khoá chéo.
+ */
+export const khoaBoTrangThai = (tx: pg.PoolClient, chung: boolean) =>
+  tx.query(`select pg_advisory_xact_lock${chung ? "_shared" : ""}(hashtextextended('trang-thai:' || app.current_company_id()::text, 0))`);
+
+/** Bộ nhãn trạng thái còn sống của sàn đang làm (`company_settings`, khoá `labels.status.*`), đọc trong giao dịch của lời gọi. */
+export async function nhanCuaSan(tx: pg.PoolClient): Promise<NhanTrangThai[]> {
+  const { rows } = await tx.query<{ key: string; value: unknown }>(
+    "select key, value from company_settings where company_id = app.current_company_id() and key like 'labels.status.%' order by key",
+  );
+  return boNhanTrangThai(rows);
+}
+
 export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId: string, cmd: Command, device: Device = null): Promise<Applied | Refusal> {
+  const mangNhan = cmd.type === "status_changed" && typeof (cmd.payload as { label?: unknown } | null)?.label === "string";
+  if (mangNhan) await khoaBoTrangThai(tx, true);
   // Khoá theo hàng: lệnh thứ hai trên cùng hàng đứng chờ, rồi thấy phiên bản mới — không bao giờ hai lệnh cùng một seq.
   const hang = await tx.query<{ version: number }>("select version from listings where id = $1 for update", [listingId]);
   if (!hang.rowCount) return { error: API_ERRORS.notFound };
@@ -215,12 +234,18 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   if (type === "status_changed") {
     // «Thắng ngay» bỏ qua phép so phiên bản, KHÔNG bỏ qua bảng chuyển: xét trên trạng thái hiện tại của hàng.
     // Vào Đang bán: máy chủ luôn đếm ảnh thật của căn và đọc số tối thiểu của sàn (hàng 23) — mọi lối lên bảng qua đây.
-    const anh = payload.to === "Active" ? await nguCanhAnh(tx, hienTai) : {};
-    const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh });
-    if (!kq.ok) {
-      return kq.kind === "invalid-transition"
-        ? { error: API_ERRORS.invalidTransition, reason: kq.reason }
-        : { error: API_ERRORS.missingRequirement, missing: kq.missing };
+    // Nhãn riêng của sàn (hàng 46): mã phải còn sống và neo đúng `to`; cùng trạng thái mà khác nhãn là đổi nhãn tại chỗ —
+    // không qua bảng chuyển, không xét điều kiện vào trạng thái (căn đã ở đó).
+    const nhan = kiemNhanSuKien(mangNhan ? await nhanCuaSan(tx) : [], hienTai, { ...payload, to: payload.to });
+    if (!nhan.ok) return { error: API_ERRORS.invalidPayload, details: [{ path: "label", reason: nhan.loi }], reason: nhan.loi };
+    if (!nhan.doiNhanTaiCho) {
+      const anh = payload.to === "Active" ? await nguCanhAnh(tx, hienTai) : {};
+      const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh });
+      if (!kq.ok) {
+        return kq.kind === "invalid-transition"
+          ? { error: API_ERRORS.invalidTransition, reason: kq.reason }
+          : { error: API_ERRORS.missingRequirement, missing: kq.missing };
+      }
     }
   }
 
@@ -254,6 +279,25 @@ export async function voidListing(tx: pg.PoolClient, listingId: string, expected
   if (version !== expectedVersion) return { error: API_ERRORS.versionConflict };
   const events = await loadEvents(tx, listingId);
   const event = await ghiSuKien(tx, listingId, version + 1, "voided", {}, false, GHI_KHONG_RO);
+  const state = foldListing([...events, event]);
+  const facts = factsFromEvents([...events, event]);
+  await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);
+  return { listingId, state, event, facts };
+}
+
+/**
+ * Gỡ nhãn trạng thái kèm nhãn thay (hàng 46): một sự kiện `status_changed {to: trạng thái hiện tại, label: thay}` ghi bằng
+ * người đang gọi (quản trị sàn), qua cùng hàm ghi sự kiện của lệnh — không sửa thẳng bản tính. Đọc lại căn SAU khoá theo
+ * hàng: căn đã rời nhãn ấy giữa lúc hỏi và lúc ghi thì bỏ qua (`null`). Không tính là xác nhận với chủ nhà.
+ */
+export async function thayNhanCan(tx: pg.PoolClient, listingId: string, maGo: string, thay: string | null): Promise<Applied | null> {
+  const hang = await tx.query<{ version: number }>("select version from listings where id = $1 for update", [listingId]);
+  if (!hang.rowCount) return null;
+  const version = hang.rows[0]!.version;
+  const events = await loadEvents(tx, listingId);
+  const hienTai = foldListing(events);
+  if (hienTai.voided || (hienTai.statusLabel ?? null) !== maGo) return null;
+  const event = await ghiSuKien(tx, listingId, version + 1, "status_changed", { to: hienTai.standardStatus, label: thay }, false, GHI_KHONG_RO);
   const state = foldListing([...events, event]);
   const facts = factsFromEvents([...events, event]);
   await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);

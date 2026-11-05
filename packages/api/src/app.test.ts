@@ -137,6 +137,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 45: cách gọi riêng của sàn.
     "GET /api/v1/company/labels",
     "PUT /api/v1/company/labels",
+    // Trạng thái riêng (hàng 46).
+    "GET /api/v1/company/statuses",
+    "PUT /api/v1/company/statuses",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
