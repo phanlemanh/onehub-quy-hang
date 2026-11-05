@@ -497,7 +497,7 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
   const dong = dongCot(new URLSearchParams(qs));
   const hoSo = chon ? (
     <KhungHoSoCan cot>
-      <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dong ? `${path}?${dong}` : path} duong={duong} />
+      <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dong ? `${path}?${dong}` : path} duong={duong} cho="cot-hom-nay" />
     </KhungHoSoCan>
   ) : null;
 

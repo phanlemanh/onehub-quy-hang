@@ -61,8 +61,28 @@ function DongTin({ dong = 6 }: { dong?: number }) {
   );
 }
 
-export function ChoTai({ kieu }: { kieu: KieuBoCuc }) {
+/** Hồ sơ căn trên điện thoại (`product-detail-5`): ảnh lớn, tên + thông số, hộp giá — đúng dáng màn đầu. */
+function HoSoDienThoai() {
+  return (
+    <div data-cho-tai="ho-so-dien-thoai" className="flex flex-col gap-4 p-4">
+      <Skeleton className="aspect-[4/3] w-full rounded-lg" />
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-5 w-20" />
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-8 w-32" />
+        <Skeleton className="h-2 w-full" />
+        <Skeleton className="h-3 w-1/2" />
+      </div>
+    </div>
+  );
+}
+
+export function ChoTai({ kieu, dienThoai = false }: { kieu: KieuBoCuc; dienThoai?: boolean }) {
   const noiDung = (() => {
+    if (kieu === "ho-so" && dienThoai) return <HoSoDienThoai />;
     switch (kieu) {
       case "tran":
         return <Luoi />;
