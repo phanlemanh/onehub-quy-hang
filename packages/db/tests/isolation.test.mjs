@@ -2387,6 +2387,69 @@ test("trang khách: share_events nằm trong phép kiểm luật theo dòng", { 
   }
 });
 
+// ---- Căn đã gỡ không vào Lần gửi, không nhận «Quan tâm» (037, hàng vá va-gui-can-da-go) ----
+/** Lời gọi phải lỗi đúng mã Postgres (mã là hợp đồng với API: 22023 → 400, 23514 → 409). */
+async function loiMa(client, sql, params, ma, nhan) {
+  await client.query("savepoint loi_ma");
+  await assert.rejects(client.query(sql, params), (e) => {
+    assert.equal(e.code, ma, `${nhan}: mã lỗi`);
+    return true;
+  });
+  await client.query("rollback to savepoint loi_ma");
+}
+test("gửi căn đã gỡ (037): hàm chặn ở tầng dữ liệu", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.DK1, COMPANY_A);
+    const demShares = async () => (await c.query("select count(*)::int n from shares where company_id = $1", [COMPANY_A])).rows[0].n;
+    const demSuKien = async () => (await c.query("select count(*)::int n from share_events where share_id = $1", [LKS.A])).rows[0].n;
+    // Đối chứng dương: căn chưa gỡ gửi được, «Quan tâm» ghi được.
+    const truoc = await demShares();
+    await c.query("select app.create_share(gen_random_uuid(), 'maG000000001', 'agents', null, $1)", [[LKL.A]]);
+    assert.equal(await demShares(), truoc + 1, "đối chứng: căn chưa gỡ gửi được");
+    assert.equal((await c.query("select app.record_share_event('maA000000000', 'interest', $1, 'may-thu-0901') as r", [LKL.A])).rows[0].r, true, "đối chứng: căn chưa gỡ nhận Quan tâm");
+    // Gỡ căn (cờ của bản gấp, hàng 66) bằng vai chủ bảng.
+    await c.query("reset role");
+    await c.query("update listings set voided = true where id = $1", [LKL.A]);
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, LK.DK1, COMPANY_A);
+    const n0 = await demShares();
+    await loiMa(c, "select app.create_share(gen_random_uuid(), 'maG000000002', 'agents', null, $1)", [[LKL.A]], "22023", "Lần gửi có căn đã gỡ");
+    assert.equal(await demShares(), n0, "căn đã gỡ: không thêm Lần gửi");
+    const e0 = await demSuKien();
+    await loiMa(c, "select app.record_share_event('maA000000000', 'interest', $1, 'may-thu-0902')", [LKL.A], "23514", "Quan tâm căn đã gỡ");
+    assert.equal(await demSuKien(), e0, "căn đã gỡ: không thêm sự kiện");
+    // Cách ly: sàn B không gửi được căn của sàn A.
+    await lamNguoi(c, LK.B, COMPANY_B);
+    await loiMa(c, "select app.create_share(gen_random_uuid(), 'maG000000003', 'agents', null, $1)", [[LKL.A]], "22023", "sàn B gửi căn của sàn A");
+  });
+});
+
+test("gửi căn đã gỡ (037): hàm giữ chữ ký và quyền", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select p.proname, p.prosecdef, p.proconfig, pg_get_userbyid(p.proowner) as chu,
+              array(select distinct (aclexplode(p.proacl)).grantee::regrole::text) as duoc
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'app' and p.proname in ('create_share', 'record_share_event') order by p.proname`,
+    );
+    assert.deepEqual(rows.map((r) => r.proname), ["create_share", "record_share_event"]);
+    for (const r of rows) {
+      assert.equal(r.prosecdef, true, `${r.proname}: prosecdef`);
+      assert.deepEqual(r.proconfig, ['search_path=""'], `${r.proname}: search_path rỗng`);
+      assert.deepEqual([...r.duoc].sort(), [r.chu, "quy_hang_app"].sort(), `${r.proname}: chỉ chủ hàm và quy_hang_app được gọi`);
+      assert.ok(r.duoc.includes("quy_hang_app"), `${r.proname}: quy_hang_app có quyền`);
+    }
+    // Chạy hai lần không áp lại: packages/api/test-db/va-gui-can-da-go/migrate-hai-lan.test.ts (cơ sở dữ liệu tạm) — bộ này
+    // còn chạy trỏ bản thật, chỉ đọc và rollback.
+    const m = await client.query("select count(*)::int n from schema_migrations where name like '037_%'");
+    assert.equal(m.rows[0].n, 1, "037 đã áp");
+  } finally {
+    await client.end();
+  }
+});
+
 test("trang khách: hàm theo mã không vượt sàn", { skip }, async () => {
   await withLienHeKhach(async (c) => {
     await lamNguoi(c, LK.TN, COMPANY_A);
@@ -2644,5 +2707,105 @@ test("đã gửi: phiên có sàn mà không người không tắt được link
     await c.query("select app.disable_share($1)", [LKS.B]);
     await lamNguoi(c, LK.TN, COMPANY_A);
     assert.notEqual(await tat(LKS.B), null, "trưởng nhóm sàn B không tắt được link của sàn mình");
+  });
+});
+
+// Mật khẩu do sàn cấp (034, hàng dang-nhap-mat-khau). Ba bảng ở `identity` — vai API không với tới; quản trị chỉ cấp
+// qua app.cap_mat_khau_tam, và hàm từ chối người còn thuộc sàn khác.
+const MK = { QT: "mk-quan-tri-a", CHI_A: "mk-chi-a", HAI_SAN: "mk-hai-san", NGOAI: "mk-ngoai", QT_B: "mk-quan-tri-b" };
+async function withMatKhau(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const id of Object.values(MK)) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $1 || '@example.test', true)`, [id]);
+    }
+    await c.query(
+      `insert into company_members (company_id, user_id, roles) values
+         ($1, $3, '{company_admin}'), ($1, $4, '{telesales}'), ($1, $5, '{telesales}'), ($2, $5, '{telesales}'),
+         ($2, $6, '{company_admin}')`,
+      [COMPANY_A, COMPANY_B, MK.QT, MK.CHI_A, MK.HAI_SAN, MK.QT_B],
+    );
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, MK.QT, COMPANY_A);
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+const HAN_TAM = "now() + interval '72 hours'";
+const trangThaiMk = async (c, u) =>
+  (await chuChay(c, "select kind, origin, disabled_reason from identity.password_state where user_id = $1", [u], [MK.QT, COMPANY_A])).rows[0];
+
+test("mật khẩu: quy_hang_app không đọc ghi identity.password_state, password_failures, password_events", { skip }, async () => {
+  await withMatKhau(async (c) => {
+    for (const bang of ["identity.password_state", "identity.password_failures", "identity.password_events"]) {
+      await expectError(c, `select * from ${bang}`, [], /permission denied/);
+      const cot = bang.endsWith("password_failures") ? "email" : "user_id";
+      await expectError(c, `update ${bang} set ${cot} = ${cot}`, [], /permission denied/);
+    }
+    await expectError(c, "insert into identity.password_failures (email) values ('x@example.test')", [], /permission denied/);
+    await expectError(c, "insert into identity.password_events (user_id, kind) values ($1, 'cap')", [MK.CHI_A], /permission denied/);
+    await expectError(c, "insert into identity.password_state (user_id, kind, origin) values ($1, 'tu-dat', 'tu-doi')", [MK.CHI_A], /permission denied/);
+  });
+});
+
+test("cap_mat_khau_tam: quản trị sàn A không cấp được cho người cũng ở sàn B", { skip }, async () => {
+  await withMatKhau(async (c) => {
+    await expectError(c, `select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.HAI_SAN], /user_in_other_company/);
+    const tk = await chuChay(c, `select 1 from identity.account where "userId" = $1`, [MK.HAI_SAN], [MK.QT, COMPANY_A]);
+    assert.equal(tk.rowCount, 0, "hàm ghi mật khẩu cho người ở hai sàn");
+    // Không phải quản trị, không phải thành viên.
+    await lamNguoi(c, MK.CHI_A, COMPANY_A);
+    await expectError(c, `select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A], /chỉ quản trị/);
+    await lamNguoi(c, MK.QT, COMPANY_A);
+    await expectError(c, `select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.NGOAI], /không có người này/);
+    // Quản trị sàn B không cấp được cho người chỉ ở sàn A.
+    await lamNguoi(c, MK.QT_B, COMPANY_B);
+    await expectError(c, `select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A], /không có người này/);
+    // Đối chứng dương: quản trị A cấp cho người chỉ ở A.
+    await lamNguoi(c, MK.QT, COMPANY_A);
+    await c.query(`select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A]);
+    const tk2 = await chuChay(c, `select "password" from identity.account where "userId" = $1 and "providerId" = 'credential'`, [MK.CHI_A], [MK.QT, COMPANY_A]);
+    assert.equal(tk2.rows[0]?.password, "bam-thu");
+    assert.deepEqual(await trangThaiMk(c, MK.CHI_A), { kind: "tam", origin: "san-cap", disabled_reason: null });
+    const sk = await chuChay(c, "select company_id, actor_user_id, kind from identity.password_events where user_id = $1", [MK.CHI_A], [MK.QT, COMPANY_A]);
+    assert.deepEqual(sk.rows, [{ company_id: COMPANY_A, actor_user_id: MK.QT, kind: "cap" }]);
+  });
+});
+
+test("mật khẩu: vào sàn khác vô hiệu mật khẩu gốc sàn cấp, giữ mật khẩu tự đổi", { skip }, async () => {
+  // Ba hình viết trước: tạm chưa dùng · đặt lần đầu từ tạm · tự đổi ở Cá nhân.
+  const hinh = [
+    { ten: "tạm chưa dùng", kind: "tam", origin: "san-cap", voHieu: true },
+    { ten: "đặt lần đầu từ tạm", kind: "tu-dat", origin: "san-cap", voHieu: true },
+    { ten: "tự đổi ở Cá nhân", kind: "tu-dat", origin: "tu-doi", voHieu: false },
+  ];
+  for (const h of hinh) {
+    await withMatKhau(async (c) => {
+      await c.query(`select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A]);
+      await chuChay(c, "update identity.password_state set kind = $2, origin = $3 where user_id = $1", [MK.CHI_A, h.kind, h.origin], null);
+      await chuChay(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{telesales}')", [COMPANY_B, MK.CHI_A], [MK.QT, COMPANY_A]);
+      const tt = await trangThaiMk(c, MK.CHI_A);
+      assert.equal(tt.disabled_reason, h.voHieu ? "vao-san-khac" : null, `hình «${h.ten}»`);
+      const sk = await chuChay(c, "select count(*)::int n from identity.password_events where user_id = $1 and kind = 'vo-hieu-san-khac'", [MK.CHI_A], [MK.QT, COMPANY_A]);
+      assert.equal(sk.rows[0].n, h.voHieu ? 1 : 0, `sự kiện của hình «${h.ten}»`);
+    });
+  }
+});
+
+test("mật khẩu: mời lại vào đúng sàn đã cấp không vô hiệu; bỏ rồi vào sàn khác thì vô hiệu", { skip }, async () => {
+  await withMatKhau(async (c) => {
+    await c.query(`select app.cap_mat_khau_tam($1, 'bam-thu', ${HAN_TAM})`, [MK.CHI_A]);
+    await chuChay(c, "delete from company_members where company_id = $1 and user_id = $2", [COMPANY_A, MK.CHI_A], null);
+    await chuChay(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{telesales}')", [COMPANY_A, MK.CHI_A], [MK.QT, COMPANY_A]);
+    assert.equal((await trangThaiMk(c, MK.CHI_A)).disabled_reason, null, "mời lại cùng sàn mà mật khẩu bị vô hiệu");
+    // Bỏ khỏi A rồi vào B — không còn dòng A nào, nhưng mật khẩu do A cấp vẫn phải thôi dùng.
+    await chuChay(c, "delete from company_members where company_id = $1 and user_id = $2", [COMPANY_A, MK.CHI_A], null);
+    await chuChay(c, "insert into company_members (company_id, user_id, roles) values ($1, $2, '{telesales}')", [COMPANY_B, MK.CHI_A], [MK.QT, COMPANY_A]);
+    assert.equal((await trangThaiMk(c, MK.CHI_A)).disabled_reason, "vao-san-khac");
   });
 });

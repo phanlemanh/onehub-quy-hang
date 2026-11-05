@@ -1,0 +1,2 @@
+driver: CDP script (chay-ui.mjs), khong co duong doc network trong tool -> networkObserved = n-a (driver)
+loiTrinhDuyet=0 (nhanh), loiTrinhDuyetMain=0 (nhanh chinh) theo log may dev

@@ -1,0 +1,3 @@
+E3 network: driver la CDP script chay-ui.mjs (khong co read_network_requests); khong doc duoc network -> n-a (driver).
+Loi trinh duyet ghi o log dev (browser/Hydration) trong ca e3: loiTrinhDuyet=0 (ca thuong va ca --dung-lai).
+App dev server: http://localhost:3477 (dung-d.mjs); 3460 khong chay.

@@ -142,6 +142,10 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K20 | Mã căn của hàng gắn một lần; đã có thì khoá | Nghĩa chuẩn để so — thuộc tính căn, ảnh gắn theo toà + mã | ADR-0026 quyết định 1; hồ sơ `dien-ma-can-cho-hang` Hỏi-3 |
 | K21 | Mỗi sàn tối đa một hàng đang mở trên một căn — gắn mã trùng bị chặn | Nghĩa chuẩn để so; «đang mở» là `OPEN_STATUSES` của lõi | §4; ADR-0026 quyết định 4 |
 | K22 | Dòng nhập file trỏ căn đã có hàng mở mà người khác giữ thành tin bổ sung, không ghi đè hàng (Lofty cho chủ tài khoản chọn cách đè) | Quyền và an toàn — người giữ căn không bị người khác ghi đè | Luật 20; hàng 65a Hỏi-2 (chủ kho duyệt 03/11); `quyetDongNhap` ở `packages/core/src/import/dong.ts` |
+| K23 | Độ dài mật khẩu 8–128 ký tự (Salesforce cho quản trị chỉnh, mặc định 8) | Quyền và an toàn — một sàn nới là mở lối đoán vào số chủ nhà (bất biến 2) | ADR-0005 bổ sung 04/11; hồ sơ `dang-nhap-mat-khau` Hỏi-3, chủ kho chọn 8 ngày 05/11 |
+| K24 | Giới hạn thử mật khẩu: 5 sai / 15 phút thì chờ, 20 sai liên tiếp thì khoá (Salesforce cho quản trị chỉnh) | Quyền và an toàn | ADR-0005 bổ sung 04/11; hồ sơ `dang-nhap-mat-khau` Hỏi-3 |
+| K25 | Mật khẩu tạm hết hạn sau 72 giờ | Quyền và an toàn | ADR-0005 bổ sung 04/11; hồ sơ `dang-nhap-mat-khau` Hỏi-3 |
+| K26 | Kiểu mở chi tiết của Danh sách – chi tiết: cột kéo chia đứng cạnh bảng (38%, kéo 28–50%), cố định theo bố cục — sàn không chọn cạnh / nổi / trang như Notion cho chủ không gian chọn | Nền tảng — một bố cục cho mọi màn danh sách – chi tiết (hệ bố cục ADR-0024): một nhánh dựng, một bộ phép đo, ảnh chuẩn chung; thêm tham số sàn là ba nhánh dựng và phép đo cho mỗi nhánh | ADR-0024 sửa đổi 05/11; hàng 105 Hỏi-2 (chủ kho duyệt 05/11, `d-20261105T041953Z-5`) |
 
 ## Đếm
 
@@ -152,7 +156,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **21 điều khoá** ở phần C.
+- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **26 điều khoá** ở phần C (K26 của hàng 105).
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.

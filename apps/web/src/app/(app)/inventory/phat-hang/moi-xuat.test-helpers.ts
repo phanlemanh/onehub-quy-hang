@@ -40,6 +40,8 @@ export function dongMoi(c: CanNoiBo): DongBang {
     closeDate: c.closeDate,
     withdrawnReason: c.withdrawnReason,
     propertySubType: c.propertySubType,
+    // Cột «Đầu chủ» (hàng 105) mang tên người giữ mồi — bản xuất không được chở.
+    "dau-chu": c.holderName ?? "[Tên] Người giữ mồi",
     // Khoá lạ của dòng:
     ownerName: c.ownerName,
     ownerPhone: c.ownerPhone,

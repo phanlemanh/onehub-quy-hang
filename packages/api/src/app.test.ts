@@ -33,9 +33,12 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/me/company",
     "GET /api/v1/company",
     "GET /api/v1/company/members",
+    // Hàng 105: tên thành viên cho mọi vai (cột «Đầu chủ»).
+    "GET /api/v1/company/member-names",
     "POST /api/v1/company/members",
     "PATCH /api/v1/company/members/{userId}",
     "DELETE /api/v1/company/members/{userId}",
+    "POST /api/v1/company/members/{userId}/temp-password",
     "GET /api/v1/company/zones",
     "POST /api/v1/company/zones",
     // Hàng 8 (ADR-0008).

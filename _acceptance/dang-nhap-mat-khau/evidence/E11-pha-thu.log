@@ -1,0 +1,14 @@
+# phá-thử 034: bỏ chốt sàn khác ở hàm cấp, bỏ vô hiệu ở trigger
+✖ cap_mat_khau_tam: quản trị sàn A không cấp được cho người cũng ở sàn B (9.761541ms)
+✖ mật khẩu: vào sàn khác vô hiệu mật khẩu gốc sàn cấp, giữ mật khẩu tự đổi (12.134125ms)
+✖ mật khẩu: mời lại vào đúng sàn đã cấp không vô hiệu; bỏ rồi vào sàn khác thì vô hiệu (14.434208ms)
+✖ failing tests:
+✖ cap_mat_khau_tam: quản trị sàn A không cấp được cho người cũng ở sàn B (9.761541ms)
+    expected: /user_in_other_company/,
+✖ mật khẩu: vào sàn khác vô hiệu mật khẩu gốc sàn cấp, giữ mật khẩu tự đổi (12.134125ms)
+  AssertionError [ERR_ASSERTION]: hình «tạm chưa dùng»
+  - 'vao-san-khac'
+    expected: 'vao-san-khac',
+✖ mật khẩu: mời lại vào đúng sàn đã cấp không vô hiệu; bỏ rồi vào sàn khác thì vô hiệu (14.434208ms)
+  - 'vao-san-khac'
+    expected: 'vao-san-khac',

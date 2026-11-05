@@ -4,9 +4,12 @@ import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "./app";
 import { emailsOf, ensureAccount } from "./auth/accounts";
 import { resolveCompany } from "./auth/company";
-import { ACTIVE_COMPANY_COOKIE } from "./auth/constants";
+import { hashPassword } from "better-auth/crypto";
+import { ACTIVE_COMPANY_COOKIE, TAM_HAN_GIO } from "./auth/constants";
+import { sinhMatKhauTam } from "./auth/mat-khau";
 import { withCompany } from "./db";
 import { API_ERRORS, type ApiErrorEntry } from "./errors";
+import { tenHienThi } from "./ten-hien-thi";
 
 /** Năm vai của Tham chiếu §2 (ADR-0006). Cơ sở dữ liệu giữ cùng danh sách ở ràng buộc company_members_roles_valid. */
 export const ROLES = ["telesales", "listing_agent", "buyer_agent", "team_lead", "company_admin"] as const;
@@ -17,6 +20,8 @@ const err = (description: string) => ({ description, content: { "application/jso
 const ok = (description: string, schema: z.ZodTypeAny) => ({ description, content: { "application/json": { schema } } });
 const Zone = z.object({ id: z.string(), name: z.string() });
 const Member = z.object({ userId: z.string(), email: z.string(), roles: z.array(z.string()), zones: z.array(Zone) });
+/** Tên thành viên cho mọi vai (hàng 105, AC-7): chỉ mã và tên — không email, không số, không vai. */
+const MemberName = z.object({ id: z.string(), name: z.string() }).strict().openapi("MemberName");
 const json = (schema: z.ZodTypeAny) => ({ body: { content: { "application/json": { schema } } } });
 /** Mọi đường quản người có thể trả các mã lỗi này (đăng nhập, sàn đang làm, quyền, dữ liệu, trigger). */
 const loi = {
@@ -202,6 +207,58 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
         if (l) return tra(c, l);
         throw e;
       }
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "post",
+      path: `${BASE}/members/{userId}/temp-password`,
+      summary: "Cấp mật khẩu tạm cho người chỉ thuộc sàn này — trả mật khẩu đúng một lần, thu mọi phiên của người",
+      request: { params: z.object({ userId: z.string() }) },
+      responses: { 200: ok("Mật khẩu tạm", z.object({ tempPassword: z.string(), expiresAt: z.string() })), ...loi },
+    }),
+    async (c) => {
+      const q = await quanTri(c);
+      if ("status" in q) return tra(c, q);
+      const { userId } = c.req.valid("param");
+      // Bản rõ chỉ sống trong lời gọi này: băm bằng hàm của thư viện, không lưu, không in (dang-nhap-mat-khau).
+      const tam = sinhMatKhauTam();
+      const het = new Date(Date.now() + TAM_HAN_GIO * 3600 * 1000);
+      try {
+        const bam = await hashPassword(tam);
+        await withCompany(appPool, q, (tx) => tx.query("select app.cap_mat_khau_tam($1, $2, $3)", [userId, bam, het]));
+      } catch (e) {
+        const x = e as { code?: string };
+        if (x.code === "QH409") return tra(c, API_ERRORS.userInOtherCompany);
+        if (x.code === "P0002") return tra(c, API_ERRORS.notFound);
+        const l = loiPg(e);
+        if (l) return tra(c, l);
+        throw e;
+      }
+      return c.json({ tempPassword: tam, expiresAt: het.toISOString() }, 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "get",
+      path: `${BASE}/member-names`,
+      summary: "Tên thành viên của sàn đang làm — mọi vai, chỉ mã và tên (cột «Đầu chủ» của Bảng hàng, hàng 105)",
+      responses: { 200: ok("Thành viên", z.array(MemberName)), ...loi },
+    }),
+    async (c) => {
+      const v = await vao(c);
+      if ("status" in v) return tra(c, v);
+      // Luật theo dòng của company_members: chỉ dòng của sàn đang làm (app.current_company_id()), vai quy_hang_app.
+      const ids = await withCompany(appPool, v.ctx, async (tx) =>
+        (await tx.query<{ userId: string }>('select user_id as "userId" from company_members where company_id = app.current_company_id() order by user_id')).rows.map((r) => r.userId),
+      );
+      const ten = await tenHienThi(identityPool, ids);
+      return c.json(
+        ids.map((id) => ({ id, name: ten.get(id) ?? "" })),
+        200,
+      );
     },
   );
 

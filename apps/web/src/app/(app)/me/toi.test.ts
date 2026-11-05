@@ -2,13 +2,28 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { test } from "node:test";
+import { describe, it, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { loaiMay, type LoaiMay } from "@quy-hang/core/thiet-bi";
 import { dangXuatTrenMay } from "@/components/shell/dang-xuat-tren-may";
 import type { TrangThaiThietBi } from "@/lib/push/dang-ky";
 import { NHAN_THONG_BAO } from "@/lib/push/nhan";
-import { coNutBaoMat, dongThongBao, LOI_DA_BAO, nhomDong, phanLoaiCai, trangThaiDongMay, type MaNhom, type NhomDong, type TrangThaiCai } from "./toi";
+import {
+  canMatKhauHienTai,
+  coNutBaoMat,
+  dongThongBao,
+  LOI_DA_BAO,
+  NHAN_MAT_KHAU,
+  NHOM_MAT_KHAU,
+  nhomDong,
+  nutMatKhau,
+  phanLoaiCai,
+  trangThaiDongMay,
+  type MaNhom,
+  type NhomDong,
+  type TrangThaiCai,
+  type TrangThaiMatKhau,
+} from "./toi";
 
 const DAY: MaNhom[] = ["ho-so", "san", "cai", "thong-bao", "may", "dang-xuat"];
 const VAI = ["listing_agent", "buyer_agent", "team_lead", "telesales", "company_admin"];
@@ -119,12 +134,12 @@ test("E4 đăng xuất ở tab Tôi: hỏi khi còn 2 thay đổi; «Ở lại»
     });
     assert.deepEqual(hoi, n > 0 ? [2] : []);
     if (!dongY) {
-      assert.equal(kq, false);
+      assert.equal(kq, "o-lai");
       assert.equal(m.goiQua.length, 0, "ở lại mà vẫn gọi sign-out");
       assert.ok(m.kho.has("u-x|s"));
       continue;
     }
-    assert.equal(kq, true);
+    assert.equal(kq, "xong");
     assert.ok(!m.kho.has("u-x|s"), "kho chưa xoá");
     assert.ok(m.kho.has("u-z|s"), "kho người khác bị xoá");
     assert.deepEqual(m.goiQua.map((g) => g.url), ["/api/v1/auth/sign-out"]);
@@ -188,4 +203,27 @@ test("E5b loại máy của sáu chuỗi mẫu", () => {
     ["curl/8.4.0", "khac"],
   ];
   for (const [ua, mong] of MAU) assert.equal(loaiMay(ua), mong, ua);
+});
+
+// dang-nhap-mat-khau (E20): dòng «Mật khẩu» nằm trong nhóm «Hồ sơ» (Hỏi-6), sáu nhóm giữ thứ tự cũ.
+describe("dòng Mật khẩu", () => {
+  it("nằm trong nhóm Hồ sơ, sáu nhóm giữ thứ tự", () => {
+    assert.deepEqual(
+      nhomDong({ companies: [1] }).map((n) => n.ma),
+      ["ho-so", "san", "cai", "thong-bao", "may", "dang-xuat"],
+    );
+    assert.equal(NHOM_MAT_KHAU, "ho-so");
+  });
+  it("chữ và nút theo ba trạng thái", () => {
+    const bang: [TrangThaiMatKhau, string, string, boolean][] = [
+      ["khong", "Chưa đặt", "Đặt mật khẩu", false],
+      ["co", "Đã đặt", "Đổi mật khẩu", true],
+      ["vo-hieu", "Đã khoá — đặt mật khẩu mới", "Đặt mật khẩu", false],
+    ];
+    for (const [t, nhan, nut, hienTai] of bang) {
+      assert.equal(NHAN_MAT_KHAU[t], nhan, t);
+      assert.equal(nutMatKhau(t), nut, t);
+      assert.equal(canMatKhauHienTai(t), hienTai, t);
+    }
+  });
 });

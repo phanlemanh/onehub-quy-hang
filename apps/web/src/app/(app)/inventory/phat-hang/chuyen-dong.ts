@@ -6,7 +6,7 @@
  * Nhập tương đối và qua `@quy-hang/core` — không `@/…` — để bộ kiểm rò rỉ ở gốc kho chạy được tệp này.
  */
 import type { CanNoiBo, CauHinhRa, NguoiNhan } from "@quy-hang/core/redaction";
-import { xuatBang, type BanXuat, type CotGocNhin, type MauXuat } from "@quy-hang/core/export";
+import { xuatBang, type BanXuat, type CotBangHang, type CotGocNhin, type MauXuat } from "@quy-hang/core/export";
 import type { CotId, DongBang } from "../cot";
 
 export type NguCanh = {
@@ -85,9 +85,15 @@ export type TuyChonTrang = NguCanh & {
   cauHinh?: CauHinhRa;
 };
 
+/**
+ * Cột của bảng hàng → cột của bảng cột lõi. «Đầu chủ» (hàng 105) là «Người giữ» của lõi (`holderName`, không ra ngoài) —
+ * luật ẩn của lõi bỏ nó ở mọi người nhận; mọi cột khác cùng tên.
+ */
+export const cotLoi = (id: CotId): CotBangHang => (id === "dau-chu" ? "holderName" : id);
+
 /** Tập căn (đã theo thứ tự góc nhìn) → bản xuất của lõi. Hộp thoại chỉ vẽ kết quả này. */
 export function banXuatTuDong(dong: readonly DongBang[], tuy: TuyChonTrang): BanXuat {
-  const cot: CotGocNhin[] = [...tuy.cot];
+  const cot: CotGocNhin[] = tuy.cot.map(cotLoi);
   return xuatBang(
     dong.map((d) => dongSangCan(d, tuy)),
     { mau: tuy.mau, nguoiNhan: tuy.nguoiNhan, cauHinh: tuy.cauHinh, cot, today: tuy.today, tenSan: tuy.tenSan },

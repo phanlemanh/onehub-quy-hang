@@ -1,0 +1,5 @@
+# phá-thử E9: bỏ chốt chặn /sign-in/email gọi thẳng thư viện
+✔ mọi đường gửi mã còn phục vụ: lần thứ sáu trả 429, không gửi (88.796209ms)
+✖ đường lõi mật khẩu đóng (63.392375ms)
+✖ đường lõi mật khẩu đóng (63.392375ms)
+  AssertionError [ERR_ASSERTION]: /sign-in/email lần 1 trả 401
