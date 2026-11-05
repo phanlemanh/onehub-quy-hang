@@ -148,6 +148,11 @@ export function activeTab(pathname: string, tabs: readonly Tab[]): Tab | null {
   return best;
 }
 
+/** Người được đổi đầu chủ hàng loạt trên Bảng hàng: chỉ người mang vai Trưởng nhóm (hàng 89). Máy chủ chặn độc lập. */
+export function canReassignListingAgents(roles: readonly string[]): boolean {
+  return roles.includes("team_lead");
+}
+
 /** Tên nhà trên màn — nhãn của CONTEXT.md; ô gõ mã căn khớp chữ gõ với tên này. */
 export const HOME_LABEL: Record<Home, string> = {
   today: "Hôm nay",
