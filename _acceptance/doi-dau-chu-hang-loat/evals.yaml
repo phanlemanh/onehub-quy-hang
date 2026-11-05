@@ -70,6 +70,7 @@ evals:
   - id: E5
     criterion: AC-5
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ma trận viết trước 6 ô sau một lần đổi D1→D2: (a) căn còn D2 → về D1; (b) căn đã đổi tiếp sang D3 → giữ D3, đếm bỏ qua; (c) căn trước chưa có đầu chủ → giữ D2 và liên hệ cùng chủ của nó cũng giữ D2, đếm vào «chưa có đầu chủ» với lời riêng; (d) liên hệ còn D2, chủ không có căn ô (c) → về người giữ cũ; (e) liên hệ đã đổi tiếp sang D3 → giữ D3, đếm bỏ qua; (f) liên hệ trước chưa có người giữ và mọi căn của chủ về D1 → về null; trả {restored, skipped, keptNoPriorAgent} đúng số; hoàn tác lần hai → 409; số assert = 6 + 2; chiều đỏ: bản sao hoàn tác không xét người giữ hiện tại → ô (b) đỏ nêu căn."
     paths: ["packages/api/src/listings/**", "packages/api/test-db/doi-dau-chu/**", "packages/db/migrations/027_*.sql"]
