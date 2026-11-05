@@ -29,7 +29,7 @@ test("Telesales: không cột nhà, không ô gõ mã căn, điện thoại Hôm
 
 test("Đầu chủ: Hôm nay, Bảng hàng; + Lead, Nhập Excel, Xuất bảng hàng", () => {
   const nav = navigationFor(["listing_agent"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "contacts", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "me"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.equal(nav.unitJump, true);
@@ -45,7 +45,7 @@ test("Đầu khách: thêm Đã gửi, không nút nào", () => {
 
 test("Trưởng nhóm: thêm Đội; + Lead, Nhập Excel (ADR-0011), Xuất bảng hàng; điện thoại không có Đội", () => {
   const nav = navigationFor(["team_lead"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "team", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "contacts", "team", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.deepEqual(nav.mobileActions, ["new_lead"]);
@@ -62,7 +62,7 @@ test("Chỉ Quản trị sàn: mở vào Cài đặt sàn, điện thoại Cài 
 
 test("Nhiều vai nhận hợp các nhà; quản trị kèm vai khác mở vào Hôm nay, điện thoại không có Cài đặt sàn", () => {
   const nav = navigationFor(["team_lead", "company_admin"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "team", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "contacts", "team", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.equal(nav.landing, "/today");
@@ -70,7 +70,7 @@ test("Nhiều vai nhận hợp các nhà; quản trị kèm vai khác mở vào 
 
 test("Telesales kèm Đầu chủ có cột nhà và tab Bảng hàng thay tab Lead", () => {
   const nav = navigationFor(["telesales", "listing_agent"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "contacts", "settings"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "me"]);
 });
 
@@ -84,7 +84,7 @@ type Row = Pick<Navigation, "homes" | "tabs" | "actions" | "mobileActions" | "la
 const SECTION_9: Record<Role, Row> = {
   telesales: { homes: [], tabs: ["today", "lead", "me"], actions: ["new_lead"], mobileActions: [], landing: "/today", unitJump: false },
   listing_agent: {
-    homes: ["today", "inventory", "settings"],
+    homes: ["today", "inventory", "contacts", "settings"],
     tabs: ["today", "inventory", "me"],
     actions: ["new_lead", "import", "export"],
     mobileActions: ["new_lead"],
@@ -100,7 +100,7 @@ const SECTION_9: Record<Role, Row> = {
     unitJump: true,
   },
   team_lead: {
-    homes: ["today", "inventory", "shares", "team", "settings"],
+    homes: ["today", "inventory", "shares", "contacts", "team", "settings"],
     tabs: ["today", "inventory", "send", "me"],
     actions: ["new_lead", "import", "export"],
     mobileActions: ["new_lead"],
@@ -155,7 +155,7 @@ test("Đối chứng đỏ: bảng giả cho Đầu chủ Nhập Excel trên đi
 
 test("Đầu chủ + Đầu khách nhận hợp nhà và nút", () => {
   const nav = navigationFor(["listing_agent", "buyer_agent"]);
-  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "settings"]);
+  assert.deepEqual(nav.homes, ["today", "inventory", "shares", "contacts", "settings"]);
   assert.deepEqual(nav.actions, ["new_lead", "import", "export"]);
   assert.deepEqual(nav.tabs, ["today", "inventory", "send", "me"]);
 });
