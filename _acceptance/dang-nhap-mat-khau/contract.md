@@ -5,7 +5,7 @@ slug: dang-nhap-mat-khau
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-mat-khau-design.md
@@ -133,3 +133,11 @@ nhật ký, sự kiện hay trang nào».
     email dài.
   - AC-10: «Chưa đăng xuất được» kèm «Thử lại» trên trình duyệt thật (menu tài khoản, Cá nhân, chọn sàn) chưa có bằng
     chứng máy; đường đăng xuất đo bằng bộ test web (E13).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: chữ trạng thái và nhãn nút của dòng «Mật khẩu» ở Cá nhân chỉ được bộ test web giữ, chưa có phép đo gắn AC-9.
+  - Ngoài-2: phép đo đăng xuất (E13) chưa ghi rõ ca «không gắn this» và «không hỏi xoá kho lần hai» trong kỳ vọng.
+  - Ngoài-3: thẻ và trang bằng chứng cũ trước khi thu phạm vi từng ghi ba phép chấm màn rớt; ảnh của chúng đã gỡ.
+  - Ngoài-4: dòng «Mật khẩu» ở Cá nhân hỏng thì cổng báo đỏ dưới AC-11, không dưới AC-9.
+  - Ngoài-8: mất mạng lúc đăng nhập bằng mật khẩu thì không hiện câu báo lỗi, chỉ thấy nút bật lại.
+  - Ngoài-9: phép kiểm «không đổi lối đăng nhập» của hồ sơ dang-nhap-auth-15 đo theo nhánh đang đứng, đỏ oan trên nhánh này
+    và xanh vô điều kiện sau khi gộp.
