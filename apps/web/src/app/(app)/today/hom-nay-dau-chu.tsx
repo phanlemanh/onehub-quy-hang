@@ -7,7 +7,7 @@
 import { NEED_LABELS, RETURN_REASON_LABEL, LEAD_STAGE_LABELS, type LeadState } from "@quy-hang/core/dedupe";
 import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type BoNhom, type LeadAction, type Nhom } from "@quy-hang/core/today";
 import { useTable, type ColumnDef, type ExpandedState, type Row } from "@tanstack/react-table";
-import { InboxIcon, RotateCwIcon } from "lucide-react";
+import { RotateCwIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
@@ -41,6 +41,11 @@ import { canHomNay, chuGiaPhi, chuGio, chuGioNgay, chuHan, chuLoai, lyDo, type C
 import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { docNhomThamSo, timNhom } from "./mo-nhom";
 import { chuSo, moSo, telHref } from "./mo-so";
+import { DanhSachDienThoai, type NhomThe, type TheDong } from "./mobile/danh-sach";
+import { dungNhomThe, noiThe, noiViecCan, noiViecLead } from "./mobile/hanh-dong";
+import { HetViec } from "./mobile/het-viec";
+import { useDienThoai } from "./mobile/kho";
+import { moSoChu } from "./mobile/mo-so-chu";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
 import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
 
@@ -163,16 +168,11 @@ function NutViec({ v, hd }: { v: Viec; hd: HanhDong }) {
   const nhan = (m: MaViec) =>
     m === "tra-lai" ? `Trả lại · ${RETURN_REASON_LABEL}` : m === "mo-so" && soMo ? `Gọi ${chuSo(soMo)}` : NHAN_VIEC[m];
   const lam = (m: MaViec): { onClick?: () => void; href?: string } => {
-    if (v.kind === "can") {
-      if (m === "con-giu-gia") return { onClick: () => hd.conGiuGia(v.can) };
-      if (m === "doi-gia-trang-thai") return v.can.unitNumber ? { onClick: () => hd.moHoSo(v.can) } : { href: duongHangChuaMa(v.can.id) };
-      return { href: `/units/call?hang=${encodeURIComponent(v.can.id)}` };
-    }
-    if (m === "nhan") return { onClick: () => hd.lead(v.lead, "accept") };
-    if (m === "da-goi") return { onClick: () => hd.lead(v.lead, "first_call") };
+    // Đường nối chung với thẻ điện thoại (hanh-dong.ts); «Trả lại» hỏi lại trước, «Mở số» chỉ có ở máy tính.
+    if (v.kind === "can") return noiViecCan(v.can, m, hd, duongHangChuaMa);
     if (m === "tra-lai") return { onClick: () => setHoiTraLai(true) };
     if (m === "mo-so") return soMo ? { href: telHref(soMo) } : { onClick: () => hd.moSo(v.lead) };
-    return { href: `/units/call?lead=${encodeURIComponent(v.lead.id)}` };
+    return noiViecLead(v.lead, m, hd);
   };
   const nutChinh = chinh ? (
     (() => {
@@ -276,21 +276,6 @@ function DangTai() {
     <FramePanel className="p-3.5!" aria-label="Đang tải Hôm nay">
       <ChoTai kieu="tran" />
     </FramePanel>
-  );
-}
-
-function HetViec() {
-  return (
-    <TrangThai
-      kind="empty"
-      icon={InboxIcon}
-      title="Hôm nay không còn việc"
-      description={
-        <Button variant="outline" size="sm" className="mt-2" nativeButton={false} render={<Link href="/inventory" />}>
-          Mở Bảng hàng
-        </Button>
-      }
-    />
   );
 }
 
@@ -518,7 +503,34 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
 
   const dangTai = ngan.listings === null || taiBo.kind === "dang" || taiLead.kind === "dang";
 
-  const than = dangTai ? (
+  // ——— Điện thoại (hàng 39): thẻ hai tầng thay lưới, cùng nhóm và cùng bộ việc ———
+  const dienThoai = useDienThoai();
+  const theCua = (v: Viec): TheDong => {
+    const h = hanCua(v, bayGio);
+    const noi = noiThe(v, hd, { duongChuaMa: duongHangChuaMa, diToi: (href) => window.location.assign(href) });
+    return {
+      id: v.id,
+      tren: tieuDe(v),
+      duoi: [lyDoChu(v), chuGiaViec(v)].filter(Boolean).join(" · "),
+      han: h && h.muc !== "khong" ? h : null,
+      dong: viecDong(v),
+      coSo: v.kind === "lead" || v.can.listAgentKey === nguoi,
+      ban: dangGhi.has(v.id),
+      loi: loi[v.id],
+      lam: noi.lam,
+      ghiKetQua: noi.ghiKetQua,
+      soCu: soDaMo[v.id] ?? null,
+      moSo: () => (v.kind === "lead" ? moSo(v.lead.id) : moSoChu(v.can.id)),
+      daMo: (so) => setSoDaMo((m) => ({ ...m, [v.id]: so })),
+    };
+  };
+  const nhomThe: NhomThe[] = dungNhomThe(nhom, theCua, badgeNhom);
+
+  const than = dienThoai ? (
+    <FramePanel className="p-0!">
+      <DanhSachDienThoai trangThai={dangTai ? "dang" : "co"} nhom={nhomThe} coMang={!ngoaiTuyen} onThuLai={thuLai} trong={taiLead.kind === "loi" ? null : <HetViec />} />
+    </FramePanel>
+  ) : dangTai ? (
     <DangTai />
   ) : tong === 0 ? (
     taiLead.kind === "loi" ? null : (
