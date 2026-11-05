@@ -40,7 +40,9 @@ import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useBoDongBo } from "@/lib/sync/react";
-import { COT, STATUS_LABEL, chuCuaO, type Cot, type CotId, type DongBang } from "./cot";
+import type { TuVung } from "@quy-hang/core/labels";
+import { COT, STATUS_LABEL, chuCuaO, nhanCot, type Cot, type CotId, type DongBang } from "./cot";
+import { useTuVung } from "./tu-vung";
 import { useDanhBaDauChu } from "./danh-ba";
 import { useDanhMuc } from "./danh-muc";
 import { chiMuc, ghepDanhMuc } from "./ghep-danh-muc";
@@ -123,8 +125,9 @@ function selectGridState(state: TableState<Feat>) {
 }
 
 function OCan({ d, cot }: { d: DongBang; cot: Cot }) {
+  const tv = useTuVung();
   if (cot.id === "standardStatus") return <Badge variant={STATUS_BADGE[d.standardStatus]}>{STATUS_LABEL[d.standardStatus]}</Badge>;
-  const chu = chuCuaO(d, cot.id);
+  const chu = chuCuaO(d, cot.id, tv);
   const trong = chu === "—";
   return (
     <span className={`flex min-w-0 items-center gap-1.5 text-sm ${cot.kind === "so" ? "justify-end tabular-nums" : ""} ${trong ? "text-muted-foreground" : ""}`}>
@@ -144,7 +147,7 @@ function ONhom({ row, label, soCan }: { row: Row<Feat, DongLuoi>; label: string;
   );
 }
 
-function taoCot(cotNhanNhom: CotId): DefCot[] {
+function taoCot(cotNhanNhom: CotId, tv: TuVung): DefCot[] {
   return [
     {
       id: "row",
@@ -173,7 +176,7 @@ function taoCot(cotNhanNhom: CotId): DefCot[] {
         <HeaderStack
           title={
             <div className={`flex min-w-0 ${cot.kind === "so" ? "-me-2 flex-1 justify-end" : ""}`}>
-              <DataGridColumnHeader column={column} title={cot.label} />
+              <DataGridColumnHeader column={column} title={nhanCot(cot, tv)} />
             </div>
           }
           filter={<OLoc cot={cot} />}
@@ -187,11 +190,11 @@ function taoCot(cotNhanNhom: CotId): DefCot[] {
       size: cot.id === cotNhanNhom ? Math.max(cot.size, 170) : cot.size,
       minSize: 80,
       meta: {
-        headerTitle: cot.label,
+        headerTitle: nhanCot(cot, tv),
         // Chép ra đúng chữ đang hiện. Ba cột Giá, Phí, Trạng thái mở trình sửa trên ô (hàng 15) qua onCellEditRequest.
         cellEdit: {
           editable: COT_SUA.has(cot.id) ? (d: DongLuoi) => d.kind === "can" : false,
-          format: (_v: unknown, d: DongLuoi) => (d.kind === "can" ? chuCuaO(d.dong, cot.id) : d.label),
+          format: (_v: unknown, d: DongLuoi) => (d.kind === "can" ? chuCuaO(d.dong, cot.id, tv) : d.label),
         },
       },
     })),
@@ -295,7 +298,8 @@ export function BangHang({
   const nguoiGiu = useMemo(() => hang.map((l) => l.listAgentKey), [hang]);
   const danhBa = useDanhBaDauChu(san, nguoiGiu);
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
-  const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap), [dong, loc, sap]);
+  const tv = useTuVung();
+  const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap, tv), [dong, loc, sap, tv]);
   const loat = useSuaHangLoat(dong, daLoc);
   const cay = useMemo(() => nhomDong(daLoc, nhom), [daLoc, nhom]);
   const sai = useMemo(() => locSai(loc), [loc]);
@@ -318,12 +322,12 @@ export function BangHang({
   }, [cuonLenDau]);
 
   const hangLoc = useMemo(
-    () => ({ open: locMo, values: loc, invalid: sai, options: (id: CotId) => luaChon(dong, id), setValue: datLoc, clearAll: xoaLoc }),
+    () => ({ open: locMo, values: loc, invalid: sai, options: (id: CotId) => luaChon(dong, id, tv), setValue: datLoc, clearAll: xoaLoc }),
     [locMo, loc, sai, dong, datLoc, xoaLoc],
   );
 
   const cotNhanNhom: CotId = cot.includes("buildingName") ? "buildingName" : (cot[0] ?? "unitNumber");
-  const columns = useMemo(() => taoCot(cotNhanNhom), [cotNhanNhom]);
+  const columns = useMemo(() => taoCot(cotNhanNhom, tv), [cotNhanNhom, tv]);
   const columnVisibility = useMemo(() => visibilityTu(cot), [cot]);
 
   const onSortingChange = useCallback(
@@ -377,7 +381,7 @@ export function BangHang({
   const [moXuat, setMoXuat] = useState<MoXuat | null>(null);
   const moHopXuat = useCallback(() => {
     if (tapXuat.tat) return;
-    setMoXuat({ dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "" });
+    setMoXuat({ dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "", tuVung: tv });
   }, [tapXuat, cot, tenSan, setMoXuat]);
   // Menu Tạo trỏ `/exports/new` → `/inventory?phat-hang=1`: mở hộp thoại một lần với cách xem đang có.
   const q = useSearchParams();

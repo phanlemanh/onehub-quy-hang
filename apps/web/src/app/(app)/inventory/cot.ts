@@ -2,6 +2,7 @@
  * Cột của Bảng hàng (hàng 14): một dòng là một hàng của sàn đã ghép thuộc tính căn từ danh mục. Tên theo RESO, nhãn theo
  * `CONTEXT.md`. Thuần — không React — để lọc, nhóm, góc nhìn và bài kiểm cùng đọc một bảng.
  */
+import { nhanGiaTri, nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { StandardStatus } from "@quy-hang/core/listing";
 
 /** Một dòng của bảng. Không trường nguồn nào: hàng đến từ API không chở lớp `source`. */
@@ -136,19 +137,25 @@ export function dinhDangGia(dong: number | null): string {
   return `${SO_NGUYEN.format(Math.round(dong / 1_000_000))} triệu`;
 }
 
-/** Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. */
-export function chuCuaO(d: DongBang, id: CotId): string {
+/** Tiêu đề cột: tên riêng của sàn cho trường chuẩn (hàng 45), vắng thì nhãn dựng sẵn của Bảng hàng. */
+export const nhanCot = (c: Cot, tv?: TuVung | null) => nhanTruong(tv, c.id, c.label);
+
+/**
+ * Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. `tv`: cách gọi riêng của sàn (hàng 45) cho giá trị của
+ * tập đóng (phí, lý do ngừng); giá trị lưu ở dòng vẫn là giá trị chuẩn.
+ */
+export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
   const v = d[id];
   if (v === null || v === undefined || v === "") return "—";
   switch (id) {
     case "standardStatus":
       return STATUS_LABEL[d.standardStatus];
     case "feeInclusion":
-      return FEE_LABEL[String(v)] ?? String(v);
+      return nhanGiaTri(tv, "feeInclusion", String(v), FEE_LABEL[String(v)] ?? String(v));
     case "visibility":
       return VISIBILITY_LABEL[String(v)] ?? String(v);
     case "withdrawnReason":
-      return WITHDRAWN_LABEL[String(v)] ?? String(v);
+      return nhanGiaTri(tv, "withdrawnReason", String(v), WITHDRAWN_LABEL[String(v)] ?? String(v));
     case "listPrice":
     case "closePrice":
       return dinhDangGia(v as number);

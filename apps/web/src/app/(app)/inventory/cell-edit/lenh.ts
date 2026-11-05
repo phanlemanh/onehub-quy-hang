@@ -4,6 +4,7 @@
  */
 import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type EventType, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
+import { nhanGiaTri, type TuVung } from "@quy-hang/core/labels";
 import { FEE_LABEL, STATUS_LABEL } from "../cot";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { hoanTacDuoc } from "./hoan-tac";
@@ -62,10 +63,17 @@ export function chuDienSan(hang: Pick<HangSua, "listPrice">, viet: VietGia = vie
 }
 
 /** Dòng «cũ → mới» của hộp hỏi lại. */
-export function moTaThayDoi(hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">, lenh: Lenh, viet: VietGia = vietGia): string {
+export function moTaThayDoi(
+  hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">,
+  lenh: Lenh,
+  viet: VietGia = vietGia,
+  /** Cách gọi riêng của sàn (hàng 45) cho chữ phí. */
+  tv?: TuVung | null,
+): string {
   if (lenh.type === "price_changed") {
-    const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${FEE_LABEL[hang.feeInclusion ?? ""] ?? "—"}`;
-    return `${cu} → ${viet(lenh.payload.listPrice)}, ${FEE_LABEL[lenh.payload.feeInclusion]}`;
+    const phi = (v: string | null | undefined) => (v ? nhanGiaTri(tv, "feeInclusion", v, FEE_LABEL[v] ?? v) : "—");
+    const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${phi(hang.feeInclusion)}`;
+    return `${cu} → ${viet(lenh.payload.listPrice)}, ${phi(lenh.payload.feeInclusion)}`;
   }
   return `${STATUS_LABEL[hang.standardStatus]} → ${STATUS_LABEL[lenh.payload.to]}`;
 }
