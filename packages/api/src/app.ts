@@ -21,6 +21,7 @@ import { registerContactReadRoutes } from "./contacts/read/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerSettingsRoutes } from "./settings/routes";
+import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
 import { registerTeamRoutes } from "./team/routes";
 import { registerTodayRoutes } from "./today/routes";
@@ -202,6 +203,7 @@ export function createApi(deps: ApiDeps) {
   registerRoutingRoutes(api, deps);
   // Hàng 82: cấu hình theo sàn qua lối chung, có nhật ký.
   registerSettingsRoutes(api, deps);
+  registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
   // Hàng 42: Hôm nay trưởng nhóm — hàng đợi lead quá hạn, đầu chủ để giao.
   registerTeamRoutes(api, deps);

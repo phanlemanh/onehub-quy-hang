@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>17 việc"]
+  GD --> B["Sắp mở vòng<br/>16 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>22 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>86 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>87 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -34,7 +34,6 @@ flowchart TD
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Quản trị sàn đổi cách chia lead, hạn nhận và hạn gọi, ngưỡng hai hàng đợi của Hôm nay; đổi chỉ áp cho lead mới (`luat-chia-lead`)
-- Quản trị sàn xem và sửa mẫu file nhập đã nhớ, mẫu bảng hàng và mẫu bài theo kênh (`mau-nhap-va-bai`)
 - Đầu chủ thấy ô máy không đọc được — giá dải, «thu về 4.2», trạng thái lạ — có đề xuất kèm lý do và chọn một chạm (`nhap-o-la`)
 - Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn; giá đã lưu giữ nguyên kèm ngày tính (`thue-phi`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
@@ -97,6 +96,7 @@ flowchart TD
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
 - Đầu chủ và trưởng nhóm mở màn Liên hệ, tìm một người bằng tên hay số, thấy đủ cơ hội và căn của người ấy, mở số và gọi trong tối đa ba chạm (`man-lien-he`)
 - Màn Nhập Excel (65b): Đầu chủ — hay Trưởng nhóm nhập hộ — chọn tệp bảng hàng cũ, màn đọc tệp trong trình duyệt, ghép cột, cho thấy từng ô sẽ ghi gì, cho sửa ô và bỏ dòng, xem thử trên máy chủ từng dòng thành gì, rồi ghi qua đường ghi lần nhập của hàng 65a (`man-nhap-excel`)
+- Hàng 50: Quản trị sàn xem, sửa, xoá mẫu file nhập đã nhớ ở Cài đặt › Sàn › Mẫu nhập; lần nhập kế dùng bản mới, lần nhập đã xong không đổi (`mau-nhap-va-bai`)
 - Mở sàn cho công ty mới trùng tên với sàn đang chạy thì được một sàn riêng; người của sàn mới không thấy dữ liệu sàn cũ (`mo-san-trung-ten`)
 - Quản trị sàn mời người vào sàn, đặt vai và khu phụ trách; một người giữ được nhiều vai (`moi-nguoi-vai-khu`)
 - Một nút chạy tay trên GitHub Actions nạp đủ dữ liệu mẫu (hàng sáu trạng thái, chủ nhà số mã hoá, lead có ca trùng, người phụ trách, tài khoản chủ kho) vào «[Mẫu] Sàn thử» trên bản thật, chạy lại không đổi gì, gỡ chỉ đúng sàn mẫu (`nap-mau-ban-that`)
