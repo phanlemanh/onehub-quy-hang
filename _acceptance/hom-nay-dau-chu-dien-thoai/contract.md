@@ -5,7 +5,7 @@ slug: hom-nay-dau-chu-dien-thoai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: _acceptance/hom-nay-dau-chu-dien-thoai/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -77,5 +77,8 @@ và 92 (Hôm nay máy tính dựng theo `solution-agents-2`). Ô cơ hội: `opp
 ## Notes
 
 - Lựa chọn máy đã quyết: `design.md` §4; sổ quyết định dòng S1.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-2: bài kiểm thẻ hai tầng chưa so tên căn ở tầng trên với lý do · giá ở tầng dưới — một lần sửa sau đảo hai tầng sẽ không bị báo.
+  - Ngoài-3: bài kiểm mở số chủ chưa ghim lời «chưa có số» — lời báo ấy đổi nhầm sang lời khác sẽ không bị báo.
 - Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Hiện tại thẻ trên điện thoại hiển thị đúng, nhưng nếu sau này ai đó vô tình đảo tên căn với lý do và giá, bài kiểm tự động sẽ không báo. Đầu chủ khi đó sẽ thấy thẻ sai thứ tự mà không ai hay. — `apps/web/src/app/(app)/today/mobile/danh-sach.test.ts`
 - Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi căn không có số chủ để mở, hiện không có bài kiểm nào bảo đảm đầu chủ được báo đúng lời «chưa có số». Nếu sau này lỗi này bị báo nhầm thành mất mạng hay hết phiên, đầu chủ sẽ hiểu sai nguyên nhân. — `apps/web/src/app/(app)/today/mobile/goi.test.ts`
