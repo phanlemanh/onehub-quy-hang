@@ -31,7 +31,9 @@ ký 05/11).
   cấu hình có đúng một sự kiện mới cho khoá `labels.field.feeInclusion` ghi người đổi. (cross-layer)
 - AC-2: Given trường Điều kiện phí đã có nhãn riêng, When quản trị bấm «Trả về mặc định» rồi Lưu, Then dòng cấu hình của
   khoá ấy mang giá trị rỗng (`null`), nhật ký có đúng một sự kiện mới ghi người đổi, và màn, API trả lại nhãn mặc định
-  «Điều kiện phí» (`custom: false`); khoá không đổi trong lượt Lưu ấy không sinh sự kiện nào. (cross-layer)
+  «Điều kiện phí» (`custom: false`); khoá không đổi trong lượt Lưu ấy không sinh sự kiện nào. Cũng vậy khi gỡ hay đổi
+  tên một giá trị riêng đang được căn dùng («BP» → trống hay → «Bao phí SC»): căn không mất dữ liệu nào — giá trị chuẩn
+  lưu ở căn (`included`) giữ nguyên, căn hiện lại chữ mặc định hay tên mới, và lọc, đếm không đổi. (cross-layer)
 - AC-3: Given quản trị sàn A ở màn Cách gọi, When đặt tên riêng «BP» neo vào giá trị chuẩn «Đã gồm phí» (`included`) rồi
   Lưu, Then API trả giá trị `feeInclusion/included` nhãn «BP»; và When gửi lên một giá trị riêng không có neo hay neo vào
   giá trị không thuộc tập đóng của trường, Then API trả 400 nêu khoá, không dòng nào được ghi, màn khoá nút Lưu ở ô ấy.

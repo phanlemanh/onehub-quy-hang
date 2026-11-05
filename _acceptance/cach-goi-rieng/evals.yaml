@@ -23,6 +23,15 @@ evals:
     expected: "exit 0; ca «cách gọi: trả về mặc định» trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok — sàn A đã đặt «Phí CN» cho feeInclusion và «Sổ» cho legalStatus; đếm sự kiện từng khoá bằng vai chủ trước lượt; PUT chỉ mang legalStatus «Sổ» → 200; sau lượt: dòng labels.field.feeInclusion có value JSON null, company_settings_events có đúng một sự kiện mới cho labels.field.feeInclusion (value null, actor quản trị A) và 0 sự kiện mới cho labels.field.legalStatus (khoá không đổi không ghi lại); GET trả feeInclusion {label:\"Điều kiện phí\",custom:false}, legalStatus {label:\"Sổ\",custom:true}. Chiều đỏ: xoá dòng thay vì ghi null → ca đỏ nêu «không có sự kiện»; ghi lại mọi khoá → ca đỏ nêu legalStatus."
     paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «cách gọi: gỡ tên riêng đang được căn dùng» trong packages/api/test-db/cach-goi-rieng/nhan.test.ts có mặt và ok — sàn A có hai căn feeInclusion included (dựng qua đường ghi thật) và tên riêng «BP»; đọc bằng vai chủ trước: số dòng và giá trị feeInclusion của hai căn; PUT đổi «BP» thành «Bao phí SC» → 200, rồi PUT bỏ giá trị riêng ấy → 200; sau mỗi lượt: hai căn vẫn feeInclusion included, số sự kiện của hàng (listing_events) của hai căn không đổi, Lần gửi nhóm môi giới của một căn trả tuVung.giaTri.feeInclusion.included lần lượt \"Bao phí SC\" rồi vắng, can[0].feeInclusion vẫn \"included\". Chiều đỏ: PUT ghi lại giá trị của căn theo tên riêng → ca đỏ nêu số sự kiện hàng."
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/cach-goi-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
   - id: E3
     criterion: AC-3
     executor: test
