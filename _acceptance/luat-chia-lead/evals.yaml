@@ -169,8 +169,17 @@ evals:
     criterion: AC-1
     executor: script
     cmd: config:executors.design.khuon
-    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san (lệch chỉ vì ngoai_le không khoi là báo oan — giới hạn kit 2.37.0, luật đợt 33)"
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 1 (đạt có giới hạn, cùng nếp hàng 34 chủ kho chốt 04/11; luật đợt 33, 45): bước chấm khuôn của kit 2.37.0 không xét ngoai_le nên báo trang mục chia lead mới «thuộc hai nhóm màn: cai-dat-san, trang-tam» — báo oan, kit#480. Mã 1 chỉ được chấp nhận cùng E13 xanh: E13 bảo đảm dòng lệch duy nhất là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E13."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/luat-chia-lead/thu/kiem-khuon-e11.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**", "_acceptance/luat-chia-lead/thu/kiem-khuon-e11.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/settings/lead-routing/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» và bài in «E13: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E11 và bài E13, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E12
