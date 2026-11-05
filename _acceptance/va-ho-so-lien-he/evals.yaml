@@ -1,0 +1,70 @@
+schema_version: 1
+feature_slug: va-ho-so-lien-he
+# Ma trận vai chấm trên Postgres dãy qua API thật (packages/api/test-db/man-lien-he/); luật «Xem thêm» chấm bằng bài kiểm
+# thuần của màn (apps/web), đọc nối dây và một lượt nhìn màn có chặn mạng. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/man-lien-he/ma-tran-vai.test.ts ca «liên hệ: ma trận vai trên bốn đường đọc» có mặt và ok — bảng DOC trong tệp kiểm trùng TỪNG Ô với bảng kỳ vọng của AC-1 trong contract.md (ghim: người giữ «mat» đã mất vai → vai ngoài màn ở cả «giu» lẫn «mat»; người giữ «giu» → đọc «giu», chặn «mat»; Trưởng nhóm đọc cả hai; người hai vai chặn cả hai), áp cho cả bốn đường (danh sách, tìm theo số, xem hồ sơ, mở số), mỗi ô một assert: đọc được → có trong danh sách / contactId / 200 đúng liên hệ / số rõ + đúng 1 sự kiện mở số; chặn → không có trong danh sách / held + holderName / 404 cùng thân mã không có / 404 cùng thân, +0 sự kiện; vai ngoài màn → 403 listing-agent-required ở danh sách và tìm theo số, 404 cùng thân ở hai đường kia, +0 sự kiện; không cookie → 401; bộ đếm ô = 4 × 9 × 2 = 72; mỗi cột liên hệ có cả ô đọc được lẫn ô chặn (đối chứng dương). Chiều đỏ (đã phá thử ở S3): đường hồ sơ trả 403 thay 404 khi không đọc được → ca đỏ nêu «xem hồ sơ dc1/mat: phải 404 cùng thân với liên hệ không có»; danh sách bỏ một liên hệ → ca đỏ nêu «danh sách dc1/giu: thiếu liên hệ trong danh sách»."
+    paths: [packages/api/test-db/man-lien-he/**, packages/api/src/contacts/read/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/xem-them.test.ts năm ca có mặt và ok — «khoá bộ lọc phân biệt từng thành phần» (6 dòng bảng, đếm 6), «bấm trong 250 ms sau khi đổi bộ lọc không gửi con trỏ cũ» (đối chứng: cùng bộ lọc gửi c1; luật cũ trên cùng kịch bản gửi c1; luật mới trả null), «không gửi khi đang tải hay hết trang» (4 dòng, đếm 4), «trang về sau khi bộ lọc đã đổi thì không nối» (đối chứng: không đổi thì nối; đổi lượt hay khoá thì không), «bấm hai lần trước khi trang về thì trang chỉ nối một lần» (đếm nối = 1; luật trước trên cùng kịch bản nối 2). Chiều đỏ (đã phá thử ở S3): bỏ so khoá trong conTroXemThem và duocNoi → hai ca đỏ nêu «gửi con trỏ của bộ lọc cũ kèm bộ lọc mới» và «khoá đổi cùng lượt mà vẫn nối»; bỏ so con trỏ trong duocNoi → ca đỏ nêu «cùng một trang nối hai lần (lặp dòng)»."
+    paths: ["apps/web/src/app/(app)/contacts/xem-them.ts", "apps/web/src/app/(app)/contacts/xem-them.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: judgment
+    inputs: ["apps/web/src/app/(app)/contacts/vung.tsx", "apps/web/src/app/(app)/contacts/xem-them.ts", "_acceptance/va-ho-so-lien-he/vung-goc.tsx.txt"]
+    question: "vung-goc.tsx.txt là vung.tsx trước bản vá. Trong vung.tsx hiện tại: (1) hàm them() có lấy con trỏ CHỈ qua conTroXemThem, và khoá đưa vào conTroXemThem có được dựng từ ĐÚNG các giá trị bộ lọc dùng làm tham số của yêu cầu docDanhSach trong them() (q, loai, dau cùng một nguồn trong cùng lần vẽ) không? (2) trang về có chỉ nối khi duocNoi trả đúng — với con trỏ trang cuối hiện tại (bấm hai lần trước khi trang về thì lần về sau không nối lại), và nối vào danh sách hiện tại bằng dạng hàm của setDs (không dùng ds.ds giữ trong closure) không; trang cuối có luôn mang khoá bộ lọc của lượt đọc sinh ra nó không? (3) so với vung-goc.tsx.txt, phần JSX được vẽ (KhungLienHe, HoSoNguoi, DanhSachLienHe và prop của chúng) và mọi chuỗi chữ có giữ nguyên, chỉ khác ở them(), trạng thái trang cuối và khoá bộ lọc không?"
+    expected: "PASS khi cả ba vế đúng trên ba tệp; FAIL nêu dòng nếu them() còn gửi con trỏ không qua conTroXemThem, khoá và tham số lấy từ hai trạng thái khác nhau, nối không qua duocNoi, nối vào danh sách trong closure, hay JSX và chữ khác bản trước."
+    paths: ["apps/web/src/app/(app)/contacts/vung.tsx", "apps/web/src/app/(app)/contacts/xem-them.ts"]
+    evidence_required: [run_id, verdict, judges, verified_at]
+
+  - id: E4
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/lien-he.md", "apps/web/src/app/(app)/contacts/vung.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm lien-he"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.design_floor
+    paths: ["apps/web/src/app/(app)/contacts/**"]
+    expected: "exit 0; sàn thiết kế M1 không chặn tệp giao diện nào của vòng (không mã màu thô trong apps/web/src/app/(app)/contacts/)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Đăng nhập Đầu chủ 1 của bộ mẫu; nếu Đầu chủ 1 có ít hơn 51 liên hệ Chủ bán, dựng thêm qua fetch trong trang (POST /api/v1/listings rồi PUT /api/v1/listings/{id}/owner, ownerName «[Tên] Thử xem thêm», số mới 0900 000 0xx) để «Chủ bán» có hơn một trang"
+      - "Khổ 1440: mở /contacts?type=Seller, chờ danh sách hiện và có nút «Xem thêm» → chụp evidence/E6-step1.png (đối chứng: danh sách Chủ bán, có Xem thêm)"
+      - "Đối chứng không đổi bộ lọc: bấm «Xem thêm» → chụp evidence/E6-step2.png: danh sách dài thêm, mọi dòng vẫn là Chủ bán; ghi số dòng trước và sau vào observed"
+      - "Tải lại /contacts?type=Seller. Bằng công cụ chặn mạng của trình duyệt, giữ phản hồi của yêu cầu GET /api/v1/contacts có tham số cursor (Xem thêm) khoảng 2 giây. Chạm mục «Chủ cho thuê» ở cột thứ hai (đổi type trên URL) rồi bấm ngay «Xem thêm» trong vòng 250 ms; thả phản hồi bị giữ sau khi danh sách Chủ cho thuê đã về"
+      - "Chờ 3 giây → chụp evidence/E6-step3.png; ghi vào observed (a) có yêu cầu Xem thêm nào mang cursor của danh sách Chủ bán đi kèm type=Landlord không (đọc từ nhật ký mạng), (b) danh sách trên màn có dòng nào chỉ mang nhãn Chủ bán không"
+    cmd: config:executors.ui-check
+    expected: "Bước 2: Xem thêm nối trang khi không đổi bộ lọc. Bước 3: không có yêu cầu Xem thêm nào mang cursor của bộ lọc Chủ bán kèm type=Landlord (hoặc có mà trang về không được nối), và màn chỉ còn dòng Chủ cho thuê — không dòng lạc lọc."
+    paths: ["apps/web/src/app/(app)/contacts/**"]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E7
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/man-lien-he/xem-them-may-chu.test.ts ca «liên hệ: xem thêm với con trỏ của loại cũ làm sót liên hệ của loại mới» có mặt và ok — 30 Chủ bán cũ, 3 Chủ cho thuê, 30 Chủ bán mới của một Đầu chủ: trang đầu Chủ bán 50 dòng còn con trỏ; đối chứng dương: cùng loại với con trỏ ấy đủ 60 Chủ bán, không trùng; danh sách màn tải sau khi đổi loại (type=Landlord, không con trỏ) đúng bằng tập 3 Chủ cho thuê, mọi dòng mang loại Chủ cho thuê; con trỏ Chủ bán gửi kèm type=Landlord thì máy chủ không trả dòng lạc loại nhưng sót cả 3 Chủ cho thuê (lý do màn không được gửi con trỏ của bộ lọc cũ). Chiều đỏ (đã phá thử): máy chủ bỏ lọc loại → ca đỏ nêu «Chủ bán qua hai trang phải đủ 60, không trùng»."
+    paths: [packages/api/test-db/man-lien-he/**, packages/api/src/contacts/read/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

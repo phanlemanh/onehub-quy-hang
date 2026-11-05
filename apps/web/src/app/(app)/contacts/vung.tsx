@@ -7,6 +7,7 @@ import { DanhSachLienHe, type TrangThaiDs } from "./danh-sach";
 import { KhungLienHe } from "./khung";
 import { HoSoNguoi, type SoDaMo, type TrangThaiHoSo } from "./ho-so";
 import { CHU, docDanhSach, docHoSo, luaTim, moSo, timSo } from "./lien-he";
+import { conTroXemThem, duocNoi, khoaLoc, type TrangCuoi } from "./xem-them";
 
 /** Màn Liên hệ (hàng 103): tìm theo tên hay số, lọc loại, chạm dòng mở hồ sơ người cạnh bảng; Hiện số → Gọi. */
 export default function VungLienHe() {
@@ -23,8 +24,10 @@ export default function VungLienHe() {
     router.replace(m.size ? `/contacts?${m}` : "/contacts");
   };
   const [ds, setDs] = useState<TrangThaiDs>({ kieu: "dang-tai" });
-  const [cursor, setCursor] = useState<string | null>(null);
   const [lan, setLan] = useState(0);
+  // Trang cuối mang khoá bộ lọc của nó: đổi bộ lọc thì con trỏ cũ hết hiệu lực ngay (AC-2, va-ho-so-lien-he).
+  const [trang, setTrang] = useState<TrangCuoi | null>(null);
+  const khoa = khoaLoc({ q, type: loai, status: dau, lan });
   const [chon, setChon] = useState<string | null>(null);
   const [hs, setHs] = useState<TrangThaiHoSo>({ kieu: "dang-tai" });
   const [daMo, setDaMo] = useState<SoDaMo>({});
@@ -32,12 +35,18 @@ export default function VungLienHe() {
   const hen = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Lượt đọc danh sách: «Xem thêm» về muộn sau khi bộ lọc đã đổi thì bỏ, không đè danh sách mới.
   const luotDs = useRef(0);
+  // Bộ lọc mà danh sách đang theo (cập nhật cùng lượt đọc): kết quả «Xem thêm» về muộn so với nó, không với closure.
+  const khoaHienTai = useRef("");
+  // Con trỏ trang cuối đã nối (cập nhật cùng lúc nối): trang về lần hai cho cùng con trỏ thì không nối lại.
+  const tiepHienTai = useRef<string | null>(null);
 
   // Danh sách: gõ xong 250 ms mới đọc; chuỗi số từ chín chữ số đi lối tìm theo số (POST, số không vào URL).
   useEffect(() => {
     let huy = false;
     if (hen.current) clearTimeout(hen.current);
     luotDs.current++;
+    const khoaLuot = khoaLoc({ q, type: loai, status: dau, lan });
+    khoaHienTai.current = khoaLuot;
     hen.current = setTimeout(async () => {
       setDs({ kieu: "dang-tai" });
       if (q.trim() && luaTim(q) === "so") {
@@ -54,7 +63,8 @@ export default function VungLienHe() {
       if (huy) return;
       if (!kq) return setDs({ kieu: "loi" });
       setDs({ kieu: "xong", ds: kq.items, con: kq.nextCursor !== null });
-      setCursor(kq.nextCursor);
+      tiepHienTai.current = kq.nextCursor;
+      setTrang({ khoa: khoaLuot, tiep: kq.nextCursor });
     }, 250);
     return () => {
       huy = true;
@@ -81,16 +91,18 @@ export default function VungLienHe() {
   }
 
   async function them() {
-    if (!cursor || ds.kieu !== "xong") return;
-    const luot = luotDs.current;
+    const cursor = conTroXemThem(trang, khoa, ds.kieu === "xong");
+    if (!cursor) return;
+    const guiLuc = { luot: luotDs.current, khoa, cursor };
     const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau, cursor });
-    if (!kq || luot !== luotDs.current) return;
-    setDs({
-      kieu: "xong",
-      ds: [...ds.ds, ...kq.items],
-      con: kq.nextCursor !== null,
-    });
-    setCursor(kq.nextCursor);
+    if (!kq || !duocNoi(guiLuc, { luot: luotDs.current, khoa: khoaHienTai.current, cursor: tiepHienTai.current })) return;
+    tiepHienTai.current = kq.nextCursor;
+    setDs((cu) =>
+      cu.kieu === "xong"
+        ? { kieu: "xong", ds: [...cu.ds, ...kq.items], con: kq.nextCursor !== null }
+        : cu,
+    );
+    setTrang({ khoa: guiLuc.khoa, tiep: kq.nextCursor });
   }
 
   async function hienSo(phoneId: string) {
