@@ -4,7 +4,8 @@
 // fetch đặt vào trang trước khi tải; service worker bị chặn như hàng 92.
 //   node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e1 --e2 --e3 --e4 --e6 --e7 --e10 --ra <thư mục>
 //   --dung-lai (cùng --e3): chiều đỏ — sau mỗi bước thay nút gốc của bảng bằng bản sao (giả bảng dựng lại theo căn)
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+//   --ban-goc (cùng --e4, --e6): đo thêm trên máy dev nhánh chính 3478 (dung-d.mjs --ban-goc <worktree của origin/main>)
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,7 +21,15 @@ mkdirSync(RA, { recursive: true });
 const phien = JSON.parse(readFileSync(path.join(CHAY, "phien.json"), "utf8"));
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const h = { "content-type": "application/json", origin: URL_GOC };
-const in1 = (o) => console.log(JSON.stringify(o));
+// Lỗi trình duyệt của mỗi ca (ngoài hợp đồng, hồ sơ vòng 2): số dòng «[browser]» hay «Hydration failed» máy dev ghi thêm từ
+// lúc ca bắt đầu — để bằng chứng không ghi «log sạch» khi có lỗi.
+const LOG = { nhanh: path.join(CHAY, "web-d105.log"), main: path.join(CHAY, "web-main-105.log") };
+const URL_MAIN = "http://localhost:3478";
+const docLog = (tep) => (existsSync(tep) ? readFileSync(tep, "utf8") : "");
+let moc = { nhanh: 0, main: 0 };
+const danhDau = () => (moc = { nhanh: docLog(LOG.nhanh).length, main: docLog(LOG.main).length });
+const demLoi = (k) => docLog(LOG[k]).slice(moc[k]).split("\n").filter((l) => /\[browser\]|Hydration failed/.test(l)).length;
+const in1 = (o) => console.log(JSON.stringify({ ...o, loiTrinhDuyet: demLoi("nhanh"), ...(arg("--ban-goc") ? { loiTrinhDuyetMain: demLoi("main") } : {}) }));
 const tron = (r) => (r ? Object.fromEntries(Object.entries(r).map(([k, v]) => [k, Math.round(v)])) : null);
 
 const BOC = `(() => { try { Object.defineProperty(navigator, "serviceWorker", { get: () => undefined }); } catch {}
@@ -33,12 +42,17 @@ const BOC = `(() => { try { Object.defineProperty(navigator, "serviceWorker", { 
 
 const chrome = await moChrome();
 
-async function mo(ai, { w = 1440, hgt = 900, duong = "/inventory", cho = true } = {}) {
+/** Mở một trang của người mẫu. `goc`: máy dev nhánh đang kiểm (3477) hay nhánh chính (3478, đối chứng `--ban-goc`). */
+async function mo(ai, { w = 1440, hgt = 900, duong = "/inventory", cho = true, goc = URL_GOC } = {}) {
   const t = await chrome.trang(w, hgt);
   await t.gui("Page.addScriptToEvaluateOnNewDocument", { source: BOC });
-  await t.datCookie(phien.cookie[ai].split(";").map((s) => s.trim()).filter(Boolean));
-  await t.di(duong);
-  await t.cho(`document.readyState === "complete" && !!document.querySelector("[data-bo-cuc-goc]")`, 180000);
+  for (const c of phien.cookie[ai].split(";").map((s) => s.trim()).filter(Boolean)) {
+    const [name, ...v] = c.split("=");
+    await t.gui("Network.setCookie", { name, value: v.join("="), url: goc });
+  }
+  await t.gui("Page.navigate", { url: `${goc}${duong}` });
+  // Nhánh chính chưa dựng Bảng hàng bằng bố cục — chờ vỏ thay vì gốc bố cục.
+  await t.cho(`document.readyState === "complete" && !!document.querySelector("[data-bo-cuc-goc], [data-slot=sidebar-inset]")`, 180000);
   if (cho) await t.cho(`!!document.querySelector('[data-slot=data-grid] tbody [data-slot=row-number]')`, 180000);
   await t.tinh(`(() => { const s = document.createElement("style"); s.textContent = "nextjs-portal{display:none!important}"; document.head.appendChild(s); return true; })()`);
   await ngu(1200);
@@ -80,7 +94,8 @@ async function moDong(t, chiSo = 0) {
   const ds = (await dongCan(t)).filter((d) => d.trong);
   const d = ds[Math.min(chiSo, ds.length - 1)];
   await bamXY(t, d.x, d.y);
-  await t.cho(`!!document.querySelector('[data-vung="cot-phu"] h2')`, 60000);
+  // Hồ sơ đã mở: đầu hồ sơ có tên căn (cột kéo chia ở nhánh này, cột trong khung bảng ở nhánh chính).
+  await t.cho(`[...document.querySelectorAll('[data-slot="ho-so-can"] h2')].some((e) => e.getClientRects().length)`, 60000);
   await ngu(700);
   return d;
 }
@@ -121,6 +136,7 @@ const KHO = [
 
 try {
   if (arg("--e1")) {
+    danhDau();
     for (const [w, hgt] of KHO) {
       const t = await mo("dau-chu-1", { w, hgt });
       const thanhTruoc = tron(await rect(t, "[data-slot=app-header]"));
@@ -154,6 +170,7 @@ try {
   }
 
   if (arg("--e2")) {
+    danhDau();
     for (const [w, hgt] of KHO) {
       const t = await mo("dau-chu-1", { w, hgt });
       await moDong(t, 1);
@@ -191,6 +208,7 @@ try {
   }
 
   if (arg("--e3")) {
+    danhDau();
     const dungLai = arg("--dung-lai");
     const t = await mo("dau-chu-1");
     await locToaA(t);
@@ -230,27 +248,59 @@ try {
   }
 
   if (arg("--e4")) {
-    if (arg("--ban-goc")) in1({ ca: "e4-ban-goc", ghiChu: "đối chứng trên nhánh chính chỉ ghi số: chạy cùng lệnh trên một worktree của main" });
-    for (const [w, hgt] of KHO) {
-      const t = await mo("dau-chu-1", { w, hgt });
-      const doTrang = async () =>
-        JSON.parse(
-          await t.tinh(`JSON.stringify((() => { const se = document.scrollingElement; const vo = document.querySelector("[data-slot=sidebar-inset] .overflow-y-auto");
-            const vp = document.querySelector("[data-slot=data-grid] [data-slot=scroll-area-viewport]");
-            return { scrollHeight: se.scrollHeight, innerHeight: innerHeight, trangKhongCuon: se.scrollHeight <= innerHeight,
-              vungLamViecDu: vo ? vo.scrollHeight - vo.clientHeight : null, bangScrollHeight: vp.scrollHeight, bangClientHeight: vp.clientHeight, bangCuonTrongKhung: vp.scrollHeight > vp.clientHeight }; })())`),
-        );
-      const dong = await doTrang();
+    danhDau();
+    // Đo một trang: phần dư của tài liệu (document.scrollingElement) và của vùng cuộn của vỏ, cùng vùng cuộn của bảng.
+    const DO_TRANG = `JSON.stringify((() => { const se = document.scrollingElement; const vo = document.querySelector("[data-slot=sidebar-inset] .overflow-y-auto");
+      const vp = document.querySelector("[data-slot=data-grid] [data-slot=scroll-area-viewport]");
+      // Trang cuộn ở một trong hai chỗ: tài liệu, hay vùng cuộn của vỏ (vỏ cao bằng khung nhìn, nội dung cuộn trong vùng làm việc).
+      const duVo = vo ? vo.scrollHeight - vo.clientHeight : 0;
+      return { scrollHeight: se.scrollHeight, innerHeight: innerHeight, duTaiLieu: se.scrollHeight - innerHeight, trangKhongCuon: se.scrollHeight <= innerHeight && duVo <= 0,
+        vungLamViecDu: vo ? duVo : null, bangScrollHeight: vp?.scrollHeight ?? null, bangClientHeight: vp?.clientHeight ?? null,
+        bangCuonTrongKhung: !!vp && vp.scrollHeight > vp.clientHeight }; })())`;
+    const doHaiTrangThai = async (goc, w, hgt, ten) => {
+      const t = await mo("dau-chu-1", { w, hgt, goc });
+      const dong = JSON.parse(await t.tinh(DO_TRANG));
       await moDong(t, 0);
-      const mo_ = await doTrang();
-      await chup(t, `E4-${w}`);
-      in1({ ca: "e4", kho: `${w}x${hgt}`, dong, mo: mo_ });
-      t.dong();
+      const moHoSo = JSON.parse(await t.tinh(DO_TRANG));
+      if (ten) await chup(t, ten);
+      return { t, dong, mo: moHoSo };
+    };
+    for (const [w, hgt] of KHO) {
+      const nhanh = await doHaiTrangThai(URL_GOC, w, hgt, `E4-${w}`);
+      // Ca dương tự thân: chèn tạm một khối cao 50px vào cuối body — bộ đo phải ra trang cuộn (đo đúng phần tử cuộn).
+      const duong = JSON.parse(
+        await nhanh.t.tinh(`(() => { const d = document.createElement("div"); d.style.height = "50px"; d.dataset.caDuong = "e4"; document.body.appendChild(d);
+          const kq = ${DO_TRANG}; d.remove(); return kq; })()`),
+      );
+      // Ca dương thứ hai: vùng làm việc của vỏ có nội dung cao hơn nó 50px — bộ đo phải bắt được vùng làm việc cuộn.
+      const duongVo = JSON.parse(
+        await nhanh.t.tinh(`(() => { const vo = document.querySelector("[data-slot=sidebar-inset] .overflow-y-auto"); const d = document.createElement("div");
+          d.style.height = (vo.clientHeight + 50) + "px"; d.style.flexShrink = "0"; vo.appendChild(d); const kq = ${DO_TRANG}; d.remove(); return kq; })()`),
+      );
+      nhanh.t.dong();
+      let main = null;
+      if (arg("--ban-goc")) {
+        const g = await doHaiTrangThai(URL_MAIN, w, hgt, `E4-main-${w}`);
+        g.t.dong();
+        main = { dong: g.dong, mo: g.mo };
+      }
+      in1({
+        ca: "e4",
+        kho: `${w}x${hgt}`,
+        dong: nhanh.dong,
+        mo: nhanh.mo,
+        duTaiLieuNhanh: { dong: nhanh.dong.duTaiLieu, mo: nhanh.mo.duTaiLieu },
+        caDuong: { duTaiLieu: duong.duTaiLieu, trangKhongCuon: duong.trangKhongCuon },
+        caDuongVungLamViec: { vungLamViecDu: duongVo.vungLamViecDu, trangKhongCuon: duongVo.trangKhongCuon },
+        vungLamViecDuNhanh: { dong: nhanh.dong.vungLamViecDu, mo: nhanh.mo.vungLamViecDu },
+        ...(main ? { main, duTaiLieuMain: { dong: main.dong.duTaiLieu, mo: main.mo.duTaiLieu }, vungLamViecDuMain: { dong: main.dong.vungLamViecDu, mo: main.mo.vungLamViecDu }, trangKhongCuonMain: { dong: main.dong.trangKhongCuon, mo: main.mo.trangKhongCuon } } : {}),
+      });
     }
   }
 
   if (arg("--e6")) {
-    let t = await mo("dau-chu-1", { w: 375, hgt: 812, cho: false });
+    danhDau();
+    const t = await mo("dau-chu-1", { w: 375, hgt: 812, cho: false });
     await t.cho(`[...document.querySelectorAll('[data-slot="item"]')].some((e) => e.getClientRects().length)`, 120000);
     await ngu(800);
     const the = JSON.parse(
@@ -260,21 +310,33 @@ try {
     await chup(t, "E6-the-375");
     t.dong();
     const ma = phien.can.daGan.ma;
-    t = await mo("dau-chu-1", { w: 375, hgt: 812, duong: `/inventory?unit=${encodeURIComponent(ma)}&toa=${encodeURIComponent(phien.can.daGan.toa)}`, cho: false });
-    await t.cho(`[...document.querySelectorAll('[data-slot="ho-so-can"]')].some((e) => e.getClientRects().length)`, 120000);
-    await ngu(800);
-    const hoSo = JSON.parse(
-      await t.tinh(`JSON.stringify((() => { const e = [...document.querySelectorAll('[data-slot="ho-so-can"]')].find((x) => x.getClientRects().length); const khung = e.closest("[data-slot=frame]") ?? e;
-        const r = khung.getBoundingClientRect(); const vung = document.querySelector("[data-slot=sidebar-inset]").getBoundingClientRect();
-        return { rongKhung: Math.round(r.width), trai: Math.round(r.left), innerWidth, rongVungLamViec: Math.round(vung.width), tenCan: e.querySelector("h2")?.textContent.trim(),
-          soTayKeo: [...document.querySelectorAll("[data-slot=resizable-handle]")].filter((x) => x.getClientRects().length).length }; })())`),
-    );
-    await chup(t, "E6-ho-so-375");
-    in1({ ca: "e6", the, hoSo });
-    t.dong();
+    const doHoSo = async (goc, ten) => {
+      const t2 = await mo("dau-chu-1", { w: 375, hgt: 812, duong: `/inventory?unit=${encodeURIComponent(ma)}&toa=${encodeURIComponent(phien.can.daGan.toa)}`, cho: false, goc });
+      await t2.cho(`[...document.querySelectorAll('[data-slot="ho-so-can"]')].some((e) => e.getClientRects().length)`, 120000);
+      await ngu(800);
+      const kq = JSON.parse(
+        await t2.tinh(`JSON.stringify((() => { const e = [...document.querySelectorAll('[data-slot="ho-so-can"]')].find((x) => x.getClientRects().length); const khung = e.closest("[data-slot=frame]") ?? e;
+          const r = khung.getBoundingClientRect(); const vung = document.querySelector("[data-slot=sidebar-inset]").getBoundingClientRect();
+          return { rongKhung: Math.round(r.width), trai: Math.round(r.left), innerWidth, rongVungLamViec: Math.round(vung.width), tenCan: e.querySelector("h2")?.textContent.trim(),
+            soTayKeo: [...document.querySelectorAll("[data-slot=resizable-handle]")].filter((x) => x.getClientRects().length).length }; })())`),
+      );
+      await chup(t2, ten);
+      t2.dong();
+      return kq;
+    };
+    const hoSo = await doHoSo(URL_GOC, "E6-ho-so-375");
+    const hoSoMain = arg("--ban-goc") ? await doHoSo(URL_MAIN, "E6-ho-so-375-main") : null;
+    in1({
+      ca: "e6",
+      the,
+      hoSo,
+      rongKhung: hoSo.rongKhung,
+      ...(hoSoMain ? { hoSoMain, rongKhungMain: hoSoMain.rongKhung, bangMain: Math.abs(hoSo.rongKhung - hoSoMain.rongKhung) <= 2 } : {}),
+    });
   }
 
   if (arg("--e7")) {
+    danhDau();
     const t = await mo("dau-chu-2");
     const cotDauChu = async () =>
       JSON.parse(
@@ -330,6 +392,7 @@ try {
   }
 
   if (arg("--e10")) {
+    danhDau();
     const t = await mo("dau-chu-1");
     await locToaA(t);
     const loc = await chuoiLoc(t);

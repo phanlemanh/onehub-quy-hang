@@ -5,7 +5,9 @@
 //     gỡ khỏi sàn (mỗi lần dựng đặt lại cả ba — ca E7 gán lại căn thứ ba qua API).
 // Dữ liệu nhãn mẫu, email miền mau.quy-hang.test (bộ xoá của sàn mẫu dọn được).
 //   node _acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs          # dựng (chạy lại: dùng lại máy dev)
-//   node _acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs --tat    # tắt máy dev (theo PID đã ghi; không pkill)
+//   node _acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs --ban-goc <dir>  # thêm máy dev nhánh chính 3478 từ worktree
+//                                                                   # của origin/main (git worktree add <dir> origin/main --detach)
+//   node _acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs --tat    # tắt cả hai máy dev (theo PID đã ghi; không pkill)
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -24,9 +26,18 @@ const SO_HANG_DAU_CHU_1 = 70;
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 mkdirSync(CHAY, { recursive: true });
 
+// Máy dev của nhánh chính (đối chứng E4, E6 — `--ban-goc <worktree của origin/main>`): cổng 3478, cùng Postgres dãy D,
+// cùng khoá phiên nên phiên của người mẫu dùng chung hai máy.
+const CONG_GOC = 3478;
+const URL_BAN_GOC = `http://localhost:${CONG_GOC}`;
+const LOG_GOC = path.join(CHAY, "web-main-105.log");
+const PID_GOC = path.join(CHAY, "web-main-105.pid");
+const KHOA_PHIEN = "dev-d105-chuoi-thu-khong-dung-o-ban-that";
+
 if (process.argv.includes("--tat")) {
-  if (existsSync(PID)) {
-    const pid = Number(readFileSync(PID, "utf8"));
+  for (const tep of [PID, PID_GOC]) {
+    if (!existsSync(tep)) continue;
+    const pid = Number(readFileSync(tep, "utf8"));
     try {
       process.kill(-pid, "SIGTERM");
     } catch {
@@ -36,10 +47,12 @@ if (process.argv.includes("--tat")) {
         // tiến trình đã tắt
       }
     }
-    console.log(`đã tắt máy dev PID ${pid}`);
+    console.log(`đã tắt máy dev PID ${pid} (${path.basename(tep)})`);
   }
   process.exit(0);
 }
+const iGoc = process.argv.indexOf("--ban-goc");
+const THU_MUC_GOC = iGoc > 0 ? path.resolve(process.argv[iGoc + 1]) : null;
 
 const song = async () => {
   try {
@@ -84,7 +97,7 @@ if (!(await song())) {
     cwd: GOC,
     detached: true,
     stdio: ["ignore", out, out],
-    env: { ...env, BETTER_AUTH_SECRET: "dev-d105-chuoi-thu-khong-dung-o-ban-that", BETTER_AUTH_URL: URL_GOC },
+    env: { ...env, BETTER_AUTH_SECRET: KHOA_PHIEN, BETTER_AUTH_URL: URL_GOC },
   });
   p.unref();
   writeFileSync(PID, String(p.pid));
@@ -213,6 +226,31 @@ try {
   writeFileSync(PHIEN, JSON.stringify({ san, cookie: ck, can, nguoi: { dc1, dc2, tn, roi }, ten }));
   const soThay = {};
   for (const t of Object.keys(ck)) soThay[t] = (await goi(ck[t], "GET", "/api/v1/listings")).length;
+  if (THU_MUC_GOC) {
+    const songGoc = async () => {
+      try {
+        return (await fetch(`${URL_BAN_GOC}/api/v1/health`)).status === 200;
+      } catch {
+        return false;
+      }
+    };
+    if (!(await songGoc())) {
+      const out = openSync(LOG_GOC, "a");
+      const p = spawn("npx", ["next", "dev", "-p", String(CONG_GOC), "apps/web"], {
+        cwd: THU_MUC_GOC,
+        detached: true,
+        stdio: ["ignore", out, out],
+        env: { ...env, BETTER_AUTH_SECRET: KHOA_PHIEN, BETTER_AUTH_URL: URL_BAN_GOC },
+      });
+      p.unref();
+      writeFileSync(PID_GOC, String(p.pid));
+      for (let i = 0; i < 150 && !(await songGoc()); i++) await ngu(2000);
+      if (!(await songGoc())) throw new Error(`máy dev nhánh chính không lên — xem ${LOG_GOC}`);
+    }
+    const me = await fetch(`${URL_BAN_GOC}/api/v1/me`, { headers: { cookie: ck["dau-chu-1"] } });
+    if (me.status !== 200) throw new Error(`phiên dau-chu-1 không dùng được trên nhánh chính: ${me.status}`);
+    console.log(JSON.stringify({ buoc: "ban-goc", url: URL_BAN_GOC, pid: readFileSync(PID_GOC, "utf8").trim(), commit: spawnSync("git", ["rev-parse", "--short", "HEAD"], { cwd: THU_MUC_GOC, encoding: "utf8" }).stdout.trim() }));
+  }
   console.log(JSON.stringify({ buoc: "cho-thu", url: URL_GOC, pid: readFileSync(PID, "utf8").trim(), san, soThay, can: Object.fromEntries(Object.entries(can).map(([k, v]) => [k, v.ma])) }));
 } finally {
   await db.end();
