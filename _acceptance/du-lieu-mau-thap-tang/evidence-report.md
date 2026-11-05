@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 680c32b22d9d5b94b2242d9f3152da9161431247
+verified_commit: 1329bab34080911fa476adc2eb4f8401eb9e07da
 human_signoff: Manh Phan 2026-11-05
 ---
 
@@ -172,3 +172,7 @@ none — mọi eval chạy một lần, tất định; không eval nào có pass
 
 Round 1: E1–E9 và bảy lệnh suite đều xanh; có một phát hiện trong hợp đồng (AC-9: bài kiểm so ảnh chụp toàn bảng dưới READ COMMITTED, đỏ ngẫu nhiên) và sáu mục ngoài hợp đồng. Returned to implementation để sửa phát hiện trong hợp đồng.
 Round 2: sau nhát sửa S4 r1 (bài kiểm chụp bảng trong repeatable read), E1–E9 và bảy lệnh suite đều xanh; không phát hiện mới trong hợp đồng; verdict PASS.
+
+### Re-pin lần 1 — 2026-11-05, do gộp main trước khi gộp PR #131
+run_id: repin-20261105T094317Z-86291
+sha: 1329bab34080911fa476adc2eb4f8401eb9e07da · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng
