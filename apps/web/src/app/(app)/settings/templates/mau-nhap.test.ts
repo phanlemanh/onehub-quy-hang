@@ -5,7 +5,8 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { CHU, chuyenTruocKhiDoc, coQuyDoi, sauKhiLuu, thanSua, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
+import { chanMucSan } from "../cai-dat";
+import { CHU, coQuyDoi, sauKhiLuu, thanSua, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
 import { BangMauNhap } from "./vung-mau-nhap";
 
 const cot: CotMauNhap = { headerKey: "tinh trang", target: "standardStatus", valueMap: { "con hang": "Active" }, nguon: { kieu: "lan-nhap", importId: "i-1", at: "2026-11-05T01:00:00Z" } };
@@ -51,23 +52,20 @@ test("mẫu nhập: hộp sửa theo kết quả lưu", () => {
 });
 
 test("mẫu nhập: trang chặn vai trước khi đọc API", () => {
-  const san = (roles: string[]) => ({ companies: [{}], activeCompany: { roles } });
-  const BANG: [string, Parameters<typeof chuyenTruocKhiDoc>[0], string | null][] = [
-    ["chưa đăng nhập", null, "/login"],
-    ["chưa thuộc sàn", { companies: [], activeCompany: null }, "/no-company"],
-    ["chưa chọn sàn", { companies: [{}], activeCompany: null }, "/select-company"],
-    ["Đầu chủ", san(["listing_agent"]), "/settings/personal?chi-quan-tri=1"],
-    ["Trưởng nhóm", san(["team_lead"]), "/settings/personal?chi-quan-tri=1"],
-    ["Quản trị", san(["company_admin"]), null],
+  // Vai của người xem qua đúng hàm chặn mà trang gọi: vai không quản trị về Cá nhân kèm báo, Quản trị ở lại (đối chứng).
+  const BANG: [string, string[], string | null][] = [
+    ["Đầu chủ", ["listing_agent"], "/settings/personal?chi-quan-tri=1"],
+    ["Trưởng nhóm", ["team_lead"], "/settings/personal?chi-quan-tri=1"],
+    ["Quản trị", ["company_admin"], null],
   ];
   let dem = 0;
-  for (const [ca, me, mong] of BANG) {
-    assert.equal(chuyenTruocKhiDoc(me), mong, `trang mẫu không chặn vai — ${ca}`);
+  for (const [ca, roles, mong] of BANG) {
+    assert.equal(chanMucSan(roles), mong, `trang mẫu không chặn vai — ${ca}`);
     dem++;
   }
   assert.equal(dem, BANG.length);
-  // Trang dùng đúng hàm này và chuyển hướng theo kết quả trước khi đọc API.
+  // Trang gọi hàm chặn với vai của sàn đang chọn và chuyển hướng theo kết quả trước khi đọc API.
   const nguon = readFileSync(new URL("./page.tsx", import.meta.url), "utf8");
-  assert.match(nguon, /const di = chuyenTruocKhiDoc\(me\);\s*if \(di \|\| !me\) redirect\(di \?\? "\/login"\);/, "trang mẫu không chuyển hướng theo chuyenTruocKhiDoc");
-  assert.ok(nguon.indexOf("chuyenTruocKhiDoc(me)") < nguon.indexOf("/api/v1/company/import-templates"), "trang đọc API trước khi chặn");
+  assert.match(nguon, /const chan = chanMucSan\(me\.activeCompany\.roles\);\s*if \(chan\) redirect\(chan\);/, "trang mẫu không chặn vai");
+  assert.ok(nguon.indexOf("chanMucSan(") < nguon.indexOf("/api/v1/company/import-templates"), "trang đọc API trước khi chặn");
 });

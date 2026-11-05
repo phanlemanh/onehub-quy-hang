@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 
 import { getApi, readMe } from "@/lib/api";
 
+import { chanMucSan } from "../cai-dat";
 import { MucCaiDat } from "../khung";
-import { CHU, chuyenTruocKhiDoc, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
+import { CHU, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
 import { VungMauNhap } from "./vung-mau-nhap";
 
 export const dynamic = "force-dynamic";
@@ -14,8 +15,11 @@ export const dynamic = "force-dynamic";
 export default async function MauNhap() {
   const cookie = (await headers()).get("cookie") ?? "";
   const me = await readMe(cookie);
-  const di = chuyenTruocKhiDoc(me);
-  if (di || !me) redirect(di ?? "/login");
+  if (!me) redirect("/login");
+  if (me.companies.length === 0) redirect("/no-company");
+  if (!me.activeCompany) redirect("/select-company");
+  const chan = chanMucSan(me.activeCompany.roles);
+  if (chan) redirect(chan);
   const res = await Promise.resolve(getApi().request("http://quy-hang.local/api/v1/company/import-templates", { headers: { cookie } })).catch(() => null);
   const tt: TrangThaiMau = res && res.ok ? { kieu: "xong", ds: (await res.json()) as CotMauNhap[] } : { kieu: "loi" };
   return (
