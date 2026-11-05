@@ -1,0 +1,7 @@
+# phá-thử E13: trả «xong» khi máy chủ 500
+  ✖ bốn kết cục viết trước (9.89825ms)
+  ✖ thử lại sau lỗi thì xong, không hỏi xoá kho lần hai (0.248083ms)
+✖ đăng xuất trên máy (10.683125ms)
+✖ failing tests:
+✖ bốn kết cục viết trước (9.89825ms)
+  AssertionError [ERR_ASSERTION]: máy chủ 500

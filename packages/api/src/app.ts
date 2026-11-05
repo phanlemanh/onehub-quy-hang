@@ -32,6 +32,8 @@ import { registerExportRoutes } from "./exports/routes";
 import type { KhoAnh, KhoAnhVang } from "./photos/kho";
 import type { PushSender } from "./push/gui";
 import { chanMayBiBao } from "./auth/may-bi-bao";
+import { registerPasswordAuth } from "./auth/dang-nhap-mat-khau";
+import { docTheoNguoi, trangThaiDong } from "./auth/trang-thai-mat-khau";
 import { registerDeviceRoutes } from "./me/routes";
 import { registerPushRoutes, registerPushSignOut } from "./push/routes";
 
@@ -73,6 +75,8 @@ const Me = z
     user: z.object({ id: z.string(), email: z.string() }),
     companies: z.array(Company),
     activeCompany: Company.nullable(),
+    /** Dòng «Mật khẩu» ở Cá nhân (dang-nhap-mat-khau): chưa đặt, đã đặt, hay đã bị vô hiệu. */
+    password: z.enum(["khong", "co", "vo-hieu"]),
   })
   .openapi("Me");
 const ApiError = z.object({ error: z.string() }).openapi("ApiError");
@@ -98,6 +102,8 @@ export function createApi(deps: ApiDeps) {
 
   // Đăng xuất gỡ đăng ký thông báo của thiết bị trước khi tới better-auth (ADR-0025) — đăng ký trước lối danh tính chung.
   registerPushSignOut(api, deps);
+  // Mật khẩu do sàn cấp (dang-nhap-mat-khau): đăng nhập bằng mật khẩu và đặt lần đầu đi đường bọc, trước lối chung.
+  registerPasswordAuth(api, deps);
   // Danh tính: gửi mã, nhập mã, đăng xuất, đọc phiên — better-auth giữ trọn.
   api.on(["GET", "POST"], `${AUTH_BASE_PATH}/*`, (c) => auth.handler(c.req.raw));
   // Máy bị báo mất (hàng 38): 401 của phiên đã bị thu qua «Báo mất máy» mang mã riêng để máy ấy xoá kho của người.
@@ -116,7 +122,8 @@ export function createApi(deps: ApiDeps) {
       const user = await viewer(c);
       if (!user) return c.json({ error: API_ERRORS.unauthenticated.code }, API_ERRORS.unauthenticated.status);
       const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
-      return c.json({ user: { id: user.id, email: user.email }, companies: r.companies, activeCompany: r.active }, 200);
+      const password = trangThaiDong(await docTheoNguoi(deps.identityPool, user.id));
+      return c.json({ user: { id: user.id, email: user.email }, companies: r.companies, activeCompany: r.active, password }, 200);
     },
   );
 

@@ -1,0 +1,5 @@
+# phá-thử E13 lượt 2: gọi d.goi(...) gắn this = deps
+  ✖ gọi máy chủ không gắn this vào deps (fetch thật ném «Illegal invocation») (0.8765ms)
+✖ đăng xuất trên máy (10.075041ms)
+✖ failing tests:
+✖ gọi máy chủ không gắn this vào deps (fetch thật ném «Illegal invocation») (0.8765ms)

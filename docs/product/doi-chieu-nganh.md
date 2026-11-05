@@ -202,6 +202,18 @@ Quỹ hàng: sổ điểm biến thiên, ba bậc (ADR-0018); một cấp sàn, 
 **Bài học:** mẫu chung là **hãng dựng sẵn → sàn đặt → người tự thêm**. Quỹ hàng đã có hãng → sàn, và ở góc nhìn có người.
 Cấp văn phòng hay đội nằm giữa sàn và người thì chưa có; Quỹ hàng chưa có khái niệm «Nhóm» (Tham chiếu §6).
 
+## 9a. Mật khẩu và đăng nhập
+
+Tra 04/11 (hàng `dang-nhap-mat-khau`). RESO Data Dictionary không có đối tượng đăng nhập hay mật khẩu.
+
+| Sản phẩm | Cách làm | Cấu hình ở đâu | Nguồn |
+| --- | --- | --- | --- |
+| Salesforce | Quản trị đặt chính sách mật khẩu: độ dài tối thiểu (mặc định 8), số lần sai trước khi khoá, thời gian khoá (mặc định 15 phút); quản trị đặt lại mật khẩu, người đổi ở lần đăng nhập đầu | **Sàn** (quản trị) | [Set Password Policies](https://developer.salesforce.com/docs/atlas.en-us.232.0.securityImplGuide.meta/securityImplGuide/admin_password.htm) |
+| Follow Up Boss | Người tự tạo và đổi mật khẩu, tối thiểu 10 ký tự; quên thì đặt lại qua thư; chỉnh độ dài được không — chưa kiểm | Hãng | [Creating or Changing Your Password](https://help.followupboss.com/hc/en-us/articles/360012325934-Creating-or-Changing-Your-Password) |
+
+**Bài học:** Quỹ hàng giữ cứng ba số (độ dài, giới hạn thử, hạn mật khẩu tạm) vì quyền và an toàn — điều khoá K23–K25 ở
+Sổ điểm biến thiên; cho sàn siết thêm để hàng sau khi có sàn đòi.
+
 ## 10. Chế độ cuộc gọi: kịch bản, kết quả gọi, lý do mất
 
 Quỹ hàng: bốn kết quả gọi cố định ở mọi màn (§5); danh sách hỏi bằng năm mục mức đủ (luật 16, sổ K6); một lý do trả lead
@@ -238,6 +250,11 @@ Added · Updated · Duplicate, dòng lặp trong tệp được gộp ([nguồn]
 Lofty giữ người giữ và giai đoạn của bản ghi đã có, cập nhật trường khác, **chủ tài khoản chỉnh cách đè** ở cài đặt, hoàn
 tác lần nhập trong 24 giờ ([nguồn](https://help.lofty.com/hc/en-us/articles/360054872172)). Quỹ hàng: căn có hàng mở của
 người khác thành tin bổ sung, không đè (luật 20).
+
+Hoàn tác lần nhập (tra 05/11, hàng 66): Follow Up Boss liệt lần nhập ở Admin › Import, «xoá lần nhập» xoá cả liên hệ và
+ghi chú của lần ấy, kể cả ghi chú gắn vào liên hệ đã có ([nguồn](https://help.followupboss.com/hc/en-us/articles/4402323239063));
+Lofty hoàn tác trong 24 giờ (nguồn trên). Cả hai không cho cấu hình. Quỹ hàng: sự kiện bù, giữ lịch sử, căn đã sửa sau lần
+nhập thì liệt kê, không gỡ (ADR-0011 quyết định 8).
 
 **Bài học:** ngành để người ghép hay soát từng lần; chưa thấy sản phẩm nào nhớ cách ghép theo sàn hay che dữ liệu cá nhân
 trước khi xử lý (chưa kiểm). Quỹ hàng nhớ theo sàn (hàng 67) và che trước khi có gì rời trình duyệt (bất biến 2).

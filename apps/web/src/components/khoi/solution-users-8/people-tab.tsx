@@ -21,6 +21,8 @@ import { CAP_BOX, Label, PersonFace } from "./value-faces";
 export interface PeopleActions {
   onEdit: (member: ThanhVien) => void;
   onRemove: (member: ThanhVien) => void;
+  /** Cấp mật khẩu tạm (dang-nhap-mat-khau) — chỉ quản trị thấy màn này. */
+  onIssuePassword?: (member: ThanhVien) => void;
 }
 
 export function IconAction({
@@ -209,6 +211,13 @@ export function PeopleTab({
                     </Button>
                   </div>
                   <div className={COL.actions}>
+                    {actions.onIssuePassword ? (
+                      <IconAction
+                        label={`Cấp mật khẩu cho ${member.email}`}
+                        icon={UI_ICONS.password}
+                        onClick={() => actions.onIssuePassword?.(member)}
+                      />
+                    ) : null}
                     <IconAction
                       label={self ? "Rời sàn" : `Bỏ ${member.email}`}
                       icon={self ? UI_ICONS.leave : UI_ICONS.remove}

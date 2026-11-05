@@ -130,7 +130,7 @@ async function hangMo(tx: pg.PoolClient, toa: string, ma: string | null) {
   if (!ma) return null;
   const { rows } = await tx.query<{ id: string; version: number }>(
     `select id, version from listings where company_id = app.current_company_id() and building_name = $1
-       and app.unit_key(unit_number) = app.unit_key($2) and standard_status = any ($3) order by id limit 1`,
+       and app.unit_key(unit_number) = app.unit_key($2) and standard_status = any ($3) and not voided order by id limit 1`,
     [toa, ma, OPEN_STATUSES],
   );
   const h = rows[0];

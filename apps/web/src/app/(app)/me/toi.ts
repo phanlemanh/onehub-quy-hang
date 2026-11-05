@@ -64,3 +64,16 @@ export function trangThaiDongMay(s: { dang: "doc" | "san" | "bao" | "xong" | "lo
 export const coNutBaoMat = (t: TrangThaiMay) => t.loai === "nhieu-may" || t.loai === "dang-bao";
 export const LOI_DA_BAO = (n: number) => `Đã đăng xuất ${n} máy khác`;
 export const HOI_BAO_MAT = "Đăng xuất mọi máy khác và xoá dữ liệu Quỹ hàng trên các máy ấy?";
+
+// Dòng «Mật khẩu» (dang-nhap-mat-khau, Hỏi-6): nằm trong nhóm «Hồ sơ», không thêm nhóm thứ bảy. Trạng thái đọc từ
+// `password` của `/api/v1/me`.
+export type TrangThaiMatKhau = "khong" | "co" | "vo-hieu";
+export const NHOM_MAT_KHAU: MaNhom = "ho-so";
+export const NHAN_MAT_KHAU: Readonly<Record<TrangThaiMatKhau, string>> = {
+  khong: "Chưa đặt",
+  co: "Đã đặt",
+  "vo-hieu": "Đã khoá — đặt mật khẩu mới",
+};
+/** Nút của dòng: có mật khẩu dùng được thì đổi (hộp hỏi mật khẩu hiện tại), không thì đặt. */
+export const nutMatKhau = (t: TrangThaiMatKhau) => (t === "co" ? "Đổi mật khẩu" : "Đặt mật khẩu");
+export const canMatKhauHienTai = (t: TrangThaiMatKhau) => t === "co";

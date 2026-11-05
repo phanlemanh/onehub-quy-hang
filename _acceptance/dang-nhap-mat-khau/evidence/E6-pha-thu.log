@@ -1,0 +1,7 @@
+# phá-thử E6: đếm cửa sổ chỉ cho email có tài khoản
+✖ giới hạn thử: email lạ cũng đếm (710.355708ms)
+✖ failing tests:
+✖ giới hạn thử: email lạ cũng đếm (710.355708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+    actual: 401,
+    expected: 429,

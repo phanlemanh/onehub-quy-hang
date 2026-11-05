@@ -1,6 +1,6 @@
 ---
 nhom: xac-thuc
-doi_tuong: [dang-nhap, chon-san, chua-gan-san]
+doi_tuong: [dang-nhap, dat-mat-khau, chon-san, chua-gan-san]
 khuon: { ten: Khung, nhap: "@/app/(auth)/khung" }
 nhan_dien: ["apps/web/src/app/(auth)/*/page.tsx"]
 mau_dang_chay: { tep: "apps/web/src/app/(auth)/login/page.tsx", duong: "/login", trang_thai: [mac-dinh, loi] }
@@ -11,7 +11,8 @@ luat: [KH-xt-khong-vo, KH-xt-loi-gan-o]
 ---
 # Xác thực
 
-Màn đưa người vào được một sàn: đăng nhập, chọn sàn khi thuộc nhiều sàn, báo chưa gắn sàn. Mỗi màn là một `page.tsx`
+Màn đưa người vào được một sàn: đăng nhập (bằng mã 6 số hay mật khẩu), «Đặt mật khẩu mới» sau khi đăng nhập bằng mật
+khẩu tạm (hàng dang-nhap-mat-khau), chọn sàn khi thuộc nhiều sàn, báo chưa gắn sàn. Mỗi màn là một `page.tsx`
 dưới `apps/web/src/app/(auth)/` và trả `<Khung title="…">…</Khung>` ở gốc.
 
 **Dùng khi** màn đứng trước lúc người có sàn đang làm — người chưa đăng nhập, hay đã đăng nhập mà chưa chọn được sàn.

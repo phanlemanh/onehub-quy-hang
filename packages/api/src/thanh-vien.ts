@@ -4,7 +4,9 @@ import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "./app";
 import { emailsOf, ensureAccount } from "./auth/accounts";
 import { resolveCompany } from "./auth/company";
-import { ACTIVE_COMPANY_COOKIE } from "./auth/constants";
+import { hashPassword } from "better-auth/crypto";
+import { ACTIVE_COMPANY_COOKIE, TAM_HAN_GIO } from "./auth/constants";
+import { sinhMatKhauTam } from "./auth/mat-khau";
 import { withCompany } from "./db";
 import { API_ERRORS, type ApiErrorEntry } from "./errors";
 import { tenHienThi } from "./ten-hien-thi";
@@ -205,6 +207,36 @@ export function registerMemberRoutes(api: OpenAPIHono, { appPool, identityPool, 
         if (l) return tra(c, l);
         throw e;
       }
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "post",
+      path: `${BASE}/members/{userId}/temp-password`,
+      summary: "Cấp mật khẩu tạm cho người chỉ thuộc sàn này — trả mật khẩu đúng một lần, thu mọi phiên của người",
+      request: { params: z.object({ userId: z.string() }) },
+      responses: { 200: ok("Mật khẩu tạm", z.object({ tempPassword: z.string(), expiresAt: z.string() })), ...loi },
+    }),
+    async (c) => {
+      const q = await quanTri(c);
+      if ("status" in q) return tra(c, q);
+      const { userId } = c.req.valid("param");
+      // Bản rõ chỉ sống trong lời gọi này: băm bằng hàm của thư viện, không lưu, không in (dang-nhap-mat-khau).
+      const tam = sinhMatKhauTam();
+      const het = new Date(Date.now() + TAM_HAN_GIO * 3600 * 1000);
+      try {
+        const bam = await hashPassword(tam);
+        await withCompany(appPool, q, (tx) => tx.query("select app.cap_mat_khau_tam($1, $2, $3)", [userId, bam, het]));
+      } catch (e) {
+        const x = e as { code?: string };
+        if (x.code === "QH409") return tra(c, API_ERRORS.userInOtherCompany);
+        if (x.code === "P0002") return tra(c, API_ERRORS.notFound);
+        const l = loiPg(e);
+        if (l) return tra(c, l);
+        throw e;
+      }
+      return c.json({ tempPassword: tam, expiresAt: het.toISOString() }, 200);
     },
   );
 

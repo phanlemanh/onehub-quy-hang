@@ -38,6 +38,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/company/members",
     "PATCH /api/v1/company/members/{userId}",
     "DELETE /api/v1/company/members/{userId}",
+    "POST /api/v1/company/members/{userId}/temp-password",
     "GET /api/v1/company/zones",
     "POST /api/v1/company/zones",
     // Hàng 8 (ADR-0008).
@@ -50,6 +51,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/imports/agents",
     "GET /api/v1/imports/templates",
     "GET /api/v1/imports/{importId}",
+    "GET /api/v1/imports",
+    "POST /api/v1/imports/{importId}/undo",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
