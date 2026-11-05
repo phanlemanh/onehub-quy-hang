@@ -3021,3 +3021,64 @@ test("màn liên hệ: số che chỉ cho người đọc được, không vư�
     assert.equal(await demMoSoLienHe(c, K1, [LH.DC1, COMPANY_A]), 0, "xem số che ghi sự kiện mở số");
   });
 });
+
+// ---- import_templates (045, hàng 50 mau-nhap-va-bai): sổ sửa mẫu file nhập ----
+const chenMau = "insert into import_templates (company_id, header_key, action, target, transform, value_map) values ($1, $2, $3, $4, $5, $6)";
+
+test("import_templates (045): cách ly", { skip }, async () => {
+  // Quản trị A ghi một dòng; đối chứng: A đọc thấy.
+  await asRole(UA, COMPANY_A, async (c) => {
+    await c.query(chenMau, [COMPANY_A, "gia", "set", "listPrice", null, null]);
+    assert.equal((await c.query("select count(*)::int n from import_templates")).rows[0].n, 1, "đối chứng: A thấy dòng của mình");
+    // Cùng giao dịch, chuyển sang quản trị B ở sàn B: không thấy dòng của A, không chèn được vào A.
+    await c.query("select set_config('app.user_id', $1, true), set_config('app.company_id', $2, true)", [UB, COMPANY_B]);
+    assert.equal((await c.query("select count(*)::int n from import_templates")).rows[0].n, 0, "sàn B đọc được mẫu của A");
+    await expectError(c, chenMau, [COMPANY_A, "gia", "delete", null, null, null], /row-level security/);
+  });
+});
+
+test("import_templates (045): chặn ở bảng", { skip }, async () => {
+  // Vai không quản trị → chính sách chặn.
+  await asRole(UN, COMPANY_A, async (c) => {
+    await expectError(c, chenMau, [COMPANY_A, "gia", "delete", null, null, null], /row-level security/);
+  });
+  await asRole(UA, COMPANY_A, async (c) => {
+    // Bảng viết trước: [ca, tham số, ràng buộc ghim].
+    const BANG = [
+      ["quy đổi ở trường lớp nguồn", ["so-chu", "set", "ownerPhone", null, '{"a":"b"}'], /import_templates_quy_doi_truong_dong/],
+      ["quy đổi ở trường thường", ["gia", "set", "listPrice", null, '{"a":"b"}'], /import_templates_quy_doi_truong_dong/],
+      ["xoá kèm đích", ["gia", "delete", "listPrice", null, null], /import_templates_xoa_khong_dich/],
+      ["sửa thiếu đích", ["gia", "set", null, null, null], /import_templates_sua_co_dich/],
+    ];
+    let so = 0;
+    for (const [, ts, ghim] of BANG) {
+      await expectError(c, chenMau, [COMPANY_A, ...ts], ghim);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+    // Đối chứng dương: quy đổi ở Trạng thái chèn được.
+    await c.query(chenMau, [COMPANY_A, "trang-thai", "set", "standardStatus", null, '{"con":"Active"}']);
+    assert.equal((await c.query("select count(*)::int n from import_templates")).rows[0].n, 1);
+  });
+});
+
+test("import_templates (045): bảng chỉ thêm, quyền hẹp", { skip }, async () => {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    const r = (await c.query("select relrowsecurity, relforcerowsecurity from pg_class where relname = 'import_templates'")).rows[0];
+    assert.equal(r.relrowsecurity, true, "chưa bật luật theo dòng");
+    assert.equal(r.relforcerowsecurity, true, "chưa ép luật theo dòng");
+    const quyen = (await c.query("select privilege_type p from information_schema.role_table_grants where table_name = 'import_templates' and grantee = 'quy_hang_app'")).rows.map((x) => x.p).sort();
+    assert.deepEqual(quyen, ["INSERT", "SELECT"], "quy_hang_app sửa được sổ mẫu");
+    const rang = (await c.query("select conname from pg_constraint where conrelid = 'import_templates'::regclass and contype = 'c'")).rows.map((x) => x.conname);
+    for (const ten of ["import_templates_xoa_khong_dich", "import_templates_sua_co_dich", "import_templates_quy_doi_truong_dong"]) assert.ok(rang.includes(ten), `thiếu ràng buộc ${ten}`);
+  } finally {
+    await c.end();
+  }
+  await asRole(UA, COMPANY_A, async (c) => {
+    await c.query(chenMau, [COMPANY_A, "gia", "set", "listPrice", null, null]);
+    await expectError(c, "update import_templates set target = 'unitNumber'", [], /permission denied/);
+    await expectError(c, "delete from import_templates", [], /permission denied/);
+  });
+});
