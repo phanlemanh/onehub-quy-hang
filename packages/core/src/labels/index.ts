@@ -122,6 +122,8 @@ export function dungDongNhan(bo: unknown): { ok: true; dong: DongNhan[] } | { ok
     if (!kq.ok) return kq;
     if (daTruong.has(String(r.field))) return { ok: false, loi: `${KHOA_TRUONG}${String(r.field)}: gửi hai lần` };
     daTruong.add(String(r.field));
+    // Gõ đúng chữ mặc định = dùng mặc định: không dòng nào (gap-probe P1 của Cổng Phạm vi).
+    if (kq.nhan === TRUONG_DAT_TEN[r.field as TruongDatTen]) continue;
     dong.push({ key: `${KHOA_TRUONG}${String(r.field)}`, value: kq.nhan });
   }
   const theoTruong = new Map<TruongDong, Record<string, string>>();
@@ -135,6 +137,7 @@ export function dungDongNhan(bo: unknown): { ok: true; dong: DongNhan[] } | { ok
     if (Object.hasOwn(m, r.value as string)) return { ok: false, loi: `${khoa}: giá trị «${String(r.value)}» có hai tên riêng` };
     if (Object.values(m).some((x) => x.toLocaleLowerCase("vi") === kq.nhan.toLocaleLowerCase("vi")))
       return { ok: false, loi: `${khoa}: hai giá trị cùng tên «${kq.nhan}»` };
+    if (kq.nhan === (TAP_DONG[truong] as Record<string, string>)[r.value as string]) continue;
     m[r.value as string] = kq.nhan;
     theoTruong.set(truong, m);
   }
@@ -154,6 +157,8 @@ export function boTuVung(dong: readonly DongNhan[]): { tuVung: TuVung; loi: stri
   const giaTri: Partial<Record<TruongDong, Partial<Record<string, string>>>> = {};
   const loi: string[] = [];
   for (const r of dong) {
+    // `null` = sàn đã trả về mặc định (dòng giữ lại để nhật ký có vết): chưa đặt, không lỗi.
+    if (r.value === null) continue;
     if (r.key.startsWith(KHOA_TRUONG)) {
       const f = r.key.slice(KHOA_TRUONG.length);
       const kq = kiemNhanTruong(f, r.value);
@@ -175,6 +180,39 @@ export function boTuVung(dong: readonly DongNhan[]): { tuVung: TuVung; loi: stri
     }
   }
   return { tuVung: { truong, giaTri }, loi };
+}
+
+/**
+ * Dòng cần ghi để bảng đang lưu (`daLuu`) thành bộ mới (`moi`, từ `dungDongNhan`): khoá mới hay đổi giá trị → dòng mới;
+ * khoá đang có giá trị (khác `null`) mà vắng trong bộ mới → `null` (trả về mặc định, nhật ký vẫn có vết); khoá giữ
+ * nguyên → không ghi (không thổi phồng nhật ký).
+ */
+export function doiNhan(daLuu: readonly DongNhan[], moi: readonly DongNhan[]): DongNhan[] {
+  const cu = new Map(daLuu.filter((r) => laKhoaNhan(r.key)).map((r) => [r.key, JSON.stringify(r.value)]));
+  const ra: DongNhan[] = [];
+  const coMoi = new Set<string>();
+  for (const r of moi) {
+    coMoi.add(r.key);
+    if (cu.get(r.key) !== JSON.stringify(r.value)) ra.push(r);
+  }
+  for (const [key, v] of cu) if (!coMoi.has(key) && v !== "null") ra.push({ key, value: null });
+  return ra;
+}
+
+/** Đọc ngược thân `GET /api/v1/company/labels` (khuôn `BangNhan`) thành từ vựng — chỉ dòng `custom`. */
+export function tuVungTuBang(bang: { fields?: readonly unknown[]; values?: readonly unknown[] } | null | undefined): TuVung {
+  const truong: Partial<Record<TruongDatTen, string>> = {};
+  const giaTri: Partial<Record<TruongDong, Partial<Record<string, string>>>> = {};
+  for (const f of bang?.fields ?? []) {
+    const r = (f ?? {}) as Record<string, unknown>;
+    if (r.custom === true && laTruongDatTen(r.field) && typeof r.label === "string") truong[r.field] = r.label;
+  }
+  for (const v of bang?.values ?? []) {
+    const r = (v ?? {}) as Record<string, unknown>;
+    if (r.custom !== true || !laTruongDong(r.field) || typeof r.value !== "string" || typeof r.label !== "string") continue;
+    (giaTri[r.field] ??= {})[r.value] = r.label;
+  }
+  return { truong, giaTri };
 }
 
 /** Tên một trường trên một mặt: tên riêng của sàn, vắng thì chữ mặc định của chính mặt ấy. */

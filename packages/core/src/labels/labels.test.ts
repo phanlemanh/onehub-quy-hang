@@ -4,7 +4,9 @@ import { test } from "node:test";
 import { FIELD_CLASS } from "../import/fields";
 import { truongRa, TRUONG_RA } from "../redaction";
 import {
+  bangNhan,
   boTuVung,
+  doiNhan,
   DS_TRUONG_DAT_TEN,
   dungDongNhan,
   kiemNhanGiaTri,
@@ -14,6 +16,7 @@ import {
   nhanTruong,
   TRUONG_DAT_TEN,
   tuVungRaNgoai,
+  tuVungTuBang,
   type TruongDatTen,
   type TuVung,
 } from "./index";
@@ -115,6 +118,9 @@ test("từ vựng: chỉ phần ra ngoài", () => {
     for (const cam of ["withdrawnReason", "closePrice", "closeDate", "standardStatus"]) assert.ok(!(cam in ra.truong), `${nn}: ${cam}`);
     assert.ok(!JSON.stringify(ra).includes("MOI-LYDO"), nn);
   }
+  // Đối chứng dương: bản sao khoá ra của nhóm môi giới lỡ chứa closePrice → phép đo bắt đúng khoá ấy.
+  const loRa = tuVungRaNgoai(day, [...TRUONG_RA.nhom_moi_gioi, "closePrice"]);
+  assert.deepEqual(Object.keys(loRa.truong).filter((k) => !KY.nhom_moi_gioi!.includes(k)), ["closePrice"]);
   // Khách riêng ẩn mã căn: tập khoá thật bỏ mã căn → nhãn mã căn cũng không đi.
   const an = tuVungRaNgoai(day, truongRa("khach_rieng", { showConfirmedAge: true, privateHidesUnitNumber: true }));
   assert.ok(!("unitNumber" in an.truong));
@@ -127,4 +133,39 @@ test("từ vựng: không trường source nào đổi tên được", () => {
   for (const f of DS_TRUONG_DAT_TEN) assert.notEqual(lopTruongDatTen(f), "source", f);
   // Đối chứng dương: bộ kiểm bắt khi bản sao danh sách chèn ownerPhone.
   assert.deepEqual(nguon([...Object.keys(TRUONG_DAT_TEN), "ownerPhone"]), ["ownerPhone"]);
+});
+
+test("từ vựng: trùng mặc định, null, khoá đổi, đọc ngược bảng", () => {
+  // Gõ đúng chữ mặc định = mặc định: không dòng.
+  assert.deepEqual(
+    dungDongNhan({ fields: [{ field: "feeInclusion", label: "Điều kiện phí" }], values: [{ field: "feeInclusion", value: "included", label: "Bao phí" }] }),
+    { ok: true, dong: [] },
+  );
+  // null = đã trả về mặc định: chưa đặt, không lỗi.
+  assert.deepEqual(boTuVung([{ key: "labels.field.feeInclusion", value: null }, { key: "labels.value.feeInclusion", value: null }]), {
+    tuVung: { truong: {}, giaTri: {} },
+    loi: [],
+  });
+  // Bảng bốn dòng: mới, đổi, giữ nguyên, bỏ → null; khoá đã null mà vẫn vắng → không ghi lại.
+  const daLuu = [
+    { key: "labels.field.legalStatus", value: "Sổ" },
+    { key: "labels.field.furnished", value: "NT" },
+    { key: "labels.field.floor", value: "Lầu" },
+    { key: "labels.field.financing", value: null },
+    { key: "lead_routing.strategy", value: "manual" },
+  ];
+  const moi = [
+    { key: "labels.field.feeInclusion", value: "Phí CN" },
+    { key: "labels.field.legalStatus", value: "Sổ hồng" },
+    { key: "labels.field.furnished", value: "NT" },
+  ];
+  assert.deepEqual(doiNhan(daLuu, moi), [
+    { key: "labels.field.feeInclusion", value: "Phí CN" },
+    { key: "labels.field.legalStatus", value: "Sổ hồng" },
+    { key: "labels.field.floor", value: null },
+  ]);
+  // Đọc ngược thân GET (dựng bằng đúng hàm bên ghi): ra lại từ vựng.
+  const tv: TuVung = { truong: { feeInclusion: "Phí CN" }, giaTri: { feeInclusion: { included: "BP" } } };
+  assert.deepEqual(tuVungTuBang(JSON.parse(JSON.stringify(bangNhan(tv)))), tv);
+  assert.deepEqual(tuVungTuBang(null), { truong: {}, giaTri: {} });
 });
