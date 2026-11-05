@@ -14,7 +14,10 @@ ngoai_le_han: [{ tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", han
 # Bảng hàng
 
 Bảng hàng trên máy tính và các góc nhìn đã lưu của nó: trang trả `<KhungBangHang title="…">` ở gốc, lưới và thanh công cụ
-nằm trong khe `children`. Khối đích `data-grid-editing-6` (`docs/design/vo-va-ia.md` §2, ADR-0004) đã chuyển thể ở
+nằm trong khe `children`. Khuôn dựng bố cục «Danh sách – chi tiết» (ADR-0024 sửa đổi 05/11, hàng 105): khung Bảng hàng cao
+hết vùng làm việc, lưới cuộn trong khung, trang không cuộn; Bảng hàng trao `hoSo` thì hồ sơ căn đang mở theo `?unit=` là
+cột kéo chia đứng cạnh, ngoài khung bảng (nhóm `ho-so-can`), bảng co trái và giữ lọc, nhóm, cuộn khi cột mở, đổi căn hay
+đóng. Khối đích `data-grid-editing-6` (`docs/design/vo-va-ia.md` §2, ADR-0004) đã chuyển thể ở
 `apps/web/src/app/(app)/inventory/bang-hang.tsx`; nhóm dòng theo cách của `data-grid-grouping-2`.
 
 **Dùng khi** màn trình tập hàng của sàn dạng bảng kiểu Sheet trên máy tính — Bảng hàng, một góc nhìn đã lưu; sau này
@@ -24,8 +27,10 @@ cho hồ sơ một căn (cột phải, mục 17), hay cho bảng phụ trong mà
 
 ## Luật
 
-- **KH-bh-mot-khung** — Một màn là đúng một `Frame` (qua `KhungBangHang`) lấp cột nội dung của vỏ; trang không tự dựng
-  `Frame`, `FrameHeader` hay `Card`. Tên góc nhìn đang mở hiện ở nút «Góc nhìn ▾» đầu thanh công cụ, không đổi tiêu đề.
+- **KH-bh-mot-khung** — Thân là đúng một `Frame` (qua `KhungBangHang`) trong bố cục «Danh sách – chi tiết»; hồ sơ căn
+  là cột kéo chia của bố cục, không nằm trong khung bảng; trang không tự dựng `Frame`, `FrameHeader` hay `Card`. Tên góc
+  nhìn đang mở hiện ở nút «Góc nhìn ▾» đầu thanh công cụ, không đổi tiêu đề. Cột «Đầu chủ» chỉ đọc (người giữ căn theo
+  `listAgentKey`; «—» khi chưa gán, «Đã rời sàn» khi người giữ không còn trong sàn).
 - **KH-bh-tren-may** — Lưới đọc từ kho trên máy (bộ đồng bộ, hàng 13): lọc, nhóm, sắp không gọi mạng; thuộc tính căn
   ghép từ danh mục đã giữ trên máy. Trạng thái đang tải · trống · lỗi · lọc rỗng đi qua `TrangThai`.
 - **KH-bh-chi-doc** — Ô có `cellEdit.editable: false` cho tới khi mục 15 (sửa trên ô) mở từng cột; chọn ô và chép luôn
