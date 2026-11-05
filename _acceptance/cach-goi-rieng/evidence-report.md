@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7d8ec27d7f0445f26450530e90292392dc9a670e
+verified_commit: 26f0a9ef37e099d8c60fe7328dd20ebdd146c6ea
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -363,3 +363,7 @@ none — every multi-run eval is uniform
 
 Round 1: E15 bị REJECT ở S4 lượt 1 (ba phát hiện trong hợp đồng: cách xem đã lưu, thứ tự khoá doiNhan, E15). Returned to implementation.
 Round 2: toàn bộ eval đạt; E15 đạt có giới hạn (kit#485) cùng E15b xanh; không còn phát hiện trong hợp đồng.
+
+### Re-pin lần 1 — 2026-11-05, do hoá cũ do gộp nhánh chính sau chữ ký
+run_id: repin-20261105T204405Z-27330
+sha: 26f0a9ef37e099d8c60fe7328dd20ebdd146c6ea · suites: 7 lệnh exit 0 · evals: 21/21 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E15=1 · ngoài làn máy: E11, E12, E13, E14
