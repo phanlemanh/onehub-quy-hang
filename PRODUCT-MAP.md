@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TD
-  A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
+  A["Đang cân nhắc cơ hội<br/>1 việc"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>4 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
@@ -21,6 +21,10 @@ flowchart TD
 > **Cổng Đáng** việc này có đáng làm không · **Cổng Phạm vi** bộ tiêu chí
 > đã đủ và đúng chưa · **Cổng Bằng chứng** đã làm đúng thứ đã hứa chưa ·
 > **Cổng Giá trị** thứ đã giao có ăn thua không.
+
+## Đang cân nhắc cơ hội
+
+- Người trong sàn mở màn «Liên hệ»: danh sách liên hệ lọc theo loại (Chủ bán · Chủ cho thuê · Người mua · Người thuê) và hồ sơ một người — các số theo luật lớp nguồn (số chủ nhà không hiện cho người không được đọc), các căn, lead, nhu cầu khách và Lần gửi gắn với người ấy — mỗi vai chỉ thấy phần quyền của mình. (`man-lien-he`)
 
 ## Sắp mở vòng
 
