@@ -5,7 +5,7 @@ slug: dia-chi-chuan
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: _acceptance/dia-chi-chuan/design.md
@@ -100,3 +100,8 @@ lại dấu, bắt sai chính tả). Never: dịch vụ tra địa chỉ, toạ 
 - Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Địa chỉ gõ liền không dấu phẩy có phường Bến Thành bị báo là phường chưa có trong danh mục, dù phường này có trong danh mục. Người dùng phải gõ lại có dấu phẩy. — `packages/core/src/address/doc-dia-chi.ts`
 - Ngoài-4 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu địa chỉ được gõ hoặc dán bằng kiểu mã hoá chữ tổ hợp, như một số bộ gõ hay máy Mac sinh ra, phường bị đọc hỏng và hệ thống báo thiếu phường. — `packages/core/src/address/doc-dia-chi.ts`
 - Ngoài-5 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Người dùng không thấy khác biệt nào hôm nay; chỉ là bộ kiểm có vài chỗ lỏng nên nếu sau này có người làm hỏng việc đọc tỉnh lạ thì bộ kiểm có thể không báo. — `packages/core/src/address/doc-dia-chi.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: Gõ địa chỉ liền một dòng, không dấu phẩy, với phường có chữ «Thành» (như Bến Thành) thì phường không được nhận và hệ thống báo thiếu; gõ có dấu phẩy thì đọc đúng.
+  - Ngoài-3: Cùng gốc với Ngoài-1 — địa chỉ gõ liền có phường Bến Thành bị báo «chưa có trong danh mục» dù phường có trong danh mục.
+  - Ngoài-4: Địa chỉ gõ hay dán bằng kiểu mã hoá chữ tổ hợp (một số bộ gõ, máy Mac) thì phường bị đọc hỏng và hệ thống báo thiếu phường.
+  - Ngoài-5: Bộ kiểm phần thiếu có vài dòng tỉnh lạ được kiểm lỏng hơn ma trận chính; hỏng việc đọc tỉnh lạ sau này có thể không bị bắt.
