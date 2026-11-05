@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "den": "f531933198b5b27640384b9d0c1ba04dcefb24b7",
-  "base": "eea70557939fa3241758acf5ed187bbcc4d1d366",
+  "den": "120d84505a7e076bcbfa6d0e0f246ca7e6dd8c1c",
+  "base": "5111937c86ba4ef6151a17c18958e791eb32a5f6",
   "ghim": {
     "bang-hang": "478a18b1ed8ca2501bbc45fcbf206a13857627ab",
     "cai-dat-san": "cfa238c20935717f5c5853a30463fba1b5985767",
@@ -19,7 +19,7 @@
     "toi": "471fc93898cb13fdf785e0ed2d44f3daac399e75",
     "trang-khach": "685f059b351e1fad28a7ae1c47a42c2a6f89cc30",
     "trang-mau": "2002381900302d8a416305d80503bc02e2dcb179",
-    "trang-tam": "c832d3aeeec79f16214aae997de9eb570f6f2aa4",
+    "trang-tam": "68c2f79275e1297659522026a3d1ad5f44002a72",
     "trang-thai": "0631cc5715db28d17a4f93f58625a132439754a4",
     "xac-thuc": "d453147b477de96ebb7049bbfec3b17654bbdc3d"
   },
