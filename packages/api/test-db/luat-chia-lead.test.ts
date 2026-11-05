@@ -1,4 +1,4 @@
-// Mục chia lead của Cài đặt sàn trên Postgres thật (hàng 48: E2b, E3, E6b). Màn lưu qua lối chung PATCH
+// Mục chia lead của Cài đặt sàn trên Postgres thật (hàng 48: E2b, E3, E5c, E6b, E7c). Màn lưu qua lối chung PATCH
 // /api/v1/company/settings (hàng 82) với sáu khoá của sổ mang `man: "48"`; bộ kiểm này đi đúng lối ấy. Sàn, người và lead
 // dựng qua lối API thật (mở sàn, nhập lead, nhịp chia); kết nối chủ chỉ đọc nhật ký và dấu trên lead. Số mẫu `0900 000 0xx`.
 import assert from "node:assert/strict";
@@ -172,4 +172,71 @@ test("luật chia lead: vai khác 403 với từng khoá của màn", async () =
   assert.equal((await suKien(s)).length, truoc, "nhật ký không thêm dòng");
   // Đối chứng dương: quản trị đổi cùng khoá → 200.
   for (const k of SAU_KHOA) assert.equal((await doi(s, { [k]: hopLe[k] })).status, 200, k);
+});
+
+// ---- E5c ---- AC-5 phía máy chủ: từng giá trị sai màn chặn thì lối chung cũng từ chối 400, lý do mở đầu bằng đúng khoá
+// (màn gắn lý do về dòng theo khoá ấy), không khoá nào được ghi, nhật ký không thêm dòng.
+test("luật chia lead: giá trị sai bị máy chủ từ chối, không ghi gì", async () => {
+  const s = await sanMoi();
+  const banDau = giaTri(await doc(s));
+  const truoc = (await suKien(s)).length;
+  const ca: [string, Record<string, unknown>, string][] = [
+    ["hạn nhận 0", { "lead_routing.accept_minutes": 0 }, "lead_routing.accept_minutes"],
+    ["hạn nhận 1441", { "lead_routing.accept_minutes": 1441 }, "lead_routing.accept_minutes"],
+    ["hạn nhận 15.5", { "lead_routing.accept_minutes": 15.5 }, "lead_routing.accept_minutes"],
+    ["hạn nhận trống", { "lead_routing.accept_minutes": "" }, "lead_routing.accept_minutes"],
+    ["hạn gọi nhỏ hơn hạn nhận", { "lead_routing.accept_minutes": 15, "lead_routing.first_call_minutes": 10 }, "lead_routing.first_call_minutes"],
+    ["cần gọi lại 6", { "queue.call_back_after_days": 6 }, "queue.call_back_after_days"],
+    ["cần gọi lại 31", { "queue.call_back_after_days": 31 }, "queue.call_back_after_days"],
+    ["thương lượng giá 15", { "queue.price_negotiation_after_days": 15 }, "queue.price_negotiation_after_days"],
+  ];
+  for (const [ten, body, khoa] of ca) {
+    const r = await doi(s, body);
+    assert.equal(r.status, 400, `${ten}: ${await r.clone().text()}`);
+    const lyDo = ((await r.json()) as { reason: string }).reason;
+    assert.match(lyDo, KHUON_LY_DO, `${ten}: ${lyDo}`);
+    assert.ok(lyDo.startsWith(khoa), `${ten}: lý do phải mở đầu bằng ${khoa}, nhận «${lyDo}»`);
+  }
+  assert.deepEqual(giaTri(await doc(s)), banDau, "không khoá nào được ghi");
+  assert.equal((await suKien(s)).length, truoc, "nhật ký không thêm dòng");
+  // Đối chứng dương: bộ đúng của màn (15/30/14/10) → 200 và được ghi.
+  const dung = { "lead_routing.accept_minutes": 15, "lead_routing.first_call_minutes": 30, "queue.call_back_after_days": 14, "queue.price_negotiation_after_days": 10 };
+  const ok = await doi(s, dung);
+  assert.equal(ok.status, 200, await ok.clone().text());
+  const sau = giaTri(await doc(s));
+  for (const [k, v] of Object.entries(dung)) assert.equal(sau[k], v, k);
+});
+
+// ---- E7c ---- AC-7 phía máy chủ: (a) sàn có bộ nhóm Hôm nay riêng → lối bộ nhóm trả nguồn «company» (màn khoá hai
+// ngưỡng theo nguồn này); (b) dòng cặp hạn trái luật có từ trước → lối chung trả `errors` nêu khoá hạn gọi, hai hạn chạy
+// theo mặc định và lead mới mang mặc định. Ca (c) «lối chung không trả lời» không có hiệu ứng máy chủ để đo.
+test("luật chia lead: hai trạng thái đặc biệt từ máy chủ", async () => {
+  const s = await sanMoi();
+  const nguon = async () => {
+    const r = await send("GET", "/api/v1/company/settings/queue", undefined, s.nguoi.qt.cookie);
+    assert.equal(r.status, 200, await r.clone().text());
+    return (await r.json()) as { source: string; groups: unknown };
+  };
+  const dau = await nguon();
+  assert.equal(dau.source, "default", "đối chứng: sàn mới dùng bộ nhóm mặc định");
+  const r = await send("PUT", "/api/v1/company/settings/queue", { groups: dau.groups }, s.nguoi.qt.cookie);
+  assert.equal(r.status, 200, await r.clone().text());
+  assert.equal((await nguon()).source, "company", "(a) sàn có bộ nhóm riêng → nguồn company");
+
+  // (b) Dòng «có từ trước», không qua lối kiểm: hạn gọi 10 nhỏ hơn hạn nhận mặc định 15.
+  assert.deepEqual((await doc(s)).errors, [], "đối chứng: chưa có dòng hỏng thì không báo");
+  await appPool.query(
+    `insert into company_settings (company_id, key, value, updated_by) values ($1, 'lead_routing.first_call_minutes', '10'::jsonb, $2)
+     on conflict (company_id, key) do update set value = excluded.value`,
+    [s.companyId, s.nguoi.qt.userId],
+  );
+  const ban = await doc(s);
+  assert.equal(ban.errors.length, 1, ban.errors.join(" | "));
+  assert.ok(ban.errors[0]!.startsWith("lead_routing.first_call_minutes"), ban.errors[0]);
+  const v = giaTri(ban);
+  assert.deepEqual([v["lead_routing.accept_minutes"], v["lead_routing.first_call_minutes"]], [15, 30], "hai hạn chạy theo mặc định");
+  const id = await nhap(s);
+  await nhip(s);
+  const d = await dauLead(id);
+  assert.deepEqual([d.accept_minutes, d.first_call_minutes], [15, 30], "lead mới mang mặc định, không mang 10");
 });

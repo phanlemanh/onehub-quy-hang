@@ -65,6 +65,15 @@ evals:
     expected: "exit 0; ca «luật chia lead: kiểm ô trước khi lưu» có mặt và ok — ma trận viết trước: accept 0, 1441, 15.5, chuỗi rỗng → lỗi gắn khoá lead_routing.accept_minutes; first_call 10 khi accept 15 → lỗi gắn lead_routing.first_call_minutes nêu hạn nhận; call_back 6 và 31, price 15 → lỗi gắn đúng khoá; bộ đúng (15/30/14/10) → không lỗi và nút Lưu bật; bộ có lỗi → Lưu khoá và danh sách khoá gửi rỗng; ca «luật chia lead: lý do 400 về đúng dòng»: reason lấy từ chính kiemGiaTri của lõi (bên viết lý do mà máy chủ trả, không viết tay) cho cặp hạn trái luật và «Cần gọi lại» 6 → gắn đúng dòng first_call và call_back; reason không mở đầu bằng khoá nào của màn gắn báo chung; chiều đỏ: bỏ kiểm cặp thì ca first_call 10 nêu «hạn gọi nhỏ hơn hạn nhận vẫn lưu»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
+  - id: E5c
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/luat-chia-lead.test.ts", "packages/api/src/settings/**"]
+    expected: "exit 0; ca «luật chia lead: giá trị sai bị máy chủ từ chối, không ghi gì» trong packages/api/test-db/luat-chia-lead.test.ts có mặt và ok — PATCH lối chung với từng giá trị sai của ma trận viết trước (hạn nhận 0, 1441, 15.5, chuỗi rỗng; hạn gọi 10 khi hạn nhận 15; cần gọi lại 6 và 31; thương lượng giá 15) → mỗi ca 400, reason khớp /^(lead_routing|queue)\\.[a-z_]+[: ]/ và mở đầu bằng đúng khoá của ca; sau cả ma trận GET vẫn giá trị ban đầu, nhật ký không thêm dòng; đối chứng dương cùng ca: bộ đúng 15/30/14/10 → 200 và GET trả đúng bốn giá trị."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
   - id: E5b
     criterion: AC-5
     executor: ui-check
@@ -107,6 +116,15 @@ evals:
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/settings/lead-routing/**"]
     expected: "exit 0; ca «luật chia lead: ba trạng thái đặc biệt» có mặt và ok — hàm trạng thái màn nhận (cấu hình, bộ nhóm): bộ nhóm source company → hai khoá ngưỡng khoá và câu «Sàn đang dùng bộ nhóm Hôm nay riêng — ngưỡng đặt trong bộ ấy»; source default → không khoá; errors ['lead_routing.first_call_minutes: …'] → báo nêu «Hạn gọi lần đầu» và «mặc định»; errors rỗng → không báo; cấu hình null (tải hỏng) → trạng thái lỗi; chiều đỏ cùng ca: source company mà hàm không khoá thì assert nêu «ngưỡng lưu mà không áp»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/luat-chia-lead.test.ts", "packages/api/src/settings/**", "packages/api/src/jobs/**"]
+    expected: "exit 0; ca «luật chia lead: hai trạng thái đặc biệt từ máy chủ» có mặt và ok — (a) sàn mới: GET /api/v1/company/settings/queue trả source default (đối chứng), PUT bộ nhóm hợp lệ → 200 rồi GET trả source company (nguồn màn dùng để khoá hai ngưỡng); (b) chưa có dòng hỏng thì errors rỗng (đối chứng), chèn thẳng dòng lead_routing.first_call_minutes = 10 như dòng có từ trước → GET lối chung trả đúng một errors mở đầu bằng «lead_routing.first_call_minutes», hai hạn đọc ra 15/30 (mặc định), lead mới nhập rồi qua nhịp chia mang 15/30, không mang 10. Ca (c) tải hỏng không có hiệu ứng máy chủ — giữ ở E7a, E7b."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E7b
