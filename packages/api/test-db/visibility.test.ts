@@ -239,9 +239,25 @@ test("mọi đường chạm hàng nằm trong bảng bốn đường", async ()
     "put /api/v1/listings/{listingId}/owner",
     "post /api/v1/listings/{listingId}/owner/phone-reveal",
     "put /api/v1/listings/{listingId}/listing-agent",
+    // Đổi đầu chủ hàng loạt (hàng 89) — ca «đổi đầu chủ hàng loạt không chạm hàng Chỉ tôi» dưới.
+    "post /api/v1/listings/agent-reassignments",
+    "post /api/v1/listings/agent-reassignments/preview",
+    "post /api/v1/listings/agent-reassignments/{id}/undo",
   ].sort();
   assert.deepEqual(duongHang(doc), BANG, "có đường chạm hàng ngoài bảng — thêm vào bảng kèm ca kiểm trục ai thấy hàng");
   // Đối chứng dương trên cùng hàm liệt: đường cấy thêm bị bắt.
   const cay = { paths: { ...doc.paths, "/api/v1/listings/{listingId}/history": { get: {} } } };
   assert.ok(duongHang(cay).includes("get /api/v1/listings/{listingId}/history"), "hàm liệt không bắt đường hàng cấy thêm");
+});
+
+test("đổi đầu chủ hàng loạt không chạm hàng Chỉ tôi: trưởng nhóm nhận 404 như mã lạ, không dòng gán nào", async () => {
+  const h = await taoHang(X);
+  for (const [duong, body] of [
+    ["/api/v1/listings/agent-reassignments/preview", (id: string) => ({ listingIds: [id] })],
+    ["/api/v1/listings/agent-reassignments", (id: string) => ({ listingIds: [id], userId: randomUUID() })],
+  ] as const) {
+    assert.deepEqual(await than(await send("POST", duong, body(h.id), T.cookie)), await than(await send("POST", duong, body(randomUUID()), T.cookie)), `${duong}: lộ hàng Chỉ tôi`);
+  }
+  const { rows } = await appPool.query<{ n: string }>("select count(*) n from listing_agent_assignments where listing_id = $1", [h.id]);
+  assert.ok(Number(rows[0]!.n) <= 1, "trưởng nhóm đổi được đầu chủ của hàng Chỉ tôi");
 });

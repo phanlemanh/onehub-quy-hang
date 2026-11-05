@@ -1,4 +1,4 @@
-// Đổi đầu chủ hàng loạt qua API trên Postgres thật (hàng 89: E1c, E2, E3, E4, E5, E7). Dữ liệu dựng bằng kết nối chủ;
+// Đổi đầu chủ hàng loạt qua API trên Postgres thật (hàng 89: E1c, E2, E3, E4, E5, E6, E7). Dữ liệu dựng bằng kết nối chủ;
 // kết quả đọc lại bằng kết nối chủ để thấy đúng điều cơ sở dữ liệu giữ. Mỗi ma trận viết trước kèm chiều đỏ trên một
 // bản sao hỏng của bộ so.
 import assert from "node:assert/strict";
@@ -59,6 +59,12 @@ async function chuNha(companyId: string, ten: string, n: number, dauChu: string 
       "insert into listings (id, company_id, building_name, standard_status, version) values (gen_random_uuid(), $1, '[Toà]', 'Incomplete', 1) returning id",
       [companyId],
     )).rows[0]!.id;
+    // Hàng đã lên bán (nấc Cả sàn) để trưởng nhóm đọc được theo trục ai thấy hàng (hàng 12).
+    await appPool.query(
+      `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+       values ($1, $2, 1, 'created', '{}', $3, '{listing_agent}', false), ($1, $2, 2, 'status_changed', '{"to":"Active"}', $3, '{listing_agent}', false)`,
+      [companyId, l, dauChu ?? "x"],
+    );
     await appPool.query("insert into listing_owners (company_id, listing_id, owner_name, updated_by, contact_id) values ($1, $2, $3, 'x', $4)", [companyId, l, ten, contactId]);
     if (dauChu) await appPool.query("insert into listing_agent_assignments (company_id, listing_id, seq, user_id, assigned_by) values ($1, $2, 1, $3, 'x')", [companyId, l, dauChu]);
     can.push(l);
@@ -185,7 +191,8 @@ test("E4 đổi sang D2: 5 căn và 2 liên hệ sang D2, căn đã do D2 giữ 
   const truoc = await demGan(s.companyId);
   const r = await goi("POST", BASE, { listingIds: [c1.can[0], c2.can[0]], userId: d2.userId }, tn.cookie);
   assert.equal(r.status, 201, await r.clone().text());
-  assert.deepEqual(await r.json().then((x: { listings: number; contacts: number }) => ({ l: x.listings, c: x.contacts })), { l: 5, c: 2 });
+  const kq = (await r.json()) as { listings: number; contacts: number };
+  assert.deepEqual({ l: kq.listings, c: kq.contacts }, { l: 5, c: 2 });
   for (const l of [...c1.can, ...c2.can]) assert.equal(await dauChuCua(s.companyId, l), d2.userId, `căn ${l} chưa sang D2`);
   for (const k of [c1.contactId, c2.contactId]) assert.equal(await nguoiGiu(s.companyId, k), d2.userId, `liên hệ ${k} chưa sang D2`);
   assert.equal((await demGan(s.companyId)) - truoc, 4, "căn đã do D2 giữ không được thêm dòng gán");

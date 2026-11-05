@@ -1,7 +1,9 @@
 // Đổi đầu chủ hàng loạt (hàng 89): xem trước, đổi, hoàn tác — mọi ghi đi qua ba hàm của migration 027, chỉ trưởng nhóm
 // gọi được. Thân trả về chỉ mang mã căn, mã người, mã liên hệ — không tên, không số chủ nhà (lớp nguồn, bất biến 2).
 import type pg from "pg";
+import { canRead } from "@quy-hang/core/visibility";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { factsOf, loadEvents, viewerOf } from "./store";
 
 export type Refusal = { error: ApiErrorEntry; details?: { path: string; reason: string }[] };
 export const isRefusal = (r: unknown): r is Refusal => !!r && typeof r === "object" && "error" in r;
@@ -52,6 +54,17 @@ async function goiHam<T>(tx: pg.PoolClient, fn: () => Promise<T>): Promise<T | R
   }
 }
 
+/**
+ * Mọi căn của lần đổi (kể cả căn kéo theo vì cùng chủ nhà) phải là căn người gọi đọc được theo trục ai thấy hàng (hàng 12,
+ * `canRead` của lõi) — hàng «Chỉ tôi» của người khác coi như không có, trả cùng 404 với mã lạ để không lộ hàng.
+ */
+async function docDuocHet(tx: pg.PoolClient, ids: readonly string[]): Promise<boolean> {
+  const { rows } = await tx.query<{ u: string }>("select app.current_user_id() as u");
+  const viewer = await viewerOf(tx, rows[0]!.u);
+  for (const id of ids) if (!canRead(viewer, await factsOf(tx, id, await loadEvents(tx, id)))) return false;
+  return true;
+}
+
 async function laTruongNhom(tx: pg.PoolClient): Promise<boolean> {
   const { rows } = await tx.query<{ ok: boolean }>("select 'team_lead' = any (app.current_user_roles()) as ok");
   return rows[0]?.ok === true;
@@ -68,6 +81,7 @@ export async function xemTruoc(tx: pg.PoolClient, payload: unknown): Promise<Xem
     )).rows,
   );
   if (isRefusal(r)) return r;
+  if (!(await docDuocHet(tx, r.map((x) => x.listing_id)))) return ve(API_ERRORS.notFound);
   return {
     listings: r.map((x) => ({ listingId: x.listing_id, selected: x.selected, fromUserId: x.from_user_id, contactId: x.contact_id })),
     contacts: new Set(r.map((x) => x.contact_id).filter((x) => x !== null)).size,
@@ -79,6 +93,8 @@ export async function doi(tx: pg.PoolClient, payload: unknown): Promise<{ id: st
   const p = docThan(payload, ["listingIds", "userId"]);
   if (isRefusal(p)) return p;
   if (typeof p.userId !== "string" || !p.userId) return ve(API_ERRORS.invalidPayload, [{ path: "userId", reason: "cần mã thành viên" }]);
+  const truoc = await xemTruoc(tx, { listingIds: p.listingIds });
+  if (isRefusal(truoc)) return truoc;
   const id = await goiHam(tx, async () =>
     (await tx.query<{ id: string }>("select app.reassign_listing_agents($1::uuid[], $2) as id", [p.listingIds, p.userId])).rows[0]!.id,
   );
