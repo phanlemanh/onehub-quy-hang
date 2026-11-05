@@ -2611,6 +2611,20 @@
         "apps/web/src/app/(app)/settings/labels/**",
         "packages/api/test-db/chan-trung-ten-gia-tri/**"
       ]
+    },
+    {
+      "ma": "luat-chia-lead-cap-han-hong",
+      "cau_giao": "Ở mục «Luật chia lead», khi sàn đã có cặp hạn nhận / hạn gọi lưu sai từ trước, quản trị sửa một hạn thì màn báo đúng: hoặc lưu được cặp hợp lệ, hoặc báo lỗi kèm hạn kia — không báo «Đã lưu» trong khi lead mới vẫn chạy theo hạn mặc định.",
+      "slug": "luat-chia-lead-cap-han-hong",
+      "vi_sao": "Ngoài-2 và Ngoài-20 của hàng 48 luat-chia-lead (_acceptance/luat-chia-lead/review-findings.md). Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy D, yêu cầu D-19). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Sàn có cặp hạn lưu sai từ trước: sửa một hạn ra cặp hợp lệ thì lưu và lead mới chạy theo cặp mới; ra cặp không hợp lệ thì màn báo lỗi nêu hạn kia, không hiện «Đã lưu»; bài kiểm phủ cả hai đường",
+      "vung": [
+        "apps/web/src/app/(app)/settings/lead-routing/**",
+        "packages/core/src/routing/**",
+        "packages/api/src/settings/**",
+        "packages/api/test-db/luat-chia-lead-cap-han-hong/**"
+      ]
     }
   ],
   "chan_troi": [
