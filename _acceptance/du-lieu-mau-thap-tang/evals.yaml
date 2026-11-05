@@ -1,0 +1,76 @@
+schema_version: 1
+feature_slug: du-lieu-mau-thap-tang
+# Mọi eval chạy cùng một tệp packages/db/tests/du-lieu-mau-thap-tang.test.mjs trong npm run db:test (job isolation của CI),
+# mỗi ca mang đúng tên «AC-n …». Mỗi phép đo có đối chứng dương trên vật lành và phá thử trên bản sao với thông điệp ghim.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-1 tất định» xanh: chạy sinh-thap-tang.mjs trong hai tiến trình node riêng ra hai thư mục tạm → SHA-256 của du-lieu-mau-thap-tang.json, bang-hang-thap-tang.xlsx, dap-an-thap-tang.json bằng nhau giữa hai lần VÀ bằng tệp đã commit ở packages/db/seed/mau-thap-tang/; --kiem thoát 0; đối chứng: hạt giống khác → du-lieu-mau-thap-tang.json khác; phá thử sửa một byte bản sao một tệp → --kiem trên bản sao thoát 1 với «lệch tệp trong kho»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-2 danh mục đơn vị hành chính» xanh: danh mục trích có nguon chứa «1685/NQ-UBTVQH15» và ngay dạng ISO; đúng 1 tỉnh, 4 phường mới, 10 phường cũ; ≥1 phường cũ vào đúng 1 phường mới và đúng 3 phường cũ vào 2 phường mới; mọi phường mới mà phường cũ trỏ tới có trong danh sách phường mới; ma trận viết trước ba nguồn (bộ dữ liệu, ô file bẩn đọc bằng doc-xlsx.py, địa chỉ thử): mọi tên tỉnh và phường tìm được (trường stateOrProvince, wardName, và tên đứng sau «Phường»/«P.» trong chuỗi) thuộc danh mục, số tên kiểm mỗi nguồn > 0; phá thử bản sao đổi wardName một căn thành «Phường [Tên lạ]» → đỏ «tên đơn vị hành chính ngoài danh mục»; bỏ nguon → đỏ «danh mục thiếu nguồn»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-3 khu thấp tầng» xanh: với MỌI lô, CatalogUnit.safeParse (packages/connect) nhận và unitFieldErrors (packages/core) trả rỗng; tập loại hình của lô bằng đúng {Townhouse, Single Family Residence, Unimproved Land}; mã lô duy nhất; với mọi lô, phần dãy tách từ mã lô bằng blockKey của dãy chứa nó; đối chứng đếm lô > 0 mỗi loại; phá thử bản sao: đặt livingArea cho một lô đất → đỏ «lô sai loại hình», trùng mã lô → đỏ «mã lô trùng», chuyển một lô sang dãy khác → đỏ «mã lô lệch dãy»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-4 căn ngoài khu» xanh: mọi streetName khớp ^Đường Mẫu \\d+$; streetNumber có ≥1 căn mặt đường (không «/»), ≥1 hẻm hai cấp, ≥1 hẻm ba cấp; ≥3 wardName khác nhau; tập loại hình bằng đúng ba loại thấp tầng và mỗi căn qua unitFieldErrors; bộ (tỉnh, phường, đường, số) duy nhất; mỗi căn qua CatalogUnit trên phần trường loại hình; phá thử bản sao: đổi streetName thành «Đường [Tên thật]» → đỏ «tên đường không phải Đường Mẫu», chép địa chỉ căn này sang căn khác → đỏ «hai căn cùng địa chỉ»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-5 địa chỉ thử» xanh: ma trận viết trước tám kiểu (phuong-moi, phuong-cu-gop, phuong-cu-tach, hem-gach, hem-chu, hem-xe-hoi, viet-tat-khong-dau, thieu-so-nha) — mỗi kiểu ≥1 cách viết; mọi cách viết cùng canDich thì cùng địa chỉ chuẩn đáp án; với kiểu phuong-cu-tach, đáp án phuong là {canNguoiChon: true, ungVien} và ungVien bằng đúng danh sách phường mới của phường cũ ấy trong danh mục trích (so như tập); kiểu thieu-so-nha có thieu chứa «streetNumber»; đáp án của cách viết đầy đủ round-trip: dựng lại từ địa chỉ chuẩn của căn đích (không từ chuỗi viết); ≥2 cặp gần trùng (cùng đường, số khác một cấp hẻm hay một chữ cái) có canDich khác nhau; QUAN HỆ CHUỖI ↔ CĂN ĐÍCH với MỌI cách viết trừ thieu-so-nha: tách số nhà theo khuôn đóng của kiểu viết («45/12/3 …», «số 3 hẻm 45/12 …», «số 3 HXH 45/12 …» đều ra 45/12/3 — kiểu hem-xe-hoi giữ đủ cấp hẻm) rồi so bằng streetNumber của canDich, số N của «Đường Mẫu N»/«Duong Mau N» bằng của căn, phường trong chuỗi bằng phường của căn hoặc là phường cũ mà bảng trích trỏ tới phường của căn; phá thử bản sao: tráo chuỗi của một cặp gần trùng mà giữ canDich → đỏ «chuỗi lệch căn đích»; đổi canDich một cách viết sang căn khác → đỏ «đáp án lệch căn», bỏ một phường khỏi ungVien → đỏ «ứng viên lệch danh mục», xoá mọi cách viết kiểu hem-xe-hoi → đỏ «thiếu kiểu viết: hem-xe-hoi»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-6 file bẩn» xanh: đọc bang-hang-thap-tang.xlsx bằng doc-xlsx.py (không bằng mã ghi); dòng ở headerRow của đáp án bằng đúng tiêu đề cột; số đích trong đáp án bằng số cột của file (không thiếu cột cuối); với MỌI ô dữ liệu, giá trị đúng trong đáp án bằng giá trị tính lại từ bộ dữ liệu theo đích của cột (căn hộ lấy từ du-lieu-mau.json của hàng 5) — so cả ô; ma trận lỗi cấy viết trước (loai-hinh-nhan-san, ma-lo-lech-dang, dien-tich-nhan, so-tang-chu, gia-ty, gia-thoa-thuan, so-dien-thoai-dang-khac, dia-chi-phuong-cu) — mỗi nhãn ≥1 lỗi cấy và mỗi lỗi cấy có value hoặc ask; ô của lỗi cấy trong file khác chữ giá trị đúng; QUAN HỆ Ô FILE ↔ ĐÁP ÁN với MỌI ô: ô không mang lỗi cấy thì chữ (hay số) bằng dạng chuẩn của giá trị đúng, ô mang lỗi cấy thì bộ giải đóng theo nhãn của bài kiểm (gia-ty, dien-tich-nhan, so-tang-chu, ma-lo-lech-dang, so-dien-thoai-dang-khac, loai-hinh-nhan-san) trả đúng giá trị đúng, nhãn ask (gia-thoa-thuan, dia-chi-phuong-cu tách) thì ô không giải ra giá trị; mã lô hay địa chỉ của dòng sau chuẩn hoá chỉ đúng căn mà đáp án gán cho dòng; tập loại hình của các dòng bằng đúng bốn loại; phá thử bản sao đáp án: đổi giá trị đúng một ô → đỏ «đáp án lệch dữ liệu», bỏ đích cột cuối → đỏ «đáp án thiếu đích cột», bỏ nhãn một lỗi cấy → đỏ «lỗi cấy thiếu nhãn»; bản sao xlsx tráo ô giá của hai dòng (thay ô bằng zipfile của Python, không qua bộ ghi) → đỏ «ô lệch đáp án»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-7 luật Tham chiếu» xanh: tập trạng thái của hàng bằng đúng sáu trạng thái chuẩn; tập loại hình của hàng bằng đúng bốn loại; với hợp hàng của bộ này và bộ hàng 5, mỗi căn (UPI hay mã căn ngoài khu) tối đa một hàng mở; mọi căn của một chủ nhà cùng một đầu chủ; bảy ca lead viết trước (biet-lo, chi-biet-day, ngoai-khu-du, ngoai-khu-thieu-so, trung-lo-mo, trung-nha-ngoai-khu-mo, trung-so-chu) mỗi ca ≥1 lead và đáp án của lead khớp sự thật trong bộ dữ liệu (trung-lo-mo trỏ lô có hàng mở; trung-nha-ngoai-khu-mo trỏ căn có hàng mở và chữ địa chỉ của lead khác chữ địa chỉ chuẩn; trung-so-chu mang số của một chủ nhà); phá thử bản sao: thêm hàng mở trên căn hộ đã có hàng mở ở bộ hàng 5 → đỏ «căn có hai hàng mở», đổi đầu chủ một căn của chủ nhiều căn → đỏ «một chủ hai đầu chủ», bỏ mọi lead ca chi-biet-day → đỏ «thiếu ca lead: chi-biet-day»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-8 không dữ liệu thật» xanh trên bốn nguồn (bộ dữ liệu, đáp án, mọi ô file bẩn đọc bằng doc-xlsx.py, dòng cơ sở dữ liệu lấy bằng chênh lệch năm bảng trước và sau nạp, không lọc theo nhãn): mọi dãy chữ số dài từ 9 chữ số (sau bỏ chấm, cách, gạch, «+84»→«0») quy về 09000000\\d\\d; số chủ nhà và lead của bộ này không thuộc tập số của du-lieu-mau.json hàng 5 trừ đúng các lead ca trung-so-chu; mọi email kết thúc @mau.quy-hang.test; mọi trường tên người mở đầu «[Mẫu]»; mọi trường streetName là «Đường Mẫu N»; mọi chuỗi địa chỉ (cách viết của địa chỉ thử, ô địa chỉ của file bẩn, địa chỉ trong lead) qua bộ quét DANH SÁCH TRẮNG: bỏ số nhà và khuôn hẻm, «Đường Mẫu N» cùng dạng tắt và không dấu của nó, tên tỉnh và phường trong bảng trích, từ khoá đóng (P., Phường, Q., Quận, TP., Thành phố, HXH, hẻm, số, dấu câu) — không còn chữ nào; ma trận nhãn viết trước theo loại bản ghi (lô, căn ngoài khu, chủ nhà, hàng, lead, người, dòng file bẩn, dòng cơ sở dữ liệu) — mỗi loại > 0 bản ghi và mọi bản ghi mang nhãn; đối chứng dương: đếm số > 0, email > 0, tên > 0, tên đường > 0; ô giá đồng ≥ 1e9 của file bẩn KHÔNG bị đếm là số điện thoại; phá thử bản sao: chèn «0912 345 678» vào ghi chú → đỏ «số không đúng dạng mẫu», ô «+84 912 345 678» vào file bẩn → đỏ «số không đúng dạng mẫu», «ten@gmail.com» → đỏ «email không thuộc miền mẫu», «Nguyễn Văn A» vào tên chủ nhà → đỏ «tên không mang nhãn mẫu», «45 Lê Lợi, P. Bến Thành» vào một địa chỉ thử và «12 Đ. Hai Bà Trưng» vào một ô địa chỉ của bản sao file bẩn → đỏ «tên đường không phải Đường Mẫu», xoá nhãn một bản ghi mỗi loại → đỏ «thiếu nhãn mẫu: <loại>»"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «AC-9 nạp và xoá một lần» xanh trên Postgres đã migrate, dưới khoá tư vấn sàn mẫu: tạo sàn và tài khoản đối chứng không nhãn; ảnh chụp năm bảng (companies, identity.user, company_members, company_zones, member_zones); napThapTang lần một → chênh lệch > 0 dòng và mọi dòng chênh mang nhãn (sàn tên «[Mẫu] Sàn thử», email miền mẫu, vùng của sàn mẫu); lần hai → ảnh chụp bằng đúng sau lần một; nhánh thứ tự ngược trên cơ sở dữ liệu sạch: napMau (hàng 5) trước rồi napThapTang hai lần → đúng một sàn tên «[Mẫu] Sàn thử», lần hai không đổi dòng, hai đầu chủ thấp tầng và sáu người của hàng 5 cùng là thành viên sàn ấy; sau cả hai nhánh, nạp thêm bộ hàng 5 rồi xoaMau (lệnh xoá của hàng 5) một lần → không còn dòng nào mang nhãn mẫu ở năm bảng, ảnh chụp bằng ảnh trước nạp; sàn và tài khoản đối chứng còn nguyên; phá thử: bản sao bộ nạp chèn một người email @vi-du.test vào sàn mẫu → đỏ «thiếu nhãn mẫu: dòng cơ sở dữ liệu»; bản sao CAU_XOA bỏ câu xoá tài khoản → đỏ «còn dòng mẫu sau xoá»; bản sao bộ nạp tìm sàn theo tên sai → đỏ «hai sàn mẫu»; mọi phá thử chạy trong giao dịch rồi hoàn lại"
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
