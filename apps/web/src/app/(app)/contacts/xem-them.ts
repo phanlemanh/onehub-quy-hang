@@ -15,7 +15,13 @@ export function conTroXemThem(trang: TrangCuoi | null, khoaHienTai: string, dang
   return trang.khoa === khoaHienTai ? trang.tiep : null;
 }
 
-/** Kết quả «Xem thêm» về: chỉ nối khi lượt đọc và bộ lọc lúc gửi vẫn là lượt và bộ lọc hiện tại. */
-export function duocNoi(guiLuc: { luot: number; khoa: string }, hienTai: { luot: number; khoa: string }): boolean {
-  return guiLuc.luot === hienTai.luot && guiLuc.khoa === hienTai.khoa;
+/** Lúc gửi hay lúc về của một lần «Xem thêm»: lượt đọc, khoá bộ lọc, con trỏ trang cuối. */
+export type MocXemThem = { luot: number; khoa: string; cursor: string | null };
+
+/**
+ * Kết quả «Xem thêm» về: chỉ nối khi lượt đọc, bộ lọc và con trỏ trang cuối lúc gửi vẫn là hiện tại. Con trỏ đã đi tiếp
+ * nghĩa là trang này đã được nối (bấm hai lần trước khi trang về) — nối lần nữa là lặp dòng.
+ */
+export function duocNoi(guiLuc: MocXemThem, hienTai: MocXemThem): boolean {
+  return guiLuc.luot === hienTai.luot && guiLuc.khoa === hienTai.khoa && guiLuc.cursor === hienTai.cursor;
 }

@@ -37,6 +37,8 @@ export default function VungLienHe() {
   const luotDs = useRef(0);
   // Bộ lọc mà danh sách đang theo (cập nhật cùng lượt đọc): kết quả «Xem thêm» về muộn so với nó, không với closure.
   const khoaHienTai = useRef("");
+  // Con trỏ trang cuối đã nối (cập nhật cùng lúc nối): trang về lần hai cho cùng con trỏ thì không nối lại.
+  const tiepHienTai = useRef<string | null>(null);
 
   // Danh sách: gõ xong 250 ms mới đọc; chuỗi số từ chín chữ số đi lối tìm theo số (POST, số không vào URL).
   useEffect(() => {
@@ -61,6 +63,7 @@ export default function VungLienHe() {
       if (huy) return;
       if (!kq) return setDs({ kieu: "loi" });
       setDs({ kieu: "xong", ds: kq.items, con: kq.nextCursor !== null });
+      tiepHienTai.current = kq.nextCursor;
       setTrang({ khoa: khoaLuot, tiep: kq.nextCursor });
     }, 250);
     return () => {
@@ -90,9 +93,10 @@ export default function VungLienHe() {
   async function them() {
     const cursor = conTroXemThem(trang, khoa, ds.kieu === "xong");
     if (!cursor) return;
-    const guiLuc = { luot: luotDs.current, khoa };
+    const guiLuc = { luot: luotDs.current, khoa, cursor };
     const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau, cursor });
-    if (!kq || !duocNoi(guiLuc, { luot: luotDs.current, khoa: khoaHienTai.current })) return;
+    if (!kq || !duocNoi(guiLuc, { luot: luotDs.current, khoa: khoaHienTai.current, cursor: tiepHienTai.current })) return;
+    tiepHienTai.current = kq.nextCursor;
     setDs((cu) =>
       cu.kieu === "xong"
         ? { kieu: "xong", ds: [...cu.ds, ...kq.items], con: kq.nextCursor !== null }

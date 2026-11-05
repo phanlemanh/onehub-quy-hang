@@ -54,10 +54,27 @@ test("xem thêm: không gửi khi đang tải hay hết trang", () => {
 });
 
 test("xem thêm: trang về sau khi bộ lọc đã đổi thì không nối", () => {
-  // Gửi «Xem thêm» ở lượt 3 của bộ lọc A.
-  const gui = { luot: 3, khoa: A };
-  assert.equal(duocNoi(gui, { luot: 3, khoa: A }), true, "đối chứng: không đổi gì thì nối");
-  assert.equal(duocNoi(gui, { luot: 4, khoa: B }), false, "bộ lọc đổi trước khi trang về mà vẫn nối");
-  assert.equal(duocNoi(gui, { luot: 4, khoa: A }), false, "lượt đọc mới (thử lại cùng bộ lọc) mà vẫn nối");
-  assert.equal(duocNoi(gui, { luot: 3, khoa: B }), false, "khoá đổi cùng lượt mà vẫn nối");
+  // Gửi «Xem thêm» ở lượt 3 của bộ lọc A, con trỏ c1.
+  const gui = { luot: 3, khoa: A, cursor: "c1" };
+  assert.equal(duocNoi(gui, { luot: 3, khoa: A, cursor: "c1" }), true, "đối chứng: không đổi gì thì nối");
+  assert.equal(duocNoi(gui, { luot: 4, khoa: B, cursor: "c1" }), false, "bộ lọc đổi trước khi trang về mà vẫn nối");
+  assert.equal(duocNoi(gui, { luot: 4, khoa: A, cursor: "c1" }), false, "lượt đọc mới (thử lại cùng bộ lọc) mà vẫn nối");
+  assert.equal(duocNoi(gui, { luot: 3, khoa: B, cursor: "c1" }), false, "khoá đổi cùng lượt mà vẫn nối");
+});
+
+test("xem thêm: bấm hai lần trước khi trang về thì trang chỉ nối một lần", () => {
+  // Hai lần bấm cùng gửi con trỏ c1 của bộ lọc A; lần về đầu nối trang và đưa con trỏ trang cuối sang c2.
+  const gui = { luot: 3, khoa: A, cursor: "c1" };
+  let cuoi: string | null = "c1";
+  let noi = 0;
+  for (const tiep of ["c2", "c2"]) {
+    if (duocNoi(gui, { luot: 3, khoa: A, cursor: cuoi })) {
+      noi++;
+      cuoi = tiep;
+    }
+  }
+  assert.equal(noi, 1, "cùng một trang nối hai lần (lặp dòng)");
+  // Luật trước bản sửa (chỉ so lượt và khoá) trên cùng kịch bản nối hai lần — chứng đó là kịch bản lỗi.
+  const luatTruoc = (g: typeof gui, h: typeof gui) => g.luot === h.luot && g.khoa === h.khoa;
+  assert.equal([0, 1].filter(() => luatTruoc(gui, { luot: 3, khoa: A, cursor: "c2" })).length, 2, "kịch bản phải là kịch bản lỗi của luật trước");
 });

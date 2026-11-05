@@ -1,0 +1,10 @@
+E6 network log (playwright, app origin http://localhost:3462) - contacts requests, t in ms
+step2: GET /api/v1/contacts?type=Seller 200 ; GET /api/v1/contacts?type=Seller&cursor=... 200 (appended)
+step3: reload; Seller&cursor held >=2s by route; click Landlord at +42ms after first Xem them click
+ 1619 req+held Seller&cursor=MTc5Mzc1...  (click Xem them #1)
+ 1662 click Chu cho thue (URL type=Landlord)
+ 1721 req+held Seller&cursor=MTc5Mzc1...  (second click at +66ms hit stale Seller Xem them button; still type=Seller)
+ 2066 req GET /api/v1/contacts?type=Landlord ; 2084 res 200 (0 items)
+ 3621 released ; 3652 res 200 Seller&cursor ; 3723 released ; 3750 res 200 Seller&cursor
+No request carried cursor + type=Landlord. All contacts requests 200.
+Console: 1 error = 404 /favicon.ico (static, note only); warnings: BETTER_AUTH_SECRET low entropy (dev).
