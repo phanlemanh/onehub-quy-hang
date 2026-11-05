@@ -90,6 +90,13 @@ if (!(await song())) {
   writeFileSync(PID, String(p.pid));
   for (let i = 0; i < 120 && !(await song()); i++) await ngu(2000);
   if (!(await song())) throw new Error(`máy dev không lên — xem ${LOG}`);
+} else {
+  // Máy dev đã nghe 3495 thì chỉ dùng lại khi nó chạy từ CHÍNH cây này — máy có nhiều worktree, cổng 3495 là cổng chung
+  // của dãy D (S4 vòng 2: lượt chấm không được đo mã của bản checkout khác).
+  const nghe = spawnSync("lsof", ["-iTCP:" + CONG, "-sTCP:LISTEN", "-P", "-t"], { encoding: "utf8" }).stdout.split("\n").filter(Boolean);
+  const thuMuc = nghe.map((pid) => (spawnSync("lsof", ["-a", "-p", pid, "-d", "cwd", "-Fn"], { encoding: "utf8" }).stdout.split("\n").find((l) => l.startsWith("n")) ?? "n?").slice(1));
+  const la = thuMuc.filter((d) => d !== GOC && !d.startsWith(`${GOC}/`));
+  if (la.length) throw new Error(`cổng ${CONG} đang có máy dev chạy từ ${la.join(", ")} — không phải cây ${GOC}; tắt máy ấy rồi chạy lại`);
 }
 
 const h = { "content-type": "application/json", origin: URL_GOC };
@@ -119,6 +126,9 @@ async function dangNhap(email, giu) {
 const db = new pg.Client({ connectionString: DB });
 await db.connect();
 try {
+  // Trả lại quyền mà ca E7-c của chay-ui thu tạm (lượt bị ngắt giữa ca thì finally không chạy). Vai của người mẫu đã về
+  // bản nạp nhờ nap.mjs ở trên (on conflict … set roles = excluded.roles) — ca E5-403 bỏ dở cũng được trả lại như thế.
+  await db.query("grant select on company_settings to quy_hang_app");
   const san = (await db.query("select id from companies where name = '[Mẫu] Sàn thử'")).rows[0]?.id;
   if (!san) throw new Error("không có sàn mẫu");
   const idCua = async (email) => (await db.query('select id from identity."user" where email = $1', [email])).rows[0]?.id;
@@ -146,6 +156,20 @@ try {
     [san, can.id, dc1, tn],
   );
   const ten = Object.fromEntries((await db.query('select email, name from identity."user" where email like $1', [`%@${MIEN}`])).rows.map((r) => [r.email.split("@")[0], r.name]));
+  // Làm nóng các trang của ca chấm bằng yêu cầu thường, TRƯỚC khi trình duyệt nào mở chúng. Đo 05/11: máy dev nguội mà
+  // trang đầu tiên trình duyệt mở là /inventory thì Turbopack biên dịch lười ngay sau lần tải đầu, kênh HMR báo
+  // «Compiled», trang tải lại và lặp mãi (E10b vòng 1 và 2 kẹt «Đang tải lần đầu»). Gọi trước bằng fetch thì lần biên
+  // dịch ấy xảy ra khi chưa có trang nào nghe HMR: 0 lần «Compiled» sau đó, E10 đạt. Chỉ là tật của máy dev, bản build không có.
+  for (const [ai, duong] of [
+    ["quan-tri", "/settings/lead-routing"],
+    ["quan-tri", "/settings/personal"],
+    ["truong-nhom", "/settings/personal"],
+    ["dau-chu-1", "/inventory"],
+  ]) {
+    const r = await fetch(`${URL_GOC}${duong}`, { headers: { cookie: ck[ai] } });
+    await r.text();
+    if (r.status !== 200) throw new Error(`làm nóng ${duong}: ${r.status}`);
+  }
   writeFileSync(PHIEN, JSON.stringify({ san, cookie: ck, can, nguoi: { qt, dc1, tn }, ten }));
   console.log(JSON.stringify({ buoc: "cho-thu", url: URL_GOC, pid: readFileSync(PID, "utf8").trim(), san, can: can.ma }));
 } finally {

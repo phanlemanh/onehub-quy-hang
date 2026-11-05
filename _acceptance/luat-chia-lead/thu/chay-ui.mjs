@@ -19,6 +19,11 @@ const arg = (k) => process.argv.includes(k);
 const iRa = process.argv.indexOf("--ra");
 const RA = path.resolve(GOC, iRa > 0 ? process.argv[iRa + 1] : ".acceptance-runs/luat-chia-lead/evidence");
 mkdirSync(RA, { recursive: true });
+// Mỗi lần chạy tự dựng (hay dùng lại) chỗ thử: S4 vòng 2, tác tử chấm E10b tới sau khi tác tử trước đã tắt máy dev chung,
+// không có máy dev ở 3495 nên chặn. dung-d dùng lại máy dev đang sống của cây này, nạp lại sàn mẫu và trả lại quyền bị thu
+// dở. Dòng JSON của nó đi ra stderr để stdout chỉ còn dòng của các ca.
+const dung = spawnSync(process.execPath, [path.join(path.dirname(fileURLToPath(import.meta.url)), "dung-d.mjs")], { cwd: GOC, stdio: ["ignore", 2, 2] });
+if (dung.status !== 0) throw new Error(`dựng chỗ thử hỏng (dung-d.mjs thoát ${dung.status})`);
 const phien = JSON.parse(readFileSync(path.join(CHAY, "phien.json"), "utf8"));
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const h = { "content-type": "application/json", origin: URL_GOC };
