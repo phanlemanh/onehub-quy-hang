@@ -5,6 +5,7 @@ import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import { cn } from "cn";
 import {
   CalendarClockIcon,
+  ContactIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   FileSpreadsheetIcon,
@@ -44,6 +45,55 @@ const SHARES: Item[] = [
 export const TODAY_ITEMS: Item[] = mucHomNay(BO_NHOM_MAC_DINH).map((m) => ({ ...m, icon: ListChecksIcon }));
 
 const TEAM: Item[] = [{ label: "Tổng quan", href: "/team", icon: UsersIcon }];
+
+// Liên hệ (hàng 103): lọc theo loại liên hệ và dấu Lead — mỗi mục là đường `/contacts?…` màn Liên hệ đọc lại.
+export const CONTACTS_ITEMS: Item[] = [
+  { label: "Tất cả liên hệ", href: "/contacts", icon: ContactIcon },
+  { label: "Chủ bán", href: "/contacts?type=Seller", icon: ContactIcon },
+  { label: "Chủ cho thuê", href: "/contacts?type=Landlord", icon: ContactIcon },
+  { label: "Người mua", href: "/contacts?type=Buyer", icon: ContactIcon },
+  { label: "Người thuê", href: "/contacts?type=Tenant", icon: ContactIcon },
+  { label: "Lead", href: "/contacts?status=lead", icon: ContactIcon },
+];
+
+/** Mục đang chọn của cột Liên hệ: khớp đúng cặp `type`, `status` của URL (mục không tham số khi cả hai vắng). */
+export function mucLienHeDangChon(qs: URLSearchParams): string {
+  const loai = qs.get("type");
+  const dau = qs.get("status");
+  const khop = CONTACTS_ITEMS.find(({ href }) => {
+    const t = new URLSearchParams(href.split("?")[1] ?? "");
+    return t.get("type") === loai && t.get("status") === dau;
+  });
+  return khop?.href ?? CONTACTS_ITEMS[0]!.href;
+}
+
+function ContactsColumn() {
+  const dangChon = mucLienHeDangChon(useSearchParams());
+  return (
+    <ScrollArea className="h-full">
+      <nav className="flex flex-col gap-0.5 px-2 py-1" aria-label={HOME_LABEL.contacts}>
+        <SectionTitle>{HOME_LABEL.contacts}</SectionTitle>
+        {CONTACTS_ITEMS.map(({ label, href, icon: Icon }) => (
+          <Button
+            key={href}
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={<Link href={href} />}
+            aria-current={href === dangChon ? "page" : undefined}
+            className={cn(
+              "w-full justify-start gap-2.5 font-normal",
+              href === dangChon ? "bg-accent font-medium text-accent-foreground" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Icon className="size-4 shrink-0 opacity-70" aria-hidden="true" />
+            <span className="truncate">{label}</span>
+          </Button>
+        ))}
+      </nav>
+    </ScrollArea>
+  );
+}
 
 // Biểu tượng của từng mục Cài đặt; nhóm và mục do `cotCaiDat` quyết (hàng cai-dat-hop-nhat).
 const ICON_CAI_DAT: Record<string, LucideIcon> = {
@@ -154,6 +204,7 @@ function SettingsColumn({ caiDat }: { caiDat: CaiDatCua }) {
 function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
   if (home === "inventory") return <InventoryColumn />;
   if (home === "settings") return <SettingsColumn caiDat={caiDat} />;
+  if (home === "contacts") return <ContactsColumn />;
   const items = home === "shares" ? SHARES : home === "today" ? TODAY_ITEMS : TEAM;
   return (
     <ScrollArea className="h-full">

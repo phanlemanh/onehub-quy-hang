@@ -180,6 +180,7 @@ export const SECOND_COLUMN_OPEN_BY_DEFAULT: Partial<Record<Home, boolean>> = {
   today: true,
   inventory: true,
   shares: true,
+  contacts: true,
   team: true,
   settings: true,
 };

@@ -50,3 +50,18 @@ test("liên hệ: ô tìm", () => {
   for (const [s, mong] of BANG) assert.equal(luaTim(s), mong, s);
   assert.equal(BANG.length, 4);
 });
+
+test("liên hệ: cột thứ hai chọn đúng mục theo URL", async () => {
+  const { CONTACTS_ITEMS, mucLienHeDangChon } = await import("@/components/shell/second-column");
+  const BANG: [string, string][] = [
+    ["", "/contacts"],
+    ["type=Seller", "/contacts?type=Seller"],
+    ["type=Landlord", "/contacts?type=Landlord"],
+    ["type=Buyer", "/contacts?type=Buyer"],
+    ["type=Tenant", "/contacts?type=Tenant"],
+    ["status=lead", "/contacts?status=lead"],
+    ["q=abc", "/contacts"],
+  ];
+  for (const [qs, mong] of BANG) assert.equal(mucLienHeDangChon(new URLSearchParams(qs)), mong, qs || "trống");
+  assert.equal(CONTACTS_ITEMS.length, 6);
+});

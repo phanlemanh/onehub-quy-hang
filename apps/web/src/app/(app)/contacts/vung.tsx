@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { DanhSachLienHe, type TrangThaiDs } from "./danh-sach";
@@ -10,7 +11,17 @@ import { CHU, docDanhSach, docHoSo, luaTim, moSo, timSo } from "./lien-he";
 /** Màn Liên hệ (hàng 103): tìm theo tên hay số, lọc loại, chạm dòng mở hồ sơ người cạnh bảng; Hiện số → Gọi. */
 export default function VungLienHe() {
   const [q, setQ] = useState("");
-  const [loai, setLoai] = useState("");
+  // Loại và dấu Lead nằm trên URL (`?type=`, `?status=`) để cột thứ hai của nhà Liên hệ mở đúng bộ lọc.
+  const thamSo = useSearchParams();
+  const router = useRouter();
+  const loai = thamSo.get("type") ?? "";
+  const dau = thamSo.get("status") ?? "";
+  const setLoai = (l: string) => {
+    const m = new URLSearchParams(thamSo.toString());
+    if (l) m.set("type", l);
+    else m.delete("type");
+    router.replace(m.size ? `/contacts?${m}` : "/contacts");
+  };
   const [ds, setDs] = useState<TrangThaiDs>({ kieu: "dang-tai" });
   const [cursor, setCursor] = useState<string | null>(null);
   const [lan, setLan] = useState(0);
@@ -36,7 +47,7 @@ export default function VungLienHe() {
         setDs({ kieu: "xong", ds: [], con: false });
         return chonNguoi(kq.contactId);
       }
-      const kq = await docDanhSach({ q: q.trim(), type: loai });
+      const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau });
       if (huy) return;
       if (!kq) return setDs({ kieu: "loi" });
       setDs({ kieu: "xong", ds: kq.items, con: kq.nextCursor !== null });
@@ -45,7 +56,7 @@ export default function VungLienHe() {
     return () => {
       huy = true;
     };
-  }, [q, loai, lan]);
+  }, [q, loai, dau, lan]);
 
   // Hồ sơ: đọc khi chọn người (hay thử lại); trạng thái chờ và che số đặt ở lúc chọn.
   useEffect(() => {
@@ -68,7 +79,7 @@ export default function VungLienHe() {
 
   async function them() {
     if (!cursor || ds.kieu !== "xong") return;
-    const kq = await docDanhSach({ q: q.trim(), type: loai, cursor });
+    const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau, cursor });
     if (!kq) return;
     setDs({
       kieu: "xong",

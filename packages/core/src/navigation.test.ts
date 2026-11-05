@@ -201,8 +201,8 @@ test("Nhà của đường: hồ sơ căn thuộc Bảng hàng, Lịch xem thu�
 });
 
 test("cột thứ hai: mọi nhà, mặc định mở", () => {
-  // Ma trận viết trước: đủ năm nhà của §9 (hàng 91, «Mặc định luôn giữ và có sub nav»).
-  const NHA = ["today", "inventory", "shares", "team", "settings"] as const;
+  // Ma trận viết trước: đủ sáu nhà của §9 (hàng 91, «Mặc định luôn giữ và có sub nav»; Liên hệ hàng 103).
+  const NHA = ["today", "inventory", "shares", "contacts", "team", "settings"] as const;
   let dem = 0;
   for (const h of NHA) {
     assert.equal(isSecondColumnOpen(h, undefined), true, `${h}: mặc định phải mở`);
@@ -210,7 +210,7 @@ test("cột thứ hai: mọi nhà, mặc định mở", () => {
     assert.equal(isSecondColumnOpen(h, true), true, `${h}: người mở thì nhớ`);
     dem++;
   }
-  assert.equal(dem, 5);
+  assert.equal(dem, 6);
 });
 
 test("Khoá nhớ tách theo người, sàn và nhà", () => {
