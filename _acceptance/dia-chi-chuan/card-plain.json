@@ -1,37 +1,3 @@
 {
-  "feature_plain": "Quỹ hàng đọc được một địa chỉ nhà gõ kiểu nào cũng được, ra địa chỉ chuẩn và một khoá để sau này nhận ra hai lần gõ là cùng một nhà; tên phường cũ đổi ra phường mới, phường cũ bị tách thì hỏi người, thiếu phần nào thì nói phần ấy — không gửi địa chỉ đi đâu.",
-  "will_do": [
-    {"id":"AC-1","p":"Sẽ cho mọi cách gõ của cùng một nhà ra cùng một khoá, đo trên bộ địa chỉ thử có đáp án của hàng 73."},
-    {"id":"AC-3","p":"Sẽ đọc đúng tỉnh, phường, tên đường, số nhà và phần thiếu như đáp án, giữ nguyên chữ người gõ."},
-    {"id":"AC-4","p":"Sẽ đổi tên phường cũ đã gộp trọn (như Bến Nghé) ra phường mới (Sài Gòn) và ghi lại tên cũ đã đọc."},
-    {"id":"AC-5","p":"Sẽ hỏi người chọn khi phường cũ bị tách vào nhiều phường mới (như Đa Kao), đưa đúng các phường mới nhận nó, không chọn hộ."},
-    {"id":"AC-6","p":"Sẽ nói rõ thiếu tỉnh, phường, đường hay số nhà, và tên nào chưa có trong danh mục; thiếu tỉnh thì không tự đoán tỉnh."},
-    {"id":"AC-7","p":"Sẽ coi «45/12/3», «số 3 hẻm 45/12», «số 3 HXH 45/12», «số 3 ngách 12 ngõ 45» là cùng một số nhà, và tên đường có dấu hay không dấu là một."},
-    {"id":"AC-8","p":"Sẽ có danh mục đơn vị hành chính ghi nguồn văn bản và ngày đọc, đủ 34 tỉnh, khớp bảng trích của hàng 73."},
-    {"id":"AC-9","p":"Sẽ đọc địa chỉ hoàn toàn trên máy, không gọi dịch vụ ngoài nào — kiểm cả mã nguồn lẫn lúc chạy."}
-  ],
-  "wont_do": [
-    {"id":"AC-2","p":"Sẽ KHÔNG bao giờ cho hai nhà khác nhau cùng một khoá, kể cả nhà 45 và 45A; địa chỉ thiếu số nhà hay còn phải chọn phường thì chưa có khoá."},
-    {"id":"OOS-1","p":"KHÔNG chép danh mục xã đầy đủ cả nước trong vòng này — chờ anh quyết ở Hỏi-1."},
-    {"id":"OOS-2","p":"KHÔNG dựng lại dấu cho tên đường gõ không dấu — cần danh mục đường, để sau."},
-    {"id":"OOS-3","p":"KHÔNG lưu địa chỉ hay khoá vào cơ sở dữ liệu — hàng 76."},
-    {"id":"OOS-4","p":"KHÔNG kiểm trùng, chưa đọc địa chỉ ở ô nhận lead hay khi nhập file — hàng 77, 78 và kiểm trùng ngoài khu."},
-    {"id":"OOS-5","p":"KHÔNG mở bộ đọc cho phần khác của sản phẩm dùng — hàng 76 mở khi dùng lần đầu."},
-    {"id":"OOS-6","p":"KHÔNG có toạ độ, không tự tra toạ độ."}
-  ],
-  "scope_plain": "Vòng này là bộ đọc ở lõi; chưa có màn nào, chưa lưu gì.",
-  "coverage_plain": [
-    {"i":0,"p":"Bốn phần địa chỉ (tỉnh, xã, đường, số nhà) đều được đọc và đo — AC-1, AC-3."},
-    {"i":1,"p":"Năm tình trạng của một phần: tên mới, tên cũ gộp trọn, tên cũ bị tách, thiếu, có mà ngoài danh mục — AC-4, AC-5, AC-6."},
-    {"i":2,"p":"Mọi kiểu gõ: có dấu, không dấu, viết tắt, các kiểu hẻm, có quận cũ — AC-3, AC-7."},
-    {"i":3,"p":"Đầu ra đủ: phần chuẩn, khoá, phần thiếu, ứng viên cần chọn, chữ gốc — AC-1, AC-2, AC-6."},
-    {"i":4,"p":"Điều kiện vận hành: danh mục có nguồn và ngày, không gọi mạng — AC-8, AC-9."}
-  ],
-  "gap_probe_plain": [
-    {"i":0,"p":"Máy tự chọn nguồn mã tỉnh, mã phường mà chưa trình anh; mã sai thì mọi kiểm vẫn xanh. Đã đưa thành câu hỏi Hỏi-2 cho anh."},
-    {"i":1,"p":"Luật «thiếu tỉnh thì không đoán tỉnh» ghi căn cứ sai loại. Đã ghi lại căn cứ đúng (danh mục mới chép một phần) kèm điều kiện xét lại khi danh mục đủ."},
-    {"i":2,"p":"Chưa có bài kiểm cho các cách viết tên tỉnh, cho «Sài Gòn» không phải tỉnh, và cho việc chỉ tìm phường trong tỉnh đã đọc. Đã thêm vào tiêu chí AC-6 và bài kiểm."},
-    {"i":3,"p":"Chưa định nghĩa kết quả khi vừa thiếu vừa phải chọn, và ứng viên chưa mang tỉnh. Đã định nghĩa: «thiếu» thắng, ứng viên mang tỉnh; bài kiểm so đúng."},
-    {"i":4,"p":"Bài kiểm «không gọi mạng» còn kẽ hở (nạp module động, một số đường gọi). Đã viết lại cho kín, kèm ca không báo oan đường dẫn nguồn."}
-  ]
+  "feature_plain": "Quỹ hàng đọc được một địa chỉ nhà gõ kiểu nào cũng được, ra địa chỉ chuẩn và một khoá để nhận ra hai lần gõ là cùng một nhà; tên phường cũ đổi ra phường mới, phường cũ bị tách thì hỏi người, thiếu phần nào thì nói phần ấy — không gửi địa chỉ đi đâu."
 }
