@@ -2528,6 +2528,20 @@
         "apps/web/src/app/(app)/shares/**",
         "apps/web/src/app/(app)/today/buyer/**"
       ]
+    },
+    {
+      "ma": "mau-bang-hang-va-bai",
+      "cau_giao": "Quản trị sàn xem và sửa mẫu bảng hàng (cột và thứ tự khi xuất) và mẫu bài theo kênh trong màn Mẫu của Cài đặt › Sàn; sửa hay xoá một mẫu thì lần xuất và lần gửi kế dùng bản mới, lần đã xong không đổi.",
+      "slug": "mau-bang-hang-va-bai",
+      "vi_sao": "Tách từ hàng 50 mau-nhap-va-bai: chủ kho duyệt Cổng Phạm vi 05/11 theo khuyến nghị Hỏi-1 (mẫu bảng hàng + mẫu bài theo kênh sang hàng kế). Hàng không mã: đã quyết (Cổng Đáng 50 đã ký cả ba loại mẫu).",
+      "sau": [
+        "50"
+      ],
+      "vung": [
+        "packages/core/src/export/**",
+        "packages/core/src/sharing/**",
+        "apps/web/src/app/(app)/settings/templates/**"
+      ]
     }
   ],
   "chan_troi": [
