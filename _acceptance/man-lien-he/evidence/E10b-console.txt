@@ -1,0 +1,41 @@
+Total messages: 59 (Errors: 38, Warnings: 0)
+Returning 38 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3491/favicon.ico:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/fdb74a33-275b-4c83-8e67-ea8e610da326/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/ee85a40c-4a92-468f-92a9-462eac44b21c/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/e508d03f-c0c3-4cd0-ba35-c94d8c75600d/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/e29455eb-a539-4dcc-a0a1-de7d029409bc/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/dc1c7026-7d0c-4dbc-b14c-a74903d6fd1f/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/d49d3fec-d550-4202-a958-f7f58e2d8eca/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/c2bd98ae-1272-4dfe-bfa0-80b1c9076ba6/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/b75aa78e-d5c0-4959-a513-a6b405c4aaca/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/a81bb741-2bff-431b-bcbe-5f2e8d513f22/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/97f7d3f4-d995-43ba-b241-958d9a8aa5a1/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/88fab078-95af-4eab-ac38-f4c2ad94e1be/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/887bbb39-346f-4343-be35-a6412930706f/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/884523b0-a85e-43a5-8590-5d629715c4ff/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/841c041b-77c1-436f-bd10-91ec50fd244f/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/76b3d6c8-a6cd-4871-a9bd-fa69c8b789fd/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/76a594d2-a5de-448f-a7b4-f26d938c5a56/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/62daeb04-0767-4073-8000-8b99fa99e810/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/5cd946e6-8ecd-4b60-a3a4-30774eff9bd1/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/5468ae9a-74d6-4b27-beb3-c7803e580c7a/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/4494c1a2-5ea1-4900-ae26-0039da6b2c16/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/3fb387d8-008f-47b7-a17c-980959e1faae/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/31878818-fad8-4d3b-83e0-e882b6b4fb24/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/2bae713b-b612-4ebf-9c58-a4dec912af61/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/19382ae1-7ac8-47b2-9fca-a6b331129ed2/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/05354dbb-830c-46d2-aa21-f8d9dea21e82/profile:0
+[ERROR] WebSocket connection to 'ws://localhost:3491/_next/hmr?id=nfdn7xmTmQnBwmXpZXyV-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3491/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] WebSocket connection to 'ws://localhost:3491/_next/hmr?id=nfdn7xmTmQnBwmXpZXyV-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3491/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/fdb74a33-275b-4c83-8e67-ea8e610da326/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/ee85a40c-4a92-468f-92a9-462eac44b21c/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/e508d03f-c0c3-4cd0-ba35-c94d8c75600d/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/e29455eb-a539-4dcc-a0a1-de7d029409bc/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/dc1c7026-7d0c-4dbc-b14c-a74903d6fd1f/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile:0
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3491/api/v1/contacts/32fc1b55-272d-416c-966d-10e7c3e0655b/profile:0
