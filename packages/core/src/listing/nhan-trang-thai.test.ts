@@ -74,3 +74,16 @@ test("hôm nay: mốc lên Đang bán đọc lúc vào trạng thái, không đ�
   assert.equal(lucLenDangBan(can(undefined)), t2);
   assert.equal(lucLenDangBan({ ...can(t1), standardStatus: "Pending" }), null);
 });
+
+test("bản gập: đổi nhãn tại chỗ ở Đã bán và Ngừng hẳn giữ giá chốt, ngày bán, lý do ngừng", () => {
+  const dau = [e(1, "created", { buildingName: "[Toà mẫu]", unitNumber: "A-02" }), e(2, "price_changed", { listPrice: 3_000_000_000, feeInclusion: "excluded" }), e(3, "status_changed", { to: "Active" })];
+  const ban = [...dau, e(4, "status_changed", { to: "Closed", closePrice: 2_900_000_000, closeDate: "2026-10-30" })];
+  const truoc = foldListing(ban);
+  ban.push(e(5, "status_changed", { to: "Closed", label: "ban_qua_san" }));
+  const sau = foldListing(ban);
+  assert.deepEqual([sau.closePrice, sau.closeDate, sau.statusLabel], [truoc.closePrice, truoc.closeDate, "ban_qua_san"]);
+
+  const ngung = [...dau, e(4, "status_changed", { to: "Withdrawn", withdrawnReason: "unreachable" }), e(5, "status_changed", { to: "Withdrawn", label: "mat_lien_lac" })];
+  const n = foldListing(ngung);
+  assert.deepEqual([n.withdrawnReason, n.statusLabel], ["unreachable", "mat_lien_lac"]);
+});

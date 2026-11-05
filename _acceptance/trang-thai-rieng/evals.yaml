@@ -282,7 +282,7 @@ evals:
     target: "http://localhost:3462/today"
     steps:
       - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
-      - "Sau E11 (sàn có «Giữ chỗ»). Đăng nhập tài khoản trưởng nhóm của bộ mẫu; trong trang, dùng fetch lấy id một căn Đang bán do dau-chu-1@mau.quy-hang.test giữ, rồi POST /api/v1/listings/{id}/events {type:\"status_changed\",payload:{to:\"Pending\",label:\"giu_cho\"}}"
+      - "Sau E11 (sàn có «Giữ chỗ»). Đăng nhập tài khoản trưởng nhóm của bộ mẫu; trong trang, dùng fetch lấy id một căn Đang bán do dau-chu-1@mau.quy-hang.test giữ mà ĐỦ thông tin (completeness 5/5 — căn thiếu thông tin rơi vào nhóm «Thiếu thông tin» đứng trước «Mới đổi», đúng luật nhóm thắng đầu tiên), rồi POST /api/v1/listings/{id}/events {type:\"status_changed\",payload:{to:\"Pending\",label:\"giu_cho\"}}"
       - "Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /today → chụp evidence/E15-step1.png: nhóm «Mới đổi» có căn ấy với dòng «Đang bán → Giữ chỗ — Trưởng nhóm, hôm nay»"
     expected: "Trưởng nhóm đổi một căn Đang bán của đầu chủ sang «Giữ chỗ»; đầu chủ mở Hôm nay thấy căn ấy ở nhóm «Mới đổi» với dòng «Đang bán → Giữ chỗ — Trưởng nhóm, hôm nay». Chụp 1440."
     paths: ["apps/web/src/app/(app)/today/**"]

@@ -395,6 +395,31 @@ test("trạng thái riêng: gỡ nhãn: căn đã đổi giữa chừng", async 
   assert.equal(kq, null);
 });
 
+test("trạng thái riêng: đổi nhãn tại chỗ và gỡ nhãn ở Đã bán giữ giá chốt", async () => {
+  // Lượt chấm 1 (t1/t3, AC-8): đổi nhãn tại chỗ ở nấc cuối từng xoá giá chốt và vấp check của cơ sở dữ liệu (500).
+  const s = await sanMoi(VAI);
+  await ghiTTDuoc(s, { labels: [{ label: "Bán qua sàn", anchor: "Closed" }, { label: "Mất liên lạc hẳn", anchor: "Withdrawn" }] });
+  const [a, b] = [(await canDangBan(s)).id, (await canDangBan(s)).id];
+  await lenhDuoc(s, "dc", a, { type: "status_changed", payload: { to: "Closed", closePrice: 2_900_000_000, closeDate: "2026-10-30" } });
+  await lenhDuoc(s, "dc", b, { type: "status_changed", payload: { to: "Withdrawn", withdrawnReason: "unreachable" } });
+  const giu = async (id: string) =>
+    (await appPool.query<{ close_price: string | null; close_date: Date | null; withdrawn_reason: string | null }>("select close_price, close_date, withdrawn_reason from listings where id = $1", [id])).rows[0]!;
+  const [ga, gb] = [await giu(a), await giu(b)];
+  // Đổi nhãn tại chỗ ở Đã bán và Ngừng hẳn: 200, giá chốt, ngày bán, lý do giữ nguyên.
+  await lenhDuoc(s, "dc", a, { type: "status_changed", payload: { to: "Closed", label: "ban_qua_san" } });
+  await lenhDuoc(s, "dc", b, { type: "status_changed", payload: { to: "Withdrawn", label: "mat_lien_lac_han" } });
+  assert.deepEqual(await giu(a), ga);
+  assert.deepEqual(await giu(b), gb);
+  assert.deepEqual(await banTinh(a), { standard_status: "Closed", status_label: "ban_qua_san" });
+  // Gỡ cả hai nhãn kèm nhãn thay: 200, mỗi căn một sự kiện, dữ liệu nấc cuối giữ nguyên.
+  const [na, nb] = [await demSuKien(a), await demSuKien(b)];
+  await ghiTTDuoc(s, { labels: [], replace: { ban_qua_san: null, mat_lien_lac_han: null } });
+  assert.deepEqual([await demSuKien(a), await demSuKien(b)], [na + 1, nb + 1]);
+  assert.deepEqual(await giu(a), ga);
+  assert.deepEqual(await giu(b), gb);
+  assert.deepEqual(await banTinh(b), { standard_status: "Withdrawn", status_label: null });
+});
+
 test("trạng thái riêng: sàn khác và vai khác", async () => {
   const [s, B] = [await sanMoi(VAI), await sanMoi(VAI)];
   await ghiTTDuoc(s, { labels: [GIU_CHO] });

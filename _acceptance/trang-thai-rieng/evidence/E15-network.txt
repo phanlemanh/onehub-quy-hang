@@ -1,0 +1,3 @@
+E15 network (app-origin http://localhost:3462): GET /api/v1/listings, /catalog, /company/settings/queue, /leads/assigned, /listings/{id} all 200; PUT /company/statuses 200; POST /listings/{id}/events 200.
+Only non-200: my own probe POST /api/auth/sign-out -> 404 (wrong path, not app traffic); one RSC prefetch ERR_ABORTED (navigation cancel); ws /_next/hmr failures (dev HMR, static/dev-tool).
+Console: HMR websocket errors only.

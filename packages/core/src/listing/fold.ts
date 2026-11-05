@@ -72,10 +72,13 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
       s.listPrice = p.listPrice as number;
       s.feeInclusion = p.feeInclusion as string;
       break;
-    case "status_changed":
+    case "status_changed": {
+      // Đổi nhãn tại chỗ (hàng 46): `to` bằng trạng thái hiện tại — chỉ nhãn đổi, giá chốt, ngày bán, lý do ngừng giữ nguyên.
+      const taiCho = p.to === s.standardStatus;
       s.standardStatus = p.to as StandardStatus;
       // Đổi trạng thái mà không chọn nhãn là về nhãn mặc định — căn «Giữ chỗ» sang Đang bán không mang nhãn cũ theo.
       s.statusLabel = (p.label as string | null | undefined) ?? null;
+      if (taiCho) break;
       // Đổi trạng thái không xoá dữ liệu: hàng đã bán giữ giá chốt và ngày bán (Tham chiếu §5).
       if (p.to === "Closed") {
         s.closePrice = p.closePrice as number;
@@ -83,6 +86,7 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
       }
       if (p.to === "Withdrawn") s.withdrawnReason = p.withdrawnReason as string;
       break;
+    }
     case "unit_number_assigned":
       s.unitNumber = p.unitNumber as string;
       break;
