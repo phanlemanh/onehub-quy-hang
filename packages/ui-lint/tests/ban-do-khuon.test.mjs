@@ -104,7 +104,7 @@ const BANG = {
   // Hàng 37: Hôm nay của đầu khách, nhóm màn mới — vùng dựng KhungHomNayDauKhach (nối vào /today sau hàng 92).
   "hom-nay-dau-khach": { theoKhuon: [`${W}/app/(app)/today/buyer/vung.tsx`], ngoaiLe: [] },
   // Hàng 103: Màn Liên hệ, nhóm màn mới — trang dựng KhungLienHe.
-  "lien-he": { theoKhuon: [`${W}/app/(app)/contacts/page.tsx`], ngoaiLe: [] },
+  "lien-he": { theoKhuon: [`${W}/app/(app)/contacts/vung.tsx`], ngoaiLe: [] },
   gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [] },
   // Hàng 38: Tôi, nhóm màn mới — màn thật /me và trang ba lối của nó.
   // Hàng cai-dat-hop-nhat: Cá nhân dựng KhungToi; /me chỉ chuyển về /settings/personal.

@@ -17,5 +17,10 @@ export default async function Page() {
   if (!me.activeCompany) redirect("/select-company");
   const roles = me.activeCompany.roles ?? [];
   const duoc = roles.includes("listing_agent") || roles.includes("team_lead");
-  return <KhungLienHe>{duoc ? <VungLienHe /> : <TrangThai kind="notice" title={CHU.khongVai} />}</KhungLienHe>;
+  if (duoc) return <VungLienHe />;
+  return (
+    <KhungLienHe>
+      <TrangThai kind="notice" title={CHU.khongVai} />
+    </KhungLienHe>
+  );
 }

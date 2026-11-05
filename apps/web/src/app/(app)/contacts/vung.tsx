@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { NganNoi } from "@/components/bo-cuc";
 
 import { DanhSachLienHe, type TrangThaiDs } from "./danh-sach";
+import { KhungLienHe } from "./khung";
 import { HoSoNguoi, type SoDaMo, type TrangThaiHoSo } from "./ho-so";
 import { CHU, docDanhSach, docHoSo, luaTim, moSo, timSo } from "./lien-he";
 
@@ -79,7 +80,7 @@ export default function VungLienHe() {
   }
 
   return (
-    <>
+    <KhungLienHe>
       <DanhSachLienHe
         tt={ds}
         q={q}
@@ -97,6 +98,6 @@ export default function VungLienHe() {
             setLanHs((n) => n + 1);
           }} />
       </NganNoi>
-    </>
+    </KhungLienHe>
   );
 }

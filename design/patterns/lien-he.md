@@ -2,8 +2,8 @@
 nhom: lien-he
 doi_tuong: [lien-he, so, co-hoi, can]
 khuon: { ten: KhungLienHe, nhap: "@/app/(app)/contacts/khung" }
-nhan_dien: ["apps/web/src/app/(app)/contacts/page.tsx"]
-mau_dang_chay: { tep: "apps/web/src/app/(app)/contacts/page.tsx", duong: "/contacts", trang_thai: [dang-tai, trong, khong-khop, nguoi-khac-giu, loi, ho-so, khong-so, so-da-hien, mo-so-loi] }
+nhan_dien: ["apps/web/src/app/(app)/contacts/vung.tsx"]
+mau_dang_chay: { tep: "apps/web/src/app/(app)/contacts/vung.tsx", duong: "/contacts", trang_thai: [dang-tai, trong, khong-khop, nguoi-khac-giu, loi, ho-so, khong-so, so-da-hien, mo-so-loi] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
 ngoai_le: []
@@ -12,8 +12,8 @@ bo_cuc: danh-sach-chi-tiet
 ---
 # Liên hệ
 
-Màn Liên hệ (hàng 103, ADR-0021 sửa đổi 05/11): trang `apps/web/src/app/(app)/contacts/page.tsx` trả `<KhungLienHe>…</KhungLienHe>`
-ở gốc — bố cục «Danh sách → chi tiết» (ADR-0024). Thân là bảng liên hệ người xem đọc được (đầu chủ: người mình giữ; trưởng
+Màn Liên hệ (hàng 103, ADR-0021 sửa đổi 05/11): vùng `apps/web/src/app/(app)/contacts/vung.tsx` trả `<KhungLienHe>…</KhungLienHe>`
+ở gốc (trang `page.tsx` dựng vùng — trang mới dưới vỏ là ngoại lệ có tên của nhóm trang-tam) — bố cục «Danh sách → chi tiết» (ADR-0024). Thân là bảng liên hệ người xem đọc được (đầu chủ: người mình giữ; trưởng
 nhóm: cả sàn), ô tìm theo tên hay số, lọc theo loại. Chạm dòng mở hồ sơ người cạnh bảng theo lối Trong kho (chủ kho chọn ở
 Cổng Phạm vi hàng 103, trang ba lối `_acceptance/man-lien-he/ba-loi/`): một cột theo khuôn hồ sơ căn (solution-crm-4) — đầu hồ
 sơ · Số · Cơ hội · Căn · Dòng thời gian. Khi hàng 105 gộp, ngăn cạnh bảng thành cột kéo chia (lối C) mà màn không đổi.
