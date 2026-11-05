@@ -89,6 +89,7 @@ export function HopHoanTac({ importId, onDong, onXong }: { importId: string | nu
 
 function NoiDungHop({ importId, onXong }: { importId: string; onXong: () => void }) {
   const [h, setH] = useState<Hop>(() => moHop(importId));
+  const [lanXem, setLanXem] = useState(0);
   useEffect(() => {
     let con = true;
     xemThuHoanTac(fetch, importId).then((r) => {
@@ -98,7 +99,13 @@ function NoiDungHop({ importId, onXong }: { importId: string; onXong: () => void
     return () => {
       con = false;
     };
-  }, [importId]);
+  }, [importId, lanXem]);
+
+  /** Xem trước lỗi khi chưa có kế hoạch: chỉ xem trước lại, không ghi (AC-5). */
+  function xemLai() {
+    setH(moHop(importId));
+    setLanXem((n) => n + 1);
+  }
 
   async function lam() {
     setH({ ...h, buoc: "dang-ghi", loi: null });
@@ -137,7 +144,8 @@ function NoiDungHop({ importId, onXong }: { importId: string; onXong: () => void
             disabled={nut.tat}
             onClick={(e) => {
               e.preventDefault();
-              void lam();
+              if (nut.lam === "xem-thu") xemLai();
+              else void lam();
             }}
           >
             {h.buoc === "dang-ghi" ? <Spinner data-icon="inline-start" /> : null}

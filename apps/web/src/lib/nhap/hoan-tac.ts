@@ -43,13 +43,18 @@ export function tieuDeHop(k: KetQuaHoanTac): string {
   return `Gỡ ${k.go} căn khỏi Quỹ hàng · Trả giá cũ cho ${k.traGia} căn · ${k.khongDuoc} căn không hoàn tác được`;
 }
 
-/** Nút xác nhận: tắt khi chưa có kế hoạch, kế hoạch không gỡ gì, đang ghi hay đã xong. */
-export function nutXacNhan(h: HopHoanTac): { tat: boolean; chu: string } {
-  if (h.buoc === "loi") return { tat: false, chu: "Hoàn tác tiếp" };
-  if (h.buoc === "dang-ghi") return { tat: true, chu: "Đang hoàn tác…" };
-  if (!h.keHoach || h.buoc !== "san-sang") return { tat: true, chu: NHAN_HOAN_TAC };
-  if (h.keHoach.go + h.keHoach.traGia === 0) return { tat: true, chu: KHONG_CO_GI };
-  return { tat: false, chu: NHAN_HOAN_TAC };
+export const XEM_LAI = "Xem trước lại";
+
+/**
+ * Nút xác nhận: tắt khi chưa có kế hoạch, kế hoạch không gỡ gì, đang ghi hay đã xong. Lỗi khi chưa có bản xem trước thì nút
+ * chỉ xem trước lại (`lam: "xem-thu"`) — không bao giờ ghi khi người chưa thấy kế hoạch (AC-5); lỗi lúc ghi thì làm tiếp.
+ */
+export function nutXacNhan(h: HopHoanTac): { tat: boolean; chu: string; lam: "xem-thu" | "ghi" } {
+  if (h.buoc === "loi") return h.keHoach ? { tat: false, chu: "Hoàn tác tiếp", lam: "ghi" } : { tat: false, chu: XEM_LAI, lam: "xem-thu" };
+  if (h.buoc === "dang-ghi") return { tat: true, chu: "Đang hoàn tác…", lam: "ghi" };
+  if (!h.keHoach || h.buoc !== "san-sang") return { tat: true, chu: NHAN_HOAN_TAC, lam: "ghi" };
+  if (h.keHoach.go + h.keHoach.traGia === 0) return { tat: true, chu: KHONG_CO_GI, lam: "ghi" };
+  return { tat: false, chu: NHAN_HOAN_TAC, lam: "ghi" };
 }
 
 /** Một dòng của danh sách căn không hoàn tác được. */

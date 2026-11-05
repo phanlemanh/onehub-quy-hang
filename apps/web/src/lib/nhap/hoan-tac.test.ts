@@ -14,6 +14,7 @@ import {
   trangThaiDanhSach,
   type KetQuaHoanTac,
   type LanNhapCuaToi,
+  XEM_LAI,
 } from "./hoan-tac";
 
 const lan = (i: number, status: LanNhapCuaToi["status"] = "committed"): LanNhapCuaToi => ({
@@ -62,6 +63,10 @@ test("màn nhập: lần nhập gần đây và nút hoàn tác", async () => {
   const loi = await hoanTacLanNhap(f503, "lan-1");
   assert.deepEqual("loi" in loi ? loi.loi : null, CHUA_XONG, "lỗi giữa chừng: chữ nguyên văn");
   assert.equal(nutXacNhan({ ...moHop("lan-1"), buoc: "loi", keHoach: KE, loi: CHUA_XONG }).tat, false, "lỗi giữa chừng: nút mở lại");
+  // Xem trước lỗi (chưa có kế hoạch): nút chỉ xem trước lại, không ghi (AC-5, finding lượt chấm 1).
+  const xemLoi = nutXacNhan({ ...moHop("lan-1"), buoc: "loi", keHoach: null, loi: "Không gửi được tới máy chủ" });
+  assert.deepEqual([xemLoi.tat, xemLoi.lam, xemLoi.chu], [false, "xem-thu", XEM_LAI], "xem trước lỗi: nút xem trước lại, không ghi");
+  assert.equal(nutXacNhan({ ...moHop("lan-1"), buoc: "loi", keHoach: KE, loi: CHUA_XONG }).lam, "ghi", "lỗi lúc ghi: làm tiếp");
   // Huỷ: chỉ xem thử, không lời gọi ghi.
   const truocHuy = goi.length;
   await xemThuHoanTac(f, "lan-2");
