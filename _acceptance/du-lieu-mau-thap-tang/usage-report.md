@@ -38,3 +38,35 @@ wall: 295s
 - **claude-sonnet-5-5**: 5 agent · 14 calls · out 18,233 · in 28 · cache_read 178,672 · cache_create 119,079
 - **claude-haiku-5-5**: 8 agent · 16 calls · out 13,347 · in 32 · cache_read 122,276 · cache_create 108,958
 
+### S4 round 2 — wf_365d994c-a8e (13 agent, 24,289 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| synthesize:report | claude-sonnet-5-5 | 4 | 5,448 | 8 | 91,782 | 38 |
+| machine:npm run db:migrate && npm run db:test | claude-haiku-5-5 | 2 | 2,651 | 4 | 15,732 | 89 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 2,446 | 4 | 15,728 | 71 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 2,232 | 4 | 15,736 | 34 |
+| review:bugs | claude-opus-5-5 | 5 | 2,163 | 10 | 77,016 | 27 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 1,930 | 4 | 12,588 | 11 |
+| machine:npm run lint | claude-haiku-5-5 | 2 | 1,705 | 4 | 15,712 | 16 |
+| review:conventions | claude-opus-5-5 | 4 | 1,414 | 8 | 45,807 | 18 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 1,269 | 4 | 15,730 | 7 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 1,067 | 4 | 15,718 | 10 |
+| review:measurement | claude-opus-5-5 | 4 | 1,033 | 8 | 50,406 | 15 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 515 | 4 | 15,716 | 13 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 416 | 4 | 11,380 | 9 |
+
+
+wall: 235s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| machine | 8 | 13,815 | 122,660 | 183 | 08:35:20 | 08:38:23 |
+| review | 3 | 4,610 | 173,229 | 28 | 08:35:20 | 08:35:48 |
+| capture | 1 | 416 | 11,380 | 9 | 08:38:25 | 08:38:34 |
+| synthesize | 1 | 5,448 | 91,782 | 38 | 08:38:36 | 08:39:14 |
+
+- **claude-sonnet-5-5**: 2 agent · 6 calls · out 5,864 · in 12 · cache_read 103,162 · cache_create 58,217
+- **claude-haiku-5-5**: 8 agent · 16 calls · out 13,815 · in 32 · cache_read 122,660 · cache_create 109,379
+- **claude-opus-5-5**: 3 agent · 13 calls · out 4,610 · in 26 · cache_read 173,229 · cache_create 62,078
+

@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: f71aadc04935755e022bab686e9ab9f8ab43f0bb
+verified_commit: 680c32b22d9d5b94b2242d9f3152da9161431247
 human_signoff:
 ---
 
@@ -28,131 +28,131 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-du-lieu-mau-thap-tang-E1-r1
+  run_id: minted-du-lieu-mau-thap-tang-E1-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E2
-  run_id: minted-du-lieu-mau-thap-tang-E2-r1
+  run_id: minted-du-lieu-mau-thap-tang-E2-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E3
-  run_id: minted-du-lieu-mau-thap-tang-E3-r1
+  run_id: minted-du-lieu-mau-thap-tang-E3-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E4
-  run_id: minted-du-lieu-mau-thap-tang-E4-r1
+  run_id: minted-du-lieu-mau-thap-tang-E4-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E5
-  run_id: minted-du-lieu-mau-thap-tang-E5-r1
+  run_id: minted-du-lieu-mau-thap-tang-E5-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E6
-  run_id: minted-du-lieu-mau-thap-tang-E6-r1
+  run_id: minted-du-lieu-mau-thap-tang-E6-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E7
-  run_id: minted-du-lieu-mau-thap-tang-E7-r1
+  run_id: minted-du-lieu-mau-thap-tang-E7-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E8
-  run_id: minted-du-lieu-mau-thap-tang-E8-r1
+  run_id: minted-du-lieu-mau-thap-tang-E8-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 - eval: E9
-  run_id: minted-du-lieu-mau-thap-tang-E9-r1
+  run_id: minted-du-lieu-mau-thap-tang-E9-r2
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
   output: |
     lệnh: npm run db:migrate && npm run db:test (một lượt chung cho E1–E9, thoát 0)
-    ℹ duration_ms 78966.255375
+    ℹ duration_ms 74231.895667
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 - cmd: npm run test:hooks
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-test_hooks-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 - cmd: npm run typecheck
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-typecheck-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 - cmd: npm run lint
-  run_id: minted-du-lieu-mau-thap-tang-SUITE-lint-r1
+  run_id: minted-du-lieu-mau-thap-tang-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-05T08:15:27Z
+  verified_at: 2026-11-05T08:33:46Z
 
 ## Known limits
 
@@ -160,14 +160,15 @@ human_signoff:
 
 ## Analyst
 
-none — mọi eval feature đều red trên baseline (có phân biệt)
+carried tu round 1 — baseline khong do lai round nay (evals.yaml khong doi tu lan baseline cuoi, round 1). Field baseline cua tung eval ghi n-a.
 
-Baseline không đo: các lệnh suite (hồi quy) không gắn eval nào nên không đo baseline; xanh-cả-hai-phía ở đó là lưới hồi quy bình thường.
+Eval không-phân-biệt (xanh trên cả HEAD lẫn baseline): none. Các lệnh suite xanh cả hai phía là regression-guard bình thường, không liệt kê.
 
 ## Variance
 
-none — every multi-run eval is uniform (mọi eval chạy một lần, tất định)
+none — mọi eval chạy một lần, tất định; không eval nào có pass_rate lẫn.
 
 ## Iterations
 
-Round 1: E1–E9 và bảy lệnh suite đều xanh; verdict PASS.
+Round 1: E1–E9 và bảy lệnh suite đều xanh; có một phát hiện trong hợp đồng (AC-9: bài kiểm so ảnh chụp toàn bảng dưới READ COMMITTED, đỏ ngẫu nhiên) và sáu mục ngoài hợp đồng. Returned to implementation để sửa phát hiện trong hợp đồng.
+Round 2: sau nhát sửa S4 r1 (bài kiểm chụp bảng trong repeatable read), E1–E9 và bảy lệnh suite đều xanh; không phát hiện mới trong hợp đồng; verdict PASS.
