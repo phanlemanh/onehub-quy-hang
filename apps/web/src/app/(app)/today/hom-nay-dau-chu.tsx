@@ -1,13 +1,13 @@
 "use client";
 
-// Hôm nay của đầu chủ (hàng 22) — chuyển thể khối data-grid-grouping-1 theo lối ReUI được duyệt ở Cổng Phạm vi (ADR-0019)
+// Hôm nay của đầu chủ (hàng 22, làm lại ở hàng 92 theo quyết định 14A: khung solution-agents-2, ô hạn data-grid-base-5)
 // bằng thành phần `data-grid` đã cài: danh sách việc không đầu cột, nhóm theo hàng đợi của bộ nhóm đang áp (dòng nhóm gập
-// được kèm số), cột Việc · Lý do · Giá · Hạn · Hành động; khung hẹp chỉ giữ cột Việc, lý do và nút xuống dưới tên.
+// được kèm số), cột Việc · Vì sao hôm nay · Giá · Hành động — một nút việc chính mỗi dòng, việc còn lại trong ⋯.
 // Căn đọc từ kho trên máy (bộ đồng bộ); lead và bộ nhóm đọc qua API, bộ nhóm đọc được thì lưu trên máy theo sàn.
 import { NEED_LABELS, RETURN_REASON_LABEL, LEAD_STAGE_LABELS, type LeadState } from "@quy-hang/core/dedupe";
-import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type Action, type BoNhom, type LeadAction, type Nhom } from "@quy-hang/core/today";
+import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type BoNhom, type LeadAction, type Nhom } from "@quy-hang/core/today";
 import { useTable, type ColumnDef, type ExpandedState, type Row } from "@tanstack/react-table";
-import { InboxIcon, PhoneIcon, RotateCwIcon } from "lucide-react";
+import { InboxIcon, RotateCwIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
@@ -18,6 +18,17 @@ import { DataGrid, DataGridContainer, dataGridFeatures, type DataGridFeatures } 
 import { DataGridTable, DataGridTableRowExpand } from "@/components/reui/data-grid/data-grid-table";
 import { Frame, FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
+import { OHaiTang, OThaoTac, RONG_NUT_CHINH, type MucMenu } from "@/components/khoi/solution-agents-2";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useBoDongBo, useDanhSachHang, useSuaHang } from "@/lib/sync/react";
@@ -31,6 +42,7 @@ import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { docNhomThamSo, timNhom } from "./mo-nhom";
 import { chuSo, moSo, telHref } from "./mo-so";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
+import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
 
 type Feat = DataGridFeatures;
 type Viec =
@@ -117,96 +129,84 @@ type HanhDong = {
   moSo: (l: LeadGiao) => void;
 };
 
-function LyDo({ v }: { v: Viec }) {
-  if (v.kind === "can") return <span className="text-muted-foreground text-sm">{v.lyDo}</span>;
-  return (
-    <span className="flex flex-wrap items-center gap-2 text-sm">
-      <Badge variant="info-light">{nhanNac(v.lead.stage)}</Badge>
-      <span className="text-muted-foreground">nhập {chuGio(v.lead.createdAt)}</span>
-    </span>
-  );
+/** Dòng trên của «Vì sao hôm nay»: lý do bằng chữ của căn, hay nấc lead và giờ nhập. */
+function lyDoChu(v: Viec): string {
+  if (v.kind === "can") return v.lyDo;
+  return `${nhanNac(v.lead.stage)} · nhập ${chuGio(v.lead.createdAt)}`;
 }
 
 const chuGiaViec = (v: Viec) => (v.kind === "can" ? chuGiaPhi(v.can.listPrice, v.can.feeInclusion) : v.lead.priceText);
 
-function Han({ v, bayGio }: { v: Viec; bayGio: string }) {
-  if (v.kind === "can") return <span className="text-muted-foreground text-sm">—</span>;
-  const h = chuHan(v.lead, bayGio);
-  return <span className={`text-sm ${h.qua ? "text-destructive" : "text-foreground"}`}>{h.chu}</span>;
+/** Hạn của dòng (chỉ lead có hạn): chữ và mốc màu — đã quá đỏ, còn dưới 15 phút vàng (hàng 92). */
+function hanCua(v: Viec, bayGio: string): { chu: string; muc: MucHan } | null {
+  if (v.kind === "can") return null;
+  const iso = v.lead.stage === "sent" ? v.lead.acceptDueAt : v.lead.callDueAt;
+  return { chu: chuHan(v.lead, bayGio).chu, muc: mucHan(iso, bayGio) };
+}
+const MAU_HAN: Record<MucHan, string> = { qua: "text-destructive", sap: "text-warning", thuong: "", khong: "" };
+
+/** «Vì sao hôm nay» hai tầng: lý do chữ đậm, hạn dòng dưới tô theo mốc. */
+function ViSao({ v, bayGio }: { v: Viec; bayGio: string }) {
+  const h = hanCua(v, bayGio);
+  return <OHaiTang tren={lyDoChu(v)} duoi={h?.chu} duoiClassName={h ? MAU_HAN[h.muc] : undefined} />;
 }
 
-const co = (n: Nhom, a: Action) => n.actions.includes(a);
+const viecDong = (v: Viec): ViecDong => (v.kind === "can" ? { kind: "can", nhom: v.nhom } : { kind: "lead", nhom: v.nhom, stage: v.lead.stage });
 
-function NutViec({ v, hd, className }: { v: Viec; hd: HanhDong; className?: string }) {
+/** Đúng một nút viền cùng bề rộng (việc đầu của nhóm), việc còn lại trong ⋯; Trả lại luôn hỏi lại (hàng 92). */
+function NutViec({ v, hd }: { v: Viec; hd: HanhDong }) {
+  const [hoiTraLai, setHoiTraLai] = useState(false);
   const ban = hd.dangGhi.has(v.id);
   const loi = hd.loi[v.id];
   const soMo = hd.so[v.id];
-  const nut =
-    v.kind === "can" ? (
-      <>
-        {/* Chế độ cuộc gọi ép giá (hàng 29): căn ở nhóm «Nên gọi điều chỉnh giá». */}
-        {v.nhom.code === "price_adjustment" && (
-          <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?hang=${encodeURIComponent(v.can.id)}`} />}>
-            Ghi cuộc gọi
-          </Button>
-        )}
-        {co(v.nhom, "owner_confirmed") && (
-          <Button size="sm" disabled={ban} onClick={() => hd.conGiuGia(v.can)}>
-            Còn · giữ giá
-          </Button>
-        )}
-        {co(v.nhom, "open_record") && (
-          v.can.unitNumber ? (
-            <Button size="sm" variant="outline" onClick={() => hd.moHoSo(v.can)}>
-              Đổi giá, trạng thái…
-            </Button>
-          ) : (
-            <Button size="sm" variant="outline" nativeButton={false} render={<Link href={duongHangChuaMa(v.can.id)} />}>
-              Đổi giá, trạng thái…
-            </Button>
-          )
-        )}
-      </>
-    ) : (
-      <>
-        {/* Chế độ cuộc gọi khai thác (hàng 28): mở lead trên máy tính, vừa nghe vừa ghi. «Gọi» để dành cho nút quay số sau «Mở số» (hàng 29, Hỏi-8). */}
-        <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/units/call?lead=${encodeURIComponent(v.lead.id)}`} />}>
-          Ghi cuộc gọi
+  const { chinh, phu } = nutCuaViec(viecDong(v));
+  const nhan = (m: MaViec) =>
+    m === "tra-lai" ? `Trả lại · ${RETURN_REASON_LABEL}` : m === "mo-so" && soMo ? `Gọi ${chuSo(soMo)}` : NHAN_VIEC[m];
+  const lam = (m: MaViec): { onClick?: () => void; href?: string } => {
+    if (v.kind === "can") {
+      if (m === "con-giu-gia") return { onClick: () => hd.conGiuGia(v.can) };
+      if (m === "doi-gia-trang-thai") return v.can.unitNumber ? { onClick: () => hd.moHoSo(v.can) } : { href: duongHangChuaMa(v.can.id) };
+      return { href: `/units/call?hang=${encodeURIComponent(v.can.id)}` };
+    }
+    if (m === "nhan") return { onClick: () => hd.lead(v.lead, "accept") };
+    if (m === "da-goi") return { onClick: () => hd.lead(v.lead, "first_call") };
+    if (m === "tra-lai") return { onClick: () => setHoiTraLai(true) };
+    if (m === "mo-so") return soMo ? { href: telHref(soMo) } : { onClick: () => hd.moSo(v.lead) };
+    return { href: `/units/call?lead=${encodeURIComponent(v.lead.id)}` };
+  };
+  const nutChinh = chinh ? (
+    (() => {
+      const h = lam(chinh);
+      return h.href ? (
+        <Button size="sm" variant="outline" className={RONG_NUT_CHINH} nativeButton={false} render={<Link href={h.href} />}>
+          {nhan(chinh)}
         </Button>
-        {co(v.nhom, "accept") && v.lead.stage === "sent" && (
-          <Button size="sm" disabled={ban} onClick={() => hd.lead(v.lead, "accept")}>
-            Nhận
-          </Button>
-        )}
-        {co(v.nhom, "first_call") && (
-          <Button size="sm" variant={v.lead.stage === "sent" ? "outline" : "default"} disabled={ban} onClick={() => hd.lead(v.lead, "first_call")}>
-            Đã gọi
-          </Button>
-        )}
-        {co(v.nhom, "return") && (
-          <Button size="sm" variant="ghost" disabled={ban} onClick={() => hd.lead(v.lead, "return")}>
-            Trả lại · {RETURN_REASON_LABEL}
-          </Button>
-        )}
-        {soMo ? (
-          <span className="flex items-center gap-2">
-            <span className="text-foreground text-sm font-medium tabular-nums">{chuSo(soMo)}</span>
-            <Button size="sm" nativeButton={false} render={<a href={telHref(soMo)} />}>
-              <PhoneIcon data-icon="inline-start" />
-              Gọi
-            </Button>
-          </span>
-        ) : (
-          <Button size="sm" variant="outline" disabled={ban} onClick={() => hd.moSo(v.lead)}>
-            Mở số
-          </Button>
-        )}
-      </>
-    );
+      ) : (
+        <Button size="sm" variant="outline" className={RONG_NUT_CHINH} disabled={ban} onClick={h.onClick}>
+          {nhan(chinh)}
+        </Button>
+      );
+    })()
+  ) : null;
+  const menu: MucMenu[] = phu.map((m) => ({ khoa: m, nhan: nhan(m), disabled: ban, ...lam(m) }));
   return (
-    <div className={`flex flex-col gap-1.5 ${className ?? ""}`}>
-      <div className={`flex flex-wrap items-center gap-2 ${className ?? ""}`}>{nut}</div>
+    <div className="flex flex-col items-end gap-1.5">
+      <OThaoTac chinh={nutChinh} phu={menu} nhanMenu={`Việc khác của ${tieuDe(v)}`} />
       {loi ? <span className="text-destructive text-sm whitespace-normal">{loi}</span> : null}
+      {v.kind === "lead" && (
+        <AlertDialog open={hoiTraLai} onOpenChange={setHoiTraLai}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Trả lại lead này?</AlertDialogTitle>
+              <AlertDialogDescription>Lý do: {RETURN_REASON_LABEL}. Lead về telesales để sửa số và gửi lại.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Giữ lại</AlertDialogCancel>
+              <AlertDialogAction onClick={() => hd.lead(v.lead, "return")}>Trả lại</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 }
@@ -239,14 +239,13 @@ function taoCot(hd: HanhDong, rong: boolean): DefCot[] {
                 {tieuDe(v)}
               </Link>
             ) : (
-              <span className="text-foreground text-sm font-medium">{tieuDe(v)}</span>
+              <span className="text-foreground text-sm font-semibold">{tieuDe(v)}</span>
             )}
-            <span className="text-muted-foreground text-sm">{phuDe(v)}</span>
+            <span className="text-muted-foreground text-xs">{phuDe(v)}</span>
             {!rong && (
               <div className="flex flex-col gap-2 pt-1">
-                <LyDo v={v} />
+                <ViSao v={v} bayGio={hd.bayGio} />
                 <span className="text-sm">{chuGiaViec(v)}</span>
-                {v.kind === "lead" && <Han v={v} bayGio={hd.bayGio} />}
                 <NutViec v={v} hd={hd} />
               </div>
             )}
@@ -254,19 +253,18 @@ function taoCot(hd: HanhDong, rong: boolean): DefCot[] {
         );
       },
     },
-    { id: "lyDo", header: "Lý do", size: 200, cell: ({ row }) => (row.original.kind === "viec" ? <LyDo v={row.original.v} /> : null) },
+    { id: "lyDo", header: "Vì sao hôm nay", size: 260, cell: ({ row }) => (row.original.kind === "viec" ? <ViSao v={row.original.v} bayGio={hd.bayGio} /> : null) },
     {
       id: "gia",
       header: "Giá",
       size: 160,
       cell: ({ row }) => (row.original.kind === "viec" ? <span className="text-sm whitespace-normal">{chuGiaViec(row.original.v)}</span> : null),
     },
-    { id: "han", header: "Hạn", size: 150, cell: ({ row }) => (row.original.kind === "viec" ? <Han v={row.original.v} bayGio={hd.bayGio} /> : null) },
     {
       id: "hanhDong",
       header: "Hành động",
-      size: 290,
-      cell: ({ row }) => (row.original.kind === "viec" ? <NutViec v={row.original.v} hd={hd} className="items-end justify-end" /> : null),
+      size: 210,
+      cell: ({ row }) => (row.original.kind === "viec" ? <NutViec v={row.original.v} hd={hd} /> : null),
     },
   ];
 }
@@ -532,7 +530,7 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
     <DataGrid table={table} recordCount={tong} i18n={I18N} tableLayout={TABLE_LAYOUT} tableClassNames={TABLE_CLASS_NAMES}>
       <FramePanel className="p-0!">
         <DataGridContainer>
-          <DataGridTable renderHeader={false} />
+          <DataGridTable />
         </DataGridContainer>
       </FramePanel>
     </DataGrid>
