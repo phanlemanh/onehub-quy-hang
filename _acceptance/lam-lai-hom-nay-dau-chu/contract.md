@@ -5,10 +5,10 @@ slug: lam-lai-hom-nay-dau-chu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-04-lam-lai-hom-nay-dau-chu-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-05
 ---
 
 # Acceptance Contract: lam-lai-hom-nay-dau-chu
