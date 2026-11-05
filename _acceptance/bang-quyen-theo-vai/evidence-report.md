@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b9bc3ea5c291d4e9061be212262fc5bacd122081
+verified_commit: f05dffc9920928587f702cf237a6b2a02dad15df
 human_signoff:
 ---
 
@@ -283,3 +283,7 @@ Round 2: chạy lại nhóm eval bị delta chạm (E2, E3, E4, E5, E8a, E9, E9c
 ### Re-pin lần 1 — 2026-11-05, do gộp main (#146, #144) sau lượt chấm S4-r2
 run_id: repin-20261105T182625Z-81645
 sha: b9bc3ea5c291d4e9061be212262fc5bacd122081 · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · ngoài làn máy: E2b
+
+### Re-pin lần 2 — 2026-11-05, do ghim lại sau gộp main (#149) trước chữ ký
+run_id: repin-20261105T220955Z-92922
+sha: f05dffc9920928587f702cf237a6b2a02dad15df · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · ngoài làn máy: E2b · diff chạm vật đo ngoài làn máy: E2b — chưa chứng lại, đi vòng S4 delta
