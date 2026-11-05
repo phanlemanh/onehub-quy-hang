@@ -143,8 +143,11 @@ migration 038:
 | API trên Postgres (`packages/api/test-db`) | 433/433 | 413/433 | 413/433 (không thêm bài đỏ) |
 | Đồng bộ của màn (`apps/web/src/lib/sync/test-db`) | — | 22/23 | — |
 
-Mọi bài đỏ cùng một nguyên nhân: người tạo hàng trong bài là người mở sàn, chỉ giữ vai Quản trị sàn — đúng ca vòng này
-chặn. Ba bài cách ly nằm trong vùng của hàng. Sáu tệp ngoài vùng (20 bài API ở `listings.test.ts` 12, `owners.test.ts` 4,
+Lượt đo S1 đọc mọi bài đỏ là cùng một nguyên nhân (người tạo hàng là người mở sàn, chỉ giữ vai Quản trị sàn). Chạy thật ở S3
+tách ra hai lớp: 15 bài đúng nguyên nhân ấy; 5 bài chủ nhà (`owners.test.ts` 4, `goi-ep-gia-dot-hai.test.ts` 1) ghim
+Telesales, Quản trị sàn nhận 403 hay 200 ở đường chủ nhà và đọc hàng — nay họ nhận 404 «không có hàng này», đúng câu giao;
+chỉ ca Telesales, Quản trị sàn của 5 bài ấy đổi kỳ vọng, mọi assert không lộ nguồn, không ghi giữ nguyên (giám sát duyệt
+Q-0511-3). Ba bài cách ly nằm trong vùng của hàng. Sáu tệp ngoài vùng (20 bài API ở `listings.test.ts` 12, `owners.test.ts` 4,
 `doi-gia-da-ban` 2, `ngay-ban` 1, `goi-ep-gia-dot-hai` 1; 1 bài đồng bộ `doi-gia-da-ban.db-test.mts`) sửa bằng cách cho người
 ấy thêm một vai Bảng hàng ngay trong bài — Đầu chủ khi bài đưa hàng lên Đang bán, Đầu khách khi không — không đổi điều bài
 kiểm (xin chạm tệp Q-3). Không đường đang sống nào khác đỏ: kiểm trùng lead, mốc lên bảng của telesales, trang khách, Lần
