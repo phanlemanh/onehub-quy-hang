@@ -674,7 +674,8 @@
       "vung": [
         "packages/core/src/import/normalize/**",
         "apps/web/src/app/(app)/settings/labels/**"
-      ]
+      ],
+      "bat_khi": "Đầu chủ gõ «dong nam», «bp», «Đang gd» ở ô bất kỳ thì thấy máy gợi đúng giá trị chuẩn; chọn gợi ý thành đề xuất từ điển của sàn chờ quản trị sàn duyệt; quản trị sàn xem được sức khoẻ dữ liệu (bao nhiêu ô lạ, đã neo bao nhiêu); bộ chuẩn hoá dùng chung với lõi nhập, không gọi dịch vụ ngoài"
     },
     {
       "ma": "71",
@@ -1191,7 +1192,8 @@
       ],
       "vung": [
         "apps/web/src/app/s/broker/**"
-      ]
+      ],
+      "bat_khi": "Môi giới sàn khác mở link bảng hàng không cần đăng nhập và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; sàn ẩn mức chia thì không hiện; tải Excel hay ảnh bảng hàng ra đúng những cột ấy; không số chủ nhà, giá đáy hay ghi chú nội bộ nào lọt ra, dựng từ luật ẩn ở lõi"
     },
     {
       "ma": "81",
@@ -1354,7 +1356,8 @@
       ],
       "vung": [
         "apps/web/src/app/(app)/settings/fields/**"
-      ]
+      ],
+      "bat_khi": "Quản trị sàn tạo trường riêng có / không hoặc chọn một chỉ sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở Bảng hàng, lọc được, không bao giờ ra trang khách; liên hệ có trường riêng theo loại, trường của liên hệ chủ nhà mang lớp nguồn và không rời công ty; sàn khác không thấy trường của nhau"
     },
     {
       "ma": "48",
@@ -1805,7 +1808,8 @@
       "vung": [
         "apps/web/src/app/(app)/inventory/**",
         "apps/web/src/app/(app)/units/**"
-      ]
+      ],
+      "bat_khi": "Đầu chủ mở Bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và mỗi loại hiện đúng bộ cột và bộ trường hồ sơ của nó — đất không có cột tầng hay trục; dựng trên bố cục danh sách – chi tiết của hàng 105; trang thử nhanh-tuc-thi hết ngoại lệ có hạn"
     },
     {
       "ma": "80",
