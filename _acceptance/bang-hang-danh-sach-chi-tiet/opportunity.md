@@ -28,3 +28,9 @@ Vì sao: Chủ kho chọn lối C ở phiên đánh giá ngăn hồ sơ căn (ng
 - Kết quả nào là SỐNG: [đề xuất] Bảng hàng có hồ sơ cạnh bên dùng cột kéo chia của bộ bố cục (BoCuc nhánh danh-sach-chi-tiet: khối nguồn app-shell-11 cột kéo chia, ruột solution-crm-4; NganNoi giữ cho ngăn báo, lọc điện thoại, luồng nhiều bước); khung Bảng hàng không cao quá khung nhìn; ADR-0024 «Sửa đổi 05/11» và Tham chiếu §12 dòng 05/11; vo-va-ia, ho-so-can.md và ngoại lệ có hạn ở bang-hang.md hết lệch nhau; không chạm inventory/bulk
 - Kết quả nào là CHẾT: [đề xuất] chưa đạt «Bảng hàng có hồ sơ cạnh bên dùng cột kéo chia của bộ bố cục (BoCuc nhánh danh-sach-chi-tiet: khối nguồn app-shell-11 cột kéo chia, ruột solution-crm-4; NganNoi giữ cho ngăn báo, lọc điện thoại, luồng nhiều bước); khung Bảng hàng không cao quá khung nhìn; ADR-0024 «Sửa đổi 05/11» và Tham chiếu §12 dòng 05/11; vo-va-ia, ho-so-can.md và ngoại lệ có hạn ở bang-hang.md hết lệch nhau; không chạm inventory/bulk» khi hết timebox
 - Timebox: …
+
+## Đề xuất thêm vào phạm vi (chờ Cổng Phạm vi)
+
+- Cột «Đầu chủ» trên Bảng hàng — nguồn «AC-4 hàng 89»: chủ kho chọn «Thu AC-4, cột sau» ở hàng 89 (sổ quyết định
+  `d-20261105T035554Z-21`); giám sát đợt khuyên làm trong hàng 105 vì hàng này đang sửa đúng phần bảng. Thành một tiêu chí
+  ở Cổng Phạm vi để chủ kho duyệt.
