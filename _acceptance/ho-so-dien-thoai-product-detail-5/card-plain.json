@@ -1,0 +1,20 @@
+{
+  "feature_plain": "Trên điện thoại, mở một căn là thấy ngay ảnh lớn, mã căn, ba thông số chính và giá; cuộn xuống xem đủ phần còn lại; một nút chính dính đáy theo vai.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ dùng bố cục mới khi màn hẹp hơn 768 px; máy tính giữ nguyên như hôm nay, cùng một mốc khổ với Hôm nay điện thoại."},
+    {"id":"AC-2","p":"Sẽ xếp đúng thứ tự: ảnh lớn lướt ngang → mã căn · toà + Diện tích · Phòng ngủ · Hướng → hộp giá; ảnh, tên, giá nằm trong màn đầu."},
+    {"id":"AC-3","p":"Sẽ giữ đủ mọi mục và nút mà hồ sơ hôm nay có cho cùng người — không mất gì khi đổi bố cục."},
+    {"id":"AC-5","p":"Sẽ có đúng một nút chính dính đáy: đầu khách hỏi đầu chủ (chỉ mở bảng chia sẻ), người giữ căn «Ghi cuộc gọi»."},
+    {"id":"AC-6","p":"Sẽ có trạng thái cho đang tải, không thấy căn, lỗi kèm Thử lại, mất mạng (xem bản trên máy), chưa có ảnh."},
+    {"id":"AC-7","p":"Sẽ đi qua khuôn Hồ sơ căn và luật giao diện của kho, không mã màu thô."},
+    {"id":"AC-8","p":"Sẽ có ảnh chụp bản chạy thật cho đầu khách, đầu chủ ở 375 và máy tính ở 1440."}
+  ],
+  "wont_do": [
+    {"id":"AC-4","p":"Sẽ KHÔNG để đầu khách thấy hay nhận về phần chủ nhà (Nội bộ, số, tên, giá đáy) — kể cả trong dữ liệu trình duyệt nhận."},
+    {"id":"OOS-1","p":"Đổi giá nhanh trên điện thoại để hàng 40 làm."},
+    {"id":"OOS-2","p":"Chụp ảnh khi đi xem nhà để hàng 41 làm."},
+    {"id":"OOS-3","p":"Hồ sơ trên máy tính giữ nguyên."},
+    {"id":"OOS-4","p":"Không cài khối ReUI mới — theo câu Hỏi-1b."},
+    {"id":"OOS-5","p":"Không đổi luật quyền hay luật ẩn ở lõi."}
+  ]
+}
