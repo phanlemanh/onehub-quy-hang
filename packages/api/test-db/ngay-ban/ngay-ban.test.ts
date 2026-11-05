@@ -23,6 +23,8 @@ const lenh = (cookie: string, id: string, body: unknown) => send("POST", `/api/v
 async function sanMoi(ten: string) {
   const email = mail(`ngay-${ten.toLowerCase()}`);
   const s = await openCompany(`[Sàn ${RUN} ${ten}]`, email);
+  // Từ 046 chỉ người có Bảng hàng tạo, sửa được hàng (bang-quyen-theo-vai): người mở sàn kiêm Đầu chủ vì bài đưa hàng lên Đang bán.
+  await appPool.query("update company_members set roles = roles || '{listing_agent}' where company_id = $1 and user_id = $2", [s.companyId, s.userId]);
   const before = sent.length;
   await send("POST", "/api/v1/auth/email-otp/send-verification-otp", { email, type: "sign-in" });
   const code = sent.slice(before).find((m) => m.email === email);
