@@ -1,0 +1,95 @@
+schema_version: 1
+feature_slug: ho-so-dien-thoai-product-detail-5
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hồ sơ rẽ khổ qua đúng hàm khổ của kho (useDienThoai/khoCuaSo của today/mobile/kho.ts) — ma trận viết trước 5 khổ 375 · 390 · 767 · 768 · 1440 × 2 chỗ (toàn màn · trong Bảng hàng thẻ) = 10 ô, mỗi ô chọn đúng thân (điện thoại / cột) bằng hàm chọn thân mà CotHoSo gọi; chiều đỏ: bản sao hàm chọn thân dùng mốc 1024 → bộ so nêu đúng ô 768px."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thân điện thoại dựng thật (renderToStaticMarkup) từ căn mẫu: thứ tự khối đọc theo thuộc tính data-khoi trên đầu ra = [anh, ten, gia, muc…] đúng như AC-2; hàng thông số mang đúng ba nhãn Diện tích · Phòng ngủ · Hướng với giá trị của căn; ảnh nằm trong khung cuộn có điểm dừng (snap); chiều đỏ: bản sao đặt hộp giá trước ảnh → bộ so nêu vị trí lệch (deepEqual lời lệch)."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận viết trước 10 mục (mức đủ · thuộc tính · chữ khoá · báo sai · lần rao · các lần rao · lịch sử · ảnh · mở toàn màn · đóng hồ sơ) × 3 vai (không thấy nguồn · thấy nguồn giữ căn · thấy nguồn không giữ) × 2 chỗ (toàn màn · trong Bảng hàng thẻ) = 60 ô viết trước, mỗi ô ghi mục ấy CÓ hay KHÔNG ở thân cột cho ca đó; mỗi ô khẳng định thân cột dựng thật đúng như bảng (đối chứng dương, tập không rỗng), rồi thân điện thoại dựng từ cùng dữ liệu có đúng mục ấy; cộng ca căn chưa có mã có ô gắn mã; chiều đỏ: bản sao thân điện thoại bỏ «Đóng hồ sơ» ở chỗ Bảng hàng thẻ → bộ so nêu đúng «trong Bảng hàng thẻ · <vai> · đóng hồ sơ»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thân điện thoại dựng cho vai không thấy nguồn với cờ lấy từ lopPhuHoSo thật (@quy-hang/core/access) và dữ liệu căn mẫu: đầu ra không chứa ngăn Nội bộ, ổ khoá, mồi số chủ 0900 000 092, mồi tên chủ, giá đáy; đối chứng dương: cùng dữ liệu cho vai thấy nguồn thì có ngăn Nội bộ; chiều đỏ: bản sao bỏ qua cờ noiBo → bộ so nêu mồi lộ ra."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/**", "apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm nút chính của thân điện thoại với ma trận viết trước 4 ca (không thấy nguồn · thấy nguồn giữ căn · thấy nguồn không giữ · căn chưa có mã): đúng một nút dính đáy hay không nút — không thấy nguồn → nút hỏi đầu chủ (NutHoiDauChu, chỉ gọi bảng chia sẻ của máy), thấy nguồn → «Ghi cuộc gọi» href /units/call?hang=<id>, chưa mã → không nút; nút dựng có lớp dính đáy và kín bề ngang; chiều đỏ: bản sao luôn trả «Ghi cuộc gọi» → ô nêu vai."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thân điện thoại dựng thật ở 5 trạng thái viết trước: đang tải → ChoTai đúng dáng (data-cho-tai), không thấy → «Không thấy căn» + liên kết /inventory, lỗi → «Thử lại», mất mạng → bản đã tải kèm giờ đồng bộ, chưa ảnh → khung ảnh có lời «Chưa có ảnh»; đối chứng: có dữ liệu → không trạng thái nào; chiều đỏ: bản sao trả khung rỗng khi lỗi → ô nêu trạng thái."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can"
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/proto/ho-so-dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.floor
+    status: not-run
+    reason: "Lệnh kho executors.design.floor dựa vào biến CLAUDE_PLUGIN_ROOT, lượt chấm không có biến ấy nên lệnh không chạy (lượt 1, E8 cannot_run); kho cấm sửa _acceptance/config.yaml ở hàng — đã báo giám sát. AC-7 vẫn có E7 (khuôn) và bộ lint của kho (mức nợ, mã màu thô)."
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/proto/ho-so-dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "375×812 đầu khách: ảnh lớn đầu màn, tên + thông số + giá trong màn đầu, nút hỏi đầu chủ dính đáy, không ngăn Nội bộ; 375×812 đầu chủ giữ căn: nút «Ghi cuộc gọi» dính đáy, có ngăn Nội bộ; cuộn tới cuối nút vẫn ở đáy; 1440×900: vẫn là thân cột hôm nay; mỗi cảnh một ảnh."
+    steps:
+      - "Dựng chỗ thử dãy H (Postgres 5574, dev 3494) bằng _acceptance/ho-so-dien-thoai-product-detail-5/thu/ (kịch bản dựng và chụp của vòng); nạp căn mẫu có ảnh do dau-chu-1 giữ, số chủ 0900 000 092; in PID, tắt bằng --tat"
+      - "Đăng nhập dau-khach-1, mở /units/<mã mẫu> ở 375×812: chụp E9-dau-khach.png, đối chiếu thứ tự khối và không có Nội bộ; cuộn tới cuối, chụp E9-dau-khach-cuoi.png, nút còn ở đáy"
+      - "Đăng nhập dau-chu-1, mở cùng căn ở 375×812: chụp E9-dau-chu.png, nút «Ghi cuộc gọi» trỏ /units/call?hang=<id>"
+      - "Mở cùng căn ở 1440×900: chụp E9-may-tinh.png, thân cột hôm nay"
+      - "Ở 375×812: mở một mã không có (chụp E9-khong-thay.png, «Không thấy căn» + về Bảng hàng), một căn mẫu chưa có ảnh (E9-chua-anh.png, khung «Chưa có ảnh»), và chặn mạng rồi mở lại căn đã xem (E9-mat-mang.png, bản trong kho trên máy)"
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-4
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử, ghi mọi phản hồi mạng khi dau-khach-1 mở /units/<mã mẫu> ở 375×812: không phản hồi nào chứa mồi số chủ 0900000092, tên chủ mẫu hay giá đáy mẫu; gọi thẳng lối mở số chủ của căn bằng phiên dau-khach-1 bị từ chối và không trả mồi. Đối chứng dương trên cùng bộ ghi: dau-chu-1 mở cùng căn rồi gọi lối mở số chủ → phản hồi mở số chứa 0900000092 (bộ dò bắt được mồi). Ghi tệp E10-mang-<vai>.txt."
+    steps:
+      - "Dùng chỗ thử của E9; dau-khach-1 mở /units/<mã mẫu>, ghi phản hồi mạng, dò ba mồi; rồi gọi POST /api/v1/listings/<id>/owner/phone-reveal bằng phiên ấy: mong bị từ chối, thân không chứa mồi"
+      - "dau-chu-1 mở cùng căn, ghi phản hồi mạng; gọi cùng lối mở số chủ: mong phản hồi chứa 0900000092 — đối chứng dương của bộ dò"
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]

@@ -45,8 +45,13 @@ test("E4 khi nào có nút: 6 trạng thái × 2 quyền viết trước", () =>
   assert.equal(so, 12);
   const nguon = readFileSync(fileURLToPath(new URL("../ho-so/cot-ho-so.tsx", import.meta.url)), "utf8");
   assert.match(nguon, /from "\.\.\/ready\/nut-san-sang"/, "hồ sơ căn không nhập nút");
-  const muc = nguon.slice(nguon.indexOf('"Lần rao đang mở"'), nguon.indexOf("</Muc>", nguon.indexOf('"Lần rao đang mở"')));
-  assert.match(muc, /<NutSanSang /, "nút không nằm trong mục «Lần rao đang mở»");
+  // Hồ sơ dựng nút rồi trao vào khe «Sẵn sàng bán»; hai thân (cột, điện thoại) đặt khe ấy trong mục «Lần rao đang mở».
+  assert.match(nguon, /sanSang: m\.hienSanSang \? <NutSanSang /, "hồ sơ không trao nút vào khe");
+  for (const tep of ["../ho-so/than-cot.tsx", "../ho-so/dien-thoai/than-dien-thoai.tsx"]) {
+    const than = readFileSync(fileURLToPath(new URL(tep, import.meta.url)), "utf8");
+    const muc = than.slice(than.indexOf('"Lần rao đang mở"'), than.indexOf("</Muc>", than.indexOf('"Lần rao đang mở"')));
+    assert.match(muc, /khe\.sanSang/, `${tep}: nút không nằm trong mục «Lần rao đang mở»`);
+  }
 });
 
 test("E5 chỉ đúng chỗ thiếu: ma trận viết trước", () => {
