@@ -171,8 +171,8 @@ Follow Up Boss, BoldTrail, Lofty, Zoho và CRM Việt Nam ở mục 3.
 | | Danh sách lưu, giai đoạn, «nguội» | Sau | Follow Up Boss có; cần thêm việc kế mới có nghĩa |
 | | Nhãn do sàn đặt | Sau | Chờ hàng 47 (trường riêng) |
 | Hồ sơ | Tên, loại, người giữ, Lead / Liên hệ, các số (che, bấm hiện thì ghi sự kiện, gọi một chạm) | **Bản đầu** | Thay danh bạ; dùng luật mở số đã có |
-| | Các căn của người này, các lead | **Bản đầu** | Trả lời câu «một chủ nhiều căn» và «đau trùng chủ đã hết chưa» |
-| | Nhu cầu khách và Lần gửi gắn với người này | **Bản đầu, chỉ trưởng nhóm** | Đầu khách không đọc liên hệ; trưởng nhóm thấy cả hai đầu khách |
+| | Khối «Cơ hội»: cơ hội phía chủ (bản ghi lead) kèm pha, hàng đã Lên bảng | **Bản đầu** | Trả lời câu «một chủ nhiều căn» và «đau trùng chủ đã hết chưa»; ba lớp chủ kho chọn 05/11 |
+| | Cơ hội phía khách (nhu cầu khách) và Lần gửi trong cùng khối «Cơ hội» | **Bản đầu, chỉ trưởng nhóm** | Đầu khách không đọc liên hệ; trưởng nhóm thấy cả hai đầu khách |
 | | Dòng thời gian gộp từ sự kiện có sẵn | **Bản đầu** | Sự kiện đã ghi, chỉ cần đọc gộp |
 | | Ai đã mở số người này | Sau, gộp vào hàng quyền dữ liệu | Luật dữ liệu cá nhân; cần màn riêng cho trưởng nhóm |
 | | Quan hệ giữa người (vợ / chồng, người được uỷ quyền) | Sau | Lofty, Follow Up Boss có; RESO chưa có bảng riêng |
@@ -207,8 +207,10 @@ cần cắt thêm thì nên cắt sửa tên và số ở bản đầu, chỉ gi
 - **Hồ sơ một người:**
   - Tên, loại, người giữ, trạng thái.
   - Các số được che. Bấm để hiện, mỗi lần hiện ghi một sự kiện mở số. Gọi được một chạm.
-  - Các căn và lead của người này.
-  - Với trưởng nhóm: thêm nhu cầu khách và Lần gửi.
+  - Khối «Cơ hội» theo ba lớp (chủ kho chọn 05/11, `lead-va-lien-he.md`): mỗi cơ hội mang loại (Bán · Cho thuê · Mua ·
+    Thuê) và pha; cơ hội bán đã Lên bảng trỏ tới hàng. Đầu chủ thấy cơ hội phía chủ; trưởng nhóm thấy thêm cơ hội phía
+    khách và Lần gửi.
+  - Lead chỉ là dấu cạnh tên người, không phải một danh sách.
   - Dòng thời gian gộp từ các sự kiện đã có.
 - **Sửa:** loại (đã có), tên, thêm số và đổi số chính theo luật hàng 85.
 - **Không làm ở 103:**
@@ -233,6 +235,9 @@ cần cắt thêm thì nên cắt sửa tên và số ở bản đầu, chỉ gi
 - Số lần mở hồ sơ liên hệ mỗi tuần theo vai.
 - Tỷ lệ lần mở số đi từ hồ sơ so với từ dòng lead.
 - Số chủ nhà có từ hai căn trở lên hiện đúng một hồ sơ.
+
+> **Cập nhật 05/11:** chủ kho chọn «Áp ba lớp» — Lead là dấu trên người, việc là Cơ hội, hàng sinh khi cơ hội bán Lên
+> bảng (`lead-va-lien-he.md`, ADR-0021 sửa đổi 05/11). Mục 5 đã sửa theo đó.
 
 ## 6. Hàng tiếp theo đề xuất (chưa mở — chủ kho chọn)
 

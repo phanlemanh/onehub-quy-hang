@@ -3,7 +3,7 @@
 Ngày 05/11. Đây là phần khám phá của hàng 103, viết theo câu hỏi của chủ kho: «Xem cách sắp xếp Leads trong Contact của Keller Williams,
 Follow Up Boss, Boomtownroi… phân tích kỹ lưỡng nguyên lý gốc và đề xuất lại». Chủ kho nghiêng về định nghĩa của Keller Williams.
 
-Tài liệu này chỉ khuyến nghị. Quyết định là của chủ kho.
+**Quyết định:** chủ kho chọn «Áp ba lớp» ngày 05/11. Đã ghi ở ADR-0021 (sửa đổi 05/11), CONTEXT.md và Tham chiếu §12, §14.
 
 ## Trả lời ngắn
 

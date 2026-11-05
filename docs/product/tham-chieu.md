@@ -392,6 +392,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 04/11 | Cấu hình theo sàn có nhật ký: một lối đọc cho mọi thành viên và một lối đổi nguyên khối cho quản trị sàn; mỗi lần đổi — qua bất kỳ lối nào — một sự kiện chỉ thêm ghi người và vai, cấu hình có từ trước được ghi bù; cơ sở dữ liệu chặn lớp nguồn. Cặp hạn trái luật không áp im lặng: đổi một nửa bị từ chối; dòng trái luật có sẵn thì chia lead theo mặc định 15/30 và báo ở lối đọc (chủ kho chọn ở Cổng Phạm vi) | Hàng 82 `cau-hinh-theo-san`, ADR-0018, luật đợt 46 |
 | 04/11 | Lead đã trả lại thì đầu chủ cũ không ghi «đã gọi lần đầu» được nữa (máy chủ trả như lead không còn của người gọi, mốc nhận và mốc gọi giữ nguyên); số đo dòng vào đếm một chủ nhà bị trả lại rồi gửi lại một lần — kỳ và thời lượng tính từ lúc nhập lead đầu chuỗi, «lead → cuộc gọi đầu» tới cuộc gọi sớm nhất trong chuỗi (kể cả của đầu chủ cũ), «lead → Sẵn sàng bán» tới lúc lead cuối lên bảng — cùng cách với số đo của cơ sở dữ liệu (luật 37 · Ngoài-5 hàng 52) | migration 023 · `_acceptance/va-moc-goi-dau-lead-tra-lai/` |
 | 04/11 | Khu Cài đặt một chỗ (chủ kho, Cổng Đáng và Cổng Phạm vi hàng cai-dat-hop-nhat): nhà «Cài đặt» cho mọi vai có cột nhà, nhóm «Cá nhân» (nội dung tab Tôi, ai cũng thấy) và nhóm «Sàn [Tên]» (chỉ quản trị); tab Tôi, menu tài khoản và /me mở Cá nhân; người không quản trị mở mục sàn về Cá nhân kèm câu báo (Hỏi-1); bố cục Đọc rộng tối đa 48rem sát cột mục lục. Đổi vỏ 31/10, §9 và ADR-0024 bằng mục sửa đổi | `_acceptance/cai-dat-hop-nhat/` |
+| 05/11 | Lead, Liên hệ, Cơ hội theo Keller Williams (chủ kho chọn «Áp ba lớp», khám phá hàng 103): Lead là dấu trên người — liên hệ chưa nói chuyện hai chiều, không hiện trên Bảng hàng; việc với một người là Cơ hội — Bán · Cho thuê (bản ghi telesales, đầu chủ nhập) hay Mua · Thuê (nhu cầu khách), pha Cultivate → Appointment → Active → Under Contract → Closed; hàng sinh khi cơ hội bán Lên bảng. Dữ liệu không đổi; nhãn pha trên màn chốt ở Cổng Phạm vi 103 | ADR-0021 (sửa đổi 05/11) · `_acceptance/man-lien-he/lead-va-lien-he.md` |
 
 ## 13. Chỗ cần chốt
 
@@ -440,7 +441,8 @@ Rà 29/10 trước khi cắt bản đầu vào lộ trình. Mười chỗ đã c
 | Sàn | Công ty dùng Quỹ hàng; mỗi sàn một vùng dữ liệu riêng | — |
 | Bảng hàng | Tập hàng của sàn; tên nhà trên máy tính và tab trên điện thoại | «Quỹ hàng» cho nhà này |
 | Hàng | Một lần chào bán của sàn trên một căn | «Tin» (tin là của Invest) |
-| Lead | Hàng ở nấc đầu, từ telesales hoặc đầu chủ tự nhập | — |
+| Lead | Dấu trên một liên hệ chưa nói chuyện hai chiều; việc với người là «Cơ hội» (chủ kho 05/11: Áp ba lớp) | «Hàng ở nấc đầu» |
+| Cơ hội | Việc với một liên hệ: Bán · Cho thuê · Mua · Thuê; hàng sinh khi cơ hội bán Lên bảng (chủ kho 05/11: Áp ba lớp) | «Lead» cho việc |
 | Đầu chủ | Người giữ nguồn chủ nhà của căn | «Người giữ» |
 | Đầu khách | Người đem căn đi bán cho khách | — |
 | Bao phí / Không bao phí | Giá đã / chưa gồm thuế thu nhập cá nhân, lệ phí trước bạ và phí môi giới, theo định nghĩa của sàn | Trên trang khách: «đã / chưa gồm phí chuyển nhượng» |

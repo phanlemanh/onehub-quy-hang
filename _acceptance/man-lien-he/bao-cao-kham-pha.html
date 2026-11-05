@@ -29,6 +29,7 @@ p,li{color:var(--fg)}code{font-size:.9em;background:var(--head);padding:0 .25em;
 table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.9rem;margin:1rem 0}
 th,td{border:1px solid var(--line);padding:.4rem .55rem;vertical-align:top;text-align:left}th{background:var(--head)}
 strong{color:var(--fg)}a{color:var(--accent)}
+pre{overflow-x:auto;background:var(--head);padding:.75rem;border-radius:6px;font-size:.8rem;line-height:1.4}
 </style>
 </head>
 <body>
@@ -466,13 +467,16 @@ sự kiện, gọi một chạm)</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>Các căn của người này, các lead</td>
+<td>Khối «Cơ hội»: cơ hội phía chủ (bản ghi lead) kèm pha, hàng đã Lên
+bảng</td>
 <td><strong>Bản đầu</strong></td>
-<td>Trả lời câu «một chủ nhiều căn» và «đau trùng chủ đã hết chưa»</td>
+<td>Trả lời câu «một chủ nhiều căn» và «đau trùng chủ đã hết chưa»; ba
+lớp chủ kho chọn 05/11</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>Nhu cầu khách và Lần gửi gắn với người này</td>
+<td>Cơ hội phía khách (nhu cầu khách) và Lần gửi trong cùng khối «Cơ
+hội»</td>
 <td><strong>Bản đầu, chỉ trưởng nhóm</strong></td>
 <td>Đầu khách không đọc liên hệ; trưởng nhóm thấy cả hai đầu khách</td>
 </tr>
@@ -608,8 +612,11 @@ Bảng hàng và hồ sơ căn); trên điện thoại dùng danh sách rồi h�
 <li>Tên, loại, người giữ, trạng thái.</li>
 <li>Các số được che. Bấm để hiện, mỗi lần hiện ghi một sự kiện mở số.
 Gọi được một chạm.</li>
-<li>Các căn và lead của người này.</li>
-<li>Với trưởng nhóm: thêm nhu cầu khách và Lần gửi.</li>
+<li>Khối «Cơ hội» theo ba lớp (chủ kho chọn 05/11,
+<code>lead-va-lien-he.md</code>): mỗi cơ hội mang loại (Bán · Cho thuê ·
+Mua · Thuê) và pha; cơ hội bán đã Lên bảng trỏ tới hàng. Đầu chủ thấy cơ
+hội phía chủ; trưởng nhóm thấy thêm cơ hội phía khách và Lần gửi.</li>
+<li>Lead chỉ là dấu cạnh tên người, không phải một danh sách.</li>
 <li>Dòng thời gian gộp từ các sự kiện đã có.</li>
 </ul></li>
 <li><strong>Sửa:</strong> loại (đã có), tên, thêm số và đổi số chính
@@ -647,6 +654,12 @@ rẻ hơn nhưng khó tìm hơn.</li>
 <li>Tỷ lệ lần mở số đi từ hồ sơ so với từ dòng lead.</li>
 <li>Số chủ nhà có từ hai căn trở lên hiện đúng một hồ sơ.</li>
 </ul>
+<blockquote>
+<p><strong>Cập nhật 05/11:</strong> chủ kho chọn «Áp ba lớp» — Lead là
+dấu trên người, việc là Cơ hội, hàng sinh khi cơ hội bán Lên bảng
+(<code>lead-va-lien-he.md</code>, ADR-0021 sửa đổi 05/11). Mục 5 đã sửa
+theo đó.</p>
+</blockquote>
 <h2 id="hàng-tiếp-theo-đề-xuất-chưa-mở-chủ-kho-chọn">6. Hàng tiếp theo
 đề xuất (chưa mở — chủ kho chọn)</h2>
 <table>
