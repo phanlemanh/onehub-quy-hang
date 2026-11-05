@@ -5,8 +5,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { chanMucSan } from "../cai-dat";
-import { CHU, coQuyDoi, sauKhiLuu, thanSua, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
+import { CHU, chuyenTruocKhiDoc, coQuyDoi, sauKhiLuu, thanSua, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
 import { BangMauNhap } from "./vung-mau-nhap";
 
 const cot: CotMauNhap = { headerKey: "tinh trang", target: "standardStatus", valueMap: { "con hang": "Active" }, nguon: { kieu: "lan-nhap", importId: "i-1", at: "2026-11-05T01:00:00Z" } };
@@ -14,9 +13,10 @@ const ve = (tt: TrangThaiMau) => renderToStaticMarkup(h(BangMauNhap, { tt, lamMo
 
 test("mẫu nhập: chữ bốn trạng thái của vùng", () => {
   const BANG: [string, TrangThaiMau, string][] = [
-    ["đang tải", { kieu: "dang-tai" }, CHU.dangTai],
-    ["trống", { kieu: "xong", ds: [] }, CHU.trong],
-    ["lỗi", { kieu: "loi" }, CHU.loi],
+    // Chữ viết lại nguyên văn từ bảng trạng thái của thiết kế (_acceptance/mau-nhap-va-bai/design.md §3), không lấy từ CHU.
+    ["đang tải", { kieu: "dang-tai" }, "Đang tải mẫu"],
+    ["trống", { kieu: "xong", ds: [] }, "Chưa có mẫu nào — mẫu tự nhớ sau lần nhập Excel đầu tiên của sàn."],
+    ["lỗi", { kieu: "loi" }, "Chưa tải được mẫu — thử lại"],
     ["có dữ liệu", { kieu: "xong", ds: [cot] }, "tinh trang"],
   ];
   let dem = 0;
@@ -51,10 +51,23 @@ test("mẫu nhập: hộp sửa theo kết quả lưu", () => {
 });
 
 test("mẫu nhập: trang chặn vai trước khi đọc API", () => {
-  assert.ok(chanMucSan(["listing_agent"])?.includes("chi-quan-tri=1"), "vai không quản trị phải về Cá nhân");
-  assert.equal(chanMucSan(["company_admin"]), null, "đối chứng: quản trị không bị chuyển");
+  const san = (roles: string[]) => ({ companies: [{}], activeCompany: { roles } });
+  const BANG: [string, Parameters<typeof chuyenTruocKhiDoc>[0], string | null][] = [
+    ["chưa đăng nhập", null, "/login"],
+    ["chưa thuộc sàn", { companies: [], activeCompany: null }, "/no-company"],
+    ["chưa chọn sàn", { companies: [{}], activeCompany: null }, "/select-company"],
+    ["Đầu chủ", san(["listing_agent"]), "/settings/personal?chi-quan-tri=1"],
+    ["Trưởng nhóm", san(["team_lead"]), "/settings/personal?chi-quan-tri=1"],
+    ["Quản trị", san(["company_admin"]), null],
+  ];
+  let dem = 0;
+  for (const [ca, me, mong] of BANG) {
+    assert.equal(chuyenTruocKhiDoc(me), mong, `trang mẫu không chặn vai — ${ca}`);
+    dem++;
+  }
+  assert.equal(dem, BANG.length);
+  // Trang dùng đúng hàm này và chuyển hướng theo kết quả trước khi đọc API.
   const nguon = readFileSync(new URL("./page.tsx", import.meta.url), "utf8");
-  const chan = nguon.indexOf("chanMucSan(me.activeCompany.roles)");
-  const doc = nguon.indexOf("/api/v1/company/import-templates");
-  assert.ok(chan > 0 && doc > chan, "trang mẫu không chặn vai");
+  assert.match(nguon, /const di = chuyenTruocKhiDoc\(me\);\s*if \(di \|\| !me\) redirect\(di \?\? "\/login"\);/, "trang mẫu không chuyển hướng theo chuyenTruocKhiDoc");
+  assert.ok(nguon.indexOf("chuyenTruocKhiDoc(me)") < nguon.indexOf("/api/v1/company/import-templates"), "trang đọc API trước khi chặn");
 });

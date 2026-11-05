@@ -1,5 +1,6 @@
 // Phần thuần của màn Mẫu nhập (hàng 50 mau-nhap-va-bai): kiểu trả từ `/api/v1/company/import-templates`, chữ trên màn,
 // luật ô Quy đổi, luật hộp sửa theo kết quả lưu, và chuyển bản sửa thành thân gửi máy chủ.
+import { chanMucSan } from "../cai-dat";
 import { FIELD_LABEL, FIELD_TRANSFORM, isStandardField, TRUONG_CACH_GOI, type PlanTarget, type Transform } from "@quy-hang/core/import";
 
 export type CotMauNhap = {
@@ -77,3 +78,11 @@ export function sauKhiLuu(kq: { status: number; reason?: string } | null): { don
 }
 
 export const TRUONG_CHON: readonly PlanTarget[] = [...(Object.keys(FIELD_LABEL) as PlanTarget[]), "keep_as_note", "ignore_with_reason"];
+
+/** Trang Mẫu nhập: đường chuyển hướng trước khi đọc API (null = được ở lại). Vai không quản trị về Cá nhân kèm câu báo. */
+export function chuyenTruocKhiDoc(me: { companies: unknown[]; activeCompany: { roles: string[] } | null } | null): string | null {
+  if (!me) return "/login";
+  if (me.companies.length === 0) return "/no-company";
+  if (!me.activeCompany) return "/select-company";
+  return chanMucSan(me.activeCompany.roles);
+}
