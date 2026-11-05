@@ -5,7 +5,7 @@ slug: bang-quyen-theo-vai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-05-bang-quyen-theo-vai-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -133,3 +133,17 @@ cả KW lẫn Follow Up Boss đều cố định nghĩa vai (Hỏi-1). Mỗi dò
   `packages/api/test-db/listings.test.ts`, `owners.test.ts`, `doi-gia-da-ban/doi-gia-da-ban.test.ts`,
   `ngay-ban/ngay-ban.test.ts`, `goi-ep-gia-dot-hai.test.ts`, `apps/web/src/lib/sync/test-db/doi-gia-da-ban.db-test.mts`.
 - Nguồn: G1, G7 của `docs/plan/ra-soat-crud-phan-quyen.md`; luật 74 của đợt (chủ kho «Mở G1 ngay» 05/11).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Rào canh sáu bài kiểm cũ không bị sửa lén chỉ chạy trên máy người viết; trên hệ thống kiểm tự động nó tự bỏ qua mà vẫn báo đạt.
+  - Ngoài-2: Người không được đưa căn lên Đang bán, sau khi đổi căn từ Đang bán sang Tạm ngưng, vẫn thấy nút Hoàn tác nhưng bấm thì luôn báo lỗi; dữ liệu không sai.
+  - Ngoài-3: Người chỉ có vai Quản trị sàn gõ thẳng địa chỉ Bảng hàng bị đưa sang Hôm nay, trang không có trong menu của họ, thay vì về Cài đặt.
+  - Ngoài-4: Telesales hay Quản trị sàn mở thẳng địa chỉ một cách xem đã lưu của Bảng hàng vẫn thấy khung màn, nhưng trống vì máy chủ không trả hàng nào.
+  - Ngoài-6: Hoàn tác một lần đổi trạng thái từ Đang bán, với người không đủ cờ Sẵn sàng bán, luôn bị máy chủ từ chối; căn giữ trạng thái mới.
+  - Ngoài-7: Chưa có bài kiểm chứng rằng cờ Sẵn sàng bán trên màn được dựng từ đúng người đăng nhập và người giữ căn.
+  - Ngoài-8: Bài kiểm «không có nấc Đang bán khi không đủ cờ» chưa thử căn đang ở Đang giao dịch.
+  - Ngoài-9: Bài kiểm lệnh mang phiên bản cũ chỉ ghim mã từ chối, chưa ghim lý do; lý do đổi thì không ai hay.
+  - Ngoài-12: Đầu khách đổi căn từ Đang bán sang Tạm ngừng rồi bấm Hoàn tác bị máy chủ từ chối và căn rơi vào Cần xem; căn không lên Đang bán trái phép.
+  - Ngoài-13: Rào canh bài cũ bị bỏ qua trên hệ thống kiểm tự động vì bản sao nông không có nhánh chính.
+  - Ngoài-14: Đã sửa một phần — rào canh bài cũ tự hết hạn khi vòng này gộp vào nhánh chính; trước lúc gộp, nhánh khác sửa bài cơ sở dữ liệu vẫn có thể vướng.
+  - Ngoài-15: Đã sửa một phần — rào nay đọc tệp trên đĩa nên bắt cả sửa chưa commit, nhưng vẫn tự bỏ qua trên hệ thống kiểm tự động.
+  - Ngoài-17: Bài kiểm ô Trạng thái không đi qua đường lấy người giữ căn của trình sửa thật; căn trên máy cũ chưa có thông tin người giữ có thể bị coi là chưa ai giữ.

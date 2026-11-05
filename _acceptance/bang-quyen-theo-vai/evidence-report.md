@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: bang-quyen-theo-vai
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: f05dffc9920928587f702cf237a6b2a02dad15df
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: bang-quyen-theo-vai
@@ -217,7 +217,7 @@ human_signoff:
     - domain-correctness: PASS — trang gọi lamViecVoiHang từ @quy-hang/core/access và chuyển về /today ngay khi hàm trả sai, trước câu dựng KhungBangHang và BangCoHoSo; trang không so tên vai tại chỗ. Việc lõi trả đúng với ba vai thuộc eval khác.
     - operational-feasibility: PASS — dòng 14 gọi lamViecVoiHang và chuyển hướng /today khi hàm trả falsy, chạy trước câu dựng bảng; không so tên vai trong tệp. Người qua được kiểm tra đi tiếp tới bảng như cũ. Tính đúng của lõi nằm ngoài đầu vào.
     - spec-alignment: PASS — trang không so tên vai tại chỗ; chuyển hướng /today ở dòng 14 trước câu trả về dựng bảng; truthy thì đi tiếp như cũ. Chưa kiểm hàm lõi với ba vai vì ngoài đầu vào.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-06 — Đạt
 
 ### Lệnh suite (hồi quy)
 
