@@ -17,5 +17,5 @@ export function HoSoToanMan({ nguoi, san, chon }: { nguoi: string; san: string; 
     if (c.lan) m.set("lan", c.lan);
     return `${path}?${m}`;
   };
-  return <CotHoSo nguoi={nguoi} san={san} chon={dangChon} duong={duong} />;
+  return <CotHoSo nguoi={nguoi} san={san} chon={dangChon} duong={duong} cho="toan-man" />;
 }
