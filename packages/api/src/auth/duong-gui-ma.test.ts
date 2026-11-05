@@ -41,8 +41,8 @@ test("mọi đường của plugin mã email có đúng một nhãn", async () =
       so++;
     }
     assert.equal(so, khoaBang.length, "số dòng đã xét phải bằng bảng");
-    assert.deepEqual([...tat].sort(), [...DUONG_DA_TAT].sort(), "disabledPaths phải đúng các đường «đã tắt» của bảng");
-    assert.deepEqual([...AUTH_DISABLED_PATHS].sort(), [...DUONG_DA_TAT].sort(), "AUTH_DISABLED_PATHS lệch bảng");
+    assert.deepEqual([...tat].sort(), [...AUTH_DISABLED_PATHS].sort(), "disabledPaths phải đúng AUTH_DISABLED_PATHS");
+    for (const p of DUONG_DA_TAT) assert.ok(AUTH_DISABLED_PATHS.includes(p), `${p} «đã tắt» mà thiếu ở AUTH_DISABLED_PATHS`);
     assert.ok(!OTP_SEND_PATHS.some((p) => tat.includes(p)), "một đường vừa gửi mã vừa bị tắt");
   } finally {
     await pool.end();
@@ -92,7 +92,8 @@ test("không lối gửi mã ngoài đường", async () => {
     assert.ok(!plugin.options?.overrideDefaultEmailVerification, "plugin đổi xác minh email lõi sang mã");
     assert.ok(!plugin.options?.sendVerificationOnSignUp, "plugin gửi mã khi đăng ký");
     assert.equal((auth.options as { emailVerification?: { sendVerificationEmail?: unknown } }).emailVerification?.sendVerificationEmail, undefined, "lõi có bộ gửi thư xác minh email");
-    assert.notEqual(auth.options.emailAndPassword?.enabled, true, "đăng nhập mật khẩu đang bật");
+    // Mật khẩu bật từ hàng dang-nhap-mat-khau nhưng không tự đăng ký — đường đăng ký còn bị tắt ở duong-mat-khau.ca.ts.
+    assert.equal(auth.options.emailAndPassword?.disableSignUp, true, "mật khẩu bật mà cho tự đăng ký");
   } finally {
     await pool.end();
   }

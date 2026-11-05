@@ -2,8 +2,9 @@
 // Gọi thẳng bộ xử lý của better-auth trên Postgres thật.
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
-import { OTP_REQUEST_LIMIT, OTP_SEND_PATHS, OTP_TYPE_NOT_ALLOWED } from "../../src/auth/constants";
+import { OTP_REQUEST_LIMIT, OTP_SEND_PATHS, OTP_TYPE_NOT_ALLOWED, PASSWORD_WRAPPED_PATHS } from "../../src/auth/constants";
 import { DUONG_DA_TAT } from "../../src/auth/duong-gui-ma.ca";
+import { DUONG_LOI_DA_TAT } from "../../src/auth/duong-mat-khau.ca";
 import { OTP_RATE_LIMITED } from "../../src/errors";
 import { authPost, cleanup, identityPool, mail, makeAuth, openCompany, RUN } from "../helpers";
 
@@ -73,4 +74,34 @@ test("đường quên mật khẩu và đổi email: 404, không gửi, không �
   // Đối chứng dương cùng email: đường xin mã chính vẫn sống và còn lượt.
   assert.equal((await authPost(auth, "/email-otp/send-verification-otp", { email, type: "sign-in" })).status, 200);
   assert.equal(sent.length, 1, "đường xin mã chính phải vẫn gửi mã");
+});
+
+// Hàng dang-nhap-mat-khau (E9): bật mật khẩu ở thư viện mở cả họ đường lõi; đường «đã tắt» của bảng lõi trả 404 trước
+// bộ xử lý, và đường đăng nhập mật khẩu gọi thẳng thư viện (lọt khỏi đường bọc) cũng 404.
+test("đường lõi mật khẩu đóng", async () => {
+  const { auth, sent } = makeAuth();
+  const email = mail("loi-tat");
+  await openCompany(`[Sàn ${RUN} L]`, email);
+  const demSai = async () =>
+    Number((await identityPool.query<{ n: string }>("select count(*) as n from identity.password_failures where email = $1", [email])).rows[0]!.n);
+  const truocMa = await demXinMa(email);
+  const truocSai = await demSai();
+  const truocNguoi = Number((await identityPool.query<{ n: string }>(`select count(*) as n from identity."user"`)).rows[0]!.n);
+  const duong = [...DUONG_LOI_DA_TAT.map((p) => p.replace(":token", "ma-thu")), ...PASSWORD_WRAPPED_PATHS];
+  let so = 0;
+  for (const path of duong) {
+    for (let k = 1; k <= 10; k++) {
+      const res = await authPost(auth, path, { email, password: "mưa rơi trên mái", newPassword: "mưa rơi trên mái 2", currentPassword: "x".repeat(12), name: "[Tên]", token: "ma-thu" });
+      assert.equal(res.status, 404, `${path} lần ${k} trả ${res.status}`);
+      so++;
+    }
+  }
+  assert.equal(so, duong.length * 10, "số lần gọi phải bằng số đường × 10");
+  assert.equal(sent.length, 0, "đường lõi đã tắt vẫn gửi thư");
+  assert.equal(await demXinMa(email), truocMa, "đường lõi đã tắt đốt lượt xin mã");
+  assert.equal(await demSai(), truocSai, "đường lõi đã tắt đếm thử sai");
+  const sauNguoi = Number((await identityPool.query<{ n: string }>(`select count(*) as n from identity."user"`)).rows[0]!.n);
+  assert.equal(sauNguoi, truocNguoi, "đường đăng ký tạo người");
+  // Đối chứng dương: đường xin mã chính vẫn sống.
+  assert.equal((await authPost(auth, "/email-otp/send-verification-otp", { email, type: "sign-in" })).status, 200);
 });
