@@ -5,7 +5,7 @@ slug: va-duong-so-n
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-06
 design_doc: _acceptance/va-duong-so-n/design.md
@@ -78,3 +78,6 @@ Core: A×B ở AC-1 · B(không số) ở AC-2 · C×khác đường ở AC-3 ·
 - Lưu khoá, kiểm trùng ngoài khu — hàng 76.
 
 ## Notes
+
+- Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Hiện người dùng không gặp gì. Về sau, khi gói được mở ra, một lập trình viên có thể dùng nhầm hàm phá thử và dựng lại lỗi «Đường số N» bị đọc thành số nhà. — `packages/core/src/address/chuan-hoa.ts`
+- Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Cùng một đường viết «số 05 nối dài» hay «số 5 nối dài» có thể ra hai khoá, nên có thể bị coi là hai đường khác nhau khi kiểm trùng. Hai nhà khác nhau không bao giờ bị gộp nhầm. — `packages/core/src/address/chuan-hoa.ts`
