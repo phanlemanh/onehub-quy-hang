@@ -36,7 +36,7 @@ const bam = (t, sel, chu) =>
 
 /** Mở bảng hàng; máy dev vừa dựng có lúc kẹt «Đang tải lần đầu» (hàng 43) — mở lại tối đa ba lần × 80 giây. */
 async function moBang(t) {
-  const xong = `!!document.querySelector('[role="row"]') && document.querySelectorAll('[aria-label="Chọn dòng"]').length > 0`;
+  const xong = `!!document.querySelector('tr') && document.querySelectorAll('[aria-label="Chọn dòng"]').length > 0`;
   for (let i = 0; i < 3; i++) {
     await t.di("/inventory");
     try {
@@ -53,10 +53,10 @@ async function moBang(t) {
 async function tich(t, ma) {
   for (let i = 0; i < 60; i++) {
     const ok = await t.tinh(`(() => {
-      const row = [...document.querySelectorAll('[role="row"]')].find((r) => r.innerText.split("\\n").some((x) => x.trim() === ${JSON.stringify(ma)}));
+      const row = [...document.querySelectorAll('tr')].find((r) => r.innerText.split("\\n").some((x) => x.trim() === ${JSON.stringify(ma)}));
       const cb = row?.querySelector('[aria-label="Chọn dòng"]');
       if (cb) { cb.click(); return true; }
-      const cuon = [...document.querySelectorAll("*")].find((e) => e.scrollHeight > e.clientHeight + 50 && e.querySelector('[role="row"]'));
+      const cuon = [...document.querySelectorAll("*")].find((e) => e.scrollHeight > e.clientHeight + 50 && e.querySelector('tr'));
       if (cuon) cuon.scrollTop += 300;
       return false;
     })()`);
@@ -79,12 +79,12 @@ const docHop = `(() => {
 try {
   // Tên hiển thị của D2 để chọn trong hộp.
   const tn = await trang("truong-nhom@mau.quy-hang.test");
+  await moBang(tn);
   const ds = await tn.tinh(`fetch("/api/v1/team/listing-agents", { credentials: "same-origin" }).then((r) => r.json())`);
   const tenD2 = ds.items.find((x) => x.userId === mau.d2)?.displayName;
   const tenD1 = ds.items.find((x) => x.userId === mau.d1)?.displayName;
 
   // 1. Hộp hỏi: tích 1 căn mỗi chủ, chọn D2.
-  await moBang(tn);
   await tich(tn, X[0].ma);
   await tich(tn, Y[0].ma);
   await moHop(tn);

@@ -147,7 +147,10 @@ async function song() {
 }
 if (!(await song())) {
   const out = openSync(LOG, "a");
-  const p = spawn("npx", ["next", "dev", "-p", String(CONG), "apps/web"], {
+  // webpack, không Turbopack: kho chính có package-lock.json ở thư mục cha nên Turbopack lấy cả kho chính làm gốc theo dõi —
+  // worktree của các dãy khác và thư mục đợt đổi liên tục làm máy dev dựng lại rồi tải lại trang không dứt (kẹt «Đang tải lần
+  // đầu», hàng 43 và lượt thử 05/11). webpack chỉ theo dõi tệp thuộc đồ thị nạp.
+  const p = spawn("npx", ["next", "dev", "--webpack", "-p", String(CONG), "apps/web"], {
     cwd: GOC,
     env: { ...env, BETTER_AUTH_SECRET: "dev-h-chuoi-thu-khong-dung-o-ban-that", BETTER_AUTH_URL: URL_GOC },
     detached: true,

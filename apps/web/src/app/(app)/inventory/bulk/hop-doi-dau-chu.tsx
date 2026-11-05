@@ -113,7 +113,7 @@ export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBa
               {hop ? `Mọi căn cùng chủ nhà đi theo · ${hop.soLienHe} liên hệ chủ nhà đổi người giữ.` : loi ?? "Đang tải các căn sẽ đổi…"}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Select value={nhan} onValueChange={(v) => setNhan((v as string | null) ?? null)}>
+          <Select value={nhan} items={dauChu.map((d) => ({ value: d.userId, label: d.displayName }))} onValueChange={(v) => setNhan((v as string | null) ?? null)}>
             <SelectTrigger aria-label="Đầu chủ mới">
               <SelectValue placeholder="Chọn đầu chủ mới" />
             </SelectTrigger>

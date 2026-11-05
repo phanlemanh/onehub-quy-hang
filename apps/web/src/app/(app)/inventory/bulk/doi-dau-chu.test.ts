@@ -87,3 +87,7 @@ test("E4b sau đổi và sau hoàn tác, bộ đồng bộ kéo lại ngay", () 
   const n = (doc("hop-doi-dau-chu.tsx").match(/await bd\.thuNgay\(\)/g) ?? []).length;
   assert.equal(n, 2);
 });
+
+test("ô chọn người nhận hiện tên đầu chủ, không hiện mã người (Select nhận danh sách mục)", () => {
+  assert.match(doc("hop-doi-dau-chu.tsx"), /<Select value=\{nhan\} items=\{dauChu\.map\(\(d\) => \(\{ value: d\.userId, label: d\.displayName \}\)\)\}/);
+});
