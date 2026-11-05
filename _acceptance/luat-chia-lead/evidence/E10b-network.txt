@@ -1,0 +1,1 @@
+driver = chay-ui.mjs (CDP script), khong co duong doc network cua browser tool; dem member-names qua lop boc fetch: 3 lan luc bao, 3 lan sau 10s (503 la do cho chan co chu dich).

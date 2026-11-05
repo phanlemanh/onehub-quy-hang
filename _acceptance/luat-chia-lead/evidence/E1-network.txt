@@ -1,0 +1,1 @@
+driver: node script chay-ui.mjs (playwright-like script), khong co read_network_requests; networkObserved n-a (driver)
