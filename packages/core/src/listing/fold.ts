@@ -19,8 +19,11 @@ export type ListingState = {
   /** YYYY-MM-DD. */
   closeDate: string | null;
   withdrawnReason: string | null;
-  /** Mã nhãn riêng của sàn neo vào `standardStatus` (hàng 46); `null` = nhãn mặc định. Mọi `status_changed` đặt lại nó. */
-  statusLabel: string | null;
+  /**
+   * Mã nhãn riêng của sàn neo vào `standardStatus` (hàng 46); `null` = nhãn mặc định. Mọi `status_changed` đặt lại nó; bản
+   * gập luôn có khoá này, vắng chỉ ở bản dựng tay đời trước (đọc như `null`).
+   */
+  statusLabel?: string | null;
   /** ISO 8601 của lần xác nhận gần nhất với chủ nhà; chưa từng xác nhận là `null`. */
   lastConfirmedAt: string | null;
   /** Hàng đã gỡ khỏi Quỹ hàng khi hoàn tác lần nhập (`voided`) — cờ, không phải trạng thái; lịch sử giữ nguyên. */
