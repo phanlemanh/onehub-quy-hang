@@ -1,0 +1,27 @@
+{
+  "feature_plain": "Đầu chủ và trưởng nhóm có màn Liên hệ: tìm một người bằng tên hay số, thấy đủ cơ hội và căn của người ấy, bấm hiện số rồi gọi trong tối đa ba chạm.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ có nhà «Liên hệ» cho đầu chủ (thấy người mình giữ) và trưởng nhóm (thấy cả sàn); vai khác không thấy; danh sách không bao giờ chứa số hay giá đáy."},
+    {"id":"AC-2","p":"Sẽ lọc theo loại, theo Lead / Liên hệ, tìm theo tên không dấu, và tải tiếp từng trang 50 người không trùng không sót."},
+    {"id":"AC-3","p":"Sẽ tìm theo số: ra đúng người mình đọc được; người khác giữ thì chỉ báo «Đã có trong sàn — [Tên] đang giữ»; số không nằm trên địa chỉ trang."},
+    {"id":"AC-4","p":"Sẽ mở hồ sơ một người với tên, loại, người giữ và các số đã che (ba số cuối)."},
+    {"id":"AC-5","p":"Sẽ cho người đọc được bấm «Hiện số» rồi «Gọi»; mỗi lần hiện số ghi một sự kiện; người không được đọc nhận cùng một câu từ chối, không lộ gì."},
+    {"id":"AC-6","p":"Sẽ liệt mọi cơ hội phía chủ kèm pha và mọi căn của người ấy; chủ nhiều căn hiện đúng một hồ sơ."},
+    {"id":"AC-7","p":"Sẽ cho trưởng nhóm thấy thêm cơ hội phía khách (nhu cầu khách, số lần gửi); đầu chủ không thấy phần này."},
+    {"id":"AC-8","p":"Sẽ có dòng thời gian 50 việc gần nhất của người ấy, không mang số hay giá đáy."}
+  ],
+  "wont_do": [
+    {"id":"AC-9","p":"Chặn mọi đường dò hay mở số của sàn khác; có bài kiểm cách ly hai chiều cho phần cơ sở dữ liệu mới."},
+    {"id":"AC-10","p":"Sẽ KHÔNG sửa bố cục chung; màn theo khuôn hồ sơ mới, đủ trạng thái tải, trống, lỗi, điện thoại không cuộn ngang."},
+    {"id":"OOS-1","p":"KHÔNG sửa tên, thêm số, gộp hai người — đường ghi liên hệ đang do hàng 89 sửa."},
+    {"id":"OOS-2","p":"KHÔNG thêm liên hệ tay, nhập danh bạ, xuất danh sách; số chủ không bao giờ xuất ra."},
+    {"id":"OOS-3","p":"KHÔNG có danh sách lưu, nhãn, việc kế, quan hệ giữa người — hàng sau."},
+    {"id":"OOS-4","p":"KHÔNG nối từ hồ sơ căn, Lead đã nhập, Đã gửi sang hồ sơ người — đề xuất hàng sau."},
+    {"id":"OOS-5","p":"KHÔNG đổi chữ «lead» trên các màn khác — việc của hàng 106."},
+    {"id":"OOS-6","p":"KHÔNG có màn Liên hệ cho telesales, đầu khách, quản trị sàn."},
+    {"id":"OOS-7","p":"KHÔNG ghi căn cứ giữ số, yêu cầu xoá theo luật dữ liệu cá nhân — hàng «Quyền chủ thể dữ liệu»."}
+  ],
+  "coverage_plain": [
+    {"i":0,"p":"Đã quét trọn vòng đời, năm vai, các chỗ nối (căn, lead, nhu cầu khách, lần gửi, mở số) và dòng thời gian, đối chiếu chuẩn RESO và bốn sản phẩm cùng ngành; phần làm ngay là AC-1…AC-10, phần còn lại nằm ở danh sách không làm."}
+  ]
+}
