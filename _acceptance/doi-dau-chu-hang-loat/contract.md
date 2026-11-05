@@ -5,7 +5,7 @@ slug: doi-dau-chu-hang-loat
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: _acceptance/doi-dau-chu-hang-loat/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -90,3 +90,8 @@ Hàng 89 của lộ trình (dãy H, đợt `dau-khach-nhap`), T3 vì migration 0
 ## Notes
 
 - Lựa chọn máy đã quyết: `design.md` §5; sổ quyết định dòng S1.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: Trưởng nhóm khác cùng sàn, nếu biết sẵn mã lần đổi, hoàn tác được lần đổi ấy kể cả trên căn «Chỉ tôi» của người khác.
+  - Ngoài-2: Đầu chủ cũ mất vai trước khi hoàn tác thì liên hệ chủ nhà quay về người đó còn căn ở lại người nhận; thông báo nêu sai lý do bỏ qua.
+  - Ngoài-3: Danh sách đầu chủ tải lỗi thì hộp hỏi để ô chọn trống mà không báo vì sao.
+  - Ngoài-4: Một phần bài kiểm «không chạm hàng Chỉ tôi» (đếm dòng gán) không thể báo lỗi.
