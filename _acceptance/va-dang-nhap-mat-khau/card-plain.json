@@ -1,0 +1,17 @@
+{
+ "feature_plain": "Vá hai kẽ an toàn của đăng nhập bằng mật khẩu: người vào sàn khác thì mọi phiên cũ bị đăng xuất cùng lúc mật khẩu do sàn cấp bị khoá; đổi mật khẩu ở Cá nhân chỉ được đoán sai như khi đăng nhập.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ đăng xuất người ở mọi máy ngay khi họ được thêm vào sàn khác mà mật khẩu đang dùng do sàn cũ cấp — qua màn mời người hay chèn thẳng."},
+  {"id":"AC-2","p":"Sẽ giữ nguyên mật khẩu và phiên của người tự đổi mật khẩu, người chưa có mật khẩu, và người được mời lại vào đúng sàn cũ."},
+  {"id":"AC-3","p":"Sẽ đếm mỗi lần gõ sai mật khẩu hiện tại khi đổi ở Cá nhân, chung một bộ đếm với đăng nhập: sai 5 lần trong 15 phút thì phải chờ."},
+  {"id":"AC-4","p":"Sẽ khoá mật khẩu và đăng xuất mọi máy, kể cả máy đang dùng, khi sai tới lần thứ 20 — dù lần ấy ở đăng nhập hay ở đổi mật khẩu."},
+  {"id":"AC-5","p":"Sẽ đưa bộ đếm về 0 khi gõ đúng, và không ghi mật khẩu nào vào nhật ký ở các nhánh mới."},
+  {"id":"AC-6","p":"Sẽ hiện «Thử lại sau ít phút» dưới ô mật khẩu hiện tại khi phải chờ."},
+  {"id":"AC-7","p":"Sẽ qua mọi kiểm máy, thêm migration 035 mới, ghi vào ADR-0005 và Tham chiếu."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"KHÔNG phân biệt phiên tạo bằng mật khẩu với phiên tạo bằng mã 6 số — thu tất cả."},
+  {"id":"OOS-2","p":"KHÔNG đổi con số giới hạn thử (5 lần / 15 phút, 20 lần liên tiếp)."},
+  {"id":"OOS-3","p":"KHÔNG chụp ảnh màn hộp đổi mật khẩu — giới hạn đã biết của hàng 104 vẫn áp."}
+ ]
+}
