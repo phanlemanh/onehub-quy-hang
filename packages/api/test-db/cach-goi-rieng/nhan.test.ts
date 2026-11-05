@@ -86,6 +86,14 @@ test("cách gọi: trả về mặc định", async () => {
   const t0 = await tong();
   await ghi(s, { fields: [{ field: "legalStatus", label: "Sổ" }], values: [] });
   assert.equal(await tong(), t0);
+  // Map hai giá trị riêng: jsonb trả khoá theo thứ tự của nó («excluded» trước «included»), thân gửi theo tập đóng —
+  // lưu lại y hệt vẫn 0 sự kiện (S4-r1 t3).
+  const haiGiaTri = { fields: [{ field: "legalStatus", label: "Sổ" }], values: [{ field: "feeInclusion", value: "included", label: "BP" }, { field: "feeInclusion", value: "excluded", label: "KBP" }] };
+  assert.equal((await ghi(s, haiGiaTri)).status, 200);
+  const t1 = await tong();
+  assert.equal(t1, t0 + 1, "map hai giá trị lần đầu: đúng một sự kiện");
+  assert.equal((await ghi(s, haiGiaTri)).status, 200);
+  assert.equal(await tong(), t1, "lưu lại map hai giá trị y hệt mà vẫn sinh sự kiện");
 });
 
 test("cách gọi: gỡ tên riêng đang được căn dùng", async () => {

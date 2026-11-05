@@ -164,6 +164,12 @@ test("từ vựng: trùng mặc định, null, khoá đổi, đọc ngược b�
     { key: "labels.field.legalStatus", value: "Sổ hồng" },
     { key: "labels.field.floor", value: null },
   ]);
+  // Map giá trị riêng: thứ tự khoá jsonb trả về khác thân gửi — không phải thay đổi (S4-r1 t3); đổi chữ thì vẫn là thay đổi.
+  const luuMap = [{ key: "labels.value.feeInclusion", value: { excluded: "KBP", included: "BP" } }];
+  assert.deepEqual(doiNhan(luuMap, [{ key: "labels.value.feeInclusion", value: { included: "BP", excluded: "KBP" } }]), []);
+  assert.deepEqual(doiNhan(luuMap, [{ key: "labels.value.feeInclusion", value: { included: "BP", excluded: "KP" } }]), [
+    { key: "labels.value.feeInclusion", value: { included: "BP", excluded: "KP" } },
+  ]);
   // Đọc ngược thân GET (dựng bằng đúng hàm bên ghi): ra lại từ vựng.
   const tv: TuVung = { truong: { feeInclusion: "Phí CN" }, giaTri: { feeInclusion: { included: "BP" } } };
   assert.deepEqual(tuVungTuBang(JSON.parse(JSON.stringify(bangNhan(tv)))), tv);

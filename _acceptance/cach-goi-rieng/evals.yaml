@@ -227,6 +227,15 @@ evals:
     criterion: AC-1
     executor: script
     cmd: config:executors.design.khuon
+    expected_exit: 1
     paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
-    expected: "exit 0 (đạt có giới hạn đã biết, luật 33 của đợt, như E10d hồ sơ man-lien-he): với nhóm cai-dat-san, dòng «lệch:» duy nhất được nhận là dòng báo oan «lệch: apps/web/src/app/(app)/settings/labels/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» — design/patterns/trang-tam.md đã khai ngoại lệ cho tệp ấy (có ly_do), bộ chấm khuôn của kit 2.37.0 bỏ qua ngoại lệ không mang khoá khoi (kit#485), còn bộ đọc bản đồ của kho từ chối khoá khoi. Mọi dòng «lệch:» khác của nhóm cai-dat-san là đỏ. Kit vá thì bỏ câu giới hạn này."
+    expected: "exit 1 (đạt có giới hạn, luật 33 của đợt, giám sát nhận B-0511-7, như E10d hồ sơ man-lien-he): bộ chấm khuôn của kit 2.37.0 bỏ qua ngoại lệ không mang khoá khoi (kit#485) nên báo oan «lệch: apps/web/src/app/(app)/settings/labels/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» dù design/patterns/trang-tam.md đã khai ngoại lệ cho tệp ấy (có ly_do), còn bộ đọc bản đồ của kho từ chối khoá khoi. Mã 1 chỉ được chấp nhận cùng E15b xanh: E15b bảo đảm mọi dòng lệch là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E15b."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E15b
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/cach-goi-rieng/kiem-khuon-e15.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**/page.tsx", "_acceptance/cach-goi-rieng/kiem-khuon-e15.mjs"]
+    expected: "exit 0; tám đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; báo oan của tệp khác đã khai ngoại lệ → qua; thêm một lệch, tệp chưa khai ngoại lệ, lỗi bản đồ, thoát 1 không có dòng của trang Cách gọi, không chấm được → đỏ; đọc ngoai_le đúng); trên cây thật, mọi dòng «lệch:» và «sai:» của bước chấm khuôn là dòng báo oan của tệp đã khai ngoại lệ ở trang-tam.md, có dòng «lệch: apps/web/src/app/(app)/settings/labels/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam», và bài in «E15b: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E15 và bài E15b, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -1,12 +1,11 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { tuVungTuBang, TU_VUNG_RONG } from "@quy-hang/core/labels";
-
-import { getApi, readMe } from "@/lib/api";
+import { readMe } from "@/lib/api";
 import { KhungBangHang } from "./khung";
 import { BangCoHoSo } from "../units/ho-so/bang-co-ho-so";
 import { BangTheDienThoai } from "./cards/bang-the";
+import { docTuVung } from "./doc-tu-vung";
 import { TuVungProvider } from "./tu-vung";
 
 export default async function Page() {
@@ -14,11 +13,7 @@ export default async function Page() {
   const me = await readMe(cookie);
   if (!me?.activeCompany) redirect("/login");
   // Cách gọi riêng của sàn (hàng 45): đọc ở máy chủ mỗi lần mở trang; đọc hỏng thì chữ dựng sẵn, bảng vẫn mở.
-  const res = await getApi().request(
-    "http://quy-hang.local/api/v1/company/labels",
-    { headers: { cookie } },
-  );
-  const tuVung = res.ok ? tuVungTuBang(await res.json()) : TU_VUNG_RONG;
+  const tuVung = await docTuVung(cookie);
   return (
     <KhungBangHang
       title="Bảng hàng"

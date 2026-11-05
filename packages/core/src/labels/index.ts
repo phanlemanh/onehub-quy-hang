@@ -187,13 +187,26 @@ export function boTuVung(dong: readonly DongNhan[]): { tuVung: TuVung; loi: stri
  * khoá đang có giá trị (khác `null`) mà vắng trong bộ mới → `null` (trả về mặc định, nhật ký vẫn có vết); khoá giữ
  * nguyên → không ghi (không thổi phồng nhật ký).
  */
+/** Chuỗi hoá bền với thứ tự khoá: jsonb trả khoá theo thứ tự của nó (độ dài trước), thân gửi theo thứ tự tập đóng. */
+function chuoiBen(v: unknown): string {
+  if (Array.isArray(v)) return `[${v.map(chuoiBen).join(",")}]`;
+  if (v !== null && typeof v === "object") {
+    const o = v as Record<string, unknown>;
+    return `{${Object.keys(o)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${chuoiBen(o[k])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(v) ?? "null";
+}
+
 export function doiNhan(daLuu: readonly DongNhan[], moi: readonly DongNhan[]): DongNhan[] {
-  const cu = new Map(daLuu.filter((r) => laKhoaNhan(r.key)).map((r) => [r.key, JSON.stringify(r.value)]));
+  const cu = new Map(daLuu.filter((r) => laKhoaNhan(r.key)).map((r) => [r.key, chuoiBen(r.value)]));
   const ra: DongNhan[] = [];
   const coMoi = new Set<string>();
   for (const r of moi) {
     coMoi.add(r.key);
-    if (cu.get(r.key) !== JSON.stringify(r.value)) ra.push(r);
+    if (cu.get(r.key) !== chuoiBen(r.value)) ra.push(r);
   }
   for (const [key, v] of cu) if (!coMoi.has(key) && v !== "null") ra.push({ key, value: null });
   return ra;

@@ -1,7 +1,10 @@
 // Bảng hàng theo cách gọi riêng của sàn (hàng 45: E4, E5, E10). Năm dòng viết tay; đáp án viết trước, không dựng từ hàm
 // đang đo.
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { TU_VUNG_RONG, type TuVung } from "@quy-hang/core/labels";
 import { moTaThayDoi } from "./cell-edit/lenh";
 import { COT, chuCuaO, nhanCot, type DongBang } from "./cot";
@@ -80,4 +83,20 @@ test("bảng hàng: từ vựng rỗng là mặc định", () => {
     (["feeInclusion", "withdrawnReason", "listPrice", "livingArea", "directionFaces"] as const).map((id) => chuCuaO(d, id, TU_VUNG_RONG)),
     ["Bao phí", "Không liên lạc được", "3,2 tỷ", "68,5 m²", "Đông Nam"],
   );
+});
+
+// Mọi trang của nhà Bảng hàng dựng bảng hay thẻ phải đọc cách gọi ở máy chủ và bọc provider (S4-r1 t1/t4: cách xem đã
+// lưu `/inventory/views/<id>` từng mở bảng bằng chữ dựng sẵn).
+test("bảng hàng: mọi trang đọc cách gọi của sàn", () => {
+  const day = dirname(fileURLToPath(import.meta.url));
+  const trang = ["page.tsx", join("views", "[id]", "page.tsx")];
+  const coTuVung = (nguon: string) => {
+    const bang = (nguon.match(/<(BangHang|BangCoHoSo|BangTheDienThoai)\b/g) ?? []).length;
+    const boc = (nguon.match(/<TuVungProvider\b/g) ?? []).length;
+    return bang > 0 && nguon.includes("docTuVung(") && boc >= 2;
+  };
+  for (const t of trang) assert.equal(coTuVung(readFileSync(join(day, t), "utf8")), true, `${t} thiếu docTuVung/TuVungProvider`);
+  // Chiều đỏ: trang trước bản sửa (không provider) thì phép đo đỏ.
+  const cu = readFileSync(join(day, trang[1]!), "utf8").replace(/<\/?TuVungProvider[^>]*>/g, "").replace(/docTuVung\(/g, "x(");
+  assert.equal(coTuVung(cu), false);
 });
