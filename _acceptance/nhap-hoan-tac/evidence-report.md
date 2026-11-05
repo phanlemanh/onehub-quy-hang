@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 442e728a6fde78084445c7e2fc2db90329b05e10
-human_signoff:
+human_signoff: Manh Phan 2026-11-05
 ---
 
 # Evidence Report: nhap-hoan-tac

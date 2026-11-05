@@ -5,7 +5,7 @@ slug: nhap-hoan-tac
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-05-nhap-hoan-tac-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05
@@ -111,3 +111,12 @@ Bỏ ở vòng này theo Hỏi-5 (ô cơ hội hàng 66 chưa khai ngưỡng). L
   `packages/core/src/import/memory/**`.
 - Migration 025: số giám sát giữ cho hàng 66 (luật 25 của đợt).
 - Nguồn AC-9..11: Ngoài-3/4/5 hàng 67 (`_acceptance/nhap-nho-mau/review-findings.md`), luật 54.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: Nếu sau này có người sửa màn hoàn tác sai, nút «xem trước» lỗi có thể vẫn ghi hoàn tác mà bộ kiểm không báo đỏ. Hiện chưa thấy người dùng bị ghi nhầm.
+  - Ngoài-3: Hiện trang khách vẫn báo căn đã gỡ là không còn; rủi ro là một cửa ra khác trong tương lai có thể quên luật này và để lộ giá của căn đã gỡ.
+  - Ngoài-4: Nếu hoàn tác gặp lỗi thật chứ không phải đứt mạng, người dùng vẫn chỉ thấy «bấm lại để làm tiếp» và bấm mãi không xong, đội kỹ thuật không có dấu vết để tìm nguyên nhân.
+  - Ngoài-6: Khi một dòng luôn hỏng, người dùng thấy «Hoàn tác chưa xong» mãi và bấm lại không giúp được, còn đội kỹ thuật không biết vì sao.
+  - Ngoài-7: Một số căn không hoàn tác được vì lý do khác sẽ bị báo nhầm là «Đã có người sửa sau lần nhập» và không được thử lại.
+  - Ngoài-8: Bài kiểm có thể vẫn xanh dù căn đã gỡ lại hiện giá trên trang khách; sản phẩm hiện chưa thấy sai.
+  - Ngoài-9: Bài kiểm «huỷ thì không ghi gì» chưa thực sự thử đường huỷ nên nếu có lỗi ghi khi huỷ thì không bị bắt.
+- Ngoài-2 (căn đã gỡ vẫn vào được link mới và nhận «Quan tâm» ở tầng cơ sở dữ liệu): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 2026-11-05 — chờ giám sát xếp hàng.
