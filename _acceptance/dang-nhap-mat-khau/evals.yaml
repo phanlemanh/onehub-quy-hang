@@ -204,3 +204,11 @@ evals:
     expected: "Số ảnh = (1 + 1 + 1 + 3 + 2) × 2 khổ = 16. (1) hộp hỏi nói mật khẩu cũ thôi dùng và người bị đăng xuất ở mọi máy; (2) mật khẩu tạm 16 ký tự chia bốn nhóm, nút «Chép», câu trao tay và hạn 72 giờ; mở lại không thấy mật khẩu cũ; (3) «… còn ở sàn khác nên tự đặt mật khẩu trong Cá nhân», không tên sàn khác; (4) sáu nhóm (Hồ sơ, Sàn, Cài lên màn hình chính, Thông báo lead, Máy đang đăng nhập, Đăng xuất), dòng «Mật khẩu» trong nhóm theo Hỏi-6 (dòng sổ gate1 hay seal; khuyến nghị Hồ sơ) với chữ «Chưa đặt» / «Đã đặt» / «Đã khoá — đặt mật khẩu mới»; (5) hộp doi có ô mật khẩu hiện tại và ô mật khẩu mới, hộp dat chỉ có ô mật khẩu mới. Không hộp nào tràn ngang ở 375. Thiếu ảnh của một ô là FAIL."
     paths: ["apps/web/src/app/(app)/settings/users/**", "apps/web/src/app/(app)/me/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+
+  - id: E23
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/xac-thuc.md", "design/patterns/toi.md", "design/patterns/cai-dat-san.md", "design/patterns/trang-thai.md", "apps/web/src/app/(auth)/**", "apps/web/src/app/(app)/me/**", "apps/web/src/app/(app)/settings/**", "apps/web/src/components/shell/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc các nhóm xac-thuc, toi, cai-dat-san, trang-thai — gồm màn mới Đặt mật khẩu mới (xac-thuc) và hai hộp mật khẩu (trang-thai)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
