@@ -9,6 +9,7 @@ import { SAMPLE_CATALOG } from "../catalog/sample";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
+import { registerUndoRoutes } from "./undo/routes";
 import { dauChuCuaSan, isRefusal, mauCuaSan, openImport, readImport, writeBatch, type BatchResult, type OpenImportInput, type Refusal } from "./store";
 
 /**
@@ -67,6 +68,7 @@ export function registerImportRoutes(api: OpenAPIHono, { appPool, auth, identity
     return { userId: user.id, companyId: r.active.id };
   }
   const tra = (c: Context, r: Refusal) => c.json({ error: r.error.code, ...(r.details && { details: r.details }) }, r.error.status as 400);
+  registerUndoRoutes(api, appPool, vao);
 
   api.openapi(
     createRoute({ method: "post", path: BASE, summary: "Mở một lần nhập: kế hoạch, tiêu đề, toà và mã căn của mọi dòng", request: json(OpenBody), responses: { 201: ok("Lần nhập", z.object({ id: z.string(), status: z.string() })), ...loi } }),
