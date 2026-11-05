@@ -44,3 +44,49 @@ export function dungNhomThe<V, T, B>(
 ): { ma: string; nhan: string; badge: B; the: T[] }[] {
   return nhom.map((g) => ({ ma: g.nhom.code, nhan: g.nhom.label, badge: badgeCua(g.nhom), the: g.viec.map(theCua) }));
 }
+
+/**
+ * Đường nối việc → hành động của Hôm nay đầu chủ, MỘT chỗ cho cả lưới máy tính và thẻ điện thoại (S4-r3): mã việc nối sang
+ * đúng hàm của màn — «Còn · giữ giá» ghi xác nhận trên máy, «Đổi giá/trạng thái» mở hồ sơ (căn chưa có mã → hàng chưa mã),
+ * «Nhận»/«Đã gọi»/«Trả lại» ghi lead, việc khác đi tới màn ghi cuộc gọi. Bài kiểm gọi đúng các hàm này với hàm ghi theo dõi.
+ */
+export type HanhDongNoi<C, L> = {
+  conGiuGia: (c: C) => void;
+  moHoSo: (c: C) => void;
+  lead: (l: L, viec: "accept" | "first_call" | "return") => void;
+};
+
+export function noiViecCan<C extends { id: string; unitNumber?: string | null }>(
+  c: C,
+  m: string,
+  hd: Pick<HanhDongNoi<C, unknown>, "conGiuGia" | "moHoSo">,
+  duongChuaMa: (id: string) => string,
+): Bam {
+  if (m === "con-giu-gia") return { onClick: () => hd.conGiuGia(c) };
+  if (m === "doi-gia-trang-thai") return c.unitNumber ? { onClick: () => hd.moHoSo(c) } : { href: duongChuaMa(c.id) };
+  return { href: `/units/call?hang=${encodeURIComponent(c.id)}` };
+}
+
+export function noiViecLead<L extends { id: string }>(l: L, m: string, hd: Pick<HanhDongNoi<unknown, L>, "lead">): Bam {
+  if (m === "nhan") return { onClick: () => hd.lead(l, "accept") };
+  if (m === "da-goi") return { onClick: () => hd.lead(l, "first_call") };
+  if (m === "tra-lai") return { onClick: () => hd.lead(l, "return") };
+  return { href: `/units/call?lead=${encodeURIComponent(l.id)}` };
+}
+
+/** Hai lối chạm của một thẻ điện thoại (`lam` cho nút và ⋯, `ghiKetQua` cho ngăn kết quả) dựng từ đường nối chung. */
+export function noiThe<C extends { id: string; unitNumber?: string | null }, L extends { id: string }>(
+  v: { kind: "can"; can: C } | { kind: "lead"; lead: L },
+  hd: HanhDongNoi<C, L>,
+  d: { duongChuaMa: (id: string) => string; diToi: (href: string) => void },
+): { lam: (m: string) => Bam; ghiKetQua: (m: string) => void } {
+  const lam = (m: string) => (v.kind === "can" ? noiViecCan(v.can, m, hd, d.duongChuaMa) : noiViecLead(v.lead, m, hd));
+  return {
+    lam,
+    ghiKetQua: (m) => {
+      const h = lam(m);
+      if (h.onClick) h.onClick();
+      else if (h.href) d.diToi(h.href);
+    },
+  };
+}

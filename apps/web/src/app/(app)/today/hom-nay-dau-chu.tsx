@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useBoDongBo, useDanhSachHang, useSuaHang } from "@/lib/sync/react";
 import { useDanhMuc } from "../inventory/danh-muc";
 import { chiMuc } from "../inventory/ghep-danh-muc";
@@ -43,8 +42,9 @@ import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { docNhomThamSo, timNhom } from "./mo-nhom";
 import { chuSo, moSo, telHref } from "./mo-so";
 import { DanhSachDienThoai, type NhomThe, type TheDong } from "./mobile/danh-sach";
-import { dungNhomThe } from "./mobile/hanh-dong";
+import { dungNhomThe, noiThe, noiViecCan, noiViecLead } from "./mobile/hanh-dong";
 import { HetViec } from "./mobile/het-viec";
+import { useDienThoai } from "./mobile/kho";
 import { moSoChu } from "./mobile/mo-so-chu";
 import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
 import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
@@ -168,16 +168,11 @@ function NutViec({ v, hd }: { v: Viec; hd: HanhDong }) {
   const nhan = (m: MaViec) =>
     m === "tra-lai" ? `Trả lại · ${RETURN_REASON_LABEL}` : m === "mo-so" && soMo ? `Gọi ${chuSo(soMo)}` : NHAN_VIEC[m];
   const lam = (m: MaViec): { onClick?: () => void; href?: string } => {
-    if (v.kind === "can") {
-      if (m === "con-giu-gia") return { onClick: () => hd.conGiuGia(v.can) };
-      if (m === "doi-gia-trang-thai") return v.can.unitNumber ? { onClick: () => hd.moHoSo(v.can) } : { href: duongHangChuaMa(v.can.id) };
-      return { href: `/units/call?hang=${encodeURIComponent(v.can.id)}` };
-    }
-    if (m === "nhan") return { onClick: () => hd.lead(v.lead, "accept") };
-    if (m === "da-goi") return { onClick: () => hd.lead(v.lead, "first_call") };
+    // Đường nối chung với thẻ điện thoại (hanh-dong.ts); «Trả lại» hỏi lại trước, «Mở số» chỉ có ở máy tính.
+    if (v.kind === "can") return noiViecCan(v.can, m, hd, duongHangChuaMa);
     if (m === "tra-lai") return { onClick: () => setHoiTraLai(true) };
     if (m === "mo-so") return soMo ? { href: telHref(soMo) } : { onClick: () => hd.moSo(v.lead) };
-    return { href: `/units/call?lead=${encodeURIComponent(v.lead.id)}` };
+    return noiViecLead(v.lead, m, hd);
   };
   const nutChinh = chinh ? (
     (() => {
@@ -509,13 +504,10 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
   const dangTai = ngan.listings === null || taiBo.kind === "dang" || taiLead.kind === "dang";
 
   // ——— Điện thoại (hàng 39): thẻ hai tầng thay lưới, cùng nhóm và cùng bộ việc ———
-  const dienThoai = useIsMobile();
+  const dienThoai = useDienThoai();
   const theCua = (v: Viec): TheDong => {
     const h = hanCua(v, bayGio);
-    const lamCan = (c: CanHomNay, m: string) =>
-      m === "con-giu-gia" ? { onClick: () => hd.conGiuGia(c) } : m === "doi-gia-trang-thai" ? (c.unitNumber ? { onClick: () => hd.moHoSo(c) } : { href: duongHangChuaMa(c.id) }) : { href: `/units/call?hang=${encodeURIComponent(c.id)}` };
-    const lamLead = (l: LeadGiao, m: string) =>
-      m === "nhan" ? { onClick: () => hd.lead(l, "accept") } : m === "da-goi" ? { onClick: () => hd.lead(l, "first_call") } : m === "tra-lai" ? { onClick: () => hd.lead(l, "return") } : { href: `/units/call?lead=${encodeURIComponent(l.id)}` };
+    const noi = noiThe(v, hd, { duongChuaMa: duongHangChuaMa, diToi: (href) => window.location.assign(href) });
     return {
       id: v.id,
       tren: tieuDe(v),
@@ -525,13 +517,8 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
       coSo: v.kind === "lead" || v.can.listAgentKey === nguoi,
       ban: dangGhi.has(v.id),
       loi: loi[v.id],
-      lam: (m) => (v.kind === "can" ? lamCan(v.can, m) : lamLead(v.lead, m)),
-      ghiKetQua: (m) => {
-        const viec = m === "da-goi" ? "da-goi" : m === "tra-lai" ? "tra-lai" : m;
-        const h2 = v.kind === "can" ? lamCan(v.can, viec) : lamLead(v.lead, viec);
-        if (h2.onClick) h2.onClick();
-        else if (h2.href) window.location.assign(h2.href);
-      },
+      lam: noi.lam,
+      ghiKetQua: noi.ghiKetQua,
       soCu: soDaMo[v.id] ?? null,
       moSo: () => (v.kind === "lead" ? moSo(v.lead.id) : moSoChu(v.can.id)),
       daMo: (so) => setSoDaMo((m) => ({ ...m, [v.id]: so })),

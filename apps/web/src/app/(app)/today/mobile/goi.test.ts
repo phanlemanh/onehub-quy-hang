@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import type { KetQuaMoSo } from "../mo-so";
 import { viecCuaDong, type ViecDong } from "../viec-dong";
-import { chayGoi, docNganMo, ghiNganMo, goiCoKhoa, ketQuaCua, laDienThoai, nutDienThoai, taoKhoaGoi, xoaNganMo, type MaViecDT } from "./goi";
+import { chayGoi, docNganMo, ghiNganMo, goiCoKhoa, ketQuaCua, nutDienThoai, taoKhoaGoi, xoaNganMo, type MaViecDT } from "./goi";
 import { moSoChu } from "./mo-so-chu";
 
 const nhom = (code: string) => {
@@ -14,21 +14,7 @@ const nhom = (code: string) => {
   return n;
 };
 
-// E1 — rẽ khổ: ma trận viết trước 5 khổ.
-test("E1 rẽ khổ: dưới 768 là điện thoại, từ 768 là lưới (5 khổ)", () => {
-  const ma: [number, boolean][] = [
-    [375, true],
-    [390, true],
-    [767, true],
-    [768, false],
-    [1440, false],
-  ];
-  assert.deepEqual(
-    ma.filter(([r, mong]) => laDienThoai(r) !== mong).map(([r]) => r),
-    [],
-  );
-  assert.equal(ma.length, 5);
-});
+// E1 — rẽ khổ: ở kho.test.ts (đi qua hàm màn đang dùng).
 
 // E3 — bảng nút: 6 loại dòng × có số / không số = 12 ô viết trước.
 const LOAI: [string, ViecDong][] = [

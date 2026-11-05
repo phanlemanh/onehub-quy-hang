@@ -8,7 +8,7 @@ import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import type { MucHan, ViecDong } from "../viec-dong";
 import type { MaViecDT, MucKetQua } from "./goi";
 import { DanhSachDienThoai, KetQuaCuocGoi, LOI_CAN_MANG, NHAN_TRA_LAI, TheViec, ViecKhac, type NhomThe, type TheDong } from "./danh-sach";
-import { bamViec, chonKetQua, dungNhomThe } from "./hanh-dong";
+import { bamViec, chonKetQua, dungNhomThe, noiThe, type HanhDongNoi } from "./hanh-dong";
 import { HetViec } from "./het-viec";
 
 const nhom = (code: string) => {
@@ -83,31 +83,59 @@ function lechMatMang(dung: (t: TheDong, coMang: boolean) => string): string[] {
 test("E6 mất mạng: «Gọi» tắt kèm «Cần mạng để mở số»; đối chứng dương có mạng: bật, không lời", () => {
   assert.deepEqual(lechMatMang(dungThe), []);
 });
-/** Bộ so chạm việc: mỗi việc chạm đi đúng đường của máy tính — «Còn · giữ giá» gọi hàm ghi của dòng (ghi trên máy, không chờ mạng). */
+/**
+ * Đường nối thật của màn (noiThe — cũng là đường của lưới máy tính qua noiViecCan/noiViecLead) với hàm ghi THEO DÕI có đúng mặt
+ * hàm của màn: mỗi lời gọi ghi «hàm:dòng[:việc]». Bài kiểm không tự viết đường nối nào.
+ */
+type Can = { id: string; unitNumber: string | null };
+type Lead = { id: string };
+type DongNoi = { kind: "can"; can: Can } | { kind: "lead"; lead: Lead };
+type HamNoi = typeof noiThe<Can, Lead>;
+const CAN_C1: DongNoi = { kind: "can", can: { id: "c1", unitNumber: "A-01" } };
+const CAN_CHUA_MA: DongNoi = { kind: "can", can: { id: "c2", unitNumber: null } };
+const LEAD_L1: DongNoi = { kind: "lead", lead: { id: "l1" } };
+const tenDong = (v: DongNoi) => (v.kind === "can" ? `căn ${v.can.id}` : `lead ${v.lead.id}`);
+function noiTheoDoi(v: DongNoi, g: string[], noi: HamNoi = noiThe) {
+  const hd: HanhDongNoi<Can, Lead> = {
+    conGiuGia: (c) => void g.push(`conGiuGia:${c.id}`),
+    moHoSo: (c) => void g.push(`moHoSo:${c.id}`),
+    lead: (l, viec) => void g.push(`lead:${l.id}:${viec}`),
+  };
+  return noi(v, hd, { duongChuaMa: (id) => `/chua-ma/${id}`, diToi: (h) => void g.push(`di:${h}`) });
+}
+
+/** Bộ so chạm việc (9 ô viết trước): mỗi việc chạm đi đúng hàm của màn — «Còn · giữ giá» ghi xác nhận, «Gọi» gọi một chạm, «Trả lại» hỏi lại. */
 type HamBam = typeof bamViec;
-function lechBam(ham: HamBam): string[] {
-  const out: string[] = [];
-  const MONG: [MaViecDT, string][] = [
-    ["con-giu-gia", "lam:con-giu-gia"],
-    ["da-goi", "lam:da-goi"],
-    ["goi", "goi"],
-    ["tra-lai", "hoi"],
-    ["ghi-cuoc-goi", "di:/units/call?lead=l1"],
+function lechBam(ham: HamBam, noi: HamNoi = noiThe): string[] {
+  const MONG: [DongNoi, MaViecDT, string][] = [
+    [CAN_C1, "con-giu-gia", "conGiuGia:c1"],
+    [CAN_C1, "doi-gia-trang-thai", "moHoSo:c1"],
+    [CAN_CHUA_MA, "doi-gia-trang-thai", "di:/chua-ma/c2"],
+    [CAN_C1, "ghi-cuoc-goi", "di:/units/call?hang=c1"],
+    [LEAD_L1, "nhan", "lead:l1:accept"],
+    [LEAD_L1, "da-goi", "lead:l1:first_call"],
+    [LEAD_L1, "goi", "goi"],
+    [LEAD_L1, "tra-lai", "hoi"],
+    [LEAD_L1, "ghi-cuoc-goi", "di:/units/call?lead=l1"],
   ];
-  for (const [m, mong] of MONG) {
+  const out: string[] = [];
+  for (const [v, m, mong] of MONG) {
     const g: string[] = [];
-    ham(m, {
-      lam: (x) => (x === "ghi-cuoc-goi" ? { href: "/units/call?lead=l1" } : { onClick: () => void g.push(`lam:${x}`) }),
-      goi: () => void g.push("goi"),
-      hoiTraLai: () => void g.push("hoi"),
-      diToi: (h) => void g.push(`di:${h}`),
-    });
-    if (g.join() !== mong) out.push(`${m}: ${g.join() || "không gọi gì"}`);
+    const n = noiTheoDoi(v, g, noi);
+    ham(m, { lam: n.lam, goi: () => void g.push("goi"), hoiTraLai: () => void g.push("hoi"), diToi: (h) => void g.push(`di:${h}`) });
+    if (g.join() !== mong) out.push(`${tenDong(v)} · ${m}: ${g.join() || "không gọi gì"}`);
   }
   return out;
 }
-test("E6 chạm việc (5 việc viết trước): «Còn · giữ giá» gọi hàm ghi của dòng, «Gọi» gọi một chạm, «Trả lại» hỏi lại", () => {
+test("E6 chạm việc (9 ô viết trước) qua đường nối thật: «Còn · giữ giá» ghi xác nhận của căn, «Gọi» gọi một chạm, «Trả lại» hỏi lại", () => {
   assert.deepEqual(lechBam(bamViec), []);
+});
+test("E6 đối chứng đỏ: đường nối nhầm «Còn · giữ giá» sang mở hồ sơ → bộ so nêu ô", () => {
+  const gia: HamNoi = (v, hd, d) => {
+    const n = noiThe(v, hd, d);
+    return { ...n, lam: (m) => n.lam(m === "con-giu-gia" ? "doi-gia-trang-thai" : m) };
+  };
+  assert.deepEqual(lechBam(bamViec, gia), ["căn c1 · con-giu-gia: moHoSo:c1"]);
 });
 test("E6 «Còn · giữ giá» không tắt khi mất mạng (ghi trên máy rồi gửi sau)", () => {
   const html = dungThe(the({ dong: { kind: "can", nhom: nhom("recent_change") } }), false);
@@ -117,7 +145,7 @@ test("E6 «Còn · giữ giá» không tắt khi mất mạng (ghi trên máy r�
 });
 test("E6 đối chứng đỏ: bản sao «Trả lại» ghi luôn không hỏi → bộ so nêu việc", () => {
   const gia: HamBam = (m, d) => (m === "tra-lai" ? void d.lam("tra-lai").onClick?.() : bamViec(m, d));
-  assert.deepEqual(lechBam(gia), ["tra-lai: lam:tra-lai"]);
+  assert.deepEqual(lechBam(gia), ["lead l1 · tra-lai: lead:l1:return"]);
 });
 
 test("E6 đối chứng đỏ: bản sao bỏ cờ mất mạng → bộ so nêu «Gọi» còn bật", () => {
@@ -141,30 +169,43 @@ test("E5 ngăn kết quả: lead · lead không trả lại · căn — đúng b
   assert.ok(renderToStaticMarkup(createElement(KetQuaCuocGoi, { hoiTraLai: () => {}, t: the({ dong: LEAD_DA_NHAN }), xong })).includes(NHAN_TRA_LAI), "Trả lại kèm lý do như máy tính");
 });
 
-/** Bộ so chọn kết quả: ma trận 5 kết quả viết trước → lời gọi mong (đóng ngăn trước, rồi ghi / hỏi / không gì). */
+/** Bộ so chọn kết quả (5 ô viết trước) qua đường nối thật: đóng ngăn trước, rồi ghi đúng hàm của màn / hỏi / không gì. */
 type HamChon = typeof chonKetQua;
-function lechChon(ham: HamChon): string[] {
-  const MONG: [MucKetQua, string][] = [
-    ["khong-nghe", "xong"],
-    ["da-goi", "xong,ghi:da-goi"],
-    ["con-giu-gia", "xong,ghi:con-giu-gia"],
-    ["doi-gia-trang-thai", "xong,ghi:doi-gia-trang-thai"],
-    ["tra-lai", "xong,hoi"],
+function lechChon(ham: HamChon, noi: HamNoi = noiThe): string[] {
+  const MONG: [DongNoi, MucKetQua, string][] = [
+    [LEAD_L1, "khong-nghe", "xong"],
+    [LEAD_L1, "da-goi", "xong,lead:l1:first_call"],
+    [CAN_C1, "con-giu-gia", "xong,conGiuGia:c1"],
+    [CAN_C1, "doi-gia-trang-thai", "xong,moHoSo:c1"],
+    [LEAD_L1, "tra-lai", "xong,hoi"],
   ];
   const out: string[] = [];
-  for (const [m, mong] of MONG) {
+  for (const [v, m, mong] of MONG) {
     const g: string[] = [];
-    ham(m, { ghiKetQua: (x) => void g.push(`ghi:${x}`), hoiTraLai: () => void g.push("hoi"), xong: () => void g.push("xong") });
-    if (g.join() !== mong) out.push(`${m}: ${g.join()}`);
+    const n = noiTheoDoi(v, g, noi);
+    ham(m, { ghiKetQua: n.ghiKetQua, hoiTraLai: () => void g.push("hoi"), xong: () => void g.push("xong") });
+    if (g.join() !== mong) out.push(`${tenDong(v)} · ${m}: ${g.join()}`);
   }
   return out;
 }
-test("E5 chọn kết quả (5 dòng viết trước): «Không nghe máy» không ghi gì, «Trả lại» hỏi lại, việc khác ghi đúng hàm", () => {
+test("E5 chọn kết quả (5 ô viết trước): «Không nghe máy» không ghi gì, «Trả lại» hỏi lại, việc khác ghi đúng hàm của màn", () => {
   assert.deepEqual(lechChon(chonKetQua), []);
+});
+test("E5 «Trả lại» sau khi xác nhận ghi lead trả về (return) qua đường nối thật", () => {
+  const g: string[] = [];
+  noiTheoDoi(LEAD_L1, g).ghiKetQua("tra-lai");
+  assert.deepEqual(g, ["lead:l1:return"]);
 });
 test("E5 đối chứng đỏ: bản sao «Không nghe máy» ghi «Đã gọi» → bộ so nêu dòng", () => {
   const gia: HamChon = (m, d) => (m === "khong-nghe" ? (d.xong(), d.ghiKetQua("da-goi")) : chonKetQua(m, d));
-  assert.deepEqual(lechChon(gia), ["khong-nghe: xong,ghi:da-goi"]);
+  assert.deepEqual(lechChon(gia), ["lead l1 · khong-nghe: xong,lead:l1:first_call"]);
+});
+test("E5 đối chứng đỏ: đường nối nhầm «Đã gọi» sang «Nhận» → bộ so nêu dòng", () => {
+  const gia: HamNoi = (v, hd, d) => {
+    const n = noiThe(v, hd, d);
+    return { ...n, ghiKetQua: (m) => n.ghiKetQua(m === "da-goi" ? "nhan" : m) };
+  };
+  assert.deepEqual(lechChon(chonKetQua, gia), ["lead l1 · da-goi: xong,lead:l1:accept"]);
 });
 
 // E1 — danh sách thẻ dựng từ đúng mảng nhóm của lưới máy tính (dungNhomThe), thứ tự là thứ tự bộ nhóm của sàn.
