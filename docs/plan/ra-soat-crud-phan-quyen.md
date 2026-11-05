@@ -127,6 +127,32 @@ vòng không.
 | Không đổi tên hay xoá được khu | **Đúng.** Đây là «Vùng» (khu chia việc của sàn), không phải «Khu» của danh mục | `003:45`; `components/khoi/solution-users-8/zones-tab.tsx:63-71` |
 | Chưa rõ: sửa tiêu chí nhu cầu khách | **Không sửa được, ở cả API và màn.** API có lối sửa nhu cầu nhưng chỉ nhận đổi người giữ, và chỉ cho TN | `core/contacts/prospects.ts:110`, `021:220` |
 
+### Đã có hạng mục phân quyền chưa
+
+**Chưa.** Quyền của Quỹ hàng chưa có một chỗ chung để đọc và kiểm.
+
+- **Màn không có mục quản quyền, và đúng hướng là không cần.** Nhóm «Sàn» của Cài đặt có bảy mục, không mục nào là phân
+  quyền (`settings/cai-dat.ts:10-18`). Năm vai là cố định (ADR-0006). Quản trị sàn chỉ gán vai cho từng người, không định
+  nghĩa vai làm được gì. Sổ điểm biến thiên xếp các quyền đã khai vào nhóm «Khoá», nên sàn không chỉnh được
+  (`docs/architecture/so-diem-bien-thien.md` mục C).
+- **Sổ điểm mới khoá bốn quyền:** ai thấy nguồn (K4), trục ai thấy hàng (K5), ai nhập file (K13), ai mở số liên hệ
+  (K27). Các quyền khác trong bảng hai chưa có dòng khoá nào. Đó là sửa hàng, gỡ hàng, sửa và bỏ lead, gộp liên hệ, nhu
+  cầu khách, Lần gửi, vùng. Chúng nằm rải trong từng ADR và từng hồ sơ hàng. ADR-0008 ghi rõ «quyền theo vai» nằm ngoài
+  quyết định ấy, và chưa ADR nào nhận phần này.
+- **Mã chỉ có bảng cho hai lớp:** bảng kỳ vọng «ai thấy nguồn» (`core/access/bang-xem-nguon.json`, có bài kiểm ở
+  `access.test.ts:11`), và bảng nhà, nút theo vai (`core/navigation.ts:61-76`). Mỗi mô-đun API còn lại tự kiểm vai theo
+  cách riêng. Có ba cách: so tên vai, gọi hàm của cơ sở dữ liệu, hay không kiểm. G1 sinh ra từ chỗ thiếu bảng chung này.
+- **Lộ trình chưa có hàng nào** cho ma trận quyền.
+
+Ngành làm cùng hướng: Follow Up Boss giữ vai cố định, KW Command chia nấc quyền cố định (mục 4). Không sản phẩm nào cần
+một màn để sàn tự vẽ ma trận quyền. Vì vậy đề xuất không thêm mục «Phân quyền» vào Cài đặt. Đề xuất là một **bảng quyền
+thao tác × vai ở lõi**, theo đúng hình của `bang-xem-nguon.json`, và gắn vào hàng G1 ở mục 6:
+
+- Bảng hai của tài liệu này là bản nháp đầu của bảng ấy.
+- API và màn đọc quyền từ bảng ấy.
+- Một bài kiểm gọi từng thao tác bằng từng vai, ở cả API lẫn luật theo dòng, và so với bảng.
+- Sổ điểm thêm một dòng khoá trỏ về bảng.
+
 ## 4. Đối chiếu ngành (ADR-0022)
 
 | Nguồn | Gỡ, xoá | Gộp liên hệ | Quyền theo vai | Bài học cho Quỹ hàng |
@@ -155,7 +181,7 @@ Máy chỉ đề xuất; chưa ghi `lo-trinh.json`. Hạng T3 vì mọi hàng d�
 
 | Đề xuất | Vai | Câu giao | `bat_khi` đề xuất | Hạng |
 | --- | --- | --- | --- | --- |
-| **G1** `quyen-sua-hang-theo-vai` | Trưởng nhóm | Chỉ người có nhà Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm) đọc và sửa được hàng; Telesales và Quản trị sàn chỉ thấy kết quả lead và cấu hình; đưa hàng lên «Đang bán» theo đúng cờ «Sẵn sàng bán» ở mọi lối | Bộ kiểm vai: mỗi lệnh ghi hàng (đổi giá, đổi trạng thái, gắn mã căn, tạo thẳng) gọi bằng từng vai cho ra đúng bảng kỳ vọng viết trước. Telesales và Quản trị sàn nhận «không có hàng này» ở cả API lẫn luật theo dòng. Lệnh đưa lên Đang bán từ ô Trạng thái của Đầu khách bị từ chối như nút đã ẩn | T3 |
+| **G1** `bang-quyen-theo-vai` | Trưởng nhóm | Mọi thao tác ghi đọc quyền từ một bảng quyền thao tác × vai ở lõi. Trước hết: chỉ người có nhà Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm) đọc và sửa được hàng; Telesales và Quản trị sàn chỉ thấy kết quả lead và cấu hình; đưa hàng lên «Đang bán» theo đúng cờ «Sẵn sàng bán» ở mọi lối | Bảng quyền viết trước, lấy bảng hai làm nháp, như `bang-xem-nguon.json`. Bộ kiểm gọi từng thao tác ghi bằng từng vai, ở API và luật theo dòng, và đếm khớp từng ô. Telesales và Quản trị sàn nhận «không có hàng này». Lệnh đưa lên Đang bán từ ô Trạng thái của Đầu khách bị từ chối như nút đã ẩn. Sổ điểm có dòng khoá trỏ về bảng | T3 |
 | **G2** `go-hang-tao-nham` | Đầu chủ | Đầu chủ gỡ một hàng tạo nhầm khỏi Quỹ hàng: hàng chưa từng lên Đang bán thì người tạo tự gỡ; hàng đã lên thì trưởng nhóm gỡ kèm lý do; gỡ là sự kiện bù như hoàn tác lần nhập, lịch sử giữ, hoàn tác được trong phiên | Hàng gỡ ra khỏi Bảng hàng, Hôm nay, Đã gửi, kiểm trùng và số đo hai tuần thử; lead mới trên cùng căn không còn thành tin bổ sung; trang khách báo căn không còn; hàng có Lần gửi đang bật thì hộp hỏi kể đủ link sẽ tắt; vai khác bị từ chối ở cơ sở dữ liệu | T3 |
 | **G3** `gop-lien-he-trung` | Trưởng nhóm | Trưởng nhóm gộp hai liên hệ là cùng một người, và đầu chủ gộp hai liên hệ mình giữ: số, loại, căn, lead, nhu cầu dồn về một người, chọn người giữ; người giữ sửa được tên; liên hệ không còn làm việc thì «ngừng theo dõi», không xoá | Sau gộp, kiểm trùng theo số nào của người ấy cũng ra một liên hệ và một đầu chủ; vết mở số và lịch sử của cả hai còn nguyên; gộp ghi người, vai, lúc; đầu chủ gộp liên hệ người khác giữ bị từ chối; liên hệ ngừng theo dõi không hiện ở danh sách mặc định nhưng vẫn chặn trùng số | T3 |
 | **G4** `sua-lead-da-nhap` | Telesales | Telesales sửa toà, căn, nhu cầu, giá và thời gian của lead mình nhập khi lead còn «Đã gửi» chưa ai nhận, và bỏ lead nhập nhầm có ghi lý do; sau khi đầu chủ nhận thì sửa ở hàng | Mỗi lần sửa thành một vết chỉ thêm; sửa toà hay căn chạy lại kiểm trùng và chia lại theo luật của sàn; lead đã nhận thì lối sửa bị từ chối; bỏ lead nhập nhầm không tính vào số đo lead → Sẵn sàng bán | T3 |
@@ -167,7 +193,8 @@ dãy nền, vì đó là bất biến 1.
 
 ## 7. Khuyến nghị
 
-**Làm G1 trước, gộp G7 vào cùng hàng.**
+**Làm G1 trước, tức bảng quyền thao tác × vai ở lõi, bắt đầu từ quyền sửa hàng. Gộp G7 vào cùng hàng.** Các hàng G2–G6
+khi mở chỉ cần thêm dòng vào bảng ấy, không phải tự đặt quyền riêng.
 
 Căn cứ:
 
