@@ -79,6 +79,9 @@ export const API_ERRORS = {
   importBatchTooLarge: { code: "import-batch-too-large", status: 422 },
   // Xuất bảng hàng (hàng 43): chỉ đầu chủ, trưởng nhóm.
   exportRoleRequired: { code: "export-role-required", status: 403 },
+  // Đổi đầu chủ hàng loạt (hàng 89): trần 200 căn một lần; một lần đổi hoàn tác một lần (vai: teamLeadRequired).
+  reassignmentTooLarge: { code: "reassignment-too-large", status: 400 },
+  reassignmentUndone: { code: "reassignment-undone", status: 409 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;
