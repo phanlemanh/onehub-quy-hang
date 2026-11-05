@@ -30,19 +30,22 @@ export function loiCuaO(khoa: string, chu: string): string | null {
   return kq.loi.slice(kq.loi.indexOf(":") + 1).trim().replace(/^./, (c) => c.toUpperCase());
 }
 
-/** Thân lưu: chỉ ô có chữ; ô rỗng không gửi — trường ấy về mặc định. */
+/** Thân lưu: chỉ ô có chữ khác tên mặc định; ô rỗng hay gõ đúng tên mặc định không gửi — trường ấy về mặc định. */
 export function thanLuu(bo: BoNhanMan, o: Readonly<Record<string, string>>): BoNhan {
   return {
     fields: bo.fields.flatMap((f) => {
       const chu = (o[oTruong(f.field)] ?? "").trim();
-      return chu ? [{ field: f.field, label: chu }] : [];
+      return chu && chu !== f.default ? [{ field: f.field, label: chu }] : [];
     }),
     values: bo.values.flatMap((v) => {
       const chu = (o[oGiaTri(v.field, v.value)] ?? "").trim();
-      return chu ? [{ field: v.field, value: v.value, label: chu }] : [];
+      return chu && chu !== v.default ? [{ field: v.field, value: v.value, label: chu }] : [];
     }),
   };
 }
+
+/** Nút «Trả về mặc định» của một ô: ô về rỗng (không phải về chữ mặc định) — lượt Lưu kế bỏ trường ấy khỏi thân. */
+export const traVeMacDinh = (o: Readonly<Record<string, string>>, khoa: string): Record<string, string> => ({ ...o, [khoa]: "" });
 
 /** Lưu được khi không ô nào lỗi. */
 export const coTheLuu = (o: Readonly<Record<string, string>>) => Object.entries(o).every(([k, chu]) => loiCuaO(k, chu) === null);

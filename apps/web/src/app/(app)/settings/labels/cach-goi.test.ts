@@ -6,7 +6,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { bangNhan } from "@quy-hang/core/labels";
 
-import { coTheLuu, loiCuaO, oBanDau, oGiaTri, oTruong, thanLuu } from "./cach-goi-thuan";
+import { coTheLuu, loiCuaO, oBanDau, oGiaTri, oTruong, thanLuu, traVeMacDinh } from "./cach-goi-thuan";
 
 const DAY = dirname(fileURLToPath(import.meta.url));
 
@@ -28,6 +28,12 @@ test("màn cách gọi: thân lưu và khoá Lưu", () => {
   assert.equal(coTheLuu(soDt), false);
   assert.equal(loiCuaO(oGiaTri("feeInclusion", "excluded"), "x".repeat(41)), "Dài hơn 40 ký tự");
   assert.equal(coTheLuu({ ...o, [oGiaTri("feeInclusion", "excluded")]: "x".repeat(41) }), false);
+  // Nút «Trả về mặc định»: ô về rỗng, thân lưu không còn feeInclusion.
+  const ve = traVeMacDinh(o, oTruong("feeInclusion"));
+  assert.equal(ve[oTruong("feeInclusion")], "");
+  assert.deepEqual(thanLuu(bo, ve).fields, []);
+  // Gõ đúng chữ mặc định = mặc định: không gửi.
+  assert.deepEqual(thanLuu(bo, { ...oBanDau(bo), [oTruong("feeInclusion")]: "Điều kiện phí", [oGiaTri("feeInclusion", "included")]: "Bao phí" }), { fields: [], values: [] });
 });
 
 test("màn cách gọi: ô ban đầu theo tên đã lưu", () => {

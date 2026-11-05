@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { FieldError, FieldLegend, FieldSeparator, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { coTheLuu, loiCuaO, oBanDau, oGiaTri, oTruong, tenTruong, thanLuu, type BoNhanMan } from "./cach-goi-thuan";
+import { coTheLuu, loiCuaO, oBanDau, oGiaTri, oTruong, tenTruong, thanLuu, traVeMacDinh, type BoNhanMan } from "./cach-goi-thuan";
 
 type TrangThaiLuu = { loai: "yen" } | { loai: "dang-luu" } | { loai: "da-luu" } | { loai: "loi"; cau: string };
 
@@ -24,6 +24,10 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
 
   const doi = (khoa: string, chu: string) => {
     setO((cu) => ({ ...cu, [khoa]: chu }));
+    if (luu.loai !== "dang-luu") setLuu({ loai: "yen" });
+  };
+  const veMacDinh = (khoa: string) => {
+    setO((cu) => traVeMacDinh(cu, khoa));
     if (luu.loai !== "dang-luu") setLuu({ loai: "yen" });
   };
 
@@ -39,8 +43,8 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
     try {
       const res = await fetch("/api/v1/company/labels", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(than) });
       if (!res.ok) {
-        const loi = (await res.json().catch(() => null)) as { message?: string } | null;
-        setLuu({ loai: "loi", cau: res.status === 403 ? "Chỉ quản trị sàn đổi được cách gọi." : (loi?.message ?? "Máy chủ chưa lưu được.") });
+        const loi = (await res.json().catch(() => null)) as { reason?: string } | null;
+        setLuu({ loai: "loi", cau: res.status === 403 ? "Chỉ quản trị sàn đổi được cách gọi." : (loi?.reason ? `Máy chủ từ chối: ${loi.reason}` : "Máy chủ chưa lưu được.") });
         return;
       }
       const moi = (await res.json()) as BoNhanMan;
@@ -62,7 +66,7 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
           <div className="flex items-center gap-2">
             <Input id={khoa} value={chu} placeholder={f.default} aria-invalid={loi ? true : undefined} onChange={(e) => doi(khoa, e.target.value)} />
             {chu.trim() ? (
-              <Button type="button" variant="ghost" size="sm" onClick={() => doi(khoa, "")}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => veMacDinh(khoa)}>
                 Trả về mặc định
               </Button>
             ) : null}
@@ -89,7 +93,7 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
           <div className="flex items-center gap-2">
             <Input id={khoa} value={chu} placeholder={v.default} aria-invalid={loi ? true : undefined} onChange={(e) => doi(khoa, e.target.value)} />
             {chu.trim() ? (
-              <Button type="button" variant="ghost" size="sm" onClick={() => doi(khoa, "")}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => veMacDinh(khoa)}>
                 Trả về mặc định
               </Button>
             ) : null}
