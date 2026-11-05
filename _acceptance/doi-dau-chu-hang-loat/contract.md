@@ -5,10 +5,10 @@ slug: doi-dau-chu-hang-loat
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: implemented
+status: draft
 design_doc: _acceptance/doi-dau-chu-hang-loat/design.md
-approved_by: Manh Phan
-approved_at: 2026-11-05
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: doi-dau-chu-hang-loat
@@ -38,7 +38,7 @@ Hàng 89 của lộ trình (dãy H, đợt `dau-khach-nhap`), T3 vì migration 0
   - mỗi liên hệ chủ nhà của các căn ấy có người giữ là người nhận;
   - căn đã do người nhận giữ thì không thêm dòng gán;
   - thông báo «Đã đổi đầu chủ N căn, M liên hệ» hiện 10 giây kèm «Hoàn tác»;
-  - cột đầu chủ trên bảng đổi theo nhờ bộ đồng bộ, không cần tải lại trang.
+  - đầu chủ mới về dữ liệu trên máy sau một lần đồng bộ, không cần tải lại trang.
 - AC-5 (cross-layer): Given một lần đổi vừa xong, When bấm «Hoàn tác», Then:
   - mỗi căn và liên hệ còn đang do người nhận giữ về lại đúng người giữ cũ của nó;
   - căn hay liên hệ đã đổi tiếp sau đó thì giữ nguyên và được đếm vào «bỏ qua K»;
@@ -66,6 +66,8 @@ Hàng 89 của lộ trình (dãy H, đợt `dau-khach-nhap`), T3 vì migration 0
   theo khuyến nghị).
 - Lead đang mở của chủ nhà đổi theo: lead đi theo luật chia lead, không đổi ở hàng này.
 - Hoàn tác sau khi thông báo 10 giây đã tắt.
+- Cột «Đầu chủ» trên Bảng hàng: hàng sau (chủ kho chọn 05/11 sau lượt chấm 1). Bảng hàng chưa có cột này; thêm cột cần
+  danh sách tên đầu chủ cho mọi vai và xếp lớp trong luật ẩn trước khi «Xuất bảng hàng» mang nó ra ngoài.
 
 ## Đường đo
 

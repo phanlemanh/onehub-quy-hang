@@ -116,9 +116,9 @@ evals:
       - "Dựng chỗ thử dãy H: node _acceptance/doi-dau-chu-hang-loat/thu/dung-h.mjs (Postgres 5574, máy dev 3494, nạp 2 chủ nhà mẫu với 5 căn của đầu chủ D1; in PID — dừng bằng --tat khi chấm xong, không pkill)"
       - "Chạy node _acceptance/doi-dau-chu-hang-loat/thu/chay-ui.mjs --ra _acceptance/doi-dau-chu-hang-loat/evidence — Chrome không đầu, mỗi cảnh một dòng JSON và ảnh E9-*.png"
       - "Đối chiếu e9-hop-hoi: trưởng nhóm tích 1 căn mỗi chủ, chọn D2, hộp hỏi kể đủ 5 căn, 3 căn đánh dấu «cùng chủ nhà», người giữ cũ D1, «2 liên hệ»; không giá trị nào trong bốn tên và số chủ nhà mẫu riêng ([Tên] C1-mau, [Tên] C2-mau, 0900 000 011, 0900 000 012) có trong DOM hộp hỏi"
-      - "Đối chiếu e9-sau-doi: KHÔNG tải lại hay điều hướng trang giữa lúc xác nhận và lúc chụp; cột đầu chủ của 5 căn đổi sang D2 trong tối đa 30 giây nhờ bộ đồng bộ (dòng ghi số giây chờ)"
+      - "Đối chiếu e9-sau-doi: KHÔNG tải lại hay điều hướng trang giữa lúc xác nhận và lúc chụp; thông báo «Đã đổi đầu chủ 5 căn, 2 liên hệ» hiện kèm «Hoàn tác» (dòng ghi số giây chờ). Bảng hàng chưa có cột Đầu chủ (cột là hàng sau); đầu chủ mới về dữ liệu trên máy do E4c chứng"
       - "Đối chiếu e9-sau-doi-db (đọc bảng gán và contacts qua dung-h.mjs --doc), e9-hoan-tac (5 căn và 2 liên hệ về D1), e9-dau-chu (đầu chủ D1 đăng nhập, tích căn, không có «Đổi đầu chủ»)"
-    expected: "Trên máy tính 1440×900 với trưởng nhóm mẫu: tích 2 căn của 2 chủ nhà mẫu, bấm «Đổi đầu chủ», chọn đầu chủ D2: hộp hỏi kể đủ 5 căn kèm người giữ cũ, đánh dấu căn cùng chủ nhà, nói 2 liên hệ; xác nhận: thông báo «Đã đổi đầu chủ 5 căn, 2 liên hệ», bảng hiện D2 ở cả 5 căn, bảng gán và contacts ghi D2; bấm «Hoàn tác»: 5 căn và 2 liên hệ về D1; đầu chủ mẫu đăng nhập không thấy lệnh; mỗi cảnh một ảnh."
+    expected: "Trên máy tính 1440×900 với trưởng nhóm mẫu: tích 2 căn của 2 chủ nhà mẫu, bấm «Đổi đầu chủ», chọn đầu chủ D2: hộp hỏi kể đủ 5 căn kèm người giữ cũ, đánh dấu căn cùng chủ nhà, nói 2 liên hệ; xác nhận: thông báo «Đã đổi đầu chủ 5 căn, 2 liên hệ», trang không tải lại, bảng gán và contacts ghi D2; bấm «Hoàn tác»: 5 căn và 2 liên hệ về D1; đầu chủ mẫu đăng nhập không thấy lệnh; mỗi cảnh một ảnh."
     paths: ["apps/web/src/app/(app)/inventory/**", "packages/api/src/listings/**", "packages/db/migrations/027_*.sql"]
     evidence_required: [screenshot, observed, verifier, verified_at]
 

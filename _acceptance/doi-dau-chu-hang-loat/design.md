@@ -56,7 +56,8 @@ trên hàng 16 (sửa hàng loạt), 85–86 (liên hệ). Sổ lựa chọn: `d
 - Lệnh «Đổi đầu chủ» trên thanh sửa hàng loạt chỉ hiện với Trưởng nhóm. Quyền đọc từ lõi (`navigationFor`), không rẽ
   theo tên vai ở màn.
 - Mất mạng thì lệnh tắt, kèm lời «Cần mạng để đổi đầu chủ».
-- Sau khi đổi, bộ đồng bộ kéo lại để cột đầu chủ trên bảng đổi theo.
+- Sau khi đổi, bộ đồng bộ kéo lại để đầu chủ mới về dữ liệu trên máy. Bảng hàng chưa có cột «Đầu chủ»; cột là hàng
+  sau (chủ kho chọn 05/11).
 
 ## 5. Lựa chọn máy đã quyết
 

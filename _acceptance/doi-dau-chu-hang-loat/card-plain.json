@@ -1,36 +1,115 @@
 {
- "feature_plain": "Trưởng nhóm tích nhiều căn trên Bảng hàng rồi đổi đầu chủ một lần; mọi căn và liên hệ của cùng chủ nhà đi theo, hộp hỏi kể đủ trước khi đổi, và hoàn tác được trong 10 giây.",
- "will_do": [
-  {"id":"AC-1","p":"Sẽ chỉ cho Trưởng nhóm thấy lệnh «Đổi đầu chủ»; máy chủ chặn mọi vai khác ở cả ba lệnh."},
-  {"id":"AC-2","p":"Sẽ cho chọn người nhận từ danh sách đầu chủ của sàn; người không phải đầu chủ bị từ chối."},
-  {"id":"AC-3","p":"Sẽ kể trước đủ căn sẽ đổi, gồm căn cùng chủ nhà bị kéo theo, kèm đầu chủ cũ và số liên hệ — không lộ tên hay số chủ nhà."},
-  {"id":"AC-4","p":"Sẽ đổi mọi căn và liên hệ chủ nhà sang người nhận trong một lần, bảng tự cập nhật không cần tải lại."},
-  {"id":"AC-5","p":"Sẽ cho hoàn tác trả người giữ cũ; căn hay liên hệ đã đổi tiếp thì giữ nguyên và báo số; căn trước chưa có đầu chủ giữ người nhận kèm lời riêng."},
-  {"id":"AC-6","p":"Sẽ giữ cách ly giữa sàn: sàn khác không xem, không đổi, không hoàn tác được gì của sàn này."},
-  {"id":"AC-8","p":"Sẽ ghi việc đổi luật người giữ liên hệ bằng mục sửa đổi 05/11 của ADR liên hệ và một dòng Tham chiếu."},
-  {"id":"AC-9","p":"Sẽ chứng trên màn thật: 5 căn của 2 chủ nhà sang đầu chủ mới rồi hoàn tác về đủ; đầu chủ không thấy lệnh."}
- ],
- "wont_do": [
-  {"id":"AC-7","p":"Chặn lô quá 200 căn và tắt lệnh khi mất mạng, kèm lời."},
-  {"id":"OOS-1","p":"Không báo cho đầu chủ cũ hay mới — hàng sau."},
-  {"id":"OOS-2","p":"Không làm trên điện thoại."},
-  {"id":"OOS-3","p":"Không đổi lối gán từng căn đang có (Hỏi-1)."},
-  {"id":"OOS-4","p":"Không đổi lead đang mở của chủ nhà — lead theo luật chia lead."},
-  {"id":"OOS-5","p":"Không hoàn tác sau khi thông báo 10 giây đã tắt."}
- ],
- "coverage_plain": [
-  {"i":0,"p":"Sáu tổ hợp vai thử cả ba lệnh ở máy chủ và lệnh trên thanh (AC-1)."},
-  {"i":1,"p":"Năm loại căn: đã tích, cùng chủ nhà, đã do người nhận giữ, chưa có đầu chủ, của sàn khác (AC-3 đến AC-6)."},
-  {"i":2,"p":"Bốn loại liên hệ: có người giữ, chưa có, chung nhiều căn, đã đổi tiếp (AC-4, AC-5)."},
-  {"i":3,"p":"Ba ca hoàn tác: còn nguyên, đã đổi tiếp, hoàn tác lần hai (AC-5)."},
-  {"i":4,"p":"Ba giới hạn: 200 căn, mất mạng, người nhận sai vai (AC-2, AC-7)."},
-  {"i":5,"p":"Lớp chủ nhà không lọt ra bản xem trước, câu trả về hay hộp hỏi — quét bằng giá trị riêng từng chủ (AC-3)."}
- ],
- "gap_probe_plain": [
-  {"i":0,"p":"Máy đã tự quyết giữ nguyên lối gán từng căn — đó là việc người quyết; nay là Hỏi-1, nháp theo khuyến nghị giữ nguyên."},
-  {"i":1,"p":"Máy đã tự quyết cách hoàn tác căn trước chưa có đầu chủ, trái «trả đủ người giữ cũ»; nay là Hỏi-2, bài kiểm thêm hai ca."},
-  {"i":2,"p":"Chặn vai ở máy chủ chưa thử đủ sáu tổ hợp vai; đã thêm ma trận 18 ô."},
-  {"i":3,"p":"Phép quét chống lộ chủ nhà chỉ tìm chuỗi giữ chỗ; đã đổi sang giá trị riêng từng chủ kèm đối chứng."},
-  {"i":4,"p":"Hứa bảng tự cập nhật nhưng bài kiểm cho tải lại trang; đã cấm tải lại và thêm bài kiểm đường đồng bộ."}
- ]
+  "feature_plain": "Trưởng nhóm tích nhiều căn trên Bảng hàng rồi đổi đầu chủ một lần; mọi căn và liên hệ của cùng chủ nhà đi theo, hộp hỏi kể đủ trước khi đổi, và hoàn tác được trong 10 giây.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ chỉ cho Trưởng nhóm thấy lệnh «Đổi đầu chủ»; máy chủ chặn mọi vai khác ở cả ba lệnh."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ cho chọn người nhận từ danh sách đầu chủ của sàn; người không phải đầu chủ bị từ chối."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ kể trước đủ căn sẽ đổi, gồm căn cùng chủ nhà bị kéo theo, kèm đầu chủ cũ và số liên hệ — không lộ tên hay số chủ nhà."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ đổi mọi căn và liên hệ chủ nhà sang người nhận trong một lần; đầu chủ mới về dữ liệu trên máy sau một lần đồng bộ, không cần tải lại trang."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ cho hoàn tác trả người giữ cũ; căn hay liên hệ đã đổi tiếp thì giữ nguyên và báo số; căn trước chưa có đầu chủ giữ người nhận kèm lời riêng."
+    },
+    {
+      "id": "AC-6",
+      "p": "Sẽ giữ cách ly giữa sàn: sàn khác không xem, không đổi, không hoàn tác được gì của sàn này."
+    },
+    {
+      "id": "AC-8",
+      "p": "Sẽ ghi việc đổi luật người giữ liên hệ bằng mục sửa đổi 05/11 của ADR liên hệ và một dòng Tham chiếu."
+    },
+    {
+      "id": "AC-9",
+      "p": "Sẽ chứng trên màn thật: 5 căn của 2 chủ nhà sang đầu chủ mới rồi hoàn tác về đủ; đầu chủ không thấy lệnh."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "AC-7",
+      "p": "Chặn lô quá 200 căn và tắt lệnh khi mất mạng, kèm lời."
+    },
+    {
+      "id": "OOS-1",
+      "p": "Không báo cho đầu chủ cũ hay mới — hàng sau."
+    },
+    {
+      "id": "OOS-2",
+      "p": "Không làm trên điện thoại."
+    },
+    {
+      "id": "OOS-3",
+      "p": "Không đổi lối gán từng căn đang có (Hỏi-1)."
+    },
+    {
+      "id": "OOS-4",
+      "p": "Không đổi lead đang mở của chủ nhà — lead theo luật chia lead."
+    },
+    {
+      "id": "OOS-5",
+      "p": "Không hoàn tác sau khi thông báo 10 giây đã tắt."
+    },
+    {
+      "id": "OOS-6",
+      "p": "Chưa thêm cột «Đầu chủ» trên Bảng hàng — hàng sau, bạn chọn 05/11."
+    }
+  ],
+  "coverage_plain": [
+    {
+      "i": 0,
+      "p": "Sáu tổ hợp vai thử cả ba lệnh ở máy chủ và lệnh trên thanh (AC-1)."
+    },
+    {
+      "i": 1,
+      "p": "Năm loại căn: đã tích, cùng chủ nhà, đã do người nhận giữ, chưa có đầu chủ, của sàn khác (AC-3 đến AC-6)."
+    },
+    {
+      "i": 2,
+      "p": "Bốn loại liên hệ: có người giữ, chưa có, chung nhiều căn, đã đổi tiếp (AC-4, AC-5)."
+    },
+    {
+      "i": 3,
+      "p": "Ba ca hoàn tác: còn nguyên, đã đổi tiếp, hoàn tác lần hai (AC-5)."
+    },
+    {
+      "i": 4,
+      "p": "Ba giới hạn: 200 căn, mất mạng, người nhận sai vai (AC-2, AC-7)."
+    },
+    {
+      "i": 5,
+      "p": "Lớp chủ nhà không lọt ra bản xem trước, câu trả về hay hộp hỏi — quét bằng giá trị riêng từng chủ (AC-3)."
+    }
+  ],
+  "gap_probe_plain": [
+    {
+      "i": 0,
+      "p": "Máy đã tự quyết giữ nguyên lối gán từng căn — đó là việc người quyết; nay là Hỏi-1, nháp theo khuyến nghị giữ nguyên."
+    },
+    {
+      "i": 1,
+      "p": "Máy đã tự quyết cách hoàn tác căn trước chưa có đầu chủ, trái «trả đủ người giữ cũ»; nay là Hỏi-2, bài kiểm thêm hai ca."
+    },
+    {
+      "i": 2,
+      "p": "Chặn vai ở máy chủ chưa thử đủ sáu tổ hợp vai; đã thêm ma trận 18 ô."
+    },
+    {
+      "i": 3,
+      "p": "Phép quét chống lộ chủ nhà chỉ tìm chuỗi giữ chỗ; đã đổi sang giá trị riêng từng chủ kèm đối chứng."
+    },
+    {
+      "i": 4,
+      "p": "Hứa bảng tự cập nhật nhưng bài kiểm cho tải lại trang; đã cấm tải lại và thêm bài kiểm đường đồng bộ."
+    }
+  ]
 }
