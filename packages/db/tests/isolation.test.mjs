@@ -2626,3 +2626,88 @@ test("đã gửi: phiên có sàn mà không người không tắt được link
     assert.notEqual(await tat(LKS.B), null, "trưởng nhóm sàn B không tắt được link của sàn mình");
   });
 });
+
+// ---- Màn Liên hệ (036_man_lien_he, hàng 103: AC-9) ----
+// Dùng bộ dựng withLienHe: K1 (DC1 giữ), K2 (người giữ đã mất vai Đầu chủ), K0 (chưa người giữ) ở sàn A; KB ở sàn B.
+const demMoSoLienHe = async (c, contactId, quayVe) =>
+  Number((await chuChay(c, "select count(*)::int n from contact_phone_reveals where contact_id = $1", [contactId], quayVe)).rows[0].n);
+const soCua = async (c, contactId, quayVe) =>
+  (await chuChay(c, "select id, phone_hash from contact_phones where contact_id = $1 order by added_at limit 1", [contactId], quayVe)).rows[0];
+
+test("màn liên hệ: bảng sự kiện mở số nằm trong phép kiểm luật theo dòng", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query("select relrowsecurity, relforcerowsecurity from pg_class where relname = 'contact_phone_reveals'");
+    assert.deepEqual(rows, [{ relrowsecurity: true, relforcerowsecurity: true }]);
+  } finally {
+    await client.end();
+  }
+});
+
+test("màn liên hệ: mở số và tìm theo số không vượt sàn, không vượt vai", { skip }, async () => {
+  await withLienHe(async (c) => {
+    const pK1 = await soCua(c, K1, [LH.DC1, COMPANY_A]);
+    const pKB = await soCua(c, KB, [LH.DC1, COMPANY_A]);
+    // Đối chứng dương: người giữ còn vai mở số liên hệ sàn mình → một dòng bản mã, một sự kiện.
+    await lamNguoi(c, LH.DC1, COMPANY_A);
+    assert.equal((await c.query("select * from app.contact_phone_for_reveal($1, $2)", [K1, pK1.id])).rows.length, 1);
+    assert.equal(await demMoSoLienHe(c, K1, [LH.DC1, COMPANY_A]), 1);
+    const tim = await c.query("select * from app.contact_lookup_by_phone_hash($1)", [pK1.phone_hash]);
+    assert.deepEqual(tim.rows.map((r) => [r.contact_id, r.readable, r.holder_user_id]), [[K1, true, LH.DC1]]);
+    // Sàn A dò và mở liên hệ sàn B → rỗng, không sự kiện.
+    assert.equal((await c.query("select * from app.contact_lookup_by_phone_hash($1)", [pKB.phone_hash])).rows.length, 0, "sàn A dò ra liên hệ sàn B");
+    assert.equal((await c.query("select * from app.contact_phone_for_reveal($1, $2)", [KB, pKB.id])).rows.length, 0, "sàn A mở được số sàn B");
+    assert.equal(await demMoSoLienHe(c, KB, [LH.DC1, COMPANY_A]), 0);
+    // Bảng viết trước: người × mở số K1 → có đọc được (đếm bằng số dòng).
+    const BANG = [
+      [LH.DC2, false], // đầu chủ khác
+      [LH.TN, true], // trưởng nhóm
+      [LH.TS, false], // telesales
+      [LH.QT, false], // quản trị sàn
+    ];
+    let so = 0;
+    for (const [ai, duoc] of BANG) {
+      await lamNguoi(c, ai, COMPANY_A);
+      const truoc = await demMoSoLienHe(c, K1, [ai, COMPANY_A]);
+      const r = await c.query("select * from app.contact_phone_for_reveal($1, $2)", [K1, pK1.id]);
+      assert.equal(r.rows.length, duoc ? 1 : 0, `dòng ${ai}: mở số sai quyền`);
+      assert.equal(await demMoSoLienHe(c, K1, [ai, COMPANY_A]), truoc + (duoc ? 1 : 0), `dòng ${ai}: số sự kiện sai`);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+    // Người giữ đã mất vai Đầu chủ không mở được số liên hệ mình từng giữ.
+    const pK2 = await soCua(c, K2, [LH.MAT, COMPANY_A]);
+    await lamNguoi(c, LH.MAT, COMPANY_A);
+    assert.equal((await c.query("select * from app.contact_phone_for_reveal($1, $2)", [K2, pK2.id])).rows.length, 0, "người giữ đã mất vai mở được số");
+    assert.deepEqual((await c.query("select readable from app.contact_lookup_by_phone_hash($1)", [pK2.phone_hash])).rows, [{ readable: false }]);
+    // Số không thuộc liên hệ → rỗng, không sự kiện.
+    await lamNguoi(c, LH.DC1, COMPANY_A);
+    assert.equal((await c.query("select * from app.contact_phone_for_reveal($1, $2)", [K1, pK2.id])).rows.length, 0);
+    // Sàn B không đọc sự kiện mở số của sàn A; vai API không ghi thẳng bảng.
+    await lamNguoi(c, LH.B, COMPANY_B);
+    assert.equal((await c.query("select count(*)::int n from contact_phone_reveals")).rows[0].n, 0, "sàn B đọc sự kiện mở số của sàn A");
+    await expectError(c, "insert into contact_phone_reveals (company_id, contact_id, phone_id, revealed_by) values ($1, $2, $3, 'x')", [COMPANY_A, K1, pK1.id], /permission denied/);
+  });
+});
+
+test("màn liên hệ: số che chỉ cho người đọc được, không vượt sàn", { skip }, async () => {
+  await withLienHe(async (c) => {
+    const BANG = [
+      [LH.DC1, COMPANY_A, K1, 1],
+      [LH.TN, COMPANY_A, K1, 1],
+      [LH.DC2, COMPANY_A, K1, 0],
+      [LH.MAT, COMPANY_A, K2, 0],
+      [LH.DC1, COMPANY_A, KB, 0],
+      [LH.B, COMPANY_B, K1, 0],
+    ];
+    let so = 0;
+    for (const [ai, san, k, mong] of BANG) {
+      await lamNguoi(c, ai, san);
+      assert.equal((await c.query("select * from app.contact_phones_for_mask($1)", [k])).rows.length, mong, `dòng ${ai} × ${k}`);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+    assert.equal(await demMoSoLienHe(c, K1, [LH.DC1, COMPANY_A]), 0, "xem số che ghi sự kiện mở số");
+  });
+});
