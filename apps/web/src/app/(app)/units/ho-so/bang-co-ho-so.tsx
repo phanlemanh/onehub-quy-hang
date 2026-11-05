@@ -47,7 +47,7 @@ export function HoSoDienThoai({ nguoi, san, bao }: { nguoi: string; san: string;
   if (!chon || !dienThoai) return bao;
   return (
     <KhungHoSoCan nhung>
-      <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} />
+      <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} cho="bang-the" />
     </KhungHoSoCan>
   );
 }
@@ -109,7 +109,7 @@ export function useHoSoCanhBang(hoSo: { nguoi: string; san: string } | undefined
     chon && nguoi && san ? (
       <KhungHoSoCan cotPhu>
         <ChanLoiCot key={khoaCan}>
-          <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} />
+          <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} cho="canh-bang" />
         </ChanLoiCot>
       </KhungHoSoCan>
     ) : null;

@@ -65,7 +65,7 @@ export function DanhSachDaGui({
           <Button
             variant="outline"
             nativeButton={false}
-            render={<a href="/inventory/cards" />}
+            render={<a href="/inventory" />}
           >
             Gửi căn
           </Button>

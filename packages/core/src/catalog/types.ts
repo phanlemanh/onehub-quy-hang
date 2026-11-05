@@ -27,11 +27,22 @@ export type CatalogBuildingData = {
   units: readonly CatalogUnitData[];
 };
 
+/** Dãy của khu thấp tầng (ADR-0016 quyết định 3, hàng 74): khu → dãy → lô; mã lô ở `unitNumber`. */
+export type CatalogBlockData = {
+  blockKey: string;
+  blockName: string;
+  /** Nhãn riêng của sàn cho dãy («Liền kề», «Shophouse») — neo vào `propertySubType` RESO, không thay nó. */
+  nhanSan?: string | null;
+  units: readonly CatalogUnitData[];
+};
+
 export type CatalogSubdivisionData = {
   subdivisionKey: string;
   subdivisionName: string;
   complexName: string | null;
   buildings: readonly CatalogBuildingData[];
+  /** Khu thấp tầng: cấp hai là dãy thay cho toà (một khu mang toà hoặc dãy). */
+  blocks?: readonly CatalogBlockData[];
 };
 
 export type CatalogData = {
