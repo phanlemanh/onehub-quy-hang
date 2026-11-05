@@ -5,7 +5,7 @@ slug: dia-chi-chuan
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: _acceptance/dia-chi-chuan/design.md
@@ -96,3 +96,7 @@ lại dấu, bắt sai chính tả). Never: dịch vụ tra địa chỉ, toạ 
 - Mã bốn phường TP.HCM đọc ở hộp thông tin Wikipedia tiếng Việt (trang dẫn danh mục Tổng cục Thống kê), chưa đối chiếu
   Phụ lục II Quyết định 19/2025 — nguồn mã là Hỏi-2 của Cổng Phạm vi; vòng này không lưu khoá ở đâu nên đổi mã còn rẻ tới
   khi hàng 76 lưu.
+- Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi người dùng gõ địa chỉ liền một dòng, không có dấu phẩy, và tên phường có chữ «Thành» như Bến Thành, hệ thống không nhận ra phường và báo thiếu. Gõ có dấu phẩy thì đọc đúng. — `packages/core/src/address/doc-dia-chi.ts`
+- Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Địa chỉ gõ liền không dấu phẩy có phường Bến Thành bị báo là phường chưa có trong danh mục, dù phường này có trong danh mục. Người dùng phải gõ lại có dấu phẩy. — `packages/core/src/address/doc-dia-chi.ts`
+- Ngoài-4 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Nếu địa chỉ được gõ hoặc dán bằng kiểu mã hoá chữ tổ hợp, như một số bộ gõ hay máy Mac sinh ra, phường bị đọc hỏng và hệ thống báo thiếu phường. — `packages/core/src/address/doc-dia-chi.ts`
+- Ngoài-5 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Người dùng không thấy khác biệt nào hôm nay; chỉ là bộ kiểm có vài chỗ lỏng nên nếu sau này có người làm hỏng việc đọc tỉnh lạ thì bộ kiểm có thể không báo. — `packages/core/src/address/doc-dia-chi.test.ts`
