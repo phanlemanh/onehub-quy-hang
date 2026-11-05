@@ -3,11 +3,10 @@ schema_version: 2
 feature_slug: va-gui-can-da-go
 verdict: PASS
 failed_evals: []
-reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 29443942586eb06b59b6b2ff423531a665baee17
+verified_commit: 3732ed3bad23ef65bd8ca147524405320a1931b8
 human_signoff:
 ---
 
@@ -23,81 +22,90 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-gui-can-da-go-E1-r2
+  run_id: minted-va-gui-can-da-go-E1-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 78147.075791
+    ca «gửi căn đã gỡ: Lần gửi mới bị từ chối» ok
+    ℹ duration_ms 59591.841917
+    __EXIT=0
 
 - eval: E2
-  run_id: minted-va-gui-can-da-go-E2-r2
+  run_id: minted-va-gui-can-da-go-E2-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 78147.075791
+    ca «gửi căn đã gỡ: khách không quan tâm được» ok
+    ℹ duration_ms 59591.841917
+    __EXIT=0
 
 - eval: E3
-  run_id: minted-va-gui-can-da-go-E3-r2
+  run_id: minted-va-gui-can-da-go-E3-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 78147.075791
+    ca «gửi căn đã gỡ (037): hàm chặn ở tầng dữ liệu» ok
+    ℹ duration_ms 59591.841917
+    __EXIT=0
 
 - eval: E4
-  run_id: minted-va-gui-can-da-go-E4-r2
+  run_id: minted-va-gui-can-da-go-E4-r3
   exit_code: 0
-  baseline: n-a
+  baseline: green
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
   output: |
     npm run db:migrate && npm run db:test
-    ℹ duration_ms 78147.075791
+    ca «gửi căn đã gỡ (037): hàm giữ chữ ký và quyền» ok
+    ca «gửi căn đã gỡ (037): chạy migrate lần hai không áp lại» ok
+    ℹ duration_ms 59591.841917
+    __EXIT=0
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-gui-can-da-go-SUITE-test_hooks-r2
+  run_id: minted-va-gui-can-da-go-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-va-gui-can-da-go-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-gui-can-da-go-SUITE-typecheck-r2
+  run_id: minted-va-gui-can-da-go-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 - cmd: npm run lint
-  run_id: minted-va-gui-can-da-go-SUITE-lint-r2
+  run_id: minted-va-gui-can-da-go-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-05T05:20:56Z
+  verified_at: 2026-11-05T05:26:52Z
 
 ## Known limits
 
@@ -105,15 +113,14 @@ human_signoff:
 
 ## Analyst
 
-carried tu round 1 — baseline khong do lai round nay
-
-Eval KHONG-PHAN-BIET (pass tren CA HEAD lan baseline): lenh `npm run db:migrate && npm run db:test` phu E1, E2, E3, E4. Can viet lai de assert hanh vi moi, hoac xac nhan day la regression-guard co chu y.
+Eval không phân biệt (xanh trên cả HEAD lẫn baseline): lệnh `npm run db:migrate && npm run db:test` gồm E1, E2, E3, E4. Cần viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý.
 
 ## Variance
 
-none — every multi-run eval is uniform
+none — mọi eval chạy một lần, deterministic, không có pass_rate hỗn hợp.
 
 ## Iterations
 
-Round 1: AC-4 co 4 phat hien trong hop dong (ca E4 khong chay migrate lan hai, phep dem 037 luon bang 1, search_path chi kiem co khoa). Returned to implementation.
-Round 2: E1-E4 va 7 lenh suite deu xanh o commit 29443942; E4 da chay migrate lan hai va kiem search_path rong.
+Round 1: bốn phát hiện trong hợp đồng ở AC-4 (E4 chưa chạy migrate lần hai, search_path chỉ kiểm có khoá) — trả về implementation.
+Round 2: sửa xong bốn phát hiện; một phát hiện ngoài hợp đồng do sửa vòng 1 (bộ kiểm cách ly chạy migrate) — trả về implementation.
+Round 3: ca migrate hai lần chuyển sang cơ sở dữ liệu tạm, bộ kiểm cách ly chỉ đọc; E1-E4 và toàn bộ lệnh suite xanh, không còn phát hiện.
