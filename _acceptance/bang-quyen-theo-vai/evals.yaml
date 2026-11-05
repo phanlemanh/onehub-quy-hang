@@ -1,0 +1,160 @@
+schema_version: 1
+feature_slug: bang-quyen-theo-vai
+# Ba lớp đọc cùng một bảng viết trước `packages/core/src/access/bang-quyen-hang.json` (14 ca × 4 thao tác = 56 ô):
+# lõi (bài thuần), API (packages/api/test-db/bang-quyen-theo-vai/ trên Postgres dãy) và luật theo dòng
+# (packages/db/tests/isolation.test.mjs dưới vai quy_hang_app). Ca người dựng bằng đường thật: thành viên với đúng vai của
+# dòng bảng, người giữ căn qua listing_agent_assignments. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/access/ ca «bảng quyền hàng: lõi khớp từng ô» có mặt và ok — đọc bang-quyen-hang.json, mỗi dòng dựng viewer {roles: vai} và người giữ theo «giu» (minh | chua | khac | tung — «tung»: người xem là dòng gán cũ, dòng gán mới nhất là người khác), duocLamVoiHang khớp đủ 56 ô (đếm assert = 14 × 4, assert số dòng = 14); ca «bảng quyền hàng: cờ Sẵn sàng bán của hồ sơ căn đọc cùng luật» — lopPhuHoSo().sanSang = cột dua_len_dang_ban ở cả 14 dòng (14 assert); ca hai chiều «bảng quyền hàng: đổi một ô thì đỏ» — bản sao bảng đảo ô «Đầu khách × dua_len_dang_ban» → hàm so trả lỗi nêu đúng «Đầu khách» và «dua_len_dang_ban» (assert thông điệp). Chiều đỏ: duocLamVoiHang cho buyer_agent đưa lên Đang bán → ca đỏ nêu «Đầu khách»."
+    paths: [packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bảng quyền: Telesales, Quản trị sàn không thấy hàng Toàn sàn» có mặt và ok trong packages/api/test-db/bang-quyen-theo-vai/ — một hàng lên Đang bán qua lệnh của đầu chủ giữ căn; Telesales và Quản trị sàn cùng sàn: GET /api/v1/listings → 200 và không phần tử nào có id hàng ấy (2 assert), GET /api/v1/listings/{id} → 404 {error:'not-found'} (2 assert, so thân lỗi bằng đúng thân của một id không có); đối chứng dương: Đầu khách, Đầu chủ khác, Trưởng nhóm GET /listings có id ấy và GET /listings/{id} 200 (6 assert). Chiều đỏ: bỏ lớp vai ở route đọc → ca đỏ nêu «Telesales»."
+    paths: [packages/api/src/listings/**, packages/core/src/access/**, packages/api/test-db/bang-quyen-theo-vai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bảng quyền: Telesales, Quản trị sàn không tạo, không sửa hàng» có mặt và ok — với mỗi người (Telesales, Quản trị sàn) và mỗi loại lệnh đọc từ EVENT_TYPES của lõi trừ created (details_changed, price_changed kèm feeInclusion, status_changed → Hold, owner_confirmed, unit_number_assigned trên hàng chưa mã, voided — bài lặp theo EVENT_TYPES, không chép tay; payload hợp lệ của từng loại) POST /api/v1/listings/{id}/events với expectedVersion đúng → 404 {error:'not-found'} (assert = số loại × 2, và assert số loại = EVENT_TYPES.length − 1), số dòng listing_events của hàng trước = sau và bản tính (list_price, standard_status, unit_number, version) không đổi (đọc bằng vai chủ, 2 assert); POST /api/v1/listings {buildingName} → 404 và số dòng listings của sàn trước = sau (4 assert). Chiều đỏ: bỏ lớp vai ở applyCommand → ca đỏ nêu «price_changed» và «Telesales»."
+    paths: [packages/api/src/listings/**, packages/core/src/access/**, packages/api/test-db/bang-quyen-theo-vai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bảng quyền: người có Bảng hàng vẫn sửa hàng Toàn sàn» có mặt và ok — hàng Toàn sàn do đầu chủ A giữ; Đầu khách, Đầu chủ B (không giữ), Trưởng nhóm lần lượt gửi mỗi loại lệnh sửa hàng đọc từ EVENT_TYPES trừ created, voided (details_changed, price_changed kèm phí, owner_confirmed, status_changed → Hold — trạng thái khác Đang bán, unit_number_assigned trên hàng chưa mã riêng của từng người); mỗi lệnh → 200 (assert = số loại × 3), dòng listing_events mới mang actor_user_id của người gửi và actor_roles đúng vai của người ấy (cùng số assert). Chiều đỏ: lớp vai chặn buyer_agent → ca đỏ nêu «Đầu khách»."
+    paths: [packages/api/src/listings/**, packages/core/src/access/**, packages/api/test-db/bang-quyen-theo-vai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bảng quyền: đưa lên Đang bán theo cờ Sẵn sàng bán» có mặt và ok — mỗi người một hàng riêng đủ điều kiện vào Đang bán (mã căn, giá kèm phí, pháp lý, tình trạng sử dụng, ảnh thật qua themAnhThat), đang ở Tạm ngưng hay Chưa đủ để rao: Trưởng nhóm (người khác giữ), Đầu chủ giữ căn, Đầu chủ khi căn chưa ai giữ gửi status_changed → Active → 200 và standard_status = Active (6 assert); Đầu khách, Đầu khách với căn chưa ai giữ, Đầu chủ khi người khác giữ, và Đầu chủ từng giữ mà căn đã đổi sang người khác qua đường đổi đầu chủ thật (POST đổi đầu chủ của trưởng nhóm, không insert tay) → 403 {error:'listing-agent-required'} (4 assert), số dòng listing_events trước = sau và standard_status không đổi (8 assert); Đầu khách gửi cùng lệnh với expectedVersion cũ → vẫn 403, không phải 409 (assert). Chiều đỏ: bỏ xét cờ ở applyCommand → ca đỏ nêu «listing-agent-required»."
+    paths: [packages/api/src/listings/**, packages/core/src/access/**, packages/api/test-db/bang-quyen-theo-vai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/cell-edit/ ca «ô Trạng thái: không có nấc Đang bán khi không đủ cờ» có mặt và ok — nacTrangThai từ Tạm ngưng (Hold) và từ Chưa đủ để rao (Incomplete) với duaLenDangBan = false không chứa Active (2 assert), với true chứa Active như bảng chuyển của lõi (2 assert); dungLenhTrangThai(hang, 'Active', {}, false) → {ok:false, loi:'Chỉ đầu chủ giữ căn hay trưởng nhóm đưa lên Đang bán'} (assert nguyên văn), với true trên hàng đủ điều kiện → ok:true, lenh.payload.to = 'Active' (2 assert); ca «ô Trạng thái: cờ lấy từ lõi» — hàm dựng cờ của trình sửa với me {userId, roles} và listAgentKey cho đủ 14 dòng bang-quyen-hang.json khớp cột dua_len_dang_ban (14 assert). Chiều đỏ: nacTrangThai bỏ qua cờ → ca đỏ nêu «Active»."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**", packages/core/src/access/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ca «bảng quyền hàng (046): luật theo dòng xét vai» có mặt và ok — dưới vai quy_hang_app với người và sàn của phiên: Telesales và Quản trị sàn đọc listings và listing_events của một hàng Toàn sàn → 0 dòng (4 assert); thêm listings, thêm listing_events (created, price_changed), update listings → lỗi «row-level security» hay 0 dòng sửa (8 assert); Đầu khách, Đầu khách với căn chưa ai giữ, Đầu chủ khi người khác giữ và Đầu chủ từng giữ (dòng gán mới nhất là người khác) thêm listing_events status_changed → Active → lỗi «row-level security» (4 assert), cùng người thêm price_changed → qua (4 assert); Trưởng nhóm thêm Active → qua (assert); người có vai của sàn B đọc listings của sàn A → 0 dòng (assert). Chiều đỏ: bỏ app.works_listings() khỏi listings_read → ca đỏ nêu «Telesales đọc listings»."
+    paths: [packages/db/migrations/046_*, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8a
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bảng quyền: API đếm khớp từng ô của bảng» có mặt và ok — đọc packages/core/src/access/bang-quyen-hang.json (không chép bảng vào bài), dựng 14 thành viên đúng vai của từng dòng và người giữ theo «giu» (dòng «tung» qua đường đổi đầu chủ thật), mỗi ô một lời gọi thật (xem: GET /listings/{id}; tao: POST /listings; sua: price_changed; dua_len_dang_ban: status_changed → Active trên hàng riêng đủ điều kiện), quy kết quả ✓ = 2xx, ✗ = 404 hay 403; số ô khớp = 56 = số dòng × 4 (assert tổng), mỗi ô lệch in «<ca> × <thao tác>: mong <✓/✗>, được <mã>». Chiều đỏ: đảo một ô trong bảng → ca đỏ nêu tên ca và thao tác."
+    paths: [packages/api/src/listings/**, packages/core/src/access/**, packages/api/test-db/bang-quyen-theo-vai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs ca «bảng quyền hàng (046): luật theo dòng đếm khớp từng ô» có mặt và ok — đọc packages/core/src/access/bang-quyen-hang.json, dựng 14 thành viên đúng vai, mỗi ô một câu SQL thật dưới vai quy_hang_app (xem: select listings Toàn sàn; tao: insert listings + listing_events created; sua: insert price_changed + update listings; dua_len_dang_ban: insert status_changed → Active), ✓ = câu qua, ✗ = lỗi row-level security hay 0 dòng; số ô khớp = 56 (assert tổng), ô lệch in tên ca và thao tác. Chiều đỏ: đảo một ô → ca đỏ nêu tên ca."
+    paths: [packages/db/migrations/046_*, packages/db/tests/isolation.test.mjs, packages/core/src/access/bang-quyen-hang.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; npm run db:migrate áp 046 rồi npm run db:test xanh trọn — bộ kiểm cách ly và mọi tệp packages/api/test-db/**, trong đó các ca có sẵn của lead → hàng (leads.test.ts, va-ma-can-lead.test.ts), nhập và hoàn tác (imports/**), kiểm trùng lúc nhập lead (leads.test.ts), mốc lên bảng «Lead của tôi» (leads-mine.test.ts), trang khách và Quan tâm (trang-khach.test.ts, va-gui-can-da-go/**), đổi đầu chủ hàng loạt (doi-dau-chu/**) có mặt và ok; sổ quyết định liệt đủ sáu tệp bài có sẵn đã sửa kèm vai được gán. Chiều đỏ: hàm kiểm trùng đọc listings bằng vai API thay vì security definer → leads.test.ts đỏ."
+    paths: [packages/db/migrations/046_*, packages/api/src/listings/**, packages/api/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «bảng quyền hàng: điều đang đúng đã ghi» có mặt và ok trong packages/core/src/access/ — đọc docs/architecture/so-diem-bien-thien.md: có đúng một dòng bảng bắt đầu «| K28 |» chứa «access/bang-quyen-hang.json» (2 assert); docs/product/tham-chieu.md §6 có dòng chứa «bảng quyền» và «access/bang-quyen-hang.json», §12 có dòng 05/11 chứa «mọi thành viên có Bảng hàng» (3 assert); đường đọc tệp suy từ vị trí bài (không hardcode gốc). Kèm trong packages/db/tests/isolation.test.mjs ca «bảng quyền hàng (046): hàm giữ khoá» — pg_proc của app.works_listings và app.can_activate_listing: prosecdef = true (2 assert), proconfig = {search_path=\"\"} (2 assert), proacl chỉ gồm chủ hàm và quy_hang_app (2 assert). Chiều đỏ: xoá dòng K28 trong bản sao tệp → ca đỏ nêu «K28»."
+    paths: [docs/architecture/so-diem-bien-thien.md, docs/product/tham-chieu.md, packages/core/src/access/**, packages/db/migrations/046_*, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; sàn thiết kế S4 không in vi phạm nào (mã màu thô) cho tệp giao diện vòng chạm dưới apps/web/src/app/(app)/inventory/cell-edit/. Chiều đỏ: một lớp màu hex thô trong tren-o.tsx → lệnh in vi phạm và thoát khác 0."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0; tham số duaLenDangBan của nacTrangThai và dungLenhTrangThai là bắt buộc (không mặc định), nên mọi chỗ gọi trong apps/web phải truyền cờ — kiểm kiểu xanh nghĩa là trình sửa thật (tren-o.tsx) truyền cờ dựng từ bd.me() và listAgentKey của dòng. Chiều đỏ: bỏ đối số cờ ở tren-o.tsx → kiểm kiểu báo lỗi ở đúng dòng gọi."
+    paths: ["apps/web/src/app/(app)/inventory/cell-edit/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web_db
+    expected: "exit 0; bộ đồng bộ của màn trên Postgres dãy (apps/web/src/lib/sync/test-db) xanh trọn sau migration 046, trong đó ca «đồng bộ: đổi giá căn Đã bán vào Cần xem» (doi-gia-da-ban.db-test.mts — đỏ ở lượt đo S1) có mặt và ok. Chiều đỏ: bỏ vai Bảng hàng vừa thêm cho người tạo hàng trong bài → ca đỏ 404."
+    paths: [packages/db/migrations/046_*, packages/api/src/listings/**, apps/web/src/lib/sync/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9c
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «bảng quyền: bài có sẵn chỉ thêm vai, không đổi điều bài kiểm» có mặt và ok trong packages/api/test-db/bang-quyen-theo-vai/ — với từng tệp trong danh sách sáu tệp Q-3 (đọc từ một hằng trong bài), git diff của tệp so với merge-base của nhánh chính: mọi dòng bị bỏ nằm trong danh sách được duyệt của tệp (dòng kỳ vọng «vai lúc làm» của listings.test.ts, dòng vai người chốt bán của bài đồng bộ; ở owners.test.ts và goi-ep-gia-dot-hai.test.ts chỉ các dòng kỳ vọng 403/200 của ca Telesales, Quản trị sàn — giám sát duyệt Q-0511-3), mọi dòng thêm chứa listing_agent hoặc buyer_agent, hoặc là kỳ vọng 404 not-found của ca Telesales, Quản trị sàn, hoặc là chú thích (assert mỗi tệp), số lời gọi assert. trong tệp sau ≥ trước (assert mỗi tệp), không dòng thêm nào chứa team_lead (assert mỗi tệp); tệp ngoài danh sách dưới packages/api/test-db (trừ thư mục bang-quyen-theo-vai) không đổi so với merge-base (assert). Đường gốc kho suy từ vị trí bài. Chiều đỏ: xoá một assert trong bản sao listings.test.ts → ca đỏ nêu tên tệp."
+    paths: [packages/api/test-db/**, apps/web/src/lib/sync/test-db/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: judgment
+    inputs: ["apps/web/src/app/(app)/inventory/page.tsx"]
+    question: "Trong tệp trang Bảng hàng này, người đã đăng nhập mà không có vai nào trong ba vai của Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm) có bị đưa về /today trước khi trang dựng bảng không, và quyết định ấy có đọc từ hàm của lõi (lamViecVoiHang) thay vì so tên vai tại chỗ không? Người có một trong ba vai có còn đi tiếp tới bảng như trước không?"
+    expected: "PASS khi có nhánh redirect('/today') dựa trên lamViecVoiHang của @quy-hang/core/access đặt trước khi trả KhungBangHang, và không đổi phần còn lại của trang."
+    paths: ["apps/web/src/app/(app)/inventory/page.tsx"]
+    evidence_required: [run_id, verdict, verified_at]
+
+  - id: E12
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai (trình sửa ô Trạng thái chỉ lọc nấc, không đổi khuôn màn)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12b
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/inventory/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang và trang-tam (trang Bảng hàng chỉ thêm nhánh đưa về /today; nợ cũ «thuộc hai nhóm màn» có từ trước vòng, không phải lệch mới)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

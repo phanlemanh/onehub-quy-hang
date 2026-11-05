@@ -91,7 +91,8 @@ test("E5b đếm ảnh thật như máy chủ: ma trận viết trước", () =>
 
 test("E6 đủ thì gửi đúng một lệnh của trình sửa ô", async () => {
   const kq = kiemSanSang(DU, 1);
-  const tuO = dungLenhTrangThai(DU, "Active");
+  // Cờ «Sẵn sàng bán» true: nút chỉ hiện cho người đủ cờ (bảng quyền của hàng).
+  const tuO = dungLenhTrangThai(DU, "Active", {}, true);
   assert.ok(tuO.ok && "lenh" in tuO);
   assert.deepEqual(kq.lenh, tuO.lenh, `payload: ${JSON.stringify(kq.lenh)}`);
   const da: unknown[] = [];
@@ -198,7 +199,8 @@ test("VSSB-E5 lệnh vào hàng đợi: «đã gửi», đúng một lệnh (đ�
   const da: unknown[] = [];
   const tt = await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: async (l) => (da.push(l), { ok: true }) });
   assert.deepEqual(tt, { kind: "da-gui" });
-  const tuO = dungLenhTrangThai(DU, "Active");
+  // Cờ «Sẵn sàng bán» true: nút chỉ hiện cho người đủ cờ (bảng quyền của hàng).
+  const tuO = dungLenhTrangThai(DU, "Active", {}, true);
   assert.ok(tuO.ok && "lenh" in tuO);
   assert.deepEqual(da, [tuO.lenh]);
 });

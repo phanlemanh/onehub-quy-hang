@@ -1,5 +1,6 @@
 // Chi tiết một căn của trang khách — chuyển thể `product-detail-5` (ReUI Pro): ảnh lớn, tên, thông số, hộp giá + nút chính;
 // bỏ đánh giá, carousel và giỏ. Ảnh lướt ngang bằng cuộn có điểm dừng.
+import { nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { CanRaNgoai } from "@quy-hang/core/redaction";
 import { giaTin, tenCanRa, thongSoRa } from "@quy-hang/core/sharing";
 import { ImageIcon } from "lucide-react";
@@ -9,15 +10,18 @@ import { Separator } from "@/components/ui/separator";
 import { NutQuanTam } from "./quan-tam";
 import { dangBan, duongAnh, NHAN_TRANG_THAI, xacNhan } from "./the-can";
 
-export function ChiTiet({ b, code, listingId }: { b: CanRaNgoai; code: string; listingId?: string }) {
+/** Dòng thông số của chi tiết: nhãn theo cách gọi riêng của sàn gửi (hàng 45), vắng thì nhãn dựng sẵn. */
+export const dongChiTiet = (b: CanRaNgoai, tv?: TuVung | null): [string, string | null | undefined][] => [
+  [nhanTruong(tv, "legalStatus", "Pháp lý"), b.legalStatus],
+  [nhanTruong(tv, "furnished", "Nội thất"), b.furnished],
+  [nhanTruong(tv, "directionFaces", "Hướng"), b.directionFaces],
+  [nhanTruong(tv, "occupantType", "Hiện trạng"), b.occupantType],
+];
+
+export function ChiTiet({ b, code, listingId, tv }: { b: CanRaNgoai; code: string; listingId?: string; tv?: TuVung | null }) {
   const anh = b.photos ?? [];
   const nhan = NHAN_TRANG_THAI[b.availability ?? ""];
-  const dong: [string, string | null | undefined][] = [
-    ["Pháp lý", b.legalStatus],
-    ["Nội thất", b.furnished],
-    ["Hướng", b.directionFaces],
-    ["Hiện trạng", b.occupantType],
-  ];
+  const dong = dongChiTiet(b, tv);
   return (
     <div className="flex flex-col gap-4 p-4">
       <a href="?" className="text-muted-foreground text-sm">

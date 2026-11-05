@@ -137,6 +137,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/company/import-templates",
     "PUT /api/v1/company/import-templates/{headerKey}",
     "DELETE /api/v1/company/import-templates/{headerKey}",
+    // Hàng 45: cách gọi riêng của sàn.
+    "GET /api/v1/company/labels",
+    "PUT /api/v1/company/labels",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

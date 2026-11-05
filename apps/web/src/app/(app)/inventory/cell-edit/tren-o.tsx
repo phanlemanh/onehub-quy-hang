@@ -16,13 +16,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
+import { useBoDongBo, useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
+import { nhanGiaTri } from "@quy-hang/core/labels";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
+import { useTuVung } from "../tu-vung";
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
 import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
+import { chayLuuO, chuaHieu, chuDienSan, coDuaLenDangBan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -145,6 +147,7 @@ export function TrinhSua({ phien, onDoiCot, onHuy, onGhi }: { phien: Pick<Phien,
 }
 
 function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; chuDau?: string; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
+  const tv = useTuVung();
   const [chu, setChu] = useState(chuDau ?? chuDienSan(hang));
   const [phi, setPhi] = useState<FeeInclusion | null>(hang.feeInclusion === "included" || hang.feeInclusion === "excluded" ? hang.feeInclusion : null);
   const hieuLa = hieuLaGia(chu, phi);
@@ -171,7 +174,7 @@ function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang;
       <ToggleGroup variant="outline" size="sm" value={phi ? [phi] : []} onValueChange={(v) => (setPhi((v[0] as FeeInclusion | undefined) ?? phi), onDoiChu())} aria-label="Điều kiện phí">
         {PHI.map((p) => (
           <ToggleGroupItem key={p} value={p}>
-            {FEE_LABEL[p]}
+            {nhanGiaTri(tv, "feeInclusion", p, FEE_LABEL[p] ?? p)}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -182,12 +185,13 @@ function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang;
 }
 
 function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => void }) {
+  const tv = useTuVung();
   return (
     <div className="flex flex-col gap-2">
       <ToggleGroup variant="outline" size="sm" value={hang.feeInclusion ? [hang.feeInclusion] : []} onValueChange={(v) => (v[0] ? onXet(dungLenhPhi(hang, v[0] as FeeInclusion)) : null)} aria-label="Điều kiện phí">
         {PHI.map((p) => (
           <ToggleGroupItem key={p} value={p} autoFocus={p !== hang.feeInclusion}>
-            {FEE_LABEL[p]}
+            {nhanGiaTri(tv, "feeInclusion", p, FEE_LABEL[p] ?? p)}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -197,7 +201,11 @@ function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => vo
 }
 
 function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
-  const nac = nacTrangThai(hang.standardStatus);
+  // Cờ «đưa lên Đang bán» từ bảng quyền của lõi: người đang đăng nhập và người giữ căn của dòng (bang-quyen-theo-vai).
+  // Người giữ căn đọc từ hàng trong kho đồng bộ (dòng Bảng hàng không mang cột này).
+  const { bd } = useBoDongBo();
+  const coDangBan = coDuaLenDangBan(bd.me(), bd.danhSach().find((l) => l.id === hang.id)?.listAgentKey);
+  const nac = nacTrangThai(hang.standardStatus, coDangBan);
   const [to, setTo] = useState<StandardStatus | null>(null);
   const [giaChot, setGiaChot] = useState("");
   const [ngayBan, setNgayBan] = useState(homNay());
@@ -205,7 +213,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
   const chon = (s: StandardStatus) => {
     onDoiChu();
     if (s === "Closed" || s === "Withdrawn") setTo(s);
-    else onXet(dungLenhTrangThai(hang, s));
+    else onXet(dungLenhTrangThai(hang, s, {}, coDangBan));
   };
   if (!nac.length) return <p className="text-sm text-muted-foreground">«{STATUS_LABEL[hang.standardStatus]}» là nấc cuối — mở lại là hàng mới.</p>;
   return (
@@ -213,7 +221,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
       className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
-        if (to) onXet(dungLenhTrangThai(hang, to, { giaChot, ngayBan, lyDo }));
+        if (to) onXet(dungLenhTrangThai(hang, to, { giaChot, ngayBan, lyDo }, coDangBan));
       }}
       onKeyDown={(e) => (e.key === "Escape" ? onHuy() : null)}
     >
@@ -257,10 +265,11 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
 }
 
 function HoiLai({ hang, kq, onDoi, onThoi }: { hang: DongBang; kq: ChoXacNhan; onDoi: () => void; onThoi: () => void }) {
+  const tv = useTuVung();
   const h = kq.hoiLai;
   return (
     <div className="flex flex-col gap-2" role="alertdialog" aria-label="Hỏi lại trước khi đổi">
-      <p className="text-sm font-medium">{moTaThayDoi(hang, kq.lenh)}</p>
+      <p className="text-sm font-medium">{moTaThayDoi(hang, kq.lenh, undefined, tv)}</p>
       {h && h.phanTram !== null && !h.doiPhi ? <p className="text-xs text-muted-foreground">Đổi {vietPhanTram(h.phanTram)} so với giá cũ</p> : null}
       {h?.doiPhi ? <p className="text-xs text-muted-foreground">Đổi điều kiện phí{h.phanTram ? ` · ${vietPhanTram(h.phanTram)}` : ""}</p> : null}
       {kq.hieuLa ? <p className="text-xs">{kq.hieuLa}</p> : null}

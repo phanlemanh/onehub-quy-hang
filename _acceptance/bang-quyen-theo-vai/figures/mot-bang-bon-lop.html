@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Một bảng, bốn lớp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1184px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+    }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Luồng · Bảng quyền thao tác × vai</p>
+    <h1>Một bảng quyền, bốn lớp cùng đọc — và một bộ kiểm đếm khớp từng ô</h1>
+
+    <svg viewBox="0 0 1184 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bảng quyền thao tác theo vai có 56 ô nằm ở một chỗ; lõi, API, luật theo dòng của cơ sở dữ liệu, ô Trạng thái và cửa vào trang Bảng hàng cùng đọc bảng ấy; bộ kiểm gọi thật 56 lần ở API và ở luật theo dòng rồi đối chiếu từng ô về bảng">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Mũi tên (vẽ trước nút) -->
+      <!-- Bảng → Lõi (cạnh trái) -->
+      <path d="M432 88 H192 A8 8 0 0 0 184 96 V200" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Bảng → API -->
+      <line x1="456" y1="136" x2="456" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Bảng → Luật theo dòng -->
+      <line x1="728" y1="136" x2="728" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Bảng → Ô Trạng thái (cạnh phải) -->
+      <path d="M752 88 H992 A8 8 0 0 1 1000 96 V200" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- API → Bộ kiểm -->
+      <line x1="456" y1="312" x2="456" y2="376" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Luật theo dòng → Bộ kiểm -->
+      <line x1="728" y1="312" x2="728" y2="376" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Bộ kiểm → đối chiếu về Bảng (đứt nét) -->
+      <path d="M792 424 H1144 A8 8 0 0 0 1152 416 V32 A8 8 0 0 0 1144 24 H600 A8 8 0 0 0 592 32 V40" fill="none" stroke="#eb6c36" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow-accent)"/>
+
+      <!-- Nhãn mũi tên -->
+      <rect x="248" y="64" width="72" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="284" y="76" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ĐỌC BẢNG</text>
+      <rect x="864" y="64" width="72" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="900" y="76" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ĐỌC BẢNG</text>
+
+      <rect x="464" y="328" width="80" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="468" y="340" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">56 LẦN GỌI</text>
+      <rect x="736" y="328" width="80" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="740" y="340" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">56 LẦN GỌI</text>
+
+      <rect x="1016" y="328" width="128" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="1140" y="340" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">ĐỐI CHIẾU TỪNG Ô</text>
+
+      <!-- Bảng quyền (tâm điểm) -->
+      <rect x="432" y="40" width="320" height="96" rx="6" fill="#f5f5f5"/>
+      <rect x="432" y="40" width="320" height="96" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <rect x="440" y="48" width="64" height="16" rx="2" fill="transparent" stroke="rgba(235,108,54,0.50)" stroke-width="0.8"/>
+      <text x="472" y="60" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MỘT CHỖ</text>
+      <text x="592" y="84" fill="#2d3142" font-size="13" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bảng quyền thao tác × vai</text>
+      <text x="592" y="104" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">14 ca người × 4 thao tác = 56 ô, viết trước</text>
+      <text x="592" y="122" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">xem · tạo · sửa · đưa lên Đang bán</text>
+
+      <!-- Lớp 1: Lõi -->
+      <rect x="64" y="200" width="240" height="112" rx="6" fill="#f5f5f5"/>
+      <rect x="64" y="200" width="240" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="72" y="208" width="40" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="92" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LÕI</text>
+      <text x="296" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">AC-1</text>
+      <text x="184" y="244" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lõi tính quyền</text>
+      <text x="184" y="264" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">mỗi ca, mỗi thao tác ra đúng ô</text>
+      <text x="184" y="280" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">nút «Sẵn sàng bán» đọc cùng luật</text>
+
+      <!-- Lớp 2: API -->
+      <rect x="336" y="200" width="240" height="112" rx="6" fill="#f5f5f5"/>
+      <rect x="336" y="200" width="240" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="344" y="208" width="40" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="364" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">API</text>
+      <text x="568" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">AC-2 … AC-5</text>
+      <text x="456" y="244" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cửa đọc và ghi của API</text>
+      <text x="456" y="264" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">không có vai Bảng hàng → 404</text>
+      <text x="456" y="280" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">không đủ cờ Đang bán → 403</text>
+
+      <!-- Lớp 3: Luật theo dòng -->
+      <rect x="608" y="200" width="240" height="112" rx="6" fill="#f5f5f5"/>
+      <rect x="608" y="200" width="240" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="616" y="208" width="96" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="664" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CƠ SỞ DỮ LIỆU</text>
+      <text x="840" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">AC-7</text>
+      <text x="728" y="244" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Luật theo dòng</text>
+      <text x="728" y="264" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">hàng và sự kiện hàng xét vai</text>
+      <text x="728" y="280" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">cách ly công ty giữ nguyên</text>
+
+      <!-- Lớp 4: Ô Trạng thái -->
+      <rect x="880" y="200" width="240" height="112" rx="6" fill="#f5f5f5"/>
+      <rect x="880" y="200" width="240" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="888" y="208" width="40" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="908" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MÀN</text>
+      <text x="1112" y="220" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">AC-6</text>
+      <text x="1000" y="244" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ô Trạng thái của Bảng hàng</text>
+      <text x="1000" y="264" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">không đủ cờ → không có nấc Đang bán</text>
+      <text x="1000" y="280" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">lệnh dựng tay bị từ chối, không gửi</text>
+      <text x="1000" y="296" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">trang Bảng hàng: không có vai → về Hôm nay</text>
+
+      <!-- Bộ kiểm -->
+      <rect x="392" y="376" width="400" height="96" rx="6" fill="#f5f5f5"/>
+      <rect x="392" y="376" width="400" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <rect x="400" y="384" width="64" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+      <text x="432" y="396" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">BỘ KIỂM</text>
+      <text x="784" y="396" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="end">AC-8</text>
+      <text x="592" y="420" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bộ kiểm đếm khớp 56 ô</text>
+      <text x="592" y="440" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">14 ca người thật × 4 thao tác, ở API và ở luật theo dòng</text>
+      <text x="592" y="456" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">lệch một ô → nêu tên ca và thao tác</text>
+
+      <!-- Ghi chú biên -->
+      <text x="64" y="400" fill="#4f5d75" font-size="14" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">Không lớp nào tự so tên vai:</text>
+      <text x="64" y="420" fill="#4f5d75" font-size="14" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">đổi quyền là đổi một ô của bảng.</text>
+
+      <!-- Chú giải -->
+      <line x1="40" y1="504" x2="1144" y2="504" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="40" y="528" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.18em">CHÚ GIẢI</text>
+
+      <rect x="132" y="520" width="24" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="164" y="530" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bảng quyền — chỗ duy nhất ghi ai làm gì với hàng</text>
+
+      <rect x="452" y="520" width="24" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="484" y="530" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Lớp đọc bảng</text>
+
+      <rect x="600" y="520" width="24" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="632" y="530" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bộ kiểm gọi thật</text>
+
+      <line x1="764" y1="526" x2="796" y2="526" stroke="#eb6c36" stroke-width="1.2" stroke-dasharray="5,4"/>
+      <text x="804" y="530" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Kết quả đếm đối chiếu về bảng</text>
+    </svg>
+  </div>
+</body>
+</html>

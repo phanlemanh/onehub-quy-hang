@@ -16,7 +16,8 @@ let Y: Nguoi;
 before(async () => {
   A = await sanMoi("dgb");
   X = await nguoi("dgb-x", [{ companyId: A.companyId, vai: ["listing_agent"] }]);
-  Y = await nguoi("dgb-y", [{ companyId: A.companyId, vai: ["company_admin"] }]);
+  // Từ 046 chỉ người có Bảng hàng sửa được hàng (bang-quyen-theo-vai): người chốt bán kiêm Đầu khách.
+  Y = await nguoi("dgb-y", [{ companyId: A.companyId, vai: ["company_admin", "buyer_agent"] }]);
 });
 
 function boCua() {
