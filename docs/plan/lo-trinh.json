@@ -2481,6 +2481,15 @@
         "39"
       ],
       "bat_khi": "Không màn nào của bàn làm việc còn gọi việc với một người là «lead»: danh sách, bộ lọc, Hôm nay, hồ sơ người và hồ sơ căn dùng «Cơ hội» với đúng nhãn pha đã chốt ở Cổng Phạm vi 103; «Lead» chỉ còn là dấu trên liên hệ; nút «+ Lead», «Gửi lead» giữ; CONTEXT.md và Tham chiếu khớp chữ trên màn; dữ liệu và API không đổi"
+    },
+    {
+      "ma": "va-ho-so-lien-he",
+      "cau_giao": "Vá màn Liên hệ: bộ kiểm vai phủ đường xem hồ sơ và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp)",
+      "slug": "va-ho-so-lien-he",
+      "vi_sao": "Chủ kho chọn «mở hợp đồng mới» cho Ngoài-22 ở Cổng Bằng chứng hàng 103 (05/11); kèm phát hiện thấp AC-2 ký cùng 103. Hàng vá, không mã: đã quyết, chạy ngay (luật đợt 72).",
+      "sau": [
+        "103"
+      ]
     }
   ],
   "chan_troi": [
