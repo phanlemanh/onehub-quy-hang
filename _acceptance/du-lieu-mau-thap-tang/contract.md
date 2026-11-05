@@ -5,7 +5,7 @@ slug: du-lieu-mau-thap-tang
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [cli, db]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-05
 design_doc: _acceptance/du-lieu-mau-thap-tang/design.md
@@ -103,3 +103,10 @@ quyết định 5 «toạ độ chỉ có khi người ghim».
 
 - Tên phường cũ → mới chép từ Nghị quyết 1685/NQ-UBTVQH15 qua trang Wikipedia tiếng Việt «Quận 1» (05/11/2026); chưa đọc
   văn bản gốc. Hàng 75 đối chiếu với danh mục có nguồn chính thức; lệch thì sửa bảng trích và sinh lại.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05:
+  - Ngoài-1: Đáp án file bẩn gọi ba cột bằng tên riêng (số thứ tự, ghi chú, nhãn), chưa theo tên đích của bộ nhập — hàng nhập file thấp tầng phải đổi tên trước khi so.
+  - Ngoài-2: Đáp án file bẩn khác cấu trúc bộ đo của hàng nhập trước (tên khoá cột, thiếu danh sách chuỗi cấm lộ, số dòng của lỗi cấy tính theo lưới) — cắm vào bộ đo cũ phải chuyển khuôn trước.
+  - Ngoài-3: Phá thử «hai sàn mẫu» không đi qua đúng phép kiểm thật của nhánh nạp sau bộ hàng 5.
+  - Ngoài-4: Giá trị đúng ghi kèm mỗi lỗi cấy chưa được đối chiếu với giá trị đúng của ô trong đáp án.
+  - Ngoài-5: Phép đếm cặp nhà gần trùng không kiểm bộ địa chỉ thử còn cách viết trỏ vào cả hai nhà của cặp.
+  - Ngoài-6: Bộ quét số điện thoại của file bẩn bỏ qua mọi ô kiểu số ngoài cột điện thoại.
