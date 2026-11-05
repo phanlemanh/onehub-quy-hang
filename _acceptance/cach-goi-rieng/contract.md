@@ -5,10 +5,10 @@ slug: cach-goi-rieng
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-05-cach-goi-rieng-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-05T13:38:07Z
 ---
 
 # Acceptance Contract: cach-goi-rieng
