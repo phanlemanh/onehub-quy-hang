@@ -7,7 +7,7 @@
   {"id":"AC-4","p":"Sẽ khoá mật khẩu và đăng xuất mọi máy, kể cả máy đang dùng, khi sai tới lần thứ 20 — dù lần ấy ở đăng nhập hay ở đổi mật khẩu."},
   {"id":"AC-5","p":"Sẽ đưa bộ đếm về 0 khi gõ đúng, và không ghi mật khẩu nào vào nhật ký ở các nhánh mới."},
   {"id":"AC-6","p":"Sẽ hiện «Thử lại sau ít phút» dưới ô mật khẩu hiện tại khi phải chờ."},
-  {"id":"AC-7","p":"Sẽ qua mọi kiểm máy, thêm migration 035 mới, ghi vào ADR-0005 và Tham chiếu."}
+  {"id":"AC-7","p":"Sẽ qua mọi kiểm máy, thêm migration 038 mới, ghi vào ADR-0005 và Tham chiếu."}
  ],
  "wont_do": [
   {"id":"OOS-1","p":"KHÔNG phân biệt phiên tạo bằng mật khẩu với phiên tạo bằng mã 6 số — thu tất cả."},

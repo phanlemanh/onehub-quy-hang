@@ -12,7 +12,7 @@ evals:
     cmd: config:executors.test.isolation
     layer: backend-effect
     expected: "exit 0; packages/db/tests/isolation.test.mjs có ca «vào sàn khác: thu phiên khi vô hiệu mật khẩu gốc sàn cấp» — bảng viết trước hai hình (tạm chưa dùng · đặt lần đầu từ tạm), mỗi hình: người chỉ ở sàn A có hai dòng identity.session, chèn company_members (sàn B) bằng vai chủ, đọc lại thấy password_state.disabled_reason «vao-san-khac», 0 dòng identity.session của người ấy, một sự kiện vo-hieu-san-khac; assert số hình = 2; và ca «vào sàn khác: phiên của người khác không bị đụng» — phiên của một người thứ ba vẫn còn. Chiều đỏ (phá-thử S3, có vật): evidence/E1-pha-thu.log ghi lần bỏ câu xoá phiên khỏi hàm trigger thì ca đầu đỏ nêu tên hình."
-    paths: ["packages/db/migrations/035_*.sql", "packages/db/tests/isolation.test.mjs"]
+    paths: ["packages/db/migrations/038_*.sql", "packages/db/tests/isolation.test.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E2
@@ -21,7 +21,7 @@ evals:
     cmd: config:executors.test.isolation
     layer: backend-effect
     expected: "exit 0; tệp packages/api/test-db/va-dang-nhap-mat-khau/vao-san-khac.test.ts: ca «vào sàn khác: phiên cũ bị thu qua đường mời của API» — người đặt lần đầu từ mật khẩu tạm ở sàn A, đăng nhập ở hai máy (hai cookie), quản trị sàn B mời người ấy qua POST /api/v1/company/members: 201; rồi bằng mỗi cookie cũ GET /api/v1/me ra 401 và PUT /api/v1/me/password (không currentPassword, newPassword hợp lệ) ra 401; identity.session của người ấy rỗng; đăng nhập bằng mã 6 số sau đó vào được."
-    paths: ["packages/db/migrations/035_*.sql", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    paths: ["packages/db/migrations/038_*.sql", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
@@ -30,7 +30,7 @@ evals:
     cmd: config:executors.test.isolation
     layer: backend-effect
     expected: "exit 0; cùng tệp vao-san-khac.test.ts: ca «vào sàn khác: giữ phiên khi không có gì để khoá» — bảng viết trước ba hình (tự đổi ở Cá nhân · chưa có mật khẩu · mời lại vào đúng sàn đã cấp), mỗi hình: người có phiên mở, được thêm vào sàn (B, hoặc lại A với hình ba), rồi GET /api/v1/me bằng cookie cũ ra 200, số dòng identity.session không đổi, password_state.disabled_reason vẫn rỗng (hình «chưa có mật khẩu»: vẫn không có dòng password_state), và hình một, ba đăng nhập bằng mật khẩu cũ ra 200; assert số hình = 3."
-    paths: ["packages/db/migrations/035_*.sql", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
+    paths: ["packages/db/migrations/038_*.sql", "packages/api/test-db/va-dang-nhap-mat-khau/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
@@ -72,7 +72,7 @@ evals:
     criterion: AC-7
     executor: script
     cmd: config:executors.script.va_dang_nhap_mat_khau
-    expected: "exit 0; tệp _acceptance/va-dang-nhap-mat-khau/thu/migration-tai-lieu.test.mjs: ca «migration: 035 là tệp mới, thay hàm trigger và xoá phiên» — đúng một tệp packages/db/migrations/035_*.sql, chứa «create or replace function app.vo_hieu_mat_khau_khi_vao_san» và «delete from identity.session»; ca «migration: không sửa migration đã commit» — diff từ merge-base với origin/main tới HEAD chỉ thêm tệp dưới packages/db/migrations, đối chứng viết trước một dòng «M …034_mat_khau.sql» thì hàm lọc nêu đúng tệp ấy; ca «tài liệu» — docs/adr/0005-dang-nhap-theo-san.md có chữ «va-dang-nhap-mat-khau», docs/product/tham-chieu.md §12 có dòng chứa «va-dang-nhap-mat-khau»."
+    expected: "exit 0; tệp _acceptance/va-dang-nhap-mat-khau/thu/migration-tai-lieu.test.mjs: ca «migration: 038 là tệp mới, thay hàm trigger và xoá phiên» — đúng một tệp packages/db/migrations/038_*.sql, chứa «create or replace function app.vo_hieu_mat_khau_khi_vao_san» và «delete from identity.session»; ca «migration: không sửa migration đã commit» — diff từ merge-base với origin/main tới HEAD chỉ thêm tệp dưới packages/db/migrations, đối chứng viết trước một dòng «M …034_mat_khau.sql» thì hàm lọc nêu đúng tệp ấy; ca «tài liệu» — docs/adr/0005-dang-nhap-theo-san.md có chữ «va-dang-nhap-mat-khau», docs/product/tham-chieu.md §12 có dòng chứa «va-dang-nhap-mat-khau»."
     paths: ["packages/db/migrations/**", "docs/adr/0005-*.md", "docs/product/tham-chieu.md", "_acceptance/va-dang-nhap-mat-khau/thu/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

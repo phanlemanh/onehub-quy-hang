@@ -39,7 +39,7 @@ Cổng Bằng chứng 05/11.
 - AC-6: Given hộp đổi mật khẩu ở Cá nhân, When máy chủ trả 429, Then câu «Thử lại sau ít phút» hiện dưới ô mật khẩu hiện
   tại; ánh xạ mã lỗi → câu được bộ test web giữ.
 - AC-7: Given cây sau hàng này, When chạy kiểm kiểu, lint (kèm chuẩn giao diện), bộ test, bộ kiểm cơ sở dữ liệu của API,
-  bộ kiểm cách ly và build, Then đều xanh; migration là tệp mới `035_*.sql`, không migration đã commit nào đổi; ADR-0005
+  bộ kiểm cách ly và build, Then đều xanh; migration là tệp mới `038_*.sql`, không migration đã commit nào đổi; ADR-0005
   có dòng bổ sung cho hàng vá; Tham chiếu §12 có một dòng.
 
 ## Coverage
@@ -60,6 +60,6 @@ Cổng Bằng chứng 05/11.
 
 ## Notes
 
-- Vùng: `ranh_gioi` của hàng cộng phần khai ở Cổng Phạm vi (migration `packages/db/migrations/035_*.sql`, bộ kiểm cách ly
+- Vùng: `ranh_gioi` của hàng cộng phần khai ở Cổng Phạm vi (migration `packages/db/migrations/038_*.sql`, bộ kiểm cách ly
   `packages/db/tests/isolation.test.mjs`, đường đổi `packages/api/src/me/routes.ts`, bộ kiểm cơ sở dữ liệu
   `packages/api/test-db/va-dang-nhap-mat-khau/**`, tài liệu ADR-0005 và Tham chiếu).

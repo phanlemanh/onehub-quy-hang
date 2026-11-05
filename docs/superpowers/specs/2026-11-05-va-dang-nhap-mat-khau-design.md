@@ -18,7 +18,7 @@ Quyết định bị chạm: ADR-0005 bổ sung 04/11; migration 034.
 
 ## 2. Cách vá
 
-1. **Thu phiên khi vô hiệu vì vào sàn khác** — migration mới `035_*.sql` thay thân `app.vo_hieu_mat_khau_khi_vao_san()`
+1. **Thu phiên khi vô hiệu vì vào sàn khác** — migration mới `038_*.sql` thay thân `app.vo_hieu_mat_khau_khi_vao_san()`
    (cùng tên, cùng trigger): khi lệnh `update identity.password_state … where origin = 'san-cap' …` đổi một dòng, hàm xoá
    thêm mọi dòng `identity.session` của người ấy trong CÙNG giao dịch với lời mời, rồi ghi sự kiện `vo-hieu-san-khac`
    như cũ. Mật khẩu `tu-doi` không bị vô hiệu thì phiên giữ nguyên. Người được mời vào lại bằng mã 6 số như mọi người
