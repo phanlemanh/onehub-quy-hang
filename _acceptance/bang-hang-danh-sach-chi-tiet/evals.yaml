@@ -67,7 +67,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e6 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — khổ 375"
-      - "Đối chiếu dòng e6: /inventory có bảng thẻ (phần tử của bang-the), không có tay kéo của resizable; /inventory?unit=<mã> mở hồ sơ toàn màn (khung hồ sơ rộng bằng khung nhìn ± 2)"
+      - "Đối chiếu dòng e6: /inventory có bảng thẻ (phần tử của bang-the), không có tay kéo của resizable; /inventory?unit=<mã> mở hồ sơ toàn màn (khung hồ sơ rộng bằng khung nhìn trừ lề trang hai bên ± 2, bằng bề rộng đo trên nhánh chính)"
     target: "http://localhost:3477/inventory"
     expected: "Điện thoại giữ bảng thẻ và hồ sơ toàn màn; không cột kéo chia. Ảnh E6-the-375.png, E6-ho-so-375.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -140,7 +140,7 @@ evals:
     criterion: AC-7
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.api
+    cmd: config:executors.test.api_db
     paths: ["packages/api/src/**", "packages/api/test-db/**"]
     expected: "exit 0; ca «tên thành viên: mọi vai của sàn đọc được, chỉ mã và tên» trong một tệp test của packages/api có mặt và ok — ma trận viết trước: đầu chủ, đầu khách, trưởng nhóm, telesales của sàn A đọc được danh sách thành viên sàn A (200), mỗi phần tử deepEqual tập khoá {id, name} (không email, không phone); người sàn B nhận danh sách không chứa thành viên nào của A; lời gọi không đăng nhập 401; chiều đỏ cùng ca: thêm khoá email vào phần tử trả về thì assert tập khoá nêu «email»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

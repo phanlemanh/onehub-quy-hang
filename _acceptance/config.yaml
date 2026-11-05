@@ -19,6 +19,7 @@ executors:
     nap_mau_yml: "node --test packages/db/seed/nap-mau-yml.test.mjs"   # nap-mau-ban-that AC-8: đọc tệp workflow nút nạp
     typecheck_db: "node --test packages/db/seed/typecheck-db.test.mjs"   # va-nap-mau E6: gói db nằm trong npm run typecheck của gốc, chiều đỏ trên chính lệnh ấy
     du_lieu_mau_tsx: "node --env-file-if-exists=.env.local --import tsx --test \"packages/db/seed/*.test.mjs\""   # nap-mau-ban-that E10: như du_lieu_mau nhưng có tsx — bộ kiểm hàng 5 nhập packages/connect (TypeScript) từ hàng 10
+    api_db: "DATABASE_URL=${DATABASE_URL:-postgres://postgres:quyhang@localhost:5575/postgres} npm run test:db -w @quy-hang/api"   # bang-hang-danh-sach-chi-tiet E7c: bộ kiểm API trên Postgres — vắng DATABASE_URL thì dùng Postgres dãy D (5575)
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
