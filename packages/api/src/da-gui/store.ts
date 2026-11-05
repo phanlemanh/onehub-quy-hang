@@ -38,7 +38,7 @@ const SQL_TOM = `
                                and up.compartment = 'shareable' and up.removed_at is null
                              order by up.is_cover desc, up.display_order, up.added_at limit 1) as id
          from share_listings sl join listings l on l.company_id = sl.company_id and l.id = sl.listing_id
-        where sl.company_id = s.company_id and sl.share_id = s.id order by sl.position limit 4) b where b.id is not null) as covers
+        where sl.company_id = s.company_id and sl.share_id = s.id and not l.voided order by sl.position limit 4) b where b.id is not null) as covers
   from shares s left join prospects p on p.company_id = s.company_id and p.id = s.prospect_id
   where s.company_id = app.current_company_id() and ($1::text is null or s.sender_user_id = $1)`;
 
@@ -76,7 +76,7 @@ export async function readShare(tx: pg.PoolClient, me: string, laTruongNhom: boo
               (select count(*)::int from share_events e where e.company_id = sl.company_id and e.share_id = sl.share_id and e.type = 'interest' and e.listing_id = l.id) as interest
          from share_listings sl join listings l on l.company_id = sl.company_id and l.id = sl.listing_id
          left join lateral (select c1.upi, c1.stack, c1.floor, c1.living_area, c1.bedrooms_total, c1.direction_faces, c1.property_type, c1.property_sub_type from catalog_units c1 where c1.building_name = l.building_name and app.unit_key(c1.unit_number) = app.unit_key(l.unit_number) order by c1.measured_at desc limit 1) cu on true
-        where sl.company_id = app.current_company_id() and sl.share_id = $1 order by sl.position`,
+        where sl.company_id = app.current_company_id() and sl.share_id = $1 and not l.voided order by sl.position`,
       [id],
     )
   ).rows;
@@ -100,7 +100,7 @@ export async function readShare(tx: pg.PoolClient, me: string, laTruongNhom: boo
         await tx.query<DongCan>(
           `select l.id, l.building_name, l.unit_number, l.list_price::text, l.standard_status, cu.bedrooms_total, 0 as interest
              from listings l left join lateral (select c1.upi, c1.stack, c1.floor, c1.living_area, c1.bedrooms_total, c1.direction_faces, c1.property_type, c1.property_sub_type from catalog_units c1 where c1.building_name = l.building_name and app.unit_key(c1.unit_number) = app.unit_key(l.unit_number) order by c1.measured_at desc limit 1) cu on true
-            where l.company_id = app.current_company_id() and l.standard_status = 'Active'`,
+            where l.company_id = app.current_company_id() and l.standard_status = 'Active' and not l.voided`,
         )
       ).rows.map((u) => ({ id: u.id, buildingName: u.building_name, bedroomsTotal: u.bedrooms_total, listPrice: u.list_price == null ? null : Number(u.list_price), standardStatus: u.standard_status, name: ten(u.building_name, u.unit_number) }));
       const goc: CanSoSanh = { id: c.id, buildingName: c.building_name, bedroomsTotal: c.bedrooms_total, listPrice: gia, standardStatus: c.standard_status };

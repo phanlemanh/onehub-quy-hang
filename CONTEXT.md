@@ -71,6 +71,8 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Chủ nhà (của hàng) | `listing_owner` | Tên, số, giá đáy của chủ nhà một hàng; lớp `source`, chỉ đầu chủ giữ căn và trưởng nhóm thấy (ADR-0010) | «Người bán» |
 | Mở số chủ | `owner_phone_reveal` | Lần bấm xem số đầy đủ của chủ nhà; mỗi lần là một sự kiện ghi người, vai, lúc | «Xem số» |
 | Lần nhập | `imports` (bảng) | Một lần đưa file bảng hàng vào: kế hoạch, kết quả từng dòng, hoàn tác được cả lần (ADR-0011) | — |
+| Hoàn tác lần nhập | `undo` (`POST /api/v1/imports/{id}/undo`) | Gỡ cả một lần nhập đã ghi bằng sự kiện bù: căn lần nhập tạo ra khỏi Quỹ hàng, căn có sẵn về giá cũ; căn đã có người sửa sau thì liệt kê, không gỡ (hàng 66) | «Xoá lần nhập» |
+| Đã gỡ khỏi Quỹ hàng | `voided` (sự kiện, cờ khi gấp) | Hàng do lần nhập tạo, đã hoàn tác: không còn ở mọi danh sách, lịch sử giữ nguyên; không phải trạng thái (ADR-0011 quyết định 8) | «Đã xoá», «Huỷ» |
 | Mẫu file nhập | `import_template` *(đề xuất)* | Cách ghép cột và đọc giá trị sàn đã dùng cho một kiểu file; nhập lại cùng kiểu thì máy ghép sẵn | — |
 | Từ điển giá trị | `company_value_aliases` *(đề xuất)* | Cách viết riêng của sàn neo vào giá trị chuẩn («BP» → Bao phí); học từ lựa chọn của người, quản trị sàn duyệt | — |
 | Xử lý bằng AI | `ai_processing` *(đề xuất)* | Loại kết nối: gửi hồ sơ cột đã che cho nhà cung cấp AI lập kế hoạch nhập; sàn bật / tắt; không bao giờ mở lớp nguồn | «Tích hợp AI» |
