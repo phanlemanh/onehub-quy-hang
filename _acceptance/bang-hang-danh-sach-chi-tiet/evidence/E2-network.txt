@@ -1,0 +1,1 @@
+Driver: chay-ui.mjs (Chrome khong dau qua CDP rieng, khong qua browser tool co read_network_requests). Khong co dump network/console. networkObserved = n-a (driver).

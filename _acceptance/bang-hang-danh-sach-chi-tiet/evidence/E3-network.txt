@@ -1,0 +1,3 @@
+E3 network: driver = chay-ui.mjs (Chrome headless qua CDP, khong co read_network_requests). networkObserved = n-a (driver).
+Dev server log (.acceptance-runs/.../web-d105.log) 5xx/error lines:
+21

@@ -1,0 +1,1 @@
+Driver: script CDP tu viet (chay-ui.mjs --e7), khong co duong doc network/console -> n-a (driver). Khong thu thap duoc request that bai.
