@@ -62,8 +62,8 @@
     "docs/plan/lo-trinh.json:51"
   ],
   "han_muc": {
-    "bao_truoc_pct": 80,
-    "ban_giao_pct": 90,
+    "bao_truoc_pct": 95,
+    "ban_giao_pct": 98,
     "cho_ban_giao_phut": 20,
     "cho_dat_lai_phut": 45
   }
