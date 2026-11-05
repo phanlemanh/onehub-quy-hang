@@ -1,0 +1,1 @@
+driver: Chrome khong dau qua CDP tu viet (chay-ui.mjs), khong co read_network_requests; PATCH bat qua lop boc fetch: 1 PATCH hai khoa (e2), 0 PATCH (e2-hoan-lai). Khong dump duoc failed requests/console.

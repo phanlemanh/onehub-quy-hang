@@ -1,0 +1,1 @@
+E5b network: driver = CDP script chay-ui.mjs (khong co read_network_requests). Thong tin lay tu lop boc fetch: soPatch=0 o ca o sai; PATCH 400 that (sua than) o e5-400; 403 that o e5-403; failRequest o e5-mang. Khong co dump failed-requests rieng.

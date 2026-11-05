@@ -185,7 +185,7 @@ evals:
   - id: E12
     criterion: AC-1
     executor: script
-    cmd: config:executors.design.floor
+    cmd: config:executors.script.design_floor
     paths: ["apps/web/src/app/(app)/settings/lead-routing/**", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
     expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
