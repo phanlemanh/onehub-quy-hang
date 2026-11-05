@@ -177,6 +177,7 @@ BAN-DO-HE-THIET-KE-MAU>>> -->
 | khuôn | Khuôn Hồ sơ căn | `design/patterns/ho-so-can.md` |
 | khuôn | Khuôn Hôm nay của đầu chủ — bố cục Tràn | `design/patterns/hom-nay-dau-chu.md` |
 | khuôn | Khuôn Hôm nay của đầu khách — bố cục Dòng tin | `design/patterns/hom-nay-dau-khach.md` |
+| khuôn | Khuôn Liên hệ — bảng và hồ sơ người, bố cục Danh sách – chi tiết | `design/patterns/lien-he.md` |
 | khuôn | Khuôn Hôm nay của trưởng nhóm — bố cục Bảng điều khiển | `design/patterns/hom-nay-truong-nhom.md` |
 | khuôn | Khuôn Lead của tôi | `design/patterns/lead-cua-toi.md` |
 | khuôn | Khuôn Nhập Excel | `design/patterns/nhap-excel.md` |

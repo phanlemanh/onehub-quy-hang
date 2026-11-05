@@ -96,6 +96,8 @@ const BO_CUC_NHOM = {
   "hom-nay-dau-chu": "tran",
   // Hôm nay của đầu khách (hàng 37): «Dòng tin» theo vo-va-ia.md §2.
   "hom-nay-dau-khach": "dong-tin",
+  // Liên hệ (hàng 103): «Danh sách – chi tiết» theo luật đợt 62.
+  "lien-he": "danh-sach-chi-tiet",
   "hom-nay-truong-nhom": "bang-dieu-khien",
   "lead-cua-toi": "danh-sach-chi-tiet",
   "o-nhan-lead": "doc",
