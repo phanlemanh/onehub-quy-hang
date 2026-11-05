@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 465c4099bd955d66693df17f9612d0810fbcc589
+verified_commit: 0a10150857b0b91ca3b2707b333eb867150e2aaf
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -240,3 +240,7 @@ none — every multi-run eval is uniform
 Round 1: sửa theo S4 lượt 1 (phép đo chặn vai theo hành vi, chữ trạng thái theo thiết kế). Returned to implementation.
 Round 2: sửa theo S4 lượt 2 (Mẫu nhập chặn vai theo khuôn chung của mục Cài đặt sàn; E10 khuôn đạt có giới hạn + bài E10e). Returned to implementation.
 Round 3: mọi eval máy và ui-check đạt; E10 ở dạng đạt có giới hạn đi cùng E10e. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-05, do hoá cũ do gộp nhánh chính trước chữ ký
+run_id: repin-20261105T222745Z-24413
+sha: 0a10150857b0b91ca3b2707b333eb867150e2aaf · suites: 7 lệnh exit 0 · evals: 14/14 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10=1 · ngoài làn máy: E9
