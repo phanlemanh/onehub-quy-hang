@@ -120,5 +120,8 @@ việc Anthropic (vận hành). Never: tác tử đọc dòng hay ô nguồn (tr
   lạ (câu giao là «file mẫu lạ»), lối khác là gác theo đúng chữ ô cơ hội «nền 64». Bảng hai bộ ở thiết kế §1.
 - Số đo AC-1 là của cùng họ mô hình chạy ngoài API thật; số qua API thật (`thu/do-tac-tu.ts --that`, cùng ngưỡng) là điều
   kiện của phiên nghiệm thu.
+- Known limits đề xuất: cột chưa ghép mà bộ phân loại xếp «chưa rõ» (tiêu đề lạ, giá trị không khớp phép đọc nào — trên bộ lạ
+  là mọi cột chưa ghép) chỉ gửi tiêu đề và hình dạng, không giá trị (ADR-0011 qđ 2 «mặc định che»); Claude ghép bằng tiêu đề
+  và hình dạng, không đề xuất được quy đổi giá trị cho các cột ấy — công cụ «xin giá trị» thuộc vòng tác tử nhiều lượt (OOS-1).
 - Known limits đề xuất: một lần gọi có thể vượt trần tháng tối đa một lần gọi (≤ ~1,3 USD theo Kiến trúc §7) vì tiền chỉ
   biết sau khi gọi; chi phí và thời gian thật mỗi lần nhập chỉ đo được khi có khoá (Hỏi-1).
