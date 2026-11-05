@@ -23,7 +23,8 @@ căn trên điện thoại, `product-detail-5`, hồ sơ ho-so-dien-thoai-produc
 
 **Dùng khi** màn trình hồ sơ một căn: thuộc tính tự điền, lần rao, lịch sử. **Không dùng** cho Bảng hàng (nhóm
 `bang-hang`) hay chế độ cuộc gọi (hàng 28). Hồ sơ căn của Đầu khách trên điện thoại (hàng 33) là **lớp phủ trên cùng
-khuôn** này, không phải khối đích riêng; dựng lại theo `product-detail-5` là hàng riêng.
+khuôn** này, không phải khối đích riêng; thân điện thoại theo `product-detail-5` (hồ sơ ho-so-dien-thoai-product-detail-5)
+cũng đi trong cùng khuôn.
 
 ## Luật
 
@@ -31,7 +32,10 @@ khuôn** này, không phải khối đích riêng; dựng lại theo `product-de
   `KhungHoSoCan`); ở cột kéo chia cạnh Bảng hàng nó là đúng một `Frame` cao hết cột, thân cuộn riêng (`KhungHoSoCan
   cotPhu`); ở cột phải của Hôm nay nó là một `FramePanel` trong Frame của Hôm nay (`KhungHoSoCan cot`). Không lồng Frame
   trong Frame; không `Card`, không `Placeholder`. Chờ tải và lỗi của hồ sơ nằm trong cột (`ChoTai`, `TrangThai` kèm «Thử
-  lại»), bảng bên cạnh vẫn dùng được.
+  lại»), bảng bên cạnh vẫn dùng được. Hồ sơ có hai thân dựng từ cùng mô hình thuần (`units/ho-so/mo-hinh.ts`): thân cột
+  (`than-cot.tsx`, từ 768 px ở mọi chỗ) và thân điện thoại (`dien-thoai/than-dien-thoai.tsx`, dưới 768 px ở toàn màn và
+  trong Bảng hàng thẻ; lối ReUI `product-detail-5`, hồ sơ ho-so-dien-thoai-product-detail-5). Thân không mang khung: cả
+  hai nằm trong `KhungHoSoCan` của chỗ gọi; rẽ thân bằng `chonThan` (hàm khổ của Hôm nay điện thoại, một mốc cho kho).
 - **KH-hs-tren-may** — Hồ sơ đọc kho trên máy (bộ đồng bộ, hàng 13) và danh mục đã giữ trên máy; lịch sử qua
   `useHoSoHang`, mất mạng thì xem bản đã tải.
 - **KH-hs-anh-noi-bo** — Mục Ảnh (hàng 18, `units/photos/`) là ngoại lệ có tên của KH-hs-tren-may: ảnh và danh sách ảnh đọc
@@ -42,5 +46,7 @@ khuôn** này, không phải khối đích riêng; dựng lại theo `product-de
   (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút «Hỏi đầu chủ»), không rẽ theo tên vai. Hồ sơ đọc hai cờ Sẵn sàng bán và nút
   hỏi; ngăn Nội bộ và sửa ảnh của mục Ảnh vẫn do API ảnh trả (`noiBo`, `suaDuoc` — KH-hs-anh-noi-bo), cùng luật
   `canSeeSource` / `canSeeUnitInternal` nên khớp hai cờ còn lại. Người không thấy nguồn: không thẻ Nội bộ, không ổ khoá;
-  nút «Hỏi đầu chủ» dính đáy chỉ mở bảng chia sẻ của máy.
+  nút «Hỏi đầu chủ» dính đáy chỉ mở bảng chia sẻ của máy. Thân điện thoại: ảnh lớn đầu màn đọc đúng đường của mục Ảnh và
+  chỉ trình ảnh Nội bộ khi cả cờ `noiBo` của lõi lẫn API cho; nút chính dính đáy chọn bằng `nutChinh` — người không thấy
+  nguồn «Hỏi đầu chủ», người thấy nguồn «Ghi cuộc gọi» (`/units/call?hang=<id>`), căn chưa có mã không nút.
 - **KH-hs-khoa-thuoc-tinh** — Thuộc tính căn từ danh mục là chữ khoá, không ô sửa; sai thì «Báo sai thông tin căn».
