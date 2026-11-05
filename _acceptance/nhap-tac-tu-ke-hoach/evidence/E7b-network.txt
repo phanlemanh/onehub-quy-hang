@@ -1,3 +1,7 @@
-Nguon: JSON do chup.mjs in (CDP). Khong co failed request, khong co console error duoc bao.
-1440 mangTruocKhiTiep: /api/v1/imports, /imports/ai, /imports/templates (x2), /imports/ai/plan -- khong co /imports/{id}/rows
-375 mangTruocKhiTiep: tuong tu (lap 4 lan), /imports/ai/plan -- khong co /imports/{id}/rows
+E7b network (nguon: resource timing trong trang qua CDP + log may chu dev 3493; khong co read_network_requests)
+--- log may chu dev sau khi dung lai (GET/POST khong phai 200/201/204/307):
+(het)
+--- so lan goi /imports/{id}/rows: 0
+--- loi console [browser]: 0
+--- 1440 mang truoc Tiep: /api/v1/imports, /imports/ai, /imports/templates, /imports/ai/plan
+--- 375 mang truoc Tiep: nhu tren, lap lai danh sach/ai/templates 4 lan (khong co rows)
