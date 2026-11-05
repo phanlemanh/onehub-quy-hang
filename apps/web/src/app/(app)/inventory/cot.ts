@@ -4,6 +4,8 @@
  */
 import { nhanGiaTri, nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { StandardStatus } from "@quy-hang/core/listing";
+import { NHAN_TRANG_THAI_MAC_DINH, nhanCuaCan } from "@quy-hang/core/statuses";
+import { MAU_TRANG_THAI, type MauTrangThai } from "@/lib/mau-trang-thai";
 
 /** Một dòng của bảng. Không trường nguồn nào: hàng đến từ API không chở lớp `source`. */
 export type DongBang = {
@@ -15,6 +17,9 @@ export type DongBang = {
   floor: number | null;
   directionFaces: string | null;
   standardStatus: StandardStatus;
+  /** Mã nhãn trạng thái riêng của sàn mà căn mang (hàng 46); vắng hay `null` = nhãn mặc định. Không phải cột — chữ của ô
+   * Trạng thái đọc nó qua `chuCuaO`; lọc và đếm vẫn theo `standardStatus`. */
+  statusLabel?: string | null;
   listPrice: number | null;
   feeInclusion: string | null;
   furnished: string | null;
@@ -39,7 +44,7 @@ export type DongBang = {
   "dau-chu"?: string;
 };
 
-export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType">;
+export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType" | "statusLabel">;
 /** Kiểu ô lọc của cột: chữ chứa · chọn một giá trị · luật số. */
 export type KieuCot = "chu" | "chon" | "so";
 
@@ -54,14 +59,8 @@ export type Cot = {
   scale?: number;
 };
 
-export const STATUS_LABEL: Record<StandardStatus, string> = {
-  Incomplete: "Chưa đủ để rao",
-  Active: "Đang bán",
-  Pending: "Đang giao dịch",
-  Closed: "Đã bán",
-  Hold: "Tạm ngừng",
-  Withdrawn: "Ngừng hẳn",
-};
+/** Nhãn mặc định của sáu trạng thái — đọc từ lõi (`NHAN_TRANG_THAI_MAC_DINH`, hàng 46), chữ không đổi. */
+export const STATUS_LABEL: Readonly<Record<StandardStatus, string>> = NHAN_TRANG_THAI_MAC_DINH;
 export const FEE_LABEL: Record<string, string> = { included: "Bao phí", excluded: "Không bao phí" };
 export const VISIBILITY_LABEL: Record<string, string> = { Private: "Chỉ tôi", Company: "Toàn sàn" };
 export const WITHDRAWN_LABEL: Record<string, string> = {
@@ -142,14 +141,14 @@ export const nhanCot = (c: Cot, tv?: TuVung | null) => nhanTruong(tv, c.id, c.la
 
 /**
  * Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. `tv`: cách gọi riêng của sàn (hàng 45) cho giá trị của
- * tập đóng (phí, lý do ngừng); giá trị lưu ở dòng vẫn là giá trị chuẩn.
+ * tập đóng (phí, lý do ngừng) và nhãn trạng thái riêng (hàng 46); giá trị lưu ở dòng vẫn là giá trị chuẩn.
  */
 export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
   const v = d[id];
   if (v === null || v === undefined || v === "") return "—";
   switch (id) {
     case "standardStatus":
-      return STATUS_LABEL[d.standardStatus];
+      return nhanCuaCan(tv?.trangThai, d.standardStatus, d.statusLabel);
     case "feeInclusion":
       return nhanGiaTri(tv, "feeInclusion", String(v), FEE_LABEL[String(v)] ?? String(v));
     case "visibility":
@@ -170,7 +169,11 @@ export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
   }
 }
 
-/** Giá trị của ô chọn: lựa chọn của ô lọc là các giá trị này, chữ hiện qua `chuCuaO`. */
+/** Màu huy hiệu ô Trạng thái: theo trạng thái chuẩn — căn mang nhãn riêng nhận màu của neo (hàng 46). */
+export const mauTrangThai = (d: Pick<DongBang, "standardStatus">): MauTrangThai => MAU_TRANG_THAI[d.standardStatus];
+
+/** Giá trị của ô chọn: lựa chọn của ô lọc là các giá trị này, chữ hiện qua `chuCuaO`. Cột Trạng thái là trạng thái chuẩn —
+ * lọc «Đang giao dịch» gồm cả căn mang nhãn riêng neo vào nó (hàng 46, Hỏi-4). */
 export function giaTriChon(d: DongBang, id: CotId): string {
   const v = d[id];
   return v === null || v === undefined ? "" : String(v);

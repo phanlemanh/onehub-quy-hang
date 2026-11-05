@@ -4,7 +4,7 @@
  * Thẻ căn của Bảng hàng trên điện thoại (hàng 32) — chuyển thể `product-card.tsx` của khối @reui/product-grid-4 (khối đích ở
  * `docs/design/vo-va-ia.md` §2): giữ ô ảnh vuông `Item` muted bên trái, cột nội dung bên phải với dòng tiêu đề + giá chung
  * đường chân chữ và hàng ba thông số `dl` trên vạch mảnh. Đổi: tiêu đề → mã căn, giá → «4,65 tỷ» kèm điều kiện phí; bỏ câu
- * chuyện; ba thông số → Diện tích · Phòng ngủ · Hướng; huy hiệu trên ảnh → «Đang giao dịch»; nút tim → ô chọn khi đang chọn
+ * chuyện; ba thông số → Diện tích · Phòng ngủ · Hướng; huy hiệu trên ảnh → «Đang giao dịch» (hay nhãn riêng của căn, hàng 46); nút tim → ô chọn khi đang chọn
  * nhiều; dải đầu chương → dòng nhóm toà (`DongNhomToa`), một lần mỗi toà.
  */
 import { ImageIcon } from "lucide-react";
@@ -19,7 +19,7 @@ import { CHUA_RO, chuCuaO, dinhDangGia, type DongBang } from "../cot";
 import { useTuVung } from "../tu-vung";
 import { taoNguonAnhBia } from "./anh-bia";
 import { taoGiuLau, NGUONG_GIU_LAU, type SuKien } from "./giu-lau";
-import { chonDuoc } from "./the";
+import { chonDuoc, chuTrangThaiThe } from "./the";
 
 // Một nguồn ảnh bìa cho cả trang: mỗi căn hỏi API một lần.
 const nguonAnh = typeof window === "undefined" ? null : taoNguonAnhBia();
@@ -134,7 +134,7 @@ export function TheCan({
         {d.standardStatus === "Pending" ? (
           <div className="absolute top-2 left-2">
             <Badge variant="info-light" radius="full">
-              Đang giao dịch
+              {chuTrangThaiThe(d, tv)}
             </Badge>
           </div>
         ) : null}

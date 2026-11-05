@@ -5,6 +5,7 @@
 import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type EventType, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
 import { nhanGiaTri, type TuVung } from "@quy-hang/core/labels";
+import { nhanCuaCan, nhanCuaNeo, type NhanTrangThai } from "@quy-hang/core/statuses";
 import { FEE_LABEL, STATUS_LABEL } from "../cot";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { hoanTacDuoc } from "./hoan-tac";
@@ -16,13 +17,19 @@ export type HangSua = {
   listPrice: number | null;
   feeInclusion: string | null;
   standardStatus: StandardStatus;
+  /** Mã nhãn trạng thái riêng căn đang mang (hàng 46); vắng hay `null` = nhãn mặc định. */
+  statusLabel?: string | null;
   legalStatus: string | null;
   occupantType: string | null;
 };
 
 export type Lenh =
   | { type: "price_changed"; payload: { listPrice: number; feeInclusion: FeeInclusion } }
-  | { type: "status_changed"; payload: { to: StandardStatus; closePrice?: number; closeDate?: string; withdrawnReason?: WithdrawnReason } };
+  | {
+      type: "status_changed";
+      /** `label`: mã nhãn riêng của nấc đích (hàng 46); `null` = về nhãn mặc định; vắng = nhãn mặc định (như trước hàng 46). */
+      payload: { to: StandardStatus; label?: string | null; closePrice?: number; closeDate?: string; withdrawnReason?: WithdrawnReason };
+    };
 
 export type KetQuaLenh =
   | { ok: true; lenh: Lenh; hieuLa: string | null; hoiLai: HoiLai | null; khongHoanTac: boolean }
@@ -64,7 +71,7 @@ export function chuDienSan(hang: Pick<HangSua, "listPrice">, viet: VietGia = vie
 
 /** Dòng «cũ → mới» của hộp hỏi lại. */
 export function moTaThayDoi(
-  hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">,
+  hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus" | "statusLabel">,
   lenh: Lenh,
   viet: VietGia = vietGia,
   /** Cách gọi riêng của sàn (hàng 45) cho chữ phí. */
@@ -75,7 +82,8 @@ export function moTaThayDoi(
     const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${phi(hang.feeInclusion)}`;
     return `${cu} → ${viet(lenh.payload.listPrice)}, ${phi(lenh.payload.feeInclusion)}`;
   }
-  return `${STATUS_LABEL[hang.standardStatus]} → ${STATUS_LABEL[lenh.payload.to]}`;
+  const nhan = tv?.trangThai;
+  return `${nhanCuaCan(nhan, hang.standardStatus, hang.statusLabel)} → ${nhanCuaCan(nhan, lenh.payload.to, lenh.payload.label)}`;
 }
 
 /** Trình sửa Giá: chữ đã gõ + điều kiện phí đang chọn → một lệnh đổi giá. */
@@ -100,6 +108,28 @@ export function dungLenhPhi(hang: HangSua, phi: FeeInclusion): KetQuaLenh {
 export function nacTrangThai(tu: StandardStatus): readonly StandardStatus[] {
   return TRANSITIONS[tu];
 }
+
+/** Một lựa chọn của thực đơn Trạng thái: nấc đích, mã nhãn (`null` = nhãn mặc định) và chữ hiện. */
+export type LuaChonTrangThai = { to: StandardStatus; label: string | null; chu: string };
+
+/**
+ * Thực đơn trình sửa Trạng thái (hàng 46): mỗi nấc đích theo bảng chuyển liệt nhãn mặc định rồi các nhãn riêng neo vào nấc
+ * ấy. Nấc hiện tại có nhãn riêng thì đứng đầu các lựa chọn cùng nấc (đổi nhãn tại chỗ), trừ nhãn căn đang mang. Mã căn
+ * mang mà bộ nhãn không còn thì không thành lựa chọn nào.
+ */
+export function luaChonTrangThai(hang: Pick<HangSua, "standardStatus" | "statusLabel">, nhan: readonly NhanTrangThai[] = []): LuaChonTrangThai[] {
+  const cuaNac = (s: StandardStatus): LuaChonTrangThai[] => [
+    { to: s, label: null, chu: STATUS_LABEL[s] },
+    ...nhanCuaNeo(nhan, s).map((n) => ({ to: s, label: n.ma, chu: n.label })),
+  ];
+  const tu = hang.standardStatus;
+  const dangMang = hang.statusLabel ?? null;
+  const taiCho = nhanCuaNeo(nhan, tu).length ? cuaNac(tu).filter((l) => l.label !== dangMang) : [];
+  return [...taiCho, ...nacTrangThai(tu).flatMap(cuaNac)];
+}
+
+/** Lựa chọn đổi nhãn tại chỗ (cùng nấc với căn) — không cần bảng chuyển. */
+export const laDoiNhanTaiCho = (hang: Pick<HangSua, "standardStatus">, l: Pick<LuaChonTrangThai, "to">) => l.to === hang.standardStatus;
 
 const NHAN_THIEU = NHAN_DIEU_KIEN;
 
@@ -147,7 +177,8 @@ export function moTaLoi(l: LoiGhi): string {
   return "Lần sửa không hợp lệ";
 }
 
-export type ThemTrangThai = { giaChot?: string; ngayBan?: string; lyDo?: WithdrawnReason };
+/** `label`: mã nhãn riêng đã chọn (hàng 46); `null` = nhãn mặc định khi đổi nhãn tại chỗ; vắng = không gửi khoá nhãn. */
+export type ThemTrangThai = { giaChot?: string; ngayBan?: string; lyDo?: WithdrawnReason; label?: string | null };
 
 /** Ngày hôm nay theo giờ máy, YYYY-MM-DD — mặc định của ngày bán. */
 export function homNay(d = new Date()): string {
@@ -157,6 +188,12 @@ export function homNay(d = new Date()): string {
 
 /** Trình sửa Trạng thái: nấc đã chọn (+ giá chốt, ngày, lý do khi nấc đòi) → một lệnh đổi trạng thái. */
 export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemTrangThai = {}): KetQuaLenh {
+  if (to === hang.standardStatus) {
+    // Đổi nhãn tại chỗ (hàng 46): cùng trạng thái chuẩn, khác nhãn — bảng chuyển không xét, không đòi điều kiện của nấc.
+    if (them.label === undefined || them.label === (hang.statusLabel ?? null)) return { ok: false, loi: "Không chuyển được sang nấc này" };
+    const lenh: Lenh = { type: "status_changed", payload: { to, label: them.label } };
+    return { ok: true, lenh, hieuLa: null, hoiLai: null, khongHoanTac: !hoanTacDuoc(hang, lenh) };
+  }
   if (!nacTrangThai(hang.standardStatus).includes(to)) return { ok: false, loi: "Không chuyển được sang nấc này" };
   let closePrice: number | undefined;
   let hieuLa: string | null = null;
@@ -172,6 +209,8 @@ export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemT
     return { ok: false, loi: to === "Active" ? `Chưa lên Đang bán được: thiếu ${ten}` : `Cần ${ten}` };
   }
   const payload: Extract<Lenh, { type: "status_changed" }>["payload"] = { to };
+  // Nhãn riêng của nấc đích; nhãn mặc định không gửi khoá — lệnh giữ đúng hình trước hàng 46.
+  if (them.label) payload.label = them.label;
   if (to === "Closed") {
     payload.closePrice = closePrice;
     payload.closeDate = them.ngayBan || homNay();

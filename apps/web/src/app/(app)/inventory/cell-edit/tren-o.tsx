@@ -7,7 +7,7 @@
  * (va-sua-tren-o). Logic thuần ở `lenh.ts`, `hoan-tac.ts`.
  */
 import { useCallback, useState, type KeyboardEvent, type ReactNode } from "react";
-import type { StandardStatus, WithdrawnReason } from "@quy-hang/core/listing";
+import type { WithdrawnReason } from "@quy-hang/core/listing";
 import { docGia, vietPhanTram, type FeeInclusion } from "@quy-hang/core/pricing";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -19,12 +19,12 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { nhanGiaTri } from "@quy-hang/core/labels";
-import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
+import { chuCuaO, FEE_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
 import { useTuVung } from "../tu-vung";
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
 import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
+import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, laDoiNhanTaiCho, luaChonTrangThai, moTaThayDoi, XAC_NHAN, type KetQuaLenh, type LuaChonTrangThai } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -201,30 +201,40 @@ function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => vo
 }
 
 function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
-  const nac = nacTrangThai(hang.standardStatus);
-  const [to, setTo] = useState<StandardStatus | null>(null);
+  const tv = useTuVung();
+  // Thực đơn đọc bộ nhãn trạng thái của sàn (hàng 46): mỗi nấc nhãn mặc định rồi nhãn riêng neo vào nó, cùng màu của neo.
+  const ds = luaChonTrangThai(hang, tv.trangThai);
+  const [chonLc, setChonLc] = useState<LuaChonTrangThai | null>(null);
+  const to = chonLc?.to ?? null;
   const [giaChot, setGiaChot] = useState("");
   const [ngayBan, setNgayBan] = useState(homNay());
   const [lyDo, setLyDo] = useState<WithdrawnReason | undefined>();
-  const chon = (s: StandardStatus) => {
+  const chon = (lc: LuaChonTrangThai) => {
     onDoiChu();
-    if (s === "Closed" || s === "Withdrawn") setTo(s);
-    else onXet(dungLenhTrangThai(hang, s));
+    if (!laDoiNhanTaiCho(hang, lc) && (lc.to === "Closed" || lc.to === "Withdrawn")) setChonLc(lc);
+    else onXet(dungLenhTrangThai(hang, lc.to, { label: lc.label }));
   };
-  if (!nac.length) return <p className="text-sm text-muted-foreground">«{STATUS_LABEL[hang.standardStatus]}» là nấc cuối — mở lại là hàng mới.</p>;
+  if (!ds.length) return <p className="text-sm text-muted-foreground">«{chuCuaO(hang, "standardStatus", tv)}» là nấc cuối — mở lại là hàng mới.</p>;
   return (
     <form
       className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
-        if (to) onXet(dungLenhTrangThai(hang, to, { giaChot, ngayBan, lyDo }));
+        if (chonLc) onXet(dungLenhTrangThai(hang, chonLc.to, { giaChot, ngayBan, lyDo, label: chonLc.label }));
       }}
       onKeyDown={(e) => (e.key === "Escape" ? onHuy() : null)}
     >
       <div className="flex flex-wrap gap-1.5" role="group" aria-label="Đổi sang">
-        {nac.map((s, i) => (
-          <Button key={s} type="button" size="sm" variant={to === s ? "default" : "outline"} autoFocus={i === 0} onClick={() => chon(s)}>
-            {STATUS_LABEL[s]}
+        {ds.map((lc, i) => (
+          <Button
+            key={`${lc.to}:${lc.label ?? ""}`}
+            type="button"
+            size="sm"
+            variant={chonLc?.to === lc.to && chonLc.label === lc.label ? "default" : "outline"}
+            autoFocus={i === 0}
+            onClick={() => chon(lc)}
+          >
+            {lc.chu}
           </Button>
         ))}
       </div>
@@ -252,7 +262,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
       {loi ? <p className="text-xs text-destructive">{loi}</p> : null}
       {to ? (
         <Button type="submit" size="sm">
-          Đổi sang {STATUS_LABEL[to]}
+          Đổi sang {chonLc?.chu}
         </Button>
       ) : null}
       <p className="text-xs text-muted-foreground">{XAC_NHAN}</p>
