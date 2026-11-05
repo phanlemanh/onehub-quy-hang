@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
 import {
   applyPlan,
+  apSuaMau,
   dongDauMoiCan,
-  gopMau,
   khoaCan,
   kiemNgayXacNhan,
   LY_DO_DONG_NHAP,
@@ -12,7 +12,8 @@ import {
   validatePlan,
   type AppliedRow,
   type Cell,
-  type CotMau,
+  type CotMauDaSua,
+  type DongSuaMau,
   type ImportPlan,
   type ImportRowAction,
   type OpenListingFact,
@@ -155,10 +156,16 @@ export async function dauChuCuaSan(tx: pg.PoolClient): Promise<string[] | Refusa
 }
 
 /** Mẫu file của sàn (hàng 67, ADR-0011 quyết định 6): rút từ kế hoạch của các lần nhập ĐÃ GHI, mỗi khoá tiêu đề giữ cột
- *  của lần mới nhất. Lõi bỏ bảng quy đổi ở cột nguồn và cột không phải trường chuẩn — thân không mang ô nào của tệp. */
-export async function mauCuaSan(tx: pg.PoolClient): Promise<CotMau[] | Refusal> {
+ *  của lần mới nhất, rồi gộp sổ sửa của Quản trị sàn (hàng 50, `import_templates`) — mục mới nhất thắng, mốc của lần nhập
+ *  là lúc mở. Lõi bỏ bảng quy đổi ở cột nguồn và cột không phải trường chuẩn — thân không mang ô nào của tệp. */
+export async function mauCuaSan(tx: pg.PoolClient): Promise<CotMauDaSua[] | Refusal> {
   const nguoi = await vaiNguoiGui(tx);
   if (!nguoi.roles.some((v) => VAI_NHAP.includes(v))) return { error: API_ERRORS.importRoleRequired };
+  return mauDaGop(tx);
+}
+
+/** Mẫu đã gộp sổ sửa — không kiểm vai (đường của màn nhập kiểm vai nhập, đường của màn Mẫu nhập kiểm quản trị). */
+export async function mauDaGop(tx: pg.PoolClient): Promise<CotMauDaSua[]> {
   // Tiêu đề của lần nhập nằm trong kế hoạch đã lưu (`plan.headers`, xem openImport), cùng thứ tự với cột.
   const { rows } = await tx.query<{ id: string; plan: ImportPlan & { headers?: unknown }; created_at: Date }>(
     "select id, plan, created_at from imports where company_id = app.current_company_id() and status = 'committed' order by created_at desc limit 50",
@@ -168,7 +175,28 @@ export async function mauCuaSan(tx: pg.PoolClient): Promise<CotMau[] | Refusal> 
     if (!Array.isArray(r.plan?.columns)) return [];
     return taoMau(r.plan, headers, { importId: r.id, at: r.created_at.toISOString() });
   });
-  return [...gopMau(mau).values()].sort((a, b) => a.headerKey.localeCompare(b.headerKey));
+  return apSuaMau(mau, await soSuaMau(tx));
+}
+
+/** Sổ sửa mẫu của sàn đang làm (luật theo dòng lọc theo sàn). */
+export async function soSuaMau(tx: pg.PoolClient): Promise<DongSuaMau[]> {
+  const { rows } = await tx.query<{
+    id: string;
+    header_key: string;
+    action: "set" | "delete";
+    target: string | null;
+    transform: DongSuaMau["transform"] | null;
+    value_map: Record<string, string> | null;
+    edited_by: string;
+    edited_at: Date;
+  }>("select id, header_key, action, target, transform, value_map, edited_by, edited_at from import_templates where company_id = app.current_company_id()");
+  return rows.map((r) => {
+    const d: DongSuaMau = { id: r.id, headerKey: r.header_key, action: r.action, editedBy: r.edited_by, at: r.edited_at.toISOString() };
+    if (r.target !== null) d.target = r.target as DongSuaMau["target"];
+    if (r.transform !== null) d.transform = r.transform;
+    if (r.value_map !== null) d.valueMap = r.value_map;
+    return d;
+  });
 }
 
 export async function writeBatch(
