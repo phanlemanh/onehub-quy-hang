@@ -2583,6 +2583,20 @@
       "vung": [
         "_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs"
       ]
+    },
+    {
+      "ma": "va-nut-ghi-cuoc-goi-truong-nhom",
+      "cau_giao": "Nút chính «Ghi cuộc gọi» của hồ sơ căn điện thoại chỉ hiện cho người vào được màn ghi cuộc gọi: trưởng nhóm không có vai đầu chủ không thấy nút dẫn tới trang không có.",
+      "slug": "va-nut-ghi-cuoc-goi-truong-nhom",
+      "vi_sao": "Ngoài-1/2 hàng ho-so-dien-thoai-product-detail-5: chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 05/11 (mo-hinh.ts nutChinh suy từ hoiDauChu, units/call/page.tsx chặn người không có listing_agent). Hàng vá, không mã: đã quyết.",
+      "hang": "T2",
+      "sau": [
+        "ho-so-dien-thoai-product-detail-5"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/**",
+        "apps/web/src/app/(app)/units/call/**"
+      ]
     }
   ],
   "chan_troi": [
