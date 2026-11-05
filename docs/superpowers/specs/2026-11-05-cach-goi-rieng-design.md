@@ -27,7 +27,7 @@ thì không lưu được; sàn khác vẫn thấy tên mặc định.
   nhãn một sự kiện ghi người và vai, đúng Tham chiếu §4 «mọi thay đổi vào nhật ký».
 - Sổ thêm dòng #37 `labels.value.<trường chuẩn>` (đối tượng `{giá trị chuẩn: tên riêng}`, lối riêng của hàng 45). #19
   `values.aliases` (từ điển gõ tắt khi nhập, nhiều cách gõ → một giá trị chuẩn) giữ nguyên cho hàng 70 — đó là chiều
-  VÀO, còn #37 là chiều HIỆN. Lệch so với chữ sổ #19 (bảng `company_value_aliases`) nêu ở Cổng Phạm vi (Hỏi-3).
+  VÀO, còn #37 là chiều HIỆN. Lệch so với chữ sổ #19 (bảng `company_value_aliases`) nêu ở Cổng Phạm vi (Hỏi-1).
 
 ### 2. Lõi — `packages/core/src/labels/` (một sổ từ vựng)
 
@@ -153,15 +153,15 @@ sàn); không có khuôn khả dĩ thứ hai nên không tra mẫu.
 
 ## Câu chỉ người có (Cổng Phạm vi)
 
-- **Hỏi-1** — Mỗi giá trị chuẩn có đúng MỘT tên riêng hiện ra (khuyến nghị); các cách gõ khác («bao phí», «BP») là từ
-  điển nhập của hàng 70. Lối khác: cho nhiều tên riêng neo cùng một giá trị chuẩn và căn nhớ tên nào được chọn — phải
-  thêm cột vào bản hàng, chạm đường ghi, gấp ba cỡ vòng.
-- **Hỏi-2** — Tên riêng của trường và giá trị ra trang khách và bản phát hàng qua cửa của lõi (`tuVungRaNgoai`), chỉ cho
-  trường có trong tập khoá ra của người nhận (khuyến nghị — đúng câu giao đã ký). Dòng nhãn lưu lớp `company_internal`;
-  chữ nhãn đã qua bộ dò số điện thoại/email lúc lưu. Lối khác: trang khách giữ chữ mặc định — bỏ một vế của câu giao.
-- **Hỏi-3** — Lưu nhãn trong `company_settings` bằng khoá ba đoạn (migration 039 nới check), thêm dòng sổ #37 cho tên
+- **Hỏi-1** — Lưu nhãn trong `company_settings` bằng khoá ba đoạn (migration 039 nới check), thêm dòng sổ #37 cho tên
   giá trị; #19 bảng `company_value_aliases` để hàng 70 (khuyến nghị — giám sát duyệt B-15). Lối khác: bảng riêng
   `company_value_aliases` ngay vòng này — thêm bảng, luật dòng, trigger nhật ký riêng.
+- **Hỏi-2** — Mỗi giá trị chuẩn có đúng MỘT tên riêng hiện ra (khuyến nghị); các cách gõ khác («bao phí», «BP») là từ
+  điển nhập của hàng 70. Lối khác: cho nhiều tên riêng neo cùng một giá trị chuẩn và căn nhớ tên nào được chọn — phải
+  thêm cột vào bản hàng, chạm đường ghi, gấp ba cỡ vòng.
+- **Hỏi-3** — Tên riêng của trường và giá trị ra trang khách và bản phát hàng qua cửa của lõi (`tuVungRaNgoai`), chỉ cho
+  trường có trong tập khoá ra của người nhận (khuyến nghị — đúng câu giao đã ký). Dòng nhãn lưu lớp `company_internal`;
+  chữ nhãn đã qua bộ dò số điện thoại/email lúc lưu. Lối khác: trang khách giữ chữ mặc định — bỏ một vế của câu giao.
 - **Hỏi-4** — Danh sách trường đổi tên được (15 trường đang là cột Bảng hàng) và tập đóng có tên riêng (phí, lý do ngừng)
   là bảng của lõi, thêm trường là thêm một dòng (khuyến nghị — giữ cứng vì nghĩa chuẩn để so giữa các sàn: chỉ trường có
   nghĩa chuẩn mới có tên mặc định để đổi). Lối khác: mở cho mọi trường của mọi mặt ngay — phải dọn mọi bảng nhãn viết tay

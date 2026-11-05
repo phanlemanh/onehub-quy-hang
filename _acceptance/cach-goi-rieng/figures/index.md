@@ -2,9 +2,9 @@
 
 | Điểm | Đếm | Hình |
 |---|---|---|
-| Hỏi-1 một tên riêng mỗi giá trị chuẩn | dưới ngưỡng: 1 bước, 2 lối không rẽ trong luồng | — |
-| Hỏi-2 nhãn ra trang khách qua cửa lõi | 4 bước nối tiếp (lưu → từ vựng → lọc theo khoá ra → ba mặt) + 2 nhánh (trong sàn / ra ngoài) | `luong-nhan.html` |
-| Hỏi-3 lưu trong company_settings khoá ba đoạn | chung hình với Hỏi-2 (bước «lưu») | `luong-nhan.html` |
+| Hỏi-2 một tên riêng mỗi giá trị chuẩn | dưới ngưỡng: 1 bước, 2 lối không rẽ trong luồng | — |
+| Hỏi-3 nhãn ra trang khách qua cửa lõi | 4 bước nối tiếp (lưu → từ vựng → lọc theo khoá ra → ba mặt) + 2 nhánh (trong sàn / ra ngoài) | `luong-nhan.html` |
+| Hỏi-1 lưu trong company_settings khoá ba đoạn | chung hình với Hỏi-3 (bước «lưu») | `luong-nhan.html` |
 | Hỏi-4 danh sách trường và tập đóng ở lõi | dưới ngưỡng: một bảng | — |
 
 ## Đề bài `luong-nhan`

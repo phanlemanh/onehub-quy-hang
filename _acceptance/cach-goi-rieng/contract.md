@@ -81,7 +81,7 @@ ký 05/11).
 - Tên riêng cho hướng và loại hình (`directionFaces`, `propertySubType`) — hướng là cột chữ, loại hình chưa là cột.
 - Hồ sơ căn, ô nhận lead, màn Gửi, Hôm nay giữ nhãn dựng sẵn ở vòng này.
 - Đưa nhãn xuống kho trên máy cùng lần kéo đồng bộ (ADR-0018 quyết định 9) — Bảng hàng đọc ở máy chủ lúc mở trang.
-- Nhiều tên riêng cùng neo một giá trị chuẩn (xem Hỏi-1 của design doc).
+- Nhiều tên riêng cùng neo một giá trị chuẩn (xem Hỏi-2 của design doc).
 - Chụp tệp xlsx/ảnh xuất ra: bản phát hàng chụp ở khung xem trước của hộp thoại (E14), tệp xuất đo bằng bài kiểm hàm dựng.
 
 > Out of scope = scope-truth (Gate 1 duyệt mục này). Rationale/trade-off từng mục → 1 entry `descope` trong `decisions.jsonl`.

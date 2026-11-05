@@ -41,7 +41,7 @@ export type TruongDatTen = keyof typeof TRUONG_DAT_TEN;
 export const DS_TRUONG_DAT_TEN = Object.keys(TRUONG_DAT_TEN) as TruongDatTen[];
 
 /**
- * Tập đóng sàn đặt tên riêng cho từng giá trị (Hỏi-1: mỗi giá trị chuẩn đúng một tên riêng). Trạng thái là hàng 46;
+ * Tập đóng sàn đặt tên riêng cho từng giá trị (Hỏi-2: mỗi giá trị chuẩn đúng một tên riêng). Trạng thái là hàng 46;
  * hướng, loại hình để sau (cột chữ, chưa là cột).
  */
 export const TAP_DONG = {
@@ -108,7 +108,7 @@ export type DongNhan = { key: string; value: unknown };
 
 /**
  * Kiểm cả bộ nhãn (nguyên khối — một ô sai thì cả bộ sai) và dựng dòng cần có. Hai giá trị riêng cùng chữ trong một
- * trường là lỗi; một giá trị chuẩn chỉ một tên riêng (Hỏi-1).
+ * trường là lỗi; một giá trị chuẩn chỉ một tên riêng (Hỏi-2).
  */
 export function dungDongNhan(bo: unknown): { ok: true; dong: DongNhan[] } | { ok: false; loi: string } {
   if (bo === null || typeof bo !== "object") return { ok: false, loi: "thân phải là { fields, values }" };
