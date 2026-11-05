@@ -2408,6 +2408,17 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-04"
     },
     {
+      "ma": "va-gui-can-da-go",
+      "cau_giao": "Căn đã gỡ khi hoàn tác lần nhập không vào được Lần gửi mới và không ghi được sự kiện gửi (Quan tâm) ở tầng cơ sở dữ liệu",
+      "slug": "va-gui-can-da-go",
+      "vi_sao": "Ngoài-2 của hàng 66 — chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 05/11 (luật 65 của đợt)",
+      "vai": "Đầu khách",
+      "hang": "T3",
+      "dung_tren": [
+        "66"
+      ]
+    },
+    {
       "ma": "105",
       "cau_giao": "Đầu chủ mở hồ sơ căn từ Bảng hàng thì hồ sơ là một cột đứng cạnh bảng, ngoài khung bảng, cao từ đỉnh vùng làm việc tới đáy màn, đẩy bảng sang trái và kéo chia 28–50%; thanh trên của vỏ giữ nguyên, nhóm nút Nhóm · Lọc · Cột · Xuất và +Lead không bị che; điện thoại không đổi",
       "slug": "bang-hang-danh-sach-chi-tiet",

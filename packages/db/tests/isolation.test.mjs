@@ -2387,6 +2387,69 @@ test("trang khách: share_events nằm trong phép kiểm luật theo dòng", { 
   }
 });
 
+// ---- Căn đã gỡ không vào Lần gửi, không nhận «Quan tâm» (037, hàng vá va-gui-can-da-go) ----
+/** Lời gọi phải lỗi đúng mã Postgres (mã là hợp đồng với API: 22023 → 400, 23514 → 409). */
+async function loiMa(client, sql, params, ma, nhan) {
+  await client.query("savepoint loi_ma");
+  await assert.rejects(client.query(sql, params), (e) => {
+    assert.equal(e.code, ma, `${nhan}: mã lỗi`);
+    return true;
+  });
+  await client.query("rollback to savepoint loi_ma");
+}
+test("gửi căn đã gỡ (037): hàm chặn ở tầng dữ liệu", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.DK1, COMPANY_A);
+    const demShares = async () => (await c.query("select count(*)::int n from shares where company_id = $1", [COMPANY_A])).rows[0].n;
+    const demSuKien = async () => (await c.query("select count(*)::int n from share_events where share_id = $1", [LKS.A])).rows[0].n;
+    // Đối chứng dương: căn chưa gỡ gửi được, «Quan tâm» ghi được.
+    const truoc = await demShares();
+    await c.query("select app.create_share(gen_random_uuid(), 'maG000000001', 'agents', null, $1)", [[LKL.A]]);
+    assert.equal(await demShares(), truoc + 1, "đối chứng: căn chưa gỡ gửi được");
+    assert.equal((await c.query("select app.record_share_event('maA000000000', 'interest', $1, 'may-thu-0901') as r", [LKL.A])).rows[0].r, true, "đối chứng: căn chưa gỡ nhận Quan tâm");
+    // Gỡ căn (cờ của bản gấp, hàng 66) bằng vai chủ bảng.
+    await c.query("reset role");
+    await c.query("update listings set voided = true where id = $1", [LKL.A]);
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, LK.DK1, COMPANY_A);
+    const n0 = await demShares();
+    await loiMa(c, "select app.create_share(gen_random_uuid(), 'maG000000002', 'agents', null, $1)", [[LKL.A]], "22023", "Lần gửi có căn đã gỡ");
+    assert.equal(await demShares(), n0, "căn đã gỡ: không thêm Lần gửi");
+    const e0 = await demSuKien();
+    await loiMa(c, "select app.record_share_event('maA000000000', 'interest', $1, 'may-thu-0902')", [LKL.A], "23514", "Quan tâm căn đã gỡ");
+    assert.equal(await demSuKien(), e0, "căn đã gỡ: không thêm sự kiện");
+    // Cách ly: sàn B không gửi được căn của sàn A.
+    await lamNguoi(c, LK.B, COMPANY_B);
+    await loiMa(c, "select app.create_share(gen_random_uuid(), 'maG000000003', 'agents', null, $1)", [[LKL.A]], "22023", "sàn B gửi căn của sàn A");
+  });
+});
+
+test("gửi căn đã gỡ (037): hàm giữ chữ ký và quyền", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select p.proname, p.prosecdef, p.proconfig, pg_get_userbyid(p.proowner) as chu,
+              array(select distinct (aclexplode(p.proacl)).grantee::regrole::text) as duoc
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'app' and p.proname in ('create_share', 'record_share_event') order by p.proname`,
+    );
+    assert.deepEqual(rows.map((r) => r.proname), ["create_share", "record_share_event"]);
+    for (const r of rows) {
+      assert.equal(r.prosecdef, true, `${r.proname}: prosecdef`);
+      assert.deepEqual(r.proconfig, ['search_path=""'], `${r.proname}: search_path rỗng`);
+      assert.deepEqual([...r.duoc].sort(), [r.chu, "quy_hang_app"].sort(), `${r.proname}: chỉ chủ hàm và quy_hang_app được gọi`);
+      assert.ok(r.duoc.includes("quy_hang_app"), `${r.proname}: quy_hang_app có quyền`);
+    }
+    // Chạy hai lần không áp lại: packages/api/test-db/va-gui-can-da-go/migrate-hai-lan.test.ts (cơ sở dữ liệu tạm) — bộ này
+    // còn chạy trỏ bản thật, chỉ đọc và rollback.
+    const m = await client.query("select count(*)::int n from schema_migrations where name like '037_%'");
+    assert.equal(m.rows[0].n, 1, "037 đã áp");
+  } finally {
+    await client.end();
+  }
+});
+
 test("trang khách: hàm theo mã không vượt sàn", { skip }, async () => {
   await withLienHeKhach(async (c) => {
     await lamNguoi(c, LK.TN, COMPANY_A);
