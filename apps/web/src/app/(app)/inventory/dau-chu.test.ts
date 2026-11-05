@@ -10,10 +10,12 @@ import { COT, COT_AN_MAC_DINH, chuCuaO, chuDauChu, DA_ROI_SAN, type DanhBaDauChu
 import { ghepDanhMuc } from "./ghep-danh-muc";
 
 // Danh bạ của sàn mẫu: hai đầu chủ còn trong sàn. Mã người và tên là mồi, không dữ liệu thật.
-const DANH_BA: DanhBaDauChu = new Map([
+// `moi: true`: danh bạ vừa đọc từ máy chủ trong phiên (hàng 48).
+const TEN = new Map([
   ["u-dau-chu-1", "[Tên] Đầu chủ một"],
   ["u-dau-chu-2", "[Tên] Đầu chủ hai"],
 ]);
+const DANH_BA: DanhBaDauChu = { ten: TEN, moi: true };
 
 function hang(listAgentKey: string | null): ListingView {
   return {
@@ -65,8 +67,28 @@ describe("cột Đầu chủ", () => {
   it("cột Đầu chủ: chưa có danh bạ trên máy thì không kết luận «Đã rời sàn»", () => {
     assert.equal(chuDauChu("u-da-nghi", null), "…");
     assert.equal(chuDauChu(null, null), "—");
-    assert.equal(chuDauChu("u-dau-chu-1", new Map([["u-dau-chu-1", " "]])), "Chưa đặt tên");
+    assert.equal(chuDauChu("u-dau-chu-1", { ten: new Map([["u-dau-chu-1", " "]]), moi: true }), "Chưa đặt tên");
     // Dòng dựng ngoài Bảng hàng (không trao danh bạ) không có cột ấy.
     assert.ok(!("dau-chu" in ghepDanhMuc(hang("u-dau-chu-1"), new Map())));
+  });
+
+  it("cột Đầu chủ: bản danh bạ giữ trên máy không kết luận Đã rời sàn", () => {
+    // Ngoài-9 hàng 105 (hàng 48, E9). Ma trận viết trước: (danh bạ, người giữ) → chữ ô.
+    const CU: DanhBaDauChu = { ten: TEN, moi: false };
+    const MA_TRAN: [string, DanhBaDauChu, string, string][] = [
+      ["bản giữ trên máy, người lạ", CU, "u-moi-vao", "…"],
+      ["danh bạ máy chủ, người lạ", DANH_BA, "u-moi-vao", "Đã rời sàn"],
+      ["bản giữ trên máy, người có tên", CU, "u-dau-chu-1", "[Tên] Đầu chủ một"],
+      ["danh bạ máy chủ, người có tên", DANH_BA, "u-dau-chu-1", "[Tên] Đầu chủ một"],
+      ["chưa có danh bạ", null, "u-moi-vao", "…"],
+    ];
+    assert.deepEqual(
+      MA_TRAN.map(([, d, k]) => chuDauChu(k, d)),
+      MA_TRAN.map(([, , , chu]) => chu),
+    );
+    // Chiều đỏ cùng ca: hàm cũ (không xét `moi`) cho ca đầu ra «Đã rời sàn».
+    const chuCu = (k: string, d: DanhBaDauChu) => (d === null ? "…" : (d.ten.get(k) ?? DA_ROI_SAN));
+    assert.equal(chuCu("u-moi-vao", CU), DA_ROI_SAN);
+    assert.notEqual(chuDauChu("u-moi-vao", CU), chuCu("u-moi-vao", CU), "bản giữ trên máy kết luận người đã rời sàn");
   });
 });

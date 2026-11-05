@@ -1,0 +1,4 @@
+driver: chay-ui.mjs (Chrome CDP, chỗ thử riêng 3495); read_network_requests khong co -> n-a (driver)
+{"ca":"e7-a","put":200,"nguonBo":"company","nguongKhoa":[true,true],"bao":true}
+{"ca":"e7-b","loiApi":["lead_routing.first_call_minutes không nhỏ hơn lead_routing.accept_minutes: lead_routing.first_call_minutes = 30 < lead_routing.accept_minutes = 60 — cặp về mặc định"],"bao":"Hạn nhận lead, Hạn gọi lần đầu đang chạy theo mặc định — giá trị đã lưu của sàn không hợp lệ. Lưu giá trị đúng để áp."}
+{"ca":"e7-c","bao":true,"coThuLai":true,"soDongSauThuLai":6}
