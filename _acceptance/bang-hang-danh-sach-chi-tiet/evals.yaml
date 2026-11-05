@@ -1,0 +1,146 @@
+schema_version: 1
+feature_slug: bang-hang-danh-sach-chi-tiet
+# Lệnh máy: executors.test.web, executors.script.bang_hang_dsct, executors.design.khuon, executors.test.ui_lint. ui-check trên
+# chỗ thử dãy D (_acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs: Postgres 5575 nạp sàn mẫu, máy dev 3477), Chrome không
+# đầu qua CDP, đo bằng getBoundingClientRect. Tắt máy dev bằng dung-d.mjs --tat khi xong.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/dung-d.mjs rồi node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e1 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence"
+      - "Đối chiếu dòng e1 ở mỗi khổ (1440x900, 1280x800): |cot.top − khung.top| ≤ 2; |cot.bottom − vungLamViec.bottom| ≤ 2 (vungLamViec: khung nội dung của vỏ, [data-slot=sidebar-inset] hay phần tử main); cot.left ≥ khung.right (cột ngoài khung bảng); thanh trên của vỏ có cùng toạ độ trước và sau khi mở cột, và mọi nút của nó (+Lead, đồng bộ, chuông, tài khoản, ô gõ mã căn) có elementFromPoint ở tâm là chính nó; coLopPhu = false"
+    target: "http://localhost:3477/inventory"
+    expected: "Hồ sơ là cột bên phải ngoài khung «Bảng hàng», mép trên ngang khung, mép dưới chạm đáy vùng làm việc của vỏ, thanh trên không bị che, không lớp phủ. Ảnh E1-1440.png, E1-1280.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e2 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence"
+      - "Đối chiếu dòng e2: rongCot/rongVung trong [0.37, 0.39] lúc mở; mọi ô bảng thấy được có right ≤ cot.left; bốn nút Nhóm, Lọc, Cột, Xuất có elementFromPoint ở tâm là chính nó; ở 1280 soCotThay ≥ 4; kéo mép sang trái hết cỡ → rongCot/rongVung trong [0.49, 0.51]; kéo sang phải hết cỡ → trong [0.27, 0.29]"
+    target: "http://localhost:3477/inventory"
+    expected: "Cột 38%, bảng trọn bên trái, bốn nút công cụ bấm được, 1280 còn ≥ 4 cột, kéo dừng ở 28% và 50%. Ảnh E2-keo-28.png, E2-keo-50.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e3 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — lọc theo một toà, nhóm theo loại căn, cuộn tới giữa"
+      - "Đối chiếu dòng e3: sau mở, đổi căn, đóng — chuỗi lọc, chuỗi nhóm và scrollTop của vùng cuộn bảng bằng giá trị trước khi mở (|Δcuộn| ≤ 2); nút gốc của bảng (phần tử [data-slot=data-grid] giữ trong window.__goc trước khi mở) vẫn là cùng một nút sau mỗi bước (window.__goc.isConnected và === phần tử hiện tại); chiều đỏ cùng ca: bản dựng lại bằng key đổi theo căn (--dung-lai) thì ca ghi conCungNut = false; dòng đang mở có data-state hay aria-selected đánh dấu"
+    target: "http://localhost:3477/inventory"
+    expected: "Lọc, nhóm, cuộn giữ nguyên qua mở, đổi căn, đóng; bảng không dựng lại; dòng đang mở có dấu."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e4 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence"
+      - "Đối chiếu dòng e4: ở mỗi khổ 1440x900 và 1280x800, cả hồ sơ đóng và mở: trangKhongCuon = true, tức cả document.scrollingElement lẫn vùng làm việc của vỏ có scrollHeight ≤ clientHeight; vùng cuộn bảng có scrollHeight > clientHeight (bảng cuộn trong khung). Chiều đỏ: dòng e4 kèm ca đối chứng trên nhánh chính (--ban-goc) ghi vùng làm việc dư > 0 (trang cuộn), và ca dương trên nhánh đang kiểm (chèn khối cao hơn chỗ trống) ra trangKhongCuon = false"
+    target: "http://localhost:3477/inventory"
+    expected: "Trang không cuộn ở hai khổ, đóng và mở; bảng cuộn trong khung."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/components/bo-cuc/**", "apps/web/src/app/(app)/inventory/*.tsx", "apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; ca «danh-sach-chi-tiet: cột phụ là cột kéo chia» trong apps/web/src/components/bo-cuc/bo-cuc.test.ts có mặt và ok — dựng BoCuc kieu danh-sach-chi-tiet có cotPhu và chiTiet: có phần tử data-slot của resizable panel group, panel cot-phu có defaultSize 38 min 28 max 50, không có phần tử của NganNoi; ca đối chứng: luồng nhiều bước, ngăn báo và lọc trên điện thoại vẫn dựng NganNoi (ba ca); chiều đỏ cùng ca: dựng lại bằng nhánh ngăn nổi cũ thì assert nêu «cột phụ là ngăn nổi»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e6 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — khổ 375"
+      - "Đối chiếu dòng e6: /inventory có bảng thẻ (phần tử của bang-the), không có tay kéo của resizable; /inventory?unit=<mã> mở hồ sơ toàn màn (khung hồ sơ rộng bằng khung nhìn trừ lề trang hai bên ± 2, bằng bề rộng đo trên nhánh chính)"
+    target: "http://localhost:3477/inventory"
+    expected: "Điện thoại giữ bảng thẻ và hồ sơ toàn màn; không cột kéo chia. Ảnh E6-the-375.png, E6-ho-so-375.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7a
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/cot.ts*", "apps/web/src/app/(app)/inventory/*.test.ts"]
+    expected: "exit 0; ca «cột Đầu chủ: tên theo listAgentKey, chưa gán là —» có mặt trong một tệp test của apps/web/src/app/(app)/inventory và ok — ma trận viết trước ba ca (gán thành viên có tên → tên; listAgentKey null → «—»; listAgentKey trỏ thành viên không còn trong sàn → «Đã rời sàn»), ba assert deepEqual với chuỗi viết tay; cột có id «dau-chu» và tiêu đề «Đầu chủ» trong danh sách cột ẩn được; chiều đỏ cùng ca: đổi listAgentKey của dòng thì ô đổi theo."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e7 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — chỗ thử có căn gán dau-chu-1 và căn chưa gán; người xem là dau-chu-2 (không phải trưởng nhóm)"
+      - "Đối chiếu dòng e7: tiêu đề cột có «Đầu chủ»; ô của căn đã gán = tên dau-chu-1, ô của căn chưa gán = «—»; ô của căn gán cho người đã rời sàn mẫu = «Đã rời sàn»; sau PATCH gán căn ấy sang dau-chu-2 qua /api/v1 và một lần kéo đồng bộ, ô đổi thành tên dau-chu-2, performance.navigation không đổi (không tải lại); ẩn cột ở trình đơn Cột thì tiêu đề «Đầu chủ» biến mất"
+    target: "http://localhost:3477/inventory"
+    expected: "Cột Đầu chủ hiện đúng tên, «—» khi chưa gán, đổi theo lần gán mà không tải lại trang, ẩn được. Ảnh E7-cot-dau-chu.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.bang_hang_dsct
+    paths: ["docs/adr/0024-he-bo-cuc.md", "docs/product/tham-chieu.md", "docs/design/vo-va-ia.md", "design/patterns/ho-so-can.md", "design/patterns/bang-hang.md"]
+    expected: "exit 0; ca «tài liệu hết lệch» trong _acceptance/bang-hang-danh-sach-chi-tiet/thu/tai-lieu.test.mjs ok — ADR-0024 có tiêu đề «Sửa đổi 05/11» nêu app-shell-11 và solution-crm-4, đoạn quyết định 2 và 13 cũ còn nguyên văn (so với origin/main); Tham chiếu §12 có dòng 05/11 nêu cột kéo chia; vo-va-ia, ho-so-can.md, bang-hang.md có «kéo chia» và không còn «ngăn trượt»/«đè lên bảng» cho hồ sơ căn; bang-hang.md không còn ngoại lệ có hạn cho inventory/page.tsx; khi sổ quyết định có dòng chốt Hỏi-2 giữ cứng thì docs/architecture/so-diem-bien-thien.md có dòng điều khoá nêu «kiểu mở chi tiết» và lý do; chiều đỏ cùng ca: bản sao xoá dòng 05/11 khỏi Tham chiếu thì ca đỏ gọi tên «Tham chiếu §12»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9a
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "design/patterns/ho-so-can.md", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang và ho-so-can"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.ui_lint
+    paths: ["design/patterns/**", "packages/ui-lint/**", ".agents/skills/quy-hang-ui/catalog.md"]
+    expected: "exit 0; catalog.md có dòng bắt đầu «| `@reui/app-shell-11`»; ca khuôn và catalog ok."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9c
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.bang_hang_dsct
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    expected: "exit 0; ca «không chạm inventory/bulk» trong tai-lieu.test.mjs ok — git diff --name-only origin/main...HEAD không có tệp dưới apps/web/src/app/(app)/inventory/bulk/; chiều đỏ cùng ca: danh sách tệp giả có một tệp bulk thì ca đỏ gọi tên tệp ấy."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-danh-sach-chi-tiet/thu/chay-ui.mjs --e10 --ra _acceptance/bang-hang-danh-sach-chi-tiet/evidence — bọc fetch lời đọc hồ sơ căn: giữ chậm 3 giây, rồi trả 500, rồi trả bình thường"
+      - "Đối chiếu dòng e10: lúc chậm cot có khung chờ ([data-cho-tai] hay aria-busy=true) và soDongBang bằng trước khi mở; lúc lỗi cot có chữ lỗi và nút «Thử lại», soDongBang bằng trước, bấm một dòng khác đổi căn được, chuỗi lọc giữ nguyên; bấm «Thử lại» sau khi trả bình thường → cot có tên căn"
+    target: "http://localhost:3477/inventory"
+    expected: "Chờ tải và lỗi nằm trong cột hồ sơ, bảng vẫn đủ dòng và dùng được, «Thử lại» đưa hồ sơ về. Ảnh E10-cho-tai.png, E10-loi.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/src/**", "packages/api/test-db/**"]
+    expected: "exit 0; ca «tên thành viên: mọi vai của sàn đọc được, chỉ mã và tên» trong một tệp test của packages/api có mặt và ok — ma trận viết trước: đầu chủ, đầu khách, trưởng nhóm, telesales của sàn A đọc được danh sách thành viên sàn A (200), mỗi phần tử deepEqual tập khoá {id, name} (không email, không phone); người sàn B nhận danh sách không chứa thành viên nào của A; lời gọi không đăng nhập 401; chiều đỏ cùng ca: thêm khoá email vào phần tử trả về thì assert tập khoá nêu «email»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -25,6 +25,7 @@ import { elementScroll, observeElementOffset, observeElementRect } from "@tansta
 import { FileSpreadsheetIcon, FileUpIcon, FilterIcon, LayoutListIcon } from "lucide-react";
 import { navigationFor } from "@quy-hang/core";
 
+import { ChoTai } from "@/components/bo-cuc/cho-tai";
 import { Badge } from "@/components/reui/badge";
 import { DataGrid, DataGridContainer, dataGridFeatures, type DataGridFeatures } from "@/components/reui/data-grid/data-grid";
 import { DataGridCellSelection } from "@/components/reui/data-grid/data-grid-cell-selection";
@@ -36,11 +37,11 @@ import { FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "@/components/ui/toggle";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useBoDongBo } from "@/lib/sync/react";
 import { COT, STATUS_LABEL, chuCuaO, type Cot, type CotId, type DongBang } from "./cot";
+import { useDanhBaDauChu } from "./danh-ba";
 import { useDanhMuc } from "./danh-muc";
 import { chiMuc, ghepDanhMuc } from "./ghep-danh-muc";
 import { CACH_XEM_MAC_DINH, daDoi, luuDe, type CachXem, type GocNhin } from "./goc-nhin";
@@ -218,17 +219,11 @@ function useDanhSachTrenMay() {
   );
 }
 
+/** Chờ lượt kéo đầu: khung chờ hình lưới của bố cục (chỗ duy nhất dựng Skeleton), trong khung của bảng. */
 function DangTai() {
   return (
-    <div className="flex flex-col gap-2 p-4" aria-busy="true" aria-label="Đang tải bảng hàng">
-      <div className="flex gap-2">
-        <Skeleton className="h-8 w-32" />
-        <Skeleton className="h-8 w-24" />
-        <Skeleton className="ms-auto h-8 w-20" />
-      </div>
-      {Array.from({ length: 8 }, (_, i) => (
-        <Skeleton key={i} className="h-7 w-full" />
-      ))}
+    <div className="p-4">
+      <ChoTai kieu="tran" />
     </div>
   );
 }
@@ -296,7 +291,10 @@ export function BangHang({
   useMoLuuGocNhin(moLuu);
 
   const idx = useMemo(() => chiMuc(danhMuc), [danhMuc]);
-  const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx)), [hang, idx]);
+  // Cột «Đầu chủ» (hàng 105): người giữ của hàng đối với danh bạ đầu chủ của sàn; lượt kéo đổi người giữ thì ô đổi theo.
+  const nguoiGiu = useMemo(() => hang.map((l) => l.listAgentKey), [hang]);
+  const danhBa = useDanhBaDauChu(san, nguoiGiu);
+  const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap), [dong, loc, sap]);
   const loat = useSuaHangLoat(dong, daLoc);
   const cay = useMemo(() => nhomDong(daLoc, nhom), [daLoc, nhom]);
@@ -499,8 +497,9 @@ export function BangHang({
       <>
         {thanhCongCu}
         <Separator />
-        <DataGridContainer>
-          <DataGridScrollArea className="h-[calc(100svh-13rem)] min-h-96">
+        {/* Lưới lấp phần còn lại của khung Bảng hàng (bố cục giữ chiều cao, hàng 105): vùng cuộn cao bằng khung, trang không cuộn. */}
+        <DataGridContainer className="min-h-0 flex-1 [&>div:first-child]:h-full">
+          <DataGridScrollArea className="h-full">
             <DataGridTableVirtual estimateSize={ROW_HEIGHT.px} overscan={3} virtualizerOptions={virtualizerOptions} columnVirtualizerOptions={COT_AO} footerContent={footer} />
           </DataGridScrollArea>
           <DataGridCellSelection />
@@ -535,7 +534,7 @@ export function BangHang({
           onCellEditRequest={(r) => (r.row.kind === "can" ? suaTrenO.moTrinhSua(r.row.dong, r.columnId as CotId, r.initialText) : undefined)}
           onCellsChange={BO_QUA_GHI_LOAT}
         >
-          <FramePanel ref={frameRef} className="p-0" onKeyDown={suaTrenO.onKeyDown}>
+          <FramePanel ref={frameRef} className="flex min-h-0 flex-1 flex-col p-0" onKeyDown={suaTrenO.onKeyDown}>
             {than}
           </FramePanel>
         </DataGrid>

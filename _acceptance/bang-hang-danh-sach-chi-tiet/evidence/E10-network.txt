@@ -1,0 +1,4 @@
+Driver: chay-ui.mjs (Chrome khong dau qua CDP, script tu viet) - khong co duong doc network/console cua tool.
+Loi 500 va cham 3 giay tren GET /api/v1/listings/<id> la DO LOP BOC fetch CHU DICH chen (kich ban E10), khong phai loi that cua may.
+Dong JSON cua driver: loiTrinhDuyet=0 (khong co dong [browser]/Hydration failed moi trong log may dev ke tu luc ca bat dau).
+networkObserved: n-a (driver)

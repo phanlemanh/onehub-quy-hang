@@ -14,9 +14,11 @@ bo_cuc: ho-so
 
 Toàn bộ thông tin của một căn (`CONTEXT.md`): trên máy tính mở thành cột phải cạnh Bảng hàng (`/inventory?unit=<mã>`)
 hay toàn màn (`/units/<mã>`). Khối đích `solution-crm-4` (`docs/design/vo-va-ia.md` §2); lối dựng chốt ở Cổng Phạm vi
-hàng 17 theo trang ba lối (ADR-0019): lối ReUI. Cột phải của Bảng hàng dựng qua `KhungHoSoCan cot` trong Frame của
-Bảng hàng (`units/ho-so/bang-co-ho-so.tsx`); trang ba lối `proto/cot-ho-so-can` đi cùng khuôn, gỡ khi màn thật qua Cổng
-Bằng chứng.
+hàng 17 theo trang ba lối (ADR-0019): lối ReUI. Cạnh Bảng hàng, hồ sơ là cột kéo chia của bố cục «Danh sách – chi
+tiết» (hàng 105, ADR-0024 sửa đổi 05/11; khối `app-shell-11`): cột đứng cạnh bảng, ngoài khung bảng, cao từ đỉnh vùng làm
+việc tới đáy, mặc định 38%, kéo 28–50%, bảng co trái và vẫn bấm được — dựng qua `KhungHoSoCan cotPhu`
+(`units/ho-so/bang-co-ho-so.tsx`). Cột phải của Hôm nay, đầu chủ vẫn là `KhungHoSoCan cot` trong Frame của Hôm nay. Trang
+ba lối `proto/cot-ho-so-can` đi cùng khuôn, gỡ khi màn thật qua Cổng Bằng chứng.
 
 **Dùng khi** màn trình hồ sơ một căn: thuộc tính tự điền, lần rao, lịch sử. **Không dùng** cho Bảng hàng (nhóm
 `bang-hang`) hay chế độ cuộc gọi (hàng 28). Hồ sơ căn của Đầu khách trên điện thoại (hàng 33) là **lớp phủ trên cùng
@@ -25,8 +27,10 @@ khuôn** này, không phải khối đích riêng; dựng lại theo `product-de
 ## Luật
 
 - **KH-hs-mot-khung** — Hồ sơ toàn màn dựng trong bố cục Hồ sơ (`<BoCuc kieu="ho-so">`) và là đúng một `Frame` (qua
-  `KhungHoSoCan`); ở cột phải nó là một `FramePanel`
-  trong Frame của Bảng hàng (`KhungHoSoCan cot`), không lồng Frame trong Frame; không `Card`, không `Placeholder`.
+  `KhungHoSoCan`); ở cột kéo chia cạnh Bảng hàng nó là đúng một `Frame` cao hết cột, thân cuộn riêng (`KhungHoSoCan
+  cotPhu`); ở cột phải của Hôm nay nó là một `FramePanel` trong Frame của Hôm nay (`KhungHoSoCan cot`). Không lồng Frame
+  trong Frame; không `Card`, không `Placeholder`. Chờ tải và lỗi của hồ sơ nằm trong cột (`ChoTai`, `TrangThai` kèm «Thử
+  lại»), bảng bên cạnh vẫn dùng được.
 - **KH-hs-tren-may** — Hồ sơ đọc kho trên máy (bộ đồng bộ, hàng 13) và danh mục đã giữ trên máy; lịch sử qua
   `useHoSoHang`, mất mạng thì xem bản đã tải.
 - **KH-hs-anh-noi-bo** — Mục Ảnh (hàng 18, `units/photos/`) là ngoại lệ có tên của KH-hs-tren-may: ảnh và danh sách ảnh đọc

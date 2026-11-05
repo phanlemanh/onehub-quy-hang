@@ -41,6 +41,8 @@ const DONG: DongBang[] = goi.hang.map((h, i) => {
     closePrice: h.trangThai === "Closed" ? h.gia : null,
     closeDate: h.trangThai === "Closed" ? `2026-10-${String(10 + (i % 18)).padStart(2, "0")}` : null,
     withdrawnReason: h.trangThai === "Withdrawn" ? (i % 2 ? "unreachable" : "owner_changed_mind") : null,
+    // Cột «Đầu chủ» (hàng 105): chữ ô đã tính — ba người giữ, căn chưa gán, người đã rời sàn.
+    "dau-chu": i % 4 === 0 ? "—" : i % 4 === 1 ? "[Tên] Đầu chủ một" : i % 4 === 2 ? "[Tên] Đầu chủ hai" : "Đã rời sàn",
   };
 });
 
@@ -68,6 +70,7 @@ const MA_TRAN: [CotId, string, (d: DongBang) => boolean][] = [
   ["closePrice", "4,5-5", (d) => d.closePrice !== null && d.closePrice >= 4.5 * TY && d.closePrice <= 5 * TY],
   ["closeDate", "2026-10-1", (d) => (d.closeDate ?? "").startsWith("2026-10-1")],
   ["withdrawnReason", "unreachable", (d) => d.withdrawnReason === "unreachable"],
+  ["dau-chu", "Đã rời sàn", (d) => d["dau-chu"] === "Đã rời sàn"],
 ];
 
 test("lọc: mọi cột của bảng đều có một ca trong ma trận (không cột nào thiếu ô lọc)", () => {
@@ -122,15 +125,15 @@ test("nhóm: Toà → Loại căn, số căn các nhóm con cộng bằng nhóm 
   assert.equal(nhomDong(DONG, "khong").every((d) => d.kind === "can"), true);
 });
 
-test("cột mặc định: mười sáu cột đúng thứ tự, ba cột ẩn", () => {
+test("cột mặc định: mười bảy cột đúng thứ tự, ba cột ẩn", () => {
   assert.deepEqual(
     [...COT_MAC_DINH],
-    ["buildingName", "unitNumber", "unitType", "livingArea", "floor", "directionFaces", "standardStatus", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType", "confirmedAgeDays", "completeness", "visibility"],
+    ["buildingName", "unitNumber", "unitType", "livingArea", "floor", "directionFaces", "standardStatus", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType", "confirmedAgeDays", "dau-chu", "completeness", "visibility"],
   );
   assert.deepEqual([...COT_AN_MAC_DINH], ["closePrice", "closeDate", "withdrawnReason"]);
   assert.deepEqual(
     COT.filter((c) => COT_MAC_DINH.includes(c.id)).map((c) => c.label),
-    ["Toà", "Mã căn", "Loại căn", "Diện tích", "Tầng", "Hướng", "Trạng thái", "Giá", "Phí", "Nội thất", "Pháp lý", "Tài chính", "Tình trạng sử dụng", "Xác nhận", "Mức đủ", "Ai thấy"],
+    ["Toà", "Mã căn", "Loại căn", "Diện tích", "Tầng", "Hướng", "Trạng thái", "Giá", "Phí", "Nội thất", "Pháp lý", "Tài chính", "Tình trạng sử dụng", "Xác nhận", "Đầu chủ", "Mức đủ", "Ai thấy"],
   );
 });
 

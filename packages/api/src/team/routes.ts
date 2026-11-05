@@ -8,6 +8,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { rolesOf } from "../routing/store";
+import { tenHienThi } from "../ten-hien-thi";
 import { readLeadQueue, readListingAgents } from "./store";
 
 /**
@@ -43,15 +44,7 @@ const ListingAgents = z
   })
   .openapi("TeamListingAgents");
 
-/**
- * Tên hiển thị của người từ phần danh tính (như tên đầu chủ ở lời báo). Tài khoản mời chưa đặt tên mang tên = email —
- * khi ấy chỉ trả phần trước «@», không trả email.
- */
-async function tenHienThi(identityPool: pg.Pool, ids: string[]): Promise<Map<string, string>> {
-  if (ids.length === 0) return new Map();
-  const { rows } = await identityPool.query<{ id: string; name: string | null }>('select id, name from "user" where id = any($1)', [ids]);
-  return new Map(rows.map((r) => [r.id, (r.name ?? "").split("@")[0]!.trim()]));
-}
+
 
 export function registerTeamRoutes(api: OpenAPIHono, deps: ApiDeps) {
   const { appPool, identityPool, auth } = deps;

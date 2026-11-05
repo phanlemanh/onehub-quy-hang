@@ -1,11 +1,14 @@
 "use client";
 
-// Bảng hàng kèm hồ sơ căn đang mở (`/inventory?unit=<mã>&toa=<toà>&lan=<lần rao>`, Tham chiếu §routes): bấm dòng mở cột
-// phải, bảng vẫn dùng được. Nhóm panel luôn dựng để bảng không dựng lại (mất lọc, cuộn) khi cột mở hay đóng.
+// Bảng hàng kèm hồ sơ căn đang mở (`/inventory?unit=<mã>&toa=<toà>&lan=<lần rao>`, Tham chiếu §routes): bấm dòng mở hồ sơ
+// ở cột kéo chia của bố cục «Danh sách – chi tiết» (ADR-0024 sửa đổi 05/11, hàng 105), bảng vẫn dùng được. Khuôn
+// `KhungBangHang` dựng bố cục và cột qua `useHoSoCanhBang`; bảng trong khe của khuôn đọc dòng đang mở qua `BangCoHoSoCtx`.
+// Nhóm panel của bố cục luôn dựng nên bảng không dựng lại (giữ lọc, nhóm, cuộn) khi cột mở, đổi căn hay đóng.
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, type ReactNode } from "react";
+import { Component, createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { TrangThai } from "@/components/trang-thai";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { DongBang } from "../../inventory/cot";
 import { BangHang } from "../../inventory/bang-hang";
@@ -49,9 +52,48 @@ export function HoSoDienThoai({ nguoi, san, bao }: { nguoi: string; san: string;
   );
 }
 
-export function BangCoHoSo({ nguoi, san, vai, tenSan }: { nguoi: string; san: string; vai?: readonly string[]; tenSan?: string }) {
+/** Dòng đang mở và việc bấm dòng — khuôn Bảng hàng trao cho bảng trong khe của nó. */
+type BangCot = { dangMo: string | null; moCan: (d: DongBang) => void };
+export const BangCoHoSoCtx = createContext<BangCot | null>(null);
+
+/**
+ * Hồ sơ lỗi khi dựng thì chỉ cột báo lỗi kèm «Thử lại», bảng bên cạnh vẫn dùng được (AC-10 hàng 105). Đổi căn thì cột
+ * dựng lại từ đầu (khoá theo căn ở chỗ gọi).
+ */
+class ChanLoiCot extends Component<{ children: ReactNode }, { loi: boolean }> {
+  override state = { loi: false };
+  static getDerivedStateFromError() {
+    return { loi: true };
+  }
+  override render() {
+    if (!this.state.loi) return this.props.children;
+    return (
+      <div className="p-4">
+        <TrangThai
+          kind="error"
+          title="Không mở được hồ sơ căn"
+          description="Bảng hàng vẫn dùng được."
+          hanhDong={
+            <Button type="button" variant="outline" size="sm" onClick={() => this.setState({ loi: false })}>
+              Thử lại
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+}
+
+/**
+ * Hồ sơ cạnh Bảng hàng trên máy tính: cột phụ của bố cục khi URL mở một căn, và dòng đang mở cho bảng. Không trao `hoSo`
+ * (góc nhìn đã lưu) hay trên điện thoại thì không có cột — điện thoại mở hồ sơ toàn màn ở khe của nó.
+ */
+export function useHoSoCanhBang(hoSo: { nguoi: string; san: string } | undefined) {
   const { chon: chonUrl, path, qs, duong, dongHref } = useCotTheoUrl();
-  const chon = useIsMobile() ? null : chonUrl;
+  const dienThoai = useIsMobile();
+  const nguoi = hoSo?.nguoi;
+  const san = hoSo?.san;
+  const chon = nguoi && san && !dienThoai ? chonUrl : null;
 
   const moCan = useCallback(
     (d: DongBang) => {
@@ -60,22 +102,22 @@ export function BangCoHoSo({ nguoi, san, vai, tenSan }: { nguoi: string; san: st
     },
     [path, qs],
   );
+  const dangMo = chon ? (laChonHang(chon) ? chon.hang : chon.lan) : null;
+  const ctx = useMemo(() => (nguoi ? { dangMo, moCan } : null), [nguoi, dangMo, moCan]);
+  const khoaCan = chon ? (laChonHang(chon) ? `hang:${chon.hang}` : `can:${chon.toa ?? ""}:${chon.ma}`) : "";
+  const cotPhu =
+    chon && nguoi && san ? (
+      <KhungHoSoCan cotPhu>
+        <ChanLoiCot key={khoaCan}>
+          <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} />
+        </ChanLoiCot>
+      </KhungHoSoCan>
+    ) : null;
+  return { mo: chon !== null, cotPhu, ctx };
+}
 
-  return (
-    <ResizablePanelGroup orientation="horizontal" id="bang-co-ho-so">
-      <ResizablePanel id="bang" minSize="35%">
-        <BangHang nguoi={nguoi} san={san} dangMo={chon ? (laChonHang(chon) ? chon.hang : chon.lan) : null} onMoCan={moCan} vai={vai} tenSan={tenSan} />
-      </ResizablePanel>
-      {chon ? (
-        <>
-          <ResizableHandle withHandle />
-          <ResizablePanel id="ho-so" defaultSize="38%" minSize="28%">
-            <KhungHoSoCan cot>
-              <CotHoSo nguoi={nguoi} san={san} chon={chon} dongHref={dongHref} duong={duong} />
-            </KhungHoSoCan>
-          </ResizablePanel>
-        </>
-      ) : null}
-    </ResizablePanelGroup>
-  );
+/** Bảng hàng trong khe của khuôn: dòng đang mở được đánh dấu, bấm dòng căn thì mở hồ sơ ở cột cạnh bên. */
+export function BangCoHoSo({ nguoi, san, vai, tenSan }: { nguoi: string; san: string; vai?: readonly string[]; tenSan?: string }) {
+  const c = useContext(BangCoHoSoCtx);
+  return <BangHang nguoi={nguoi} san={san} dangMo={c?.dangMo ?? null} onMoCan={c?.moCan} vai={vai} tenSan={tenSan} />;
 }
