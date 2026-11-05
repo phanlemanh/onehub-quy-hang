@@ -5,7 +5,7 @@ slug: va-link-gui-can
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-05-va-link-gui-can-design.md
 approved_by:
 approved_at:
@@ -79,3 +79,6 @@ Quét bằng morphological-scan (preset entity-feature), ba trục:
 - Chạm tệp: `shares/danh-sach.tsx`, `today/buyer/dong-tin.tsx` (đổi đích), `shares/da-gui.test.ts`,
   `today/buyer/dau-khach.test.ts` (đích mới), tệp mới `apps/web/src/app/link-noi-bo.test.ts`; chỗ thử
   `_acceptance/va-link-gui-can/thu/dung.mjs` (Postgres riêng 5581, máy dev 3460 — không tranh dãy của đợt).
+- Ngoài-1 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Khi người chấm dựng chỗ thử mà trên máy đã có một bản chạy thử khác, công cụ vẫn báo sẵn sàng nhưng thực ra nhìn vào bản kia. Kết quả kiểm có thể xanh hoặc đỏ oan, còn người dùng sản phẩm không bị ảnh hưởng. — `_acceptance/va-link-gui-can/thu/dung.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Chỗ thử có thể vô tình đo nhầm bản phần mềm khác đang chạy trên máy, nên bằng chứng bấm «Gửi căn» có thể không phải của bản đang kiểm. Người dùng sản phẩm không bị ảnh hưởng. — `_acceptance/va-link-gui-can/thu/dung.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-05, đề xuất S4 known-limits): Bài kiểm ở màn Đã gửi chỉ xác nhận đường dẫn tới Bảng hàng có xuất hiện đâu đó, chưa chắc là ở đúng nút «Gửi căn». Nếu sau này nút bị đổi đích, một bài kiểm khác vẫn bắt được. — `apps/web/src/app/(app)/shares/da-gui.test.ts`
