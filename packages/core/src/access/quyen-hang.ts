@@ -22,6 +22,9 @@ export type DongBangQuyen = {
   giu: "minh" | "chua" | "khac" | "tung";
 } & Record<ThaoTacHang, boolean>;
 
+/** Câu từ chối khi người không đủ cờ «Sẵn sàng bán» gửi lệnh đưa lên Đang bán — API (trường `reason`) và ô Trạng thái. */
+export const LY_DO_DUA_LEN_DANG_BAN = "Chỉ đầu chủ giữ căn hay trưởng nhóm đưa lên Đang bán";
+
 /** Người có Bảng hàng: có ít nhất một trong ba vai — kiêm vai thì hợp quyền của mọi vai (Tham chiếu §9). */
 export function lamViecVoiHang(viewer: { roles: readonly string[] }): boolean {
   return VAI_BANG_HANG.some((v) => viewer.roles.includes(v));

@@ -4,6 +4,7 @@
  */
 import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type EventType, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
+import { duocLamVoiHang, LY_DO_DUA_LEN_DANG_BAN, type Viewer } from "@quy-hang/core/access";
 import { FEE_LABEL, STATUS_LABEL } from "../cot";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { hoanTacDuoc } from "./hoan-tac";
@@ -88,9 +89,17 @@ export function dungLenhPhi(hang: HangSua, phi: FeeInclusion): KetQuaLenh {
   return { ok: true, lenh, hieuLa: docLai(hang.listPrice, phi), hoiLai: canHoiLai(cu, lenh.payload), khongHoanTac: !hoanTacDuoc(hang, lenh) };
 }
 
-/** Các nấc trình sửa Trạng thái đưa ra: đúng bảng chuyển ADR-0008 từ trạng thái hiện tại. */
-export function nacTrangThai(tu: StandardStatus): readonly StandardStatus[] {
-  return TRANSITIONS[tu];
+/**
+ * Các nấc trình sửa Trạng thái đưa ra: bảng chuyển ADR-0008 từ trạng thái hiện tại, bỏ «Đang bán» khi người xem không đủ cờ
+ * «Sẵn sàng bán» (bảng quyền của hàng, bang-quyen-theo-vai). Cờ bắt buộc — không mặc định — để kiểm kiểu bắt chỗ gọi quên.
+ */
+export function nacTrangThai(tu: StandardStatus, duaLenDangBan: boolean): readonly StandardStatus[] {
+  return duaLenDangBan ? TRANSITIONS[tu] : TRANSITIONS[tu].filter((s) => s !== "Active");
+}
+
+/** Cờ «đưa lên Đang bán» của trình sửa: người đang đăng nhập và người giữ căn của dòng, đọc từ bảng quyền của lõi. */
+export function coDuaLenDangBan(me: Viewer, listAgentKey: string | null | undefined): boolean {
+  return duocLamVoiHang(me, "dua_len_dang_ban", listAgentKey ?? null);
 }
 
 const NHAN_THIEU = NHAN_DIEU_KIEN;
@@ -148,8 +157,10 @@ export function homNay(d = new Date()): string {
 }
 
 /** Trình sửa Trạng thái: nấc đã chọn (+ giá chốt, ngày, lý do khi nấc đòi) → một lệnh đổi trạng thái. */
-export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemTrangThai = {}): KetQuaLenh {
-  if (!nacTrangThai(hang.standardStatus).includes(to)) return { ok: false, loi: "Không chuyển được sang nấc này" };
+export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemTrangThai, duaLenDangBan: boolean): KetQuaLenh {
+  // Như nút đã ẩn: lệnh Đang bán dựng tay của người không đủ cờ bị từ chối trước khi gửi (máy chủ cũng từ chối, 403).
+  if (to === "Active" && !duaLenDangBan) return { ok: false, loi: LY_DO_DUA_LEN_DANG_BAN };
+  if (!nacTrangThai(hang.standardStatus, true).includes(to)) return { ok: false, loi: "Không chuyển được sang nấc này" };
   let closePrice: number | undefined;
   let hieuLa: string | null = null;
   if (to === "Closed" && them.giaChot !== undefined && them.giaChot.trim() !== "") {

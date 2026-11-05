@@ -16,13 +16,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
+import { useBoDongBo, useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
 import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
+import { chayLuuO, chuaHieu, chuDienSan, coDuaLenDangBan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -197,7 +197,11 @@ function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => vo
 }
 
 function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
-  const nac = nacTrangThai(hang.standardStatus);
+  // Cờ «đưa lên Đang bán» từ bảng quyền của lõi: người đang đăng nhập và người giữ căn của dòng (bang-quyen-theo-vai).
+  // Người giữ căn đọc từ hàng trong kho đồng bộ (dòng Bảng hàng không mang cột này).
+  const { bd } = useBoDongBo();
+  const coDangBan = coDuaLenDangBan(bd.me(), bd.danhSach().find((l) => l.id === hang.id)?.listAgentKey);
+  const nac = nacTrangThai(hang.standardStatus, coDangBan);
   const [to, setTo] = useState<StandardStatus | null>(null);
   const [giaChot, setGiaChot] = useState("");
   const [ngayBan, setNgayBan] = useState(homNay());
@@ -205,7 +209,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
   const chon = (s: StandardStatus) => {
     onDoiChu();
     if (s === "Closed" || s === "Withdrawn") setTo(s);
-    else onXet(dungLenhTrangThai(hang, s));
+    else onXet(dungLenhTrangThai(hang, s, {}, coDangBan));
   };
   if (!nac.length) return <p className="text-sm text-muted-foreground">«{STATUS_LABEL[hang.standardStatus]}» là nấc cuối — mở lại là hàng mới.</p>;
   return (
@@ -213,7 +217,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
       className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
-        if (to) onXet(dungLenhTrangThai(hang, to, { giaChot, ngayBan, lyDo }));
+        if (to) onXet(dungLenhTrangThai(hang, to, { giaChot, ngayBan, lyDo }, coDangBan));
       }}
       onKeyDown={(e) => (e.key === "Escape" ? onHuy() : null)}
     >
