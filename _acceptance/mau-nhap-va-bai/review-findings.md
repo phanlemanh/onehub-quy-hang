@@ -1,4 +1,4 @@
-# Review findings: mau-nhap-va-bai (round 2)
+# Review findings: mau-nhap-va-bai (round 3)
 
 ## Trong hợp đồng
 
@@ -6,55 +6,67 @@
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **GET /imports/templates (vai nhập) giờ trả thêm trường `sua` (id dòng sổ + user id của Quản trị) và importId rỗng, lệch với schema OpenAPI đã khai**
-  Người dùng thấy gì: Người có vai nhập, khi mở màn Nhập Excel, nhận thêm một vài thông tin nội bộ về người đã sửa mẫu mà họ không cần thấy. Mẫu hiển thị vẫn đúng.
-  Căn cứ: Nhẹ: mẫu vẫn đúng, chỉ lộ thêm mã nội bộ của người sửa trong cùng sàn, không lộ dữ liệu chủ nhà, và sửa là việc nhỏ có thể làm ở đợt sau.
-  file: `packages/api/src/imports/store.ts`
-  severity: low
-  Đề xuất: known-limits
-
-- **Xoá cột trong mẫu nuốt lỗi, không báo gì cho người dùng**
-  Người dùng thấy gì: Khi xoá một cột mẫu mà máy chủ từ chối hoặc mất mạng, hộp xác nhận vẫn đóng và dòng vẫn nằm đó, không có câu báo nào. Người dùng không biết vì sao chưa xoá được.
-  Căn cứ: Không mất dữ liệu, người dùng thấy dòng còn đó và có thể bấm xoá lại hay tải lại trang; chỉ gây bối rối chứ không gây hại.
-  file: `apps/web/src/app/(app)/settings/templates/vung-mau-nhap.tsx`
-  severity: low
-  Đề xuất: known-limits
-
-- **Xoá mẫu nuốt lỗi: hộp xác nhận đóng và làm mới dù máy chủ từ chối hay mạng hỏng**
-  Người dùng thấy gì: Bấm xoá cột mẫu gặp lỗi thì màn hình trông như đã xử lý xong nhưng dòng vẫn còn, không có lời giải thích.
-  Căn cứ: Không mất dữ liệu và thử lại được ngay; lỗi chỉ xảy ra khi mạng hỏng hoặc quyền đổi giữa chừng nên hiếm gặp.
+- **Xoá cột mẫu thất bại vẫn đóng hộp và không báo gì (lệch khuôn hộp xác nhận có sẵn)**
+  Người dùng thấy gì: Khi xoá một cột mẫu mà gặp lỗi mạng hoặc máy chủ từ chối, hộp xác nhận vẫn đóng như thể đã xoá xong. Cột vẫn còn trong bảng và Quản trị sàn không biết vì sao.
+  Căn cứ: Không mất dữ liệu và người dùng tự thử xoá lại được sau khi thấy cột còn đó, nhưng họ sẽ bối rối vì không có lời báo lỗi; sửa khá rẻ.
   file: `apps/web/src/app/(app)/settings/templates/vung-mau-nhap.tsx`
   severity: medium
   Đề xuất: known-limits
 
-- **Ô Quy đổi bỏ lặng các dòng không có ký tự «→» và có thể xoá trắng bảng quy đổi cũ**
-  Người dùng thấy gì: Nếu người quản trị gõ quy đổi bằng ký hiệu khác mũi tên (ví dụ «->» hoặc «=»), dòng đó bị bỏ qua mà không báo, và bảng quy đổi cũ của cột có thể bị xoá trắng khi bấm Lưu.
-  Căn cứ: Có thể mất bảng quy đổi đã nhớ mà không hay biết, nhưng chỉ chạm một cột ở màn quản trị, người dùng nhập lại được; sửa nhỏ ở hộp sửa.
-  file: `apps/web/src/app/(app)/settings/templates/mau-nhap.ts`
+- **Xoá cột mẫu thất bại vẫn đóng hộp, không báo lỗi gì**
+  Người dùng thấy gì: Xoá cột mẫu không thành công vẫn trông như đã xoá, vì hộp đóng và không có thông báo. Quản trị sàn thấy cột còn nguyên mà không hiểu lý do.
+  Căn cứ: Hậu quả nhẹ vì không mất hay lộ dữ liệu và thử lại được, chỉ gây khó hiểu; nên ghi lại để sửa sau cùng finding trùng.
+  file: `apps/web/src/app/(app)/settings/templates/vung-mau-nhap.tsx`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình 1 (đo chỉ dẫn thay vì đầu ra): E4 «lần nhập đang mở ghi theo kế hoạch cũ» chỉ đọc lại imports.plan đã lưu, không đo căn được ghi**
-  Người dùng thấy gì: Một bài kiểm tự động chưa bắt được trường hợp lần nhập đang mở ghi căn theo mẫu mới thay vì kế hoạch cũ. Người dùng chưa gặp lỗi nào, chỉ là lưới an toàn mỏng hơn.
-  Căn cứ: Không ảnh hưởng người dùng hiện tại; chỉ làm giảm khả năng phát hiện lỗi về sau, bổ sung bài kiểm sau này không đắt.
+- **kiemSuaMau nhận phép price/date thiếu tham số bắt buộc; mẫu được lưu 200 nhưng lần nhập sau âm thầm quay về từ điển**
+  Người dùng thấy gì: Một bên gọi trực tiếp API có thể lưu mẫu giá hoặc ngày thiếu quy đổi và vẫn được báo thành công. Lần nhập sau, mẫu đó bị bỏ qua mà không ai biết.
+  Căn cứ: Màn hình thông thường không gây ra lỗi này, chỉ xảy ra khi gọi API trực tiếp; không rò rỉ hay mất dữ liệu nhưng bản sửa có thể bị bỏ lặng lẽ, và sửa tương đối rẻ.
+  file: `packages/core/src/import/memory/sua-mau.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Shape 1 (đo chỉ dẫn thay vì đầu ra): E4 «lần đang mở ghi theo kế hoạch cũ» đọc lại imports.plan đã lưu, không đo căn được ghi**
+  Người dùng thấy gì: Bài kiểm chưa chứng minh lần nhập đang mở khi ghi sẽ tạo căn đúng theo kế hoạch cũ sau khi mẫu bị sửa. Nếu có lỗi ở đó, bài kiểm vẫn báo xanh.
+  Căn cứ: Sản phẩm chưa thấy sai, chỉ là lưới kiểm lỏng hơn lời hứa; người dùng không bị ảnh hưởng ngay và bài kiểm bổ sung sau được.
   file: `packages/api/test-db/mau-nhap-va-bai/mau-nhap.test.ts`
   severity: high
   Đề xuất: known-limits
 
-- **Hình 3 (lời hứa là quan hệ nhưng chỉ kiểm phía có mặt): hoàn tác «gỡ đúng tập căn» chỉ lọc trong chính tập mong đợi**
-  Người dùng thấy gì: Bài kiểm tự động hoàn tác lần nhập chưa chứng minh được rằng hoàn tác không gỡ nhầm căn của lần nhập khác. Người dùng chưa gặp lỗi nào.
-  Căn cứ: Không có lỗi thật được chỉ ra, chỉ là bài kiểm lỏng; rủi ro thấp và có thể siết bài kiểm ở đợt sau.
+- **Shape 3 (assert có mặt thay vì quan hệ) và Shape 4 (âm tính rỗng không đối chứng): E4 hoàn tác chỉ kiểm tập con, rỗng thì cũng qua**
+  Người dùng thấy gì: Bài kiểm hoàn tác chưa chắc bắt được trường hợp hoàn tác gỡ nhầm căn của lần nhập khác, và có thể xanh khi không có căn nào để gỡ. Chưa thấy lỗi thật ở sản phẩm.
+  Căn cứ: Rủi ro là hoàn tác gỡ nhầm căn mà không bị phát hiện, nhưng chưa có bằng chứng xảy ra thật; thêm đối chiếu vào bài kiểm khá rẻ.
   file: `packages/api/test-db/mau-nhap-va-bai/mau-nhap.test.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình 5 (tuyên phủ đủ lớp nhưng ma trận có dòng trùng): bảng E1b đếm 9 ca nhưng hai ca «mở TRƯỚC, ghi sau» trùng y hệt hai ca khác**
-  Người dùng thấy gì: Bảng ca kiểm tự động đếm chín ca nhưng thật ra chỉ bảy ca khác nhau, nên việc lần nhập mở trước rồi ghi sau có đè bản sửa hay không chưa được đo ở tầng này. Người dùng chưa thấy lỗi nào.
-  Căn cứ: Không gây hại trực tiếp cho người dùng; chỉ là con số phủ kiểm phóng đại, và hành vi này đã có bài kiểm ở tầng khác.
-  file: `packages/core/src/import/memory/sua-mau.test.ts`
+- **Shape 3 (assert có mặt thay vì quan hệ): E1 «tiêu đề trùng lấy đích + nguồn của lần sau» không đo đích**
+  Người dùng thấy gì: Bài kiểm chưa xác nhận khi hai lần nhập có tiêu đề trùng thì màn hiện đúng trường đích của lần ghi sau. Nếu lỗi này có thật, bài kiểm vẫn xanh.
+  Căn cứ: Chưa có bằng chứng sản phẩm sai, chỉ là lưới kiểm hở một vế; người dùng thấy sai sẽ tự phát hiện trên màn và sửa bài kiểm rẻ.
+  file: `packages/api/test-db/mau-nhap-va-bai/mau-nhap.test.ts`
   severity: medium
   Đề xuất: known-limits
 
-## Chưa adversarial-verify (refuter chết)
+- **Shape 1 (đo chỉ dẫn thay vì đầu ra): E6b đo trang chặn vai bằng regex trên mã nguồn page.tsx**
+  Người dùng thấy gì: Bài kiểm chặn vai ở màn Mẫu nhập chỉ đọc chữ trong mã, không thử mở màn bằng từng vai. Vì vậy có thể báo xanh sai hoặc đỏ oan khi mã được viết lại.
+  Căn cứ: Chưa thấy ai mở được màn trái quyền; rủi ro là bài kiểm giòn và bỏ sót, không ảnh hưởng người dùng ngay, sửa vừa phải.
+  file: `apps/web/src/app/(app)/settings/templates/mau-nhap.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Shape 5 (tuyên lớp, chỉ có điểm-case): E3 «khoá khác còn đủ» chỉ kiểm một khoá**
+  Người dùng thấy gì: Bài kiểm xoá cột chỉ xác nhận một cột khác còn nguyên, chưa soát hết các cột còn lại. Nếu việc xoá lỡ tay xoá cả cột khác thì có thể không bị bắt.
+  Căn cứ: Mức thấp, lỗi xoá nhầm nhiều cột sẽ lộ ngay trên màn và ca xen kẽ ở bài khác đã phủ một phần; không đáng mở việc riêng.
+  file: `packages/api/test-db/mau-nhap-va-bai/mau-nhap.test.ts`
+  severity: low
+  Đề xuất: wont-fix
+
+- **Shape 2 (fixture viết tay đúng khuôn bên đọc): ca «mở TRƯỚC, ghi sau» của E1b trùng hệt ca «sửa mới hơn»**
+  Người dùng thấy gì: Hai dòng trong bảng ca kiểm thực chất giống nhau nên số ca khác biệt ít hơn bảng khai. Không ảnh hưởng người dùng.
+  Căn cứ: Không có hậu quả với người dùng và trục này đã được bài kiểm cơ sở dữ liệu đo thật; sửa không đáng công.
+  file: `packages/core/src/import/memory/sua-mau.test.ts`
+  severity: low
+  Đề xuất: wont-fix
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
