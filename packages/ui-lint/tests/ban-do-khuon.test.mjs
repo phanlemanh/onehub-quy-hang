@@ -439,7 +439,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 1 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 2 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -454,8 +454,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 120 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 20 ngoại lệ · 0 lệch",
+      "trang-thai: 123 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
