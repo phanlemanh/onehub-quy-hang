@@ -173,7 +173,15 @@ export async function readProfile(tx: pg.PoolClient, id: string, ai: Nguoi, khoa
     "select * from app.contact_phones_for_mask($1)",
     [id],
   );
-  const phones = so.map((p) => ({ phoneId: p.phone_id, label: p.label, isPrimary: p.is_primary, tail: giaiMaSo(p.phone_enc, p.enc_context, khoa).replace(/\D/g, "").slice(-3) }));
+  // Bản mã không giải được (khoá của môi trường khác khoá đã ghi) thì số vẫn hiện, chỉ không có ba số cuối — hồ sơ không đổ.
+  const duoi = (p: { phone_enc: Buffer; enc_context: string }) => {
+    try {
+      return giaiMaSo(p.phone_enc, p.enc_context, khoa).replace(/\D/g, "").slice(-3);
+    } catch {
+      return "";
+    }
+  };
+  const phones = so.map((p) => ({ phoneId: p.phone_id, label: p.label, isPrimary: p.is_primary, tail: duoi(p) }));
   const [leads, nhuCau] = await Promise.all([leadCua(tx, [id]), nhuCauCua(tx, [id], ai)]);
   const { rows: hang } = await tx.query<{ id: string; building_name: string; unit_number: string | null; standard_status: string; list_price: string | null }>(
     `select h.id, h.building_name, h.unit_number, h.standard_status, h.list_price from listing_owners o
@@ -233,5 +241,10 @@ export async function readProfile(tx: pg.PoolClient, id: string, ai: Nguoi, khoa
 export async function revealPhone(tx: pg.PoolClient, contactId: string, phoneId: string, khoa: KhoaSoChu): Promise<string | null> {
   const { rows } = await tx.query<{ phone_enc: Buffer; enc_context: string }>("select * from app.contact_phone_for_reveal($1, $2)", [contactId, phoneId]);
   const r = rows[0];
-  return r ? giaiMaSo(r.phone_enc, r.enc_context, khoa) : null;
+  if (!r) return null;
+  try {
+    return giaiMaSo(r.phone_enc, r.enc_context, khoa);
+  } catch {
+    return null; // bản mã của khoá khác: báo «chưa mở được», không đổ
+  }
 }

@@ -43,7 +43,7 @@ function DongCoHoi({ o }: { o: CoHoi }) {
   return (
     <li className="flex items-center justify-between gap-2 text-sm" data-co-hoi={o.side}>
       {o.side === "seller" && o.listingId ? (
-        <Link href={`/inventory?listing=${o.listingId}`} className="min-w-0 truncate hover:underline">
+        <Link href={`/inventory?hang=${o.listingId}`} className="min-w-0 truncate hover:underline">
           {chu}
         </Link>
       ) : (
@@ -104,7 +104,7 @@ export function HoSoNguoi({
                       {(p.label && NHAN_SO[p.label]) ?? "Số"}
                       {p.isPrimary ? " · chính" : ""}
                     </span>
-                    <span className="grow tabular-nums">{ro ?? `••• ${p.tail}`}</span>
+                    <span className="grow tabular-nums">{ro ?? `•••${p.tail ? ` ${p.tail}` : ""}`}</span>
                     {ro ? (
                       <Button size="sm" nativeButton={false} render={<a href={`tel:${ro.replace(/\s/g, "")}`} />}>
                         <PhoneIcon aria-hidden="true" /> {CHU.goi}

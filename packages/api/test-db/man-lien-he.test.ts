@@ -181,6 +181,19 @@ test("liên hệ: hồ sơ không có số rõ", async () => {
   assert.equal(doLo("so 0900000021", [so1]), 1, "đối chứng dương");
   assert.equal(doLo(than, [so1]), 0, "hồ sơ lộ số rõ");
   assert.equal((await hoSo("dc2")).status, 404);
+  // Bản mã của khoá khác (dữ liệu nạp ở môi trường khác): hồ sơ vẫn 200, số đó không có ba số cuối, mở số báo 404.
+  const la = (
+    await appPool.query<{ id: string }>(
+      `insert into contact_phones (company_id, contact_id, phone_enc, phone_hash, enc_context, is_primary, added_by)
+       values ($1, $2, $3, $4, $5, false, 'x') returning id`,
+      [s.companyId, a.contactId, Buffer.concat([Buffer.from([1]), Buffer.alloc(38, 7)]), Buffer.alloc(32, 9), `leads:${s.companyId}:00000000-0000-4000-8000-0000000000ff`],
+    )
+  ).rows[0]!.id;
+  const r2 = await hoSo("dc1");
+  assert.equal(r2.status, 200, await r2.clone().text());
+  const h2 = await json<{ phones: { phoneId: string; tail: string }[] }>(r2);
+  assert.deepEqual(h2.phones.find((p) => p.phoneId === la)?.tail, "");
+  assert.equal((await send("POST", `/api/v1/contacts/${a.contactId}/phones/${la}/reveal`, undefined, ck(s, "dc1"))).status, 404);
 });
 
 // ---- E5 ----

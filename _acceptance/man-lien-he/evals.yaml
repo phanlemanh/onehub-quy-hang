@@ -117,11 +117,11 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "Postgres dãy L (5571) có bộ mẫu; máy chủ dev ở cổng của executors.ui-check; đăng nhập Đầu chủ mẫu có ít nhất một chủ nhiều căn"
+      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Số chủ của bộ mẫu mã hoá bằng khoá khác khoá của máy chủ dev (dữ liệu mẫu không mở số, không tìm theo số được) — nên DỰNG DỮ LIỆU CỦA LƯỢT qua chính máy chủ đang chạy: đăng nhập Đầu chủ 1 mẫu, dùng fetch trong trang gọi POST /api/v1/listings rồi PUT /api/v1/listings/{id}/owner hai lần (hai căn Toà A, cùng một số mới 0900 000 09x, ownerName «[Tên] Chủ thử 103») để có một chủ nhiều căn; đăng nhập Đầu chủ 2 mẫu làm như vậy với một số mới khác cho một chủ của Đầu chủ 2"
       - "Khổ 1440: mở /contacts → chụp evidence/E10b-step1.png: danh sách có cột tên, loại, người giữ, cơ hội, căn; nhà Liên hệ sáng trên cột nhà"
-      - "Gõ một phần tên chủ nhiều căn, chạm dòng → chụp evidence/E10b-step2.png: cột hồ sơ có Số (che), Cơ hội (pha), Căn (≥2), Dòng thời gian"
+      - "Đăng nhập lại Đầu chủ 1, mở /contacts, gõ «Chủ thử 103», chạm dòng → chụp evidence/E10b-step2.png: cột hồ sơ có Số (che, ba số cuối), Căn (≥2) và mục Cơ hội, Dòng thời gian"
       - "Chạm «Hiện số» → chụp evidence/E10b-step3.png: số rõ và nút Gọi; ghi vào observed số chạm từ nhà Liên hệ tới lúc chạm Gọi (không tính gõ tìm), so với 3"
-      - "Gõ số của chủ đầu chủ khác giữ → chụp evidence/E10b-step4.png: «Đã có trong sàn — [Tên] đang giữ», không tên chủ, không số"
+      - "Gõ số mới của chủ Đầu chủ 2 giữ (dựng ở bước đầu) → chụp evidence/E10b-step4.png: «đã có trong sàn — [Tên] đang giữ», không tên chủ, không số"
       - "Khổ 375: mở /contacts, chạm một dòng → chụp evidence/E10b-step5.png: hồ sơ mở ngăn từ đáy, không cuộn ngang"
       - "Đăng nhập Đầu khách mẫu → chụp evidence/E10b-step6.png: không có nhà hay mục Liên hệ"
     cmd: config:executors.ui-check
@@ -141,6 +141,15 @@ evals:
     criterion: AC-10
     executor: script
     cmd: config:executors.design.khuon
-    paths: ["design/patterns/lien-he.md", "apps/web/src/app/(app)/contacts/**"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» mới nào cho tệp của vòng."
+    expected_exit: 1
+    paths: ["design/patterns/lien-he.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/contacts/**"]
+    expected: "exit 1 (đạt có giới hạn, giám sát trả L-0511-4, luật 33): bước chấm khuôn của kit 2.37.0 bỏ qua ngoai_le không có khoá khoi nên báo trang Liên hệ mới «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» — báo oan, kit#485. Mã 1 chỉ được chấp nhận cùng E10e xanh: E10e bảo đảm dòng lệch duy nhất là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E10e."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10e
+    criterion: AC-10
+    executor: script
+    cmd: node _acceptance/man-lien-he/kiem-khuon-e10d.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/contacts/**", "_acceptance/man-lien-he/kiem-khuon-e10d.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/contacts/page.tsx · khuôn Placeholder · nhóm trang-tam» và bài in «E10e: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E10d và bài E10e, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -27,7 +27,7 @@ test("liên hệ: trạng thái màn", () => {
     ["không khớp", ds({ kieu: "xong", ds: [], con: false }, "khongco"), (s) => s.includes("Không tìm thấy «khongco»")],
     ["người khác giữ", ds({ kieu: "nguoi-khac-giu", holderName: "[Tên] Đầu chủ 2" }), (s) => s.includes("đã có trong sàn") && s.includes("[Tên] Đầu chủ 2 đang giữ")],
     ["lỗi", ds({ kieu: "loi" }), (s) => s.includes("Chưa tải được — thử lại") && /<button[^>]*>Thử lại<\/button>/.test(s)],
-    ["hồ sơ có dữ liệu", hs({ kieu: "xong", hs: HS }), (s) => ["Số", "Cơ hội", "Căn", "Dòng thời gian", "••• 011", "Đang chào", "Hiện số"].every((x) => s.includes(x))],
+    ["hồ sơ có dữ liệu", hs({ kieu: "xong", hs: HS }), (s) => ["Số", "Cơ hội", "Căn", "Dòng thời gian", "••• 011", "Đang chào", "Hiện số", 'href="/inventory?hang=H1"'].every((x) => s.includes(x))],
     ["hồ sơ không số", hs({ kieu: "xong", hs: { ...HS, phones: [] } }), (s) => s.includes("Chưa có số")],
     ["số đã hiện", hs({ kieu: "xong", hs: HS }, { P1: "0900 000 011" }), (s) => s.includes('href="tel:0900000011"') && s.includes("Gọi")],
     ["mở số lỗi", hs({ kieu: "xong", hs: HS }, { P1: "loi" }), (s) => s.includes("••• 011") && s.includes("Chưa mở được số — thử lại")],
