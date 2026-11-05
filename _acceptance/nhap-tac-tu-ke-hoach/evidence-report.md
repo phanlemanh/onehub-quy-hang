@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b71bb4bb4f48620e32328e168c7e13afcc5e48b6
+verified_commit: 05df54c2f8db55b907fde1e9692eb43c7dd940b1
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -338,3 +338,7 @@ Round 2: toàn bộ eval đạt; E12 và E13 đạt có giới hạn (xem Known 
 ### Re-pin lần 1 — 2026-11-05, do hoá cũ do gộp nhánh chính trước chữ ký
 run_id: repin-20261105T221814Z-92714
 sha: b71bb4bb4f48620e32328e168c7e13afcc5e48b6 · suites: 7 lệnh exit 0 · evals: 20/20 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E12=1, E13=1 · ngoài làn máy: E5b, E7b, E8c · diff chạm vật đo ngoài làn máy: E5b — chưa chứng lại, đi vòng S4 delta
+
+### Re-pin lần 2 — 2026-11-05, do hoá cũ do gộp nhánh chính (#147) sau chữ ký
+run_id: repin-20261105T223132Z-15570
+sha: 05df54c2f8db55b907fde1e9692eb43c7dd940b1 · suites: 7 lệnh exit 0 · evals: 20/20 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E12=1, E13=1 · ngoài làn máy: E5b, E7b, E8c
