@@ -142,3 +142,19 @@ evals:
     expected: "PASS khi có nhánh redirect('/today') dựa trên lamViecVoiHang của @quy-hang/core/access đặt trước khi trả KhungBangHang, và không đổi phần còn lại của trang."
     paths: ["apps/web/src/app/(app)/inventory/page.tsx"]
     evidence_required: [run_id, verdict, verified_at]
+
+  - id: E12
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/(app)/inventory/cell-edit/tren-o.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai (trình sửa ô Trạng thái chỉ lọc nấc, không đổi khuôn màn)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12b
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/inventory/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang và trang-tam (trang Bảng hàng chỉ thêm nhánh đưa về /today; nợ cũ «thuộc hai nhóm màn» có từ trước vòng, không phải lệch mới)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
