@@ -16,7 +16,7 @@ export default async function Page() {
   if (me.companies.length === 0) redirect("/no-company");
   if (!me.activeCompany) redirect("/select-company");
   return (
-    <KhungLeadCuaToi>
+    <KhungLeadCuaToi trang>
       <LeadDaNhapThat />
     </KhungLeadCuaToi>
   );

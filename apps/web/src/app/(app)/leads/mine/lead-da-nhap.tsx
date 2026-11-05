@@ -12,13 +12,13 @@ import {
   type MyLeadView,
 } from "@quy-hang/core/dedupe";
 
+import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
 import { FramePanel } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Vùng «Lead đã nhập» (hàng 27) — khối đích `@reui/list-11` (Top Movers) của vo-va-ia §2, chuyển thể tại chỗ dùng từ
@@ -223,25 +223,10 @@ export function LeadDaNhap({ nguon }: { nguon: NguonLeadDaNhap }) {
   );
 
   if (leads === "dang-tai") {
+    // Chờ tải theo hình bảng của bố cục Danh sách – chi tiết (ADR-0024 §4), trong vùng của khuôn.
     return (
-      <FramePanel className="p-0!">
-        <Bang>
-          {Array.from({ length: 5 }, (_, i) => (
-            <TableRow key={i} aria-busy>
-              <TableCell className="px-3.5 py-3">
-                <Skeleton className="h-4 w-36" />
-                <Skeleton className="mt-1.5 h-3.5 w-44" />
-              </TableCell>
-              <TableCell className="px-3.5 py-3">
-                <Skeleton className="h-5.5 w-16" />
-              </TableCell>
-              <TableCell className="hidden px-3.5 py-3 @md:table-cell">
-                <Skeleton className="h-4 w-10" />
-                <Skeleton className="mt-1.5 h-3.5 w-28" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </Bang>
+      <FramePanel aria-busy>
+        <ChoTai kieu="danh-sach-chi-tiet" />
       </FramePanel>
     );
   }
