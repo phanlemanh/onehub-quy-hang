@@ -5,9 +5,7 @@ slug: dang-nhap-mat-khau
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db, ui]
-status: implemented
-approved_by: Manh Phan
-approved_at: 2026-11-05
+status: draft
 design_doc: docs/superpowers/specs/2026-11-04-dang-nhap-mat-khau-design.md
 ---
 
@@ -63,16 +61,15 @@ Source input: ô cơ hội `_acceptance/dang-nhap-mat-khau/opportunity.md` (Cổ
   còn lại (tự đăng ký, đổi mật khẩu của thư viện, quên và đặt lại mật khẩu, xác minh mật khẩu, thư xác minh) trả 404 trước
   bộ xử lý, không gửi thư; thêm một đường chạm mật khẩu mà không xếp loại thì bài kiểm đỏ; bài kiểm đường gửi mã của hàng
   55 vẫn xanh.
-- AC-9: Given màn đăng nhập, Đặt mật khẩu mới, Người dùng và Cá nhân đang chạy, When đi mọi trạng thái `ST-*` của Đặc
-  tả UX trong thiết kế (trừ ST-dang-xuat-loi của AC-10), mỗi trạng thái ở cả khổ điện thoại 375 và máy tính 1280, Then
-  mỗi trạng thái hiện đúng chữ và việc tiếp theo đã khai, lỗi đăng nhập nằm ngay dưới ô;
-  hộp kết quả cấp mật khẩu hiện mật khẩu tạm một lần với nút «Chép», đóng hộp là không xem lại được; Cá nhân giữ sáu nhóm
-  dòng, dòng «Mật khẩu» nằm trong nhóm theo Hỏi-6 (khuyến nghị «Hồ sơ»), hộp đổi có ô mật khẩu hiện tại khi «Đã đặt»
-  và không có khi «Chưa đặt»; màn đặt mật khẩu mở thẳng không có mã đổi thì báo hết phiên kèm nút về đăng nhập; địa chỉ
-  và lịch sử trình duyệt không bao giờ chứa mã đổi.
-- AC-10: Given người đang ở vỏ (menu tài khoản, Cá nhân) hay ở màn chọn sàn, When bấm «Đăng xuất» mà máy chủ trả lỗi hay
-  mất mạng, Then màn hiện «Chưa đăng xuất được» kèm «Thử lại», người không bị đưa về đăng nhập; thử lại khi máy chủ đã
-  trả lời được thì về đăng nhập; kho trên máy vẫn xoá trước khi gọi máy chủ như hàng 38.
+- AC-9: Given phần thuần và mã nguồn màn của hàng, When chạy bộ test web và bước chấm khuôn giao diện, Then Cá nhân giữ
+  sáu nhóm dòng theo thứ tự cũ, dòng «Mật khẩu» nằm trong nhóm «Hồ sơ» (Hỏi-6) với chữ «Chưa đặt» / «Đã đặt» / «Đã khoá —
+  đặt mật khẩu mới» và nút «Đặt mật khẩu» / «Đổi mật khẩu»; màn Đặt mật khẩu mới và hai hộp mật khẩu đi đúng khuôn của nhóm
+  xac-thuc, toi, cai-dat-san, trang-thai, không lệch. (Phần chụp mọi trạng thái `ST-*` ở 375 và 1280 ra Known limits — thu
+  phạm vi ở Cổng Bằng chứng 05/11.)
+- AC-10: Given đường đăng xuất trên máy (`dangXuatTrenMay`), When máy chủ trả lỗi hay fetch ném lỗi mạng, Then kết cục là
+  «loi» và không về đăng nhập; máy chủ trả lời được thì «xong» và về đăng nhập; thử lại sau lỗi không hỏi xoá kho lần hai;
+  kho trên máy vẫn xoá trước khi gọi máy chủ như hàng 38; lời gọi máy chủ không gắn `this` vào đối tượng deps. (Phần
+  thử trên trình duyệt thật ra Known limits — thu phạm vi ở Cổng Bằng chứng 05/11.)
 - AC-11: Given cây sau hàng này, When chạy kiểm kiểu, lint (kèm chuẩn giao diện), bộ test lõi, API, web, bộ kiểm cơ sở dữ
   liệu của API, bộ kiểm cách ly, bộ kiểm rò rỉ và build, Then đều xanh; migration là tệp mới `034_*.sql`, không migration
   đã commit nào đổi; ADR-0005 có mục bổ sung 04/11, `design/patterns/xac-thuc.md` có màn Đặt mật khẩu mới, Tham chiếu §12
@@ -128,3 +125,9 @@ nhật ký, sự kiện hay trang nào».
   `apps/web/src/lib/api.ts`, bộ kiểm cách ly `packages/db/tests/isolation.test.mjs`, bài kiểm đường gửi mã
   `packages/api/test-db/dong-duong-gui-ma/**`, tài liệu `CONTEXT.md`, `docs/architecture/so-diem-bien-thien.md`,
   `docs/product/doi-chieu-nganh.md`).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-05 (thu phạm vi sau trần ba lượt chấm):
+  - AC-9: ảnh mọi trạng thái của màn đăng nhập, Đặt mật khẩu mới, hộp cấp mật khẩu và Cá nhân ở 375 và 1280 chưa có bằng
+    chứng máy; ba lượt chấm rớt vì bản thử thiếu khoá thông báo đẩy và vì tiêu đề «… còn ở sàn khác» bị cắt ở 375 khi
+    email dài.
+  - AC-10: «Chưa đăng xuất được» kèm «Thử lại» trên trình duyệt thật (menu tài khoản, Cá nhân, chọn sàn) chưa có bằng
+    chứng máy; đường đăng xuất đo bằng bộ test web (E13).

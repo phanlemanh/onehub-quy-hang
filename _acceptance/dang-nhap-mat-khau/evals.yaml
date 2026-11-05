@@ -92,6 +92,7 @@ evals:
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E10
+    status: not-run  # thu phạm vi ở Cổng Bằng chứng 05/11 — Known limits của hợp đồng
     criterion: AC-9
     executor: ui-check
     layer: ui-observed
@@ -127,6 +128,7 @@ evals:
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E14
+    status: not-run  # thu phạm vi ở Cổng Bằng chứng 05/11 — Known limits của hợp đồng
     criterion: AC-10
     executor: ui-check
     layer: ui-observed
@@ -195,6 +197,7 @@ evals:
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E22
+    status: not-run  # thu phạm vi ở Cổng Bằng chứng 05/11 — Known limits của hợp đồng
     criterion: AC-9
     executor: ui-check
     layer: ui-observed
