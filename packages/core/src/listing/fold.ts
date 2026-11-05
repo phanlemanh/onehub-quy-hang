@@ -19,6 +19,8 @@ export type ListingState = {
   /** YYYY-MM-DD. */
   closeDate: string | null;
   withdrawnReason: string | null;
+  /** Mã nhãn riêng của sàn neo vào `standardStatus` (hàng 46); `null` = nhãn mặc định. Mọi `status_changed` đặt lại nó. */
+  statusLabel: string | null;
   /** ISO 8601 của lần xác nhận gần nhất với chủ nhà; chưa từng xác nhận là `null`. */
   lastConfirmedAt: string | null;
   /** Hàng đã gỡ khỏi Quỹ hàng khi hoàn tác lần nhập (`voided`) — cờ, không phải trạng thái; lịch sử giữ nguyên. */
@@ -44,6 +46,7 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
     closePrice: null,
     closeDate: null,
     withdrawnReason: null,
+    statusLabel: null,
     lastConfirmedAt: null,
     voided: false,
     version: 0,
@@ -68,6 +71,8 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
       break;
     case "status_changed":
       s.standardStatus = p.to as StandardStatus;
+      // Đổi trạng thái mà không chọn nhãn là về nhãn mặc định — căn «Giữ chỗ» sang Đang bán không mang nhãn cũ theo.
+      s.statusLabel = (p.label as string | null | undefined) ?? null;
       // Đổi trạng thái không xoá dữ liệu: hàng đã bán giữ giá chốt và ngày bán (Tham chiếu §5).
       if (p.to === "Closed") {
         s.closePrice = p.closePrice as number;
