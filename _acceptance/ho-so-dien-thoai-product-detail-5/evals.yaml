@@ -61,6 +61,8 @@ evals:
     criterion: AC-7
     executor: script
     cmd: config:executors.design.floor
+    status: not-run
+    reason: "Lệnh kho executors.design.floor dựa vào biến CLAUDE_PLUGIN_ROOT, lượt chấm không có biến ấy nên lệnh không chạy (lượt 1, E8 cannot_run); kho cấm sửa _acceptance/config.yaml ở hàng — đã báo giám sát. AC-7 vẫn có E7 (khuôn) và bộ lint của kho (mức nợ, mã màu thô)."
     expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
     paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/proto/ho-so-dien-thoai/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -85,8 +87,9 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
-    expected: "Trên chỗ thử, ghi mọi phản hồi mạng khi dau-khach-1 mở /units/<mã mẫu> ở 375×812: không phản hồi nào chứa mồi số chủ 0900000092, tên chủ mẫu hay giá đáy mẫu; đối chứng dương: cùng thao tác với dau-chu-1 thì phản hồi có mồi số chủ; ghi tệp mạng E10-mang.txt."
+    expected: "Trên chỗ thử, ghi mọi phản hồi mạng khi dau-khach-1 mở /units/<mã mẫu> ở 375×812: không phản hồi nào chứa mồi số chủ 0900000092, tên chủ mẫu hay giá đáy mẫu; gọi thẳng lối mở số chủ của căn bằng phiên dau-khach-1 bị từ chối và không trả mồi. Đối chứng dương trên cùng bộ ghi: dau-chu-1 mở cùng căn rồi gọi lối mở số chủ → phản hồi mở số chứa 0900000092 (bộ dò bắt được mồi). Ghi tệp E10-mang-<vai>.txt."
     steps:
-      - "Dùng chỗ thử của E9; với mỗi vai mở /units/<mã mẫu>, ghi phản hồi mạng (tệp E10-mang-<vai>.txt) và dò các mồi"
+      - "Dùng chỗ thử của E9; dau-khach-1 mở /units/<mã mẫu>, ghi phản hồi mạng, dò ba mồi; rồi gọi POST /api/v1/listings/<id>/owner/phone-reveal bằng phiên ấy: mong bị từ chối, thân không chứa mồi"
+      - "dau-chu-1 mở cùng căn, ghi phản hồi mạng; gọi cùng lối mở số chủ: mong phản hồi chứa 0900000092 — đối chứng dương của bộ dò"
     paths: ["apps/web/src/app/(app)/units/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]

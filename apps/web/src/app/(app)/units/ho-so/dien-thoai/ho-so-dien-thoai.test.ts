@@ -335,6 +335,13 @@ test("E4 đầu khách: cờ từ lopPhuHoSo thật, thân điện thoại khôn
   assert.ok(htmlChu.includes("Nội bộ") && htmlChu.includes("lucide-lock"), "người giữ căn thấy ngăn Nội bộ");
 });
 
+test("E4 đối chứng dương của bộ dò: bản sao thân trình thẳng trường nguồn của căn mẫu → bộ dò bắt đủ số chủ, tên chủ, giá đáy", () => {
+  // Cùng căn mẫu, cùng vai đầu khách: bản sao hỏng chèn nguyên văn ba trường nguồn (như một đường đọc chưa qua luật ẩn).
+  const m = coCan(moHinhHoSo(vao("khach", "toan-man")));
+  const ro = (html: string) => `${html}<p>${SO_CHU}</p><p>${TEN_CHU}</p><p>Giá đáy ${dinhDangGia(GIA_DAY)}</p>`;
+  assert.deepEqual(moiLo(ro(dungDT(m))), [SO_CHU, TEN_CHU, dinhDangGia(GIA_DAY), "Giá đáy"]);
+});
+
 test("E4 chiều đỏ: bản sao bỏ qua cờ noiBo → bộ so nêu mồi lộ ra", () => {
   const m = coCan(moHinhHoSo(vao("khach", "toan-man")));
   assert.deepEqual(moiLo(dungDT({ ...m, co: { ...m.co, noiBo: true } })), ["Nội bộ", "lucide-lock", "0900000092"]);

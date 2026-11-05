@@ -1,0 +1,70 @@
+### run chu (resource timing: url status initiator)
+/manifest.webmanifest 200 link
+/favicon.ico 404 other
+/icons/icon-192.png 200 other
+/api/v1/catalog 200 fetch
+/api/v1/catalog 200 fetch
+/manifest.webmanifest 200 link
+/icons/icon-192.png 200 other
+/api/v1/listings 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 200 fetch
+/api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64 200 fetch
+/api/v1/units/photos/0d8feab8-468e-4016-b46e-e5e3ce7101ed/original 200 img
+/api/v1/units/photos/0d8feab8-468e-4016-b46e-e5e3ce7101ed/thumb 200 img
+/units/A-01.06?_rsc=8SnHsI62eaWfF4Dm 200 fetch
+/manifest.webmanifest 200 link
+/icons/icon-192.png 200 other
+### run mt (resource timing: url status initiator)
+/manifest.webmanifest 200 link
+/favicon.ico 404 other
+/icons/icon-192.png 200 other
+/api/v1/catalog 200 fetch
+/api/v1/catalog 200 fetch
+/manifest.webmanifest 200 link
+/icons/icon-192.png 200 other
+/api/v1/listings 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 200 fetch
+/api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64 200 fetch
+/api/v1/units/photos/0d8feab8-468e-4016-b46e-e5e3ce7101ed/thumb 200 img
+### run kt (resource timing: url status initiator)
+/manifest.webmanifest 200 link
+/favicon.ico 404 other
+/icons/icon-192.png 200 other
+/api/v1/catalog 200 fetch
+/api/v1/catalog 200 fetch
+/manifest.webmanifest 200 link
+/icons/icon-192.png 200 other
+/api/v1/listings 200 fetch
+### run ca (resource timing: url status initiator)
+/manifest.webmanifest 200 link
+/favicon.ico 404 other
+/icons/icon-192.png 200 other
+/api/v1/catalog 200 fetch
+/api/v1/catalog 200 fetch
+/manifest.webmanifest 200 link
+/icons/icon-192.png 200 other
+/api/v1/listings 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 fetch
+/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962/owner 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 fetch
+/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962/owner 200 fetch
+/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 200 fetch
+### run mm (resource timing: url status initiator)
+/manifest.webmanifest 200 link
+/icons/icon-192.png 200 other
+/api/v1/catalog 0 fetch
+/api/v1/catalog 0 fetch
+/manifest.webmanifest 200 link
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 0 fetch
+/api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64/owner 0 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 0 fetch
+/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 0 fetch
+/api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64/owner 0 fetch
+/api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64 0 fetch
+/icons/icon-192.png 200 other
+/api/v1/listings 0 fetch
+### console errors: tool CDP khong thu console; chi co resource timing

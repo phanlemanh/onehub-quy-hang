@@ -2,7 +2,7 @@
 nhom: ho-so-can
 doi_tuong: [can, lan-rao, lich-su-hang]
 khuon: { ten: KhungHoSoCan, nhap: "@/app/(app)/units/ho-so/khung" }
-nhan_dien: ["apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx", "apps/web/src/app/(app)/proto/ho-so-dien-thoai/page.tsx"]
+nhan_dien: ["apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx"]
 mau_dang_chay: { tep: "apps/web/src/app/(app)/units/[code]/page.tsx", duong: "/units/A-01.02", trang_thai: [mac-dinh, nhieu-can, khong-co] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card, Placeholder]
@@ -18,8 +18,8 @@ hàng 17 theo trang ba lối (ADR-0019): lối ReUI. Cạnh Bảng hàng, hồ s
 tiết» (hàng 105, ADR-0024 sửa đổi 05/11; khối `app-shell-11`): cột đứng cạnh bảng, ngoài khung bảng, cao từ đỉnh vùng làm
 việc tới đáy, mặc định 38%, kéo 28–50%, bảng co trái và vẫn bấm được — dựng qua `KhungHoSoCan cotPhu`
 (`units/ho-so/bang-co-ho-so.tsx`). Cột phải của Hôm nay, đầu chủ vẫn là `KhungHoSoCan cot` trong Frame của Hôm nay. Trang
-ba lối `proto/cot-ho-so-can` đi cùng khuôn, gỡ khi màn thật qua Cổng Bằng chứng. Trang ba lối `proto/ho-so-dien-thoai` (Hồ sơ
-căn trên điện thoại, `product-detail-5`, hồ sơ ho-so-dien-thoai-product-detail-5) cũng đi cùng khuôn, gỡ khi màn thật ra.
+ba lối `proto/cot-ho-so-can` đi cùng khuôn, gỡ khi màn thật qua Cổng Bằng chứng. Trang ba lối của hồ sơ điện thoại (hồ sơ ho-so-dien-thoai-product-detail-5)
+đã gỡ sau khi chủ kho chọn lối (luật 45); ảnh giữ ở `_acceptance/ho-so-dien-thoai-product-detail-5/ba-loi/`.
 
 **Dùng khi** màn trình hồ sơ một căn: thuộc tính tự điền, lần rao, lịch sử. **Không dùng** cho Bảng hàng (nhóm
 `bang-hang`) hay chế độ cuộc gọi (hàng 28). Hồ sơ căn của Đầu khách trên điện thoại (hàng 33) là **lớp phủ trên cùng
