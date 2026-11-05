@@ -151,12 +151,24 @@ test("E2 người nhận không mang vai Đầu chủ hay khác sàn → 400 nê
 const MOC_CHU = ["[Tên] C1-mau", "[Tên] C2-mau", "0900000011", "0900 000 011", "0900000012", "0900 000 012"];
 const quetLo = (than: string) => MOC_CHU.filter((m) => than.includes(m));
 
+/** Chủ nhà ghi QUA API (PUT …/owner) như màn thật: tên và số thật sự nằm trong lớp nguồn (số bản mã, liên hệ theo số). */
+async function chuNhaQuaApi(companyId: string, cookie: string, ten: string, so: string, n: number, dauChu: string) {
+  const { can } = await chuNha(companyId, ten, n, dauChu, dauChu);
+  for (const l of can) {
+    const r = await goi("PUT", `/api/v1/listings/${l}/owner`, { ownerName: ten, ownerPhone: so }, cookie);
+    assert.equal(r.status, 200, `ghi chủ nhà: ${await r.clone().text()}`);
+  }
+  const { rows } = await appPool.query<{ contact_id: string; has_phone: boolean }>("select contact_id, has_phone from listing_owners where listing_id = $1", [can[0]]);
+  assert.ok(rows[0]!.has_phone, "đối chứng: số chủ nhà đã nằm trong dữ liệu");
+  return { contactId: rows[0]!.contact_id, can };
+}
+
 test("E3 xem trước: 2 căn đã tích kéo đủ 5 căn của 2 chủ, đầu chủ cũ đúng, 2 liên hệ, không lộ tên và số chủ", async () => {
   const s = await sanMoi();
   const tn = await s.nguoi("tn", ["team_lead"]);
   const d1 = await s.nguoi("d1", ["listing_agent"]);
-  const c1 = await chuNha(s.companyId, "[Tên] C1-mau", 3, d1.userId, d1.userId);
-  const c2 = await chuNha(s.companyId, "[Tên] C2-mau", 2, d1.userId, d1.userId);
+  const c1 = await chuNhaQuaApi(s.companyId, tn.cookie, "[Tên] C1-mau", "0900 000 011", 3, d1.userId);
+  const c2 = await chuNhaQuaApi(s.companyId, tn.cookie, "[Tên] C2-mau", "0900 000 012", 2, d1.userId);
   const khacChu = await chuNha(s.companyId, "[Tên] khác", 1, d1.userId, d1.userId);
   const r = await goi("POST", `${BASE}/preview`, { listingIds: [c1.can[0], c2.can[0]] }, tn.cookie);
   assert.equal(r.status, 200, await r.clone().text());
@@ -282,13 +294,19 @@ test("E6 mã căn và mã lần đổi của sàn khác → 404, không dòng n�
   const a = await sanMoi();
   const tnA = await a.nguoi("tn", ["team_lead"]);
   const d1 = await a.nguoi("d1", ["listing_agent"]);
+  const d2 = await a.nguoi("d2", ["listing_agent"]);
   const ca = await chuNha(a.companyId, "[Tên] e6", 1, d1.userId, d1.userId);
-  const lanA = ((await (await goi("POST", BASE, { listingIds: ca.can, userId: d1.userId }, tnA.cookie)).json()) as { id: string }).id;
+  // Lần đổi thật D1 → D2: hoàn tác lọt sang thì căn và liên hệ sẽ về D1 — ca dưới phân biệt được.
+  const lanA = ((await (await goi("POST", BASE, { listingIds: ca.can, userId: d2.userId }, tnA.cookie)).json()) as { id: string }).id;
   const b = await sanMoi();
   const tnB = await b.nguoi("tn", ["team_lead"]);
   const dB = await b.nguoi("d", ["listing_agent"]);
   assert.equal((await goi("POST", `${BASE}/preview`, { listingIds: ca.can }, tnB.cookie)).status, 404);
   assert.equal((await goi("POST", BASE, { listingIds: ca.can, userId: dB.userId }, tnB.cookie)).status, 404);
   assert.equal((await goi("POST", `${BASE}/${lanA}/undo`, undefined, tnB.cookie)).status, 404);
-  assert.equal(await dauChuCua(a.companyId, ca.can[0]!), d1.userId, "sàn B đổi được căn của A");
+  assert.equal(await dauChuCua(a.companyId, ca.can[0]!), d2.userId, "sàn B đổi hay hoàn tác được căn của A");
+  assert.equal(await nguoiGiu(a.companyId, ca.contactId), d2.userId, "sàn B đổi hay hoàn tác được liên hệ của A");
+  // Đối chứng dương: chính A hoàn tác thì về D1 — phép đọc trên phân biệt được hai trạng thái.
+  assert.equal((await goi("POST", `${BASE}/${lanA}/undo`, undefined, tnA.cookie)).status, 200);
+  assert.equal(await dauChuCua(a.companyId, ca.can[0]!), d1.userId);
 });

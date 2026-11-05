@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useBoDongBo } from "@/lib/sync/react";
 import type { DongBang } from "../cot";
-import { chuDaDoi, chuHoanTac, doiDauChu, dungHop, hoanTacDoi, THOI_GIAN_HOAN_TAC, trangThaiNut, xemTruoc, type XemTruoc } from "./doi-dau-chu";
+import { chayDoi, chayHoanTac, doiDauChu, dungHop, hoanTacDoi, THOI_GIAN_HOAN_TAC, trangThaiNut, xemTruoc, type XemTruoc } from "./doi-dau-chu";
 
 const nghe = (bao: () => void) => {
   window.addEventListener("online", bao);
@@ -34,6 +34,17 @@ const nghe = (bao: () => void) => {
   };
 };
 const useCoMang = () => useSyncExternalStore(nghe, () => navigator.onLine, () => true);
+
+/** Nút «Đổi đầu chủ»: chỉ dựng khi luật của lõi cho phép theo vai; mất mạng thì tắt kèm lời. */
+export function NutDoiDauChu({ vai, coMang, onMo, quyen = canReassignListingAgents }: { vai: readonly string[]; coMang: boolean; onMo: () => void; quyen?: (vai: readonly string[]) => boolean }) {
+  if (!quyen(vai)) return null;
+  const nut = trangThaiNut(coMang);
+  return (
+    <Button type="button" variant="outline" size="sm" disabled={nut.tat} title={nut.loi ?? undefined} onClick={onMo}>
+      Đổi đầu chủ
+    </Button>
+  );
+}
 
 export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBang[], xong: () => void): { nut: ReactNode; hop: ReactNode } {
   const { bd, vai } = useBoDongBo();
@@ -46,7 +57,6 @@ export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBa
   const [dangDoi, setDangDoi] = useState(false);
 
   const duoc = canReassignListingAgents(vai);
-  const nut = trangThaiNut(coMang);
   const ten = useCallback((id: string) => dauChu.find((d) => d.userId === id)?.displayName ?? "Đầu chủ khác", [dauChu]);
   const maCan = useCallback(
     (id: string) => {
@@ -72,11 +82,9 @@ export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBa
 
   const hoanTac = useCallback(
     async (id: string, tenNhan: string) => {
-      const r = await hoanTacDoi(id);
+      const r = await chayHoanTac({ hoanTac: () => hoanTacDoi(id), keo: () => bd.thuNgay(), tenNhan });
       if (!r.ok) return void toast.error(r.loi);
-      const t = chuHoanTac(r.data, tenNhan);
-      toast.success(t.chu, { description: t.moTa ?? undefined });
-      await bd.thuNgay();
+      toast.success(r.chu, { description: r.moTa ?? undefined });
     },
     [bd],
   );
@@ -84,26 +92,26 @@ export function useDoiDauChu(tich: ReadonlySet<string>, moiHang: readonly DongBa
   const doi = useCallback(async () => {
     if (!nhan) return;
     setDangDoi(true);
-    const r = await doiDauChu([...tich], nhan);
-    setDangDoi(false);
-    if (!r.ok) return void setLoi(r.loi);
-    setMo(false);
-    setNhan(null);
-    xong();
     const tenNhan = ten(nhan);
-    toast(chuDaDoi(r.data), { duration: THOI_GIAN_HOAN_TAC, action: { label: "Hoàn tác", onClick: () => void hoanTac(r.data.id, tenNhan) } });
-    await bd.thuNgay();
+    const r = await chayDoi({
+      doi: () => doiDauChu([...tich], nhan),
+      bao: (chu, id) => {
+        setMo(false);
+        setNhan(null);
+        xong();
+        toast(chu, { duration: THOI_GIAN_HOAN_TAC, action: { label: "Hoàn tác", onClick: () => void hoanTac(id, tenNhan) } });
+      },
+      keo: () => bd.thuNgay(),
+    });
+    setDangDoi(false);
+    if (!r.ok) setLoi(r.loi);
   }, [nhan, tich, xong, ten, hoanTac, bd]);
 
   if (!duoc) return { nut: null, hop: null };
 
   const hop = ban ? dungHop(ban, maCan, ten) : null;
   return {
-    nut: (
-      <Button type="button" variant="outline" size="sm" disabled={nut.tat} title={nut.loi ?? undefined} onClick={() => (setBan(null), setLoi(null), setMo(true))}>
-        Đổi đầu chủ
-      </Button>
-    ),
+    nut: <NutDoiDauChu vai={vai} coMang={coMang} onMo={() => (setBan(null), setLoi(null), setMo(true))} />,
     hop: (
       <AlertDialog open={mo} onOpenChange={(m) => (m || dangDoi ? null : (setMo(false), setNhan(null)))}>
         <AlertDialogContent>

@@ -4,10 +4,41 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { chuDaDoi, chuHoanTac, dungHop, LOI_MAT_MANG, THOI_GIAN_HOAN_TAC, trangThaiNut, type XemTruoc } from "./doi-dau-chu";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { canReassignListingAgents } from "@quy-hang/core";
+import { chayDoi, chayHoanTac, chuDaDoi, chuHoanTac, dungHop, LOI_MAT_MANG, THOI_GIAN_HOAN_TAC, trangThaiNut, type XemTruoc } from "./doi-dau-chu";
+import { NutDoiDauChu } from "./hop-doi-dau-chu";
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const doc = (t: string) => readFileSync(join(DIR, t), "utf8");
+
+// E1b — nút dựng thật (renderToStaticMarkup) theo 6 tổ hợp vai: có nút khi và chỉ khi có Trưởng nhóm.
+const VAI6: [string, string[], boolean][] = [
+  ["trưởng nhóm", ["team_lead"], true],
+  ["đầu chủ", ["listing_agent"], false],
+  ["đầu khách", ["buyer_agent"], false],
+  ["telesales", ["telesales"], false],
+  ["quản trị", ["company_admin"], false],
+  ["trưởng nhóm + đầu chủ", ["team_lead", "listing_agent"], true],
+];
+const coNut = (vai: string[], quyen?: (v: readonly string[]) => boolean) =>
+  renderToStaticMarkup(createElement(NutDoiDauChu, { vai, coMang: true, onMo: () => {}, ...(quyen ? { quyen } : {}) })).includes("Đổi đầu chủ");
+const lechNut = (quyen?: (v: readonly string[]) => boolean) => VAI6.flatMap(([ten, vai, mong]) => (coNut(vai, quyen) === mong ? [] : [ten]));
+
+test("E1b nút dựng khi và chỉ khi có vai Trưởng nhóm (6 tổ hợp, dựng thật)", () => {
+  assert.deepEqual(lechNut(), []);
+});
+
+test("E1b đối chứng đỏ: luật giả cho đầu chủ → nút hiện cho đầu chủ, bộ so nêu tổ hợp", () => {
+  assert.deepEqual(lechNut((v) => canReassignListingAgents(v) || v.includes("listing_agent")), ["đầu chủ"]);
+});
+
+test("E1b mất mạng: nút dựng ở trạng thái tắt kèm lời", () => {
+  const html = renderToStaticMarkup(createElement(NutDoiDauChu, { vai: ["team_lead"], coMang: false, onMo: () => {} }));
+  assert.match(html, /disabled=""/);
+  assert.match(html, /title="Cần mạng để đổi đầu chủ"/);
+});
 
 /** Nút «Đổi đầu chủ» dựng theo luật của lõi: hộp gọi canReassignListingAgents, thanh gắn nút của hộp, không so tên vai. */
 function lechQuyen(thanh: string, hop: string): string[] {
@@ -83,9 +114,44 @@ test("E4b thông báo đổi 10 giây có «Hoàn tác»; hoàn tác ghi lời r
   assert.deepEqual(chuHoanTac({ restored: 3, skipped: 0, keptNoPriorAgent: 0 }, "x"), { chu: "Đã trả lại người giữ cũ cho 3 căn và liên hệ", moTa: null });
 });
 
-test("E4b sau đổi và sau hoàn tác, bộ đồng bộ kéo lại ngay", () => {
-  const n = (doc("hop-doi-dau-chu.tsx").match(/await bd\.thuNgay\(\)/g) ?? []).length;
-  assert.equal(n, 2);
+// E4b — thứ tự: kéo đồng bộ chỉ sau khi máy chủ nhận lệnh đổi, lệnh hoàn tác; lỗi thì không kéo.
+type Ghi = string[];
+const okDoi = (g: Ghi) => async () => (g.push("doi"), { ok: true as const, data: { id: "lan-1", listings: 5, contacts: 2 } });
+const loiDoi = (g: Ghi) => async () => (g.push("doi"), { ok: false as const, loi: "Tối đa 200 căn một lần" });
+
+function lechThuTu(chay: typeof chayDoi): Promise<string[]> {
+  const out: string[] = [];
+  return (async () => {
+    const g: Ghi = [];
+    await chay({ doi: okDoi(g), bao: (chu) => g.push(`bao:${chu}`), keo: async () => void g.push("keo") });
+    if (JSON.stringify(g) !== JSON.stringify(["doi", "bao:Đã đổi đầu chủ 5 căn, 2 liên hệ", "keo"])) out.push(`đổi được: ${g.join(" → ")}`);
+    const h: Ghi = [];
+    await chay({ doi: loiDoi(h), bao: () => h.push("bao"), keo: async () => void h.push("keo") });
+    if (JSON.stringify(h) !== JSON.stringify(["doi"])) out.push(`đổi lỗi: ${h.join(" → ")}`);
+    return out;
+  })();
+}
+
+test("E4b đổi: gọi máy chủ → thông báo → kéo đồng bộ; lỗi thì không thông báo, không kéo", async () => {
+  assert.deepEqual(await lechThuTu(chayDoi), []);
+});
+
+test("E4b đối chứng đỏ: bản sao kéo trước khi gọi máy chủ → nêu thứ tự", async () => {
+  const gia: typeof chayDoi = async (d) => {
+    await d.keo();
+    return chayDoi({ ...d, keo: async () => {} });
+  };
+  assert.deepEqual(await lechThuTu(gia), ["đổi được: keo → doi → bao:Đã đổi đầu chủ 5 căn, 2 liên hệ", "đổi lỗi: keo → doi"]);
+});
+
+test("E4b hoàn tác: gọi máy chủ rồi mới kéo; lỗi thì không kéo", async () => {
+  const g: Ghi = [];
+  const r = await chayHoanTac({ hoanTac: async () => (g.push("hoan-tac"), { ok: true as const, data: { restored: 7, skipped: 0, keptNoPriorAgent: 0 } }), keo: async () => void g.push("keo"), tenNhan: "x" });
+  assert.deepEqual(g, ["hoan-tac", "keo"]);
+  assert.deepEqual(r, { ok: true, chu: "Đã trả lại người giữ cũ cho 7 căn và liên hệ", moTa: null });
+  const h: Ghi = [];
+  await chayHoanTac({ hoanTac: async () => (h.push("hoan-tac"), { ok: false as const, loi: "Lần đổi này đã hoàn tác" }), keo: async () => void h.push("keo"), tenNhan: "x" });
+  assert.deepEqual(h, ["hoan-tac"]);
 });
 
 test("ô chọn người nhận hiện tên đầu chủ, không hiện mã người (Select nhận danh sách mục)", () => {
