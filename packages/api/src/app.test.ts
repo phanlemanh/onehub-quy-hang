@@ -33,6 +33,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/me/company",
     "GET /api/v1/company",
     "GET /api/v1/company/members",
+    // Hàng 105: tên thành viên cho mọi vai (cột «Đầu chủ»).
+    "GET /api/v1/company/member-names",
     "POST /api/v1/company/members",
     "PATCH /api/v1/company/members/{userId}",
     "DELETE /api/v1/company/members/{userId}",
@@ -120,6 +122,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/team/listing-agents",
     // Hàng 43 (phat-hang): lần xuất bảng hàng.
     "POST /api/v1/exports",
+    "POST /api/v1/listings/agent-reassignments",
+    "POST /api/v1/listings/agent-reassignments/preview",
+    "POST /api/v1/listings/agent-reassignments/{id}/undo",
     // Hàng 82: cấu hình theo sàn qua lối chung.
     "GET /api/v1/company/settings",
     "PATCH /api/v1/company/settings",

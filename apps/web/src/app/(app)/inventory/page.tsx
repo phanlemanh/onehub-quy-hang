@@ -10,7 +10,11 @@ export default async function Page() {
   const me = await readMe((await headers()).get("cookie") ?? "");
   if (!me?.activeCompany) redirect("/login");
   return (
-    <KhungBangHang title="Bảng hàng" dienThoai={() => <BangTheDienThoai nguoi={me.user.id} san={me.activeCompany!.id} />}>
+    <KhungBangHang
+      title="Bảng hàng"
+      hoSo={{ nguoi: me.user.id, san: me.activeCompany.id }}
+      dienThoai={<BangTheDienThoai nguoi={me.user.id} san={me.activeCompany.id} />}
+    >
       <BangCoHoSo nguoi={me.user.id} san={me.activeCompany.id} vai={me.activeCompany.roles} tenSan={me.activeCompany.name} />
     </KhungBangHang>
   );

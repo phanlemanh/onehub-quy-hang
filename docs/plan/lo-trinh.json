@@ -2408,6 +2408,44 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-04"
     },
     {
+      "ma": "va-gui-can-da-go",
+      "cau_giao": "Căn đã gỡ khi hoàn tác lần nhập không vào được Lần gửi mới và không ghi được sự kiện gửi (Quan tâm) ở tầng cơ sở dữ liệu",
+      "slug": "va-gui-can-da-go",
+      "vi_sao": "Ngoài-2 của hàng 66 — chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 05/11 (luật 65 của đợt)",
+      "vai": "Đầu khách",
+      "hang": "T3",
+      "dung_tren": [
+        "66"
+      ]
+    },
+    {
+      "ma": "105",
+      "cau_giao": "Đầu chủ mở hồ sơ căn từ Bảng hàng thì hồ sơ là một cột đứng cạnh bảng, ngoài khung bảng, cao từ đỉnh vùng làm việc tới đáy màn, đẩy bảng sang trái và kéo chia 28–50%; thanh trên của vỏ giữ nguyên, nhóm nút Nhóm · Lọc · Cột · Xuất và +Lead không bị che; điện thoại không đổi",
+      "slug": "bang-hang-danh-sach-chi-tiet",
+      "vi_sao": "Chủ kho chọn lối C ở phiên đánh giá ngăn hồ sơ căn (nguyên văn «Chọn C», 05/11; docs/design/danh-gia-ngan-chi-tiet-can.md): đầu chủ làm việc lâu trong ngăn, ngăn nổi đè bảng che nhóm nút và gần hết bảng ở màn 1280. Luật đợt 60: tách khỏi hàng 79, chạy trước 79; mọi màn Danh sách – chi tiết (103, 79, 99, 100, 102) dựng trên bố cục này",
+      "vai": "Đầu chủ",
+      "tieu_chi": 8,
+      "hang": "T2",
+      "dung_tren": [
+        "14",
+        "17",
+        "91"
+      ],
+      "bat_khi": "Bảng hàng có hồ sơ cạnh bên dùng cột kéo chia của bộ bố cục (BoCuc nhánh danh-sach-chi-tiet: khối nguồn app-shell-11 cột kéo chia, ruột solution-crm-4; NganNoi giữ cho ngăn báo, lọc điện thoại, luồng nhiều bước); khung Bảng hàng không cao quá khung nhìn; ADR-0024 «Sửa đổi 05/11» và Tham chiếu §12 dòng 05/11; vo-va-ia, ho-so-can.md và ngoại lệ có hạn ở bang-hang.md hết lệch nhau; không chạm inventory/bulk",
+      "nhom": "bang-hang",
+      "vung": [
+        "apps/web/src/components/bo-cuc/*.tsx",
+        "apps/web/src/components/bo-cuc/*.ts",
+        "apps/web/src/app/(app)/units/ho-so/*.tsx",
+        "apps/web/src/app/(app)/inventory/*.tsx",
+        "design/patterns/bang-hang.md",
+        "design/patterns/ho-so-can.md",
+        "docs/design/vo-va-ia.md",
+        "docs/adr/0024-he-bo-cuc.md",
+        "docs/product/tham-chieu.md"
+      ]
+    },
+    {
       "ma": "va-dang-nhap-mat-khau",
       "cau_giao": "Vá hai kẽ an toàn của mật khẩu do sàn cấp (Ngoài-6, Ngoài-7 của hàng 104): người vào sàn khác thì phiên cũ cũng bị thu khi mật khẩu gốc sàn cấp bị vô hiệu; đổi mật khẩu ở Cá nhân đếm lần sai mật khẩu hiện tại chung bộ đếm với đăng nhập.",
       "slug": "va-dang-nhap-mat-khau",

@@ -51,6 +51,7 @@ export function MenuGocNhin(p: {
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button type="button" variant="outline" />}>
         <BookmarkIcon data-icon="inline-start" aria-hidden="true" />
+        {/* eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- trần bề rộng tên góc nhìn trong nút (cắt chữ), không phải kích thước trang */}
         <span className="max-w-48 truncate">{p.dangMo ? p.dangMo.ten : "Góc nhìn"}</span>
         <ChevronDownIcon data-icon="inline-end" aria-hidden="true" />
       </DropdownMenuTrigger>
@@ -188,6 +189,7 @@ export function HopGocNhin(p: {
 
   return (
     <Dialog open onOpenChange={(o) => !o && p.onDong()}>
+      {/* eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- bề rộng hộp lưu góc nhìn, không phải kích thước trang */}
       <DialogContent className="sm:max-w-md">
         <form
           className="flex flex-col gap-4"

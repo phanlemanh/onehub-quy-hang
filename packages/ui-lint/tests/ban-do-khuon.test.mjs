@@ -125,6 +125,8 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["bang-hang.tsx", "bulk/thanh.tsx", "cell-edit/tren-o.tsx", "hang-loc.tsx", "khung.tsx", "page.tsx", "phat-hang/hop-thoai.tsx", "thanh-cong-cu.tsx", "views/[id]/page.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
   ),
+  // Hộp hỏi đổi đầu chủ hàng loạt (hàng 89).
+  `${W}/app/(app)/inventory/bulk/hop-doi-dau-chu.tsx`,
   // Bảng hàng thẻ trên điện thoại (hàng 32): bảng thẻ, ngăn lọc, thẻ căn.
   ...["cards/bang-the.tsx", "cards/ngan-loc.tsx", "cards/the-can.tsx"].map(
     (p) => `${W}/app/(app)/inventory/${p}`,
@@ -224,7 +226,9 @@ const CHO_TRANG_THAI = [
   // Chế độ ép giá (hàng 29): không thấy căn, đã ghi kết quả, máy chủ từ chối.
   ...Array(3).fill(`${W}/app/(app)/units/call/push/ep-gia.tsx`),
   // Hồ sơ căn (hàng 17): khung xương và «không có / nhiều căn» của cột, kết quả chia sẻ của báo sai; chờ tải lịch sử (hàng 33).
-  ...["cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
+  // Hàng 105: lỗi dựng hồ sơ ở cột kéo chia (bảng vẫn dùng được), lượt kéo đầu hỏng kèm «Thử lại».
+  `${W}/app/(app)/units/ho-so/bang-co-ho-so.tsx`,
+  ...["cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "cot-ho-so.tsx", "nut-bao-sai.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
   // Mục Ảnh (hàng 18): lỗi tải, trống của ngăn, thẻ Tự có từ mã (ngăn nội bộ khoá bỏ ở hàng 33 — không thẻ).
   ...Array(3).fill(`${W}/app/(app)/units/photos/muc-anh.tsx`),
   // Trình che vùng ảnh (hàng 19): ảnh không mở được, lưu lỗi.
@@ -430,7 +434,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 18 ngoại lệ · 0 lệch",
-      "trang-thai: 111 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 113 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

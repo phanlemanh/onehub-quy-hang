@@ -4,7 +4,7 @@
  */
 import type { CatalogData, CatalogUnitData } from "@quy-hang/core";
 import type { ListingView } from "@/lib/sync/types";
-import { CHUA_RO, type DongBang } from "./cot";
+import { CHUA_RO, chuDauChu, type DanhBaDauChu, type DongBang } from "./cot";
 
 type ThuocTinhCan = {
   unitType: string;
@@ -56,8 +56,11 @@ function mucDu(c: unknown): number | null {
   return c && typeof c === "object" && "filled" in c && typeof c.filled === "number" ? c.filled : null;
 }
 
-/** Một hàng của kho trên máy thành một dòng của bảng. */
-export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc): DongBang {
+/**
+ * Một hàng của kho trên máy thành một dòng của bảng. Bảng hàng trao `danhBa` (kể cả `null` khi chưa đọc được) để có cột
+ * «Đầu chủ»; chỗ khác (Hôm nay, bảng thẻ) không trao thì dòng không có cột ấy.
+ */
+export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaDauChu): DongBang {
   return {
     id: l.id,
     buildingName: l.buildingName,
@@ -76,5 +79,6 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc): DongBang {
     closePrice: l.closePrice,
     closeDate: l.closeDate,
     withdrawnReason: l.withdrawnReason,
+    ...(danhBa !== undefined ? { "dau-chu": chuDauChu(l.listAgentKey, danhBa) } : {}),
   };
 }

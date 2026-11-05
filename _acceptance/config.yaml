@@ -19,6 +19,7 @@ executors:
     nap_mau_yml: "node --test packages/db/seed/nap-mau-yml.test.mjs"   # nap-mau-ban-that AC-8: đọc tệp workflow nút nạp
     typecheck_db: "node --test packages/db/seed/typecheck-db.test.mjs"   # va-nap-mau E6: gói db nằm trong npm run typecheck của gốc, chiều đỏ trên chính lệnh ấy
     du_lieu_mau_tsx: "node --env-file-if-exists=.env.local --import tsx --test \"packages/db/seed/*.test.mjs\""   # nap-mau-ban-that E10: như du_lieu_mau nhưng có tsx — bộ kiểm hàng 5 nhập packages/connect (TypeScript) từ hàng 10
+    api_db: "DATABASE_URL=${DATABASE_URL:-postgres://postgres:quyhang@localhost:5575/postgres} npm run test:db -w @quy-hang/api"   # bang-hang-danh-sach-chi-tiet E7c: bộ kiểm API trên Postgres — vắng DATABASE_URL thì dùng Postgres dãy D (5575)
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
@@ -34,6 +35,7 @@ executors:
     # SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY (moi_truong_that); APP_URL (suc_khoe_that). Không chạy trong suite_keys.
     moi_truong_that: "node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs"
     cai_dat_tai_lieu: "node --test \"_acceptance/cai-dat-hop-nhat/thu/*.test.mjs\""   # cai-dat-hop-nhat AC-9: ba quyết định đã niêm có mục sửa đổi, không viết đè
+    doi_dau_chu_tai_lieu: "node --test \"_acceptance/doi-dau-chu-hang-loat/thu/*.test.mjs\""   # doi-dau-chu-hang-loat AC-8: ADR-0021 có mục sửa đổi 05/11, Tham chiếu §12
     suc_khoe_that: "node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs --suc-khoe"
     suc_khoe_xem_truoc: "cd \"$VERCEL_LINK_DIR\" && npx -y vercel@latest curl /api/v1/health --deployment \"$APP_URL\" -- -fsS"   # moi-truong-that AC-8: bản xem trước có Vercel Authentication — vercel curl vượt bảo vệ bằng phiên CLI; VERCEL_LINK_DIR là thư mục ngoài kho đã `vercel link`
     cach_ly_that: "npm run test:isolation -w @quy-hang/db"   # moi-truong-that: chỉ bộ kiểm cách ly (mỗi ca rollback) — DATABASE_URL trỏ cơ sở dữ liệu thật
@@ -51,8 +53,9 @@ executors:
     lint_bo_qua: "node --test \"_acceptance/luat-an-va-kiem-ro-ri/thu/*.test.mjs\""   # luat-an-va-kiem-ro-ri: lint bỏ qua thư mục đợt, CI nối ro-ri, phá thử trên bản sao lõi (E9b, E10)
     dang_nhap_auth_15: "node --test \"_acceptance/dang-nhap-auth-15/thu/*.test.mjs\""   # dang-nhap-auth-15 AC-5: không tệp nào dưới packages/api/src/auth đổi so với nhánh chính, cặp hai chiều
     va_moc_goi_dau: "node --test \"_acceptance/va-moc-goi-dau-lead-tra-lai/thu/*.test.mjs\""   # va-moc-goi-dau-lead-tra-lai AC-3, AC-6: migration 023 và không sửa migration đã commit; mốc ca chập chờn từ đồng hồ cơ sở dữ liệu
-    dang_nhap_mat_khau: "node --test \"_acceptance/dang-nhap-mat-khau/thu/*.test.mjs\""
-    va_dang_nhap_mat_khau: "node --test \"_acceptance/va-dang-nhap-mat-khau/thu/*.test.mjs\""   # dang-nhap-mat-khau AC-11: migration 034 mới, không sửa migration đã commit, ADR-0005, khuôn xác thực, Tham chiếu
+    dang_nhap_mat_khau: "node --test \"_acceptance/dang-nhap-mat-khau/thu/*.test.mjs\""   # dang-nhap-mat-khau AC-11: migration 034 mới, không sửa migration đã commit, ADR-0005, khuôn xác thực, Tham chiếu
+    bang_hang_dsct: node --test "_acceptance/bang-hang-danh-sach-chi-tiet/thu/*.test.mjs"
+    va_dang_nhap_mat_khau: "node --test \"_acceptance/va-dang-nhap-mat-khau/thu/*.test.mjs\""
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "node \"${CLAUDE_PLUGIN_ROOT}/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm

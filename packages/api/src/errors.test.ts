@@ -83,6 +83,8 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     importUndoIncomplete: ["import-undo-incomplete", 503],
     // phat-hang (hàng 43).
     exportRoleRequired: ["export-role-required", 403],
+    reassignmentTooLarge: ["reassignment-too-large", 400],
+    reassignmentUndone: ["reassignment-undone", 409],
     // dang-nhap-mat-khau.
     invalidEmailOrPassword: ["invalid-email-or-password", 401],
     passwordRateLimited: ["password-rate-limited", 429],
@@ -96,7 +98,7 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     passwordCommon: ["password-common", 400],
     passwordGuessable: ["password-guessable", 400],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 74);
+  assert.equal(Object.keys(API_ERRORS).length, 76);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

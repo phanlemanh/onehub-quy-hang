@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const me = await readMe((await headers()).get("cookie") ?? "");
   if (!me?.activeCompany) redirect("/login");
   return (
-    <KhungBangHang title="Bảng hàng" dienThoai={() => <BangTheDienThoai nguoi={me.user.id} san={me.activeCompany!.id} />}>
+    <KhungBangHang title="Bảng hàng" dienThoai={<BangTheDienThoai nguoi={me.user.id} san={me.activeCompany.id} />}>
       <BangHang nguoi={me.user.id} san={me.activeCompany.id} gocNhinId={decodeURIComponent(id)} vai={me.activeCompany.roles} tenSan={me.activeCompany.name} />
     </KhungBangHang>
   );
