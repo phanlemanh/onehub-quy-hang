@@ -15,6 +15,7 @@ import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
 import { registerContactRoutes } from "./contacts/routes";
+import { registerContactReadRoutes } from "./contacts/read/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerSettingsRoutes } from "./settings/routes";
@@ -188,6 +189,7 @@ export function createApi(deps: ApiDeps) {
   registerSettingsRoutes(api, deps);
   // Hàng 42: Hôm nay trưởng nhóm — hàng đợi lead quá hạn, đầu chủ để giao.
   registerTeamRoutes(api, deps);
+  registerContactReadRoutes(api, deps);
   registerContactRoutes(api, deps);
   registerJobRoutes(api, deps);
   registerPushRoutes(api, deps);
