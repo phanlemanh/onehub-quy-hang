@@ -54,7 +54,8 @@ const DOC_DONG = `JSON.stringify([...document.querySelectorAll('[aria-label^="Vi
   const tr = menu.closest("tr"); const td = [...tr.children];
   const nut = [...tr.querySelectorAll("button, a[data-slot=button]")].filter((b) => b !== menu && b.offsetParent !== null);
   const viSao = td[1]?.querySelector("span.flex-col"); const tang = viSao ? [...viSao.children] : [];
-  return { ma: tr.dataset.rowId, ten: menu.getAttribute("aria-label").replace("Việc khác của ", ""), soO: td.filter((x) => x.getBoundingClientRect().width > 0).length, soNutNgoai: nut.length, nhan: nut[0]?.textContent.trim(),
+  let truoc = tr.previousElementSibling; while (truoc && truoc.querySelector('[aria-label^="Việc khác của"]')) truoc = truoc.previousElementSibling;
+  return { ma: tr.dataset.rowId, nhom: truoc?.querySelector("span.truncate")?.textContent.trim() ?? null, ten: menu.getAttribute("aria-label").replace("Việc khác của ", ""), soO: td.filter((x) => x.getBoundingClientRect().width > 0).length, soNutNgoai: nut.length, nhan: nut[0]?.textContent.trim(),
     vien: nut[0] ? getComputedStyle(nut[0]).borderTopStyle : null, rong: nut[0] ? Math.round(nut[0].getBoundingClientRect().width) : null,
     tangViec: td[0]?.querySelectorAll(":scope > div > span, :scope > div > a").length, tangViSao: tang.length,
     dam: tang[0] ? Number(getComputedStyle(tang[0]).fontWeight) : null, hanChu: tang[1]?.textContent ?? null,
@@ -67,9 +68,8 @@ try {
     const dong = JSON.parse(await t.tinh(DOC_DONG));
     const token = JSON.parse(await t.tinh(`JSON.stringify((() => { const m = (c) => { const e = document.createElement("span"); e.className = c; document.body.appendChild(e); const v = getComputedStyle(e).color; e.remove(); return v; }; return { destructive: m("text-destructive"), warning: m("text-warning") }; })())`));
     await chup(t, "E1-hom-nay-1440");
-    // Khối solution-agents-2 không in hàng tiêu đề (renderHeader={false}, như khối gốc): bốn cột đếm bằng ô có bề rộng của
-    // từng dòng việc.
-    in1({ ca: "e1", soO: [...new Set(dong.map((d) => d.soO))], soDong: dong.length, rongNut: [...new Set(dong.map((d) => d.rong))], vien: [...new Set(dong.map((d) => d.vien))], dong, token });
+    const tieuDeCot = JSON.parse(await t.tinh(`JSON.stringify([...document.querySelectorAll("thead th")].map((th) => th.textContent.trim()).filter(Boolean))`));
+    in1({ ca: "e1", tieuDeCot, soO: [...new Set(dong.map((d) => d.soO))], soDong: dong.length, rongNut: [...new Set(dong.map((d) => d.rong))], vien: [...new Set(dong.map((d) => d.vien))], dong, token });
     t.dong();
   }
   if (arg("--e4")) {

@@ -530,7 +530,7 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
     <DataGrid table={table} recordCount={tong} i18n={I18N} tableLayout={TABLE_LAYOUT} tableClassNames={TABLE_CLASS_NAMES}>
       <FramePanel className="p-0!">
         <DataGridContainer>
-          <DataGridTable renderHeader={false} />
+          <DataGridTable />
         </DataGridContainer>
       </FramePanel>
     </DataGrid>
