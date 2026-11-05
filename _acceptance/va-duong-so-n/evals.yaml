@@ -1,0 +1,47 @@
+schema_version: 1
+feature_slug: va-duong-so-n
+# Mọi eval chạy bộ kiểm lõi `npm test -w @quy-hang/core`; ca của vòng nằm ở packages/core/src/address/duong-so.test.ts, mỗi
+# ca mang đúng tên «AC-n …». Mỗi phép đo là một hàm kiểm thuần trả danh sách lỗi: đối chứng dương trên vật lành ra rỗng,
+# phá thử ra đúng thông điệp ghim. Phá thử bộ tách dùng `tachSoNhaVoi(phan, () => false)` — đúng hành vi trước vá (không
+# tiền tố nào được nhận), không phải bản sao viết tay. Ma trận viết trước; số assert bằng số dòng ma trận (đếm in ra).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 tách số nhà trước đường số» xanh: ma trận toàn phần 7 tiền tố (Đường, đường, ĐƯỜNG, Đ., Đg, Duong, Phố) × 7 dạng số nhà (12 <t> số 5 · Số 12 <t> số 5 · số 12, <t> số 5 · sn 12 <t> số 5 · <t> số 5 số 12 · số 3 hẻm 45/12 <t> số 5 · số 3 ngách 12 ngõ 45 <t> số 5) = 49 dòng, số assert = 49 × 2 (số nhà và tên đường); số nhà bằng 12 (hay 45/12/3 cho hai dạng hẻm, ngõ), streetName bằng đúng «<t> số 5» như gõ; phá thử: bộ tách tachSoNhaVoi(phan, () => false) → hàm kiểm trả dòng đầu đúng «tên đường lệch: 12 Đường số 5» và có «số nhà lệch: Số 12 Đường số 5»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 đường số không kèm số nhà» xanh: với 7 tiền tố, tachSoNha(«<t> số 5»).streetNumber === null và streetName === «<t> số 5»; tachSoNha(«hẻm 45 Đường số 5») = {streetNumber: null, streetName: «Đường số 5», hemKhongSo: true}; docDiaChi(«Đường số 5, Phường Bến Thành, TP.HCM»): thieu === [streetNumber], trangThai «thieu», khoa null, wardName.ma 26743; đối chứng dương cùng địa chỉ có «12 » đứng đầu → trangThai chuan, khoa «79|26743|so 5|12»; phá thử: bộ tách tachSoNhaVoi(phan, () => false) → hàm kiểm trả «có số nhà khi không có: Đường số 5»; hàm kiểm nhận kết quả đọc bản sao có khoa khác null cho địa chỉ không số nhà → «có khoá khi thiếu số nhà: Đường số 5, Phường Bến Thành, TP.HCM»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-3 khác đường khác khoá» xanh: ma trận toàn phần 31 đường (Đường số 1…30 và Đường số 5A) × 3 số nhà (12, 45/12/3, 7A) = 93 địa chỉ trọn «<số> Đường số N, Phường Bến Thành, TP.HCM»; mọi dòng trangThai «chuan», khoa khác null; 93 khoá đôi một khác nhau (đếm khoá khác nhau = 93, in ra); khoá của «12 Đường số 5» ≠ khoá của «12 Đường số 7»; phá thử: bộ dựng khoá bản sao dùng tachSoNhaVoi(phần đường, () => false) rồi khoaDiaChi(79, 26743, …) → hàm kiểm trả dòng đầu đúng «hai đường cùng khoá: 12 Đường số 1 · 12 Đường số 2» và có «hai đường cùng khoá: 12 Đường số 1 · 12 Đường số 7»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-4 cùng đường cùng khoá» xanh: 9 cách viết (Đường số 5, đường Số 5, ĐƯỜNG SỐ 5, Đ. số 5, Đg số 5, Duong so 5, Phố số 5, Đường số5, Đường số 05) trong «12 <cách viết>, Phường Bến Thành, TP.HCM» → mọi dòng trangThai chuan và khoa === «79|26743|so 5|12» (số assert = 9, in ra); tenDuongChuan(«Đường 5») === «5» (không chữ «số», chưa gộp — Out of scope), tenDuongChuan(«Đường 3 Tháng 2») === «3 thang 2», tenDuongChuan(«Đường 30/4») === «30/4», tenDuongChuan(«Đường Mẫu 1») === «mau 1»; phá thử: bộ chuẩn hoá tên đường bản sao chỉ bỏ tiền tố (luật hàng 75) dựng khoá từ kết quả đọc → hàm kiểm trả đúng [«khoá lệch cách viết: Đường số5», «khoá lệch cách viết: Đường số 05»]"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-5 khoá cũ không đổi» xanh: anh-truoc-va.json có đúng 86 dòng, mã trùng tập ma của dap-an-thap-tang.json, sha là commit trước mọi thay đổi mã của vòng; với mọi dòng, docDiaChi(chu) sau vá ra streetNumber, streetName, tenDuongChuan(streetName), khoa, trangThai bằng ảnh (số dòng so = 86, in ra); các ca «AC-1 …» tới «AC-7 …» của hàng 75 (bo-thu, chuan-hoa, doc-dia-chi, danh-muc, khong-mang) xanh trong cùng lượt; phá thử bản sao ảnh: đổi khoa của DC-001 → hàm kiểm trả «đổi so với trước vá: DC-001: khoa»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
