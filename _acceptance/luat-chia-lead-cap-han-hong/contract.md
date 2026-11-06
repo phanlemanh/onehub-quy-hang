@@ -5,7 +5,7 @@ slug: luat-chia-lead-cap-han-hong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-11-06
 design_doc: docs/superpowers/specs/2026-11-06-luat-chia-lead-cap-han-hong-design.md
@@ -78,3 +78,4 @@ thuần, E7 nhìn trên bản đang chạy).
 
 - Lỗi gốc ở `packages/api/src/settings/store.ts` (`writeCompanySettings`); lưới thứ hai ở màn là hàm thuần `ketQuaLuu`
   của `apps/web/src/app/(app)/settings/lead-routing/luat.ts`.
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Phép nhìn thử trên màn dùng một câu báo lỗi gõ tay, không phải câu lỗi thật của máy chủ. Nếu sau này câu lỗi của máy chủ đổi, phép nhìn này vẫn xanh dù màn có thể không còn báo lỗi đúng. Người dùng hiện tại không bị ảnh hưởng. — `_acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs`
