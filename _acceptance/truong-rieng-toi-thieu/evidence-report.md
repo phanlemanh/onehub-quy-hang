@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 20e82b06691493011c18782670d99e37a43685e4
+verified_commit: 5dd9f32201294f58e2e896813be301e04d5f6965
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -406,3 +406,7 @@ Round 2: E6, E6b, E6c, E13, E14 chạy lại trên b1c20a3a và đạt; E13 nay 
 ### Re-pin lần 1 — 2026-11-06, do gộp main (Thuế phí hàng 49) sau chữ ký
 run_id: repin-20261106T151548Z-82111
 sha: 20e82b06691493011c18782670d99e37a43685e4 · suites: 7 lệnh exit 0 · evals: 27/27 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E14=1 · ngoài làn máy: E11, E12, E13
+
+### Re-pin lần 2 — 2026-11-06, do gộp main (danh mục xã, PR #174)
+run_id: repin-20261106T165150Z-83197
+sha: 5dd9f32201294f58e2e896813be301e04d5f6965 · suites: 7 lệnh exit 0 · evals: 27/27 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E14=1 · ngoài làn máy: E11, E12, E13
