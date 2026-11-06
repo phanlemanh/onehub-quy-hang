@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 8d0d3488e84959d44d826db5dc6264404344d05f
+verified_commit: 3a93b8c2940a9e639062a06de979de69cdf6526b
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -171,3 +171,7 @@ none — every multi-run eval is uniform
 
 Round 1: chi tiết không được truyền xuống vòng này; xem run-log.jsonl và lịch sử commit (S4-r1, S4-r2).
 Round 2: E1 đến E10 đều đạt, không eval đỏ; chỗ thử sự cố E3 dùng phiên mã cố định nên không phụ thuộc cookie cũ.
+
+### Re-pin lần 1 — 2026-11-06, do gộp main sau chữ ký (PR #156 vào main)
+run_id: repin-20261106T043100Z-65912
+sha: 3a93b8c2940a9e639062a06de979de69cdf6526b · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E3 · AC không có chốt máy: AC-3
