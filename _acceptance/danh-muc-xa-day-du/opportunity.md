@@ -24,9 +24,9 @@ Vì sao: Chủ kho duyệt Cổng Phạm vi hàng 75 (05/11), Hỏi-1 theo khuy�
 
 ## Ngưỡng chết / ngưỡng UAT
 
-- Câu hỏi phép đo trả lời: [đề xuất] lõi địa chỉ đã nhận đúng mọi xã, phường của 34 tỉnh (tên mới, tên cũ trước sắp xếp) và mã của hàng 75 đã khớp danh mục chính thống chưa?
-- Kết quả nào là SỐNG: [đề xuất] đủ 3.321 đơn vị cấp xã theo nguồn chủ kho chọn; địa chỉ ghi phường cũ hay tỉnh cũ ra đúng phường, tỉnh mới; mã 34 tỉnh và 4 phường TP.HCM của hàng 75 khớp nguồn (hoặc lệch được gọi tên và sửa trước hàng 76)
-- Kết quả nào là CHẾT: [đề xuất] thiếu xã so với nguồn, một tên cũ trỏ sai phường mới, hoặc mã hàng 75 lệch nguồn mà không ai biết
-- Timebox: [đề xuất] một vòng, xong trước khi hàng 76 lưu khoá
+- Câu hỏi phép đo trả lời: lõi địa chỉ đã nhận đúng mọi xã, phường của 34 tỉnh (tên mới, tên cũ trước sắp xếp) và mã của hàng 75 đã khớp danh mục chính thống chưa?
+- Kết quả nào là SỐNG: đủ 3.321 đơn vị cấp xã theo nguồn chủ kho chọn; địa chỉ ghi phường cũ hay tỉnh cũ ra đúng phường, tỉnh mới; mã 34 tỉnh và 4 phường TP.HCM của hàng 75 khớp nguồn (hoặc lệch được gọi tên và sửa trước hàng 76)
+- Kết quả nào là CHẾT: thiếu xã so với nguồn, một tên cũ trỏ sai phường mới, hoặc mã hàng 75 lệch nguồn mà không ai biết
+- Timebox: một vòng, xong trước khi hàng 76 lưu khoá
 
 Cổng Đáng: hàng lộ trình không mã — chủ kho đã quyết ở Cổng Phạm vi hàng 75 (Hỏi-1, `_acceptance/dia-chi-chuan/decisions.jsonl` d-20261105T115755Z-6, duyệt 05/11); giám sát đợt xác nhận (trả lời X-9, 06/11).
