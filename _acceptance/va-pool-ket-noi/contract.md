@@ -5,7 +5,7 @@ slug: va-pool-ket-noi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-06-va-pool-ket-noi-design.md
 approved_by:
 approved_at:
@@ -84,3 +84,7 @@ Liệt kê tay hai trục (descope «bỏ coverage-scan» trong sổ quyết đ�
 - Hình cho Cổng Phạm vi: trang lỗi trên máy dev khi cơ sở dữ liệu tắt — `evidence/E3-today-loi-ha-tang.jpg`.
 - Máy dev qua `127.0.0.1`, không qua `localhost`: cookie không tách theo cổng, và máy dev của các dãy khác trên `localhost`
   để lại cookie phiên HttpOnly cùng tên trong trình duyệt chung — lần thử đầu trên `localhost` bị cookie lạ ấy đè.
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Sau khi bản vá vào nhánh chính, bài kiểm của hồ sơ này sẽ báo đỏ dù sản phẩm không có lỗi, và có thể che mất tín hiệu thật của rào chống lùi lỗi đọc phiên. — `_acceptance/va-pool-ket-noi/thu/pham-vi.test.mjs`
+- Ngoài-4 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Chỗ thử sự cố có thể báo đã mở lại kết nối dù thực tế chưa, làm bước kiểm hồi phục đỏ sai; người dùng thật không bị ảnh hưởng. — `_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs`
+- Ngoài-5 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Khi có nhiều người vào cùng lúc, máy chủ web có thể nhân bản và vẫn làm cạn kết nối cơ sở dữ liệu, khiến trang báo lỗi tạm thời kèm nút Thử lại. — `apps/web/src/lib/api.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Sau này nếu có ai viết cách khác để nuốt lỗi đọc phiên, bài kiểm có thể không bắt được và người đang đăng nhập lại bị đá về màn đăng nhập khi hệ thống nghẽn. — `_acceptance/va-pool-ket-noi/thu/noi-goi.test.mjs`

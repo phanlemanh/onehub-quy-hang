@@ -88,3 +88,47 @@ wall: 275s
 - **claude-sonnet-5-5**: 5 agent · 22 calls · out 18,877 · in 44 · cache_read 1,196,355 · cache_create 206,369
 - **claude-haiku-5-5**: 12 agent · 24 calls · out 12,376 · in 48 · cache_read 186,522 · cache_create 165,294
 
+### S4 round 2 (thử lại) — wf_2e085e2d-a37 (21 agent, 67,847 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| review:bugs | claude-opus-5-5 | 16 | 13,630 | 32 | 686,137 | 188 |
+| review:conventions | claude-opus-5-5 | 14 | 10,015 | 30 | 658,449 | 132 |
+| review:measurement | claude-opus-5-5 | 7 | 8,829 | 16 | 186,225 | 111 |
+| ui:E3 | claude-sonnet-5-5 | 25 | 8,274 | 50 | 2,489,589 | 146 |
+| synthesize:report | claude-sonnet-5-5 | 2 | 5,631 | 4 | 27,229 | 32 |
+| baseline:diffBase | claude-sonnet-5-5 | 3 | 5,422 | 6 | 44,980 | 83 |
+| triage | claude-sonnet-5-5 | 2 | 3,205 | 4 | 17,173 | 23 |
+| machine:npm test -w @quy-hang/web | claude-haiku-5-5 | 2 | 2,134 | 4 | 15,840 | 13 |
+| machine:node --test "_acceptance/va-pool-ket-noi | claude-haiku-5-5 | 2 | 1,160 | 4 | 15,866 | 7 |
+| refute:dung-su-co.mjs | claude-sonnet-5-5 | 3 | 1,057 | 6 | 27,953 | 12 |
+| machine:npm run lint | claude-haiku-5-5 | 2 | 1,033 | 4 | 15,824 | 15 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 989 | 4 | 15,842 | 7 |
+| machine:R="${CLAUDE_PLUGIN_ROOT:-$(node packages | claude-haiku-5-5 | 2 | 980 | 4 | 15,919 | 9 |
+| machine:npm run build | claude-haiku-5-5 | 2 | 977 | 4 | 15,822 | 13 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 927 | 4 | 15,830 | 10 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 791 | 4 | 15,840 | 7 |
+| machine:R="${CLAUDE_PLUGIN_ROOT:-$(node packages | claude-haiku-5-5 | 2 | 725 | 4 | 15,914 | 8 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 659 | 4 | 12,639 | 18 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 544 | 4 | 15,840 | 6 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 524 | 4 | 15,877 | 31 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 341 | 4 | 11,668 | 7 |
+
+
+wall: 274s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| baseline | 1 | 5,422 | 44,980 | 83 | 03:05:58 | 03:07:21 |
+| ui | 1 | 8,274 | 2,489,589 | 146 | 03:05:58 | 03:08:23 |
+| machine | 12 | 11,443 | 187,053 | 106 | 03:05:58 | 03:07:44 |
+| review | 3 | 32,474 | 1,530,811 | 192 | 03:05:58 | 03:09:10 |
+| triage | 1 | 3,205 | 17,173 | 23 | 03:09:12 | 03:09:36 |
+| refute | 1 | 1,057 | 27,953 | 12 | 03:09:37 | 03:09:50 |
+| capture | 1 | 341 | 11,668 | 7 | 03:09:51 | 03:09:58 |
+| synthesize | 1 | 5,631 | 27,229 | 32 | 03:10:00 | 03:10:32 |
+
+- **claude-opus-5-5**: 3 agent · 37 calls · out 32,474 · in 78 · cache_read 1,530,811 · cache_create 190,397
+- **claude-sonnet-5-5**: 6 agent · 37 calls · out 23,930 · in 74 · cache_read 2,618,592 · cache_create 262,976
+- **claude-haiku-5-5**: 12 agent · 24 calls · out 11,443 · in 48 · cache_read 187,053 · cache_create 166,355
+

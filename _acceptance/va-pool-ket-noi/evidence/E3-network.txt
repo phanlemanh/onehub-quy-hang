@@ -1,6 +1,5 @@
-E3 network (preview tab, origin http://127.0.0.1:3499), doc tu read_network_requests/read_console_messages
-- Document load GET /today, /inventory, /, /select-company => 500 trong khi cong tac TAT (su co duoc dung co chu y; trang loi la ket qua mong doi). Day la tai trang, khong phai fetch/XHR loi bat ngo.
-- Sau khi cong tac MO + bam Thu lai: GET /today?_rsc => 200; /api/v1/catalog, /api/v1/company/settings/queue, /api/v1/leads/assigned, /api/v1/listings => 200 OK.
-- Console: "LoiDocPhien: Khong doc duoc phien (HTTP 500)" va ECONNRESET (server, do su co dung); Failed to load resource 500 tuong ung document load.
-- Khong co request third-party.
-- Luu y: trinh duyet co cookie qh.session_token cu (khac gia tri phat ra) o 127.0.0.1 truoc buoc 2; da xoa roi chay lai buoc 2.
+E3 network (browser pane, origin http://127.0.0.1:3499), lan chay 06/11 10:0x
+- Ca nguoi dung: cong tac TAT -> tai trang /today,/inventory,/,/select-company: document HTTP 500 (su co co chu dich), thu muc loi hien «Khong mo duoc trang nay».
+- Console: "[Better Auth] INTERNAL_SERVER_ERROR read ECONNRESET" + "LoiDocPhien: Khong doc duoc phien (HTTP 500)" moi lan tai trang luc cong tac TAT (dung la su co duoc dung, bat boi ErrorBoundary).
+- Sau khi mo cong tac + bam Thu lai: /api/v1/catalog, /company/settings/queue, /leads/assigned, /listings -> 200 OK.
+- Fetch/XHR toi app-origin that bai: chi 1 GET /today?_rsc=... ERR_ABORTED (huy do chuyen trang mem khi Thu lai/refresh, 200 OK), khong co 5xx/4xx fetch nao ngoai document co chu dich.
