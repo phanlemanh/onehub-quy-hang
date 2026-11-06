@@ -164,7 +164,7 @@ const NHAN_DIEN_TRANG_THAI = [
   // Hôm nay của đầu khách (hàng 37): dòng tin, khuôn, vùng.
   ...["buyer/dong-tin.tsx", "buyer/khung.tsx", "buyer/vung.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
   // Màn Liên hệ (hàng 103): danh sách, hồ sơ, khuôn, trang, mục trên Tôi, vùng.
-  ...["danh-sach.tsx", "ho-so.tsx", "khung.tsx", "page.tsx", "tren-toi.tsx", "vung.tsx"].map((p) => `${W}/app/(app)/contacts/${p}`),
+  ...["danh-sach.tsx", "ho-so.tsx", "khung.tsx", "muc-truong-rieng.tsx", "page.tsx", "tren-toi.tsx", "vung.tsx"].map((p) => `${W}/app/(app)/contacts/${p}`),
   // Thông báo lead (hàng 26): dải bật thông báo ở đầu /today; Hôm nay của trưởng nhóm (hàng 42).
   ...["dai-bat.tsx", "hom-nay-dau-chu.tsx", "khung.tsx", "truong-nhom.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
   // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; khối báo máy bị báo ở đăng nhập.
@@ -194,6 +194,8 @@ const CHO_TRANG_THAI = [
   // Màn Liên hệ (hàng 103): lỗi tải, người khác giữ, không khớp, trống; lỗi hồ sơ; vai không xem ở trang.
   ...Array(4).fill(`${W}/app/(app)/contacts/danh-sach.tsx`),
   `${W}/app/(app)/contacts/ho-so.tsx`,
+  // Trường riêng ở hồ sơ liên hệ (hàng 47): lỗi lưu.
+  `${W}/app/(app)/contacts/muc-truong-rieng.tsx`,
   `${W}/app/(app)/contacts/page.tsx`,
   // Hàng 91: lỗi và không thấy cấp nhóm (app).
   `${W}/app/(app)/error.tsx`,
@@ -481,7 +483,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 25 ngoại lệ · 0 lệch",
-      "trang-thai: 146 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 147 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
