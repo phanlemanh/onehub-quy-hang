@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 20541c5054939fee17abf50202c6c36e8226e19d
+verified_commit: 3aead26f84e7e0c9058270083ee2535a8323e215
 human_signoff:
 ---
 
@@ -30,150 +30,119 @@ human_signoff:
 | E8b | AC-8 | test | PASS |
 | E9 | AC-9 | test | PASS |
 | E10 | AC-10 | ui-check | PASS |
-| E10b | AC-10 | script | PASS |
+| E10b | AC-10 | script | PASS (đạt có giới hạn) |
 | E10c | AC-10 | test | PASS |
 | E10e | AC-10 | script | PASS |
 
 ## Evidence
 
+- eval: E9
+  run_id: minted-trang-nhom-moi-gioi-E9-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T09:56:04Z
+  output: |
+    npm run db:migrate && npm run db:test
+    ℹ duration_ms 114138.097208
+
+- eval: E10b
+  run_id: minted-trang-nhom-moi-gioi-E10b-r4
+  exit_code: 1
+  baseline: n-a
+  verifier: config:executors.design.khuon
+  verified_at: 2026-11-06T09:56:04Z
+  output: |
+    17 tệp giao diện ngoài bản đồ
+    (mã thoát đã khai trước cho eval này, đi cùng E10e xanh)
+
 - eval: E1
   run_id: minted-trang-nhom-moi-gioi-E1-r3
   exit_code: 0
   baseline: n-a
+  carried_from_round: 3
   verifier: config:executors.test.isolation
   verified_at: 2026-11-06T09:50:00Z
   output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 113723.215292
-
-- eval: E2b
-  run_id: minted-trang-nhom-moi-gioi-E2b-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 113723.215292
-
-- eval: E3
-  run_id: minted-trang-nhom-moi-gioi-E3-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 113723.215292
-
-- eval: E4b
-  run_id: minted-trang-nhom-moi-gioi-E4b-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 113723.215292
-
-- eval: E8
-  run_id: minted-trang-nhom-moi-gioi-E8-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 113723.215292
-
-- eval: E9
-  run_id: minted-trang-nhom-moi-gioi-E9-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm run db:migrate && npm run db:test
-    ℹ duration_ms 113723.215292
-
-- eval: E2
-  run_id: minted-trang-nhom-moi-gioi-E2-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.core
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 1328.693875
-
-- eval: E4
-  run_id: minted-trang-nhom-moi-gioi-E4-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.core
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 1328.693875
-
-- eval: E7
-  run_id: minted-trang-nhom-moi-gioi-E7-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.script.ro_ri
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    npm run test:ro-ri
-    ℹ duration_ms 430.627625
-
-- eval: E10b
-  run_id: minted-trang-nhom-moi-gioi-E10b-r3
-  exit_code: 1
-  baseline: n-a
-  verifier: config:executors.design.khuon
-  verified_at: 2026-11-06T09:50:00Z
-  output: |
-    design-floor-khuon --kiem --root .
-    17 tệp giao diện ngoài bản đồ
-    (mã thoát 1 là kết quả đã khai trước của eval này, đi cùng E10e xanh)
-
-- eval: E10e
-  run_id: minted-trang-nhom-moi-gioi-E10e-r2
-  exit_code: 0
-  baseline: n-a
-  verifier: _acceptance/trang-nhom-moi-gioi/kiem-khuon-e10.mjs
-  verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
-  output: |
-    carry-forward tu round 2 — delta khong cham paths cua eval
+    carry-forward tu round 3 — delta khong cham paths cua eval
 
 - eval: E1b
   run_id: minted-trang-nhom-moi-gioi-E1b-r2
   exit_code: 0
   baseline: n-a
+  carried_from_round: 2
   verifier: config:executors.test.web
   verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E2
+  run_id: minted-trang-nhom-moi-gioi-E2-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.test.core
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
+
+- eval: E2b
+  run_id: minted-trang-nhom-moi-gioi-E2b-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
+
+- eval: E3
+  run_id: minted-trang-nhom-moi-gioi-E3-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
 
 - eval: E3b
   run_id: minted-trang-nhom-moi-gioi-E3b-r2
   exit_code: 0
   baseline: n-a
+  carried_from_round: 2
   verifier: config:executors.test.web
   verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E4
+  run_id: minted-trang-nhom-moi-gioi-E4-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.test.core
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
+
+- eval: E4b
+  run_id: minted-trang-nhom-moi-gioi-E4b-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
 
 - eval: E5
   run_id: minted-trang-nhom-moi-gioi-E5-r2
   exit_code: 0
   baseline: n-a
+  carried_from_round: 2
   verifier: config:executors.test.web
   verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
 
@@ -181,29 +150,39 @@ human_signoff:
   run_id: minted-trang-nhom-moi-gioi-E6-r2
   exit_code: 0
   baseline: n-a
+  carried_from_round: 2
   verifier: config:executors.test.web
   verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E7
+  run_id: minted-trang-nhom-moi-gioi-E7-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.script.ro_ri
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
+
+- eval: E8
+  run_id: minted-trang-nhom-moi-gioi-E8-r3
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 3
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T09:50:00Z
+  output: |
+    carry-forward tu round 3 — delta khong cham paths cua eval
 
 - eval: E8b
   run_id: minted-trang-nhom-moi-gioi-E8b-r2
   exit_code: 0
   baseline: n-a
+  carried_from_round: 2
   verifier: config:executors.test.web
   verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
-  output: |
-    carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E10c
-  run_id: minted-trang-nhom-moi-gioi-E10c-r2
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.test.web
-  verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
 
@@ -211,9 +190,9 @@ human_signoff:
   run_id: E10-ui-verify-20261106
   exit_code: 0
   baseline: n-a
+  carried_from_round: 2
   verifier: config:executors.ui-check
   verified_at: 2026-11-06T09:35:12Z
-  carried_from_round: 2
   screenshot: evidence/E10-step1.png
   observed: |
     I opened every saved frame with Read.
@@ -232,39 +211,64 @@ human_signoff:
     All frames match the descriptions.
     Caveats: step 11 cannot press Lưu because it is disabled. Step 9 ran on a separate copy on 3498 without stopping web-L, which is a deviation from the written step. In steps 8 and 9 the alert sits at the top edge of the page with no sàn header, which is accepted because the link has no sàn context.
   network_observed: clean
-  note: carry-forward tu round 2 — delta khong cham paths cua eval
+  # carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E10c
+  run_id: minted-trang-nhom-moi-gioi-E10c-r2
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 2
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T09:35:12Z
+  output: |
+    carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E10e
+  run_id: minted-trang-nhom-moi-gioi-E10e-r2
+  exit_code: 0
+  baseline: n-a
+  carried_from_round: 2
+  verifier: config:executors.script
+  verified_at: 2026-11-06T09:35:12Z
+  output: |
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 ### Lệnh suite (hồi quy)
 
-- cmd: npm test -w @quy-hang/api
-  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_api-r3
+- cmd: npm test -w @quy-hang/core
+  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_core-r4
   exit_code: 0
-  verified_at: 2026-11-06T09:50:00Z
+  verified_at: 2026-11-06T09:56:04Z
+
+- cmd: npm test -w @quy-hang/api
+  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_api-r4
+  exit_code: 0
+  verified_at: 2026-11-06T09:56:04Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_connect-r3
+  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_connect-r4
   exit_code: 0
-  verified_at: 2026-11-06T09:50:00Z
+  verified_at: 2026-11-06T09:56:04Z
 
 - cmd: npm run test:hooks
-  run_id: minted-trang-nhom-moi-gioi-SUITE-test_hooks-r3
+  run_id: minted-trang-nhom-moi-gioi-SUITE-test_hooks-r4
   exit_code: 0
-  verified_at: 2026-11-06T09:50:00Z
+  verified_at: 2026-11-06T09:56:04Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_ui_lint-r3
+  run_id: minted-trang-nhom-moi-gioi-SUITE-npm_test_w_quy_hang_ui_lint-r4
   exit_code: 0
-  verified_at: 2026-11-06T09:50:00Z
+  verified_at: 2026-11-06T09:56:04Z
 
 - cmd: npm run typecheck
-  run_id: minted-trang-nhom-moi-gioi-SUITE-typecheck-r3
+  run_id: minted-trang-nhom-moi-gioi-SUITE-typecheck-r4
   exit_code: 0
-  verified_at: 2026-11-06T09:50:00Z
+  verified_at: 2026-11-06T09:56:04Z
 
 - cmd: npm run lint
-  run_id: minted-trang-nhom-moi-gioi-SUITE-lint-r3
+  run_id: minted-trang-nhom-moi-gioi-SUITE-lint-r4
   exit_code: 0
-  verified_at: 2026-11-06T09:50:00Z
+  verified_at: 2026-11-06T09:56:04Z
 
 ## Known limits
 
@@ -276,12 +280,7 @@ human_signoff:
 
 carried tu round 2 — baseline khong do lai round nay
 
-Baseline khong do lai nen field baseline cua moi eval la n-a. Cac eval sau tren cung lenh chua co do phan biet baseline; can viet lai de assert hanh vi moi hoac xac nhan la regression-guard co chu y:
-
-- npm run db:migrate && npm run db:test: E1, E2b, E3, E4b, E8, E9
-- npm test -w @quy-hang/web: E1b, E3b, E5, E6, E8b, E10c
-- npm test -w @quy-hang/core: E2, E4
-- npm run test:ro-ri: E7
+Eval không-phân-biệt (xanh cả trên mã mới lẫn mã cũ, đo ở baseline round 2): E1, E2b, E3, E4b, E8, E9 (lệnh db:migrate + db:test); E1b, E3b, E5, E6, E8b, E10c (lệnh test của web); E2, E4 (lệnh test của core); E7 (lệnh test:ro-ri). Cần viết lại để khẳng định hành vi mới hoặc xác nhận là hàng rào hồi quy có chủ ý.
 
 ## Variance
 
@@ -289,6 +288,6 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: chay dau tien, chi tiet trong run-log.jsonl (run_id duoi -r1).
-Round 2: siet bon phep do va ghi bang chung luot 2 (commit 20541c50); cac eval web, E10, E10c, E10e giu khung luot nay.
-Round 3: moi eval va lenh suite deu qua; E10b thoat theo ma da khai truoc, kem E10e xanh. Verdict PASS.
+Round 1: baseline đầu; E10b mang mã thoát đã khai trước (đạt có giới hạn), E10e giữ cùng.
+Round 2: siết bốn phép đo, ghi bằng chứng lượt 2 (commit 20541c50).
+Round 3: ca 048 không áp hộ migration còn chờ (commit 3aead26f); round 4 chạy lại E9, E10b và các lệnh suite, các eval còn lại carry-forward.
