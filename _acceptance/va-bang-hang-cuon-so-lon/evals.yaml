@@ -1,0 +1,45 @@
+# Bộ đo của hàng vá va-bang-hang-cuon-so-lon. Phép đo trang chạy MỘT lệnh tuần tự (build một lần, next start 3491 trên bộ
+# thử dãy B — Postgres 5561, sàn «[Mẫu] Sàn đo cuộn» 5.000 căn, phiên do-cuon đã giữ), dò ba khổ màn rồi chạy máy đo cuộn
+# E11 của bang-hang-kieu-sheet trên cùng bản build — các bài cùng cổng và thư mục build nên không tách thành lệnh song song.
+# Đối chứng dương trong lệnh: API trả đủ 5.000 căn cho do-cuon trước khi dò; thiếu bộ thử thì thoát 2.
+# Chiều đỏ trên trang (bang-the.tsx của main) đo tay 06/11, ghi ở design.md; trên máy, chiều đỏ là vế đối chứng của E3.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kem-e11
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/data-grid/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**"]
+    expected: "exit 0; dòng {kho:'1366x768'} và {kho:'1920x1080'} ok — trang /inventory của do-cuon hiện «/ 5000 căn», không hiện «Không mở được màn này», console không có lỗi mang «#185» hay «Maximum update depth». Đỏ in «màn sập «Không mở được màn này» (<khổ>)», «lỗi vòng cập nhật (<khổ>): …», «không thấy «/ 5000 căn» (<khổ>)»; thiếu bộ thử hay API không đủ 5.000 căn thì thoát 2 «đối chứng dương hỏng» / «thiếu bộ thử dãy B»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kem-e11
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/data-grid/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**", "_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"]
+    expected: "exit 0; dòng {kho:'e11'} ok — máy đo cuộn E11 (do-cuon.mjs --khong-build) chạy đủ ba lượt và cả ba dòng «lượt N: …» mang «dòng cuối thấy 5000»; dòng in thêm hieu_nang (trung vị p95, tỷ lệ khung > 50 ms) và tai_may làm thông tin, không quyết. Đỏ in «máy đo cuộn E11 không chạy đủ ba lượt (thoát <mã>)» hay «cuộn không tới căn cuối: <k>/3 lượt thấy dòng 5000»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: cd apps/web && TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test "src/app/(app)/inventory/cards/do-the.test.ts"
+    paths: ["apps/web/src/app/(app)/inventory/cards/**"]
+    expected: "exit 0; ba ca ✔ — (1) doCaoThe: dòng ẩn trả ước lượng (128, 56), dòng hiện trả chiều cao thật (143), dòng hiện cao 0 thật trả 0; (2) khoá vòng #185: Virtualizer thật, 5.000 dòng, vùng cuộn 1366×700, mọi dòng ẩn đo bằng doCaoThe → số dòng dựng ≤ 25 và bằng nhau giữa 1 và 40 khung; (3) đối chứng: đo 0 (hành vi cũ) → số dòng ≥ 100 sau 40 khung và lớn hơn nữa ở 80 khung. Phá thử tay 06/11 (bỏ nhánh ẩn của doCaoThe) đỏ «dòng ẩn phải trả ước lượng, không trả 0». Đỏ in «khe ẩn dựng <n> dòng — vòng đo đang phình» hay «phép đo cũ chỉ dựng <n> dòng — bài kiểm không tái hiện được vòng»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kem-e11
+    paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**"]
+    expected: "exit 0; dòng {kho:'375x812'} ok — bảng thẻ điện thoại hiện «<N> căn» với N = số căn Đang bán + Đang giao dịch của do-cuon đếm từ API cùng lượt (không viết tay), không màn lỗi, không lỗi «#185». Vế «dòng hiện đo chiều cao thật» là ca (1) của E3. Đỏ in «không thấy «<N> căn» (375x812)» hay «màn sập … (375x812)»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai — bảng thẻ vẫn dùng TrangThai cho trạng thái lỗi, trống, chờ tải như trước."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

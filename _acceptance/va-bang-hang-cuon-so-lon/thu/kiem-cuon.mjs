@@ -3,7 +3,9 @@
 // do-cuon@mau.quy-hang.test — dựng bằng _acceptance/bang-hang-kieu-sheet/thu/dung-b.mjs --nhan 5000).
 //   node kiem-cuon.mjs --kho 1366x768 [--kho 1920x1080 --kho 375x812] [--khong-build] [--kem-e11]
 // --kem-e11: dò xong thì tắt máy chủ rồi chạy máy đo cuộn E11 của bang-hang-kieu-sheet (do-cuon.mjs --khong-build) trên
-// CHÍNH bản build này, tuần tự — hai bài cùng cổng 3491 và cùng thư mục build, chạy song song sẽ giẫm nhau.
+// CHÍNH bản build này, tuần tự — hai bài cùng cổng 3491 và cùng thư mục build, chạy song song sẽ giẫm nhau. Vòng này chỉ
+// đòi vế CHỨC NĂNG: cả ba lượt cuộn tới «dòng cuối thấy 5000» (trang không sập giữa cuộn). Ngưỡng hiệu năng của E11 phụ
+// thuộc tải máy (06/11, tải ~10: commit tốt 1414c1e7 trượt 2,9% còn nặng hơn bản sửa) — in ra kèm tải máy, không quyết.
 // Khổ rộng ≥ 768: bảng phải hiện «/ 5000 căn». Khổ điện thoại: bảng thẻ (chỉ căn Đang bán, Đang giao dịch) phải hiện
 // «<N> căn» với N đếm từ API cùng lượt (đáp án không viết tay). Cả hai: không màn
 // «Không mở được màn này», không lỗi console mang «#185» hay «Maximum update depth». Mỗi khổ một dòng JSON.
@@ -124,7 +126,13 @@ if (process.argv.includes("--kem-e11")) {
   await ngu(1500);
   const r = spawnSync(process.execPath, ["_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs", "--khong-build"], { cwd: GOC, encoding: "utf8", timeout: 900_000 });
   const ra = `${r.stdout ?? ""}${r.stderr ?? ""}`.trim().split("\n").slice(-12).join("\n");
-  ket.push({ kho: "e11", ok: r.status === 0, loi: r.status === 0 ? [] : [`máy đo cuộn E11 thoát ${r.status}`], ra });
+  const luot = ra.split("\n").filter((l) => /^lượt \d/.test(l));
+  const toi = luot.filter((l) => l.includes(`dòng cuối thấy ${SO_HANG}`)).length;
+  const loi = [];
+  if (luot.length < 3) loi.push(`máy đo cuộn E11 không chạy đủ ba lượt (thoát ${r.status}): ${ra.split("\n").at(-1)}`);
+  else if (toi < luot.length) loi.push(`cuộn không tới căn cuối: ${toi}/${luot.length} lượt thấy dòng ${SO_HANG}`);
+  const tai = (await import("node:os")).loadavg().map((x) => x.toFixed(1)).join(" ");
+  ket.push({ kho: "e11", ok: loi.length === 0, loi, hieu_nang: ra.split("\n").at(-1), tai_may: tai });
   console.log(JSON.stringify(ket.at(-1)));
 }
 process.exit(ket.every((k) => k.ok) ? 0 : 1);

@@ -30,10 +30,11 @@ Source input: hàng `va-bang-hang-cuon-so-lon` (`docs/plan/lo-trinh.json`) · th
   Then trang hiện «/ 5000 căn», không hiện «Không mở được màn này», và console không có lỗi mang «#185» hay «Maximum update
   depth».
 
-- **AC-2** — Cuộn Bảng hàng 5.000 căn vẫn đạt ngưỡng hiệu năng đã ký.
+- **AC-2** — Cuộn Bảng hàng 5.000 căn tới căn cuối mà không sập.
   Given cùng bản build và bộ thử,
-  When chạy máy đo cuộn E11 của `bang-hang-kieu-sheet`,
-  Then nó thoát 0 (p95 khoảng cách khung ≤ 33,4 ms, khung > 50 ms ≤ 1%, cuộn tới căn cuối, đối chứng bận trượt ngưỡng).
+  When chạy máy đo cuộn E11 của `bang-hang-kieu-sheet` (ba lượt cuộn trọn bảng ở 1366×768, CPU chậm 4 lần),
+  Then cả ba lượt thấy dòng thứ 5000 («dòng cuối thấy 5000»); số hiệu năng (p95, tỷ lệ khung > 50 ms) và tải máy được in
+  ra làm thông tin, không quyết tiêu chí này — ngưỡng hiệu năng là của E11 đã ký, chấm ở lượt ghim lại của #165.
 
 - **AC-3** — Vòng đo của bộ cuộn ảo bị khoá bằng một bài kiểm đơn vị.
   Given bộ cuộn ảo thật với 5.000 dòng, vùng cuộn đang hiện cao 700, mọi dòng nằm trong khe ẩn,

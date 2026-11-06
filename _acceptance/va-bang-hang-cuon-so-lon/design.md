@@ -25,7 +25,8 @@ dòng, đo tiếp ra 0, báo đổi, dựng lại — với 5.000 căn (2.375 l�
   khe hay tổ tiên đang `display: none`) thì trả chiều cao ước lượng như thể chưa đo; dòng đang hiển thị trả chiều cao thật.
   `uocLuongDong(kind)` gom ước lượng 56/128 đang viết tại chỗ.
 - `cards/bang-the.tsx`: `useVirtualizer` nhận `measureElement` gọi `doCaoThe` với ước lượng của đúng dòng
-  (`data-index`). Không đổi `KhungBangHang`, `bang-hang.tsx`, data-grid hay thư viện.
+  (`data-index`); `BangTheDienThoai` chỉ gắn `BangThe` khi khe có hình chiếu (xem lần lặp 2 dưới). Không đổi
+  `KhungBangHang`, `bang-hang.tsx`, data-grid hay thư viện.
 - Khe hiện ra (điện thoại, hay đóng hồ sơ) thì dòng có hình chiếu và được đo thật như cũ — hiệu ứng `ao.measure()` sẵn có
   khi `an` đổi vẫn chạy.
 
@@ -39,7 +40,14 @@ dòng, đo tiếp ra 0, báo đổi, dựng lại — với 5.000 căn (2.375 l�
   700, mọi dòng ẩn: đo bằng `doCaoThe` thì số dòng dựng ≤ 25 và đứng yên qua 40 khung; đối chứng đo 0 (hành vi cũ) thì
   số dòng phình ≥ 100 và còn tăng ở 80 khung. Phá thử tay: bỏ nhánh ẩn của `doCaoThe` → bài khoá vòng đỏ «dòng ẩn phải trả
   ước lượng, không trả 0».
-- E11 của `bang-hang-kieu-sheet` (`do-cuon.mjs`) là thước hiệu năng cuộn đã ký — chạy lại nguyên văn.
+- E11 của `bang-hang-kieu-sheet` (`do-cuon.mjs`) chạy lại nguyên văn sau bài dò, trên cùng bản build; vòng này đòi vế
+  chức năng (ba lượt cuộn tới dòng 5000). Ngưỡng hiệu năng phụ thuộc tải máy: 06/11 (tải ~10, Spotlight đánh chỉ mục sau
+  khởi động lại, các dãy khác đang kiểm) bản sửa ra 1,3–1,5% khung > 50 ms, còn commit tốt `1414c1e7` đo cùng lúc ra 2,9%
+  và p95 50 ms — ngưỡng không phân biệt được bản tốt với bản hỏng lúc máy nặng. Bỏ hẳn bảng thẻ khỏi máy tính không đổi
+  số, nên phần sát ngưỡng không thuộc hàng này.
+- Lần lặp 2 của cách sửa (06/11): đo dòng ẩn bằng ước lượng chặn được vòng #185 nhưng bảng thẻ ẩn vẫn nghe cuộn của vùng
+  cuộn chung; `BangTheDienThoai` nay không gắn `BangThe` khi khe không có hình chiếu (máy tính), gắn khi khe hiện (đổi khổ
+  màn). Hồ sơ đang mở trên điện thoại vẫn chỉ ẩn bảng thẻ (giữ lọc và vị trí cuộn). `doCaoThe` giữ làm lớp thứ hai.
 
 ## Đối chiếu ngành
 
