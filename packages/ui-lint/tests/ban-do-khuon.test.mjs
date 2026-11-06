@@ -52,7 +52,7 @@ const BANG = {
   "xac-thuc": { theoKhuon: ["dat-mat-khau", "login", "no-company", "select-company"].map((p) => `${W}/app/(auth)/${p}/page.tsx`), ngoaiLe: [] },
   "cai-dat-san": {
     // Hàng 50: Mẫu nhập đi khuôn MucCaiDat. Hàng 45: màn Cách gọi.
-    theoKhuon: [`${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
+    theoKhuon: [`${W}/app/(app)/settings/fees/page.tsx`, `${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/(app)/settings/[section]/page.tsx`, `${W}/app/(app)/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
@@ -78,6 +78,8 @@ const BANG = {
       `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/settings/[section]/page.tsx`,
+      // Hàng 49: màn Thuế phí rời trang tạm.
+      `${W}/app/(app)/settings/fees/page.tsx`,
       // Hàng 45: màn Cách gọi rời trang tạm.
       `${W}/app/(app)/settings/labels/page.tsx`,
       `${W}/app/(app)/settings/lead-routing/page.tsx`,
@@ -180,7 +182,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -215,6 +217,8 @@ const CHO_TRANG_THAI = [
   `${W}/app/(app)/not-found.tsx`,
   // Hôm nay của đầu chủ (hàng 22): báo bộ đã lưu, báo bộ mặc định, lỗi tải lead, trống của vùng.
   // Cài đặt sàn → Người dùng (vào vỏ ở hàng 91).
+  // Thuế phí (hàng 49): lỗi tải, lỗi lưu.
+  ...Array(2).fill(`${W}/app/(app)/settings/fees/bang-thue-phi.tsx`),
   // Cách gọi (hàng 45): lỗi lưu, đã lưu; lỗi đọc ở trang.
   ...Array(2).fill(`${W}/app/(app)/settings/labels/cach-goi.tsx`),
   `${W}/app/(app)/settings/labels/page.tsx`,
@@ -451,7 +455,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 4 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 5 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -466,8 +470,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 22 ngoại lệ · 0 lệch",
-      "trang-thai: 132 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 23 ngoại lệ · 0 lệch",
+      "trang-thai: 134 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
