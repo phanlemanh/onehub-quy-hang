@@ -1,0 +1,64 @@
+schema_version: 1
+feature_slug: va-deploy-csdl-tam
+# Lệnh máy: _acceptance/va-deploy-csdl-tam/thu/kiem-ci.mjs (chỉ đọc tệp kho và chạy kiem-nhanh.mjs không DATABASE_URL —
+# không kết nối gì) và executors.test.isolation (Postgres dãy Q 5577 — lượt chấm đặt
+# DATABASE_URL=postgres://postgres:quyhang@localhost:5577/postgres trên dòng lệnh). Không lệnh nào chạm cơ sở dữ liệu bản thật.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-deploy-csdl-tam/thu/kiem-ci.mjs
+    paths: [".github/workflows/ci.yml", "_acceptance/va-deploy-csdl-tam/thu/**"]
+    expected: "exit 0; dòng «ĐẠT deploy không chạy bộ kiểm ghi» và «ĐẠT chuỗi bản thật chỉ tới db:migrate và kiem-nhanh»: hàm xét liệt mọi bước của job deploy thấy secrets.PROD_DATABASE_URL (env mức job lẫn mức bước) và so tập lệnh của chúng đúng bằng {npm run db:migrate, npm run kiem-nhanh -w @quy-hang/db}; đối chứng đỏ in trước, mỗi bản sao ci.yml đỏ ĐÚNG tên vế của nó: chèn bước `npm run test:isolation -w @quy-hang/db` · chèn `npm run db:test` · chèn `npm run test:db` · chèn bước `npm test -w @quy-hang/db` mang env PROD_DATABASE_URL · đặt PROD_DATABASE_URL ở env mức job."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-deploy-csdl-tam/thu/kiem-ci.mjs
+    paths: [".github/workflows/ci.yml", "_acceptance/va-deploy-csdl-tam/thu/**"]
+    expected: "exit 0; dòng «ĐẠT isolation chạy ở PR và push main», «ĐẠT isolation trên postgres:16 trong job, không bí mật bản thật», «ĐẠT isolation: db:migrate rồi db:test», «ĐẠT deploy chờ isolation»; đối chứng đỏ: bản sao bỏ `isolation` khỏi needs của deploy → đỏ đúng tên «deploy chờ isolation»; bản sao đặt DATABASE_URL của isolation bằng secrets.PROD_DATABASE_URL → đỏ đúng tên vế không bí mật bản thật."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-deploy-csdl-tam/thu/kiem-ci.mjs
+    paths: [".github/workflows/ci.yml", "_acceptance/va-deploy-csdl-tam/thu/**"]
+    expected: "exit 0; dòng «ĐẠT thứ tự: db:migrate → kiem-nhanh → deploy hook», «ĐẠT không continue-on-error trong deploy», «ĐẠT kiem-nhanh và deploy hook không có if ngoài success()», «ĐẠT dòng run của kiem-nhanh đúng nguyên lệnh»; đối chứng đỏ, mỗi bản sao đỏ ĐÚNG tên vế của nó: đảo kiem-nhanh xuống sau bước gọi VERCEL_DEPLOY_HOOK · thêm `continue-on-error: true` vào bước kiem-nhanh · thêm `if: always()` vào bước gọi Vercel · thêm `if: ${{ !cancelled() }}` vào bước gọi Vercel · thêm `if: false` vào bước kiem-nhanh · đổi run thành `npm run kiem-nhanh -w @quy-hang/db || true` · đổi run thành `set +e; npm run kiem-nhanh -w @quy-hang/db`."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs", "packages/db/migrations/**"]
+    expected: "exit 0; trong packages/db/tests/kiem-nhanh.test.mjs: ca «kiểm nhanh: cơ sở dữ liệu lành thì không lỗi» (soi trên Postgres đã migrate, mảng lỗi rỗng, số bảng soi > 0); trên CÙNG kết nối trong một giao dịch rollback: tạo bảng `public.__kn_thieu` không bật luật → lỗi gọi đúng `__kn_thieu` vế «chưa bật»; bật mà không force → lỗi gọi đúng `__kn_thieu` vế «chưa ép»; phần xét thuần `xet` trên ma trận toàn phần viết trước 24 dòng = luật theo dòng {bật+ép, chỉ bật, không bật} × chủ bảng là quy_hang_app {có, không} × bypassrls {có, không} × superuser {có, không}, mỗi dòng ghi sẵn tập tên vế lỗi mong đợi; bài đếm đúng 24 assert và đỏ khi một dòng thiếu."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs", "packages/db/migrations/**"]
+    expected: "exit 0; ca «kiểm nhanh: vai của API là chủ bảng thì lỗi»: trong giao dịch rollback, `alter table public.__kn_chu owner to quy_hang_app` (bảng đã bật và ép luật) → lỗi gọi đúng `__kn_chu` vế «chủ bảng»; ca `alter role quy_hang_app bypassrls` → lỗi vế «bypassrls»; ca `alter role quy_hang_app superuser` → lỗi vế «superuser»; đối chứng dương cùng tệp: cơ sở dữ liệu lành không lỗi."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; ca «kiểm nhanh: đường chạy thật chỉ đọc»: gọi `chay(url, { moc })` trên Postgres dãy với móc tiêm vào chạy trên đúng kết nối của kiểm nhanh giữa lúc soi — móc đọc `show transaction_read_only` = on, `show statement_timeout` khác 0, và một câu `create table` trong móc bị từ chối mã 25006; ca «kiểm nhanh: một kết nối»: đếm `pg_stat_activity` của database (không lọc theo tên) có backend_start sau mốc trước khi gọi, trừ kết nối của chính bài — trong lúc móc chạy đúng bằng 1 (đối chứng dương), sau khi `chay` trả về bằng 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/va-deploy-csdl-tam/thu/kiem-ci.mjs
+    paths: ["packages/db/package.json", "packages/db/scripts/kiem-nhanh.mjs", "_acceptance/va-deploy-csdl-tam/thu/**"]
+    expected: "exit 0; dòng «ĐẠT script kiem-nhanh của @quy-hang/db gọi scripts/kiem-nhanh.mjs, nạp .env.local như migrate» và «ĐẠT thiếu DATABASE_URL thì thoát khác 0 có câu báo»: chép kiem-nhanh.mjs vào thư mục tạm (không .env.local ở cwd lẫn cạnh tệp), chạy bằng env dựng từ đầu chỉ giữ PATH cộng PGHOST=10.255.255.1 (không định tuyến được); mong mã ≠ 0, stderr chứa «DATABASE_URL», chạy dưới 2 giây; đối chứng đỏ: bản sao package.json đổi script sang tệp khác → đỏ đúng tên vế script."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

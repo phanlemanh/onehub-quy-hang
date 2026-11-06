@@ -1,0 +1,15 @@
+{"feature_plain":"Mỗi lần gộp vào main, bản thật chỉ nhận cập nhật cấu trúc dữ liệu rồi một lượt kiểm nhanh chỉ đọc; bộ kiểm cách ly chạy trên cơ sở dữ liệu tạm dựng riêng cho đúng lần gộp ấy, nên bản thật không còn đứng vì bài kiểm ghi hay cạn kết nối.",
+"will_do":[
+{"id":"AC-2","p":"Sẽ vẫn chạy trọn bộ kiểm cách ly trên một cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp, và đỏ thì vẫn chặn triển khai."},
+{"id":"AC-3","p":"Sẽ làm theo thứ tự: cập nhật cấu trúc, kiểm nhanh, rồi mới gọi Vercel — kiểm nhanh đỏ thì không gọi Vercel, không có đường vòng nào."},
+{"id":"AC-4","p":"Sẽ làm bước triển khai đỏ khi trên bản thật có bảng chưa bật hoặc chưa ép luật theo dòng, gọi đúng tên bảng."},
+{"id":"AC-5","p":"Sẽ làm bước triển khai đỏ khi vai của API là chủ một bảng, hoặc được quyền bỏ qua luật theo dòng."},
+{"id":"AC-6","p":"Sẽ kiểm nhanh trong một giao dịch chỉ đọc, một kết nối; cả bước triển khai không giữ quá hai kết nối bản thật."},
+{"id":"AC-7","p":"Sẽ có lệnh kiểm nhanh chạy được bằng tên; thiếu chuỗi kết nối thì báo và không kết nối đi đâu."}],
+"wont_do":[
+{"id":"AC-1","p":"Sẽ KHÔNG chạy bài kiểm nào ghi trên bản thật; chuỗi kết nối bản thật chỉ tới đúng hai bước cập nhật cấu trúc và kiểm nhanh."},
+{"id":"OOS-1","p":"KHÔNG sửa ADR-0009 và Tham chiếu trong hàng này — ghi ở việc theo sau."},
+{"id":"OOS-2","p":"KHÔNG sửa bài kiểm CI của hồ sơ môi trường thật đã ký — việc của hồ sơ ấy."},
+{"id":"OOS-3","p":"KHÔNG dùng nhánh Supabase làm cơ sở dữ liệu tạm (tốn tiền)."},
+{"id":"OOS-4","p":"Chưa kiểm nhanh phần danh tính và chưa chạy cố vấn của Supabase trong CI."},
+{"id":"OOS-5","p":"KHÔNG đổi phiên bản bộ nghiệm thu, KHÔNG chạy gì lên bản thật từ máy."}]}
