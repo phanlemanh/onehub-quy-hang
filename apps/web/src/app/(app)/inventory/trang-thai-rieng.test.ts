@@ -53,21 +53,21 @@ test("bảng hàng: nhãn của căn", () => {
   assert.equal(chuTrangThaiThe(dong("1", "Pending", "giu_cho"), TV), "Giữ chỗ");
 
   // Thực đơn từ căn Active: mỗi nấc nhãn mặc định rồi nhãn riêng neo vào nó.
-  const tuActive = luaChonTrangThai(hang("Active"), NHAN);
+  const tuActive = luaChonTrangThai(hang("Active"), NHAN, true);
   assert.deepEqual(
     tuActive.map((l) => l.chu),
     ["Đang giao dịch", "Giữ chỗ", "Đã bán", "Tạm ngừng", "Ngừng hẳn"],
   );
   const giu = tuActive.find((l) => l.chu === "Giữ chỗ")!;
-  const kq = dungLenhTrangThai(hang("Active"), giu.to, { label: giu.label });
+  const kq = dungLenhTrangThai(hang("Active"), giu.to, { label: giu.label }, true);
   assert.ok(kq.ok);
   assert.deepEqual(kq.lenh, { type: "status_changed", payload: { to: "Pending", label: "giu_cho" } });
 
   // Từ căn Pending/giu_cho: thêm «Đang giao dịch» cùng nấc — về nhãn mặc định.
-  const tuGiu = luaChonTrangThai(hang("Pending", "giu_cho"), NHAN);
+  const tuGiu = luaChonTrangThai(hang("Pending", "giu_cho"), NHAN, true);
   const veMacDinh = tuGiu.find((l) => l.to === "Pending" && l.chu === "Đang giao dịch");
   assert.ok(veMacDinh, "thiếu lựa chọn «Đang giao dịch» cùng nấc");
-  const kq2 = dungLenhTrangThai(hang("Pending", "giu_cho"), veMacDinh.to, { label: veMacDinh.label });
+  const kq2 = dungLenhTrangThai(hang("Pending", "giu_cho"), veMacDinh.to, { label: veMacDinh.label }, true);
   assert.ok(kq2.ok);
   assert.deepEqual(kq2.lenh, { type: "status_changed", payload: { to: "Pending", label: null } });
   assert.ok(!tuGiu.some((l) => l.to === "Pending" && l.label === "giu_cho"), "không lựa chọn nhãn căn đang mang");
@@ -76,13 +76,13 @@ test("bảng hàng: nhãn của căn", () => {
 test("bảng hàng: mã đã gỡ", () => {
   // Bộ nhãn tải về cũ hơn máy chủ hay nhãn vừa gỡ: ô hiện chữ mặc định, thực đơn không còn lựa chọn mang mã ấy.
   assert.equal(chuCuaO(dong("1", "Pending", "da_go"), "standardStatus", TV), "Đang giao dịch");
-  const ds = luaChonTrangThai(hang("Pending", "da_go"), NHAN);
+  const ds = luaChonTrangThai(hang("Pending", "da_go"), NHAN, true);
   assert.ok(!ds.some((l) => l.label === "da_go"));
   assert.ok(!ds.some((l) => l.chu === "da_go"));
 });
 
 test("bảng hàng: nấc của căn mang nhãn", () => {
-  const ds = luaChonTrangThai(hang("Pending", "giu_cho"), NHAN);
+  const ds = luaChonTrangThai(hang("Pending", "giu_cho"), NHAN, true);
   const nac = [...new Set(ds.filter((l) => l.to !== "Pending").map((l) => l.to))];
   assert.deepEqual(nac, ["Active", "Closed", "Withdrawn"]);
   assert.deepEqual(nac, [...TRANSITIONS.Pending]);
@@ -137,7 +137,7 @@ test("bảng hàng: sàn chưa thêm nhãn", () => {
     const chu = Object.fromEntries(STANDARD_STATUSES.map((s) => [s, chuCuaO(dong("x", s), "standardStatus", tv)]));
     assert.deepEqual(chu, MAC_DINH);
     for (const s of STANDARD_STATUSES) {
-      const ds = luaChonTrangThai(hang(s), tv?.trangThai);
+      const ds = luaChonTrangThai(hang(s), tv?.trangThai, true);
       assert.deepEqual(
         ds.map((l) => l.to),
         [...TRANSITIONS[s]],
@@ -164,4 +164,17 @@ test("bảng hàng: từ vựng của sàn đọc bộ nhãn trạng thái", () 
   assert.deepEqual(tuVungTuBang(than).trangThai, nhanTuBang(than));
   // Thân chưa có `statuses` (API đời trước) → từ vựng không khoá nhãn trạng thái, chữ mặc định.
   assert.equal(Object.hasOwn(tuVungTuBang({ fields: [], values: [] }), "trangThai"), false);
+});
+
+test("bảng hàng: nhãn trong Đang bán theo cờ «Sẵn sàng bán»", () => {
+  // Gộp với bảng quyền của hàng (bang-quyen-theo-vai): người không đủ cờ không thấy Đang bán, kể cả đổi nhãn tại chỗ — như
+  // máy chủ từ chối mọi lệnh `to: Active`.
+  const nhanBan: NhanTrangThai[] = [{ ma: "ban_gap", label: "Bán gấp", anchor: "Active" }];
+  const coCo = luaChonTrangThai(hang("Active"), nhanBan, true);
+  assert.ok(coCo.some((l) => l.to === "Active" && l.label === "ban_gap"));
+  const khongCo = luaChonTrangThai(hang("Active"), nhanBan, false);
+  assert.ok(!khongCo.some((l) => l.to === "Active"));
+  assert.ok(!luaChonTrangThai(hang("Hold"), nhanBan, false).some((l) => l.to === "Active"));
+  assert.equal(dungLenhTrangThai(hang("Active"), "Active", { label: "ban_gap" }, false).ok, false);
+  assert.equal(dungLenhTrangThai(hang("Active"), "Active", { label: "ban_gap" }, true).ok, true);
 });

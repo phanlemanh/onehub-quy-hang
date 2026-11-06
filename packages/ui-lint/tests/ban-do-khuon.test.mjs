@@ -51,8 +51,8 @@ const TRANG_TAM = [
 const BANG = {
   "xac-thuc": { theoKhuon: ["dat-mat-khau", "login", "no-company", "select-company"].map((p) => `${W}/app/(auth)/${p}/page.tsx`), ngoaiLe: [] },
   "cai-dat-san": {
-    // Hàng 45: màn Cách gọi.
-    theoKhuon: [`${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/statuses/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
+    // Hàng 50: Mẫu nhập đi khuôn MucCaiDat. Hàng 45: màn Cách gọi. Hàng 46: màn Trạng thái.
+    theoKhuon: [`${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/statuses/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/(app)/settings/[section]/page.tsx`, `${W}/app/(app)/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
@@ -80,9 +80,11 @@ const BANG = {
       `${W}/app/(app)/settings/[section]/page.tsx`,
       // Hàng 45: màn Cách gọi rời trang tạm.
       `${W}/app/(app)/settings/labels/page.tsx`,
+      `${W}/app/(app)/settings/lead-routing/page.tsx`,
       `${W}/app/(app)/settings/page.tsx`,
       // Hàng 46: màn Trạng thái rời trang tạm.
       `${W}/app/(app)/settings/statuses/page.tsx`,
+      `${W}/app/(app)/settings/templates/page.tsx`,
       `${W}/app/(app)/settings/users/page.tsx`,
       `${W}/app/(app)/shares/new/page.tsx`,
       `${W}/app/(app)/shares/page.tsx`,
@@ -180,7 +182,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "khung.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -200,7 +202,7 @@ const CHO_TRANG_THAI = [
   ...Array(12).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
   `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
-  ...Array(4).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
+  ...Array(5).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
   // Bảng hàng thẻ (hàng 32): lỗi tải lần đầu, trống, lọc rỗng.
   ...Array(3).fill(`${W}/app/(app)/inventory/cards/bang-the.tsx`),
   `${W}/app/(app)/inventory/khung.tsx`,
@@ -218,10 +220,13 @@ const CHO_TRANG_THAI = [
   // Cách gọi (hàng 45): lỗi lưu, đã lưu; lỗi đọc ở trang.
   ...Array(2).fill(`${W}/app/(app)/settings/labels/cach-goi.tsx`),
   `${W}/app/(app)/settings/labels/page.tsx`,
+  ...Array(4).fill(`${W}/app/(app)/settings/lead-routing/luat-chia-lead.tsx`),
   `${W}/app/(app)/settings/personal/ca-nhan.tsx`,
   // Trạng thái (hàng 46): lỗi lưu, đã lưu; lỗi đọc ở trang.
   `${W}/app/(app)/settings/statuses/page.tsx`,
   ...Array(2).fill(`${W}/app/(app)/settings/statuses/trang-thai.tsx`),
+  // Mẫu nhập (hàng 50): đang tải, lỗi, trống của vùng.
+  ...Array(3).fill(`${W}/app/(app)/settings/templates/vung-mau-nhap.tsx`),
   `${W}/app/(app)/settings/users/page.tsx`,
   // dang-nhap-mat-khau: báo hay lỗi khi cấp mật khẩu tạm.
   ...Array(3).fill(`${W}/app/(app)/settings/users/quan-nguoi.tsx`),
@@ -451,7 +456,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 3 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 5 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -466,8 +471,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 21 ngoại lệ · 0 lệch",
-      "trang-thai: 127 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 23 ngoại lệ · 0 lệch",
+      "trang-thai: 135 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

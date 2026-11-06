@@ -1,0 +1,37 @@
+{
+ "feature_plain": "Quản trị sàn có màn «Mẫu nhập» trong Cài đặt để xem, sửa, xoá cách sàn ghép từng cột Excel đã gặp; lần nhập sau dùng bản mới, lần nhập đã xong không đổi.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ cho Quản trị sàn thấy mỗi tiêu đề cột đã gặp ở các lần nhập đã ghi một dòng: ghép vào trường nào, đổi thế nào, nguồn từ lần nhập nào."},
+  {"id":"AC-2","p":"Sẽ cho sửa một cột (kể cả tiêu đề có dấu, «/», «(m²)»); màn Nhập Excel dùng ngay bản sửa ở lần sau, kể cả khi có lần nhập đang dở từ trước."},
+  {"id":"AC-3","p":"Sẽ cho xoá một cột: lần nhập sau ghép cột ấy lại từ đầu; một lần nhập mới về sau dạy lại như thường."},
+  {"id":"AC-4","p":"Sẽ giữ nguyên lần nhập đã xong và lần nhập đang dở — sửa mẫu không đổi căn nào đã nhập, hoàn tác vẫn đúng."},
+  {"id":"AC-5","p":"Sẽ từ chối sửa sai luật (trường không có, quy đổi ở cột không phải danh sách đóng, nhất là cột chủ nhà), chặn cả ở cơ sở dữ liệu."},
+  {"id":"AC-6","p":"Sẽ chỉ cho Quản trị sàn mở và sửa; vai khác bị chặn và quay về Cá nhân."},
+  {"id":"AC-7","p":"Sẽ giữ mẫu của mỗi sàn riêng — sàn khác không thấy, không sửa được."},
+  {"id":"AC-8","p":"Sẽ thêm một bảng chỉ ghi thêm (không sửa, không xoá dòng cũ) cho lịch sử sửa mẫu, có luật cách ly theo sàn."},
+  {"id":"AC-9","p":"Sẽ dựng màn trong khung Cài đặt sàn có sẵn, đủ trạng thái tải, trống, lỗi, lưu lỗi, và hỏi xác nhận trước khi xoá."}
+ ],
+ "wont_do": [
+  {"id":"OOS-1","p":"KHÔNG làm mẫu bảng hàng và mẫu bài theo kênh ở vòng này — thành hàng kế (Hỏi-1)."},
+  {"id":"OOS-2","p":"KHÔNG đổi cách lần nhập tự học mẫu, cách ghi, hoàn tác hay màn Nhập Excel."},
+  {"id":"OOS-3","p":"KHÔNG chạm từ điển giá trị và cách gọi riêng của sàn."},
+  {"id":"OOS-4","p":"KHÔNG cho thêm tay một cột mới khi chưa lần nhập nào gặp tiêu đề ấy."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Thao tác: xem, sửa, xoá (AC-1, AC-2, AC-3)."},
+  {"i":1,"p":"Một cột lấy bản nào: chỉ từ lần nhập, sửa mới hơn, xoá mới hơn, lần nhập mới hơn (AC-1..AC-3)."},
+  {"i":2,"p":"Loại trường đích: danh sách đóng, trường thường, cột chủ nhà, trường không có (AC-2, AC-5)."},
+  {"i":3,"p":"Lần nhập bị chạm: đã xong, đang dở, hoàn tác, mở trước khi sửa rồi ghi sau (AC-2..AC-4)."},
+  {"i":4,"p":"Dạng tiêu đề: thường, có dấu, khoảng trắng, «/», «(m²)» (AC-2, AC-3)."},
+  {"i":5,"p":"Người gọi: năm vai và người chưa đăng nhập (AC-6)."},
+  {"i":6,"p":"Sàn: cùng sàn và sàn khác (AC-7)."},
+  {"i":7,"p":"Trạng thái màn: tải, trống, lỗi, có dữ liệu, không quyền, lưu bị từ chối, lưu lỗi mạng (AC-6, AC-9)."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Ngưỡng đo vẫn nói cả ba loại mẫu và thời hạn để trống — việc chốt ngưỡng là của anh, đưa thành Hỏi-4 kèm câu đề nghị."},
+  {"i":1,"p":"Thiếu ca tiêu đề có dấu, «/» và ca lưu bị lỗi — đã thêm vào tiêu chí và phép đo; việc bỏ phép quét độ phủ thành Hỏi-5."},
+  {"i":2,"p":"Căn cứ «chỉ Quản trị» trỏ sai câu — đã đổi sang câu ngưỡng anh đã ký."},
+  {"i":3,"p":"Chưa nói lần nhập dở từ trước có đè bản sửa không — đã chốt không đè (so theo lúc mở) và thêm ca kiểm."},
+  {"i":4,"p":"Chặn quy đổi cột chủ nhà mới chỉ ở máy chủ — đã thêm ràng buộc ở bảng và ca chèn thẳng."}
+ ]
+}

@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
+import { useBoDongBo, useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { nhanGiaTri } from "@quy-hang/core/labels";
 import { chuCuaO, FEE_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
@@ -24,7 +24,7 @@ import { useTuVung } from "../tu-vung";
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
 import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, laDoiNhanTaiCho, luaChonTrangThai, moTaThayDoi, XAC_NHAN, type KetQuaLenh, type LuaChonTrangThai } from "./lenh";
+import { chayLuuO, chuaHieu, chuDienSan, coDuaLenDangBan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, laDoiNhanTaiCho, luaChonTrangThai, moTaThayDoi, XAC_NHAN, type KetQuaLenh, type LuaChonTrangThai } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -202,8 +202,12 @@ function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => vo
 
 function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
   const tv = useTuVung();
+  // Cờ «đưa lên Đang bán» từ bảng quyền của lõi: người đang đăng nhập và người giữ căn của dòng (bang-quyen-theo-vai).
+  // Người giữ căn đọc từ hàng trong kho đồng bộ (dòng Bảng hàng không mang cột này).
+  const { bd } = useBoDongBo();
+  const coDangBan = coDuaLenDangBan(bd.me(), bd.danhSach().find((l) => l.id === hang.id)?.listAgentKey);
   // Thực đơn đọc bộ nhãn trạng thái của sàn (hàng 46): mỗi nấc nhãn mặc định rồi nhãn riêng neo vào nó, cùng màu của neo.
-  const ds = luaChonTrangThai(hang, tv.trangThai);
+  const ds = luaChonTrangThai(hang, tv.trangThai, coDangBan);
   const [chonLc, setChonLc] = useState<LuaChonTrangThai | null>(null);
   const to = chonLc?.to ?? null;
   const [giaChot, setGiaChot] = useState("");
@@ -212,7 +216,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
   const chon = (lc: LuaChonTrangThai) => {
     onDoiChu();
     if (!laDoiNhanTaiCho(hang, lc) && (lc.to === "Closed" || lc.to === "Withdrawn")) setChonLc(lc);
-    else onXet(dungLenhTrangThai(hang, lc.to, { label: lc.label }));
+    else onXet(dungLenhTrangThai(hang, lc.to, { label: lc.label }, coDangBan));
   };
   if (!ds.length) return <p className="text-sm text-muted-foreground">«{chuCuaO(hang, "standardStatus", tv)}» là nấc cuối — mở lại là hàng mới.</p>;
   return (
@@ -220,7 +224,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
       className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
-        if (chonLc) onXet(dungLenhTrangThai(hang, chonLc.to, { giaChot, ngayBan, lyDo, label: chonLc.label }));
+        if (chonLc) onXet(dungLenhTrangThai(hang, chonLc.to, { giaChot, ngayBan, lyDo, label: chonLc.label }, coDangBan));
       }}
       onKeyDown={(e) => (e.key === "Escape" ? onHuy() : null)}
     >

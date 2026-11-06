@@ -288,7 +288,8 @@ export function BangHang({
   const idx = useMemo(() => chiMuc(danhMuc), [danhMuc]);
   // Cột «Đầu chủ» (hàng 105): người giữ của hàng đối với danh bạ đầu chủ của sàn; lượt kéo đổi người giữ thì ô đổi theo.
   const nguoiGiu = useMemo(() => hang.map((l) => l.listAgentKey), [hang]);
-  const danhBa = useDanhBaDauChu(san, nguoiGiu);
+  // Hàng 48 (Ngoài-10 của 105): đọc danh bạ hỏng thì báo kèm «Thử lại», không nuốt lỗi.
+  const { danhBa, loi: loiDanhBa, thuLai: docLaiDanhBa } = useDanhBaDauChu(san, nguoiGiu);
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
   const tv = useTuVung();
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap, tv), [dong, loc, sap, tv]);
@@ -493,6 +494,19 @@ export function BangHang({
       <>
         {thanhCongCu}
         <Separator />
+        {loiDanhBa ? (
+          <div className="px-4 py-2">
+            <TrangThai
+              kind="error"
+              title="Chưa đọc được danh bạ thành viên — cột Đầu chủ có thể thiếu tên"
+              hanhDong={
+                <Button variant="outline" size="sm" onClick={docLaiDanhBa}>
+                  Thử lại
+                </Button>
+              }
+            />
+          </div>
+        ) : null}
         {/* Lưới lấp phần còn lại của khung Bảng hàng (bố cục giữ chiều cao, hàng 105): vùng cuộn cao bằng khung, trang không cuộn. */}
         <DataGridContainer className="min-h-0 flex-1 [&>div:first-child]:h-full">
           <DataGridScrollArea className="h-full">

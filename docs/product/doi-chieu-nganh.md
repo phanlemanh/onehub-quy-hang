@@ -138,7 +138,7 @@ Hàng 46 (dựng 06/11) theo đúng mẫu `StandardStatus` ↔ `MlsStatus`: sáu
 3 nhãn neo vào mỗi trạng thái; nhãn nhận luật và màu của neo, đếm và lọc theo trạng thái chuẩn, trang khách chỉ thấy trạng
 thái chuẩn. Neo cố định sau khi tạo, gỡ nhãn đang dùng thì hỏi nhãn thay cùng neo — giống Follow Up Boss chuyển người sang
 stage khác khi xoá stage đang dùng (cách hỏi chưa kiểm). Trần 3 nhãn là của ta; Follow Up Boss, KW Command không nêu trần
-(chưa kiểm) — điều khoá K28.
+(chưa kiểm) — điều khoá K29.
 
 | Sản phẩm | Cách làm | Cấu hình ở đâu | Nguồn |
 | --- | --- | --- | --- |
