@@ -1,7 +1,9 @@
 // Định nghĩa bao phí theo tập khoản (hàng 49, AC-9, E9). Ma trận viết trước: bảy tập con khác rỗng × ba giá.
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { giaiCauHinh } from "../config/giai";
+import { SO_DIEM } from "../config/so";
 import { giaBaoPhiTuVeTay, tinhVeTay, type MaKhoan } from "../pricing/ve-tay";
 import { DINH_NGHIA_MAC_DINH, dinhNghiaBaoPhi, tuDau } from ".";
 
@@ -54,4 +56,44 @@ test("thuế phí: định nghĩa đọc từ dấu đã đóng", () => {
   const dn = tuDau({ includedItems: ["personalIncomeTax", "brokerageFee", "khoanLa"], rates: { personalIncomeTax: 200, registrationFee: 50, brokerageFee: 200 } });
   assert.deepEqual(dn, { khoan: ["thue_tncn", "moi_gioi"], tiLe: { thue_tncn: 200, le_phi_truoc_ba: 50, moi_gioi: 200 } });
   assert.equal(tinhVeTay(3_000_000_000, "included", dn.tiLe, dn.khoan).veTay, 2_880_000_000);
+});
+
+// ---- Mặc định ở hàm SQL của migration 050 khớp sổ điểm (AC-9) — đường tệp suy từ vị trí bài ----
+const THU_MUC_MIGRATION = new URL("../../../db/migrations/", import.meta.url);
+
+/** Lỗi nêu khoá sổ khi mặc định trong SQL lệch sổ điểm; rỗng khi khớp. Mọi chỗ SQL viết mặc định đều bị xét. */
+export function kiemMacDinhSql(sql: string): string[] {
+  const loi: string[] = [];
+  const macDinh = (khoa: string) => SO_DIEM.find((d) => d.khoa === khoa)!.macDinh;
+  const tiLe: Record<string, string> = {
+    personalIncomeTax: "fee.personal_income_tax_pct",
+    registrationFee: "fee.registration_fee_pct",
+    brokerageFee: "fee.brokerage_pct",
+  };
+  const cum = [...sql.matchAll(/jsonb_build_object\('personalIncomeTax', (\d+), 'registrationFee', (\d+), 'brokerageFee', (\d+)\)/g)];
+  if (cum.length < 2) loi.push(`mặc định tỉ lệ: cần ở hàm định nghĩa và hàm điền giá cũ, thấy ${cum.length}`);
+  for (const m of cum) {
+    for (const [i, ma] of (["personalIncomeTax", "registrationFee", "brokerageFee"] as const).entries()) {
+      const so = Number(m[i + 1]);
+      const mong = Math.round(Number(macDinh(tiLe[ma]!)) * 100);
+      if (so !== mong) loi.push(`${tiLe[ma]}: SQL ${so}, sổ điểm ${mong}`);
+    }
+  }
+  const tap = [...sql.matchAll(/array\['personalIncomeTax', 'registrationFee', 'brokerageFee'\]/g)].length;
+  const tapSo = macDinh("fee.inclusion") as string[];
+  if (JSON.stringify(tapSo) !== JSON.stringify(["personalIncomeTax", "registrationFee", "brokerageFee"]) || tap < 2) {
+    loi.push(`fee.inclusion: SQL mặc định ba khoản ở ${tap} chỗ, sổ điểm ${JSON.stringify(tapSo)}`);
+  }
+  return loi;
+}
+
+test("thuế phí: mặc định SQL bằng sổ điểm", () => {
+  const ten = readdirSync(THU_MUC_MIGRATION).filter((t) => t.startsWith("050_"));
+  assert.equal(ten.length, 1, "cần đúng một migration 050");
+  const sql = readFileSync(new URL(ten[0]!, THU_MUC_MIGRATION), "utf8");
+  assert.deepEqual(kiemMacDinhSql(sql), []);
+  // Chiều đỏ trên bản sao chữ: môi giới 100 → 150 thì bài nêu đúng khoá.
+  const hong = sql.replace("'brokerageFee', 100)", "'brokerageFee', 150)");
+  assert.notEqual(hong, sql, "bản sao phải đổi được");
+  assert.match(kiemMacDinhSql(hong).join("\n"), /fee\.brokerage_pct: SQL 150, sổ điểm 100/);
 });
