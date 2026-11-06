@@ -40,3 +40,30 @@ test("máy tính: đối chứng đỏ — tự giữ tỉ lệ riêng bị gọ
   const tuGiu: Doi = (s, d) => doiMayTinh(s, d, { thue_tncn: 200, le_phi_truoc_ba: 50, moi_gioi: 100 });
   assert.equal(theoTiLeLoi(tuGiu), false, "ca đổi tỉ lệ lõi");
 });
+
+test("máy tính cuộc gọi: theo định nghĩa của sàn", async () => {
+  const { soGiaToa } = await import("@quy-hang/core/pricing");
+  const { dinhNghiaTuBan } = await import("./dinh-nghia-san");
+  const dn = dinhNghiaTuBan({
+    items: [
+      { key: "fee.inclusion", value: ["personalIncomeTax", "brokerageFee"] },
+      { key: "fee.brokerage_pct", value: 2 },
+    ],
+  });
+  const s = mayTinhDau(3_000_000_000, "included", dn);
+  assert.deepEqual(s.ketQua?.khoan.map((k) => k.ma), ["thue_tncn", "moi_gioi"]);
+  assert.equal(s.ketQua?.veTay, 2_880_000_000);
+  assert.equal(s.chuMoiGioi, "2");
+  // Đối chứng: sàn mặc định (đọc hỏng cũng vậy) ra ba khoản, 2,895 tỷ.
+  const md = mayTinhDau(3_000_000_000, "included", dinhNghiaTuBan(null));
+  assert.equal(md.ketQua?.khoan.length, 3);
+  assert.equal(md.ketQua?.veTay, 2_895_000_000);
+  // So giá toà nhận cùng định nghĩa.
+  const so = soGiaToa({
+    can: { id: null, buildingName: "Toà A", unitNumber: null, bedroomsTotal: null, listPrice: null, feeInclusion: null },
+    cacCan: [{ id: "c1", buildingName: "Toà A", unitNumber: "A-01.01", bedroomsTotal: 2, standardStatus: "Active", listPrice: 3_000_000_000, feeInclusion: "included", lastConfirmedAt: null }],
+    tiLe: dn.tiLe,
+    tapKhoan: dn.khoan,
+  });
+  assert.equal(so.dong[0]?.veTay, 2_880_000_000);
+});

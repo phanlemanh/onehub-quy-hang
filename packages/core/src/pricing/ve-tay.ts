@@ -36,9 +36,18 @@ export type VeTay = { veTay: number; khoan: KhoanPhi[] };
 /** Làm tròn nửa lên tới đồng của giá × tỉ lệ / 10 000, bằng số nguyên. */
 const khoanCua = (gia: number, tiLe: number) => Math.floor((gia * tiLe + PHAN_VAN / 2) / PHAN_VAN);
 
-export function tinhVeTay(gia: number, dieuKien: FeeInclusion, tiLe: TiLeBaoPhi = TI_LE_BAO_PHI_MAC_DINH): VeTay {
+/**
+ * `tapKhoan` là định nghĩa «bao phí» của sàn (hàng 49, luật 13): khoản ngoài tập không trừ và không hiện. Vắng thì cả ba
+ * khoản — mặc định của sản phẩm.
+ */
+export function tinhVeTay(
+  gia: number,
+  dieuKien: FeeInclusion,
+  tiLe: TiLeBaoPhi = TI_LE_BAO_PHI_MAC_DINH,
+  tapKhoan: readonly MaKhoan[] = KHOAN_BAO_PHI,
+): VeTay {
   if (dieuKien === "excluded") return { veTay: gia, khoan: [] };
-  const khoan = KHOAN_BAO_PHI.map((ma) => ({ ma, tiLe: tiLe[ma], dong: khoanCua(gia, tiLe[ma]) }));
+  const khoan = KHOAN_BAO_PHI.filter((ma) => tapKhoan.includes(ma)).map((ma) => ({ ma, tiLe: tiLe[ma], dong: khoanCua(gia, tiLe[ma]) }));
   return { veTay: gia - khoan.reduce((t, k) => t + k.dong, 0), khoan };
 }
 
@@ -46,10 +55,11 @@ export function tinhVeTay(gia: number, dieuKien: FeeInclusion, tiLe: TiLeBaoPhi 
  * Giá bao phí nhỏ nhất mà về tay không thấp hơn `veTay`. Ba lần làm tròn làm về tay không tăng đều theo giá, nên không
  * chia ngược: bắt đầu từ cận dưới chắc chắn (mỗi khoản lệch tối đa nửa đồng) rồi dò lên.
  */
-export function giaBaoPhiTuVeTay(veTay: number, tiLe: TiLeBaoPhi = TI_LE_BAO_PHI_MAC_DINH): number {
-  const tong = KHOAN_BAO_PHI.reduce((t, ma) => t + tiLe[ma], 0);
+export function giaBaoPhiTuVeTay(veTay: number, tiLe: TiLeBaoPhi = TI_LE_BAO_PHI_MAC_DINH, tapKhoan: readonly MaKhoan[] = KHOAN_BAO_PHI): number {
+  const ma = KHOAN_BAO_PHI.filter((m) => tapKhoan.includes(m));
+  const tong = ma.reduce((t, m) => t + tiLe[m], 0);
   if (tong >= PHAN_VAN) throw new Error("tổng tỉ lệ phải dưới 100%");
-  let g = Math.max(0, Math.floor(((veTay - KHOAN_BAO_PHI.length) * PHAN_VAN) / (PHAN_VAN - tong)) - 1);
-  while (tinhVeTay(g, "included", tiLe).veTay < veTay) g++;
+  let g = Math.max(0, Math.floor(((veTay - ma.length) * PHAN_VAN) / (PHAN_VAN - tong)) - 1);
+  while (tinhVeTay(g, "included", tiLe, ma).veTay < veTay) g++;
   return g;
 }

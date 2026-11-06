@@ -4,7 +4,7 @@
  */
 import type { StandardStatus } from "../listing/status";
 import type { FeeInclusion } from "./types";
-import { tinhVeTay, TI_LE_BAO_PHI_MAC_DINH, type TiLeBaoPhi } from "./ve-tay";
+import { KHOAN_BAO_PHI, tinhVeTay, TI_LE_BAO_PHI_MAC_DINH, type MaKhoan, type TiLeBaoPhi } from "./ve-tay";
 
 /** Nấc được đem so (Hỏi-4): Đang bán và Đang giao dịch — căn còn hàng và căn đã cọc của bản phác KD1. */
 export const SO_GIA_NAC: readonly StandardStatus[] = ["Active", "Pending"];
@@ -57,7 +57,18 @@ function trungVi(ds: readonly number[]): number {
   return s.length % 2 ? s[g]! : Math.floor((s[g - 1]! + s[g]!) / 2);
 }
 
-export function soGiaToa({ can, cacCan, tiLe = TI_LE_BAO_PHI_MAC_DINH }: { can: CanDangGoi; cacCan: readonly CanSo[]; tiLe?: TiLeBaoPhi }): SoGiaToa {
+/** `tiLe` và `tapKhoan` là định nghĩa bao phí hiện hành của sàn (hàng 49); vắng thì mặc định sản phẩm. */
+export function soGiaToa({
+  can,
+  cacCan,
+  tiLe = TI_LE_BAO_PHI_MAC_DINH,
+  tapKhoan = KHOAN_BAO_PHI,
+}: {
+  can: CanDangGoi;
+  cacCan: readonly CanSo[];
+  tiLe?: TiLeBaoPhi;
+  tapKhoan?: readonly MaKhoan[];
+}): SoGiaToa {
   const caToa = can.bedroomsTotal === null;
   const laChinhCan = (c: CanSo) => c.id === can.id || (can.unitNumber !== null && chuan(c.unitNumber) === chuan(can.unitNumber));
   const dong: DongSo[] = cacCan
@@ -77,13 +88,13 @@ export function soGiaToa({ can, cacCan, tiLe = TI_LE_BAO_PHI_MAC_DINH }: { can: 
       lastConfirmedAt: c.lastConfirmedAt,
       listPrice: c.listPrice!,
       feeInclusion: c.feeInclusion!,
-      veTay: tinhVeTay(c.listPrice!, c.feeInclusion!, tiLe).veTay,
+      veTay: tinhVeTay(c.listPrice!, c.feeInclusion!, tiLe, tapKhoan).veTay,
     }))
     .sort((a, b) => b.veTay - a.veTay);
   if (!dong.length) return { dai: null, dong, viTri: null, caToa };
   const ve = dong.map((d) => d.veTay);
   const dai = { thap: Math.min(...ve), giua: trungVi(ve), cao: Math.max(...ve) };
-  const veTay = can.listPrice !== null && can.feeInclusion !== null ? tinhVeTay(can.listPrice, can.feeInclusion, tiLe).veTay : null;
+  const veTay = can.listPrice !== null && can.feeInclusion !== null ? tinhVeTay(can.listPrice, can.feeInclusion, tiLe, tapKhoan).veTay : null;
   const viTri = veTay === null ? null : { veTay, lechPhanTram: Math.round(((veTay - dai.giua) * 1000) / dai.giua) / 10 };
   return { dai, dong, viTri, caToa };
 }

@@ -1,19 +1,25 @@
 /**
  * Máy tính giá bao phí ↔ về tay của chế độ cuộc gọi (hàng 28, AC-4). Thuần — màn và bài kiểm cùng đọc. Sửa ô nào thì ô
- * kia tính lại bằng lõi (`tinhVeTay`, `giaBaoPhiTuVeTay`); tỉ lệ đọc từ mặc định của sàn ở lõi, đầu chủ chỉ sửa phần trăm
- * môi giới cho lần tính. Máy tính không ghi gì vào hồ sơ.
+ * kia tính lại bằng lõi (`tinhVeTay`, `giaBaoPhiTuVeTay`); định nghĩa bao phí là định nghĩa hiện hành của sàn (hàng 49 —
+ * khoản sàn tắt không trừ), đầu chủ chỉ sửa phần trăm môi giới cho lần tính. Máy tính không ghi gì vào hồ sơ.
  */
 import {
+  DINH_NGHIA_MAC_DINH,
   docGia,
   giaBaoPhiTuVeTay,
   NHAN_KHOAN,
-  TI_LE_BAO_PHI_MAC_DINH,
   tinhVeTay,
   vietGia,
   type FeeInclusion,
+  KHOAN_BAO_PHI,
+  type DinhNghiaBaoPhi,
   type KhoanPhi,
   type TiLeBaoPhi,
 } from "@quy-hang/core/pricing";
+
+/** Cơ sở của lần tính: bảng tỉ lệ (cả ba khoản) hay định nghĩa của sàn có tập khoản. */
+export type CoSo = TiLeBaoPhi | DinhNghiaBaoPhi;
+const dinhNghia = (c: CoSo): DinhNghiaBaoPhi => ("khoan" in c ? (c as DinhNghiaBaoPhi) : { khoan: KHOAN_BAO_PHI, tiLe: c as TiLeBaoPhi });
 
 export type MayTinh = {
   chuGia: string;
@@ -29,7 +35,7 @@ export type MayTinh = {
 
 export type DoiMayTinh = { o: "gia"; chu: string } | { o: "ve-tay"; chu: string } | { o: "phi"; phi: FeeInclusion } | { o: "moi-gioi"; chu: string };
 
-export const TI_LE_MAC_DINH_CHU = "Tỉ lệ mặc định của sàn";
+export const TI_LE_MAC_DINH_CHU = "Tỉ lệ của sàn";
 export const nhanKhoan = (k: KhoanPhi) => NHAN_KHOAN[k.ma];
 
 /** «1» · «0,5» — phần vạn viết thành phần trăm, dấu phẩy thập phân. */
@@ -45,25 +51,25 @@ export function docPhanTram(chu: string): number | null {
 
 const chuaHieuGia = (chu: string) => `Chưa hiểu «${chu.trim()}» — gõ như 2,75 tỷ hoặc 950 triệu`;
 
-function tiLeCua(s: MayTinh, coSo: TiLeBaoPhi): TiLeBaoPhi | null {
+function tiLeCua(s: MayTinh, coSo: CoSo): TiLeBaoPhi | null {
   const mg = docPhanTram(s.chuMoiGioi);
-  return mg === null ? null : { ...coSo, moi_gioi: mg };
+  return mg === null ? null : { ...dinhNghia(coSo).tiLe, moi_gioi: mg };
 }
 
-function tinhTuGia(s: MayTinh, gia: number, coSo: TiLeBaoPhi): MayTinh {
+function tinhTuGia(s: MayTinh, gia: number, coSo: CoSo): MayTinh {
   const tiLe = tiLeCua(s, coSo);
   if (!tiLe) return { ...s, loi: { o: "moi-gioi", chu: "Môi giới từ 0 tới 10%, bước 0,1" } };
-  const { veTay, khoan } = tinhVeTay(gia, s.phi, tiLe);
+  const { veTay, khoan } = tinhVeTay(gia, s.phi, tiLe, dinhNghia(coSo).khoan);
   return { ...s, chuVeTay: vietGia(veTay), ketQua: { gia, veTay, khoan }, loi: null };
 }
 
 /** Máy tính mở với một giá (của hồ sơ, hay của lead); chưa giá thì trống. */
-export function mayTinhDau(gia: number | null, phi: FeeInclusion | null, coSo: TiLeBaoPhi = TI_LE_BAO_PHI_MAC_DINH): MayTinh {
-  const s: MayTinh = { chuGia: gia === null ? "" : vietGia(gia), phi: phi ?? "included", chuVeTay: "", chuMoiGioi: vietPhanTramTiLe(coSo.moi_gioi), ketQua: null, loi: null };
+export function mayTinhDau(gia: number | null, phi: FeeInclusion | null, coSo: CoSo = DINH_NGHIA_MAC_DINH): MayTinh {
+  const s: MayTinh = { chuGia: gia === null ? "" : vietGia(gia), phi: phi ?? "included", chuVeTay: "", chuMoiGioi: vietPhanTramTiLe(dinhNghia(coSo).tiLe.moi_gioi), ketQua: null, loi: null };
   return gia === null ? s : tinhTuGia(s, gia, coSo);
 }
 
-export function doiMayTinh(s: MayTinh, d: DoiMayTinh, coSo: TiLeBaoPhi = TI_LE_BAO_PHI_MAC_DINH): MayTinh {
+export function doiMayTinh(s: MayTinh, d: DoiMayTinh, coSo: CoSo = DINH_NGHIA_MAC_DINH): MayTinh {
   if (d.o === "phi" || d.o === "moi-gioi") {
     const moi = d.o === "phi" ? { ...s, phi: d.phi } : { ...s, chuMoiGioi: d.chu };
     if (d.o === "moi-gioi" && docPhanTram(d.chu) === null) return { ...moi, loi: { o: "moi-gioi", chu: "Môi giới từ 0 tới 10%, bước 0,1" } };
@@ -79,7 +85,8 @@ export function doiMayTinh(s: MayTinh, d: DoiMayTinh, coSo: TiLeBaoPhi = TI_LE_B
   if (!kq.ok) return { ...s, chuVeTay: d.chu, loi: d.chu.trim() ? { o: "ve-tay", chu: chuaHieuGia(d.chu) } : null };
   const tiLe = tiLeCua(s, coSo);
   if (!tiLe) return { ...s, chuVeTay: d.chu, loi: { o: "moi-gioi", chu: "Môi giới từ 0 tới 10%, bước 0,1" } };
-  const gia = s.phi === "included" ? giaBaoPhiTuVeTay(kq.dong, tiLe) : kq.dong;
-  const { veTay, khoan } = tinhVeTay(gia, s.phi, tiLe);
+  const tap = dinhNghia(coSo).khoan;
+  const gia = s.phi === "included" ? giaBaoPhiTuVeTay(kq.dong, tiLe, tap) : kq.dong;
+  const { veTay, khoan } = tinhVeTay(gia, s.phi, tiLe, tap);
   return { ...s, chuGia: vietGia(gia), chuVeTay: d.chu, ketQua: { gia, veTay, khoan }, loi: null };
 }
