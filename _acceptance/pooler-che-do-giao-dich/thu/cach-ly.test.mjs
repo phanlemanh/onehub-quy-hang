@@ -18,7 +18,8 @@ before(() => {
   const r = docker("run", "--rm", "-d", "--name", TEN, "-e", "POSTGRES_PASSWORD=quyhang", "-p", `${CONG}:5432`, "postgres:16");
   assert.equal(r.status, 0, `cach-ly: không dựng được Postgres ${TEN}: ${r.stderr}`);
   for (let i = 0; i < 60; i++) {
-    if (docker("exec", TEN, "pg_isready", "-U", "postgres").status === 0) return;
+    // pg_isready báo sẵn sàng cả lúc máy chủ khởi động tạm của bước init — đợi một câu thật chạy được.
+    if (docker("exec", TEN, "psql", "-U", "postgres", "-h", "127.0.0.1", "-qAtc", "select 1").status === 0) return;
     execFileSync("sleep", ["1"]);
   }
   throw new Error("cach-ly: Postgres không sẵn sàng sau 60 giây");
@@ -36,7 +37,8 @@ test("bộ kiểm db: migrate và db:test xanh trên Postgres sạch với bể 
 
   const r = spawnSync("sh", ["-c", "npm run db:migrate && npm run db:test"], {
     cwd: ROOT,
-    env: { ...process.env, DATABASE_URL: URL },
+    // Bỏ NODE_TEST_CONTEXT: không có nó thì `node --test` lồng bên trong chạy như lệnh độc lập và in dòng tổng.
+    env: Object.fromEntries(Object.entries({ ...process.env, DATABASE_URL: URL }).filter(([k]) => k !== "NODE_TEST_CONTEXT")),
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
   });
