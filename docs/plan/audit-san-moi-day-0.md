@@ -303,7 +303,7 @@ Theo khuôn `docs/plan/lo-trinh.json`; `ma` để giám sát đặt. Thứ tự 
 
 Ba hàng 0a–0c thêm sau khi chủ kho thử trên bản thật (06/11). 0b và 0c mở lại điều đã chốt ở Tham chiếu §3 («ba cửa
 vào») — cần chủ kho quyết ở Cổng Phạm vi. Ba hàng đầu (`chu-san-du-vai`, `anh-khong-chan-ban`, `can-nhap-len-bang-chung`) thêm sau
-khi khung lại theo hai nguyên tắc ở mục 9 — đứng trước mọi hàng khác; hai hàng đầu đã có quyết định của chủ kho 06/11.
+khi khung lại theo hai nguyên tắc ở mục 9 — đứng trước mọi hàng khác; cả ba đã có quyết định của chủ kho 06/11.
 
 ```json
 [
@@ -333,7 +333,7 @@ khi khung lại theo hai nguyên tắc ở mục 9 — đứng trước mọi h�
     "cau_giao": "Đầu chủ nhập bảng hàng cũ từ Sheet và căn mà file ghi «còn hàng» lên ngay bảng hàng chung dù file thiếu pháp lý hay tình trạng sử dụng; mục thiếu hiện ở mức đủ và thành việc ở Hôm nay",
     "vai": "Đầu chủ",
     "hang": "T3",
-    "vi_sao": "Audit sàn mới ngày 0 §9: sau khi gỡ cổng ảnh (anh-khong-chan-ban), cửa nhập vẫn đòi pháp lý và tình trạng sử dụng — hai cột Sheet hay thiếu. Mở rộng cùng lý lẽ «không thất bại ở bước chuyển nhà» cho riêng cửa nhập — chủ kho quyết ở Cổng Phạm vi",
+    "vi_sao": "Audit sàn mới ngày 0 §9: sau khi gỡ cổng ảnh (anh-khong-chan-ban), cửa nhập vẫn đòi pháp lý và tình trạng sử dụng — hai cột Sheet hay thiếu. Chủ kho chốt 06/11 «Có, lên luôn» (Tham chiếu §12, luật 11) — cùng lý lẽ «không thất bại ở bước chuyển nhà», chỉ cửa nhập",
     "dung_tren": ["anh-khong-chan-ban"],
     "bat_khi": "Nhập 50 căn «còn hàng» thiếu pháp lý thì 50 căn ở bảng chung, đầu khách thấy; hàng tạo tay và từ lead giữ điều kiện pháp lý, tình trạng sử dụng; mỗi căn thiếu có việc ở Hôm nay của đầu chủ giữ căn",
     "vung": ["packages/api/src/imports/**", "packages/core/src/listing/**", "apps/web/src/app/(app)/today/**"]
@@ -517,8 +517,8 @@ hàng chạy song song vài ngày** → **(4) làm hằng ngày trên Quỹ hàn
    chỉ còn là lời dẫn chuyển nhà, không còn là lối thoát ngõ cụt.
 2. **Chặn thật của nguyên tắc 2 không nằm ở màn tạo · sửa · xoá mà ở cổng Đang bán.** Luật 17 cũ («Sẵn sàng bán» cần
    ảnh thật) biến lần chuyển nhà thành một bảng hàng chung rỗng: Sheet thấy hết, Quỹ hàng thấy không. Chủ kho chốt
-   06/11: thiếu ảnh không chặn bán, ở mọi cửa (Tham chiếu §12). Còn lại ở cửa nhập: pháp lý, tình trạng sử dụng — chờ
-   Cổng Phạm vi của `can-nhap-len-bang-chung`.
+   06/11: thiếu ảnh không chặn bán, ở mọi cửa (Tham chiếu §12). Ở cửa nhập, căn «còn hàng» lên thẳng
+   Đang bán dù thiếu pháp lý, tình trạng sử dụng (chốt cùng ngày); giá kèm điều kiện phí vẫn là điều kiện.
 3. **Ngang Sheet ở hai thao tác thường nhất — thêm dòng, xoá dòng — là điều kiện để không quay lại.** «Ba cửa vào»
    (Tham chiếu §3) giả định cửa lead chạy; hôm nay cửa lead gãy và thao tác «thêm một căn» không có lối ngắn như Sheet.
 4. Thứ tự cũ của mục 8 (chia lead, danh mục) vẫn đúng **sau** chuyển nhà: lead và danh mục là việc của chặng 4, không
@@ -530,7 +530,7 @@ hàng chạy song song vài ngày** → **(4) làm hằng ngày trên Quỹ hàn
 | --- | --- | --- | --- |
 | Hôm nay | Chủ kho tự thêm bốn vai cho mình ở sàn «OneHub» (Cài đặt › Người dùng › Sửa) — đúng cách B, làm tay | 1 | Tự làm |
 | 1 | `chu-san-du-vai` (cách B) | 1 | **Đã chốt B 06/11** (Tham chiếu §12) |
-| 2 | `anh-khong-chan-ban`, rồi `can-nhap-len-bang-chung` | 2b | Ảnh: **đã chốt 06/11** (Tham chiếu §12). Pháp lý, tình trạng sử dụng ở cửa nhập: quyết ở Cổng Phạm vi |
+| 2 | `anh-khong-chan-ban`, rồi `can-nhap-len-bang-chung` | 2b | **Cả hai đã chốt 06/11** (Tham chiếu §12) |
 | 3 | `tao-can-tay` + gỡ căn tạo nhầm (G2 của rà soát CRUD 05/11) | 4a, 4c | Mở lại «ba cửa vào» |
 | 4 | Gán đầu chủ theo cột «Đầu chủ» của file (chưa thành hàng — giám sát cân gộp vào hàng nhập) | 2c | — |
 | 5 | Vận hành: bật nhịp chia lead (A1); rồi `chia-lead-khi-chua-co-khu`, `toa-cua-san-o-lead` | 4 | Chủ kho bật khoá |
