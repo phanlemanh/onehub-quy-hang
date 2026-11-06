@@ -1,0 +1,64 @@
+schema_version: 1
+feature_slug: doc-xa-thieu-mot-phan-dau
+# Mọi eval chạy bộ kiểm lõi `npm test -w @quy-hang/core`; ca của vòng nằm ở packages/core/src/address/doc-xa-thieu-dau.test.ts,
+# mỗi ca mang đúng tên «AC-n …». Mỗi phép đo là một hàm kiểm thuần trả danh sách lỗi: đối chứng dương trên bộ đọc mới
+# (`soDau: "tuong-thich"`, mặc định của docDiaChi) ra rỗng; phá thử chạy CÙNG hàm kiểm, CÙNG ma trận với bộ đọc ở công tắc
+# khác (`giu` = hành vi trước vòng, `lui-bo-dau` = lối lui về so bỏ dấu) và ghim thông điệp. Ma trận rút từ danh mục theo
+# luật viết trước (mã nhỏ nhất), dạng thiếu và dạng sai sinh bằng hàm thuần từ tên danh mục; số dòng ma trận in ra và
+# bằng số assert.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 xã mới gõ thiếu một phần dấu» xanh: ma trận rút theo luật viết trước (mỗi tỉnh: loại xã có xã khác cùng tỉnh cùng dangSo, rồi xã mã nhỏ nhất có ≥ 2 chữ mũ/móc/đ; in tên các xã bị loại; số dòng in ra, tỉnh không có dòng in tên; đếm 06/11 kỳ vọng 34); với mỗi dòng docDiaChi(«12 Đường Mẫu 1, <Loại> <dạngThiếu(tên)>, <tên tỉnh>») có trangThai chuan và khoa bằng khoa của docDiaChi cùng địa chỉ với tên đủ dấu; dạngThiếu(tên) khác tên (assert từng dòng, để ma trận không suy biến về gõ đủ dấu); hai ca có tên: «12 Lê Lợi, Phường Tan Định, Thành phố Hồ Chí Minh» → wardName.ma 26737, «12 Lê Lợi, Phường Đong Ba, Thành phố Huế» → wardName.ten «Đông Ba», cả hai chuan; phá thử: cùng hàm kiểm với docDiaChiVoi(…, soDau: \"giu\") trả dòng đầu «thiếu dấu không ra xã: <tên xã dòng đầu ma trận>» và số dòng lỗi bằng số dòng ma trận"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 xã cũ gõ thiếu một phần dấu» xanh: ma trận mỗi tỉnh mới một xã cũ (mã cũ nhỏ nhất có ≥ 2 chữ mũ/móc/đ, huyện cũ dạng Quận/Huyện, vao đúng một mã, không xã cũ khác cùng tỉnh cùng huyện cũ cùng dangSo; số dòng in ra, tỉnh không có xã cũ đủ điều kiện in tên); docDiaChi(«12 Đường Mẫu 1, <Loại cũ> <dạngThiếu(tên cũ)>, <huyện cũ>, <tên tỉnh mới>») → trangThai chuan, wardName.ma = vao[0], wardName.tuTenCu = tên cũ; phá thử: cùng hàm kiểm với soDau \"giu\" trả dòng đầu «thiếu dấu không ra xã cũ: <tên cũ dòng đầu>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-3 không khớp nhầm khác tỉnh» xanh: P = mọi cặp có thứ tự (A, B) của xa.json với dangSo(A.ten) = dangSo(B.ten), dạng giữ chữ khác nhau, A.maTinh ≠ B.maTinh; chia bằng hàm thuần viết trước: «trái» nếu ở một chỗ chữ của A có mũ/móc/đ và khác chữ của B, «thiếu» nếu mọi chỗ khác nhau A để gốc; in |P|, |trái|, |thiếu| và assert |trái| + |thiếu| = |P| (đếm 06/11: 74 = 44 + 30); với mỗi cặp hai địa chỉ «12 Đường Mẫu 1, <Loại B> <A.ten>, <tên tỉnh B>» và «12 Đường Mẫu 1, <A.ten>, <tên tỉnh B>»: nhóm trái → wardName không phải {ma: B.ma}; nhóm thiếu → wardName.ma = B.ma, trangThai chuan (2 × |P| assert, in ra); đối chứng dương: «12 Đường Mẫu 1, <Loại A> <A.ten>, <tên tỉnh A>» → wardName.ma = A.ma với mọi A; ca có tên: «12 Lê Lợi, Phường Tân Định, Tỉnh Bắc Ninh» → wardName không phải Tân Dĩnh; phá thử: cùng hàm kiểm nhóm trái với soDau \"lui-bo-dau\" trả dòng đầu «khớp nhầm khác tỉnh: <A.ten> → <B.ma>»; cùng hàm kiểm nhóm thiếu với soDau \"giu\" trả dòng đầu «thiếu dấu không ra xã tỉnh đã chọn: <A.ten> → <B.ma>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-4 cùng tỉnh: nguyên văn thắng, mơ hồ ra cần người chọn» xanh: Q = mọi cặp không thứ tự cùng tỉnh của xa.json cùng dangSo, khác dạng giữ chữ (|Q| in ra, ≥ 1; đếm 06/11: Văn Lang/Văn Lăng, Ba Tô/Ba Tơ); với CẢ HAI xã của mỗi cặp «12 Đường Mẫu 1, <Loại> <tên đủ dấu>, <tên tỉnh>» → chuan, wardName.ma đúng xã ấy (2 × |Q| assert); dạng chung = giữ chữ mũ/móc/đ ở chỗ hai tên trùng chữ, đổi về gốc chỗ khác; dạng chung khác dạng giữ chữ của cả hai tên → can-nguoi-chon, tập ungVien.ma = {A.ma, B.ma}; dạng chung trùng dạng giữ chữ của một tên → chuan, ma tên ấy (|Q| assert, in nhánh từng cặp); phá thử: cùng hàm kiểm với soDau \"tuong-thich-tron\" trả dòng «tên trùng nguyên văn không thắng: <tên>» cho ít nhất một xã của Q"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-5 chữ trái danh mục không nới» xanh: với 34 xã của ma trận AC-1, dạngSai(tên) = đổi chữ gốc đầu tiên thuộc {a, o, u, e, d} (không phân biệt hoa thường) mà tên danh mục để gốc thành â, ô, ư, ê, đ tương ứng (dòng không có chữ như vậy in tên và bỏ; số dòng còn in ra, ≥ 30); docDiaChi(«12 Đường Mẫu 1, <Loại> <dạngSai>, <tên tỉnh>») → wardName không phải {ma: xã đó}; khi không xã nào khác của tỉnh có dạng giữ chữ tương thích, chuaCoTrongDanhMuc chứa {phan: wardName}; phá thử: cùng hàm kiểm với soDau \"lui-bo-dau\" trả dòng đầu «chữ trái danh mục vẫn khớp: <dạngSai dòng đầu>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-6 đoạn không tiền tố gõ thiếu dấu» xanh: ma trận của AC-1 (cùng luật rút, cùng số dòng), địa chỉ «12 Đường Mẫu 1, <dạngThiếu(tên)>, <tên tỉnh>» (không chữ Phường/Xã) → wardName.ma = mã xã, chuan (assert bằng số dòng ma trận); ca AC-6 của danh-muc-xa-day-du (đoạn trùng tên xã tỉnh khác không bị đọc thành xã) vẫn xanh trong cùng lượt; phá thử: cùng hàm kiểm với soDau \"giu\" trả dòng đầu «đoạn thiếu dấu không thành xã: <tên dòng đầu>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-7 hồi quy» xanh: 86 cách viết của bộ thử hàng 73 đọc bằng docDiaChi ra đúng streetNumber, streetName, khoa, trangThai của anh-truoc-va.json (86 dòng so, in ra); ma trận AC-1 ở hai dạng — tên đủ dấu và dangSo(tên) bỏ hết dấu, mỗi dạng có và không có tiền tố — đọc bằng docDiaChi và bằng docDiaChiVoi(…, soDau: \"giu\") cho kết quả deepEqual (4 × số dòng ma trận AC-1, in ra); các ca của bo-thu.test.ts, duong-so.test.ts, doc-dia-chi.test.ts, danh-muc-xa.test.ts xanh trong cùng lượt npm test; phá thử: CÙNG hàm so, CÙNG ma trận 4 × số dòng AC-1, vế mới bọc bởi bộ đọc cấy lệch (đổi trangThai của kết quả dòng đầu sang \"thieu\") trả dòng đầu «lệch bộ đọc trước vòng: <địa chỉ dòng đầu>»; ma trận AC-3 nhóm trái đủ dấu với soDau \"giu\" và \"tuong-thich\" deepEqual (|trái| × 2 dòng)"
+    paths: ["packages/core/src/address/**", "packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
