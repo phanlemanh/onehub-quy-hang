@@ -161,6 +161,7 @@ async function goi(cookie, method, p, body) {
 // Luật «ảnh thật» (listing.ready_min_real_photos, mặc định 1): căn vào Đang bán phải có đủ ảnh trong ngăn Gửi được,
 // không ảnh mẫu. Chỗ thử không có kho ảnh S3 để tải qua API, nên bộ dựng gieo thẳng một dòng ảnh vào cơ sở dữ liệu thử của
 // dãy (không chạm luật hay mã sản phẩm) — đủ số tối thiểu của sàn, ngay trước bước lên Đang bán (va-cdp-tat-chrome, D-0611-3).
+// Đếm ảnh có sẵn theo ĐÚNG sàn của căn: máy chủ đếm dưới luật cách ly nên ảnh cùng căn ở sàn khác không tính.
 const db = new pg.Pool({ connectionString: DATABASE_URL, max: 4 });
 async function gieoAnhThat(id) {
   await db.query(
@@ -169,7 +170,7 @@ async function gieoAnhThat(id) {
      from listings l, generate_series(1, greatest(1, coalesce((select (s.value #>> '{}')::int from company_settings s
        where s.company_id = l.company_id and s.key = 'listing.ready_min_real_photos'), 1)))
      where l.id = $1 and l.unit_number is not null
-       and not exists (select 1 from unit_photos p where p.building_name = l.building_name
+       and not exists (select 1 from unit_photos p where p.company_id = l.company_id and p.building_name = l.building_name
          and app.unit_key(p.unit_number) = app.unit_key(l.unit_number) and p.compartment = 'shareable' and not p.is_sample and p.removed_at is null)`,
     [id],
   );
