@@ -46,3 +46,45 @@ wall: 295s
 - **claude-sonnet-5-5**: 6 agent · 28 calls · out 23,033 · in 56 · cache_read 1,674,885 · cache_create 261,191
 - **claude-haiku-5-5**: 12 agent · 24 calls · out 13,480 · in 48 · cache_read 186,022 · cache_create 165,605
 
+### S4 round 2 — wf_4ba75a04-5c0 (20 agent, 60,517 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| review:bugs | claude-opus-5-5 | 23 | 13,182 | 50 | 1,233,000 | 207 |
+| review:conventions | claude-opus-5-5 | 18 | 8,888 | 36 | 788,643 | 141 |
+| review:measurement | claude-opus-5-5 | 6 | 7,194 | 12 | 148,611 | 89 |
+| synthesize:report | claude-sonnet-5-5 | 2 | 5,682 | 4 | 25,394 | 33 |
+| baseline:diffBase | claude-sonnet-5-5 | 3 | 5,420 | 6 | 44,882 | 83 |
+| ui:E3 | claude-sonnet-5-5 | 12 | 4,621 | 24 | 1,077,146 | 75 |
+| triage | claude-sonnet-5-5 | 3 | 2,725 | 6 | 37,503 | 20 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 2,115 | 4 | 15,793 | 10 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 1,538 | 4 | 15,793 | 9 |
+| machine:npm run lint | claude-haiku-5-5 | 2 | 1,508 | 4 | 15,777 | 17 |
+| machine:npm run build | claude-haiku-5-5 | 2 | 1,103 | 4 | 15,775 | 15 |
+| machine:node --test "_acceptance/va-pool-ket-noi | claude-haiku-5-5 | 2 | 1,076 | 4 | 15,819 | 7 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 961 | 4 | 15,814 | 11 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 838 | 4 | 15,795 | 8 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 702 | 4 | 12,592 | 18 |
+| machine:R="${CLAUDE_PLUGIN_ROOT:-$(node packages | claude-haiku-5-5 | 2 | 676 | 4 | 15,872 | 8 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 655 | 4 | 15,832 | 30 |
+| machine:npm test -w @quy-hang/web | claude-haiku-5-5 | 2 | 630 | 4 | 15,793 | 9 |
+| machine:R="${CLAUDE_PLUGIN_ROOT:-$(node packages | claude-haiku-5-5 | 2 | 574 | 4 | 15,867 | 8 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 429 | 4 | 11,430 | 7 |
+
+
+wall: 275s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| baseline | 1 | 5,420 | 44,882 | 83 | 02:56:52 | 02:58:15 |
+| ui | 1 | 4,621 | 1,077,146 | 75 | 02:56:52 | 02:58:08 |
+| machine | 12 | 12,376 | 186,522 | 117 | 02:56:52 | 02:58:49 |
+| review | 3 | 29,264 | 2,170,254 | 210 | 02:56:53 | 03:00:22 |
+| triage | 1 | 2,725 | 37,503 | 20 | 03:00:24 | 03:00:44 |
+| capture | 1 | 429 | 11,430 | 7 | 03:00:46 | 03:00:53 |
+| synthesize | 1 | 5,682 | 25,394 | 33 | 03:00:54 | 03:01:28 |
+
+- **claude-opus-5-5**: 3 agent · 47 calls · out 29,264 · in 98 · cache_read 2,170,254 · cache_create 198,189
+- **claude-sonnet-5-5**: 5 agent · 22 calls · out 18,877 · in 44 · cache_read 1,196,355 · cache_create 206,369
+- **claude-haiku-5-5**: 12 agent · 24 calls · out 12,376 · in 48 · cache_read 186,522 · cache_create 165,294
+

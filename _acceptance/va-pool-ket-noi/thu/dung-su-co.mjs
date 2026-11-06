@@ -9,7 +9,7 @@
 // Phiên: một dòng identity.session cho Đầu chủ mẫu 1, cookie `qh.session_token` ký bằng bí mật của cấu hình web-su-co-pool.
 // Không dùng ở bản thật; mọi người và sàn là mẫu của packages/db/seed.
 import { execFileSync, spawn } from "node:child_process";
-import { createHmac, randomBytes } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import net from "node:net";
 import path from "node:path";
@@ -25,6 +25,7 @@ const CONG_TAC = 5599;
 const DATABASE_URL = `postgres://postgres:quyhang@localhost:${DB_CONG}/postgres`;
 const BI_MAT = "dev-su-co-chuoi-thu-khong-dung-o-ban-that"; // khớp cấu hình web-su-co-pool
 const EMAIL = "dau-chu-1@mau.quy-hang.test";
+const TOKEN = "vapoolketnoiphienthu000000000001"; // mã phiên thử cố định — không có ở cơ sở dữ liệu nào ngoài container này
 
 mkdirSync(CHAY, { recursive: true });
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -106,12 +107,15 @@ if (lenh === "--cong-tac") {
   chay("npm", ["run", "db:migrate"]);
   chay("node", ["packages/db/seed/nap.mjs", "--nap"]);
 
-  // 2. Phiên thật cho Đầu chủ mẫu 1 (token ngẫu nhiên, hạn 1 ngày).
+  // 2. Phiên thật cho Đầu chủ mẫu 1, mã CỐ ĐỊNH (hạn 1 ngày): trình duyệt chung có thể còn giữ cookie HttpOnly cùng tên
+  //    từ lần chạy trước (máy chủ đặt lại nó khi làm mới phiên) — JS không ghi đè được cookie ấy, nên mã cố định giữ nó
+  //    luôn đúng với cơ sở dữ liệu vừa dựng.
   const userId = psql(`select id from identity."user" where email = '${EMAIL}'`);
   if (!userId) throw new Error(`không thấy người mẫu ${EMAIL} sau khi nạp`);
-  const token = randomBytes(24).toString("hex");
+  const token = TOKEN;
   psql(`insert into identity.session (id, "expiresAt", token, "updatedAt", "userId")
-        values ('${randomBytes(12).toString("hex")}', now() + interval '1 day', '${token}', now(), '${userId}')`);
+        values ('phien-thu-va-pool-ket-noi', now() + interval '1 day', '${token}', now(), '${userId}')
+        on conflict (token) do update set "expiresAt" = excluded."expiresAt", "userId" = excluded."userId"`);
   const ky = encodeURIComponent(createHmac("sha256", BI_MAT).update(token).digest("base64"));
 
   // 3. Công tắc, bắt đầu TẮT (cơ sở dữ liệu «nghẽn»).

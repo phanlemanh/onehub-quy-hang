@@ -21,6 +21,7 @@ const DUOC = [
   /^docs\/superpowers\/specs\/2026-11-06-va-pool-ket-noi-design\.md$/,
   /^docs\/superpowers\/plans\/2026-11-06-va-pool-ket-noi\.md$/,
   /^docs\/plan\/lo-trinh\.json$/,
+  /^docs\/product\/tham-chieu\.md$/,
   /^PRODUCT-MAP\.md$/,
   /^LO-TRINH\.html$/,
 ];
