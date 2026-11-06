@@ -49,9 +49,9 @@ if (new URL(APP_URL.startsWith("http") ? APP_URL : `https://${APP_URL}`).hostnam
 const tt = vercel(["inspect", APP_URL, "--json"]);
 if (tt.status !== 0) dung(2, `không đọc được triển khai ${APP_URL}: ${tt.stderr.trim().split("\n").at(-1)}`);
 const trienKhai = JSON.parse(tt.stdout);
-const nhanhCua = trienKhai.meta?.githubCommitRef ?? trienKhai.gitSource?.ref ?? "";
 if (trienKhai.target === "production") dung(2, "triển khai là bản thật — chỉ đo bản xem trước");
-if (nhanhCua !== NHANH) dung(2, `triển khai thuộc nhánh «${nhanhCua}», không phải ${NHANH}`);
+// `vercel inspect --json` không mang tên nhánh; nhánh đọc từ chính dòng nhật ký dựng bể ở bước 1.
+let nhanhCua = "";
 const maTrienKhai = trienKhai.id ?? trienKhai.uid;
 // Công tắc cổng của bản xem trước nhánh (biến thường — chỉ đọc tên và phạm vi).
 const ds = vercel(["env", "ls", "preview", NHANH]);
@@ -65,9 +65,13 @@ await curl("/api/v1/me", "qh.session_token=gia.gia");
 let cong = null;
 for (let i = 0; i < 12 && cong === null; i++) {
   await ngu(5_000);
-  const dong = nhatKy(["--deployment", APP_URL, "--since", batDau]).map((d) => d.message).find((m) => /\[pool:ket-noi\] cổng \d+/.test(m));
-  if (dong) cong = /cổng (\d+)/.exec(dong)[1];
+  const dong = nhatKy(["--deployment", APP_URL, "--since", batDau]).find((d) => /\[pool:ket-noi\] cổng \d+/.test(d.message ?? ""));
+  if (dong) {
+    cong = /cổng (\d+)/.exec(dong.message)[1];
+    nhanhCua = dong.branch ?? "";
+  }
 }
+if (cong !== null && nhanhCua !== NHANH) dung(2, `triển khai thuộc nhánh «${nhanhCua}», không phải ${NHANH}`);
 if (cong !== "6543") dung(1, `triển khai không chạy qua pooler giao dịch: dòng dựng bể ${cong === null ? "vắng" : `nêu cổng ${cong}`}`);
 
 // Bước 2 — 40 yêu cầu đồng thời, cookie phiên giả (mỗi yêu cầu đọc phiên qua bể danh tính).
