@@ -66,3 +66,29 @@ bước 7).
 - Đăng nhập trên bản xem trước dùng `BETTER_AUTH_URL` của tên miền chính — chỉ kiểm được API, chưa đăng nhập được.
 - Ghim chứng chỉ của Supabase (`sslrootcert`) và cân chế độ giao dịch của pooler khi tải tăng.
 - Môi trường mới (staging, sàn riêng) dựng theo cùng thứ tự: `nen-du-an.sql` → migration → bộ kiểm cách ly → advisors.
+
+## Sửa đổi 06/11 — chế độ giao dịch của pooler
+
+Bối cảnh: sự cố bản thật 06/11 — pooler chế độ phiên (§4) cấp tổng 15 kết nối máy chủ cho cả dự án, mỗi kết nối khách giữ
+một kết nối máy chủ suốt đời nó; hàm Vercel tự nhân bản khi tải tăng thì cạn trần ấy (`EMAXCONNSESSION`), đọc phiên hỏng,
+người đã đăng nhập bị đưa về đăng nhập. Hồ sơ `va-pool-ket-noi` thu nhỏ bể; hồ sơ `pooler-che-do-giao-dich` gỡ điều chặn
+chế độ giao dịch mà §4 nêu.
+
+1. **Chế độ giao dịch (cổng 6543) là chế độ đích của `DATABASE_URL`**: kết nối máy chủ chỉ bị giữ trong một giao dịch rồi
+   trả, nên nhiều kết nối khách dùng chung 15 kết nối máy chủ. Chế độ này không giữ trạng thái phiên (tham số khởi động,
+   `SET` không `LOCAL`, `set_config(…, false)`, `LISTEN`, khoá tư vấn mức phiên, câu lệnh có tên, bảng tạm).
+2. **Lược đồ danh tính đặt ở adapter, không ở kết nối**: better-auth nhận bể danh tính qua dialect Kysely với
+   `schemaName: "identity"`; truy vấn tay trên bể danh tính ghi `identity.<bảng>`. Bể danh tính không còn tham số khởi động
+   `-c search_path=identity`. Cách ly theo dòng không đổi: `withCompany` đặt vai và sàn bằng `set local` trong giao dịch.
+   Bài quét của hồ sơ chặn trạng thái phiên quay lại mã máy chủ.
+3. **Mã chạy được ở cả hai chế độ** (5432 phiên, 6543 giao dịch, kết nối trực tiếp): đổi chế độ là đổi `DATABASE_URL`,
+   không đổi mã. Mỗi lần dựng bể, nhật ký ghi `[pool:ket-noi] cổng <cổng> · <nơi>` — chỉ cổng — để biết triển khai đang nối
+   chế độ nào.
+4. **Job migrate giữ chuỗi riêng**: `PROD_DATABASE_URL` của job `deploy` (§7) không chuyển sang chế độ giao dịch — migration
+   chạy một lần sau mỗi lần gộp và có câu lệnh cần phiên. Hai chuỗi kết nối giữ riêng, không gộp.
+5. **Đổi bản thật** (chủ kho quyết ở Cổng Bằng chứng của hồ sơ `pooler-che-do-giao-dich`, sau khi đã đo trên bàn thử tại
+   máy và trên bản xem trước cổng 6543):
+   1. Vercel → `DATABASE_URL` phạm vi Production: cùng chuỗi, đổi cổng 5432 → 6543 (giữ `sslmode=require&uselibpqcompat=true`).
+   2. Triển khai lại bản thật; nhật ký phải có dòng `[pool:ket-noi] cổng 6543`.
+   3. Theo dõi nhật ký 30 phút: không `EMAXCONNSESSION`, không dòng lỗi bể `[pool:`, không 5xx mới.
+   4. Lùi: đặt lại chuỗi cổng 5432, triển khai lại — mã không cần đổi.
