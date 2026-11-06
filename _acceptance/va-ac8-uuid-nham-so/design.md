@@ -15,11 +15,11 @@ bị bắt dở thành số, rồi UUID bị cắt nên không khớp mẫu đư
 ## Cách sửa (chỉ trong tệp kiểm)
 
 - Gỡ `CHO_PHEP` TRƯỚC khi dò ứng viên số.
-- `UNG_VIEN_SO` chỉ nhận chuỗi đứng riêng: không dính chữ hay chữ số ở hai bên (`(?<![\p{L}\p{Nd}])` …
-  `(?![\p{L}\p{Nd}])`).
-- Thêm ca `AC-8 dò số` (không cần cơ sở dữ liệu) với ma trận viết trước `DO_SO_SACH` (5 chuỗi không được báo, gồm UUID
-  của sự cố) và `DO_SO_BAN` (4 chuỗi phải báo, gồm số thật dạng thường, quốc tế, liền có dấu chấm sau, và dãy số đứng
-  riêng), kèm đối chứng dương: số mẫu đúng dạng được đếm.
+- `UNG_VIEN_SO` giữ nguyên. Bản đầu có thêm chặn hai bên (không dính chữ hay chữ số); phản biện cho thấy gỡ chặn ấy mọi
+  phép đo vẫn xanh, tức nó không đo được và không cần — bỏ, để lời hợp đồng nói đúng một cơ chế: gỡ trước, dò sau.
+- Thêm ca `AC-8 dò số` (không cần cơ sở dữ liệu) với ma trận viết trước `DO_SO_SACH` (6 chuỗi không được báo, gồm UUID
+  của sự cố viết thường và viết hoa) và `DO_SO_BAN` (6 chuỗi phải báo: số thật dạng thường, quốc tế, liền có dấu chấm sau,
+  gạch ngang, dính chữ, và dãy số đứng riêng); ca ghim kích thước hai ma trận, kèm đối chứng dương: số mẫu đúng dạng được đếm.
 - Không đổi bộ dữ liệu mẫu, `SO_MAU`, `CHO_PHEP` hay phần còn lại của AC-8. Phá thử sẵn có của AC-8 («Gọi 0912 345 678»,
   «+84 912 345 678» cài vào bộ mẫu) giữ nguyên và phải còn đỏ — tức «một số điện thoại thật cài vào bộ mẫu vẫn bị bắt».
   Ô ngưỡng của hàng viết «cài một số dạng 0900 000 0xx thì bài đỏ»; `0900 000 0xx` chính là dạng mẫu được phép, nên vòng
@@ -30,7 +30,9 @@ bị bắt dở thành số, rồi UUID bị cắt nên không khớp mẫu đư
 `_acceptance/va-ac8-uuid-nham-so/thu/kiem-ac8.mjs`: `--lap N` chạy ca AC-8 cần cơ sở dữ liệu N lần trên một cơ sở dữ
 liệu tạm (UUID mới mỗi lần), đòi 0 lần đỏ và đối chứng dương ca ấy thật sự chạy cả N lần; `--doi-chung-do <sha>` ghép ma
 trận và ca «AC-8 dò số» của cây vào bản tệp kiểm của nhánh chính tại `<sha>` rồi đòi ca ấy ĐỎ đúng «nhận nhầm số trong
-«14a1928b-…»». Chạy thử 06/11: chiều đỏ đúng; 25/25 lần xanh.
+«14a1928b-…»»; `--bat-bien <sha>` đòi `packages/db/seed/` không đổi tệp nào và `SO_MAU`, `CHO_PHEP` giữ nguyên;
+`--tron` còn đếm phần tử hai ma trận. Mọi chế độ cần cơ sở dữ liệu từ chối máy chủ không phải máy cục bộ (thoát 2). Chạy thử
+06/11: chiều đỏ đúng; 25/25 lần xanh.
 
 ## Đối chiếu ngành
 

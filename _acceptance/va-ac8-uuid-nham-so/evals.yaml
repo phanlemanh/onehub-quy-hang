@@ -14,7 +14,7 @@ evals:
     executor: script
     cmd: node _acceptance/va-ac8-uuid-nham-so/thu/kiem-ac8.mjs --tron
     paths: ["packages/db/tests/du-lieu-mau-thap-tang.test.mjs", "_acceptance/va-ac8-uuid-nham-so/thu/**"]
-    expected: "exit 0; dòng {ca:'tron'} ok — trong đầu ra có «✔ AC-8 dò số: dãy chữ số trong UUID không bị nhận là số điện thoại; số thật đứng riêng vẫn bị bắt» — ma trận viết trước DO_SO_SACH năm chuỗi, mỗi chuỗi một khẳng định quetSo(...).loi rỗng (đỏ in «nhận nhầm số trong «<chuỗi>»»), và đối chứng dương quetSo('Gọi 0900 000 012').dem = 1 (đỏ in «không đếm được số mẫu đúng dạng»). Lệnh tạo cơ sở dữ liệu tạm, migrate, chạy CẢ tệp kiểm, đòi exit 0 và thấy «✔ AC-8 dò số» lẫn «✔ AC-8 không dữ liệu thật» (đỏ in «không thấy «✔ <ca>» — ca không chạy hay không đạt» hay «tệp kiểm đỏ: …»)."
+    expected: "exit 0; dòng {ca:'tron'} ok — trong đầu ra có «✔ AC-8 dò số: dãy chữ số trong UUID không bị nhận là số điện thoại; số thật vẫn bị bắt» — ma trận viết trước DO_SO_SACH sáu chuỗi (ca khẳng định đủ 6; lệnh đếm lại phần tử trong nguồn, lệch in «ma trận DO_SO_SACH có <k> chuỗi, đã duyệt 6»), mỗi chuỗi một khẳng định quetSo(...).loi rỗng (đỏ in «nhận nhầm số trong «<chuỗi>»»), và đối chứng dương quetSo('Gọi 0900 000 012').dem = 1 (đỏ in «không đếm được số mẫu đúng dạng»). Lệnh tạo cơ sở dữ liệu tạm, migrate, chạy CẢ tệp kiểm, đòi exit 0 và thấy «✔ AC-8 dò số» lẫn «✔ AC-8 không dữ liệu thật» (đỏ in «không thấy «✔ <ca>» — ca không chạy hay không đạt» hay «tệp kiểm đỏ: …»)."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
@@ -22,7 +22,7 @@ evals:
     executor: script
     cmd: node _acceptance/va-ac8-uuid-nham-so/thu/kiem-ac8.mjs --tron
     paths: ["packages/db/tests/du-lieu-mau-thap-tang.test.mjs", "_acceptance/va-ac8-uuid-nham-so/thu/**"]
-    expected: "exit 0; dòng {ca:'tron'} ok — «✔ AC-8 dò số…»: ma trận DO_SO_BAN bốn chuỗi, mỗi chuỗi một khẳng định có «số không đúng dạng mẫu» (đỏ in «bỏ sót số thật trong «<chuỗi>»»); và «✔ AC-8 không dữ liệu thật…» — hai phép phá thử sẵn có (ghiChu «Gọi 0912 345 678», ô số «+84 912 345 678») vẫn đòi đỏ «số không đúng dạng mẫu» (đỏ in «phá thử không đỏ «số không đúng dạng mẫu»»)."
+    expected: "exit 0; dòng {ca:'tron'} ok — «✔ AC-8 dò số…»: ma trận DO_SO_BAN sáu chuỗi (ghim 6 như E2), mỗi chuỗi một khẳng định có «số không đúng dạng mẫu» (đỏ in «bỏ sót số thật trong «<chuỗi>»»); và «✔ AC-8 không dữ liệu thật…» — hai phép phá thử sẵn có (ghiChu «Gọi 0912 345 678», ô số «+84 912 345 678») vẫn đòi đỏ «số không đúng dạng mẫu» (đỏ in «phá thử không đỏ «số không đúng dạng mẫu»»)."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
@@ -31,4 +31,12 @@ evals:
     cmd: node _acceptance/va-ac8-uuid-nham-so/thu/kiem-ac8.mjs --doi-chung-do a4122e9e81ca99eacb6de8d60f0c7daab4d01cce
     paths: ["_acceptance/va-ac8-uuid-nham-so/thu/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"]
     expected: "exit 0; dòng {ca:'doi-chung-do'} ok — bản tệp kiểm tại a4122e9e ghép ma trận và ca «AC-8 dò số» của cây (rút giữa hai mốc trong tệp) chạy ĐỎ với «nhận nhầm số trong «14a1928b-9906-4b2b-af5e-03408001142f»». Bản cũ xanh thì in «bản cũ xanh ở ca «AC-8 dò số» — phép đo không phân biệt được bản sửa»; đỏ sai thông điệp thì in «bản cũ đỏ sai thông điệp»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/va-ac8-uuid-nham-so/thu/kiem-ac8.mjs --bat-bien a4122e9e81ca99eacb6de8d60f0c7daab4d01cce
+    paths: ["packages/db/seed/**", "packages/db/tests/du-lieu-mau-thap-tang.test.mjs", "_acceptance/va-ac8-uuid-nham-so/thu/**"]
+    expected: "exit 0; dòng {ca:'bat-bien'} ok — git diff --name-only a4122e9e -- packages/db/seed rỗng, và khai báo SO_MAU, CHO_PHEP (bỏ chú thích) trùng bản tại a4122e9e. Đỏ in «bộ dữ liệu mẫu đổi so với a4122e9e: <tệp>» hay «<tên> đổi so với a4122e9e». Phá thử 07/11: đổi SO_MAU → đỏ «SO_MAU đổi so với a4122e9e»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -557,10 +557,10 @@ test("AC-7 luật Tham chiếu: sáu trạng thái, bốn loại hình, một h�
 // ——— AC-8 ——————————————————————————————————————————————————————————————————————————————————————————————
 
 const SO_MAU = /^09000000\d\d$/;
-// Ứng viên số điện thoại: chuỗi ĐỨNG RIÊNG (không dính chữ hay chữ số hai bên) bắt đầu bằng «+84» hay «0», chữ số xen
-// chấm hay cách, dài từ 9 chữ số. Dò sau khi đã gỡ các đoạn được phép (CHO_PHEP) — dò trước thì dãy số nằm trong một UUID
-// ngẫu nhiên («…-03408001142f») bị bắt dở thành số và bài đỏ chập chờn (va-ac8-uuid-nham-so).
-const UNG_VIEN_SO = /(?<![\p{L}\p{Nd}])(?:\+84|0)[\d .]{7,14}\d(?![\p{L}\p{Nd}])/gu;
+// Ứng viên số điện thoại: chuỗi bắt đầu bằng «+84» hay «0», chữ số xen chấm hay cách, dài từ 9 chữ số. Dò SAU khi đã gỡ
+// các đoạn được phép (CHO_PHEP) — dò trước thì dãy số nằm trong một UUID ngẫu nhiên («…-03408001142f») bị bắt dở thành số
+// và bài đỏ chập chờn (va-ac8-uuid-nham-so).
+const UNG_VIEN_SO = /(?:\+84|(?<!\d)0)[\d .]{7,14}\d/g;
 const CHO_PHEP = [
   /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})/g, // mốc giờ ISO
   /\d{4}-\d{2}-\d{2}/g, // ngày
@@ -595,12 +595,15 @@ const DO_SO_SACH = [
   "00000000-0000-0000-0000-000000000000", // UUID toàn số 0
   "Gọi 0900 000 012", // số mẫu đúng dạng
   "2026-11-06T17:03:07.982Z", // mốc giờ
+  "14A1928B-9906-4B2B-AF5E-03408001142F", // UUID của sự cố viết hoa
 ];
 const DO_SO_BAN = [
   "Gọi 0912 345 678", // số thật đứng riêng
   "+84 912 345 678", // số thật dạng quốc tế
   "liên hệ 0912345678.", // số thật liền, có dấu chấm sau
   "id 03408001142 x", // dãy số đứng riêng — không phải UUID nên vẫn là số lạ
+  "0912-345-678", // số thật viết gạch ngang — lọt mẫu ứng viên, phép đếm chữ số còn lại bắt
+  "SĐT0912345678", // số thật dính chữ
 ];
 
 const TU_DIA_CHI = [
@@ -819,7 +822,9 @@ test("AC-8 không dữ liệu thật: số, email, tên người, tên đường
   }
 });
 
-test("AC-8 dò số: dãy chữ số trong UUID không bị nhận là số điện thoại; số thật đứng riêng vẫn bị bắt", () => {
+test("AC-8 dò số: dãy chữ số trong UUID không bị nhận là số điện thoại; số thật vẫn bị bắt", () => {
+  assert.equal(DO_SO_SACH.length, 6, "ma trận chuỗi sạch phải đủ 6 phần tử viết trước");
+  assert.equal(DO_SO_BAN.length, 6, "ma trận chuỗi có số thật phải đủ 6 phần tử viết trước");
   for (const s of DO_SO_SACH) assert.deepEqual(quetSo(s, "thử").loi, [], `nhận nhầm số trong «${s}»`);
   for (const s of DO_SO_BAN) assert.ok(coLoi(quetSo(s, "thử").loi, "số không đúng dạng mẫu"), `bỏ sót số thật trong «${s}»`);
   // Đối chứng dương của chính phép dò: số mẫu đúng dạng được đếm, không bị coi là chuỗi không có số.

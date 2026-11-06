@@ -2,7 +2,9 @@
 //   node kiem-ac8.mjs --lap <N>              chạy AC-8 (cần cơ sở dữ liệu) N lần trên một cơ sở dữ liệu tạm, mỗi lần UUID mới
 //   node kiem-ac8.mjs --tron                 chạy CẢ tệp kiểm một lần trên cơ sở dữ liệu tạm; đòi ✔ của hai ca AC-8
 //   node kiem-ac8.mjs --doi-chung-do <sha>   tệp kiểm của nhánh chính tại <sha> + ca «AC-8 dò số» của cây: ca ấy phải ĐỎ
-// Cơ sở dữ liệu tạm tạo trên Postgres của DATABASE_URL (mặc định dãy D, cổng 5575), migrate, rồi DROP. Mỗi dòng JSON một ca.
+//   node kiem-ac8.mjs --bat-bien <sha>       bộ dữ liệu mẫu (packages/db/seed/**), SO_MAU và CHO_PHEP không đổi so với <sha>
+// Cơ sở dữ liệu tạm tạo trên Postgres của DATABASE_URL (mặc định dãy D, cổng 5575), migrate, rồi DROP. Chỉ nhận máy chủ
+// cục bộ (localhost, 127.0.0.1, ::1) — lệnh tạo và xoá cơ sở dữ liệu, không bao giờ chạy trên bản thật. Mỗi dòng JSON một ca.
 // Thoát 0 = đạt kỳ vọng · 1 = lệch · 2 = không chạy được.
 import { spawnSync } from "node:child_process";
 import { readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -15,6 +17,10 @@ const GOC = path.resolve(DAY, "../../..");
 const TUONG_DOI = "packages/db/tests/du-lieu-mau-thap-tang.test.mjs";
 const TEP = path.join(GOC, TUONG_DOI);
 const URL_GOC = new URL(process.env.DATABASE_URL ?? "postgres://postgres:quyhang@localhost:5575/postgres");
+if (!["localhost", "127.0.0.1", "[::1]", "::1"].includes(URL_GOC.hostname)) {
+  console.error(`từ chối: DATABASE_URL trỏ máy chủ «${URL_GOC.hostname}» — bài đo tạo và xoá cơ sở dữ liệu, chỉ chạy trên máy cục bộ`);
+  process.exit(2);
+}
 const urlCua = (ten) => {
   const u = new URL(URL_GOC);
   u.pathname = `/${ten}`;
@@ -39,6 +45,8 @@ const chay = (tep, mau, db) =>
 
 const ket = [];
 const lapI = process.argv.indexOf("--lap");
+const bbI = process.argv.indexOf("--bat-bien");
+const MA_TRAN = { DO_SO_SACH: 6, DO_SO_BAN: 6 };
 const dcdI = process.argv.indexOf("--doi-chung-do");
 try {
   if (lapI > 0) {
@@ -81,6 +89,12 @@ try {
       const loi = [];
       if (r.status !== 0) loi.push(`tệp kiểm đỏ: ${ra.split("\n").filter((l) => /^✖ |AssertionError|nhận nhầm|bỏ sót|phá thử/.test(l)).slice(0, 3).join(" | ")}`);
       for (const ca of ["AC-8 dò số", "AC-8 không dữ liệu thật"]) if (!ra.includes(`✔ ${ca}`)) loi.push(`không thấy «✔ ${ca}» — ca không chạy hay không đạt`);
+      // Ma trận viết trước phải đủ phần tử: bớt một chuỗi thì ca «AC-8 dò số» vẫn xanh nhưng đo ít hơn đã duyệt.
+      const nguon = readFileSync(TEP, "utf8");
+      for (const [ten, n] of Object.entries(MA_TRAN)) {
+        const k = nguon.match(new RegExp(`const ${ten} = \\[([\\s\\S]*?)\\n\\];`))?.[1].split("\n").filter((l) => /^\s+"/.test(l)).length ?? 0;
+        if (k !== n) loi.push(`ma trận ${ten} có ${k} chuỗi, đã duyệt ${n}`);
+      }
       ket.push({ ca: "tron", ok: loi.length === 0, loi });
     } finally {
       await quanTri(`drop database if exists "${ten}" with (force)`).catch((e) => console.error(`cảnh báo: không xoá được ${ten}: ${e.message}`));
@@ -109,8 +123,25 @@ try {
     } finally {
       rmSync(tep, { force: true });
     }
+  } else if (bbI > 0) {
+    const sha = process.argv[bbI + 1];
+    const loi = [];
+    const d = spawnSync("git", ["diff", "--name-only", sha, "--", "packages/db/seed"], { cwd: GOC, encoding: "utf8" });
+    if (d.status !== 0) throw new Error(`git diff lỗi: ${d.stderr.trim()}`);
+    if (d.stdout.trim()) loi.push(`bộ dữ liệu mẫu đổi so với ${sha.slice(0, 8)}: ${d.stdout.trim().split("\n").join(", ")}`);
+    const cu = spawnSync("git", ["show", `${sha}:${TUONG_DOI}`], { cwd: GOC, encoding: "utf8", maxBuffer: 1 << 26 });
+    if (cu.status !== 0) throw new Error(`không rút được ${TUONG_DOI} tại ${sha}`);
+    const nay = readFileSync(TEP, "utf8");
+    const khoi = (src, ten) => src.match(new RegExp(`^const ${ten} = (?:\\[[\\s\\S]*?\\n\\];|[^\\n]*)`, "m"))?.[0].replace(/\s*\/\/[^\n]*$/gm, "");
+    for (const ten of ["SO_MAU", "CHO_PHEP"]) {
+      const a = khoi(cu.stdout, ten);
+      const b = khoi(nay, ten);
+      if (!a || !b) loi.push(`không tìm thấy khai báo ${ten}`);
+      else if (a.trim() !== b.trim()) loi.push(`${ten} đổi so với ${sha.slice(0, 8)}`);
+    }
+    ket.push({ ca: "bat-bien", sha, ok: loi.length === 0, loi });
   } else {
-    console.error("thiếu --lap <N>, --tron hay --doi-chung-do <sha>");
+    console.error("thiếu --lap <N>, --tron, --doi-chung-do <sha> hay --bat-bien <sha>");
     process.exit(2);
   }
 } catch (e) {
