@@ -34,9 +34,10 @@ Source input: hàng `pooler-che-do-giao-dich` của `docs/plan/lo-trinh.json` ·
   schema» hay lỗi lệch lược đồ của better-auth.
 - AC-3 (cross-layer): Given bàn thử pooler chế độ giao dịch tại máy (PgBouncer `pool_mode = transaction`,
   `default_pool_size = 1`) trước Postgres đã nạp mẫu, và một tiến trình nạp `getApi` THẬT của `apps/web` với
-  `DATABASE_URL` trỏ pooler, When đầu chủ mẫu xin mã, nhập mã, rồi đọc `/api/v1/me`, Hôm nay và Bảng hàng, Then mọi bước
-  trả 2xx với đúng người và sàn, và nhật ký tiến trình không có lỗi kiểm lược đồ; đối chứng: bể danh tính cấu hình cũ
-  (tham số khởi động search_path, truy vấn trần `"user"`) qua cùng pooler thì hỏng.
+  `DATABASE_URL` trỏ pooler, When đầu chủ mẫu xin mã, nhập mã, rồi đọc `/api/v1/me`, Hôm nay và Bảng hàng — trên kết nối thường
+  và trên kết nối mang search_path sai (`public`) — Then mọi bước trả 2xx với đúng người và sàn, và nhật ký tiến trình
+  không có lỗi kiểm lược đồ; đối chứng: câu trần `"user"` trên kết nối search_path sai qua cùng pooler thì hỏng (sửa đổi
+  S3 06/11: PgBouncer giữ search_path của từng khách nên cấu hình cũ không hỏng ở bàn thử — sổ quyết định).
 - AC-4 (cross-layer): Given cùng bàn thử và HAI sàn, mỗi sàn có người đã đăng nhập và ít nhất một căn, When 10 tiến trình
   (mỗi tiến trình một bộ bể như một phiên bản hàm) cùng bắn 40 yêu cầu đồng thời xen kẽ người hai sàn, Then cả 40 trả 2xx,
   mỗi phản hồi Bảng hàng chứa đúng tập căn của sàn người hỏi, và sau loạt một kết nối trần qua pooler thấy vai chủ và

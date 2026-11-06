@@ -70,9 +70,13 @@ Postgres thật không giả được chế độ giao dịch, nên bằng chứ
   yêu cầu đồng thời từ 10 tiến trình (mô phỏng 10 phiên bản hàm, mỗi tiến trình một bộ bể như bản thật) của người thuộc
   HAI sàn xen kẽ — mỗi phản hồi chỉ chứa dữ liệu sàn của người hỏi; sau loạt, một kết nối trần qua PgBouncer thấy vai
   `postgres`, `app.company_id` rỗng (không gì của `set local` sót lại).
-- Chiều đỏ, chứng bàn thử phân biệt được: (a) bể danh tính cấu hình CŨ (`options -c search_path=identity`, truy vấn trần
-  `"user"`) qua PgBouncer thì hỏng; (b) một khách đặt `set app.company_id` mức phiên qua PgBouncer thì khách khác thấy giá
+- Chiều đỏ, chứng bàn thử phân biệt được: (a) kết nối mang search_path sai (`public`) qua PgBouncer thì câu trần `"user"`
+  hỏng — còn luồng đăng nhập của bản vá chạy cả trên kết nối ấy; (b) một khách đặt `set app.company_id` mức phiên qua PgBouncer thì khách khác thấy giá
   trị ấy — tức bàn thử thật sự dùng chung kết nối máy chủ và sẽ bắt được một chỗ rò.
+
+Đo 06/11 (S3): PgBouncer 1.26 giữ riêng `search_path` của từng khách (đặt lại khi đổi kết nối máy chủ), kể cả khi đặt
+bỏ qua tham số khởi động, và từ chối tham số khởi động khác — cấu hình cũ KHÔNG hỏng ở PgBouncer. Vì thế bàn thử đo độc
+lập khỏi search_path bằng kết nối mang search_path sai, không bằng cấu hình cũ.
 
 Giới hạn khai trước: PgBouncer không phải Supavisor. Cách Supavisor xử tham số khởi động `options` và câu lệnh chuẩn bị
 chưa kiểm ở máy — bước bản xem trước dưới đây đo trên Supavisor thật.
