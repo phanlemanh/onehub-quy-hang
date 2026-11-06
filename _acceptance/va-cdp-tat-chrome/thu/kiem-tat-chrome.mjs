@@ -66,20 +66,23 @@ const stderrLa = (s) =>
     .join("\n");
 
 // Ma trận viết trước: mã thoát kỳ vọng của từng lối kết thúc (null = tiến trình con không tự thoát; bài kill nó).
-const MA_THOAT = { dong: null, thoat: 0, loi: 1, "dong-exit-0": 0, "dong-exit-3": 3, SIGTERM: 143, SIGINT: 130, SIGHUP: 129, "bat-rieng": 7, SIGKILL: null, api: null };
-const TIN_HIEU = { SIGTERM: "SIGTERM", SIGINT: "SIGINT", SIGHUP: "SIGHUP", "bat-rieng": "SIGTERM", SIGKILL: "SIGKILL" };
-// Thông điệp ghim chính của từng ca — E7 đòi ca tắt trên bản cũ đỏ bằng ít nhất một thông điệp trong đây.
+const MA_THOAT = { dong: null, thoat: 0, loi: 1, "dong-exit-0": 0, "dong-exit-3": 3, SIGTERM: 143, SIGINT: 130, SIGHUP: 129, "bat-rieng": 7, "bat-rieng-once": 7, SIGKILL: null, api: null };
+const TIN_HIEU = { SIGTERM: "SIGTERM", SIGINT: "SIGINT", SIGHUP: "SIGHUP", "bat-rieng": "SIGTERM", "bat-rieng-once": "SIGTERM", SIGKILL: "SIGKILL" };
+// Thông điệp ghim chính của từng ca — E7 đòi ca tắt trên bản cũ đỏ bằng ít nhất một thông điệp trong đây. Ca mà bản cũ để
+// Chrome sống thì CHỈ thông điệp về Chrome được tính — thông điệp thư mục chung không chứng được bộ dò Chrome. Ca dong và
+// dong-exit-* bản cũ có tắt Chrome (p.kill), nên chiều đỏ của chúng là hồ sơ tạm còn trên đĩa.
 const GHIM = {
   dong: ["Chrome còn sống sau dong()", "hồ sơ tạm còn trên đĩa"],
-  thoat: ["Chrome mồ côi sau khi lời gọi thoát", "lời gọi không thoát", "hồ sơ tạm còn trên đĩa"],
-  loi: ["Chrome mồ côi sau khi lời gọi thoát", "lời gọi không thoát", "hồ sơ tạm còn trên đĩa"],
+  thoat: ["Chrome mồ côi sau khi lời gọi thoát"],
+  loi: ["Chrome mồ côi sau khi lời gọi thoát"],
   "dong-exit-0": ["Chrome mồ côi sau khi lời gọi thoát", "hồ sơ tạm còn trên đĩa"],
   "dong-exit-3": ["Chrome mồ côi sau khi lời gọi thoát", "hồ sơ tạm còn trên đĩa"],
-  SIGTERM: ["Chrome mồ côi sau SIGTERM", "hồ sơ tạm còn trên đĩa"],
-  SIGINT: ["Chrome mồ côi sau SIGINT", "hồ sơ tạm còn trên đĩa"],
-  SIGHUP: ["Chrome mồ côi sau SIGHUP", "hồ sơ tạm còn trên đĩa"],
-  "bat-rieng": ["Chrome mồ côi sau SIGTERM", "hồ sơ tạm còn trên đĩa"],
-  SIGKILL: ["Chrome mồ côi sau SIGKILL", "hồ sơ tạm còn trên đĩa"],
+  SIGTERM: ["Chrome mồ côi sau SIGTERM"],
+  SIGINT: ["Chrome mồ côi sau SIGINT"],
+  SIGHUP: ["Chrome mồ côi sau SIGHUP"],
+  "bat-rieng": ["Chrome mồ côi sau SIGTERM"],
+  "bat-rieng-once": ["Chrome mồ côi sau SIGTERM"],
+  SIGKILL: ["Chrome mồ côi sau SIGKILL"],
   "mo-coi": ["mồ côi cũ không được dọn", "hồ sơ tạm của Chrome đã chết còn trên đĩa"],
 };
 
@@ -121,7 +124,7 @@ function donLuot({ con, chrome, canh, dir }) {
 async function caTat(cdp, ca, coSo) {
   const dau = path.join(RA, `dau-${process.pid}-${ca}`);
   rmSync(dau, { force: true });
-  const k = moCon(cdp, ca, ca === "bat-rieng" ? ["--dau", dau] : []);
+  const k = moCon(cdp, ca, ca.startsWith("bat-rieng") ? ["--dau", dau] : []);
   const ok1 = await cho(() => k.dong.length > 0 || k.ma !== undefined, 30000);
   const info = k.dong[0];
   const loi = [];
@@ -152,7 +155,7 @@ async function caTat(cdp, ca, coSo) {
   process.kill(k.p.pid, TIN_HIEU[ca] ?? "SIGUSR2");
   const ky = MA_THOAT[ca];
   const tuThoat = ky !== null && ky !== undefined;
-  const ten = TIN_HIEU[ca] === "SIGTERM" && ca === "bat-rieng" ? "SIGTERM" : TIN_HIEU[ca] ?? null;
+  const ten = TIN_HIEU[ca] ?? null;
   const sach = () =>
     mangDir(info.dir).length === 0 && !existsSync(info.dir) && (!coSo || (!existsSync(so) && !conSong(info.canh))) && (!tuThoat || k.ma !== undefined);
   await cho(sach, HAN_MS);
@@ -180,7 +183,7 @@ async function caTat(cdp, ca, coSo) {
   if (ca === "loi" && stderrLa(`công cụ: cảnh báo thử\n${k.loi}\ncông cụ: cảnh báo sau`) !== "công cụ: cảnh báo thử\ncông cụ: cảnh báo sau")
     loi.push("phép đo stderr (loi) không bắt được dòng lạ");
   if (ca === "loi" && !k.loi.includes("lỗi thử của con")) loi.push("mã thoát đổi (loi: không thấy lỗi của con)");
-  if (ca === "bat-rieng" && !existsSync(dau)) loi.push("bộ bắt riêng không chạy");
+  if (ca.startsWith("bat-rieng") && !existsSync(dau)) loi.push("bộ bắt riêng không chạy");
   rmSync(dau, { force: true });
   donLuot({ con: k.p.pid, ...info });
   return { ca, ok: loi.length === 0, loi };
@@ -278,7 +281,7 @@ async function caMoCoi(cdp) {
   return { ca: "mo-coi", ok: loi.length === 0, loi };
 }
 
-const CA_TAT = ["dong", "thoat", "loi", "dong-exit-0", "dong-exit-3", "SIGTERM", "SIGINT", "SIGHUP", "bat-rieng", "SIGKILL"];
+const CA_TAT = ["dong", "thoat", "loi", "dong-exit-0", "dong-exit-3", "SIGTERM", "SIGINT", "SIGHUP", "bat-rieng", "bat-rieng-once", "SIGKILL"];
 async function chay(cdp, ca, coSo) {
   if (ca === "api") return caApi(cdp, coSo);
   if (ca === "mo-coi") return caMoCoi(cdp);

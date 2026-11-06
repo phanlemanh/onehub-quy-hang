@@ -85,14 +85,28 @@ const gietNhom = (pid, tin) => {
     giet(pid, tin);
   }
 };
+const nguDongBo = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 const xoa = (p) => {
-  try {
-    rmSync(p, { recursive: true, force: true });
-  } catch {
-    // đã xoá
+  // Tiến trình phụ của Chrome vừa nhận SIGKILL có thể còn ghi vào hồ sơ vài chục ms: thử lại tới khi đường biến mất.
+  for (let i = 0; i < 10; i++) {
+    try {
+      rmSync(p, { recursive: true, force: true, maxRetries: 3, retryDelay: 50 });
+    } catch {
+      // còn tệp đang ghi — thử lại
+    }
+    if (!existsSync(p)) return;
+    nguDongBo(100);
   }
 };
-const nguDongBo = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+/** Còn tiến trình sống (không phải xác) mang thư mục hồ sơ trong dòng lệnh không. */
+const conMangDir = (dir) =>
+  spawnSync("ps", ["-axww", "-o", "stat=,command="], { encoding: "utf8" })
+    .stdout.split("\n")
+    .some((l) => l.includes(dir) && !/^\s*Z/.test(l));
+/** Chờ đồng bộ (tối đa han ms) tới khi không còn tiến trình nào mang thư mục hồ sơ. */
+const choHetDir = (dir, han = 1500) => {
+  for (let t = 0; t < han && conMangDir(dir); t += 50) nguDongBo(50);
+};
 /** Chỉ xoá thư mục hồ sơ do công cụ tạo: ngay dưới thư mục tạm của hệ thống, tên mang tiền tố. */
 const xoaDuoc = (dir) => typeof dir === "string" && path.dirname(path.resolve(dir)) === path.resolve(tmpdir()) && path.basename(dir).startsWith(TIEN_TO);
 
@@ -131,12 +145,17 @@ function donMoCoi() {
 const CANH = `const [cha, chrome, dir, so] = process.argv.slice(1); const { spawnSync } = require("node:child_process");
 const fs = require("node:fs"); const song = (p) => { try { process.kill(+p, 0); return true; } catch (e) { return e.code === "EPERM"; } };
 const mang = () => (spawnSync("ps", ["-ww", "-o", "command=", "-p", chrome], { encoding: "utf8" }).stdout || "").includes(dir);
-const don = () => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch {} try { fs.rmSync(so, { force: true }); } catch {} };
+let dang = false;
+const don = (n) => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch {}
+  if (fs.existsSync(dir) && n < 10) return setTimeout(() => don(n + 1), 100);
+  try { fs.rmSync(so, { force: true }); } catch {} process.exit(0); };
 process.on("SIGTERM", () => process.exit(0));
 setInterval(() => {
   if (song(cha)) { if (!song(chrome)) process.exit(0); return; }
+  if (dang) return;
+  dang = true;
   if (song(chrome) && mang()) { try { process.kill(-chrome, "SIGKILL"); } catch { try { process.kill(+chrome, "SIGKILL"); } catch {} } }
-  setTimeout(() => { don(); process.exit(0); }, 300);
+  setTimeout(() => don(0), 300);
 }, 500);`;
 
 /** Chrome đang mở của tiến trình này — bộ tắt lúc thoát và lúc nhận tín hiệu tắt hết. */
@@ -153,7 +172,8 @@ function caiBat() {
     ["SIGINT", 2],
     ["SIGHUP", 1],
   ]) {
-    process.on(tin, () => {
+    // Cài ĐẦU danh sách: lúc bộ này chạy, bộ bắt `once` của lời gọi chưa tự gỡ, nên phép đếm thấy đủ bộ bắt riêng.
+    process.prependListener(tin, () => {
       for (const c of DANG_MO) c.tatNgay();
       // Bộ bắt này là bộ bắt duy nhất → giữ hành vi mặc định của Node (thoát 128 + số hiệu). Lời gọi có bộ bắt riêng thì bộ
       // bắt riêng quyết mã thoát.
@@ -182,6 +202,7 @@ export async function moChrome() {
       DANG_MO.delete(c);
       if (conChay()) gietNhom(p.pid, "SIGKILL");
       if (canh) giet(canh.pid, "SIGTERM");
+      choHetDir(dir);
       xoa(dir);
       xoa(so);
     },

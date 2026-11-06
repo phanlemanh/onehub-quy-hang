@@ -5,7 +5,7 @@
 # Đối chứng dương trong MỌI ca E1–E5, trước bước tắt: dòng sổ có ở đúng đường ghép từ PID Chrome con in và mang đúng PID Chrome cùng thư mục; bộ dò thấy
 # ≥1 tiến trình mang thư mục hồ sơ; thư mục có trên đĩa; người canh sống. Thiếu một điều thì ca đỏ «đối chứng dương hỏng:
 # <điều>» — không có xanh rỗng.
-# E7 chạy lại đủ mười ca tắt và ca mo-coi (mười một ca) trên bản cdp.mjs của nhánh chính trước vòng (git show <base>:<đường> vào thư mục tạm ngoài
+# E7 chạy lại đủ mười một ca tắt và ca mo-coi (mười hai ca) trên bản cdp.mjs của nhánh chính trước vòng (git show <base>:<đường> vào thư mục tạm ngoài
 # kho) và đòi mỗi ca ĐỎ đúng thông điệp ghim của nó.
 evals:
   - id: E1
@@ -27,9 +27,9 @@ evals:
   - id: E3
     criterion: AC-3
     executor: script
-    cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --ca SIGTERM --ca SIGINT --ca SIGHUP --ca bat-rieng
+    cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --ca SIGTERM --ca SIGINT --ca SIGHUP --ca bat-rieng --ca bat-rieng-once
     paths: ["_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs", "_acceptance/va-cdp-tat-chrome/thu/**"]
-    expected: "exit 0; bốn dòng ok — ma trận viết trước {SIGTERM: 143, SIGINT: 130, SIGHUP: 129} ba phần tử ba khẳng định mã thoát; bat-rieng: con tự cài bộ bắt SIGTERM ghi tệp dấu rồi thoát 7 → tệp dấu có và mã 7. Cả bốn: đối chứng dương đạt; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau <tín hiệu>», «hồ sơ tạm còn trên đĩa (<ca>)», «dòng sổ PID còn (<ca>)», «người canh còn sống (<ca>)», «lời gọi không thoát sau <tín hiệu>» (con còn sống sau 5 giây), «mã thoát đổi (<ca>: <đo>)», hay «bộ bắt riêng không chạy»."
+    expected: "exit 0; năm dòng ok — ma trận viết trước {SIGTERM: 143, SIGINT: 130, SIGHUP: 129} ba phần tử ba khẳng định mã thoát; bat-rieng: con tự cài bộ bắt SIGTERM bằng process.on SAU moChrome() ghi tệp dấu rồi thoát 7 → tệp dấu có và mã 7; bat-rieng-once: con cài bộ bắt SIGTERM bằng process.once TRƯỚC moChrome(), dọn bất đồng bộ 300 ms rồi ghi tệp dấu và thoát 7 → tệp dấu có và mã 7 (không bị công cụ cắt bằng mã 143). Cả năm: đối chứng dương đạt; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau <tín hiệu>», «hồ sơ tạm còn trên đĩa (<ca>)», «dòng sổ PID còn (<ca>)», «người canh còn sống (<ca>)», «lời gọi không thoát sau <tín hiệu>» (con còn sống sau 5 giây), «mã thoát đổi (<ca>: <đo>)», hay «bộ bắt riêng không chạy»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
@@ -61,5 +61,5 @@ evals:
     executor: script
     cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --doi-chung-do 382a010c4a0e6a60ec5c43d3c8a6c2de1d90beee
     paths: ["_acceptance/va-cdp-tat-chrome/thu/**"]
-    expected: "exit 0; chiều đỏ của AC-1 đến AC-5 trên bản cdp.mjs của nhánh chính tại 382a010c (git show vào thư mục tạm ngoài kho). Ma trận viết trước mười một phần tử: dong, thoat, loi, dong-exit-0, dong-exit-3, SIGTERM, SIGINT, SIGHUP, bat-rieng, SIGKILL, mo-coi — mỗi ca ĐỎ với đúng một trong các thông điệp ghim của nó (bản cũ không ghi sổ, nên đối chứng dương phần sổ được tắt ở chế độ này và ca đỏ bằng thông điệp về Chrome / hồ sơ tạm; mo-coi dựng dòng sổ bằng khuôn do bản trong cây ghi ở cùng lượt rồi chạy moChrome() của bản cũ). Ca api trên bản cũ XANH (đối chứng: bản cũ đúng API). Ca nào trên bản cũ ra xanh thì bài in «phép đo <ca> không phân biệt được bản sửa» và thoát 1. Bài tự dọn mọi Chrome bản cũ để lại bằng nhóm tiến trình nó đã ghi."
+    expected: "exit 0; chiều đỏ của AC-1 đến AC-5 trên bản cdp.mjs của nhánh chính tại 382a010c (git show vào thư mục tạm ngoài kho). Ma trận viết trước mười hai phần tử: dong, thoat, loi, dong-exit-0, dong-exit-3, SIGTERM, SIGINT, SIGHUP, bat-rieng, bat-rieng-once, SIGKILL, mo-coi — mỗi ca ĐỎ với đúng một trong các thông điệp ghim của nó; ca mà bản cũ để Chrome sống (thoat, loi, ba tín hiệu mềm, hai ca bộ bắt riêng, SIGKILL) chỉ tính thông điệp «Chrome mồ côi …», không tính thông điệp hồ sơ tạm (bản cũ không ghi sổ, nên đối chứng dương phần sổ được tắt ở chế độ này và ca đỏ bằng thông điệp về Chrome / hồ sơ tạm; mo-coi dựng dòng sổ bằng khuôn do bản trong cây ghi ở cùng lượt rồi chạy moChrome() của bản cũ). Ca api trên bản cũ XANH (đối chứng: bản cũ đúng API). Ca nào trên bản cũ ra xanh thì bài in «phép đo <ca> không phân biệt được bản sửa» và thoát 1. Bài tự dọn mọi Chrome bản cũ để lại bằng nhóm tiến trình nó đã ghi."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -13,7 +13,14 @@ const ca = doi("--ca");
 const { moChrome } = await import(pathToFileURL(doi("--cdp")).href);
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Bộ bắt riêng của lời gọi cài TRƯỚC khi mở Chrome là ca thường gặp ở chỗ thử cũ; ca bat-rieng cài SAU (như chay-ui.mjs).
+// Bộ bắt riêng của lời gọi: ca bat-rieng cài SAU khi mở Chrome (như chay-ui.mjs) bằng process.on; ca bat-rieng-once cài
+// TRƯỚC bằng process.once và dọn bất đồng bộ 300 ms rồi mới ghi dấu và thoát — bộ bắt `once` tự gỡ trước khi chạy.
+if (ca === "bat-rieng-once")
+  process.once("SIGTERM", async () => {
+    await ngu(300);
+    writeFileSync(doi("--dau"), "bat-rieng-once");
+    process.exit(7);
+  });
 const c = await moChrome();
 
 // Chrome của lượt = con trực tiếp của tiến trình này mang --user-data-dir; người canh = con node mang thư mục ấy.

@@ -72,7 +72,7 @@ Bỏ quét không gian — xem dòng sổ «bỏ coverage-scan». Không gian c�
 liệt trọn: gọi `dong()` (AC-1) · thoát thường không `dong()`, lỗi chưa bắt, `dong()` rồi `process.exit` ngay (AC-2) · ba tín
 hiệu mềm, có và không có bộ bắt riêng (AC-3) · SIGKILL (AC-4) · mồ côi của lượt trước — Chrome còn sống, PID tái dùng,
 Chrome đã chết còn hồ sơ, đường lạ (AC-5) · không hồi quy API (AC-6). Mỗi lối tắt có một phép đo chiều đỏ chạy trên bản
-`cdp.mjs` của nhánh chính trước vòng (E7, mười một ca), và mỗi ca E1–E5 có đối chứng dương trước bước tắt. Người canh
+`cdp.mjs` của nhánh chính trước vòng (E7, mười hai ca — thêm ca bộ bắt riêng cài bằng `once` trước khi mở Chrome, lượt chấm 2), và mỗi ca E1–E5 có đối chứng dương trước bước tắt. Người canh
 (tiến trình mới của vòng) được đo tắt ở mọi lối.
 
 ## Out of scope
