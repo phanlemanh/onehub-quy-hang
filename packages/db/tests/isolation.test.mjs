@@ -3296,3 +3296,58 @@ test("bảng quyền hàng (046): hàm giữ khoá", { skip }, async () => {
     await client.end();
   }
 });
+
+// ---- Trang nhóm môi giới (048, hàng 44 trang-nhom-moi-gioi): mức chia và định nghĩa phí lúc gửi trên Lần gửi ----
+test("shares (048): mức chia", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.DK1, COMPANY_A);
+    const tao = "select app.create_share(gen_random_uuid(), $1, $2, $3, $4, $5, $6)";
+    const dem = async () => (await c.query("select count(*)::int n from shares where company_id = $1", [COMPANY_A])).rows[0].n;
+    // Bảng viết trước: [ca, mã link, người nhận, nhu cầu, mức chia, định nghĩa phí, ràng buộc ghim].
+    const BANG = [
+      ["khách riêng kèm mức chia", "maM000000001", "client", LKP.A, 40, null, /shares_commission_split_agents_only/],
+      ["nhóm môi giới mức 120", "maM000000002", "agents", null, 120, null, /shares_commission_split_range/],
+      ["nhóm môi giới mức -1", "maM000000003", "agents", null, -1, null, /shares_commission_split_range/],
+      ["định nghĩa phí ngoài tập đóng", "maM000000004", "agents", null, 40, ["vatTax"], /shares_fee_inclusion_closed/],
+      ["định nghĩa phí rỗng", "maM000000005", "agents", null, 40, [], /shares_fee_inclusion_closed/],
+    ];
+    const truoc = await dem();
+    let so = 0;
+    for (const [, ma, nhan, nhuCau, muc, phi, ghim] of BANG) {
+      await expectError(c, tao, [ma, nhan, nhuCau, [LKL.A], muc, phi], ghim);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+    assert.equal(await dem(), truoc, "lời gọi bị từ chối vẫn thêm Lần gửi");
+    // Đối chứng dương: nhóm môi giới mức 40 kèm định nghĩa phí, và mức rỗng (lời gọi năm tham số như cũ).
+    await c.query(tao, ["maM000000006", "agents", null, [LKL.A], 40, ["personalIncomeTax", "brokerageFee"]]);
+    await c.query("select app.create_share(gen_random_uuid(), 'maM000000007', 'agents', null, $1)", [[LKL.A]]);
+    const r = (await c.query("select code, commission_split_pct::float8 muc, fee_inclusion phi from shares where code in ('maM000000006', 'maM000000007') order by code")).rows;
+    assert.deepEqual(r, [
+      { code: "maM000000006", muc: 40, phi: ["personalIncomeTax", "brokerageFee"] },
+      { code: "maM000000007", muc: null, phi: null },
+    ]);
+    // Cách ly: sàn B không đọc được Lần gửi mang mức chia của sàn A (đối chứng: A đọc được).
+    assert.equal((await c.query("select count(*)::int n from shares where code = 'maM000000006'")).rows[0].n, 1, "đối chứng: A đọc được");
+    await lamNguoi(c, LK.B, COMPANY_B);
+    assert.equal((await c.query("select count(*)::int n from shares where code = 'maM000000006'")).rows[0].n, 0, "sàn B đọc được mức chia của sàn A");
+  });
+});
+
+test("shares (048): một hàm create_share, quyền hẹp, đã áp", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select pg_get_function_identity_arguments(p.oid) args, has_function_privilege('quy_hang_app', p.oid, 'execute') goi
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'app' and p.proname = 'create_share'`,
+    );
+    assert.equal(rows.length, 1, "create_share phải là một hàm duy nhất");
+    assert.match(rows[0].args, /p_commission_split numeric, p_fee_inclusion text\[\]$/);
+    assert.equal(rows[0].goi, true, "quy_hang_app không gọi được create_share");
+    const m = await client.query("select count(*)::int n from schema_migrations where name like '048_%'");
+    assert.equal(m.rows[0].n, 1, "048 áp đúng một lần");
+  } finally {
+    await client.end();
+  }
+});
