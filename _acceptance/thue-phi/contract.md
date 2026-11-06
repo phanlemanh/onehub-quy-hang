@@ -5,7 +5,7 @@ slug: thue-phi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-06T01:35:13Z
 design_doc: docs/superpowers/specs/2026-11-06-thue-phi-design.md
@@ -121,3 +121,7 @@ cuộc gọi; Bảng hàng sau hàng 46) là Hỏi-4.
 - Tỉ lệ hay định nghĩa ra trang khách — Never (lớp `company_internal`).
 
 ## Notes
+
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Dòng phụ ở hồ sơ căn gọi tên khoản phí bằng một bảng chữ riêng; đổi tên khoản ở chỗ chung sau này thì dòng này có thể còn tên cũ.
+  - Ngoài-4: Bài kiểm chưa chứng chắc rằng số «về tay» ở dòng phụ theo định nghĩa lúc ghi giá chứ không theo định nghĩa hiện hành của sàn; một lần sửa nhầm có thể không bị báo.
