@@ -24,7 +24,7 @@ const TO_HOP: Record<string, string[]> = {
 };
 const QUAN_TRI = (ten: string) => ten.startsWith("quản trị");
 
-const MUC_SAN = ["Người dùng", "Cách gọi", "Trường riêng", "Trạng thái", "Luật chia lead", "Thuế phí", "Mẫu nhập", "Xử lý bằng AI"];
+const MUC_SAN = ["Người dùng", "Cách gọi", "Trường riêng", "Trạng thái", "Luật chia lead", "Thuế phí", "Mẫu nhập", "Xử lý bằng AI", "Trang môi giới"];
 
 // E2 — cột mục lục của nhà Cài đặt.
 function lechCot(f: (roles: string[], tenSan: string) => NhomCot[]): string[] {

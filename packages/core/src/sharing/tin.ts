@@ -90,12 +90,14 @@ export function thanKhachMoi(o: { ten: string; so: string; need: ProspectNeed })
 }
 
 /** Thân `POST /api/v1/shares`: khách riêng gắn nhu cầu khách, nhóm môi giới không; căn theo thứ tự chọn. */
-export function thanLanGui(o: { nguoiNhan: NguoiNhan; prospectId: string | null; listingIds: readonly string[] }): KetThan<ShareInput> {
-  const than = {
+export function thanLanGui(o: { nguoiNhan: NguoiNhan; prospectId: string | null; listingIds: readonly string[]; mucChia?: number | null }): KetThan<ShareInput> {
+  const than: ShareInput = {
     audience: o.nguoiNhan === "khach_rieng" ? ("client" as const) : ("agents" as const),
     prospectId: o.nguoiNhan === "khach_rieng" ? o.prospectId : null,
     listingIds: [...o.listingIds],
   };
+  // Hàng 44: mức chia chỉ đi với nhóm môi giới; để trống thì thân không mang khoá.
+  if (o.nguoiNhan === "nhom_moi_gioi" && o.mucChia != null) than.commissionSplitPct = o.mucChia;
   const v = validateShareInput(than);
   return v.ok ? { ok: true, than } : v;
 }

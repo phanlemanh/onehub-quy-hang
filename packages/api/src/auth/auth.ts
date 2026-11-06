@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { emailOTP } from "better-auth/plugins";
+import { PostgresDialect } from "kysely";
 import type pg from "pg";
 import {
   AUTH_BASE_PATH,
@@ -23,7 +24,7 @@ import { devSender, type OtpSender } from "./sender";
 import { OTP_RATE_LIMITED } from "../errors";
 
 export type CreateAuthOptions = {
-  /** Kết nối chủ, search_path = identity — chỉ cho danh tính, không bao giờ chạm bảng của công ty. */
+  /** Kết nối chủ, không tham số khởi động — chỉ cho danh tính, không bao giờ chạm bảng của công ty. */
   identityPool: pg.Pool;
   secret: string;
   baseURL: string;
@@ -39,7 +40,15 @@ export function createAuth(o: CreateAuthOptions) {
   if (o.env === "production" && !o.sender) throw new Error("thiếu bộ gửi mã đăng nhập");
   const sender = o.sender ?? devSender;
   return betterAuth({
-    database: o.identityPool,
+    // Lược đồ danh tính đặt ở adapter (pooler-che-do-giao-dich): Kysely `withSchema("identity")` ghi rõ lược đồ cho mọi câu
+    // của better-auth và cho bước kiểm lược đồ lúc khởi động — không dựa vào search_path của kết nối, thứ pooler chế độ
+    // giao dịch không giữ. `transaction: true` giữ đúng hành vi khi adapter tự dựng từ pg.Pool trần.
+    database: {
+      dialect: new PostgresDialect({ pool: o.identityPool }),
+      type: "postgres",
+      schemaName: "identity",
+      transaction: true,
+    },
     secret: o.secret,
     baseURL: o.baseURL,
     basePath: AUTH_BASE_PATH,

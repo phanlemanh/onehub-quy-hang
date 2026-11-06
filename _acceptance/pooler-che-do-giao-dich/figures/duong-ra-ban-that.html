@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đường ra bản thật</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #f5f5f5;
+      --color-ink:    #2d3142;
+      --color-muted:  #4f5d75;
+      --font-sans:    'Geist', system-ui, sans-serif;
+      --font-serif:   'Instrument Serif', 'Lora', serif;
+      --font-mono:    'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      padding: 2rem 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .frame { max-width: 1184px; width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .sub { color: var(--color-muted); font-size: 0.875rem; line-height: 1.45; margin-bottom: 1.5rem; max-width: 760px; }
+    svg { width: 100%; min-width: 880px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Pooler chế độ giao dịch · Hình tại điểm quyết định</p>
+    <h1>Đường ra bản thật: gộp, đo, chủ kho quyết, đổi — và đường lùi về cổng 5432</h1>
+    <p class="sub">Vòng này chỉ gộp mã và đo trên bản xem trước; bản thật chỉ đổi sau khi chủ kho quyết ở Cổng Bằng chứng. Có lỗi sau khi đổi thì máy đặt lại cổng cũ, không cần sửa mã. Phủ AC-3, AC-4, AC-6, AC-7.</p>
+
+    <svg viewBox="0 0 1184 504" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Đường ra bản thật: hai làn Máy và Chủ kho, từ gộp PR tới đổi bản thật, kèm đường lùi về cổng 5432">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- ===== Lanes ===== -->
+      <rect x="24" y="280" width="1144" height="152" fill="rgba(45,49,66,0.025)"/>
+      <line x1="24" y1="32" x2="1168" y2="32" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <line x1="24" y1="280" x2="1168" y2="280" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <line x1="24" y1="432" x2="1168" y2="432" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <line x1="104" y1="32" x2="104" y2="432" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <text x="36" y="160" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.18em">MÁY</text>
+      <text x="36" y="360" fill="#4f5d75" font-size="9" font-weight="500" font-family="'Geist Mono', monospace" letter-spacing="0.18em">CHỦ KHO</text>
+
+      <!-- ===== Arrows (behind nodes) ===== -->
+      <!-- Gộp PR → Đặt cổng -->
+      <line x1="264" y1="216" x2="296" y2="216" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Đặt cổng → Đo (máy đặt được) -->
+      <line x1="440" y1="204" x2="472" y2="204" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Đặt cổng → Chủ kho đặt (rào chặn) -->
+      <line x1="368" y1="256" x2="368" y2="320" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <!-- Chủ kho đặt → Đo -->
+      <path d="M440 360 H448 Q456 360 456 352 V244 Q456 236 464 236 H472" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <!-- Đo → Chủ kho thử tay -->
+      <line x1="544" y1="256" x2="544" y2="320" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Thử tay → Cổng Bằng chứng -->
+      <line x1="616" y1="360" x2="648" y2="360" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Cổng → Đổi bản thật (đồng ý) -->
+      <path d="M792 344 H808 Q816 344 816 336 V224 Q816 216 824 216 H840" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Cổng → Chưa đổi -->
+      <line x1="792" y1="376" x2="840" y2="376" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Đổi bản thật → Chạy 6543 -->
+      <line x1="984" y1="216" x2="1016" y2="216" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Đổi bản thật → Lùi (có lỗi) -->
+      <line x1="912" y1="176" x2="912" y2="120" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <!-- Lùi → quay về trạng thái sau Gộp PR (bản thật 5432) -->
+      <path d="M840 88 H200 Q192 88 192 96 V176" fill="none" stroke="#eb6c36" stroke-width="1.4" stroke-dasharray="6,4" marker-end="url(#arrow-accent)"/>
+
+      <!-- ===== Arrow labels (masked, 8px gap) ===== -->
+      <rect x="376" y="288" width="56" height="12" rx="2" fill="#f0f0f1"/>
+      <text x="380" y="297" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.08em">RÀO CHẶN</text>
+      <rect x="552" y="288" width="60" height="12" rx="2" fill="#f0f0f1"/>
+      <text x="556" y="297" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.08em">SỐ ĐO ĐẠT</text>
+      <rect x="824" y="288" width="52" height="12" rx="2" fill="#f0f0f1"/>
+      <text x="828" y="297" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.08em">ĐỒNG Ý</text>
+      <rect x="920" y="140" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="924" y="149" fill="#ba4513" font-size="8" font-weight="600" font-family="'Geist Mono', monospace" letter-spacing="0.08em">CÓ LỖI</text>
+      <rect x="472" y="68" width="96" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="520" y="77" fill="#ba4513" font-size="8" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">QUAY VỀ 5432</text>
+
+      <!-- ===== Máy: Gộp PR ===== -->
+      <rect x="120" y="176" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="192" y="204" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gộp PR</text>
+      <text x="192" y="224" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">mã chạy cả hai chế độ</text>
+      <text x="192" y="236" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">bản thật vẫn cổng 5432</text>
+
+      <!-- ===== Máy: Đặt cổng 6543 cho bản xem trước (Hỏi-2) ===== -->
+      <rect x="296" y="176" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="304" y="184" width="40" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="324" y="193" fill="rgba(45,49,66,0.80)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-2</text>
+      <text x="368" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đặt cổng 6543</text>
+      <text x="368" y="228" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">chỉ cho bản xem trước nhánh</text>
+      <text x="368" y="240" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">chuỗi bí mật không lộ ra</text>
+
+      <!-- ===== Máy: Đo ===== -->
+      <rect x="472" y="176" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="544" y="204" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đo hai nơi</text>
+      <text x="544" y="220" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">bàn thử pooler tại máy</text>
+      <text x="544" y="232" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">40 yêu cầu cùng lúc trên</text>
+      <text x="544" y="244" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">bản xem trước, không lỗi</text>
+
+      <!-- ===== Máy: Đổi bản thật ===== -->
+      <rect x="840" y="176" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="912" y="208" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bản thật sang 6543</text>
+      <text x="912" y="224" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">đổi biến, triển khai lại</text>
+      <text x="912" y="236" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">theo dõi nhật ký 30 phút</text>
+
+      <!-- ===== Máy: kết thúc tốt ===== -->
+      <rect x="1016" y="176" width="144" height="80" rx="40" fill="#f5f5f5"/>
+      <rect x="1016" y="176" width="144" height="80" rx="40" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="1088" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bản thật chạy 6543</text>
+      <text x="1088" y="228" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">nhật ký sạch sau 30 phút</text>
+
+      <!-- ===== Máy: Lùi (focal 2) ===== -->
+      <rect x="840" y="56" width="144" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="840" y="56" width="144" height="64" rx="6" fill="rgba(235,108,54,0.06)" stroke="#eb6c36" stroke-width="1.4" stroke-dasharray="6,4"/>
+      <text x="912" y="80" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lùi về cổng 5432</text>
+      <text x="912" y="96" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">đặt lại biến, triển khai lại</text>
+      <text x="912" y="108" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">mã không cần đổi</text>
+
+      <!-- ===== Chủ kho: đặt biến một bước (nhánh rẽ) ===== -->
+      <rect x="296" y="320" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="368" y="348" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chủ kho đặt biến</text>
+      <text x="368" y="364" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">một bước, khi máy bị chặn</text>
+      <text x="368" y="376" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">sao biến sang, đổi cổng</text>
+
+      <!-- ===== Chủ kho: thử tay ===== -->
+      <rect x="472" y="320" width="144" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="544" y="348" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chủ kho thử tay</text>
+      <text x="544" y="364" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">đăng nhập · Hôm nay</text>
+      <text x="544" y="376" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">Bảng hàng, trên bản xem trước</text>
+
+      <!-- ===== Chủ kho: Cổng Bằng chứng (focal 1) ===== -->
+      <rect x="648" y="320" width="144" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="648" y="320" width="144" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <rect x="656" y="328" width="84" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/>
+      <text x="698" y="337" fill="#ba4513" font-size="7" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CHỦ KHO QUYẾT</text>
+      <text x="720" y="360" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cổng Bằng chứng</text>
+      <text x="720" y="376" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">đọc số đo và thử tay</text>
+      <text x="720" y="388" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">quyết đổi bản thật hay chưa</text>
+
+      <!-- ===== Chủ kho: chưa đổi ===== -->
+      <rect x="840" y="336" width="144" height="80" rx="40" fill="#f5f5f5"/>
+      <rect x="840" y="336" width="144" height="80" rx="40" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="912" y="372" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chưa đổi</text>
+      <text x="912" y="388" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif" text-anchor="middle">bản thật giữ cổng 5432</text>
+
+      <!-- ===== Legend ===== -->
+      <line x1="24" y1="456" x2="1168" y2="456" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="24" y="484" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+      <rect x="112" y="476" width="24" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="144" y="486" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Bước</text>
+      <rect x="196" y="476" width="24" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="228" y="486" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Nhánh rẽ khi máy bị chặn</text>
+      <rect x="368" y="476" width="24" height="12" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="400" y="486" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Kết thúc</text>
+      <rect x="464" y="476" width="24" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="496" y="486" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Chủ kho quyết</text>
+      <line x1="584" y1="482" x2="616" y2="482" stroke="#eb6c36" stroke-width="1.4" stroke-dasharray="6,4"/>
+      <text x="624" y="486" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Đường lùi: quay về cổng 5432, mã giữ nguyên</text>
+    </svg>
+  </div>
+</body>
+</html>
