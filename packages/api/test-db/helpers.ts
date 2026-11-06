@@ -10,7 +10,8 @@ const url = process.env.DATABASE_URL;
 if (!url) throw new Error("test:db cần DATABASE_URL (Postgres đã áp migration) — xem .env.example.");
 
 export const appPool = new pg.Pool({ connectionString: url, max: 4 });
-export const identityPool = new pg.Pool({ connectionString: url, max: 4, options: "-c search_path=identity" });
+// Dựng như máy chủ (pooler-che-do-giao-dich): không tham số khởi động — bộ kiểm đỏ nếu còn câu dựa vào search_path.
+export const identityPool = new pg.Pool({ connectionString: url, max: 4 });
 
 export function makeAuth() {
   const capture = captureSender();
