@@ -2675,6 +2675,18 @@
         "docs/adr/0009-moi-truong-that.md",
         "docs/architecture/kien-truc-repo-va-stack.md"
       ]
+    },
+    {
+      "ma": "va-e7-loi-that-cap-han",
+      "cau_giao": "Phép nhìn khung 3 của bài E7 (màn Luật chia lead, cặp hạn hỏng) dựng lỗi bằng phản hồi thật của máy chủ thay cho câu lỗi gõ tay, nên khi chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo.",
+      "slug": "va-e7-loi-that-cap-han",
+      "vi_sao": "Ngoài-1 của luat-chia-lead-cap-han-hong (PR #156): fixture viết tay đúng khuôn bên đọc — phản hồi 200 giả còn lỗi ở khung 3 của E7. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy D, D-0611-2). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Đổi câu lỗi của máy chủ thì phép nhìn khung 3 đỏ; câu đúng thì xanh; không còn phản hồi giả viết tay trong chạy-ui",
+      "vung": [
+        "_acceptance/luat-chia-lead-cap-han-hong/thu/**",
+        "_acceptance/va-e7-loi-that-cap-han/**"
+      ]
     }
   ],
   "chan_troi": [
