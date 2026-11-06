@@ -8,6 +8,8 @@ export const CONNECTION_KINDS = [
   "spreadsheet",
   "company_partnership",
   "company_api",
+  // Xử lý bằng AI (ADR-0011 qđ 2, hàng 68): chiều ra, bên kia `anthropic`, chỉ `catalog` và `shareable_listing`.
+  "ai_processing",
 ] as const;
 
 export type ConnectionKind = (typeof CONNECTION_KINDS)[number];

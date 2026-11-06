@@ -1,0 +1,108 @@
+{
+  "ten": "la-b-dong-nghia",
+  "tieuDe": [
+    "Thứ tự",
+    "Tình hình bán",
+    "Khu đô thị",
+    "Khối tháp",
+    "Tầng thứ",
+    "Mã sản phẩm",
+    "Diện tích sàn (m²)",
+    "Số buồng ngủ",
+    "Hướng mặt tiền",
+    "Giá thả (VNĐ)",
+    "Phí giao dịch",
+    "Nhân sự phụ trách",
+    "Chủ sở hữu",
+    "Hotline chủ",
+    "Diễn giải",
+    "Nhóm"
+  ],
+  "bamGoi": "9a1c708603a2f520374157e3467ece0ce209477197029dd2f0df2ecc2f2c9ca1",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 2,
+        "dich": "subdivisionName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Khu đô thị» chỉ tên dự án, cả cột chỉ một giá trị như thường thấy ở bảng hàng một dự án."
+      },
+      {
+        "cot": 3,
+        "dich": "buildingName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Khối tháp» là toà, cột chỉ có hai giá trị chữ ngắn như tên hai toà."
+      },
+      {
+        "cot": 4,
+        "dich": "floor",
+        "phep": {
+          "name": "floor"
+        },
+        "ly_do": "Tiêu đề «Tầng thứ» là tầng, giá trị là số một đến hai chữ số."
+      },
+      {
+        "cot": 6,
+        "dich": "livingArea",
+        "phep": {
+          "name": "area",
+          "kind": "unknown"
+        },
+        "ly_do": "Tiêu đề «Diện tích sàn (m²)» là diện tích, giá trị là số; tiêu đề không nói thông thuỷ hay tim tường."
+      },
+      {
+        "cot": 7,
+        "dich": "bedroomsTotal",
+        "phep": {
+          "name": "bedrooms"
+        },
+        "ly_do": "Tiêu đề «Số buồng ngủ» là số phòng ngủ, giá trị là một chữ số với ba mức khác nhau."
+      },
+      {
+        "cot": 9,
+        "dich": "listPrice",
+        "phep": {
+          "name": "price",
+          "unit": "dong"
+        },
+        "ly_do": "Tiêu đề «Giá thả (VNĐ)» là giá chào tính bằng đồng, giá trị là số mười chữ số tức hàng tỉ."
+      },
+      {
+        "cot": 11,
+        "dich": "listAgentName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Nhân sự phụ trách» là người của sàn giữ căn, tức đầu chủ, cột chỉ có hai người."
+      },
+      {
+        "cot": 12,
+        "dich": "ownerName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Chủ sở hữu» là chủ nhà, số giá trị khác nhau khớp với cột số chủ nhà đã ghép."
+      },
+      {
+        "cot": 14,
+        "dich": "privateRemarks",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Diễn giải» là lời ghi thêm, có ô trống và ít giá trị lặp lại như ghi chú nội bộ."
+      },
+      {
+        "cot": 15,
+        "dich": "keep_as_note",
+        "ly_do": "Tiêu đề «Nhóm» không khớp trường chuẩn nào và cả cột chỉ một giá trị, nên giữ làm ghi chú."
+      }
+    ]
+  }
+}

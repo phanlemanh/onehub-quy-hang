@@ -1,4 +1,4 @@
-// Mục chia lead của Cài đặt sàn (hàng 48: E4, E5a, E7a, E8b) — ma trận viết trước, mỗi ma trận kèm chiều đỏ trên bản sao
+// Mục chia lead của Cài đặt sàn (hàng 48: E4, E5a, E7a, E8b; luat-chia-lead-cap-han-hong: E5) — ma trận viết trước, mỗi ma trận kèm chiều đỏ trên bản sao
 // hỏng. Lý do lỗi lấy từ chính `kiemGiaTri` của lõi — bên viết lý do mà máy chủ trả (lối chung, hàng 82), không viết tay.
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
@@ -15,6 +15,7 @@ import {
   diemMan,
   ganLyDo,
   KHOA_MAN,
+  ketQuaLuu,
   kiemBan,
   quetChuCam,
   thongBaoLuu,
@@ -149,4 +150,25 @@ test("luật chia lead: chữ màn theo từ vựng", () => {
   // Chiều đỏ: chuỗi mẫu chứa chữ cấm thì hàm quét trả đúng tệp và chữ.
   assert.deepEqual(quetChuCam("mau.tsx", 'const t = "Cảnh báo quá hạn";'), [{ tep: "mau.tsx", chu: "Cảnh báo" }]);
   assert.deepEqual(quetChuCam("mau.tsx", "<span>Luật chia</span>"), [{ tep: "mau.tsx", chu: "Luật chia" }]);
+});
+
+test("luật chia lead: kết quả lưu", () => {
+  // Lỗi lấy từ bộ giải của lõi — chính bên viết `errors` của lối chung — trên dòng hạn gọi 10 có từ trước (luat-chia-lead-cap-han-hong).
+  const loiThat = giaiCauHinh([{ key: "lead_routing.first_call_minutes", value: 10 }]).loi;
+  assert.ok(loiThat.some((e) => e.startsWith("lead_routing.first_call_minutes")), `bộ giải phải báo cặp — ${loiThat.join(" | ")}`);
+  const ban = (errors: string[]): BanCauHinh => ({ items: [], errors });
+  const maTran: [string, KhoaMan[], string[], "ok" | "loi", string][] = [
+    ["còn lỗi ở khoá vừa đổi", ["lead_routing.first_call_minutes"], loiThat, "loi", "Hạn gọi lần đầu"],
+    ["không lỗi, có điểm hiệu lực mới", ["lead_routing.accept_minutes"], [], "ok", "Đã lưu · áp cho lead mới từ bây giờ"],
+    ["không lỗi, chỉ ngưỡng hàng đợi", ["queue.call_back_after_days"], [], "ok", "Đã lưu"],
+    ["lỗi cũ ở khoá không đổi", ["queue.call_back_after_days"], loiThat, "ok", "Đã lưu"],
+  ];
+  for (const [ten, doi, errors, kind, chu] of maTran) {
+    const kq = ketQuaLuu(doi, ban(errors));
+    assert.equal(kq.kind, kind, ten);
+    assert.ok(kind === "ok" ? kq.cau === chu : kq.cau.includes(chu) && kq.cau.includes("chưa áp") && !kq.cau.startsWith("Đã lưu"), `${ten}: ${kq.cau}`);
+  }
+  // Chiều đỏ: bản sao bỏ qua `errors` thì ca còn lỗi ra «Đã lưu».
+  const boQua = (doi: KhoaMan[]) => ({ kind: "ok" as const, cau: thongBaoLuu(doi) });
+  assert.notDeepEqual(ketQuaLuu(["lead_routing.first_call_minutes"], ban(loiThat)), boQua(["lead_routing.first_call_minutes"]), "báo Đã lưu khi dòng vừa lưu chưa áp");
 });

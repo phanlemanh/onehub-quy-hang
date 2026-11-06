@@ -3255,6 +3255,73 @@ test("cửa hẹp nhãn (049): hàm giữ khoá", { skip }, async () => {
   }
 });
 
+// ---- Sổ chi phí AI và thoả thuận «Xử lý bằng AI» (035, hàng 68) ----
+test("ai_usage: ép luật theo dòng; sàn B không đọc, không chèn dòng của sàn A; chỉ thêm", { skip }, async () => {
+  const chu = new pg.Client({ connectionString: url });
+  await chu.connect();
+  try {
+    const { rows } = await chu.query("select relrowsecurity, relforcerowsecurity from pg_class where relname = 'ai_usage'");
+    assert.equal(rows[0]?.relrowsecurity, true, "ai_usage chưa bật luật theo dòng");
+    assert.equal(rows[0]?.relforcerowsecurity, true, "ai_usage chưa ép luật theo dòng");
+  } finally {
+    await chu.end();
+  }
+  await asCompany(null, async (c) => {
+    await c.query("reset role");
+    await c.query(
+      "insert into ai_usage (company_id, user_id, model, cost_usd, result) values ($1, 'u-ai-a', 'claude-opus-5-5', 0.5, 'ok')",
+      [COMPANY_A],
+    );
+    await c.query("set local role quy_hang_app");
+    await c.query("select set_config('app.company_id', $1, true)", [COMPANY_B]);
+    await c.query("select set_config('app.user_id', 'u-ai-b', true)");
+    assert.equal((await c.query("select count(*)::int n from ai_usage")).rows[0].n, 0, "sàn B đọc sổ chi phí AI của sàn A");
+    await expectError(
+      c,
+      "insert into ai_usage (company_id, user_id, model, result) values ($1, 'u-ai-b', 'claude-opus-5-5', 'ok')",
+      [COMPANY_A],
+      /row-level security/,
+    );
+    await c.query("select set_config('app.company_id', $1, true)", [COMPANY_A]);
+    await c.query("select set_config('app.user_id', 'u-ai-a', true)");
+    assert.equal((await c.query("select count(*)::int n from ai_usage")).rows[0].n, 1, "sàn A không đọc được sổ của mình");
+    await expectError(c, "update ai_usage set cost_usd = 0", [], /permission denied/);
+    await expectError(c, "delete from ai_usage", [], /permission denied/);
+  });
+});
+
+test("thoả thuận ai_processing: nhận loại mới, vẫn chặn nguồn và loại lạ, chỉ quản trị sàn tạo", { skip }, async () => {
+  await asCompany(COMPANY_A, async (c) => {
+    const them = (lop, kind = "ai_processing") =>
+      c.query(
+        `insert into agreements (company_id, kind, direction, counterparty, data_classes, valid_from, approved_by)
+         values ($1, $2, 'outbound', 'anthropic', $3, now(), '[Tên]')`,
+        [COMPANY_A, kind, lop],
+      );
+    // Không phải quản trị sàn: luật hạn chế từ chối.
+    await c.query("select set_config('app.user_id', 'u-ai-dc', true)");
+    await c.query("savepoint truoc_vai");
+    await assert.rejects(them("{catalog,shareable_listing}"), /row-level security/);
+    await c.query("rollback to savepoint truoc_vai");
+    // Ràng buộc (vai chủ, không luật dòng): nhận loại mới; nguồn và loại lạ vẫn bị từ chối.
+    await c.query("reset role");
+    // Nguồn bị chặn TRƯỚC khi sàn có thoả thuận AI nào — mục «một thoả thuận mỗi sàn» chưa thể là lý do từ chối.
+    await c.query("savepoint nguon");
+    await assert.rejects(them("{catalog,source}"), /agreements_never_source/);
+    await c.query("rollback to savepoint nguon");
+    // Đối chứng dương: cùng câu chèn, bỏ lớp nguồn, được nhận.
+    await them("{catalog,shareable_listing}");
+    await c.query("savepoint la");
+    await assert.rejects(them("{catalog}", "ai_magic"), /agreements_kind_check/);
+    await c.query("rollback to savepoint la");
+    // Một sàn một thoả thuận AI.
+    await c.query("savepoint hai");
+    await assert.rejects(them("{catalog}"), /agreements_mot_thoa_thuan_ai/);
+    await c.query("rollback to savepoint hai");
+  });
+});
+
+
 // ---- import_templates (045, hàng 50 mau-nhap-va-bai): sổ sửa mẫu file nhập ----
 const chenMau = "insert into import_templates (company_id, header_key, action, target, transform, value_map) values ($1, $2, $3, $4, $5, $6)";
 
