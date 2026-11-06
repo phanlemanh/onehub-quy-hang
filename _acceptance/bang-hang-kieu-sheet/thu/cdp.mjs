@@ -1,8 +1,8 @@
 // Trình duyệt không đầu tối giản cho hồ sơ bang-hang-kieu-sheet: Chrome có sẵn trên máy + DevTools Protocol qua
 // WebSocket của Node — kho không có playwright ở main (ADR-0004 đo trên nhánh thử). Dùng cho chụp đối chiếu và máy đo
 // cuộn (E11). Đăng nhập lấy phiên bằng mã đọc ở nhật ký máy chủ dev của dung-b.mjs.
-import { spawn } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { spawn, spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -53,11 +53,140 @@ async function xinPhien(email) {
   return [...ck, `qh_san=${me.companies.find((c) => c.name === "[Mẫu] Sàn thử").id}`];
 }
 
+// ── Chrome của lượt luôn tắt (va-cdp-tat-chrome) ──
+// Chrome chạy trong nhóm tiến trình riêng (PID nhóm = PID Chrome) — tắt là kill đúng nhóm công cụ đã mở, không dò tên
+// (luật đợt 8). Mỗi lần mở ghi một dòng sổ ở .acceptance-runs/cdp-chrome/<pid>.json của cây đang chạy; tắt xong xoá dòng.
+// Bốn lối tắt: dong() · lúc tiến trình gọi thoát (kể cả lỗi chưa bắt) · lúc nhận SIGTERM/SIGINT/SIGHUP · người canh khi
+// tiến trình gọi bị SIGKILL. Đầu mỗi moChrome() dọn mồ côi của lượt trước theo sổ.
+const SO_PID = path.join(GOC, ".acceptance-runs/cdp-chrome");
+const TIEN_TO = "qh-b-chrome-";
+const conSong = (pid) => {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return e.code === "EPERM";
+  }
+};
+const dongLenh = (pid) => spawnSync("ps", ["-ww", "-o", "command=", "-p", String(pid)], { encoding: "utf8" }).stdout ?? "";
+const giet = (pid, tin) => {
+  try {
+    process.kill(pid, tin);
+  } catch {
+    // đã tắt
+  }
+};
+/** Kill cả nhóm tiến trình của Chrome; nhóm không có (Chrome không phải trưởng nhóm) thì kill riêng PID. */
+const gietNhom = (pid, tin) => {
+  try {
+    process.kill(-pid, tin);
+  } catch {
+    giet(pid, tin);
+  }
+};
+const xoa = (p) => {
+  try {
+    rmSync(p, { recursive: true, force: true });
+  } catch {
+    // đã xoá
+  }
+};
+const nguDongBo = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+/** Chỉ xoá thư mục hồ sơ do công cụ tạo: ngay dưới thư mục tạm của hệ thống, tên mang tiền tố. */
+const xoaDuoc = (dir) => typeof dir === "string" && path.dirname(path.resolve(dir)) === path.resolve(tmpdir()) && path.basename(dir).startsWith(TIEN_TO);
+
+/** Dọn dòng sổ mà tiến trình gọi đã chết: Chrome còn mang đúng hồ sơ thì tắt; PID đã tái dùng thì không kill. */
+function donMoCoi() {
+  let ten;
+  try {
+    ten = readdirSync(SO_PID).filter((f) => f.endsWith(".json"));
+  } catch {
+    return;
+  }
+  for (const t of ten) {
+    const tep = path.join(SO_PID, t);
+    let d;
+    try {
+      d = JSON.parse(readFileSync(tep, "utf8"));
+    } catch {
+      xoa(tep);
+      continue;
+    }
+    if (conSong(d.cha)) continue;
+    const mang = (pid) => typeof d.dir === "string" && conSong(pid) && dongLenh(pid).includes(d.dir);
+    if (mang(d.chrome)) {
+      gietNhom(d.chrome, "SIGKILL");
+      for (let i = 0; i < 20 && conSong(d.chrome); i++) nguDongBo(50);
+    }
+    if (mang(d.canh)) giet(d.canh, "SIGTERM");
+    if (xoaDuoc(d.dir)) xoa(d.dir);
+    xoa(tep);
+  }
+}
+
+// Người canh: tiến trình node tách rời, mỗi Chrome một cái. Tiến trình gọi chết (kể cả SIGKILL) → tắt nhóm Chrome khi dòng
+// lệnh của nó còn mang hồ sơ, xoá hồ sơ và dòng sổ, thoát. Chrome đã tắt → thoát luôn (tiến trình gọi còn sống thì việc dọn
+// là của nó).
+const CANH = `const [cha, chrome, dir, so] = process.argv.slice(1); const { spawnSync } = require("node:child_process");
+const fs = require("node:fs"); const song = (p) => { try { process.kill(+p, 0); return true; } catch (e) { return e.code === "EPERM"; } };
+const mang = () => (spawnSync("ps", ["-ww", "-o", "command=", "-p", chrome], { encoding: "utf8" }).stdout || "").includes(dir);
+const don = () => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch {} try { fs.rmSync(so, { force: true }); } catch {} };
+process.on("SIGTERM", () => process.exit(0));
+setInterval(() => {
+  if (song(cha)) { if (!song(chrome)) process.exit(0); return; }
+  if (song(chrome) && mang()) { try { process.kill(-chrome, "SIGKILL"); } catch { try { process.kill(+chrome, "SIGKILL"); } catch {} } }
+  setTimeout(() => { don(); process.exit(0); }, 300);
+}, 500);`;
+
+/** Chrome đang mở của tiến trình này — bộ tắt lúc thoát và lúc nhận tín hiệu tắt hết. */
+const DANG_MO = new Set();
+let daCaiBat = false;
+function caiBat() {
+  if (daCaiBat) return;
+  daCaiBat = true;
+  process.on("exit", () => {
+    for (const c of DANG_MO) c.tatNgay();
+  });
+  for (const [tin, so] of [
+    ["SIGTERM", 15],
+    ["SIGINT", 2],
+    ["SIGHUP", 1],
+  ]) {
+    process.on(tin, () => {
+      for (const c of DANG_MO) c.tatNgay();
+      // Bộ bắt này là bộ bắt duy nhất → giữ hành vi mặc định của Node (thoát 128 + số hiệu). Lời gọi có bộ bắt riêng thì bộ
+      // bắt riêng quyết mã thoát.
+      if (process.listenerCount(tin) === 1) process.exit(128 + so);
+    });
+  }
+}
+
 export async function moChrome() {
-  const dir = mkdtempSync(path.join(tmpdir(), "qh-b-chrome-"));
+  donMoCoi();
+  caiBat();
+  const dir = mkdtempSync(path.join(tmpdir(), TIEN_TO));
   const p = spawn(CHROME, ["--headless=new", "--remote-debugging-port=0", `--user-data-dir=${dir}`, "--no-first-run", "--hide-scrollbars", "about:blank"], {
     stdio: ["ignore", "ignore", "pipe"],
+    detached: true,
   });
+  const so = path.join(SO_PID, `${p.pid}.json`);
+  const conChay = () => p.exitCode === null && p.signalCode === null;
+  let canh = null;
+  let xong = false;
+  const c = {
+    /** Tắt đồng bộ — dùng lúc thoát và lúc nhận tín hiệu. Gọi nhiều lần không sao. */
+    tatNgay() {
+      if (xong) return;
+      xong = true;
+      DANG_MO.delete(c);
+      if (conChay()) gietNhom(p.pid, "SIGKILL");
+      if (canh) giet(canh.pid, "SIGTERM");
+      xoa(dir);
+      xoa(so);
+    },
+  };
+  DANG_MO.add(c);
   const ws = await new Promise((res, rej) => {
     let buf = "";
     p.stderr.on("data", (d) => {
@@ -66,15 +195,43 @@ export async function moChrome() {
       if (m) res(m[1]);
     });
     p.on("exit", () => rej(new Error("Chrome thoát trước khi mở cổng gỡ lỗi")));
+  }).catch((e) => {
+    c.tatNgay();
+    throw e;
   });
+  // Chrome và ống stderr của nó không giữ vòng sự kiện: lời gọi xong việc thì thoát được, bộ tắt lúc thoát lo phần còn lại.
+  p.unref();
+  p.stderr.unref?.();
+  canh = spawn(process.execPath, ["-e", CANH, String(process.pid), String(p.pid), dir, so], { detached: true, stdio: "ignore" });
+  canh.unref();
+  mkdirSync(SO_PID, { recursive: true });
+  writeFileSync(so, JSON.stringify({ chrome: p.pid, canh: canh.pid, cha: process.pid, dir, luc: new Date().toISOString() }));
   const base = ws.replace(/^ws:\/\/([^/]+).*/, "http://$1");
   return {
     async trang(rong, cao) {
       const t = await (await fetch(`${base}/json/new?about:blank`, { method: "PUT" })).json();
       return moTrang(t.webSocketDebuggerUrl, rong, cao);
     },
+    /** Tắt Chrome: SIGTERM cho nhóm, tối đa 2 giây rồi SIGKILL; xoá hồ sơ tạm và dòng sổ. Không cần await. */
     dong() {
-      p.kill();
+      if (xong) return Promise.resolve();
+      if (!conChay()) {
+        c.tatNgay();
+        return Promise.resolve();
+      }
+      gietNhom(p.pid, "SIGTERM");
+      return new Promise((res) => {
+        const het = setTimeout(() => {
+          c.tatNgay();
+          res();
+        }, 2000);
+        het.unref();
+        p.once("exit", () => {
+          clearTimeout(het);
+          c.tatNgay();
+          res();
+        });
+      });
     },
   };
 }

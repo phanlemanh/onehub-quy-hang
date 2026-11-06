@@ -13,7 +13,7 @@ evals:
     executor: script
     cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --ca dong
     paths: ["_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs", "_acceptance/va-cdp-tat-chrome/thu/**"]
-    expected: "exit 0; dòng {ca:'dong'} ok — đối chứng dương đạt; sau dong() trong 5 giây: không tiến trình nào mang thư mục hồ sơ, thư mục không còn, dòng sổ không còn, người canh không còn, trong khi tiến trình con vẫn sống; dong() lần hai không ném lỗi. Đỏ in «Chrome còn sống sau dong()» / «hồ sơ tạm còn trên đĩa» / «dòng sổ PID còn» / «người canh còn sống»."
+    expected: "exit 0; dòng {ca:'dong'} ok — đối chứng dương đạt; sau dong() trong 5 giây: không tiến trình nào mang thư mục hồ sơ, thư mục không còn, dòng sổ không còn, người canh không còn, trong khi tiến trình con vẫn sống; dong() lần hai không ném lỗi. Đỏ in «Chrome còn sống sau dong()» / «hồ sơ tạm còn trên đĩa (dong)» / «dòng sổ PID còn (dong)» / «người canh còn sống (dong)» / «lời gọi chết sau dong()» / «dong() lần hai ném lỗi»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E2
@@ -21,7 +21,7 @@ evals:
     executor: script
     cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --ca thoat --ca loi --ca dong-exit-0 --ca dong-exit-3
     paths: ["_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs", "_acceptance/va-cdp-tat-chrome/thu/**"]
-    expected: "exit 0; bốn dòng ok, ma trận viết trước {thoat: mã 0, loi: mã 1, dong-exit-0: mã 0, dong-exit-3: mã 3} — bốn phần tử bốn khẳng định mã thoát; dong-exit-*: con gọi dong() không await rồi process.exit ngay, stderr của con rỗng; loi: stderr chỉ có vết của lỗi con tự ném. Cả bốn: đối chứng dương đạt; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau khi lời gọi thoát (<ca>)», «mã thoát đổi (<ca>: <đo>)», hay «công cụ in ra stderr (<ca>)»."
+    expected: "exit 0; bốn dòng ok, ma trận viết trước {thoat: mã 0, loi: mã 1, dong-exit-0: mã 0, dong-exit-3: mã 3} — bốn phần tử bốn khẳng định mã thoát; dong-exit-*: con gọi dong() không await rồi process.exit ngay, stderr của con rỗng; loi: stderr chỉ có vết của lỗi con tự ném. Cả bốn: đối chứng dương đạt; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau khi lời gọi thoát (<ca>)», «hồ sơ tạm còn trên đĩa (<ca>)», «dòng sổ PID còn (<ca>)», «người canh còn sống (<ca>)», «lời gọi không thoát (<ca>)», «mã thoát đổi (<ca>: <đo>)», hay «công cụ in ra stderr (<ca>)»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
@@ -29,7 +29,7 @@ evals:
     executor: script
     cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --ca SIGTERM --ca SIGINT --ca SIGHUP --ca bat-rieng
     paths: ["_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs", "_acceptance/va-cdp-tat-chrome/thu/**"]
-    expected: "exit 0; bốn dòng ok — ma trận viết trước {SIGTERM: 143, SIGINT: 130, SIGHUP: 129} ba phần tử ba khẳng định mã thoát; bat-rieng: con tự cài bộ bắt SIGTERM ghi tệp dấu rồi thoát 7 → tệp dấu có và mã 7. Cả bốn: đối chứng dương đạt; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau <tín hiệu>», «lời gọi không thoát sau <tín hiệu>» (con còn sống sau 5 giây), «mã thoát đổi (<tín hiệu>: <đo>)», hay «bộ bắt riêng không chạy»."
+    expected: "exit 0; bốn dòng ok — ma trận viết trước {SIGTERM: 143, SIGINT: 130, SIGHUP: 129} ba phần tử ba khẳng định mã thoát; bat-rieng: con tự cài bộ bắt SIGTERM ghi tệp dấu rồi thoát 7 → tệp dấu có và mã 7. Cả bốn: đối chứng dương đạt; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau <tín hiệu>», «hồ sơ tạm còn trên đĩa (<ca>)», «dòng sổ PID còn (<ca>)», «người canh còn sống (<ca>)», «lời gọi không thoát sau <tín hiệu>» (con còn sống sau 5 giây), «mã thoát đổi (<ca>: <đo>)», hay «bộ bắt riêng không chạy»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
@@ -37,7 +37,7 @@ evals:
     executor: script
     cmd: node _acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs --ca SIGKILL
     paths: ["_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs", "_acceptance/va-cdp-tat-chrome/thu/**"]
-    expected: "exit 0; dòng {ca:'SIGKILL'} ok — đối chứng dương đạt; con bị SIGKILL; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau SIGKILL»."
+    expected: "exit 0; dòng {ca:'SIGKILL'} ok — đối chứng dương đạt; con bị SIGKILL; trong 5 giây không còn tiến trình mang thư mục hồ sơ, thư mục, dòng sổ, người canh. Đỏ in «Chrome mồ côi sau SIGKILL», «hồ sơ tạm còn trên đĩa (SIGKILL)», «dòng sổ PID còn (SIGKILL)», hay «người canh còn sống (SIGKILL)»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E5
