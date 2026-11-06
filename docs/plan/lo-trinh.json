@@ -2740,6 +2740,21 @@
       "vung": [
         "packages/core/src/address/**"
       ]
+    },
+    {
+      "ma": "khung-ho-so-lien-he",
+      "cau_giao": "Hồ sơ liên hệ nằm trong cùng khung cột của hồ sơ căn (một khung có viền, cuộn riêng, có nút Đóng và Esc), bảng liên hệ giữ đủ cột và tên cột đứng yên khi hồ sơ mở, dòng đang mở được tô — và lưới khuôn bắt được khi cột phụ thiếu khung.",
+      "slug": "khung-ho-so-lien-he",
+      "vi_sao": "Kiểm chi tiết liên hệ 06/11 (docs/plan/kiem-chi-tiet-lien-he.md, PR #167): hồ sơ liên hệ dùng chung bố cục và ruột hồ sơ nhưng thiếu khung cột của hồ sơ căn (không viền, máy tính không đóng được), bảng mất hai cột khi mở hồ sơ, lint không bắt. Chủ kho yêu cầu kiểm; giám sát xếp hàng vá (việc kỹ thuật, giao diện). Làm trước hàng 86 để đỡ chụp lại. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Mở hồ sơ một liên hệ ở 1440: khung có viền, cuộn riêng, Đóng và Esc đóng được; bảng giữ đủ cột, tên cột dính đầu, dòng đang mở tô; ảnh hồ sơ căn không đổi; lưới khuôn đỏ khi gỡ khung khỏi cột phụ",
+      "vung": [
+        "apps/web/src/app/(app)/contacts/**",
+        "apps/web/src/components/khoi/solution-crm-4/**",
+        "apps/web/src/app/(app)/units/ho-so/khung.tsx",
+        "design/patterns/lien-he.md",
+        "packages/ui-lint/**"
+      ]
     }
   ],
   "chan_troi": [
