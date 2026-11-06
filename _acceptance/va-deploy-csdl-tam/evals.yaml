@@ -52,7 +52,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
-    expected: "exit 0; ca «kiểm nhanh: đường chạy thật chỉ đọc»: gọi `chay(url, { moc })` trên Postgres dãy với móc tiêm vào chạy trên đúng kết nối của kiểm nhanh giữa lúc soi — móc đọc `show transaction_read_only` = on, `show statement_timeout` khác 0, và một câu `create table` trong móc bị từ chối mã 25006; ca «kiểm nhanh: một kết nối»: đếm `pg_stat_activity` của database (không lọc theo tên) có backend_start sau mốc trước khi gọi, trừ kết nối của chính bài — trong lúc móc chạy đúng bằng 1 (đối chứng dương), sau khi `chay` trả về bằng 0."
+    expected: "exit 0; ca «kiểm nhanh: giao dịch chỉ đọc có trần thời gian»: `moGiaoDich` trên một kết nối thật rồi `create table` bị từ chối mã 25006; ca «kiểm nhanh: đường chạy thật chỉ đọc, đúng một kết nối»: gọi `chay(url, { Client, moc })` với lớp Client đếm lần connect/end và móc chạy trên đúng kết nối của kiểm nhanh giữa lúc soi — móc đọc `show transaction_read_only` = on, `show statement_timeout` khác 0, `create table` bị từ chối 25006, số kết nối mang tên kiem-nhanh trong pg_stat_activity = trước + 1 (đối chứng dương: tên có đặt); sau khi `chay` trả về: lớp đếm ghi đúng 1 connect và 0 kết nối còn mở, pg_stat_activity về lại số trước.""
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E7
