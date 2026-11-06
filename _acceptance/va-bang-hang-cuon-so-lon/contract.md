@@ -5,7 +5,7 @@ slug: va-bang-hang-cuon-so-lon
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/va-bang-hang-cuon-so-lon/design.md
 approved_by:
 approved_at:
@@ -79,3 +79,4 @@ Chiều đỏ trên trang đo tay 06/11 (ghi ở thiết kế): máy tính × b�
 
 - Mọi phép đo trang chạy trên bộ thử dãy B đã dựng (Postgres 5561, phiên do-cuon giữ ở `.acceptance-runs/`); thiếu bộ thử
   thì bài đo thoát 2 «thiếu bộ thử dãy B», không ra xanh giả.
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bảng hàng 5.000 căn vẫn được sửa và kiểm ở các vế khác (thấy «/ 5000 căn», có thẻ, cuộn tới căn cuối). Riêng vế «không có lỗi sập» của bài đo tay có thể báo xanh dù bộ bắt lỗi không chạy, nên lỗi sập quay lại có thể lọt qua bài đo này. — `_acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs`
