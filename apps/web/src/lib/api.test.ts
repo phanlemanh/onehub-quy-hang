@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import type pg from "pg";
+import pg from "pg";
 
 import { docPhanHoiMe, dungPools, KHACH_KHAC, LoiDocPhien, NOI_CHAN_DAU, NOI_TRANG, SO_BAN_DU_KIEN, TRAN_POOLER } from "./api";
 
@@ -70,5 +70,56 @@ test("hai pool dựng đúng cỡ của nơi chạy và cả hai gắn attachDat
     assert.equal(identityPool.options.max, NOI_TRANG.danhTinh.max);
   } finally {
     await Promise.all([identityPool.end(), appPool.end()]);
+  }
+});
+
+// va-pool-nghe-loi: pooler cắt kết nối rảnh thì pg phát `error` lên pool; không ai nghe là lỗi không bắt được.
+const BON_POOL = [
+  ["trang", "identityPool", "danh-tinh"],
+  ["trang", "appPool", "ung-dung"],
+  ["chan-dau", "identityPool", "danh-tinh"],
+  ["chan-dau", "appPool", "ung-dung"],
+] as const;
+
+test("pool nghe lỗi: mỗi pool ở mọi nơi chạy có đúng một trình nghe error", async () => {
+  for (const [noi, khoa, ten] of BON_POOL) {
+    const pools = dungPools("postgres://u:p@127.0.0.1:1/x", noi, () => {});
+    try {
+      const n = pools[khoa].listenerCount("error");
+      assert.equal(n, 1, `pool nghe lỗi: ${ten}·${noi} có ${n} trình nghe`);
+    } finally {
+      await Promise.all([pools.identityPool.end(), pools.appPool.end()]);
+    }
+  }
+});
+
+test("pool nghe lỗi: phát error không ném, ghi đúng một dòng không lộ mật khẩu", async () => {
+  const goc = console.error;
+  for (const [noi, khoa, ten] of BON_POOL) {
+    const dong: string[] = [];
+    console.error = (...a: unknown[]) => void dong.push(a.map(String).join(" "));
+    const pools = dungPools("postgres://u:mat-khau-thu@127.0.0.1:1/x", noi, () => {});
+    try {
+      const loi = Object.assign(new Error("read ECONNRESET"), { code: "ECONNRESET" });
+      assert.doesNotThrow(() => pools[khoa].emit("error", loi), `pool nghe lỗi: ${ten}·${noi} ném khi phát error`);
+      assert.equal(dong.length, 1, `pool nghe lỗi: ${ten}·${noi} ghi ${dong.length} dòng`);
+      const d = dong[0] ?? "";
+      for (const can of [ten, noi, "ECONNRESET", "read ECONNRESET"]) {
+        assert.ok(d.includes(can), `pool nghe lỗi: dòng nhật ký thiếu «${can}»: ${d}`);
+      }
+      assert.ok(!d.includes("mat-khau-thu"), "pool nghe lỗi: dòng nhật ký lộ mật khẩu");
+    } finally {
+      console.error = goc;
+      await Promise.all([pools.identityPool.end(), pools.appPool.end()]);
+    }
+  }
+});
+
+test("pool nghe lỗi: đối chứng — pool trần phát error thì ném", async () => {
+  const tran = new pg.Pool({ connectionString: "postgres://u:p@127.0.0.1:1/x" });
+  try {
+    assert.throws(() => tran.emit("error", new Error("read ECONNRESET")), /ECONNRESET/);
+  } finally {
+    await tran.end();
   }
 });
