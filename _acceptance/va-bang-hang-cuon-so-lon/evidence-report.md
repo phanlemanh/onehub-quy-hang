@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: cb9163ec8e14533b9500224f3a63c7f3b925131f
+verified_commit: 29454acedac638752d69bc2a2695f9e9b0893629
 human_signoff:
 ---
 
@@ -147,3 +147,7 @@ Round 2: chạy lại trên commit a515b7ae sau khi gộp nhánh chính; E1–E6
 ### Re-pin lần 1 — 2026-11-06, do gộp nhánh chính (#176)
 run_id: repin-20261106T152615Z-16637
 sha: cb9163ec8e14533b9500224f3a63c7f3b925131f · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng
+
+### Re-pin lần 2 — 2026-11-06, do gộp nhánh chính (#173); bước E11 nới giới hạn
+run_id: repin-20261106T164700Z-34431
+sha: 29454acedac638752d69bc2a2695f9e9b0893629 · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng
