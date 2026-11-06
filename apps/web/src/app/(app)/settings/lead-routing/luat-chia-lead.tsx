@@ -25,9 +25,9 @@ import {
   DOAN,
   ganLyDo,
   giaTriTu,
+  ketQuaLuu,
   kiemBan,
   loiChoNguoi,
-  thongBaoLuu,
   trangThaiMan,
   type BanCauHinh,
   type BoNhomDangAp,
@@ -103,7 +103,9 @@ export function LuatChiaLead({
         const moi = (await r.json()) as BanCauHinh;
         setCauHinh(moi);
         setNhap(giaTriTu(moi));
-        toast.success(thongBaoLuu(kq.doi), { toasterId: KHUNG_BAO });
+        const ket = ketQuaLuu(kq.doi, moi);
+        if (ket.kind === "ok") toast.success(ket.cau, { toasterId: KHUNG_BAO });
+        else setLoiLuu({ kind: "chung", cau: ket.cau, thuLai: false });
         router.refresh();
       } else if (r.status === 403) {
         setLoiLuu({ kind: "chung", cau: BAO_403, thuLai: false });
