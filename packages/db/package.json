@@ -6,6 +6,7 @@
   "scripts": {
     "migrate": "node --env-file-if-exists=../../.env.local scripts/migrate.mjs",
     "test:isolation": "node --env-file-if-exists=../../.env.local --test \"tests/*.test.mjs\"",
+    "kiem-nhanh": "node --env-file-if-exists=../../.env.local scripts/kiem-nhanh.mjs",
     "van-hanh:mo-san": "node --env-file-if-exists=../../.env.local scripts/mo-san.mjs",
     "typecheck": "tsc --noEmit -p ."
   },
