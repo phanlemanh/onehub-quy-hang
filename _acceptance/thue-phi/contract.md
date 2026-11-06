@@ -4,7 +4,7 @@ feature: "Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «ba
 slug: thue-phi
 owner: phanlemanh@gmail.com
 risk_tier: T3
-surfaces: [ui, api, db]
+surfaces: [ui, api]
 status: draft
 approved_by:
 approved_at:
