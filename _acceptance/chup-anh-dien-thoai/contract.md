@@ -5,7 +5,7 @@ slug: chup-anh-dien-thoai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/chup-anh-dien-thoai/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06
@@ -100,3 +100,4 @@ ma trận viết trước trong bài kiểm. Later/Never: Background Sync, nhậ
   `packages/api/src/photos/**`, `design/patterns/ho-so-can.md`, `packages/ui-lint/tests/ban-do-khuon.test.mjs`.
 - Bản bấm được của bước thiết kế đã dựng thẳng trong hồ sơ thật (hàng chờ trong bộ nhớ); kho trên máy, mã ảnh chống trùng và
   xoá khi đăng xuất là phần của bước dựng.
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài kiểm chưa chứng minh được rằng khi đăng xuất, ảnh đang tải dở được chờ xong rồi mới xoá kho. Nếu sau này ai đó đổi thứ tự này, bài kiểm vẫn xanh và một ảnh đang tải dở có thể bị mất hoặc tải lại sai chỗ. — `apps/web/src/app/(app)/units/photos/hang-cho-may.test.ts`

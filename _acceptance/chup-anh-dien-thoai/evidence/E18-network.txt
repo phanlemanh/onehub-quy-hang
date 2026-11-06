@@ -1,66 +1,112 @@
-== NETWORK E18 (CDP Network.* + console), lan 2 may that ==
-== that/fetch (http://localhost:3460) fetch/XHR/POST, theo pha ==
-[offline] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-11.01 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/today?_rsc=Ba19qQeOhV25VtM9 -> 200
-[offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[online] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-11.01 -> 200
-[online] GET http://localhost:3460/api/v1/listings -> 200
-[online] POST http://localhost:3460/api/v1/sync/offline-sessions -> 201
-[online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
-[online] POST http://localhost:3460/api/v1/units/photos -> 201
-[online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
-[online] POST http://localhost:3460/api/v1/units/photos -> 201
-== console error/warning ==
-
-== exceptions ==
-
-
-== doichung/fetch (http://localhost:3496) fetch/XHR/POST, theo pha ==
-[offline] POST http://localhost:3496/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/today?_rsc=-HFVbFe9DJ10gdOD -> 200
-[offline] GET http://localhost:3496/_next/static/webpack/504ec26a61a8e42b.webpack.hot-update.json -> 200
-[offline] GET http://localhost:3496/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3496/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[online] GET http://localhost:3496/api/v1/listings -> 200
-[online] POST http://localhost:3496/api/v1/sync/offline-sessions -> 201
-== console error/warning ==
-
-== exceptions ==
-
-
-== lan 1 (nguon: kq-lan1) ==
-== that/fetch (http://localhost:3460) fetch/XHR/POST, theo pha ==
-[offline] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/today?_rsc=0pZfAJKr9kWuiOhZ -> 200
-[offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[online] GET http://localhost:3460/api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 -> 200
-[online] GET http://localhost:3460/api/v1/listings -> 200
-[online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
-[online] POST http://localhost:3460/api/v1/sync/offline-sessions -> 201
-[online] POST http://localhost:3460/api/v1/units/photos -> 201
-[online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
-[online] POST http://localhost:3460/api/v1/units/photos -> 201
-== console error/warning ==
-
-== exceptions ==
-
+# Ghi chu verifier: dong BLOCKED(induced)/FAILED ERR_INTERNET_DISCONNECTED = chan co chu dich (Fetch.failRequest /api/) o pha dang-chan, KHONG tinh la loi app. Pha sau-mo-mang: POST /api/v1/units/photos 201 x2, POST /sync/offline-sessions 201; khong 4xx/5xx app. 500 /manifest.webmanifest (Manifest, static) o pha dang-chan = chi note.
+# that http://localhost:3460 A-01.08
+[truoc-chan] 200 GET /units/A-01.08 (Document)
+[truoc-chan] 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793954011005 (Font)
+[truoc-chan] 200 GET /_next/static/css/app/layout.css?v=1793954011005 (Stylesheet)
+[truoc-chan] 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793954011005 (Font)
+[truoc-chan] 200 GET /_next/static/css/app/global-error.css?v=1793954011005 (Stylesheet)
+[truoc-chan] 200 GET /manifest.webmanifest (Manifest)
+[truoc-chan] 200 GET /_next/static/chunks/webpack.js?v=1793954011005 (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app-pages-internals.js (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app/layout.js (Script)
+[truoc-chan] 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 (Font)
+[truoc-chan] 200 GET /_next/static/media/aa016aab0e6d1295-s.woff2 (Font)
+[truoc-chan] 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2 (Font)
+[truoc-chan] 200 GET /_next/static/chunks/app/error.js (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app/(app)/error.js (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app/(app)/not-found.js (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app/global-error.js (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js (Script)
+[truoc-chan] 200 GET /_next/static/chunks/main-app.js?v=1793954011005 (Script)
+[truoc-chan] 200 GET /_next/static/chunks/app/(app)/layout.js (Script)
+[truoc-chan] 404 GET /favicon.ico (Other)
+[truoc-chan] 200 GET /icons/icon-192.png (Other)
+[truoc-chan] 200 GET /manifest.webmanifest (Manifest)
+[truoc-chan] 200 GET /api/v1/catalog (Fetch)
+[truoc-chan] 200 GET /icons/icon-192.png (Other)
+[truoc-chan] 200 GET /api/v1/catalog (Fetch)
+[truoc-chan] 200 GET /api/v1/listings (Fetch)
+[truoc-chan] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
+[truoc-chan] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
+[truoc-chan] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
+[truoc-chan] 200 GET /api/v1/listings/d604aa9b-6464-49b8-b10d-eb16cf385756 (Fetch)
+[truoc-chan] 200 GET /api/v1/units/photos/e2701ff0-6c08-42e5-bcee-2b8918eec936/thumb (Image)
+[truoc-chan] 200 GET /api/v1/units/photos/03adfc2a-791b-40e5-967e-667b312e8c30/thumb (Image)
+[truoc-chan] 200 GET /api/v1/units/photos/e2701ff0-6c08-42e5-bcee-2b8918eec936/original (Image)
+[truoc-chan] 200 GET /api/v1/units/photos/03adfc2a-791b-40e5-967e-667b312e8c30/original (Image)
+[truoc-chan] 200 GET /__nextjs_font/geist-latin.woff2 (Font)
+[truoc-chan] 200 GET /_next/static/webpack/d8dffc41c9f46580.webpack.hot-update.json (Fetch)
+[truoc-chan] 200 GET /_next/static/webpack/app/layout.d8dffc41c9f46580.hot-update.js (Script)
+[truoc-chan] 200 GET /_next/static/webpack/app/global-error.d8dffc41c9f46580.hot-update.js (Script)
+[truoc-chan] 200 GET /units/A-01.08?_rsc=j8RHX87LCOI5ok1o (Fetch)
+[truoc-chan] 200 GET /_next/static/webpack/webpack.d8dffc41c9f46580.hot-update.js (Script)
+[truoc-chan] 200 GET /_next/static/css/app/layout.css?v=1793954016305 (Stylesheet)
+[truoc-chan] 200 GET /manifest.webmanifest (Manifest)
+[truoc-chan] 200 GET /icons/icon-192.png (Other)
+[dang-chan] BLOCKED(induced) POST /api/v1/units/photos/upload-url
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED POST /api/v1/units/photos/upload-url (Fetch)
+[dang-chan] 200 GET blob:http://localhost:3460/139603d9-8d67-4dd5-8b32-61fc77e0accf (Image)
+[dang-chan] BLOCKED(induced) GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08
+[dang-chan] 200 GET blob:http://localhost:3460/d15bcd93-a45d-4a0d-9c41-5af7391698dc (Image)
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
+[dang-chan] BLOCKED(induced) GET /api/v1/listings
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/listings (Fetch)
+[dang-chan] 200 GET /_next/static/webpack/4713351747b89705.webpack.hot-update.json (Fetch)
+[dang-chan] 200 GET /_next/static/webpack/webpack.4713351747b89705.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/app/layout.4713351747b89705.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/app/global-error.4713351747b89705.hot-update.js (Script)
+[dang-chan] 200 GET /units/A-01.08?_rsc=j8RHX87LCOI5ok1o (Fetch)
+[dang-chan] 200 GET /_next/static/css/app/layout.css?v=1793954017777 (Stylesheet)
+[dang-chan] 200 GET /manifest.webmanifest (Manifest)
+[dang-chan] 200 GET /icons/icon-192.png (Other)
+[dang-chan] 200 GET /today?_rsc=0pZfAJKr9kWuiOhZ (Fetch)
+[dang-chan] 200 GET /manifest.webmanifest (Manifest)
+[dang-chan] 200 GET /icons/icon-192.png (Other)
+[dang-chan] 200 GET /_next/static/chunks/app/(app)/today/page.js (Script)
+[dang-chan] BLOCKED(induced) GET /api/v1/catalog
+[dang-chan] BLOCKED(induced) GET /api/v1/company/settings/queue
+[dang-chan] BLOCKED(induced) GET /api/v1/leads/assigned
+[dang-chan] BLOCKED(induced) GET /api/v1/catalog
+[dang-chan] BLOCKED(induced) GET /api/v1/company/settings/queue
+[dang-chan] BLOCKED(induced) GET /api/v1/leads/assigned
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/catalog (Fetch)
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/company/settings/queue (Fetch)
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/leads/assigned (Fetch)
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/catalog (Fetch)
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/company/settings/queue (Fetch)
+[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/leads/assigned (Fetch)
+[dang-chan] 200 GET /_next/static/webpack/dec1d8b54a8fe5ba.webpack.hot-update.json (Fetch)
+[dang-chan] 200 GET /today?_rsc=u9UalX1p5TYJo1BU (Fetch)
+[dang-chan] 200 GET /_next/static/webpack/webpack.dec1d8b54a8fe5ba.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/app/layout.dec1d8b54a8fe5ba.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/app/global-error.dec1d8b54a8fe5ba.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/css/app/layout.css?v=1793954019381 (Stylesheet)
+[dang-chan] 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 (Font)
+[dang-chan] 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2 (Font)
+[dang-chan] 200 GET /_next/static/media/aa016aab0e6d1295-s.woff2 (Font)
+[dang-chan] 200 GET /_next/static/webpack/52c1436457c188e7.webpack.hot-update.json (Fetch)
+[dang-chan] 200 GET /_next/static/webpack/app/layout.52c1436457c188e7.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/app/global-error.52c1436457c188e7.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/webpack.52c1436457c188e7.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/webpack/7bcc179754cdc5d7.webpack.hot-update.json (Fetch)
+[dang-chan] 200 GET /today?_rsc=u9UalX1p5TYJo1BU (Fetch)
+[dang-chan] 200 GET /_next/static/webpack/webpack.7bcc179754cdc5d7.hot-update.js (Script)
+[dang-chan] 200 GET /_next/static/css/app/layout.css?v=1793954020858 (Stylesheet)
+[dang-chan] 500 GET /manifest.webmanifest (Manifest)
+[dang-chan] 200 GET /manifest.webmanifest (Manifest)
+[dang-chan] 200 GET /icons/icon-192.png (Other)
+[sau-mo-mang] 200 GET /_next/static/webpack/375dac1063be0093.webpack.hot-update.json (Fetch)
+[sau-mo-mang] 200 GET /today?_rsc=u9UalX1p5TYJo1BU (Fetch)
+[sau-mo-mang] 200 GET /_next/static/webpack/app/global-error.375dac1063be0093.hot-update.js (Script)
+[sau-mo-mang] 200 GET /_next/static/webpack/app/layout.375dac1063be0093.hot-update.js (Script)
+[sau-mo-mang] 200 GET /_next/static/webpack/webpack.375dac1063be0093.hot-update.js (Script)
+[sau-mo-mang] 200 GET /_next/static/css/app/layout.css?v=1793954024887 (Stylesheet)
+[sau-mo-mang] 200 GET /manifest.webmanifest (Manifest)
+[sau-mo-mang] 200 GET /icons/icon-192.png (Other)
+[sau-mo-mang] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
+[sau-mo-mang] 200 POST /api/v1/units/photos/upload-url (Fetch)
+[sau-mo-mang] 201 POST /api/v1/units/photos (Fetch)
+[sau-mo-mang] 200 POST /api/v1/units/photos/upload-url (Fetch)
+[sau-mo-mang] 201 POST /api/v1/units/photos (Fetch)
+[sau-mo-mang] 200 GET /api/v1/listings (Fetch)
+[sau-mo-mang] 201 POST /api/v1/sync/offline-sessions (Fetch)

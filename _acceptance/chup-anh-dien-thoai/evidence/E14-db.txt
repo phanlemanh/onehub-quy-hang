@@ -1,50 +1,39 @@
-# E14 verifier doc lap, 2026-11-06T06:48:48Z
-== 6 anh moi nhat
+# E14 verifier doc lap, 2026-11-06T08:04:22Z. Luot E12 cuoi: added_at >= 2026-11-06 07:58:00Z (E12 file 14:58-14:59 gio may = 07:58-07:59Z)
+== unit_photos tu luot E12 cuoi
  building_name | unit_number | compartment | display_order |           added_at            | removed_at 
 ---------------+-------------+-------------+---------------+-------------------------------+------------
- Toà A         | A-03.02     | shareable   |             2 | 2026-11-06 06:47:56.808798+00 | 
- Toà A         | A-15.05     | internal    |             1 | 2026-11-06 06:44:05.46231+00  | 
- Toà A         | A-15.05     | shareable   |             3 | 2026-11-06 06:44:05.387609+00 | 
- Toà A         | A-15.05     | shareable   |             2 | 2026-11-06 06:44:05.292403+00 | 
- Toà A         | A-15.05     | internal    |             0 | 2026-11-06 06:43:13.354166+00 | 
- Toà A         | A-15.05     | shareable   |             1 | 2026-11-06 06:43:13.295569+00 | 
+ Toà A         | A-01.06     | shareable   |             1 | 2026-11-06 07:58:16.577122+00 | 
+ Toà A         | A-01.06     | shareable   |             2 | 2026-11-06 07:58:16.678828+00 | 
+ Toà A         | A-01.06     | internal    |             0 | 2026-11-06 07:58:16.740246+00 | 
+ Toà A         | A-04.02     | shareable   |             2 | 2026-11-06 07:59:21.066709+00 | 
+ Toà A         | A-04.02     | shareable   |             3 | 2026-11-06 07:59:21.133758+00 | 
+ Toà A         | A-04.02     | internal    |             0 | 2026-11-06 07:59:21.202038+00 | 
 (6 rows)
 
 == nhom theo can/ngan
- building_name | unit_number | compartment | count |              max              
----------------+-------------+-------------+-------+-------------------------------
- Toà A         | A-03.02     | shareable   |     3 | 2026-11-06 06:47:56.808798+00
- Toà A         | A-15.05     | internal    |     2 | 2026-11-06 06:44:05.46231+00
- Toà A         | A-15.05     | shareable   |     4 | 2026-11-06 06:44:05.387609+00
- Toà A         | A-11.02     | shareable   |     3 | 2026-11-06 05:29:12.460272+00
- Toà A         | A-04.02     | shareable   |     2 | 2026-11-06 05:28:27.121497+00
- Toà A         | A-03.04     | internal    |     1 | 2026-11-06 04:51:27.379049+00
- Toà A         | A-03.04     | shareable   |     2 | 2026-11-06 04:51:27.147903+00
- Toà A         | A-04.01     | internal    |     1 | 2026-11-06 04:43:10.428702+00
-(8 rows)
+ building_name | unit_number | compartment | count 
+---------------+-------------+-------------+-------
+ Toà A         | A-01.06     | internal    |     1
+ Toà A         | A-01.06     | shareable   |     2
+ Toà A         | A-04.02     | internal    |     1
+ Toà A         | A-04.02     | shareable   |     2
+(4 rows)
 
-== su kien added moi nhat
-  id  | type  |           payload            | compartment | building_name | unit_number |          occurred_at          
-------+-------+------------------------------+-------------+---------------+-------------+-------------------------------
- 3801 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-03.02     | 2026-11-06 06:47:56.808798+00
- 3800 | added | {"compartment": "internal"}  | internal    | Toà A         | A-15.05     | 2026-11-06 06:44:05.46231+00
- 3799 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-15.05     | 2026-11-06 06:44:05.387609+00
- 3798 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-15.05     | 2026-11-06 06:44:05.292403+00
- 3797 | added | {"compartment": "internal"}  | internal    | Toà A         | A-15.05     | 2026-11-06 06:43:13.354166+00
- 3796 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-15.05     | 2026-11-06 06:43:13.295569+00
+== unit_photo_events added (join unit_photos) cung khoang
+ building_name | unit_number | compartment | type  | payload_ngan |          occurred_at          
+---------------+-------------+-------------+-------+--------------+-------------------------------
+ Toà A         | A-01.06     | shareable   | added | shareable    | 2026-11-06 07:58:16.577122+00
+ Toà A         | A-01.06     | shareable   | added | shareable    | 2026-11-06 07:58:16.678828+00
+ Toà A         | A-01.06     | internal    | added | internal     | 2026-11-06 07:58:16.740246+00
+ Toà A         | A-04.02     | shareable   | added | shareable    | 2026-11-06 07:59:21.066709+00
+ Toà A         | A-04.02     | shareable   | added | shareable    | 2026-11-06 07:59:21.133758+00
+ Toà A         | A-04.02     | internal    | added | internal     | 2026-11-06 07:59:21.202038+00
 (6 rows)
 
-== can mau E12 = Toà A / A-15.05 (E12-network.txt chi goi ma nay)
- compartment | count 
--------------+-------
- internal    |     2
- shareable   |     4
-(2 rows)
+== khop ngan: so su kien added khong khop compartment cua anh
+ lech 
+------
+    0
+(1 row)
 
- type  | payload_ngan | compartment | count 
--------+--------------+-------------+-------
- added | internal     | internal    |     2
- added | shareable    | shareable   |     4
-(2 rows)
-
-== ket luan: moi dot nap (06:43:13Z va 06:44:05Z) deu +2 shareable +1 internal, su kien added khop; tong can = 6 dong (4 shareable + 2 internal), khong phai 3 => assertion 'dung ba dong' FAIL
+== ghi chu: A-03.02 08:02:45Z la ban ghi ngoai luot E12 (khong tinh)

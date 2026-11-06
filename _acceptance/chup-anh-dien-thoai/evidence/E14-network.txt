@@ -1,1 +1,1 @@
-# E14-network: driver psql qua docker exec, khong co browser/network tool, khong mo dev server.
+E14 driver la docker exec psql (khong qua trinh duyet): khong co network tool, networkObserved = n-a (driver). 2026-11-06T08:04:30Z

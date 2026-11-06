@@ -1,4 +1,52 @@
-# Playwright network, origin http://localhost:3460 (cac dong localhost:3494 trong luong tool la cua lan chay truoc, bo qua)
-FAIL-eligible tren 3460: chi 6 lan POST /api/v1/units/photos/upload-url => net::ERR_INTERNET_DISCONNECTED = CHAN CO CHU DICH do verifier (page.route abort) theo buoc 1; khong loi nao khac.
-Moi GET/POST khac toi /api/v1 (catalog, listings, units/photos, me, auth/sign-out 200) = 200.
-Console error: chi 'Failed to load resource' cua upload-url bi chan co chu dich + WebSocket HMR dev (static, khong tinh).
+== E19 fetch/XHR/POST theo pha (Chrome CDP, http://localhost:3460) ==
+[B1] GET http://localhost:3460/api/v1/catalog -> 200
+[B1] GET http://localhost:3460/api/v1/catalog -> 200
+[B1] GET http://localhost:3460/api/v1/listings -> 200
+[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B1] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
+[B1] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B1] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+[B2] GET http://localhost:3460/api/v1/catalog -> 200
+[B2] GET http://localhost:3460/api/v1/catalog -> 200
+[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B2] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
+[B2] GET http://localhost:3460/api/v1/listings -> 200
+[B2] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+[B3] GET http://localhost:3460/api/v1/listings -> 200
+[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B3] GET http://localhost:3460/api/v1/catalog -> 200
+[B3] GET http://localhost:3460/api/v1/catalog -> 200
+[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B3] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
+[B3] GET http://localhost:3460/api/v1/listings -> 200
+[B3] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+[B3] GET http://localhost:3460/api/v1/listings -> 200
+[B3] POST http://localhost:3460/api/v1/auth/sign-out -> 200
+[B3] GET http://localhost:3460/login?_rsc=BtWg930EyCGj5cvj -> 200
+[B3] GET http://localhost:3460/login?_rsc=2PWn4eNgFwgEGU5W -> 200
+[B4] GET http://localhost:3460/api/v1/me -> 200
+[B4] GET http://localhost:3460/api/v1/catalog -> 200
+[B4] GET http://localhost:3460/api/v1/catalog -> 200
+[B4] GET http://localhost:3460/api/v1/listings -> 200
+[B4] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B4] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B4] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
+[B4] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
+[B4] GET http://localhost:3460/api/v1/me -> 200
+[B4] GET http://localhost:3460/units/A-04.01?_rsc=TlzN5i6H9X7NN0oU -> 200
+[B4] GET http://localhost:3460/_next/static/webpack/313f71f50d22b4e2.webpack.hot-update.json -> 200
+[B4] GET http://localhost:3460/units/A-04.01?_rsc=TlzN5i6H9X7NN0oU -> 200
+[B4] GET http://localhost:3460/_next/static/webpack/53c18c482e4b3c30.webpack.hot-update.json -> 200
+== console error/warning ==
+
+== exceptions ==
+

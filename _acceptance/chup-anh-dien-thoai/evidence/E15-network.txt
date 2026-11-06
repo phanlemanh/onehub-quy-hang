@@ -1,109 +1,413 @@
-2026-11-06T06:52:26.922Z RESP 200 GET /units/A-02.06
-2026-11-06T06:52:26.964Z RESP 200 GET /_next/static/css/app/layout.css?v=1793947946664
-2026-11-06T06:52:26.966Z RESP 200 GET /_next/static/css/app/global-error.css?v=1793947946664
-2026-11-06T06:52:26.966Z RESP 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793947946664
-2026-11-06T06:52:26.966Z RESP 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793947946664
-2026-11-06T06:52:26.970Z RESP 200 GET /_next/static/chunks/webpack.js?v=1793947946664
-2026-11-06T06:52:26.973Z RESP 200 GET /manifest.webmanifest
-2026-11-06T06:52:26.981Z RESP 200 GET /_next/static/chunks/app-pages-internals.js
-2026-11-06T06:52:27.020Z RESP 200 GET /_next/static/chunks/app/layout.js
-2026-11-06T06:52:27.027Z RESP 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2
-2026-11-06T06:52:27.027Z RESP 200 GET /_next/static/media/aa016aab0e6d1295-s.woff2
-2026-11-06T06:52:27.028Z RESP 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2
-2026-11-06T06:52:27.155Z RESP 200 GET /_next/static/chunks/app/(app)/not-found.js
-2026-11-06T06:52:27.175Z RESP 200 GET /_next/static/chunks/app/(app)/error.js
-2026-11-06T06:52:27.191Z RESP 200 GET /_next/static/chunks/app/error.js
-2026-11-06T06:52:27.233Z RESP 200 GET /_next/static/chunks/app/global-error.js
-2026-11-06T06:52:27.303Z RESP 200 GET /_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
-2026-11-06T06:52:27.398Z RESP 200 GET /_next/static/chunks/main-app.js?v=1793947946664
-2026-11-06T06:52:27.613Z RESP 200 GET /_next/static/chunks/app/(app)/layout.js
-2026-11-06T06:52:27.646Z RESP 404 GET /favicon.ico
-2026-11-06T06:52:27.651Z RESP 200 GET /icons/icon-192.png
-2026-11-06T06:52:27.683Z REQ GET /api/v1/catalog
-2026-11-06T06:52:27.684Z REQ GET /api/v1/catalog
-2026-11-06T06:52:27.694Z RESP 200 GET /manifest.webmanifest
-2026-11-06T06:52:27.697Z RESP 200 GET /icons/icon-192.png
-2026-11-06T06:52:27.701Z RESP 200 GET /api/v1/catalog
-2026-11-06T06:52:27.709Z RESP 200 GET /api/v1/catalog
-2026-11-06T06:52:27.722Z REQ GET /api/v1/listings
-2026-11-06T06:52:27.752Z RESP 200 GET /api/v1/listings
-2026-11-06T06:52:27.770Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:27.770Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:27.770Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:27.777Z REQ GET /api/v1/listings/661e46e9-730c-402d-906b-6fe1d1b9f54d
-2026-11-06T06:52:27.797Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:27.820Z RESP 200 GET /api/v1/listings/661e46e9-730c-402d-906b-6fe1d1b9f54d
-2026-11-06T06:52:27.831Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:27.831Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:28.510Z RESP 200 GET /_next/static/webpack/9d7c441dca72c877.webpack.hot-update.json
-2026-11-06T06:52:28.513Z RESP 200 GET /_next/static/webpack/app/layout.9d7c441dca72c877.hot-update.js
-2026-11-06T06:52:28.514Z RESP 200 GET /_next/static/webpack/app/global-error.9d7c441dca72c877.hot-update.js
-2026-11-06T06:52:28.514Z RESP 200 GET /_next/static/webpack/webpack.9d7c441dca72c877.hot-update.js
-2026-11-06T06:52:28.516Z RESP 200 GET /__nextjs_font/geist-latin.woff2
-2026-11-06T06:52:28.530Z RESP 200 GET /units/A-02.06?_rsc=h5sYM0T3_DFJ7kty
-2026-11-06T06:52:28.538Z RESP 200 GET /_next/static/css/app/layout.css?v=1793947948519
-2026-11-06T06:52:28.593Z RESP 200 GET /manifest.webmanifest
-2026-11-06T06:52:28.596Z RESP 200 GET /icons/icon-192.png
-2026-11-06T06:52:30.521Z RESP 200 GET /_next/static/webpack/595c4c6799a94d5f.webpack.hot-update.json
-2026-11-06T06:52:30.524Z RESP 200 GET /_next/static/webpack/app/layout.595c4c6799a94d5f.hot-update.js
-2026-11-06T06:52:30.524Z RESP 200 GET /_next/static/webpack/app/global-error.595c4c6799a94d5f.hot-update.js
-2026-11-06T06:52:30.524Z RESP 200 GET /_next/static/webpack/webpack.595c4c6799a94d5f.hot-update.js
-2026-11-06T06:52:30.541Z RESP 200 GET /units/A-02.06?_rsc=h5sYM0T3_DFJ7kty
-2026-11-06T06:52:30.547Z RESP 200 GET /_next/static/css/app/layout.css?v=1793947950528
-2026-11-06T06:52:30.605Z RESP 200 GET /manifest.webmanifest
-2026-11-06T06:52:30.609Z RESP 200 GET /icons/icon-192.png
-2026-11-06T06:52:31.274Z RESP 200 GET /_next/static/webpack/dfc851f31fdce06b.webpack.hot-update.json
-2026-11-06T06:52:31.277Z RESP 200 GET /_next/static/webpack/app/layout.dfc851f31fdce06b.hot-update.js
-2026-11-06T06:52:31.277Z RESP 200 GET /_next/static/webpack/app/global-error.dfc851f31fdce06b.hot-update.js
-2026-11-06T06:52:31.278Z RESP 200 GET /_next/static/webpack/webpack.dfc851f31fdce06b.hot-update.js
-2026-11-06T06:52:31.293Z RESP 200 GET /units/A-02.06?_rsc=h5sYM0T3_DFJ7kty
-2026-11-06T06:52:31.300Z RESP 200 GET /_next/static/css/app/layout.css?v=1793947951283
-2026-11-06T06:52:31.363Z RESP 200 GET /manifest.webmanifest
-2026-11-06T06:52:31.367Z RESP 200 GET /icons/icon-192.png
-2026-11-06T06:52:33.253Z REQ POST /api/v1/units/photos/upload-url
-2026-11-06T06:52:33.256Z REQ GET /api/v1/listings
-2026-11-06T06:52:33.292Z RESP 200 GET /_next/static/webpack/e6796ec217eb8501.webpack.hot-update.json
-2026-11-06T06:52:33.301Z RESP 200 GET /_next/static/webpack/app/layout.e6796ec217eb8501.hot-update.js
-2026-11-06T06:52:33.301Z RESP 200 GET /_next/static/webpack/app/global-error.e6796ec217eb8501.hot-update.js
-2026-11-06T06:52:33.301Z RESP 200 GET /_next/static/webpack/webpack.e6796ec217eb8501.hot-update.js
-2026-11-06T06:52:33.317Z RESP 200 GET /units/A-02.06?_rsc=h5sYM0T3_DFJ7kty
-2026-11-06T06:52:33.326Z RESP 200 GET /_next/static/css/app/layout.css?v=1793947953305
-2026-11-06T06:52:33.335Z RESP 200 POST /api/v1/units/photos/upload-url
-2026-11-06T06:52:33.336Z REQ POST /api/v1/units/photos
-2026-11-06T06:52:33.352Z RESP 200 GET /api/v1/listings
-2026-11-06T06:52:33.364Z FETCH-FAIL POST /api/v1/units/photos phan hoi 201 bi Fetch.failRequest (may chu da tra)
-2026-11-06T06:52:33.372Z FAIL POST /api/v1/units/photos net::ERR_FAILED canceled=false
-2026-11-06T06:52:33.466Z RESP 200 GET /manifest.webmanifest
-2026-11-06T06:52:33.470Z RESP 200 GET /icons/icon-192.png
-2026-11-06T06:52:48.387Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.446Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.459Z REQ POST /api/v1/units/photos/upload-url
-2026-11-06T06:52:48.460Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.460Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.460Z RESP 200 POST /api/v1/units/photos/upload-url
-2026-11-06T06:52:48.461Z REQ POST /api/v1/units/photos
-2026-11-06T06:52:48.485Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.493Z REQ GET /api/v1/units/photos/2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d/thumb
-2026-11-06T06:52:48.512Z RESP 201 POST /api/v1/units/photos
-2026-11-06T06:52:48.512Z REQ POST /api/v1/units/photos/upload-url
-2026-11-06T06:52:48.513Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.514Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.514Z RESP 200 GET /api/v1/units/photos/2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d/thumb
-2026-11-06T06:52:48.514Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.515Z RESP 200 POST /api/v1/units/photos/upload-url
-2026-11-06T06:52:48.515Z REQ POST /api/v1/units/photos
-2026-11-06T06:52:48.535Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.535Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.547Z REQ GET /api/v1/units/photos/2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d/original
-2026-11-06T06:52:48.547Z REQ GET /api/v1/units/photos/92270ce2-7095-4222-967c-b3499dc91ce9/original
-2026-11-06T06:52:48.562Z RESP 201 POST /api/v1/units/photos
-2026-11-06T06:52:48.563Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.563Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.563Z RESP 200 GET /api/v1/units/photos/2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d/original
-2026-11-06T06:52:48.563Z RESP 200 GET /api/v1/units/photos/92270ce2-7095-4222-967c-b3499dc91ce9/original
-2026-11-06T06:52:48.569Z REQ GET /api/v1/units/photos/92270ce2-7095-4222-967c-b3499dc91ce9/thumb
-2026-11-06T06:52:48.581Z RESP 200 GET /api/v1/units/photos/92270ce2-7095-4222-967c-b3499dc91ce9/thumb
-2026-11-06T06:52:48.587Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.592Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06
-2026-11-06T06:52:48.605Z REQ GET /api/v1/units/photos/731b9f5c-3259-4b5c-9812-2d3a50385fcc/original
-2026-11-06T06:52:48.614Z RESP 200 GET /api/v1/units/photos/731b9f5c-3259-4b5c-9812-2d3a50385fcc/original
+2026-11-06T08:11:49.100Z RESP 200 GET /units/A-01.01
+2026-11-06T08:11:49.114Z RESP 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793952708789
+2026-11-06T08:11:49.115Z RESP 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793952708789
+2026-11-06T08:11:49.142Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952708789
+2026-11-06T08:11:49.145Z RESP 200 GET /_next/static/css/app/global-error.css?v=1793952708789
+2026-11-06T08:11:49.152Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:49.156Z RESP 200 GET /_next/static/chunks/webpack.js?v=1793952708789
+2026-11-06T08:11:49.157Z RESP 200 GET /_next/static/chunks/app-pages-internals.js
+2026-11-06T08:11:49.200Z RESP 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2
+2026-11-06T08:11:49.202Z RESP 200 GET /_next/static/chunks/app/layout.js
+2026-11-06T08:11:49.208Z RESP 200 GET /_next/static/media/aa016aab0e6d1295-s.woff2
+2026-11-06T08:11:49.209Z RESP 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2
+2026-11-06T08:11:49.269Z RESP 200 GET /_next/static/chunks/app/(app)/not-found.js
+2026-11-06T08:11:49.275Z RESP 200 GET /_next/static/chunks/app/(app)/error.js
+2026-11-06T08:11:49.281Z RESP 200 GET /_next/static/chunks/app/error.js
+2026-11-06T08:11:49.300Z RESP 200 GET /_next/static/chunks/app/global-error.js
+2026-11-06T08:11:49.331Z RESP 200 GET /_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
+2026-11-06T08:11:49.406Z RESP 200 GET /_next/static/chunks/main-app.js?v=1793952708789
+2026-11-06T08:11:50.288Z RESP 200 GET /_next/static/chunks/app/(app)/layout.js
+2026-11-06T08:11:50.344Z RESP 404 GET /favicon.ico
+2026-11-06T08:11:50.352Z REQ GET /api/v1/catalog
+2026-11-06T08:11:50.357Z REQ GET /api/v1/catalog
+2026-11-06T08:11:50.360Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:50.365Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:50.371Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:50.376Z RESP 200 GET /api/v1/catalog
+2026-11-06T08:11:50.394Z REQ GET /api/v1/listings
+2026-11-06T08:11:50.403Z RESP 200 GET /api/v1/catalog
+2026-11-06T08:11:50.443Z RESP 200 GET /api/v1/listings
+2026-11-06T08:11:50.456Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:11:50.456Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:11:50.457Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:11:50.457Z REQ GET /api/v1/listings/8eaf5679-8b2d-4bea-89d7-65db0daa8a82
+2026-11-06T08:11:50.502Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:11:50.503Z REQ GET /api/v1/units/photos/3ad5fd41-b91a-4761-a7cc-d54b1878cdb3/original
+2026-11-06T08:11:50.504Z REQ GET /api/v1/units/photos/198bce5b-92d3-4bd8-a332-e483bdad5e97/original
+2026-11-06T08:11:50.504Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:11:50.525Z REQ GET /api/v1/units/photos/3ad5fd41-b91a-4761-a7cc-d54b1878cdb3/thumb
+2026-11-06T08:11:50.525Z REQ GET /api/v1/units/photos/198bce5b-92d3-4bd8-a332-e483bdad5e97/thumb
+2026-11-06T08:11:50.559Z RESP 200 GET /api/v1/listings/8eaf5679-8b2d-4bea-89d7-65db0daa8a82
+2026-11-06T08:11:50.567Z RESP 200 GET /api/v1/units/photos/198bce5b-92d3-4bd8-a332-e483bdad5e97/original
+2026-11-06T08:11:50.569Z RESP 200 GET /api/v1/units/photos/3ad5fd41-b91a-4761-a7cc-d54b1878cdb3/original
+2026-11-06T08:11:50.576Z RESP 200 GET /api/v1/units/photos/3ad5fd41-b91a-4761-a7cc-d54b1878cdb3/thumb
+2026-11-06T08:11:50.585Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:11:50.588Z RESP 200 GET /api/v1/units/photos/198bce5b-92d3-4bd8-a332-e483bdad5e97/thumb
+2026-11-06T08:11:53.686Z RESP 200 GET /_next/static/webpack/3f462848c4a4fe3c.webpack.hot-update.json
+2026-11-06T08:11:53.691Z RESP 200 GET /__nextjs_font/geist-latin.woff2
+2026-11-06T08:11:53.694Z RESP 200 GET /_next/static/webpack/app/layout.3f462848c4a4fe3c.hot-update.js
+2026-11-06T08:11:53.734Z RESP 200 GET /_next/static/webpack/app/global-error.3f462848c4a4fe3c.hot-update.js
+2026-11-06T08:11:53.739Z RESP 200 GET /_next/static/webpack/webpack.3f462848c4a4fe3c.hot-update.js
+2026-11-06T08:11:53.778Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:53.791Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952713767
+2026-11-06T08:11:53.866Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:53.871Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:54.085Z RESP 200 GET /_next/static/webpack/befd817610177103.webpack.hot-update.json
+2026-11-06T08:11:54.087Z RESP 200 GET /_next/static/webpack/app/layout.befd817610177103.hot-update.js
+2026-11-06T08:11:54.087Z RESP 200 GET /_next/static/webpack/app/global-error.befd817610177103.hot-update.js
+2026-11-06T08:11:54.088Z RESP 200 GET /_next/static/webpack/webpack.befd817610177103.hot-update.js
+2026-11-06T08:11:54.118Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:54.153Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952714108
+2026-11-06T08:11:54.219Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:54.223Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:55.871Z REQ POST /api/v1/units/photos/upload-url
+2026-11-06T08:11:55.874Z REQ GET /api/v1/listings
+2026-11-06T08:11:55.890Z RESP 200 GET /_next/static/webpack/2446ffb3747b9ae5.webpack.hot-update.json
+2026-11-06T08:11:55.905Z RESP 200 GET /_next/static/webpack/app/layout.2446ffb3747b9ae5.hot-update.js
+2026-11-06T08:11:55.905Z RESP 200 GET /_next/static/webpack/app/global-error.2446ffb3747b9ae5.hot-update.js
+2026-11-06T08:11:55.906Z RESP 200 GET /_next/static/webpack/webpack.2446ffb3747b9ae5.hot-update.js
+2026-11-06T08:11:55.929Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:55.945Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952715910
+2026-11-06T08:11:55.954Z RESP 200 POST /api/v1/units/photos/upload-url
+2026-11-06T08:11:55.956Z REQ POST /api/v1/units/photos
+2026-11-06T08:11:55.969Z RESP 200 GET /api/v1/listings
+2026-11-06T08:11:56.016Z FETCH-FAIL POST /api/v1/units/photos phan hoi 201 bi Fetch.failRequest (may chu da tra)
+2026-11-06T08:11:56.033Z FAIL POST /api/v1/units/photos net::ERR_FAILED canceled=false
+2026-11-06T08:11:56.108Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:56.124Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:56.848Z RESP 200 GET /_next/static/webpack/dccbf690e81c3f7f.webpack.hot-update.json
+2026-11-06T08:11:56.855Z RESP 200 GET /_next/static/webpack/app/global-error.dccbf690e81c3f7f.hot-update.js
+2026-11-06T08:11:56.856Z RESP 200 GET /_next/static/webpack/app/layout.dccbf690e81c3f7f.hot-update.js
+2026-11-06T08:11:56.856Z RESP 200 GET /_next/static/webpack/webpack.dccbf690e81c3f7f.hot-update.js
+2026-11-06T08:11:56.874Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:56.925Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952716862
+2026-11-06T08:11:56.998Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:57.003Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:57.411Z RESP 200 GET /_next/static/webpack/89c3689e37f1245c.webpack.hot-update.json
+2026-11-06T08:11:57.415Z RESP 200 GET /_next/static/webpack/app/layout.89c3689e37f1245c.hot-update.js
+2026-11-06T08:11:57.416Z RESP 200 GET /_next/static/webpack/app/global-error.89c3689e37f1245c.hot-update.js
+2026-11-06T08:11:57.416Z RESP 200 GET /_next/static/webpack/webpack.89c3689e37f1245c.hot-update.js
+2026-11-06T08:11:57.444Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:57.484Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952717434
+2026-11-06T08:11:57.550Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:57.554Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:58.004Z RESP 200 GET /_next/static/webpack/cce076837401e3bd.webpack.hot-update.json
+2026-11-06T08:11:58.008Z RESP 200 GET /_next/static/webpack/app/layout.cce076837401e3bd.hot-update.js
+2026-11-06T08:11:58.009Z RESP 200 GET /_next/static/webpack/app/global-error.cce076837401e3bd.hot-update.js
+2026-11-06T08:11:58.010Z RESP 200 GET /_next/static/webpack/webpack.cce076837401e3bd.hot-update.js
+2026-11-06T08:11:58.042Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:58.078Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952718031
+2026-11-06T08:11:58.146Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:58.152Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:58.750Z RESP 200 GET /_next/static/webpack/e04d733be780ef88.webpack.hot-update.json
+2026-11-06T08:11:58.755Z RESP 200 GET /_next/static/webpack/app/layout.e04d733be780ef88.hot-update.js
+2026-11-06T08:11:58.755Z RESP 200 GET /_next/static/webpack/app/global-error.e04d733be780ef88.hot-update.js
+2026-11-06T08:11:58.756Z RESP 200 GET /_next/static/webpack/webpack.e04d733be780ef88.hot-update.js
+2026-11-06T08:11:58.783Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:58.819Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952718772
+2026-11-06T08:11:58.886Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:58.889Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:59.270Z RESP 200 GET /_next/static/webpack/2648d6d26c5aa064.webpack.hot-update.json
+2026-11-06T08:11:59.274Z RESP 200 GET /_next/static/webpack/app/layout.2648d6d26c5aa064.hot-update.js
+2026-11-06T08:11:59.275Z RESP 200 GET /_next/static/webpack/app/global-error.2648d6d26c5aa064.hot-update.js
+2026-11-06T08:11:59.275Z RESP 200 GET /_next/static/webpack/webpack.2648d6d26c5aa064.hot-update.js
+2026-11-06T08:11:59.311Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:59.345Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952719300
+2026-11-06T08:11:59.411Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:11:59.415Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:11:59.851Z RESP 200 GET /_next/static/webpack/a179918ec83406f7.webpack.hot-update.json
+2026-11-06T08:11:59.856Z RESP 200 GET /_next/static/webpack/app/layout.a179918ec83406f7.hot-update.js
+2026-11-06T08:11:59.856Z RESP 200 GET /_next/static/webpack/app/global-error.a179918ec83406f7.hot-update.js
+2026-11-06T08:11:59.856Z RESP 200 GET /_next/static/webpack/webpack.a179918ec83406f7.hot-update.js
+2026-11-06T08:11:59.870Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:11:59.919Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952719859
+2026-11-06T08:11:59.989Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:00.001Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:00.281Z RESP 200 GET /_next/static/webpack/5c3d36182d6cc6ec.webpack.hot-update.json
+2026-11-06T08:12:00.287Z RESP 200 GET /_next/static/webpack/app/layout.5c3d36182d6cc6ec.hot-update.js
+2026-11-06T08:12:00.287Z RESP 200 GET /_next/static/webpack/app/global-error.5c3d36182d6cc6ec.hot-update.js
+2026-11-06T08:12:00.287Z RESP 200 GET /_next/static/webpack/webpack.5c3d36182d6cc6ec.hot-update.js
+2026-11-06T08:12:00.322Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:00.366Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952720312
+2026-11-06T08:12:00.536Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:00.555Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:00.559Z RESP 200 GET /_next/static/webpack/1d8b982fc6dc747d.webpack.hot-update.json
+2026-11-06T08:12:00.567Z RESP 200 GET /_next/static/webpack/app/layout.1d8b982fc6dc747d.hot-update.js
+2026-11-06T08:12:00.567Z RESP 200 GET /_next/static/webpack/app/global-error.1d8b982fc6dc747d.hot-update.js
+2026-11-06T08:12:00.568Z RESP 200 GET /_next/static/webpack/webpack.1d8b982fc6dc747d.hot-update.js
+2026-11-06T08:12:00.624Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:00.660Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952720609
+2026-11-06T08:12:00.915Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:00.933Z RESP 200 GET /_next/static/webpack/2a8756cbc460d1f8.webpack.hot-update.json
+2026-11-06T08:12:00.934Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:00.936Z RESP 200 GET /_next/static/webpack/app/layout.2a8756cbc460d1f8.hot-update.js
+2026-11-06T08:12:00.937Z RESP 200 GET /_next/static/webpack/app/global-error.2a8756cbc460d1f8.hot-update.js
+2026-11-06T08:12:00.937Z RESP 200 GET /_next/static/webpack/webpack.2a8756cbc460d1f8.hot-update.js
+2026-11-06T08:12:00.955Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:01.017Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952720942
+2026-11-06T08:12:01.189Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:01.206Z RESP 200 GET /_next/static/webpack/23f7244e1c762303.webpack.hot-update.json
+2026-11-06T08:12:01.207Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:01.211Z RESP 200 GET /_next/static/webpack/app/layout.23f7244e1c762303.hot-update.js
+2026-11-06T08:12:01.211Z RESP 200 GET /_next/static/webpack/app/global-error.23f7244e1c762303.hot-update.js
+2026-11-06T08:12:01.212Z RESP 200 GET /_next/static/webpack/webpack.23f7244e1c762303.hot-update.js
+2026-11-06T08:12:01.253Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:01.277Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952721243
+2026-11-06T08:12:01.339Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:01.343Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:01.993Z RESP 200 GET /_next/static/webpack/ee4f47ef26aa6e29.webpack.hot-update.json
+2026-11-06T08:12:01.998Z RESP 200 GET /_next/static/webpack/app/layout.ee4f47ef26aa6e29.hot-update.js
+2026-11-06T08:12:01.998Z RESP 200 GET /_next/static/webpack/app/global-error.ee4f47ef26aa6e29.hot-update.js
+2026-11-06T08:12:01.999Z RESP 200 GET /_next/static/webpack/webpack.ee4f47ef26aa6e29.hot-update.js
+2026-11-06T08:12:02.027Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:02.068Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952722016
+2026-11-06T08:12:02.133Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:02.136Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:03.003Z RESP 200 GET /_next/static/webpack/b945989af683e701.webpack.hot-update.json
+2026-11-06T08:12:03.008Z RESP 200 GET /_next/static/webpack/app/layout.b945989af683e701.hot-update.js
+2026-11-06T08:12:03.009Z RESP 200 GET /_next/static/webpack/app/global-error.b945989af683e701.hot-update.js
+2026-11-06T08:12:03.009Z RESP 200 GET /_next/static/webpack/webpack.b945989af683e701.hot-update.js
+2026-11-06T08:12:03.036Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:03.074Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952723026
+2026-11-06T08:12:03.141Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:03.145Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:03.752Z RESP 200 GET /_next/static/webpack/054fb1f3ae242070.webpack.hot-update.json
+2026-11-06T08:12:03.756Z RESP 200 GET /_next/static/webpack/app/layout.054fb1f3ae242070.hot-update.js
+2026-11-06T08:12:03.756Z RESP 200 GET /_next/static/webpack/app/global-error.054fb1f3ae242070.hot-update.js
+2026-11-06T08:12:03.757Z RESP 200 GET /_next/static/webpack/webpack.054fb1f3ae242070.hot-update.js
+2026-11-06T08:12:03.771Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:03.828Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952723760
+2026-11-06T08:12:03.894Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:03.909Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:04.178Z RESP 200 GET /_next/static/webpack/57ca0e72335e94d1.webpack.hot-update.json
+2026-11-06T08:12:04.181Z RESP 200 GET /_next/static/webpack/app/layout.57ca0e72335e94d1.hot-update.js
+2026-11-06T08:12:04.182Z RESP 200 GET /_next/static/webpack/app/global-error.57ca0e72335e94d1.hot-update.js
+2026-11-06T08:12:04.182Z RESP 200 GET /_next/static/webpack/webpack.57ca0e72335e94d1.hot-update.js
+2026-11-06T08:12:04.196Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:04.245Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952724185
+2026-11-06T08:12:04.309Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:04.314Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:04.477Z RESP 200 GET /_next/static/webpack/1640e7ca9c79d304.webpack.hot-update.json
+2026-11-06T08:12:04.481Z RESP 200 GET /_next/static/webpack/app/layout.1640e7ca9c79d304.hot-update.js
+2026-11-06T08:12:04.482Z RESP 200 GET /_next/static/webpack/app/global-error.1640e7ca9c79d304.hot-update.js
+2026-11-06T08:12:04.482Z RESP 200 GET /_next/static/webpack/webpack.1640e7ca9c79d304.hot-update.js
+2026-11-06T08:12:04.497Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:04.547Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952724486
+2026-11-06T08:12:04.611Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:04.615Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:04.864Z RESP 200 GET /_next/static/webpack/0facee1c50a5d18e.webpack.hot-update.json
+2026-11-06T08:12:04.890Z RESP 200 GET /_next/static/webpack/app/global-error.0facee1c50a5d18e.hot-update.js
+2026-11-06T08:12:04.890Z RESP 200 GET /_next/static/webpack/app/layout.0facee1c50a5d18e.hot-update.js
+2026-11-06T08:12:04.890Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:04.894Z RESP 200 GET /_next/static/webpack/webpack.0facee1c50a5d18e.hot-update.js
+2026-11-06T08:12:04.957Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952724874
+2026-11-06T08:12:05.075Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:05.078Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:05.368Z RESP 200 GET /_next/static/webpack/5e6f665dcdbfe30e.webpack.hot-update.json
+2026-11-06T08:12:05.372Z RESP 200 GET /_next/static/webpack/app/layout.5e6f665dcdbfe30e.hot-update.js
+2026-11-06T08:12:05.372Z RESP 200 GET /_next/static/webpack/app/global-error.5e6f665dcdbfe30e.hot-update.js
+2026-11-06T08:12:05.372Z RESP 200 GET /_next/static/webpack/webpack.5e6f665dcdbfe30e.hot-update.js
+2026-11-06T08:12:05.403Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:05.441Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952725392
+2026-11-06T08:12:05.587Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:05.597Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:05.664Z RESP 200 GET /_next/static/webpack/724c8bcd363a6848.webpack.hot-update.json
+2026-11-06T08:12:05.670Z RESP 200 GET /_next/static/webpack/app/layout.724c8bcd363a6848.hot-update.js
+2026-11-06T08:12:05.670Z RESP 200 GET /_next/static/webpack/app/global-error.724c8bcd363a6848.hot-update.js
+2026-11-06T08:12:05.670Z RESP 200 GET /_next/static/webpack/webpack.724c8bcd363a6848.hot-update.js
+2026-11-06T08:12:05.697Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:05.731Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952725687
+2026-11-06T08:12:05.797Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:05.801Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:06.070Z RESP 200 GET /_next/static/webpack/e94f287eb2fd639a.webpack.hot-update.json
+2026-11-06T08:12:06.075Z RESP 200 GET /_next/static/webpack/app/layout.e94f287eb2fd639a.hot-update.js
+2026-11-06T08:12:06.075Z RESP 200 GET /_next/static/webpack/app/global-error.e94f287eb2fd639a.hot-update.js
+2026-11-06T08:12:06.076Z RESP 200 GET /_next/static/webpack/webpack.e94f287eb2fd639a.hot-update.js
+2026-11-06T08:12:06.104Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:06.141Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952726094
+2026-11-06T08:12:06.215Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:06.219Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:06.587Z RESP 200 GET /_next/static/webpack/9976af09d60ea94f.webpack.hot-update.json
+2026-11-06T08:12:06.593Z RESP 200 GET /_next/static/webpack/app/global-error.9976af09d60ea94f.hot-update.js
+2026-11-06T08:12:06.594Z RESP 200 GET /_next/static/webpack/webpack.9976af09d60ea94f.hot-update.js
+2026-11-06T08:12:06.594Z RESP 200 GET /_next/static/webpack/app/layout.9976af09d60ea94f.hot-update.js
+2026-11-06T08:12:06.609Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:06.660Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952726598
+2026-11-06T08:12:06.723Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:06.727Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:06.973Z RESP 200 GET /_next/static/webpack/715fe6c41857d95b.webpack.hot-update.json
+2026-11-06T08:12:06.979Z RESP 200 GET /_next/static/webpack/app/layout.715fe6c41857d95b.hot-update.js
+2026-11-06T08:12:06.979Z RESP 200 GET /_next/static/webpack/webpack.715fe6c41857d95b.hot-update.js
+2026-11-06T08:12:06.980Z RESP 200 GET /_next/static/webpack/app/global-error.715fe6c41857d95b.hot-update.js
+2026-11-06T08:12:07.009Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:07.066Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952726998
+2026-11-06T08:12:07.227Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:07.234Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:07.306Z RESP 200 GET /_next/static/webpack/d13656b37e4099c6.webpack.hot-update.json
+2026-11-06T08:12:07.313Z RESP 200 GET /_next/static/webpack/app/layout.d13656b37e4099c6.hot-update.js
+2026-11-06T08:12:07.313Z RESP 200 GET /_next/static/webpack/app/global-error.d13656b37e4099c6.hot-update.js
+2026-11-06T08:12:07.313Z RESP 200 GET /_next/static/webpack/webpack.d13656b37e4099c6.hot-update.js
+2026-11-06T08:12:07.337Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:07.382Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952727326
+2026-11-06T08:12:07.452Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:07.457Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:07.732Z RESP 200 GET /_next/static/webpack/58b7e5a31ef631d6.webpack.hot-update.json
+2026-11-06T08:12:07.735Z RESP 200 GET /_next/static/webpack/app/layout.58b7e5a31ef631d6.hot-update.js
+2026-11-06T08:12:07.735Z RESP 200 GET /_next/static/webpack/webpack.58b7e5a31ef631d6.hot-update.js
+2026-11-06T08:12:07.736Z RESP 200 GET /_next/static/webpack/app/global-error.58b7e5a31ef631d6.hot-update.js
+2026-11-06T08:12:07.771Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:07.811Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952727759
+2026-11-06T08:12:07.882Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:07.885Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:08.210Z RESP 200 GET /_next/static/webpack/dc62202486cc5f1f.webpack.hot-update.json
+2026-11-06T08:12:08.217Z RESP 200 GET /_next/static/webpack/app/global-error.dc62202486cc5f1f.hot-update.js
+2026-11-06T08:12:08.218Z RESP 200 GET /_next/static/webpack/webpack.dc62202486cc5f1f.hot-update.js
+2026-11-06T08:12:08.218Z RESP 200 GET /_next/static/webpack/app/layout.dc62202486cc5f1f.hot-update.js
+2026-11-06T08:12:08.255Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:08.367Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952728239
+2026-11-06T08:12:08.553Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:08.571Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:08.571Z RESP 200 GET /_next/static/webpack/1ecf05dd44737bc0.webpack.hot-update.json
+2026-11-06T08:12:08.576Z RESP 200 GET /_next/static/webpack/app/layout.1ecf05dd44737bc0.hot-update.js
+2026-11-06T08:12:08.577Z RESP 200 GET /_next/static/webpack/webpack.1ecf05dd44737bc0.hot-update.js
+2026-11-06T08:12:08.577Z RESP 200 GET /_next/static/webpack/app/global-error.1ecf05dd44737bc0.hot-update.js
+2026-11-06T08:12:08.602Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:08.640Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952728592
+2026-11-06T08:12:08.822Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:08.839Z RESP 200 GET /_next/static/webpack/57a83570f6491be9.webpack.hot-update.json
+2026-11-06T08:12:08.840Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:08.844Z RESP 200 GET /_next/static/webpack/app/layout.57a83570f6491be9.hot-update.js
+2026-11-06T08:12:08.845Z RESP 200 GET /_next/static/webpack/app/global-error.57a83570f6491be9.hot-update.js
+2026-11-06T08:12:08.845Z RESP 200 GET /_next/static/webpack/webpack.57a83570f6491be9.hot-update.js
+2026-11-06T08:12:08.885Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:08.909Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952728875
+2026-11-06T08:12:08.972Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:08.976Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:09.177Z RESP 200 GET /_next/static/webpack/b0f002639723fcd8.webpack.hot-update.json
+2026-11-06T08:12:09.186Z RESP 200 GET /_next/static/webpack/app/layout.b0f002639723fcd8.hot-update.js
+2026-11-06T08:12:09.186Z RESP 200 GET /_next/static/webpack/webpack.b0f002639723fcd8.hot-update.js
+2026-11-06T08:12:09.187Z RESP 200 GET /_next/static/webpack/app/global-error.b0f002639723fcd8.hot-update.js
+2026-11-06T08:12:09.211Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:09.257Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952729201
+2026-11-06T08:12:09.327Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:09.331Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:09.633Z RESP 200 GET /_next/static/webpack/12f03ca645778fbf.webpack.hot-update.json
+2026-11-06T08:12:09.638Z RESP 200 GET /_next/static/webpack/app/layout.12f03ca645778fbf.hot-update.js
+2026-11-06T08:12:09.639Z RESP 200 GET /_next/static/webpack/app/global-error.12f03ca645778fbf.hot-update.js
+2026-11-06T08:12:09.639Z RESP 200 GET /_next/static/webpack/webpack.12f03ca645778fbf.hot-update.js
+2026-11-06T08:12:09.676Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:09.703Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952729666
+2026-11-06T08:12:09.766Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:09.769Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:10.012Z RESP 200 GET /_next/static/webpack/b2d476cda8d659f7.webpack.hot-update.json
+2026-11-06T08:12:10.018Z RESP 200 GET /_next/static/webpack/app/layout.b2d476cda8d659f7.hot-update.js
+2026-11-06T08:12:10.018Z RESP 200 GET /_next/static/webpack/app/global-error.b2d476cda8d659f7.hot-update.js
+2026-11-06T08:12:10.018Z RESP 200 GET /_next/static/webpack/webpack.b2d476cda8d659f7.hot-update.js
+2026-11-06T08:12:10.057Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:10.084Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952730046
+2026-11-06T08:12:10.165Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:10.171Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:10.547Z RESP 200 GET /_next/static/webpack/bfcd9a99854c3985.webpack.hot-update.json
+2026-11-06T08:12:10.552Z RESP 200 GET /_next/static/webpack/app/layout.bfcd9a99854c3985.hot-update.js
+2026-11-06T08:12:10.553Z RESP 200 GET /_next/static/webpack/app/global-error.bfcd9a99854c3985.hot-update.js
+2026-11-06T08:12:10.553Z RESP 200 GET /_next/static/webpack/webpack.bfcd9a99854c3985.hot-update.js
+2026-11-06T08:12:10.569Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:10.620Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952730556
+2026-11-06T08:12:10.682Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:10.686Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:10.866Z RESP 200 GET /_next/static/webpack/5587fb486ab2b28a.webpack.hot-update.json
+2026-11-06T08:12:10.872Z RESP 200 GET /_next/static/webpack/app/global-error.5587fb486ab2b28a.hot-update.js
+2026-11-06T08:12:10.872Z RESP 200 GET /_next/static/webpack/app/layout.5587fb486ab2b28a.hot-update.js
+2026-11-06T08:12:10.873Z RESP 200 GET /_next/static/webpack/webpack.5587fb486ab2b28a.hot-update.js
+2026-11-06T08:12:10.886Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:10.939Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952730875
+2026-11-06T08:12:10.998Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:11.002Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:11.037Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.148Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.160Z REQ POST /api/v1/units/photos/upload-url
+2026-11-06T08:12:11.160Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.161Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.240Z RESP 200 GET /_next/static/webpack/ae5c119f4503005e.webpack.hot-update.json
+2026-11-06T08:12:11.245Z RESP 200 GET /_next/static/webpack/app/layout.ae5c119f4503005e.hot-update.js
+2026-11-06T08:12:11.246Z RESP 200 POST /api/v1/units/photos/upload-url
+2026-11-06T08:12:11.247Z REQ POST /api/v1/units/photos
+2026-11-06T08:12:11.248Z RESP 200 GET /_next/static/webpack/app/global-error.ae5c119f4503005e.hot-update.js
+2026-11-06T08:12:11.283Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:11.316Z RESP 200 GET /_next/static/webpack/webpack.ae5c119f4503005e.hot-update.js
+2026-11-06T08:12:11.341Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.348Z REQ GET /api/v1/units/photos/76e2ebdd-fa27-47ae-9c0a-058bbcacf024/thumb
+2026-11-06T08:12:11.349Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.363Z REQ GET /api/v1/units/photos/76e2ebdd-fa27-47ae-9c0a-058bbcacf024/original
+2026-11-06T08:12:11.401Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952731267
+2026-11-06T08:12:11.438Z RESP 200 GET /api/v1/units/photos/76e2ebdd-fa27-47ae-9c0a-058bbcacf024/thumb
+2026-11-06T08:12:11.439Z RESP 200 GET /api/v1/units/photos/76e2ebdd-fa27-47ae-9c0a-058bbcacf024/original
+2026-11-06T08:12:11.504Z RESP 201 POST /api/v1/units/photos
+2026-11-06T08:12:11.504Z REQ POST /api/v1/units/photos/upload-url
+2026-11-06T08:12:11.505Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.505Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.506Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:11.518Z RESP 200 POST /api/v1/units/photos/upload-url
+2026-11-06T08:12:11.519Z REQ POST /api/v1/units/photos
+2026-11-06T08:12:11.528Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:11.735Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.750Z REQ GET /api/v1/units/photos/7eeb741c-f50a-41d5-9604-3012d01f1482/original
+2026-11-06T08:12:11.750Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.751Z RESP 200 GET /_next/static/webpack/7929bd0693b06a29.webpack.hot-update.json
+2026-11-06T08:12:11.759Z REQ GET /api/v1/units/photos/7eeb741c-f50a-41d5-9604-3012d01f1482/thumb
+2026-11-06T08:12:11.763Z RESP 200 GET /_next/static/webpack/app/layout.7929bd0693b06a29.hot-update.js
+2026-11-06T08:12:11.775Z RESP 201 POST /api/v1/units/photos
+2026-11-06T08:12:11.775Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.776Z REQ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:11.777Z RESP 200 GET /_next/static/webpack/app/global-error.7929bd0693b06a29.hot-update.js
+2026-11-06T08:12:11.780Z RESP 200 GET /_next/static/webpack/webpack.7929bd0693b06a29.hot-update.js
+2026-11-06T08:12:11.792Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:11.842Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952731781
+2026-11-06T08:12:11.851Z RESP 200 GET /api/v1/units/photos/7eeb741c-f50a-41d5-9604-3012d01f1482/original
+2026-11-06T08:12:11.966Z RESP 200 GET /api/v1/units/photos/7eeb741c-f50a-41d5-9604-3012d01f1482/thumb
+2026-11-06T08:12:12.024Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:12.024Z RESP 200 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.01
+2026-11-06T08:12:12.029Z REQ GET /api/v1/units/photos/e57beb00-54e5-4d98-bc32-3dbb030c64cf/original
+2026-11-06T08:12:12.030Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:12.044Z RESP 200 GET /_next/static/webpack/feceef18ac630ab8.webpack.hot-update.json
+2026-11-06T08:12:12.052Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:12.059Z RESP 200 GET /_next/static/webpack/app/layout.feceef18ac630ab8.hot-update.js
+2026-11-06T08:12:12.059Z RESP 200 GET /_next/static/webpack/app/global-error.feceef18ac630ab8.hot-update.js
+2026-11-06T08:12:12.060Z RESP 200 GET /_next/static/webpack/webpack.feceef18ac630ab8.hot-update.js
+2026-11-06T08:12:12.079Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:12.237Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952732067
+2026-11-06T08:12:12.278Z RESP 200 GET /api/v1/units/photos/e57beb00-54e5-4d98-bc32-3dbb030c64cf/original
+2026-11-06T08:12:12.366Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:12.409Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:12.414Z RESP 200 GET /_next/static/webpack/c5c8af8dc5d3793b.webpack.hot-update.json
+2026-11-06T08:12:12.419Z RESP 200 GET /_next/static/webpack/app/layout.c5c8af8dc5d3793b.hot-update.js
+2026-11-06T08:12:12.419Z RESP 200 GET /_next/static/webpack/app/global-error.c5c8af8dc5d3793b.hot-update.js
+2026-11-06T08:12:12.419Z RESP 200 GET /_next/static/webpack/webpack.c5c8af8dc5d3793b.hot-update.js
+2026-11-06T08:12:12.473Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:12.497Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952732460
+2026-11-06T08:12:12.653Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:12.662Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:12.720Z RESP 200 GET /_next/static/webpack/f62af1027daecfd4.webpack.hot-update.json
+2026-11-06T08:12:12.726Z RESP 200 GET /_next/static/webpack/app/layout.f62af1027daecfd4.hot-update.js
+2026-11-06T08:12:12.726Z RESP 200 GET /_next/static/webpack/app/global-error.f62af1027daecfd4.hot-update.js
+2026-11-06T08:12:12.727Z RESP 200 GET /_next/static/webpack/webpack.f62af1027daecfd4.hot-update.js
+2026-11-06T08:12:12.765Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:12.797Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952732753
+2026-11-06T08:12:12.930Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:12.940Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:13.012Z RESP 200 GET /_next/static/webpack/a5796b795155e5c6.webpack.hot-update.json
+2026-11-06T08:12:13.017Z RESP 200 GET /_next/static/webpack/app/layout.a5796b795155e5c6.hot-update.js
+2026-11-06T08:12:13.018Z RESP 200 GET /_next/static/webpack/app/global-error.a5796b795155e5c6.hot-update.js
+2026-11-06T08:12:13.018Z RESP 200 GET /_next/static/webpack/webpack.a5796b795155e5c6.hot-update.js
+2026-11-06T08:12:13.046Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:13.083Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952733035
+2026-11-06T08:12:13.137Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:13.141Z RESP 200 GET /icons/icon-192.png
+2026-11-06T08:12:13.398Z RESP 200 GET /_next/static/webpack/d818af2470dd0070.webpack.hot-update.json
+2026-11-06T08:12:13.402Z RESP 200 GET /_next/static/webpack/app/layout.d818af2470dd0070.hot-update.js
+2026-11-06T08:12:13.403Z RESP 200 GET /_next/static/webpack/app/global-error.d818af2470dd0070.hot-update.js
+2026-11-06T08:12:13.403Z RESP 200 GET /_next/static/webpack/webpack.d818af2470dd0070.hot-update.js
+2026-11-06T08:12:13.418Z RESP 200 GET /units/A-01.01?_rsc=jXturUwRytp1nctJ
+2026-11-06T08:12:13.470Z RESP 200 GET /_next/static/css/app/layout.css?v=1793952733406
+2026-11-06T08:12:13.540Z RESP 200 GET /manifest.webmanifest
+2026-11-06T08:12:13.545Z RESP 200 GET /icons/icon-192.png
