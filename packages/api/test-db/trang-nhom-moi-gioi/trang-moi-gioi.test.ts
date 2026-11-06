@@ -2,7 +2,7 @@
 // lệnh hàng; Lần gửi tạo qua POST /api/v1/shares; cấu hình sàn qua PATCH /api/v1/company/settings của Quản trị. Dữ liệu mẫu:
 // `[Tên]`.
 import { cotRa } from "@quy-hang/core/export";
-import { CAU_HINH_MAC_DINH } from "@quy-hang/core/redaction";
+import { banRaNgoai, CAU_HINH_MAC_DINH, canMoi, type CanNoiBo } from "@quy-hang/core/redaction";
 import { COT_TRANG_MOI_GIOI, thanKhachMoi } from "@quy-hang/core/sharing";
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
@@ -94,10 +94,10 @@ test("môi giới: mở link thấy bảng", async () => {
   const ba = [await canDangBan(s.dauChu.cookie), await canDangBan(s.dauChu.cookie), await canDangBan(s.dauChu.cookie)];
   const code = await gui(s, ba.map((c) => c.id));
   // Bảng viết trước ba trạng thái căn trong cùng bộ: [vị trí, lệnh đổi trạng thái].
-  const BANG: [number, Record<string, unknown>[]][] = [
-    [0, []],
-    [1, [{ to: "Pending" }]],
-    [2, [{ to: "Pending" }, { to: "Closed", closePrice: 3_000_000_000, closeDate: "2026-11-01" }]],
+  const BANG: [number, Record<string, unknown>[], CanNoiBo["standardStatus"]][] = [
+    [0, [], "Active"],
+    [1, [{ to: "Pending" }], "Pending"],
+    [2, [{ to: "Pending" }, { to: "Closed", closePrice: 3_000_000_000, closeDate: "2026-11-01" }], "Closed"],
   ];
   for (const [i, lenh] of BANG) for (const p of lenh) await ba[i]!.buoc("status_changed", p);
   const than = await mo(code);
@@ -106,14 +106,11 @@ test("môi giới: mở link thấy bảng", async () => {
   assert.deepEqual(than.cot?.map((c) => c.khoa), ra.map((c) => c.khoa), "trang môi giới thiếu cột");
   assert.deepEqual(than.can.map((c) => c.unitNumber), ba.map((c) => c.ma), "thứ tự gửi");
   for (const c of than.can) assert.ok(typeof c.unitNumber === "string" && c.unitNumber.length > 0, "mã căn rỗng");
-  // Giá theo luật giá ra: đã bán không có giá; còn bán có.
-  let dem = 0;
-  for (const [i] of BANG) {
-    const coGia = Object.hasOwn(than.can[i]!, "listPrice");
-    assert.equal(coGia, i !== 2, `căn ${i}: giá ra sai luật`);
-    dem++;
-  }
-  assert.equal(dem, BANG.length);
+  // Giá theo đúng luật giá ra: mỗi căn so khoá giá trong thân với banRaNgoai của một căn cùng trạng thái.
+  const homNay = new Date().toISOString().slice(0, 10);
+  const mong = BANG.map(([, , st]) => Object.hasOwn(banRaNgoai({ ...canMoi(), standardStatus: st }, { cua: "gui_link", nguoiNhan: "nhom_moi_gioi", today: homNay }), "listPrice"));
+  assert.ok(mong.includes(true) && mong.includes(false), "đối chứng: bộ phải có căn có giá và căn không giá");
+  assert.deepEqual(than.can.map((c) => Object.hasOwn(c, "listPrice")), mong, "giá ra của route lệch banRaNgoai");
   // Đối chứng: khách riêng cùng căn không có khoá cột.
   const t = thanKhachMoi({ ten: "[Tên] Khách", so: "0900 000 011", need: "purchase" });
   assert.ok(t.ok);

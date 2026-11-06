@@ -1,9 +1,11 @@
 // Bộ kiểm cách ly: «công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành.
 // Chạy trên Postgres thật đã áp migration. Mỗi ca trong một giao dịch rồi rollback, không để lại dữ liệu.
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import pg from "pg";
 
 const url = process.env.DATABASE_URL;
@@ -3623,8 +3625,13 @@ test("shares (048): một hàm create_share, quyền hẹp, đã áp", { skip },
     assert.equal(rows.length, 1, "create_share phải là một hàm duy nhất");
     assert.match(rows[0].args, /p_commission_split numeric, p_fee_inclusion text\[\]$/);
     assert.equal(rows[0].goi, true, "quy_hang_app không gọi được create_share");
-    const m = await client.query("select count(*)::int n from schema_migrations where name like '048_%'");
-    assert.equal(m.rows[0].n, 1, "048 áp đúng một lần");
+    // Chạy bộ migrate lần nữa trên chính cơ sở dữ liệu này: 048 không được áp lại (dấu thời gian áp giữ nguyên, lệnh không in «đã áp 048»).
+    const luc = async () => (await client.query("select applied_at from schema_migrations where name like '048_%'")).rows;
+    const truoc = await luc();
+    assert.equal(truoc.length, 1, "048 chưa áp");
+    const ra = execFileSync(process.execPath, [fileURLToPath(new URL("../scripts/migrate.mjs", import.meta.url))], { env: { ...process.env, DATABASE_URL: url }, encoding: "utf8" });
+    assert.ok(!/đã áp 048_/.test(ra), `lần chạy thứ hai áp lại 048: ${ra}`);
+    assert.deepEqual(await luc(), truoc, "lần chạy thứ hai ghi lại 048");
   } finally {
     await client.end();
   }

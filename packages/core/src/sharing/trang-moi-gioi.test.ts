@@ -1,7 +1,7 @@
 // Trang nhóm môi giới (hàng 44, E2, E4): định nghĩa phí, mức chia và cột dựng ở lõi. Bảng viết trước; căn mồi của hàng 31.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { cotRa } from "../export/cot";
+import { cotRa, KHONG_CO } from "../export/cot";
 import { banRaNgoai, CAU_HINH_MAC_DINH, canMoi, type CanNoiBo } from "../redaction";
 import { thanTrangKhach } from "./trang-khach";
 import { cauDinhNghiaPhi, cauMucChia, COT_TRANG_MOI_GIOI } from "./trang-moi-gioi";
@@ -49,7 +49,11 @@ test("môi giới: ẩn mức chia ở lõi", () => {
   assert.equal(than(false, 40).mucChia, 40);
   const an = than(true, 40);
   assert.equal(Object.hasOwn(an, "mucChia"), false, "mức chia lọt khi sàn ẩn");
-  assert.ok(!/"mucChia"/.test(JSON.stringify(an)), "mức chia lọt khi sàn ẩn");
+  // Thân khi ẩn đúng bằng thân khi hiện bỏ đi khoá mức chia: giá trị 40 không lọt dưới khoá nào khác.
+  const hienBoMuc: Partial<ReturnType<typeof than>> = { ...than(false, 40) };
+  delete hienBoMuc.mucChia;
+  assert.deepEqual(an, hienBoMuc, "thân khi ẩn khác thân khi hiện ngoài khoá mức chia");
+  assert.ok(!JSON.stringify(an).includes("Mức chia"), "câu mức chia lọt khi sàn ẩn");
   assert.equal(Object.hasOwn(than(false, null), "mucChia"), false, "bộ không có mức thì không có khoá mức chia");
   assert.equal(cauMucChia(40), "Mức chia: 40%");
   assert.equal(cauMucChia(12.5), "Mức chia: 12,5%");
@@ -67,5 +71,6 @@ test("môi giới: cột và ô dựng từ bản ra theo thứ tự gửi", () 
   const iGia = than.cot!.findIndex((c) => c.khoa === "listPrice");
   const banBan = banRaNgoai(ba[2]!, { cua: "gui_link", nguoiNhan: "nhom_moi_gioi", today: HOM_NAY });
   assert.equal(banBan.listPrice, undefined, "đối chứng: căn đã bán không có giá ra");
-  assert.notEqual(than.dong![0]![iGia], than.dong![2]![iGia], "căn còn bán và căn đã bán cùng ô giá");
+  assert.equal(than.dong![2]![iGia], KHONG_CO, "ô giá của căn đã bán phải là ô trống của bảng");
+  assert.notEqual(than.dong![0]![iGia], KHONG_CO, "đối chứng: căn còn bán có giá");
 });

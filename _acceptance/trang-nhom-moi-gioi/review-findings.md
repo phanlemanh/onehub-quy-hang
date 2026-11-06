@@ -1,79 +1,55 @@
+# Review findings: trang-nhom-moi-gioi (round 2)
+
 ## Trong hợp đồng
 
-- **Phép kiểm «tối đa hai chữ số lẻ» dùng nhân số thực nên từ chối cả số hợp lệ (0.29, 1.15, 0.57…)**
-  file: `packages/core/src/sharing/index.ts:687`
+- **Hình dạng 4 — phép kiểm âm-tính không thể đỏ: «048 áp đúng một lần» đếm trên cột khoá chính**
+  AC: AC-9
+  file: `packages/db/tests/isolation.test.mjs:3626`
   severity: medium
-  AC: AC-8
-  source: conventions
-  detail: validateShareInput kiểm bằng `Math.round(muc * 100) !== muc * 100`. Với số thực, 0.29*100 = 28.999999999999996 và 1.15*100 = 114.99999999999999, nên mức chia hợp lệ bị máy chủ trả 400 «tối đa hai chữ số lẻ». Đã chạy thử: 0.29, 1.15 và 0.57 đều bị từ chối. Cùng phép kiểm đó được chép lại ở `mucChiaGui` (apps/web/src/app/(app)/shares/new/gui.ts:200) và `docO` (settings/broker-page/thuan.ts:71). Kết quả là cả ô cài đặt lẫn ô ở màn Gửi đều báo lỗi sai với người dùng. Nên so bằng sai số (`Math.abs(Math.round(n*100) - n*100) < 1e-9`) hoặc kiểm trên chuỗi đã nhập. Nên gom về một hàm trong lõi thay vì ba bản chép. Lý do thuộc hợp đồng: AC-8 nói đặt mức chia trong 0–100 thì đọc lại thấy đúng giá trị, nhưng các số hợp lệ như 0,29 bị từ chối với lỗi 400.
-
-- **Hinh dang 4 — assert khong the do: 'kem ly do' cua 400 duoc kiem bang `reason ?? "x"` (luon truthy)**
-  file: `packages/api/test-db/trang-nhom-moi-gioi/trang-moi-gioi.test.ts:205`
-  severity: high
-  AC: AC-8
   source: measurement
-  detail: Trong ca «môi giới: cài đặt sàn», dong `assert.ok(((await r.json()) as {reason?: string; error?: string}).reason ?? "x", "thiếu lý do")` khong bao gio do duoc: khi than tra ve khong co `reason` thi bieu thuc thanh "x" va assert van qua. evals.yaml E8 hua «120 và -1 → 400 kèm lý do», nhung ly do khong bi ghim, ca chuoi lan su co mat cua khoa. Ve do-luong, 400 chi duoc do bang ma trang thai, con loi hua ve ly do khong co phep do nao. Lý do thuộc hợp đồng: AC-8 yêu cầu giá trị ngoài 0–100 bị trả 400 kèm lý do, mà phép kiểm lý do không đo được gì.
+  detail: `select count(*) from schema_migrations where name like '048_%'` rồi `assert.equal(n, 1, "048 áp đúng một lần")`. Trong packages/db/scripts/migrate.mjs:22, cột `schema_migrations.name` là `primary key`, nên đã áp 048 thì số đếm luôn bằng 1, dù bộ migrate có chạy lại 048 hay không. Bài không chạy migrate lần hai và không có đối chứng chứng minh phép kiểm có thể đỏ. E9 trong evals.yaml hứa «lệnh migrate chạy hai lần không áp lại 048», nhưng bài này không đo điều đó.
+  rationale: AC-9 đòi chạy migrate hai lần mà lần hai không áp lại, và phép kiểm này không đo được điều đó.
 
-- **Hinh dang 1 — do hang so chu thay vi dau ra da dung: dong «tải lỗi» cua E10c**
-  file: `apps/web/src/app/s/broker/bang.test.ts:208`
+- **Hình dạng 4 — phép kiểm âm-tính trùng lặp, không ghim giá trị: E4 hứa trong JSON không còn '40', bài chỉ grep tên khoá**
+  AC: AC-4
+  file: `packages/core/src/sharing/trang-moi-gioi.test.ts:52`
   severity: medium
-  AC: AC-10
   source: measurement
-  detail: Bang sau trang thai co dong `["tải lỗi", "Chưa tải được tệp — thử lại", CHU_MG.taiLoi]`: cot "html dung" chinh la hang so `CHU_MG.taiLoi` lay tu chu.ts, khong phai markup dung tu NutTai. Phep `ra.includes(chu)` vi the chi so hang so voi mot ban chep cua no. Neu nut-tai.tsx thoi hien `CHU_MG.taiLoi` (dong 41) thi ca van xanh. evals.yaml E10c hua «mỗi dòng dựng thành phần ở trạng thái ấy và tìm đúng chuỗi». Ca van dem 6/6 nhu the da do du sau trang thai. Lý do thuộc hợp đồng: AC-10 đòi mỗi trạng thái, trong đó có tải tệp lỗi, có đúng chữ trên màn; phép kiểm chỉ so hằng số với chính nó.
+  detail: `assert.ok(!/"mucChia"/.test(JSON.stringify(an)))` chỉ lặp lại phép `Object.hasOwn(an, "mucChia") === false` ở dòng ngay trên. Nếu lõi để giá trị 40 lọt ra dưới khoá khác (ví dụ `commissionSplitPct`, hoặc trong `dau`/`dong`), cả hai phép kiểm vẫn xanh. E4 trong evals.yaml hứa «JSON.stringify của thân không chứa '40' ở khoá nào liên quan mức chia», nhưng không phép kiểm nào tìm chính giá trị ấy. Đối chứng dương (`than(false,40).mucChia === 40`) chỉ cho thấy khoá có mặt, không cho thấy bộ dò giá trị bắt được chỗ lọt.
+  rationale: AC-4 đòi thân trả không còn mức chia khi sàn ẩn, mà phép kiểm chỉ dò tên khoá chứ không dò giá trị.
 
-- **Hinh dang 3 — anh chi dem so o, khong kiem thu tu va gia tri dong can; thieu ca an muc chia tren anh**
-  file: `apps/web/src/app/s/broker/bang.test.ts:196`
+- **Hình dạng 4 — chỉ kiểm khác nhau, không ghim giá trị mong đợi: ô giá của căn đã bán**
+  AC: AC-1
+  file: `packages/core/src/sharing/trang-moi-gioi.test.ts:70`
   severity: medium
-  AC: AC-6
   source: measurement
-  detail: Ca «môi giới: ảnh vẽ đúng cột và dòng» chi ghim dau va tieu de cot. Cac dong can chi duoc kiem bang `assert.equal(sau.length, m.cot.length * (1 + than.dong!.length), "ảnh thiếu ô")`, tuc la mot phep dem. evals.yaml E6 hua quan he «ba dòng căn theo thứ tự … phần đầu như Excel; thân ẩn mức chia → không dòng mức chia». Bo ve doi cho o, ve sai gia tri hay dao thu tu dong van qua. Nhanh than an muc chia cung khong duoc chay qua veMoiGioi trong bai nay (an chi duoc kiem tren moHinhTep o ca Excel). Lý do thuộc hợp đồng: AC-6 đòi ảnh vẽ đúng các cột, các dòng và phần đầu như Excel, nhưng bài chỉ đếm số ô.
+  detail: Lời hứa của ca (comment ngay trên) là «căn đã bán … ô giá là ô trống của bảng», nhưng bài chỉ có `assert.notEqual(than.dong[0][iGia], than.dong[2][iGia])`. Nếu ô giá của căn đã bán là một giá sai hay giá cũ, miễn khác ô của căn 0, bài vẫn xanh. Bài không ghim `than.dong[2][iGia]` bằng ô trống mong đợi ("—" hoặc ""). Phép kiểm đối chứng `banBan.listPrice === undefined` chỉ chạy trên banRaNgoai, không chạm vào ô của bảng.
+  rationale: AC-1 đòi căn đã bán không có giá theo luật giá ra, mà phép kiểm chỉ so sánh khác nhau chứ không ghim ô trống.
 
-- **Hinh dang 5 — bang muc chia o API lech ma tran viet truoc cua E3**
-  file: `packages/api/test-db/trang-nhom-moi-gioi/trang-moi-gioi.test.ts:146`
-  severity: medium
-  AC: AC-3
+- **Hình dạng 3 — lời hứa là quan hệ với banRaNgoai, bài lại hardcode kết quả theo vị trí**
+  AC: AC-1
+  file: `packages/api/test-db/trang-nhom-moi-gioi/trang-moi-gioi.test.ts:113`
+  severity: low
   source: measurement
-  detail: evals.yaml E3 khai ma tran: (mac dinh 50, gui khong sua) → trang 50 · gui 40 → 40 · trong → khong khoa · doi mac dinh 30 → van 40 · khach rieng kem 40 → 400. Moi dong mot assert, dem bang so dong. BANG trong test lai la [gửi 40, gửi 12,5, để trống, không gửi khoá → null]. Dong «mặc định 50 → trang 50» khong co, va dong «không gửi khoá» con assert dieu nguoc lai (null). Hai dong «đổi mặc định» va «khách riêng → 400» nam ngoai bang nen `dem === BANG.length` khong phu ma tran da tuyen. Lý do thuộc hợp đồng: AC-3 nêu rõ mặc định giữ, sửa, sàn đổi mặc định về sau và khách riêng không mang mức chia; bảng kiểm lệch ma trận này.
+  detail: E1 trong evals.yaml hứa «mỗi dòng so khoá giá của căn trong thân với kết quả banRaNgoai của chính căn ấy». Bài lại viết `assert.equal(coGia, i !== 2)`, tức hằng số theo vị trí, không gọi banRaNgoai cho từng căn. Nếu luật giá ra đổi (ví dụ căn đã cọc cũng ẩn giá), bài đỏ hoặc xanh theo bảng viết tay chứ không theo quan hệ đã hứa giữa route và luật ẩn.
+  rationale: AC-1 đòi giá theo đúng luật giá ra của banRaNgoai, mà bài so với bảng viết tay theo vị trí.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Gửi bộ khi ô mức chia sai làm màn Gửi kẹt ở trạng thái «đang tạo» mãi**
-  Người dùng thấy gì: Nếu người gửi gõ mức chia không hợp lệ rồi bấm Gửi, nút Gửi bị treo ở «Đang tạo link…» và không bấm lại được dù đã sửa ô.
-  Căn cứ: Không mất dữ liệu và người dùng tự gỡ được bằng cách tải lại trang, chỉ gặp khi gõ sai ô mức chia.
-  file: `apps/web/src/app/(app)/shares/new/man-gui.tsx`
+- **Branch adds a second copy of the fee-item set, its labels and its default instead of using @quy-hang/core/fees**
+  Người dùng thấy gì: Hiện trang môi giới vẫn hiện đúng các khoản phí. Nếu sau này sàn đổi bộ khoản phí hay tên gọi, trang môi giới có thể lệch so với màn Cài đặt phí cho tới khi có người sửa thêm một chỗ.
+  Căn cứ: Hôm nay người dùng không thấy gì sai, rủi ro chỉ xuất hiện khi bộ khoản phí đổi, và sửa sau vẫn rẻ nên ghi lại là đủ.
+  file: `packages/core/src/sharing/trang-moi-gioi.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Khuôn cấu hình điểm #15 nhận số lẻ quá hai chữ số, khác ràng buộc numeric(5,2) và khác bộ kiểm Lần gửi: một mặc định xấu chặn mọi lần gửi nhóm môi giới**
-  Người dùng thấy gì: Quản trị sàn có thể lưu mức chia mặc định có nhiều chữ số lẻ, và sau đó mọi lần gửi cho nhóm môi giới mà không sửa ô sẽ báo lỗi tạo link.
-  Căn cứ: Hiếm gặp vì giao diện đã chặn và chỉ xảy ra khi gọi thẳng đường lưu; quản trị sàn sửa lại giá trị là hết, không mất dữ liệu.
-  file: `packages/core/src/config/khuon.ts`
+- **Share-level 'Bao phí' snapshot can contradict the per-price stamp that migration 050 already stores**
+  Người dùng thấy gì: Nếu sàn đổi định nghĩa phí sau khi một giá đã được nhập, trang môi giới có thể ghi giá đó đã gồm các khoản mà thực ra lúc tính giá chưa gồm. Môi giới có thể hiểu sai giá đã gồm những phí nào.
+  Căn cứ: Có thể làm môi giới bên ngoài hiểu sai giá, nhưng chỉ khi sàn đã đổi định nghĩa phí giữa chừng, và muốn khớp từng giá thì phải làm thành một tính năng riêng.
+  file: `packages/api/src/contacts/prospects.ts`
   severity: medium
-  Đề xuất: known-limits
-
-- **Gửi khi ô Mức chia sai làm nút Gửi kẹt ở «Đang tạo link…» vĩnh viễn**
-  Người dùng thấy gì: Gõ mức chia sai rồi bấm Gửi làm nút kẹt ở «Đang tạo link…» và không gửi được nữa nếu không tải lại trang.
-  Căn cứ: Không mất dữ liệu, tải lại trang là gỡ được, và chỉ xảy ra khi người gửi nhập sai ô mức chia.
-  file: `apps/web/src/app/(app)/shares/new/man-gui.tsx`
-  severity: high
-  Đề xuất: known-limits
-
-- **Mức chia mặc định của sàn mất lặng lẽ khi gửi trước lúc tải xong cài đặt, hoặc khi tải lỗi**
-  Người dùng thấy gì: Nếu người gửi bấm Gửi quá sớm hoặc mạng lỗi lúc tải cài đặt, bộ gửi đi sẽ không có mức chia dù sàn đã đặt mặc định, và không có câu báo nào.
-  Căn cứ: Chỉ xảy ra khi bấm cực nhanh hoặc mạng lỗi, nhưng bộ đã gửi thì không sửa lại được mức chia; số ca ít nên chấp nhận.
-  file: `apps/web/src/app/(app)/shares/new/man-gui.tsx`
-  severity: low
-  Đề xuất: known-limits
-
-- **Hinh dang 3 — gia ra cua tung can duoc ghim bang chi so cung, khong so voi banRaNgoai cua chinh can**
-  Người dùng thấy gì: Bài kiểm tra giá hiển thị của từng căn so với vị trí cố định thay vì luật ẩn giá, nên có thể báo sai nếu luật giá đổi về sau.
-  Căn cứ: Không ảnh hưởng người dùng hiện tại, chỉ làm bài kiểm dễ báo nhầm khi luật đổi; sửa sau cũng rẻ.
-  file: `packages/api/test-db/trang-nhom-moi-gioi/trang-moi-gioi.test.ts`
-  severity: low
-  Đề xuất: known-limits
-
-## Chưa adversarial-verify (refuter chết)
+  Đề xuất: new-contract
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

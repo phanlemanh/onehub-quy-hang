@@ -1,5 +1,55 @@
-# E10 network (playwright, public pages, no login)
-requests app-origin: GET /s/<code>, POST /api/v1/public/shares/<code>/events, GET /api/v1/public/shares/<code>/photos/<id> - all OK, no 4xx/5xx on public pages.
-console errors on public pages: none.
-console on admin copy (3496): 1x 404 resource (not identified, admin-only page).
-No requests to internal paths (/api/v1/me etc) while logged out.
+# E10 network (Chrome headless CDP, own script; public pages with no cookie; admin/buyer pages with test session)
+## public/admin run 1
+[s1] GET /s/HxLA5Przrye9 200
+[s1] POST /api/v1/public/shares/HxLA5Przrye9/events 201
+[s1] POST /api/v1/public/shares/HxLA5Przrye9/events 200
+[s2] GET /s/HxLA5Przrye9 200
+[s2] POST /api/v1/public/shares/HxLA5Przrye9/events 201
+[s2] POST /api/v1/public/shares/HxLA5Przrye9/events 200
+[s4] GET /s/AwnrV8ycpFit 200
+[s4] GET /api/v1/public/shares/AwnrV8ycpFit/photos/d70602f6-2b64-496a-8d10-ceefefbf17e3 200
+[s4] GET /api/v1/public/shares/AwnrV8ycpFit/photos/db5c13c1-276c-4aad-a2cb-2a2608e7b540 200
+[s4] POST /api/v1/public/shares/AwnrV8ycpFit/events 201
+[s4] POST /api/v1/public/shares/AwnrV8ycpFit/events 200
+[s5] GET /s/HxLA5Przrye9 200
+[s5] POST /api/v1/public/shares/HxLA5Przrye9/events 201
+[s5] POST /api/v1/public/shares/HxLA5Przrye9/events 200
+[s8a] GET /s/8xtQ-062rWCh 200
+[s8b] GET /s/BADCODE12345 200
+[s10] GET /s/HxLA5Przrye9 200
+[s10] POST /api/v1/public/shares/HxLA5Przrye9/events 201
+[s10] POST /api/v1/public/shares/HxLA5Przrye9/events 200
+--console--
+[s1] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s2] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s4] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s5] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s8a] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s8b] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s10] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+## run 2 (admin, public after hide, buyer)
+[s3admin] GET /settings/broker-page 200
+[s3admin] GET /api/v1/listings 200
+[s3admin] PATCH /api/v1/company/settings 200
+[s3] GET /s/HxLA5Przrye9 200
+[s3] POST /api/v1/public/shares/HxLA5Przrye9/events 201
+[s3] POST /api/v1/public/shares/HxLA5Przrye9/events 200
+[s11] GET /settings/broker-page 200
+[s11] GET /api/v1/listings 200
+[s11] PATCH /api/v1/company/settings 200
+[s12] GET /settings/broker-page 200
+[s12] GET /api/v1/listings 200
+[s12] GET /settings/personal?chi-quan-tri=1 200
+[s12] GET /api/v1/listings 200
+[s12] GET /api/v1/me/devices 200
+[s12] GET /api/v1/me/devices 200
+[s12] GET /api/v1/me 200
+[s12] GET /api/v1/me 200
+[s12] GET /api/v1/push/public-key 200
+[s12] GET /api/v1/push/public-key 200
+--console--
+[s3admin] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s3] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+[s12] log-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3491/favicon.ico
+## step9 (3498 fault copy): GET /s/HxLA5Przrye9 200; console: dev overlay 'Server Error: connect ECONNREFUSED 127.0.0.1:5599' (injected fault); favicon 404
+Public pages: only /s/<code>, /api/v1/public/shares/... ; no /api/v1/me etc while logged out. Only 404 = /favicon.ico (static, note-only).
