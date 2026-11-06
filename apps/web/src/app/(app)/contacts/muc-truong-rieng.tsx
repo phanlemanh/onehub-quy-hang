@@ -9,7 +9,7 @@ import { MucHoSo } from "@/components/khoi/solution-crm-4/ho-so";
 import { TrangThai } from "@/components/trang-thai";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { CHUA_GHI, docBoTruong, ghiTruong, luaChonMuc, truongCuaNguoi } from "./truong-rieng";
+import { CHUA_GHI, chuMucTruong, docBoTruong, ghiTruong, luaChonMuc, truongCuaNguoi } from "./truong-rieng";
 
 export function MucTruongRieng({ contactId, contactTypes, custom }: { contactId: string; contactTypes: string[]; custom: Record<string, unknown> }) {
   const [bo, setBo] = useState<TruongRieng[] | null>(null);
@@ -50,12 +50,14 @@ export function MucTruongRieng({ contactId, contactTypes, custom }: { contactId:
         {ds.map((t) => {
           const v = gia[t.code];
           const khoa = v === undefined ? null : String(v);
+          // Ô hiện chữ của lựa chọn (bảng `items`), không mã thô — «Sáng», không «sang».
+          const items = [...luaChonMuc(t).map((c) => ({ value: c.khoa, label: c.label })), { value: "__bo", label: "Bỏ trống" }];
           return (
             <li key={t.code} className="flex items-center justify-between gap-2 text-sm">
               <span className="text-muted-foreground shrink-0">{t.label}</span>
-              <Select value={khoa} onValueChange={(k) => void chon(t, (k as string | null) ?? null)}>
+              <Select items={items} value={khoa} onValueChange={(k) => void chon(t, (k as string | null) ?? null)}>
                 <SelectTrigger aria-label={t.label} className="w-44">
-                  <SelectValue placeholder={CHUA_GHI} />
+                  <SelectValue>{khoa === null ? <span className="text-muted-foreground">{CHUA_GHI}</span> : chuMucTruong(t, v)}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {luaChonMuc(t).map((c) => (
