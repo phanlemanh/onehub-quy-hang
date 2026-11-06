@@ -56,6 +56,7 @@ executors:
     dang_nhap_mat_khau: "node --test \"_acceptance/dang-nhap-mat-khau/thu/*.test.mjs\""   # dang-nhap-mat-khau AC-11: migration 034 mới, không sửa migration đã commit, ADR-0005, khuôn xác thực, Tham chiếu
     bang_hang_dsct: node --test "_acceptance/bang-hang-danh-sach-chi-tiet/thu/*.test.mjs"
     va_dang_nhap_mat_khau: "node --test \"_acceptance/va-dang-nhap-mat-khau/thu/*.test.mjs\""
+    nhap_tac_tu: "DATABASE_URL=\"${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres}\" sh -c 'npm run db:migrate && npm run db:test'"   # nhap-tac-tu-ke-hoach: migrate + cách ly + test-db API trên Postgres dãy G (giám sát duyệt G-0511-2)
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm

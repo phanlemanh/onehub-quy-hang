@@ -1,0 +1,694 @@
+{
+  "nguon": "docDiaChi trên 86 cách viết của dap-an-thap-tang.json, mã trước khi vá «Đường số N»",
+  "sha": "01f7cc3a17389de356edf9b9d92d940dfbfe11fc",
+  "dong": [
+    {
+      "ma": "DC-001",
+      "streetNumber": "45",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-002",
+      "streetNumber": "45",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-003",
+      "streetNumber": "45",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-004",
+      "streetNumber": "45",
+      "streetName": "Duong Mau 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-005",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-006",
+      "streetNumber": "45A",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45A",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-007",
+      "streetNumber": "45A",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45A",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-008",
+      "streetNumber": "45A",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-009",
+      "streetNumber": "45A",
+      "streetName": "Duong Mau 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45A",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-010",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-011",
+      "streetNumber": "45/12",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-012",
+      "streetNumber": "45/12",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-013",
+      "streetNumber": "45/12",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-014",
+      "streetNumber": "45/12",
+      "streetName": "Duong Mau 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-015",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-016",
+      "streetNumber": "45/12",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-017",
+      "streetNumber": "45/12",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-018",
+      "streetNumber": "45/12/3",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12/3",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-019",
+      "streetNumber": "45/12/3",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12/3",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-020",
+      "streetNumber": "45/12/3",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-021",
+      "streetNumber": "45/12/3",
+      "streetName": "Duong Mau 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12/3",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-022",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-023",
+      "streetNumber": "45/12/3",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12/3",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-024",
+      "streetNumber": "45/12/3",
+      "streetName": "Đường Mẫu 1",
+      "tenDuongChuan": "mau 1",
+      "khoa": "79|26740|mau 1|45/12/3",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-025",
+      "streetNumber": "120/7",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|120/7",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-026",
+      "streetNumber": "120/7",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|120/7",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-027",
+      "streetNumber": "120/7",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-028",
+      "streetNumber": "120/7",
+      "streetName": "Duong Mau 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|120/7",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-029",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-030",
+      "streetNumber": "120/7",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|120/7",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-031",
+      "streetNumber": "120/7",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|120/7",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-032",
+      "streetNumber": "88",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-033",
+      "streetNumber": "88",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-034",
+      "streetNumber": "88",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-035",
+      "streetNumber": "88",
+      "streetName": "Duong Mau 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-036",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-037",
+      "streetNumber": "88/5/2",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88/5/2",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-038",
+      "streetNumber": "88/5/2",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88/5/2",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-039",
+      "streetNumber": "88/5/2",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-040",
+      "streetNumber": "88/5/2",
+      "streetName": "Duong Mau 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88/5/2",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-041",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-042",
+      "streetNumber": "88/5/2",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88/5/2",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-043",
+      "streetNumber": "88/5/2",
+      "streetName": "Đường Mẫu 2",
+      "tenDuongChuan": "mau 2",
+      "khoa": "79|26737|mau 2|88/5/2",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-044",
+      "streetNumber": "17",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-045",
+      "streetNumber": "17",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-046",
+      "streetNumber": "17",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-047",
+      "streetNumber": "17",
+      "streetName": "Duong Mau 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-048",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-049",
+      "streetNumber": "17/9",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17/9",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-050",
+      "streetNumber": "17/9",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17/9",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-051",
+      "streetNumber": "17/9",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-052",
+      "streetNumber": "17/9",
+      "streetName": "Duong Mau 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17/9",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-053",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-054",
+      "streetNumber": "17/9",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17/9",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-055",
+      "streetNumber": "17/9",
+      "streetName": "Đường Mẫu 3",
+      "tenDuongChuan": "mau 3",
+      "khoa": "79|26743|mau 3|17/9",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-056",
+      "streetNumber": "203/14",
+      "streetName": "Đường Mẫu 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": "79|26743|mau 4|203/14",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-057",
+      "streetNumber": "203/14",
+      "streetName": "Đường Mẫu 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": "79|26743|mau 4|203/14",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-058",
+      "streetNumber": "203/14",
+      "streetName": "Đường Mẫu 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-059",
+      "streetNumber": "203/14",
+      "streetName": "Duong Mau 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": "79|26743|mau 4|203/14",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-060",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-061",
+      "streetNumber": "203/14",
+      "streetName": "Đường Mẫu 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": "79|26743|mau 4|203/14",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-062",
+      "streetNumber": "203/14",
+      "streetName": "Đường Mẫu 4",
+      "tenDuongChuan": "mau 4",
+      "khoa": "79|26743|mau 4|203/14",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-063",
+      "streetNumber": "61",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-064",
+      "streetNumber": "61",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-065",
+      "streetNumber": "61",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-066",
+      "streetNumber": "61",
+      "streetName": "Duong Mau 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-067",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-068",
+      "streetNumber": "61/3/8",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61/3/8",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-069",
+      "streetNumber": "61/3/8",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61/3/8",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-070",
+      "streetNumber": "61/3/8",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-071",
+      "streetNumber": "61/3/8",
+      "streetName": "Duong Mau 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61/3/8",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-072",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-073",
+      "streetNumber": "61/3/8",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61/3/8",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-074",
+      "streetNumber": "61/3/8",
+      "streetName": "Đường Mẫu 5",
+      "tenDuongChuan": "mau 5",
+      "khoa": "79|26758|mau 5|61/3/8",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-075",
+      "streetNumber": "9B",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|9B",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-076",
+      "streetNumber": "9B",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|9B",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-077",
+      "streetNumber": "9B",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-078",
+      "streetNumber": "9B",
+      "streetName": "Duong Mau 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|9B",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-079",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-080",
+      "streetNumber": "150/22",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|150/22",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-081",
+      "streetNumber": "150/22",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|150/22",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-082",
+      "streetNumber": "150/22",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": null,
+      "trangThai": "can-nguoi-chon"
+    },
+    {
+      "ma": "DC-083",
+      "streetNumber": "150/22",
+      "streetName": "Duong Mau 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|150/22",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-084",
+      "streetNumber": null,
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": null,
+      "trangThai": "thieu"
+    },
+    {
+      "ma": "DC-085",
+      "streetNumber": "150/22",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|150/22",
+      "trangThai": "chuan"
+    },
+    {
+      "ma": "DC-086",
+      "streetNumber": "150/22",
+      "streetName": "Đường Mẫu 6",
+      "tenDuongChuan": "mau 6",
+      "khoa": "79|26758|mau 6|150/22",
+      "trangThai": "chuan"
+    }
+  ]
+}

@@ -20,7 +20,7 @@ import {
   UserIcon,
   UsersIcon,
   type LucideIcon,
-} from "lucide-react";
+ SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -105,6 +105,7 @@ const ICON_CAI_DAT: Record<string, LucideIcon> = {
   "/settings/lead-routing": SplitIcon,
   "/settings/fees": PercentIcon,
   "/settings/templates": FileSpreadsheetIcon,
+  "/settings/ai": SparklesIcon,
 };
 
 const coIcon = (m: { label: string; href: string }): Item => ({ ...m, icon: ICON_CAI_DAT[m.href] ?? ListChecksIcon });
