@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3aead26f84e7e0c9058270083ee2535a8323e215
+verified_commit: 6674096ffc1f392b662e6161f3c8aa38f8e4e824
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -291,3 +291,7 @@ none — every multi-run eval is uniform
 Round 1: baseline đầu; E10b mang mã thoát đã khai trước (đạt có giới hạn), E10e giữ cùng.
 Round 2: siết bốn phép đo, ghi bằng chứng lượt 2 (commit 20541c50).
 Round 3: ca 048 không áp hộ migration còn chờ (commit 3aead26f); round 4 chạy lại E9, E10b và các lệnh suite, các eval còn lại carry-forward.
+
+### Re-pin lần 1 — 2026-11-06, do gộp main + chữ ký
+run_id: repin-20261106T140010Z-44317
+sha: 6674096ffc1f392b662e6161f3c8aa38f8e4e824 · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10b=1 · ngoài làn máy: E10
