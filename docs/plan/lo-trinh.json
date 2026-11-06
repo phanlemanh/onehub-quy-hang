@@ -2654,6 +2654,45 @@
       "vung": [
         "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"
       ]
+    },
+    {
+      "ma": "va-pool-nghe-loi",
+      "cau_giao": "Máy chủ web không sập khi cơ sở dữ liệu cắt một kết nối đang rảnh: mọi bể kết nối gắn trình nghe lỗi, ghi nhật ký rồi bỏ kết nối hỏng; người đang dùng không gặp trang lỗi vì việc này.",
+      "slug": "va-pool-nghe-loi",
+      "vi_sao": "Ngoài-3 của va-pool-ket-noi (PR #155, sự cố bản thật 06/11 EMAXCONNSESSION): pg.Pool mới không gắn trình nghe error, pooler cắt kết nối rảnh thì tiến trình hàm có thể sập. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Giả lập cơ sở dữ liệu cắt kết nối rảnh thì tiến trình không sập, nhật ký có một dòng lỗi, lời gọi sau vẫn chạy; bài kiểm phủ cả hai bể",
+      "vung": [
+        "apps/web/src/lib/api.ts",
+        "apps/web/src/lib/api.test.ts"
+      ]
+    },
+    {
+      "ma": "pooler-che-do-giao-dich",
+      "cau_giao": "Quỹ hàng nối cơ sở dữ liệu qua pooler chế độ giao dịch, nên lượng người dùng đồng thời không còn bị trần 15 kết nối của chế độ phiên: bể danh tính bỏ tham số khởi động search_path (đặt lược đồ trong từng truy vấn hoặc giao dịch), cách ly theo dòng giữ nguyên (set local trong giao dịch), thử trên bản xem trước với chuỗi kết nối chế độ giao dịch trước khi đổi bản thật.",
+      "slug": "pooler-che-do-giao-dich",
+      "vi_sao": "Gốc lâu dài của sự cố 06/11 (PR #155 chỉ thu nhỏ bể; known-limits: hàm serverless tự nhân bản khi tải tăng vẫn cạn được 15 kết nối chế độ phiên). Phiên SC đề xuất; giám sát xếp thành hàng vì là việc kỹ thuật. Đổi DATABASE_URL bản thật là bước vận hành chủ kho duyệt ở Cổng Bằng chứng.",
+      "hang": "T3",
+      "bat_khi": "Trên bản xem trước dùng pooler chế độ giao dịch: đăng nhập, Hôm nay, Bảng hàng chạy; bộ kiểm cách ly xanh; tải đồng thời 40 trang không còn EMAXCONNSESSION",
+      "vung": [
+        "apps/web/src/lib/api.ts",
+        "packages/api/src/auth/**",
+        "packages/api/src/db.ts",
+        "docs/adr/0009-moi-truong-that.md",
+        "docs/architecture/kien-truc-repo-va-stack.md"
+      ]
+    },
+    {
+      "ma": "va-e7-loi-that-cap-han",
+      "cau_giao": "Phép nhìn khung 3 của bài E7 (màn Luật chia lead, cặp hạn hỏng) dựng lỗi bằng phản hồi thật của máy chủ thay cho câu lỗi gõ tay, nên khi chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo.",
+      "slug": "va-e7-loi-that-cap-han",
+      "vi_sao": "Ngoài-1 của luat-chia-lead-cap-han-hong (PR #156): fixture viết tay đúng khuôn bên đọc — phản hồi 200 giả còn lỗi ở khung 3 của E7. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy D, D-0611-2). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Đổi câu lỗi của máy chủ thì phép nhìn khung 3 đỏ; câu đúng thì xanh; không còn phản hồi giả viết tay trong chạy-ui",
+      "vung": [
+        "_acceptance/luat-chia-lead-cap-han-hong/thu/**",
+        "_acceptance/va-e7-loi-that-cap-han/**"
+      ]
     }
   ],
   "chan_troi": [
