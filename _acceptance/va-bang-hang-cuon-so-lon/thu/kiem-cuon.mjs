@@ -176,7 +176,19 @@ for (const k of ket) console.log(JSON.stringify(k));
 tat();
 if (process.argv.includes("--kem-e11")) {
   await ngu(1500);
-  const r = spawnSync(process.execPath, ["_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs", "--khong-build"], { cwd: GOC, encoding: "utf8", timeout: 900_000 });
+  const r = spawnSync(process.execPath, ["_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs", "--khong-build"], { cwd: GOC, encoding: "utf8", timeout: 1_800_000 });
+  // do-cuon bị cắt giữa chừng thì máy chủ next start nó bật ở 3491 thành mồ côi: tắt đúng máy chủ chạy từ cây này.
+  const ton = spawnSync("lsof", ["-iTCP:" + CONG, "-sTCP:LISTEN", "-P", "-n", "-t"], { encoding: "utf8" }).stdout.trim().split("\n").filter(Boolean);
+  for (const pid of ton) {
+    const cwd = spawnSync("lsof", ["-a", "-p", pid, "-d", "cwd", "-Fn"], { encoding: "utf8" }).stdout.split("\n").find((l) => l.startsWith("n"));
+    if (cwd === `n${GOC}`) {
+      try {
+        process.kill(Number(pid));
+      } catch {
+        // đã thoát
+      }
+    }
+  }
   const ra = `${r.stdout ?? ""}${r.stderr ?? ""}`.trim().split("\n").slice(-12).join("\n");
   const luot = ra.split("\n").filter((l) => /^lượt \d/.test(l));
   const toi = luot.filter((l) => l.includes(`dòng cuối thấy ${SO_HANG}`)).length;
