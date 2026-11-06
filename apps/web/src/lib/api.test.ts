@@ -3,7 +3,16 @@ import { test } from "node:test";
 
 import type pg from "pg";
 
-import { docPhanHoiMe, dungPools, LoiDocPhien, POOL_DANH_TINH, POOL_UNG_DUNG } from "./api";
+import {
+  docPhanHoiMe,
+  dungPools,
+  KHACH_KHAC,
+  LoiDocPhien,
+  POOL_DANH_TINH,
+  POOL_UNG_DUNG,
+  SO_PHIEN_BAN_DU_KIEN,
+  TRAN_POOLER,
+} from "./api";
 
 const json = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -29,8 +38,11 @@ test("401 thường là chưa đăng nhập (null); 401 máy bị báo mất tr�
 
 // Pooler chế độ session: TỔNG 15 kết nối cho cả dự án, mọi phiên bản hàm cùng chia. Một phiên bản không được giữ quá
 // một phần ba, và phải nhả kết nối rảnh sớm.
-test("cỡ pool mỗi phiên bản hàm đủ nhỏ để nhiều phiên bản cùng sống dưới trần 15 của pooler", () => {
-  assert.ok(POOL_DANH_TINH.max + POOL_UNG_DUNG.max <= 5, "cỡ pool: một phiên bản giữ quá 5 kết nối của trần 15");
+test("cỡ pool: số phiên bản dự kiến × cỡ mỗi phiên bản + khách khác nhỏ hơn hẳn trần 15 của pooler", () => {
+  // Quan hệ, không phải hằng: số phiên bản dự kiến × cỡ mỗi phiên bản + khách khác phải NHỎ HƠN HẲN trần của pooler.
+  const tong = SO_PHIEN_BAN_DU_KIEN * (POOL_DANH_TINH.max + POOL_UNG_DUNG.max) + KHACH_KHAC;
+  assert.equal(TRAN_POOLER, 15);
+  assert.ok(tong < TRAN_POOLER, `cỡ pool: ${SO_PHIEN_BAN_DU_KIEN} phiên bản × ${POOL_DANH_TINH.max + POOL_UNG_DUNG.max} + ${KHACH_KHAC} = ${tong} chạm trần ${TRAN_POOLER}`);
   for (const p of [POOL_DANH_TINH, POOL_UNG_DUNG]) {
     assert.ok(p.idleTimeoutMillis > 0 && p.idleTimeoutMillis <= 10_000, "cỡ pool: kết nối rảnh không được nhả sớm");
     assert.ok(p.connectionTimeoutMillis > 0, "cỡ pool: chờ kết nối không có hạn");

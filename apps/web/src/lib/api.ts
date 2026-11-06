@@ -6,13 +6,18 @@ type Api = ReturnType<typeof createApi>;
 let cached: Api | undefined;
 
 /**
- * Cỡ pool của mỗi phiên bản hàm (sự cố 06/11): pooler Supabase chế độ session cấp TỔNG 15 kết nối cho cả dự án, mọi
- * phiên bản hàm đang ấm cùng chia. Mặc định của pg (10 mỗi pool, hai pool) để một phiên bản giữ tới 20 kết nối, nên vài
- * trang dựng song song là cạn — better-auth không đọc được phiên. Mỗi phiên bản giữ ít, nhả kết nối rảnh sau vài giây,
- * và `attachDatabasePool` nhả kết nối rảnh trước khi Vercel treo phiên bản; yêu cầu vượt cỡ thì xếp hàng trong pool.
+ * Cỡ pool của mỗi phiên bản hàm (sự cố 06/11): pooler Supabase chế độ session cấp TỔNG 15 kết nối cho cả dự án, và mọi
+ * khách dùng chung `DATABASE_URL` cùng chia — phiên bản hàm của bản chính thức, của bản xem trước (cùng biến môi trường),
+ * và job migrate của CI. Mặc định của pg (10 mỗi pool, hai pool) để một phiên bản giữ tới 20 kết nối. Nay mỗi phiên bản
+ * giữ tối đa 4, nhả kết nối rảnh sau 5 giây; `attachDatabasePool` nhả kết nối rảnh trước khi Vercel treo phiên bản; yêu
+ * cầu vượt cỡ xếp hàng trong pool. Khoảng dư mỏng — gốc lâu dài là pooler chế độ transaction (vòng riêng).
  */
 export const POOL_DANH_TINH = { max: 2, idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
-export const POOL_UNG_DUNG = { max: 3, idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
+export const POOL_UNG_DUNG = { max: 2, idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
+/** Số phiên bản hàm cùng sống mà cỡ trên tính cho (chính thức + xem trước), và số kết nối của khách khác (migrate, quản trị). */
+export const SO_PHIEN_BAN_DU_KIEN = 3;
+export const KHACH_KHAC = 2;
+export const TRAN_POOLER = 15;
 
 /** Lỗi hạ tầng khi đọc phiên (cơ sở dữ liệu nghẽn, API lỗi) — khác «chưa đăng nhập»: vỏ hiện trang lỗi, không đá về đăng nhập. */
 export class LoiDocPhien extends Error {
