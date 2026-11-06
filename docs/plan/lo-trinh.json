@@ -2729,6 +2729,17 @@
       "vung": [
         "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"
       ]
+    },
+    {
+      "ma": "doc-xa-thieu-mot-phan-dau",
+      "cau_giao": "Bộ đọc địa chỉ nhận ra phường khi người gõ thiếu một phần dấu (ví dụ «Phường Tan Định», «Phường Đong Ba») mà không dựng lại lỗi khớp nhầm tên giữa tỉnh (Tân Định ↔ Tân Dĩnh).",
+      "slug": "doc-xa-thieu-mot-phan-dau",
+      "vi_sao": "Ngoài-1 của danh-muc-xa-day-du: gõ thiếu một phần dấu thì không ra phường. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy X, X-11). Làm trước hàng 76 vì 76 lưu khoá địa chỉ. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Gõ thiếu một phần dấu ra đúng phường trong tỉnh đã chọn; hai phường khác tỉnh chỉ khác dấu không khớp nhầm; bộ thử danh mục xã cũ vẫn xanh",
+      "vung": [
+        "packages/core/src/address/**"
+      ]
     }
   ],
   "chan_troi": [
