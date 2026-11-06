@@ -1,22 +1,33 @@
 /**
- * Danh mục đơn vị hành chính cho bộ đọc địa chỉ (hàng 75, ADR-0016 quyết định 5). Địa giới hai cấp từ 1/7/2025: tỉnh,
- * thành → xã, phường, đặc khu. Dữ liệu công, không phải địa chỉ của ai. Bộ đọc chỉ dùng dữ liệu ở đây — thêm đơn vị là
- * thêm dòng, không đổi hàm đọc, không đổi khoá đã ra (khoá dựng trên mã).
+ * Danh mục đơn vị hành chính cho bộ đọc địa chỉ (hàng 75, ADR-0016 quyết định 5; đủ cấp xã ở hàng danh-muc-xa-day-du).
+ * Địa giới hai cấp từ 1/7/2025: tỉnh, thành → xã, phường, đặc khu. Dữ liệu công, không phải địa chỉ của ai. Bộ đọc chỉ
+ * dùng dữ liệu ở đây — thêm đơn vị là thêm dòng, không đổi hàm đọc, không đổi khoá đã ra (khoá dựng trên mã).
  *
- * Phạm vi đã chép (Cổng Phạm vi hàng 75, Hỏi-1 và Hỏi-2 duyệt theo khuyến nghị 05/11): đủ 34 tỉnh, thành; cấp xã chỉ phần
- * trích TP.HCM của hàng 73. Danh mục cấp xã đầy đủ và tên tỉnh cũ là một hàng dữ liệu riêng, đối chiếu lại mọi mã trước
- * khi hàng 76 lưu khoá.
+ * Nguồn (Cổng Phạm vi hàng danh-muc-xa-day-du, Hỏi-1 duyệt 06/11): Cục Thống kê. Ba bảng trong `du-lieu/` sinh bằng máy
+ * từ hai tệp nguồn chép nguyên trong `nguon/` (`nguon/sinh-danh-muc.ts`); không sửa tay bảng — sửa nguồn hay bảng sửa
+ * của bộ sinh rồi sinh lại. 34 tỉnh giữ trong mã, mã và tên đối chiếu với tệp nguồn.
  */
+import XA from "./du-lieu/xa.json" with { type: "json" };
+import XA_CU from "./du-lieu/xa-cu.json" with { type: "json" };
+import TINH_CU from "./du-lieu/tinh-cu.json" with { type: "json" };
+
+export type PhanDanhMuc = "tinh" | "xa" | "xaCu" | "tinhCu";
 
 export type NguonDanhMuc = {
   /** Phần của danh mục mà nguồn này chống lưng. */
-  phan: "tinh" | "xa" | "xaCu";
+  phan: PhanDanhMuc;
   /** Văn bản quy định (số hiệu). */
   vanBan: string;
   /** Nơi máy đã đọc dữ liệu. */
   docQua: string;
   /** Ngày đọc, ISO. */
   ngayDoc: string;
+  /** Danh mục đúng tại ngày này, ISO. */
+  ngayThamChieu?: string;
+  /** Tệp nguồn đã chép trong `nguon/`, nếu có. */
+  tep?: string;
+  /** Băm sha256 của tệp nguồn. */
+  sha256?: string;
   /** Điều chưa kiểm của nguồn, nếu có. */
   ghiChu?: string;
 };
@@ -41,12 +52,29 @@ export type DonViCapXa = {
 };
 
 export type DonViCapXaCu = {
+  /** Mã năm chữ số trước sắp xếp. */
+  ma?: string;
   ten: string;
-  loai: "Phường" | "Xã" | "Thị trấn";
-  /** Quận, huyện, thị xã cũ chứa nó, như «Quận 1». */
+  /** null khi nguồn không ghi loại. */
+  loai: "Phường" | "Xã" | "Thị trấn" | null;
+  /** Quận, huyện, thị xã, thành phố cũ chứa nó, như «Quận 1». */
   huyenCu: string;
+  /** Tỉnh MỚI chứa các xã nhận nó. */
   maTinh: string;
+  /** Mã tỉnh cũ (trước sắp xếp). */
+  maTinhCu?: string;
   /** Mã các xã mới nhận nó (toàn bộ hay một phần). Từ hai mã = bị tách. */
+  vao: readonly string[];
+  /** Cách nhập vào từng xã của `vao`, cùng thứ tự. */
+  cach?: readonly ("toan-bo" | "mot-phan")[];
+};
+
+export type DonViCapTinhCu = {
+  /** Mã hai chữ số trước sắp xếp. */
+  ma: string;
+  /** Tên chính thức cũ, như «Tỉnh Hà Giang». */
+  ten: string;
+  /** Mã các tỉnh mới nhận nó. */
   vao: readonly string[];
 };
 
@@ -59,6 +87,7 @@ export type DanhMucDonViHanhChinh = {
   tinh: readonly DonViCapTinh[];
   xa: readonly DonViCapXa[];
   xaCu: readonly DonViCapXaCu[];
+  tinhCu: readonly DonViCapTinhCu[];
 };
 
 const T = (ma: string, ten: string, tenGoiKhac: readonly string[] = []): DonViCapTinh => ({
@@ -68,35 +97,55 @@ const T = (ma: string, ten: string, tenGoiKhac: readonly string[] = []): DonViCa
   tenGoiKhac,
 });
 
+const CUC_THONG_KE = "https://danhmuchanhchinh.nso.gov.vn";
+
 export const DANH_MUC_DON_VI_HANH_CHINH: DanhMucDonViHanhChinh = {
   nguon: [
     {
       phan: "tinh",
       vanBan: "Quyết định 19/2025/QĐ-TTg ban hành Bảng danh mục và mã số các đơn vị hành chính Việt Nam, Phụ lục I",
-      docQua: "https://thuviennhadat.vn/phap-luat/danh-muc-va-ma-so-34-tinh-thanh-viet-nam-tu-01-7-2025-690649.html",
-      ngayDoc: "2026-11-05",
+      docQua: `${CUC_THONG_KE}/DMDVHC.asmx (DanhMucPhuongXa, cột MaTinh, TenTinh)`,
+      ngayDoc: "2026-11-06",
+      ngayThamChieu: "2026-11-06",
+      tep: "danh-muc-xa-06-11-2026.xml",
+      sha256: "0ff480b1febabf7d3ea2e2dede4af923fc79427a1c967043d541ce0dc4925013",
+      ghiChu: "mã 34 tỉnh khớp bản chép hàng 75 (thuviennhadat.vn); ba tên 22, 24, 75 nay là thành phố",
     },
     {
       phan: "xa",
-      vanBan: "Quyết định 19/2025/QĐ-TTg, Phụ lục II (mã xã năm chữ số)",
-      docQua:
-        "Hộp thông tin trang Wikipedia tiếng Việt từng phường (Sài Gòn, Tân Định, Bến Thành, Cầu Ông Lãnh), trang dẫn " +
-        "danh mục của Tổng cục Thống kê",
-      ngayDoc: "2026-11-05",
-      ghiChu: "chưa đối chiếu Phụ lục II — hàng danh mục đầy đủ đối chiếu lại trước khi hàng 76 lưu khoá",
+      vanBan: "Quyết định 19/2025/QĐ-TTg, Phụ lục II (mã xã năm chữ số), cập nhật tới ngày tham chiếu",
+      docQua: `${CUC_THONG_KE}/DMDVHC.asmx (DanhMucPhuongXa, cả nước, DenNgay 06/11/2026)`,
+      ngayDoc: "2026-11-06",
+      ngayThamChieu: "2026-11-06",
+      tep: "danh-muc-xa-06-11-2026.xml",
+      sha256: "0ff480b1febabf7d3ea2e2dede4af923fc79427a1c967043d541ce0dc4925013",
     },
     {
       phan: "xaCu",
-      vanBan: "Nghị quyết 1685/NQ-UBTVQH15 ngày 16/6/2025 về sắp xếp đơn vị hành chính cấp xã của Thành phố Hồ Chí Minh",
-      docQua: "Trang Wikipedia tiếng Việt «Quận 1» và trang từng phường mới (như bảng trích của hàng 73)",
-      ngayDoc: "2026-11-05",
-      ghiChu: "chưa đọc văn bản gốc",
+      vanBan:
+        "Bảng chuyển đổi đơn vị hành chính mới – cũ của Cục Thống kê theo các nghị quyết sắp xếp đơn vị hành chính cấp xã " +
+        "năm 2025 của Ủy ban Thường vụ Quốc hội (TP.HCM: Nghị quyết 1685/NQ-UBTVQH15)",
+      docQua: `${CUC_THONG_KE}/TAPTIN/BangChuyendoiĐVHCmoi_cu_final.xlsx (sheet «Tổng hợp_không merge»)`,
+      ngayDoc: "2026-11-06",
+      ngayThamChieu: "2025-07-01",
+      tep: "bang-chuyen-doi-moi-cu.xlsx",
+      sha256: "213966723785859dedd7c88965d6f12f8c3c508c91796e003804cf60a1054fc2",
+      ghiChu: "tệp sửa lần cuối 23/10/2025; lỗi đã biết sửa bằng bảng SUA_NGUON của bộ sinh",
+    },
+    {
+      phan: "tinhCu",
+      vanBan: "Bảng chuyển đổi đơn vị hành chính mới – cũ của Cục Thống kê (cột tỉnh cũ, tỉnh mới)",
+      docQua: `${CUC_THONG_KE}/TAPTIN/BangChuyendoiĐVHCmoi_cu_final.xlsx (sheet «Tổng hợp_không merge»)`,
+      ngayDoc: "2026-11-06",
+      ngayThamChieu: "2025-07-01",
+      tep: "bang-chuyen-doi-moi-cu.xlsx",
+      sha256: "213966723785859dedd7c88965d6f12f8c3c508c91796e003804cf60a1054fc2",
     },
   ],
-  ngay: "2026-11-05",
+  ngay: "2026-11-06",
   phamVi:
-    "Đủ 34 tỉnh, thành. Cấp xã: chỉ phần trích TP.HCM của hàng 73 — bốn phường mới Sài Gòn, Tân Định, Bến Thành, Cầu Ông " +
-    "Lãnh và mười phường cũ Quận 1. Chưa có 3.321 xã, bảng tên cũ → mới cả nước, tên tỉnh cũ (hàng dữ liệu riêng).",
+    "Đủ 34 tỉnh, thành và 3.321 xã, phường, đặc khu tại ngày 06/11/2026; mọi xã cũ có mã trước sắp xếp 2025 và 63 tỉnh " +
+    "cũ, trỏ sang đơn vị mới theo bảng chuyển đổi của Cục Thống kê.",
   tinh: [
     T("01", "Thành phố Hà Nội"),
     T("04", "Tỉnh Cao Bằng"),
@@ -107,8 +156,8 @@ export const DANH_MUC_DON_VI_HANH_CHINH: DanhMucDonViHanhChinh = {
     T("15", "Tỉnh Lào Cai"),
     T("19", "Tỉnh Thái Nguyên"),
     T("20", "Tỉnh Lạng Sơn"),
-    T("22", "Tỉnh Quảng Ninh"),
-    T("24", "Tỉnh Bắc Ninh"),
+    T("22", "Thành phố Quảng Ninh"),
+    T("24", "Thành phố Bắc Ninh"),
     T("25", "Tỉnh Phú Thọ"),
     T("31", "Thành phố Hải Phòng"),
     T("33", "Tỉnh Hưng Yên"),
@@ -124,7 +173,7 @@ export const DANH_MUC_DON_VI_HANH_CHINH: DanhMucDonViHanhChinh = {
     T("56", "Tỉnh Khánh Hòa"),
     T("66", "Tỉnh Đắk Lắk"),
     T("68", "Tỉnh Lâm Đồng"),
-    T("75", "Tỉnh Đồng Nai"),
+    T("75", "Thành phố Đồng Nai"),
     // «Sài Gòn» cố ý không là tên gọi khác: nay là tên một phường.
     T("79", "Thành phố Hồ Chí Minh", ["TP.HCM", "TPHCM", "TP HCM", "HCM", "TP. HCM", "Tp.HCM"]),
     T("80", "Tỉnh Tây Ninh"),
@@ -134,36 +183,23 @@ export const DANH_MUC_DON_VI_HANH_CHINH: DanhMucDonViHanhChinh = {
     T("92", "Thành phố Cần Thơ"),
     T("96", "Tỉnh Cà Mau"),
   ],
-  xa: [
-    { ma: "26737", maTinh: "79", ten: "Tân Định", loai: "Phường" },
-    { ma: "26740", maTinh: "79", ten: "Sài Gòn", loai: "Phường" },
-    { ma: "26743", maTinh: "79", ten: "Bến Thành", loai: "Phường" },
-    { ma: "26758", maTinh: "79", ten: "Cầu Ông Lãnh", loai: "Phường" },
-  ],
-  xaCu: [
-    { ten: "Bến Nghé", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26740"] },
-    { ten: "Đa Kao", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26740", "26737"] },
-    { ten: "Nguyễn Thái Bình", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26743", "26740"] },
-    { ten: "Tân Định", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26737"] },
-    { ten: "Bến Thành", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26743"] },
-    { ten: "Phạm Ngũ Lão", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26743"] },
-    { ten: "Cầu Ông Lãnh", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26743", "26758"] },
-    { ten: "Cầu Kho", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26758"] },
-    { ten: "Cô Giang", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26758"] },
-    { ten: "Nguyễn Cư Trinh", loai: "Phường", huyenCu: "Quận 1", maTinh: "79", vao: ["26758"] },
-  ],
+  xa: XA as readonly DonViCapXa[],
+  xaCu: XA_CU as readonly DonViCapXaCu[],
+  tinhCu: TINH_CU as readonly DonViCapTinhCu[],
 };
 
 /** Kiểm khuôn danh mục; trả danh sách lỗi (rỗng = lành). */
 export function kiemDanhMuc(dm: DanhMucDonViHanhChinh): string[] {
   const loi: string[] = [];
   const iso = /^\d{4}-\d{2}-\d{2}$/;
-  for (const phan of ["tinh", "xa", "xaCu"] as const) {
+  for (const phan of ["tinh", "xa", "xaCu", "tinhCu"] as const) {
     const ns = (dm.nguon ?? []).filter((n) => n.phan === phan);
     if (ns.length === 0) loi.push(`danh mục thiếu nguồn: ${phan}`);
     for (const n of ns) {
       if (!n.vanBan?.trim()) loi.push(`danh mục thiếu nguồn: ${phan} không có văn bản`);
       if (!iso.test(n.ngayDoc ?? "")) loi.push(`danh mục thiếu ngày đọc: ${phan}`);
+      if (!iso.test(n.ngayThamChieu ?? "")) loi.push(`danh mục thiếu ngày tham chiếu: ${phan}`);
+      if (n.tep !== undefined && !/^[0-9a-f]{64}$/.test(n.sha256 ?? "")) loi.push(`danh mục thiếu băm nguồn: ${phan}`);
     }
   }
   if (!iso.test(dm.ngay ?? "")) loi.push("danh mục thiếu ngày");
@@ -181,10 +217,21 @@ export function kiemDanhMuc(dm: DanhMucDonViHanhChinh): string[] {
     maXa.add(x.ma);
     if (!maTinh.has(x.maTinh)) loi.push(`xã trỏ tỉnh không có: ${x.ten}`);
   }
+  const maCu = new Set<string>();
   for (const c of dm.xaCu) {
+    if (c.ma !== undefined) {
+      if (!/^\d{5}$/.test(c.ma)) loi.push(`mã xã cũ sai khuôn: ${c.ma}`);
+      if (maCu.has(c.ma)) loi.push(`mã xã cũ trùng: ${c.ma}`);
+      maCu.add(c.ma);
+    }
     if (c.vao.length === 0) loi.push(`phường cũ không vào xã nào: ${c.ten}`);
     for (const m of c.vao) if (!maXa.has(m)) loi.push(`phường cũ trỏ xã mới không có: ${c.ten} → ${m}`);
     if (!maTinh.has(c.maTinh)) loi.push(`phường cũ trỏ tỉnh không có: ${c.ten}`);
+  }
+  for (const t of dm.tinhCu ?? []) {
+    if (!/^\d{2}$/.test(t.ma)) loi.push(`mã tỉnh cũ sai khuôn: ${t.ma}`);
+    if (t.vao.length === 0) loi.push(`tỉnh cũ không vào tỉnh nào: ${t.ten}`);
+    for (const m of t.vao) if (!maTinh.has(m)) loi.push(`tỉnh cũ trỏ tỉnh mới không có: ${t.ten} → ${m}`);
   }
   return loi;
 }
