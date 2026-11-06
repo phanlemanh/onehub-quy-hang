@@ -136,8 +136,7 @@ export function BangThuePhi({ tieuDe, cauHinh: dau, tenNguoi }: { tieuDe: string
                   value={nhap.moiGioi}
                   onValueChange={(n) => doi({ ...nhap, moiGioi: n })}
                   step={0.1}
-                  min={0}
-                  max={5}
+                  locale="vi-VN"
                   disabled={dangLuu}
                   aria-label={`${d.ten} (%)`}
                 >
@@ -152,6 +151,7 @@ export function BangThuePhi({ tieuDe, cauHinh: dau, tenNguoi }: { tieuDe: string
                   {d.tiLeChu} · {THEO_LUAT}
                 </p>
               )}
+              {/* Ô không kẹp min/max: số ngoài khoảng ở lại để câu lỗi hiện và Lưu khoá (E2a ca sai). */}
               {loi?.o === "moi_gioi" && d.suaDuoc ? <FieldError id="loi-moi-gioi">{loi.chu}</FieldError> : null}
               {loi?.o === "cong-tac" && j === ds.length - 1 ? <FieldError id="loi-cong-tac">{loi.chu}</FieldError> : null}
               <p id={`nguon-${d.ma}`} className="text-xs text-muted-foreground">

@@ -35,7 +35,7 @@ export type MayTinh = {
 
 export type DoiMayTinh = { o: "gia"; chu: string } | { o: "ve-tay"; chu: string } | { o: "phi"; phi: FeeInclusion } | { o: "moi-gioi"; chu: string };
 
-export const TI_LE_MAC_DINH_CHU = "Tỉ lệ mặc định của sàn";
+export const TI_LE_MAC_DINH_CHU = "Tỉ lệ của sàn";
 export const nhanKhoan = (k: KhoanPhi) => NHAN_KHOAN[k.ma];
 
 /** «1» · «0,5» — phần vạn viết thành phần trăm, dấu phẩy thập phân. */
