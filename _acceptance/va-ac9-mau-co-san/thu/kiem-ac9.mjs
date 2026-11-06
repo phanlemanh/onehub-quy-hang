@@ -113,8 +113,18 @@ function chayTep(tep, ten) {
   };
 }
 
-// Thông điệp ghim chiều đỏ của từng ca phá: biểu thức của lời khẳng định phá thử mà phép đếm bị vô hiệu làm hỏng.
-const GHIM_DO = { "pha-dem": `coLoi(loi, "${THONG_DIEP_DO}")`, "pha-hai-san": 'coLoi(loi, "hai sàn mẫu")' };
+// Lời khẳng định phá thử mà mỗi phép đếm bị vô hiệu làm hỏng. Node in «false == true» cho assert.ok, không in lại biểu
+// thức, nên ghim là khung stack đầu tiên sau AssertionError: phải trỏ đúng dòng chứa lời khẳng định này trong tệp phá.
+const KHANG_DINH = { "pha-dem": `coLoi(loi, "${THONG_DIEP_DO}")`, "pha-hai-san": 'coLoi(loi, "hai sàn mẫu")' };
+// Chỗ ghim chiều đỏ theo ca; ca phá điền lúc dựng tệp phá (tên tệp:số dòng).
+const GHIM_DO = {};
+
+/** Khung stack đầu tiên ngay sau dòng AssertionError đầu tiên. */
+function khungDau(ra) {
+  const d = ra.split("\n");
+  const i = d.findIndex((l) => l.includes("AssertionError"));
+  return i < 0 ? "" : (d.slice(i + 1).find((l) => /^\s+at /.test(l)) ?? "");
+}
 
 /** Đúng lệnh của job deploy (ci.yml): mọi tệp packages/db/tests/*.test.mjs của gói db. */
 function chayDeploy(ten) {
@@ -149,7 +159,7 @@ async function mot(ca, tep, kyVongXanh) {
       if (k.ac9BoQua) loi.push(`AC-9 bị bỏ qua (${ca})`);
     } else {
       if (k.ma === 0) loi.push(`tệp kiểm xanh trên cơ sở dữ liệu ${ca} — phép đo không phân biệt được`);
-      else if (!k.ra.includes(GHIM_DO[ca] ?? THONG_DIEP_DO)) loi.push(`đỏ sai thông điệp (${ca}): ${k.dongDo.join(" | ")}`);
+      else if (GHIM_DO[ca] ? !khungDau(k.ra).includes(GHIM_DO[ca]) : !k.ra.includes(THONG_DIEP_DO)) loi.push(`đỏ sai thông điệp (${ca}): ${k.dongDo.join(" | ")}`);
     }
     if (JSON.stringify(sau) !== JSON.stringify(truoc)) loi.push(`dữ liệu có sẵn đổi sau lượt chạy (${ca}): ${JSON.stringify(truoc)} → ${JSON.stringify(sau)}`);
     return { ca, ok: loi.length === 0, loi, ma_tep: k.ma };
@@ -213,7 +223,15 @@ if (dcd > 0) {
         console.error(`không tìm thấy «${neo}» trong ${TUONG_DOI} — phép đo ${ca} không áp được`);
         process.exit(2);
       }
-      const tep = banSao(goc.replace(neo, `${neo}\n  return 0;`), ca);
+      const pha = goc.replace(neo, `${neo}\n  return 0;`);
+      const tep = banSao(pha, ca);
+      const dong = pha.split("\n").findIndex((l) => l.includes(KHANG_DINH[ca])) + 1;
+      if (!dong) {
+        rmSync(tep, { force: true });
+        console.error(`không tìm thấy lời khẳng định ${KHANG_DINH[ca]} trong ${TUONG_DOI}`);
+        process.exit(2);
+      }
+      GHIM_DO[ca] = `${path.basename(tep)}:${dong}:`;
       try {
         ket.push(await mot(ca, tep, false));
       } finally {
