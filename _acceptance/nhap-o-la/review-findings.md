@@ -1,20 +1,17 @@
-# Review findings: nhap-o-la (round 2)
-
 ## Trong hợp đồng
-
-- **Hình dạng 1 (đo chỉ dẫn/vật thế chỗ thay vì đầu ra): số «tự ghi» trong E8 luôn bằng 0 vì đường nhận mặc định là hàm rỗng, không phải đường nhận thật của màn**
-  AC: AC-8
-  file: `_acceptance/nhap-o-la/thu/do-o-la.ts:34`
-  severity: high
-  source: measurement
-  detail: `tinhSoDoOLa(goi, dauRa, nhan = () => {})` tính `tuGhi = JSON.stringify(ap) === truocJson ? 0 : 1` sau khi gọi `nhan(ap, kq.deXuat)`. Chỉ `nhan` có thể đổi `ap` (`kiemDeXuatOLa` không nhận `ap`). Lần đo thật ở `lap-de-xuat.ts:24` (`tinhSoDoOLa(goi, docTep(m).dauRa)`) và bài kiểm trong `do-o-la.test.ts:41` (`assert.equal(so.tuGhi, 0, "tự ghi")`) đều để `nhan` mặc định là hàm rỗng. Vì vậy số tự ghi = 0 trong `so-do-o-la.json` đúng ngay từ cách dựng, dù mã sản phẩm làm gì đi nữa. Không có đường nhận nào của sản phẩm (ví dụ `hoiOLa` ở `apps/web/src/lib/nhap/o-la.ts`) được đưa vào. Đối chứng dương mới thêm ở `do-o-la.test.ts:51-58` chỉ chứng minh một hàm `nhan` viết tay bên trong bài kiểm có tự áp thì số ra 1. Nó kiểm bộ đếm, không kiểm mã sản phẩm. Trong khi đó evals.yaml E8 vẫn ghi «tự ghi = 0» là một trong năm assert số đo, như thể đây là kết quả đo được. Chú thích ở dòng 38-40 thừa nhận đường nhận của màn «đo riêng ở E5». Như vậy chỉ tiêu tự ghi của E8 không đo đầu ra nào: assert này sẽ không đỏ dù đường nhận thật có tự áp đề xuất.
-  rationale: Cùng gốc với t1: chỉ tiêu «tự ghi 0» của AC-8 không đo đầu ra thật nên không thể đỏ khi màn tự áp đề xuất.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hai ảnh «cận ô» ở khổ 1440 giống nhau từng byte: ô về tay và ô trạng thái lạ dùng chung một ảnh**
+- **Bài kiểm của packages/core giờ nhập thẳng mã apps/web (hoiOLa, chayOng): lõi phụ thuộc ngược vào app**
+  Người dùng thấy gì: Người dùng không thấy gì khác đi: tính năng đề xuất ô lạ chạy đúng. Chỉ có điều bộ kiểm của phần lõi giờ dính vào mã màn Nhập, nên sửa màn có thể làm bộ kiểm lõi đỏ oan.
+  Căn cứ: Không ảnh hưởng người dùng và không mất dữ liệu; chỉ gây phiền cho người làm kho, tự lộ ra ngay khi bài kiểm đỏ và dời sau cũng không đắt hơn.
+  file: `packages/core/src/import/ai/o-la/do-o-la.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hai ảnh «cận ô» ở khổ 1440 giống nhau từng byte: ô về tay và ô trạng thái lạ dùng chung một ảnh (r2 · tệp đã đổi)**
   Người dùng thấy gì: Hai ảnh minh hoạ ở khổ máy tính trông như hai bằng chứng riêng nhưng thực ra là một, nên người xem hồ sơ có thể tưởng đã kiểm kỹ hơn thực tế. Màn hình dùng thật không bị ảnh hưởng.
   Căn cứ: Chỉ ảnh hồ sơ bị trùng, không mất hay lộ dữ liệu của người dùng, chụp lại sau lúc nào cũng được và rẻ.
   file: `_acceptance/nhap-o-la/thu/chup-o-la.mjs`
@@ -56,7 +53,7 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: medium
   Đề xuất: known-limits
 
-- **Hình 3 (kiểm 'có mặt' trong khi lời hứa là quan hệ): 'thứ tự cột rồi dòng' chỉ xem hai phần tử đầu của một cột (r1 · tệp đã đổi)**
+- **Hình 3 (kiểm 'có mặt' trong khi lời hứa là quan hệ): 'thứ tự cột rồi dòng' chỉ xem hai phần tử đầu của một cột (r1)**
   Người dùng thấy gì: Với tệp có hơn 300 ô lạ, chưa chắc máy chọn đúng 300 ô theo thứ tự mong muốn.
   Căn cứ: Chỉ xảy ra với tệp rất lớn, ô bị bỏ vẫn sửa tay được và không mất dữ liệu.
   file: `packages/core/src/import/ai/o-la/goi.test.ts`
@@ -69,5 +66,7 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   file: `apps/web/src/lib/nhap/test-db/o-la.db-test.mts`
   severity: medium
   Đề xuất: known-limits
+
+## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

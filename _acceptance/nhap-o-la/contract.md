@@ -5,7 +5,7 @@ slug: nhap-o-la
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: verified
 design_doc: _acceptance/nhap-o-la/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06
@@ -96,3 +96,10 @@ AC-4. Later/Never ở «Out of scope».
 
 - Số đo mô hình (AC-8) là mô phỏng: đề xuất ghi sẵn do tác tử con chạy đúng mô hình lập, không qua Claude API với đầu ra có
   khuôn. Số qua API thật là điều kiện của phiên nghiệm thu trước khi hạ đường ô lạ xuống Haiku 5.5 (Hỏi-1).
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Người dùng không thấy gì khác đi: tính năng đề xuất ô lạ chạy đúng. Chỉ có điều bộ kiểm của phần lõi giờ dính vào mã màn Nhập, nên sửa màn có thể làm bộ kiểm lõi đỏ oan. — `packages/core/src/import/ai/o-la/do-o-la.test.ts`
+- Ngoài-2 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Hai ảnh minh hoạ ở khổ máy tính trông như hai bằng chứng riêng nhưng thực ra là một, nên người xem hồ sơ có thể tưởng đã kiểm kỹ hơn thực tế. Màn hình dùng thật không bị ảnh hưởng. — `_acceptance/nhap-o-la/thu/chup-o-la.mjs`
+- Ngoài-5 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Với ô kiểu «chủ nhận về 3,95 tỷ», máy có thể đề xuất một giá sai mà vẫn hiện ra cho người bấm «Dùng». — `packages/core/src/import/ai/o-la/kiem.ts`
+- Ngoài-6 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài kiểm không chứng minh chắc là màn không gọi AI khi sàn tắt; chức năng thật có thể vẫn đúng. — `apps/web/src/lib/nhap/o-la.test.ts`
+- Ngoài-7 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Sổ chi phí có thể ghi sai loại dữ liệu cá nhân bị chặn, dù việc chặn vẫn xảy ra. — `packages/api/src/imports/ai/cells/quet.ro-ri.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Với tệp có hơn 300 ô lạ, chưa chắc máy chọn đúng 300 ô theo thứ tự mong muốn. — `packages/core/src/import/ai/o-la/goi.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài kiểm có thể xanh dù dòng bị bỏ vì lý do khác, nên chưa chứng minh chặt rằng ô giá cần người mới là nguyên nhân. — `apps/web/src/lib/nhap/test-db/o-la.db-test.mts`
