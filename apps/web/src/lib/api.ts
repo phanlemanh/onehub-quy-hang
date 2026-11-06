@@ -35,11 +35,32 @@ export class LoiDocPhien extends Error {
   }
 }
 
-/** Hai pool của một hàm, đúng cỡ của nơi chạy, cả hai gắn `attachDatabasePool` (tham số để bài kiểm thay). */
+/**
+ * Nghe lỗi kết nối (va-pool-nghe-loi): pooler cắt kết nối (cạn, khởi động lại) thì pg phát `error`; không ai nghe là lỗi
+ * không bắt được và phiên bản hàm chết. Hai chỗ nghe, theo pg-pool 3.14:
+ * - kết nối RẢNH: pool tự bỏ kết nối hỏng rồi phát `error` lên pool → ghi đúng một dòng (tên pool, nơi chạy, mã, câu lỗi;
+ *   không in đối tượng lỗi hay cấu hình — chuỗi kết nối mang mật khẩu);
+ * - kết nối ĐÃ MƯỢN: pool gỡ trình nghe rảnh lúc cho mượn, nên chính kết nối phát `error` → trình chặn lặng trên mỗi kết
+ *   nối mới; truy vấn kế tiếp trên kết nối ấy vẫn nhận lỗi của chính nó (đi đường cũ), nên không ghi dòng thứ hai.
+ */
+function ngheLoi(pool: pg.Pool, ten: "danh-tinh" | "ung-dung", noi: Noi) {
+  pool.on("error", (err: Error & { code?: string }) => {
+    console.error(`[pool:${ten}·${noi}] kết nối rảnh hỏng, đã bỏ — ${err.code ?? "?"}: ${err.message}`);
+  });
+  pool.on("connect", (client) => {
+    client.on("error", () => {
+      // Lặng: lỗi về truy vấn kế tiếp trên kết nối này; kết nối rảnh đã có dòng của pool ở trên.
+    });
+  });
+}
+
+/** Hai pool của một hàm, đúng cỡ của nơi chạy, cả hai gắn `attachDatabasePool` (tham số để bài kiểm thay) và nghe lỗi. */
 export function dungPools(url: string, noi: Noi = "trang", attach: (pool: pg.Pool) => void = attachDatabasePool) {
   const co = CO_THEO_NOI[noi];
   const identityPool = new pg.Pool({ ...co.danhTinh, connectionString: url, options: "-c search_path=identity" });
   const appPool = new pg.Pool({ ...co.ungDung, connectionString: url });
+  ngheLoi(identityPool, "danh-tinh", noi);
+  ngheLoi(appPool, "ung-dung", noi);
   attach(identityPool);
   attach(appPool);
   return { identityPool, appPool };
