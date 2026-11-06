@@ -17,3 +17,7 @@
 {"ts":"2026-11-06T13:43:39Z","sha":"f10f19a415a0d708f09bf5865274fc40ab2c5e6a","round":1,"kind":"baseline","evals_hash":"55f37f502505417bc247ec7a11160310807696404205b0cb5e80a1a6933f94f7","non_discriminating":[]}
 {"ts":"2026-11-06T13:43:39Z","sha":"f10f19a415a0d708f09bf5865274fc40ab2c5e6a","round":1,"kind":"round-tally","verdict":"REJECT","expected":9,"returned":9,"blocked":0}
 {"ts":"2026-11-06T13:43:39Z","sha":"f10f19a415a0d708f09bf5865274fc40ab2c5e6a","round":1,"kind":"chot-truong-nguoi","human_signoff":0,"human_override":0,"bypass_ack":0,"verified_at":14}
+{"kind":"thuoc-vat","ts":"2026-11-06T13:50:12Z","round":1,"san":"f88ea320c03fe4c0bf3b6ec7d0e08d497efb3bff","vat":[0,0],"thuoc":[1,1],"ho_so":[195,0],"nhat":1,"lan":0,"tep_thuoc":["_acceptance/va-deploy-csdl-tam/evals.yaml"]}
+{"kind":"thuoc-lech","ts":"2026-11-06T13:50:12Z","round":1,"sha":"f10f19a415a0d708f09bf5865274fc40ab2c5e6a","tep":[{"tep":"_acceptance/va-deploy-csdl-tam/evals.yaml","doi":"đổi nội dung"}]}
+{"kind":"cay-doi","ts":"2026-11-06T13:50:12Z","round":1,"luot_ts":"2026-11-06T13:43:39Z","sha":"f10f19a415a0d708f09bf5865274fc40ab2c5e6a","tep":[{"tep":"_acceptance/va-deploy-csdl-tam/evals.yaml","doi":"commit"}],"commit":["9ce53c5e"],"moi":[]}
+{"kind":"ghi-boi-tac-tu-cham","ts":"2026-11-06T13:50:12Z","round":1,"luot_ts":"2026-11-06T13:43:39Z","sha":"f10f19a415a0d708f09bf5865274fc40ab2c5e6a","tac_tu":[],"tep_khong_ro":["_acceptance/va-deploy-csdl-tam/evals.yaml"]}
