@@ -5,7 +5,7 @@ slug: trang-nhom-moi-gioi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-06-trang-nhom-moi-gioi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06
@@ -107,3 +107,7 @@ AC-1..AC-7. Số lượt mở link nhóm môi giới đọc từ `share_events` 
   `apps/web/src/app/(app)/settings/broker-page/**`, `apps/web/src/app/(app)/settings/cai-dat.ts`, `packages/core/src/sharing/**`,
   `packages/api/src/public/**`, `packages/api/src/contacts/**`, `packages/db/migrations/048_*.sql`, `packages/db/tests/isolation.test.mjs`,
   `packages/api/test-db/trang-nhom-moi-gioi/**`, `docs/product/tham-chieu.md`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Bộ kiểm cách ly chạy lại lệnh migrate thật để đo 048 không áp lại (đã rào: còn migration chờ thì ca đỏ trước khi chạy).
+  - Ngoài-2: Cùng chỗ với Ngoài-1: trước bản rào, bộ kiểm có thể lặng lẽ áp migration còn chờ rồi vẫn báo đạt.
+  - Ngoài-3: Trang môi giới giữ một bản riêng tập khoản phí và nhãn; sàn đổi khoản hay tên gọi thì trang có thể lệch màn Cài đặt phí tới khi sửa thêm một chỗ.

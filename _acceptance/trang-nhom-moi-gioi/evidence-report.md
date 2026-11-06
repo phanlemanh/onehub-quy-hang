@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 3aead26f84e7e0c9058270083ee2535a8323e215
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: trang-nhom-moi-gioi
@@ -228,7 +228,7 @@ human_signoff:
   exit_code: 0
   baseline: n-a
   carried_from_round: 2
-  verifier: config:executors.script
+  verifier: _acceptance/trang-nhom-moi-gioi/kiem-khuon-e10.mjs
   verified_at: 2026-11-06T09:35:12Z
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
