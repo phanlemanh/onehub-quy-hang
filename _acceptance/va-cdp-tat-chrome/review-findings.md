@@ -1,23 +1,23 @@
-## Trong hợp đồng
+# Review findings: va-cdp-tat-chrome (round 3)
 
-- **Bộ bắt tín hiệu của cdp.mjs đếm sai khi lời gọi dùng process.once, nên cắt ngang việc dọn dẹp riêng của lời gọi (lệch AC-3)**
-  AC: AC-3
-  file: `_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs:145`
-  severity: low
-  source: conventions
-  detail: caiBat() chỉ để Node tự thoát với mã 128 + số hiệu khi `process.listenerCount(tin) === 1`, tức nó đoán chỉ còn mỗi bộ bắt của mình. Nhưng EventEmitter gỡ bộ bắt `once` ra TRƯỚC khi gọi nó. Nếu lời gọi cài `process.once("SIGTERM", async () => { await donRieng(); process.exit(0) })` trước moChrome(), thì lúc bộ bắt của cdp.mjs chạy, số bộ bắt đã về 1. Kết quả là `process.exit(143)` chạy ngay, cắt ngang việc dọn dẹp bất đồng bộ của lời gọi và đè lên mã thoát lời gọi chọn. AC-3 hứa "có bộ bắt riêng thì bộ bắt riêng vẫn chạy và mã thoát là mã nó chọn". Ca bat-rieng của E3 chỉ thử `process.on` cài SAU moChrome(), nên không bắt được lối này. Hiện chưa chỗ thử nào trong _acceptance cài bộ bắt tín hiệu (đã grep), nên đây chưa phải lỗi đang chạy, chỉ là lỗ hổng so với hợp đồng. Hướng sửa: ghi số bộ bắt khác ngay lúc tín hiệu tới, hoặc chỉ tự thoát khi trước đó không có bộ bắt nào khác.
+## Trong hợp đồng
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hình dạng 4 (âm tính không ghim đúng thông điệp): E7 đỏ được ở mọi ca chỉ nhờ «hồ sơ tạm còn trên đĩa», nên chưa chứng minh phép đo «Chrome mồ côi» phân biệt được bản sửa**
-  Người dùng thấy gì: Bộ kiểm tra có thể vẫn báo đạt dù phần phát hiện Chrome chạy ẩn bị hỏng, vì nó đã đỏ nhờ một dấu hiệu khác trên bản cũ. Sản phẩm vẫn tắt Chrome đúng, nhưng độ tin của phép đo thấp hơn lời hứa.
-  Căn cứ: Không ảnh hưởng người dùng, chỉ làm bộ kiểm tra kém nhạy hơn; không mất dữ liệu và có thể siết lại sau với chi phí thấp.
-  file: `_acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs`
+- **Awaiting dong() never resolves: the caller's process exits early (code 0, or 13 under top-level await) and skips the code after it**
+  Người dùng thấy gì: Nếu một lượt chấm viết chờ việc đóng Chrome xong rồi mới làm tiếp (ví dụ ghi báo cáo), phần sau đó có thể bị bỏ qua mà không báo lỗi gì. Chrome vẫn được tắt đúng, và các lượt chấm hiện có không dùng cách viết này.
+  Căn cứ: Chỉ ảnh hưởng người viết thêm lượt chấm mới theo cách chờ đóng, hiện chưa ai làm vậy; Chrome vẫn tắt nên không mất dữ liệu, chỉ cần ghi chú là không chờ việc đóng.
+  file: `_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs`
   severity: medium
   Đề xuất: known-limits
 
-## Chưa adversarial-verify (refuter chết)
+- **Hình dạng 4 (kiểm âm không có đối chứng dương): ca api kiểm «người canh không còn» mà không xác nhận trước rằng người canh từng sống**
+  Người dùng thấy gì: Bài tự kiểm có thể báo đạt về việc tiến trình canh đã tắt dù thực ra chưa đo được là nó từng chạy. Công cụ thật vẫn tắt Chrome đúng, chỉ là bài kiểm ở một ca yếu hơn mong muốn.
+  Căn cứ: Nhẹ với người dùng: không làm rò Chrome hay mất dữ liệu, chỉ làm một phép kiểm kém chắc; ca tắt thường đã có đối chứng nên rủi ro bỏ sót thấp, sửa sau cũng rẻ.
+  file: `_acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs`
+  severity: medium
+  Đề xuất: known-limits
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

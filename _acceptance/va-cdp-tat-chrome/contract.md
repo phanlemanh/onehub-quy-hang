@@ -5,7 +5,7 @@ slug: va-cdp-tat-chrome
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [cli]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/va-cdp-tat-chrome/design.md
 approved_by:
 approved_at:
@@ -87,3 +87,5 @@ Chrome đã chết còn hồ sơ, đường lạ (AC-5) · không hồi quy API 
 
 - Mọi phép đo chạy Chrome thật trên máy (`CHROME_PATH` hay đường mặc định); không có Chrome thì bộ đo thoát 2 với câu
   «không có Chrome» — không ra xanh giả.
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Nếu một lượt chấm viết chờ việc đóng Chrome xong rồi mới làm tiếp (ví dụ ghi báo cáo), phần sau đó có thể bị bỏ qua mà không báo lỗi gì. Chrome vẫn được tắt đúng, và các lượt chấm hiện có không dùng cách viết này. — `_acceptance/bang-hang-kieu-sheet/thu/cdp.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài tự kiểm có thể báo đạt về việc tiến trình canh đã tắt dù thực ra chưa đo được là nó từng chạy. Công cụ thật vẫn tắt Chrome đúng, chỉ là bài kiểm ở một ca yếu hơn mong muốn. — `_acceptance/va-cdp-tat-chrome/thu/kiem-tat-chrome.mjs`
