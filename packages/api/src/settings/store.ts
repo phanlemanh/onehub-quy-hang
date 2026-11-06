@@ -60,13 +60,27 @@ export async function writeCompanySettings(tx: pg.PoolClient, input: unknown): P
 
   // Cùng khoá với lối chia lead (hàng 25): hai lối không giẫm nhau khi đổi cặp hạn.
   await tx.query("select pg_advisory_xact_lock(hashtext('lead_routing:' || app.current_company_id()::text))");
-  const { cauHinh } = giaiCauHinh(await dongCuaSan(tx));
+  const dong = await dongCuaSan(tx);
+  const { cauHinh } = giaiCauHinh(dong);
   const sau: Record<string, unknown> = { ...cauHinh, ...Object.fromEntries(vao) };
   for (const [khoa, giaTri] of vao) {
     const kq = kiemGiaTri(khoa, giaTri, sau);
     if (!kq.ok) return { refusal: "invalid", reason: kq.loi };
   }
-  for (const [khoa, giaTri] of vao) {
+  // Cặp `khongNhoHon` đang hỏng (bộ giải đã đưa về mặc định): lưu một nửa thì ghi thêm nửa kia bằng giá trị đang áp — đúng
+  // giá trị vừa dùng để kiểm và đúng giá trị màn đang hiện — để bảng khớp cặp đã kiểm, không để lại nửa hỏng cũ
+  // (luat-chia-lead-cap-han-hong, Hỏi-1 chủ kho duyệt 06/11). Cặp lành thì nửa kia đã lưu bằng đúng giá trị đang áp: không ghi.
+  const ghi = new Map(vao);
+  for (const [khoa] of vao) {
+    const d = timDiem(khoa)!;
+    const ban = [d.khongNhoHon, ...SO_DIEM.filter((x) => x.khongNhoHon === khoa).map((x) => x.khoa)].filter((k): k is string => !!k);
+    for (const k of ban) {
+      if (ghi.has(k)) continue;
+      const luu = dong.find((r) => r.key === k);
+      if (luu && JSON.stringify(luu.value) !== JSON.stringify(cauHinh[k])) ghi.set(k, cauHinh[k]);
+    }
+  }
+  for (const [khoa, giaTri] of ghi) {
     await tx.query(
       `insert into company_settings (company_id, key, value, updated_by, data_class)
        values (app.current_company_id(), $1, $2::jsonb, app.current_user_id(), $3)
