@@ -211,7 +211,7 @@ evals:
       - "Chọn «Giữ chỗ» → chụp evidence/E12-step2.png: ô hiện «Giữ chỗ» với cùng màu huy hiệu của các căn Đang giao dịch"
       - "Mở ô lọc cột Trạng thái, chọn Đang giao dịch → chụp evidence/E12-step3.png: căn «Giữ chỗ» nằm trong kết quả"
       - "Khổ 375: mở /inventory → chụp evidence/E12-step4.png: thẻ căn ấy hiện «Giữ chỗ»"
-      - "Mở ngữ cảnh trình duyệt mới (không kho cục bộ, phiên mới), đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /inventory, chờ đồng bộ xong → chụp evidence/E12-step5.png: cùng căn ấy hiện «Giữ chỗ» (nhãn đi qua đồng bộ, không chỉ áp lạc quan trên máy người đổi)"
+      - "Mở ngữ cảnh trình duyệt mới (không kho cục bộ, phiên mới), đăng nhập dau-chu-2@mau.quy-hang.test (người thứ hai có Bảng hàng — từ luật 046 quản trị sàn không mở Bảng hàng), khổ 1440: mở /inventory, chờ đồng bộ xong → chụp evidence/E12-step5.png: cùng căn ấy hiện «Giữ chỗ» (nhãn đi qua đồng bộ, không chỉ áp lạc quan trên máy người đổi)"
     expected: "Sau E11, đầu chủ mở ô Trạng thái của một căn Đang bán thấy «Giữ chỗ» dưới «Đang giao dịch»; chọn nó → ô hiện «Giữ chỗ» cùng màu với căn Đang giao dịch; lọc Đang giao dịch giữ căn ấy; khổ 375 thẻ căn hiện «Giữ chỗ»; người thứ hai trên trình duyệt mới cũng thấy «Giữ chỗ». Chụp 1440 và 375."
     paths: ["apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
@@ -227,7 +227,7 @@ evals:
       - "Chuẩn bị (bài chụp tự đủ): sàn thử phải có nhãn «Giữ chỗ» neo Đang giao dịch và ít nhất một căn mang nó — thiếu thì quản trị PUT /api/v1/company/statuses thêm nhãn, đầu chủ dau-chu-1@mau.quy-hang.test POST /api/v1/listings/{id}/events {type:\"status_changed\",payload:{to:\"Pending\",label:\"giu_cho\"}} cho một căn Đang bán; ghi mã căn vào observed"
       - "Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/statuses → dòng «Giữ chỗ» hiện số căn n (n ≥ 1 — bằng số căn đang mang nhãn, đối chiếu GET /api/v1/company/statuses inUse); bấm gỡ → chụp evidence/E13-step1.png: hộp «n căn đang là «Giữ chỗ». Chuyển chúng sang:» với lựa chọn «Đang giao dịch» và chỉ các nhãn còn lại cùng nhóm"
       - "Chọn «Đang giao dịch», xác nhận, Lưu → chụp evidence/E13-step2.png: «Đã lưu trạng thái», nhóm Đang giao dịch không còn «Giữ chỗ»"
-      - "Mở /inventory → chụp evidence/E13-step3.png: không căn nào hiện «Giữ chỗ»; căn đã ghi ở bước chuẩn bị (hay ở E12) hiện «Đang giao dịch»"
+      - "Đăng nhập dau-chu-1@mau.quy-hang.test (quản trị sàn không mở Bảng hàng từ luật 046), mở /inventory → chụp evidence/E13-step3.png: không căn nào hiện «Giữ chỗ»; căn đã ghi ở bước chuẩn bị (hay ở E12) hiện «Đang giao dịch»"
     expected: "Sau E12, quản trị gỡ «Giữ chỗ» đang được n căn mang (n đọc từ màn, khớp inUse của API): màn hỏi nhãn thay, chọn «Đang giao dịch», Lưu → nhãn biến mất khỏi nhóm; Bảng hàng không còn căn nào hiện «Giữ chỗ», căn đã ghi ở bước chuẩn bị hiện «Đang giao dịch». Chụp 1440."
     paths: ["apps/web/src/app/(app)/settings/statuses/**", "apps/web/src/app/(app)/inventory/**"]
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]

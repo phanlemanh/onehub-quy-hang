@@ -1,6 +1,5 @@
-E15 network (app-origin http://localhost:3462), driver playwright. Chi tiet tho: E15-network-raw.txt
-- Luong /today cuoi (dau-chu-1): GET /api/v1/listings, /catalog, /company/settings/queue, /leads/assigned, /push/public-key -> 200 het.
-- sign-in/email-otp POST 200 (cac lan dang nhap); PUT /company/statuses 200 (dat nhan Giu cho, setup E11); POST /listings/{id}/events status_changed 200.
-- net::ERR_ABORTED tren GET /api/v1/* : huy do dieu huong (page.goto khi trang dang tai), khong phai loi may chu.
-- 409 version-conflict tren POST /listings/{id}/events: lan goi setup dau cua verifier thieu expectedVersion (may chu tu choi dung luat); goi lai voi expectedVersion -> 200. Khong thuoc luong trang /today.
-- Console error: favicon.ico 404 (static, note-only); 409 noi tren.
+E15 network (app-origin http://localhost:3462), driver chrome-devtools (luong /today cua dau-chu-1, 1440)
+- GET /today 200; GET /api/v1/catalog, /company/settings/queue, /leads/assigned, /listings, /push/public-key -> 200 het (10 request app-scope, 0 loi).
+- Console: 3 canh bao link-preload (font/css, static, note-only); 0 error.
+- Setup (fetch trong trang, ngoai khung chup): sign-in/email-otp 200 (quan-tri, truong-nhom, dau-chu-1); PUT /company/statuses 200 (sàn thieu nhan Giu cho nen dat lai); POST /listings/092e32ee.../events status_changed Active 200 (dua can 5/5 ve Dang ban vi khong con can Dang ban du thong tin), roi status_changed Pending label giu_cho 200 (truong-nhom).
+- Ghi chu moi truong: Turbopack dev tu reload lien tuc o may nay nen chay dev voi --webpack; setup dau tien tra 400 vi sàn chua co nhan (da PUT lai).

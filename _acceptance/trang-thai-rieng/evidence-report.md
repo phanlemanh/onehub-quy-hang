@@ -1,17 +1,19 @@
 ---
 schema_version: 2
 feature_slug: trang-thai-rieng
-verdict: PASS
-failed_evals: []
+verdict: REJECT
+failed_evals: [E12]
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 37cac55f34d54f54736734160b612620f74b1e87
+verified_commit: 0c8f2ed922bccf85bc5705db2b39b9878a63b830
 human_signoff:
 ---
 
 # Evidence Report: trang-thai-rieng
+
+Round 4. Một eval truot: E12 (ui-check). Lệnh fail không gắn eval nào khác: `ui-check:E12` (eval E12). Các eval còn lại qua.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -22,17 +24,14 @@ human_signoff:
 | E3 | AC-3 | test | PASS |
 | E3b | AC-3 | test | PASS |
 | E3c | AC-3 | test | PASS |
-| E3d | AC-3 | test | PASS |
 | E4 | AC-4 | test | PASS |
 | E4b | AC-4 | test | PASS |
 | E5 | AC-5 | test | PASS |
 | E5b | AC-5 | script | PASS |
 | E6 | AC-6 | test | PASS |
 | E6b | AC-6 | test | PASS |
-| E6c | AC-7 | test | PASS |
 | E7 | AC-7 | test | PASS |
 | E7b | AC-7 | test | PASS |
-| E7c | AC-7 | test | PASS |
 | E8 | AC-8 | test | PASS |
 | E8b | AC-8 | test | PASS |
 | E9 | AC-9 | test | PASS |
@@ -40,324 +39,335 @@ human_signoff:
 | E10 | AC-10 | test | PASS |
 | E10b | AC-10 | test | PASS |
 | E11 | AC-1 | ui-check | PASS |
-| E12 | AC-3 | ui-check | PASS |
+| E12 | AC-3 | ui-check | FAIL |
 | E13 | AC-8 | ui-check | PASS |
-| E14 | AC-1 | script | PASS |
+| E14 | AC-1 | script | PASS (đạt có giới hạn) |
 | E14b | AC-1 | script | PASS |
+| E3d | AC-3 | test | PASS |
+| E6c | AC-7 | test | PASS |
+| E7c | AC-7 | test | PASS |
 | E15 | AC-7 | ui-check | PASS |
 
 ## Evidence
 
-### Eval chạy ở round 3
-
 - eval: E1
-  run_id: minted-trang-thai-rieng-E1-r3
+  run_id: minted-trang-thai-rieng-E1-r4
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
   output: |
-    cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 99026.673209
+    npm run db:migrate && npm run db:test — bộ kiểm cách ly và API test-db xanh.
+
+- eval: E2
+  run_id: minted-trang-thai-rieng-E2-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.core
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/core xanh.
+
+- eval: E2b
+  run_id: minted-trang-thai-rieng-E2b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
+
+- eval: E2c
+  run_id: minted-trang-thai-rieng-E2c-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E3
+  run_id: minted-trang-thai-rieng-E3-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
+
+- eval: E3b
+  run_id: minted-trang-thai-rieng-E3b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.core
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/core xanh.
+
+- eval: E3c
+  run_id: minted-trang-thai-rieng-E3c-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E4
+  run_id: minted-trang-thai-rieng-E4-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
+
+- eval: E4b
+  run_id: minted-trang-thai-rieng-E4b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E5
+  run_id: minted-trang-thai-rieng-E5-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
+
+- eval: E5b
+  run_id: minted-trang-thai-rieng-E5b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.script.ro_ri
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run test:ro-ri xanh.
+
+- eval: E6
+  run_id: minted-trang-thai-rieng-E6-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E6b
+  run_id: minted-trang-thai-rieng-E6b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.core
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/core xanh.
+
+- eval: E7
+  run_id: minted-trang-thai-rieng-E7-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E7b
+  run_id: minted-trang-thai-rieng-E7b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
 
 - eval: E8
-  run_id: minted-trang-thai-rieng-E8-r3
+  run_id: minted-trang-thai-rieng-E8-r4
   exit_code: 0
-  baseline: red
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
   output: |
-    cmd: npm run db:migrate && npm run db:test
-    ℹ duration_ms 99026.673209
+    npm run db:migrate && npm run db:test xanh.
 
 - eval: E8b
-  run_id: minted-trang-thai-rieng-E8b-r3
+  run_id: minted-trang-thai-rieng-E8b-r4
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
   output: |
-    cmd: npm test -w @quy-hang/web
-    ℹ duration_ms 4168.365458
+    npm test -w @quy-hang/web xanh.
+
+- eval: E9
+  run_id: minted-trang-thai-rieng-E9-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.isolation
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
+
+- eval: E9b
+  run_id: minted-trang-thai-rieng-E9b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E10
+  run_id: minted-trang-thai-rieng-E10-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/web xanh.
+
+- eval: E10b
+  run_id: minted-trang-thai-rieng-E10b-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.core
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm test -w @quy-hang/core xanh.
+
+- eval: E11
+  run_id: minted-trang-thai-rieng-E11-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-06T03:52:11Z
+  screenshot: evidence/E11-step1.png
+  observed: |
+    step1 (1440): Khung đầy đủ: cột nhà bên trái, cột thứ hai "Cài đặt" với nhóm Cá nhân và Sàn [MẪU] SÀN THỬ, mục "Trạng thái" nền sáng; breadcrumb "Cài đặt › Sàn [Mẫu] Sàn thử › Trạng thái"; sáu nhóm, mỗi nhóm huy hiệu màu kèm nút "Thêm nhãn" và nút Lưu. Khớp Expected.
+    step2: Nhóm Đang giao dịch có dòng "Nhãn riêng · 0 căn đang mang" với ô "Giữ chỗ" và nút thùng rác; cuối trang thẻ "Đã lưu trạng thái". Khớp Expected (tải lại vẫn còn nhãn, kiểm bằng DOM).
+    step3: Nhóm Tạm ngừng có dòng "Nhãn mới · Chưa lưu" ô "Đang bán" viền đỏ, dòng lỗi đỏ "Trùng tên trạng thái «Đang bán»"; Lưu khoá (kiểm bằng DOM). Khớp Expected.
+    step4 (375): Bố cục điện thoại: tiêu đề "Cài đặt", thẻ nhãn trạng thái xếp dọc, huy hiệu màu, nhãn "Giữ chỗ" trong ô nhập, thanh dưới "Cài đặt sàn / Tôi"; không cuộn ngang. Khớp Expected.
+  network_observed: clean
+
+- eval: E12
+  run_id: E12-2026-11-06
+  exit_code: 1
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-06T03:52:11Z
+  screenshot: evidence/E12-step1.png
+  observed: |
+    step1: khổ 1440, bảng hàng, ô trạng thái căn A-06.03 (Đang bán) mở ra khay chip 'Đang giao dịch | Giữ chỗ | Đã bán / Tạm ngừng | Ngừng hẳn' kèm dòng 'Tính là vừa xác nhận với chủ nhà'; Giữ chỗ liền sau Đang giao dịch (cạnh phải, không bên dưới). step2: dòng 9 A-06.03 cột Trạng thái hiện huy hiệu tím nhạt «Giữ chỗ» cùng kiểu với huy hiệu «Đang giao dịch»; toast 'Đã đổi trạng thái A-06.03' + Hoàn tác. step3: lọc Trạng thái = Đang giao dịch, 11/36 căn, A-06.03 vẫn trong kết quả với huy hiệu «Giữ chỗ». step4: khổ 375, thẻ A-06.03 5,55 tỷ có huy hiệu «Giữ chỗ».
+    step5: tài khoản quan-tri ở ngữ cảnh mới chỉ thấy trang /today 'Màn này đang dựng', KHÔNG có bảng hàng nên không thấy «Giữ chỗ» — mâu thuẫn Expected. Ảnh bổ sung dau-chu-2: bảng hàng 33/33 căn, A-06.03 «Giữ chỗ» hiện, trạng thái 'Đã đồng bộ 10:58'.
+  network_observed: clean
+  output: |
+    Bước 1-4 đạt. Bước 5 truot: đăng nhập quản trị rồi mở /inventory bị chuyển về /today vì quản trị sàn không có Bảng hàng (inventory/page.tsx chuyển hướng khi !lamViecVoiHang). Đối chứng bổ sung (không thay thế bước): người đầu chủ thứ hai ở ngữ cảnh mới thấy A-06.03 «Giữ chỗ». Cần sửa đề (dùng tài khoản có Bảng hàng) hoặc người xác nhận.
+
+- eval: E13
+  run_id: minted-trang-thai-rieng-E13-r4
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-06T03:52:11Z
+  screenshot: evidence/E13-step1.png
+  observed: |
+    step1 (1440): trang Cài đặt > Trạng thái làm mờ nền, hộp thoại «Gỡ nhãn «Giữ chỗ»?» với câu «1 căn đang là «Giữ chỗ». Chuyển chúng sang:», một lựa chọn «Đang giao dịch», nút «Giữ nhãn» và «Gỡ và chuyển»; dòng nhãn trên màn «1 căn đang mang» khớp inUse của API.
+    step2: sau chọn «Đang giao dịch», «Gỡ và chuyển», Lưu: thẻ «Đã lưu trạng thái»; nhóm Đang giao dịch không còn dòng «Giữ chỗ». step3: /inventory (đăng nhập dau-chu-1, vì quản trị bị chuyển hướng khỏi /inventory) 36/36 căn, A-06.03 hiện huy hiệu «Đang giao dịch», không có chữ «Giữ chỗ» ở hàng nào. Lệch nhỏ so với steps: bước 5 dùng tài khoản đầu chủ thay vì quản trị.
+  network_observed: clean
 
 - eval: E14
-  run_id: minted-trang-thai-rieng-E14-r3
+  run_id: minted-trang-thai-rieng-E14-r4
   exit_code: 1
-  baseline: red
+  baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
   output: |
-    Kết quả đã khai trước của eval này (đạt có giới hạn, xem Known limits), chỉ chấp nhận cùng E14b.
-    16 tệp giao diện ngoài bản đồ
+    16 tệp giao diện ngoài bản đồ. Mã thoát 1 là kết quả đã khai trước (đạt có giới hạn), chỉ chấp nhận cùng E14b.
 
 - eval: E14b
-  run_id: minted-trang-thai-rieng-E14b-r3
+  run_id: minted-trang-thai-rieng-E14b-r4
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/trang-thai-rieng/kiem-khuon-e14.mjs
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
   output: |
     E14b: chỉ có dòng báo oan đã khai (1): lệch: apps/web/src/app/(app)/settings/statuses/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam
 
-- eval: E11
-  run_id: minted-trang-thai-rieng-E11-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-05T23:27:33Z
-  screenshot: evidence/E11-step1.png
-  observed: |
-    E11-step1.png (1440): một Frame, đủ cột nhà; cột thứ hai Cài đặt có «Trạng thái» sáng; breadcrumb «Cài đặt › Sàn [Mẫu] Sàn thử › Trạng thái»; sáu nhóm theo thứ tự Chưa đủ để rao (vàng), Đang bán (xanh lục), Đang giao dịch (tím), Đã bán (xám), Tạm ngừng (cam), Ngừng hẳn (đỏ), mỗi nhóm có huy hiệu màu, chú thích «Trạng thái chuẩn · nhãn riêng nhận luật và màu này» và nút «Thêm nhãn»; nút Lưu cuối. Khớp Expected.
-    E11-step2.png: dưới Đang giao dịch có dòng «Nhãn riêng» ô nhập «Giữ chỗ» («0 căn đang mang»), thẻ «Đã lưu trạng thái» ở cuối; tải lại thì ô vẫn là «Giữ chỗ». Khớp Expected.
-    E11-step3.png: dưới Tạm ngừng dòng «Nhãn mới» ô «Đang bán» viền đỏ, câu đỏ «Trùng tên trạng thái «Đang bán»»; Lưu khoá (kiểm bằng DOM vì nút nằm ngoài khung nhìn). Khớp Expected.
-    E11-step4.png (375): bố cục một cột, tiêu đề «Cài đặt», lối trở về «Sàn [Mẫu] Sàn thử», «Trạng thái», nhóm Chưa đủ để rao, Đang bán, Đang giao dịch với nhãn «Giữ chỗ» và nút xoá, thanh tab dưới «Cài đặt sàn / Tôi»; không cuộn ngang. Khớp Expected.
-  network_observed: clean
-
-- eval: E13
-  run_id: minted-trang-thai-rieng-E13-r3
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-05T23:27:33Z
-  screenshot: evidence/E13-step1.png
-  observed: |
-    Chuẩn bị: sàn thử có nhãn «Giữ chỗ» neo Đang giao dịch với inUse 0; đã POST status_changed {to:Pending,label:giu_cho} bằng dau-chu-1 lên căn Đang bán B-14.04 (id 2afac20f-2c8b-4f27-9025-e1ba9b16185f), HTTP 200, inUse thành 1. step1.png (1440x900): /settings/statuses, bấm gỡ nhãn Giữ chỗ (màn trước đó ghi «1 căn đang mang», khớp inUse API = 1), hộp «Gỡ nhãn «Giữ chỗ»?» với nội dung «1 căn đang là «Giữ chỗ». Chuyển chúng sang:», chỉ một lựa chọn «Đang giao dịch» (không còn nhãn khác cùng nhóm), nút Giữ nhãn / Gỡ và chuyển. step2.png: sau chọn Đang giao dịch, Gỡ và chuyển, Lưu: toast «Đã lưu trạng thái — Bảng hàng và Hôm nay dùng nhãn mới từ lần mở kế», nhóm Đang giao dịch chỉ còn nút Thêm nhãn, không còn «Giữ chỗ». step3.png: /inventory 29 căn, cuộn tới Toà B 2PN, dòng B-14.04 hiện «Đang giao dịch» (chip tím); không dòng nào hiện «Giữ chỗ» (DOM không có chuỗi này; API listings: 0 căn có statusLabel; lastStatusChange fromLabel=giu_cho, toLabel=null). Lưu ý: bước bấm nhầm đầu tiên đóng hộp rồi làm lại, kết quả không ảnh hưởng. Console có 1 lỗi hydration mismatch trên /inventory (không phải lỗi mạng, chỉ ghi chú).
-  network_observed: clean
-
-### Eval mang sang (carry-forward)
-
-- eval: E2
-  run_id: minted-trang-thai-rieng-E2-r2
-  exit_code: 0
-  verifier: config:executors.test.core
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E2b
-  run_id: minted-trang-thai-rieng-E2b-r2
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E2c
-  run_id: minted-trang-thai-rieng-E2c-r2
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E3
-  run_id: minted-trang-thai-rieng-E3-r2
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E3b
-  run_id: minted-trang-thai-rieng-E3b-r2
-  exit_code: 0
-  verifier: config:executors.test.core
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E3c
-  run_id: minted-trang-thai-rieng-E3c-r2
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
 - eval: E3d
-  run_id: minted-trang-thai-rieng-E3d-r2
+  run_id: minted-trang-thai-rieng-E3d-r4
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E4
-  run_id: minted-trang-thai-rieng-E4-r2
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E4b
-  run_id: minted-trang-thai-rieng-E4b-r2
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E5
-  run_id: minted-trang-thai-rieng-E5-r2
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E5b
-  run_id: minted-trang-thai-rieng-E5b-r2
-  exit_code: 0
-  verifier: config:executors.script.ro_ri
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E6
-  run_id: minted-trang-thai-rieng-E6-r1
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T22:54:59Z
-  carried_from_round: 1
-  ghi chú: carry-forward tu round 1 — delta khong cham paths cua eval
-
-- eval: E6b
-  run_id: minted-trang-thai-rieng-E6b-r1
-  exit_code: 0
-  verifier: config:executors.test.core
-  verified_at: 2026-11-05T22:54:59Z
-  carried_from_round: 1
-  ghi chú: carry-forward tu round 1 — delta khong cham paths cua eval
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
 
 - eval: E6c
-  run_id: minted-trang-thai-rieng-E6c-r2
+  run_id: minted-trang-thai-rieng-E6c-r4
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E7
-  run_id: minted-trang-thai-rieng-E7-r2
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E7b
-  run_id: minted-trang-thai-rieng-E7b-r2
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
 
 - eval: E7c
-  run_id: minted-trang-thai-rieng-E7c-r2
+  run_id: minted-trang-thai-rieng-E7c-r4
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E9
-  run_id: minted-trang-thai-rieng-E9-r2
-  exit_code: 0
-  verifier: config:executors.test.isolation
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E9b
-  run_id: minted-trang-thai-rieng-E9b-r1
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T22:54:59Z
-  carried_from_round: 1
-  ghi chú: carry-forward tu round 1 — delta khong cham paths cua eval
-
-- eval: E10
-  run_id: minted-trang-thai-rieng-E10-r1
-  exit_code: 0
-  verifier: config:executors.test.web
-  verified_at: 2026-11-05T22:54:59Z
-  carried_from_round: 1
-  ghi chú: carry-forward tu round 1 — delta khong cham paths cua eval
-
-- eval: E10b
-  run_id: minted-trang-thai-rieng-E10b-r2
-  exit_code: 0
-  verifier: config:executors.test.core
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-
-- eval: E12
-  run_id: minted-trang-thai-rieng-E12-r2
-  exit_code: 0
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
-  screenshot: evidence/E12-step1.png
-  observed: |
-    E12-step1.png (1440): bảng hàng with the Trạng thái column in view; A-08.03 cell is focused and shows the green "Đang bán" badge. The editor popup lists Đang giao dịch (focused), Giữ chỗ, Giữ chỗ lần hai, Đã bán, Tạm ngừng, Ngừng hẳn, with the caption "Tính là vừa xác nhận với chủ nhà". Giữ chỗ follows Đang giao dịch directly. Matches Expected.
-    E12-step2.png (1440): A-08.03 cell now shows a purple-tinted "Giữ chỗ" badge in the same style as the Đang giao dịch badges of A-13.01, A-13.03 and A-15.04. Toast "Đã đổi trạng thái A-08.03". The panel header badge reads "Đang giao dịch". Matches Expected (same color).
-    E12-step3.png (1440): the Trạng thái filter shows "Đang giao dịch", counter 8 / 36 căn. Results: A-13.01 Đang giao dịch, A-08.03 Giữ chỗ, A-13.03, A-15.04, A-04.06 Giữ chỗ, B-10.01, B-14.02, B-08.04. A-08.03 stays in the results. Matches Expected.
-    E12-step4.png (375): mobile Bảng hàng card list; the A-08.03 card (4,95 tỷ, 75 m², 2PN, Tây Bắc) has a "Giữ chỗ" badge on the photo, next to Đang giao dịch cards for A-13.03 and A-13.01. Matches Expected.
-    E12-step5.png (1440, new context, quan-tri, avatar QU, Đã đồng bộ 06:18): the Trạng thái column shows A-08.03 as "Giữ chỗ" and A-04.06 as "Giữ chỗ" in the same purple style as Đang giao dịch. Matches Expected (label arrived through sync).
-  network_observed: clean
+  verified_at: 2026-11-06T03:52:11Z
+  output: |
+    npm run db:migrate && npm run db:test xanh.
 
 - eval: E15
-  run_id: minted-trang-thai-rieng-E15-r2
+  run_id: minted-trang-thai-rieng-E15-r4
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-05T23:12:06Z
-  carried_from_round: 2
-  ghi chú: carry-forward tu round 2 — delta khong cham paths cua eval
+  verified_at: 2026-11-06T03:52:11Z
   screenshot: evidence/E15-step1.png
   observed: |
-    E15-step1.png (1440x1000, doc truc tiep): trang Hom nay cua dau-chu-1, cuon toi cuoi. Nhom «Thieu thong tin 14» o tren (cac can 3/5). Duoi cung nhom «Moi doi 1» co mot dong: «A-11.02 · Toa A, 2PN · 68,5 m²», cot ly do «Dang ban → Giu cho — Truong nhom, hom nay», gia 3,08 ty · Bao phi, nut «Con · giu gia». Khop Expected. Assert DOM: innerText chua dung chuoi «Dang ban → Giu cho — Truong nhom, hom nay», va dong ay nam duoi tieu de nhom «Moi doi 1».
+    E15-step1.png (1440): màn Hôm nay của dau-chu-1 ([Mẫu] Sàn thử, chip "Đã đồng bộ 11:15"). Cuối danh sách có nhóm «Mới đổi» (số 1) với dòng A-11.02 · Toà A, 2PN · 68,5 m², lý do «Đang bán → Giữ chỗ — Trưởng nhóm, hôm nay», giá 3,08 tỷ · Bao phí, nút «Còn · giữ giá». Phía trên là nhóm «Thiếu thông tin». Khớp Expected.
   network_observed: clean
+  output: |
+    Độ lệch so với steps: sàn thử lúc chạy không còn nhãn «Giữ chỗ» và không còn căn Đang bán đủ 5/5 của dau-chu-1, nên máy chuẩn bị lại nhãn và căn trước khi đổi; dev chạy cờ --webpack vì Turbopack tự reload.
 
 ### Lệnh suite (hồi quy)
 
-- cmd: npm test -w @quy-hang/core
-  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_core-r3
-  exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
-
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_api-r3
+  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_api-r4
   exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_connect-r3
+  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_connect-r4
   exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
 
 - cmd: npm run test:hooks
-  run_id: minted-trang-thai-rieng-SUITE-test_hooks-r3
+  run_id: minted-trang-thai-rieng-SUITE-test_hooks-r4
   exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_ui_lint-r3
+  run_id: minted-trang-thai-rieng-SUITE-npm_test_w_quy_hang_ui_lint-r4
   exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
 
 - cmd: npm run typecheck
-  run_id: minted-trang-thai-rieng-SUITE-typecheck-r3
+  run_id: minted-trang-thai-rieng-SUITE-typecheck-r4
   exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
 
 - cmd: npm run lint
-  run_id: minted-trang-thai-rieng-SUITE-lint-r3
+  run_id: minted-trang-thai-rieng-SUITE-lint-r4
   exit_code: 0
-  verified_at: 2026-11-05T23:27:33Z
+  verified_at: 2026-11-06T03:52:11Z
 
 ## Known limits
 
@@ -367,18 +377,14 @@ human_signoff:
 
 ## Analyst
 
-Eval không-phân-biệt (xanh trên cả baseline lẫn HEAD):
-- npm test -w @quy-hang/web: E8b
+carried tu round 3 — baseline khong do lai round nay.
 
-Baseline không đo:
-- node _acceptance/trang-thai-rieng/kiem-khuon-e14.mjs: bo qua baseline: tep _acceptance/trang-thai-rieng/kiem-khuon-e14.mjs co o cay dang kiem nhung chua co o merge-base 24dbfb2de227ce73a8fc9aaf6306347a8c34cd8a — eval moi, chay tren code cu khong phan biet gi
+Eval không-phân-biệt (xanh trên cả HEAD lẫn baseline; chứng minh harness chứ không chứng minh tính năng): E8b (npm test -w @quy-hang/web). Nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý.
 
 ## Variance
 
-none — mọi eval chạy một lần, xác định, không có pass_rate hỗn hợp.
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E6, E6b, E9b, E10 đạt và được mang sang các round sau.
-Round 2: E11 và E13 chưa đạt ở lượt chạy round 2, tổng kết round là REJECT; bài chụp được sửa (tự dọn dữ liệu, đọc số căn từ màn, E13 tự chuẩn bị căn mang nhãn). Quay lại triển khai.
-Round 3: E1, E8, E8b, E14, E14b, E11, E13 chạy lại và đạt; các eval còn lại mang sang vì delta không chạm paths của chúng. Verdict PASS.
+Round 4: E12 failed — bước 6 của đề đòi tài khoản quản trị thấy «Giữ chỗ» ở Bảng hàng, nhưng quản trị sàn không có Bảng hàng (bị chuyển về /today theo bảng quyền theo vai); các bước 1-5 đạt và đối chứng bằng đầu chủ thứ hai đạt. Cần sửa đề E12 hoặc người xác nhận. Lịch sử round 1-3 xem run-log.jsonl.

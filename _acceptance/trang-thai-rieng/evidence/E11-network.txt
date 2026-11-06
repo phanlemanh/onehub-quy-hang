@@ -1,9 +1,22 @@
-browser network (playwright, after last navigation, non-static):
-[GET] /api/v1/listings => 200 (x2)
-console errors in final page: 0
-earlier console error: self-made probe GET /api/auth/get-session => 404 (not an app flow)
-server log status lines:
- GET /api/v1/company/statuses 200 in 15ms (next.js: 0.5ms, application-code: 15ms)
- PUT /api/v1/company/statuses 200 in 15ms (next.js: 1.7ms, application-code: 13ms)
- GET /api/v1/company/statuses 200 in 6ms (next.js: 0.4ms, application-code: 6ms)
- PUT /api/v1/company/statuses 200 in 47ms (next.js: 5ms, application-code: 43ms)
+41. [GET] http://localhost:3462/api/v1/listings => [FAILED] net::ERR_ABORTED
+80. [GET] http://localhost:3462/api/v1/listings => [200] OK
+81. [POST] http://localhost:3462/api/v1/sync/offline-sessions => [201] Created
+82. [GET] http://localhost:3462/api/auth/get-session => [404] Not Found
+83. [GET] http://localhost:3462/api/v1/company/statuses => [200] OK
+117. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+118. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+119. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+120. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+122. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+123. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+137. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+138. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+139. [GET] http://localhost:3462/api/v1/listings => [200] OK
+144. [GET] http://localhost:3462/api/v1/company/statuses => [200] OK
+145. [PUT] http://localhost:3462/api/v1/company/statuses => [200] OK
+186. [GET] http://localhost:3462/api/v1/listings => [200] OK
+187. [PUT] http://localhost:3462/api/v1/company/statuses => [200] OK
+228. [GET] http://localhost:3462/api/v1/listings => [200] OK
+229. [GET] http://localhost:3462/api/v1/listings => [200] OK
+
+Note: 209 static requests not shown, run with "static" option to see them.
