@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 358da7e98a0966c56bb9c5956449b31a31b4b7a3
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: va-deploy-csdl-tam
