@@ -1,0 +1,213 @@
+schema_version: 1
+feature_slug: mau-bang-hang-va-bai
+# Khuôn mẫu và cách dựng bài, bảng theo mẫu chấm thuần ở packages/core. Đường đọc, ghi mẫu, quyền, cách ly và hiệu lực lần
+# sau chấm trên Postgres dãy qua API thật (packages/api/test-db/mau-bang-hang-va-bai/). Hộp Xuất, màn Gửi và màn Mẫu chấm
+# thuần ở apps/web, cộng một lượt nhìn màn thật. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/mau-bang-hang-va-bai/ ca «mẫu bảng: thêm, sửa, xoá» có mặt và ok — Quản trị PUT /api/v1/company/templates/export một mẫu (tên, ba cột) → GET trả đúng tên và dãy cột (so mảng theo thứ tự); PUT đổi tên và đảo thứ tự cột → GET so mảng mới; PUT bỏ mẫu → GET không còn id ấy (so mảng id rỗng); đối chứng: dòng company_settings khoá export.templates đúng một dòng của sàn. Chiều đỏ: kho bỏ thứ tự (sắp cột theo chữ) → ca đỏ nêu «thứ tự cột của mẫu không giữ»."
+    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/(app)/settings/templates/ dựng tab «Mẫu bảng hàng» với hai mẫu viết sẵn: mỗi mẫu một dòng có tên và nhãn cột đúng thứ tự (so mảng nhãn), và hộp sửa nút lên/xuống đổi đúng thứ tự (bảng ca: lên đầu · xuống cuối · giữa, đếm 3). Chiều đỏ: nút lên đổi sai chỗ → ca đỏ nêu «xếp cột sai»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/export/ bảng ca viết trước của hàm kiểm khuôn mẫu bảng phủ trục «luật khuôn mẫu bảng» — tên trống · 61 ký tự · trùng tên (khác hoa thường, thừa khoảng trắng) · không cột · 16 cột · cột trùng · cột lạ · từng cột nội bộ có khoa null của COT_BANG_HANG (đọc từ chính bảng, không viết tay) · 21 mẫu: mỗi dòng ghim lý do mang khoá sai, đếm bằng số dòng bảng; đối chứng dương: mẫu 1 cột và mẫu 15 cột, 60 ký tự, 20 mẫu → hợp lệ. Chiều đỏ: bỏ luật cột nội bộ → ca đỏ nêu tên cột nội bộ lọt."
+    paths: [packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu bảng: sai khuôn bị từ chối» — Quản trị PUT một lần lưu gồm hai mẫu, một mẫu đúng và một mẫu có cột holderName → 400, typeof reason string và reason chứa khoá sai; GET sau đó không có mẫu nào của lần lưu ấy (so với trước bằng mảng); bảng ba ca 400 (tên trùng · không cột · 21 mẫu), đếm 3. Chiều đỏ: kho ghi phần đúng rồi mới từ chối → ca đỏ nêu «lần lưu bị từ chối vẫn ghi một phần»."
+    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu bài: lưu và về mặc định» — Quản trị PUT /api/v1/company/templates/posts lời mở đầu, lời kết cho zalo và facebook → GET so đúng chữ; PUT bỏ kênh facebook (về mặc định) → GET không còn facebook, zalo giữ nguyên; bảng ca 400: 501 ký tự · kênh lạ «tiktok» · thân không phải đối tượng, mỗi dòng reason chứa khoá sai, đếm 3; đối chứng: 500 ký tự đúng biên → 200. Chiều đỏ: bỏ trần 500 → ca đỏ nêu «lời mẫu bài quá dài vẫn lưu»."
+    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của tab «Mẫu bài» (apps/web/src/app/(app)/settings/templates/): bấm «Về mặc định» ở Facebook → thân PUT dựng ra không có khoá facebook, zalo giữ nguyên (so đối tượng); xem trước bằng chuỗi D + bài của hai căn [Tên] dựng từ lõi + C (so chuỗi); ô 501 ký tự → lý do «Tối đa 500 ký tự» dưới ô, nút Lưu không gửi; đối chứng: 500 ký tự → không lý do. Chiều đỏ: «Về mặc định» gửi chuỗi rỗng thay vì bỏ khoá → ca đỏ nêu «về mặc định còn để kênh rỗng»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu: quyền và cách ly» — bảng viết trước năm vai của sàn A × hai thao tác (GET, PUT mỗi đường): GET → 200 với mọi vai, PUT → 200 chỉ với Quản trị, 403 với bốn vai còn lại; chưa đăng nhập → 401; đếm số ô bằng tích; sàn B (Quản trị) GET → không thấy mẫu của A (so mảng rỗng), PUT của B không đổi mẫu của A (GET bằng A so trước, sau). Chiều đỏ: bỏ kiểm vai ở PUT → ca đỏ nêu vai ghi được."
+    paths: [packages/api/src/templates/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của trang Mẫu: vai không phải Quản trị → hàm định đường trả về Cá nhân kèm câu «Chỉ Quản trị sàn sửa được mẫu»; bảng năm vai, đếm 5, chỉ company_admin ở lại. Chiều đỏ: cho Đầu chủ ở lại → ca đỏ nêu vai."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "apps/web/src/app/(app)/settings/cai-dat.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/export/ bảng ca viết trước: mẫu [unitNumber, listPrice, livingArea] × người nhận (nhom_moi_gioi · khach_rieng) × năm mẫu xuất của MAU_XUAT — mỗi ô so ban.cot (nhãn) và ban.khoa bằng mảng mong đợi rút từ cotRa của lõi cho cùng người nhận (không viết tay), đếm 10; khách riêng: cột đầu là nấc tầng; đối chứng: không truyền mẫu → cột theo góc nhìn như cũ (so với xuatBang không mẫu). Chiều đỏ: dùng cột góc nhìn khi có mẫu → ca đỏ nêu «xuất không theo mẫu»."
+    paths: [packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/(app)/inventory/phat-hang/: ô «Cột theo» có «Góc nhìn đang mở» rồi tên các mẫu theo thứ tự của sàn (so mảng); chọn mẫu → bản xem trước có tiêu đề cột đúng bằng mẫu sau luật ẩn (so mảng); đọc mẫu lỗi → chỉ còn «Góc nhìn đang mở» và câu «Chưa đọc được mẫu của sàn — đang theo góc nhìn đang mở». Chiều đỏ: chọn mẫu mà xem trước giữ cột góc nhìn → ca đỏ nêu «xem trước không theo mẫu»."
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5c
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của hộp Xuất (apps/web/src/app/(app)/inventory/phat-hang/): chọn mẫu ba cột rồi gọi đúng hàm dựng tệp hay chép bài của hộp cho từng kiểu xuất — bảng viết trước năm kiểu (Excel · PDF · ảnh · bài Zalo · bài Facebook), đếm 5: Excel đọc lại hàng tiêu đề của tệp sinh ra và so mảng ba cột theo thứ tự; PDF và ảnh so dãy tiêu đề cột của mô hình vẽ; bài Zalo, Facebook so cả chuỗi D + phần dựng sẵn + C với mẫu bài của sàn. Chiều đỏ: Excel giữ cột góc nhìn → ca đỏ nêu kiểu xuất."
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5d
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «Xuất: Đầu chủ đọc mẫu của sàn» — Quản trị PUT hai mẫu bảng; Đầu chủ GET /api/v1/company/templates/export → 200, so mảng tên và dãy cột đúng thứ tự Quản trị lưu; xuatBang của lõi với cột của mẫu thứ nhất cho người nhận khách riêng → cột đầu là nấc tầng (so mảng nhãn); đối chứng: sàn chưa có mẫu → GET trả mảng rỗng. Chiều đỏ: GET trả mẫu theo thứ tự chữ → ca đỏ nêu «thứ tự mẫu không giữ»."
+    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/export/ bảng ca của bài theo mẫu: (kênh zalo · facebook) × (có D và C · chỉ D · chỉ C · không mẫu · D mang biểu tượng · C mang biểu tượng) — mỗi dòng so cả bài bằng chuỗi mong đợi dựng từ baiZalo/baiFacebook của chính lõi cộng D, C đã bỏ biểu tượng (Facebook: dòng tên sàn trước D), đếm 12; ca không mẫu bằng đúng bài cũ. Chiều đỏ: đặt D sau dòng tên sàn ở Zalo hay trước tên sàn ở Facebook → ca đỏ nêu kênh."
+    paths: [packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/sharing/ bảng ca của tin Gửi theo mẫu Zalo: (nhóm môi giới · khách riêng) × (có mẫu · không mẫu), mỗi dòng so cả tin bằng chuỗi mong đợi theo thứ tự lời chào, D, «Em gửi N căn…», dòng căn, dòng link, C; đếm 4; ca không mẫu bằng soanTin cũ; ganLink trên tin có mẫu cho link đúng một lần (đếm lần xuất hiện bằng 1). Chiều đỏ: C đặt trước dòng link → ca đỏ nêu «lời kết đứng trước link»."
+    paths: [packages/core/src/sharing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «Gửi: tin mang mẫu Zalo» — Quản trị PUT mẫu bài Zalo D, C; Đầu khách GET /api/v1/company/templates/posts → so D, C; tin soạn từ thân trả bằng hàm của lõi chứa D trước «Em gửi» và C sau dòng link; đối chứng: sàn chưa đặt mẫu → GET trả không có zalo và tin bằng soanTin cũ. Chiều đỏ: GET trả mẫu của sàn khác → ca đỏ nêu «tin mang mẫu sàn khác»."
+    paths: [packages/api/src/templates/**, packages/core/src/sharing/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của màn Gửi (apps/web/src/app/(app)/shares/new/): ma trận viết trước (có mẫu Zalo · không mẫu · đọc mẫu lỗi) × (nhóm môi giới · khách riêng), đếm 6 — mỗi ô so cả tin soạn sẵn mà thành phần hiện ra với chuỗi mong đợi (đọc lỗi → tin như không mẫu); đổi mẫu rồi dựng lại màn → tin mang lời mới (so chuỗi); ô tin sửa được: gõ thêm chữ → giá trị ô đổi và thân gửi đi mang chữ đã sửa. Chiều đỏ: màn gọi soanTin không mẫu → ca đỏ nêu «màn Gửi không theo mẫu Zalo»."
+    paths: ["apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu: hiệu lực lần sau» — Đầu khách tạo Lần gửi S và ghi một lần xuất X trước khi đổi mẫu; lấy thân công khai của S và dòng exports của X; Quản trị sửa rồi xoá mẫu bảng và mẫu bài; thân công khai của S so bằng (deepEqual) bản trước, dòng exports của X so bằng bản trước; GET mẫu sau khi sửa trả bản mới (so). Chiều đỏ: trang công khai đọc mẫu bài hiện hành → ca đỏ nêu «Lần gửi cũ đổi theo mẫu»."
+    paths: [packages/api/src/templates/**, packages/api/src/public/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của hộp Xuất: mẫu đọc một lần lúc mở — hộp đang mở nhận bộ mẫu mới thì xem trước giữ cột của bộ lúc mở (so mảng), mở lại thì theo bộ mới (so mảng). Chiều đỏ: hộp đọc lại mẫu mỗi lần vẽ → ca đỏ nêu «hộp đang mở đổi theo mẫu mới»."
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ kiểm rò rỉ có ca mới: căn mồi qua xuatBang với mẫu chứa mọi cột của COT_BANG_HANG (kể cả cột nội bộ, như một dòng ghi thẳng vào cơ sở dữ liệu) × hai người nhận × năm mẫu xuất, và bài theo mẫu có D, C — không chuỗi mồi nào trong cot, dong, bai; màn Mẫu có tệp *.ro-ri.test.ts quét mồi trên mã nguồn màn. Chiều đỏ: cho cột holderName qua lõi khi mẫu mang nó → ca đỏ nêu chuỗi mồi lọt."
+    paths: [packages/core/src/export/**, packages/core/src/sharing/**, "apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu ghi thẳng mang cột nội bộ» — chèn thẳng vào company_settings (vai chủ) khoá export.templates một mẫu có holderName và closePrice; GET /api/v1/company/templates/export → mẫu ấy không mang cột nội bộ nào (so mảng cột chỉ còn cột có khoá ra) và errors nêu khoá export.templates; xuatBang theo mẫu đọc được trên căn mồi (tên chủ, số chủ nhà 0900 000 0xx, người giữ) → không chuỗi mồi nào trong cot, dong, bai. Chiều đỏ: GET trả nguyên mẫu ghi thẳng → ca đỏ nêu «cột nội bộ ra khỏi kho mẫu»."
+    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    target: "http://localhost:3491/settings/templates"
+    preconditions:
+      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Dựng dữ liệu qua máy chủ đang chạy: Quản trị đăng nhập; sàn có ba căn đang bán"
+    steps:
+      - "Mở Cài đặt › Sàn: menu có mục «Mẫu»; mở mục: ba tab «Mẫu nhập» · «Mẫu bảng hàng» · «Mẫu bài»; tab Mẫu nhập như hàng 50"
+      - "Tab Mẫu bảng hàng khi chưa có mẫu: thấy «Sàn chưa có mẫu bảng hàng — xuất đang theo góc nhìn đang mở.» và nút «Thêm mẫu»"
+      - "Thêm mẫu «[Tên] gửi đội» với Mã căn, Giá, Diện tích; đưa Diện tích lên đầu; Lưu: thấy «Đã lưu mẫu», danh sách hiện đúng thứ tự"
+      - "Thêm mẫu trùng tên: lý do «Tên đã có trong sàn» dưới ô, chữ đã gõ còn nguyên; danh sách cột không có «Người giữ», «Giá chốt»"
+      - "Tab Mẫu bài, khối Zalo: gõ lời mở đầu và lời kết, xem trước có hai lời quanh dòng căn mẫu; Lưu"
+      - "Mở Bảng hàng › Xuất bảng hàng: ô «Cột theo» có «Góc nhìn đang mở» và «[Tên] gửi đội»; chọn mẫu → xem trước đúng ba cột theo thứ tự; chọn Bài Zalo → bài có lời mở đầu, lời kết"
+      - "Mở màn Gửi với hai căn: tin soạn sẵn có lời mở đầu sau lời chào, lời kết sau dòng link; gõ thêm chữ vào ô tin: ô nhận chữ"
+      - "Về tab Mẫu bài sửa lời mở đầu Zalo, Lưu; mở lại màn Gửi: tin mang lời mới"
+      - "Xoá mẫu bảng (xác nhận): mẫu biến khỏi danh sách; mở lại Xuất: «Cột theo» chỉ còn «Góc nhìn đang mở»"
+      - "Mở /settings/templates bằng vai Đầu chủ: về trang Cá nhân kèm câu «Chỉ Quản trị sàn sửa được mẫu»"
+      - "Khổ điện thoại: màn Mẫu một cột, không vỡ khung"
+    cmd: config:executors.ui-check
+    expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console"
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/(app)/shares/new/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot, observed]
+
+  - id: E10c
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của màn Mẫu ghim chữ của từng trạng thái trong bảng trạng thái thiết kế — bảng viết trước tám trạng thái (đang tải, trống, có mẫu, lỗi đọc, từ chối, lỗi lưu, đã lưu, không quyền) → chữ mong đợi, đếm 8; mỗi dòng dựng thành phần ở trạng thái ấy và tìm đúng chuỗi; menu Cài đặt › Sàn có nhãn «Mẫu» (không còn «Mẫu nhập» ở menu). Chiều đỏ: đổi chữ «Đã lưu mẫu» → ca đỏ nêu tên trạng thái."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "apps/web/src/app/(app)/settings/cai-dat.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0 hay đúng mã đã khai của lưới khuôn; màn Mẫu vẫn theo khuôn MucCaiDat của nhóm cai-dat-san, không lệch mới."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
