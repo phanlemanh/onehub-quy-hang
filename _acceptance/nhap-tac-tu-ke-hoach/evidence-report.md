@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: ca8c31ce171e877e175ca04ca03f83738097a515
+verified_commit: ff246e4e27e7bb02a99c82d3f3d16487229e6daa
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -346,3 +346,7 @@ sha: 05df54c2f8db55b907fde1e9692eb43c7dd940b1 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 3 — 2026-11-05, do hoá cũ do gộp nhánh chính (#150) sau chữ ký
 run_id: repin-20261105T234232Z-93122
 sha: ca8c31ce171e877e175ca04ca03f83738097a515 · suites: 7 lệnh exit 0 · evals: 20/20 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E12=1, E13=1 · ngoài làn máy: E5b, E7b, E8c · diff chạm vật đo ngoài làn máy: E5b — chưa chứng lại, đi vòng S4 delta
+
+### Re-pin lần 4 — 2026-11-06, do hoá cũ do gộp nhánh chính (#151, #145) sau chữ ký
+run_id: repin-20261106T020222Z-33720
+sha: ff246e4e27e7bb02a99c82d3f3d16487229e6daa · suites: 7 lệnh exit 0 · evals: 20/20 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E12=1, E13=1 · ngoài làn máy: E5b, E7b, E8c · diff chạm vật đo ngoài làn máy: E5b — chưa chứng lại, đi vòng S4 delta
