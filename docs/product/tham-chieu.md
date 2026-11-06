@@ -274,7 +274,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | Đã gửi | Xin dẫn xem, lịch xem | Đầu khách ↔ đầu chủ | chưa phác, chờ phỏng vấn | Bản đầu | P1 |
 | Đã gửi | Bản máy tính | Máy tính | chưa phác | Bản đầu | P2 |
 | Đội | Phễu, hàng theo người, bàn giao | Trưởng nhóm · máy tính | chưa phác | Sau | P2 |
-| Cài đặt sàn | Cách gọi riêng, trạng thái, trường riêng, luật chia lead, thuế phí | Quản trị · máy tính | S1–S5 | Bản đầu | P1 — Cách gọi (S1) đã có màn (hàng 45); mục khác chạy bằng mặc định dựng sẵn |
+| Cài đặt sàn | Cách gọi riêng, trạng thái, trường riêng, luật chia lead, thuế phí | Quản trị · máy tính | S1–S5 | Bản đầu | P1 — Cách gọi (S1) đã có màn (hàng 45), Thuế phí (hàng 49) đã có màn; mục khác chạy bằng mặc định dựng sẵn |
 | Cài đặt sàn | Mẫu file nhập, mẫu bảng hàng và bài, người dùng | Quản trị · máy tính | S6 | Bản đầu | P1 |
 | Bộ gõ | Chèn bài + link khi đang chat | Đầu khách · điện thoại | — | Sau | — |
 
@@ -413,6 +413,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 06/11 | Vá sự cố bản thật 06/11: cơ sở dữ liệu nghẽn mà không đọc được phiên thì người đã đăng nhập ở lại đúng địa chỉ, thấy «Không mở được trang này» kèm «Thử lại» (dựng lại trang, không tải lại cả trang), không bị đưa về màn đăng nhập; màn đăng nhập vẫn hiện ô nhập. Mỗi hàm máy chủ giữ ít kết nối và nhả sớm (hàm trang 2 + 2, bước chặn đầu 1 + 1) để không cạn trần 15 của pooler chế độ session | `_acceptance/va-pool-ket-noi/` |
 | 06/11 | Vá pool nghe lỗi: cơ sở dữ liệu cắt một kết nối đang rảnh hay đang mượn thì máy chủ web không sập — kết nối hỏng bị bỏ, nhật ký ghi một dòng, lời gọi kế tiếp chạy lại; lời gọi đang dùng đúng kết nối ấy nhận lỗi của chính nó (trang lỗi kèm «Thử lại» như trước) | `_acceptance/va-pool-nghe-loi/` |
 | 06/11 | Quỹ hàng chạy được qua pooler chế độ giao dịch (cổng 6543): đăng nhập, đọc phiên và tên người không còn dựa vào cài đặt lúc mở kết nối, nên nhiều người dùng cùng lúc không còn cạn trần 15 kết nối của chế độ phiên; cách ly giữa sàn giữ nguyên. Bản thật đổi chuỗi kết nối khi chủ kho quyết ở Cổng Bằng chứng, có đường lùi về 5432 | `_acceptance/pooler-che-do-giao-dich/` |
+| 06/11 | Thuế phí (hàng 49, chủ kho duyệt Cổng Phạm vi): quản trị sàn ở Cài đặt › Sàn › Thuế phí bật tắt từng khoản của «bao phí» (thuế thu nhập cá nhân, lệ phí trước bạ, môi giới — ba khoản cố định, Hỏi-2) và đặt môi giới 0–5%; thuế 2% và lệ phí 0,5% đúng số luật, màn ghi «theo luật» (Hỏi-1, kiểm văn bản 06/11). Mỗi giá bao phí mang dấu định nghĩa của sàn lúc giá vào máy chủ — đóng ở cơ sở dữ liệu cho mọi lối ghi (bảng `listing_price_fee_basis`, migration 050), giá đã lưu giữ dấu cũ; giá ghi trước 06/11 mang định nghĩa mặc định (Hỏi-3). Hồ sơ căn hiện «Tính theo định nghĩa ngày …» kèm giá về tay theo dấu; màn cuộc gọi tính và so giá theo định nghĩa hiện hành của sàn. Bảng hàng chưa hiện ngày tính — sau hàng 46 (Hỏi-4); so giá toà chưa quy theo dấu từng căn (Hỏi-5) | `_acceptance/thue-phi/` |
 
 ## 13. Chỗ cần chốt
 

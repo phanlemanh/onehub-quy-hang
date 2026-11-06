@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Năm câu hỏi thuế phí</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1184px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+    }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Bảng quyết định · Thuế phí ở Cổng Phạm vi</p>
+    <h1>Năm câu hỏi, mỗi câu hai lối: máy khuyên lối a, lối b kèm giá phải trả</h1>
+
+    <svg viewBox="0 0 1184 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bảng năm câu hỏi thuế phí. Hỏi-1 thuế TNCN 2%, trước bạ 0,5%: a giữ đúng số luật, b mở khoảng cho sàn. Hỏi-2 khoản trong bao phí: a ba khoản cố định sàn bật tắt, b sàn thêm khoản riêng. Hỏi-3 giá cũ: a điền dấu mặc định, b dấu không ghi định nghĩa. Hỏi-4 Bảng hàng: a làm sau khi hàng 46 vào, b chạm Bảng hàng ngay. Hỏi-5 so giá toà: a dùng định nghĩa hiện hành, b dấu riêng từng căn.">
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <rect x="384" y="40" width="384" height="408" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="40" y="68" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CÂU HỎI</text>
+      <text x="400" y="68" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">A · MÁY KHUYÊN</text>
+      <text x="784" y="68" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">B · LỐI KHÁC VÀ GIÁ</text>
+      <line x1="40" y1="88" x2="1144" y2="88" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="40" y="104" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="62" y="113" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-1</text>
+      <text x="40" y="136" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Thuế TNCN 2%, trước bạ 0,5%</text>
+      <text x="400" y="120" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Giữ đúng số luật</text>
+      <text x="400" y="138" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">màn ghi «theo luật»</text>
+      <text x="784" y="120" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif">Mở khoảng cho sàn</text>
+      <text x="784" y="138" fill="#4f5d75" font-size="10" font-style="italic" font-family="'Geist', sans-serif">giá: sàn có thể đặt sai luật</text>
+      <line x1="40" y1="160" x2="1144" y2="160" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="40" y="176" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="62" y="185" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-2</text>
+      <text x="40" y="208" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Khoản trong bao phí</text>
+      <text x="400" y="192" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Ba khoản cố định</text>
+      <text x="400" y="210" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">sàn bật tắt</text>
+      <text x="784" y="192" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif">Sàn thêm khoản riêng</text>
+      <text x="784" y="210" fill="#4f5d75" font-size="10" font-style="italic" font-family="'Geist', sans-serif">giá: thêm bảng và màn, vượt cỡ</text>
+      <line x1="40" y1="232" x2="1144" y2="232" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="40" y="248" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="62" y="257" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-3</text>
+      <text x="40" y="280" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Giá cũ</text>
+      <text x="400" y="272" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Điền dấu mặc định</text>
+      <text x="784" y="264" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif">Dấu «không ghi định nghĩa»</text>
+      <text x="784" y="282" fill="#4f5d75" font-size="10" font-style="italic" font-family="'Geist', sans-serif">giá: giá cũ không có về tay theo dấu</text>
+      <line x1="40" y1="304" x2="1144" y2="304" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="40" y="320" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="62" y="329" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-4</text>
+      <text x="40" y="352" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Bảng hàng</text>
+      <text x="400" y="344" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Làm sau khi hàng 46 vào</text>
+      <text x="784" y="336" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif">Chạm Bảng hàng ngay</text>
+      <text x="784" y="354" fill="#4f5d75" font-size="10" font-style="italic" font-family="'Geist', sans-serif">giá: xếp chờ hàng 46</text>
+      <line x1="40" y1="376" x2="1144" y2="376" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="40" y="392" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="62" y="401" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-5</text>
+      <text x="40" y="424" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">So giá toà</text>
+      <text x="400" y="416" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Dùng định nghĩa hiện hành</text>
+      <text x="784" y="408" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif">Dấu riêng từng căn</text>
+      <text x="784" y="426" fill="#4f5d75" font-size="10" font-style="italic" font-family="'Geist', sans-serif">giá: vượt cỡ hợp đồng</text>
+      <line x1="40" y1="448" x2="1144" y2="448" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="40" y="488" fill="#4f5d75" font-size="14" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">Mỗi câu một chạm: giữ lối a, hoặc chọn b và nhận giá kèm theo.</text>
+    </svg>
+  </div>
+</body>
+</html>

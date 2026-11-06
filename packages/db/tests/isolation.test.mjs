@@ -3574,3 +3574,69 @@ test("bảng quyền hàng (046): hàm giữ khoá", { skip }, async () => {
     await client.end();
   }
 });
+
+// ---- Dấu định nghĩa bao phí (050, hàng 49 thue-phi) ----
+const PHI_HANG_A = "00000000-0000-4000-8000-0000000049a1";
+const PHI_HANG_A2 = "00000000-0000-4000-8000-0000000049a2";
+const PHI_HANG_B = "00000000-0000-4000-8000-0000000049b1";
+const MAC_DINH_PHI = { personalIncomeTax: 200, registrationFee: 50, brokerageFee: 100 };
+const BA_KHOAN = ["personalIncomeTax", "registrationFee", "brokerageFee"];
+
+/** Hàng `h` của sàn `san` (vai chủ): sự kiện created rồi một price_changed với điều kiện phí `phi`. */
+async function phiHang(c, san, h, phi, nguoi = USER_1) {
+  await c.query(
+    `insert into listing_events (company_id, listing_id, seq, type, payload, actor_user_id, actor_roles, confirmed_with_owner)
+     values ($1, $2, 1, 'created', '{"buildingName":"[Toà Q]"}', $3, '{listing_agent}', false),
+            ($1, $2, 2, 'price_changed', $4, $3, '{listing_agent}', false)`,
+    [san, h, nguoi, JSON.stringify({ listPrice: 3_000_000_000, feeInclusion: phi })],
+  );
+  await c.query("insert into listings (id, company_id, building_name, standard_status, version) values ($1, $2, '[Toà Q]', 'Hold', 2)", [h, san]);
+}
+
+const dauCua = async (c, h) =>
+  (await c.query("select included_items, rates, computed_at, (select occurred_at from listing_events e where e.listing_id = d.listing_id and e.seq = d.seq) as luc from listing_price_fee_basis d where listing_id = $1 order by seq", [h])).rows;
+
+test("thuế phí: điền dấu cho giá cũ", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    await c.query("reset role");
+    await c.query("alter table listing_events disable trigger dong_dau_phi");
+    await phiHang(c, COMPANY_A, PHI_HANG_A, "included");
+    await phiHang(c, COMPANY_A, PHI_HANG_A2, "excluded");
+    await c.query("alter table listing_events enable trigger dong_dau_phi");
+    assert.equal((await dauCua(c, PHI_HANG_A)).length, 0, "trigger tắt thì chưa có dấu");
+    assert.ok((await c.query("select app.dien_dau_phi_cu() as n")).rows[0].n >= 1);
+    const [d, ...thua] = await dauCua(c, PHI_HANG_A);
+    assert.equal(thua.length, 0, "đúng một dấu cho sự kiện bao phí");
+    assert.deepEqual(d.included_items, BA_KHOAN);
+    assert.deepEqual(d.rates, MAC_DINH_PHI);
+    assert.equal(d.computed_at.toISOString(), d.luc.toISOString(), "ngày tính = lúc ghi sự kiện");
+    assert.equal((await dauCua(c, PHI_HANG_A2)).length, 0, "giá không bao phí không có dấu");
+    assert.equal((await c.query("select app.dien_dau_phi_cu() as n")).rows[0].n, 0, "chạy lại không thêm dòng");
+    assert.equal((await dauCua(c, PHI_HANG_A)).length, 1);
+  });
+});
+
+test("listing_price_fee_basis: công ty này không đọc, không ghi được dấu của công ty kia", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    await c.query("reset role");
+    await c.query("update company_members set roles = '{listing_agent}' where user_id in ($1, $2)", [USER_1, USER_2]);
+    await c.query("insert into company_settings (company_id, key, value, updated_by) values ($1, 'fee.brokerage_pct', '2', $2)", [COMPANY_A, USER_1]);
+    await phiHang(c, COMPANY_A, PHI_HANG_A, "included");
+    await phiHang(c, COMPANY_B, PHI_HANG_B, "included", USER_2);
+    // Đổi của sàn A không chạm dấu của sàn B.
+    assert.deepEqual((await dauCua(c, PHI_HANG_A))[0].rates, { ...MAC_DINH_PHI, brokerageFee: 200 });
+    assert.deepEqual((await dauCua(c, PHI_HANG_B))[0].rates, MAC_DINH_PHI);
+
+    await bqLa(c, USER_1, COMPANY_A);
+    assert.equal((await c.query("select 1 from listing_price_fee_basis where listing_id = $1", [PHI_HANG_A])).rowCount, 1, "sàn A đọc dấu của mình");
+    assert.equal((await c.query("select 1 from listing_price_fee_basis where company_id = $1", [COMPANY_B])).rowCount, 0, "sàn A đọc dấu của sàn B");
+    await expectError(c, "insert into listing_price_fee_basis (company_id, listing_id, seq, included_items, rates, computed_at) values ($1, $2, 2, '{}', '{}', now())", [COMPANY_A, PHI_HANG_A], /permission denied/);
+    await expectError(c, "update listing_price_fee_basis set rates = '{}' where listing_id = $1", [PHI_HANG_A], /permission denied/);
+    await expectError(c, "delete from listing_price_fee_basis where listing_id = $1", [PHI_HANG_A], /permission denied/);
+
+    await bqLa(c, USER_2, COMPANY_B);
+    assert.equal((await c.query("select 1 from listing_price_fee_basis where listing_id = $1", [PHI_HANG_B])).rowCount, 1, "sàn B đọc dấu của mình");
+    assert.equal((await c.query("select 1 from listing_price_fee_basis where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc dấu của sàn A");
+    assert.equal((await c.query("select value from company_settings where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc cấu hình phí của sàn A");
+  });
+});
