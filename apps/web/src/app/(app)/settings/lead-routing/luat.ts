@@ -101,6 +101,19 @@ export function thongBaoLuu(doi: readonly KhoaMan[]): string {
   return doi.some((k) => diemMan(k).hieuLuc === "moi") ? "Đã lưu · áp cho lead mới từ bây giờ" : "Đã lưu";
 }
 
+export type KetQuaLuu = { kind: "ok"; cau: string } | { kind: "loi"; cau: string };
+
+/**
+ * Kết quả một lần lưu 200: phản hồi còn `errors` nhắc khoá vừa đổi nghĩa là giá trị vừa lưu chưa áp (dòng ấy vẫn chạy
+ * theo mặc định) — không báo «Đã lưu» (luat-chia-lead-cap-han-hong, AC-5). Lỗi cũ của dòng không đổi không chặn câu báo lưu.
+ */
+export function ketQuaLuu(doi: readonly KhoaMan[], ban: BanCauHinh): KetQuaLuu {
+  const conLoi = doi.filter((k) => ban.errors.some((e) => e.includes(k)));
+  if (conLoi.length)
+    return { kind: "loi", cau: `Đã gửi nhưng chưa áp: ${conLoi.map((k) => diemMan(k).ten).join(", ")} vẫn chạy theo mặc định — giá trị đã lưu của sàn không hợp lệ.` };
+  return { kind: "ok", cau: thongBaoLuu(doi) };
+}
+
 export const BAO_BO_NHOM_RIENG = "Sàn đang dùng bộ nhóm Hôm nay riêng — ngưỡng đặt trong bộ ấy";
 
 export type TrangThaiMan =
