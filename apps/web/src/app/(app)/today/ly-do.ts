@@ -3,11 +3,12 @@
  * lý do căn vào nhóm bằng chữ, đọc giá kèm điều kiện phí, đọc hạn của lead. Không React, không mạng — kiểm bằng `node:test`.
  * «Ngày», «hôm nay», «hôm qua» theo lịch Việt Nam (UTC+7 cố định) như lõi, không theo múi giờ của máy.
  */
-import { completeness, type StandardStatus } from "@quy-hang/core/listing";
-import type { Condition, DuKienCan, LanDoi, Nhom } from "@quy-hang/core/today";
+import { completeness, isStandardStatus } from "@quy-hang/core/listing";
+import { nhanCuaCan, type NhanTrangThai } from "@quy-hang/core/statuses";
+import { lucLenDangBan, type Condition, type DuKienCan, type LanDoi, type Nhom } from "@quy-hang/core/today";
 import type { ListingView } from "@/lib/sync/types";
 import { nhanVai } from "@/lib/vai";
-import { FEE_LABEL, STATUS_LABEL } from "../inventory/cot";
+import { FEE_LABEL } from "../inventory/cot";
 import { ghepDanhMuc, type ChiMucDanhMuc } from "../inventory/ghep-danh-muc";
 import { NHAN_PHAN } from "../units/ho-so/ho-so";
 
@@ -17,6 +18,9 @@ const ngayVn = (iso: string) => Math.floor((Date.parse(iso) + VN_MS) / NGAY_MS);
 
 /** Một căn của Hôm nay: bản trên máy kèm dữ kiện cho bộ máy hàng đợi và vài thuộc tính danh mục để hiện. */
 export type CanHomNay = DuKienCan & { id: string; buildingName: string; unitNumber: string | null; unitType: string; livingArea: number | null; listPrice: number | null; feeInclusion: string | null };
+
+/** Khoá `lucVaoTrangThai` của bản xem hàng (hàng 46) — kho trên máy từ trước hàng 46 chưa có. */
+const vaoTrangThai = (l: ListingView): string | null | undefined => (l as ListingView & { lucVaoTrangThai?: string | null }).lucVaoTrangThai;
 
 /** Bản trên máy → dữ kiện căn: loại hình qua ghép danh mục của Bảng hàng, mục thiếu tính lại trên máy (gồm thao tác chờ). */
 export function canHomNay(l: ListingView, idx: ChiMucDanhMuc): CanHomNay {
@@ -35,6 +39,8 @@ export function canHomNay(l: ListingView, idx: ChiMucDanhMuc): CanHomNay {
     priceChangeTimestamp: l.priceChangeTimestamp ?? null,
     lastPriceChange: l.lastPriceChange ?? null,
     lastStatusChange: l.lastStatusChange ?? null,
+    // Lúc vào trạng thái hiện tại (hàng 46) khi bản xem hàng mang nó; vắng thì lõi đọc lần đổi gần nhất như cũ.
+    ...(vaoTrangThai(l) !== undefined && { lucVaoTrangThai: vaoTrangThai(l) }),
     missing: completeness(l).missing,
     propertySubType: d.propertySubType ?? null,
   };
@@ -58,7 +64,9 @@ function chuDoiGia(from: unknown, to: unknown): string {
   return `${chuGia(from)} → ${chuGia(to)}`;
 }
 
-const chuNac = (v: unknown) => (typeof v === "string" && v in STATUS_LABEL ? STATUS_LABEL[v as StandardStatus] : "—");
+/** Chữ một nấc của lần đổi: nhãn riêng của sàn khi lần đổi mang mã còn sống neo đúng nấc (hàng 46), không thì nhãn mặc định. */
+const chuNac = (v: unknown, label: string | null | undefined, nhan: readonly NhanTrangThai[] | undefined) =>
+  isStandardStatus(v) ? nhanCuaCan(nhan, v, label) : "—";
 
 /** Vai nói thay người đổi: vai cao nhất người ấy giữ lúc đổi. */
 const THU_TU_VAI = ["company_admin", "team_lead", "listing_agent", "buyer_agent", "telesales"];
@@ -76,13 +84,16 @@ export function chuNgay(at: string, bayGio: string): string {
   return `${String(d.getUTCDate()).padStart(2, "0")}/${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
-/** Lần đổi của người khác: «3,10 → 2,95 tỷ — Trưởng nhóm, hôm qua» · «Đang bán → Đang giao dịch — Trưởng nhóm, hôm nay». */
-export function chuLanDoi(l: LanDoi, loai: "gia" | "nac", bayGio: string): string {
-  const cai = loai === "gia" ? chuDoiGia(l.from, l.to) : `${chuNac(l.from)} → ${chuNac(l.to)}`;
+/**
+ * Lần đổi của người khác: «3,10 → 2,95 tỷ — Trưởng nhóm, hôm qua» · «Đang bán → Đang giao dịch — Trưởng nhóm, hôm nay».
+ * `nhan`: bộ nhãn trạng thái của sàn (hàng 46) — «Đang bán → Giữ chỗ», đổi nhãn tại chỗ «Đang giao dịch → Giữ chỗ».
+ */
+export function chuLanDoi(l: LanDoi, loai: "gia" | "nac", bayGio: string, nhan?: readonly NhanTrangThai[]): string {
+  const cai = loai === "gia" ? chuDoiGia(l.from, l.to) : `${chuNac(l.from, l.fromLabel, nhan)} → ${chuNac(l.to, l.toLabel, nhan)}`;
   return `${cai} — ${chuVai(l.byRoles)}, ${chuNgay(l.at, bayGio)}`;
 }
 
-const lucLenDangBan = (c: DuKienCan) => (c.lastStatusChange?.to === "Active" ? c.lastStatusChange.at : null);
+// Mốc lên Đang bán đọc lõi (`lucLenDangBan`, hàng 46): đổi nhãn tại chỗ trong Đang bán không đặt lại số ngày.
 function moc(c: DuKienCan, anchor: Extract<Condition, { kind: "days_since" }>["anchor"]): string | null {
   const gia = c.priceChangeTimestamp ?? lucLenDangBan(c);
   if (anchor === "price") return gia;
@@ -104,9 +115,10 @@ const UU_TIEN: Condition["kind"][] = ["missing_info", "changed_by_other", "days_
 
 /**
  * Lý do căn ở nhóm `nhom`, bằng chữ: «Chưa xác nhận 16 ngày», «Chưa từng xác nhận», «Giá giữ 12 ngày», «Thiếu: pháp lý,
- * tài chính», «3,10 → 2,95 tỷ — Trưởng nhóm, hôm qua». Nhóm không có điều kiện nói được thì là tên nhóm.
+ * tài chính», «3,10 → 2,95 tỷ — Trưởng nhóm, hôm qua». Nhóm không có điều kiện nói được thì là tên nhóm. `nhan`: bộ nhãn
+ * trạng thái của sàn (hàng 46) cho dòng lần đổi trạng thái.
  */
-export function lyDo(nhom: Nhom, can: DuKienCan, nguoi: string, bayGio: string): string {
+export function lyDo(nhom: Nhom, can: DuKienCan, nguoi: string, bayGio: string, nhan?: readonly NhanTrangThai[]): string {
   const dk = [...nhom.conditions].sort((a, b) => UU_TIEN.indexOf(a.kind) - UU_TIEN.indexOf(b.kind));
   for (const d of dk) {
     if (d.kind === "missing_info" && can.missing.length) return `Thiếu: ${can.missing.map((m) => (NHAN_PHAN[m] ?? m).toLowerCase()).join(", ")}`;
@@ -117,7 +129,7 @@ export function lyDo(nhom: Nhom, can: DuKienCan, nguoi: string, bayGio: string):
       ]
         .filter((x): x is { l: LanDoi; loai: "gia" | "nac" } => !!x && x.l.byUserId !== nguoi)
         .sort((a, b) => Date.parse(b.l.at) - Date.parse(a.l.at));
-      if (doi[0]) return chuLanDoi(doi[0].l, doi[0].loai, bayGio);
+      if (doi[0]) return chuLanDoi(doi[0].l, doi[0].loai, bayGio, nhan);
     }
     if (d.kind === "days_since") return chuQuaNgay(d, can, bayGio);
     if (d.kind === "property_sub_type_in" || d.kind === "status_in") return nhom.label;

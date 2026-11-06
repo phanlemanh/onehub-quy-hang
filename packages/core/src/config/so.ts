@@ -88,7 +88,7 @@ export const SO_DIEM: readonly DiemSo[] = [
     man: "49",
   },
   { so: "9", khoa: "fee.brokerage_pct", ten: "Phí môi giới", kieu: { loai: "decimal", donVi: "%", min: 0, max: 5 }, macDinh: 1, aiDoi: QT, ghiDe: "Đầu chủ sửa từng căn", hieuLuc: "moi", lop: NOI_BO, tinhTrang: "mo", man: "49" },
-  // Thuế và lệ phí do luật đặt — đúng số luật, sàn không sửa (Hỏi-1 hàng 81, 04/11; hàng 49 kiểm văn bản 06/11 và giữ cứng, K29).
+  // Thuế và lệ phí do luật đặt — đúng số luật, sàn không sửa (Hỏi-1 hàng 81, 04/11; hàng 49 kiểm văn bản 06/11 và giữ cứng, K30).
   { so: "10", khoa: "fee.personal_income_tax_pct", ten: "Thuế thu nhập cá nhân khi chuyển nhượng", kieu: { loai: "decimal", donVi: "%", min: 2, max: 2 }, macDinh: 2, aiDoi: QT, ghiDe: null, hieuLuc: "moi", lop: NOI_BO, tinhTrang: "mo", man: "49" },
   { so: "11", khoa: "fee.registration_fee_pct", ten: "Lệ phí trước bạ", kieu: { loai: "decimal", donVi: "%", min: 0.5, max: 0.5 }, macDinh: 0.5, aiDoi: QT, ghiDe: null, hieuLuc: "moi", lop: NOI_BO, tinhTrang: "mo", man: "49" },
   // A4. Trang khách và gửi — chỉ chọn trong trần của luật ẩn
@@ -106,7 +106,7 @@ export const SO_DIEM: readonly DiemSo[] = [
   { so: "37", khoa: "labels.value.<trường chuẩn>", ten: "Tên hiển thị của các giá trị chuẩn của một trường tập đóng", kieu: { loai: "map", bang: "company_settings" }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "45" },
   // Hỏi-1: tắt (null) là mặc định; bật thì 2–10 người.
   { so: "20", khoa: "values.auto_accept_after_choices", ten: "Tự nhận đề xuất từ điển khi đủ số người cùng chọn", kieu: { loai: "int", donVi: "người", min: 2, max: 10 }, macDinh: null, coTheTrong: true, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "de_xuat", man: "70" },
-  { so: "21", khoa: "labels.status.<nhãn>", ten: "Nhãn trạng thái riêng neo vào trạng thái chuẩn", kieu: { loai: "map", bang: null }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "46" },
+  { so: "21", khoa: "labels.status.<mã>", ten: "Nhãn trạng thái riêng neo vào trạng thái chuẩn", kieu: { loai: "map", bang: "company_settings" }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "46" },
   { so: "22", khoa: "custom_fields", ten: "Trường riêng", kieu: { loai: "map", bang: null }, macDinh: null, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: "custom_field", tinhTrang: "mo", man: "47" },
   { so: "23", khoa: "custom_fields.<id>.share_with_partners", ten: "Kèm trường riêng khi phát hàng cho đội khác", kieu: { loai: "bool" }, macDinh: false, aiDoi: QT, ghiDe: null, hieuLuc: "tinh_lai", lop: NOI_BO, tinhTrang: "mo", man: "47" },
   // A6. Nhập dữ liệu, AI, mẫu — Hỏi-1: trần AI 0–10 USD tới hàng 68 đặt trần nền tảng.

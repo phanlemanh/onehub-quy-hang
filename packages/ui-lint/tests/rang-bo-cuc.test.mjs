@@ -109,6 +109,7 @@ describe("răng của hệ bố cục", () => {
         `${W}/app/(app)/settings/fees/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/labels/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/lead-routing/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
+        `${W}/app/(app)/settings/statuses/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/templates/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/users/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
       ]);
@@ -122,6 +123,7 @@ describe("răng của hệ bố cục", () => {
         `${W}/app/(app)/settings/fees/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/labels/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/lead-routing/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
+        `${W}/app/(app)/settings/statuses/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/templates/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/users/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
       ]);
