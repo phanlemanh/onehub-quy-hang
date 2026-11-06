@@ -1,39 +1,30 @@
-# E14 verifier doc lap, 2026-11-06T08:04:22Z. Luot E12 cuoi: added_at >= 2026-11-06 07:58:00Z (E12 file 14:58-14:59 gio may = 07:58-07:59Z)
-== unit_photos tu luot E12 cuoi
+# E14 verifier doc lap, 2026-11-06T10:26:03Z. Luot E12 cuoi: frame E12 luu 17:22:12-17:22:43 gio may (UTC+7) = 10:22:12-10:22:43Z; E12-network.txt 17:23:12 = 10:23:12Z. Cua so dem: 10:22:00Z <= added_at < 10:23:12Z (cac lan upload 10:06-10:21Z la cac luot E12 truoc, khong tinh; A-03.02 10:24:55Z la ban ghi sau luot, khong tinh)
+== unit_photos trong cua so luot E12 cuoi
  building_name | unit_number | compartment | display_order |           added_at            | removed_at 
 ---------------+-------------+-------------+---------------+-------------------------------+------------
- Toà A         | A-01.06     | shareable   |             1 | 2026-11-06 07:58:16.577122+00 | 
- Toà A         | A-01.06     | shareable   |             2 | 2026-11-06 07:58:16.678828+00 | 
- Toà A         | A-01.06     | internal    |             0 | 2026-11-06 07:58:16.740246+00 | 
- Toà A         | A-04.02     | shareable   |             2 | 2026-11-06 07:59:21.066709+00 | 
- Toà A         | A-04.02     | shareable   |             3 | 2026-11-06 07:59:21.133758+00 | 
- Toà A         | A-04.02     | internal    |             0 | 2026-11-06 07:59:21.202038+00 | 
-(6 rows)
+ Toà A         | A-06.03     | shareable   |            13 | 2026-11-06 10:22:31.431149+00 | 
+ Toà A         | A-06.03     | shareable   |            14 | 2026-11-06 10:22:31.519619+00 | 
+ Toà A         | A-06.03     | internal    |             6 | 2026-11-06 10:22:31.578801+00 | 
+(3 rows)
 
 == nhom theo can/ngan
  building_name | unit_number | compartment | count 
 ---------------+-------------+-------------+-------
- Toà A         | A-01.06     | internal    |     1
- Toà A         | A-01.06     | shareable   |     2
- Toà A         | A-04.02     | internal    |     1
- Toà A         | A-04.02     | shareable   |     2
-(4 rows)
+ Toà A         | A-06.03     | internal    |     1
+ Toà A         | A-06.03     | shareable   |     2
+(2 rows)
 
-== unit_photo_events added (join unit_photos) cung khoang
- building_name | unit_number | compartment | type  | payload_ngan |          occurred_at          
----------------+-------------+-------------+-------+--------------+-------------------------------
- Toà A         | A-01.06     | shareable   | added | shareable    | 2026-11-06 07:58:16.577122+00
- Toà A         | A-01.06     | shareable   | added | shareable    | 2026-11-06 07:58:16.678828+00
- Toà A         | A-01.06     | internal    | added | internal     | 2026-11-06 07:58:16.740246+00
- Toà A         | A-04.02     | shareable   | added | shareable    | 2026-11-06 07:59:21.066709+00
- Toà A         | A-04.02     | shareable   | added | shareable    | 2026-11-06 07:59:21.133758+00
- Toà A         | A-04.02     | internal    | added | internal     | 2026-11-06 07:59:21.202038+00
-(6 rows)
+== unit_photo_events added trong cua so (join unit_photos)
+  id  | building_name | unit_number | compartment | type  | payload_ngan |          occurred_at          
+------+---------------+-------------+-------------+-------+--------------+-------------------------------
+ 3848 | Toà A         | A-06.03     | shareable   | added | shareable    | 2026-11-06 10:22:31.431149+00
+ 3849 | Toà A         | A-06.03     | shareable   | added | shareable    | 2026-11-06 10:22:31.519619+00
+ 3850 | Toà A         | A-06.03     | internal    | added | internal     | 2026-11-06 10:22:31.578801+00
+(3 rows)
 
-== khop ngan: so su kien added khong khop compartment cua anh
+== lech ngan (su kien added payload.compartment <> p.compartment) trong cua so
  lech 
 ------
     0
 (1 row)
 
-== ghi chu: A-03.02 08:02:45Z la ban ghi ngoai luot E12 (khong tinh)

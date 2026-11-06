@@ -174,3 +174,42 @@ capture:provenance                           claude-sonnet-5-5      2       403 
   claude-opus-5-5: 3 agent · 18 calls · out 7,670 · in 36 · cache_read 368,581 · cache_create 90,003
   claude-haiku-5-5: 10 agent · 20 calls · out 14,022 · in 40 · cache_read 158,426 · cache_create 143,929
   TỔNG: 24 agent · 199 calls · out 142,334 · in 398 · cache_read 18,440,053
+wf_6e78e78b-3ed: 24 agent
+label                                        model              calls       out        in  cache_read     s
+ui:E18                                       claude-sonnet-5-5     48    30,615        96   6,556,653  1236
+ui:E12                                       claude-sonnet-5-5     37    28,671        74   4,210,144  1147
+ui:E16                                       claude-sonnet-5-5     32    26,804        66   3,715,345  3690
+ui:E19                                       claude-sonnet-5-5     39    21,058        78   4,694,304   414
+ui:E15                                       claude-sonnet-5-5     13    11,591        26   1,388,417   190
+synthesize:report                            claude-sonnet-5-5      2     9,388         4      35,319    52
+ui:E13                                       claude-sonnet-5-5     13     6,502        26   1,286,097   106
+review:bugs                                  claude-opus-5-5       11     5,900        22     420,695   108
+baseline:diffBase                            claude-sonnet-5-5      3     5,387         6      45,455   101
+ui:E14                                       claude-sonnet-5-5      7     4,728        14     635,883    55
+triage                                       claude-sonnet-5-5      3     3,721         6      43,194    26
+review:conventions                           claude-opus-5-5        5     3,449        10     121,660    50
+review:measurement                           claude-opus-5-5        5     3,101        10     100,265    59
+machine:npm test -w @quy-hang/api            claude-haiku-5-5       2     2,276         4      12,988    13
+machine:npm run test:ro-ri                   claude-haiku-5-5       2     2,190         4      16,171    12
+machine:npm test -w @quy-hang/web            claude-haiku-5-5       2     2,165         4      16,177    14
+machine:npm run lint                         claude-haiku-5-5       2     1,607         4      16,161    21
+machine:npm test -w @quy-hang/core           claude-haiku-5-5       2     1,546         4      16,177    10
+machine:npm test -w @quy-hang/connect        claude-haiku-5-5       2     1,253         4      16,179     9
+machine:npm run test:hooks                   claude-haiku-5-5       2     1,008         4      16,167    13
+machine:R="${CLAUDE_PLUGIN_ROOT:-$(node pack claude-haiku-5-5       2       750         4      16,256     9
+machine:npm test -w @quy-hang/ui-lint        claude-haiku-5-5       2       514         4      16,185    42
+machine:npm run typecheck                    claude-haiku-5-5       2       485         4      16,165    16
+capture:provenance                           claude-sonnet-5-5      2       350         4      12,637     9
+— wall 6949s theo vai trò —
+  baseline       1 agent · out     5,387 · wall   101s · 10:04:18 → 10:05:59
+  ui             7 agent · out   129,969 · wall  6854s · 10:04:18 → 11:58:32
+  machine       10 agent · out    13,794 · wall   138s · 10:04:18 → 10:06:36
+  review         3 agent · out    12,450 · wall   111s · 10:04:18 → 10:06:08
+  triage         1 agent · out     3,721 · wall    26s · 11:58:35 → 11:59:01
+  capture        1 agent · out       350 · wall     9s · 11:59:04 → 11:59:12
+  synthesize     1 agent · out     9,388 · wall    52s · 11:59:15 → 12:00:07
+— tổng theo model —
+  claude-sonnet-5-5: 11 agent · 199 calls · out 148,815 · in 400 · cache_read 22,623,448 · cache_create 1,132,912
+  claude-opus-5-5: 3 agent · 21 calls · out 12,450 · in 42 · cache_read 642,620 · cache_create 118,977
+  claude-haiku-5-5: 10 agent · 20 calls · out 13,794 · in 40 · cache_read 158,626 · cache_create 144,332
+  TỔNG: 24 agent · 240 calls · out 175,059 · in 482 · cache_read 23,424,694

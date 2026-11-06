@@ -1,112 +1,175 @@
-# Ghi chu verifier: dong BLOCKED(induced)/FAILED ERR_INTERNET_DISCONNECTED = chan co chu dich (Fetch.failRequest /api/) o pha dang-chan, KHONG tinh la loi app. Pha sau-mo-mang: POST /api/v1/units/photos 201 x2, POST /sync/offline-sessions 201; khong 4xx/5xx app. 500 /manifest.webmanifest (Manifest, static) o pha dang-chan = chi note.
-# that http://localhost:3460 A-01.08
-[truoc-chan] 200 GET /units/A-01.08 (Document)
-[truoc-chan] 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793954011005 (Font)
-[truoc-chan] 200 GET /_next/static/css/app/layout.css?v=1793954011005 (Stylesheet)
-[truoc-chan] 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793954011005 (Font)
-[truoc-chan] 200 GET /_next/static/css/app/global-error.css?v=1793954011005 (Stylesheet)
-[truoc-chan] 200 GET /manifest.webmanifest (Manifest)
-[truoc-chan] 200 GET /_next/static/chunks/webpack.js?v=1793954011005 (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app-pages-internals.js (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app/layout.js (Script)
-[truoc-chan] 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 (Font)
-[truoc-chan] 200 GET /_next/static/media/aa016aab0e6d1295-s.woff2 (Font)
-[truoc-chan] 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2 (Font)
-[truoc-chan] 200 GET /_next/static/chunks/app/error.js (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app/(app)/error.js (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app/(app)/not-found.js (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app/global-error.js (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js (Script)
-[truoc-chan] 200 GET /_next/static/chunks/main-app.js?v=1793954011005 (Script)
-[truoc-chan] 200 GET /_next/static/chunks/app/(app)/layout.js (Script)
-[truoc-chan] 404 GET /favicon.ico (Other)
-[truoc-chan] 200 GET /icons/icon-192.png (Other)
-[truoc-chan] 200 GET /manifest.webmanifest (Manifest)
-[truoc-chan] 200 GET /api/v1/catalog (Fetch)
-[truoc-chan] 200 GET /icons/icon-192.png (Other)
-[truoc-chan] 200 GET /api/v1/catalog (Fetch)
-[truoc-chan] 200 GET /api/v1/listings (Fetch)
-[truoc-chan] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
-[truoc-chan] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
-[truoc-chan] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
-[truoc-chan] 200 GET /api/v1/listings/d604aa9b-6464-49b8-b10d-eb16cf385756 (Fetch)
-[truoc-chan] 200 GET /api/v1/units/photos/e2701ff0-6c08-42e5-bcee-2b8918eec936/thumb (Image)
-[truoc-chan] 200 GET /api/v1/units/photos/03adfc2a-791b-40e5-967e-667b312e8c30/thumb (Image)
-[truoc-chan] 200 GET /api/v1/units/photos/e2701ff0-6c08-42e5-bcee-2b8918eec936/original (Image)
-[truoc-chan] 200 GET /api/v1/units/photos/03adfc2a-791b-40e5-967e-667b312e8c30/original (Image)
-[truoc-chan] 200 GET /__nextjs_font/geist-latin.woff2 (Font)
-[truoc-chan] 200 GET /_next/static/webpack/d8dffc41c9f46580.webpack.hot-update.json (Fetch)
-[truoc-chan] 200 GET /_next/static/webpack/app/layout.d8dffc41c9f46580.hot-update.js (Script)
-[truoc-chan] 200 GET /_next/static/webpack/app/global-error.d8dffc41c9f46580.hot-update.js (Script)
-[truoc-chan] 200 GET /units/A-01.08?_rsc=j8RHX87LCOI5ok1o (Fetch)
-[truoc-chan] 200 GET /_next/static/webpack/webpack.d8dffc41c9f46580.hot-update.js (Script)
-[truoc-chan] 200 GET /_next/static/css/app/layout.css?v=1793954016305 (Stylesheet)
-[truoc-chan] 200 GET /manifest.webmanifest (Manifest)
-[truoc-chan] 200 GET /icons/icon-192.png (Other)
-[dang-chan] BLOCKED(induced) POST /api/v1/units/photos/upload-url
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED POST /api/v1/units/photos/upload-url (Fetch)
-[dang-chan] 200 GET blob:http://localhost:3460/139603d9-8d67-4dd5-8b32-61fc77e0accf (Image)
-[dang-chan] BLOCKED(induced) GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08
-[dang-chan] 200 GET blob:http://localhost:3460/d15bcd93-a45d-4a0d-9c41-5af7391698dc (Image)
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
-[dang-chan] BLOCKED(induced) GET /api/v1/listings
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/listings (Fetch)
-[dang-chan] 200 GET /_next/static/webpack/4713351747b89705.webpack.hot-update.json (Fetch)
-[dang-chan] 200 GET /_next/static/webpack/webpack.4713351747b89705.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/app/layout.4713351747b89705.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/app/global-error.4713351747b89705.hot-update.js (Script)
-[dang-chan] 200 GET /units/A-01.08?_rsc=j8RHX87LCOI5ok1o (Fetch)
-[dang-chan] 200 GET /_next/static/css/app/layout.css?v=1793954017777 (Stylesheet)
-[dang-chan] 200 GET /manifest.webmanifest (Manifest)
-[dang-chan] 200 GET /icons/icon-192.png (Other)
-[dang-chan] 200 GET /today?_rsc=0pZfAJKr9kWuiOhZ (Fetch)
-[dang-chan] 200 GET /manifest.webmanifest (Manifest)
-[dang-chan] 200 GET /icons/icon-192.png (Other)
-[dang-chan] 200 GET /_next/static/chunks/app/(app)/today/page.js (Script)
-[dang-chan] BLOCKED(induced) GET /api/v1/catalog
-[dang-chan] BLOCKED(induced) GET /api/v1/company/settings/queue
-[dang-chan] BLOCKED(induced) GET /api/v1/leads/assigned
-[dang-chan] BLOCKED(induced) GET /api/v1/catalog
-[dang-chan] BLOCKED(induced) GET /api/v1/company/settings/queue
-[dang-chan] BLOCKED(induced) GET /api/v1/leads/assigned
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/catalog (Fetch)
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/company/settings/queue (Fetch)
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/leads/assigned (Fetch)
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/catalog (Fetch)
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/company/settings/queue (Fetch)
-[dang-chan] FAILED net::ERR_INTERNET_DISCONNECTED GET /api/v1/leads/assigned (Fetch)
-[dang-chan] 200 GET /_next/static/webpack/dec1d8b54a8fe5ba.webpack.hot-update.json (Fetch)
-[dang-chan] 200 GET /today?_rsc=u9UalX1p5TYJo1BU (Fetch)
-[dang-chan] 200 GET /_next/static/webpack/webpack.dec1d8b54a8fe5ba.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/app/layout.dec1d8b54a8fe5ba.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/app/global-error.dec1d8b54a8fe5ba.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/css/app/layout.css?v=1793954019381 (Stylesheet)
-[dang-chan] 200 GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 (Font)
-[dang-chan] 200 GET /_next/static/media/b66cf8e69499582a-s.p.woff2 (Font)
-[dang-chan] 200 GET /_next/static/media/aa016aab0e6d1295-s.woff2 (Font)
-[dang-chan] 200 GET /_next/static/webpack/52c1436457c188e7.webpack.hot-update.json (Fetch)
-[dang-chan] 200 GET /_next/static/webpack/app/layout.52c1436457c188e7.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/app/global-error.52c1436457c188e7.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/webpack.52c1436457c188e7.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/webpack/7bcc179754cdc5d7.webpack.hot-update.json (Fetch)
-[dang-chan] 200 GET /today?_rsc=u9UalX1p5TYJo1BU (Fetch)
-[dang-chan] 200 GET /_next/static/webpack/webpack.7bcc179754cdc5d7.hot-update.js (Script)
-[dang-chan] 200 GET /_next/static/css/app/layout.css?v=1793954020858 (Stylesheet)
-[dang-chan] 500 GET /manifest.webmanifest (Manifest)
-[dang-chan] 200 GET /manifest.webmanifest (Manifest)
-[dang-chan] 200 GET /icons/icon-192.png (Other)
-[sau-mo-mang] 200 GET /_next/static/webpack/375dac1063be0093.webpack.hot-update.json (Fetch)
-[sau-mo-mang] 200 GET /today?_rsc=u9UalX1p5TYJo1BU (Fetch)
-[sau-mo-mang] 200 GET /_next/static/webpack/app/global-error.375dac1063be0093.hot-update.js (Script)
-[sau-mo-mang] 200 GET /_next/static/webpack/app/layout.375dac1063be0093.hot-update.js (Script)
-[sau-mo-mang] 200 GET /_next/static/webpack/webpack.375dac1063be0093.hot-update.js (Script)
-[sau-mo-mang] 200 GET /_next/static/css/app/layout.css?v=1793954024887 (Stylesheet)
-[sau-mo-mang] 200 GET /manifest.webmanifest (Manifest)
-[sau-mo-mang] 200 GET /icons/icon-192.png (Other)
-[sau-mo-mang] 200 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 (Fetch)
-[sau-mo-mang] 200 POST /api/v1/units/photos/upload-url (Fetch)
-[sau-mo-mang] 201 POST /api/v1/units/photos (Fetch)
-[sau-mo-mang] 200 POST /api/v1/units/photos/upload-url (Fetch)
-[sau-mo-mang] 201 POST /api/v1/units/photos (Fetch)
-[sau-mo-mang] 200 GET /api/v1/listings (Fetch)
-[sau-mo-mang] 201 POST /api/v1/sync/offline-sessions (Fetch)
+REQ GET http://localhost:3460/today
+RES 200 http://localhost:3460/today
+REQ GET http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793965713750
+REQ GET http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793965713750
+REQ GET http://localhost:3460/_next/static/css/app/layout.css?v=1793965713750
+REQ GET http://localhost:3460/_next/static/chunks/webpack.js?v=1793965713750
+REQ GET http://localhost:3460/_next/static/chunks/main-app.js?v=1793965713750
+REQ GET http://localhost:3460/_next/static/chunks/app-pages-internals.js
+REQ GET http://localhost:3460/_next/static/chunks/app/error.js
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/error.js
+REQ GET http://localhost:3460/_next/static/chunks/app/layout.js
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/today/page.js
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/not-found.js
+REQ GET http://localhost:3460/_next/static/chunks/app/global-error.js
+REQ GET http://localhost:3460/_next/static/css/app/global-error.css?v=1793965713750
+REQ GET http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/_next/static/css/app/layout.css?v=1793965713750
+RES 200 http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793965713750
+RES 200 http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793965713750
+RES 200 http://localhost:3460/_next/static/css/app/global-error.css?v=1793965713750
+RES 200 http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/_next/static/chunks/webpack.js?v=1793965713750
+RES 200 http://localhost:3460/_next/static/chunks/app-pages-internals.js
+REQ GET http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2
+REQ GET http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2
+REQ GET http://localhost:3460/_next/static/media/aa016aab0e6d1295-s.woff2
+RES 200 http://localhost:3460/_next/static/chunks/app/layout.js
+RES 200 http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2
+RES 200 http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2
+RES 200 http://localhost:3460/_next/static/media/aa016aab0e6d1295-s.woff2
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/error.js
+RES 200 http://localhost:3460/_next/static/chunks/app/error.js
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/not-found.js
+RES 200 http://localhost:3460/_next/static/chunks/app/global-error.js
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/today/page.js
+RES 200 http://localhost:3460/_next/static/chunks/main-app.js?v=1793965713750
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/layout.js
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/layout.js
+REQ GET http://localhost:3460/favicon.ico
+REQ GET http://localhost:3460/icons/icon-192.png
+RES 404 http://localhost:3460/favicon.ico
+RES 200 http://localhost:3460/icons/icon-192.png
+REQ GET http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/company/settings/queue
+REQ GET http://localhost:3460/api/v1/leads/assigned
+REQ GET http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/company/settings/queue
+REQ GET http://localhost:3460/api/v1/leads/assigned
+RES 200 http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/listings
+REQ GET http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/api/v1/company/settings/queue
+RES 200 http://localhost:3460/api/v1/company/settings/queue
+RES 200 http://localhost:3460/api/v1/listings
+RES 200 http://localhost:3460/api/v1/leads/assigned
+RES 200 http://localhost:3460/api/v1/leads/assigned
+REQ GET http://localhost:3460/units/A-13.01
+RES 200 http://localhost:3460/units/A-13.01
+REQ GET http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793965716116
+REQ GET http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793965716116
+REQ GET http://localhost:3460/_next/static/css/app/layout.css?v=1793965716116
+REQ GET http://localhost:3460/_next/static/chunks/webpack.js?v=1793965716116
+REQ GET http://localhost:3460/_next/static/chunks/main-app.js?v=1793965716116
+REQ GET http://localhost:3460/_next/static/chunks/app-pages-internals.js
+REQ GET http://localhost:3460/_next/static/chunks/app/error.js
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/error.js
+REQ GET http://localhost:3460/_next/static/chunks/app/layout.js
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/not-found.js
+REQ GET http://localhost:3460/_next/static/chunks/app/global-error.js
+REQ GET http://localhost:3460/_next/static/css/app/global-error.css?v=1793965716116
+RES 200 http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793965716116
+RES 200 http://localhost:3460/_next/static/css/app/layout.css?v=1793965716116
+RES 200 http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793965716116
+RES 200 http://localhost:3460/_next/static/css/app/global-error.css?v=1793965716116
+RES 200 http://localhost:3460/_next/static/chunks/app-pages-internals.js
+RES 200 http://localhost:3460/_next/static/chunks/webpack.js?v=1793965716116
+REQ GET http://localhost:3460/manifest.webmanifest
+REQ GET http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2
+REQ GET http://localhost:3460/_next/static/media/aa016aab0e6d1295-s.woff2
+REQ GET http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2
+RES 200 http://localhost:3460/_next/static/chunks/app/layout.js
+RES 200 http://localhost:3460/_next/static/media/22a5144ee8d83bca-s.p.woff2
+RES 200 http://localhost:3460/_next/static/media/b66cf8e69499582a-s.p.woff2
+RES 200 http://localhost:3460/_next/static/media/aa016aab0e6d1295-s.woff2
+RES 200 http://localhost:3460/_next/static/chunks/app/error.js
+RES 200 http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/error.js
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/not-found.js
+RES 200 http://localhost:3460/_next/static/chunks/app/global-error.js
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
+RES 200 http://localhost:3460/_next/static/chunks/main-app.js?v=1793965716116
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/layout.js
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/layout.js
+REQ GET http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/icons/icon-192.png
+REQ GET http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/catalog
+RES 200 http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ GET http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/listings/bc92d8a7-4129-4311-a849-3ea7554c5d5c
+REQ GET http://localhost:3460/api/v1/listings
+RES 200 http://localhost:3460/manifest.webmanifest
+REQ GET http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/api/v1/listings/bc92d8a7-4129-4311-a849-3ea7554c5d5c
+RES 200 http://localhost:3460/api/v1/listings
+RES 200 http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+RES 200 http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+RES 200 http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ GET http://localhost:3460/api/v1/units/photos/8b0cbd4b-64c3-4fd4-8763-475b082bd13a/original
+REQ GET http://localhost:3460/api/v1/units/photos/8b0cbd4b-64c3-4fd4-8763-475b082bd13a/thumb
+RES 200 http://localhost:3460/api/v1/units/photos/8b0cbd4b-64c3-4fd4-8763-475b082bd13a/original
+RES 200 http://localhost:3460/api/v1/units/photos/8b0cbd4b-64c3-4fd4-8763-475b082bd13a/thumb
+BLOCKED(Fetch.fail) POST http://localhost:3460/api/v1/units/photos/upload-url
+REQ POST http://localhost:3460/api/v1/units/photos/upload-url
+REQ GET blob:http://localhost:3460/a1145180-e355-477e-b478-90096a7e3cc8
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.109 blocked=
+RES 200 blob:http://localhost:3460/a1145180-e355-477e-b478-90096a7e3cc8
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ GET blob:http://localhost:3460/b6a51a56-0822-4a9e-a8e0-f35f275eda9e
+RES 200 blob:http://localhost:3460/b6a51a56-0822-4a9e-a8e0-f35f275eda9e
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.111 blocked=
+REQ GET http://localhost:3460/api/v1/listings
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/listings
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.113 blocked=
+REQ GET http://localhost:3460/today?_rsc=PSl2VJ1Q6W_gbSy4
+RES 200 http://localhost:3460/today?_rsc=PSl2VJ1Q6W_gbSy4
+REQ GET http://localhost:3460/_next/static/chunks/app/(app)/today/page.js
+REQ GET http://localhost:3460/manifest.webmanifest
+RES 200 http://localhost:3460/manifest.webmanifest
+REQ GET http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/icons/icon-192.png
+RES 200 http://localhost:3460/_next/static/chunks/app/(app)/today/page.js
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/catalog
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/company/settings/queue
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/leads/assigned
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/catalog
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/company/settings/queue
+BLOCKED(Fetch.fail) GET http://localhost:3460/api/v1/leads/assigned
+REQ GET http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/company/settings/queue
+REQ GET http://localhost:3460/api/v1/leads/assigned
+REQ GET http://localhost:3460/api/v1/catalog
+REQ GET http://localhost:3460/api/v1/company/settings/queue
+REQ GET http://localhost:3460/api/v1/leads/assigned
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.118 blocked=
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.119 blocked=
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.120 blocked=
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.121 blocked=
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.122 blocked=
+FAIL net::ERR_INTERNET_DISCONNECTED 41523.123 blocked=
+REQ GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+RES 200 http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.01
+REQ POST http://localhost:3460/api/v1/units/photos/upload-url
+RES 200 http://localhost:3460/api/v1/units/photos/upload-url
+REQ POST http://localhost:3460/api/v1/units/photos
+RES 201 http://localhost:3460/api/v1/units/photos
+REQ POST http://localhost:3460/api/v1/units/photos/upload-url
+RES 200 http://localhost:3460/api/v1/units/photos/upload-url
+REQ POST http://localhost:3460/api/v1/units/photos
+RES 201 http://localhost:3460/api/v1/units/photos
+REQ GET http://localhost:3460/api/v1/listings
+RES 200 http://localhost:3460/api/v1/listings
+REQ POST http://localhost:3460/api/v1/sync/offline-sessions
+RES 201 http://localhost:3460/api/v1/sync/offline-sessions

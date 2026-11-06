@@ -1,5 +1,3 @@
-# E16 doi chung duong 2026-11-06T08:17:12Z: dau-chu-1@mau.quy-hang.test cung ho so (E16-step4.png), 375x812
-37 response, status >=400: 0
-Phan hoi bat duoc ma Noi bo e326afdd: 4 (3x 200 GET /api/v1/units/photos?toa&ma=A-01.06 body chua ma; 1x 200 GET /api/v1/units/photos/e326afdd-.../original)
-DOM: outerHTML co e326afdd = true; img src co .../e326afdd-.../original; tab "Noi bo" = true; nut "Chup anh" = true
-requestfailed: 2x POST/beacon /api/v1/public/shares/ojQtFO4VcHna/events net::ERR_ABORTED = beacon cua trang khach bi huy khi dieu huong sang trang khac (client huy, khong phai loi may chu)
+# E16 doi chung duong: dau-chu-1@mau.quy-hang.test (listing_agent) mo cung ho so, context moi, 375x812 (E16-step4.png)
+70 response tong, 45 /api/v1/*, requestfailed=0, status>=400: 0
+Bo do BAT DUOC ma Noi bo: 10 phan hoi (3 x GET units/photos?toa&ma chua 7 ma trong body; 7 x GET photos/<ma Noi bo>/original 200); DOM chua du 7 ma; 22 anh (1/22..22/22, 7 the "Noi bo"); nut "Chup anh" co

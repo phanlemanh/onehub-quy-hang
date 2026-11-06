@@ -1,7 +1,4 @@
-# E16 verifier doc lap 2026-11-06T08:17:12Z; can A-01.06 Toa A (listing 1066089e); Playwright MCP 375x812; dev 3460 -> Postgres 5574
-# ma Noi bo e326afdd-03ec-4072-b745-3153bd9b0466
-== dau-khach@mau.quy-hang.test mo /units/A-01.06 (E16-step3.png)
-31 response tong (trong do 13 /api/v1/*), requestfailed=0, status >=400: 0
-API: 200 catalog x2, listings, listings/<id>/owner x2, units/photos?toa&ma x3, listings/<id>, photos original+thumb cua 2 ma Gui duoc (af500efa, 2b82a205)
-Phan hoi chua ma Noi bo (url hoac body): 0
-DOM: outerHTML co e326afdd = false; img src chi 2 ma Gui duoc; tab "Noi bo" = false; nut "Chup anh" = false; viewport 375x812
+# E16 verifier doc lap 2026-11-06T10:5xZ; Playwright MCP, context moi (serviceWorkers chan), 375x812; dev 3460 -> Postgres 5574
+# dau-khach@mau.quy-hang.test (buyer_agent, xac nhan qua /api/v1/me) mo /units/A-06.03 (E16-step3.png)
+58 response tong, 40 /api/v1/* (30 byte anh thumb/original, deu cua anh Gui duoc), requestfailed=0, status>=400: 0
+Phan hoi (url hoac body JSON) chua ma Noi bo (7 ma): 0 ; DOM outerHTML chua ma Noi bo: 0 ; 15 anh (1/15..15/15) ; chu "Noi bo": khong ; nut "Chup anh": khong

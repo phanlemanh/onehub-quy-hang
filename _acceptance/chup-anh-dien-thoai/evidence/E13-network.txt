@@ -1,8 +1,6 @@
-# Driver: node fetch (không có browser/console). Nguồn: web-h.log của dev 3494, các dòng /api/v1/units/photos của lượt này.
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.02 200 in 16ms (next.js: 0.2ms, application-code: 16ms)
- GET /api/v1/units/photos/514ef52c-ea3b-4da2-800c-48f99a4ada27/original 200 in 8ms (next.js: 0.3ms, application-code: 8ms)
- POST /api/v1/units/photos/upload-url 403 in 10ms (next.js: 0.4ms, application-code: 10ms)
- POST /api/v1/units/photos 403 in 11ms (next.js: 0.8ms, application-code: 11ms)
- POST /api/v1/units/photos/upload-url 200 in 10ms (next.js: 0.7ms, application-code: 9ms)
- POST /api/v1/units/photos 201 in 18ms (next.js: 0.4ms, application-code: 17ms)
+# Driver: node fetch (khong co browser/console). Nguon: web-h.log dev 3494, cac dong /api/v1/units/photos cua luot nay.
+ POST /api/v1/units/photos/upload-url 403 in 10ms (next.js: 0.5ms, application-code: 10ms)
+ POST /api/v1/units/photos 403 in 10ms (next.js: 0.3ms, application-code: 9ms)
+ POST /api/v1/units/photos/upload-url 200 in 12ms (next.js: 0.4ms, application-code: 12ms)
+ POST /api/v1/units/photos 201 in 20ms (next.js: 0.3ms, application-code: 19ms)
 # Khong co 5xx/loi ket noi; 403 cua dau-khach la dung expected.

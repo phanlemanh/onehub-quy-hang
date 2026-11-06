@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 1c79e6ae3ce0dbbc642282265ef4690c428b0785
+verified_commit: 85c4fad024e194820dc07ac542eb6c7625dfe76a
 human_signoff:
 ---
 
@@ -38,223 +38,233 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-chup-anh-dien-thoai-E1-r4
+  run_id: minted-chup-anh-dien-thoai-E1-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E2
-  run_id: minted-chup-anh-dien-thoai-E2-r4
+  run_id: minted-chup-anh-dien-thoai-E2-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E3
-  run_id: minted-chup-anh-dien-thoai-E3-r4
+  run_id: minted-chup-anh-dien-thoai-E3-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E4
-  run_id: minted-chup-anh-dien-thoai-E4-r4
+  run_id: minted-chup-anh-dien-thoai-E4-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E5
-  run_id: minted-chup-anh-dien-thoai-E5-r4
+  run_id: minted-chup-anh-dien-thoai-E5-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.api
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/api
-    ℹ duration_ms 991.837584
+    ℹ duration_ms 842.388584
 
 - eval: E6
-  run_id: minted-chup-anh-dien-thoai-E6-r4
+  run_id: minted-chup-anh-dien-thoai-E6-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.core
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/core
-    ℹ duration_ms 993.937
+    ℹ duration_ms 910.847375
 
 - eval: E7
-  run_id: minted-chup-anh-dien-thoai-E7-r4
+  run_id: minted-chup-anh-dien-thoai-E7-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E8
-  run_id: minted-chup-anh-dien-thoai-E8-r4
+  run_id: minted-chup-anh-dien-thoai-E8-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E9
-  run_id: minted-chup-anh-dien-thoai-E9-r4
+  run_id: minted-chup-anh-dien-thoai-E9-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 2987.839042
+    ℹ duration_ms 2975.113666
 
 - eval: E10
-  run_id: minted-chup-anh-dien-thoai-E10-r4
+  run_id: minted-chup-anh-dien-thoai-E10-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     design-floor-khuon.mjs --kiem --root .
     13 tệp giao diện ngoài bản đồ
 
 - eval: E11
-  run_id: minted-chup-anh-dien-thoai-E11-r4
+  run_id: minted-chup-anh-dien-thoai-E11-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.test.ui_lint
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 50846.494375
+    ℹ duration_ms 35604.433541
 
 - eval: E12
-  run_id: minted-chup-anh-dien-thoai-E12-r4
+  run_id: minted-chup-anh-dien-thoai-E12-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
-  screenshot: evidence/E12-truoc.png
+  verified_at: 2026-11-06T10:04:10Z
+  screenshot: evidence/E12-step1.png
   observed: |
-    E12-truoc.png: 375×812 «Căn A-01.06», ảnh lớn xám «Chưa có ảnh», nút «Chụp ảnh» góc phải trên ảnh. E12-chon-ngan.png: ngăn «Chụp ảnh · A-01.06 / Toà A», hai nút Gửi được và Nội bộ, «Mở máy ảnh» xám (tắt) dính đáy. E12-cho-mang.png: khối «Mất mạng», ba dòng Gửi được, Gửi được, Nội bộ (có khoá), mỗi dòng nhãn vàng «Chờ mạng — tự tải khi có mạng». E12-da-tai.png: ba dòng nhãn xanh «Đã tải lên». E12-anh-lon.png: ảnh lớn nhãn «1/3». E12-dau-khach.png: ảnh lớn «1/2», không có nút «Chụp ảnh». E12-tai-lai.png (A-04.02, sau tải lại): mở lại ngăn có đúng ba dòng «Chờ mạng — tự tải khi có mạng»; E12-tai-lai-da-tai.png: ba dòng «Đã tải lên». Tất cả khớp Expected; độ lệch: bước tải lại chạy trên căn A-04.02, các frame A-04.02 và dau-khach chụp ở chế độ tối. DB: A-01.06 thêm 3 dòng unit_photos (shareable, shareable, internal); A-04.02 tăng đúng 3.
+    E12-truoc.png: 375x812, «Căn A-06.03», ảnh lớn màu hồng có nút «Chụp ảnh» góc trên phải và nhãn 1/1. Khớp.
+    E12-chon-ngan.png: ngăn dưới «Chụp ảnh · A-06.03», hai nút «Gửi được» và «Nội bộ», dòng «Chọn ngăn trước khi chụp», nút «Mở máy ảnh» xám dính đáy. Khớp.
+    E12-cho-mang.png: khối «Mất mạng — Ảnh chờ trên máy…», ba dòng «Chờ mạng — tự tải khi có mạng» (Gửi được, Gửi được, Nội bộ có khoá). Khớp.
+    E12-da-tai.png: ba dòng huy hiệu xanh «Đã tải lên» (Gửi được, Gửi được, Nội bộ). Khớp.
+    E12-anh-lon.png: ngăn đã đóng, ảnh lớn 1/4. Khớp về số lượng nhưng căn có sẵn 1 ảnh nên không phải 1/3.
+    E12-dau-khach.png: đầu khách, ảnh lớn 1/13, không có nút «Chụp ảnh», có nút «Hỏi đầu chủ · [Mẫu] Đầu chủ 1». Khớp.
+    E12-tai-lai.png: sau tải lại và mở lại ngăn, đúng 3 dòng «Chờ mạng — tự tải khi có mạng», nút «Mở máy ảnh» xám. Khớp.
   network_observed: clean
 
 - eval: E13
-  run_id: minted-chup-anh-dien-thoai-E13-r4
+  run_id: minted-chup-anh-dien-thoai-E13-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   screenshot: evidence/E13-step1.html
   observed: |
-    E13-step1.html (đã đọc bằng Read): trang HTML ghi kết quả assertion, gồm B1 trước 3/3; dau-khach upload-url bị từ chối listing-agent-required; dau-khach photos bị từ chối listing-agent-required; sau dau-khach vẫn 3/3; dau-chu-1 upload-url trả {"truc_tiep":false}; dau-chu-1 photos tạo ảnh mới Toà A/A-03.02; sau dau-chu-1 4/4; dòng KET: khách không đổi, dau-chu-1 tăng +1. Khớp Expected.
-  network_observed: clean
+    E13-step1.html (đã đọc) hiện kết quả chạy: số dòng trước 4/4; dau-khach gọi upload-url và POST photos đều bị từ chối với lỗi listing-agent-required, đếm sau vẫn 4/4; dau-chu-1 upload-url thành công và POST photos tạo ảnh mới trên Toà A / A-03.02, đếm sau 5/5; dòng KẾT: khách đổi=không (4/4 -> 4/4), dau-chu-1 +1 (4/4 -> 5/5). Khớp Expected.
+  network_observed: n-a (driver)
 
 - eval: E14
-  run_id: minted-chup-anh-dien-thoai-E14-r4
+  run_id: minted-chup-anh-dien-thoai-E14-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   screenshot: evidence/E14-db.txt
   observed: |
-    Đã đọc tệp E14-db.txt (không có ảnh, driver là psql). Bảng unit_photos từ 07:58Z có 6 dòng: A-01.06 (shareable x2, internal x1) và A-04.02 (shareable x2, internal x1), building_name «Toà A». Mỗi căn đúng 2 shareable và 1 internal. unit_photo_events có 6 sự kiện added, compartment trong payload trùng compartment của ảnh, độ lệch 0. Khớp Expected: mỗi căn ba dòng mới, hai shareable, một internal, ba sự kiện added đúng ngăn.
+    E12-da-tai.png (read): a phone sheet titled "Chụp ảnh · A-06.03", "Toà A", with the Ảnh vào ngăn selector (Gửi được / Nội bộ). The list shows three uploaded rows: Gửi được "Đã tải lên", Gửi được "Đã tải lên", and Nội bộ (lock icon) "Đã tải lên". This matches Expected: 2 shareable + 1 internal on the same unit A-06.03, Toà A. E14-db.txt (read after writing) shows 3 unit_photos rows and 3 matching 'added' events in the window.
   network_observed: n-a (driver)
 
 - eval: E15
-  run_id: minted-chup-anh-dien-thoai-E15-r4
+  run_id: minted-chup-anh-dien-thoai-E15-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   screenshot: evidence/E15-step1.png
   observed: |
-    E15-step1.png: ngăn «Chụp ảnh · A-01.01 / Toà A», hai nút ngăn «Gửi được» và «Nội bộ» (ổ khoá), khối «Mất mạng», ba dòng ảnh (Gửi được, Gửi được, Nội bộ có ổ khoá), mỗi dòng nhãn «Chờ mạng — tự tải khi có mạng», nút «Mở máy ảnh» ở đáy. E15-step2.png: cùng ngăn sau khi mở mạng, ba dòng đều nhãn xanh «Đã tải lên». E15-db.txt: trước 2 dòng, lúc offline vẫn 2, sau 5 (tăng đúng 3), ba mã mới khác nhau, mã có hơn một dòng bằng 0, ba sự kiện added. Lưu ý trung thực: phản hồi lời xác nhận đầu bị chặn sau khi máy chủ đã ghi; máy đối chiếu bằng GET danh sách ảnh rồi gửi hai ảnh còn lại, không gửi lại cùng lời xác nhận. Kết quả cuối đúng Expected.
+    E15-step1.png (375x812, đã mở lại bằng Read): ngăn «Chụp ảnh · A-01.01 / Toà A», hai nút «Gửi được» và «Nội bộ» (ổ khoá), khối «Mất mạng — Ảnh chờ trên máy và tự tải lên khi có mạng.», ba dòng ảnh (Gửi được, Gửi được, Nội bộ có ổ khoá), mỗi dòng nhãn vàng «Chờ mạng — tự tải khi có mạng», nút «Mở máy ảnh» ở đáy. Khớp Expected (đang chặn mạng, ba ảnh chờ). E15-step2.png (đã mở lại bằng Read): cùng ngăn sau khi mở mạng và sau khi phản hồi POST đầu bị cắt, không còn khối «Mất mạng», ba dòng đều nhãn xanh «Đã tải lên». Khớp Expected. E15-db.txt (đã ghi): TRƯỚC 8 dòng còn sống của A-01.01, khi còn offline vẫn 8, SAU 11 (tăng đúng 3); ba mã mới (hai shareable, một internal); số mã có hơn một dòng là 0; ba sự kiện added, mỗi mã một; máy chủ ghi đủ ba lần cho POST /api/v1/units/photos (phản hồi đầu bị Fetch.failRequest sau khi máy chủ đã ghi).
   network_observed: clean
 
 - eval: E16
-  run_id: minted-chup-anh-dien-thoai-E16-r4
+  run_id: minted-chup-anh-dien-thoai-E16-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   screenshot: evidence/E16-step2.png
   observed: |
-    E16-step2.png (375 wide, /s/ojQtFO4VcHna, chưa đăng nhập): one green and purple cover image, "Toà A · A-01.06", "3,25 tỷ Bao phí", button "Quan tâm"; a single image, no gallery counter, no Nội bộ label. E16-step3.png (dau-khach, 375x812): image counter "1/2", no "Chụp ảnh" button and no Nội bộ tab. E16-step4.png (dau-chu-1, same profile): counter "1/3" (third is Nội bộ), "Chụp ảnh" button at top right of the image. The frames match Expected.
+    Tôi đã mở từng frame và đối chiếu với Expected. E16-step2.png (trang khách /s/ZMR0ymkzCi7n, 375x812, không đăng nhập): có tiêu đề «[Mẫu] Sàn thử», «[Mẫu] Đầu khách gửi bạn 1 căn», đúng một thẻ căn «Toà A · A-06.03» với một ảnh bìa màu hồng, giá 5,55 tỷ, nút Quan tâm; không có ảnh thứ hai. Phản hồi mạng của trang có đúng một ảnh là public/shares/.../photos/aea484d5 (bìa Gửi được). E16-step3.png (dau-khach, hồ sơ A-06.03): tiêu đề «Căn A-06.03», bộ đếm ảnh «1/15», chip Đang bán, «Hỏi đầu chủ · [Mẫu] Đầu chủ 1»; không có nút «Chụp ảnh», không có nhãn «Nội bộ». E16-step4.png (dau-chu-1, cùng hồ sơ): bộ đếm «1/22», có nút «Chụp ảnh» ở góc ảnh, nút «Ghi cuộc gọi»; văn bản trang có 7 thẻ «Nội bộ» (16/22 đến 22/22). Các frame khớp Expected, và dau-chu-1 là đối chứng dương cho bộ dò.
   network_observed: clean
 
 - eval: E17
-  run_id: minted-chup-anh-dien-thoai-E17-r4
+  run_id: minted-chup-anh-dien-thoai-E17-r5
   exit_code: 0
   baseline: green
   verifier: config:executors.script.ro_ri
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   output: |
     npm run test:ro-ri
-    ℹ duration_ms 300.147709
+    ℹ duration_ms 930.992208
 
 - eval: E18
-  run_id: minted-chup-anh-dien-thoai-E18-r4
+  run_id: minted-chup-anh-dien-thoai-E18-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   screenshot: evidence/E18-step1.png
   observed: |
-    E18-step1.png (375x812): ngăn «Chụp ảnh · A-01.08 / Tòa A» trên hồ sơ mờ; hai dòng đều «Gửi được» với nhãn «Chờ mạng — tự tải khi có mạng»; nút «Mở máy ảnh» ở đáy. E18-step2.png: màn «Hôm nay» (24 việc), hồ sơ và ngăn đã đóng, không mở lại hồ sơ. E18-hom-nay.png: vẫn ở /today sau 20 giây khi mở mạng; E18-db.txt: 2 dòng lên 4 dòng (+2) không tải lại. E18-doichung-hom-nay.png: bản đối chứng đếm 3 lên 3 (+0). Không mâu thuẫn Expected.
+    E18-step1.png: ngăn «Chụp ảnh · A-13.01 / Toà A» mở trên nền hồ sơ mờ, ngăn Gửi được đang chọn, hai dòng ảnh Gửi được đều có nhãn vàng «Chờ mạng — tự tải khi có mạng». Khớp expected (2 ảnh chờ khi chặn mạng). E18-step2.png: màn Hôm nay (đường /today, tab Hôm nay sáng ở thanh dưới), biểu tượng mạng trên thanh đầu hiện trạng thái mất kết nối, ngăn đã đóng, không còn ở hồ sơ. Khớp (rời hồ sơ, chưa mở lại). E18-hom-nay.png: vẫn màn Hôm nay sau khi mở mạng và chờ 20s, biểu tượng mạng đã đổi sang trạng thái có mạng; trang không mở lại hồ sơ; DB đếm lúc này 3 (tăng 2). Khớp. E18-doichung-hom-nay.png (bản sao giữ hàng chờ theo thành phần): cùng màn Hôm nay sau 20s; DB đếm A-13.03 vẫn 1 (tăng 0). Khớp đối chứng +0. Frame bản sao step1/step2 lưu nhưng không mở riêng ngoài step2/hom-nay máy thật.
   network_observed: clean
 
 - eval: E19
-  run_id: minted-chup-anh-dien-thoai-E19-r4
+  run_id: minted-chup-anh-dien-thoai-E19-r5
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
   screenshot: evidence/E19-step1.png
   observed: |
-    E19-step1.png (375x812, tối): ngăn «Chụp ảnh · A-04.01 / Toà A» mở, hai dòng ảnh cùng nhãn vàng «Chờ mạng — tự tải khi có mạng»: «Gửi được» và «Nội bộ» (có ổ khoá). E19-con.png (sau tải lại, mở lại ngăn): vẫn 2 dòng chờ mạng (đối chứng dương). E19-dang-xuat.png (1280x800): trang đăng nhập Quỹ hàng với ô Email trống và nút «Gửi mã», đã đăng xuất thật. E19-nguoi-b.png: ngăn A-04.01 chỉ có chọn ngăn và câu «Chưa chụp ảnh nào cho căn này.», không có dòng chờ mạng nào. Khớp Expected. Các yêu cầu bị chặn trong lúc chặn mạng là do chính eval cố ý chèn, console sạch.
-  network_observed: app-fail
+    E19-step1.png (375x812, can A-04.01): khay Chup anh mo, ngan Noi bo dang chon, hai dong anh: Gui duoc va Noi bo (co icon khoa), moi dong co nhan vang "Cho mang — tu tai khi co mang". Khop expected (2 anh cho, mot Noi bo).
+    E19-con.png (= E19-step2.png) sau khi tai lai va mo lai ngan: van dung hai dong Gui duoc va Noi bo, ca hai "Cho mang — tu tai khi co mang". Chua chon ngan nen dong chu "Chon ngan truoc khi chup." va nut Mo may anh xam. Doi chung duong khop.
+    E19-menu.png: menu Tai khoan o 1280x800 co muc Dang xuat (menuitem dem duoc 1); khong mau thuan.
+    E19-dang-xuat.png (= E19-step3.png, 1280x800): trang Dang nhap Quy hang (/login) voi o Email va nut Gui ma; khong con khay anh. Khop; databases() do bang JS la [].
+    E19-nguoi-b.png (= E19-step4.png, 375x812): nguoi B mo cung can A-04.01, khay Chup anh hien "Chua chụp ảnh nào cho căn này." va khong co dong anh cho nao. Khop expected; so dong [data-cho]=0, databases() chi co kho cua B.
+  network_observed: clean
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-chup-anh-dien-thoai-SUITE-npm_test_w_quy_hang_connect-r4
+  run_id: minted-chup-anh-dien-thoai-SUITE-npm_test_w_quy_hang_connect-r5
   exit_code: 0
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
 
 - cmd: npm run test:hooks
-  run_id: minted-chup-anh-dien-thoai-SUITE-test_hooks-r4
+  run_id: minted-chup-anh-dien-thoai-SUITE-test_hooks-r5
   exit_code: 0
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
 
 - cmd: npm run typecheck
-  run_id: minted-chup-anh-dien-thoai-SUITE-typecheck-r4
+  run_id: minted-chup-anh-dien-thoai-SUITE-typecheck-r5
   exit_code: 0
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
 
 - cmd: npm run lint
-  run_id: minted-chup-anh-dien-thoai-SUITE-lint-r4
+  run_id: minted-chup-anh-dien-thoai-SUITE-lint-r5
   exit_code: 0
-  verified_at: 2026-11-06T07:51:51Z
+  verified_at: 2026-11-06T10:04:10Z
 
 ## Known limits
 
@@ -262,24 +272,24 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (green trên cả HEAD lẫn baseline; chứng minh harness hoặc regression-guard có chủ ý, nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard):
-- npm test -w @quy-hang/web: E1, E2, E3, E4, E7, E8, E9
-- npm test -w @quy-hang/api: E5
-- npm test -w @quy-hang/core: E6
-- design-floor-khuon.mjs --kiem: E10
-- npm test -w @quy-hang/ui-lint: E11
-- npm run test:ro-ri: E17
+Eval xanh trên cả mã mới lẫn mã nền (baseline green), không phân biệt được tính năng — cần viết lại để khẳng định hành vi mới, hoặc xác nhận là lưới hồi quy có chủ ý:
 
-Baseline không đo: E12, E13, E14, E15, E16, E18, E19 (ui-check, baseline n-a, chạy trên chỗ thử cần dữ liệu và trình duyệt, không dựng được trên mã cũ).
+- E1, E2, E3, E4, E7, E8, E9 (npm test -w @quy-hang/web)
+- E5 (npm test -w @quy-hang/api)
+- E6 (npm test -w @quy-hang/core)
+- E10 (design-floor-khuon.mjs --kiem)
+- E11 (npm test -w @quy-hang/ui-lint)
+- E17 (npm run test:ro-ri)
+
+Baseline không đo: E12, E13, E14, E15, E16, E18, E19 (eval giao diện, baseline n-a).
 
 ## Variance
 
-none — every multi-run eval is uniform
+none — mọi eval chạy một lần, xác định; không có phương sai.
 
 ## Iterations
 
-Round 1: REJECT — năm lỗi nằm trong hợp đồng; sửa ở commit 145215dc, trả về triển khai.
-Round 2: REJECT — E12 theo luật mạng và hai lỗi trong hợp đồng; sửa ở commit b0d2ac9f, trả về triển khai.
-Round 3: REJECT — E14 đếm 6 dòng trên một căn (lỗi đo trong hợp đồng); sửa ở commit 1c79e6ae, mỗi căn nay đúng 3 dòng.
-Round 4: tất cả 19 eval và 4 lệnh suite đạt, verdict PASS.
+Round 3: REJECT — E14 đếm 6 dòng, lỗi đo trong hợp đồng; sửa phép đo.
+Round 4: PASS — máy thông, cửa veto mở.
+Round 5: PASS — sau bản sửa 24fc0ecc (ảnh chờ chỉ lên đúng sàn lúc chụp); mọi eval xanh.
 

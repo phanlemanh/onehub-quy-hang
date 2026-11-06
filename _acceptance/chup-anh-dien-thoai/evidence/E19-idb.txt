@@ -1,21 +1,20 @@
-[verifier doc lap, 2026-11-06T08:39:55.453Z, may dev 3460 + Postgres 5574; Chrome headless CDP, mot ho so trinh duyet; 375x812, rieng buoc dang xuat 1280x800]
-B0 DB truoc: databases()=(chua mo trang); unit_photos A-04.01=3, tong=120
-B0b databases() sau khi mo trang, truoc khi chan = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
-B1 chan POST /api/v1/units/photos* (Fetch.failRequest InternetDisconnected)
-ngan dang chon: shareable
-ngan dang chon: internal
-B1 ngan co 2 dong Cho mang; databases()=["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
+[verifier doc lap, 2026-11-06, may dev 3460 (webpack) + Postgres 5574; Playwright Chrome mot ho so trinh duyet, UA iPhone; 375x812, rieng buoc dang xuat 1280x800]
+B0 DB truoc: unit_photos A-04.01=3, tong=150
+B0a databases() khi mo trang lan dau (ton du tu cac lan thu truoc trong ho so trinh duyet, 3 nguoi) = ["quy-hang-anh-cho:524f266e-...","quy-hang-anh-cho:92ab1862-...","quy-hang-anh-cho:b5237944-...","quy-hang-sync:524f266e-...","quy-hang-sync:92ab1862-...","quy-hang-sync:b5237944-..."]
+B0b don thu cong (deleteDatabase) cac kho ton du de moc dau sach -> databases()=[]
+B0c dang nhap dau-chu-1 bang ma OTP that (doc tu nhat ky may dev), mo /units/A-04.01, databases() = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
+B1 chan POST /api/v1/units/photos* (route.abort internetdisconnected); ngan shareable nap anh 1, ngan internal nap anh 2
+B1 ngan co 2 dong Cho mang; databases() = ["quy-hang-anh-cho:524f266e-...","quy-hang-sync:524f266e-..."]; so POST bi chan = 2 (upload-url)
 chup E19-step1.png
-B2 doi chung duong: tai lai (phien giu, khong dang xuat), mo lai ngan: 2 dong Cho mang; databases()=["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
-chup E19-con.png
+B2 doi chung duong: tai lai (phien giu, khong dang xuat), mo lai ngan: dong = [cho-mang, cho-mang]; databases() = ["quy-hang-anh-cho:524f266e-...","quy-hang-sync:524f266e-..."]
+chup E19-con.png (= E19-step2.png)
 chup E19-menu.png
-B3 bam Dang xuat o menu Tai khoan (nut that) tai 1135,210; databases() ngay truoc = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
-B3 sau dang xuat: duong=/login
+B3 bam menuitem "Dang xuat" o menu Tai khoan (nut that, 1280x800); databases() ngay truoc = ["quy-hang-anh-cho:524f266e-...","quy-hang-sync:524f266e-..."]
+B3 sau dang xuat: duong=/login; POST /api/v1/auth/sign-out = 200
 B3 databases() sau dang xuat = []
-chup E19-dang-xuat.png
-B4 nguoi B = truong-nhom@mau.quy-hang.test; ngan: so dong cho=0; co cau "Chưa chụp ảnh nào cho căn này." = true; databases()=["quy-hang-anh-cho:92ab1862-37f3-4b59-baae-d892214a4797","quy-hang-sync:92ab1862-37f3-4b59-baae-d892214a4797"]
+chup E19-dang-xuat.png (= E19-step3.png)
+B4 nguoi B = truong-nhom@mau.quy-hang.test (ma OTP that); mo /units/A-04.01, mo ngan: so dong [data-cho]=0; co cau "Chưa chụp ảnh nào cho căn này." = true; databases() = ["quy-hang-anh-cho:92ab1862-37f3-4b59-baae-d892214a4797","quy-hang-sync:92ab1862-37f3-4b59-baae-d892214a4797"] (kho cua B, khong co kho 524f266e cua dau-chu-1)
 B4 noi dung ngan: "Ảnh vào ngăn\nGửi được\nNội bộ\n\nChọn ngăn trước khi chụp.\n\nChưa chụp ảnh nào cho căn này."
-chup E19-nguoi-b.png
-B5 unit_photos A-04.01: truoc=3 sau=3; tong truoc=120 sau=120
-ASSERT {"A_dbCo":true,"B_2dong":true,"C_dbHet":true,"D_B":true,"E_dem":true,"F_khongKhoA":true}
+chup E19-nguoi-b.png (= E19-step4.png)
+B5 unit_photos A-04.01: truoc=3 sau=3; tong truoc=150 sau=150
 KET: OK

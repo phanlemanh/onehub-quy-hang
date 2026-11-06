@@ -1,52 +1,10 @@
-== E19 fetch/XHR/POST theo pha (Chrome CDP, http://localhost:3460) ==
-[B1] GET http://localhost:3460/api/v1/catalog -> 200
-[B1] GET http://localhost:3460/api/v1/catalog -> 200
-[B1] GET http://localhost:3460/api/v1/listings -> 200
-[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B1] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
-[B1] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
-[B1] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B1] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
-[B2] GET http://localhost:3460/api/v1/catalog -> 200
-[B2] GET http://localhost:3460/api/v1/catalog -> 200
-[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B2] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B2] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
-[B2] GET http://localhost:3460/api/v1/listings -> 200
-[B2] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
-[B3] GET http://localhost:3460/api/v1/listings -> 200
-[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B3] GET http://localhost:3460/api/v1/catalog -> 200
-[B3] GET http://localhost:3460/api/v1/catalog -> 200
-[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B3] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B3] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
-[B3] GET http://localhost:3460/api/v1/listings -> 200
-[B3] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
-[B3] GET http://localhost:3460/api/v1/listings -> 200
-[B3] POST http://localhost:3460/api/v1/auth/sign-out -> 200
-[B3] GET http://localhost:3460/login?_rsc=BtWg930EyCGj5cvj -> 200
-[B3] GET http://localhost:3460/login?_rsc=2PWn4eNgFwgEGU5W -> 200
-[B4] GET http://localhost:3460/api/v1/me -> 200
-[B4] GET http://localhost:3460/api/v1/catalog -> 200
-[B4] GET http://localhost:3460/api/v1/catalog -> 200
-[B4] GET http://localhost:3460/api/v1/listings -> 200
-[B4] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B4] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B4] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 -> 200
-[B4] GET http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 -> 200
-[B4] GET http://localhost:3460/api/v1/me -> 200
-[B4] GET http://localhost:3460/units/A-04.01?_rsc=TlzN5i6H9X7NN0oU -> 200
-[B4] GET http://localhost:3460/_next/static/webpack/313f71f50d22b4e2.webpack.hot-update.json -> 200
-[B4] GET http://localhost:3460/units/A-04.01?_rsc=TlzN5i6H9X7NN0oU -> 200
-[B4] GET http://localhost:3460/_next/static/webpack/53c18c482e4b3c30.webpack.hot-update.json -> 200
-== console error/warning ==
-
-== exceptions ==
-
+[E19 network, Playwright page.on(response/requestfailed) + route, may dev http://localhost:3460]
+Buoc 1-2 (dau-chu-1): POST /api/v1/units/photos/upload-url x2 -> CHU DICH bi chan (route.abort internetdisconnected); khong co response app nao 4xx/5xx
+Buoc 3: 200 POST /api/v1/auth/sign-out
+Buoc 4 (truong-nhom):
+ 200 POST /api/v1/auth/sign-in/email-otp
+ FAILED GET /_next/static/chunks/app/(app)/today/page.js net::ERR_ABORTED   (static asset bi huy do dieu huong sang /units/A-04.01 — chi note)
+ 200 GET /api/v1/catalog (x2); 200 GET /api/v1/listings; 200 GET /api/v1/units/photos (x3); 200 GET /api/v1/listings/<id>
+ 200 GET /api/v1/units/photos/<id>/thumb (x2), /original (x3)
+ khong co POST /api/v1/units/photos nao tu nguoi B (so POST bi chan = 0)
+Console: loi console cua phien chi la hau qua cua POST upload-url bi chan co chu dich o buoc 1-2.

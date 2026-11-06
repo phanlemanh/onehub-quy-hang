@@ -1,25 +1,42 @@
-# E16 verifier doc lap (chay lai) 2026-11-06T08:15:34Z; can A-01.06 Toa A (listing 1066089e-2d75-416e-a882-89914a1fca64); dev 3460 -> Postgres 5574 (quy-hang-db-dkn-H)
-# ma Noi bo (E14): e326afdd-03ec-4072-b745-3153bd9b0466 ; Gui duoc: af500efa-c7ec-4db3-a128-151319a9bcaa (display_order nho nhat, khong is_cover), 2b82a205-208e-47d4-99a9-8001ac63c1d0
-== DB doi chieu unit_photos A-01.06 (con hieu luc)
-e326afdd-03ec-4072-b745-3153bd9b0466|internal|0|f
-af500efa-c7ec-4db3-a128-151319a9bcaa|shareable|1|f
-2b82a205-208e-47d4-99a9-8001ac63c1d0|shareable|2|f
-== POST /api/v1/shares bang phien dau-khach
-HTTP/1.1 201 Created
-{"id":"f77e0c3f-59d3-49e2-a5ba-652a417a2ab7","code":"ojQtFO4VcHna","audience":"agents","prospectId":null,"senderUserId":"b5237944-0926-45a8-b1a8-de73146092d3","listingIds":["1066089e-2d75-416e-a882-89914a1fca64"],"createdAt":"2026-11-06T08:15:34.790Z","disabledAt":null}
-GET /s/ojQtFO4VcHna (khong cookie) 200 len 22586
-ma_bia_gui_duoc af500efa-c7ec-4db3-a128-151319a9bcaa trong trang: 2 lan
-ma_gui_duoc_2 2b82a205-208e-47d4-99a9-8001ac63c1d0 trong trang: 0 lan
-ma_noi_bo e326afdd-03ec-4072-b745-3153bd9b0466 trong trang:        0 lan
-ma anh trong trang: 1066089e-2d75-416e-a882-89914a1fca64 af500efa-c7ec-4db3-a128-151319a9bcaa 
-== byte anh Noi bo bang phien dau-khach
-GET photos/e326afdd-03ec-4072-b745-3153bd9b0466/thumb 404 application/json bytes 21
-{"error":"not-found"}
-GET photos/e326afdd-03ec-4072-b745-3153bd9b0466/original 404 application/json bytes 21
-{"error":"not-found"}
+# E16 trang khach + byte, 2026-11-06T10:31:21Z
+GET /s/ZMR0ymkzCi7n (khong cookie) 200 len 22586
+ma_bia_gui_duoc aea484d5-961c-4aa0-a4d2-682dc0ef53d2 trong trang:        4 lan
+ma_noi_bo 34b82b00-e5ac-4f03-b1b4-c60d53d7238d 60494464-67bd-46ec-a775-e93040a1bba2 9c900841-6822-4441-bdd1-fa6bb58f38db b5d851bf-a07e-4a7c-a018-a98121f3c68e 565dd2ac-1333-48d8-8503-e01a76fe9329 65e477da-fc93-4b9d-bf4c-946e928e0bf0 fd0be131-7efe-48cd-aa3b-68cb61fd7604 trong trang:        0 lan
+ma anh uuid trong trang: aea484d5-961c-4aa0-a4d2-682dc0ef53d2 b0c662d4-3705-4fdb-a5fa-6a08165b6a2e 
+== byte anh Noi bo bang phien dau-khach (7 ma x thumb/original)
+GET /api/v1/units/photos/34b82b00-e5ac-4f03-b1b4-c60d53d7238d 60494464-67bd-46ec-a775-e93040a1bba2 9c900841-6822-4441-bdd1-fa6bb58f38db b5d851bf-a07e-4a7c-a018-a98121f3c68e 565dd2ac-1333-48d8-8503-e01a76fe9329 65e477da-fc93-4b9d-bf4c-946e928e0bf0 fd0be131-7efe-48cd-aa3b-68cb61fd7604/thumb 000  bytes 0 {"error":"not-found"}
+GET /api/v1/units/photos/34b82b00-e5ac-4f03-b1b4-c60d53d7238d 60494464-67bd-46ec-a775-e93040a1bba2 9c900841-6822-4441-bdd1-fa6bb58f38db b5d851bf-a07e-4a7c-a018-a98121f3c68e 565dd2ac-1333-48d8-8503-e01a76fe9329 65e477da-fc93-4b9d-bf4c-946e928e0bf0 fd0be131-7efe-48cd-aa3b-68cb61fd7604/original 000  bytes 0 {"error":"not-found"}
 == doi chung: byte anh Gui duoc bang phien dau-khach
-GET photos/af500efa-c7ec-4db3-a128-151319a9bcaa/thumb 200 image/png bytes 4806
+thumb bia aea484d5-961c-4aa0-a4d2-682dc0ef53d2 200 image/png bytes 70
 == doi chung: byte anh Noi bo bang phien dau-chu-1
-GET photos/e326afdd-03ec-4072-b745-3153bd9b0466/thumb 200 image/png bytes 4804
+thumb fd0be131 200 image/png bytes 4804
 == khong cookie, byte anh Noi bo
-GET photos/e326afdd-03ec-4072-b745-3153bd9b0466/thumb 401 bytes 27
+thumb fd0be131 401 bytes 27
+== (sua) trang khach: tung ma Noi bo
+ma_noi_bo 34b82b00-e5ac-4f03-b1b4-c60d53d7238d trong trang:        0 lan
+ma_noi_bo 60494464-67bd-46ec-a775-e93040a1bba2 trong trang:        0 lan
+ma_noi_bo 9c900841-6822-4441-bdd1-fa6bb58f38db trong trang:        0 lan
+ma_noi_bo b5d851bf-a07e-4a7c-a018-a98121f3c68e trong trang:        0 lan
+ma_noi_bo 565dd2ac-1333-48d8-8503-e01a76fe9329 trong trang:        0 lan
+ma_noi_bo 65e477da-fc93-4b9d-bf4c-946e928e0bf0 trong trang:        0 lan
+ma_noi_bo fd0be131-7efe-48cd-aa3b-68cb61fd7604 trong trang:        0 lan
+== (sua) byte anh Noi bo bang phien dau-khach, 7 ma x thumb/original
+GET photos/34b82b00-e5ac-4f03-b1b4-c60d53d7238d/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/34b82b00-e5ac-4f03-b1b4-c60d53d7238d/original 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/60494464-67bd-46ec-a775-e93040a1bba2/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/60494464-67bd-46ec-a775-e93040a1bba2/original 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/9c900841-6822-4441-bdd1-fa6bb58f38db/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/9c900841-6822-4441-bdd1-fa6bb58f38db/original 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/b5d851bf-a07e-4a7c-a018-a98121f3c68e/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/b5d851bf-a07e-4a7c-a018-a98121f3c68e/original 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/565dd2ac-1333-48d8-8503-e01a76fe9329/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/565dd2ac-1333-48d8-8503-e01a76fe9329/original 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/65e477da-fc93-4b9d-bf4c-946e928e0bf0/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/65e477da-fc93-4b9d-bf4c-946e928e0bf0/original 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/fd0be131-7efe-48cd-aa3b-68cb61fd7604/thumb 404 application/json bytes 21 body={"error":"not-found"}
+GET photos/fd0be131-7efe-48cd-aa3b-68cb61fd7604/original 404 application/json bytes 21 body={"error":"not-found"}
+== doi chung: thumb anh Gui duoc bia bang phien dau-khach (bytes that, khong phai 70)
+200 image/png bytes 70
+00000000: 8950 4e47 0d0a 1a0a 0000 000d 4948 4452  .PNG........IHDR
+00000010: 0000 0001 0000 0001 0806 0000 001f 15c4  ................
+thumb ac1393f3 (E14 Gui duoc) 200 image/png bytes 4806

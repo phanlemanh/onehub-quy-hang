@@ -1,85 +1,43 @@
-E18 - verifier doc lap 2026-11-06. May chu that = http://localhost:3460 (worktree dreamy-mahavira, ma 1c79e6ae, DB H 5574); ban sao doi chung = http://localhost:3496 (cung ma + chup-anh.tsx them cleanup dungHangCho khi roi ho so).
+E18 - verifier doc lap lan chay 2026-11-06T11:51:09Z. May that = http://localhost:3460 (worktree dreamy-mahavira, ma 85c4fad0, DB H 5574, can A-13.01 - luu y: moi can dau-chu-1 thay deu da co >=1 anh, nen do bang DELTA tren dong unit_photos cua can). Ban sao doi chung = http://localhost:3496 (cung ma + chup-anh.tsx them cleanup dungHangCho khi roi ho so, tren ban sao /tmp/qh-e18/ctrl), can A-13.03.
 
-=== LAN MAY THAT (Fetch.failRequest /api/) can B-06.02 ===
-[2026-11-06T08:30:29.598Z] that: url http://localhost:3460 can B-06.02 - TRUOC 0 dong unit_photos; mang: Fetch.failRequest /api/
-[2026-11-06T08:30:32.318Z] ngan co 2 anh cho-mang; dong DB luc dang chan: 0
-[2026-11-06T08:30:33.170Z] sau Escape: khay-chup con false; duong /units/B-06.02
-[2026-11-06T08:30:33.171Z] tab Hom nay: {"x":62.5,"y":784,"text":"Hôm nay"}
-[2026-11-06T08:30:36.183Z] sau cham tab 3s: duong /today; __ban giu-1793953829599
-[2026-11-06T08:30:36.317Z] da mo mang; ngay luc mo: 0 dong; navigator.onLine=true
-[2026-11-06T08:30:41.319Z] +5s: 0 dong, duong /today
-[2026-11-06T08:30:46.410Z] +10s: 0 dong, duong /today
-[2026-11-06T08:30:51.488Z] +15s: 1 dong, duong /today
-[2026-11-06T08:30:56.293Z] +20s: 2 dong, duong /today
-[2026-11-06T08:30:56.293Z] SAU 20s: 2 dong (tang 2); duong luc dem: /today; window.__ban con (trang khong tai lai): undefined
-[2026-11-06T08:30:56.378Z] anh moi: bb31a2ae-ed67-4d17-8e5f-0359124fa99a|shareable|2026-11-06 08:30:51.81081+00 ;; bec4566d-ab4e-49c1-b06f-89760f9ad4cf|shareable|2026-11-06 08:30:50.394963+00
-[2026-11-06T08:30:56.378Z] KET that: {"truoc":0,"sau":2,"tang":2,"duong":"/today","khongTaiLai":false}
+Ghi chu: Network.emulateNetworkConditions offline=true lam tab Hom nay tai trang day (duong /) nen khong toi duoc /today (xem lan thu o cuoi); chan mang bang Fetch.failRequest /api/ (trang van dieu huong duoc). Input may-anh khong co multiple -> nap 2 anh bang 2 lan DOM.setFileInputFiles.
 
-=== LAN 2 MAY THAT (may chu da nong route /today) can A-01.06 (da co anh nen do bang delta) ===
-[2026-11-06T08:31:34.345Z] that: url http://localhost:3460 can A-01.06 - TRUOC 4 dong unit_photos; mang: Fetch.failRequest /api/
-[2026-11-06T08:31:37.170Z] ngan co 2 anh cho-mang; dong DB luc dang chan: 4
-[2026-11-06T08:31:38.047Z] sau Escape: khay-chup con false; duong /units/A-01.06
-[2026-11-06T08:31:38.048Z] tab Hom nay: {"x":62.5,"y":784,"text":"Hôm nay"}
-[2026-11-06T08:31:41.054Z] sau cham tab 3s: duong /units/A-01.06; __ban giu-1793953894347
-[2026-11-06T08:31:41.163Z] da mo mang; ngay luc mo: 4 dong; navigator.onLine=true
-[2026-11-06T08:31:46.165Z] +5s: 4 dong, duong /units/A-01.06
-[2026-11-06T08:31:51.229Z] +10s: 4 dong, duong /units/A-01.06
-[2026-11-06T08:31:56.175Z] +15s: 6 dong, duong /units/A-01.06
-[2026-11-06T08:32:01.159Z] +20s: 6 dong, duong /units/A-01.06
-[2026-11-06T08:32:01.159Z] SAU 20s: 6 dong (tang 2); duong luc dem: /units/A-01.06; window.__ban con (trang khong tai lai): giu-1793953894347
-[2026-11-06T08:32:01.536Z] anh moi: 56abcfba-ba2c-4c50-882d-c888746a5ecd|shareable|2026-11-06 08:31:51.736624+00 ;; 65771ae8-7e3c-478a-b90c-b85a6b8817ed|shareable|2026-11-06 08:31:51.682864+00 ;; e326afdd-03ec-4072-b745-3153bd9b0466|internal|2026-11-06 07:58:16.740246+00
-[2026-11-06T08:32:01.536Z] KET that: {"truoc":4,"sau":6,"tang":2,"duong":"/units/A-01.06","khongTaiLai":true}
+=== MAY THAT (3460) ===
+[2026-11-06T11:48:38.405Z] that: url http://localhost:3460 can A-13.01 - TRUOC 1 dong unit_photos; mang: Fetch.failRequest /api/
+[2026-11-06T11:48:43.367Z] ngan co 2 anh [cho-mang,cho-mang]; dong DB luc dang chan: 1
+[2026-11-06T11:48:44.704Z] sau Escape: khay-chup con false; duong /units/A-13.01
+[2026-11-06T11:48:44.705Z] tab Hom nay: {"x":62.5,"y":784}
+[2026-11-06T11:48:47.717Z] sau cham tab: duong /today; __ban giu-1793965724705
+[2026-11-06T11:48:47.863Z] da mo mang; ngay luc mo: 1 dong; navigator.onLine=true
+[2026-11-06T11:48:52.933Z] +5s: 1 dong, duong /today
+[2026-11-06T11:48:58.013Z] +10s: 3 dong, duong /today
+[2026-11-06T11:49:03.111Z] +15s: 3 dong, duong /today
+[2026-11-06T11:49:08.209Z] +20s: 3 dong, duong /today
+[2026-11-06T11:49:08.413Z] SAU 20s: 3 dong (tang 2); duong luc dem: /today; window.__ban con: giu-1793965724705
+[2026-11-06T11:49:08.493Z] anh moi: aceac021-8367-4a56-a52c-e1fd5a9e8ab6|shareable|2026-11-06 11:48:54.589382+00 ;; ef5e9f26-c632-46b9-b3cc-a9616a78e829|shareable|2026-11-06 11:48:54.563703+00 ;; 8b0cbd4b-64c3-4fd4-8763-475b082bd13a|shareable|2026-11-04 04:06:37.512384+00
+[2026-11-06T11:49:08.493Z] KET that: {"truoc":1,"sau":3,"tang":2,"duong":"/today","khongTaiLai":true}
 
-=== LAN 3 MAY THAT (lan 2 tab chua dieu huong duoc -> sua cho den khi toi /today) can A-01.07 ===
-(A-01.07 khong nam trong hang dau-chu-1 thay -> bo; doi sang A-01.08)
-=== LAN 3 can A-01.08 ===
-[2026-11-06T08:33:34.617Z] that: url http://localhost:3460 can A-01.08 - TRUOC 2 dong unit_photos; mang: Fetch.failRequest /api/
-[2026-11-06T08:33:37.458Z] ngan co 2 anh cho-mang; dong DB luc dang chan: 2
-[2026-11-06T08:33:38.296Z] sau Escape: khay-chup con false; duong /units/A-01.08
-[2026-11-06T08:33:38.297Z] tab Hom nay: {"x":62.5,"y":784,"text":"Hôm nay"}
-[2026-11-06T08:33:42.821Z] sau cham tab 3s: duong /today; __ban giu-1793954014620
-[2026-11-06T08:33:42.936Z] da mo mang; ngay luc mo: 2 dong; navigator.onLine=true
-[2026-11-06T08:33:47.973Z] +5s: 2 dong, duong /today
-[2026-11-06T08:33:52.933Z] +10s: 4 dong, duong /today
-[2026-11-06T08:33:57.922Z] +15s: 4 dong, duong /today
-[2026-11-06T08:34:02.915Z] +20s: 4 dong, duong /today
-[2026-11-06T08:34:02.916Z] SAU 20s: 4 dong (tang 2); duong luc dem: /today; window.__ban con (trang khong tai lai): giu-1793954014620
-[2026-11-06T08:34:03.060Z] anh moi: 1c071c38-2547-40b6-a4ce-acc3c0a4e242|shareable|2026-11-06 08:33:52.004924+00 ;; b34af14e-35b6-4321-8729-c77b6ac0635a|shareable|2026-11-06 08:33:51.974749+00 ;; 03adfc2a-791b-40e5-967e-667b312e8c30|shareable|2026-11-06 07:05:16.999307+00
-[2026-11-06T08:34:03.061Z] KET that: {"truoc":2,"sau":4,"tang":2,"duong":"/today","khongTaiLai":true}
+=== DOI CHUNG (3496, hang cho theo thanh phan, mat khi roi ho so) ===
+[2026-11-06T11:50:17.455Z] doichung: url http://localhost:3496 can A-13.03 - TRUOC 1 dong unit_photos; mang: Fetch.failRequest /api/
+[2026-11-06T11:50:22.427Z] ngan co 2 anh [cho-mang,cho-mang]; dong DB luc dang chan: 1
+[2026-11-06T11:50:23.822Z] sau Escape: khay-chup con false; duong /units/A-13.03
+[2026-11-06T11:50:23.825Z] tab Hom nay: {"x":62.5,"y":784}
+[2026-11-06T11:50:26.844Z] sau cham tab: duong /today; __ban giu-1793965823824
+[2026-11-06T11:50:27.040Z] da mo mang; ngay luc mo: 1 dong; navigator.onLine=true
+[2026-11-06T11:50:32.120Z] +5s: 1 dong, duong /today
+[2026-11-06T11:50:37.242Z] +10s: 1 dong, duong /today
+[2026-11-06T11:50:42.361Z] +15s: 1 dong, duong /today
+[2026-11-06T11:50:47.451Z] +20s: 1 dong, duong /today
+[2026-11-06T11:50:47.605Z] SAU 20s: 1 dong (tang 0); duong luc dem: /today; window.__ban con: giu-1793965823824
+[2026-11-06T11:50:47.676Z] anh moi: 80a06d17-2bba-4016-9030-d0c1c70df33a|shareable|2026-11-04 04:06:37.627471+00
+[2026-11-06T11:50:47.677Z] KET doichung: {"truoc":1,"sau":1,"tang":0,"duong":"/today","khongTaiLai":true}
 
-=== DOI CHUNG ban sao 3496 (hang cho theo thanh phan + cleanup dungHangCho khi roi ho so), lan khoi dong nguoi (bien dich route) can A-02.06 ===
-[2026-11-06T08:34:33.780Z] doichung: url http://localhost:3496 can A-02.06 - TRUOC 3 dong unit_photos; mang: Fetch.failRequest /api/
-[2026-11-06T08:34:36.713Z] ngan co 2 anh cho-mang; dong DB luc dang chan: 3
-[2026-11-06T08:34:37.549Z] sau Escape: khay-chup con false; duong /units/A-02.06
-[2026-11-06T08:34:37.550Z] tab Hom nay: {"x":62.5,"y":784,"text":"Hôm nay"}
-[2026-11-06T08:34:42.063Z] sau cham tab 3s: duong /today; __ban giu-1793954073781
-[2026-11-06T08:34:42.188Z] da mo mang; ngay luc mo: 3 dong; navigator.onLine=true
-[2026-11-06T08:34:47.218Z] +5s: 3 dong, duong /today
-[2026-11-06T08:34:52.281Z] +10s: 3 dong, duong /today
-[2026-11-06T08:34:57.982Z] +15s: 3 dong, duong /today
-[2026-11-06T08:35:02.526Z] +20s: 3 dong, duong /today
-[2026-11-06T08:35:02.528Z] SAU 20s: 3 dong (tang 0); duong luc dem: /today; window.__ban con (trang khong tai lai): giu-1793954073781
-[2026-11-06T08:35:02.629Z] anh moi: 731b9f5c-3259-4b5c-9812-2d3a50385fcc|internal|2026-11-06 06:52:48.525426+00 ;; 92270ce2-7095-4222-967c-b3499dc91ce9|shareable|2026-11-06 06:52:48.48075+00 ;; 2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d|shareable|2026-11-06 06:52:33.350069+00
-[2026-11-06T08:35:02.629Z] KET doichung: {"truoc":3,"sau":3,"tang":0,"duong":"/today","khongTaiLai":true}
+=== THU emulateNetworkConditions offline (3460, A-13.01, khong tinh ket qua) ===
+[2026-11-06T11:48:17.149Z] that-offline: url http://localhost:3460 can A-13.01 - TRUOC 1 dong unit_photos; mang: Network.emulateNetworkConditions offline
+[2026-11-06T11:48:22.121Z] ngan co 2 anh [cho-mang,cho-mang]; dong DB luc dang chan: 1
+[2026-11-06T11:48:23.384Z] sau Escape: khay-chup con false; duong /units/A-13.01
+[2026-11-06T11:48:23.385Z] tab Hom nay: {"x":62.5,"y":784}
+[2026-11-06T11:48:26.397Z] sau cham tab: duong /; __ban undefined
+[2026-11-06T11:48:26.399Z] tab Hom nay: null
 
-=== THU Network.emulateNetworkConditions offline=true (dung chu ky buoc 2) can A-02.06 - ghi nhan, khong tinh ket qua ===
-[2026-11-06T08:35:18.659Z] offline: url http://localhost:3460 can A-02.06 - TRUOC 3 dong unit_photos; mang: Network.emulateNetworkConditions offline
-[2026-11-06T08:35:21.423Z] ngan co 2 anh cho-mang; dong DB luc dang chan: 3
-[2026-11-06T08:35:22.257Z] sau Escape: khay-chup con false; duong /units/A-02.06
-[2026-11-06T08:35:22.258Z] tab Hom nay: {"x":62.5,"y":784,"text":"Hôm nay"}
-[2026-11-06T08:35:25.265Z] chua toi /today sau 3s, cham lai tab
-[2026-11-06T08:35:28.270Z] chua toi /today sau 6s, cham lai tab
-[2026-11-06T08:35:31.273Z] chua toi /today sau 9s, cham lai tab
-[2026-11-06T08:35:34.276Z] chua toi /today sau 12s, cham lai tab
-[2026-11-06T08:35:37.280Z] chua toi /today sau 15s, cham lai tab
-[2026-11-06T08:35:40.283Z] chua toi /today sau 18s, cham lai tab
-[2026-11-06T08:35:41.787Z] sau cham tab 3s: duong /; __ban undefined
-[2026-11-06T08:35:41.788Z] KHONG toi duoc /today khi offline
-[2026-11-06T08:35:42.369Z] da mo mang; ngay luc mo: 3 dong; navigator.onLine=true
-[2026-11-06T08:35:47.339Z] +5s: 3 dong, duong /
-[2026-11-06T08:35:52.718Z] +10s: 3 dong, duong /
-[2026-11-06T08:35:57.012Z] +15s: 3 dong, duong /
-[2026-11-06T08:36:02.037Z] +20s: 5 dong, duong /today
-[2026-11-06T08:36:02.038Z] SAU 20s: 5 dong (tang 2); duong luc dem: /today; window.__ban con (trang khong tai lai): undefined
-[2026-11-06T08:36:02.132Z] anh moi: 9db3524d-a2a8-4625-8542-3b6bf4b0f479|shareable|2026-11-06 08:35:59.671049+00 ;; 24b1a81f-c0f1-4810-b63c-76938712be1c|shareable|2026-11-06 08:35:59.540775+00 ;; 731b9f5c-3259-4b5c-9812-2d3a50385fcc|internal|2026-11-06 06:52:48.525426+00
-[2026-11-06T08:36:02.132Z] KET offline: {"truoc":3,"sau":5,"tang":2,"duong":"/today","khongTaiLai":false}
+=== Lan 3496 dau bi hong do cleanup chay trong StrictMode (dung hang cho som, 'Chua nhan anh'); da sua cleanup chiu StrictMode roi chay lai (lan tinh o tren) ===

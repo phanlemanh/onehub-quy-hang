@@ -1,6 +1,7 @@
-# E16 NETWORK TRUTH 2026-11-06T08:17:12Z (app origin http://localhost:3460)
-trang khach /s/ojQtFO4VcHna (khong dang nhap): 19 response, status>=400: 0, phan hoi chua ma Noi bo: 0; img chi /api/v1/public/shares/ojQtFO4VcHna/photos/af500efa-... (anh bia Gui duoc)
-dau-khach /units/A-01.06: xem E16-mang-dau-khach.txt (31 response, 0 loi, 0 chua ma Noi bo)
-dau-chu-1 /units/A-01.06: xem E16-mang-dau-chu-1.txt (37 response, 0 loi >=400; 2 beacon ERR_ABORTED do dieu huong, note-only)
-curl: GET photos/<Noi bo>/thumb|original bang dau-khach = 404 {"error":"not-found"} (dung expected); khong cookie = 401
-static/_next: 200 het; khong third-party
+# E16 NETWORK TRUTH 2026-11-06 (app origin http://localhost:3460)
+trang khach /s/ZMR0ymkzCi7n (khong dang nhap): 19 response, 0 loi >=400; 1 anh = /api/v1/public/shares/ZMR0ymkzCi7n/photos/aea484d5-... (bia Gui duoc); 0 ma Noi bo
+dau-khach /units/A-06.03: xem E16-mang-dau-khach.txt (58 response, 0 loi, 0 chua ma Noi bo)
+dau-chu-1 /units/A-06.03: xem E16-mang-dau-chu-1.txt (70 response, 0 loi, bat 10 phan hoi chua ma Noi bo)
+curl: dau-khach GET photos/<7 ma Noi bo>/thumb|original = 404 {"error":"not-found"}; khong cookie = 401
+requestfailed ERR_ABORTED o lan chay dau (Playwright profile chung): beacon events/_next chunk do dieu huong, note-only
+LUU Y: lan chay dau bang profile Playwright chung (da tung dang nhap dau-chu-1) tra 22 anh kem "Noi bo" va server log 200 cho original Noi bo; do trang thai trinh duyet cu (offline cache) KHONG phai phien dau-khach (curl cung cookie = 404). Da chay lai bang context moi sach: ket qua chinh thuc o tren.
