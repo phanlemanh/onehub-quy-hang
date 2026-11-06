@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>89 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>90 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -92,6 +92,7 @@ flowchart TD
 - Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện (`lop-truong-nguon`)
 - Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách) (`luat-an-va-kiem-ro-ri`)
 - Quản trị sàn đổi cách chia lead, hạn nhận và hạn gọi, người đọc lời báo và ngưỡng hai hàng đợi của Hôm nay ở mục «Luật chia lead» của Cài đặt sàn; lead mới theo luật mới, lead đã chia giữ luật cũ; vai khác không đổi được; cột Đầu chủ của Bảng hàng không ghi nhầm «Đã rời sàn» và đọc danh bạ hỏng thì báo kèm thử lại (`luat-chia-lead`)
+- Ở mục «Luật chia lead», khi sàn đã có cặp hạn nhận / hạn gọi lưu sai từ trước, quản trị sửa một hạn thì màn báo đúng: hoặc lưu được cặp hợp lệ, hoặc báo lỗi kèm hạn kia — không báo «Đã lưu» trong khi lead mới vẫn chạy theo hạn mặc định. (`luat-chia-lead-cap-han-hong`)
 - Đầu khách chọn căn, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với link, ảnh và tin soạn sẵn; người tự bấm gửi trong Zalo (`luong-gui`)
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
 - Đầu chủ và trưởng nhóm mở màn Liên hệ, tìm một người bằng tên hay số, thấy đủ cơ hội và căn của người ấy, mở số và gọi trong tối đa ba chạm (`man-lien-he`)
