@@ -27,9 +27,9 @@ export function registerFeeRoutes(api: OpenAPIHono, deps: ApiDeps) {
   api.openapi(
     createRoute({
       method: "get",
-      path: "/api/v1/listings/{id}/fee-basis",
+      path: "/api/v1/listings/{listingId}/fee-basis",
       summary: "Định nghĩa bao phí mà giá hiện hành của căn mang — khoản, tỉ lệ (phần vạn), ngày tính; null khi giá không bao phí hay chưa có giá",
-      request: { params: z.object({ id: z.string().uuid() }) },
+      request: { params: z.object({ listingId: z.string() }) },
       responses: {
         200: { description: "Dấu hoặc null", content: { "application/json": { schema: FeeBasis } } },
         401: err("Chưa đăng nhập"),
@@ -46,7 +46,9 @@ export function registerFeeRoutes(api: OpenAPIHono, deps: ApiDeps) {
         const l = r.reason === API_ERRORS.selectCompany.code ? API_ERRORS.selectCompany : API_ERRORS.noCompany;
         return c.json({ error: l.code }, l.status as 403);
       }
-      const kq = await withCompany(appPool, { userId: user.id, companyId: r.active.id }, (tx) => readFeeBasis(tx, c.req.valid("param").id));
+      const { listingId } = c.req.valid("param");
+      if (!/^[0-9a-f-]{36}$/i.test(listingId)) return c.json({ error: API_ERRORS.notFound.code }, 404);
+      const kq = await withCompany(appPool, { userId: user.id, companyId: r.active.id }, (tx) => readFeeBasis(tx, user.id, listingId));
       if (kq.kind === "not-found") return c.json({ error: API_ERRORS.notFound.code }, 404);
       return c.json(kq.dau, 200);
     },
