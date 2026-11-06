@@ -78,5 +78,14 @@ function xoaCoSo(ten: string): Promise<void> {
  * Xoá cùng lúc kho đồng bộ và kho ảnh chờ của người ấy (hàng 41, AC-6); kho của người khác không bị đụng.
  */
 export async function xoaKhoCuaNguoi(userId: string, xoa: (ten: string) => Promise<void> = xoaCoSo): Promise<void> {
+  // Mọi lối xoá kho (đăng xuất trong vỏ, màn chọn sàn, máy bị báo mất) dừng hàng chờ ảnh của người TRƯỚC khi xoá, để lượt
+  // tải đang dở không mở lại kho vừa xoá (AC-6).
+  await truocKhiXoa(userId);
   await Promise.all([xoa(tenCoSo(userId)), xoa(tenKhoAnhCho(userId))]);
+}
+
+let truocKhiXoa: (userId: string) => Promise<void> = async () => {};
+/** Hàng chờ ảnh đăng ký việc phải xong trước khi kho của người bị xoá (`app/(app)/units/photos/hang-cho-may.ts`). */
+export function datTruocKhiXoaKho(f: (userId: string) => Promise<void>): void {
+  truocKhiXoa = f;
 }

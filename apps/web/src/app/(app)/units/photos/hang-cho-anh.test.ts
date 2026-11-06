@@ -8,7 +8,9 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { Compartment } from "@quy-hang/core/photos";
-import { tenCoSo, tenKhoAnhCho, xoaKhoCuaNguoi } from "@/lib/sync/kho-indexeddb";
+import { readFileSync } from "node:fs";
+import { datTruocKhiXoaKho, tenCoSo, tenKhoAnhCho, xoaKhoCuaNguoi } from "@/lib/sync/kho-indexeddb";
+import { xoaMayBiBao } from "@/lib/sync/may-bi-bao";
 import { CHU_KY_CHO, type DongHo } from "@/lib/sync/mang";
 import { CHU_KHONG_HANG_CHO, KhayChup, khongNhanTep, NutMoMay } from "../ho-so/dien-thoai/chup-anh";
 import { anhDangTrinh, sauLoiDoc, type TrangThaiAnh } from "../ho-so/dien-thoai/anh-lon";
@@ -346,7 +348,7 @@ test("E4 đối chứng: bỏ sự kiện online và nhịp 15 giây → đúng 
   ]);
 });
 
-test("E4 409 sau tải lại trang: mất phản hồi rồi mở lại app, gửi lại nhận 409, đối chiếu danh sách → đủ 3 dòng, không trùng", async () => {
+test("E4 gửi lại sau tải lại trang: mất phản hồi rồi mở lại app, hỏi danh sách trước khi gửi → đủ 3 dòng, không trùng, không lời 409", async () => {
   const idb = idbGia();
   const may = mayChuGia((lan) => (lan === 1 ? "mat-phan-hoi" : "ok"));
   const mang = { on: true };
@@ -364,6 +366,7 @@ test("E4 409 sau tải lại trang: mất phản hồi rồi mở lại app, g�
   await xong(sau);
   assert.deepEqual(trangThai(sau).filter((t) => t !== "da-tai"), []);
   assert.equal(may.dong.size, 3);
+  assert.equal(may.xung.n, 0, "ảnh dựng lại từ kho hỏi danh sách trước, máy chủ không phải trả 409");
   assert.equal((await idb.kho("u-chu").tai()).length, 0);
 });
 
@@ -495,6 +498,52 @@ test("E7 đăng xuất giữa lúc đang tải: lượt đang bay không ghi l�
   };
   assert.equal(await chay(true), false, "dừng hàng chờ rồi xoá: kho không sống lại");
   assert.equal(await chay(false), true, "đối chứng dương của bộ dò: xoá mà không dừng hàng chờ thì lượt đang bay tạo lại kho");
+});
+
+// Bảng viết trước: MỌI lối xoá kho của người trên máy. Mỗi lối chạy qua hàm thật của nó; hàng chờ dừng nhờ việc đăng ký ở
+// `xoaKhoCuaNguoi`, không nhờ thứ tự do bài kiểm tự đặt.
+const LOI_XOA: readonly { ten: string; xoa: (u: string, x: (ten: string) => Promise<void>) => Promise<void> }[] = [
+  { ten: "đăng xuất trong vỏ · màn chọn sàn", xoa: (u, x) => xoaKhoCuaNguoi(u, x) },
+  { ten: "máy bị báo mất", xoa: (u, x) => xoaMayBiBao(u, { xoaKho: (v) => xoaKhoCuaNguoi(v, x), huyDay: async () => {} }) },
+];
+
+async function lechLoiXoa(dangKy: boolean): Promise<string[]> {
+  const ra: string[] = [];
+  for (const l of LOI_XOA) {
+    const idb = idbGia();
+    let mo!: () => void;
+    const chan = new Promise<void>((r) => (mo = r));
+    const h = taoHangCho({ gui: async () => (await chan, Promise.reject(new LoiGuiAnh(403))), daCo: async () => false, kho: idb.kho("u-chu"), onLine: () => true, xem: () => "", taoMa: () => `ma-${++dem}` });
+    datTruocKhiXoaKho(dangKy ? async (u) => (u === "u-chu" ? h.dung() : undefined) : async () => {});
+    h.them(TOA, MA, "internal", tep("so.jpg"));
+    await h.choKho();
+    const xoa = l.xoa("u-chu", idb.xoa);
+    mo();
+    await xoa;
+    await h.cho();
+    await h.choKho();
+    if (idb.db.has(tenKhoAnhCho("u-chu"))) ra.push(`${l.ten} · kho ảnh chờ sống lại`);
+  }
+  datTruocKhiXoaKho(async () => {});
+  return ra;
+}
+
+test("E7 mọi lối xoá kho dừng hàng chờ trước: lượt đang bay không tạo lại kho (cả ảnh Nội bộ)", async () => {
+  assert.deepEqual(await lechLoiXoa(true), []);
+});
+
+test("E7 chiều đỏ: không đăng ký việc dừng trước khi xoá → bộ so nêu đúng hai lối", async () => {
+  assert.deepEqual(await lechLoiXoa(false), ["đăng xuất trong vỏ · màn chọn sàn · kho ảnh chờ sống lại", "máy bị báo mất · kho ảnh chờ sống lại"]);
+});
+
+test("E7 lối xoá kho trong mã: mọi chỗ xoá kho của người đi qua xoaKhoCuaNguoi, hàng chờ đăng ký việc dừng ở đó", () => {
+  const doc = (p: string) => readFileSync(new URL(p, import.meta.url), "utf8");
+  for (const p of ["../../../../lib/sync/react.tsx", "../../../(auth)/dang-xuat.tsx", "../../../../lib/sync/may-bi-bao.ts"]) {
+    const s = doc(p);
+    assert.match(s, /xoaKhoCuaNguoi/, p);
+    assert.doesNotMatch(s, /deleteDatabase/, p);
+  }
+  assert.match(doc("./hang-cho-may.ts"), /datTruocKhiXoaKho\(/);
 });
 
 test("E7 kho theo người: kho của A dựng bằng mã người B trả rỗng; kho đồng bộ không có khoá ảnh; 401 không xoá kho", async () => {

@@ -255,7 +255,12 @@ export function taoHangCho(o: HangChoDeps) {
       for (const b of tren) {
         banGhi.set(b.id, b);
         thuTu = Math.max(thuTu, b.thuTu + 1);
-        if (!co.has(b.id)) ds = [...ds, tuBanGhi(b, o.xem)];
+        if (!co.has(b.id)) {
+          ds = [...ds, tuBanGhi(b, o.xem)];
+          // Ảnh còn trên máy sau tải lại có thể đã lên máy chủ ngay trước khi trang đóng (lời đáp chưa về): hỏi danh sách
+          // trước khi gửi lại, để gửi lại không thành lời 409 (AC-4).
+          nghi.add(b.id);
+        }
       }
       bao();
       await day();

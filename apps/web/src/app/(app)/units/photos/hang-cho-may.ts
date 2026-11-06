@@ -5,6 +5,7 @@
 // nhập, dừng và xoá kho khi đăng xuất. Thử lại khi trình duyệt báo có mạng và theo nhịp 15 giây của bộ đồng bộ.
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
+import { datTruocKhiXoaKho } from "@/lib/sync/kho-indexeddb";
 import { dongHoThat } from "@/lib/sync/mang";
 import { noiNhip, taoHangCho, theoDoiDaTai, type AnhCho, type HangCho } from "./hang-cho-anh";
 import { taoKhoAnhCho } from "./kho-anh-cho";
@@ -21,7 +22,12 @@ const doiBan = (b: Ban | null) => {
 /** Khởi động hàng chờ của người (mở app, đăng nhập lại): dựng lại từ kho trên máy rồi tải tiếp. */
 export function khoiDongHangCho(userId: string): HangCho {
   if (ban?.userId === userId) return ban.hang;
-  ban?.dung();
+  // Đổi người trên cùng máy: hàng của người trước dừng hẳn — không lấy ảnh kế để gửi bằng phiên người mới, không ghi kho cũ
+  // (AC-4, AC-6).
+  if (ban) {
+    ban.dung();
+    void ban.hang.dung();
+  }
   const hang = taoHangCho({
     gui: ({ id, toa, ma, ngan, tep }) => nguonApi(toa, ma).them(tep, ngan, id),
     daCo: async ({ toa, ma, id }) => (await nguonApi(toa, ma).danhSach()).anh.some((p) => p.id === id),
@@ -45,15 +51,20 @@ export function khoiDongHangCho(userId: string): HangCho {
   return hang;
 }
 
-/** Đăng xuất: dừng hàng chờ, chờ lệnh vào kho đang dở xong (rồi người gọi xoá kho). */
-export async function dungHangCho(): Promise<void> {
+/**
+ * Dừng hàng chờ, chờ lệnh vào kho đang dở xong. Gọi trước MỌI lần xoá kho của người (đăng ký ở `xoaKhoCuaNguoi`);
+ * `userId` cho trước thì chỉ dừng khi hàng đang chạy là của chính người ấy.
+ */
+export async function dungHangCho(userId?: string): Promise<void> {
   const b = ban;
-  if (!b) return;
+  if (!b || (userId !== undefined && b.userId !== userId)) return;
   b.dung();
   doiBan(null);
   // Lượt tải đang bay không được ghi lại vào kho sắp xoá (AC-6).
   await b.hang.dung();
 }
+
+datTruocKhiXoaKho((u) => dungHangCho(u));
 
 export const hangChoHienTai = (): HangCho | null => ban?.hang ?? null;
 

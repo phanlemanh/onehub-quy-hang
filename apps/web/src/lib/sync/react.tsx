@@ -9,7 +9,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, u
 import type { BoLoc } from "./doc";
 import { taoBoDongBo, type BoDongBo } from "./dong-bo";
 import { goiFetch } from "./goi-fetch";
-import { dungHangCho, khoiDongHangCho } from "@/app/(app)/units/photos/hang-cho-may";
+import { khoiDongHangCho } from "@/app/(app)/units/photos/hang-cho-may";
 import { taoKhoIndexedDb, xoaKhoCuaNguoi } from "./kho-indexeddb";
 import { bocGoiBiBao, dichBiBao, xoaMayBiBao } from "./may-bi-bao";
 import { canHoiKhiDangXuat } from "./trang-thai";
@@ -81,8 +81,7 @@ export function BoDongBoProvider({ userId, companyId, companyIds, roles, childre
     }
     await bd.dongHan();
     await kho.wipe();
-    // Ảnh chờ của người (cả ngăn Nội bộ) xoá cùng kho đồng bộ (hàng 41, AC-6).
-    await dungHangCho();
+    // Ảnh chờ của người (cả ngăn Nội bộ) xoá cùng kho đồng bộ (hàng 41, AC-6); `xoaKhoCuaNguoi` dừng hàng chờ trước.
     await xoaKhoCuaNguoi(userId);
     return true;
   };
