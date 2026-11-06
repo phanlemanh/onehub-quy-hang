@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fb4c1b29b9c933a3b7d03f5993fe682743ce635e
+verified_commit: 93f003b9769b4bf4c3ecbbc1f17a1c75ee900b9c
 human_signoff:
 ---
 
@@ -151,3 +151,7 @@ none — mọi eval nhiều lần chạy đều đồng nhất (tất cả eval 
 Round 1: lượt chấm 1 trả về — phép đo stderr và rào thư mục tạm chưa đo thật. Returned to implementation.
 Round 2: lượt chấm 2 trả về — phải chờ Chrome chết hẳn rồi mới xoá hồ sơ, và đếm đúng bộ bắt once. Returned to implementation.
 Round 3: E1–E7 và toàn bộ lệnh suite đều xanh trên commit fb4c1b29; verdict PASS.
+
+### Re-pin lần 1 — 2026-11-06, do gộp nhánh chính sau lượt chấm 3
+run_id: repin-20261106T074746Z-16460
+sha: 93f003b9769b4bf4c3ecbbc1f17a1c75ee900b9c · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng
