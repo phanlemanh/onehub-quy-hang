@@ -1,0 +1,37 @@
+{
+  "ten": "mau-b",
+  "tieuDe": [
+    "STT",
+    "Trạng thái",
+    "Dự án",
+    "Toà",
+    "Tầng",
+    "Mã căn",
+    "Diện tích (m²)",
+    "Số phòng ngủ",
+    "Hướng ban công",
+    "Giá chào (VNĐ)",
+    "Điều kiện phí",
+    "Người phụ trách",
+    "Tên chủ nhà",
+    "Số điện thoại chủ nhà",
+    "Ghi chú",
+    "Nhãn"
+  ],
+  "bamGoi": "c55eb5a662bf87aca20bc66cd2da70535c8d84295ae06d3d476eb40106ebf31c",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 15,
+        "dich": "keep_as_note",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Nhãn» không chỉ rõ trường nào và cả cột chỉ có một giá trị ngắn, nên giữ làm ghi chú để không mất dữ liệu."
+      }
+    ]
+  }
+}

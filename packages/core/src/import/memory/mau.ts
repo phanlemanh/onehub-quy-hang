@@ -95,6 +95,9 @@ export type KetQuaApMau = { plan: ImportPlan; theoMau: number[]; veTuDien: { cot
 /** Lý do của cột về «chưa rõ» vì trùng đích với một cột theo mẫu. */
 export const LY_DO_TRUNG_MAU = "trùng đích với cột theo mẫu";
 
+/** Lớp tạm của cột mà mẫu được đưa vào trường lớp nguồn (chiều che thêm). */
+export const LOP_VAO_NGUON: readonly ColumnClass[] = ["source", "person_name", "unknown"];
+
 export function apMau(table: Table, mau: readonly CotMau[], ctx: ImportContext, tuDien: ImportPlan = planFromDictionary(table)): KetQuaApMau {
   const nho = gopMau(mau);
   const lop = classifyColumns(table);
@@ -115,7 +118,11 @@ export function apMau(table: Table, mau: readonly CotMau[], ctx: ImportContext, 
   const theo = () => columns.map((c, i) => (c.reason.startsWith(LY_DO_THEO_MAU) ? i : -1)).filter((i) => i >= 0);
   for (const i of theo()) {
     const t = columns[i]!.target;
-    if (isStandardField(t) && FIELD_CLASS[t] === "source" && lop[i]?.cls !== "source") ve(i, `cột «${table.headers[i] ?? ""}» không mang dữ liệu nguồn mà mẫu đưa vào ${t}`);
+    // Mẫu đưa cột vào trường nguồn là chiều che thêm: nhận khi cột trông như nguồn, tên người hay chưa rõ (cột tên chủ nhà
+    // tiêu đề lạ mà bộ phân loại không nhận — hàng 68, giám sát duyệt G-0511-6); vẫn từ chối khi cột rõ là danh mục, hàng
+    // chia sẻ được hay chữ tự do — mẫu ấy không hợp với dữ liệu của tệp này.
+    if (isStandardField(t) && FIELD_CLASS[t] === "source" && !LOP_VAO_NGUON.includes(lop[i]?.cls as ColumnClass))
+      ve(i, `cột «${table.headers[i] ?? ""}» không mang dữ liệu nguồn mà mẫu đưa vào ${t}`);
   }
   for (let vong = 0; vong < table.headers.length; vong++) {
     const plan = { ...tuDien, columns, questions: tuDien.questions };
