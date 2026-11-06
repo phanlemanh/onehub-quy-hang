@@ -1,5 +1,4 @@
 {
  "feature_plain": "Quản trị sàn thêm nhãn trạng thái của sàn như «Giữ chỗ»; căn mang nhãn hiện đúng chữ và màu ở Bảng hàng, Hôm nay, còn luật, khách ngoài và cách đếm vẫn theo trạng thái chuẩn.",
- "scope_plain": "Vòng này đặt nhãn ở Bảng hàng và hiện nhãn ở Bảng hàng, Hôm nay; các màn khác giữ chữ mặc định.",
- "analyst_plain": "Vài bài đo máy chạy chung một lệnh với bài khác nên không tự phân biệt được; mỗi bài vẫn được đối chiếu đúng tên ca của nó."
+ "scope_plain": "Vòng này đặt nhãn ở Bảng hàng và hiện nhãn ở Bảng hàng, Hôm nay; các màn khác giữ chữ mặc định."
 }
