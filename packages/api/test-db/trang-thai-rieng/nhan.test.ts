@@ -390,9 +390,10 @@ test("trạng thái riêng: gỡ nhãn: căn đã đổi giữa chừng", async 
   assert.equal(await demSuKien(b), nb + 1);
   assert.deepEqual(await banTinh(a), { standard_status: "Active", status_label: null });
   assert.deepEqual(await banTinh(b), { standard_status: "Pending", status_label: null });
-  // Ghi cho từng căn đọc lại căn sau khoá theo hàng: căn không còn mang mã thì bỏ qua, không sự kiện.
-  const kq = await trongSan(s, s.nguoi.qt!.userId, (c) => thayNhanCan(c, a, "giu_cho", null));
-  assert.equal(kq, null);
+  // Cửa hẹp 049 đọc lại căn sau khoá theo hàng: không căn nào còn mang mã thì không chuyển căn nào, không sự kiện.
+  const kq = await trongSan(s, s.nguoi.qt!.userId, (c) => thayNhanCan(c, "giu_cho", null));
+  assert.equal(kq, 0);
+  assert.deepEqual([await demSuKien(a), await demSuKien(b)], [na, nb + 1]);
 });
 
 test("trạng thái riêng: đổi nhãn tại chỗ và gỡ nhãn ở Đã bán giữ giá chốt", async () => {

@@ -300,22 +300,14 @@ export async function voidListing(tx: pg.PoolClient, listingId: string, expected
 }
 
 /**
- * Gỡ nhãn trạng thái kèm nhãn thay (hàng 46): một sự kiện `status_changed {to: trạng thái hiện tại, label: thay}` ghi bằng
- * người đang gọi (quản trị sàn), qua cùng hàm ghi sự kiện của lệnh — không sửa thẳng bản tính. Đọc lại căn SAU khoá theo
- * hàng: căn đã rời nhãn ấy giữa lúc hỏi và lúc ghi thì bỏ qua (`null`). Không tính là xác nhận với chủ nhà.
+ * Gỡ nhãn trạng thái kèm nhãn thay (hàng 46): mỗi căn của sàn còn mang `maGo` nhận một sự kiện `status_changed {to: trạng
+ * thái hiện tại, label: thay}` ghi bằng người đang gọi (quản trị sàn). Từ luật 046 quản trị không ghi thẳng được hàng, nên
+ * đi qua cửa hẹp `app.relabel_listings_status_label` (migration 049): hàm khoá theo hàng rồi đọc lại — căn đã rời nhãn ấy
+ * giữa lúc hỏi và lúc ghi thì bỏ qua; chỉ đổi nhãn và phiên bản, đúng bước gấp «đổi nhãn tại chỗ». Trả số căn đã chuyển.
  */
-export async function thayNhanCan(tx: pg.PoolClient, listingId: string, maGo: string, thay: string | null): Promise<Applied | null> {
-  const hang = await tx.query<{ version: number }>("select version from listings where id = $1 for update", [listingId]);
-  if (!hang.rowCount) return null;
-  const version = hang.rows[0]!.version;
-  const events = await loadEvents(tx, listingId);
-  const hienTai = foldListing(events);
-  if (hienTai.voided || (hienTai.statusLabel ?? null) !== maGo) return null;
-  const event = await ghiSuKien(tx, listingId, version + 1, "status_changed", { to: hienTai.standardStatus, label: thay }, false, GHI_KHONG_RO);
-  const state = foldListing([...events, event]);
-  const facts = factsFromEvents([...events, event]);
-  await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);
-  return { listingId, state, event, facts };
+export async function thayNhanCan(tx: pg.PoolClient, maGo: string, thay: string | null): Promise<number> {
+  const { rows } = await tx.query<{ n: number }>("select app.relabel_listings_status_label($1, $2) n", [maGo, thay]);
+  return rows[0]!.n;
 }
 
 /** Ảnh thật của căn (ngăn Gửi được, không ảnh mẫu, chưa xoá) và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */

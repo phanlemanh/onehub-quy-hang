@@ -15,7 +15,7 @@ import { rolesOf } from "../routing/store";
  * Trạng thái riêng của sàn (hàng 46): đọc và đổi bộ nhãn trạng thái trong `company_settings` (khoá `labels.status.<mã>`,
  * migration 047). Luật ở lõi (`@quy-hang/core/statuses`); nhật ký do trigger của migration 026 ghi — mỗi khoá đổi một sự
  * kiện, khoá giữ nguyên không ghi lại, gỡ nhãn ghi `null`. Gỡ nhãn còn căn mang cần nhãn thay: mỗi căn còn mang mã ở lúc
- * ghi nhận một sự kiện `status_changed` qua đường ghi của lệnh hàng — không sửa thẳng bảng hàng.
+ * ghi nhận một sự kiện `status_changed` qua cửa hẹp của migration 049 — quản trị không ghi thẳng hàng (luật 046).
  */
 
 export type BangTrangThai = { statuses: DongBangTrangThai[] };
@@ -24,8 +24,19 @@ export type StatusesRefusal =
   | { refusal: "invalid"; reason: string }
   | { refusal: "in-use"; code: string; count: number; reason: string };
 
-/** Số căn (chưa gỡ khỏi Quỹ hàng) đang mang từng mã nhãn, trong sàn đang làm. */
-async function demCanMang(tx: pg.PoolClient): Promise<Record<string, number>> {
+/**
+ * Số căn (chưa gỡ khỏi Quỹ hàng) đang mang từng mã nhãn của sàn, trong sàn đang làm. Quản trị sàn không đọc được hàng (luật
+ * 046) nên đếm qua cửa hẹp `app.count_listings_with_status_label` (migration 049); người khác đếm qua luật theo dòng — ai có
+ * Bảng hàng thấy số thật, ai không có thấy 0.
+ */
+async function demCanMang(tx: pg.PoolClient, nhan: readonly { ma: string }[]): Promise<Record<string, number>> {
+  if ((await rolesOf(tx)).includes("company_admin")) {
+    const { rows } = await tx.query<{ ma: string; n: number }>(
+      "select ma, app.count_listings_with_status_label(ma) n from unnest($1::text[]) ma",
+      [nhan.map((n) => n.ma)],
+    );
+    return Object.fromEntries(rows.map((r) => [r.ma, r.n]));
+  }
   const { rows } = await tx.query<{ ma: string; n: number }>(
     `select status_label ma, count(*)::int n from listings
      where company_id = app.current_company_id() and status_label is not null and not voided group by status_label`,
@@ -34,7 +45,8 @@ async function demCanMang(tx: pg.PoolClient): Promise<Record<string, number>> {
 }
 
 export async function readStatuses(tx: pg.PoolClient): Promise<BangTrangThai> {
-  return bangTrangThai(await nhanCuaSan(tx), await demCanMang(tx));
+  const nhan = await nhanCuaSan(tx);
+  return bangTrangThai(nhan, await demCanMang(tx, nhan));
 }
 
 type ThanPut = { labels: NhanGui[]; replace: Record<string, unknown> };
@@ -61,7 +73,7 @@ export async function writeStatuses(tx: pg.PoolClient, input: unknown): Promise<
   // Mã bị gỡ: còn căn mang thì phải có nhãn thay cùng neo (hay `null` = nhãn mặc định của neo).
   const conLai = new Map(kq.nhan.map((n) => [n.ma, n]));
   const go = daCo.filter((n) => !conLai.has(n.ma));
-  const dem = await demCanMang(tx);
+  const dem = await demCanMang(tx, go);
   const thay = new Map<string, string | null>();
   for (const n of go) {
     const khoa = khoaNhan(n.ma);
@@ -90,13 +102,7 @@ export async function writeStatuses(tx: pg.PoolClient, input: unknown): Promise<
       [r.key, JSON.stringify(r.value)],
     );
   }
-  // Căn còn mang mã gỡ — đọc trong giao dịch đã khoá; `thayNhanCan` đọc lại từng căn sau khoá theo hàng.
-  for (const [ma, dich] of thay) {
-    const { rows } = await tx.query<{ id: string }>(
-      "select id from listings where company_id = app.current_company_id() and status_label = $1 and not voided order by id",
-      [ma],
-    );
-    for (const r of rows) await thayNhanCan(tx, r.id, ma, dich);
-  }
+  // Căn còn mang mã gỡ — trong giao dịch đã khoá bộ nhãn; `thayNhanCan` khoá và đọc lại từng căn ở cửa hẹp 049.
+  for (const [ma, dich] of thay) await thayNhanCan(tx, ma, dich);
   return readStatuses(tx);
 }
