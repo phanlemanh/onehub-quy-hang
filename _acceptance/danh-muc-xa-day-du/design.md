@@ -50,10 +50,12 @@ trên tệp gốc và đòi kết quả trùng từng byte với bảng đã com
    Mỗi bảng được sắp theo mã nên luôn ra cùng một byte.
 2. **Làm sạch có tên.** Lỗi đã biết của tệp xlsx được sửa bằng một bảng sửa nằm trong bộ sinh, mỗi dòng một lý do. Bộ
    sinh không đoán:
-   - 342 mã cũ mất số 0 đầu (Tuyên Quang, Cao Bằng) được đệm lại cho đủ năm chữ số;
+   - 342 mã xã mới mất số 0 đầu (Tuyên Quang, Cao Bằng) được đệm lại cho đủ năm chữ số;
+   - 40 tên xã cũ ghi chữ tổ hợp (Khánh Hòa, Bình Định) được đưa về dạng dựng sẵn;
    - khoảng trắng và dấu xuống dòng thừa được cắt;
    - nhãn tỉnh cũ của Đặc khu Cồn Cỏ (19742) ghi «Quảng Trị (44)», đúng là 45;
-   - nhãn tỉnh cũ của Phường 4, Tân An (27691) ghi «Tiền Giang (82)», đúng là Long An (80).
+   - nhãn tỉnh cũ của Phường 4, Tân An (27691) ghi «Tiền Giang (82)», đúng là Long An (80);
+   - nhãn tỉnh cũ của Xã Tiên Hải, Hà Tiên (30781) ghi «An Giang (89)», đúng là Kiên Giang (91) (máy bắt lúc làm).
 
    Tên đơn vị mới lấy theo dịch vụ (nguồn mã), không lấy theo tệp xlsx.
 3. **Danh mục lõi** (`danh-muc.ts`) nạp ba bảng thay cho phần trích. 34 tỉnh giữ trong mã TS, tên sửa theo nguồn: «Thành
