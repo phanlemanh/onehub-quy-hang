@@ -5,7 +5,7 @@ slug: va-bang-hang-cuon-so-lon
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/va-bang-hang-cuon-so-lon/design.md
 approved_by:
 approved_at:
