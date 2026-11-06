@@ -5,7 +5,7 @@ slug: nhap-o-la
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: approved
+status: implemented
 design_doc: _acceptance/nhap-o-la/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06
