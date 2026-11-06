@@ -25,14 +25,16 @@ Lúc soạn (02:06Z) bản thật đã tự hồi: không lỗi mới từ 01:47
 
 **Pool nhỏ, nhả sớm** (`apps/web/src/lib/api.ts`):
 
-- `dungPools(url, attach)` dựng hai pool: danh tính `max 2`, ứng dụng `max 2` — một phiên bản giữ tối đa 4 kết nối.
-  `idleTimeoutMillis 5000` nhả kết nối rảnh; `connectionTimeoutMillis 10000` để yêu cầu chờ trong hàng đợi của pool có
-  hạn, không treo.
-- **Phép tính trần, có khoảng dư mỏng.** Trần 15 chia cho mọi khách dùng chung `DATABASE_URL`: phiên bản hàm của bản chính
-  thức, của bản xem trước (biến `DATABASE_URL` khai cho cả Production và Preview), và job migrate của CI. Dự kiến 3 phiên
-  bản cùng sống × 4 + 2 kết nối của khách khác = 14 < 15. Bài kiểm ghim bất đẳng thức chặt này bằng ba hằng
-  `SO_PHIEN_BAN_DU_KIEN`, `KHACH_KHAC`, `TRAN_POOLER`. Phiên bản thứ tư cùng lúc vẫn có thể chạm trần — gốc lâu dài là
-  pooler chế độ transaction (vòng riêng, mục cuối).
+- `dungPools(url, noi, attach)` dựng hai pool theo nơi chạy. Mỗi bản triển khai chạy HAI hàm có đồ thị mô-đun riêng,
+  mỗi hàm một bộ pool (lượt chấm S4-r1 bắt: bản build có `/_middleware` chạy Node riêng): hàm trang và API — danh tính
+  `max 2`, ứng dụng `max 2`; hàm bước chặn đầu `proxy.ts` gọi `getApi("chan-dau")` — mỗi pool `max 1` (nó chỉ đọc phiên để
+  làm mới cookie). `idleTimeoutMillis 5000` nhả kết nối rảnh; `connectionTimeoutMillis 10000` để yêu cầu chờ trong hàng
+  đợi của pool có hạn, không treo.
+- **Phép tính trần, có khoảng dư mỏng.** Trần 15 chia cho mọi khách dùng chung `DATABASE_URL`: hai bản triển khai cùng ấm
+  (chính thức + một bản xem trước — `DATABASE_URL` khai cho cả Production và Preview), mỗi bản 4 + 2 kết nối, cộng 2 của
+  khách khác (job migrate của CI, quản trị) = 14 < 15. Bài kiểm ghim bất đẳng thức chặt này bằng `SO_BAN_DU_KIEN`,
+  `KHACH_KHAC`, `TRAN_POOLER`, `NOI_TRANG`, `NOI_CHAN_DAU`. Giả định: hàm trang và hàm API là một hàm. Một phiên bản thứ hai
+  cùng lúc của cùng hàm vẫn có thể chạm trần — gốc lâu dài là pooler chế độ transaction (vòng riêng, mục cuối).
 - Cả hai pool gắn `attachDatabasePool` của `@vercel/functions` (ghim 3.10.2): Vercel nhả kết nối rảnh trước khi treo
   phiên bản, nên phiên bản treo không giữ chỗ của trần 15.
 - Yêu cầu vượt cỡ xếp hàng trong pool thay vì mở kết nối mới tới pooler.

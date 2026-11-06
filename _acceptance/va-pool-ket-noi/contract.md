@@ -29,10 +29,11 @@ Source input: yêu cầu của phiên giám sát đợt `dau-khach-nhap` (06/11)
 - AC-1: Given phản hồi của `/api/v1/me` cho trang dựng ở máy chủ, When mã là 500, 502 hay 503, Then bộ phân loại ném
   `LoiDocPhien` mang đúng mã, không trả `null`; When mã là 200 thì trả người, 401 mang `device_reported_lost` và mã người
   thì trả mã người bị báo, 401 khác thì trả `null` — đúng như trước bản vá.
-- AC-2: Given `getApi()` dựng kết nối của một phiên bản hàm, When dựng hai pool, Then pool danh tính và pool ứng dụng
-  mỗi pool tối đa 2 kết nối, cả hai nhả kết nối rảnh sau 5 giây và chờ kết nối tối đa 10 giây, cả hai được gắn
-  `attachDatabasePool`; pool danh tính giữ `search_path=identity`, pool ứng dụng không mang tham số khởi động; và số phiên
-  bản dự kiến (3) × cỡ mỗi phiên bản + kết nối của khách khác (2) nhỏ hơn hẳn trần 15 của pooler.
+- AC-2: Given `getApi()` dựng kết nối, When dựng hai pool ở hàm trang và API, Then pool danh tính và pool ứng dụng mỗi
+  pool tối đa 2 kết nối; When bước chặn đầu (`proxy.ts`, một hàm riêng trên Vercel) dựng bộ pool của nó, Then mỗi pool
+  tối đa 1; cả bốn nhả kết nối rảnh sau 5 giây, chờ kết nối tối đa 10 giây, đều gắn `attachDatabasePool`; pool danh tính
+  giữ `search_path=identity`, pool ứng dụng không mang tham số khởi động; và số bản triển khai dự kiến (2: chính thức + xem
+  trước) × (hàm trang + hàm bước chặn đầu) + kết nối của khách khác (2) nhỏ hơn hẳn trần 15 của pooler.
 - AC-3: Given chỗ thử `dung-su-co.mjs` (Postgres riêng sau một công tắc mạng ở cổng 5599, phiên thật của Đầu chủ mẫu) và
   máy dev `web-su-co-pool` mở qua `127.0.0.1`, When công tắc tắt và mở `/today`, `/inventory`, `/`, `/select-company`
   bằng cookie phiên, Then địa chỉ giữ nguyên, trang hiện «Không mở được trang này» kèm nút «Thử lại», không chuyển về
@@ -59,7 +60,7 @@ Liệt kê tay hai trục (descope «bỏ coverage-scan» trong sổ quyết đ�
 - Trục B — nơi đọc phiên: vỏ `(app)` · trang gốc `/` · chọn sàn · chưa gắn sàn · đăng nhập · trang trong vỏ gọi `readMe`
   · bước chặn đầu · tab Tôi ở trình duyệt [thước CE: bài soi nơi gọi của AC-6 trên cây thật — nơi đọc thẳng `/api/v1/me`,
   nơi bắt `LoiDocPhien`, `.catch` sau `readMe`]
-- Trục C — pool: danh tính · ứng dụng [thước CE: `getApi` dựng đúng hai pool]
+- Trục C — pool: danh tính · ứng dụng × hàm trang · hàm bước chặn đầu [thước CE: `getApi` dựng đúng hai pool mỗi đồ thị mô-đun; bản build có hai đồ thị — trang và `/_middleware`]
 - Core: A toàn bộ ở AC-1; B vỏ, `/`, chọn sàn, đăng nhập quan sát ở AC-3, mọi nơi ghim ở AC-6 (chưa gắn sàn đi cùng
   `readMe` như chọn sàn); C toàn bộ ở AC-2.
 - Later: chuyển pooler sang chế độ transaction; nâng `pool_size` của Supabase; tự thử lại phía máy chủ.
