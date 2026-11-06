@@ -6,16 +6,24 @@ type Api = ReturnType<typeof createApi>;
 let cached: Api | undefined;
 
 /**
- * Cỡ pool của mỗi phiên bản hàm (sự cố 06/11): pooler Supabase chế độ session cấp TỔNG 15 kết nối cho cả dự án, và mọi
- * khách dùng chung `DATABASE_URL` cùng chia — phiên bản hàm của bản chính thức, của bản xem trước (cùng biến môi trường),
- * và job migrate của CI. Mặc định của pg (10 mỗi pool, hai pool) để một phiên bản giữ tới 20 kết nối. Nay mỗi phiên bản
- * giữ tối đa 4, nhả kết nối rảnh sau 5 giây; `attachDatabasePool` nhả kết nối rảnh trước khi Vercel treo phiên bản; yêu
- * cầu vượt cỡ xếp hàng trong pool. Khoảng dư mỏng — gốc lâu dài là pooler chế độ transaction (vòng riêng).
+ * Cỡ pool (sự cố 06/11): pooler Supabase chế độ session cấp TỔNG 15 kết nối cho cả dự án, và mọi khách dùng chung
+ * `DATABASE_URL` cùng chia. Mỗi bản triển khai (chính thức, xem trước — cùng biến môi trường) chạy HAI hàm có đồ thị mô-đun
+ * riêng, mỗi hàm một bộ pool: hàm trang và API (`NOI_TRANG`), và hàm bước chặn đầu `proxy.ts` (`NOI_CHAN_DAU` — chỉ đọc
+ * phiên để làm mới cookie). Mặc định của pg (10 mỗi pool) để một hàm giữ tới 20 kết nối. Nay hàm trang giữ tối đa 4, bước
+ * chặn đầu tối đa 2, nhả kết nối rảnh sau 5 giây; `attachDatabasePool` nhả kết nối rảnh trước khi Vercel treo phiên bản;
+ * yêu cầu vượt cỡ xếp hàng trong pool. Khoảng dư mỏng — gốc lâu dài là pooler chế độ transaction (vòng riêng).
  */
-export const POOL_DANH_TINH = { max: 2, idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
-export const POOL_UNG_DUNG = { max: 2, idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
-/** Số phiên bản hàm cùng sống mà cỡ trên tính cho (chính thức + xem trước), và số kết nối của khách khác (migrate, quản trị). */
-export const SO_PHIEN_BAN_DU_KIEN = 3;
+const NHA_SOM = { idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
+export const NOI_TRANG = { danhTinh: { max: 2, ...NHA_SOM }, ungDung: { max: 2, ...NHA_SOM } } as const;
+export const NOI_CHAN_DAU = { danhTinh: { max: 1, ...NHA_SOM }, ungDung: { max: 1, ...NHA_SOM } } as const;
+export type Noi = "trang" | "chan-dau";
+const CO_THEO_NOI = { trang: NOI_TRANG, "chan-dau": NOI_CHAN_DAU } as const;
+/**
+ * Số bản triển khai có hàm cùng ấm (chính thức + một bản xem trước), mỗi bản một hàm trang và một hàm bước chặn đầu; và
+ * số kết nối của khách khác (job migrate của CI, quản trị). Giả định: hàm trang và hàm API là một hàm (Vercel gom tuyến
+ * của Next vào cùng hàm khi cấu hình như nhau).
+ */
+export const SO_BAN_DU_KIEN = 2;
 export const KHACH_KHAC = 2;
 export const TRAN_POOLER = 15;
 
@@ -27,10 +35,11 @@ export class LoiDocPhien extends Error {
   }
 }
 
-/** Hai pool của một phiên bản hàm, đúng cỡ ở trên, cả hai gắn `attachDatabasePool` (tham số để bài kiểm thay). */
-export function dungPools(url: string, attach: (pool: pg.Pool) => void = attachDatabasePool) {
-  const identityPool = new pg.Pool({ ...POOL_DANH_TINH, connectionString: url, options: "-c search_path=identity" });
-  const appPool = new pg.Pool({ ...POOL_UNG_DUNG, connectionString: url });
+/** Hai pool của một hàm, đúng cỡ của nơi chạy, cả hai gắn `attachDatabasePool` (tham số để bài kiểm thay). */
+export function dungPools(url: string, noi: Noi = "trang", attach: (pool: pg.Pool) => void = attachDatabasePool) {
+  const co = CO_THEO_NOI[noi];
+  const identityPool = new pg.Pool({ ...co.danhTinh, connectionString: url, options: "-c search_path=identity" });
+  const appPool = new pg.Pool({ ...co.ungDung, connectionString: url });
   attach(identityPool);
   attach(appPool);
   return { identityPool, appPool };
@@ -45,9 +54,10 @@ function need(name: string): string {
 /**
  * App API dựng lười ở lời gọi đầu — không ở lúc nạp mô-đun, để `next build` chạy được khi không có cơ sở dữ liệu.
  * Có RESEND_API_KEY thì gửi mã qua Resend (ADR-0009); bản thật thiếu khoá thì createAuth ném «thiếu bộ gửi mã đăng nhập»
- * thay vì in mã ra nhật ký (AC-11).
+ * thay vì in mã ra nhật ký (AC-11). `noi` chọn cỡ pool: bước chặn đầu gọi `getApi("chan-dau")`; mọi nơi khác để mặc định.
+ * Một đồ thị mô-đun dựng một lần — nơi gọi đầu tiên quyết cỡ (máy dev có thể chung đồ thị: cỡ vẫn trong giới hạn).
  */
-export function getApi(): Api {
+export function getApi(noi: Noi = "trang"): Api {
   if (cached) return cached;
   const url = need("DATABASE_URL");
   const env = process.env.NODE_ENV;
@@ -57,7 +67,7 @@ export function getApi(): Api {
     : env === "production"
       ? undefined
       : devSender;
-  const { identityPool, appPool } = dungPools(url);
+  const { identityPool, appPool } = dungPools(url, noi);
   const auth = createAuth({
     identityPool,
     secret: need("BETTER_AUTH_SECRET"),
