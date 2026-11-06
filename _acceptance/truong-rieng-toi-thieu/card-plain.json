@@ -1,0 +1,116 @@
+{
+ "feature_plain": "Quản trị sàn thêm trường thật sự mới của sàn — «có / không» hay «chọn một» — cho hàng và cho liên hệ theo loại; máy chặn tên trùng nghĩa trường chuẩn và chỉ sang Cách gọi; trường của hàng là cột lọc được ở Bảng hàng; trường của chủ nhà là thông tin chủ nhà; không trường nào ra trang khách.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ cho quản trị sàn tạo «Căn góc» (có / không) và «Nội thất bàn giao» (chọn một) cho hàng, lưu lại thấy đúng và mỗi lần đổi vào nhật ký."
+  },
+  {
+   "id": "AC-2",
+   "p": "Sẽ chặn tạo khi tên trùng nghĩa một trường chuẩn («Hướng», «Toà nhà», «Phí CN», tên riêng ở Cách gọi, «Số điện thoại» của liên hệ) và chỉ sang Cách gọi."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ chặn lưu khi tên sai (rỗng, quá 40 ký tự, có số điện thoại / email, trùng trường khác), chọn một không có hay quá 30 lựa chọn, quá 20 trường, hay đổi kiểu / gỡ lựa chọn của trường đã có."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ hiện mỗi trường của hàng thành một cột ở Bảng hàng máy tính: đặt giá trị ở ô, lọc theo giá trị, người thứ hai thấy sau đồng bộ; mã lạ hay giá trị sai bị từ chối."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ KHÔNG đưa trường riêng ra trang khách, bản phát hàng cho nhóm môi giới hay tệp xuất — kể cả khi góc nhìn có cột ấy."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ cho trường của liên hệ theo loại: hồ sơ một người chỉ hiện trường khớp loại của họ; trường của Chủ bán, Chủ cho thuê mang huy hiệu «Thông tin chủ nhà»."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ chặn mọi người ngoài đầu chủ giữ và trưởng nhóm đọc hay ghi giá trị trường riêng của liên hệ chủ nhà, qua mọi đường đọc liên hệ; giá trị ấy không rời sàn."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ cho đổi tên trường, đổi chữ và thêm lựa chọn mà không đụng căn nào; bỏ trường thì trường thôi hiện nhưng giá trị đã ghi vẫn giữ."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ chặn sàn khác thấy trường của nhau, và chặn người không phải quản trị sửa trường riêng hay mở màn này."
+  },
+  {
+   "id": "AC-10",
+   "p": "Sẽ giữ nguyên mọi thứ như trước vòng này với sàn chưa tạo trường riêng nào."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "OOS-1",
+   "p": "KHÔNG có kiểu chữ, số, ngày ở bản đầu."
+  },
+  {
+   "id": "OOS-2",
+   "p": "KHÔNG kèm trường riêng khi phát hàng cho đội khác (công tắc theo trường để hàng sau)."
+  },
+  {
+   "id": "OOS-3",
+   "p": "KHÔNG hiện trường riêng ở thẻ điện thoại, hồ sơ căn, thao tác hàng loạt, nhập Excel ở vòng này."
+  },
+  {
+   "id": "OOS-4",
+   "p": "KHÔNG gỡ lựa chọn đã có, không đổi kiểu, đối tượng, loại liên hệ của trường đã tạo."
+  },
+  {
+   "id": "OOS-5",
+   "p": "KHÔNG ghi lịch sử từng lần đổi giá trị trường riêng của liên hệ."
+  }
+ ],
+ "scope_plain": "Vòng này tạo trường ở Cài đặt, hiện trường của hàng ở Bảng hàng máy tính và trường của liên hệ ở hồ sơ liên hệ; mọi mặt khác và mọi cửa ra ngoài giữ nguyên.",
+ "coverage_plain": [
+  {
+   "i": 0,
+   "p": "Mặt: màn Trường riêng, API, Bảng hàng máy tính (cột, sửa ô, lọc, góc nhìn), hồ sơ liên hệ, trang khách, bản phát, xuất bảng — đủ khi mỗi mặt có ảnh chụp hay ca máy (AC-1, 4, 5, 6)."
+  },
+  {
+   "i": 1,
+   "p": "Thao tác: tạo, dò trùng nghĩa, đổi tên, thêm / đổi chữ lựa chọn, bỏ trường, đặt / xoá giá trị, lọc — đủ khi mỗi thao tác có ca đo kết quả trên dữ liệu (AC-1, 2, 4, 8)."
+  },
+  {
+   "i": 2,
+   "p": "Đối tượng: hàng, liên hệ khách, liên hệ chủ nhà — đủ khi ma trận lớp chạy cả ở lõi lẫn cơ sở dữ liệu (AC-4, 6, 7)."
+  },
+  {
+   "i": 3,
+   "p": "Người: quản trị, đầu chủ giữ / không giữ, trưởng nhóm, telesales, sàn khác, khách ngoài — đủ khi mỗi người × mỗi đường đọc có một assert (AC-5, 7, 9)."
+  },
+  {
+   "i": 4,
+   "p": "Dữ liệu: chưa có, có, hỏng (mười loại sai) — đủ khi mỗi loại sai có một dòng từ chối và đối chứng hợp lệ (AC-2, 3, 4, 10)."
+  },
+  {
+   "i": 5,
+   "p": "Để sau: kiểu chữ / số / ngày, kèm khi phát hàng, thẻ điện thoại, hồ sơ căn, Excel, gỡ lựa chọn, lịch sử giá trị liên hệ."
+  }
+ ],
+ "gap_probe_plain": [
+  {
+   "i": 0,
+   "p": "Thiếu đo mọi đường đọc liên hệ khác (danh sách, tra số, hồ sơ căn, đổi đầu chủ, đồng bộ) với người không giữ — đã thêm ca đường × người dùng mồi."
+  },
+  {
+   "i": 1,
+   "p": "Chốt lớp ở cơ sở dữ liệu chỉ được so chuỗi, có thể lệch luật của lõi ở trường nhiều loại — đã thêm ma trận hành vi chạy trên cơ sở dữ liệu."
+  },
+  {
+   "i": 2,
+   "p": "Chưa đo lệnh đặt giá trị lúc mất mạng và trường hợp bộ trường chưa tải làm mất cột trong góc nhìn — đã thêm ca hàng đợi ngoại tuyến và dòng «chưa tải»."
+  },
+  {
+   "i": 3,
+   "p": "Vế màn của quyền (đầu chủ mở màn Trường riêng) chưa có ảnh — đã thêm bước chụp đầu chủ bị chuyển về Cá nhân."
+  },
+  {
+   "i": 4,
+   "p": "Việc không kèm trường khi phát cho đội bạn bị ghi như câu giao đã quyết — đã đổi thành câu hỏi Hỏi-6 cho anh."
+  }
+ ]
+}
