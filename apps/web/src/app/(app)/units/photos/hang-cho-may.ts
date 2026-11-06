@@ -41,8 +41,9 @@ export function khoiDongHangCho(userId: string, companyId: string): HangCho {
   const san = { id: companyId };
   const hang = taoHangCho({
     san: () => san.id,
-    gui: ({ id, toa, ma, ngan, tep }) => nguonApi(toa, ma).them(tep, ngan, id),
-    daCo: async ({ toa, ma, id }) => (await nguonApi(toa, ma).danhSach()).anh.some((p) => p.id === id),
+    // Mọi lời gọi mang sàn lúc chụp: máy chủ từ chối khi phiên đang ở sàn khác (bất biến 2), không chỉ máy khách tự chặn.
+    gui: ({ id, san, toa, ma, ngan, tep }) => nguonApi(toa, ma, fetch, san).them(tep, ngan, id),
+    daCo: async ({ san, toa, ma, id }) => (await nguonApi(toa, ma, fetch, san).danhSach()).anh.some((p) => p.id === id),
     kho: taoKhoAnhCho(userId),
     onLine: () => navigator.onLine,
     xem: (b) => URL.createObjectURL(b),

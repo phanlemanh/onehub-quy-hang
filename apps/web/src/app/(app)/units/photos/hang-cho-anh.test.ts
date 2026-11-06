@@ -617,6 +617,69 @@ test("Bất biến 2 · vỏ truyền sàn của phiên cho hàng chờ và đ�
   assert.match(vo, /\[userId, companyId\]/);
 });
 
+test("Bất biến 2 · máy chủ trả select-company (tab lệch sàn với cookie): ảnh nằm chờ, không thành lỗi, không đối chiếu như 409 mã đã có", async () => {
+  let goiDaCo = 0;
+  const h = taoHangCho({ gui: async () => Promise.reject(new LoiGuiAnh(409, "select-company")), daCo: async () => (goiDaCo++, false), kho: idbGia().kho("u-hai-san"), onLine: () => true, xem: () => "", taoMa: () => `ma-${++dem}` });
+  h.them(TOA, MA, "internal", tep("so-do.jpg"));
+  await xong(h);
+  assert.deepEqual(trangThai(h), ["cho-mang"]);
+  assert.equal(goiDaCo, 0, "sai sàn không đi đường đối chiếu của 409 mã đã có");
+  assert.equal(phanLoaiLoi(new LoiGuiAnh(409, "select-company"), true), "sai-san");
+  assert.equal(phanLoaiLoi(new LoiGuiAnh(409, "photo-already-confirmed"), true), "da-co", "đối chứng: 409 mã đã có vẫn là da-co");
+});
+
+test("Bất biến 2 · đổi sàn đúng lúc đang hỏi danh sách (ảnh nghi): không gửi bằng phiên của sàn mới", async () => {
+  const phien = { san: "san-a" };
+  const mang = { on: true };
+  const gui: string[] = [];
+  let lan = 0;
+  let moDaCo!: () => void;
+  const h = taoHangCho({
+    gui: async (a) => {
+      if (++lan === 1) throw new TypeError("Failed to fetch");
+      gui.push(`${phien.san}:${a.san}`);
+    },
+    daCo: () => new Promise((ok) => (moDaCo = () => ok(false))),
+    kho: idbGia().kho("u-hai-san"),
+    onLine: () => mang.on,
+    xem: () => "",
+    taoMa: () => `ma-${++dem}`,
+    san: () => phien.san,
+  });
+  h.them(TOA, MA, "internal", tep("so-do.jpg"));
+  await h.cho();
+  // Lần gửi đầu mất mạng → ảnh vào nhóm nghi; lượt sau hỏi danh sách trước. Đổi sàn trong lúc chờ danh sách trả lời.
+  const luot = h.day();
+  await new Promise((r) => setTimeout(r, 0));
+  phien.san = "san-b";
+  moDaCo();
+  await luot;
+  assert.deepEqual(gui, [], "không lời gửi nào sau khi đổi sang sàn B");
+  assert.deepEqual(trangThai(h), ["cho-mang"]);
+});
+
+test("Bất biến 2 · nguồn API khai sàn lúc chụp ở cả ba lời gọi của đường chụp (danh sách, xin link, thêm ảnh)", async () => {
+  const { nguonApi } = await import("./nguon-api");
+  const nhan: { url: string; san: string | null }[] = [];
+  const f: typeof fetch = async (u, init) => {
+    const url = String(u);
+    const b = init?.body;
+    const san = b instanceof FormData ? (b.get("companyId") as string | null) : typeof b === "string" ? ((JSON.parse(b) as { companyId?: string }).companyId ?? null) : new URL(url, "http://x").searchParams.get("companyId");
+    nhan.push({ url: url.split("?")[0]!, san });
+    if (url.endsWith("/upload-url")) return new Response(JSON.stringify({ truc_tiep: false }), { status: 200 });
+    if (url.startsWith("/api/v1/units/photos?")) return new Response(JSON.stringify({ anh: [], noiBo: "thay", suaDuoc: true }), { status: 200 });
+    return new Response(JSON.stringify({ anh: {} }), { status: 201 });
+  };
+  const n = nguonApi(TOA, MA, f, "san-a");
+  await n.danhSach();
+  await n.them(tep("so-do.jpg"), "internal", "ma-1");
+  assert.deepEqual(nhan.map((x) => x.san), ["san-a", "san-a", "san-a"]);
+  // Đối chứng: mục Ảnh (không truyền sàn) không khai — máy chủ dùng sàn của phiên như cũ.
+  nhan.length = 0;
+  await nguonApi(TOA, MA, f).danhSach();
+  assert.deepEqual(nhan.map((x) => x.san), [null]);
+});
+
 // ——— E8 · AC-7: ngày chụp là ngày trong tệp, vắng thì ngày lúc chụp trên máy ———
 
 type ONgay = { ten: string; takenAt: string | null; type: TepSanSang["type"]; chup: Date; gui: Date; mong: string };

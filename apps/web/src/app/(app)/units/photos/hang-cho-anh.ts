@@ -62,12 +62,16 @@ export type KhoAnhCho = {
 
 /** Máy chủ không nhận lời gửi: mang mã trạng thái HTTP để hàng chờ biết chờ, thử lại hay đối chiếu. */
 export class LoiGuiAnh extends Error {
-  constructor(readonly status: number) {
+  constructor(
+    readonly status: number,
+    /** Mã lỗi trong thân (`{ error }`) — tách «sai sàn» khỏi «mã đã có», cùng 409. */
+    readonly code?: string,
+  ) {
     super(`ảnh: ${status}`);
   }
 }
 
-export type LoiGuiLoai = "mat-mang" | "het-phien" | "da-co" | "khong-nhan";
+export type LoiGuiLoai = "mat-mang" | "het-phien" | "da-co" | "sai-san" | "khong-nhan";
 
 /**
  * Loại lỗi của một lời gửi: mất mạng (gửi lại ở nhịp sau) · hết phiên 401 (giữ chờ tới khi chính người ấy đăng nhập lại,
@@ -76,11 +80,13 @@ export type LoiGuiLoai = "mat-mang" | "het-phien" | "da-co" | "khong-nhan";
 export function phanLoaiLoi(e: unknown, onLine: boolean): LoiGuiLoai {
   if (!onLine || e instanceof TypeError) return "mat-mang";
   if (e instanceof LoiGuiAnh && e.status === 401) return "het-phien";
+  // Máy chủ: phiên đang ở sàn khác sàn lúc chụp — ảnh nằm chờ tới khi về đúng sàn, không phải lỗi (bất biến 2).
+  if (e instanceof LoiGuiAnh && e.code === "select-company") return "sai-san";
   if (e instanceof LoiGuiAnh && e.status === 409) return "da-co";
   return "khong-nhan";
 }
 
-export type GuiAnh = (o: { id: string; toa: string; ma: string; ngan: Compartment; tep: TepSanSang }) => Promise<void>;
+export type GuiAnh = (o: { id: string; san: string; toa: string; ma: string; ngan: Compartment; tep: TepSanSang }) => Promise<void>;
 
 /** Ngày trên máy (giờ địa phương) — ngày chụp của ảnh không có EXIF (AC-7). */
 export const ngayTrenMay = (d: Date) =>
@@ -100,7 +106,7 @@ const tuBanGhi = (b: BanGhiCho, xem: (blob: Blob) => string): AnhCho => ({
 export type HangChoDeps = {
   gui: GuiAnh;
   /** Máy chủ đã có ảnh mang mã này của căn chưa (sau 409). */
-  daCo: (o: { toa: string; ma: string; id: string }) => Promise<boolean>;
+  daCo: (o: { san: string; toa: string; ma: string; id: string }) => Promise<boolean>;
   kho: KhoAnhCho;
   onLine: () => boolean;
   xem: (b: Blob) => string;
@@ -179,9 +185,10 @@ export function taoHangCho(o: HangChoDeps) {
       dat(a.key, "dang-tai");
       if (nghi.has(a.key)) {
         // Lời gửi trước mất phản hồi: máy chủ có thể đã ghi — hỏi danh sách trước, không gửi lại mù.
-        const co = await o.daCo({ toa: a.toa, ma: a.ma, id: a.key }).catch(() => null);
+        const co = await o.daCo({ san: a.san, toa: a.toa, ma: a.ma, id: a.key }).catch(() => null);
         if (daDung) return;
-        if (co === null) {
+        // Đổi sàn trong lúc hỏi danh sách: ảnh này nằm chờ, không gửi bằng phiên của sàn mới.
+        if (co === null || !guiDuoc({ ...a, trangThai: "cho-mang" })) {
           dat(a.key, "cho-mang");
           return;
         }
@@ -192,14 +199,14 @@ export function taoHangCho(o: HangChoDeps) {
         }
       }
       try {
-        await o.gui({ id: a.key, toa: a.toa, ma: a.ma, ngan: a.ngan, tep: a.tep });
+        await o.gui({ id: a.key, san: a.san, toa: a.toa, ma: a.ma, ngan: a.ngan, tep: a.tep });
         if (daDung) return;
         xongAnh(a);
       } catch (e) {
         if (daDung) return;
         const loai = phanLoai(e, o.onLine());
         if (loai === "da-co") {
-          const co = await o.daCo({ toa: a.toa, ma: a.ma, id: a.key }).catch(() => null);
+          const co = await o.daCo({ san: a.san, toa: a.toa, ma: a.ma, id: a.key }).catch(() => null);
           if (co === true) xongAnh(a);
           else if (co === null) {
             dat(a.key, "cho-mang");
@@ -210,7 +217,7 @@ export function taoHangCho(o: HangChoDeps) {
           }
           continue;
         }
-        if (loai === "mat-mang" || loai === "het-phien") {
+        if (loai === "mat-mang" || loai === "het-phien" || loai === "sai-san") {
           if (loai === "mat-mang") nghi.add(a.key);
           dat(a.key, "cho-mang");
           return;

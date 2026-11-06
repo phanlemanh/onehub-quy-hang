@@ -7,26 +7,31 @@ import type { TepSanSang } from "./tai-len";
 
 const BASE = "/api/v1/units/photos";
 
-export function nguonApi(toa: string, ma: string, f: typeof fetch = fetch): NguonAnh {
+/**
+ * `san`: sàn mà lời gọi tự khai (ảnh chờ của hàng 41 mang sàn lúc chụp). Máy chủ từ chối `select-company` khi sàn ấy khác sàn
+ * của phiên — ảnh chụp ở sàn này không lên sàn khác dù tab lệch sàn với cookie (bất biến 2).
+ */
+export function nguonApi(toa: string, ma: string, f: typeof fetch = fetch, san?: string): NguonAnh {
   const ok = async (r: Response) => {
-    if (!r.ok) throw new LoiGuiAnh(r.status);
+    if (!r.ok) throw new LoiGuiAnh(r.status, ((await r.json().catch(() => null)) as { error?: string } | null)?.error);
     return r;
   };
   return {
     async danhSach() {
-      const r = await ok(await f(`${BASE}?toa=${encodeURIComponent(toa)}&ma=${encodeURIComponent(ma)}`, { cache: "no-store" }));
+      const r = await ok(await f(`${BASE}?toa=${encodeURIComponent(toa)}&ma=${encodeURIComponent(ma)}${san ? `&companyId=${encodeURIComponent(san)}` : ""}`, { cache: "no-store" }));
       return (await r.json()) as DanhSachAnh;
     },
     // `photoId`: mã ảnh tạo lúc chụp (hàng 41) — máy chủ dùng làm mã dòng ảnh ở cả hai bản kho, gửi lại không trùng.
     async them(tep: TepSanSang, ngan: Compartment, photoId?: string) {
       // Bản Storage: bản gốc đi thẳng lên kho bằng link ký (không qua giới hạn thân yêu cầu của hàm Vercel), rồi xác nhận
       // bằng mã ảnh; bản Postgres (truc_tiep false): bản gốc đi trong thân như cũ.
-      const r = await ok(await f(`${BASE}/upload-url`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ toa, ma, contentType: tep.type, byteSize: tep.file.size, ...(photoId ? { photoId } : {}) }) }));
+      const r = await ok(await f(`${BASE}/upload-url`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ toa, ma, contentType: tep.type, byteSize: tep.file.size, ...(photoId ? { photoId } : {}), ...(san ? { companyId: san } : {}) }) }));
       const link = (await r.json()) as { truc_tiep: boolean; photoId?: string; url?: string };
       const fd = new FormData();
       fd.set("toa", toa);
       fd.set("ma", ma);
       fd.set("compartment", ngan);
+      if (san) fd.set("companyId", san);
       fd.set("width", String(tep.width));
       fd.set("height", String(tep.height));
       if (tep.takenAt) fd.set("takenAt", tep.takenAt);
