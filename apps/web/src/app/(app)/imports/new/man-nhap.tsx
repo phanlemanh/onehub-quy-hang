@@ -337,7 +337,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
         <TrangThai kind="notice" title={`Đã đổi theo ${s.soOTheo} ô cùng chữ`} description="Các ô cùng chữ trong cột nhận cùng giá trị — soát lại trước khi ghi; lần nhập sau nhớ cách gọi này." />
       ) : null}
       {s.buoc === 3 && s.ong && ola.dangHoi ? <TrangThai kind="loading" title={CHO_O_LA} description="Máy chỉ gửi chữ của ô mã căn, giá, phí, trạng thái chưa đọc được — không gửi chủ nhà, số điện thoại, giá đáy, ghi chú. Vẫn sửa tay được." /> : null}
-      {s.buoc === 3 && s.ong && !ola.dangHoi && ola.bao ? <TrangThai kind="notice" title="Sửa tay lần này" description={ola.bao} /> : null}
+      {s.buoc === 3 && s.ong && !ola.dangHoi && ola.bao ? <TrangThai kind="notice" title="Máy không đề xuất lần này" description={ola.bao} /> : null}
       {s.buoc === 3 && s.ong && ctx ? (
         <BangXemTruoc
           ong={s.ong}
