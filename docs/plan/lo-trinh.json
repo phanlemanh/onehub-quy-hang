@@ -2639,12 +2639,93 @@
       ]
     },
     {
+      "ma": "va-pool-ket-noi",
+      "cau_giao": "Vá sự cố bản thật 06/11: người đã đăng nhập không bị đá về màn đăng nhập khi cơ sở dữ liệu nghẽn kết nối — mỗi phiên bản máy chủ giữ ít kết nối và nhả sớm để không cạn trần 15 của pooler, và khi vẫn không đọc được phiên thì hiện trang lỗi kèm «Thử lại» thay vì chuyển về đăng nhập.",
+      "slug": "va-pool-ket-noi",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-06"
+    },
+    {
       "ma": "va-ac8-uuid-nham-so",
       "cau_giao": "Bài kiểm «AC-8 không dữ liệu thật» của bộ dữ liệu mẫu thấp tầng không còn đỏ chập chờn: mẫu dò số điện thoại chỉ bắt chuỗi đứng riêng như số điện thoại, không bắt dãy chữ số nằm trong UUID ngẫu nhiên; một số điện thoại thật cài vào bộ mẫu vẫn bị bắt.",
       "slug": "va-ac8-uuid-nham-so",
       "vi_sao": "Dãy D báo 06/11 (D-0511-8): CI isolation của PR #151 đỏ một lần vì bài AC-8 (packages/db/tests/du-lieu-mau-thap-tang.test.mjs, hàng 73) bắt nhầm UUID chứa dãy giống số điện thoại; chạy lại thì xanh. Bài chập chờn làm hỏng check bắt buộc của mọi PR. Hàng vá kỹ thuật, không mã: giám sát quyết (chủ kho giao giám sát tự quyết việc kỹ thuật).",
       "hang": "T2",
       "bat_khi": "Chạy bài AC-8 nhiều lần với UUID ngẫu nhiên không lần nào đỏ oan; cài một số dạng 0900 000 0xx vào bộ mẫu thì bài đỏ; không đổi bộ dữ liệu mẫu",
+      "vung": [
+        "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"
+      ]
+    },
+    {
+      "ma": "va-pool-nghe-loi",
+      "cau_giao": "Máy chủ web không sập khi cơ sở dữ liệu cắt một kết nối đang rảnh: mọi bể kết nối gắn trình nghe lỗi, ghi nhật ký rồi bỏ kết nối hỏng; người đang dùng không gặp trang lỗi vì việc này.",
+      "slug": "va-pool-nghe-loi",
+      "vi_sao": "Ngoài-3 của va-pool-ket-noi (PR #155, sự cố bản thật 06/11 EMAXCONNSESSION): pg.Pool mới không gắn trình nghe error, pooler cắt kết nối rảnh thì tiến trình hàm có thể sập. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Giả lập cơ sở dữ liệu cắt kết nối rảnh thì tiến trình không sập, nhật ký có một dòng lỗi, lời gọi sau vẫn chạy; bài kiểm phủ cả hai bể",
+      "vung": [
+        "apps/web/src/lib/api.ts",
+        "apps/web/src/lib/api.test.ts"
+      ]
+    },
+    {
+      "ma": "pooler-che-do-giao-dich",
+      "cau_giao": "Quỹ hàng nối cơ sở dữ liệu qua pooler chế độ giao dịch, nên lượng người dùng đồng thời không còn bị trần 15 kết nối của chế độ phiên: bể danh tính bỏ tham số khởi động search_path (đặt lược đồ trong từng truy vấn hoặc giao dịch), cách ly theo dòng giữ nguyên (set local trong giao dịch), thử trên bản xem trước với chuỗi kết nối chế độ giao dịch trước khi đổi bản thật.",
+      "slug": "pooler-che-do-giao-dich",
+      "vi_sao": "Gốc lâu dài của sự cố 06/11 (PR #155 chỉ thu nhỏ bể; known-limits: hàm serverless tự nhân bản khi tải tăng vẫn cạn được 15 kết nối chế độ phiên). Phiên SC đề xuất; giám sát xếp thành hàng vì là việc kỹ thuật. Đổi DATABASE_URL bản thật là bước vận hành chủ kho duyệt ở Cổng Bằng chứng.",
+      "hang": "T3",
+      "bat_khi": "Trên bản xem trước dùng pooler chế độ giao dịch: đăng nhập, Hôm nay, Bảng hàng chạy; bộ kiểm cách ly xanh; tải đồng thời 40 trang không còn EMAXCONNSESSION",
+      "vung": [
+        "apps/web/src/lib/api.ts",
+        "packages/api/src/auth/**",
+        "packages/api/src/db.ts",
+        "docs/adr/0009-moi-truong-that.md",
+        "docs/architecture/kien-truc-repo-va-stack.md"
+      ]
+    },
+    {
+      "ma": "va-e7-loi-that-cap-han",
+      "cau_giao": "Phép nhìn khung 3 của bài E7 (màn Luật chia lead, cặp hạn hỏng) dựng lỗi bằng phản hồi thật của máy chủ thay cho câu lỗi gõ tay, nên khi chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo.",
+      "slug": "va-e7-loi-that-cap-han",
+      "vi_sao": "Ngoài-1 của luat-chia-lead-cap-han-hong (PR #156): fixture viết tay đúng khuôn bên đọc — phản hồi 200 giả còn lỗi ở khung 3 của E7. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy D, D-0611-2). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Đổi câu lỗi của máy chủ thì phép nhìn khung 3 đỏ; câu đúng thì xanh; không còn phản hồi giả viết tay trong chạy-ui",
+      "vung": [
+        "_acceptance/luat-chia-lead-cap-han-hong/thu/**",
+        "_acceptance/va-e7-loi-that-cap-han/**"
+      ]
+    },
+    {
+      "ma": "doi-nhan-so-phien-ban",
+      "cau_giao": "Đổi nhãn tại chỗ của căn đang giao dịch hay đã bán đi qua phép so phiên bản như mọi lệnh đổi trạng thái: lệnh dựa trên bản cũ không âm thầm đè lần đổi trước hay kéo căn về trạng thái cũ, mà vào «Cần xem».",
+      "slug": "doi-nhan-so-phien-ban",
+      "vi_sao": "Ngoài-5 và Ngoài-7 của hàng 46 trang-thai-rieng (PR #153): đổi nhãn tại chỗ trong Đang giao dịch / Đã bán bỏ qua phép so phiên bản — hai người cùng đổi thì lần sau âm thầm đè, lệnh cũ có thể kéo căn từ Đang bán về Đang giao dịch. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Hai lệnh đổi nhãn cùng gốc phiên bản: lệnh sau vào Cần xem, không đè; lệnh đổi nhãn cũ gửi sau khi căn đã về Đang bán thì không kéo căn về; bài kiểm phủ cả Đang giao dịch và Đã bán",
+      "vung": [
+        "packages/api/src/listings/**",
+        "packages/core/src/listing/**",
+        "packages/api/test-db/doi-nhan-so-phien-ban/**"
+      ]
+    },
+    {
+      "ma": "va-dinh-nghia-doc-lai",
+      "cau_giao": "Dòng «Tính theo định nghĩa ngày …» ở hồ sơ căn đọc lại dấu định nghĩa bao phí khi giá mới vừa đồng bộ xong, nên khi mạng yếu và giá còn trong hàng đợi, người xem không bị giữ ở dấu cũ sau khi giá đã lên máy chủ.",
+      "slug": "va-dinh-nghia-doc-lai",
+      "vi_sao": "Ngoài-3 của hàng 49 thue-phi (PR #160): dong-dinh-nghia.tsx đọc dấu cũ khi giá mới còn trong hàng đợi đồng bộ và không đọc lại. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy Q, Q-7). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Đổi giá khi mất mạng rồi có mạng lại: dòng định nghĩa ở hồ sơ căn đổi sang dấu mới ngay khi giá đồng bộ xong, không cần tải lại trang; bài kiểm phủ đường mạng yếu",
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/dong-dinh-nghia.tsx",
+        "apps/web/src/app/(app)/units/ho-so/**"
+      ]
+    },
+    {
+      "ma": "va-ac9-mau-co-san",
+      "cau_giao": "Bài «AC-9 nạp và xoá một lần» của bộ dữ liệu mẫu thấp tầng chỉ đếm những dòng do chính bài nạp, nên chạy được trên cơ sở dữ liệu đã có sàn mẫu khác (như «[Mẫu] Sàn thử» trên bản thật); bước triển khai trên nhánh chính xanh lại và bản thật nhận bản mới sau mỗi lần gộp.",
+      "slug": "va-ac9-mau-co-san",
+      "vi_sao": "Sự cố 06/11: job deploy trên main đỏ liên tục từ 05/11 08:41Z vì AC-9 (packages/db/tests/du-lieu-mau-thap-tang.test.mjs) chạy trên CSDL bản thật và gặp sàn mẫu có sẵn — bản thật đứng 22 giờ, bản vá #155 không lên. Chủ kho cho triển khai tay 06/11 07:26Z và mở hàng vá này. Hàng không mã: đã quyết.",
+      "hang": "T3",
+      "bat_khi": "Chạy bộ cách ly trên CSDL có sẵn sàn mẫu khác thì AC-9 xanh và không xoá dữ liệu không do bài nạp; job deploy trên main xanh ở lần gộp đầu tiên sau hàng này",
       "vung": [
         "packages/db/tests/du-lieu-mau-thap-tang.test.mjs"
       ]

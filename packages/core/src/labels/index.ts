@@ -7,7 +7,9 @@
 import { FIELD_CLASS } from "../import/fields";
 import { detectPersonal } from "../import/detect";
 import { FEE_INCLUSIONS } from "../listing/events";
-import { WITHDRAWN_REASONS } from "../listing/status";
+import { isStandardStatus, MA_NHAN_TRANG_THAI_RE, WITHDRAWN_REASONS } from "../listing/status";
+// Chỉ kiểu: `statuses` nhập `kiemChuNhan` của tệp này, nên nhập giá trị từ `statuses` sẽ thành vòng nhập.
+import type { NhanTrangThai } from "../statuses";
 
 /** Tiền tố khoá của hai họ trong `company_settings` (migration 039). */
 export const KHOA_TRUONG = "labels.field.";
@@ -64,6 +66,8 @@ export const laTruongDong = (v: unknown): v is TruongDong => typeof v === "strin
 export type TuVung = {
   truong: Partial<Record<TruongDatTen, string>>;
   giaTri: Partial<Record<TruongDong, Partial<Record<string, string>>>>;
+  /** Nhãn trạng thái riêng của sàn (hàng 46); vắng hay rỗng = chữ mặc định của sáu trạng thái chuẩn. */
+  trangThai?: readonly NhanTrangThai[];
 };
 export const TU_VUNG_RONG: TuVung = Object.freeze({ truong: Object.freeze({}), giaTri: Object.freeze({}) }) as TuVung;
 
@@ -212,8 +216,29 @@ export function doiNhan(daLuu: readonly DongNhan[], moi: readonly DongNhan[]): D
   return ra;
 }
 
-/** Đọc ngược thân `GET /api/v1/company/labels` (khuôn `BangNhan`) thành từ vựng — chỉ dòng `custom`. */
-export function tuVungTuBang(bang: { fields?: readonly unknown[]; values?: readonly unknown[] } | null | undefined): TuVung {
+/**
+ * Phần `statuses` của thân labels → bộ nhãn trạng thái. Cùng khuôn với `nhanTuBang` của `@quy-hang/core/statuses` (đọc lại
+ * ở đây để không vòng nhập; bài kiểm của Bảng hàng buộc hai hàm cho cùng kết quả). Thân vắng hay hỏng → bộ rỗng.
+ */
+function trangThaiTuBang(statuses: unknown): NhanTrangThai[] {
+  const ra: NhanTrangThai[] = [];
+  if (!Array.isArray(statuses)) return ra;
+  for (const s of statuses as unknown[]) {
+    const d = s as { status?: unknown; labels?: unknown } | null;
+    if (!d || !isStandardStatus(d.status) || !Array.isArray(d.labels)) continue;
+    for (const l of d.labels as unknown[]) {
+      const x = l as { code?: unknown; label?: unknown } | null;
+      if (x && typeof x.code === "string" && MA_NHAN_TRANG_THAI_RE.test(x.code) && typeof x.label === "string" && x.label.trim())
+        ra.push({ ma: x.code, label: x.label, anchor: d.status });
+    }
+  }
+  return ra;
+}
+
+/** Đọc ngược thân `GET /api/v1/company/labels` (khuôn `BangNhan`) thành từ vựng — chỉ dòng `custom`, cộng bộ nhãn trạng thái. */
+export function tuVungTuBang(
+  bang: { fields?: readonly unknown[]; values?: readonly unknown[]; statuses?: readonly unknown[] } | null | undefined,
+): TuVung {
   const truong: Partial<Record<TruongDatTen, string>> = {};
   const giaTri: Partial<Record<TruongDong, Partial<Record<string, string>>>> = {};
   for (const f of bang?.fields ?? []) {
@@ -225,7 +250,9 @@ export function tuVungTuBang(bang: { fields?: readonly unknown[]; values?: reado
     if (r.custom !== true || !laTruongDong(r.field) || typeof r.value !== "string" || typeof r.label !== "string") continue;
     (giaTri[r.field] ??= {})[r.value] = r.label;
   }
-  return { truong, giaTri };
+  const trangThai = trangThaiTuBang(bang?.statuses);
+  // Sàn chưa đặt nhãn trạng thái: từ vựng giữ đúng hình cũ (không khoá `trangThai`).
+  return trangThai.length ? { truong, giaTri, trangThai } : { truong, giaTri };
 }
 
 /** Tên một trường trên một mặt: tên riêng của sàn, vắng thì chữ mặc định của chính mặt ấy. */

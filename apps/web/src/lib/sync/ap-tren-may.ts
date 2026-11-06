@@ -14,6 +14,7 @@ import {
   type PayloadError,
   type Requirement,
 } from "@quy-hang/core/listing";
+import { kiemNhanSuKien, type NhanTrangThai } from "@quy-hang/core/statuses";
 import type { ListingView, Ngan, PendingOp } from "./types";
 
 export type LoiTrenMay = { kind: "invalid-payload"; errors: PayloadError[] } | { kind: "invalid-transition"; reason: string } | { kind: "missing-requirement"; missing: Requirement[] } | { kind: "not-found" }
@@ -49,6 +50,9 @@ export function apTrenMay(
   /** Phiên bản người đã thấy khi mở trình sửa (hàng 15). Kho kéo bản mới trong lúc người gõ thì lần sửa vẫn mang phiên
    * bản cũ, để máy chủ trả xung đột và hàng vào «Cần xem» — không ghi đè lặng lên lần sửa người chưa thấy. */
   coSo?: number,
+  /** Bộ nhãn trạng thái của sàn (hàng 46) để kiểm mã nhãn trên máy; vắng thì chỉ máy chủ kiểm mã (lệnh sai bị từ chối 400
+   * và bản trên máy hoàn lại), máy vẫn chặn đổi nhãn tại chỗ sang đúng nhãn đang mang. */
+  nhan?: readonly NhanTrangThai[],
 ): { ok: true; ngan: Ngan; op: PendingOp } | { ok: false; loi: LoiTrenMay } {
   const server = n.listings?.find((l) => l.id === listingId);
   if (!server) return { ok: false, loi: { kind: "not-found" } };
@@ -56,7 +60,17 @@ export function apTrenMay(
   if (type === "created") errors.push({ path: "type", reason: "hàng đã có" });
   if (errors.length) return { ok: false, loi: { kind: "invalid-payload", errors } };
   const hienTai = banTrenMay(server, n.queue);
+  // Đổi nhãn tại chỗ (`to` = trạng thái hiện tại, hàng 46) đi qua luật nhãn của lõi, không qua bảng chuyển.
+  const taiCho = type === "status_changed" && payload.to === hienTai.standardStatus && payload.label !== undefined;
   if (type === "status_changed") {
+    const nk = nhan
+      ? kiemNhanSuKien(nhan, hienTai, payload as { to: unknown; label?: unknown })
+      : taiCho && (hienTai.statusLabel ?? null) === payload.label
+        ? { ok: false as const, loi: "label: căn đã mang nhãn này" }
+        : null;
+    if (nk && !nk.ok) return { ok: false, loi: { kind: "invalid-transition", reason: nk.loi } };
+  }
+  if (type === "status_changed" && !taiCho) {
     const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload });
     if (!kq.ok) return { ok: false, loi: kq.kind === "invalid-transition" ? { kind: kq.kind, reason: kq.reason } : { kind: kq.kind, missing: kq.missing } };
   }

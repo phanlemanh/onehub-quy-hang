@@ -1,0 +1,180 @@
+schema_version: 1
+feature_slug: thue-phi
+# Lệnh máy: executors.test.core, executors.test.web, executors.test.api_db, executors.test.isolation (Postgres dãy Q 5577 —
+# lượt chấm đặt DATABASE_URL=postgres://postgres:quyhang@localhost:5577/postgres trên dòng lệnh), executors.design.khuon,
+# executors.design.floor. ui-check trên chỗ thử dãy Q (_acceptance/thue-phi/thu/dung-q.mjs: Postgres 5577 nạp sàn mẫu, máy
+# dev 3497, phiên quản trị, trưởng nhóm, đầu chủ mẫu), Chrome không đầu qua CDP; chay-ui.mjs ghi dòng quan sát JSON và ảnh
+# vào thư mục --ra. Tắt máy dev bằng dung-q.mjs --tat. Tạo phẩm của lượt chấm ra .acceptance-runs/.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/thue-phi/thu/dung-q.mjs rồi node _acceptance/thue-phi/thu/chay-ui.mjs --e1 --ra _acceptance/thue-phi/evidence — chỗ thử đặt fee.brokerage_pct của sàn mẫu = 1.5 bằng phiên quản trị trước khi mở"
+      - "Đối chiếu dòng e1 (khổ 1440x900): tenDong đúng mảng viết trước [«Thuế thu nhập cá nhân», «Lệ phí trước bạ», «Môi giới»]; congTac = [true, true, true]; tiLe = [«2%», «0,5%», «1,5%»]; nguon dòng Môi giới bằng đúng «Đã đổi · <tên quản trị mẫu> · <dd/mm ngày đặt>», hai dòng kia «Mặc định»; hai dòng thuế, lệ phí chứa «theo luật» và soOSuaTiLe = 1 (chỉ dòng Môi giới); chiều đỏ cùng ca: ảnh E1-truoc.png trước khi đặt 1.5 có dòng Môi giới «Mặc định» và «1%»"
+    target: "http://localhost:3497/settings/fees"
+    expected: "Ba dòng đúng tên, thứ tự, công tắc, tỉ lệ; Môi giới «Đã đổi» kèm người và ngày; thuế và lệ phí «theo luật», không ô sửa. Ảnh E1-1440.png, E1-truoc.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2a
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/thue-phi/thu/chay-ui.mjs --e2 --ra _acceptance/thue-phi/evidence — chỗ thử đưa sàn mẫu về mặc định, đếm sự kiện cấu hình trước, mở màn bằng phiên quản trị, gõ Môi giới 2, tắt Lệ phí trước bạ, bấm Lưu"
+      - "Đối chiếu dòng e2: thân PATCH bắt qua CDP có đúng hai khoá fee.brokerage_pct=2 và fee.inclusion=[personalIncomeTax, brokerageFee]; toast bằng đúng «Đã lưu · áp cho giá ghi từ bây giờ»; sau tải lại Môi giới 2 và công tắc Lệ phí trước bạ tắt; soSuKienSau − soSuKienTruoc = 2"
+      - "Ca sai (dòng e2-sai): gõ Môi giới 6 → nút Lưu không gửi PATCH, câu lỗi dưới dòng Môi giới; tắt cả ba công tắc → câu lỗi dưới công tắc, số PATCH của ca = 0"
+    target: "http://localhost:3497/settings/fees"
+    expected: "Lưu một lần gửi đúng hai khoá, toast đúng chữ, tải lại giữ, nhật ký thêm hai sự kiện; ca sai không gửi gì và báo đúng dòng. Ảnh E2-sau-luu.png, E2-sai.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/thue-phi/**", "packages/api/src/settings/**", "packages/core/src/config/**"]
+    expected: "exit 0; ca «thuế phí: lưu môi giới và định nghĩa, mỗi khoá một sự kiện» trong packages/api/test-db/thue-phi/thue-phi.test.ts có mặt và ok — PATCH hai khoá: GET trả đúng hai giá trị, nhật ký thêm đúng hai dòng ghi người và vai company_admin; chiều đỏ cùng ca: fee.brokerage_pct = 6 → 400, reason mở đầu «fee.brokerage_pct: », fee.inclusion = [] → 400, reason mở đầu «fee.inclusion: », fee.personal_income_tax_pct = 3 → 400; sau ba lần GET vẫn giá trị cũ, nhật ký không thêm dòng."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/thue-phi/**", "packages/api/src/settings/**"]
+    expected: "exit 0; ca «thuế phí: vai khác không đổi được» có mặt và ok — ma trận viết trước bốn vai (team_lead, listing_agent, buyer_agent, telesales) × ba khoá fee.* = 12 lần PATCH, cả 12 trả 403 và GET sau đó bằng trước (12 assert đếm được); đối chứng dương cùng ca: company_admin PATCH fee.brokerage_pct = 1.5 → 200."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/thue-phi/thu/chay-ui.mjs --e3 --ra _acceptance/thue-phi/evidence — mở /settings/fees bằng phiên trưởng nhóm và phiên đầu chủ"
+      - "Đối chiếu dòng e3: cả hai phiên kết thúc ở /settings/personal?chi-quan-tri=1 và trang chứa đúng «Mục này chỉ quản trị sàn mở được»; đối chứng dương: phiên quản trị ở lại /settings/fees"
+    target: "http://localhost:3497/settings/fees"
+    expected: "Hai vai không quản trị bị chuyển kèm câu báo; quản trị ở lại. Ảnh E3-truong-nhom.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/thue-phi/**", "packages/db/migrations/050_*", "packages/api/src/listings/**", "packages/api/src/imports/**", "packages/api/src/sync/**"]
+    expected: "exit 0; ca «thuế phí: giá bao phí mang định nghĩa lúc ghi ở mọi lối» có mặt và ok — căn X ghi giá bao phí ở t1 (mặc định); quản trị đổi môi giới 2 và tắt lệ phí; căn Y ghi giá bao phí qua ba lối viết trước [sửa trên ô PATCH listing, lần nhập file, đẩy đồng bộ] = 3 sự kiện, mỗi sự kiện có đúng một dòng listing_price_fee_basis với included_items = [personalIncomeTax, brokerageFee], rates = {personalIncomeTax:200, registrationFee:50, brokerageFee:200}, computed_at = occurred_at (3 × 3 assert); dấu của X vẫn ba khoản, 200·50·100, computed_at t1; căn Z giá không bao phí có 0 dòng; ca mất mạng: sự kiện đồng bộ mang made_offline=true làm trước lần đổi và đẩy lên sau lần đổi có dấu định nghĩa mới và computed_at = occurred_at do máy chủ gán (không phải giờ máy khách); chiều đỏ: vai quy_hang_app insert, update, delete trên listing_price_fee_basis đều bị từ chối (3 assert)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/migrations/050_*", "packages/db/tests/isolation.test.mjs"]
+    expected: "exit 0; ca «thuế phí: điền dấu cho giá cũ» trong packages/db/tests/isolation.test.mjs có mặt và ok — với trigger tắt, chèn hai sự kiện giá (một bao phí, một không bao phí) rồi gọi app.dien_dau_phi_cu(): sự kiện bao phí có đúng một dấu mang ba khoản, 200·50·100, computed_at = occurred_at; sự kiện không bao phí 0 dấu; gọi lần hai số dòng không đổi; db:migrate chạy hai lần không lỗi."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/migrations/050_*", "packages/db/tests/isolation.test.mjs"]
+    expected: "exit 0; ca «listing_price_fee_basis: công ty này không đọc, không ghi được dấu của công ty kia» có mặt và ok — sàn A đổi fee.brokerage_pct 2, giá bao phí của căn sàn B ghi sau đó có dấu 200·50·100; trong phiên sàn B select dấu của A = 0 dòng, trong phiên sàn A select dấu của B = 0 dòng; đối chứng dương: mỗi sàn đọc đúng dấu của mình (≥1 dòng)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7a
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    paths: ["packages/api/test-db/thue-phi/**", "packages/api/src/fees/**"]
+    expected: "exit 0; ca «thuế phí: lối đọc dấu của giá hiện hành» có mặt và ok — căn giá bao phí 3 tỷ ghi lúc mặc định, sau đó sàn đổi môi giới 2: GET /api/v1/listings/{id}/fee-basis trả includedItems ba khoản, rates 200·50·100, computedAt = lúc ghi; đổi giá lần nữa sau khi đổi môi giới → lối trả rates môi giới 200; căn không bao phí và căn chưa giá → body null; người sàn khác → 404."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "packages/core/src/fees/**"]
+    expected: "exit 0; ca «hồ sơ căn: dòng phụ theo dấu định nghĩa» có mặt và ok — dongDinhNghia(3_000_000_000, dấu mặc định ngày 2026-11-06) bằng đúng «Tính theo định nghĩa ngày 06/11/2026: Thuế TNCN 2% · Trước bạ 0,5% · Môi giới 1% — về tay 2,895 tỷ»; dấu tắt lệ phí thì không có đoạn «Trước bạ»; dấu null → null; chiều đỏ: cùng dấu nhưng truyền cấu hình hiện hành môi giới 2 vẫn ra «về tay 2,895 tỷ» (hàm không đọc cấu hình hiện hành)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/thue-phi/thu/chay-ui.mjs --e7 --ra _acceptance/thue-phi/evidence — chỗ thử ghi giá bao phí 3 tỷ cho căn mẫu, đặt môi giới 2, mở hồ sơ căn bằng phiên đầu chủ của căn"
+      - "Đối chiếu dòng e7: dòng phụ dưới giá bằng đúng «Tính theo định nghĩa ngày <dd/mm/yyyy ngày ghi>: Thuế TNCN 2% · Trước bạ 0,5% · Môi giới 1% — về tay 2,895 tỷ»; căn mẫu thứ hai giá không bao phí không có dòng phụ"
+    target: "http://localhost:3497/inventory"
+    expected: "Hồ sơ căn hiện ngày tính và về tay theo dấu; căn không bao phí không có dòng phụ. Ảnh E7-ho-so.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/call/**", "packages/core/src/fees/**", "packages/core/src/pricing/**"]
+    expected: "exit 0; ca «máy tính cuộc gọi: theo định nghĩa của sàn» trong apps/web/src/app/(app)/units/call/may-tinh.test.ts có mặt và ok — mayTinhDau(3_000_000_000, included, định nghĩa {khoan: [thue_tncn, moi_gioi], tiLe môi giới 200}) cho ketQua.khoan đúng hai mã [thue_tncn, moi_gioi], veTay 2_880_000_000, chuMoiGioi «2»; đối chứng: định nghĩa mặc định cho 2_895_000_000 và ba khoản; so giá toà nhận cùng định nghĩa (ca soGiaToa với định nghĩa tắt lệ phí quy về tay 2_880_000_000)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/thue-phi/thu/chay-ui.mjs --e8 --ra _acceptance/thue-phi/evidence — chỗ thử đặt sàn mẫu tắt lệ phí trước bạ và môi giới 2, mở màn cuộc gọi của lead mẫu bằng phiên đầu chủ, gõ 3 tỷ bao phí vào máy tính"
+      - "Đối chiếu dòng e8: danh sách khoản của máy tính bằng đúng [«Thuế thu nhập cá nhân 2%», «Môi giới 2%»], về tay bằng đúng «2,88 tỷ», ô phần trăm môi giới bằng «2»; đối chứng cùng ca (dòng e8-mac-dinh): đưa sàn về mặc định, tải lại → ba khoản và «2,895 tỷ»"
+    target: "http://localhost:3497/units/call"
+    expected: "Màn cuộc gọi thật nạp định nghĩa của sàn: hai khoản, 2,88 tỷ; sàn mặc định ra ba khoản, 2,895 tỷ. Ảnh E8-may-tinh.png."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    paths: ["packages/core/src/fees/**", "packages/core/src/pricing/**", "packages/db/migrations/050_*"]
+    expected: "exit 0; ca «thuế phí: bảy tập khoản, hai chiều khớp» trong packages/core/src/fees/dinh-nghia.test.ts có mặt và ok — ma trận viết trước bảy tập con khác rỗng × ba giá [1 tỷ, 2,75 tỷ, 4,65 tỷ] = 21 ca: khoản ngoài tập không có trong kết quả, về tay = giá − tổng khoản trong tập, giaBaoPhiTuVeTay(veTay) trả giá nhỏ nhất có về tay ≥ veTay; ca «thuế phí: mặc định SQL bằng sổ điểm» đọc hàm mặc định trong packages/db/migrations/050_*.sql (đường suy từ vị trí bài) và so ba tỉ lệ, tập khoản với SO_DIEM; chiều đỏ trên bản sao chữ: đổi 100 thành 150 trong bản sao thì bài trả lỗi nêu «fee.brokerage_pct»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    paths: ["docs/product/tham-chieu.md", "docs/architecture/so-diem-bien-thien.md", "packages/core/src/fees/**"]
+    expected: "exit 0; ca «thuế phí: điều đang đúng đã ghi» trong packages/core/src/fees/dieu-dang-dung.test.ts có mặt và ok — Tham chiếu §12 có dòng mở đầu «| 06/11 |» chứa «Thuế phí» và «listing_price_fee_basis»; dòng Cài đặt sàn của §10 chứa «Thuế phí (hàng 49)»; sổ điểm dòng #10 và #11 chứa «kiểm văn bản 06/11»; chiều đỏ trên bản sao: xoá dòng 06/11 thì hàm kiểm trả lỗi nêu «§12»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 1 (đạt có giới hạn, cùng nếp hàng 48 E11/E13, hàng 34; luật đợt 33, 45): bước chấm khuôn của kit 2.37.0 không xét ngoai_le nên báo trang Thuế phí mới «thuộc hai nhóm màn: cai-dat-san, trang-tam» — báo oan, kit#480. Mã 1 chỉ được chấp nhận cùng E13 xanh. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E13."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/thue-phi/thu/kiem-khuon-e11.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**", "_acceptance/thue-phi/thu/kiem-khuon-e11.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/settings/fees/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» và bài in «E13: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E11 và bài E13, vẫn thoát 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/settings/fees/**", "apps/web/src/app/(app)/units/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
