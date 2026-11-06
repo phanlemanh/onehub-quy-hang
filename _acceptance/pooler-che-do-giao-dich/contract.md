@@ -5,7 +5,7 @@ slug: pooler-che-do-giao-dich
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-06-pooler-che-do-giao-dich-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06
@@ -114,3 +114,11 @@ Liệt kê tay bốn trục (descope «bỏ coverage-scan» trong sổ quyết �
   máy không đọc nó; công tắc là biến thường. Giờ vắng theo Hỏi-3.
 - Thử tay của chủ kho (đăng nhập, Hôm nay, Bảng hàng) sau khi đổi là mục kiểm tay của trang bằng chứng — máy không tạo
   tài khoản thử trên dữ liệu thật.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Khi đổi bản thật mà lùi không thành hay chưa xác nhận, tập lệnh vẫn thoát cùng mã như đã lùi — người chạy đọc dòng chữ in ra để biết.
+  - Ngoài-2: Đọc nhật ký bản thật hỏng một lần giữa lúc theo dõi thì tập lệnh dừng, bản thật ở lại chế độ mới không còn theo dõi tự động — người chạy chạy lại hay lùi tay.
+  - Ngoài-3: Mã thoát của tập lệnh đổi không tách được lùi đã xác nhận với lùi chưa xác nhận.
+  - Ngoài-4: Bài kiểm công tắc cổng để lại trạng thái trong tiến trình kiểm; bài kiểm gọi cùng hàm thêm sau này có thể chạy sai.
+  - Ngoài-5: Bài kiểm bộ kiểm db chỉ soi một dòng khai báo bể danh tính; viết lại nhiều dòng thì có thể lọt tham số khởi động.
+  - Ngoài-6: Phép thử cách ly hai sàn dựng sàn thứ hai bằng tay, chưa đi qua công cụ mở sàn thật.
+  - Ngoài-7: Bài quét trạng thái phiên chưa có mồi cho mọi cách viết đặc tả nêu tên.

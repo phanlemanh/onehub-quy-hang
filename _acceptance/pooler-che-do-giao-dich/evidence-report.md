@@ -1,14 +1,14 @@
 ---
 schema_version: 2
 feature_slug: pooler-che-do-giao-dich
-verdict: PENDING-JUDGMENT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: aefcc2bab1f62e4b885a6830c728eafbaab7828e
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: pooler-che-do-giao-dich
@@ -146,7 +146,7 @@ không chạy theo hồ sơ: E7
   judged_by: judge panel (fresh context) — domain-correctness, operational-feasibility, spec-alignment
   verdict: PASS
   rationale: Đề xuất PASS. ADR-0009 có mục «Sửa đổi 06/11 — chế độ giao dịch của pooler» (dòng 70–97) nêu đủ bốn ý; kiến trúc dòng 153 và Tham chiếu dòng 415 nhắc lại. Bước đổi dùng công tắc DATABASE_POOLER_PORT thay vì sửa trực tiếp DATABASE_URL, nhưng vẫn là đổi sang 6543 và lùi về 5432.
-  human_override:  # chi nguoi ghi
+  human_override: Manh Phan 2026-11-06 — Đạt
   - domain-correctness: PASS — mục «Sửa đổi 06/11» nêu chế độ giao dịch cổng 6543 và lý do là trần 15 kết nối chế độ phiên; lược đồ danh tính đặt ở adapter (schemaName identity), truy vấn tay ghi identity.<bảng>; job migrate giữ PROD_DATABASE_URL riêng; có bước đổi bằng DATABASE_POOLER_PORT và cách lùi về 5432.
   - operational-feasibility: PASS — đủ bốn ý (chế độ đích, lược đồ ở adapter, job migrate riêng, bước đổi và đường lùi). Lệch nhỏ: bước đổi dùng công tắc cổng chứ không sửa DATABASE_URL, ADR nói rõ.
   - spec-alignment: PASS — mục có trần 15 kết nối, lược đồ identity ở adapter, PROD_DATABASE_URL riêng, các bước đổi bản thật (đặt DATABASE_POOLER_PORT=6543, triển khai lại, theo dõi nhật ký) và cách lùi về 5432.
