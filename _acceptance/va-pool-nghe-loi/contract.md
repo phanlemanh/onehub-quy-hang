@@ -5,7 +5,7 @@ slug: va-pool-nghe-loi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-06-va-pool-nghe-loi-design.md
 approved_by:
 approved_at:

@@ -27,7 +27,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.script.va_pool_nghe_loi
     expected: "exit 0; hai ca «cắt kết nối rảnh: tiến trình dùng dungPools sống qua cú cắt và truy vấn lại được» và «cắt kết nối rảnh: đối chứng — pool trần làm tiến trình chết» có mặt và ok. Cả hai ca dựng chỗ thử bằng _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --dung (Postgres riêng sau công tắc cổng 5599); tiến trình con chạy bằng `node --import tsx` và NẠP dungPools THẬT từ apps/web/src/lib/api.ts (ca pool trần dùng new pg.Pool trực tiếp), in dòng «san-sang» sau select 1 (kết nối để rảnh), bài thử gọi --tat (cắt mọi kết nối đang sống), chờ 2 giây, rồi --mo và gửi lệnh truy vấn lại. Ca thứ nhất: tiến trình con còn sống sau cú cắt, stderr có ĐÚNG MỘT dòng nhật ký của pool (khớp «[pool:ung-dung·trang]») cho một kết nối rảnh đã mở, lần select 1 sau khi mở lại trả 1, tiến trình con thoát 0. Ca thứ hai: tiến trình con chết trước bước truy vấn lại với mã thoát khác 0 và stderr có ECONNRESET hoặc «Connection terminated». Chiều đỏ (phá-thử ở S3): bỏ dòng gắn trình nghe pool khỏi dungPools thì ca thứ nhất đỏ — tiến trình con thoát khác 0 trước bước truy vấn lại. Chỗ thử dọn bằng --don ở cuối."
-    paths: ["apps/web/src/lib/api.ts", "_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs", "_acceptance/va-pool-nghe-loi/thu/con-giu-pool.ts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
+    paths: ["apps/web/src/lib/api.ts", "_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs", "_acceptance/va-pool-nghe-loi/thu/con-giu-pool.mts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
@@ -68,7 +68,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.script.va_pool_nghe_loi
     expected: "exit 0; hai ca «cắt kết nối đã mượn: tiến trình dùng dungPools sống, truy vấn trên kết nối ấy nhận lỗi, pool chạy lại sau khi trả» và «cắt kết nối đã mượn: đối chứng — pool trần làm tiến trình chết» có mặt và ok. Cùng chỗ thử và cách nạp dungPools thật như E3; tiến trình con mượn một kết nối bằng pool.connect(), chạy select 1 rồi GIỮ (không release), in «san-sang»; bài thử --tat, chờ 2 giây, --mo, gửi lệnh tiếp. Ca thứ nhất: tiến trình con còn sống; truy vấn kế tiếp trên kết nối đã mượn bị từ chối (lỗi của chính nó); sau release(err) truy vấn mới trên pool trả 1; tiến trình con thoát 0. Ca thứ hai: tiến trình con chết với mã khác 0 trước bước truy vấn kế tiếp. Chiều đỏ (phá-thử ở S3): bỏ dòng gắn trình chặn trên kết nối mới khỏi dungPools thì ca thứ nhất đỏ — tiến trình con thoát khác 0."
-    paths: ["apps/web/src/lib/api.ts", "_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs", "_acceptance/va-pool-nghe-loi/thu/con-giu-pool.ts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
+    paths: ["apps/web/src/lib/api.ts", "_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs", "_acceptance/va-pool-nghe-loi/thu/con-giu-pool.mts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E9
