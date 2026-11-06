@@ -7,7 +7,7 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>12 việc"]
+  GD --> B["Sắp mở vòng<br/>13 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
@@ -33,6 +33,7 @@ flowchart TD
 - Đầu chủ đổi giá hoặc trạng thái nhanh trên điện thoại sau cuộc gọi, theo đúng luật sửa giá (`doi-gia-nhanh`)
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
+- Kiểm nhanh chỉ đọc của bước triển khai trên bản thật thêm vế bất biến 2: bảng chủ nhà và bảng lead không còn số điện thoại để rõ thì ràng buộc chặn số rõ phải đã bật — bảng sạch mà ràng buộc chưa bật làm bước triển khai đỏ trước khi gọi Vercel, gọi đúng tên bảng và ràng buộc; bảng còn số rõ thì chỉ báo, không chặn; vẫn một kết nối, giao dịch chỉ đọc (Ngoài-2 của hàng va-deploy-csdl-tam, chủ kho mở hợp đồng mới 06/11). (`kiem-nhanh-rang-buoc-ban-ma`)
 - Đầu chủ thấy ô máy không đọc được — giá dải, «thu về 4.2», trạng thái lạ — có đề xuất kèm lý do và chọn một chạm (`nhap-o-la`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
 - Quản trị sàn tạo trường riêng kiểu có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở bảng hàng, lọc được, không ra trang khách; cùng cơ chế áp cho liên hệ: trường riêng theo loại liên hệ (chủ nhà, người mua, người thuê…), trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
