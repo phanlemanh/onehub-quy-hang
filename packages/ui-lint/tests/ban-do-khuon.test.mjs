@@ -245,8 +245,8 @@ const CHO_TRANG_THAI = [
   // Hàng 105: lỗi dựng hồ sơ ở cột kéo chia (bảng vẫn dùng được), lượt kéo đầu hỏng kèm «Thử lại».
   `${W}/app/(app)/units/ho-so/bang-co-ho-so.tsx`,
   // Hồ sơ ho-so-dien-thoai-product-detail-5: thân cột tách khỏi cot-ho-so.tsx (năm chỗ dời sang than-cot.tsx); thân điện thoại
-  // có «Không thấy căn» kèm đường về Bảng hàng. Hàng 41 (chup-anh-dien-thoai): «Mất mạng» của ngăn chụp ảnh.
-  ...["dien-thoai/chup-anh.tsx", "dien-thoai/than-dien-thoai.tsx", "nut-bao-sai.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
+  // có «Không thấy căn» kèm đường về Bảng hàng. Hàng 41 (chup-anh-dien-thoai): «Mất mạng» và «Máy không giữ được ảnh chờ» của ngăn chụp ảnh.
+  ...["dien-thoai/chup-anh.tsx", "dien-thoai/chup-anh.tsx", "dien-thoai/than-dien-thoai.tsx", "nut-bao-sai.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx", "than-cot.tsx"].map((p) => `${W}/app/(app)/units/ho-so/${p}`),
   // Mục Ảnh (hàng 18): lỗi tải, trống của ngăn, thẻ Tự có từ mã (ngăn nội bộ khoá bỏ ở hàng 33 — không thẻ).
   ...Array(3).fill(`${W}/app/(app)/units/photos/muc-anh.tsx`),
   // Trình che vùng ảnh (hàng 19): ảnh không mở được, lưu lỗi.
@@ -453,7 +453,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 19 ngoại lệ · 0 lệch",
-      "trang-thai: 122 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 123 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

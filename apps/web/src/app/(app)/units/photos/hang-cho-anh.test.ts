@@ -9,13 +9,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import type { Compartment } from "@quy-hang/core/photos";
 import { tenCoSo, tenKhoAnhCho, xoaKhoCuaNguoi } from "@/lib/sync/kho-indexeddb";
-import { CHU_KY_CHO, taoNhip, type DongHo } from "@/lib/sync/mang";
-import { KhayChup, NutMoMay } from "../ho-so/dien-thoai/chup-anh";
-import { anhDangTrinh, type TrangThaiAnh } from "../ho-so/dien-thoai/anh-lon";
+import { CHU_KY_CHO, type DongHo } from "@/lib/sync/mang";
+import { CHU_KHONG_HANG_CHO, KhayChup, khongNhanTep, NutMoMay } from "../ho-so/dien-thoai/chup-anh";
+import { anhDangTrinh, sauLoiDoc, type TrangThaiAnh } from "../ho-so/dien-thoai/anh-lon";
 import {
   doiNgan,
   LoiGuiAnh,
   nhanAnhChup,
+  noiNhip,
   phanLoaiLoi,
   taoHangCho,
   theoDoiDaTai,
@@ -67,17 +68,21 @@ function mayChuGia(che: (lan: number, id: string) => Kieu = () => "ok") {
   const dong = new Map<string, { toa: string; ma: string; ngan: Compartment; takenAt: string | null }>();
   const gui: { id: string; ngan: Compartment; takenAt: string | null }[] = [];
   let lan = 0;
+  const xung = { n: 0 };
   const g: GuiAnh = async (a) => {
     lan++;
     const k = che(lan, a.id);
     if (k === "mat-truoc") throw new TypeError("Failed to fetch");
     if (typeof k === "number") throw new LoiGuiAnh(k);
-    if (dong.has(a.id)) throw new LoiGuiAnh(409);
+    if (dong.has(a.id)) {
+      xung.n++;
+      throw new LoiGuiAnh(409);
+    }
     dong.set(a.id, { toa: a.toa, ma: a.ma, ngan: a.ngan, takenAt: a.tep.takenAt });
     gui.push({ id: a.id, ngan: a.ngan, takenAt: a.tep.takenAt });
     if (k === "mat-phan-hoi") throw new TypeError("Failed to fetch");
   };
-  return { dong, gui, g, daCo: async ({ id }: { id: string }) => dong.has(id) };
+  return { dong, gui, g, xung, daCo: async ({ id }: { id: string }) => dong.has(id) };
 }
 
 let dem = 0;
@@ -286,7 +291,7 @@ function dongHoGia() {
 type OMang = "mất trước khi chụp" | "mất giữa lúc tải" | "mất phản hồi" | "có lại bằng online" | "có lại bằng nhịp 15 giây";
 const O_MANG: readonly OMang[] = ["mất trước khi chụp", "mất giữa lúc tải", "mất phản hồi", "có lại bằng online", "có lại bằng nhịp 15 giây"];
 
-async function lechMang(boc: (g: GuiAnh) => GuiAnh = (g) => g) {
+async function lechMang(boc: (g: GuiAnh) => GuiAnh = (g) => g, boKichHoat = false) {
   const ra: string[] = [];
   for (const o of O_MANG) {
     const mang = { on: o !== "mất giữa lúc tải" && o !== "mất phản hồi" ? false : true };
@@ -300,18 +305,29 @@ async function lechMang(boc: (g: GuiAnh) => GuiAnh = (g) => g) {
     });
     const { h } = hang({ gui: boc(may.g), daCo: may.daCo, mang });
     const gio = dongHoGia();
-    const nhip = taoNhip({ dongHo: gio.d, thu: h.day, coCho: h.coCho });
+    const nhip = noiNhip(h, gio.d);
     for (let i = 0; i < 3; i++) h.them(TOA, MA, "shareable", tep(`${i}.jpg`));
     await xong(h);
     mang.on = true;
-    if (o === "có lại bằng online") nhip.quayLaiTrang();
-    else if (o === "có lại bằng nhịp 15 giây") gio.toi(CHU_KY_CHO);
-    else await h.day();
-    await xong(h);
+    // Hai ô «có lại»: CHỈ cơ chế của ô kích hoạt lượt gửi — sau đó chờ lượt đang chạy, không tự mở lượt mới.
+    if (o === "có lại bằng online") {
+      if (!boKichHoat) nhip.quayLaiTrang();
+      await h.cho();
+      await h.choKho();
+    } else if (o === "có lại bằng nhịp 15 giây") {
+      if (!boKichHoat) gio.toi(CHU_KY_CHO);
+      await h.cho();
+      await h.choKho();
+    } else {
+      await h.day();
+      await xong(h);
+    }
     nhip.dung();
     const theoMa = new Set(may.gui.map((g) => g.id));
     if (may.gui.length !== 3 || theoMa.size !== 3) ra.push(`${o} · ${may.gui.length} dòng · mong 3`);
     if (trangThai(h).some((t) => t !== "da-tai")) ra.push(`${o} · ${trangThai(h).join(",")} · mong da-tai`);
+    // Gửi lại sau khi mất phản hồi: hỏi danh sách trước, không gửi lại mù nên máy chủ không phải trả 409.
+    if (may.xung.n) ra.push(`${o} · ${may.xung.n} lời đáp 409 · mong 0`);
   }
   return ra;
 }
@@ -319,6 +335,54 @@ async function lechMang(boc: (g: GuiAnh) => GuiAnh = (g) => g) {
 test("E4 mạng: ma trận 5 ô × 3 ảnh — máy chủ có đúng 3 ảnh, mỗi mã một dòng", async () => {
   assert.equal(O_MANG.length, 5);
   assert.deepEqual(await lechMang(), []);
+});
+
+test("E4 đối chứng: bỏ sự kiện online và nhịp 15 giây → đúng hai ô «có lại» không tải được ảnh nào", async () => {
+  assert.deepEqual(await lechMang((g) => g, true), [
+    "có lại bằng online · 0 dòng · mong 3",
+    "có lại bằng online · cho-mang,cho-mang,cho-mang · mong da-tai",
+    "có lại bằng nhịp 15 giây · 0 dòng · mong 3",
+    "có lại bằng nhịp 15 giây · cho-mang,cho-mang,cho-mang · mong da-tai",
+  ]);
+});
+
+test("E4 409 sau tải lại trang: mất phản hồi rồi mở lại app, gửi lại nhận 409, đối chiếu danh sách → đủ 3 dòng, không trùng", async () => {
+  const idb = idbGia();
+  const may = mayChuGia((lan) => (lan === 1 ? "mat-phan-hoi" : "ok"));
+  const mang = { on: true };
+  const dung = () => taoHangCho({ gui: may.g, daCo: may.daCo, kho: idb.kho("u-chu"), onLine: () => mang.on, xem: () => "", taoMa: () => `ma-${++dem}` });
+  mang.on = false;
+  const truoc = dung();
+  for (let i = 0; i < 3; i++) truoc.them(TOA, MA, "shareable", tep(`${i}.jpg`));
+  await xong(truoc);
+  mang.on = true;
+  await truoc.day();
+  await truoc.dung();
+  // Mở lại app: ảnh đầu (máy chủ đã ghi, mất phản hồi) vẫn nằm trong kho.
+  const sau = dung();
+  await sau.khoiDong();
+  await xong(sau);
+  assert.deepEqual(trangThai(sau).filter((t) => t !== "da-tai"), []);
+  assert.equal(may.dong.size, 3);
+  assert.equal((await idb.kho("u-chu").tai()).length, 0);
+});
+
+test("E4 kho trên máy hỏng thì hàng chờ nói ra (khoLoi), ngăn chụp báo ảnh chỉ còn trong bộ nhớ", async () => {
+  const hong: KhoAnhCho = { tai: async () => Promise.reject(new Error("QuotaExceededError")), ghi: async () => Promise.reject(new Error("QuotaExceededError")), xoa: async () => {} };
+  const mo = taoHangCho({ gui: mayChuGia().g, daCo: async () => false, kho: hong, onLine: () => false, xem: () => "" });
+  await mo.khoiDong();
+  assert.equal(mo.khoLoi(), true, "mở kho lỗi");
+  const ghi = taoHangCho({ gui: mayChuGia().g, daCo: async () => false, kho: { ...idbGia().kho("u"), ghi: hong.ghi }, onLine: () => false, xem: () => "" });
+  ghi.them(TOA, MA, "shareable", tep("a.jpg"));
+  await ghi.choKho();
+  assert.equal(ghi.khoLoi(), true, "ghi kho lỗi");
+  const lanh = taoHangCho({ gui: mayChuGia().g, daCo: async () => false, kho: idbGia().kho("u"), onLine: () => false, xem: () => "" });
+  lanh.them(TOA, MA, "shareable", tep("a.jpg"));
+  await lanh.choKho();
+  assert.equal(lanh.khoLoi(), false, "đối chứng: kho lành không báo");
+  const html = renderToStaticMarkup(createElement(KhayChup, { ngan: null, thayNoiBo: false, matMang: true, khoLoi: true, ds: [], hong: [], onChon: () => {}, onThuLai: () => {} }));
+  assert.match(html, /data-trang-thai="kho-loi"/);
+  assert.doesNotMatch(renderToStaticMarkup(createElement(KhayChup, { ngan: null, thayNoiBo: false, matMang: true, ds: [], hong: [], onChon: () => {}, onThuLai: () => {} })), /kho-loi/);
 });
 
 test("E4 chiều đỏ: bản sao tạo mã mới mỗi lần gửi → bộ so nêu ô mất phản hồi", async () => {
@@ -410,6 +474,29 @@ test("E7 chiều đỏ: bản sao giữ ảnh Nội bộ sau xác nhận → b�
   assert.deepEqual(await lechXoa(giuNoiBo), ["Nội bộ · xác nhận · còn trên máy"]);
 });
 
+test("E7 đăng xuất giữa lúc đang tải: lượt đang bay không ghi lại kho đã xoá (cả ảnh Nội bộ)", async () => {
+  // Bộ dò: sau khi xoá kho, kho của người không được xuất hiện lại.
+  const chay = async (dungTruoc: boolean) => {
+    const idb = idbGia();
+    let mo!: () => void;
+    const chan = new Promise<void>((r) => (mo = r));
+    const h = taoHangCho({ gui: async () => (await chan, Promise.reject(new LoiGuiAnh(403))), daCo: async () => false, kho: idb.kho("u-chu"), onLine: () => true, xem: () => "", taoMa: () => `ma-${++dem}` });
+    h.them(TOA, MA, "internal", tep("so.jpg"));
+    h.them(TOA, MA, "shareable", tep("a.jpg"));
+    await h.choKho();
+    const dung = dungTruoc ? h.dung() : Promise.resolve();
+    if (!dungTruoc) await xoaKhoCuaNguoi("u-chu", idb.xoa);
+    mo();
+    await dung;
+    if (dungTruoc) await xoaKhoCuaNguoi("u-chu", idb.xoa);
+    await h.cho();
+    await h.choKho();
+    return idb.db.has(tenKhoAnhCho("u-chu"));
+  };
+  assert.equal(await chay(true), false, "dừng hàng chờ rồi xoá: kho không sống lại");
+  assert.equal(await chay(false), true, "đối chứng dương của bộ dò: xoá mà không dừng hàng chờ thì lượt đang bay tạo lại kho");
+});
+
 test("E7 kho theo người: kho của A dựng bằng mã người B trả rỗng; kho đồng bộ không có khoá ảnh; 401 không xoá kho", async () => {
   const idb = idbGia();
   const dongBo = new Map([["c1", { listings: [], queue: [] }]]);
@@ -493,6 +580,28 @@ test("E9 đọc lại: căn A đọc lại đúng một lần khi ảnh của A 
 test("E9 chiều đỏ: bản sao không nghe số đã tải → bộ so nêu căn A", async () => {
   const diec = (h: HangCho) => ({ subscribe: () => () => {}, soDaTai: h.soDaTai });
   assert.deepEqual(await lechDocLai(diec), ["căn A · 0 lần đọc lại · mong 1"]);
+});
+
+test("E9 đọc lại lỗi giữ danh sách cũ (nút «Chụp ảnh» không mất); lần đọc đầu lỗi thì báo lỗi", () => {
+  const khoa = `${TOA}|${MA}`;
+  const cu = { khoa, anh: { kind: "co", ds: { anh: [], noiBo: "thay", suaDuoc: true } } as TrangThaiAnh };
+  const lech = (f: typeof sauLoiDoc) => {
+    const ra: string[] = [];
+    if (f(cu, khoa, false) !== cu) ra.push("đọc lại lỗi · mất danh sách cũ");
+    if (f(null, khoa, true).anh.kind !== "loi") ra.push("đọc đầu lỗi · không báo lỗi");
+    if (f({ ...cu, khoa: "khac|X" }, khoa, false).anh.kind !== "loi") ra.push("đổi căn · giữ nhầm căn khác");
+    return ra;
+  };
+  assert.deepEqual(lech(sauLoiDoc), []);
+  assert.deepEqual(lech((_c, k, m) => ({ khoa: k, anh: { kind: "loi", matMang: m } })), ["đọc lại lỗi · mất danh sách cũ"]);
+});
+
+test("E3 không có hàng chờ: mọi tệp máy ảnh trả đều báo lý do, không tệp nào bị bỏ im lặng", () => {
+  const files = [new File([JPEG(500, 1)], "a.jpg"), new File([JPEG(500, 2)], "b.jpg")];
+  assert.deepEqual(khongNhanTep(files), [
+    { ten: "a.jpg", loi: CHU_KHONG_HANG_CHO },
+    { ten: "b.jpg", loi: CHU_KHONG_HANG_CHO },
+  ]);
 });
 
 test("E9 trong lúc đọc lại khung lớn vẫn trình ảnh cũ, không về «Đang tải ảnh…»", () => {

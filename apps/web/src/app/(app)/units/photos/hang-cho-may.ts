@@ -5,8 +5,8 @@
 // nhập, dừng và xoá kho khi đăng xuất. Thử lại khi trình duyệt báo có mạng và theo nhịp 15 giây của bộ đồng bộ.
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
-import { dongHoThat, taoNhip } from "@/lib/sync/mang";
-import { taoHangCho, theoDoiDaTai, type AnhCho, type HangCho } from "./hang-cho-anh";
+import { dongHoThat } from "@/lib/sync/mang";
+import { noiNhip, taoHangCho, theoDoiDaTai, type AnhCho, type HangCho } from "./hang-cho-anh";
 import { taoKhoAnhCho } from "./kho-anh-cho";
 import { nguonApi } from "./nguon-api";
 
@@ -29,7 +29,7 @@ export function khoiDongHangCho(userId: string): HangCho {
     onLine: () => navigator.onLine,
     xem: (b) => URL.createObjectURL(b),
   });
-  const nhip = taoNhip({ dongHo: dongHoThat, thu: hang.day, coCho: hang.coCho });
+  const nhip = noiNhip(hang, dongHoThat);
   const online = () => nhip.quayLaiTrang();
   window.addEventListener("online", online);
   doiBan({
@@ -40,7 +40,8 @@ export function khoiDongHangCho(userId: string): HangCho {
       window.removeEventListener("online", online);
     },
   });
-  void hang.khoiDong().catch(() => {});
+  // Lỗi mở kho không nuốt: hàng chờ đặt `khoLoi`, ngăn chụp báo ảnh chỉ còn trong bộ nhớ (AC-4).
+  void hang.khoiDong();
   return hang;
 }
 
@@ -50,7 +51,8 @@ export async function dungHangCho(): Promise<void> {
   if (!b) return;
   b.dung();
   doiBan(null);
-  await b.hang.choKho();
+  // Lượt tải đang bay không được ghi lại vào kho sắp xoá (AC-6).
+  await b.hang.dung();
 }
 
 export const hangChoHienTai = (): HangCho | null => ban?.hang ?? null;
@@ -72,6 +74,11 @@ const ngheHang = (f: () => void) => {
 
 export function useHangCho(): AnhCho[] {
   return useSyncExternalStore(ngheHang, () => ban?.hang.anh() ?? KHONG, () => KHONG);
+}
+
+/** Trạng thái của hàng chờ cho ngăn chụp: có hàng chờ không, kho trên máy có giữ được không. */
+export function useTinhHangCho(): "co" | "khong-co" | "kho-loi" {
+  return useSyncExternalStore(ngheHang, () => (!ban ? "khong-co" : ban.hang.khoLoi() ? "kho-loi" : "co"), () => "co");
 }
 
 /** Hàng chờ đang chạy, nhìn qua lúc đổi người (đăng xuất rồi đăng nhập người khác). */

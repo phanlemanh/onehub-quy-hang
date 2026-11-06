@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { doiNgan, nhanAnhChup, NHAN_TRANG_THAI_CHO, type AnhCho, type KetQuaChup } from "../../photos/hang-cho-anh";
-import { hangChoHienTai, useHangCho } from "../../photos/hang-cho-may";
+import { hangChoHienTai, useHangCho, useTinhHangCho } from "../../photos/hang-cho-may";
 import { chuanBiTep } from "../../photos/tai-len";
 
 function useMatMang() {
@@ -38,6 +38,11 @@ function useMatMang() {
 const MAU_TRANG_THAI = { "cho-mang": "warning-light", "dang-tai": "info-light", "da-tai": "success-light", loi: "destructive-light" } as const;
 
 export const CHU_CHON_NGAN = "Chọn ngăn trước khi chụp.";
+/** Không có hàng chờ (vừa thử đăng xuất mà chưa xong): ảnh không được nhận, nói rõ thay vì bỏ im lặng (AC-3). */
+export const CHU_KHONG_HANG_CHO = "Chưa nhận ảnh — tải lại trang rồi chụp lại";
+
+/** Kết quả nhận một lượt tệp máy ảnh trả khi không có hàng chờ: mọi tệp báo lý do, không tệp nào bị bỏ im lặng. */
+export const khongNhanTep = (files: readonly File[]): KetQuaChup[] => files.map((f) => ({ ten: f.name, loi: CHU_KHONG_HANG_CHO }));
 
 /** Nút «Chụp ảnh» trên ảnh lớn — mang số ảnh của căn chưa lên máy chủ. */
 export function NutChup({ cho, onMo }: { cho: number; onMo: () => void }) {
@@ -55,6 +60,8 @@ export function KhayChup(o: {
   ngan: Compartment | null;
   thayNoiBo: boolean;
   matMang: boolean;
+  /** Kho trên máy không giữ được ảnh (AC-4): ảnh chờ chỉ còn trong bộ nhớ. */
+  khoLoi?: boolean;
   ds: readonly AnhCho[];
   hong: readonly KetQuaChup[];
   onChon: (n: Compartment) => void;
@@ -80,6 +87,11 @@ export function KhayChup(o: {
       {o.matMang ? (
         <div className="contents" data-trang-thai="mat-mang">
           <TrangThai kind="notice" icon={CloudOff} title="Mất mạng" description="Ảnh chờ trên máy và tự tải lên khi có mạng." />
+        </div>
+      ) : null}
+      {o.khoLoi ? (
+        <div className="contents" data-trang-thai="kho-loi">
+          <TrangThai kind="error" title="Máy không giữ được ảnh chờ" description="Giữ app mở tới khi ảnh tải xong — đóng app lúc này là mất ảnh chưa tải." />
         </div>
       ) : null}
       {o.hong.length ? (
@@ -142,12 +154,16 @@ export function ChupAnh({ toa, ma, thayNoiBo }: { toa: string; ma: string; thayN
   const [hong, setHong] = useState<KetQuaChup[]>([]);
   const may = useRef<HTMLInputElement>(null);
   const matMang = useMatMang();
+  const tinh = useTinhHangCho();
   const ds = useHangCho().filter((a) => a.toa === toa && a.ma === ma);
   const cho = ds.filter((a) => a.trangThai !== "da-tai").length;
   // Ngăn gắn vào ảnh lúc chụp: đọc ngăn ngay khi máy ảnh trả tệp, đổi ngăn sau không đổi ảnh đã chụp.
   const nhan = async (files: File[], ngan: Compartment) => {
     const h = hangChoHienTai();
-    if (!h) return;
+    if (!h) {
+      setHong(khongNhanTep(files));
+      return;
+    }
     const kq = await nhanAnhChup(files, { chuanBi: (f) => chuanBiTep(f), them: (tep) => h.them(toa, ma, ngan, tep) });
     setHong(kq.filter((k) => k.loi));
   };
@@ -165,7 +181,7 @@ export function ChupAnh({ toa, ma, thayNoiBo }: { toa: string; ma: string; thayN
         moTa={toa}
         chan={<NutMoMay ngan={s.ngan} onMo={() => may.current?.click()} />}
       >
-        <KhayChup ngan={s.ngan} thayNoiBo={thayNoiBo} matMang={matMang} ds={ds} hong={hong} onChon={(n) => gui({ kind: "chon", ngan: n })} onThuLai={(k) => hangChoHienTai()?.thuLai(k)} />
+        <KhayChup ngan={s.ngan} thayNoiBo={thayNoiBo} matMang={matMang} khoLoi={tinh === "kho-loi"} ds={ds} hong={hong} onChon={(n) => gui({ kind: "chon", ngan: n })} onThuLai={(k) => hangChoHienTai()?.thuLai(k)} />
         <Input
           ref={may}
           type="file"

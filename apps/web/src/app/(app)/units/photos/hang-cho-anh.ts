@@ -6,6 +6,8 @@
 // Hàng chờ KHÔNG đi qua bộ đồng bộ (ảnh là byte, luật khuôn KH-hs-anh-noi-bo) — chỉ mượn nhịp thử mạng và các chỗ xoá kho.
 import type { Compartment } from "@quy-hang/core/photos";
 
+import { taoNhip, type DongHo } from "@/lib/sync/mang";
+
 import type { TepLoi, TepSanSang } from "./tai-len";
 
 export type TrangThaiCho = "cho-mang" | "dang-tai" | "da-tai" | "loi";
@@ -115,12 +117,24 @@ export function taoHangCho(o: HangChoDeps) {
   const daTai = new Map<string, number>();
   let dangChay: Promise<void> | null = null;
   let chayLai = false;
+  // Đã dừng (đăng xuất): không gửi thêm, không ghi gì vào kho nữa — kho sắp bị xoá, ghi lại là tạo lại kho (AC-6).
+  let daDung = false;
+  // Kho trên máy hỏng (mở lỗi, hết chỗ, duyệt riêng tư): ảnh chỉ còn trong bộ nhớ — màn phải nói ra (AC-4).
+  let khoLoi = false;
+  // Ảnh mà lời gửi trước có thể đã tới máy chủ (mất phản hồi): lần sau đối chiếu danh sách trước khi gửi lại.
+  const nghi = new Set<string>();
   // Mọi lệnh vào kho đi lần lượt: ảnh vừa chụp đã tải xong trước khi kịp ghi xuống thì lệnh xoá vẫn đứng sau lệnh ghi.
   let khoViec: Promise<unknown> = Promise.resolve();
   const vaoKho = (f: () => Promise<void>) => {
-    const p = khoViec.then(f, f);
-    khoViec = p.catch(() => {});
-    return p;
+    if (daDung) return Promise.resolve();
+    const p = khoViec.then(() => (daDung ? undefined : f()));
+    khoViec = p.catch(() => {
+      if (!khoLoi) {
+        khoLoi = true;
+        bao();
+      }
+    });
+    return khoViec;
   };
   const bao = () => nghe.forEach((f) => f());
   const dat = (key: string, trangThai: TrangThaiCho) => {
@@ -146,13 +160,30 @@ export function taoHangCho(o: HangChoDeps) {
   /** Một lượt: tải lần lượt theo thứ tự chụp; mất mạng hay hết phiên thì dừng cả lô, giữ nguyên hàng chờ. */
   async function motLuot(): Promise<void> {
     for (;;) {
+      if (daDung) return;
       const a = ds.find((x) => x.trangThai === "cho-mang");
       if (!a || !o.onLine()) return;
       dat(a.key, "dang-tai");
+      if (nghi.has(a.key)) {
+        // Lời gửi trước mất phản hồi: máy chủ có thể đã ghi — hỏi danh sách trước, không gửi lại mù.
+        const co = await o.daCo({ toa: a.toa, ma: a.ma, id: a.key }).catch(() => null);
+        if (daDung) return;
+        if (co === null) {
+          dat(a.key, "cho-mang");
+          return;
+        }
+        nghi.delete(a.key);
+        if (co) {
+          xongAnh(a);
+          continue;
+        }
+      }
       try {
         await o.gui({ id: a.key, toa: a.toa, ma: a.ma, ngan: a.ngan, tep: a.tep });
+        if (daDung) return;
         xongAnh(a);
       } catch (e) {
+        if (daDung) return;
         const loai = phanLoai(e, o.onLine());
         if (loai === "da-co") {
           const co = await o.daCo({ toa: a.toa, ma: a.ma, id: a.key }).catch(() => null);
@@ -167,6 +198,7 @@ export function taoHangCho(o: HangChoDeps) {
           continue;
         }
         if (loai === "mat-mang" || loai === "het-phien") {
+          if (loai === "mat-mang") nghi.add(a.key);
           dat(a.key, "cho-mang");
           return;
         }
@@ -206,9 +238,19 @@ export function taoHangCho(o: HangChoDeps) {
     soDaTai: (toa: string, ma: string) => daTai.get(`${toa}|${ma}`) ?? 0,
     /** Còn ảnh chưa lên máy chủ (nhịp thử mạng 15 giây). */
     coCho: () => ds.some((a) => a.trangThai === "cho-mang"),
-    /** Dựng lại hàng chờ từ kho của người (mở app, tải lại trang), rồi tải tiếp. */
+    /** Kho trên máy hỏng: ảnh chờ chỉ còn trong bộ nhớ, đóng app là mất. */
+    khoLoi: () => khoLoi,
+    /** Dựng lại hàng chờ từ kho của người (mở app, tải lại trang), rồi tải tiếp. Kho mở lỗi thì báo qua `khoLoi`. */
     async khoiDong() {
-      const tren = (await o.kho.tai()).sort((x, y) => x.thuTu - y.thuTu);
+      let doc: BanGhiCho[];
+      try {
+        doc = await o.kho.tai();
+      } catch {
+        khoLoi = true;
+        bao();
+        return;
+      }
+      const tren = doc.sort((x, y) => x.thuTu - y.thuTu);
       const co = new Set(ds.map((a) => a.key));
       for (const b of tren) {
         banGhi.set(b.id, b);
@@ -240,8 +282,16 @@ export function taoHangCho(o: HangChoDeps) {
       void day();
     },
     day,
+    /** Chờ lượt đang chạy xong, không mở lượt mới. */
+    cho: () => dangChay ?? Promise.resolve(),
     /** Chờ mọi lệnh vào kho đã xong (bài kiểm, đăng xuất). */
     choKho: () => khoViec.then(() => {}),
+    /** Đăng xuất: thôi gửi, thôi ghi kho; chờ lượt đang bay và lệnh kho đang dở xong rồi mới cho xoá kho. */
+    async dung() {
+      daDung = true;
+      await (dangChay ?? Promise.resolve()).catch(() => {});
+      await khoViec;
+    },
   };
 }
 
@@ -290,4 +340,27 @@ export function doiNgan(s: NganChup, v: ViecNgan): NganChup {
   if (v.kind === "mo") return { mo: true, ngan: null };
   if (v.kind === "dong") return { ...s, mo: false };
   return { ...s, ngan: v.ngan };
+}
+
+/**
+ * Nhịp thử mạng của hàng chờ (AC-4): mượn `taoNhip` của bộ đồng bộ — 15 giây khi còn ảnh chờ, 30 giây khi yên. Có ảnh mới
+ * vào chờ (hay hết ảnh chờ) thì hẹn lại theo chu kỳ mới ngay, không đợi hết chu kỳ yên đang chạy.
+ */
+export function noiNhip(hang: Pick<HangCho, "subscribe" | "coCho" | "day">, dongHo: DongHo) {
+  const nhip = taoNhip({ dongHo, thu: hang.day, coCho: hang.coCho });
+  let truoc = hang.coCho();
+  const thoi = hang.subscribe(() => {
+    const n = hang.coCho();
+    if (n !== truoc) {
+      truoc = n;
+      nhip.henLai();
+    }
+  });
+  return {
+    quayLaiTrang: nhip.quayLaiTrang,
+    dung() {
+      thoi();
+      nhip.dung();
+    },
+  };
 }

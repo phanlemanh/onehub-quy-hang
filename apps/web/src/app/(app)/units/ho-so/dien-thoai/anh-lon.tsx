@@ -83,6 +83,14 @@ export function anhDangTrinh(kq: { khoa: string; anh: TrangThaiAnh } | null, kho
   return kq?.khoa === khoa ? kq.anh : { kind: "dang-tai" };
 }
 
+/**
+ * Kết quả đọc lỗi: lần đọc lại (sau khi một ảnh lên máy chủ) mà lỗi thì giữ danh sách cũ của đúng căn — không gỡ ảnh lớn và
+ * nút «Chụp ảnh» giữa lúc đang chụp (AC-8); lần đọc đầu lỗi thì báo lỗi.
+ */
+export function sauLoiDoc(cu: { khoa: string; anh: TrangThaiAnh } | null, khoa: string, matMang: boolean): { khoa: string; anh: TrangThaiAnh } {
+  return cu?.khoa === khoa && cu.anh.kind === "co" ? cu : { khoa, anh: { kind: "loi", matMang } };
+}
+
 /** Danh sách ảnh của căn, đọc khi mở hồ sơ, đổi căn hay có ảnh chụp vừa tải lên — cùng đường API của mục Ảnh. */
 export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
   const [kq, setKq] = useState<{ khoa: string; anh: TrangThaiAnh } | null>(null);
@@ -96,7 +104,7 @@ export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
       .danhSach()
       .then(
         (ds) => !huy && setKq({ khoa, anh: { kind: "co", ds } }),
-        () => !huy && setKq({ khoa, anh: { kind: "loi", matMang: !navigator.onLine } }),
+        () => !huy && setKq((cu) => sauLoiDoc(cu, khoa, !navigator.onLine)),
       );
     return () => {
       huy = true;

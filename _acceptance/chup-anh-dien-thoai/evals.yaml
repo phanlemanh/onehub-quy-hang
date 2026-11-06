@@ -144,10 +144,10 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
-    expected: "Trên chỗ thử sau E14: ghi mọi phản hồi mạng khi dau-khach@mau.quy-hang.test mở hồ sơ căn mẫu ở 375×812 — không phản hồi nào chứa mã ảnh Nội bộ; GET /api/v1/units/photos/<mã Nội bộ>/thumb bằng phiên ấy không trả byte ảnh; trang khách /s/<mã link> do dau-chu-1 vừa tạo cho căn mẫu chứa mã ảnh Gửi được của E14 (đối chứng dương của bộ dò trên trang) và không chứa mã ảnh Nội bộ. Đối chứng dương cùng bộ dò: phiên dau-chu-1 mở cùng hồ sơ → bộ dò bắt được mã ảnh Nội bộ. Ghi E16-mang-<vai>.txt."
+    expected: "Trên chỗ thử sau E14: ghi mọi phản hồi mạng khi dau-khach@mau.quy-hang.test mở hồ sơ căn mẫu ở 375×812 — không phản hồi nào chứa mã ảnh Nội bộ; GET /api/v1/units/photos/<mã Nội bộ>/thumb bằng phiên ấy không trả byte ảnh; trang khách /s/<mã link> do dau-khach@mau.quy-hang.test vừa tạo cho căn mẫu (API chỉ cho đầu khách và trưởng nhóm tạo link) chứa mã ảnh bìa Gửi được của căn — trang khách dựng một ảnh bìa mỗi căn (đối chứng dương của bộ dò trên trang) — và không chứa mã ảnh Nội bộ nào của căn. Đối chứng dương cùng bộ dò: phiên dau-chu-1 mở cùng hồ sơ → bộ dò bắt được mã ảnh Nội bộ. Ghi E16-mang-<vai>.txt."
     steps:
       - "Lấy mã ảnh Nội bộ và mã một ảnh Gửi được từ E14"
-      - "dau-chu-1 tạo link gửi căn mẫu qua luồng Gửi (POST đường tạo link của API bằng phiên ấy), ghi mã link; mở /s/<mã link> không đăng nhập: đối chứng dương — trang chứa mã ảnh Gửi được; dò mã ảnh Nội bộ — không có"
+      - "dau-khach@mau.quy-hang.test tạo link gửi căn mẫu qua luồng Gửi (POST đường tạo link của API bằng phiên ấy), ghi mã link; mở /s/<mã link> không đăng nhập: đối chứng dương — trang chứa mã ảnh bìa Gửi được của căn (đọc từ unit_photos: is_cover hay ảnh Gửi được đầu thứ tự); dò mọi mã ảnh Nội bộ của căn — không có"
       - "dau-khach@mau.quy-hang.test mở hồ sơ căn mẫu, ghi phản hồi mạng, dò mã; gọi thẳng đường byte của ảnh ấy"
       - "dau-chu-1 mở cùng hồ sơ — đối chứng dương của bộ dò"
     paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/**"]
