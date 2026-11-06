@@ -1,3 +1,3 @@
-# E16 doi chung duong: dau-chu-1@mau.quy-hang.test (listing_agent) mo cung ho so, context moi, 375x812 (E16-step4.png)
-70 response tong, 45 /api/v1/*, requestfailed=0, status>=400: 0
-Bo do BAT DUOC ma Noi bo: 10 phan hoi (3 x GET units/photos?toa&ma chua 7 ma trong body; 7 x GET photos/<ma Noi bo>/original 200); DOM chua du 7 ma; 22 anh (1/22..22/22, 7 the "Noi bo"); nut "Chup anh" co
+# E16 doi chung duong: dau-chu-1@mau.quy-hang.test (listing_agent) mo cung ho so /units/A-10.05, context moi, 375x812 (E16-step4.png)
+32 response, 14 /api/v1/*, requestfailed=0, status>=400: 0
+Bo do BAT DUOC ma Noi bo 26a841db: 4 phan hoi (3 x GET units/photos?toa&ma=A-10.05 body chua ma; 1 x GET photos/26a841db-.../original 200); DOM chua 26a841db = true

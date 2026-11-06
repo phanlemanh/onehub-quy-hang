@@ -1,5 +1,76 @@
-[Playwright network, app-origin http://localhost:3494, /api/]
-POST /api/v1/units/photos/upload-url x4 -> FAILED net::ERR_INTERNET_DISCONNECTED (CHU DONG: route.abort theo thiet ke cua eval, khong phai loi app)
-POST /api/v1/auth/sign-out -> 200
-Tat ca GET /api/v1/{catalog,listings,units/photos,listings/<id>} -> 200
-Khong co 4xx/5xx. Console: loi chi la phan hoi bi chan chu dong (net::ERR_INTERNET_DISCONNECTED).
+BLOCKED POST (Fetch.failRequest InternetDisconnected): 3
+http://localhost:3494/api/v1/units/photos/upload-url
+http://localhost:3494/api/v1/units/photos/upload-url
+http://localhost:3494/api/v1/units/photos/upload-url
+REQ GET http://localhost:3494/api/v1/catalog (55076.45)
+REQ GET http://localhost:3494/api/v1/catalog (55076.46)
+RES 200 http://localhost:3494/api/v1/catalog
+RES 200 http://localhost:3494/api/v1/catalog
+REQ GET http://localhost:3494/api/v1/listings (55076.49)
+RES 200 http://localhost:3494/api/v1/listings
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.50)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.51)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.52)
+REQ GET http://localhost:3494/api/v1/listings/0daff353-14c5-41c6-8eb4-e7c839cb47a8 (55076.53)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+REQ GET http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/thumb (55076.54)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/listings/0daff353-14c5-41c6-8eb4-e7c839cb47a8
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+REQ GET http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/original (55076.55)
+RES 200 http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/thumb
+RES 200 http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/original
+REQ POST http://localhost:3494/api/v1/units/photos/upload-url (55076.56)
+FAIL 55076.56 net::ERR_INTERNET_DISCONNECTED blocked=
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7 (55076.58)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7
+REQ POST http://localhost:3494/api/v1/units/photos/upload-url (55076.60)
+FAIL 55076.60 net::ERR_INTERNET_DISCONNECTED blocked=
+REQ GET http://localhost:3494/api/v1/catalog (55076.104)
+REQ GET http://localhost:3494/api/v1/catalog (55076.105)
+RES 200 http://localhost:3494/api/v1/catalog
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7 (55076.106)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.107)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.108)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.109)
+RES 200 http://localhost:3494/api/v1/catalog
+REQ GET http://localhost:3494/api/v1/listings/0daff353-14c5-41c6-8eb4-e7c839cb47a8 (55076.111)
+REQ GET http://localhost:3494/api/v1/listings (55076.112)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7
+REQ POST http://localhost:3494/api/v1/units/photos/upload-url (55076.113)
+FAIL 55076.113 net::ERR_INTERNET_DISCONNECTED blocked=
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+REQ GET http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/thumb (55076.115)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/listings/0daff353-14c5-41c6-8eb4-e7c839cb47a8
+RES 200 http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/thumb
+RES 200 http://localhost:3494/api/v1/listings
+REQ GET http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/original (55076.116)
+RES 200 http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/original
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.123)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.124)
+REQ GET http://localhost:3494/api/v1/listings (55076.125)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/listings
+REQ POST http://localhost:3494/api/v1/auth/sign-out (55076.142)
+RES 200 http://localhost:3494/api/v1/auth/sign-out
+REQ GET http://localhost:3494/api/v1/catalog (55076.218)
+REQ GET http://localhost:3494/api/v1/catalog (55076.219)
+RES 200 http://localhost:3494/api/v1/catalog
+RES 200 http://localhost:3494/api/v1/catalog
+REQ GET http://localhost:3494/api/v1/listings (55076.222)
+RES 200 http://localhost:3494/api/v1/listings
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.223)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.224)
+REQ GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06 (55076.225)
+REQ GET http://localhost:3494/api/v1/listings/0daff353-14c5-41c6-8eb4-e7c839cb47a8 (55076.226)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+REQ GET http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/original (55076.227)
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/listings/0daff353-14c5-41c6-8eb4-e7c839cb47a8
+RES 200 http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.06
+RES 200 http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/original
+REQ GET http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/thumb (55076.228)
+RES 200 http://localhost:3494/api/v1/units/photos/146344fc-dbac-451d-8f82-78ec4ab01310/thumb

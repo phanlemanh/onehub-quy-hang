@@ -1,6 +1,8 @@
-# E16 verifier doc lap 2026-11-06T10:31:21Z; can A-06.03 Toa A (listing b0c662d4-3705-4fdb-a5fa-6a08165b6a2e); dev 3460 -> Postgres 5574 (quy-hang-db-dkn-H)
-# E14: Noi bo moi fd0be131-7efe-48cd-aa3b-68cb61fd7604 ; Gui duoc moi ac1393f3-168c-46f2-bbab-727909177f1f, 81f5f659-ead2-4966-917f-c3e0da35bff5. Bia Gui duoc (display_order nho nhat, khong is_cover) aea484d5-961c-4aa0-a4d2-682dc0ef53d2
-# Moi ma Noi bo cua can (7): 34b82b00-e5ac-4f03-b1b4-c60d53d7238d 60494464-67bd-46ec-a775-e93040a1bba2 9c900841-6822-4441-bdd1-fa6bb58f38db b5d851bf-a07e-4a7c-a018-a98121f3c68e 565dd2ac-1333-48d8-8503-e01a76fe9329 65e477da-fc93-4b9d-bf4c-946e928e0bf0 fd0be131-7efe-48cd-aa3b-68cb61fd7604
-== POST /api/v1/shares bang phien dau-khach
+# E16 verifier doc lap 2026-11-06T15:44:52Z; dev 3494 -> Postgres 5574 (quy-hang-db-dkn-H); 375x812
+# E14 (A-03.04, Withdrawn): Noi bo c1a2a740-042a-4064-809b-3790efd5f1ce ; Gui duoc 3e1dc9ef-9c73-43c3-98d4-9c1a62f96944, 22966ed6-eb0c-48ad-ab30-d7021dc00bd2
+== POST /api/v1/shares A-03.04 (Withdrawn) bang phien dau-khach
+{"error":"listing-not-shareable"} HTTP=400
+# => A-03.04 trang thai Withdrawn nen khong gui duoc; dung can mau Active A-10.05 (listing da39b7d6-865d-4542-8c98-a5f349e27fd4) co anh Noi bo 26a841db-01f0-484b-88c1-d22c8b0779e4 va anh Gui duoc: bia(order 0) 90395cc9-a184-4bf2-b890-6c007a45ac09, 4e0d4e98-5cac-44a2-91e1-3918cb694cc5, abe27663-79c6-48ef-a8fd-0e59c13bc08f (E15)
+== POST /api/v1/shares A-10.05 bang phien dau-khach
 HTTP/1.1 201 Created
-{"id":"91f91e06-f4f9-4f8c-9562-1ffb34a9dc57","code":"ZMR0ymkzCi7n","audience":"agents","prospectId":null,"senderUserId":"b5237944-0926-45a8-b1a8-de73146092d3","listingIds":["b0c662d4-3705-4fdb-a5fa-6a08165b6a2e"],"createdAt":"2026-11-06T10:31:21.576Z","disabledAt":null}
+{"id":"427c710f-e250-4026-af92-2d2e274b4528","code":"6CA79Zbb81dN","audience":"agents","prospectId":null,"senderUserId":"eeb50ad5-5a2f-4d32-94ae-dafc26024741","listingIds":["da39b7d6-865d-4542-8c98-a5f349e27fd4"],"createdAt":"2026-11-06T15:44:52.580Z","disabledAt":null}

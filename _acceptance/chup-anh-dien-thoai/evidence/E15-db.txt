@@ -1,13 +1,13 @@
-Can mau: Toà A A-08.05 (dau-chu-1 giu), may dev http://localhost:3494, DB quy-hang-db-dkn-H:5574
-Moc thoi gian DB truoc luot: 2026-11-06 14:20:08.263204+00
-TRUOC: 0 dong (tinh ca da go: 0)
-Dong khi con offline (truoc khi mo mang): 0
+Can mau: Toà A A-10.05 (dau-chu-1 giu), dev http://localhost:3494, DB quy-hang-db-dkn-H:5574
+Moc thoi gian DB truoc luot: 2026-11-06 15:42:04.344186+00
+TRUOC: 1 dong (tinh ca da go)
+Dong khi con offline (truoc khi mo mang): 1
 trang thai tren giao dien: ["da-tai","da-tai","da-tai"]
 daChan=true; POST /api/v1/units/photos phan hoi may chu theo thu tu: [201,201,201]
-SAU: 3 dong (tang 3)
+SAU: 4 dong (tang 3)
 ma anh moi trong luot (id|ngan|added_at|removed_at):
-cf603126-8a90-4d96-914e-6927b19ed1cb|shareable|2026-11-06 14:20:14.462941+00|
-234b62b0-8a43-434b-89ac-0768c71d6099|shareable|2026-11-06 14:20:29.527816+00|
-0d12fe51-8f66-4124-9b6b-6d82e98f36c2|internal|2026-11-06 14:20:29.568493+00|
+4e0d4e98-5cac-44a2-91e1-3918cb694cc5|shareable|2026-11-06 15:42:11.551888+00|
+abe27663-79c6-48ef-a8fd-0e59c13bc08f|shareable|2026-11-06 15:42:26.663612+00|
+26a841db-01f0-484b-88c1-d22c8b0779e4|internal|2026-11-06 15:42:26.720182+00|
 so ma co >1 dong (toan can): 0
 so dong moi cua luot (added_at>=moc): 3

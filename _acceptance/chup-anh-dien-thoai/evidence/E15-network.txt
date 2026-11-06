@@ -1,27 +1,63 @@
-200 Fetch http://localhost:3494/api/v1/catalog
-200 Fetch http://localhost:3494/api/v1/catalog
-200 Fetch http://localhost:3494/api/v1/listings
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Fetch http://localhost:3494/api/v1/listings/9b09f15d-d255-43b7-a4bf-7a06181d53eb
-200 Fetch http://localhost:3494/api/v1/units/photos/upload-url
-200 Fetch http://localhost:3494/api/v1/listings
+200 Document GET http://localhost:3494/units/A-10.05
+200 Stylesheet GET http://localhost:3494/_next/static/css/app/layout.css?v=1793979725232
+200 Stylesheet GET http://localhost:3494/_next/static/css/app/global-error.css?v=1793979725232
+200 Font GET http://localhost:3494/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793979725232
+200 Font GET http://localhost:3494/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793979725232
+200 Script GET http://localhost:3494/_next/static/chunks/webpack.js?v=1793979725232
+200 Manifest GET http://localhost:3494/manifest.webmanifest
+200 Script GET http://localhost:3494/_next/static/chunks/app-pages-internals.js
+200 Font GET http://localhost:3494/_next/static/media/22a5144ee8d83bca-s.p.woff2
+200 Script GET http://localhost:3494/_next/static/chunks/app/layout.js
+200 Font GET http://localhost:3494/_next/static/media/aa016aab0e6d1295-s.woff2
+200 Font GET http://localhost:3494/_next/static/media/b66cf8e69499582a-s.p.woff2
+200 Script GET http://localhost:3494/_next/static/chunks/app/(app)/error.js
+200 Script GET http://localhost:3494/_next/static/chunks/app/error.js
+200 Script GET http://localhost:3494/_next/static/chunks/app/(app)/not-found.js
+200 Script GET http://localhost:3494/_next/static/chunks/app/global-error.js
+200 Script GET http://localhost:3494/_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
+200 Script GET http://localhost:3494/_next/static/chunks/main-app.js?v=1793979725232
+200 Script GET http://localhost:3494/_next/static/chunks/app/(app)/layout.js
+404 Other GET http://localhost:3494/favicon.ico
+200 Other GET http://localhost:3494/icons/icon-192.png
+200 Fetch GET http://localhost:3494/api/v1/catalog
+200 Manifest GET http://localhost:3494/manifest.webmanifest
+200 Fetch GET http://localhost:3494/api/v1/catalog
+200 Other GET http://localhost:3494/icons/icon-192.png
+200 Fetch GET http://localhost:3494/api/v1/listings
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Fetch GET http://localhost:3494/api/v1/listings/da39b7d6-865d-4542-8c98-a5f349e27fd4
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Image GET http://localhost:3494/api/v1/units/photos/90395cc9-a184-4bf2-b890-6c007a45ac09/thumb
+200 Image GET http://localhost:3494/api/v1/units/photos/90395cc9-a184-4bf2-b890-6c007a45ac09/original
+200 Image GET blob:http://localhost:3494/2970c51b-3e85-45b2-8528-6ad2072e3d16
+200 Image GET blob:http://localhost:3494/18e122a6-0a80-488f-a410-43fb49c533d7
+200 Image GET blob:http://localhost:3494/197be13b-5e2a-4d49-b175-4fa03f082976
+200 Fetch POST http://localhost:3494/api/v1/units/photos/upload-url
+200 Fetch GET http://localhost:3494/api/v1/listings
+200 Fetch GET http://localhost:3494/_next/static/webpack/6e606e541cb4c35b.webpack.hot-update.json
+200 Script GET http://localhost:3494/_next/static/webpack/app/layout.6e606e541cb4c35b.hot-update.js
+200 Script GET http://localhost:3494/_next/static/webpack/app/global-error.6e606e541cb4c35b.hot-update.js
+200 Script GET http://localhost:3494/_next/static/webpack/webpack.6e606e541cb4c35b.hot-update.js
+200 Fetch GET http://localhost:3494/units/A-10.05?_rsc=BIdApWm8Q1W-9lyz
+200 Stylesheet GET http://localhost:3494/_next/static/css/app/layout.css?v=1793979731558
 [CHAN] POST /api/v1/units/photos phan hoi dau (may chu tra 201) -> Fetch.failRequest ConnectionReset
 FAILED POST http://localhost:3494/api/v1/units/photos :: net::ERR_CONNECTION_RESET canceled=false
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7
-200 Fetch http://localhost:3494/api/v1/units/photos/upload-url
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-201 Fetch http://localhost:3494/api/v1/units/photos
-200 Image http://localhost:3494/api/v1/units/photos/cf603126-8a90-4d96-914e-6927b19ed1cb/thumb
-200 Fetch http://localhost:3494/api/v1/units/photos/upload-url
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-201 Fetch http://localhost:3494/api/v1/units/photos
-200 Image http://localhost:3494/api/v1/units/photos/234b62b0-8a43-434b-89ac-0768c71d6099/original
-200 Image http://localhost:3494/api/v1/units/photos/cf603126-8a90-4d96-914e-6927b19ed1cb/original
-200 Image http://localhost:3494/api/v1/units/photos/234b62b0-8a43-434b-89ac-0768c71d6099/thumb
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Fetch http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-08.05
-200 Image http://localhost:3494/api/v1/units/photos/0d12fe51-8f66-4124-9b6b-6d82e98f36c2/original
+200 Manifest GET http://localhost:3494/manifest.webmanifest
+200 Other GET http://localhost:3494/icons/icon-192.png
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7
+200 Fetch POST http://localhost:3494/api/v1/units/photos/upload-url
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Image GET http://localhost:3494/api/v1/units/photos/4e0d4e98-5cac-44a2-91e1-3918cb694cc5/thumb
+201 Fetch POST http://localhost:3494/api/v1/units/photos
+200 Image GET http://localhost:3494/api/v1/units/photos/4e0d4e98-5cac-44a2-91e1-3918cb694cc5/original
+200 Fetch POST http://localhost:3494/api/v1/units/photos/upload-url
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+201 Fetch POST http://localhost:3494/api/v1/units/photos
+200 Image GET http://localhost:3494/api/v1/units/photos/abe27663-79c6-48ef-a8fd-0e59c13bc08f/original
+200 Image GET http://localhost:3494/api/v1/units/photos/abe27663-79c6-48ef-a8fd-0e59c13bc08f/thumb
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Fetch GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-10.05
+200 Image GET http://localhost:3494/api/v1/units/photos/26a841db-01f0-484b-88c1-d22c8b0779e4/original

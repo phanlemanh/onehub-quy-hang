@@ -252,3 +252,40 @@ capture:provenance                           claude-sonnet-5-5      2       443 
   claude-opus-5-5: 3 agent · 21 calls · out 11,059 · in 42 · cache_read 581,973 · cache_create 122,478
   claude-haiku-5-5: 10 agent · 21 calls · out 12,559 · in 42 · cache_read 179,167 · cache_create 147,249
   TỔNG: 24 agent · 182 calls · out 128,294 · in 366 · cache_read 15,475,377
+wf_a06eec50-995: 23 agent
+label                                        model              calls       out        in  cache_read     s
+ui:E18                                       claude-sonnet-5-5     32    26,766        64   4,054,546   987
+ui:E19                                       claude-sonnet-5-5     30    23,217        62   3,808,647  1154
+ui:E12                                       claude-sonnet-5-5     24    19,182        48   2,668,218   431
+ui:E16                                       claude-sonnet-5-5     27    17,164        56   3,174,466   273
+ui:E15                                       claude-sonnet-5-5     13    12,285        26   1,371,704   146
+synthesize:report                            claude-sonnet-5-5      2     6,976         4      32,579    44
+baseline:diffBase                            claude-sonnet-5-5      3     5,420         6      45,972    83
+ui:E13                                       claude-sonnet-5-5      9     4,735        18     855,652    68
+machine:npm run test:ro-ri                   claude-haiku-5-5       3     3,767         8      34,609    15
+ui:E14                                       claude-sonnet-5-5      5     3,677        10     434,277    46
+review:bugs                                  claude-opus-5-5        8     2,445        16     193,825    42
+machine:npm test -w @quy-hang/api            claude-haiku-5-5       2     2,278         4      13,234    10
+review:measurement                           claude-opus-5-5        6     2,007        12     141,706    35
+machine:npm test -w @quy-hang/ui-lint        claude-haiku-5-5       2     1,815         4      16,431    46
+machine:npm run lint                         claude-haiku-5-5       2     1,659         4      16,407    15
+machine:npm test -w @quy-hang/core           claude-haiku-5-5       2     1,602         4      16,423     8
+review:conventions                           claude-opus-5-5        4     1,139         8      64,842    20
+machine:npm run test:hooks                   claude-haiku-5-5       2       992         4      16,413     9
+machine:npm test -w @quy-hang/connect        claude-haiku-5-5       2       903         4      16,425     5
+machine:R="${CLAUDE_PLUGIN_ROOT:-$(node pack claude-haiku-5-5       2       785         4      16,502     7
+machine:npm run typecheck                    claude-haiku-5-5       2       699         4      16,411    14
+machine:npm test -w @quy-hang/web            claude-haiku-5-5       2       626         4      16,423     8
+capture:provenance                           claude-sonnet-5-5      2       347         4      12,824     7
+— wall 3184s theo vai trò —
+  baseline       1 agent · out     5,420 · wall    83s · 15:31:28 → 15:32:52
+  ui             7 agent · out   107,026 · wall  3121s · 15:31:28 → 16:23:29
+  machine       10 agent · out    15,126 · wall   123s · 15:31:28 → 15:33:32
+  review         3 agent · out     5,591 · wall    44s · 15:31:28 → 15:32:13
+  capture        1 agent · out       347 · wall     7s · 16:23:32 → 16:23:39
+  synthesize     1 agent · out     6,976 · wall    44s · 16:23:48 → 16:24:32
+— tổng theo model —
+  claude-sonnet-5-5: 10 agent · 147 calls · out 119,769 · in 298 · cache_read 16,458,885 · cache_create 798,990
+  claude-haiku-5-5: 10 agent · 21 calls · out 15,126 · in 44 · cache_read 179,278 · cache_create 148,149
+  claude-opus-5-5: 3 agent · 18 calls · out 5,591 · in 36 · cache_read 400,373 · cache_create 102,953
+  TỔNG: 23 agent · 186 calls · out 140,486 · in 378 · cache_read 17,038,536
