@@ -2743,17 +2743,31 @@
     },
     {
       "ma": "khung-ho-so-lien-he",
-      "cau_giao": "Hồ sơ liên hệ nằm trong cùng khung cột của hồ sơ căn (một khung có viền, cuộn riêng, có nút Đóng và Esc), bảng liên hệ giữ đủ cột và tên cột đứng yên khi hồ sơ mở, dòng đang mở được tô — và lưới khuôn bắt được khi cột phụ thiếu khung.",
+      "cau_giao": "Hồ sơ liên hệ nằm trong cùng khung cột của hồ sơ căn (một khung có viền, cuộn riêng, có nút Đóng và Esc), bảng liên hệ giữ đủ cột và tên cột đứng yên khi hồ sơ mở, dòng đang mở được tô — và lưới khuôn bắt được khi cột phụ thiếu khung; mở màn liên hệ thì bảng hiện cùng lúc với màn — trang đầu lấy sẵn ở máy chủ, không chờ thêm trước khi hỏi danh sách.",
       "slug": "khung-ho-so-lien-he",
-      "vi_sao": "Kiểm chi tiết liên hệ 06/11 (docs/plan/kiem-chi-tiet-lien-he.md, PR #167): hồ sơ liên hệ dùng chung bố cục và ruột hồ sơ nhưng thiếu khung cột của hồ sơ căn (không viền, máy tính không đóng được), bảng mất hai cột khi mở hồ sơ, lint không bắt. Chủ kho yêu cầu kiểm; giám sát xếp hàng vá (việc kỹ thuật, giao diện). Làm trước hàng 86 để đỡ chụp lại. Hàng không mã: đã quyết.",
+      "vi_sao": "Kiểm chi tiết liên hệ 06/11 (docs/plan/kiem-chi-tiet-lien-he.md, PR #167): hồ sơ liên hệ dùng chung bố cục và ruột hồ sơ nhưng thiếu khung cột của hồ sơ căn (không viền, máy tính không đóng được), bảng mất hai cột khi mở hồ sơ, lint không bắt. Chủ kho yêu cầu kiểm; giám sát xếp hàng vá (việc kỹ thuật, giao diện). Làm trước hàng 86 để đỡ chụp lại. Hàng không mã: đã quyết. Chủ kho báo màn liên hệ chậm: phiên KT đo máy chủ ấm trả lời 0,16–0,24 s, chậm nằm ở trình duyệt (dựng màn xong chờ thêm 0,25 s mới hỏi danh sách; máy và mạng chậm thì bảng hiện sau 4,4 s) — hai vá tốc độ gộp vào hàng này.",
       "hang": "T2",
-      "bat_khi": "Mở hồ sơ một liên hệ ở 1440: khung có viền, cuộn riêng, Đóng và Esc đóng được; bảng giữ đủ cột, tên cột dính đầu, dòng đang mở tô; ảnh hồ sơ căn không đổi; lưới khuôn đỏ khi gỡ khung khỏi cột phụ",
+      "bat_khi": "Mở hồ sơ một liên hệ ở 1440: khung có viền, cuộn riêng, Đóng và Esc đóng được; bảng giữ đủ cột, tên cột dính đầu, dòng đang mở tô; ảnh hồ sơ căn không đổi; lưới khuôn đỏ khi gỡ khung khỏi cột phụ; mở /contacts ở chế độ máy chậm và mạng chậm: dòng đầu của bảng có trong trang máy chủ trả về, không lượt hỏi danh sách nào chờ sau khi màn dựng xong",
       "vung": [
         "apps/web/src/app/(app)/contacts/**",
         "apps/web/src/components/khoi/solution-crm-4/**",
         "apps/web/src/app/(app)/units/ho-so/khung.tsx",
         "design/patterns/lien-he.md",
         "packages/ui-lint/**"
+      ]
+    },
+    {
+      "ma": "va-deploy-csdl-tam",
+      "cau_giao": "Bước triển khai trên nhánh chính không còn chạy bộ kiểm cách ly trên cơ sở dữ liệu bản thật: bộ kiểm chạy trên một cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp ấy; trên bản thật bước triển khai chỉ cập nhật cấu trúc dữ liệu rồi kiểm nhanh, chỉ đọc, rằng mọi bảng của công ty còn bật luật theo dòng và vai của API không là chủ bảng; bản thật nhận bản mới trong vài phút sau mỗi lần gộp và bước triển khai không giữ quá hai kết nối của bản thật.",
+      "slug": "va-deploy-csdl-tam",
+      "vi_sao": "Sự cố 06/11: job deploy trên main chạy db:migrate + bộ cách ly ~25 phút trên CSDL bản thật ở mỗi lần gộp; lượt 07:43Z tự làm cạn kết nối bản thật (3 bài đỏ EMAXCONNSESSION 08:03Z), cộng AC-9 đỏ từ 05/11 08:41Z làm bản thật đứng 22 giờ. Chủ kho duyệt hàng khẩn 06/11 ~08:20Z (câu h-20261106T081703Z-15). Hàng không mã: đã quyết.",
+      "hang": "T3",
+      "bat_khi": "Job deploy trên main xanh ở lần gộp đầu tiên sau hàng này, xong dưới 5 phút, không bài nào chạy ghi trên CSDL bản thật; bảng thiếu luật theo dòng trên bản thật làm job đỏ trước khi gọi Vercel; bộ cách ly vẫn chạy đủ trên CSDL tạm và vẫn chặn triển khai khi đỏ",
+      "vung": [
+        ".github/workflows/ci.yml",
+        "packages/db/scripts/**",
+        "packages/db/package.json",
+        "_acceptance/va-deploy-csdl-tam/**"
       ]
     }
   ],
