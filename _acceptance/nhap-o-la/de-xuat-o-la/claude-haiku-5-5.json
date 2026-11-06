@@ -1,0 +1,127 @@
+{
+  "ten": "bo-o-la",
+  "moHinh": "claude-haiku-5-5",
+  "bamGoi": "9e484d7b27ba8c0f13f4d6a69c87f8d53f6ccbe1be46061f27cf39c1c3828243",
+  "bamLoiNhac": "d955cb7a087e25de73e3d98924b2305eeb7e4e302ab3b613b1eaa519c55d9ce0",
+  "lapBoi": "lập bởi tác tử context sạch (claude-haiku-5-5)",
+  "ngay": "2026-11-06",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "id": "o1",
+        "gia_tri": "4,6 tỷ",
+        "ly_do": "Ô ghi dải 4,6–4,8 tỷ; chọn cận dưới 4,6 tỷ làm giá chào, đầu chủ nên xác nhận lại mức này trước khi lưu."
+      },
+      {
+        "id": "o2",
+        "gia_tri": "4,6 tỷ",
+        "ly_do": "Ô ghi dải 4,6–4,8 tỷ; chọn cận dưới 4,6 tỷ làm giá chào, đầu chủ nên xác nhận lại mức này trước khi lưu."
+      },
+      {
+        "id": "o3",
+        "gia_tri": "4,6 tỷ",
+        "ly_do": "Ô ghi dải 4,6–4,8 tỷ; chọn cận dưới 4,6 tỷ làm giá chào, đầu chủ nên xác nhận lại mức này trước khi lưu."
+      },
+      {
+        "id": "o4",
+        "gia_tri": "4,6 tỷ",
+        "ly_do": "4600 triệu bằng 4,6 tỷ; ô ghi dải 4,6–4,8 tỷ nên chọn cận dưới 4,6 tỷ làm giá chào."
+      },
+      {
+        "id": "o5",
+        "gia_tri": "3,2 tỷ",
+        "ly_do": "Ô ghi dải 3,2–3,5 tỷ; chọn cận dưới 3,2 tỷ làm giá chào, đầu chủ nên xác nhận lại trước khi lưu."
+      },
+      {
+        "id": "o6",
+        "gia_tri": "5 tỷ",
+        "ly_do": "Ô ghi dải 5–5,5 tỷ; chọn cận dưới 5 tỷ làm giá chào, đầu chủ nên xác nhận lại trước khi lưu."
+      },
+      {
+        "id": "o7",
+        "gia_tri": "2,9 tỷ",
+        "ly_do": "Ô ghi dải 2,9–3,1 tỷ; chọn cận dưới 2,9 tỷ làm giá chào, đầu chủ nên xác nhận lại trước khi lưu."
+      },
+      {
+        "id": "o8",
+        "gia_tri": "6,2 tỷ",
+        "ly_do": "Ô ghi dải 6,2–6,5 (cột tính theo tỷ); chọn cận dưới 6,2 tỷ làm giá chào, đầu chủ nên xác nhận lại trước khi lưu."
+      },
+      {
+        "id": "o9",
+        "gia_tri": "4,2 tỷ KBP",
+        "ly_do": "Ô ghi giá về tay chủ 4,2 tỷ; giá không bao phí chính là giá về tay nên ghi đúng số này kèm KBP."
+      },
+      {
+        "id": "o10",
+        "gia_tri": "3,95 tỷ KBP",
+        "ly_do": "Ô ghi chủ nhận về 3,95 tỷ; giá không bao phí chính là giá về tay nên ghi đúng số này kèm KBP."
+      },
+      {
+        "id": "o11",
+        "gia_tri": "5 tỷ KBP",
+        "ly_do": "Ô ghi về tay 5 tỷ; giá không bao phí chính là giá về tay nên ghi đúng số này kèm KBP."
+      },
+      {
+        "id": "o12",
+        "gia_tri": "2,8 tỷ KBP",
+        "ly_do": "Ô ghi thu về 2,8 tỷ; giá không bao phí chính là giá về tay nên ghi đúng số này kèm KBP."
+      },
+      {
+        "id": "o13",
+        "gia_tri": "3,6 tỷ KBP",
+        "ly_do": "Ô ghi chủ nhận về tay 3,6 tỷ; giá không bao phí chính là giá về tay nên ghi đúng số này kèm KBP."
+      },
+      {
+        "id": "o14",
+        "gia_tri": "6,1 tỷ KBP",
+        "ly_do": "Ô ghi thu về 6,1 tỷ; giá không bao phí chính là giá về tay nên ghi đúng số này kèm KBP."
+      },
+      {
+        "id": "o18",
+        "gia_tri": "KBP",
+        "ly_do": "Ô thu về là giá chưa gồm phí nên điều kiện phí là KBP."
+      },
+      {
+        "id": "o19",
+        "gia_tri": "KBP",
+        "ly_do": "Ô chủ thu về là giá chưa gồm phí nên điều kiện phí là KBP."
+      },
+      {
+        "id": "o20",
+        "gia_tri": "Đang giao dịch",
+        "ly_do": "Đang đàm phán nghĩa là đã có khách đang thương lượng, thuộc nhóm Đang giao dịch."
+      },
+      {
+        "id": "o21",
+        "gia_tri": "Đang giao dịch",
+        "ly_do": "Giữ chỗ nghĩa là đã có khách giữ chỗ, thuộc nhóm Đang giao dịch."
+      },
+      {
+        "id": "o23",
+        "gia_tri": "Đã bán",
+        "ly_do": "Đã sang tên nghĩa là quyền sở hữu đã chuyển, tức đã bán."
+      },
+      {
+        "id": "o24",
+        "gia_tri": "Đang bán",
+        "ly_do": "Còn trống nghĩa là còn để bán và đang rao, nên ghi Đang bán."
+      },
+      {
+        "id": "o25",
+        "gia_tri": "Đang bán",
+        "ly_do": "Đang chào bán nghĩa là đang rao bán."
+      },
+      {
+        "id": "o26",
+        "gia_tri": "Tạm ngừng",
+        "ly_do": "Tạm dừng bán tương ứng trạng thái Tạm ngừng."
+      },
+      {
+        "id": "o27",
+        "gia_tri": "Ngừng hẳn",
+        "ly_do": "Chủ không bán nữa nghĩa là ngừng hẳn việc bán."
+      }
+    ]
+  }
+}

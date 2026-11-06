@@ -1,0 +1,132 @@
+{
+  "ten": "bo-o-la",
+  "moHinh": "claude-opus-5-5",
+  "bamGoi": "9e484d7b27ba8c0f13f4d6a69c87f8d53f6ccbe1be46061f27cf39c1c3828243",
+  "bamLoiNhac": "d955cb7a087e25de73e3d98924b2305eeb7e4e302ab3b613b1eaa519c55d9ce0",
+  "lapBoi": "lập bởi tác tử context sạch (claude-opus-5-5)",
+  "ngay": "2026-11-06",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "id": "o1",
+        "gia_tri": "4,8 tỷ",
+        "ly_do": "Ô ghi dải 4,6–4,8 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o2",
+        "gia_tri": "4,8 tỷ",
+        "ly_do": "Ô ghi dải 4,6–4,8 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o3",
+        "gia_tri": "4,8 tỷ",
+        "ly_do": "Ô ghi dải 4,6 đến 4,8 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o4",
+        "gia_tri": "4,8 tỷ",
+        "ly_do": "Ô ghi dải 4.600–4.800 triệu, tức 4,6–4,8 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống."
+      },
+      {
+        "id": "o5",
+        "gia_tri": "3,5 tỷ",
+        "ly_do": "Ô ghi dải 3,2–3,5 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o6",
+        "gia_tri": "5,5 tỷ",
+        "ly_do": "Ô ghi dải 5–5,5 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o7",
+        "gia_tri": "3,1 tỷ",
+        "ly_do": "Ô ghi dải 2,9–3,1 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o8",
+        "gia_tri": "6,5 tỷ",
+        "ly_do": "Ô ghi dải 6,2 đến 6,5 tỷ; chọn mức trên của dải làm giá chào để còn đường thương lượng xuống, sửa lại nếu chủ chốt mức khác."
+      },
+      {
+        "id": "o9",
+        "gia_tri": "4,2 tỷ KBP",
+        "ly_do": "Chủ thu về 4,2 tỷ, theo luật của sàn giá về tay là giá không bao phí nên ghi 4,2 tỷ kèm KBP."
+      },
+      {
+        "id": "o10",
+        "gia_tri": "3,95 tỷ KBP",
+        "ly_do": "Chủ thu về 3,95 tỷ, theo luật của sàn giá về tay là giá không bao phí nên ghi 3,95 tỷ kèm KBP."
+      },
+      {
+        "id": "o11",
+        "gia_tri": "5 tỷ KBP",
+        "ly_do": "Chủ nhận về tay 5 tỷ, theo luật của sàn giá về tay là giá không bao phí nên ghi 5 tỷ kèm KBP."
+      },
+      {
+        "id": "o12",
+        "gia_tri": "2,8 tỷ KBP",
+        "ly_do": "«thu ve 2.8» là chủ thu về 2,8 tỷ, theo luật của sàn giá về tay là giá không bao phí nên ghi kèm KBP."
+      },
+      {
+        "id": "o13",
+        "gia_tri": "3,6 tỷ KBP",
+        "ly_do": "Chủ nhận về tay 3,6 tỷ, theo luật của sàn giá về tay là giá không bao phí nên ghi 3,6 tỷ kèm KBP."
+      },
+      {
+        "id": "o14",
+        "gia_tri": "6,1 tỷ KBP",
+        "ly_do": "Chủ thu về 6,1 tỷ, theo luật của sàn giá về tay là giá không bao phí nên ghi 6,1 tỷ kèm KBP."
+      },
+      {
+        "id": "o18",
+        "gia_tri": "KBP",
+        "ly_do": "«thu về» nghĩa là giá ghi là tiền chủ nhận, chưa gồm phí, nên điều kiện phí là KBP."
+      },
+      {
+        "id": "o19",
+        "gia_tri": "KBP",
+        "ly_do": "«chủ thu về» nghĩa là giá ghi là tiền chủ nhận, chưa gồm phí, nên điều kiện phí là KBP."
+      },
+      {
+        "id": "o20",
+        "gia_tri": "Đang giao dịch",
+        "ly_do": "Căn đang đàm phán với khách thuộc trạng thái Đang giao dịch."
+      },
+      {
+        "id": "o21",
+        "gia_tri": "Đang giao dịch",
+        "ly_do": "Căn đã có khách giữ chỗ thuộc trạng thái Đang giao dịch."
+      },
+      {
+        "id": "o22",
+        "gia_tri": "Đã bán",
+        "ly_do": "«hết hàng» nghĩa là căn không còn để bán vì đã bán xong."
+      },
+      {
+        "id": "o23",
+        "gia_tri": "Đã bán",
+        "ly_do": "Căn đã sang tên cho người mua nghĩa là giao dịch hoàn tất, trạng thái Đã bán."
+      },
+      {
+        "id": "o24",
+        "gia_tri": "Đang bán",
+        "ly_do": "«còn trống» nghĩa là căn vẫn còn, chưa có khách, nên đang mở bán."
+      },
+      {
+        "id": "o25",
+        "gia_tri": "Đang bán",
+        "ly_do": "«đang chào bán» cùng nghĩa với trạng thái Đang bán."
+      },
+      {
+        "id": "o26",
+        "gia_tri": "Tạm ngừng",
+        "ly_do": "«tạm dừng bán» là ngừng có thời hạn, ứng với trạng thái Tạm ngừng."
+      },
+      {
+        "id": "o27",
+        "gia_tri": "Ngừng hẳn",
+        "ly_do": "Chủ không bán nữa là thôi bán hẳn, ứng với trạng thái Ngừng hẳn."
+      }
+    ]
+  }
+}

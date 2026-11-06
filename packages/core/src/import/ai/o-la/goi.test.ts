@@ -74,6 +74,12 @@ test("gói ô lạ: gộp cùng chữ, trần 300, bỏ dáng dữ liệu cá nh
   );
   assert.ok(!caNhan.o.some((x) => x.cot === 0), "ô số điện thoại ở cột giá không vào gói");
   assert.ok(!caNhan.o.some((x) => x.cot === 1), "ô dáng họ tên ở cột trạng thái không vào gói");
+  const trongCau = dungGoiOLa(
+    [hoSo(0, "shareable_listing", "Trạng thái")],
+    { headerRow: 0, columns: [cotKH(0, "standardStatus")], questions: [] },
+    [dong(0, [o("chủ Nguyễn Văn An giữ", "needs_person", "normalize", "standardStatus")]), dong(1, [o("chủ [Tên] giữ", "needs_person", "normalize", "standardStatus")]), dong(2, [o("giữ chỗ", "needs_person", "normalize", "standardStatus")])],
+  );
+  assert.deepEqual(trongCau.o.map((x) => x.giaTri), ["giữ chỗ"], "họ tên giữa câu không vào gói; đối chứng «giữ chỗ» vào");
 
   const mot = dungGoiOLa(profile, plan, [dong(0, [o("giữ chỗ", "needs_person", "normalize", "standardStatus"), o("y", "keep")])]).o[0]!;
   assert.deepEqual(Object.keys(mot).sort(), ["cot", "giaTri", "id", "lyDoMa", "tieuDe", "truong"], "đúng sáu khoá (cột không mang phép)");

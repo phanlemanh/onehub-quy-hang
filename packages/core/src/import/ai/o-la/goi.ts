@@ -30,7 +30,17 @@ export const chuO = (raw: string | number | null): string => (raw === null ? "" 
 /** Lý do mã bỏ đoạn chép lại chữ của ô («X»: … → «ô»: …): chữ đã ở `giaTri`, chép hai lần chỉ làm gói dài gấp đôi. */
 export const lyDoGon = (lyDo: string, giaTri: string) => lyDo.split(`«${giaTri}»`).join("«ô»");
 
-const laCaNhan = (s: string) => detectPersonal(s) !== null || looksLikePersonName(s);
+/**
+ * Ô lạ là chữ tự do nhiều khi kèm người («chủ Nguyễn Văn An giữ»): dáng họ tên ở BẤT KỲ đoạn 2–5 chữ liền nhau nào của ô
+ * (không chỉ cả ô như hồ sơ cột), hay một nhãn ngoặc vuông của bộ dò («[Tên]»), là loại ô.
+ */
+export function chuaHoTen(s: string): boolean {
+  const tu = s.normalize("NFC").trim().split(/\s+/);
+  if (tu.some((t) => /^\[[^\]]+\]$/.test(t))) return true;
+  for (let i = 0; i < tu.length; i++) for (let n = 2; n <= 5 && i + n <= tu.length; n++) if (looksLikePersonName(tu.slice(i, i + n).join(" "))) return true;
+  return false;
+}
+const laCaNhan = (s: string) => detectPersonal(s) !== null || chuaHoTen(s);
 
 /** Trường của cột có được mở cho ô lạ không — lớp cột (bộ phân loại) VÀ lớp trường (đích của kế hoạch) đều phải được mở. */
 export function cotMoOLa(cls: ColumnClass, target: unknown): target is StandardField {
