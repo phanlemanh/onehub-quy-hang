@@ -58,8 +58,8 @@ hơn» xét hai chiều: đổi một nửa làm cặp trái luật thì bị t�
 | 7 | `price.change_confirm_pct` | Đổi giá quá bao nhiêu % thì hỏi lại | `int` % | 20 | 5–50 | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 7; ADR-0011 quyết định 1 (luật kiểm của lần nhập) | 49 |
 | 8 | `fee.inclusion` | Định nghĩa «Bao phí» | `set{personalIncomeTax, registrationFee, brokerageFee}` | cả ba | tập con khác rỗng | Quản trị sàn | — | mới — giá bao phí mang định nghĩa lúc tính | company_internal | Mở | §13 (chốt 29/10), luật 13 | 49 |
 | 9 | `fee.brokerage_pct` | Phí môi giới | `decimal` % | 1 | 0–5 | Quản trị sàn | Đầu chủ sửa từng căn | mới | company_internal | Mở | §13 (chốt 29/10); hàng 28 đọc mặc định ở `TI_LE_BAO_PHI_MAC_DINH` (`pricing/ve-tay.ts`), đầu chủ sửa cho một lần tính trên màn cuộc gọi, chưa lưu | 49 |
-| 10 | `fee.personal_income_tax_pct` | Thuế thu nhập cá nhân khi chuyển nhượng | `decimal` % | 2 (mặc định tạm của hàng 28, `TI_LE_BAO_PHI_MAC_DINH`) — kiểm lại văn bản ở hàng 49 | 2–2 — chỉ đúng số luật tới hàng 49 (Hỏi-1 hàng 81, 04/11) | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
-| 11 | `fee.registration_fee_pct` | Lệ phí trước bạ | `decimal` % | 0,5 (như #10) | 0,5–0,5 — như #10 | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
+| 10 | `fee.personal_income_tax_pct` | Thuế thu nhập cá nhân khi chuyển nhượng | `decimal` % | 2 — kiểm văn bản 06/11: Điều 14 Luật Thuế thu nhập cá nhân 2025 (hiệu lực 01/7/2026) giữ 2% trên giá chuyển nhượng | 2–2 — đúng số luật, sàn không sửa (K30) | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
+| 11 | `fee.registration_fee_pct` | Lệ phí trước bạ | `decimal` % | 0,5 — kiểm văn bản 06/11: Điều 8 Nghị định 10/2022/NĐ-CP (sửa bởi Nghị định 175/2025/NĐ-CP) giữ 0,5% | 0,5–0,5 — đúng số luật, sàn không sửa (K30) | Quản trị sàn | — | mới | company_internal | Mở | Luật 13, hàng 49 | 49 |
 
 ### A4. Trang khách và gửi — luật 24, 26, §13, hàng 31, 35, 44
 
@@ -150,6 +150,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K27 | Ai mở được số của một liên hệ chủ nhà, và tìm theo số báo «đã có — [Tên] đang giữ»: người giữ còn vai Đầu chủ và trưởng nhóm; mỗi lần mở số là một sự kiện (KW cho Owner + Assignees, Follow Up Boss phân quyền theo vai) | Quyền và an toàn — bất biến 2, lớp nguồn | ADR-0021 qđ 3; hàng 103 Hỏi-6 (chủ kho duyệt Cổng Phạm vi 05/11), migration 036 |
 | K28 | Ai làm gì với hàng: bảng quyền thao tác × vai cố định ở lõi — xem, tạo, sửa chỉ người có Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm); đưa lên Đang bán theo cờ «Sẵn sàng bán»; Telesales, Quản trị sàn nhận «không có hàng này»; sàn không tự chỉnh ô nào (KW Command nấc quyền cố định, Follow Up Boss vai cố định) | Quyền và an toàn — bất biến 1 kề (luật theo dòng 046) | `access/bang-quyen-hang.json`; hàng `bang-quyen-theo-vai` Hỏi-1 (chủ kho duyệt Cổng Phạm vi 05/11), migration 046 |
 | K29 | Nhãn trạng thái riêng: neo vào trạng thái chuẩn cố định sau khi tạo (đổi neo = gỡ có hỏi nhãn thay rồi tạo mới); trần 3 nhãn còn sống mỗi trạng thái chuẩn (Follow Up Boss, KW Command không nêu trần — chưa kiểm) | Neo: nghĩa chuẩn để so — căn mang nhãn không bao giờ lệch trạng thái chuẩn. Trần: nền tảng — thực đơn trình sửa ô và thẻ điện thoại giữ gọn | Hàng 46 Hỏi-5, Hỏi-6 (chủ kho duyệt Cổng Phạm vi 06/11); `kiemNhanTrangThai` ở `packages/core/src/statuses` |
+| K30 | Thuế thu nhập cá nhân 2% và lệ phí trước bạ 0,5% đúng số luật, sàn không sửa (#10, #11); bao phí gồm tập con của ba khoản cố định ở lõi — sàn bật tắt từng khoản (#8), không thêm khoản riêng | Nghĩa chuẩn theo văn bản và để quy về tay (luật 12) | Hàng `thue-phi` Hỏi-1, Hỏi-2 (chủ kho duyệt Cổng Phạm vi 06/11); mặc định SQL của migration 050 canh bằng `fees/dinh-nghia.test.ts` |
 
 ## Đếm
 
@@ -160,7 +161,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **29 điều khoá** ở phần C (K27 của hàng 103, K28 của hàng bang-quyen-theo-vai, K29 của hàng 46).
+- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **30 điều khoá** ở phần C (K27 của hàng 103, K28 của hàng bang-quyen-theo-vai, K29 của hàng 46, K30 của hàng thue-phi).
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.
