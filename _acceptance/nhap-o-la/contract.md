@@ -55,7 +55,7 @@ Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`, `[Tên sàn]`.
   không có đáp án) và đề xuất ghi sẵn do tác tử context sạch lập trên đúng gói và lời nhắc của mã — một bộ Opus 5.5, một bộ
   Haiku 5.5, When mã chấm, Then mỗi bộ có số phủ, đúng, bịa, tự ghi, rò nguồn; bộ của mô hình đường ô lạ dùng (theo Hỏi-1:
   Opus 5.5) đạt phủ ≥ 90%, đúng ≥ 95%, bịa 0, tự ghi 0, rò nguồn 0; số của bộ kia in cạnh để phiên nghiệm thu quyết hạ mô
-  hình.
+  hình; bộ dưới một ngưỡng (vd phủ 89%) thì bài đo đỏ và nêu số, không cho đường ô lạ dùng mô hình ấy.
 - **AC-9 — Tính vào sổ chi phí.** Given một lần gọi ô lạ trả lời, When máy chủ ghi, Then đúng một dòng `ai_usage` mang mô
   hình đã gọi, token, tiền theo bảng giá của mô hình ấy, `result: "ok"`; trần tháng của sàn tính chung với đề xuất cột — đã chạm
   trần thì không gọi.
@@ -77,12 +77,10 @@ AC-4. Later/Never ở «Out of scope».
 
 ## Đường đo
 
-| Thước (ô cơ hội) | Số từ đâu | AC bảo đảm |
-| --- | --- | --- |
-| mỗi ô lạ một đề xuất kèm lý do | số phủ và đúng của `thu/do-o-la.ts` trên bộ ô lạ | AC-8 |
-| chọn một chạm; sửa tay được | ca màn và ca trạng thái web | AC-4, AC-6 |
-| không ô nào tự ghi khi người chưa chọn | số «tự ghi» của bộ đo + ca gói ghi | AC-5, AC-8 |
-| thông tin chủ nhà không rời công ty | bộ kiểm rò `*.ro-ri.test.ts` (job CI `ro-ri`) | AC-1, AC-2 |
+- Mỗi ô lạ có một đề xuất kèm lý do · số phủ và đúng từ `so-do-o-la.json` (lệnh `thu/do-o-la.ts` trên bộ ô lạ, hai mô hình; số qua API thật ở phiên nghiệm thu) · AC-8
+- Chọn một chạm, đề xuất sai thì sửa tay · số từ ca «Dùng» và «gõ tay thắng» ở trạng thái màn, ảnh màn 1440 và 375 · AC-4, AC-6
+- Không ô nào tự ghi khi người chưa chọn · số «tự ghi» của bộ đo và ca gói ghi mang chữ gốc · AC-5, AC-8
+- Thông tin chủ nhà không rời công ty · số từ bộ kiểm rò trên gói ô lạ và số dòng `ai_usage` kết quả `blocked_pii` · AC-1, AC-2
 
 ## Out of scope
 
