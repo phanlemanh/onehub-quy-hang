@@ -313,7 +313,7 @@ lại theo hai nguyên tắc ở mục 9 — đứng trước mọi hàng khác.
     "cau_giao": "Người được trao Quản trị sàn — từ công cụ mở sàn hay ở màn Người dùng — mang luôn đủ bốn vai làm việc (Telesales, Đầu chủ, Đầu khách, Trưởng nhóm): đăng nhập lần đầu đã thấy mọi nhà, mọi nút tạo và chủ nhà cả sàn; gỡ bớt vai vẫn được cho người chỉ cấu hình",
     "vai": "Quản trị sàn",
     "hang": "T3",
-    "vi_sao": "Chủ kho 06/11: quản trị sàn là quyền lớn nhất, trao cho chủ sàn, nên thấy tất cả và giữ luôn các vai khác. Audit sàn mới ngày 0 mục 3b, 9. Sửa Tham chiếu §2, §6 («quản trị sàn không tự thấy chủ nhà»), ghi chú ADR-0010, ADR-0011. Cách B ở mục 9: gán gói vai, không đổi luật theo dòng",
+    "vi_sao": "Chủ kho 06/11: quản trị sàn là quyền lớn nhất, trao cho chủ sàn, nên thấy tất cả và giữ luôn các vai khác. Audit sàn mới ngày 0 mục 3b, 9. Sửa Tham chiếu §2, §6 («quản trị sàn không tự thấy chủ nhà»), ghi chú ADR-0010, ADR-0011. Chủ kho chốt cách B 06/11 (Tham chiếu §12): gán gói vai, không đổi luật theo dòng",
     "bat_khi": "Mở sàn mới thì người đầu tiên mang năm vai; tích Quản trị sàn cho một người ở màn Người dùng thì bốn vai kia tích sẵn; gỡ bớt được và lưu đúng; người mang đủ vai thấy Bảng hàng, Nhập Excel, chủ nhà cả sàn, mỗi lần mở số vẫn một vết; sàn đang chạy không đổi vai ai",
     "vung": ["packages/db/scripts/**", "packages/api/src/thanh-vien.ts", "apps/web/src/app/(app)/settings/users/**", "docs/product/tham-chieu.md", "docs/adr/**"]
   },
@@ -474,7 +474,7 @@ hàng chạy song song vài ngày** → **(4) làm hằng ngày trên Quỹ hàn
 - **Hai cách làm:**
   - **A — Quản trị bao mọi vai ở luật**: mỗi chỗ xét vai hiểu «Quản trị» là có đủ. Đổi nghĩa một vai, chạm lõi và ~17
     migration, T3 nặng; mất chỗ cho người chỉ cấu hình (thư ký, người IT của sàn).
-  - **B — Trao Quản trị là trao đủ vai**: công cụ mở sàn gắn năm vai; ở màn Người dùng, tích Quản trị sàn thì bốn vai
+  - **B — Trao Quản trị là trao đủ vai** (**chủ kho chốt 06/11**): công cụ mở sàn gắn năm vai; ở màn Người dùng, tích Quản trị sàn thì bốn vai
     kia tích sẵn, gỡ bớt được. Không đổi luật theo dòng nào; đúng chữ «giữ luôn các quyền khác»; vẫn giữ được người chỉ
     cấu hình. Đổi vai của chính mình đã chạy (`packages/api/src/thanh-vien.ts:150-180`).
 - **Hệ quả của B cần biết trước:** mang Trưởng nhóm là thấy chủ nhà cả sàn (mỗi lần mở số vẫn một vết); mang Đầu chủ là có
@@ -517,7 +517,7 @@ hàng chạy song song vài ngày** → **(4) làm hằng ngày trên Quỹ hàn
 | Thứ tự | Việc | Chặng gỡ | Cần chủ kho |
 | --- | --- | --- | --- |
 | Hôm nay | Chủ kho tự thêm bốn vai cho mình ở sàn «OneHub» (Cài đặt › Người dùng › Sửa) — đúng cách B, làm tay | 1 | Tự làm |
-| 1 | `chu-san-du-vai` (cách B) | 1 | Chọn A hay B |
+| 1 | `chu-san-du-vai` (cách B) | 1 | **Đã chốt B 06/11** (Tham chiếu §12) |
 | 2 | `can-nhap-len-bang-chung` | 2b | Mở lại luật 17 cho cửa nhập ở Cổng Phạm vi |
 | 3 | `tao-can-tay` + gỡ căn tạo nhầm (G2 của rà soát CRUD 05/11) | 4a, 4c | Mở lại «ba cửa vào» |
 | 4 | Gán đầu chủ theo cột «Đầu chủ» của file (chưa thành hàng — giám sát cân gộp vào hàng nhập) | 2c | — |
