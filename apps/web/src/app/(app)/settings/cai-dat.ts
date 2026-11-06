@@ -15,6 +15,8 @@ export const MUC_SAN: readonly MucCot[] = [
   { label: "Luật chia lead", href: "/settings/lead-routing" },
   { label: "Thuế phí", href: "/settings/fees" },
   { label: "Mẫu nhập", href: "/settings/templates" },
+  // Hàng 44: mức chia mặc định và ẩn mức chia của trang nhóm môi giới.
+  { label: "Trang môi giới", href: "/settings/broker-page" },
 ];
 
 export const MUC_CA_NHAN: MucCot = { label: "Cá nhân", href: PERSONAL_SETTINGS_PATH };
