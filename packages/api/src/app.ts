@@ -21,6 +21,7 @@ import { registerContactReadRoutes } from "./contacts/read/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerSettingsRoutes } from "./settings/routes";
+import { registerFeeRoutes } from "./fees/routes";
 import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
 import { registerStatusesRoutes } from "./statuses/routes";
@@ -204,6 +205,8 @@ export function createApi(deps: ApiDeps) {
   registerRoutingRoutes(api, deps);
   // Hàng 82: cấu hình theo sàn qua lối chung, có nhật ký.
   registerSettingsRoutes(api, deps);
+  // Hàng 49: dấu định nghĩa bao phí của giá.
+  registerFeeRoutes(api, deps);
   registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
   registerStatusesRoutes(api, deps);
