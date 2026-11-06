@@ -1,6 +1,7 @@
 import { bangNhan, boTuVung, doiNhan, dungDongNhan, laKhoaNhan, type BangNhan, type DongNhan } from "@quy-hang/core/labels";
 import type pg from "pg";
 import { rolesOf } from "../routing/store";
+import { readStatuses, type BangTrangThai } from "../statuses/store";
 
 /**
  * Cách gọi riêng của sàn (hàng 45): đọc và đổi bộ nhãn trong `company_settings` (khoá `labels.field.*`, `labels.value.*`,
@@ -19,12 +20,15 @@ export async function dongNhanCuaSan(tx: pg.PoolClient): Promise<DongNhan[]> {
   ).rows.filter((r) => laKhoaNhan(r.key));
 }
 
-export async function readLabels(tx: pg.PoolClient): Promise<BangNhan> {
-  return bangNhan(boTuVung(await dongNhanCuaSan(tx)).tuVung);
+/** Bộ cách gọi của sàn, kèm bộ trạng thái riêng (hàng 46) để màn đọc từ vựng một lần — cùng thân `GET /company/statuses`. */
+export type BangTuVung = BangNhan & BangTrangThai;
+
+export async function readLabels(tx: pg.PoolClient): Promise<BangTuVung> {
+  return { ...bangNhan(boTuVung(await dongNhanCuaSan(tx)).tuVung), ...(await readStatuses(tx)) };
 }
 
 /** Ghi nguyên khối: một ô sai thì không ô nào được ghi. Chỉ quản trị sàn. */
-export async function writeLabels(tx: pg.PoolClient, input: unknown): Promise<BangNhan | LabelsRefusal> {
+export async function writeLabels(tx: pg.PoolClient, input: unknown): Promise<BangTuVung | LabelsRefusal> {
   if (!(await rolesOf(tx)).includes("company_admin")) return { refusal: "forbidden" };
   const bo = dungDongNhan(input);
   if (!bo.ok) return { refusal: "invalid", reason: bo.loi };

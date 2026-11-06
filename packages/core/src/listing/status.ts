@@ -27,6 +27,12 @@ export const TRANSITIONS: Readonly<Record<StandardStatus, readonly StandardStatu
 /** Đổi sang hai trạng thái này thắng ngay dù phiên bản cũ (luật 10: «Đã bán» và «Đã cọc» thắng ngay). */
 export const WINS_IMMEDIATELY: readonly StandardStatus[] = ["Pending", "Closed"];
 
+/**
+ * Khuôn mã nhãn trạng thái riêng của sàn (hàng 46): `listings.status_label` và khoá `labels.status.<mã>` (migration 047 chép
+ * đúng khuôn). Đặt ở đây để lệnh hàng kiểm được mà không nhập lõi nhãn (`@quy-hang/core/statuses` dùng lại hằng này).
+ */
+export const MA_NHAN_TRANG_THAI_RE = /^[a-z][a-z0-9_]{0,31}$/;
+
 export function isStandardStatus(value: unknown): value is StandardStatus {
   return typeof value === "string" && (STANDARD_STATUSES as readonly string[]).includes(value);
 }

@@ -21,6 +21,7 @@
     "./export": "./src/export/index.ts",
     "./config": "./src/config/index.ts",
     "./labels": "./src/labels/index.ts",
+    "./statuses": "./src/statuses/index.ts",
     "./thiet-bi": "./src/thiet-bi/index.ts"
   },
   "scripts": {
