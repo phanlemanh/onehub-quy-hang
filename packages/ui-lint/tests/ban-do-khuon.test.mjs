@@ -169,7 +169,7 @@ const NHAN_DIEN_TRANG_THAI = [
   // Nhập Excel (hàng man-nhap-excel): khuôn, màn và bảng của nó.
   ...["khung.tsx", "new/bang.tsx", "new/hoan-tac.tsx", "new/man-nhap.tsx"].map((p) => `${W}/app/(app)/imports/${p}`),
   `${W}/app/(auth)/login/may-bi-bao.tsx`,
-  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/dien-thoai/anh-lon.tsx", "ho-so/dien-thoai/than-dien-thoai.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "ho-so/than-chung.tsx", "ho-so/than-cot.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
+  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/dien-thoai/anh-lon.tsx", "ho-so/dien-thoai/than-dien-thoai.tsx", "ho-so/dong-dinh-nghia.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "ho-so/than-chung.tsx", "ho-so/than-cot.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "dat-mat-khau/form.tsx", "dat-mat-khau/page.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
