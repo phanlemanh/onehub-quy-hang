@@ -48,3 +48,13 @@ Chiều 400 giữ nguyên: giá trị mới trái luật so với hạn kia đan
 
 Không áp: vòng không thêm đối tượng, danh sách hay điểm cấu hình nào — chỉ sửa cách lối ghi chung giữ một bất biến đã
 chốt (cặp hạn ghi xuống luôn khớp cặp đã kiểm). Không có dòng «ta cứng — họ cấu hình».
+
+## Hình — Hỏi-1: lưu một nửa của cặp đang hỏng
+
+```mermaid
+flowchart LR
+  A["Đã lưu: hạn nhận 60 (hỏng)<br/>Màn hiện: 15 / 30 + báo mặc định"] --> B["Quản trị sửa Hạn gọi = 40, Lưu"]
+  B --> C{"Hỏi-1"}
+  C -- "Đè (khuyến nghị)" --> D["Ghi 40 và ghi thêm hạn nhận 15<br/>Bảng 15 / 40 · nhật ký 2 dòng<br/>«Đã lưu · áp cho lead mới»"]
+  C -- "Từ chối" --> E["400: «lưu cả hai hạn»<br/>Bảng giữ 60 · quản trị sửa thêm Hạn nhận rồi lưu lại"]
+```
