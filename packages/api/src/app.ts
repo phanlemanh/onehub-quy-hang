@@ -25,6 +25,7 @@ import { registerFeeRoutes } from "./fees/routes";
 import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
 import { registerStatusesRoutes } from "./statuses/routes";
+import { registerCustomFieldsRoutes } from "./custom-fields/routes";
 import { registerTeamRoutes } from "./team/routes";
 import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
@@ -55,7 +56,7 @@ const BASE = `/api/${API_VERSION}`;
 export type ApiDeps = {
   /** Kết nối tới bảng của công ty — chỉ dùng qua withCompany (vai quy_hang_app). */
   appPool: pg.Pool;
-  /** Kết nối danh tính (search_path = identity) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email. */
+  /** Kết nối danh tính (vai chủ, không tham số khởi động) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email; câu tay ghi `identity.<bảng>`. */
   identityPool: pg.Pool;
   auth: Auth;
   /** Khoá của lối việc nền (`JOB_SECRET`); vắng thì lối ấy trả 503. Chủ kho đặt ở Vercel và Supabase (ADR-0017). */
@@ -210,6 +211,7 @@ export function createApi(deps: ApiDeps) {
   registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
   registerStatusesRoutes(api, deps);
+  registerCustomFieldsRoutes(api, deps);
   // Hàng 42: Hôm nay trưởng nhóm — hàng đợi lead quá hạn, đầu chủ để giao.
   registerTeamRoutes(api, deps);
   registerContactReadRoutes(api, deps);

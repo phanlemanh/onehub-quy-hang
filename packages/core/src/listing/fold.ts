@@ -5,6 +5,16 @@
 import type { DetailField, ListingEvent } from "./events";
 import type { StandardStatus } from "./status";
 
+/** Trộn giá trị trường riêng: `null` xoá khoá (hàng 47). Lặp `tronGiaTri` của lõi trường riêng để `listing` không phụ thuộc ngược. */
+function tronTruongRieng(cu: Readonly<Record<string, boolean | string>>, patch: Readonly<Record<string, unknown>>): Record<string, boolean | string> {
+  const ra: Record<string, boolean | string> = { ...cu };
+  for (const [k, v] of Object.entries(patch)) {
+    if (v === null) delete ra[k];
+    else if (typeof v === "boolean" || typeof v === "string") ra[k] = v;
+  }
+  return ra;
+}
+
 export type ListingState = {
   buildingName: string;
   unitNumber: string | null;
@@ -24,6 +34,8 @@ export type ListingState = {
    * gập luôn có khoá này, vắng chỉ ở bản dựng tay đời trước (đọc như `null`).
    */
   statusLabel?: string | null;
+  /** Giá trị trường riêng của sàn (hàng 47): mã trường → có / không hay mã lựa chọn. Bản gập luôn có; vắng ở bản dựng tay đời trước. */
+  custom?: Record<string, boolean | string>;
   /** ISO 8601 của lần xác nhận gần nhất với chủ nhà; chưa từng xác nhận là `null`. */
   lastConfirmedAt: string | null;
   /** Hàng đã gỡ khỏi Quỹ hàng khi hoàn tác lần nhập (`voided`) — cờ, không phải trạng thái; lịch sử giữ nguyên. */
@@ -50,6 +62,7 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
     closeDate: null,
     withdrawnReason: null,
     statusLabel: null,
+    custom: {},
     lastConfirmedAt: null,
     voided: false,
     version: 0,
@@ -89,6 +102,9 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
     }
     case "unit_number_assigned":
       s.unitNumber = p.unitNumber as string;
+      break;
+    case "custom_changed":
+      s.custom = tronTruongRieng(s.custom ?? {}, p);
       break;
     case "voided":
       s.voided = true;

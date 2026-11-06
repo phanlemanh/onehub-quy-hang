@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luồng triển khai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Lora',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+    body { font-family:var(--font-sans); background:var(--color-paper); color:var(--color-ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .frame { max-width:1344px; width:100%; }
+    .eyebrow { font-family:var(--font-mono); font-size:0.66rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-muted); margin-bottom:0.5rem; }
+    h1 { font-family:var(--font-serif); font-size:clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.25; margin-bottom:1.25rem; }
+    svg { width:100%; min-width:960px; display:block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Sơ đồ luồng · va-deploy-csdl-tam · AC-1, AC-2, AC-3, AC-4, AC-5, AC-6</p>
+    <h1>Bộ kiểm cách ly chạy trên cơ sở dữ liệu tạm; bản thật chỉ nhận migration rồi kiểm nhanh chỉ đọc</h1>
+
+    <svg viewBox="0 0 1344 584" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hai làn: cơ sở dữ liệu tạm chạy bộ kiểm cách ly, đỏ thì không triển khai; xanh thì bản thật áp migration, kiểm nhanh chỉ đọc, xanh mới gọi Vercel">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+        </marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+        </marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+        </marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Làn 1: cơ sở dữ liệu tạm -->
+      <rect x="24" y="40" width="1296" height="160" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.14)" stroke-width="0.8"/>
+      <rect x="36" y="44" width="236" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="40" y="56" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CƠ SỞ DỮ LIỆU TẠM · JOB ISOLATION</text>
+
+      <!-- Làn 2: bản thật -->
+      <rect x="24" y="232" width="1296" height="272" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.14)" stroke-width="0.8"/>
+      <rect x="36" y="236" width="308" height="16" rx="2" fill="#f5f5f5"/>
+      <text x="40" y="248" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.14em">BẢN THẬT · JOB DEPLOY (CHỜ ISOLATION XANH)</text>
+
+      <!-- Mũi tên (vẽ trước hộp) -->
+      <!-- Gộp main → Postgres tạm -->
+      <line x1="208" y1="120" x2="256" y2="120" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Postgres tạm → bộ cách ly -->
+      <line x1="456" y1="120" x2="504" y2="120" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Bộ cách ly đỏ → không triển khai -->
+      <line x1="704" y1="120" x2="800" y2="120" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <rect x="736" y="100" width="32" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="752" y="109" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ĐỎ</text>
+      <!-- Bộ cách ly xanh → migration bản thật (chặn triển khai) -->
+      <line x1="604" y1="160" x2="604" y2="288" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <rect x="616" y="208" width="100" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="620" y="217" fill="#ba4513" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">XANH · CÙNG COMMIT</text>
+      <!-- Migration bản thật → kiểm nhanh -->
+      <line x1="704" y1="328" x2="752" y2="328" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Kiểm nhanh xanh → Vercel -->
+      <line x1="992" y1="328" x2="1056" y2="328" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <rect x="1008" y="308" width="32" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="1024" y="317" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">XANH</text>
+      <!-- Kiểm nhanh đỏ → không gọi Vercel -->
+      <line x1="872" y1="384" x2="872" y2="424" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <rect x="884" y="396" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="896" y="405" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ĐỎ</text>
+
+      <!-- Hộp -->
+      <!-- 1. Gộp vào main -->
+      <rect x="48" y="80" width="160" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="48" y="80" width="160" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="56" y="86" width="32" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="72" y="97" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GIT</text>
+      <text x="128" y="128" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gộp vào main</text>
+      <text x="128" y="144" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">một commit</text>
+
+      <!-- 2. Postgres 16 tạm + migration từ đầu -->
+      <rect x="256" y="80" width="200" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="256" y="80" width="200" height="80" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <rect x="264" y="86" width="32" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+      <text x="280" y="97" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CSDL</text>
+      <text x="356" y="124" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Postgres 16 dựng trong job</text>
+      <text x="356" y="142" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">áp migration từ đầu</text>
+
+      <!-- 3. Bộ kiểm cách ly -->
+      <rect x="504" y="80" width="200" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="504" y="80" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="512" y="86" width="40" height="16" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="532" y="97" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">KIỂM</text>
+      <text x="604" y="124" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bộ kiểm cách ly trọn bộ</text>
+      <text x="604" y="142" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">ghi thử rồi rollback</text>
+
+      <!-- 4. Dừng: không triển khai -->
+      <rect x="800" y="88" width="160" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="800" y="88" width="160" height="64" rx="6" fill="#f5f5f5" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="880" y="116" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dừng</text>
+      <text x="880" y="134" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">không triển khai</text>
+
+      <!-- Bước cũ đã bỏ -->
+      <rect x="256" y="288" width="200" height="80" rx="6" fill="#f5f5f5" stroke="rgba(79,93,117,0.45)" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <rect x="264" y="294" width="32" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.40)" stroke-width="0.8"/>
+      <text x="280" y="305" fill="#8a93a6" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">BỎ</text>
+      <text x="356" y="332" fill="#8a93a6" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle" text-decoration="line-through">Bộ cách ly trên bản thật</text>
+      <text x="356" y="350" fill="#8a93a6" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">bước cũ: ghi vào bản thật, nhiều kết nối</text>
+
+      <!-- 5. Áp migration bản thật -->
+      <rect x="504" y="288" width="200" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="504" y="288" width="200" height="80" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <rect x="512" y="294" width="32" height="16" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+      <text x="528" y="305" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CSDL</text>
+      <text x="604" y="332" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Áp migration lên bản thật</text>
+      <text x="604" y="350" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">1 kết nối, xong thì đóng</text>
+
+      <!-- 6. Kiểm nhanh chỉ đọc (focal) -->
+      <rect x="752" y="272" width="240" height="112" rx="6" fill="#f5f5f5"/>
+      <rect x="752" y="272" width="240" height="112" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <rect x="760" y="278" width="40" height="16" rx="2" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/>
+      <text x="780" y="289" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MỚI</text>
+      <text x="872" y="312" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Kiểm nhanh chỉ đọc · 1 kết nối</text>
+      <text x="872" y="332" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">mọi bảng bật và ép luật theo dòng</text>
+      <text x="872" y="350" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">vai của API không là chủ bảng</text>
+      <text x="872" y="368" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">vai của API không được bỏ qua luật</text>
+
+      <!-- 7. Gọi Vercel -->
+      <rect x="1056" y="288" width="200" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="1056" y="288" width="200" height="80" rx="6" fill="rgba(46,90,168,0.05)" stroke="#2e5aa8" stroke-width="1"/>
+      <rect x="1064" y="294" width="44" height="16" rx="2" fill="transparent" stroke="rgba(46,90,168,0.50)" stroke-width="0.8"/>
+      <text x="1086" y="305" fill="#2e5aa8" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">NGOÀI</text>
+      <text x="1156" y="332" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gọi Vercel triển khai</text>
+      <text x="1156" y="350" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">deploy hook</text>
+
+      <!-- 8. Dừng: không gọi Vercel -->
+      <rect x="792" y="424" width="160" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="792" y="424" width="160" height="64" rx="6" fill="#f5f5f5" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="872" y="452" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dừng</text>
+      <text x="872" y="470" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">in bảng sai, không gọi Vercel</text>
+
+      <!-- Ghi chú -->
+      <text x="48" y="448" fill="#4f5d75" font-size="16" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">Bản thật không bao giờ quá 2 kết nối, mở tuần tự.</text>
+      <text x="48" y="472" fill="#4f5d75" font-size="16" font-style="italic" font-family="'Instrument Serif', 'Lora', serif">Luật kiểm ở bản tạm; bản thật chỉ soi trạng thái thật.</text>
+
+      <!-- Chú giải -->
+      <line x1="24" y1="528" x2="1320" y2="528" stroke="rgba(45,49,66,0.14)" stroke-width="0.8"/>
+      <text x="24" y="556" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CHÚ GIẢI</text>
+      <line x1="120" y1="552" x2="152" y2="552" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <text x="160" y="556" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">bộ cách ly xanh mới mở job bản thật</text>
+      <line x1="384" y1="552" x2="416" y2="552" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <text x="424" y="556" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">nhánh đỏ: dừng</text>
+      <line x1="528" y1="552" x2="560" y2="552" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="568" y="556" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">gọi ra ngoài</text>
+      <rect x="664" y="544" width="24" height="16" rx="3" fill="#f5f5f5" stroke="rgba(79,93,117,0.45)" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <text x="696" y="556" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">bước cũ đã bỏ</text>
+      <rect x="800" y="544" width="24" height="16" rx="3" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <text x="832" y="556" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">bước mới</text>
+    </svg>
+  </main>
+</body>
+</html>
