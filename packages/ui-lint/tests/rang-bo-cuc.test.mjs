@@ -106,6 +106,7 @@ describe("răng của hệ bố cục", () => {
       sua(d, CAI_DAT, "\nbo_cuc: doc", "");
       assert.deepEqual(lechCua(d), [
         `${W}/app/(app)/settings/ai/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
+        `${W}/app/(app)/settings/broker-page/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/fees/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/labels/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
         `${W}/app/(app)/settings/lead-routing/page.tsx: cai-dat-san — nhóm chưa khai bo_cuc (design/patterns/cai-dat-san.md)`,
@@ -120,6 +121,7 @@ describe("răng của hệ bố cục", () => {
       sua(d, CAI_DAT, "\nbo_cuc: doc", "\nbo_cuc: tran");
       assert.deepEqual(lechCua(d), [
         `${W}/app/(app)/settings/ai/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
+        `${W}/app/(app)/settings/broker-page/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/fees/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/labels/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,
         `${W}/app/(app)/settings/lead-routing/page.tsx: cai-dat-san — khuôn ${W}/app/(app)/settings/khung.tsx không dựng <BoCuc kieu="tran"> (đang dựng doc)`,

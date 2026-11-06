@@ -167,6 +167,22 @@
       "port": 3492
     },
     {
+      "name": "web-L-loi",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "DATABASE_URL=postgres://postgres:quyhang@127.0.0.1:5599/postgres",
+        "BETTER_AUTH_SECRET=dev-l-chuoi-thu-khong-dung-o-ban-that",
+        "BETTER_AUTH_URL=http://localhost:3498",
+        "npx",
+        "next",
+        "dev",
+        "-p",
+        "3498",
+        "apps/web"
+      ],
+      "port": 3498
+    },
+    {
       "name": "web-su-co-pool",
       "runtimeExecutable": "env",
       "runtimeArgs": [
