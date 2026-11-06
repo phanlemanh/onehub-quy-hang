@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b6b201016a046ec3a963f51cc4f84afb215d4934
+verified_commit: 1a954f66f17ad646551987c72aed3093894c2051
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -182,3 +182,7 @@ none — every multi-run eval is uniform
 ## Iterations
 
 Round 1: tất cả eval đạt (E1-E4, E3b đỏ trên baseline nên có phân biệt; E5, E6, E8 là regression-guard; E7 có ảnh). Chuyển sang Cổng 2.
+
+### Re-pin lần 1 — 2026-11-06, do gộp nhánh chính sau chữ ký
+run_id: repin-20261106T034838Z-11570
+sha: 1a954f66f17ad646551987c72aed3093894c2051 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E7 (E7 không khai paths)
