@@ -1,0 +1,60 @@
+== that (http://localhost:3494) fetch/XHR/POST ==
+GET http://localhost:3494/api/v1/catalog -> 200
+GET http://localhost:3494/api/v1/catalog -> 200
+GET http://localhost:3494/api/v1/listings -> 200
+GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.05 -> 200
+GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.05 -> 200
+GET http://localhost:3494/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.05 -> 200
+GET http://localhost:3494/api/v1/listings/9f612fa2-29c0-4d7c-a771-7b7d9ddb27f0 -> 200
+POST http://localhost:3494/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+POST http://localhost:3494/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/today?_rsc=jbFUAOLFW7Aar-Y8 -> 200
+GET http://localhost:3494/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3494/today?_rsc=u9UalX1p5TYJo1BU -> 200
+GET http://localhost:3494/_next/static/webpack/736a6f4c5a57e28e.webpack.hot-update.json -> 200
+POST http://localhost:3494/api/v1/units/photos/upload-url -> 200
+GET http://localhost:3494/api/v1/listings -> 200
+POST http://localhost:3494/api/v1/units/photos -> 201
+POST http://localhost:3494/api/v1/units/photos/upload-url -> 200
+POST http://localhost:3494/api/v1/sync/offline-sessions -> 201
+POST http://localhost:3494/api/v1/units/photos -> 201
+GET http://localhost:3494/today?_rsc=u9UalX1p5TYJo1BU -> 200
+GET http://localhost:3494/_next/static/webpack/604d8b07dab4fef7.webpack.hot-update.json -> 200
+== console error/warning ==
+
+== exceptions ==
+
+
+== doichung (http://localhost:3496) fetch/XHR/POST ==
+GET http://localhost:3496/api/v1/catalog -> 200
+GET http://localhost:3496/api/v1/catalog -> 200
+GET http://localhost:3496/api/v1/listings -> 200
+GET http://localhost:3496/_next/static/webpack/6ba7c87901d2f80a.webpack.hot-update.json -> 200
+GET http://localhost:3496/units/A-02.02?_rsc=WZWAY0AJWUGQJ7bu -> 200
+GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.02 -> 200
+GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.02 -> 200
+GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.02 -> 200
+GET http://localhost:3496/api/v1/listings/f82e6aa2-60fb-4ee6-af2b-dc1e835194c2 -> 200
+POST http://localhost:3496/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+POST http://localhost:3496/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/today?_rsc=3bakO34MaBgNvcex -> 200
+GET http://localhost:3496/_next/static/webpack/32a755b34d72ca9c.webpack.hot-update.json -> 200
+GET http://localhost:3496/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED
+GET http://localhost:3496/api/v1/listings -> 200
+POST http://localhost:3496/api/v1/sync/offline-sessions -> 201
+== console error/warning ==
+
+== exceptions ==
+

@@ -1,0 +1,13 @@
+# Nguon: nhat ky may dev (web-h.log) trong luc chay E19 + yeu cau bi Fetch.failRequest o phia trinh duyet (driver CDP tho, khong co network tool)
+# Yeu cau bi chan phia trinh duyet (khong toi may chu): ["POST /api/v1/units/photos/upload-url","POST /api/v1/units/photos/upload-url","POST /api/v1/units/photos/upload-url","POST /api/v1/auth/sign-out"]
+  14 GET /manifest.webmanifest 200
+   9 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200
+   8 GET /units/A-04.01 200
+   6 GET /api/v1/catalog 200
+   4 GET /api/v1/listings 200
+   4 GET /login 200
+   3 POST /api/v1/auth/email-otp/send-verification-otp 200
+   3 POST /api/v1/auth/sign-in/email-otp 200
+   3 GET /api/v1/me 200
+   3 GET /api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 200
+   1 POST /api/v1/auth/sign-out 200

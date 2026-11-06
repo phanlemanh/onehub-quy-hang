@@ -1,0 +1,164 @@
+== unit_photos
+                  id                  | compartment | building_name | unit_number | display_order | is_cover |               added_by               |           added_at            | removed_at 
+--------------------------------------+-------------+---------------+-------------+---------------+----------+--------------------------------------+-------------------------------+------------
+ 71f5b89e-c51c-451c-972e-408cb9830fcb | shareable   | Toà A         | A-01.03     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:35.933283+00 | 
+ 2f0b367a-0421-407c-9fe6-0e7e5cd9814b | shareable   | Toà A         | A-02.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:36.146035+00 | 
+ 96ce4663-d67c-4a20-993f-3d8dfca92141 | shareable   | Toà A         | A-04.06     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:36.42585+00  | 
+ 63c1fba6-0f35-4387-add1-77b4ae622c65 | shareable   | Toà A         | A-05.03     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:36.534725+00 | 
+ aea484d5-961c-4aa0-a4d2-682dc0ef53d2 | shareable   | Toà A         | A-06.03     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:36.742701+00 | 
+ bb06e382-a8a7-495f-87bd-b702321212f6 | shareable   | Toà A         | A-06.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:36.84722+00  | 
+ a5acbf34-9c40-48b3-b935-ac7d40f04f77 | shareable   | Toà A         | A-08.03     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:36.963343+00 | 
+ 5bd0b098-d057-46e5-a300-48b0ab3f2436 | shareable   | Toà A         | A-10.05     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:37.192522+00 | 
+ c225f0cd-92ae-44e4-927f-0f7736c6e9ec | shareable   | Toà A         | A-11.02     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:37.360987+00 | 
+ 8b0cbd4b-64c3-4fd4-8763-475b082bd13a | shareable   | Toà A         | A-13.01     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:37.512384+00 | 
+ 80a06d17-2bba-4016-9030-d0c1c70df33a | shareable   | Toà A         | A-13.03     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:37.627471+00 | 
+ 03a18ec6-fff4-4191-bd7e-4fb26bd5f881 | shareable   | Toà A         | A-15.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:37.786976+00 | 
+ 1643465e-a4fb-4009-81c3-c88685f4a97e | shareable   | Toà B         | B-08.02     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:38.044252+00 | 
+ 948530d6-d4da-40ee-928b-70a336b0e26a | shareable   | Toà B         | B-08.06     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:38.161267+00 | 
+ ffafe379-4287-4962-b96d-3a1db26c4412 | shareable   | Toà B         | B-14.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:38.285409+00 | 
+ 93b4a11d-2459-493a-b7d3-4b67e156893c | shareable   | Toà B         | B-15.01     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:38.430311+00 | 
+ ec74b713-aea3-43b7-bb03-ed29f32aa3bb | shareable   | Toà B         | B-01.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:39.206911+00 | 
+ b284ac25-fa2a-4e26-b8c8-fe1fb5584ed4 | shareable   | Toà B         | B-01.05     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:39.379586+00 | 
+ daabc700-165f-42b2-b1dd-f6ae2d059b29 | shareable   | Toà B         | B-03.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:39.544191+00 | 
+ fef0fcae-7af2-4d8f-acb1-2bb88727ae6b | shareable   | Toà B         | B-08.04     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:39.745814+00 | 
+ 5324babb-4391-4282-bcdf-799c32b32870 | shareable   | Toà B         | B-10.01     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:40.010049+00 | 
+ de89e462-b970-4fe9-bfaf-69856362c298 | shareable   | Toà B         | B-13.02     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:40.417529+00 | 
+ 66df61b3-147a-4f96-9866-d39b86b86f31 | shareable   | Toà B         | B-14.02     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:40.551492+00 | 
+ 90bfbc8f-d815-4073-8157-ddb2ec4e0779 | shareable   | Toà B         | B-14.05     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:40.705945+00 | 
+ b1984d67-857c-4c82-9047-ef102c4b04bb | shareable   | Toà B         | B-14.06     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:40.804688+00 | 
+ 49a698ac-06ee-4b1d-a116-d9a2afc1a8c7 | shareable   | Toà B         | B-15.05     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-04 04:06:40.952449+00 | 
+ 0d8feab8-468e-4016-b46e-e5e3ce7101ed | shareable   | Toà A         | A-01.06     |             0 | f        | 92ab1862-37f3-4b59-baae-d892214a4797 | 2026-11-05 14:38:04.740305+00 | 
+ 71d61852-307b-4889-a06b-5ddf2b3d0ccd | shareable   | Toà A         | A-01.02     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 17:02:05.453256+00 | 
+ 41191be0-71c3-434e-8466-16acdcdd34b8 | shareable   | Toà A         | A-01.02     |             1 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 17:02:05.568424+00 | 
+ a7835f26-a19b-44ff-b8db-a3e94b55562f | internal    | Toà A         | A-01.02     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 17:02:06.013464+00 | 
+ 7b885167-f71b-4e79-a303-cb6648c99f3f | shareable   | Toà A         | A-01.04     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 17:02:50.778123+00 | 
+ 1cb83f28-9637-4762-a0fe-34568eb7b15a | shareable   | Toà A         | A-01.04     |             1 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 17:02:50.918932+00 | 
+ ad2659d6-7617-4f13-b6d4-475d4e871c60 | internal    | Toà A         | A-01.04     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 17:02:50.975858+00 | 
+ 18003654-cbb6-41e2-84a8-d0df2aeead56 | shareable   | Toà A         | A-01.02     |             2 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 23:45:03.182978+00 | 
+ 3b7d6ed8-77cb-407d-92fd-575c6f573abd | shareable   | Toà A         | A-01.02     |             3 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 23:45:03.236108+00 | 
+ d9cf0507-65ca-4167-aa96-5b8cf30b360f | internal    | Toà A         | A-01.02     |             1 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 23:45:03.303338+00 | 
+ de6f0d3b-04ed-451a-80b0-2d67bc3d6542 | shareable   | Toà A         | A-02.01     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 23:53:23.674847+00 | 
+ cc08918e-338d-4d58-ac2d-cf4306b4a1a0 | shareable   | Toà A         | A-02.01     |             1 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 23:53:23.721287+00 | 
+ 480ed0dc-2f05-40a7-ac46-38b9fbeac2c6 | internal    | Toà A         | A-02.01     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-05 23:53:23.759125+00 | 
+ 353a7d6d-7af9-470d-92c7-f67d90513f7b | shareable   | Toà A         | A-02.01     |             2 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:14:36.111957+00 | 
+ edc8e45b-1f4a-4992-91ae-f83b19a47dcd | shareable   | Toà A         | A-02.01     |             3 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:14:36.163096+00 | 
+ ee2f7c5a-83b4-4948-b02b-289b2cd8ef00 | internal    | Toà A         | A-02.01     |             1 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:14:36.221924+00 | 
+ 9c8c07d2-45f3-49dc-97b8-e10dce70a711 | shareable   | Toà A         | A-02.01     |             4 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:17:53.841373+00 | 
+ 2a822010-74c0-4c9e-9d93-217b0ef011d4 | shareable   | Toà A         | A-02.01     |             5 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:17:53.889172+00 | 
+ f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5 | internal    | Toà A         | A-02.01     |             2 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:17:53.930115+00 | 
+ f51b4dd7-b057-40a3-804f-00a7f6a4f270 | shareable   | Toà A         | A-02.01     |             6 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:19:33.795597+00 | 
+ 4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3 | shareable   | Toà A         | A-02.01     |             7 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:19:33.879481+00 | 
+ b201d7cb-4a2a-46d4-9f24-05419813cca4 | internal    | Toà A         | A-02.01     |             3 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:19:33.950937+00 | 
+ a3560dee-1aca-420f-8ee0-1f4da019fc93 | shareable   | Toà A         | A-03.02     |             0 | f        | 524f266e-04ee-4260-96de-31c76535a211 | 2026-11-06 00:28:17.029265+00 | 
+(49 rows)
+
+== events
+  id  |               photo_id               | type  |           payload            |          occurred_at          | compartment | building_name | unit_number 
+------+--------------------------------------+-------+------------------------------+-------------------------------+-------------+---------------+-------------
+  679 | 71f5b89e-c51c-451c-972e-408cb9830fcb | added | {"compartment": "shareable"} | 2026-11-04 04:06:35.933283+00 | shareable   | Toà A         | A-01.03
+  680 | 2f0b367a-0421-407c-9fe6-0e7e5cd9814b | added | {"compartment": "shareable"} | 2026-11-04 04:06:36.146035+00 | shareable   | Toà A         | A-02.04
+  681 | 96ce4663-d67c-4a20-993f-3d8dfca92141 | added | {"compartment": "shareable"} | 2026-11-04 04:06:36.42585+00  | shareable   | Toà A         | A-04.06
+  682 | 63c1fba6-0f35-4387-add1-77b4ae622c65 | added | {"compartment": "shareable"} | 2026-11-04 04:06:36.534725+00 | shareable   | Toà A         | A-05.03
+  683 | aea484d5-961c-4aa0-a4d2-682dc0ef53d2 | added | {"compartment": "shareable"} | 2026-11-04 04:06:36.742701+00 | shareable   | Toà A         | A-06.03
+  684 | bb06e382-a8a7-495f-87bd-b702321212f6 | added | {"compartment": "shareable"} | 2026-11-04 04:06:36.84722+00  | shareable   | Toà A         | A-06.04
+  685 | a5acbf34-9c40-48b3-b935-ac7d40f04f77 | added | {"compartment": "shareable"} | 2026-11-04 04:06:36.963343+00 | shareable   | Toà A         | A-08.03
+  686 | 5bd0b098-d057-46e5-a300-48b0ab3f2436 | added | {"compartment": "shareable"} | 2026-11-04 04:06:37.192522+00 | shareable   | Toà A         | A-10.05
+  687 | c225f0cd-92ae-44e4-927f-0f7736c6e9ec | added | {"compartment": "shareable"} | 2026-11-04 04:06:37.360987+00 | shareable   | Toà A         | A-11.02
+  688 | 8b0cbd4b-64c3-4fd4-8763-475b082bd13a | added | {"compartment": "shareable"} | 2026-11-04 04:06:37.512384+00 | shareable   | Toà A         | A-13.01
+  689 | 80a06d17-2bba-4016-9030-d0c1c70df33a | added | {"compartment": "shareable"} | 2026-11-04 04:06:37.627471+00 | shareable   | Toà A         | A-13.03
+  690 | 03a18ec6-fff4-4191-bd7e-4fb26bd5f881 | added | {"compartment": "shareable"} | 2026-11-04 04:06:37.786976+00 | shareable   | Toà A         | A-15.04
+  691 | 1643465e-a4fb-4009-81c3-c88685f4a97e | added | {"compartment": "shareable"} | 2026-11-04 04:06:38.044252+00 | shareable   | Toà B         | B-08.02
+  692 | 948530d6-d4da-40ee-928b-70a336b0e26a | added | {"compartment": "shareable"} | 2026-11-04 04:06:38.161267+00 | shareable   | Toà B         | B-08.06
+  693 | ffafe379-4287-4962-b96d-3a1db26c4412 | added | {"compartment": "shareable"} | 2026-11-04 04:06:38.285409+00 | shareable   | Toà B         | B-14.04
+  694 | 93b4a11d-2459-493a-b7d3-4b67e156893c | added | {"compartment": "shareable"} | 2026-11-04 04:06:38.430311+00 | shareable   | Toà B         | B-15.01
+  695 | ec74b713-aea3-43b7-bb03-ed29f32aa3bb | added | {"compartment": "shareable"} | 2026-11-04 04:06:39.206911+00 | shareable   | Toà B         | B-01.04
+  696 | b284ac25-fa2a-4e26-b8c8-fe1fb5584ed4 | added | {"compartment": "shareable"} | 2026-11-04 04:06:39.379586+00 | shareable   | Toà B         | B-01.05
+  697 | daabc700-165f-42b2-b1dd-f6ae2d059b29 | added | {"compartment": "shareable"} | 2026-11-04 04:06:39.544191+00 | shareable   | Toà B         | B-03.04
+  698 | fef0fcae-7af2-4d8f-acb1-2bb88727ae6b | added | {"compartment": "shareable"} | 2026-11-04 04:06:39.745814+00 | shareable   | Toà B         | B-08.04
+  699 | 5324babb-4391-4282-bcdf-799c32b32870 | added | {"compartment": "shareable"} | 2026-11-04 04:06:40.010049+00 | shareable   | Toà B         | B-10.01
+  700 | de89e462-b970-4fe9-bfaf-69856362c298 | added | {"compartment": "shareable"} | 2026-11-04 04:06:40.417529+00 | shareable   | Toà B         | B-13.02
+  701 | 66df61b3-147a-4f96-9866-d39b86b86f31 | added | {"compartment": "shareable"} | 2026-11-04 04:06:40.551492+00 | shareable   | Toà B         | B-14.02
+  702 | 90bfbc8f-d815-4073-8157-ddb2ec4e0779 | added | {"compartment": "shareable"} | 2026-11-04 04:06:40.705945+00 | shareable   | Toà B         | B-14.05
+  703 | b1984d67-857c-4c82-9047-ef102c4b04bb | added | {"compartment": "shareable"} | 2026-11-04 04:06:40.804688+00 | shareable   | Toà B         | B-14.06
+  704 | 49a698ac-06ee-4b1d-a116-d9a2afc1a8c7 | added | {"compartment": "shareable"} | 2026-11-04 04:06:40.952449+00 | shareable   | Toà B         | B-15.05
+ 3736 | 0d8feab8-468e-4016-b46e-e5e3ce7101ed | added | {"compartment": "shareable"} | 2026-11-05 14:38:04.740305+00 | shareable   | Toà A         | A-01.06
+ 3737 | 71d61852-307b-4889-a06b-5ddf2b3d0ccd | added | {"compartment": "shareable"} | 2026-11-05 17:02:05.453256+00 | shareable   | Toà A         | A-01.02
+ 3738 | 41191be0-71c3-434e-8466-16acdcdd34b8 | added | {"compartment": "shareable"} | 2026-11-05 17:02:05.568424+00 | shareable   | Toà A         | A-01.02
+ 3739 | a7835f26-a19b-44ff-b8db-a3e94b55562f | added | {"compartment": "internal"}  | 2026-11-05 17:02:06.013464+00 | internal    | Toà A         | A-01.02
+ 3740 | 7b885167-f71b-4e79-a303-cb6648c99f3f | added | {"compartment": "shareable"} | 2026-11-05 17:02:50.778123+00 | shareable   | Toà A         | A-01.04
+ 3741 | 1cb83f28-9637-4762-a0fe-34568eb7b15a | added | {"compartment": "shareable"} | 2026-11-05 17:02:50.918932+00 | shareable   | Toà A         | A-01.04
+ 3742 | ad2659d6-7617-4f13-b6d4-475d4e871c60 | added | {"compartment": "internal"}  | 2026-11-05 17:02:50.975858+00 | internal    | Toà A         | A-01.04
+ 3743 | 18003654-cbb6-41e2-84a8-d0df2aeead56 | added | {"compartment": "shareable"} | 2026-11-05 23:45:03.182978+00 | shareable   | Toà A         | A-01.02
+ 3744 | 3b7d6ed8-77cb-407d-92fd-575c6f573abd | added | {"compartment": "shareable"} | 2026-11-05 23:45:03.236108+00 | shareable   | Toà A         | A-01.02
+ 3745 | d9cf0507-65ca-4167-aa96-5b8cf30b360f | added | {"compartment": "internal"}  | 2026-11-05 23:45:03.303338+00 | internal    | Toà A         | A-01.02
+ 3746 | de6f0d3b-04ed-451a-80b0-2d67bc3d6542 | added | {"compartment": "shareable"} | 2026-11-05 23:53:23.674847+00 | shareable   | Toà A         | A-02.01
+ 3747 | cc08918e-338d-4d58-ac2d-cf4306b4a1a0 | added | {"compartment": "shareable"} | 2026-11-05 23:53:23.721287+00 | shareable   | Toà A         | A-02.01
+ 3748 | 480ed0dc-2f05-40a7-ac46-38b9fbeac2c6 | added | {"compartment": "internal"}  | 2026-11-05 23:53:23.759125+00 | internal    | Toà A         | A-02.01
+ 3749 | 353a7d6d-7af9-470d-92c7-f67d90513f7b | added | {"compartment": "shareable"} | 2026-11-06 00:14:36.111957+00 | shareable   | Toà A         | A-02.01
+ 3750 | edc8e45b-1f4a-4992-91ae-f83b19a47dcd | added | {"compartment": "shareable"} | 2026-11-06 00:14:36.163096+00 | shareable   | Toà A         | A-02.01
+ 3751 | ee2f7c5a-83b4-4948-b02b-289b2cd8ef00 | added | {"compartment": "internal"}  | 2026-11-06 00:14:36.221924+00 | internal    | Toà A         | A-02.01
+ 3752 | 9c8c07d2-45f3-49dc-97b8-e10dce70a711 | added | {"compartment": "shareable"} | 2026-11-06 00:17:53.841373+00 | shareable   | Toà A         | A-02.01
+ 3753 | 2a822010-74c0-4c9e-9d93-217b0ef011d4 | added | {"compartment": "shareable"} | 2026-11-06 00:17:53.889172+00 | shareable   | Toà A         | A-02.01
+ 3754 | f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5 | added | {"compartment": "internal"}  | 2026-11-06 00:17:53.930115+00 | internal    | Toà A         | A-02.01
+ 3755 | f51b4dd7-b057-40a3-804f-00a7f6a4f270 | added | {"compartment": "shareable"} | 2026-11-06 00:19:33.795597+00 | shareable   | Toà A         | A-02.01
+ 3756 | 4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3 | added | {"compartment": "shareable"} | 2026-11-06 00:19:33.879481+00 | shareable   | Toà A         | A-02.01
+ 3757 | b201d7cb-4a2a-46d4-9f24-05419813cca4 | added | {"compartment": "internal"}  | 2026-11-06 00:19:33.950937+00 | internal    | Toà A         | A-02.01
+ 3758 | a3560dee-1aca-420f-8ee0-1f4da019fc93 | added | {"compartment": "shareable"} | 2026-11-06 00:28:17.029265+00 | shareable   | Toà A         | A-03.02
+(49 rows)
+
+== count by
+ building_name | unit_number | compartment | count 
+---------------+-------------+-------------+-------
+ Toà A         | A-01.04     | internal    |     1
+ Toà A         | A-03.02     | shareable   |     1
+ Toà B         | B-13.02     | shareable   |     1
+ Toà B         | B-15.05     | shareable   |     1
+ Toà B         | B-14.04     | shareable   |     1
+ Toà B         | B-08.06     | shareable   |     1
+ Toà A         | A-02.01     | shareable   |     8
+ Toà B         | B-01.04     | shareable   |     1
+ Toà A         | A-08.03     | shareable   |     1
+ Toà A         | A-01.03     | shareable   |     1
+ Toà A         | A-05.03     | shareable   |     1
+ Toà A         | A-01.06     | shareable   |     1
+ Toà B         | B-15.01     | shareable   |     1
+ Toà A         | A-04.06     | shareable   |     1
+ Toà A         | A-15.04     | shareable   |     1
+ Toà A         | A-01.04     | shareable   |     2
+ Toà B         | B-03.04     | shareable   |     1
+ Toà B         | B-14.02     | shareable   |     1
+ Toà B         | B-10.01     | shareable   |     1
+ Toà A         | A-01.02     | shareable   |     4
+ Toà A         | A-02.01     | internal    |     4
+ Toà B         | B-14.05     | shareable   |     1
+ Toà B         | B-08.04     | shareable   |     1
+ Toà B         | B-01.05     | shareable   |     1
+ Toà A         | A-06.03     | shareable   |     1
+ Toà A         | A-13.03     | shareable   |     1
+ Toà A         | A-02.04     | shareable   |     1
+ Toà B         | B-14.06     | shareable   |     1
+ Toà B         | B-08.02     | shareable   |     1
+ Toà A         | A-01.02     | internal    |     2
+ Toà A         | A-06.04     | shareable   |     1
+ Toà A         | A-11.02     | shareable   |     1
+ Toà A         | A-13.01     | shareable   |     1
+ Toà A         | A-10.05     | shareable   |     1
+(34 rows)
+
+
+== ASSERT: batch cuoi E12 (can mau A-02.01, added_at >= 2026-11-06 00:19:00Z)
+ compartment | building_name | unit_number | rows | events_added_ok 
+-------------+---------------+-------------+------+-----------------
+ internal    | Toà A         | A-02.01     |    1 |               1
+ shareable   | Toà A         | A-02.01     |    2 |               2
+(2 rows)
+
+== tong theo batch A-02.01
+           m            | sh | it 
+------------------------+----+----
+ 2026-11-05 23:53:00+00 |  2 |  1
+ 2026-11-06 00:14:00+00 |  2 |  1
+ 2026-11-06 00:17:00+00 |  2 |  1
+ 2026-11-06 00:19:00+00 |  2 |  1
+(4 rows)
+

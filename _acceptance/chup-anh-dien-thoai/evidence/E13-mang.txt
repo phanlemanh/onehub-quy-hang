@@ -1,0 +1,8 @@
+can mau: Toà A / A-03.02
+B1 so dong unit_photos truoc: 0
+B2 dau-khach POST /units/photos/upload-url -> 403 {"error":"listing-agent-required"}
+B2 dau-khach POST /units/photos -> 403 {"error":"listing-agent-required"}
+B2 so dong sau dau-khach: 0
+B3 dau-chu-1 POST /units/photos/upload-url -> 200 {"truc_tiep":false}
+B3 dau-chu-1 POST /units/photos -> 201 {"anh":{"id":"a3560dee-1aca-420f-8ee0-1f4da019fc93","buildingName":"Toà A","unitNumber":"A-03.02","compartment":"shareable","displayOrder":0,"isCover":false,"isSample":false,"takenAt":null,"addedAt":"
+B3 so dong sau dau-chu-1: 1

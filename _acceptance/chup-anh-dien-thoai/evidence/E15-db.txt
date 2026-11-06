@@ -1,0 +1,14 @@
+Can mau: Toà A A-03.01 (dau-chu-1 giu), chỗ thử dãy H
+TRUOC: 0 dong
+Dong khi con offline (truoc khi mo mang): (0 dong)
+SAU: 3 dong (tang 3)
+ma anh (id|ngan|added_at|removed_at):
+e0ae9f23-2cd9-4c4f-b5a3-0996a004e7ca|shareable|2026-11-06 01:08:50.843272+00|
+ccd07889-b5e2-403a-b807-1d545b705814|shareable|2026-11-06 01:09:06.093643+00|
+10bead28-0e35-468e-8e5c-403599ecec99|internal|2026-11-06 01:09:06.15429+00|
+su kien:
+e0ae9f23-2cd9-4c4f-b5a3-0996a004e7ca|added
+ccd07889-b5e2-403a-b807-1d545b705814|added
+10bead28-0e35-468e-8e5c-403599ecec99|added
+ma anh trung nhau: false
+POST /api/v1/units/photos: trang thai may chu tra theo thu tu [201,201,201] (lan dau bi Fetch.failRequest sau khi may chu da tra)

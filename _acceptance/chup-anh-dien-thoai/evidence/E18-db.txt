@@ -1,0 +1,74 @@
+E18 - hang cho anh song ngoai ngan chup (AC-3). Cho thu day H (Postgres 5574, container quy-hang-db-dkn-H); may chu dev 3494 = ma that, 3496 = ban sao doi chung.
+Chan mang: Fetch.failRequest(InternetDisconnected) cho moi yeu cau /api/ (Network.emulateNetworkConditions offline lam tab Hom nay tai lai cung ERR_INTERNET_DISCONNECTED nen khong dung duoc); mo mang = het chan + phat su kien online.
+
+=== LAN THU 1 (ghi lai, khong tinh): chua phat su kien online khi mo mang, dem dung luc 20.0s ra 1 dong, ngay sau do len 2 (nhip 15s)
+[2026-11-06T01:23:11.618Z] that: can A-01.01 - TRUOC 0 dong unit_photos
+[2026-11-06T01:23:14.665Z] da chan mang (cac yeu cau /api/ that bai InternetDisconnected)
+[2026-11-06T01:23:17.234Z] ngan co 2 anh Cho mang (offline)
+[2026-11-06T01:23:17.566Z] chup E18-step1.png
+[2026-11-06T01:23:17.981Z] da dong ngan bang Escape; duong: /units/A-01.01
+[2026-11-06T01:23:17.981Z] tab Hom nay: {"x":62.5,"y":784,"href":"/today","text":"Hôm nay"}
+[2026-11-06T01:23:19.989Z] sau cham 2s: {"p":"/units/A-01.01","title":"Quỹ hàng","on":true,"sw":false} ev:[["Page.frameNavigated","http://localhost:3494/units/A-01.01"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"]]
+[2026-11-06T01:23:22.096Z] dang o: {"duong":"/today","trangMoLai":true} (van offline)
+[2026-11-06T01:23:22.419Z] chup E18-step2.png
+[2026-11-06T01:23:22.419Z] da mo mang (da chan 9 yeu cau /api/ luc offline)
+[2026-11-06T01:23:22.566Z] ngay luc mo mang: 0 dong
+[2026-11-06T01:23:27.660Z] +5s: 0 dong, duong /today
+[2026-11-06T01:23:32.761Z] +10s: 0 dong, duong /today
+[2026-11-06T01:23:37.847Z] +15s: 0 dong, duong /today
+[2026-11-06T01:23:42.942Z] +20s: 0 dong, duong /today
+[2026-11-06T01:23:43.004Z] SAU 20s: 1 dong (tang 1); duong luc dem: /today; trang chua tai lai (window.__ban giu): true
+[2026-11-06T01:23:43.404Z] chup E18-hom-nay.png
+[2026-11-06T01:23:43.487Z] ma anh:
+3ad5fd41-b91a-4761-a7cc-d54b1878cdb3|shareable|2026-11-06 01:23:42.954828+00
+198bce5b-92d3-4bd8-a332-e483bdad5e97|shareable|2026-11-06 01:23:43.030035+00
+
+KET: {"truoc":0,"sau":1,"tang":1,"duong":"/today","khongTaiLai":true}
+
+=== MA THAT (3494) can A-01.05
+[2026-11-06T01:23:54.268Z] that: can A-01.05 - TRUOC 0 dong unit_photos
+[2026-11-06T01:23:57.760Z] da chan mang (cac yeu cau /api/ that bai InternetDisconnected)
+[2026-11-06T01:24:00.313Z] ngan co 2 anh Cho mang (offline)
+[2026-11-06T01:24:00.642Z] chup E18-step1.png
+[2026-11-06T01:24:01.058Z] da dong ngan bang Escape; duong: /units/A-01.05
+[2026-11-06T01:24:01.058Z] tab Hom nay: {"x":62.5,"y":784,"href":"/today","text":"Hôm nay"}
+[2026-11-06T01:24:03.069Z] sau cham 2s: {"p":"/today","title":"Quỹ hàng","on":true,"sw":true} ev:[["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"]]
+[2026-11-06T01:24:04.572Z] dang o: {"duong":"/today","trangMoLai":true} (van offline)
+[2026-11-06T01:24:04.911Z] chup E18-step2.png
+[2026-11-06T01:24:04.916Z] da mo mang (da chan 9 yeu cau /api/ luc offline)
+[2026-11-06T01:24:05.155Z] ngay luc mo mang: 0 dong
+[2026-11-06T01:24:10.237Z] +5s: 2 dong, duong /today
+[2026-11-06T01:24:15.354Z] +10s: 2 dong, duong /today
+[2026-11-06T01:24:20.450Z] +15s: 2 dong, duong /today
+[2026-11-06T01:24:25.574Z] +21s: 2 dong, duong /today
+[2026-11-06T01:24:25.637Z] SAU 20s: 2 dong (tang 2); duong luc dem: /today; trang chua tai lai (window.__ban giu): true
+[2026-11-06T01:24:26.070Z] chup E18-hom-nay.png
+[2026-11-06T01:24:26.151Z] ma anh:
+07768740-c355-4ddb-b677-1fc1ec68a958|shareable|2026-11-06 01:24:05.172017+00
+73c04f6a-411c-4ea1-838d-5c50f76d7d3e|shareable|2026-11-06 01:24:05.361176+00
+
+KET: {"truoc":0,"sau":2,"tang":2,"duong":"/today","khongTaiLai":true}
+
+=== BAN SAO DOI CHUNG (3496, hang cho theo thanh phan, mat khi roi ho so) can A-02.02
+[2026-11-06T01:29:26.965Z] doichung: can A-02.02 - TRUOC 0 dong unit_photos
+[2026-11-06T01:29:39.247Z] da chan mang (cac yeu cau /api/ that bai InternetDisconnected)
+[2026-11-06T01:29:41.814Z] ngan co 2 anh Cho mang (offline)
+[2026-11-06T01:29:42.138Z] chup E18-doichung-step1.png
+[2026-11-06T01:29:42.755Z] da dong ngan bang Escape; duong: /units/A-02.02
+[2026-11-06T01:29:42.755Z] tab Hom nay: {"x":62.5,"y":784,"href":"/today","text":"Hôm nay"}
+[2026-11-06T01:29:44.762Z] sau cham 2s: {"p":"/today","title":"Quỹ hàng","on":true,"sw":true} ev:[["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"],["Network.loadingFailed","net::ERR_INTERNET_DISCONNECTED"]]
+[2026-11-06T01:29:46.265Z] dang o: {"duong":"/today","trangMoLai":true} (van offline)
+[2026-11-06T01:29:46.629Z] chup E18-doichung-step2.png
+[2026-11-06T01:29:46.630Z] da mo mang (da chan 9 yeu cau /api/ luc offline)
+[2026-11-06T01:29:46.840Z] ngay luc mo mang: 0 dong
+[2026-11-06T01:29:51.940Z] +5s: 0 dong, duong /today
+[2026-11-06T01:29:57.037Z] +10s: 0 dong, duong /today
+[2026-11-06T01:30:02.127Z] +15s: 0 dong, duong /today
+[2026-11-06T01:30:07.212Z] +20s: 0 dong, duong /today
+[2026-11-06T01:30:07.267Z] SAU 20s: 0 dong (tang 0); duong luc dem: /today; trang chua tai lai (window.__ban giu): true
+[2026-11-06T01:30:07.704Z] chup E18-doichung-hom-nay.png
+[2026-11-06T01:30:07.784Z] ma anh:
+
+KET: {"truoc":0,"sau":0,"tang":0,"duong":"/today","khongTaiLai":true}
+
+Ban sao khac ma that o: apps/web/src/app/(app)/units/ho-so/dien-thoai/chup-anh.tsx them useEffect cleanup goi dungHangCho() khi ho so khong con nut chup-anh (ban sao o /private/tmp/claude-501/e18-mutant, khong sua kho).

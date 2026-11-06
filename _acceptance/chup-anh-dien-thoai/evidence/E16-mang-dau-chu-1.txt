@@ -1,0 +1,36 @@
+vai=dau-chu-1 375x812 /units/A-02.01 ready=true nut-chup-anh=true
+== phan hoi mang (tat ca) ==
+GET 404 text/plain http://localhost:3460/favicon.ico bodyLen=9 noiBo=0 guiDuoc=0
+GET 200 application/json http://localhost:3460/api/v1/catalog bodyLen=37357 noiBo=0 guiDuoc=0
+GET 200 application/json http://localhost:3460/api/v1/catalog bodyLen=37357 noiBo=0 guiDuoc=0
+GET 200 application/json http://localhost:3460/api/v1/listings bodyLen=50777 noiBo=0 guiDuoc=0
+GET 200 application/json http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 bodyLen=3383 noiBo=4 guiDuoc=2
+GET 200 application/json http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 bodyLen=3383 noiBo=4 guiDuoc=2
+GET 200 application/json http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 bodyLen=3383 noiBo=4 guiDuoc=2
+GET 200 application/json http://localhost:3460/api/v1/listings/e87b3a56-3f3a-49aa-a101-9bd6d163b3aa bodyLen=2231 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/de6f0d3b-04ed-451a-80b0-2d67bc3d6542/thumb bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/cc08918e-338d-4d58-ac2d-cf4306b4a1a0/thumb bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/353a7d6d-7af9-470d-92c7-f67d90513f7b/thumb bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/edc8e45b-1f4a-4992-91ae-f83b19a47dcd/thumb bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/9c8c07d2-45f3-49dc-97b8-e10dce70a711/thumb bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/2a822010-74c0-4c9e-9d93-217b0ef011d4/thumb bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/f51b4dd7-b057-40a3-804f-00a7f6a4f270/thumb bodyLen=0 noiBo=0 guiDuoc=1
+GET 200 image/png http://localhost:3460/api/v1/units/photos/4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3/thumb bodyLen=0 noiBo=0 guiDuoc=1
+GET 200 image/png http://localhost:3460/api/v1/units/photos/de6f0d3b-04ed-451a-80b0-2d67bc3d6542/original bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/cc08918e-338d-4d58-ac2d-cf4306b4a1a0/original bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/353a7d6d-7af9-470d-92c7-f67d90513f7b/original bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/edc8e45b-1f4a-4992-91ae-f83b19a47dcd/original bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/9c8c07d2-45f3-49dc-97b8-e10dce70a711/original bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/2a822010-74c0-4c9e-9d93-217b0ef011d4/original bodyLen=0 noiBo=0 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/f51b4dd7-b057-40a3-804f-00a7f6a4f270/original bodyLen=0 noiBo=0 guiDuoc=1
+GET 200 image/png http://localhost:3460/api/v1/units/photos/4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3/original bodyLen=0 noiBo=0 guiDuoc=1
+GET 200 image/png http://localhost:3460/api/v1/units/photos/480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/original bodyLen=0 noiBo=1 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/ee2f7c5a-83b4-4948-b02b-289b2cd8ef00/original bodyLen=0 noiBo=1 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5/original bodyLen=0 noiBo=1 guiDuoc=0
+GET 200 image/png http://localhost:3460/api/v1/units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4/original bodyLen=0 noiBo=1 guiDuoc=0
+tong phan hoi=50
+== DO MA NOI BO tren mang: 7 phan hoi; tren DOM: 4
+[{"url":"http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","hi":["b201d7cb-4a2a-46d4-9f24-05419813cca4","ee2f7c5a-83b4-4948-b02b-289b2cd8ef00","f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5","480ed0dc-2f05-40a7-ac46-38b9fbeac2c6"]},{"url":"http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","hi":["b201d7cb-4a2a-46d4-9f24-05419813cca4","ee2f7c5a-83b4-4948-b02b-289b2cd8ef00","f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5","480ed0dc-2f05-40a7-ac46-38b9fbeac2c6"]},{"url":"http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","hi":["b201d7cb-4a2a-46d4-9f24-05419813cca4","ee2f7c5a-83b4-4948-b02b-289b2cd8ef00","f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5","480ed0dc-2f05-40a7-ac46-38b9fbeac2c6"]},{"url":"http://localhost:3460/api/v1/units/photos/480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/original","hi":["480ed0dc-2f05-40a7-ac46-38b9fbeac2c6"]},{"url":"http://localhost:3460/api/v1/units/photos/ee2f7c5a-83b4-4948-b02b-289b2cd8ef00/original","hi":["ee2f7c5a-83b4-4948-b02b-289b2cd8ef00"]},{"url":"http://localhost:3460/api/v1/units/photos/f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5/original","hi":["f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5"]},{"url":"http://localhost:3460/api/v1/units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4/original","hi":["b201d7cb-4a2a-46d4-9f24-05419813cca4"]}]
+== DO MA GUI DUOC tren mang: 7 phan hoi
+[{"url":"http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","hs":["f51b4dd7-b057-40a3-804f-00a7f6a4f270","4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3"]},{"url":"http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","hs":["f51b4dd7-b057-40a3-804f-00a7f6a4f270","4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3"]},{"url":"http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01","hs":["f51b4dd7-b057-40a3-804f-00a7f6a4f270","4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3"]},{"url":"http://localhost:3460/api/v1/units/photos/f51b4dd7-b057-40a3-804f-00a7f6a4f270/thumb","hs":["f51b4dd7-b057-40a3-804f-00a7f6a4f270"]},{"url":"http://localhost:3460/api/v1/units/photos/4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3/thumb","hs":["4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3"]},{"url":"http://localhost:3460/api/v1/units/photos/f51b4dd7-b057-40a3-804f-00a7f6a4f270/original","hs":["f51b4dd7-b057-40a3-804f-00a7f6a4f270"]},{"url":"http://localhost:3460/api/v1/units/photos/4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3/original","hs":["4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3"]}]
+DOM co nut chup-anh=true ; chuoi "Ảnh" trong text=true

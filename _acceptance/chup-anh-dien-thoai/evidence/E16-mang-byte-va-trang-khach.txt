@@ -1,0 +1,29 @@
+== byte truc tiep, dau-khach (buyer_agent)
+GET /units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4 ee2f7c5a-83b4-4948-b02b-289b2cd8ef00 f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5 480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/thumb -> 000  0B
+
+GET /units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4 ee2f7c5a-83b4-4948-b02b-289b2cd8ef00 f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5 480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/original -> 000  0B
+
+== doi chung duong: dau-chu-1 cung loi thumb ngan Noi bo
+GET thumb b201d7cb -> 200 image/png 4809B
+/private/tmp/claude-501/-Users-manhphan-dev-onehub-quy-hang--claude-worktrees-zealous-knuth-94d7fc/d04e1681-71ad-443a-acc3-becd506c5d76/scratchpad/b2.bin: PNG image data, 480 x 360, 8-bit/color RGBA, non-interlaced
+== doi chung duong: dau-khach thumb anh Gui duoc
+GET thumb f51b4dd7 -> 200 image/png 4806B
+/private/tmp/claude-501/-Users-manhphan-dev-onehub-quy-hang--claude-worktrees-zealous-knuth-94d7fc/d04e1681-71ad-443a-acc3-becd506c5d76/scratchpad/b3.bin: PNG image data, 480 x 360, 8-bit/color RGBA, non-interlaced
+== trang khach /s/W-6j3rapYRhf (khong dang nhap)
+GET /s/W-6j3rapYRhf -> 200 22543B
+noi bo b201d7cb-4a2a-46d4-9f24-05419813cca4 ee2f7c5a-83b4-4948-b02b-289b2cd8ef00 f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5 480ed0dc-2f05-40a7-ac46-38b9fbeac2c6:        0 lan
+gui duoc f51b4dd7-b057-40a3-804f-00a7f6a4f270:        0 lan
+gui duoc 4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3:        0 lan
+gui duoc de6f0d3b-04ed-451a-80b0-2d67bc3d6542:        4 lan
+gui duoc cc08918e-338d-4d58-ac2d-cf4306b4a1a0:        0 lan
+GET public photo de6f0d3b -> 200 image/png 2501B
+GET public photo noi bo b201d7cb -> 404 application/json 21B
+== (lan 2, sua vong lap) byte truc tiep ngan Noi bo, phien dau-khach
+GET /api/v1/units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4/thumb -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4/original -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/ee2f7c5a-83b4-4948-b02b-289b2cd8ef00/thumb -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/ee2f7c5a-83b4-4948-b02b-289b2cd8ef00/original -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5/thumb -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5/original -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/thumb -> 404 application/json 21B | {"error":"not-found"}
+GET /api/v1/units/photos/480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/original -> 404 application/json 21B | {"error":"not-found"}
