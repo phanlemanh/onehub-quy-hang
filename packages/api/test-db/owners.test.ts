@@ -182,7 +182,7 @@ test("người không thấy nguồn: ba lời gọi không lộ trường ngu�
 });
 
 /** Tên người dùng như `identity.user` lưu — cái API phải trả ở `listingAgentName`. */
-const tenNguoi = async (userId: string) => (await identityPool.query<{ name: string }>('select name from "user" where id = $1', [userId])).rows[0]!.name;
+const tenNguoi = async (userId: string) => (await identityPool.query<{ name: string }>('select name from identity."user" where id = $1', [userId])).rows[0]!.name;
 const KHOA_LIEN_LAC = ["email", "phone", "ownerPhone", "listingAgentEmail", "listingAgentPhone"];
 const coKhoa = (v: unknown, khoa: string[]): string[] => {
   if (!v || typeof v !== "object") return [];
