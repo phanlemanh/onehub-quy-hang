@@ -29,7 +29,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   if (!hasSession) return NextResponse.next();
-  return refreshSessionCookie(request, NextResponse.next(), getApi());
+  // Bước chặn đầu là một hàm riêng trên Vercel với bộ pool riêng — cỡ nhỏ «chan-dau» (sự cố 06/11, lib/api.ts).
+  return refreshSessionCookie(request, NextResponse.next(), getApi("chan-dau"));
 }
 
 export const config = {

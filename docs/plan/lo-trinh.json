@@ -2639,6 +2639,12 @@
       ]
     },
     {
+      "ma": "va-pool-ket-noi",
+      "cau_giao": "Vá sự cố bản thật 06/11: người đã đăng nhập không bị đá về màn đăng nhập khi cơ sở dữ liệu nghẽn kết nối — mỗi phiên bản máy chủ giữ ít kết nối và nhả sớm để không cạn trần 15 của pooler, và khi vẫn không đọc được phiên thì hiện trang lỗi kèm «Thử lại» thay vì chuyển về đăng nhập.",
+      "slug": "va-pool-ket-noi",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-06"
+    },
+    {
       "ma": "va-ac8-uuid-nham-so",
       "cau_giao": "Bài kiểm «AC-8 không dữ liệu thật» của bộ dữ liệu mẫu thấp tầng không còn đỏ chập chờn: mẫu dò số điện thoại chỉ bắt chuỗi đứng riêng như số điện thoại, không bắt dãy chữ số nằm trong UUID ngẫu nhiên; một số điện thoại thật cài vào bộ mẫu vẫn bị bắt.",
       "slug": "va-ac8-uuid-nham-so",
