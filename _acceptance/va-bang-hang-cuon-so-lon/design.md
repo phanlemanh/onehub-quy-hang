@@ -1,0 +1,79 @@
+# Thiết kế: va-bang-hang-cuon-so-lon — Bảng hàng sàn 5.000 căn không sập
+
+Hàng vá khẩn dãy D (đợt `dau-khach-nhap`), giám sát mở 06/11, D-23 «duyet». Câu giao ở hàng
+`va-bang-hang-cuon-so-lon` của `docs/plan/lo-trinh.json`.
+
+## Vấn đề
+
+Lượt ghim lại của #165 (06/11) chạy E11 của `bang-hang-kieu-sheet` (đo cuộn 5.000 căn) trên bộ thử dãy B và thấy
+`/inventory` của sàn đo cuộn hiện màn lỗi «Không mở được màn này»; console: `Minified React error #185` (vòng cập nhật
+vô hạn) với vết `resizeItem → measureElement → onChange` của bộ cuộn ảo. Tái hiện ở 1366×768 và 1920×1080; sàn 33 căn
+không sập.
+
+**Chia đôi** (bản dev, bộ thử dãy B, bài dò mở Bảng hàng sàn 5.000 căn) giữa `028f5636` (E11 xanh lần cuối) và
+`555fd831`: commit đầu tiên hỏng là `f5c7b81e` «bảng thẻ điện thoại trong khe của Bảng hàng». Phiên bản
+`@tanstack/react-virtual` (3.14.24) và React (19.3.0) không đổi giữa hai mốc.
+
+**Cơ chế.** `KhungBangHang` gắn khe điện thoại (`BangTheDienThoai` → `BangThe`) ở MỌI khổ, chỉ ẩn bằng CSS trên máy
+tính. `BangThe` dựng bộ cuộn ảo trên vùng cuộn chung ĐANG HIỆN của trang (cao ~700). Mỗi dòng nằm trong khe ẩn đo ra cao
+0 (`getBoundingClientRect` của phần tử dưới `display: none`), nên mọi dòng sau nó cũng lọt khung nhìn; bộ cuộn dựng thêm
+dòng, đo tiếp ra 0, báo đổi, dựng lại — với 5.000 căn (2.375 lên thẻ) số lần cập nhật đồng bộ vượt giới hạn của React.
+
+## Cách sửa (chỉ trong `inventory/cards/`)
+
+- `cards/do-the.ts` (mới): `doCaoThe(el, uocLuong)` — dòng không có hình chiếu nào (`getClientRects().length === 0`, tức
+  khe hay tổ tiên đang `display: none`) thì trả chiều cao ước lượng như thể chưa đo; dòng đang hiển thị trả chiều cao thật.
+  `uocLuongDong(kind)` gom ước lượng 56/128 đang viết tại chỗ.
+- `cards/bang-the.tsx`: `useVirtualizer` nhận `measureElement` gọi `doCaoThe` với ước lượng của đúng dòng
+  (`data-index`); `BangTheDienThoai` chỉ gắn `BangThe` khi khe có hình chiếu (xem lần lặp 2 dưới). Không đổi
+  `KhungBangHang`, `bang-hang.tsx`, data-grid hay thư viện.
+- Khe hiện ra (điện thoại, hay đóng hồ sơ) thì dòng có hình chiếu và được đo thật như cũ — hiệu ứng `ao.measure()` sẵn có
+  khi `an` đổi vẫn chạy.
+
+## Đo
+
+- `_acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs`: build (ADR-0004), `next start` 3491 trên bộ thử dãy B, mở
+  `/inventory` bằng phiên do-cuon ở từng khổ; khổ ≥ 768 đòi «/ 5000 căn», khổ điện thoại đòi «<N> căn» với N = số căn
+  Đang bán + Đang giao dịch đếm từ API cùng lượt; mọi khổ: không màn lỗi, không lỗi console `#185`. Đối chứng dương: API
+  trả đủ 5.000 căn. Chiều đỏ đo tay 06/11 trên `bang-the.tsx` của main: hai khổ máy tính đỏ đủ ba thông điệp ghim.
+- `cards/do-the.test.ts`: bộ cuộn ảo thật (`Virtualizer` của `@tanstack/react-virtual`), 5.000 dòng, vùng cuộn hiện cao
+  700, mọi dòng ẩn: đo bằng `doCaoThe` thì số dòng dựng ≤ 25 và đứng yên qua 40 khung; đối chứng đo 0 (hành vi cũ) thì
+  số dòng phình ≥ 100 và còn tăng ở 80 khung. Phá thử tay: bỏ nhánh ẩn của `doCaoThe` → bài khoá vòng đỏ «dòng ẩn phải trả
+  ước lượng, không trả 0».
+- E11 của `bang-hang-kieu-sheet` (`do-cuon.mjs`) chạy lại nguyên văn sau bài dò, trên cùng bản build; vòng này đòi vế
+  chức năng (ba lượt cuộn tới dòng 5000). Ngưỡng hiệu năng phụ thuộc tải máy: 06/11 (tải ~10, Spotlight đánh chỉ mục sau
+  khởi động lại, các dãy khác đang kiểm) bản sửa ra 1,3–1,5% khung > 50 ms, còn commit tốt `1414c1e7` đo cùng lúc ra 2,9%
+  và p95 50 ms — ngưỡng không phân biệt được bản tốt với bản hỏng lúc máy nặng. Bỏ hẳn bảng thẻ khỏi máy tính không đổi
+  số, nên phần sát ngưỡng không thuộc hàng này.
+- Chiều đỏ ca hồ sơ (đo tay 06/11, sau phản biện): giữ việc không gắn trên máy tính nhưng bỏ lớp ước lượng của `doCaoThe`
+  → ở 375×812 chạm thẻ mở hồ sơ thì màn sập #185, cả khi quay lại. Lớp ước lượng là phần sửa bắt buộc cho điện thoại,
+  không chỉ lớp phòng.
+- Lần lặp 2 của cách sửa (06/11): đo dòng ẩn bằng ước lượng chặn được vòng #185 nhưng bảng thẻ ẩn vẫn nghe cuộn của vùng
+  cuộn chung; `BangTheDienThoai` nay không gắn `BangThe` khi khe không có hình chiếu (máy tính), gắn khi khe hiện (đổi khổ
+  màn). Hồ sơ đang mở trên điện thoại vẫn chỉ ẩn bảng thẻ (giữ lọc và vị trí cuộn). `doCaoThe` giữ làm lớp thứ hai.
+
+## Đối chiếu ngành
+
+Không áp: vòng không thêm đối tượng, trường hay điểm cấu hình nào — chỉ sửa cách bảng thẻ đo dòng khi bị ẩn.
+
+## Ngoài vòng
+
+- Không đổi `KhungBangHang` (khung vẫn gắn khe ở mọi khổ) — ngoài vùng của hàng, và #175 đang giữ `bang-hang.tsx`;
+  bảng thẻ tự không gắn bên trong khe khi khe ẩn.
+- Bộ thử dãy B gieo ảnh thật (`dung-b.mjs`) sửa ở #165, không ở hàng này — lượt chấm dùng bộ thử đã dựng sẵn.
+
+## Đầu ra chiều đỏ đo tay (06/11)
+
+Bản `bang-the.tsx` của main (chưa sửa), `kiem-cuon.mjs --kho 1366x768 --kho 1920x1080`:
+
+```
+{"kho":"1366x768","ok":false,"loi":["màn sập «Không mở được màn này» (1366x768)","lỗi vòng cập nhật (1366x768): Minified React error #185; …","không thấy «/ 5000 căn» (1366x768)"]}
+{"kho":"1920x1080","ok":false,"loi":["màn sập «Không mở được màn này» (1920x1080)","lỗi vòng cập nhật (1920x1080): Minified React error #185; …","không thấy «/ 5000 căn» (1920x1080)"]}
+```
+
+Bản sửa bỏ lớp ước lượng của `doCaoThe`, `kiem-cuon.mjs --kho 375x812-ho-so --kho 375x812`:
+
+```
+{"kho":"375x812-ho-so","ok":false,"loi":["bảng thẻ bị gỡ khi mở hồ sơ — mất lọc và vị trí cuộn (375x812-ho-so)","màn sập «Không mở được màn này» (375x812-ho-so)","lỗi vòng cập nhật (375x812-ho-so): Minified React error #185; …","không thấy «2375 căn» sau khi đóng hồ sơ (375x812-ho-so)", …]}
+{"kho":"375x812","ok":true,"loi":[]}
+```
