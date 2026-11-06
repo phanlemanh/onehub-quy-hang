@@ -97,6 +97,8 @@ export const API_ERRORS = {
   passwordTooLong: { code: "password-too-long", status: 400 },
   passwordCommon: { code: "password-common", status: 400 },
   passwordGuessable: { code: "password-guessable", status: 400 },
+  // Trạng thái riêng (hàng 46): gỡ nhãn còn căn mang mà thiếu nhãn thay — thân kèm mã và số căn.
+  statusLabelInUse: { code: "status-label-in-use", status: 409 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

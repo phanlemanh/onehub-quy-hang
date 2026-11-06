@@ -1,0 +1,13 @@
+# E13 network (dev server log 3462)
+-- phan hoi khong phai 2xx/3xx tren /api:
+-- (het)
+-- PUT/POST ghi:
+ POST /api/v1/auth/email-otp/send-verification-otp 200 in 26ms (next.js: 2ms, application-code: 23ms)
+ POST /api/v1/auth/sign-in/email-otp 200 in 21ms (next.js: 1.6ms, application-code: 20ms)
+ PUT /api/v1/company/statuses 200 in 38ms (next.js: 4ms, application-code: 34ms)
+ POST /api/v1/auth/email-otp/send-verification-otp 200 in 35ms (next.js: 1.8ms, application-code: 33ms)
+ POST /api/v1/auth/sign-in/email-otp 200 in 20ms (next.js: 2ms, application-code: 18ms)
+-- loi trong log:
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+-- tong request api:
+356

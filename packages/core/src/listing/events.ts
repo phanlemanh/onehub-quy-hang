@@ -3,7 +3,7 @@
  * từ chối, nên thông tin chủ nhà (lớp `source`) không có đường vào bảng sự kiện (bất biến 2, AC-10).
  */
 import { kiemMaCan } from "./gan-ma-can";
-import { isStandardStatus, WITHDRAWN_REASONS } from "./status";
+import { isStandardStatus, MA_NHAN_TRANG_THAI_RE, WITHDRAWN_REASONS } from "./status";
 
 export const EVENT_TYPES = [
   "created",
@@ -60,6 +60,9 @@ const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
     closePrice: [false, tien],
     closeDate: [false, ngay],
     withdrawnReason: [false, motTrong(WITHDRAWN_REASONS)],
+    // Nhãn riêng của sàn neo vào `to` (hàng 46): mã nhãn, hay `null` = nhãn mặc định. Mã có trong bộ nhãn của sàn hay không
+    // là việc của lệnh (`kiemNhanSuKien`), khuôn chỉ kiểm hình mã.
+    label: [false, (v) => (v === null || (typeof v === "string" && MA_NHAN_TRANG_THAI_RE.test(v)) ? null : "cần mã nhãn trạng thái hay null")],
   },
   owner_confirmed: { confirmedAt: [false, ngay] },
   unit_number_assigned: { unitNumber: [true, maCan] },

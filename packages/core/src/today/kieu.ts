@@ -31,7 +31,16 @@ export type Nhom = {
 export type BoNhom = Nhom[];
 
 /** Một lần đổi giá hay trạng thái gần nhất, như bản xem hàng trả (`lastPriceChange`, `lastStatusChange`). */
-export type LanDoi = { at: string; byUserId: string; byRoles: string[]; from: unknown; to: unknown };
+export type LanDoi = {
+  at: string;
+  byUserId: string;
+  byRoles: string[];
+  from: unknown;
+  to: unknown;
+  /** Nhãn riêng (mã) của trạng thái trước và sau lần đổi (hàng 46); vắng hay `null` = nhãn mặc định. */
+  fromLabel?: string | null;
+  toLabel?: string | null;
+};
 
 /** Dữ kiện của một căn cho hàng đợi — lấy từ bản xem hàng, cộng loại hình từ danh mục. */
 export type DuKienCan = {
@@ -41,6 +50,11 @@ export type DuKienCan = {
   priceChangeTimestamp: string | null;
   lastPriceChange: LanDoi | null;
   lastStatusChange: LanDoi | null;
+  /**
+   * Lúc căn vào trạng thái hiện tại — lần `status_changed` cuối có `to` khác trạng thái trước (đổi nhãn tại chỗ không tính,
+   * hàng 46). Vắng (dữ kiện đời trước) thì mốc Đang bán đọc lần đổi gần nhất như cũ.
+   */
+  lucVaoTrangThai?: string | null;
   missing: readonly string[];
   /** RESO `PropertySubType` từ danh mục; căn ngoài danh mục là `null`. */
   propertySubType: string | null;
