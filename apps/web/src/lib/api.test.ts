@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import pg from "pg";
 
-import { docPhanHoiMe, dungPools, KHACH_KHAC, LoiDocPhien, NOI_CHAN_DAU, NOI_TRANG, SO_BAN_DU_KIEN, TRAN_POOLER } from "./api";
+import { CONG_POOLER, docPhanHoiMe, doiCong, dungPools, getApi, KHACH_KHAC, LoiDocPhien, NOI_CHAN_DAU, NOI_TRANG, SO_BAN_DU_KIEN, TRAN_POOLER } from "./api";
 
 const json = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -103,6 +103,47 @@ test("dòng dựng bể nêu cổng, không lộ chuỗi kết nối", async () 
     }
   } finally {
     console.log = goc;
+  }
+});
+
+test("công tắc cổng: đổi đúng cổng, vắng thì giữ nguyên, giá trị lạ thì ném không lộ chuỗi", () => {
+  const goc = "postgres://nguoi-thu:mat-khau-thu@may-chu-thu:5432/postgres?sslmode=require&uselibpqcompat=true";
+  for (const cong of CONG_POOLER) {
+    const u = new URL(doiCong(goc, cong));
+    assert.equal(u.port === "" ? "5432" : u.port, cong, `công tắc cổng ${cong}: cổng sau khi đổi là ${u.port}`);
+    assert.equal(u.hostname, "may-chu-thu", `công tắc cổng ${cong}: đổi máy chủ`);
+    assert.equal(u.password, "mat-khau-thu", `công tắc cổng ${cong}: mất mật khẩu`);
+    assert.equal(u.searchParams.get("sslmode"), "require", `công tắc cổng ${cong}: mất sslmode`);
+    assert.equal(u.searchParams.get("uselibpqcompat"), "true", `công tắc cổng ${cong}: mất uselibpqcompat`);
+  }
+  assert.equal(doiCong(goc, undefined), goc, "công tắc cổng vắng: chuỗi bị đổi");
+  assert.equal(doiCong(goc, ""), goc, "công tắc cổng rỗng: chuỗi bị đổi");
+  for (const la of ["6544", "abc", " 6543"]) {
+    assert.throws(
+      () => doiCong(goc, la),
+      (e: Error) => /chỉ nhận 5432 hoặc 6543/.test(e.message) && !e.message.includes("mat-khau-thu") && !e.message.includes("may-chu-thu"),
+      `công tắc cổng «${la}»: không ném, hoặc lỗi lộ chuỗi kết nối`,
+    );
+  }
+});
+
+test("công tắc cổng: getApi dựng bể theo cổng của công tắc", async () => {
+  const cu = { ...process.env };
+  const goc = console.log;
+  const dong: string[] = [];
+  console.log = (...a: unknown[]) => void dong.push(a.map(String).join(" "));
+  try {
+    Object.assign(process.env, {
+      DATABASE_URL: "postgres://u:p@127.0.0.1:5432/x",
+      DATABASE_POOLER_PORT: "6543",
+      BETTER_AUTH_SECRET: "bi-mat-thu-".padEnd(40, "x"),
+      BETTER_AUTH_URL: "http://localhost:3460",
+    });
+    getApi();
+    assert.ok(dong.some((l) => l.includes("[pool:ket-noi] cổng 6543")), `getApi không dựng bể ở cổng 6543: ${dong.join(" | ")}`);
+  } finally {
+    console.log = goc;
+    process.env = cu;
   }
 });
 

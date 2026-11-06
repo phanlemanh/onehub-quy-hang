@@ -27,7 +27,9 @@ Source input: hàng `pooler-che-do-giao-dich` của `docs/plan/lo-trinh.json` ·
 
 - AC-1: Given `dungPools` dựng bộ bể ở nơi chạy «trang» và «chan-dau», When đọc cấu hình bể danh tính, Then không bể nào
   mang tham số khởi động `options`, mỗi lần dựng bể ghi đúng một dòng nhật ký nêu cổng của chuỗi kết nối (không mật khẩu,
-  không máy chủ); cỡ bể và trình nghe lỗi của hai hồ sơ trước giữ nguyên.
+  không máy chủ); công tắc cổng `DATABASE_POOLER_PORT` (biến thường, không bí mật) đổi cổng của chuỗi kết nối sang 5432
+  hoặc 6543, vắng thì giữ nguyên, giá trị khác thì máy chủ không khởi động và lỗi không lộ chuỗi (sửa đổi S3 06/11, chủ
+  kho chọn); cỡ bể và trình nghe lỗi của hai hồ sơ trước giữ nguyên.
 - AC-2 (cross-layer): Given Postgres sạch đã áp mọi migration và bộ kiểm db dựng bể danh tính KHÔNG tham số khởi động
   (search_path mặc định, không chứa `identity`), When chạy bộ kiểm cách ly và bộ kiểm API trên Postgres
   (`npm run db:migrate && npm run db:test`), Then cả hai xanh và đầu ra không có dòng «Could not validate the database
@@ -46,7 +48,8 @@ Source input: hàng `pooler-che-do-giao-dich` của `docs/plan/lo-trinh.json` ·
   có trạng thái phiên — `SET` không `LOCAL`, `set_config(…, false)`, `LISTEN`, khoá tư vấn mức phiên, `PREPARE`, bảng tạm,
   câu lệnh có tên, tham số khởi động `options` — và mọi câu nhắc bảng danh tính đều ghi `identity.`; đối chứng: tệp mồi
   mang từng mẫu bị gọi tên đúng đường, còn `set local` và `set_config(…, true)` không bị gọi tên.
-- AC-6 (cross-layer): Given bản xem trước của nhánh chạy với `DATABASE_URL` cổng 6543 (Supavisor chế độ giao dịch), When
+- AC-6 (cross-layer): Given bản xem trước của nhánh chạy với công tắc `DATABASE_POOLER_PORT=6543` (Supavisor chế độ giao
+  dịch), When
   bắn 40 yêu cầu đồng thời tới `/api/v1/me` và `/today` với cookie phiên giả, Then nhật ký của đúng triển khai ấy có dòng
   dựng bể nêu cổng 6543, không yêu cầu nào 5xx, `/api/v1/health` trả 200, nhật ký bản xem trước trong khoảng thử không có
   `EMAXCONNSESSION`, lỗi bể, lỗi lược đồ hay lỗi câu lệnh chuẩn bị, và nhật ký bản thật cùng khoảng không có
@@ -99,7 +102,7 @@ Liệt kê tay bốn trục (descope «bỏ coverage-scan» trong sổ quyết �
 
 ## Notes
 
-- Danh sách cho phép của AC-8: `apps/web/src/lib/api.ts`, `apps/web/src/lib/api.test.ts`, `packages/api/src/auth/auth.ts`,
+- Danh sách cho phép của AC-8: `.env.example`, `apps/web/src/lib/api.ts`, `apps/web/src/lib/api.test.ts`, `packages/api/src/auth/auth.ts`,
   `packages/api/src/app.ts` (chú thích), `packages/api/src/ten-hien-thi.ts`, `packages/api/src/leads/routes.ts`,
   `packages/api/src/owners/routes.ts`, `packages/api/src/routing/routes.ts`, `packages/api/package.json`,
   `package-lock.json`, `packages/api/test-db/helpers.ts`, `packages/api/test-db/owners.test.ts`,
@@ -107,8 +110,8 @@ Liệt kê tay bốn trục (descope «bỏ coverage-scan» trong sổ quyết �
   `docs/architecture/kien-truc-repo-va-stack.md`, `docs/product/tham-chieu.md`, `docs/plan/lo-trinh.json`, design doc và
   kế hoạch của hàng, `_acceptance/pooler-che-do-giao-dich/**`, `_acceptance/config.yaml`, `PRODUCT-MAP.md`, `LO-TRINH.html`.
 - Bàn thử tại máy cần PgBouncer (Homebrew) và Docker; dùng lại chỗ thử Postgres của `va-pool-ket-noi` (chỉ đọc, không sửa).
-- E7 cần bản xem trước của nhánh đã có `DATABASE_URL` cổng 6543 (Hỏi ở Cổng Phạm vi) và thư mục `vercel link` ngoài kho
-  (`VERCEL_LINK_DIR`, như khoá `suc_khoe_xem_truoc`).
+- E7 cần bản xem trước của nhánh đã có `DATABASE_POOLER_PORT=6543` (máy đặt — biến thường) và thư mục `vercel link` ngoài
+  kho (`VERCEL_LINK_DIR`, như khoá `suc_khoe_xem_truoc`). `DATABASE_URL` trên Vercel là bí mật kín, máy không đọc được nó.
 - E7 bắn tải từ bản xem trước qua cùng Supavisor với bản thật (dùng chung cơ sở dữ liệu): khung giờ và mức tải là Hỏi ở
   Cổng Phạm vi; tập lệnh dừng ngay khi nhật ký bản thật có `EMAXCONNSESSION`.
 - Thử tay của chủ kho (đăng nhập, Hôm nay, Bảng hàng trên bản xem trước) là mục kiểm tay của trang bằng chứng — máy không

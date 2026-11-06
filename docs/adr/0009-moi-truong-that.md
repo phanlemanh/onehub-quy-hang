@@ -86,9 +86,12 @@ chế độ giao dịch mà §4 nêu.
    chế độ nào.
 4. **Job migrate giữ chuỗi riêng**: `PROD_DATABASE_URL` của job `deploy` (§7) không chuyển sang chế độ giao dịch — migration
    chạy một lần sau mỗi lần gộp và có câu lệnh cần phiên. Hai chuỗi kết nối giữ riêng, không gộp.
-5. **Đổi bản thật** (chủ kho quyết ở Cổng Bằng chứng của hồ sơ `pooler-che-do-giao-dich`, sau khi đã đo trên bàn thử tại
+5. **Công tắc cổng**: `DATABASE_URL` là bí mật kín (Sensitive) nên không ai phải cầm nó để đổi chế độ — biến thường
+   `DATABASE_POOLER_PORT` (chỉ nhận 5432 hoặc 6543) đổi cổng của `DATABASE_URL` lúc dựng bể; vắng thì giữ cổng của chuỗi;
+   giá trị khác thì máy chủ không khởi động.
+6. **Đổi bản thật** (chủ kho quyết ở Cổng Bằng chứng của hồ sơ `pooler-che-do-giao-dich`, sau khi đã đo trên bàn thử tại
    máy và trên bản xem trước cổng 6543):
-   1. Vercel → `DATABASE_URL` phạm vi Production: cùng chuỗi, đổi cổng 5432 → 6543 (giữ `sslmode=require&uselibpqcompat=true`).
+   1. Vercel → `DATABASE_POOLER_PORT=6543` phạm vi Production (`DATABASE_URL` giữ nguyên).
    2. Triển khai lại bản thật; nhật ký phải có dòng `[pool:ket-noi] cổng 6543`.
    3. Theo dõi nhật ký 30 phút: không `EMAXCONNSESSION`, không dòng lỗi bể `[pool:`, không 5xx mới.
-   4. Lùi: đặt lại chuỗi cổng 5432, triển khai lại — mã không cần đổi.
+   4. Lùi: xoá `DATABASE_POOLER_PORT` (hoặc đặt 5432), triển khai lại — mã không cần đổi.

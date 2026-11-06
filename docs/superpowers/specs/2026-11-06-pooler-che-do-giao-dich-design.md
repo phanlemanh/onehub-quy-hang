@@ -81,6 +81,13 @@ lập khỏi search_path bằng kết nối mang search_path sai, không bằng 
 Giới hạn khai trước: PgBouncer không phải Supavisor. Cách Supavisor xử tham số khởi động `options` và câu lệnh chuẩn bị
 chưa kiểm ở máy — bước bản xem trước dưới đây đo trên Supavisor thật.
 
+## Công tắc cổng (sửa đổi S3 06/11 — chủ kho chọn)
+
+`DATABASE_URL` trên Vercel là biến bí mật kín: CLI kéo về chỉ được giá trị giữ chỗ, máy không dựng được chuỗi 6543 mà
+không có người cầm chuỗi. Chủ kho chọn công tắc: biến thường `DATABASE_POOLER_PORT` (chỉ nhận 5432 hoặc 6543) đổi cổng
+của `DATABASE_URL` lúc `getApi` dựng bể; vắng thì giữ nguyên; giá trị khác thì máy chủ không khởi động, lỗi không in chuỗi
+kết nối. Máy tự đặt biến cho bản xem trước nhánh; đổi bản thật là đặt biến ở phạm vi Production, lùi là xoá biến.
+
 ## Bản xem trước với cổng 6543
 
 `DATABASE_URL` của bản thật và bản xem trước hiện là một (pooler chế độ phiên). Đo trên Supavisor thật cần một biến

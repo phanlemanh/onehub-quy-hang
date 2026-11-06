@@ -53,6 +53,9 @@ const nhanhCua = trienKhai.meta?.githubCommitRef ?? trienKhai.gitSource?.ref ?? 
 if (trienKhai.target === "production") dung(2, "triển khai là bản thật — chỉ đo bản xem trước");
 if (nhanhCua !== NHANH) dung(2, `triển khai thuộc nhánh «${nhanhCua}», không phải ${NHANH}`);
 const maTrienKhai = trienKhai.id ?? trienKhai.uid;
+// Công tắc cổng của bản xem trước nhánh (biến thường — chỉ đọc tên và phạm vi).
+const ds = vercel(["env", "ls", "preview", NHANH]);
+if (ds.status !== 0 || !/\bDATABASE_POOLER_PORT\b/.test(ds.stdout)) dung(2, `bản xem trước nhánh ${NHANH} chưa có DATABASE_POOLER_PORT`);
 
 const batDau = new Date(Date.now() - 5_000).toISOString();
 
