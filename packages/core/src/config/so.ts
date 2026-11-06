@@ -88,7 +88,7 @@ export const SO_DIEM: readonly DiemSo[] = [
     man: "49",
   },
   { so: "9", khoa: "fee.brokerage_pct", ten: "Phí môi giới", kieu: { loai: "decimal", donVi: "%", min: 0, max: 5 }, macDinh: 1, aiDoi: QT, ghiDe: "Đầu chủ sửa từng căn", hieuLuc: "moi", lop: NOI_BO, tinhTrang: "mo", man: "49" },
-  // Hỏi-1 (Cổng Phạm vi 04/11): thuế và lệ phí do luật đặt — chỉ nhận đúng số mặc định tới hàng 49.
+  // Thuế và lệ phí do luật đặt — đúng số luật, sàn không sửa (Hỏi-1 hàng 81, 04/11; hàng 49 kiểm văn bản 06/11 và giữ cứng, K29).
   { so: "10", khoa: "fee.personal_income_tax_pct", ten: "Thuế thu nhập cá nhân khi chuyển nhượng", kieu: { loai: "decimal", donVi: "%", min: 2, max: 2 }, macDinh: 2, aiDoi: QT, ghiDe: null, hieuLuc: "moi", lop: NOI_BO, tinhTrang: "mo", man: "49" },
   { so: "11", khoa: "fee.registration_fee_pct", ten: "Lệ phí trước bạ", kieu: { loai: "decimal", donVi: "%", min: 0.5, max: 0.5 }, macDinh: 0.5, aiDoi: QT, ghiDe: null, hieuLuc: "moi", lop: NOI_BO, tinhTrang: "mo", man: "49" },
   // A4. Trang khách và gửi — chỉ chọn trong trần của luật ẩn
