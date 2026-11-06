@@ -2818,6 +2818,12 @@
         "packages/core/src/listing/**",
         "apps/web/src/app/(app)/today/**"
       ]
+    },
+    {
+      "ma": "va-bang-hang-cuon-so-lon",
+      "cau_giao": "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập («Không mở được màn này», React #185 — vòng cập nhật vô hạn resizeItem → measureElement → onChange của bộ cuộn ảo), ở 1366×768 và 1920×1080; một bài kiểm đơn vị khoá vòng ấy.",
+      "slug": "va-bang-hang-cuon-so-lon",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-06"
     }
   ],
   "chan_troi": [
