@@ -6,7 +6,8 @@
 // CHÍNH bản build này, tuần tự — hai bài cùng cổng 3491 và cùng thư mục build, chạy song song sẽ giẫm nhau. Vòng này chỉ
 // đòi vế CHỨC NĂNG: cả ba lượt cuộn tới «dòng cuối thấy 5000» (trang không sập giữa cuộn). Ngưỡng hiệu năng của E11 phụ
 // thuộc tải máy (06/11, tải ~10: commit tốt 1414c1e7 trượt 2,9% còn nặng hơn bản sửa) — in ra kèm tải máy, không quyết.
-// Khổ rộng ≥ 768: bảng phải hiện «/ 5000 căn». Khổ điện thoại: bảng thẻ (chỉ căn Đang bán, Đang giao dịch) phải hiện
+// Khổ «<w>x<h>-ho-so»: điện thoại mở hồ sơ một căn từ thẻ rồi đóng. Khổ «<a>x<b>><c>x<d>»: đổi khổ ngay trên một trang.
+// Khổ rộng ≥ 768: bảng phải hiện «/ 5000 căn» và bảng thẻ KHÔNG gắn (0 phần tử [data-the-can]). Khổ điện thoại: bảng thẻ (chỉ căn Đang bán, Đang giao dịch) phải hiện
 // «<N> căn» với N đếm từ API cùng lượt (đáp án không viết tay). Cả hai: không màn
 // «Không mở được màn này», không lỗi console mang «#185» hay «Maximum update depth». Mỗi khổ một dòng JSON.
 // Thoát 0 = mọi khổ đạt · 1 = có khổ lệch · 2 = không chạy được (thiếu bộ thử, bản build không lên).
@@ -83,33 +84,84 @@ try {
 
   const chrome = await moChrome();
   try {
-    for (const kho of khos) {
-      const [w, h] = kho.split("x").map(Number);
-      const dienThoai = w < 768;
+    const DICH_BANG = new RegExp(`/ ${SO_HANG} căn`);
+    const DICH_THE = new RegExp(`(^|\\n)${soThe} căn`);
+    const soThe_ = (t) => t.tinh("document.querySelectorAll('[data-the-can]').length").catch(() => -1);
+    const doc = (t) => t.tinh("document.body.innerText").catch(() => "");
+    const cho = async (t, dk, giay = 90) => {
+      for (let i = 0; i < giay; i++) {
+        const txt = await doc(t);
+        if (dk(txt) || txt.includes("Không mở được màn này")) return txt;
+        await ngu(1000);
+      }
+      return doc(t);
+    };
+    const loiChung = async (t, kho, loi) => {
+      const txt = await doc(t);
+      if (txt.includes("Không mở được màn này")) loi.push(`màn sập «Không mở được màn này» (${kho})`);
+      const l185 = ((await t.tinh("window.__loi").catch(() => [])) ?? []).filter((x) => /#185|Maximum update depth/.test(x));
+      if (l185.length) loi.push(`lỗi vòng cập nhật (${kho}): ${l185[0].slice(0, 120)}`);
+    };
+    const moTrang = async (w, h) => {
       const t = await chrome.trang(w, h);
       await t.gui("Page.addScriptToEvaluateOnNewDocument", {
         source: "window.__loi=[];const e0=console.error;console.error=(...a)=>{try{window.__loi.push(a.map(x=>x&&x.message?x.message:String(x)).join(' ').slice(0,300))}catch{};e0(...a)};window.addEventListener('error',e=>window.__loi.push(String(e.message)));",
       });
       await t.datCookie(cookie);
       await t.di("/inventory");
-      const dich = dienThoai ? new RegExp(`(^|\\n)${soThe} căn`) : new RegExp(`/ ${SO_HANG} căn`);
-      let txt = "";
-      let thay = false;
-      for (let i = 0; i < 90 && !thay; i++) {
-        await ngu(1000);
-        txt = await t.tinh("document.body.innerText").catch(() => "");
-        thay = dich.test(txt) || txt.includes("Không mở được màn này");
-      }
-      await ngu(1500);
-      txt = await t.tinh("document.body.innerText").catch(() => "");
-      const loiConsole = (await t.tinh("window.__loi").catch(() => [])) ?? [];
+      return t;
+    };
+    for (const kho of khos) {
       const loi = [];
-      if (txt.includes("Không mở được màn này")) loi.push(`màn sập «Không mở được màn này» (${kho})`);
-      const l185 = loiConsole.filter((x) => /#185|Maximum update depth/.test(x));
-      if (l185.length) loi.push(`lỗi vòng cập nhật (${kho}): ${l185[0].slice(0, 120)}`);
-      if (!dich.test(txt)) loi.push(`không thấy «${dienThoai ? `${soThe}` : `/ ${SO_HANG}`} căn» (${kho})`);
+      if (kho.includes(">")) {
+        // Đổi khổ ngay trên một trang: máy tính (bảng thẻ không gắn) → điện thoại (bảng thẻ gắn và hiện).
+        const [tu, den] = kho.split(">").map((k) => k.split("x").map(Number));
+        const t = await moTrang(tu[0], tu[1]);
+        if (!DICH_BANG.test(await cho(t, (x) => DICH_BANG.test(x)))) loi.push(`không thấy «/ ${SO_HANG} căn» trước khi đổi khổ (${kho})`);
+        const truoc = await soThe_(t);
+        if (truoc !== 0) loi.push(`bảng thẻ đang gắn trên máy tính: ${truoc} thẻ (${kho})`);
+        await t.gui("Emulation.setDeviceMetricsOverride", { width: den[0], height: den[1], deviceScaleFactor: 1, mobile: true });
+        const txt = await cho(t, (x) => DICH_THE.test(x), 45);
+        if (!DICH_THE.test(txt)) loi.push(`không thấy «${soThe} căn» sau khi đổi khổ (${kho})`);
+        if ((await soThe_(t)) <= 0) loi.push(`bảng thẻ không gắn sau khi khe hiện (${kho})`);
+        await loiChung(t, kho, loi);
+        t.dong();
+      } else if (kho.endsWith("-ho-so")) {
+        // Điện thoại mở hồ sơ một căn: bảng thẻ vẫn gắn nhưng bị ẩn (đúng điều kiện từng gây #185), rồi quay lại bảng thẻ.
+        const [w, h] = kho.replace("-ho-so", "").split("x").map(Number);
+        const t = await moTrang(w, h);
+        if (!DICH_THE.test(await cho(t, (x) => DICH_THE.test(x)))) loi.push(`không thấy «${soThe} căn» trước khi mở hồ sơ (${kho})`);
+        const mo = await t.tinh("(() => { const e = document.querySelector('[data-the-can]'); if (!e) return false; e.focus(); e.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); return true; })()");
+        let daMo = false;
+        for (let i = 0; i < 20 && !daMo; i++) {
+          await ngu(500);
+          daMo = /[?&](unit|hang)=/.test(await t.tinh("location.search").catch(() => ""));
+        }
+        if (!mo || !daMo) loi.push(`không mở được hồ sơ từ thẻ (${kho})`);
+        await ngu(4000);
+        if ((await soThe_(t)) <= 0) loi.push(`bảng thẻ bị gỡ khi mở hồ sơ — mất lọc và vị trí cuộn (${kho})`);
+        await loiChung(t, kho, loi);
+        await t.tinh("history.back()");
+        const txt = await cho(t, (x) => DICH_THE.test(x), 30);
+        if (!DICH_THE.test(txt)) loi.push(`không thấy «${soThe} căn» sau khi đóng hồ sơ (${kho})`);
+        await loiChung(t, `${kho} sau khi đóng`, loi);
+        t.dong();
+      } else {
+        const [w, h] = kho.split("x").map(Number);
+        const dienThoai = w < 768;
+        const dich = dienThoai ? DICH_THE : DICH_BANG;
+        const t = await moTrang(w, h);
+        const txt = await cho(t, (x) => dich.test(x));
+        await ngu(1500);
+        await loiChung(t, kho, loi);
+        if (!dich.test(txt)) loi.push(`không thấy «${dienThoai ? `${soThe}` : `/ ${SO_HANG}`} căn» (${kho})`);
+        const n = await soThe_(t);
+        // Máy tính: bảng thẻ không gắn (0 thẻ trong cây trang). Điện thoại: đối chứng dương — có thẻ.
+        if (!dienThoai && n !== 0) loi.push(`bảng thẻ đang gắn trên máy tính: ${n} thẻ (${kho})`);
+        if (dienThoai && n <= 0) loi.push(`không có thẻ nào trên điện thoại (${kho})`);
+        t.dong();
+      }
       ket.push({ kho, ok: loi.length === 0, loi });
-      t.dong();
     }
   } finally {
     chrome.dong();

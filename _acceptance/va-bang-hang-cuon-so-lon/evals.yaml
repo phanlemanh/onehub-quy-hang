@@ -7,15 +7,15 @@ evals:
   - id: E1
     criterion: AC-1
     executor: script
-    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kem-e11
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kho 375x812-ho-so --kho "1366x768>375x812" --kem-e11
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/data-grid/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**"]
-    expected: "exit 0; dòng {kho:'1366x768'} và {kho:'1920x1080'} ok — trang /inventory của do-cuon hiện «/ 5000 căn», không hiện «Không mở được màn này», console không có lỗi mang «#185» hay «Maximum update depth». Đỏ in «màn sập «Không mở được màn này» (<khổ>)», «lỗi vòng cập nhật (<khổ>): …», «không thấy «/ 5000 căn» (<khổ>)»; thiếu bộ thử hay API không đủ 5.000 căn thì thoát 2 «đối chứng dương hỏng» / «thiếu bộ thử dãy B»."
+    expected: "exit 0; dòng {kho:'1366x768'} và {kho:'1920x1080'} ok — trang /inventory của do-cuon hiện «/ 5000 căn», không hiện «Không mở được màn này», console không có lỗi mang «#185» hay «Maximum update depth», và 0 phần tử [data-the-can] trong cây trang (bảng thẻ không gắn). Đỏ in «bảng thẻ đang gắn trên máy tính: <n> thẻ (<khổ>)», «màn sập «Không mở được màn này» (<khổ>)», «lỗi vòng cập nhật (<khổ>): …», «không thấy «/ 5000 căn» (<khổ>)»; thiếu bộ thử hay API không đủ 5.000 căn thì thoát 2 «đối chứng dương hỏng» / «thiếu bộ thử dãy B»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E2
     criterion: AC-2
     executor: script
-    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kem-e11
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kho 375x812-ho-so --kho "1366x768>375x812" --kem-e11
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/data-grid/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**", "_acceptance/bang-hang-kieu-sheet/thu/do-cuon.mjs"]
     expected: "exit 0; dòng {kho:'e11'} ok — máy đo cuộn E11 (do-cuon.mjs --khong-build) chạy đủ ba lượt và cả ba dòng «lượt N: …» mang «dòng cuối thấy 5000»; dòng in thêm hieu_nang (trung vị p95, tỷ lệ khung > 50 ms) và tai_may làm thông tin, không quyết. Đỏ in «máy đo cuộn E11 không chạy đủ ba lượt (thoát <mã>)» hay «cuộn không tới căn cuối: <k>/3 lượt thấy dòng 5000»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -31,9 +31,9 @@ evals:
   - id: E4
     criterion: AC-4
     executor: script
-    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kem-e11
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kho 375x812-ho-so --kho "1366x768>375x812" --kem-e11
     paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**"]
-    expected: "exit 0; dòng {kho:'375x812'} ok — bảng thẻ điện thoại hiện «<N> căn» với N = số căn Đang bán + Đang giao dịch của do-cuon đếm từ API cùng lượt (không viết tay), không màn lỗi, không lỗi «#185». Vế «dòng hiện đo chiều cao thật» là ca (1) của E3. Đỏ in «không thấy «<N> căn» (375x812)» hay «màn sập … (375x812)»."
+    expected: "exit 0; dòng {kho:'375x812'} ok và dòng {kho:'1366x768>375x812'} ok — 375x812: bảng thẻ điện thoại hiện «<N> căn» với N = số căn Đang bán + Đang giao dịch của do-cuon đếm từ API cùng lượt (không viết tay), không màn lỗi, không lỗi «#185». có ≥1 phần tử [data-the-can] (đối chứng dương của vế «không gắn» ở E1); 1366x768>375x812: mở ở máy tính (0 thẻ, «/ 5000 căn»), đổi khổ trên cùng trang sang 375×812 → «<N> căn» và có thẻ, không lỗi. Vế «dòng hiện đo chiều cao thật» là ca (1) của E3. Đỏ in «không thấy «<N> căn» (375x812)», «không có thẻ nào trên điện thoại», «không thấy «<N> căn» sau khi đổi khổ», «bảng thẻ không gắn sau khi khe hiện» hay «màn sập … (<khổ>)»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E5
@@ -42,4 +42,12 @@ evals:
     cmd: config:executors.design.khuon
     paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
     expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai — bảng thẻ vẫn dùng TrangThai cho trạng thái lỗi, trống, chờ tải như trước."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/va-bang-hang-cuon-so-lon/thu/kiem-cuon.mjs --kho 1366x768 --kho 1920x1080 --kho 375x812 --kho 375x812-ho-so --kho "1366x768>375x812" --kem-e11
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/**", "_acceptance/va-bang-hang-cuon-so-lon/thu/**"]
+    expected: "exit 0; dòng {kho:'375x812-ho-so'} ok — ở 375×812 bảng thẻ hiện «<N> căn»; bài nhấn Enter trên thẻ đầu, URL mang unit= hay hang= (hồ sơ mở); 4 giây sau: không màn lỗi, không lỗi «#185», vẫn có [data-the-can] trong cây trang; history.back() → «<N> căn», không lỗi. Chiều đỏ đo tay 06/11 (bỏ lớp ước lượng của doCaoThe): đỏ «màn sập «Không mở được màn này» (375x812-ho-so)» và «lỗi vòng cập nhật (375x812-ho-so): …#185». Đỏ in thêm «không mở được hồ sơ từ thẻ», «bảng thẻ bị gỡ khi mở hồ sơ — mất lọc và vị trí cuộn», «không thấy «<N> căn» sau khi đóng hồ sơ»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

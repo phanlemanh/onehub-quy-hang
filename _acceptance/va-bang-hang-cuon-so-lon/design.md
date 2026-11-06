@@ -45,6 +45,9 @@ dòng, đo tiếp ra 0, báo đổi, dựng lại — với 5.000 căn (2.375 l�
   khởi động lại, các dãy khác đang kiểm) bản sửa ra 1,3–1,5% khung > 50 ms, còn commit tốt `1414c1e7` đo cùng lúc ra 2,9%
   và p95 50 ms — ngưỡng không phân biệt được bản tốt với bản hỏng lúc máy nặng. Bỏ hẳn bảng thẻ khỏi máy tính không đổi
   số, nên phần sát ngưỡng không thuộc hàng này.
+- Chiều đỏ ca hồ sơ (đo tay 06/11, sau phản biện): giữ việc không gắn trên máy tính nhưng bỏ lớp ước lượng của `doCaoThe`
+  → ở 375×812 chạm thẻ mở hồ sơ thì màn sập #185, cả khi quay lại. Lớp ước lượng là phần sửa bắt buộc cho điện thoại,
+  không chỉ lớp phòng.
 - Lần lặp 2 của cách sửa (06/11): đo dòng ẩn bằng ước lượng chặn được vòng #185 nhưng bảng thẻ ẩn vẫn nghe cuộn của vùng
   cuộn chung; `BangTheDienThoai` nay không gắn `BangThe` khi khe không có hình chiếu (máy tính), gắn khi khe hiện (đổi khổ
   màn). Hồ sơ đang mở trên điện thoại vẫn chỉ ẩn bảng thẻ (giữ lọc và vị trí cuộn). `doCaoThe` giữ làm lớp thứ hai.
@@ -55,6 +58,22 @@ Không áp: vòng không thêm đối tượng, trường hay điểm cấu hìn
 
 ## Ngoài vòng
 
-- Không gắn khe điện thoại theo khổ (bỏ gắn trên máy tính) — `KhungBangHang` ngoài vùng của hàng, và #175 đang giữ
-  `bang-hang.tsx`; cách sửa ở phép đo đủ chặn vòng mà không đổi cấu trúc khung.
+- Không đổi `KhungBangHang` (khung vẫn gắn khe ở mọi khổ) — ngoài vùng của hàng, và #175 đang giữ `bang-hang.tsx`;
+  bảng thẻ tự không gắn bên trong khe khi khe ẩn.
 - Bộ thử dãy B gieo ảnh thật (`dung-b.mjs`) sửa ở #165, không ở hàng này — lượt chấm dùng bộ thử đã dựng sẵn.
+
+## Đầu ra chiều đỏ đo tay (06/11)
+
+Bản `bang-the.tsx` của main (chưa sửa), `kiem-cuon.mjs --kho 1366x768 --kho 1920x1080`:
+
+```
+{"kho":"1366x768","ok":false,"loi":["màn sập «Không mở được màn này» (1366x768)","lỗi vòng cập nhật (1366x768): Minified React error #185; …","không thấy «/ 5000 căn» (1366x768)"]}
+{"kho":"1920x1080","ok":false,"loi":["màn sập «Không mở được màn này» (1920x1080)","lỗi vòng cập nhật (1920x1080): Minified React error #185; …","không thấy «/ 5000 căn» (1920x1080)"]}
+```
+
+Bản sửa bỏ lớp ước lượng của `doCaoThe`, `kiem-cuon.mjs --kho 375x812-ho-so --kho 375x812`:
+
+```
+{"kho":"375x812-ho-so","ok":false,"loi":["bảng thẻ bị gỡ khi mở hồ sơ — mất lọc và vị trí cuộn (375x812-ho-so)","màn sập «Không mở được màn này» (375x812-ho-so)","lỗi vòng cập nhật (375x812-ho-so): Minified React error #185; …","không thấy «2375 căn» sau khi đóng hồ sơ (375x812-ho-so)", …]}
+{"kho":"375x812","ok":true,"loi":[]}
+```

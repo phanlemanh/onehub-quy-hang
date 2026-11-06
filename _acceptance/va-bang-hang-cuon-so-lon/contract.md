@@ -5,10 +5,12 @@ slug: va-bang-hang-cuon-so-lon
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: draft
+status: approved
 design_doc: _acceptance/va-bang-hang-cuon-so-lon/design.md
 approved_by:
 approved_at:
+veto_state: mo
+veto_opened_at: 2026-11-06T14:07:07Z
 ---
 
 # Acceptance Contract: va-bang-hang-cuon-so-lon
@@ -17,7 +19,9 @@ approved_at:
 
 Hàng vá khẩn dãy D (đợt `dau-khach-nhap`), giám sát mở 06/11 (D-23). Trên main, Bảng hàng của sàn 5.000 căn hiện «Không
 mở được màn này» (React #185). Chia đôi chỉ ra `f5c7b81e`: bảng thẻ điện thoại được gắn cả trên máy tính (ẩn bằng CSS) và
-dòng ẩn đo ra cao 0 làm bộ cuộn ảo dựng-đo-dựng không dừng. Vòng chỉ sửa cách bảng thẻ đo dòng (`inventory/cards/`).
+dòng ẩn đo ra cao 0 làm bộ cuộn ảo dựng-đo-dựng không dừng. Vòng sửa hai chỗ trong `inventory/cards/`: bảng thẻ không
+gắn khi khe điện thoại bị ẩn (máy tính), và dòng ẩn đo bằng ước lượng thay vì 0 (khi bảng thẻ vẫn gắn mà bị ẩn — hồ sơ
+đang mở trên điện thoại).
 «Sàn 5.000 căn» = sàn «[Mẫu] Sàn đo cuộn» của bộ thử dãy B (`bang-hang-kieu-sheet/thu/dung-b.mjs --nhan 5000`).
 
 Source input: hàng `va-bang-hang-cuon-so-lon` (`docs/plan/lo-trinh.json`) · thiết kế `_acceptance/va-bang-hang-cuon-so-lon/design.md`
@@ -27,8 +31,8 @@ Source input: hàng `va-bang-hang-cuon-so-lon` (`docs/plan/lo-trinh.json`) · th
 - **AC-1** — Bảng hàng sàn 5.000 căn mở được trên máy tính.
   Given bản build trên bộ thử dãy B, người do-cuon của sàn 5.000 căn,
   When mở `/inventory` ở 1366×768 và ở 1920×1080,
-  Then trang hiện «/ 5000 căn», không hiện «Không mở được màn này», và console không có lỗi mang «#185» hay «Maximum update
-  depth».
+  Then trang hiện «/ 5000 căn», không hiện «Không mở được màn này», console không có lỗi mang «#185» hay «Maximum update
+  depth», và bảng thẻ điện thoại không được gắn (0 thẻ trong cây trang).
 
 - **AC-2** — Cuộn Bảng hàng 5.000 căn tới căn cuối mà không sập.
   Given cùng bản build và bộ thử,
@@ -45,19 +49,29 @@ Source input: hàng `va-bang-hang-cuon-so-lon` (`docs/plan/lo-trinh.json`) · th
 - **AC-4** — Bảng thẻ trên điện thoại vẫn hiện và đo dòng thật.
   Given cùng bản build và bộ thử,
   When mở `/inventory` ở 375×812,
-  Then bảng thẻ hiện «<N> căn» với N là số căn Đang bán và Đang giao dịch của sàn (đếm từ API cùng lượt), không màn lỗi,
-  không lỗi «#185»; và phép đo trả chiều cao thật cho dòng đang hiển thị.
+  Then bảng thẻ hiện «<N> căn» với N là số căn Đang bán và Đang giao dịch của sàn (đếm từ API cùng lượt), có thẻ trong cây
+  trang, không màn lỗi, không lỗi «#185»; và phép đo trả chiều cao thật cho dòng đang hiển thị.
+  Và khi trang mở ở 1366×768 rồi đổi khổ sang 375×812 trên chính trang ấy, bảng thẻ được gắn và hiện «<N> căn», không lỗi.
+
+- **AC-5** — Điện thoại mở hồ sơ một căn trên sàn 5.000 căn không sập.
+  Given cùng bản build và bộ thử, bảng thẻ đang hiện ở 375×812,
+  When chạm một thẻ để mở hồ sơ (bảng thẻ còn gắn nhưng bị ẩn), rồi quay lại,
+  Then trong lúc hồ sơ mở: không màn lỗi, không lỗi «#185», bảng thẻ vẫn còn trong cây trang (giữ lọc và vị trí cuộn); sau
+  khi quay lại: bảng thẻ hiện «<N> căn», không lỗi.
 
 ## Coverage
 
-Bỏ quét không gian — xem dòng sổ «bỏ coverage-scan». Không gian là khổ màn (máy tính 1366×768 · 1920×1080, nơi khe ẩn;
-điện thoại 375×812, nơi khe hiện) × trạng thái dòng (ẩn · hiện) × phép đo (sửa · cũ). Máy tính × ẩn × sửa là AC-1, AC-2;
-điện thoại × hiện × sửa là AC-4; ẩn × sửa/cũ trên bộ cuộn thật là AC-3 (hai chiều trong một bài). Chiều đỏ trên trang
-(máy tính × phép đo cũ) đo tay 06/11 và ghi trong thiết kế; trên máy nó là vế đối chứng của AC-3.
+Bỏ quét không gian — xem dòng sổ «bỏ coverage-scan». Không gian là khổ màn × trạng thái khe × phép đo:
+- máy tính (1366×768 · 1920×1080) × khe ẩn → bảng thẻ không gắn: AC-1, AC-2;
+- điện thoại (375×812) × khe hiện → bảng thẻ gắn, dòng đo thật: AC-4;
+- điện thoại × khe hiện, bảng thẻ ẩn vì hồ sơ đang mở → dòng đo bằng ước lượng: AC-5;
+- đổi khổ trên một trang (máy tính → điện thoại) → bảng thẻ gắn khi khe hiện ra: AC-4;
+- dòng ẩn × phép đo sửa/cũ trên bộ cuộn thật: AC-3 (hai chiều trong một bài).
+Chiều đỏ trên trang đo tay 06/11 (ghi ở thiết kế): máy tính × bản main sập; điện thoại × hồ sơ mở × bỏ lớp ước lượng sập.
 
 ## Out of scope
 
-- Không đổi `KhungBangHang` (bỏ gắn khe điện thoại trên máy tính) — ngoài vùng; phép đo đã chặn vòng.
+- Không đổi `KhungBangHang` — khe vẫn được khung gắn ở mọi khổ; bảng thẻ tự không gắn bên trong khe khi khe ẩn.
 - Không đổi `bang-hang.tsx`, data-grid hay phiên bản thư viện cuộn ảo — #175 đang giữ `bang-hang.tsx`.
 - Bộ thử dãy B gieo ảnh thật (`dung-b.mjs`) — sửa ở #165.
 
