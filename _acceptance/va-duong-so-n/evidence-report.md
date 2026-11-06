@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 120d84505a7e076bcbfa6d0e0f246ca7e6dd8c1c
+verified_commit: 93be453b04a129d7972920d89370035471628582
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -138,3 +138,7 @@ none — mọi eval chạy một lần, xác định, không có phương sai.
 
 Round 1: E1-E5 xanh, verdict PASS; bốn mục ngoài hợp đồng được ghi vào review-findings.
 Round 2: chủ kho duyệt lại phạm vi, thêm AC-6 (chữ cái «D» đứng một mình không phải tiền tố đường) và eval E6; E1-E6 và toàn bộ lệnh suite xanh, verdict PASS.
+
+### Re-pin lần 1 — 2026-11-06, do gộp main + chữ ký
+run_id: repin-20261106T024020Z-92418
+sha: 93be453b04a129d7972920d89370035471628582 · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng
