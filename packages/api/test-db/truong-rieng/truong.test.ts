@@ -246,7 +246,7 @@ test("trường riêng: mọi đường đọc liên hệ không lộ custom", a
   assert.ok((await (await send("GET", `/api/v1/contacts/${x}/profile`, undefined, ck(s, "dc"))).text()).includes("moi_gio_goi"));
 
   const sB = await sanMoi(VAI);
-  const DUONG: [string, (s: San, k: string) => Promise<Response>][] = [
+  const DUONG: [string, (s: San, k: string) => Response | Promise<Response>][] = [
     ["danh sách liên hệ", (z, k) => send("GET", "/api/v1/contacts", undefined, ck(z, k))],
     ["tra theo số", (z, k) => send("POST", "/api/v1/contacts/lookup-phone", { phone: so }, ck(z, k))],
     ["hồ sơ liên hệ", (z, k) => send("GET", `/api/v1/contacts/${x}/profile`, undefined, ck(z, k))],
