@@ -6,6 +6,9 @@ Mã đọc ở `main` @ `1d682ade`.
 
 ## Trả lời ngắn
 
+**Chậm** chủ yếu do chuỗi chờ phía trình duyệt, không do máy chủ: bảng chỉ được hỏi sau khi màn dựng xong và chờ thêm 0,25
+giây; trên máy và mạng chậm bảng hiện sau khoảng 4,4 giây (mục «Tốc độ tải»).
+
 **Dùng lại một nửa.** Màn Liên hệ đi chung hệ bố cục với Bảng hàng (bố cục «Danh sách – chi tiết», cột kéo chia 38 %) và
 dùng chung các mảnh ruột hồ sơ (đầu hồ sơ, mục có tiêu đề in hoa, cặp nhãn – giá trị). Nhưng nó **bỏ cái khung** mà hồ sơ
 căn có: hồ sơ căn nằm trong một khung có viền, cuộn riêng, có nút «Mở toàn màn» và «Đóng»; hồ sơ liên hệ đặt ruột trần
@@ -39,9 +42,10 @@ Sáng và tối đều đủ tương phản; không thấy chữ cắt hay tràn
 | 8 | Dòng thời gian là danh sách chữ trơn, khác dòng thời gian của hồ sơ căn; sự kiện của căn không nói căn nào | cả hai | thấp | **Khuôn riêng lệch + thiếu dữ liệu.** Hồ sơ căn dùng khối dòng thời gian của ReUI; dữ liệu sự kiện chưa mang tên căn |
 | 9 | Căn trong hồ sơ không bấm được để mở hồ sơ căn (Cơ hội thì bấm được) | cả hai | thấp | **Vá tại chỗ** |
 
-Trạng thái đang tải và lỗi của hồ sơ **kiểm qua mã, chưa chụp**: giữa lượt kiểm, sàn đang mở trên trình duyệt bị đổi sang
-«OneHub» (không phải do phiên này) nên không chụp tiếp. Theo mã, đang tải dùng khung chờ của hồ sơ và lỗi có «Thử lại» —
-đúng luật của nhóm; khi thiếu khung (lỗi 1), hai trạng thái này cũng trôi trần trong cột như hồ sơ.
+Trạng thái [đang tải](kiem-chi-tiet-lien-he/7-dang-tai-1440-sang.png) (giả mạng chậm) và [lỗi](kiem-chi-tiet-lien-he/8-loi-1440-sang.png)
+(chặn lời gọi hồ sơ ở trình duyệt) của hồ sơ đúng luật của nhóm: khung chờ theo hình hồ sơ, lỗi có «Thử lại». Cả hai cũng
+nằm trần trong cột như hồ sơ (lỗi 1). Giữa lượt kiểm, sàn đang mở trên trình duyệt từng bị đổi sang «OneHub» (không phải do
+phiên này); đã chuyển về «[Mẫu] Sàn thử» để chụp tiếp.
 
 Ngoài phạm vi, ghi để giám sát xét: thanh đáy điện thoại (Hôm nay · Bảng hàng · Gửi · Tôi) không có lối vào Liên hệ, dù
 bản đồ khối ghi «Liên hệ (máy tính, điện thoại đọc)».
@@ -58,6 +62,42 @@ bản đồ khối ghi «Liên hệ (máy tính, điện thoại đọc)».
 | Khối đích đã chốt | `docs/design/vo-va-ia.md` dòng Liên hệ (hàng 103; hàng 85 là lõi và API, không có dòng giao diện): **lối Lai** — lưới `solution-crm-3` + hồ sơ người `solution-crm-4` «theo mảnh hồ sơ căn», bố cục Danh sách – chi tiết. Khuôn nhóm `design/patterns/lien-he.md`, luật KH-lh-danh-sach-chi-tiet: hồ sơ dùng mảnh của solution-crm-4 «trong ngăn cạnh bảng; không Card». Luật **không nói** hồ sơ phải nằm trong một Frame, khác KH-hs-mot-khung của hồ sơ căn |
 | Lint `quy-hang-ui` có bắt được không? | **Không.** ESLint trên `contacts/` và khối `solution-crm-4`: 0 lỗi. Bài quét khuôn: `lien-he: 1 tệp theo khuôn · 0 lệch`. Lý do: luật chỉ cấm khối (`Card`), và khe bắt buộc của nhóm chỉ có `children`; không luật nào đòi cột phụ có khung, không luật nào đo bề rộng bảng khi cột mở hay bắt prop nhận mà không dùng |
 
+## Tốc độ tải
+
+Chủ kho báo thêm: tải rất chậm. Đo trên bản thật, cùng sàn, máy Mac, mạng văn phòng, đo bằng đồng hồ trong trang (không
+tính độ trễ của công cụ bấm), máy chủ đang ấm.
+
+| Việc | Mạng tốt | 4G chậm + máy chậm 4 lần |
+| --- | --- | --- |
+| Mở màn Liên hệ (tải cả trang) tới lúc bảng hiện | 1,0 – 1,4 s | **4,3 – 4,4 s** |
+| Từ Bảng hàng bấm sang Liên hệ tới lúc bảng hiện | 0,8 – 1,0 s | chưa đo |
+| Bấm một người tới lúc hồ sơ hiện | 0,22 – 0,34 s | chưa đo |
+| Một lời gọi máy chủ: kiểm sống · đọc phiên · danh sách · hồ sơ | ~0,10 · 0,13–0,16 · 0,17–0,21 · 0,16–0,24 s | — |
+
+**Máy chủ không phải chỗ chậm chính.** Một lần đọc danh sách chỉ hơn lần «kiểm sống» trống khoảng 0,07 giây; máy chủ và cơ sở
+dữ liệu cùng ở Singapore. Thời gian nằm ở **chuỗi chờ nối đuôi** trước khi màn chịu hỏi dữ liệu:
+
+1. Trình duyệt tải trang và khoảng 420 KB mã (đã nén) rồi dựng màn. Máy chậm mất khoảng 2,7 s ở bước này.
+2. Màn **chờ thêm 0,25 giây** rồi mới hỏi danh sách. Khoảng chờ này để đợi người gõ xong ô tìm, nhưng nó áp cả lúc mới mở
+   màn và lúc bấm bộ lọc ở cột thứ hai, khi chẳng ai gõ gì (`contacts/vung.tsx`, hẹn giờ 250 ms ở mọi lần đọc).
+3. Lúc đó mới gọi máy chủ (0,17 s ở mạng tốt). Trên máy chậm, lời gọi danh sách bắt đầu ở giây thứ 4.
+
+Trong khi trang **đã chạy ở máy chủ** để đọc phiên người dùng (`contacts/page.tsx`), nó không lấy luôn trang đầu của danh
+sách, nên trình duyệt phải đi thêm một vòng sau khi dựng xong. Lần chuyển nhà đầu tiên còn bắn bốn lượt đọc trang trùng nhau.
+
+Ở máy chủ, mỗi lời gọi đi khoảng chín lượt hỏi cơ sở dữ liệu nối tiếp nhau (đọc phiên, chọn sàn, mở giao dịch, đặt vai,
+truy vấn, đóng, đọc tên người giữ), trên kho kết nối chỉ **2 chỗ** mỗi phiên bản máy chủ (vá sự cố cạn kết nối 06/11). Một
+người dùng ấm thì nhanh; lúc nhiều người cùng mở hay máy chủ vừa nguội thì các lời gọi xếp hàng. **Chưa đo được** trường hợp
+này: nhật ký máy chủ trên Vercel không ghi thời gian xử lý. PR #162 (kết nối qua pooler chế độ giao dịch, đang mở) chạm đúng
+chỗ này.
+
+**Vá tốc độ, theo thứ tự lợi:**
+
+- Bỏ khoảng chờ 0,25 s khi mở màn và khi đổi bộ lọc; chỉ chờ khi đang gõ ô tìm. Một dòng; được 0,25 s mỗi lần.
+- Lấy trang đầu danh sách ngay ở máy chủ, cùng lượt đọc phiên, trao sẵn cho màn. Bảng hiện cùng lúc với trang, bỏ một
+  vòng đi về: được khoảng 0,4 s ở mạng tốt, hơn 1 s ở máy chậm.
+- Sau đó mới xét gói mã của màn (420 KB) và kho kết nối, khi có số đo lúc đông người.
+
 ## Kết luận và đề xuất
 
 **Nên chuyển phần hồ sơ sang khung chung, vá tại chỗ phần bảng.** Không cần dựng lại màn.
@@ -69,7 +109,8 @@ bản đồ khối ghi «Liên hệ (máy tính, điện thoại đọc)».
 - Lỗi 3–6, 9 vá tại chỗ trong `contacts/danh-sach.tsx`: bỏ cột Loại, cho cột tên co giãn, khung bảng cao hết vùng làm việc
   để tên cột dính đầu như Bảng hàng, tô dòng đang chọn, Esc đóng.
 - Lỗi 8: đổi sang khối dòng thời gian như hồ sơ căn; tên căn trong sự kiện cần API trả thêm — tách nếu chạm API.
-- **Độ lớn:** nhỏ – vừa, khoảng một ngày máy; T2 (giao diện, không chạm cơ sở dữ liệu). Chạm `contacts/` (bốn tệp),
+- Tốc độ: hai vá đầu ở mục «Tốc độ tải» đi cùng hàng vá này (cùng tệp `contacts/vung.tsx`, `contacts/page.tsx`).
+- **Độ lớn:** nhỏ – vừa, khoảng một ngày máy (thêm nửa ngày cho phần tốc độ); T2 (giao diện, không chạm cơ sở dữ liệu). Chạm `contacts/` (bốn tệp),
   `components/khoi/solution-crm-4/ho-so.tsx`, `units/ho-so/khung.tsx` (nếu gom khung), `design/patterns/lien-he.md`, bài
   quét khuôn. Đổi khung chung chạm cả hồ sơ căn nên cần chụp lại cặp ảnh hồ sơ căn.
 - **Hàng lộ trình chạm vùng này:** không hàng nào đang chạy. Hàng 103 `man-lien-he` đã ký; hàng vá `va-ho-so-lien-he` đã
@@ -77,5 +118,5 @@ bản đồ khối ghi «Liên hệ (máy tính, điện thoại đọc)».
   liên hệ) — chỉ chạm lõi và API, nhưng sẽ đổ thêm Người mua, Người thuê vào màn này; vá trước hàng 86 thì đỡ phải chụp lại.
 
 **Câu giao đề xuất cho hàng vá:** «Hồ sơ liên hệ nằm trong cùng khung cột của hồ sơ căn (một khung có viền, cuộn riêng, có
-nút Đóng và Esc), bảng liên hệ giữ đủ cột và tên cột đứng yên khi hồ sơ mở, dòng đang mở được tô — và lưới khuôn bắt được
-khi cột phụ thiếu khung.»
+nút Đóng và Esc), bảng liên hệ giữ đủ cột và tên cột đứng yên khi hồ sơ mở, dòng đang mở được tô, bảng hiện cùng lúc với
+trang mà không chờ thêm — và lưới khuôn bắt được khi cột phụ thiếu khung.»
