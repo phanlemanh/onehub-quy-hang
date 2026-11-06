@@ -23,9 +23,9 @@ evals:
   - id: E3
     criterion: AC-3
     executor: script
-    cmd: cd apps/web && TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test "src/app/(app)/inventory/cards/do-the.test.ts"
+    cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/cards/**"]
-    expected: "exit 0; ba ca ✔ — (1) doCaoThe: dòng ẩn trả ước lượng (128, 56), dòng hiện trả chiều cao thật (143), dòng hiện cao 0 thật trả 0; (2) khoá vòng #185: Virtualizer thật, 5.000 dòng, vùng cuộn 1366×700, mọi dòng ẩn đo bằng doCaoThe → số dòng dựng ≤ 25 và bằng nhau giữa 1 và 40 khung; (3) đối chứng: đo 0 (hành vi cũ) → số dòng ≥ 100 sau 40 khung và lớn hơn nữa ở 80 khung. Phá thử tay 06/11 (bỏ nhánh ẩn của doCaoThe) đỏ «dòng ẩn phải trả ước lượng, không trả 0». Đỏ in «khe ẩn dựng <n> dòng — vòng đo đang phình» hay «phép đo cũ chỉ dựng <n> dòng — bài kiểm không tái hiện được vòng»."
+    expected: "exit 0 (bộ kiểm của gói web, trong đó cards/do-the.test.ts); ba ca của tệp ấy ✔ — (1) doCaoThe: dòng ẩn trả ước lượng (128, 56), dòng hiện trả chiều cao thật (143), dòng hiện cao 0 thật trả 0; (2) khoá vòng #185: Virtualizer thật, 5.000 dòng, vùng cuộn 1366×700, mọi dòng ẩn đo bằng doCaoThe → số dòng dựng ≤ 25 và bằng nhau giữa 1 và 40 khung; (3) đối chứng: đo 0 (hành vi cũ) → số dòng ≥ 100 sau 40 khung và lớn hơn nữa ở 80 khung. Phá thử tay 06/11 (bỏ nhánh ẩn của doCaoThe) đỏ «dòng ẩn phải trả ước lượng, không trả 0». Đỏ in «khe ẩn dựng <n> dòng — vòng đo đang phình» hay «phép đo cũ chỉ dựng <n> dòng — bài kiểm không tái hiện được vòng»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
