@@ -14,9 +14,12 @@ với sàn thật) · **chưa có**.
 
 ## Tóm tắt
 
-Một sàn mới hôm nay **vào được, mời được người, nhập được hàng bằng file Excel, gửi được căn cho khách** — nhưng chưa
-chạy được trọn một ngày làm việc như sàn thử. Ba chỗ chặn:
+Một sàn mới hôm nay **đăng nhập được và mời được người, nhưng người mở sàn không bắt đầu làm việc được** — chủ kho
+thấy đúng điều này trên sàn «OneHub» của bản thật ngày 06/11 (mục 3b). Bốn chỗ chặn:
 
+0. **Người mở sàn rơi vào ngõ cụt.** Công cụ mở sàn chỉ gắn vai Quản trị sàn; vai này không có nhà nào ở cột nhà (chỉ
+   Cài đặt), không có nút tạo nào, không nhập Excel được. Không màn nào nói phải tự thêm vai làm việc cho mình. Thêm vai
+   rồi, Excel là cửa duy nhất đưa được căn và chủ nhà vào; không có lối tạo một căn, một liên hệ, một khách bằng tay.
 1. **Danh mục là danh mục mẫu, viết cứng trong mã.** Gõ mã căn, ô nhập lead, nhập Excel và gợi ý mã ở hồ sơ căn đều tra
    «[Mẫu] Dự án căn hộ thử» (Toà A, Toà B) cho mọi sàn. Sàn thật **không chọn được toà của mình khi nhập lead**, mã căn
    thật luôn báo «chưa có trong danh mục». Cửa nhận danh mục Invest đã dựng (hàng 10) nhưng chưa đường tra nào đọc từ
@@ -35,6 +38,7 @@ ngoài đội, và **bản xem trước dùng chung cơ sở dữ liệu thật*
 | 1 | Tạo sàn và quản trị đầu tiên | Thủ công | OneHub (chỉ chủ kho) | Không chặn, nhưng là nút thắt người |
 | 2 | Đăng nhập lần đầu | Chạy được, một cửa duy nhất | Sàn | Có thể — nếu thư mã không tới |
 | 3 | Quản trị dựng sàn | Chạy được, thiếu vài mục | Sàn | Có — chưa có khu thì lead không chia |
+| 3b | Người mở sàn bắt đầu làm việc | Gãy — chỉ vai Quản trị, cột nhà trống, không nút tạo | Sàn | **Có — ngõ cụt ngay sau đăng nhập** |
 | 4 | Đưa hàng vào | Excel chạy được; lead gãy; tạo tay theo lead | Sàn | Có — toà ở lead chỉ toà mẫu |
 | 5 | Ngày làm việc đầu | Màn chạy; chia lead gãy | Sàn + OneHub | Có — nhịp chia lead tắt |
 | 6 | Cách ly | Dữ liệu cách ly đúng; danh mục mẫu lọt vào | — | Không lộ dữ liệu sàn khác |
@@ -126,6 +130,43 @@ tên là sai trên trang khách.
 
 **Rủi ro:** quản trị làm đúng thứ tự trên màn (mời người → đặt vai) mà không tạo khu đặt đúng tên toà thì lead đầu tiên
 nằm chờ, không ai được giao. Không chỗ nào trên màn nói điều đó.
+
+## 3b. Người mở sàn bắt đầu làm việc — ngõ cụt
+
+**Hiện trạng: gãy.** Chủ kho mở sàn «OneHub» trên bản thật (06/11, ảnh màn Cài đặt › Sàn OneHub › Người dùng): một
+thành viên, vai «Quản trị sàn», «Quản trị cuối», «Chưa giao vùng»; cột nhà chỉ có nút Cài đặt ở đáy.
+
+- **Cột nhà trống là đúng bảng vai hiện hành** — và chính bảng ấy là ngõ cụt cho người mở sàn. Tham chiếu §9: Quản trị
+  sàn không có Hôm nay, Bảng hàng, Đã gửi, Đội, không «+ Lead», không Nhập Excel, không Xuất. Mã:
+  `packages/core/src/navigation.ts:64-71` (`company_admin: []` việc tạo, chú thích «ADR-0011: quản trị chỉ quản mẫu file
+  ở Cài đặt sàn, không tự nhập»), `:87-117` (nhà theo vai, người chỉ quản trị mở vào Cài đặt).
+- **Công cụ mở sàn chỉ gắn vai Quản trị** (`packages/db/scripts/mo-san.mjs:50-58`). Không có bước nào sau đó gợi ý
+  thêm vai, tạo khu, mời người hay nhập bảng hàng cũ — trang Hôm nay của người chỉ quản trị là trang tạm
+  (`apps/web/src/app/(app)/today/page.tsx:73`).
+- **Lối gỡ có, nhưng phải tự biết**: quản trị bấm «Sửa» trên dòng của chính mình và thêm vai Đầu chủ, Đầu khách, Trưởng
+  nhóm — API cho quản trị đổi vai của mọi thành viên kể cả chính mình (`packages/api/src/thanh-vien.ts:150-180`). Sau đó
+  có Hôm nay, Bảng hàng, Đã gửi, Liên hệ, Đội, menu Tạo có «+ Lead», «Nhập Excel», «Xuất bảng hàng». Đánh đổi: thêm vai
+  Trưởng nhóm là thấy chủ nhà cả sàn — Tham chiếu §6 tách quyền cấu hình khỏi quyền xem nguồn có chủ ý.
+
+**Thêm vai rồi, sàn rỗng tạo được gì** (đối chiếu bảng tạo · xem · sửa · gỡ ở `docs/plan/ra-soat-crud-phan-quyen.md` §1,
+ở đây chỉ hỏi «ngày 0 tạo được không»):
+
+| Đối tượng | Tạo bằng tay | Qua lead | Qua Nhập Excel | Ngày 0 tạo được? |
+| --- | --- | --- | --- | --- |
+| Căn / hàng | **Chưa có màn** (API `POST /api/v1/listings` có, không màn gọi — `listings/routes.ts:77`) | **Gãy**: chỉ toà mẫu (mục 4) | Chạy được | **Chỉ qua Excel** |
+| Chủ nhà (liên hệ phía chủ) | **Chưa có** — vai API chỉ đọc bảng liên hệ (`migrations/016_lien_he.sql:30`) | Gãy theo lead | Chạy được (cột chủ, số) | **Chỉ qua Excel** |
+| Khách (liên hệ Người mua / Người thuê) + nhu cầu | Chỉ ở luồng Gửi, nút «Khách mới» (`shares/new/man-gui.tsx:128`), khi đã chọn căn để gửi | — | — | **Không** — cần một căn Đang bán trước |
+| Lead | Ô nhận lead | Gãy với toà thật | — | **Không** với toà thật |
+| Khu | Cài đặt › Người dùng › Vùng | — | — | Có (không sửa, không gỡ) |
+| Người | Mời | — | — | Có (không thư mời) |
+
+Kết luận khớp lời chủ kho: **ngày 0, tạo · sửa · xoá chưa tồn tại như một lối làm việc** — chỉ có một cửa (Excel) mở
+được sau khi người mở sàn tự biết thêm vai cho mình, và cửa ấy cần sẵn một file. Căn và liên hệ không tạo tay được là
+**có chủ ý** ở Tham chiếu §3 («ba cửa vào, một đích»: lead, Excel, tin thu) — chỉ đúng khi cửa lead chạy; hôm nay cửa
+lead gãy nên thiết kế ba cửa còn một.
+
+**Rủi ro:** sàn đầu tiên ngoài đội đăng nhập xong thấy một màn Cài đặt và không biết làm gì tiếp; sàn không có file bảng
+hàng sẵn (môi giới mới, sàn một người) không có lối nào đưa căn đầu tiên vào.
 
 ## 4. Đưa hàng vào
 
@@ -219,6 +260,7 @@ và không màn nào báo lý do.
 
 | # | Khoảng trống | Loại | Ai gỡ |
 | --- | --- | --- | --- |
+| A0 | Người mở sàn chỉ giữ vai Quản trị: cột nhà trống, không nút tạo, không gợi ý bước tiếp; không tạo tay được căn, chủ nhà; khách chỉ tạo được khi đã có căn Đang bán | Sản phẩm — mở lại §3 «ba cửa vào» và bảng vai §9 | Hàng đề xuất 0a, 0b, 0c; ngay hôm nay chủ kho tự thêm vai cho mình |
 | A1 | Nhịp chia lead tắt trên bản thật (thiếu `JOB_SECRET`, chưa lịch `pg_cron`) — không lead nào được chia, không thông báo lead nào phát | Vận hành, ngoài kho | Chủ kho, theo ADR-0017 bảy bước (~15 phút) |
 | A2 | Sàn chưa có khu thì cách chia mặc định không giao cho ai, không màn nào nói vì sao | Sản phẩm | Hàng đề xuất 1, 4 |
 | A3 | Ô nhập lead chỉ chọn toà mẫu — sàn thật không nhập được lead cho toà của mình | Sản phẩm | Hàng đề xuất 2 (hoặc hàng 99 khi danh mục Invest phủ khu của sàn) |
@@ -255,8 +297,41 @@ quyết khoá AI · bật danh sách tin cậy + thoả thuận danh mục cho s
 
 Theo khuôn `docs/plan/lo-trinh.json`; `ma` để giám sát đặt. Thứ tự theo độ chặn. Phiên này không ghi `lo-trinh.json`.
 
+Ba hàng 0a–0c thêm sau khi chủ kho thử trên bản thật (06/11). 0b và 0c mở lại điều đã chốt ở Tham chiếu §3 («ba cửa
+vào») — cần chủ kho quyết ở Cổng Phạm vi.
+
 ```json
 [
+  {
+    "ma": "",
+    "slug": "bat-dau-san",
+    "cau_giao": "Quản trị sàn mới đăng nhập lần đầu và thấy danh sách «Bắt đầu sàn» — thêm vai làm việc cho mình, tạo khu, mời người, đưa căn đầu tiên vào — mỗi mục một chạm tới đúng màn và tự đánh dấu khi xong",
+    "vai": "Quản trị sàn",
+    "hang": "T2",
+    "vi_sao": "Audit sàn mới ngày 0 A0, mục 3b: chủ kho mở sàn «OneHub» trên bản thật 06/11, người mở sàn chỉ có vai Quản trị, cột nhà trống, không nút tạo, không biết làm gì tiếp. Thay trang tạm của Hôm nay người chỉ quản trị",
+    "bat_khi": "Sàn mới (một thành viên, không khu, không hàng): quản trị mở app thấy danh sách bốn mục; thêm vai cho mình xong thì cột nhà hiện nhà của vai ấy không cần tải lại tay; mục tự đánh dấu theo dữ liệu thật của sàn; sàn đã chạy không thấy danh sách",
+    "vung": ["apps/web/src/app/(app)/settings/**", "apps/web/src/app/(app)/today/**", "packages/core/src/navigation.ts"]
+  },
+  {
+    "ma": "",
+    "slug": "tao-can-tay",
+    "cau_giao": "Đầu chủ tạo một căn bằng tay từ menu Tạo — gõ toà và mã căn (hay mã lô, địa chỉ), giá kèm điều kiện phí, chủ nhà và số — căn vào «Chỉ tôi» ở Chưa đủ để rao, qua cùng kiểm trùng như lead và nhập file",
+    "vai": "Đầu chủ",
+    "hang": "T3",
+    "vi_sao": "Audit sàn mới ngày 0 A0, mục 3b: sàn không có file sẵn thì không có lối đưa căn đầu tiên vào; API tạo hàng đã có, không màn gọi. Mở lại Tham chiếu §3 «ba cửa vào» — chủ kho quyết",
+    "bat_khi": "Tạo một căn ngoài danh mục thì căn hiện ở Bảng hàng của người tạo; căn đã có hàng mở của sàn thì chặn và chỉ hàng kia; chủ nhà trùng số thì về đầu chủ đang giữ; số chủ chỉ lưu bản mã; vai không có Bảng hàng không thấy nút",
+    "vung": ["apps/web/src/app/(app)/units/**", "apps/web/src/components/shell/**", "packages/api/src/listings/**", "packages/api/src/owners/**"]
+  },
+  {
+    "ma": "",
+    "slug": "tao-lien-he-tay",
+    "cau_giao": "Đầu chủ hay đầu khách thêm một liên hệ bằng tay ở màn Liên hệ — tên, số, loại Chủ bán · Chủ cho thuê · Người mua · Người thuê; số đã có người giữ thì báo «đã có — [Tên] đang giữ», không tạo trùng",
+    "vai": "Đầu chủ",
+    "hang": "T3",
+    "vi_sao": "Audit sàn mới ngày 0 A0, mục 3b: liên hệ chỉ sinh từ lead, nhập file hay luồng Gửi; khách chỉ tạo được khi đã chọn một căn để gửi. Gần chỗ hở G3 của rà soát CRUD 05/11",
+    "bat_khi": "Thêm liên hệ mới thì hiện ở Liên hệ của người thêm; số trùng trong sàn bị chặn kèm tên người giữ; liên hệ chủ mang lớp nguồn, không ra ngoài sàn; khách thêm tay chọn được ở luồng Gửi",
+    "vung": ["apps/web/src/app/(app)/contacts/**", "packages/api/src/contacts/**", "packages/db/migrations/**"]
+  },
   {
     "ma": "",
     "slug": "chia-lead-khi-chua-co-khu",
@@ -340,6 +415,9 @@ Theo khuôn `docs/plan/lo-trinh.json`; `ma` để giám sát đặt. Thứ tự 
 ]
 ```
 
-**Khuyến nghị thứ tự:** chủ kho bật nhịp chia lead (A1, ngoài kho) ngay — gỡ cho cả sàn thử; rồi `chia-lead-khi-chua-co-khu`
+**Khuyến nghị thứ tự:** ngay hôm nay, chủ kho tự thêm vai Đầu chủ (và Đầu khách nếu muốn gửi khách) cho mình ở sàn «OneHub»
+để có Bảng hàng và Nhập Excel — thêm Trưởng nhóm là thấy chủ nhà cả sàn. Hàng đầu tiên nên mở: `bat-dau-san` (T2, gỡ ngõ
+cụt mà không đụng quyết định đã chốt); `tao-can-tay` và `tao-lien-he-tay` chờ chủ kho quyết có mở lại «ba cửa vào» không.
+Song song, chủ kho bật nhịp chia lead (A1, ngoài kho) — gỡ cho cả sàn thử; rồi `chia-lead-khi-chua-co-khu`
 và `toa-cua-san-o-lead` (hai hàng T2 nhỏ, mở khoá ngày làm việc đầu); `danh-muc-mau-chi-san-mau` gộp vào hàng 99 nếu 99
 mở trong đợt kế, không thì làm riêng; `xem-truoc-co-so-du-lieu-rieng` và rà pháp lý trước dữ liệu chủ nhà thật.
