@@ -32,11 +32,12 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG SỰ CỐ (công tắc TẮT). Khổ 1280x800. Chưa đặt cookie: mở http://127.0.0.1:3499/today → ghi địa chỉ cuối (phải là /login)."
-      - "Đặt cookie in ra (qh.session_token, domain 127.0.0.1, path /). Mở http://127.0.0.1:3499/login → ghi văn bản trang → chụp evidence/E3-login.png."
+      - "DỰNG SỰ CỐ: từ gốc kho chạy `node _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --dung` (Postgres riêng cổng 5598, nạp mẫu, phiên thật, công tắc cổng 5599 ở trạng thái TẮT) và giữ JSON cookie nó in. Mở máy dev bằng công cụ xem trước của phiên với cấu hình `web-su-co-pool` (preview_start name web-su-co-pool, cổng 3499). Mọi địa chỉ dưới đây dùng http://127.0.0.1:3499, không dùng localhost."
+      - "Khổ 1280x800. Chưa đặt cookie: mở http://127.0.0.1:3499/today → ghi địa chỉ cuối (phải là /login)."
+      - "Đặt cookie in ra bằng JS trong trang (document.cookie = 'qh.session_token=<value>; path=/'), rồi kiểm document.cookie có nó. Mở http://127.0.0.1:3499/login → ghi văn bản trang → chụp evidence/E3-login.png."
       - "Mở lần lượt http://127.0.0.1:3499/today, /inventory, /, /select-company; mỗi đường chờ 3 giây, ghi location.pathname và văn bản trang → chụp evidence/E3-today.png, E3-inventory.png, E3-goc.png, E3-chon-san.png."
       - "Về http://127.0.0.1:3499/today (trang lỗi). Chạy trong trang: window.__dauThuLai = 'con'. Chạy `node _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --mo`. Bấm «Thử lại», chờ 6 giây. Ghi location.pathname, giá trị window.__dauThuLai và văn bản trang → chụp evidence/E3-hoi-phuc.png."
-      - "Chạy `node _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --don`."
+      - "Dọn: dừng máy dev đã mở (preview_stop) và chạy `node _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --don`."
     expected: "Không cookie: /today về /login. Có cookie, công tắc tắt: /login hiện ô đăng nhập («Đăng nhập Quỹ hàng», ô Email), không phải trang lỗi; /today, /inventory, / và /select-company mỗi đường giữ đúng địa chỉ của mình (/ giữ là /), trang ghi «Không mở được trang này» và có nút «Thử lại», không có ô đăng nhập. Công tắc mở rồi bấm «Thử lại»: địa chỉ vẫn /today, window.__dauThuLai vẫn là 'con' (không tải lại cả trang), trang hiện màn Hôm nay của sàn mẫu (có chữ «[Mẫu] Sàn thử» và vùng «Hôm nay»), không còn chữ «Không mở được trang này»."
     paths: ["apps/web/src/lib/api.ts", "apps/web/src/app/error.tsx", "apps/web/src/app/(app)/error.tsx", "apps/web/src/app/(auth)/login/page.tsx", "apps/web/src/app/page.tsx", "apps/web/src/app/(auth)/select-company/page.tsx", "apps/web/src/components/shell/shell-layout.tsx", "apps/web/src/proxy.ts", "apps/web/src/lib/session-refresh.ts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
