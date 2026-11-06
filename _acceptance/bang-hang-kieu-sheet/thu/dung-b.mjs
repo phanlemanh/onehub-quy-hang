@@ -11,6 +11,7 @@ import { existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeF
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import pg from "pg";
 import { cookieCua } from "./cdp.mjs";
 
 const GOC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -157,6 +158,23 @@ async function goi(cookie, method, p, body) {
   return than;
 }
 
+// Luật «ảnh thật» (listing.ready_min_real_photos, mặc định 1): căn vào Đang bán phải có đủ ảnh trong ngăn Gửi được,
+// không ảnh mẫu. Chỗ thử không có kho ảnh S3 để tải qua API, nên bộ dựng gieo thẳng một dòng ảnh vào cơ sở dữ liệu thử của
+// dãy (không chạm luật hay mã sản phẩm) — đủ số tối thiểu của sàn, ngay trước bước lên Đang bán (va-cdp-tat-chrome, D-0611-3).
+const db = new pg.Pool({ connectionString: DATABASE_URL, max: 4 });
+async function gieoAnhThat(id) {
+  await db.query(
+    `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+     select gen_random_uuid(), l.company_id, l.building_name, l.unit_number, 'shareable', 'image/jpeg', 1, 1, 1, '[Mẫu] bộ thử dãy B'
+     from listings l, generate_series(1, greatest(1, coalesce((select (s.value #>> '{}')::int from company_settings s
+       where s.company_id = l.company_id and s.key = 'listing.ready_min_real_photos'), 1)))
+     where l.id = $1 and l.unit_number is not null
+       and not exists (select 1 from unit_photos p where p.building_name = l.building_name
+         and app.unit_key(p.unit_number) = app.unit_key(l.unit_number) and p.compartment = 'shareable' and not p.is_sample and p.removed_at is null)`,
+    [id],
+  );
+}
+
 // 4. Nạp hàng mẫu.
 const goi_mau = JSON.parse(readFileSync(path.join(GOC, "packages/db/seed/mau/du-lieu-mau.json"), "utf8"));
 const toaCua = new Map();
@@ -174,6 +192,7 @@ async function napMot(cookie, h, maCan, i) {
   const lenBan = ["Active", "Pending", "Closed"].includes(h.trangThai) || (h.trangThai === "Hold" && i % 2 === 0);
   if (lenBan) {
     await su("details_changed", { legalStatus: "[Mẫu] Sổ hồng", occupantType: i % 3 ? "[Mẫu] Để trống" : "[Mẫu] Chủ đang ở" });
+    await gieoAnhThat(l.id);
     await su("status_changed", { to: "Active" });
   }
   if (h.trangThai === "Pending") await su("status_changed", { to: "Pending" });
@@ -216,3 +235,4 @@ for (const n of [...nguoiMau, "truong-nhom", "dau-khach", "trong", ...(a.nhan ? 
   const ds = await goi(ck, "GET", "/api/v1/listings");
   console.log(`${n}@${MIEN}\tthấy ${ds.length} hàng`);
 }
+await db.end();
