@@ -6,7 +6,7 @@ import { canManageCompany, COMPANY_SETTINGS_PATH, PERSONAL_SETTINGS_PATH } from 
 export type MucCot = { label: string; href: string };
 export type NhomCot = { tieuDe: string; muc: MucCot[] };
 
-/** Bảy mục của nhóm Sàn, theo thứ tự cột (Tham chiếu §9). */
+/** Tám mục của nhóm Sàn, theo thứ tự cột (Tham chiếu §9). */
 export const MUC_SAN: readonly MucCot[] = [
   { label: "Người dùng", href: COMPANY_SETTINGS_PATH },
   { label: "Cách gọi", href: "/settings/labels" },
@@ -15,6 +15,7 @@ export const MUC_SAN: readonly MucCot[] = [
   { label: "Luật chia lead", href: "/settings/lead-routing" },
   { label: "Thuế phí", href: "/settings/fees" },
   { label: "Mẫu nhập", href: "/settings/templates" },
+  { label: "Xử lý bằng AI", href: "/settings/ai" },
   // Hàng 44: mức chia mặc định và ẩn mức chia của trang nhóm môi giới.
   { label: "Trang môi giới", href: "/settings/broker-page" },
 ];

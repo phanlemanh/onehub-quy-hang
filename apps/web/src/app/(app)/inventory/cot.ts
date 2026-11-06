@@ -110,8 +110,10 @@ export const DA_ROI_SAN = "Đã rời sàn";
 /**
  * Danh bạ thành viên của sàn: mã người → tên hiển thị (`GET /api/v1/company/member-names`, mọi vai, hàng 105). `null` khi
  * máy chưa có danh bạ nào (lần mở đầu chưa đọc xong, chưa từng đọc được) — lúc ấy không kết luận «Đã rời sàn».
+ * `moi`: danh bạ đã đọc từ máy chủ trong phiên này; chỉ có bản giữ trên máy (có thể cũ) thì `false` — người lạ khi ấy chưa
+ * chắc đã rời sàn, có khi mới vào (Ngoài-9 hàng 105, hàng 48).
  */
-export type DanhBaDauChu = ReadonlyMap<string, string> | null;
+export type DanhBaDauChu = { ten: ReadonlyMap<string, string>; moi: boolean } | null;
 
 /** Chưa có danh bạ trên máy: ô chờ, không đoán. */
 export const CHO_DANH_BA = "…";
@@ -119,14 +121,14 @@ export const CHO_DANH_BA = "…";
 export const CHUA_DAT_TEN = "Chưa đặt tên";
 
 /**
- * Chữ ô «Đầu chủ»: chưa gán → «—»; gán thành viên của sàn → tên; gán người không còn là thành viên → «Đã rời sàn»; máy
- * chưa có danh bạ → «…».
+ * Chữ ô «Đầu chủ»: chưa gán → «—»; gán thành viên của sàn → tên; gán người không có trong danh bạ máy chủ vừa đọc →
+ * «Đã rời sàn»; máy chưa có danh bạ, hay chỉ có bản giữ trên máy mà không có người ấy → «…».
  */
 export function chuDauChu(listAgentKey: string | null | undefined, danhBa: DanhBaDauChu): string {
   if (!listAgentKey) return "—";
   if (danhBa === null) return CHO_DANH_BA;
-  const ten = danhBa.get(listAgentKey);
-  if (ten === undefined) return DA_ROI_SAN;
+  const ten = danhBa.ten.get(listAgentKey);
+  if (ten === undefined) return danhBa.moi ? DA_ROI_SAN : CHO_DANH_BA;
   return ten.trim() || CHUA_DAT_TEN;
 }
 
