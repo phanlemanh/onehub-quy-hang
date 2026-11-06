@@ -3,10 +3,10 @@ schema_version: 1
 slug: anh-khong-chan-ban
 feature: Đầu chủ đưa một căn lên Đang bán — bằng «Sẵn sàng bán», ô Trạng thái hay nhập file — khi chưa có ảnh thật; căn lên bảng hàng chung, gửi khách được, ảnh hiện là mục còn thiếu ở mức đủ và thành việc «bổ sung ảnh» ở Hôm nay của đầu chủ giữ căn
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided               # discovery | decided | archived
+decision: build # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-06T17:50:45Z    # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
@@ -28,3 +28,7 @@ Vì sao: Chủ kho chốt 06/11 (Tham chiếu §12, đổi luật 17): chặn v�
 - Kết quả nào là SỐNG: [đề xuất] Căn đủ giá kèm điều kiện phí, pháp lý, tình trạng sử dụng mà 0 ảnh thì vào Đang bán ở cả ba lối; số ảnh tối thiểu của sàn mặc định 0, đặt 1–20 thì luật cũ áp lại; trang khách mở căn không ảnh hiện ô trống, không lỗi; căn thiếu ảnh có dấu ở Bảng hàng và việc ở Hôm nay
 - Kết quả nào là CHẾT: [đề xuất] chưa đạt «Căn đủ giá kèm điều kiện phí, pháp lý, tình trạng sử dụng mà 0 ảnh thì vào Đang bán ở cả ba lối; số ảnh tối thiểu của sàn mặc định 0, đặt 1–20 thì luật cũ áp lại; trang khách mở căn không ảnh hiện ô trống, không lỗi; căn thiếu ảnh có dấu ở Bảng hàng và việc ở Hôm nay» khi hết timebox
 - Timebox: …
+
+## Quyết định Cổng Đáng
+
+- build — chủ kho chốt 06/11 ba hàng audit sàn mới ngày 0 (`docs/plan/audit-san-moi-day-0.md` §8–§9, trong đó có hàng này) và đổi luật 17 ở `docs/product/tham-chieu.md` §12 («Thiếu ảnh không chặn bán»). Giám sát đợt dau-khach-nhap chuyển nguyên văn 07/11.
