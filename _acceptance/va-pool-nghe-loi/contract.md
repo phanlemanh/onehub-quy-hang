@@ -5,7 +5,7 @@ slug: va-pool-nghe-loi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-06-va-pool-nghe-loi-design.md
 approved_by:
 approved_at:
@@ -79,3 +79,6 @@ Liệt kê tay hai trục (descope «bỏ coverage-scan» trong sổ quyết đ�
 - Chạm tệp: `apps/web/src/lib/api.ts`, `apps/web/src/lib/api.test.ts`, `_acceptance/config.yaml` (khoá `va_pool_nghe_loi`),
   `docs/product/tham-chieu.md` (một dòng Sổ quyết định).
 - Bài thử thật dùng lại chỗ thử `_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs` (chỉ đọc, không sửa).
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài thử chứng minh phép đo phân biệt được lỗi chỉ kiểm rằng tiến trình đối chứng chết, chưa kiểm nó chết đúng vì kết nối bị cắt. Người dùng cuối không bị ảnh hưởng, chỉ là bằng chứng kiểm thử yếu hơn một chút. — `_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Máy quét chặn việc tạo kết nối ngoài chỗ cho phép có thể bỏ sót một cách viết nếu sau này ai đó sửa nó nhầm, và bài thử sẽ không báo. Hiện tại không có kết nối nào nằm ngoài lưới nghe lỗi. — `_acceptance/va-pool-nghe-loi/thu/noi-dung-pool.test.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Với một số lỗi thật khi nhà cung cấp cắt kết nối, dòng nhật ký có thể hiện dấu hỏi thay cho mã lỗi, khiến người vận hành khó đọc nguyên nhân hơn. Người dùng trang không thấy khác biệt, máy chủ vẫn không sập. — `apps/web/src/lib/api.test.ts`
