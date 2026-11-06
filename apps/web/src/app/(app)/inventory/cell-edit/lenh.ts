@@ -30,7 +30,9 @@ export type Lenh =
       type: "status_changed";
       /** `label`: mã nhãn riêng của nấc đích (hàng 46); `null` = về nhãn mặc định; vắng = nhãn mặc định (như trước hàng 46). */
       payload: { to: StandardStatus; label?: string | null; closePrice?: number; closeDate?: string; withdrawnReason?: WithdrawnReason };
-    };
+    }
+  // Trường riêng của sàn (hàng 47): một mã trường → có / không, mã lựa chọn hay `null` (bỏ trống).
+  | { type: "custom_changed"; payload: Record<string, boolean | string | null> };
 
 export type KetQuaLenh =
   | { ok: true; lenh: Lenh; hieuLa: string | null; hoiLai: HoiLai | null; khongHoanTac: boolean }
@@ -83,6 +85,8 @@ export function moTaThayDoi(
     const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${phi(hang.feeInclusion)}`;
     return `${cu} → ${viet(lenh.payload.listPrice)}, ${phi(lenh.payload.feeInclusion)}`;
   }
+  // Trường riêng (hàng 47) không qua hộp hỏi lại — chọn là ghi.
+  if (lenh.type === "custom_changed") return "";
   const nhan = tv?.trangThai;
   return `${nhanCuaCan(nhan, hang.standardStatus, hang.statusLabel)} → ${nhanCuaCan(nhan, lenh.payload.to, lenh.payload.label)}`;
 }

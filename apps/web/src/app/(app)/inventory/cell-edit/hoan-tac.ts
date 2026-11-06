@@ -12,6 +12,8 @@ export const KHONG_HOAN_TAC = "Không hoàn tác được";
 
 /** Lệnh đưa hàng về trạng thái trước lần sửa; null khi lần sửa không hoàn tác được. */
 export function lenhHoanTac(truoc: Truoc, lenh: Lenh): Lenh | null {
+  // Trường riêng (hàng 47): lệnh ngược dựng ở trình sửa ô, nơi biết kiểu của trường (`lenhHoanTacRieng`).
+  if (lenh.type === "custom_changed") return null;
   if (lenh.type === "price_changed") {
     if (truoc.listPrice === null || (truoc.feeInclusion !== "included" && truoc.feeInclusion !== "excluded")) return null;
     return { type: "price_changed", payload: { listPrice: truoc.listPrice, feeInclusion: truoc.feeInclusion } };
@@ -101,4 +103,9 @@ export async function chayHoanTac(so: Pick<SoHoanTac, "traLai">, kq: KetQuaDung,
   if (ketQua.ok) return { loai: "thanh-cong", chu: `Đã hoàn tác ${g.nhan}` };
   so.traLai(g);
   return { loai: "loi", chu: `${KHONG_HOAN_TAC}: ${moTaLoi(ketQua.loi)} — ${g.nhan}`, thuLai: g };
+}
+
+/** Lệnh ngược của một lần đặt trường riêng (hàng 47): giá trị trước lần sửa, vắng thì bỏ trống. */
+export function lenhHoanTacRieng(ma: string, truoc: boolean | string | undefined): Lenh {
+  return { type: "custom_changed", payload: { [ma]: truoc ?? null } };
 }
