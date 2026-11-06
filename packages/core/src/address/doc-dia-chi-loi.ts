@@ -11,7 +11,18 @@ export type LuatDoc = {
   trongTinh: boolean;
   /** Nhận huyện cũ dạng «Thành phố <tên>», «TP <tên>» khi khớp huyện cũ của tỉnh (AC-9). */
   nhanHuyenTP: boolean;
+  /**
+   * Cách so tên xã khi người gõ có chữ â ă ê ô ơ ư đ (hàng doc-xa-thieu-mot-phan-dau). Vắng = `tuong-thich`.
+   * - `tuong-thich`: chữ người gõ có mũ/móc/đ phải trùng; chữ để gốc nhận cả chữ mang mũ/móc/đ cùng gốc; sau khi lọc
+   *   tỉnh, tên trùng nguyên văn (dạng giữ chữ) thắng.
+   * - `giu`: chỉ tên trùng nguyên văn dạng giữ chữ (hành vi hàng danh-muc-xa-day-du) — chỉ để bộ kiểm phá thử.
+   * - `lui-bo-dau`: trong tỉnh, tên trùng nguyên văn nếu có, không thì so bỏ dấu (lối khớp nhầm giữa tỉnh) — chỉ để phá thử.
+   * - `tuong-thich-tron`: tương thích mà không ưu tiên nguyên văn — chỉ để phá thử.
+   */
+  soDau?: SoDau;
 };
+
+export type SoDau = "giu" | "tuong-thich" | "lui-bo-dau" | "tuong-thich-tron";
 
 const TIEN_TO_XA = /^(phường|phuong|p\.?|xã|xa|x\.|đặc khu|dac khu|thị trấn|thi tran|tt\.?)\s*(?=\S)/i;
 const TIEN_TO_TINH = /^(tỉnh|tinh|thành phố|thanh pho|tp\.?)\s*(?=\S)/i;
@@ -33,6 +44,17 @@ function dangGiuChu(s: string): string {
     .replace(/\s*\/\s*/g, "/")
     .trim()
     .replace(/\s+/g, " ");
+}
+
+/**
+ * Chữ người gõ (dạng giữ chữ) tương thích với tên danh mục (dạng giữ chữ): cùng số chữ; từng chữ trùng, hoặc chữ người
+ * gõ để gốc (a, o, u, e, d…) và chữ danh mục cùng gốc. Chữ người gõ có mũ/móc/đ mà danh mục khác chữ → không tương thích.
+ */
+function tuongThich(go: string, dm: string): boolean {
+  const a = [...go];
+  const b = [...dm];
+  if (a.length !== b.length) return false;
+  return a.every((ch, i) => ch === b[i] || (boDau(ch) === ch && boDau(b[i]!) === ch));
 }
 
 /** Chữ người gõ có chữ â ă ê ô ơ ư đ không — có thì so giữ chữ, không thì so bỏ dấu. */
@@ -111,14 +133,31 @@ function chiMuc(dm: DanhMucDonViHanhChinh): ChiMuc {
   return c;
 }
 
-/** Xã mới, xã cũ có tên khớp chữ người gõ (giữ chữ khi người gõ có dấu chữ). */
-function timTen(c: ChiMuc, chu: string): { moi: DonViCapXa[]; cu: DonViCapXaCu[] } {
-  if (coChuDau(chu)) {
-    const k = dangGiuChu(chu);
-    return { moi: c.xaGiu.get(k) ?? [], cu: c.cuGiu.get(k) ?? [] };
-  }
-  const k = dangSo(chu);
-  return { moi: c.xaBo.get(k) ?? [], cu: c.cuBo.get(k) ?? [] };
+type TenTim = { moi: DonViCapXa[]; cu: DonViCapXaCu[]; giu: string | null };
+
+/**
+ * Xã mới, xã cũ có tên khớp chữ người gõ. Người gõ không có chữ mũ/móc/đ → so bỏ dấu (mọi cách so như nhau). Có →
+ * theo `soDau`; `giu` của kết quả là dạng giữ chữ người gõ để `docXa` ưu tiên tên trùng nguyên văn sau khi lọc tỉnh.
+ */
+function timTen(c: ChiMuc, chu: string, soDau: SoDau): TenTim {
+  const bo = dangSo(chu);
+  if (!coChuDau(chu)) return { moi: c.xaBo.get(bo) ?? [], cu: c.cuBo.get(bo) ?? [], giu: null };
+  const k = dangGiuChu(chu);
+  if (soDau === "giu") return { moi: c.xaGiu.get(k) ?? [], cu: c.cuGiu.get(k) ?? [], giu: null };
+  // Lối lui: mọi tên cùng dạng bỏ dấu; `docXa` lọc tỉnh rồi giữ tên trùng nguyên văn nếu có, không thì lấy hết.
+  if (soDau === "lui-bo-dau") return { moi: c.xaBo.get(bo) ?? [], cu: c.cuBo.get(bo) ?? [], giu: k };
+  return {
+    moi: (c.xaBo.get(bo) ?? []).filter((x) => tuongThich(k, dangGiuChu(x.ten))),
+    cu: (c.cuBo.get(bo) ?? []).filter((x) => tuongThich(k, dangGiuChu(x.ten))),
+    giu: soDau === "tuong-thich-tron" ? null : k,
+  };
+}
+
+/** Có ứng viên trùng nguyên văn dạng giữ chữ thì chỉ giữ các ứng viên ấy. */
+function nguyenVanThang<T extends { ten: string }>(ds: T[], giu: string | null): T[] {
+  if (giu === null) return ds;
+  const trung = ds.filter((x) => dangGiuChu(x.ten) === giu);
+  return trung.length > 0 ? trung : ds;
 }
 
 function chuanHuyen(s: string): string | null {
@@ -142,6 +181,7 @@ function tachDoan(chu: string): string[] {
 
 export function docDiaChiVoi(chu: string, danhMuc: DanhMucDonViHanhChinh, luat: LuatDoc): KetQuaDiaChi {
   const c = chiMuc(danhMuc);
+  const soDau: SoDau = luat.soDau ?? "tuong-thich";
   const doan = tachDoan(chu);
   while (doan.length > 0 && DUOI_QUOC_GIA.has(dangSo(doan[doan.length - 1]!))) doan.pop();
 
@@ -206,7 +246,7 @@ export function docDiaChiVoi(chu: string, danhMuc: DanhMucDonViHanhChinh, luat: 
   if (viTriXa < 0) {
     for (let i = doan.length - 1; i > 0; i--) {
       if (dung[i]) continue;
-      const { moi, cu } = timTen(c, doan[i]!);
+      const { moi, cu } = timTen(c, doan[i]!, soDau);
       const loc = (maTinh: string) => !luat.trongTinh || trongTinh(maTinh);
       if (moi.some((x) => loc(x.maTinh)) || cu.some((x) => loc(x.maTinh))) {
         viTriXa = i;
@@ -223,7 +263,7 @@ export function docDiaChiVoi(chu: string, danhMuc: DanhMucDonViHanhChinh, luat: 
     dung[cuoi] = true;
   }
 
-  const wardName = chuXa === null ? null : docXa(chuXa, tinh, huyenCu, c);
+  const wardName = chuXa === null ? null : docXa(chuXa, tinh, huyenCu, c, soDau);
   if (chuXa !== null && wardName === null) chuaCo.push({ phan: "wardName", chu: chuXa });
 
   // 4. Số nhà và đường: các đoạn còn lại đứng trước xã (hay mọi đoạn còn lại khi không có xã).
@@ -257,11 +297,23 @@ export function docDiaChiVoi(chu: string, danhMuc: DanhMucDonViHanhChinh, luat: 
   };
 }
 
-function docXa(chuXa: string, tinh: DonViCapTinh | null, huyenCu: string | null, c: ChiMuc): XaDaDoc | XaCanChon | null {
+function docXa(
+  chuXa: string,
+  tinh: DonViCapTinh | null,
+  huyenCu: string | null,
+  c: ChiMuc,
+  soDau: SoDau,
+): XaDaDoc | XaCanChon | null {
   const trongTinh = (maTinh: string) => tinh === null || maTinh === tinh.ma;
-  const ten = timTen(c, chuXa);
-  const moi = ten.moi.filter((x) => trongTinh(x.maTinh));
-  const cu = ten.cu.filter((x) => trongTinh(x.maTinh) && (huyenCu === null || dangSo(x.huyenCu) === huyenCu));
+  const ten = timTen(c, chuXa, soDau);
+  const moi = nguyenVanThang(
+    ten.moi.filter((x) => trongTinh(x.maTinh)),
+    ten.giu,
+  );
+  const cu = nguyenVanThang(
+    ten.cu.filter((x) => trongTinh(x.maTinh) && (huyenCu === null || dangSo(x.huyenCu) === huyenCu)),
+    ten.giu,
+  );
   const ungVien = (mas: readonly string[]): UngVienXa[] =>
     [...new Set(mas)].flatMap((ma) => {
       const x = c.xaTheoMa.get(ma);

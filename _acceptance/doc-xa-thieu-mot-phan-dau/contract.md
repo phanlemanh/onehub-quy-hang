@@ -5,7 +5,7 @@ slug: doc-xa-thieu-mot-phan-dau
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: approved
+status: implemented
 approved_by:
 approved_at:
 veto_state: mo
@@ -33,7 +33,8 @@ Từ dùng trong tiêu chí: **chữ mũ/móc/đ** là â ă ê ô ơ ư đ; **d
 - AC-1: Given ma trận viết trước — mỗi tỉnh trong 34 tỉnh một xã mới: loại các xã có xã khác cùng tỉnh cùng dạng bỏ dấu,
   rồi lấy mã nhỏ nhất trong các xã có từ hai chữ mũ/móc/đ — When đọc «12 Đường Mẫu 1, <Loại> <dạng thiếu của tên>, <tên
   tỉnh>», Then mọi dòng ra «chuan» với khoá bằng khoá khi đọc tên đủ dấu; và hai ca có tên: «12 Lê Lợi, Phường Tan Định,
-  Thành phố Hồ Chí Minh» ra 26737 Tân Định, «12 Lê Lợi, Phường Đong Ba, Thành phố Huế» ra phường Đông Ba.
+  Thành phố Hồ Chí Minh» ra 26737 Tân Định, «12 Lê Lợi, Phường Đong Ba, Thành phố Huế» ra phường
+  mới nhận phường cũ Đông Ba (19753 Phú Xuân), kết quả ghi tên cũ Đông Ba.
 - AC-2: Given mỗi tỉnh mới một xã cũ (mã cũ nhỏ nhất trong các xã cũ có từ hai chữ mũ/móc/đ, huyện cũ dạng «Quận …» hay
   «Huyện …», đúng một xã mới nhận, không xã cũ nào khác cùng tỉnh cùng huyện cũ cùng dạng bỏ dấu), When đọc «12 Đường Mẫu
   1, <Loại cũ> <dạng thiếu của tên cũ>, <huyện cũ>, <tên tỉnh mới>», Then mọi dòng ra «chuan», xã đọc ra là xã mới nhận,
@@ -41,8 +42,9 @@ Từ dùng trong tiêu chí: **chữ mũ/móc/đ** là â ă ê ô ơ ư đ; **d
 - AC-3: Given mọi cặp có thứ tự xã mới (A, B) ở hai tỉnh khác nhau có cùng dạng bỏ dấu mà khác chữ mũ/móc/đ (rút từ danh
   mục), chia trước khi chạy theo luật viết sẵn: nhóm «trái» — A có ít nhất một chữ mũ/móc/đ khác chữ của B ở cùng chỗ;
   nhóm «thiếu» — A chỉ khác B ở chỗ A để gốc; When đọc tên A gõ đủ dấu kèm tỉnh của B — cả dạng có «Phường/Xã» đứng trước
-  lẫn dạng không có — Then nhóm «trái» không dòng nào ra xã B (đóng lỗi «Tân Định, Bắc Ninh» khớp «Tân Dĩnh»), nhóm
-  «thiếu» ra xã B «chuan» (gõ thiếu dấu một tên của tỉnh đã chọn); hai nhóm cộng lại bằng số cặp; đối chứng dương: tên A
+  lẫn dạng không có — Then nhóm «trái» không dòng nào ra xã B bằng tên xã mới (đọc qua tên một xã cũ trỏ vào B là đọc đúng; đóng lỗi «Tân Định, Bắc Ninh» khớp «Tân Dĩnh»), nhóm
+  «thiếu» ra «chuan» theo luật trong tỉnh B — xã của tỉnh B trùng nguyên văn tên A nếu có, không thì xã B (gõ thiếu dấu
+  một tên của tỉnh đã chọn); hai nhóm cộng lại bằng số cặp; đối chứng dương: tên A
   kèm tỉnh của A ra xã A.
 - AC-4: Given cặp xã mới cùng tỉnh có cùng dạng bỏ dấu mà khác chữ mũ/móc/đ (rút từ danh mục), When đọc tên đủ dấu của
   từng xã trong cặp, Then ra đúng xã ấy «chuan» (tên trùng nguyên văn thắng); và When đọc dạng chung (giữ chữ mũ/móc/đ
