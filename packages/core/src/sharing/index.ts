@@ -13,7 +13,8 @@ export type ShareAudience = (typeof SHARE_AUDIENCES)[number];
 /** Trần căn của một Lần gửi — giữ cứng (Hỏi-7: trang khách nhẹ trên điện thoại). */
 export const MAX_SHARE_LISTINGS = 30;
 
-export type ShareInput = { audience: ShareAudience; prospectId: string | null; listingIds: string[] };
+/** `commissionSplitPct` (hàng 44): mức chia của bộ, phần trăm 0–100, tối đa hai chữ số lẻ; chỉ nhóm môi giới; vắng = không có. */
+export type ShareInput = { audience: ShareAudience; prospectId: string | null; listingIds: string[]; commissionSplitPct?: number | null };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -21,7 +22,7 @@ export function validateShareInput(payload: unknown): { ok: true; value: ShareIn
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return { ok: false, errors: [{ path: "payload", reason: "cần một đối tượng" }] };
   const p = payload as Record<string, unknown>;
   const errors: PayloadError[] = [];
-  for (const k of Object.keys(p)) if (!["audience", "prospectId", "listingIds"].includes(k)) errors.push({ path: k, reason: "khoá lạ" });
+  for (const k of Object.keys(p)) if (!["audience", "prospectId", "listingIds", "commissionSplitPct"].includes(k)) errors.push({ path: k, reason: "khoá lạ" });
   const aud = p.audience;
   if (!(SHARE_AUDIENCES as readonly unknown[]).includes(aud)) errors.push({ path: "audience", reason: `cần trong: ${SHARE_AUDIENCES.join(", ")}` });
   const pid = p.prospectId ?? null;
@@ -35,8 +36,17 @@ export function validateShareInput(payload: unknown): { ok: true; value: ShareIn
   } else if (new Set(ds.map((x) => (x as string).toLowerCase())).size !== ds.length) {
     errors.push({ path: "listingIds", reason: "căn trùng" });
   }
+  const muc = p.commissionSplitPct ?? null;
+  if (muc !== null) {
+    if (aud === "client") errors.push({ path: "commissionSplitPct", reason: "gửi khách riêng không mang mức chia" });
+    else if (typeof muc !== "number" || !Number.isFinite(muc) || muc < 0 || muc > 100 || Math.round(muc * 100) !== muc * 100)
+      errors.push({ path: "commissionSplitPct", reason: "mức chia cần từ 0 đến 100, tối đa hai chữ số lẻ" });
+  }
   if (errors.length) return { ok: false, errors };
-  return { ok: true, value: { audience: aud as ShareAudience, prospectId: aud === "client" ? (pid as string) : null, listingIds: (ds as string[]).map((x) => x.toLowerCase()) } };
+  return {
+    ok: true,
+    value: { audience: aud as ShareAudience, prospectId: aud === "client" ? (pid as string) : null, listingIds: (ds as string[]).map((x) => x.toLowerCase()), commissionSplitPct: muc as number | null },
+  };
 }
 
 /**
@@ -68,4 +78,5 @@ export function publicEnvelope(r: ShareRecord): PublicEnvelope {
 
 export * from "./tin";
 export * from "./trang-khach";
+export * from "./trang-moi-gioi";
 export * from "./goi-y";

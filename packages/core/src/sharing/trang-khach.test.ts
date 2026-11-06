@@ -20,7 +20,9 @@ test("trang khách: thân dựng từ bản ra theo thứ tự gửi", () => {
   for (const [audience, nguoiNhan] of BANG) {
     assert.equal(nguoiNhanCua(audience), nguoiNhan);
     const than = thanTrangKhach({ can: ba, audience, today: HOM_NAY });
-    assert.deepEqual(Object.keys(than), ["companyName", "senderName", "nguoiNhan", "can", "tuVung"], "khoá của thân");
+    // Hàng 44: nhóm môi giới có thêm cột, ô và định nghĩa phí (mức chia vắng khi bộ không có).
+    const khoa = ["companyName", "senderName", "nguoiNhan", "can", "tuVung", ...(audience === "agents" ? ["cot", "dong", "dinhNghiaPhi"] : [])];
+    assert.deepEqual(Object.keys(than), khoa, "khoá của thân");
     // Hàng 45: sàn chưa đặt cách gọi → từ vựng ra ngoài rỗng.
     assert.deepEqual(than.tuVung, { truong: {}, giaTri: {} }, `${audience}: từ vựng rỗng`);
     assert.deepEqual([than.companyName, than.senderName, than.nguoiNhan], [ba[0]!.companyName, ba[0]!.senderName, nguoiNhan]);
