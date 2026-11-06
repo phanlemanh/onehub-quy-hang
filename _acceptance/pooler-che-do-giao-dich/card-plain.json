@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Quỹ hàng chịu được nhiều người dùng cùng lúc hơn: máy chủ nối cơ sở dữ liệu theo kiểu dùng chung kết nối, nên lượt đông không còn đá người đang đăng nhập ra trang đăng nhập như sự cố sáng 06/11.",
+  "will_do": [
+    {"id": "AC-2", "p": "Sẽ chạy trọn bộ kiểm cách ly giữa sàn và bộ kiểm API với kết nối danh tính kiểu mới — xanh hết, không cảnh báo lệch bảng đăng nhập."},
+    {"id": "AC-3", "p": "Sẽ đăng nhập bằng mã, mở Hôm nay và Bảng hàng qua một bộ dùng chung kết nối dựng tại máy — mọi bước chạy, còn cách nối cũ thì hỏng ở đó."},
+    {"id": "AC-4", "p": "Sẽ bắn 40 yêu cầu cùng lúc của người hai sàn qua một kết nối dùng chung duy nhất — ai cũng chỉ thấy căn của sàn mình."},
+    {"id": "AC-6", "p": "Sẽ đo trên bản xem trước nối kiểu dùng chung kết nối: 40 yêu cầu cùng lúc không lỗi máy chủ, nhật ký không còn lỗi cạn kết nối, bản thật không bị ảnh hưởng."},
+    {"id": "AC-7", "p": "Sẽ ghi vào quyết định môi trường thật cách bản thật nối cơ sở dữ liệu, cách đổi sang kiểu mới và cách lùi lại — chỉ thêm mục sửa đổi, không viết đè."},
+    {"id": "AC-8", "p": "Sẽ chỉ đổi các tệp đã kê tên — không đổi cơ sở dữ liệu, không đổi luật cách ly, không đổi rào của kho."},
+    {"id": "AC-9", "p": "Sẽ giữ xanh kiểm kiểu, lint, build và bộ kiểm đơn vị."}
+  ],
+  "wont_do": [
+    {"id": "AC-1", "p": "Sẽ KHÔNG còn gửi tham số đặt chỗ tìm bảng lúc mở kết nối danh tính — chỉ ghi một dòng nhật ký nêu cổng đang dùng, không lộ chuỗi kết nối."},
+    {"id": "AC-5", "p": "Chặn mọi cách đặt trạng thái gắn với một kết nối (thứ sẽ rò sang người khác khi dùng chung kết nối) trong mã máy chủ."},
+    {"id": "OOS-1", "p": "KHÔNG đổi cách bản thật kết nối trong vòng này — anh quyết ở Cổng Bằng chứng sau khi đã đo."},
+    {"id": "OOS-2", "p": "KHÔNG đổi cỡ bể kết nối, không nâng giới hạn kết nối của Supabase."},
+    {"id": "OOS-3", "p": "KHÔNG đổi chuỗi kết nối của bước chạy migration và các lệnh vận hành cơ sở dữ liệu."},
+    {"id": "OOS-4", "p": "KHÔNG đổi cửa đọc bảng của công ty hay luật cách ly theo dòng."}
+  ],
+  "scope_plain": "Bốn việc để ngoài vòng này:",
+  "coverage_plain": [
+    {"i": 0, "p": "Mọi đường tới bảng đăng nhập (thư viện đăng nhập, câu đọc tên người, bộ kiểm) — đủ khi bộ kiểm chạy với kết nối không đặt chỗ tìm bảng (AC-2, AC-3) và bài quét không thấy câu nào thiếu tên lược đồ (AC-5)."},
+    {"i": 1, "p": "Mọi kiểu trạng thái gắn với một kết nối — đủ khi bài quét gọi tên từng kiểu (AC-5) và phép đo rò thật trên một kết nối dùng chung không thấy rò (AC-4)."},
+    {"i": 2, "p": "Bốn cách nối: trực tiếp ở máy và CI, kiểu giữ-kết-nối của bản thật hôm nay, kiểu dùng-chung tại máy, kiểu dùng-chung của Supabase trên bản xem trước (AC-2, AC-3, AC-4, AC-6)."},
+    {"i": 3, "p": "Luồng người dùng: xin mã, nhập mã, đọc phiên, Hôm nay, Bảng hàng (AC-3); làm mới phiên ở bước chặn đầu và đăng nhập mật khẩu qua bộ kiểm (AC-2) và qua anh thử tay trên bản xem trước."},
+    {"i": 4, "p": "Mọi ô của bốn trục đã có tiêu chí đo; kiểu giữ-kết-nối hôm nay không cần tiêu chí mới vì cách chạy không đổi."},
+    {"i": 5, "p": "Để sau: nâng cỡ bể khi bản thật đã chuyển, số đo kết nối theo thời gian."},
+    {"i": 6, "p": "Không bao giờ: đặt chỗ tìm bảng cho cả kết nối để «sửa nhanh»."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Phép đo trên bản xem trước dùng chung cơ sở dữ liệu với bản thật đang còn kiểu cũ — nếu đo vào giờ đông, bản thật có thể gặp lại lỗi sáng nay. Đã thêm câu hỏi giờ đo và mức tải cho anh (Hỏi-3), và phép đo tự kiểm nhật ký bản thật."},
+    {"i": 1, "p": "Phép đo bản xem trước có thể xanh mà thật ra vẫn nối kiểu cũ (quên đổi cổng). Đã sửa: máy chủ ghi một dòng nêu cổng đang dùng, phép đo đòi thấy cổng 6543 trên đúng bản ấy — không cần đọc mật khẩu."},
+    {"i": 2, "p": "Cookie giả có thể che lỗi đọc bảng đăng nhập. Đã thêm các mẫu lỗi bảng vào phép đo; đăng nhập thật trên bản xem trước vẫn là anh thử tay, tại máy đã có phép đo đăng nhập thật."},
+    {"i": 3, "p": "Bài quét bỏ sót vài cách viết lệnh đặt trạng thái cho cả kết nối. Đã sửa: ghim từng cách viết thành một mồi phải bị bắt."},
+    {"i": 4, "p": "Người chấm bằng mắt không so được bản cũ của quyết định môi trường thật. Đã tách: máy so khác biệt để chứng chỉ thêm, không viết đè."}
+  ]
+}

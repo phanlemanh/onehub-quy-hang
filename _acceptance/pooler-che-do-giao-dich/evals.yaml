@@ -1,0 +1,116 @@
+schema_version: 1
+feature_slug: pooler-che-do-giao-dich
+# Lệnh máy: executors.test.web (apps/web/src/lib/api.test.ts), executors.test.api, executors.script.pooler_giao_dich
+# (_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs — bộ kiểm db trên Postgres riêng, bàn thử PgBouncer chế độ giao dịch
+# trước chỗ thử Postgres của va-pool-ket-noi, bài quét, bài phạm vi; cần Docker và PgBouncer), executors.script.pooler_xem_truoc
+# (bản xem trước cổng 6543 qua vercel curl), typecheck, lint, build. Người chấm đối chiếu tên ca nêu trong `expected` với
+# dòng reporter: có mặt, ok, không SKIP.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «bể danh tính không mang tham số khởi động ở mọi nơi chạy» có mặt và ok — ma trận viết trước hai phần tử (danh-tinh·trang, danh-tinh·chan-dau), mỗi phần tử một assert `identityPool.options.options === undefined` với thông điệp ghim «bể danh tính <nơi> còn tham số khởi động: <giá trị>»; ca «dòng dựng bể nêu cổng, không lộ chuỗi kết nối» có mặt và ok — với chuỗi thử mang mật khẩu mat-khau-thu và máy chủ may-chu-thu cổng 6543, dungPools ghi đúng một dòng khớp `[pool:ket-noi] cổng 6543` cho mỗi lần dựng, dòng không chứa mat-khau-thu hay may-chu-thu; các ca cỡ bể và trình nghe lỗi của va-pool-ket-noi, va-pool-nghe-loi vẫn có mặt và ok. Chiều đỏ (phá-thử ở S3): trả lại `options: \"-c search_path=identity\"` vào dungPools thì ca đỏ nêu đúng nơi chạy và giá trị."
+    paths: ["apps/web/src/lib/api.ts", "apps/web/src/lib/api.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.pooler_giao_dich
+    expected: "exit 0; ca «bộ kiểm db: migrate và db:test xanh trên Postgres sạch với bể danh tính không search_path» có mặt và ok. Ca dựng container Postgres 16 riêng (cổng 5597, tên quy-hang-db-pooler-V), chạy `npm run db:migrate && npm run db:test` với DATABASE_URL trỏ nó, assert mã thoát 0, assert đầu ra không khớp /Could not validate the database schema|SchemaMismatch/, assert `packages/api/test-db/helpers.ts` dựng identityPool không có `options` (đọc mã, không chép chuỗi kỳ vọng tay: rút từ chính tệp), rồi dọn container. Chiều đỏ (phá-thử ở S3): trả một trong bốn truy vấn tay về `from \"user\"` thì db:test đỏ với `relation \"user\" does not exist` ở ca của tuyến ấy — S3 ghi tên ca đỏ cho từng tuyến (ten-hien-thi, leads, owners, routing); tuyến nào không có ca db:test nào đỏ thì thêm ca trước khi chuyển implemented."
+    paths: ["packages/api/src/**", "packages/api/test-db/**", "_acceptance/pooler-che-do-giao-dich/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.pooler_giao_dich
+    expected: "exit 0; hai ca «pooler giao dịch: đăng nhập bằng mã, phiên, Hôm nay, Bảng hàng qua getApi thật» và «pooler giao dịch: đối chứng — bể danh tính cấu hình cũ hỏng qua pooler» có mặt và ok. Bàn thử: _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --dung (Postgres 5598, đã nạp mẫu); PgBouncer chạy từ tệp cấu hình sinh ở .acceptance-runs/pooler-che-do-giao-dich/ với pool_mode = transaction, default_pool_size = 1, cổng 5596; assert `SHOW CONFIG` qua cổng quản trị trả pool_mode transaction (bàn thử thật ở chế độ giao dịch, không chỉ khai). Ca thứ nhất: tiến trình con `node --import tsx` nạp getApi từ apps/web/src/lib/api.ts với DATABASE_URL=postgres://…@127.0.0.1:5596/postgres; POST xin mã cho dau-chu-1@mau.quy-hang.test → đọc mã từ dòng `[ma-dang-nhap]` của bộ gửi máy dev → POST nhập mã → cookie; GET /api/v1/me trả 200 với email ấy và sàn «[Mẫu] Sàn thử»; GET Hôm nay và Bảng hàng trả 200 với ít nhất một căn; stderr không khớp /Could not validate the database schema|relation .* does not exist/. Ca đối chứng: pg.Pool với `options: \"-c search_path=identity\"` qua cổng 5596 chạy `select id from \"user\" limit 1` → assert lỗi (kết nối bị từ chối hoặc `relation \"user\" does not exist`), thông điệp ghim «đối chứng: cấu hình cũ vẫn chạy qua pooler — bàn thử không phân biệt được». PgBouncer và chỗ thử dọn ở cuối."
+    paths: ["apps/web/src/lib/api.ts", "packages/api/src/auth/**", "packages/api/src/**", "_acceptance/pooler-che-do-giao-dich/thu/**", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.pooler_giao_dich
+    expected: "exit 0; hai ca «pooler giao dịch: 40 yêu cầu đồng thời từ 10 tiến trình, hai sàn, không rò» và «pooler giao dịch: đối chứng — đặt mức phiên thì rò sang khách khác» có mặt và ok. Cùng bàn thử E3; bước dựng mở sàn thứ hai bằng công cụ vận hành moSan, cấp phiên cho người của sàn ấy và thêm một căn qua API của chính người ấy. Ca thứ nhất: 10 tiến trình con, mỗi tiến trình một getApi riêng, cùng bắn 4 yêu cầu Bảng hàng (tổng 40, người hai sàn xen kẽ, khởi đồng thời bằng một tín hiệu chung); assert 40/40 mã 2xx; assert tập mã căn của MỖI phản hồi bằng đúng tập mã căn của sàn người hỏi, đọc bằng vai chủ trên Postgres trực tiếp (5598) — ma trận 40 phần tử, thông điệp ghim «yêu cầu <i> của sàn <A|B> thấy căn của sàn khác: <mã>»; sau loạt, một pg.Client trần qua 5596 chạy `select current_user, current_setting('app.company_id', true)` → assert `postgres` và rỗng/null. Ca đối chứng: khách thứ nhất qua 5596 chạy `set app.company_id = 'ro-ri-thu'` (mức phiên, ngoài giao dịch), khách thứ hai (pg.Client khác) đọc `current_setting('app.company_id', true)` → assert bằng 'ro-ri-thu' (bàn thử dùng chung một kết nối máy chủ, bắt được rò), rồi `reset all`."
+    paths: ["apps/web/src/lib/api.ts", "packages/api/src/**", "_acceptance/pooler-che-do-giao-dich/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.pooler_giao_dich
+    expected: "exit 0; hai ca «trạng thái phiên: cây thật sạch» và «trạng thái phiên: chiều đỏ và đối chứng dương» có mặt và ok. Ca cây thật quét mọi .ts/.tsx dưới apps/web/src và packages/api/src trừ *.test.ts, *.ca.ts, test-db, bỏ dòng chú thích, và assert danh sách vi phạm RỖNG cho từng mẫu của ma trận viết trước chín phần tử: (1) SET mức phiên — câu SQL mở đầu (sau dấu nháy, dấu chấm phẩy hay đầu chuỗi) bằng `set` mà từ kế không phải `local`, gồm cả `set role`, `set session authorization`, `set <tên> = …`, `set <tên>=…`, `set <tên> to …`; (2) `set_config(…, false)`; (3) `listen`/`unlisten`; (4) `pg_advisory_lock`/`pg_try_advisory_lock` (không _xact_); (5) `prepare`; (6) `create temp(orary)? table`; (7) khoá `name:` trong đối tượng truyền vào `.query(`; (8) khoá `options:` trong `new pg.Pool(`/`new Pool(`; (9) câu `from|join|into|update` nhắc một trong chín bảng của lược đồ identity (rút danh sách từ `create table identity.*` của packages/db/migrations, không chép tay) mà không có tiền tố `identity.`. Ca chiều đỏ trên tệp dựng trong bộ nhớ, ma trận mồi viết trước ghim từng dạng viết, mỗi dạng một assert «bị gọi tên» với thông điệp nêu dạng: `set role x`, `set session authorization x`, `set app.company_id = 'v'`, `set app.company_id='v'`, `set x to v`, `SET SEARCH_PATH = identity`, `set_config('a', $1, false)`, `listen ch`, `pg_advisory_lock(1)`, `prepare q as select 1`, `create temp table t (x int)`, `.query({ name: 'q', text })`, `new pg.Pool({ options: '-c x=y' })`, `select name from \"user\"`; đối chứng dương KHÔNG bị gọi tên: `set local role quy_hang_app`, `set_config('app.user_id', $1, true)`, `pg_advisory_xact_lock(1)`, `update listings set status = $1`, `from identity.\"user\"`."
+    paths: ["apps/web/src/**", "packages/api/src/**", "packages/db/migrations/**", "_acceptance/pooler-che-do-giao-dich/thu/quet-trang-thai-phien.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.pooler_giao_dich
+    expected: "exit 0; ba ca «phạm vi: đối chứng dương và chiều đỏ của danh sách cho phép», «phạm vi: config.yaml chỉ thêm khoá của hồ sơ» và «phạm vi: cây thật — không tệp nào ngoài danh sách cho phép đổi so với điểm rẽ khỏi main» có mặt và ok. Danh sách cho phép rút từ mục Notes của contract.md (không chép tay hai nơi). Chiều đỏ gọi tên packages/db/migrations/051_x.sql, packages/api/src/db.ts, .claude/hooks/x.sh, packages/core/src/data-classes.ts, _acceptance/hang-khac/contract.md. Ca cây thật: diff từ điểm rẽ rỗng (nhánh đã nằm trong nhánh chính) thì bỏ qua có lý do «nhánh đã nằm trong nhánh chính», không đỏ giả; khác rỗng thì assert diff chứa packages/api/src/auth/auth.ts."
+    paths: ["_acceptance/pooler-che-do-giao-dich/thu/pham-vi.test.mjs", "_acceptance/pooler-che-do-giao-dich/contract.md", "packages/**", ".claude/**", "_acceptance/config.yaml"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-6
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.pooler_xem_truoc
+    expected: "exit 0; tập lệnh in đúng dòng «xem-truoc: 40/40 không 5xx · health 200 · cổng 6543 · nhật ký sạch · bản thật sạch». Tiền đề do tập lệnh tự kiểm và in rõ khi thiếu (exit 2, không exit 0): APP_URL là bản xem trước của nhánh claude/pooler-che-do-giao-dich (không phải tên miền bản thật), VERCEL_LINK_DIR đã `vercel link`. Bước 1 — chứng triển khai chạy qua 6543: gọi `/api/v1/health` rồi một yêu cầu `/api/v1/me` (đánh thức hàm dựng bể), assert `vercel logs` của ĐÚNG triển khai ấy có dòng `[pool:ket-noi] cổng 6543` (dòng dungPools ghi lúc dựng bể, chỉ cổng, không chuỗi kết nối); vắng dòng hay cổng khác 6543 → exit 1 «triển khai không chạy qua pooler giao dịch». Bước 2 — 20 yêu cầu `/api/v1/me` + 20 yêu cầu `/today` đồng thời qua `vercel curl` với cookie qh.session_token giả; assert mỗi mã ∈ {200, 307, 401} (in bảng 40 dòng); `/api/v1/health` 200. Bước 3 — `vercel logs` của triển khai ấy trong khoảng thử không khớp /EMAXCONNSESSION|\\[pool:(danh-tinh|ung-dung)|max clients|relation .* does not exist|Could not validate the database schema|prepared statement/i. Bước 4 — nhật ký Production trong cùng khoảng thử không khớp /EMAXCONNSESSION/ và không có 5xx; có thì exit 1 «bản thật bị ảnh hưởng trong khoảng thử». Chiều đỏ (phá-thử ở S3): chạy tập lệnh với APP_URL của một triển khai dùng cổng 5432 thì bước 1 đỏ."
+    paths: ["apps/web/src/lib/api.ts", "packages/api/src/**", "_acceptance/pooler-che-do-giao-dich/thu/xem-truoc.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-7
+    executor: judgment
+    inputs: ["docs/adr/0009-moi-truong-that.md", "docs/architecture/kien-truc-repo-va-stack.md", "docs/product/tham-chieu.md"]
+    question: "Ba tệp có cho người vận hành biết: (1) bản thật nối cơ sở dữ liệu qua pooler chế độ nào và vì sao chế độ giao dịch (trần 15 kết nối chế độ phiên); (2) lược đồ danh tính nay đặt ở adapter của better-auth và truy vấn tay ghi `identity.`, không dựa vào search_path của kết nối; (3) job migrate giữ chuỗi kết nối riêng; (4) các bước đổi DATABASE_URL bản thật sang 6543 và cách lùi về 5432 — và ADR-0009 có một mục mang tên «Sửa đổi 06/11» chứa các ý này? Trả PASS chỉ khi đủ cả bốn ý và có mục ấy."
+    expected: "PASS — đủ bốn ý; ADR-0009 có mục «Sửa đổi 06/11»."
+    paths: ["docs/adr/0009-moi-truong-that.md", "docs/architecture/kien-truc-repo-va-stack.md", "docs/product/tham-chieu.md"]
+    evidence_required: [run_id, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.pooler_giao_dich
+    expected: "exit 0; hai ca «ADR-0009: chỉ thêm, không viết đè» và «ADR-0009: chiều đỏ — sửa một dòng cũ thì đỏ» có mặt và ok. Ca thứ nhất: `git diff --unified=0 <điểm rẽ khỏi main> -- docs/adr/0009-moi-truong-that.md` không có dòng xoá nào (dòng mở đầu `-` ngoài tiêu đề diff) và có ít nhất một dòng thêm chứa «Sửa đổi 06/11»; nhánh đã nằm trong main thì bỏ qua có lý do. Ca chiều đỏ: hàm phân tích diff nhận một diff mồi có một dòng `-` cũ và một dòng `+` mới → trả vi phạm nêu dòng bị xoá."
+    paths: ["docs/adr/0009-moi-truong-that.md", "_acceptance/pooler-che-do-giao-dich/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**", "packages/api/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; bước kiểm chuẩn in «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**", "packages/api/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.build
+    expected: "exit 0; next build hoàn tất."
+    paths: ["apps/web/**", "packages/api/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; bộ kiểm đơn vị của @quy-hang/api xanh (không cần Postgres)."
+    paths: ["packages/api/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

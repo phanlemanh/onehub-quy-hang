@@ -58,6 +58,8 @@ executors:
     va_dang_nhap_mat_khau: "node --test \"_acceptance/va-dang-nhap-mat-khau/thu/*.test.mjs\""
     va_pool_ket_noi: "node --test \"_acceptance/va-pool-ket-noi/thu/*.test.mjs\""   # va-pool-ket-noi AC-4: bản vá chỉ chạm lớp web, cặp hai chiều
     va_pool_nghe_loi: "node --import tsx --test \"_acceptance/va-pool-nghe-loi/thu/*.test.mjs\""   # va-pool-nghe-loi AC-3, AC-4: cắt kết nối rảnh trên chỗ thử thật (Docker) và phạm vi
+    pooler_giao_dich: "node --import tsx --test --test-concurrency=1 \"_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs\""   # pooler-che-do-giao-dich AC-2..AC-5, AC-8: bộ kiểm db trên Postgres riêng, bàn thử PgBouncer chế độ giao dịch (Docker + Homebrew), quét, phạm vi
+    pooler_xem_truoc: "node _acceptance/pooler-che-do-giao-dich/thu/xem-truoc.mjs"   # pooler-che-do-giao-dich AC-6: bản xem trước cổng 6543 qua vercel curl — cần APP_URL, VERCEL_LINK_DIR
     nhap_tac_tu: "DATABASE_URL=\"${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres}\" sh -c 'npm run db:migrate && npm run db:test'"   # nhap-tac-tu-ke-hoach: migrate + cách ly + test-db API trên Postgres dãy G (giám sát duyệt G-0511-2)
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
