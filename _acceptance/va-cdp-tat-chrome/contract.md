@@ -5,7 +5,7 @@ slug: va-cdp-tat-chrome
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [cli]
-status: approved
+status: implemented
 design_doc: _acceptance/va-cdp-tat-chrome/design.md
 approved_by:
 approved_at:
