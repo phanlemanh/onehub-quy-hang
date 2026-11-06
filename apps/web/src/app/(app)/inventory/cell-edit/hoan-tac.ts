@@ -6,7 +6,7 @@
 import { TRANSITIONS } from "@quy-hang/core/listing";
 import { moTaLoi, type GhiFn, type HangSua, type Lenh } from "./lenh";
 
-export type Truoc = Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">;
+export type Truoc = Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus" | "statusLabel">;
 
 export const KHONG_HOAN_TAC = "Không hoàn tác được";
 
@@ -16,7 +16,12 @@ export function lenhHoanTac(truoc: Truoc, lenh: Lenh): Lenh | null {
     if (truoc.listPrice === null || (truoc.feeInclusion !== "included" && truoc.feeInclusion !== "excluded")) return null;
     return { type: "price_changed", payload: { listPrice: truoc.listPrice, feeInclusion: truoc.feeInclusion } };
   }
-  return TRANSITIONS[lenh.payload.to].includes(truoc.standardStatus) ? { type: "status_changed", payload: { to: truoc.standardStatus } } : null;
+  // Nhãn riêng căn mang trước lần sửa (hàng 46) đi theo lệnh ngược; nhãn đã bị gỡ thì máy chủ từ chối và báo như lỗi khác.
+  const nhan = truoc.statusLabel ?? null;
+  if (lenh.payload.to === truoc.standardStatus) return { type: "status_changed", payload: { to: truoc.standardStatus, label: nhan } };
+  return TRANSITIONS[lenh.payload.to].includes(truoc.standardStatus)
+    ? { type: "status_changed", payload: { to: truoc.standardStatus, ...(nhan !== null && { label: nhan }) } }
+    : null;
 }
 
 export function hoanTacDuoc(truoc: Truoc, lenh: Lenh): boolean {

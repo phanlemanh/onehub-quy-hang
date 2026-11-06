@@ -67,6 +67,8 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaD
     unitNumber: l.unitNumber,
     ...thuocTinhCan(idx, l.buildingName, l.unitNumber),
     standardStatus: l.standardStatus,
+    // Nhãn trạng thái riêng (hàng 46): chỉ khi căn mang — căn không nhãn giữ đúng dòng cũ.
+    ...(l.statusLabel ? { statusLabel: l.statusLabel } : {}),
     listPrice: l.listPrice,
     feeInclusion: l.feeInclusion,
     furnished: l.furnished,

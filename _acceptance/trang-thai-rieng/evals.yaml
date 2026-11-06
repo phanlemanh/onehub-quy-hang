@@ -1,0 +1,291 @@
+schema_version: 1
+feature_slug: trang-thai-rieng
+# Lệnh máy: `executors.test.core`, `executors.test.web`, `executors.test.isolation` (bộ kiểm cách ly packages/db/tests VÀ
+# bộ kiểm API trên cơ sở dữ liệu packages/api/test-db — cần DATABASE_URL tới Postgres dãy B, cổng 5572),
+# `executors.script.ro_ri`. exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người
+# chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu: sàn thử qua đường ghi
+# thật, tên «[Tên]», số `0900 000 0xx`. Mã nhãn trong ca: «giu_cho» (dựng từ «Giữ chỗ»).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok: «trạng thái riêng: thêm nhãn» — quản trị sàn A PUT /api/v1/company/statuses với labels [{label:\"Giữ chỗ\",anchor:\"Pending\"}] → 200; GET trả dòng status Pending có labels deepEqual [{code:\"giu_cho\",label:\"Giữ chỗ\",inUse:0}] và năm dòng còn lại labels []; đọc bằng vai chủ: company_settings của A có đúng dòng key labels.status.giu_cho value {label:\"Giữ chỗ\",anchor:\"Pending\"} data_class company_internal; company_settings_events có thêm đúng một sự kiện cho khoá ấy với actor_user_id là quản trị A (đếm trước/sau). Chiều đỏ: PUT lần hai cùng bộ nhãn → 0 sự kiện mới (khoá không đổi không ghi lại); bỏ dòng migration nới check → ca đỏ nêu company_settings_key_check."
+    paths: [packages/api/src/statuses/**, packages/core/src/statuses/**, packages/db/migrations/047_trang_thai_rieng.sql, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/statuses/statuses.test.ts có mặt và ok: «trạng thái riêng: kiểm bộ nhãn» — bảng viết trước mười hai dòng (mỗi phần tử của AC-2 ít nhất một dòng), mỗi dòng một assert trên kết quả kiemNhanTrangThai, đếm bằng số dòng: {Giữ chỗ, Pending} → ok; {Giữ chỗ, thiếu neo} → lỗi mở đầu labels.status; {Giữ chỗ, neo \"Reserved\"} → lỗi nêu sáu trạng thái chuẩn; bốn nhãn cùng neo Pending → lỗi nêu trần 3; {\"Đang bán\", Hold} → lỗi trùng nhãn mặc định; {\"giữ  chỗ\", Hold} cạnh {Giữ chỗ, Pending} → lỗi trùng (không phân biệt hoa thường, dấu cách thừa); {\"Gọi 0900 000 001\", Pending} → lỗi nêu số điện thoại; {\"Liên hệ [Tên]@vidu.vn\", Pending} → lỗi nêu email; nhãn 41 ký tự → lỗi; nhãn đúng 40 ký tự → ok; nhãn 40 ký tự kèm hai khoảng trắng mỗi đầu → ok và label lưu đã bỏ khoảng trắng; ba nhãn neo ba trạng thái khác nhau → ok. maNhanMoi(\"Giữ chỗ\", []) = \"giu_cho\", maNhanMoi(\"Giữ chỗ\", [\"giu_cho\"]) = \"giu_cho_2\". Chiều đỏ: bỏ kiểm trùng nhãn mặc định → dòng «Đang bán» đỏ."
+    paths: [packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: bộ nhãn sai không ghi gì» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — PUT cùng lượt một nhãn hợp lệ {Giữ chỗ, Pending} VÀ một nhãn neo \"Reserved\" → 400 thân nêu labels.status; PUT nhãn \"Đang bán\" neo Hold → 400; đọc bằng vai chủ sau mỗi lượt: số dòng labels.status.* của A không đổi (không ghi nửa chừng). Chiều đỏ: ghi từng khoá ngoài giao dịch → ca đỏ nêu dòng giu_cho đã lọt."
+    paths: [packages/api/src/statuses/**, packages/core/src/statuses/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2c
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/settings/statuses/trang-thai.test.ts có mặt và ok: «màn trạng thái: thân lưu và khoá Lưu» — từ trạng thái màn viết trước (nhóm Pending có ô mới «Giữ chỗ», nhóm Hold có ô mới rỗng): thân PUT deepEqual {labels:[{label:\"Giữ chỗ\",anchor:\"Pending\"}],replace:{}} (ô rỗng bị bỏ); ô «Đang bán» → loiCuaO trả câu lỗi nêu trùng tên trạng thái và coTheLuu false; ô chứa \"0900 000 001\" → lỗi; ô chứa \"[Tên]@vidu.vn\" → lỗi và coTheLuu false; nhóm đã có 3 nhãn → coTheThem false. Chiều đỏ: loiCuaO bỏ kiểm trùng → ca đỏ nêu «Đang bán»."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**", packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: căn mang nhãn» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — sàn A có nhãn giu_cho neo Pending và một căn Đang bán dựng qua đường ghi thật; đầu chủ POST /listings/{id}/events status_changed {to:\"Pending\",label:\"giu_cho\"} → 200; đọc bằng vai chủ: listing_events của căn có thêm đúng một sự kiện payload {to:\"Pending\",label:\"giu_cho\"}, listings.standard_status Pending, status_label giu_cho; GET /company/statuses trả inUse 1; lệnh tiếp status_changed {to:\"Pending\",label:null} → 200, status_label null; rồi {to:\"Active\"} → 200, status_label null. Chiều đỏ: bản chiếu không ghi status_label → ca đỏ nêu cột."
+    paths: [packages/api/src/listings/**, packages/api/src/statuses/**, packages/core/src/listing/**, packages/core/src/statuses/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/listing/nhan-trang-thai.test.ts có mặt và ok: «bản gập: nhãn trạng thái» — chuỗi sự kiện viết trước (created; status_changed Active; status_changed Pending label giu_cho; status_changed Pending label null; status_changed Pending label giu_cho; status_changed Active) gập ra statusLabel lần lượt null, null, giu_cho, null, giu_cho, null (một assert mỗi bước, đếm bằng số bước); validatePayload status_changed nhận label chuỗi khuôn mã và null, từ chối label \"Giữ chỗ\" (không phải khuôn mã) và số; checkTransition giữ nguyên (Pending→Pending không qua), còn kiemNhanSuKien cho Pending→Pending khi nhãn khác và từ chối khi nhãn trùng. Chiều đỏ: stepListing giữ nhãn cũ khi sự kiện không mang label → bước 6 đỏ."
+    paths: [packages/core/src/listing/**, packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3c
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/trang-thai-rieng.test.ts có mặt và ok: «bảng hàng: nhãn của căn» — bộ nhãn viết trước [{ma:\"giu_cho\",label:\"Giữ chỗ\",anchor:\"Pending\"}]; chuCuaO cột Trạng thái của căn Pending/giu_cho = \"Giữ chỗ\", căn Pending/null = \"Đang giao dịch\", căn Active/giu_cho (mã neo lệch) = \"Đang bán\", căn Pending/mã đã gỡ = \"Đang giao dịch\"; huy hiệu của căn Pending/giu_cho cùng biến thể với căn Pending/null; chữ trạng thái của thẻ điện thoại cho căn Pending/giu_cho = \"Giữ chỗ\". Thực đơn trình sửa ô từ căn Active liệt (theo thứ tự) Đang giao dịch, Giữ chỗ, Đã bán, Tạm ngừng, Ngừng hẳn; lệnh dựng từ lựa chọn «Giữ chỗ» deepEqual {type:\"status_changed\",payload:{to:\"Pending\",label:\"giu_cho\"}}; từ căn Pending/giu_cho thực đơn có thêm «Đang giao dịch» cùng nấc (về nhãn mặc định) → lệnh {to:\"Pending\",label:null}. Chiều đỏ: chuCuaO bỏ qua nhãn → ca đỏ nêu «Giữ chỗ»."
+    paths: ["apps/web/src/app/(app)/inventory/**", packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: luật của neo và mã lạ» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — bảng viết trước bốn dòng trên căn Pending/giu_cho: {to:\"Hold\"} → 422 hay 400 invalid-transition (Đang giao dịch không sang Tạm ngừng), {to:\"Active\"} → 200; trên căn Active: {to:\"Pending\",label:\"khong_co\"} → 400 nêu khong_co, {to:\"Closed\",label:\"giu_cho\",closePrice:...} → 400 nêu neo lệch; mỗi dòng một assert mã HTTP và một assert số sự kiện của căn (đọc bằng vai chủ, không đổi ở dòng bị từ chối). Chiều đỏ: bỏ kiemNhanSuKien ở applyCommand → dòng khong_co đỏ."
+    paths: [packages/api/src/listings/**, packages/core/src/statuses/**, packages/core/src/listing/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/trang-thai-rieng.test.ts có mặt và ok: «bảng hàng: nấc của căn mang nhãn» — căn Pending/giu_cho: các nấc đích của thực đơn (bỏ qua lựa chọn đổi nhãn cùng nấc) deepEqual [\"Active\",\"Closed\",\"Withdrawn\"] = TRANSITIONS.Pending; áp lạc quan trên máy (ap-tren-may) lệnh {to:\"Pending\",label:\"giu_cho\"} từ căn Pending/null cho bản mang statusLabel giu_cho, còn {to:\"Pending\",label:null} từ căn Pending/null bị từ chối (không đổi gì). Chiều đỏ: ap-tren-may chạy checkTransition trần cho lệnh đổi nhãn → ca đỏ nêu Pending→Pending."
+    paths: ["apps/web/src/app/(app)/inventory/**", apps/web/src/lib/sync/**, packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: trang khách theo neo» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — sàn A có căn Pending/giu_cho và căn Pending/null, Lần gửi khách riêng gồm cả hai: GET /api/v1/public/shares/{code} trả can[i].availability \"under_contract\" cho cả hai, hai phần tử can deepEqual nhau trừ id và các trường của chính căn; JSON thân không chứa \"Giữ chỗ\" lẫn \"giu_cho\". Chiều đỏ: thân gắn statusLabel → ca đỏ nêu giu_cho."
+    paths: [packages/api/src/public/**, packages/core/src/redaction/**, packages/core/src/sharing/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ kiểm rò rỉ (npm run test:ro-ri) xanh; trong packages/core/src/redaction/nhan-trang-thai.ro-ri.test.ts có mặt và ok ca «rò rỉ: nhãn trạng thái riêng không ra ngoài» — bản hàng viết trước Pending với statusLabel mang mồi «MOI-NHAN-TT»: banRaNgoai cho khach_rieng và nhom_moi_gioi không chứa mồi và không khoá statusLabel, availability \"under_contract\"; xuatBang cho nhom_moi_gioi của căn ấy không chứa mồi. Đối chứng dương: bản sao banRaNgoai thêm statusLabel vào khoá ra → ca bắt mồi. Chiều đỏ: thêm statusLabel vào khoá ra thật → ca đỏ nêu mồi."
+    paths: [packages/core/src/redaction/**, packages/core/src/export/**, packages/core/src/sharing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/trang-thai-rieng.test.ts có mặt và ok: «bảng hàng: lọc theo trạng thái chuẩn» — năm dòng viết tay (id 1 Pending/giu_cho, 2 Pending/null, 3 Active, 4 Pending/giu_cho, 5 Hold): lựa chọn ô lọc cột Trạng thái, sắp theo value, deepEqual [{value:\"Active\",label:\"Đang bán\"},{value:\"Hold\",label:\"Tạm ngừng\"},{value:\"Pending\",label:\"Đang giao dịch\"}] (không lựa chọn «Giữ chỗ»; thứ tự hiện là thứ tự chữ có từ hàng 45, không đổi); lọc chọn Pending giữ đúng id [1,2,4]. Chiều đỏ: giaTriChon của cột Trạng thái trả mã nhãn → ca đỏ nêu id 2."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/statuses/statuses.test.ts có mặt và ok: «trạng thái riêng: đếm theo chuẩn» — tiLeHangMo trên bản hàng viết trước (hai Pending/giu_cho, một Pending/null, một Active) cho theoTrangThai chỉ mang khoá thuộc STANDARD_STATUSES (không khoá thứ bảy — tiLeHangMo chỉ ghi trạng thái có căn), đúng hai khoá Active và Pending, Pending 3, Active 1; và hàng đợi Hôm nay dựng từ luật mặc định (mac-dinh.ts) xếp căn Pending/giu_cho cùng nhóm với căn Pending/null. Chiều đỏ: đếm theo nhanCuaCan → ca đỏ nêu khoá thứ bảy."
+    paths: [packages/core/src/metrics/**, packages/core/src/today/**, packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/today/nhan-trang-thai.test.ts có mặt và ok: «hôm nay: dòng lần đổi đọc nhãn» — bộ nhãn dựng bằng nhanTuBang của lõi từ thân API viết trước (khuôn code), không viết tay ma; lyDo của nhóm «Mới đổi» cho căn có lần đổi {from:\"Active\",to:\"Pending\",toLabel:\"giu_cho\",byRoles:[\"team_lead\"],at:hôm nay} = \"Đang bán → Giữ chỗ — Trưởng nhóm, hôm nay\"; {from:\"Pending\",fromLabel:null,to:\"Pending\",toLabel:\"giu_cho\"} = \"Đang giao dịch → Giữ chỗ — …\"; {from:\"Pending\",fromLabel:\"giu_cho\",to:\"Pending\",toLabel:null,byRoles:[\"company_admin\"]} = \"Giữ chỗ → Đang giao dịch — Quản trị sàn, …\"; lần đổi không nhãn = chuỗi trước vòng này (viết trước). Mốc «Đang bán N ngày» của căn có vaoTrangThaiLuc t1 và lần đổi nhãn tại chỗ t2 tính từ t1. Chiều đỏ: chuNac bỏ qua nhãn → ca đỏ nêu «Giữ chỗ»; mốc đọc lần đổi cuối → ca đỏ nêu số ngày."
+    paths: ["apps/web/src/app/(app)/today/**", packages/core/src/statuses/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: Hôm nay mang nhãn của lần đổi» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — căn đổi từ Active sang Pending/giu_cho bởi đầu chủ; trưởng nhóm GET đường đọc Hôm nay của trưởng nhóm trả lần đổi của căn ấy với from \"Active\", to \"Pending\", toLabel \"giu_cho\". Chiều đỏ: truy vấn lần đổi không đọc payload label → ca đỏ."
+    paths: [packages/api/src/today/**, packages/api/src/listings/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: đổi tên và gỡ nhãn đang dùng» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — sàn A có nhãn giu_cho, hai căn Pending/giu_cho; đếm listing_events hai căn bằng vai chủ; PUT đổi chữ thành \"Giữ chỗ 7 ngày\" (giữ code giu_cho) → 200, số sự kiện hai căn không đổi, status_label vẫn giu_cho, GET trả label mới inUse 2; PUT gỡ giu_cho không replace → 409 thân nêu 2 căn, dòng labels.status.giu_cho không đổi; PUT gỡ kèm replace {giu_cho:null} → 200: mỗi căn thêm đúng một sự kiện status_changed {to:\"Pending\",label:null} với actor_user_id quản trị A, status_label null, standard_status Pending; dòng labels.status.giu_cho có value JSON null; gỡ một nhãn inUse 0 không replace → 200. Replace trỏ nhãn neo khác → 400. Chiều đỏ: sửa thẳng listings thay vì ghi sự kiện → ca đỏ nêu số sự kiện."
+    paths: [packages/api/src/statuses/**, packages/api/src/listings/**, packages/core/src/statuses/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/settings/statuses/trang-thai.test.ts có mặt và ok: «màn trạng thái: hỏi nhãn thay» — trạng thái màn viết trước: nhóm Pending có giu_cho (inUse 2) và «Đặt cọc» dat_coc (inUse 0); bấm gỡ dat_coc → canHoi false, thân PUT không có dat_coc, replace {}; bấm gỡ giu_cho → canHoi true, câu hỏi \"2 căn đang là «Giữ chỗ». Chuyển chúng sang:\", lựa chọn deepEqual [{value:null,label:\"Đang giao dịch\"}] (dat_coc đã gỡ trong cùng lượt nên không có); chọn null → thân replace {giu_cho:null}; chưa chọn → coTheLuu false. Chiều đỏ: lựa chọn liệt nhãn của nhóm khác → ca đỏ."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; hai ca có mặt và ok: (1) packages/db/tests/isolation.test.mjs «trạng thái riêng: dòng labels.status.* theo sàn và cột status_label» — quản trị A chèn labels.status.giu_cho (đối chứng dương: A đọc được); người sàn B đọc company_settings where key like 'labels.status.%' and company_id = A → 0 dòng; chèn khoá 'labels.status.Giu Cho' → company_settings_key_check; ca cũ 'Lead Routing' và hai họ khoá của 039 vẫn như cũ; listings.status_label nhận 'giu_cho', từ chối 'Giữ chỗ' (check khuôn). (2) packages/api/test-db/trang-thai-rieng/nhan.test.ts «trạng thái riêng: sàn khác và vai khác» — sàn A có giu_cho; quản trị B GET /company/statuses → mọi labels []; đầu chủ B gửi status_changed {to:\"Pending\",label:\"giu_cho\"} lên căn của B → 400; bảng vai (đầu chủ A → 403, trưởng nhóm A → 403, không cookie → 401, quản trị A → 200) cho PUT, mỗi dòng một assert mã và một assert số dòng labels.status.* của A; GET bằng đầu chủ A → 200. Chiều đỏ: bỏ lọc company_id khi đọc bộ nhãn ở applyCommand → ca (2) đỏ."
+    paths: [packages/db/migrations/047_trang_thai_rieng.sql, packages/db/tests/isolation.test.mjs, packages/api/src/statuses/**, packages/api/src/listings/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; apps/web/src/app/(app)/settings/cai-dat.test.ts vẫn ok ca chặn mục sàn, và apps/web/src/app/(app)/settings/statuses/trang-thai.test.ts có mặt và ok «màn trạng thái: trang gọi chặn mục sàn và chuyển hướng» — mã nguồn page.tsx của settings/statuses gọi chanMucSan trước khi đọc API, và kết quả chanMucSan được đưa vào redirect (đọc tệp; đối chứng dương trên trang settings/labels). Chiều đỏ: bỏ dòng chanMucSan khỏi bản sao trang → ca đỏ."
+    paths: ["apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; các bộ kiểm có từ trước của Bảng hàng, Hôm nay, trang khách và phát hàng (apps/web inventory/**, today/**, s/[code]/**) vẫn ok không đổi kỳ vọng nào; trong apps/web/src/app/(app)/inventory/trang-thai-rieng.test.ts có mặt và ok «bảng hàng: sàn chưa thêm nhãn» — với bộ nhãn rỗng, chữ ô Trạng thái của sáu trạng thái deepEqual bảng viết trước (Chưa đủ để rao, Đang bán, Đang giao dịch, Đã bán, Tạm ngừng, Ngừng hẳn) và thực đơn mỗi nấc deepEqual TRANSITIONS. Chiều đỏ: đổi chữ mặc định một trạng thái ở lõi → ca đỏ nêu trạng thái."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/today/**", "apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; bộ kiểm có từ trước của packages/core/src/listing/** vẫn ok không đổi kỳ vọng; trong packages/core/src/statuses/statuses.test.ts có mặt và ok «trạng thái riêng: sàn chưa đặt» — boNhanTrangThai([]) deepEqual []; dòng hỏng (khoá lạ, value số, neo lạ, value null) bị bỏ qua, không ném; foldListing của chuỗi sự kiện không mang label cho statusLabel null. Chiều đỏ: boNhanTrangThai ném ở dòng hỏng → ca đỏ."
+    paths: [packages/core/src/statuses/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/settings/statuses"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Dọn trước (bài chụp tự đủ, không phụ thuộc lượt trước): đăng nhập quan-tri@mau.quy-hang.test, dùng fetch GET /api/v1/company/statuses rồi PUT /api/v1/company/statuses {labels:[], replace:{<mọi mã đang có>: null}} — sàn thử không còn nhãn riêng nào, mọi căn về nhãn mặc định; ghi số mã đã gỡ vào observed."
+      - "Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/statuses, chụp evidence/E11-step1.png (đủ cột nhà, cột thứ hai Cài đặt với mục «Trạng thái» sáng; sáu nhóm có huy hiệu màu)"
+      - "Ở nhóm Đang giao dịch bấm «Thêm nhãn», gõ «Giữ chỗ», bấm Lưu → chụp evidence/E11-step2.png (câu «Đã lưu trạng thái»); tải lại → nhãn còn dưới nhóm"
+      - "Thêm nhãn «Đang bán» ở nhóm Tạm ngừng → chụp evidence/E11-step3.png (ô viền đỏ, câu lỗi trùng tên, Lưu khoá); xoá dòng ấy"
+      - "Khổ 375: mở /settings/statuses → chụp evidence/E11-step4.png, không cuộn ngang"
+    expected: "Quản trị sàn thử mở Cài đặt › Sàn › Trạng thái: một Frame, đường dẫn «Cài đặt › Sàn [Tên] › Trạng thái»; sáu nhóm theo sáu trạng thái chuẩn, mỗi nhóm huy hiệu màu và nhãn mặc định; thêm «Giữ chỗ» ở Đang giao dịch, Lưu → «Đã lưu trạng thái», tải lại còn; thêm «Đang bán» ở Tạm ngừng → ô viền đỏ, câu lỗi, Lưu khoá. Chụp 1440 và 375."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E12
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/inventory"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11 (sàn có «Giữ chỗ» neo Đang giao dịch). Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /inventory, mở ô Trạng thái của một căn Đang bán → chụp evidence/E12-step1.png: thực đơn có «Giữ chỗ» ngay dưới «Đang giao dịch»"
+      - "Chọn «Giữ chỗ» → chụp evidence/E12-step2.png: ô hiện «Giữ chỗ» với cùng màu huy hiệu của các căn Đang giao dịch"
+      - "Mở ô lọc cột Trạng thái, chọn Đang giao dịch → chụp evidence/E12-step3.png: căn «Giữ chỗ» nằm trong kết quả"
+      - "Khổ 375: mở /inventory → chụp evidence/E12-step4.png: thẻ căn ấy hiện «Giữ chỗ»"
+      - "Mở ngữ cảnh trình duyệt mới (không kho cục bộ, phiên mới), đăng nhập dau-chu-2@mau.quy-hang.test (người thứ hai có Bảng hàng — từ luật 046 quản trị sàn không mở Bảng hàng), khổ 1440: mở /inventory, chờ đồng bộ xong → chụp evidence/E12-step5.png: cùng căn ấy hiện «Giữ chỗ» (nhãn đi qua đồng bộ, không chỉ áp lạc quan trên máy người đổi)"
+    expected: "Sau E11, đầu chủ mở ô Trạng thái của một căn Đang bán thấy «Giữ chỗ» dưới «Đang giao dịch»; chọn nó → ô hiện «Giữ chỗ» cùng màu với căn Đang giao dịch; lọc Đang giao dịch giữ căn ấy; khổ 375 thẻ căn hiện «Giữ chỗ»; người thứ hai trên trình duyệt mới cũng thấy «Giữ chỗ». Chụp 1440 và 375."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/settings/statuses"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Chuẩn bị (bài chụp tự đủ): sàn thử phải có nhãn «Giữ chỗ» neo Đang giao dịch và ít nhất một căn mang nó — thiếu thì quản trị PUT /api/v1/company/statuses thêm nhãn, đầu chủ dau-chu-1@mau.quy-hang.test POST /api/v1/listings/{id}/events {type:\"status_changed\",payload:{to:\"Pending\",label:\"giu_cho\"}} cho một căn Đang bán; ghi mã căn vào observed"
+      - "Đăng nhập quan-tri@mau.quy-hang.test, khổ 1440: mở /settings/statuses → dòng «Giữ chỗ» hiện số căn n (n ≥ 1 — bằng số căn đang mang nhãn, đối chiếu GET /api/v1/company/statuses inUse); bấm gỡ → chụp evidence/E13-step1.png: hộp «n căn đang là «Giữ chỗ». Chuyển chúng sang:» với lựa chọn «Đang giao dịch» và chỉ các nhãn còn lại cùng nhóm"
+      - "Chọn «Đang giao dịch», xác nhận, Lưu → chụp evidence/E13-step2.png: «Đã lưu trạng thái», nhóm Đang giao dịch không còn «Giữ chỗ»"
+      - "Đăng nhập dau-chu-1@mau.quy-hang.test (quản trị sàn không mở Bảng hàng từ luật 046), mở /inventory → chụp evidence/E13-step3.png: không căn nào hiện «Giữ chỗ»; căn đã ghi ở bước chuẩn bị (hay ở E12) hiện «Đang giao dịch»"
+    expected: "Sau E12, quản trị gỡ «Giữ chỗ» đang được n căn mang (n đọc từ màn, khớp inUse của API): màn hỏi nhãn thay, chọn «Đang giao dịch», Lưu → nhãn biến mất khỏi nhóm; Bảng hàng không còn căn nào hiện «Giữ chỗ», căn đã ghi ở bước chuẩn bị hiện «Đang giao dịch». Chụp 1440."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E14
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 1 (đạt có giới hạn, luật 33 của đợt, cùng lối E15 hồ sơ cach-goi-rieng): bộ chấm khuôn của kit 2.37.0 bỏ qua ngoại lệ không mang khoá khoi (kit#485) nên báo oan «lệch: apps/web/src/app/(app)/settings/statuses/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» (và dòng cũ của settings/labels/page.tsx) dù design/patterns/trang-tam.md đã khai ngoại lệ cho các tệp ấy (có ly_do). Mã 1 chỉ được chấp nhận cùng E14b xanh: E14b bảo đảm mọi dòng lệch là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E14b."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14b
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/trang-thai-rieng/kiem-khuon-e14.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**/page.tsx", "_acceptance/trang-thai-rieng/kiem-khuon-e14.mjs"]
+    expected: "exit 0; tám đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; báo oan của tệp khác đã khai ngoại lệ → qua; thêm một lệch, tệp chưa khai ngoại lệ, lỗi bản đồ, thoát 1 không có dòng của trang Trạng thái, không chấm được → đỏ; đọc ngoai_le đúng); trên cây thật, mọi dòng «lệch:» và «sai:» của bước chấm khuôn là dòng báo oan của tệp đã khai ngoại lệ ở trang-tam.md, có dòng «lệch: apps/web/src/app/(app)/settings/statuses/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam», và bài in «E14b: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E14 và bài E14b, vẫn thoát 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3d
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: nhãn đi qua đồng bộ» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — sau lần ghi thật status_changed {to:\"Pending\",label:\"giu_cho\"} bởi đầu chủ, trưởng nhóm cùng sàn gọi đường kéo đồng bộ thật (GET của packages/api/src/sync) từ con trỏ trước lần ghi: bản ghi của căn mang standardStatus \"Pending\" và statusLabel \"giu_cho\"; căn khác không nhãn mang statusLabel null. Chiều đỏ: bỏ statusLabel khỏi STATE_COLUMNS → ca đỏ nêu statusLabel."
+    paths: [packages/api/src/sync/**, packages/api/src/listings/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6c
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: mọi chỗ đọc payload to không đổi vì đổi nhãn» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — bảng viết trước liệt MỌI chỗ đọc `payload ->> 'to'` của packages/api/src và packages/db/migrations (ca đếm bằng grep trên mã nguồn: số chỗ tìm thấy deepEqual số dòng bảng — chỗ đọc mới mà bảng thiếu thì ca đỏ nêu tệp); mỗi dòng một assert trên hai căn dựng qua đường ghi thật — căn X: created → Active (t1) → status_changed Active label nhãn neo Active (t2); căn Y: created → Active (t1) — kết quả của chỗ đọc cho X bằng cho Y (dữ kiện «đã từng tới», hàm SQL của 015/016/021/037, lúc vào trạng thái hiện tại = t1), trừ lần đổi gần nhất của lan-doi.ts mà X phải trả to Active toLabel mã nhãn ở t2. Ca thứ hai: sau gỡ nhãn kèm replace (AC-8), lúc vào trạng thái hiện tại của các căn giữ nguyên. Chiều đỏ: lan-doi tính lúc vào trạng thái từ sự kiện cuối → ca đỏ nêu t2."
+    paths: [packages/api/src/listings/**, packages/api/src/today/**, packages/api/src/today-buyer/**, packages/api/src/contacts/**, packages/db/migrations/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trạng thái riêng: từ vựng của sàn mang bộ nhãn» trong packages/api/test-db/trang-thai-rieng/nhan.test.ts có mặt và ok — sàn A có giu_cho; GET /api/v1/company/labels trả statuses deepEqual phần statuses của GET /api/v1/company/statuses (cùng người gọi); nhanTuBang của lõi trên thân ấy cho [{ma:\"giu_cho\",label:\"Giữ chỗ\",anchor:\"Pending\"}]. Chiều đỏ: labels không gắn statuses → ca đỏ."
+    paths: [packages/api/src/labels/**, packages/api/src/statuses/**, packages/core/src/statuses/**, packages/api/test-db/trang-thai-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E15
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11 (sàn có «Giữ chỗ»). Đăng nhập tài khoản trưởng nhóm của bộ mẫu; trong trang, dùng fetch lấy id một căn Đang bán do dau-chu-1@mau.quy-hang.test giữ mà ĐỦ thông tin (completeness 5/5 — căn thiếu thông tin rơi vào nhóm «Thiếu thông tin» đứng trước «Mới đổi», đúng luật nhóm thắng đầu tiên), rồi POST /api/v1/listings/{id}/events {type:\"status_changed\",payload:{to:\"Pending\",label:\"giu_cho\"}}"
+      - "Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /today → chụp evidence/E15-step1.png: nhóm «Mới đổi» có căn ấy với dòng «Đang bán → Giữ chỗ — Trưởng nhóm, hôm nay»"
+    expected: "Trưởng nhóm đổi một căn Đang bán của đầu chủ sang «Giữ chỗ»; đầu chủ mở Hôm nay thấy căn ấy ở nhóm «Mới đổi» với dòng «Đang bán → Giữ chỗ — Trưởng nhóm, hôm nay». Chụp 1440."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]

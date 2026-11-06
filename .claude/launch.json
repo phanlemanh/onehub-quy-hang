@@ -181,6 +181,24 @@
         "apps/web"
       ],
       "port": 3498
+    },
+    {
+      "name": "web-su-co-pool",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "DATABASE_URL=postgres://postgres:quyhang@localhost:5599/postgres",
+        "BETTER_AUTH_SECRET=dev-su-co-chuoi-thu-khong-dung-o-ban-that",
+        "BETTER_AUTH_URL=http://localhost:3499",
+        "npm",
+        "run",
+        "dev",
+        "-w",
+        "@quy-hang/web",
+        "--",
+        "-p",
+        "3499"
+      ],
+      "port": 3499
     }
   ]
 }

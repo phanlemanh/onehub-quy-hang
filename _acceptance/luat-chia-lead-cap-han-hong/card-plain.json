@@ -1,0 +1,30 @@
+{
+  "feature_plain": "Quản trị sàn có cặp hạn nhận / hạn gọi lưu hỏng từ trước, sửa một hạn thì máy lưu đúng cặp đang thấy trên màn — hoặc báo lỗi nêu hạn kia — thay vì báo «Đã lưu» mà lead mới vẫn chạy theo mặc định.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ lưu đúng cặp hạn đang hiện trên màn khi quản trị sửa một nửa của cặp hỏng (hạn nhận hỏng, sửa hạn gọi 40 → lưu 15/40), lead mới chạy theo cặp ấy, nhật ký ghi cả hai hạn."},
+    {"id": "AC-6", "p": "Sẽ báo lỗi nêu hạn kia và không ghi gì khi hạn gọi đang hỏng mà hạn nhận mới vượt hạn gọi đang hiện; hạn nhận hợp lệ thì lưu 20/30."}
+  ],
+  "wont_do": [
+    {"id": "AC-2", "p": "Sẽ KHÔNG để giá trị cũ ẩn (hạn gọi 10 quản trị chưa từng thấy) bỗng có hiệu lực sau khi sửa hạn nhận — lưu ra 5/30."},
+    {"id": "AC-3", "p": "Chặn lưu cặp trái luật so với cái đang hiện: báo lỗi nêu hạn nhận, không khoá nào đổi."},
+    {"id": "AC-4", "p": "Sẽ KHÔNG ghi thêm gì khi cặp không hỏng: lưu một hạn chỉ ghi đúng hạn ấy, nhật ký một dòng."},
+    {"id": "AC-5", "p": "Sẽ KHÔNG hiện «Đã lưu» khi máy chủ trả về mà dòng vừa lưu vẫn còn lỗi — màn báo dòng ấy chưa áp."},
+    {"id": "OOS-1", "p": "Không dọn dòng hỏng lúc chỉ đọc."},
+    {"id": "OOS-2", "p": "Không đổi luật cặp hay cách chạy theo mặc định đã chốt ở hàng 82."},
+    {"id": "OOS-3", "p": "Không đổi bố cục màn «Luật chia lead»."},
+    {"id": "OOS-4", "p": "Không đổi lối cài chia lead cũ của hàng 25."}
+  ],
+  "scope_plain": "Bốn việc để ngoài vòng vá này:",
+  "coverage_plain": [
+    {"i": 0, "p": "Không quét thêm: bảng đã đủ mọi tổ hợp của một cặp hai hạn — nửa nào hỏng × sửa ra hợp lệ hay trái luật (AC-1, AC-2, AC-3, AC-6), cộng cặp lành (AC-4) và lưới của màn (AC-5)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc đè giá trị hỏng đã lưu bằng giá trị đang áp là quyết định của người, không phải máy — đã chuyển thành Hỏi-1 cho anh."},
+    {"i": 1, "p": "Lời hứa «màn báo đúng» thiếu ảnh chụp màn thật — đã thêm bài nhìn E7 ba khung (lưu được, bị từ chối, máy chủ còn báo lỗi)."},
+    {"i": 2, "p": "Bài kiểm hàm báo sau lưu không chứng màn thật dùng nó — khung 2 và 3 của E7 đo trên màn đang chạy."},
+    {"i": 3, "p": "Thiếu ô hạn gọi hỏng mà sửa hạn nhận ra cặp trái luật — đã thêm AC-6 và bài kiểm E3b."},
+    {"i": 4, "p": "Đề nghị gắn nhãn xuyên lớp cho AC-3, AC-4 — bác: hai tiêu chí ấy chỉ ở lối máy chủ, không qua màn."}
+  ],
+  "decisions_plain": [],
+  "analyst_plain": ""
+}

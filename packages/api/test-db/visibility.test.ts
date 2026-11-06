@@ -243,11 +243,21 @@ test("mọi đường chạm hàng nằm trong bảng bốn đường", async ()
     "post /api/v1/listings/agent-reassignments",
     "post /api/v1/listings/agent-reassignments/preview",
     "post /api/v1/listings/agent-reassignments/{id}/undo",
+    // Dấu định nghĩa bao phí (hàng 49) — ca «dấu định nghĩa của hàng Chỉ tôi của người khác trả 404» dưới.
+    "get /api/v1/listings/{listingId}/fee-basis",
   ].sort();
   assert.deepEqual(duongHang(doc), BANG, "có đường chạm hàng ngoài bảng — thêm vào bảng kèm ca kiểm trục ai thấy hàng");
   // Đối chứng dương trên cùng hàm liệt: đường cấy thêm bị bắt.
   const cay = { paths: { ...doc.paths, "/api/v1/listings/{listingId}/history": { get: {} } } };
   assert.ok(duongHang(cay).includes("get /api/v1/listings/{listingId}/history"), "hàm liệt không bắt đường hàng cấy thêm");
+});
+
+test("dấu định nghĩa của hàng Chỉ tôi của người khác trả 404", async () => {
+  const h = await taoHang(X);
+  assert.equal((await send("GET", `/api/v1/listings/${h.id}/fee-basis`, undefined, X.cookie)).status, 200, "người tạo không đọc được dấu");
+  const khongCo = await than(await send("GET", `/api/v1/listings/${randomUUID()}/fee-basis`, undefined, T.cookie));
+  assert.equal(khongCo.status, 404, "mã không có không trả 404");
+  assert.deepEqual(await than(await send("GET", `/api/v1/listings/${h.id}/fee-basis`, undefined, T.cookie)), khongCo, "lộ hàng Chỉ tôi");
 });
 
 test("đổi đầu chủ hàng loạt không chạm hàng Chỉ tôi: trưởng nhóm nhận 404 như mã lạ, không dòng gán nào", async () => {

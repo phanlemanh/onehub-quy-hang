@@ -1,0 +1,3 @@
+E7 network: driver la chay-ui.mjs (CDP tu viet), khong co read_network_requests/console. Khong thu duoc network that.
+Ghi nhan gian tiep: PATCH /api/v1/company/settings qua lop boc fetch cua trang (khung 1: 200; khung 2: 400 that sau khi sua than; khung 3: 200 gia).
+GET /api/v1/company/settings thuc te: errors=[].

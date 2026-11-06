@@ -4,7 +4,7 @@
  */
 import { parseNumberExpression, type ExpressionResult } from "./bieu-thuc-so";
 import type { TuVung } from "@quy-hang/core/labels";
-import { COT, COT_THEO_ID, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
+import { COT, COT_THEO_ID, STATUS_LABEL, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
 
 export type BoLocCot = Partial<Record<CotId, string>>;
 export type QuySap = { id: string; desc: boolean }[];
@@ -88,7 +88,8 @@ export function luaChon(dong: readonly DongBang[], id: CotId, tv?: TuVung | null
   const m = new Map<string, string>();
   for (const d of dong) {
     const v = giaTriChon(d, id);
-    if (v) m.set(v, chuCuaO(d, id, tv));
+    // Cột Trạng thái: lựa chọn hiện nhãn mặc định của trạng thái chuẩn, không nhãn riêng của căn đầu tiên (hàng 46, Hỏi-4).
+    if (v) m.set(v, id === "standardStatus" ? STATUS_LABEL[d.standardStatus] : chuCuaO(d, id, tv));
   }
   return [...m].map(([value, label]) => ({ value, label })).sort((a, b) => collator.compare(a.label, b.label));
 }
