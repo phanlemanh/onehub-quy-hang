@@ -6,7 +6,7 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 50f5cf426d29478ff176e1bef182ceb288fd4905
+verified_commit: 24ec0f3c82e2af3ec4ea87f6c0ff3239e12f6e0a
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -392,3 +392,7 @@ none — every multi-run eval is uniform
 
 Round 4: E12 failed — đề dùng tài khoản quản trị (luật 046) nên bước người thứ hai không ra căn «Giữ chỗ»; sửa tài khoản của E12 và E13. Returned to implementation.
 Round 5: all evals passed — E1, E3, E8, E3d, E3b, E3c, E8b, E14, E14b, E11, E12, E13 chạy lại; các eval còn lại carry-forward từ round 4.
+
+### Re-pin lần 1 — 2026-11-06, do gộp main sau chữ ký (049, #155-#159)
+run_id: repin-20261106T063204Z-63701
+sha: 24ec0f3c82e2af3ec4ea87f6c0ff3239e12f6e0a · suites: 7 lệnh exit 0 · evals: 26/26 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E14=1 · ngoài làn máy: E11, E12, E13, E15
