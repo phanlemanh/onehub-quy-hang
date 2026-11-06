@@ -705,8 +705,27 @@ function kiemNhanDb(ch, sanMau) {
   return ok.every(Boolean) ? [] : ["thiếu nhãn mẫu: dòng cơ sở dữ liệu"];
 }
 const sanMauIds = async (c) => new Set((await c.query("select id from companies where name = $1", [TEN_SAN])).rows.map((r) => r.id));
-const conDongMau = async (c) =>
-  Number((await c.query(`select (select count(*) from companies where name like '[Mẫu] Sàn%') + (select count(*) from identity."user" where email like $1) n`, [`%${DUOI_MAU}`])).rows[0].n);
+// Phép đếm của AC-9 chỉ tính dòng do chính bài nạp: cơ sở dữ liệu có thể có sẵn sàn mẫu khác (bản thật có — job deploy
+// chạy tệp này trên đó), nên mọi dòng mang nhãn mẫu đã có lúc chụp mốc là dữ liệu có sẵn, không đếm (va-ac9-mau-co-san).
+const idMau = async (c) => ({
+  san: (await c.query("select id from companies where name like '[Mẫu] Sàn%'")).rows.map((r) => r.id),
+  nguoi: (await c.query('select id from identity."user" where email like $1', [`%${DUOI_MAU}`])).rows.map((r) => r.id),
+});
+/** Tập mã các dòng mang nhãn mẫu đang có — gọi lúc chụp mốc s0. */
+async function mocMau(c) {
+  const { san, nguoi } = await idMau(c);
+  return { san: new Set(san), nguoi: new Set(nguoi) };
+}
+/** Số sàn tên «[Mẫu] Sàn…» và người miền mẫu mà mã không có trong mốc — dòng bài nạp còn sót. */
+async function dongMauMoi(c, goc) {
+  const { san, nguoi } = await idMau(c);
+  return san.filter((id) => !goc.san.has(id)).length + nguoi.filter((id) => !goc.nguoi.has(id)).length;
+}
+/** Số sàn tên «[Mẫu] Sàn thử…» mà mã không có trong mốc. */
+async function sanMauMoi(c, goc) {
+  const ds = (await c.query("select id from companies where name like '[Mẫu] Sàn thử%'")).rows.map((r) => r.id);
+  return ds.filter((id) => !goc.san.has(id)).length;
+}
 
 async function trongGiaoDich(fn) {
   const nha = await giuKhoaSanMau(URL_DB);
@@ -793,6 +812,7 @@ test("AC-9 nạp và xoá một lần: nạp lại không đổi; hai thứ tự
     const sanDc = (await c.query("insert into companies (name) values ('[Tên sàn] đối chứng thấp tầng') returning id")).rows[0].id;
     await c.query(`insert into identity."user" (id, name, email, "emailVerified") values (gen_random_uuid()::text, '[Tên] đối chứng', 'doi-chung-tt@vi-du.test', true)`);
     const s0 = await anhChup(c);
+    const goc = await mocMau(c);
 
     // Nhánh một: cơ sở dữ liệu không có sàn mẫu.
     await napThapTang(c, d);
@@ -805,7 +825,7 @@ test("AC-9 nạp và xoá một lần: nạp lại không đổi; hai thứ tự
     await napMau(c, hang5);
     await xoaMau(c);
     assert.deepEqual(await anhChup(c), s0, "còn dòng mẫu sau xoá");
-    assert.equal(await conDongMau(c), 0, "còn dòng mẫu sau xoá");
+    assert.equal(await dongMauMoi(c, goc), 0, "còn dòng mẫu sau xoá");
 
     // Nhánh hai: bộ hàng 5 nạp trước.
     await napMau(c, hang5);
@@ -832,14 +852,13 @@ test("AC-9 nạp và xoá một lần: nạp lại không đổi; hai thứ tự
     await phaThu(c, async () => {
       await napThapTang(c, d);
       await xoaMau(c, CAU_XOA.slice(1));
-      const loi = (await conDongMau(c)) > 0 ? ["còn dòng mẫu sau xoá"] : [];
+      const loi = (await dongMauMoi(c, goc)) > 0 ? ["còn dòng mẫu sau xoá"] : [];
       assert.ok(coLoi(loi, "còn dòng mẫu sau xoá"));
     });
     await phaThu(c, async () => {
       await napMau(c, hang5);
       await napThapTang(c, { ...d, san: { ...d.san, ten: `${TEN_SAN} (sai)` } });
-      const n = Number((await c.query("select count(*) n from companies where name like '[Mẫu] Sàn thử%'")).rows[0].n);
-      const loi = n > 1 ? ["hai sàn mẫu"] : [];
+      const loi = (await sanMauMoi(c, goc)) > 1 ? ["hai sàn mẫu"] : [];
       assert.ok(coLoi(loi, "hai sàn mẫu"));
     });
   });

@@ -20,6 +20,8 @@ export type ListingView = { id: string } & ListingState & {
     statusChangeTimestamp?: string | null;
     lastPriceChange?: LanDoi | null;
     lastStatusChange?: LanDoi | null;
+    /** Lúc vào trạng thái hiện tại (hàng 46) — đổi nhãn tại chỗ không đặt lại; kho trên máy cũ chưa có tới lần kéo kế. */
+    lucVaoTrangThai?: string | null;
   };
 
 /** Lần đọc bộ nhóm Hôm nay thành công gần nhất của sàn (`GET /api/v1/company/settings/queue`, hàng 22). */

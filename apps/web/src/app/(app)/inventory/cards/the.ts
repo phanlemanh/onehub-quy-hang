@@ -3,10 +3,17 @@
  * của Hỏi-1), nhóm theo toà, thẻ lọc. Không React, không mạng: chạy trên kho trên máy như lưới máy tính.
  */
 import type { StandardStatus } from "@quy-hang/core/listing";
-import { CHUA_RO, type DongBang } from "../cot";
+import type { TuVung } from "@quy-hang/core/labels";
+import { CHUA_RO, chuCuaO, type DongBang } from "../cot";
 
 /** Bảng hàng chung (Tham chiếu §4): Đang bán, và Đang giao dịch («Có, không gửi mới được»). */
 export const lenThe = (s: StandardStatus): boolean => s === "Active" || s === "Pending";
+
+/**
+ * Chữ huy hiệu trạng thái trên ảnh của thẻ (căn Đang giao dịch): nhãn của căn — «Giữ chỗ» khi căn mang nhãn riêng neo vào
+ * Đang giao dịch, không thì «Đang giao dịch» (hàng 46). Màu giữ `info-light` của neo.
+ */
+export const chuTrangThaiThe = (d: DongBang, tv?: TuVung | null): string => chuCuaO(d, "standardStatus", tv);
 
 /** Chọn nhiều là để gửi: chỉ căn Đang bán. */
 export const chonDuoc = (d: DongBang): boolean => d.standardStatus === "Active";

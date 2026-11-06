@@ -6,6 +6,7 @@ import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
+import { DongTrangThai } from "../statuses/routes";
 import { readLabels, writeLabels } from "./store";
 
 /**
@@ -25,6 +26,8 @@ const Labels = z
   .object({
     fields: z.array(z.object({ field: z.string(), label: z.string(), default: z.string(), custom: z.boolean() })),
     values: z.array(z.object({ field: z.string(), value: z.string(), label: z.string(), default: z.string(), custom: z.boolean() })),
+    // Trạng thái riêng (hàng 46), chỉ đọc: deepEqual thân `GET /api/v1/company/statuses`.
+    statuses: z.array(DongTrangThai),
   })
   .openapi("CompanyLabels");
 export function registerLabelsRoutes(api: OpenAPIHono, deps: ApiDeps) {

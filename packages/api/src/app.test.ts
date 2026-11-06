@@ -137,6 +137,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/agent-reassignments/{id}/undo",
     // Hàng 82: cấu hình theo sàn qua lối chung.
     "GET /api/v1/company/settings",
+    "GET /api/v1/listings/{listingId}/fee-basis",
     "PATCH /api/v1/company/settings",
     "GET /api/v1/company/import-templates",
     "PUT /api/v1/company/import-templates/{headerKey}",
@@ -144,6 +145,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 45: cách gọi riêng của sàn.
     "GET /api/v1/company/labels",
     "PUT /api/v1/company/labels",
+    // Trạng thái riêng (hàng 46).
+    "GET /api/v1/company/statuses",
+    "PUT /api/v1/company/statuses",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

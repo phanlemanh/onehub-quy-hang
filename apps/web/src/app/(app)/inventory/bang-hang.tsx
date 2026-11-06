@@ -41,7 +41,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useBoDongBo } from "@/lib/sync/react";
 import type { TuVung } from "@quy-hang/core/labels";
-import { COT, STATUS_LABEL, chuCuaO, nhanCot, type Cot, type CotId, type DongBang } from "./cot";
+import { COT, chuCuaO, mauTrangThai, nhanCot, type Cot, type CotId, type DongBang } from "./cot";
 import { useTuVung } from "./tu-vung";
 import { useDanhBaDauChu } from "./danh-ba";
 import { useDanhMuc } from "./danh-muc";
@@ -100,15 +100,6 @@ const I18N = {
   },
 };
 
-const STATUS_BADGE: Record<DongBang["standardStatus"], "success-light" | "info-light" | "primary-light" | "warning-light" | "destructive-light"> = {
-  Incomplete: "warning-light",
-  Active: "success-light",
-  Pending: "info-light",
-  Closed: "primary-light",
-  Hold: "warning-light",
-  Withdrawn: "destructive-light",
-};
-
 /** Ngày theo máy người xuất (YYYY-MM-DD) — gọi lúc bấm, không lúc dựng. */
 const homNay = () => new Date().toLocaleDateString("sv-SE");
 
@@ -126,8 +117,9 @@ function selectGridState(state: TableState<Feat>) {
 
 function OCan({ d, cot }: { d: DongBang; cot: Cot }) {
   const tv = useTuVung();
-  if (cot.id === "standardStatus") return <Badge variant={STATUS_BADGE[d.standardStatus]}>{STATUS_LABEL[d.standardStatus]}</Badge>;
   const chu = chuCuaO(d, cot.id, tv);
+  // Nhãn riêng của sàn mang màu của trạng thái neo (hàng 46): màu theo trạng thái chuẩn, chữ theo nhãn của căn.
+  if (cot.id === "standardStatus") return <Badge variant={mauTrangThai(d)}>{chu}</Badge>;
   const trong = chu === "—";
   return (
     <span className={`flex min-w-0 items-center gap-1.5 text-sm ${cot.kind === "so" ? "justify-end tabular-nums" : ""} ${trong ? "text-muted-foreground" : ""}`}>

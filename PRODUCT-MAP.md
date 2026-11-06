@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>14 việc"]
+  GD --> B["Sắp mở vòng<br/>12 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>22 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>88 việc"] --> GG{"Cổng Giá trị"}
+  GB --> DG["Đã giao<br/>23 việc"]
+  GB --> CN["Chờ phiên nghiệm thu<br/>94 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -33,10 +33,8 @@ flowchart TD
 - Đầu chủ đổi giá hoặc trạng thái nhanh trên điện thoại sau cuộc gọi, theo đúng luật sửa giá (`doi-gia-nhanh`)
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
-- Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn; giá đã lưu giữ nguyên kèm ngày tính (`thue-phi`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
 - Môi giới sàn khác mở link bảng hàng và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; tải Excel hay ảnh bảng hàng được (`trang-nhom-moi-gioi`)
-- Quản trị sàn thêm nhãn trạng thái riêng như «Giữ chỗ», bắt buộc neo vào một trong sáu trạng thái chuẩn và nhận luật, màu của trạng thái đó (`trang-thai-rieng`)
 - Quản trị sàn tạo trường riêng kiểu có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở bảng hàng, lọc được, không ra trang khách; cùng cơ chế áp cho liên hệ: trường riêng theo loại liên hệ (chủ nhà, người mua, người thuê…), trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
 
 ## Đang làm
@@ -95,6 +93,7 @@ flowchart TD
 - Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện (`lop-truong-nguon`)
 - Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách) (`luat-an-va-kiem-ro-ri`)
 - Quản trị sàn đổi cách chia lead, hạn nhận và hạn gọi, người đọc lời báo và ngưỡng hai hàng đợi của Hôm nay ở mục «Luật chia lead» của Cài đặt sàn; lead mới theo luật mới, lead đã chia giữ luật cũ; vai khác không đổi được; cột Đầu chủ của Bảng hàng không ghi nhầm «Đã rời sàn» và đọc danh bạ hỏng thì báo kèm thử lại (`luat-chia-lead`)
+- Ở mục «Luật chia lead», khi sàn đã có cặp hạn nhận / hạn gọi lưu sai từ trước, quản trị sửa một hạn thì màn báo đúng: hoặc lưu được cặp hợp lệ, hoặc báo lỗi kèm hạn kia — không báo «Đã lưu» trong khi lead mới vẫn chạy theo hạn mặc định. (`luat-chia-lead-cap-han-hong`)
 - Đầu khách chọn căn, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với link, ảnh và tin soạn sẵn; người tự bấm gửi trong Zalo (`luong-gui`)
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
 - Đầu chủ và trưởng nhóm mở màn Liên hệ, tìm một người bằng tên hay số, thấy đủ cơ hội và căn của người ấy, mở số và gọi trong tối đa ba chạm (`man-lien-he`)
@@ -122,13 +121,18 @@ flowchart TD
 - Kho có bộ chuẩn giao diện trước màn sản phẩm đầu tiên: thành phần ReUI, skill giao diện của kho, lint giao diện có mức nợ, sàn thiết kế M1 (`tang-5-giao-dien`)
 - Chủ sản phẩm duyệt Cổng Phạm vi của một vòng chạm ô chưa có khuôn trên trang so ba lối — Trong kho, ReUI, Vẽ mới — dựng bằng lệnh, cùng khổ 1440 và 375, mỗi lối một câu đánh đổi, lời khuyên ghim trên trang; vòng có ô chưa có khuôn mà bỏ bước phân kỳ thì bài chấm đỏ, vòng chỉ đi khuôn sẵn thì không cần trang (`the-ba-loi`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
+- Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn ở mục «Thuế phí» của Cài đặt sàn; giá bao phí ghi sau lúc đổi mang định nghĩa mới, giá đã lưu giữ định nghĩa lúc tính kèm ngày; người xem giá thấy giá ấy tính theo định nghĩa ngày nào; sàn khác không bị ảnh hưởng (`thue-phi`)
 - Khách mở link từ Zalo và thấy bộ căn mang tên sàn, giá sống kèm «giá xác nhận X ngày trước», căn đã cọc tự mờ, chạm «Quan tâm» được (`trang-khach-rieng`)
+- Quản trị sàn thêm nhãn trạng thái riêng neo vào một trong sáu trạng thái chuẩn; căn mang nhãn nhận luật và màu của neo ở Bảng hàng, Hôm nay và trang khách; đếm vẫn theo sáu trạng thái chuẩn (`trang-thai-rieng`)
 - Đầu chủ để lead và hàng chưa khoá nguồn ở «Chỉ tôi»; hàng lên «Toàn sàn» thì cả sàn mới thấy (`truc-ai-thay-hang`)
+- Bài «AC-9 nạp và xoá một lần» của bộ dữ liệu mẫu thấp tầng chỉ đếm những dòng do chính bài nạp, nên chạy được trên cơ sở dữ liệu đã có sàn mẫu khác (như trên bản thật); bước triển khai trên nhánh chính xanh lại. (`va-ac9-mau-co-san`)
 - Vá đổi giá căn Đã bán: máy chủ từ chối lệnh đổi giá trên căn Đã bán với lý do rõ, kể cả khi bản trên máy đã mới; bộ đồng bộ đưa lệnh ấy vào «Cần xem» (`va-doi-gia-can-da-ban`)
 - Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng (`va-duong-loi-hoan-tac`)
+- Bộ đọc địa chỉ đọc đúng tên đường dạng «Đường số N»: chữ «số» trong tên đường không bị lấy làm số nhà, hai đường số khác nhau không bao giờ ra cùng khoá, mọi cách viết của cùng một đường số ra cùng khoá, và khoá cũ của bộ thử hàng 73 không đổi (`va-duong-so-n`)
 - Hàng vá va-gui-can-da-go: căn đã gỡ khi hoàn tác lần nhập không vào được Lần gửi mới và không ghi được sự kiện «Quan tâm» ở tầng cơ sở dữ liệu (Ngoài-2 hàng 66, luật 65) (`va-gui-can-da-go`)
 - Hàng vá va-ho-so-lien-he: ma trận vai phủ cả ba đường đọc liên hệ chủ nhà và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp hàng 103) (`va-ho-so-lien-he`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
+- Máy chủ web không sập khi cơ sở dữ liệu cắt một kết nối đang rảnh: mọi bể kết nối gắn trình nghe lỗi, ghi nhật ký rồi bỏ kết nối hỏng; người đang dùng không gặp trang lỗi vì việc này. (`va-pool-nghe-loi`)
 - Vá tiêu đề Cuộc gọi: trên điện thoại, đầu trang của màn ghi cuộc gọi hiện «Ghi cuộc gọi» thay vì «Căn call»; trang của một căn vẫn hiện mã căn như cũ (`va-tieu-de-goi`)
 - Mọi lựa chọn khối của kho có một dòng máy đọc — khối đã chuyển thể ở danh mục giao diện, chỗ ghép hay tự viết ở «Chỗ hở» kèm điều đã tra trên ReUI, lý do và hạn xem lại; thiếu một ô thì npm run lint đỏ gọi đúng dòng (`vet-chon-khoi`)
 - Người trong sàn mở Quỹ hàng và thấy đúng vỏ theo thiết bị và vai: trên máy tính thanh trên, cột nhà và cột góc nhìn; trên điện thoại bốn tab dưới; telesales chỉ Hôm nay và «+ Lead» (`vo-ung-dung`)
@@ -155,6 +159,7 @@ flowchart TD
 - Vá mã căn của lead — lead nhập mã căn toàn dấu bị từ chối ngay lúc nhập với lời báo như hồ sơ hàng; tạo hàng và gửi lại từ lead cũ mang mã rác không còn hỏng (`va-ma-can-lead`)
 - Nút «Nạp dữ liệu mẫu» chạy được trên bản thật và không mở đường chèn lệnh qua ô email; bộ nạp của gói db được kiểm kiểu; lệnh chấm bộ dữ liệu mẫu hàng 5 chạy lại được (`va-nap-mau`)
 - Vá bài kiểm Nạp mẫu có ảnh — ca kho Storage dùng đúng kho bước chọn kho dựng, có đối chứng dương, phá thử thì đỏ (`va-nap-mau-co-anh`)
+- Vá sự cố bản thật 06/11: người đã đăng nhập không bị đá về màn đăng nhập khi cơ sở dữ liệu nghẽn kết nối — mỗi phiên bản máy chủ giữ ít kết nối và nhả sớm để không cạn trần 15 của pooler, và khi vẫn không đọc được phiên thì hiện trang lỗi kèm «Thử lại» thay vì chuyển về đăng nhập (`va-pool-ket-noi`)
 - Vá Sẵn sàng bán — chuyển căn hay điền xong thì «Còn thiếu» và «Chưa có» làm mới đúng căn đang xem; nút chỉ báo đã gửi khi lệnh vào hàng đợi, không vào thì báo lỗi và giữ nút bấm lại được (`va-san-sang-ban`)
 - Vá sửa trên ô: dòng «Hiểu là» đọc lại đúng số máy ghi, không làm tròn; nút Hoàn tác trên thông báo hoàn tác đúng lần sửa của chính nó và không ghi đè lần sửa sau (`va-sua-tren-o`)
 - Vá Thông báo lead — chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo (`va-thong-bao-lead`)
