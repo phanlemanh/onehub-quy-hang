@@ -190,3 +190,52 @@ test("nhớ mẫu: hai cột không cùng đích ở cả hai thứ tự", () =>
   dem++;
   assert.equal(dem, 13);
 });
+
+// Hàng 68 (giám sát duyệt lối B, G-0511-6): mẫu đưa cột vào trường nguồn là chiều che thêm — nhận khi lớp tạm của cột là
+// nguồn, tên người hay chưa rõ; từ chối khi cột rõ là danh mục, hàng chia sẻ được hay chữ tự do. Ma trận khai bằng
+// Record<ColumnClass, …> — thêm lớp mới thì kiểm kiểu đỏ; lớp của mỗi bảng thử kiểm bằng bộ phân loại thật, không giả định.
+test("nhớ mẫu: cột vào trường nguồn theo lớp — chiều che thêm", () => {
+  const COT: Record<ColumnClass, { giaTri: [string, string]; nhan: boolean }> = {
+    source: { giaTri: ["0900 000 012", "0900 000 013"], nhan: true },
+    person_name: { giaTri: ["Nguyễn Văn An", "Trần Thị Bình"], nhan: true },
+    unknown: { giaTri: ["[Mẫu] Chủ nhà 08", "[Mẫu] Chủ nhà 09"], nhan: true },
+    catalog: { giaTri: ["A-01.03", "A-01.05"], nhan: false },
+    shareable_listing: { giaTri: ["Đã bán", "Đang bán"], nhan: false },
+    free_text: { giaTri: ["Xem nhà sau 18 giờ, gọi trước nửa tiếng", "Căn góc view hồ, nội thất đầy đủ, chủ thiện chí"], nhan: false },
+  };
+  let so = 0;
+  for (const [lop, ca] of Object.entries(COT) as [ColumnClass, (typeof COT)[ColumnClass]][]) {
+    const t = readTable([["Mã căn", "Cột X"], ["A-01.01", ca.giaTri[0]], ["A-01.02", ca.giaTri[1]]]);
+    assert.equal(classifyColumns(t)[1]!.cls, lop, `bảng thử của lớp ${lop}`);
+    const kq = apMau(t, [{ headerKey: khoaMau("Cột X"), target: "ownerName", importId: "x", at: "2026-11-05T00:00:00Z" }], CTX);
+    const c = kq.plan.columns[1]!;
+    if (ca.nhan) {
+      assert.ok(c.reason.startsWith(LY_DO_THEO_MAU) && c.target === "ownerName", `lớp ${lop}: mẫu vào Chủ nhà phải được nhận, có ${c.reason}`);
+      assert.deepEqual(validate(kq.plan, t), [], `lớp ${lop}: kế hoạch hợp lệ`);
+    } else assert.match(c.reason, /không mang dữ liệu nguồn mà mẫu đưa vào ownerName/, `lớp ${lop}: mẫu vào Chủ nhà phải bị từ chối`);
+    so++;
+  }
+  assert.equal(so, 6);
+});
+
+test("nhớ mẫu: giá trị đã vào trường nguồn không ra trang khách hay đường xuất", () => {
+  const t = readTable([["Mã căn", "Họ tên CSH"], ["A-01.01", "Nguyễn Văn An"], ["A-01.02", "Trần Thị Bình"]]);
+  const kq = apMau(t, [{ headerKey: khoaMau("Họ tên CSH"), target: "ownerName", importId: "x", at: "2026-11-05T00:00:00Z" }], CTX);
+  const o = applyPlan(t, kq.plan, CTX).rows[0]!.cells[1]!;
+  assert.equal(o.target, "ownerName");
+  const ten = String(o.value);
+  assert.ok(ten.includes("An"), "giá trị đã vào trường Chủ nhà");
+  const can = { ...canMoi(), ownerName: ten };
+  let so = 0;
+  for (const cua of CUA_RA)
+    for (const nguoiNhan of NGUOI_NHAN) {
+      const ra = JSON.stringify(banRaNgoai(can, { cua, nguoiNhan, today: HOM_NAY }));
+      assert.ok(!ra.includes(ten), `${cua} × ${nguoiNhan}: tên chủ nhà ra ngoài`);
+      so++;
+    }
+  assert.equal(so, CUA_RA.length * NGUOI_NHAN.length);
+});
+
+import { applyPlan } from "../apply";
+import { classifyColumns, type ColumnClass } from "../classify";
+import { banRaNgoai, canMoi, CUA_RA, NGUOI_NHAN } from "../../redaction";

@@ -1,0 +1,136 @@
+{
+  "ghi_chu": "Số nền tất định (không AI) trên bộ file mẫu lạ của hàng 68 — mọi tiêu đề ngoài từ điển dựng sẵn; dữ liệu và đáp án của hai file mẫu hàng 5. Tính bằng _acceptance/nhap-tac-tu-ke-hoach/thu/bo-la.ts.",
+  "hom_nay": "2026-11-03",
+  "tep": {
+    "la-a-dong-nghia": {
+      "ghepCot": {
+        "tu": 6,
+        "mau": 13
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 40,
+        "mau": 520
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 520
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      },
+      "cotChoNguoi": {
+        "tu": 8,
+        "mau": 13
+      }
+    },
+    "la-a-tieng-anh": {
+      "ghepCot": {
+        "tu": 6,
+        "mau": 13
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 40,
+        "mau": 520
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 520
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      },
+      "cotChoNguoi": {
+        "tu": 8,
+        "mau": 13
+      }
+    },
+    "la-b-viet-tat": {
+      "ghepCot": {
+        "tu": 7,
+        "mau": 16
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 600
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 640
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      },
+      "cotChoNguoi": {
+        "tu": 10,
+        "mau": 16
+      }
+    },
+    "la-b-dong-nghia": {
+      "ghepCot": {
+        "tu": 7,
+        "mau": 16
+      },
+      "loiDuocSua": {
+        "tu": 0,
+        "mau": 0
+      },
+      "loiLot": {
+        "tu": 0,
+        "mau": 600
+      },
+      "hoiNguoi": {
+        "tu": 0,
+        "mau": 640
+      },
+      "roNguon": {
+        "tu": 0,
+        "mau": 165
+      },
+      "cotChoNguoi": {
+        "tu": 10,
+        "mau": 16
+      }
+    }
+  },
+  "cong": {
+    "ghepCot": {
+      "tu": 26,
+      "mau": 58
+    },
+    "loiDuocSua": {
+      "tu": 0,
+      "mau": 0
+    },
+    "loiLot": {
+      "tu": 80,
+      "mau": 2240
+    },
+    "hoiNguoi": {
+      "tu": 0,
+      "mau": 2320
+    },
+    "roNguon": {
+      "tu": 0,
+      "mau": 660
+    },
+    "cotChoNguoi": {
+      "tu": 36,
+      "mau": 58
+    }
+  }
+}
