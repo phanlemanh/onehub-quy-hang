@@ -5,7 +5,7 @@ slug: trang-thai-rieng
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-06-trang-thai-rieng-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-05T22:08:17Z
@@ -108,3 +108,7 @@ ký 05/11).
   `quy_hang_app`), nới check khoá `company_settings` nhận `labels.status.<mã>`.
 - Lệnh máy cần `DATABASE_URL` tới Postgres dãy B (cổng 5572) cho bộ kiểm cách ly và bộ kiểm API trên cơ sở dữ liệu.
 - Dữ liệu thử: sàn thử dựng qua đường ghi thật, tên «[Tên]», số `0900 000 0xx`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-6: Đầu chủ ngoại tuyến chọn một nhãn đã bị gỡ thì máy hiện nhãn mới trước, rồi máy chủ từ chối và nhãn lùi lại.
+  - Ngoài-8: Quản trị gỡ một nhãn, chọn nhãn thay rồi gỡ luôn nhãn thay ấy trong cùng lượt thì nút Lưu vẫn bật nhưng lưu bị từ chối, màn không chỉ cách sửa.
+  - Ngoài-9: Bài kiểm «mọi chỗ đọc trạng thái đích» gộp mọi migration làm một dòng; một luật cơ sở dữ liệu mới đọc trạng thái đích mà quên nhãn có thể lọt.
