@@ -5,7 +5,7 @@ slug: va-duong-so-n
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-06
 design_doc: _acceptance/va-duong-so-n/design.md
@@ -87,3 +87,5 @@ Core: A×B ở AC-1 · B(không số) ở AC-2 · C×khác đường ở AC-3 ·
 - Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
   - Ngoài-2: Hàm dùng để phá thử của bộ tách số nhà đang lộ ra ngoài gói địa chỉ; cần ẩn trước khi hàng 76 mở gói cho bên gọi.
   - Ngoài-3: «Đường số 05 nối dài» và «Đường số 5 nối dài» ra hai khoá khác nhau — một nhà có thể ra hai khoá, không bao giờ hai nhà ra một khoá.
+  - Ngoài-1 (vòng 2): Cùng ý Ngoài-3 vòng 1 — «Đường số 05 nối dài» và «Đường số 5 nối dài» ra hai khoá khác nhau.
+  - Ngoài-2 (vòng 2): «Lô Đ số 12» (chữ Đ có dấu làm ký hiệu lô, khu) bị báo thiếu số nhà, vì «Đ» trùng cách viết tắt «Đường»; người dùng nhập lại số nhà.
