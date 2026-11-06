@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 8d0d3488e84959d44d826db5dc6264404344d05f
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: va-pool-ket-noi
@@ -66,7 +66,7 @@ none — every multi-run eval is uniform
   run_id: minted-va-pool-ket-noi-E3-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-06T03:04:38Z
   screenshot: evidence/E3-login.png
   observed: |

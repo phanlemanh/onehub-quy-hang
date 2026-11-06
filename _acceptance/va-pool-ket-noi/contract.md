@@ -5,7 +5,7 @@ slug: va-pool-ket-noi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-06-va-pool-ket-noi-design.md
 approved_by:
 approved_at:
@@ -88,3 +88,8 @@ Liệt kê tay hai trục (descope «bỏ coverage-scan» trong sổ quyết đ�
 - Ngoài-4 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Chỗ thử sự cố có thể báo đã mở lại kết nối dù thực tế chưa, làm bước kiểm hồi phục đỏ sai; người dùng thật không bị ảnh hưởng. — `_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs`
 - Ngoài-5 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Khi có nhiều người vào cùng lúc, máy chủ web có thể nhân bản và vẫn làm cạn kết nối cơ sở dữ liệu, khiến trang báo lỗi tạm thời kèm nút Thử lại. — `apps/web/src/lib/api.test.ts`
 - Ngoài-6 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Sau này nếu có ai viết cách khác để nuốt lỗi đọc phiên, bài kiểm có thể không bắt được và người đang đăng nhập lại bị đá về màn đăng nhập khi hệ thống nghẽn. — `_acceptance/va-pool-ket-noi/thu/noi-goi.test.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Sau khi bản vá vào nhánh chính, bài kiểm phạm vi của hồ sơ này báo đỏ giả khi chạy lại, dù sản phẩm không có lỗi.
+  - Ngoài-4: Chỗ thử sự cố có thể kẹt ở trạng thái tắt nếu lần chạy trước chết giữa chừng; người dùng thật không bị ảnh hưởng.
+  - Ngoài-5: Khi tải tăng và máy chủ nhân bản nhiều phiên bản cùng lúc, kết nối vẫn có thể cạn — người dùng thấy trang lỗi kèm «Thử lại»; gốc lâu dài là pooler chế độ transaction.
+  - Ngoài-6: Bài soi nơi gọi chỉ bắt cách nuốt lỗi viết cùng dòng; cách viết khác sau này có thể lọt.
