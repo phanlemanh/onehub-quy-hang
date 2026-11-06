@@ -78,3 +78,11 @@ evals:
     target: "http://localhost:3495/settings/lead-routing"
     expected: "Sửa một nửa cặp hỏng thì màn lưu và hiện đúng cặp mới; ra cặp trái luật thì báo lỗi ở dòng, không «Đã lưu»; phản hồi còn lỗi thì báo «chưa áp», không «Đã lưu». Ảnh E7-cap-ok.png, E7-cap-400.png, E7-cap-con-loi.png."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/(app)/settings/lead-routing/**", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai (màn chỉ đổi cách báo kết quả lưu, không đổi bố cục)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
