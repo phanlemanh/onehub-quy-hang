@@ -50,7 +50,7 @@ const laMa = (id: string) => /^[0-9a-f-]{36}$/i.test(id);
 
 async function tenNguoi(identityPool: pg.Pool, ids: string[]): Promise<Map<string, string>> {
   if (ids.length === 0) return new Map();
-  const { rows } = await identityPool.query<{ id: string; name: string }>('select id, name from "user" where id = any($1)', [ids]);
+  const { rows } = await identityPool.query<{ id: string; name: string }>('select id, name from identity."user" where id = any($1)', [ids]);
   return new Map(rows.map((r) => [r.id, r.name]));
 }
 
