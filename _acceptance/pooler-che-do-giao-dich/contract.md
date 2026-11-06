@@ -48,12 +48,11 @@ Source input: hàng `pooler-che-do-giao-dich` của `docs/plan/lo-trinh.json` ·
   có trạng thái phiên — `SET` không `LOCAL`, `set_config(…, false)`, `LISTEN`, khoá tư vấn mức phiên, `PREPARE`, bảng tạm,
   câu lệnh có tên, tham số khởi động `options` — và mọi câu nhắc bảng danh tính đều ghi `identity.`; đối chứng: tệp mồi
   mang từng mẫu bị gọi tên đúng đường, còn `set local` và `set_config(…, true)` không bị gọi tên.
-- AC-6 (cross-layer): Given bản xem trước của nhánh chạy với công tắc `DATABASE_POOLER_PORT=6543` (Supavisor chế độ giao
-  dịch), When
-  bắn 40 yêu cầu đồng thời tới `/api/v1/me` và `/today` với cookie phiên giả, Then nhật ký của đúng triển khai ấy có dòng
-  dựng bể nêu cổng 6543, không yêu cầu nào 5xx, `/api/v1/health` trả 200, nhật ký bản xem trước trong khoảng thử không có
-  `EMAXCONNSESSION`, lỗi bể, lỗi lược đồ hay lỗi câu lệnh chuẩn bị, và nhật ký bản thật cùng khoảng không có
-  `EMAXCONNSESSION` hay 5xx.
+- AC-6 (cross-layer): Given PR đã gộp, bản thật đã chạy mã có dòng dựng bể, và chủ kho duyệt đổi ở Cổng Bằng chứng, When
+  máy đặt công tắc `DATABASE_POOLER_PORT=6543` cho Production (Supavisor chế độ giao dịch) vào giờ vắng và triển khai lại,
+  Then nhật ký bản thật có dòng dựng bể nêu cổng 6543 trong 2 phút, và 30 phút theo dõi không có `EMAXCONNSESSION`, lỗi
+  bể, lỗi lược đồ hay lỗi câu lệnh chuẩn bị; có lỗi thì máy tự xoá công tắc, triển khai lại và thấy dòng cổng 5432 (sửa
+  đổi S3 06/11: chủ kho chọn «Đo trên bản thật» — bản xem trước không dựng được API vì thiếu khoá mã hoá số chủ nhà).
 - AC-7 (judgment): Given ADR-0009, tài liệu kiến trúc và Tham chiếu sau bản vá, When người đọc tìm cách bản thật kết nối
   cơ sở dữ liệu, Then thấy mục sửa đổi 06/11 nêu chế độ giao dịch, lược đồ danh tính đặt ở adapter, job migrate giữ chuỗi
   riêng, các bước đổi `DATABASE_URL` bản thật và cách lùi; so với điểm rẽ khỏi nhánh chính, ADR-0009 chỉ có dòng thêm.
@@ -110,9 +109,8 @@ Liệt kê tay bốn trục (descope «bỏ coverage-scan» trong sổ quyết �
   `docs/architecture/kien-truc-repo-va-stack.md`, `docs/product/tham-chieu.md`, `docs/plan/lo-trinh.json`, design doc và
   kế hoạch của hàng, `_acceptance/pooler-che-do-giao-dich/**`, `_acceptance/config.yaml`, `PRODUCT-MAP.md`, `LO-TRINH.html`.
 - Bàn thử tại máy cần PgBouncer (Homebrew) và Docker; dùng lại chỗ thử Postgres của `va-pool-ket-noi` (chỉ đọc, không sửa).
-- E7 cần bản xem trước của nhánh đã có `DATABASE_POOLER_PORT=6543` (máy đặt — biến thường) và thư mục `vercel link` ngoài
-  kho (`VERCEL_LINK_DIR`, như khoá `suc_khoe_xem_truoc`). `DATABASE_URL` trên Vercel là bí mật kín, máy không đọc được nó.
-- E7 bắn tải từ bản xem trước qua cùng Supavisor với bản thật (dùng chung cơ sở dữ liệu): khung giờ và mức tải là Hỏi ở
-  Cổng Phạm vi; tập lệnh dừng ngay khi nhật ký bản thật có `EMAXCONNSESSION`.
-- Thử tay của chủ kho (đăng nhập, Hôm nay, Bảng hàng trên bản xem trước) là mục kiểm tay của trang bằng chứng — máy không
-  tạo tài khoản thử trên dữ liệu thật.
+- E7 chạy SAU khi gộp, do chủ kho duyệt đổi ở Cổng Bằng chứng: `doi-ban-that.mjs --doi` (đặt công tắc, triển khai lại,
+  theo dõi, tự lùi) với thư mục `vercel link` ngoài kho (`VERCEL_LINK_DIR`). `DATABASE_URL` trên Vercel là bí mật kín —
+  máy không đọc nó; công tắc là biến thường. Giờ vắng theo Hỏi-3.
+- Thử tay của chủ kho (đăng nhập, Hôm nay, Bảng hàng) sau khi đổi là mục kiểm tay của trang bằng chứng — máy không tạo
+  tài khoản thử trên dữ liệu thật.

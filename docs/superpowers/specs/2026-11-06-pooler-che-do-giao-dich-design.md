@@ -79,41 +79,34 @@ bỏ qua tham số khởi động, và từ chối tham số khởi động khá
 lập khỏi search_path bằng kết nối mang search_path sai, không bằng cấu hình cũ.
 
 Giới hạn khai trước: PgBouncer không phải Supavisor. Cách Supavisor xử tham số khởi động `options` và câu lệnh chuẩn bị
-chưa kiểm ở máy — bước bản xem trước dưới đây đo trên Supavisor thật.
+chưa kiểm ở máy — bước đổi bản thật dưới đây đo trên Supavisor thật.
 
 ## Công tắc cổng (sửa đổi S3 06/11 — chủ kho chọn)
 
 `DATABASE_URL` trên Vercel là biến bí mật kín: CLI kéo về chỉ được giá trị giữ chỗ, máy không dựng được chuỗi 6543 mà
 không có người cầm chuỗi. Chủ kho chọn công tắc: biến thường `DATABASE_POOLER_PORT` (chỉ nhận 5432 hoặc 6543) đổi cổng
 của `DATABASE_URL` lúc `getApi` dựng bể; vắng thì giữ nguyên; giá trị khác thì máy chủ không khởi động, lỗi không in chuỗi
-kết nối. Máy tự đặt biến cho bản xem trước nhánh; đổi bản thật là đặt biến ở phạm vi Production, lùi là xoá biến.
+kết nối. Đổi bản thật là đặt biến ở phạm vi Production, lùi là xoá biến.
 
-## Bản xem trước với cổng 6543
+## Đo trên Supavisor thật (sửa đổi S3 06/11 — chủ kho chọn «Đo trên bản thật»)
 
-`DATABASE_URL` của bản thật và bản xem trước hiện là một (pooler chế độ phiên). Đo trên Supavisor thật cần một biến
-`DATABASE_URL` chỉ cho bản xem trước của nhánh này, cùng chuỗi kết nối, đổi cổng 5432 → 6543. Chuỗi ấy là bí mật:
+Kế hoạch ban đầu đo trên bản xem trước cổng 6543. Đo 06/11 07:06Z: công tắc chạy trên bản xem trước (nhật ký ghi
+`[pool:ket-noi] cổng 6543`) nhưng bản xem trước không dựng được API — `OWNER_PHONE_KEY` chỉ có ở Production — và vốn không
+đăng nhập được (ADR-0009 Hệ quả). Chủ kho chọn đo thẳng trên bản thật, sau khi gộp và duyệt ở Cổng Bằng chứng, bằng
+`_acceptance/pooler-che-do-giao-dich/thu/doi-ban-that.mjs`:
 
-- Khuyến nghị (Hỏi ở Cổng Phạm vi): máy đặt biến qua CLI Vercel bằng một tập lệnh đọc chuỗi hiện có, đổi cổng, ghi
-  thành biến của bản xem trước nhánh `claude/pooler-che-do-giao-dich` — giá trị không in ra, không vào kho, tệp tạm xoá
-  ngay. Rào của app chặn thì máy không lách: chủ kho làm đúng một bước (sao biến `DATABASE_URL` sang phạm vi bản xem
-  trước của nhánh, đổi cổng).
-- Đo bằng máy (bản xem trước có Vercel Authentication, đi qua `vercel curl` như khoá `suc_khoe_xem_truoc`): trước hết nhật
-  ký của đúng triển khai ấy phải có dòng `[pool:ket-noi] cổng 6543` (chứng biến đã đổi cổng và triển khai dựng sau khi đặt
-  biến — không đọc giá trị bí mật); rồi 40 yêu cầu đồng thời tới `/api/v1/me` và `/today` với cookie phiên giả (mỗi yêu
-  cầu chạm bể danh tính khi đọc phiên) → không 5xx; nhật ký bản xem trước không có `EMAXCONNSESSION`, lỗi bể, lỗi lược đồ
-  hay lỗi câu lệnh chuẩn bị; nhật ký bản thật cùng khoảng không có `EMAXCONNSESSION` hay 5xx.
-- Rủi ro khai trước: bản xem trước dùng chung cơ sở dữ liệu và Supavisor với bản thật, mà bản thật còn ở chế độ phiên.
-  Khung giờ và mức tải của phép đo là Hỏi ở Cổng Phạm vi (khuyến nghị: giờ vắng, 40 yêu cầu một đợt, máy theo dõi nhật
-  ký bản thật suốt khoảng thử và dừng ngay khi thấy `EMAXCONNSESSION`).
-- Thử tay của chủ kho, gom vào trang bằng chứng của Cổng Bằng chứng: đăng nhập, Hôm nay, Bảng hàng trên bản xem trước.
-  (Bản xem trước dùng cơ sở dữ liệu bản thật; máy không tạo tài khoản thử trên dữ liệu thật.)
+- `--doi`: tiền đề (bản thật đã chạy mã có dòng dựng bể; 30 phút trước không lỗi kết nối) → đặt `DATABASE_POOLER_PORT=6543`
+  cho Production → triển khai lại → chờ dòng `cổng 6543` → theo dõi 30 phút; có lỗi cạn kết nối, lỗi bể, lỗi lược đồ hay
+  lỗi câu lệnh chuẩn bị thì tự xoá biến, triển khai lại, chờ `cổng 5432`.
+- `--kiem`: chỉ đọc nhật ký bản thật. `--lui`: lùi tay.
+- Giờ vắng (Hỏi-3). Chủ kho thử tay đăng nhập, Hôm nay, Bảng hàng sau khi đổi.
 
 ## Đường ra bản thật
 
-1. Gộp PR — mã chạy được ở cả hai chế độ, bản thật vẫn 5432.
-2. Cổng Bằng chứng: chủ kho đọc số đo bàn thử + bản xem trước, quyết đổi `DATABASE_URL` của Production sang 6543.
-3. Đổi biến, triển khai lại; theo dõi nhật ký 30 phút (`EMAXCONNSESSION`, `[pool:`, 5xx).
-4. Lùi: đặt lại chuỗi 5432, triển khai lại — mã không cần đổi.
+1. Cổng Bằng chứng: chủ kho đọc số đo bàn thử tại máy, ký, và quyết có đổi bản thật hay không, giờ nào.
+2. Gộp PR — mã chạy được ở cả hai chế độ, bản thật vẫn 5432; nhật ký bản thật có dòng `cổng 5432`.
+3. Giờ vắng: `doi-ban-that.mjs --doi` — đặt `DATABASE_POOLER_PORT=6543` cho Production, triển khai lại, theo dõi 30 phút.
+4. Lùi: tự động khi có lỗi, hoặc `--lui` — xoá biến, triển khai lại, mã không cần đổi.
 
 Job `deploy` của CI chạy migration bằng secret riêng `PROD_DATABASE_URL` — giữ nguyên (migration là việc một lần, chạy
 được ở chế độ phiên hay kết nối trực tiếp). ADR-0009 ghi mục sửa đổi 06/11 về chế độ kết nối, không viết đè.

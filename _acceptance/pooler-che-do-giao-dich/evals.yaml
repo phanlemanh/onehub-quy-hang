@@ -2,8 +2,8 @@ schema_version: 1
 feature_slug: pooler-che-do-giao-dich
 # Lệnh máy: executors.test.web (apps/web/src/lib/api.test.ts), executors.test.api, executors.script.pooler_giao_dich
 # (_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs — bộ kiểm db trên Postgres riêng, bàn thử PgBouncer chế độ giao dịch
-# trước chỗ thử Postgres của va-pool-ket-noi, bài quét, bài phạm vi; cần Docker và PgBouncer), executors.script.pooler_xem_truoc
-# (bản xem trước cổng 6543 qua vercel curl), typecheck, lint, build. Người chấm đối chiếu tên ca nêu trong `expected` với
+# trước chỗ thử Postgres của va-pool-ket-noi, bài quét, bài phạm vi; cần Docker và PgBouncer), executors.script.pooler_ban_that
+# (đọc nhật ký bản thật sau khi đổi sang 6543 — E7 khai không chạy ở lượt chấm), typecheck, lint, build. Người chấm đối chiếu tên ca nêu trong `expected` với
 # dòng reporter: có mặt, ok, không SKIP.
 evals:
   - id: E1
@@ -61,9 +61,11 @@ evals:
     criterion: AC-6
     executor: script
     layer: backend-effect
-    cmd: config:executors.script.pooler_xem_truoc
-    expected: "exit 0; tập lệnh in đúng dòng «xem-truoc: 40/40 không 5xx · health 200 · cổng 6543 · nhật ký sạch · bản thật sạch». Tiền đề do tập lệnh tự kiểm và in rõ khi thiếu (exit 2, không exit 0): APP_URL là bản xem trước của nhánh claude/pooler-che-do-giao-dich (không phải tên miền bản thật), VERCEL_LINK_DIR đã `vercel link`, `vercel env ls preview claude/pooler-che-do-giao-dich` có DATABASE_POOLER_PORT. Bước 1 — chứng triển khai chạy qua 6543: gọi `/api/v1/health` rồi một yêu cầu `/api/v1/me` (đánh thức hàm dựng bể), assert `vercel logs` của ĐÚNG triển khai ấy có dòng `[pool:ket-noi] cổng 6543` (dòng dungPools ghi lúc dựng bể, chỉ cổng, không chuỗi kết nối); vắng dòng hay cổng khác 6543 → exit 1 «triển khai không chạy qua pooler giao dịch». Bước 2 — 20 yêu cầu `/api/v1/me` + 20 yêu cầu `/today` đồng thời qua `vercel curl` với cookie qh.session_token giả; assert mỗi mã ∈ {200, 307, 401} (in bảng 40 dòng); `/api/v1/health` 200. Bước 3 — `vercel logs` của triển khai ấy trong khoảng thử không khớp /EMAXCONNSESSION|\\[pool:(danh-tinh|ung-dung)|max clients|relation .* does not exist|Could not validate the database schema|prepared statement/i. Bước 4 — nhật ký Production trong cùng khoảng thử không khớp /EMAXCONNSESSION/ và không có 5xx; có thì exit 1 «bản thật bị ảnh hưởng trong khoảng thử». Chiều đỏ (phá-thử ở S3): chạy tập lệnh với APP_URL của một triển khai dùng cổng 5432 thì bước 1 đỏ."
-    paths: ["apps/web/src/lib/api.ts", "packages/api/src/**", "_acceptance/pooler-che-do-giao-dich/thu/xem-truoc.mjs"]
+    cmd: config:executors.script.pooler_ban_that
+    status: not-run
+    reason: "Đo trên bản thật SAU khi gộp và chủ kho duyệt đổi ở Cổng Bằng chứng (chủ kho chọn «Đo trên bản thật» 06/11): bản xem trước không dựng được API (thiếu OWNER_PHONE_KEY, chỉ có ở Production) và vốn không đăng nhập được. Lượt chấm không chạy được vì phép đo chỉ có sau khi đổi; bàn thử tại máy (E3, E4) là bằng chứng máy trước khi đổi."
+    expected: "Sau khi đổi: `doi-ban-that.mjs --doi --phut 30` thoát 0 — tiền đề (bản thật đã chạy mã có dòng dựng bể trong 6 giờ, 30 phút trước đổi không lỗi kết nối) đạt; DATABASE_POOLER_PORT=6543 đặt ở Production, triển khai lại, nhật ký bản thật có `[pool:ket-noi] cổng 6543` trong 2 phút; 30 phút theo dõi không dòng nào khớp /EMAXCONNSESSION|max clients|\\[pool:(danh-tinh|ung-dung)|relation .* does not exist|Could not validate the database schema|prepared statement/i; có dòng khớp thì tập lệnh tự xoá biến, triển khai lại, chờ «cổng 5432» và thoát 1. Rồi `--kiem --phut 30` thoát 0."
+    paths: ["apps/web/src/lib/api.ts", "packages/api/src/**", "_acceptance/pooler-che-do-giao-dich/thu/doi-ban-that.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E8

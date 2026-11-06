@@ -30,7 +30,7 @@ export function danhSachChoPhep(hopDong = readFileSync(HOP_DONG, "utf8")) {
 const DUOC = danhSachChoPhep().map(theoMau);
 export const ngoaiPhamVi = (paths) => paths.filter((p) => !DUOC.some((re) => re.test(p)));
 
-const KHOA = ["pooler_giao_dich", "pooler_xem_truoc"];
+const KHOA = ["pooler_giao_dich", "pooler_ban_that"];
 export function loiConfig(diff) {
   const doi = diff.split("\n").filter((l) => /^[+-]/.test(l) && !/^(\+\+\+|---) /.test(l));
   const la = doi.filter((l) => !KHOA.some((k) => new RegExp(`^\\+\\s+${k}: `).test(l)));
@@ -69,7 +69,7 @@ test("phạm vi: đối chứng dương và chiều đỏ của danh sách cho p
 });
 
 test("phạm vi: config.yaml chỉ thêm khoá của hồ sơ", () => {
-  assert.equal(loiConfig('@@\n+    pooler_giao_dich: "node --test x"\n+    pooler_xem_truoc: "node y"\n'), null);
+  assert.equal(loiConfig('@@\n+    pooler_giao_dich: "node --test x"\n+    pooler_ban_that: "node y"\n'), null);
   assert.match(loiConfig("@@\n-gap_probe: required\n+gap_probe: off\n") ?? "", /config\.yaml đổi ngoài khoá executor/);
   assert.match(loiConfig('@@\n+    khoa_la: "node z"\n') ?? "", /khoa_la/);
   const that = git("diff", diemRe(), "HEAD", "--", "_acceptance/config.yaml");

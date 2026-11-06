@@ -90,7 +90,7 @@ chế độ giao dịch mà §4 nêu.
    `DATABASE_POOLER_PORT` (chỉ nhận 5432 hoặc 6543) đổi cổng của `DATABASE_URL` lúc dựng bể; vắng thì giữ cổng của chuỗi;
    giá trị khác thì máy chủ không khởi động.
 6. **Đổi bản thật** (chủ kho quyết ở Cổng Bằng chứng của hồ sơ `pooler-che-do-giao-dich`, sau khi đã đo trên bàn thử tại
-   máy và trên bản xem trước cổng 6543):
+   máy; bản xem trước không dựng được API vì thiếu `OWNER_PHONE_KEY`, nên phép đo trên Supavisor chạy thẳng ở bước này):
    1. Vercel → `DATABASE_POOLER_PORT=6543` phạm vi Production (`DATABASE_URL` giữ nguyên).
    2. Triển khai lại bản thật; nhật ký phải có dòng `[pool:ket-noi] cổng 6543`.
    3. Theo dõi nhật ký 30 phút: không `EMAXCONNSESSION`, không dòng lỗi bể `[pool:`, không 5xx mới.
