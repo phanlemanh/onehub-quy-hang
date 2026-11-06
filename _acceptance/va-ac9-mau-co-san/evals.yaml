@@ -1,0 +1,49 @@
+# Bộ đo của hàng vá va-ac9-mau-co-san. Mọi phép đo chạy _acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs: mỗi ca tạo một
+# cơ sở dữ liệu tạm trên Postgres của DATABASE_URL (mặc định Postgres dãy D, cổng 5575), migrate, cấy dữ liệu có sẵn
+# của ca, chạy cả tệp packages/db/tests/du-lieu-mau-thap-tang.test.mjs bằng node --test, rồi DROP. Không chạm cơ sở dữ
+# liệu bản thật.
+# Dữ liệu có sẵn dựng bằng chính bộ ghi của kho: bộ nạp mẫu (packages/db/seed/nap.mjs --nap) và lệnh mở sàn
+# (packages/db/scripts/mo-san.mjs). Đối chứng dương trong MỌI ca có dữ liệu sẵn: trước lượt chạy, đủ các sàn đã cấy
+# (san-khac: «[Mẫu] Sàn thử», «[Mẫu] Sàn trình diễn», «[Tên sàn] có sẵn» · san-thu-trung: «[Mẫu] Sàn thử (bản cũ)») và
+# có ít nhất một thành viên — thiếu thì ca đỏ «đối chứng dương hỏng».
+# E5 chạy bản tệp kiểm của nhánh chính trước vòng (git show <sha>:<đường> vào tệp tạm cạnh tệp thật) và đòi chiều đỏ.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs --ca san-khac --ca san-thu-trung --ca deploy-san-khac
+    paths: ["packages/db/tests/du-lieu-mau-thap-tang.test.mjs", "_acceptance/va-ac9-mau-co-san/thu/**"]
+    expected: "exit 0; ba dòng ok — trên cơ sở dữ liệu có sẵn «[Mẫu] Sàn thử» của bộ nạp mẫu, «[Mẫu] Sàn trình diễn» và «[Tên sàn] có sẵn» của lệnh mở sàn (san-khac), và trên cơ sở dữ liệu chỉ có «[Mẫu] Sàn thử (bản cũ)» (san-thu-trung): tệp kiểm thoát 0, đầu ra có dòng «✔ AC-9 …» và không có «AC-9 … # SKIP»; trên cơ sở dữ liệu san-khac, đúng lệnh của job deploy (npm run test:isolation -w @quy-hang/db, mọi tệp packages/db/tests/*.test.mjs) thoát 0 (deploy-san-khac). Đỏ in «tệp kiểm đỏ trên cơ sở dữ liệu <ca>: <dòng lỗi>», «AC-9 không chạy hay không đạt (<ca>)», «AC-9 bị bỏ qua (<ca>)», hay «đối chứng dương hỏng»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs --ca san-khac
+    paths: ["packages/db/tests/du-lieu-mau-thap-tang.test.mjs", "_acceptance/va-ac9-mau-co-san/thu/**"]
+    expected: "exit 0; dòng {ca:'san-khac'} ok — đối chứng dương: trước lượt chạy có đủ ba sàn đã cấy và ít nhất một thành viên; sau lượt chạy số dòng và băm sha256 của mọi dòng ba bảng (sắp theo khoá) giống hệt trước. Đỏ in «dữ liệu có sẵn đổi sau lượt chạy (san-khac): <trước> → <sau>» hay «đối chứng dương hỏng: dữ liệu có sẵn …»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs --ca pha-dem --ca pha-hai-san
+    paths: ["packages/db/tests/du-lieu-mau-thap-tang.test.mjs", "_acceptance/va-ac9-mau-co-san/thu/**"]
+    expected: "exit 0; hai dòng ok, ma trận viết trước hai phần tử — pha-dem: bài đo chép tệp kiểm của cây ra tệp tạm, chèn «return 0;» đầu «async function dongMauMoi(c, goc) {», chạy trên cơ sở dữ liệu san-khac → tệp đỏ và đầu ra mang biểu thức ghim «coLoi(loi, \"còn dòng mẫu sau xoá\")»; pha-hai-san: chèn «return 0;» đầu «async function sanMauMoi(c, goc) {», chạy trên cơ sở dữ liệu san-thu-trung → tệp đỏ và đầu ra mang «coLoi(loi, \"hai sàn mẫu\")». Cả hai: dữ liệu có sẵn không đổi. Tệp kiểm thiếu một trong hai hàm → exit 2 «không tìm thấy …». Đỏ in «tệp kiểm xanh trên cơ sở dữ liệu <ca> — phép đo không phân biệt được» hay «đỏ sai thông điệp (<ca>)»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: node _acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs --ca sach --ca cach-ly
+    paths: ["packages/db/tests/**", "packages/db/migrations/**", "_acceptance/va-ac9-mau-co-san/thu/**"]
+    expected: "exit 0; hai dòng ok — trên cơ sở dữ liệu tạm vừa migrate, không dữ liệu nào: tệp kiểm thoát 0 với «✔ AC-9 …» (sach), và npm run db:test (bộ kiểm cách ly của gói db cùng bộ kiểm API trên Postgres) thoát 0 (cach-ly). Đỏ in «tệp kiểm đỏ trên cơ sở dữ liệu sach: …» hay «bộ kiểm cách ly đỏ trên cơ sở dữ liệu sạch: …»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs --doi-chung-do 1d682adec85de348aa746e156eb2b308131693cb
+    paths: ["_acceptance/va-ac9-mau-co-san/thu/**"]
+    expected: "exit 0; ba dòng {ban:'cu'} ok — bản tệp kiểm của nhánh chính tại 1d682ade trên cơ sở dữ liệu san-khac và trên san-thu-trung: tệp đỏ và đầu ra mang «còn dòng mẫu sau xoá»; cùng bản trên cơ sở dữ liệu sạch: tệp xanh với «✔ AC-9 …». Dữ liệu có sẵn không đổi ở cả hai. Bản cũ xanh trên san-khac thì in «tệp kiểm xanh trên cơ sở dữ liệu san-khac — phép đo không phân biệt được» và thoát 1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -1,0 +1,26 @@
+{
+  "feature_plain": "Bước kiểm trước khi triển khai lên bản thật thôi đỏ oan vì sàn mẫu có sẵn, nên bản mới lại lên bản thật sau mỗi lần gộp.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cho bài kiểm dữ liệu mẫu, và cả lệnh kiểm mà bước triển khai dùng, chạy xanh trên một cơ sở dữ liệu đã có sẵn sàn mẫu khác."},
+    {"id": "AC-2", "p": "Sẽ để mọi dòng có sẵn trong cơ sở dữ liệu giống hệt trước khi bài kiểm chạy."},
+    {"id": "AC-3", "p": "Sẽ giữ cho bài kiểm vẫn bắt được dữ liệu mẫu xoá sót và sàn mẫu bị nạp trùng, ngay cả khi có sẵn sàn mẫu khác."},
+    {"id": "AC-4", "p": "Sẽ giữ nguyên kết quả xanh trên cơ sở dữ liệu sạch, cả bài kiểm này lẫn bộ kiểm cách ly."},
+    {"id": "AC-5", "p": "Sẽ chứng rằng bản kiểm cũ đỏ đúng lỗi này, để biết phép đo phân biệt được bản sửa."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không đổi bước triển khai: nó vẫn chạy bộ kiểm trên bản thật trước khi đẩy bản mới."},
+    {"id": "OOS-2", "p": "Không đổi lệnh nạp và gỡ dữ liệu mẫu."},
+    {"id": "OOS-3", "p": "Không dọn hay đổi sàn mẫu đang có trên bản thật."},
+    {"id": "OOS-4", "p": "Không sửa lỗi mã nhầm số ở cùng tệp — để hàng va-ac8-uuid-nham-so làm ngay sau."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đo đủ sáu ô: ba trạng thái cơ sở dữ liệu (sạch · có sàn mẫu khác · chỉ có sàn trùng tiền tố tên) nhân hai bản kiểm (sửa · cũ); dữ liệu có sẵn dựng bằng chính lệnh nạp mẫu và lệnh mở sàn của kho."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Việc giữ bài kiểm dữ liệu mẫu chạy trên bản thật mỗi lần triển khai bị máy tự quyết bằng một câu luật không nói đến nó — nay thành câu hỏi Hỏi-2 cho anh, đánh dấu khó đảo; câu Hỏi-1 cũng đánh dấu khó đảo."},
+    {"i": 1, "p": "Chưa có phép đo chạy đúng lệnh mà bước triển khai dùng — đã thêm, chạy trên cơ sở dữ liệu có sẵn sàn mẫu khác."},
+    {"i": 2, "p": "Dữ liệu có sẵn trong bài đo được chèn tay, không giống bản thật — nay dựng bằng chính lệnh nạp mẫu và lệnh mở sàn; bản kiểm cũ đỏ đúng lỗi trên dữ liệu ấy."},
+    {"i": 3, "p": "Phép kiểm sàn mẫu nạp trùng chưa có phép phá riêng và thiếu một ô của ma trận — đã thêm phép phá có ghim thông điệp và ô còn thiếu."},
+    {"i": 4, "p": "Bài đo bám tên hàm mà thiết kế chưa nêu — thiết kế nay nêu đúng tên, chữ ký và lời khẳng định."}
+  ]
+}
