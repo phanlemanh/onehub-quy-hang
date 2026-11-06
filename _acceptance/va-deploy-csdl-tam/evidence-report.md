@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 358da7e98a0966c56bb9c5956449b31a31b4b7a3
+verified_commit: 5527fc4632817fbba4f76977df5eb85ea7f92035
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -152,3 +152,7 @@ none — every multi-run eval is uniform
 
 Round 1: số đo lượt 1 đã ghi; evals.yaml được sửa cho đọc lại được (S4-r1), rồi trở lại chấm.
 Round 2: E1 đến E7 và mọi lệnh suite đều xanh; không còn eval hỏng.
+
+### Re-pin lần 1 — 2026-11-06, do hoá cũ do gộp main trước chữ ký
+run_id: repin-20261106T151232Z-80736
+sha: 5527fc4632817fbba4f76977df5eb85ea7f92035 · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng
