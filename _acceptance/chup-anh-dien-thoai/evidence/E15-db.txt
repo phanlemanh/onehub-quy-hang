@@ -1,17 +1,15 @@
-Can mau: Toà A A-03.04 (dau-chu-1 giu), cho thu day H
+Can mau: Toà A A-02.06 (dau-chu-1 giu), may dev http://localhost:3460, DB quy-hang-db-dkn-H:5574
 TRUOC: 0 dong
 Dong khi con offline (truoc khi mo mang): 0
-ba dong da-tai tren giao dien: 3
+trang thai tren giao dien: ["da-tai","da-tai","da-tai"]
 SAU: 3 dong (tang 3)
 ma anh (id|ngan|added_at|removed_at):
-32869612-89cf-4545-bef0-5fae4900a807|shareable|2026-11-06 04:51:11.913497+00|
-3719eabe-1add-4810-8f1b-728365c4a45f|shareable|2026-11-06 04:51:27.147903+00|
-a3c76fbb-401d-45eb-a707-cdb4fc00ce71|internal|2026-11-06 04:51:27.379049+00|
-tong so dong ca bang gom da go (building+unit):
-3
+2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d|shareable|2026-11-06 06:52:33.350069+00|
+92270ce2-7095-4222-967c-b3499dc91ce9|shareable|2026-11-06 06:52:48.48075+00|
+731b9f5c-3259-4b5c-9812-2d3a50385fcc|internal|2026-11-06 06:52:48.525426+00|
+ma anh trung nhau (so mã có >1 dòng): 0
 su kien:
-32869612-89cf-4545-bef0-5fae4900a807|added
-3719eabe-1add-4810-8f1b-728365c4a45f|added
-a3c76fbb-401d-45eb-a707-cdb4fc00ce71|added
-ma anh trung nhau: f
-POST /api/v1/units/photos: trang thai may chu tra theo thu tu [201,201,201] (lan dau bi Fetch.failRequest sau khi may chu da tra)
+2d8f58f1-4ba8-4936-969d-b7f9d5a6ff8d|added
+731b9f5c-3259-4b5c-9812-2d3a50385fcc|added
+92270ce2-7095-4222-967c-b3499dc91ce9|added
+POST /api/v1/units/photos: trang thai may chu tra theo thu tu [201,201,201] (phan hoi dau bi Fetch.failRequest sau khi may chu da tra; Fetch.enable requestStage=Response)

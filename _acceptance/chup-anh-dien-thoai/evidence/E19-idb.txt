@@ -1,9 +1,9 @@
-[verifier doc lap, 2026-11-06, may dev 3494 + Postgres 5574 (dung-h.mjs cua ho-so-dien-thoai-product-detail-5); Playwright, cung mot ho so trinh duyet]
-B0 unit_photos can A-04.01 TRUOC = 3 (ho so trinh duyet da co san 2 CSDL rong cua dau-chu-1 tu lan chay truoc; ngan trong)
-B1 dau-chu-1: chan POST /api/v1/units/photos/upload-url (abort internetdisconnected), nap 2 anh (Gui duoc + Noi bo)
-   ngan: 2 dong "Cho mang"; indexedDB.databases() = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
-B2 doi chung duong: tai lai trang (phien dau-chu-1 giu), mo lai ngan: 2 dong "Cho mang"; databases() = cung 2 kho
-B3 bam menu Tai khoan > Dang xuat (nut that, man 1280x800 vi nut an o 375px): url=/login; indexedDB.databases() = []
-B4 truong-nhom (nguoi B, /api/v1/me xac nhan) cung trinh duyet, mo can A-04.01, mo ngan: "Chua chup anh nao cho can nay.", 0 dong Cho mang;
-   databases() = ["quy-hang-anh-cho:92ab1862-37f3-4b59-baae-d892214a4797","quy-hang-sync:92ab1862-37f3-4b59-baae-d892214a4797"] (kho cua B, khong con kho 524f266e)
-B5 unit_photos can A-04.01 SAU = 3
+[verifier doc lap, 2026-11-06, may dev 3460 (worktree dreamy-mahavira) + Postgres 5574; Playwright, cung mot ho so trinh duyet; man 375x812, rieng buoc dang xuat 1280x800]
+B0 mốc: ho so trinh duyet con 4 kho sot tu lan chay truoc (anh-cho + sync cua 524f266e va b5237944); da xoa het -> indexedDB.databases() = []. unit_photos A-04.01 (Toa A) = 3; tong unit_photos = 102
+B1 dau-chu-1 (524f266e): chan POST /api/v1/units/photos/upload-url (abort internetdisconnected), nap 2 anh o ngan Chup anh (Gui duoc + Noi bo): 2 dong "Cho mang"
+   databases() = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]   (E19-step1.png)
+B2 doi chung duong: tai lai trang (phien giu), mo lai ngan: 2 dong "Cho mang"; databases() = cung 2 kho   (E19-con.png)
+B3 menu Tai khoan > Dang xuat (nut that; POST /api/v1/auth/sign-out 200; khong hoi xac nhan): url=/login; databases() = []   (E19-menu.png, E19-dang-xuat.png)
+B4 truong-nhom (nguoi B, /api/v1/me xac nhan), cung trinh duyet, mo can A-04.01, mo ngan: "Chua chup anh nao cho can nay.", 0 dong Cho mang
+   databases() = ["quy-hang-anh-cho:92ab1862-37f3-4b59-baae-d892214a4797","quy-hang-sync:92ab1862-37f3-4b59-baae-d892214a4797"]  (kho cua B, khong con kho 524f266e)   (E19-nguoi-b.png)
+B5 unit_photos A-04.01 SAU = 3; tong unit_photos SAU = 102 (khong doi)

@@ -1,30 +1,50 @@
-# E14 verifier doc lap, 2026-11-06T04:47:38Z. Can mau cua lan E12 moi nhat (11:43 +07): Toà A / A-04.01
-== unit_photos (can A-04.01)
- compartment | building_name | unit_number | display_order |           added_at            | removed_at 
--------------+---------------+-------------+---------------+-------------------------------+------------
- shareable   | Toà A         | A-04.01     |             0 | 2026-11-06 04:43:10.355652+00 | 
- shareable   | Toà A         | A-04.01     |             1 | 2026-11-06 04:43:10.403462+00 | 
- internal    | Toà A         | A-04.01     |             0 | 2026-11-06 04:43:10.428702+00 | 
-(3 rows)
+# E14 verifier doc lap, 2026-11-06T06:48:48Z
+== 6 anh moi nhat
+ building_name | unit_number | compartment | display_order |           added_at            | removed_at 
+---------------+-------------+-------------+---------------+-------------------------------+------------
+ Toà A         | A-03.02     | shareable   |             2 | 2026-11-06 06:47:56.808798+00 | 
+ Toà A         | A-15.05     | internal    |             1 | 2026-11-06 06:44:05.46231+00  | 
+ Toà A         | A-15.05     | shareable   |             3 | 2026-11-06 06:44:05.387609+00 | 
+ Toà A         | A-15.05     | shareable   |             2 | 2026-11-06 06:44:05.292403+00 | 
+ Toà A         | A-15.05     | internal    |             0 | 2026-11-06 06:43:13.354166+00 | 
+ Toà A         | A-15.05     | shareable   |             1 | 2026-11-06 06:43:13.295569+00 | 
+(6 rows)
 
-== dem theo ngan (con hieu luc)
+== nhom theo can/ngan
+ building_name | unit_number | compartment | count |              max              
+---------------+-------------+-------------+-------+-------------------------------
+ Toà A         | A-03.02     | shareable   |     3 | 2026-11-06 06:47:56.808798+00
+ Toà A         | A-15.05     | internal    |     2 | 2026-11-06 06:44:05.46231+00
+ Toà A         | A-15.05     | shareable   |     4 | 2026-11-06 06:44:05.387609+00
+ Toà A         | A-11.02     | shareable   |     3 | 2026-11-06 05:29:12.460272+00
+ Toà A         | A-04.02     | shareable   |     2 | 2026-11-06 05:28:27.121497+00
+ Toà A         | A-03.04     | internal    |     1 | 2026-11-06 04:51:27.379049+00
+ Toà A         | A-03.04     | shareable   |     2 | 2026-11-06 04:51:27.147903+00
+ Toà A         | A-04.01     | internal    |     1 | 2026-11-06 04:43:10.428702+00
+(8 rows)
+
+== su kien added moi nhat
+  id  | type  |           payload            | compartment | building_name | unit_number |          occurred_at          
+------+-------+------------------------------+-------------+---------------+-------------+-------------------------------
+ 3801 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-03.02     | 2026-11-06 06:47:56.808798+00
+ 3800 | added | {"compartment": "internal"}  | internal    | Toà A         | A-15.05     | 2026-11-06 06:44:05.46231+00
+ 3799 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-15.05     | 2026-11-06 06:44:05.387609+00
+ 3798 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-15.05     | 2026-11-06 06:44:05.292403+00
+ 3797 | added | {"compartment": "internal"}  | internal    | Toà A         | A-15.05     | 2026-11-06 06:43:13.354166+00
+ 3796 | added | {"compartment": "shareable"} | shareable   | Toà A         | A-15.05     | 2026-11-06 06:43:13.295569+00
+(6 rows)
+
+== can mau E12 = Toà A / A-15.05 (E12-network.txt chi goi ma nay)
  compartment | count 
 -------------+-------
- internal    |     1
- shareable   |     2
+ internal    |     2
+ shareable   |     4
 (2 rows)
 
-== unit_photo_events type=added (can A-04.01)
-  id  | type  |           payload            |          occurred_at          | photo_compartment | building_name | unit_number 
-------+-------+------------------------------+-------------------------------+-------------------+---------------+-------------
- 3784 | added | {"compartment": "shareable"} | 2026-11-06 04:43:10.355652+00 | shareable         | Toà A         | A-04.01
- 3785 | added | {"compartment": "shareable"} | 2026-11-06 04:43:10.403462+00 | shareable         | Toà A         | A-04.01
- 3786 | added | {"compartment": "internal"}  | 2026-11-06 04:43:10.428702+00 | internal          | Toà A         | A-04.01
-(3 rows)
+ type  | payload_ngan | compartment | count 
+-------+--------------+-------------+-------
+ added | internal     | internal    |     2
+ added | shareable    | shareable   |     4
+(2 rows)
 
-== khop payload vs compartment
- su_kien | khop 
----------+------
-       3 |    3
-(1 row)
-
+== ket luan: moi dot nap (06:43:13Z va 06:44:05Z) deu +2 shareable +1 internal, su kien added khop; tong can = 6 dong (4 shareable + 2 internal), khong phai 3 => assertion 'dung ba dong' FAIL

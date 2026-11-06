@@ -1,41 +1,4 @@
-# Playwright network (all, non-static) + chan phia trinh duyet: POST upload-url
-   1 Note: 91 static requests not shown, run with "static" option to see them.
-   1 99. [GET] http://localhost:3494/api/v1/units/photos
-   1 98. [POST] http://localhost:3494/api/v1/sync/offline-sessions => [201] Created
-   1 92. [GET] http://localhost:3494/api/v1/listings => [200] OK
-   1 91. [GET] http://localhost:3494/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 => [200] OK
-   1 90. [GET] http://localhost:3494/api/v1/units/photos
-   1 89. [GET] http://localhost:3494/api/v1/units/photos
-   1 88. [GET] http://localhost:3494/api/v1/units/photos
-   1 87. [POST] http://localhost:3494/api/v1/units/photos/upload-url => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 86. [GET] http://localhost:3494/api/v1/catalog => [200] OK
-   1 85. [GET] http://localhost:3494/api/v1/catalog => [200] OK
-   1 66. [GET] http://localhost:3494/api/v1/listings => [200] OK
-   1 65. [GET] http://localhost:3494/api/v1/units/photos
-   1 64. [GET] http://localhost:3494/api/v1/listings => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 63. [GET] http://localhost:3494/api/v1/units/photos
-   1 62. [GET] http://localhost:3494/api/v1/listings => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 61. [GET] http://localhost:3494/api/v1/units/photos
-   1 60. [GET] http://localhost:3494/api/v1/listings => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 59. [GET] http://localhost:3494/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 58. [GET] http://localhost:3494/api/v1/units/photos
-   1 57. [GET] http://localhost:3494/api/v1/units/photos
-   1 56. [GET] http://localhost:3494/api/v1/units/photos
-   1 55. [POST] http://localhost:3494/api/v1/units/photos/upload-url => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 54. [GET] http://localhost:3494/api/v1/catalog => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 53. [GET] http://localhost:3494/api/v1/catalog => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 34. [GET] http://localhost:3494/api/v1/listings => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 33. [GET] http://localhost:3494/api/v1/units/photos
-   1 32. [POST] http://localhost:3494/api/v1/units/photos/upload-url => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 31. [GET] http://localhost:3494/api/v1/listings => [FAILED] net::ERR_INTERNET_DISCONNECTED
-   1 25. [GET] http://localhost:3494/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 => [200] OK
-   1 24. [GET] http://localhost:3494/api/v1/units/photos
-   1 23. [GET] http://localhost:3494/api/v1/units/photos
-   1 22. [GET] http://localhost:3494/api/v1/units/photos
-   1 21. [GET] http://localhost:3494/api/v1/listings => [200] OK
-   1 20. [GET] http://localhost:3494/api/v1/catalog => [200] OK
-   1 19. [GET] http://localhost:3494/api/v1/catalog => [200] OK
-   1 149. [GET] http://localhost:3494/api/v1/me => [200] OK
-   1 143. [GET] http://localhost:3494/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 => [200] OK
-   1 142. [GET] http://localhost:3494/api/v1/units/photos
-   1 141. [GET] http://localhost:3494/api/v1/units/photos
+# Playwright network, origin http://localhost:3460 (cac dong localhost:3494 trong luong tool la cua lan chay truoc, bo qua)
+FAIL-eligible tren 3460: chi 6 lan POST /api/v1/units/photos/upload-url => net::ERR_INTERNET_DISCONNECTED = CHAN CO CHU DICH do verifier (page.route abort) theo buoc 1; khong loi nao khac.
+Moi GET/POST khac toi /api/v1 (catalog, listings, units/photos, me, auth/sign-out 200) = 200.
+Console error: chi 'Failed to load resource' cua upload-url bi chan co chu dich + WebSocket HMR dev (static, khong tinh).

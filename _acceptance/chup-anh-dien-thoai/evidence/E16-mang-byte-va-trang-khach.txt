@@ -1,17 +1,11 @@
-# E16 buoc 2+3 (curl), 2026-11-06T05:17:33Z. Can A-04.01 Toa A; link KAkmNxwDKQWc tao boi dau-khach (xem E16-tao-link-dau-khach.txt)
-ma Noi bo=8af6a63e-91ae-4c38-9848-130b51247b21 ; Gui duoc thu tu 0 (bia khi khong co is_cover)=c5054d33-c39a-4c77-9f52-a4cbadb1dc5e ; Gui duoc thu tu 1=49dc0d11-eff0-407e-9d63-8a9cb4dd8444
-== trang khach /s/KAkmNxwDKQWc khong dang nhap ==
-status: 200
-so lan xuat hien c5054d33-c39a-4c77-9f52-a4cbadb1dc5e trong HTML:        4
-so lan xuat hien 49dc0d11-eff0-407e-9d63-8a9cb4dd8444 trong HTML:        0
-so lan xuat hien 8af6a63e-91ae-4c38-9848-130b51247b21 trong HTML:        0
-so the <img ... public/shares:        1
-== byte anh bia tren trang khach (khong dang nhap): status=200 ct=image/png bytes=2806
-== byte anh Noi bo qua link khach (khong dang nhap): status=404 ct=application/json bytes=21
-== dau-khach GET thang byte anh Noi bo ==
-GET /api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/thumb (dau-khach): status=404 ct=application/json bytes=21 body-dau={"error":"not-found"}
-GET /api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/original (dau-khach): status=404 ct=application/json bytes=21 body-dau={"error":"not-found"}
-== doi chung: dau-khach GET byte anh Gui duoc c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb: status=200 ct=image/png bytes=4806
-== doi chung: dau-chu-1 GET byte anh Noi bo ==
-GET /api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/thumb (dau-chu-1): status=200 ct=image/png bytes=4809 magic=89504e47
-GET /api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/original (dau-chu-1): status=200 ct=image/png bytes=2808 magic=89504e47
+POST shares 201 {"id":"2f1ae996-0c08-4643-8586-5e86e94c9599","code":"eVmnDeC9fBxj","audience":"agents","prospectId":null,"senderUserId":"b5237944-0926-45a8-b1a8-de73146092d3","listingIds":["459e1afc-330a-453a-acf4-8af394b90962"],"createdAt":"2026-11-06T06:56:07.017Z","disabledAt":null}
+GET /s/ 200 len 27749
+cover in page: true count 4
+internal 8af6a63e-91ae-4c38-9848-130b51247b21 false
+other shareable present: c5054d33,true 49dc0d11,false
+photo ids in page: [ 'c5054d33-c39a-4c77-9f52-a4cbadb1dc5e' ]
+GET thumb 8af6a63e 404 application/json bytes 21 body {"error":"not-found"}
+GET original 8af6a63e 404 application/json bytes 21 body {"error":"not-found"}
+control GET shareable thumb 200 image/png 4806
+list dau-khach 200 {"anh":[{"id":"c5054d33-c39a-4c77-9f52-a4cbadb1dc5e","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":0,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.355Z","contentType":"image/png","width":640,"height":480},{"id":"49dc0d11-eff0-407e-9d63-8a9cb4dd8444","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":1,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.403Z","contentType":"image/png","width":640,"height":480}],"noiBo":"an","suaDuoc":false}
+list dau-chu-1 200 {"anh":[{"id":"8af6a63e-91ae-4c38-9848-130b51247b21","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"internal","displayOrder":0,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.428Z","contentType":"image/png","width":640,"height":480},{"id":"c5054d33-c39a-4c77-9f52-a4cbadb1dc5e","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":0,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.355Z","contentType":"image/png","width":640,"height":480},{"id":"49dc0d11-eff0-407e-9d63-8a9cb4dd8444","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":1,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.403Z","contentType":"image/png","width":640,"height":480}],"noiBo":"thay","suaDuoc":true}

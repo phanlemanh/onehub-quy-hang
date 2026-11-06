@@ -1,23 +1,7 @@
-vai=dau-khach 375x812 /units/A-04.01 2026-11-06T05:16:57.176Z
-DOM(luc chup): {"url":"http://localhost:3460/units/A-04.01","w":375,"h":812,"imgsThumb":["/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original","/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original","/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb","/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb"],"noiBoTrongHtml":false,"nutChupAnh":false,"body":"Căn A-04.01\n1/2\n2/2\nĐang bán\nA-04.01 · Toà A\n\n[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ\n\nDiện tích\n54,2 m²\nPhòng ngủ\n1\nHướng\nĐông Nam\n3,25 tỷ\nBao phí\n\nXác nhận 1 "}
-ma Noi bo dang do: 8af6a63e-91ae-4c38-9848-130b51247b21
-ma Gui duoc (doi chung): c5054d33-c39a-4c77-9f52-a4cbadb1dc5e, 49dc0d11-eff0-407e-9d63-8a9cb4dd8444
-== phan hoi mang cua app (gop theo method/status/mime/url; n=so lan; noiBo/guiDuoc = so phan hoi co chua ma) ==
-GET 200 text/html http://localhost:3460/units/A-04.01 | n=1 bodyLen=77009 noiBo=0 guiDuoc=0
-GET 200 application/manifest+json http://localhost:3460/manifest.webmanifest | n=2 bodyLen=422 noiBo=0 guiDuoc=0
-GET 404 text/plain http://localhost:3460/favicon.ico | n=1 bodyLen=9 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/icons/icon-192.png | n=2 bodyLen=707 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/catalog | n=2 bodyLen=37729 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/listings | n=1 bodyLen=43836 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962/owner | n=2 bodyLen=121 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 | n=3 bodyLen=598 noiBo=0 guiDuoc=3
-GET 200 application/json http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 | n=1 bodyLen=2511 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb | n=1 bodyLen=4806 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb | n=1 bodyLen=4813 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original | n=1 bodyLen=2378 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original | n=1 bodyLen=2806 noiBo=0 guiDuoc=1
-static (_next/*, khong do body): 17 phan hoi, status: 200
-== loadingFailed: 0 ==
-== loi script (exceptionThrown): 0 ==
-ghi chu: may dev Next (webpack) -p 3460; frameNavigated=1 (tai trang 1 lan)
-TONG: 36 phan hoi/that bai; phan hoi app: 19; chua ma Noi bo: 0; chua ma Gui duoc: 7
+# E16 verifier doc lap 2026-11-06T06:58:02Z; can A-04.01 Toa A (listing 459e1afc); Playwright MCP 375x812
+== dau-khach (E16-step3.png)
+GET 200 /units/A-04.01: DOM noiBo=false; DOM guiDuoc=[true,true]; img src chi 2 ma Gui duoc (original+thumb)
+GET /api/v1/units/photos?toa=Toà A&ma=A-04.01 n=3 noiBo=0 guiDuoc=3
+GET thumb/original 2 ma Gui duoc 200 image/png, noiBo=0
+52 response, requestfailed=0, tong response chua ma Noi bo (8af6a63e...)=0
+static _next/*: 200 het

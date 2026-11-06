@@ -1,35 +1,33 @@
-== E18 mang (CDP Network events) - ma that http://localhost:3460 ==
+== NETWORK E18 (CDP Network.* + console), lan 2 may that ==
 == that/fetch (http://localhost:3460) fetch/XHR/POST, theo pha ==
 [offline] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.02 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-11.01 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3460/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[offline] GET http://localhost:3460/today?_rsc=MxohIy6O7bbQQR4p -> 200
-[offline] GET http://localhost:3460/_next/static/webpack/74aa73c886e89a31.webpack.hot-update.json -> 200
+[offline] GET http://localhost:3460/today?_rsc=Ba19qQeOhV25VtM9 -> 200
 [offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
-[online] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.02 -> 200
+[online] GET http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-11.01 -> 200
 [online] GET http://localhost:3460/api/v1/listings -> 200
+[online] POST http://localhost:3460/api/v1/sync/offline-sessions -> 201
 [online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
 [online] POST http://localhost:3460/api/v1/units/photos -> 201
 [online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
-[online] POST http://localhost:3460/api/v1/sync/offline-sessions -> 201
 [online] POST http://localhost:3460/api/v1/units/photos -> 201
 == console error/warning ==
 
 == exceptions ==
 
 
-== ban sao doi chung http://localhost:3496 ==
 == doichung/fetch (http://localhost:3496) fetch/XHR/POST, theo pha ==
 [offline] POST http://localhost:3496/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.06 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3496/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3496/today?_rsc=-HFVbFe9DJ10gdOD -> 200
-[offline] GET http://localhost:3496/_next/static/webpack/6bc97eba012edad4.webpack.hot-update.json -> 200
+[offline] GET http://localhost:3496/_next/static/webpack/504ec26a61a8e42b.webpack.hot-update.json -> 200
 [offline] GET http://localhost:3496/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3496/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
 [offline] GET http://localhost:3496/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
@@ -43,4 +41,26 @@
 == exceptions ==
 
 
-Ghi chu: yeu cau [offline] FAILED InternetDisconnected la do CHU DICH (buoc chan mang cua eval), khong phai loi app. Yeu cau [online] cua ma that: xem dong status.
+== lan 1 (nguon: kq-lan1) ==
+== that/fetch (http://localhost:3460) fetch/XHR/POST, theo pha ==
+[offline] POST http://localhost:3460/api/v1/units/photos/upload-url -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/listings -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/today?_rsc=0pZfAJKr9kWuiOhZ -> 200
+[offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/catalog -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/company/settings/queue -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[offline] GET http://localhost:3460/api/v1/leads/assigned -> - FAILED net::ERR_INTERNET_DISCONNECTED (pha offline)
+[online] GET http://localhost:3460/api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 -> 200
+[online] GET http://localhost:3460/api/v1/listings -> 200
+[online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
+[online] POST http://localhost:3460/api/v1/sync/offline-sessions -> 201
+[online] POST http://localhost:3460/api/v1/units/photos -> 201
+[online] POST http://localhost:3460/api/v1/units/photos/upload-url -> 200
+[online] POST http://localhost:3460/api/v1/units/photos -> 201
+== console error/warning ==
+
+== exceptions ==
+

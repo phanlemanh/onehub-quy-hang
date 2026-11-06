@@ -1,71 +1,24 @@
-# E16-network: CDP (Network+Fetch) tren Chrome headless 375x812, may dev http://localhost:3460 (next dev --webpack, DB dkn-H), 2026-11-06T05:17:45Z
-# Ghi chu: may dev mac dinh (Turbopack) tai lai trang lien tuc o chay nay nen khoi dong lai bang --webpack.
-
-##### dau-khach #####
-vai=dau-khach 375x812 /units/A-04.01 2026-11-06T05:16:57.176Z
-DOM(luc chup): {"url":"http://localhost:3460/units/A-04.01","w":375,"h":812,"imgsThumb":["/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original","/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original","/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb","/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb"],"noiBoTrongHtml":false,"nutChupAnh":false,"body":"Căn A-04.01\n1/2\n2/2\nĐang bán\nA-04.01 · Toà A\n\n[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ\n\nDiện tích\n54,2 m²\nPhòng ngủ\n1\nHướng\nĐông Nam\n3,25 tỷ\nBao phí\n\nXác nhận 1 "}
-ma Noi bo dang do: 8af6a63e-91ae-4c38-9848-130b51247b21
-ma Gui duoc (doi chung): c5054d33-c39a-4c77-9f52-a4cbadb1dc5e, 49dc0d11-eff0-407e-9d63-8a9cb4dd8444
-== phan hoi mang cua app (gop theo method/status/mime/url; n=so lan; noiBo/guiDuoc = so phan hoi co chua ma) ==
-GET 200 text/html http://localhost:3460/units/A-04.01 | n=1 bodyLen=77009 noiBo=0 guiDuoc=0
-GET 200 application/manifest+json http://localhost:3460/manifest.webmanifest | n=2 bodyLen=422 noiBo=0 guiDuoc=0
-GET 404 text/plain http://localhost:3460/favicon.ico | n=1 bodyLen=9 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/icons/icon-192.png | n=2 bodyLen=707 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/catalog | n=2 bodyLen=37729 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/listings | n=1 bodyLen=43836 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962/owner | n=2 bodyLen=121 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 | n=3 bodyLen=598 noiBo=0 guiDuoc=3
-GET 200 application/json http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 | n=1 bodyLen=2511 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb | n=1 bodyLen=4806 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb | n=1 bodyLen=4813 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original | n=1 bodyLen=2378 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original | n=1 bodyLen=2806 noiBo=0 guiDuoc=1
-static (_next/*, khong do body): 17 phan hoi, status: 200
-== loadingFailed: 0 ==
-== loi script (exceptionThrown): 0 ==
-ghi chu: may dev Next (webpack) -p 3460; frameNavigated=1 (tai trang 1 lan)
-TONG: 36 phan hoi/that bai; phan hoi app: 19; chua ma Noi bo: 0; chua ma Gui duoc: 7
-
-##### dau-chu-1 (doi chung duong) #####
-vai=dau-chu-1 375x812 /units/A-04.01 2026-11-06T05:17:03.502Z
-DOM(luc chup): {"url":"http://localhost:3460/units/A-04.01","w":375,"h":812,"imgsThumb":["/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original","/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original","/api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/original","/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb","/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb"],"noiBoTrongHtml":true,"nutChupAnh":true,"body":"Căn A-04.01\n1/3\n2/3\nNội bộ\n3/3\nChụp ảnh\nĐang bán\nA-04.01 · Toà A\n\n[Mẫu] Dự án căn hộ thử · Toà A · Căn hộ\n\nDiện tích\n54,2 m²\nPhòng ngủ\n1\nHướng\nĐông Nam\n3,25 tỷ\n"}
-ma Noi bo dang do: 8af6a63e-91ae-4c38-9848-130b51247b21
-ma Gui duoc (doi chung): c5054d33-c39a-4c77-9f52-a4cbadb1dc5e, 49dc0d11-eff0-407e-9d63-8a9cb4dd8444
-== phan hoi mang cua app (gop theo method/status/mime/url; n=so lan; noiBo/guiDuoc = so phan hoi co chua ma) ==
-GET 200 text/html http://localhost:3460/units/A-04.01 | n=1 bodyLen=80278 noiBo=0 guiDuoc=0
-GET 200 application/manifest+json http://localhost:3460/manifest.webmanifest | n=2 bodyLen=422 noiBo=0 guiDuoc=0
-GET 404 text/plain http://localhost:3460/favicon.ico | n=1 bodyLen=9 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/icons/icon-192.png | n=2 bodyLen=707 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/catalog | n=2 bodyLen=37729 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/listings | n=1 bodyLen=51457 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 | n=1 bodyLen=2511 noiBo=0 guiDuoc=0
-GET 200 application/json http://localhost:3460/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 | n=3 bodyLen=878 noiBo=3 guiDuoc=3
-GET 200 image/png http://localhost:3460/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original | n=1 bodyLen=2806 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original | n=1 bodyLen=2378 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/original | n=1 bodyLen=2808 noiBo=1 guiDuoc=0
-GET 200 image/png http://localhost:3460/api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb | n=1 bodyLen=4806 noiBo=0 guiDuoc=1
-GET 200 image/png http://localhost:3460/api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb | n=1 bodyLen=4813 noiBo=0 guiDuoc=1
-static (_next/*, khong do body): 17 phan hoi, status: 200
-== loadingFailed: 0 ==
-== loi script (exceptionThrown): 0 ==
-ghi chu: may dev Next (webpack) -p 3460; frameNavigated=1 (tai trang 1 lan)
-TONG: 35 phan hoi/that bai; phan hoi app: 18; chua ma Noi bo: 4; chua ma Gui duoc: 7
-
-##### /s/<ma link> khong dang nhap #####
-vai=khong-dang-nhap 375x812 /units/A-04.01 2026-11-06T05:17:20.072Z
-DOM(luc chup): {"url":"http://localhost:3460/s/KAkmNxwDKQWc","w":375,"h":812,"imgsThumb":["/api/v1/public/shares/KAkmNxwDKQWc/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e"],"noiBoTrongHtml":false,"nutChupAnh":false,"body":"[Mẫu] Sàn thử\n\n[Mẫu] Đầu khách gửi bạn 1 căn\n\nToà A · A-04.01\n\n3,25 tỷ\nBao phí\n\nGiá xác nhận 1 ngày trước\n\nQuan tâm"}
-ma Noi bo dang do: 8af6a63e-91ae-4c38-9848-130b51247b21
-ma Gui duoc (doi chung): c5054d33-c39a-4c77-9f52-a4cbadb1dc5e, 49dc0d11-eff0-407e-9d63-8a9cb4dd8444
-== phan hoi mang cua app (gop theo method/status/mime/url; n=so lan; noiBo/guiDuoc = so phan hoi co chua ma) ==
-GET 200 text/html http://localhost:3460/s/KAkmNxwDKQWc | n=1 bodyLen=22447 noiBo=0 guiDuoc=1
-GET 200 application/manifest+json http://localhost:3460/manifest.webmanifest | n=2 bodyLen=422 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/api/v1/public/shares/KAkmNxwDKQWc/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e | n=1 bodyLen=2806 noiBo=0 guiDuoc=1
-GET 404 text/plain http://localhost:3460/favicon.ico | n=1 bodyLen=9 noiBo=0 guiDuoc=0
-GET 200 image/png http://localhost:3460/icons/icon-192.png | n=2 bodyLen=707 noiBo=0 guiDuoc=0
-POST 201 application/json http://localhost:3460/api/v1/public/shares/KAkmNxwDKQWc/events | n=1 bodyLen=17 noiBo=0 guiDuoc=0
-POST 200 application/json http://localhost:3460/api/v1/public/shares/KAkmNxwDKQWc/events | n=1 bodyLen=18 noiBo=0 guiDuoc=0
-static (_next/*, khong do body): 15 phan hoi, status: 200
-== loadingFailed: 0 ==
-== loi script (exceptionThrown): 0 ==
-ghi chu: may dev Next (webpack) -p 3460; frameNavigated=1 (tai trang 1 lan)
-TONG: 24 phan hoi/that bai; phan hoi app: 9; chua ma Noi bo: 0; chua ma Gui duoc: 2
+# E16 verifier doc lap 2026-11-06T06:58:02Z; can A-04.01 Toa A (listing 459e1afc); Playwright MCP 375x812
+== dau-khach (E16-step3.png)
+GET 200 /units/A-04.01: DOM noiBo=false; DOM guiDuoc=[true,true]; img src chi 2 ma Gui duoc (original+thumb)
+GET /api/v1/units/photos?toa=Toà A&ma=A-04.01 n=3 noiBo=0 guiDuoc=3
+GET thumb/original 2 ma Gui duoc 200 image/png, noiBo=0
+52 response, requestfailed=0, tong response chua ma Noi bo (8af6a63e...)=0
+static _next/*: 200 het
+# E16 doi chung duong: dau-chu-1 cung ho so (E16-step4.png)
+GET /api/v1/units/photos?toa=..&ma=A-04.01 n=3 noiBo=3 guiDuoc=3 (bo do bat ma Noi bo)
+GET /api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/original 200 image/png noiBo=1
+DOM noiBo=true; img src co .../8af6a63e.../original; tab Noi bo 3/3; 51 response, requestfailed=0; tong noiBo=4
+== byte + trang khach
+POST shares 201 {"id":"2f1ae996-0c08-4643-8586-5e86e94c9599","code":"eVmnDeC9fBxj","audience":"agents","prospectId":null,"senderUserId":"b5237944-0926-45a8-b1a8-de73146092d3","listingIds":["459e1afc-330a-453a-acf4-8af394b90962"],"createdAt":"2026-11-06T06:56:07.017Z","disabledAt":null}
+GET /s/ 200 len 27749
+cover in page: true count 4
+internal 8af6a63e-91ae-4c38-9848-130b51247b21 false
+other shareable present: c5054d33,true 49dc0d11,false
+photo ids in page: [ 'c5054d33-c39a-4c77-9f52-a4cbadb1dc5e' ]
+GET thumb 8af6a63e 404 application/json bytes 21 body {"error":"not-found"}
+GET original 8af6a63e 404 application/json bytes 21 body {"error":"not-found"}
+control GET shareable thumb 200 image/png 4806
+list dau-khach 200 {"anh":[{"id":"c5054d33-c39a-4c77-9f52-a4cbadb1dc5e","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":0,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.355Z","contentType":"image/png","width":640,"height":480},{"id":"49dc0d11-eff0-407e-9d63-8a9cb4dd8444","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":1,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.403Z","contentType":"image/png","width":640,"height":480}],"noiBo":"an","suaDuoc":false}
+list dau-chu-1 200 {"anh":[{"id":"8af6a63e-91ae-4c38-9848-130b51247b21","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"internal","displayOrder":0,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.428Z","contentType":"image/png","width":640,"height":480},{"id":"c5054d33-c39a-4c77-9f52-a4cbadb1dc5e","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":0,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.355Z","contentType":"image/png","width":640,"height":480},{"id":"49dc0d11-eff0-407e-9d63-8a9cb4dd8444","buildingName":"Toà A","unitNumber":"A-04.01","compartment":"shareable","displayOrder":1,"isCover":false,"isSample":false,"takenAt":"2026-11-06","addedAt":"2026-11-06T04:43:10.403Z","contentType":"image/png","width":640,"height":480}],"noiBo":"thay","suaDuoc":true}
+networkObserved: app-scope 200 het, khong 5xx/4xx tru GET thumb|original ma Noi bo => 404 (expected)

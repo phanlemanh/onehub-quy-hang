@@ -1,8 +1,9 @@
-can mau: Toà A / A-03.02
-B1 so dong unit_photos truoc: 1
+can mau: Toa A / A-03.02 (dem = chua-xoa/tong)
+B1 so dong unit_photos truoc: 2/2
 B2 dau-khach POST /units/photos/upload-url -> 403 {"error":"listing-agent-required"}
 B2 dau-khach POST /units/photos -> 403 {"error":"listing-agent-required"}
-B2 so dong sau dau-khach: 1
+B2 so dong sau dau-khach: 2/2
 B3 dau-chu-1 POST /units/photos/upload-url -> 200 {"truc_tiep":false}
-B3 dau-chu-1 POST /units/photos -> 201 {"anh":{"id":"430521fb-07d7-4f8d-81fa-2025d8a4500d","buildingName":"Toà A","unitNumber":"A-03.02","compartment":"shareab
-B3 so dong sau dau-chu-1: 2
+B3 dau-chu-1 POST /units/photos -> 201 {"anh":{"id":"ef9611df-251b-48df-b506-8d24246787e8","buildingName":"Toà A","unitNumber":"A-03.02","compartment
+B3 so dong sau dau-chu-1: 3/3
+KET: khach doi=khong; dau-chu-1 tang=3/3
