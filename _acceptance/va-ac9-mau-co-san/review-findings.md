@@ -1,25 +1,17 @@
-# Review findings: va-ac9-mau-co-san (round 1)
-
 ## Trong hợp đồng
 
-(không có finding nào map được vào AC)
+- **Hình dạng 4 (khẳng định âm tính một mình): ca deploy-san-khac chỉ kiểm «AC-9 không bị bỏ qua», không có đối chứng dương «AC-9 đã chạy và đạt»**
+  file: `_acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs:253`
+  severity: medium
+  AC: AC-1
+  source: measurement
+  detail: Trong mot(), nhánh kyVongXanh có `if (ca !== "deploy-san-khac" && !k.ac9Dat) loi.push(...)`, nên với ca deploy-san-khac (chayDeploy chạy `npm run test:isolation -w @quy-hang/db`) đòi hỏi «AC-9 đã chạy» bị tắt hẳn. Phép đo chỉ còn lại `k.ma === 0` và phép âm `if (k.ac9BoQua)` (đầu ra không có dòng «AC-9 … # SKIP» / «﹣ AC-9»). AC-1 của contract hứa rằng dưới đúng lệnh deploy thì «ca AC-9 được chạy và đạt (không bị bỏ qua)», và expected của E1 cũng nói thế. Nhưng nếu glob tests/*.test.mjs của test:isolation không còn gom tệp này, hay ca AC-9 không xuất hiện trong đầu ra vì lý do khác, thì mã thoát vẫn 0, đầu ra không có SKIP, và ca vẫn ra ok. Như vậy sự vắng mặt của SKIP được đọc thành bằng chứng AC-9 chạy, trong khi không có phép dương nào cho điều đó. Đầu ra thật (.acceptance-runs/va-ac9-mau-co-san/ra-deploy-san-khac-91394.txt) có in «✔ AC-9 …», nên phép dương ac9Dat áp được cho ca này mà không vướng gì.
+  rationale: AC-1 đòi rõ dưới lệnh deploy ca AC-9 «được chạy và đạt (không bị bỏ qua)», mà phép đo của ca này chỉ kiểm vắng mặt SKIP chứ không kiểm AC-9 đã chạy, nên không chứng minh được vế «chạy và đạt» của AC-1; không nằm trong mục Out of scope.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Lỗi hạ tầng (migrate, cấy dữ liệu) thoát mã 1 như «có ca lệch», không phải mã 2 như đã khai, và mất dòng JSON của các ca đã chạy**
-  Người dùng thấy gì: Khi không dựng được môi trường đo, tập lệnh báo giống như có ca đo bị lệch và có thể mất kết quả các ca đã chạy xong. Người đọc bằng chứng khó phân biệt môi trường hỏng với phép đo đỏ, nhưng sản phẩm và người dùng cuối không bị ảnh hưởng.
-  Căn cứ: Chỉ ảnh hưởng người đọc hồ sơ nghiệm thu, không mất hay lộ dữ liệu của người dùng; chạy lại phép đo là xong, và đây chỉ là công cụ dùng trong vòng vá này.
-  file: `_acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs`
-  severity: medium
-  Đề xuất: known-limits
-
-- **xoaDb nuốt mọi lỗi DROP DATABASE**
-  Người dùng thấy gì: Nếu việc xoá cơ sở dữ liệu tạm của bài đo hỏng, một cơ sở dữ liệu thừa còn lại trên máy thử mà không ai biết. Người dùng sản phẩm không gặp gì.
-  Căn cứ: Chỉ để lại một cơ sở dữ liệu tạm vô hại trên máy thử nội bộ, không chạm dữ liệu thật và dễ xoá tay; sửa không đáng công cho tập lệnh dùng một lần.
-  file: `_acceptance/va-ac9-mau-co-san/thu/kiem-ac9.mjs`
-  severity: low
-  Đề xuất: wont-fix
+## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

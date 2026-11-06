@@ -247,7 +247,7 @@ async function mot(ca, tep, kyVongXanh) {
         loi.push(
           `tệp kiểm đỏ trên cơ sở dữ liệu ${ca}: ${k.dongDo.join(" | ")}`,
         );
-      if (ca !== "deploy-san-khac" && !k.ac9Dat)
+      if (!k.ac9Dat)
         loi.push(`AC-9 không chạy hay không đạt (${ca})`);
       if (k.ac9BoQua) loi.push(`AC-9 bị bỏ qua (${ca})`);
     } else {
