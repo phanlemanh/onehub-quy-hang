@@ -8,7 +8,7 @@ import type { ProspectNeed } from "@quy-hang/core/contacts";
 import { CALL_BACK_AFTER_DAYS, freshness } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import type { AnhRa, CanNoiBo, CanRaNgoai, NguoiNhan } from "@quy-hang/core/redaction";
-import { chonAnhChiaSe, ganLink, thanKhachMoi, thanLanGui } from "@quy-hang/core/sharing";
+import { chonAnhChiaSe, ganLink, laMucChia, thanKhachMoi, thanLanGui } from "@quy-hang/core/sharing";
 import type { ListingView } from "@/lib/sync/types";
 
 /** Luật sản phẩm 25: căn chưa xác nhận từ ngưỡng «cần gọi lại» của lõi mang nhắc — nhắc, không chặn. */
@@ -223,11 +223,12 @@ export function mucChiaMacDinh(body: unknown): number | null {
  * chấm → số. Chữ không đọc được → "sai" (nút gửi khoá, báo dưới ô). Hàng 44.
  */
 export function mucChiaGui(nhap: string | null, macDinh: number | null): number | null | "sai" {
-  if (nhap === null) return macDinh;
+  // Mặc định của sàn cũng qua cùng luật: một mặc định lệch luật báo dưới ô thay vì làm hỏng lần gửi.
+  if (nhap === null) return macDinh === null || laMucChia(macDinh) ? macDinh : "sai";
   const t = nhap.trim().replace(",", ".");
   if (t === "") return null;
   const n = Number(t);
-  return Number.isFinite(n) && n >= 0 && n <= 100 && Math.round(n * 100) === n * 100 ? n : "sai";
+  return laMucChia(n) ? n : "sai";
 }
 export const LOI_MUC_CHIA = "Mức chia từ 0 đến 100, tối đa hai chữ số lẻ";
 

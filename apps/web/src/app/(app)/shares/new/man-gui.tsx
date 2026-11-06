@@ -19,7 +19,7 @@ import { NganNoi } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -198,13 +198,23 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
   // Hàng 44: mức chia của bộ khi gửi nhóm môi giới — điền sẵn mặc định của sàn, người gửi sửa hay để trống.
   const [mucMacDinh, setMucMacDinh] = useState<number | null | undefined>(undefined);
   const [mucNhap, setMucNhap] = useState<string | null>(null);
+  const [mucDocLoi, setMucDocLoi] = useState(false);
   useEffect(() => {
     if (nguoiNhan !== "nhom_moi_gioi" || mucMacDinh !== undefined) return;
     goiFetch("GET", "/api/v1/company/settings")
-      .then((r) => setMucMacDinh(r.status === 200 ? mucChiaMacDinh(r.body) : null))
-      .catch(() => setMucMacDinh(null));
+      .then((r) => {
+        setMucDocLoi(r.status !== 200);
+        setMucMacDinh(r.status === 200 ? mucChiaMacDinh(r.body) : null);
+      })
+      .catch(() => {
+        setMucDocLoi(true);
+        setMucMacDinh(null);
+      });
   }, [nguoiNhan, mucMacDinh]);
   const mucChia = nguoiNhan === "nhom_moi_gioi" ? mucChiaGui(mucNhap, mucMacDinh ?? null) : null;
+  // Chưa đọc xong mặc định mà người gửi chưa chạm ô → chưa gửi: Lần gửi chụp mức chia lúc gửi, gửi sớm là mất mức.
+  const choMacDinh = nguoiNhan === "nhom_moi_gioi" && mucNhap === null && mucMacDinh === undefined;
+  const khoaMuc = mucChia === "sai" || choMacDinh;
 
   useEffect(() => {
     if (nguoiNhan !== "khach_rieng" || khach) return;
@@ -252,10 +262,9 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
   const coBang = useCoBangChiaSe();
   const chuNut = nut.mo && !coBang ? "Chép tin" : nut.chu;
   async function bamGui() {
-    if (!nut.mo || !nguoiNhan) return;
+    if (!nut.mo || !nguoiNhan || khoaMuc) return;
     setDangTao(true);
     setKet(null);
-    if (mucChia === "sai") return;
     const kq = await boGui.gui({ nguoiNhan, prospectId: khachId, listingIds: canGui.map((c) => c.id), tin, ban, mucChia });
     setDangTao(false);
     if (kq.kieu !== "bo-qua") setKet(kq);
@@ -308,6 +317,9 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
               aria-invalid={mucChia === "sai" || undefined}
             />
             {mucChia === "sai" ? <FieldError>{LOI_MUC_CHIA}</FieldError> : null}
+            {mucDocLoi && mucNhap === null ? (
+              <FieldDescription>Chưa đọc được mức chia mặc định của sàn — nhập mức chia hay để trống.</FieldDescription>
+            ) : null}
           </Field>
         ) : null}
         {nguoiNhan === "khach_rieng" ? (
@@ -425,7 +437,7 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
             <EyeIcon aria-hidden="true" />
             Xem trước
           </Button>
-          <Button size="sm" disabled={!nut.mo} onClick={() => void bamGui()}>
+          <Button size="sm" disabled={!nut.mo || khoaMuc} onClick={() => void bamGui()}>
             <Share2Icon aria-hidden="true" />
             {chuNut}
           </Button>
@@ -439,7 +451,7 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
         tieuDe={nhanXem === "khach_rieng" ? `Xem trước — ${tenKhach ?? "khách riêng"} thấy` : "Xem trước — nhóm môi giới thấy"}
         moTa={nhanXem === "khach_rieng" ? "Khách riêng không thấy mã căn." : "Nhóm môi giới thấy mã căn."}
         chan={
-          <Button className="w-full" disabled={!nut.mo} onClick={() => void bamGui()}>
+          <Button className="w-full" disabled={!nut.mo || khoaMuc} onClick={() => void bamGui()}>
             <Share2Icon aria-hidden="true" />
             {chuNut}
           </Button>

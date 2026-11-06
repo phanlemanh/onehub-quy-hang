@@ -5,6 +5,7 @@
  * 31 (`../redaction`). Nhập qua `@quy-hang/core/sharing`.
  */
 import type { PayloadError } from "../listing/events";
+import { laMucChia } from "./trang-moi-gioi";
 
 /** Khách riêng (`client`, bắt buộc một nhu cầu khách) · nhóm môi giới (`agents`, không nhu cầu) — Tham chiếu mục 24. */
 export const SHARE_AUDIENCES = ["client", "agents"] as const;
@@ -39,7 +40,7 @@ export function validateShareInput(payload: unknown): { ok: true; value: ShareIn
   const muc = p.commissionSplitPct ?? null;
   if (muc !== null) {
     if (aud === "client") errors.push({ path: "commissionSplitPct", reason: "gửi khách riêng không mang mức chia" });
-    else if (typeof muc !== "number" || !Number.isFinite(muc) || muc < 0 || muc > 100 || Math.round(muc * 100) !== muc * 100)
+    else if (!laMucChia(muc))
       errors.push({ path: "commissionSplitPct", reason: "mức chia cần từ 0 đến 100, tối đa hai chữ số lẻ" });
   }
   if (errors.length) return { ok: false, errors };

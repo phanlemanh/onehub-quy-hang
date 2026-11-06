@@ -11,7 +11,8 @@ import type { ThanTrang } from "../[code]/doc";
 import Loading from "../[code]/loading";
 import { TrangKhachCongKhai } from "../[code]/trang";
 import { BangMoiGioi, laTrangMoiGioi } from "./bang";
-import { CHU_MG, LINK_TAT, LOI_TAM } from "./chu";
+import { LINK_TAT, LOI_TAM } from "./chu";
+import { KhungNutTai } from "./nut-tai";
 import { moHinhTep, veMoiGioi, xlsxMoiGioi, type ButVe, type ToVe } from "./tep";
 
 const HOM_NAY = "2026-11-06";
@@ -63,17 +64,29 @@ test("môi giới: Excel đúng cột và dòng của bảng trang", async () =>
   assert.ok(!an.dau.some((s) => s.startsWith("Mức chia")), "mức chia lọt vào tệp khi sàn ẩn");
 });
 
-test("môi giới: ảnh vẽ đúng cột và dòng", () => {
-  const than = thanCua("agents");
+// Vẽ lên canvas giả, trả mọi chữ fillText theo thứ tự vẽ.
+function veGia(than: ThanTrang): string[] {
   const ve: string[] = [];
   const but = (): ButVe => ({ font: "", fillStyle: "", textBaseline: "", measureText: (s) => ({ width: s.length * 7 }), fillText: (s) => void ve.push(s), fillRect: () => {}, scale: () => {} });
   const tao = (): ToVe => ({ width: 0, height: 0, getContext: () => but() });
   veMoiGioi(moHinhTep(than), tao);
+  return ve;
+}
+
+test("môi giới: ảnh vẽ đúng cột và dòng", () => {
+  const than = thanCua("agents");
+  const ve = veGia(than);
   const m = moHinhTep(than);
-  assert.deepEqual(ve.slice(0, m.dau.length), [than.companyName, "Bao phí: giá đã gồm phí môi giới", "Mức chia: 40%"]);
+  assert.deepEqual(ve.slice(0, m.dau.length), [than.companyName, "Bao phí: giá đã gồm phí môi giới", "Mức chia: 40%"], "phần đầu ảnh khác Excel");
   const sau = ve.slice(m.dau.length);
   assert.deepEqual(sau.slice(0, m.cot.length), than.cot!.map((c) => c.nhan), "cột ảnh lệch bảng trang");
-  assert.equal(sau.length, m.cot.length * (1 + than.dong!.length), "ảnh thiếu ô");
+  // Từng dòng căn: đúng ô, đúng thứ tự gửi.
+  const dong: string[][] = [];
+  for (let i = m.cot.length; i < sau.length; i += m.cot.length) dong.push(sau.slice(i, i + m.cot.length));
+  assert.deepEqual(dong, than.dong, "dòng ảnh lệch bảng trang");
+  assert.deepEqual(dong.map((d) => d[than.cot!.findIndex((c) => c.khoa === "unitNumber")]), ba.map((c) => c.unitNumber), "thứ tự dòng ảnh");
+  // Sàn ẩn mức chia → ảnh không có dòng mức chia.
+  assert.ok(!veGia(thanCua("agents", 40, true)).some((s) => s.startsWith("Mức chia")), "mức chia lọt vào ảnh khi sàn ẩn");
 });
 
 test("môi giới: chữ của từng trạng thái", () => {
@@ -85,7 +98,7 @@ test("môi giới: chữ của từng trạng thái", () => {
     ["ẩn mức chia", "Bao phí", renderToStaticMarkup(h(BangMoiGioi, { code: MA, than: thanCua("agents", 40, true) }))],
     ["link tắt", "Link không còn mở", html({ code: MA, than: null })],
     ["lỗi tạm", "Chưa mở được", html({ code: MA, than: null, loiTam: true })],
-    ["tải lỗi", "Chưa tải được tệp — thử lại", CHU_MG.taiLoi], // nút chỉ hiện câu này sau khi bấm lỗi — E10 nhìn nó trên màn
+    ["tải lỗi", "Chưa tải được tệp — thử lại", renderToStaticMarkup(h(KhungNutTai, { loi: true, taiExcel: () => {}, taiAnh: () => {} }))],
   ];
   let dem = 0;
   for (const [ten, chu, ra] of BANG) {
@@ -94,5 +107,7 @@ test("môi giới: chữ của từng trạng thái", () => {
   }
   assert.equal(dem, 6);
   assert.ok(!BANG[2]![2].includes("Mức chia"), "mức chia hiện khi sàn ẩn");
+  // Đối chứng: chưa lỗi thì không có câu tải lỗi.
+  assert.ok(!renderToStaticMarkup(h(KhungNutTai, { loi: false, taiExcel: () => {}, taiAnh: () => {} })).includes("Chưa tải được tệp"));
   assert.ok(LINK_TAT.startsWith("Link không còn mở") && LOI_TAM.length > 0);
 });

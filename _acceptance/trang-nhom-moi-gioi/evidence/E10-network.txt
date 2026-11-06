@@ -1,0 +1,5 @@
+# E10 network (playwright, public pages, no login)
+requests app-origin: GET /s/<code>, POST /api/v1/public/shares/<code>/events, GET /api/v1/public/shares/<code>/photos/<id> - all OK, no 4xx/5xx on public pages.
+console errors on public pages: none.
+console on admin copy (3496): 1x 404 resource (not identified, admin-only page).
+No requests to internal paths (/api/v1/me etc) while logged out.

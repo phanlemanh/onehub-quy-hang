@@ -51,6 +51,15 @@ export function phanMoiGioi(o: {
   return phan;
 }
 
+/**
+ * Mức chia hợp lệ: số từ 0 đến 100, tối đa hai chữ số lẻ (khớp cột `numeric(5,2)` của 048). So bằng sai số vì số thực:
+ * 0.29 * 100 = 28.999999999999996. Một luật cho máy chủ, màn Gửi và Cài đặt › Trang môi giới.
+ */
+export function laMucChia(n: unknown): n is number {
+  if (typeof n !== "number" || !Number.isFinite(n) || n < 0 || n > 100) return false;
+  return Math.abs(n * 100 - Math.round(n * 100)) < 1e-6;
+}
+
 /** Câu định nghĩa một dòng: «Bao phí: giá đã gồm thuế thu nhập cá nhân, phí môi giới». */
 export function cauDinhNghiaPhi(d: DinhNghiaPhi): string {
   return `${d.ten}: giá đã gồm ${d.khoan.join(", ")}`;

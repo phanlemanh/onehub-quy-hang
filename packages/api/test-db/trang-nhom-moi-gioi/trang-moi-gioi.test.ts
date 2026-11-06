@@ -143,38 +143,65 @@ test("môi giới: định nghĩa phí chụp lúc gửi", async () => {
 test("môi giới: mức chia của bộ", async () => {
   const s = await sanMoi("chia");
   const c = await canDangBan(s.dauChu.cookie);
-  assert.equal((await datSan(s, { "broker_page.commission_split_pct": 50 })).status, 200);
-  // Bảng viết trước: [ca, mức gửi kèm (undefined = không gửi khoá), mức mong đợi trên trang (null = không khoá)].
-  const BANG: [string, number | null | undefined, number | null][] = [
-    ["gửi 40", 40, 40],
-    ["gửi 12,5", 12.5, 12.5],
-    ["để trống", null, null],
-    ["không gửi khoá", undefined, null],
-  ];
-  const codes: string[] = [];
-  let dem = 0;
-  for (const [ca, gui_, mong] of BANG) {
-    const code = await gui(s, [c.id], gui_);
-    codes.push(code);
+  // Màn Gửi điền sẵn mặc định đọc từ GET /company/settings (vai người gửi); «gửi không sửa» = gửi đúng giá trị ấy.
+  const macDinhManGui = async () => {
+    const r = await send("GET", "/api/v1/company/settings", undefined, s.dauKhach.cookie);
+    assert.equal(r.status, 200, await r.clone().text());
+    const v = (await r.json()) as { items: { key: string; value: unknown }[] };
+    const m = v.items.find((x) => x.key === "broker_page.commission_split_pct")?.value;
+    return typeof m === "number" ? m : null;
+  };
+  const datMacDinh = async (m: number | null) =>
+    assert.equal((await datSan(s, { "broker_page.commission_split_pct": m })).status, 200, `đặt mặc định ${m}`);
+  const coTrenTrang = async (code: string, mong: number | null, ca: string) => {
     const than = await mo(code);
-    assert.equal(than.mucChia ?? null, mong, `mức chia sai — ${ca}`);
+    if (mong === null) assert.equal(Object.hasOwn(than, "mucChia"), false, `có khoá mucChia — ${ca}`);
+    else assert.equal(than.mucChia, mong, `mức chia sai — ${ca}`);
     const db = (await appPool.query<{ m: number | null }>("select commission_split_pct::float8 m from shares where code = $1", [code])).rows[0]!;
     assert.equal(db.m, mong, `cột mức chia — ${ca}`);
+  };
+  // Bảng viết trước trục mức chia của E3 (thêm hai dòng số lẻ): mỗi dòng một lần gửi và một khẳng định.
+  const BANG: [string, () => Promise<void>][] = [
+    ["mặc định 50, gửi không sửa", async () => {
+      await datMacDinh(50);
+      await coTrenTrang(await gui(s, [c.id], await macDinhManGui()), 50, "mặc định 50, gửi không sửa");
+    }],
+    ["mặc định 50, gửi 40", async () => {
+      await datMacDinh(50);
+      await coTrenTrang(await gui(s, [c.id], 40), 40, "mặc định 50, gửi 40");
+    }],
+    ["mặc định trống, gửi trống", async () => {
+      await datMacDinh(null);
+      assert.equal(await macDinhManGui(), null);
+      await coTrenTrang(await gui(s, [c.id], null), null, "mặc định trống, gửi trống");
+    }],
+    ["gửi 40 rồi đổi mặc định 30", async () => {
+      await datMacDinh(50);
+      const code = await gui(s, [c.id], 40);
+      await datMacDinh(30);
+      await coTrenTrang(code, 40, "bộ đã gửi đổi theo mặc định mới");
+    }],
+    ["khách riêng kèm 40", async () => {
+      const dem = async () => (await appPool.query<{ n: number }>("select count(*)::int n from shares where company_id = $1", [s.companyId])).rows[0]!.n;
+      const truoc = await dem();
+      const r = await send("POST", "/api/v1/shares", { audience: "client", prospectId: "00000000-0000-4000-8000-000000000001", listingIds: [c.id], commissionSplitPct: 40 }, s.dauKhach.cookie);
+      assert.equal(r.status, 400, "khách riêng kèm mức chia không bị từ chối");
+      assert.equal(await dem(), truoc, "khách riêng kèm mức chia vẫn thêm Lần gửi");
+    }],
+    ["gửi 12,5", async () => coTrenTrang(await gui(s, [c.id], 12.5), 12.5, "gửi 12,5")],
+    ["gửi 0,29 (số thực)", async () => coTrenTrang(await gui(s, [c.id], 0.29), 0.29, "gửi 0,29")],
+  ];
+  let dem = 0;
+  for (const [, chay] of BANG) {
+    await chay();
     dem++;
   }
   assert.equal(dem, BANG.length);
-  // Sàn đổi mặc định sau khi gửi → bộ đã gửi vẫn giữ.
-  assert.equal((await datSan(s, { "broker_page.commission_split_pct": 30 })).status, 200);
-  assert.equal((await mo(codes[0]!)).mucChia, 40, "bộ đã gửi đổi theo mặc định mới");
-  // Khách riêng kèm mức chia → 400, không thêm Lần gửi.
-  const truoc = (await appPool.query<{ n: number }>("select count(*)::int n from shares where company_id = $1", [s.companyId])).rows[0]!.n;
-  const r = await send("POST", "/api/v1/shares", { audience: "client", prospectId: "00000000-0000-4000-8000-000000000001", listingIds: [c.id], commissionSplitPct: 40 }, s.dauKhach.cookie);
-  assert.equal(r.status, 400);
-  const sau = (await appPool.query<{ n: number }>("select count(*)::int n from shares where company_id = $1", [s.companyId])).rows[0]!.n;
-  assert.equal(sau, truoc, "khách riêng kèm mức chia vẫn thêm Lần gửi");
-  // Mức ngoài khoảng → 400.
-  const r2 = await send("POST", "/api/v1/shares", { audience: "agents", prospectId: null, listingIds: [c.id], commissionSplitPct: 120 }, s.dauKhach.cookie);
-  assert.equal(r2.status, 400);
+  // Mức ngoài khoảng hay quá hai chữ số lẻ → 400.
+  for (const sai of [120, 33.333]) {
+    const r = await send("POST", "/api/v1/shares", { audience: "agents", prospectId: null, listingIds: [c.id], commissionSplitPct: sai }, s.dauKhach.cookie);
+    assert.equal(r.status, 400, `mức chia ${sai} không bị từ chối`);
+  }
 });
 
 test("môi giới: sàn ẩn mức chia", async () => {
@@ -204,7 +231,8 @@ test("môi giới: cài đặt sàn", async () => {
   for (const sai of [120, -1]) {
     const r = await datSan(s, { "broker_page.commission_split_pct": sai });
     assert.equal(r.status, 400, `mức chia ngoài 0–100 lưu được: ${sai}`);
-    assert.ok(((await r.json()) as { reason?: string; error?: string }).reason ?? "x", "thiếu lý do");
+    const loi = (await r.json()) as { reason?: unknown };
+    assert.ok(typeof loi.reason === "string" && loi.reason.includes("broker_page.commission_split_pct"), `thiếu lý do nêu khoá: ${JSON.stringify(loi)}`);
   }
   v = await doc();
   assert.equal(v["broker_page.commission_split_pct"], 45, "giá trị cũ đổi sau lần bị từ chối");
