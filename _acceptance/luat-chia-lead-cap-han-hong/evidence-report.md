@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: b6b201016a046ec3a963f51cc4f84afb215d4934
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: luat-chia-lead-cap-han-hong

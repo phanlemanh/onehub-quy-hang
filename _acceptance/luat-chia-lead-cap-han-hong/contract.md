@@ -5,7 +5,7 @@ slug: luat-chia-lead-cap-han-hong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: machine-cleared
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-06
 design_doc: docs/superpowers/specs/2026-11-06-luat-chia-lead-cap-han-hong-design.md
