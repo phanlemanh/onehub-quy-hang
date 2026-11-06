@@ -1,0 +1,1 @@
+{"feature_plain":"Mỗi lần gộp vào main, bản thật chỉ nhận cập nhật cấu trúc dữ liệu rồi một lượt kiểm nhanh chỉ đọc; bộ kiểm cách ly chạy trên cơ sở dữ liệu tạm dựng riêng cho đúng lần gộp, nên bản thật không còn đứng vì bài kiểm ghi hay cạn kết nối."}

@@ -89,7 +89,9 @@ test("trang khách: trang không đệm", async () => {
 
 test("trang khách: chỉ trang thật dưới /s/", () => {
   const goc = join(dirname(fileURLToPath(import.meta.url)), "..");
-  assert.deepEqual(readdirSync(goc).sort(), ["[code]"]);
+  // Hàng 44: `broker/` chỉ chứa thành phần của trang nhóm môi giới (cùng link `/s/<mã>`), không có trang riêng.
+  assert.deepEqual(readdirSync(goc).sort(), ["[code]", "broker"]);
+  assert.ok(!readdirSync(join(goc, "broker")).some((t) => /^(page|route|layout)\./.test(t)), "broker/ không được thành route");
 });
 
 test("trang khách: lỗi tạm khác link tắt", async () => {

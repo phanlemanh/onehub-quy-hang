@@ -1,9 +1,11 @@
 // Bộ kiểm cách ly: «công ty này không thấy gì của công ty kia» — check bắt buộc trước mỗi lần phát hành.
 // Chạy trên Postgres thật đã áp migration. Mỗi ca trong một giao dịch rồi rollback, không để lại dữ liệu.
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import pg from "pg";
 
 const url = process.env.DATABASE_URL;
@@ -3731,6 +3733,70 @@ test("trường riêng: check lớp khớp luật của lõi", { skip }, async (
       assert.deepEqual(nhan, [dong.lop], `${dong.target} ${JSON.stringify(dong.contactTypes)}: lớp nhận khác luật của lõi`);
     }
   });
+});
+
+// ---- Trang nhóm môi giới (048, hàng 44 trang-nhom-moi-gioi): mức chia và định nghĩa phí lúc gửi trên Lần gửi ----
+test("shares (048): mức chia", { skip }, async () => {
+  await withLienHeKhach(async (c) => {
+    await lamNguoi(c, LK.DK1, COMPANY_A);
+    const tao = "select app.create_share(gen_random_uuid(), $1, $2, $3, $4, $5, $6)";
+    const dem = async () => (await c.query("select count(*)::int n from shares where company_id = $1", [COMPANY_A])).rows[0].n;
+    // Bảng viết trước: [ca, mã link, người nhận, nhu cầu, mức chia, định nghĩa phí, ràng buộc ghim].
+    const BANG = [
+      ["khách riêng kèm mức chia", "maM000000001", "client", LKP.A, 40, null, /shares_commission_split_agents_only/],
+      ["nhóm môi giới mức 120", "maM000000002", "agents", null, 120, null, /shares_commission_split_range/],
+      ["nhóm môi giới mức -1", "maM000000003", "agents", null, -1, null, /shares_commission_split_range/],
+      ["định nghĩa phí ngoài tập đóng", "maM000000004", "agents", null, 40, ["vatTax"], /shares_fee_inclusion_closed/],
+      ["định nghĩa phí rỗng", "maM000000005", "agents", null, 40, [], /shares_fee_inclusion_closed/],
+    ];
+    const truoc = await dem();
+    let so = 0;
+    for (const [, ma, nhan, nhuCau, muc, phi, ghim] of BANG) {
+      await expectError(c, tao, [ma, nhan, nhuCau, [LKL.A], muc, phi], ghim);
+      so++;
+    }
+    assert.equal(so, BANG.length);
+    assert.equal(await dem(), truoc, "lời gọi bị từ chối vẫn thêm Lần gửi");
+    // Đối chứng dương: nhóm môi giới mức 40 kèm định nghĩa phí, và mức rỗng (lời gọi năm tham số như cũ).
+    await c.query(tao, ["maM000000006", "agents", null, [LKL.A], 40, ["personalIncomeTax", "brokerageFee"]]);
+    await c.query("select app.create_share(gen_random_uuid(), 'maM000000007', 'agents', null, $1)", [[LKL.A]]);
+    const r = (await c.query("select code, commission_split_pct::float8 muc, fee_inclusion phi from shares where code in ('maM000000006', 'maM000000007') order by code")).rows;
+    assert.deepEqual(r, [
+      { code: "maM000000006", muc: 40, phi: ["personalIncomeTax", "brokerageFee"] },
+      { code: "maM000000007", muc: null, phi: null },
+    ]);
+    // Cách ly: sàn B không đọc được Lần gửi mang mức chia của sàn A (đối chứng: A đọc được).
+    assert.equal((await c.query("select count(*)::int n from shares where code = 'maM000000006'")).rows[0].n, 1, "đối chứng: A đọc được");
+    await lamNguoi(c, LK.B, COMPANY_B);
+    assert.equal((await c.query("select count(*)::int n from shares where code = 'maM000000006'")).rows[0].n, 0, "sàn B đọc được mức chia của sàn A");
+  });
+});
+
+test("shares (048): một hàm create_share, quyền hẹp, đã áp", { skip }, async () => {
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rows } = await client.query(
+      `select pg_get_function_identity_arguments(p.oid) args, has_function_privilege('quy_hang_app', p.oid, 'execute') goi
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'app' and p.proname = 'create_share'`,
+    );
+    assert.equal(rows.length, 1, "create_share phải là một hàm duy nhất");
+    assert.match(rows[0].args, /p_commission_split numeric, p_fee_inclusion text\[\]$/);
+    assert.equal(rows[0].goi, true, "quy_hang_app không gọi được create_share");
+    // Chạy bộ migrate lần nữa trên chính cơ sở dữ liệu này: 048 không được áp lại (dấu thời gian áp giữ nguyên, lệnh không in «đã áp 048»).
+    const luc = async () => (await client.query("select applied_at from schema_migrations where name like '048_%'")).rows;
+    const truoc = await luc();
+    assert.equal(truoc.length, 1, "048 chưa áp");
+    // Rào: chỉ chạy lại migrate khi mọi tệp đã áp — còn tệp chờ thì ca này đỏ, không lặng lẽ áp hộ vào cơ sở dữ liệu đang kiểm.
+    const tep = readdirSync(fileURLToPath(new URL("../migrations/", import.meta.url))).filter((f) => /^\d{3}_.+\.sql$/.test(f));
+    const daAp = new Set((await client.query("select name from schema_migrations")).rows.map((r) => r.name));
+    assert.deepEqual(tep.filter((f) => !daAp.has(f)), [], "còn migration chưa áp — chạy npm run db:migrate trước bộ kiểm");
+    const ra = execFileSync(process.execPath, [fileURLToPath(new URL("../scripts/migrate.mjs", import.meta.url))], { env: { ...process.env, DATABASE_URL: url }, encoding: "utf8" });
+    assert.ok(!/đã áp 048_/.test(ra), `lần chạy thứ hai áp lại 048: ${ra}`);
+    assert.deepEqual(await luc(), truoc, "lần chạy thứ hai ghi lại 048");
+  } finally {
+    await client.end();
+  }
 });
 
 // ---- Dấu định nghĩa bao phí (050, hàng 49 thue-phi) ----

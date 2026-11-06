@@ -71,7 +71,7 @@ nội bộ hay nguồn ra trang khách (bất biến 2, 4) — bộ kiểm rò r
 | 12 | `customer_page.show_confirmed_age` | Hiện «giá xác nhận X ngày trước» cho khách | `bool` | có | — | Quản trị sàn | — | tính lại | company_internal | Mở | §13 (chốt 29/10) | — |
 | 13 | `customer_page.private_hides_unit_number` | Gửi khách riêng ẩn mã căn, chỉ toà + tầng cao / thấp | `bool` | có | — | Quản trị sàn | — | tính lại | company_internal | Mở | Luật 24 (chốt 28/10), §7 «cách hiện trên trang khách là mặc định» | — |
 | 14 | `customer_page.off_compound_address` | Khách riêng thấy gì với nhà ngoài khu | `enum{street_ward, ward_only}` | `street_ward` | hai giá trị; không mở số nhà, hẻm, toạ độ cho khách riêng | Quản trị sàn | — | tính lại | company_internal | Đề xuất | ADR-0016 Hỏi-3 | — |
-| 15 | `broker_page.commission_split_pct` | Mức chia trên trang nhóm môi giới | `decimal` % | trống — chưa có số, đặt ở Cổng Phạm vi hàng 44 (Hỏi-1 hàng 81) | 0–100 | Quản trị sàn | Người gửi sửa theo bộ | mới — bộ gửi mang mức lúc gửi | company_internal | Mở | §13 (chốt 29/10) | 44 |
+| 15 | `broker_page.commission_split_pct` | Mức chia trên trang nhóm môi giới | `decimal` % | trống — sàn đặt ở Cài đặt › Sàn › Trang môi giới (hàng 44); % phí môi giới | 0–100 | Quản trị sàn | Người gửi sửa theo bộ | mới — bộ gửi mang mức lúc gửi | company_internal | Mở | §13 (chốt 29/10) | 44 |
 | 16 | `broker_page.hide_commission_split` | Sàn ẩn mức chia | `bool` | không | — | Quản trị sàn | — | tính lại | company_internal | Mở | §13 (chốt 29/10) | 44 |
 | 17 | `customer_page.interest_button` | Nút «Quan tâm» trên trang khách | `bool` | có | — | Quản trị sàn | — | tính lại | company_internal | Mở | §13 «giữ» (29/10), §7 | — |
 
