@@ -21,6 +21,8 @@ function nguonMoi(nguoiNhan: NguoiNhan, anhDaDoc: string[] = []): NguonCongKhai 
   return {
     timLanGui: async (code) => (code === MA ? { companyId: "san-moi", shareId: "lan-gui-moi", senderUserId: "nguoi-gui-moi", audience: AUDIENCE[nguoiNhan] } : null),
     docCan: async () => [{ id: ID_CAN, can }],
+    // Hàng 44: thân nhóm môi giới có cột, ô, định nghĩa phí và mức chia — route thật dựng chúng từ căn mồi.
+    docMoiGioi: async () => ({ luu: { mucChia: 40, feeInclusion: ["brokerageFee"] }, san: { anMucChia: false, feeInclusion: ["brokerageFee"] } }),
     ghiSuKien: async () => ({ inserted: true }),
     docAnh: async (_s, id) => {
       anhDaDoc.push(id);
