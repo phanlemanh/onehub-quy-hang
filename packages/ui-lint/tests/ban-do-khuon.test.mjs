@@ -213,7 +213,7 @@ const CHO_TRANG_THAI = [
   ...Array(5).fill(`${W}/app/(app)/imports/new/hoan-tac.tsx`),
   // Hàng 66: hai dải mẫu gộp thành một dải đọc từ daiBaoMau.
   // Hàng 68: dải «Máy đang đề xuất cách ghép…» và dải «Chưa dùng được AI».
-  ...Array(14).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
+  ...Array(16).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
   `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(5).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
@@ -501,7 +501,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 27 ngoại lệ · 0 lệch",
-      "trang-thai: 154 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 156 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
