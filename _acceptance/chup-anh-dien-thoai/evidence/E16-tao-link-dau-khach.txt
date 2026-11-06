@@ -1,9 +1,10 @@
+# E16 buoc 2: dau-khach POST /api/v1/shares (can A-04.01 Toa A), 2026-11-06T04:53:45Z
 HTTP/1.1 201 Created
 vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
 content-type: application/json
-Date: Fri, 06 Nov 2026 01:11:49 GMT
+Date: Fri, 06 Nov 2026 04:53:45 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 Transfer-Encoding: chunked
 
-{"id":"ae983838-83b0-4b3a-abb5-e2a97a48d359","code":"W-6j3rapYRhf","audience":"agents","prospectId":null,"senderUserId":"b5237944-0926-45a8-b1a8-de73146092d3","listingIds":["e87b3a56-3f3a-49aa-a101-9bd6d163b3aa"],"createdAt":"2026-11-06T01:11:49.115Z","disabledAt":null}
+{"id":"3b67e20a-81ad-4d00-b998-52e28242d3fe","code":"KAkmNxwDKQWc","audience":"agents","prospectId":null,"senderUserId":"b5237944-0926-45a8-b1a8-de73146092d3","listingIds":["459e1afc-330a-453a-acf4-8af394b90962"],"createdAt":"2026-11-06T04:53:45.202Z","disabledAt":null}

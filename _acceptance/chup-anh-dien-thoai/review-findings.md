@@ -1,73 +1,66 @@
-# Review findings: chup-anh-dien-thoai (round 1)
-
 ## Trong hợp đồng
 
-- **Đăng xuất dừng hàng chờ nhưng lượt tải đang chạy vẫn tiếp tục và có thể ghi lại ảnh (cả ảnh Nội bộ) vào kho vừa xoá**
-  file: apps/web/src/app/(app)/units/photos/hang-cho-may.ts:48
+- **Đổi người dùng chỉ tắt nhịp thử, hàng chờ cũ vẫn tải và vẫn ghi kho**
+  AC: AC-4
+  file: `apps/web/src/app/(app)/units/photos/hang-cho-may.ts:24`
   severity: medium
+  source: bugs
+  detail: Khi `userId` khác, `khoiDongHangCho` gọi `ban?.dung()`, nhưng hàm này chỉ chạy `nhip.dung()` và gỡ trình nghe «online». Nó không gọi `hang.dung()` mới thêm ở vòng này. Vì `daDung` của hàng cũ vẫn là false, nếu hàng cũ đang ở giữa vòng `motLuot` thì nó tiếp tục lấy ảnh `cho-mang` kế tiếp của người A và gửi bằng cookie phiên lúc đó, tức có thể là phiên của người B. Nó cũng tiếp tục ghi hay xoá trong kho `quy-hang-anh-cho:A`. Đây đúng là lỗ AC-6 mà vòng này định bịt, nay còn ở lối đổi người. Cần gọi `await ban.hang.dung()` (hoặc `dungHangCho()`) trước khi dựng hàng mới.
+  rationale: AC-4 chỉ cho ảnh chờ tải tiếp sau khi chính người chụp đăng nhập; hàng cũ tải ảnh của người A bằng phiên người B là vi phạm.
+
+- **Hai lối xoá kho khác chưa dừng hàng chờ, kho ảnh chờ vẫn có thể bị lượt tải đang dở mở lại**
   AC: AC-6
-  source: bugs
-  detail: dungHangCho() chỉ gọi b.dung() (dừng nhịp và gỡ listener online), đặt ban=null rồi chờ choKho(), tức là chỉ chờ chuỗi lệnh vào kho đang có lúc đó. Nó không chặn motLuot() đang chạy (hang-cho-anh.ts:153). Vòng for(;;) vẫn chạy tiếp: tải nốt các ảnh «cho-mang» còn lại, vì phiên máy chủ còn sống tới khi dangXuatTrenMay gọi sign-out sau đó. Mỗi kết quả về sau lại đẩy lệnh vào kho: xongAnh gọi vaoKho(xoa), khi máy chủ không nhận thì ghiTrangThai gọi vaoKho(ghi(moi)). Trong lúc đó xoaKhoCuaNguoi (react.tsx:86) đã xoá cơ sở dữ liệu, onversionchange đặt db=null, nên lay() mở lại indexedDB.open(tenKhoAnhCho(userId), 1) và tạo lại kho. Trường hợp lỗi thì ghi lại cả bản ghi có blob ảnh gốc, kể cả ảnh ngăn Nội bộ, sau khi người đã đăng xuất. Trái AC-6 (đăng xuất chủ động phải xoá hàng chờ). Cách sửa: thêm cờ «đã dừng» trong taoHangCho để motLuot và vaoKho không làm gì sau khi dung, và chờ dangChay xong trước khi xoá kho.
-
-- **Lỗi IndexedDB của hàng chờ bị nuốt: ảnh tưởng đã «chờ trên máy» nhưng thực ra chỉ nằm trong bộ nhớ**
-  file: apps/web/src/app/(app)/units/photos/hang-cho-may.ts:48
+  file: `apps/web/src/lib/sync/react.tsx:42`
   severity: medium
-  AC: AC-4
   source: bugs
-  detail: `void hang.khoiDong().catch(() => {})` nuốt mọi lỗi kho.tai() (mở IndexedDB lỗi, hết dung lượng, Safari riêng tư...). Khi đó ảnh chờ của phiên trước không bao giờ được dựng lại và tải lên, cũng không có dấu hiệu nào. Lệnh ghi của ảnh mới cũng vậy: trong taoHangCho, them() gọi `void vaoKho(() => o.kho.ghi(b))` (hang-cho-anh.ts:239), còn ghiTrangThai gọi `void vaoKho(...)` (dòng 141). Lời hứa bị từ chối không ai xử lý. Màn vẫn báo «Chờ mạng — tự tải khi có mạng» và «Ảnh chờ trên máy», trong khi ảnh chỉ còn trong bộ nhớ: đóng hay tải lại app là mất ảnh. Đúng tình huống AC-4 hứa giữ ảnh.
-
-- **Chụp ảnh khi hàng chờ không có (ban=null) thì ảnh bị bỏ trong im lặng**
-  file: apps/web/src/app/(app)/units/ho-so/dien-thoai/chup-anh.tsx:148
-  severity: medium
-  AC: AC-3
-  source: bugs
-  detail: Trong nhan(), `const h = hangChoHienTai(); if (!h) return;` bỏ các tệp máy ảnh vừa trả mà không báo gì, kể cả mục «Tệp không nhận» cũng không có. ban có thể là null khi giao diện vẫn dùng được: dangXuat() trong react.tsx gọi dungHangCho() (đặt ban=null) trước khi gọi sign-out. Nếu sign-out lỗi hay mất mạng, dangXuatTrenMay trả «loi» và người ở lại app với phiên còn sống («Chưa đăng xuất được»). Effect khoiDongHangCho(userId) chỉ chạy lại khi userId đổi, nên hàng chờ không khởi động lại. Từ đó mọi ảnh chụp ở hồ sơ điện thoại bị bỏ trong im lặng.
-
-- **Đọc lại danh sách sau khi một ảnh lên máy chủ mà lỗi thì nút và ngăn Chụp ảnh biến mất giữa lúc đang chụp**
-  file: apps/web/src/app/(app)/units/ho-so/dien-thoai/anh-lon.tsx:98
-  severity: low
-  AC: AC-8
-  source: bugs
-  detail: useAnhCan đọc lại danh sách mỗi lần lanTai tăng (mỗi lần một ảnh lên máy chủ). Lần đọc lại mà lỗi (mạng chập chờn ngay sau khi tải, thường gặp lúc đi xem nhà) thì setKq({kind:'loi'}) ghi đè danh sách cũ. Ghi chú trong code nói giữ bản cũ tới khi có bản mới, nhưng chỉ đúng khi đọc thành công. coNutChup (than-dien-thoai.tsx:29) cần anh.kind === 'co', nên ChupAnh bị gỡ: ngăn đang mở đóng lại và nút Chụp ảnh (kèm số ảnh chờ) mất cho tới khi đọc lại thành công. Trong khi đó hàng chờ vẫn còn ảnh, mà người không mở lại được ngăn để xem hay bấm «Thử lại».
-
-- **Hình dạng 5 — tuyên ma trận 5 ô mạng nhưng hai ô «có lại bằng online» và «có lại bằng nhịp 15 giây» không phân biệt được cơ chế**
-  file: apps/web/src/app/(app)/units/photos/hang-cho-anh.test.ts:553
-  severity: medium
-  AC: AC-4
-  source: measurement
-  detail: Trong lechMang, sau khi bật lại mạng (`mang.on = true`), ô «có lại bằng online» gọi `nhip.quayLaiTrang()` và ô «có lại bằng nhịp 15 giây» gọi `gio.toi(CHU_KY_CHO)`. Ngay sau đó dòng 556 luôn chạy `await xong(h)`, mà `xong` (dòng 339-342) gọi thẳng `h.day()`. `day()` (hang-cho-anh.ts:181) tự mở một lượt tải mới khi đang có mạng. Nghĩa là dù sự kiện online hay nhịp 15 giây không làm gì (ví dụ `taoNhip` không gọi `thu`, hay `quayLaiTrang` không nối gì), cả ba ảnh vẫn lên máy chủ và hai ô vẫn xanh. Không có chiều đỏ nào làm hỏng lối online hay nhịp 15 giây. Hai ô trùng hẳn với lối mặc định `else await h.day()`, nên thực ra chỉ có 3 ô đo được chứ không phải 5 như E4 tuyên. Lời hứa «có lại bằng sự kiện online · có lại bằng nhịp 15 giây» chưa được đo.
+  detail: Vòng này chỉ thêm `dungHangCho()` trước khi xoá kho ở lối `dangXuat` trong vỏ. Hai lối khác vẫn xoá kho mà không dừng hàng chờ. (1) Máy bị báo mất (react.tsx:40-43): `xoaMayBiBao(u)` gọi thẳng `xoaKhoCuaNguoi`. (2) Đăng xuất ở màn chọn sàn và màn chưa có sàn (app/(auth)/dang-xuat.tsx:19): chỉ `xoaKhoCuaNguoi(userId)`, trong khi `ban` là biến cấp module nên vẫn chạy nếu người vào đó bằng chuyển trang phía máy khách từ vỏ. Ở cả hai lối, lượt đang dở xong thì `ghiTrangThai`/`xongAnh` gọi `vaoKho`, và `kho-anh-cho.ts` mở lại cơ sở dữ liệu (`indexedDB.open` sau `onversionchange`). Như vậy kho vừa xoá được tạo lại, có thể kèm bản ghi ảnh ngăn Nội bộ ở trạng thái `loi`, ngay trên chiếc máy bị báo mất. Đây chính là tình huống mà bài kiểm «E7 đăng xuất giữa lúc đang tải» dùng làm đối chứng dương.
+  rationale: AC-6 đòi máy bị báo mất xoá mọi ảnh chờ; lối này để kho được tạo lại kèm ảnh Nội bộ.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hàng chờ ảnh không gắn sàn: ảnh chụp ở sàn A có thể được tải vào căn trùng toà/mã của sàn B**
-  Người dùng thấy gì: Người làm ở hai sàn có thể chụp ảnh lúc mất mạng ở sàn này, đổi sang sàn kia, rồi ảnh (kể cả ảnh sổ đỏ) tự lên căn trùng toà và mã của sàn kia.
-  Căn cứ: Nặng vì ảnh nội bộ có thể sang sàn khác và không gỡ lại được, nhưng chỉ xảy ra với người thuộc nhiều sàn và hợp đồng này chưa nói tới trường hợp đó nên cần tính năng riêng.
+- **Đăng xuất phải chờ hết lượt tải ảnh đang chạy vì lượt tải không bị huỷ, nên có thể treo lâu**
+  Người dùng thấy gì: Khi mạng yếu và đang tải ảnh lớn, bấm Đăng xuất có thể đứng chờ khá lâu trước khi xong. Cuối cùng ảnh chờ vẫn bị xoá.
+  Căn cứ: Chỉ làm chậm chứ không làm mất hay lộ dữ liệu, người dùng chờ hoặc tải lại là xong, và sửa cần thêm cơ chế huỷ lượt tải khá tốn công.
   file: `apps/web/src/app/(app)/units/photos/hang-cho-anh.ts`
-  severity: high
-  Đề xuất: new-contract
+  severity: medium
+  Đề xuất: known-limits
 
-- **Thư viện lõi lib/sync import ngược vào một route của app**
-  Người dùng thấy gì: Người dùng không thấy gì khác đi; chỉ là lớp đồng bộ gắn chặt vào màn ảnh nên sau này sửa hoặc tách dễ vướng.
-  Căn cứ: Nhẹ, không mất dữ liệu và người dùng không gặp lỗi; có thể dọn sau khi cần mà không tốn nhiều.
-  file: `apps/web/src/lib/sync/react.tsx`
+- **Một lần xoá hay ghi kho bị lỗi làm cờ «kho lỗi» bật mãi, ngăn chụp báo «Máy không giữ được ảnh chờ» cả khi đáng lẽ không báo**
+  Người dùng thấy gì: Sau một lần lỗi nhỏ khi dọn kho, ngăn chụp có thể báo sai rằng máy không giữ được ảnh chờ cho tới khi tải lại trang.
+  Căn cứ: Chỉ là lời báo sai gây lo, không mất ảnh nào, và người dùng tự hết báo bằng cách tải lại trang.
+  file: `apps/web/src/app/(app)/units/photos/hang-cho-anh.ts`
   severity: low
   Đề xuất: known-limits
 
-- **Hình dạng 2 — fixture kho đồng bộ viết tay; lời hứa «kho đồng bộ không có khoá ảnh nào» không đo qua bên ghi thật**
-  Người dùng thấy gì: Bài kiểm chưa chứng minh chắc rằng ảnh chờ không lẫn vào kho đồng bộ chung, nên nếu sau này có người sửa nhầm thì bài kiểm có thể không báo.
-  Căn cứ: Nhẹ với người dùng hiện tại vì chưa có lỗi thật, chỉ là lưới an toàn mỏng; bổ sung sau khá rẻ.
+- **Đăng xuất phải chờ lượt tải đang dở chạy xong, không huỷ được, nên có thể treo**
+  Người dùng thấy gì: Bấm Đăng xuất lúc đang tải ảnh có thể bị đứng chờ, và ảnh đang bay vẫn lên máy chủ sau khi người đã bấm.
+  Căn cứ: Ảnh đó vốn là ảnh của chính người ấy nên không lộ gì, chỉ chậm; tự hết sau khi lượt tải xong, sửa đắt hơn hậu quả.
+  file: `apps/web/src/app/(app)/units/photos/hang-cho-anh.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 5 (tuyên một lớp nhưng chỉ đo một điểm): bài «E7 đăng xuất giữa lúc đang tải» tự viết tay thứ tự dừng-rồi-xoá, không chạy qua đường xoá kho thật nào**
+  Người dùng thấy gì: Bài kiểm đăng xuất giữa lúc tải chưa phủ đúng đường thật, nên nếu sau này ai đảo thứ tự dừng và xoá thì bài kiểm vẫn xanh.
+  Căn cứ: Không ảnh hưởng người dùng hôm nay, chỉ giảm độ tin của lưới kiểm lần sau; lỗ hành vi thật được xử lý ở mục khác.
   file: `apps/web/src/app/(app)/units/photos/hang-cho-anh.test.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Hình dạng 1 — đo chuỗi trong mã nguồn kho-anh-cho.ts thay vì đo kho được mở**
-  Người dùng thấy gì: Bài kiểm chỉ đọc chữ trong mã chứ không mở kho thật, nên có thể không phát hiện nếu kho ảnh chờ vô tình dùng chung tên với kho đồng bộ.
-  Căn cứ: Nhẹ vì chưa có lỗi thật và không ảnh hưởng người dùng ngay; củng cố sau khi cần.
-  file: `apps/web/src/app/(app)/units/photos/muc-anh.test.ts`
+- **Hình dạng 2 (dữ liệu vào viết tay đúng khuôn bên đọc): bài kho-loi đưa thẳng `khoLoi: true` vào KhayChup thay vì lấy từ hàng chờ**
+  Người dùng thấy gì: Bài kiểm lời báo máy không giữ được ảnh chưa chứng minh được dây nối thật từ kho lỗi tới màn hình.
+  Căn cứ: Mức nhẹ, không gây hại trực tiếp cho người dùng, và lời báo này đã tự lộ ra khi dùng thật nên không đáng mở việc.
+  file: `apps/web/src/app/(app)/units/photos/hang-cho-anh.test.ts`
   severity: low
-  Đề xuất: known-limits
+  Đề xuất: wont-fix
+
+- **Hình dạng 1 (đo hàm phụ thay vì đầu ra): bài «E3 không có hàng chờ… không tệp nào bị bỏ im lặng» chỉ gọi `khongNhanTep`**
+  Người dùng thấy gì: Bài kiểm chưa chứng minh được rằng khi máy không có hàng chờ thì tệp bị từ chối vẫn được báo cho người chụp.
+  Căn cứ: Nhánh hiếm, hậu quả nhẹ (người chụp lại được), sửa bài kiểm không đổi hành vi cho người dùng.
+  file: `apps/web/src/app/(app)/units/photos/hang-cho-anh.test.ts`
+  severity: low
+  Đề xuất: wont-fix
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
 

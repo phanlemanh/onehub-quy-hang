@@ -1,84 +1,66 @@
-# Nguon: nhat ky may dev dai H (web-h.log), dong /api/ — driver CDP tho, khong co console/network tool
- 340 GET /api/v1/listings 200
- 278 GET /api/v1/catalog 200
- 138 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.06 200
- 135 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200
-  87 GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-01.02 200
-  71 POST /api/v1/auth/email-otp/send-verification-otp 200
-  70 POST /api/v1/auth/sign-in/email-otp 200
-  64 GET /api/v1/me 200
-  46 GET /api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64 200
-  36 GET /api/v1/listings/e87b3a56-3f3a-49aa-a101-9bd6d163b3aa 200
-  34 GET /api/v1/company/member-names 200
-  26 GET /api/v1/listings/70fb8160-8cd0-4f0c-9148-0d70ae7757f1 200
-  25 GET /api/v1/units/photos/480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/original 200
-  22 POST /api/v1/units/photos 201
-  22 GET /api/v1/units/photos/0d8feab8-468e-4016-b46e-e5e3ce7101ed/thumb 200
-  21 POST /api/v1/units/photos/upload-url 200
-  21 GET /api/v1/units/photos?toa=T%C3%B2a%20A&ma=A-01.08 200
-  21 GET /api/v1/units/photos/0d8feab8-468e-4016-b46e-e5e3ce7101ed/original 200
-  20 GET /api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64/owner 200
-  18 GET /api/v1/listings/e87b3a56-3f3a-49aa-a101-9bd6d163b3aa/owner 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-15.04 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-11.02 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-08.03 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.06 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-04.01 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.02 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-01.06 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-01.02 200
-  17 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-01.01 200
-  12 GET /api/v1/units/photos/a7835f26-a19b-44ff-b8db-a3e94b55562f/original 200
-  11 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-06.03 200
-  11 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-03.06 200
-  11 GET /api/v1/units/photos?toa=To%C3%A0+A&ma=A-01.04 200
-  11 GET /api/v1/units/photos/c225f0cd-92ae-44e4-927f-0f7736c6e9ec/thumb 200
-  11 GET /api/v1/units/photos/aea484d5-961c-4aa0-a4d2-682dc0ef53d2/thumb 200
-  11 GET /api/v1/units/photos/a5acbf34-9c40-48b3-b935-ac7d40f04f77/thumb 200
-  11 GET /api/v1/units/photos/96ce4663-d67c-4a20-993f-3d8dfca92141/thumb 200
-  11 GET /api/v1/units/photos/03a18ec6-fff4-4191-bd7e-4fb26bd5f881/thumb 200
-  10 GET /api/v1/units/photos/de6f0d3b-04ed-451a-80b0-2d67bc3d6542/thumb 200
-  10 GET /api/v1/units/photos/de6f0d3b-04ed-451a-80b0-2d67bc3d6542/original 200
---- status >=400 tren /api/:
- GET /api/v1/listings 500 in 1752ms (next.js: 1704ms, application-code: 48ms)
- POST /api/v1/listings/1066089e-2d75-416e-a882-89914a1fca64/owner/phone-reveal 403 in 33ms (next.js: 3ms, application-code: 31ms)
- POST /api/v1/units/photos/upload-url 409 in 163ms (next.js: 16ms, application-code: 147ms)
- POST /api/v1/units/photos/upload-url 409 in 11ms (next.js: 0.4ms, application-code: 11ms)
- POST /api/v1/units/photos/upload-url 409 in 13ms (next.js: 0.9ms, application-code: 12ms)
---- loi/exception:
-⨯ SyntaxError: Unexpected end of JSON input
-⨯ SyntaxError: Unexpected end of JSON input
-
-=== CUA SO LAN CHAY CUOI (dong 2780-2810 cua web-h.log) ===
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 22ms (next.js: 0.2ms, application-code: 22ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 23ms (next.js: 0.3ms, application-code: 22ms)
- GET /api/v1/listings/e87b3a56-3f3a-49aa-a101-9bd6d163b3aa 200 in 14ms (next.js: 0.3ms, application-code: 14ms)
- GET /api/v1/listings 200 in 15ms (next.js: 0.2ms, application-code: 15ms)
- GET /api/v1/units/photos/ee2f7c5a-83b4-4948-b02b-289b2cd8ef00/original 200 in 11ms (next.js: 0.2ms, application-code: 11ms)
- GET /api/v1/units/photos/f4e6dd4f-0859-4fca-8c4b-5c2e72f953e5/original 200 in 11ms (next.js: 0.2ms, application-code: 11ms)
- GET /api/v1/units/photos/480ed0dc-2f05-40a7-ac46-38b9fbeac2c6/original 200 in 14ms (next.js: 0.3ms, application-code: 14ms)
- GET /units/A-02.01 200 in 58ms (next.js: 2ms, proxy.ts: 16ms, application-code: 40ms)
- GET /units/A-02.01 200 in 114ms (next.js: 5ms, proxy.ts: 13ms, application-code: 96ms)
- GET /manifest.webmanifest 200 in 4ms (next.js: 0.8ms, proxy.ts: 1.7ms, application-code: 1.9ms)
- GET /manifest.webmanifest 200 in 5ms (next.js: 1.0ms, proxy.ts: 3ms, application-code: 1.5ms)
- GET /api/v1/listings 200 in 69ms (next.js: 10ms, application-code: 59ms)
- POST /api/v1/units/photos/upload-url 200 in 75ms (next.js: 4ms, application-code: 72ms)
- POST /api/v1/units/photos 201 in 39ms (next.js: 1.0ms, application-code: 38ms)
- POST /api/v1/units/photos/upload-url 200 in 12ms (next.js: 0.5ms, application-code: 11ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 29ms (next.js: 1.4ms, application-code: 27ms)
- GET /api/v1/listings 200 in 16ms (next.js: 1.1ms, application-code: 15ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 41ms (next.js: 0.5ms, application-code: 40ms)
- POST /api/v1/units/photos 201 in 34ms (next.js: 1.0ms, application-code: 33ms)
- GET /api/v1/units/photos/f51b4dd7-b057-40a3-804f-00a7f6a4f270/thumb 200 in 12ms (next.js: 0.4ms, application-code: 12ms)
- POST /api/v1/units/photos/upload-url 200 in 10ms (next.js: 0.5ms, application-code: 10ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 10ms (next.js: 0.7ms, application-code: 9ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 15ms (next.js: 0.9ms, application-code: 14ms)
- POST /api/v1/units/photos 201 in 18ms (next.js: 0.4ms, application-code: 18ms)
- GET /api/v1/units/photos/f51b4dd7-b057-40a3-804f-00a7f6a4f270/original 200 in 20ms (next.js: 0.4ms, application-code: 20ms)
- GET /api/v1/units/photos/4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3/original 200 in 18ms (next.js: 0.3ms, application-code: 18ms)
- GET /api/v1/units/photos/4d59ed2e-7ae1-4a08-88e3-ade7c5dc17e3/thumb 200 in 23ms (next.js: 0.2ms, application-code: 23ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 15ms (next.js: 0.6ms, application-code: 14ms)
- GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-02.01 200 in 13ms (next.js: 0.3ms, application-code: 12ms)
- GET /api/v1/units/photos/b201d7cb-4a2a-46d4-9f24-05419813cca4/original 200 in 8ms (next.js: 0.4ms, application-code: 8ms)
-[?25h
-Ghi chu: 3 dong 409 upload-url (dong 2700-2707) thuoc lan chay do dang truoc, bi huy do loi cho cua chinh script thu; lan chay cuoi khong co 4xx/5xx.
+# Nguon: web-h.log (may dev dai H) phien chay E12 hom nay; driver CDP tho, khong co network tool. Dong /api/ cuoi log:
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 26ms (next.js: 0.4ms, application-code: 26ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 33ms (next.js: 0.5ms, application-code: 32ms)
+ GET /api/v1/listings/ecb63462-7e37-4fad-93b9-6a33e110e5f6/owner 200 in 9ms (next.js: 0.4ms, application-code: 9ms)
+ GET /api/v1/units/photos/315c09e3-5779-4ee6-98ea-d9f309b6ffeb/thumb 200 in 7ms (next.js: 0.3ms, application-code: 7ms)
+ GET /api/v1/units/photos/1a2f3653-aac5-4b45-bbe9-99185dab739a/thumb 200 in 10ms (next.js: 0.4ms, application-code: 10ms)
+ GET /api/v1/units/photos/315c09e3-5779-4ee6-98ea-d9f309b6ffeb/original 200 in 6ms (next.js: 0.3ms, application-code: 6ms)
+ GET /api/v1/units/photos/1a2f3653-aac5-4b45-bbe9-99185dab739a/original 200 in 13ms (next.js: 0.3ms, application-code: 13ms)
+ POST /api/v1/auth/email-otp/send-verification-otp 200 in 9ms (next.js: 1.4ms, application-code: 7ms)
+ POST /api/v1/auth/sign-in/email-otp 200 in 14ms (next.js: 1.5ms, application-code: 13ms)
+ GET /api/v1/me 200 in 8ms (next.js: 0.4ms, application-code: 7ms)
+ GET /api/v1/catalog 200 in 9ms (next.js: 1.5ms, application-code: 7ms)
+ GET /api/v1/catalog 200 in 14ms (next.js: 0.5ms, application-code: 14ms)
+ GET /api/v1/listings 200 in 17ms (next.js: 0.3ms, application-code: 17ms)
+ GET /api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 200 in 14ms (next.js: 0.4ms, application-code: 14ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 24ms (next.js: 0.2ms, application-code: 24ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 29ms (next.js: 0.4ms, application-code: 29ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 26ms (next.js: 0.5ms, application-code: 25ms)
+ GET /api/v1/listings/ecb63462-7e37-4fad-93b9-6a33e110e5f6 200 in 78ms (next.js: 0.4ms, application-code: 78ms)
+ GET /api/v1/listings 200 in 78ms (next.js: 0.4ms, application-code: 78ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 98ms (next.js: 2.0ms, application-code: 96ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 92ms (next.js: 0.7ms, application-code: 92ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 88ms (next.js: 0.3ms, application-code: 88ms)
+ GET /api/v1/units/photos/8418abef-bcde-4a87-ae0d-b00cca74d7c2/original 200 in 9ms (next.js: 0.3ms, application-code: 8ms)
+ GET /api/v1/listings 200 in 16ms (next.js: 1.5ms, application-code: 14ms)
+ GET /api/v1/catalog 200 in 13ms (next.js: 1.7ms, application-code: 11ms)
+ GET /api/v1/catalog 200 in 9ms (next.js: 0.4ms, application-code: 8ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 25ms (next.js: 0.4ms, application-code: 24ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 26ms (next.js: 0.3ms, application-code: 26ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 30ms (next.js: 0.3ms, application-code: 29ms)
+ GET /api/v1/listings/459e1afc-330a-453a-acf4-8af394b90962 200 in 17ms (next.js: 0.3ms, application-code: 17ms)
+ GET /api/v1/listings 200 in 17ms (next.js: 0.3ms, application-code: 16ms)
+ GET /api/v1/catalog 200 in 12ms (next.js: 1.5ms, application-code: 10ms)
+ POST /api/v1/units/photos/upload-url 200 in 23ms (next.js: 0.3ms, application-code: 23ms)
+ GET /api/v1/listings/ecb63462-7e37-4fad-93b9-6a33e110e5f6 200 in 13ms (next.js: 0.2ms, application-code: 13ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 22ms (next.js: 0.2ms, application-code: 22ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 22ms (next.js: 0.2ms, application-code: 22ms)
+ GET /api/v1/listings 200 in 14ms (next.js: 0.2ms, application-code: 13ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-03.03 200 in 26ms (next.js: 0.3ms, application-code: 26ms)
+ GET /api/v1/units/photos/8418abef-bcde-4a87-ae0d-b00cca74d7c2/original 200 in 8ms (next.js: 0.4ms, application-code: 8ms)
+ POST /api/v1/units/photos 201 in 30ms (next.js: 0.3ms, application-code: 30ms)
+ POST /api/v1/units/photos/upload-url 200 in 7ms (next.js: 0.3ms, application-code: 7ms)
+ POST /api/v1/units/photos 201 in 14ms (next.js: 0.3ms, application-code: 14ms)
+ POST /api/v1/units/photos/upload-url 200 in 7ms (next.js: 0.4ms, application-code: 6ms)
+ POST /api/v1/units/photos 201 in 16ms (next.js: 0.3ms, application-code: 16ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 29ms (next.js: 1.9ms, application-code: 27ms)
+ POST /api/v1/units/photos/upload-url 409 in 13ms (next.js: 0.4ms, application-code: 12ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 20ms (next.js: 0.5ms, application-code: 20ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 18ms (next.js: 0.3ms, application-code: 18ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 18ms (next.js: 0.3ms, application-code: 17ms)
+ GET /api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/thumb 200 in 12ms (next.js: 0.3ms, application-code: 12ms)
+ GET /api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/thumb 200 in 11ms (next.js: 0.4ms, application-code: 11ms)
+ POST /api/v1/units/photos/upload-url 409 in 10ms (next.js: 0.3ms, application-code: 9ms)
+ GET /api/v1/units/photos/c5054d33-c39a-4c77-9f52-a4cbadb1dc5e/original 200 in 13ms (next.js: 0.3ms, application-code: 12ms)
+ GET /api/v1/units/photos/49dc0d11-eff0-407e-9d63-8a9cb4dd8444/original 200 in 13ms (next.js: 0.2ms, application-code: 12ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 22ms (next.js: 0.4ms, application-code: 21ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 26ms (next.js: 0.4ms, application-code: 26ms)
+ GET /api/v1/units/photos/8af6a63e-91ae-4c38-9848-130b51247b21/original 200 in 20ms (next.js: 0.2ms, application-code: 20ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 28ms (next.js: 0.3ms, application-code: 28ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 15ms (next.js: 0.9ms, application-code: 14ms)
+ GET /api/v1/units/photos?toa=To%C3%A0%20A&ma=A-04.01 200 in 13ms (next.js: 0.2ms, application-code: 13ms)
+# Dong /api/ co status >=400 trong 400 dong cuoi:
+ POST /api/v1/auth/sign-in/email-otp 500 in 1178ms (next.js: 1126ms, application-code: 52ms)
+ GET /api/v1/catalog 500 in 1198ms (next.js: 1181ms, application-code: 17ms)
+ POST /api/v1/units/photos/upload-url 409 in 13ms (next.js: 0.4ms, application-code: 12ms)
+ POST /api/v1/units/photos/upload-url 409 in 10ms (next.js: 0.3ms, application-code: 9ms)

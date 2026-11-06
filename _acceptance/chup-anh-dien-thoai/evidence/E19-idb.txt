@@ -1,30 +1,9 @@
-[2026-11-06T01:57:31.900Z] can A-04.01: unit_photos TRUOC = 0
-[2026-11-06T01:57:37.146Z] B1 da chan /api/ (Fetch.failRequest InternetDisconnected)
-[2026-11-06T01:57:38.198Z] B1 ngan co 2 anh Cho mang; ngan: internal
-[2026-11-06T01:57:38.199Z] B1 indexedDB.databases() = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
-[2026-11-06T01:57:38.527Z] B1 chup /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/dreamy-mahavira-36d819/_acceptance/chup-anh-dien-thoai/evidence/E19-step1.png
-[2026-11-06T01:57:39.377Z] B2 dang nhap lai dau-chu-1 (khong dang xuat), tai lai trang
-[2026-11-06T01:57:44.921Z] B2 sau tai lai: 2 dong Cho mang; indexedDB.databases() = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
-[2026-11-06T01:57:45.244Z] B2 chup /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/dreamy-mahavira-36d819/_acceptance/chup-anh-dien-thoai/evidence/E19-con.png
-[2026-11-06T01:57:46.062Z] B3 khay con? false
-[2026-11-06T01:57:47.227Z] B3 chup menu /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/dreamy-mahavira-36d819/_acceptance/chup-anh-dien-thoai/evidence/E19-menu.png
-[2026-11-06T01:57:47.228Z] B3 menu items: ["Cá nhân","Sáng / tối","Đăng xuất"]
-[2026-11-06T01:57:49.743Z] B3 sau bam Dang xuat: path=/units/A-04.01 body=Căn A-04.01 Chưa có ảnh Chụp ảnh Đang bán A-04.01 · Toà A [Mẫu] Dự án căn hộ thử · Toà A · Căn hộ Diện tích 54,2 m² Phòng ngủ 1 Hướng Đông Nam 3,25 tỷ Bao phí Xác nhận 1 ngày trước x Mức đủ thông tin 5/5 THUỘC TÍNH CĂN Báo sai thông tin căn Loại căn 1PN Diện tích 54,2 m² Tầng 4 Hướng Đông Nam Toà To
-[2026-11-06T01:57:49.744Z] B3 indexedDB.databases() = []
-[2026-11-06T01:57:49.744Z] B3 su kien dialog: []
-[2026-11-06T01:57:50.062Z] B3 chup /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/dreamy-mahavira-36d819/_acceptance/chup-anh-dien-thoai/evidence/E19-dang-xuat.png
-[2026-11-06T01:57:50.062Z] B3 yeu cau bi chan (khong toi may chu): ["POST /api/v1/units/photos/upload-url","POST /api/v1/units/photos/upload-url","POST /api/v1/units/photos/upload-url","POST /api/v1/auth/sign-out"]
-[2026-11-06T01:57:50.063Z] B3 toast/thong bao: Đã đồng bộ · 08:57 || Chưa đăng xuất đượcThử lại || 
-[2026-11-06T01:57:50.268Z] B3 unit_photos sau dang xuat (van chan): 0
-[2026-11-06T01:57:50.269Z] B3b da mo mang; bam lai Dang xuat o menu tai khoan
-[2026-11-06T01:57:52.794Z] B3b path=/login
-[2026-11-06T01:57:52.795Z] B3b indexedDB.databases() = []
-[2026-11-06T01:57:53.223Z] B3b chup /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/dreamy-mahavira-36d819/_acceptance/chup-anh-dien-thoai/evidence/E19-dang-xuat-xong.png
-[2026-11-06T01:57:53.379Z] B3b unit_photos sau mo mang: 0
-[2026-11-06T01:57:57.844Z] B4 truong-nhom mo can: body=Căn A-04.01 Chưa có ảnh Chụp ảnh Đang bán A-04.01 · Toà A [Mẫu] Dự án căn hộ thử · Toà A · Căn hộ Diện tích 54,2 m² Phòng ngủ 1 Hướng Đông Nam 3,25 tỷ Bao phí X
-[2026-11-06T01:57:57.845Z] B4 co nut Chup anh: true
-[2026-11-06T01:57:58.678Z] B4 khay: Ảnh vào ngăn Gửi được Nội bộ Chọn ngăn trước khi chụp. Chưa chụp ảnh nào cho căn này.
-[2026-11-06T01:57:58.679Z] B4 so dong data-cho = 0; co chu "Chưa chụp ảnh nào cho căn này." = true
-[2026-11-06T01:57:58.680Z] B4 indexedDB.databases() = ["quy-hang-anh-cho:92ab1862-37f3-4b59-baae-d892214a4797","quy-hang-sync:92ab1862-37f3-4b59-baae-d892214a4797"]
-[2026-11-06T01:57:59.012Z] B4 chup /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/dreamy-mahavira-36d819/_acceptance/chup-anh-dien-thoai/evidence/E19-nguoi-b.png
-[2026-11-06T01:57:59.130Z] B4 unit_photos cua can A-04.01 SAU = 0
+[verifier doc lap, 2026-11-06, may dev 3494 + Postgres 5574 (dung-h.mjs cua ho-so-dien-thoai-product-detail-5); Playwright, cung mot ho so trinh duyet]
+B0 unit_photos can A-04.01 TRUOC = 3 (ho so trinh duyet da co san 2 CSDL rong cua dau-chu-1 tu lan chay truoc; ngan trong)
+B1 dau-chu-1: chan POST /api/v1/units/photos/upload-url (abort internetdisconnected), nap 2 anh (Gui duoc + Noi bo)
+   ngan: 2 dong "Cho mang"; indexedDB.databases() = ["quy-hang-anh-cho:524f266e-04ee-4260-96de-31c76535a211","quy-hang-sync:524f266e-04ee-4260-96de-31c76535a211"]
+B2 doi chung duong: tai lai trang (phien dau-chu-1 giu), mo lai ngan: 2 dong "Cho mang"; databases() = cung 2 kho
+B3 bam menu Tai khoan > Dang xuat (nut that, man 1280x800 vi nut an o 375px): url=/login; indexedDB.databases() = []
+B4 truong-nhom (nguoi B, /api/v1/me xac nhan) cung trinh duyet, mo can A-04.01, mo ngan: "Chua chup anh nao cho can nay.", 0 dong Cho mang;
+   databases() = ["quy-hang-anh-cho:92ab1862-37f3-4b59-baae-d892214a4797","quy-hang-sync:92ab1862-37f3-4b59-baae-d892214a4797"] (kho cua B, khong con kho 524f266e)
+B5 unit_photos can A-04.01 SAU = 3

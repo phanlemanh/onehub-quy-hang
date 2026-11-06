@@ -1,1 +1,1 @@
-n-a (driver): docker psql only, no network
+# E14-network: driver psql qua docker exec, khong co browser/network tool, khong mo dev server.

@@ -52,3 +52,45 @@ wall: 7717s
 - **claude-opus-5-5**: 3 agent · 28 calls · out 22,254 · in 56 · cache_read 982,751 · cache_create 169,158
 - **claude-haiku-5-5**: 10 agent · 21 calls · out 13,806 · in 44 · cache_read 179,454 · cache_create 142,323
 
+wf_db5133e6-e44: 26 agent
+label                                        model              calls       out        in  cache_read     s
+ui:E16                                       claude-sonnet-5-5     72    53,550       144  10,536,002  1562
+ui:E18                                       claude-sonnet-5-5     37    27,059        74   4,862,414   901
+ui:E19                                       claude-sonnet-5-5     34    16,285        70   4,203,028   302
+ui:E12                                       claude-sonnet-5-5     18    15,407        36   1,959,085   680
+ui:E15                                       claude-sonnet-5-5     18    13,275        36   2,035,169   250
+synthesize:report                            claude-sonnet-5-5      2    10,651         4      37,483    59
+review:bugs                                  claude-opus-5-5       11     8,619        22     452,749   117
+review:measurement                           claude-opus-5-5       10     7,568        20     319,846    98
+ui:E13                                       claude-sonnet-5-5     12     6,088        24   1,179,396   165
+baseline:diffBase                            claude-sonnet-5-5      3     5,334         6      45,234    97
+ui:E14                                       claude-sonnet-5-5      8     4,844        16     796,136    48
+review:conventions                           claude-opus-5-5        8     4,376        16     231,019    60
+triage                                       claude-sonnet-5-5      2     3,439         4      18,447    25
+machine:npm run test:ro-ri                   claude-haiku-5-5       2     2,170         4      16,074    13
+machine:npm test -w @quy-hang/web            claude-haiku-5-5       2     2,030         4      16,080    14
+machine:npm test -w @quy-hang/ui-lint        claude-haiku-5-5       2     1,805         4      16,088    52
+machine:npm run lint                         claude-haiku-5-5       2     1,582         4      16,419    18
+refute:react.tsx                             claude-sonnet-5-5      4     1,433         8      57,356    15
+refute:hang-cho-may.ts                       claude-sonnet-5-5      4     1,371         8      49,500    15
+machine:npm run test:hooks                   claude-haiku-5-5       2     1,126         4      16,106    13
+machine:npm test -w @quy-hang/connect        claude-haiku-5-5       2       876         4      16,082     7
+machine:R="${CLAUDE_PLUGIN_ROOT:-$(node pack claude-haiku-5-5       2       779         4      16,159     8
+machine:npm run typecheck                    claude-haiku-5-5       2       692         4      16,173    15
+machine:npm test -w @quy-hang/core           claude-haiku-5-5       2       579         4      16,080     6
+machine:npm test -w @quy-hang/api            claude-haiku-5-5       2       511         4      12,891     8
+capture:provenance                           claude-sonnet-5-5      2       345         4      12,636     5
+— wall 4038s theo vai trò —
+  baseline       1 agent · out     5,334 · wall    97s · 04:32:54 → 04:34:31
+  ui             7 agent · out   136,508 · wall  3923s · 04:32:54 → 05:38:18
+  machine       10 agent · out    12,150 · wall   132s · 04:32:54 → 04:35:07
+  review         3 agent · out    20,563 · wall   119s · 04:32:54 → 04:34:53
+  triage         1 agent · out     3,439 · wall    25s · 05:38:20 → 05:38:45
+  refute         2 agent · out     2,804 · wall    17s · 05:38:47 → 05:39:04
+  capture        1 agent · out       345 · wall     5s · 05:39:06 → 05:39:11
+  synthesize     1 agent · out    10,651 · wall    59s · 05:39:13 → 05:40:13
+— tổng theo model —
+  claude-sonnet-5-5: 13 agent · 216 calls · out 159,081 · in 434 · cache_read 25,791,886 · cache_create 914,171
+  claude-opus-5-5: 3 agent · 29 calls · out 20,563 · in 58 · cache_read 1,003,614 · cache_create 161,397
+  claude-haiku-5-5: 10 agent · 20 calls · out 12,150 · in 40 · cache_read 158,152 · cache_create 143,926
+  TỔNG: 26 agent · 265 calls · out 191,794 · in 532 · cache_read 26,953,652

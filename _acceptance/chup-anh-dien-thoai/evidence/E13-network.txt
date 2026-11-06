@@ -1,5 +1,6 @@
-# Driver: node fetch (khong co browser/console) - ghi lai loi goi API app-scope toi http://localhost:3494
+# Driver: node fetch (khong co browser/console) - cac loi goi API app-scope toi http://localhost:3494 (cho thu dung-h)
 B2 dau-khach POST /units/photos/upload-url -> 403 {"error":"listing-agent-required"}
 B2 dau-khach POST /units/photos -> 403 {"error":"listing-agent-required"}
 B3 dau-chu-1 POST /units/photos/upload-url -> 200 {"truc_tiep":false}
-B3 dau-chu-1 POST /units/photos -> 201 {"anh":{"id":"a3560dee-1aca-420f-8ee0-1f4da019fc93","buildingName":"Toà A","unitNumber":"A-03.02","c
+B3 dau-chu-1 POST /units/photos -> 201 {"anh":{"id":"430521fb-07d7-4f8d-81fa-2025d8a4500d","buildingName":"Toà A","unitNumber":"A-03.02","compartment":"shareab
+# Khong co request that bai ngoai 403 dung expected cua dau-khach; khong co console.
