@@ -1,0 +1,89 @@
+{
+  "ten": "la-a-tieng-anh",
+  "tieuDe": [
+    "Unit code",
+    "Building",
+    "Area",
+    "Bedrooms",
+    "Facing",
+    "Asking price (bn)",
+    "Fees",
+    "Sale status",
+    "Owner",
+    "Owner contact",
+    "Agent",
+    "Remarks",
+    "Tag"
+  ],
+  "bamGoi": "bdd564d71935a17b90d5f9b32cc689af8b246fdf4e185eba35e860e15aed5c3b",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 1,
+        "dich": "buildingName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Building» nghĩa là toà, cột chỉ có 2 giá trị chữ ngắn lặp lại — đúng kiểu tên toà."
+      },
+      {
+        "cot": 2,
+        "dich": "livingArea",
+        "phep": {
+          "name": "area",
+          "kind": "unknown"
+        },
+        "ly_do": "Tiêu đề «Area» là diện tích, cột toàn số; file không ghi thông thuỷ hay tim tường nên để chưa rõ loại."
+      },
+      {
+        "cot": 3,
+        "dich": "bedroomsTotal",
+        "phep": {
+          "name": "bedrooms"
+        },
+        "ly_do": "Tiêu đề «Bedrooms» là số phòng ngủ, cột là số một chữ số với 3 giá trị khác nhau."
+      },
+      {
+        "cot": 5,
+        "dich": "listPrice",
+        "phep": {
+          "name": "price",
+          "unit": "ty"
+        },
+        "ly_do": "Tiêu đề «Asking price (bn)» là giá chào tính theo tỷ (bn = billion), cột là số ngắn 3–4 ký tự."
+      },
+      {
+        "cot": 8,
+        "dich": "ownerName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Owner» là chủ nhà, cột chữ dài khác nhau gần mỗi dòng, đứng cạnh cột số chủ nhà."
+      },
+      {
+        "cot": 10,
+        "dich": "listAgentName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Agent» là người môi giới phụ trách, chỉ 2 tên lặp lại — đúng kiểu cột đầu chủ."
+      },
+      {
+        "cot": 11,
+        "dich": "privateRemarks",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Remarks» là ghi chú, cột chữ tự do có ô trống — giữ làm ghi chú nội bộ."
+      },
+      {
+        "cot": 12,
+        "dich": "keep_as_note",
+        "ly_do": "Tiêu đề «Tag» không rõ nghĩa và cả cột chỉ một giá trị, nên giữ làm ghi chú để không mất dữ liệu."
+      }
+    ]
+  }
+}
