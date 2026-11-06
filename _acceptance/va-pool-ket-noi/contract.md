@@ -40,7 +40,7 @@ Source input: yêu cầu của phiên giám sát đợt `dau-khach-nhap` (06/11)
   mà trang không tải lại cả trang. Không cookie thì `/today` vẫn chuyển về `/login`; có cookie mà công tắc tắt thì
   `/login` vẫn hiện ô đăng nhập.
 - AC-4: Given cây sau bản vá, When so với điểm rẽ khỏi nhánh chính, Then mọi tệp đổi nằm trong danh sách cho phép đích
-  danh — `apps/web/**`, `package-lock.json`, `.claude/launch.json`, `_acceptance/va-pool-ket-noi/**`, design doc của hàng,
+  danh — `apps/web/**`, `package-lock.json`, `.claude/launch.json`, `_acceptance/va-pool-ket-noi/**`, design doc và kế hoạch của hàng,
   `docs/plan/lo-trinh.json`, hai tệp sinh — và `_acceptance/config.yaml` chỉ thêm đúng một dòng khoá executor của hồ sơ;
   không migration, luật cách ly theo dòng, `withCompany`, lõi, API hay rào nào đổi, nên cách ly giữa công ty giữ nguyên.
 - AC-5: Given cây sau bản vá, When chạy kiểm kiểu, lint (luật `quy-hang-ui`, mức nợ 0, kiểm chuẩn), build, sàn thiết kế và

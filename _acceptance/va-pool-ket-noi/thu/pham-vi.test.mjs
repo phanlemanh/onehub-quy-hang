@@ -19,6 +19,7 @@ const DUOC = [
   /^_acceptance\/va-pool-ket-noi\//,
   /^_acceptance\/config\.yaml$/,
   /^docs\/superpowers\/specs\/2026-11-06-va-pool-ket-noi-design\.md$/,
+  /^docs\/superpowers\/plans\/2026-11-06-va-pool-ket-noi\.md$/,
   /^docs\/plan\/lo-trinh\.json$/,
   /^PRODUCT-MAP\.md$/,
   /^LO-TRINH\.html$/,

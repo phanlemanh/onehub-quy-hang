@@ -24,7 +24,7 @@ const TO_HOP: Record<string, string[]> = {
 };
 const QUAN_TRI = (ten: string) => ten.startsWith("quản trị");
 
-const MUC_SAN = ["Người dùng", "Cách gọi", "Trường riêng", "Trạng thái", "Luật chia lead", "Thuế phí", "Mẫu nhập"];
+const MUC_SAN = ["Người dùng", "Cách gọi", "Trường riêng", "Trạng thái", "Luật chia lead", "Thuế phí", "Mẫu nhập", "Xử lý bằng AI"];
 
 // E2 — cột mục lục của nhà Cài đặt.
 function lechCot(f: (roles: string[], tenSan: string) => NhomCot[]): string[] {
@@ -40,7 +40,7 @@ function lechCot(f: (roles: string[], tenSan: string) => NhomCot[]): string[] {
   return out;
 }
 
-test("E2: cột Cài đặt — Cá nhân cho mọi vai, nhóm «Sàn [Mẫu] Sàn A» bảy mục chỉ quản trị (6 tổ hợp)", () => {
+test("E2: cột Cài đặt — Cá nhân cho mọi vai, nhóm «Sàn [Mẫu] Sàn A» tám mục chỉ quản trị (6 tổ hợp)", () => {
   assert.deepEqual(lechCot(cotCaiDat), []);
   assert.equal(tenNhomSan(SAN), "Sàn [Mẫu] Sàn A");
 });
