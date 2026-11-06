@@ -567,6 +567,56 @@ test("E7 kho theo người: kho của A dựng bằng mã người B trả rỗn
   assert.equal((await idb.kho("u-b").tai()).length, 1);
 });
 
+// ——— Bất biến 2: ảnh chụp ở sàn nào chỉ lên sàn ấy (người thuộc hai sàn, đổi sàn khi còn ảnh chờ) ———
+
+/** Máy chủ giả biết phiên đang ở sàn nào: mỗi dòng ảnh ghi sàn của phiên lúc nhận. */
+async function lechHaiSan(sanLucGui?: (sanPhien: () => string) => () => string): Promise<string[]> {
+  const phien = { san: "san-a" };
+  const mang = { on: false };
+  const dong: { san: string; toa: string; ma: string; ngan: Compartment }[] = [];
+  const gui: GuiAnh = async (a) => void dong.push({ san: phien.san, toa: a.toa, ma: a.ma, ngan: a.ngan });
+  const sanPhien = () => phien.san;
+  const h = taoHangCho({ gui, daCo: async () => false, kho: idbGia().kho("u-hai-san"), onLine: () => mang.on, xem: () => "", taoMa: () => `ma-${++dem}`, san: sanLucGui ? sanLucGui(sanPhien) : sanPhien });
+  h.them(TOA, MA, "shareable", tep("can.jpg"));
+  h.them(TOA, MA, "internal", tep("so-do.jpg"));
+  await xong(h);
+  const ra: string[] = [];
+  phien.san = "san-b";
+  mang.on = true;
+  await h.day();
+  await h.cho();
+  for (const d of dong.filter((x) => x.san === "san-b")) ra.push(`sàn B nhận ảnh ${TEN_NGAN[d.ngan]} chụp ở sàn A`);
+  if (h.coCho()) ra.push("sàn B còn ảnh để tải");
+  phien.san = "san-a";
+  await h.day();
+  await h.cho();
+  for (const ngan of ["shareable", "internal"] as const) {
+    if (!dong.some((d) => d.san === "san-a" && d.toa === TOA && d.ma === MA && d.ngan === ngan)) ra.push(`về sàn A · thiếu ảnh ${TEN_NGAN[ngan]}`);
+  }
+  return ra;
+}
+
+test("Bất biến 2 · hai sàn: chụp lúc mất mạng ở A, sang B có mạng thì không ảnh nào lên B (kể cả Nội bộ); về A thì lên đúng căn ở A", async () => {
+  assert.deepEqual(await lechHaiSan(), []);
+});
+
+test("Bất biến 2 · chiều đỏ: bản sao không theo sàn của phiên (giữ sàn lúc chụp) → bộ so nêu cả hai ngăn lên sàn B", async () => {
+  assert.deepEqual(await lechHaiSan(() => () => "san-a"), [
+    "sàn B nhận ảnh Gửi được chụp ở sàn A",
+    "sàn B nhận ảnh Nội bộ chụp ở sàn A",
+    "về sàn A · thiếu ảnh Gửi được",
+    "về sàn A · thiếu ảnh Nội bộ",
+  ]);
+});
+
+test("Bất biến 2 · vỏ truyền sàn của phiên cho hàng chờ và đổi sàn khi phiên đổi", () => {
+  const may = readFileSync(new URL("./hang-cho-may.ts", import.meta.url), "utf8");
+  assert.match(may, /san: \(\) => san\.id/);
+  const vo = readFileSync(new URL("../../../../lib/sync/react.tsx", import.meta.url), "utf8");
+  assert.match(vo, /khoiDongHangCho\(userId, companyId\)/);
+  assert.match(vo, /\[userId, companyId\]/);
+});
+
 // ——— E8 · AC-7: ngày chụp là ngày trong tệp, vắng thì ngày lúc chụp trên máy ———
 
 type ONgay = { ten: string; takenAt: string | null; type: TepSanSang["type"]; chup: Date; gui: Date; mong: string };

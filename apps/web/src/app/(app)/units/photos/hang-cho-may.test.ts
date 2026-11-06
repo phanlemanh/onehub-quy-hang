@@ -27,11 +27,11 @@ const tep = (): TepSanSang => ({
 
 test("E4 đổi người trên cùng máy: hàng của người trước không gửi thêm ảnh nào; đối chứng dương: hàng đang chạy có gửi", { timeout: 5000 }, async () => {
   const { dungHangCho, khoiDongHangCho } = await import("./hang-cho-may");
-  const a = khoiDongHangCho("u-a");
+  const a = khoiDongHangCho("u-a", "san-a");
   await a.them("[Mẫu] Toà A", "A-01.02", "shareable", tep());
   await a.cho();
   assert.ok(goi > 0, "đối chứng dương: hàng của A đang chạy thì gửi");
-  khoiDongHangCho("u-b");
+  khoiDongHangCho("u-b", "san-a");
   const truoc = goi;
   await a.them("[Mẫu] Toà A", "A-01.02", "internal", tep());
   await a.day();
@@ -50,7 +50,7 @@ test("E7 xoá kho chạy đúng việc dừng mà hàng chờ thật của app �
   ];
   const lech: string[] = [];
   for (const l of LOI) {
-    const h = khoiDongHangCho("u-chu");
+    const h = khoiDongHangCho("u-chu", "san-a");
     // Đối chứng dương: xoá kho của người khác trên máy không dừng hàng của người đang dùng.
     await l.xoa("u-khac", async () => {});
     if (hangChoHienTai() !== h) lech.push(`${l.ten} · xoá kho người khác mà hàng dừng`);
@@ -63,4 +63,26 @@ test("E7 xoá kho chạy đúng việc dừng mà hàng chờ thật của app �
     if (goi !== truoc) lech.push(`${l.ten} · hàng chờ còn gửi sau khi xoá kho`);
   }
   assert.deepEqual(lech, []);
+});
+
+test("Bất biến 2 · đổi sàn trên vỏ thật: chụp lúc mất mạng ở sàn A, sang sàn B có mạng thì không lời gửi nào; về lại A thì gửi", { timeout: 5000 }, async () => {
+  const { dungHangCho, khoiDongHangCho } = await import("./hang-cho-may");
+  const mang = globalThis.navigator as { onLine: boolean };
+  mang.onLine = false;
+  const h = khoiDongHangCho("u-hai-san", "san-a");
+  h.them("[Mẫu] Toà A", "A-01.02", "shareable", tep());
+  h.them("[Mẫu] Toà A", "A-01.02", "internal", tep());
+  await h.cho();
+  khoiDongHangCho("u-hai-san", "san-b");
+  mang.onLine = true;
+  const truoc = goi;
+  await h.day();
+  await h.cho();
+  assert.equal(goi, truoc, "phiên ở sàn B không gửi ảnh chụp ở sàn A");
+  assert.equal(h.coCho(), false, "ở sàn B không còn ảnh nào để nhịp thử tải");
+  khoiDongHangCho("u-hai-san", "san-a");
+  await h.day();
+  await h.cho();
+  assert.ok(goi > truoc, "đối chứng dương: về lại sàn A thì ảnh của A được gửi");
+  await dungHangCho();
 });

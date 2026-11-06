@@ -52,8 +52,8 @@ export function BoDongBoProvider({ userId, companyId, companyIds, roles, childre
 
   // Hàng chờ ảnh chụp trên điện thoại (hàng 41): một bản cho người, sống suốt phiên — mở app thì tải tiếp ảnh còn chờ.
   useEffect(() => {
-    khoiDongHangCho(userId);
-  }, [userId]);
+    khoiDongHangCho(userId, companyId);
+  }, [userId, companyId]);
 
   useEffect(() => {
     void bd.khoiDong();

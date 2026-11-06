@@ -22,6 +22,8 @@ export const NHAN_TRANG_THAI_CHO: Readonly<Record<TrangThaiCho, string>> = {
 export type AnhCho = {
   /** Mã ảnh tạo lúc chụp — cũng là mã của dòng ảnh trên máy chủ. */
   key: string;
+  /** Sàn của phiên lúc chụp: ảnh chỉ lên khi phiên đang ở đúng sàn này (bất biến 2 — thông tin chủ nhà không rời sàn). */
+  san: string;
   toa: string;
   ma: string;
   ngan: Compartment;
@@ -34,6 +36,8 @@ export type AnhCho = {
 /** Một ảnh chờ như nằm trong kho trên máy: đủ để dựng lại ảnh sau khi tải lại trang hay đóng mở app. */
 export type BanGhiCho = {
   id: string;
+  /** Sàn lúc chụp (xem `AnhCho.san`). */
+  san: string;
   toa: string;
   ma: string;
   ngan: Compartment;
@@ -84,6 +88,7 @@ export const ngayTrenMay = (d: Date) =>
 
 const tuBanGhi = (b: BanGhiCho, xem: (blob: Blob) => string): AnhCho => ({
   key: b.id,
+  san: b.san,
   toa: b.toa,
   ma: b.ma,
   ngan: b.ngan,
@@ -99,6 +104,11 @@ export type HangChoDeps = {
   kho: KhoAnhCho;
   onLine: () => boolean;
   xem: (b: Blob) => string;
+  /**
+   * Sàn của phiên đang mở. Ảnh mang sàn lúc chụp; đổi sàn thì ảnh của sàn kia nằm chờ, không lên căn trùng toà + mã của sàn
+   * đang mở — về lại đúng sàn thì tải tiếp. Vỏ luôn truyền; bài kiểm không truyền thì mọi ảnh cùng một sàn rỗng.
+   */
+  san?: () => string;
   /** Đồng hồ lúc chụp (bài kiểm truyền đồng hồ giả). */
   bayGio?: () => Date;
   taoMa?: () => string;
@@ -110,6 +120,8 @@ export function taoHangCho(o: HangChoDeps) {
   const bayGio = o.bayGio ?? (() => new Date());
   const taoMa = o.taoMa ?? (() => crypto.randomUUID());
   const phanLoai = o.phanLoai ?? phanLoaiLoi;
+  const san = o.san ?? (() => "");
+  const guiDuoc = (a: AnhCho) => a.trangThai === "cho-mang" && a.san === san();
   let ds: AnhCho[] = [];
   const banGhi = new Map<string, BanGhiCho>();
   let thuTu = 0;
@@ -161,7 +173,8 @@ export function taoHangCho(o: HangChoDeps) {
   async function motLuot(): Promise<void> {
     for (;;) {
       if (daDung) return;
-      const a = ds.find((x) => x.trangThai === "cho-mang");
+      // Chỉ ảnh chụp ở sàn đang mở: phiên ở sàn B không bao giờ gửi ảnh chụp ở sàn A (kể cả ngăn Nội bộ).
+      const a = ds.find(guiDuoc);
       if (!a || !o.onLine()) return;
       dat(a.key, "dang-tai");
       if (nghi.has(a.key)) {
@@ -237,7 +250,7 @@ export function taoHangCho(o: HangChoDeps) {
     /** Số ảnh của căn đã lên máy chủ — ảnh lớn và mục Ảnh đọc lại danh sách khi số này đổi (AC-8). */
     soDaTai: (toa: string, ma: string) => daTai.get(`${toa}|${ma}`) ?? 0,
     /** Còn ảnh chưa lên máy chủ (nhịp thử mạng 15 giây). */
-    coCho: () => ds.some((a) => a.trangThai === "cho-mang"),
+    coCho: () => ds.some(guiDuoc),
     /** Kho trên máy hỏng: ảnh chờ chỉ còn trong bộ nhớ, đóng app là mất. */
     khoLoi: () => khoLoi,
     /** Dựng lại hàng chờ từ kho của người (mở app, tải lại trang), rồi tải tiếp. Kho mở lỗi thì báo qua `khoLoi`. */
@@ -273,9 +286,10 @@ export function taoHangCho(o: HangChoDeps) {
       const id = taoMa();
       const takenAt = tep.takenAt ?? ngayTrenMay(bayGio());
       const t: TepSanSang = { ...tep, takenAt };
-      const b: BanGhiCho = { id, toa, ma, ngan, trangThai: "cho-mang", thuTu: thuTu++, ten: tep.file.name, type: tep.type, takenAt, width: tep.width, height: tep.height, file: tep.file, thumb: tep.thumb };
+      const sanChup = san();
+      const b: BanGhiCho = { id, san: sanChup, toa, ma, ngan, trangThai: "cho-mang", thuTu: thuTu++, ten: tep.file.name, type: tep.type, takenAt, width: tep.width, height: tep.height, file: tep.file, thumb: tep.thumb };
       banGhi.set(id, b);
-      ds = [...ds, { key: id, toa, ma, ngan, tep: t, xem: o.xem(tep.thumb), trangThai: "cho-mang" }];
+      ds = [...ds, { key: id, san: sanChup, toa, ma, ngan, tep: t, xem: o.xem(tep.thumb), trangThai: "cho-mang" }];
       bao();
       void vaoKho(() => o.kho.ghi(b));
       void day();

@@ -11,7 +11,7 @@ import { noiNhip, taoHangCho, theoDoiDaTai, type AnhCho, type HangCho } from "./
 import { taoKhoAnhCho } from "./kho-anh-cho";
 import { nguonApi } from "./nguon-api";
 
-type Ban = { userId: string; hang: HangCho; dung: () => void };
+type Ban = { userId: string; hang: HangCho; dung: () => void; san: { id: string } };
 let ban: Ban | null = null;
 const ngheBan = new Set<() => void>();
 const doiBan = (b: Ban | null) => {
@@ -19,16 +19,28 @@ const doiBan = (b: Ban | null) => {
   ngheBan.forEach((f) => f());
 };
 
-/** Khởi động hàng chờ của người (mở app, đăng nhập lại): dựng lại từ kho trên máy rồi tải tiếp. */
-export function khoiDongHangCho(userId: string): HangCho {
-  if (ban?.userId === userId) return ban.hang;
+/**
+ * Khởi động hàng chờ của người ở sàn đang mở (mở app, đăng nhập lại, đổi sàn): dựng lại từ kho trên máy rồi tải tiếp. Cùng
+ * người đổi sàn thì giữ hàng, chỉ đổi sàn — ảnh của sàn kia nằm chờ, ảnh của sàn này tải tiếp (bất biến 2).
+ */
+export function khoiDongHangCho(userId: string, companyId: string): HangCho {
+  if (ban?.userId === userId) {
+    if (ban.san.id !== companyId) {
+      ban.san.id = companyId;
+      doiBan(ban);
+      void ban.hang.day();
+    }
+    return ban.hang;
+  }
   // Đổi người trên cùng máy: hàng của người trước dừng hẳn — không lấy ảnh kế để gửi bằng phiên người mới, không ghi kho cũ
   // (AC-4, AC-6).
   if (ban) {
     ban.dung();
     void ban.hang.dung();
   }
+  const san = { id: companyId };
   const hang = taoHangCho({
+    san: () => san.id,
     gui: ({ id, toa, ma, ngan, tep }) => nguonApi(toa, ma).them(tep, ngan, id),
     daCo: async ({ toa, ma, id }) => (await nguonApi(toa, ma).danhSach()).anh.some((p) => p.id === id),
     kho: taoKhoAnhCho(userId),
@@ -41,6 +53,7 @@ export function khoiDongHangCho(userId: string): HangCho {
   doiBan({
     userId,
     hang,
+    san,
     dung: () => {
       nhip.dung();
       window.removeEventListener("online", online);
@@ -83,8 +96,17 @@ const ngheHang = (f: () => void) => {
   };
 };
 
+// Ảnh của sàn đang mở thôi: căn trùng toà + mã ở sàn khác không hiện ảnh chờ của sàn này.
+let nho: { ds: AnhCho[]; san: string; ra: AnhCho[] } | null = null;
+const anhCuaSan = (): AnhCho[] => {
+  if (!ban) return KHONG;
+  const ds = ban.hang.anh();
+  if (nho?.ds !== ds || nho.san !== ban.san.id) nho = { ds, san: ban.san.id, ra: ds.filter((a) => a.san === ban!.san.id) };
+  return nho.ra;
+};
+
 export function useHangCho(): AnhCho[] {
-  return useSyncExternalStore(ngheHang, () => ban?.hang.anh() ?? KHONG, () => KHONG);
+  return useSyncExternalStore(ngheHang, anhCuaSan, () => KHONG);
 }
 
 /** Trạng thái của hàng chờ cho ngăn chụp: có hàng chờ không, kho trên máy có giữ được không. */
