@@ -45,6 +45,25 @@ const mangDir = (dir) =>
     .filter((m) => m && !m[2].startsWith("Z") && m[3].includes(dir))
     .map((m) => Number(m[1]));
 const deadPid = () => spawnSync("true").pid;
+/** Gửi tín hiệu cho bước dọn: tiến trình vừa chết giữa lúc dò và lúc kill (ESRCH) không làm sập lượt đo. */
+const diet = (pid, sig = "SIGKILL") => {
+  try {
+    process.kill(pid, sig);
+    return true;
+  } catch {
+    return false;
+  }
+};
+/** Giết nhóm tiến trình, nhóm không có thì giết riêng tiến trình. */
+const dietNhom = (pid) => diet(-pid) || diet(pid);
+// Vết lỗi Node của chính con.mjs khi lỗi chưa bắt: dòng nguồn, dòng mũi tên, dòng Error, các dòng «at …», dòng phiên bản.
+const VET_LOI_CON = [/^file:\/\/\S*con\.mjs:\d+$/, /throw new Error\("lỗi thử của con"\);$/, /^\s*\^+\s*$/, /^Error: lỗi thử của con$/, /^\s+at /, /^Node\.js v\d/];
+/** Phần stderr còn lại sau khi bỏ đúng vết lỗi của con — rỗng nghĩa là công cụ không in gì thêm. */
+const stderrLa = (s) =>
+  s
+    .split("\n")
+    .filter((l) => l.trim() && !VET_LOI_CON.some((r) => r.test(l)))
+    .join("\n");
 
 // Ma trận viết trước: mã thoát kỳ vọng của từng lối kết thúc (null = tiến trình con không tự thoát; bài kill nó).
 const MA_THOAT = { dong: null, thoat: 0, loi: 1, "dong-exit-0": 0, "dong-exit-3": 3, SIGTERM: 143, SIGINT: 130, SIGHUP: 129, "bat-rieng": 7, SIGKILL: null, api: null };
@@ -91,14 +110,9 @@ async function cho(dk, han) {
 }
 /** Dọn đúng thứ lượt đo đã ghi: tiến trình con, nhóm Chrome, tiến trình mang thư mục hồ sơ của lượt, thư mục, dòng sổ. */
 function donLuot({ con, chrome, canh, dir }) {
-  for (const pid of [con, canh]) if (conSong(pid)) process.kill(pid, "SIGKILL");
-  if (conSong(chrome))
-    try {
-      process.kill(-chrome, "SIGKILL");
-    } catch {
-      process.kill(chrome, "SIGKILL");
-    }
-  if (dir) for (const pid of mangDir(dir)) process.kill(pid, "SIGKILL");
+  for (const pid of [con, canh]) if (conSong(pid)) diet(pid);
+  if (conSong(chrome)) dietNhom(chrome);
+  if (dir) for (const pid of mangDir(dir)) diet(pid);
   if (dir) rmSync(dir, { recursive: true, force: true });
   if (chrome) rmSync(path.join(SO_PID, `${chrome}.json`), { force: true });
 }
@@ -161,7 +175,10 @@ async function caTat(cdp, ca, coSo) {
     if (l2 && l2.lan2 !== "ok") loi.push(`dong() lần hai ném lỗi: ${l2.lan2}`);
   }
   if (ca.startsWith("dong-exit") && k.loi.trim()) loi.push(`công cụ in ra stderr (${ca})`);
-  if (ca === "loi" && k.loi.replace(/[\s\S]*?lỗi thử của con[\s\S]*/, "").trim()) loi.push("công cụ in ra stderr (loi)");
+  if (ca === "loi" && stderrLa(k.loi)) loi.push("công cụ in ra stderr (loi)");
+  // Đối chứng âm của chính phép kiểm: stderr thật của ca cộng một dòng lạ trước và sau phải bị bắt.
+  if (ca === "loi" && stderrLa(`công cụ: cảnh báo thử\n${k.loi}\ncông cụ: cảnh báo sau`) !== "công cụ: cảnh báo thử\ncông cụ: cảnh báo sau")
+    loi.push("phép đo stderr (loi) không bắt được dòng lạ");
   if (ca === "loi" && !k.loi.includes("lỗi thử của con")) loi.push("mã thoát đổi (loi: không thấy lỗi của con)");
   if (ca === "bat-rieng" && !existsSync(dau)) loi.push("bộ bắt riêng không chạy");
   rmSync(dau, { force: true });
@@ -221,8 +238,8 @@ async function caMoCoi(cdp) {
   // (c) Chrome đã chết, hồ sơ còn.
   const dirC = mkdtempSync(path.join(tmpdir(), "qh-b-chrome-"));
   writeFileSync(path.join(dirC, "x"), "x");
-  // (d) đường ngoài thư mục tạm.
-  const dirD = path.join(RA, `ngoai-tmp-qh-b-chrome-${process.pid}`);
+  // (d) đường ngoài thư mục tạm, tên mang ĐÚNG tiền tố — chỉ rào «ngay dưới thư mục tạm» giữ được nó.
+  const dirD = path.join(RA, `qh-b-chrome-ngoai-tmp-${process.pid}`);
   mkdirSync(dirD, { recursive: true });
   writeFileSync(path.join(dirD, "x"), "x");
   const pc = deadPid();
@@ -253,14 +270,9 @@ async function caMoCoi(cdp) {
     donLuot({ con: k.p.pid, ...info });
   }
   // Dọn đúng thứ bài đã dựng.
-  if (conSong(a.pid))
-    try {
-      process.kill(-a.pid, "SIGKILL");
-    } catch {
-      process.kill(a.pid, "SIGKILL");
-    }
-  for (const pid of mangDir(dirA)) process.kill(pid, "SIGKILL");
-  if (conSong(b.pid)) process.kill(b.pid, "SIGKILL");
+  if (conSong(a.pid)) dietNhom(a.pid);
+  for (const pid of mangDir(dirA)) diet(pid);
+  if (conSong(b.pid)) diet(b.pid);
   for (const d of [dirA, dirB, dirC, dirD]) rmSync(d, { recursive: true, force: true });
   for (const t of tep) rmSync(t, { force: true });
   return { ca: "mo-coi", ok: loi.length === 0, loi };
