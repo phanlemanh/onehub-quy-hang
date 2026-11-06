@@ -176,6 +176,9 @@ const NHAN_DIEN_TRANG_THAI = [
   `${W}/app/exports/new/page.tsx`,
   // Trang khách (hàng 35): khuôn, thẻ, chi tiết, nút Quan tâm, báo mở, trang.
   ...["bao-mo.tsx", "chi-tiet.tsx", "khung.tsx", "page.tsx", "quan-tam.tsx", "the-can.tsx", "trang.tsx"].map((p) => `${W}/app/s/[code]/${p}`),
+  // Trang nhóm môi giới (hàng 44): chờ tải chung của link; bảng và nút tải.
+  `${W}/app/s/[code]/loading.tsx`,
+  ...["bang.tsx", "nut-tai.tsx"].map((p) => `${W}/app/s/broker/${p}`),
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
@@ -276,8 +279,12 @@ const CHO_TRANG_THAI = [
   `${W}/app/global-error.tsx`,
   ...Array(3).fill(`${W}/app/mau/he-bo-cuc/man-mau.tsx`),
   `${W}/app/not-found.tsx`,
+  // Trang khách (hàng 44): đang tải bộ căn.
+  `${W}/app/s/[code]/loading.tsx`,
   // Trang khách (hàng 35): link không còn mở được; lỗi tạm «Chưa mở được» (hàng 36).
   ...Array(2).fill(`${W}/app/s/[code]/trang.tsx`),
+  // Trang nhóm môi giới (hàng 44): tải tệp lỗi.
+  `${W}/app/s/broker/nut-tai.tsx`,
   `${W}/components/shell/notifications.tsx`,
   `${W}/components/shell/placeholder.tsx`,
 ];
@@ -465,7 +472,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 21 ngoại lệ · 0 lệch",
-      "trang-thai: 127 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 129 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
