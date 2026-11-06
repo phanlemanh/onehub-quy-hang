@@ -67,7 +67,11 @@ export async function docVaoDungTin(tx: pg.PoolClient, me: string, bay: Date): P
       `select l.id, l.building_name, l.unit_number, l.list_price::text, cu.bedrooms_total, a.active_at
          from listings l
          join lateral (select max(e.occurred_at) as active_at from listing_events e
-                        where e.company_id = l.company_id and e.listing_id = l.id and e.type = 'status_changed' and e.payload ->> 'to' = 'Active') a on true
+                        where e.company_id = l.company_id and e.listing_id = l.id and e.type = 'status_changed' and e.payload ->> 'to' = 'Active'
+                          -- Đổi nhãn tại chỗ trong Đang bán (hàng 46) không phải lần lên mới: bỏ sự kiện mà trạng thái trước đã là Đang bán.
+                          and coalesce((select p.payload ->> 'to' from listing_events p
+                                         where p.company_id = e.company_id and p.listing_id = e.listing_id and p.type = 'status_changed' and p.seq < e.seq
+                                         order by p.seq desc limit 1), 'Incomplete') <> 'Active') a on true
          ${DONG_CAN}
         where l.company_id = app.current_company_id() and l.standard_status = 'Active' and not l.voided and a.active_at >= $1`,
       [tu],

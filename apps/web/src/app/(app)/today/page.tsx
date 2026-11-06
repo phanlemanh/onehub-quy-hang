@@ -7,6 +7,7 @@ import { Placeholder } from "@/components/shell/placeholder";
 import { TrangThai } from "@/components/trang-thai";
 import { readMe } from "@/lib/api";
 
+import { docTuVung } from "../inventory/doc-tu-vung";
 import { KhungLeadCuaToi } from "../leads/mine/khung";
 import { LeadDaNhapThat } from "../leads/mine/nguon-that";
 import VungDauKhach from "./buyer/vung";
@@ -26,9 +27,12 @@ export const dynamic = "force-dynamic";
 // từ cột thứ hai thì đầu màn báo một dòng (va-he-bo-cuc, Hỏi-1: báo rõ) — cột liệt bộ nhóm mặc định nên dòng báo đọc nhãn
 // từ cùng bộ ấy.
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const me = await readMe((await headers()).get("cookie") ?? "");
+  const cookie = (await headers()).get("cookie") ?? "";
+  const me = await readMe(cookie);
   const vai = me?.activeCompany?.roles ?? [];
   const dauChu = me?.activeCompany && vai.includes("listing_agent") ? { nguoi: me.user.id, san: me.activeCompany.id } : null;
+  // Bộ nhãn trạng thái của sàn (hàng 46) cho dòng «Mới đổi»: cùng đường đọc từ vựng với Bảng hàng; đọc hỏng là chữ mặc định.
+  const nhan = dauChu ? (await docTuVung(cookie)).trangThai : undefined;
   const vung = vungTheoVai(vai);
   const nhanDay = Boolean(me?.activeCompany) && (vai.includes("listing_agent") || vai.includes("team_lead"));
   const q = await searchParams;
@@ -48,7 +52,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         v === "truong-nhom" ? (
           <HomNayTruongNhom key={v} />
         ) : v === "dau-chu" && dauChu ? (
-          <HomNayDauChu key={v} nguoi={dauChu.nguoi} san={dauChu.san} />
+          <HomNayDauChu key={v} nguoi={dauChu.nguoi} san={dauChu.san} nhan={nhan} />
         ) : v === "telesales" ? (
           <KhungLeadCuaToi key={v}>
             <LeadDaNhapThat />

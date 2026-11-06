@@ -9,6 +9,11 @@ import { fileURLToPath } from "node:url";
 
 const GOC = fileURLToPath(new URL("../../../..", import.meta.url));
 const NOI_DUOC_GHI = "packages/api/src/listings/";
+/**
+ * Ngoại lệ có tên duy nhất: cửa hẹp chuyển nhãn trạng thái của quản trị (migration 049, hàng trang-thai-rieng — chủ kho chốt
+ * «Cửa hẹp, mig 049» sau luật 046). Hàm chỉ ghi bước gấp «đổi nhãn tại chỗ»; lớp cơ sở dữ liệu đo ở bộ kiểm cách ly.
+ */
+const TEP_NGOAI_LE = ["packages/db/migrations/049_cua_hep_nhan_trang_thai.sql"];
 const BANG = "(?:public\\.)?(?:listings|listing_events)\\b";
 /** Câu SQL ghi, và dạng bộ dựng câu (insertInto("listings"), updateTable(…), deleteFrom(…)). */
 const MAU = [
@@ -41,7 +46,7 @@ export function quetDuongGhi(goc: string): string[] {
   const out: string[] = [];
   for (const p of ds) {
     const rel = relative(goc, p).split("\\").join("/");
-    if (rel.startsWith(NOI_DUOC_GHI)) continue;
+    if (rel.startsWith(NOI_DUOC_GHI) || TEP_NGOAI_LE.includes(rel)) continue;
     readFileSync(p, "utf8")
       .split("\n")
       .forEach((dong, i) => {

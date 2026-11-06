@@ -12,8 +12,18 @@ const ngayVn = (iso: string) => Math.floor((Date.parse(iso) + VN_MS) / NGAY_MS);
 /** 0 giờ (giờ Việt Nam) của ngày `lui` trước `bayGio`, dạng ms UTC. */
 const dauNgayVn = (bayGio: string, lui: number) => (ngayVn(bayGio) - lui) * NGAY_MS - VN_MS;
 
-/** Lúc căn lên Đang bán: lần đổi trạng thái gần nhất nếu nó đưa căn tới Đang bán. */
-const lucLenDangBan = (c: DuKienCan) => (c.lastStatusChange?.to === "Active" ? c.lastStatusChange.at : null);
+/**
+ * Lúc căn lên Đang bán. Có `lucVaoTrangThai` (hàng 46) thì đọc nó — đổi nhãn tại chỗ trong Đang bán không đặt lại mốc;
+ * dữ kiện đời trước thì lần đổi trạng thái gần nhất nếu nó đưa căn tới Đang bán.
+ */
+export const lucLenDangBan = (c: DuKienCan) =>
+  c.lucVaoTrangThai !== undefined
+    ? c.standardStatus === "Active"
+      ? c.lucVaoTrangThai
+      : null
+    : c.lastStatusChange?.to === "Active"
+      ? c.lastStatusChange.at
+      : null;
 
 function moc(c: DuKienCan, anchor: Extract<Condition, { kind: "days_since" }>["anchor"]): string | null {
   const gia = c.priceChangeTimestamp ?? lucLenDangBan(c);
