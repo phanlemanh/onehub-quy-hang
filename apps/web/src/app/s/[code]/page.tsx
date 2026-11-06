@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { getApi } from "@/lib/api";
+import { BangMoiGioi, laTrangMoiGioi } from "../broker/bang";
 import { docTrang } from "./doc";
 import { KhungTrangKhach } from "./khung";
 import { dauCua, NoiDungTrangKhach } from "./trang";
@@ -17,9 +18,11 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const kq = await docTrang(code, (u, i) => getApi().request(u, i));
   const than = kq.kieu === "mo" ? kq.than : null;
   const viTri = can != null && /^\d+$/.test(can) ? Number(can) : undefined;
+  // Hàng 44: một link, hai cách hiện — Lần gửi nhóm môi giới ra bảng chỉ đọc, khách riêng ra trang thẻ như cũ (Hỏi-5).
+  const moiGioi = laTrangMoiGioi(than);
   return (
-    <KhungTrangKhach dau={dauCua(than)}>
-      <NoiDungTrangKhach code={code} than={than} can={viTri} loiTam={kq.kieu === "loi-tam"} />
+    <KhungTrangKhach dau={dauCua(than)} rong={moiGioi}>
+      {moiGioi ? <BangMoiGioi code={code} than={than} /> : <NoiDungTrangKhach code={code} than={than} can={viTri} loiTam={kq.kieu === "loi-tam"} />}
     </KhungTrangKhach>
   );
 }
