@@ -1,0 +1,6 @@
+{
+  "feature_plain": "Quỹ hàng chạy được qua kiểu dùng chung kết nối của Supabase, nên lúc đông người không còn đá người đang đăng nhập ra màn đăng nhập; đổi bản thật sang kiểu này chỉ là bật một công tắc, có đường lùi.",
+  "decisions": [
+    {"id": "E8", "q": "Tài liệu vận hành đã đủ cách đổi bản thật và cách lùi chưa?", "why": "Hội đồng máy đề xuất Đạt: ADR-0009 có mục sửa đổi 06/11 nêu chế độ mới, lý do, chuỗi riêng của bước migration, các bước bật công tắc và cách lùi."}
+  ]
+}
