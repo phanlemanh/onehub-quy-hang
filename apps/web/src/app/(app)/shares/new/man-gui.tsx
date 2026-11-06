@@ -31,7 +31,7 @@ import type { ListingView } from "@/lib/sync/types";
 import { dinhDangGia, FEE_LABEL } from "../../inventory/cot";
 import { useDanhMuc } from "../../inventory/danh-muc";
 import { chiMuc } from "../../inventory/ghep-danh-muc";
-import { canNoiBoTu, docCanChon, khoaTin, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, tinDangDung, type KetGui, type NguoiGui } from "./gui";
+import { canNoiBoTu, docCanChon, khoaTin, LOI_MUC_CHIA, mucChiaGui, mucChiaMacDinh, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, tinDangDung, type KetGui, type NguoiGui } from "./gui";
 import { TrangKhach } from "./trang-khach";
 
 const ANH = "/api/v1/units/photos";
@@ -195,6 +195,16 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
   const [tinSua, setTinSua] = useState<{ khoa: string; tin: string } | null>(null);
   const [ket, setKet] = useState<KetGui | null>(null);
   const [dangTao, setDangTao] = useState(false);
+  // Hàng 44: mức chia của bộ khi gửi nhóm môi giới — điền sẵn mặc định của sàn, người gửi sửa hay để trống.
+  const [mucMacDinh, setMucMacDinh] = useState<number | null | undefined>(undefined);
+  const [mucNhap, setMucNhap] = useState<string | null>(null);
+  useEffect(() => {
+    if (nguoiNhan !== "nhom_moi_gioi" || mucMacDinh !== undefined) return;
+    goiFetch("GET", "/api/v1/company/settings")
+      .then((r) => setMucMacDinh(r.status === 200 ? mucChiaMacDinh(r.body) : null))
+      .catch(() => setMucMacDinh(null));
+  }, [nguoiNhan, mucMacDinh]);
+  const mucChia = nguoiNhan === "nhom_moi_gioi" ? mucChiaGui(mucNhap, mucMacDinh ?? null) : null;
 
   useEffect(() => {
     if (nguoiNhan !== "khach_rieng" || khach) return;
@@ -245,7 +255,8 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
     if (!nut.mo || !nguoiNhan) return;
     setDangTao(true);
     setKet(null);
-    const kq = await boGui.gui({ nguoiNhan, prospectId: khachId, listingIds: canGui.map((c) => c.id), tin, ban });
+    if (mucChia === "sai") return;
+    const kq = await boGui.gui({ nguoiNhan, prospectId: khachId, listingIds: canGui.map((c) => c.id), tin, ban, mucChia });
     setDangTao(false);
     if (kq.kieu !== "bo-qua") setKet(kq);
   }
@@ -285,6 +296,20 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
+        {nguoiNhan === "nhom_moi_gioi" ? (
+          <Field data-invalid={mucChia === "sai" || undefined}>
+            <FieldLabel htmlFor="muc-chia">Mức chia (%)</FieldLabel>
+            <Input
+              id="muc-chia"
+              inputMode="decimal"
+              placeholder="Để trống nếu không chia"
+              value={mucNhap ?? (mucMacDinh == null ? "" : String(mucMacDinh))}
+              onChange={(e) => setMucNhap(e.target.value)}
+              aria-invalid={mucChia === "sai" || undefined}
+            />
+            {mucChia === "sai" ? <FieldError>{LOI_MUC_CHIA}</FieldError> : null}
+          </Field>
+        ) : null}
         {nguoiNhan === "khach_rieng" ? (
           <div className="flex flex-col gap-2">
             {khach === null ? (

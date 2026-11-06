@@ -170,7 +170,7 @@ export function taoBoGui(dep: {
       }
     },
 
-    async gui(o: { nguoiNhan: NguoiNhan; prospectId: string | null; listingIds: readonly string[]; tin: string; ban: readonly CanRaNgoai[] }): Promise<KetGui> {
+    async gui(o: { nguoiNhan: NguoiNhan; prospectId: string | null; listingIds: readonly string[]; tin: string; ban: readonly CanRaNgoai[]; mucChia?: number | null }): Promise<KetGui> {
       if (dangTao) return { kieu: "bo-qua" };
       const than = thanLanGui(o);
       if (!than.ok) return { kieu: "loi", chu: LOI_TAO_LINK };
@@ -210,3 +210,24 @@ export function taoBoGui(dep: {
     },
   };
 }
+
+/** Mức chia mặc định của sàn (điểm #15) từ thân `GET /api/v1/company/settings`; trống hay đọc lỗi → null. Hàng 44. */
+export function mucChiaMacDinh(body: unknown): number | null {
+  const items = (body as { items?: { key: string; value: unknown }[] } | null)?.items ?? [];
+  const v = items.find((x) => x.key === "broker_page.commission_split_pct")?.value;
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+/**
+ * Mức chia của bộ từ ô «Mức chia (%)»: chưa chạm ô (null) → mặc định của sàn; ô trống → không có mức; số dấu phẩy hay dấu
+ * chấm → số. Chữ không đọc được → "sai" (nút gửi khoá, báo dưới ô). Hàng 44.
+ */
+export function mucChiaGui(nhap: string | null, macDinh: number | null): number | null | "sai" {
+  if (nhap === null) return macDinh;
+  const t = nhap.trim().replace(",", ".");
+  if (t === "") return null;
+  const n = Number(t);
+  return Number.isFinite(n) && n >= 0 && n <= 100 && Math.round(n * 100) === n * 100 ? n : "sai";
+}
+export const LOI_MUC_CHIA = "Mức chia từ 0 đến 100, tối đa hai chữ số lẻ";
+
