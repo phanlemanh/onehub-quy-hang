@@ -134,6 +134,12 @@ Quỹ hàng: lead bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên
 Quỹ hàng: quỹ hàng nội bộ là lõi. Sáu trạng thái chuẩn; sàn thêm nhãn neo vào trạng thái chuẩn (hàng 46); ba lý do Ngừng
 hẳn cố định (sổ, điều khoá K12).
 
+Hàng 46 (dựng 06/11) theo đúng mẫu `StandardStatus` ↔ `MlsStatus`: sáu trạng thái chuẩn giữ ở lõi, quản trị sàn thêm tối đa
+3 nhãn neo vào mỗi trạng thái; nhãn nhận luật và màu của neo, đếm và lọc theo trạng thái chuẩn, trang khách chỉ thấy trạng
+thái chuẩn. Neo cố định sau khi tạo, gỡ nhãn đang dùng thì hỏi nhãn thay cùng neo — giống Follow Up Boss chuyển người sang
+stage khác khi xoá stage đang dùng (cách hỏi chưa kiểm). Trần 3 nhãn là của ta; Follow Up Boss, KW Command không nêu trần
+(chưa kiểm) — điều khoá K29.
+
 | Sản phẩm | Cách làm | Cấu hình ở đâu | Nguồn |
 | --- | --- | --- | --- |
 | RESO | `StandardStatus` cố định 11 giá trị; `MlsStatus` do từng MLS tự đặt, mỗi giá trị phải neo vào đúng một `StandardStatus` | **Lai**: RESO giữ chuẩn, MLS đặt nhãn | [StandardStatus](https://dd.reso.org/DD2.0/Property/StandardStatus/), [MlsStatus](https://dd.reso.org/DD2.0/Property/MlsStatus/) |

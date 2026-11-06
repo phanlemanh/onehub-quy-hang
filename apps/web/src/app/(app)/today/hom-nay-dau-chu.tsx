@@ -37,6 +37,7 @@ import { chiMuc } from "../inventory/ghep-danh-muc";
 import { CotHoSo } from "../units/ho-so/cot-ho-so";
 import { docCot, dongCot, duongHangChuaMa, moCot, type ChonCan } from "../units/ho-so/ho-so";
 import { KhungHoSoCan } from "../units/ho-so/khung";
+import type { NhanTrangThai } from "@quy-hang/core/statuses";
 import { canHomNay, chuGiaPhi, chuGio, chuGioNgay, chuHan, chuLoai, lyDo, type CanHomNay } from "./ly-do";
 import { docLeadThamSo, moNhom, timLead } from "./mo-lead";
 import { docNhomThamSo, timNhom } from "./mo-nhom";
@@ -282,7 +283,8 @@ function DangTai() {
 type TaiBo = { kind: "dang" } | { kind: "ok"; bo: BoNhom } | { kind: "loi" };
 type TaiLead = { kind: "dang" } | { kind: "ok"; ds: LeadGiao[] } | { kind: "loi" };
 
-export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
+/** `nhan`: bộ nhãn trạng thái của sàn (hàng 46), trang đọc ở máy chủ qua từ vựng của sàn; vắng = chữ mặc định. */
+export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string; nhan?: readonly NhanTrangThai[] }) {
   const { bd } = useBoDongBo();
   const dsHang = useDanhSachHang();
   const ngan = bd.ngan();
@@ -336,7 +338,7 @@ export function HomNayDauChu({ nguoi, san }: { nguoi: string; san: string }) {
         const viec: Viec[] =
           n.subject === "lead"
             ? leads.filter((l) => nhomCuaLead(bo, { stage: l.stage as LeadState })?.code === n.code).map((lead) => ({ kind: "lead", id: `lead:${lead.id}`, nhom: n, lead }))
-            : (theoCan.get(n.code) ?? []).map((can) => ({ kind: "can", id: `can:${can.id}`, nhom: n, can, lyDo: lyDo(n, can, nguoi, bayGio) }));
+            : (theoCan.get(n.code) ?? []).map((can) => ({ kind: "can", id: `can:${can.id}`, nhom: n, can, lyDo: lyDo(n, can, nguoi, bayGio, nhan) }));
         return { nhom: n, viec };
       })
       .filter((g) => g.viec.length > 0);
