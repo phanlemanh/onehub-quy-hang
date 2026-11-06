@@ -9,6 +9,7 @@ import { withCompany } from "../../db";
 import { API_ERRORS, type ApiErrorEntry } from "../../errors";
 import { khachMacDinh, LoiAi, MO_HINH, TRAN_MS, type KhachAi, type TraLoiAi } from "./claude";
 import { tinhTien } from "./gia";
+import { registerOLaRoutes } from "./cells/routes";
 import { batTat, docTinhTrang, ghiDongAi, giaTriQuaThoaThuan, thoaThuanMo, VAI_GOI, type DongAi } from "./store";
 
 /**
@@ -54,17 +55,22 @@ const TrangThai = z.object({
   laQuanTri: z.boolean(),
 });
 
-const laQuaGio = (e: unknown) => e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
+export const laQuaGio = (e: unknown) => e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
 
-export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
-  const { appPool, auth } = deps;
-  async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
-    const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
+/** Phiên + sàn đang làm của lời gọi — chung cho đường đề xuất cột và đường ô lạ. */
+export function dungVao(deps: ApiDeps) {
+  return async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
+    const user = (await deps.auth.api.getSession({ headers: c.req.raw.headers }))?.user;
     if (!user) return API_ERRORS.unauthenticated;
-    const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
+    const r = await resolveCompany(deps.appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
     if (!r.active) return r.reason === API_ERRORS.selectCompany.code ? API_ERRORS.selectCompany : API_ERRORS.noCompany;
     return { userId: user.id, companyId: r.active.id };
-  }
+  };
+}
+
+export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
+  const { appPool } = deps;
+  const vao = dungVao(deps);
   const khach = (): KhachAi | null => (deps.khachAi === undefined ? khachMacDinh() : deps.khachAi);
   const tra = (c: Context, l: ApiErrorEntry, reason?: string) => c.json({ error: l.code, ...(reason && { reason }) }, l.status as 400);
   const tatDinh = (c: Context, lyDo: string) => c.json({ cheDo: "tat-dinh" as const, lyDo }, 200);
@@ -112,7 +118,7 @@ export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
         await ghi({
           model: (e instanceof LoiAi && e.model) || MO_HINH,
           ...(u && { usage: u }),
-          costUsd: u ? tinhTien(u) : 0,
+          costUsd: u ? tinhTien(u, (e instanceof LoiAi && e.model) || MO_HINH) : 0,
           durationMs: performance.now() - batDau,
           result: quaGio ? "timeout" : saiKhuon ? "invalid_output" : "provider_error",
         });
@@ -120,7 +126,7 @@ export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
       }
       const kq: KetQuaDeXuat = kiemDeXuat(goi, tl.json);
       const hongGoc = kq.loi.some((l) => l.cot === null && /sai khuôn/.test(l.lyDo));
-      await ghi({ model: tl.model, usage: tl.usage, costUsd: tinhTien(tl.usage), durationMs: performance.now() - batDau, result: hongGoc ? "invalid_output" : "ok" });
+      await ghi({ model: tl.model, usage: tl.usage, costUsd: tinhTien(tl.usage, tl.model), durationMs: performance.now() - batDau, result: hongGoc ? "invalid_output" : "ok" });
       if (hongGoc) return tatDinh(c, LY_DO.saiKhuon);
       return c.json({ cheDo: "ai" as const, deXuat: kq.deXuat, loi: kq.loi }, 200);
     },
@@ -175,4 +181,6 @@ export function registerAiRoutes(api: OpenAPIHono, deps: ApiDeps) {
       return c.body(null, 204);
     },
   );
+
+  registerOLaRoutes(api, deps);
 }
