@@ -1,9 +1,9 @@
-# E13 verifier doc lap 2026-11-06T10:24:53.086Z. Cho thu day H (dev 3494, Postgres 5574). Can mau: Toà A / A-03.02 (dem = chua-xoa/tong).
-B1 truoc: 4/4
-B2 dau-khach POST /units/photos/upload-url -> 403 {"error":"listing-agent-required"}
-B2 dau-khach POST /units/photos -> 403 {"error":"listing-agent-required"}
-B2 sau dau-khach: 4/4
-B3 dau-chu-1 POST /units/photos/upload-url -> 200 {"truc_tiep":false}
-B3 dau-chu-1 POST /units/photos -> 201 {"anh":{"id":"dd9b8a01-1572-4bb4-8082-d51048e65a59","buildingName":"Toà A","unitNumber":"A-03.02","c
-B3 sau dau-chu-1: 5/5
-KET: khach doi=khong (4/4 -> 4/4); dau-chu-1 +1 (4/4 -> 5/5)
+# E13 verifier doc lap 2026-11-06T14:12:47.449Z - chỗ thử H dev 3494 / container quy-hang-db-dkn-H. Căn: Toà A / A-02.06 (đếm = chưa-xoá/tổng)
+B1 truoc: 6/6
+B2 dau-khach POST upload-url -> 403 {"error":"listing-agent-required"}
+B2 dau-khach POST photos -> 403 {"error":"listing-agent-required"}
+B2 sau dau-khach: 6/6
+B3 dau-chu-1 POST upload-url -> 200 {"truc_tiep":false}
+B3 dau-chu-1 POST photos -> 201 {"anh":{"id":"f776fb19-4da3-4908-b46b-ae9fb44e8104","buildingName":"Toà A","unitNumber":"A-02.06","c
+B3 sau dau-chu-1: 7/7
+KET: khach doi=khong (6/6 -> 6/6, 403 x2 listing-agent-required); dau-chu-1 +1 (6/6 -> 7/7, 200 + 201)

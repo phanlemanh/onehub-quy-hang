@@ -1,6 +1,1 @@
-# Driver: node fetch (khong co browser/console). Nguon: web-h.log dev 3494, cac dong /api/v1/units/photos cua luot nay.
- POST /api/v1/units/photos/upload-url 403 in 10ms (next.js: 0.5ms, application-code: 10ms)
- POST /api/v1/units/photos 403 in 10ms (next.js: 0.3ms, application-code: 9ms)
- POST /api/v1/units/photos/upload-url 200 in 12ms (next.js: 0.4ms, application-code: 12ms)
- POST /api/v1/units/photos 201 in 20ms (next.js: 0.3ms, application-code: 19ms)
-# Khong co 5xx/loi ket noi; 403 cua dau-khach la dung expected.
+driver node fetch + psql, khong co browser tool: khong doc network trinh duyet (n-a driver). Fallback html thay screenshot (config khong khai capture.ui).

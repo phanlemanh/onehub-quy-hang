@@ -1,10 +1,5 @@
-[E19 network, Playwright page.on(response/requestfailed) + route, may dev http://localhost:3460]
-Buoc 1-2 (dau-chu-1): POST /api/v1/units/photos/upload-url x2 -> CHU DICH bi chan (route.abort internetdisconnected); khong co response app nao 4xx/5xx
-Buoc 3: 200 POST /api/v1/auth/sign-out
-Buoc 4 (truong-nhom):
- 200 POST /api/v1/auth/sign-in/email-otp
- FAILED GET /_next/static/chunks/app/(app)/today/page.js net::ERR_ABORTED   (static asset bi huy do dieu huong sang /units/A-04.01 — chi note)
- 200 GET /api/v1/catalog (x2); 200 GET /api/v1/listings; 200 GET /api/v1/units/photos (x3); 200 GET /api/v1/listings/<id>
- 200 GET /api/v1/units/photos/<id>/thumb (x2), /original (x3)
- khong co POST /api/v1/units/photos nao tu nguoi B (so POST bi chan = 0)
-Console: loi console cua phien chi la hau qua cua POST upload-url bi chan co chu dich o buoc 1-2.
+[Playwright network, app-origin http://localhost:3494, /api/]
+POST /api/v1/units/photos/upload-url x4 -> FAILED net::ERR_INTERNET_DISCONNECTED (CHU DONG: route.abort theo thiet ke cua eval, khong phai loi app)
+POST /api/v1/auth/sign-out -> 200
+Tat ca GET /api/v1/{catalog,listings,units/photos,listings/<id>} -> 200
+Khong co 4xx/5xx. Console: loi chi la phan hoi bi chan chu dong (net::ERR_INTERNET_DISCONNECTED).
