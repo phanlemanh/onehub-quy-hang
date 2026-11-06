@@ -141,7 +141,8 @@ test("AC-3 khớp đáp án — phá thử: đáp án bản sao lệch thì đ�
 });
 
 test("AC-5 tên cũ bị tách", () => {
-  const tach = DM.xaCu.filter((x) => x.vao.length >= 2);
+  // Phạm vi bảng trích hàng 73 (Quận 1 cũ): danh mục cả nước có hơn 400 xã cũ bị tách (hàng danh-muc-xa-day-du).
+  const tach = DM.xaCu.filter((x) => x.vao.length >= 2 && x.maTinh === "79" && x.huyenCu === "Quận 1");
   assert.deepEqual(tach.map((x) => x.ten).sort(), ["Cầu Ông Lãnh", "Nguyễn Thái Bình", "Đa Kao"].sort());
   for (const cu of tach) assert.deepEqual(kiemTach(docDiaChi(`45 Đường Mẫu 1, Phường ${cu.ten}, ${cu.huyenCu}, TP.HCM`), cu.ten), []);
   const cachViet = DAP_AN.filter((c) => c.kieu.includes("phuong-cu-tach"));
