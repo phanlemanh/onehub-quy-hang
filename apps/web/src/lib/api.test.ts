@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import pg from "pg";
 
-import { docPhanHoiMe, dungPools, KHACH_KHAC, LoiDocPhien, NOI_CHAN_DAU, NOI_TRANG, SO_BAN_DU_KIEN, TRAN_POOLER } from "./api";
+import { CONG_POOLER, docPhanHoiMe, doiCong, dungPools, getApi, KHACH_KHAC, LoiDocPhien, NOI_CHAN_DAU, NOI_TRANG, SO_BAN_DU_KIEN, TRAN_POOLER } from "./api";
 
 const json = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -57,8 +57,7 @@ test("hai pool dựng đúng cỡ của nơi chạy và cả hai gắn attachDat
         assert.equal(pool.options.idleTimeoutMillis, c.idleTimeoutMillis);
         assert.equal(pool.options.connectionTimeoutMillis, c.connectionTimeoutMillis);
       }
-      // Pool danh tính giữ search_path=identity; pool ứng dụng không (luật cách ly đặt trong giao dịch, không ở chuỗi nối).
-      assert.equal((identityPool.options as { options?: string }).options, "-c search_path=identity");
+      // Không pool nào mang tham số khởi động (pooler-che-do-giao-dich) — ca riêng dưới ghim cho bể danh tính.
       assert.equal((appPool.options as { options?: string }).options, undefined);
     } finally {
       await Promise.all([identityPool.end(), appPool.end()]);
@@ -70,6 +69,81 @@ test("hai pool dựng đúng cỡ của nơi chạy và cả hai gắn attachDat
     assert.equal(identityPool.options.max, NOI_TRANG.danhTinh.max);
   } finally {
     await Promise.all([identityPool.end(), appPool.end()]);
+  }
+});
+
+// pooler-che-do-giao-dich: chế độ giao dịch không giữ tham số khởi động — bể danh tính không được dựa vào nó.
+test("bể danh tính không mang tham số khởi động ở mọi nơi chạy", async () => {
+  for (const noi of ["trang", "chan-dau"] as const) {
+    const { identityPool, appPool } = dungPools("postgres://u:p@127.0.0.1:1/x", noi, () => {});
+    try {
+      const o = (identityPool.options as { options?: string }).options;
+      assert.equal(o, undefined, `bể danh tính ${noi} còn tham số khởi động: ${o}`);
+    } finally {
+      await Promise.all([identityPool.end(), appPool.end()]);
+    }
+  }
+});
+
+test("dòng dựng bể nêu cổng, không lộ chuỗi kết nối", async () => {
+  const goc = console.log;
+  const dong: string[] = [];
+  console.log = (...a: unknown[]) => void dong.push(a.map(String).join(" "));
+  try {
+    for (const noi of ["trang", "chan-dau"] as const) {
+      dong.length = 0;
+      const { identityPool, appPool } = dungPools("postgres://nguoi-thu:mat-khau-thu@may-chu-thu:6543/postgres", noi, () => {});
+      await Promise.all([identityPool.end(), appPool.end()]);
+      const cua = dong.filter((l) => l.includes("[pool:ket-noi]"));
+      assert.equal(cua.length, 1, `dòng dựng bể ${noi}: cần đúng 1, có ${cua.length}`);
+      assert.match(cua[0]!, /\[pool:ket-noi\] cổng 6543/, `dòng dựng bể ${noi} không nêu cổng 6543: ${cua[0]}`);
+      for (const bi of ["mat-khau-thu", "may-chu-thu", "nguoi-thu"]) {
+        assert.ok(!cua[0]!.includes(bi), `dòng dựng bể ${noi} lộ «${bi}»: ${cua[0]}`);
+      }
+    }
+  } finally {
+    console.log = goc;
+  }
+});
+
+test("công tắc cổng: đổi đúng cổng, vắng thì giữ nguyên, giá trị lạ thì ném không lộ chuỗi", () => {
+  const goc = "postgres://nguoi-thu:mat-khau-thu@may-chu-thu:5432/postgres?sslmode=require&uselibpqcompat=true";
+  for (const cong of CONG_POOLER) {
+    const u = new URL(doiCong(goc, cong));
+    assert.equal(u.port === "" ? "5432" : u.port, cong, `công tắc cổng ${cong}: cổng sau khi đổi là ${u.port}`);
+    assert.equal(u.hostname, "may-chu-thu", `công tắc cổng ${cong}: đổi máy chủ`);
+    assert.equal(u.password, "mat-khau-thu", `công tắc cổng ${cong}: mất mật khẩu`);
+    assert.equal(u.searchParams.get("sslmode"), "require", `công tắc cổng ${cong}: mất sslmode`);
+    assert.equal(u.searchParams.get("uselibpqcompat"), "true", `công tắc cổng ${cong}: mất uselibpqcompat`);
+  }
+  assert.equal(doiCong(goc, undefined), goc, "công tắc cổng vắng: chuỗi bị đổi");
+  assert.equal(doiCong(goc, ""), goc, "công tắc cổng rỗng: chuỗi bị đổi");
+  for (const la of ["6544", "abc", " 6543"]) {
+    assert.throws(
+      () => doiCong(goc, la),
+      (e: Error) => /chỉ nhận 5432 hoặc 6543/.test(e.message) && !e.message.includes("mat-khau-thu") && !e.message.includes("may-chu-thu"),
+      `công tắc cổng «${la}»: không ném, hoặc lỗi lộ chuỗi kết nối`,
+    );
+  }
+});
+
+test("công tắc cổng: getApi dựng bể theo cổng của công tắc", async () => {
+  const cu = { ...process.env };
+  const goc = console.log;
+  const dong: string[] = [];
+  console.log = (...a: unknown[]) => void dong.push(a.map(String).join(" "));
+  try {
+    Object.assign(process.env, {
+      DATABASE_URL: "postgres://u:p@127.0.0.1:5432/x",
+      DATABASE_POOLER_PORT: "6543",
+      BETTER_AUTH_SECRET: "bi-mat-thu-".padEnd(40, "x"),
+      BETTER_AUTH_URL: "http://localhost:3460",
+    });
+    getApi();
+    assert.ok(dong.some((l) => l.includes("[pool:ket-noi] cổng 6543")), `getApi không dựng bể ở cổng 6543: ${dong.join(" | ")}`);
+  } finally {
+    console.log = goc;
+    process.env = cu;
   }
 });
 

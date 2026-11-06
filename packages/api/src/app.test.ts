@@ -137,6 +137,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/agent-reassignments/{id}/undo",
     // Hàng 82: cấu hình theo sàn qua lối chung.
     "GET /api/v1/company/settings",
+    "GET /api/v1/listings/{listingId}/fee-basis",
     "PATCH /api/v1/company/settings",
     "GET /api/v1/company/import-templates",
     "PUT /api/v1/company/import-templates/{headerKey}",

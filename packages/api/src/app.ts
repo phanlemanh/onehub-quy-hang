@@ -21,6 +21,7 @@ import { registerContactReadRoutes } from "./contacts/read/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerSettingsRoutes } from "./settings/routes";
+import { registerFeeRoutes } from "./fees/routes";
 import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
 import { registerStatusesRoutes } from "./statuses/routes";
@@ -55,7 +56,7 @@ const BASE = `/api/${API_VERSION}`;
 export type ApiDeps = {
   /** Kết nối tới bảng của công ty — chỉ dùng qua withCompany (vai quy_hang_app). */
   appPool: pg.Pool;
-  /** Kết nối danh tính (search_path = identity) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email. */
+  /** Kết nối danh tính (vai chủ, không tham số khởi động) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email; câu tay ghi `identity.<bảng>`. */
   identityPool: pg.Pool;
   auth: Auth;
   /** Khoá của lối việc nền (`JOB_SECRET`); vắng thì lối ấy trả 503. Chủ kho đặt ở Vercel và Supabase (ADR-0017). */
@@ -205,6 +206,8 @@ export function createApi(deps: ApiDeps) {
   registerRoutingRoutes(api, deps);
   // Hàng 82: cấu hình theo sàn qua lối chung, có nhật ký.
   registerSettingsRoutes(api, deps);
+  // Hàng 49: dấu định nghĩa bao phí của giá.
+  registerFeeRoutes(api, deps);
   registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
   registerStatusesRoutes(api, deps);

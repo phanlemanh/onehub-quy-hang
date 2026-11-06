@@ -196,7 +196,7 @@ independent: true · phục vụ E5, E14 (gián tiếp)
 **Files:**
 - Create: `packages/core/src/redaction/truong-rieng.ro-ri.test.ts` (mồi `custom` + bộ trường mồi; `banRaNgoai`, `xuatBang`)
 - Modify: `docs/product/tham-chieu.md` (§7 dựng 06/11, sổ quyết định §12 Hỏi-1..6), `docs/architecture/so-diem-bien-thien.md`
-  (#22 «Mở · hàng 47», trần gộp 20; điều khoá K30 kiểu/đối tượng cố định, lựa chọn không gỡ), `docs/adr/0018-cau-hinh-theo-san.md`
+  (#22 «Mở · hàng 47», trần gộp 20; điều khoá K31 kiểu/đối tượng cố định, lựa chọn không gỡ), `docs/adr/0018-cau-hinh-theo-san.md`
   (quyết định 8 sửa đổi 06/11 — lớp nguồn cho trường của liên hệ chủ nhà), `docs/adr/0021-lien-he.md` (đóng «Mục chờ cho hàng 47»),
   `docs/product/doi-chieu-nganh.md` (dòng trường riêng theo loại), `docs/design/vo-va-ia.md` (Cài đặt › Trường riêng đã dựng),
   `CONTEXT.md` nếu thêm nhãn

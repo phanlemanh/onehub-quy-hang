@@ -51,8 +51,8 @@ const TRANG_TAM = [
 const BANG = {
   "xac-thuc": { theoKhuon: ["dat-mat-khau", "login", "no-company", "select-company"].map((p) => `${W}/app/(auth)/${p}/page.tsx`), ngoaiLe: [] },
   "cai-dat-san": {
-    // Hàng 50: Mẫu nhập đi khuôn MucCaiDat. Hàng 45: màn Cách gọi. Hàng 46: màn Trạng thái. Hàng 47: màn Trường riêng.
-    theoKhuon: [`${W}/app/(app)/settings/ai/page.tsx`, `${W}/app/(app)/settings/fields/page.tsx`, `${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/statuses/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
+    // Hàng 50: Mẫu nhập đi khuôn MucCaiDat. Hàng 45: màn Cách gọi. Hàng 46: màn Trạng thái. Hàng 47: màn Trường riêng. Hàng 49: màn Thuế phí.
+    theoKhuon: [`${W}/app/(app)/settings/ai/page.tsx`, `${W}/app/(app)/settings/fees/page.tsx`, `${W}/app/(app)/settings/fields/page.tsx`, `${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/statuses/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/(app)/settings/[section]/page.tsx`, `${W}/app/(app)/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
@@ -79,6 +79,8 @@ const BANG = {
       `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/settings/[section]/page.tsx`,
       `${W}/app/(app)/settings/ai/page.tsx`,
+      // Hàng 49: màn Thuế phí rời trang tạm.
+      `${W}/app/(app)/settings/fees/page.tsx`,
       // Hàng 47: màn Trường riêng rời trang tạm.
       `${W}/app/(app)/settings/fields/page.tsx`,
       // Hàng 45: màn Cách gọi rời trang tạm.
@@ -172,7 +174,7 @@ const NHAN_DIEN_TRANG_THAI = [
   // Nhập Excel (hàng man-nhap-excel): khuôn, màn và bảng của nó.
   ...["khung.tsx", "new/bang.tsx", "new/hoan-tac.tsx", "new/man-nhap.tsx"].map((p) => `${W}/app/(app)/imports/${p}`),
   `${W}/app/(auth)/login/may-bi-bao.tsx`,
-  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/dien-thoai/anh-lon.tsx", "ho-so/dien-thoai/than-dien-thoai.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "ho-so/than-chung.tsx", "ho-so/than-cot.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
+  ...["[code]/page.tsx", "ho-so/bang-co-ho-so.tsx", "ho-so/cot-ho-so.tsx", "ho-so/dien-thoai/anh-lon.tsx", "ho-so/dien-thoai/than-dien-thoai.tsx", "ho-so/dong-dinh-nghia.tsx", "ho-so/ho-so-toan-man.tsx", "ho-so/khung.tsx", "ho-so/nut-bao-sai.tsx", "ho-so/nut-hoi-dau-chu.tsx", "ho-so/o-ma-can.tsx", "ho-so/than-chung.tsx", "ho-so/than-cot.tsx", "photos/muc-anh-can.tsx", "photos/muc-anh.tsx", "photos/redact/trinh-che.tsx", "ready/nut-san-sang.tsx"].map((p) => `${W}/app/(app)/units/${p}`),
   ...["dang-xuat.tsx", "dat-mat-khau/form.tsx", "dat-mat-khau/page.tsx", "khung.tsx", "login/form.tsx", "login/page.tsx", "no-company/page.tsx", "select-company/danh-sach.tsx", "select-company/page.tsx"].map(
     (p) => `${W}/app/(auth)/${p}`,
   ),
@@ -185,7 +187,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -225,6 +227,8 @@ const CHO_TRANG_THAI = [
   // Cài đặt sàn → Xử lý bằng AI (hàng 68): lỗi đọc, đang đọc, hết trần, chưa sẵn sàng, lỗi đổi.
   ...Array(5).fill(`${W}/app/(app)/settings/ai/cong-tac.tsx`),
   // Cài đặt sàn → Người dùng (vào vỏ ở hàng 91).
+  // Thuế phí (hàng 49): lỗi tải, lỗi lưu.
+  ...Array(2).fill(`${W}/app/(app)/settings/fees/bang-thue-phi.tsx`),
   // Trường riêng (hàng 47): lỗi lưu, đã lưu, trùng nghĩa; lỗi đọc ở trang.
   `${W}/app/(app)/settings/fields/page.tsx`,
   ...Array(3).fill(`${W}/app/(app)/settings/fields/truong-rieng.tsx`),
@@ -467,7 +471,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 7 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 8 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -482,8 +486,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 25 ngoại lệ · 0 lệch",
-      "trang-thai: 147 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 26 ngoại lệ · 0 lệch",
+      "trang-thai: 149 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

@@ -49,7 +49,7 @@ const TOA = [...new Set(SAMPLE_CATALOG.subdivisions.flatMap((p) => p.buildings.m
 
 async function tenNguoi(identityPool: pg.Pool, userId: string | null): Promise<string | null> {
   if (!userId) return null;
-  const { rows } = await identityPool.query<{ name: string }>('select name from "user" where id = $1', [userId]);
+  const { rows } = await identityPool.query<{ name: string }>('select name from identity."user" where id = $1', [userId]);
   return rows[0]?.name ?? null;
 }
 
