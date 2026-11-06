@@ -137,7 +137,7 @@ evals:
       - "Mở ảnh PNG vừa tải và chụp lại: đủ tiêu đề cột như bảng trang, ba dòng căn, phần đầu có mức chia"
       - "Trong bộ có một căn đã bán: dòng mờ, không giá"
       - "Mở link đã tắt và một mã sai: thấy «Link không còn mở» trong khung trang"
-      - "Giả lỗi đọc (tắt API tạm hay chặn route trong công cụ trình duyệt): thấy «Chưa tải được — thử lại»"
+      - "Giả lỗi đọc: dừng máy chủ web-L, chạy cấu hình web-L-loi của .claude/launch.json (cổng 3498, DATABASE_URL trỏ Postgres không có máy ở 127.0.0.1:5599), mở link nhóm môi giới trên cổng 3498: thấy «Chưa mở được — thử lại sau» trong khung trang; xong thì tắt web-L-loi, chạy lại web-L"
       - "Giả lỗi dựng tệp (chặn bộ ghi trong công cụ trình duyệt): câu báo tại nút tải, bảng vẫn còn"
       - "Ở mục Trang môi giới nhập 120 rồi Lưu: lý do hiện dưới ô"
       - "Mở /settings/broker-page bằng vai Đầu khách: về trang Cá nhân kèm câu báo chỉ Quản trị sàn"
@@ -158,6 +158,15 @@ evals:
     criterion: AC-10
     executor: script
     cmd: config:executors.design.khuon
-    expected: "exit 0; lưới khuôn không báo lệch mới ở nhóm trang-khach và cai-dat-san cho tệp vòng chạm."
+    expected_exit: 1
+    expected: "exit 1 (đạt có giới hạn, giám sát trả L-41, luật 33): lưới khuôn không báo lệch mới ở nhóm trang-khach và cai-dat-san cho tệp vòng chạm, trừ đúng một dòng báo oan của kit 2.37.0 — «lệch: apps/web/src/app/(app)/settings/broker-page/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» dù trang-tam.md đã khai ngoại lệ (bộ đọc bỏ qua ngoai_le không có khoá khoi, kit#485). Mã 1 chỉ được chấp nhận cùng E10e xanh. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E10e."
     paths: ["apps/web/src/app/s/**", "apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10e
+    criterion: AC-10
+    executor: script
+    cmd: node _acceptance/trang-nhom-moi-gioi/kiem-khuon-e10.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/s/**", "apps/web/src/app/(app)/settings/**", "_acceptance/trang-nhom-moi-gioi/kiem-khuon-e10.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng báo oan đã khai và bài in «E10e: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E10b và bài E10e, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

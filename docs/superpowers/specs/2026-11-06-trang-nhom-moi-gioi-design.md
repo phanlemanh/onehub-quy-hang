@@ -72,7 +72,7 @@ P1, nhóm T4, máy tính.
   bảng căn chỉ đọc → bấm «Tải Excel» hoặc «Tải ảnh» (điểm ra: tệp trên máy).
 - Biên: sàn ẩn mức chia hoặc bộ không có mức → không có dòng mức chia. Căn đã cọc hay đã bán → dòng mờ, giá ẩn như luật ẩn.
   Mở trên điện thoại → bảng cuộn ngang.
-- Lỗi & quay lại: link tắt hay sai mã → «Link không còn mở» như trang khách. Lỗi tạm khi đọc → «Chưa tải được — thử lại».
+- Lỗi & quay lại: link tắt hay sai mã → «Link không còn mở» như trang khách. Lỗi tạm khi đọc → «Chưa mở được — thử lại sau» như trang khách (L-42, chủ kho chốt 06/11).
   Tải tệp lỗi → báo tại nút, bảng vẫn đọc được.
 
 ### 2. Kiểm kê màn
@@ -92,7 +92,7 @@ P1, nhóm T4, máy tính.
 | ST-moigioi-data | Trang môi giới | Đầu trang + bảng mọi căn theo thứ tự gửi + hai nút tải | Đọc, tải |
 | ST-moigioi-an-chia | Trang môi giới | Như trên, không dòng mức chia | Đọc, tải |
 | ST-moigioi-tat | Trang môi giới | «Link không còn mở» | Hỏi người gửi |
-| ST-moigioi-loi | Trang môi giới | «Chưa tải được — thử lại» | Thử lại |
+| ST-moigioi-loi | Trang môi giới | «Chưa mở được — thử lại sau» (câu trang khách, L-42) | Thử lại |
 | ST-moigioi-tai-loi | Trang môi giới | Câu báo tại nút tải | Thử lại |
 | ST-caidat-data | Trang môi giới (cài đặt) | Ô mức chia + công tắc ẩn + Lưu | Sửa, lưu |
 | ST-caidat-tu-choi | Trang môi giới (cài đặt) | Lý do dưới ô (ngoài 0–100) | Sửa lại |
