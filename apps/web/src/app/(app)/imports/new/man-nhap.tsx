@@ -18,7 +18,8 @@ import { choMau, DANG_TAI_MAU, daiBaoMau, ghepKhiCoMau, type MauDaNho } from "@/
 import { bamTep, docTep } from "@/lib/nhap/doc-tep";
 import { cotTheoMau, loiTheoCot, mauCot, nhanLop } from "@/lib/nhap/duong-ong";
 import { canHoi, cauChoDuyet, CHO_DE_XUAT, coTheTiepGhepAi, dongY, dongYHet, hoiDeXuat, khiDoiDich, lyDoKhongHoi, ttDau, type AiMan, type TrangThaiDeXuat } from "@/lib/nhap/de-xuat";
-import { batDauGhi, deXuatGhep, docDauChu, docMau, docTrangThaiAi, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type LoiGoi, type TienDoGhi } from "@/lib/nhap/goi-api";
+import { canHoiOLa, CHO_O_LA, dungDeXuat, hoiOLa, lyDoKhongHoiOLa, tatO, ttOLaDau, type TrangThaiOLa } from "@/lib/nhap/o-la";
+import { batDauGhi, deXuatGhep, deXuatOLa, docDauChu, docMau, docTrangThaiAi, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type LoiGoi, type TienDoGhi } from "@/lib/nhap/goi-api";
 import {
   BUOC,
   boDong,
@@ -77,6 +78,12 @@ export function ManNhap({ vai }: { vai: string[] }) {
   // Lời đọc trạng thái giữ dạng hứa: tệp thả trước khi trạng thái về vẫn chờ nó, không lặng lẽ coi là «tắt».
   const aiHua = useRef<Promise<AiMan> | null>(null);
   const [dx, setDx] = useState<TrangThaiDeXuat>(() => ttDau(0));
+  // Ô lạ còn lại (hàng 69): đề xuất cho ô «Cần người» ở bước Xem trước — riêng mỗi tệp.
+  const [ola, setOla] = useState<TrangThaiOLa>(ttOLaDau);
+  const olaMoi = useRef(ola);
+  useEffect(() => {
+    olaMoi.current = ola;
+  }, [ola]);
 
   useEffect(() => {
     fetch("/api/v1/catalog")
@@ -121,6 +128,8 @@ export function ManNhap({ vai }: { vai: string[] }) {
       if ("loi" in doc) return setLoiTep(doc.loi);
       const bam = await bamTep(bytes);
       setTepGoc({ ten, bytes, trangCo: doc.trang });
+      setOla(ttOLaDau());
+      olaMoi.current = ttOLaDau();
       const { ong } = await ghepKhiCoMau(doc.grid, ctx, mauHua.current ?? Promise.resolve([]));
       const sau = nhanTep(moiNhat.current, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, ong);
       moiNhat.current = sau;
@@ -141,6 +150,32 @@ export function ManNhap({ vai }: { vai: string[] }) {
       setDangDoc(false);
     }
   }
+
+  // Vào bước Xem trước (hay sửa ô ở đó): gửi các ô lạ CHƯA hỏi của kế hoạch này một lần; không ô nào đổi khi người chưa chạm.
+  useEffect(() => {
+    if (s.buoc !== 3 || !s.ong) return;
+    const ong = s.ong;
+    const tep = s.tep?.bam;
+    void (async () => {
+      const ai = await (aiHua.current ?? Promise.resolve<AiMan>("loi"));
+      if (olaMoi.current.dangHoi) return;
+      if (!canHoiOLa(ong, ai, olaMoi.current)) {
+        const bao = lyDoKhongHoiOLa(ong, ai);
+        if (bao) setOla((cu) => ({ ...cu, bao }));
+        return;
+      }
+      olaMoi.current = { ...olaMoi.current, dangHoi: true };
+      setOla(olaMoi.current);
+      const kq = await hoiOLa(ong, (g) => deXuatOLa(fetch, g), olaMoi.current);
+      // Người đã chọn tệp khác trong lúc chờ: bỏ kết quả.
+      if (moiNhat.current.tep?.bam !== tep) return;
+      setOla((cu) => {
+        const moi = { ...kq, daTat: cu.daTat };
+        olaMoi.current = moi;
+        return moi;
+      });
+    })();
+  }, [s.buoc, s.ong, s.tep?.bam]);
 
   async function xemThu(t: TrangThaiNhap) {
     setLoiXem(null);
@@ -301,8 +336,24 @@ export function ManNhap({ vai }: { vai: string[] }) {
       {s.buoc === 3 && s.ong && ctx && s.soOTheo ? (
         <TrangThai kind="notice" title={`Đã đổi theo ${s.soOTheo} ô cùng chữ`} description="Các ô cùng chữ trong cột nhận cùng giá trị — soát lại trước khi ghi; lần nhập sau nhớ cách gọi này." />
       ) : null}
+      {s.buoc === 3 && s.ong && ola.dangHoi ? <TrangThai kind="loading" title={CHO_O_LA} description="Máy chỉ gửi chữ của ô mã căn, giá, phí, trạng thái chưa đọc được — không gửi chủ nhà, số điện thoại, giá đáy, ghi chú. Vẫn sửa tay được." /> : null}
+      {s.buoc === 3 && s.ong && !ola.dangHoi && ola.bao ? <TrangThai kind="notice" title="Sửa tay lần này" description={ola.bao} /> : null}
       {s.buoc === 3 && s.ong && ctx ? (
-        <BangXemTruoc ong={s.ong} bo={s.bo} onSua={(src, cot, raw) => setS(suaO(s, src, cot, raw, ctx))} onBo={(src, bo) => setS(boDong(s, src, bo))} />
+        <BangXemTruoc
+          ong={s.ong}
+          bo={s.bo}
+          ola={ola}
+          onSua={(src, cot, raw) => {
+            setS(suaO(s, src, cot, raw, ctx));
+            setOla((cu) => tatO(cu, src, cot));
+          }}
+          onDung={(src, cot) => {
+            const r = dungDeXuat(s, ola, src, cot, ctx);
+            setS(r.s);
+            setOla(r.tt);
+          }}
+          onBo={(src, bo) => setS(boDong(s, src, bo))}
+        />
       ) : null}
 
       {s.buoc === 4 ? (
