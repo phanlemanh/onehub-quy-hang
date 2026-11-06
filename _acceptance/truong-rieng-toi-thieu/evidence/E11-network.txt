@@ -1,0 +1,30 @@
+49. [GET] http://localhost:3462/api/v1/listings => [200] OK
+50. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+51. [GET] http://localhost:3462/api/v1/company/settings/queue => [200] OK
+52. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
+53. [GET] http://localhost:3462/api/v1/catalog => [200] OK
+54. [GET] http://localhost:3462/api/v1/company/settings/queue => [200] OK
+55. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
+56. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
+57. [GET] http://localhost:3462/api/v1/push/public-key => [200] OK
+58. [POST] http://localhost:3462/api/v1/sync/offline-sessions => [201] Created
+59. [GET] http://localhost:3462/api/v1/company/fields => [200] OK
+94. [POST] http://localhost:3462/api/v1/auth/email-otp/send-verification-otp => [200] OK
+95. [POST] http://localhost:3462/api/v1/auth/sign-in/email-otp => [200] OK
+96. [GET] http://localhost:3462/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+97. [GET] http://localhost:3462/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+98. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+99. [GET] http://localhost:3462/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+100. [GET] http://localhost:3462/api/v1/company/fields => [200] OK
+115. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+116. [GET] http://localhost:3462/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+117. [GET] http://localhost:3462/api/v1/listings => [200] OK
+163. [GET] http://localhost:3462/api/v1/listings => [200] OK
+164. [GET] http://localhost:3462/api/v1/listings => [200] OK
+165. [PUT] http://localhost:3462/api/v1/company/fields => [200] OK
+207. [GET] http://localhost:3462/api/v1/listings => [200] OK
+208. [GET] http://localhost:3462/api/v1/listings => [200] OK
+209. [PUT] http://localhost:3462/api/v1/company/fields => [200] OK
+251. [GET] http://localhost:3462/api/v1/listings => [200] OK
+
+Note: 223 static requests not shown, run with "static" option to see them.

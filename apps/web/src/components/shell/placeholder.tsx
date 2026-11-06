@@ -17,7 +17,6 @@ const PLACEHOLDER: Record<string, Info> = {
   "/team": { title: "Đội", question: "Đội đang chạy thế nào?", rows: "chưa xếp mục" },
   "/settings/labels": { title: "Cách gọi", question: "Sàn gọi tên trường và giá trị thế nào?", rows: "mục 45" },
   "/settings/statuses": { title: "Trạng thái", question: "Hàng đi qua những trạng thái nào?", rows: "mục 46" },
-  "/settings/fields": { title: "Trường riêng", question: "Sàn cần thêm trường nào?", rows: "mục 47" },
   "/settings/lead-routing": { title: "Luật chia lead", question: "Lead mới về tay ai?", rows: "mục 48" },
   "/settings/fees": { title: "Thuế phí", question: "Giá bao phí tính thế nào?", rows: "mục 49" },
   "/settings/templates": { title: "Mẫu nhập", question: "Bảng tính mẫu của sàn", rows: "mục 50" },

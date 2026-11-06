@@ -5,3 +5,4 @@ export * from "./quet";
 export * from "./khuon";
 export * from "./loi-nhac";
 export * from "./kiem";
+export * from "./o-la";
