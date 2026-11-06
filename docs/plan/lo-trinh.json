@@ -2706,6 +2706,18 @@
         "packages/core/src/listing/**",
         "packages/api/test-db/doi-nhan-so-phien-ban/**"
       ]
+    },
+    {
+      "ma": "va-dinh-nghia-doc-lai",
+      "cau_giao": "Dòng «Tính theo định nghĩa ngày …» ở hồ sơ căn đọc lại dấu định nghĩa bao phí khi giá mới vừa đồng bộ xong, nên khi mạng yếu và giá còn trong hàng đợi, người xem không bị giữ ở dấu cũ sau khi giá đã lên máy chủ.",
+      "slug": "va-dinh-nghia-doc-lai",
+      "vi_sao": "Ngoài-3 của hàng 49 thue-phi (PR #160): dong-dinh-nghia.tsx đọc dấu cũ khi giá mới còn trong hàng đợi đồng bộ và không đọc lại. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11 (dãy Q, Q-7). Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Đổi giá khi mất mạng rồi có mạng lại: dòng định nghĩa ở hồ sơ căn đổi sang dấu mới ngay khi giá đồng bộ xong, không cần tải lại trang; bài kiểm phủ đường mạng yếu",
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/dong-dinh-nghia.tsx",
+        "apps/web/src/app/(app)/units/ho-so/**"
+      ]
     }
   ],
   "chan_troi": [
