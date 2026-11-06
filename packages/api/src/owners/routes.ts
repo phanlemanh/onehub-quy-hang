@@ -37,7 +37,7 @@ const OwnerView = z.union([
 /** Tên người dùng của đầu chủ giữ căn (`identity.user`); chưa ai giữ hay không tìm thấy → `null`. */
 async function tenDauChu(identityPool: pg.Pool, userId: string | null): Promise<string | null> {
   if (userId === null) return null;
-  const { rows } = await identityPool.query<{ name: string }>('select name from "user" where id = $1', [userId]);
+  const { rows } = await identityPool.query<{ name: string }>('select name from identity."user" where id = $1', [userId]);
   return rows[0]?.name ?? null;
 }
 
