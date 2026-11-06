@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>15 việc"]
+  GD --> B["Sắp mở vòng<br/>14 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>92 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>93 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -37,7 +37,6 @@ flowchart TD
 - Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn; giá đã lưu giữ nguyên kèm ngày tính (`thue-phi`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
 - Môi giới sàn khác mở link bảng hàng và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; tải Excel hay ảnh bảng hàng được (`trang-nhom-moi-gioi`)
-- Quản trị sàn thêm nhãn trạng thái riêng như «Giữ chỗ», bắt buộc neo vào một trong sáu trạng thái chuẩn và nhận luật, màu của trạng thái đó (`trang-thai-rieng`)
 - Quản trị sàn tạo trường riêng kiểu có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường hiện ở bảng hàng, lọc được, không ra trang khách; cùng cơ chế áp cho liên hệ: trường riêng theo loại liên hệ (chủ nhà, người mua, người thuê…), trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
 
 ## Đã giao — chờ phiên nghiệm thu
@@ -121,6 +120,7 @@ flowchart TD
 - Chủ sản phẩm duyệt Cổng Phạm vi của một vòng chạm ô chưa có khuôn trên trang so ba lối — Trong kho, ReUI, Vẽ mới — dựng bằng lệnh, cùng khổ 1440 và 375, mỗi lối một câu đánh đổi, lời khuyên ghim trên trang; vòng có ô chưa có khuôn mà bỏ bước phân kỳ thì bài chấm đỏ, vòng chỉ đi khuôn sẵn thì không cần trang (`the-ba-loi`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
 - Khách mở link từ Zalo và thấy bộ căn mang tên sàn, giá sống kèm «giá xác nhận X ngày trước», căn đã cọc tự mờ, chạm «Quan tâm» được (`trang-khach-rieng`)
+- Quản trị sàn thêm nhãn trạng thái riêng neo vào một trong sáu trạng thái chuẩn; căn mang nhãn nhận luật và màu của neo ở Bảng hàng, Hôm nay và trang khách; đếm vẫn theo sáu trạng thái chuẩn (`trang-thai-rieng`)
 - Đầu chủ để lead và hàng chưa khoá nguồn ở «Chỉ tôi»; hàng lên «Toàn sàn» thì cả sàn mới thấy (`truc-ai-thay-hang`)
 - Công cụ chụp màn dùng chung của các lượt chấm (cdp.mjs) luôn tắt Chrome do chính nó mở, kể cả khi tác tử chấm hết giờ hay bị ngắt: ghi PID, bắt tín hiệu thoát, dọn hồ sơ tạm; không còn Chrome chạy ẩn mồ côi sau lượt chấm. (`va-cdp-tat-chrome`)
 - Vá đổi giá căn Đã bán: máy chủ từ chối lệnh đổi giá trên căn Đã bán với lý do rõ, kể cả khi bản trên máy đã mới; bộ đồng bộ đưa lệnh ấy vào «Cần xem» (`va-doi-gia-can-da-ban`)
