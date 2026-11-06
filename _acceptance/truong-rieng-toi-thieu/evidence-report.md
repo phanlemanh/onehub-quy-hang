@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: b1c20a3a0e82915e9d72ba503ac8ac2d407e3142
-human_signoff:
+human_signoff: Manh Phan 2026-11-06
 ---
 
 # Evidence Report: truong-rieng-toi-thieu
@@ -342,7 +342,7 @@ Round 2. Nội dung thay toàn bộ round cũ; lịch sử round nằm ở mục
   run_id: minted-truong-rieng-toi-thieu-E14b-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.script
+  verifier: _acceptance/truong-rieng-toi-thieu/kiem-khuon-e14.mjs
   verified_at: 2026-11-06T09:19:20Z
   carried_from_round: 1
   output: carry-forward tu round 1 — delta khong cham paths cua eval

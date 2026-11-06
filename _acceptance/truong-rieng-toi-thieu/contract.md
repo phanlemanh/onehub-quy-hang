@@ -5,7 +5,7 @@ slug: truong-rieng-toi-thieu
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-06-truong-rieng-toi-thieu-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06T07:45:00Z
@@ -115,3 +115,14 @@ Source input: hàng 47 của `docs/plan/lo-trinh.json` · ô cơ hội `_accepta
   `app.set_contact_custom`.
 - Lệnh máy cần `DATABASE_URL` tới Postgres dãy B (cổng 5572) cho bộ kiểm cách ly và bộ kiểm API trên cơ sở dữ liệu.
 - Dữ liệu thử: sàn thử dựng qua đường ghi thật, tên «[Tên]», số `0900 000 0xx`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: đổi nhanh hai trường ở hồ sơ liên hệ khi lần lưu trước lỗi có thể tạm giấu giá trị vừa lưu; tải lại trang là đúng.
+  - Ngoài-2: chương trình ngoài gửi danh sách trường có phần tử rỗng nhận lỗi chung thay vì câu nêu chỗ sai.
+  - Ngoài-4: lịch sử căn ghi mỗi lần đặt trường riêng như một lần «Xác nhận với chủ nhà».
+  - Ngoài-5: sắp theo cột trường riêng không đẩy căn chưa có giá trị xuống cuối.
+  - Ngoài-6: tải bộ trường lỗi mạng thì mục «Trường riêng» ở hồ sơ liên hệ biến mất, không báo.
+  - Ngoài-7: bài kiểm lớp dữ liệu chỉ thử 8 trong 16 tổ hợp loại liên hệ.
+  - Ngoài-8: bảng đường đọc liên hệ của bài kiểm rò rỉ viết tay, đường đọc mới không tự được kiểm.
+  - Ngoài-9: bài kiểm rò rỉ từng ô chỉ kiểm «không chứa mồi», không kiểm mã trạng thái.
+  - Ngoài-10: phép quét chặn đọc thừa cột liên hệ chỉ bắt hai kiểu viết.
+  - Ngoài-11: việc chặn người không phải quản trị ở màn Trường riêng kiểm gián tiếp bằng mã nguồn.
