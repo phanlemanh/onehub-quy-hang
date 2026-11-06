@@ -124,6 +124,7 @@ evals:
     expected: "Sau E12: bảng unit_photos của căn mẫu có đúng ba dòng mới — hai compartment=shareable, một compartment=internal — building_name và unit_number đúng căn; unit_photo_events có ba sự kiện added mang đúng compartment. Ghi E14-db.txt."
     steps:
       - "docker exec quy-hang-db-dkn-H psql: select compartment, building_name, unit_number from unit_photos của căn mẫu, và sự kiện added"
+      - "Chỉ đếm dòng của lượt E12 cuối cùng (added_at từ lúc lượt ấy bắt đầu); lượt E12 nào phải chạy lại thì dùng một căn mẫu chưa có ảnh, không chụp chồng lên căn cũ"
     paths: ["packages/api/src/photos/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
 

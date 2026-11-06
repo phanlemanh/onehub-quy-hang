@@ -39,3 +39,28 @@ test("E4 đổi người trên cùng máy: hàng của người trước không 
   assert.equal(goi, truoc, "hàng của A sau khi đổi sang B không gửi lời nào");
   await dungHangCho();
 });
+
+test("E7 xoá kho chạy đúng việc dừng mà hàng chờ thật của app đăng ký: dừng TRƯỚC khi xoá, ở cả hai lối; kho của người khác không dừng hàng", { timeout: 5000 }, async () => {
+  const { hangChoHienTai, khoiDongHangCho } = await import("./hang-cho-may");
+  const { xoaKhoCuaNguoi } = await import("@/lib/sync/kho-indexeddb");
+  const { xoaMayBiBao } = await import("@/lib/sync/may-bi-bao");
+  const LOI: readonly { ten: string; xoa: (u: string, x: (ten: string) => Promise<void>) => Promise<void> }[] = [
+    { ten: "đăng xuất · màn chọn sàn", xoa: (u, x) => xoaKhoCuaNguoi(u, x) },
+    { ten: "máy bị báo mất", xoa: (u, x) => xoaMayBiBao(u, { xoaKho: (v) => xoaKhoCuaNguoi(v, x), huyDay: async () => {} }) },
+  ];
+  const lech: string[] = [];
+  for (const l of LOI) {
+    const h = khoiDongHangCho("u-chu");
+    // Đối chứng dương: xoá kho của người khác trên máy không dừng hàng của người đang dùng.
+    await l.xoa("u-khac", async () => {});
+    if (hangChoHienTai() !== h) lech.push(`${l.ten} · xoá kho người khác mà hàng dừng`);
+    let conChayLucXoa = false;
+    await l.xoa("u-chu", async () => void (conChayLucXoa ||= hangChoHienTai() !== null));
+    if (conChayLucXoa) lech.push(`${l.ten} · kho bị xoá khi hàng chờ còn chạy`);
+    const truoc = goi;
+    await h.them("[Mẫu] Toà A", "A-01.02", "internal", tep());
+    await h.day();
+    if (goi !== truoc) lech.push(`${l.ten} · hàng chờ còn gửi sau khi xoá kho`);
+  }
+  assert.deepEqual(lech, []);
+});
