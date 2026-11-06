@@ -2740,6 +2740,84 @@
       "vung": [
         "packages/core/src/address/**"
       ]
+    },
+    {
+      "ma": "khung-ho-so-lien-he",
+      "cau_giao": "Hồ sơ liên hệ nằm trong cùng khung cột của hồ sơ căn (một khung có viền, cuộn riêng, có nút Đóng và Esc), bảng liên hệ giữ đủ cột và tên cột đứng yên khi hồ sơ mở, dòng đang mở được tô — và lưới khuôn bắt được khi cột phụ thiếu khung; mở màn liên hệ thì bảng hiện cùng lúc với màn — trang đầu lấy sẵn ở máy chủ, không chờ thêm trước khi hỏi danh sách.",
+      "slug": "khung-ho-so-lien-he",
+      "vi_sao": "Kiểm chi tiết liên hệ 06/11 (docs/plan/kiem-chi-tiet-lien-he.md, PR #167): hồ sơ liên hệ dùng chung bố cục và ruột hồ sơ nhưng thiếu khung cột của hồ sơ căn (không viền, máy tính không đóng được), bảng mất hai cột khi mở hồ sơ, lint không bắt. Chủ kho yêu cầu kiểm; giám sát xếp hàng vá (việc kỹ thuật, giao diện). Làm trước hàng 86 để đỡ chụp lại. Hàng không mã: đã quyết. Chủ kho báo màn liên hệ chậm: phiên KT đo máy chủ ấm trả lời 0,16–0,24 s, chậm nằm ở trình duyệt (dựng màn xong chờ thêm 0,25 s mới hỏi danh sách; máy và mạng chậm thì bảng hiện sau 4,4 s) — hai vá tốc độ gộp vào hàng này.",
+      "hang": "T2",
+      "bat_khi": "Mở hồ sơ một liên hệ ở 1440: khung có viền, cuộn riêng, Đóng và Esc đóng được; bảng giữ đủ cột, tên cột dính đầu, dòng đang mở tô; ảnh hồ sơ căn không đổi; lưới khuôn đỏ khi gỡ khung khỏi cột phụ; mở /contacts ở chế độ máy chậm và mạng chậm: dòng đầu của bảng có trong trang máy chủ trả về, không lượt hỏi danh sách nào chờ sau khi màn dựng xong",
+      "vung": [
+        "apps/web/src/app/(app)/contacts/**",
+        "apps/web/src/components/khoi/solution-crm-4/**",
+        "apps/web/src/app/(app)/units/ho-so/khung.tsx",
+        "design/patterns/lien-he.md",
+        "packages/ui-lint/**"
+      ]
+    },
+    {
+      "ma": "va-deploy-csdl-tam",
+      "cau_giao": "Bước triển khai trên nhánh chính không còn chạy bộ kiểm cách ly trên cơ sở dữ liệu bản thật: bộ kiểm chạy trên một cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp ấy; trên bản thật bước triển khai chỉ cập nhật cấu trúc dữ liệu rồi kiểm nhanh, chỉ đọc, rằng mọi bảng của công ty còn bật luật theo dòng và vai của API không là chủ bảng; bản thật nhận bản mới trong vài phút sau mỗi lần gộp và bước triển khai không giữ quá hai kết nối của bản thật.",
+      "slug": "va-deploy-csdl-tam",
+      "vi_sao": "Sự cố 06/11: job deploy trên main chạy db:migrate + bộ cách ly ~25 phút trên CSDL bản thật ở mỗi lần gộp; lượt 07:43Z tự làm cạn kết nối bản thật (3 bài đỏ EMAXCONNSESSION 08:03Z), cộng AC-9 đỏ từ 05/11 08:41Z làm bản thật đứng 22 giờ. Chủ kho duyệt hàng khẩn 06/11 ~08:20Z (câu h-20261106T081703Z-15). Hàng không mã: đã quyết.",
+      "hang": "T3",
+      "bat_khi": "Job deploy trên main xanh ở lần gộp đầu tiên sau hàng này, xong dưới 5 phút, không bài nào chạy ghi trên CSDL bản thật; bảng thiếu luật theo dòng trên bản thật làm job đỏ trước khi gọi Vercel; bộ cách ly vẫn chạy đủ trên CSDL tạm và vẫn chặn triển khai khi đỏ",
+      "vung": [
+        ".github/workflows/ci.yml",
+        "packages/db/scripts/**",
+        "packages/db/package.json",
+        "_acceptance/va-deploy-csdl-tam/**"
+      ]
+    },
+    {
+      "ma": "chu-san-du-vai",
+      "slug": "chu-san-du-vai",
+      "cau_giao": "Người được trao Quản trị sàn — từ công cụ mở sàn hay ở màn Người dùng — mang luôn đủ bốn vai làm việc (Telesales, Đầu chủ, Đầu khách, Trưởng nhóm): đăng nhập lần đầu đã thấy mọi nhà, mọi nút tạo và chủ nhà cả sàn; gỡ bớt vai vẫn được cho người chỉ cấu hình",
+      "vai": "Quản trị sàn",
+      "hang": "T3",
+      "vi_sao": "Chủ kho 06/11: quản trị sàn là quyền lớn nhất, trao cho chủ sàn, nên thấy tất cả và giữ luôn các vai khác. Audit sàn mới ngày 0 mục 3b, 9. Sửa Tham chiếu §2, §6 («quản trị sàn không tự thấy chủ nhà»), ghi chú ADR-0010, ADR-0011. Chủ kho chốt cách B 06/11 (Tham chiếu §12): gán gói vai, không đổi luật theo dòng",
+      "bat_khi": "Mở sàn mới thì người đầu tiên mang năm vai; tích Quản trị sàn cho một người ở màn Người dùng thì bốn vai kia tích sẵn; gỡ bớt được và lưu đúng; người mang đủ vai thấy Bảng hàng, Nhập Excel, chủ nhà cả sàn, mỗi lần mở số vẫn một vết; sàn đang chạy không đổi vai ai",
+      "vung": [
+        "packages/db/scripts/**",
+        "packages/api/src/thanh-vien.ts",
+        "apps/web/src/app/(app)/settings/users/**",
+        "docs/product/tham-chieu.md",
+        "docs/adr/**"
+      ]
+    },
+    {
+      "ma": "anh-khong-chan-ban",
+      "slug": "anh-khong-chan-ban",
+      "cau_giao": "Đầu chủ đưa một căn lên Đang bán — bằng «Sẵn sàng bán», ô Trạng thái hay nhập file — khi chưa có ảnh thật; căn lên bảng hàng chung, gửi khách được, ảnh hiện là mục còn thiếu ở mức đủ và thành việc «bổ sung ảnh» ở Hôm nay của đầu chủ giữ căn",
+      "vai": "Đầu chủ",
+      "hang": "T3",
+      "vi_sao": "Chủ kho chốt 06/11 (Tham chiếu §12, đổi luật 17): chặn vì không có ảnh là thất bại ngay bước đầu — Sheet không có ảnh nên mọi căn chuyển sang kẹt ở Chưa đủ để rao, chỉ người nhập thấy. Audit sàn mới ngày 0 §9",
+      "bat_khi": "Căn đủ giá kèm điều kiện phí, pháp lý, tình trạng sử dụng mà 0 ảnh thì vào Đang bán ở cả ba lối; số ảnh tối thiểu của sàn mặc định 0, đặt 1–20 thì luật cũ áp lại; trang khách mở căn không ảnh hiện ô trống, không lỗi; căn thiếu ảnh có dấu ở Bảng hàng và việc ở Hôm nay",
+      "vung": [
+        "packages/core/src/listing/**",
+        "packages/core/src/config/**",
+        "packages/api/src/listings/**",
+        "apps/web/src/app/(app)/units/ready/**",
+        "apps/web/src/app/(app)/today/**"
+      ]
+    },
+    {
+      "ma": "can-nhap-len-bang-chung",
+      "slug": "can-nhap-len-bang-chung",
+      "cau_giao": "Đầu chủ nhập bảng hàng cũ từ Sheet và căn mà file ghi «còn hàng» lên ngay bảng hàng chung dù file thiếu pháp lý hay tình trạng sử dụng; mục thiếu hiện ở mức đủ và thành việc ở Hôm nay",
+      "vai": "Đầu chủ",
+      "hang": "T3",
+      "vi_sao": "Audit sàn mới ngày 0 §9: sau khi gỡ cổng ảnh (anh-khong-chan-ban), cửa nhập vẫn đòi pháp lý và tình trạng sử dụng — hai cột Sheet hay thiếu. Mở rộng cùng lý lẽ «không thất bại ở bước chuyển nhà» cho riêng cửa nhập — chủ kho quyết ở Cổng Phạm vi",
+      "dung_tren": [
+        "anh-khong-chan-ban"
+      ],
+      "bat_khi": "Nhập 50 căn «còn hàng» thiếu pháp lý thì 50 căn ở bảng chung, đầu khách thấy; hàng tạo tay và từ lead giữ điều kiện pháp lý, tình trạng sử dụng; mỗi căn thiếu có việc ở Hôm nay của đầu chủ giữ căn",
+      "vung": [
+        "packages/api/src/imports/**",
+        "packages/core/src/listing/**",
+        "apps/web/src/app/(app)/today/**"
+      ]
     }
   ],
   "chan_troi": [
