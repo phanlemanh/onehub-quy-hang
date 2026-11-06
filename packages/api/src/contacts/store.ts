@@ -59,3 +59,22 @@ export async function patchContact(tx: pg.PoolClient, id: string, payload: unkno
   }
   return (await readContact(tx, id))!;
 }
+
+/**
+ * Ghi giá trị trường riêng của một liên hệ (hàng 47) qua `app.set_contact_custom` (migration 043): người đọc được liên hệ
+ * (luật đọc lớp nguồn của 036), mã là trường liên hệ còn sống áp cho loại của người ấy. Trả custom mới.
+ */
+export async function patchContactCustom(tx: pg.PoolClient, id: string, payload: unknown): Promise<{ custom: Record<string, unknown> } | Refusal> {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return { error: API_ERRORS.invalidPayload, details: [{ path: "custom", reason: "cần một object" }] };
+  await tx.query("savepoint ghi_truong_rieng");
+  try {
+    const { rows } = await tx.query<{ v: Record<string, unknown> }>("select app.set_contact_custom($1, $2::jsonb) v", [id, JSON.stringify(payload)]);
+    return { custom: rows[0]!.v };
+  } catch (e) {
+    await tx.query("rollback to savepoint ghi_truong_rieng");
+    const code = (e as { code?: string }).code;
+    if (code === "42501") return { error: API_ERRORS.notFound };
+    if (code === "22023") return { error: API_ERRORS.invalidPayload, details: [{ path: "custom", reason: (e as Error).message }] };
+    throw e;
+  }
+}

@@ -40,6 +40,9 @@ ADR-0018 quyết định 8 cấm lớp `source` cho bảng định nghĩa trư�
 mang lớp nguồn — hàng 47 phải nới quyết định ấy có chủ đích (quyết định mới, chủ kho duyệt). Hàng 85 chỉ dựng chỗ
 (`contacts.custom`, ràng buộc giữ rỗng), không nới.
 
+**Đã đóng 06/11 (hàng 47):** chủ kho duyệt Hỏi-1 — ADR-0018 quyết định 8 sửa đổi: trường của liên hệ Chủ bán · Chủ cho thuê
+mang lớp nguồn; migration 043 mở `contacts.custom` (object), ghi qua `app.set_contact_custom` có kiểm `app.contact_readable`.
+
 ## Hệ quả
 
 - Hàng tạo từ lead chưa có số trên chủ nhà của hàng: «Mở số» báo chưa có số tới khi đầu chủ ghi chủ nhà, dù liên hệ có số.

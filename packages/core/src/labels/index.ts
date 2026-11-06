@@ -9,6 +9,7 @@ import { detectPersonal } from "../import/detect";
 import { FEE_INCLUSIONS } from "../listing/events";
 import { isStandardStatus, MA_NHAN_TRANG_THAI_RE, WITHDRAWN_REASONS } from "../listing/status";
 // Chỉ kiểu: `statuses` nhập `kiemChuNhan` của tệp này, nên nhập giá trị từ `statuses` sẽ thành vòng nhập.
+import type { TruongRieng } from "../custom-fields";
 import type { NhanTrangThai } from "../statuses";
 
 /** Tiền tố khoá của hai họ trong `company_settings` (migration 039). */
@@ -68,6 +69,8 @@ export type TuVung = {
   giaTri: Partial<Record<TruongDong, Partial<Record<string, string>>>>;
   /** Nhãn trạng thái riêng của sàn (hàng 46); vắng hay rỗng = chữ mặc định của sáu trạng thái chuẩn. */
   trangThai?: readonly NhanTrangThai[];
+  /** Trường riêng của sàn (hàng 47); `null` = chưa tải được (khác bộ rỗng — Bảng hàng không đụng góc nhìn đã lưu). */
+  truongRieng?: readonly TruongRieng[] | null;
 };
 export const TU_VUNG_RONG: TuVung = Object.freeze({ truong: Object.freeze({}), giaTri: Object.freeze({}) }) as TuVung;
 

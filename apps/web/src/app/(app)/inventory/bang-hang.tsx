@@ -41,7 +41,8 @@ import { Toggle } from "@/components/ui/toggle";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useBoDongBo } from "@/lib/sync/react";
 import type { TuVung } from "@quy-hang/core/labels";
-import { COT, chuCuaO, mauTrangThai, nhanCot, type Cot, type CotId, type DongBang } from "./cot";
+import { COT, chuCuaO, mauTrangThai, nhanCot, tatCaCot, type Cot, type CotId, type DongBang } from "./cot";
+import { cotTruongRieng, giuCotRieng, laCotRieng } from "./truong-rieng";
 import { useTuVung } from "./tu-vung";
 import { useDanhBaDauChu } from "./danh-ba";
 import { useDanhMuc } from "./danh-muc";
@@ -161,7 +162,7 @@ function taoCot(cotNhanNhom: CotId, tv: TuVung): DefCot[] {
       enableCellSelection: false,
       meta: { headerTitle: "Dòng" },
     },
-    ...COT.map<DefCot>((cot) => ({
+    ...tatCaCot(tv).map<DefCot>((cot) => ({
       id: cot.id,
       accessorFn: (d: DongLuoi) => (d.kind === "can" ? d.dong[cot.id] : null),
       header: ({ column }) => (
@@ -185,7 +186,7 @@ function taoCot(cotNhanNhom: CotId, tv: TuVung): DefCot[] {
         headerTitle: nhanCot(cot, tv),
         // Chép ra đúng chữ đang hiện. Ba cột Giá, Phí, Trạng thái mở trình sửa trên ô (hàng 15) qua onCellEditRequest.
         cellEdit: {
-          editable: COT_SUA.has(cot.id) ? (d: DongLuoi) => d.kind === "can" : false,
+          editable: COT_SUA.has(cot.id) || laCotRieng(cot.id) ? (d: DongLuoi) => d.kind === "can" : false,
           format: (_v: unknown, d: DongLuoi) => (d.kind === "can" ? chuCuaO(d.dong, cot.id, tv) : d.label),
         },
       },
@@ -223,8 +224,8 @@ function DangTai() {
   );
 }
 
-function visibilityTu(cot: CotId[]): ColumnVisibilityState {
-  return Object.fromEntries(COT.filter((c) => !cot.includes(c.id)).map((c) => [c.id, false]));
+function visibilityTu(cot: CotId[], tv?: TuVung | null): ColumnVisibilityState {
+  return Object.fromEntries(tatCaCot(tv).filter((c) => !cot.includes(c.id)).map((c) => [c.id, false]));
 }
 
 /** `dangMo` / `onMoCan` (hàng 17): hồ sơ căn đang mở ở cột phải — dòng của nó được đánh dấu; bấm dòng căn thì mở hồ sơ. */
@@ -258,7 +259,9 @@ export function BangHang({
 
   const [loc, setLoc] = useState<BoLocCot>({});
   const [locMo, setLocMo] = useState(false);
-  const [cot, setCot] = useState<CotId[]>(CACH_XEM_MAC_DINH.cot);
+  const tv = useTuVung();
+  // Cột trường riêng còn sống của sàn (hàng 47) hiện mặc định sau các cột chuẩn.
+  const [cot, setCot] = useState<CotId[]>(() => [...CACH_XEM_MAC_DINH.cot, ...cotTruongRieng(tv.truongRieng).map((c) => c.id)]);
   const [sap, setSap] = useState<SortingState>([]);
   const [nhom, setNhom] = useState<CachNhom>(CACH_XEM_MAC_DINH.nhom);
   const [expanded, setExpanded] = useState<ExpandedState>(true);
@@ -278,9 +281,10 @@ export function BangHang({
   useEffect(() => {
     if (gocNhin && daAp.current !== gocNhin.id) {
       daAp.current = gocNhin.id;
-      apCachXem(gocNhin);
+      // Bộ trường chưa tải thì giữ nguyên cột và lọc custom của góc nhìn; đã tải thì bỏ trường đã bỏ (hàng 47).
+      apCachXem(giuCotRieng(gocNhin, tv.truongRieng));
     }
-  }, [gocNhin, apCachXem]);
+  }, [gocNhin, apCachXem, tv.truongRieng]);
 
   const moLuu = useCallback(() => setHop({ loai: "moi" }), []);
   useMoLuuGocNhin(moLuu);
@@ -291,7 +295,6 @@ export function BangHang({
   // Hàng 48 (Ngoài-10 của 105): đọc danh bạ hỏng thì báo kèm «Thử lại», không nuốt lỗi.
   const { danhBa, loi: loiDanhBa, thuLai: docLaiDanhBa } = useDanhBaDauChu(san, nguoiGiu);
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
-  const tv = useTuVung();
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap, tv), [dong, loc, sap, tv]);
   const loat = useSuaHangLoat(dong, daLoc);
   const cay = useMemo(() => nhomDong(daLoc, nhom), [daLoc, nhom]);
@@ -321,7 +324,7 @@ export function BangHang({
 
   const cotNhanNhom: CotId = cot.includes("buildingName") ? "buildingName" : (cot[0] ?? "unitNumber");
   const columns = useMemo(() => taoCot(cotNhanNhom, tv), [cotNhanNhom, tv]);
-  const columnVisibility = useMemo(() => visibilityTu(cot), [cot]);
+  const columnVisibility = useMemo(() => visibilityTu(cot, tv), [cot, tv]);
 
   const onSortingChange = useCallback(
     (u: Updater<SortingState>) => {
@@ -332,10 +335,10 @@ export function BangHang({
   );
   const onColumnVisibilityChange = useCallback((u: Updater<ColumnVisibilityState>) => {
     setCot((cu) => {
-      const v = typeof u === "function" ? u(visibilityTu(cu)) : u;
-      return COT.map((c) => c.id).filter((id) => v[id] !== false);
+      const v = typeof u === "function" ? u(visibilityTu(cu, tv)) : u;
+      return tatCaCot(tv).map((c) => c.id).filter((id) => v[id] !== false);
     });
-  }, []);
+  }, [tv]);
 
   const dongDangMo = useMemo<Record<string, true>>(() => (dangMo ? { [dangMo]: true } : {}), [dangMo]);
   const tableOptions = useMemo(

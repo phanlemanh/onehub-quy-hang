@@ -20,7 +20,8 @@ export const CONTACT_TYPE_LABELS: Readonly<Record<ContactType, string>> = {
 export const PHONE_LABELS = ["Home", "Mobile", "Work", "Other"] as const;
 export type PhoneLabel = (typeof PHONE_LABELS)[number];
 
-const OWNER_TYPES: readonly ContactType[] = ["Seller", "Landlord"];
+/** Loại của chủ nhà — liên hệ mang một trong hai là lớp nguồn; trường riêng áp cho một trong hai cũng là lớp nguồn (hàng 47). */
+export const OWNER_TYPES: readonly ContactType[] = ["Seller", "Landlord"];
 
 /** Nhu cầu của lead ra loại của chủ nhà. */
 export function typesForNeed(need: Need): ContactType[] {
