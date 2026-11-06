@@ -81,8 +81,8 @@ chế độ giao dịch mà §4 nêu.
    `schemaName: "identity"`; truy vấn tay trên bể danh tính ghi `identity.<bảng>`. Bể danh tính không còn tham số khởi động
    `-c search_path=identity`. Cách ly theo dòng không đổi: `withCompany` đặt vai và sàn bằng `set local` trong giao dịch.
    Bài quét của hồ sơ chặn trạng thái phiên quay lại mã máy chủ.
-3. **Mã chạy được ở cả hai chế độ** (5432 phiên, 6543 giao dịch, kết nối trực tiếp): đổi chế độ là đổi `DATABASE_URL`,
-   không đổi mã. Mỗi lần dựng bể, nhật ký ghi `[pool:ket-noi] cổng <cổng> · <nơi>` — chỉ cổng — để biết triển khai đang nối
+3. **Mã chạy được ở cả hai chế độ** (5432 phiên, 6543 giao dịch, kết nối trực tiếp): đổi chế độ bằng công tắc cổng (điểm
+   5), `DATABASE_URL` giữ nguyên, không đổi mã. Mỗi lần dựng bể, nhật ký ghi `[pool:ket-noi] cổng <cổng> · <nơi>` — chỉ cổng — để biết triển khai đang nối
    chế độ nào.
 4. **Job migrate giữ chuỗi riêng**: `PROD_DATABASE_URL` của job `deploy` (§7) không chuyển sang chế độ giao dịch — migration
    chạy một lần sau mỗi lần gộp và có câu lệnh cần phiên. Hai chuỗi kết nối giữ riêng, không gộp.

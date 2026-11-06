@@ -43,8 +43,8 @@ Soi mã (06/11):
    chủ và đỏ ngay nếu còn chỗ nào dựa vào search_path.
 4. **Không đổi `withCompany`, không migration.** Cách ly theo dòng đã nằm trọn trong giao dịch.
 5. **Mã chạy được ở cả hai chế độ.** Sau bản vá, cùng mã chạy với Postgres trực tiếp (máy, CI), pooler chế độ phiên 5432
-   (bản thật hiện nay) và pooler chế độ giao dịch 6543. Gộp PR không đổi cách bản thật kết nối; đổi `DATABASE_URL` là một
-   bước vận hành riêng (mục «Đường ra bản thật»).
+   (bản thật hiện nay) và pooler chế độ giao dịch 6543. Gộp PR không đổi cách bản thật kết nối; đổi chế độ bằng công tắc
+   `DATABASE_POOLER_PORT` là một bước vận hành riêng (mục «Đường ra bản thật»), `DATABASE_URL` giữ nguyên.
 
 Lối khác đã loại:
 

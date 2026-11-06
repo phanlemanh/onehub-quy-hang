@@ -58,8 +58,12 @@ async function choCong(muon, tu) {
   return false;
 }
 
+/** Đặt (hay xoá, khi `gia` null) công tắc cổng ở Production. Xoá hỏng mà không phải «biến không có» → dừng, không báo lùi giả. */
 function datCongTac(gia) {
-  vercel(["env", "rm", "DATABASE_POOLER_PORT", "production", "-y"]);
+  const xoa = vercel(["env", "rm", "DATABASE_POOLER_PORT", "production", "-y"]);
+  if (xoa.status !== 0 && !/not found|không tìm thấy|does not exist|No Environment Variable/i.test(`${xoa.stdout}\n${xoa.stderr}`)) {
+    dung(gia === null ? 1 : 2, `không xoá được DATABASE_POOLER_PORT ở Production — ${gia === null ? "CHƯA LÙI, bản thật vẫn ở cổng 6543: xoá biến tay rồi triển khai lại" : "không đổi"}: ${xoa.stderr.trim().split("\n").at(-1)}`);
+  }
   if (gia === null) return;
   const r = vercel(["env", "add", "DATABASE_POOLER_PORT", "production"], gia);
   if (r.status !== 0) dung(2, `không đặt được DATABASE_POOLER_PORT: ${r.stderr.trim().split("\n").at(-1)}`);
@@ -71,7 +75,8 @@ async function lui(lyDo) {
   datCongTac(null);
   trienKhaiLai();
   const ve = await choCong("5432", tu);
-  console.error(`doi-ban-that: đã lùi về 5432${ve ? "" : " — chưa thấy dòng «cổng 5432», soi nhật ký ngay"}`);
+  console.error(ve ? "doi-ban-that: đã lùi về 5432" : "doi-ban-that: CHƯA XÁC NHẬN đã lùi — chưa thấy dòng «cổng 5432», soi nhật ký ngay");
+  return ve;
 }
 
 if (!DIR) dung(2, "cần VERCEL_LINK_DIR (thư mục đã vercel link với dự án onehub-quy-hang)");
@@ -109,7 +114,7 @@ if (lenh === "--kiem") {
   }
   console.log(`doi-ban-that: ${phut} phút sạch ở cổng 6543 — giữ chế độ giao dịch`);
 } else if (lenh === "--lui") {
-  await lui("chủ kho hay người vận hành gọi lùi");
+  process.exit((await lui("chủ kho hay người vận hành gọi lùi")) ? 0 : 1);
 } else {
   dung(2, "dùng: --kiem [--phut N] | --doi [--phut N] | --lui");
 }

@@ -12,8 +12,8 @@ let cached: Api | undefined;
  * phiên để làm mới cookie). Mặc định của pg (10 mỗi pool) để một hàm giữ tới 20 kết nối. Nay hàm trang giữ tối đa 4, bước
  * chặn đầu tối đa 2, nhả kết nối rảnh sau 5 giây; `attachDatabasePool` nhả kết nối rảnh trước khi Vercel treo phiên bản;
  * yêu cầu vượt cỡ xếp hàng trong pool. Khoảng dư mỏng ở chế độ phiên — gốc lâu dài là pooler chế độ giao dịch (cổng 6543,
- * hồ sơ pooler-che-do-giao-dich): mã chạy được ở cả hai chế độ vì không bể nào giữ trạng thái phiên; đổi chế độ là đổi
- * `DATABASE_URL`, chủ kho quyết ở Cổng Bằng chứng.
+ * hồ sơ pooler-che-do-giao-dich): mã chạy được ở cả hai chế độ vì không bể nào giữ trạng thái phiên; đổi chế độ bằng công
+ * tắc `DATABASE_POOLER_PORT` (`doiCong` dưới) — `DATABASE_URL` giữ nguyên; chủ kho quyết ở Cổng Bằng chứng.
  */
 const NHA_SOM = { idleTimeoutMillis: 5_000, connectionTimeoutMillis: 10_000 } as const;
 export const NOI_TRANG = { danhTinh: { max: 2, ...NHA_SOM }, ungDung: { max: 2, ...NHA_SOM } } as const;
