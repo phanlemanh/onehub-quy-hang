@@ -5,7 +5,7 @@ slug: nhap-o-la
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: _acceptance/nhap-o-la/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-06
@@ -103,3 +103,11 @@ AC-4. Later/Never ở «Out of scope».
 - Ngoài-7 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Sổ chi phí có thể ghi sai loại dữ liệu cá nhân bị chặn, dù việc chặn vẫn xảy ra. — `packages/api/src/imports/ai/cells/quet.ro-ri.test.ts`
 - Ngoài-8 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Với tệp có hơn 300 ô lạ, chưa chắc máy chọn đúng 300 ô theo thứ tự mong muốn. — `packages/core/src/import/ai/o-la/goi.test.ts`
 - Ngoài-9 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài kiểm có thể xanh dù dòng bị bỏ vì lý do khác, nên chưa chứng minh chặt rằng ô giá cần người mới là nguyên nhân. — `apps/web/src/lib/nhap/test-db/o-la.db-test.mts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-06:
+  - Ngoài-1: Bộ kiểm của phần lõi dính vào mã màn Nhập, nên sửa màn có thể làm bộ kiểm lõi đỏ oan; tính năng chạy đúng.
+  - Ngoài-2: Ảnh cận ô trong hồ sơ được chụp theo khung nhìn ở lượt đầu nên từng có hai ảnh trùng; màn dùng thật không bị ảnh hưởng.
+  - Ngoài-5: Với ô kiểu «chủ nhận về 3,95 tỷ», máy có thể đề xuất một giá sai mà vẫn hiện ra; người vẫn tự bấm «Dùng» hay sửa tay.
+  - Ngoài-6: Bài kiểm chưa chứng minh chắc là màn không gọi AI khi sàn tắt AI.
+  - Ngoài-7: Sổ chi phí có thể ghi sai loại dữ liệu cá nhân bị chặn, dù việc chặn vẫn xảy ra.
+  - Ngoài-8: Với tệp có hơn 300 ô lạ, chưa chắc máy chọn đúng 300 ô theo thứ tự mong muốn.
+  - Ngoài-9: Bài kiểm đối chứng của «Dùng tới máy chủ» chưa ghim lý do dòng bị bỏ.
