@@ -5,7 +5,7 @@ slug: thue-phi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-06T01:35:13Z
 design_doc: docs/superpowers/specs/2026-11-06-thue-phi-design.md
