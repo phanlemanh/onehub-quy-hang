@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: aefcc2bab1f62e4b885a6830c728eafbaab7828e
+verified_commit: 31ad4099d44a292d964e6956fab70ae199e8aebc
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -198,3 +198,7 @@ none — every multi-run eval is uniform
 
 Round 1: E6 và E12 xanh ở round 1 (nay carry-forward); phần còn lại trả về triển khai để sửa.
 Round 2: S4 lượt 1 — tài liệu nói đổi chế độ bằng công tắc cổng; tập lệnh lùi không báo lùi giả. E1–E5, E9–E11, E13 chạy lại và xanh; E6, E12 carry-forward; E8 chờ người chốt ở Cổng 2; E7 không chạy theo hồ sơ.
+
+### Re-pin lần 1 — 2026-11-06, do hoá cũ do gộp nhánh chính sau lượt chấm, ghim cùng chữ ký
+run_id: repin-20261106T121009Z-89029
+sha: 31ad4099d44a292d964e6956fab70ae199e8aebc · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · không chạy theo hồ sơ: E7 · ngoài làn máy: E8 · diff chạm vật đo ngoài làn máy: E8 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-6
