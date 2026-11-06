@@ -17,17 +17,18 @@ export const SO_DO = new URL("../so-do-o-la.json", import.meta.url);
 export const lapBoi = (moHinh: string) => `lập bởi tác tử context sạch (${moHinh})`;
 export const docTep = (moHinh: string): TepDeXuatOLa => JSON.parse(readFileSync(new URL(`${moHinh}.json`, DE_XUAT_DIR), "utf8"));
 
-export function soDoTatCa() {
+export async function soDoTatCa() {
   const { goi } = chuanBi();
+  const so = await Promise.all(MO_HINH_DO.map(async (m) => [m, await tinhSoDoOLa(goi, docTep(m).dauRa)] as const));
   return {
     ghi_chu: "Số đo ô lạ (hàng 69): đề xuất ghi sẵn do tác tử context sạch lập trên đúng gói và lời nhắc của mã — MÔ PHỎNG, không qua Claude API. Tính bằng _acceptance/nhap-o-la/thu/lap-de-xuat.ts --so-do.",
-    mo_hinh: Object.fromEntries(MO_HINH_DO.map((m) => [m, tinhSoDoOLa(goi, docTep(m).dauRa)])),
+    mo_hinh: Object.fromEntries(so),
   };
 }
 
 if (process.argv[1]?.endsWith("lap-de-xuat.ts")) {
   const [a, b] = process.argv.slice(2);
-  if (a === "--so-do") writeFileSync(SO_DO, `${JSON.stringify(soDoTatCa(), null, 2)}\n`);
+  if (a === "--so-do") void soDoTatCa().then((x) => writeFileSync(SO_DO, `${JSON.stringify(x, null, 2)}\n`));
   else if (a && b) {
     const { goi } = chuanBi();
     void Promise.all([bamJson(goi), bamLoiNhacOLa()]).then(([bg, bl]) => {

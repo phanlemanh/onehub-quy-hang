@@ -10,6 +10,8 @@ import { planFromDictionary } from "../../../packages/core/src/import/plan";
 import { buildProfile } from "../../../packages/core/src/import/profile";
 import { dungGoiOLa, kiemDeXuatOLa, type GoiOLa } from "../../../packages/core/src/import/ai/o-la";
 import { giaBaoPhiTuVeTay } from "../../../packages/core/src/pricing/ve-tay";
+import { chayOng, type Ong } from "../../../apps/web/src/lib/nhap/duong-ong";
+import { hoiOLa, ttOLaDau, type HoiOLa, type TrangThaiOLa } from "../../../apps/web/src/lib/nhap/o-la";
 import { CAM_LO, luoiOLa, O_LA } from "./bo-o-la";
 
 export const HOM_NAY_O_LA = "2026-11-06";
@@ -28,18 +30,27 @@ export function chuanBi() {
 
 const lam = (x: number) => Math.round(x * 10000) / 10000;
 
-/** Đường nhận đề xuất: nhận kết quả áp kế hoạch đang hiện và các đề xuất qua kiểm. Đường đúng không đổi gì trên `ap`. */
-export type NhanDeXuat = (ap: ReturnType<typeof applyPlan>, deXuat: ReturnType<typeof kiemDeXuatOLa>["deXuat"]) => void;
+/** Đường nhận đề xuất của màn: nhận lưới đang hiện, hàm hỏi đường ô lạ và trạng thái ô lạ. Mặc định là `hoiOLa` thật của
+ * màn (apps/web/src/lib/nhap/o-la.ts) — chính hàm màn gọi khi đề xuất về. */
+export type DuongNhan = (ong: Ong, hoi: HoiOLa, tt: TrangThaiOLa) => Promise<TrangThaiOLa>;
 
-export function tinhSoDoOLa(goi: GoiOLa, dauRa: unknown, nhan: NhanDeXuat = () => {}): SoDoOLa {
-  const { ctx, ap } = chuanBi();
-  const truocJson = JSON.stringify(ap);
+export async function tinhSoDoOLa(goi: GoiOLa, dauRa: unknown, duongNhan: DuongNhan = hoiOLa): Promise<SoDoOLa> {
+  const { ctx } = chuanBi();
   const kq = kiemDeXuatOLa(goi, dauRa, HOM_NAY_O_LA);
-  // Tự ghi: đưa đề xuất qua đường nhận trên CHÍNH bảng đang hiện, rồi so — người chưa chạm thì mọi ô phải y như trước. Đường
-  // nhận của màn (lib/nhap/o-la `hoiOLa`) đo riêng ở E5; ở đây đối chứng dương trong do-o-la.test.ts cho thấy số này ra 1 khi
-  // đường nhận tự áp.
-  nhan(ap, kq.deXuat);
-  const tuGhi = JSON.stringify(ap) === truocJson ? 0 : 1;
+  // Tự ghi: dựng lưới bằng đường ống của màn trên bộ ô lạ, đưa đề xuất qua kiểm vào đường nhận của màn, rồi so lưới — người
+  // chưa chạm thì mọi ô, bảng và kế hoạch phải y như trước. Màn gửi gói của nó (mã ô của nó); hàm hỏi giả trả đúng đề xuất đã
+  // kiểm, ghép theo chữ ô.
+  const ong = chayOng(luoiOLa(), ctx);
+  const truoc = JSON.stringify(ong);
+  const theoChu = new Map(kq.deXuat.map((d) => [goi.o.find((o) => o.id === d.id)!.giaTri, d]));
+  const hoi: HoiOLa = async (g) => ({
+    cheDo: "ai",
+    deXuat: g.o.flatMap((o) => (theoChu.has(o.giaTri) ? [{ ...theoChu.get(o.giaTri)!, id: o.id }] : [])),
+    loi: [],
+  });
+  const tt = await duongNhan(ong, hoi, ttOLaDau());
+  if (kq.deXuat.length > 0 && tt.theoKhoa.size === 0) throw new Error("đường nhận không nhận đề xuất nào — số tự ghi không đo được");
+  const tuGhi = JSON.stringify(ong) === truoc ? 0 : 1;
   const theoId = new Map(goi.o.map((o) => [o.id, o]));
   let coDapAn = 0, deXuat = 0, dungSo = 0, bia = 0;
   for (const c of O_LA) {

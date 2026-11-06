@@ -91,11 +91,22 @@ async function doO(chu) {
     };
   })()`);
 }
+// Ảnh cận cắt theo dòng của ô (khổ hẹp: theo khung cuộn của bảng) — mỗi loại ô một ảnh riêng, không phải cả khung nhìn.
 async function chupO(chu, ten) {
   const d = await doO(chu);
   await ngu(400);
+  const k = await t.tinh(`(() => { const td = ${oCua(chu)}; if (!td) return null; const tr = td.closest("tr").getBoundingClientRect(); const kv = td.closest(".overflow-x-auto").getBoundingClientRect(); const x = Math.max(0, kv.left), y = Math.max(0, tr.top - 8); return { x, y, width: Math.min(window.innerWidth, kv.right) - x, height: Math.min(window.innerHeight - y, tr.height + 16), scale: 1 }; })()`);
+  const anh = k ? Buffer.from((await t.gui("Page.captureScreenshot", { format: "png", clip: k })).data, "base64") : await t.chup();
+  writeFileSync(path.join(RA, `E4b-${ten}-${KHO}.png`), anh);
+  return { ...d, cat: k };
+}
+// Cuộn tới dòng báo `chu` (đầu bước Xem trước) rồi chụp khung nhìn.
+async function chupBao(chu, ten) {
+  const thayBao = await t.tinh(`(() => { const el = [...document.querySelectorAll("p, div, span")].filter((x) => x.children.length === 0 && x.textContent.includes(${JSON.stringify(chu)}))[0]; if (!el) return false; el.scrollIntoView({ block: "start" }); const r = el.getBoundingClientRect(); return r.top >= 0 && r.bottom <= window.innerHeight; })()`);
+  await t.tinh(`(() => { const s = document.createElement("style"); s.textContent = "nextjs-portal{display:none!important}"; document.head.appendChild(s); return true; })()`);
+  await ngu(500);
   writeFileSync(path.join(RA, `E4b-${ten}-${KHO}.png`), await t.chup());
-  return d;
+  return thayBao;
 }
 const demDau = () => t.tinh(`(() => { const o = {}; for (const s of document.querySelectorAll("section[aria-labelledby=nhap-xem-truoc] span.tabular-nums")) { const b = s.parentElement?.querySelector("[data-slot=badge]"); if (b) o[b.textContent.trim()] = Number(s.textContent.replace(/\\D/g, "")); } return o; })()`);
 async function denXemTruoc(sanId) {
@@ -133,8 +144,8 @@ try {
   const demTruoc = await demDau();
   const daBam = await t.tinh(`(() => { const b = [...document.querySelectorAll("[data-de-xuat-o-la] button")].find((x) => x.getAttribute("aria-label")?.includes("Trạng thái")); if (!b) return false; b.click(); return true; })()`);
   await thay("Đã đổi theo 1 ô cùng chữ", 15000);
-  ghiNhan("da-dung", { daBam, dongDoiTheo: (await chu()).includes("Đã đổi theo 1 ô cùng chữ"), soDeXuat: await soDeXuat(), demTruoc, demSau: await demDau() });
-  await chup("da-dung");
+  const dd = { daBam, dongDoiTheo: (await chu()).includes("Đã đổi theo 1 ô cùng chữ"), soDeXuat: await soDeXuat(), demTruoc, demSau: await demDau() };
+  ghiNhan("da-dung", { ...dd, baoTrongAnh: await chupBao("Đã đổi theo 1 ô cùng chữ", "da-dung") });
   ghiNhan("da-dung-o", { ...(await chupO("Đang giao dịch", "da-dung-o-trang-thai")), tranNgang: await tran() });
 
   writeFileSync(path.join(AI_GIA, ".loi"), "");

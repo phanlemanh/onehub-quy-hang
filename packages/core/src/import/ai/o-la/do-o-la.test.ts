@@ -6,6 +6,7 @@ import { chuanBi, datNguongOLa, MO_HINH_DO, tinhSoDoOLa } from "../../../../../.
 import { docTep, lapBoi, soDoTatCa } from "../../../../../../_acceptance/nhap-o-la/thu/lap-de-xuat";
 import soDoDaGhi from "../../../../../../_acceptance/nhap-o-la/so-do-o-la.json" with { type: "json" };
 import { bamJson } from "../goi";
+import { hoiOLa } from "../../../../../../apps/web/src/lib/nhap/o-la";
 import { bamLoiNhacOLa, LOI_NHAC_O_LA, MO_HINH_O_LA } from "./loi-nhac";
 
 test("bộ ô lạ có đủ bốn nhóm", () => {
@@ -30,8 +31,8 @@ test("đề xuất ghi sẵn khớp gói và lời nhắc", async () => {
   assert.notEqual(doi, docTep(MO_HINH_O_LA).bamLoiNhac, "lời nhắc đổi — ghi lại đề xuất");
 });
 
-test("số đo ô lạ", () => {
-  const tinh = soDoTatCa();
+test("số đo ô lạ", async () => {
+  const tinh = await soDoTatCa();
   assert.deepEqual(tinh, soDoDaGhi, "số đo tính lại khác so-do-o-la.json đã commit");
   assert.equal(MO_HINH_O_LA, "claude-opus-5-5", "Hỏi-1: đường ô lạ dùng Opus 5.5");
   const so = tinh.mo_hinh[MO_HINH_O_LA]!;
@@ -47,13 +48,16 @@ test("số đo ô lạ", () => {
   assert.deepEqual(datNguongOLa({ ...DAT, phu: 0.89 }), ["phủ 0.89 < 0.9"]);
   assert.deepEqual(datNguongOLa({ ...DAT, dung: 0.94 }), ["đúng 0.94 < 0.95"]);
   assert.deepEqual(datNguongOLa({ ...DAT, bia: 1 }), ["bịa 1 > 0"]);
-  // Đối chứng dương của «tự ghi»: đường nhận tự áp đề xuất vào ô thì số đo ra 1 và bài đo đỏ.
+  // Đối chứng dương của «tự ghi»: đường nhận của màn mà tự áp đề xuất vào ô (gọi hoiOLa thật rồi ghi đè ô) thì số ra 1.
   const { goi } = chuanBi();
-  const tuAp = tinhSoDoOLa(goi, docTep(MO_HINH_O_LA).dauRa, (ap, deXuat) => {
-    const o = goi.o.find((x) => x.id === deXuat[0]?.id)!;
-    const c = ap.rows.flatMap((r) => r.cells).find((x) => x.raw === o.giaTri)!;
-    Object.assign(c, { mark: "keep", value: deXuat[0]!.giaTri });
+  const tuAp = await tinhSoDoOLa(goi, docTep(MO_HINH_O_LA).dauRa, async (ong, hoi, tt) => {
+    const sau = await hoiOLa(ong, hoi, tt);
+    const c = ong.dong.flatMap((d) => d.cells).find((x) => x.mark === "needs_person" && x.by === "normalize")!;
+    Object.assign(c, { mark: "keep" });
+    return sau;
   });
   assert.equal(tuAp.tuGhi, 1, "đường nhận tự áp mà số tự ghi vẫn 0");
   assert.deepEqual(datNguongOLa(tuAp).filter((x) => x.startsWith("tự ghi")), ["tự ghi 1 > 0"]);
+  // Đối chứng âm: đường nhận không nhận gì thì bài đo không được im lặng báo 0.
+  await assert.rejects(tinhSoDoOLa(goi, docTep(MO_HINH_O_LA).dauRa, async (_o, _h, tt) => tt), /không đo được/);
 });
