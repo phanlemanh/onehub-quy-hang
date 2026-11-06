@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b1c20a3a0e82915e9d72ba503ac8ac2d407e3142
+verified_commit: 20e82b06691493011c18782670d99e37a43685e4
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -402,3 +402,7 @@ none — every multi-run eval is uniform
 
 Round 1: E13 failed — ô trường riêng ở hồ sơ liên hệ hiện mã thô thay vì chữ lựa chọn. Returned to implementation (commit b1c20a3a).
 Round 2: E6, E6b, E6c, E13, E14 chạy lại trên b1c20a3a và đạt; E13 nay hiện chữ lựa chọn «Sáng»; các eval còn lại carry-forward từ round 1.
+
+### Re-pin lần 1 — 2026-11-06, do gộp main (Thuế phí hàng 49) sau chữ ký
+run_id: repin-20261106T151548Z-82111
+sha: 20e82b06691493011c18782670d99e37a43685e4 · suites: 7 lệnh exit 0 · evals: 27/27 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E14=1 · ngoài làn máy: E11, E12, E13
