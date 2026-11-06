@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 05adf21c59e19ea31e22c61538e4e14d9d9b0472
+verified_commit: aefcc2bab1f62e4b885a6830c728eafbaab7828e
 human_signoff:
 ---
 
@@ -20,161 +20,163 @@ human_signoff:
 | E3 | AC-3 | script | PASS |
 | E4 | AC-4 | script | PASS |
 | E5 | AC-5 | script | PASS |
-| E6 | AC-8 | script | PASS |
-| E8 | AC-7 | judgment | PASS (đề xuất của hội đồng, chờ người chốt ở Cổng 2) |
+| E6 | AC-8 | script | PASS (carry-forward từ round 1) |
+| E8 | AC-7 | judgment | PASS (judge đề xuất, chờ người chốt ở Cổng 2) |
 | E13 | AC-7 | script | PASS |
 | E9 | AC-9 | script | PASS |
 | E10 | AC-9 | script | PASS |
 | E11 | AC-9 | script | PASS |
-| E12 | AC-9 | test | PASS |
+| E12 | AC-9 | test | PASS (carry-forward từ round 1) |
 
 không chạy theo hồ sơ: E7
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-pooler-che-do-giao-dich-E1-r1
+  run_id: minted-pooler-che-do-giao-dich-E1-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6228.90025
+    ℹ duration_ms 3861.149334
 
 - eval: E2
-  run_id: minted-pooler-che-do-giao-dich-E2-r1
+  run_id: minted-pooler-che-do-giao-dich-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.pooler_giao_dich
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
   output: |
     node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"
-    ℹ duration_ms 147798.671458
+    ℹ duration_ms 113938.895792
 
 - eval: E3
-  run_id: minted-pooler-che-do-giao-dich-E3-r1
+  run_id: minted-pooler-che-do-giao-dich-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.pooler_giao_dich
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
   output: |
-    node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"
-    ℹ duration_ms 147798.671458
+    cùng lệnh với E2 (một lần chạy phủ E2, E3, E4, E5, E13)
+    ℹ duration_ms 113938.895792
 
 - eval: E4
-  run_id: minted-pooler-che-do-giao-dich-E4-r1
+  run_id: minted-pooler-che-do-giao-dich-E4-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.pooler_giao_dich
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
   output: |
-    node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"
-    ℹ duration_ms 147798.671458
+    cùng lệnh với E2 (một lần chạy phủ E2, E3, E4, E5, E13)
+    ℹ duration_ms 113938.895792
 
 - eval: E5
-  run_id: minted-pooler-che-do-giao-dich-E5-r1
+  run_id: minted-pooler-che-do-giao-dich-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.pooler_giao_dich
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
   output: |
-    node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"
-    ℹ duration_ms 147798.671458
+    cùng lệnh với E2 (một lần chạy phủ E2, E3, E4, E5, E13)
+    ℹ duration_ms 113938.895792
+
+- eval: E13
+  run_id: minted-pooler-che-do-giao-dich-E13-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.script.pooler_giao_dich
+  verified_at: 2026-11-06T09:09:11Z
+  output: |
+    cùng lệnh với E2 (một lần chạy phủ E2, E3, E4, E5, E13)
+    ℹ duration_ms 113938.895792
+
+- eval: E9
+  run_id: minted-pooler-che-do-giao-dich-E9-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.script.typecheck
+  verified_at: 2026-11-06T09:09:11Z
+  output: |
+    npm run typecheck (mọi gói)
+
+- eval: E10
+  run_id: minted-pooler-che-do-giao-dich-E10-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.script.lint
+  verified_at: 2026-11-06T09:09:11Z
+  output: |
+    npm run lint
+    chuẩn giao diện: đạt
+
+- eval: E11
+  run_id: minted-pooler-che-do-giao-dich-E11-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.script.build
+  verified_at: 2026-11-06T09:09:11Z
+  output: |
+    npm run build (next build hoàn tất)
 
 - eval: E6
   run_id: minted-pooler-che-do-giao-dich-E6-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.pooler_giao_dich
   verified_at: 2026-11-06T08:59:56Z
+  carried_from_round: 1
   output: |
-    node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"
-    ℹ duration_ms 147798.671458
-
-- eval: E13
-  run_id: minted-pooler-che-do-giao-dich-E13-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.script.pooler_giao_dich
-  verified_at: 2026-11-06T08:59:56Z
-  output: |
-    node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"
-    ℹ duration_ms 147798.671458
-
-- eval: E9
-  run_id: minted-pooler-che-do-giao-dich-E9-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.script.typecheck
-  verified_at: 2026-11-06T08:59:56Z
-  output: |
-    npm run typecheck — hoàn tất trên mọi gói, không lỗi kiểu.
-
-- eval: E10
-  run_id: minted-pooler-che-do-giao-dich-E10-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.script.lint
-  verified_at: 2026-11-06T08:59:56Z
-  output: |
-    chuẩn giao diện: đạt
-
-- eval: E11
-  run_id: minted-pooler-che-do-giao-dich-E11-r1
-  exit_code: 0
-  baseline: red
-  verifier: config:executors.script.build
-  verified_at: 2026-11-06T08:59:56Z
-  output: |
-    npm run build — next build hoàn tất.
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E12
   run_id: minted-pooler-che-do-giao-dich-E12-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.api
   verified_at: 2026-11-06T08:59:56Z
+  carried_from_round: 1
   output: |
-    npm test -w @quy-hang/api
-    ℹ duration_ms 1644.244375
+    carry-forward tu round 1 — delta khong cham paths cua eval
+
+### Judgment
 
 - eval: E8
-  judged_by: hội đồng ba góc nhìn (context sạch) — domain-correctness, operational-feasibility, spec-alignment
-  run_id: không áp dụng — mục phán đoán, không có lệnh máy
-  verifier: config:executors.judgment
-  verified_at: 2026-11-06T08:59:56Z
+  judged_by: judge panel (fresh context) — domain-correctness, operational-feasibility, spec-alignment
   verdict: PASS
-  rationale: |
-    Đề xuất PASS. Ba phiếu:
-    - domain-correctness: PASS — ADR-0009 có mục «Sửa đổi 06/11 — chế độ giao dịch của pooler» (dòng 70–97) đủ bốn ý: chế độ giao dịch 6543 và trần 15 của chế độ phiên, lược đồ danh tính đặt ở adapter với truy vấn tay ghi `identity.`, job migrate giữ chuỗi riêng, các bước đổi sang 6543 kèm cách lùi về 5432. Tệp kiến trúc (dòng 153) và Tham chiếu (dòng 413–415) nhắc lại.
-    - operational-feasibility: PASS — mục có đủ bốn ý (chế độ 6543 và trần 15; lược đồ `identity` ở adapter; chuỗi `PROD_DATABASE_URL` của job migrate giữ riêng; bước đổi và cách lùi); kien-truc-repo-va-stack.md (dòng 153) và tham-chieu.md (dòng 413–415) trỏ về mục ấy.
-    - spec-alignment: PASS — mục dòng 70–97 nêu đủ bốn ý, tệp kiến trúc và Tham chiếu nhắc lại các ý đầu cùng việc đổi chuỗi sau Cổng Bằng chứng và đường lùi về 5432.
-  required_evidence:
-    - (judge không nêu bằng-chứng-thiếu)
+  rationale: Đề xuất PASS. ADR-0009 có mục «Sửa đổi 06/11 — chế độ giao dịch của pooler» (dòng 70–97) nêu đủ bốn ý; kiến trúc dòng 153 và Tham chiếu dòng 415 nhắc lại. Bước đổi dùng công tắc DATABASE_POOLER_PORT thay vì sửa trực tiếp DATABASE_URL, nhưng vẫn là đổi sang 6543 và lùi về 5432.
   human_override:  # chi nguoi ghi
+  - domain-correctness: PASS — mục «Sửa đổi 06/11» nêu chế độ giao dịch cổng 6543 và lý do là trần 15 kết nối chế độ phiên; lược đồ danh tính đặt ở adapter (schemaName identity), truy vấn tay ghi identity.<bảng>; job migrate giữ PROD_DATABASE_URL riêng; có bước đổi bằng DATABASE_POOLER_PORT và cách lùi về 5432.
+  - operational-feasibility: PASS — đủ bốn ý (chế độ đích, lược đồ ở adapter, job migrate riêng, bước đổi và đường lùi). Lệch nhỏ: bước đổi dùng công tắc cổng chứ không sửa DATABASE_URL, ADR nói rõ.
+  - spec-alignment: PASS — mục có trần 15 kết nối, lược đồ identity ở adapter, PROD_DATABASE_URL riêng, các bước đổi bản thật (đặt DATABASE_POOLER_PORT=6543, triển khai lại, theo dõi nhật ký) và cách lùi về 5432.
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
+
+- cmd: npm test -w @quy-hang/api
+  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_api-r2
+  exit_code: 0
+  verified_at: 2026-11-06T09:09:11Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
 
 - cmd: npm run test:hooks
-  run_id: minted-pooler-che-do-giao-dich-SUITE-test_hooks-r1
+  run_id: minted-pooler-che-do-giao-dich-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-pooler-che-do-giao-dich-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-06T08:59:56Z
+  verified_at: 2026-11-06T09:09:11Z
 
 ## Known limits
 
@@ -182,14 +184,11 @@ không chạy theo hồ sơ: E7
 
 ## Analyst
 
-Baseline không phân biệt (xanh cả trên mã mới lẫn mã cũ diffBase) — chứng minh bộ thử chứ chưa chứng minh riêng tính năng; cần viết lại để assert hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý:
-- `npm test -w @quy-hang/web`: E1
-- `node --import tsx --test --test-concurrency=1 "_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs"`: E2, E3, E4, E5, E6, E13
-- `npm run typecheck`: E9
-- `npm run lint`: E10
-- `npm test -w @quy-hang/api`: E12
+carried tu round 1 — baseline khong do lai round nay
 
-E11 đỏ trên mã cũ (có phân biệt). E8 là mục phán đoán, không đo baseline.
+Baseline khong do: mọi eval round này ghi baseline n-a (evals.yaml không đổi từ lần đo cuối ở round 1).
+
+Eval không-phân-biệt (xanh cả trên HEAD lẫn baseline lần đo trước, chứng minh harness chứ chưa chứng minh tính năng; cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý): E1, E2, E3, E4, E5, E6, E13, E9, E10, E12.
 
 ## Variance
 
@@ -197,4 +196,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval máy xanh; E8 (phán đoán) chờ người chốt ở Cổng 2 nên verdict PENDING-JUDGMENT.
+Round 1: E6 và E12 xanh ở round 1 (nay carry-forward); phần còn lại trả về triển khai để sửa.
+Round 2: S4 lượt 1 — tài liệu nói đổi chế độ bằng công tắc cổng; tập lệnh lùi không báo lùi giả. E1–E5, E9–E11, E13 chạy lại và xanh; E6, E12 carry-forward; E8 chờ người chốt ở Cổng 2; E7 không chạy theo hồ sơ.
