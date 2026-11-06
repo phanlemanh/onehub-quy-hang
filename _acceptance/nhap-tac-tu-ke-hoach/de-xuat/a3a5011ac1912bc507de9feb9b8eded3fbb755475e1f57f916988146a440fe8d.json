@@ -1,0 +1,105 @@
+{
+  "ten": "la-b-viet-tat",
+  "tieuDe": [
+    "#",
+    "T.Trạng",
+    "Tên DA",
+    "Tháp",
+    "Vị trí tầng",
+    "Căn hộ số",
+    "DT sàn (m²)",
+    "P.Ngủ",
+    "H.BC",
+    "Giá đăng (VNĐ)",
+    "Phí GD",
+    "CTV",
+    "Họ tên CSH",
+    "ĐTLL",
+    "Ghi nhận",
+    "Loại"
+  ],
+  "bamGoi": "a3a5011ac1912bc507de9feb9b8eded3fbb755475e1f57f916988146a440fe8d",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 2,
+        "dich": "subdivisionName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Tên DA» là viết tắt của tên dự án, và cả cột chỉ có một giá trị chữ giống nhau."
+      },
+      {
+        "cot": 3,
+        "dich": "buildingName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Tháp» chỉ toà nhà, cột chỉ có hai giá trị chữ ngắn như tên hai toà."
+      },
+      {
+        "cot": 4,
+        "dich": "floor",
+        "phep": {
+          "name": "floor"
+        },
+        "ly_do": "Tiêu đề «Vị trí tầng» và giá trị là số một đến hai chữ số, đúng dạng số tầng."
+      },
+      {
+        "cot": 6,
+        "dich": "livingArea",
+        "phep": {
+          "name": "area",
+          "kind": "unknown"
+        },
+        "ly_do": "Tiêu đề «DT sàn (m²)» là diện tích tính bằng mét vuông, nhưng không ghi rõ thông thuỷ hay tim tường."
+      },
+      {
+        "cot": 7,
+        "dich": "bedroomsTotal",
+        "phep": {
+          "name": "bedrooms"
+        },
+        "ly_do": "Tiêu đề «P.Ngủ» là số phòng ngủ, giá trị là một chữ số với ba mức khác nhau."
+      },
+      {
+        "cot": 9,
+        "dich": "listPrice",
+        "phep": {
+          "name": "price",
+          "unit": "dong"
+        },
+        "ly_do": "Tiêu đề «Giá đăng (VNĐ)» là giá chào tính bằng đồng, giá trị mười chữ số đúng hàng tỉ đồng."
+      },
+      {
+        "cot": 11,
+        "dich": "listAgentName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «CTV» là cộng tác viên nhận hàng, cả bảng chỉ có hai người nên giống cột người giữ căn."
+      },
+      {
+        "cot": 12,
+        "dich": "ownerName",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Tiêu đề «Họ tên CSH» là họ tên chủ sở hữu, tức chủ nhà của căn."
+      },
+      {
+        "cot": 14,
+        "dich": "keep_as_note",
+        "ly_do": "Tiêu đề «Ghi nhận» không rõ là ngày hay lời ghi, độ dài giá trị lệch từ 10 đến 18 ký tự nên giữ làm ghi chú cho chắc."
+      },
+      {
+        "cot": 15,
+        "dich": "keep_as_note",
+        "ly_do": "Tiêu đề «Loại» chỉ có một giá trị chữ ngắn cho cả bảng, không khớp trường chuẩn nào nên giữ làm ghi chú."
+      }
+    ]
+  }
+}

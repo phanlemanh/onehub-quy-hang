@@ -17,7 +17,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { choMau, DANG_TAI_MAU, daiBaoMau, ghepKhiCoMau, type MauDaNho } from "@/lib/nhap/cho-mau";
 import { bamTep, docTep } from "@/lib/nhap/doc-tep";
 import { cotTheoMau, loiTheoCot, mauCot, nhanLop } from "@/lib/nhap/duong-ong";
-import { batDauGhi, docDauChu, docMau, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type LoiGoi, type TienDoGhi } from "@/lib/nhap/goi-api";
+import { canHoi, cauChoDuyet, CHO_DE_XUAT, coTheTiepGhepAi, dongY, dongYHet, hoiDeXuat, khiDoiDich, lyDoKhongHoi, ttDau, type AiMan, type TrangThaiDeXuat } from "@/lib/nhap/de-xuat";
+import { batDauGhi, deXuatGhep, docDauChu, docMau, docTrangThaiAi, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type LoiGoi, type TienDoGhi } from "@/lib/nhap/goi-api";
 import {
   BUOC,
   boDong,
@@ -72,12 +73,19 @@ export function ManNhap({ vai }: { vai: string[] }) {
   // Hoàn tác cả lần nhập (hàng 66): lần nhập đang mở hộp, và số lần làm mới danh sách «Lần nhập gần đây».
   const [hoanTacId, setHoanTacId] = useState<string | null>(null);
   const [lamMoi, setLamMoi] = useState(0);
+  // «Xử lý bằng AI» (hàng 68): trạng thái của sàn và đề xuất của tệp đang mở.
+  // Lời đọc trạng thái giữ dạng hứa: tệp thả trước khi trạng thái về vẫn chờ nó, không lặng lẽ coi là «tắt».
+  const aiHua = useRef<Promise<AiMan> | null>(null);
+  const [dx, setDx] = useState<TrangThaiDeXuat>(() => ttDau(0));
 
   useEffect(() => {
     fetch("/api/v1/catalog")
       .then((r) => (r.ok ? r.json() : null))
       .then((catalog: CatalogData | null) => setCtx({ today: homNay(), ...(catalog ? { catalog } : {}) }))
       .catch(() => setCtx({ today: homNay() }));
+    aiHua.current = docTrangThaiAi(fetch)
+      .then((t): AiMan => (laLoi(t) ? "loi" : t))
+      .catch((): AiMan => "loi");
     const p = docMau(fetch);
     mauHua.current = p;
     void choMau(p).then(setMauTT);
@@ -114,7 +122,19 @@ export function ManNhap({ vai }: { vai: string[] }) {
       const bam = await bamTep(bytes);
       setTepGoc({ ten, bytes, trangCo: doc.trang });
       const { ong } = await ghepKhiCoMau(doc.grid, ctx, mauHua.current ?? Promise.resolve([]));
-      setS((cu) => nhanTep(cu, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, ong));
+      const sau = nhanTep(moiNhat.current, batDau.the, { ten, bam, loai: doc.loai, trang: doc.trangChon }, ong);
+      moiNhat.current = sau;
+      setS(sau);
+      if (sau.the === batDau.the) return setDx(ttDau(sau.the));
+      const ai = await (aiHua.current ?? Promise.resolve<AiMan>("loi"));
+      if (moiNhat.current.the !== sau.the) return;
+      if (!canHoi(ong, ai)) return setDx({ ...ttDau(sau.the), baoTatDinh: lyDoKhongHoi(ong, ai) });
+      setDx({ ...ttDau(sau.the), dangHoi: true });
+      const kq = await hoiDeXuat(ong, (g) => deXuatGhep(fetch, g), sau.the);
+      // Kết quả về muộn: người đã chọn tệp khác hay đổi gì ở tệp này trong lúc chờ (thế hệ đã tăng) thì bỏ, gỡ dải chờ.
+      if (moiNhat.current.the !== sau.the) return setDx((cu) => (cu.phien === sau.the ? ttDau(sau.the) : cu));
+      setS((cu) => (cu.the === sau.the ? { ...cu, ong: kq.ong } : cu));
+      setDx(kq.tt);
     } catch {
       setLoiTep("Không đọc được tệp này — thử chọn lại.");
     } finally {
@@ -149,6 +169,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
       return;
     }
     if (s.buoc === 4 && coTheGhi(s)) return setS(sangBuoc(s, 5));
+    if (s.buoc === 2 && s.ong && !coTheTiepGhepAi(s.ong, dx).ok) return;
     if (coTheTiep(s)) setS(sangBuoc(s, s.buoc + 1));
   };
 
@@ -169,7 +190,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
         </Button>
       ) : null}
       {s.buoc < 5 ? (
-        <Button type="button" onClick={tiep} disabled={s.buoc === 4 ? !coTheGhi(s) || tienDoXem !== null : !coTheTiep(s)}>
+        <Button type="button" onClick={tiep} disabled={s.buoc === 4 ? !coTheGhi(s) || tienDoXem !== null : !coTheTiep(s) || (s.buoc === 2 && s.ong !== null && !coTheTiepGhepAi(s.ong, dx).ok)}>
           Tiếp
           <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
         </Button>
@@ -237,6 +258,9 @@ export function ManNhap({ vai }: { vai: string[] }) {
           description={mauTT.kind === "loi" ? "Ghép theo từ điển như lần nhập đầu — kiểm lại từng cột." : "Cột có nhãn «theo mẫu» ghép như lần nhập đã ghi gần nhất; đổi cột nào thì lần sau nhớ cách mới."}
         />
       ) : null}
+      {s.buoc === 2 && s.ong && dx.dangHoi ? <TrangThai kind="notice" title={CHO_DE_XUAT} description="Máy chỉ gửi tiêu đề, dạng cột và mã căn, giá, phí, trạng thái — không gửi chủ nhà, số điện thoại, giá đáy, ghi chú." /> : null}
+      {/* Câu lý do ở mô tả: tiêu đề của TrangThai cắt một dòng, khổ 375 mất nửa câu. */}
+      {s.buoc === 2 && s.ong && dx.baoTatDinh ? <TrangThai kind="notice" title="Ghép tay lần này" description={dx.baoTatDinh} /> : null}
       {s.buoc === 2 && s.ong ? (
         <BangGhepCot
           cot={s.ong.table.headers.map((h, i) => ({
@@ -246,10 +270,31 @@ export function ManNhap({ vai }: { vai: string[] }) {
             lop: theoMau.includes(i) ? `${nhanLop(s.ong!.lop[i]!.cls)} · theo mẫu` : nhanLop(s.ong!.lop[i]!.cls),
             dich: s.ong!.plan.columns[i]!.target,
             loi: loiCot.get(i),
+            ...(dx.choDuyet.includes(i) || dx.daDongY.includes(i)
+              ? { deXuat: { lyDo: s.ong!.plan.columns[i]!.reason.replace(/^Máy đề xuất: /, ""), daDongY: dx.daDongY.includes(i) } }
+              : {}),
           }))}
           options={DICH}
-          canhBao={loiCot.size ? { tieuDe: "Có cột chưa ghép được", moTa: "Sửa cột có chữ đỏ rồi bấm Tiếp." } : null}
-          onDoi={(ma, dich) => ctx && setS(doiDichCot(s, Number(ma), dich as PlanTarget, ctx))}
+          canhBao={
+            loiCot.size
+              ? { tieuDe: "Có cột chưa ghép được", moTa: "Sửa cột có chữ đỏ rồi bấm Tiếp." }
+              : dx.choDuyet.length
+                ? {
+                    tieuDe: cauChoDuyet(dx.choDuyet.length),
+                    moTa: (
+                      <Button type="button" size="sm" variant="outline" onClick={() => setDx(dongYHet(dx))}>
+                        Đồng ý mọi đề xuất ({dx.choDuyet.length})
+                      </Button>
+                    ),
+                  }
+                : null
+          }
+          onDoi={(ma, dich) => {
+            if (!ctx) return;
+            setS(doiDichCot(s, Number(ma), dich as PlanTarget, ctx));
+            setDx(khiDoiDich(dx, Number(ma)));
+          }}
+          onDongY={(ma) => setDx(dongY(dx, Number(ma)))}
         />
       ) : null}
 
