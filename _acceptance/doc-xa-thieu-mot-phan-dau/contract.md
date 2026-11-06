@@ -5,7 +5,7 @@ slug: doc-xa-thieu-mot-phan-dau
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: implemented
+status: machine-cleared
 approved_by:
 approved_at:
 veto_state: mo
@@ -92,3 +92,5 @@ d) bằng gợi ý. Never: lui về so bỏ dấu khi giữ chữ không khớp.
 - Đọc tên tỉnh, tên huyện cũ — đã so bỏ dấu, không có lỗi này.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-06, đề xuất S4 known-limits): Bài kiểm riêng cho địa chỉ «Tân Định, Bắc Ninh» chỉ xác nhận kết quả không phải Tân Dĩnh, nên nếu bộ đọc sau này trả rỗng hoặc trả nhầm sang xã khác thì ca này vẫn xanh. Người dùng không gặp lỗi mới ngay lúc này, chỉ là một lớp bảo vệ mỏng hơn cho ca đó. — `packages/core/src/address/doc-xa-thieu-dau.test.ts`
