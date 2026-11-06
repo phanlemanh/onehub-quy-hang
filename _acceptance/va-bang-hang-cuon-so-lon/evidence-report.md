@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: a515b7ae1305653f114bf5e6063d1aecb889d0fe
+verified_commit: cb9163ec8e14533b9500224f3a63c7f3b925131f
 human_signoff:
 ---
 
@@ -143,3 +143,7 @@ none — every multi-run eval is uniform
 
 Round 1: E1–E6 đều đạt, các lệnh suite xanh. Chuyển Cổng 2.
 Round 2: chạy lại trên commit a515b7ae sau khi gộp nhánh chính; E1–E6 đều đạt, bảy lệnh suite xanh.
+
+### Re-pin lần 1 — 2026-11-06, do gộp nhánh chính (#176)
+run_id: repin-20261106T152615Z-16637
+sha: cb9163ec8e14533b9500224f3a63c7f3b925131f · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng
