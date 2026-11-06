@@ -22,6 +22,15 @@ export class LoiDocPhien extends Error {
   }
 }
 
+/** Hai pool của một phiên bản hàm, đúng cỡ ở trên, cả hai gắn `attachDatabasePool` (tham số để bài kiểm thay). */
+export function dungPools(url: string, attach: (pool: pg.Pool) => void = attachDatabasePool) {
+  const identityPool = new pg.Pool({ ...POOL_DANH_TINH, connectionString: url, options: "-c search_path=identity" });
+  const appPool = new pg.Pool({ ...POOL_UNG_DUNG, connectionString: url });
+  attach(identityPool);
+  attach(appPool);
+  return { identityPool, appPool };
+}
+
 function need(name: string): string {
   const v = process.env[name];
   if (!v) throw new Error(`Thiếu ${name} — xem .env.example.`);
@@ -43,10 +52,7 @@ export function getApi(): Api {
     : env === "production"
       ? undefined
       : devSender;
-  const identityPool = new pg.Pool({ ...POOL_DANH_TINH, connectionString: url, options: "-c search_path=identity" });
-  const appPool = new pg.Pool({ ...POOL_UNG_DUNG, connectionString: url });
-  attachDatabasePool(identityPool);
-  attachDatabasePool(appPool);
+  const { identityPool, appPool } = dungPools(url);
   const auth = createAuth({
     identityPool,
     secret: need("BETTER_AUTH_SECRET"),
