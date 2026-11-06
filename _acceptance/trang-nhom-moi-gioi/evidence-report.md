@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6674096ffc1f392b662e6161f3c8aa38f8e4e824
+verified_commit: 8acd7045ee549ed94af0ab705748d39ab3e79a99
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -295,3 +295,7 @@ Round 3: ca 048 không áp hộ migration còn chờ (commit 3aead26f); round 4 
 ### Re-pin lần 1 — 2026-11-06, do gộp main + chữ ký
 run_id: repin-20261106T140010Z-44317
 sha: 6674096ffc1f392b662e6161f3c8aa38f8e4e824 · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10b=1 · ngoài làn máy: E10
+
+### Re-pin lần 2 — 2026-11-06, do gộp main + chữ ký
+run_id: repin-20261106T152227Z-50616
+sha: 8acd7045ee549ed94af0ab705748d39ab3e79a99 · suites: 7 lệnh exit 0 · evals: 17/17 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E10b=1 · ngoài làn máy: E10
