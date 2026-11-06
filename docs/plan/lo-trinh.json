@@ -2693,6 +2693,19 @@
         "_acceptance/luat-chia-lead-cap-han-hong/thu/**",
         "_acceptance/va-e7-loi-that-cap-han/**"
       ]
+    },
+    {
+      "ma": "doi-nhan-so-phien-ban",
+      "cau_giao": "Đổi nhãn tại chỗ của căn đang giao dịch hay đã bán đi qua phép so phiên bản như mọi lệnh đổi trạng thái: lệnh dựa trên bản cũ không âm thầm đè lần đổi trước hay kéo căn về trạng thái cũ, mà vào «Cần xem».",
+      "slug": "doi-nhan-so-phien-ban",
+      "vi_sao": "Ngoài-5 và Ngoài-7 của hàng 46 trang-thai-rieng (PR #153): đổi nhãn tại chỗ trong Đang giao dịch / Đã bán bỏ qua phép so phiên bản — hai người cùng đổi thì lần sau âm thầm đè, lệnh cũ có thể kéo căn từ Đang bán về Đang giao dịch. Chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 06/11. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Hai lệnh đổi nhãn cùng gốc phiên bản: lệnh sau vào Cần xem, không đè; lệnh đổi nhãn cũ gửi sau khi căn đã về Đang bán thì không kéo căn về; bài kiểm phủ cả Đang giao dịch và Đã bán",
+      "vung": [
+        "packages/api/src/listings/**",
+        "packages/core/src/listing/**",
+        "packages/api/test-db/doi-nhan-so-phien-ban/**"
+      ]
     }
   ],
   "chan_troi": [
