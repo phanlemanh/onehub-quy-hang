@@ -30,6 +30,10 @@ thấy đúng điều này trên sàn «OneHub» của bản thật ngày 06/11 
 3. **Mở sàn là lệnh chạy tay bằng chuỗi kết nối chủ**, chỉ chủ kho làm được; quản trị đầu tiên chỉ vào được bằng mã qua
    email.
 
+**Khung lại theo hai nguyên tắc chủ kho nêu 06/11** (quản trị sàn là chủ sàn, thấy mọi thứ; việc của Quỹ hàng là đưa sàn
+khỏi Sheet nhanh rồi không quay lại) ở **mục 9** — đọc mục ấy trước nếu chỉ đọc một mục. Điểm mới nặng nhất ở đó: căn
+nhập từ Sheet không có ảnh nên không lên được bảng hàng chung — nhập xong, cả sàn vẫn không thấy căn nào.
+
 Hai điều kiện có từ trước, chưa đóng, phải xong trước khi có dữ liệu chủ nhà thật: **rà pháp lý** trước sàn đầu tiên
 ngoài đội, và **bản xem trước dùng chung cơ sở dữ liệu thật**.
 
@@ -298,10 +302,31 @@ quyết khoá AI · bật danh sách tin cậy + thoả thuận danh mục cho s
 Theo khuôn `docs/plan/lo-trinh.json`; `ma` để giám sát đặt. Thứ tự theo độ chặn. Phiên này không ghi `lo-trinh.json`.
 
 Ba hàng 0a–0c thêm sau khi chủ kho thử trên bản thật (06/11). 0b và 0c mở lại điều đã chốt ở Tham chiếu §3 («ba cửa
-vào») — cần chủ kho quyết ở Cổng Phạm vi.
+vào») — cần chủ kho quyết ở Cổng Phạm vi. Hai hàng đầu (`chu-san-du-vai`, `can-nhap-len-bang-chung`) thêm sau khi khung
+lại theo hai nguyên tắc ở mục 9 — đứng trước mọi hàng khác.
 
 ```json
 [
+  {
+    "ma": "",
+    "slug": "chu-san-du-vai",
+    "cau_giao": "Người được trao Quản trị sàn — từ công cụ mở sàn hay ở màn Người dùng — mang luôn đủ bốn vai làm việc (Telesales, Đầu chủ, Đầu khách, Trưởng nhóm): đăng nhập lần đầu đã thấy mọi nhà, mọi nút tạo và chủ nhà cả sàn; gỡ bớt vai vẫn được cho người chỉ cấu hình",
+    "vai": "Quản trị sàn",
+    "hang": "T3",
+    "vi_sao": "Chủ kho 06/11: quản trị sàn là quyền lớn nhất, trao cho chủ sàn, nên thấy tất cả và giữ luôn các vai khác. Audit sàn mới ngày 0 mục 3b, 9. Sửa Tham chiếu §2, §6 («quản trị sàn không tự thấy chủ nhà»), ghi chú ADR-0010, ADR-0011. Cách B ở mục 9: gán gói vai, không đổi luật theo dòng",
+    "bat_khi": "Mở sàn mới thì người đầu tiên mang năm vai; tích Quản trị sàn cho một người ở màn Người dùng thì bốn vai kia tích sẵn; gỡ bớt được và lưu đúng; người mang đủ vai thấy Bảng hàng, Nhập Excel, chủ nhà cả sàn, mỗi lần mở số vẫn một vết; sàn đang chạy không đổi vai ai",
+    "vung": ["packages/db/scripts/**", "packages/api/src/thanh-vien.ts", "apps/web/src/app/(app)/settings/users/**", "docs/product/tham-chieu.md", "docs/adr/**"]
+  },
+  {
+    "ma": "",
+    "slug": "can-nhap-len-bang-chung",
+    "cau_giao": "Đầu chủ nhập bảng hàng cũ từ Sheet và căn mà file ghi «còn hàng» lên ngay bảng hàng chung của sàn, kể cả khi chưa có ảnh; phần còn thiếu (ảnh thật, pháp lý, tình trạng sử dụng) hiện ở mức đủ và thành việc «bổ sung» ở Hôm nay",
+    "vai": "Đầu chủ",
+    "hang": "T3",
+    "vi_sao": "Chủ kho 06/11: việc của Quỹ hàng là đưa sàn khỏi Sheet nhanh rồi không quay lại. Audit mục 9: Sheet không có ảnh, mà vào Đang bán phải có ít nhất một ảnh thật (sàn đặt được 1–20, không được 0) — mọi căn nhập nằm ở Chưa đủ để rao, «Chỉ tôi»; nhập xong cả sàn không thấy căn nào. Mở lại luật 17 cho riêng cửa nhập — chủ kho quyết ở Cổng Phạm vi",
+    "bat_khi": "Nhập file 50 căn «còn hàng» không ảnh thì 50 căn ở bảng chung, đầu khách thấy được; căn thiếu ảnh có dấu ở Bảng hàng và việc ở Hôm nay của đầu chủ giữ căn; luật nào còn chặn gửi khách khi thiếu ảnh ghi rõ trong hợp đồng; hàng tạo tay và từ lead giữ luật 17 như cũ",
+    "vung": ["packages/core/src/listing/**", "packages/api/src/imports/**", "packages/core/src/visibility/**", "apps/web/src/app/(app)/today/**"]
+  },
   {
     "ma": "",
     "slug": "bat-dau-san",
@@ -415,9 +440,87 @@ vào») — cần chủ kho quyết ở Cổng Phạm vi.
 ]
 ```
 
-**Khuyến nghị thứ tự:** ngay hôm nay, chủ kho tự thêm vai Đầu chủ (và Đầu khách nếu muốn gửi khách) cho mình ở sàn «OneHub»
-để có Bảng hàng và Nhập Excel — thêm Trưởng nhóm là thấy chủ nhà cả sàn. Hàng đầu tiên nên mở: `bat-dau-san` (T2, gỡ ngõ
-cụt mà không đụng quyết định đã chốt); `tao-can-tay` và `tao-lien-he-tay` chờ chủ kho quyết có mở lại «ba cửa vào» không.
-Song song, chủ kho bật nhịp chia lead (A1, ngoài kho) — gỡ cho cả sàn thử; rồi `chia-lead-khi-chua-co-khu`
-và `toa-cua-san-o-lead` (hai hàng T2 nhỏ, mở khoá ngày làm việc đầu); `danh-muc-mau-chi-san-mau` gộp vào hàng 99 nếu 99
-mở trong đợt kế, không thì làm riêng; `xem-truoc-co-so-du-lieu-rieng` và rà pháp lý trước dữ liệu chủ nhà thật.
+**Khuyến nghị thứ tự:** theo mục 9.4 — thứ tự ấy thay thứ tự cũ của mục này.
+
+## 9. Khung lại theo hai nguyên tắc của chủ kho (06/11)
+
+Chủ kho, sau khi thử sàn «OneHub» trên bản thật:
+
+> Quản trị sàn là quyền lớn nhất, thường trao cho chủ sàn — ngay từ đầu nên thấy tất cả mọi thứ và giữ luôn các quyền
+> khác. Nhiệm vụ của Quỹ hàng là đổi cách làm cũ từ Google Sheet, Excel lên hệ thống, giúp sàn nhanh, rồi làm việc trên
+> đây, không quay lại Excel nữa.
+
+### 9.1 Khung
+
+Hai nguyên tắc biến câu hỏi «sàn mới lên được tới đâu» thành một hành trình có đích: **từ lúc chủ sàn đăng nhập lần đầu tới
+lúc cả sàn bỏ Sheet** — mỗi chặng có lối không, và có nhanh hơn Sheet không. Đích này đã có sẵn ở Tham chiếu §1 («bản đầu
+xong khi một đội bỏ hẳn Google Sheet cho một khu trong hai tuần») và số đo «số ngày Sheet cũ không được sửa» (§11); hai
+nguyên tắc chỉ đưa nó lên làm thước cho ngày 0.
+
+Bốn chặng: **(1) chủ sàn vào và thấy việc** → **(2) chuyển nhà: đưa Sheet vào một lần** → **(3) sống chung: Sheet và Quỹ
+hàng chạy song song vài ngày** → **(4) làm hằng ngày trên Quỹ hàng, Sheet đứng im**.
+
+### 9.2 Phân tích
+
+**Nguyên tắc 1 — quản trị sàn là chủ sàn.**
+
+- **Đổi điều đã chốt, không chạm bất biến.** Tham chiếu §2 («Quản trị sàn … không tự thấy chủ nhà»), §6 («quyền cấu hình
+  tách khỏi quyền xem nguồn»), ADR-0010 (quản trị không thấy nguồn), ADR-0011 (quản trị chỉ quản mẫu file, không tự nhập)
+  đều nói ngược. Bất biến 2 chỉ cấm thông tin chủ nhà **rời công ty** — chủ sàn thấy trong sàn mình không chạm bất biến.
+- **Quyền nằm rải ở hai lớp.** Lõi: bảng nhà và nút theo vai (`packages/core/src/navigation.ts:64-71`), bảng quyền hàng
+  (`packages/core/src/access/bang-quyen-hang.json`), luật thấy nguồn (`packages/core/src/access/can-see-source.ts:7-10`).
+  Cơ sở dữ liệu: khoảng 58 chỗ xét vai bằng tên trong 17 migration (`'team_lead' = any` 25 chỗ, `'company_admin'` 14,
+  `'listing_agent'` 13, `'buyer_agent'` 6).
+- **Hai cách làm:**
+  - **A — Quản trị bao mọi vai ở luật**: mỗi chỗ xét vai hiểu «Quản trị» là có đủ. Đổi nghĩa một vai, chạm lõi và ~17
+    migration, T3 nặng; mất chỗ cho người chỉ cấu hình (thư ký, người IT của sàn).
+  - **B — Trao Quản trị là trao đủ vai**: công cụ mở sàn gắn năm vai; ở màn Người dùng, tích Quản trị sàn thì bốn vai
+    kia tích sẵn, gỡ bớt được. Không đổi luật theo dòng nào; đúng chữ «giữ luôn các quyền khác»; vẫn giữ được người chỉ
+    cấu hình. Đổi vai của chính mình đã chạy (`packages/api/src/thanh-vien.ts:150-180`).
+- **Hệ quả của B cần biết trước:** mang Trưởng nhóm là thấy chủ nhà cả sàn (mỗi lần mở số vẫn một vết); mang Đầu chủ là có
+  thể được chia lead khi sàn chia đều cả sàn (mặc định chia theo khu thì chỉ khi chủ sàn có khu); Hôm nay của chủ sàn gộp
+  việc của mọi vai.
+- **Ngành:** bảng đối chiếu của kho (`docs/product/doi-chieu-nganh.md` §9) ghi Follow Up Boss có vai Owner tách khỏi
+  Admin và dồn cấu hình về chủ tài khoản. Lần này không đọc lại được trang ấy (trang chặn đọc tự động), nên chi tiết Admin
+  của họ thấy tới đâu **chưa kiểm**.
+
+**Nguyên tắc 2 — đưa sàn khỏi Sheet nhanh, rồi không quay lại.** Đi lần lượt bốn chặng trên mã hôm nay:
+
+| Chặng | Hôm nay | Bằng chứng | Hiện trạng |
+| --- | --- | --- | --- |
+| 1. Chủ sàn vào và thấy việc | Chỉ vai Quản trị, cột nhà trống, không nút tạo (mục 3b) | `navigation.ts:64-71`, `mo-san.mjs:50-58` | **Gãy** — gỡ bằng nguyên tắc 1 |
+| 2a. Nhập file | Chạy với sàn thật, không cần danh mục; AI tắt trên bản thật | mục 4 | Chạy được |
+| 2b. **Căn nhập lên bảng chung** | File ghi «còn hàng» → máy thử đưa lên Đang bán, nhưng Đang bán đòi ít nhất **một ảnh thật** (sàn đặt 1–20, không đặt 0 được), pháp lý, tình trạng sử dụng. Sheet không có ảnh → **mọi căn nhập ở Chưa đủ để rao**, mà hàng chưa từng Đang bán thì **chỉ người tạo và đầu chủ giữ căn thấy** | `packages/api/src/imports/store.ts:380-391`, `packages/core/src/listing/status.ts:90-104`, `packages/core/src/config/so.ts:118`, `packages/core/src/visibility/index.ts:44-49` | **Gãy — chặn nặng nhất của nguyên tắc 2**: nhập xong, bảng hàng chung rỗng, đầu khách không thấy, không gửi được căn nào |
+| 2c. Sheet chung nhiều đầu chủ | Mỗi lần nhập gán **một** đầu chủ cho mọi dòng; cột «Đầu chủ» trong file đọc được (`headers.ts:35`) nhưng không dùng để gán theo dòng. Lối vòng: nhập rồi «Đổi đầu chủ hàng loạt» (hàng 89) | `packages/core/src/import/dong.ts:23`, `packages/api/src/imports/store.ts:218-219, 345-355` | Thủ công |
+| 3. Sống chung | Nhập lại file: căn đã có hàng mở thì cập nhật giá trên hàng ấy, không tạo trùng; chủ nhà chỉ ghi lúc tạo | `packages/api/src/imports/store.ts:129-142, 340-357` | Chạy được |
+| 4a. Thêm căn mới hằng ngày | Sheet: thêm một dòng. Quỹ hàng: chỉ qua lead (gãy với toà thật) — không có tạo tay | mục 3b, 4 | **Gãy** |
+| 4b. Sửa | Sửa trên ô, hàng loạt, hồ sơ | rà soát CRUD 05/11 | Chạy được |
+| 4c. Xoá dòng nhập nhầm | Sheet: xoá dòng. Quỹ hàng: chỉ hoàn tác cả lần nhập; «Ngừng hẳn» không phải xoá | rà soát CRUD 05/11, G2 | **Chưa có** |
+| 4d. Thêm khách | Chỉ trong luồng Gửi, khi đã có căn Đang bán | mục 3b | Thủ công, phụ thuộc 2b |
+| 4e. Lối thoát tin cậy | Xuất bảng hàng ra Excel | Tham chiếu §10 | Chạy được |
+
+### 9.3 Tổng hợp
+
+1. **Nguyên tắc 1 gỡ ngõ cụt ngay, rẻ nếu đi cách B.** Không đổi luật cơ sở dữ liệu; phải sửa Tham chiếu §2, §6 và ghi
+   chú ADR-0010, 0011 trong cùng PR. Hàng `bat-dau-san` lùi xuống: chủ sàn đã thấy mọi nhà thì danh sách «Bắt đầu sàn»
+   chỉ còn là lời dẫn chuyển nhà, không còn là lối thoát ngõ cụt.
+2. **Chặn thật của nguyên tắc 2 không nằm ở màn tạo · sửa · xoá mà ở cổng Đang bán.** Luật 17 («Sẵn sàng bán» cần ảnh
+   thật) đúng cho căn mới khai thác, nhưng biến lần chuyển nhà thành một bảng hàng chung rỗng. Chừng nào chưa gỡ, sàn
+   không có lý do bỏ Sheet: Sheet thấy hết, Quỹ hàng thấy không.
+3. **Ngang Sheet ở hai thao tác thường nhất — thêm dòng, xoá dòng — là điều kiện để không quay lại.** «Ba cửa vào»
+   (Tham chiếu §3) giả định cửa lead chạy; hôm nay cửa lead gãy và thao tác «thêm một căn» không có lối ngắn như Sheet.
+4. Thứ tự cũ của mục 8 (chia lead, danh mục) vẫn đúng **sau** chuyển nhà: lead và danh mục là việc của chặng 4, không
+   chặn chặng 1–3.
+
+### 9.4 Đề xuất thứ tự
+
+| Thứ tự | Việc | Chặng gỡ | Cần chủ kho |
+| --- | --- | --- | --- |
+| Hôm nay | Chủ kho tự thêm bốn vai cho mình ở sàn «OneHub» (Cài đặt › Người dùng › Sửa) — đúng cách B, làm tay | 1 | Tự làm |
+| 1 | `chu-san-du-vai` (cách B) | 1 | Chọn A hay B |
+| 2 | `can-nhap-len-bang-chung` | 2b | Mở lại luật 17 cho cửa nhập ở Cổng Phạm vi |
+| 3 | `tao-can-tay` + gỡ căn tạo nhầm (G2 của rà soát CRUD 05/11) | 4a, 4c | Mở lại «ba cửa vào» |
+| 4 | Gán đầu chủ theo cột «Đầu chủ» của file (chưa thành hàng — giám sát cân gộp vào hàng nhập) | 2c | — |
+| 5 | Vận hành: bật nhịp chia lead (A1); rồi `chia-lead-khi-chua-co-khu`, `toa-cua-san-o-lead` | 4 | Chủ kho bật khoá |
+| 6 | `tao-lien-he-tay`, `danh-muc-mau-chi-san-mau`, `bat-dau-san`, `nut-mo-san`, `thu-moi-vao-san`, `ten-san-va-khu` | 4 | — |
+| Trước dữ liệu thật | Rà pháp lý; `xem-truoc-co-so-du-lieu-rieng` | — | Chủ kho |
