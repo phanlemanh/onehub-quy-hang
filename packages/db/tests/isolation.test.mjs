@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
@@ -3629,6 +3629,10 @@ test("shares (048): một hàm create_share, quyền hẹp, đã áp", { skip },
     const luc = async () => (await client.query("select applied_at from schema_migrations where name like '048_%'")).rows;
     const truoc = await luc();
     assert.equal(truoc.length, 1, "048 chưa áp");
+    // Rào: chỉ chạy lại migrate khi mọi tệp đã áp — còn tệp chờ thì ca này đỏ, không lặng lẽ áp hộ vào cơ sở dữ liệu đang kiểm.
+    const tep = readdirSync(fileURLToPath(new URL("../migrations/", import.meta.url))).filter((f) => /^\d{3}_.+\.sql$/.test(f));
+    const daAp = new Set((await client.query("select name from schema_migrations")).rows.map((r) => r.name));
+    assert.deepEqual(tep.filter((f) => !daAp.has(f)), [], "còn migration chưa áp — chạy npm run db:migrate trước bộ kiểm");
     const ra = execFileSync(process.execPath, [fileURLToPath(new URL("../scripts/migrate.mjs", import.meta.url))], { env: { ...process.env, DATABASE_URL: url }, encoding: "utf8" });
     assert.ok(!/đã áp 048_/.test(ra), `lần chạy thứ hai áp lại 048: ${ra}`);
     assert.deepEqual(await luc(), truoc, "lần chạy thứ hai ghi lại 048");
