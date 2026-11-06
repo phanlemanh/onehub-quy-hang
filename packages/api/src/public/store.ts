@@ -6,7 +6,8 @@ import { dongNhanCuaSan } from "../labels/store";
 import type { ListingState } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import type { CanNoiBo } from "@quy-hang/core/redaction";
-import { thanTrangKhach, type ShareAudience, type ThanTrangKhach } from "@quy-hang/core/sharing";
+import { giaiCauHinh } from "@quy-hang/core/config";
+import { thanTrangKhach, type CauHinhTrangMoiGioi, type LuuTrenLanGui, type ShareAudience, type ThanTrangKhach } from "@quy-hang/core/sharing";
 import { canRead, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { withCompany } from "../db";
@@ -124,11 +125,35 @@ export type ThanRoute = ThanTrangKhach & { listingIds: string[] };
  * Thân trang khách của một Lần gửi còn mở; `today` là `YYYY-MM-DD` UTC. `listingIds` (cùng thứ tự với `can`) là mã hàng để
  * trang báo «Quan tâm» đúng căn — chuỗi UUID không mang nghĩa, không thuộc lớp nguồn; mọi giá trị căn vẫn chỉ là bản ra.
  */
-export async function docTrangKhach(nguon: Pick<NguonCongKhai, "docCan" | "docNhan">, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
+export async function docTrangKhach(nguon: Pick<NguonCongKhai, "docCan" | "docNhan" | "docMoiGioi">, s: LanGuiTheoMa, today: string): Promise<ThanRoute> {
   const ds = await nguon.docCan(s);
   // Cách gọi riêng của sàn gửi (hàng 45): lõi cắt về phần theo khoá ra của người nhận.
   const tuVung = boTuVung(nguon.docNhan ? await nguon.docNhan(s) : []).tuVung;
-  return { ...thanTrangKhach({ can: ds.map((d) => d.can), audience: s.audience, today, tuVung }), listingIds: ds.map((d) => d.id) };
+  // Trang nhóm môi giới (hàng 44): mức chia và định nghĩa phí lúc gửi, cùng cấu hình hiện tại của sàn gửi.
+  const mg = s.audience === "agents" && nguon.docMoiGioi ? await nguon.docMoiGioi(s) : null;
+  const than = thanTrangKhach({ can: ds.map((d) => d.can), audience: s.audience, today, tuVung, luuTrenLanGui: mg?.luu, cauHinhMoiGioi: mg?.san });
+  return { ...than, listingIds: ds.map((d) => d.id) };
+}
+
+/** Mức chia, định nghĩa phí lúc gửi (048) và cấu hình trang môi giới của sàn — đọc trong phiên người gửi. */
+export async function docMoiGioiCua(tx: pg.PoolClient, shareId: string): Promise<{ luu: LuuTrenLanGui; san: CauHinhTrangMoiGioi }> {
+  const r = (
+    await tx.query<{ muc: string | null; phi: string[] | null }>(
+      "select commission_split_pct::text muc, fee_inclusion phi from shares where company_id = app.current_company_id() and id = $1",
+      [shareId],
+    )
+  ).rows[0];
+  const dong = (
+    await tx.query<{ key: string; value: unknown }>(
+      "select key, value from company_settings where company_id = app.current_company_id() and key = any($1)",
+      [["broker_page.hide_commission_split", "fee.inclusion"]],
+    )
+  ).rows;
+  const { cauHinh } = giaiCauHinh(dong);
+  return {
+    luu: { mucChia: r?.muc == null ? null : Number(r.muc), feeInclusion: r?.phi ?? null },
+    san: { anMucChia: cauHinh["broker_page.hide_commission_split"] === true, feeInclusion: (cauHinh["fee.inclusion"] as string[] | undefined) ?? [] },
+  };
 }
 
 export type AnhCongKhai = { kind: "byte"; bytes: Buffer; type: string } | { kind: "link"; url: string } | "khong-co" | "chua-cau-hinh";
@@ -143,6 +168,8 @@ export type NguonCongKhai = {
   docCan(s: LanGuiTheoMa): Promise<{ id: string; can: CanNoiBo }[]>;
   /** Dòng cách gọi riêng của sàn gửi (hàng 45) — chỉ đi vào `thanTrangKhach`, lõi cắt về phần ra ngoài. Vắng = chưa đặt. */
   docNhan?(s: LanGuiTheoMa): Promise<DongNhan[]>;
+  /** Hàng 44: mức chia, định nghĩa phí lúc gửi và cấu hình trang môi giới của sàn gửi — chỉ đi vào `thanTrangKhach`. */
+  docMoiGioi?(s: LanGuiTheoMa): Promise<{ luu: LuuTrenLanGui; san: CauHinhTrangMoiGioi }>;
   ghiSuKien(code: string, type: string, listingId: string | null, visitor: string): Promise<GhiSuKien>;
   /** Byte một ảnh của Lần gửi; route chỉ gọi với id đã có trong bản ra. */
   docAnh(s: LanGuiTheoMa, photoId: string): Promise<AnhCongKhai>;
@@ -157,6 +184,7 @@ export function nguonThat(deps: { appPool: pg.Pool; identityPool: pg.Pool }, kho
       return tx(s, (c) => canCuaLanGui(c, s, ten));
     },
     docNhan: (s) => tx(s, dongNhanCuaSan),
+    docMoiGioi: (s) => tx(s, (c) => docMoiGioiCua(c, s.shareId)),
     ghiSuKien: (code, type, listingId, visitor) => ghiSuKien(deps.appPool, code, type, listingId, visitor),
     async docAnh(s, id) {
       if (kho.ten === "vang") return "chua-cau-hinh";

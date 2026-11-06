@@ -1,3 +1,4 @@
+import { giaiCauHinh } from "@quy-hang/core/config";
 import { randomUUID } from "node:crypto";
 import {
   prospectView,
@@ -201,6 +202,12 @@ export async function listProspectShares(tx: pg.PoolClient, id: string): Promise
   return rows.map(banGui);
 }
 
+/** Định nghĩa «Bao phí» hiện tại của sàn (điểm #8) — dòng sàn đã đặt, vắng thì mặc định của sổ. */
+async function feeInclusionCuaSan(tx: pg.PoolClient): Promise<string[]> {
+  const dong = (await tx.query<{ key: string; value: unknown }>("select key, value from company_settings where company_id = app.current_company_id() and key = 'fee.inclusion'")).rows;
+  return giaiCauHinh(dong).cauHinh["fee.inclusion"] as string[];
+}
+
 /** Tạo một Lần gửi: người gửi là người gọi; căn phải đã lên bảng; mã link ngẫu nhiên, trùng thì sinh lại một lần. */
 export async function createShare(tx: pg.PoolClient, payload: unknown): Promise<ShareView | Refusal> {
   const vai = await rolesOf(tx);
@@ -208,6 +215,8 @@ export async function createShare(tx: pg.PoolClient, payload: unknown): Promise<
   const v = validateShareInput(payload);
   if (!v.ok) return { error: API_ERRORS.invalidPayload, details: v.errors };
   const id = randomUUID();
+  // Hàng 44: định nghĩa «Bao phí» của sàn chụp vào Lần gửi nhóm môi giới lúc gửi (điểm #8 hiệu lực «mới», migration 048).
+  const phi = v.value.audience === "agents" ? await feeInclusionCuaSan(tx) : null;
   const loi: Record<string, Refusal> = {
     "42501": { error: API_ERRORS.buyerAgentRequired },
     P0002: { error: API_ERRORS.notFound },
@@ -215,7 +224,7 @@ export async function createShare(tx: pg.PoolClient, payload: unknown): Promise<
     "23503": { error: API_ERRORS.listingNotShareable },
   };
   for (let lan = 0; lan < 2; lan++) {
-    const kq = await goiHam(tx, "select app.create_share($1, $2, $3, $4, $5)", [id, newShareCode(), v.value.audience, v.value.prospectId, v.value.listingIds], {
+    const kq = await goiHam(tx, "select app.create_share($1, $2, $3, $4, $5, $6, $7)", [id, newShareCode(), v.value.audience, v.value.prospectId, v.value.listingIds, v.value.commissionSplitPct ?? null, phi], {
       ...loi,
       ...(lan === 0 && { "23505": { error: API_ERRORS.versionConflict } }),
     });
