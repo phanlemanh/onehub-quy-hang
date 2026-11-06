@@ -5,7 +5,9 @@ slug: danh-muc-xa-day-du
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: draft
+status: approved
+approved_by: Manh Phan
+approved_at: 2026-11-06
 design_doc: _acceptance/danh-muc-xa-day-du/design.md
 ---
 
