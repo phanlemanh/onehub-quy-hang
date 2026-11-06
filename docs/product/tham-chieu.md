@@ -152,7 +152,7 @@ Sáu trạng thái chuẩn; nhãn của sàn nằm trên.
 
 15. Độ tươi là ngày xác nhận gần nhất với chủ nhà; căn nhạt dần theo tuổi.
 16. Mức đủ thông tin tự tính, và chính là danh sách hỏi của màn cuộc gọi.
-17. «Sẵn sàng bán» một chạm: máy kiểm giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; không qua người duyệt.
+17. «Sẵn sàng bán» một chạm: máy kiểm giá về tay, ảnh thật, pháp lý, tình trạng sử dụng; không qua người duyệt. **Đổi 06/11, chưa dựng** (§12): thiếu ảnh thật không chặn lên Đang bán — ảnh thành một mục của mức đủ; sàn muốn thì đặt lại số ảnh tối thiểu ở Cài đặt sàn.
 18. Chỉ Hôm nay được đẩy việc; mỗi căn nằm ở đúng một hàng đợi (điều chỉnh giá thắng gọi lại). Mặc định: cần gọi lại sau 14 ngày chưa xác nhận; nên gọi điều chỉnh giá sau 10 ngày (sàn chỉnh trong 7–14).
 
 **Lead**
@@ -414,6 +414,7 @@ Mỗi nhà trả lời một câu: Hôm nay — giờ làm gì? · Bảng hàng 
 | 06/11 | Vá pool nghe lỗi: cơ sở dữ liệu cắt một kết nối đang rảnh hay đang mượn thì máy chủ web không sập — kết nối hỏng bị bỏ, nhật ký ghi một dòng, lời gọi kế tiếp chạy lại; lời gọi đang dùng đúng kết nối ấy nhận lỗi của chính nó (trang lỗi kèm «Thử lại» như trước) | `_acceptance/va-pool-nghe-loi/` |
 | 06/11 | Thuế phí (hàng 49, chủ kho duyệt Cổng Phạm vi): quản trị sàn ở Cài đặt › Sàn › Thuế phí bật tắt từng khoản của «bao phí» (thuế thu nhập cá nhân, lệ phí trước bạ, môi giới — ba khoản cố định, Hỏi-2) và đặt môi giới 0–5%; thuế 2% và lệ phí 0,5% đúng số luật, màn ghi «theo luật» (Hỏi-1, kiểm văn bản 06/11). Mỗi giá bao phí mang dấu định nghĩa của sàn lúc giá vào máy chủ — đóng ở cơ sở dữ liệu cho mọi lối ghi (bảng `listing_price_fee_basis`, migration 050), giá đã lưu giữ dấu cũ; giá ghi trước 06/11 mang định nghĩa mặc định (Hỏi-3). Hồ sơ căn hiện «Tính theo định nghĩa ngày …» kèm giá về tay theo dấu; màn cuộc gọi tính và so giá theo định nghĩa hiện hành của sàn. Bảng hàng chưa hiện ngày tính — sau hàng 46 (Hỏi-4); so giá toà chưa quy theo dấu từng căn (Hỏi-5) | `_acceptance/thue-phi/` |
 | 06/11 | Quản trị sàn là chủ sàn, quyền lớn nhất (chủ kho thử sàn «OneHub» trên bản thật: người mở sàn chỉ có vai Quản trị, cột nhà trống, không nút tạo). Chọn **cách B**: trao Quản trị sàn — ở công cụ mở sàn hay màn Người dùng — là trao luôn bốn vai làm việc, gỡ bớt được cho người chỉ cấu hình; không đổi luật theo dòng (cách A «Quản trị bao mọi vai ở luật» bị loại: chạm khoảng 17 migration, mất người chỉ cấu hình). Đổi §2, §6; ADR-0010, ADR-0011 ghi chú khi dựng. Chưa dựng — hàng `chu-san-du-vai`. Cùng ngày chủ kho đặt thước cho ngày 0: việc của Quỹ hàng là đưa sàn khỏi Sheet nhanh rồi không quay lại (§1) | `docs/plan/audit-san-moi-day-0.md` §3b, §9 |
+| 06/11 | **Thiếu ảnh không chặn bán** (chủ kho: chặn vì không có ảnh là «thất bại ngay bước đầu tiên» — Sheet không có ảnh, nên mọi căn chuyển từ Sheet sang nằm ở Chưa đủ để rao, chỉ người nhập thấy). Lên Đang bán ở mọi cửa — «Sẵn sàng bán», ô Trạng thái, nhập file — không còn đòi ảnh thật; ảnh thành một mục của mức đủ và một việc ở Hôm nay. Số ảnh tối thiểu vẫn là điểm sàn chỉnh được, mặc định 0. Trang khách đã có chỗ trống cho căn không ảnh. Đổi luật 17; giá kèm điều kiện phí, pháp lý, tình trạng sử dụng vẫn là điều kiện. Chưa dựng — hàng `anh-khong-chan-ban` | `docs/plan/audit-san-moi-day-0.md` §9 |
 
 ## 13. Chỗ cần chốt
 
