@@ -57,8 +57,7 @@ test("hai pool dựng đúng cỡ của nơi chạy và cả hai gắn attachDat
         assert.equal(pool.options.idleTimeoutMillis, c.idleTimeoutMillis);
         assert.equal(pool.options.connectionTimeoutMillis, c.connectionTimeoutMillis);
       }
-      // Pool danh tính giữ search_path=identity; pool ứng dụng không (luật cách ly đặt trong giao dịch, không ở chuỗi nối).
-      assert.equal((identityPool.options as { options?: string }).options, "-c search_path=identity");
+      // Không pool nào mang tham số khởi động (pooler-che-do-giao-dich) — ca riêng dưới ghim cho bể danh tính.
       assert.equal((appPool.options as { options?: string }).options, undefined);
     } finally {
       await Promise.all([identityPool.end(), appPool.end()]);
@@ -70,6 +69,40 @@ test("hai pool dựng đúng cỡ của nơi chạy và cả hai gắn attachDat
     assert.equal(identityPool.options.max, NOI_TRANG.danhTinh.max);
   } finally {
     await Promise.all([identityPool.end(), appPool.end()]);
+  }
+});
+
+// pooler-che-do-giao-dich: chế độ giao dịch không giữ tham số khởi động — bể danh tính không được dựa vào nó.
+test("bể danh tính không mang tham số khởi động ở mọi nơi chạy", async () => {
+  for (const noi of ["trang", "chan-dau"] as const) {
+    const { identityPool, appPool } = dungPools("postgres://u:p@127.0.0.1:1/x", noi, () => {});
+    try {
+      const o = (identityPool.options as { options?: string }).options;
+      assert.equal(o, undefined, `bể danh tính ${noi} còn tham số khởi động: ${o}`);
+    } finally {
+      await Promise.all([identityPool.end(), appPool.end()]);
+    }
+  }
+});
+
+test("dòng dựng bể nêu cổng, không lộ chuỗi kết nối", async () => {
+  const goc = console.log;
+  const dong: string[] = [];
+  console.log = (...a: unknown[]) => void dong.push(a.map(String).join(" "));
+  try {
+    for (const noi of ["trang", "chan-dau"] as const) {
+      dong.length = 0;
+      const { identityPool, appPool } = dungPools("postgres://nguoi-thu:mat-khau-thu@may-chu-thu:6543/postgres", noi, () => {});
+      await Promise.all([identityPool.end(), appPool.end()]);
+      const cua = dong.filter((l) => l.includes("[pool:ket-noi]"));
+      assert.equal(cua.length, 1, `dòng dựng bể ${noi}: cần đúng 1, có ${cua.length}`);
+      assert.match(cua[0]!, /\[pool:ket-noi\] cổng 6543/, `dòng dựng bể ${noi} không nêu cổng 6543: ${cua[0]}`);
+      for (const bi of ["mat-khau-thu", "may-chu-thu", "nguoi-thu"]) {
+        assert.ok(!cua[0]!.includes(bi), `dòng dựng bể ${noi} lộ «${bi}»: ${cua[0]}`);
+      }
+    }
+  } finally {
+    console.log = goc;
   }
 });
 
