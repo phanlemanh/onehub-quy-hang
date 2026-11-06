@@ -120,6 +120,7 @@ evals:
   - id: E8
     criterion: AC-8
     executor: test
+    layer: backend-effect
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/units/call/**", "packages/core/src/fees/**", "packages/core/src/pricing/**"]
     expected: "exit 0; ca «máy tính cuộc gọi: theo định nghĩa của sàn» trong apps/web/src/app/(app)/units/call/may-tinh.test.ts có mặt và ok — mayTinhDau(3_000_000_000, included, định nghĩa {khoan: [thue_tncn, moi_gioi], tiLe môi giới 200}) cho ketQua.khoan đúng hai mã [thue_tncn, moi_gioi], veTay 2_880_000_000, chuMoiGioi «2»; đối chứng: định nghĩa mặc định cho 2_895_000_000 và ba khoản; so giá toà nhận cùng định nghĩa (ca soGiaToa với định nghĩa tắt lệ phí quy về tay 2_880_000_000)."
