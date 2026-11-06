@@ -97,4 +97,11 @@ test("khuôn gói ô lạ ở máy chủ", () => {
   assert.match((kiemKhuonGoiOLa({ o: [{ ...sach.o[0], truong: "ownerPhone" }] }) as { loi: string }).loi, /không thuộc lớp được mở/);
   const quaTran = { o: Array.from({ length: 301 }, (_, i) => ({ ...sach.o[0], id: `o${i + 1}` })) };
   assert.match((kiemKhuonGoiOLa(quaTran) as { loi: string }).loi, /1–300/);
+  // Phép kiểm như kế hoạch nhập: phép lạ, thiếu tham số, khoá lạ trong phép hay tham số đều sai khuôn (vòng 1: t1, t3, t4).
+  const voiPhep = (phep: unknown) => kiemKhuonGoiOLa({ o: [{ ...sach.o[0], phep }] }) as { loi?: string };
+  assert.match(voiPhep({ name: "regex" }).loi ?? "", /phép ngoài thực đơn/, "phép lạ");
+  assert.match(voiPhep({ name: "price" }).loi ?? "", /params\.unit: thiếu/, "giá thiếu đơn vị");
+  assert.match(voiPhep({ name: "price", params: { unit: "ty", ghiChu: "0900 000 011" } }).loi ?? "", /params\.ghiChu: khoá lạ/, "khoá lạ trong tham số");
+  assert.match(voiPhep({ name: "price", params: { unit: "ty" }, ghiChu: "x" }).loi ?? "", /phep\.ghiChu: khoá lạ/, "khoá lạ trong phép");
+  assert.ok("goi" in kiemKhuonGoiOLa({ o: [{ ...sach.o[0], phep: { name: "price", params: { unit: "ty" } } }] }), "phép đúng qua khuôn");
 });

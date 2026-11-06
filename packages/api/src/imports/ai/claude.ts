@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { bamGoi, bamJson, KHUON_DE_XUAT, KHUON_O_LA, LOI_NHAC, LOI_NHAC_O_LA, type GoiDeXuat, type GoiOLa } from "@quy-hang/core/import";
+import { bamGoi, bamJson, KHUON_DE_XUAT, KHUON_O_LA, LOI_NHAC, LOI_NHAC_O_LA, MO_HINH_O_LA, type GoiDeXuat, type GoiOLa } from "@quy-hang/core/import";
 
 /**
  * Khách gọi Claude cho đường đề xuất (hàng 68, ADR-0011 quyết định 3–5). Gọi Messages API bằng `fetch` — không thêm gói
@@ -11,7 +11,7 @@ import { bamGoi, bamJson, KHUON_DE_XUAT, KHUON_O_LA, LOI_NHAC, LOI_NHAC_O_LA, ty
 export const MO_HINH = "claude-opus-5-5";
 export const TRAN_MS = 240_000;
 /** Mô hình của đường ô lạ (hàng 69, Hỏi-1): Opus 5.5 tới khi phiên nghiệm thu có số qua API cho Haiku 5.5. */
-export const MO_HINH_O_LA = "claude-opus-5-5";
+export { MO_HINH_O_LA };
 
 export type DungLuong = { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number; cache_creation_input_tokens?: number };
 export type TraLoiAi = { json: unknown; model: string; usage: DungLuong };

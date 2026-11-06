@@ -28,13 +28,18 @@ export function chuanBi() {
 
 const lam = (x: number) => Math.round(x * 10000) / 10000;
 
-export function tinhSoDoOLa(goi: GoiOLa, dauRa: unknown): SoDoOLa {
-  const { table, plan, ctx, ap } = chuanBi();
+/** Đường nhận đề xuất: nhận kết quả áp kế hoạch đang hiện và các đề xuất qua kiểm. Đường đúng không đổi gì trên `ap`. */
+export type NhanDeXuat = (ap: ReturnType<typeof applyPlan>, deXuat: ReturnType<typeof kiemDeXuatOLa>["deXuat"]) => void;
+
+export function tinhSoDoOLa(goi: GoiOLa, dauRa: unknown, nhan: NhanDeXuat = () => {}): SoDoOLa {
+  const { ctx, ap } = chuanBi();
   const truocJson = JSON.stringify(ap);
   const kq = kiemDeXuatOLa(goi, dauRa, HOM_NAY_O_LA);
-  // Tự ghi: áp lại kế hoạch sau khi nhận đề xuất mà người chưa chạm — mọi ô phải y như trước.
-  const sau = applyPlan(table, plan, ctx);
-  const tuGhi = JSON.stringify(sau) === truocJson ? 0 : 1;
+  // Tự ghi: đưa đề xuất qua đường nhận trên CHÍNH bảng đang hiện, rồi so — người chưa chạm thì mọi ô phải y như trước. Đường
+  // nhận của màn (lib/nhap/o-la `hoiOLa`) đo riêng ở E5; ở đây đối chứng dương trong do-o-la.test.ts cho thấy số này ra 1 khi
+  // đường nhận tự áp.
+  nhan(ap, kq.deXuat);
+  const tuGhi = JSON.stringify(ap) === truocJson ? 0 : 1;
   const theoId = new Map(goi.o.map((o) => [o.id, o]));
   let coDapAn = 0, deXuat = 0, dungSo = 0, bia = 0;
   for (const c of O_LA) {

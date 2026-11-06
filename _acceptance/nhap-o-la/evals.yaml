@@ -75,7 +75,7 @@ evals:
     criterion: AC-4
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.web_db
+    cmd: DATABASE_URL="${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres}" npm run test:db -w @quy-hang/web
     expected: "exit 0 (DATABASE_URL tới Postgres dãy G 5573); trong apps/web/src/lib/nhap/test-db/o-la.db-test.mts ca «Dùng đề xuất tới xem thử của máy chủ» có mặt và ok — cùng fixture với E4 (tệp không có cột điều kiện phí): dựng trạng thái nhập bằng đúng hàm của màn, dungDeXuat ở ô «thu về 4.2», rồi gửi goiDong của trạng thái ấy qua bản xem thử của API thật (Postgres, sàn và đầu chủ thử) → dòng ấy có listPrice 4 200 000 000 và feeInclusion 'excluded' (2 assert), dòng không bị bỏ vì ô giá (assert); đối chứng cùng fixture KHÔNG dungDeXuat → dòng bị bỏ vì ô giá cần người (assert)."
     paths: [apps/web/src/lib/nhap/**, packages/api/src/imports/**, packages/core/src/import/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

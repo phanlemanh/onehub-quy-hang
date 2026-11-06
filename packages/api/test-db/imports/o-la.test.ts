@@ -90,6 +90,9 @@ test("ô lạ: cửa máy chủ trước khi gửi", async () => {
   assert.equal((await oLa(app, { ...GOI, la: 1 }, s.dauChu)).status, 400, "khoá lạ ở gốc");
   assert.equal((await oLa(app, { o: [{ ...GOI.o[0], truong: "ownerPhone" }] }, s.dauChu)).status, 400, "ô của trường lớp nguồn");
   assert.equal((await oLa(app, { o: Array.from({ length: 301 }, (_, i) => ({ ...GOI.o[2], id: `o${i + 1}` })) }, s.dauChu)).status, 400, "301 ô");
+  assert.equal((await oLa(app, { o: [{ ...GOI.o[0], phep: { name: "regex" } }] }, s.dauChu)).status, 400, "phép ngoài thực đơn");
+  assert.equal((await oLa(app, { o: [{ ...GOI.o[0], phep: { name: "price" } }] }, s.dauChu)).status, 400, "giá thiếu đơn vị");
+  assert.equal((await oLa(app, { o: [{ ...GOI.o[0], phep: { name: "price", params: { unit: "ty", ghiChu: "0900 000 011" } } }] }, s.dauChu)).status, 400, "khoá lạ trong tham số phép");
   assert.equal(dem.n, 0, "gói sai khuôn mà khách AI bị gọi");
 
   const coSo = { o: [{ ...GOI.o[2], giaTri: "chủ đang đàm phán 0900 000 011" }] };

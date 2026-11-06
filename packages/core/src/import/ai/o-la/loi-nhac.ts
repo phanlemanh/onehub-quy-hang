@@ -26,3 +26,7 @@ Trường thường gặp:
 Trả lời đúng khuôn JSON được yêu cầu, không thêm chữ nào khác.`;
 
 export const bamLoiNhacOLa = () => bamJson(LOI_NHAC_O_LA);
+
+/** Mô hình của đường ô lạ (ADR-0011 qđ 3, Hỏi-1 hàng 69): Opus 5.5. Máy chủ gọi đúng hằng này; hạ mô hình là đổi ở đây sau
+ * phiên nghiệm thu đo qua API thật. */
+export const MO_HINH_O_LA = "claude-opus-5-5";

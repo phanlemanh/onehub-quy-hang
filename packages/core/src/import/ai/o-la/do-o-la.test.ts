@@ -2,14 +2,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { O_LA } from "../../../../../../_acceptance/nhap-o-la/thu/bo-o-la";
-import { chuanBi, datNguongOLa, MO_HINH_DO } from "../../../../../../_acceptance/nhap-o-la/thu/do-o-la";
+import { chuanBi, datNguongOLa, MO_HINH_DO, tinhSoDoOLa } from "../../../../../../_acceptance/nhap-o-la/thu/do-o-la";
 import { docTep, lapBoi, soDoTatCa } from "../../../../../../_acceptance/nhap-o-la/thu/lap-de-xuat";
 import soDoDaGhi from "../../../../../../_acceptance/nhap-o-la/so-do-o-la.json" with { type: "json" };
 import { bamJson } from "../goi";
-import { bamLoiNhacOLa, LOI_NHAC_O_LA } from "./loi-nhac";
-
-/** Mô hình của đường ô lạ — cùng hằng với máy chủ (packages/api/src/imports/ai/claude.ts, Hỏi-1). */
-const MO_HINH_O_LA = "claude-opus-5-5";
+import { bamLoiNhacOLa, LOI_NHAC_O_LA, MO_HINH_O_LA } from "./loi-nhac";
 
 test("bộ ô lạ có đủ bốn nhóm", () => {
   for (const [nhom, it] of [["dai", 8], ["ve-tay", 8], ["trang-thai", 8], ["doi-chung", 4]] as const)
@@ -50,4 +47,13 @@ test("số đo ô lạ", () => {
   assert.deepEqual(datNguongOLa({ ...DAT, phu: 0.89 }), ["phủ 0.89 < 0.9"]);
   assert.deepEqual(datNguongOLa({ ...DAT, dung: 0.94 }), ["đúng 0.94 < 0.95"]);
   assert.deepEqual(datNguongOLa({ ...DAT, bia: 1 }), ["bịa 1 > 0"]);
+  // Đối chứng dương của «tự ghi»: đường nhận tự áp đề xuất vào ô thì số đo ra 1 và bài đo đỏ.
+  const { goi } = chuanBi();
+  const tuAp = tinhSoDoOLa(goi, docTep(MO_HINH_O_LA).dauRa, (ap, deXuat) => {
+    const o = goi.o.find((x) => x.id === deXuat[0]?.id)!;
+    const c = ap.rows.flatMap((r) => r.cells).find((x) => x.raw === o.giaTri)!;
+    Object.assign(c, { mark: "keep", value: deXuat[0]!.giaTri });
+  });
+  assert.equal(tuAp.tuGhi, 1, "đường nhận tự áp mà số tự ghi vẫn 0");
+  assert.deepEqual(datNguongOLa(tuAp).filter((x) => x.startsWith("tự ghi")), ["tự ghi 1 > 0"]);
 });

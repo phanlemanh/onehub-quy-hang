@@ -12,7 +12,7 @@ import type { AppliedRow } from "../../apply";
 import type { ColumnClass } from "../../classify";
 import { detectPersonal, looksLikePersonName } from "../../detect";
 import { FIELD_CLASS, isStandardField, type StandardField } from "../../fields";
-import type { ImportPlan } from "../../plan";
+import { kiemPhep, type ImportPlan, type PlanError } from "../../plan";
 import type { ColumnProfile } from "../../profile";
 import type { Transform } from "../../transforms";
 import { LOP_COT } from "../goi";
@@ -98,7 +98,13 @@ export function kiemKhuonGoiOLa(v: unknown): { goi: GoiOLa } | { loi: string } {
     if (!Number.isInteger(x.cot) || (x.cot as number) < 0) return { loi: `${p}.cot cần số cột` };
     if (!isStandardField(x.truong) || !LOP_TRUONG_MO.has(FIELD_CLASS[x.truong])) return { loi: `${p}.truong không thuộc lớp được mở` };
     if (!chuNgan(x.tieuDe, 200) || !chuNgan(x.giaTri, 200) || !chuNgan(x.lyDoMa, 400) || !(x.giaTri as string).trim()) return { loi: `${p}: chữ rỗng hay quá dài` };
-    if (x.phep !== undefined && (!laDoiTuong(x.phep) || typeof x.phep.name !== "string")) return { loi: `${p}.phep sai khuôn` };
+    // Phép kiểm đúng như kế hoạch nhập (`kiemPhep`): tên trong thực đơn, tham số đóng, không khoá lạ — phép lạ không đi tới
+    // Claude, và không làm bộ chạy phép sập sau khi đã gọi (hàng 69 vòng 1: t1, t3, t4).
+    if (x.phep !== undefined) {
+      const loiPhep: PlanError[] = [];
+      kiemPhep(x.phep, `${p}.phep`, loiPhep);
+      if (loiPhep.length > 0) return { loi: `${loiPhep[0]!.path}: ${loiPhep[0]!.reason}` };
+    }
   }
   return { goi: v as GoiOLa };
 }

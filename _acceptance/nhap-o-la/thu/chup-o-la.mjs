@@ -59,12 +59,45 @@ const bam = (nhan) =>
 const mang = () => t.tinh(`performance.getEntriesByType("resource").map((e) => new URL(e.name).pathname).filter((p) => p.startsWith("/api/v1/imports/ai"))`);
 const ghiNhan = (ca, x) => console.log(JSON.stringify({ ca, kho: KHO, ...x }));
 async function chup(ten) {
-  // Khổ hẹp: lưới cuộn ngang như hôm nay — cuộn tới ô có đề xuất đầu tiên để ảnh thấy nó.
-  if (KHO < 768) await t.tinh(`(() => { const o = document.querySelector("[data-de-xuat-o-la]") ?? [...document.querySelectorAll("td")].find((x) => x.innerText.includes("Cần người")); o?.scrollIntoView({ block: "center", inline: "nearest" }); return true; })()`);
-  await t.tinh(`(() => { const s = document.createElement("style"); s.textContent = "nextjs-portal{display:none!important}"; document.head.appendChild(s); return true; })()`);
+  await t.tinh(`(() => { const s = document.createElement("style"); s.textContent = "nextjs-portal{display:none!important}"; document.head.appendChild(s); window.scrollTo(0, 0); return true; })()`);
   await ngu(500);
   writeFileSync(path.join(RA, `E4b-${ten}-${KHO}.png`), await t.chup());
 }
+// Ô lưới có chữ gốc `chu` (ô nhập còn «Cần người» hay chữ đã áp): cuộn ô vào giữa khung nhìn — dọc lẫn ngang, vì ở 375 lưới cuộn
+// ngang — rồi đo khối đề xuất của ô: huy hiệu, chữ, nút «Dùng», lý do, và lý do có nằm trọn trong khung nhìn không.
+const oCua = (chu) => `[...document.querySelectorAll("td")].find((td) => [...td.querySelectorAll("input")].some((x) => x.value === ${JSON.stringify(chu)}) || td.innerText.split("\\n")[0].trim() === ${JSON.stringify(chu)})`;
+async function doO(chu) {
+  return t.tinh(`(() => {
+    const td = ${oCua(chu)};
+    if (!td) return { chu: ${JSON.stringify(chu)}, coO: false };
+    const k = td.querySelector("[data-de-xuat-o-la]");
+    (k ?? td).scrollIntoView({ block: "center", inline: "start" });
+    const kv = td.closest(".overflow-x-auto")?.getBoundingClientRect();
+    const trai0 = Math.max(0, kv?.left ?? 0), vw = Math.min(window.innerWidth, kv?.right ?? window.innerWidth);
+    const ra = (el) => { if (!el) return null; const r = el.getBoundingClientRect(); return { trai: Math.round(r.left), phai: Math.round(r.right), h: Math.round(r.height), w: Math.round(r.width) }; };
+    const spans = k ? [...k.querySelectorAll(":scope > span")] : [];
+    const lyDo = spans[spans.length - 1] ?? null;
+    const nut = k?.querySelector("button") ?? null;
+    const rl = ra(lyDo), rn = ra(nut);
+    return {
+      chu: ${JSON.stringify(chu)}, coO: true, oNhap: !!td.querySelector("input"),
+      huyHieu: [...td.querySelectorAll("[data-slot=badge]")].map((b) => b.textContent.trim()),
+      deXuat: k ? spans[1]?.textContent.trim() ?? null : null,
+      lyDo: lyDo && k ? lyDo.textContent.trim() : null,
+      nutDung: rn, lyDoKhung: rl,
+      lyDoTrongKhung: rl ? rl.trai >= trai0 && rl.phai <= vw : null,
+      nutTrongKhung: rn ? rn.trai >= trai0 && rn.phai <= vw : null,
+      lyDoBiCat: lyDo ? lyDo.scrollWidth > lyDo.clientWidth + 1 : null,
+    };
+  })()`);
+}
+async function chupO(chu, ten) {
+  const d = await doO(chu);
+  await ngu(400);
+  writeFileSync(path.join(RA, `E4b-${ten}-${KHO}.png`), await t.chup());
+  return d;
+}
+const demDau = () => t.tinh(`(() => { const o = {}; for (const s of document.querySelectorAll("section[aria-labelledby=nhap-xem-truoc] span.tabular-nums")) { const b = s.parentElement?.querySelector("[data-slot=badge]"); if (b) o[b.textContent.trim()] = Number(s.textContent.replace(/\\D/g, "")); } return o; })()`);
 async function denXemTruoc(sanId) {
   await t.datCookie(cookieCua(DC, sanId));
   await t.di("/imports/new");
@@ -90,19 +123,25 @@ try {
   await denXemTruoc(id);
   await thay("Máy đề xuất", 30000);
   const s = await chu();
-  ghiNhan("co-de-xuat", { soDeXuat: await soDeXuat(), thay: ["4,8 tỷ", "4,2 tỷ KBP", "Đang giao dịch"].filter((x) => s.includes(x)), nutDung: await nutDung(), tranNgang: await tran(), mang: await mang() });
+  ghiNhan("co-de-xuat", { soDeXuat: await soDeXuat(), thay: ["4,8 tỷ", "4,2 tỷ KBP", "Đang giao dịch"].filter((x) => s.includes(x)), nutDung: await nutDung(), tranNgang: await tran(), dem: await demDau(), mang: await mang() });
   await chup("co-de-xuat");
+  // Ba loại ô lạ, mỗi loại một ảnh cận ô: dải, về tay, trạng thái lạ.
+  for (const [chuO, ten] of [["4.6–4.8 tỷ", "o-dai"], ["thu về 4.2", "o-ve-tay"], ["đang đàm phán", "o-trang-thai"]]) {
+    ghiNhan(ten, { ...(await chupO(chuO, ten)), tranNgang: await tran() });
+  }
 
+  const demTruoc = await demDau();
   const daBam = await t.tinh(`(() => { const b = [...document.querySelectorAll("[data-de-xuat-o-la] button")].find((x) => x.getAttribute("aria-label")?.includes("Trạng thái")); if (!b) return false; b.click(); return true; })()`);
   await thay("Đã đổi theo 1 ô cùng chữ", 15000);
-  ghiNhan("da-dung", { daBam, dongDoiTheo: (await chu()).includes("Đã đổi theo 1 ô cùng chữ"), soDeXuat: await soDeXuat() });
+  ghiNhan("da-dung", { daBam, dongDoiTheo: (await chu()).includes("Đã đổi theo 1 ô cùng chữ"), soDeXuat: await soDeXuat(), demTruoc, demSau: await demDau() });
   await chup("da-dung");
+  ghiNhan("da-dung-o", { ...(await chupO("Đang giao dịch", "da-dung-o-trang-thai")), tranNgang: await tran() });
 
   writeFileSync(path.join(AI_GIA, ".loi"), "");
   const id2 = sanMoi();
   await denXemTruoc(id2);
   await thay("Sửa tay lần này", 30000);
-  ghiNhan("tat-dinh", { dong: (await chu()).match(/Sửa tay lần này[^\n]*\n?[^\n]*/)?.[0], soDeXuat: await soDeXuat() });
+  ghiNhan("tat-dinh", { dong: (await chu()).match(/Sửa tay lần này[^\n]*\n?[^\n]*/)?.[0], soDeXuat: await soDeXuat(), huyHieuMay: (await chu()).includes("Máy đề xuất") });
   await chup("tat-dinh");
   rmSync(path.join(AI_GIA, ".loi"), { force: true });
 } finally {

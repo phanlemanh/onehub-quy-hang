@@ -105,7 +105,7 @@ export function BangXemTruoc({
                   const sua = o.mark === "needs_person" || o.mark === "blocked";
                   return (
                     <TableCell key={i} className="align-top" title={o.reason}>
-                      <div className="flex min-w-32 flex-col gap-1">
+                      <div className="flex min-w-32 flex-col gap-1 whitespace-normal">
                         {sua ? (
                           <Input
                             defaultValue={o.raw === null ? "" : String(o.raw)}
