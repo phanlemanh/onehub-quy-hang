@@ -2818,6 +2818,18 @@
         "packages/core/src/listing/**",
         "apps/web/src/app/(app)/today/**"
       ]
+    },
+    {
+      "ma": "kiem-nhanh-rang-buoc-ban-ma",
+      "cau_giao": "Kiểm nhanh chỉ đọc của bước triển khai trên bản thật thêm vế bất biến 2: bảng chủ nhà và bảng lead không còn số điện thoại để rõ thì ràng buộc chặn số rõ phải đã bật — bảng sạch mà ràng buộc chưa bật làm bước triển khai đỏ trước khi gọi Vercel, gọi đúng tên bảng và ràng buộc; bảng còn số rõ thì chỉ báo, không chặn; vẫn một kết nối, giao dịch chỉ đọc (Ngoài-2 của hàng va-deploy-csdl-tam, chủ kho mở hợp đồng mới 06/11).",
+      "slug": "kiem-nhanh-rang-buoc-ban-ma",
+      "vi_sao": "Ngoài-2 của hàng va-deploy-csdl-tam (PR #176): bỏ bộ cách ly trên bản thật cũng bỏ ca chỉ đọc «bảng sạch số rõ thì ràng buộc bản mã phải đã bật» của packages/db/tests/bat-rang-buoc.test.mjs; chủ kho chọn mở hợp đồng mới ở Cổng Bằng chứng 06/11, giám sát xếp ưu tiên nhất của dãy Q (bất biến 2).",
+      "hang": "T3",
+      "bat_khi": "Job deploy trên main xanh ở lần gộp đầu sau hàng này với dòng kiểm nhanh nêu trạng thái ràng buộc bản mã của bảng chủ nhà và bảng lead; bảng sạch mà ràng buộc chưa bật làm kiểm nhanh đỏ trước khi gọi Vercel; vẫn một kết nối, chỉ đọc",
+      "vung": [
+        "packages/db/scripts/**",
+        ".github/workflows/ci.yml"
+      ]
     }
   ],
   "chan_troi": [
