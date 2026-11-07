@@ -114,6 +114,6 @@ export const SO_DIEM: readonly DiemSo[] = [
   { so: "25", khoa: "import.templates", ten: "Mẫu file nhập đã nhớ", kieu: { loai: "map", bang: "import_templates" }, macDinh: null, aiDoi: ["listing_agent", "team_lead", "company_admin"], ghiDe: null, hieuLuc: "lan_sau", lop: NOI_BO, tinhTrang: "mo", man: "67, 50" },
   { so: "26", khoa: "export.templates", ten: "Mẫu bảng hàng khi phát hàng", kieu: { loai: "map", bang: null }, macDinh: null, aiDoi: QT, ghiDe: "Đầu chủ chọn mẫu khi phát", hieuLuc: "lan_sau", lop: NOI_BO, tinhTrang: "mo", man: "50" },
   { so: "27", khoa: "share.post_templates", ten: "Mẫu bài theo kênh", kieu: { loai: "map", bang: null }, macDinh: null, aiDoi: QT, ghiDe: "Người gửi sửa bài trước khi chia sẻ", hieuLuc: "lan_sau", lop: NOI_BO, tinhTrang: "mo", man: "50" },
-  // A7. Lên bảng — luật 17, hàng 23
-  { so: "33", khoa: "listing.ready_min_real_photos", ten: "Số ảnh thật tối thiểu để căn vào Đang bán", kieu: { loai: "int", donVi: "ảnh", min: 1, max: 20 }, macDinh: 1, aiDoi: QT, ghiDe: null, hieuLuc: "lan_sau", lop: NOI_BO, tinhTrang: "mo", man: null },
+  // A7. Lên bảng — luật 17, hàng 23; anh-khong-chan-ban (06/11): mặc định 0 — thiếu ảnh không chặn bán, sàn đặt 1–20 thì chặn như cũ
+  { so: "33", khoa: "listing.ready_min_real_photos", ten: "Số ảnh thật tối thiểu để căn vào Đang bán", kieu: { loai: "int", donVi: "ảnh", min: 0, max: 20 }, macDinh: 0, aiDoi: QT, ghiDe: null, hieuLuc: "lan_sau", lop: NOI_BO, tinhTrang: "mo", man: null },
 ];
