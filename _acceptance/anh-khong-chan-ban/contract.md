@@ -31,9 +31,11 @@ Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`, `[Tên sàn]`.
   số ảnh k−1 → đúng `["realPhoto"]`, số ảnh k → rỗng; giá trị −1, 21, 1.5 bị bộ đọc từ chối và về mặc định.
 - **AC-2 — Máy chủ nhận căn 0 ảnh ở ba cửa.** Given sàn chưa đặt số ảnh tối thiểu và một căn đủ điều kiện khác, 0 ảnh thật,
   When đưa căn lên Đang bán bằng (a) lệnh của nút «Sẵn sàng bán», (b) lệnh sửa ô Trạng thái / sửa hàng loạt ở Bảng hàng,
-  (c) nhập file dòng «còn hàng», Then căn ở Đang bán, sự kiện `status_changed` ghi đúng một lần, và đầu khách của sàn thấy
-  căn trong `GET /api/v1/listings`; When sàn đặt tối thiểu 2 và căn có 1 ảnh thật, Then (a)(b) bị từ chối `missing:
-  ["realPhoto"]` như hôm nay và (c) để dòng ở Chưa đủ để rao với lý do chứa «ảnh thật», không chứa mã `realPhoto`; sàn
+  Then căn ở Đang bán, sự kiện `status_changed` ghi đúng một lần, và đầu khách của sàn thấy căn trong
+  `GET /api/v1/listings`; When (c) nhập file dòng «còn hàng», Then lý do dòng không nêu «ảnh thật» (dòng vẫn ở Chưa đủ để
+  rao vì cửa nhập chưa đọc pháp lý, tình trạng sử dụng — hàng `can-nhap-len-bang-chung`; chủ kho chốt 07/11 lúc thi công);
+  When sàn đặt tối thiểu 2 và căn có 1 ảnh thật, Then (a)(b) bị từ chối `missing: ["realPhoto"]` như hôm nay và (c) để
+  dòng ở Chưa đủ để rao với lý do chứa «ảnh thật», không chứa mã `realPhoto`; sàn
   đã lưu dòng tối thiểu 1 từ trước hàng này giữ 1 (căn 0 ảnh vẫn bị từ chối), sàn chưa từng lưu dòng ấy đi theo Hỏi-6.
   (cross-layer)
 - **AC-3 — Bảng hàng không đẩy căn 0 ảnh vào «Cần xem».** Given máy của đầu chủ, sàn chưa đặt số ảnh tối thiểu, When sửa ô

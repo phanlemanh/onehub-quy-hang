@@ -125,3 +125,18 @@ test("rò rỉ: từ vựng ra ngoài không mang nhãn nội bộ", async () =>
     assert.deepEqual(roRi(than, nguoiNhan), []);
   }
 });
+
+test("rò rỉ: số ảnh và mục ảnh không mở ảnh Nội bộ ra trang khách (anh-khong-chan-ban E9b)", async () => {
+  const can = canMoi();
+  const noiBo = can.photos.filter((a) => a.compartment === "internal");
+  const guiDuoc = can.photos.filter((a) => a.compartment === "shareable" && !a.isSample);
+  assert.ok(noiBo.length > 0 && guiDuoc.length > 0, "căn mồi cần cả ảnh Nội bộ và ảnh Gửi được");
+  for (const nguoiNhan of NGUOI_NHAN) {
+    const res = await dungAppThu(nguonMoi(nguoiNhan)).request(`http://localhost/api/v1/public/shares/${MA}`);
+    const than = await res.text();
+    for (const a of noiBo) assert.ok(!than.includes(a.id), `${nguoiNhan}: thân trang khách có ảnh Nội bộ ${a.id} (trường photos)`);
+    assert.ok(!than.includes("photosCount"), `${nguoiNhan}: thân trang khách mang photosCount — số đếm nội bộ`);
+    // Đối chứng dương: ảnh Gửi được vẫn ra.
+    assert.ok(guiDuoc.some((a) => than.includes(a.id)), `${nguoiNhan}: đối chứng — ảnh Gửi được phải có mặt`);
+  }
+});

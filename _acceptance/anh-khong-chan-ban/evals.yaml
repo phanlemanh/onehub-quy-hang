@@ -14,7 +14,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.script.nhap_tac_tu
-    expected: "exit 0 (DATABASE_URL tới Postgres dãy G 5573); trong packages/api/test-db/san-sang-ban.test.ts ca «ba cửa nhận căn 0 ảnh» có mặt và ok — sàn mới chưa đặt tối thiểu, ba căn đủ điều kiện khác, 0 ảnh thật: (a) lệnh status_changed Active như nút «Sẵn sàng bán» gửi, (b) lệnh như gói đồng bộ ô Trạng thái gửi (madeOffline: false và true), (c) một lần nhập file dòng «còn hàng» → cả ba căn status Active (3 assert), mỗi căn đúng một sự kiện status_changed tới Active (3 assert), đầu khách của sàn đọc GET /api/v1/listings thấy cả ba (assert đếm 3); ca «tối thiểu 2 thì luật cũ» — PATCH settings listing.ready_min_real_photos = 2, căn 1 ảnh: (a)(b) trả 400 missingRequirement với missing ['realPhoto'] (2 assert), (c) dòng nhập ở Incomplete với reason chứa «ảnh thật» và không chứa 'realPhoto' (2 assert), sàn khác vẫn nhận căn 0 ảnh (assert); ca «sàn đã lưu dòng từ trước» — chèn thẳng dòng company_settings listing.ready_min_real_photos = 1 như sàn đã lưu trước hàng: căn 0 ảnh bị từ chối missing ['realPhoto'] (assert); sàn có dòng cấu hình khác (khoá khác) nhưng vắng khoá này đi theo quyết định Hỏi-6 ghi ở Cổng Phạm vi (assert một chiều đúng theo câu chốt). Chiều đỏ: đưa mặc định về 1 → ca ba cửa đỏ ở cửa (a) với missing realPhoto."
+    expected: "exit 0 (DATABASE_URL tới Postgres dãy G 5573); trong packages/api/test-db/anh-khong-chan-ban.test.ts ca «ba cửa nhận căn 0 ảnh» và packages/api/test-db/imports/lan-nhap.test.ts ca «ảnh không còn chặn ở cửa nhập» (cửa c) có mặt và ok — sàn mới chưa đặt tối thiểu, các căn đủ điều kiện khác, 0 ảnh thật: (a) lệnh status_changed Active như nút «Sẵn sàng bán» gửi, (b) lệnh như gói đồng bộ ô Trạng thái gửi (madeOffline: false và true) → ba căn status Active (3 assert), mỗi căn đúng một sự kiện status_changed tới Active (3 assert), đầu khách của sàn đọc GET /api/v1/listings thấy cả ba (assert đếm 3); (c) một lần nhập file dòng «còn hàng» → lý do dòng không chứa «ảnh thật» (assert) — dòng vẫn ở Incomplete vì cửa nhập chưa đọc pháp lý, tình trạng sử dụng (chủ kho 07/11); ca «tối thiểu 2 thì luật cũ» — PATCH settings listing.ready_min_real_photos = 2, căn 1 ảnh: (a)(b) trả 400 missingRequirement với missing ['realPhoto'] (2 assert), (c) dòng nhập ở Incomplete với reason chứa «ảnh thật» và không chứa 'realPhoto' (2 assert), sàn khác vẫn nhận căn 0 ảnh (assert); ca «sàn đã lưu dòng từ trước» — chèn thẳng dòng company_settings listing.ready_min_real_photos = 1 như sàn đã lưu trước hàng: căn 0 ảnh bị từ chối missing ['realPhoto'] (assert); sàn có dòng cấu hình khác (khoá khác) nhưng vắng khoá này đi theo quyết định Hỏi-6 ghi ở Cổng Phạm vi (assert một chiều đúng theo câu chốt). Chiều đỏ: đưa mặc định về 1 → ca ba cửa đỏ ở cửa (a) với missing realPhoto."
     paths: [packages/api/src/listings/**, packages/api/src/imports/**, packages/core/src/listing/**, packages/core/src/config/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -32,7 +32,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.script.nhap_tac_tu
-    expected: "exit 0; trong packages/api/test-db/listings.test.ts ca «photosCount và mục ảnh của mức đủ» có mặt và ok — căn có 2 ảnh ngăn Gửi được, 1 ảnh Nội bộ, 1 ảnh mẫu, 1 ảnh đã gỡ: GET /api/v1/listings và /{id} cùng photosCount 2 (2 assert); completeness.total 6, 'photos' không trong missing (2 assert); căn 0 ảnh: photosCount 0, missing chứa 'photos' (2 assert); photosCount bằng đúng số mà máy chủ dùng xét Đang bán — sàn đặt tối thiểu 2 thì căn photosCount 2 lên được, căn photosCount 1 bị từ chối (2 assert); bộ khoá của bản xem không có trường nguồn (so tập khoá với danh sách viết trước, assert). Trong packages/core/src/listing/completeness.test.ts ca «mục ảnh» — không truyền ảnh: total 5, COMPLETENESS_ITEMS không có 'photos' (2 assert); truyền {photosCount:0}: total 6, missing chứa 'photos' (2 assert); {photosCount:1}: 'photos' không thiếu (assert). Chiều đỏ: đếm cả ảnh Nội bộ → photosCount 3, assert đầu đỏ."
+    expected: "exit 0; trong packages/api/test-db/anh-khong-chan-ban.test.ts ca «photosCount và mục ảnh của mức đủ» có mặt và ok — căn có 2 ảnh ngăn Gửi được, 1 ảnh Nội bộ, 1 ảnh mẫu, 1 ảnh đã gỡ: GET /api/v1/listings và /{id} cùng photosCount 2 (2 assert); completeness.total 6, 'photos' không trong missing (2 assert); căn 0 ảnh: photosCount 0, missing chứa 'photos' (2 assert); photosCount bằng đúng số mà máy chủ dùng xét Đang bán — sàn đặt tối thiểu 2 thì căn photosCount 2 lên được, căn photosCount 1 bị từ chối (2 assert); bộ khoá của bản xem không có trường nguồn (so tập khoá với danh sách viết trước, assert). Trong packages/core/src/listing/completeness.test.ts ca «mục ảnh» — không truyền ảnh: total 5, COMPLETENESS_ITEMS không có 'photos' (2 assert); truyền {photosCount:0}: total 6, missing chứa 'photos' (2 assert); {photosCount:1}: 'photos' không thiếu (assert). Chiều đỏ: đếm cả ảnh Nội bộ → photosCount 3, assert đầu đỏ."
     paths: [packages/api/src/listings/**, packages/api/src/photos/**, packages/core/src/listing/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -90,7 +90,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.script.nhap_tac_tu
-    expected: "exit 0; trong packages/api/test-db (settings) ca «số ảnh tối thiểu qua lối chung» có mặt và ok — GET /api/v1/company/settings của sàn mới trả listing.ready_min_real_photos 0 (assert); quản trị PATCH 0 và 20 → 200 (2 assert); PATCH 21 và −1 → 400 invalidSettings với reason nêu khoảng 0–20 (2 assert); đầu chủ PATCH → 403 adminRequired (assert)."
+    expected: "exit 0; trong packages/api/test-db/anh-khong-chan-ban.test.ts ca «số ảnh tối thiểu qua lối chung» có mặt và ok — GET /api/v1/company/settings của sàn mới trả listing.ready_min_real_photos 0 (assert); quản trị PATCH 0 và 20 → 200 (2 assert); PATCH 21 và −1 → 400 invalidSettings với reason nêu khoảng 0–20 (2 assert); đầu chủ PATCH → 403 adminRequired (assert)."
     paths: [packages/api/src/settings/**, packages/core/src/config/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -128,7 +128,7 @@ evals:
     executor: test
     layer: backend-effect
     cmd: config:executors.script.nhap_tac_tu
-    expected: "exit 0; trong packages/api/test-db (tệp của hàng) ca «gửi căn 0 ảnh» có mặt và ok — căn Active 0 ảnh: đầu khách tạo lần gửi có căn ấy → 2xx (assert); đọc dữ liệu trang khách theo mã → có căn (assert), photos là mảng rỗng (assert); đối chứng: căn có một ảnh Gửi được trả đúng một ảnh (assert)."
+    expected: "exit 0; trong packages/api/test-db/anh-khong-chan-ban.test.ts ca «gửi căn 0 ảnh» có mặt và ok — căn Active 0 ảnh: đầu khách tạo lần gửi có căn ấy → 2xx (assert); đọc dữ liệu trang khách theo mã → có căn (assert), photos là mảng rỗng (assert); đối chứng: căn có một ảnh Gửi được trả đúng một ảnh (assert)."
     paths: [packages/api/src/public/**, packages/api/src/listings/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
