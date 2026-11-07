@@ -1,0 +1,273 @@
+Total messages: 195 (Errors: 5, Warnings: 0)
+Returning 5 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 400 (Bad Request) @ http://localhost:3491/api/v1/company/templates/export:0
+Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <BangHang nguoi="518d6071-1..." san="ccf093dc-f..." dangMo={null} ...>
+      <TooltipProvider delay={200}>
+        <TooltipProvider data-slot="tooltip-pr..." delay={200}>
+          <FloatingDelayGroup delay={{open:200, ...}} timeoutMs={400}>
+            <DataGrid table={{...}} recordCount={0} onRowClick={function} i18n={{labels:{...}}} ...>
+              <DataGridProvider table={{...}} loadingMode="skeleton" tableLayout={{dense:true, ...}} ...>
+                <FramePanel ref={{current:null}} className="flex min-h..." ...>
+                  <div className="relative o..." data-slot="frame-panel" ref={{current:null}} ...>
+                    <TrangThai kind="empty" icon={{...}} title="Sàn chưa c..." description={<Button>}>
+                      <Empty data-kieu="chua-co" className={undefined}>
+                        <div
++                         data-slot="empty"
+-                         data-slot={null}
++                         className="flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-xl ..."
+-                         className="p-4"
++                         data-kieu="chua-co"
+-                         data-kieu={null}
+                        >
+                          <EmptyHeader>
+                            <div
++                             data-slot="empty-header"
+-                             data-slot={null}
++                             className="flex max-w-sm flex-col items-center gap-2"
+-                             className={null}
+-                             role="status"
+-                             aria-busy="true"
+-                             aria-label="Đang tải"
+-                             data-cho-tai-kieu="tran"
+                            >
+                              <EmptyMedia variant="icon">
+                                <div
++                                 data-slot="empty-icon"
+-                                 data-slot={null}
++                                 data-variant="icon"
+-                                 data-variant={null}
++                                 className={"mb-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 flex size-8 shrink-0 ..."}
+-                                 className="flex flex-col gap-3"
+-                                 data-cho-tai="luoi"
+                                >
+                                  <LayoutList>
++                                   <svg
++                                     ref={null}
++                                     xmlns="http://www.w3.org/2000/svg"
++                                     width={24}
++                                     height={24}
++                                     viewBox="0 0 24 24"
++                                     fill="none"
++                                     stroke="currentColor"
++                                     strokeWidth={2}
++                                     strokeLinecap="round"
++                                     strokeLinejoin="round"
++                                     className="lucide lucide-layout-list"
++                                     aria-hidden="true"
++                                   >
+-                                   <div className="grid gap-4" style={{grid-template-columns:"repeat(5, ..."}}>
+                              ...
+            ...
+
+    at throwOnHydrationMismatch (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:3142:56)
+    at beginWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:6616:918)
+    at runWithFiberInDEV (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:777:74)
+    at performUnitOfWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9440:97)
+    at workLoopConcurrentByScheduler (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9436:58)
+    at renderRootConcurrent (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9419:71)
+    at performWorkOnRoot (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:8947:150)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:10140:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3491/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js:1864:64)
+Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <BangCoHoSo nguoi="52687d8c-4..." san="ccf093dc-f..." vai={[...]} tenSan="[Mẫu] Sàn thử">
+      <BangHang nguoi="52687d8c-4..." san="ccf093dc-f..." dangMo={null} ...>
+        <TooltipProvider delay={200}>
+          <TooltipProvider data-slot="tooltip-pr..." delay={200}>
+            <FloatingDelayGroup delay={{open:200, ...}} timeoutMs={400}>
+              <DataGrid table={{...}} recordCount={3} onRowClick={function} i18n={{labels:{...}}} ...>
+                <DataGridProvider table={{...}} loadingMode="skeleton" tableLayout={{dense:true, ...}} ...>
+                  <FramePanel ref={{current:null}} className="flex min-h..." ...>
+                    <div className="relative o..." data-slot="frame-panel" ref={{current:null}} ...>
+                      <div
++                       className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-he..."
+-                       className="p-4"
+                      >
+                        ...
+                          <MenuTrigger data-slot="dropdown-m..." render={<Button>}>
+                            <Button type="button" variant="outline" onClick={function} onMouseDown={function} ...>
+                              <Button data-slot="dropdown-m..." className={"group/bu..."} type="button" ...>
++                               <button
++                                 type="button"
++                                 onClick={function}
++                                 onMouseDown={function}
++                                 onKeyDown={function}
++                                 onKeyUp={function}
++                                 onPointerDown={function}
++                                 tabIndex={0}
++                                 disabled={false}
++                                 data-slot="dropdown-menu-trigger"
++                                 onFocus={function}
++                                 onPointerEnter={function}
++                                 aria-haspopup="menu"
++                                 aria-expanded={false}
++                                 aria-controls={undefined}
++                                 id="base-ui-_R_1kj6lm6atpeuqknelb_"
++                                 ref={function}
++                                 className={"group/button inline-flex shrink-0 items-center justify-center rounded-l..."}
++                               >
+-                               <div role="status" aria-busy="true" aria-label="Đang tải" data-cho-tai-kieu="tran">
+                        ...
+                      ...
+              ...
+
+    at throwOnHydrationMismatch (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:3142:56)
+    at beginWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:6616:918)
+    at runWithFiberInDEV (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:777:74)
+    at performUnitOfWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9440:97)
+    at workLoopConcurrentByScheduler (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9436:58)
+    at renderRootConcurrent (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9419:71)
+    at performWorkOnRoot (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:8947:150)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:10140:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3491/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js:1864:64)
+Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <BangCoHoSo nguoi="518d6071-1..." san="ccf093dc-f..." vai={[...]} tenSan="[Mẫu] Sàn thử">
+      <BangHang nguoi="518d6071-1..." san="ccf093dc-f..." dangMo={null} ...>
+        <TooltipProvider delay={200}>
+          <TooltipProvider data-slot="tooltip-pr..." delay={200}>
+            <FloatingDelayGroup delay={{open:200, ...}} timeoutMs={400}>
+              <DataGrid table={{...}} recordCount={6} onRowClick={function} i18n={{labels:{...}}} ...>
+                <DataGridProvider table={{...}} loadingMode="skeleton" tableLayout={{dense:true, ...}} ...>
+                  <FramePanel ref={{current:null}} className="flex min-h..." ...>
+                    <div className="relative o..." data-slot="frame-panel" ref={{current:null}} ...>
+                      <div
++                       className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-he..."
+-                       className="p-4"
+                      >
+                        ...
+                          <MenuTrigger data-slot="dropdown-m..." render={<Button>}>
+                            <Button type="button" variant="outline" onClick={function} onMouseDown={function} ...>
+                              <Button data-slot="dropdown-m..." className={"group/bu..."} type="button" ...>
++                               <button
++                                 type="button"
++                                 onClick={function}
++                                 onMouseDown={function}
++                                 onKeyDown={function}
++                                 onKeyUp={function}
++                                 onPointerDown={function}
++                                 tabIndex={0}
++                                 disabled={false}
++                                 data-slot="dropdown-menu-trigger"
++                                 onFocus={function}
++                                 onPointerEnter={function}
++                                 aria-haspopup="menu"
++                                 aria-expanded={false}
++                                 aria-controls={undefined}
++                                 id="base-ui-_R_1kj6lm6atpeuqknelb_"
++                                 ref={function}
++                                 className={"group/button inline-flex shrink-0 items-center justify-center rounded-l..."}
++                               >
+-                               <div role="status" aria-busy="true" aria-label="Đang tải" data-cho-tai-kieu="tran">
+                        ...
+                      ...
+              ...
+
+    at throwOnHydrationMismatch (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:3142:56)
+    at beginWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:6616:918)
+    at runWithFiberInDEV (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:777:74)
+    at performUnitOfWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9440:97)
+    at workLoopConcurrentByScheduler (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9436:58)
+    at renderRootConcurrent (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9419:71)
+    at performWorkOnRoot (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:8947:150)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:10140:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3491/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js:1864:64)
+Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <BangCoHoSo nguoi="52687d8c-4..." san="ccf093dc-f..." vai={[...]} tenSan="[Mẫu] Sàn thử">
+      <BangHang nguoi="52687d8c-4..." san="ccf093dc-f..." dangMo={null} ...>
+        <TooltipProvider delay={200}>
+          <TooltipProvider data-slot="tooltip-pr..." delay={200}>
+            <FloatingDelayGroup delay={{open:200, ...}} timeoutMs={400}>
+              <DataGrid table={{...}} recordCount={3} onRowClick={function} i18n={{labels:{...}}} ...>
+                <DataGridProvider table={{...}} loadingMode="skeleton" tableLayout={{dense:true, ...}} ...>
+                  <FramePanel ref={{current:null}} className="flex min-h..." ...>
+                    <div className="relative o..." data-slot="frame-panel" ref={{current:null}} ...>
+                      <div
++                       className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-he..."
+-                       className="p-4"
+                      >
+                        ...
+                          <MenuTrigger data-slot="dropdown-m..." render={<Button>}>
+                            <Button type="button" variant="outline" onClick={function} onMouseDown={function} ...>
+                              <Button data-slot="dropdown-m..." className={"group/bu..."} type="button" ...>
++                               <button
++                                 type="button"
++                                 onClick={function}
++                                 onMouseDown={function}
++                                 onKeyDown={function}
++                                 onKeyUp={function}
++                                 onPointerDown={function}
++                                 tabIndex={0}
++                                 disabled={false}
++                                 data-slot="dropdown-menu-trigger"
++                                 onFocus={function}
++                                 onPointerEnter={function}
++                                 aria-haspopup="menu"
++                                 aria-expanded={false}
++                                 aria-controls={undefined}
++                                 id="base-ui-_R_1kj6lm6atpeuqknelb_"
++                                 ref={function}
++                                 className={"group/button inline-flex shrink-0 items-center justify-center rounded-l..."}
++                               >
+-                               <div role="status" aria-busy="true" aria-label="Đang tải" data-cho-tai-kieu="tran">
+                        ...
+                      ...
+              ...
+
+    at throwOnHydrationMismatch (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:3142:56)
+    at beginWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:6616:918)
+    at runWithFiberInDEV (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:777:74)
+    at performUnitOfWork (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9440:97)
+    at workLoopConcurrentByScheduler (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9436:58)
+    at renderRootConcurrent (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:9419:71)
+    at performWorkOnRoot (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:8947:150)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3491/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js:10140:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3491/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js:1864:64)
