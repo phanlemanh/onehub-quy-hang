@@ -5,7 +5,7 @@ slug: chan-trung-ten-gia-tri
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-07-chan-trung-ten-gia-tri-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07T02:00:00Z
@@ -70,3 +70,4 @@ Bỏ quét bằng skill — không gian nhỏ, kê tay (sổ: dòng «bỏ cover
 
 - Hàm lõi mới ở `packages/core/src/labels/index.ts`; màn ở `apps/web/src/app/(app)/settings/labels/`.
 - Bài kiểm API trên Postgres dãy B (cổng 5572); dữ liệu thử «[Tên]», `0900 000 0xx`.
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Khi quản trị đặt hai tên riêng cùng chữ cho hai lựa chọn, bài kiểm chỉ xác nhận hệ thống từ chối mà không xác nhận câu báo lỗi đúng. Nếu sau này có người gỡ nhầm phép kiểm trùng này mà hệ thống vẫn từ chối vì lý do khác, bài kiểm vẫn xanh và không ai biết. — `packages/api/test-db/chan-trung-ten-gia-tri/trung-ten.test.ts`
