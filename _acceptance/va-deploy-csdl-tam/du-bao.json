@@ -1,0 +1,11 @@
+{
+  "ngay_tinh": "2026-11-06",
+  "hang": {
+    "ma": "va-deploy-csdl-tam",
+    "gio_may": [
+      2.14,
+      13.07
+    ],
+    "phan_tram": 9.21
+  }
+}

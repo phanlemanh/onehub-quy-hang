@@ -4,7 +4,7 @@
 // Lead đọc thẳng API; hồ sơ căn đọc và ghi qua bộ đồng bộ trên máy — mỗi lựa chọn một sự kiện, mất mạng vẫn ghi (KH-cg-tren-may).
 import type { CatalogData } from "@quy-hang/core";
 import { DANH_SACH_HOI, type EventType } from "@quy-hang/core/listing";
-import { soGiaToa, type CanSo, type FeeInclusion } from "@quy-hang/core/pricing";
+import { soGiaToa, type CanSo, type DinhNghiaBaoPhi, type FeeInclusion } from "@quy-hang/core/pricing";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, type KeyboardEvent } from "react";
@@ -21,6 +21,7 @@ import { dungGhiGia, goiYGia, hieuLa, type LenhGia } from "./gia";
 import { daCoMocGoiDau, taoMocGoiDau } from "./goi-dau";
 import { taoHoSoLead } from "./ho-so-lead";
 import { BaCot, DangTai, DanhSachHoi, SoGia, TheLead, TinhGia, type GiaNhom, type ThuocTinhLead } from "./khoi";
+import { docDinhNghiaSan } from "./dinh-nghia-san";
 import { doiMayTinh, mayTinhDau, type DoiMayTinh } from "./may-tinh";
 import { dongMucDu } from "./muc-du";
 import { NutQuaySo } from "./dial/nut-quay-so";
@@ -40,6 +41,15 @@ export function phongNguTheo(dm: CatalogData | null) {
 export function CuocGoi({ leadId, san }: { leadId: string | null; san: string }) {
   const [tai, setTai] = useState<{ kind: "dang" } | { kind: "co"; lead: LeadCuocGoi } | { kind: "vang" } | { kind: "loi" }>(leadId ? { kind: "dang" } : { kind: "vang" });
   const [lan, setLan] = useState(0);
+  // Định nghĩa bao phí hiện hành của sàn (hàng 49) — đọc song song với lead, hỏng thì mặc định sản phẩm.
+  const [dn, setDn] = useState<DinhNghiaBaoPhi | null>(null);
+  useEffect(() => {
+    let huy = false;
+    void docDinhNghiaSan().then((d) => !huy && setDn(d));
+    return () => {
+      huy = true;
+    };
+  }, []);
   useEffect(() => {
     if (!leadId) return;
     let huy = false;
@@ -49,7 +59,7 @@ export function CuocGoi({ leadId, san }: { leadId: string | null; san: string })
     };
   }, [leadId, lan]);
 
-  if (tai.kind === "dang") return <DangTai />;
+  if (tai.kind === "dang" || (tai.kind === "co" && !dn)) return <DangTai />;
   if (tai.kind === "vang")
     return (
       <div className="flex flex-col items-start gap-2 p-4">
@@ -68,10 +78,10 @@ export function CuocGoi({ leadId, san }: { leadId: string | null; san: string })
         </Button>
       </div>
     );
-  return <ManCuocGoi key={tai.lead.id} lead={tai.lead} san={san} />;
+  return <ManCuocGoi key={tai.lead.id} lead={tai.lead} san={san} dn={dn!} />;
 }
 
-function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) {
+function ManCuocGoi({ lead: leadDau, san, dn }: { lead: LeadCuocGoi; san: string; dn: DinhNghiaBaoPhi }) {
   const router = useRouter();
   const { bd } = useBoDongBo();
   const sua = useSuaHang();
@@ -163,8 +173,8 @@ function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) 
   };
 
   // ——— Máy tính: mở với giá của hồ sơ hay của lead, không ghi gì ———
-  const [mayTinh, setMayTinh] = useState(() => mayTinhDau(leadDau.listPrice, leadDau.feeInclusion));
-  const doiMay = (d: DoiMayTinh) => setMayTinh((s) => doiMayTinh(s, d));
+  const [mayTinh, setMayTinh] = useState(() => mayTinhDau(leadDau.listPrice, leadDau.feeInclusion, dn));
+  const doiMay = (d: DoiMayTinh) => setMayTinh((s) => doiMayTinh(s, d, dn));
 
   // ——— Phím ———
   const veDanhSach = () => danhSach.current?.focus();
@@ -225,6 +235,8 @@ function ManCuocGoi({ lead: leadDau, san }: { lead: LeadCuocGoi; san: string }) 
   const phongNgu = useMemo(() => phongNguTheo(dm), [dm]);
   const phongNguLead = phongNgu(lead.buildingName, lead.unitNumber);
   const soGia = soGiaToa({
+    tiLe: dn.tiLe,
+    tapKhoan: dn.khoan,
     can: { id: listingId, buildingName: lead.buildingName, unitNumber: lead.unitNumber, bedroomsTotal: phongNguLead, ...(can?.listPrice != null && can.feeInclusion ? { listPrice: can.listPrice, feeInclusion: can.feeInclusion as FeeInclusion } : { listPrice: lead.listPrice, feeInclusion: lead.feeInclusion }) },
     cacCan: ds.map(
       (l): CanSo => ({

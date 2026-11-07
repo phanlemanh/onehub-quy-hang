@@ -1,0 +1,8 @@
+E9 network (Claude_Browser read_network_requests + console), app origin http://localhost:3491 (verifier run, lan doc lap)
+POST /api/v1/imports -> 201 ; POST /api/v1/imports/{id}/rows (dry-run + ghi) -> 200 (dau chu 1, mau-a.xlsx)
+GET  /settings/templates (quan-tri) -> 200
+PUT  /api/v1/company/import-templates/tt -> 200 ; GET /settings/templates?_rsc -> 200
+DELETE /api/v1/company/import-templates/toa -> 204 [tool flag net::ERR_ABORTED = router refresh abort on 204, not a failed response; DOM re-read: toa row gone]
+GET  /api/v1/listings -> 200 (nhieu lan); 401 mot lan trong luc sign-out (poll dang chay khi minh dang xuat, do thao tac doi vai)
+GET  /api/v1/company/import-templates voi Dau chu 1 -> 403 admin-required (minh tu thu, dung hanh vi vai khac)
+Console: 0 loi ung dung; 2 dong "Failed to load resource" = hai 403/401 o tren do thao tac doi vai.

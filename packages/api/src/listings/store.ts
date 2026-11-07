@@ -19,7 +19,11 @@ import {
   type Requirement,
   type StandardStatus,
 } from "@quy-hang/core/listing";
+import { duocLamVoiHang, lamViecVoiHang, LY_DO_DUA_LEN_DANG_BAN } from "@quy-hang/core/access";
 import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
+import { boNhanTrangThai, kiemNhanSuKien, type NhanTrangThai } from "@quy-hang/core/statuses";
+import { kiemGiaTriTruong } from "@quy-hang/core/custom-fields";
+import { docBoTruong } from "../custom-fields/store";
 import { canRead, factsFromEvents, type Viewer, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -61,6 +65,8 @@ export const STATE_COLUMNS: Readonly<Record<keyof ListingState, string>> = {
   buildingName: "building_name",
   unitNumber: "unit_number",
   standardStatus: "standard_status",
+  statusLabel: "status_label",
+  custom: "custom",
   listPrice: "list_price",
   feeInclusion: "fee_inclusion",
   furnished: "furnished",
@@ -168,6 +174,9 @@ async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type
 const giaTri = (s: ListingState) => KHOA.map((k) => s[k]);
 
 export async function createListing(tx: pg.PoolClient, payload: unknown, cach: CachGhi = GHI_KHONG_RO): Promise<Applied | Refusal> {
+  // Bảng quyền của hàng (bang-quyen-theo-vai): người không có Bảng hàng như không có hàng nào — mọi lối tạo hàng (route, lead
+  // → hàng, nhập file) đi qua đây. Luật theo dòng 046 chặn thêm ở cơ sở dữ liệu.
+  if (!lamViecVoiHang({ roles: await vaiLucLam(tx) })) return { error: API_ERRORS.notFound };
   const details = validatePayload("created", payload);
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const listingId = randomUUID();
@@ -182,7 +191,27 @@ export async function createListing(tx: pg.PoolClient, payload: unknown, cach: C
   return { listingId, state, event, facts };
 }
 
+/**
+ * Khoá bộ nhãn trạng thái của sàn (hàng 46): lượt lưu bộ nhãn giữ khoá riêng, lệnh mang nhãn giữ khoá chung — lệnh không
+ * đặt được mã mà lượt lưu đang gỡ. Lấy TRƯỚC khoá theo hàng để hai đường cùng thứ tự khoá, không khoá chéo.
+ */
+export const khoaBoTrangThai = (tx: pg.PoolClient, chung: boolean) =>
+  tx.query(`select pg_advisory_xact_lock${chung ? "_shared" : ""}(hashtextextended('trang-thai:' || app.current_company_id()::text, 0))`);
+
+/** Bộ nhãn trạng thái còn sống của sàn đang làm (`company_settings`, khoá `labels.status.*`), đọc trong giao dịch của lời gọi. */
+export async function nhanCuaSan(tx: pg.PoolClient): Promise<NhanTrangThai[]> {
+  const { rows } = await tx.query<{ key: string; value: unknown }>(
+    "select key, value from company_settings where company_id = app.current_company_id() and key like 'labels.status.%' order by key",
+  );
+  return boNhanTrangThai(rows);
+}
+
 export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId: string, cmd: Command, device: Device = null): Promise<Applied | Refusal> {
+  // Bảng quyền của hàng (bang-quyen-theo-vai): người không có Bảng hàng nhận «không có hàng này» — xét trước mọi điều khác
+  // để mã lỗi không lộ hàng có thật.
+  if (!lamViecVoiHang(viewer)) return { error: API_ERRORS.notFound };
+  const mangNhan = cmd.type === "status_changed" && typeof (cmd.payload as { label?: unknown } | null)?.label === "string";
+  if (mangNhan) await khoaBoTrangThai(tx, true);
   // Khoá theo hàng: lệnh thứ hai trên cùng hàng đứng chờ, rồi thấy phiên bản mới — không bao giờ hai lệnh cùng một seq.
   const hang = await tx.query<{ version: number }>("select version from listings where id = $1 for update", [listingId]);
   if (!hang.rowCount) return { error: API_ERRORS.notFound };
@@ -191,7 +220,8 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // Trục ai thấy hàng (hàng 12): không đọc được thì như hàng không có — xét trước phiên bản và khuôn để mã lỗi không lộ
   // hàng có thật (AC-5).
   const events = await loadEvents(tx, listingId);
-  if (!canRead(viewer, await factsOf(tx, listingId, events))) return { error: API_ERRORS.notFound };
+  const dk = await factsOf(tx, listingId, events);
+  if (!canRead(viewer, dk)) return { error: API_ERRORS.notFound };
   // Hàng đã gỡ khi hoàn tác lần nhập (hàng 66): như hàng không có — máy giữ lệnh chờ chuyển lệnh sang «cần xem».
   if (foldListing(events).voided) return { error: API_ERRORS.notFound };
 
@@ -201,6 +231,12 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
   const type = cmd.type as EventType;
   const payload = cmd.payload as Record<string, unknown>;
+
+  // Đưa lên Đang bán theo đúng cờ «Sẵn sàng bán» (bảng quyền của hàng): xét trước phép so phiên bản, để lệnh mang bản cũ
+  // nhận đúng lý do «cần đầu chủ» thay cho «đụng nhau».
+  if (type === "status_changed" && payload.to === "Active" && !duocLamVoiHang(viewer, "dua_len_dang_ban", dk.listingAgentUserId ?? null)) {
+    return { error: API_ERRORS.listingAgentRequired, reason: LY_DO_DUA_LEN_DANG_BAN };
+  }
 
   // Hàng đã có mã: từ chối bằng chính sự thật ấy, trước phép so phiên bản — máy đang giữ bản cũ (gắn lúc mất mạng) nhận lý
   // do «đã có mã» thay cho «đụng nhau» (ADR-0026).
@@ -215,13 +251,25 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   if (type === "status_changed") {
     // «Thắng ngay» bỏ qua phép so phiên bản, KHÔNG bỏ qua bảng chuyển: xét trên trạng thái hiện tại của hàng.
     // Vào Đang bán: máy chủ luôn đếm ảnh thật của căn và đọc số tối thiểu của sàn (hàng 23) — mọi lối lên bảng qua đây.
-    const anh = payload.to === "Active" ? await nguCanhAnh(tx, hienTai) : {};
-    const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh });
-    if (!kq.ok) {
-      return kq.kind === "invalid-transition"
-        ? { error: API_ERRORS.invalidTransition, reason: kq.reason }
-        : { error: API_ERRORS.missingRequirement, missing: kq.missing };
+    // Nhãn riêng của sàn (hàng 46): mã phải còn sống và neo đúng `to`; cùng trạng thái mà khác nhãn là đổi nhãn tại chỗ —
+    // không qua bảng chuyển, không xét điều kiện vào trạng thái (căn đã ở đó).
+    const nhan = kiemNhanSuKien(mangNhan ? await nhanCuaSan(tx) : [], hienTai, { ...payload, to: payload.to });
+    if (!nhan.ok) return { error: API_ERRORS.invalidPayload, details: [{ path: "label", reason: nhan.loi }], reason: nhan.loi };
+    if (!nhan.doiNhanTaiCho) {
+      const anh = payload.to === "Active" ? await nguCanhAnh(tx, hienTai) : {};
+      const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh });
+      if (!kq.ok) {
+        return kq.kind === "invalid-transition"
+          ? { error: API_ERRORS.invalidTransition, reason: kq.reason }
+          : { error: API_ERRORS.missingRequirement, missing: kq.missing };
+      }
     }
+  }
+
+  if (type === "custom_changed") {
+    // Trường riêng (hàng 47): mỗi mã là trường của hàng còn sống của sàn, giá trị đúng kiểu — lỗi nêu mã.
+    const gt = kiemGiaTriTruong(await docBoTruong(tx), "listing", null, payload);
+    if (!gt.ok) return { error: API_ERRORS.invalidPayload, details: [{ path: "custom", reason: gt.loi }], reason: gt.loi };
   }
 
   if (type === "unit_number_assigned") {
@@ -258,6 +306,17 @@ export async function voidListing(tx: pg.PoolClient, listingId: string, expected
   const facts = factsFromEvents([...events, event]);
   await tx.query(`update listings set ${COT.map((c, i) => `${c} = $${i + 2}`).join(", ")} where id = $1`, [listingId, ...giaTri(state)]);
   return { listingId, state, event, facts };
+}
+
+/**
+ * Gỡ nhãn trạng thái kèm nhãn thay (hàng 46): mỗi căn của sàn còn mang `maGo` nhận một sự kiện `status_changed {to: trạng
+ * thái hiện tại, label: thay}` ghi bằng người đang gọi (quản trị sàn). Từ luật 046 quản trị không ghi thẳng được hàng, nên
+ * đi qua cửa hẹp `app.relabel_listings_status_label` (migration 049): hàm khoá theo hàng rồi đọc lại — căn đã rời nhãn ấy
+ * giữa lúc hỏi và lúc ghi thì bỏ qua; chỉ đổi nhãn và phiên bản, đúng bước gấp «đổi nhãn tại chỗ». Trả số căn đã chuyển.
+ */
+export async function thayNhanCan(tx: pg.PoolClient, maGo: string, thay: string | null): Promise<number> {
+  const { rows } = await tx.query<{ n: number }>("select app.relabel_listings_status_label($1, $2) n", [maGo, thay]);
+  return rows[0]!.n;
 }
 
 /** Ảnh thật của căn (ngăn Gửi được, không ảnh mẫu, chưa xoá) và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */

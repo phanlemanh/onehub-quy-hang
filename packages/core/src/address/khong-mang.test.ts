@@ -13,7 +13,9 @@ import { docDiaChi } from "./doc-dia-chi";
 
 /** Thư mục vùng, suy từ vị trí tệp này. */
 const VUNG = path.dirname(fileURLToPath(import.meta.url));
-const TAP_GHIM = ["chuan-hoa.ts", "danh-muc.ts", "doc-dia-chi.ts", "index.ts"];
+const TAP_GHIM = ["chuan-hoa.ts", "danh-muc.ts", "doc-dia-chi-loi.ts", "doc-dia-chi.ts", "index.ts"];
+/** Bộ sinh danh mục và bộ đọc tệp nguồn (hàng danh-muc-xa-day-du) — E8. */
+const TAP_GHIM_NGUON = ["doc-tep.ts", "sinh-danh-muc.ts"];
 const MODULE_CAM = new Set(["http", "https", "net", "tls", "dgram", "dns", "http2", "undici", "axios", "node-fetch"]);
 const DINH_DANH_CAM = ["fetch(", "XMLHttpRequest", "WebSocket", "EventSource", "sendBeacon"];
 
@@ -45,7 +47,10 @@ test("AC-9 không mạng", async () => {
   const tep = readdirSync(VUNG).filter((t) => t.endsWith(".ts") && !t.endsWith(".test.ts")).sort();
   assert.deepEqual(tep, TAP_GHIM, "tập tệp quét lệch");
   for (const t of tep) assert.deepEqual(quetNguon(readFileSync(path.join(VUNG, t), "utf8")), [], t);
-  console.log(`AC-9: quét ${tep.length} tệp`);
+  const tepNguon = readdirSync(path.join(VUNG, "nguon")).filter((t) => t.endsWith(".ts") && !t.endsWith(".test.ts")).sort();
+  assert.deepEqual(tepNguon, TAP_GHIM_NGUON, "tập tệp quét lệch: nguon/");
+  for (const t of tepNguon) assert.deepEqual(quetNguon(readFileSync(path.join(VUNG, "nguon", t), "utf8")), [], `nguon/${t}`);
+  console.log(`AC-9: quét ${tep.length} tệp vùng + ${tepNguon.length} tệp nguon/`);
   // Đối chứng dương: chuỗi nguồn có đường dẫn https không bị báo.
   assert.deepEqual(quetNguon('const docQua = "https://vi.wikipedia.org/wiki/Quận_1";'), []);
 

@@ -60,6 +60,8 @@ function mucDu(c: unknown): number | null {
  * Một hàng của kho trên máy thành một dòng của bảng. Bảng hàng trao `danhBa` (kể cả `null` khi chưa đọc được) để có cột
  * «Đầu chủ»; chỗ khác (Hôm nay, bảng thẻ) không trao thì dòng không có cột ấy.
  */
+import { oRiengCuaHang } from "./truong-rieng";
+
 export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaDauChu): DongBang {
   return {
     id: l.id,
@@ -67,6 +69,8 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaD
     unitNumber: l.unitNumber,
     ...thuocTinhCan(idx, l.buildingName, l.unitNumber),
     standardStatus: l.standardStatus,
+    // Nhãn trạng thái riêng (hàng 46): chỉ khi căn mang — căn không nhãn giữ đúng dòng cũ.
+    ...(l.statusLabel ? { statusLabel: l.statusLabel } : {}),
     listPrice: l.listPrice,
     feeInclusion: l.feeInclusion,
     furnished: l.furnished,
@@ -80,5 +84,7 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaD
     closeDate: l.closeDate,
     withdrawnReason: l.withdrawnReason,
     ...(danhBa !== undefined ? { "dau-chu": chuDauChu(l.listAgentKey, danhBa) } : {}),
+    // Trường riêng của sàn (hàng 47): căn không mang giá trị nào giữ đúng dòng cũ.
+    ...oRiengCuaHang(l.custom),
   };
 }

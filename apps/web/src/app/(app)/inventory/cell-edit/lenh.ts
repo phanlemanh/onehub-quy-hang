@@ -4,6 +4,9 @@
  */
 import { missingFor, NHAN_DIEU_KIEN, nhanDieuKien, TRANSITIONS, type EventType, type StandardStatus, type WithdrawnReason } from "@quy-hang/core/listing";
 import { canHoiLai, docGia, vietGia, type FeeInclusion, type HoiLai } from "@quy-hang/core/pricing";
+import { duocLamVoiHang, LY_DO_DUA_LEN_DANG_BAN, type Viewer } from "@quy-hang/core/access";
+import { nhanGiaTri, type TuVung } from "@quy-hang/core/labels";
+import { nhanCuaCan, nhanCuaNeo, type NhanTrangThai } from "@quy-hang/core/statuses";
 import { FEE_LABEL, STATUS_LABEL } from "../cot";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { hoanTacDuoc } from "./hoan-tac";
@@ -15,13 +18,21 @@ export type HangSua = {
   listPrice: number | null;
   feeInclusion: string | null;
   standardStatus: StandardStatus;
+  /** Mã nhãn trạng thái riêng căn đang mang (hàng 46); vắng hay `null` = nhãn mặc định. */
+  statusLabel?: string | null;
   legalStatus: string | null;
   occupantType: string | null;
 };
 
 export type Lenh =
   | { type: "price_changed"; payload: { listPrice: number; feeInclusion: FeeInclusion } }
-  | { type: "status_changed"; payload: { to: StandardStatus; closePrice?: number; closeDate?: string; withdrawnReason?: WithdrawnReason } };
+  | {
+      type: "status_changed";
+      /** `label`: mã nhãn riêng của nấc đích (hàng 46); `null` = về nhãn mặc định; vắng = nhãn mặc định (như trước hàng 46). */
+      payload: { to: StandardStatus; label?: string | null; closePrice?: number; closeDate?: string; withdrawnReason?: WithdrawnReason };
+    }
+  // Trường riêng của sàn (hàng 47): một mã trường → có / không, mã lựa chọn hay `null` (bỏ trống).
+  | { type: "custom_changed"; payload: Record<string, boolean | string | null> };
 
 export type KetQuaLenh =
   | { ok: true; lenh: Lenh; hieuLa: string | null; hoiLai: HoiLai | null; khongHoanTac: boolean }
@@ -62,12 +73,22 @@ export function chuDienSan(hang: Pick<HangSua, "listPrice">, viet: VietGia = vie
 }
 
 /** Dòng «cũ → mới» của hộp hỏi lại. */
-export function moTaThayDoi(hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">, lenh: Lenh, viet: VietGia = vietGia): string {
+export function moTaThayDoi(
+  hang: Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus" | "statusLabel">,
+  lenh: Lenh,
+  viet: VietGia = vietGia,
+  /** Cách gọi riêng của sàn (hàng 45) cho chữ phí. */
+  tv?: TuVung | null,
+): string {
   if (lenh.type === "price_changed") {
-    const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${FEE_LABEL[hang.feeInclusion ?? ""] ?? "—"}`;
-    return `${cu} → ${viet(lenh.payload.listPrice)}, ${FEE_LABEL[lenh.payload.feeInclusion]}`;
+    const phi = (v: string | null | undefined) => (v ? nhanGiaTri(tv, "feeInclusion", v, FEE_LABEL[v] ?? v) : "—");
+    const cu = hang.listPrice === null ? "chưa có giá" : `${viet(hang.listPrice)}, ${phi(hang.feeInclusion)}`;
+    return `${cu} → ${viet(lenh.payload.listPrice)}, ${phi(lenh.payload.feeInclusion)}`;
   }
-  return `${STATUS_LABEL[hang.standardStatus]} → ${STATUS_LABEL[lenh.payload.to]}`;
+  // Trường riêng (hàng 47) không qua hộp hỏi lại — chọn là ghi.
+  if (lenh.type === "custom_changed") return "";
+  const nhan = tv?.trangThai;
+  return `${nhanCuaCan(nhan, hang.standardStatus, hang.statusLabel)} → ${nhanCuaCan(nhan, lenh.payload.to, lenh.payload.label)}`;
 }
 
 /** Trình sửa Giá: chữ đã gõ + điều kiện phí đang chọn → một lệnh đổi giá. */
@@ -88,10 +109,47 @@ export function dungLenhPhi(hang: HangSua, phi: FeeInclusion): KetQuaLenh {
   return { ok: true, lenh, hieuLa: docLai(hang.listPrice, phi), hoiLai: canHoiLai(cu, lenh.payload), khongHoanTac: !hoanTacDuoc(hang, lenh) };
 }
 
-/** Các nấc trình sửa Trạng thái đưa ra: đúng bảng chuyển ADR-0008 từ trạng thái hiện tại. */
-export function nacTrangThai(tu: StandardStatus): readonly StandardStatus[] {
-  return TRANSITIONS[tu];
+/**
+ * Các nấc trình sửa Trạng thái đưa ra: bảng chuyển ADR-0008 từ trạng thái hiện tại, bỏ «Đang bán» khi người xem không đủ cờ
+ * «Sẵn sàng bán» (bảng quyền của hàng, bang-quyen-theo-vai). Cờ bắt buộc — không mặc định — để kiểm kiểu bắt chỗ gọi quên.
+ */
+export function nacTrangThai(tu: StandardStatus, duaLenDangBan: boolean): readonly StandardStatus[] {
+  return duaLenDangBan ? TRANSITIONS[tu] : TRANSITIONS[tu].filter((s) => s !== "Active");
 }
+
+/** Cờ «đưa lên Đang bán» của trình sửa: người đang đăng nhập và người giữ căn của dòng, đọc từ bảng quyền của lõi. */
+export function coDuaLenDangBan(me: Viewer, listAgentKey: string | null | undefined): boolean {
+  return duocLamVoiHang(me, "dua_len_dang_ban", listAgentKey ?? null);
+}
+
+/** Một lựa chọn của thực đơn Trạng thái: nấc đích, mã nhãn (`null` = nhãn mặc định) và chữ hiện. */
+export type LuaChonTrangThai = { to: StandardStatus; label: string | null; chu: string };
+
+/**
+ * Thực đơn trình sửa Trạng thái (hàng 46): mỗi nấc đích theo bảng chuyển liệt nhãn mặc định rồi các nhãn riêng neo vào nấc
+ * ấy. Nấc hiện tại có nhãn riêng thì đứng đầu các lựa chọn cùng nấc (đổi nhãn tại chỗ), trừ nhãn căn đang mang. Mã căn
+ * mang mà bộ nhãn không còn thì không thành lựa chọn nào. Người không đủ cờ «Sẵn sàng bán» (bang-quyen-theo-vai) không thấy
+ * nấc Đang bán, kể cả đổi nhãn tại chỗ trong Đang bán — như máy chủ. Cờ bắt buộc, như `nacTrangThai`.
+ */
+export function luaChonTrangThai(
+  hang: Pick<HangSua, "standardStatus" | "statusLabel">,
+  nhan: readonly NhanTrangThai[] | undefined,
+  duaLenDangBan: boolean,
+): LuaChonTrangThai[] {
+  const boNhan = nhan ?? [];
+  const cuaNac = (s: StandardStatus): LuaChonTrangThai[] => [
+    { to: s, label: null, chu: STATUS_LABEL[s] },
+    ...nhanCuaNeo(boNhan, s).map((n) => ({ to: s, label: n.ma, chu: n.label })),
+  ];
+  const tu = hang.standardStatus;
+  const dangMang = hang.statusLabel ?? null;
+  const doiTaiCho = nhanCuaNeo(boNhan, tu).length > 0 && (tu !== "Active" || duaLenDangBan);
+  const taiCho = doiTaiCho ? cuaNac(tu).filter((l) => l.label !== dangMang) : [];
+  return [...taiCho, ...nacTrangThai(tu, duaLenDangBan).flatMap(cuaNac)];
+}
+
+/** Lựa chọn đổi nhãn tại chỗ (cùng nấc với căn) — không cần bảng chuyển. */
+export const laDoiNhanTaiCho = (hang: Pick<HangSua, "standardStatus">, l: Pick<LuaChonTrangThai, "to">) => l.to === hang.standardStatus;
 
 const NHAN_THIEU = NHAN_DIEU_KIEN;
 
@@ -139,7 +197,8 @@ export function moTaLoi(l: LoiGhi): string {
   return "Lần sửa không hợp lệ";
 }
 
-export type ThemTrangThai = { giaChot?: string; ngayBan?: string; lyDo?: WithdrawnReason };
+/** `label`: mã nhãn riêng đã chọn (hàng 46); `null` = nhãn mặc định khi đổi nhãn tại chỗ; vắng = không gửi khoá nhãn. */
+export type ThemTrangThai = { giaChot?: string; ngayBan?: string; lyDo?: WithdrawnReason; label?: string | null };
 
 /** Ngày hôm nay theo giờ máy, YYYY-MM-DD — mặc định của ngày bán. */
 export function homNay(d = new Date()): string {
@@ -148,8 +207,17 @@ export function homNay(d = new Date()): string {
 }
 
 /** Trình sửa Trạng thái: nấc đã chọn (+ giá chốt, ngày, lý do khi nấc đòi) → một lệnh đổi trạng thái. */
-export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemTrangThai = {}): KetQuaLenh {
-  if (!nacTrangThai(hang.standardStatus).includes(to)) return { ok: false, loi: "Không chuyển được sang nấc này" };
+export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemTrangThai, duaLenDangBan: boolean): KetQuaLenh {
+  // Như nút đã ẩn: lệnh Đang bán dựng tay của người không đủ cờ bị từ chối trước khi gửi (máy chủ cũng từ chối, 403) —
+  // kể cả đổi nhãn tại chỗ trong Đang bán, như máy chủ.
+  if (to === "Active" && !duaLenDangBan) return { ok: false, loi: LY_DO_DUA_LEN_DANG_BAN };
+  if (to === hang.standardStatus) {
+    // Đổi nhãn tại chỗ (hàng 46): cùng trạng thái chuẩn, khác nhãn — bảng chuyển không xét, không đòi điều kiện của nấc.
+    if (them.label === undefined || them.label === (hang.statusLabel ?? null)) return { ok: false, loi: "Không chuyển được sang nấc này" };
+    const lenh: Lenh = { type: "status_changed", payload: { to, label: them.label } };
+    return { ok: true, lenh, hieuLa: null, hoiLai: null, khongHoanTac: !hoanTacDuoc(hang, lenh) };
+  }
+  if (!nacTrangThai(hang.standardStatus, true).includes(to)) return { ok: false, loi: "Không chuyển được sang nấc này" };
   let closePrice: number | undefined;
   let hieuLa: string | null = null;
   if (to === "Closed" && them.giaChot !== undefined && them.giaChot.trim() !== "") {
@@ -164,6 +232,8 @@ export function dungLenhTrangThai(hang: HangSua, to: StandardStatus, them: ThemT
     return { ok: false, loi: to === "Active" ? `Chưa lên Đang bán được: thiếu ${ten}` : `Cần ${ten}` };
   }
   const payload: Extract<Lenh, { type: "status_changed" }>["payload"] = { to };
+  // Nhãn riêng của nấc đích; nhãn mặc định không gửi khoá — lệnh giữ đúng hình trước hàng 46.
+  if (them.label) payload.label = them.label;
   if (to === "Closed") {
     payload.closePrice = closePrice;
     payload.closeDate = them.ngayBan || homNay();

@@ -100,3 +100,20 @@ test("mayFlow: lời gọi cũ không truyền loại giữ nguyên hành vi", (
   const lead = agreement({ kind: "lead_source", direction: "inbound", dataClasses: ["catalog"] });
   assert.deepEqual(mayFlow(lead, "catalog", { at }), { ok: true });
 });
+
+// Hàng 68 (ADR-0011 qđ 2): cửa ra AI là một thoả thuận — chiều ra, bên kia Anthropic, chỉ catalog và shareable_listing.
+test("ai_processing: chỉ catalog và shareable_listing ra Anthropic", async () => {
+  const { CONNECTION_KINDS } = await import("./agreements");
+  assert.ok((CONNECTION_KINDS as readonly string[]).includes("ai_processing"), "CONNECTION_KINDS chứa ai_processing");
+  const ai = agreement({ kind: "ai_processing" as Agreement["kind"], counterparty: "anthropic", dataClasses: ["catalog", "shareable_listing"] });
+  const ctx = { at, kind: "ai_processing" as Agreement["kind"], direction: "outbound" as const };
+  assert.deepEqual(agreementErrors(ai), [], "thoả thuận AI hợp lệ");
+  assert.deepEqual(mayFlow(ai, "catalog", ctx), { ok: true }, "catalog ra AI");
+  assert.deepEqual(mayFlow(ai, "shareable_listing", ctx), { ok: true }, "shareable_listing ra AI");
+  // Ma trận viết tay năm lớp còn lại — không lớp nào ra AI.
+  for (const dc of ["source", "company_internal", "custom_field", "transaction", "behavior"] as const)
+    assert.equal(mayFlow(ai, dc, ctx).ok, false, `lớp ${dc} không ra AI`);
+  assert.equal(mayFlow({ ...ai, dataClasses: ["catalog", "source"] }, "source", ctx).ok, false, "source không ra AI kể cả khi liệt kê");
+  assert.ok(agreementErrors({ ...ai, dataClasses: ["catalog", "source"] }).length > 0, "thêm source là thoả thuận sai");
+  assert.equal(mayFlow({ ...ai, status: "paused" }, "catalog", ctx).ok, false, "tạm ngừng thì không ra");
+});

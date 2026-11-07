@@ -1,0 +1,39 @@
+{
+  "ten": "ban-nguon-giau",
+  "tieuDe": [
+    "Mã căn",
+    "Toà",
+    "Giá (tỷ)",
+    "Phí CN",
+    "TT",
+    "Chủ nhà",
+    "Liên hệ",
+    "Email",
+    "Số GT",
+    "Ghi chú"
+  ],
+  "bamGoi": "31077b900154848a2af72d656697ecbb60a9486123b6f3778915f0b39ba4abed",
+  "bamLoiNhac": "f27130675cfc255dc77e6461131a83050126b11fa7d6e0a695d1a9f4d25b731f",
+  "lapBoi": "lập bởi tác tử context sạch",
+  "ngay": "2026-11-05",
+  "dauRa": {
+    "de_xuat": [
+      {
+        "cot": 7,
+        "dich": "keep_as_note",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Cột «Email» là thông tin liên hệ chủ nhà nhưng phần mềm chưa có trường email, nên giữ làm ghi chú nội bộ."
+      },
+      {
+        "cot": 8,
+        "dich": "keep_as_note",
+        "phep": {
+          "name": "text"
+        },
+        "ly_do": "Cột «Số GT» gồm 12 chữ số bắt đầu bằng 0, giống số giấy tờ tuỳ thân của chủ nhà chứ không phải số điện thoại, nên giữ làm ghi chú nội bộ."
+      }
+    ]
+  }
+}

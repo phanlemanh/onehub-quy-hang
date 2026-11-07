@@ -7,6 +7,7 @@
  * từ app, nên id và nhãn chép lại ở đây; mỗi id của `CotId` phải có một dòng (bài kiểm của hộp thoại ghim). Cái riêng
  * của lõi là cột ↔ khoá ra của `banRaNgoai` — app không có bảng ấy.
  */
+import { nhanGiaTri, type TuVung } from "../labels";
 import { type CanRaNgoai, type CauHinhRa, type KhoaRa, truongRa } from "../redaction/ban-ra";
 import type { NguoiNhan } from "../redaction/cua-ra";
 
@@ -96,7 +97,7 @@ export const NHAN_PHI: Readonly<Record<string, string>> = { included: "Bao phí"
 export const NHAN_NAC_TANG: Readonly<Record<"high" | "low", string>> = { high: "Tầng cao", low: "Tầng thấp" };
 
 /** Chữ của một ô, đọc từ bản đã ẩn — như chữ ô của bảng hàng. */
-export function chuCuaO(ban: CanRaNgoai, khoa: KhoaRa): string {
+export function chuCuaO(ban: CanRaNgoai, khoa: KhoaRa, tv?: TuVung | null): string {
   const v = ban[khoa];
   if (khoa === "bedroomsTotal") {
     if (typeof v !== "number") return CHUA_RO;
@@ -107,7 +108,7 @@ export function chuCuaO(ban: CanRaNgoai, khoa: KhoaRa): string {
     case "availability":
       return NHAN_TINH_TRANG[v as keyof typeof NHAN_TINH_TRANG] ?? String(v);
     case "feeInclusion":
-      return NHAN_PHI[String(v)] ?? String(v);
+      return nhanGiaTri(tv, "feeInclusion", String(v), NHAN_PHI[String(v)] ?? String(v));
     case "floorBand":
       return NHAN_NAC_TANG[v as "high" | "low"] ?? String(v);
     case "listPrice":

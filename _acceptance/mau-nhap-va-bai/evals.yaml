@@ -1,0 +1,140 @@
+schema_version: 1
+feature_slug: mau-nhap-va-bai
+# Lõi gộp mẫu (apSuaMau, kiemSuaMau) chấm thuần; API, bảng, quyền và cách ly chấm trên Postgres dãy qua API thật
+# (packages/api/test-db/mau-nhap-va-bai/) và gọi thẳng bảng (packages/db/tests/isolation.test.mjs). Lần nhập dựng qua
+# đường nhập thật (POST /api/v1/imports … commit) trên bộ mẫu, không chèn kế hoạch tay. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/mau-nhap-va-bai/ ca «mẫu nhập: xem đúng mẫu của sàn» có mặt và ok — hai lần nhập đã ghi qua đường nhập thật (tiêu đề trùng một phần, lần sau đổi đích của tiêu đề trùng) và một lần chỉ mới mở: GET /api/v1/company/import-templates của Quản trị trả đúng tập khoá = hợp tiêu đề của hai lần đã ghi (đếm khớp), tiêu đề trùng lấy đích + nguồn của lần sau, không khoá nào chỉ có ở lần đang mở (đối chứng: lần mở ấy có tiêu đề riêng). Chiều đỏ: bỏ điều kiện status='committed' → ca đỏ nêu «lần chưa ghi dạy mẫu»."
+    paths: [packages/api/src/templates/**, packages/api/src/imports/store.ts, packages/core/src/import/memory/**, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/import/memory/ bảng ca viết trước của apSuaMau phủ đủ trục «nguồn của một khoá» (chỉ lần nhập · sửa mới hơn · xoá mới hơn · lần nhập mở sau lần sửa · lần nhập mở sau lần xoá · lần nhập mở TRƯỚC lần sửa (ghi sau) → bản sửa thắng · lần nhập mở TRƯỚC lần xoá (ghi sau) → khoá vẫn vắng · hai lần sửa · cùng thời điểm), mốc của lần nhập là lúc mở — mỗi dòng một assert, đếm bằng số dòng bảng; đối chứng: không dòng sổ nào thì kết quả bằng gopMau. Chiều đỏ: bỏ so thời điểm (sổ luôn thắng) → ca đỏ nêu «lần nhập mới hơn lần xoá phải dạy lại khoá»."
+    paths: [packages/core/src/import/memory/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu nhập: sửa một cột, lần nhập kế dùng bản mới» có mặt và ok — Quản trị PUT đổi đích một khoá (và quy đổi ở một khoá Trạng thái) → 200; GET /api/v1/company/import-templates hiện bản mới với nguon.kieu='sua' và tên người sửa; GET /api/v1/imports/templates của Đầu chủ trả đúng bản mới cho khoá ấy, mọi khoá khác bằng trước khi sửa (so từng khoá); một dòng import_templates action='set' đúng người sửa. Bảng viết trước năm dạng tiêu đề (thường, có dấu «Giá bán», khoảng trắng đôi, «Giá/m2», «Diện tích (m²)») dạy qua lần nhập thật, mỗi dạng một PUT 200 đúng khoá (đếm 5). Ca xen kẽ: lần nhập mở TRƯỚC lần sửa, ghi SAU → mẫu vẫn là bản sửa. Chiều đỏ: mauCuaSan không gộp sổ sửa → ca đỏ nêu «màn nhập chưa thấy bản sửa»."
+    paths: [packages/api/src/templates/**, packages/api/src/imports/store.ts, packages/core/src/import/memory/**, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu nhập: xoá một cột rồi học lại» có mặt và ok — DELETE một khoá → 204; khoá vắng ở cả hai đường đọc (Quản trị và màn nhập), khoá khác còn đủ; một lần nhập ghi SAU lần xoá có tiêu đề ấy → khoá trở lại với nguồn là lần nhập mới (đối chứng dương); DELETE lần hai → 404; mỗi dạng tiêu đề của E2 một DELETE 204 đúng khoá (đếm 5); ca xen kẽ: lần nhập mở TRƯỚC lần xoá, ghi SAU → khoá vẫn vắng. Chiều đỏ: dòng xoá bị bỏ qua khi gộp → ca đỏ nêu «khoá đã xoá còn trong mẫu»."
+    paths: [packages/api/src/templates/**, packages/api/src/imports/store.ts, packages/core/src/import/memory/**, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu nhập: lần nhập đã xong không đổi» có mặt và ok — chụp imports.plan (jsonb::text) của một lần đã ghi và một lần đang mở; Quản trị sửa rồi xoá các khoá của chúng; plan của cả hai bằng bản chụp từng ký tự (2 assert); hoàn tác lần đã ghi gỡ đúng tập căn nó tạo (so tập mã); ghi tiếp gói của lần đang mở vẫn theo kế hoạch cũ (đích cũ). Chiều đỏ: writeBatch đọc mẫu hiện tại thay plan đã lưu → ca đỏ nêu «lần nhập đang mở đổi theo mẫu»."
+    paths: [packages/api/src/imports/store.ts, packages/api/src/templates/**, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu nhập: sửa sai luật bị từ chối» có mặt và ok — bảng viết trước: đích không hợp lệ → 400; quy đổi ở trường thường (giá) → 400; quy đổi ở trường lớp nguồn (số chủ nhà) → 400; transform không hợp với đích → 400; khoá không có → 404 — mỗi dòng: mã, lý do khác rỗng, số dòng import_templates trước = sau; đối chứng: quy đổi ở Trạng thái → 200. Và trong packages/db/tests/isolation.test.mjs ca «import_templates (045): chặn ở bảng» — bảng viết trước chèn thẳng dưới vai quy_hang_app: vai không quản trị → lỗi chính sách; với vai quản trị — value_map ở trường lớp nguồn (ownerPhone) → lỗi ràng buộc, value_map ở trường thường (listPrice) → lỗi ràng buộc, action='delete' kèm đích → lỗi ràng buộc, action='set' thiếu đích → lỗi ràng buộc; mỗi dòng ghim tên ràng buộc; đối chứng dương: value_map ở standardStatus chèn được. Chiều đỏ: bỏ kiểm quy đổi ở lõi → ca đỏ nêu «quy đổi ở trường không đóng phải 400»."
+    paths: [packages/core/src/import/memory/**, packages/api/src/templates/**, packages/db/migrations/045_*, packages/db/tests/isolation.test.mjs, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu nhập: ma trận vai» có mặt và ok — bảng viết trước sáu người (Quản trị, Đầu chủ, Trưởng nhóm, Telesales, Đầu khách, không cookie) × ba đường (GET, PUT, DELETE /api/v1/company/import-templates…) → mã mong đợi (Quản trị 200/200/204; bốn vai 403 admin-required; không cookie 401), mỗi ô một assert, đếm = 18; số dòng import_templates chỉ tăng ở ô của Quản trị. Chiều đỏ: bỏ kiểm vai ở route → ca đỏ nêu «đầu chủ sửa được mẫu»."
+    paths: [packages/api/src/templates/**, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của trang apps/web/src/app/(app)/settings/templates/ khẳng định trang gọi chanMucSan với vai của người xem trước khi dựng: vai không quản trị → đường chuyển về Cá nhân kèm chi-quan-tri=1; Quản trị → không chuyển (đối chứng). Chiều đỏ: trang bỏ chanMucSan → ca đỏ nêu «trang mẫu không chặn vai»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «mẫu nhập: sàn khác không thấy» (test-db) — Quản trị sàn B: GET không có khoá nào của A (đối chứng: A thấy khoá ấy), PUT/DELETE khoá của A → 404, số dòng import_templates của A trước = sau; và ca «import_templates (045): cách ly» trong packages/db/tests/isolation.test.mjs — dưới quy_hang_app với company của B, select dòng của A trả 0 dòng, insert mang company_id của A bị chính sách chặn. Chiều đỏ: tắt force row level security → ca đỏ nêu «sàn B đọc được mẫu của A»."
+    paths: [packages/db/migrations/045_*, packages/db/tests/isolation.test.mjs, packages/api/src/templates/**, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «import_templates (045): bảng chỉ thêm, quyền hẹp» trong packages/db/tests/isolation.test.mjs — relrowsecurity và relforcerowsecurity đúng (2 assert); quyền của quy_hang_app trên bảng đúng bằng {SELECT, INSERT} (so tập, không có UPDATE, DELETE); update và delete dưới quy_hang_app lỗi quyền (2 assert); các ràng buộc kiểm của bảng có mặt trong pg_constraint đúng tên (quy đổi chỉ ở trường đóng, xoá không mang đích); và trong packages/api/test-db/mau-nhap-va-bai/migrate-hai-lan.test.ts trên cơ sở dữ liệu tạm: lần một in «đã áp 045», lần hai không in và số dòng sổ migration 045 trước = sau. Chiều đỏ: cấp thêm update → ca đỏ nêu «quy_hang_app sửa được sổ mẫu»."
+    paths: [packages/db/migrations/045_*, packages/db/tests/isolation.test.mjs, packages/api/test-db/mau-nhap-va-bai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Dựng dữ liệu của lượt qua máy chủ đang chạy: đăng nhập Đầu chủ 1 mẫu, nhập và ghi một tệp mẫu của bộ mẫu (đường Nhập Excel) để sàn có mẫu"
+      - "Đăng nhập Quản trị mẫu, khổ 1440: mở /settings/templates → chụp evidence/E9-step1.png: một khung Cài đặt › Sàn › Mẫu nhập, bảng các cột đã nhớ có tiêu đề, trường, nguồn"
+      - "Chạm «Sửa» ở một dòng Trạng thái, đổi quy đổi một giá trị, Lưu → chụp evidence/E9-step2.png: dòng hiện bản mới, nguồn «Sửa bởi …»"
+      - "Chạm «Xoá» một dòng → chụp evidence/E9-step3.png hộp xác nhận; xác nhận → chụp evidence/E9-step4.png: dòng không còn"
+      - "Đăng nhập Đầu chủ 1, mở /settings/templates → chụp evidence/E9-step5.png: ở Cá nhân với câu báo «Mục này chỉ quản trị sàn mở được»"
+    cmd: config:executors.ui-check
+    expected: "Màn dựng trong một khung Cài đặt sàn; bảng đủ cột; sửa hiện bản mới với nguồn; xoá qua hộp xác nhận; vai khác về Cá nhân với câu báo."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/(app)/settings/templates/ dựng vùng màn ở bốn trạng thái (đang tải, trống, lỗi, có dữ liệu) bằng renderToStaticMarkup và khẳng định chữ đúng bảng trạng thái của thiết kế (đếm 4); ô Quy đổi chỉ hiện khi đích là trường giá trị đóng (bảng: Trạng thái có, Giá không); luật hộp sửa thuần: kết quả lưu 400 → hộp còn mở với lý do, lỗi mạng → hộp còn mở với «Chưa lưu được — thử lại», 200 → hộp đóng (đếm 3). Chiều đỏ: trạng thái trống dùng chữ khác → ca đỏ nêu «chữ trạng thái trống»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/templates/**"]
+    expected: "exit 1 (đạt có giới hạn, giám sát trả L-39, luật 33): bước chấm khuôn của kit 2.37.0 bỏ qua ngoai_le không có khoá khoi nên báo màn Mẫu nhập «lệch: apps/web/src/app/(app)/settings/templates/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» dù trang-tam.md đã khai ngoại lệ — báo oan, kit#485. Mã 1 chỉ được chấp nhận cùng E10e xanh. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E10e."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10e
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/mau-nhap-va-bai/kiem-khuon-e10.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/templates/**", "_acceptance/mau-nhap-va-bai/kiem-khuon-e10.mjs"]
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng báo oan đã khai và bài in «E10e: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E10 và bài E10e, vẫn thoát 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.design_floor
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    expected: "exit 0; sàn thiết kế M1 không chặn tệp giao diện nào của vòng"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

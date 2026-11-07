@@ -1,0 +1,10 @@
+[
+  { "target": "listing", "contactTypes": [], "lop": "custom_field" },
+  { "target": "contact", "contactTypes": ["Buyer"], "lop": "custom_field" },
+  { "target": "contact", "contactTypes": ["Tenant"], "lop": "custom_field" },
+  { "target": "contact", "contactTypes": ["Buyer", "Tenant"], "lop": "custom_field" },
+  { "target": "contact", "contactTypes": ["Seller"], "lop": "source" },
+  { "target": "contact", "contactTypes": ["Landlord"], "lop": "source" },
+  { "target": "contact", "contactTypes": ["Seller", "Buyer"], "lop": "source" },
+  { "target": "contact", "contactTypes": ["Landlord", "Tenant"], "lop": "source" }
+]

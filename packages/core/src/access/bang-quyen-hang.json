@@ -1,0 +1,16 @@
+[
+  { "o": "Telesales", "vai": ["telesales"], "giu": "khac", "xem": false, "tao": false, "sua": false, "dua_len_dang_ban": false },
+  { "o": "Telesales từng giữ căn (mất vai Đầu chủ) · giữ căn", "vai": ["telesales"], "giu": "minh", "xem": false, "tao": false, "sua": false, "dua_len_dang_ban": false },
+  { "o": "Quản trị sàn", "vai": ["company_admin"], "giu": "khac", "xem": false, "tao": false, "sua": false, "dua_len_dang_ban": false },
+  { "o": "Đầu chủ · giữ căn", "vai": ["listing_agent"], "giu": "minh", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": true },
+  { "o": "Đầu chủ · căn chưa ai giữ", "vai": ["listing_agent"], "giu": "chua", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": true },
+  { "o": "Đầu chủ · người khác giữ", "vai": ["listing_agent"], "giu": "khac", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": false },
+  { "o": "Đầu chủ từng giữ, căn đã đổi sang người khác", "vai": ["listing_agent"], "giu": "tung", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": false },
+  { "o": "Đầu khách", "vai": ["buyer_agent"], "giu": "khac", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": false },
+  { "o": "Đầu khách · căn chưa ai giữ", "vai": ["buyer_agent"], "giu": "chua", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": false },
+  { "o": "Đầu khách (từng giữ, mất vai Đầu chủ) · giữ căn", "vai": ["buyer_agent"], "giu": "minh", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": false },
+  { "o": "Trưởng nhóm · người khác giữ", "vai": ["team_lead"], "giu": "khac", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": true },
+  { "o": "Quản trị sàn kiêm Đầu chủ · giữ căn", "vai": ["company_admin", "listing_agent"], "giu": "minh", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": true },
+  { "o": "Telesales kiêm Trưởng nhóm · người khác giữ", "vai": ["telesales", "team_lead"], "giu": "khac", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": true },
+  { "o": "Telesales kiêm Đầu khách", "vai": ["telesales", "buyer_agent"], "giu": "khac", "xem": true, "tao": true, "sua": true, "dua_len_dang_ban": false }
+]

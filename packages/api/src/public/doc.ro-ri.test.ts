@@ -21,6 +21,8 @@ function nguonMoi(nguoiNhan: NguoiNhan, anhDaDoc: string[] = []): NguonCongKhai 
   return {
     timLanGui: async (code) => (code === MA ? { companyId: "san-moi", shareId: "lan-gui-moi", senderUserId: "nguoi-gui-moi", audience: AUDIENCE[nguoiNhan] } : null),
     docCan: async () => [{ id: ID_CAN, can }],
+    // Hàng 44: thân nhóm môi giới có cột, ô, định nghĩa phí và mức chia — route thật dựng chúng từ căn mồi.
+    docMoiGioi: async () => ({ luu: { mucChia: 40, feeInclusion: ["brokerageFee"] }, san: { anMucChia: false, feeInclusion: ["brokerageFee"] } }),
     ghiSuKien: async () => ({ inserted: true }),
     docAnh: async (_s, id) => {
       anhDaDoc.push(id);
@@ -98,4 +100,28 @@ test("rò rỉ: hàm dựng thân của route đọc, mọi người nhận × m
   }
   assert.equal(o, NGUOI_NHAN.length * CAU_HINH_TAT_CA.length, "số tổ hợp");
   assert.deepEqual(loi, []);
+});
+
+test("rò rỉ: từ vựng ra ngoài không mang nhãn nội bộ", async () => {
+  for (const nguoiNhan of NGUOI_NHAN) {
+    const nguon: NguonCongKhai = {
+      ...nguonMoi(nguoiNhan),
+      docNhan: async () => [
+        { key: "labels.field.legalStatus", value: "Sổ" },
+        { key: "labels.field.withdrawnReason", value: "MOI-LYDO-TRUONG" },
+        { key: "labels.field.closePrice", value: "MOI-GIA-CHOT" },
+        { key: "labels.value.withdrawnReason", value: { unreachable: "MOI-LYDO" } },
+        { key: "labels.value.feeInclusion", value: { included: "BP" } },
+      ],
+    };
+    const res = await dungAppThu(nguon).request(`http://localhost/api/v1/public/shares/${MA}`);
+    assert.equal(res.status, 200);
+    const than = await res.text();
+    for (const moi of ["MOI-LYDO", "MOI-GIA-CHOT"]) assert.ok(!than.includes(moi), `${nguoiNhan}: rò ${moi}`);
+    // Đối chứng dương: nhãn của trường thuộc khoá ra có mặt.
+    const t = JSON.parse(than) as { tuVung: { truong: Record<string, string>; giaTri: Record<string, Record<string, string>> } };
+    assert.equal(t.tuVung.truong.legalStatus, "Sổ", `${nguoiNhan}: thiếu nhãn Pháp lý`);
+    assert.equal(t.tuVung.giaTri.feeInclusion?.included, "BP", `${nguoiNhan}: thiếu tên giá trị phí`);
+    assert.deepEqual(roRi(than, nguoiNhan), []);
+  }
 });

@@ -1,0 +1,80 @@
+schema_version: 1
+feature_slug: danh-muc-xa-day-du
+# Mọi eval chạy bộ kiểm lõi `npm test -w @quy-hang/core`; ca của vòng nằm ở packages/core/src/address/danh-muc-xa.test.ts,
+# mỗi ca mang đúng tên «AC-n …». Mỗi phép đo là một hàm kiểm thuần trả danh sách lỗi: đối chứng dương trên vật lành ra
+# rỗng, phá thử trên BẢN SAO (tệp nguồn sao chép, bảng sao chép, danh mục sao chép) ra đúng thông điệp ghim. Số trong
+# expected (3.321, 168, đếm loại, số mã tách) là số của tệp nguồn đã chép — bộ kiểm đếm lại từ TỆP NGUỒN bằng bộ đọc của
+# bộ sinh, không chép số tay; số in ra để người đọc. Ma trận rút từ danh mục theo luật viết trước (mã nhỏ nhất), số assert
+# bằng số dòng ma trận, in ra.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 bảng xã sinh từ nguồn» xanh: chạy bộ sinh (hàm thuần sinhBangXa trên nội dung tệp nguồn XML trong nguon/) → chuỗi JSON trùng từng byte nội dung du-lieu/xa.json; bảng có đúng 3.321 mã, khớp /^\\d{5}$/, đôi một khác nhau; đếm theo loại bằng đếm của tệp nguồn VÀ bằng số ghim viết trước 2.599 xã · 709 phường · 13 đặc khu (in ra ba số); số phần tử TABLE của tệp XML đếm độc lập bằng regex trên chuỗi thô (không qua bộ đọc của bộ sinh) = 3.321; mỗi xã có maTinh thuộc 34 tỉnh của danh mục; số xã từng tỉnh bằng đếm của tệp nguồn (34 dòng, in ra), TP.HCM 168; phá thử: (a) bản sao XML bỏ phần tử TABLE của mã nhỏ nhất → hàm kiểm trả «thiếu mã xã nguồn: <mã đó>»; (b) bản sao bảng sửa tên một xã → «bảng xã lệch bộ sinh: <mã>»; (c) bản sao bảng nhân đôi một dòng → «mã xã trùng: <mã>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 bảng xã cũ sinh từ nguồn» xanh: bộ sinh chạy trên tệp xlsx trong nguon/ (giải zip bằng zlib, đọc sheet «Tổng hợp_không merge») → chuỗi JSON trùng từng byte du-lieu/xa-cu.json; tập mã cũ của bảng bằng tập mã cũ của tệp nguồn sau làm sạch và bằng số ghim viết trước 10.033 (đếm in ra); số dòng dữ liệu của sheet đọc bằng bộ sinh bằng số ghim 10.571 và bằng số thẻ <row> có ô cột C hoặc cột E mang giá trị, đếm độc lập bằng regex trên XML sheet thô, trừ dòng tiêu đề; mọi phần tử vao trỏ mã có trong xa.json; số mã cũ có vao ≥ 2 bằng đếm của nguồn và bằng số ghim 441 (in ra); mọi mã cũ khớp /^\\d{5}$/; mỗi dòng của bảng SUA_NGUON được dùng ≥ 1 lần (đếm từng dòng in ra, gồm đệm số 0 và hai nhãn tỉnh 19742, 27691); phá thử: (a) bộ sinh với bảng sửa rỗng → hàm kiểm trả có «mã xã cũ sai khuôn: », «xã cũ trỏ xã mới không có: », «nhãn tỉnh cũ lệch mã: 44» (Cồn Cỏ) và «huyện cũ lệch tỉnh cũ: 794» (Tân An); (b) bản sao bảng thêm vao trỏ «99999» → «xã cũ trỏ xã mới không có: <tên> → 99999»; (c) bản sao bảng bỏ một mã cũ → «thiếu mã xã cũ nguồn: <mã>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-3 tỉnh cũ ra tỉnh mới» xanh: T = mọi tỉnh cũ của du-lieu/tinh-cu.json có tên gốc không trùng tên gốc một tỉnh mới (|T| in ra); in ra số tỉnh cũ có ≥ 2 tỉnh mới nhận; ma trận hai dạng cho mỗi tỉnh cũ vào đúng một tỉnh mới: (i) docDiaChi(«12 Đường Mẫu 1, <Loại> <tên xã mã nhỏ nhất của tỉnh mới>, <Tỉnh|Thành phố> <tên tỉnh cũ>») và (ii) docDiaChi(«12 Đường Mẫu 1, <Loại cũ> <tên xã cũ mã cũ nhỏ nhất của tỉnh cũ có đúng một vao và huyện cũ dạng Quận/Huyện>, <huyện cũ>, <Tỉnh|Thành phố> <tên tỉnh cũ>») → stateOrProvince.ma = mã tỉnh mới, stateOrProvince.tuTenCu = tên tỉnh cũ, trangThai chuan, khoa = «<mã tỉnh mới>|<mã xã mới mong đợi>|mau 1|12» (2 × |T| assert, in ra); tinh-cu.json sinh từ cùng tệp xlsx trùng từng byte; ca âm tính trên danh mục bản sao có một tỉnh cũ vào hai tỉnh mới → thieu chứa stateOrProvince, khoa null, đối chứng dương cùng địa chỉ trên danh mục thật → chuan; phá thử: danh mục bản sao có tinhCu rỗng → hàm kiểm trả dòng đầu «tỉnh cũ không đọc ra tỉnh mới: <tên tỉnh cũ đầu ma trận>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-4 đối chiếu hàng 75» xanh: 34 tỉnh của danh mục có mã và tên chính thức trùng (MaTinh, TenTinh) của tệp nguồn XML (34 dòng so, in ra); tên 22, 24, 75 là «Thành phố Quảng Ninh», «Thành phố Bắc Ninh», «Thành phố Đồng Nai»; 26737 Tân Định, 26740 Sài Gòn, 26743 Bến Thành, 26758 Cầu Ông Lãnh trùng mã, tên, loại Phường; mười phường cũ Quận 1 (Bến Nghé, Đa Kao, Nguyễn Thái Bình, Tân Định, Bến Thành, Phạm Ngũ Lão, Cầu Ông Lãnh, Cầu Kho, Cô Giang, Nguyễn Cư Trinh) có tập vao bằng tập của bảng chuyển đổi nguồn; doiChieuBangTrich(danh mục, bảng trích hàng 73) trả rỗng; phá thử: danh mục bản sao đổi tên tỉnh 75 về «Tỉnh Đồng Nai» → hàm kiểm trả «tỉnh lệch nguồn: 75»; đổi mã Bến Thành thành 26744 → có «xã hàng 75 lệch nguồn: Bến Thành»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-5 đọc địa chỉ cả nước» xanh: ma trận toàn phần 34 tỉnh × 2 dạng (xã mới mã nhỏ nhất của tỉnh; xã cũ mã cũ nhỏ nhất của tỉnh có đúng một vao và huyện cũ dạng Quận/Huyện, kèm huyện cũ) = 68 địa chỉ «12 Đường Mẫu 1, <Loại> <tên>, [<huyện cũ>,] <tên tỉnh mới>»; mọi dòng trangThai chuan, khoa = «<mã tỉnh>|<mã xã mới mong đợi>|mau 1|12» (68 assert, in ra); ma trận xã cũ bị tách: mỗi tỉnh có xã cũ vao ≥ 2 lấy mã cũ nhỏ nhất (số dòng in ra) → trangThai can-nguoi-chon, tập mã ứng viên bằng tập vao; phá thử: bộ đọc với danh mục bản sao chỉ giữ phần trích hàng 75 → hàm kiểm trả dòng đầu «không đọc ra xã: <địa chỉ đầu ma trận>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-6 không mượn tên xã tỉnh khác» xanh: ma trận rút từ danh mục = mỗi tỉnh lấy tên xã mới (không loại) mã nhỏ nhất KHÔNG có ở TP.HCM, đặt làm đoạn không tiền tố trong «12 <tên đó>, Phường Bến Thành, TP.HCM» và trong «12 Đường Mẫu 1, <tên đó>, TP.HCM» (2 × số tỉnh khác TP.HCM dòng, in ra); không dòng nào có wardName.ma thuộc tỉnh khác 79; dòng thứ nhất giữ trangThai chuan với wardName.ma 26743; đối chứng: «12 Đường Mẫu 1, Bến Thành, TP.HCM» vẫn ra wardName.ma 26743, chuan; phá thử: bộ đọc bản sao so đoạn không tiền tố với xã cả nước (luatTrongTinh = false) → hàm kiểm trả có «mượn tên xã tỉnh khác: »"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-7 khoá cũ không đổi» xanh: anh-truoc-va.json có 86 dòng; với mọi dòng docDiaChi(chu) ra streetNumber, streetName, khoa, trangThai bằng ảnh (86 dòng so, in ra); các ca của bo-thu, chuan-hoa, doc-dia-chi, danh-muc, duong-so, khong-mang xanh trong cùng lượt, không sửa dòng assert nào của chúng ngoài tên ba tỉnh ở danh-muc.test.ts nếu có; phá thử bản sao ảnh: đổi khoa của DC-001 → hàm kiểm trả «đổi so với ảnh: DC-001: khoa»"
+    paths: ["packages/core/src/address/**", "packages/db/seed/mau-thap-tang/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-8 nguồn có băm» xanh: kiemDanhMuc(DANH_MUC_DON_VI_HANH_CHINH) rỗng; bốn phần tinh, xa, xaCu, tinhCu mỗi phần có vanBan, docQua, ngayDoc ISO, ngayThamChieu ISO; phần có tệp (xa, xaCu, tinhCu) mang sha256 bằng sha256 tính từ tệp trong nguon/ (in ra); ca không-mạng quét thêm nguon/doc-tep.ts, nguon/sinh-danh-muc.ts và mọi .ts của vùng, xanh; phá thử: danh mục bản sao đổi một chữ của sha256 phần xa → «băm nguồn lệch tệp: xa»; bỏ ngayThamChieu phần xaCu → «danh mục thiếu ngày tham chiếu: xaCu»; chuỗi nguồn có fetch( → «gọi mạng: fetch(»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-9 huyện cũ dạng thành phố, thị xã» xanh: ma trận rút từ danh mục = mỗi tỉnh mới một xã cũ, mã cũ nhỏ nhất có huyện cũ dạng «Thành phố …» hay «Thị xã …» và đúng một vao (số dòng in ra, tỉnh không có thì in tên); mỗi dòng đọc ba cách viết huyện cũ («Thành phố <tên>», «TP <tên>» hay «Thị xã <tên>», «TX <tên>» theo loại) trong «12 Đường Mẫu 1, <Loại cũ> <tên>, <huyện>, <tên tỉnh mới>» → trangThai chuan, khoa = «<mã tỉnh>|<mã xã mới>|mau 1|12», stateOrProvince.ma đúng (số assert = 2 × số dòng, in ra); đối chứng: «12 Đường Mẫu 1, Phường Bến Thành, TP Hồ Chí Minh» vẫn ra tỉnh 79, chuan; «12 Đường Mẫu 1, Phường Bến Thành, Thành phố Không Có, TP.HCM» không đặt huyện cũ, vẫn chuan với 26743; phá thử: bộ đọc bản sao không nhận huyện cũ dạng thành phố (nhanHuyenTP = false) → hàm kiểm trả dòng đầu «huyện cũ thành phố không đọc: <địa chỉ đầu ma trận>»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

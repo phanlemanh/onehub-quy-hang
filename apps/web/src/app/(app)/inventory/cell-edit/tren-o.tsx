@@ -7,7 +7,7 @@
  * (va-sua-tren-o). Logic thuần ở `lenh.ts`, `hoan-tac.ts`.
  */
 import { useCallback, useState, type KeyboardEvent, type ReactNode } from "react";
-import type { StandardStatus, WithdrawnReason } from "@quy-hang/core/listing";
+import type { WithdrawnReason } from "@quy-hang/core/listing";
 import { docGia, vietPhanTram, type FeeInclusion } from "@quy-hang/core/pricing";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -16,13 +16,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
+import { useBoDongBo, useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
-import { FEE_LABEL, STATUS_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
+import { nhanGiaTri } from "@quy-hang/core/labels";
+import { chuCuaO, FEE_LABEL, WITHDRAWN_LABEL, type CotId, type DongBang } from "../cot";
+import { giaTriCuaTho, laCotRieng, lenhTruongRieng, luaChonSua, maCuaCot, truongCuaCot, type CotRiengId } from "../truong-rieng";
+import { useTuVung } from "../tu-vung";
 import { laOGo } from "../bulk/phim";
 import { COT_SUA } from "./cot-sua";
-import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
-import { chayLuuO, chuaHieu, chuDienSan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, moTaThayDoi, nacTrangThai, XAC_NHAN, type KetQuaLenh } from "./lenh";
+import { chayHoanTac, KHONG_HOAN_TAC, lenhHoanTac, lenhHoanTacRieng, taoSoHoanTac, type BanGhiHoanTac, type KetQuaDung } from "./hoan-tac";
+import { chayLuuO, chuaHieu, chuDienSan, coDuaLenDangBan, dungLenhGia, dungLenhPhi, dungLenhTrangThai, ghiAnToan, hieuLaGia, hieuLaGiaChot, homNay, laDoiNhanTaiCho, luaChonTrangThai, moTaThayDoi, XAC_NHAN, type KetQuaLenh, type LuaChonTrangThai } from "./lenh";
 
 export { COT_SUA };
 type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
@@ -30,7 +33,7 @@ type CotSua = "listPrice" | "feeInclusion" | "standardStatus";
 const NHAN_COT: Record<CotSua, string> = { listPrice: "giá", feeInclusion: "phí", standardStatus: "trạng thái" };
 const PHI: FeeInclusion[] = ["included", "excluded"];
 
-type Phien = { hang: DongBang; cot: CotSua; chuDau?: string; coSo?: number; o: { top: number; left: number; width: number; height: number } };
+type Phien = { hang: DongBang; cot: CotSua | CotRiengId; chuDau?: string; coSo?: number; o: { top: number; left: number; width: number; height: number } };
 type ChoXacNhan = Extract<KetQuaLenh, { ok: true }>;
 
 
@@ -41,15 +44,17 @@ export function useSuaTrenO() {
   const [phien, setPhien] = useState<Phien | null>(null);
   const [so] = useState(taoSoHoanTac);
 
+  const tvGhi = useTuVung();
   const moTrinhSua = useCallback((hang: DongBang, cot: CotId, chuDau?: string) => {
-    if (!COT_SUA.has(cot)) return;
+    // Cột trường riêng (hàng 47) sửa được khi trường còn sống trong bộ đã tải.
+    if (!COT_SUA.has(cot) && !(laCotRieng(cot) && truongCuaCot(cot, tvGhi.truongRieng))) return;
     // Hàng chưa có giá: ô Phí mở thẳng trình sửa Giá — không có phí trơn (AC-4).
     if (cot === "feeInclusion" && hang.listPrice === null) cot = "listPrice";
     const td = document.querySelector("td[data-cell-focused]");
     const r = td?.getBoundingClientRect();
     // Phiên bản người đang thấy: kho kéo bản mới trong lúc gõ thì lần ghi vào «Cần xem», không ghi đè lặng (AC-9).
-    setPhien({ hang, cot: cot as CotSua, chuDau, coSo: docPhienBan(hang.id), o: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : { top: 0, left: 0, width: 0, height: 0 } });
-  }, [docPhienBan]);
+    setPhien({ hang, cot: cot as CotSua | CotRiengId, chuDau, coSo: docPhienBan(hang.id), o: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : { top: 0, left: 0, width: 0, height: 0 } });
+  }, [docPhienBan, tvGhi.truongRieng]);
 
   /**
    * Ghi lệnh bù của bản ghi đã được bộ giữ cho dùng; bị từ chối thì báo, không ghi gì. Lệnh bù không tạo bản ghi mới.
@@ -72,24 +77,28 @@ export function useSuaTrenO() {
   );
 
   const ghi = useCallback(
-    async (hang: DongBang, cot: CotSua, kq: ChoXacNhan, coSo: number | undefined) => {
+    async (hang: DongBang, cot: CotSua | CotRiengId, kq: ChoXacNhan, coSo: number | undefined) => {
       setPhien(null);
-      const nhan = `${NHAN_COT[cot]} ${hang.unitNumber ?? ""}`.trim();
+      const truong = laCotRieng(cot) ? truongCuaCot(cot, tvGhi.truongRieng) : undefined;
+      const nhan = `${laCotRieng(cot) ? (truong?.label ?? "trường riêng").toLocaleLowerCase("vi") : NHAN_COT[cot]} ${hang.unitNumber ?? ""}`.trim();
       const ketQua = await chayLuuO(sua, hang.id, kq.lenh, coSo, nhan);
       if (!ketQua.ok) {
         toast.error(ketQua.chu);
         return;
       }
-      const bu = lenhHoanTac(hang, kq.lenh);
+      const tho = laCotRieng(cot) ? hang[cot] : undefined;
+      const bu = laCotRieng(cot) ? lenhHoanTacRieng(maCuaCot(cot), truong && tho !== undefined ? giaTriCuaTho(truong, tho) : undefined) : lenhHoanTac(hang, kq.lenh);
       // Phiên bản căn ngay sau lần ghi này: căn đổi phiên bản nữa là có lần sửa sau, thông báo này thôi hoàn tác (AC-5).
       const banGhi: BanGhiHoanTac | null = so.ghi(bu ? { id: hang.id, nhan, lenh: bu, phienBanSau: ketQua.phienBanSau } : null);
+      // Trường riêng không tính là xác nhận với chủ nhà (sự kiện custom_changed không mang cờ ấy).
+      const xn = laCotRieng(cot) ? null : XAC_NHAN;
       toast(`Đã đổi ${nhan}`, {
-        description: banGhi ? XAC_NHAN : `${XAC_NHAN} · ${KHONG_HOAN_TAC}`,
+        description: banGhi ? (xn ?? undefined) : [xn, KHONG_HOAN_TAC].filter(Boolean).join(" · "),
         duration: 10_000,
         action: banGhi ? { label: "Hoàn tác", onClick: () => void hoanTac(so.dungNut(banGhi, docPhienBan)) } : undefined,
       });
     },
-    [sua, so, hoanTac, docPhienBan],
+    [sua, so, hoanTac, docPhienBan, tvGhi.truongRieng],
   );
 
   /** Ctrl/Cmd+Z khi lưới có tiêu điểm: hoàn tác lần sửa thành công gần nhất của người này trên bảng này (AC-6). */
@@ -125,7 +134,7 @@ export function useSuaTrenO() {
 }
 
 /** Trình sửa trong hộp nổi — dùng cả ở Bảng hàng lẫn trang mẫu design-pass. */
-export function TrinhSua({ phien, onDoiCot, onHuy, onGhi }: { phien: Pick<Phien, "hang" | "cot" | "chuDau">; onDoiCot: (cot: CotSua) => void; onHuy: () => void; onGhi: (kq: ChoXacNhan) => void }) {
+export function TrinhSua({ phien, onDoiCot, onHuy, onGhi }: { phien: Pick<Phien, "hang" | "cot" | "chuDau">; onDoiCot: (cot: CotSua | CotRiengId) => void; onHuy: () => void; onGhi: (kq: ChoXacNhan) => void }) {
   const [cho, setCho] = useState<ChoXacNhan | null>(null);
   const [loi, setLoi] = useState<string | null>(null);
   const xet = (kq: KetQuaLenh) => {
@@ -139,12 +148,14 @@ export function TrinhSua({ phien, onDoiCot, onHuy, onGhi }: { phien: Pick<Phien,
   };
 
   if (cho) return <HoiLai hang={phien.hang} kq={cho} onDoi={() => onGhi(cho)} onThoi={() => setCho(null)} />;
+  if (laCotRieng(phien.cot)) return <SuaTruongRieng hang={phien.hang} cot={phien.cot} onXet={xet} />;
   if (phien.cot === "listPrice") return <SuaGia hang={phien.hang} chuDau={phien.chuDau} loi={loi} onDoiChu={() => setLoi(null)} onXet={xet} onHuy={onHuy} />;
   if (phien.cot === "feeInclusion") return <SuaPhi hang={phien.hang} onXet={xet} />;
   return <SuaTrangThai hang={phien.hang} loi={loi} onDoiChu={() => setLoi(null)} onXet={xet} onHuy={onHuy} />;
 }
 
 function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; chuDau?: string; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
+  const tv = useTuVung();
   const [chu, setChu] = useState(chuDau ?? chuDienSan(hang));
   const [phi, setPhi] = useState<FeeInclusion | null>(hang.feeInclusion === "included" || hang.feeInclusion === "excluded" ? hang.feeInclusion : null);
   const hieuLa = hieuLaGia(chu, phi);
@@ -171,7 +182,7 @@ function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang;
       <ToggleGroup variant="outline" size="sm" value={phi ? [phi] : []} onValueChange={(v) => (setPhi((v[0] as FeeInclusion | undefined) ?? phi), onDoiChu())} aria-label="Điều kiện phí">
         {PHI.map((p) => (
           <ToggleGroupItem key={p} value={p}>
-            {FEE_LABEL[p]}
+            {nhanGiaTri(tv, "feeInclusion", p, FEE_LABEL[p] ?? p)}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -181,13 +192,42 @@ function SuaGia({ hang, chuDau, loi, onDoiChu, onXet, onHuy }: { hang: DongBang;
   );
 }
 
+/** Trường riêng (hàng 47): các giá trị của trường rồi «Bỏ trống»; chọn là ghi, không hỏi lại. */
+function SuaTruongRieng({ hang, cot, onXet }: { hang: DongBang; cot: CotRiengId; onXet: (kq: KetQuaLenh) => void }) {
+  const tv = useTuVung();
+  const t = truongCuaCot(cot, tv.truongRieng);
+  if (!t) return <p className="text-sm text-muted-foreground">Trường này đã bỏ.</p>;
+  const hien = hang[cot];
+  return (
+    <div className="flex flex-col gap-2" role="group" aria-label={t.label}>
+      {luaChonSua(t).map((c) => {
+        const dang = c.value === null ? hien === undefined : hien === String(c.value);
+        return (
+          <Button
+            key={String(c.value)}
+            type="button"
+            size="sm"
+            variant={dang ? "secondary" : "ghost"}
+            className="justify-start"
+            autoFocus={!dang}
+            onClick={() => onXet({ ok: true, lenh: lenhTruongRieng(t.code, c.value), hieuLa: null, hoiLai: null, khongHoanTac: false })}
+          >
+            {c.label}
+          </Button>
+        );
+      })}
+    </div>
+  );
+}
+
 function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => void }) {
+  const tv = useTuVung();
   return (
     <div className="flex flex-col gap-2">
       <ToggleGroup variant="outline" size="sm" value={hang.feeInclusion ? [hang.feeInclusion] : []} onValueChange={(v) => (v[0] ? onXet(dungLenhPhi(hang, v[0] as FeeInclusion)) : null)} aria-label="Điều kiện phí">
         {PHI.map((p) => (
           <ToggleGroupItem key={p} value={p} autoFocus={p !== hang.feeInclusion}>
-            {FEE_LABEL[p]}
+            {nhanGiaTri(tv, "feeInclusion", p, FEE_LABEL[p] ?? p)}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -197,30 +237,44 @@ function SuaPhi({ hang, onXet }: { hang: DongBang; onXet: (kq: KetQuaLenh) => vo
 }
 
 function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; loi: string | null; onDoiChu: () => void; onXet: (kq: KetQuaLenh) => void; onHuy: () => void }) {
-  const nac = nacTrangThai(hang.standardStatus);
-  const [to, setTo] = useState<StandardStatus | null>(null);
+  const tv = useTuVung();
+  // Cờ «đưa lên Đang bán» từ bảng quyền của lõi: người đang đăng nhập và người giữ căn của dòng (bang-quyen-theo-vai).
+  // Người giữ căn đọc từ hàng trong kho đồng bộ (dòng Bảng hàng không mang cột này).
+  const { bd } = useBoDongBo();
+  const coDangBan = coDuaLenDangBan(bd.me(), bd.danhSach().find((l) => l.id === hang.id)?.listAgentKey);
+  // Thực đơn đọc bộ nhãn trạng thái của sàn (hàng 46): mỗi nấc nhãn mặc định rồi nhãn riêng neo vào nó, cùng màu của neo.
+  const ds = luaChonTrangThai(hang, tv.trangThai, coDangBan);
+  const [chonLc, setChonLc] = useState<LuaChonTrangThai | null>(null);
+  const to = chonLc?.to ?? null;
   const [giaChot, setGiaChot] = useState("");
   const [ngayBan, setNgayBan] = useState(homNay());
   const [lyDo, setLyDo] = useState<WithdrawnReason | undefined>();
-  const chon = (s: StandardStatus) => {
+  const chon = (lc: LuaChonTrangThai) => {
     onDoiChu();
-    if (s === "Closed" || s === "Withdrawn") setTo(s);
-    else onXet(dungLenhTrangThai(hang, s));
+    if (!laDoiNhanTaiCho(hang, lc) && (lc.to === "Closed" || lc.to === "Withdrawn")) setChonLc(lc);
+    else onXet(dungLenhTrangThai(hang, lc.to, { label: lc.label }, coDangBan));
   };
-  if (!nac.length) return <p className="text-sm text-muted-foreground">«{STATUS_LABEL[hang.standardStatus]}» là nấc cuối — mở lại là hàng mới.</p>;
+  if (!ds.length) return <p className="text-sm text-muted-foreground">«{chuCuaO(hang, "standardStatus", tv)}» là nấc cuối — mở lại là hàng mới.</p>;
   return (
     <form
       className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
-        if (to) onXet(dungLenhTrangThai(hang, to, { giaChot, ngayBan, lyDo }));
+        if (chonLc) onXet(dungLenhTrangThai(hang, chonLc.to, { giaChot, ngayBan, lyDo, label: chonLc.label }, coDangBan));
       }}
       onKeyDown={(e) => (e.key === "Escape" ? onHuy() : null)}
     >
       <div className="flex flex-wrap gap-1.5" role="group" aria-label="Đổi sang">
-        {nac.map((s, i) => (
-          <Button key={s} type="button" size="sm" variant={to === s ? "default" : "outline"} autoFocus={i === 0} onClick={() => chon(s)}>
-            {STATUS_LABEL[s]}
+        {ds.map((lc, i) => (
+          <Button
+            key={`${lc.to}:${lc.label ?? ""}`}
+            type="button"
+            size="sm"
+            variant={chonLc?.to === lc.to && chonLc.label === lc.label ? "default" : "outline"}
+            autoFocus={i === 0}
+            onClick={() => chon(lc)}
+          >
+            {lc.chu}
           </Button>
         ))}
       </div>
@@ -248,7 +302,7 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
       {loi ? <p className="text-xs text-destructive">{loi}</p> : null}
       {to ? (
         <Button type="submit" size="sm">
-          Đổi sang {STATUS_LABEL[to]}
+          Đổi sang {chonLc?.chu}
         </Button>
       ) : null}
       <p className="text-xs text-muted-foreground">{XAC_NHAN}</p>
@@ -257,10 +311,11 @@ function SuaTrangThai({ hang, loi, onDoiChu, onXet, onHuy }: { hang: DongBang; l
 }
 
 function HoiLai({ hang, kq, onDoi, onThoi }: { hang: DongBang; kq: ChoXacNhan; onDoi: () => void; onThoi: () => void }) {
+  const tv = useTuVung();
   const h = kq.hoiLai;
   return (
     <div className="flex flex-col gap-2" role="alertdialog" aria-label="Hỏi lại trước khi đổi">
-      <p className="text-sm font-medium">{moTaThayDoi(hang, kq.lenh)}</p>
+      <p className="text-sm font-medium">{moTaThayDoi(hang, kq.lenh, undefined, tv)}</p>
       {h && h.phanTram !== null && !h.doiPhi ? <p className="text-xs text-muted-foreground">Đổi {vietPhanTram(h.phanTram)} so với giá cũ</p> : null}
       {h?.doiPhi ? <p className="text-xs text-muted-foreground">Đổi điều kiện phí{h.phanTram ? ` · ${vietPhanTram(h.phanTram)}` : ""}</p> : null}
       {kq.hieuLa ? <p className="text-xs">{kq.hieuLa}</p> : null}

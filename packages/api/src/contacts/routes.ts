@@ -8,7 +8,7 @@ import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { isRefusal, type Refusal } from "../leads/store";
 import { addProspectPhone, closeProspect, createProspect, createShare, listMyOpenProspects, listProspectShares, readProspect, reassignProspect } from "./prospects";
-import { patchContact, readContact } from "./store";
+import { patchContact, patchContactCustom, readContact } from "./store";
 
 /** Liên hệ (hàng 85, ADR-0021): xem bản của lõi (không số) và sửa loại liên hệ. */
 const BASE = "/api/v1/contacts";
@@ -63,6 +63,24 @@ export function registerContactRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const { contactId } = c.req.valid("param");
       if (!laMa(contactId)) return tra(c, API_ERRORS.notFound);
       const kq = await withCompany(appPool, ctx, (tx) => patchContact(tx, contactId, c.req.valid("json")));
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 200);
+    },
+  );
+
+  api.openapi(
+    createRoute({
+      method: "patch",
+      path: `${BASE}/{contactId}/custom`,
+      summary: "Đặt giá trị trường riêng của một liên hệ (người giữ, trưởng nhóm) — mã là trường liên hệ còn sống áp cho loại của người ấy; null xoá",
+      request: { params, body: { content: { "application/json": { schema: z.record(z.unknown()) } } } },
+      responses: { 200: ok("Giá trị trường riêng", z.object({ custom: z.record(z.unknown()) })), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const { contactId } = c.req.valid("param");
+      if (!laMa(contactId)) return tra(c, API_ERRORS.notFound);
+      const kq = await withCompany(appPool, ctx, (tx) => patchContactCustom(tx, contactId, c.req.valid("json")));
       return isRefusal(kq) ? tuChoi(c, kq) : c.json(kq, 200);
     },
   );

@@ -53,11 +53,17 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/imports/{importId}",
     "GET /api/v1/imports",
     "POST /api/v1/imports/{importId}/undo",
+    "GET /api/v1/imports/ai",
+    "POST /api/v1/imports/ai/plan",
+    "POST /api/v1/imports/ai/cells",
+    "PUT /api/v1/imports/ai/agreement",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",
     "POST /api/v1/listings/{listingId}/owner/phone-reveal",
     "PUT /api/v1/listings/{listingId}/listing-agent",
     "GET /api/v1/catalog/units/{code}",
+    // Hàng 74: gõ mã lô thấp tầng (yêu cầu X-5).
+    "GET /api/v1/catalog/lots/{code}",
     // Nhận danh mục Invest (ADR-0015).
     "POST /api/v1/catalog/feeds",
     // Hàng 14: Bảng hàng đọc cả danh mục một lần.
@@ -90,6 +96,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/contacts/lookup-phone",
     "POST /api/v1/contacts/{contactId}/phones/{phoneId}/reveal",
     "PATCH /api/v1/contacts/{contactId}",
+    "PATCH /api/v1/contacts/{contactId}/custom",
     // lien-he-khach (hàng 86).
     "POST /api/v1/prospects",
     "GET /api/v1/prospects/{prospectId}",
@@ -131,7 +138,19 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/listings/agent-reassignments/{id}/undo",
     // Hàng 82: cấu hình theo sàn qua lối chung.
     "GET /api/v1/company/settings",
+    "GET /api/v1/listings/{listingId}/fee-basis",
     "PATCH /api/v1/company/settings",
+    "GET /api/v1/company/import-templates",
+    "PUT /api/v1/company/import-templates/{headerKey}",
+    "DELETE /api/v1/company/import-templates/{headerKey}",
+    // Hàng 45: cách gọi riêng của sàn.
+    "GET /api/v1/company/labels",
+    "PUT /api/v1/company/labels",
+    // Trạng thái riêng (hàng 46).
+    "GET /api/v1/company/statuses",
+    "PUT /api/v1/company/statuses",
+    "GET /api/v1/company/fields",
+    "PUT /api/v1/company/fields",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

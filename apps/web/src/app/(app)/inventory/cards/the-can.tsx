@@ -4,7 +4,7 @@
  * Thẻ căn của Bảng hàng trên điện thoại (hàng 32) — chuyển thể `product-card.tsx` của khối @reui/product-grid-4 (khối đích ở
  * `docs/design/vo-va-ia.md` §2): giữ ô ảnh vuông `Item` muted bên trái, cột nội dung bên phải với dòng tiêu đề + giá chung
  * đường chân chữ và hàng ba thông số `dl` trên vạch mảnh. Đổi: tiêu đề → mã căn, giá → «4,65 tỷ» kèm điều kiện phí; bỏ câu
- * chuyện; ba thông số → Diện tích · Phòng ngủ · Hướng; huy hiệu trên ảnh → «Đang giao dịch»; nút tim → ô chọn khi đang chọn
+ * chuyện; ba thông số → Diện tích · Phòng ngủ · Hướng; huy hiệu trên ảnh → «Đang giao dịch» (hay nhãn riêng của căn, hàng 46); nút tim → ô chọn khi đang chọn
  * nhiều; dải đầu chương → dòng nhóm toà (`DongNhomToa`), một lần mỗi toà.
  */
 import { ImageIcon } from "lucide-react";
@@ -14,10 +14,12 @@ import { cn } from "cn";
 import { Badge } from "@/components/reui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Item } from "@/components/ui/item";
-import { CHUA_RO, FEE_LABEL, chuCuaO, dinhDangGia, type DongBang } from "../cot";
+import { nhanTruong } from "@quy-hang/core/labels";
+import { CHUA_RO, chuCuaO, dinhDangGia, type DongBang } from "../cot";
+import { useTuVung } from "../tu-vung";
 import { taoNguonAnhBia } from "./anh-bia";
 import { taoGiuLau, NGUONG_GIU_LAU, type SuKien } from "./giu-lau";
-import { chonDuoc } from "./the";
+import { chonDuoc, chuTrangThaiThe } from "./the";
 
 // Một nguồn ảnh bìa cho cả trang: mỗi căn hỏi API một lần.
 const nguonAnh = typeof window === "undefined" ? null : taoNguonAnhBia();
@@ -97,6 +99,7 @@ export function TheCan({
   onTich: (d: DongBang) => void;
   onGiuLau: (d: DongBang) => void;
 }) {
+  const tv = useTuVung();
   const [anh, anhHong] = useAnhBia(d.buildingName, d.unitNumber);
   const duoc = chonDuoc(d);
   const cham = () => (dangChon ? onTich(d) : onMo(d));
@@ -131,7 +134,7 @@ export function TheCan({
         {d.standardStatus === "Pending" ? (
           <div className="absolute top-2 left-2">
             <Badge variant="info-light" radius="full">
-              Đang giao dịch
+              {chuTrangThaiThe(d, tv)}
             </Badge>
           </div>
         ) : null}
@@ -153,13 +156,13 @@ export function TheCan({
           <h3 className={cn("text-foreground min-w-0 truncate text-lg leading-snug font-medium tracking-tight", !d.unitNumber && "text-muted-foreground")}>{ma}</h3>
           <div className="flex shrink-0 flex-col items-end">
             <span className="text-foreground text-base font-semibold tabular-nums">{dinhDangGia(d.listPrice)}</span>
-            {d.feeInclusion ? <span className="text-muted-foreground text-xs">{FEE_LABEL[d.feeInclusion] ?? d.feeInclusion}</span> : null}
+            {d.feeInclusion ? <span className="text-muted-foreground text-xs">{chuCuaO(d, "feeInclusion", tv)}</span> : null}
           </div>
         </div>
         <dl className="border-border/60 grid grid-cols-3 gap-x-3 gap-y-2 border-t pt-3">
-          <ThongSo nhan="Diện tích" giaTri={chuCuaO(d, "livingArea")} />
+          <ThongSo nhan={nhanTruong(tv, "livingArea", "Diện tích")} giaTri={chuCuaO(d, "livingArea")} />
           <ThongSo nhan="Phòng ngủ" giaTri={d.unitType === CHUA_RO ? "—" : d.unitType} />
-          <ThongSo nhan="Hướng" giaTri={chuCuaO(d, "directionFaces")} />
+          <ThongSo nhan={nhanTruong(tv, "directionFaces", "Hướng")} giaTri={chuCuaO(d, "directionFaces")} />
         </dl>
       </div>
     </article>

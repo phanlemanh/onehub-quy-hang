@@ -233,8 +233,8 @@ test("đầu chủ để giao: tên, nghỉ, lead mở", async () => {
   });
   const khac = await sanMoi({ ts: { vai: ["telesales"] }, dc1: { vai: ["listing_agent"], khu: ["Toà A"] } });
   // Tên hiển thị: dc1, dc3 có tên; dc2 giữ tên mặc định của tài khoản mời (= email).
-  await identityPool.query('update "user" set name = $2 where id = $1', [s.nguoi.dc1!.userId, "[Tên] một"]);
-  await identityPool.query('update "user" set name = $2 where id = $1', [s.nguoi.dc3!.userId, "[Tên] ba"]);
+  await identityPool.query('update identity."user" set name = $2 where id = $1', [s.nguoi.dc1!.userId, "[Tên] một"]);
+  await identityPool.query('update identity."user" set name = $2 where id = $1', [s.nguoi.dc3!.userId, "[Tên] ba"]);
   const nghi = await send("PUT", `/api/v1/company/members/${s.nguoi.dc3!.userId}/leave`, { onLeave: true }, s.nguoi.tn!.cookie);
   assert.equal(nghi.status, 200, await nghi.clone().text());
   // dc1 nhận hai lead đang mở; dc2 một lead đã gọi (không còn mở).

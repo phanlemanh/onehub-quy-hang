@@ -2,7 +2,11 @@
  * Cột của Bảng hàng (hàng 14): một dòng là một hàng của sàn đã ghép thuộc tính căn từ danh mục. Tên theo RESO, nhãn theo
  * `CONTEXT.md`. Thuần — không React — để lọc, nhóm, góc nhìn và bài kiểm cùng đọc một bảng.
  */
+import { nhanGiaTri, nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { StandardStatus } from "@quy-hang/core/listing";
+import { NHAN_TRANG_THAI_MAC_DINH, nhanCuaCan } from "@quy-hang/core/statuses";
+import { MAU_TRANG_THAI, type MauTrangThai } from "@/lib/mau-trang-thai";
+import { chuOTruongRieng, cotTruongRieng, laCotRieng, type CotRiengId } from "./truong-rieng";
 
 /** Một dòng của bảng. Không trường nguồn nào: hàng đến từ API không chở lớp `source`. */
 export type DongBang = {
@@ -14,6 +18,9 @@ export type DongBang = {
   floor: number | null;
   directionFaces: string | null;
   standardStatus: StandardStatus;
+  /** Mã nhãn trạng thái riêng của sàn mà căn mang (hàng 46); vắng hay `null` = nhãn mặc định. Không phải cột — chữ của ô
+   * Trạng thái đọc nó qua `chuCuaO`; lọc và đếm vẫn theo `standardStatus`. */
+  statusLabel?: string | null;
   listPrice: number | null;
   feeInclusion: string | null;
   furnished: string | null;
@@ -36,9 +43,14 @@ export type DongBang = {
    * danh bạ đầu chủ của sàn — `chuDauChu`. Chỉ đọc; dòng dựng ngoài Bảng hàng không có khoá này.
    */
   "dau-chu"?: string;
+  /** Trường riêng của sàn (hàng 47): `custom:<mã>` → chữ thô của giá trị ("true" · "false" · mã lựa chọn). */
+  [k: CotRiengId]: string | undefined;
 };
 
-export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType">;
+/** Cột chuẩn của bảng. */
+export type CotChuanId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType" | "statusLabel" | CotRiengId>;
+/** Cột chuẩn hay cột trường riêng của sàn (hàng 47). */
+export type CotId = CotChuanId | CotRiengId;
 /** Kiểu ô lọc của cột: chữ chứa · chọn một giá trị · luật số. */
 export type KieuCot = "chu" | "chon" | "so";
 
@@ -53,14 +65,8 @@ export type Cot = {
   scale?: number;
 };
 
-export const STATUS_LABEL: Record<StandardStatus, string> = {
-  Incomplete: "Chưa đủ để rao",
-  Active: "Đang bán",
-  Pending: "Đang giao dịch",
-  Closed: "Đã bán",
-  Hold: "Tạm ngừng",
-  Withdrawn: "Ngừng hẳn",
-};
+/** Nhãn mặc định của sáu trạng thái — đọc từ lõi (`NHAN_TRANG_THAI_MAC_DINH`, hàng 46), chữ không đổi. */
+export const STATUS_LABEL: Readonly<Record<StandardStatus, string>> = NHAN_TRANG_THAI_MAC_DINH;
 export const FEE_LABEL: Record<string, string> = { included: "Bao phí", excluded: "Không bao phí" };
 export const VISIBILITY_LABEL: Record<string, string> = { Private: "Chỉ tôi", Company: "Toàn sàn" };
 export const WITHDRAWN_LABEL: Record<string, string> = {
@@ -109,8 +115,10 @@ export const DA_ROI_SAN = "Đã rời sàn";
 /**
  * Danh bạ thành viên của sàn: mã người → tên hiển thị (`GET /api/v1/company/member-names`, mọi vai, hàng 105). `null` khi
  * máy chưa có danh bạ nào (lần mở đầu chưa đọc xong, chưa từng đọc được) — lúc ấy không kết luận «Đã rời sàn».
+ * `moi`: danh bạ đã đọc từ máy chủ trong phiên này; chỉ có bản giữ trên máy (có thể cũ) thì `false` — người lạ khi ấy chưa
+ * chắc đã rời sàn, có khi mới vào (Ngoài-9 hàng 105, hàng 48).
  */
-export type DanhBaDauChu = ReadonlyMap<string, string> | null;
+export type DanhBaDauChu = { ten: ReadonlyMap<string, string>; moi: boolean } | null;
 
 /** Chưa có danh bạ trên máy: ô chờ, không đoán. */
 export const CHO_DANH_BA = "…";
@@ -118,14 +126,14 @@ export const CHO_DANH_BA = "…";
 export const CHUA_DAT_TEN = "Chưa đặt tên";
 
 /**
- * Chữ ô «Đầu chủ»: chưa gán → «—»; gán thành viên của sàn → tên; gán người không còn là thành viên → «Đã rời sàn»; máy
- * chưa có danh bạ → «…».
+ * Chữ ô «Đầu chủ»: chưa gán → «—»; gán thành viên của sàn → tên; gán người không có trong danh bạ máy chủ vừa đọc →
+ * «Đã rời sàn»; máy chưa có danh bạ, hay chỉ có bản giữ trên máy mà không có người ấy → «…».
  */
 export function chuDauChu(listAgentKey: string | null | undefined, danhBa: DanhBaDauChu): string {
   if (!listAgentKey) return "—";
   if (danhBa === null) return CHO_DANH_BA;
-  const ten = danhBa.get(listAgentKey);
-  if (ten === undefined) return DA_ROI_SAN;
+  const ten = danhBa.ten.get(listAgentKey);
+  if (ten === undefined) return danhBa.moi ? DA_ROI_SAN : CHO_DANH_BA;
   return ten.trim() || CHUA_DAT_TEN;
 }
 
@@ -136,19 +144,31 @@ export function dinhDangGia(dong: number | null): string {
   return `${SO_NGUYEN.format(Math.round(dong / 1_000_000))} triệu`;
 }
 
-/** Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. */
-export function chuCuaO(d: DongBang, id: CotId): string {
+/** Cột chuẩn rồi cột trường riêng còn sống của sàn (hàng 47) — bộ trường chưa tải thì chỉ cột chuẩn. */
+export function tatCaCot(tv?: TuVung | null): readonly Cot[] {
+  return [...COT, ...cotTruongRieng(tv?.truongRieng)];
+}
+
+/** Tiêu đề cột: tên riêng của sàn cho trường chuẩn (hàng 45), vắng thì nhãn dựng sẵn của Bảng hàng. */
+export const nhanCot = (c: Cot, tv?: TuVung | null) => (laCotRieng(c.id) ? c.label : nhanTruong(tv, c.id, c.label));
+
+/**
+ * Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. `tv`: cách gọi riêng của sàn (hàng 45) cho giá trị của
+ * tập đóng (phí, lý do ngừng) và nhãn trạng thái riêng (hàng 46); giá trị lưu ở dòng vẫn là giá trị chuẩn.
+ */
+export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
+  if (laCotRieng(id)) return chuOTruongRieng(d[id], id, tv?.truongRieng) || "—";
   const v = d[id];
   if (v === null || v === undefined || v === "") return "—";
   switch (id) {
     case "standardStatus":
-      return STATUS_LABEL[d.standardStatus];
+      return nhanCuaCan(tv?.trangThai, d.standardStatus, d.statusLabel);
     case "feeInclusion":
-      return FEE_LABEL[String(v)] ?? String(v);
+      return nhanGiaTri(tv, "feeInclusion", String(v), FEE_LABEL[String(v)] ?? String(v));
     case "visibility":
       return VISIBILITY_LABEL[String(v)] ?? String(v);
     case "withdrawnReason":
-      return WITHDRAWN_LABEL[String(v)] ?? String(v);
+      return nhanGiaTri(tv, "withdrawnReason", String(v), WITHDRAWN_LABEL[String(v)] ?? String(v));
     case "listPrice":
     case "closePrice":
       return dinhDangGia(v as number);
@@ -163,7 +183,11 @@ export function chuCuaO(d: DongBang, id: CotId): string {
   }
 }
 
-/** Giá trị của ô chọn: lựa chọn của ô lọc là các giá trị này, chữ hiện qua `chuCuaO`. */
+/** Màu huy hiệu ô Trạng thái: theo trạng thái chuẩn — căn mang nhãn riêng nhận màu của neo (hàng 46). */
+export const mauTrangThai = (d: Pick<DongBang, "standardStatus">): MauTrangThai => MAU_TRANG_THAI[d.standardStatus];
+
+/** Giá trị của ô chọn: lựa chọn của ô lọc là các giá trị này, chữ hiện qua `chuCuaO`. Cột Trạng thái là trạng thái chuẩn —
+ * lọc «Đang giao dịch» gồm cả căn mang nhãn riêng neo vào nó (hàng 46, Hỏi-4). */
 export function giaTriChon(d: DongBang, id: CotId): string {
   const v = d[id];
   return v === null || v === undefined ? "" : String(v);

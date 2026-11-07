@@ -40,7 +40,8 @@ async function caSai(doc: Doc, s: San, co: string, chua: string): Promise<{ sai:
     ["đầu chủ giữ căn", co, s.nguoi.a!.cookie, (r) => r.status === 200 && r.body?.visible === true && r.body.floorPrice === 2_700_000_000],
     ["trưởng nhóm", co, s.nguoi.tn!.cookie, (r) => r.status === 200 && r.body?.floorPrice === 2_700_000_000],
     ["floorPrice lọt", co, s.nguoi.b!.cookie, (r) => r.status === 200 && r.body?.visible === false && !("floorPrice" in r.body)],
-    ["telesales", co, s.nguoi.ts!.cookie, (r) => !(r.body && "floorPrice" in r.body) && (r.status === 403 || r.body?.visible === false)],
+    // Từ bảng quyền của hàng (bang-quyen-theo-vai, giám sát duyệt Q-0511-3): Telesales không có Bảng hàng — «không có hàng này».
+    ["telesales", co, s.nguoi.ts!.cookie, (r) => !(r.body && "floorPrice" in r.body) && r.status === 404 && r.body?.error === "not-found"],
     ["chưa đăng nhập", co, "", (r) => r.status === 401],
     ["chưa có giá đáy", chua, s.nguoi.a!.cookie, (r) => r.status === 200 && r.body?.visible === true && r.body.floorPrice === null],
   ];

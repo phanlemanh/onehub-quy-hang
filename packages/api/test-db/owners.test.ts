@@ -114,10 +114,12 @@ test("đặt chủ nhà sai khuôn trả 400 và không lưu gì", async () => {
 test("không có vai Đầu chủ thì 403 trên hàng chưa có đầu chủ", async () => {
   const a = await SAN;
   const h = await taoHang(a.dauChu.cookie);
-  for (const ai of [a.dauKhach, a.quanTri, a.truongNhom]) {
+  for (const [ai, ma, loi] of [[a.dauKhach, 403, "listing-agent-required"], [a.quanTri, 404, "not-found"], [a.truongNhom, 403, "listing-agent-required"]] as const) {
+    // Từ bảng quyền của hàng (bang-quyen-theo-vai, giám sát duyệt Q-0511-3): Telesales, Quản trị sàn không có Bảng hàng nên
+    // nhận «không có hàng này» (404) thay cho 403; mọi assert không ghi, không lộ nguồn giữ nguyên.
     const res = await send("PUT", chuNha(h), CHU, ai.cookie);
-    assert.equal(res.status, 403);
-    assert.equal((await json(res)).error, "listing-agent-required");
+    assert.equal(res.status, ma);
+    assert.equal((await json(res)).error, loi);
   }
   assert.equal(await dem("listing_owners", h), 0);
   assert.equal(await dem("listing_agent_assignments", h), 0);
@@ -144,9 +146,11 @@ test("chỉ người thấy nguồn sửa được chủ nhà", async () => {
   const giaSau = async () => (await appPool.query("select floor_price::float8 g from listing_owners where listing_id = $1", [h])).rows[0]!.g;
   assert.equal(await giaSau(), 3_100_000_000);
   let tuChoi = 0;
-  for (const ai of [a.dauChuKhac, a.telesales, a.quanTri]) {
+  for (const [ai, ma] of [[a.dauChuKhac, 403], [a.telesales, 404], [a.quanTri, 404]] as const) {
+    // Từ bảng quyền của hàng (bang-quyen-theo-vai, giám sát duyệt Q-0511-3): Telesales, Quản trị sàn không có Bảng hàng nên
+    // nhận «không có hàng này» (404) thay cho 403; mọi assert không ghi, không lộ nguồn giữ nguyên.
     const res = await send("PUT", chuNha(h), { ...CHU, floorPrice: 1_000 }, ai.cookie);
-    assert.equal(res.status, 403);
+    assert.equal(res.status, ma);
     assert.equal(await giaSau(), 3_100_000_000);
     tuChoi++;
   }
@@ -161,12 +165,16 @@ test("người không thấy nguồn: ba lời gọi không lộ trường ngu�
   assert.ok(findSourceLeaks(await json(await send("GET", chuNha(h), undefined, a.dauChu.cookie)), MAU).length > 0);
   let soThan = 0;
   for (const [ten, ai] of [["đầu khách", a.dauKhach], ["đầu chủ khác", a.dauChuKhac], ["telesales", a.telesales], ["quản trị sàn", a.quanTri]] as const) {
+    // Từ bảng quyền của hàng (bang-quyen-theo-vai, giám sát duyệt Q-0511-3): Telesales, Quản trị sàn không có Bảng hàng —
+    // mở hàng và chủ nhà nhận 404 «không có hàng này», danh sách rỗng; thân vẫn quét không lộ nguồn.
+    const khongBangHang = ten === "telesales" || ten === "quản trị sàn";
     for (const duong of [chuNha(h), `/api/v1/listings/${h}`, "/api/v1/listings"]) {
       const res = await send("GET", duong, undefined, ai.cookie);
-      assert.equal(res.status, 200, `${ten} ${duong}`);
+      assert.equal(res.status, khongBangHang && duong !== "/api/v1/listings" ? 404 : 200, `${ten} ${duong}`);
       const than = await res.json();
       assert.deepEqual(findSourceLeaks(than, MAU), [], `${ten} ${duong}`);
-      if (duong === chuNha(h)) assert.deepEqual(than, { visible: false, listingAgentUserId: a.dauChu.userId, listingAgentName: await tenNguoi(a.dauChu.userId) }, ten);
+      if (khongBangHang) assert.deepEqual(than, duong === "/api/v1/listings" ? [] : { error: "not-found" }, `${ten} ${duong}`);
+      else if (duong === chuNha(h)) assert.deepEqual(than, { visible: false, listingAgentUserId: a.dauChu.userId, listingAgentName: await tenNguoi(a.dauChu.userId) }, ten);
       soThan++;
     }
   }
@@ -174,7 +182,7 @@ test("người không thấy nguồn: ba lời gọi không lộ trường ngu�
 });
 
 /** Tên người dùng như `identity.user` lưu — cái API phải trả ở `listingAgentName`. */
-const tenNguoi = async (userId: string) => (await identityPool.query<{ name: string }>('select name from "user" where id = $1', [userId])).rows[0]!.name;
+const tenNguoi = async (userId: string) => (await identityPool.query<{ name: string }>('select name from identity."user" where id = $1', [userId])).rows[0]!.name;
 const KHOA_LIEN_LAC = ["email", "phone", "ownerPhone", "listingAgentEmail", "listingAgentPhone"];
 const coKhoa = (v: unknown, khoa: string[]): string[] => {
   if (!v || typeof v !== "object") return [];
@@ -282,10 +290,12 @@ test("mở số bị từ chối không ghi gì", async () => {
   const a = await SAN;
   const h = await taoHang(a.dauChu.cookie);
   assert.equal((await send("PUT", chuNha(h), CHU, a.dauChu.cookie)).status, 200);
-  for (const ai of [a.dauKhach, a.quanTri]) {
+  for (const [ai, ma, loi] of [[a.dauKhach, 403, "listing-agent-required"], [a.quanTri, 404, "not-found"]] as const) {
+    // Từ bảng quyền của hàng (bang-quyen-theo-vai, giám sát duyệt Q-0511-3): Telesales, Quản trị sàn không có Bảng hàng nên
+    // nhận «không có hàng này» (404) thay cho 403; mọi assert không ghi, không lộ nguồn giữ nguyên.
     const res = await send("POST", moSo(h), undefined, ai.cookie);
-    assert.equal(res.status, 403);
-    assert.equal((await json(res)).error, "listing-agent-required");
+    assert.equal(res.status, ma);
+    assert.equal((await json(res)).error, loi);
   }
   assert.equal(await dem("owner_phone_reveals", h), 0);
   const h2 = await taoHang(a.dauChu.cookie);

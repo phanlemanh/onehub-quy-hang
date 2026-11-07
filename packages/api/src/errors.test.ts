@@ -97,8 +97,12 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     passwordTooLong: ["password-too-long", 400],
     passwordCommon: ["password-common", 400],
     passwordGuessable: ["password-guessable", 400],
+    // trang-thai-rieng (hàng 46).
+    statusLabelInUse: ["status-label-in-use", 409],
+    // Hàng 47.
+    customFieldSameMeaning: ["trung-nghia", 409],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 76);
+  assert.equal(Object.keys(API_ERRORS).length, 78);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

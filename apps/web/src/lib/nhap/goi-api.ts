@@ -141,3 +141,28 @@ export async function hoanTacLanNhap(f: Fetch, importId: string): Promise<KetQua
   const r = await goi<KetQuaHoanTac>(f, `/api/v1/imports/${importId}/undo`, json("POST", {}));
   return laLoi(r) && (r.status === undefined || r.status >= 500) ? { ...r, loi: CHUA_XONG } : r;
 }
+
+// ── «Xử lý bằng AI» (hàng 68) ───────────────────────────────────────────────────────────────────────────────────────
+
+/** Hỏi đường đề xuất với gói đã che của lõi (không ô thô nào). Lỗi mạng hay máy chủ → `LoiGoi`, màn ghép như không AI. */
+export const deXuatGhep = (f: Fetch, goiDx: import("@quy-hang/core/import").GoiDeXuat) =>
+  goi<import("./de-xuat").KetQuaGoiDeXuat>(f, "/api/v1/imports/ai/plan", json("POST", goiDx));
+/** Trạng thái «Xử lý bằng AI» của sàn đang làm. */
+export const docTrangThaiAi = (f: Fetch) => goi<import("./de-xuat").TrangThaiAi>(f, "/api/v1/imports/ai", { method: "GET" });
+/** Quản trị sàn bật hay tắt. */
+export async function batTatAi(f: Fetch, bat: boolean): Promise<true | LoiGoi> {
+  try {
+    const r = await f("/api/v1/imports/ai/agreement", json("PUT", { bat }));
+    if (r.ok) return true;
+    const b = (await r.json().catch(() => ({}))) as { error?: unknown };
+    return { loi: typeof b.error === "string" ? b.error : `Máy chủ từ chối yêu cầu (mã ${r.status}).`, status: r.status };
+  } catch {
+    return { loi: LOI_MANG };
+  }
+}
+
+// ── Ô lạ còn lại (hàng 69) ──────────────────────────────────────────────────────────────────────────────────────────
+
+/** Hỏi đường ô lạ với gói của lõi (chỉ ô lạ của cột được mở). Lỗi mạng hay máy chủ → `LoiGoi`, màn sửa tay như không AI. */
+export const deXuatOLa = (f: Fetch, goiOLa: import("@quy-hang/core/import").GoiOLa) =>
+  goi<import("./o-la").KetQuaGoiOLa>(f, "/api/v1/imports/ai/cells", json("POST", goiOLa));

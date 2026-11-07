@@ -4,6 +4,7 @@
  * trên trường không nguồn, nên không xoá khi đăng xuất. Kho nhận từ ngoài để kiểm bằng `node:test`.
  */
 import { COT_MAC_DINH, COT_THEO_ID, type CotId } from "./cot";
+import { laCotRieng } from "./truong-rieng";
 import type { BoLocCot, QuySap } from "./loc";
 import { CACH_NHOM, NHOM_MAC_DINH, type CachNhom } from "./nhom";
 
@@ -19,7 +20,8 @@ export type KhoChu = { getItem(k: string): string | null; setItem(k: string, v: 
 const PHIEN_BAN = 1;
 export const khoaGocNhin = (nguoi: string, san: string) => `qh:goc-nhin:v${PHIEN_BAN}:${nguoi}:${san}`;
 
-const laCot = (x: unknown): x is CotId => typeof x === "string" && COT_THEO_ID.has(x as CotId);
+// Cột trường riêng (hàng 47) giữ lại khi đọc — bỏ hay không là việc của `giuCotRieng` khi bộ trường đã tải.
+const laCot = (x: unknown): x is CotId => (typeof x === "string" && COT_THEO_ID.has(x as CotId)) || laCotRieng(x);
 
 function docCachXem(x: Record<string, unknown>): CachXem | null {
   const { loc, cot, sap, nhom } = x;

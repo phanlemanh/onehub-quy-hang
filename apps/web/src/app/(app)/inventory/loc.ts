@@ -3,7 +3,9 @@
  * kiện, các ô AND với nhau; luật số không đọc được thì bỏ qua (ô báo đỏ). Không gọi mạng: chạy trên kho trên máy.
  */
 import { parseNumberExpression, type ExpressionResult } from "./bieu-thuc-so";
-import { COT, COT_THEO_ID, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
+import type { TuVung } from "@quy-hang/core/labels";
+import { COT, COT_THEO_ID, STATUS_LABEL, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
+import { laCotRieng } from "./truong-rieng";
 
 export type BoLocCot = Partial<Record<CotId, string>>;
 export type QuySap = { id: string; desc: boolean }[];
@@ -33,12 +35,14 @@ export function locSai(loc: BoLocCot): Set<CotId> {
 
 export function soOLocDangChay(loc: BoLocCot): number {
   const bt = docBieuThuc(loc);
-  return COT.filter((c) => loc[c.id] && (c.kind !== "so" || bt.get(c.id)?.state === "valid")).length;
+  return COT.filter((c) => loc[c.id] && (c.kind !== "so" || bt.get(c.id)?.state === "valid")).length + Object.keys(loc).filter((k) => laCotRieng(k) && loc[k as CotId]).length;
 }
 
 function dieuKien(loc: BoLocCot): ((d: DongBang) => boolean)[] {
   const bt = docBieuThuc(loc);
-  return COT.flatMap((c) => {
+  // Trường riêng (hàng 47): lọc «chọn» trên chữ thô của giá trị.
+  const rieng = Object.entries(loc).flatMap(([k, raw]) => (laCotRieng(k) && raw ? [(d: DongBang) => giaTriChon(d, k) === raw] : []));
+  return [...rieng, ...COT.flatMap((c) => {
     const raw = loc[c.id];
     if (!raw) return [];
     if (c.kind === "so") {
@@ -55,7 +59,7 @@ function dieuKien(loc: BoLocCot): ((d: DongBang) => boolean)[] {
     if (c.kind === "chon") return [(d: DongBang) => giaTriChon(d, c.id) === raw];
     const kim = boDau(raw.trim());
     return [(d: DongBang) => boDau(chuCuaO(d, c.id)).includes(kim)];
-  });
+  })];
 }
 
 export function locDong(dong: readonly DongBang[], loc: BoLocCot): DongBang[] {
@@ -66,13 +70,13 @@ export function locDong(dong: readonly DongBang[], loc: BoLocCot): DongBang[] {
 const collator = new Intl.Collator("vi", { numeric: true, sensitivity: "base" });
 
 /** Sắp theo quy đầu tiên; ô trống luôn xuống cuối. Cột số so số, cột khác so chữ hiện. */
-export function sapDong(dong: DongBang[], sap: QuySap): DongBang[] {
+export function sapDong(dong: DongBang[], sap: QuySap, tv?: TuVung | null): DongBang[] {
   const q = sap[0];
-  const c = q ? COT_THEO_ID.get(q.id as CotId) : undefined;
+  const c = q ? (COT_THEO_ID.get(q.id as CotId) ?? (laCotRieng(q.id) ? ({ id: q.id, kind: "chon" } as const) : undefined)) : undefined;
   if (!q || !c) return dong;
   const huong = q.desc ? -1 : 1;
   return dong
-    .map((d) => ({ d, k: c.kind === "so" ? d[c.id] : d[c.id] === null ? null : chuCuaO(d, c.id) }))
+    .map((d) => ({ d, k: c.kind === "so" ? d[c.id] : d[c.id] === null ? null : chuCuaO(d, c.id, tv) }))
     .sort((a, b) => {
       if (a.k === null || a.k === undefined) return b.k === null || b.k === undefined ? 0 : 1;
       if (b.k === null || b.k === undefined) return -1;
@@ -82,12 +86,13 @@ export function sapDong(dong: DongBang[], sap: QuySap): DongBang[] {
     .map(({ d }) => d);
 }
 
-/** Lựa chọn của ô chọn: giá trị có trong dữ liệu, sắp theo chữ hiện. */
-export function luaChon(dong: readonly DongBang[], id: CotId): { value: string; label: string }[] {
+/** Lựa chọn của ô chọn: giá trị chuẩn có trong dữ liệu (lọc theo giá trị chuẩn), chữ và thứ tự theo chữ hiện của sàn. */
+export function luaChon(dong: readonly DongBang[], id: CotId, tv?: TuVung | null): { value: string; label: string }[] {
   const m = new Map<string, string>();
   for (const d of dong) {
     const v = giaTriChon(d, id);
-    if (v) m.set(v, chuCuaO(d, id));
+    // Cột Trạng thái: lựa chọn hiện nhãn mặc định của trạng thái chuẩn, không nhãn riêng của căn đầu tiên (hàng 46, Hỏi-4).
+    if (v) m.set(v, id === "standardStatus" ? STATUS_LABEL[d.standardStatus] : chuCuaO(d, id, tv));
   }
   return [...m].map(([value, label]) => ({ value, label })).sort((a, b) => collator.compare(a.label, b.label));
 }

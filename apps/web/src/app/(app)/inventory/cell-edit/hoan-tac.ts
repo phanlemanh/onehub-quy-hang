@@ -6,17 +6,24 @@
 import { TRANSITIONS } from "@quy-hang/core/listing";
 import { moTaLoi, type GhiFn, type HangSua, type Lenh } from "./lenh";
 
-export type Truoc = Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus">;
+export type Truoc = Pick<HangSua, "listPrice" | "feeInclusion" | "standardStatus" | "statusLabel">;
 
 export const KHONG_HOAN_TAC = "Không hoàn tác được";
 
 /** Lệnh đưa hàng về trạng thái trước lần sửa; null khi lần sửa không hoàn tác được. */
 export function lenhHoanTac(truoc: Truoc, lenh: Lenh): Lenh | null {
+  // Trường riêng (hàng 47): lệnh ngược dựng ở trình sửa ô, nơi biết kiểu của trường (`lenhHoanTacRieng`).
+  if (lenh.type === "custom_changed") return null;
   if (lenh.type === "price_changed") {
     if (truoc.listPrice === null || (truoc.feeInclusion !== "included" && truoc.feeInclusion !== "excluded")) return null;
     return { type: "price_changed", payload: { listPrice: truoc.listPrice, feeInclusion: truoc.feeInclusion } };
   }
-  return TRANSITIONS[lenh.payload.to].includes(truoc.standardStatus) ? { type: "status_changed", payload: { to: truoc.standardStatus } } : null;
+  // Nhãn riêng căn mang trước lần sửa (hàng 46) đi theo lệnh ngược; nhãn đã bị gỡ thì máy chủ từ chối và báo như lỗi khác.
+  const nhan = truoc.statusLabel ?? null;
+  if (lenh.payload.to === truoc.standardStatus) return { type: "status_changed", payload: { to: truoc.standardStatus, label: nhan } };
+  return TRANSITIONS[lenh.payload.to].includes(truoc.standardStatus)
+    ? { type: "status_changed", payload: { to: truoc.standardStatus, ...(nhan !== null && { label: nhan }) } }
+    : null;
 }
 
 export function hoanTacDuoc(truoc: Truoc, lenh: Lenh): boolean {
@@ -96,4 +103,9 @@ export async function chayHoanTac(so: Pick<SoHoanTac, "traLai">, kq: KetQuaDung,
   if (ketQua.ok) return { loai: "thanh-cong", chu: `Đã hoàn tác ${g.nhan}` };
   so.traLai(g);
   return { loai: "loi", chu: `${KHONG_HOAN_TAC}: ${moTaLoi(ketQua.loi)} — ${g.nhan}`, thuLai: g };
+}
+
+/** Lệnh ngược của một lần đặt trường riêng (hàng 47): giá trị trước lần sửa, vắng thì bỏ trống. */
+export function lenhHoanTacRieng(ma: string, truoc: boolean | string | undefined): Lenh {
+  return { type: "custom_changed", payload: { [ma]: truoc ?? null } };
 }

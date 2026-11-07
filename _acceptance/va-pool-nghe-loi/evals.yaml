@@ -1,0 +1,80 @@
+schema_version: 1
+feature_slug: va-pool-nghe-loi
+# Lệnh máy: executors.test.web (apps/web/src/lib/api.test.ts), executors.script.va_pool_nghe_loi
+# (_acceptance/va-pool-nghe-loi/thu/*.test.mjs — bài thử thật trên chỗ thử Postgres sau công tắc mạng của hồ sơ va-pool-ket-noi,
+# cần Docker; và bài phạm vi), typecheck, lint, build. Người chấm đối chiếu tên ca nêu trong `expected` với dòng reporter:
+# có mặt, ok, không SKIP.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «pool nghe lỗi: mỗi pool ở mọi nơi chạy có đúng một trình nghe error» có mặt và ok — ma trận viết trước bốn phần tử (danh tính·trang, ứng dụng·trang, danh tính·chan-dau, ứng dụng·chan-dau), mỗi phần tử một assert listenerCount('error') === 1 với thông điệp ghim «pool nghe lỗi: <pool>·<nơi> có <n> trình nghe». Chiều đỏ (phá-thử ở S3): bỏ dòng gắn trình nghe khỏi dungPools thì ca đỏ với thông điệp nêu đúng pool và «có 0 trình nghe»."
+    paths: ["apps/web/src/lib/api.ts", "apps/web/src/lib/api.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hai ca «pool nghe lỗi: phát error không ném, ghi đúng một dòng không lộ mật khẩu» và «pool nghe lỗi: đối chứng — pool trần phát error thì ném» có mặt và ok. Ca thứ nhất, với cả bốn pool, thay console.error bằng hàm ghi giả, phát error (mã ECONNRESET) rồi assert không ném, đúng một dòng được ghi, dòng chứa tên pool, nơi chạy, mã ECONNRESET và câu lỗi, và KHÔNG chứa chuỗi mật khẩu của chuỗi kết nối thử (mat-khau-thu). Ca thứ hai: new pg.Pool trần phát error thì assert.throws. Chiều đỏ (phá-thử ở S3): đổi trình nghe thành ghi cả đối tượng pool.options thì ca thứ nhất đỏ «pool nghe lỗi: dòng nhật ký lộ mật khẩu»."
+    paths: ["apps/web/src/lib/api.ts", "apps/web/src/lib/api.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.va_pool_nghe_loi
+    expected: "exit 0; hai ca «cắt kết nối rảnh: tiến trình dùng dungPools sống qua cú cắt và truy vấn lại được» và «cắt kết nối rảnh: đối chứng — pool trần làm tiến trình chết» có mặt và ok. Cả hai ca dựng chỗ thử bằng _acceptance/va-pool-ket-noi/thu/dung-su-co.mjs --dung (Postgres riêng sau công tắc cổng 5599); tiến trình con chạy bằng `node --import tsx` và NẠP dungPools THẬT từ apps/web/src/lib/api.ts (ca pool trần dùng new pg.Pool trực tiếp), in dòng «san-sang» sau select 1 (kết nối để rảnh), bài thử gọi --tat (cắt mọi kết nối đang sống), chờ 2 giây, rồi --mo và gửi lệnh truy vấn lại. Ca thứ nhất: tiến trình con còn sống sau cú cắt, stderr có ĐÚNG MỘT dòng nhật ký của pool (khớp «[pool:ung-dung·trang]») cho một kết nối rảnh đã mở, lần select 1 sau khi mở lại trả 1, tiến trình con thoát 0. Ca thứ hai: tiến trình con chết trước bước truy vấn lại với mã thoát khác 0 và stderr có ECONNRESET hoặc «Connection terminated». Chiều đỏ (phá-thử ở S3): bỏ dòng gắn trình nghe pool khỏi dungPools thì ca thứ nhất đỏ — tiến trình con thoát khác 0 trước bước truy vấn lại. Chỗ thử dọn bằng --don ở cuối."
+    paths: ["apps/web/src/lib/api.ts", "_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs", "_acceptance/va-pool-nghe-loi/thu/con-giu-pool.mts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.va_pool_nghe_loi
+    expected: "exit 0; ba ca «phạm vi: đối chứng dương và chiều đỏ của danh sách cho phép», «phạm vi: config.yaml chỉ thêm khoá va_pool_nghe_loi» và «phạm vi: cây thật — không tệp nào ngoài danh sách cho phép đổi so với điểm rẽ khỏi main» có mặt và ok. Chiều đỏ gọi tên packages/api/src/db.ts, packages/db/migrations/051_x.sql, .claude/hooks/x.sh, _acceptance/hang-khac/contract.md. Ca cây thật: khi diff từ điểm rẽ rỗng (nhánh đã nằm trong main) thì ca bỏ qua có lý do «nhánh đã nằm trong nhánh chính», không đỏ giả; khi diff khác rỗng thì assert diff chứa apps/web/src/lib/api.ts."
+    paths: ["_acceptance/va-pool-nghe-loi/thu/pham-vi.test.mjs", "packages/**", ".claude/**", "_acceptance/config.yaml"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên mọi gói."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.lint
+    expected: "exit 0; dòng «mức nợ giao diện: 0/0»; bước kiểm chuẩn in «chuẩn giao diện: đạt»."
+    paths: ["apps/web/src/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.build
+    expected: "exit 0; next build hoàn tất."
+    paths: ["apps/web/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-6
+    executor: script
+    layer: backend-effect
+    cmd: config:executors.script.va_pool_nghe_loi
+    expected: "exit 0; hai ca «cắt kết nối đã mượn: tiến trình dùng dungPools sống, truy vấn trên kết nối ấy nhận lỗi, pool chạy lại sau khi trả» và «cắt kết nối đã mượn: đối chứng — pool trần làm tiến trình chết» có mặt và ok. Cùng chỗ thử và cách nạp dungPools thật như E3; tiến trình con mượn một kết nối bằng pool.connect(), chạy select 1 rồi GIỮ (không release), in «san-sang»; bài thử --tat, chờ 2 giây, --mo, gửi lệnh tiếp. Ca thứ nhất: tiến trình con còn sống; truy vấn kế tiếp trên kết nối đã mượn bị từ chối (lỗi của chính nó); sau release(err) truy vấn mới trên pool trả 1; tiến trình con thoát 0. Ca thứ hai: tiến trình con chết với mã khác 0 trước bước truy vấn kế tiếp. Chiều đỏ (phá-thử ở S3): bỏ dòng gắn trình chặn trên kết nối mới khỏi dungPools thì ca thứ nhất đỏ — tiến trình con thoát khác 0."
+    paths: ["apps/web/src/lib/api.ts", "_acceptance/va-pool-nghe-loi/thu/cat-ket-noi.test.mjs", "_acceptance/va-pool-nghe-loi/thu/con-giu-pool.mts", "_acceptance/va-pool-ket-noi/thu/dung-su-co.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.va_pool_nghe_loi
+    expected: "exit 0; hai ca «nơi dựng pool: cây thật — chỗ duy nhất dựng Pool/Client của pg là dungPools» và «nơi dựng pool: chiều đỏ — chỗ dựng lạ bị gọi tên» có mặt và ok. Ca cây thật quét mọi .ts/.tsx dưới apps/web/src và packages/api/src trừ bài kiểm và test-db, bỏ dòng chú thích, tìm new pg.Pool, new Pool(, new pg.Client, new Client( và assert tập tệp khớp bằng đúng [apps/web/src/lib/api.ts]. Ca chiều đỏ trên tệp dựng trong bộ nhớ: tệp mồi có new pg.Pool( hoặc new Client( bị gọi tên đúng đường dẫn; tệp chỉ dùng kiểu pg.ClientBase không bị gọi tên."
+    paths: ["apps/web/src/**", "packages/api/src/**", "_acceptance/va-pool-nghe-loi/thu/noi-dung-pool.test.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

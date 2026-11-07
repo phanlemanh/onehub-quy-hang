@@ -11,6 +11,8 @@ import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerImportRoutes } from "./imports/routes";
+import { registerAiRoutes } from "./imports/ai/routes";
+import type { KhachAi, KhachOLa } from "./imports/ai/claude";
 import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
@@ -19,6 +21,11 @@ import { registerContactReadRoutes } from "./contacts/read/routes";
 import { registerLeadRoutes } from "./leads/routes";
 import { registerRoutingRoutes } from "./routing/routes";
 import { registerSettingsRoutes } from "./settings/routes";
+import { registerFeeRoutes } from "./fees/routes";
+import { registerTemplateRoutes } from "./templates/routes";
+import { registerLabelsRoutes } from "./labels/routes";
+import { registerStatusesRoutes } from "./statuses/routes";
+import { registerCustomFieldsRoutes } from "./custom-fields/routes";
 import { registerTeamRoutes } from "./team/routes";
 import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
@@ -49,7 +56,7 @@ const BASE = `/api/${API_VERSION}`;
 export type ApiDeps = {
   /** Kết nối tới bảng của công ty — chỉ dùng qua withCompany (vai quy_hang_app). */
   appPool: pg.Pool;
-  /** Kết nối danh tính (search_path = identity) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email. */
+  /** Kết nối danh tính (vai chủ, không tham số khởi động) — chỉ cho phần danh tính: tạo tài khoản khi mời, đọc email; câu tay ghi `identity.<bảng>`. */
   identityPool: pg.Pool;
   auth: Auth;
   /** Khoá của lối việc nền (`JOB_SECRET`); vắng thì lối ấy trả 503. Chủ kho đặt ở Vercel và Supabase (ADR-0017). */
@@ -60,6 +67,10 @@ export type ApiDeps = {
   pushSender?: PushSender;
   /** Nguồn dữ liệu của route công khai trang khách; vắng thì đọc cơ sở dữ liệu — bài rò rỉ của rào route truyền nguồn mồi. */
   nguonCongKhai?: NguonCongKhai;
+  /** Khách gọi Claude cho «Xử lý bằng AI» (hàng 68); vắng thì theo môi trường (`ANTHROPIC_API_KEY`), `null` = không có khoá. */
+  khachAi?: KhachAi | null;
+  /** Khách gọi Claude cho ô lạ còn lại (hàng 69); vắng thì theo môi trường, `null` = không có khoá. */
+  khachOLa?: KhachOLa | null;
 };
 
 const Health = z
@@ -185,6 +196,8 @@ export function createApi(deps: ApiDeps) {
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
   registerOwnerRoutes(api, deps);
+  // Trước route lần nhập: «/imports/ai» không được rơi vào «/imports/{importId}».
+  registerAiRoutes(api, deps);
   registerImportRoutes(api, deps);
   registerCatalogRoutes(api, deps);
   registerFeedRoutes(api, deps);
@@ -195,6 +208,12 @@ export function createApi(deps: ApiDeps) {
   registerRoutingRoutes(api, deps);
   // Hàng 82: cấu hình theo sàn qua lối chung, có nhật ký.
   registerSettingsRoutes(api, deps);
+  // Hàng 49: dấu định nghĩa bao phí của giá.
+  registerFeeRoutes(api, deps);
+  registerTemplateRoutes(api, deps);
+  registerLabelsRoutes(api, deps);
+  registerStatusesRoutes(api, deps);
+  registerCustomFieldsRoutes(api, deps);
   // Hàng 42: Hôm nay trưởng nhóm — hàng đợi lead quá hạn, đầu chủ để giao.
   registerTeamRoutes(api, deps);
   registerContactReadRoutes(api, deps);

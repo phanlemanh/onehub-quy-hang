@@ -8,6 +8,9 @@ import { banRaNgoai, canMoi, type CanNoiBo, type CanRaNgoai, type NguoiNhan } fr
 import type { StandardStatus } from "@quy-hang/core/listing";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import type { TuVung } from "@quy-hang/core/labels";
+import { chuPhi } from "./the-can";
+import { dongChiTiet } from "./chi-tiet";
 import { docThan } from "./doc";
 import { TheCan } from "./the-can";
 import { LINK_TAT, TrangKhachCongKhai } from "./trang";
@@ -15,8 +18,9 @@ import { LINK_TAT, TrangKhachCongKhai } from "./trang";
 const HOM_NAY = "2026-11-04";
 const MA = "AbCdEfGhIjKl";
 const ra = (c: CanNoiBo, nguoiNhan: NguoiNhan) => banRaNgoai(c, { cua: "gui_link", nguoiNhan, today: HOM_NAY });
-const than = (can: CanRaNgoai[], nguoiNhan: NguoiNhan) => ({ companyName: "[Tên sàn] Mồi", senderName: "[Tên] Người gửi mồi", nguoiNhan, can, listingIds: can.map((_, i) => `L${i}`) });
-const dung = (can: CanRaNgoai[], nguoiNhan: NguoiNhan) => renderToStaticMarkup(h(TrangKhachCongKhai, { code: MA, than: than(can, nguoiNhan) }));
+const RONG: TuVung = { truong: {}, giaTri: {} };
+const than = (can: CanRaNgoai[], nguoiNhan: NguoiNhan, tuVung: TuVung = RONG) => ({ companyName: "[Tên sàn] Mồi", senderName: "[Tên] Người gửi mồi", nguoiNhan, can, listingIds: can.map((_, i) => `L${i}`), tuVung });
+const dung = (can: CanRaNgoai[], nguoiNhan: NguoiNhan, tuVung: TuVung = RONG) => renderToStaticMarkup(h(TrangKhachCongKhai, { code: MA, than: than(can, nguoiNhan, tuVung) }));
 
 test("trang khách: người nhận quyết mã căn", () => {
   const m = canMoi();
@@ -85,7 +89,9 @@ test("trang khách: trang không đệm", async () => {
 
 test("trang khách: chỉ trang thật dưới /s/", () => {
   const goc = join(dirname(fileURLToPath(import.meta.url)), "..");
-  assert.deepEqual(readdirSync(goc).sort(), ["[code]"]);
+  // Hàng 44: `broker/` chỉ chứa thành phần của trang nhóm môi giới (cùng link `/s/<mã>`), không có trang riêng.
+  assert.deepEqual(readdirSync(goc).sort(), ["[code]", "broker"]);
+  assert.ok(!readdirSync(join(goc, "broker")).some((t) => /^(page|route|layout)\./.test(t)), "broker/ không được thành route");
 });
 
 test("trang khách: lỗi tạm khác link tắt", async () => {
@@ -109,4 +115,18 @@ test("trang khách: lỗi tạm khác link tắt", async () => {
     }
   }
   assert.equal(LOI_TAM, "Chưa mở được — thử lại sau");
+});
+
+test("trang khách: chữ theo từ vựng", () => {
+  const tv: TuVung = { truong: { legalStatus: "Sổ" }, giaTri: { feeInclusion: { included: "BP" } } };
+  const b = { ...ra(canMoi(), "khach_rieng"), feeInclusion: "included", legalStatus: "pink_book" } as CanRaNgoai;
+  assert.equal(chuPhi(b, tv), "BP");
+  assert.equal(dongChiTiet(b, tv)[0]![0], "Sổ");
+  // Thân không có từ vựng → chữ dựng sẵn như cũ.
+  assert.equal(chuPhi(b, null), "Bao phí");
+  assert.equal(dongChiTiet(b, undefined)[0]![0], "Pháp lý");
+  // Trang dựng thật mang chữ riêng; trang không từ vựng mang chữ dựng sẵn.
+  const coTv = dung([b], "khach_rieng", tv);
+  assert.ok(coTv.includes("BP") && !coTv.includes("Bao phí"), "thẻ còn bảng PHI cứng");
+  assert.ok(dung([b], "khach_rieng").includes("Bao phí"));
 });
