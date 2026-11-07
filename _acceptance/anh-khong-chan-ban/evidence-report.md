@@ -108,7 +108,7 @@ Round 3 chạy lại E5, E7, E8b. Các eval còn lại mang từ round 2 (carry-
   exit_code: 0
   carried_from_round: 2
   baseline: n-a
-  verifier: config:executors.test
+  verifier: config:executors.test.web_db
   verified_at: 2026-11-07T02:24:54Z
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
@@ -158,7 +158,7 @@ Round 3 chạy lại E5, E7, E8b. Các eval còn lại mang từ round 2 (carry-
   exit_code: 0
   carried_from_round: 2
   baseline: n-a
-  verifier: config:executors.test
+  verifier: config:executors.test.web_db
   verified_at: 2026-11-07T02:24:54Z
   output: |
     carry-forward tu round 2 — delta khong cham paths cua eval
