@@ -76,7 +76,7 @@ evals:
     criterion: AC-8
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.chuan_hoa_moi_cua_cach_ly
     paths: ["packages/db/migrations/051_*", "packages/db/tests/isolation.test.mjs"]
     expected: "exit 0; isolation.test.mjs ca «từ điển của sàn»: hai bảng bật và ép luật theo dòng; sàn B không đọc, không chèn hộ A; trường ngoài ba trường bị check chặn (thử ownerPhone); nhật ký không sửa, không xoá; đối chứng sàn A đọc dòng của mình. Chiều đỏ: tắt luật theo dòng trên bản sao → ca đỏ nêu bảng."
   - id: E9
@@ -112,6 +112,13 @@ evals:
     criterion: AC-9
     executor: script
     cmd: config:executors.design.khuon
-    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
-    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san (màn Từ điển đi khuôn MucCaiDat). Chiều đỏ: thay khung bằng Card trần → dòng «lệch:» nêu tệp."
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 1 (đạt có giới hạn, luật 33 của đợt, cùng lối E14 hàng 46 và 47): bộ chấm khuôn của kit 2.37.0 bỏ qua ngoại lệ không mang khoá khoi (kit#485) nên báo oan «lệch: apps/web/src/app/(app)/settings/dictionary/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» dù trang đã khai ngoại lệ ở trang-tam.md; E11b chứng mọi dòng đỏ chỉ là dòng báo oan ấy."
+  - id: E11b
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/chuan-hoa-moi-cua/kiem-khuon-e11.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**/page.tsx", "_acceptance/chuan-hoa-moi-cua/kiem-khuon-e11.mjs"]
+    expected: "exit 0; tám đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; báo oan của tệp khác đã khai → qua; thêm một lệch, tệp chưa khai ngoại lệ, lỗi bản đồ, thoát 1 không có dòng của trang Từ điển, không chấm được → đỏ; đọc ngoai_le đúng); trên cây thật, mọi dòng «lệch:» và «sai:» là dòng báo oan của tệp đã khai ngoại lệ, có dòng của trang Từ điển, bài in «E11b: chỉ có dòng báo oan đã khai». Kit vá thì bài nhắc bỏ mã 1, vẫn thoát 0."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

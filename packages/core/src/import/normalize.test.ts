@@ -47,7 +47,7 @@ test("chuẩn hoá một cửa: ma trận chữ gõ tay", () => {
 test("chuẩn hoá một cửa: từ điển của sàn", () => {
   assert.equal(normalizeValue("standardStatus", "Đang deal", CTX).mark, "needs_person", "không từ điển của sàn → cần người");
   const r = normalizeValue("standardStatus", "Đang deal", { ...CTX, companyAliases: [{ field: "standardStatus", raw: "đang deal", value: "Pending" }] });
-  assert.deepEqual(r, { mark: "keep", value: "Pending" });
+  assert.deepEqual(r, { mark: "fixed", value: "Pending", reason: "theo từ điển của sàn" });
 });
 
 test("chuẩn hoá một cửa: áp kế hoạch dùng cùng bộ", () => {

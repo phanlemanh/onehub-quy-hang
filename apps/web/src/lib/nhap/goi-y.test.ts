@@ -56,5 +56,5 @@ test("đề xuất chưa duyệt không đổi chuẩn hoá ở bước xem trư
   const mark = (ds: DongCachGo[]) => o(voi({ ...CTX, companyAliases: cachGoDaDuyet(ds) }), voi(CTX).ong!.dong[0]!.source, "standardStatus").mark;
   assert.equal(mark(dong("proposed")), "needs_person", "đề xuất chưa duyệt đã đổi chuẩn hoá");
   assert.equal(mark(dong("rejected")), "needs_person");
-  assert.equal(mark(dong("approved")), "keep", "cách gõ đã duyệt phải chuẩn hoá thẳng");
+  assert.equal(mark(dong("approved")), "fixed", "cách gõ đã duyệt phải chuẩn hoá thẳng");
 });

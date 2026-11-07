@@ -60,7 +60,7 @@ test("đề xuất chưa duyệt không đổi chuẩn hoá", () => {
   const chuan = (r: DongCachGo[]) => normalizeValue("directionFaces", "dong nm", { today: "2026-11-07", companyAliases: cachGoDaDuyet(r) }).mark;
   assert.equal(chuan(rows), "needs_person", "đề xuất chưa duyệt đã đổi chuẩn hoá");
   assert.equal(chuan([{ ...rows[0]!, status: "rejected" }]), "needs_person");
-  assert.equal(chuan([{ ...rows[0]!, status: "approved" }]), "keep", "đã duyệt phải chuẩn hoá thẳng");
+  assert.equal(chuan([{ ...rows[0]!, status: "approved" }]), "fixed", "đã duyệt phải chuẩn hoá thẳng");
 });
 
 test("kiểm đề xuất cách gõ", () => {

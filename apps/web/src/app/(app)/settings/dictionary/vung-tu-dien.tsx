@@ -44,8 +44,8 @@ export function BangTuDien({ tt, lamMoi }: { tt: TrangThaiTuDien; lamMoi: () => 
             <TableHead className="text-end">Đã gặp</TableHead>
             <TableHead className="text-end">Đã neo</TableHead>
             <TableHead className="text-end">Chờ duyệt</TableHead>
-            <TableHead className="text-end">Đã bỏ</TableHead>
-            <TableHead className="text-end">Lần chọn</TableHead>
+            <TableHead className="hidden sm:table-cell text-end">Đã bỏ</TableHead>
+            <TableHead className="hidden sm:table-cell text-end">Lần chọn</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -55,8 +55,8 @@ export function BangTuDien({ tt, lamMoi }: { tt: TrangThaiTuDien; lamMoi: () => 
               <TableCell className="text-end tabular-nums">{s.gap}</TableCell>
               <TableCell className="text-end tabular-nums">{s.daNeo}</TableCell>
               <TableCell className="text-end tabular-nums">{s.cho}</TableCell>
-              <TableCell className="text-end tabular-nums">{s.daBo}</TableCell>
-              <TableCell className="text-end tabular-nums">{s.lanChon}</TableCell>
+              <TableCell className="hidden sm:table-cell text-end tabular-nums">{s.daBo}</TableCell>
+              <TableCell className="hidden sm:table-cell text-end tabular-nums">{s.lanChon}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -74,18 +74,18 @@ export function BangTuDien({ tt, lamMoi }: { tt: TrangThaiTuDien; lamMoi: () => 
                 <TableRow>
                   <TableHead>{TEN_TRUONG[field]} · cách gõ</TableHead>
                   <TableHead>Giá trị chuẩn</TableHead>
-                  <TableHead className="text-end">Lần chọn</TableHead>
-                  <TableHead>Trạng thái</TableHead>
+                  <TableHead className="hidden sm:table-cell text-end">Lần chọn</TableHead>
+                  <TableHead className="hidden sm:table-cell">Trạng thái</TableHead>
                   <TableHead className="text-end" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {rows.map((r) => (
                   <TableRow key={r.id}>
-                    <TableCell className="font-medium">{r.raw}</TableCell>
-                    <TableCell>{chuGiaTri(field, r.value)}</TableCell>
-                    <TableCell className="text-end tabular-nums">{r.pickCount}</TableCell>
-                    <TableCell>
+                    <TableCell className="font-medium whitespace-normal break-words">{r.raw}</TableCell>
+                    <TableCell className="whitespace-normal">{chuGiaTri(field, r.value)}</TableCell>
+                    <TableCell className="hidden sm:table-cell text-end tabular-nums">{r.pickCount}</TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <Badge variant={r.status === "approved" ? "success-light" : r.status === "rejected" ? "secondary" : "warning-light"}>{TEN_TRANG_THAI[r.status]}</Badge>
                     </TableCell>
                     <TableCell className="text-end">

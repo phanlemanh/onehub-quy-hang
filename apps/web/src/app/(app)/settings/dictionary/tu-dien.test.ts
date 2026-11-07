@@ -30,14 +30,17 @@ test("màn từ điển: sức khoẻ dữ liệu theo trường và cả sàn",
 });
 
 test("màn từ điển: trang chặn mục sàn, mục có trong Cài đặt sàn", () => {
+  // Quan hệ, không chỉ thứ tự chuỗi: kết quả chanMucSan được dùng để chuyển trang ngay, trước mọi lời gọi API.
   const chanTruocApi = (nguon: string) => {
-    const chan = nguon.indexOf("chanMucSan(");
+    const m = /const (\w+) = chanMucSan\([^)]*\);\s*if \(\1\) redirect\(\1\);/.exec(nguon);
     const api = nguon.indexOf("/api/v1/company/");
-    return chan > 0 && api > chan;
+    return !!m && api > (m.index ?? 0) + m[0].length;
   };
   assert.equal(chanTruocApi(readFileSync(join(DAY, "..", "users", "page.tsx"), "utf8")), true, "đối chứng: trang Người dùng");
   const trang = readFileSync(join(DAY, "page.tsx"), "utf8");
   assert.equal(chanTruocApi(trang), true, "settings/dictionary/page.tsx phải gọi chanMucSan trước khi đọc API");
   assert.equal(chanTruocApi(trang.replace(/chanMucSan\(/g, "boChan(")), false);
+  // Chiều đỏ: gọi chặn mà bỏ chuyển trang → phép đo đỏ.
+  assert.equal(chanTruocApi(trang.replace(/if \(chan\) redirect\(chan\);/, "void chan;")), false, "bỏ chuyển trang mà phép đo vẫn xanh");
   assert.ok(MUC_SAN.some((m) => m.label === "Từ điển" && m.href === "/settings/dictionary"), "thiếu mục Từ điển trong nhóm Sàn");
 });

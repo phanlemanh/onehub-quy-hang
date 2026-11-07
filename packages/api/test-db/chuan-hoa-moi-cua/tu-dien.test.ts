@@ -129,16 +129,24 @@ test("từ điển: cách gõ đã duyệt chuẩn hoá thẳng ở đường gh
 
 test("từ điển: duyệt hay bỏ không đổi dữ liệu đã lưu", async () => {
   const s = await sanMoi(VAI);
-  const tao = await nhapMot(s, "A-02.01", "bao phí");
-  assert.equal(tao.action, "create", JSON.stringify(tao));
+  // Căn nhập TRƯỚC khi duyệt mang đúng chữ gốc của cách gõ sắp duyệt: ô phí chưa nhận nên giá chưa ghi.
+  const cu = await nhapMot(s, "A-02.01", "phi rieng");
+  assert.equal(cu.action, "create", JSON.stringify(cu));
+  assert.equal(await phiCua(cu.listingId!), null, "căn cũ đã có phí trước khi duyệt");
   const chup = async () => ({
     listings: (await appPool.query("select * from listings where company_id = $1 order by id", [s.companyId])).rows,
     events: (await appPool.query("select listing_id, seq, type, payload from listing_events where company_id = $1 order by listing_id, seq", [s.companyId])).rows,
   });
   const truoc = await chup();
   const id = ((await (await deXuat(s, { field: "feeInclusion", raw: "phi rieng", value: "excluded" })).json()) as Dong).id;
-  await quyet(s, id, "approve");
-  await quyet(s, id, "reject");
-  assert.deepEqual(await chup(), truoc, "duyệt hay bỏ đã đổi dữ liệu căn");
+  assert.equal((await quyet(s, id, "approve")).status, 200, "duyệt phải thành công");
+  assert.deepEqual(await chup(), truoc, "duyệt đã viết lại căn đã lưu");
+  // Đối chứng dương: lần nhập MỚI sau khi duyệt thì chuẩn hoá ra giá trị chuẩn.
+  const moi = await nhapMot(s, "A-02.02", "phi rieng");
+  assert.equal(await phiCua(moi.listingId!), "excluded", "cách gõ đã duyệt không chuẩn hoá lần nhập mới");
+  assert.equal(await phiCua(cu.listingId!), null, "căn cũ bị đổi theo cách gõ đã duyệt");
+  const truocBo = await chup();
+  assert.equal((await quyet(s, id, "reject")).status, 200);
+  assert.deepEqual(await chup(), truocBo, "bỏ đã viết lại căn đã lưu");
   assert.equal((await doc(s)).rows[0]!.status, "rejected", "đối chứng: bảng từ điển đổi thật");
 });
