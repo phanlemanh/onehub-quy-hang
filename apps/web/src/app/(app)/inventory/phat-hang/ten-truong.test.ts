@@ -43,7 +43,14 @@ test("xuất và tin Gửi từ mẫu lưu dạng cũ", async () => {
 test("ô «Cột theo» dựng như nhau từ dạng lưu cũ và mới", () => {
   const cu = { mauBang: docMauBang(FX.luu["export.templates"]).ds, mauBai: {} };
   const moi = { mauBang: MOI_BANG, mauBai: {} };
-  const htmlCu = renderToStaticMarkup(h(CotTheo, { mauSan: cu, chon: null, onChon: () => {} }));
-  assert.equal(htmlCu, renderToStaticMarkup(h(CotTheo, { mauSan: moi, chon: null, onChon: () => {} })), "màn đổi theo dạng lưu");
-  assert.deepEqual(cu.mauBang.map((m) => m.name), MOI_BANG.map((m) => m.name), "tên mẫu dạng cũ trống hay sai thứ tự");
+  // Chọn từng mẫu: ô hiện tên mẫu đã chọn — so trên HTML đã dựng, không trên dữ liệu đưa vào.
+  let dem = 0;
+  for (const m of MOI_BANG) {
+    const htmlCu = renderToStaticMarkup(h(CotTheo, { mauSan: cu, chon: m.id, onChon: () => {} }));
+    const htmlMoi = renderToStaticMarkup(h(CotTheo, { mauSan: moi, chon: m.id, onChon: () => {} }));
+    assert.equal(htmlCu, htmlMoi, `màn đổi theo dạng lưu — mẫu «${m.name}»`);
+    assert.ok(htmlCu.includes(m.name), `ô «Cột theo» không hiện tên mẫu «${m.name}» đọc từ dạng cũ`);
+    dem++;
+  }
+  assert.equal(dem, MOI_BANG.length);
 });

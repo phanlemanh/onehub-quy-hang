@@ -124,7 +124,7 @@ test("ghi bằng tên cũ bị từ chối", async () => {
   const r2 = await send("PUT", BAI, { templates: { zalo: { dau: "Mới", cuoi: "" } } }, s.cookie);
   assert.equal(r2.status, 400);
   const l2 = (await r2.json()) as { reason?: unknown };
-  assert.ok(typeof l2.reason === "string" && l2.reason.includes("opening"), `lý do: ${l2.reason}`);
+  assert.ok(typeof l2.reason === "string" && l2.reason.includes("«dau»") && l2.reason.includes("«opening»"), `lý do phải nêu tên cũ và tên đúng: ${l2.reason}`);
   assert.deepEqual(await doc(s, BANG), truocBang, "lần lưu bị từ chối vẫn ghi một phần");
   assert.deepEqual(await doc(s, BAI), truocBai, "lần lưu bị từ chối vẫn ghi một phần");
 });
