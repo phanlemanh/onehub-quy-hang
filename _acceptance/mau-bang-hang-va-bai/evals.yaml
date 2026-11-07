@@ -10,7 +10,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; trong packages/api/test-db/mau-bang-hang-va-bai/ ca «mẫu bảng: thêm, sửa, xoá» có mặt và ok — Quản trị PUT /api/v1/company/templates/export một mẫu (tên, ba cột) → GET trả đúng tên và dãy cột (so mảng theo thứ tự); PUT đổi tên và đảo thứ tự cột → GET so mảng mới; PUT bỏ mẫu → GET không còn id ấy (so mảng id rỗng); đối chứng: dòng company_settings khoá export.templates đúng một dòng của sàn. Chiều đỏ: kho bỏ thứ tự (sắp cột theo chữ) → ca đỏ nêu «thứ tự cột của mẫu không giữ»."
-    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E1b
@@ -35,7 +35,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mẫu bảng: sai khuôn bị từ chối» — Quản trị PUT một lần lưu gồm hai mẫu, một mẫu đúng và một mẫu có cột holderName → 400, typeof reason string và reason chứa khoá sai; GET sau đó không có mẫu nào của lần lưu ấy (so với trước bằng mảng); bảng ba ca 400 (tên trùng · không cột · 21 mẫu), đếm 3. Chiều đỏ: kho ghi phần đúng rồi mới từ chối → ca đỏ nêu «lần lưu bị từ chối vẫn ghi một phần»."
-    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
@@ -44,7 +44,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mẫu bài: lưu và về mặc định» — Quản trị PUT /api/v1/company/templates/posts lời mở đầu, lời kết cho zalo và facebook → GET so đúng chữ; PUT bỏ kênh facebook (về mặc định) → GET không còn facebook, zalo giữ nguyên; bảng ca 400: 501 ký tự · kênh lạ «tiktok» · thân không phải đối tượng, mỗi dòng reason chứa khoá sai, đếm 3; đối chứng: 500 ký tự đúng biên → 200. Chiều đỏ: bỏ trần 500 → ca đỏ nêu «lời mẫu bài quá dài vẫn lưu»."
-    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3b
@@ -61,7 +61,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mẫu: quyền và cách ly» — bảng viết trước năm vai của sàn A × hai thao tác (GET, PUT mỗi đường): GET → 200 với mọi vai, PUT → 200 chỉ với Quản trị, 403 với bốn vai còn lại; chưa đăng nhập → 401; đếm số ô bằng tích; sàn B (Quản trị) GET → không thấy mẫu của A (so mảng rỗng), PUT của B không đổi mẫu của A (GET bằng A so trước, sau). Chiều đỏ: bỏ kiểm vai ở PUT → ca đỏ nêu vai ghi được."
-    paths: [packages/api/src/templates/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4b
@@ -102,7 +102,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «Xuất: Đầu chủ đọc mẫu của sàn» — Quản trị PUT hai mẫu bảng; Đầu chủ GET /api/v1/company/templates/export → 200, so mảng tên và dãy cột đúng thứ tự Quản trị lưu; xuatBang của lõi với cột của mẫu thứ nhất cho người nhận khách riêng → cột đầu là nấc tầng (so mảng nhãn); đối chứng: sàn chưa có mẫu → GET trả mảng rỗng. Chiều đỏ: GET trả mẫu theo thứ tự chữ → ca đỏ nêu «thứ tự mẫu không giữ»."
-    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E6
@@ -127,7 +127,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «Gửi: tin mang mẫu Zalo» — Quản trị PUT mẫu bài Zalo D, C; Đầu khách GET /api/v1/company/templates/posts → so D, C; tin soạn từ thân trả bằng hàm của lõi chứa D trước «Em gửi» và C sau dòng link; đối chứng: sàn chưa đặt mẫu → GET trả không có zalo và tin bằng soanTin cũ. Chiều đỏ: GET trả mẫu của sàn khác → ca đỏ nêu «tin mang mẫu sàn khác»."
-    paths: [packages/api/src/templates/**, packages/core/src/sharing/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/core/src/sharing/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E7c
@@ -144,7 +144,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mẫu: hiệu lực lần sau» — Đầu khách tạo Lần gửi S và ghi một lần xuất X trước khi đổi mẫu; lấy thân công khai của S và dòng exports của X; Quản trị sửa rồi xoá mẫu bảng và mẫu bài; thân công khai của S so bằng (deepEqual) bản trước, dòng exports của X so bằng bản trước; GET mẫu sau khi sửa trả bản mới (so). Chiều đỏ: trang công khai đọc mẫu bài hiện hành → ca đỏ nêu «Lần gửi cũ đổi theo mẫu»."
-    paths: [packages/api/src/templates/**, packages/api/src/public/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/api/src/public/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E8b
@@ -169,7 +169,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.isolation
     expected: "exit 0; ca «mẫu ghi thẳng mang cột nội bộ» — chèn thẳng vào company_settings (vai chủ) khoá export.templates một mẫu có holderName và closePrice; GET /api/v1/company/templates/export → mẫu ấy không mang cột nội bộ nào (so mảng cột chỉ còn cột có khoá ra) và errors nêu khoá export.templates; xuatBang theo mẫu đọc được trên căn mồi (tên chủ, số chủ nhà 0900 000 0xx, người giữ) → không chuỗi mồi nào trong cot, dong, bai. Chiều đỏ: GET trả nguyên mẫu ghi thẳng → ca đỏ nêu «cột nội bộ ra khỏi kho mẫu»."
-    paths: [packages/api/src/templates/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
+    paths: [packages/api/src/mau-san/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E10

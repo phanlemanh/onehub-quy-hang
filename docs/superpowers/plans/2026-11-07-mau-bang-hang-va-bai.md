@@ -87,8 +87,8 @@ shadcn base-nova, node:test.
 `independent: false` (cần Task 1) · phục vụ E1, E2b, E3, E4, E5d, E7b, E8, E9b
 
 **Files:**
-- Create: `packages/api/src/templates/store.ts`, `packages/api/src/templates/routes.ts`, `packages/api/test-db/mau-bang-hang-va-bai/mau.test.ts`
-- Modify: `packages/api/src/app.ts` (gọi `registerTemplatesRoutes(api, deps)` cạnh `registerLabelsRoutes`)
+- Create: `packages/api/src/mau-san/store.ts`, `packages/api/src/mau-san/routes.ts`, `packages/api/test-db/mau-bang-hang-va-bai/mau.test.ts`
+- Modify: `packages/api/src/app.ts` (gọi `registerMauSanRoutes(api, deps)` cạnh `registerLabelsRoutes`)
 
 **Interfaces:**
 - `GET /api/v1/company/templates/export` → 200 `{ templates: MauBang[]; errors: string[] }`; `PUT` thân `{ templates: MauBang[] }` → 200 cùng hình · 400 `{ error: "invalid_settings", reason }` · 403 `admin_required`.

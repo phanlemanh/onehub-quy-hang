@@ -114,5 +114,5 @@ Không thêm số đo mới.
 
 - Vùng: `apps/web/src/app/(app)/settings/templates/**`, `apps/web/src/app/(app)/settings/cai-dat.ts`,
   `apps/web/src/app/(app)/inventory/phat-hang/**`, `apps/web/src/app/(app)/shares/new/**`, `packages/core/src/export/**`,
-  `packages/core/src/sharing/**`, `packages/api/src/templates/**`, `packages/api/src/app.ts`,
+  `packages/core/src/sharing/**`, `packages/api/src/mau-san/**`, `packages/api/src/app.ts`,
   `packages/api/test-db/mau-bang-hang-va-bai/**`, `docs/product/tham-chieu.md`.
