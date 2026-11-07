@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Ong } from "@/lib/nhap/duong-ong";
+import type { GoiYO } from "@/lib/nhap/goi-y";
 import { deXuatCuaO, type TrangThaiOLa } from "@/lib/nhap/o-la";
 import type { HanhDong, XemThu } from "@/lib/nhap/trang-thai";
 
@@ -44,6 +45,8 @@ export function BangXemTruoc({
   onSua,
   onDung,
   onBo,
+  goiY,
+  onChonGoiY,
 }: {
   ong: Ong;
   bo: ReadonlySet<number>;
@@ -52,6 +55,9 @@ export function BangXemTruoc({
   onSua: (source: number, cot: number, raw: string) => void;
   onDung?: (source: number, cot: number) => void;
   onBo: (source: number, bo: boolean) => void;
+  /** Gợi ý «Ý bạn là» của ô cần người (hàng 70) — vắng thì bảng như trước. */
+  goiY?: (source: number, cot: number) => GoiYO | null;
+  onChonGoiY?: (source: number, cot: number, value: string) => void;
 }) {
   const [chiCanNguoi, setChiCanNguoi] = useState(false);
   const [trang, setTrang] = useState(0);
@@ -118,6 +124,20 @@ export function BangXemTruoc({
                             {o.mark === "fixed" && o.value !== undefined && o.value !== null && String(o.value) !== String(o.raw) ? ` → ${String(o.value)}` : ""}
                           </span>
                         )}
+                        {(() => {
+                          const g = sua && goiY && onChonGoiY ? goiY(d.source, i) : null;
+                          if (!g) return null;
+                          return (
+                            <span className="flex flex-wrap items-center gap-2 whitespace-normal" data-goi-y="">
+                              <span className="text-muted-foreground text-xs">Ý bạn là:</span>
+                              {g.goiY.map((x) => (
+                                <Button key={x.value} type="button" size="sm" variant="outline" className="min-h-11 sm:min-h-0" onClick={() => onChonGoiY!(d.source, i, x.value)} aria-label={`Dùng «${x.chu}» cho ${c.column} dòng ${d.source + 1}`}>
+                                  {x.chu}
+                                </Button>
+                              ))}
+                            </span>
+                          );
+                        })()}
                         {o.mark !== "keep" ? <HuyHieuDau dau={o.mark} /> : null}
                         {o.reason && o.mark !== "keep" ? <span className="text-muted-foreground text-xs">{o.reason}</span> : null}
                         {(() => {

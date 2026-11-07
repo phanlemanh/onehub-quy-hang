@@ -3864,3 +3864,78 @@ test("listing_price_fee_basis: công ty này không đọc, không ghi được 
     assert.equal((await c.query("select value from company_settings where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc cấu hình phí của sàn A");
   });
 });
+
+// ---- Từ điển của sàn (051, hàng 70 chuan-hoa-moi-cua: E8) ----
+const TD_DC = "u-td-dau-chu-a";
+const TD_QT = "u-td-quan-tri-a";
+const TD_DK = "u-td-dau-khach-a";
+const TD_B = "u-td-dau-chu-b";
+
+/** Hai sàn, bốn người, dựng bằng vai chủ; rồi trở vai API. */
+async function withTuDien(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [TD_DC, COMPANY_A, ["listing_agent"]],
+      [TD_QT, COMPANY_A, ["company_admin"]],
+      [TD_DK, COMPANY_A, ["buyer_agent"]],
+      [TD_B, COMPANY_B, ["listing_agent", "company_admin"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+const deXuat = (c, f, raw, fold, v) => c.query("select app.de_xuat_cach_go($1, $2, $3, $4) id", [f, raw, fold, v]);
+
+test("từ điển của sàn: cách ly, ghi qua hàm, nhật ký chỉ thêm", { skip }, async () => {
+  const chu = new pg.Client({ connectionString: url });
+  await chu.connect();
+  try {
+    for (const bang of ["company_value_aliases", "company_value_alias_events"]) {
+      const { rows } = await chu.query("select relrowsecurity, relforcerowsecurity from pg_class where relname = $1", [bang]);
+      assert.deepEqual([rows[0]?.relrowsecurity, rows[0]?.relforcerowsecurity], [true, true], `${bang} chưa bật và ép luật theo dòng`);
+    }
+  } finally {
+    await chu.end();
+  }
+  await withTuDien(async (c) => {
+    // Đối chứng dương: đầu chủ A đề xuất, chọn lại cùng chữ gập → một dòng, đếm 2.
+    await lamNguoi(c, TD_DC, COMPANY_A);
+    const id = (await deXuat(c, "directionFaces", "dong nm", "dong nm", "Đông Nam")).rows[0].id;
+    await deXuat(c, "directionFaces", "Dong  NM", "dong nm", "Đông Nam");
+    const dong = (await c.query("select status, pick_count from company_value_aliases")).rows;
+    assert.deepEqual(dong, [{ status: "proposed", pick_count: 2 }]);
+    // Đầu khách không đề xuất; đầu chủ không duyệt; vai API không ghi thẳng.
+    await lamNguoi(c, TD_DK, COMPANY_A);
+    await expectError(c, "select app.de_xuat_cach_go('directionFaces', 'x', 'x', 'Đông')", [], /chỉ người nhập file/);
+    await lamNguoi(c, TD_DC, COMPANY_A);
+    await expectError(c, "select app.quyet_cach_go($1, 'approved')", [id], /chỉ quản trị sàn/);
+    await expectError(c, "update company_value_aliases set status = 'approved'", [], /permission denied/);
+    await expectError(c, "insert into company_value_aliases (company_id, field, raw, raw_fold, value, proposed_by) values ($1, 'directionFaces', 'y', 'y', 'Đông', $2)", [COMPANY_A, TD_DC], /permission denied/);
+    // Quản trị duyệt; sàn B không thấy, không quyết được dòng của A.
+    await lamNguoi(c, TD_QT, COMPANY_A);
+    await c.query("select app.quyet_cach_go($1, 'approved')", [id]);
+    assert.equal((await c.query("select status from company_value_aliases where id = $1", [id])).rows[0].status, "approved");
+    await lamNguoi(c, TD_B, COMPANY_B);
+    assert.equal((await c.query("select 1 from company_value_aliases")).rowCount, 0, "sàn B đọc được từ điển của sàn A");
+    assert.equal((await c.query("select 1 from company_value_alias_events")).rowCount, 0, "sàn B đọc được nhật ký từ điển của sàn A");
+    await expectError(c, "select app.quyet_cach_go($1, 'rejected')", [id], /không có cách gõ này/);
+    // Check trường: ngoài ba trường (lớp source) bị chặn.
+    await lamNguoi(c, TD_DC, COMPANY_A);
+    await expectError(c, "select app.de_xuat_cach_go('ownerPhone', 'x', 'x', 'y')", [], /company_value_aliases_field_check/);
+    // Nhật ký: ba sự kiện (proposed, picked, approved), không sửa, không xoá.
+    await c.query("reset role");
+    assert.deepEqual((await c.query("select kind from company_value_alias_events where alias_id = $1 order by id", [id])).rows.map((r) => r.kind), ["proposed", "picked", "approved"]);
+    await expectError(c, "update company_value_alias_events set kind = 'rejected'", [], /chỉ thêm/);
+    await expectError(c, "delete from company_value_alias_events", [], /chỉ thêm/);
+  });
+});

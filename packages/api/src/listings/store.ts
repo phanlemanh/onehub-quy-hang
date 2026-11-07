@@ -319,12 +319,32 @@ export async function thayNhanCan(tx: pg.PoolClient, maGo: string, thay: string 
   return rows[0]!.n;
 }
 
-/** Ảnh thật của căn (ngăn Gửi được, không ảnh mẫu, chưa xoá) và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */
+/**
+ * Điều kiện «ảnh thật» (ngăn Gửi được, không ảnh mẫu, chưa xoá) — một nguồn cho bước xét Đang bán và cho số ảnh của bản xem
+ * hàng (`photosCount`, anh-khong-chan-ban), để màn và máy chủ không bao giờ đếm khác nhau.
+ */
+const DIEU_KIEN_ANH_THAT = "compartment = 'shareable' and not is_sample and removed_at is null";
+
+/** Số ảnh thật theo căn, đếm một lượt cho cả danh sách; khoá là đúng chữ toà và mã bên gọi truyền (`khoaAnh`). Căn chưa có mã không có ảnh. */
+export async function demAnhThatTheoCan(tx: pg.PoolClient, can: readonly { buildingName: string; unitNumber: string | null }[]): Promise<Map<string, number>> {
+  const co = can.filter((c) => c.unitNumber);
+  if (co.length === 0) return new Map();
+  const { rows } = await tx.query<{ toa: string; ma: string; n: number }>(
+    `select c.toa, c.ma, (select count(*)::int from unit_photos p
+        where p.building_name = c.toa and app.unit_key(p.unit_number) = app.unit_key(c.ma) and ${DIEU_KIEN_ANH_THAT}) n
+     from unnest($1::text[], $2::text[]) as c(toa, ma)`,
+    [co.map((c) => c.buildingName), co.map((c) => c.unitNumber)],
+  );
+  return new Map(rows.map((r) => [khoaAnh(r.toa, r.ma), r.n]));
+}
+/** Khoá tra của `demAnhThatTheoCan`: chữ toà và mã nguyên văn. */
+export const khoaAnh = (toa: string, ma: string | null) => `${toa}\u0000${ma ?? ""}`;
+
+/** Ảnh thật của căn và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */
 async function nguCanhAnh(tx: pg.PoolClient, hang: ListingState): Promise<{ realPhotoCount: number; minRealPhotos: number }> {
   const { rows } = await tx.query<{ n: number }>(
     `select count(*)::int n from unit_photos
-     where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2)
-       and compartment = 'shareable' and not is_sample and removed_at is null`,
+     where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2) and ${DIEU_KIEN_ANH_THAT}`,
     [hang.buildingName, hang.unitNumber],
   );
   const cauHinh = await tx.query<{ key: string; value: unknown }>("select key, value from company_settings where key = $1", [KHOA_ANH_THAT_TOI_THIEU]);

@@ -10,6 +10,8 @@ export type Condition =
   | { kind: "status_in"; in: StandardStatus[] }
   | { kind: "days_since"; anchor: Anchor; days: number }
   | { kind: "missing_info" }
+  /** Căn chưa có ảnh thật gửi được (anh-khong-chan-ban) — đọc `photosCount` của bản xem hàng; vắng số là không xét. */
+  | { kind: "missing_photo" }
   | { kind: "changed_by_other"; since: "yesterday" | "today" }
   | { kind: "property_sub_type_in"; in: string[] }
   | { kind: "lead_stage_in"; in: LeadState[] };
@@ -56,6 +58,8 @@ export type DuKienCan = {
    */
   lucVaoTrangThai?: string | null;
   missing: readonly string[];
+  /** Số ảnh thật gửi được (RESO `PhotosCount`) do máy chủ đếm; vắng khi bản trên máy từ trước hàng anh-khong-chan-ban. */
+  photosCount?: number;
   /** RESO `PropertySubType` từ danh mục; căn ngoài danh mục là `null`. */
   propertySubType: string | null;
 };

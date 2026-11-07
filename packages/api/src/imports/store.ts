@@ -23,7 +23,9 @@ import {
 } from "@quy-hang/core/import";
 import type { CatalogData } from "@quy-hang/core";
 import { canRead } from "@quy-hang/core/visibility";
+import { nhanDieuKien } from "@quy-hang/core/listing";
 import type pg from "pg";
+import { companyAliasesCuaSan } from "../value-aliases/store";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { ghiLead } from "../leads/store";
 import { applyCommand, createListing, factsOf, loadEvents, viewerOf, type Refusal as RefusalHang } from "../listings/store";
@@ -216,6 +218,8 @@ export async function writeBatch(
   if (loi.length) return { error: API_ERRORS.importPlanInvalid, details: loi };
 
   const today = homNay();
+  // Cách gõ đã duyệt của sàn (hàng 70) chuẩn hoá thẳng — cùng bộ trang xem trước nạp, để hai bên cho cùng kết quả.
+  const companyAliases = await companyAliasesCuaSan(tx);
   const laDauChu = nguoi.roles.includes("listing_agent");
   const laTruongNhom = nguoi.roles.includes("team_lead");
   const ketQua: RowResult[] = [];
@@ -231,7 +235,7 @@ export async function writeBatch(
       continue;
     }
     // Áp kế hoạch trên đúng một dòng: trùng trong file xét trên cả file (`duplicate_rows`), không trong gói.
-    const dong = applyPlan(bangTu(headers, [{ source: r.row, cells: r.cells }]), plan, { today, catalog: deps.catalog }).rows[0]!;
+    const dong = applyPlan(bangTu(headers, [{ source: r.row, cells: r.cells }]), plan, { today, catalog: deps.catalog, companyAliases }).rows[0]!;
     const oNgay = dong.cells.find((c) => c.target === "confirmedDate");
     if (oNgay && (oNgay.mark === "keep" || oNgay.mark === "fixed") && typeof oNgay.value === "string") {
       const sai = kiemNgayXacNhan(oNgay.value, today);
@@ -383,7 +387,8 @@ async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportR
     for (const to of tt === "Pending" ? ["Active", "Pending"] : [tt]) {
       const r = await lenh("status_changed", { to });
       if (laTuChoi(r)) {
-        const thieu = r.missing?.map((m) => (typeof m === "string" ? m : JSON.stringify(m))).join(", ");
+        // Nhãn của lõi («ảnh thật», «pháp lý»…), không mã thô (anh-khong-chan-ban, AC-2).
+        const thieu = r.missing?.map((m) => (typeof m === "string" ? nhanDieuKien(m) : JSON.stringify(m))).join(", ");
         ghiChu.push(`ở Chưa đủ để rao — ${thieu ? `thiếu ${thieu}` : (r.reason ?? r.error.code)}`);
         break;
       }

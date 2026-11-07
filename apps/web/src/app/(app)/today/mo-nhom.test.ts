@@ -10,19 +10,20 @@ import { TODAY_ITEMS } from "@/components/shell/second-column";
 import { moNhom } from "./mo-lead";
 import { baoChiDauChu, baoNgoaiDauChu, baoNhomTrong, docNhomThamSo, KHONG_CO_NHOM, mucDangChon, timNhom } from "./mo-nhom";
 
-const MA = ["new_lead", "price_adjustment", "call_back", "missing_info", "recent_change"] as const;
+const MA = ["new_lead", "price_adjustment", "call_back", "missing_info", "add_photos", "recent_change"] as const;
 const NHAN: Record<(typeof MA)[number], string> = {
   new_lead: "Lead mới",
   price_adjustment: "Nên gọi điều chỉnh giá",
   call_back: "Cần gọi lại",
   missing_info: "Thiếu thông tin",
+  add_photos: "Bổ sung ảnh",
   recent_change: "Mới đổi",
 };
 const hien = (...ma: string[]) => ma.map((code) => ({ nhom: { code } }));
 
 describe("mo-nhom: chỗ của nhóm (E1)", () => {
   type O = { ten: string; ma: string; dangHien: ReturnType<typeof hien> | null; mong: ReturnType<typeof timNhom> };
-  // Ma trận viết trước: năm mã × {đang tải, có việc, không việc}.
+  // Ma trận viết trước: sáu mã × {đang tải, có việc, không việc}.
   const O: O[] = MA.flatMap((ma) => [
     { ten: `${ma} đang tải`, ma, dangHien: null, mong: null },
     { ten: `${ma} có việc`, ma, dangHien: hien(ma, "zz_khac"), mong: { nhom: ma, dong: `nhom:${ma}` } },
@@ -33,13 +34,13 @@ describe("mo-nhom: chỗ của nhóm (E1)", () => {
     return JSON.stringify(co) === JSON.stringify(mong) ? null : `ô «${o.ten}»: ra ${JSON.stringify(co)}, mong ${JSON.stringify(mong)}`;
   };
 
-  it("15 ô, mỗi ô đúng kết quả mong", () => {
+  it("18 ô, mỗi ô đúng kết quả mong", () => {
     let dem = 0;
     for (const o of O) {
       assert.equal(lech(o), null);
       dem++;
     }
-    assert.equal(dem, 15);
+    assert.equal(dem, 18);
   });
 
   it("có việc: moNhom mở đúng khoá nhóm mà giữ khoá khác", () => {
@@ -72,13 +73,13 @@ describe("mo-nhom: mục cột sáng (E2)", () => {
   const loiHref = (items: readonly { label: string; href: string }[]) =>
     items.filter((m) => !/^\/today\?nhom=[a-z][a-z0-9_]{1,39}$/.test(m.href) || m.href.includes("#")).map((m) => `mục «${m.label}» trỏ ${m.href}`);
 
-  it("9 ô, mỗi ô đúng tập mục chọn", () => {
+  it("10 ô, mỗi ô đúng tập mục chọn", () => {
     let dem = 0;
     for (const [ten, qs, mong] of O) {
       assert.equal(lech(ten, qs, mong), null);
       dem++;
     }
-    assert.equal(dem, 9);
+    assert.equal(dem, 10);
   });
 
   it("mỗi mục Hôm nay của cột trỏ /today?nhom=<mã của chính nó>, không mục nào trỏ #", () => {
@@ -152,7 +153,7 @@ describe("mo-nhom: không đầu chủ (E5)", () => {
   /** Dòng báo màn Hôm nay hiện ở đầu khung: chỉ cho người không có vai Đầu chủ (page.tsx). */
   const baoTheoVai = (vai: Vai, ma: string) => (vai === "đầu chủ kiêm telesales" ? null : baoNgoaiDauChu(ma, BO_NHOM_MAC_DINH));
   const VAI: Vai[] = ["chỉ telesales", "chỉ trưởng nhóm", "đầu chủ kiêm telesales"];
-  // Ma trận viết trước: vai × {năm mã, mã lạ, sai khuôn}.
+  // Ma trận viết trước: vai × {sáu mã, mã lạ, sai khuôn}.
   const O: [Vai, string, string | null][] = VAI.flatMap((vai) => [
     ...MA.map((ma): [Vai, string, string | null] => [vai, ma, vai === "đầu chủ kiêm telesales" ? null : baoChiDauChu(NHAN[ma])]),
     [vai, "nhom_la", vai === "đầu chủ kiêm telesales" ? null : KHONG_CO_NHOM],
@@ -163,13 +164,13 @@ describe("mo-nhom: không đầu chủ (E5)", () => {
     return co === mong ? null : `vai «${vai}», mã ${ma}: ra ${JSON.stringify(co)}, mong ${JSON.stringify(mong)}`;
   };
 
-  it("21 ô, mỗi ô đúng chữ báo", () => {
+  it("24 ô, mỗi ô đúng chữ báo", () => {
     let dem = 0;
     for (const [vai, ma, mong] of O) {
       assert.equal(lech(vai, ma, mong), null);
       dem++;
     }
-    assert.equal(dem, 21);
+    assert.equal(dem, 24);
     assert.equal(baoNgoaiDauChu(null, BO_NHOM_MAC_DINH), null, "vắng tham số");
   });
 
