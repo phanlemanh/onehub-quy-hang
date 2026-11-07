@@ -5,10 +5,10 @@ slug: va-ac8-uuid-nham-so
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [db]
-status: draft
+status: approved
 design_doc: _acceptance/va-ac8-uuid-nham-so/design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-07
 ---
 
 # Acceptance Contract: va-ac8-uuid-nham-so
