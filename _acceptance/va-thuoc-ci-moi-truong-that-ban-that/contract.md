@@ -5,8 +5,12 @@ slug: va-thuoc-ci-moi-truong-that-ban-that
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, config]
-status: draft
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-07-va-thuoc-ci-moi-truong-that-ban-that-design.md
+approved_by:
+approved_at:
+veto_state: mo
+veto_opened_at: 2026-11-07T12:20:00Z
 ---
 
 # Acceptance Contract: va-thuoc-ci-moi-truong-that-ban-that
@@ -29,8 +33,9 @@ Source input: hàng `va-thuoc-ci-moi-truong-that-ban-that` (`docs/plan/lo-trinh.
   tắt tự deploy main · vùng sin1.
 
 - **AC-2** — Thước đỏ khi bước triển khai lệch lại.
-  Given năm bản sao ci.yml, mỗi bản sửa một chỗ (deploy chạy bộ kiểm cách ly; chạy bộ kiểm API; bỏ isolation khỏi needs;
-  bỏ kiểm nhanh; chuỗi kết nối ở mức job),
+  Given mười bản sao viết trước, mỗi bản sửa một chỗ — ci.yml: deploy chạy bộ kiểm cách ly; chạy bộ kiểm API; chạy db:test;
+  bỏ isolation khỏi needs; bỏ kiểm nhanh; gọi Vercel trước migration; chuỗi kết nối ở mức job; chuỗi kết nối ở bước gọi
+  Vercel — vercel.json: bật lại tự deploy main; đổi vùng khỏi sin1,
   When chạy thước trên từng bản sao,
   Then thước thoát 1 với «HỎNG <vế>» đúng vế ghim của từng ca; bản sao không sửa thì xanh.
 
@@ -38,7 +43,9 @@ Source input: hàng `va-thuoc-ci-moi-truong-that-ban-that` (`docs/plan/lo-trinh.
   Given `_acceptance/moi-truong-that/evals.yaml`,
   When bộ đọc của kit (`chungThayBoi`, `notRunConflicts`) đọc ô E3,
   Then E3 mang `status: not-run`, `superseded_by: va-deploy-csdl-tam#AC-2`, được nhận và không xung đột với báo cáo đã ký;
-  con trỏ tới AC không có, thẻ trong thiết kế dính chữ, hay hồ sơ thay chưa ký thì đỏ đúng điều kiện.
+  con trỏ tới AC không có, thẻ trong thiết kế dính chữ, hay hồ sơ thay chưa ký thì đỏ đúng điều kiện; và bộ chọn ô của làn
+  ghim lại (`machineEvalIdsSkipped` của kit) bỏ E3 — ô duy nhất trỏ executor `cach_ly_that` — nên lệnh ghim lại của chủ kho
+  không chạy bộ kiểm cách ly trên bản thật; gỡ `status: not-run` thì bộ chọn lấy lại E3.
 
 ## Coverage
 
@@ -49,7 +56,8 @@ Thước CE: ADR-0009 «Sửa đổi 06/11 — bộ kiểm cách ly chạy trên
 
 - Ngưỡng ô cơ hội «thước ĐẠT tám vế, đỏ khi deploy chạy lại bộ kiểm ghi» → AC-1, AC-2. «Lưới trước gộp của moi-truong-that
   xanh sau khi chủ kho ghim lại» → đọc job `gate` của PR sau lệnh ghim lại của chủ kho (không phải AC máy: lệnh cần biến bản
-  thật). Timebox chưa khai.
+  thật). Điều kiện ký Cổng Bằng chứng không đổi: lưới trước gộp chặn gộp tới khi moi-truong-that hết «bằng chứng cũ» trên
+  PR. Timebox đề xuất: 3 ngày kể từ khi PR mở (tới 10/11) — quá hạn mà gate còn đỏ thì giám sát mở hàng gỡ.
 
 ## Out of scope
 
@@ -60,3 +68,7 @@ Thước CE: ADR-0009 «Sửa đổi 06/11 — bộ kiểm cách ly chạy trên
 
 - Ghim lại moi-truong-that là việc của chủ kho (lệnh ở thiết kế, mục 3). Trước lệnh ấy, lưới trước gộp báo moi-truong-that
   cũ và PR của hàng chờ.
+- Hàng còn chạm `_acceptance/config.yaml` một chỗ: lệnh `suc_khoe_xem_truoc` thêm `--yes` vì Vercel CLI 65 đòi xác nhận
+  (lượt ghim lại của chủ kho 07/11 đỏ ở E8 vì thiếu cờ này).
+- Chủ kho duyệt 07/11 «Áp gói khuyên» cho ba mục phản biện của moi-truong-that: dòng «Sửa đổi 07/11» ở Notes của hợp đồng ấy
+  (chữ AC giữ nguyên), một dòng revisit trong sổ của nó, AC-8 đo trên bản thật.

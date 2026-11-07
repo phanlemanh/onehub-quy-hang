@@ -14,12 +14,14 @@ const THUOC = join(GOC, "_acceptance/moi-truong-that/thu/kiem-ci.mjs");
 const CI = readFileSync(join(GOC, ".github/workflows/ci.yml"), "utf8");
 const loi = [];
 const dat = (ok, ten) => (console.log(`${ok ? "ĐẠT" : "HỎNG"} ${ten}`), ok || loi.push(ten));
-const chayThuoc = (ci) => {
+const VERCEL = readFileSync(join(GOC, "apps/web/vercel.json"), "utf8");
+const chayThuoc = (ci, vercel = VERCEL) => {
   const d = mkdtempSync(join(tmpdir(), "thuoc-ci-"));
   try {
     const tep = join(d, "ci.yml");
     writeFileSync(tep, ci);
-    const r = spawnSync(process.execPath, [THUOC, "--ci", tep], { encoding: "utf8" });
+    writeFileSync(join(d, "vercel.json"), vercel);
+    const r = spawnSync(process.execPath, [THUOC, "--ci", tep, "--vercel", join(d, "vercel.json")], { encoding: "utf8" });
     return { exit: r.status, out: r.stdout + r.stderr };
   } finally {
     rmSync(d, { recursive: true, force: true });
@@ -52,23 +54,44 @@ if (process.argv.includes("--thuoc")) {
     ["chuỗi kết nối bản thật đặt ở mức job",
       sua("    environment: production\n", "    environment: production\n    env:\n      DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}\n"),
       "bí mật ở environment production; chuỗi kết nối bản thật chỉ ở bước migrate và bước kiểm nhanh"],
+    ["gọi Vercel trước migration",
+      (s) => {
+        const hook = "      - name: Deploy bản main lên Vercel\n        env:\n          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}\n        run: curl -fsS -X POST \"$HOOK\" > /dev/null\n";
+        const mig = "      - name: Áp migration lên bản thật\n";
+        if (!s.includes(hook) || !s.includes(mig)) throw new Error("ca phá thử lệch ci.yml: không thấy bước deploy hook hay bước migration");
+        return s.replace(hook, "").replace(mig, hook + mig);
+      },
+      "thứ tự: migration → kiểm nhanh chỉ đọc → deploy hook"],
+    ["chuỗi kết nối bản thật ở bước gọi Vercel",
+      sua("          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}\n", "          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}\n          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}\n"),
+      "bí mật ở environment production; chuỗi kết nối bản thật chỉ ở bước migrate và bước kiểm nhanh"],
+    ["deploy chạy db:test trên bản thật",
+      sua("      - name: Deploy bản main lên Vercel", "      - run: npm run db:test\n      - name: Deploy bản main lên Vercel"),
+      "không chạy bộ kiểm ghi nào (cách ly, API) trên cơ sở dữ liệu thật"],
+    ["vercel.json bật lại tự deploy main",
+      { vercel: (v) => { const j = JSON.parse(v); j.git.deploymentEnabled.main = true; return JSON.stringify(j); } },
+      "vercel.json tắt tự deploy main"],
+    ["vercel.json đổi vùng khỏi sin1",
+      { vercel: (v) => { const j = JSON.parse(v); j.regions = ["iad1"]; return JSON.stringify(j); } },
+      "vercel.json ghim vùng sin1"],
   ];
   let so = 0;
   for (const [ten, f, ve] of MA_TRAN) {
-    let ci;
+    let ci = CI, vercel = VERCEL;
     try {
-      ci = f(CI);
+      if (typeof f === "function") ci = f(CI);
+      else vercel = f.vercel(VERCEL);
     } catch (e) {
       dat(false, `${ten}: ${e.message}`);
       continue;
     }
-    const r = chayThuoc(ci);
+    const r = chayThuoc(ci, vercel);
     dat(r.exit === 1 && r.out.includes(`HỎNG ${ve}`), `phá thử «${ten}» → thước đỏ ở vế «${ve}»${r.exit === 1 ? "" : " (thước vẫn xanh)"}`);
     so++;
   }
-  dat(so === 5, `ma trận phá thử chạy đủ 5/5 ca (chạy ${so})`);
+  dat(so === 10 && MA_TRAN.length === 10, `ma trận phá thử chạy đủ 10/10 ca (chạy ${so})`);
   const lanh = chayThuoc(CI);
-  dat(lanh.exit === 0, "đối chứng dương: bản sao không sửa qua cùng đường --ci thì thước xanh");
+  dat(lanh.exit === 0, "đối chứng dương: bản sao ci.yml và vercel.json không sửa qua cùng đường --ci, --vercel thì thước xanh");
 } else if (process.argv.includes("--thay")) {
   const KIT = process.env.CLAUDE_PLUGIN_ROOT || execFileSync(process.execPath, [join(GOC, "packages/ui-lint/tim-kit.mjs")], { encoding: "utf8" }).trim();
   const core = createRequire(import.meta.url)(join(KIT, "lib/evidence-core.cjs"));
@@ -106,6 +129,15 @@ if (process.argv.includes("--thuoc")) {
     rmSync(g, { recursive: true, force: true });
   }
   const doc = (p) => readFileSync(join(GOC, p), "utf8");
+  // Làn ghim lại chọn ô bằng core.isRepinMachineEval / core.machineEvalIdsSkipped (repin-lane.mjs); E3 phải bị bỏ, và
+  // không ô máy nào khác trỏ executor cach_ly_that (bộ kiểm ghi) — đối chứng dương: gỡ «status: not-run» thì E3 bị chọn.
+  const ev = doc("_acceptance/moi-truong-that/evals.yaml");
+  const boQua = core.machineEvalIdsSkipped(ev) ?? [];
+  const khoiE3 = ev.slice(ev.indexOf("  - id: E3"), ev.indexOf("  - id: E4"));
+  const conTroCachLy = (ev.match(/cmd: config:executors\.script\.cach_ly_that/g) ?? []).length;
+  dat(boQua.includes("E3") && khoiE3.includes("cach_ly_that") && conTroCachLy === 1, `làn ghim lại bỏ E3 — ô duy nhất trỏ cach_ly_that (bỏ qua: ${JSON.stringify(boQua)})`);
+  const boQuaGo = core.machineEvalIdsSkipped(ev.replace(khoiE3, khoiE3.replace("    status: not-run\n", ""))) ?? [];
+  dat(!boQuaGo.includes("E3"), `đối chứng dương: gỡ «status: not-run» thì làn chọn E3 (bỏ qua: ${JSON.stringify(boQuaGo)})`);
   const r = core.notRunConflicts(doc("_acceptance/moi-truong-that/evals.yaml"), doc("_acceptance/moi-truong-that/evidence-report.md"), { root: GOC, slug: "moi-truong-that" });
   dat(
     r.xungDot.length === 0 && r.thayBoi.some((t) => t.id === "E3" && t.thay === "va-deploy-csdl-tam" && t.ac === "AC-2"),
