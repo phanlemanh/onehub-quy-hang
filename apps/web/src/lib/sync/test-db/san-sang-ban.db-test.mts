@@ -155,12 +155,12 @@ test("số ảnh tới máy qua đồng bộ (anh-khong-chan-ban E6c)", async ()
     .filter((x) => x.cans.length > 0).map((x) => x.nhom.code);
   assert.equal(tren().photosCount, 0, "kéo về: photosCount 0");
   assert.deepEqual(nhomCua(), ["add_photos"], "vào nhóm Bổ sung ảnh");
-  assert.match(chuCuaO(ghepDanhMuc(tren(), idx), "completeness"), /^\d\/6 · thiếu ảnh thật$/, "Bảng hàng: dấu thiếu ảnh");
+  assert.equal(chuCuaO(ghepDanhMuc(tren(), idx), "completeness"), "5/6 · thiếu ảnh thật", "Bảng hàng: 5/6 kèm dấu thiếu ảnh");
   await H.themAnhThat(id);
   await bd.thuNgay();
   assert.equal(tren().photosCount, 1, "kéo lại: photosCount 1");
   assert.deepEqual(nhomCua(), [], "rời nhóm Bổ sung ảnh");
-  assert.doesNotMatch(chuCuaO(ghepDanhMuc(tren(), idx), "completeness"), /thiếu ảnh/, "Bảng hàng: hết dấu");
+  assert.equal(chuCuaO(ghepDanhMuc(tren(), idx), "completeness"), "6/6", "Bảng hàng: 6/6, hết dấu thiếu ảnh");
   await H.appPool.query(
     `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
      select gen_random_uuid(), company_id, building_name, unit_number, 'internal', 'image/jpeg', 1000, 10, 10, 'bai-kiem' from listings where id = $1`,

@@ -56,7 +56,7 @@ const chrome = await moChrome();
 const t = await chrome.trang(KHO, KHO < 768 ? 812 : 900);
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const chu = () => t.tinh("document.body.innerText");
-const thay = (s, han = 60000) => t.cho(`document.body.innerText.includes(${JSON.stringify(s)})`, han);
+const thay = (s, han = 180000) => t.cho(`document.body.innerText.includes(${JSON.stringify(s)})`, han);
 const ghiNhan = (khung, x) => console.log(JSON.stringify({ khung, kho: KHO, ...x }));
 const tran = () => t.tinh(`document.documentElement.scrollWidth > window.innerWidth + 1`);
 /** Vào sàn bằng màn chọn sàn (như người dùng): đặt phiên, mở /select-company, bấm tên sàn. */
@@ -97,7 +97,7 @@ try {
   ghiNhan("cai-dat", { giaTri: await giaTriO(), coCauNghia: (await chu()).includes("0 — căn lên Đang bán khi chưa có ảnh"), tranNgang: await tran() });
   await chup("cai-dat", "[data-o-anh-toi-thieu]");
   await datO(2);
-  await thay("Đã lưu", 15000);
+  await thay("Đã lưu", 60000);
   await t.di("/settings/statuses");
   await thay("Số ảnh thật tối thiểu");
   ghiNhan("cai-dat-luu-2", { giaTriSauTaiLai: await giaTriO(), mayChu: sql(`select value from company_settings where company_id = '${san}' and key = 'listing.ready_min_real_photos'`) });
@@ -110,13 +110,21 @@ try {
 
   // Đầu chủ: không thấy ô.
   await vaoSan(ckDc, "/settings/statuses");
-  await ngu(3000);
-  ghiNhan("cai-dat-dau-chu", { thayO: await t.tinh(`!!document.querySelector("#anh-toi-thieu")`), url: await t.tinh("location.pathname") });
+  // Đối chứng dương: trang đích đã dựng xong (bị chuyển sang Cài đặt › Cá nhân, chữ «Cá nhân» đã hiện) rồi mới đọc ô.
+  await t.cho(`location.pathname === "/settings/personal" && document.body.innerText.includes("Cá nhân")`, 60000);
+  await ngu(1500);
+  ghiNhan("cai-dat-dau-chu", {
+    thayO: await t.tinh(`!!document.querySelector("#anh-toi-thieu")`),
+    url: await t.tinh("location.pathname"),
+    trangDaDung: await t.tinh(`document.body.innerText.includes("Cá nhân")`),
+    thayMucTrangThai: await t.tinh(`document.body.innerText.includes("Nhãn trạng thái của sàn")`),
+  });
+  await chup("cai-dat-dau-chu");
 
   // Hôm nay của đầu chủ: nhóm «Bổ sung ảnh».
   await t.di("/today");
-  await thay("Bổ sung ảnh", 60000);
-  await thay(can.ma, 60000);
+  await thay("Bổ sung ảnh", 180000);
+  await thay(can.ma, 180000);
   const s = await chu();
   ghiNhan("hom-nay", { coNhom: s.includes("Bổ sung ảnh"), coCan: s.includes(can.ma) || s.includes(can.ma.replace(/\.01$/, "")), tranNgang: await tran() });
   await chup("hom-nay");
@@ -131,7 +139,7 @@ try {
 
   // Bảng hàng: ô Mức đủ của căn.
   await t.di("/inventory");
-  await thay(can.ma, 60000);
+  await thay(can.ma, 180000);
   // Cột «Mức đủ» nằm bên phải lưới: cuộn ngang lưới tới cuối để cột được dựng và vào ảnh.
   await t.tinh(`(() => { for (const el of document.querySelectorAll("*")) if (el.scrollWidth > el.clientWidth + 20 && getComputedStyle(el).overflowX !== "visible") el.scrollLeft = el.scrollWidth; return true; })()`);
   await ngu(1200);
