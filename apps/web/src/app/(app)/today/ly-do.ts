@@ -41,7 +41,9 @@ export function canHomNay(l: ListingView, idx: ChiMucDanhMuc): CanHomNay {
     lastStatusChange: l.lastStatusChange ?? null,
     // Lúc vào trạng thái hiện tại (hàng 46) khi bản xem hàng mang nó; vắng thì lõi đọc lần đổi gần nhất như cũ.
     ...(vaoTrangThai(l) !== undefined && { lucVaoTrangThai: vaoTrangThai(l) }),
+    // «Thiếu thông tin» đọc năm mục mô tả; ảnh là nhóm riêng «Bổ sung ảnh» qua photosCount (anh-khong-chan-ban).
     missing: completeness(l).missing,
+    ...(l.photosCount !== undefined && { photosCount: l.photosCount }),
     propertySubType: d.propertySubType ?? null,
   };
 }

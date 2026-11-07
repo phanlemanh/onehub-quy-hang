@@ -43,7 +43,7 @@ test("settings/queue: đọc bộ của sàn", async () => {
   const a = await sanMoi({ dc: { vai: ["listing_agent"] } });
   const b = await sanMoi({ dc: { vai: ["listing_agent"] } });
   const truoc = await docBo(a, "dc");
-  assert.deepEqual([truoc.source, truoc.groups.length, truoc.errors], ["default", 5, []]);
+  assert.deepEqual([truoc.source, truoc.groups.length, truoc.errors], ["default", 6, []]);
   assert.deepEqual(truoc.groups, boMacDinh());
 
   const bo = boCuaSan();

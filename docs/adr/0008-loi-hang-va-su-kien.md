@@ -57,3 +57,10 @@ lần nhập ghi được; lệnh sửa thường từ chối nó, và mọi l�
 
 - Màn bảng hàng, hồ sơ căn, Hôm nay, màn cuộc gọi đọc `GET /api/v1/listings` và gửi lệnh qua một đường.
 - Đổi luật chuyển, độ tươi hay mức đủ là sửa lõi rồi gấp lại bảng hàng từ sự kiện — sự kiện không bao giờ đổi.
+
+## Ghi chú hàng `anh-khong-chan-ban` (07/11)
+
+Hỏi-1 và đoạn «Hàng 23» ở trên đổi: số ảnh thật tối thiểu (`listing.ready_min_real_photos`) mặc định **0**, khoảng 0–20
+(chủ kho 06/11, Tham chiếu §12). Luật trong `missingFor` không đổi — thiếu «ảnh thật» khi số ảnh dưới số tối thiểu — nên sàn
+đặt 1–20 thì chặn như hàng 23. Bản xem hàng mang `photosCount`; mức đủ thêm mục ảnh khi biết số ảnh, danh sách hỏi giữ năm
+mục.

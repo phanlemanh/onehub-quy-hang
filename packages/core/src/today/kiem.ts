@@ -14,6 +14,7 @@ const KHOA_DIEU_KIEN: Record<string, string[]> = {
   status_in: ["kind", "in"],
   days_since: ["kind", "anchor", "days"],
   missing_info: ["kind"],
+  missing_photo: ["kind"],
   changed_by_other: ["kind", "since"],
   property_sub_type_in: ["kind", "in"],
   lead_stage_in: ["kind", "in"],
