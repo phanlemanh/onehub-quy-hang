@@ -5,7 +5,7 @@ slug: chuan-hoa-moi-cua
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, db]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-07-chuan-hoa-moi-cua-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07T04:20:00Z
