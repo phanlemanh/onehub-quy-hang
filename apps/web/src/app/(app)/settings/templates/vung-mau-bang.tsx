@@ -53,15 +53,15 @@ export function BangMauBang({ tt, lamMoi, baoDau = null }: { tt: TrangThaiMauSan
   const ds = tt.giaTri;
 
   const mo = (m: MauBang | null) => {
-    setSua(m ?? { id: crypto.randomUUID(), ten: "", cot: [] });
-    setTen(m?.ten ?? "");
-    setCot(m ? [...m.cot] : []);
+    setSua(m ?? { id: crypto.randomUUID(), name: "", columns: [] });
+    setTen(m?.name ?? "");
+    setCot(m ? [...m.columns] : []);
     setLoi("");
   };
   const luu = async () => {
     if (!sua) return;
     setDangLuu(true);
-    const kq = await ghi(thanPutBang(ds, { id: sua.id, ten, cot }));
+    const kq = await ghi(thanPutBang(ds, { id: sua.id, name: ten, columns: cot }));
     setDangLuu(false);
     if (kq.ok) {
       setSua(null);
@@ -97,9 +97,9 @@ export function BangMauBang({ tt, lamMoi, baoDau = null }: { tt: TrangThaiMauSan
             <TableBody>
               {ds.map((m) => (
                 <TableRow key={m.id}>
-                  <TableCell className="font-medium">{m.ten}</TableCell>
+                  <TableCell className="font-medium">{m.name}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {CHU_MAU.soCot(m.cot.length)} · {m.cot.map(nhanCot).join(" · ")}
+                    {CHU_MAU.soCot(m.columns.length)} · {m.columns.map(nhanCot).join(" · ")}
                   </TableCell>
                   <TableCell className="text-end">
                     <Button variant="ghost" size="sm" onClick={() => mo(m)}>
@@ -119,7 +119,7 @@ export function BangMauBang({ tt, lamMoi, baoDau = null }: { tt: TrangThaiMauSan
       <Dialog open={sua !== null} onOpenChange={(m) => !m && setSua(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{sua?.ten ? `${CHU_MAU.sua} «${sua.ten}»` : CHU_MAU.them}</DialogTitle>
+            <DialogTitle>{sua?.name ? `${CHU_MAU.sua} «${sua.name}»` : CHU_MAU.them}</DialogTitle>
           </DialogHeader>
           <Field>
             <FieldLabel htmlFor="ten-mau">{CHU_MAU.ten}</FieldLabel>
@@ -170,7 +170,7 @@ export function BangMauBang({ tt, lamMoi, baoDau = null }: { tt: TrangThaiMauSan
       <AlertDialog open={xoa !== null} onOpenChange={(m) => !m && setXoa(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{xoa ? CHU_MAU.xoaHoi(xoa.ten) : ""}</AlertDialogTitle>
+            <AlertDialogTitle>{xoa ? CHU_MAU.xoaHoi(xoa.name) : ""}</AlertDialogTitle>
             <AlertDialogDescription>{CHU_MAU.xoaMoTa}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

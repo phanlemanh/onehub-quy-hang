@@ -59,8 +59,8 @@ export function soanTin(o: { ban: readonly CanRaNgoai[]; nguoiNhan: NguoiNhan; t
     return `${i + 1}. ${[tenCanRa(b), thongSoRa(b), gia].filter(Boolean).join(" — ")}`;
   });
   // Mẫu bài Zalo của sàn (#27, hàng mau-bang-hang-va-bai): lời mở đầu sau lời chào, lời kết sau dòng link; lời rỗng bị bỏ.
-  const dau = loiSach(o.mauZalo?.dau);
-  const cuoi = loiSach(o.mauZalo?.cuoi);
+  const dau = loiSach(o.mauZalo?.opening);
+  const cuoi = loiSach(o.mauZalo?.closing);
   return [chao, dau, `Em gửi ${o.ban.length} căn đang bán:`, ...dong, `Xem ảnh và chi tiết: ${CHO_LINK}`, cuoi].filter((s) => s !== "").join("\n");
 }
 

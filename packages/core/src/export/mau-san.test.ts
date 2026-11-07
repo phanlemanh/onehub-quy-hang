@@ -9,7 +9,7 @@ import { MAU_XUAT, xuatBang } from "./index";
 import { COT_MAU_DUOC, docMauBai, docMauBang, kiemMauBai, kiemMauBang, TRAN_MAU, type MauBang } from "./mau-san";
 
 const ID = (i: number) => `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`;
-const mau = (i: number, ten: string, cot: string[]): MauBang => ({ id: ID(i), ten, cot: cot as CotBangHang[] });
+const mau = (i: number, ten: string, cot: string[]): MauBang => ({ id: ID(i), name: ten, columns: cot as CotBangHang[] });
 const COT_NOI_BO = (Object.keys(COT_BANG_HANG) as CotBangHang[]).filter((k) => COT_BANG_HANG[k].khoa === null);
 const ba = ["unitNumber", "listPrice", "livingArea"];
 
@@ -21,16 +21,16 @@ test("mẫu bảng: cột chọn được đọc từ COT_BANG_HANG", () => {
 test("mẫu bảng: bảng luật khuôn", () => {
   // [ca, giá trị, phần khoá sai trong lý do]
   const BANG: [string, unknown, string][] = [
-    ["tên trống", [mau(1, "  ", ba)], "export.templates[0].ten"],
-    ["tên 61 ký tự", [mau(1, "a".repeat(61), ba)], "export.templates[0].ten"],
-    ["trùng tên", [mau(1, "[Tên] A", ba), mau(2, " [tên] a ", ba)], "export.templates[1].ten"],
-    ["không cột", [mau(1, "A", [])], "export.templates[0].cot"],
-    ["16 cột", [mau(1, "A", [...COT_MAU_DUOC, ...COT_MAU_DUOC].slice(0, 16))], "export.templates[0].cot"],
-    ["cột trùng", [mau(1, "A", ["listPrice", "listPrice"])], "export.templates[0].cot"],
-    ["cột lạ", [mau(1, "A", ["foo"])], "export.templates[0].cot"],
-    ...COT_NOI_BO.map((k): [string, unknown, string] => [`cột nội bộ ${k}`, [mau(1, "A", ["listPrice", k])], "export.templates[0].cot"]),
+    ["tên trống", [mau(1, "  ", ba)], "export.templates[0].name"],
+    ["tên 61 ký tự", [mau(1, "a".repeat(61), ba)], "export.templates[0].name"],
+    ["trùng tên", [mau(1, "[Tên] A", ba), mau(2, " [tên] a ", ba)], "export.templates[1].name"],
+    ["không cột", [mau(1, "A", [])], "export.templates[0].columns"],
+    ["16 cột", [mau(1, "A", [...COT_MAU_DUOC, ...COT_MAU_DUOC].slice(0, 16))], "export.templates[0].columns"],
+    ["cột trùng", [mau(1, "A", ["listPrice", "listPrice"])], "export.templates[0].columns"],
+    ["cột lạ", [mau(1, "A", ["foo"])], "export.templates[0].columns"],
+    ...COT_NOI_BO.map((k): [string, unknown, string] => [`cột nội bộ ${k}`, [mau(1, "A", ["listPrice", k])], "export.templates[0].columns"]),
     ["21 mẫu", Array.from({ length: 21 }, (_, i) => mau(i, `M${i}`, ba)), "export.templates"],
-    ["id không phải uuid", [{ id: "x", ten: "A", cot: ba }], "export.templates[0].id"],
+    ["id không phải uuid", [{ id: "x", name: "A", columns: ba }], "export.templates[0].id"],
     ["không phải mảng", { a: 1 }, "export.templates"],
   ];
   let dem = 0;
@@ -58,10 +58,10 @@ test("mẫu bảng: bảng luật khuôn", () => {
 
 test("mẫu bài: bảng luật khuôn", () => {
   const BANG: [string, unknown, string][] = [
-    ["501 ký tự", { zalo: { dau: "a".repeat(501), cuoi: "" } }, "share.post_templates.zalo.dau"],
-    ["kênh lạ", { tiktok: { dau: "a", cuoi: "" } }, "share.post_templates.tiktok"],
+    ["501 ký tự", { zalo: { opening: "a".repeat(501), closing: "" } }, "share.post_templates.zalo.opening"],
+    ["kênh lạ", { tiktok: { opening: "a", closing: "" } }, "share.post_templates.tiktok"],
     ["không phải đối tượng", [1], "share.post_templates"],
-    ["thiếu cuoi", { facebook: { dau: "a" } }, "share.post_templates.facebook.cuoi"],
+    ["thiếu closing", { facebook: { opening: "a" } }, "share.post_templates.facebook.closing"],
   ];
   let dem = 0;
   for (const [ca, v, khoa] of BANG) {
@@ -71,7 +71,7 @@ test("mẫu bài: bảng luật khuôn", () => {
     dem++;
   }
   assert.equal(dem, BANG.length);
-  assert.equal(kiemMauBai({ zalo: { dau: "a".repeat(500), cuoi: "" } }).ok, true, "đối chứng: 500 ký tự đúng biên");
+  assert.equal(kiemMauBai({ zalo: { opening: "a".repeat(500), closing: "" } }).ok, true, "đối chứng: 500 ký tự đúng biên");
   assert.equal(kiemMauBai({}).ok, true, "đối chứng: không kênh nào");
 });
 
@@ -80,8 +80,8 @@ test("đọc khoan dung: dòng hỏng bị lọc, lỗi nêu khoá", () => {
   assert.deepEqual(ds, [mau(1, "A", ["listPrice"])], "chỉ còn cột ra ngoài được, mẫu không còn cột bị bỏ");
   assert.ok(loi.length >= 3 && loi.every((l) => l.startsWith("export.templates")), `lỗi: ${loi.join(" | ")}`);
   assert.deepEqual(docMauBang(null), { ds: [], loi: [] }, "chưa đặt thì rỗng, không lỗi");
-  const bai = docMauBai({ zalo: { dau: "D", cuoi: "C" }, tiktok: { dau: "x", cuoi: "" } });
-  assert.deepEqual(bai.mau, { zalo: { dau: "D", cuoi: "C" } });
+  const bai = docMauBai({ zalo: { opening: "D", closing: "C" }, tiktok: { opening: "x", closing: "" } });
+  assert.deepEqual(bai.mau, { zalo: { opening: "D", closing: "C" } });
   assert.ok(bai.loi.some((l) => l.startsWith("share.post_templates.tiktok")));
 });
 
@@ -107,14 +107,14 @@ test("bài theo mẫu: hai kênh", () => {
   const goc = { zalo: baiZalo(bang), facebook: baiFacebook(bang, tuy.tenSan) };
   const khoiFb = goc.facebook.split("\n\n").slice(1).join("\n\n");
   // [ca, lời, bài Zalo mong đợi, bài Facebook mong đợi]
-  const BANG: [string, { dau: string; cuoi: string } | undefined, string, string][] = [
-    ["có D và C", { dau: "Chào nhóm", cuoi: "Liên hệ em" }, `Chào nhóm\n${goc.zalo}\nLiên hệ em`, `[Tên sàn]\n\nChào nhóm\n\n${khoiFb}\n\nLiên hệ em`],
-    ["chỉ D", { dau: "Chào nhóm", cuoi: "" }, `Chào nhóm\n${goc.zalo}`, `[Tên sàn]\n\nChào nhóm\n\n${khoiFb}`],
-    ["chỉ C", { dau: "", cuoi: "Liên hệ em" }, `${goc.zalo}\nLiên hệ em`, `${goc.facebook}\n\nLiên hệ em`],
+  const BANG: [string, { opening: string; closing: string } | undefined, string, string][] = [
+    ["có D và C", { opening: "Chào nhóm", closing: "Liên hệ em" }, `Chào nhóm\n${goc.zalo}\nLiên hệ em`, `[Tên sàn]\n\nChào nhóm\n\n${khoiFb}\n\nLiên hệ em`],
+    ["chỉ D", { opening: "Chào nhóm", closing: "" }, `Chào nhóm\n${goc.zalo}`, `[Tên sàn]\n\nChào nhóm\n\n${khoiFb}`],
+    ["chỉ C", { opening: "", closing: "Liên hệ em" }, `${goc.zalo}\nLiên hệ em`, `${goc.facebook}\n\nLiên hệ em`],
     ["không mẫu", undefined, goc.zalo, goc.facebook],
-    ["D có biểu tượng", { dau: "Chào 🎉 nhóm", cuoi: "" }, `Chào nhóm\n${goc.zalo}`, `[Tên sàn]\n\nChào nhóm\n\n${khoiFb}`],
-    ["C có biểu tượng", { dau: "", cuoi: "Liên hệ 🏠 em" }, `${goc.zalo}\nLiên hệ em`, `${goc.facebook}\n\nLiên hệ em`],
-    ["D chỉ khoảng trắng", { dau: "   ", cuoi: "" }, goc.zalo, goc.facebook],
+    ["D có biểu tượng", { opening: "Chào 🎉 nhóm", closing: "" }, `Chào nhóm\n${goc.zalo}`, `[Tên sàn]\n\nChào nhóm\n\n${khoiFb}`],
+    ["C có biểu tượng", { opening: "", closing: "Liên hệ 🏠 em" }, `${goc.zalo}\nLiên hệ em`, `${goc.facebook}\n\nLiên hệ em`],
+    ["D chỉ khoảng trắng", { opening: "   ", closing: "" }, goc.zalo, goc.facebook],
   ];
   let dem = 0;
   for (const [ca, loi, zalo, facebook] of BANG) {
@@ -127,6 +127,6 @@ test("bài theo mẫu: hai kênh", () => {
   }
   assert.equal(dem, BANG.length * 2);
   // Mẫu của kênh này không lọt sang kênh kia.
-  const cheo = xuatBang([canMoi()], { ...tuy, mau: "post_zalo", mauBai: { facebook: { dau: "FB", cuoi: "" } } });
+  const cheo = xuatBang([canMoi()], { ...tuy, mau: "post_zalo", mauBai: { facebook: { opening: "FB", closing: "" } } });
   assert.ok(!cheo.bai!.includes("FB"), "lời Facebook lọt vào bài Zalo");
 });

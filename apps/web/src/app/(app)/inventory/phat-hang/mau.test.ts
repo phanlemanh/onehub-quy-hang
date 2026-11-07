@@ -18,10 +18,10 @@ import { chuDeVe } from "./ve-anh";
 const ID = (i: number) => `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`;
 const BA: CotBangHang[] = ["unitNumber", "listPrice", "livingArea"];
 const MAU: MauBang[] = [
-  { id: ID(1), ten: "[Tên] gửi đội", cot: BA },
-  { id: ID(2), ten: "[Tên] gửi khách", cot: ["livingArea"] },
+  { id: ID(1), name: "[Tên] gửi đội", columns: BA },
+  { id: ID(2), name: "[Tên] gửi khách", columns: ["livingArea"] },
 ];
-const LOI = { dau: "Chào nhóm", cuoi: "Gọi em" };
+const LOI = { opening: "Chào nhóm", closing: "Gọi em" };
 const SAN: MauXuatSan = { mauBang: MAU, mauBai: { zalo: LOI, facebook: LOI } };
 const mo = (mauSan?: MauXuatSan): MoXuat => ({ dong: [dongMoi(canMoi())], cot: MOI_COT, today: TODAY, tenSan: "[Tên sàn]", tenNguoiGui: "", mauSan });
 const ban = (m: MoXuat, mauSan: MauXuatSan, cotTheo: string | null, mau: MauXuat, nguoiNhan: "nhom_moi_gioi" | "khach_rieng" = "nhom_moi_gioi") =>
@@ -68,7 +68,7 @@ test("năm kiểu xuất theo mẫu", async () => {
     } else {
       const mong = kieu === "post_zalo" ? bocBai(baiZalo(b), LOI) : baiFacebook(b, "[Tên sàn]", LOI);
       assert.equal(b.bai, mong, `${kieu}: bài không mang lời của mẫu`);
-      assert.ok(b.bai!.includes(LOI.dau) && b.bai!.includes(LOI.cuoi));
+      assert.ok(b.bai!.includes(LOI.opening) && b.bai!.includes(LOI.closing));
     }
     dem++;
   }
@@ -87,7 +87,7 @@ test("hộp đang mở giữ bộ mẫu lúc mở", async () => {
   const luc = await moHopVoiMau(coDinh, mayChu);
   assert.deepEqual(goi, ["/api/v1/company/templates/export", "/api/v1/company/templates/posts"], "mở hộp phải đọc mẫu đúng một lần");
   // Quản trị đổi mẫu khi hộp đang mở: bản hộp đang giữ không đổi theo.
-  bo = [{ ...MAU[0]!, cot: ["livingArea"] }];
+  bo = [{ ...MAU[0]!, columns: ["livingArea"] }];
   assert.deepEqual(ban(luc, luc.mauSan, ID(1), "xlsx").cot, ["Mã căn", "Giá", "Diện tích"], "hộp đang mở đổi theo mẫu mới");
   assert.equal(goi.length, 2, "hộp đang mở lại gọi đọc mẫu");
   const moLai = await moHopVoiMau(coDinh, mayChu);

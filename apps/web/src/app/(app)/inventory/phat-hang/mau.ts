@@ -11,10 +11,10 @@ export type MauXuatSan = { mauBang: MauBang[] | null; mauBai: MauBai };
 
 /** Lựa chọn của ô «Cột theo»: `null` là góc nhìn đang mở, rồi các mẫu theo thứ tự của sàn. */
 export function luaChonCotTheo(mau: MauXuatSan): { id: string | null; nhan: string }[] {
-  return [{ id: null, nhan: GOC_NHIN }, ...(mau.mauBang ?? []).map((m) => ({ id: m.id, nhan: m.ten }))];
+  return [{ id: null, nhan: GOC_NHIN }, ...(mau.mauBang ?? []).map((m) => ({ id: m.id, nhan: m.name }))];
 }
 
 /** Cột của mẫu đã chọn; `undefined` = theo góc nhìn (không chọn, hay id không còn). */
 export function cotCuaMau(mau: MauXuatSan, chon: string | null): readonly CotBangHang[] | undefined {
-  return chon === null ? undefined : mau.mauBang?.find((m) => m.id === chon)?.cot;
+  return chon === null ? undefined : mau.mauBang?.find((m) => m.id === chon)?.columns;
 }
