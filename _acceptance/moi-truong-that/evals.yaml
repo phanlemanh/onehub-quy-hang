@@ -55,7 +55,7 @@ evals:
   - id: E8
     criterion: AC-8
     executor: script
-    cmd: config:executors.script.suc_khoe_xem_truoc
+    cmd: config:executors.script.suc_khoe_that
     expected: "exit 0; «ĐẠT GET /api/v1/health trả 200» — in JSON {\"ok\":true,…}; APP_URL là bản thật (tên miền chính) — sửa đổi 07/11: bản xem trước không dựng được API khi thiếu OWNER_PHONE_KEY"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
