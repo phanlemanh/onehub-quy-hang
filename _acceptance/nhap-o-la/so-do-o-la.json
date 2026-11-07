@@ -1,0 +1,25 @@
+{
+  "ghi_chu": "Số đo ô lạ (hàng 69): đề xuất ghi sẵn do tác tử context sạch lập trên đúng gói và lời nhắc của mã — MÔ PHỎNG, không qua Claude API. Tính bằng _acceptance/nhap-o-la/thu/lap-de-xuat.ts --so-do.",
+  "mo_hinh": {
+    "claude-opus-5-5": {
+      "phu": 1,
+      "dung": 1,
+      "bia": 0,
+      "tuGhi": 0,
+      "roNguon": 0,
+      "coDapAn": 24,
+      "deXuat": 24,
+      "dungSo": 24
+    },
+    "claude-haiku-5-5": {
+      "phu": 0.9583,
+      "dung": 1,
+      "bia": 0,
+      "tuGhi": 0,
+      "roNguon": 0,
+      "coDapAn": 24,
+      "deXuat": 23,
+      "dungSo": 23
+    }
+  }
+}

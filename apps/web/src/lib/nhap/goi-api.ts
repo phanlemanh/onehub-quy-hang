@@ -160,3 +160,9 @@ export async function batTatAi(f: Fetch, bat: boolean): Promise<true | LoiGoi> {
     return { loi: LOI_MANG };
   }
 }
+
+// ── Ô lạ còn lại (hàng 69) ──────────────────────────────────────────────────────────────────────────────────────────
+
+/** Hỏi đường ô lạ với gói của lõi (chỉ ô lạ của cột được mở). Lỗi mạng hay máy chủ → `LoiGoi`, màn sửa tay như không AI. */
+export const deXuatOLa = (f: Fetch, goiOLa: import("@quy-hang/core/import").GoiOLa) =>
+  goi<import("./o-la").KetQuaGoiOLa>(f, "/api/v1/imports/ai/cells", json("POST", goiOLa));

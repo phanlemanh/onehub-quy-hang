@@ -1,0 +1,24 @@
+# E16 trang khach + byte 2026-11-06T15:45:04Z
+GET /s/6CA79Zbb81dN (khong cookie) HTTP=200 len=22567
+ma_bia_gui_duoc 90395cc9-a184-4bf2-b890-6c007a45ac09 trong trang:        4 lan
+gui_duoc 90395cc9-a184-4bf2-b890-6c007a45ac09 4e0d4e98-5cac-44a2-91e1-3918cb694cc5 abe27663-79c6-48ef-a8fd-0e59c13bc08f trong trang:        0
+ma_noi_bo 26a841db-01f0-484b-88c1-d22c8b0779e4 c1a2a740-042a-4064-809b-3790efd5f1ce trong trang:        0
+uuid trong trang:
+   4 90395cc9-a184-4bf2-b890-6c007a45ac09
+   1 da39b7d6-865d-4542-8c98-a5f349e27fd4
+== byte anh Noi bo bang phien dau-khach (2 ma Noi bo x thumb/original)
+GET /api/v1/units/photos/26a841db-01f0-484b-88c1-d22c8b0779e4 c1a2a740-042a-4064-809b-3790efd5f1ce/thumb HTTP=000 type= bytes=0 head: /private/tmp/claude-501/e16/b.bin: No such file or directory
+
+GET /api/v1/units/photos/26a841db-01f0-484b-88c1-d22c8b0779e4 c1a2a740-042a-4064-809b-3790efd5f1ce/original HTTP=000 type= bytes=0 head: /private/tmp/claude-501/e16/b.bin: No such file or directory
+
+== doi chung: byte anh Gui duoc bang phien dau-khach
+thumb 90395cc9-a184-4bf2-b890-6c007a45ac09 HTTP=200 type=image/png bytes=350
+== doi chung: byte anh Noi bo bang phien dau-chu-1
+thumb 26a841db HTTP=200 type=image/png bytes=4804
+== khong cookie, byte anh Noi bo
+thumb 26a841db HTTP=401 bytes=27
+== (sua) byte anh Noi bo bang phien dau-khach, 2 ma x thumb/original
+GET /api/v1/units/photos/26a841db-01f0-484b-88c1-d22c8b0779e4/thumb HTTP=404 type=application/json bytes=21 body={"error":"not-found"}
+GET /api/v1/units/photos/26a841db-01f0-484b-88c1-d22c8b0779e4/original HTTP=404 type=application/json bytes=21 body={"error":"not-found"}
+GET /api/v1/units/photos/c1a2a740-042a-4064-809b-3790efd5f1ce/thumb HTTP=404 type=application/json bytes=21 body={"error":"not-found"}
+GET /api/v1/units/photos/c1a2a740-042a-4064-809b-3790efd5f1ce/original HTTP=404 type=application/json bytes=21 body={"error":"not-found"}

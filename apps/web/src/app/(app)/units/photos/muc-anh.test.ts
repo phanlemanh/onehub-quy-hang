@@ -11,9 +11,14 @@ import type { Goi, Ngan } from "../../../../lib/sync/types";
 
 const ANH = fileURLToPath(new URL(".", import.meta.url));
 
+// Hàng chờ ảnh chụp trên điện thoại (hàng 41, Cổng Phạm vi 06/11 Hỏi-1): ảnh chụp lúc mất mạng được chờ trên máy trong kho
+// riêng của người chụp — ba tệp này là chỗ duy nhất được chạm IndexedDB và mượn nhịp thử mạng của bộ đồng bộ. Mục Ảnh vẫn
+// không qua bộ đồng bộ; bài dưới đo riêng rằng kho ảnh chờ là cơ sở dữ liệu khác kho đồng bộ.
+const HANG_CHO = ["hang-cho-anh.ts", "hang-cho-may.ts", "kho-anh-cho.ts"];
+
 function quet(anh: string): string[] {
   const loi: string[] = [];
-  for (const ten of readdirSync(anh).filter((t) => /\.tsx?$/.test(t) && !t.endsWith(".test.ts"))) {
+  for (const ten of readdirSync(anh).filter((t) => /\.tsx?$/.test(t) && !t.endsWith(".test.ts") && !HANG_CHO.includes(t))) {
     const t = readFileSync(join(anh, ten), "utf8");
     if (/from\s+["'][^"']*lib\/sync/.test(t)) loi.push(`${ten}: nhập bộ đồng bộ`);
     if (/indexedDB|localStorage|caches\.open/.test(t)) loi.push(`${ten}: chạm bộ nhớ trình duyệt`);
@@ -28,6 +33,14 @@ test("E6 phía web: mục Ảnh không qua bộ đồng bộ, không IndexedDB; 
   const muc = join(sao, "muc-anh.tsx");
   writeFileSync(muc, `import { useBoDongBo } from "@/lib/sync/react";\n${readFileSync(muc, "utf8")}`);
   assert.deepEqual(quet(sao), ["muc-anh.tsx: nhập bộ đồng bộ"]);
+});
+
+test("hàng 41: kho ảnh chờ là cơ sở dữ liệu riêng, không mở kho đồng bộ; ba tệp miễn quét có thật", () => {
+  const ten = readdirSync(ANH);
+  assert.deepEqual(HANG_CHO.filter((t) => !ten.includes(t)), []);
+  const kho = readFileSync(join(ANH, "kho-anh-cho.ts"), "utf8");
+  assert.match(kho, /indexedDB\.open\(tenKhoAnhCho\(/);
+  assert.doesNotMatch(kho, /tenCoSo\(|taoKhoIndexedDb/);
 });
 
 /** Chạy một lượt kéo của bộ đồng bộ với máy chủ giả; trả mọi đường nó gọi và các khoá của ngăn kho nó ghi. */

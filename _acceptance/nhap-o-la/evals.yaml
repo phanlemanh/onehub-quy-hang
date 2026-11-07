@@ -1,0 +1,148 @@
+schema_version: 1
+feature_slug: nhap-o-la
+# Lõi gói / quét / kiểm / số đo ô lạ ở `packages/core/src/import/ai/o-la/**` (node:test của core — bài số đo đọc bộ ô lạ và
+# đề xuất ghi sẵn trong hồ sơ, theo nếp `do-tac-tu.test.ts` của hàng 68). Bộ kiểm rò nguồn ra AI ở
+# `packages/api/src/imports/ai/cells/*.ro-ri.test.ts` (job CI `ro-ri`, bắt buộc). Đường ô lạ, cửa, trần, `ai_usage` chấm trên
+# Postgres dãy G qua `packages/api/test-db/imports/o-la.test.ts` (executor script.nhap_tac_tu — migrate + cách ly + test-db
+# API). Ca xem thử từ trạng thái màn qua API thật ở `apps/web/src/lib/nhap/test-db/o-la.db-test.mts` (test.web_db, DATABASE_URL
+# dãy G 5573). Trạng thái màn ở `apps/web/src/lib/nhap/o-la.test.ts` (test.web). Khách AI trong mọi ca là khách giả tiêm qua `deps`
+# hay `QH_AI_GIA` — không ca nào gọi mạng. exit 0 của lệnh chung KHÔNG đủ: người chấm đối chiếu từng tên ca nêu trong
+# `expected` — có mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/import/ai/o-la/goi.test.ts ca «gói ô lạ: chỉ ô được mở» có mặt và ok — ma trận khai bằng Record<ColumnClass, …> (thêm lớp mới vào ColumnClass thì kiểm kiểu đỏ) sáu lớp × bốn dấu (keep, fixed, needs_person, blocked) trên cùng một bảng: chỉ hai ô (catalog, shareable_listing) × needs_person vào gói, 22 ô còn lại không (24 assert); ô needs_person do luật cấp dòng (by fee_from_price, catalog, duplicate) không vào gói (3 assert); cột lớp catalog ghép vào keep_as_note hay custom: không vào gói (assert); mười dòng cùng chữ «đang đàm phán» ở một cột → một ô (assert), cùng chữ ở hai cột → hai ô (assert); 320 ô khác nhau → đúng 300 ô, theo thứ tự cột rồi dòng (2 assert); ô «0900 000 011» ở cột giá và ô dáng họ tên ở cột trạng thái không vào gói (2 assert); mỗi ô mang đúng sáu khoá id, cot, tieuDe, truong, giaTri, lyDoMa và lyDoMa bằng reason của ô với đoạn chép chữ ô thay bằng «ô» (2 assert); ô có họ tên giữa câu («chủ Nguyễn Văn An giữ», «chủ [Tên] giữ») không vào gói, đối chứng «giữ chỗ» vào (assert); gói 300 ô dài nhất của bộ thử (mỗi giaTri 200 ký tự) có JSON ≤ 96 KB (assert). Chiều đỏ: bỏ lọc lớp → ô của cột source vào gói, ca đỏ nêu «cột lớp source»."
+    paths: [packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; trong packages/api/src/imports/ai/cells/goi.ro-ri.test.ts hai ca có mặt và ok. Ca «gói ô lạ không chứa chuỗi cấm» — với mỗi file của bộ thử hàng 64 (9), bộ lạ hàng 68 (4) và bộ ô lạ của hàng này: dựng gói ô lạ sau áp kế hoạch nền và (bộ lạ) kế hoạch đã gộp đề xuất ghi sẵn của hàng 68; không chuỗi nào trong dapAn.camLo có trong JSON.stringify(gói) (mỗi assert nêu tên file và chuỗi trúng). Ca «mồi rò» — bảng có ô giá «thu về 4.2 gọi 0900 000 011», ô trạng thái «chủ Nguyễn Văn An giữ», cột Chủ nhà mang «thương lượng» và «[Tên]»: gói không chứa «0900 000 011», «0900000011», «Nguyễn Văn An», «[Tên]» (4 assert) và không có ô nào của cột Chủ nhà (assert); đối chứng dương trên tệp sạch cùng khuôn cột (cột mang mồi số bị bộ phân loại che cả cột): ô «thu về 4.2» và «giữ chỗ» có trong gói (2 assert). Chiều đỏ: bỏ bộ dò dữ liệu cá nhân ở dungGoiOLa → ca mồi rò đỏ nêu chuỗi số."
+    paths: [packages/core/src/import/**, packages/api/src/imports/ai/**, _acceptance/nhap-o-la/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/o-la.test.ts ca «ô lạ: cửa máy chủ trước khi gửi» có mặt và ok — sàn có thoả thuận ai_processing đang hiệu lực, khách AI giả đếm lần gọi; POST /api/v1/imports/ai/cells với gói có khoá lạ ở gốc → 400 (assert), ô mang truong lớp source (ownerPhone) → 400 (assert), 301 ô → 400 (assert), mỗi lần khách 0 lần gọi (3 assert); gói có «0900 000 011» trong giaTri → 200 {cheDo: 'tat-dinh', lyDo chứa 'dữ liệu cá nhân'} (assert), khách 0 lần (assert), đúng một dòng ai_usage result 'blocked_pii' và blocked_kinds chứa 'phone' (2 assert), cột của dòng ấy ép thành văn bản không chứa chuỗi số (assert); đối chứng: gói sạch → khách đúng 1 lần (assert). Chiều đỏ: bỏ quét lại ở route → khách giả bị gọi, ca đỏ nêu «khách AI bị gọi với gói có dữ liệu cá nhân»."
+    paths: [packages/api/src/imports/ai/**, packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; trong packages/api/src/imports/ai/cells/quet.ro-ri.test.ts ca «máy chủ quét lại gói ô lạ» có mặt và ok — ma trận viết tay sáu mẫu dữ liệu cá nhân (0900 000 0xx, 0900.000.0xx, +84 900 000 0xx, email, số giấy tờ 9 chữ số, 12 chữ số) × ba chỗ (tieuDe, giaTri, lyDoMa) → quetGoiOLa trúng, nêu loại (18 assert); dáng họ tên ở giaTri → trúng (assert), ở tieuDe («Trạng Thái») → không trúng (assert); đối chứng dương: gói ô lạ thật của bộ ô lạ → không trúng (assert). Chiều đỏ: bỏ quét lyDoMa → sáu ô lyDoMa đỏ."
+    paths: [packages/core/src/import/**, packages/api/src/imports/ai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/import/ai/o-la/kiem.test.ts ca «kiểm đề xuất ô lạ» có mặt và ok — trên một gói có ô dải «4.6–4.8 tỷ», ô «thu về 4.2» (cột giá đơn vị tỷ), ô trạng thái «đang đàm phán», ô phí «thu về»: đề xuất hợp lệ «4,8 tỷ», «4,6 tỷ», «4,2 tỷ KBP», «Đang giao dịch», «KBP» qua kiểm (5 assert); giá bao phí đúng bằng giaBaoPhiTuVeTay(4,2 tỷ) kèm «BP» qua kiểm (assert); bị loại kèm lý do nêu được: «4,9 tỷ» cho ô dải (ngoài dải), «4,3 tỷ KBP» và «4,2 tỷ BP» cho ô thu về (sai số luật 12), «abc» cho ô trạng thái (không qua bộ chuẩn hoá), id lạ, id lặp (lần thứ hai bị loại), ly_do rỗng (7 assert, mỗi assert so chuỗi lý do); một đề xuất sai không làm mất đề xuất đúng khác (assert); gốc có khoá lạ hay de_xuat không phải mảng → không đề xuất, một lỗi «đầu ra sai khuôn» (2 assert). Dải với cận thiếu đơn vị («4,6 - 4,8 tỷ», «4600~4800tr») đọc đúng cận (2 assert). Chiều đỏ: bỏ kiểm dải → assert «4,9 tỷ» đỏ nêu «ngoài dải»."
+    paths: [packages/core/src/import/**, packages/core/src/pricing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/lib/nhap/o-la.test.ts ca «Dùng đề xuất một chạm» có mặt và ok — trạng thái nhập ở bước Xem trước của tệp có cột giá (đơn vị tỷ) và cột trạng thái, KHÔNG có cột điều kiện phí; ba dòng giá cùng chữ «4.6–4.8 tỷ», một dòng giá «thu về 4.2», hai dòng trạng thái «đang đàm phán», một dòng giá «5 tỷ» (đối chứng); khách giả trả đề xuất qua kiểm cho ba ô gói: canHoiOLa đúng khi sàn bật và có ô lạ (assert), sai khi không ô lạ (assert); hoiOLa gọi khách đúng một lần cho một gói, đổi kế hoạch qua lại giữa hai kế hoạch K1 → K2 → K1 → K2 thì khách đúng 2 lần (2 assert); ba ô dải đều hiện đề xuất «4,8 tỷ» (3 assert), ô «5 tỷ» không có đề xuất (assert); dungDeXuat ở ô dải dòng 1 → chỉ dòng 1 ra mark 'keep', value 4 800 000 000; dòng 2, 3 vẫn 'needs_person' và vẫn hiện đề xuất (3 assert); dungDeXuat ở ô «thu về 4.2» → ô giá value 4 200 000 000 và row.extra.feeInclusion === 'excluded' (2 assert); dungDeXuat ở một ô trạng thái → cả hai dòng ra 'Pending' và soOTheo = 1 (2 assert); ô đã dùng không còn đề xuất hiện (assert). Chiều đỏ: dungDeXuat không đi qua suaO (ghi thẳng value) → ô trạng thái thứ hai không đổi theo, ca đỏ nêu «đổi theo»."
+    paths: [apps/web/src/lib/nhap/**, apps/web/src/app/(app)/imports/**, packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên màn đang chạy /imports/new (đăng nhập vai đầu chủ của sàn thử đã bật «Xử lý bằng AI», khách AI giả bằng QH_AI_GIA trả đề xuất ghi sẵn), tải tệp mẫu của bộ ô lạ, sang Xem trước: ảnh ở khổ 1440 và 375 cho thấy ô «thu về 4.2», ô dải và ô trạng thái lạ mỗi ô có huy hiệu «Máy đề xuất», chữ đề xuất, lý do một dòng và nút «Dùng» dưới ô nhập; sau khi bấm «Dùng» ở ô trạng thái, ảnh cho thấy ô về «Giữ nguyên» và dòng «Đã đổi theo 1 ô cùng chữ»; ở trạng thái tắt AI, ảnh cho thấy một dòng «Sửa tay lần này: …» và không huy hiệu nào. Ở 375 nút «Dùng» không bị cắt và không tràn khổ ngang của trang."
+    steps:
+      - "Dựng chỗ thử dãy G kèm khách AI giả (không khoá thật): node _acceptance/nhap-o-la/thu/dung-o-la.mjs — máy dev 3493 đang chạy thì tắt trước bằng --tat; chấm xong tắt bằng --tat (không pkill, luật 8, 43)"
+      - "Chạy node _acceptance/nhap-o-la/thu/chup-o-la.mjs --kho 1440 rồi --kho 375 — lệnh tự dựng sàn, đăng nhập người mẫu, chạy ba ca co-de-xuat, da-dung, tat-dinh, in mỗi ca một dòng JSON và chụp E4b-<ca>-<khổ>.png vào _acceptance/nhap-o-la/evidence/"
+      - "Đối chiếu từng dòng JSON với expected và xem từng ảnh ở hai khổ"
+    paths: ["apps/web/src/app/(app)/imports/**", apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E4c
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: DATABASE_URL="${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres}" npm run test:db -w @quy-hang/web
+    expected: "exit 0 (DATABASE_URL tới Postgres dãy G 5573); trong apps/web/src/lib/nhap/test-db/o-la.db-test.mts ca «Dùng đề xuất tới xem thử của máy chủ» có mặt và ok — cùng fixture với E4 (tệp không có cột điều kiện phí): dựng trạng thái nhập bằng đúng hàm của màn, dungDeXuat ở ô «thu về 4.2», rồi gửi goiDong của trạng thái ấy qua bản xem thử của API thật (Postgres, sàn và đầu chủ thử) → dòng ấy có listPrice 4 200 000 000 và feeInclusion 'excluded' (2 assert), dòng không bị bỏ vì ô giá (assert); đối chứng cùng fixture KHÔNG dungDeXuat → dòng bị bỏ vì ô giá cần người (assert)."
+    paths: [apps/web/src/lib/nhap/**, packages/api/src/imports/**, packages/core/src/import/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/lib/nhap/o-la.test.ts ca «không chạm thì không đổi» có mặt và ok — sau khi nhận ba đề xuất mà không dùng: mọi ô vẫn mark 'needs_person' (assert), ong.table bằng bảng trước khi nhận (deepEqual), plan.columns[].valueMap không đổi (deepEqual); goiDong của bước Trùng mang chữ gốc «thu về 4.2» và «đang đàm phán», không chuỗi đề xuất nào có trong JSON gói ghi (3 assert). Chiều đỏ: cho nhận đề xuất áp luôn vào bảng → assert deepEqual đỏ."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/o-la.test.ts ca «ô lạ không ghi gì» có mặt và ok — đếm dòng các bảng imports, listings, listing_events, units của sàn trước và sau một POST /api/v1/imports/ai/cells trả đề xuất: bằng nhau (4 assert); chỉ ai_usage tăng đúng 1 (assert)."
+    paths: [packages/api/src/imports/ai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/lib/nhap/o-la.test.ts ca «gõ tay thắng đề xuất» có mặt và ok — ô trạng thái có đề xuất «Đang giao dịch», người gõ «Đang bán» qua suaO: ô ra 'Active' (assert), đề xuất của ô ấy không còn trong danh sách hiện (assert), dựng lại lưới bằng apLai (đổi bộ lọc) vẫn không hiện lại (assert); người gõ chữ không đọc được «xyz» → ô vẫn 'needs_person' với reason của bộ chuẩn hoá và đề xuất cũng không quay lại (2 assert). Chiều đỏ: giữ đề xuất theo (cột, chữ gốc) mà không xoá khi sửa → assert hiện lại đỏ."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/o-la.test.ts ca «ô lạ: không AI vẫn nhập» có mặt và ok — ma trận viết tay bảy lối: chưa bật thoả thuận, thoả thuận tạm ngừng, thiếu khoá (deps.khachAi null), đã dùng bằng trần tháng, khách ném lỗi, khách quá 240 giây (đồng hồ giả), đầu ra sai khuôn ở gốc → 200 {cheDo: 'tat-dinh', lyDo} với lyDo bằng đúng hằng LY_DO tương ứng (7 assert); ba lối đầu và lối trần không gọi khách và không ghi ai_usage (4 assert); ba lối sau ghi đúng một dòng ai_usage result lần lượt 'provider_error', 'timeout', 'invalid_output' (3 assert). Chiều đỏ: bỏ kiểm trần ở route ô lạ → khách bị gọi ở lối trần, ca đỏ."
+    paths: [packages/api/src/imports/ai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/lib/nhap/o-la.test.ts ca «màn nói lý do khi không đề xuất» có mặt và ok — khách ném lỗi mạng → trạng thái ô lạ {cheDo 'tat-dinh'} với lyDo «không gửi được tới máy chủ» (assert); máy chủ trả {cheDo 'tat-dinh', lyDo X} → dòng thông báo bằng «Sửa tay lần này: X» (assert); sàn chưa bật → không gọi khách (assert); trong mọi lối trên suaO vẫn chạy như không AI (assert)."
+    paths: [apps/web/src/lib/nhap/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/import/ai/o-la/do-o-la.test.ts ba ca có mặt và ok. Ca «bộ ô lạ có đủ bốn nhóm» — bộ của _acceptance/nhap-o-la/thu/bo-o-la.ts có ≥ 8 ô mỗi nhóm giá dải, về tay (giá và phí), trạng thái lạ, và ≥ 4 ô đối chứng (4 assert); mỗi ô của bộ qua applyPlan ra 'needs_person' by 'normalize' (assert). Ca «đề xuất ghi sẵn khớp gói và lời nhắc» — với mỗi mô hình (opus-5-5, haiku-5-5): tệp _acceptance/nhap-o-la/de-xuat-o-la/<mô hình>.json có băm gói bằng băm gói dựng bởi dungGoiOLa (assert), băm lời nhắc bằng bamLoiNhacOLa() (assert), mang dấu «lập bởi tác tử context sạch (<mô hình>)» (assert); đối chứng đỏ: đổi một chữ của lời nhắc → báo «lời nhắc đổi — ghi lại đề xuất» (assert). Ca «số đo ô lạ» — tính lại bằng thu/do-o-la.ts (kiemDeXuatOLa rồi chấm theo đáp án) và so bằng _acceptance/nhap-o-la/so-do-o-la.json đã commit (deepEqual); MO_HINH_O_LA === 'claude-opus-5-5' (assert, theo Hỏi-1); bộ của MO_HINH_O_LA đạt phủ ≥ 0,90, đúng ≥ 0,95, bịa = 0, tự ghi = 0, rò nguồn = 0 (5 assert); so-do-o-la.json có đủ năm số cho cả hai mô hình (assert); ca dưới ngưỡng: datNguongOLa với số phủ 0,89 hay đúng 0,94 hay bịa 1 → trả lỗi nêu đúng số và ngưỡng bị hụt (3 assert), đối chứng số 0,90/0,95/0 → không lỗi (assert). Chiều đỏ: cho bộ chấm coi đề xuất ở ô đối chứng là đúng → assert bịa = 0 đỏ nêu tên ô."
+    paths: [packages/core/src/import/**, packages/api/src/imports/ai/**, _acceptance/nhap-o-la/thu/**, _acceptance/nhap-o-la/de-xuat-o-la/**, _acceptance/nhap-o-la/so-do-o-la.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/o-la.test.ts ca «ô lạ vào sổ chi phí» có mặt và ok — khách giả trả usage {input 1000, output 200, cache_read 0, cache_write 0}: đúng một dòng ai_usage mới với model bằng MO_HINH_O_LA, input_tokens 1000, output_tokens 200, result 'ok' (4 assert), cost_usd bằng tinhTien(MO_HINH_O_LA, usage) theo bảng giá của mô hình ấy (assert); tổng cost_usd tháng gồm dòng đề xuất cột và dòng ô lạ: đặt tổng bằng trần bằng một dòng đề xuất cột → lần gọi ô lạ kế không gọi khách, trả lyDo hết trần (2 assert). Chiều đỏ: tính tiền ô lạ bằng giá Opus khi MO_HINH_O_LA là Haiku → assert cost_usd đỏ."
+    paths: [packages/api/src/imports/ai/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/nhap-excel.md", "apps/web/src/app/(app)/imports/new/page.tsx", "apps/web/src/app/(app)/imports/new/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel — khối đề xuất ô lạ ở bảng Xem trước đi trong khuôn của màn Nhập Excel."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

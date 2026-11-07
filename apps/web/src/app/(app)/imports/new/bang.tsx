@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Ong } from "@/lib/nhap/duong-ong";
+import { deXuatCuaO, type TrangThaiOLa } from "@/lib/nhap/o-la";
 import type { HanhDong, XemThu } from "@/lib/nhap/trang-thai";
 
 // Hai bảng của màn Nhập Excel: xem trước từng ô (bước 3) và từng dòng thành gì (bước 4). Bảng của khối solution-crm-6
@@ -36,7 +37,22 @@ function ChiaTrang({ trang, so, onDoi }: { trang: number; so: number; onDoi: (t:
 
 const DEM_DAU: Dau[] = ["keep", "fixed", "needs_person", "blocked"];
 
-export function BangXemTruoc({ ong, bo, onSua, onBo }: { ong: Ong; bo: ReadonlySet<number>; onSua: (source: number, cot: number, raw: string) => void; onBo: (source: number, bo: boolean) => void }) {
+export function BangXemTruoc({
+  ong,
+  bo,
+  ola,
+  onSua,
+  onDung,
+  onBo,
+}: {
+  ong: Ong;
+  bo: ReadonlySet<number>;
+  /** Đề xuất ô lạ (hàng 69) — vắng thì bảng như hàng 65. */
+  ola?: TrangThaiOLa;
+  onSua: (source: number, cot: number, raw: string) => void;
+  onDung?: (source: number, cot: number) => void;
+  onBo: (source: number, bo: boolean) => void;
+}) {
   const [chiCanNguoi, setChiCanNguoi] = useState(false);
   const [trang, setTrang] = useState(0);
   const cot = ong.plan.columns.map((c, i) => ({ i, c })).filter(({ c }) => c.target !== "ignore_with_reason");
@@ -89,7 +105,7 @@ export function BangXemTruoc({ ong, bo, onSua, onBo }: { ong: Ong; bo: ReadonlyS
                   const sua = o.mark === "needs_person" || o.mark === "blocked";
                   return (
                     <TableCell key={i} className="align-top" title={o.reason}>
-                      <div className="flex min-w-32 flex-col gap-1">
+                      <div className="flex min-w-32 flex-col gap-1 whitespace-normal">
                         {sua ? (
                           <Input
                             defaultValue={o.raw === null ? "" : String(o.raw)}
@@ -104,6 +120,20 @@ export function BangXemTruoc({ ong, bo, onSua, onBo }: { ong: Ong; bo: ReadonlyS
                         )}
                         {o.mark !== "keep" ? <HuyHieuDau dau={o.mark} /> : null}
                         {o.reason && o.mark !== "keep" ? <span className="text-muted-foreground text-xs">{o.reason}</span> : null}
+                        {(() => {
+                          const dx = ola && onDung ? deXuatCuaO(ong, ola, d.source, i) : null;
+                          if (!dx) return null;
+                          return (
+                            <span className="flex flex-wrap items-center gap-2 pt-1 whitespace-normal" data-de-xuat-o-la="">
+                              <Badge variant="info-light">Máy đề xuất</Badge>
+                              <span className="text-sm font-medium break-words">{dx.giaTri}</span>
+                              <Button type="button" size="sm" variant="outline" className="min-h-11 sm:min-h-0" onClick={() => onDung!(d.source, i)} aria-label={`Dùng «${dx.giaTri}» cho ${c.column} dòng ${d.source + 1}`}>
+                                Dùng
+                              </Button>
+                              <span className="text-muted-foreground w-full text-xs break-words">{dx.lyDo}</span>
+                            </span>
+                          );
+                        })()}
                       </div>
                     </TableCell>
                   );
