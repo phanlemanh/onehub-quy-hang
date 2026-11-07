@@ -9,7 +9,8 @@ import type { CatalogUnitData } from "@quy-hang/core";
 import type { ProspectNeed, ProspectView } from "@quy-hang/core/contacts";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import { banRaNgoai, type NguoiNhan } from "@quy-hang/core/redaction";
-import { soanTin, tenCanRa, thongSoRa } from "@quy-hang/core/sharing";
+import type { LoiMauBai } from "@quy-hang/core/export";
+import { tenCanRa, thongSoRa } from "@quy-hang/core/sharing";
 import { EyeIcon, ImageIcon, PhoneCallIcon, PlusIcon, Share2Icon, UserIcon, UsersIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -31,7 +32,7 @@ import type { ListingView } from "@/lib/sync/types";
 import { dinhDangGia, FEE_LABEL } from "../../inventory/cot";
 import { useDanhMuc } from "../../inventory/danh-muc";
 import { chiMuc } from "../../inventory/ghep-danh-muc";
-import { canNoiBoTu, docCanChon, khoaTin, LOI_MUC_CHIA, mucChiaGui, mucChiaMacDinh, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, tinDangDung, type KetGui, type NguoiGui } from "./gui";
+import { canNoiBoTu, docCanChon, khoaTin, LOI_MUC_CHIA, mucChiaGui, mucChiaMacDinh, NHAC_XAC_NHAN, nutGui, phanLoaiCan, taoBoGui, tinDangDung, tinMacDinh, mauZaloTu, type KetGui, type NguoiGui } from "./gui";
 import { TrangKhach } from "./trang-khach";
 
 const ANH = "/api/v1/units/photos";
@@ -77,7 +78,7 @@ function useAnhCan(ds: readonly ListingView[]) {
   useEffect(() => {
     let huy = false;
     for (const l of ds) {
-      if (!l.unitNumber || anh[l.id]) continue;
+      if (!l.unitNumber || !l.buildingName || anh[l.id]) continue;
       fetch(`${ANH}?${new URLSearchParams({ toa: l.buildingName, ma: l.unitNumber })}`, { cache: "no-store" })
         .then(async (r) => (r.ok ? (((await r.json()) as { anh?: UnitPhoto[] }).anh ?? []) : []))
         .catch(() => [])
@@ -216,6 +217,14 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
   const choMacDinh = nguoiNhan === "nhom_moi_gioi" && mucNhap === null && mucMacDinh === undefined;
   const khoaMuc = mucChia === "sai" || choMacDinh;
 
+  // Mẫu bài Zalo của sàn (hàng mau-bang-hang-va-bai): đọc một lần lúc mở màn; đọc lỗi thì tin như cũ.
+  const [mauZalo, setMauZalo] = useState<LoiMauBai | undefined>(undefined);
+  useEffect(() => {
+    goiFetch("GET", "/api/v1/company/templates/posts")
+      .then((r) => setMauZalo(r.status === 200 ? mauZaloTu(r.body) : undefined))
+      .catch(() => setMauZalo(undefined));
+  }, []);
+
   useEffect(() => {
     if (nguoiNhan !== "khach_rieng" || khach) return;
     goiFetch("GET", "/api/v1/prospects")
@@ -227,13 +236,13 @@ export function ManGui({ san, nguoi }: { san: string; nguoi: NguoiGui }) {
   const nhanXem: NguoiNhan = nguoiNhan ?? "khach_rieng";
   const ban = useMemo(() => {
     return canGui.map((c) => {
-      const u: CatalogUnitData | undefined = c.l.unitNumber ? idx.get(khoaDanhMuc(c.l.buildingName, c.l.unitNumber)) : undefined;
+      const u: CatalogUnitData | undefined = c.l.unitNumber && c.l.buildingName ? idx.get(khoaDanhMuc(c.l.buildingName, c.l.unitNumber)) : undefined;
       return banRaNgoai(canNoiBoTu(c.l, u, nguoi, anh[c.id] ?? []), { cua: "gui_link", nguoiNhan: nhanXem, today: hom });
     });
   }, [canGui, idx, nguoi, anh, nhanXem, hom]);
 
   const tenKhach = khach?.find((k) => k.id === khachId)?.displayName ?? null;
-  const tinTuDong = nguoiNhan ? soanTin({ ban, nguoiNhan, tenKhach }) : "";
+  const tinTuDong = tinMacDinh({ ban, nguoiNhan, tenKhach, mauZalo });
   const khoa = khoaTin(nguoiNhan, khachId, canGui.map((c) => c.id));
   const tin = tinDangDung(tinSua, khoa, tinTuDong);
 

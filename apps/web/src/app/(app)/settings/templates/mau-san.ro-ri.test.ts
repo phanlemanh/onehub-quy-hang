@@ -1,0 +1,37 @@
+// Bài rò rỉ của màn Mẫu (hàng mau-bang-hang-va-bai, AC-9): mã nguồn màn không đọc trường nội bộ nào của căn, và hai tab
+// dựng ra (danh sách mẫu, xem trước bài) không mang giá trị mồi nào. Rào cửa ra đọc tệp này (canMoi + timRoRi).
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { test } from "node:test";
+import { CAU_HINH_MAC_DINH, canMoi, giaTriMoi, NGUOI_NHAN, timRoRi } from "@quy-hang/core/redaction";
+import { createElement as h } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { BangMauBai } from "./vung-mau-bai";
+import { BangMauBang } from "./vung-mau-bang";
+
+const TEP = ["mau-san.ts", "vung-mau-bang.tsx", "vung-mau-bai.tsx", "page.tsx"];
+const NOI_BO = ["ownerName", "ownerPhone", "floorPrice", "titleDeedPhoto", "holderName", "holderUserId", "ghiChuNoiBo", "contacts"];
+
+test("rò rỉ: mã nguồn màn Mẫu không đọc trường nội bộ", () => {
+  const loi: string[] = [];
+  for (const t of TEP) {
+    const ma = readFileSync(new URL(`./${t}`, import.meta.url), "utf8");
+    for (const k of NOI_BO) if (new RegExp(`\\b${k}\\b`).test(ma)) loi.push(`${t}: đọc ${k}`);
+  }
+  assert.deepEqual(loi, []);
+  // Đối chứng dương: bộ quét bắt được khi một tệp nêu trường nội bộ.
+  assert.ok(new RegExp(`\\bholderName\\b`).test("const x = can.holderName;"));
+});
+
+test("rò rỉ: hai tab dựng ra không mang giá trị mồi", () => {
+  const html = [
+    renderToStaticMarkup(h(BangMauBang, { tt: { kieu: "xong", giaTri: [{ id: "00000000-0000-4000-8000-000000000001", name: "[Tên] gửi đội", columns: ["unitNumber", "listPrice"] }] }, lamMoi: () => {} })),
+    renderToStaticMarkup(h(BangMauBai, { tt: { kieu: "xong", giaTri: { zalo: { opening: "Chào nhóm", closing: "Gọi em" } } }, lamMoi: () => {} })),
+  ].join("\n");
+  let o = 0;
+  for (const nguoiNhan of NGUOI_NHAN) {
+    assert.deepEqual(timRoRi(html, giaTriMoi(canMoi(), nguoiNhan, CAU_HINH_MAC_DINH)), [], `${nguoiNhan}: mồi lọt`);
+    o++;
+  }
+  assert.equal(o, NGUOI_NHAN.length);
+});

@@ -9,6 +9,7 @@ import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "./auth/constants";
 import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
+import { registerOffCompoundUnitRoutes } from "./off-compound-units/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerImportRoutes } from "./imports/routes";
 import { registerAiRoutes } from "./imports/ai/routes";
@@ -24,6 +25,7 @@ import { registerSettingsRoutes } from "./settings/routes";
 import { registerFeeRoutes } from "./fees/routes";
 import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
+import { registerMauSanRoutes } from "./mau-san/routes";
 import { registerStatusesRoutes } from "./statuses/routes";
 import { registerCustomFieldsRoutes } from "./custom-fields/routes";
 import { registerValueAliasesRoutes } from "./value-aliases/routes";
@@ -196,6 +198,7 @@ export function createApi(deps: ApiDeps) {
 
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
+  registerOffCompoundUnitRoutes(api, deps);
   registerOwnerRoutes(api, deps);
   // Trước route lần nhập: «/imports/ai» không được rơi vào «/imports/{importId}».
   registerAiRoutes(api, deps);
@@ -213,6 +216,7 @@ export function createApi(deps: ApiDeps) {
   registerFeeRoutes(api, deps);
   registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
+  registerMauSanRoutes(api, deps);
   registerStatusesRoutes(api, deps);
   registerCustomFieldsRoutes(api, deps);
   registerValueAliasesRoutes(api, deps);

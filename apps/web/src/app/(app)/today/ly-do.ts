@@ -3,7 +3,7 @@
  * lý do căn vào nhóm bằng chữ, đọc giá kèm điều kiện phí, đọc hạn của lead. Không React, không mạng — kiểm bằng `node:test`.
  * «Ngày», «hôm nay», «hôm qua» theo lịch Việt Nam (UTC+7 cố định) như lõi, không theo múi giờ của máy.
  */
-import { completeness, isStandardStatus } from "@quy-hang/core/listing";
+import { completeness, isStandardStatus, nhanViTri } from "@quy-hang/core/listing";
 import { nhanCuaCan, type NhanTrangThai } from "@quy-hang/core/statuses";
 import { lucLenDangBan, type Condition, type DuKienCan, type LanDoi, type Nhom } from "@quy-hang/core/today";
 import type { ListingView } from "@/lib/sync/types";
@@ -27,7 +27,7 @@ export function canHomNay(l: ListingView, idx: ChiMucDanhMuc): CanHomNay {
   const d = ghepDanhMuc(l, idx);
   return {
     id: l.id,
-    buildingName: l.buildingName,
+    buildingName: nhanViTri(l),
     unitNumber: l.unitNumber,
     unitType: d.unitType,
     livingArea: d.livingArea,

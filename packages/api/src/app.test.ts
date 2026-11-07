@@ -46,6 +46,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/listings",
     "GET /api/v1/listings/{listingId}",
     "POST /api/v1/listings/{listingId}/events",
+    // Căn ngoài khu (hàng 76 can-ngoai-khu).
+    "POST /api/v1/off-compound-units",
+    "GET /api/v1/off-compound-units/{id}",
     "POST /api/v1/imports",
     "POST /api/v1/imports/{importId}/rows",
     "GET /api/v1/imports/agents",
@@ -146,6 +149,11 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 45: cách gọi riêng của sàn.
     "GET /api/v1/company/labels",
     "PUT /api/v1/company/labels",
+    // Mẫu bảng hàng và mẫu bài của sàn (hàng mau-bang-hang-va-bai).
+    "GET /api/v1/company/templates/export",
+    "PUT /api/v1/company/templates/export",
+    "GET /api/v1/company/templates/posts",
+    "PUT /api/v1/company/templates/posts",
     // Trạng thái riêng (hàng 46).
     "GET /api/v1/company/statuses",
     "PUT /api/v1/company/statuses",

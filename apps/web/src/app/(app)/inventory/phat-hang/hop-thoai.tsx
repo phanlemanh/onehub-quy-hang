@@ -41,7 +41,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { CotId, DongBang } from "../cot";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { banXuatTuDong } from "./chuyen-dong";
+import { CAU_LOI_MAU, cotCuaMau, GOC_NHIN, luaChonCotTheo, type MauXuatSan } from "./mau";
 import { dungTep } from "./ve-anh";
 import { lamXuat, type KetQuaXong, type MoiTruong } from "./xong";
 
@@ -155,6 +157,8 @@ export type MoXuat = {
   tenNguoiGui: string;
   /** Cách gọi riêng của sàn (hàng 45). */
   tuVung?: TuVung;
+  /** Mẫu của sàn đọc lúc mở hộp (hàng mau-bang-hang-va-bai); vắng = sàn chưa có mẫu. */
+  mauSan?: MauXuatSan;
 };
 
 export function HopThoaiXuat({ mo, onDong }: { mo: MoXuat; onDong: () => void }) {
@@ -166,15 +170,17 @@ export function HopThoaiXuat({ mo, onDong }: { mo: MoXuat; onDong: () => void })
   const [lanDung, setLanDung] = useState(0);
   const [dangLam, setDangLam] = useState(false);
   const [ketQua, setKetQua] = useState<KetQuaXong | null>(null);
+  const mauSan: MauXuatSan = useMemo(() => mo.mauSan ?? { mauBang: [], mauBai: {} }, [mo.mauSan]);
+  const [cotTheo, setCotTheo] = useState<string | null>(null);
 
   const dung = useMemo((): { ban: BanXuat } | { loi: string } => {
     void lanDung;
     try {
-      return { ban: banXuatTuDong(mo.dong, { mau, nguoiNhan, cot: mo.cot, today: mo.today, tenSan: mo.tenSan, tenNguoiGui: mo.tenNguoiGui, tuVung: mo.tuVung }) };
+      return { ban: banXuatTuDong(mo.dong, { mau, nguoiNhan, tuVung: mo.tuVung, ...tuyChonXuat(mo, mauSan, cotTheo) }) };
     } catch (e) {
       return { loi: e instanceof Error ? e.message : String(e) };
     }
-  }, [mo, mau, nguoiNhan, lanDung]);
+  }, [mo, mau, nguoiNhan, lanDung, mauSan, cotTheo]);
 
   const dn = dinhNghiaMau(mau);
   const toi = (i: number) => {
@@ -199,12 +205,15 @@ export function HopThoaiXuat({ mo, onDong }: { mo: MoXuat; onDong: () => void })
   let than: React.ReactNode;
   if (buoc === 0) {
     than = (
-      <RadioGroup value={mau} onValueChange={(v) => setMau(v as MauXuat)} aria-label="Mẫu" className="flex flex-col gap-2">
-        {MAU_XUAT.map((m) => {
-          const k = mauBiKhoa(m.ma, n);
-          return <LuaChon key={m.ma} value={m.ma} nhan={m.nhan} ghiChu={k.khoa ? k.loi : GHI_CHU_MAU[m.ma]} icon={ICON_MAU[m.ma]} chon={m.ma === mau} khoa={k.khoa} />;
-        })}
-      </RadioGroup>
+      <div className="flex flex-col gap-4">
+        <RadioGroup value={mau} onValueChange={(v) => setMau(v as MauXuat)} aria-label="Mẫu" className="flex flex-col gap-2">
+          {MAU_XUAT.map((m) => {
+            const k = mauBiKhoa(m.ma, n);
+            return <LuaChon key={m.ma} value={m.ma} nhan={m.nhan} ghiChu={k.khoa ? k.loi : GHI_CHU_MAU[m.ma]} icon={ICON_MAU[m.ma]} chon={m.ma === mau} khoa={k.khoa} />;
+          })}
+        </RadioGroup>
+        <CotTheo mauSan={mauSan} chon={cotTheo} onChon={setCotTheo} />
+      </div>
     );
   } else if (buoc === 1) {
     than = (
@@ -287,5 +296,33 @@ export function HopThoaiXuat({ mo, onDong }: { mo: MoXuat; onDong: () => void })
     >
       {than}
     </HopBuoc>
+  );
+}
+
+/** Tuỳ chọn dựng bản xuất từ hộp đang mở: cột theo mẫu đã chọn (hay góc nhìn) và mẫu bài của sàn. */
+export function tuyChonXuat(mo: MoXuat, mauSan: MauXuatSan, cotTheo: string | null) {
+  return { cot: mo.cot, cotMau: cotCuaMau(mauSan, cotTheo), mauBai: mauSan.mauBai, today: mo.today, tenSan: mo.tenSan, tenNguoiGui: mo.tenNguoiGui };
+}
+
+/** Ô «Cột theo» ở bước Mẫu: góc nhìn đang mở hay một mẫu bảng hàng của sàn; đọc mẫu lỗi thì kèm câu báo. */
+export function CotTheo({ mauSan, chon, onChon }: { mauSan: MauXuatSan; chon: string | null; onChon: (id: string | null) => void }) {
+  const ds = luaChonCotTheo(mauSan);
+  return (
+    <div className="flex flex-col gap-2">
+      <Label htmlFor="cot-theo">Cột theo</Label>
+      <Select value={chon ?? GOC_NHIN} onValueChange={(v) => onChon(v === GOC_NHIN || v === null ? null : v)}>
+        <SelectTrigger id="cot-theo" aria-label="Cột theo">
+          <SelectValue>{ds.find((l) => l.id === chon)?.nhan ?? GOC_NHIN}</SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {ds.map((l) => (
+            <SelectItem key={l.id ?? GOC_NHIN} value={l.id ?? GOC_NHIN}>
+              {l.nhan}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {mauSan.mauBang === null ? <TrangThai kind="notice" title={CAU_LOI_MAU} /> : null}
+    </div>
   );
 }
