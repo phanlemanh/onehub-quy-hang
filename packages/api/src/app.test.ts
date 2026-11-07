@@ -146,6 +146,11 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 45: cách gọi riêng của sàn.
     "GET /api/v1/company/labels",
     "PUT /api/v1/company/labels",
+    // Mẫu bảng hàng và mẫu bài của sàn (hàng mau-bang-hang-va-bai).
+    "GET /api/v1/company/templates/export",
+    "PUT /api/v1/company/templates/export",
+    "GET /api/v1/company/templates/posts",
+    "PUT /api/v1/company/templates/posts",
     // Trạng thái riêng (hàng 46).
     "GET /api/v1/company/statuses",
     "PUT /api/v1/company/statuses",

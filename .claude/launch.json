@@ -199,6 +199,15 @@
         "3499"
       ],
       "port": 3499
+    },
+    {
+      "name": "web-L-nhat-ky",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "mkdir -p .acceptance-runs && env DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres BETTER_AUTH_SECRET=dev-l-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3491 npx next dev -p 3491 apps/web 2>&1 | tee .acceptance-runs/web-L.log"
+      ],
+      "port": 3491
     }
   ]
 }

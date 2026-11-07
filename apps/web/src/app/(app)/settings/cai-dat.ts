@@ -14,7 +14,7 @@ export const MUC_SAN: readonly MucCot[] = [
   { label: "Trạng thái", href: "/settings/statuses" },
   { label: "Luật chia lead", href: "/settings/lead-routing" },
   { label: "Thuế phí", href: "/settings/fees" },
-  { label: "Mẫu nhập", href: "/settings/templates" },
+  { label: "Mẫu", href: "/settings/templates" },
   // Hàng 70: từ điển của sàn — duyệt cách gõ lạ, sức khoẻ dữ liệu.
   { label: "Từ điển", href: "/settings/dictionary" },
   { label: "Xử lý bằng AI", href: "/settings/ai" },

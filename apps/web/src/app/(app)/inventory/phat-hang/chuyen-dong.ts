@@ -7,7 +7,7 @@
  */
 import type { TuVung } from "@quy-hang/core/labels";
 import type { CanNoiBo, CauHinhRa, NguoiNhan } from "@quy-hang/core/redaction";
-import { xuatBang, type BanXuat, type CotBangHang, type CotGocNhin, type MauXuat } from "@quy-hang/core/export";
+import { xuatBang, type BanXuat, type CotBangHang, type CotGocNhin, type MauBai, type MauXuat } from "@quy-hang/core/export";
 import type { CotChuanId, CotId, DongBang } from "../cot";
 import { laCotRieng, truongCuaCot } from "../truong-rieng";
 
@@ -87,6 +87,10 @@ export type TuyChonTrang = NguCanh & {
   cauHinh?: CauHinhRa;
   /** Cách gọi riêng của sàn (hàng 45, từ `GET /api/v1/company/labels`) — lõi cắt về phần ra ngoài. */
   tuVung?: TuVung;
+  /** Cột của mẫu bảng hàng đã chọn (hàng mau-bang-hang-va-bai) — thay cột góc nhìn, vẫn qua luật ẩn của lõi. */
+  cotMau?: readonly CotBangHang[];
+  /** Mẫu bài theo kênh của sàn — lời mở đầu, lời kết của bài Zalo, Facebook. */
+  mauBai?: MauBai;
 };
 
 /**
@@ -101,9 +105,9 @@ export const cotLoiGocNhin = (id: CotId, tv?: TuVung | null): CotGocNhin =>
 
 /** Tập căn (đã theo thứ tự góc nhìn) → bản xuất của lõi. Hộp thoại chỉ vẽ kết quả này. */
 export function banXuatTuDong(dong: readonly DongBang[], tuy: TuyChonTrang): BanXuat {
-  const cot: CotGocNhin[] = tuy.cot.map((id) => cotLoiGocNhin(id, tuy.tuVung));
+  const cot: CotGocNhin[] = tuy.cotMau ? [...tuy.cotMau] : tuy.cot.map((id) => cotLoiGocNhin(id, tuy.tuVung));
   return xuatBang(
     dong.map((d) => dongSangCan(d, tuy)),
-    { mau: tuy.mau, nguoiNhan: tuy.nguoiNhan, cauHinh: tuy.cauHinh, cot, today: tuy.today, tenSan: tuy.tenSan, tuVung: tuy.tuVung },
+    { mau: tuy.mau, nguoiNhan: tuy.nguoiNhan, cauHinh: tuy.cauHinh, cot, today: tuy.today, tenSan: tuy.tenSan, tuVung: tuy.tuVung, mauBai: tuy.mauBai },
   );
 }
