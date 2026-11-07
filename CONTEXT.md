@@ -49,7 +49,7 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Sự kiện của hàng | `listing_event` | Một lần thay đổi của hàng: tạo, đổi phần lần rao, đổi giá, đổi trạng thái, xác nhận với chủ nhà; chỉ thêm, ghi người và vai lúc làm (ADR-0008) | — |
 | Trạng thái chuẩn | `StandardStatus` (RESO) | Một trong sáu: Chưa đủ để rao `Incomplete`, Đang bán `Active`, Đang giao dịch `Pending`, Đã bán `Closed`, Tạm ngừng `Hold`, Ngừng hẳn `Withdrawn`; nhãn riêng của sàn neo vào đây | Trạng thái thứ bảy |
 | Độ tươi | `freshness` | Tuổi của lần xác nhận gần nhất với chủ nhà, tính từ sự kiện | — |
-| Mức đủ thông tin | `completeness` | Phần đã có trên năm mục của danh sách hỏi: giá kèm điều kiện phí, nội thất, pháp lý, tài chính, tình trạng sử dụng | — |
+| Mức đủ thông tin | `completeness` | Phần đã có trên năm mục của danh sách hỏi: giá kèm điều kiện phí, nội thất, pháp lý, tài chính, tình trạng sử dụng; cộng mục «Ảnh thật» (`photos`, đủ khi ≥ 1 ảnh thật) khi biết số ảnh — mục ảnh không vào danh sách hỏi | — |
 | Giá chốt · Ngày bán | `ClosePrice` · `CloseDate` (RESO) | Giá và ngày sàn mình bán; bắt buộc khi vào Đã bán, giữ lại sau đó | — |
 | Lý do ngừng | `withdrawn_reason` | Chủ đã bán nơi khác · chủ đổi ý · không liên lạc được; bắt buộc khi vào Ngừng hẳn | — |
 | Phiên bản (của hàng) | `version` | Số sự kiện đã ghi của hàng; lệnh mang phiên bản cũ bị báo «đã có người sửa trước» | — |

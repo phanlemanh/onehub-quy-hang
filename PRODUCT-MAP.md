@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>107 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>110 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -36,6 +36,7 @@ flowchart TD
 ## Đã giao — chờ phiên nghiệm thu
 
 - Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy (`anh-can-ba-ngan`)
+- Đầu chủ đưa một căn lên Đang bán khi chưa có ảnh thật — ở cả ba cửa; ảnh là mục còn thiếu ở mức đủ và việc «Bổ sung ảnh» ở Hôm nay (`anh-khong-chan-ban`)
 - Bộ đồng bộ đưa đúng phần mỗi người được thấy xuống máy, rút mạng năm phút rồi nối lại không mất thay đổi nào (`bai-thu-dong-bo-mat-mang`)
 - Lưới bảng hàng 5.000 dòng × 20 cột cuộn, sửa trên ô và dán 500 ô từ Excel mà không giật trên máy tính văn phòng (`bai-thu-luoi-5000-dong`)
 - Link trang khách dán vào Zalo hiện ảnh xem trước, và lượt Zalo tự lấy ảnh không bị tính là khách mở (`bai-thu-zalo`)
@@ -82,6 +83,7 @@ flowchart TD
 - Trưởng nhóm mở Hôm nay và thấy lead quá hạn để chia lại, hàng cũ theo từng đầu chủ, và ngoại lệ máy không tự quyết được (`hom-nay-truong-nhom`)
 - Lõi, API và tài liệu gọi khu chứa căn là SubdivisionName, mỗi căn mang loại hình PropertyType và PropertySubType theo RESO, và trường dùng được của từng loại hình đọc từ một bảng dữ liệu của lõi (`khu-va-loai-hinh`)
 - Kiểm nhanh chỉ đọc trên bản thật thêm vế bất biến 2: bảng chủ nhà và bảng lead không còn số điện thoại để rõ thì ràng buộc chặn số rõ phải đã bật; bảng sạch mà ràng buộc chưa bật làm bước triển khai đỏ trước Vercel; bảng còn số rõ chỉ báo (`kiem-nhanh-rang-buoc-ban-ma`)
+- Bài kiểm ca «Tân Định, Tỉnh Bắc Ninh» của bộ đọc địa chỉ ghim kết quả dương và có phá thử riêng chứng nó đỏ khi bộ đọc lui về so bỏ dấu, trả rỗng hay trả sai xã — thay phép kiểm âm tính đứng một mình (`kiem-tan-dinh-bac-ninh`)
 - Đầu chủ mở Hôm nay và đọc mỗi việc trên một dòng: tên căn, cột «Vì sao hôm nay» hai tầng — lý do chữ đậm, hạn đỏ khi quá, vàng khi còn dưới 15 phút — và giá; làm việc đầu của nhóm bằng đúng một nút, một chạm; việc còn lại nằm trong ⋯; hàng đợi, luật mỗi căn một hàng đợi và ghi kết quả của hàng 22 giữ nguyên (`lam-lai-hom-nay-dau-chu`)
 - Telesales theo dõi lead đã nhập qua bốn nấc Đã gửi → Đã nhận → Đã gọi → Lên bảng, thấy lead bị trả lại kèm «Sửa số và gửi lại»; không thấy hàng (`lead-bon-nac`)
 - Telesales nhập lead trên điện thoại: thiếu một mục thì chưa gửi được, gửi xong theo dõi được bốn nấc (`lead-dien-thoai`)
@@ -138,6 +140,7 @@ flowchart TD
 - Hàng vá va-ho-so-lien-he: ma trận vai phủ cả ba đường đọc liên hệ chủ nhà và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp hàng 103) (`va-ho-so-lien-he`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
 - Máy chủ web không sập khi cơ sở dữ liệu cắt một kết nối đang rảnh: mọi bể kết nối gắn trình nghe lỗi, ghi nhật ký rồi bỏ kết nối hỏng; người đang dùng không gặp trang lỗi vì việc này. (`va-pool-nghe-loi`)
+- Eval thứ tự deploy cũ của hồ sơ đã ký bat-rang-buoc-ban-ma khai không chạy, trỏ tiêu chí đã ký đo lại nó; hồ sơ ấy ghim lại sau gộp main (phần moi-truong-that tách sang hàng sau) (`va-thuoc-ci-ho-so-moi-truong-that`)
 - Vá tiêu đề Cuộc gọi: trên điện thoại, đầu trang của màn ghi cuộc gọi hiện «Ghi cuộc gọi» thay vì «Căn call»; trang của một căn vẫn hiện mã căn như cũ (`va-tieu-de-goi`)
 - Mọi lựa chọn khối của kho có một dòng máy đọc — khối đã chuyển thể ở danh mục giao diện, chỗ ghép hay tự viết ở «Chỗ hở» kèm điều đã tra trên ReUI, lý do và hạn xem lại; thiếu một ô thì npm run lint đỏ gọi đúng dòng (`vet-chon-khoi`)
 - Người trong sàn mở Quỹ hàng và thấy đúng vỏ theo thiết bị và vai: trên máy tính thanh trên, cột nhà và cột góc nhìn; trên điện thoại bốn tab dưới; telesales chỉ Hôm nay và «+ Lead» (`vo-ung-dung`)

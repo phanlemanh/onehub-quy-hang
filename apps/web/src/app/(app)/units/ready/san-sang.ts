@@ -1,6 +1,6 @@
 // «Sẵn sàng bán» ở hồ sơ căn (hàng 23, luật 17): kiểm bằng luật lõi rồi gửi đúng lệnh của trình sửa ô. Phần thuần — không
 // React, không mạng.
-import { MAC_DINH_ANH_THAT_TOI_THIEU, missingFor, type Requirement, type StandardStatus } from "@quy-hang/core/listing";
+import { docCauHinhSanSang, MAC_DINH_ANH_THAT_TOI_THIEU, missingFor, type Requirement, type StandardStatus } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import type { LoiTrenMay } from "@/lib/sync/ap-tren-may";
 import { dungLenhTrangThai, moTaLoi, type HangSua, type Lenh } from "../../inventory/cell-edit/lenh";
@@ -56,6 +56,25 @@ export function kiemSanSang(hang: HangSua, soAnhThat: number, toiThieu = MAC_DIN
   return { thieu: [], lenh: kq.lenh };
 }
 
+type Fetch = (input: string, init?: RequestInit) => Promise<Response>;
+
+/**
+ * Số ảnh thật tối thiểu của sàn từ lối chung cấu hình (mọi thành viên đọc được), giải bằng lõi. Đọc hỏng (mất mạng, máy chủ
+ * lỗi, khuôn lạ) → `null` = chưa biết, KHÔNG gộp vào 0: sàn có thể đang đòi ảnh, nên nút xử như sàn đòi ảnh (Ngoài-1 của
+ * anh-khong-chan-ban, chủ kho chọn sửa ngay 07/11).
+ */
+export async function docToiThieuSan(f: Fetch = fetch): Promise<number | null> {
+  try {
+    const r = await f("/api/v1/company/settings", { credentials: "same-origin" });
+    if (!r.ok) return null;
+    const ban = (await r.json()) as { items?: unknown };
+    if (!Array.isArray(ban.items)) return null;
+    return docCauHinhSanSang(ban.items as { key: string; value: unknown }[]).minRealPhotos;
+  } catch {
+    return null;
+  }
+}
+
 export const CHU_CAN_MANG_KIEM_ANH = "Cần mạng để kiểm ảnh";
 /** Dòng dưới danh sách khi còn «Ảnh thật»: số ảnh là của lần bấm, không đếm lại ngầm (Hỏi-2 của va-san-sang-ban). */
 export const CHU_ANH_CAP_NHAT = "Ảnh thật cập nhật khi bấm lại";
@@ -63,7 +82,7 @@ export const CHU_ANH_CAP_NHAT = "Ảnh thật cập nhật khi bấm lại";
 export type TrangThaiNut =
   | { kind: "san" }
   | { kind: "can-mang" }
-  | { kind: "thieu"; thieu: DieuThieu[]; soAnh: number }
+  | { kind: "thieu"; thieu: DieuThieu[]; soAnh: number; toiThieu: number }
   | { kind: "loi"; chu: string }
   | { kind: "da-gui" };
 
@@ -71,9 +90,10 @@ export type TrangThaiNut =
 export type KetQuaGui = { ok: true } | { ok: false; loi: LoiTrenMay };
 
 /**
- * Một lần bấm: ngoại tuyến hay đọc ảnh lỗi → «Cần mạng để kiểm ảnh», không gửi (không coi lỗi đọc là 0 ảnh); thiếu → danh
- * sách kèm số ảnh đã đếm, không gửi; đủ → gửi đúng một lệnh qua hàm gửi của trình sửa ô. Chỉ báo «đã gửi» khi lệnh vào
- * hàng đợi; không vào thì báo bằng câu của trình sửa ô (một đường lệnh, một lời báo).
+ * Một lần bấm. Sàn đòi ảnh (tối thiểu ≥ 1) hay chưa biết số tối thiểu (`null`, đọc cấu hình hỏng): ngoại tuyến hay đọc lỗi →
+ * «Cần mạng để kiểm ảnh», không gửi (không coi lỗi đọc là 0 ảnh, cũng không coi số tối thiểu chưa biết là 0). Sàn không đòi ảnh (tối thiểu 0 — mặc định từ hàng anh-khong-chan-ban): không đếm ảnh, lúc mất mạng vẫn gửi
+ * (máy chủ vẫn là bên quyết). Thiếu → danh sách kèm số ảnh đã đếm, không gửi; đủ → gửi đúng một lệnh qua hàm gửi của trình
+ * sửa ô. Chỉ báo «đã gửi» khi lệnh vào hàng đợi; không vào thì báo bằng câu của trình sửa ô (một đường lệnh, một lời báo).
  */
 export async function bamSanSang(
   hang: HangSua,
@@ -81,17 +101,23 @@ export async function bamSanSang(
     onLine: boolean;
     docAnh: () => Promise<{ anh: readonly Pick<UnitPhoto, "compartment" | "isSample">[] }>;
     gui: (lenh: Lenh) => Promise<KetQuaGui>;
+    /** Số ảnh thật tối thiểu của sàn (`docToiThieuSan`); `null` = chưa đọc được (xử như sàn đòi ảnh); vắng là mặc định của lõi. */
+    toiThieu?: number | null;
   },
 ): Promise<TrangThaiNut> {
-  if (!o.onLine) return { kind: "can-mang" };
-  let soAnh: number;
-  try {
-    soAnh = demAnhThat((await o.docAnh()).anh);
-  } catch {
-    return { kind: "can-mang" };
+  if (o.toiThieu === null) return { kind: "can-mang" };
+  const toiThieu = o.toiThieu ?? MAC_DINH_ANH_THAT_TOI_THIEU;
+  let soAnh = 0;
+  if (toiThieu > 0) {
+    if (!o.onLine) return { kind: "can-mang" };
+    try {
+      soAnh = demAnhThat((await o.docAnh()).anh);
+    } catch {
+      return { kind: "can-mang" };
+    }
   }
-  const kq = kiemSanSang(hang, soAnh);
-  if (!kq.lenh) return { kind: "thieu", thieu: kq.thieu, soAnh };
+  const kq = kiemSanSang(hang, soAnh, toiThieu);
+  if (!kq.lenh) return { kind: "thieu", thieu: kq.thieu, soAnh, toiThieu };
   let gui: KetQuaGui;
   try {
     gui = await o.gui(kq.lenh);
@@ -103,7 +129,7 @@ export async function bamSanSang(
 
 /** Danh sách «Còn thiếu» tính lại từ hàng đang xem với số ảnh của lần bấm: điền xong điều nào thì điều đó rời ngay. */
 export function thieuHienTai(tt: TrangThaiNut, hang: HangSua): DieuThieu[] {
-  return tt.kind === "thieu" ? kiemSanSang(hang, tt.soAnh).thieu : [];
+  return tt.kind === "thieu" ? kiemSanSang(hang, tt.soAnh, tt.toiThieu).thieu : [];
 }
 
 /** Dấu «Chưa có» chỉ thuộc lần rao đã bấm — xem lần rao khác thì không dấu nào. */

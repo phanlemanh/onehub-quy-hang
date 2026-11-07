@@ -390,3 +390,18 @@ test("lần nhập: hàng Trưởng nhóm nhập hiện cho đầu chủ giữ c
   assert.equal((await send("GET", `/api/v1/listings/${h}`, undefined, s.dauChuB.cookie)).status, 404, "đầu chủ khác không");
   assert.equal((await send("GET", `/api/v1/listings/${h}`, undefined, s.telesales.cookie)).status, 404, "telesales không");
 });
+
+test("lần nhập: ảnh không còn chặn ở cửa nhập (anh-khong-chan-ban E2c)", async () => {
+  const s = await sanMoi("AKCB");
+  const { id, rows } = await lanNhap(s.dauChu.cookie, [{ ma: maMoi(), tt: "Đang bán" }]);
+  const kq = await ghi(s.dauChu.cookie, id, rows);
+  assert.match(kq.rows[0]!.reason, /ở Chưa đủ để rao — thiếu/, "cửa nhập chưa đọc pháp lý, tình trạng sử dụng (hàng can-nhap-len-bang-chung)");
+  assert.doesNotMatch(kq.rows[0]!.reason, /ảnh thật|realPhoto/, "sàn mặc định 0: lý do không nêu ảnh");
+  // Sàn đặt tối thiểu 2: lý do nêu «ảnh thật» bằng nhãn, không mã thô.
+  const s2 = await sanMoi("AKCB2");
+  await appPool.query("insert into company_settings (company_id, key, value, updated_by) values ($1, 'listing.ready_min_real_photos', '2'::jsonb, $2)", [s2.companyId, s2.dauChu.userId]);
+  const l2 = await lanNhap(s2.dauChu.cookie, [{ ma: maMoi(), tt: "Đang bán" }]);
+  const kq2 = await ghi(s2.dauChu.cookie, l2.id, l2.rows);
+  assert.match(kq2.rows[0]!.reason, /ảnh thật/, "sàn đặt 2: lý do nêu ảnh thật");
+  assert.doesNotMatch(kq2.rows[0]!.reason, /realPhoto/, "không mã thô");
+});

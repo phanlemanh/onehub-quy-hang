@@ -228,7 +228,7 @@ function lechThuTuNhom(ham: HamDung): string[] {
   return out;
 }
 test("E1 danh sách thẻ: nhóm đúng thứ tự bộ nhóm như lưới máy tính, mỗi việc một thẻ, không có lưới", () => {
-  assert.equal(NHOM_LUOI.length, 5);
+  assert.equal(NHOM_LUOI.length, 6);
   assert.deepEqual(lechThuTuNhom(dungNhomThe), []);
 });
 test("E1 đối chứng đỏ: bản sao xếp nhóm theo tên → bộ so nêu vị trí lệch", () => {

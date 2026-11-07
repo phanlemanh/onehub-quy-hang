@@ -85,7 +85,7 @@ test("mã căn phải có chữ hay số", () => {
 });
 
 test("sẵn sàng bán sau khi gắn mã", () => {
-  const ctx = { listPrice: 3_200_000_000, feeInclusion: "included", legalStatus: "Sổ hồng", occupantType: "Đang trống", realPhotoCount: 0 };
+  const ctx = { listPrice: 3_200_000_000, feeInclusion: "included", legalStatus: "Sổ hồng", occupantType: "Đang trống", realPhotoCount: 0, minRealPhotos: 1 };
   const truoc = missingFor("Active", { ...ctx, unitNumber: foldListing(day([CHUA_MA])).unitNumber });
   assert.ok(truoc.includes("unitNumber"));
   assert.ok(!truoc.includes("realPhoto"));

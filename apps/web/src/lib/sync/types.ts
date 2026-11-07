@@ -20,6 +20,8 @@ export type ListingView = { id: string } & ListingState & {
     statusChangeTimestamp?: string | null;
     lastPriceChange?: LanDoi | null;
     lastStatusChange?: LanDoi | null;
+    /** Số ảnh thật gửi được (RESO `PhotosCount`, anh-khong-chan-ban); kho trên máy cũ chưa có tới lần kéo kế. */
+    photosCount?: number;
     /** Lúc vào trạng thái hiện tại (hàng 46) — đổi nhãn tại chỗ không đặt lại; kho trên máy cũ chưa có tới lần kéo kế. */
     lucVaoTrangThai?: string | null;
   };

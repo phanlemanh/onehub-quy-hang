@@ -178,11 +178,12 @@ export function chonLanRao(ds: readonly LanRao[], lan: string | null): string | 
   return (ds.find((r) => r.dangMo) ?? ds[0])?.id ?? null;
 }
 
-export const NHAN_PHAN: Record<string, string> = { price: "Giá", furnished: "Nội thất", legalStatus: "Pháp lý", financing: "Tài chính", occupantType: "Tình trạng sử dụng" };
+export const NHAN_PHAN: Record<string, string> = { price: "Giá", furnished: "Nội thất", legalStatus: "Pháp lý", financing: "Tài chính", occupantType: "Tình trạng sử dụng", photos: "Ảnh thật" };
 
 /** Phần của lần rao đang xem và mức đủ tính bằng luật lõi trên bản trên máy. */
 export function phanLanRao(l: ListingView): { gia: string; phi: string | null; truong: [string, string][]; mucDu: { co: number; tren: number; thieu: string[] } } {
-  const md = completeness(l);
+  // Mục ảnh (anh-khong-chan-ban) khi bản xem mang số ảnh thật; kho trên máy cũ chưa có số thì năm mục như trước.
+  const md = completeness(l, l.photosCount === undefined ? undefined : { photosCount: l.photosCount });
   return {
     gia: dinhDangGia(l.listPrice),
     phi: l.feeInclusion ? (FEE_LABEL[l.feeInclusion] ?? l.feeInclusion) : null,

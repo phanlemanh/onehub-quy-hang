@@ -103,7 +103,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 
 | # | Khoá | Điểm | Kiểu | Mặc định | Khoảng | Ai đổi | Ghi đè | Hiệu lực | Lớp | Tình trạng | Nguồn | Màn |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 33 | `listing.ready_min_real_photos` | Số ảnh thật tối thiểu (ngăn Gửi được, không ảnh mẫu, chưa xoá) để căn vào Đang bán | `int` | 1 | 1–20 (sàn nâng được, không bỏ được — giữ nghĩa K7) | Quản trị sàn | — | lần đổi trạng thái kế | company_internal | Mở | Luật 17; hàng 23 (giám sát đồng ý 01/11); MLS mỗi nơi một luật (Đối chiếu ngành §7); lõi `listing/san-sang.ts`, máy chủ đọc khi đổi sang Đang bán | chưa có |
+| 33 | `listing.ready_min_real_photos` | Số ảnh thật tối thiểu (ngăn Gửi được, không ảnh mẫu, chưa xoá) để căn vào Đang bán | `int` | 0 | 0–20 | Quản trị sàn | — | lần đổi trạng thái kế | company_internal | Mở | Luật 17; hàng 23 (giám sát đồng ý 01/11); anh-khong-chan-ban (chủ kho 06/11: mặc định 0, thiếu ảnh không chặn bán, sàn đặt 1–20 thì chặn như cũ); MLS mỗi nơi một luật (Đối chiếu ngành §7); lõi `listing/san-sang.ts`, máy chủ đọc khi đổi sang Đang bán | anh-khong-chan-ban |
 
 ## B. Ứng viên — chưa mở, chờ điều kiện
 
@@ -126,8 +126,8 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K3 | Trần của bảy lớp dữ liệu | Bất biến | `data-classes.ts`; ADR-0017 của onehub-invest |
 | K4 | Ai thấy nguồn: đầu chủ giữ căn và trưởng nhóm; quản trị sàn không tự thấy | Bất biến 2 kề; quyền | ADR-0010; `access/bang-xem-nguon.json` |
 | K5 | Trục ai thấy hàng: «Chỉ tôi» → «Toàn sàn» khi lần đầu Đang bán | Quyền, lớp khó đảo; «Nhóm» chưa có | §6; hàng 12; `visibility/index.ts` |
-| K6 | Mức đủ thông tin: năm mục, theo loại hình — cũng là năm nhóm của danh sách hỏi trong chế độ cuộc gọi | Danh sách hỏi chung; so được giữa sàn | ADR-0008 quyết định 5; ADR-0016 quyết định 2; hàng 28 (`DANH_SACH_HOI` khớp `COMPLETENESS_ITEMS`) |
-| K7 | Điều kiện tối thiểu vào Đang bán: mã căn, giá kèm điều kiện phí (thay cho giá về tay tới hàng 28), ít nhất một ảnh thật, pháp lý, tình trạng sử dụng; số ảnh thật tối thiểu sàn nâng được ở #33 | Nghĩa của «Đang bán» trên trang khách | Luật 17; ADR-0008 Hỏi-1; hàng 23; `missingFor` |
+| K6 | Mức đủ thông tin: năm mục mô tả, theo loại hình — cũng là năm nhóm của danh sách hỏi trong chế độ cuộc gọi; cộng mục «Ảnh thật» khi biết số ảnh (anh-khong-chan-ban) — mục ảnh không vào danh sách hỏi | Danh sách hỏi chung; so được giữa sàn | ADR-0008 quyết định 5; ADR-0016 quyết định 2; hàng 28 (`DANH_SACH_HOI` khớp `COMPLETENESS_ITEMS`) |
+| K7 | Điều kiện tối thiểu vào Đang bán: mã căn, giá kèm điều kiện phí (thay cho giá về tay tới hàng 28), pháp lý, tình trạng sử dụng; ảnh thật chỉ khi sàn đặt số tối thiểu ≥ 1 ở #33 (mặc định 0 từ anh-khong-chan-ban, chủ kho 06/11) | Nghĩa của «Đang bán» trên trang khách | Luật 17; ADR-0008 Hỏi-1; hàng 23; `missingFor` |
 | K8 | Mỗi căn ở đúng một hàng đợi; ép giá thắng gọi lại | Hôm nay đọc được | Luật 18 |
 | K9 | Sửa giá hay trạng thái là vừa xác nhận với chủ nhà | Tắt theo từng lệnh, không theo sàn | Luật 9; ADR-0008 quyết định 5; ADR-0011 quyết định 8 |
 | K10 | Cách đọc mã căn của khu | Dữ liệu của danh mục dùng chung, không của sàn | Hàng 9; `catalog/code-rule.ts` |

@@ -66,8 +66,8 @@ test("điều ảnh thật vào Đang bán (hàng 23, E1)", async () => {
   const BON = { listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant" };
   // [realPhotoCount, minRealPhotos, mong] — viết tay, không sinh từ hàm.
   const BANG: [number, number | undefined, string[]][] = [
-    [0, undefined, ["realPhoto"]],
-    [1, undefined, []],
+    [0, 1, ["realPhoto"]],
+    [1, 1, []],
     [1, 2, ["realPhoto"]],
     [2, 2, []],
     [5, 3, []],
@@ -76,31 +76,58 @@ test("điều ảnh thật vào Đang bán (hàng 23, E1)", async () => {
     assert.deepEqual(missingFor("Active", { ...BON, realPhotoCount: dem, minRealPhotos: toiThieu }), mong, `ảnh ${dem}, tối thiểu ${toiThieu ?? "vắng"}`);
   }
   assert.deepEqual(
-    missingFor("Active", { listPrice: null, feeInclusion: null, legalStatus: null, occupantType: null, realPhotoCount: 0 }),
+    missingFor("Active", { listPrice: null, feeInclusion: null, legalStatus: null, occupantType: null, realPhotoCount: 0, minRealPhotos: 1 }),
     ["listPrice", "feeInclusion", "realPhoto", "legalStatus", "occupantType"],
     "thiếu cả năm theo thứ tự cố định",
   );
   // Vắng số đếm (Bảng hàng, Hỏi-2): điều ảnh không xét trên máy.
   assert.deepEqual(missingFor("Active", BON), []);
   for (const [to, them] of [["Pending", {}], ["Hold", {}], ["Withdrawn", { withdrawnReason: "unreachable" }], ["Closed", { closePrice: 3_400_000_000 }]] as const) {
-    assert.ok(!missingFor(to, { ...BON, ...them, realPhotoCount: 0 }).includes("realPhoto"), `${to} không đòi ảnh`);
+    assert.ok(!missingFor(to, { ...BON, ...them, realPhotoCount: 0, minRealPhotos: 1 }).includes("realPhoto"), `${to} không đòi ảnh`);
   }
-  assert.deepEqual(checkTransition("Incomplete", "Active", { ...BON, realPhotoCount: 0 }), { ok: false, kind: "missing-requirement", missing: ["realPhoto"] });
+  assert.deepEqual(checkTransition("Incomplete", "Active", { ...BON, realPhotoCount: 0, minRealPhotos: 1 }), { ok: false, kind: "missing-requirement", missing: ["realPhoto"] });
   // Mã căn (giám sát «C»): hàng chưa có mã chỉ báo «mã căn», không báo thêm ảnh; có mã thì như trên; khoá vắng thì không xét.
-  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: null, realPhotoCount: 0 }), ["unitNumber"], "chưa có mã căn");
-  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "", realPhotoCount: 0 }), ["unitNumber"], "mã căn rỗng");
-  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "A-0601", realPhotoCount: 0 }), ["realPhoto"], "có mã, chưa ảnh");
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: null, realPhotoCount: 0, minRealPhotos: 1 }), ["unitNumber"], "chưa có mã căn");
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "", realPhotoCount: 0, minRealPhotos: 1 }), ["unitNumber"], "mã căn rỗng");
+  assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "A-0601", realPhotoCount: 0, minRealPhotos: 1 }), ["realPhoto"], "có mã, chưa ảnh");
   assert.deepEqual(missingFor("Active", { ...BON, unitNumber: "A-0601", realPhotoCount: 1 }), [], "có mã, có ảnh");
 });
 
-test("đọc cấu hình số ảnh thật tối thiểu (hàng 23, E1)", async () => {
+test("số ảnh thật tối thiểu mặc định 0 (anh-khong-chan-ban, E1)", async () => {
+  const { missingFor, MAC_DINH_ANH_THAT_TOI_THIEU } = await import("./status");
+  const { SO_DIEM } = await import("../config/so");
+  const { KHOANG_ANH_THAT_TOI_THIEU } = await import("./san-sang");
+  assert.equal(MAC_DINH_ANH_THAT_TOI_THIEU, 0, "mặc định 0 — thiếu ảnh không chặn bán");
+  const d = SO_DIEM.find((x) => x.khoa === "listing.ready_min_real_photos")!;
+  assert.deepEqual([d.macDinh, (d.kieu as { min: number }).min, (d.kieu as { max: number }).max], [0, 0, 20], "sổ điểm 33: 0–20, mặc định 0");
+  assert.deepEqual([KHOANG_ANH_THAT_TOI_THIEU.min, KHOANG_ANH_THAT_TOI_THIEU.max], [0, 20], "bản sao khoảng ở lõi");
+  const DU = { listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant", unitNumber: "A-0601" };
+  // Ma trận viết trước: [tối thiểu, số ảnh, mong].
+  const BANG: [number | undefined, number, string[]][] = [
+    [undefined, 0, []],
+    [0, 0, []],
+    [1, 0, ["realPhoto"]],
+    [1, 1, []],
+    [2, 1, ["realPhoto"]],
+    [2, 2, []],
+    [20, 19, ["realPhoto"]],
+    [20, 20, []],
+  ];
+  for (const [toiThieu, dem, mong] of BANG) {
+    assert.deepEqual(missingFor("Active", { ...DU, realPhotoCount: dem, minRealPhotos: toiThieu }), mong, `tối thiểu ${toiThieu ?? "vắng"}, ảnh ${dem}: cần ${JSON.stringify(mong)}`);
+  }
+});
+
+test("đọc cấu hình số ảnh thật tối thiểu (hàng 23, E1; anh-khong-chan-ban: mặc định 0)", async () => {
   const { docCauHinhSanSang, KHOA_ANH_THAT_TOI_THIEU } = await import("./san-sang");
-  assert.deepEqual(docCauHinhSanSang([]), { minRealPhotos: 1, loi: null }, "vắng dòng");
+  assert.deepEqual(docCauHinhSanSang([]), { minRealPhotos: 0, loi: null }, "vắng dòng");
   assert.deepEqual(docCauHinhSanSang([{ key: KHOA_ANH_THAT_TOI_THIEU, value: 3 }]), { minRealPhotos: 3, loi: null });
-  assert.deepEqual(docCauHinhSanSang([{ key: "lead.routing_strategy", value: 3 }]), { minRealPhotos: 1, loi: null }, "khoá khác không tính");
-  for (const v of [0, 21, 2.5, "2", null]) {
+  assert.deepEqual(docCauHinhSanSang([{ key: KHOA_ANH_THAT_TOI_THIEU, value: 2 }]), { minRealPhotos: 2, loi: null });
+  assert.deepEqual(docCauHinhSanSang([{ key: KHOA_ANH_THAT_TOI_THIEU, value: 0 }]), { minRealPhotos: 0, loi: null }, "0 hợp lệ");
+  assert.deepEqual(docCauHinhSanSang([{ key: "lead.routing_strategy", value: 3 }]), { minRealPhotos: 0, loi: null }, "khoá khác không tính");
+  for (const v of [-1, 21, 1.5, 2.5, "2", null]) {
     const kq = docCauHinhSanSang([{ key: KHOA_ANH_THAT_TOI_THIEU, value: v }]);
-    assert.equal(kq.minRealPhotos, 1, `giá trị ${JSON.stringify(v)} về mặc định`);
+    assert.equal(kq.minRealPhotos, 0, `giá trị ${JSON.stringify(v)} về mặc định`);
     assert.match(kq.loi ?? "", /listing\.ready_min_real_photos/, `giá trị ${JSON.stringify(v)} phải báo lỗi nêu khoá`);
   }
 });
