@@ -5,7 +5,7 @@ slug: mau-bang-hang-va-bai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-06-mau-bang-hang-va-bai-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07
@@ -115,3 +115,14 @@ Không thêm số đo mới.
   - AC-10 (màn Mẫu theo khuôn, đủ chữ từng trạng thái, nhãn menu «Mẫu»): ship không có bằng chứng nhìn màn của máy — bài nhìn
     màn E10 đi đúng cả 11 bước nhưng đỏ 3 lượt vì lỗi hydration sẵn có của Bảng hàng (bốn khung) trên console; bài thuần
     chữ trạng thái (E10c) và lưới khuôn (E10b) vẫn xanh, đi theo AC-1.
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu Quản trị lưu lời cho Zalo rồi bấm Lưu ở Facebook ngay trước khi màn kịp làm mới, lời Zalo vừa lưu có thể bị xoá mà màn vẫn báo «Đã lưu». Việc này chỉ xảy ra khi thao tác rất sát nhau hoặc hai Quản trị cùng sửa, và người dùng nhập lại được. — `apps/web/src/app/(app)/settings/templates/vung-mau-bai.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Một bài kiểm tin Gửi có thể vẫn xanh dù tin soạn sẵn thiếu lời mở đầu của mẫu. Người dùng không gặp lỗi ngay, nhưng sau này nếu tin mất lời mở đầu thì máy có thể không báo. — `packages/api/test-db/mau-bang-hang-va-bai/mau.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Một số câu trạng thái trên màn Mẫu, như câu lỗi đọc của vùng mẫu bảng hàng, chưa có bài kiểm tự động dựng ra để soi. Nếu chữ ở đó sai hay mất thì máy không bắt được, và người dùng có thể thấy câu báo thiếu hoặc lạ. — `apps/web/src/app/(app)/settings/templates/mau-san.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Hồ sơ chứng minh có hai tệp ghi không khớp nhau về lần lưu tên trùng bị từ chối. Người dùng không gặp gì, nhưng người duyệt khó tin rằng lần từ chối đó thật sự xảy ra đúng chỗ. — `_acceptance/mau-bang-hang-va-bai/evidence/E10-network.txt`
+- Ngoài-5 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Ghi chú về lỗi chớp màn của Bảng hàng nói ngược bên nào dựng gì, nên người theo dõi sau này có thể đi tìm nguyên nhân sai hướng. Người dùng chỉ thấy màn nháy khi tải, tải lại là hết. — `_acceptance/mau-bang-hang-va-bai/evals.yaml`
+- Ngoài-6 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bảng hàng có thể nháy hoặc dựng lại một lần khi mới mở, và có nhiều kiểu hơn mức đã khai. Dữ liệu không mất, tải lại là hiện đúng. — `_acceptance/mau-bang-hang-va-bai/evals.yaml`
+- Ngoài-7 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Hồ sơ không cho thấy lần lưu mẫu trùng tên bị từ chối ở phía mạng, dù màn báo lỗi có ghi lại. Người dùng không bị ảnh hưởng. — `_acceptance/mau-bang-hang-va-bai/evidence/E10-network.txt`
+- Ngoài-10 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Khi không đọc được mẫu bài, bài Zalo hoặc Facebook được chép ra thiếu lời mở đầu và lời kết của sàn mà không có báo gì. Người gửi có thể gửi đi mà không biết. — `apps/web/src/app/(app)/inventory/mau-xuat-san.ts`
+- Ngoài-11 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm có thể không bắt được lỗi nếu hộp Xuất đang mở sau này đọc lại mẫu mới giữa chừng. Người dùng có thể thấy cột đổi khi đang xem. — `apps/web/src/app/(app)/inventory/phat-hang/mau.test.ts`
+- Ngoài-12 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm chống lộ thông tin chủ nhà ở màn Mẫu có thể không bắt được lỗi nếu sau này có thông tin nội bộ lọt vào màn này. — `apps/web/src/app/(app)/settings/templates/mau-san.ro-ri.test.ts`
+- Ngoài-13 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm chống lộ thông tin không quét hết các tệp của màn Mẫu, nên lỗi lộ thông tin ở phần bị sót hoặc tệp thêm sau có thể không bị phát hiện. — `apps/web/src/app/(app)/settings/templates/mau-san.ro-ri.test.ts`

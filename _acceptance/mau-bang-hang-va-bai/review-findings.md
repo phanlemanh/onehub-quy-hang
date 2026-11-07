@@ -1,35 +1,54 @@
-# Review findings: mau-bang-hang-va-bai (round 3)
+# Review findings: mau-bang-hang-va-bai (round 4)
 
 ## Trong hợp đồng
-
-Không có finding nào.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hai tệp bằng chứng E10 nói ngược nhau: console có lỗi 400 nhưng nhật ký mạng không có yêu cầu nào trả 400**
+- **Lưu Mẫu bài của một kênh ghi lại kênh kia từ bản chụp cũ, nên có thể xoá lời vừa lưu**
+  Người dùng thấy gì: Nếu Quản trị lưu lời cho Zalo rồi bấm Lưu ở Facebook ngay trước khi màn kịp làm mới, lời Zalo vừa lưu có thể bị xoá mà màn vẫn báo «Đã lưu». Việc này chỉ xảy ra khi thao tác rất sát nhau hoặc hai Quản trị cùng sửa, và người dùng nhập lại được.
+  Căn cứ: Hậu quả là mất một đoạn lời mẫu ngắn, không lộ dữ liệu, chỉ xảy ra khi hai thao tác chồng nhau và nhập lại được; nên ghi hạn chế đã biết thay vì chặn phát hành.
+  file: `apps/web/src/app/(app)/settings/templates/vung-mau-bai.tsx`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình 3 (assert chuỗi có mặt / quan hệ thoái hoá) — E7b so thứ tự bằng indexOf nhưng không chặn trường hợp -1**
+  Người dùng thấy gì: Một bài kiểm tin Gửi có thể vẫn xanh dù tin soạn sẵn thiếu lời mở đầu của mẫu. Người dùng không gặp lỗi ngay, nhưng sau này nếu tin mất lời mở đầu thì máy có thể không báo.
+  Căn cứ: Không ảnh hưởng người dùng hiện tại và không mất dữ liệu; chỉ làm lưới an toàn của bài kiểm lỏng hơn, và bổ sung sau rẻ.
+  file: `packages/api/test-db/mau-bang-hang-va-bai/mau.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình 5 (tuyên quét lớp nhưng chỉ có điểm-case) — E10c «chữ của từng trạng thái» không dựng từng trạng thái của cả hai vùng**
+  Người dùng thấy gì: Một số câu trạng thái trên màn Mẫu, như câu lỗi đọc của vùng mẫu bảng hàng, chưa có bài kiểm tự động dựng ra để soi. Nếu chữ ở đó sai hay mất thì máy không bắt được, và người dùng có thể thấy câu báo thiếu hoặc lạ.
+  Căn cứ: Chỉ ảnh hưởng chữ báo trạng thái, không mất hay lộ dữ liệu, và phần này đã được chủ kho chấp nhận là hạn chế đã biết ở cổng bằng chứng.
+  file: `apps/web/src/app/(app)/settings/templates/mau-san.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hai tệp bằng chứng E10 nói ngược nhau: console có lỗi 400 nhưng nhật ký mạng không có yêu cầu nào trả 400 (r3 · tệp đã đổi)**
   Người dùng thấy gì: Hồ sơ chứng minh có hai tệp ghi không khớp nhau về lần lưu tên trùng bị từ chối. Người dùng không gặp gì, nhưng người duyệt khó tin rằng lần từ chối đó thật sự xảy ra đúng chỗ.
   Căn cứ: Không ảnh hưởng người dùng cuối và không mất dữ liệu; chỉ làm hồ sơ nghiệm thu kém thuyết phục, chụp lại bằng chứng sau thì rẻ.
   file: `_acceptance/mau-bang-hang-va-bai/evidence/E10-network.txt`
   severity: medium
   Đề xuất: known-limits
 
-- **Phần khai lỗi hydration trong expected của E10 tả ngược phía máy chủ và phía máy khách**
+- **Phần khai lỗi hydration trong expected của E10 tả ngược phía máy chủ và phía máy khách (r3 · tệp đã đổi)**
   Người dùng thấy gì: Ghi chú về lỗi chớp màn của Bảng hàng nói ngược bên nào dựng gì, nên người theo dõi sau này có thể đi tìm nguyên nhân sai hướng. Người dùng chỉ thấy màn nháy khi tải, tải lại là hết.
   Căn cứ: Hậu quả nhẹ, chỉ là ghi chú sai gây tốn công tìm sau này; người dùng tự khỏi bằng cách tải lại và sửa ghi chú rất rẻ.
   file: `_acceptance/mau-bang-hang-va-bai/evals.yaml`
   severity: low
   Đề xuất: known-limits
 
-- **E10's console exception names one hydration error, but the recorded run has four, and three of them look different**
+- **E10's console exception names one hydration error, but the recorded run has four, and three of them look different (r3 · tệp đã đổi)**
   Người dùng thấy gì: Bảng hàng có thể nháy hoặc dựng lại một lần khi mới mở, và có nhiều kiểu hơn mức đã khai. Dữ liệu không mất, tải lại là hiện đúng.
   Căn cứ: Là lỗi giao diện sẵn có của Bảng hàng, không mất hay lộ dữ liệu, người dùng tự qua được bằng cách tải lại; ghi vào han chế đã biết và theo dõi ở L-45 là đủ.
   file: `_acceptance/mau-bang-hang-va-bai/evals.yaml`
   severity: medium
   Đề xuất: known-limits
 
-- **The network evidence doesn't show the planned 400 from saving the sale's export template**
+- **The network evidence doesn't show the planned 400 from saving the sale's export template (r3 · tệp đã đổi)**
   Người dùng thấy gì: Hồ sơ không cho thấy lần lưu mẫu trùng tên bị từ chối ở phía mạng, dù màn báo lỗi có ghi lại. Người dùng không bị ảnh hưởng.
   Căn cứ: Chỉ thiếu dấu vết trong hồ sơ, không ảnh hưởng người dùng và không mất dữ liệu; chụp lại nhật ký là việc rẻ.
   file: `_acceptance/mau-bang-hang-va-bai/evidence/E10-network.txt`
@@ -78,4 +97,4 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: low
   Đề xuất: known-limits
 
-⚠ Cụm ngoài vùng phủ: 4/4 lỗi rơi vào file không bộ đo nào phủ (_acceptance/mau-bang-hang-va-bai/evidence/E10-network.txt, _acceptance/mau-bang-hang-va-bai/evals.yaml) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.
+Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
