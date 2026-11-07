@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 0126278f277d8ca980e2111a076863955d0b9b46
+verified_commit: 6ec707acdf6b345f927fa16e98482c6435378424
 human_signoff: Manh Phan 2026-11-07
 ---
 
@@ -274,3 +274,7 @@ none — every multi-run eval is uniform
 Round 1: lịch sử round này không có trong dữ liệu được giao cho bản báo cáo này.
 Round 2: S4 lượt 2, hợp đồng verified; toàn bộ eval PASS.
 Round 3: sửa nút «Sẵn sàng bán» xử số ảnh tối thiểu chưa đọc được như sàn đòi ảnh (commit 0126278f); chạy lại E5, E7, E8b cùng các lệnh suite, tất cả PASS; các eval còn lại mang từ round 2.
+
+### Re-pin lần 1 — 2026-11-07, do hoá cũ do gộp main vào nhánh trước khi gộp
+run_id: repin-20261107T094820Z-25392
+sha: 6ec707acdf6b345f927fa16e98482c6435378424 · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · ngoài làn máy: E8b · diff chạm vật đo ngoài làn máy: E8b — chưa chứng lại, đi vòng S4 delta
