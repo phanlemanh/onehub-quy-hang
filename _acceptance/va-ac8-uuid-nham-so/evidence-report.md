@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 3e4a02a1448d333968c3192fa3c1c5a3854d2045
-human_signoff:
+human_signoff: Manh Phan 2026-11-07
 ---
 
 # Evidence Report: va-ac8-uuid-nham-so
