@@ -5,7 +5,7 @@ slug: ghim-lai-ban-that-qua-ci
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-07-ghim-lai-ban-that-qua-ci-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
