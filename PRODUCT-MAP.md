@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>102 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>103 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -125,6 +125,7 @@ flowchart TD
 - Quản trị sàn thêm nhãn trạng thái riêng neo vào một trong sáu trạng thái chuẩn; căn mang nhãn nhận luật và màu của neo ở Bảng hàng, Hôm nay và trang khách; đếm vẫn theo sáu trạng thái chuẩn (`trang-thai-rieng`)
 - Đầu chủ để lead và hàng chưa khoá nguồn ở «Chỉ tôi»; hàng lên «Toàn sàn» thì cả sàn mới thấy (`truc-ai-thay-hang`)
 - Quản trị sàn tạo trường riêng có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường của hàng hiện và lọc được ở Bảng hàng, không ra trang khách; liên hệ có trường riêng theo loại, trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
+- Bài kiểm «AC-8 không dữ liệu thật» của bộ dữ liệu mẫu thấp tầng không còn đỏ chập chờn: phép dò số điện thoại gỡ các đoạn được phép (UUID, ngày, mốc giờ) trước khi dò, nên không bắt dãy chữ số nằm trong UUID ngẫu nhiên; một số điện thoại thật cài vào bộ mẫu vẫn bị bắt. (`va-ac8-uuid-nham-so`)
 - Bài «AC-9 nạp và xoá một lần» của bộ dữ liệu mẫu thấp tầng chỉ đếm những dòng do chính bài nạp, nên chạy được trên cơ sở dữ liệu đã có sàn mẫu khác (như trên bản thật); bước triển khai trên nhánh chính xanh lại. (`va-ac9-mau-co-san`)
 - "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập (React (`va-bang-hang-cuon-so-lon`)
 - Bước triển khai trên nhánh chính không còn chạy bộ kiểm cách ly trên cơ sở dữ liệu bản thật: bộ kiểm chạy trên cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp; bản thật chỉ cập nhật cấu trúc dữ liệu rồi kiểm nhanh chỉ đọc rằng mọi bảng công ty bật và ép luật theo dòng và vai của API không là chủ bảng; không quá hai kết nối bản thật (`va-deploy-csdl-tam`)
