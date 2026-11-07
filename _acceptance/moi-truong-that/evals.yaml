@@ -49,7 +49,7 @@ evals:
     criterion: AC-7
     executor: script
     cmd: config:executors.script.kiem_ci
-    expected: "exit 0; tám dòng ĐẠT, «KẾT: ĐẠT» — bước triển khai theo ADR-0009 «Sửa đổi 06/11»: chờ năm job, migration → kiểm nhanh chỉ đọc → deploy hook, không bộ kiểm ghi trên bản thật, chuỗi kết nối bản thật chỉ ở hai bước"
+    expected: "exit 0; «KẾT: ĐẠT» với đúng tám dòng ĐẠT nguyên văn: «ĐẠT chỉ chạy khi push main» · «ĐẠT chờ check, isolation (bộ kiểm cách ly trên Postgres tạm), secrets, gate, ro-ri» · «ĐẠT bí mật ở environment production; chuỗi kết nối bản thật chỉ ở bước migrate và bước kiểm nhanh» · «ĐẠT thứ tự: migration → kiểm nhanh chỉ đọc → deploy hook» · «ĐẠT không chạy bộ kiểm ghi nào (cách ly, API) trên cơ sở dữ liệu thật» · «ĐẠT deploy không nằm trong ci-ok» · «ĐẠT vercel.json tắt tự deploy main» · «ĐẠT vercel.json ghim vùng sin1» (ADR-0009 «Sửa đổi 06/11»). Chiều đỏ: ma trận phá thử năm ca của hàng va-thuoc-ci-moi-truong-that-ban-that (E2) — vế lệch in «HỎNG <vế>»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E8
