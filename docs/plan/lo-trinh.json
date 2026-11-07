@@ -2879,6 +2879,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     },
     {
+      "ma": "ghim-lai-ban-that-qua-ci",
+      "cau_giao": "Thêm một lượt chạy bằng tay trên GitHub (environment production) ghim lại một hồ sơ nghiệm thu cần biến của bản thật: lấy chuỗi kết nối và khoá từ bí mật GitHub, chạy làn ghim lại cho đúng một hồ sơ trên nhánh của PR, đẩy dòng ghim về nhánh ấy; không in bí mật, không chạy bộ kiểm ghi nào trên bản thật; chủ kho chỉ bấm chạy và duyệt environment.",
+      "slug": "ghim-lai-ban-that-qua-ci",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
+    },
+    {
       "ma": "mau-api-ten-truong-tieng-anh",
       "cau_giao": "Đường API mẫu bảng hàng và mẫu bài của sàn (/api/v1/company/templates/export, /posts) và dữ liệu mẫu đã lưu dùng tên trường tiếng Anh; mẫu sàn đã lưu bằng tên cũ vẫn đọc và xuất được, lần lưu kế ghi tên mới.",
       "slug": "mau-api-ten-truong-tieng-anh",
