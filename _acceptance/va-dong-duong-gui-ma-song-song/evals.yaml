@@ -1,0 +1,26 @@
+# Bộ đo của hàng va-dong-duong-gui-ma-song-song. Chép tệp kiểm ra .acceptance-runs/, chèn một người trước lần đếm «sau»,
+# chạy riêng trên Postgres của DATABASE_URL (mặc định dãy Q 5577). Không ghi vào cây kho.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --song-song
+    paths: ["packages/api/test-db/dong-duong-gui-ma/**", "_acceptance/va-dong-duong-gui-ma-song-song/thu/**"]
+    expected: "exit 0; dòng {ca:'song-song', ok:true} — bản chép của cây chèn một người mang email khác vẫn thoát 0 với «✔ đường lõi mật khẩu đóng» (đỏ in «bản cây đỏ khi có người email khác: <dòng lỗi>»); đối chứng đỏ: bản tệp tại 987c78c6 cùng phép chèn thoát ≠ 0 với «đường đăng ký tạo người» (xanh thì in «bản trước hàng xanh — phép chèn không chạm lần đếm»; đỏ sai thông điệp in «bản trước hàng đỏ sai thông điệp»)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --dang-ky-tao
+    paths: ["packages/api/test-db/dong-duong-gui-ma/**", "_acceptance/va-dong-duong-gui-ma-song-song/thu/**"]
+    expected: "exit 0; dòng {ca:'dang-ky-tao', ok:true} — nguồn ca gọi đường đăng ký bằng đúng biểu thức BANG_LOI.signUpEmail[0] với emailMoi (thiếu in «lời gọi email mới không đi đường đăng ký của bảng lõi») và khẳng định emailMoi đã ở dạng chuẩn trim().toLowerCase() với thông điệp «email thử chưa ở dạng chuẩn» (thiếu in «mất khẳng định dạng chuẩn»); bản chép của cây chèn người mang đúng email ấy thoát ≠ 0 với «đường đăng ký tạo người» (xanh in «chèn người đúng email mà ca vẫn xanh»; đỏ sai thông điệp in «đỏ sai thông điệp»)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --that
+    paths: ["packages/api/test-db/dong-duong-gui-ma/**", "_acceptance/va-dong-duong-gui-ma-song-song/thu/**"]
+    expected: "exit 0; dòng {ca:'that', ok:true} — tệp thật của cây chạy riêng thoát 0, «# pass 4» và «✔ đường lõi mật khẩu đóng» (đỏ in «tệp thật đỏ: …» hay «không đủ 4 ca đạt»); nguồn ca còn đủ năm khẳng định đã có (ghim chuỗi thông điệp: «đường lõi đã tắt vẫn gửi thư», «đường lõi đã tắt đốt lượt xin mã», «đường lõi đã tắt đếm thử sai», «trả ${res.status}», đối chứng dương send-verification-otp) — thiếu in «mất khẳng định: <chuỗi>»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
