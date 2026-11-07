@@ -1,0 +1,2 @@
+Driver: CDP qua chup.mjs, khong co read_network_requests. networkObserved = n-a (driver).
+Ghi chu tu log may dev 3493: canh bao hydration-mismatch o MenuGocNhin (inventory/thanh-cong-cu.tsx:52) khi mo /inventory; khong phai loi fetch/XHR.
