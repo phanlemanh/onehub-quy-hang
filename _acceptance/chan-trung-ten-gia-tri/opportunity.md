@@ -3,10 +3,10 @@ schema_version: 1
 slug: chan-trung-ten-gia-tri
 feature: "Cách gọi riêng: khi lưu tên riêng của một giá trị, chặn chữ trùng với tên đang hiện (tên riêng hoặc tên mặc định) của giá trị khác trong cùng tập đóng; quản trị thấy lý do ngay ở ô đang sửa, không có hai lựa chọn khác nghĩa mà cùng một chữ trên bảng hàng, ô lọc hay trang khách."
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided                # discovery | decided | archived
+decision: build # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-07T01:14:58Z    # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
