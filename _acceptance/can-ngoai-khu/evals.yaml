@@ -109,3 +109,11 @@ evals:
     expected: "exit 0 của toàn bộ bộ kiểm lõi; số ca fail = 0."
     paths: ["packages/core/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10d
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai (vòng chỉ đổi chỗ đọc toà cho hàng không toà, không đổi bố cục màn)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
