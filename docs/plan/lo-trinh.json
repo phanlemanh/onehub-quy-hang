@@ -2836,6 +2836,17 @@
       "cau_giao": "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập («Không mở được màn này», React #185 — vòng cập nhật vô hạn resizeItem → measureElement → onChange của bộ cuộn ảo), ở 1366×768 và 1920×1080; một bài kiểm đơn vị khoá vòng ấy.",
       "slug": "va-bang-hang-cuon-so-lon",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-06"
+    },
+    {
+      "ma": "kiem-tan-dinh-bac-ninh",
+      "cau_giao": "Bài kiểm ca «Tân Định, Tỉnh Bắc Ninh» của bộ đọc địa chỉ ghim kết quả dương (tên xã vào «chưa có trong danh mục», trạng thái cụ thể) và có phá thử riêng chứng nó đỏ khi bộ đọc lui về so bỏ dấu — thay phép kiểm âm tính đứng một mình.",
+      "slug": "kiem-tan-dinh-bac-ninh",
+      "vi_sao": "Ngoài-1 của doc-xa-thieu-mot-phan-dau: ca «Tân Định, Tỉnh Bắc Ninh» chỉ kiểm âm tính. Chủ kho ký Cổng Bằng chứng 07/11 và chọn «mở hợp đồng mới» (d-20261107T011616Z-10); giám sát duyệt X-12. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Ca «Tân Định, Tỉnh Bắc Ninh» đỏ khi bộ đọc trả rỗng, trả sai xã hay lui về so bỏ dấu; xanh trên bộ đọc hiện tại với kết quả dương ghim tường minh",
+      "vung": [
+        "packages/core/src/address/**"
+      ]
     }
   ],
   "chan_troi": [
