@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 104674c5ff1d7c133c7112f8da9f1f808f30a21b
+verified_commit: fe0911f75095389492ef152e6bcd70e2457d9afb
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -129,3 +129,7 @@ none — every multi-run eval is uniform (moi eval chay mot lan, deterministic)
 Round 1: lich su round nay nam trong run-log, khong lap lai o day.
 Round 2: S4 lan 2 dat, dung va, trinh ba duong (commit b19ab9d2).
 Round 3: E1-E5 va bay lenh suite deu dat tren commit 104674c5 (bo chan chay truoc cai goi, cai goi khong chay script, chan hai khoa chay lenh, tep nut vao t3_paths). Cac loi ngoai hop dong nam trong review-findings.md.
+
+### Re-pin lần 1 — 2026-11-07, do ghim lại sau gộp main
+run_id: repin-20261107T220641Z-74975
+sha: fe0911f75095389492ef152e6bcd70e2457d9afb · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
