@@ -5,10 +5,8 @@ slug: ghim-lai-ban-that-qua-ci
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: draft
 design_doc: docs/superpowers/specs/2026-11-07-ghim-lai-ban-that-qua-ci-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-07
 ---
 
 # Acceptance Contract: ghim-lai-ban-that-qua-ci
@@ -37,11 +35,15 @@ Source input: hàng `ghim-lai-ban-that-qua-ci` (`docs/plan/lo-trinh.json`) · ô
   When đọc từng bản sao,
   Then đúng vế bị phá hỏng, mười một vế còn lại vẫn đạt; luồng không sửa thì mười hai vế đạt.
 
-- **AC-3** — Bộ chặn từ chối hồ sơ còn eval chạy bộ kiểm ghi.
-  Given bản sao rút từ `_acceptance/config.yaml` và `_acceptance/moi-truong-that/evals.yaml` thật,
-  When chạy `.github/scripts/chan-ghim-ban-that.mjs moi-truong-that`,
-  Then E3 khai không chạy → thoát 0 «CHO CHẠY»; E3 còn chạy `cach_ly_that` → thoát 1 gọi tên E3 và lệnh; khoá để trống
-  thiếu `DATABASE_URL` → thoát 1; eval trỏ khoá không có → thoát 1 gọi tên eval.
+- **AC-3** — Bộ chặn chỉ cho chạy lệnh trong danh sách cho phép, giải như main.
+  Given bản «sẵn bấm» rút từ `_acceptance/config.yaml` và `_acceptance/moi-truong-that/evals.yaml` thật (E3 khai không chạy,
+  E8 gọi thẳng bản thật), và bảy bản sao mỗi bản sửa một chỗ,
+  When chạy `.github/scripts/chan-ghim-ban-that.mjs moi-truong-that --root <nhánh> --goc <main>` (đọc evals bằng bộ đọc của
+  kit),
+  Then bản sẵn bấm → thoát 0 «CHO CHẠY»; E3 còn chạy `cach_ly_that`, E3 trỏ bộ nạp mẫu, E3 trỏ bộ kiểm chặn trùng tên, E3
+  viết dạng khối nhiều dòng → thoát 1 «khoá … không trong danh sách cho phép»; E3 viết thẳng lệnh cách ly → thoát 1 «lệnh
+  viết thẳng»; nhánh định nghĩa lại một khoá cho phép → thoát 1 «ở nhánh giải khác main»; thiếu khoá để trống
+  `DATABASE_URL` → thoát 1.
 
 - **AC-4** — Bộ kiểm chung của làn ghim lại không thấy chuỗi kết nối.
   Given kho git tạm mang khoá `repin_ci_blank_env` của kho, một bộ kiểm chung chỉ xanh khi `DATABASE_URL` trống và một eval
@@ -58,7 +60,8 @@ Source input: hàng `ghim-lai-ban-that-qua-ci` (`docs/plan/lo-trinh.json`) · ô
 
 Trục: vật {luồng, bộ chặn, bộ quét, khoá config} × chiều {xanh trên vật lành, đỏ khi phá}. Luồng: mười hai vế × một ca phá mỗi
 vế. Bộ quét: ba ca. Bộ
-chặn: bốn ca rút từ hồ sơ thật. Khoá: một kho tạm hai chiều. Thước CE: luồng `nap-mau.yml` (tiền lệ chạy tay với bí mật bản
+chặn: tám ca rút từ hồ sơ thật, phủ lớp bộ kiểm ghi (khoá ngoài danh sách, lệnh viết thẳng, viết dạng khối, nhánh định nghĩa
+lại khoá). Khoá: một kho tạm hai chiều. Thước CE: luồng `nap-mau.yml` (tiền lệ chạy tay với bí mật bản
 thật), job `deploy` của `ci.yml`.
 
 ## Đường đo
@@ -73,3 +76,9 @@ thật), job `deploy` của `ci.yml`.
 - Thêm hồ sơ khác vào danh sách; cho luồng ghi thẳng vào kho; đổi `KIT_TAG`.
 
 ## Notes
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
+  - Ngoài-2: Bộ chặn cũ đọc sai lệnh viết dạng khối nhiều dòng — bộ chặn mới đọc bằng bộ đọc của kit, ca này có trong AC-3.
+  - Ngoài-4: Khi bộ chặn từ chối, nút vẫn tải lên một tệp đính kèm mang kết quả cũ của nhánh; lượt chạy vẫn báo đỏ.
+  - Ngoài-5: Phép đo bộ chặn cũ chỉ thử một ca của lớp bộ kiểm ghi — AC-3 mới thử bảy ca.
+- Cổng Bằng chứng 07/11: chủ kho chọn «nâng phạm vi sửa ngay» cho Ngoài-1, Ngoài-3 — AC-3 viết lại thành danh sách cho phép
+  giải như main; Cổng Phạm vi duyệt lại.

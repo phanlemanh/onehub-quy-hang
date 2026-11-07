@@ -1,5 +1,5 @@
 {
-  "feature_plain": "Một nút trên GitHub thay anh chạy lệnh ghim lại hồ sơ cần bản thật; lượt chấm thấy bộ chặn của nút còn để lọt vài bộ kiểm có ghi dữ liệu.",
+  "feature_plain": "Một nút trên GitHub thay anh chạy lệnh ghim lại hồ sơ cần bản thật — bản sửa: bộ chặn giờ chỉ cho chạy năm lệnh chỉ đọc đã định sẵn, theo đúng anh chọn ở Cổng Bằng chứng.",
   "will_do": [
     {
       "id": "AC-1",
@@ -13,7 +13,7 @@
   "wont_do": [
     {
       "id": "AC-3",
-      "p": "Chặn mọi hồ sơ còn phép đo chạy bộ kiểm có ghi dữ liệu — nút sẽ không bao giờ ghi vào cơ sở dữ liệu thật."
+      "p": "Chặn mọi lệnh ngoài năm lệnh chỉ đọc đã định sẵn — kể cả lệnh viết thẳng, lệnh viết nhiều dòng, và nhánh tự định nghĩa lại tên lệnh — nên nút không ghi vào cơ sở dữ liệu thật."
     },
     {
       "id": "AC-4",

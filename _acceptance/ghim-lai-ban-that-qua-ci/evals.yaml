@@ -21,7 +21,7 @@ evals:
     executor: script
     cmd: node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --chan
     paths: [".github/scripts/chan-ghim-ban-that.mjs", "_acceptance/config.yaml", "_acceptance/moi-truong-that/evals.yaml", "_acceptance/ghim-lai-ban-that-qua-ci/thu/**"]
-    expected: "exit 0; bốn dòng «ĐẠT bộ chặn «<ca>» → thoát <mã>, «<chữ ghim>»»: E3 khai không chạy → 0 «CHO CHẠY moi-truong-that»; E3 còn chạy bộ kiểm cách ly → 1 «CHẶN E3: chạy bộ kiểm ghi trên bản thật»; thiếu khoá để trống → 1 «CHẶN feature_loop.repin_ci_blank_env không để trống DATABASE_URL»; eval trỏ khoá không có → 1 «CHẶN E7: không giải được …». Vật thật lệch (E3 không còn trỏ cach_ly_that) in «vật thật lệch»."
+    expected: "exit 0; tám dòng «ĐẠT bộ chặn «<ca>» → thoát <mã>, «<chữ ghim>»»: bản sẵn bấm → 0 «CHO CHẠY moi-truong-that»; E3 còn chạy bộ kiểm cách ly → 1 «CHẶN E3: khoá executors.script.cach_ly_that không trong danh sách cho phép»; E3 trỏ bộ nạp mẫu → 1 «… du_lieu_mau không trong danh sách cho phép»; E3 trỏ bộ kiểm chặn trùng tên → 1 «… chan_trung_ten …»; E3 viết thẳng lệnh cách ly → 1 «CHẶN E3: lệnh viết thẳng»; E3 viết dạng khối → 1 «… cach_ly_that không trong danh sách cho phép»; nhánh định nghĩa lại khoá cho phép → 1 «CHẶN E1: … ở nhánh giải khác main»; thiếu khoá để trống → 1. «ma trận bộ chặn đủ 8 ca». Vật thật lệch in «vật thật lệch»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4

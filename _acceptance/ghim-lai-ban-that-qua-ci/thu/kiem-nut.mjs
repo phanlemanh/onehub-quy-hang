@@ -11,6 +11,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const GOC = fileURLToPath(new URL("../../../", import.meta.url));
+const KIT_DO = process.env.CLAUDE_PLUGIN_ROOT || execFileSync(process.execPath, [join(GOC, "packages/ui-lint/tim-kit.mjs")], { encoding: "utf8" }).trim();
 const LUONG = readFileSync(join(GOC, ".github/workflows/ghim-lai-ban-that.yml"), "utf8");
 const CI = readFileSync(join(GOC, ".github/workflows/ci.yml"), "utf8");
 const loi = [];
@@ -111,33 +112,47 @@ if (process.argv.includes("--tinh")) {
   const CHAN = join(GOC, ".github/scripts/chan-ghim-ban-that.mjs");
   const cfgThat = readFileSync(join(GOC, "_acceptance/config.yaml"), "utf8");
   const evThat = readFileSync(join(GOC, "_acceptance/moi-truong-that/evals.yaml"), "utf8");
-  // Rút từ vật thật: E3 của moi-truong-that trỏ cach_ly_that (bộ kiểm cách ly); bản khai not-run là bản PR #192 đặt.
-  const khoiE3 = evThat.slice(evThat.indexOf("  - id: E3"), evThat.indexOf("  - id: E4"));
-  if (!khoiE3.includes("cmd: config:executors.script.cach_ly_that")) dat(false, "vật thật lệch: E3 của moi-truong-that không còn trỏ cach_ly_that");
-  const daKhai = /status:\s*not-run/.test(khoiE3) ? evThat : evThat.replace(khoiE3, khoiE3.replace("    cmd: config:executors.script.cach_ly_that\n", "    cmd: config:executors.script.cach_ly_that\n    status: not-run\n"));
-  const chuaKhai = evThat.replace(khoiE3, khoiE3.replace(/ {4}status: not-run\n/, ""));
-  const chay = (cfg, ev) => {
+  // Rút từ vật thật: bản «sẵn bấm» là hồ sơ moi-truong-that với E3 khai không chạy và E8 gọi thẳng bản thật — đúng bản mà
+  // nhánh PR #192 đặt trước khi bấm (thiết kế mục 5). Mỗi ca sửa MỘT chỗ của bản ấy hay của config nhánh.
+  const khoi = (ev, id, sau) => ev.slice(ev.indexOf(`  - id: ${id}`), ev.indexOf(`  - id: ${sau}`));
+  const e3 = khoi(evThat, "E3", "E4"), e8 = khoi(evThat, "E8", "E9");
+  if (!e3.includes("cmd: config:executors.script.cach_ly_that")) dat(false, "vật thật lệch: E3 của moi-truong-that không còn trỏ cach_ly_that");
+  const e3Khai = /status:\s*not-run/.test(e3) ? e3 : e3.replace("    cmd: config:executors.script.cach_ly_that\n", "    cmd: config:executors.script.cach_ly_that\n    status: not-run\n");
+  const e8That = e8.replace(/cmd: config:executors\.script\.suc_khoe_\w+/, "cmd: config:executors.script.suc_khoe_that");
+  const sanBam = evThat.replace(e3, e3Khai).replace(e8, e8That);
+  const e3Cua = (ev) => khoi(ev, "E3", "E4");
+  const chay = (cfgNhanh, ev) => {
     const g = mkdtempSync(join(tmpdir(), "chan-"));
+    const m = mkdtempSync(join(tmpdir(), "chan-goc-"));
     try {
       mkdirSync(join(g, "_acceptance/moi-truong-that"), { recursive: true });
-      writeFileSync(join(g, "_acceptance/config.yaml"), cfg);
+      mkdirSync(join(m, "_acceptance"), { recursive: true });
+      writeFileSync(join(g, "_acceptance/config.yaml"), cfgNhanh);
+      writeFileSync(join(m, "_acceptance/config.yaml"), cfgThat);
       writeFileSync(join(g, "_acceptance/moi-truong-that/evals.yaml"), ev);
-      const r = spawnSync(process.execPath, [CHAN, "moi-truong-that", "--root", g], { encoding: "utf8" });
+      const r = spawnSync(process.execPath, [CHAN, "moi-truong-that", "--root", g, "--goc", m], { encoding: "utf8", env: { ...process.env, CLAUDE_PLUGIN_ROOT: KIT_DO } });
       return { exit: r.status, out: r.stdout + r.stderr };
     } finally {
       rmSync(g, { recursive: true, force: true });
+      rmSync(m, { recursive: true, force: true });
     }
   };
+  const doiE3 = (thanh) => sanBam.replace(e3Cua(sanBam), thanh);
   const CA = [
-    ["E3 khai không chạy", cfgThat, daKhai, 0, "CHO CHẠY moi-truong-that"],
-    ["E3 còn chạy bộ kiểm cách ly", cfgThat, chuaKhai, 1, "CHẶN E3: chạy bộ kiểm ghi trên bản thật"],
-    ["thiếu khoá để trống DATABASE_URL", cfgThat.replace(/repin_ci_blank_env: \[DATABASE_URL, /, "repin_ci_blank_env: ["), daKhai, 1, "CHẶN feature_loop.repin_ci_blank_env không để trống DATABASE_URL"],
-    ["eval trỏ khoá không có", cfgThat, daKhai.replace("config:executors.script.kiem_ci", "config:executors.script.khong_co"), 1, "CHẶN E7: không giải được config:executors.script.khong_co"],
+    ["bản sẵn bấm (E3 khai không chạy, E8 gọi bản thật)", cfgThat, sanBam, 0, "CHO CHẠY moi-truong-that"],
+    ["E3 còn chạy bộ kiểm cách ly", cfgThat, doiE3(e3Cua(sanBam).replace(/ {4}status: not-run\n/, "").replace(/ {4}superseded_by: .*\n/, "")), 1, "CHẶN E3: khoá executors.script.cach_ly_that không trong danh sách cho phép"],
+    ["E3 trỏ bộ nạp dữ liệu mẫu", cfgThat, doiE3("  - id: E3\n    criterion: AC-3\n    executor: script\n    cmd: config:executors.script.du_lieu_mau\n    expected: \"x\"\n\n"), 1, "CHẶN E3: khoá executors.script.du_lieu_mau không trong danh sách cho phép"],
+    ["E3 trỏ bộ kiểm chặn trùng tên", cfgThat, doiE3("  - id: E3\n    criterion: AC-3\n    executor: test\n    cmd: config:executors.test.chan_trung_ten\n    expected: \"x\"\n\n"), 1, "CHẶN E3: khoá executors.test.chan_trung_ten không trong danh sách cho phép"],
+    ["E3 viết thẳng lệnh cách ly", cfgThat, doiE3("  - id: E3\n    criterion: AC-3\n    executor: script\n    cmd: node --test packages/db/tests/isolation.test.mjs\n    expected: \"x\"\n\n"), 1, "CHẶN E3: lệnh viết thẳng, không qua khoá cho phép"],
+    ["E3 viết dạng khối nhiều dòng", cfgThat, doiE3("  - id: E3\n    criterion: AC-3\n    executor: script\n    cmd: >\n      config:executors.script.cach_ly_that\n    expected: \"x\"\n\n"), 1, "CHẶN E3: khoá executors.script.cach_ly_that không trong danh sách cho phép"],
+    ["nhánh định nghĩa lại khoá cho phép", cfgThat.replace(/(\n {4}moi_truong_that: )"[^"]*"/, '$1"npm run test:isolation -w @quy-hang/db"'), sanBam, 1, "CHẶN E1: khoá executors.script.moi_truong_that ở nhánh giải khác main"],
+    ["thiếu khoá để trống DATABASE_URL", cfgThat.replace(/repin_ci_blank_env: \[DATABASE_URL, /, "repin_ci_blank_env: ["), sanBam, 1, "CHẶN feature_loop.repin_ci_blank_env không để trống DATABASE_URL"],
   ];
   for (const [ten, cfg, ev, ma, chu] of CA) {
     const r = chay(cfg, ev);
-    dat(r.exit === ma && r.out.includes(chu), `bộ chặn «${ten}» → thoát ${ma}, «${chu}» (được: thoát ${r.exit})`);
+    dat(r.exit === ma && r.out.includes(chu), `bộ chặn «${ten}» → thoát ${ma}, «${chu}» (được: thoát ${r.exit}${r.exit !== ma ? ` — ${r.out.trim().split("\n")[0]}` : ""})`);
   }
+  dat(CA.length === 8, `ma trận bộ chặn đủ 8 ca (có ${CA.length})`);
 } else if (process.argv.includes("--trong")) {
   // Kho git tạm có một hồ sơ: bộ kiểm chung thoát 0 chỉ khi DATABASE_URL trống, eval thoát 0 chỉ khi nó có.
   // Kit đúng bản luồng dùng: KIT_TAG đọc từ ci.yml, lấy từ kho kit theo tag (cùng cách luồng lấy).

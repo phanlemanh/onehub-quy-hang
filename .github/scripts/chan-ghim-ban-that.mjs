@@ -1,46 +1,70 @@
-// Bộ chặn của nút «Ghim lại hồ sơ cần bản thật» (hàng ghim-lai-ban-that-qua-ci). Đọc evals.yaml của hồ sơ, giải lệnh
-// `config:` theo _acceptance/config.yaml, và từ chối khi một eval còn chạy (không khai `status: not-run`) gọi bộ kiểm ghi —
-// cách ly hay API trên cơ sở dữ liệu — vì làn ghim lại chạy eval với chuỗi kết nối bản thật. Kiểm thêm khoá
-// feature_loop.repin_ci_blank_env để trống DATABASE_URL cho bộ kiểm chung. Chỉ đọc. Thoát 0 = cho chạy, 1 = chặn, 2 = gọi sai.
-// `--root <thư mục>`: đọc kho khác (chỉ để phá thử).
+// Bộ chặn của nút «Ghim lại hồ sơ cần bản thật» (hàng ghim-lai-ban-that-qua-ci). Làn ghim lại của kit chạy mọi eval máy của
+// hồ sơ với chuỗi kết nối bản thật, nên bộ chặn đòi DANH SÁCH CHO PHÉP, không danh sách cấm:
+//   1. mọi eval máy còn chạy (đọc bằng chính bộ đọc của kit — parseEvals, isRepinMachineEval) phải trỏ `config:<khoá>` với
+//      khoá nằm trong CHO_PHEP — các lệnh chỉ đọc hay không chạm cơ sở dữ liệu; lệnh viết thẳng bị chặn;
+//   2. mỗi khoá được dùng phải giải RA CÙNG MỘT LỆNH ở config của main (`--goc`) và config của nhánh (`--root`) — nhánh không
+//      định nghĩa lại được khoá cho phép thành lệnh ghi;
+//   3. config của nhánh để trống DATABASE_URL cho bộ kiểm chung (feature_loop.repin_ci_blank_env).
+// Danh sách CHO_PHEP sống trong tệp này, ở main; thêm khoá là sửa tệp qua PR. Thoát 0 = cho chạy, 1 = chặn, 2 = gọi sai.
+// Kit tìm qua CLAUDE_PLUGIN_ROOT (luồng đặt) hoặc packages/ui-lint/tim-kit.mjs của kho.
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 
+/** Khoá executor được phép chạy với chuỗi kết nối bản thật: chỉ đọc hay không chạm cơ sở dữ liệu. */
+export const CHO_PHEP = [
+  "executors.script.moi_truong_that", // kiem-moi-truong.mjs — chỉ đọc
+  "executors.script.suc_khoe_that", // GET /api/v1/health
+  "executors.script.kiem_ci", // đọc ci.yml, vercel.json
+  "executors.test.api", // test đơn vị của API, không cơ sở dữ liệu
+  "executors.script.hooks", // bài tự kiểm của rào
+];
+
 const args = process.argv.slice(2);
-const iRoot = args.indexOf("--root");
-const ROOT = iRoot >= 0 ? resolve(args[iRoot + 1]) : process.cwd();
-const slug = args.find((a, i) => !a.startsWith("--") && (iRoot < 0 || i !== iRoot + 1));
+const co = (ten) => {
+  const i = args.indexOf(ten);
+  return i >= 0 ? resolve(args[i + 1]) : null;
+};
+const ROOT = co("--root") ?? process.cwd();
+const GOC = co("--goc") ?? process.cwd();
+const slug = args.find((a, i) => !a.startsWith("--") && !["--root", "--goc"].includes(args[i - 1]));
 if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
-  console.error("dùng: chan-ghim-ban-that.mjs <slug> [--root <thư mục>]");
+  console.error("dùng: chan-ghim-ban-that.mjs <slug> [--root <cây nhánh>] [--goc <cây main>]");
   process.exit(2);
 }
-const GHI = /test:isolation|test:db|db:test/;
-const config = readFileSync(join(ROOT, "_acceptance/config.yaml"), "utf8");
+const KIT = process.env.CLAUDE_PLUGIN_ROOT || execFileSync(process.execPath, [join(GOC, "packages/ui-lint/tim-kit.mjs")], { encoding: "utf8" }).trim();
+const req = createRequire(import.meta.url);
+const ey = req(join(KIT, "lib/eval-yaml.cjs"));
+const core = req(join(KIT, "lib/evidence-core.cjs"));
+
+const cfgNhanh = readFileSync(join(ROOT, "_acceptance/config.yaml"), "utf8");
+const cfgGoc = readFileSync(join(GOC, "_acceptance/config.yaml"), "utf8");
 const evals = readFileSync(join(ROOT, "_acceptance", slug, "evals.yaml"), "utf8");
 
-// Giải `config:executors.<nhóm>.<khoá>`: dòng `<khoá>: "<lệnh>"` nằm dưới `  <nhóm>:` của khối executors.
-const giai = (ref) => {
-  const [, nhom, khoa] = ref.split(".");
-  const khoi = config.slice(config.indexOf(`\n  ${nhom}:`));
-  const m = khoi.match(new RegExp(`\\n    ${khoa}:\\s*"((?:[^"\\\\]|\\\\.)*)"`));
-  return m ? m[1].replace(/\\"/g, '"') : null;
-};
-
 const loi = [];
-const khoi = evals.split(/\n {2}- id: /).slice(1);
-for (const k of khoi) {
-  const id = k.split("\n")[0].trim();
-  if (/\n\s+status:\s*not-run\b/.test(k)) continue;
-  const cmd = (k.match(/\n\s+cmd:\s*(.+)/) ?? [])[1]?.trim() ?? "";
-  const lenh = cmd.startsWith("config:") ? giai(cmd.slice("config:".length)) : cmd;
-  if (lenh === null) loi.push(`${id}: không giải được ${cmd}`);
-  else if (GHI.test(lenh)) loi.push(`${id}: chạy bộ kiểm ghi trên bản thật (${lenh})`);
+const ds = ey.parseEvals(evals, ["executor", "cmd", "status"]);
+const may = ds.filter((e) => core.isRepinMachineEval(e));
+for (const e of may) {
+  const cmd = String(e.cmd ?? "").trim();
+  if (!cmd.startsWith("config:")) {
+    loi.push(`${e.id}: lệnh viết thẳng, không qua khoá cho phép (${cmd || "trống"})`);
+    continue;
+  }
+  const khoa = cmd.slice("config:".length);
+  if (!CHO_PHEP.includes(khoa)) {
+    loi.push(`${e.id}: khoá ${khoa} không trong danh sách cho phép`);
+    continue;
+  }
+  const lenhNhanh = core.resolveConfigKey(cfgNhanh, khoa);
+  const lenhGoc = core.resolveConfigKey(cfgGoc, khoa);
+  if (!lenhNhanh || lenhNhanh !== lenhGoc) loi.push(`${e.id}: khoá ${khoa} ở nhánh giải khác main`);
 }
-const trong = (config.match(/\n {2}repin_ci_blank_env:\s*\[([^\]]*)\]/) ?? [])[1] ?? "";
+const trong = (cfgNhanh.match(/\n {2}repin_ci_blank_env:\s*\[([^\]]*)\]/) ?? [])[1] ?? "";
 if (!trong.split(",").map((s) => s.trim()).includes("DATABASE_URL")) loi.push("feature_loop.repin_ci_blank_env không để trống DATABASE_URL cho bộ kiểm chung");
 
 if (loi.length) {
   for (const l of loi) console.log(`CHẶN ${l}`);
   process.exit(1);
 }
-console.log(`CHO CHẠY ${slug}: ${khoi.length} eval, không eval còn chạy nào gọi bộ kiểm ghi; bộ kiểm chung chạy với DATABASE_URL trống`);
+console.log(`CHO CHẠY ${slug}: ${may.length} eval máy, mọi lệnh qua khoá cho phép và giải như main; bộ kiểm chung chạy với DATABASE_URL trống`);

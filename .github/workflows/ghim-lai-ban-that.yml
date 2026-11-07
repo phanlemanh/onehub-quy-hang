@@ -59,7 +59,7 @@ jobs:
           git -C "$RUNNER_TEMP/kit" checkout -q FETCH_HEAD
           echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"
       - name: Chặn hồ sơ còn eval chạy bộ kiểm ghi
-        run: node goc/.github/scripts/chan-ghim-ban-that.mjs "$HO_SO" --root nhanh
+        run: node goc/.github/scripts/chan-ghim-ban-that.mjs "$HO_SO" --root nhanh --goc goc
       - name: Ghim lại
         env:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
