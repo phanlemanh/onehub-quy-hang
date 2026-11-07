@@ -5,7 +5,7 @@ slug: kiem-nhanh-rang-buoc-ban-ma
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-07
 design_doc: docs/superpowers/specs/2026-11-06-kiem-nhanh-rang-buoc-ban-ma-design.md
