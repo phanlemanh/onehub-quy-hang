@@ -5,7 +5,7 @@ slug: chuan-hoa-moi-cua
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-07-chuan-hoa-moi-cua-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07T09:00:00Z
@@ -82,6 +82,11 @@ Bỏ quét bằng skill — trục kê tay (sổ: dòng «bỏ coverage-scan»):
 
 - Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
   - Màn Từ điển ở khổ điện thoại: bảng cách gõ phải cuộn ngang, nút «Bỏ» có thể nằm ngoài khung — quản trị duyệt từ điển trên máy tính.
+  - Ngoài-1: trang bằng chứng của lượt 2 từng hiện kết quả trượt cũ; đã dựng lại theo lượt 3.
+  - Ngoài-2: hai người chọn hai giá trị khác nhau cho cùng một cách gõ thì lựa chọn sau bị bỏ qua mà vẫn cộng lượt chọn cho giá trị cũ.
+  - Ngoài-3: cùng trường hợp ấy, nhật ký ghi giá trị của người sau dù cách gõ vẫn trỏ giá trị cũ.
+  - Ngoài-4: bước xem trước không tải được từ điển thì không báo, ô dùng cách gõ đã duyệt hiện «cần người».
+  - Ngoài-5: bài kiểm bước xem trước chưa kiểm dấu của ô hướng sau khi chọn gợi ý.
 
 - Migration 051 `company_value_aliases` + `company_value_alias_events`; luật theo dòng theo sàn; bộ kiểm cách ly thêm ca.
 - Bài kiểm trên Postgres dãy B (5572); dữ liệu thử «[Tên]», `0900 000 0xx`.

@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>106 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>107 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -32,10 +32,6 @@ flowchart TD
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
-
-## Đang làm
-
-- Ở bước xem trước nhập file, đầu chủ gõ «dong nam», «bp», «Đang gd» thì thấy máy gợi giá trị chuẩn; chọn gợi ý thành đề xuất từ điển của sàn; quản trị sàn duyệt ở màn Từ điển và xem sức khoẻ dữ liệu; cách gõ đã duyệt chuẩn hoá thẳng ở mọi lần nhập sau (`chuan-hoa-moi-cua`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
@@ -56,6 +52,7 @@ flowchart TD
 - Cách gọi riêng chặn tên riêng của một giá trị trùng tên đang hiện (riêng hay mặc định) của giá trị khác cùng tập đóng, ở máy chủ và ngay ở ô đang sửa (`chan-trung-ten-gia-tri`)
 - Che vùng ảnh: đầu chủ kéo khung che lên ảnh căn rồi lưu một bản che nhẹ ở ngăn Gửi được; bản gốc giữ nguyên và sang ngăn Nội bộ (`che-vung-anh`)
 - Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo (`chia-lead-va-han`)
+- Ở bước xem trước nhập file, đầu chủ gõ «dong nam», «bp», «Đang gd» thì thấy máy gợi giá trị chuẩn; chọn gợi ý thành đề xuất từ điển của sàn; quản trị sàn duyệt ở màn Từ điển và xem sức khoẻ dữ liệu; cách gõ đã duyệt chuẩn hoá thẳng ở mọi lần nhập sau (`chuan-hoa-moi-cua`)
 - Đầu chủ chụp ảnh khi đi xem nhà ngay trên điện thoại và ảnh vào đúng ngăn của căn, tải lên ở nền (`chup-anh-dien-thoai`)
 - Đầu chủ chọn một căn và thấy cột hồ sơ cạnh bảng — thuộc tính tự điền, lần rao, lịch sử giá và trạng thái ai sửa khi nào; thấy thuộc tính sai thì bấm «Báo sai thông tin căn» (`cot-ho-so-can`)
 - Đầu chủ mở chế độ cuộc gọi của một lead trên máy tính: thẻ lead so giá với toà, danh sách hỏi chọn bằng phím, tính giá bao phí ↔ về tay; ghi xong thì mức đủ tự tính lại (`cuoc-goi-khai-thac`)
