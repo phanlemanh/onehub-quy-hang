@@ -5,7 +5,7 @@ slug: mau-api-ten-truong-tieng-anh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-07-mau-api-ten-truong-tieng-anh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07
@@ -101,3 +101,6 @@ Không thêm số đo mới.
 - Hỏi-1 (chuyển dữ liệu: không migration, hạng T2 — khuyến nghị) và Hỏi-2 (ghi bằng tên cũ: từ chối — khuyến nghị) chờ
   chủ kho ở Cổng Phạm vi; hợp đồng soạn theo khuyến nghị.
 - Theo Hỏi-2: Quản trị đang mở màn Mẫu từ trước lúc phát hành bấm lưu thì bị báo lỗi, tải lại trang rồi lưu lại.
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu ai đó gửi lên mẫu có một khoá lạ trùng tên một thuộc tính sẵn có của hệ thống, lần lưu vẫn bị từ chối đúng, nhưng lời báo lỗi kèm một gợi ý tên đúng vô nghĩa. Dữ liệu của sàn không bị hỏng. — `packages/core/src/export/mau-san.ts`
+  - Đã sửa trước lượt 2 (commit 77c9906c, ca kiểm `constructor`/`toString` ở f2a12613); mục còn trong sổ vì lượt 2 mang
+    nó theo nhãn «r1 · tệp đã đổi» — lượt 2 chấm trên bản đã sửa, PASS.
