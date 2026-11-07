@@ -41,6 +41,7 @@ import {
   type XemThu,
 } from "@/lib/nhap/trang-thai";
 
+import { chonGoiY, docCachGoDaDuyet, goiYCuaO, guiDeXuat } from "@/lib/nhap/goi-y";
 import { BangTrung, BangXemTruoc } from "./bang";
 import { HopHoanTac, LanNhapGanDay } from "./hoan-tac";
 import { NUT_SAU_GHI } from "@/lib/nhap/hoan-tac";
@@ -80,16 +81,21 @@ export function ManNhap({ vai }: { vai: string[] }) {
   const [dx, setDx] = useState<TrangThaiDeXuat>(() => ttDau(0));
   // Ô lạ còn lại (hàng 69): đề xuất cho ô «Cần người» ở bước Xem trước — riêng mỗi tệp.
   const [ola, setOla] = useState<TrangThaiOLa>(ttOLaDau);
+  // Gợi ý «Ý bạn là» (hàng 70): lỗi gửi đề xuất từ điển — ô đã sửa, chỉ báo một dòng.
+  const [loiGoiY, setLoiGoiY] = useState<string | null>(null);
   const olaMoi = useRef(ola);
   useEffect(() => {
     olaMoi.current = ola;
   }, [ola]);
 
   useEffect(() => {
-    fetch("/api/v1/catalog")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((catalog: CatalogData | null) => setCtx({ today: homNay(), ...(catalog ? { catalog } : {}) }))
-      .catch(() => setCtx({ today: homNay() }));
+    // Danh mục và cách gõ đã duyệt của sàn (hàng 70) cùng vào ngữ cảnh chuẩn hoá — như đường ghi của máy chủ.
+    Promise.all([
+      fetch("/api/v1/catalog")
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null) as Promise<CatalogData | null>,
+      docCachGoDaDuyet(fetch),
+    ]).then(([catalog, companyAliases]) => setCtx({ today: homNay(), ...(catalog ? { catalog } : {}), ...(companyAliases.length ? { companyAliases } : {}) }));
     aiHua.current = docTrangThaiAi(fetch)
       .then((t): AiMan => (laLoi(t) ? "loi" : t))
       .catch((): AiMan => "loi");
@@ -338,6 +344,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
       ) : null}
       {s.buoc === 3 && s.ong && ola.dangHoi ? <TrangThai kind="loading" title={CHO_O_LA} description="Máy chỉ gửi chữ của ô mã căn, giá, phí, trạng thái chưa đọc được — không gửi chủ nhà, số điện thoại, giá đáy, ghi chú. Vẫn sửa tay được." /> : null}
       {s.buoc === 3 && s.ong && !ola.dangHoi && ola.bao ? <TrangThai kind="notice" title="Máy không đề xuất lần này" description={ola.bao} /> : null}
+      {s.buoc === 3 && loiGoiY ? <TrangThai kind="error" title="Đề xuất từ điển chưa ghi" description={loiGoiY} /> : null}
       {s.buoc === 3 && s.ong && ctx ? (
         <BangXemTruoc
           ong={s.ong}
@@ -353,6 +360,13 @@ export function ManNhap({ vai }: { vai: string[] }) {
             setOla(r.tt);
           }}
           onBo={(src, bo) => setS(boDong(s, src, bo))}
+          goiY={(src, cot) => (s.ong ? goiYCuaO(s.ong, ctx, src, cot) : null)}
+          onChonGoiY={(src, cot, value) => {
+            const r = chonGoiY(s, src, cot, value, ctx);
+            setS(r.s);
+            setOla((cu) => tatO(cu, src, cot));
+            if (r.deXuat) void guiDeXuat(fetch, r.deXuat).then(setLoiGoiY);
+          }}
         />
       ) : null}
 
