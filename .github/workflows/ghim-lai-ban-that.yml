@@ -1,0 +1,89 @@
+# Nút ghim lại một hồ sơ nghiệm thu cần biến của bản thật (hàng ghim-lai-ban-that-qua-ci). Chủ kho (hay máy) bấm ở Actions →
+# «Ghim lại hồ sơ cần bản thật» → Run workflow trên main, chọn hồ sơ và gõ tên nhánh của PR. Environment production chỉ cho
+# nhánh main dùng bí mật, nên luồng chạy từ main rồi checkout nhánh của PR. Không quyền ghi kho: dòng ghim lại đi ra dạng tệp
+# đính kèm của lượt chạy; máy tải về và commit vào PR. Bí mật chỉ ở bước ghim lại; bộ kiểm chung chạy với biến bản thật để
+# trống (feature_loop.repin_ci_blank_env), nên chỉ eval của hồ sơ thấy biến. Bộ chặn (lấy từ main) từ chối hồ sơ có eval còn
+# chạy bộ kiểm ghi; bộ quét (lấy từ main) chặn tải tệp đính kèm mang chuỗi kết nối. Giới hạn đã biết (chủ kho chọn 08/11):
+# rào chặn NHẦM LẪN, không chặn một nhánh CỐ Ý cài mã — mã của nhánh chạy với chuỗi kết nối trong bước ghim lại.
+name: Ghim lại hồ sơ cần bản thật
+
+on:
+  workflow_dispatch:
+    inputs:
+      ho_so:
+        description: "Hồ sơ cần biến của bản thật"
+        type: choice
+        options: [moi-truong-that]
+      nhanh:
+        description: "Nhánh của PR chứa hồ sơ (ví dụ claude/va-thuoc-ci-moi-truong-that-ban-that)"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  ghim-lai:
+    name: ghim-lai
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: ghim-lai-ban-that
+      cancel-in-progress: false
+    env:
+      KIT_TAG: v2.37.0
+      HO_SO: ${{ inputs.ho_so }}
+      NHANH: ${{ inputs.nhanh }}
+    steps:
+      - name: Chỉ từ nhánh main, tên nhánh đúng dạng
+        run: |
+          [ "$GITHUB_REF" = "refs/heads/main" ] || { echo "Nút chỉ chạy từ nhánh main"; exit 1; }
+          [[ "$NHANH" =~ ^[A-Za-z0-9._/-]+$ ]] && [ "$NHANH" != "main" ] || { echo "Tên nhánh sai dạng hoặc là main"; exit 1; }
+      # Gác lấy từ main (thư mục goc), mã của hồ sơ lấy từ nhánh PR (thư mục nhanh) — nhánh không sửa được bộ chặn.
+      - uses: actions/checkout@v4
+        with:
+          path: goc
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.nhanh }}
+          path: nhanh
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: goc/.nvmrc
+      - name: Lấy kit theo tag (ngoài cây kho)
+        run: |
+          git init -q "$RUNNER_TEMP/kit"
+          git -C "$RUNNER_TEMP/kit" fetch -q --depth 1 https://github.com/phanlemanh/acceptance-gate-kit "refs/tags/$KIT_TAG"
+          git -C "$RUNNER_TEMP/kit" checkout -q FETCH_HEAD
+          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"
+      - name: Chặn hồ sơ còn eval chạy bộ kiểm ghi
+        run: node goc/.github/scripts/chan-ghim-ban-that.mjs "$HO_SO" --root nhanh --goc goc
+      # Cài gói SAU bộ chặn và không chạy script vòng đời của nhánh: mã của nhánh không chạy trước khi bộ chặn xét xong.
+      - run: npm ci --ignore-scripts
+        working-directory: nhanh
+      - name: Ghim lại
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+          APP_URL: https://quyhang.onehub.center
+        working-directory: nhanh
+        run: node "$CLAUDE_PLUGIN_ROOT/feature-loop/scripts/repin-lane.mjs" --root . --slug "$HO_SO" --reason "ghim lại bằng biến bản thật qua CI" --write
+      # Thông báo lỗi kết nối có thể in nguyên chuỗi kết nối; GitHub không che bí mật trong tệp đính kèm. Gặp thì dừng, không tải.
+      - name: Quét bí mật trong tệp sắp tải
+        id: quet
+        if: always()
+        env:
+          BI_MAT: ${{ secrets.PROD_DATABASE_URL }}
+        run: node goc/.github/scripts/quet-bi-mat.mjs "nhanh/_acceptance/$HO_SO/run-log.jsonl" "nhanh/_acceptance/$HO_SO/evidence-report.md"
+      - name: Gửi dòng ghim lại ra tệp đính kèm
+        if: always() && steps.quet.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghim-lai-${{ inputs.ho_so }}
+          path: |
+            nhanh/_acceptance/${{ inputs.ho_so }}/run-log.jsonl
+            nhanh/_acceptance/${{ inputs.ho_so }}/evidence-report.md
+          if-no-files-found: error
+          retention-days: 7
