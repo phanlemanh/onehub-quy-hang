@@ -1,8 +1,19 @@
+# Review findings: chuan-hoa-moi-cua (round 3)
+
 ## Trong hợp đồng
+
+(không có)
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
+
+- **Trang bằng chứng vẫn là bản của lượt chấm 2 (REJECT, E9u trượt) sau khi đã thu phạm vi**
+  Người dùng thấy gì: Trang bằng chứng người ký xem vẫn hiện kết quả cũ là không đạt ở khổ điện thoại, dù phạm vi đã thu lại và phần đó không còn thuộc bản này. Tính năng chuẩn hoá cho người dùng không bị ảnh hưởng; chỉ là người ký có thể đọc nhầm hiện trạng.
+  Căn cứ: Không ảnh hưởng gì tới người dùng cuối hay dữ liệu của họ, chỉ làm hồ sơ ký trông cũ; dựng lại trang là việc rẻ và làm được bất cứ lúc nào, nên ghi lại và đi tiếp là hợp lý.
+  file: `_acceptance/chuan-hoa-moi-cua/evidence-page.html`
+  severity: medium
+  Đề xuất: known-limits
 
 - **Đề xuất trùng chữ gập nhưng khác giá trị bị tính thành lượt chọn cho giá trị cũ, còn nhật ký lại ghi giá trị mới (r1)**
   Người dùng thấy gì: Nếu hai người chọn hai giá trị khác nhau cho cùng một cách gõ, lựa chọn của người sau bị bỏ qua mà vẫn tính phiếu cho giá trị của người trước. Số lần chọn trên màn Từ điển và nhật ký có thể lệch với điều người dùng thật sự chọn.
@@ -25,13 +36,11 @@ Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm v
   severity: low
   Đề xuất: known-limits
 
-- **Hình dạng 3 — ca E2 không kiểm dấu của ô hướng sau khi chọn gợi ý, dù lời hứa là ô hết «cần người» (r1 · tệp đã đổi)**
+- **Hình dạng 3 — ca E2 không kiểm dấu của ô hướng sau khi chọn gợi ý, dù lời hứa là ô hết «cần người» (r1)**
   Người dùng thấy gì: Phép kiểm tự động chưa chắc chắn ô hướng hết bị gắn «cần người» sau khi chọn gợi ý, dù giá trị đã đổi đúng. Nếu có lỗi, người nhập vẫn thấy cờ dù đã chọn xong.
   Căn cứ: Giá trị lưu vẫn đúng, chỉ là khoảng trống trong bài kiểm và người dùng nhìn thấy ngay nếu có sai; bổ sung kiểm sau rất rẻ.
   file: `apps/web/src/lib/nhap/goi-y.test.ts`
   severity: low
   Đề xuất: known-limits
-
-## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

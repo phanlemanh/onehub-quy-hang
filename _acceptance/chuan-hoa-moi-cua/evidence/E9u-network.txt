@@ -1,6 +1,39 @@
-E9u network (Claude_Browser, localhost:3460, 196 requests, doc 100 cuoi da doc)
-App-scope: POST /api/v1/auth/sign-out 200 x2, send-verification-otp 200 x2, sign-in/email-otp 200 x2,
-POST /api/v1/company/value-aliases/proposals 201 x3, PUT /api/v1/company/value-aliases/<id> 200,
-GET /api/v1/listings 200, GET /settings/dictionary 200.
-Note-only: GET /settings/dictionary?_rsc=... ERR_ABORTED (dieu huong bi huy khi tai lai trang, khong phai loi server).
-Console: chi info React DevTools va log HMR; khong co error.
+19091. [GET] http://localhost:3460/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+19092. [GET] http://localhost:3460/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+19093. [GET] http://localhost:3460/api/v1/listings => [200] OK
+19138. [GET] http://localhost:3460/api/v1/listings => [200] OK
+19139. [POST] http://localhost:3460/api/auth/sign-out => [404] Not Found
+19140. [POST] http://localhost:3460/api/v1/auth/sign-out => [200] OK
+19176. [POST] http://localhost:3460/api/v1/auth/email-otp/send-verification-otp => [200] OK
+19177. [POST] http://localhost:3460/api/v1/auth/sign-in/email-otp => [200] OK
+19178. [GET] http://localhost:3460/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+19179. [GET] http://localhost:3460/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+19180. [GET] http://localhost:3460/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+19181. [GET] http://localhost:3460/today?_rsc=2Md0sTUZcnjCijMr => [200] OK
+19211. [GET] http://localhost:3460/api/v1/catalog => [200] OK
+19212. [GET] http://localhost:3460/api/v1/company/settings/queue => [200] OK
+19213. [GET] http://localhost:3460/api/v1/leads/assigned => [200] OK
+19214. [GET] http://localhost:3460/api/v1/catalog => [200] OK
+19215. [GET] http://localhost:3460/api/v1/company/settings/queue => [200] OK
+19216. [GET] http://localhost:3460/api/v1/leads/assigned => [200] OK
+19217. [GET] http://localhost:3460/api/v1/push/public-key => [200] OK
+19218. [GET] http://localhost:3460/api/v1/push/public-key => [200] OK
+19219. [GET] http://localhost:3460/api/v1/listings => [200] OK
+19220. [POST] http://localhost:3460/api/v1/company/value-aliases/proposals => [201] Created
+19221. [POST] http://localhost:3460/api/v1/company/value-aliases/proposals => [201] Created
+19222. [POST] http://localhost:3460/api/v1/company/value-aliases/proposals => [201] Created
+19223. [POST] http://localhost:3460/api/v1/auth/sign-out => [200] OK
+19258. [POST] http://localhost:3460/api/v1/auth/email-otp/send-verification-otp => [200] OK
+19259. [POST] http://localhost:3460/api/v1/auth/sign-in/email-otp => [200] OK
+19260. [GET] http://localhost:3460/?_rsc=qYT2Wy2QR8kXuUU6 => [200] OK
+19261. [GET] http://localhost:3460/?_rsc=q3mOO9BClNZHexY7 => [200] OK
+19262. [GET] http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+19263. [GET] http://localhost:3460/settings?_rsc=2Md0sTUZcnjCijMr => [200] OK
+19278. [GET] http://localhost:3460/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+19279. [GET] http://localhost:3460/settings/users?_rsc=uNnECJ9dXqH8Hh5e => [200] OK
+19280. [GET] http://localhost:3460/api/v1/listings => [200] OK
+19325. [GET] http://localhost:3460/api/v1/listings => [200] OK
+19326. [PUT] http://localhost:3460/api/v1/company/value-aliases/3575d199-60c5-489c-99b8-3aaa03dce089 => [200] OK
+19327. [GET] http://localhost:3460/settings/dictionary?_rsc=Axz-sX-FynsEkwsi => [200] OK
+
+Note: 206 static requests not shown, run with "static" option to see them.
