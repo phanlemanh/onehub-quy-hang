@@ -96,14 +96,24 @@ try {
       else if (!doDungThongDiep(r)) loi.push(`đỏ sai thông điệp: ${dongLoi(r.out)}`);
     }
   } else {
+    // Ghim trong THÂN ca «đường lõi mật khẩu đóng» (từ dòng test(...) tới «\n});» đầu tiên sau nó) — chuỗi chung như
+    // «trả ${res.status}» còn ở ca khác nên đo cả tệp là đo chuỗi-có-mặt, không phải khẳng định của ca (lượt chấm 1).
+    const dau = nguonCay.indexOf(`test("${TEN_CA}"`);
+    const cuoi = dau < 0 ? -1 : nguonCay.indexOf("\n});", dau);
+    const than = dau < 0 || cuoi < 0 ? "" : nguonCay.slice(dau, cuoi + 4);
+    if (!than) loi.push(`không tìm thấy thân ca «${TEN_CA}»`);
     const GHIM = [
-      "đường lõi đã tắt vẫn gửi thư",
-      "đường lõi đã tắt đốt lượt xin mã",
-      "đường lõi đã tắt đếm thử sai",
-      "trả ${res.status}",
-      '"/email-otp/send-verification-otp", { email, type: "sign-in" })).status, 200);\n});',
+      "for (const path of duong) {",
+      "assert.equal(res.status, 404, `${path} lần ${k} trả ${res.status}`);",
+      'assert.equal(sent.length, 0, "đường lõi đã tắt vẫn gửi thư");',
+      'assert.equal(await demXinMa(email), truocMa, "đường lõi đã tắt đốt lượt xin mã");',
+      'assert.equal(await demSai(), truocSai, "đường lõi đã tắt đếm thử sai");',
+      'assert.equal((await authPost(auth, "/email-otp/send-verification-otp", { email, type: "sign-in" })).status, 200);\n});',
     ];
-    for (const g of GHIM) if (!nguonCay.includes(g)) loi.push(`mất khẳng định: ${g.split("\n")[0]}`);
+    for (const g of GHIM) if (than && !than.includes(g)) loi.push(`mất khẳng định: ${g.split("\n")[0]}`);
+    // Khẳng định 404 phải nằm trong vòng qua các đường lõi, trước vòng đăng ký email mới.
+    const iVong = than.indexOf(GHIM[0]), i404 = than.indexOf(GHIM[1]), iMoi = than.indexOf("email: emailMoi");
+    if (than && i404 >= 0 && !(iVong >= 0 && i404 > iVong && (iMoi < 0 || i404 < iMoi))) loi.push("khẳng định 404 không nằm trong vòng đường lõi");
     const r = chay(iNguon >= 0 ? chep(nguonCay, "that", null) : join(ROOT, REL));
     if (r.exit !== 0) loi.push(`tệp thật đỏ: ${dongLoi(r.out)}`);
     else if (!/ℹ pass 4\b/.test(r.out) || !r.out.includes(`✔ ${TEN_CA}`)) loi.push("không đủ 4 ca đạt");
