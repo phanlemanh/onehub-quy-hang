@@ -5,7 +5,7 @@ slug: anh-khong-chan-ban
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-07-anh-khong-chan-ban-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07

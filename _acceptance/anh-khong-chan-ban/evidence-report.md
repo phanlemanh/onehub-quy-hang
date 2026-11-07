@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6d2ec74effa4d535caca4cc61660ba2ebbb92080
+verified_commit: 0126278f277d8ca980e2111a076863955d0b9b46
 human_signoff:
 ---
 
@@ -34,203 +34,221 @@ human_signoff:
 
 ## Evidence
 
+Round 3 chạy lại E5, E7, E8b. Các eval còn lại mang từ round 2 (carry-forward).
+
+- eval: E5
+  run_id: minted-anh-khong-chan-ban-E5-r3
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-07T07:55:11Z
+  output: |
+    npm test -w @quy-hang/web
+    ℹ duration_ms 4401.6965
+
+- eval: E7
+  run_id: minted-anh-khong-chan-ban-E7-r3
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.web
+  verified_at: 2026-11-07T07:55:11Z
+  output: |
+    npm test -w @quy-hang/web
+    ℹ duration_ms 4401.6965
+
+- eval: E8b
+  run_id: minted-anh-khong-chan-ban-E8b-r3
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-07T07:55:11Z
+  screenshot: evidence/E8b-step1.png
+  observed: |
+    Khổ 1440:
+    - Cài đặt sàn › Trạng thái, nhóm «Lên Đang bán»: ô «Số ảnh thật tối thiểu để căn vào Đang bán» đang hiện 0. Câu nghĩa: «0 — căn lên Đang bán khi chưa có ảnh; ảnh hiện cần bổ sung. Đặt 1–20 thì căn phải đủ số ảnh thật mới lên.» Khớp expected.
+    - Gõ 21: ô hiện 21 kèm khung đỏ «Cần số nguyên 0–20». Khớp.
+    - Đầu chủ: trang cá nhân (/settings/personal) chỉ có mục Cá nhân và dòng «Mục này chỉ quản trị sàn mở được»; không có ô. Khớp.
+    - Hôm nay (Đầu chủ): nhóm «Bổ sung ảnh» (1) với căn T-54167.01 và giá 3,20 tỷ. Có nhãn «Đổi giá, trạng thái · Mở hồ sơ» đè lên viền nút (xem ghi chú). Tạm chấp nhận.
+    - Hồ sơ: T-54167.01 «Đang bán», dòng «Mức đủ thông tin · thiếu Ảnh thật» và 5/6. Khớp.
+    - Bảng hàng: cột «Mức đủ» của căn hiện «5/6 · thiếu…» (JSON: 5/6 · thiếu ảnh thật). Khớp.
+    Khổ 375:
+    - Cài đặt: ô hiện 0 với câu nghĩa đủ, không tràn ngang.
+    - Gõ 21: hiện lỗi «Cần số nguyên 0–20».
+    - Đầu chủ: trang Cá nhân hiện «Mục này chỉ quản trị sàn mở được», không có ô.
+    - Hôm nay: nhóm «Bổ sung ảnh» 1, dòng căn có nhãn «Đổi giá, trạng thái · Mở hồ sơ» nằm gọn trong nút.
+    - Hồ sơ: ngăn hồ sơ hiện T-37209.01 «Đang bán», «thiếu Ảnh thật» 5/6.
+    - Bảng hàng: thẻ căn T-37209.01 có ô ảnh trống bằng icon ảnh, không có cột Mức đủ (đúng khuôn thẻ điện thoại).
+    Không có khung nào mâu thuẫn expected.
+  network_observed: n-a (driver)
+
+### Eval mang từ round trước (carry-forward)
+
 - eval: E1
   run_id: minted-anh-khong-chan-ban-E1-r2
   exit_code: 0
-  baseline: green
+  carried_from_round: 2
+  baseline: n-a
   verifier: config:executors.test.core
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 17923.026084
-
-- eval: E5b
-  run_id: minted-anh-khong-chan-ban-E5b-r2
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.core
-  verified_at: 2026-11-07T02:24:54Z
-  output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 17923.026084
-
-- eval: E6
-  run_id: minted-anh-khong-chan-ban-E6-r2
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.core
-  verified_at: 2026-11-07T02:24:54Z
-  output: |
-    npm test -w @quy-hang/core
-    ℹ duration_ms 17923.026084
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E2
   run_id: minted-anh-khong-chan-ban-E2-r2
   exit_code: 0
-  baseline: red
+  carried_from_round: 2
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm run db:migrate && npm run db:test (Postgres dãy G, cổng 5573)
-    ℹ duration_ms 129215.383459
-
-- eval: E4
-  run_id: minted-anh-khong-chan-ban-E4-r2
-  exit_code: 0
-  baseline: red
-  verifier: config:executors.script.nhap_tac_tu
-  verified_at: 2026-11-07T02:24:54Z
-  output: |
-    npm run db:migrate && npm run db:test (Postgres dãy G, cổng 5573)
-    ℹ duration_ms 129215.383459
-
-- eval: E8
-  run_id: minted-anh-khong-chan-ban-E8-r2
-  exit_code: 0
-  baseline: red
-  verifier: config:executors.script.nhap_tac_tu
-  verified_at: 2026-11-07T02:24:54Z
-  output: |
-    npm run db:migrate && npm run db:test (Postgres dãy G, cổng 5573)
-    ℹ duration_ms 129215.383459
-
-- eval: E9c
-  run_id: minted-anh-khong-chan-ban-E9c-r2
-  exit_code: 0
-  baseline: red
-  verifier: config:executors.script.nhap_tac_tu
-  verified_at: 2026-11-07T02:24:54Z
-  output: |
-    npm run db:migrate && npm run db:test (Postgres dãy G, cổng 5573)
-    ℹ duration_ms 129215.383459
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E3
   run_id: minted-anh-khong-chan-ban-E3-r2
   exit_code: 0
-  baseline: red
-  verifier: config:executors.test.web
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.test
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm run test:db -w @quy-hang/web
-    ℹ duration_ms 16969.101667
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
-- eval: E6c
-  run_id: minted-anh-khong-chan-ban-E6c-r2
+- eval: E4
+  run_id: minted-anh-khong-chan-ban-E4-r2
   exit_code: 0
-  baseline: red
-  verifier: config:executors.test.web
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm run test:db -w @quy-hang/web
-    ℹ duration_ms 16969.101667
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
-- eval: E5
-  run_id: minted-anh-khong-chan-ban-E5-r2
+- eval: E5b
+  run_id: minted-anh-khong-chan-ban-E5b-r2
   exit_code: 0
-  baseline: red
-  verifier: config:executors.test.web
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.test.core
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 6363.137125
+    carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E6
+  run_id: minted-anh-khong-chan-ban-E6-r2
+  exit_code: 0
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.test.core
+  verified_at: 2026-11-07T02:24:54Z
+  output: |
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E6b
   run_id: minted-anh-khong-chan-ban-E6b-r2
   exit_code: 0
-  baseline: red
+  carried_from_round: 2
+  baseline: n-a
   verifier: config:executors.test.web
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 6363.137125
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
-- eval: E7
-  run_id: minted-anh-khong-chan-ban-E7-r2
+- eval: E6c
+  run_id: minted-anh-khong-chan-ban-E6c-r2
   exit_code: 0
-  baseline: red
-  verifier: config:executors.test.web
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.test
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 6363.137125
+    carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E8
+  run_id: minted-anh-khong-chan-ban-E8-r2
+  exit_code: 0
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.script.nhap_tac_tu
+  verified_at: 2026-11-07T02:24:54Z
+  output: |
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E9
   run_id: minted-anh-khong-chan-ban-E9-r2
   exit_code: 0
-  baseline: red
+  carried_from_round: 2
+  baseline: n-a
   verifier: config:executors.test.web
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 6363.137125
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E9b
   run_id: minted-anh-khong-chan-ban-E9b-r2
   exit_code: 0
-  baseline: green
+  carried_from_round: 2
+  baseline: n-a
   verifier: config:executors.script.ro_ri
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    npm run test:ro-ri
-    ℹ duration_ms 1615.311458
+    carry-forward tu round 2 — delta khong cham paths cua eval
+
+- eval: E9c
+  run_id: minted-anh-khong-chan-ban-E9c-r2
+  exit_code: 0
+  carried_from_round: 2
+  baseline: n-a
+  verifier: config:executors.script.nhap_tac_tu
+  verified_at: 2026-11-07T02:24:54Z
+  output: |
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 - eval: E10
   run_id: minted-anh-khong-chan-ban-E10-r2
   exit_code: 0
-  baseline: green
+  carried_from_round: 2
+  baseline: n-a
   verifier: config:executors.design.khuon
   verified_at: 2026-11-07T02:24:54Z
   output: |
-    node design-floor-khuon.mjs --kiem --root .
-    16 tệp giao diện ngoài bản đồ
-
-- eval: E8b
-  run_id: minted-anh-khong-chan-ban-E8b-r2
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-07T02:24:54Z
-  screenshot: evidence/E8b-cai-dat-1440.png
-  observed: |
-    Đã mở và đọc cả mười hai ảnh (E8b-*.png, sáu khung ở 1440 và sáu khung ở 375).
-    1440: cai-dat — Cài đặt sàn › Trạng thái, khối "Lên Đang bán", ô «Số ảnh thật tối thiểu để căn vào Đang bán» hiện 0 với câu nghĩa "0 — căn lên Đang bán khi chưa có ảnh; ảnh hiện là việc cần bổ sung. Đặt 1–20 thì căn phải đủ số ảnh thật mới lên."
-    1440: cai-dat-21 — ô hiện 21, khung lỗi đỏ "Cần số nguyên 0–20". cai-dat-dau-chu — Đầu chủ bị đưa sang /settings/personal, mục "Cá nhân", khối "Mục này chỉ quản trị sàn mở được", thanh bên không có "Trạng thái", không có ô số ảnh.
-    1440: hom-nay — nhóm "Bổ sung ảnh" có 1 căn T-… (Toà thử ảnh), giá 3,20 tỷ, nút "Đổi giá, trạng thái · Mở hồ sơ". ho-so — trạng thái "Đang bán", "Mức đủ thông tin · thiếu Ảnh thật 5/6", mục Ảnh "Gửi được (0)" và "Chưa có ảnh gửi được". bang-hang — cột "Mức đủ" hiện "5/6 · thiếu ảnh thật", Đầu chủ "[Mẫu] Đầu chủ 1".
-    375: cai-dat ô hiện 0 cùng câu nghĩa, xếp dọc không tràn ngang; cai-dat-21 ô 21 kèm lỗi "Cần số nguyên 0–20"; cai-dat-dau-chu màn Tôi › Cá nhân không có mục Trạng thái; hom-nay nhóm "Bổ sung ảnh" 1 căn T-96285… có nút "Đổi giá, trạng thái · Mở hồ sơ"; ho-so "thiếu Ảnh thật 5/6", mục Ảnh "Gửi được (0)"; bang-hang thẻ căn T-96285.01, ô ảnh trống bằng icon ảnh, giá 3,2 tỷ. Thẻ điện thoại không có cột/nhãn Mức đủ nên "Mức đủ 5/6 ở Bảng hàng" chỉ thấy ở 1440.
-    Đối chiếu Expected: khớp ở cả hai khổ.
-  network_observed: n-a (driver)
+    carry-forward tu round 2 — delta khong cham paths cua eval
 
 ### Lệnh suite (hồi quy)
 
-- cmd: npm test -w @quy-hang/api
-  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_api-r2
+- cmd: npm test -w @quy-hang/core
+  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-07T02:24:54Z
+  verified_at: 2026-11-07T07:55:11Z
+
+- cmd: npm test -w @quy-hang/api
+  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_api-r3
+  exit_code: 0
+  verified_at: 2026-11-07T07:55:11Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-07T02:24:54Z
+  verified_at: 2026-11-07T07:55:11Z
 
 - cmd: npm run test:hooks
-  run_id: minted-anh-khong-chan-ban-SUITE-test_hooks-r2
+  run_id: minted-anh-khong-chan-ban-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-07T02:24:54Z
+  verified_at: 2026-11-07T07:55:11Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-anh-khong-chan-ban-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-07T02:24:54Z
+  verified_at: 2026-11-07T07:55:11Z
 
 - cmd: npm run typecheck
-  run_id: minted-anh-khong-chan-ban-SUITE-typecheck-r2
+  run_id: minted-anh-khong-chan-ban-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-07T02:24:54Z
+  verified_at: 2026-11-07T07:55:11Z
 
 - cmd: npm run lint
-  run_id: minted-anh-khong-chan-ban-SUITE-lint-r2
+  run_id: minted-anh-khong-chan-ban-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-07T02:24:54Z
+  verified_at: 2026-11-07T07:55:11Z
 
 ## Known limits
 
@@ -238,12 +256,14 @@ human_signoff:
 
 ## Analyst
 
-Baseline không đo: E8b (ui-check, không chạy được trên code cũ) và sáu lệnh suite (hồi quy, không gắn eval).
+carried tu round 2 — baseline khong do lai round nay
 
-Eval không phân biệt (xanh ở cả HEAD lẫn baseline, chứng minh harness chứ không phải tính năng; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+Eval không-phân-biệt (pass trên cả HEAD lẫn baseline ở lần đo round 2; hoặc xác nhận là regression-guard có chủ ý):
 - npm test -w @quy-hang/core: E1, E5b, E6
 - npm run test:ro-ri: E9b
-- design-floor-khuon --kiem: E10
+- bước chấm khuôn design-floor-khuon (--kiem): E10
+
+Baseline khong do: round này không đo lại (evals.yaml không đổi từ lần baseline cuối, round 2); mọi field baseline ghi n-a.
 
 ## Variance
 
@@ -251,5 +271,6 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: không có chi tiết trong dữ liệu truyền xuống cho vòng này; lịch sử vòng cũ do vòng trước giữ.
-Round 2: toàn bộ 16 eval và 6 lệnh suite xanh; verdict PASS, không còn eval hỏng.
+Round 1: lịch sử round này không có trong dữ liệu được giao cho bản báo cáo này.
+Round 2: S4 lượt 2, hợp đồng verified; toàn bộ eval PASS.
+Round 3: sửa nút «Sẵn sàng bán» xử số ảnh tối thiểu chưa đọc được như sàn đòi ảnh (commit 0126278f); chạy lại E5, E7, E8b cùng các lệnh suite, tất cả PASS; các eval còn lại mang từ round 2.
