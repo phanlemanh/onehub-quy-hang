@@ -56,8 +56,7 @@ export function AnhToiThieu({ dau }: { dau: number }) {
               setN(v);
               setLuu({ loai: "yen" });
             }}
-            min={TOI_THIEU_NHO}
-            max={TOI_THIEU_LON}
+            // Không kẹp khoảng ở ô: gõ ngoài 0–20 thì câu lỗi nói khoảng (AC-8), không lặng lẽ đổi số người gõ.
             step={1}
             locale="vi-VN"
             disabled={dangLuu}
