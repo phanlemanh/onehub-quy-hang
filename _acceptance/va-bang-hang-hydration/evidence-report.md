@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 9b74925a5af85f8fb44cb24a4975ce10f74cb846
+verified_commit: a8248c8998d8daba01733ea5fc269baec96052d0
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -157,3 +157,7 @@ none — every multi-run eval is uniform
 
 Round 1: E8 báo đỏ — sàn thiết kế đọc nhầm chú thích «#185» thành mã màu; hồ sơ lượt chấm 1 bị từ chối. Quay lại sửa chú thích.
 Round 2: mọi eval đạt; E7 mang sang từ vòng 1 vì thay đổi không chạm tệp của eval này; E2 đạt có giới hạn (mã thoát đã khai trước).
+
+### Re-pin lần 1 — 2026-11-07, do gộp nhánh chính và làm nóng lệnh đo sau chữ ký
+run_id: repin-20261107T232151Z-65875
+sha: a8248c8998d8daba01733ea5fc269baec96052d0 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E2=1 · ngoài làn máy: E3 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
