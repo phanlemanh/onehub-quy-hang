@@ -265,6 +265,23 @@ test("gấp lại: xoá trắng bảng hàng rồi gấp từ sự kiện ra đ�
   assert.equal((await lenh(a.cookie, ids[1]!, { type: "owner_confirmed", payload: {}, expectedVersion: 1 })).status, 200);
   assert.equal((await lenh(a.cookie, ids[1]!, { type: "status_changed", payload: { to: "Withdrawn", withdrawnReason: "sold_elsewhere" }, expectedVersion: 2 })).status, 200);
   assert.equal((await lenh(a.cookie, ids[2]!, { type: "price_changed", payload: GIA, expectedVersion: 1, confirmedWithOwner: false })).status, 200);
+  // Hàng lô và hàng ngoài khu (hàng 76 can-ngoai-khu, E10): ba cột mới vào phép gấp lại.
+  const lo = await send("POST", "/api/v1/listings", { subdivisionName: "[Khu G]", blockName: "LK9", unitNumber: "01" }, a.cookie);
+  assert.equal(lo.status, 201, await lo.clone().text());
+  ids.push(((await lo.json()) as View).id);
+  const can = await send("POST", "/api/v1/off-compound-units", { address: "5 Đường Mẫu 2, Phường Tân Định, Thành phố Hồ Chí Minh", propertySubType: "Townhouse" }, a.cookie);
+  assert.equal(can.status, 201, await can.clone().text());
+  const ngoai = await send("POST", "/api/v1/listings", { offCompoundUnitId: ((await can.json()) as { id: string }).id }, a.cookie);
+  assert.equal(ngoai.status, 201, await ngoai.clone().text());
+  const idNgoai = ((await ngoai.json()) as View).id;
+  ids.push(idNgoai);
+  assert.equal((await lenh(a.cookie, idNgoai, { type: "price_changed", payload: GIA, expectedVersion: 1, confirmedWithOwner: false })).status, 200);
+  const dang = (await appPool.query<{ toa: number; lo: number; ngoai: number }>(
+    "select count(*) filter (where building_name is not null)::int toa, count(*) filter (where block_name is not null)::int lo, count(*) filter (where off_compound_unit_id is not null)::int ngoai from listings where company_id = $1",
+    [a.companyId],
+  )).rows[0]!;
+  console.log(`gấp lại: toà ${dang.toa} · lô ${dang.lo} · ngoài khu ${dang.ngoai}`);
+  assert.ok(dang.toa >= 1 && dang.lo >= 1 && dang.ngoai >= 1, "phải có mỗi dạng ít nhất một hàng");
 
   // Danh sách cột lấy từ information_schema của bảng thật, không từ đầu ra hàm gấp.
   const cot = (

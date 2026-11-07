@@ -36,6 +36,8 @@ const chu: Kiem = (v) => (typeof v === "string" && v.trim().length > 0 && v.leng
 /** Mã căn: chữ như mọi trường chữ, và có ít nhất một chữ hay số để so căn được (`kiemMaCan`). */
 const maCan: Kiem = (v) => chu(v) ?? kiemMaCan(v as string);
 const chuHayXoa: Kiem = (v) => (v === null ? null : chu(v));
+/** Mã căn ngoài khu của sàn (uuid). */
+const maCanNgoaiKhu: Kiem = (v) => (typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v) ? null : "cần mã căn ngoài khu");
 const tien: Kiem = (v) => (typeof v === "number" && Number.isSafeInteger(v) && v > 0 ? null : "cần số đồng nguyên dương");
 export const NGAY_SAI_DANG = "cần ngày YYYY-MM-DD";
 export const NGAY_KHONG_CO_THAT = "ngày không có thật";
@@ -55,7 +57,15 @@ const motTrong = (ds: readonly string[]): Kiem => (v) => (typeof v === "string" 
 
 /** Khuôn từng loại: khoá → [bắt buộc, cách kiểm]. */
 const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
-  created: { buildingName: [true, chu], unitNumber: [false, maCan] },
+  // Ba cách gọi căn (ADR-0016 quyết định 3, hàng can-ngoai-khu): có toà · lô (khu + dãy + lô) · ngoài khu. Khoá nào bắt
+  // buộc tuỳ dạng — `kiemDangCreated` xét sau khuôn.
+  created: {
+    buildingName: [false, chu],
+    unitNumber: [false, maCan],
+    subdivisionName: [false, chu],
+    blockName: [false, chu],
+    offCompoundUnitId: [false, maCanNgoaiKhu],
+  },
   details_changed: Object.fromEntries(DETAIL_FIELDS.map((k) => [k, [false, chuHayXoa]])),
   price_changed: { listPrice: [true, tien], feeInclusion: [true, motTrong(FEE_INCLUSIONS)] },
   status_changed: {
@@ -96,6 +106,31 @@ function kiemTruongRiengPayload(payload: Record<string, unknown>): PayloadError[
 
 export type PayloadError = { path: string; reason: string };
 
+/** Ba cách gọi căn của sự kiện tạo hàng. */
+export type DangDinhDanh = "toa" | "lo" | "ngoai-khu";
+export const LY_DO_MOT_DANG = "chỉ một cách gọi căn: toà, lô (khu, dãy, lô) hay căn ngoài khu";
+export const LY_DO_CAN_DANG = "cần một cách gọi căn: buildingName, blockName hay offCompoundUnitId";
+
+/** Dạng định danh của payload `created`: theo khoá có mặt; `null` khi không có dạng nào, mảng khi trộn. */
+export function dangDinhDanh(p: Record<string, unknown>): DangDinhDanh | null | DangDinhDanh[] {
+  const co = (k: string) => k in p;
+  const dang: DangDinhDanh[] = [];
+  if (co("buildingName")) dang.push("toa");
+  if (co("subdivisionName") || co("blockName")) dang.push("lo");
+  if (co("offCompoundUnitId")) dang.push("ngoai-khu");
+  return dang.length === 0 ? null : dang.length === 1 ? dang[0]! : dang;
+}
+
+/** Luật dạng của `created`: đúng một dạng; lô đủ khu, dãy, lô; căn ngoài khu không mang mã căn. */
+function kiemDangCreated(p: Record<string, unknown>): PayloadError[] {
+  const d = dangDinhDanh(p);
+  if (d === null) return [{ path: "payload", reason: LY_DO_CAN_DANG }];
+  if (Array.isArray(d)) return [{ path: "payload", reason: LY_DO_MOT_DANG }];
+  if (d === "lo") return (["subdivisionName", "blockName", "unitNumber"] as const).filter((k) => !(k in p)).map((k) => ({ path: k, reason: "thiếu" }));
+  if (d === "ngoai-khu" && "unitNumber" in p) return [{ path: "unitNumber", reason: "căn ngoài khu không mang mã căn — " + LY_DO_MOT_DANG }];
+  return [];
+}
+
 function khoaLong(v: unknown, path: string, out: PayloadError[]) {
   if (v && typeof v === "object") {
     for (const k of Object.keys(v)) out.push({ path: `${path}.${k}`, reason: "khoá lạ" });
@@ -126,6 +161,7 @@ export function validatePayload(type: unknown, payload: unknown, opts: { today?:
     if (loi) out.push({ path: k, reason: loi });
   }
   for (const [k, [batBuoc]] of Object.entries(khuon)) if (batBuoc && !(k in payload)) out.push({ path: k, reason: "thiếu" });
+  if (type === "created") out.push(...kiemDangCreated(payload as Record<string, unknown>));
   if (type === "details_changed" && Object.keys(payload).length === 0) out.push({ path: "payload", reason: "không có phần nào đổi" });
   const xn = (payload as Record<string, unknown>).confirmedAt;
   if (type === "owner_confirmed" && opts.today && typeof xn === "string" && !out.length && xn > opts.today)

@@ -9,6 +9,7 @@ import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "./auth/constants";
 import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
+import { registerOffCompoundUnitRoutes } from "./off-compound-units/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerImportRoutes } from "./imports/routes";
 import { registerAiRoutes } from "./imports/ai/routes";
@@ -197,6 +198,7 @@ export function createApi(deps: ApiDeps) {
 
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
+  registerOffCompoundUnitRoutes(api, deps);
   registerOwnerRoutes(api, deps);
   // Trước route lần nhập: «/imports/ai» không được rơi vào «/imports/{importId}».
   registerAiRoutes(api, deps);

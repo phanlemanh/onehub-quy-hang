@@ -9,7 +9,7 @@ export function locDanhSach(n: Ngan, loc: BoLoc = {}): ListingView[] {
   return (n.listings ?? [])
     .map((l) => banTrenMay(l, n.queue))
     .filter((l) => !loc.trangThai || loc.trangThai.includes(l.standardStatus))
-    .filter((l) => !loc.toa || loc.toa.includes(l.buildingName));
+    .filter((l) => !loc.toa || loc.toa.includes(l.buildingName ?? ""));
 }
 
 export function moHoSo(n: Ngan, id: string): { can: ListingView; lichSu: ListingEvent[] } | null {
