@@ -5,7 +5,7 @@ slug: man-mau-bao-mau-hong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-07-man-mau-bao-mau-hong-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -90,3 +90,12 @@ Không thêm số đo mới.
 - Hỏi-1 (lưu khi còn chỗ hỏng: báo trước rồi bỏ — khuyến nghị; chỗ hỏng mất vĩnh viễn ở lần lưu đầu), Hỏi-2 (lời báo
   dựng ở web — khuyến nghị) và Hỏi-3 (duyệt bằng chữ, nhìn màn ở Cổng Bằng chứng — khuyến nghị) chờ chủ kho ở Cổng Phạm
   vi; hợp đồng soạn theo khuyến nghị.
+- Ngoài-2 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm tra rò rỉ cho khối báo mẫu hỏng có thể vẫn xanh dù khối báo không hiện, nên có thể không đo gì. Hiện chưa có thông tin nội bộ nào bị lộ ra. — `apps/web/src/app/(app)/settings/templates/mau-san.ro-ri.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu sau này lõi đổi lời lỗi, năm lý do bỏ mẫu có thể rơi về câu chung mà bài kiểm tra vẫn xanh. Hiện người dùng vẫn thấy lời báo đúng. — `apps/web/src/app/(app)/settings/templates/bao-hong.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm rò rỉ cho khối báo mẫu hỏng hiện không thể phát hiện nếu sau này câu báo vô tình chép nội dung nội bộ của căn. Hôm nay màn vẫn đúng, nhưng lưới an toàn ở chỗ này mỏng hơn vẻ ngoài. — `apps/web/src/app/(app)/settings/templates/mau-san.ro-ri.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu sau này đổi chữ của khối báo, bài kiểm vẫn xanh dù khối báo có thể lại hiện cả khi mẫu không hỏng. Hiện người dùng chưa gặp lỗi nào. — `apps/web/src/app/(app)/settings/templates/bao-hong.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu về sau lõi thêm một lý do mới khiến mẫu bị bỏ, màn sẽ báo bằng câu chung và không bài kiểm nào nhắc phải viết câu riêng. Người dùng vẫn được báo, chỉ là câu kém rõ. — `apps/web/src/app/(app)/settings/templates/bao-hong.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu phía API sau này đổi dạng danh sách chỗ hỏng, màn sẽ im lặng không báo gì mà không bài kiểm nào đỏ. Quản trị khi đó mất lời cảnh báo trước khi lưu. — `apps/web/src/app/(app)/settings/templates/bao-hong.test.ts`
+- Ngoài-4, Ngoài-5, Ngoài-6, Ngoài-8 là mục lượt 1, đã siết trước lượt 2 (commit fc1a8b62: bài rò rỉ có chiều đỏ, E4 ghim
+  chữ khối báo và role=status, ma trận theo từng lý do của khuôn lõi, đáp GET thật qua trangThaiTuDap); lượt 2 mang chúng
+  theo nhãn «r1 · tệp đã đổi» và chấm trên bản đã siết, PASS. Ngoài-2, Ngoài-3 là chỗ hụt còn lại của chính các bài vừa siết.
