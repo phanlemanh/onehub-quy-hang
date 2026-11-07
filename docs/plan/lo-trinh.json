@@ -2836,6 +2836,18 @@
       "cau_giao": "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập («Không mở được màn này», React #185 — vòng cập nhật vô hạn resizeItem → measureElement → onChange của bộ cuộn ảo), ở 1366×768 và 1920×1080; một bài kiểm đơn vị khoá vòng ấy.",
       "slug": "va-bang-hang-cuon-so-lon",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-06"
+    },
+    {
+      "ma": "va-thuoc-ci-ho-so-moi-truong-that",
+      "cau_giao": "Thước của hai hồ sơ đã ký đo bước triển khai cũ được đưa về đúng bước triển khai mới: bài kiểm CI của hồ sơ môi trường thật kiểm job deploy chờ bộ cách ly trên cơ sở dữ liệu tạm, áp migration rồi kiểm nhanh chỉ đọc rồi mới gọi Vercel, không chạy bộ kiểm ghi trên bản thật; eval chạy bộ cách ly trên bản thật của hồ sơ môi trường thật và eval thứ tự deploy cũ của hồ sơ ràng buộc bản mã khai không chạy, trỏ tới tiêu chí đã ký của hai hàng đo lại chúng; ghim lại hai hồ sơ cũ xanh (Ngoài-3 của hàng va-deploy-csdl-tam, chủ kho mở hợp đồng mới 06/11).",
+      "slug": "va-thuoc-ci-ho-so-moi-truong-that",
+      "vi_sao": "Ngoài-3 của hàng va-deploy-csdl-tam (PR #176): thước kiem_ci và cach_ly_that của hồ sơ đã ký moi-truong-that, bat-rang-buoc-ban-ma còn đòi bộ cách ly chạy trên bản thật; chủ kho chọn mở hợp đồng mới ở Cổng Bằng chứng 06/11.",
+      "hang": "T2",
+      "bat_khi": "Lưới trước gộp và làn ghim lại của moi-truong-that, bat-rang-buoc-ban-ma xanh trên main sau hàng; bài kiểm CI của moi-truong-that đỏ khi job deploy chạy lại bộ kiểm ghi trên bản thật",
+      "vung": [
+        "_acceptance/moi-truong-that/**",
+        "_acceptance/bat-rang-buoc-ban-ma/**"
+      ]
     }
   ],
   "chan_troi": [
