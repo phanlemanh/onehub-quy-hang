@@ -2892,6 +2892,12 @@
         "packages/core/src/sharing/**",
         "apps/web/src/app/(app)/settings/templates/**"
       ]
+    },
+    {
+      "ma": "va-bang-hang-hydration",
+      "cau_giao": "Bảng hàng không báo lỗi hydration khi mở: máy chủ dựng khung đang tải còn máy khách dựng trạng thái trống hay thanh công cụ có dữ liệu cục bộ (bốn khung lỗi ghi ở _acceptance/mau-bang-hang-va-bai/evidence/E10-console-errors.txt); bài nhìn màn nào mở Bảng hàng cũng sạch console.",
+      "slug": "va-bang-hang-hydration",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     }
   ],
   "chan_troi": [
