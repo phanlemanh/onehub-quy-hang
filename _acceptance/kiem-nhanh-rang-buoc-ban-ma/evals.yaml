@@ -1,0 +1,52 @@
+schema_version: 1
+feature_slug: kiem-nhanh-rang-buoc-ban-ma
+# Lệnh máy: executors.test.isolation (Postgres dãy Q 5577 — lượt chấm đặt
+# DATABASE_URL=postgres://postgres:quyhang@localhost:5577/postgres trên dòng lệnh). Không lệnh nào chạm bản thật.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; trong packages/db/tests/kiem-nhanh.test.mjs ca «kiểm nhanh: bảng sạch mà ràng buộc bản mã chưa bật thì lỗi»: trong giao dịch rollback, gỡ và dựng lại ràng buộc listing_owners_phone_chi_ban_ma ở dạng not valid → soi cho đúng một lỗi vế «bảng sạch mà ràng buộc chưa bật» tên listing_owners / listing_owners_phone_chi_ban_ma, và ketQuaCli của kết quả ấy trả mã 1 với dòng lỗi chứa cả «listing_owners» lẫn «listing_owners_phone_chi_ban_ma»; lặp cho leads / leads_phone_chi_ban_ma; đối chứng dương cùng ca: validate lại ràng buộc thì hết lỗi và ketQuaCli trả mã 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; ma trận viết trước 12 dòng cho phần xét thuần (bảng × số rõ {0, 3} × ràng buộc {bật, chưa bật, vắng}), mỗi dòng ghi sẵn tập vế lỗi và dòng báo mong đợi — dòng (còn 3, chưa bật) cho 0 lỗi và báo «còn 3 số rõ (chưa bật — chờ mã hoá lại)»; bài đếm đúng 12 và đỏ khi thiếu dòng; ca trên Postgres: gỡ ràng buộc về not valid rồi cấy một dòng owner_phone mẫu (khoá ngoài tắt trong giao dịch) → soi 0 lỗi, báo «còn 1 số rõ»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; ma trận E2 gồm dòng (còn số rõ, bật) → vế «ràng buộc bật mà còn số rõ» và dòng (vắng) → vế «thiếu ràng buộc»; ca trên Postgres: drop constraint leads_phone_chi_ban_ma trong giao dịch rollback → soi cho lỗi vế «thiếu ràng buộc» gọi đúng leads_phone_chi_ban_ma."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; ca «kiểm nhanh: dòng xanh nêu ràng buộc bản mã»: chạy kiem-nhanh.mjs bằng tiến trình con với DATABASE_URL của Postgres dãy → mã 0 và stdout chứa đúng «ràng buộc bản mã: listing_owners bật · leads bật»; đối chứng: hàm dựng dòng báo trên ảnh (leads còn 2 số rõ, chưa bật) cho «leads còn 2 số rõ (chưa bật — chờ mã hoá lại)»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; ca hiện có «kiểm nhanh: đường chạy thật chỉ đọc, đúng một kết nối» vẫn xanh; ca mới «kiểm nhanh: không đọc giá trị số»: bọc client ghi lại mọi câu và result.fields của soi → mọi câu chạm listing_owners hay leads trả đúng một cột kiểu int8 (dataTypeID 20); đối chứng đỏ: hàm kiểm nhận bản ghi viết sẵn của câu `select count(*), max(owner_phone) from public.leads` (hai cột, một kiểu text) và báo vi phạm."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.isolation
+    paths: ["packages/db/scripts/kiem-nhanh.mjs", "packages/db/tests/kiem-nhanh.test.mjs"]
+    expected: "exit 0; ca «kiểm nhanh: vai chịu luật theo dòng thì không đếm»: trong giao dịch rollback, `set local role quy_hang_app` rồi soi → có lỗi vế «vai kết nối chịu luật theo dòng — không đếm được số rõ» gọi tên quy_hang_app, và KHÔNG có lỗi vế «bảng sạch mà ràng buộc chưa bật»; đối chứng dương: soi bằng vai postgres không có lỗi vai; ma trận xét thuần thêm hai dòng (vai có quyền / vai chịu luật)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
