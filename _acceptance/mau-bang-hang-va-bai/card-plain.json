@@ -1,1 +1,63 @@
-{"feature_plain":"Quản trị sàn đặt sẵn cột của bảng hàng khi xuất và lời mở đầu, lời kết của bài Zalo, Facebook; hộp Xuất và màn Gửi dùng bản mới ngay lần mở kế tiếp."}
+{
+ "feature_plain": "Quản trị sàn đặt sẵn những cột nào, theo thứ tự nào khi xuất bảng hàng, và lời mở đầu, lời kết của bài Zalo, Facebook; người xuất và người gửi dùng bản mới ngay lần kế tiếp. Ký lại sau khi đưa phần «màn Mẫu đủ trạng thái» (AC-10 cũ) vào giới hạn đã biết.",
+ "will_do": [
+  {
+   "id": "AC-1",
+   "p": "Sẽ cho Quản trị thêm, sửa, xoá mẫu bảng hàng (tên, các cột, thứ tự) ở màn Mẫu."
+  },
+  {
+   "id": "AC-3",
+   "p": "Sẽ cho Quản trị lưu lời mở đầu, lời kết của bài Zalo và Facebook, và đưa một kênh về mặc định."
+  },
+  {
+   "id": "AC-4",
+   "p": "Sẽ cho mọi người trong sàn đọc mẫu để dùng; chỉ Quản trị sửa; sàn khác không thấy."
+  },
+  {
+   "id": "AC-5",
+   "p": "Sẽ cho Đầu chủ chọn mẫu ở Xuất bảng hàng: xem trước, Excel, PDF, ảnh, bài có đúng cột theo thứ tự của mẫu, sau luật ẩn của người nhận."
+  },
+  {
+   "id": "AC-6",
+   "p": "Sẽ đặt lời mở đầu, lời kết của mẫu quanh bài Zalo, Facebook chép ra từ Xuất bảng hàng."
+  },
+  {
+   "id": "AC-7",
+   "p": "Sẽ đưa lời của mẫu Zalo vào tin soạn sẵn ở màn Gửi; người gửi vẫn sửa được."
+  },
+  {
+   "id": "AC-8",
+   "p": "Sẽ dùng bản mới từ lần mở kế tiếp; link đã gửi và lần xuất cũ giữ nguyên."
+  }
+ ],
+ "wont_do": [
+  {
+   "id": "AC-2",
+   "p": "Chặn mẫu sai: tên trống, trùng hay quá dài; không cột, quá 15 cột, cột nội bộ như «Người giữ»; quá 20 mẫu — báo lý do, không lưu phần nào."
+  },
+  {
+   "id": "AC-9",
+   "p": "Sẽ KHÔNG để số chủ nhà, tên chủ, giá đáy, ghi chú nội bộ, người giữ lọt ra bài hay bảng, kể cả mẫu bị ghi thẳng vào cơ sở dữ liệu."
+  },
+  {
+   "id": "OOS-1",
+   "p": "Trang nhóm môi giới chưa theo mẫu bảng hàng (Hỏi-4)."
+  },
+  {
+   "id": "OOS-2",
+   "p": "Không có chỗ trống chèn giá, toà… vào bài; dòng căn do máy dựng (Hỏi-1)."
+  },
+  {
+   "id": "OOS-3",
+   "p": "Mẫu chỉ ở cấp sàn, chưa theo nhóm hay người; chỉ Zalo và Facebook (Hỏi-6)."
+  },
+  {
+   "id": "OOS-4",
+   "p": "Sổ xuất chưa ghi lần xuất theo mẫu nào (Hỏi-7)."
+  },
+  {
+   "id": "OOS-5",
+   "p": "Xếp cột bằng nút lên, xuống; chưa kéo thả."
+  }
+ ]
+}

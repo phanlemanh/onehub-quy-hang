@@ -172,33 +172,8 @@ evals:
     paths: [packages/api/src/mau-san/**, packages/core/src/export/**, packages/api/test-db/mau-bang-hang-va-bai/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
-  - id: E10
-    criterion: AC-10
-    executor: ui-check
-    layer: ui-observed
-    target: "http://localhost:3491/settings/templates"
-    preconditions:
-      - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Dựng dữ liệu qua máy chủ đang chạy: Quản trị đăng nhập; sàn có ba căn đang bán"
-      - "Đăng nhập: sàn mẫu «[Mẫu] Sàn thử» đã nạp bằng packages/db/seed/nap.mjs --nap (tài khoản quan-tri@mau.quy-hang.test, dau-chu-1@mau.quy-hang.test, dau-khach@mau.quy-hang.test); xin mã ở màn đăng nhập rồi đọc mã dev ở dòng «[ma-dang-nhap] <email> <mã>» cuối tệp .acceptance-runs/web-L.log (nhật ký máy chủ dev cổng 3491)"
-    steps:
-      - "Mở Cài đặt › Sàn: menu có mục «Mẫu»; mở mục: ba tab «Mẫu nhập» · «Mẫu bảng hàng» · «Mẫu bài»; tab Mẫu nhập như hàng 50"
-      - "Tab Mẫu bảng hàng khi chưa có mẫu: thấy «Sàn chưa có mẫu bảng hàng — xuất đang theo góc nhìn đang mở.» và nút «Thêm mẫu»"
-      - "Thêm mẫu «[Tên] gửi đội» với Mã căn, Giá, Diện tích; đưa Diện tích lên đầu; Lưu: thấy «Đã lưu mẫu», danh sách hiện đúng thứ tự"
-      - "Thêm mẫu trùng tên: lý do «Tên đã có trong sàn» dưới ô, chữ đã gõ còn nguyên; danh sách cột không có «Người giữ», «Giá chốt»"
-      - "Tab Mẫu bài, khối Zalo: gõ lời mở đầu và lời kết, xem trước có hai lời quanh dòng căn mẫu; Lưu"
-      - "Mở Bảng hàng › Xuất bảng hàng: ô «Cột theo» có «Góc nhìn đang mở» và «[Tên] gửi đội»; chọn mẫu → xem trước đúng ba cột theo thứ tự; chọn Bài Zalo → bài có lời mở đầu, lời kết"
-      - "Mở màn Gửi với hai căn: tin soạn sẵn có lời mở đầu sau lời chào, lời kết sau dòng link; gõ thêm chữ vào ô tin: ô nhận chữ"
-      - "Về tab Mẫu bài sửa lời mở đầu Zalo, Lưu; mở lại màn Gửi: tin mang lời mới"
-      - "Xoá mẫu bảng (xác nhận): mẫu biến khỏi danh sách; mở lại Xuất: «Cột theo» chỉ còn «Góc nhìn đang mở»"
-      - "Mở /settings/templates bằng vai Đầu chủ: về trang Cá nhân kèm câu «Mục này chỉ quản trị sàn mở được»"
-      - "Khổ điện thoại: màn Mẫu một cột, không vỡ khung"
-    cmd: config:executors.ui-check
-    expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console, trừ hai điều đã khai: (1) bước 4 có đúng một lời 400 có chủ đích từ PUT /api/v1/company/templates/export (tên trùng — hành vi của AC-2); (2) lỗi hydration sẵn có của Bảng hàng ở main, khung «Hydration failed … <BangHang …> <DataGrid …> <FramePanel …> <TrangThai kind=\"empty\" … title=\"Sàn chưa c…\">» (máy chủ dựng trạng thái trống, máy khách có dữ liệu cục bộ) — không do vòng này, theo dõi riêng (L-45). Mọi lỗi console khác là không đạt."
-    paths: ["apps/web/src/app/(app)/settings/templates/**", "apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/(app)/shares/new/**"]
-    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot, observed]
-
   - id: E10c
-    criterion: AC-10
+    criterion: AC-1
     executor: test
     cmd: config:executors.test.web
     expected: "exit 0; bài thuần của màn Mẫu ghim chữ của từng trạng thái trong bảng trạng thái thiết kế — bảng viết trước tám trạng thái (đang tải, trống, có mẫu, lỗi đọc, từ chối, lỗi lưu, đã lưu, không quyền) → chữ mong đợi, đếm 8; mỗi dòng dựng thành phần ở trạng thái ấy và tìm đúng chuỗi; menu Cài đặt › Sàn có nhãn «Mẫu» (không còn «Mẫu nhập» ở menu). Chiều đỏ: đổi chữ «Đã lưu mẫu» → ca đỏ nêu tên trạng thái."
@@ -206,7 +181,7 @@ evals:
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E10b
-    criterion: AC-10
+    criterion: AC-1
     executor: script
     cmd: config:executors.design.khuon
     expected: "exit 0 hay đúng mã đã khai của lưới khuôn; màn Mẫu vẫn theo khuôn MucCaiDat của nhóm cai-dat-san, không lệch mới."

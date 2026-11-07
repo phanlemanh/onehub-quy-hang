@@ -5,10 +5,8 @@ slug: mau-bang-hang-va-bai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: implemented
+status: draft
 design_doc: docs/superpowers/specs/2026-11-06-mau-bang-hang-va-bai-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-07
 ---
 
 # Acceptance Contract: mau-bang-hang-va-bai
@@ -71,11 +69,6 @@ không thêm migration — hạng T2. Bài và bảng vẫn dựng từ luật �
   - không chuỗi mồi nào ra bài, bảng hay tệp;
   - cột nội bộ bị bỏ ở lõi;
   - màn Mẫu mới có tệp `*.ro-ri.test.ts` quét mồi trên mã nguồn màn.
-- **AC-10 — Màn theo khuôn, đủ trạng thái.** Given màn Mẫu · When đang tải, chưa có mẫu, có mẫu, lỗi đọc, lưu bị từ chối, lỗi
-  lưu, đã lưu, không quyền · Then:
-  - mỗi trạng thái có chữ như bảng trạng thái của thiết kế;
-  - màn dựng trong `MucCaiDat`;
-  - nhãn menu là «Mẫu» và tab «Mẫu nhập» của hàng 50 giữ nguyên hành vi.
 
 ## Coverage
 
@@ -91,13 +84,13 @@ Quét tay theo khuôn morphological-scan (preset entity-feature) trên các tr�
 - Trục **người nhận**: nhóm môi giới | khách riêng [thước CE: `NguoiNhan`] — AC-5, AC-9
 - Trục **thời điểm**: lần đã xong | hộp đang mở | lần kế tiếp [thước CE: hiệu lực `lan_sau`] — AC-8
 - Trục **trạng thái màn**: đang tải | trống | có mẫu | lỗi đọc | từ chối | lỗi lưu | đã lưu | không quyền [thước CE: bảng
-  trạng thái thiết kế] — AC-10
+  trạng thái thiết kế] — không AC: tiêu chí cũ AC-10 ra Known limits ở Cổng Bằng chứng lượt 3 (xem Notes)
 
 ## Đường đo
 
 Ngưỡng SỐNG và CHẾT chép từ ô cơ hội hàng 50 vào `opportunity.md` của hàng này. Mỗi vế trỏ tới tiêu chí và bài đo nó:
-- thấy đủ mẫu bảng hàng và mẫu bài của sàn mình — AC-1, AC-3 · E1, E3, E10;
-- sửa hay xoá một mẫu thì lần kế dùng bản mới, lần đã xong không đổi — AC-8 · E8, E8b, E7c, E10;
+- thấy đủ mẫu bảng hàng và mẫu bài của sàn mình — AC-1, AC-3 · E1, E3;
+- sửa hay xoá một mẫu thì lần kế dùng bản mới, lần đã xong không đổi — AC-8 · E8, E8b, E7c;
 - vai khác không mở được màn; sàn khác không thấy mẫu của nhau — AC-4 · E4, E4b.
 
 Không thêm số đo mới.
@@ -116,3 +109,7 @@ Không thêm số đo mới.
   `apps/web/src/app/(app)/inventory/phat-hang/**`, `apps/web/src/app/(app)/shares/new/**`, `packages/core/src/export/**`,
   `packages/core/src/sharing/**`, `packages/api/src/mau-san/**`, `packages/api/src/app.ts`,
   `packages/api/test-db/mau-bang-hang-va-bai/**`, `docs/product/tham-chieu.md`.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07 (trần 3 lượt chấm, lối «thu phạm vi»):
+  - AC-10 (màn Mẫu theo khuôn, đủ chữ từng trạng thái, nhãn menu «Mẫu»): ship không có bằng chứng nhìn màn của máy — bài nhìn
+    màn E10 đi đúng cả 11 bước nhưng đỏ 3 lượt vì lỗi hydration sẵn có của Bảng hàng (bốn khung) trên console; bài thuần
+    chữ trạng thái (E10c) và lưới khuôn (E10b) vẫn xanh, đi theo AC-1.
