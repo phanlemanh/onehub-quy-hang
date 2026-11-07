@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 4f05f58aced8d7ef4314fbd4637e6fe20b28d4ab
+verified_commit: 735d0902e22de74a597c5c717b42a8f0ad3272fb
 human_signoff: Manh Phan 2026-11-07
 ---
 
@@ -232,3 +232,7 @@ none — every multi-run eval is uniform
 Round 1: lượt đầu, chi tiết không còn trong dữ liệu round này.
 Round 2: REJECT — E9u trượt ở khổ điện thoại 375 (mép phải bị cắt). Trả về dừng-vá, sau đó thu phạm vi: khổ điện thoại màn Từ điển ra Known limits.
 Round 3: PASS — E9u chạy lại ở khổ máy tính sau thu phạm vi, E11 đạt có giới hạn, các eval khác mang từ round 2 vì delta không chạm paths của chúng.
+
+### Re-pin lần 1 — 2026-11-07, do gộp main sau #187
+run_id: repin-20261107T101110Z-91775
+sha: 735d0902e22de74a597c5c717b42a8f0ad3272fb · suites: 7 lệnh exit 0 · evals: 13/13 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E11=1 · ngoài làn máy: E2u, E9u
