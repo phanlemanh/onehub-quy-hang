@@ -52,7 +52,7 @@ const BANG = {
   "xac-thuc": { theoKhuon: ["dat-mat-khau", "login", "no-company", "select-company"].map((p) => `${W}/app/(auth)/${p}/page.tsx`), ngoaiLe: [] },
   "cai-dat-san": {
     // Hàng 50: Mẫu nhập đi khuôn MucCaiDat. Hàng 45: màn Cách gọi. Hàng 46: màn Trạng thái. Hàng 47: màn Trường riêng.
-    theoKhuon: [`${W}/app/(app)/settings/ai/page.tsx`, `${W}/app/(app)/settings/broker-page/page.tsx`, `${W}/app/(app)/settings/fees/page.tsx`, `${W}/app/(app)/settings/fields/page.tsx`, `${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/statuses/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
+    theoKhuon: [`${W}/app/(app)/settings/ai/page.tsx`, `${W}/app/(app)/settings/broker-page/page.tsx`, `${W}/app/(app)/settings/dictionary/page.tsx`, `${W}/app/(app)/settings/fees/page.tsx`, `${W}/app/(app)/settings/fields/page.tsx`, `${W}/app/(app)/settings/labels/page.tsx`, `${W}/app/(app)/settings/lead-routing/page.tsx`, `${W}/app/(app)/settings/statuses/page.tsx`, `${W}/app/(app)/settings/templates/page.tsx`, `${W}/app/(app)/settings/users/page.tsx`],
     ngoaiLe: [`${W}/app/(app)/settings/[section]/page.tsx`, `${W}/app/(app)/settings/page.tsx`],
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
@@ -81,6 +81,8 @@ const BANG = {
       `${W}/app/(app)/settings/ai/page.tsx`,
       // Hàng 44: màn Trang môi giới rời trang tạm.
       `${W}/app/(app)/settings/broker-page/page.tsx`,
+      // Hàng 70: màn Từ điển.
+      `${W}/app/(app)/settings/dictionary/page.tsx`,
       // Hàng 49: màn Thuế phí rời trang tạm.
       `${W}/app/(app)/settings/fees/page.tsx`,
       // Hàng 47: màn Trường riêng rời trang tạm.
@@ -193,7 +195,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "dictionary/page.tsx", "dictionary/vung-tu-dien.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/page.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -212,8 +214,8 @@ const CHO_TRANG_THAI = [
   // Hàng 66: lần nhập gần đây (đang tải, lỗi, trống) và hộp hoàn tác (đang xem trước, lỗi).
   ...Array(5).fill(`${W}/app/(app)/imports/new/hoan-tac.tsx`),
   // Hàng 66: hai dải mẫu gộp thành một dải đọc từ daiBaoMau.
-  // Hàng 68: dải «Máy đang đề xuất cách ghép…» và dải «Chưa dùng được AI».
-  ...Array(16).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
+  // Hàng 68: dải «Máy đang đề xuất cách ghép…» và dải «Chưa dùng được AI». Hàng 70: dải lỗi gửi đề xuất từ điển.
+  ...Array(17).fill(`${W}/app/(app)/imports/new/man-nhap.tsx`),
   `${W}/app/(app)/imports/new/page.tsx`,
   // Bảng hàng (hàng 14): góc nhìn không có, lỗi tải, trống, lọc rỗng; khối báo điện thoại ở khuôn.
   ...Array(5).fill(`${W}/app/(app)/inventory/bang-hang.tsx`),
@@ -237,6 +239,8 @@ const CHO_TRANG_THAI = [
   // Trang môi giới (hàng 44): lỗi đọc ở trang; lỗi lưu, đã lưu ở vùng.
   `${W}/app/(app)/settings/broker-page/page.tsx`,
   ...Array(2).fill(`${W}/app/(app)/settings/broker-page/vung.tsx`),
+  // Từ điển (hàng 70): đang tải, lỗi đọc, lỗi lưu, trống.
+  ...Array(4).fill(`${W}/app/(app)/settings/dictionary/vung-tu-dien.tsx`),
   // Thuế phí (hàng 49): lỗi tải, lỗi lưu.
   ...Array(2).fill(`${W}/app/(app)/settings/fees/bang-thue-phi.tsx`),
   // Trường riêng (hàng 47): lỗi lưu, đã lưu, trùng nghĩa; lỗi đọc ở trang.
@@ -485,7 +489,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
     const dong = r.stdout.trim().split("\n");
     assert.deepEqual(dong, [
       "bang-hang: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "cai-dat-san: 9 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
+      "cai-dat-san: 10 tệp theo khuôn · 2 ngoại lệ · 0 lệch",
       "cuoc-goi: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "da-gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "gui: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
@@ -500,8 +504,8 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 27 ngoại lệ · 0 lệch",
-      "trang-thai: 158 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 28 ngoại lệ · 0 lệch",
+      "trang-thai: 163 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
