@@ -7,7 +7,7 @@
  * hàng đợi để gửi lại ở nhịp sau. Chỉ 4xx khác mới đối chiếu rồi thành «cần xem». Căn đang «cần xem» không gửi: thao tác
  * sửa tiếp được giữ tới khi người chọn lối (xu-ly-can-xem.ts).
  */
-import { nhanDieuKien, type ListingEvent } from "@quy-hang/core/listing";
+import { nhanDieuKien, suKienThangNgay, type ListingEvent } from "@quy-hang/core/listing";
 import type { Goi, LanThu, ListingView, Me, NeedsReview, Ngan, PendingOp } from "./types";
 
 class MatMang extends Error {}
@@ -61,7 +61,9 @@ export async function doiChieu(
   if (cua) return { dc: { kq: "da-ap-truoc", seq: cua.seq }, view: view as ListingView, events };
   const cuoi = events[events.length - 1]!;
   const server = { value: view as ListingView, byUserId: cuoi.actorUserId, byRoles: cuoi.actorRoles, at: cuoi.occurredAt };
-  const thang = [...events].reverse().find((e) => e.seq > op.expectedVersion && e.type === "status_changed" && (e.payload.to === "Pending" || e.payload.to === "Closed"));
+  // Sự kiện thắng ngay: lệnh thật sự ĐƯA căn vào Đang giao dịch / Đã bán (luật lõi) — đổi nhãn tại chỗ của người khác là
+  // «đụng nhau», không phải «đã cọc» (doi-nhan-so-phien-ban).
+  const thang = [...events].reverse().find((e) => e.seq > op.expectedVersion && suKienThangNgay(events, e));
   if (thang && thang.actorUserId !== me.userId && view.standardStatus === thang.payload.to) {
     return { dc: { kq: "can-xem", review: { listingId: op.listingId, kind: thang.payload.to === "Pending" ? "da-coc" : "da-ban", server } }, view: view as ListingView, events };
   }
