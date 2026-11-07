@@ -24,7 +24,7 @@ biến nào; không chạy gì lên bản thật.
 - **AC-1** — Eval thứ tự deploy cũ của bat-rang-buoc-ban-ma khai không chạy, trỏ tiêu chí đã ký đo lại nó.
   Given `_acceptance/bat-rang-buoc-ban-ma/evals.yaml`,
   When bộ đọc của kit (`notRunConflicts`, `chungThayBoi` trong `lib/evidence-core.cjs`) đọc ô E4,
-  Then E4 mang `status: not-run` và `superseded_by: kiem-nhanh-rang-buoc-ban-ma#AC-1`, bộ đọc nhận con trỏ (không xung
+  Then E4 mang `status: not-run` và `superseded_by: va-deploy-csdl-tam#AC-3`, bộ đọc nhận con trỏ (không xung
   đột); thiết kế của hồ sơ thay ghi thẻ `bat-rang-buoc-ban-ma/E4`.
 
 - **AC-2** — Con trỏ hỏng bị bắt đúng điều kiện.
@@ -34,7 +34,7 @@ biến nào; không chạy gì lên bản thật.
 
 - **AC-3** — Lưới trước gộp của hai hồ sơ liên quan sạch.
   Given nhánh của hàng (bat-rang-buoc-ban-ma đã ghim lại sau gộp main),
-  When chạy lưới trước gộp của kit cho bat-rang-buoc-ban-ma và kiem-nhanh-rang-buoc-ban-ma,
+  When chạy lưới trước gộp của kit cho bat-rang-buoc-ban-ma và va-deploy-csdl-tam,
   Then không VIOLATION nào cho hai slug ấy.
 
 ## Coverage

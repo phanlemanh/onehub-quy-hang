@@ -5,8 +5,8 @@ evals:
     criterion: AC-1
     executor: script
     cmd: node _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs
-    paths: ["_acceptance/bat-rang-buoc-ban-ma/evals.yaml", "_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/**", "docs/superpowers/specs/2026-11-06-kiem-nhanh-rang-buoc-ban-ma-design.md"]
-    expected: "exit 0; dòng «ĐẠT bat-rang-buoc-ban-ma/E4 không chạy → kiem-nhanh-rang-buoc-ban-ma#AC-1» từ notRunConflicts của kit (xungDot rỗng, thayBoi có đúng cặp ấy); «KẾT: ĐẠT»."
+    paths: ["_acceptance/bat-rang-buoc-ban-ma/evals.yaml", "_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/**", "docs/superpowers/specs/2026-11-06-va-deploy-csdl-tam-design.md"]
+    expected: "exit 0; dòng «ĐẠT bat-rang-buoc-ban-ma/E4 không chạy → va-deploy-csdl-tam#AC-3» từ notRunConflicts của kit (xungDot rỗng, thayBoi có đúng cặp ấy); «KẾT: ĐẠT»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E2
@@ -14,13 +14,13 @@ evals:
     executor: script
     cmd: node _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs
     paths: ["_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/**"]
-    expected: "exit 0; ba dòng «ĐỐI CHỨNG đỏ đúng điều kiện» trên bản sao tạm của kiem-nhanh-rang-buoc-ban-ma: AC-9 → ac-thay-vang; thẻ bat-rang-buoc-ban-ma/E4a trong thiết kế và hợp đồng → thay-khong-nhan; status verified → ho-so-thay-chua-ky; một dòng «ĐẠT đối chứng dương» bản sao không sửa nhận con trỏ."
+    expected: "exit 0; ba dòng «ĐỐI CHỨNG đỏ đúng điều kiện» trên bản sao tạm của va-deploy-csdl-tam: AC-9 → ac-thay-vang; thẻ bat-rang-buoc-ban-ma/E4a trong thiết kế và hợp đồng → thay-khong-nhan; status verified → ho-so-thay-chua-ky; một dòng «ĐẠT đối chứng dương» bản sao không sửa nhận con trỏ."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
     criterion: AC-3
     executor: script
     cmd: node _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs --luoi
-    paths: ["_acceptance/bat-rang-buoc-ban-ma/**", "_acceptance/kiem-nhanh-rang-buoc-ban-ma/**", "_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/**"]
-    expected: "exit 0; pre-merge-check.sh của kit (tìm qua packages/ui-lint/tim-kit.mjs) cho bat-rang-buoc-ban-ma và kiem-nhanh-rang-buoc-ban-ma, base origin/main: in «rules ran=», không dòng VIOLATION nào mang tên hai slug."
+    paths: ["_acceptance/bat-rang-buoc-ban-ma/**", "_acceptance/va-deploy-csdl-tam/**", "_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/**"]
+    expected: "exit 0; pre-merge-check.sh của kit (tìm qua packages/ui-lint/tim-kit.mjs) cho bat-rang-buoc-ban-ma và va-deploy-csdl-tam, base origin/main: in «rules ran=», không dòng VIOLATION nào mang tên hai slug."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

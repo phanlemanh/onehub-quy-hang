@@ -1,4 +1,4 @@
-# Review findings: va-thuoc-ci-ho-so-moi-truong-that (round 1)
+# Review findings: va-thuoc-ci-ho-so-moi-truong-that (round 2)
 
 ## Trong hợp đồng
 
@@ -8,39 +8,41 @@
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **E3 nói ba ca đối chứng khác với ba ca mà kiem-thay.mjs thực sự chạy**
-  Người dùng thấy gì: Phép thử kiểm việc hồ sơ cũ được thay bằng hồ sơ mới ghi một đằng nhưng chạy một nẻo ở hai ca. Người đọc kết quả sẽ thấy tên ca và điều kiện không khớp, nên bằng chứng kém tin cậy hơn.
-  Căn cứ: Chỉ làm lệch lời mô tả của phép thử, không mất dữ liệu hay hỏng chức năng cho người dùng, và ghi lại thành hạn chế đã biết thì rẻ.
-  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/evals.yaml`
+- **Hợp đồng được viết lại toàn bộ tiêu chí sau khi Cổng 1 đã niêm phong, nhưng vẫn giữ chữ duyệt cũ; thẻ Cổng 1 còn mô tả phạm vi cũ**
+  Người dùng thấy gì: Chữ ký duyệt của chủ kho đang đứng tên cho một bộ tiêu chí đã đổi sau khi duyệt, nên người ký có thể chưa từng xem đúng nội dung này.
+  Căn cứ: Không mất dữ liệu và không ảnh hưởng người dùng cuối, chỉ là sai lệch hồ sơ duyệt; chủ kho có thể duyệt lại bất cứ lúc nào với chi phí rất thấp.
+  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/card-plain.json`
   severity: medium
   Đề xuất: known-limits
 
-- **Ca đối chứng «hồ sơ thay chưa ký» dựa vào trạng thái của chính hồ sơ này, sẽ hỏng ngay khi hồ sơ được ký**
-  Người dùng thấy gì: Phép thử này đang xanh nhưng sẽ chuyển đỏ sau khi hồ sơ được ký, nên lần chạy lại sau đó sẽ báo lỗi giả và có thể chặn người làm việc tiếp theo.
-  Căn cứ: Không mất dữ liệu và chỉ là cảnh báo đỏ giả khi chạy lại, nhưng sẽ lặp lại mỗi lần chạy nên nên sửa trong một việc riêng.
+- **Con trỏ superseded_by của E4 trỏ sang tiêu chí không đo thứ tự triển khai mà E4 đo**
+  Người dùng thấy gì: Bước kiểm thứ tự triển khai (chạy cập nhật cơ sở dữ liệu và kiểm cách ly trước khi gọi bản thật) có thể không còn phép đo nào canh giữ, dù hồ sơ báo là đã có tiêu chí thay thế.
+  Căn cứ: Một thay đổi sai thứ tự triển khai có thể lọt qua mà không báo đỏ, nhưng hệ quả chỉ xảy ra khi có người sửa quy trình triển khai, và thứ tự này đã được đo ở một hồ sơ khác; nên xử lý ở một việc riêng.
+  file: `_acceptance/bat-rang-buoc-ban-ma/evals.yaml`
+  severity: medium
+  Đề xuất: new-contract
+
+- **Thẻ Cổng 1 (card.html, card-plain.json) mô tả phạm vi cũ, không khớp hợp đồng đã duyệt**
+  Người dùng thấy gì: Thẻ người đã xem lúc duyệt còn tả phạm vi cũ và đánh số tiêu chí khác với hợp đồng hiện tại, dễ gây hiểu nhầm khi đối chiếu sau này.
+  Căn cứ: Chỉ gây nhầm lẫn khi đọc hồ sơ, không ảnh hưởng người dùng hay dữ liệu; vẽ lại thẻ rẻ và làm sau được.
+  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/card-plain.json`
+  severity: medium
+  Đề xuất: known-limits
+
+- **kiem-thay --luoi bỏ qua mã thoát của pre-merge-check và mọi VIOLATION không mang tên slug**
+  Người dùng thấy gì: Bài thử lưới trước gộp có thể báo đạt trong khi lưới thật đỏ vì một lỗi không gắn tên hồ sơ, nên người duyệt có thể tin nhầm là sạch.
+  Căn cứ: Lưới thật của kho vẫn chạy ở bước gộp và sẽ chặn, nên rủi ro thấp; đây chỉ là công cụ thử cục bộ và sửa rẻ khi cần.
+  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình dạng 3: chỉ kiểm chuỗi có mặt, trong khi lời hứa là một quan hệ (tiêu chí AC-1 đo lại eval E4)**
+  Người dùng thấy gì: Hệ thống chỉ kiểm con trỏ thay thế có hình thức hợp lệ, chứ không kiểm tiêu chí được trỏ tới có thật sự đo cùng điều đã bỏ.
+  Căn cứ: Khoảng trống này chỉ làm lưới yếu đi về lâu dài, không gây mất dữ liệu hay lỗi người dùng ngay; cần một việc riêng nếu muốn kiểm nội dung.
   file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs`
   severity: medium
   Đề xuất: new-contract
 
-- **Phép đối chứng «hồ sơ thay chưa ký» trỏ vào chính hồ sơ này, nên sẽ hỏng ngay khi hồ sơ được ký**
-  Người dùng thấy gì: Sau khi hồ sơ được ký, phép thử đối chứng sẽ tự báo hỏng và thoát lỗi ở mọi lần chạy lại, dù không có gì sai thật.
-  Căn cứ: Chỉ gây báo đỏ giả khi kiểm lại, không ảnh hưởng người dùng cuối hay dữ liệu, và sửa bằng việc riêng là hợp lý.
-  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs`
-  severity: high
-  Đề xuất: new-contract
+## Chưa adversarial-verify (refuter chết)
 
-- **Đối chứng trong code không khớp với E3 đã khai: ca ranh giới thẻ «moi-truong-that/E3a» không được kiểm**
-  Người dùng thấy gì: Phép thử không kiểm được trường hợp thẻ dính chữ thừa bị nhận nhầm là đã có người nhận việc thay. Nếu luật nhận diện bị nới lỏng, phép thử vẫn báo đạt.
-  Căn cứ: Chỉ là khoảng hở trong phép thử phụ, chưa gây hại thật cho người dùng, và ghi thành hạn chế đã biết là đủ.
-  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 5 — eval tuyên đối chứng ca biên «thẻ dính chữ moi-truong-that/E3a» nhưng script chỉ đo ca vắng hẳn thẻ**
-  Người dùng thấy gì: Phép thử chỉ kiểm trường hợp thẻ vắng hẳn, không kiểm trường hợp thẻ gần giống, nên lỗi nhận nhầm kiểu so khớp theo tiền tố có thể lọt qua mà không ai biết.
-  Căn cứ: Khả năng xảy ra thấp, không ảnh hưởng dữ liệu người dùng, và có thể bổ sung sau khi cần.
-  file: `_acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs`
-  severity: medium
-  Đề xuất: known-limits
-
-Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
+⚠ Cụm ngoài vùng phủ: 2/5 lỗi rơi vào file không bộ đo nào phủ (_acceptance/va-thuoc-ci-ho-so-moi-truong-that/card-plain.json) — dừng và quyết: mở rộng hợp đồng hay rút phạm vi.
