@@ -2877,6 +2877,21 @@
       "cau_giao": "Bài kiểm «đường lõi mật khẩu đóng» thôi đếm tổng người dùng của cả cơ sở dữ liệu: nó chỉ xét người dùng mang đúng email mà đường đăng ký được thử, để chạy song song với các tệp kiểm khác không vỡ, và vẫn bắt được đường đăng ký lỡ mở lại.",
       "slug": "va-dong-duong-gui-ma-song-song",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
+    },
+    {
+      "ma": "mau-api-ten-truong-tieng-anh",
+      "cau_giao": "Đường API mẫu bảng hàng và mẫu bài của sàn (/api/v1/company/templates/export, /posts) và dữ liệu mẫu đã lưu dùng tên trường tiếng Anh; mẫu sàn đã lưu bằng tên cũ vẫn đọc và xuất được, lần lưu kế ghi tên mới.",
+      "slug": "mau-api-ten-truong-tieng-anh",
+      "vi_sao": "Ngoài-8 của mau-bang-hang-va-bai (#191): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 07/11 (sổ d-20261107T114018Z-45). Hàng không mã — đã quyết.",
+      "sau": [
+        "mau-bang-hang-va-bai"
+      ],
+      "vung": [
+        "packages/api/src/mau-san/**",
+        "packages/core/src/export/**",
+        "packages/core/src/sharing/**",
+        "apps/web/src/app/(app)/settings/templates/**"
+      ]
     }
   ],
   "chan_troi": [
