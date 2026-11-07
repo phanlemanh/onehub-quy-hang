@@ -178,7 +178,9 @@ try {
   await t.tinh(`window.__thanTuGet = ${JSON.stringify(JSON.stringify({ items: getThat.items, errors: getThat.errors }))}`);
   await go(t, GOI, "45");
   await bamLuu(t);
-  await ngu(1500);
+  // Vế âm «không Đã lưu» chờ cùng khoảng như khung 1 chờ toast (20 giây) — toast tới muộn vẫn bị bắt.
+  await t.cho(`document.body.innerText.includes("chưa áp")`, 20000).catch(() => {});
+  await t.cho(`!!document.querySelector("[data-sonner-toast]")`, 20000).catch(() => {});
   const bao3 = await baoDau(t);
   const toast3 = await toast(t);
   await chup(t, "E7-cap-con-loi");

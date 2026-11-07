@@ -14,6 +14,28 @@ import { fileURLToPath } from "node:url";
 const GOC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const RA = path.join(GOC, ".acceptance-runs/va-e7-loi-that-cap-han");
 const doiCau = process.argv.includes("--doi-cau");
+// --nguon: chỉ đọc mã nguồn chay-ui.mjs — không còn phản hồi giả viết tay (AC-3). Đối chứng dương: có lớp thay thân bằng GET thật.
+if (process.argv.includes("--nguon")) {
+  // --tu <ref>: đọc bản của một commit (đối chứng: bản trước vòng phải đỏ).
+  const iTu = process.argv.indexOf("--tu");
+  const TEP = "_acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs";
+  const nguon = iTu > 0 ? execFileSync("git", ["show", `${process.argv[iTu + 1]}:${TEP}`], { cwd: GOC, encoding: "utf8" }) : readFileSync(path.join(GOC, TEP), "utf8");
+  const gia = [/__traGia/, /`[^`]*— cặp về mặc định[^`]*`/, /"[^"]*— cặp về mặc định[^"]*"/].filter((re) => re.test(nguon));
+  if (!/await api\(\)/.test(nguon)) {
+    console.log("nguồn: đối chứng dương hỏng — tệp không có lời gọi GET thật api(), không phải phép nhìn E7");
+    process.exit(2);
+  }
+  if (gia.length) {
+    console.log(`nguồn ĐỎ: còn phản hồi giả viết tay — ${gia.map(String).join(", ")}`);
+    process.exit(1);
+  }
+  if (!/__thanTuGet/.test(nguon)) {
+    console.log("nguồn ĐỎ: khung 3 không lấy thân từ GET thật (__thanTuGet)");
+    process.exit(1);
+  }
+  console.log("nguồn ĐẠT: khung 3 lấy thân từ GET thật, không còn câu lỗi gõ tay");
+  process.exit(0);
+}
 const thoat = (ma, chu) => {
   console.log(chu);
   process.exit(ma);
@@ -22,6 +44,9 @@ const tat = (cay) => spawnSync(process.execPath, [path.join(cay, "_acceptance/lu
 
 let CAY = GOC;
 if (doiCau) {
+  // Bản sao lấy theo HEAD: cây đang chấm còn đổi chưa commit ở vùng đo thì E1 và E2 chấm hai bản khác nhau — từ chối.
+  const ban = execFileSync("git", ["status", "--porcelain", "--", "_acceptance/luat-chia-lead-cap-han-hong/thu", "_acceptance/luat-chia-lead/thu", "_acceptance/va-e7-loi-that-cap-han/thu", "packages/core/src/config"], { cwd: GOC, encoding: "utf8" }).trim();
+  if (ban) thoat(2, `e7: cây đang chấm còn đổi chưa commit ở vùng đo — commit rồi chạy lại:\n${ban}`);
   const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: GOC, encoding: "utf8" }).trim();
   CAY = path.join(RA, "wt-doi-cau");
   if (!existsSync(CAY)) execFileSync("git", ["worktree", "add", "-q", "--detach", CAY, sha], { cwd: GOC });

@@ -1,0 +1,37 @@
+# Bộ đo của hàng vá va-e7-loi-that-cap-han. Chấm E7: thu/kiem-e7.mjs (chỗ thử dãy D 5575/postgres, máy dev 3495).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs
+    long_running: 30
+    paths: ["_acceptance/luat-chia-lead-cap-han-hong/thu/**", "_acceptance/luat-chia-lead/thu/dung-d.mjs", "_acceptance/va-e7-loi-that-cap-han/thu/**", "apps/web/src/app/(app)/settings/lead-routing/**", "packages/core/src/config/**"]
+    expected: "exit 0; dòng «khung 1: toast «Đã lưu · …»», dòng khung 3 có errors từ GET thật nêu «lead_routing.first_call_minutes» và báo «Đã gửi nhưng chưa áp: Hạn gọi lần đầu …», toast null; dòng cuối «khung 3 ĐẠT: lỗi thật của máy chủ → «chưa áp», không «Đã lưu»». Chiều đỏ ở E2."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs --doi-cau
+    long_running: 30
+    expected_exit: 1
+    paths: ["_acceptance/va-e7-loi-that-cap-han/thu/**", "packages/core/src/config/**"]
+    expected: "exit 1 với «khung 3 ĐỎ: màn không báo «chưa áp» nêu «Hạn gọi lần đầu» với lỗi thật của máy chủ»; dòng khung 3 có errors từ GET thật [«cặp hạn trái luật — cặp về mặc định»] (bản sao cây, câu lỗi bỏ tên khoá) và toast «Đã lưu». Đo 08/11: đúng như vậy."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs --nguon
+    paths: ["_acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs", "_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs"]
+    expected: "exit 0 với «nguồn ĐẠT: khung 3 lấy thân từ GET thật, không còn câu lỗi gõ tay». Đỏ in «nguồn ĐỎ: còn phản hồi giả viết tay — …». Chiều đỏ ở E3b."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs --nguon --tu 5b17fd36
+    expected_exit: 1
+    paths: ["_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs"]
+    expected: "exit 1 với «nguồn ĐỎ: còn phản hồi giả viết tay — /__traGia/, …» trên bản chay-ui.mjs của nhánh chính trước vòng (5b17fd36)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
