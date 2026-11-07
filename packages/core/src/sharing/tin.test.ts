@@ -92,3 +92,33 @@ test("tin gửi: thân lời gọi", () => {
   });
   assert.equal(thanLanGui({ nguoiNhan: "khach_rieng", prospectId: null, listingIds: [id(2)] }).ok, false, "khách riêng thiếu nhu cầu khách");
 });
+
+// E7 (hàng mau-bang-hang-va-bai, AC-7): tin soạn sẵn của màn Gửi mang lời mở đầu, lời kết của mẫu bài Zalo.
+test("Gửi: tin theo mẫu Zalo", () => {
+  const MAU = { dau: "Hàng mới tuần này 🎉", cuoi: "Cần thêm căn cứ nhắn em" };
+  // [ca, tin dựng, các dòng mong đợi]
+  const BANG: [string, string, string[]][] = [
+    [
+      "nhóm môi giới · có mẫu",
+      soanTin({ ban: ban(hai, "nhom_moi_gioi"), nguoiNhan: "nhom_moi_gioi", mauZalo: MAU }),
+      ["Gửi các anh chị trong nhóm,", "Hàng mới tuần này", "Em gửi 2 căn đang bán:", "1. Toà Mồi A · Z-97.53 — 74,5 m² · 2 PN · Đông Nam — 4,25 tỷ (không bao phí)", "2. Toà Mồi B · Y-03.08 — 55 m² · 1 PN · Tây — 950 triệu (bao phí)", `Xem ảnh và chi tiết: ${CHO_LINK}`, "Cần thêm căn cứ nhắn em"],
+    ],
+    [
+      "khách riêng · có mẫu",
+      soanTin({ ban: ban(hai, "khach_rieng"), nguoiNhan: "khach_rieng", tenKhach: "[Tên]", mauZalo: MAU }),
+      ["Chào anh/chị [Tên],", "Hàng mới tuần này", "Em gửi 2 căn đang bán:", "1. Toà Mồi A · Tầng cao — 74,5 m² · 2 PN · Đông Nam — 4,25 tỷ (không bao phí)", "2. Toà Mồi B · Tầng thấp — 55 m² · 1 PN · Tây — 950 triệu (bao phí)", `Xem ảnh và chi tiết: ${CHO_LINK}`, "Cần thêm căn cứ nhắn em"],
+    ],
+    ["nhóm môi giới · không mẫu", soanTin({ ban: ban(hai, "nhom_moi_gioi"), nguoiNhan: "nhom_moi_gioi" }), soanTin({ ban: ban(hai, "nhom_moi_gioi"), nguoiNhan: "nhom_moi_gioi" }).split("\n")],
+    ["khách riêng · mẫu rỗng", soanTin({ ban: ban(hai, "khach_rieng"), nguoiNhan: "khach_rieng", tenKhach: "[Tên]", mauZalo: { dau: "  ", cuoi: "" } }), soanTin({ ban: ban(hai, "khach_rieng"), nguoiNhan: "khach_rieng", tenKhach: "[Tên]" }).split("\n")],
+  ];
+  let dem = 0;
+  for (const [ca, tin, dong] of BANG) {
+    assert.equal(tin, dong.join("\n"), `tin lệch mẫu — ${ca}`);
+    dem++;
+  }
+  assert.equal(dem, 4);
+  const coMau = BANG[0]![1];
+  assert.ok(coMau.indexOf(MAU.cuoi) > coMau.indexOf(CHO_LINK), "lời kết đứng trước link");
+  const daGan = ganLink(coMau, LINK);
+  assert.equal(daGan.split(LINK).length - 1, 1, "tin gửi đi phải có link đúng một lần");
+});

@@ -8,7 +8,8 @@ import type { ProspectNeed } from "@quy-hang/core/contacts";
 import { CALL_BACK_AFTER_DAYS, freshness } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import type { AnhRa, CanNoiBo, CanRaNgoai, NguoiNhan } from "@quy-hang/core/redaction";
-import { chonAnhChiaSe, ganLink, laMucChia, thanKhachMoi, thanLanGui } from "@quy-hang/core/sharing";
+import { docMauBai, type LoiMauBai } from "@quy-hang/core/export";
+import { chonAnhChiaSe, ganLink, laMucChia, soanTin, thanKhachMoi, thanLanGui } from "@quy-hang/core/sharing";
 import type { ListingView } from "@/lib/sync/types";
 
 /** Luật sản phẩm 25: căn chưa xác nhận từ ngưỡng «cần gọi lại» của lõi mang nhắc — nhắc, không chặn. */
@@ -233,3 +234,17 @@ export function mucChiaGui(nhap: string | null, macDinh: number | null): number 
 }
 export const LOI_MUC_CHIA = "Mức chia từ 0 đến 100, tối đa hai chữ số lẻ";
 
+
+/**
+ * Mẫu bài Zalo của sàn (#27, hàng mau-bang-hang-va-bai) từ thân `GET /api/v1/company/templates/posts`; đọc lỗi hay sàn
+ * chưa đặt → không mẫu (tin như cũ). Đọc một lần lúc mở màn.
+ */
+export function mauZaloTu(than: unknown): LoiMauBai | undefined {
+  const t = than !== null && typeof than === "object" && "templates" in than ? (than as { templates: unknown }).templates : null;
+  return docMauBai(t).mau.zalo;
+}
+
+/** Tin soạn sẵn của màn Gửi: chưa chọn người nhận thì rỗng; có mẫu Zalo thì mang lời mở đầu, lời kết của sàn. */
+export function tinMacDinh(o: { ban: readonly CanRaNgoai[]; nguoiNhan: NguoiNhan | null; tenKhach: string | null; mauZalo?: LoiMauBai }): string {
+  return o.nguoiNhan ? soanTin({ ban: o.ban, nguoiNhan: o.nguoiNhan, tenKhach: o.tenKhach, mauZalo: o.mauZalo }) : "";
+}

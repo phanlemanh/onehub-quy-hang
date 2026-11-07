@@ -1,0 +1,8 @@
+E10 lan cham 3 (playwright, dev server http://localhost:3491, phien dung chung, khong tat)
+Console error (browser_console_messages, level=error, all):
+ - 400 PUT /api/v1/company/templates/export  (buoc 4, ten trung; trang quan tri chi ghi 1 lan trong tep console cua trang; tong hop cong cu hien 2 dong)  -> da khai trong Expected
+ - Hydration failed #1: BangHang dangMo=null > DataGrid recordCount=0 > FramePanel > TrangThai kind="empty" title="San chua c..."  -> DA KHAI (L-45)
+ - Hydration failed #2,#3,#4: BangCoHoSo > BangHang > DataGrid recordCount=3|6|3 > FramePanel > div(thanh cong cu, className flex flex-wrap...) > MenuTrigger/Button; may chu dung <div role=status aria-busy "Dang tai">, may khach dung <button dropdown-menu-trigger>  -> KHUNG KHAC, KHONG DUOC KHAI trong Expected
+Failed requests app-origin (response >= 400) tren luong chinh (quan tri + dau-chu-1 + dau-khach): chi 400 PUT templates/export o buoc 4.
+Tham do ngoai luong: vai Truong nhom o man Gui -> GET /api/v1/prospects 403 (khong lap lai voi vai Dau khach).
+Khong co request third-party.

@@ -25,6 +25,7 @@ import { registerSettingsRoutes } from "./settings/routes";
 import { registerFeeRoutes } from "./fees/routes";
 import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
+import { registerMauSanRoutes } from "./mau-san/routes";
 import { registerStatusesRoutes } from "./statuses/routes";
 import { registerCustomFieldsRoutes } from "./custom-fields/routes";
 import { registerValueAliasesRoutes } from "./value-aliases/routes";
@@ -215,6 +216,7 @@ export function createApi(deps: ApiDeps) {
   registerFeeRoutes(api, deps);
   registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
+  registerMauSanRoutes(api, deps);
   registerStatusesRoutes(api, deps);
   registerCustomFieldsRoutes(api, deps);
   registerValueAliasesRoutes(api, deps);
