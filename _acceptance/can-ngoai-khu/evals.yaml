@@ -1,0 +1,111 @@
+schema_version: 1
+feature_slug: can-ngoai-khu
+# Lệnh máy: executors.test.core (lõi), executors.test.doi_nhan_db (bộ kiểm cách ly + packages/api/test-db trên Postgres
+# dãy X 5576, ghim cứng — khoá khai ở hàng doi-nhan-so-phien-ban, cùng lệnh dùng lại), executors.script.typecheck (kiểm
+# kiểu toàn kho). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` liệt tên ca; người chấm đối chiếu từng tên ca nêu
+# trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Mỗi ca dùng hàm kiểm thuần trả danh sách lỗi; phá thử chạy CÙNG
+# hàm, ghim thông điệp. Địa chỉ trong ca: «Đường Mẫu N», số nhà sinh, tỉnh/xã lấy từ danh mục công — không địa chỉ thật.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 khuôn created ba dạng» có mặt và ok trong packages/core/src/listing/dinh-danh.test.ts — bảng viết tay [tên, payload, lỗi chờ (deepEqual danh sách {path, reason})]: 3 payload đủ → []; thiếu từng khoá bắt buộc (có toà: buildingName; lô: subdivisionName, blockName, unitNumber; ngoài khu: offCompoundUnitId — 5 dòng); 3 cặp trộn dạng; 3 khoá lạ; 4 khoá nguồn × 3 dạng = 12 dòng lý do «thông tin chủ nhà không vào hàng»; số dòng bảng assert = 26 và in ra; hàm kiểm kiemKhuon(validatePayload) trả []. Phá thử cùng tệp: khuôn cũ (chỉ buildingName bắt buộc) → lỗi nêu tên dòng «lô đủ» và «ngoài khu đủ»; khuôn bỏ chặn trộn → lỗi nêu dòng trộn đầu tiên."
+    paths: ["packages/core/src/listing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 gấp lại sự kiện cũ và ba dạng» có mặt và ok — tệp ghim packages/core/src/listing/anh-gap-cu.json sinh bằng foldListing TRƯỚC khi sửa fold (commit riêng, ghi rõ trong sổ) cho ≥ 6 dãy sự kiện cũ có toà (tạo, đổi giá, đổi chi tiết, đổi trạng thái có nhãn, gắn mã, gỡ); sau vòng: mọi khoá có trong ảnh ghim bằng nhau (deepEqual từng dãy), ba khoá subdivisionName, blockName, offCompoundUnitId = null; dãy lô và dãy ngoài khu gấp ra đúng khoá viết tay, buildingName null. Phá thử: fold đặt subdivisionName = buildingName cho dãy cũ → lỗi «dãy cũ <tên>: subdivisionName lệch»."
+    paths: ["packages/core/src/listing/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca «AC-3 tạo căn ngoài khu và cùng khoá là một căn» có mặt và ok trong packages/api/test-db/can-ngoai-khu/ — ba địa chỉ «<số> Đường Mẫu <n>, <Phường danh mục>, <Tỉnh danh mục>», mỗi loại hình một (Townhouse, Single Family Residence, Unimproved Land); POST /api/v1/off-compound-units → 201, thân có propertySubType, stateOrProvinceCode, wardCode, streetName, streetNumber, addressKey; addressKey === khoaDiaChi của lõi tính lại từ docDiaChi của cùng chữ (rút từ lõi, không chép chuỗi); gửi lại ba dạng viết khác (chữ HOA, «số <n>», tên phường cũ trước 1/7/2025 lấy từ bảng tên cũ của danh mục) → 200, id trùng, số dòng off_compound_units của sàn đếm trước/sau bằng nhau."
+    paths: ["packages/api/src/**", "packages/core/src/address/**", "packages/db/migrations/**", "packages/api/test-db/can-ngoai-khu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca «AC-4 địa chỉ chưa chắc và loại hình sai bị từ chối» có mặt và ok — bảng viết tay 6 dòng [tên, thân, phần chờ trong reason]: cần người chọn xã (tên phường cũ tách vào nhiều xã, rút từ danh mục), thiếu tỉnh, thiếu xã, thiếu đường, xã chưa có trong danh mục, loại hình Condominium; mỗi dòng 400 và reason chứa phần chờ; số dòng off_compound_units của sàn trước/sau bằng nhau; đối chứng dương cùng ca: một địa chỉ chắc → 201."
+    paths: ["packages/api/src/**", "packages/core/src/address/**", "packages/api/test-db/can-ngoai-khu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca «AC-5 thiếu số nhà» có mặt và ok — theo Hỏi-2 đã chốt ở Cổng Phạm vi (khuyến nghị: «Đường Mẫu <n>, <Phường>, <Tỉnh>» không số nhà → 201, addressKey null, streetNumber null; gửi lại cùng chữ → 201 mã khác; số căn của sàn tăng 2). Nếu chủ kho chọn lối khác, expected được sửa trước S2 theo câu chốt và ghi sổ."
+    paths: ["packages/api/src/**", "packages/api/test-db/can-ngoai-khu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca «AC-6 hai sàn cùng địa chỉ» có mặt và ok — sàn A và B tạo căn cùng chữ địa chỉ → hai mã khác nhau, cùng addressKey; người sàn A gửi hai cặp, mỗi cặp với mã của B và với một uuid ngẫu nhiên: GET /api/v1/off-compound-units/<mã> và POST /api/v1/listings {offCompoundUnitId: <mã>} — assert hai phản hồi của mỗi cặp cùng status và deepEqual thân lỗi (không lộ mã nào tồn tại); đếm listings, listing_events của sàn A trước/sau bằng nhau. Ca «AC-6 không Bảng hàng» có mặt và ok — người sàn A chỉ có vai không thuộc Bảng hàng (telesales) POST và GET /api/v1/off-compound-units → status và thân lỗi deepEqual với lệnh tạo hàng của cùng người (POST /api/v1/listings), số căn không đổi; đối chứng dương: người có Bảng hàng → 201. Phá thử: bỏ kiểm căn cùng sàn ở lệnh tạo hàng trên bản sao → ca đỏ nêu «A tạo hàng trên căn của B»."
+    paths: ["packages/api/src/**", "packages/db/migrations/**", "packages/api/test-db/can-ngoai-khu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca cách ly «off_compound_units» có mặt và ok trong packages/db/tests/isolation.test.mjs (đúng khuôn các ca hiện có: begin, hai sàn, set local role quy_hang_app, rollback) — A đọc dòng của A, 0 dòng của B; insert với company_id của B, update và delete dòng của B → lỗi permission/RLS hoặc 0 dòng; thêm dòng thứ hai cùng address_key trong sàn A → lỗi duy nhất; thêm dòng cùng khoá ở sàn B (vai của B) → được; phiên sàn A có vai không thuộc Bảng hàng đọc 0 dòng của chính sàn (đối chứng: vai có Bảng hàng đọc 1); ca «listings trỏ căn sàn khác»: dưới vai của sàn A insert listings với off_compound_unit_id là căn của B → lỗi khoá ngoại (ghim tên ràng buộc), trỏ căn của A → được. Ca meta «mọi bảng bật và ép luật theo dòng» vẫn ok."
+    paths: ["packages/db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca «AC-8 tạo hàng bốn loại hình» có mặt và ok — ba căn ngoài khu (ba loại hình) và một lô (subdivisionName, blockName, unitNumber rút từ danh mục mẫu thấp tầng của lõi — không chép tay); POST /api/v1/listings mỗi căn → 201; GET hàng: standardStatus Incomplete, buildingName null, đúng khoá dạng định danh; GET căn ngoài khu của hàng ra đúng propertySubType; đối chứng: hàng có toà tạo như cũ → 201, subdivisionName/blockName/offCompoundUnitId null."
+    paths: ["packages/api/src/**", "packages/core/src/listing/**", "packages/api/test-db/can-ngoai-khu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0; ca «AC-9 khoá nguồn bị từ chối» có mặt và ok — 4 khoá nguồn × (3 dạng tạo hàng + 1 thân tạo căn ngoài khu) = 16 lần gửi, đếm và assert 16; mỗi lần 400, details/reason nêu đúng khoá; đếm listings, listing_events, off_compound_units của sàn trước/sau bằng nhau."
+    paths: ["packages/api/src/**", "packages/core/src/listing/**", "packages/api/test-db/can-ngoai-khu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    expected: "exit 0 của toàn bộ bộ kiểm cách ly và packages/api/test-db; ca gấp lại «xoá trắng bảng rồi gấp lại» của packages/api/test-db/listings.test.ts có mặt và ok VỚI dữ liệu dựng thêm hàng lô và hàng ngoài khu (đếm số hàng mỗi dạng ≥ 1 in ra), và assert cột information_schema của listings bằng Object.values(STATE_COLUMNS) gồm ba cột mới; số ca fail = 0."
+    paths: ["packages/api/src/listings/**", "packages/core/src/listing/**", "packages/db/migrations/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 của npm run typecheck toàn kho (core, api, web, db) sau khi buildingName của bản tính thành string | null."
+    paths: ["packages/**", "apps/web/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10c
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0 của toàn bộ bộ kiểm lõi; số ca fail = 0."
+    paths: ["packages/core/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
