@@ -41,7 +41,7 @@ không thêm migration — hạng T2. Bài và bảng vẫn dựng từ luật �
 - **AC-4 — Chỉ Quản trị sửa, sàn khác không thấy.** (cross-layer) Given hai sàn A, B và đủ năm vai · When đọc và ghi mẫu ·
   Then:
   - mọi thành viên sàn A đọc được mẫu của A;
-  - vai khác Quản trị ghi thì nhận 403, mở màn Mẫu thì về Cá nhân kèm câu «Chỉ Quản trị sàn sửa được mẫu»;
+  - vai khác Quản trị ghi thì nhận 403, mở màn Mẫu thì về Cá nhân kèm câu «Mục này chỉ quản trị sàn mở được»;
   - sàn B không đọc, không ghi được mẫu của A.
 - **AC-5 — Xuất bảng hàng theo mẫu.** (cross-layer) Given sàn có mẫu «[Tên] gửi đội» với cột Mã căn · Giá · Diện tích · When
   Đầu chủ mở Xuất bảng hàng, chọn «Cột theo: [Tên] gửi đội» · Then:

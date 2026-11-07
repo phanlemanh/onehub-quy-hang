@@ -68,7 +68,7 @@ evals:
     criterion: AC-4
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; bài thuần của trang Mẫu: vai không phải Quản trị → hàm định đường trả về Cá nhân kèm câu «Chỉ Quản trị sàn sửa được mẫu»; bảng năm vai, đếm 5, chỉ company_admin ở lại. Chiều đỏ: cho Đầu chủ ở lại → ca đỏ nêu vai."
+    expected: "exit 0; bài thuần của trang Mẫu: vai không phải Quản trị → hàm định đường trả về Cá nhân kèm câu «Mục này chỉ quản trị sàn mở được»; bảng năm vai, đếm 5, chỉ company_admin ở lại. Chiều đỏ: cho Đầu chủ ở lại → ca đỏ nêu vai."
     paths: ["apps/web/src/app/(app)/settings/templates/**", "apps/web/src/app/(app)/settings/cai-dat.ts"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
@@ -189,7 +189,7 @@ evals:
       - "Mở màn Gửi với hai căn: tin soạn sẵn có lời mở đầu sau lời chào, lời kết sau dòng link; gõ thêm chữ vào ô tin: ô nhận chữ"
       - "Về tab Mẫu bài sửa lời mở đầu Zalo, Lưu; mở lại màn Gửi: tin mang lời mới"
       - "Xoá mẫu bảng (xác nhận): mẫu biến khỏi danh sách; mở lại Xuất: «Cột theo» chỉ còn «Góc nhìn đang mở»"
-      - "Mở /settings/templates bằng vai Đầu chủ: về trang Cá nhân kèm câu «Chỉ Quản trị sàn sửa được mẫu»"
+      - "Mở /settings/templates bằng vai Đầu chủ: về trang Cá nhân kèm câu «Mục này chỉ quản trị sàn mở được»"
       - "Khổ điện thoại: màn Mẫu một cột, không vỡ khung"
     cmd: config:executors.ui-check
     expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console"

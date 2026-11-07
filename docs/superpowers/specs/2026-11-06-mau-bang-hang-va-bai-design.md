@@ -114,7 +114,7 @@ Lần đã xong (tệp đã tải, trang `/s/<mã>` cũ, tin đã gửi) không 
 | ST-mau-tu-choi | Hộp sửa mẫu | lý do dưới ô (vd «Tên đã có trong sàn») | sửa rồi lưu lại |
 | ST-mau-loi-luu | Mẫu | «Chưa lưu được — thử lại» | lưu lại |
 | ST-mau-da-luu | Mẫu | «Đã lưu mẫu» | tiếp tục |
-| ST-mau-khong-quyen | (vai khác) | về Cá nhân, «Chỉ Quản trị sàn sửa được mẫu» | — |
+| ST-mau-khong-quyen | (vai khác) | về Cá nhân, «Mục này chỉ quản trị sàn mở được» | — |
 | ST-xuat-mau-loi | Xuất bảng hàng | «Chưa đọc được mẫu của sàn — đang theo góc nhìn đang mở» | xuất theo góc nhìn |
 <!-- UX-STATE-TABLE>>> -->
 
