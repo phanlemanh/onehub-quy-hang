@@ -23,7 +23,9 @@
     "./labels": "./src/labels/index.ts",
     "./statuses": "./src/statuses/index.ts",
     "./custom-fields": "./src/custom-fields/index.ts",
-    "./thiet-bi": "./src/thiet-bi/index.ts"
+    "./thiet-bi": "./src/thiet-bi/index.ts",
+    "./property": "./src/property/index.ts",
+    "./address": "./src/address/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",

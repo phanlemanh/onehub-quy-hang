@@ -3939,3 +3939,79 @@ test("từ điển của sàn: cách ly, ghi qua hàm, nhật ký chỉ thêm", 
     await expectError(c, "delete from company_value_alias_events", [], /chỉ thêm/);
   });
 });
+
+// ---- Căn ngoài khu (052, hàng 76 can-ngoai-khu: E7) ----
+const CNK_A = "00000000-0000-4000-8000-0000000c0a01";
+const CNK_B = "00000000-0000-4000-8000-0000000c0b01";
+const CNK_KHOA = "79|26737|mau 3|12";
+const CNK_KHOA_B = "79|26737|mau 3|14";
+
+async function themCan(c, san, id, khoa, nguoi) {
+  await c.query(
+    `insert into off_compound_units (company_id, id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key, created_by)
+     values ($1, $2, 'Townhouse', '79', '26737', 'Đường Mẫu 3', $3, $4, $5, $6)`,
+    [san, id, khoa.split("|")[3], `${khoa.split("|")[3]} Đường Mẫu 3, Phường Tân Định, Thành phố Hồ Chí Minh`, khoa, nguoi],
+  );
+}
+
+test("off_compound_units: cách ly sàn, chỉ Bảng hàng, một khoá một căn, hàng không trỏ căn sàn khác", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    await c.query("reset role");
+    await c.query("update company_members set roles = '{listing_agent}' where user_id = $1", [USER_1]);
+    await c.query("update company_members set roles = '{telesales}' where user_id = $1 and company_id = $2", [USER_2, COMPANY_A]);
+    await c.query("update company_members set roles = '{listing_agent}' where user_id = $1 and company_id = $2", [USER_2, COMPANY_B]);
+    await themCan(c, COMPANY_A, CNK_A, CNK_KHOA, USER_1);
+    await themCan(c, COMPANY_B, CNK_B, CNK_KHOA_B, USER_2);
+
+    await bqLa(c, USER_1, COMPANY_A);
+    assert.equal((await c.query("select 1 from off_compound_units where id = $1", [CNK_A])).rowCount, 1, "sàn A đọc căn của mình");
+    assert.equal((await c.query("select 1 from off_compound_units where company_id = $1", [COMPANY_B])).rowCount, 0, "sàn A đọc căn của sàn B");
+    await expectError(
+      c,
+      `insert into off_compound_units (company_id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key)
+       values ($1, 'Townhouse', '79', '26737', 'Đường Mẫu 3', '16', '16 Đường Mẫu 3', '79|26737|mau 3|16')`,
+      [COMPANY_B],
+      /row-level security/,
+    );
+    await expectError(c, "update off_compound_units set street_name = 'x' where id = $1", [CNK_A], /permission denied/);
+    await expectError(c, "delete from off_compound_units where id = $1", [CNK_A], /permission denied/);
+    // Một khoá một căn trong sàn.
+    await expectError(
+      c,
+      `insert into off_compound_units (company_id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key)
+       values ($1, 'Townhouse', '79', '26737', 'Đường Mẫu 3', '12', 'số 12 Đường Mẫu 3', $2)`,
+      [COMPANY_A, CNK_KHOA],
+      /off_compound_units_address_key/,
+    );
+    // Hàng của sàn A không trỏ được căn của sàn B (khoá ngoại ghép); trỏ căn của A thì được.
+    await expectError(
+      c,
+      "insert into listings (id, company_id, off_compound_unit_id, standard_status, version) values (gen_random_uuid(), $1, $2, 'Incomplete', 1)",
+      [COMPANY_A, CNK_B],
+      /listings_off_compound_unit_fkey/,
+    );
+    assert.equal(
+      (await c.query("insert into listings (id, company_id, off_compound_unit_id, standard_status, version) values (gen_random_uuid(), $1, $2, 'Incomplete', 1)", [COMPANY_A, CNK_A])).rowCount,
+      1,
+      "hàng của sàn A trỏ căn của A",
+    );
+
+    // Người sàn A không có Bảng hàng đọc 0 căn của chính sàn.
+    await bqLa(c, USER_2, COMPANY_A);
+    assert.equal((await c.query("select 1 from off_compound_units")).rowCount, 0, "telesales đọc căn ngoài khu");
+
+    // Sàn B thêm căn cùng khoá với căn của A: được — khoá chỉ duy nhất trong một sàn.
+    await bqLa(c, USER_2, COMPANY_B);
+    assert.equal(
+      (
+        await c.query(
+          `insert into off_compound_units (company_id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key)
+           values ($1, 'Townhouse', '79', '26737', 'Đường Mẫu 3', '12', '12 Đường Mẫu 3', $2)`,
+          [COMPANY_B, CNK_KHOA],
+        )
+      ).rowCount,
+      1,
+    );
+    assert.equal((await c.query("select 1 from off_compound_units where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc căn của sàn A");
+  });
+});
