@@ -5,7 +5,7 @@ slug: can-ngoai-khu
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, sdk, db]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-07
 design_doc: docs/superpowers/specs/2026-11-07-can-ngoai-khu-design.md
@@ -100,3 +100,10 @@ trùng theo khoá (hàng 77), hiện theo loại hình (hàng 79), luật ẩn (
 - Sửa, gộp, xoá căn ngoài khu sau khi tạo.
 
 ## Notes
+
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
+  - Ngoài-1: Màn gửi cho khách xem trước căn lô hay căn ngoài khu với tên khu hoặc chữ «Căn ngoài khu» ở ô toà, chưa qua luật ẩn theo loại hình (hàng 80).
+  - Ngoài-2: Ép giá một căn lô hay căn mặt đường thì bảng so giá lẫn các căn ở khu khác, đường khác.
+  - Ngoài-3: Khách mở link không thấy căn lô hay căn ngoài khu đã gửi, người gửi không được báo.
+  - Ngoài-4: Màn Hôm nay của đầu khách hiện tên xấu dạng «null · <mã>» cho hàng không toà.
+  - Ngoài-6: Bài kiểm ca «thiếu tỉnh» chỉ ghim chữ «tỉnh», chưa phân biệt với nhánh «chưa có trong danh mục».
