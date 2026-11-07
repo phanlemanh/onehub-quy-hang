@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: faab389136d828e05923101cf6b2d734a56e4f28
-human_signoff:
+human_signoff: Manh Phan 2026-11-07
 ---
 
 # Evidence Report: chup-anh-dien-thoai
