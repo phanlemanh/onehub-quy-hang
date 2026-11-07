@@ -1,0 +1,4 @@
+# E3 network (playwright, origin http://localhost:3585)
+fetch/XHR /api/v1/*: catalog, member-names, listings, units/photos?toa&ma (11x) all 200 on desktop+mobile loads; auth send-otp 200, sign-in 200
+static/img (note-only): GET /api/v1/units/photos/<id>/thumb 404 x11 per load (anh seed khong co tep) -> placeholder icon
+console errors: 11 (all the 404 thumbs above), no hydration error
