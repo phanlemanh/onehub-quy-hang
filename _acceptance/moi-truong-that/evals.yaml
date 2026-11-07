@@ -19,8 +19,6 @@ evals:
     criterion: AC-3
     executor: script
     cmd: config:executors.script.cach_ly_that
-    status: not-run
-    superseded_by: va-deploy-csdl-tam#AC-2
     expected: "exit 0; mọi ca của isolation.test.mjs pass, 0 fail — DATABASE_URL trỏ cơ sở dữ liệu thật"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

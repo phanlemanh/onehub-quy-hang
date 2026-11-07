@@ -32,3 +32,9 @@ bước cũ:
 
 Không làm: sửa `_acceptance/config.yaml` (executor `cach_ly_that` còn tả bản thật — ô E3 không chạy nữa nên không ai gọi
 nó); sửa hợp đồng đã ký; sửa ADR-0009, Tham chiếu (hàng adr-0009-csdl-tam); chú thích đầu bat-rang-buoc.test.mjs.
+
+## Tách phạm vi (07/11, giám sát)
+
+Ghim lại moi-truong-that cần DATABASE_URL của bản thật (chuỗi có mật khẩu) — giám sát không cầm bí mật ấy. Hàng này chỉ
+giữ phần bat-rang-buoc-ban-ma (mục 2 vế E4, mục 3 vế thiết kế kiem-nhanh). Phần moi-truong-that (mục 1, mục 2 vế E3,
+mục 4) chuyển sang hàng `va-thuoc-ci-moi-truong-that-ban-that`; chủ kho tự chạy lệnh ghim lại trong terminal riêng.

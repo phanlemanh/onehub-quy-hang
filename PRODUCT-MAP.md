@@ -36,7 +36,7 @@ flowchart TD
 
 ## Đang làm
 
-- Thước của hai hồ sơ đã ký đo bước triển khai cũ được đưa về bước triển khai mới: bài kiểm CI của moi-truong-that đo deploy chờ bộ cách ly trên CSDL tạm, migrate rồi kiểm nhanh rồi Vercel; hai eval đo bước cũ khai không chạy, trỏ tiêu chí đã ký đo lại chúng (`va-thuoc-ci-ho-so-moi-truong-that`)
+- Eval thứ tự deploy cũ của hồ sơ đã ký bat-rang-buoc-ban-ma khai không chạy, trỏ tiêu chí đã ký đo lại nó; hồ sơ ấy ghim lại sau gộp main (phần moi-truong-that tách sang hàng sau) (`va-thuoc-ci-ho-so-moi-truong-that`)
 
 ## Đã giao — chờ phiên nghiệm thu
 

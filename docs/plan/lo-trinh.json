@@ -2843,10 +2843,22 @@
       "slug": "va-thuoc-ci-ho-so-moi-truong-that",
       "vi_sao": "Ngoài-3 của hàng va-deploy-csdl-tam (PR #176): thước kiem_ci và cach_ly_that của hồ sơ đã ký moi-truong-that, bat-rang-buoc-ban-ma còn đòi bộ cách ly chạy trên bản thật; chủ kho chọn mở hợp đồng mới ở Cổng Bằng chứng 06/11.",
       "hang": "T2",
-      "bat_khi": "Lưới trước gộp và làn ghim lại của moi-truong-that, bat-rang-buoc-ban-ma xanh trên main sau hàng; bài kiểm CI của moi-truong-that đỏ khi job deploy chạy lại bộ kiểm ghi trên bản thật",
+      "bat_khi": "Lưới trước gộp của bat-rang-buoc-ban-ma và kiem-nhanh-rang-buoc-ban-ma xanh trên main sau hàng; eval thứ tự deploy cũ của bat-rang-buoc-ban-ma khai không chạy, trỏ kiem-nhanh-rang-buoc-ban-ma#AC-1",
       "vung": [
         "_acceptance/moi-truong-that/**",
         "_acceptance/bat-rang-buoc-ban-ma/**"
+      ]
+    },
+    {
+      "ma": "va-thuoc-ci-moi-truong-that-ban-that",
+      "cau_giao": "Thước của hồ sơ đã ký moi-truong-that được đưa về bước triển khai mới: bài kiểm CI đo deploy chờ bộ cách ly trên cơ sở dữ liệu tạm, áp migration rồi kiểm nhanh chỉ đọc rồi mới gọi Vercel, giữ đủ tám vế; eval chạy bộ cách ly trên bản thật khai không chạy, trỏ va-deploy-csdl-tam#AC-2; chủ kho tự ghim lại hồ sơ trên máy mình bằng một lệnh (phần còn lại của Ngoài-3 hàng va-deploy-csdl-tam).",
+      "slug": "va-thuoc-ci-moi-truong-that-ban-that",
+      "vi_sao": "Tách từ hàng va-thuoc-ci-ho-so-moi-truong-that 07/11 (giám sát): ghim lại moi-truong-that cần DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL của bản thật và VERCEL_LINK_DIR — chủ kho chạy trong terminal riêng, biến đọc từ máy chủ kho: node /Users/manhphan/dev/acceptance-gate-kit-v2.37.0/feature-loop/scripts/repin-lane.mjs --root . --slug moi-truong-that --reason \"thước CI theo bước triển khai mới\" --write",
+      "hang": "T2",
+      "bat_khi": "Bài kiểm CI của moi-truong-that ĐẠT tám vế trên bước triển khai mới và đỏ khi deploy chạy lại bộ kiểm ghi; lưới trước gộp của moi-truong-that xanh sau khi chủ kho ghim lại",
+      "vung": [
+        "_acceptance/moi-truong-that/**",
+        "docs/superpowers/specs/2026-11-06-va-deploy-csdl-tam-design.md"
       ]
     }
   ],
