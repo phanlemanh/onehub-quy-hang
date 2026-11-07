@@ -5,10 +5,10 @@ slug: chuan-hoa-moi-cua
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui, db]
-status: implemented
+status: draft
 design_doc: docs/superpowers/specs/2026-11-07-chuan-hoa-moi-cua-design.md
-approved_by: Manh Phan
-approved_at: 2026-11-07T04:20:00Z
+approved_by:
+approved_at:
 ---
 
 # Acceptance Contract: chuan-hoa-moi-cua
@@ -76,8 +76,12 @@ Bỏ quét bằng skill — trục kê tay (sổ: dòng «bỏ coverage-scan»):
 - Dọn từ điển định kỳ bằng AI (ND8).
 - Nội thất, pháp lý, tình trạng sử dụng — chưa có tập giá trị chuẩn.
 - Một chạm mở Bảng hàng lọc căn lạ — ba trường này không lưu được giá trị ngoài chuẩn.
+- Màn Từ điển xếp một cột ở khổ điện thoại (thu phạm vi sau lượt chấm 2, chủ kho chọn 07/11) — bản đầu dùng trên máy tính.
 
 ## Notes
+
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
+  - Màn Từ điển ở khổ điện thoại: bảng cách gõ phải cuộn ngang, nút «Bỏ» có thể nằm ngoài khung — quản trị duyệt từ điển trên máy tính.
 
 - Migration 051 `company_value_aliases` + `company_value_alias_events`; luật theo dòng theo sàn; bộ kiểm cách ly thêm ca.
 - Bài kiểm trên Postgres dãy B (5572); dữ liệu thử «[Tên]», `0900 000 0xx`.

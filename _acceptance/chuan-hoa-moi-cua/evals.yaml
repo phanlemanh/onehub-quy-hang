@@ -98,8 +98,7 @@ evals:
       - "Bước 0 (trước khi tạo dữ liệu, sàn chưa có dòng nào — nếu có thì ghi số dòng vào observed): mở /settings/dictionary khổ 1440 → chụp evidence/E9u-step0.png: câu «Chưa có cách gõ lạ nào — chọn gợi ý ở bước xem trước khi nhập file sẽ hiện ở đây», mọi số sức khoẻ bằng 0"
       - "Khổ 1440 mở /settings/dictionary → chụp evidence/E9u-step1.png: hàng sức khoẻ đầu màn (đã gặp 3 · chờ 3 · đã neo 0), ba nhóm trường, mỗi dòng chữ gốc → giá trị chuẩn · số lần · «Duyệt» «Bỏ»"
       - "Bấm «Duyệt» dòng «dong nm» → chụp evidence/E9u-step2.png: dòng ấy đã duyệt, sức khoẻ đã neo 1 · chờ 2"
-      - "Khổ 375 → chụp evidence/E9u-step3.png: một cột đọc được"
-    expected: "Sức khoẻ khớp số đề xuất; duyệt một dòng làm đã neo tăng, chờ giảm; khổ 375 đọc được."
+    expected: "Sức khoẻ khớp số đề xuất; duyệt một dòng làm đã neo tăng, chờ giảm. Khổ điện thoại ngoài phạm vi (thu phạm vi sau lượt 2, Known limits)."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
   - id: E10
     criterion: AC-10
