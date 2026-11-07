@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c9454756566683c685e396d19f875f0a93e9f67b
+verified_commit: ef89d41ab67e1def0d4bbc90d310940227cf4566
 human_signoff:
 ---
 
@@ -108,3 +108,7 @@ none — every multi-run eval is uniform
 
 Round 1: lượt chấm 1 có finding về E3 (ghim khẳng định phải nằm trong thân ca) — đã sửa ở commit c9454756.
 Round 2: E1, E2, E3 đạt; các lệnh suite hồi quy đạt. Không có mục judgment nên không có panel nào cần người chốt.
+
+### Re-pin lần 1 — 2026-11-07, do ghim lại sau gộp main
+run_id: repin-20261107T101431Z-38473
+sha: ef89d41ab67e1def0d4bbc90d310940227cf4566 · suites: 7 lệnh exit 0 · evals: 3/3 eval máy đạt kỳ vọng
