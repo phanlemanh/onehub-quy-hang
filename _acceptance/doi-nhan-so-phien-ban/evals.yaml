@@ -1,7 +1,7 @@
 schema_version: 1
 feature_slug: doi-nhan-so-phien-ban
-# Ba lệnh máy: executors.test.core (lõi), executors.test.isolation (packages/api/test-db trên Postgres dãy X, cổng 5576 —
-# DATABASE_URL từ .env.local của worktree), executors.test.web_db (bộ đồng bộ nói với API thật trên cùng Postgres). exit 0
+# Ba lệnh máy: executors.test.core (lõi), executors.test.doi_nhan_db (packages/api/test-db trên Postgres dãy X, cổng 5576 ghim cứng),
+# executors.test.doi_nhan_web_db (bộ đồng bộ nói với API thật trên cùng Postgres). exit 0
 # của lệnh chung KHÔNG đủ: mỗi eval đòi `output` liệt tên ca; người chấm đối chiếu từng tên ca nêu trong `expected`: có mặt,
 # «ok», không «# SKIP»/«# TODO». Mỗi ca dùng hàm kiểm thuần trả danh sách lỗi; phá thử chạy CÙNG hàm, ghim thông điệp.
 evals:
@@ -24,7 +24,7 @@ evals:
   - id: E3
     criterion: AC-3
     executor: test
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     layer: backend-effect
     expected: "exit 0; ca «AC-3 đổi nhãn đụng nhau: lệnh sau 409, không đè» có mặt và ok trong packages/api/test-db/doi-nhan-so-phien-ban/ — sàn có hai nhãn neo Pending và hai nhãn neo Closed (PUT /api/v1/company/statuses); một căn đưa tới Pending và một căn tới Closed qua lệnh API; với mỗi căn: đọc phiên bản v, người 1 POST status_changed {to: trạng thái hiện tại, label: nhãn 1} expectedVersion v → 200; người 2 POST cùng loại {label: nhãn 2} expectedVersion v → 409 thân error === API_ERRORS.versionConflict.code; sau đó status_label của bảng listings = nhãn 1, standard_status không đổi, số listing_events = trước + 1. Lặp đúng 2 căn (đếm). Phá thử: trả store.ts về luật cũ (thắng ngay theo đích) trên bản sao → ca đỏ nêu «Pending: lệnh sau ra 200, chờ 409»."
     paths: ["packages/core/src/listing/**", "packages/api/src/listings/**", "packages/api/test-db/doi-nhan-so-phien-ban/**"]
@@ -33,7 +33,7 @@ evals:
   - id: E4
     criterion: AC-4
     executor: test
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     layer: backend-effect
     expected: "exit 0; ca «AC-4 lệnh cũ không kéo căn về Đang giao dịch» có mặt và ok trong packages/api/test-db/doi-nhan-so-phien-ban/ — căn ở Pending phiên bản v; người khác POST status_changed {to: Active} đúng phiên bản → 200 (căn về Đang bán); rồi hai lệnh cũ với expectedVersion v: (a) {to: Pending, label: nhãn neo Pending}, (b) {to: Pending} không nhãn — mỗi lệnh 409 thân error === API_ERRORS.versionConflict.code; sau cả hai: standard_status = Active, status_label và số listing_events bằng ngay sau lệnh về Active. Phá thử: luật bỏ qua bản gốc (chỉ xét hiện tại) trên bản sao → ca đỏ nêu «(a) ra 200, căn thành Pending»."
     paths: ["packages/core/src/listing/**", "packages/api/src/listings/**", "packages/api/test-db/doi-nhan-so-phien-ban/**"]
@@ -42,7 +42,7 @@ evals:
   - id: E5
     criterion: AC-5
     executor: test
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     layer: backend-effect
     expected: "exit 0; ca «AC-5 thắng ngay giữ nguyên, đổi nhãn đúng phiên bản nhận» có mặt và ok trong packages/api/test-db/doi-nhan-so-phien-ban/ — hai căn Active phiên bản v, người khác đổi giá mỗi căn (v+1); POST status_changed {to: Pending} và (căn hai) {to: Closed, closePrice, closeDate} với expectedVersion v → 200 và standard_status là đích (đối chứng dương của thắng ngay); trên căn Pending: đổi nhãn tại chỗ expectedVersion = phiên bản hiện tại → 200 và status_label mới; đổi nhãn tại chỗ không khóa expectedVersion → 409 thân error === API_ERRORS.versionConflict.code, nhãn không đổi; đối chứng cùng ca: price_changed không khoá expectedVersion → 409 cùng mã. Ca «AC-5 cùng đưa vào: lệnh sau bị từ chối» có mặt và ok — căn A Active phiên bản v: người 1 POST {to: Pending} expectedVersion v → 200; người 2 POST {to: Pending} expectedVersion v → status ∉ {200}; người 2 POST {to: Pending, label: nhãn neo Pending} expectedVersion v → 409 versionConflict; căn B Active phiên bản w: người 1 {to: Closed, closePrice: 3_400_000_000, closeDate} → 200; người 2 {to: Closed, closePrice: 3_100_000_000, closeDate} expectedVersion w → status ∉ {200}; sau cùng: A standard_status Pending, status_label null, B close_price 3_400_000_000, mỗi căn số listing_events = trước + 1. Phá thử: luật bỏ vế hiện tại trên bản sao → ca đỏ nêu «A: lệnh có nhãn ra 200, nhãn bị đè»."
     paths: ["packages/core/src/listing/**", "packages/api/src/listings/**", "packages/api/test-db/doi-nhan-so-phien-ban/**"]
@@ -51,7 +51,7 @@ evals:
   - id: E6
     criterion: AC-6
     executor: test
-    cmd: config:executors.test.web_db
+    cmd: config:executors.test.doi_nhan_web_db
     layer: backend-effect
     expected: "exit 0; ca «AC-6 đồng bộ: đổi nhãn đụng nhau vào Cần xem lý do đụng nhau» có mặt và ok trong apps/web/src/lib/sync/test-db/doi-nhan-so-phien-ban.db-test.mts — hai bộ đồng bộ (kho bộ nhớ) của hai người cùng khoiDong kéo căn Pending; bộ 1 sua status_changed {to: Pending, label: nhãn 1} rồi thuNgay; bộ 2 sua {label: nhãn 2} rồi thuNgay → bộ 2 canXem() map [listingId, kind] deepEqual [[id, \"dung-nhau\"]]; hàng đợi bộ 2 rỗng; căn trên máy bộ 2 (standardStatus, statusLabel) bằng GET máy chủ và bằng [Pending, nhãn 1]; lặp y hệt trên căn Closed (hai nhãn neo Closed) → kind \"dung-nhau\". Ca «AC-6 đồng bộ: lệnh đổi nhãn xếp hàng không kéo căn về» có mặt và ok — bộ 2 kéo căn Pending, sua đổi nhãn (chưa gửi); người khác POST {to: Active} qua API; bộ 2 thuNgay → GET máy chủ standardStatus Active và statusLabel null, bộ 2 canXem có đúng một mục cho căn, hàng đợi rỗng, số sự kiện máy chủ không đổi qua lần gửi. Đối chứng cùng tệp: căn Active, bộ 2 kéo, người khác POST {to: Pending} qua API, bộ 2 sua price_changed rồi thuNgay → canXem kind \"da-coc\". Phá thử: doiChieu dùng phép cũ «to là Pending hay Closed» (bản sao) → ca đầu đỏ nêu kind «da-coc», chờ «dung-nhau»."
     paths: ["packages/core/src/listing/**", "packages/api/src/listings/**", "apps/web/src/lib/sync/gui.ts", "apps/web/src/lib/sync/test-db/doi-nhan-so-phien-ban.db-test.mts"]
@@ -60,7 +60,7 @@ evals:
   - id: E7
     criterion: AC-7
     executor: test
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     expected: "exit 0 của toàn bộ bộ kiểm cách ly và packages/api/test-db (gồm packages/api/test-db/trang-thai-rieng/nhan.test.ts và doi-gia-da-ban) trên Postgres dãy X; output không có «# SKIP»/«# TODO» cho các ca trang-thai-rieng; số ca fail = 0."
     paths: ["packages/core/src/listing/**", "packages/api/src/listings/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -68,7 +68,7 @@ evals:
   - id: E7b
     criterion: AC-7
     executor: test
-    cmd: config:executors.test.web_db
+    cmd: config:executors.test.doi_nhan_web_db
     expected: "exit 0 của bộ đồng bộ nói với API thật (apps/web/src/lib/sync/test-db/*.db-test.mts, gồm dong-bo.db-test.mts với các ca «da-coc», «da-ban», «dung-nhau» đã có); số ca fail = 0."
     paths: ["apps/web/src/lib/sync/**", "packages/api/src/listings/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
