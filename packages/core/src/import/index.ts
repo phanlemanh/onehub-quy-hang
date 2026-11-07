@@ -5,6 +5,7 @@ export * from "./dictionaries";
 export * from "./detect";
 export * from "./transforms";
 export * from "./normalize";
+export * from "./goi-y";
 export * from "./grid";
 export * from "./headers";
 export * from "./classify";
