@@ -5,7 +5,7 @@ slug: anh-khong-chan-ban
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-07-anh-khong-chan-ban-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07
@@ -99,3 +99,10 @@ AC-3, AC-7. Later/Never ở «Out of scope».
 ## Notes
 
 - Không migration: số tối thiểu là một dòng `company_settings`; không ràng buộc cơ sở dữ liệu nào chặn Đang bán theo ảnh.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
+  - Ngoài-1: Bài kiểm nút «Sẵn sàng bán» lúc mất mạng và lúc có mạng lại chỉ đối chiếu chữ trong mã, chưa chạy nút thật.
+  - Ngoài-3: Bài kiểm cửa «ô Trạng thái» dùng lệnh dựng tay, không đi qua đường đồng bộ thật.
+  - Ngoài-4: Bài kiểm từ chối khoá lạ của nhóm «Bổ sung ảnh» xanh cả khi bị từ chối vì lý do khác.
+  - Ngoài-5: Bài kiểm trang khách với căn không ảnh chỉ đếm số căn, không gắn căn nào với danh sách ảnh rỗng.
+  - Ngoài-6: Bài kiểm đọc số ảnh tối thiểu dùng phản hồi dựng tay; máy chủ đổi dạng cấu hình thì bài vẫn xanh.
+  - Ngoài-8: Bài kiểm bản xem căn chỉ xét vắng bốn tên trường nguồn, không so trọn tập khoá.

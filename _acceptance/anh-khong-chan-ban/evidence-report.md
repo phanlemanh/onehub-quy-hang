@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 0126278f277d8ca980e2111a076863955d0b9b46
-human_signoff:
+human_signoff: Manh Phan 2026-11-07
 ---
 
 # Evidence Report: anh-khong-chan-ban
