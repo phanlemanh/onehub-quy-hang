@@ -1,0 +1,52 @@
+NETWORK (app-origin XHR/Fetch/Document + failures)
+1440 200 Document http://localhost:3585/inventory
+1440 200 Fetch http://localhost:3585/api/v1/catalog
+1440 200 Fetch http://localhost:3585/api/v1/catalog
+1440 200 Fetch http://localhost:3585/api/v1/company/member-names
+1440 200 Fetch http://localhost:3585/api/v1/company/member-names
+1440 200 Fetch http://localhost:3585/api/v1/listings
+1440 200 Document http://localhost:3585/inventory
+1440 200 Fetch http://localhost:3585/api/v1/listings
+1440 200 Fetch http://localhost:3585/api/v1/catalog
+1440 200 Fetch http://localhost:3585/api/v1/company/member-names
+1440 200 Fetch http://localhost:3585/__nextjs_original-stack-frames
+375 200 Document http://localhost:3585/inventory
+375 200 Fetch http://localhost:3585/api/v1/catalog
+375 200 Fetch http://localhost:3585/api/v1/company/member-names
+375 200 Fetch http://localhost:3585/api/v1/catalog
+375 200 Fetch http://localhost:3585/api/v1/catalog
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05
+375 200 Fetch http://localhost:3585/api/v1/listings
+375 200 Document http://localhost:3585/inventory
+375 200 Fetch http://localhost:3585/api/v1/catalog
+375 200 Fetch http://localhost:3585/api/v1/company/member-names
+375 200 Fetch http://localhost:3585/api/v1/catalog
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.06
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-13.02
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-03.04
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.01
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-15.05
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.02
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.04
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.02
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-08.04
+375 200 Fetch http://localhost:3585/api/v1/catalog
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-10.01
+375 200 Fetch http://localhost:3585/api/v1/units/photos?toa=To%C3%A0+B&ma=B-14.05
+375 200 Fetch http://localhost:3585/api/v1/listings
+
+CONSOLE errors/warnings
+1440 exception: Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math
