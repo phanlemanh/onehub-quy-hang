@@ -54,7 +54,7 @@ export function isRowIndexColumn(cells: readonly Cell[]): boolean {
 /** Phép có tham số bắt buộc: đơn vị giá, thứ tự ngày. */
 const CAN_THAM_SO: readonly string[] = ["price", "date"];
 
-function kiemPhep(t: unknown, path: string, out: PlanError[]) {
+export function kiemPhep(t: unknown, path: string, out: PlanError[]) {
   if (!laDoiTuong(t)) return void out.push({ path, reason: "cần một đối tượng" });
   khoaLa(t, KHOA_PHEP, path, out);
   if (typeof t.name !== "string" || !(TRANSFORM_NAMES as readonly string[]).includes(t.name)) return void out.push({ path: `${path}.name`, reason: "phép ngoài thực đơn" });

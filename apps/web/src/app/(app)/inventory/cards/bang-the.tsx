@@ -26,6 +26,7 @@ import { useDanhMuc } from "../danh-muc";
 import { chiMuc, ghepDanhMuc } from "../ghep-danh-muc";
 import { HangTheLoc, NganLoc } from "./ngan-loc";
 import { chuThanhGui, duongGui } from "./thanh-gui";
+import { doCaoThe, uocLuongDong } from "./do-the";
 import { DongNhomToa, TheCan } from "./the-can";
 import { batDauChon, doiChon, giuChonHopLe, lenThe, locNhuCau, NHU_CAU_RONG, nhomTheoToa, phang, theLoc, type NhuCau } from "./the";
 
@@ -107,7 +108,9 @@ function BangThe({ san, an }: { san: string; an: boolean }) {
   const ao = useVirtualizer({
     count: dong.length,
     getScrollElement: () => cuon,
-    estimateSize: (i) => (dong[i]?.kind === "nhom" ? 56 : 128),
+    estimateSize: (i) => uocLuongDong(dong[i]?.kind === "nhom" ? "nhom" : "can"),
+    // Khe ẩn (máy tính, hay hồ sơ đang mở) đo ra cao 0 — trả ước lượng để vòng đo không nuốt cả 5.000 dòng (React #185).
+    measureElement: (el) => doCaoThe(el, uocLuongDong(dong[Number(el.getAttribute("data-index"))]?.kind === "nhom" ? "nhom" : "can")),
     overscan: 6,
     scrollMargin: le,
     getItemKey: (i) => {
@@ -245,12 +248,21 @@ function BangThe({ san, an }: { san: string; an: boolean }) {
 export function BangTheDienThoai({ nguoi, san }: { nguoi: string; san: string }) {
   const q = useSearchParams();
   const dangMo = docCot(new URLSearchParams(q.toString())) !== null;
+  // Khung gắn khe này ở mọi khổ và ẩn nó bằng CSS trên máy tính. Khe ẩn thì không gắn bảng thẻ: bộ cuộn ảo của nó cuộn
+  // chung vùng cuộn đang hiện của trang và làm Bảng hàng sàn lớn sập hay giật (va-bang-hang-cuon-so-lon). Khe hiện ra khi
+  // đổi khổ màn thì gắn. Hồ sơ đang mở trên điện thoại vẫn chỉ ẩn bảng thẻ, không gỡ — giữ lọc và vị trí cuộn.
+  const khe = useRef<HTMLDivElement | null>(null);
+  const [kheHien, setKheHien] = useState(false);
+  useLayoutEffect(() => {
+    const xem = () => setKheHien(!!khe.current && khe.current.getClientRects().length > 0);
+    xem();
+    window.addEventListener("resize", xem);
+    return () => window.removeEventListener("resize", xem);
+  }, []);
   return (
-    <>
-      <div className={dangMo ? "hidden" : undefined}>
-        <BangThe san={san} an={dangMo} />
-      </div>
+    <div ref={khe}>
+      <div className={dangMo ? "hidden" : undefined}>{kheHien ? <BangThe san={san} an={dangMo} /> : null}</div>
       <HoSoDienThoai nguoi={nguoi} san={san} bao={null} />
-    </>
+    </div>
   );
 }

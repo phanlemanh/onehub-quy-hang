@@ -55,6 +55,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/imports/{importId}/undo",
     "GET /api/v1/imports/ai",
     "POST /api/v1/imports/ai/plan",
+    "POST /api/v1/imports/ai/cells",
     "PUT /api/v1/imports/ai/agreement",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",
@@ -95,6 +96,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/contacts/lookup-phone",
     "POST /api/v1/contacts/{contactId}/phones/{phoneId}/reveal",
     "PATCH /api/v1/contacts/{contactId}",
+    "PATCH /api/v1/contacts/{contactId}/custom",
     // lien-he-khach (hàng 86).
     "POST /api/v1/prospects",
     "GET /api/v1/prospects/{prospectId}",
@@ -147,6 +149,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Trạng thái riêng (hàng 46).
     "GET /api/v1/company/statuses",
     "PUT /api/v1/company/statuses",
+    "GET /api/v1/company/fields",
+    "PUT /api/v1/company/fields",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
