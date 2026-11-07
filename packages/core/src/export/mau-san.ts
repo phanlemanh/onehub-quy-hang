@@ -38,7 +38,7 @@ const KHOA_LOI = new Set(["opening", "closing"]);
 function khoaLa(o: Record<string, unknown>, duoc: Set<string>, k: string): string | null {
   const la = Object.keys(o).find((x) => !duoc.has(x));
   if (la === undefined) return null;
-  return TEN_CU[la] ? `${k}: khoá lạ «${la}» — dùng «${TEN_CU[la]}»` : `${k}: khoá lạ «${la}»`;
+  return Object.hasOwn(TEN_CU, la) ? `${k}: khoá lạ «${la}» — dùng «${TEN_CU[la]}»` : `${k}: khoá lạ «${la}»`;
 }
 
 /** Đọc một trường theo tên mới, thiếu thì theo tên cũ (dòng lưu trước khi đổi tên). */
