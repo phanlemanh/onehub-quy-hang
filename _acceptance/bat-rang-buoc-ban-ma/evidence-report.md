@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: e104653ef548472fdb3705ffd99a2be6c2b02373
+verified_commit: bc797845baa3748ca99f39aea252971a1bf5132f
 human_signoff: Manh Phan 2026-11-01
 ---
 
@@ -150,3 +150,7 @@ sha: 1c746689b504967738cbd009561b3f67797cc3ae · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 2 — 2026-11-07, do gộp main; E4 khai thay bởi kiem-nhanh-rang-buoc-ban-ma#AC-1
 run_id: repin-20261107T080703Z-57082
 sha: e104653ef548472fdb3705ffd99a2be6c2b02373 · suites: 7 lệnh exit 0 · evals: 4/4 eval máy đạt kỳ vọng · không chạy theo hồ sơ: E4 · thay bởi hồ sơ đã ký: E4→kiem-nhanh-rang-buoc-ban-ma#AC-1 · ngoài làn máy: E5 · diff chạm vật đo ngoài làn máy: E5 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-4
+
+### Re-pin lần 3 — 2026-11-07, do gộp main; E4 trỏ va-deploy-csdl-tam#AC-3
+run_id: repin-20261107T084108Z-45350
+sha: bc797845baa3748ca99f39aea252971a1bf5132f · suites: 7 lệnh exit 0 · evals: 4/4 eval máy đạt kỳ vọng · không chạy theo hồ sơ: E4 · thay bởi hồ sơ đã ký: E4→va-deploy-csdl-tam#AC-3 · ngoài làn máy: E5 · AC không có chốt máy: AC-4
