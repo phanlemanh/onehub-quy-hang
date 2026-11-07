@@ -1,0 +1,104 @@
+schema_version: 1
+feature_slug: man-mau-bao-mau-hong
+# Lời báo chỗ hỏng chấm thuần ở apps/web (settings/templates), lỗi đầu vào là đầu ra THẬT của bộ đọc lõi (docMauBang,
+# docMauBai) trên dữ liệu hỏng viết trước — không chép tay chuỗi lỗi. Đường lưu bỏ đúng chỗ đã báo chấm trên Postgres dãy
+# qua API thật. Một lượt nhìn màn thật. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài thuần của apps/web/src/app/(app)/settings/templates/ dựng tab Mẫu bảng hàng (renderToStaticMarkup BangMauBang) với baoHong lấy từ loiMauHong(docMauBang(<dữ liệu hỏng viết trước>).loi): bảng ca viết trước — một mẫu mang cột holderName (cột bị bỏ) · một mẫu tên trùng (mẫu bị bỏ) · một mẫu không phải đối tượng · cả khoá không phải danh sách · 21 mẫu (quá trần): mỗi ca HTML có tiêu đề «Mẫu đã lưu có N chỗ không đọc được» với N đúng số dòng lỗi, câu «Lần lưu kế sẽ bỏ hẳn những chỗ này», và mỗi chỗ một câu (ca cột nêu «Người giữ»); đếm 5. Chiều đỏ: tab không nhận baoHong → ca đỏ nêu «tab không báo chỗ hỏng»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; như E1 cho tab Mẫu bài (BangMauBai) với loiMauHong(docMauBai(<dữ liệu hỏng>).loi): bảng ca — kênh lạ «tiktok» · zalo lời 501 ký tự · facebook thiếu closing · cả khoá là mảng: mỗi ca có tiêu đề đúng N, câu lưu kế, và kênh nêu bằng «Zalo»/«Facebook» hay câu chung cho kênh lạ; đếm 4. Chiều đỏ: tab Mẫu bài bỏ khối báo → ca đỏ nêu tên ca."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận toàn phần viết trước: MỌI dạng lỗi docMauBang và docMauBai phát ra (sinh bằng chính hai hàm trên một bảng dữ liệu hỏng phủ từng nhánh loi.push; số dòng bảng bằng số lần «loi.push(» đếm trong mã nguồn packages/core/src/export/mau-san.ts — thêm nhánh mà quên dòng bảng là đỏ) → loiMauHong: không câu nào là câu chung (mọi dạng lõi phát ra đều được nhận ra), không câu nào khớp /export\\.templates|share\\.post_templates|\\[\\d+\\]|holderName|closePrice|\\bname\\b|\\bcolumns\\b|\\bopening\\b|\\bclosing\\b/; số câu ra bằng số dòng lỗi vào; dòng lạ khuôn («xyz») ra đúng câu chung. Đối chứng dương: một câu ra chứa nhãn «Người giữ». Chiều đỏ: bỏ bước đổi khoá cột → ca đỏ nêu câu còn «holderName»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; dựng hai tab với baoHong rỗng: HTML không chứa «không đọc được» và không có khối role=status của báo hỏng; bảng trạng thái đang tải · trống · lỗi đọc · có mẫu dựng ra chữ như bài cũ của mau-san.test.ts (bài cũ vẫn xanh). Chiều đỏ: khối hiện cả khi rỗng → ca đỏ nêu «báo hỏng khi không có chỗ hỏng»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/man-mau-bao-mau-hong/ ca «lưu bỏ đúng chỗ đã báo»: ghi thẳng company_settings (vai chủ bảng) ba mẫu, mẫu giữa trùng tên mẫu đầu, mẫu cuối mang holderName → GET trả 2 mẫu và errors 2 dòng → dựng thân bằng thanPutBang của màn Mẫu từ đáp GET, lưu lại mẫu đầu → PUT 200 → GET sau: đúng 2 mẫu, mẫu đầu và mẫu cuối cùng tên và cột như GET trước (so sâu), errors rỗng. Quan hệ: loiMauHong(errors của GET trước, đáp API thật) ra 2 câu, không câu chung, một câu chứa «Người giữ»; chỗ biến mất giữa dòng lưu cũ và mới (mẫu giữa, cột holderName) đúng bằng hai chỗ ấy. Ca thứ hai: thêm một mẫu mới khi còn chỗ hỏng → mẫu đọc được cũ còn đủ. Chiều đỏ: thân dựng bỏ thêm một mẫu đọc được → ca đỏ nêu «lưu làm mất mẫu đọc được»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", packages/api/test-db/man-mau-bao-mau-hong/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; page.tsx chuyển errors của hai đáp GET xuống tab: hàm thuần trangThaiTuDap(<đáp 200 có errors>) trả trạng thái xong với baoHong bằng loiMauHong(errors) (so mảng), đáp lỗi → kiểu lỗi; mã nguồn page.tsx gọi hàm ấy cho cả hai đường. Chiều đỏ: hàm bỏ errors → ca đỏ nêu «trang vứt errors»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5c
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «lưu mẫu bài bỏ đúng chỗ đã báo»: ghi thẳng share.post_templates có kênh lạ «tiktok», zalo lời 501 ký tự, facebook hợp lệ → GET: chỉ facebook, errors 2 dòng; loiMauHong(errors) 2 câu không câu chung → dựng thân bằng thanPutBai của màn Mẫu (đặt lời Zalo mới) → PUT 200 → GET sau: facebook so sâu như trước, zalo là lời mới, errors rỗng; dòng lưu mới không còn khoá tiktok. Chiều đỏ: thân bỏ kênh facebook → ca đỏ nêu «lưu mẫu bài làm mất lời đọc được»."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", packages/api/test-db/man-mau-bao-mau-hong/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; settings/templates/mau-san.ro-ri.test.ts (có sẵn, quét mồi trên mã nguồn màn) xanh, cộng ca mới: khối báo dựng từ dữ liệu hỏng mang mẫu có cột nội bộ của căn mồi không mang chuỗi mồi nào. Chiều đỏ: câu báo chép giá trị ô thay vì nhãn cột → ca đỏ nêu chuỗi mồi."
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; bài cũ chanMucSan của mau-san.test.ts (vai khác về Cá nhân) vẫn xanh. Chiều đỏ: bỏ chặn vai → ca cũ đỏ."
+    paths: ["apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6c
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0 hay đúng mã đã khai của lưới khuôn; khối báo đi qua TrangThai (khuôn trang-thai), màn vẫn theo MucCaiDat của nhóm cai-dat-san, không lệch mới."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    setup:
+      - "Postgres dãy L (5571) có sàn mẫu (DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres node packages/db/seed/nap.mjs --nap), máy chủ dev ở cổng của lượt chấm; nạp mẫu hỏng cho sàn mẫu: DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres node _acceptance/man-mau-bao-mau-hong/thu/nap-mau-hong.mjs (ba mẫu bảng hàng — một trùng tên, một mang cột Người giữ — và mẫu bài có kênh lạ)"
+    steps:
+      - "Đăng nhập quan-tri@mau.quy-hang.test, mở Cài đặt › Sàn › Mẫu, tab Mẫu bảng hàng: đầu tab có khối báo «Mẫu đã lưu có 2 chỗ không đọc được», hai câu (một nêu «Người giữ»), câu «Lần lưu kế sẽ bỏ hẳn những chỗ này»; bảng có 2 mẫu"
+      - "Tab Mẫu bài: khối báo 1 chỗ, câu chung cho kênh lạ; khối Zalo vẫn có lời đã lưu"
+      - "Tab Mẫu bảng hàng: Sửa mẫu đầu, Lưu: khối báo mất, bảng còn đủ 2 mẫu cùng tên"
+      - "Tab Mẫu bài: sửa lời Zalo, Lưu: khối báo của tab mất, lời Facebook (nếu có) còn nguyên"
+      - "Khổ điện thoại: khối báo không tràn ngang"
+    cmd: config:executors.ui-check
+    expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console ngoài lời 400 có chủ đích (không có ở đây)"
+    paths: ["apps/web/src/app/(app)/settings/templates/**"]
+    evidence_required: [run_id, screenshot, observed]
