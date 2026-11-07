@@ -85,7 +85,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     expected: "exit 0; bài thuần của apps/web/src/app/(app)/inventory/phat-hang/: ô «Cột theo» có «Góc nhìn đang mở» rồi tên các mẫu theo thứ tự của sàn (so mảng); chọn mẫu → bản xem trước có tiêu đề cột đúng bằng mẫu sau luật ẩn (so mảng); đọc mẫu lỗi → chỉ còn «Góc nhìn đang mở» và câu «Chưa đọc được mẫu của sàn — đang theo góc nhìn đang mở». Chiều đỏ: chọn mẫu mà xem trước giữ cột góc nhìn → ca đỏ nêu «xem trước không theo mẫu»."
-    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/(app)/inventory/mau-xuat-san.ts", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E5c
@@ -93,7 +93,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     expected: "exit 0; bài thuần của hộp Xuất (apps/web/src/app/(app)/inventory/phat-hang/): chọn mẫu ba cột rồi gọi đúng hàm dựng tệp hay chép bài của hộp cho từng kiểu xuất — bảng viết trước năm kiểu (Excel · PDF · ảnh · bài Zalo · bài Facebook), đếm 5: Excel đọc lại hàng tiêu đề của tệp sinh ra và so mảng ba cột theo thứ tự; PDF và ảnh so dãy tiêu đề cột của mô hình vẽ; bài Zalo, Facebook so cả chuỗi D + phần dựng sẵn + C với mẫu bài của sàn. Chiều đỏ: Excel giữ cột góc nhìn → ca đỏ nêu kiểu xuất."
-    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/(app)/inventory/mau-xuat-san.ts", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E5d
@@ -152,7 +152,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     expected: "exit 0; bài thuần của hộp Xuất: mẫu đọc một lần lúc mở — hộp đang mở nhận bộ mẫu mới thì xem trước giữ cột của bộ lúc mở (so mảng), mở lại thì theo bộ mới (so mảng). Chiều đỏ: hộp đọc lại mẫu mỗi lần vẽ → ca đỏ nêu «hộp đang mở đổi theo mẫu mới»."
-    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**"]
+    paths: ["apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/(app)/inventory/mau-xuat-san.ts", "apps/web/src/app/(app)/inventory/bang-hang.tsx"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E9
