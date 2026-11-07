@@ -1,0 +1,59 @@
+schema_version: 1
+feature_slug: va-nut-ghi-cuoc-goi-truong-nhom
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ma trận viết trước 12 ô của lopPhuHoSo đúng «Bảng người xem» của hợp đồng (6 người xem × căn có người giữ · chưa ai giữ), mỗi ô ghim đủ năm cờ; ghiCuocGoi chỉ đúng ở 3 ô (đầu chủ giữ căn · có người giữ; trưởng nhóm có vai Đầu chủ · hai ô); số ô = 12; chiều đỏ: bản sao suy ghiCuocGoi = !hoiDauChu → bộ so nêu đúng hai ô «trưởng nhóm thuần · có người giữ» và «trưởng nhóm thuần · chưa ai giữ» (deepEqual lời lệch)."
+    paths: ["packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; nút chính theo cờ trên ma trận viết trước 5 ca (không thấy nguồn · đầu chủ giữ căn · trưởng nhóm thuần · trưởng nhóm có vai Đầu chủ · căn chưa có mã) — mỗi ca ghim nút mong (hỏi-đầu-chủ · ghi-cuộc-gọi + đường · không nút · ghi-cuộc-gọi + đường · không nút); thân điện thoại dựng thật (renderToStaticMarkup) có đúng 0 hay 1 nút dính đáy theo ca; quét mã nguồn units/ho-so/** không có chỗ đọc danh sách vai (roles) — chiều đỏ của bộ quét: bản sao nutChinh đọc roles thẳng → bộ quét nêu tên tệp; chiều đỏ của bộ so nút: bản sao nút suy từ !hoiDauChu → bộ so nêu đúng ca «trưởng nhóm thuần · có nút ghi-cuộc-gọi · mong không nút»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web
+    expected: "exit 0; luật cửa của màn ghi cuộc gọi (hàm thuần mà page.tsx gọi) trên cùng 6 người xem của E1: cho vào đúng người mang vai Đầu chủ; quan hệ nút ⇒ trang: với mọi người xem × căn có người giữ · chưa ai giữ, nút chính là ghi-cuộc-gọi thì luật cửa cho vào (0 ca lệch); đối chứng dương của bộ so: bản sao nút suy từ !hoiDauChu → bộ so nêu đúng hai ca của trưởng nhóm thuần; page.tsx gọi đúng hàm cửa ấy và không tự đọc tên vai (quét mã nguồn trang, chiều đỏ: bản sao trang đọc roles.includes thẳng → bộ quét nêu tệp)."
+    paths: ["apps/web/src/app/(app)/units/call/**", "apps/web/src/app/(app)/units/ho-so/**", "packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử dãy H (dev http://localhost:3494, dựng bằng _acceptance/ho-so-dien-thoai-product-detail-5/thu/dung-h.mjs), 375×812, cùng một căn mẫu do dau-chu-1 giữ: (0) đọc vai trên chỗ thử, ghi vào observed — truong-nhom@mau.quy-hang.test chỉ có team_lead; (1) truong-nhom — hồ sơ dựng xong và thấy phần nguồn (thẻ Nội bộ / chủ nhà: đối chứng dương rằng đây là ca «thấy nguồn»), không có nút chính dính đáy (không data-slot ghi-cuoc-goi, không hoi-dau-chu); (2) dau-chu-1 — có «Ghi cuộc gọi», bấm vào mở màn ghi cuộc gọi (đầu màn «Gọi ép giá», không phải trang không tìm thấy); (3) dau-khach@mau.quy-hang.test — có «Hỏi đầu chủ»; (4) truong-nhom gõ thẳng /units/call?hang=<mã> → trang không tìm thấy; (5) gán thêm vai listing_agent cho truong-nhom trên chỗ thử (đăng nhập lại), mở cùng căn → có «Ghi cuộc gọi», bấm vào mở màn «Gọi ép giá»; trả vai về như cũ sau cảnh. Mỗi cảnh một ảnh E4-<cảnh>.png; ghi E4-network.txt."
+    steps:
+      - "Dựng chỗ thử dãy H bằng _acceptance/ho-so-dien-thoai-product-detail-5/thu/dung-h.mjs; lấy phiên bằng --phien <email>"
+      - "Đọc vai của truong-nhom (docker exec quy-hang-db-dkn-H psql: company_members), ghi vào observed"
+      - "Chọn một căn mẫu có mã do dau-chu-1 giữ (đọc listing_agent_assignments), mở /units/<mã> ở 375×812 bằng từng phiên"
+      - "dau-chu-1 bấm «Ghi cuộc gọi», chụp màn sau khi chuyển"
+      - "truong-nhom mở thẳng /units/call?hang=<mã>, chụp"
+      - "Gán thêm listing_agent cho truong-nhom trên chỗ thử, lấy phiên mới, mở cùng căn, bấm «Ghi cuộc gọi», chụp; trả vai về như cũ"
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/units/call/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; bộ kiểm giao diện xanh, bảng viết trước của bản đồ khuôn khớp."
+    paths: ["apps/web/src/app/(app)/units/**", "packages/ui-lint/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
