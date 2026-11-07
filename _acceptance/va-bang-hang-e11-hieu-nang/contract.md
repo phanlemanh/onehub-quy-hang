@@ -5,7 +5,7 @@ slug: va-bang-hang-e11-hieu-nang
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: _acceptance/va-bang-hang-e11-hieu-nang/design.md
 approved_by:
 approved_at:

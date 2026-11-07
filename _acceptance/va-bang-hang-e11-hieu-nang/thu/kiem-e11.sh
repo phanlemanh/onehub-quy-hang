@@ -14,6 +14,16 @@ TOT_SHA=028f56366fb9e425239b7642b861e7ec0e35c078
 XET_SHA=$(git -C "$GOC" rev-parse "${E11_SHA:-HEAD}")
 CAP=${E11_CAP:-3}
 mkdir -p "$RA"
+# Một lượt đo một lúc: E1, E2, E2b dùng chung cổng 3575/3585 và worktree wt-xet — lượt chấm có thể gọi chúng song song.
+KHOA=$RA/.khoa-kiem-e11
+for _ in $(seq 1 720); do
+  if mkdir "$KHOA" 2>/dev/null; then break; fi
+  # Khoá bỏ quên (lượt trước bị giết) quá 90 phút thì gỡ.
+  if [ -n "$(find "$KHOA" -maxdepth 0 -mmin +90 2>/dev/null)" ]; then rmdir "$KHOA" 2>/dev/null || true; fi
+  sleep 10
+done
+[ -d "$KHOA" ] || { echo "E11 cặp: chờ khoá đo quá 2 giờ"; exit 2; }
+trap 'rmdir "$KHOA" 2>/dev/null || true' EXIT
 
 if ! docker exec quy-hang-db-dkn-D psql -U postgres -d e11 -qtAc 'select 1' >/dev/null 2>&1; then
   (cd "$GOC" && node "$DAY/dung-d.mjs") >"$RA/dung-d.log" 2>&1 || { echo "E11 cặp: không dựng được Postgres dãy D — xem $RA/dung-d.log"; exit 2; }
