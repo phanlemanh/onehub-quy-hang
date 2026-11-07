@@ -10,7 +10,7 @@ flowchart TD
   GD --> B["Sắp mở vòng<br/>8 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
-  B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
+  B --> CD["Chờ duyệt phạm vi<br/>1 việc"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>111 việc"] --> GG{"Cổng Giá trị"}
@@ -32,6 +32,10 @@ flowchart TD
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
+
+## Chờ duyệt phạm vi
+
+- Thước của hồ sơ đã ký moi-truong-that được đưa về bước triển khai mới: bài kiểm CI đo deploy chờ bộ cách ly trên cơ sở dữ liệu tạm, áp migration rồi kiểm nhanh chỉ đọc rồi mới gọi Vercel, giữ đủ tám vế; eval chạy bộ cách ly trên bản thật khai không chạy, trỏ va-deploy-csdl-tam#AC-2; chủ kho tự ghim lại hồ sơ trên máy mình bằng một lệnh. (`va-thuoc-ci-moi-truong-that-ban-that`)
 
 ## Đã giao — chờ phiên nghiệm thu
 

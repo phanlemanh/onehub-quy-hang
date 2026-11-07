@@ -65,3 +65,4 @@ trong CI.
 | Eval cũ | Tiêu chí của hồ sơ này đo lại |
 |---|---|
 | bat-rang-buoc-ban-ma/E4 | AC-3 — thứ tự trên bản thật: db:migrate → kiểm nhanh → deploy hook; kiểm nhanh đỏ thì không gọi Vercel |
+| moi-truong-that/E3 | AC-2 — bộ kiểm cách ly chạy trọn trên cơ sở dữ liệu tạm của đúng commit và vẫn chặn triển khai (thay việc chạy bộ ấy trên bản thật; ghi 07/11, hàng va-thuoc-ci-moi-truong-that-ban-that) |
