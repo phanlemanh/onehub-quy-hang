@@ -5,7 +5,7 @@ slug: kiem-tan-dinh-bac-ninh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [sdk]
-status: implemented
+status: machine-cleared
 approved_by:
 approved_at:
 veto_state: mo
