@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 21796b75033dbb39674e8f0a6a7bc0fe73d5eb95
+verified_commit: b4557a55fe10c6a50684ec6b52c9ff5f3beda68e
 human_signoff: Manh Phan 2026-11-07
 ---
 
@@ -137,3 +137,7 @@ none — every multi-run eval is uniform (moi eval chay mot lan, deterministic).
 
 Round 1: baseline do o round nay (xem ho so round 1).
 Round 2: E1-E6 va bay lenh suite deu xanh; khong eval nao fail; evals.yaml khong doi tu round 1.
+
+### Re-pin lần 1 — 2026-11-07, do gộp main (PR #180) sau chữ ký
+run_id: repin-20261107T020333Z-93999
+sha: b4557a55fe10c6a50684ec6b52c9ff5f3beda68e · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng
