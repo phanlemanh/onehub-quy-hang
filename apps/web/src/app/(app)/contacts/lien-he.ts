@@ -17,7 +17,7 @@ export type CoHoi =
   | { side: "seller"; leadId: string; need: string; unit: { buildingName: string; unitNumber: string | null }; phase: Pha; listingId: string | null }
   | { side: "buyer"; prospectId: string; need: string; agentName: string | null; phase: Pha; shareCount: number };
 export type HoSo = {
-  contact: { id: string; name: string | null; contactTypes: string[]; status: "lead" | "contact"; holderName: string | null };
+  contact: { id: string; name: string | null; contactTypes: string[]; status: "lead" | "contact"; holderName: string | null; custom?: Record<string, unknown> };
   phones: SoChe[];
   opportunities: CoHoi[];
   listings: { id: string; buildingName: string; unitNumber: string | null; status: string; listPrice: number | null }[];

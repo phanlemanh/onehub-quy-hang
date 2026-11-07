@@ -40,8 +40,11 @@ cũng đi trong cùng khuôn.
   `useHoSoHang`, mất mạng thì xem bản đã tải.
 - **KH-hs-anh-noi-bo** — Mục Ảnh (hàng 18, `units/photos/`) là ngoại lệ có tên của KH-hs-tren-may: ảnh và danh sách ảnh đọc
   thẳng API, không qua bộ đồng bộ, không vào kho trên máy; ngăn nội bộ API trả no-store. Ẩn ngăn nội bộ do API và luật
-  theo dòng quyết — mục chỉ trình điều API trả. Trang bấm được `proto/anh-can-ba-ngan` đi cùng khuôn, gỡ khi màn thật
-  qua Cổng Bằng chứng.
+  theo dòng quyết — mục chỉ trình điều API trả. Ngoại lệ có tên (hàng 41, chủ kho 06/11): ảnh chụp trên điện thoại lúc mất
+  mạng chờ trong kho ảnh chờ riêng của người chụp (`photos/hang-cho-anh.ts`, `kho-anh-cho.ts` — IndexedDB tách khỏi kho
+  đồng bộ), xoá ngay khi máy chủ nhận và khi đăng xuất hay máy bị báo mất; tải vẫn đi đúng đường API của mục Ảnh. Ngăn chụp
+  (`dien-thoai/chup-anh.tsx`) mở qua `NganNoi`, báo mất mạng qua `TrangThai`. Trang bấm được `proto/anh-can-ba-ngan` đi cùng
+  khuôn, gỡ khi màn thật qua Cổng Bằng chứng.
 - **KH-hs-lop-phu** — Quyền là lớp phủ trên cùng màn (hàng 33): `lopPhuHoSo` ở `packages/core/src/access` trả bốn cờ
   (ngăn Nội bộ, Sẵn sàng bán, sửa ảnh, nút «Hỏi đầu chủ»), không rẽ theo tên vai. Hồ sơ đọc hai cờ Sẵn sàng bán và nút
   hỏi; ngăn Nội bộ và sửa ảnh của mục Ảnh vẫn do API ảnh trả (`noiBo`, `suaDuoc` — KH-hs-anh-noi-bo), cùng luật

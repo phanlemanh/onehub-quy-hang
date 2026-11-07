@@ -1,0 +1,289 @@
+schema_version: 1
+feature_slug: truong-rieng-toi-thieu
+# Lệnh máy: `executors.test.core`, `executors.test.web`, `executors.test.isolation` (bộ kiểm cách ly packages/db/tests VÀ
+# bộ kiểm API trên cơ sở dữ liệu packages/api/test-db — cần DATABASE_URL tới Postgres dãy B, cổng 5572),
+# `executors.script.ro_ri`. exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người
+# chấm đối chiếu từng tên ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Dữ liệu: sàn thử qua đường ghi
+# thật, tên «[Tên]», số `0900 000 0xx`. Mã trường trong ca: «can_goc» (dựng từ «Căn góc»), «noi_that_ban_giao»,
+# «nguon_khach», «gio_goi_duoc».
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok: «trường riêng: tạo trường của hàng» — quản trị sàn A PUT /api/v1/company/fields với [{target:\"listing\",kind:\"bool\",label:\"Căn góc\"},{target:\"listing\",kind:\"single_select\",label:\"Nội thất bàn giao\",options:[{label:\"Cơ bản\"},{label:\"Đầy đủ\"},{label:\"Thô\"}]}] → 200; GET trả fields deepEqual hai trường {code:\"can_goc\",kind:\"bool\",options:[],dataClass:\"custom_field\",archived:false} và {code:\"noi_that_ban_giao\",options có ba mã co_ban, day_du, tho}; đọc bằng vai chủ: custom_fields của A có đúng hai dòng data_class custom_field, updated_by là quản trị A; custom_field_events thêm đúng hai sự kiện (đếm trước/sau) actor là quản trị A. Chiều đỏ: PUT lần hai cùng bộ → 0 sự kiện mới (dòng không đổi không ghi lại); bỏ trigger nhật ký trong bản sao migration → ca đỏ nêu custom_field_events."
+    paths: [packages/api/src/custom-fields/**, packages/core/src/custom-fields/**, packages/db/migrations/043_truong_rieng.sql, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/custom-fields/custom-fields.test.ts có mặt và ok: «máy dò trùng nghĩa» — bảng viết trước, mỗi dòng một assert trên doTrungNghia, đếm bằng số dòng: (listing) «Hướng» → directionFaces; «Toà nhà» → buildingName; «Phí CN» → feeInclusion; «  HƯỚNG  » → directionFaces (bỏ dấu, hoa thường, khoảng trắng); tên riêng sàn đặt cho feeInclusion «Phí sang tay» (ngữ cảnh viết trước) → feeInclusion; nhãn cột Bảng hàng «Diện tích» → livingArea; «Căn góc» → null; «Nội thất bàn giao» → null; (contact) «Số điện thoại» → trường chuẩn số; «Họ tên» → trường chuẩn tên; «Người mua» → loại liên hệ; «Nguồn khách» → null. Chiều đỏ: bỏ nhánh tên riêng của sàn → dòng «Phí sang tay» đỏ."
+    paths: [packages/core/src/custom-fields/**, packages/core/src/import/headers.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: trùng nghĩa bị chặn» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — PUT một trường mới «Hướng» (listing) cùng lượt với «Căn góc» → 409 thân nêu trung-nghia và directionFaces; PUT «Số điện thoại» (contact, loại Buyer) → 409; đọc bằng vai chủ sau mỗi lượt: số dòng custom_fields và custom_field_events của A không đổi (không ghi nửa chừng); PUT riêng «Căn góc» → 200. Chiều đỏ: API bỏ gọi doTrungNghia → dòng «Hướng» 200 và ca đỏ."
+    paths: [packages/api/src/custom-fields/**, packages/core/src/custom-fields/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/custom-fields/custom-fields.test.ts có mặt và ok: «kiểm bộ trường» — bảng viết trước (mỗi phần tử của AC-3 ít nhất một dòng), mỗi dòng một assert trên kiemTruongRieng, đếm bằng số dòng: tên rỗng → lỗi; tên 41 ký tự → lỗi; tên đúng 40 ký tự kèm hai khoảng trắng mỗi đầu → ok và label lưu đã bỏ khoảng trắng; tên «Gọi 0900 000 001» → lỗi nêu số điện thoại; tên «[Tên]@vidu.vn» → lỗi nêu email; kind \"text\" → lỗi; single_select không lựa chọn → lỗi; 31 lựa chọn → lỗi; 30 lựa chọn → ok; hai lựa chọn «Thô» và «thô» → lỗi trùng; hai trường listing «Căn góc» và «căn  góc» → lỗi trùng; trường listing «Căn góc» và trường contact «Căn góc» → ok (khác đối tượng); contact không loại → lỗi; 21 trường còn sống (gộp listing và contact) → lỗi nêu trần 20; 20 còn sống + 5 đã bỏ → ok; so với bộ cũ: đổi kind của can_goc → lỗi; đổi target → lỗi; đổi contactTypes → lỗi; bỏ lựa chọn tho của noi_that_ban_giao → lỗi; đổi chữ lựa chọn tho → ok; thêm lựa chọn → ok. maTruongMoi(\"Căn góc\", []) = \"can_goc\"; maTruongMoi(\"Căn góc\", [\"can_goc\"]) = \"can_goc_2\" (kể cả khi can_goc đã bỏ). Chiều đỏ: bỏ kiểm trần 20 → dòng 21 trường đỏ."
+    paths: [packages/core/src/custom-fields/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: bộ trường sai không ghi gì» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — bảng viết trước bốn dòng, mỗi dòng PUT cùng lượt một trường hợp lệ và một trường sai: kind \"text\" → 400 nêu kind; 31 lựa chọn → 400 nêu options; trường thứ 21 → 400 nêu trần; đổi kind của can_goc đã có → 400 nêu kind; mỗi dòng một assert mã HTTP và một assert số dòng custom_fields của A (đọc bằng vai chủ, không đổi). Chiều đỏ: ghi từng dòng ngoài giao dịch → ca đỏ nêu dòng hợp lệ đã lọt."
+    paths: [packages/api/src/custom-fields/**, packages/core/src/custom-fields/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3c
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/settings/fields/truong-rieng.test.ts có mặt và ok: «màn trường riêng: thân lưu, máy dò và khoá Lưu» — từ trạng thái màn viết trước (nhóm hàng có trường mới «Căn góc» bool và một ô mới rỗng; nhóm liên hệ có «Nguồn khách» chọn một ba lựa chọn loại Buyer, Tenant): thân PUT deepEqual {fields:[{target:\"listing\",kind:\"bool\",label:\"Căn góc\",options:[]},{target:\"contact\",contactTypes:[\"Buyer\",\"Tenant\"],kind:\"single_select\",label:\"Nguồn khách\",options:[...ba lựa chọn]}]} (ô rỗng bị bỏ); ô tên «Hướng» → trungNghia trả câu «Đã có trường «Hướng» — đổi tên ở Cách gọi» và coTheLuu false; ô chứa \"0900 000 001\" → lỗi và coTheLuu false; chọn một không lựa chọn → coTheLuu false; trường contact không loại → coTheLuu false; đủ 20 trường → coTheThem false; trường contact có Seller → laNguon true (huy hiệu «Thông tin chủ nhà»). Chiều đỏ: trungNghia bỏ gọi lõi → ca đỏ nêu «Hướng»."
+    paths: ["apps/web/src/app/(app)/settings/fields/**", packages/core/src/custom-fields/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: giá trị của căn» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — sàn A có can_goc và noi_that_ban_giao, một căn dựng qua đường ghi thật; đầu chủ POST /listings/{id}/events custom_changed {can_goc:true} → 200; đọc bằng vai chủ: listing_events của căn thêm đúng một sự kiện type custom_changed payload {can_goc:true}, listings.custom = {can_goc:true}; lệnh tiếp {noi_that_ban_giao:\"co_ban\"} → custom = {can_goc:true,noi_that_ban_giao:\"co_ban\"}; {can_goc:null} → custom = {noi_that_ban_giao:\"co_ban\"}. Bảng từ chối viết trước, mỗi dòng một assert mã HTTP và một assert số sự kiện không đổi: {khong_co:true} → 400 nêu khong_co; {nguon_khach:\"x\"} (mã của trường contact) → 400; {can_goc:\"co\"} → 400; {noi_that_ban_giao:\"khong_co\"} → 400; mã của trường đã bỏ → 400. Chiều đỏ: bỏ kiemGiaTriTruong ở applyCommand → dòng khong_co đỏ."
+    paths: [packages/api/src/listings/**, packages/api/src/custom-fields/**, packages/core/src/listing/**, packages/core/src/custom-fields/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/listing/truong-rieng.test.ts có mặt và ok: «bản gập: trường riêng» — chuỗi sự kiện viết trước (created; custom_changed {can_goc:true}; custom_changed {noi_that_ban_giao:\"co_ban\"}; custom_changed {can_goc:null}; details_changed {furnished:\"x\"}) gập ra custom lần lượt {}, {can_goc:true}, {can_goc:true,noi_that_ban_giao:\"co_ban\"}, {noi_that_ban_giao:\"co_ban\"}, {noi_that_ban_giao:\"co_ban\"} (một assert mỗi bước, đếm bằng số bước); validatePayload custom_changed nhận khoá khuôn mã với true/false/chuỗi khuôn mã/null, từ chối khoá «Căn góc», giá trị số, khối lồng, payload rỗng. Chiều đỏ: stepListing thay custom bằng payload thay vì trộn → bước 3 đỏ."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4c
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/truong-rieng.test.ts có mặt và ok: «bảng hàng: cột trường riêng» — bộ trường viết trước (can_goc bool, noi_that_ban_giao ba lựa chọn, một trường đã bỏ, một trường contact): cột dựng từ bộ trường có đúng hai cột custom:can_goc, custom:noi_that_ban_giao sau mọi cột chuẩn (trường đã bỏ và trường contact không thành cột); chữ ô của căn {can_goc:true} = \"Có\", {can_goc:false} = \"Không\", {} = \"\", {noi_that_ban_giao:\"co_ban\"} = \"Cơ bản\", mã lựa chọn không còn = \"\"; ô lọc custom:can_goc liệt «Có», «Không» từ dữ liệu; lọc «Có» trên ba căn viết trước giữ đúng một căn; lệnh trình sửa ô chọn «Có» deepEqual {type:\"custom_changed\",payload:{can_goc:true}}, chọn «Bỏ trống» → {can_goc:null}; góc nhìn đã lưu có cột và lọc custom:can_goc giữ nguyên khi trường còn sống và chỉ bị bỏ khi trường có mặt trong bộ với archived:true; bộ trường ở trạng thái «chưa tải» (null — ngoại tuyến hay GET lỗi) thì góc nhìn giữ nguyên cột và lọc custom, không ghi lại, và bảng không dựng cột custom. Chiều đỏ: ghép dòng bỏ custom → ca đỏ nêu «Có»; coi «chưa tải» là bộ rỗng → dòng góc nhìn đỏ."
+    paths: ["apps/web/src/app/(app)/inventory/**", packages/core/src/custom-fields/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4d
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: giá trị đi qua đồng bộ» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — sau lần ghi thật custom_changed {can_goc:true} bởi đầu chủ, trưởng nhóm cùng sàn gọi đường kéo đồng bộ thật (GET của packages/api/src/sync) từ con trỏ trước lần ghi: bản ghi của căn mang custom deepEqual {can_goc:true}; căn khác mang custom {}. Chiều đỏ: bỏ custom khỏi STATE_COLUMNS → ca đỏ nêu custom."
+    paths: [packages/api/src/sync/**, packages/api/src/listings/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ kiểm rò rỉ chạy cả packages/core/src/redaction/truong-rieng.ro-ri.test.ts có mặt và ok: «rò rỉ: trường riêng không ra ngoài» — căn nội bộ mang custom chứa mồi (mã và giá trị ngoài khuôn chỉ để quét) cùng bộ trường mang chữ mồi: banRaNgoai cho khach_rieng và nhom_moi_gioi không mang chuỗi mồi nào và không có khoá custom; xuatBang với góc nhìn có cột custom:can_goc cho nhom_moi_gioi đưa cột ấy vào boQua và tệp không mang mồi. Đối chứng dương: bản ra lỡ chép custom → bộ quét bắt được. Các tệp *.ro-ri.test.ts đã có vẫn ok."
+    paths: [packages/core/src/redaction/**, packages/core/src/export/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: thân công khai không mang trường riêng» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — căn mang custom {can_goc:true,noi_that_ban_giao:\"co_ban\"} nằm trong một Lần gửi dựng qua đường ghi thật; GET thân công khai của link (route public thật) không chứa chuỗi can_goc, noi_that_ban_giao, co_ban, «Căn góc», «Cơ bản» và không có khoá custom. Đối chứng dương: cùng thân có mã căn đúng. Chiều đỏ: thêm custom vào bản ra → ca đỏ nêu can_goc."
+    paths: [packages/api/src/public/**, packages/core/src/redaction/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: trường của liên hệ theo loại» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — quản trị A PUT hai trường contact: nguon_khach (Buyer, Tenant) và gio_goi_duoc (Seller, Landlord) → 200; đọc bằng vai chủ: data_class lần lượt custom_field và source; liên hệ Chủ bán X do đầu chủ giữ, liên hệ Người mua Y; đầu chủ giữ X PATCH /api/v1/contacts/{X}/custom {gio_goi_duoc:\"sang\"} → 200, contacts.custom của X = {gio_goi_duoc:\"sang\"}; PATCH X {nguon_khach:\"zalo\"} → 400 nêu nguon_khach (không khớp loại); hồ sơ X (GET thật) trả custom {gio_goi_duoc:\"sang\"}; hồ sơ Y trả custom {}. Chiều đỏ: hàm ghi bỏ kiểm loại → dòng nguon_khach đỏ."
+    paths: [packages/api/src/contacts/**, packages/api/src/custom-fields/**, packages/core/src/custom-fields/**, packages/db/migrations/043_truong_rieng.sql, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/custom-fields/custom-fields.test.ts có mặt và ok: «lớp của trường riêng» — ma trận viết trước đủ 2 đối tượng × tập loại: listing → custom_field; contact [Buyer] → custom_field; [Tenant] → custom_field; [Buyer,Tenant] → custom_field; [Seller] → source; [Landlord] → source; [Seller,Buyer] → source; [Landlord,Tenant] → source (một assert mỗi dòng, đếm bằng số dòng); ma trận này là bảng chung (xuất từ tệp test-fixture của lõi) mà E6d chạy lại trên Postgres. Chiều đỏ: lopTruongRieng chỉ xét Seller → dòng [Landlord] đỏ."
+    paths: [packages/core/src/custom-fields/**, packages/core/src/contacts/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6c
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/truong-rieng.test.ts có mặt và ok: «hồ sơ liên hệ: mục trường riêng» — bộ trường viết trước (nguon_khach Buyer/Tenant, gio_goi_duoc Seller/Landlord, một trường contact đã bỏ, một trường listing): truongCuaNguoi cho người [Seller] = [gio_goi_duoc]; [Buyer] = [nguon_khach]; [Seller,Buyer] = [gio_goi_duoc, nguon_khach]; [] = [] (không hiện mục); chữ giá trị của {gio_goi_duoc:\"sang\"} = chữ lựa chọn, giá trị vắng = «Chưa ghi»; thân PATCH khi chọn deepEqual {gio_goi_duoc:\"sang\"}. Chiều đỏ: truongCuaNguoi không lọc trường đã bỏ → ca đỏ."
+    paths: ["apps/web/src/app/(app)/contacts/**", packages/core/src/custom-fields/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có mặt và ok: «trường riêng: giá trị của liên hệ chủ nhà theo lớp nguồn» — liên hệ Chủ bán X (custom {gio_goi_duoc:\"sang\"}) giữ bởi đầu chủ A1: bảng viết trước người đọc × kết quả, mỗi dòng một assert: A1 đọc X thấy custom; trưởng nhóm A thấy; đầu chủ A2 không giữ X — 0 dòng; telesales A — 0 dòng; quản trị A — 0 dòng; người sàn B — 0 dòng; và gọi app.set_contact_custom(X, {gio_goi_duoc:\"toi\"}) bởi A2, telesales, quản trị, người B → lỗi quyền, custom của X không đổi (đọc bằng vai chủ); bởi A1 và trưởng nhóm → được. Ràng buộc: chèn custom_fields target contact loại Seller với data_class custom_field (vai chủ) → lỗi check; vai API cập nhật thẳng contacts.custom → permission denied. Chiều đỏ: hàm ghi bỏ kiểm contact_readable → dòng A2 đỏ."
+    paths: [packages/db/migrations/043_truong_rieng.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6d
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có mặt và ok: «trường riêng: check lớp khớp luật của lõi» — đọc ma trận chung của E6b (listing; contact [Buyer], [Tenant], [Buyer,Tenant], [Seller], [Landlord], [Seller,Buyer], [Landlord,Tenant]) — 8 dòng; với mỗi dòng chèn custom_fields hai lần bằng vai chủ (savepoint), một lần data_class custom_field và một lần source; assert đúng một lần được nhận và lớp được nhận bằng lớp mong đợi của dòng (số assert = 8 dòng × 2). Chiều đỏ: check chỉ xét Seller → dòng [Landlord] đỏ; check viết contact_types <@ array['Seller','Landlord'] → dòng [Seller,Buyer] đỏ."
+    paths: [packages/db/migrations/043_truong_rieng.sql, packages/db/tests/isolation.test.mjs, packages/core/src/custom-fields/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7c
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: mọi đường đọc liên hệ không lộ custom» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — liên hệ Chủ bán X giữ bởi đầu chủ A1 mang custom chứa mồi (giá trị mã lựa chọn «moi_gio_goi» của trường gio_goi_duoc); bảng viết trước đường × người: đường = mọi route đọc liên hệ có thật của packages/api/src (danh sách liên hệ, hồ sơ liên hệ, tra theo số, hồ sơ của căn mang chủ nhà, đổi đầu chủ hàng loạt khi liệt chủ nhà, kéo đồng bộ) — ca đếm bằng grep các route GET trong packages/api/src/contacts/** và các tệp đọc bảng contacts: số đường tìm thấy deepEqual số dòng bảng (đường mới mà bảng thiếu thì ca đỏ nêu tệp); người = A2 (đầu chủ không giữ), telesales A, quản trị A, người sàn B; mỗi ô một assert: thân không có khoá custom mang mồi và không chứa chuỗi moi_gio_goi. Đối chứng dương: A1 GET hồ sơ X thấy moi_gio_goi. Kèm quét packages/db/migrations: mọi hàm security definer đọc từ contacts liệt cột tường minh, không select * hay c.*. Chiều đỏ: thêm một chỗ đọc bảng contacts vào mã API (vd packages/api/src/owners/store.ts) → ca đỏ nêu tệp ấy (thêm custom vào thân danh sách không lộ được vì luật đọc theo dòng đã lọc liên hệ — bảng đường × người là đối chứng hành vi, chỗ phá đo được là bảng chỗ đọc)."
+    paths: [packages/api/src/contacts/**, packages/api/src/listings/**, packages/api/src/sync/**, packages/db/migrations/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4e
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/lib/sync/truong-rieng.test.ts có mặt và ok: «hàng đợi ngoại tuyến: lệnh trường riêng» — với máy chủ giả của bộ đồng bộ (may-chu-gia), đầu chủ đặt custom_changed {can_goc:true} lúc mất mạng: bản trên máy (apTrenMay + stepListing) hiện custom {can_goc:true} ngay; có mạng lại thì hàng đợi gửi đúng một POST /api/v1/listings/{id}/events mang {type:\"custom_changed\",payload:{can_goc:true}} (đường đẩy là đường lệnh thật, đi qua applyCommand); máy chủ trả 400 nêu mã (trường đã bỏ trong lúc ngoại tuyến) → lệnh rời hàng đợi, bản trên máy về custom trước lệnh và có một mục «Cần xem» hay thông báo theo luật từ chối của bộ đồng bộ. Chiều đỏ: bỏ custom khỏi bản gập trên máy → dòng hiện ngay đỏ."
+    paths: [apps/web/src/lib/sync/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/custom-fields/custom-fields.test.ts có mặt và ok: «trường riêng không vào thoả thuận» — mayFlow từ chối custom_field và source ra mọi loại thoả thuận đang có (một assert mỗi loại, đếm bằng số loại trong danh sách loại thoả thuận của lõi); LOP_TRUONG vẫn xếp contacts là source và customFields là custom_field với trần không thuộc RA_DUOC. Chiều đỏ: thêm custom_field vào RA_DUOC trong bản sao → ca đỏ."
+    paths: [packages/core/src/custom-fields/**, packages/core/src/agreements.ts, packages/core/src/redaction/**, packages/core/src/data-classes.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: đổi tên, thêm lựa chọn, bỏ trường» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — căn mang {noi_that_ban_giao:\"co_ban\"}; quản trị PUT đổi label trường thành «Nội thất» và chữ lựa chọn co_ban thành «Cơ bản (bếp)», thêm lựa chọn «Cao cấp» → 200; listing_events của căn không thêm sự kiện nào, listings.custom không đổi; GET trả options có thêm mã cao_cap; PUT archived:true cho noi_that_ban_giao → 200; GET trả archived:true; listings.custom của căn vẫn {noi_that_ban_giao:\"co_ban\"}; lệnh custom_changed {noi_that_ban_giao:\"day_du\"} → 400; PUT trường mới «Nội thất bàn giao» → mã noi_that_ban_giao_2. Chiều đỏ: bỏ trường bằng xoá giá trị trên căn → ca đỏ nêu custom."
+    paths: [packages/api/src/custom-fields/**, packages/core/src/custom-fields/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có mặt và ok: «trường riêng: bảng định nghĩa theo sàn» — custom_fields và custom_field_events bật và ép luật theo dòng; quản trị A chèn trường của A rồi đọc lại đúng một dòng (đối chứng dương); người sàn B đọc custom_fields — 0 dòng của A, chèn dòng mang company A → lỗi luật dòng; đầu chủ A chèn hay sửa custom_fields → lỗi luật dòng; vai API xoá dòng → permission denied; custom_field_events không sửa, không xoá được (trigger chỉ thêm). Chiều đỏ: tắt force row level security trong bản sao → dòng sàn B đỏ."
+    paths: [packages/db/migrations/043_truong_rieng.sql, packages/db/tests/isolation.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: sàn khác và vai khác» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — sàn A có can_goc; người sàn B GET /api/v1/company/fields → fields [] (không trường của A); người B POST custom_changed {can_goc:true} cho căn của B → 400 nêu can_goc; đầu chủ A, telesales A PUT /api/v1/company/fields → 403, đọc bằng vai chủ số dòng custom_fields không đổi. Chiều đỏ: bỏ kiểm company_admin ở PUT → dòng đầu chủ đỏ."
+    paths: [packages/api/src/custom-fields/**, packages/api/src/listings/**, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/inventory/truong-rieng.test.ts có mặt và ok: «bảng hàng: sàn không có trường riêng» — với bộ trường rỗng: danh sách cột deepEqual COT chuẩn (đúng thứ tự và số cột trước vòng này), luaChon của mọi cột chuẩn không đổi trên bộ dòng viết trước, góc nhìn đã lưu viết trước (cột và lọc chuẩn) đọc lại không đổi; và apps/web/src/app/(app)/settings/fields/page.tsx tồn tại, PLACEHOLDER không còn khoá /settings/fields. Chiều đỏ: dựng cột custom khi bộ trường rỗng thêm một cột → ca đỏ nêu số cột."
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/settings/fields/**", apps/web/src/components/shell/placeholder.tsx]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10b
+    criterion: AC-10
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.isolation
+    expected: "exit 0; ca «trường riêng: căn và liên hệ không mang custom» trong packages/api/test-db/truong-rieng/truong.test.ts có mặt và ok — sàn không có trường riêng; căn tạo qua đường ghi thật rồi sửa details_changed, price_changed, status_changed: listings.custom = {} sau mỗi bước, listing_events không có sự kiện custom_changed; liên hệ tạo qua đường ghi thật có contacts.custom = {}; GET /api/v1/company/fields → fields []. Chiều đỏ: default của cột khác {} → ca đỏ."
+    paths: [packages/api/src/listings/**, packages/api/src/custom-fields/**, packages/db/migrations/043_truong_rieng.sql, packages/api/test-db/truong-rieng/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/settings/fields"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Chuẩn bị (bài chụp tự đủ): đăng nhập quan-tri@mau.quy-hang.test; trong trang, dùng fetch GET /api/v1/company/fields rồi PUT lại bộ đã bỏ mọi trường còn sống (archived:true) để sàn thử không còn trường riêng sống; ghi số trường đã bỏ vào observed"
+      - "Khổ 1440: mở /settings/fields → chụp evidence/E11-step1.png: hai nhóm «Trường của hàng», «Trường của liên hệ» trống kèm câu hướng dẫn, nút «Thêm trường»"
+      - "Nhóm hàng: «Thêm trường», gõ «Hướng» → chụp evidence/E11-step2.png: khối báo «Đã có trường «Hướng» — đổi tên ở Cách gọi» kèm liên kết, «Lưu» khoá"
+      - "Đổi tên thành «Căn góc», chọn «Có / Không»; thêm «Nội thất bàn giao» «Chọn một» với ba lựa chọn Cơ bản, Đầy đủ, Thô; Lưu → tải lại trang → chụp evidence/E11-step3.png: hai trường dưới nhóm «Trường của hàng», «Đã lưu trường riêng» trước khi tải lại"
+      - "Nhóm liên hệ: thêm «Giờ gọi được» «Chọn một» (Sáng, Trưa, Tối) loại Chủ bán, Chủ cho thuê và «Nguồn khách» «Chọn một» (Zalo, Facebook, Giới thiệu) loại Người mua, Người thuê; Lưu → chụp evidence/E11-step4.png: «Giờ gọi được» có huy hiệu «Thông tin chủ nhà», «Nguồn khách» không có"
+      - "Khổ 375: mở /settings/fields → chụp evidence/E11-step5.png: một cột, các trường đọc được"
+      - "Mở ngữ cảnh trình duyệt mới, đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /settings/fields → chụp evidence/E11-step6.png: địa chỉ về Cá nhân (/settings/personal) kèm câu «Mục này chỉ quản trị sàn mở được», không thấy form trường riêng"
+    expected: "Quản trị sàn tạo hai trường của hàng và hai trường của liên hệ; tên trùng nghĩa «Hướng» bị chặn kèm lối sang Cách gọi; tải lại thấy trường đã lưu; trường của liên hệ chủ nhà mang huy hiệu «Thông tin chủ nhà»; đầu chủ mở đường này bị chuyển về Cá nhân kèm câu báo. Chụp 1440 và 375."
+    paths: ["apps/web/src/app/(app)/settings/fields/**", "apps/web/src/app/(app)/settings/cai-dat.ts"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E12
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/inventory"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11 (sàn có «Căn góc», «Nội thất bàn giao»; thiếu thì quản trị PUT /api/v1/company/fields thêm hai trường ấy). Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /inventory, cuộn ngang tới cột «Căn góc» → chụp evidence/E12-step1.png: hai cột «Căn góc», «Nội thất bàn giao» sau các cột chuẩn"
+      - "Mở ô «Căn góc» của một căn, chọn «Có» → chụp evidence/E12-step2.png: ô hiện «Có»; ghi mã căn vào observed"
+      - "Mở ô lọc cột «Căn góc», chọn «Có» → chụp evidence/E12-step3.png: chỉ còn các căn mang «Có», gồm căn vừa đặt (số căn đọc từ bộ đếm)"
+      - "Mở ngữ cảnh trình duyệt mới (không kho cục bộ, phiên mới), đăng nhập dau-chu-2@mau.quy-hang.test (người thứ hai có Bảng hàng), khổ 1440: mở /inventory, chờ đồng bộ xong → chụp evidence/E12-step4.png: cùng căn ấy hiện «Có» ở cột «Căn góc»"
+    expected: "Trường riêng của hàng là cột ở Bảng hàng; đầu chủ đặt «Có» ở trình sửa ô; lọc cột giữ đúng căn mang «Có»; người thứ hai thấy giá trị sau đồng bộ. Chụp 1440."
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/contacts"
+    steps:
+      - "Postgres dãy B (5572, cơ sở dữ liệu postgres, đã migrate tới migration của hàng này, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev ở cổng của executors.ui-check bằng: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (ghi log ra tệp). Đăng nhập tài khoản mẫu bằng email + mã 6 số: mã in ở log máy chủ dòng «[ma-dang-nhap] <email> <mã>». Tắt máy chủ khi xong (luật 43 của đợt)."
+      - "Sau E11 (sàn có «Giờ gọi được» loại chủ, «Nguồn khách» loại khách; thiếu thì quản trị PUT /api/v1/company/fields thêm). Đăng nhập dau-chu-1@mau.quy-hang.test, khổ 1440: mở /contacts?type=Seller, mở hồ sơ một liên hệ Chủ bán do mình giữ → chụp evidence/E13-step1.png: mục «Trường riêng» chỉ có «Giờ gọi được» («Chưa ghi»)"
+      - "Chọn «Sáng» → chụp evidence/E13-step2.png: mục hiện «Sáng»; tải lại trang, mở lại hồ sơ → vẫn «Sáng»"
+      - "Mở /contacts?type=Buyer, hồ sơ một Người mua (nếu đầu chủ có) → chụp evidence/E13-step3.png: mục «Trường riêng» chỉ có «Nguồn khách»; không có Người mua nào thì ghi rõ vào observed và bỏ khung này"
+    expected: "Hồ sơ liên hệ hiện mục «Trường riêng» với đúng các trường khớp loại của người ấy; người giữ chọn giá trị và giá trị còn sau khi tải lại. Chụp 1440."
+    paths: ["apps/web/src/app/(app)/contacts/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E14
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    expected_exit: 1
+    paths: ["design/patterns/cai-dat-san.md", "design/patterns/trang-tam.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 1 (đạt có giới hạn, luật 33 của đợt, cùng lối E14 hồ sơ trang-thai-rieng): bộ chấm khuôn của kit 2.37.0 bỏ qua ngoại lệ không mang khoá khoi (kit#485) nên báo oan «lệch: apps/web/src/app/(app)/settings/fields/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam» (và dòng cũ của settings/labels, settings/statuses) dù design/patterns/trang-tam.md đã khai ngoại lệ cho các tệp ấy (có ly_do). Mã 1 chỉ được chấp nhận cùng E14b xanh: E14b bảo đảm mọi dòng lệch là dòng báo oan ấy, lệch khác vẫn đỏ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E14b."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14b
+    criterion: AC-10
+    executor: script
+    cmd: node _acceptance/truong-rieng-toi-thieu/kiem-khuon-e14.mjs
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/settings/**/page.tsx", "_acceptance/truong-rieng-toi-thieu/kiem-khuon-e14.mjs"]
+    expected: "exit 0; tám đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; báo oan của tệp khác đã khai ngoại lệ → qua; thêm một lệch, tệp chưa khai ngoại lệ, lỗi bản đồ, thoát 1 không có dòng của trang Trường riêng, không chấm được → đỏ; đọc ngoai_le đúng); trên cây thật, mọi dòng «lệch:» và «sai:» của bước chấm khuôn là dòng báo oan của tệp đã khai ngoại lệ ở trang-tam.md, có dòng «lệch: apps/web/src/app/(app)/settings/fields/page.tsx · thuộc hai nhóm màn: cai-dat-san, trang-tam», và bài in «E14b: chỉ có dòng báo oan đã khai». Bước chấm thoát 0 (kit đã vá) thì bài in câu nhắc bỏ mã 1 ở E14 và bài E14b, vẫn thoát 0."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

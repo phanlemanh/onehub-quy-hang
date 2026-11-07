@@ -9,6 +9,7 @@ import { Badge } from "@/components/reui/badge";
 import { TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 
+import { MucTruongRieng } from "./muc-truong-rieng";
 import { CHU, giaTy, NHAN_LOAI, NHAN_NHU_CAU, NHAN_SO, NHAN_SU_KIEN, NHAN_TRANG_THAI_HANG, nhanPha, tenCan, type CoHoi, type HoSo } from "./lien-he";
 
 // Hồ sơ một người — lối Trong kho (chủ kho chọn ở Cổng Phạm vi hàng 103, Hỏi-5): một cột theo khuôn hồ sơ căn (solution-crm-4
@@ -122,6 +123,7 @@ export function HoSoNguoi({
           </ul>
         )}
       </MucHoSo>
+      <MucTruongRieng key={c.id} contactId={c.id} contactTypes={c.contactTypes} custom={c.custom ?? {}} />
       <MucHoSo tieuDe="Cơ hội">
         {opportunities.length ? (
           <ul className="flex flex-col gap-2">

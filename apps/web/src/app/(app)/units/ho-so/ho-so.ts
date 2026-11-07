@@ -10,8 +10,8 @@ import { dinhDangGia, FEE_LABEL, STATUS_LABEL } from "../../inventory/cot";
 import { nhanLoaiCan } from "../../inventory/ghep-danh-muc";
 
 const chuan = (s: string) => s.trim().toLowerCase();
-const cungCan = (l: { buildingName: string; unitNumber: string | null }, toa: string, ma: string) =>
-  l.unitNumber !== null && chuan(l.buildingName) === chuan(toa) && chuan(l.unitNumber) === chuan(ma);
+const cungCan = (l: { buildingName: string | null; unitNumber: string | null }, toa: string, ma: string) =>
+  l.buildingName !== null && l.unitNumber !== null && chuan(l.buildingName) === chuan(toa) && chuan(l.unitNumber) === chuan(ma);
 
 // ——— Đường của cột ———
 
@@ -71,7 +71,8 @@ export type KetQuaTim = { kind: "mot"; toa: string; hang: ListingView[] } | { ki
  * không chỉ toà thì liệt toà để chọn, không chọn hộ (hàng 63).
  */
 export function timCan(ds: readonly ListingView[], ma: string, toa: string | null): KetQuaTim {
-  const khop = ds.filter((l) => l.unitNumber !== null && chuan(l.unitNumber) === chuan(ma));
+  // Hồ sơ theo toà + mã: hàng lô, hàng ngoài khu không vào phép tìm này (can-ngoai-khu; hồ sơ theo loại hình là hàng 79).
+  const khop = ds.filter((l): l is ListingView & { buildingName: string } => l.buildingName !== null && l.unitNumber !== null && chuan(l.unitNumber) === chuan(ma));
   const theoToa = toa ? khop.filter((l) => chuan(l.buildingName) === chuan(toa)) : khop;
   const cacToa = [...new Map(theoToa.map((l) => [chuan(l.buildingName), l.buildingName])).values()].sort((a, b) => a.localeCompare(b, "vi"));
   if (cacToa.length === 0) return { kind: "khong" };
@@ -178,11 +179,12 @@ export function chonLanRao(ds: readonly LanRao[], lan: string | null): string | 
   return (ds.find((r) => r.dangMo) ?? ds[0])?.id ?? null;
 }
 
-export const NHAN_PHAN: Record<string, string> = { price: "Giá", furnished: "Nội thất", legalStatus: "Pháp lý", financing: "Tài chính", occupantType: "Tình trạng sử dụng" };
+export const NHAN_PHAN: Record<string, string> = { price: "Giá", furnished: "Nội thất", legalStatus: "Pháp lý", financing: "Tài chính", occupantType: "Tình trạng sử dụng", photos: "Ảnh thật" };
 
 /** Phần của lần rao đang xem và mức đủ tính bằng luật lõi trên bản trên máy. */
 export function phanLanRao(l: ListingView): { gia: string; phi: string | null; truong: [string, string][]; mucDu: { co: number; tren: number; thieu: string[] } } {
-  const md = completeness(l);
+  // Mục ảnh (anh-khong-chan-ban) khi bản xem mang số ảnh thật; kho trên máy cũ chưa có số thì năm mục như trước.
+  const md = completeness(l, l.photosCount === undefined ? undefined : { photosCount: l.photosCount });
   return {
     gia: dinhDangGia(l.listPrice),
     phi: l.feeInclusion ? (FEE_LABEL[l.feeInclusion] ?? l.feeInclusion) : null,

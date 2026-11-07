@@ -7,6 +7,7 @@ import { validateProspectInput, type ProspectNeed } from "../contacts/prospects"
 import type { PayloadError } from "../listing/events";
 import type { AnhRa, CanRaNgoai } from "../redaction/ban-ra";
 import type { NguoiNhan } from "../redaction/cua-ra";
+import { loiSach, type LoiMauBai } from "../export/mau-san";
 import { validateShareInput, type ShareInput } from "./index";
 
 /** Chỗ của link trong tin — màn thay bằng `<gốc>/s/<mã>` sau khi Lần gửi tạo xong (link nằm trong thân tin, hàng 3). */
@@ -48,16 +49,19 @@ export function thongSoRa(b: CanRaNgoai): string {
 
 /**
  * Mẫu tin mặc định: lời chào theo người nhận, mỗi căn một dòng, rồi chỗ link. Khách riêng chào theo tên khách người gửi
- * đã lưu; nhóm môi giới chào chung.
+ * đã lưu; nhóm môi giới chào chung. Sàn có mẫu bài Zalo thì lời mở đầu đứng sau lời chào, lời kết sau dòng link.
  */
-export function soanTin(o: { ban: readonly CanRaNgoai[]; nguoiNhan: NguoiNhan; tenKhach?: string | null }): string {
+export function soanTin(o: { ban: readonly CanRaNgoai[]; nguoiNhan: NguoiNhan; tenKhach?: string | null; mauZalo?: LoiMauBai }): string {
   const chao = o.nguoiNhan === "khach_rieng" ? `Chào anh/chị ${o.tenKhach?.trim() || "ạ"},` : "Gửi các anh chị trong nhóm,";
   const dong = o.ban.map((b, i) => {
     const phi = b.feeInclusion ? PHI[b.feeInclusion] : undefined;
     const gia = `${giaTin(b.listPrice)}${phi ? ` (${phi})` : ""}`;
     return `${i + 1}. ${[tenCanRa(b), thongSoRa(b), gia].filter(Boolean).join(" — ")}`;
   });
-  return [chao, `Em gửi ${o.ban.length} căn đang bán:`, ...dong, `Xem ảnh và chi tiết: ${CHO_LINK}`].join("\n");
+  // Mẫu bài Zalo của sàn (#27, hàng mau-bang-hang-va-bai): lời mở đầu sau lời chào, lời kết sau dòng link; lời rỗng bị bỏ.
+  const dau = loiSach(o.mauZalo?.opening);
+  const cuoi = loiSach(o.mauZalo?.closing);
+  return [chao, dau, `Em gửi ${o.ban.length} căn đang bán:`, ...dong, `Xem ảnh và chi tiết: ${CHO_LINK}`, cuoi].filter((s) => s !== "").join("\n");
 }
 
 /** Đặt link vào tin: thay chỗ link; người đã xoá chỗ ấy thì thêm link ở dòng cuối — tin gửi đi luôn có link đúng một lần. */

@@ -33,7 +33,7 @@ export function OMaCan({ hang, danhMuc, moHangKia }: { hang: ListingView; danhMu
   const [chu, setChu] = useState(typeof daGo === "string" ? daGo : "");
   const [loi, setLoi] = useState<string | null>(null);
   const [dangLuu, setDangLuu] = useState(false);
-  const goiY = maCuaToa(danhMuc, hang.buildingName);
+  const goiY = maCuaToa(danhMuc, hang.buildingName ?? "");
   const idGoiY = useId();
 
   const loiHien = loi ?? tuChoi?.reason ?? null;

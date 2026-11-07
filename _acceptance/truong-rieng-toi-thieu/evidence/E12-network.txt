@@ -1,0 +1,7 @@
+E12 network (nguon: log may chu dev cong 3462 + listener playwright ngữ cảnh 2: 33 phản hồi /api/ đều 200, 0 requestfailed)
+--- dong GET/POST/PUT/PATCH khong phai 2xx trong log may chu ---
+ GET /api/v1/company/fields 401 in 4ms (next.js: 1.6ms, application-code: 2.0ms)
+--- loi may chu ---
+   4 [browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+--- tong request /api ---
+163

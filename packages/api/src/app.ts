@@ -9,10 +9,11 @@ import { ACTIVE_COMPANY_COOKIE, AUTH_BASE_PATH } from "./auth/constants";
 import { withCompany } from "./db";
 import { API_ERRORS } from "./errors";
 import { registerListingRoutes } from "./listings/routes";
+import { registerOffCompoundUnitRoutes } from "./off-compound-units/routes";
 import { registerOwnerRoutes } from "./owners/routes";
 import { registerImportRoutes } from "./imports/routes";
 import { registerAiRoutes } from "./imports/ai/routes";
-import type { KhachAi } from "./imports/ai/claude";
+import type { KhachAi, KhachOLa } from "./imports/ai/claude";
 import { registerFeedRoutes } from "./catalog/feeds";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
@@ -24,7 +25,10 @@ import { registerSettingsRoutes } from "./settings/routes";
 import { registerFeeRoutes } from "./fees/routes";
 import { registerTemplateRoutes } from "./templates/routes";
 import { registerLabelsRoutes } from "./labels/routes";
+import { registerMauSanRoutes } from "./mau-san/routes";
 import { registerStatusesRoutes } from "./statuses/routes";
+import { registerCustomFieldsRoutes } from "./custom-fields/routes";
+import { registerValueAliasesRoutes } from "./value-aliases/routes";
 import { registerTeamRoutes } from "./team/routes";
 import { registerTodayRoutes } from "./today/routes";
 import { registerJobRoutes } from "./jobs/routes";
@@ -68,6 +72,8 @@ export type ApiDeps = {
   nguonCongKhai?: NguonCongKhai;
   /** Khách gọi Claude cho «Xử lý bằng AI» (hàng 68); vắng thì theo môi trường (`ANTHROPIC_API_KEY`), `null` = không có khoá. */
   khachAi?: KhachAi | null;
+  /** Khách gọi Claude cho ô lạ còn lại (hàng 69); vắng thì theo môi trường, `null` = không có khoá. */
+  khachOLa?: KhachOLa | null;
 };
 
 const Health = z
@@ -192,6 +198,7 @@ export function createApi(deps: ApiDeps) {
 
   registerMemberRoutes(api, deps);
   registerListingRoutes(api, deps);
+  registerOffCompoundUnitRoutes(api, deps);
   registerOwnerRoutes(api, deps);
   // Trước route lần nhập: «/imports/ai» không được rơi vào «/imports/{importId}».
   registerAiRoutes(api, deps);
@@ -209,7 +216,10 @@ export function createApi(deps: ApiDeps) {
   registerFeeRoutes(api, deps);
   registerTemplateRoutes(api, deps);
   registerLabelsRoutes(api, deps);
+  registerMauSanRoutes(api, deps);
   registerStatusesRoutes(api, deps);
+  registerCustomFieldsRoutes(api, deps);
+  registerValueAliasesRoutes(api, deps);
   // Hàng 42: Hôm nay trưởng nhóm — hàng đợi lead quá hạn, đầu chủ để giao.
   registerTeamRoutes(api, deps);
   registerContactReadRoutes(api, deps);

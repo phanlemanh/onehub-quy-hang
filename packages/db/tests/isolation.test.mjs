@@ -1496,11 +1496,15 @@ test("liên hệ: ai đọc liên hệ chủ nhà", { skip }, async () => {
   });
 });
 
-test("liên hệ: chỗ trường riêng giữ rỗng", { skip }, async () => {
+// Hàng 47 (043) mở chỗ trường riêng: custom nhận object, vẫn từ chối mảng hay giá trị trần; ghi qua app.set_contact_custom.
+test("liên hệ: chỗ trường riêng chỉ nhận object", { skip }, async () => {
   await withLienHe(async (c) => {
     await c.query("reset role");
     await c.query("savepoint sp");
-    await assert.rejects(c.query(`update contacts set custom = '{"a":1}' where id = $1`, [K1]), /contacts_custom_check/);
+    await assert.rejects(c.query(`update contacts set custom = '[1]' where id = $1`, [K1]), /contacts_custom_check/);
+    await c.query("rollback to savepoint sp");
+    await c.query("savepoint sp");
+    assert.equal((await c.query(`update contacts set custom = '{"a":1}' where id = $1`, [K1])).rowCount, 1, "đối chứng: object được nhận");
     await c.query("rollback to savepoint sp");
     await c.query("set local role quy_hang_app");
   });
@@ -3577,6 +3581,160 @@ test("bảng quyền hàng (046): hàm giữ khoá", { skip }, async () => {
   }
 });
 
+// ---- Trường riêng (043, hàng 47: E6d, E7, E9) ----
+const TR_DC1 = "u-tr-dau-chu-1-a";
+const TR_DC2 = "u-tr-dau-chu-2-a";
+const TR_TN = "u-tr-truong-nhom-a";
+const TR_TS = "u-tr-telesales-a";
+const TR_QT = "u-tr-quan-tri-a";
+const TR_B = "u-tr-nguoi-b"; // sàn B đủ vai
+const TR_X = "00000000-0000-4000-8000-0000000047a1"; // liên hệ Chủ bán của A, A1 giữ
+const MA_TRAN_LOP = JSON.parse(readFileSync(new URL("../../core/src/custom-fields/ma-tran-lop.json", import.meta.url), "utf8"));
+
+/** Hai sàn, sáu người, một trường liên hệ chủ nhà gio_goi_duoc và liên hệ X mang giá trị — dựng bằng vai chủ. */
+async function withTruongRieng(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [TR_DC1, COMPANY_A, ["listing_agent"]],
+      [TR_DC2, COMPANY_A, ["listing_agent"]],
+      [TR_TN, COMPANY_A, ["team_lead"]],
+      [TR_TS, COMPANY_A, ["telesales"]],
+      [TR_QT, COMPANY_A, ["company_admin"]],
+      [TR_B, COMPANY_B, ["listing_agent", "team_lead", "company_admin"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    await c.query(
+      `insert into custom_fields (company_id, code, target, contact_types, kind, label, options, data_class, updated_by)
+       values ($1, 'gio_goi_duoc', 'contact', '{Seller,Landlord}', 'single_select', 'Giờ gọi được',
+               '[{"code":"sang","label":"Sáng"},{"code":"toi","label":"Tối"}]', 'source', $2)`,
+      [COMPANY_A, TR_QT],
+    );
+    await c.query(
+      `insert into contacts (company_id, id, full_name, contact_types, owner_member_user_id, custom, created_by)
+       values ($1, $2, '[Tên]', '{Seller}', $3, '{"gio_goi_duoc":"sang"}', $3)`,
+      [COMPANY_A, TR_X, TR_DC1],
+    );
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+const customCuaX = async (c) => {
+  await c.query("reset role");
+  const v = (await c.query("select custom from contacts where id = $1", [TR_X])).rows[0].custom;
+  await c.query("set local role quy_hang_app");
+  return v;
+};
+
+test("trường riêng: bảng định nghĩa theo sàn", { skip }, async () => {
+  const chu = new pg.Client({ connectionString: url });
+  await chu.connect();
+  try {
+    for (const bang of ["custom_fields", "custom_field_events"]) {
+      const { rows } = await chu.query("select relrowsecurity, relforcerowsecurity from pg_class where relname = $1", [bang]);
+      assert.deepEqual([rows[0]?.relrowsecurity, rows[0]?.relforcerowsecurity], [true, true], `${bang} chưa bật và ép luật theo dòng`);
+    }
+  } finally {
+    await chu.end();
+  }
+  await withTruongRieng(async (c) => {
+    const chen = (san, ma, ai) =>
+      c.query("insert into custom_fields (company_id, code, target, kind, label, data_class, updated_by) values ($1, $2, 'listing', 'bool', 'Căn góc', 'custom_field', $3)", [san, ma, ai]);
+    // Đối chứng dương: quản trị A chèn rồi đọc lại.
+    await lamNguoi(c, TR_QT, COMPANY_A);
+    assert.equal((await chen(COMPANY_A, "can_goc", TR_QT)).rowCount, 1);
+    assert.equal((await c.query("select 1 from custom_fields where code = 'can_goc'")).rowCount, 1);
+    // Sàn B không đọc, không chèn hộ A.
+    await lamNguoi(c, TR_B, COMPANY_B);
+    assert.equal((await c.query("select 1 from custom_fields")).rowCount, 0, "sàn B đọc được trường riêng của sàn A");
+    await expectError(c, "insert into custom_fields (company_id, code, target, kind, label, data_class, updated_by) values ($1, 'x', 'listing', 'bool', 'X', 'custom_field', $2)", [COMPANY_A, TR_B], /row-level security/);
+    // Đầu chủ A không chèn, không sửa.
+    await lamNguoi(c, TR_DC1, COMPANY_A);
+    await expectError(c, "insert into custom_fields (company_id, code, target, kind, label, data_class, updated_by) values ($1, 'y', 'listing', 'bool', 'Y', 'custom_field', $2)", [COMPANY_A, TR_DC1], /row-level security/);
+    assert.equal((await c.query("update custom_fields set label = 'Z' where code = 'can_goc'")).rowCount, 0, "đầu chủ sửa được trường riêng");
+    // Vai API không xoá; nhật ký chỉ thêm.
+    await lamNguoi(c, TR_QT, COMPANY_A);
+    await expectError(c, "delete from custom_fields where code = 'can_goc'", [], /permission denied/);
+    assert.ok((await c.query("select 1 from custom_field_events where code = 'can_goc'")).rowCount >= 1, "thiếu sự kiện nhật ký");
+    await c.query("reset role");
+    await expectError(c, "update custom_field_events set value = '{}' where code = 'can_goc'", [], /chỉ thêm/);
+    await expectError(c, "delete from custom_field_events where code = 'can_goc'", [], /chỉ thêm/);
+  });
+});
+
+test("trường riêng: giá trị của liên hệ chủ nhà theo lớp nguồn", { skip }, async () => {
+  await withTruongRieng(async (c) => {
+    const doc = () => c.query("select custom from contacts where id = $1", [TR_X]);
+    const ghi = (gia) => c.query("select app.set_contact_custom($1, $2::jsonb) v", [TR_X, JSON.stringify({ gio_goi_duoc: gia })]);
+    // Bảng viết trước: người đọc × kết quả.
+    const DOC = [
+      [TR_DC1, COMPANY_A, 1],
+      [TR_TN, COMPANY_A, 1],
+      [TR_DC2, COMPANY_A, 0],
+      [TR_TS, COMPANY_A, 0],
+      [TR_QT, COMPANY_A, 0],
+      [TR_B, COMPANY_B, 0],
+    ];
+    for (const [ai, san, n] of DOC) {
+      await lamNguoi(c, ai, san);
+      const r = await doc();
+      assert.equal(r.rowCount, n, `${ai} đọc X`);
+      if (n) assert.deepEqual(r.rows[0].custom, { gio_goi_duoc: "sang" });
+    }
+    // Ghi: người không đọc được X bị từ chối, custom giữ nguyên.
+    for (const [ai, san] of [[TR_DC2, COMPANY_A], [TR_TS, COMPANY_A], [TR_QT, COMPANY_A], [TR_B, COMPANY_B]]) {
+      await lamNguoi(c, ai, san);
+      await expectError(c, "select app.set_contact_custom($1, $2::jsonb)", [TR_X, '{"gio_goi_duoc":"toi"}'], /không có quyền/);
+      assert.deepEqual(await customCuaX(c), { gio_goi_duoc: "sang" }, `${ai} ghi được`);
+    }
+    await lamNguoi(c, TR_DC1, COMPANY_A);
+    assert.deepEqual((await ghi("toi")).rows[0].v, { gio_goi_duoc: "toi" });
+    await lamNguoi(c, TR_TN, COMPANY_A);
+    assert.deepEqual((await ghi(null)).rows[0].v, {});
+    // Ràng buộc: trường liên hệ loại chủ ghi custom_field bị check chặn; vai API không cập nhật thẳng contacts.custom.
+    await c.query("reset role");
+    await expectError(c, "insert into custom_fields (company_id, code, target, contact_types, kind, label, data_class, updated_by) values ($1, 'sai', 'contact', '{Seller}', 'bool', 'Sai', 'custom_field', $2)", [COMPANY_A, TR_QT], /custom_fields_data_class_check/);
+    await c.query("set local role quy_hang_app");
+    await lamNguoi(c, TR_DC1, COMPANY_A);
+    await expectError(c, "update contacts set custom = '{}' where id = $1", [TR_X], /permission denied/);
+  });
+});
+
+test("trường riêng: check lớp khớp luật của lõi", { skip }, async () => {
+  assert.equal(MA_TRAN_LOP.length, 8, "ma trận chung phải đủ 8 dòng");
+  await withTruongRieng(async (c) => {
+    await c.query("reset role");
+    let i = 0;
+    for (const dong of MA_TRAN_LOP) {
+      const nhan = [];
+      for (const lop of ["custom_field", "source"]) {
+        i++;
+        await c.query("savepoint lop");
+        try {
+          await c.query(
+            "insert into custom_fields (company_id, code, target, contact_types, kind, label, data_class, updated_by) values ($1, $2, $3, $4, 'bool', $2, $5, $6)",
+            [COMPANY_A, `t_${i}`, dong.target, dong.contactTypes, lop, TR_QT],
+          );
+          nhan.push(lop);
+          await c.query("release savepoint lop");
+        } catch (e) {
+          assert.match(String(e.message), /custom_fields_data_class_check/, `${JSON.stringify(dong)} ${lop}: lỗi khác check lớp`);
+          await c.query("rollback to savepoint lop");
+        }
+      }
+      assert.deepEqual(nhan, [dong.lop], `${dong.target} ${JSON.stringify(dong.contactTypes)}: lớp nhận khác luật của lõi`);
+    }
+  });
+});
+
 // ---- Trang nhóm môi giới (048, hàng 44 trang-nhom-moi-gioi): mức chia và định nghĩa phí lúc gửi trên Lần gửi ----
 test("shares (048): mức chia", { skip }, async () => {
   await withLienHeKhach(async (c) => {
@@ -3704,5 +3862,156 @@ test("listing_price_fee_basis: công ty này không đọc, không ghi được 
     assert.equal((await c.query("select 1 from listing_price_fee_basis where listing_id = $1", [PHI_HANG_B])).rowCount, 1, "sàn B đọc dấu của mình");
     assert.equal((await c.query("select 1 from listing_price_fee_basis where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc dấu của sàn A");
     assert.equal((await c.query("select value from company_settings where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc cấu hình phí của sàn A");
+  });
+});
+
+// ---- Từ điển của sàn (051, hàng 70 chuan-hoa-moi-cua: E8) ----
+const TD_DC = "u-td-dau-chu-a";
+const TD_QT = "u-td-quan-tri-a";
+const TD_DK = "u-td-dau-khach-a";
+const TD_B = "u-td-dau-chu-b";
+
+/** Hai sàn, bốn người, dựng bằng vai chủ; rồi trở vai API. */
+async function withTuDien(fn) {
+  const c = new pg.Client({ connectionString: url });
+  await c.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into companies (id, name) values ($1, '[Sàn A]'), ($2, '[Sàn B]')", [COMPANY_A, COMPANY_B]);
+    for (const [id, san, vai] of [
+      [TD_DC, COMPANY_A, ["listing_agent"]],
+      [TD_QT, COMPANY_A, ["company_admin"]],
+      [TD_DK, COMPANY_A, ["buyer_agent"]],
+      [TD_B, COMPANY_B, ["listing_agent", "company_admin"]],
+    ]) {
+      await c.query(`insert into identity."user" (id, name, email, "emailVerified") values ($1, '[Tên]', $2, true)`, [id, `${id}@example.test`]);
+      await c.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [san, id, vai]);
+    }
+    await c.query("set local role quy_hang_app");
+    return await fn(c);
+  } finally {
+    await c.query("rollback").catch(() => {});
+    await c.end();
+  }
+}
+const deXuat = (c, f, raw, fold, v) => c.query("select app.de_xuat_cach_go($1, $2, $3, $4) id", [f, raw, fold, v]);
+
+test("từ điển của sàn: cách ly, ghi qua hàm, nhật ký chỉ thêm", { skip }, async () => {
+  const chu = new pg.Client({ connectionString: url });
+  await chu.connect();
+  try {
+    for (const bang of ["company_value_aliases", "company_value_alias_events"]) {
+      const { rows } = await chu.query("select relrowsecurity, relforcerowsecurity from pg_class where relname = $1", [bang]);
+      assert.deepEqual([rows[0]?.relrowsecurity, rows[0]?.relforcerowsecurity], [true, true], `${bang} chưa bật và ép luật theo dòng`);
+    }
+  } finally {
+    await chu.end();
+  }
+  await withTuDien(async (c) => {
+    // Đối chứng dương: đầu chủ A đề xuất, chọn lại cùng chữ gập → một dòng, đếm 2.
+    await lamNguoi(c, TD_DC, COMPANY_A);
+    const id = (await deXuat(c, "directionFaces", "dong nm", "dong nm", "Đông Nam")).rows[0].id;
+    await deXuat(c, "directionFaces", "Dong  NM", "dong nm", "Đông Nam");
+    const dong = (await c.query("select status, pick_count from company_value_aliases")).rows;
+    assert.deepEqual(dong, [{ status: "proposed", pick_count: 2 }]);
+    // Đầu khách không đề xuất; đầu chủ không duyệt; vai API không ghi thẳng.
+    await lamNguoi(c, TD_DK, COMPANY_A);
+    await expectError(c, "select app.de_xuat_cach_go('directionFaces', 'x', 'x', 'Đông')", [], /chỉ người nhập file/);
+    await lamNguoi(c, TD_DC, COMPANY_A);
+    await expectError(c, "select app.quyet_cach_go($1, 'approved')", [id], /chỉ quản trị sàn/);
+    await expectError(c, "update company_value_aliases set status = 'approved'", [], /permission denied/);
+    await expectError(c, "insert into company_value_aliases (company_id, field, raw, raw_fold, value, proposed_by) values ($1, 'directionFaces', 'y', 'y', 'Đông', $2)", [COMPANY_A, TD_DC], /permission denied/);
+    // Quản trị duyệt; sàn B không thấy, không quyết được dòng của A.
+    await lamNguoi(c, TD_QT, COMPANY_A);
+    await c.query("select app.quyet_cach_go($1, 'approved')", [id]);
+    assert.equal((await c.query("select status from company_value_aliases where id = $1", [id])).rows[0].status, "approved");
+    await lamNguoi(c, TD_B, COMPANY_B);
+    assert.equal((await c.query("select 1 from company_value_aliases")).rowCount, 0, "sàn B đọc được từ điển của sàn A");
+    assert.equal((await c.query("select 1 from company_value_alias_events")).rowCount, 0, "sàn B đọc được nhật ký từ điển của sàn A");
+    await expectError(c, "select app.quyet_cach_go($1, 'rejected')", [id], /không có cách gõ này/);
+    // Check trường: ngoài ba trường (lớp source) bị chặn.
+    await lamNguoi(c, TD_DC, COMPANY_A);
+    await expectError(c, "select app.de_xuat_cach_go('ownerPhone', 'x', 'x', 'y')", [], /company_value_aliases_field_check/);
+    // Nhật ký: ba sự kiện (proposed, picked, approved), không sửa, không xoá.
+    await c.query("reset role");
+    assert.deepEqual((await c.query("select kind from company_value_alias_events where alias_id = $1 order by id", [id])).rows.map((r) => r.kind), ["proposed", "picked", "approved"]);
+    await expectError(c, "update company_value_alias_events set kind = 'rejected'", [], /chỉ thêm/);
+    await expectError(c, "delete from company_value_alias_events", [], /chỉ thêm/);
+  });
+});
+
+// ---- Căn ngoài khu (052, hàng 76 can-ngoai-khu: E7) ----
+const CNK_A = "00000000-0000-4000-8000-0000000c0a01";
+const CNK_B = "00000000-0000-4000-8000-0000000c0b01";
+const CNK_KHOA = "79|26737|mau 3|12";
+const CNK_KHOA_B = "79|26737|mau 3|14";
+
+async function themCan(c, san, id, khoa, nguoi) {
+  await c.query(
+    `insert into off_compound_units (company_id, id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key, created_by)
+     values ($1, $2, 'Townhouse', '79', '26737', 'Đường Mẫu 3', $3, $4, $5, $6)`,
+    [san, id, khoa.split("|")[3], `${khoa.split("|")[3]} Đường Mẫu 3, Phường Tân Định, Thành phố Hồ Chí Minh`, khoa, nguoi],
+  );
+}
+
+test("off_compound_units: cách ly sàn, chỉ Bảng hàng, một khoá một căn, hàng không trỏ căn sàn khác", { skip }, async () => {
+  await asUser(null, null, async (c) => {
+    await c.query("reset role");
+    await c.query("update company_members set roles = '{listing_agent}' where user_id = $1", [USER_1]);
+    await c.query("update company_members set roles = '{telesales}' where user_id = $1 and company_id = $2", [USER_2, COMPANY_A]);
+    await c.query("update company_members set roles = '{listing_agent}' where user_id = $1 and company_id = $2", [USER_2, COMPANY_B]);
+    await themCan(c, COMPANY_A, CNK_A, CNK_KHOA, USER_1);
+    await themCan(c, COMPANY_B, CNK_B, CNK_KHOA_B, USER_2);
+
+    await bqLa(c, USER_1, COMPANY_A);
+    assert.equal((await c.query("select 1 from off_compound_units where id = $1", [CNK_A])).rowCount, 1, "sàn A đọc căn của mình");
+    assert.equal((await c.query("select 1 from off_compound_units where company_id = $1", [COMPANY_B])).rowCount, 0, "sàn A đọc căn của sàn B");
+    await expectError(
+      c,
+      `insert into off_compound_units (company_id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key)
+       values ($1, 'Townhouse', '79', '26737', 'Đường Mẫu 3', '16', '16 Đường Mẫu 3', '79|26737|mau 3|16')`,
+      [COMPANY_B],
+      /row-level security/,
+    );
+    await expectError(c, "update off_compound_units set street_name = 'x' where id = $1", [CNK_A], /permission denied/);
+    await expectError(c, "delete from off_compound_units where id = $1", [CNK_A], /permission denied/);
+    // Một khoá một căn trong sàn.
+    await expectError(
+      c,
+      `insert into off_compound_units (company_id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key)
+       values ($1, 'Townhouse', '79', '26737', 'Đường Mẫu 3', '12', 'số 12 Đường Mẫu 3', $2)`,
+      [COMPANY_A, CNK_KHOA],
+      /off_compound_units_address_key/,
+    );
+    // Hàng của sàn A không trỏ được căn của sàn B (khoá ngoại ghép); trỏ căn của A thì được.
+    await expectError(
+      c,
+      "insert into listings (id, company_id, off_compound_unit_id, standard_status, version) values (gen_random_uuid(), $1, $2, 'Incomplete', 1)",
+      [COMPANY_A, CNK_B],
+      /listings_off_compound_unit_fkey/,
+    );
+    assert.equal(
+      (await c.query("insert into listings (id, company_id, off_compound_unit_id, standard_status, version) values (gen_random_uuid(), $1, $2, 'Incomplete', 1)", [COMPANY_A, CNK_A])).rowCount,
+      1,
+      "hàng của sàn A trỏ căn của A",
+    );
+
+    // Người sàn A không có Bảng hàng đọc 0 căn của chính sàn.
+    await bqLa(c, USER_2, COMPANY_A);
+    assert.equal((await c.query("select 1 from off_compound_units")).rowCount, 0, "telesales đọc căn ngoài khu");
+
+    // Sàn B thêm căn cùng khoá với căn của A: được — khoá chỉ duy nhất trong một sàn.
+    await bqLa(c, USER_2, COMPANY_B);
+    assert.equal(
+      (
+        await c.query(
+          `insert into off_compound_units (company_id, property_sub_type, state_or_province_code, ward_code, street_name, street_number, unparsed_address, address_key)
+           values ($1, 'Townhouse', '79', '26737', 'Đường Mẫu 3', '12', '12 Đường Mẫu 3', $2)`,
+          [COMPANY_B, CNK_KHOA],
+        )
+      ).rowCount,
+      1,
+    );
+    assert.equal((await c.query("select 1 from off_compound_units where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc căn của sàn A");
   });
 });

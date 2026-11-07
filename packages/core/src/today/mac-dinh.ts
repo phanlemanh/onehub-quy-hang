@@ -61,6 +61,9 @@ export function boMacDinh(nguong: { priceAdjustment: number; callBack: number } 
       actions: ["owner_confirmed", "open_record"],
     },
     { code: "missing_info", label: "Thiếu thông tin", subject: "listing", enabled: true, conditions: [{ kind: "missing_info" }], actions: ["open_record"] },
+    // anh-khong-chan-ban (Tham chiếu §12, 06/11): ảnh không chặn bán mà thành việc. Căn đã Đã bán, Ngừng hẳn đã bị loại ở
+    // điều kiện ngầm của mọi nhóm căn, nên nhóm nhận bốn trạng thái mở (Hỏi-4). Đứng sau «Thiếu thông tin»: một căn một nhóm.
+    { code: "add_photos", label: "Bổ sung ảnh", subject: "listing", enabled: true, conditions: [{ kind: "missing_photo" }], actions: ["open_record"] },
     {
       code: "recent_change",
       label: "Mới đổi",

@@ -9,6 +9,9 @@ import {
   doiNhan,
   DS_TRUONG_DAT_TEN,
   dungDongNhan,
+  TAP_DONG,
+  DS_TRUONG_DONG,
+  trungTenGiaTri,
   kiemNhanGiaTri,
   kiemNhanTruong,
   lopTruongDatTen,
@@ -46,7 +49,7 @@ test("từ vựng: kiểm giá trị riêng", () => {
   // Hai giá trị cùng chữ trong một trường là lỗi trùng.
   const trung = dungDongNhan({ fields: [], values: [{ field: "feeInclusion", value: "included", label: "BP" }, { field: "feeInclusion", value: "excluded", label: "bp" }] });
   assert.equal(trung.ok, false);
-  assert.ok(!trung.ok && trung.loi.includes("hai giá trị cùng tên"), !trung.ok ? trung.loi : "");
+  assert.ok(!trung.ok && trung.loi.includes("Trùng tên của «"), !trung.ok ? trung.loi : "");
 });
 
 test("từ vựng: kiểm tên trường — dài, số điện thoại, email", () => {
@@ -174,4 +177,63 @@ test("từ vựng: trùng mặc định, null, khoá đổi, đọc ngược b�
   const tv: TuVung = { truong: { feeInclusion: "Phí CN" }, giaTri: { feeInclusion: { included: "BP" } } };
   assert.deepEqual(tuVungTuBang(JSON.parse(JSON.stringify(bangNhan(tv)))), tv);
   assert.deepEqual(tuVungTuBang(null), { truong: {}, giaTri: {} });
+});
+
+// ---- Chặn trùng tên giá trị (hàng chan-trung-ten-gia-tri: E1, E1b, E1c, E1d, E1e) ----
+const boGT = (...v: [string, string, string][]) => ({ fields: [], values: v.map(([field, value, label]) => ({ field, value, label })) });
+const loiCua = (kq: ReturnType<typeof dungDongNhan>) => (kq.ok ? "" : kq.loi);
+
+test("trùng tên đang hiện: mọi cặp riêng–mặc định anh em của mọi tập đóng", () => {
+  // Ma trận sinh từ TAP_DONG của lõi; tập mới chưa vào danh sách khẳng định thì ca đỏ.
+  assert.deepEqual([...DS_TRUONG_DONG].sort(), ["feeInclusion", "withdrawnReason"], "tập đóng của lõi đổi — xét lại ma trận");
+  const mo = (s: string) => `  ${s.toLocaleUpperCase("vi").replace(/ /g, "   ")} `;
+  let dem = 0;
+  let mong = 0;
+  for (const truong of DS_TRUONG_DONG) {
+    const tap = TAP_DONG[truong] as Record<string, string>;
+    const neo = Object.keys(tap);
+    mong += neo.length * (neo.length - 1);
+    for (const a of neo)
+      for (const b of neo) {
+        if (a === b) continue;
+        const kq = dungDongNhan(boGT([truong, a, mo(tap[b]!)]));
+        assert.equal(kq.ok, false, `${truong}: ${a} lấy tên của ${b} phải bị chặn`);
+        assert.ok(loiCua(kq).endsWith(`: Trùng tên của «${tap[b]}»`), `${truong} ${a}→${b}: ${loiCua(kq)}`);
+        assert.equal(dungDongNhan(boGT([truong, a, `${tap[b]} riêng`])).ok, true, `${truong} ${a}: đối chứng không trùng`);
+        dem++;
+      }
+  }
+  assert.equal(dem, mong);
+  assert.equal(dem, 8);
+});
+
+test("trùng tên đang hiện: riêng–riêng, hoa thường, đổi chéo, khác tập, đối chứng", () => {
+  // E1b — hai tên riêng cùng một chữ lạ: lỗi nêu tên mặc định của anh em, không phải chữ trùng.
+  const rr = dungDongNhan(boGT(["withdrawnReason", "owner_changed_mind", "Mất liên lạc"], ["withdrawnReason", "unreachable", "mất  LIÊN lạc"]));
+  assert.ok(!rr.ok && /Trùng tên của «(Chủ đổi ý|Không liên lạc được)»$/.test(rr.loi), loiCua(rr));
+  assert.ok(!loiCua(rr).includes("Mất liên lạc"), "câu lỗi phải nêu giá trị anh em, không lặp chữ gõ");
+  assert.equal(trungTenGiaTri("withdrawnReason", { owner_changed_mind: "Mất liên lạc", unreachable: "Mất liên lạc" }).owner_changed_mind, "unreachable");
+  assert.equal(trungTenGiaTri("withdrawnReason", { owner_changed_mind: "Mất liên lạc", unreachable: "Mất liên lạc" }).unreachable, "owner_changed_mind");
+  const phi = dungDongNhan(boGT(["feeInclusion", "included", "Trọn gói"], ["feeInclusion", "excluded", "trọn GÓI"]));
+  assert.ok(!phi.ok && phi.loi.includes("Trùng tên của «"), loiCua(phi));
+  assert.equal(dungDongNhan(boGT(["feeInclusion", "included", "Trọn gói"], ["feeInclusion", "excluded", "Chưa gồm phí"])).ok, true);
+  // E1c — bỏ hoa thường, dấu cách thừa.
+  const BANG: [string, string, string, string][] = [
+    ["feeInclusion", "excluded", "bao   PHÍ", "Bao phí"],
+    ["feeInclusion", "excluded", "  Bao Phí ", "Bao phí"],
+    ["feeInclusion", "included", "KHÔNG BAO PHÍ", "Không bao phí"],
+  ];
+  for (const [f, v, nhan, ten] of BANG) {
+    const kq = dungDongNhan(boGT([f, v, nhan]));
+    assert.ok(!kq.ok && kq.loi.endsWith(`Trùng tên của «${ten}»`), `${nhan}: ${loiCua(kq)}`);
+  }
+  assert.equal(dungDongNhan(boGT(["feeInclusion", "excluded", "Bao phí trọn"])).ok, true);
+  // E1d — không trùng; đúng mặc định của chính nó; đổi chéo bị chặn (Hỏi-1).
+  const khong = dungDongNhan(boGT(["feeInclusion", "excluded", "Phí ngoài"]));
+  assert.deepEqual(khong, { ok: true, dong: [{ key: "labels.value.feeInclusion", value: { excluded: "Phí ngoài" } }] });
+  assert.deepEqual(dungDongNhan(boGT(["feeInclusion", "included", "Bao phí"])), { ok: true, dong: [] });
+  const cheo = dungDongNhan(boGT(["feeInclusion", "included", "Không bao phí"], ["feeInclusion", "excluded", "Bao phí"]));
+  assert.ok(!cheo.ok && /Trùng tên của «(Bao phí|Không bao phí)»$/.test(cheo.loi), loiCua(cheo));
+  // E1e — khác tập được trùng chữ.
+  assert.equal(dungDongNhan(boGT(["withdrawnReason", "unreachable", "Bao phí"])).ok, true);
 });

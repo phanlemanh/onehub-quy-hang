@@ -3,6 +3,7 @@
  * toà + mã căn, không chỉ mã căn: hai toà có thể trùng mã (hàng 63). Thuần, kiểm bằng `node:test`.
  */
 import type { CatalogData, CatalogUnitData } from "@quy-hang/core";
+import { nhanViTri } from "@quy-hang/core/listing";
 import type { ListingView } from "@/lib/sync/types";
 import { CHUA_RO, chuDauChu, type DanhBaDauChu, type DongBang } from "./cot";
 
@@ -56,16 +57,26 @@ function mucDu(c: unknown): number | null {
   return c && typeof c === "object" && "filled" in c && typeof c.filled === "number" ? c.filled : null;
 }
 
+/** Mục ảnh của mức đủ (anh-khong-chan-ban): chỉ khi bản xem mang tổng khác năm — dòng của bản xem đời trước giữ nguyên. */
+function mucAnh(c: unknown): Pick<DongBang, "mucDuTong" | "thieuAnh"> {
+  if (!c || typeof c !== "object" || !("total" in c) || typeof c.total !== "number" || c.total === 5) return {};
+  const thieu = "missing" in c && Array.isArray(c.missing) && c.missing.includes("photos");
+  return { mucDuTong: c.total, ...(thieu && { thieuAnh: true }) };
+}
+
 /**
  * Một hàng của kho trên máy thành một dòng của bảng. Bảng hàng trao `danhBa` (kể cả `null` khi chưa đọc được) để có cột
  * «Đầu chủ»; chỗ khác (Hôm nay, bảng thẻ) không trao thì dòng không có cột ấy.
  */
+import { oRiengCuaHang } from "./truong-rieng";
+
 export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaDauChu): DongBang {
   return {
     id: l.id,
-    buildingName: l.buildingName,
+    // Hàng lô, hàng ngoài khu (can-ngoai-khu): chữ chỗ của căn, không tra danh mục toà.
+    buildingName: nhanViTri(l),
     unitNumber: l.unitNumber,
-    ...thuocTinhCan(idx, l.buildingName, l.unitNumber),
+    ...thuocTinhCan(idx, l.buildingName ?? "", l.unitNumber),
     standardStatus: l.standardStatus,
     // Nhãn trạng thái riêng (hàng 46): chỉ khi căn mang — căn không nhãn giữ đúng dòng cũ.
     ...(l.statusLabel ? { statusLabel: l.statusLabel } : {}),
@@ -77,10 +88,13 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaD
     occupantType: l.occupantType,
     ...soNgay(l.freshness),
     completeness: mucDu(l.completeness),
+    ...mucAnh(l.completeness),
     visibility: l.visibility ?? null,
     closePrice: l.closePrice,
     closeDate: l.closeDate,
     withdrawnReason: l.withdrawnReason,
     ...(danhBa !== undefined ? { "dau-chu": chuDauChu(l.listAgentKey, danhBa) } : {}),
+    // Trường riêng của sàn (hàng 47): căn không mang giá trị nào giữ đúng dòng cũ.
+    ...oRiengCuaHang(l.custom),
   };
 }

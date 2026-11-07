@@ -1,0 +1,22 @@
+{
+  "feature_plain": "Đầu chủ đứng ở căn, mở hồ sơ trên điện thoại, chọn ngăn rồi chụp ảnh; ảnh vào đúng căn, đúng ngăn và tự tải lên ở nền, mất mạng thì chờ trên máy không mất ảnh nào.",
+  "will_do": [
+    {"id":"AC-1","p":"Sẽ hiện nút «Chụp ảnh» trên hồ sơ điện thoại chỉ cho người được sửa ảnh (đầu chủ giữ căn, trưởng nhóm); máy chủ từ chối người khác."},
+    {"id":"AC-2","p":"Sẽ đưa ảnh vào đúng toà, mã căn và ngăn đã chọn lúc chụp; ngăn mặc định theo câu Hỏi-2."},
+    {"id":"AC-4","p":"Sẽ giữ ảnh chờ trên máy khi mất mạng hay hết phiên, qua tải lại trang và đóng app; có mạng lại tự tải đủ, không sinh ảnh trùng."},
+    {"id":"AC-5","p":"Sẽ coi ảnh Nội bộ (sổ đỏ, giấy tờ) là phần chủ nhà: không ra cho đầu khách, trang khách hay link gửi."},
+    {"id":"AC-6","p":"Sẽ xoá ảnh Nội bộ khỏi máy ngay khi máy chủ nhận; đăng xuất hay máy bị báo mất thì xoá mọi ảnh chờ."},
+    {"id":"AC-7","p":"Sẽ ghi ngày chụp thật của ảnh, không lấy ngày tải lên."},
+    {"id":"AC-8","p":"Sẽ tự cập nhật ảnh lớn đầu hồ sơ và mục Ảnh khi ảnh tải xong."},
+    {"id":"AC-10","p":"Sẽ có ảnh chụp bản chạy thật cho đầu chủ và đầu khách ở khổ điện thoại."}
+  ],
+  "wont_do": [
+    {"id":"AC-3","p":"Sẽ KHÔNG bắt người đứng chờ tải: ảnh vào hàng chờ ngay, tải ở nền theo thứ tự chụp kể cả khi rời hồ sơ, mỗi ảnh có trạng thái và «Thử lại»."},
+    {"id":"AC-9","p":"Sẽ KHÔNG tự vẽ khung mới: ngăn chụp đi qua khuôn và thành phần sẵn có của kho."},
+    {"id":"OOS-1","p":"Không tải khi app đã đóng hẳn (Safari trên iPhone không hỗ trợ); mở lại app thì tải tiếp."},
+    {"id":"OOS-2","p":"Không tự nhận ra ảnh sổ đỏ hay tự che mặt, biển số — người chọn ngăn."},
+    {"id":"OOS-3","p":"Sửa, xoá, sắp xếp, đặt bìa ảnh vẫn làm ở mục Ảnh."},
+    {"id":"OOS-4","p":"Không chụp trên máy tính, không nhận ảnh chia sẻ từ Zalo ở hàng này."},
+    {"id":"OOS-5","p":"Chưa ghi thiết bị cho sự kiện ảnh."}
+  ]
+}

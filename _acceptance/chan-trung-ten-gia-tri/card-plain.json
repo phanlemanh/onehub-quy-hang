@@ -1,0 +1,19 @@
+{
+  "feature_plain": "Trên màn Cách gọi, quản trị không đặt được tên riêng trùng với tên của một giá trị khác trong cùng danh sách, nên bảng hàng, ô lọc và trang khách không còn hai lựa chọn khác nghĩa mà cùng một chữ.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ từ chối lưu khi tên riêng của một giá trị trùng tên mặc định của giá trị anh em chưa đổi tên, báo «Trùng tên của «…»» và không đổi gì của sàn."},
+    {"id": "AC-2", "p": "Sẽ từ chối khi hai giá trị cùng danh sách được đặt cùng một tên riêng, câu lỗi nêu đúng giá trị anh em."},
+    {"id": "AC-3", "p": "Sẽ coi «bao   PHÍ» là trùng «Bao phí» — bỏ qua hoa thường và dấu cách thừa."},
+    {"id": "AC-5", "p": "Sẽ cho trùng chữ giữa hai danh sách khác nhau (Lý do ngừng được tên «Bao phí»)."},
+    {"id": "AC-6", "p": "Sẽ báo lỗi ngay ở ô đang sửa và khoá «Lưu»; mở màn mà dữ liệu cũ đã trùng thì báo và khoá ngay."},
+    {"id": "AC-7", "p": "Sẽ cho màn và máy chủ dùng chung một luật — màn khoá đúng khi máy chủ sẽ từ chối."},
+    {"id": "AC-8", "p": "Sẽ giữ nguyên cách lưu tên trường và nhãn trạng thái."}
+  ],
+  "wont_do": [
+    {"id": "AC-4", "p": "Sẽ KHÔNG chặn tên không trùng hay gõ đúng tên mặc định của chính giá trị; còn đổi chéo «Bao phí» ↔ «Không bao phí» thì chặn (Hỏi-1)."},
+    {"id": "OOS-1", "p": "Không chặn hai tên trường (hai cột) trùng nhau."},
+    {"id": "OOS-2", "p": "Không đụng nhãn trạng thái — hàng 46 đã có kiểm trùng riêng."},
+    {"id": "OOS-3", "p": "Không tự sửa tên trùng đã lưu từ trước — chỉ quản trị đổi chữ của sàn."}
+  ],
+  "scope_plain": "Ba việc để ngoài hàng này:"
+}

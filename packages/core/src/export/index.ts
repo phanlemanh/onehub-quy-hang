@@ -11,10 +11,12 @@ import type { CanNoiBo } from "../redaction/lop-truong";
 import { baiFacebook, baiZalo } from "./bai";
 import { chuCuaO, cotRa, type CotGocNhin } from "./cot";
 import type { MauXuat } from "./mau";
+import { bocBai, type MauBai } from "./mau-san";
 
 export * from "./mau";
 export * from "./cot";
 export * from "./bai";
+export * from "./mau-san";
 export { chuCot, crc32, ghiXlsx, type OXlsx } from "./xlsx";
 export { ghiPdf, type TrangJpeg } from "./pdf";
 
@@ -30,6 +32,8 @@ export type TuyChonXuat = {
   tenSan: string;
   /** Cách gọi riêng của sàn gửi (hàng 45) — lõi cắt về phần theo khoá ra của người nhận trước khi dùng. */
   tuVung?: TuVung;
+  /** Mẫu bài theo kênh của sàn (#27) — lời mở đầu, lời kết quanh bài dựng sẵn. */
+  mauBai?: MauBai;
 };
 
 export type BanXuat = {
@@ -65,7 +69,7 @@ export function xuatBang(can: readonly CanNoiBo[], tuy: TuyChonXuat): BanXuat {
     dong,
     boQua,
   };
-  if (tuy.mau === "post_zalo") bang.bai = baiZalo(bang);
-  else if (tuy.mau === "post_facebook") bang.bai = baiFacebook(bang, tuy.tenSan);
+  if (tuy.mau === "post_zalo") bang.bai = bocBai(baiZalo(bang), tuy.mauBai?.zalo);
+  else if (tuy.mau === "post_facebook") bang.bai = baiFacebook(bang, tuy.tenSan, tuy.mauBai?.facebook);
   return bang;
 }

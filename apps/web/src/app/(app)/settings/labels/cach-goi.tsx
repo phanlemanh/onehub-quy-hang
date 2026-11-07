@@ -20,7 +20,7 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
   const [bo, setBo] = useState(boDau);
   const [o, setO] = useState<Record<string, string>>(() => oBanDau(boDau));
   const [luu, setLuu] = useState<TrangThaiLuu>({ loai: "yen" });
-  const luuDuoc = useMemo(() => coTheLuu(o), [o]);
+  const luuDuoc = useMemo(() => coTheLuu(bo, o), [bo, o]);
 
   const doi = (khoa: string, chu: string) => {
     setO((cu) => ({ ...cu, [khoa]: chu }));
@@ -59,7 +59,7 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
   const dongTruong = bo.fields.map((f, i) => {
     const khoa = oTruong(f.field);
     const chu = o[khoa] ?? "";
-    const loi = loiCuaO(khoa, chu);
+    const loi = loiCuaO(bo, o, khoa);
     return (
       <SettingField key={khoa} title={f.default} description={chu.trim() ? `Mặc định «${f.default}»` : "Đang dùng tên mặc định"} labelFor={khoa} last={i === bo.fields.length - 1}>
         <div className="flex flex-col gap-1.5">
@@ -80,7 +80,7 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
   const dongGiaTri = bo.values.map((v, i) => {
     const khoa = oGiaTri(v.field, v.value);
     const chu = o[khoa] ?? "";
-    const loi = loiCuaO(khoa, chu);
+    const loi = loiCuaO(bo, o, khoa);
     return (
       <SettingField
         key={khoa}

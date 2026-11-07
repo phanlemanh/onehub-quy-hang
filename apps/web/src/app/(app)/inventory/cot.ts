@@ -6,6 +6,7 @@ import { nhanGiaTri, nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { StandardStatus } from "@quy-hang/core/listing";
 import { NHAN_TRANG_THAI_MAC_DINH, nhanCuaCan } from "@quy-hang/core/statuses";
 import { MAU_TRANG_THAI, type MauTrangThai } from "@/lib/mau-trang-thai";
+import { chuOTruongRieng, cotTruongRieng, laCotRieng, type CotRiengId } from "./truong-rieng";
 
 /** Một dòng của bảng. Không trường nguồn nào: hàng đến từ API không chở lớp `source`. */
 export type DongBang = {
@@ -29,8 +30,12 @@ export type DongBang = {
   /** Số ngày từ lần xác nhận với chủ nhà; chưa từng xác nhận là `null`. */
   confirmedAgeDays: number | null;
   needsCallBack: boolean;
-  /** Số mục đã có trên năm mục của danh sách hỏi. */
+  /** Số mục đã có của mức đủ: năm mục của danh sách hỏi, cộng mục ảnh khi bản xem mang số ảnh (anh-khong-chan-ban). */
   completeness: number | null;
+  /** Tổng mục của mức đủ khi khác năm (6: có mục ảnh) — vắng là năm. */
+  mucDuTong?: number;
+  /** Căn chưa có ảnh thật gửi được — dấu «thiếu ảnh thật» ở ô Mức đủ (anh-khong-chan-ban). */
+  thieuAnh?: boolean;
   visibility: "Private" | "Company" | null;
   closePrice: number | null;
   closeDate: string | null;
@@ -42,9 +47,14 @@ export type DongBang = {
    * danh bạ đầu chủ của sàn — `chuDauChu`. Chỉ đọc; dòng dựng ngoài Bảng hàng không có khoá này.
    */
   "dau-chu"?: string;
+  /** Trường riêng của sàn (hàng 47): `custom:<mã>` → chữ thô của giá trị ("true" · "false" · mã lựa chọn). */
+  [k: CotRiengId]: string | undefined;
 };
 
-export type CotId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType" | "statusLabel">;
+/** Cột chuẩn của bảng. */
+export type CotChuanId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType" | "statusLabel" | CotRiengId>;
+/** Cột chuẩn hay cột trường riêng của sàn (hàng 47). */
+export type CotId = CotChuanId | CotRiengId;
 /** Kiểu ô lọc của cột: chữ chứa · chọn một giá trị · luật số. */
 export type KieuCot = "chu" | "chon" | "so";
 
@@ -138,14 +148,20 @@ export function dinhDangGia(dong: number | null): string {
   return `${SO_NGUYEN.format(Math.round(dong / 1_000_000))} triệu`;
 }
 
+/** Cột chuẩn rồi cột trường riêng còn sống của sàn (hàng 47) — bộ trường chưa tải thì chỉ cột chuẩn. */
+export function tatCaCot(tv?: TuVung | null): readonly Cot[] {
+  return [...COT, ...cotTruongRieng(tv?.truongRieng)];
+}
+
 /** Tiêu đề cột: tên riêng của sàn cho trường chuẩn (hàng 45), vắng thì nhãn dựng sẵn của Bảng hàng. */
-export const nhanCot = (c: Cot, tv?: TuVung | null) => nhanTruong(tv, c.id, c.label);
+export const nhanCot = (c: Cot, tv?: TuVung | null) => (laCotRieng(c.id) ? c.label : nhanTruong(tv, c.id, c.label));
 
 /**
  * Chữ hiện ở ô — cũng là chữ ô lọc chữ so và chữ chép ra clipboard. `tv`: cách gọi riêng của sàn (hàng 45) cho giá trị của
  * tập đóng (phí, lý do ngừng) và nhãn trạng thái riêng (hàng 46); giá trị lưu ở dòng vẫn là giá trị chuẩn.
  */
 export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
+  if (laCotRieng(id)) return chuOTruongRieng(d[id], id, tv?.truongRieng) || "—";
   const v = d[id];
   if (v === null || v === undefined || v === "") return "—";
   switch (id) {
@@ -165,7 +181,7 @@ export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
     case "confirmedAgeDays":
       return v === 0 ? "Hôm nay" : `${v} ngày trước`;
     case "completeness":
-      return `${v}/5`;
+      return `${v}/${d.mucDuTong ?? 5}${d.thieuAnh ? " · thiếu ảnh thật" : ""}`;
     default:
       return String(v);
   }

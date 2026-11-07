@@ -10,8 +10,9 @@ import {
   lyDoCanDangMo,
   LY_DO_DOI_GIA_DA_BAN,
   LY_DO_MA_CAN_DA_CO,
+  thangNgay as luatThangNgay,
+  trangThaiGoc,
   validatePayload,
-  WINS_IMMEDIATELY,
   type EventType,
   type ListingEvent,
   type ListingState,
@@ -22,6 +23,8 @@ import {
 import { duocLamVoiHang, lamViecVoiHang, LY_DO_DUA_LEN_DANG_BAN } from "@quy-hang/core/access";
 import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
 import { boNhanTrangThai, kiemNhanSuKien, type NhanTrangThai } from "@quy-hang/core/statuses";
+import { kiemGiaTriTruong } from "@quy-hang/core/custom-fields";
+import { docBoTruong } from "../custom-fields/store";
 import { canRead, factsFromEvents, type Viewer, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -61,9 +64,13 @@ export type Applied = { listingId: string; state: ListingState; event: ListingEv
 /** Cột của bảng `listings` ứng với từng khoá của bản tính — cũng là danh sách bộ kiểm «gấp lại» so. */
 export const STATE_COLUMNS: Readonly<Record<keyof ListingState, string>> = {
   buildingName: "building_name",
+  subdivisionName: "subdivision_name",
+  blockName: "block_name",
+  offCompoundUnitId: "off_compound_unit_id",
   unitNumber: "unit_number",
   standardStatus: "standard_status",
   statusLabel: "status_label",
+  custom: "custom",
   listPrice: "list_price",
   feeInclusion: "fee_inclusion",
   furnished: "furnished",
@@ -168,7 +175,8 @@ async function ghiSuKien(tx: pg.PoolClient, listingId: string, seq: number, type
   return toEvent(rows[0]!);
 }
 
-const giaTri = (s: ListingState) => KHOA.map((k) => s[k]);
+const giaTri = (s: ListingState) => KHOA.map((k) => s[k] ?? null);
+export const LY_DO_KHONG_CO_CAN = "không có căn ngoài khu này ở sàn đang làm";
 
 export async function createListing(tx: pg.PoolClient, payload: unknown, cach: CachGhi = GHI_KHONG_RO): Promise<Applied | Refusal> {
   // Bảng quyền của hàng (bang-quyen-theo-vai): người không có Bảng hàng như không có hàng nào — mọi lối tạo hàng (route, lead
@@ -176,6 +184,13 @@ export async function createListing(tx: pg.PoolClient, payload: unknown, cach: C
   if (!lamViecVoiHang({ roles: await vaiLucLam(tx) })) return { error: API_ERRORS.notFound };
   const details = validatePayload("created", payload);
   if (details.length) return { error: API_ERRORS.invalidPayload, details };
+  // Căn ngoài khu phải là căn của sàn đang làm (luật theo dòng 052): căn của sàn khác và mã không tồn tại cùng một câu trả
+  // lời — sàn không dò được căn của sàn khác (hàng can-ngoai-khu).
+  const maCan = (payload as { offCompoundUnitId?: string }).offCompoundUnitId;
+  if (maCan !== undefined) {
+    const can = await tx.query("select 1 from off_compound_units where company_id = app.current_company_id() and id = $1", [maCan]);
+    if (!can.rowCount) return { error: API_ERRORS.invalidPayload, details: [{ path: "offCompoundUnitId", reason: LY_DO_KHONG_CO_CAN }] };
+  }
   const listingId = randomUUID();
   const event = await ghiSuKien(tx, listingId, 1, "created", payload as object, false, cach);
   const state = foldListing([event]);
@@ -238,13 +253,19 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // Hàng đã có mã: từ chối bằng chính sự thật ấy, trước phép so phiên bản — máy đang giữ bản cũ (gắn lúc mất mạng) nhận lý
   // do «đã có mã» thay cho «đụng nhau» (ADR-0026).
   if (type === "unit_number_assigned" && kiemGanMaCan(foldListing(events))) return { error: API_ERRORS.unitNumberAlreadySet, reason: LY_DO_MA_CAN_DA_CO };
+  // Căn ngoài khu định danh bằng địa chỉ, không mang mã căn (hàng can-ngoai-khu).
+  if (type === "unit_number_assigned" && foldListing(events).offCompoundUnitId)
+    return { error: API_ERRORS.invalidPayload, details: [{ path: "unitNumber", reason: "căn ngoài khu không mang mã căn" }] };
   // Căn Đã bán không đổi giá (luật của lõi): cũng xét trước phép so phiên bản — máy giữ bản cũ nhận đúng lý do «đã bán».
   if (type === "price_changed" && kiemDoiGia(foldListing(events))) return { error: API_ERRORS.priceLockedClosed, reason: LY_DO_DOI_GIA_DA_BAN };
 
-  const thangNgay = type === "status_changed" && WINS_IMMEDIATELY.includes(payload.to as never);
+  // Thắng ngay (luật 10) chỉ cho lệnh ĐƯA căn vào Đang giao dịch / Đã bán: bản gốc của lệnh (trạng thái ở phiên bản lệnh
+  // khai) và bản hiện tại đều chưa ở đích — đổi nhãn tại chỗ hay lệnh soạn trên bản đã ở đích qua phép so như mọi lệnh
+  // (doi-nhan-so-phien-ban).
+  const hienTai = foldListing(events);
+  const thangNgay = type === "status_changed" && luatThangNgay(payload.to, trangThaiGoc(events, cmd.expectedVersion), hienTai.standardStatus);
   if (!thangNgay && cmd.expectedVersion !== version) return { error: API_ERRORS.versionConflict };
 
-  const hienTai = foldListing(events);
   if (type === "status_changed") {
     // «Thắng ngay» bỏ qua phép so phiên bản, KHÔNG bỏ qua bảng chuyển: xét trên trạng thái hiện tại của hàng.
     // Vào Đang bán: máy chủ luôn đếm ảnh thật của căn và đọc số tối thiểu của sàn (hàng 23) — mọi lối lên bảng qua đây.
@@ -263,9 +284,16 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
     }
   }
 
+  if (type === "custom_changed") {
+    // Trường riêng (hàng 47): mỗi mã là trường của hàng còn sống của sàn, giá trị đúng kiểu — lỗi nêu mã.
+    const gt = kiemGiaTriTruong(await docBoTruong(tx), "listing", null, payload);
+    if (!gt.ok) return { error: API_ERRORS.invalidPayload, details: [{ path: "custom", reason: gt.loi }], reason: gt.loi };
+  }
+
   if (type === "unit_number_assigned") {
     // Gắn mã căn (ADR-0026): căn đã có hàng đang mở khác của sàn thì từ chối.
-    const trung = await hangMoCungCan(tx, listingId, hienTai.buildingName, payload.unitNumber as string);
+    // Hàng lô đã có mã từ lúc tạo; hàng ngoài khu bị từ chối ở trên — chỉ hàng có toà tới đây.
+    const trung = await hangMoCungCan(tx, listingId, hienTai.buildingName ?? "", payload.unitNumber as string);
     if (trung) return { error: API_ERRORS.unitAlreadyListed, reason: lyDoCanDangMo(trung.status), conflictListingId: trung.id };
   }
 
@@ -310,12 +338,33 @@ export async function thayNhanCan(tx: pg.PoolClient, maGo: string, thay: string 
   return rows[0]!.n;
 }
 
-/** Ảnh thật của căn (ngăn Gửi được, không ảnh mẫu, chưa xoá) và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */
+/**
+ * Điều kiện «ảnh thật» (ngăn Gửi được, không ảnh mẫu, chưa xoá) — một nguồn cho bước xét Đang bán và cho số ảnh của bản xem
+ * hàng (`photosCount`, anh-khong-chan-ban), để màn và máy chủ không bao giờ đếm khác nhau.
+ */
+const DIEU_KIEN_ANH_THAT = "compartment = 'shareable' and not is_sample and removed_at is null";
+
+/** Số ảnh thật theo căn, đếm một lượt cho cả danh sách; khoá là đúng chữ toà và mã bên gọi truyền (`khoaAnh`). Căn chưa có mã không có ảnh. */
+export async function demAnhThatTheoCan(tx: pg.PoolClient, can: readonly { buildingName: string | null; unitNumber: string | null }[]): Promise<Map<string, number>> {
+  // Ảnh căn còn khoá theo toà + mã (012): hàng lô và hàng ngoài khu chưa có ảnh ở vòng này (Hỏi-1 Cổng Phạm vi 07/11).
+  const co = can.filter((c): c is { buildingName: string; unitNumber: string } => !!c.buildingName && !!c.unitNumber);
+  if (co.length === 0) return new Map();
+  const { rows } = await tx.query<{ toa: string; ma: string; n: number }>(
+    `select c.toa, c.ma, (select count(*)::int from unit_photos p
+        where p.building_name = c.toa and app.unit_key(p.unit_number) = app.unit_key(c.ma) and ${DIEU_KIEN_ANH_THAT}) n
+     from unnest($1::text[], $2::text[]) as c(toa, ma)`,
+    [co.map((c) => c.buildingName), co.map((c) => c.unitNumber)],
+  );
+  return new Map(rows.map((r) => [khoaAnh(r.toa, r.ma), r.n]));
+}
+/** Khoá tra của `demAnhThatTheoCan`: chữ toà và mã nguyên văn. */
+export const khoaAnh = (toa: string | null, ma: string | null) => `${toa}\u0000${ma ?? ""}`;
+
+/** Ảnh thật của căn và số tối thiểu của sàn, đọc trong giao dịch của lệnh. */
 async function nguCanhAnh(tx: pg.PoolClient, hang: ListingState): Promise<{ realPhotoCount: number; minRealPhotos: number }> {
   const { rows } = await tx.query<{ n: number }>(
     `select count(*)::int n from unit_photos
-     where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2)
-       and compartment = 'shareable' and not is_sample and removed_at is null`,
+     where building_name = $1 and app.unit_key(unit_number) = app.unit_key($2) and ${DIEU_KIEN_ANH_THAT}`,
     [hang.buildingName, hang.unitNumber],
   );
   const cauHinh = await tx.query<{ key: string; value: unknown }>("select key, value from company_settings where key = $1", [KHOA_ANH_THAT_TOI_THIEU]);

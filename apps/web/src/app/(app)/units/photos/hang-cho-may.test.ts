@@ -1,0 +1,88 @@
+// Hàng chờ của cả app khi đổi người trên cùng máy (hàng 41 chup-anh-dien-thoai, AC-4, AC-6): hàng của người trước dừng
+// hẳn — không gửi thêm ảnh nào (gửi bằng phiên người mới là sai người), không ghi kho cũ. Chạy hàm thật của vỏ với
+// trình duyệt giả tối thiểu: fetch đếm lời gọi, không IndexedDB (kho mở lỗi → hàng chờ chỉ trong bộ nhớ, vẫn gửi).
+import assert from "node:assert/strict";
+import { test } from "node:test";
+
+import type { TepSanSang } from "./tai-len";
+
+const g = globalThis as unknown as Record<string, unknown>;
+g.window = { addEventListener() {}, removeEventListener() {} };
+Object.defineProperty(globalThis, "navigator", { value: { onLine: true }, configurable: true });
+let goi = 0;
+g.fetch = async () => {
+  goi++;
+  throw new TypeError("Failed to fetch");
+};
+
+const tep = (): TepSanSang => ({
+  ok: true,
+  file: new File([new Uint8Array([0xff, 0xd8, 0xff, 0xe0])], "a.jpg", { type: "image/jpeg" }),
+  type: "image/jpeg",
+  takenAt: null,
+  thumb: new Blob([new Uint8Array([1])]),
+  width: 10,
+  height: 10,
+});
+
+test("E4 đổi người trên cùng máy: hàng của người trước không gửi thêm ảnh nào; đối chứng dương: hàng đang chạy có gửi", { timeout: 5000 }, async () => {
+  const { dungHangCho, khoiDongHangCho } = await import("./hang-cho-may");
+  const a = khoiDongHangCho("u-a", "san-a");
+  await a.them("[Mẫu] Toà A", "A-01.02", "shareable", tep());
+  await a.cho();
+  assert.ok(goi > 0, "đối chứng dương: hàng của A đang chạy thì gửi");
+  khoiDongHangCho("u-b", "san-a");
+  const truoc = goi;
+  await a.them("[Mẫu] Toà A", "A-01.02", "internal", tep());
+  await a.day();
+  await a.cho();
+  assert.equal(goi, truoc, "hàng của A sau khi đổi sang B không gửi lời nào");
+  await dungHangCho();
+});
+
+test("E7 xoá kho chạy đúng việc dừng mà hàng chờ thật của app đăng ký: dừng TRƯỚC khi xoá, ở cả hai lối; kho của người khác không dừng hàng", { timeout: 5000 }, async () => {
+  const { hangChoHienTai, khoiDongHangCho } = await import("./hang-cho-may");
+  const { xoaKhoCuaNguoi } = await import("@/lib/sync/kho-indexeddb");
+  const { xoaMayBiBao } = await import("@/lib/sync/may-bi-bao");
+  const LOI: readonly { ten: string; xoa: (u: string, x: (ten: string) => Promise<void>) => Promise<void> }[] = [
+    { ten: "đăng xuất · màn chọn sàn", xoa: (u, x) => xoaKhoCuaNguoi(u, x) },
+    { ten: "máy bị báo mất", xoa: (u, x) => xoaMayBiBao(u, { xoaKho: (v) => xoaKhoCuaNguoi(v, x), huyDay: async () => {} }) },
+  ];
+  const lech: string[] = [];
+  for (const l of LOI) {
+    const h = khoiDongHangCho("u-chu", "san-a");
+    // Đối chứng dương: xoá kho của người khác trên máy không dừng hàng của người đang dùng.
+    await l.xoa("u-khac", async () => {});
+    if (hangChoHienTai() !== h) lech.push(`${l.ten} · xoá kho người khác mà hàng dừng`);
+    let conChayLucXoa = false;
+    await l.xoa("u-chu", async () => void (conChayLucXoa ||= hangChoHienTai() !== null));
+    if (conChayLucXoa) lech.push(`${l.ten} · kho bị xoá khi hàng chờ còn chạy`);
+    const truoc = goi;
+    await h.them("[Mẫu] Toà A", "A-01.02", "internal", tep());
+    await h.day();
+    if (goi !== truoc) lech.push(`${l.ten} · hàng chờ còn gửi sau khi xoá kho`);
+  }
+  assert.deepEqual(lech, []);
+});
+
+test("Bất biến 2 · đổi sàn trên vỏ thật: chụp lúc mất mạng ở sàn A, sang sàn B có mạng thì không lời gửi nào; về lại A thì gửi", { timeout: 5000 }, async () => {
+  const { dungHangCho, khoiDongHangCho } = await import("./hang-cho-may");
+  const mang = globalThis.navigator as { onLine: boolean };
+  mang.onLine = false;
+  const h = khoiDongHangCho("u-hai-san", "san-a");
+  h.them("[Mẫu] Toà A", "A-01.02", "shareable", tep());
+  h.them("[Mẫu] Toà A", "A-01.02", "internal", tep());
+  await h.cho();
+  khoiDongHangCho("u-hai-san", "san-b");
+  mang.onLine = true;
+  const truoc = goi;
+  await h.day();
+  await h.cho();
+  assert.equal(goi, truoc, "phiên ở sàn B không gửi ảnh chụp ở sàn A");
+  assert.equal(h.coCho(), false, "ở sàn B không còn ảnh nào để nhịp thử tải");
+  khoiDongHangCho("u-hai-san", "san-a");
+  await h.day();
+  await h.cho();
+  assert.ok(goi > truoc, "đối chứng dương: về lại sàn A thì ảnh của A được gửi");
+  await dungHangCho();
+});

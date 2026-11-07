@@ -46,6 +46,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/listings",
     "GET /api/v1/listings/{listingId}",
     "POST /api/v1/listings/{listingId}/events",
+    // Căn ngoài khu (hàng 76 can-ngoai-khu).
+    "POST /api/v1/off-compound-units",
+    "GET /api/v1/off-compound-units/{id}",
     "POST /api/v1/imports",
     "POST /api/v1/imports/{importId}/rows",
     "GET /api/v1/imports/agents",
@@ -55,6 +58,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/imports/{importId}/undo",
     "GET /api/v1/imports/ai",
     "POST /api/v1/imports/ai/plan",
+    "POST /api/v1/imports/ai/cells",
     "PUT /api/v1/imports/ai/agreement",
     "GET /api/v1/listings/{listingId}/owner",
     "PUT /api/v1/listings/{listingId}/owner",
@@ -95,6 +99,7 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "POST /api/v1/contacts/lookup-phone",
     "POST /api/v1/contacts/{contactId}/phones/{phoneId}/reveal",
     "PATCH /api/v1/contacts/{contactId}",
+    "PATCH /api/v1/contacts/{contactId}/custom",
     // lien-he-khach (hàng 86).
     "POST /api/v1/prospects",
     "GET /api/v1/prospects/{prospectId}",
@@ -144,9 +149,20 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Hàng 45: cách gọi riêng của sàn.
     "GET /api/v1/company/labels",
     "PUT /api/v1/company/labels",
+    // Mẫu bảng hàng và mẫu bài của sàn (hàng mau-bang-hang-va-bai).
+    "GET /api/v1/company/templates/export",
+    "PUT /api/v1/company/templates/export",
+    "GET /api/v1/company/templates/posts",
+    "PUT /api/v1/company/templates/posts",
     // Trạng thái riêng (hàng 46).
     "GET /api/v1/company/statuses",
     "PUT /api/v1/company/statuses",
+    "GET /api/v1/company/fields",
+    "PUT /api/v1/company/fields",
+    // Từ điển của sàn (hàng 70).
+    "GET /api/v1/company/value-aliases",
+    "POST /api/v1/company/value-aliases/proposals",
+    "PUT /api/v1/company/value-aliases/{id}",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));

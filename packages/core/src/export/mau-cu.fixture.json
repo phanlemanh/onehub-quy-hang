@@ -1,0 +1,65 @@
+{
+  "nguon": "Đầu ra nguyên văn của kiemMauBang, kiemMauBai ở main 9f7df527 (trước mau-api-ten-truong-tieng-anh) — đúng giá trị store ghi vào company_settings. Sinh lại: chạy hai hàm ấy ở commit đó với «than».",
+  "than": {
+    "export.templates": [
+      {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "ten": "  [Tên] gửi đội ",
+        "cot": [
+          "unitNumber",
+          "listPrice",
+          "livingArea"
+        ]
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "ten": "[Tên] gửi khách",
+        "cot": [
+          "livingArea",
+          "unitType"
+        ]
+      }
+    ],
+    "share.post_templates": {
+      "zalo": {
+        "dau": "Chào nhóm [Tên sàn]",
+        "cuoi": "Gọi em 0900 000 001"
+      },
+      "facebook": {
+        "dau": "Hàng mới",
+        "cuoi": ""
+      }
+    }
+  },
+  "luu": {
+    "export.templates": [
+      {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "ten": "[Tên] gửi đội",
+        "cot": [
+          "unitNumber",
+          "listPrice",
+          "livingArea"
+        ]
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "ten": "[Tên] gửi khách",
+        "cot": [
+          "livingArea",
+          "unitType"
+        ]
+      }
+    ],
+    "share.post_templates": {
+      "zalo": {
+        "dau": "Chào nhóm [Tên sàn]",
+        "cuoi": "Gọi em 0900 000 001"
+      },
+      "facebook": {
+        "dau": "Hàng mới",
+        "cuoi": ""
+      }
+    }
+  }
+}

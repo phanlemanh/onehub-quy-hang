@@ -5,8 +5,25 @@
 import type { DetailField, ListingEvent } from "./events";
 import type { StandardStatus } from "./status";
 
+/** Trộn giá trị trường riêng: `null` xoá khoá (hàng 47). Lặp `tronGiaTri` của lõi trường riêng để `listing` không phụ thuộc ngược. */
+function tronTruongRieng(cu: Readonly<Record<string, boolean | string>>, patch: Readonly<Record<string, unknown>>): Record<string, boolean | string> {
+  const ra: Record<string, boolean | string> = { ...cu };
+  for (const [k, v] of Object.entries(patch)) {
+    if (v === null) delete ra[k];
+    else if (typeof v === "boolean" || typeof v === "string") ra[k] = v;
+  }
+  return ra;
+}
+
 export type ListingState = {
-  buildingName: string;
+  /** Toà — `null` với hàng lô và hàng ngoài khu (hàng can-ngoai-khu). */
+  buildingName: string | null;
+  /** Khu của hàng lô (RESO `SubdivisionName`); `null` với dạng khác. Bản dựng tay đời trước vắng khoá (đọc như `null`). */
+  subdivisionName?: string | null;
+  /** Dãy của hàng lô (`blockName`, đặc trưng Việt Nam). */
+  blockName?: string | null;
+  /** Mã căn ngoài khu của sàn. */
+  offCompoundUnitId?: string | null;
   unitNumber: string | null;
   standardStatus: StandardStatus;
   listPrice: number | null;
@@ -24,6 +41,8 @@ export type ListingState = {
    * gập luôn có khoá này, vắng chỉ ở bản dựng tay đời trước (đọc như `null`).
    */
   statusLabel?: string | null;
+  /** Giá trị trường riêng của sàn (hàng 47): mã trường → có / không hay mã lựa chọn. Bản gập luôn có; vắng ở bản dựng tay đời trước. */
+  custom?: Record<string, boolean | string>;
   /** ISO 8601 của lần xác nhận gần nhất với chủ nhà; chưa từng xác nhận là `null`. */
   lastConfirmedAt: string | null;
   /** Hàng đã gỡ khỏi Quỹ hàng khi hoàn tác lần nhập (`voided`) — cờ, không phải trạng thái; lịch sử giữ nguyên. */
@@ -37,7 +56,10 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
   const dau = ds[0];
   if (!dau || dau.type !== "created") throw new Error("dãy sự kiện phải mở đầu bằng created");
   const s: ListingState = {
-    buildingName: String(dau.payload.buildingName),
+    buildingName: (dau.payload.buildingName as string | undefined) ?? null,
+    subdivisionName: (dau.payload.subdivisionName as string | undefined) ?? null,
+    blockName: (dau.payload.blockName as string | undefined) ?? null,
+    offCompoundUnitId: (dau.payload.offCompoundUnitId as string | undefined) ?? null,
     unitNumber: (dau.payload.unitNumber as string | undefined) ?? null,
     standardStatus: "Incomplete",
     listPrice: null,
@@ -50,6 +72,7 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
     closeDate: null,
     withdrawnReason: null,
     statusLabel: null,
+    custom: {},
     lastConfirmedAt: null,
     voided: false,
     version: 0,
@@ -90,6 +113,9 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
     case "unit_number_assigned":
       s.unitNumber = p.unitNumber as string;
       break;
+    case "custom_changed":
+      s.custom = tronTruongRieng(s.custom ?? {}, p);
+      break;
     case "voided":
       s.voided = true;
       break;
@@ -106,3 +132,13 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
   return s;
 }
 
+
+/**
+ * Chữ chỉ chỗ của căn cho màn nội bộ (hàng can-ngoai-khu): toà; hàng lô «khu · dãy»; hàng ngoài khu «Căn ngoài khu». Hiện
+ * đúng theo loại hình là hàng 79 — đây chỉ để màn không gãy với hàng không toà.
+ */
+export function nhanViTri(s: { buildingName: string | null; subdivisionName?: string | null; blockName?: string | null }): string {
+  if (s.buildingName) return s.buildingName;
+  if (s.blockName) return `${s.subdivisionName ?? ""} · ${s.blockName}`;
+  return "Căn ngoài khu";
+}

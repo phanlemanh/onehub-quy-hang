@@ -6,7 +6,7 @@
  */
 import type { CatalogData } from "@quy-hang/core";
 import { lopPhuHoSo, type CoHoSo } from "@quy-hang/core/access";
-import type { ListingEvent } from "@quy-hang/core/listing";
+import { nhanViTri, type ListingEvent } from "@quy-hang/core/listing";
 import type { LanThu, ListingView } from "@/lib/sync/types";
 import { khoCuaSo } from "../../today/mobile/kho";
 import { dauCuaCan, hienNutSanSang, type Dich } from "../ready/san-sang";
@@ -164,7 +164,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   }
 
   const theoHang = chuaMa !== undefined;
-  const tim = chuaMa ? { kind: "mot" as const, toa: chuaMa.buildingName, hang: [chuaMa] } : theoHang ? { kind: "khong" as const } : timCan(ds, chon.ma, chon.toa);
+  const tim = chuaMa ? { kind: "mot" as const, toa: chuaMa.buildingName ?? nhanViTri(chuaMa), hang: [chuaMa] } : theoHang ? { kind: "khong" as const } : timCan(ds, chon.ma, chon.toa);
   if (tim.kind === "khong") return { kind: "khong", theoHang, ma: chon.ma, dongHref };
   if (tim.kind === "nhieu") return { kind: "nhieu", ma: chon.ma, toa: tim.toa.map((t) => ({ ten: t, href: duong({ ma: chon.ma, toa: t, lan: null }) })), dongHref };
 

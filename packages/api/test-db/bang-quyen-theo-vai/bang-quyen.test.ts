@@ -132,6 +132,8 @@ test("bảng quyền: Telesales, Quản trị sàn không tạo, không sửa h�
     owner_confirmed: [h, {}],
     unit_number_assigned: [hChuaMa, { unitNumber: maCan() }],
     voided: [h, {}],
+    // Hàng 47: trường riêng — bảng quyền xét trước mã trường, nên mã chưa có vẫn nhận «không có hàng này».
+    custom_changed: [h, { can_goc: true }],
   };
   const loai = EVENT_TYPES.filter((t) => t !== "created");
   assert.equal(loai.length, EVENT_TYPES.length - 1);
@@ -158,6 +160,9 @@ test("bảng quyền: Telesales, Quản trị sàn không tạo, không sửa h�
 test("bảng quyền: người có Bảng hàng vẫn sửa hàng Toàn sàn", async () => {
   const ROLES: Record<string, string[]> = { "Đầu khách": ["buyer_agent"], "Đầu chủ khác": ["listing_agent"], "Trưởng nhóm": ["team_lead"] };
   const loai = EVENT_TYPES.filter((t) => t !== "created" && t !== "voided");
+  // Hàng 47: sàn có trường riêng «Căn góc» để lệnh custom_changed hợp lệ.
+  const tr = await send("PUT", "/api/v1/company/fields", { fields: [{ target: "listing", kind: "bool", label: "Căn góc", options: [] }] }, san.nguoi.qt!.cookie);
+  assert.equal(tr.status, 200, await tr.clone().text());
   let soLan = 0;
   for (const [ten, n] of [["Đầu khách", san.nguoi.dk!], ["Đầu chủ khác", san.nguoi.dc2!], ["Trưởng nhóm", san.nguoi.tn!]] as const) {
     const h = await hangSanSang();
@@ -171,6 +176,7 @@ test("bảng quyền: người có Bảng hàng vẫn sửa hàng Toàn sàn", a
       owner_confirmed: [h, {}],
       status_changed: [h, { to: "Withdrawn", withdrawnReason: "owner_changed_mind" }],
       unit_number_assigned: [hChuaMa, { unitNumber: maCan() }],
+      custom_changed: [h, { can_goc: true }],
     };
     assert.deepEqual([...loai].sort(), Object.keys(PAYLOAD).sort(), "bài phải phủ mọi loại lệnh sửa của lõi");
     for (const t of loai) {

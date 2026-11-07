@@ -440,3 +440,39 @@ test("E6 chiều đỏ: bản sao trả khung rỗng khi lỗi → ô nêu trạ
   const rong: DungThan = (m, a) => (m.kind === "loi" ? renderToStaticMarkup(createElement("div")) : dungDT(m, a));
   assert.deepEqual(lechTrangThai(rong), ["lỗi"]);
 });
+
+// ——— Hàng 41 chup-anh-dien-thoai · E1 (AC-1): nút «Chụp ảnh» theo cờ `suaDuoc` của API ảnh, không theo tên vai ———
+
+type CaChup = { ten: string; vai: Vai; anh: TrangThaiAnh; chuaMa: boolean };
+const dsAnh = (suaDuoc: boolean): TrangThaiAnh => ({ kind: "co", ds: { ...ANH, suaDuoc, noiBo: suaDuoc ? "thay" : "an" } });
+// Ma trận viết trước 6 ô: (suaDuoc true · false · đang tải · lỗi) × căn có mã, cộng (suaDuoc true · false) × căn chưa mã.
+const CA_CHUP: readonly CaChup[] = [
+  { ten: "trưởng nhóm · có mã", vai: "truong", anh: dsAnh(true), chuaMa: false },
+  { ten: "đầu khách · có mã", vai: "khach", anh: dsAnh(false), chuaMa: false },
+  { ten: "đang tải · có mã", vai: "chu", anh: { kind: "dang-tai" }, chuaMa: false },
+  { ten: "lỗi · có mã", vai: "chu", anh: { kind: "loi", matMang: false }, chuaMa: false },
+  { ten: "giữ căn · chưa mã", vai: "chu", anh: dsAnh(true), chuaMa: true },
+  { ten: "đầu khách · chưa mã", vai: "khach", anh: dsAnh(false), chuaMa: true },
+];
+const MONG_CO_NUT = new Set(["trưởng nhóm · có mã"]);
+const coNutTrenThan = (c: CaChup) => {
+  const m = coCan(moHinhHoSo(vao(c.vai, "toan-man", c.chuaMa ? { chon: { ma: "", toa: null, lan: "hang-2" }, chuaMa: CHUA_MA } : {})));
+  return dungDT(m, c.anh).includes('data-nut="chup-anh"');
+};
+const lechNutChup = (coNut: (c: CaChup) => boolean) =>
+  CA_CHUP.flatMap((c) => {
+    const mong = MONG_CO_NUT.has(c.ten);
+    const thay = coNut(c);
+    return mong === thay ? [] : [`${c.ten} · ${mong ? "thiếu nút" : "thừa nút"}`];
+  });
+
+test("E1 nút «Chụp ảnh»: ma trận 6 ô viết trước — chỉ ô suaDuoc true × có mã có nút", () => {
+  assert.equal(CA_CHUP.length, 6);
+  assert.ok(MONG_CO_NUT.size > 0, "đối chứng dương: tập ô có nút không rỗng");
+  assert.deepEqual(lechNutChup(coNutTrenThan), []);
+});
+
+test("E1 chiều đỏ: bản sao rẽ nút theo tên vai (dau-chu) thay cờ suaDuoc → bộ so nêu đúng ô trưởng nhóm", () => {
+  const theoTenVai = (c: CaChup) => c.vai === "chu" && !c.chuaMa && c.anh.kind === "co";
+  assert.deepEqual(lechNutChup(theoTenVai), ["trưởng nhóm · có mã · thiếu nút"]);
+});

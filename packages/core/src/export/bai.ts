@@ -6,6 +6,7 @@
  */
 import type { KhoaRa } from "../redaction/ban-ra";
 import { KHONG_CO } from "./cot";
+import type { LoiMauBai } from "./mau-san";
 
 /** Phần bảng mà bài đọc: khoá ra của từng cột và chữ đã định dạng của từng ô. */
 export type BangChoBai = { khoa: readonly KhoaRa[]; dong: readonly (readonly string[])[] };
@@ -34,7 +35,8 @@ function manh(khoa: KhoaRa, chu: string): string | null {
   }
 }
 
-const sach = (s: string) => s.replace(BIEU_TUONG, "").replace(/[ \t]+/g, " ").trim();
+/** Bỏ biểu tượng cảm xúc và khoảng trắng thừa — dùng cho chữ căn và lời mẫu của sàn. */
+export const sach = (s: string) => s.replace(BIEU_TUONG, "").replace(/[ \t]+/g, " ").trim();
 
 function manhCuaDong(bang: BangChoBai, dong: readonly string[]): string[] {
   return bang.khoa.flatMap((k, i) => {
@@ -49,8 +51,12 @@ export function baiZalo(bang: BangChoBai): string {
   return bang.dong.map((d) => manhCuaDong(bang, d).join(" · ")).join("\n");
 }
 
-/** Dòng đầu tên sàn, rồi mỗi căn một khối (mỗi mảnh một dòng), các khối cách nhau một dòng trống. */
-export function baiFacebook(bang: BangChoBai, tenSan: string): string {
+/**
+ * Dòng đầu tên sàn, rồi lời mở đầu của mẫu (nếu có), rồi mỗi căn một khối (mỗi mảnh một dòng), rồi lời kết; các phần cách
+ * nhau một dòng trống. Lời mẫu bỏ biểu tượng; lời rỗng bị bỏ.
+ */
+export function baiFacebook(bang: BangChoBai, tenSan: string, loi?: LoiMauBai): string {
   const khoi = bang.dong.map((d) => manhCuaDong(bang, d).join("\n"));
-  return [sach(tenSan), ...khoi].join("\n\n");
+  const lai = (x: string | undefined) => (x ? x.split("\n").map(sach).join("\n").trim() : "");
+  return [sach(tenSan), lai(loi?.opening), ...khoi, lai(loi?.closing)].filter((p) => p !== "").join("\n\n");
 }

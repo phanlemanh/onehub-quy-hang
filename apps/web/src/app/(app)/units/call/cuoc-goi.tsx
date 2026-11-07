@@ -241,9 +241,9 @@ function ManCuocGoi({ lead: leadDau, san, dn }: { lead: LeadCuocGoi; san: string
     cacCan: ds.map(
       (l): CanSo => ({
         id: l.id,
-        buildingName: l.buildingName,
+        buildingName: l.buildingName ?? "",
         unitNumber: l.unitNumber,
-        bedroomsTotal: phongNgu(l.buildingName, l.unitNumber),
+        bedroomsTotal: phongNgu(l.buildingName ?? "", l.unitNumber),
         standardStatus: l.standardStatus,
         listPrice: l.listPrice,
         feeInclusion: (l.feeInclusion as FeeInclusion | null) ?? null,

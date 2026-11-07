@@ -9,3 +9,4 @@ export * from "./danh-sach-hoi";
 export * from "./gan-ma-can";
 export * from "./doi-gia";
 export * from "./hoan-tac-nhap";
+export * from "./thang-ngay";
