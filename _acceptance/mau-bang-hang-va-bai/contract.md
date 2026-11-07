@@ -5,7 +5,7 @@ slug: mau-bang-hang-va-bai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-06-mau-bang-hang-va-bai-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-07
@@ -126,3 +126,15 @@ Không thêm số đo mới.
 - Ngoài-11 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm có thể không bắt được lỗi nếu hộp Xuất đang mở sau này đọc lại mẫu mới giữa chừng. Người dùng có thể thấy cột đổi khi đang xem. — `apps/web/src/app/(app)/inventory/phat-hang/mau.test.ts`
 - Ngoài-12 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm chống lộ thông tin chủ nhà ở màn Mẫu có thể không bắt được lỗi nếu sau này có thông tin nội bộ lọt vào màn này. — `apps/web/src/app/(app)/settings/templates/mau-san.ro-ri.test.ts`
 - Ngoài-13 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Bài kiểm chống lộ thông tin không quét hết các tệp của màn Mẫu, nên lỗi lộ thông tin ở phần bị sót hoặc tệp thêm sau có thể không bị phát hiện. — `apps/web/src/app/(app)/settings/templates/mau-san.ro-ri.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
+  - Ngoài-1: Nếu Quản trị lưu lời cho Zalo rồi bấm Lưu ở Facebook ngay trước khi màn kịp làm mới, lời Zalo vừa lưu có thể bị xoá mà màn vẫn báo «Đã lưu».
+  - Ngoài-2: Một bài kiểm tin Gửi có thể vẫn xanh dù tin soạn sẵn thiếu lời mở đầu của mẫu.
+  - Ngoài-3: Một số câu trạng thái trên màn Mẫu, như câu lỗi đọc của vùng mẫu bảng hàng, chưa có bài kiểm tự động dựng ra để soi.
+  - Ngoài-4: Hồ sơ chứng minh có hai tệp ghi không khớp nhau về lần lưu tên trùng bị từ chối.
+  - Ngoài-5: Ghi chú về lỗi chớp màn của Bảng hàng nói ngược bên nào dựng gì, nên người theo dõi sau này có thể đi tìm nguyên nhân sai hướng.
+  - Ngoài-6: Bảng hàng có thể nháy hoặc dựng lại một lần khi mới mở, và có nhiều kiểu hơn mức đã khai.
+  - Ngoài-7: Hồ sơ không cho thấy lần lưu mẫu trùng tên bị từ chối ở phía mạng, dù màn báo lỗi có ghi lại.
+  - Ngoài-10: Khi không đọc được mẫu bài, bài Zalo hoặc Facebook được chép ra thiếu lời mở đầu và lời kết của sàn mà không có báo gì.
+  - Ngoài-11: Bài kiểm có thể không bắt được lỗi nếu hộp Xuất đang mở sau này đọc lại mẫu mới giữa chừng.
+  - Ngoài-12: Bài kiểm chống lộ thông tin chủ nhà ở màn Mẫu có thể không bắt được lỗi nếu sau này có thông tin nội bộ lọt vào màn này.
+  - Ngoài-13: Bài kiểm chống lộ thông tin không quét hết các tệp của màn Mẫu, nên lỗi lộ thông tin ở phần bị sót hoặc tệp thêm sau có thể không bị phát hiện.
