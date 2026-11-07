@@ -52,11 +52,14 @@ export type NutChinh = { kind: "hoi-dau-chu" } | { kind: "ghi-cuoc-goi"; href: s
 
 /**
  * Một nút chính theo cờ của lớp phủ: người không thấy nguồn hỏi đầu chủ (chỉ mở bảng chia sẻ — bất biến 3); người thấy
- * nguồn ghi cuộc gọi của căn; căn chưa có mã không có nút chính (chưa có gì để hỏi hay ép giá).
+ * nguồn và vào được màn ghi cuộc gọi (cờ `ghiCuocGoi`) ghi cuộc gọi của căn; người thấy nguồn mà không vào được màn ấy
+ * (trưởng nhóm không có vai Đầu chủ) không có nút chính — Hỏi-1 của va-nut-ghi-cuoc-goi-truong-nhom; căn chưa có mã không
+ * có nút chính (chưa có gì để hỏi hay ép giá).
  */
-export function nutChinh(o: { co: Pick<CoHoSo, "hoiDauChu">; chuaMa: boolean; canId: string }): NutChinh {
+export function nutChinh(o: { co: Pick<CoHoSo, "hoiDauChu" | "ghiCuocGoi">; chuaMa: boolean; canId: string }): NutChinh {
   if (o.chuaMa) return null;
-  return o.co.hoiDauChu ? { kind: "hoi-dau-chu" } : { kind: "ghi-cuoc-goi", href: duongGhiCuocGoi(o.canId) };
+  if (o.co.hoiDauChu) return { kind: "hoi-dau-chu" };
+  return o.co.ghiCuocGoi ? { kind: "ghi-cuoc-goi", href: duongGhiCuocGoi(o.canId) } : null;
 }
 
 // ——— Thông số chính ———

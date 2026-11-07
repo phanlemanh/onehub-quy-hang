@@ -3,7 +3,8 @@
 // sách lệch; ma trận viết trước; cặp hai chiều trên cùng dữ liệu: vật lành → [], bản sao hỏng → lời lệch ghim bằng deepEqual.
 // Dữ liệu mẫu: [Mẫu] Toà A, A-01.02, số 0900 000 092 — không dữ liệu cá nhân thật.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { join, relative } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement } from "react";
@@ -350,31 +351,71 @@ test("E4 chiều đỏ: bản sao bỏ qua cờ noiBo → bộ so nêu mồi l�
 // ——— E5 — nút chính dính đáy: 4 ca viết trước ———
 
 type HamNut = typeof nutChinh;
-type CaNut = { ten: string; vai: Vai; chuaMa: boolean; mong: NutChinh };
+type CaNut = { ten: string; vai: Vai; vaiThat?: string[]; chuaMa: boolean; mong: NutChinh };
+// Năm ca viết trước, đúng cột «nút» của «Bảng người xem» (hợp đồng va-nut-ghi-cuoc-goi-truong-nhom, Hỏi-1 = không nút).
 const CA_NUT: CaNut[] = [
   { ten: "không thấy nguồn", vai: "khach", chuaMa: false, mong: { kind: "hoi-dau-chu" } },
-  { ten: "thấy nguồn giữ căn", vai: "chu", chuaMa: false, mong: { kind: "ghi-cuoc-goi", href: "/units/call?hang=hang-1" } },
-  { ten: "thấy nguồn không giữ", vai: "truong", chuaMa: false, mong: { kind: "ghi-cuoc-goi", href: "/units/call?hang=hang-1" } },
+  { ten: "đầu chủ giữ căn", vai: "chu", chuaMa: false, mong: { kind: "ghi-cuoc-goi", href: "/units/call?hang=hang-1" } },
+  { ten: "trưởng nhóm thuần", vai: "truong", chuaMa: false, mong: null },
+  { ten: "trưởng nhóm có vai Đầu chủ", vai: "truong", vaiThat: ["team_lead", "listing_agent"], chuaMa: false, mong: { kind: "ghi-cuoc-goi", href: "/units/call?hang=hang-1" } },
   { ten: "căn chưa có mã", vai: "khach", chuaMa: true, mong: null },
 ];
+const vaoCa = (c: CaNut) => vao(c.vai, "toan-man", { ...(c.chuaMa ? { chon: { ma: "", toa: null, lan: "hang-2" }, chuaMa: CHUA_MA } : {}), ...(c.vaiThat ? { vai: c.vaiThat } : {}) });
 function lechNut(ham: HamNut): string[] {
   const out: string[] = [];
   for (const c of CA_NUT) {
-    const m = coCan(moHinhHoSo(vao(c.vai, "toan-man", c.chuaMa ? { chon: { ma: "", toa: null, lan: "hang-2" }, chuaMa: CHUA_MA } : {})));
+    const m = coCan(moHinhHoSo(vaoCa(c)));
     const nut = ham({ co: m.co, chuaMa: m.chuaMa !== null, canId: m.can.id });
     if (JSON.stringify(nut) !== JSON.stringify(c.mong)) out.push(`${c.ten}: ${nut ? nut.kind : "không nút"}`);
   }
   return out;
 }
 
-test("E5 nút chính theo cờ (4 ca viết trước): hỏi đầu chủ · ghi cuộc gọi · ghi cuộc gọi · không nút", () => {
+test("E5 nút chính theo cờ (5 ca viết trước): hỏi đầu chủ · ghi cuộc gọi · không nút · ghi cuộc gọi · không nút", () => {
+  assert.equal(CA_NUT.length, 5);
   assert.deepEqual(lechNut(nutChinh), []);
+});
+
+test("E5 chiều đỏ: bản sao nút suy từ !hoiDauChu (trước hàng vá) → bộ so nêu đúng ca trưởng nhóm thuần", () => {
+  const cu: HamNut = (o) => (o.chuaMa ? null : o.co.hoiDauChu ? { kind: "hoi-dau-chu" } : { kind: "ghi-cuoc-goi", href: `/units/call?hang=${o.canId}` });
+  assert.deepEqual(lechNut(cu), ["trưởng nhóm thuần: ghi-cuoc-goi"]);
+});
+
+// Vế «màn đọc cờ, không rẽ theo tên vai» (AC-2): mã nguồn phần hồ sơ không viết tên vai nào.
+const TEN_VAI_LOI = ["listing_agent", "team_lead", "buyer_agent", "company_admin", "telesales"];
+function tepRePhanVai(tep: Record<string, string>): string[] {
+  return Object.entries(tep)
+    .filter(([, nd]) => TEN_VAI_LOI.some((v) => nd.includes(`"${v}"`) || nd.includes(`'${v}'`)))
+    .map(([t]) => t);
+}
+function docHoSo(): Record<string, string> {
+  const goc = fileURLToPath(new URL("..", import.meta.url));
+  const ra: Record<string, string> = {};
+  const di = (thu: string) => {
+    for (const e of readdirSync(thu, { withFileTypes: true })) {
+      const p = join(thu, e.name);
+      if (e.isDirectory()) di(p);
+      else if (/\.(ts|tsx)$/.test(e.name) && !/\.test\.tsx?$/.test(e.name)) ra[relative(goc, p)] = readFileSync(p, "utf8");
+    }
+  };
+  di(goc);
+  return ra;
+}
+
+test("E5 phần hồ sơ không rẽ theo tên vai: quét mã nguồn units/ho-so (trừ bài kiểm)", () => {
+  const tep = docHoSo();
+  assert.ok(Object.keys(tep).length >= 5, "đối chứng dương: bộ quét đọc được các tệp của phần hồ sơ");
+  assert.ok("mo-hinh.ts" in tep);
+  assert.deepEqual(tepRePhanVai(tep), []);
+  // Chiều đỏ: bản sao nutChinh đọc tên vai thẳng → bộ quét nêu đúng tệp.
+  const banSao = { ...tep, "mo-hinh.ts": tep["mo-hinh.ts"]!.replace("if (o.co.hoiDauChu)", 'if (vai.includes("listing_agent"))') };
+  assert.deepEqual(tepRePhanVai(banSao), ["mo-hinh.ts"]);
 });
 
 test("E5 nút dựng thật: đúng một nút dính đáy, kín bề ngang, cao 44 px; hỏi đầu chủ chỉ mở bảng chia sẻ", () => {
   const nutCua = (html: string) => [...html.matchAll(/<div class="([^"]*)" data-slot="(hoi-dau-chu|ghi-cuoc-goi)">(.*?)<\/div>/gs)];
   for (const c of CA_NUT) {
-    const m = moHinhHoSo(vao(c.vai, "toan-man", c.chuaMa ? { chon: { ma: "", toa: null, lan: "hang-2" }, chuaMa: CHUA_MA } : {}));
+    const m = moHinhHoSo(vaoCa(c));
     const ds = nutCua(dungDT(m, c.chuaMa ? { kind: "chua-ma" } : CO_ANH));
     assert.equal(ds.length, c.mong ? 1 : 0, c.ten);
     if (!c.mong) continue;
@@ -395,7 +436,7 @@ test("E5 nút dựng thật: đúng một nút dính đáy, kín bề ngang, cao
 
 test("E5 chiều đỏ: bản sao luôn trả «Ghi cuộc gọi» → ô nêu vai", () => {
   const sai: HamNut = (o) => ({ kind: "ghi-cuoc-goi", href: `/units/call?hang=${o.canId}` });
-  assert.deepEqual(lechNut(sai), ["không thấy nguồn: ghi-cuoc-goi", "căn chưa có mã: ghi-cuoc-goi"]);
+  assert.deepEqual(lechNut(sai), ["không thấy nguồn: ghi-cuoc-goi", "trưởng nhóm thuần: ghi-cuoc-goi", "căn chưa có mã: ghi-cuoc-goi"]);
 });
 
 // ——— E6 — năm trạng thái viết trước + đối chứng ———
