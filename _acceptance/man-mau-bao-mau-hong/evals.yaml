@@ -92,6 +92,7 @@ evals:
     layer: ui-observed
     setup:
       - "Postgres dãy L (5571) có sàn mẫu (DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres node packages/db/seed/nap.mjs --nap), máy chủ dev ở cổng của lượt chấm; nạp mẫu hỏng cho sàn mẫu: DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres node _acceptance/man-mau-bao-mau-hong/thu/nap-mau-hong.mjs (ba mẫu bảng hàng — một trùng tên, một mang cột Người giữ — và mẫu bài có kênh lạ)"
+      - "Máy chủ dev của dãy L chạy ở http://localhost:3491, nhật ký tee ra .acceptance-runs/web-L.log; mã đăng nhập dev nằm ở dòng «[ma-dang-nhap] <email> <mã>» của tệp ấy"
     steps:
       - "Đăng nhập quan-tri@mau.quy-hang.test, mở Cài đặt › Sàn › Mẫu, tab Mẫu bảng hàng: đầu tab có khối báo «Mẫu đã lưu có 2 chỗ không đọc được», hai câu (một nêu «Người giữ»), câu «Lần lưu kế sẽ bỏ hẳn những chỗ này»; bảng có 2 mẫu"
       - "Tab Mẫu bài: khối báo 1 chỗ, câu chung cho kênh lạ; khối Zalo vẫn có lời đã lưu"
