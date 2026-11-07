@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 27bd858375b1f28bcf5162bcaf611ff1a2fbc81f
+verified_commit: 44d95af1831d5ce7f38ef740e2f968b80c33e091
 human_signoff:
 ---
 
@@ -187,3 +187,7 @@ none — every multi-run eval is uniform
 
 Round 1: E2, E2b trượt — lệnh chạy trên Postgres dãy D (không phải dãy đã dựng cho hồ sơ), không phải lỗi mã. Trả về triển khai, đổi sang Postgres dãy B.
 Round 2: E2, E2b xanh trên Postgres dãy B; các eval còn lại mang sang từ round 1 vì phần thay đổi không chạm paths của chúng.
+
+### Re-pin lần 1 — 2026-11-07, do gộp main (#180, #181, #183) trước khi gộp
+run_id: repin-20261107T031759Z-60325
+sha: 44d95af1831d5ce7f38ef740e2f968b80c33e091 · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · ngoài làn máy: E4
