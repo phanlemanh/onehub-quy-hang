@@ -66,3 +66,8 @@ thật in mã ra nhật ký (AC-6), bí mật vào kho (AC-9).
 
 - Bằng chứng AC-1–AC-5 và AC-8 đọc môi trường thật nên cần biến môi trường của người chấm (khai ở `_acceptance/config.yaml`,
   executors `moi_truong_that`, `cach_ly_that`, `suc_khoe_that`); giá trị bí mật không vào hồ sơ.
+- Sửa đổi 07/11 (chủ kho duyệt «Áp gói khuyên», hàng va-thuoc-ci-moi-truong-that-ban-that): AC-3 và AC-7 đọc theo ADR-0009
+  «Sửa đổi 06/11 — bộ kiểm cách ly chạy trên cơ sở dữ liệu tạm». Bộ kiểm cách ly không chạy trên cơ sở dữ liệu thật nữa —
+  AC-3 do va-deploy-csdl-tam#AC-2 đo lại (E3 khai không chạy); job `deploy` chờ năm job và chạy migration → kiểm nhanh chỉ
+  đọc → deploy hook (E7). AC-8 đo trên bản thật (`APP_URL` = tên miền chính), vì bản xem trước không dựng được API khi
+  thiếu `OWNER_PHONE_KEY` (ADR-0009 «Sửa đổi 06/11 — chế độ giao dịch», điểm 6). Chữ đã ký không viết lại.
