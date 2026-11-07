@@ -5,7 +5,7 @@ slug: va-thuoc-ci-moi-truong-that-ban-that
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, config]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-07-va-thuoc-ci-moi-truong-that-ban-that-design.md
 approved_by:
 approved_at:
@@ -72,3 +72,9 @@ Thước CE: ADR-0009 «Sửa đổi 06/11 — bộ kiểm cách ly chạy trên
   (lượt ghim lại của chủ kho 07/11 đỏ ở E8 vì thiếu cờ này).
 - Chủ kho duyệt 07/11 «Áp gói khuyên» cho ba mục phản biện của moi-truong-that: dòng «Sửa đổi 07/11» ở Notes của hợp đồng ấy
   (chữ AC giữ nguyên), một dòng revisit trong sổ của nó, AC-8 đo trên bản thật.
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu một số tệp cấu hình triển khai hoặc hồ sơ liên quan đổi sau này, bằng chứng cũ có thể vẫn bị coi là còn hiệu lực. Người dùng cuối không thấy gì, chỉ là lưới kiểm có thể bỏ sót một lần đổi. — `_acceptance/va-thuoc-ci-moi-truong-that-ban-that/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Một dòng báo cáo nội bộ gọi tên ca thử không khớp với điều ca đó làm, và chưa có ca thử việc đảo thứ tự kiểm nhanh với bước gọi Vercel. Người dùng không bị ảnh hưởng. — `_acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/kiem-thuoc.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Chú thích trong cấu hình nói về bản xem trước trong khi phép đo chạy trên bản thật, dễ làm người bảo trì hiểu nhầm. Người dùng cuối không thấy gì. — `_acceptance/config.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Một dòng mô tả trong hồ sơ cũ ghi sai số ca thử so với thực tế, người đối chiếu có thể thấy lệch. Phép đo vẫn đúng và người dùng không bị ảnh hưởng. — `_acceptance/moi-truong-that/evals.yaml`
+- Ngoài-5 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Hai trong tám điều kiện của quy trình triển khai chưa có phép thử cố tình làm hỏng, nên nếu phép kiểm hai điều kiện đó hỏng thì lưới vẫn báo xanh. Có thể để lọt một lần triển khai sai bước. — `_acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/kiem-thuoc.mjs`
+- Ngoài-6 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Một dòng mô tả trong hồ sơ cũ ghi sai số ca thử so với ma trận thật, làm người đối chiếu khó biết ma trận nào đúng. Người dùng không bị ảnh hưởng. — `_acceptance/moi-truong-that/evals.yaml`
