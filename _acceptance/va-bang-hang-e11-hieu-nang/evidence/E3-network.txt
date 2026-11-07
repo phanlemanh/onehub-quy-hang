@@ -1,0 +1,24 @@
+36. [POST] http://localhost:3585/api/v1/auth/email-otp/send-verification-otp => [200] OK
+37. [POST] http://localhost:3585/api/v1/auth/sign-in/email-otp => [200] OK
+74. [GET] http://localhost:3585/api/v1/catalog => [200] OK
+75. [GET] http://localhost:3585/api/v1/company/settings/queue => [200] OK
+76. [GET] http://localhost:3585/api/v1/leads/assigned => [200] OK
+77. [GET] http://localhost:3585/api/v1/catalog => [200] OK
+78. [GET] http://localhost:3585/api/v1/company/settings/queue => [200] OK
+79. [GET] http://localhost:3585/api/v1/leads/assigned => [200] OK
+80. [GET] http://localhost:3585/api/v1/push/public-key => [200] OK
+81. [GET] http://localhost:3585/api/v1/push/public-key => [200] OK
+82. [GET] http://localhost:3585/api/v1/listings => [FAILED] net::ERR_ABORTED
+129. [GET] http://localhost:3585/api/v1/listings => [200] OK
+130. [GET] http://localhost:3585/api/v1/catalog => [500] Internal Server Error
+131. [GET] http://localhost:3585/api/v1/company/member-names => [500] Internal Server Error
+132. [GET] http://localhost:3585/api/v1/catalog => [500] Internal Server Error
+133. [GET] http://localhost:3585/api/v1/company/member-names => [500] Internal Server Error
+134. [GET] http://localhost:3585/api/v1/listings => [200] OK
+135. [GET] http://localhost:3585/api/v1/listings
+
+Note: 113 static requests not shown, run with "static" option to see them.[    2247ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3585/favicon.ico:0
+[   37772ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3585/api/v1/catalog:0
+[   37774ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3585/api/v1/company/member-names:0
+[   47820ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3585/api/v1/catalog:0
+[   47823ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3585/api/v1/company/member-names:0
