@@ -1,0 +1,8 @@
+# E16 verifier doc lap 2026-11-06T15:44:52Z; dev 3494 -> Postgres 5574 (quy-hang-db-dkn-H); 375x812
+# E14 (A-03.04, Withdrawn): Noi bo c1a2a740-042a-4064-809b-3790efd5f1ce ; Gui duoc 3e1dc9ef-9c73-43c3-98d4-9c1a62f96944, 22966ed6-eb0c-48ad-ab30-d7021dc00bd2
+== POST /api/v1/shares A-03.04 (Withdrawn) bang phien dau-khach
+{"error":"listing-not-shareable"} HTTP=400
+# => A-03.04 trang thai Withdrawn nen khong gui duoc; dung can mau Active A-10.05 (listing da39b7d6-865d-4542-8c98-a5f349e27fd4) co anh Noi bo 26a841db-01f0-484b-88c1-d22c8b0779e4 va anh Gui duoc: bia(order 0) 90395cc9-a184-4bf2-b890-6c007a45ac09, 4e0d4e98-5cac-44a2-91e1-3918cb694cc5, abe27663-79c6-48ef-a8fd-0e59c13bc08f (E15)
+== POST /api/v1/shares A-10.05 bang phien dau-khach
+HTTP/1.1 201 Created
+{"id":"427c710f-e250-4026-af92-2d2e274b4528","code":"6CA79Zbb81dN","audience":"agents","prospectId":null,"senderUserId":"eeb50ad5-5a2f-4d32-94ae-dafc26024741","listingIds":["da39b7d6-865d-4542-8c98-a5f349e27fd4"],"createdAt":"2026-11-06T15:44:52.580Z","disabledAt":null}

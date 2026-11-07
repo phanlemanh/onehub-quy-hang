@@ -10,6 +10,7 @@ import { ImageIcon, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/reui/badge";
+import { useDocLaiKhiDaTai } from "../../photos/hang-cho-may";
 import type { DanhSachAnh } from "../../photos/muc-anh";
 import { nguonApi } from "../../photos/nguon-api";
 
@@ -73,9 +74,28 @@ export function AnhLon({ anh, co, urlAnh }: { anh: TrangThaiAnh; co: Pick<CoHoSo
   );
 }
 
-/** Danh sách ảnh của căn, đọc một lần khi mở hồ sơ hay đổi căn — cùng đường API của mục Ảnh. */
+/**
+ * Ảnh khung lớn đang trình: kết quả đọc của đúng căn (đọc lại vì ảnh mới tải lên thì giữ kết quả cũ tới khi có kết quả mới,
+ * không về «Đang tải ảnh…» — AC-8); chưa đọc xong lần đầu thì đang tải.
+ */
+export function anhDangTrinh(kq: { khoa: string; anh: TrangThaiAnh } | null, khoa: string, ma: string | null): TrangThaiAnh {
+  if (!ma) return { kind: "chua-ma" };
+  return kq?.khoa === khoa ? kq.anh : { kind: "dang-tai" };
+}
+
+/**
+ * Kết quả đọc lỗi: lần đọc lại (sau khi một ảnh lên máy chủ) mà lỗi thì giữ danh sách cũ của đúng căn — không gỡ ảnh lớn và
+ * nút «Chụp ảnh» giữa lúc đang chụp (AC-8); lần đọc đầu lỗi thì báo lỗi.
+ */
+export function sauLoiDoc(cu: { khoa: string; anh: TrangThaiAnh } | null, khoa: string, matMang: boolean): { khoa: string; anh: TrangThaiAnh } {
+  return cu?.khoa === khoa && cu.anh.kind === "co" ? cu : { khoa, anh: { kind: "loi", matMang } };
+}
+
+/** Danh sách ảnh của căn, đọc khi mở hồ sơ, đổi căn hay có ảnh chụp vừa tải lên — cùng đường API của mục Ảnh. */
 export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
   const [kq, setKq] = useState<{ khoa: string; anh: TrangThaiAnh } | null>(null);
+  const [lanTai, setLanTai] = useState(0);
+  useDocLaiKhiDaTai(toa, ma, () => setLanTai((n) => n + 1));
   const khoa = `${toa}|${ma ?? ""}`;
   useEffect(() => {
     if (!ma) return;
@@ -84,12 +104,12 @@ export function useAnhCan(toa: string, ma: string | null): TrangThaiAnh {
       .danhSach()
       .then(
         (ds) => !huy && setKq({ khoa, anh: { kind: "co", ds } }),
-        () => !huy && setKq({ khoa, anh: { kind: "loi", matMang: !navigator.onLine } }),
+        () => !huy && setKq((cu) => sauLoiDoc(cu, khoa, !navigator.onLine)),
       );
     return () => {
       huy = true;
     };
-  }, [toa, ma, khoa]);
-  if (!ma) return { kind: "chua-ma" };
-  return kq?.khoa === khoa ? kq.anh : { kind: "dang-tai" };
+    // lanTai: ảnh vừa chụp lên máy chủ (hàng 41) — đọc lại để khung lớn có ảnh mới, giữ bản cũ tới khi có bản mới.
+  }, [toa, ma, khoa, lanTai]);
+  return anhDangTrinh(kq, khoa, ma);
 }

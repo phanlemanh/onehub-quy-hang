@@ -1,0 +1,8 @@
+# E13 verifier doc lap 2026-11-06T15:39:36.707Z - cho thu H dev 3494 / quy-hang-db-dkn-H. Can: Toà A / A-02.06 (dem = chua-xoa/tong)
+B1 truoc: 8/8
+B2 dau-khach upload-url -> 403 {"error":"listing-agent-required"}
+B2 dau-khach photos -> 403 {"error":"listing-agent-required"}
+B2 sau dau-khach: 8/8
+B3 dau-chu-1 upload-url -> 200 {"truc_tiep":false}
+B3 dau-chu-1 photos -> 201 {"anh":{"id":"e36f0f9e-831b-4093-aef5-f6770376073f","buildingName":"Toà A","unitNumber":"A-02.06","compartment":"shareab
+B3 sau dau-chu-1: 9/9

@@ -134,6 +134,7 @@ export function dungDongNhan(bo: unknown): { ok: true; dong: DongNhan[] } | { ok
     dong.push({ key: `${KHOA_TRUONG}${String(r.field)}`, value: kq.nhan });
   }
   const theoTruong = new Map<TruongDong, Record<string, string>>();
+  const daGiaTri = new Set<string>();
   for (const v of values as unknown[]) {
     const r = (v ?? {}) as Record<string, unknown>;
     const kq = kiemNhanGiaTri(r.field, r.value, r.label);
@@ -141,15 +142,51 @@ export function dungDongNhan(bo: unknown): { ok: true; dong: DongNhan[] } | { ok
     const truong = r.field as TruongDong;
     const m = theoTruong.get(truong) ?? {};
     const khoa = `${KHOA_GIA_TRI}${truong}`;
-    if (Object.hasOwn(m, r.value as string)) return { ok: false, loi: `${khoa}: giá trị «${String(r.value)}» có hai tên riêng` };
-    if (Object.values(m).some((x) => x.toLocaleLowerCase("vi") === kq.nhan.toLocaleLowerCase("vi")))
-      return { ok: false, loi: `${khoa}: hai giá trị cùng tên «${kq.nhan}»` };
+    if (daGiaTri.has(`${truong}:${String(r.value)}`)) return { ok: false, loi: `${khoa}: giá trị «${String(r.value)}» có hai tên riêng` };
+    daGiaTri.add(`${truong}:${String(r.value)}`);
     if (kq.nhan === (TAP_DONG[truong] as Record<string, string>)[r.value as string]) continue;
     m[r.value as string] = kq.nhan;
     theoTruong.set(truong, m);
   }
+  // Trùng tên trong một tập (hàng chan-trung-ten-gia-tri): so trên cả bộ sau khi lưu, gồm tên mặc định của anh em.
+  for (const [truong, m] of theoTruong) {
+    const trung = trungTenGiaTri(truong, m);
+    const dau = Object.keys(m).find((neo) => trung[neo]);
+    if (dau) return { ok: false, loi: `${KHOA_GIA_TRI}${truong}: ${cauTrungTen(truong, trung[dau]!)}` };
+  }
   for (const [truong, m] of theoTruong) dong.push({ key: `${KHOA_GIA_TRI}${truong}`, value: m });
   return { ok: true, dong };
+}
+
+/** Chữ để so trùng: bỏ hoa thường và dấu cách thừa — cùng cách so nhãn trạng thái (hàng 46, Hỏi-7). */
+const chuSoTen = (s: string) => s.trim().replace(/\s+/g, " ").toLocaleLowerCase("vi");
+
+/** Câu lỗi trùng tên, nêu tên mặc định của giá trị kia (không lặp chữ người gõ). */
+export const cauTrungTen = (truong: TruongDong, anhEm: string) =>
+  `Trùng tên của «${(TAP_DONG[truong] as Record<string, string>)[anhEm] ?? anhEm}»`;
+
+/**
+ * Trùng tên trong một tập đóng: với mỗi giá trị có tên riêng, giá trị anh em mà tên ấy trùng — tên đang hiện của anh em
+ * (tên riêng, vắng thì mặc định) hoặc tên mặc định của anh em kể cả khi anh em đã đổi tên (chặn đổi chéo, Hỏi-1). Màn
+ * Cách gọi và máy chủ cùng gọi hàm này. Tên riêng bằng đúng tên mặc định của chính nó coi như vắng.
+ */
+export function trungTenGiaTri(truong: TruongDong, tenRieng: Readonly<Record<string, string>>): Record<string, string> {
+  const macDinh = TAP_DONG[truong] as Record<string, string>;
+  const rieng: Record<string, string> = {};
+  for (const [neo, nhan] of Object.entries(tenRieng)) {
+    if (!Object.hasOwn(macDinh, neo) || typeof nhan !== "string" || !nhan.trim()) continue;
+    if (chuSoTen(nhan) === chuSoTen(macDinh[neo]!)) continue;
+    rieng[neo] = nhan;
+  }
+  const ra: Record<string, string> = {};
+  for (const [neo, nhan] of Object.entries(rieng)) {
+    const chu = chuSoTen(nhan);
+    const anhEm = Object.keys(macDinh).find(
+      (kia) => kia !== neo && (chuSoTen(rieng[kia] ?? macDinh[kia]!) === chu || chuSoTen(macDinh[kia]!) === chu),
+    );
+    if (anhEm) ra[neo] = anhEm;
+  }
+  return ra;
 }
 
 /** Một dòng đã lưu có thuộc hai họ nhãn không — để người gọi chỉ đưa dòng nhãn vào `boTuVung`. */
