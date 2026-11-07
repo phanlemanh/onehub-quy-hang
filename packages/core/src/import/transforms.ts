@@ -184,27 +184,36 @@ export function price(raw: Cell, params: { unit: (typeof PRICE_UNITS)[number] })
   return lyDo.length ? fixed(dong, lyDo.join("; "), also) : keep(dong, also);
 }
 
+/** Ô đọc theo cách gõ đã duyệt của sàn (hàng 70): máy sửa có lý do, để bước xem trước hiện «chữ gốc → giá trị chuẩn». */
+const TU_DIEN_SAN = "theo từ điển của sàn";
+
 // ── Điều kiện phí, trạng thái, hướng ───────────────────────────────────────────────────────────────────────────────
 
 export function feeCondition(raw: Cell, ctx?: Pick<ImportContext, "companyAliases">): Outcome {
   if (trong(raw)) return keep(null);
   const s = chu(raw);
   if (/(thu ve|ve tay)/.test(fold(s))) return hoi(`«${s}»: giá về tay chủ — cần người quy ra giá chào và điều kiện phí (luật 12)`);
-  const v = lookupAlias("feeInclusion", s, FEE_ALIASES, ctx?.companyAliases);
+  const san = lookupAlias("feeInclusion", s, null, ctx?.companyAliases);
+  if (san) return fixed(san, TU_DIEN_SAN);
+  const v = lookupAlias("feeInclusion", s, FEE_ALIASES);
   return v ? keep(v) : hoi(`«${s}» không phải điều kiện phí đã biết`);
 }
 
 export function status(raw: Cell, ctx?: Pick<ImportContext, "companyAliases">): Outcome {
   if (trong(raw)) return keep(null);
   const s = chu(raw);
-  const v = lookupAlias("standardStatus", s, STATUS_ALIASES, ctx?.companyAliases);
+  const san = lookupAlias("standardStatus", s, null, ctx?.companyAliases);
+  if (san) return fixed(san, TU_DIEN_SAN);
+  const v = lookupAlias("standardStatus", s, STATUS_ALIASES);
   return v ? keep(v) : hoi(`«${s}» không phải trạng thái đã biết`);
 }
 
 export function direction(raw: Cell, ctx?: Pick<ImportContext, "companyAliases">): Outcome {
   if (trong(raw)) return keep(null);
   const s = chu(raw);
-  const v = lookupAlias("directionFaces", s, null, ctx?.companyAliases) ?? readDirection(s);
+  const san = lookupAlias("directionFaces", s, null, ctx?.companyAliases);
+  if (san) return fixed(san, TU_DIEN_SAN);
+  const v = readDirection(s);
   return v ? keep(v) : hoi(`«${s}» không phải hướng đã biết`);
 }
 
