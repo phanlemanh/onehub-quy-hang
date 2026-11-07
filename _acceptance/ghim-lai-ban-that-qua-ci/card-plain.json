@@ -1,17 +1,41 @@
 {
-  "feature_plain": "Một nút trên GitHub thay anh chạy lệnh ghim lại hồ sơ cần bản thật: anh (hoặc máy) bấm, GitHub dùng bí mật nó đang giữ, kết quả quay về PR — không ai phải cầm bí mật.",
+  "feature_plain": "Một nút trên GitHub thay anh chạy lệnh ghim lại hồ sơ cần bản thật; lượt chấm thấy bộ chặn của nút còn để lọt vài bộ kiểm có ghi dữ liệu.",
   "will_do": [
-    {"id": "AC-1", "p": "Sẽ có nút «Ghim lại hồ sơ cần bản thật» chỉ chạy khi bấm tay, chỉ từ nhánh chính, chỉ cho chọn hồ sơ trong danh sách cố định, và tự kiểm mười hai điều an toàn trước khi chạm bí mật."},
-    {"id": "AC-2", "p": "Sẽ có phép thử cố tình làm hỏng từng điều trong mười hai điều ấy, và mỗi lần phép đo phải bắt đúng điều bị hỏng."}
+    {
+      "id": "AC-1",
+      "p": "Sẽ có nút «Ghim lại hồ sơ cần bản thật» chỉ chạy khi bấm tay, chỉ từ nhánh chính, chỉ cho chọn hồ sơ trong danh sách cố định, và tự kiểm mười hai điều an toàn trước khi chạm bí mật."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ có phép thử cố tình làm hỏng từng điều trong mười hai điều ấy, và mỗi lần phép đo phải bắt đúng điều bị hỏng."
+    }
   ],
   "wont_do": [
-    {"id": "AC-3", "p": "Chặn mọi hồ sơ còn phép đo chạy bộ kiểm có ghi dữ liệu — nút sẽ không bao giờ ghi vào cơ sở dữ liệu thật."},
-    {"id": "AC-4", "p": "Chặn bí mật lọt sang các bộ kiểm chung: chỉ phép đo của hồ sơ thấy chuỗi kết nối."},
-    {"id": "AC-5", "p": "Chặn bí mật rời GitHub: trước khi trả kết quả, nút quét và dừng nếu thấy chuỗi kết nối hay mật khẩu."},
-    {"id": "OOS-1", "p": "KHÔNG tự bật chế độ «duyệt từng lượt» cho vùng bí mật bản thật — đó là cài đặt của anh."},
-    {"id": "OOS-2", "p": "KHÔNG thêm hồ sơ khác vào danh sách, không cho nút ghi thẳng vào kho, không đổi bản kit."}
+    {
+      "id": "AC-3",
+      "p": "Chặn mọi hồ sơ còn phép đo chạy bộ kiểm có ghi dữ liệu — nút sẽ không bao giờ ghi vào cơ sở dữ liệu thật."
+    },
+    {
+      "id": "AC-4",
+      "p": "Chặn bí mật lọt sang các bộ kiểm chung: chỉ phép đo của hồ sơ thấy chuỗi kết nối."
+    },
+    {
+      "id": "AC-5",
+      "p": "Chặn bí mật rời GitHub: trước khi trả kết quả, nút quét và dừng nếu thấy chuỗi kết nối hay mật khẩu."
+    },
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG tự bật chế độ «duyệt từng lượt» cho vùng bí mật bản thật — đó là cài đặt của anh."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG thêm hồ sơ khác vào danh sách, không cho nút ghi thẳng vào kho, không đổi bản kit."
+    }
   ],
   "coverage_plain": [
-    {"i": 0, "p": "Phủ bốn vật — nút, bộ chặn, bộ quét, khoá cấu hình — mỗi vật đo cả chiều lành (xanh) lẫn chiều bị phá (đỏ)."}
+    {
+      "i": 0,
+      "p": "Phủ bốn vật — nút, bộ chặn, bộ quét, khoá cấu hình — mỗi vật đo cả chiều lành (xanh) lẫn chiều bị phá (đỏ)."
+    }
   ]
 }
