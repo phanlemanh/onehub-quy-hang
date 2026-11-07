@@ -40,7 +40,7 @@ executors:
     cai_dat_tai_lieu: "node --test \"_acceptance/cai-dat-hop-nhat/thu/*.test.mjs\""   # cai-dat-hop-nhat AC-9: ba quyết định đã niêm có mục sửa đổi, không viết đè
     doi_dau_chu_tai_lieu: "node --test \"_acceptance/doi-dau-chu-hang-loat/thu/*.test.mjs\""   # doi-dau-chu-hang-loat AC-8: ADR-0021 có mục sửa đổi 05/11, Tham chiếu §12
     suc_khoe_that: "node _acceptance/moi-truong-that/thu/kiem-moi-truong.mjs --suc-khoe"
-    suc_khoe_xem_truoc: "cd \"$VERCEL_LINK_DIR\" && npx -y vercel@latest curl /api/v1/health --deployment \"$APP_URL\" -- -fsS"   # moi-truong-that AC-8: bản xem trước có Vercel Authentication — vercel curl vượt bảo vệ bằng phiên CLI; VERCEL_LINK_DIR là thư mục ngoài kho đã `vercel link`
+    suc_khoe_xem_truoc: "cd \"$VERCEL_LINK_DIR\" && npx -y vercel@latest curl /api/v1/health --deployment \"$APP_URL\" --yes -- -fsS"   # moi-truong-that AC-8: bản xem trước có Vercel Authentication — vercel curl vượt bảo vệ bằng phiên CLI; VERCEL_LINK_DIR là thư mục ngoài kho đã `vercel link`
     cach_ly_that: "npm run test:isolation -w @quy-hang/db"   # moi-truong-that: chỉ bộ kiểm cách ly (mỗi ca rollback) — DATABASE_URL trỏ cơ sở dữ liệu thật
     kiem_ci: "node _acceptance/moi-truong-that/thu/kiem-ci.mjs"   # moi-truong-that AC-7: job deploy và vercel.json
     typecheck: "npm run typecheck"                # tang-5-giao-dien
