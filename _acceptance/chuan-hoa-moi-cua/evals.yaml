@@ -7,7 +7,7 @@ evals:
     layer: unit
     cmd: config:executors.test.core
     paths: ["packages/core/src/import/**"]
-    expected: "exit 0; ca «gợi ý giá trị chuẩn» trong packages/core/src/import/goi-y.test.ts: bảng viết trước — «dong nam», «ĐN», «Đ-N» → khớp Đông Nam; «bp», «KBP» → included/excluded; «Đang gd», «GD» → Pending; «dong nm», «khong bao phi», «dang giao dich» → gợi ý đầu là giá trị đúng; «xyz», «12345» → không gợi ý; «Gọi 0900 000 001», «[Tên]@vidu.vn» → không gợi ý; số ô đếm bằng độ dài bảng. Đối chứng: từ điển của sàn chứa «huong dn» → Đông Nam thì khớp từ điển sàn trước. Chiều đỏ: bỏ bước khoảng cách chữ → ca gần đúng đỏ nêu chữ."
+    expected: "exit 0; ca «gợi ý giá trị chuẩn» trong packages/core/src/import/goi-y.test.ts: bảng viết trước — «dong nam», «ĐN», «Đ-N» → khớp Đông Nam; «bp», «KBP» → included/excluded; «Đang gd», «GD» → Pending; «dong nm», «khong bao phi», «dang giao dich» → gợi ý đầu là giá trị đúng; «xyz», «12345» → không gợi ý; «Gọi 0900 000 001», «[Tên]@vidu.vn», «CCCD 012345678901» → không gợi ý; số ô đếm bằng độ dài bảng; ca chạy với fetch và mọi lối mạng bị thay bằng hàm ném lỗi — gọi mạng là ca đỏ. Đối chứng: từ điển của sàn chứa «huong dn» → Đông Nam thì khớp từ điển sàn trước. Chiều đỏ: bỏ bước khoảng cách chữ → ca gần đúng đỏ nêu chữ."
   - id: E2
     criterion: AC-2
     executor: test
@@ -26,7 +26,9 @@ evals:
       - "Postgres dãy B (5572, đã migrate, có bộ mẫu «[Mẫu] Sàn thử»). Mở máy chủ dev cổng 3462: env DATABASE_URL=postgres://postgres:quyhang@localhost:5572/postgres BETTER_AUTH_SECRET=dev-b-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462 (log ra tệp). Đăng nhập dau-chu-1@mau.quy-hang.test bằng mã 6 số in ở log dòng «[ma-dang-nhap]». Tắt máy chủ khi xong (luật 43)."
       - "Tải tệp _acceptance/chuan-hoa-moi-cua/thu/tu-dien.csv vào /imports/new (khổ 1440), sang bước xem trước; mở ô hướng «dong nm» → chụp evidence/E2u-step1.png: dưới ô dòng «Ý bạn là:» có nút «Đông Nam»"
       - "Bấm «Đông Nam» → chụp evidence/E2u-step2.png: ô hiện Đông Nam, hết đánh dấu cần người. Không bấm Nhập."
-    expected: "step1 có dòng «Ý bạn là:» với nút Đông Nam dưới đúng ô; step2 ô thành Đông Nam."
+      - "Trong trang, fetch GET /api/v1/company/value-aliases; ghi vào observed dòng directionFaces «dong nm» (trạng thái, giá trị, pick_count)"
+      - "Vòng ND7: đăng xuất, đăng nhập quan-tri@mau.quy-hang.test, fetch PUT duyệt dòng ấy; đăng xuất, đăng nhập lại dau-chu-1, tải lại tu-dien.csv → chụp evidence/E2u-step3.png: ô hướng hiện Đông Nam ngay, không đánh dấu cần người, không dòng «Ý bạn là:»"
+    expected: "step1 có dòng «Ý bạn là:» với nút Đông Nam dưới đúng ô; step2 ô thành Đông Nam; GET sau khi bấm có đúng một dòng proposed directionFaces «dong nm» → Đông Nam, pick_count 1 (nút gợi ý gửi đề xuất thật); step3 sau khi duyệt, lần tải lại chuẩn hoá thẳng ô ấy (trang xem trước nạp cách gõ đã duyệt)."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
   - id: E3
     criterion: AC-3
@@ -93,6 +95,7 @@ evals:
     paths: ["apps/web/src/app/(app)/settings/dictionary/**"]
     steps:
       - "Máy chủ dev như E2u. Đăng nhập quan-tri@mau.quy-hang.test. Chuẩn bị: trong trang, fetch POST /api/v1/company/value-aliases/proposals ba đề xuất (directionFaces «dong nm»→Đông Nam; feeInclusion «bao phi het»→included; standardStatus «dang gd roi»→Pending); ghi mã trả vào observed"
+      - "Bước 0 (trước khi tạo dữ liệu, sàn chưa có dòng nào — nếu có thì ghi số dòng vào observed): mở /settings/dictionary khổ 1440 → chụp evidence/E9u-step0.png: câu «Chưa có cách gõ lạ nào — chọn gợi ý ở bước xem trước khi nhập file sẽ hiện ở đây», mọi số sức khoẻ bằng 0"
       - "Khổ 1440 mở /settings/dictionary → chụp evidence/E9u-step1.png: hàng sức khoẻ đầu màn (đã gặp 3 · chờ 3 · đã neo 0), ba nhóm trường, mỗi dòng chữ gốc → giá trị chuẩn · số lần · «Duyệt» «Bỏ»"
       - "Bấm «Duyệt» dòng «dong nm» → chụp evidence/E9u-step2.png: dòng ấy đã duyệt, sức khoẻ đã neo 1 · chờ 2"
       - "Khổ 375 → chụp evidence/E9u-step3.png: một cột đọc được"
@@ -104,7 +107,7 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.chuan_hoa_moi_cua
     paths: ["packages/api/src/value-aliases/**", "packages/api/test-db/chuan-hoa-moi-cua/**"]
-    expected: "exit 0; trên Postgres: bảng viết trước POST đề xuất với chữ «Gọi 0900 000 001», «[Tên]@vidu.vn», «012345678901», 41 ký tự, trường ownerPhone, giá trị ngoài tập chuẩn → mỗi ô 400, số dòng bảng không đổi; đối chứng chữ hợp lệ → 201. Chiều đỏ: bỏ kiểm dữ liệu cá nhân → ô số điện thoại đỏ."
+    expected: "exit 0; trên Postgres: bảng viết trước POST đề xuất với chữ «Gọi 0900 000 001», «[Tên]@vidu.vn», «012345678901», 41 ký tự, trường ownerPhone, giá trị ngoài tập chuẩn, chữ gập trùng cách gõ dựng sẵn mà trỏ giá trị khác («bao phi» → excluded), chữ gập trùng tên giá trị chuẩn mà trỏ giá trị khác («dong nam» → Tây Bắc) → mỗi ô 400, số dòng bảng không đổi; đối chứng chữ hợp lệ → 201. Chiều đỏ: bỏ kiểm dữ liệu cá nhân → ô số điện thoại đỏ."
   - id: E11
     criterion: AC-9
     executor: script

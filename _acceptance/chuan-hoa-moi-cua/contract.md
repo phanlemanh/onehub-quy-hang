@@ -56,7 +56,8 @@ thêm migration (`packages/db/**`); lộ trình ghi T2.
   dữ liệu bảng; sàn chưa có dòng nào thì hiện trạng thái trống có câu hướng dẫn.
 - **AC-10** Given chữ gốc có số điện thoại, email, số giấy tờ, hay dài hơn 40 ký tự
   When gửi đề xuất
-  Then máy chủ từ chối, không ghi dòng nào.
+  Then máy chủ từ chối, không ghi dòng nào. Chữ gốc mà khi gập trùng một cách gõ dựng sẵn hay tên một giá trị chuẩn nhưng
+  trỏ sang giá trị khác cũng bị từ chối — sàn không ghi đè nghĩa của lõi (Hỏi-4, khuyến nghị).
 
 ## Coverage
 
