@@ -1,0 +1,23 @@
+{
+  "feature_plain": "Khi nhập file, ô trạng thái, phí hay hướng gõ lạ («dong nm», «bp», «Đang gd») hiện gợi ý giá trị chuẩn; chọn gợi ý thành đề xuất từ điển của sàn, quản trị duyệt ở màn Từ điển, và từ lần sau chữ ấy chuẩn hoá thẳng.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ nhận «dong nam», «bp», «Đang gd» và gợi giá trị chuẩn cho chữ gần đúng; không gợi cho chữ vô nghĩa hay chữ có số điện thoại, email, số giấy tờ; không gọi dịch vụ ngoài."},
+    {"id": "AC-2", "p": "Sẽ hiện «Ý bạn là:» dưới ô cần người ở bước xem trước; bấm gợi ý là sửa ô."},
+    {"id": "AC-3", "p": "Sẽ biến lựa chọn thành một đề xuất chờ duyệt; chọn lại cùng chữ thì đếm thêm, không thêm dòng."},
+    {"id": "AC-4", "p": "Sẽ không đổi cách chuẩn hoá của ai khi đề xuất chưa được duyệt."},
+    {"id": "AC-5", "p": "Sẽ cho chỉ quản trị sàn duyệt hay bỏ ở Cài đặt › Sàn › Từ điển; mỗi quyết định có nhật ký."},
+    {"id": "AC-6", "p": "Sẽ chuẩn hoá thẳng chữ đã duyệt ở mọi lần nhập sau, cả ở bước xem trước lẫn khi máy chủ ghi."},
+    {"id": "AC-7", "p": "Sẽ không đổi dữ liệu đã lưu của căn nào khi duyệt hay bỏ."},
+    {"id": "AC-8", "p": "Sẽ giữ từ điển của mỗi sàn trong sàn ấy; không nhận trường thông tin chủ nhà."},
+    {"id": "AC-9", "p": "Sẽ hiện sức khoẻ dữ liệu đầu màn Từ điển: đã gặp, đã neo, chờ duyệt, đã bỏ, số lần chọn."},
+    {"id": "AC-10", "p": "Sẽ từ chối đề xuất có dữ liệu cá nhân, quá dài, hay ghi đè nghĩa của cách gõ dựng sẵn (Hỏi-4)."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không làm ô nhận lead, sửa hàng loạt, API công cụ của sàn ở hàng này (Hỏi-2)."},
+    {"id": "OOS-2", "p": "Không bật «tự nhận khi ba người cùng chọn»."},
+    {"id": "OOS-3", "p": "Không dọn từ điển định kỳ bằng AI."},
+    {"id": "OOS-4", "p": "Không làm nội thất, pháp lý, tình trạng sử dụng — chưa có giá trị chuẩn."},
+    {"id": "OOS-5", "p": "Không làm lối mở Bảng hàng lọc căn lạ — ba trường này không có căn lạ."}
+  ],
+  "scope_plain": "Năm việc để ngoài hàng này:"
+}
