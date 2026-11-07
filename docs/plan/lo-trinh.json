@@ -2877,6 +2877,12 @@
       "cau_giao": "Bài kiểm «đường lõi mật khẩu đóng» thôi đếm tổng người dùng của cả cơ sở dữ liệu: nó chỉ xét người dùng mang đúng email mà đường đăng ký được thử, để chạy song song với các tệp kiểm khác không vỡ, và vẫn bắt được đường đăng ký lỡ mở lại.",
       "slug": "va-dong-duong-gui-ma-song-song",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
+    },
+    {
+      "ma": "ghim-lai-ban-that-qua-ci",
+      "cau_giao": "Thêm một lượt chạy bằng tay trên GitHub (environment production) ghim lại một hồ sơ nghiệm thu cần biến của bản thật: lấy chuỗi kết nối và khoá từ bí mật GitHub, chạy làn ghim lại cho đúng một hồ sơ trên nhánh của PR, đẩy dòng ghim về nhánh ấy; không in bí mật, không chạy bộ kiểm ghi nào trên bản thật; chủ kho chỉ bấm chạy và duyệt environment.",
+      "slug": "ghim-lai-ban-that-qua-ci",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     }
   ],
   "chan_troi": [
