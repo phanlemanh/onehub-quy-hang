@@ -10,8 +10,9 @@ import {
   lyDoCanDangMo,
   LY_DO_DOI_GIA_DA_BAN,
   LY_DO_MA_CAN_DA_CO,
+  thangNgay as luatThangNgay,
+  trangThaiGoc,
   validatePayload,
-  WINS_IMMEDIATELY,
   type EventType,
   type ListingEvent,
   type ListingState,
@@ -244,10 +245,13 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
   // Căn Đã bán không đổi giá (luật của lõi): cũng xét trước phép so phiên bản — máy giữ bản cũ nhận đúng lý do «đã bán».
   if (type === "price_changed" && kiemDoiGia(foldListing(events))) return { error: API_ERRORS.priceLockedClosed, reason: LY_DO_DOI_GIA_DA_BAN };
 
-  const thangNgay = type === "status_changed" && WINS_IMMEDIATELY.includes(payload.to as never);
+  // Thắng ngay (luật 10) chỉ cho lệnh ĐƯA căn vào Đang giao dịch / Đã bán: bản gốc của lệnh (trạng thái ở phiên bản lệnh
+  // khai) và bản hiện tại đều chưa ở đích — đổi nhãn tại chỗ hay lệnh soạn trên bản đã ở đích qua phép so như mọi lệnh
+  // (doi-nhan-so-phien-ban).
+  const hienTai = foldListing(events);
+  const thangNgay = type === "status_changed" && luatThangNgay(payload.to, trangThaiGoc(events, cmd.expectedVersion), hienTai.standardStatus);
   if (!thangNgay && cmd.expectedVersion !== version) return { error: API_ERRORS.versionConflict };
 
-  const hienTai = foldListing(events);
   if (type === "status_changed") {
     // «Thắng ngay» bỏ qua phép so phiên bản, KHÔNG bỏ qua bảng chuyển: xét trên trạng thái hiện tại của hàng.
     // Vào Đang bán: máy chủ luôn đếm ảnh thật của căn và đọc số tối thiểu của sàn (hàng 23) — mọi lối lên bảng qua đây.
