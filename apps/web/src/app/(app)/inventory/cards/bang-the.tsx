@@ -116,7 +116,7 @@ function BangThe({ san, an }: { san: string; an: boolean }) {
     count: dong.length,
     getScrollElement: () => cuon,
     estimateSize: (i) => uocLuongDong(dong[i]?.kind === "nhom" ? "nhom" : "can"),
-    // Khe ẩn (máy tính, hay hồ sơ đang mở) đo ra cao 0 — trả ước lượng để vòng đo không nuốt cả 5.000 dòng (React #185).
+    // Khe ẩn (máy tính, hay hồ sơ đang mở) đo ra cao 0 — trả ước lượng để vòng đo không nuốt cả 5.000 dòng (lỗi React số 185).
     measureElement: (el) => doCaoThe(el, uocLuongDong(dong[Number(el.getAttribute("data-index"))]?.kind === "nhom" ? "nhom" : "can")),
     overscan: 6,
     scrollMargin: le,
