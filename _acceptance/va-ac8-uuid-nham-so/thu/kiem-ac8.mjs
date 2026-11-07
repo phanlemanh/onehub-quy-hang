@@ -17,8 +17,10 @@ const GOC = path.resolve(DAY, "../../..");
 const TUONG_DOI = "packages/db/tests/du-lieu-mau-thap-tang.test.mjs";
 const TEP = path.join(GOC, TUONG_DOI);
 const URL_GOC = new URL(process.env.DATABASE_URL ?? "postgres://postgres:quyhang@localhost:5575/postgres");
-if (!["localhost", "127.0.0.1", "[::1]", "::1"].includes(URL_GOC.hostname)) {
-  console.error(`từ chối: DATABASE_URL trỏ máy chủ «${URL_GOC.hostname}» — bài đo tạo và xoá cơ sở dữ liệu, chỉ chạy trên máy cục bộ`);
+// Thư viện pg lấy tham số «?host=» / «?hostaddr=» làm máy chủ thật, đè phần host của URL — nên từ chối luôn hai tham số ấy.
+const thamSoHost = ["host", "hostaddr"].filter((k) => URL_GOC.searchParams.has(k));
+if (thamSoHost.length || !["localhost", "127.0.0.1", "[::1]", "::1"].includes(URL_GOC.hostname)) {
+  console.error(`từ chối: DATABASE_URL trỏ máy chủ «${thamSoHost.length ? thamSoHost.map((k) => `${k}=${URL_GOC.searchParams.get(k)}`).join(", ") : URL_GOC.hostname}» — bài đo tạo và xoá cơ sở dữ liệu, chỉ chạy trên máy cục bộ`);
   process.exit(2);
 }
 const urlCua = (ten) => {
@@ -129,6 +131,10 @@ try {
     const d = spawnSync("git", ["diff", "--name-only", sha, "--", "packages/db/seed"], { cwd: GOC, encoding: "utf8" });
     if (d.status !== 0) throw new Error(`git diff lỗi: ${d.stderr.trim()}`);
     if (d.stdout.trim()) loi.push(`bộ dữ liệu mẫu đổi so với ${sha.slice(0, 8)}: ${d.stdout.trim().split("\n").join(", ")}`);
+    // git diff không thấy tệp mới chưa theo dõi — đếm riêng, kể cả tệp bị .gitignore bỏ qua thì không tính.
+    const moi = spawnSync("git", ["ls-files", "--others", "--exclude-standard", "--", "packages/db/seed"], { cwd: GOC, encoding: "utf8" });
+    if (moi.status !== 0) throw new Error(`git ls-files lỗi: ${moi.stderr.trim()}`);
+    if (moi.stdout.trim()) loi.push(`bộ dữ liệu mẫu có tệp mới chưa theo dõi: ${moi.stdout.trim().split("\n").join(", ")}`);
     const cu = spawnSync("git", ["show", `${sha}:${TUONG_DOI}`], { cwd: GOC, encoding: "utf8", maxBuffer: 1 << 26 });
     if (cu.status !== 0) throw new Error(`không rút được ${TUONG_DOI} tại ${sha}`);
     const nay = readFileSync(TEP, "utf8");
