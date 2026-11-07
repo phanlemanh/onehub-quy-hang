@@ -179,6 +179,7 @@ evals:
     target: "http://localhost:3491/settings/templates"
     preconditions:
       - "Postgres dãy L (5571), máy chủ dev ở cổng của executors.ui-check. Dựng dữ liệu qua máy chủ đang chạy: Quản trị đăng nhập; sàn có ba căn đang bán"
+      - "Đăng nhập: sàn mẫu «[Mẫu] Sàn thử» đã nạp bằng packages/db/seed/nap.mjs --nap (tài khoản quan-tri@mau.quy-hang.test, dau-chu-1@mau.quy-hang.test, dau-khach@mau.quy-hang.test); xin mã ở màn đăng nhập rồi đọc mã dev ở dòng «[ma-dang-nhap] <email> <mã>» cuối tệp .acceptance-runs/web-L.log (nhật ký máy chủ dev cổng 3491)"
     steps:
       - "Mở Cài đặt › Sàn: menu có mục «Mẫu»; mở mục: ba tab «Mẫu nhập» · «Mẫu bảng hàng» · «Mẫu bài»; tab Mẫu nhập như hàng 50"
       - "Tab Mẫu bảng hàng khi chưa có mẫu: thấy «Sàn chưa có mẫu bảng hàng — xuất đang theo góc nhìn đang mở.» và nút «Thêm mẫu»"

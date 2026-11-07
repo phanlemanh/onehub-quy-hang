@@ -14,3 +14,11 @@ export async function docMauXuat(goi: GoiDoc): Promise<MauXuatSan> {
   };
 }
 
+
+/**
+ * Mở hộp Xuất kèm mẫu: đọc mẫu đúng MỘT lần (hai lời gọi, mỗi loại một) rồi gắn bản chụp vào dữ liệu mở hộp. Hộp chỉ đọc
+ * `mo.mauSan` — mẫu đổi ở máy chủ khi hộp đang mở không tới hộp ấy; lần mở sau đọc lại.
+ */
+export async function moHopVoiMau<T extends object>(coDinh: T, goi: GoiDoc): Promise<T & { mauSan: MauXuatSan }> {
+  return { ...coDinh, mauSan: structuredClone(await docMauXuat(goi)) };
+}

@@ -9,7 +9,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { docTep } from "@/lib/nhap/doc-tep";
 import { banXuatTuDong } from "./chuyen-dong";
 import { CotTheo, tuyChonXuat, type MoXuat } from "./hop-thoai";
-import { docMauXuat } from "../mau-xuat-san";
+import { readFileSync } from "node:fs";
+import { docMauXuat, moHopVoiMau } from "../mau-xuat-san";
 import { CAU_LOI_MAU, cotCuaMau, GOC_NHIN, luaChonCotTheo, type MauXuatSan } from "./mau";
 import { dongMoi, MOI_COT, TODAY } from "./moi-xuat.test-helpers";
 import { chuDeVe } from "./ve-anh";
@@ -74,11 +75,24 @@ test("năm kiểu xuất theo mẫu", async () => {
   assert.equal(dem, 5);
 });
 
-test("hộp đang mở giữ bộ mẫu lúc mở", () => {
-  const luc = mo(SAN);
-  const moi: MauXuatSan = { mauBang: [{ ...MAU[0]!, cot: ["livingArea"] }], mauBai: {} };
-  // Hộp dựng từ `mo.mauSan` của lúc mở: bộ mới chỉ tới ở lần mở sau.
-  assert.deepEqual(ban(luc, luc.mauSan!, ID(1), "xlsx").cot, ["Mã căn", "Giá", "Diện tích"], "hộp đang mở đổi theo mẫu mới");
-  const moLai = mo(moi);
-  assert.deepEqual(ban(moLai, moLai.mauSan!, ID(1), "xlsx").cot, ["Diện tích"], "mở lại phải theo bộ mới");
+test("hộp đang mở giữ bộ mẫu lúc mở", async () => {
+  // Máy chủ giả: đếm lời gọi, trả bộ mẫu hiện hành — đổi được giữa chừng.
+  let bo: MauBang[] = MAU;
+  const goi: string[] = [];
+  const mayChu = async (duong: string) => {
+    goi.push(duong);
+    return { status: 200, body: { templates: duong.endsWith("export") ? bo : {} } };
+  };
+  const coDinh = { dong: [dongMoi(canMoi())], cot: MOI_COT, today: TODAY, tenSan: "[Tên sàn]", tenNguoiGui: "" };
+  const luc = await moHopVoiMau(coDinh, mayChu);
+  assert.deepEqual(goi, ["/api/v1/company/templates/export", "/api/v1/company/templates/posts"], "mở hộp phải đọc mẫu đúng một lần");
+  // Quản trị đổi mẫu khi hộp đang mở: bản hộp đang giữ không đổi theo.
+  bo = [{ ...MAU[0]!, cot: ["livingArea"] }];
+  assert.deepEqual(ban(luc, luc.mauSan, ID(1), "xlsx").cot, ["Mã căn", "Giá", "Diện tích"], "hộp đang mở đổi theo mẫu mới");
+  assert.equal(goi.length, 2, "hộp đang mở lại gọi đọc mẫu");
+  const moLai = await moHopVoiMau(coDinh, mayChu);
+  assert.deepEqual(ban(moLai, moLai.mauSan, ID(1), "xlsx").cot, ["Diện tích"], "mở lại phải theo bộ mới");
+  // Hộp không tự đọc mẫu: mã nguồn hộp không gọi bộ đọc hay đường mẫu.
+  const ma = readFileSync(new URL("./hop-thoai.tsx", import.meta.url), "utf8");
+  assert.ok(!/docMauXuat|moHopVoiMau|\/templates\//.test(ma), "hộp Xuất tự đọc mẫu thay vì nhận bản lúc mở");
 });
