@@ -7,7 +7,7 @@ import { CHO_LINK, soanTin } from "@quy-hang/core/sharing";
 import { mauZaloTu, tinDangDung, tinMacDinh } from "./gui";
 
 const HOM_NAY = "2026-11-07";
-const MAU = { dau: "Hàng mới tuần này", cuoi: "Cần thêm căn cứ nhắn em" };
+const MAU = { opening: "Hàng mới tuần này", closing: "Cần thêm căn cứ nhắn em" };
 const ban = (nguoiNhan: NguoiNhan) => [banRaNgoai(canMoi(), { cua: "gui_link", nguoiNhan, today: HOM_NAY })];
 
 test("Gửi: ma trận mẫu Zalo × người nhận", () => {
@@ -25,7 +25,7 @@ test("Gửi: ma trận mẫu Zalo × người nhận", () => {
       const cu = soanTin({ ban: ban(nguoiNhan), nguoiNhan, tenKhach });
       if (ca === "có mẫu") {
         const dong = cu.split("\n");
-        const mong = [dong[0], MAU.dau, ...dong.slice(1), MAU.cuoi].join("\n");
+        const mong = [dong[0], MAU.opening, ...dong.slice(1), MAU.closing].join("\n");
         assert.equal(tin, mong, `màn Gửi không theo mẫu Zalo — ${ca} · ${nguoiNhan}`);
       } else assert.equal(tin, cu, `tin phải như cũ — ${ca} · ${nguoiNhan}`);
       dem++;
@@ -37,8 +37,8 @@ test("Gửi: ma trận mẫu Zalo × người nhận", () => {
 
 test("Gửi: đổi mẫu rồi dựng lại thì theo bản mới; ô tin sửa được", () => {
   const truoc = tinMacDinh({ ban: ban("nhom_moi_gioi"), nguoiNhan: "nhom_moi_gioi", tenKhach: null, mauZalo: mauZaloTu({ templates: { zalo: MAU } }) });
-  const sau = tinMacDinh({ ban: ban("nhom_moi_gioi"), nguoiNhan: "nhom_moi_gioi", tenKhach: null, mauZalo: mauZaloTu({ templates: { zalo: { dau: "Lời mới", cuoi: "" } } }) });
-  assert.ok(truoc.includes(MAU.dau) && sau.includes("Lời mới") && !sau.includes(MAU.dau), "màn Gửi giữ mẫu cũ");
+  const sau = tinMacDinh({ ban: ban("nhom_moi_gioi"), nguoiNhan: "nhom_moi_gioi", tenKhach: null, mauZalo: mauZaloTu({ templates: { zalo: { opening: "Lời mới", closing: "" } } }) });
+  assert.ok(truoc.includes(MAU.opening) && sau.includes("Lời mới") && !sau.includes(MAU.opening), "màn Gửi giữ mẫu cũ");
   // Ô tin: người gửi gõ thêm chữ → tin dùng là bản đã sửa, vẫn có chỗ link.
   const sua = { khoa: "k1", tin: `${truoc}\nThêm một dòng` };
   const dung = tinDangDung(sua, "k1", truoc);

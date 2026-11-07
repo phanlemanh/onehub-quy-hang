@@ -14,8 +14,8 @@ import { CHU_MAU, doiCho, loiO, sauKhiLuuMau, thanPutBai, xemTruocBai } from "./
 
 const ID = (i: number) => `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`;
 const hai: MauBang[] = [
-  { id: ID(1), ten: "[Tên] gửi đội", cot: ["livingArea", "unitNumber", "listPrice"] },
-  { id: ID(2), ten: "[Tên] gửi khách", cot: ["buildingName", "listPrice"] },
+  { id: ID(1), name: "[Tên] gửi đội", columns: ["livingArea", "unitNumber", "listPrice"] },
+  { id: ID(2), name: "[Tên] gửi khách", columns: ["buildingName", "listPrice"] },
 ];
 const xong = <T,>(giaTri: T) => ({ kieu: "xong" as const, giaTri });
 const khong = () => {};
@@ -23,9 +23,9 @@ const khong = () => {};
 test("mẫu bảng: danh sách đúng tên và cột theo thứ tự", () => {
   const html = renderToStaticMarkup(h(BangMauBang, { tt: xong(hai), lamMoi: khong }));
   for (const m of hai) {
-    assert.ok(html.includes(m.ten), `thiếu mẫu ${m.ten}`);
-    const cot = m.cot.map((c) => ({ livingArea: "Diện tích", unitNumber: "Mã căn", listPrice: "Giá", buildingName: "Toà" })[c as string]!).join(" · ");
-    assert.ok(html.includes(cot), `cột của «${m.ten}» lệch thứ tự: cần «${cot}»`);
+    assert.ok(html.includes(m.name), `thiếu mẫu ${m.name}`);
+    const cot = m.columns.map((c) => ({ livingArea: "Diện tích", unitNumber: "Mã căn", listPrice: "Giá", buildingName: "Toà" })[c as string]!).join(" · ");
+    assert.ok(html.includes(cot), `cột của «${m.name}» lệch thứ tự: cần «${cot}»`);
   }
 });
 
@@ -45,9 +45,9 @@ test("mẫu bảng: nút lên, xuống xếp cột", () => {
 });
 
 test("mẫu bài: về mặc định bỏ khoá, xem trước, biên 500", () => {
-  const mau = { zalo: { dau: "D", cuoi: "C" }, facebook: { dau: "F", cuoi: "" } };
+  const mau = { zalo: { opening: "D", closing: "C" }, facebook: { opening: "F", closing: "" } };
   assert.deepEqual(thanPutBai(mau, "facebook", null), { templates: { zalo: mau.zalo } }, "về mặc định còn để kênh rỗng");
-  assert.deepEqual(thanPutBai(mau, "zalo", { dau: "D2", cuoi: "" }), { templates: { zalo: { dau: "D2", cuoi: "" }, facebook: mau.facebook } });
+  assert.deepEqual(thanPutBai(mau, "zalo", { opening: "D2", closing: "" }), { templates: { zalo: { opening: "D2", closing: "" }, facebook: mau.facebook } });
   const c = { buildingName: "[Tên] Toà A", unitNumber: "A-12.05", livingArea: 68.5, bedroomsTotal: 2, listPrice: 3_250_000_000, standardStatus: "Active", photos: [] };
   const bang = xuatBang([c, { ...c, unitNumber: "A-08.02", livingArea: 55, bedroomsTotal: 1, listPrice: 2_100_000_000 }] as unknown as CanNoiBo[], {
     mau: "xlsx",
@@ -56,9 +56,9 @@ test("mẫu bài: về mặc định bỏ khoá, xem trước, biên 500", () =>
     today: "2026-11-07",
     tenSan: "[Tên sàn]",
   });
-  assert.equal(xemTruocBai("zalo", { dau: "D", cuoi: "C" }), bocBai(baiZalo(bang), { dau: "D", cuoi: "C" }));
-  assert.equal(xemTruocBai("facebook", { dau: "D", cuoi: "C" }), baiFacebook(bang, "[Tên sàn]", { dau: "D", cuoi: "C" }));
-  assert.ok(xemTruocBai("zalo", { dau: "D", cuoi: "C" }).startsWith("D\n"), "xem trước thiếu lời mở đầu");
+  assert.equal(xemTruocBai("zalo", { opening: "D", closing: "C" }), bocBai(baiZalo(bang), { opening: "D", closing: "C" }));
+  assert.equal(xemTruocBai("facebook", { opening: "D", closing: "C" }), baiFacebook(bang, "[Tên sàn]", { opening: "D", closing: "C" }));
+  assert.ok(xemTruocBai("zalo", { opening: "D", closing: "C" }).startsWith("D\n"), "xem trước thiếu lời mở đầu");
   assert.equal(loiO("a".repeat(500)), null, "đối chứng: 500 ký tự đúng biên");
   assert.equal(loiO("a".repeat(501)), CHU_MAU.toiDa);
 });

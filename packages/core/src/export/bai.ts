@@ -58,5 +58,5 @@ export function baiZalo(bang: BangChoBai): string {
 export function baiFacebook(bang: BangChoBai, tenSan: string, loi?: LoiMauBai): string {
   const khoi = bang.dong.map((d) => manhCuaDong(bang, d).join("\n"));
   const lai = (x: string | undefined) => (x ? x.split("\n").map(sach).join("\n").trim() : "");
-  return [sach(tenSan), lai(loi?.dau), ...khoi, lai(loi?.cuoi)].filter((p) => p !== "").join("\n\n");
+  return [sach(tenSan), lai(loi?.opening), ...khoi, lai(loi?.closing)].filter((p) => p !== "").join("\n\n");
 }

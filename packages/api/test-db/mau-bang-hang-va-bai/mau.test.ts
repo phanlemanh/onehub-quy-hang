@@ -52,7 +52,7 @@ type San = Awaited<ReturnType<typeof sanMoi>>;
 
 const BANG_DUONG = "/api/v1/company/templates/export";
 const BAI_DUONG = "/api/v1/company/templates/posts";
-const mau = (ten: string, cot: string[], id = randomUUID()): MauBang => ({ id, ten, cot: cot as CotBangHang[] });
+const mau = (ten: string, cot: string[], id = randomUUID()): MauBang => ({ id, name: ten, columns: cot as CotBangHang[] });
 async function docBang(cookie: string) {
   const r = await send("GET", BANG_DUONG, undefined, cookie);
   assert.equal(r.status, 200, await r.clone().text());
@@ -61,7 +61,7 @@ async function docBang(cookie: string) {
 async function docBai(cookie: string) {
   const r = await send("GET", BAI_DUONG, undefined, cookie);
   assert.equal(r.status, 200, await r.clone().text());
-  return (await r.json()) as { templates: Record<string, { dau: string; cuoi: string }>; errors: string[] };
+  return (await r.json()) as { templates: Record<string, { opening: string; closing: string }>; errors: string[] };
 }
 const ghiBang = (s: San, templates: unknown, cookie = s.quanTri.cookie) => send("PUT", BANG_DUONG, { templates }, cookie);
 const ghiBai = (s: San, templates: unknown, cookie = s.quanTri.cookie) => send("PUT", BAI_DUONG, { templates }, cookie);
@@ -71,9 +71,9 @@ test("mẫu bảng: thêm, sửa, xoá", async () => {
   const a = mau("[Tên] gửi đội", ["unitNumber", "listPrice", "livingArea"]);
   assert.equal((await ghiBang(s, [a])).status, 200);
   assert.deepEqual((await docBang(s.dauChu.cookie)).templates, [a], "đọc lại sau khi thêm");
-  const sua = { ...a, ten: "[Tên] gửi nhóm", cot: ["livingArea", "unitNumber", "listPrice"] as CotBangHang[] };
+  const sua = { ...a, name: "[Tên] gửi nhóm", columns: ["livingArea", "unitNumber", "listPrice"] as CotBangHang[] };
   assert.equal((await ghiBang(s, [sua])).status, 200);
-  assert.deepEqual((await docBang(s.dauChu.cookie)).templates.map((m) => [m.id, m.ten, m.cot]), [[a.id, sua.ten, sua.cot]], "thứ tự cột của mẫu không giữ");
+  assert.deepEqual((await docBang(s.dauChu.cookie)).templates.map((m) => [m.id, m.name, m.columns]), [[a.id, sua.name, sua.columns]], "thứ tự cột của mẫu không giữ");
   assert.equal((await ghiBang(s, [])).status, 200);
   assert.deepEqual((await docBang(s.dauChu.cookie)).templates.map((m) => m.id), [], "mẫu đã xoá vẫn còn");
   const dong = await appPool.query("select count(*)::int n from company_settings where company_id = $1 and key = 'export.templates'", [s.companyId]);
@@ -86,11 +86,11 @@ test("mẫu bảng: sai khuôn bị từ chối", async () => {
   const r = await ghiBang(s, [mau("Đúng", ["listPrice"]), mau("Sai", ["listPrice", "holderName"])]);
   assert.equal(r.status, 400);
   const loi = (await r.json()) as { reason?: unknown };
-  assert.ok(typeof loi.reason === "string" && loi.reason.includes("export.templates[1].cot") && loi.reason.includes("holderName"), `lý do: ${loi.reason}`);
+  assert.ok(typeof loi.reason === "string" && loi.reason.includes("export.templates[1].columns") && loi.reason.includes("holderName"), `lý do: ${loi.reason}`);
   assert.deepEqual((await docBang(s.dauChu.cookie)).templates, truoc, "lần lưu bị từ chối vẫn ghi một phần");
   const BANG: [string, unknown, string][] = [
-    ["tên trùng", [mau("[Tên] A", ["listPrice"]), mau(" [tên] a ", ["listPrice"])], "export.templates[1].ten"],
-    ["không cột", [mau("A", [])], "export.templates[0].cot"],
+    ["tên trùng", [mau("[Tên] A", ["listPrice"]), mau(" [tên] a ", ["listPrice"])], "export.templates[1].name"],
+    ["không cột", [mau("A", [])], "export.templates[0].columns"],
     ["21 mẫu", Array.from({ length: 21 }, (_, i) => mau(`M${i}`, ["listPrice"])), "export.templates"],
   ];
   let dem = 0;
@@ -106,14 +106,14 @@ test("mẫu bảng: sai khuôn bị từ chối", async () => {
 
 test("mẫu bài: lưu và về mặc định", async () => {
   const s = await sanMoi("bai");
-  const hai = { zalo: { dau: "[Tên sàn] gửi nhóm", cuoi: "Gọi em" }, facebook: { dau: "Bảng hàng tuần", cuoi: "Hẹn xem nhà" } };
+  const hai = { zalo: { opening: "[Tên sàn] gửi nhóm", closing: "Gọi em" }, facebook: { opening: "Bảng hàng tuần", closing: "Hẹn xem nhà" } };
   assert.equal((await ghiBai(s, hai)).status, 200);
   assert.deepEqual((await docBai(s.dauKhach.cookie)).templates, hai);
   assert.equal((await ghiBai(s, { zalo: hai.zalo })).status, 200);
   assert.deepEqual((await docBai(s.dauKhach.cookie)).templates, { zalo: hai.zalo }, "về mặc định phải bỏ kênh, giữ kênh kia");
   const BANG: [string, unknown, string][] = [
-    ["501 ký tự", { zalo: { dau: "a".repeat(501), cuoi: "" } }, "share.post_templates.zalo.dau"],
-    ["kênh lạ", { tiktok: { dau: "a", cuoi: "" } }, "share.post_templates.tiktok"],
+    ["501 ký tự", { zalo: { opening: "a".repeat(501), closing: "" } }, "share.post_templates.zalo.opening"],
+    ["kênh lạ", { tiktok: { opening: "a", closing: "" } }, "share.post_templates.tiktok"],
     ["không phải đối tượng", [1], "share.post_templates"],
   ];
   let dem = 0;
@@ -125,7 +125,7 @@ test("mẫu bài: lưu và về mặc định", async () => {
     dem++;
   }
   assert.equal(dem, 3);
-  assert.equal((await ghiBai(s, { zalo: { dau: "a".repeat(500), cuoi: "" } })).status, 200, "đối chứng: 500 ký tự đúng biên");
+  assert.equal((await ghiBai(s, { zalo: { opening: "a".repeat(500), closing: "" } })).status, 200, "đối chứng: 500 ký tự đúng biên");
 });
 
 test("mẫu: quyền và cách ly", async () => {
@@ -171,9 +171,9 @@ test("Xuất: Đầu chủ đọc mẫu của sàn", async () => {
   const hai = [mau("[Tên] một", ["unitNumber", "listPrice", "livingArea"]), mau("[Tên] hai", ["livingArea"])];
   assert.equal((await ghiBang(s, hai)).status, 200);
   const doc = (await docBang(s.dauChu.cookie)).templates;
-  assert.deepEqual(doc.map((m) => [m.ten, m.cot]), hai.map((m) => [m.ten, m.cot]), "thứ tự mẫu không giữ");
-  const ban = xuatBang([canMoi()], { mau: "xlsx", nguoiNhan: "khach_rieng", cot: doc[0]!.cot, today: "2026-11-07", tenSan: "[Tên sàn]" });
-  assert.deepEqual(ban.cot, cotRa(doc[0]!.cot, "khach_rieng", CAU_HINH_MAC_DINH).ra.map((c) => c.nhan));
+  assert.deepEqual(doc.map((m) => [m.name, m.columns]), hai.map((m) => [m.name, m.columns]), "thứ tự mẫu không giữ");
+  const ban = xuatBang([canMoi()], { mau: "xlsx", nguoiNhan: "khach_rieng", cot: doc[0]!.columns, today: "2026-11-07", tenSan: "[Tên sàn]" });
+  assert.deepEqual(ban.cot, cotRa(doc[0]!.columns, "khach_rieng", CAU_HINH_MAC_DINH).ra.map((c) => c.nhan));
   assert.equal(ban.khoa[0], "floorBand", "khách riêng: mã căn thành nấc tầng");
 });
 
@@ -181,12 +181,12 @@ test("Gửi: tin mang mẫu Zalo", async () => {
   const s = await sanMoi("gui");
   const b = await sanMoi("gui-b");
   assert.deepEqual((await docBai(s.dauKhach.cookie)).templates, {}, "đối chứng: sàn chưa đặt mẫu");
-  assert.equal((await ghiBai(b, { zalo: { dau: "Của sàn B", cuoi: "" } })).status, 200);
+  assert.equal((await ghiBai(b, { zalo: { opening: "Của sàn B", closing: "" } })).status, 200);
   const D = "Hàng mới tuần này";
   const C = "Cần thêm căn cứ nhắn em";
-  assert.equal((await ghiBai(s, { zalo: { dau: D, cuoi: C } })).status, 200);
+  assert.equal((await ghiBai(s, { zalo: { opening: D, closing: C } })).status, 200);
   const mauZalo = (await docBai(s.dauKhach.cookie)).templates.zalo;
-  assert.deepEqual(mauZalo, { dau: D, cuoi: C }, "tin mang mẫu sàn khác");
+  assert.deepEqual(mauZalo, { opening: D, closing: C }, "tin mang mẫu sàn khác");
   const tin = soanTin({ ban: [], nguoiNhan: "nhom_moi_gioi", mauZalo });
   assert.ok(tin.indexOf(D) < tin.indexOf("Em gửi") && tin.indexOf(C) > tin.indexOf(CHO_LINK), tin);
 });
@@ -214,7 +214,7 @@ async function canDangBan(cookie: string) {
 test("mẫu: hiệu lực lần sau", async () => {
   const s = await sanMoi("lan-sau");
   assert.equal((await ghiBang(s, [mau("[Tên] cũ", ["listPrice"])])).status, 200);
-  assert.equal((await ghiBai(s, { zalo: { dau: "Cũ", cuoi: "" } })).status, 200);
+  assert.equal((await ghiBai(s, { zalo: { opening: "Cũ", closing: "" } })).status, 200);
   const ids = [await canDangBan(s.dauChu.cookie)];
   const tao = await send("POST", "/api/v1/shares", { audience: "agents", prospectId: null, listingIds: ids }, s.dauKhach.cookie);
   assert.equal(tao.status, 201, await tao.clone().text());
@@ -232,9 +232,9 @@ test("mẫu: hiệu lực lần sau", async () => {
   const truocXuat = await dongXuat();
   const moi = mau("[Tên] mới", ["livingArea", "unitNumber"]);
   assert.equal((await ghiBang(s, [moi])).status, 200);
-  assert.equal((await ghiBai(s, { zalo: { dau: "Mới", cuoi: "Kết" } })).status, 200);
+  assert.equal((await ghiBai(s, { zalo: { opening: "Mới", closing: "Kết" } })).status, 200);
   assert.deepEqual((await docBang(s.dauChu.cookie)).templates, [moi], "lần kế không đọc bản mới");
-  assert.deepEqual((await docBai(s.dauKhach.cookie)).templates, { zalo: { dau: "Mới", cuoi: "Kết" } });
+  assert.deepEqual((await docBai(s.dauKhach.cookie)).templates, { zalo: { opening: "Mới", closing: "Kết" } });
   assert.equal((await ghiBang(s, [])).status, 200);
   assert.deepEqual(await moCong(), truocCong, "Lần gửi cũ đổi theo mẫu");
   assert.deepEqual(await dongXuat(), truocXuat, "lần xuất cũ đổi theo mẫu");
@@ -248,9 +248,9 @@ test("mẫu ghi thẳng mang cột nội bộ", async () => {
     [s.companyId, JSON.stringify([{ id: randomUUID(), ten: "[Tên] ghi thẳng", cot: ["listPrice", "holderName", "closePrice"] }]), s.dauChu.userId],
   );
   const doc = await docBang(s.dauChu.cookie);
-  assert.deepEqual(doc.templates.map((m) => m.cot), [["listPrice"]], "cột nội bộ ra khỏi kho mẫu");
+  assert.deepEqual(doc.templates.map((m) => m.columns), [["listPrice"]], "cột nội bộ ra khỏi kho mẫu");
   assert.ok(doc.errors.some((e) => e.startsWith("export.templates")), `errors: ${doc.errors.join(" | ")}`);
   const moi = giaTriMoi(canMoi(), "nhom_moi_gioi", CAU_HINH_MAC_DINH);
-  const ban = xuatBang([canMoi()], { mau: "post_zalo", nguoiNhan: "nhom_moi_gioi", cot: doc.templates[0]!.cot, today: "2026-11-07", tenSan: "[Tên sàn]" });
+  const ban = xuatBang([canMoi()], { mau: "post_zalo", nguoiNhan: "nhom_moi_gioi", cot: doc.templates[0]!.columns, today: "2026-11-07", tenSan: "[Tên sàn]" });
   assert.deepEqual(timRoRi(JSON.stringify({ cot: ban.cot, dong: ban.dong, bai: ban.bai }), moi), [], "chuỗi mồi lọt");
 });
