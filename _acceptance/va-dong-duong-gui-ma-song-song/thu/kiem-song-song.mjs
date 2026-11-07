@@ -86,7 +86,7 @@ try {
       else if (!truoc.out.includes(THONG_DIEP)) loi.push(`bản trước hàng đỏ sai thông điệp: ${dongLoi(truoc.out)}`);
     }
   } else if (ca === "dang-ky-tao") {
-    if (!/authPost\(auth,\s*BANG_LOI\.signUpEmail\[0\]!?,\s*\{\s*email:\s*emailMoi\b/.test(nguonCay))
+    if (!/authPost\(auth,\s*BANG_LOI\.signUpEmail!?\[0\]!?,\s*\{\s*email:\s*emailMoi\b/.test(nguonCay))
       loi.push("lời gọi email mới không đi đường đăng ký của bảng lõi");
     if (!nguonCay.includes('assert.equal(emailMoi, emailMoi.trim().toLowerCase(), "email thử chưa ở dạng chuẩn")'))
       loi.push("mất khẳng định dạng chuẩn");

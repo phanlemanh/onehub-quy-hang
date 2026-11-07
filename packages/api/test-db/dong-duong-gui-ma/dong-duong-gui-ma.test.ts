@@ -107,7 +107,7 @@ test("đường lõi mật khẩu đóng", async () => {
   }
   assert.equal(so, duong.length * 10, "số lần gọi phải bằng số đường × 10");
   for (let k = 1; k <= 10; k++) {
-    const res = await authPost(auth, BANG_LOI.signUpEmail[0]!, { email: emailMoi, password: "mưa rơi trên mái", name: "[Tên]" });
+    const res = await authPost(auth, BANG_LOI.signUpEmail![0]!, { email: emailMoi, password: "mưa rơi trên mái", name: "[Tên]" });
     assert.equal(res.status, 404, `đăng ký email mới lần ${k} trả ${res.status}`);
   }
   assert.equal(sent.length, 0, "đường lõi đã tắt vẫn gửi thư");
