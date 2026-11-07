@@ -1,10 +1,1 @@
-{"feature_plain":"Đưa thước đo của hai hồ sơ đã ký về đúng bước triển khai mới: bài kiểm CI của hồ sơ môi trường thật đo «chờ bộ cách ly trên CSDL tạm, cập nhật cấu trúc, kiểm nhanh, rồi mới gọi Vercel»; hai phép đo bước cũ thôi chạy và trỏ sang tiêu chí đã ký đo lại chúng.",
-"will_do":[
-{"id":"AC-1","p":"Sẽ cho bài kiểm CI của hồ sơ môi trường thật đo đúng bước triển khai mới, giữ đủ tám vế."},
-{"id":"AC-2","p":"Sẽ làm bài kiểm ấy đỏ đúng chỗ khi job triển khai trôi về bước cũ."},
-{"id":"AC-4","p":"Sẽ giữ lưới trước gộp của hai hồ sơ cũ và hai hồ sơ thay đều sạch."}],
-"wont_do":[
-{"id":"AC-3","p":"Sẽ KHÔNG còn chạy hai phép đo bước cũ (bộ cách ly trên bản thật; thứ tự triển khai cũ) — mỗi phép trỏ sang tiêu chí đã ký đo lại nó."},
-{"id":"OOS-1","p":"KHÔNG mở lại hợp đồng đã ký của hồ sơ môi trường thật — vế cũ của AC-7 ghi ở Notes (Hỏi-2)."},
-{"id":"OOS-2","p":"KHÔNG sửa cấu hình bộ chạy «cách ly trên bản thật» — ô dùng nó thôi chạy."},
-{"id":"OOS-3","p":"KHÔNG sửa ADR-0009 và Tham chiếu — hàng adr-0009-csdl-tam."}]}
+{"feature_plain":"Phép đo «thứ tự triển khai cũ» của hồ sơ ràng buộc bản mã thôi chạy và trỏ sang tiêu chí đã ký đo đúng thứ tự mới (va-deploy-csdl-tam AC-3); hồ sơ ấy được ghim lại xanh. Phần hồ sơ môi trường thật tách sang hàng sau vì cần chuỗi kết nối bản thật."}
