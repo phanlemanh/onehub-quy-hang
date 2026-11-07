@@ -5,7 +5,7 @@ slug: va-bang-hang-hydration
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 approved_by:
 approved_at:
 veto_state: mo
@@ -67,3 +67,6 @@ bản vòng ở AC-1 (góc nhìn và mất mạng đo ở khổ máy tính — c
 
 - Đo hydration cần Postgres dãy D (container `quy-hang-db-dkn-D`, 5575/e11) và cổng 3585; lệnh tự nạp dữ liệu và giữ khoá
   đo chung của dãy D.
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Nếu còn một máy chủ cũ đang chạy, công cụ kiểm có thể báo sạch hoặc đỏ cho một bản mã mà nó không hề đo. Người dùng cuối không bị ảnh hưởng, chỉ kết quả nghiệm thu có thể sai trong tình huống hiếm này. — `_acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Khi phiên đăng nhập mẫu đã hết hạn, công cụ kiểm báo lỗi chung chung và giấu nguyên nhân thật, đồng thời tốn một lượt xin mã đăng nhập. Người dùng cuối không bị ảnh hưởng. — `_acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs`
+- Ngoài-4 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Ở khổ điện thoại, việc kiểm không chứng minh được rằng chỗ sửa danh sách thẻ có tác dụng, vì bản cũ cũng không báo lỗi ở đó. Nếu chỗ sửa này bị gỡ sau này, việc kiểm vẫn xanh. — `_acceptance/va-bang-hang-hydration/evals.yaml`

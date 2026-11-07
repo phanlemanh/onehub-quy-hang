@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 feature_slug: va-bang-hang-hydration
-verdict: REJECT
-failed_evals: ["E8"]
+verdict: PASS
+failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 6e923c533a94baf9a59ed028789e153fbb714f36
+verified_commit: 9b74925a5af85f8fb44cb24a4975ce10f74cb846
 human_signoff:
 ---
 
@@ -22,128 +22,116 @@ human_signoff:
 | E4 | AC-4 | script | PASS |
 | E5 | AC-4 | script | PASS |
 | E6 | AC-4 | test | PASS |
-| E7 | AC-4 | script | PASS |
-| E8 | AC-4 | script | FAIL |
-
-Lệnh fail không gắn eval nào: không có. Lệnh thất bại duy nhất là lệnh của E8 (design-floor S4, chặn mã màu thô): in «design-floor S4: hex thô apps/web/src/app/(app)/inventory/cards/bang-the.tsx:119 #185».
+| E7 | AC-4 | script | PASS (mang sang từ vòng 1) |
+| E8 | AC-4 | script | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-bang-hang-hydration-E1-r1
+  run_id: minted-va-bang-hang-hydration-E1-r2
   exit_code: 0
   baseline: n-a
-  verifier: _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
-  verified_at: 2026-11-07T22:18:30Z
+  verifier: node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
+  verified_at: 2026-11-07T22:22:17Z
+  output: |
+    hydration SẠCH: 0 lỗi hydration ở cả 6 ca; mất mạng vẫn hiện hàng trong 5 giây
+
+- eval: E1b
+  run_id: minted-va-bang-hang-hydration-E1b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
+  verified_at: 2026-11-07T22:22:17Z
   output: |
     hydration SẠCH: 0 lỗi hydration ở cả 6 ca; mất mạng vẫn hiện hàng trong 5 giây
 
 - eval: E2
-  run_id: minted-va-bang-hang-hydration-E2-r1
+  run_id: minted-va-bang-hang-hydration-E2-r2
   exit_code: 1
   baseline: n-a
-  verifier: _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
-  verified_at: 2026-11-07T22:18:30Z
+  verifier: node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs --sha a5682245
+  verified_at: 2026-11-07T22:22:17Z
   output: |
     hydration ĐỎ: 4 lỗi hydration trên Bảng hàng
-    (chạy với --sha a5682245; mã thoát 1 là kết quả đã khai trước của eval này)
-
-- eval: E1b
-  run_id: minted-va-bang-hang-hydration-E1b-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
-  verified_at: 2026-11-07T22:18:30Z
-  output: |
-    hydration SẠCH: 0 lỗi hydration ở cả 6 ca; mất mạng vẫn hiện hàng trong 5 giây
 
 - eval: E3
-  run_id: minted-va-bang-hang-hydration-E3-r1
+  run_id: minted-va-bang-hang-hydration-E3-r2
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-07T22:18:30Z
+  verifier: ui-check
+  verified_at: 2026-11-07T22:22:17Z
   screenshot: evidence/E3-may-tinh.png
   observed: |
-    E3-may-tinh.png (1440x900, sau tải lại): lưới Bảng hàng có hàng thật, nhóm Toà A → 1PN/2PN/3PN, các cột Toà/Mã căn/Loại căn/Diện tích/Tầng/Hướng/Trạng thái/Giá; dòng đếm trên thanh công cụ và chân bảng ghi «33 / 33 căn», khớp 33 hàng dung-d in cho dau-chu-1. Không có khung đang tải/skeleton. LƯU Ý: góc trái dưới ảnh có huy hiệu Next dev «1 Issue», khớp với một ngoại lệ console «Hydration failed because the server rendered HTML didn't match the client» thu ở khổ 1440 (ghi trong E3-network.txt). Expected của E3 không đòi 0 lỗi console, nhưng đây là dấu hiệu hydration vẫn còn lệch ở bản dev khổ máy tính, nên đáng người xem lại. E3-dien-thoai.png (375x812, sau tải lại): tiêu đề Bảng hàng, «19 căn», nhóm «Toà B · 11 căn» với thẻ căn B-03.04, B-15.05, B-13.02, B-14.06, B-15.01… (đếm DOM [data-the-can] = 11), mỗi thẻ có giá, diện tích, phòng ngủ, hướng; ảnh là ô giữ chỗ biểu tượng ảnh (ảnh chưa có), không có khung/skeleton đang tải. Điện thoại không có dòng «x / y căn» kiểu máy tính.
+    E3-may-tinh.png (1440x900, /inventory sau khi tải lại): tiêu đề «Bảng hàng», thanh công cụ có dòng đếm «33 / 33 căn», chân bảng cũng «33 / 33 căn». Lưới có hàng thật: nhóm Toà A (18 căn) → 1PN, 2PN, 3PN, các hàng A-13.01, A-11.01, A-15.04... với diện tích, tầng, hướng, trạng thái (Đang bán, Ngưng hẳn, Đã bán...), giá. Không có khung xương hay chữ đang tải. Khớp 33 hàng dung-d in cho dau-chu-1. E3-dien-thoai.png (375x812, sau khi tải lại): tiêu đề «Bảng hàng», «19 căn», nhóm «11 căn / TOÀ B», thẻ căn B-03.04 (5,35 tỷ), B-15.05, B-13.02, B-14.06, B-15.01 với diện tích, phòng ngủ, hướng. Ô ảnh thẻ hiện biểu tượng ảnh dự phòng (ảnh thumb mẫu trả 404), không phải khung đang tải; trong DOM không có skeleton, aria-busy hay animate-pulse. Điện thoại đếm 19 căn, khác 33 của máy tính; đề bài chỉ cần có thẻ căn nên không tính là lỗi, nhưng đáng ghi chú.
   network_observed: clean
-  output: |
-    Máy tính sau tải lại: dòng đếm «33 / 33 căn» khớp 33 hàng; không skeleton, không chữ «Đang tải».
-    Điện thoại sau tải lại: 11 thẻ căn, không skeleton, không «Đang tải».
-    Máy chủ dev đã tắt sau khi đo.
-    Frame: evidence/E3-may-tinh.png ; evidence/E3-dien-thoai.png ; mạng/console: evidence/E3-network.txt.
 
 - eval: E4
-  run_id: minted-va-bang-hang-hydration-E4-r1
+  run_id: minted-va-bang-hang-hydration-E4-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.typecheck
-  verified_at: 2026-11-07T22:18:30Z
-  output: |
-    npm run typecheck hoàn tất, không lỗi kiểu.
+  verified_at: 2026-11-07T22:22:17Z
 
 - eval: E5
-  run_id: minted-va-bang-hang-hydration-E5-r1
+  run_id: minted-va-bang-hang-hydration-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.lint
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
   output: |
     chuẩn giao diện: đạt
 
 - eval: E6
-  run_id: minted-va-bang-hang-hydration-E6-r1
+  run_id: minted-va-bang-hang-hydration-E6-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
   output: |
-    ℹ duration_ms 3818.482667
+    ℹ duration_ms 3731.607125
 
 - eval: E7
   run_id: minted-va-bang-hang-hydration-E7-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.khuon
   verified_at: 2026-11-07T22:18:30Z
-  output: |
-    2 tệp giao diện ngoài bản đồ
+  carried_from_round: 1
+  # carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E8
-  run_id: minted-va-bang-hang-hydration-E8-r1
-  exit_code: 2
-  baseline: green
+  run_id: minted-va-bang-hang-hydration-E8-r2
+  exit_code: 0
+  baseline: n-a
   verifier: config:executors.design.floor
-  verified_at: 2026-11-07T22:18:30Z
-  output: |
-    design-floor S4: hex thô apps/web/src/app/(app)/inventory/cards/bang-the.tsx:119 #185
+  verified_at: 2026-11-07T22:22:17Z
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-bang-hang-hydration-SUITE-test_hooks-r1
+  run_id: minted-va-bang-hang-hydration-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-bang-hang-hydration-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-07T22:18:30Z
+  verified_at: 2026-11-07T22:22:17Z
 
 ## Known limits
 
@@ -153,22 +141,19 @@ Lệnh fail không gắn eval nào: không có. Lệnh thất bại duy nhất l
 
 ## Analyst
 
-Eval không-phân-biệt (xanh cả trên bản cũ lẫn bản mới, chứng minh harness chứ không chứng minh tính năng; là regression-guard có chủ ý):
-- E4: npm run typecheck
-- E5: npm run lint
-- E6: npm test -w @quy-hang/web
-- E7: design-floor-khuon --kiem
+carried tu round 1 — baseline khong do lai round nay
 
-Baseline không đo:
-- node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs: bo qua baseline: tep _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs co o cay dang kiem nhung chua co o merge-base a56822457e764c421f5c2bc58bf0949e35f56c8f — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs --sha a5682245: bo qua baseline: tep _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs co o cay dang kiem nhung chua co o merge-base a56822457e764c421f5c2bc58bf0949e35f56c8f — eval moi, chay tren code cu khong phan biet gi
-
-Ghi chú cho người xem: E3 ghi nhận một ngoại lệ console hydration ở khổ máy tính trên bản dev, trong khi E1 đo 0 lỗi hydration ở cả 6 ca; nên đối chiếu hai kết quả này ở Cổng 2.
+Eval không phân biệt (xanh cả hai phía, hoặc chưa đo baseline), cần xác nhận là regression-guard có chủ ý:
+- npm run typecheck (E4)
+- npm run lint (E5)
+- npm test -w @quy-hang/web (E6)
+- bước chấm khuôn design-floor-khuon (E7)
 
 ## Variance
 
-none — mọi eval nhiều lần chạy đều đồng nhất (mọi eval chạy một lần, deterministic)
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E8 failed — design-floor S4 phát hiện mã màu thô #185 ở apps/web/src/app/(app)/inventory/cards/bang-the.tsx dòng 119. Returned to implementation.
+Round 1: E8 báo đỏ — sàn thiết kế đọc nhầm chú thích «#185» thành mã màu; hồ sơ lượt chấm 1 bị từ chối. Quay lại sửa chú thích.
+Round 2: mọi eval đạt; E7 mang sang từ vòng 1 vì thay đổi không chạm tệp của eval này; E2 đạt có giới hạn (mã thoát đã khai trước).
