@@ -5,10 +5,10 @@ slug: chan-trung-ten-gia-tri
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-07-chan-trung-ten-gia-tri-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-07T02:00:00Z
 ---
 
 # Acceptance Contract: chan-trung-ten-gia-tri

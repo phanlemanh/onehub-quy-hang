@@ -7,11 +7,11 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>12 việc"]
+  GD --> B["Sắp mở vòng<br/>11 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>100 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
@@ -26,7 +26,6 @@ flowchart TD
 
 - Đầu chủ mở bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và thấy cột, hồ sơ căn đúng trường của từng loại — không cột tầng, trục cho đất (`bang-hang-theo-loai-hinh`)
 - Hàng tạo được trên lô thấp tầng trong khu và trên nhà, đất ngoài khu định danh bằng địa chỉ chuẩn; căn ngoài khu là bản ghi của sàn, sàn khác không thấy, và hàng cũ gấp lại ra đúng như trước (`can-ngoai-khu`)
-- Cách gọi riêng: khi lưu tên riêng của một giá trị, chặn chữ trùng với tên đang hiện (tên riêng hoặc tên mặc định) của giá trị khác trong cùng tập đóng; quản trị thấy lý do ngay ở ô đang sửa, không có hai lựa chọn khác nghĩa mà cùng một chữ trên bảng hàng, ô lọc hay trang khách. (`chan-trung-ten-gia-tri`)
 - Đầu chủ gõ «dong nam», «bp», «Đang gd» ở ô bất kỳ và thấy máy gợi giá trị chuẩn; lựa chọn thành đề xuất từ điển của sàn; quản trị sàn duyệt và xem sức khoẻ dữ liệu (`chuan-hoa-moi-cua`)
 - Đầu chủ chụp ảnh khi đi xem nhà ngay trên điện thoại và ảnh vào đúng ngăn của căn, tải lên ở nền (`chup-anh-dien-thoai`)
 - Đầu chủ gõ mã căn, mở Bảng hàng hay hồ sơ căn và thấy thuộc tính căn đọc từ vùng danh mục dùng chung — danh mục đã nhận từ nguồn danh mục — thay cho gói mẫu cố định; căn chưa có vẫn đi đường mã ngoài danh mục (`doc-vung-danh-muc`)
@@ -36,6 +35,10 @@ flowchart TD
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Đầu chủ thấy ô máy không đọc được — giá dải, «thu về 4.2», trạng thái lạ — có đề xuất kèm lý do và chọn một chạm (`nhap-o-la`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
+
+## Đang làm
+
+- Cách gọi riêng chặn tên riêng của một giá trị trùng tên đang hiện (riêng hay mặc định) của giá trị khác cùng tập đóng, ở máy chủ và ngay ở ô đang sửa (`chan-trung-ten-gia-tri`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
