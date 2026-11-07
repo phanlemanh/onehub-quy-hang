@@ -30,8 +30,14 @@ import { doCaoThe, uocLuongDong } from "./do-the";
 import { DongNhomToa, TheCan } from "./the-can";
 import { batDauChon, doiChon, giuChonHopLe, lenThe, locNhuCau, NHU_CAU_RONG, nhomTheoToa, phang, theLoc, type NhuCau } from "./the";
 
+// Kho trên máy chỉ có ở trình duyệt: lượt dựng trên máy chủ và lượt hydrat đầu cùng thấy «chưa kéo» (khung đang tải) để
+// khỏi lệch hydration — dữ liệu trên máy hiện ngay lượt dựng sau (va-bang-hang-hydration, nếp của units/call/push/ep-gia.tsx).
+const khongDangKy = () => () => {};
+const RONG: never[] = [];
+
 function useDanhSachTrenMay() {
   const { bd } = useBoDongBo();
+  const oMay = useSyncExternalStore(khongDangKy, () => true, () => false);
   const dangKy = useCallback((f: () => void) => bd.dangKy(f), [bd]);
   const phienBan = useSyncExternalStore(dangKy, bd.phienBan, () => 0);
   const n = useMemo(() => {
@@ -44,6 +50,7 @@ function useDanhSachTrenMay() {
     void queue;
     return bd.danhSach();
   }, [bd, listings, queue]);
+  if (!oMay) return { hang: RONG, daKeo: false, loiMang: false, thuLai: () => void bd.thuNgay() };
   return { hang, daKeo: listings !== null, loiMang: lastAttempt === "mang", thuLai: () => void bd.thuNgay() };
 }
 
