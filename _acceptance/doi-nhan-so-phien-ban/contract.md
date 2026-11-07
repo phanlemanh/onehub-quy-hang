@@ -5,7 +5,7 @@ slug: doi-nhan-so-phien-ban
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, sdk]
-status: implemented
+status: machine-cleared
 approved_by:
 approved_at:
 veto_state: mo
@@ -93,3 +93,5 @@ D(nhập file): gửi đúng phiên bản hiện tại nên luật mới không 
 - Kiểm mã nhãn trên máy lúc ngoại tuyến (Ngoài khác của hàng 46, đã ghi Known limits).
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Một bài kiểm cho ca hai người cùng chốt một căn chưa chứng minh được là luật mới tạo ra khác biệt, vì luật cũ cũng từ chối lệnh đến sau. Hành vi người dùng thấy vẫn đúng: lệnh sau bị từ chối và căn giữ nguyên kết quả của lệnh đầu. — `packages/api/test-db/doi-nhan-so-phien-ban/doi-nhan.test.ts`
