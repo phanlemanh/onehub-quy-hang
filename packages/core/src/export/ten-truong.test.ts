@@ -43,6 +43,11 @@ test("ghi chặt: tên cũ, khoá lạ, mẫu lẫn bị từ chối, lý do nê
     dem++;
   }
   assert.equal(dem, 6);
+  // Khoá lạ trùng tên thuộc tính có sẵn của đối tượng: không gợi ý tên đúng nào.
+  for (const la of ["constructor", "toString"]) {
+    const kq = kiemMauBang([{ ...DUNG, [la]: 1 }]);
+    assert.ok(!kq.ok && kq.lyDo === `export.templates[0]: khoá lạ «${la}»`, `khoá «${la}»: ${kq.ok ? "lọt" : kq.lyDo}`);
+  }
   // Đối chứng dương: cùng thân, chỉ tên mới.
   assert.equal(kiemMauBang([DUNG, { id: ID(2), name: "B", columns: ["listPrice"] }]).ok, true);
   assert.equal(kiemMauBai({ zalo: { opening: "a", closing: "" }, facebook: { opening: "a", closing: "" } }).ok, true);
