@@ -1,0 +1,76 @@
+# Bộ đo của hàng vá va-bang-hang-e11-hieu-nang. Đo cặp: bản tốt 028f5636 ↔ bản xét, xen kẽ cùng tải, 3 cặp
+# (thu/kiem-e11.sh — dựng Postgres dãy D 5575/e11 và worktree đo dưới .acceptance-runs/ nếu thiếu).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: bash _acceptance/va-bang-hang-e11-hieu-nang/thu/kiem-e11.sh
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**", "_acceptance/va-bang-hang-e11-hieu-nang/thu/**"]
+    expected: "exit 0; dòng cuối «E11 cặp ĐẠT»; dòng trên in ba tỉ số, trung vị ≤ 1,2 và khung > 50 ms bản xét trung vị ≤ 1%. Đỏ in «E11 cặp ĐỎ: tỉ số trung vị <x> > 1,2» hay «E11 cặp ĐỎ: khung > 50 ms <y>% > 1%»; cặp không đo được in «chỉ <k>/3 cặp đo được» (exit 2). Chiều đỏ của cùng lệnh ở E2."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: E11_SHA=fbdad5ad519a5c154a0385f0c8d7f81ab4a59454 bash _acceptance/va-bang-hang-e11-hieu-nang/thu/kiem-e11.sh
+    expected_exit: 1
+    paths: ["_acceptance/va-bang-hang-e11-hieu-nang/thu/**"]
+    expected: "exit 1 với «E11 cặp ĐỎ: tỉ số trung vị <x> > 1,2» (x ≈ 1,9 theo chia đôi) — cùng lệnh, cùng máy đo với E1, chỉ đổi bản xét về nhánh chính trước vòng; exit 0 nghĩa là thước không phân biệt được bản chậm."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: script
+    cmd: E11_SHA=028f56366fb9e425239b7642b861e7ec0e35c078 bash _acceptance/va-bang-hang-e11-hieu-nang/thu/kiem-e11.sh
+    paths: ["_acceptance/va-bang-hang-e11-hieu-nang/thu/**"]
+    expected: "exit 0 với «E11 cặp ĐẠT» — đối chứng A/A: bản tốt so với chính nó, trung vị tỉ số trong 0,8–1,2 (gap-probe P1: thước không đỏ oan bản tốt). Đỏ ở đây nghĩa là ngưỡng nằm trong vùng nhiễu, không phải bản vòng chậm."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    question: "Trên Bảng hàng của bản build vòng này (sàn có nhiều căn; đọc N ở ô đếm «N / tổng căn»): (1) tích ô của một dòng — thanh hành động đếm 1? (2) cuộn xuống quá vài trăm dòng rồi cuộn về đầu — dòng ấy vẫn hiện đã tích? (3) bỏ tích — thanh về 0 hay ẩn? (4) bấm «Chọn hết» ở đầu cột — thanh đếm đúng N? (5) cuộn tới dòng thứ vài trăm — dòng ấy đã tích?"
+    expected: "Cả năm bước đúng; mỗi bước một ảnh evidence/E3-<bước>.png có thấy số trên thanh và N ở ô đếm."
+    evidence_required: [run_id, verifier, verified_at, screenshot]
+
+  - id: E3b
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/bulk/**"]
+    expected: "exit 0; có «✔ ô tích của dòng là React.memo» (bulk/thanh-memo.test.ts: OTich.$$typeof === Symbol.for('react.memo'); đỏ in «OTich không phải memo — mỗi khung cuộn vẽ lại Checkbox của mọi dòng»). Chiều đỏ: bỏ memo trong bản sao thì ca đỏ đúng thông điệp ấy — ghi trong sổ S3."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/**"]
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.lint
+    paths: ["apps/web/**", "design/patterns/**"]
+    expected: "exit 0; in «mức nợ giao diện: 0/0» và bài quét khuôn «0 lệch»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx", "apps/web/src/app/(app)/inventory/views/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

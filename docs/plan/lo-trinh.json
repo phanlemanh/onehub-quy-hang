@@ -2892,6 +2892,12 @@
         "packages/core/src/sharing/**",
         "apps/web/src/app/(app)/settings/templates/**"
       ]
+    },
+    {
+      "ma": "va-bang-hang-e11-hieu-nang",
+      "cau_giao": "Vá Bảng hàng chậm khi cuộn (E11): ô tích từng dòng của sửa hàng loạt (PR #60) làm dòng ảo dựng lại khi cuộn — giữ ô tích nhưng đưa tỷ lệ khung chậm về ≤ 1% và ≤ 1,2 lần bản tốt khi đo xen kẽ cùng tải.",
+      "slug": "va-bang-hang-e11-hieu-nang",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     }
   ],
   "chan_troi": [
