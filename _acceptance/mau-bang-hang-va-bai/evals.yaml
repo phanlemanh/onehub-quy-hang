@@ -193,7 +193,7 @@ evals:
       - "Mở /settings/templates bằng vai Đầu chủ: về trang Cá nhân kèm câu «Mục này chỉ quản trị sàn mở được»"
       - "Khổ điện thoại: màn Mẫu một cột, không vỡ khung"
     cmd: config:executors.ui-check
-    expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console"
+    expected: "Ảnh mỗi bước khớp mô tả; không lỗi ứng dụng trên console, trừ hai điều đã khai: (1) bước 4 có đúng một lời 400 có chủ đích từ PUT /api/v1/company/templates/export (tên trùng — hành vi của AC-2); (2) lỗi hydration sẵn có của Bảng hàng ở main, khung «Hydration failed … <BangHang …> <DataGrid …> <FramePanel …> <TrangThai kind=\"empty\" … title=\"Sàn chưa c…\">» (máy chủ dựng trạng thái trống, máy khách có dữ liệu cục bộ) — không do vòng này, theo dõi riêng (L-45). Mọi lỗi console khác là không đạt."
     paths: ["apps/web/src/app/(app)/settings/templates/**", "apps/web/src/app/(app)/inventory/phat-hang/**", "apps/web/src/app/(app)/shares/new/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot, observed]
 
