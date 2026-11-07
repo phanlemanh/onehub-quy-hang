@@ -5,7 +5,7 @@ slug: ghim-lai-ban-that-qua-ci
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-07-ghim-lai-ban-that-qua-ci-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -28,12 +28,12 @@ Source input: hàng `ghim-lai-ban-that-qua-ci` (`docs/plan/lo-trinh.json`) · ô
   When đọc luồng,
   Then chỉ chạy bằng tay · hồ sơ chọn từ danh sách cố định · quyền chỉ đọc kho · environment production · chỉ chạy từ main,
   không ghim chính main · gác lấy từ main (bộ chặn và bộ quét chạy từ bản checkout main, mã hồ sơ từ bản checkout nhánh) ·
-  bộ chặn chạy trước bước ghim lại, đọc cây nhánh PR · bí mật chỉ ở bước ghim lại và bước quét · bước ghim lại chạy làn của
+  bộ chặn chạy trước cài gói và ghim lại, đọc cây nhánh PR, cài gói không chạy mã của nhánh · bí mật chỉ ở bước ghim lại và bước quét · bước ghim lại chạy làn của
   kit trên cây nhánh, không gọi bộ kiểm ghi · quét bí mật trước khi tải, chỉ tải khi quét sạch · dòng ghim lại ra tệp đính
   kèm cả khi làn đỏ · cùng `KIT_TAG` với CI.
 
 - **AC-2** — Mỗi vế gác đỏ khi bị phá.
-  Given mười hai bản sao của luồng, mỗi bản phá đúng một vế,
+  Given mười bốn bản sao của luồng, mỗi bản phá đúng một chỗ, phủ đủ mười hai vế,
   When đọc từng bản sao,
   Then đúng vế bị phá hỏng, mười một vế còn lại vẫn đạt; luồng không sửa thì mười hai vế đạt.
 
@@ -45,7 +45,8 @@ Source input: hàng `ghim-lai-ban-that-qua-ci` (`docs/plan/lo-trinh.json`) · ô
   Then bản sẵn bấm → thoát 0 «CHO CHẠY»; E3 còn chạy `cach_ly_that`, E3 trỏ bộ nạp mẫu, E3 trỏ bộ kiểm chặn trùng tên, E3
   viết dạng khối nhiều dòng → thoát 1 «khoá … không trong danh sách cho phép»; E3 viết thẳng lệnh cách ly → thoát 1 «lệnh
   viết thẳng»; nhánh định nghĩa lại một khoá cho phép → thoát 1 «ở nhánh giải khác main»; thiếu khoá để trống
-  `DATABASE_URL` → thoát 1.
+  `DATABASE_URL` → thoát 1; nhánh khai `model_carry_cmd` hay `repin_cost_cmd` → thoát 1. Tệp của nút nằm trong
+  `risk_tiers.t3_paths`.
 
 - **AC-4** — Bộ kiểm chung của làn ghim lại không thấy chuỗi kết nối.
   Given kho git tạm mang khoá `repin_ci_blank_env` của kho, một bộ kiểm chung chỉ xanh khi `DATABASE_URL` trống và một eval
@@ -84,3 +85,7 @@ thật), job `deploy` của `ci.yml`.
   - Ngoài-5: Phép đo bộ chặn cũ chỉ thử một ca của lớp bộ kiểm ghi — AC-3 mới thử bảy ca.
 - Cổng Bằng chứng 07/11: chủ kho chọn «nâng phạm vi sửa ngay» cho Ngoài-1, Ngoài-3 — AC-3 viết lại thành danh sách cho phép
   giải như main; Cổng Phạm vi duyệt lại.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08 (chủ kho «Ship kèm giới hạn», sau dừng vá lượt 2):
+  - Rào chặn: nút chặn nhầm lẫn (khoá ngoài danh sách, lệnh viết thẳng, nhánh định nghĩa lại khoá, hai khoá chạy lệnh của
+    kit, cài gói chạy mã nhánh), không chặn một nhánh cố ý sửa nội dung tệp mà lệnh cho phép chạy — mã ấy chạy với chuỗi
+    kết nối bản thật trong bước ghim lại (rủi ro đã chấp nhận ở Hỏi-2: kho riêng tư, chỉ chủ kho và máy đẩy nhánh).

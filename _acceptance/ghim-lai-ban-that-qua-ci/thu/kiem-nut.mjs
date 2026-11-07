@@ -38,7 +38,8 @@ function veHong(y) {
   v(/\n {4}environment: production\n/.test(y), "bí mật ở environment production");
   v(y.includes('[ "$GITHUB_REF" = "refs/heads/main" ] || {') && y.includes('[ "$NHANH" != "main" ]'), "chỉ chạy từ main, không ghim chính main");
   v(coGoc && coNhanh && iChan >= 0 && buoc[iChan].includes("node goc/.github/scripts/chan-ghim-ban-that.mjs") && iQuet >= 0 && buoc[iQuet].includes("node goc/.github/scripts/quet-bi-mat.mjs"), "gác lấy từ main: bộ chặn và bộ quét chạy từ bản checkout main");
-  v(iChan >= 0 && iGhim > iChan && buoc[iChan].includes("--root nhanh"), "bộ chặn chạy trước bước ghim lại, đọc cây nhánh PR");
+  const iCai = buoc.findIndex((b) => /^run: npm (ci|install)\b/.test(b));
+  v(iChan >= 0 && iGhim > iChan && buoc[iChan].includes("--root nhanh") && iCai > iChan && /^run: npm ci --ignore-scripts\n/.test(buoc[iCai]), "bộ chặn chạy trước cài gói và ghim lại, đọc cây nhánh PR; cài gói không chạy mã của nhánh");
   v(coBiMat.length === 2 && coBiMat.includes(iGhim) && coBiMat.includes(iQuet) && (y.match(/secrets\./g) ?? []).length === 2, "bí mật chỉ ở bước ghim lại và bước quét");
   v(iGhim >= 0 && buoc[iGhim].includes("repin-lane.mjs") && buoc[iGhim].includes("--write") && /working-directory: nhanh/.test(buoc[iGhim]) && !/test:isolation|test:db|db:test/.test(y), "bước ghim lại chạy làn của kit trên cây nhánh, không gọi bộ kiểm ghi");
   v(iQuet > iGhim && iTai > iQuet && buoc[iTai].includes("steps.quet.outcome == 'success'"), "quét bí mật trước khi tải, chỉ tải khi quét sạch");
@@ -51,6 +52,14 @@ const VE = 12;
 if (process.argv.includes("--tinh")) {
   const h = veHong(LUONG);
   dat(h.length === 0, `luồng ghim lại: ${VE - h.length}/${VE} vế gác ĐẠT${h.length ? ` — hỏng: ${h.join(" | ")}` : ""}`);
+  // Tệp của nút ở hạng rủi ro cao nhất: sửa sau này cần chủ kho ký ở mức T3. Đối chứng đỏ: bỏ một glob khỏi bản sao.
+  const t3 = (cfg) => {
+    const khoi = cfg.slice(cfg.indexOf("\n  t3_paths:"), cfg.indexOf("\nsignoff:"));
+    return khoi.includes('- ".github/workflows/ghim-lai-ban-that.yml"') && khoi.includes('- ".github/scripts/**"');
+  };
+  const cfgThat = readFileSync(join(GOC, "_acceptance/config.yaml"), "utf8");
+  dat(t3(cfgThat), "tệp của nút (luồng và .github/scripts) nằm trong risk_tiers.t3_paths");
+  dat(!t3(cfgThat.replace('    - ".github/scripts/**"', "")), "đối chứng đỏ: bỏ .github/scripts khỏi t3_paths thì phép kiểm hỏng");
 } else if (process.argv.includes("--pha")) {
   const sua = (tu, sang) => (s) => {
     if (!s.includes(tu)) throw new Error(`ca phá thử lệch luồng: không thấy «${tu.trim().slice(0, 50)}»`);
@@ -63,7 +72,16 @@ if (process.argv.includes("--tinh")) {
     ["bỏ environment production", sua("    environment: production\n", ""), "bí mật ở environment production"],
     ["bỏ chặn chạy ngoài main", sua('[ "$GITHUB_REF" = "refs/heads/main" ] || {', '[ -n "$GITHUB_REF" ] || {'), "chỉ chạy từ main, không ghim chính main"],
     ["bộ chặn lấy từ cây nhánh PR", sua("        run: node goc/.github/scripts/chan-ghim-ban-that.mjs", "        run: node nhanh/.github/scripts/chan-ghim-ban-that.mjs"), "gác lấy từ main: bộ chặn và bộ quét chạy từ bản checkout main"],
-    ["bộ chặn đọc cây main thay cây nhánh", sua(' "$HO_SO" --root nhanh', ' "$HO_SO" --root goc'), "bộ chặn chạy trước bước ghim lại, đọc cây nhánh PR"],
+    ["bộ chặn đọc cây main thay cây nhánh", sua(' "$HO_SO" --root nhanh', ' "$HO_SO" --root goc'), "bộ chặn chạy trước cài gói và ghim lại, đọc cây nhánh PR; cài gói không chạy mã của nhánh"],
+    ["cài gói chạy script của nhánh", sua("      - run: npm ci --ignore-scripts\n", "      - run: npm ci\n"), "bộ chặn chạy trước cài gói và ghim lại, đọc cây nhánh PR; cài gói không chạy mã của nhánh"],
+    ["cài gói trước bộ chặn",
+      (s) => {
+        const cai = "      # Cài gói SAU bộ chặn và không chạy script vòng đời của nhánh: mã của nhánh không chạy trước khi bộ chặn xét xong.\n      - run: npm ci --ignore-scripts\n        working-directory: nhanh\n";
+        const kit = "      - name: Lấy kit theo tag (ngoài cây kho)\n";
+        if (!s.includes(cai) || !s.includes(kit)) throw new Error("ca phá thử lệch luồng: không thấy bước cài gói hay bước lấy kit");
+        return s.replace(cai, "").replace(kit, cai + kit);
+      },
+      "bộ chặn chạy trước cài gói và ghim lại, đọc cây nhánh PR; cài gói không chạy mã của nhánh"],
     ["bí mật ở mức job", sua("      NHANH: ${{ inputs.nhanh }}\n", "      NHANH: ${{ inputs.nhanh }}\n      OWNER_PHONE_KEY: ${{ secrets.OWNER_PHONE_KEY }}\n"), "bí mật chỉ ở bước ghim lại và bước quét"],
     ["chạy bộ kiểm cách ly", sua("      # Thông báo lỗi kết nối", "      - run: npm run test:isolation -w @quy-hang/db\n      # Thông báo lỗi kết nối"), "bước ghim lại chạy làn của kit trên cây nhánh, không gọi bộ kiểm ghi"],
     ["tải dù quét thấy bí mật", sua("        if: always() && steps.quet.outcome == 'success'\n", "        if: always()\n"), "quét bí mật trước khi tải, chỉ tải khi quét sạch"],
@@ -83,7 +101,8 @@ if (process.argv.includes("--tinh")) {
     dat(h.length === 1 && h[0] === ve, `phá thử «${ten}» → hỏng đúng vế «${ve}» (hỏng: ${h.join(" | ") || "không vế nào"})`);
     so++;
   }
-  dat(so === VE && MA_TRAN.length === VE, `ma trận phá thử chạy đủ ${VE}/${VE} ca, mỗi vế một ca (chạy ${so})`);
+  const vePhu = new Set(MA_TRAN.map((c) => c[2]));
+  dat(so === MA_TRAN.length && MA_TRAN.length === 14 && vePhu.size === VE, `ma trận phá thử chạy đủ ${MA_TRAN.length}/14 ca, phủ ${vePhu.size}/${VE} vế (chạy ${so})`);
   dat(veHong(LUONG).length === 0, "đối chứng dương: luồng không sửa thì mười hai vế đều ĐẠT");
 } else if (process.argv.includes("--quet")) {
   const QUET = join(GOC, ".github/scripts/quet-bi-mat.mjs");
@@ -147,12 +166,14 @@ if (process.argv.includes("--tinh")) {
     ["E3 viết dạng khối nhiều dòng", cfgThat, doiE3("  - id: E3\n    criterion: AC-3\n    executor: script\n    cmd: >\n      config:executors.script.cach_ly_that\n    expected: \"x\"\n\n"), 1, "CHẶN E3: khoá executors.script.cach_ly_that không trong danh sách cho phép"],
     ["nhánh định nghĩa lại khoá cho phép", cfgThat.replace(/(\n {4}moi_truong_that: )"[^"]*"/, '$1"npm run test:isolation -w @quy-hang/db"'), sanBam, 1, "CHẶN E1: khoá executors.script.moi_truong_that ở nhánh giải khác main"],
     ["thiếu khoá để trống DATABASE_URL", cfgThat.replace(/repin_ci_blank_env: \[DATABASE_URL, /, "repin_ci_blank_env: ["), sanBam, 1, "CHẶN feature_loop.repin_ci_blank_env không để trống DATABASE_URL"],
+    ["nhánh khai model_carry_cmd", cfgThat.replace("\n  suite_keys:\n", '\n  model_carry_cmd: "npm run test:isolation -w @quy-hang/db"\n  suite_keys:\n'), sanBam, 1, "CHẶN config của nhánh khai feature_loop.model_carry_cmd"],
+    ["nhánh khai repin_cost_cmd", cfgThat.replace("\n  suite_keys:\n", '\n  repin_cost_cmd: "node -e 1"\n  suite_keys:\n'), sanBam, 1, "CHẶN config của nhánh khai feature_loop.repin_cost_cmd"],
   ];
   for (const [ten, cfg, ev, ma, chu] of CA) {
     const r = chay(cfg, ev);
     dat(r.exit === ma && r.out.includes(chu), `bộ chặn «${ten}» → thoát ${ma}, «${chu}» (được: thoát ${r.exit}${r.exit !== ma ? ` — ${r.out.trim().split("\n")[0]}` : ""})`);
   }
-  dat(CA.length === 8, `ma trận bộ chặn đủ 8 ca (có ${CA.length})`);
+  dat(CA.length === 10, `ma trận bộ chặn đủ 10 ca (có ${CA.length})`);
 } else if (process.argv.includes("--trong")) {
   // Kho git tạm có một hồ sơ: bộ kiểm chung thoát 0 chỉ khi DATABASE_URL trống, eval thoát 0 chỉ khi nó có.
   // Kit đúng bản luồng dùng: KIT_TAG đọc từ ci.yml, lấy từ kho kit theo tag (cùng cách luồng lấy).

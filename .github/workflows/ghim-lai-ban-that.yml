@@ -3,7 +3,8 @@
 # nhánh main dùng bí mật, nên luồng chạy từ main rồi checkout nhánh của PR. Không quyền ghi kho: dòng ghim lại đi ra dạng tệp
 # đính kèm của lượt chạy; máy tải về và commit vào PR. Bí mật chỉ ở bước ghim lại; bộ kiểm chung chạy với biến bản thật để
 # trống (feature_loop.repin_ci_blank_env), nên chỉ eval của hồ sơ thấy biến. Bộ chặn (lấy từ main) từ chối hồ sơ có eval còn
-# chạy bộ kiểm ghi (cách ly, API); bộ quét (lấy từ main) chặn tải tệp đính kèm mang chuỗi kết nối.
+# chạy bộ kiểm ghi; bộ quét (lấy từ main) chặn tải tệp đính kèm mang chuỗi kết nối. Giới hạn đã biết (chủ kho chọn 08/11):
+# rào chặn NHẦM LẪN, không chặn một nhánh CỐ Ý cài mã — mã của nhánh chạy với chuỗi kết nối trong bước ghim lại.
 name: Ghim lại hồ sơ cần bản thật
 
 on:
@@ -50,8 +51,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: goc/.nvmrc
-      - run: npm ci
-        working-directory: nhanh
       - name: Lấy kit theo tag (ngoài cây kho)
         run: |
           git init -q "$RUNNER_TEMP/kit"
@@ -60,6 +59,9 @@ jobs:
           echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"
       - name: Chặn hồ sơ còn eval chạy bộ kiểm ghi
         run: node goc/.github/scripts/chan-ghim-ban-that.mjs "$HO_SO" --root nhanh --goc goc
+      # Cài gói SAU bộ chặn và không chạy script vòng đời của nhánh: mã của nhánh không chạy trước khi bộ chặn xét xong.
+      - run: npm ci --ignore-scripts
+        working-directory: nhanh
       - name: Ghim lại
         env:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}

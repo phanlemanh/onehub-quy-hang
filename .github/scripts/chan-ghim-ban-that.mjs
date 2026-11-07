@@ -4,7 +4,10 @@
 //      khoá nằm trong CHO_PHEP — các lệnh chỉ đọc hay không chạm cơ sở dữ liệu; lệnh viết thẳng bị chặn;
 //   2. mỗi khoá được dùng phải giải RA CÙNG MỘT LỆNH ở config của main (`--goc`) và config của nhánh (`--root`) — nhánh không
 //      định nghĩa lại được khoá cho phép thành lệnh ghi;
-//   3. config của nhánh để trống DATABASE_URL cho bộ kiểm chung (feature_loop.repin_ci_blank_env).
+//   3. config của nhánh để trống DATABASE_URL cho bộ kiểm chung (feature_loop.repin_ci_blank_env);
+//   4. config của nhánh không khai model_carry_cmd, repin_cost_cmd — kit chạy hai lệnh ấy với đủ biến môi trường.
+// Giới hạn đã biết (chủ kho chọn 08/11): bộ chặn chống NHẦM LẪN; lệnh cho phép vẫn chạy tệp của nhánh, nên một nhánh cố ý
+// sửa nội dung tệp ấy thì không chặn được.
 // Danh sách CHO_PHEP sống trong tệp này, ở main; thêm khoá là sửa tệp qua PR. Thoát 0 = cho chạy, 1 = chặn, 2 = gọi sai.
 // Kit tìm qua CLAUDE_PLUGIN_ROOT (luồng đặt) hoặc packages/ui-lint/tim-kit.mjs của kho.
 import { execFileSync } from "node:child_process";
@@ -59,6 +62,10 @@ for (const e of may) {
   const lenhNhanh = core.resolveConfigKey(cfgNhanh, khoa);
   const lenhGoc = core.resolveConfigKey(cfgGoc, khoa);
   if (!lenhNhanh || lenhNhanh !== lenhGoc) loi.push(`${e.id}: khoá ${khoa} ở nhánh giải khác main`);
+}
+// Kit chạy hai khoá này với ĐỦ biến môi trường trong làn ghim lại (không qua bộ để trống) — cấm khai ở nhánh.
+for (const k of ["model_carry_cmd", "repin_cost_cmd"]) {
+  if (new RegExp(`^[ \\t]+${k}[ \\t]*:`, "m").test(cfgNhanh)) loi.push(`config của nhánh khai feature_loop.${k} — lệnh ấy chạy với chuỗi kết nối bản thật`);
 }
 const trong = (cfgNhanh.match(/\n {2}repin_ci_blank_env:\s*\[([^\]]*)\]/) ?? [])[1] ?? "";
 if (!trong.split(",").map((s) => s.trim()).includes("DATABASE_URL")) loi.push("feature_loop.repin_ci_blank_env không để trống DATABASE_URL cho bộ kiểm chung");

@@ -116,6 +116,8 @@ risk_tiers:
     - ".claude/hooks/**"
     - ".githooks/**"                          # chặn commit main, gitleaks
     - ".gitattributes"                        # nang-kit-2-36-0: driver gộp tệp sinh
+    - ".github/workflows/ghim-lai-ban-that.yml"   # ghim-lai-ban-that-qua-ci: nút chạy với chuỗi kết nối bản thật
+    - ".github/scripts/**"                        # bộ chặn, bộ quét của nút ấy
 signoff:
   required_for: [T2, T3]
   approvers: ["Manh Phan"]   # suy từ: git config user.name — thông tin, cổng không cưỡng chế
