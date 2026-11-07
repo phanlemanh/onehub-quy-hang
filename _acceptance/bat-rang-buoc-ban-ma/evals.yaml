@@ -33,6 +33,8 @@ evals:
     criterion: AC-3
     executor: script
     cmd: config:executors.script.kiem_ci
+    status: not-run
+    superseded_by: va-deploy-csdl-tam#AC-3
     expected: "exit 0 và dòng 'KẾT: ĐẠT' — job deploy chạy npm run db:migrate trước test:isolation trước VERCEL_DEPLOY_HOOK, DATABASE_URL lấy từ PROD_DATABASE_URL; vế «bộ cách ly của deploy gồm tệp bat-rang-buoc.test.mjs» được E3 đo qua glob tests/*.test.mjs của script test:isolation."
     paths: [.github/workflows/ci.yml, packages/db/package.json]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
