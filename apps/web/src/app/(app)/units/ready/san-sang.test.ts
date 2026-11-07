@@ -115,7 +115,8 @@ test("E10 ngoại tuyến hay đọc ảnh lỗi: «Cần mạng để kiểm �
   assert.equal(gui, 0);
   assert.deepEqual(await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: g }), { kind: "da-gui" }, "đối chứng");
   const nguon = readFileSync(fileURLToPath(new URL("./nut-san-sang.tsx", import.meta.url)), "utf8");
-  assert.match(nguon, /disabled=\{\(toiThieu > 0 && !coMang\) \|\| dang\}/, "nút không mờ khi ngoại tuyến");
+  assert.match(nguon, /khoaNgoaiTuyen = toiThieu !== 0 && !coMang/, "nút khoá ngoại tuyến khi sàn đòi ảnh hay chưa biết số");
+  assert.match(nguon, /disabled=\{khoaNgoaiTuyen \|\| dang\}/, "nút không mờ khi ngoại tuyến");
   assert.match(nguon, /CHU_CAN_MANG_KIEM_ANH/, "thiếu chữ «Cần mạng để kiểm ảnh»");
 });
 
@@ -191,7 +192,7 @@ test("VSSB-E4 lệnh không vào hàng đợi: báo lỗi bằng câu của trì
   }
   assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["legalStatus"] }), "Thiếu pháp lý");
   const nguon = NUT();
-  assert.match(nguon, /disabled=\{\(toiThieu > 0 && !coMang\) \|\| dang\}/, "nút bị khoá theo trạng thái lỗi");
+  assert.match(nguon, /disabled=\{khoaNgoaiTuyen \|\| dang\}/, "nút bị khoá theo trạng thái lỗi");
   assert.match(nguon, /tt\.kind === "loi" \? <TrangThai kind="error"/, "lời báo lỗi không dùng TrangThai kiểu error");
 });
 
@@ -222,5 +223,29 @@ test("số tối thiểu của sàn (anh-khong-chan-ban E7)", async () => {
     items ? new Response(JSON.stringify({ items }), { status: 200 }) : new Response("{}", { status: 500 });
   assert.equal(await docToiThieuSan(docSan([{ key: "listing.ready_min_real_photos", value: 2 }])), 2, "đọc số của sàn");
   assert.equal(await docToiThieuSan(docSan([])), 0, "sàn chưa đặt: 0");
-  assert.equal(await docToiThieuSan(docSan(null)), 0, "đọc hỏng: 0");
+  assert.equal(await docToiThieuSan(docSan(null)), null, "máy chủ lỗi: chưa biết, không phải 0");
+});
+
+test("chưa đọc được số tối thiểu thì xử như sàn đòi ảnh (anh-khong-chan-ban Ngoài-1)", async () => {
+  let gui = 0;
+  const g = async (): Promise<KetQuaGui> => (gui++, { ok: true });
+  const coAnh = async () => ({ anh: [anh("shareable")] });
+  // Đọc cấu hình hỏng mọi kiểu → null.
+  const mat = async (): Promise<Response> => {
+    throw new TypeError("Failed to fetch");
+  };
+  assert.equal(await docToiThieuSan(mat), null, "mất mạng: chưa biết");
+  assert.equal(await docToiThieuSan(async () => new Response(JSON.stringify({ khac: 1 }), { status: 200 })), null, "khuôn lạ: chưa biết");
+  assert.equal(await docToiThieuSan(async () => new Response("không phải JSON", { status: 200 })), null, "thân hỏng: chưa biết");
+  // Chưa biết số: lúc mất mạng hay có mạng đều không gửi, báo cần mạng — như sàn đòi ảnh.
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: null, onLine: false, docAnh: coAnh, gui: g }), { kind: "can-mang" }, "chưa biết, mất mạng");
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: null, onLine: true, docAnh: coAnh, gui: g }), { kind: "can-mang" }, "chưa biết, có mạng");
+  assert.equal(gui, 0, "chưa biết số thì không lệnh nào vào hàng đợi");
+  // Đối chứng: đọc được 0 thì mất mạng vẫn gửi.
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 0, onLine: false, docAnh: coAnh, gui: g }), { kind: "da-gui" }, "đối chứng: biết 0");
+  assert.equal(gui, 1);
+  // Thành phần: khởi đầu là chưa biết, đọc lại khi có mạng và lúc bấm.
+  const nguon = NUT();
+  assert.match(nguon, /useState<number \| null>\(null\)/, "khởi đầu phải là chưa biết, không phải 0");
+  assert.match(nguon, /toiThieu \?\? \(navigator\.onLine \? await docToiThieuSan\(\) : null\)/, "bấm khi chưa biết phải đọc lại");
 });

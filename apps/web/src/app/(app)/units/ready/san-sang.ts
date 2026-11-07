@@ -59,17 +59,19 @@ export function kiemSanSang(hang: HangSua, soAnhThat: number, toiThieu = MAC_DIN
 type Fetch = (input: string, init?: RequestInit) => Promise<Response>;
 
 /**
- * Số ảnh thật tối thiểu của sàn từ lối chung cấu hình (mọi thành viên đọc được), giải bằng lõi. Đọc hỏng thì mặc định của
- * lõi (0) — máy chủ vẫn xét đúng số của sàn khi nhận lệnh.
+ * Số ảnh thật tối thiểu của sàn từ lối chung cấu hình (mọi thành viên đọc được), giải bằng lõi. Đọc hỏng (mất mạng, máy chủ
+ * lỗi, khuôn lạ) → `null` = chưa biết, KHÔNG gộp vào 0: sàn có thể đang đòi ảnh, nên nút xử như sàn đòi ảnh (Ngoài-1 của
+ * anh-khong-chan-ban, chủ kho chọn sửa ngay 07/11).
  */
-export async function docToiThieuSan(f: Fetch = fetch): Promise<number> {
+export async function docToiThieuSan(f: Fetch = fetch): Promise<number | null> {
   try {
     const r = await f("/api/v1/company/settings", { credentials: "same-origin" });
-    if (!r.ok) return MAC_DINH_ANH_THAT_TOI_THIEU;
-    const ban = (await r.json()) as { items: { key: string; value: unknown }[] };
-    return docCauHinhSanSang(ban.items).minRealPhotos;
+    if (!r.ok) return null;
+    const ban = (await r.json()) as { items?: unknown };
+    if (!Array.isArray(ban.items)) return null;
+    return docCauHinhSanSang(ban.items as { key: string; value: unknown }[]).minRealPhotos;
   } catch {
-    return MAC_DINH_ANH_THAT_TOI_THIEU;
+    return null;
   }
 }
 
@@ -88,8 +90,8 @@ export type TrangThaiNut =
 export type KetQuaGui = { ok: true } | { ok: false; loi: LoiTrenMay };
 
 /**
- * Một lần bấm. Sàn đòi ảnh (tối thiểu ≥ 1): ngoại tuyến hay đọc ảnh lỗi → «Cần mạng để kiểm ảnh», không gửi (không coi lỗi
- * đọc là 0 ảnh). Sàn không đòi ảnh (tối thiểu 0 — mặc định từ hàng anh-khong-chan-ban): không đếm ảnh, lúc mất mạng vẫn gửi
+ * Một lần bấm. Sàn đòi ảnh (tối thiểu ≥ 1) hay chưa biết số tối thiểu (`null`, đọc cấu hình hỏng): ngoại tuyến hay đọc lỗi →
+ * «Cần mạng để kiểm ảnh», không gửi (không coi lỗi đọc là 0 ảnh, cũng không coi số tối thiểu chưa biết là 0). Sàn không đòi ảnh (tối thiểu 0 — mặc định từ hàng anh-khong-chan-ban): không đếm ảnh, lúc mất mạng vẫn gửi
  * (máy chủ vẫn là bên quyết). Thiếu → danh sách kèm số ảnh đã đếm, không gửi; đủ → gửi đúng một lệnh qua hàm gửi của trình
  * sửa ô. Chỉ báo «đã gửi» khi lệnh vào hàng đợi; không vào thì báo bằng câu của trình sửa ô (một đường lệnh, một lời báo).
  */
@@ -99,10 +101,11 @@ export async function bamSanSang(
     onLine: boolean;
     docAnh: () => Promise<{ anh: readonly Pick<UnitPhoto, "compartment" | "isSample">[] }>;
     gui: (lenh: Lenh) => Promise<KetQuaGui>;
-    /** Số ảnh thật tối thiểu của sàn (`docToiThieuSan`); vắng là mặc định của lõi. */
-    toiThieu?: number;
+    /** Số ảnh thật tối thiểu của sàn (`docToiThieuSan`); `null` = chưa đọc được (xử như sàn đòi ảnh); vắng là mặc định của lõi. */
+    toiThieu?: number | null;
   },
 ): Promise<TrangThaiNut> {
+  if (o.toiThieu === null) return { kind: "can-mang" };
   const toiThieu = o.toiThieu ?? MAC_DINH_ANH_THAT_TOI_THIEU;
   let soAnh = 0;
   if (toiThieu > 0) {

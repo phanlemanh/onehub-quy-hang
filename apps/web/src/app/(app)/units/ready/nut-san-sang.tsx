@@ -37,24 +37,28 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
   const nguon = useMemo(() => (ma ? nguonApi(toa, ma) : null), [toa, ma]);
   const [tt, setTt] = useState<TrangThaiNut>({ kind: "san" });
   const [dang, setDang] = useState(false);
-  // Số ảnh tối thiểu của sàn (anh-khong-chan-ban): 0 thì không đếm ảnh, mất mạng vẫn bấm được; chưa đọc xong coi như 0.
-  const [toiThieu, setToiThieu] = useState(0);
+  // Số ảnh tối thiểu của sàn (anh-khong-chan-ban): 0 thì không đếm ảnh, mất mạng vẫn bấm được. Chưa đọc được (null) thì xử
+  // như sàn đòi ảnh — cần mạng; đọc lại khi có mạng trở lại và ngay lúc bấm (Ngoài-1, sửa ngay 07/11).
+  const [toiThieu, setToiThieu] = useState<number | null>(null);
   useEffect(() => {
+    if (!coMang || toiThieu !== null) return;
     let con = true;
     void docToiThieuSan().then((n) => con && setToiThieu(n));
     return () => {
       con = false;
     };
-  }, []);
+  }, [coMang, toiThieu]);
 
   const bam = async () => {
     setDang(true);
     try {
+      const so = toiThieu ?? (navigator.onLine ? await docToiThieuSan() : null);
+      if (so !== toiThieu) setToiThieu(so);
       const kq = await bamSanSang(hang, {
         onLine: navigator.onLine,
         docAnh: () => (nguon ? nguon.danhSach() : Promise.resolve({ anh: [] })),
         gui: (lenh) => sua(hang.id, lenh.type, lenh.payload, docPhienBan(hang.id)),
-        toiThieu,
+        toiThieu: so,
       });
       setTt(kq);
     } finally {
@@ -72,11 +76,13 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
   // Nút gỡ ra (lần rao lên Đang bán, đổi lần rao) thì dấu «Chưa có» của lần rao ấy không còn.
   useEffect(() => () => onThieu(id, []), [id, onThieu]);
 
-  const canMang = (toiThieu > 0 && !coMang) || tt.kind === "can-mang";
+  // Sàn không đòi ảnh (0) mới bấm được lúc mất mạng; đòi ảnh hay chưa biết số thì cần mạng.
+  const khoaNgoaiTuyen = toiThieu !== 0 && !coMang;
+  const canMang = khoaNgoaiTuyen || tt.kind === "can-mang";
   return (
     <div className="flex flex-col gap-2" data-slot="san-sang-ban">
       <div className="flex items-center gap-2">
-        <Button size="sm" disabled={(toiThieu > 0 && !coMang) || dang} onClick={() => void bam()}>
+        <Button size="sm" disabled={khoaNgoaiTuyen || dang} onClick={() => void bam()}>
           Sẵn sàng bán
         </Button>
         {canMang ? <span className="text-xs text-muted-foreground">{CHU_CAN_MANG_KIEM_ANH}</span> : null}
