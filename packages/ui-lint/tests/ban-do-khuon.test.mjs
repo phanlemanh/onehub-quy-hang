@@ -195,7 +195,7 @@ const NHAN_DIEN_TRANG_THAI = [
   ...["man-mau.tsx", "page.tsx", "trang-mau.tsx", "xem/page.tsx"].map((p) => `${W}/app/mau/he-bo-cuc/${p}`),
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
-  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "dictionary/page.tsx", "dictionary/vung-tu-dien.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/anh-toi-thieu.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/page.tsx", "templates/vung-mau-bai.tsx", "templates/vung-mau-bang.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
+  ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "dictionary/page.tsx", "dictionary/vung-tu-dien.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/anh-toi-thieu.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/bao-hong.tsx", "templates/page.tsx", "templates/vung-mau-bai.tsx", "templates/vung-mau-bang.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
   ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
@@ -258,6 +258,8 @@ const CHO_TRANG_THAI = [
   ...Array(2).fill(`${W}/app/(app)/settings/statuses/trang-thai.tsx`),
   // Mẫu nhập (hàng 50): đang tải, lỗi, trống của vùng.
   // Mẫu bảng hàng, mẫu bài (hàng mau-bang-hang-va-bai): đang tải, lỗi đọc, báo lưu; trống của mẫu bảng.
+  // Báo mẫu hỏng (hàng man-mau-bao-mau-hong): một khối báo đầu tab.
+  `${W}/app/(app)/settings/templates/bao-hong.tsx`,
   ...Array(3).fill(`${W}/app/(app)/settings/templates/vung-mau-bai.tsx`),
   ...Array(4).fill(`${W}/app/(app)/settings/templates/vung-mau-bang.tsx`),
   ...Array(3).fill(`${W}/app/(app)/settings/templates/vung-mau-nhap.tsx`),
@@ -510,7 +512,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 28 ngoại lệ · 0 lệch",
-      "trang-thai: 174 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 175 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
