@@ -95,3 +95,25 @@ chế độ giao dịch mà §4 nêu.
    2. Triển khai lại bản thật; nhật ký phải có dòng `[pool:ket-noi] cổng 6543`.
    3. Theo dõi nhật ký 30 phút: không `EMAXCONNSESSION`, không dòng lỗi bể `[pool:`, không 5xx mới.
    4. Lùi: xoá `DATABASE_POOLER_PORT` (hoặc đặt 5432), triển khai lại — mã không cần đổi.
+
+## Sửa đổi 06/11 — bộ kiểm cách ly chạy trên cơ sở dữ liệu tạm
+
+Bối cảnh: từ 05/11 08:41Z job `deploy` đỏ liên tục ở bước chạy bộ kiểm cách ly trên bản thật (§7) — bộ kiểm dựng sàn,
+người và hàng thử, giả định cơ sở dữ liệu sạch, mà bản thật đã có sàn mẫu; nó còn mở nhiều kết nối vào pooler có trần 15.
+Bản thật đứng 22 giờ. Hồ sơ `va-deploy-csdl-tam` (PR #176) đổi bước triển khai; hồ sơ `kiem-nhanh-rang-buoc-ban-ma`
+(PR #181) thêm vế ràng buộc bản mã. Không viết đè §7: điểm 7 đọc theo mục này.
+
+1. **Bộ kiểm cách ly không chạy trên bản thật nữa.** Nó kiểm luật, không kiểm dữ liệu, và luật nằm trong migration: job
+   `isolation` của cùng commit dựng Postgres 16 tạm, áp migration từ đầu và chạy trọn bộ kiểm; job `deploy` chờ nó
+   (`needs: [check, isolation, secrets, gate, ro-ri]`). Bộ kiểm đỏ thì không triển khai — như cũ.
+2. **Bản thật chỉ nhận migration rồi kiểm nhanh chỉ đọc**: thứ tự của job `deploy` là `npm run db:migrate` (bản thật) →
+   `npm run kiem-nhanh -w @quy-hang/db` (bản thật, một kết nối, giao dịch `read only`, trần câu lệnh 15 giây) → deploy
+   hook của Vercel. Kiểm nhanh đỏ thì không gọi Vercel, nên code mới không chạy trên schema sai.
+3. **Kiểm nhanh soi trạng thái thật mà Postgres tạm không có**: mọi bảng thường của `public` bật và ép luật theo dòng;
+   không bảng nào do `quy_hang_app` sở hữu; `quy_hang_app` không `bypassrls`, không superuser; bảng chủ nhà và bảng lead
+   không còn số rõ thì ràng buộc chặn số rõ phải đã bật (bất biến 2), còn số rõ thì chỉ báo; vai kết nối chịu luật theo
+   dòng thì báo thay vì đếm sai. Chỉ đếm dòng, không đọc giá trị số điện thoại.
+4. **Chuỗi kết nối bản thật chỉ ở hai bước cần nó** (`db:migrate`, kiểm nhanh); `npm ci` và bước gọi Vercel không thấy nó.
+   Bản thật không giữ quá hai kết nối, mở lần lượt.
+5. **Môi trường mới** (Hệ quả, gạch cuối) dựng theo thứ tự: `nen-du-an.sql` → migration → kiểm nhanh → advisors; bộ kiểm
+   cách ly chạy trên Postgres tạm từ cùng migration, không trên môi trường ấy.
