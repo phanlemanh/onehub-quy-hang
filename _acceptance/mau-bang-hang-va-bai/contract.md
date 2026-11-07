@@ -5,8 +5,10 @@ slug: mau-bang-hang-va-bai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api, ui]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-06-mau-bang-hang-va-bai-design.md
+approved_by: Manh Phan
+approved_at: 2026-11-07
 ---
 
 # Acceptance Contract: mau-bang-hang-va-bai
