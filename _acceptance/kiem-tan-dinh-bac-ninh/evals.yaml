@@ -1,0 +1,37 @@
+schema_version: 1
+feature_slug: kiem-tan-dinh-bac-ninh
+# Mọi eval chạy bộ kiểm lõi `npm test -w @quy-hang/core`; ca của vòng ở packages/core/src/address/kiem-tan-dinh.test.ts, mỗi
+# ca mang đúng tên «AC-n …». Hàm kiểm thuần kiemTanDinhBacNinh(doc) trả danh sách lỗi; kết quả ghim viết trước trong
+# design doc. Phá thử chạy CÙNG hàm với bộ đọc lỗi, ghim thông điệp.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-1 ghim kết quả Tân Định, Bắc Ninh» xanh: kiemTanDinhBacNinh(docDiaChi) trả []; hàm so tập khoá đã sắp của kết quả với tập ghim 9 khoá (8 trường dưới + unparsedAddress = chữ người gõ), lệch thì dòng «lệch tập trường: <khoá>»; rồi so đủ 8 trường stateOrProvince, wardName, chuaCoTrongDanhMuc, thieu, trangThai, khoa, streetNumber, streetName với kết quả ghim (stateOrProvince {ma 24, ten «Thành phố Bắc Ninh»}, wardName null, chuaCoTrongDanhMuc [{phan wardName, chu «Tân Định»}], thieu [wardName], trangThai thieu, khoa null, streetNumber «12», streetName «Lê Lợi»); số trường so in ra = 8; phá thử: bộ đọc bọc thêm khoá «goiY» → [«lệch tập trường: goiY»]"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-2 phá thử ba bộ đọc lỗi» xanh: cùng hàm kiểm với (a) docDiaChiVoi(…, soDau \"lui-bo-dau\") trả [«lệch kết quả ghim: wardName», «lệch kết quả ghim: chuaCoTrongDanhMuc», «lệch kết quả ghim: thieu», «lệch kết quả ghim: trangThai», «lệch kết quả ghim: khoa»] (deepEqual, đúng thứ tự trường); (b) bộ đọc bọc trả kết quả thật với chuaCoTrongDanhMuc [] → đúng [«lệch kết quả ghim: chuaCoTrongDanhMuc»]; (c) bộ đọc bọc trả kết quả thật với wardName {ma 07210, ten «Bắc Giang»} (xã mã nhỏ nhất tỉnh 24) → đúng [«lệch kết quả ghim: wardName»] (deepEqual)"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «AC-3 dạng không tiền tố» xanh: docDiaChi(«12 Lê Lợi, Tân Định, Tỉnh Bắc Ninh») → wardName null, thieu chứa wardName, trangThai thieu (hàm kiểm riêng trả []); phá thử: cùng hàm với soDau \"lui-bo-dau\" trả dòng đầu «không tiền tố ra xã: 07432»"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca của kiem-tan-dinh.test.ts và mọi ca cũ của npm test -w @quy-hang/core xanh trong cùng lượt (số ca in ra); doc-xa-thieu-dau.test.ts không đổi so với nhánh chính (git diff rỗng trên tệp ấy)"
+    paths: ["packages/core/src/address/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

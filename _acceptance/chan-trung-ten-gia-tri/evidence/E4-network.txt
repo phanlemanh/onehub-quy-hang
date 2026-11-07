@@ -1,0 +1,7 @@
+Driver: playwright (khung chup) tren may chu dev 3462 (dãy B). Console: 0 loi, 0 canh bao.
+POST /api/v1/auth/email-otp/send-verification-otp 200
+POST /api/v1/auth/sign-in/email-otp 200
+PUT  /api/v1/company/labels 200 (chuan bi)
+GET  /api/v1/listings 200
+Static chunk /_next/static/chunks/*.js ERR_ABORTED x6 (huy do dieu huong trang, static asset - chi ghi chu)
+Luu y: origin that la http://localhost:3462, config dev_server.url la :3460 -> ngoai pham vi da khai (note-only).

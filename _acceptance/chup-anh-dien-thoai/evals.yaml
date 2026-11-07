@@ -1,0 +1,192 @@
+schema_version: 1
+feature_slug: chup-anh-dien-thoai
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; thân điện thoại dựng thật (renderToStaticMarkup) từ cùng mô hình hồ sơ với ma trận viết trước 6 ô: (suaDuoc true · false · danh sách đang tải · lỗi) × căn có mã, cộng (suaDuoc true · false) × căn chưa mã — mỗi ô ghi CÓ hay KHÔNG nút «Chụp ảnh» (data-nut=chup-anh); chỉ ô suaDuoc true × có mã là CÓ; đối chứng dương: tập ô CÓ không rỗng; chiều đỏ: bản sao rẽ nút theo tên vai (dau-chu) thay cờ suaDuoc → bộ so nêu đúng ô «trưởng nhóm · có mã · thiếu nút» (deepEqual lời lệch)."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàng chờ thuần với nguồn gửi giả ghi lại mọi lời gửi: ma trận viết trước 4 ô (ngăn lúc chụp Gửi được · Nội bộ) × (đổi ngăn sau khi chụp: có · không) — mỗi ô khẳng định lời gửi mang đúng toà, mã, ngăn lúc chụp; ngăn chụp dựng thật chỉ có nút Nội bộ khi noiBo=thay (2 ô); ngăn mặc định viết trước theo Hỏi-2 (khuyến nghị: chưa chọn ngăn, «Mở máy ảnh» disabled) ở 2 ô (mở ngăn lần đầu · mở ngăn lần hai sau khi lần trước chọn Nội bộ rồi đóng) — mỗi ô ghim đúng ngăn đang chọn và trạng thái nút; chiều đỏ: bản sao đọc ngăn đang chọn lúc gửi thay lúc chụp → bộ so nêu ô «Gửi được · đổi ngăn · gửi Nội bộ»; chiều đỏ thứ hai: bản sao nhớ ngăn lần trước → bộ so nêu ô «mở lần hai · Nội bộ · mong chưa chọn»."
+    paths: ["apps/web/src/app/(app)/units/photos/hang-cho-anh.ts", "apps/web/src/app/(app)/units/ho-so/dien-thoai/chup-anh.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàng chờ với nguồn gửi giả chặn được (lời hứa tự giải): ngay sau them() và trước khi lời gửi nào xong, ảnh đã có trong danh sách (trạng thái cho-mang hay dang-tai); ba ảnh tải đúng thứ tự chụp; ma trận viết trước chuyển trạng thái 5 ô (thành công → da-tai · máy chủ 403 → loi · ném TypeError → cho-mang · loi + thuLai → da-tai · ảnh 2 lỗi thì ảnh 3 vẫn tải); tệp không phải ảnh / quá 10 MB không vào hàng chờ và trả lý do của lõi; chiều đỏ: bản sao dừng cả lô khi một ảnh 403 → bộ so nêu «ảnh 3 · cho-mang · mong da-tai»."
+    paths: ["apps/web/src/app/(app)/units/photos/hang-cho-anh.ts", "apps/web/src/app/(app)/units/photos/tai-len.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàng chờ trên kho ảnh chờ giả (cùng giao diện với kho IndexedDB) và máy chủ giả giữ bảng ảnh theo mã: ma trận viết trước 5 ô mạng (mất trước khi chụp · mất giữa lúc tải · mất phản hồi sau khi máy chủ ghi · có lại bằng sự kiện online · có lại bằng nhịp 15 giây) × N=3 ảnh — mỗi ô khẳng định máy chủ có đúng 3 ảnh, mỗi mã một dòng; dựng lại hàng chờ từ kho (giả lập tải lại trang) giữ đủ 3 ảnh chờ; 409 thì đối chiếu danh sách, có mã → da-tai; hai ô phiên viết trước: máy chủ trả 401 → kho vẫn giữ đủ 3 ảnh trạng thái cho-mang, không ảnh nào loi hay bị xoá; cùng người đăng nhập lại (máy chủ hết 401) → máy chủ có đúng 3 dòng; chiều đỏ: bản sao tạo mã mới mỗi lần gửi → bộ so nêu «mất phản hồi · 4 dòng · mong 3»; chiều đỏ thứ hai: bản sao coi 401 là loi → bộ so nêu «401 · loi · mong cho-mang»."
+    paths: ["apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; route ảnh nhận photoId của máy khách: ma trận viết trước 4 ô (bản Postgres · bản Storage) × (mã hợp lệ mới · mã sai khuôn) — mã hợp lệ được dùng làm id, mã sai khuôn trả invalid-payload; xác nhận lần hai cùng mã trả 409 photo-already-confirmed, không ghi thêm; chiều đỏ: bản sao bỏ qua photoId ở bản Postgres → bộ so nêu «postgres · mã mới · id khác mã khách»."
+    paths: ["packages/api/src/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; COMPARTMENT_CLASS.internal = source và trần của source là never_leaves_company; luật ẩn banRaNgoai với căn mẫu có ảnh Gửi được và ảnh Nội bộ: dữ liệu ra ngoài chỉ có ảnh Gửi được; chiều đỏ: bản sao luật ẩn giữ mọi ảnh → bộ so nêu mã ảnh Nội bộ lộ ra."
+    paths: ["packages/core/src/photos/**", "packages/core/src/redaction/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; kho ảnh chờ giả và kho đồng bộ giả: ma trận viết trước 4 ô (ảnh Gửi được · Nội bộ) × (máy chủ xác nhận · đăng xuất / máy bị báo mất) — xác nhận thì bản trên máy của ảnh ấy bị xoá; đăng xuất hay báo mất thì kho ảnh chờ rỗng cùng lúc kho đồng bộ bị xoá; kho mở theo người: kho của người A dựng lại bằng mã người B trả rỗng dù A còn 3 ảnh (quan hệ, không dò chuỗi tên); kho đồng bộ không có khoá ảnh nào; 401 (hết phiên) KHÔNG xoá kho; chiều đỏ: bản sao giữ ảnh Nội bộ sau xác nhận → bộ so nêu «Nội bộ · xác nhận · còn trên máy»."
+    paths: ["apps/web/src/app/(app)/units/photos/**", "apps/web/src/lib/sync/may-bi-bao.ts", "apps/web/src/components/shell/account-menu.tsx", "apps/web/src/lib/sync/react.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ma trận viết trước 3 ô ngày chụp với đồng hồ giả (EXIF 2026-11-01 · không EXIF chụp 2026-11-05 23:50 tải 2026-11-06 · tệp PNG không EXIF): takenAt gửi lên = 2026-11-01 · 2026-11-05 · ngày lúc chụp; chiều đỏ: bản sao lấy ngày lúc gửi → bộ so nêu «không EXIF · 2026-11-06 · mong 2026-11-05»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/chup-anh.tsx", "apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; với nguồn ảnh giả đếm lời đọc danh sách: hàng chờ báo một ảnh của căn A da-tai → ảnh lớn và mục Ảnh của căn A đọc lại đúng một lần, căn B không đọc lại; trong lúc đọc lại khung lớn vẫn trình ảnh cũ (không về «Đang tải ảnh…»); chiều đỏ: bản sao không nghe số đã tải → bộ so nêu «căn A · 0 lần đọc lại · mong 1»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/dien-thoai/anh-lon.tsx", "apps/web/src/app/(app)/units/photos/muc-anh.tsx"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx", "apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; bảng viết trước của ban-do-khuon.test.mjs có chup-anh.tsx trong nhận diện và chỗ trạng thái của nhóm trang-thai, số đếm khớp cây; luật no-direct-sheet và ban-do-khuon không báo tệp nào của vòng; chiều đỏ có sẵn trong bộ: bản sao nhập Alert ngoài khuôn → lệch «không nhập Alert ngoài khuôn — dựng qua <TrangThai>»."
+    paths: ["packages/ui-lint/tests/ban-do-khuon.test.mjs", "apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E12
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "375×812 đầu chủ giữ căn (dau-chu-1): nút «Chụp ảnh» trên ảnh lớn; ngăn «Chụp ảnh · <mã>» có hai nút ngăn và «Mở máy ảnh» dính đáy; chặn mạng rồi nạp ba ảnh (hai Gửi được, một Nội bộ): ba dòng «Chờ mạng — tự tải khi có mạng» và khối «Mất mạng»; mở mạng: ba dòng «Đã tải lên»; đóng ngăn: ảnh lớn 1/3; 375×812 đầu khách cùng căn: không nút «Chụp ảnh»; tải lại trang khi đang chặn mạng và còn 3 ảnh chờ → mở lại ngăn còn đúng 3 dòng «Chờ mạng» (kho IndexedDB thật); mở mạng → đếm unit_photos của căn tăng đúng 3; mỗi cảnh một ảnh."
+    steps:
+      - "Dựng chỗ thử dãy H (Postgres 5574, dev 3494) bằng _acceptance/ho-so-dien-thoai-product-detail-5/thu/dung-h.mjs; in PID, tắt bằng --tat ngay sau khi chụp"
+      - "Chạy _acceptance/chup-anh-dien-thoai/thu/chup-design-pass.mjs --ma <căn mẫu dau-chu-1 giữ, chưa có ảnh> (ảnh PNG khối màu của packages/db/seed/anh-mau.mjs, chặn mạng bằng Network.emulateNetworkConditions): chụp E12-truoc.png, E12-chon-ngan.png, E12-cho-mang.png, E12-da-tai.png, E12-anh-lon.png"
+      - "Đăng nhập dau-khach@mau.quy-hang.test, mở cùng căn ở 375×812: chụp E12-dau-khach.png, không có nút «Chụp ảnh»"
+      - "Tải lại trang khi còn ảnh chờ (chặn mạng), mở lại ngăn: chụp E12-tai-lai.png, ảnh chờ vẫn còn"
+    paths: ["apps/web/src/app/(app)/units/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E13
+    criterion: AC-1
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử của E12: phiên dau-khach@mau.quy-hang.test gọi POST /api/v1/units/photos/upload-url và POST /api/v1/units/photos cho căn mẫu → bị từ chối (listing-agent-required), số dòng unit_photos của căn không đổi; đối chứng dương cùng bộ đếm: phiên dau-chu-1 cùng lời gọi → thêm đúng một dòng. Ghi E13-mang.txt (mã trạng thái, số dòng trước/sau)."
+    steps:
+      - "Đếm dòng unit_photos của căn mẫu (docker exec quy-hang-db-dkn-H psql)"
+      - "Gọi hai lối thêm ảnh bằng phiên dau-khach@mau.quy-hang.test (cookie từ dung-h.mjs --phien): mong 403, đếm lại không đổi"
+      - "Gọi cùng lối bằng phiên dau-chu-1: mong 201, đếm lại +1"
+    paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E14
+    criterion: AC-2
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Sau E12: bảng unit_photos của căn mẫu có đúng ba dòng mới — hai compartment=shareable, một compartment=internal — building_name và unit_number đúng căn; unit_photo_events có ba sự kiện added mang đúng compartment. Ghi E14-db.txt."
+    steps:
+      - "docker exec quy-hang-db-dkn-H psql: select compartment, building_name, unit_number from unit_photos của căn mẫu, và sự kiện added"
+      - "Chỉ đếm dòng của lượt E12 cuối cùng (added_at từ lúc lượt ấy bắt đầu); lượt E12 nào phải chạy lại thì dùng một căn mẫu chưa có ảnh, không chụp chồng lên căn cũ"
+    paths: ["packages/api/src/photos/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E15
+    criterion: AC-4
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử: chặn mạng, nạp ba ảnh, mở mạng; trong lúc tải chặn phản hồi của lời xác nhận đầu tiên (Fetch.failRequest sau khi máy chủ đã ghi) để máy gửi lại — cuối cùng số dòng unit_photos của căn tăng đúng 3, không mã nào hai dòng. Ghi E15-db.txt (số dòng trước/sau, mã ảnh)."
+    steps:
+      - "Đếm dòng của căn mẫu; chạy cảnh chặn mạng như E12 với Fetch.enable chặn phản hồi POST /api/v1/units/photos đầu tiên"
+      - "Chờ ba ảnh da-tai; đếm lại, liệt mã ảnh"
+    paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/photos/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E16
+    criterion: AC-5
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử sau E14: ghi mọi phản hồi mạng khi dau-khach@mau.quy-hang.test mở hồ sơ căn mẫu ở 375×812 — không phản hồi nào chứa mã ảnh Nội bộ; GET /api/v1/units/photos/<mã Nội bộ>/thumb bằng phiên ấy không trả byte ảnh; trang khách /s/<mã link> do dau-khach@mau.quy-hang.test vừa tạo cho căn mẫu (API chỉ cho đầu khách và trưởng nhóm tạo link) chứa mã ảnh bìa Gửi được của căn — trang khách dựng một ảnh bìa mỗi căn (đối chứng dương của bộ dò trên trang) — và không chứa mã ảnh Nội bộ nào của căn. Đối chứng dương cùng bộ dò: phiên dau-chu-1 mở cùng hồ sơ → bộ dò bắt được mã ảnh Nội bộ. Ghi E16-mang-<vai>.txt."
+    steps:
+      - "Chỗ thử là chỗ thử dãy H của E12 (dev http://localhost:3494, Postgres 5574, dựng bằng _acceptance/ho-so-dien-thoai-product-detail-5/thu/dung-h.mjs), không phải URL ui-check mặc định 3460; phiên lấy bằng dung-h.mjs --phien <email>"
+      - "Lấy mã ảnh Nội bộ và mã một ảnh Gửi được từ E14"
+      - "dau-khach@mau.quy-hang.test tạo link gửi căn mẫu qua luồng Gửi (POST đường tạo link của API bằng phiên ấy), ghi mã link; mở /s/<mã link> không đăng nhập: đối chứng dương — trang chứa mã ảnh bìa Gửi được của căn (đọc từ unit_photos: is_cover hay ảnh Gửi được đầu thứ tự); dò mọi mã ảnh Nội bộ của căn — không có"
+      - "dau-khach@mau.quy-hang.test mở hồ sơ căn mẫu, ghi phản hồi mạng, dò mã; gọi thẳng đường byte của ảnh ấy"
+      - "dau-chu-1 mở cùng hồ sơ — đối chứng dương của bộ dò"
+    paths: ["packages/api/src/photos/**", "apps/web/src/app/(app)/units/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E17
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.ro_ri
+    expected: "exit 0; bộ kiểm rò rỉ của luật ẩn xanh — không cửa ra nào mang ảnh ngăn Nội bộ"
+    paths: ["packages/core/src/redaction/**", "apps/web/src/app/s/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E18
+    criterion: AC-3
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử: dau-chu-1 mở hồ sơ căn mẫu chưa có ảnh ở 375×812, chặn mạng, nạp 2 ảnh Gửi được, đóng ngăn, chạm tab «Hôm nay» (rời hồ sơ, không mở lại), mở mạng, chờ 20 giây — số dòng unit_photos của căn tăng đúng 2 mà không mở lại hồ sơ. Đối chứng hai chiều trên cùng bộ đếm: bản sao giữ hàng chờ trong state của thành phần ngăn (mất khi rời hồ sơ) chạy cùng cảnh thì đếm ra +0. Ghi E18-db.txt (số dòng trước/sau, đường đang mở lúc đếm)."
+    steps:
+      - "Đếm dòng unit_photos của căn mẫu (docker exec quy-hang-db-dkn-H psql)"
+      - "Chặn mạng (Network.emulateNetworkConditions), mở ngăn, nạp 2 ảnh (DOM.setFileInputFiles), đóng ngăn bằng Escape, chạm tab Hôm nay, mở mạng"
+      - "Chờ 20 giây (nhịp thử 15 giây), đếm lại khi trang vẫn ở /today: mong +2; chụp E18-hom-nay.png"
+      - "Chạy lại cảnh trên bản sao giữ hàng chờ trong thành phần: mong +0 — bộ đếm phân biệt được"
+    paths: ["apps/web/src/app/(app)/units/photos/**", "apps/web/src/app/(app)/units/ho-so/dien-thoai/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E19
+    criterion: AC-6
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử, cùng một hồ sơ Chrome: dau-chu-1 chặn mạng, nạp 2 ảnh (một Nội bộ) — indexedDB.databases() có kho ảnh chờ của người ấy; đối chứng dương: tải lại trang và đăng nhập lại dau-chu-1 (không đăng xuất) → ngăn vẫn còn 2 ảnh chờ. Rồi đăng xuất bằng nút thật ở menu tài khoản → indexedDB.databases() không còn kho ảnh chờ nào, kho đồng bộ cũng không còn; đăng nhập truong-nhom@mau.quy-hang.test (người B) cùng trình duyệt, mở cùng căn → ngăn «Chưa chụp ảnh nào cho căn này.», không ảnh chờ của dau-chu-1, số dòng unit_photos của căn không đổi. Ghi E19-idb.txt (danh sách cơ sở dữ liệu ở từng bước)."
+    steps:
+      - "Đăng nhập dau-chu-1 (dung-h.mjs --phien), chặn mạng, nạp 2 ảnh, ghi indexedDB.databases()"
+      - "Tải lại, mở lại ngăn: còn 2 dòng Chờ mạng (đối chứng dương); chụp E19-con.png"
+      - "Bấm Đăng xuất ở menu tài khoản; ghi indexedDB.databases(); chụp E19-dang-xuat.png"
+      - "Đăng nhập người B cùng hồ sơ Chrome, mở cùng căn, mở ngăn: chụp E19-nguoi-b.png; đếm unit_photos của căn"
+    paths: ["apps/web/src/app/(app)/units/photos/**", "apps/web/src/components/shell/account-menu.tsx", "apps/web/src/lib/sync/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]

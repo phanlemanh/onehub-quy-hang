@@ -1,0 +1,1 @@
+driver node fetch + psql, khong co browser tool: n-a (driver). Fallback html thay screenshot (config khong khai capture.ui). Cho thu H 3494 (3460 khong chay).
