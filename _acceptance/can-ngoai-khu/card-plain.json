@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Đầu chủ tạo được hàng cho lô nhà phố, biệt thự, đất trong khu thấp tầng và cho nhà, đất ngoài khu gõ bằng địa chỉ; căn ngoài khu là của riêng sàn, sàn khác không thấy; hàng cũ giữ nguyên.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ nhận hàng mới theo đúng một trong ba cách gọi căn (toà · lô trong khu · căn ngoài khu), từ chối lệnh trộn hai cách, thiếu phần, hay mang thông tin chủ nhà."},
+    {"id": "AC-2", "p": "Sẽ giữ hàng cũ y như trước khi gấp lại lịch sử; hàng lô và hàng ngoài khu ra đúng khu, dãy, lô, căn."},
+    {"id": "AC-3", "p": "Sẽ tạo căn ngoài khu từ địa chỉ gõ cho nhà phố, biệt thự, đất; gõ lại cùng địa chỉ kiểu khác (chữ hoa, «số», tên phường cũ) ra đúng căn cũ."},
+    {"id": "AC-4", "p": "Sẽ từ chối tạo căn khi địa chỉ đọc chưa chắc hay loại hình không hợp, nói rõ phần thiếu."},
+    {"id": "AC-5", "p": "Sẽ xử đất, nhà chưa có số nhà theo câu anh chốt ở Hỏi-2 (khuyến nghị: vẫn tạo được, không gộp theo địa chỉ)."},
+    {"id": "AC-6", "p": "Sẽ giữ căn của mỗi sàn riêng: sàn khác hỏi căn của mình nhận đúng câu như hỏi mã không có; người không có Bảng hàng không tạo, không đọc được căn."},
+    {"id": "AC-7", "p": "Sẽ khoá ở tầng dữ liệu: bảng căn ngoài khu có luật cách ly, một địa chỉ một căn trong sàn, hàng không trỏ được căn của sàn khác."},
+    {"id": "AC-8", "p": "Sẽ tạo được hàng cho ba loại căn ngoài khu và một lô, hàng ở «Chưa đủ để rao»; hàng căn hộ tạo như cũ."},
+    {"id": "AC-9", "p": "Sẽ từ chối mọi lệnh tạo hàng hay tạo căn mang thông tin chủ nhà (tên, số, giá đáy, ảnh sổ)."},
+    {"id": "AC-10", "p": "Sẽ gấp lại toàn bộ bảng hàng từ lịch sử ra đúng bảng cũ, kể cả hàng mới; mọi bộ kiểm hiện có vẫn xanh."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "KHÔNG đưa hàng lô và hàng ngoài khu lên Đang bán ở vòng này — ảnh căn còn khoá theo toà (Hỏi-1)."},
+    {"id": "OOS-2", "p": "KHÔNG làm kiểm trùng lead theo địa chỉ, màn theo loại hình, luật ẩn số nhà, nhập file thấp tầng — mỗi việc một hàng sau (77, 79, 80, 78)."},
+    {"id": "OOS-3", "p": "KHÔNG nạp dữ liệu mẫu thấp tầng vào cơ sở dữ liệu — đề nghị một hàng riêng trước hàng 79."},
+    {"id": "OOS-4", "p": "KHÔNG khoá «một hàng mở trên một căn» ở tầng dữ liệu — giữ ở ứng dụng như hôm nay."},
+    {"id": "OOS-5", "p": "KHÔNG đối chiếu lô với danh mục khi tạo hàng lô — như toà hôm nay."},
+    {"id": "OOS-6", "p": "KHÔNG cho sửa, gộp, xoá căn ngoài khu sau khi tạo."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Ba cách gọi căn (toà · lô · ngoài khu) đều có bài kiểm nhận và từ chối (AC-1, AC-2, AC-8)."},
+    {"i": 1, "p": "Ba loại hình thấp tầng tạo được căn và hàng; căn hộ giữ như cũ (AC-3, AC-8)."},
+    {"i": 2, "p": "Mọi kiểu đọc địa chỉ — chắc đủ, thiếu số nhà, cần chọn xã, thiếu phần — có câu trả lời riêng (AC-3, AC-4, AC-5)."},
+    {"i": 3, "p": "Ranh giới sàn và quyền Bảng hàng đo ở cả API lẫn tầng dữ liệu (AC-6, AC-7)."},
+    {"i": 4, "p": "Lịch sử cũ và mới gấp lại ra đúng bảng (AC-2, AC-10)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Cách tạo căn ngoài khu (lối riêng hay gộp vào lệnh tạo hàng) còn hai lối sống — đã chuyển thành Hỏi-4 cho anh chọn."},
+    {"i": 1, "p": "Tầng dữ liệu chưa chặn hàng trỏ căn sàn khác — đã thêm khoá theo sàn và bài kiểm cách ly."},
+    {"i": 2, "p": "Bài kiểm chưa chứng sàn khác không dò được căn — đã đòi trả lời giống hệt mã không tồn tại."},
+    {"i": 3, "p": "Chưa nói lô có đối chiếu danh mục không — đã chốt không đối chiếu ở vòng này, ghi vào phần không làm."},
+    {"i": 4, "p": "Chưa đo quyền Bảng hàng với căn ngoài khu — đã thêm bài kiểm người không có Bảng hàng."}
+  ]
+}

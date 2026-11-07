@@ -16,7 +16,14 @@ function tronTruongRieng(cu: Readonly<Record<string, boolean | string>>, patch: 
 }
 
 export type ListingState = {
-  buildingName: string;
+  /** Toà — `null` với hàng lô và hàng ngoài khu (hàng can-ngoai-khu). */
+  buildingName: string | null;
+  /** Khu của hàng lô (RESO `SubdivisionName`); `null` với dạng khác. Bản dựng tay đời trước vắng khoá (đọc như `null`). */
+  subdivisionName?: string | null;
+  /** Dãy của hàng lô (`blockName`, đặc trưng Việt Nam). */
+  blockName?: string | null;
+  /** Mã căn ngoài khu của sàn. */
+  offCompoundUnitId?: string | null;
   unitNumber: string | null;
   standardStatus: StandardStatus;
   listPrice: number | null;
@@ -49,7 +56,10 @@ export function foldListing(events: readonly ListingEvent[]): ListingState {
   const dau = ds[0];
   if (!dau || dau.type !== "created") throw new Error("dãy sự kiện phải mở đầu bằng created");
   const s: ListingState = {
-    buildingName: String(dau.payload.buildingName),
+    buildingName: (dau.payload.buildingName as string | undefined) ?? null,
+    subdivisionName: (dau.payload.subdivisionName as string | undefined) ?? null,
+    blockName: (dau.payload.blockName as string | undefined) ?? null,
+    offCompoundUnitId: (dau.payload.offCompoundUnitId as string | undefined) ?? null,
     unitNumber: (dau.payload.unitNumber as string | undefined) ?? null,
     standardStatus: "Incomplete",
     listPrice: null,
@@ -122,3 +132,13 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
   return s;
 }
 
+
+/**
+ * Chữ chỉ chỗ của căn cho màn nội bộ (hàng can-ngoai-khu): toà; hàng lô «khu · dãy»; hàng ngoài khu «Căn ngoài khu». Hiện
+ * đúng theo loại hình là hàng 79 — đây chỉ để màn không gãy với hàng không toà.
+ */
+export function nhanViTri(s: { buildingName: string | null; subdivisionName?: string | null; blockName?: string | null }): string {
+  if (s.buildingName) return s.buildingName;
+  if (s.blockName) return `${s.subdivisionName ?? ""} · ${s.blockName}`;
+  return "Căn ngoài khu";
+}

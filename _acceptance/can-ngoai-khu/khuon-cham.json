@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "den": "0020fb7b4a5a273f916be807760a42a65f6163f9",
+  "base": "ad26850dee5de9f33abe73fa53d536c4af56341b",
+  "ghim": null,
+  "theo_khuon": [
+    "apps/web/src/app/(app)/shares/new/man-gui.tsx",
+    "apps/web/src/app/(app)/units/call/cuoc-goi.tsx",
+    "apps/web/src/app/(app)/units/call/push/ep-gia.tsx",
+    "apps/web/src/app/(app)/units/ho-so/o-ma-can.tsx"
+  ],
+  "lech_moi": [],
+  "no_cu": [],
+  "khong_do": [],
+  "ngoai_ban_do": 9,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "da-gui",
+    "gui",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "hom-nay-dau-khach",
+    "hom-nay-truong-nhom",
+    "lead-cua-toi",
+    "lien-he",
+    "nhap-excel",
+    "o-nhan-lead",
+    "toi",
+    "trang-khach",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}
