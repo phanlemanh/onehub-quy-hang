@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>116 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>117 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -76,6 +76,7 @@ flowchart TD
 - Bộ dữ liệu mẫu của một sàn thử — một dự án căn hộ, hai mẫu file bảng hàng Excel, lead và chủ nhà giả — sinh từ khuôn của bảng hàng thật, mọi bản ghi mang nhãn mẫu (`du-lieu-mau-san-thu`)
 - Bộ dữ liệu mẫu thứ hai — một khu thấp tầng có dãy và lô nhà phố, biệt thự, đất; nhà và đất ngoài khu ở vài phường; một file bảng hàng thấp tầng bẩn có đáp án; lead và chủ nhà giả — sinh từ khuôn, mọi bản ghi mang nhãn mẫu (`du-lieu-mau-thap-tang`)
 - Ghi thiết bị (máy tính hay điện thoại) vào sự kiện của thao tác, và ghi lượt mất mạng cùng thao tác lúc mất mạng trên điện thoại về máy chủ, để hai số đo §11 «thao tác theo thiết bị và vai» và «mất mạng trên điện thoại» đo được trong hai tuần thử (`ghi-thiet-bi-va-mat-mang`)
+- Nút chạy tay trên GitHub ghim lại một hồ sơ nghiệm thu cần biến của bản thật: lấy bí mật từ environment production, chạy làn ghim lại cho đúng một hồ sơ trong danh sách cố định trên nhánh của PR, trả dòng ghim lại ra tệp đính kèm; không bí mật nào rời GitHub, không bộ kiểm ghi nào chạy trên bản thật. (`ghim-lai-ban-that-qua-ci`)
 - Đầu chủ gõ mã lô thấp tầng kiểu nào cũng được và thấy thuộc tính lô tự điền — khu, dãy, loại hình, diện tích đất, số tầng, mặt tiền — như gõ mã căn hộ; mã đọc được mà danh mục chưa có thì báo rõ (`go-ma-lo`)
 - Đầu chủ gọi ép giá đợt hai trên máy tính: thấy lịch sử trả giá và giá đáy nội bộ, ghi kết quả bằng phím, hạ giá theo đúng luật sửa giá (`goi-ep-gia-dot-hai`)
 - Đầu chủ bấm Gọi trên máy tính thì chế độ cuộc gọi mở và điện thoại của mình quay số chủ nhà (`goi-tu-may-tinh`)
