@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3ae68582c551ef73da642eb8a0c5d212c0eaf014
+verified_commit: 104674c5ff1d7c133c7112f8da9f1f808f30a21b
 human_signoff:
 ---
 
@@ -24,86 +24,91 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-ghim-lai-ban-that-qua-ci-E1-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-E1-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
   output: |
+    node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --tinh
     KẾT: ĐẠT
 
 - eval: E2
-  run_id: minted-ghim-lai-ban-that-qua-ci-E2-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-E2-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
   output: |
+    node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --pha
     KẾT: ĐẠT
 
 - eval: E3
-  run_id: minted-ghim-lai-ban-that-qua-ci-E3-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-E3-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
   output: |
+    node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --chan
     KẾT: ĐẠT
 
 - eval: E4
-  run_id: minted-ghim-lai-ban-that-qua-ci-E4-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-E4-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
   output: |
+    node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --trong
     KẾT: ĐẠT
 
 - eval: E5
-  run_id: minted-ghim-lai-ban-that-qua-ci-E5-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-E5-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
   output: |
+    node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --quet
     KẾT: ĐẠT
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 - cmd: npm run test:hooks
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-test_hooks-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 - cmd: npm run typecheck
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-typecheck-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 - cmd: npm run lint
-  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-lint-r2
+  run_id: minted-ghim-lai-ban-that-qua-ci-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-07T21:35:45Z
+  verified_at: 2026-11-07T21:56:57Z
 
 ## Known limits
 
@@ -111,20 +116,16 @@ human_signoff:
 
 ## Analyst
 
-none — không eval nào bị đánh dấu không-phân-biệt (baseline của cả năm eval là n-a, xem mục dưới).
+carried tu round 2 — baseline khong do lai round nay
 
-Baseline khong do:
-- node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --tinh: bo qua baseline: tep _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs co o cay dang kiem nhung chua co o merge-base ad26850dee5de9f33abe73fa53d536c4af56341b — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --pha: bo qua baseline: tep _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs co o cay dang kiem nhung chua co o merge-base ad26850dee5de9f33abe73fa53d536c4af56341b — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --chan: bo qua baseline: tep _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs co o cay dang kiem nhung chua co o merge-base ad26850dee5de9f33abe73fa53d536c4af56341b — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --trong: bo qua baseline: tep _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs co o cay dang kiem nhung chua co o merge-base ad26850dee5de9f33abe73fa53d536c4af56341b — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --quet: bo qua baseline: tep _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs co o cay dang kiem nhung chua co o merge-base ad26850dee5de9f33abe73fa53d536c4af56341b — eval moi, chay tren code cu khong phan biet gi
+Eval khong-phan-biet: none. Baseline round nay khong do lai (evals.yaml khong doi tu lan baseline cuoi, round 2), nen moi block eval ghi baseline n-a. Lenh suite xanh o ca hai phia la regression-guard binh thuong, khong liet ke.
 
 ## Variance
 
-none — every multi-run eval is uniform
+none — every multi-run eval is uniform (moi eval chay mot lan, deterministic)
 
 ## Iterations
 
-Round 1: bản đầu của bộ chặn và bài tự kiểm được dựng; sau phản biện, chủ kho nâng phạm vi sửa ngay (bộ chặn danh sách cho phép, giải như main, đọc bằng bộ đọc của kit). Returned to implementation.
-Round 2: E1-E5 đều đạt, bảy lệnh suite đều xanh; kết quả PASS trên cây 3ae68582.
+Round 1: lich su round nay nam trong run-log, khong lap lai o day.
+Round 2: S4 lan 2 dat, dung va, trinh ba duong (commit b19ab9d2).
+Round 3: E1-E5 va bay lenh suite deu dat tren commit 104674c5 (bo chan chay truoc cai goi, cai goi khong chay script, chan hai khoa chay lenh, tep nut vao t3_paths). Cac loi ngoai hop dong nam trong review-findings.md.
