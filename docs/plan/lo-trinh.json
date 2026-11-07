@@ -2879,6 +2879,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     },
     {
+      "ma": "ghim-lai-ban-that-qua-ci",
+      "cau_giao": "Thêm một lượt chạy bằng tay trên GitHub (environment production) ghim lại một hồ sơ nghiệm thu cần biến của bản thật: lấy chuỗi kết nối và khoá từ bí mật GitHub, chạy làn ghim lại cho đúng một hồ sơ trên nhánh của PR, đẩy dòng ghim về nhánh ấy; không in bí mật, không chạy bộ kiểm ghi nào trên bản thật; chủ kho chỉ bấm chạy và duyệt environment.",
+      "slug": "ghim-lai-ban-that-qua-ci",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
+    },
+    {
       "ma": "mau-api-ten-truong-tieng-anh",
       "cau_giao": "Đường API mẫu bảng hàng và mẫu bài của sàn (/api/v1/company/templates/export, /posts) và dữ liệu mẫu đã lưu dùng tên trường tiếng Anh; mẫu sàn đã lưu bằng tên cũ vẫn đọc và xuất được, lần lưu kế ghi tên mới.",
       "slug": "mau-api-ten-truong-tieng-anh",
@@ -2892,6 +2898,25 @@
         "packages/core/src/sharing/**",
         "apps/web/src/app/(app)/settings/templates/**"
       ]
+    },
+    {
+      "ma": "man-mau-bao-mau-hong",
+      "cau_giao": "Màn Mẫu của Cài đặt › Sàn báo cho Quản trị khi mẫu bảng hàng hay mẫu bài đã lưu có chỗ không đọc được, nói rõ chỗ nào; lần lưu kế không lặng lẽ xoá các chỗ ấy mà Quản trị biết trước điều sẽ xảy ra.",
+      "slug": "man-mau-bao-mau-hong",
+      "vi_sao": "Ngoài-9 của mau-bang-hang-va-bai (#191): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 07/11 (sổ d-20261107T114018Z-46). Hàng không mã — đã quyết.",
+      "sau": [
+        "mau-api-ten-truong-tieng-anh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/settings/templates/**",
+        "packages/api/src/mau-san/**"
+      ]
+    },
+    {
+      "ma": "va-bang-hang-hydration",
+      "cau_giao": "Bảng hàng không báo lỗi hydration khi mở: máy chủ dựng khung đang tải còn máy khách dựng trạng thái trống hay thanh công cụ có dữ liệu cục bộ (bốn khung lỗi ghi ở _acceptance/mau-bang-hang-va-bai/evidence/E10-console-errors.txt); bài nhìn màn nào mở Bảng hàng cũng sạch console.",
+      "slug": "va-bang-hang-hydration",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     }
   ],
   "chan_troi": [

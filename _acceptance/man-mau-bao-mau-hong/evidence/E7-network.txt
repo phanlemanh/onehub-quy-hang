@@ -1,0 +1,6 @@
+console errors (playwright, all):
+[ERROR] Failed to load resource: 404 http://localhost:3491/favicon.ico (static, note-only)
+
+network app-scope (last page load, non-static):
+[GET] http://localhost:3491/api/v1/listings => 200
+no 4xx/5xx on fetch/XHR to app origin observed

@@ -1,0 +1,84 @@
+# Bộ đo của hàng vá va-bang-hang-hydration. Đo hydration: thu/kiem-hydration.mjs (bản dev, Chrome không đầu, bốn ca,
+# bàn đo dãy D 5575/e11 · 3585, khoá chung với các lệnh đo của dãy D).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
+    long_running: 60
+    paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-bang-hang-hydration/thu/**"]
+    expected: "exit 0; dòng cuối «hydration SẠCH: 0 lỗi hydration ở cả 6 ca; mất mạng vẫn hiện hàng trong 5 giây»; sáu dòng ca (máy tính · mở đầu, máy tính · mở lại, máy tính · góc nhìn đã lưu · mở lại, máy tính · mở lại · mất mạng, điện thoại · mở đầu, điện thoại · mở lại) đều «có hàng · … lỗi hydration 0», dòng mất mạng có «hàng từ kho trên máy hiện trong 5 giây». Đỏ in «hydration ĐỎ: <n> lỗi hydration trên Bảng hàng» kèm khung lỗi đầu; ca không hiện hàng in «KHÔNG ĐO ĐƯỢC» (exit 2). Chiều đỏ của cùng lệnh ở E2."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs --sha a5682245
+    long_running: 60
+    expected_exit: 1
+    paths: ["_acceptance/va-bang-hang-hydration/thu/**"]
+    expected: "exit 1 với «hydration ĐỎ: <n> lỗi hydration trên Bảng hàng» trên nhánh chính trước vòng (a5682245) — cùng lệnh, chỉ đổi cây; bốn dòng ca khổ máy tính (mở đầu, mở lại, góc nhìn đã lưu · mở lại, mở lại · mất mạng) mỗi dòng «lỗi hydration ≥ 1» (đo 07/11: mỗi ca 1, tổng 4). Hai ca khổ điện thoại 0 trên bản cũ — thước không phân biệt ở đó (ghi ở contract Context). exit 0 nghĩa là thước không bắt được lỗi đã ghi ở E10-console-errors.txt."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1b
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-bang-hang-hydration/thu/kiem-hydration.mjs
+    long_running: 60
+    paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-bang-hang-hydration/thu/**"]
+    expected: "exit 0; dòng «máy tính · mở lại · mất mạng: có hàng · hàng từ kho trên máy hiện trong 5 giây» (lệnh chặn mọi yêu cầu /api/v1 rồi mở lại /inventory). Đỏ in «hydration ĐỎ: mất mạng thì hàng trong kho trên máy không hiện trong 5 giây»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    steps:
+      - "E1 tự tắt máy chủ của nó, nên bật bản dev của cây: node _acceptance/va-bang-hang-hydration/thu/dung-d.mjs (in bảng người ↔ số hàng; dau-chu-1 thấy N). Đăng nhập dau-chu-1@mau.quy-hang.test (mã: grep \"[ma-dang-nhap] dau-chu-1@mau.quy-hang.test\" .acceptance-runs/va-bang-hang-e11-hieu-nang/web-d.log | tail -1)."
+      - "Khổ 1440x900: mở /inventory, chờ lưới; tải lại trang (kho trên máy đã có hàng) → chụp evidence/E3-may-tinh.png; ghi dòng đếm «x / y căn» và có còn khung đang tải không."
+      - "Khổ 375x812: mở /inventory, tải lại → chụp evidence/E3-dien-thoai.png; ghi số thẻ thấy và có còn khung đang tải không."
+      - "Tắt: node _acceptance/va-bang-hang-hydration/thu/dung-d.mjs --tat"
+    question: "Sau khi tải lại, Bảng hàng ở khổ máy tính hiện lưới với dòng đếm «N / N căn» (N bằng số dung-d in cho dau-chu-1) và ở khổ điện thoại hiện danh sách thẻ — không còn khung đang tải?"
+    expected: "Máy tính: dòng đếm «N / N căn» khớp số dung-d in, lưới có hàng; điện thoại: có thẻ căn; không khung đang tải nào còn lại."
+    evidence_required: [run_id, verifier, verified_at, screenshot]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/**"]
+    expected: "exit 0"
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.lint
+    paths: ["apps/web/**", "design/patterns/**"]
+    expected: "exit 0; in «mức nợ giao diện: 0/0» và «khuôn: … 0 lệch»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/**"]
+    expected: "exit 0; mọi bài của apps/web đạt."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx", "apps/web/src/app/(app)/inventory/views/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
