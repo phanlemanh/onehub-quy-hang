@@ -51,19 +51,39 @@ export async function listPhotos(tx: pg.PoolClient, toa: string, ma: string): Pr
   return { anh: rows.map(raAnh), noiBo: thay ? "thay" : "an", suaDuoc: thay };
 }
 
-/** Bản gốc đi kèm thân yêu cầu (bản Postgres), hay đã tải thẳng lên kho bằng link ký (bản Storage, `photoId`). */
+/**
+ * Bản gốc đi kèm thân yêu cầu (bản Postgres), hay đã tải thẳng lên kho bằng link ký (bản Storage, `photoId`). Bản Postgres
+ * nhận thêm `photoId` của máy khách (hàng 41): mã tạo lúc chụp, gửi lại sau khi mất phản hồi không sinh ảnh thứ hai.
+ */
 export type TepVao = { toa: string; ma: string; ngan: Compartment; takenAt: string | null; width: number; height: number; thumb: Buffer } & (
-  | { original: Buffer }
+  | { original: Buffer; photoId?: string }
   | { photoId: string }
 );
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Mã ảnh máy khách đưa (hàng 41 chup-anh-dien-thoai, AC-4): sai khuôn → invalid-payload; đã có dòng → 409
+ * photo-already-confirmed (máy khách đối chiếu danh sách). Dòng mà phiên không đọc được vẫn bị chặn ở lệnh ghi
+ * (`on conflict do nothing`).
+ */
+async function maKhach(tx: pg.PoolClient, id: string): Promise<Refusal | null> {
+  if (!UUID.test(id)) return ve(API_ERRORS.invalidPayload);
+  if ((await tx.query("select 1 from unit_photos where id = $1", [id])).rowCount) return ve(API_ERRORS.photoAlreadyConfirmed);
+  return null;
+}
+
 /** Xin link tải bản gốc thẳng lên kho (va-anh-ban-that): kiểm loại, cỡ khai và quyền thêm ảnh như lệnh thêm. */
-export async function uploadUrl(tx: pg.PoolClient, kho: KhoAnh, companyId: string, b: { toa: string; ma: string; contentType: string; byteSize: number }): Promise<{ truc_tiep: false } | { truc_tiep: true; photoId: string; url: string } | Refusal> {
+export async function uploadUrl(tx: pg.PoolClient, kho: KhoAnh, companyId: string, b: { toa: string; ma: string; contentType: string; byteSize: number; photoId?: string }): Promise<{ truc_tiep: false } | { truc_tiep: true; photoId: string; url: string } | Refusal> {
   if (!(PHOTO_TYPES as readonly string[]).includes(b.contentType)) return ve(API_ERRORS.photoNotImage);
   if (!(b.byteSize > 0) || b.byteSize > MAX_PHOTO_BYTES) return ve(API_ERRORS.photoTooLarge);
   if (!(await thayNoiBo(tx, b.toa, b.ma))) return ve(API_ERRORS.listingAgentRequired);
+  if (b.photoId !== undefined) {
+    const tu = await maKhach(tx, b.photoId);
+    if (tu) return tu;
+  }
   if (!kho.taiThang) return { truc_tiep: false };
-  const photoId = randomUUID();
+  const photoId = b.photoId ?? randomUUID();
   return { truc_tiep: true, photoId, url: kho.taiThang.kyLinkTaiLen(companyId, photoId) };
 }
 
@@ -74,12 +94,17 @@ export async function addPhoto(tx: pg.PoolClient, kho: KhoAnh, companyId: string
   let id: string;
   let goc: { dau: Buffer; size: number; bytes?: Buffer };
   if ("original" in t) {
-    id = randomUUID();
+    if (t.photoId !== undefined) {
+      const tu = await maKhach(tx, t.photoId);
+      if (tu) return tu;
+    }
+    id = t.photoId ?? randomUUID();
     goc = { dau: t.original.subarray(0, 64), size: t.original.length, bytes: t.original };
   } else {
     // Bản gốc đã ở kho dưới tiền tố mã sàn của phiên — mã của sàn khác hay mã bịa không có ở đó.
-    if (!kho.taiThang || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t.photoId)) return ve(API_ERRORS.invalidPayload);
-    if ((await tx.query("select 1 from unit_photos where id = $1", [t.photoId])).rowCount) return ve(API_ERRORS.photoAlreadyConfirmed);
+    if (!kho.taiThang) return ve(API_ERRORS.invalidPayload);
+    const tu = await maKhach(tx, t.photoId);
+    if (tu) return tu;
     const tren = await kho.taiThang.kiemBanGoc(companyId, t.photoId);
     if (!tren) return ve(API_ERRORS.photoNotImage);
     id = t.photoId;

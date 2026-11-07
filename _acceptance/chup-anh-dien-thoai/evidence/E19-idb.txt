@@ -1,0 +1,10 @@
+[verifier doc lap lan 3, may dev 3494 (3460 khong chay), Postgres 5574, Chrome headless mot ho so]
+DB truoc: {"can":"?","tong":65}
+B0 databases() luc mo trang (dau-chu-1): ["quy-hang-anh-cho:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42","quy-hang-sync:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42"]
+B1 dong cho: ["cho-mang","cho-mang"] databases(): ["quy-hang-anh-cho:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42","quy-hang-sync:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42"]
+B2 sau tai lai, mo lai ngan: dong ["cho-mang","cho-mang"] databases(): ["quy-hang-anh-cho:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42","quy-hang-sync:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42"]
+B3 databases() ngay truoc dang xuat: ["quy-hang-anh-cho:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42","quy-hang-sync:9a00ea67-7192-4a1e-a9bb-6b41e2f4ee42"]
+B3 nut menu Tai khoan thay duoc: true
+B3 url sau: /login databases() sau: []
+B4 nguoi B: dong cho []; ngan chua cau 'Chua chup anh nao cho can nay': true; databases(): ["quy-hang-anh-cho:f0b3140c-db4d-4259-92c6-a51dbe7ab61a","quy-hang-sync:f0b3140c-db4d-4259-92c6-a51dbe7ab61a"]
+DB sau: {"can":"?","tong":65}

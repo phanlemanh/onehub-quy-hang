@@ -43,7 +43,7 @@ export type SuaAnh = { compartment?: Compartment; order?: string[]; isCover?: tr
 /** Đường tới API ảnh — bản thật gọi `/api/v1/units/photos`; trang bấm được truyền bản trong bộ nhớ. */
 export type NguonAnh = {
   danhSach(): Promise<DanhSachAnh>;
-  them(tep: TepSanSang, ngan: Compartment): Promise<void>;
+  them(tep: TepSanSang, ngan: Compartment, photoId?: string): Promise<void>;
   sua(id: string, sua: SuaAnh): Promise<void>;
   xoa(id: string): Promise<void>;
   urlAnh(id: string, bien: "thumb" | "original"): string;
@@ -66,7 +66,7 @@ function useNgoaiTuyen() {
   );
 }
 
-export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
+export function MucAnh({ nguon, toaMa, lanTai = 0 }: { nguon: NguonAnh; toaMa: string; lanTai?: number }) {
   const [ds, setDs] = useState<DanhSachAnh | null>(null);
   const [loiTai, setLoiTai] = useState(false);
   const [the, setThe] = useState<The>("shareable");
@@ -89,7 +89,8 @@ export function MucAnh({ nguon, toaMa }: { nguon: NguonAnh; toaMa: string }) {
       () => setLoiTai(true),
     );
   }, [nguon]);
-  useEffect(tai, [tai]);
+  // lanTai: ảnh chụp từ hàng chờ vừa lên máy chủ (hàng 41) — đọc lại; danh sách cũ giữ trên màn tới khi có danh sách mới.
+  useEffect(tai, [tai, lanTai]);
   const lam = (viec: ViecAnh, goi: () => Promise<void>) => void lamViec(viec, goi, { baoLoi: (chu) => toast.error(chu, { toasterId: KHUNG_BAO }), taiLai: tai });
 
   const nhan = useCallback(

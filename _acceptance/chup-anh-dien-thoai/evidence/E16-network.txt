@@ -1,0 +1,6 @@
+# E16 NETWORK TRUTH 2026-11-06 (app origin http://localhost:3460 khai trong config; chay that tren cho thu dung-h http://localhost:3494)
+trang khach /s/6CA79Zbb81dN (khong dang nhap): 19 response, 0 loi >=400; 1 anh = /api/v1/public/shares/.../photos/90395cc9-... (bia Gui duoc); 0 ma Noi bo; POST/GET public/shares/.../events 201/200
+dau-khach /units/A-10.05: 33 response, 0 loi, 0 chua ma Noi bo (xem E16-mang-dau-khach.txt)
+dau-chu-1 /units/A-10.05: 32 response, 0 loi, bat 4 phan hoi chua ma Noi bo (xem E16-mang-dau-chu-1.txt)
+curl: dau-khach GET photos/<2 ma Noi bo>/thumb|original = 404 {"error":"not-found"}; khong cookie = 401
+LUU Y: lan dau goto /s/<ma> bang waitUntil=networkidle het 30s (trang khach co beacon events) -> doi sang load; note-only
