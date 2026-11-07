@@ -5,7 +5,7 @@ slug: va-thuoc-ci-ho-so-moi-truong-that
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, config]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-07
 design_doc: docs/superpowers/specs/2026-11-07-va-thuoc-ci-ho-so-moi-truong-that-design.md
@@ -59,3 +59,12 @@ ghim lại hồ sơ ấy cần chuỗi kết nối bản thật — chủ kho t�
   test:isolation; E3 chạy bộ cách ly trên bản thật) chuyển sang hàng `va-thuoc-ci-moi-truong-that-ban-that` theo quyết
   định của giám sát 07/11 (ghim lại hồ sơ ấy cần DATABASE_URL bản thật, chủ kho tự chạy). Hỏi-1, Hỏi-2 của Cổng Phạm vi
   thuộc phần ấy và đi theo sang hàng sau.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-07:
+  - Ngoài-1: Báo cáo đã ký của bat-rang-buoc-ban-ma (ghim lại lần 2) còn ghi tiêu chí thay cũ kiem-nhanh#AC-1, trong khi
+    cấu hình đã trỏ va-deploy-csdl-tam#AC-3; đúng lại ở lần ghim sau.
+  - Ngoài-2: Mục ghim lại lần 2 của cùng hồ sơ tả lần thay khác lần thay thật; người duyệt sau đọc theo cấu hình, không
+    theo mục ấy.
+  - Ngoài-3: Thẻ Cổng Phạm vi của hàng này vẽ trước khi tách hàng, nên tả phạm vi rộng hơn và số AC cũ; hợp đồng hiện
+    hành là bản đúng.
+  - Ngoài-4: Phép kiểm E1 chỉ xác nhận có con trỏ thay, không đối chiếu với con trỏ trong lần ghim đã chứng, nên lệch kiểu
+    Ngoài-1 vẫn lọt.
