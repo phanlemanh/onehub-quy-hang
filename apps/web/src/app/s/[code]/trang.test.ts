@@ -130,3 +130,16 @@ test("trang khách: chữ theo từ vựng", () => {
   assert.ok(coTv.includes("BP") && !coTv.includes("Bao phí"), "thẻ còn bảng PHI cứng");
   assert.ok(dung([b], "khach_rieng").includes("Bao phí"));
 });
+
+test("trang khách: căn không ảnh (anh-khong-chan-ban E9)", async () => {
+  const { ChiTiet } = await import("./chi-tiet");
+  const khong: CanRaNgoai = { ...ra(canMoi(), "khach_rieng"), photos: [] };
+  const the = renderToStaticMarkup(h(TheCan, { b: khong, i: 0, code: MA, listingId: "L0" }));
+  const chiTiet = renderToStaticMarkup(h(ChiTiet, { b: khong, code: MA, listingId: "L0" }));
+  assert.ok(!/<img/.test(the), "thẻ căn không ảnh không có thẻ ảnh");
+  assert.ok(/<svg/.test(the), "thẻ căn có ô ảnh trống (icon)");
+  assert.ok(!/<img/.test(chiTiet), "chi tiết căn không ảnh không có thẻ ảnh");
+  assert.ok(/<svg/.test(chiTiet), "chi tiết có ô ảnh trống (icon)");
+  const co = ra(canMoi(), "khach_rieng");
+  assert.ok((co.photos ?? []).length > 0 && /<img/.test(renderToStaticMarkup(h(TheCan, { b: co, i: 0, code: MA, listingId: "L0" }))), "đối chứng: căn có ảnh hiện ảnh đầu");
+});

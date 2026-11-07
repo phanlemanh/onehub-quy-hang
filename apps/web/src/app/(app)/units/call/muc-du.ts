@@ -8,8 +8,14 @@ export type DongMucDu = { filled: number; total: number; chu: string; conThieu: 
 
 export const DA_DU = "Đã đủ năm mục";
 
-export function dongMucDu(can: Pick<ListingState, "listPrice" | "feeInclusion" | "furnished" | "legalStatus" | "financing" | "occupantType"> | null): DongMucDu {
-  const c = completeness(can ?? { listPrice: null, feeInclusion: null, furnished: null, legalStatus: null, financing: null, occupantType: null });
-  const nhan = c.missing.map((m) => DANH_SACH_HOI.find((h) => h.ma === m)!.nhan.toLowerCase());
-  return { filled: c.filled, total: c.total, chu: `Mức đủ ${c.filled}/${c.total}`, conThieu: nhan.length ? `Còn thiếu: ${nhan.join(", ")}` : DA_DU };
+export function dongMucDu(
+  can: (Pick<ListingState, "listPrice" | "feeInclusion" | "furnished" | "legalStatus" | "financing" | "occupantType"> & { photosCount?: number }) | null,
+): DongMucDu {
+  // Mục ảnh (anh-khong-chan-ban) có mặt khi bản xem mang số ảnh; ảnh không có trong danh sách hỏi nên nhãn lấy riêng.
+  const c = completeness(
+    can ?? { listPrice: null, feeInclusion: null, furnished: null, legalStatus: null, financing: null, occupantType: null },
+    can?.photosCount === undefined ? undefined : { photosCount: can.photosCount },
+  );
+  const nhan = c.missing.map((m) => (m === "photos" ? "ảnh thật" : DANH_SACH_HOI.find((h) => h.ma === m)!.nhan.toLowerCase()));
+  return { filled: c.filled, total: c.total, chu: `Mức đủ ${c.filled}/${c.total}`, conThieu: nhan.length ? `Còn thiếu: ${nhan.join(", ")}` : c.total === 5 ? DA_DU : `Đã đủ ${c.total} mục` };
 }

@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { STANDARD_STATUSES, type StandardStatus } from "@quy-hang/core/listing";
 import type { UnitPhoto } from "@quy-hang/core/photos";
 import { dungLenhTrangThai, moTaLoi, type HangSua } from "../../inventory/cell-edit/lenh";
-import { bamSanSang, CHU_ANH_CAP_NHAT, dauCuaCan, demAnhThat, hienNutSanSang, kiemSanSang, thieuHienTai, type KetQuaGui } from "./san-sang";
+import { bamSanSang, CHU_ANH_CAP_NHAT, dauCuaCan, demAnhThat, docToiThieuSan, hienNutSanSang, kiemSanSang, thieuHienTai, type KetQuaGui } from "./san-sang";
 
 const DU: HangSua = { id: "h1", unitNumber: "A-0601", listPrice: 3_250_000_000, feeInclusion: "included", standardStatus: "Incomplete", legalStatus: "pink_book", occupantType: "vacant" };
 /** Ảnh dạng phản hồi của API ảnh (kiểu UnitPhoto của lõi). */
@@ -70,11 +70,11 @@ test("E5 chỉ đúng chỗ thiếu: ma trận viết trước", () => {
     ],
   ];
   for (const [ten, doi, soAnh, mong] of CA) {
-    const kq = kiemSanSang({ ...DU, ...doi }, soAnh);
+    const kq = kiemSanSang({ ...DU, ...doi }, soAnh, 1);
     assert.deepEqual(kq.thieu.map((t) => [t.nhan, t.dich]), mong, ten);
     assert.equal(kq.lenh, null, `${ten}: không lệnh`);
   }
-  assert.deepEqual(kiemSanSang(DU, 1).thieu, [], "đủ → rỗng");
+  assert.deepEqual(kiemSanSang(DU, 1, 1).thieu, [], "đủ → rỗng");
 });
 
 test("E5b đếm ảnh thật như máy chủ: ma trận viết trước", () => {
@@ -90,16 +90,16 @@ test("E5b đếm ảnh thật như máy chủ: ma trận viết trước", () =>
 });
 
 test("E6 đủ thì gửi đúng một lệnh của trình sửa ô", async () => {
-  const kq = kiemSanSang(DU, 1);
+  const kq = kiemSanSang(DU, 1, 1);
   // Cờ «Sẵn sàng bán» true: nút chỉ hiện cho người đủ cờ (bảng quyền của hàng).
   const tuO = dungLenhTrangThai(DU, "Active", {}, true);
   assert.ok(tuO.ok && "lenh" in tuO);
   assert.deepEqual(kq.lenh, tuO.lenh, `payload: ${JSON.stringify(kq.lenh)}`);
   const da: unknown[] = [];
   const gui = async (l: unknown): Promise<KetQuaGui> => (da.push(l), { ok: true });
-  assert.deepEqual(await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui }), { kind: "da-gui" });
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui }), { kind: "da-gui" });
   assert.deepEqual(da, [{ type: "status_changed", payload: { to: "Active" } }]);
-  const tt = await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable", true)] }), gui });
+  const tt = await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: async () => ({ anh: [anh("shareable", true)] }), gui });
   assert.equal(tt.kind, "thieu");
   assert.equal(da.length, 1, "còn thiếu mà vẫn gửi");
 });
@@ -110,12 +110,12 @@ test("E10 ngoại tuyến hay đọc ảnh lỗi: «Cần mạng để kiểm �
   const loi = async () => {
     throw new TypeError("Failed to fetch");
   };
-  assert.deepEqual(await bamSanSang(DU, { onLine: true, docAnh: loi, gui: g }), { kind: "can-mang" }, "đọc ảnh lỗi không được coi là 0 ảnh");
-  assert.deepEqual(await bamSanSang(DU, { onLine: false, docAnh: async () => ({ anh: [anh("shareable")] }), gui: g }), { kind: "can-mang" });
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: loi, gui: g }), { kind: "can-mang" }, "đọc ảnh lỗi không được coi là 0 ảnh");
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 1, onLine: false, docAnh: async () => ({ anh: [anh("shareable")] }), gui: g }), { kind: "can-mang" });
   assert.equal(gui, 0);
-  assert.deepEqual(await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: g }), { kind: "da-gui" }, "đối chứng");
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: g }), { kind: "da-gui" }, "đối chứng");
   const nguon = readFileSync(fileURLToPath(new URL("./nut-san-sang.tsx", import.meta.url)), "utf8");
-  assert.match(nguon, /disabled=\{!coMang \|\| dang\}/, "nút không mờ khi ngoại tuyến");
+  assert.match(nguon, /disabled=\{\(toiThieu > 0 && !coMang\) \|\| dang\}/, "nút không mờ khi ngoại tuyến");
   assert.match(nguon, /CHU_CAN_MANG_KIEM_ANH/, "thiếu chữ «Cần mạng để kiểm ảnh»");
 });
 
@@ -145,7 +145,7 @@ test("VSSB-E3 danh sách suy lại từ hàng đang xem: ma trận viết trư�
   let gui = 0;
   const g = async (): Promise<KetQuaGui> => (gui++, { ok: true });
   const bam = async (hang: HangSua, soAnh: number) => {
-    const tt = await bamSanSang(hang, { onLine: true, docAnh: async () => ({ anh: Array.from({ length: soAnh }, () => anh("shareable")) }), gui: g });
+    const tt = await bamSanSang(hang, { toiThieu: 1, onLine: true, docAnh: async () => ({ anh: Array.from({ length: soAnh }, () => anh("shareable")) }), gui: g });
     assert.equal(tt.kind, "thieu", "lần bấm phải ra danh sách");
     return tt;
   };
@@ -186,21 +186,41 @@ test("VSSB-E4 lệnh không vào hàng đợi: báo lỗi bằng câu của trì
     }, "Máy chưa lưu được lần sửa — thử lại"],
   ];
   for (const [ten, gui, chu] of CA) {
-    const tt = await bamSanSang(DU, { onLine: true, docAnh: doc, gui });
+    const tt = await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: doc, gui });
     assert.deepEqual(tt, { kind: "loi", chu }, `${ten}: kind ${tt.kind}`);
   }
   assert.equal(moTaLoi({ kind: "missing-requirement", missing: ["legalStatus"] }), "Thiếu pháp lý");
   const nguon = NUT();
-  assert.match(nguon, /disabled=\{!coMang \|\| dang\}/, "nút bị khoá theo trạng thái lỗi");
+  assert.match(nguon, /disabled=\{\(toiThieu > 0 && !coMang\) \|\| dang\}/, "nút bị khoá theo trạng thái lỗi");
   assert.match(nguon, /tt\.kind === "loi" \? <TrangThai kind="error"/, "lời báo lỗi không dùng TrangThai kiểu error");
 });
 
 test("VSSB-E5 lệnh vào hàng đợi: «đã gửi», đúng một lệnh (đối chứng)", async () => {
   const da: unknown[] = [];
-  const tt = await bamSanSang(DU, { onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: async (l) => (da.push(l), { ok: true }) });
+  const tt = await bamSanSang(DU, { toiThieu: 1, onLine: true, docAnh: async () => ({ anh: [anh("shareable")] }), gui: async (l) => (da.push(l), { ok: true }) });
   assert.deepEqual(tt, { kind: "da-gui" });
   // Cờ «Sẵn sàng bán» true: nút chỉ hiện cho người đủ cờ (bảng quyền của hàng).
   const tuO = dungLenhTrangThai(DU, "Active", {}, true);
   assert.ok(tuO.ok && "lenh" in tuO);
   assert.deepEqual(da, [tuO.lenh]);
+});
+
+test("số tối thiểu của sàn (anh-khong-chan-ban E7)", async () => {
+  const daGui: unknown[] = [];
+  const g = async (l: unknown) => (daGui.push(l), { ok: true as const });
+  assert.deepEqual(kiemSanSang(DU, 0, 0).thieu, [], "tối thiểu 0, 0 ảnh: không thiếu");
+  assert.ok(kiemSanSang(DU, 0, 0).lenh, "tối thiểu 0, 0 ảnh: sẵn sàng");
+  assert.deepEqual(kiemSanSang(DU, 1, 2).thieu.map((t) => t.nhan), ["Ảnh thật"], "tối thiểu 2, 1 ảnh");
+  assert.deepEqual(kiemSanSang(DU, 0).thieu, [], "vắng tối thiểu: mặc định 0");
+  const loi = async () => {
+    throw new Error("mất mạng");
+  };
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 0, onLine: false, docAnh: loi, gui: g }), { kind: "da-gui" }, "tối thiểu 0 lúc mất mạng vẫn gửi");
+  assert.equal(daGui.length, 1, "đúng một lệnh");
+  assert.deepEqual(await bamSanSang(DU, { toiThieu: 2, onLine: false, docAnh: loi, gui: g }), { kind: "can-mang" }, "tối thiểu 2 lúc mất mạng cần mạng");
+  const docSan = (items: { key: string; value: unknown }[] | null) => async () =>
+    items ? new Response(JSON.stringify({ items }), { status: 200 }) : new Response("{}", { status: 500 });
+  assert.equal(await docToiThieuSan(docSan([{ key: "listing.ready_min_real_photos", value: 2 }])), 2, "đọc số của sàn");
+  assert.equal(await docToiThieuSan(docSan([])), 0, "sàn chưa đặt: 0");
+  assert.equal(await docToiThieuSan(docSan(null)), 0, "đọc hỏng: 0");
 });

@@ -103,7 +103,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 
 | # | Khoá | Điểm | Kiểu | Mặc định | Khoảng | Ai đổi | Ghi đè | Hiệu lực | Lớp | Tình trạng | Nguồn | Màn |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 33 | `listing.ready_min_real_photos` | Số ảnh thật tối thiểu (ngăn Gửi được, không ảnh mẫu, chưa xoá) để căn vào Đang bán | `int` | 0 | 0–20 | Quản trị sàn | — | lần đổi trạng thái kế | company_internal | Mở | Luật 17; hàng 23 (giám sát đồng ý 01/11); anh-khong-chan-ban (chủ kho 06/11: mặc định 0, thiếu ảnh không chặn bán, sàn đặt 1–20 thì chặn như cũ); MLS mỗi nơi một luật (Đối chiếu ngành §7); lõi `listing/san-sang.ts`, máy chủ đọc khi đổi sang Đang bán | chưa có |
+| 33 | `listing.ready_min_real_photos` | Số ảnh thật tối thiểu (ngăn Gửi được, không ảnh mẫu, chưa xoá) để căn vào Đang bán | `int` | 0 | 0–20 | Quản trị sàn | — | lần đổi trạng thái kế | company_internal | Mở | Luật 17; hàng 23 (giám sát đồng ý 01/11); anh-khong-chan-ban (chủ kho 06/11: mặc định 0, thiếu ảnh không chặn bán, sàn đặt 1–20 thì chặn như cũ); MLS mỗi nơi một luật (Đối chiếu ngành §7); lõi `listing/san-sang.ts`, máy chủ đọc khi đổi sang Đang bán | anh-khong-chan-ban |
 
 ## B. Ứng viên — chưa mở, chờ điều kiện
 

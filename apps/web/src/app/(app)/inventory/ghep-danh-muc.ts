@@ -56,6 +56,13 @@ function mucDu(c: unknown): number | null {
   return c && typeof c === "object" && "filled" in c && typeof c.filled === "number" ? c.filled : null;
 }
 
+/** Mục ảnh của mức đủ (anh-khong-chan-ban): chỉ khi bản xem mang tổng khác năm — dòng của bản xem đời trước giữ nguyên. */
+function mucAnh(c: unknown): Pick<DongBang, "mucDuTong" | "thieuAnh"> {
+  if (!c || typeof c !== "object" || !("total" in c) || typeof c.total !== "number" || c.total === 5) return {};
+  const thieu = "missing" in c && Array.isArray(c.missing) && c.missing.includes("photos");
+  return { mucDuTong: c.total, ...(thieu && { thieuAnh: true }) };
+}
+
 /**
  * Một hàng của kho trên máy thành một dòng của bảng. Bảng hàng trao `danhBa` (kể cả `null` khi chưa đọc được) để có cột
  * «Đầu chủ»; chỗ khác (Hôm nay, bảng thẻ) không trao thì dòng không có cột ấy.
@@ -79,6 +86,7 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaD
     occupantType: l.occupantType,
     ...soNgay(l.freshness),
     completeness: mucDu(l.completeness),
+    ...mucAnh(l.completeness),
     visibility: l.visibility ?? null,
     closePrice: l.closePrice,
     closeDate: l.closeDate,

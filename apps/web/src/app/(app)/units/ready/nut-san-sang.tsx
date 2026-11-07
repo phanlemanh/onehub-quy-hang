@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useDocPhienBan, useSuaHang } from "@/lib/sync/react";
 import type { HangSua } from "../../inventory/cell-edit/lenh";
 import { nguonApi } from "../photos/nguon-api";
-import { bamSanSang, CHU_ANH_CAP_NHAT, CHU_CAN_MANG_KIEM_ANH, NEO_MA_CAN, thieuHienTai, type Dich, type TrangThaiNut } from "./san-sang";
+import { bamSanSang, CHU_ANH_CAP_NHAT, CHU_CAN_MANG_KIEM_ANH, docToiThieuSan, NEO_MA_CAN, thieuHienTai, type Dich, type TrangThaiNut } from "./san-sang";
 
 function useCoMang() {
   return useSyncExternalStore(
@@ -37,6 +37,15 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
   const nguon = useMemo(() => (ma ? nguonApi(toa, ma) : null), [toa, ma]);
   const [tt, setTt] = useState<TrangThaiNut>({ kind: "san" });
   const [dang, setDang] = useState(false);
+  // Số ảnh tối thiểu của sàn (anh-khong-chan-ban): 0 thì không đếm ảnh, mất mạng vẫn bấm được; chưa đọc xong coi như 0.
+  const [toiThieu, setToiThieu] = useState(0);
+  useEffect(() => {
+    let con = true;
+    void docToiThieuSan().then((n) => con && setToiThieu(n));
+    return () => {
+      con = false;
+    };
+  }, []);
 
   const bam = async () => {
     setDang(true);
@@ -45,6 +54,7 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
         onLine: navigator.onLine,
         docAnh: () => (nguon ? nguon.danhSach() : Promise.resolve({ anh: [] })),
         gui: (lenh) => sua(hang.id, lenh.type, lenh.payload, docPhienBan(hang.id)),
+        toiThieu,
       });
       setTt(kq);
     } finally {
@@ -62,11 +72,11 @@ export function NutSanSang({ hang, toa, ma, onThieu }: { hang: HangSua; toa: str
   // Nút gỡ ra (lần rao lên Đang bán, đổi lần rao) thì dấu «Chưa có» của lần rao ấy không còn.
   useEffect(() => () => onThieu(id, []), [id, onThieu]);
 
-  const canMang = !coMang || tt.kind === "can-mang";
+  const canMang = (toiThieu > 0 && !coMang) || tt.kind === "can-mang";
   return (
     <div className="flex flex-col gap-2" data-slot="san-sang-ban">
       <div className="flex items-center gap-2">
-        <Button size="sm" disabled={!coMang || dang} onClick={() => void bam()}>
+        <Button size="sm" disabled={(toiThieu > 0 && !coMang) || dang} onClick={() => void bam()}>
           Sẵn sàng bán
         </Button>
         {canMang ? <span className="text-xs text-muted-foreground">{CHU_CAN_MANG_KIEM_ANH}</span> : null}
