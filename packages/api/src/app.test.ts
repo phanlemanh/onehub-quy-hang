@@ -46,6 +46,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/listings",
     "GET /api/v1/listings/{listingId}",
     "POST /api/v1/listings/{listingId}/events",
+    // Căn ngoài khu (hàng 76 can-ngoai-khu).
+    "POST /api/v1/off-compound-units",
+    "GET /api/v1/off-compound-units/{id}",
     "POST /api/v1/imports",
     "POST /api/v1/imports/{importId}/rows",
     "GET /api/v1/imports/agents",

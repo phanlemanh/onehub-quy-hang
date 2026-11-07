@@ -30,7 +30,8 @@ export type NguoiGui = { companyName: string; senderName: string };
  */
 export function canNoiBoTu(l: ListingView, u: CatalogUnitData | undefined, nguoi: NguoiGui, photos: readonly UnitPhoto[]): CanNoiBo {
   return {
-    buildingName: l.buildingName,
+    // Hàng không toà (can-ngoai-khu): chỉ tên khu ra ngoài, không dãy, không địa chỉ — luật ẩn theo loại hình là hàng 80.
+    buildingName: l.buildingName ?? l.subdivisionName ?? "Căn ngoài khu",
     livingArea: u?.livingArea ?? null,
     bedroomsTotal: u?.bedroomsTotal ?? null,
     directionFaces: u?.directionFaces ?? null,

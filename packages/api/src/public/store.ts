@@ -70,6 +70,8 @@ async function canCuaLanGui(tx: pg.PoolClient, s: LanGuiTheoMa, senderName: stri
   for (const r of rows) {
     const facts: VisibilityFacts = { creatorUserId: r.creatorUserId, statusesReached: r.statusesReached, listingAgentUserId: r.listingAgentUserId };
     if (!canRead(nguoiXem, facts)) continue;
+    // Hàng lô, hàng ngoài khu (can-ngoai-khu) chưa ra trang khách: luật ẩn số nhà, mã lô theo loại hình là hàng 80 (bất biến 4).
+    if (!r.buildingName) continue;
     const anh: UnitPhoto[] = r.unitNumber ? (await listPhotos(tx, r.buildingName, r.unitNumber)).anh.filter((a) => a.compartment === "shareable") : [];
     ra.push({ id: r.id, can: {
       buildingName: r.buildingName,

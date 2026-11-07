@@ -195,11 +195,11 @@ function ManEpGia({ hangId, san, ds, lichSu }: { hangId: string; san: string; ds
   // ——— Máy tính và so giá ———
   const [mayTinh, setMayTinh] = useState(() => mayTinhDau(can.listPrice, cuGia.feeInclusion));
   const phongNgu = useMemo(() => phongNguTheo(dm), [dm]);
-  const pnCan = phongNgu(can.buildingName, can.unitNumber);
+  const pnCan = phongNgu((can.buildingName ?? ""), can.unitNumber);
   const soGia = soGiaToa({
-    can: { id: can.id, buildingName: can.buildingName, unitNumber: can.unitNumber, bedroomsTotal: pnCan, listPrice: can.listPrice, feeInclusion: cuGia.feeInclusion },
+    can: { id: can.id, buildingName: (can.buildingName ?? ""), unitNumber: can.unitNumber, bedroomsTotal: pnCan, listPrice: can.listPrice, feeInclusion: cuGia.feeInclusion },
     cacCan: ds.map(
-      (l): CanSo => ({ id: l.id, buildingName: l.buildingName, unitNumber: l.unitNumber, bedroomsTotal: phongNgu(l.buildingName, l.unitNumber), standardStatus: l.standardStatus, listPrice: l.listPrice, feeInclusion: (l.feeInclusion as FeeInclusion | null) ?? null, lastConfirmedAt: l.lastConfirmedAt }),
+      (l): CanSo => ({ id: l.id, buildingName: l.buildingName ?? "", unitNumber: l.unitNumber, bedroomsTotal: phongNgu(l.buildingName ?? "", l.unitNumber), standardStatus: l.standardStatus, listPrice: l.listPrice, feeInclusion: (l.feeInclusion as FeeInclusion | null) ?? null, lastConfirmedAt: l.lastConfirmedAt }),
     ),
   });
 

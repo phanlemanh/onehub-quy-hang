@@ -132,3 +132,13 @@ export function stepListing(state: ListingState, e: ListingEvent): ListingState 
   return s;
 }
 
+
+/**
+ * Chữ chỉ chỗ của căn cho màn nội bộ (hàng can-ngoai-khu): toà; hàng lô «khu · dãy»; hàng ngoài khu «Căn ngoài khu». Hiện
+ * đúng theo loại hình là hàng 79 — đây chỉ để màn không gãy với hàng không toà.
+ */
+export function nhanViTri(s: { buildingName: string | null; subdivisionName?: string | null; blockName?: string | null }): string {
+  if (s.buildingName) return s.buildingName;
+  if (s.blockName) return `${s.subdivisionName ?? ""} · ${s.blockName}`;
+  return "Căn ngoài khu";
+}

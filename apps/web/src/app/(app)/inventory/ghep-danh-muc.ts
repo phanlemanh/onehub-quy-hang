@@ -3,6 +3,7 @@
  * toà + mã căn, không chỉ mã căn: hai toà có thể trùng mã (hàng 63). Thuần, kiểm bằng `node:test`.
  */
 import type { CatalogData, CatalogUnitData } from "@quy-hang/core";
+import { nhanViTri } from "@quy-hang/core/listing";
 import type { ListingView } from "@/lib/sync/types";
 import { CHUA_RO, chuDauChu, type DanhBaDauChu, type DongBang } from "./cot";
 
@@ -72,9 +73,10 @@ import { oRiengCuaHang } from "./truong-rieng";
 export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaDauChu): DongBang {
   return {
     id: l.id,
-    buildingName: l.buildingName,
+    // Hàng lô, hàng ngoài khu (can-ngoai-khu): chữ chỗ của căn, không tra danh mục toà.
+    buildingName: nhanViTri(l),
     unitNumber: l.unitNumber,
-    ...thuocTinhCan(idx, l.buildingName, l.unitNumber),
+    ...thuocTinhCan(idx, l.buildingName ?? "", l.unitNumber),
     standardStatus: l.standardStatus,
     // Nhãn trạng thái riêng (hàng 46): chỉ khi căn mang — căn không nhãn giữ đúng dòng cũ.
     ...(l.statusLabel ? { statusLabel: l.statusLabel } : {}),
