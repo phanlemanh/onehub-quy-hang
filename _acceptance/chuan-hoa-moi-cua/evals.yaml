@@ -94,7 +94,7 @@ evals:
     target: "http://localhost:3462/settings/dictionary"
     paths: ["apps/web/src/app/(app)/settings/dictionary/**"]
     steps:
-      - "Máy chủ dev như E2u. Đăng nhập quan-tri@mau.quy-hang.test. Chuẩn bị: trong trang, fetch POST /api/v1/company/value-aliases/proposals ba đề xuất (directionFaces «dong nm»→Đông Nam; feeInclusion «bao phi het»→included; standardStatus «dang gd roi»→Pending); ghi mã trả vào observed"
+      - "Máy chủ dev như E2u. Đăng nhập quan-tri@mau.quy-hang.test cho bước 0. Chuẩn bị sau bước 0: đăng nhập dau-chu-1@mau.quy-hang.test, trong trang fetch POST /api/v1/company/value-aliases/proposals ba đề xuất (directionFaces «dong nm»→Đông Nam; feeInclusion «bao phi het»→included; standardStatus «dang gd roi»→Pending), ghi mã trả vào observed; rồi đăng nhập lại quan-tri@mau.quy-hang.test"
       - "Bước 0 (trước khi tạo dữ liệu, sàn chưa có dòng nào — nếu có thì ghi số dòng vào observed): mở /settings/dictionary khổ 1440 → chụp evidence/E9u-step0.png: câu «Chưa có cách gõ lạ nào — chọn gợi ý ở bước xem trước khi nhập file sẽ hiện ở đây», mọi số sức khoẻ bằng 0"
       - "Khổ 1440 mở /settings/dictionary → chụp evidence/E9u-step1.png: hàng sức khoẻ đầu màn (đã gặp 3 · chờ 3 · đã neo 0), ba nhóm trường, mỗi dòng chữ gốc → giá trị chuẩn · số lần · «Duyệt» «Bỏ»"
       - "Bấm «Duyệt» dòng «dong nm» → chụp evidence/E9u-step2.png: dòng ấy đã duyệt, sức khoẻ đã neo 1 · chờ 2"
