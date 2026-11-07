@@ -29,3 +29,9 @@ phải dữ liệu của sàn — điều khoá bất biến, không cần Hỏi
 ## Phạm vi
 
 Không làm: đọc giá trị số; mã hoá lại; đổi migration; sửa bài bat-rang-buoc hay chú thích của nó (ngoài vùng).
+
+## Thay eval của hồ sơ đã ký (ghi 07/11, hàng va-thuoc-ci-ho-so-moi-truong-that)
+
+| Eval cũ | Tiêu chí của hồ sơ này đo lại |
+|---|---|
+| bat-rang-buoc-ban-ma/E4 | AC-1 — bảng sạch mà ràng buộc bản mã chưa bật thì deploy đỏ trước khi gọi Vercel |

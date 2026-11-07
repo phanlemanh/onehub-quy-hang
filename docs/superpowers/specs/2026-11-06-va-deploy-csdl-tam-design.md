@@ -59,3 +59,9 @@ Làm: job deploy, job isolation giữ nguyên, kiểm nhanh. CSDL tạm là serv
 chọn 06/11: không dùng nhánh Supabase vì tốn tiền). Không làm: đổi `KIT_TAG`; chạy gì lên bản thật từ máy; sửa ADR,
 Tham chiếu hay bài kiểm của hồ sơ khác (mục «Việc theo sau»); kiểm nhanh schema `identity`; chạy advisors của Supabase
 trong CI.
+
+## Thay eval của hồ sơ đã ký (ghi 07/11, hàng va-thuoc-ci-ho-so-moi-truong-that)
+
+| Eval cũ | Tiêu chí của hồ sơ này đo lại |
+|---|---|
+| moi-truong-that/E3 | AC-2 — bộ cách ly chạy trọn trên cơ sở dữ liệu tạm và vẫn chặn triển khai |
