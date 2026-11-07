@@ -22,5 +22,5 @@ evals:
     executor: script
     cmd: node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --that
     paths: ["packages/api/test-db/dong-duong-gui-ma/**", "_acceptance/va-dong-duong-gui-ma-song-song/thu/**"]
-    expected: "exit 0; dòng {ca:'that', ok:true} — tệp thật của cây chạy riêng thoát 0, «# pass 4» và «✔ đường lõi mật khẩu đóng» (đỏ in «tệp thật đỏ: …» hay «không đủ 4 ca đạt»); nguồn ca còn đủ năm khẳng định đã có (ghim chuỗi thông điệp: «đường lõi đã tắt vẫn gửi thư», «đường lõi đã tắt đốt lượt xin mã», «đường lõi đã tắt đếm thử sai», «trả ${res.status}», đối chứng dương send-verification-otp) — thiếu in «mất khẳng định: <chuỗi>»."
+    expected: "exit 0; dòng {ca:'that', ok:true} — tệp thật của cây chạy riêng thoát 0, «ℹ pass 4» (bộ báo spec) và «✔ đường lõi mật khẩu đóng» (đỏ in «tệp thật đỏ: …» hay «không đủ 4 ca đạt»); nguồn ca còn đủ năm khẳng định đã có (ghim chuỗi thông điệp: «đường lõi đã tắt vẫn gửi thư», «đường lõi đã tắt đốt lượt xin mã», «đường lõi đã tắt đếm thử sai», «trả ${res.status}», đối chứng dương send-verification-otp) — thiếu in «mất khẳng định: <chuỗi>»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

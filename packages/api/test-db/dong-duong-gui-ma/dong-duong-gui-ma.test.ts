@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { OTP_REQUEST_LIMIT, OTP_SEND_PATHS, OTP_TYPE_NOT_ALLOWED, PASSWORD_WRAPPED_PATHS } from "../../src/auth/constants";
 import { DUONG_DA_TAT } from "../../src/auth/duong-gui-ma.ca";
-import { DUONG_LOI_DA_TAT } from "../../src/auth/duong-mat-khau.ca";
+import { BANG_LOI, DUONG_LOI_DA_TAT } from "../../src/auth/duong-mat-khau.ca";
 import { OTP_RATE_LIMITED } from "../../src/errors";
 import { authPost, cleanup, identityPool, mail, makeAuth, openCompany, RUN } from "../helpers";
 
@@ -78,15 +78,24 @@ test("đường quên mật khẩu và đổi email: 404, không gửi, không �
 
 // Hàng dang-nhap-mat-khau (E9): bật mật khẩu ở thư viện mở cả họ đường lõi; đường «đã tắt» của bảng lõi trả 404 trước
 // bộ xử lý, và đường đăng nhập mật khẩu gọi thẳng thư viện (lọt khỏi đường bọc) cũng 404.
+// Đếm người chỉ trên email của ca (hàng va-dong-duong-gui-ma-song-song): cơ sở dữ liệu của lượt chấm dùng chung, tiến
+// trình khác tạo người cùng lúc thì đếm cả bảng sẽ lệch. emailMoi chưa ai đăng ký — đường đăng ký lỡ mở lại sẽ tạo người
+// mang đúng email ấy (email đã mở sàn thì thư viện từ chối vì trùng, không chứng được gì).
 test("đường lõi mật khẩu đóng", async () => {
   const { auth, sent } = makeAuth();
   const email = mail("loi-tat");
+  const emailMoi = mail("loi-tat-moi");
+  assert.equal(emailMoi, emailMoi.trim().toLowerCase(), "email thử chưa ở dạng chuẩn");
   await openCompany(`[Sàn ${RUN} L]`, email);
   const demSai = async () =>
     Number((await identityPool.query<{ n: string }>("select count(*) as n from identity.password_failures where email = $1", [email])).rows[0]!.n);
+  const demNguoi = async () =>
+    Number(
+      (await identityPool.query<{ n: string }>(`select count(*) as n from identity."user" where email = any($1)`, [[email, emailMoi]])).rows[0]!.n,
+    );
   const truocMa = await demXinMa(email);
   const truocSai = await demSai();
-  const truocNguoi = Number((await identityPool.query<{ n: string }>(`select count(*) as n from identity."user"`)).rows[0]!.n);
+  const truocNguoi = await demNguoi();
   const duong = [...DUONG_LOI_DA_TAT.map((p) => p.replace(":token", "ma-thu")), ...PASSWORD_WRAPPED_PATHS];
   let so = 0;
   for (const path of duong) {
@@ -97,10 +106,14 @@ test("đường lõi mật khẩu đóng", async () => {
     }
   }
   assert.equal(so, duong.length * 10, "số lần gọi phải bằng số đường × 10");
+  for (let k = 1; k <= 10; k++) {
+    const res = await authPost(auth, BANG_LOI.signUpEmail[0]!, { email: emailMoi, password: "mưa rơi trên mái", name: "[Tên]" });
+    assert.equal(res.status, 404, `đăng ký email mới lần ${k} trả ${res.status}`);
+  }
   assert.equal(sent.length, 0, "đường lõi đã tắt vẫn gửi thư");
   assert.equal(await demXinMa(email), truocMa, "đường lõi đã tắt đốt lượt xin mã");
   assert.equal(await demSai(), truocSai, "đường lõi đã tắt đếm thử sai");
-  const sauNguoi = Number((await identityPool.query<{ n: string }>(`select count(*) as n from identity."user"`)).rows[0]!.n);
+  const sauNguoi = await demNguoi();
   assert.equal(sauNguoi, truocNguoi, "đường đăng ký tạo người");
   // Đối chứng dương: đường xin mã chính vẫn sống.
   assert.equal((await authPost(auth, "/email-otp/send-verification-otp", { email, type: "sign-in" })).status, 200);
