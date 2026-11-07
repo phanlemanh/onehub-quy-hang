@@ -31,6 +31,14 @@ evals:
     executor: ui-check
     layer: ui-observed
     paths: ["apps/web/src/app/(app)/inventory/**"]
+    steps:
+      - "DỰNG D: bash _acceptance/va-bang-hang-e11-hieu-nang/thu/dung-e3.sh (chờ khoá đo nếu lệnh đo cặp đang chạy). Khổ 1440x900. Đăng nhập do-cuon@mau.quy-hang.test ở http://localhost:3585 (mã: grep \"[ma-dang-nhap] do-cuon@mau.quy-hang.test\" .acceptance-runs/va-bang-hang-e11-hieu-nang/web-d.log | tail -1), mở /inventory, chờ lưới; ghi N ở ô đếm «N / tổng căn»."
+      - "Tích ô của dòng đầu → chụp evidence/E3-1-tich.png; ghi số căn thanh hành động hiện"
+      - "Cuộn lưới xuống quá 300 dòng rồi cuộn về đầu → chụp evidence/E3-2-cuon-ve.png; ghi dòng đầu còn tích không"
+      - "Bỏ tích dòng đầu → chụp evidence/E3-3-bo-tich.png; ghi thanh hành động còn không và số"
+      - "Bấm ô «Chọn hết» ở đầu cột Dòng → chụp evidence/E3-4-chon-het.png; ghi số căn thanh hành động hiện"
+      - "Cuộn tới khoảng dòng thứ 400 → chụp evidence/E3-5-cuon-sau-chon-het.png; ghi các dòng đang hiện có tích không"
+      - "Tắt: bash _acceptance/va-bang-hang-e11-hieu-nang/thu/dung-e3.sh --tat"
     question: "Trên Bảng hàng của bản build vòng này (sàn có nhiều căn; đọc N ở ô đếm «N / tổng căn»): (1) tích ô của một dòng — thanh hành động đếm 1? (2) cuộn xuống quá vài trăm dòng rồi cuộn về đầu — dòng ấy vẫn hiện đã tích? (3) bỏ tích — thanh về 0 hay ẩn? (4) bấm «Chọn hết» ở đầu cột — thanh đếm đúng N? (5) cuộn tới dòng thứ vài trăm — dòng ấy đã tích?"
     expected: "Cả năm bước đúng; mỗi bước một ảnh evidence/E3-<bước>.png có thấy số trên thanh và N ở ô đếm."
     evidence_required: [run_id, verifier, verified_at, screenshot]
