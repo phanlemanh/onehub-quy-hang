@@ -40,14 +40,14 @@ evals:
     criterion: AC-1
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.api_db
+    cmd: config:executors.test.chan_trung_ten
     paths: ["packages/core/src/labels/**", "packages/api/src/labels/**", "packages/api/test-db/chan-trung-ten-gia-tri/**"]
     expected: "exit 0; packages/api/test-db/chan-trung-ten-gia-tri/trung-ten.test.ts trên Postgres: sàn thử qua đường ghi thật; quản trị đặt trước một tên riêng hợp lệ (withdrawnReason/unreachable «Mất liên lạc»); rồi PUT bộ có excluded «Bao phí» kèm thay đổi khác → 400, reason chứa «Bao phí»; đọc lại GET và dòng company_settings y như trước PUT (nguyên khối, không khoá nào đổi). Cùng thân với excluded «Phí ngoài» → 200, GET hiện «Phí ngoài». Chiều đỏ: gỡ kiểm trùng ở lõi → PUT trùng trả 200, ca đỏ nêu reason vắng."
   - id: E2b
     criterion: AC-4
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.api_db
+    cmd: config:executors.test.chan_trung_ten
     paths: ["packages/core/src/labels/**", "packages/api/src/labels/**", "packages/api/test-db/chan-trung-ten-gia-tri/**"]
     expected: "exit 0; trên Postgres: PUT đổi chéo (included «Không bao phí», excluded «Bao phí») → 400, reason chứa «Trùng tên của»; PUT riêng–riêng trùng (hai lý do ngừng cùng «Mất liên lạc») → 400; đọc lại GET y như trước mỗi PUT. Đối chứng: PUT không trùng → 200. Chiều đỏ: cho đổi chéo → ca 400 đỏ."
   - id: E3
