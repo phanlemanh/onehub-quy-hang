@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 9b74925a5af85f8fb44cb24a4975ce10f74cb846
-human_signoff:
+human_signoff: Manh Phan 2026-11-08
 ---
 
 # Evidence Report: va-bang-hang-hydration
@@ -58,7 +58,7 @@ human_signoff:
   run_id: minted-va-bang-hang-hydration-E3-r2
   exit_code: 0
   baseline: n-a
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-07T22:22:17Z
   screenshot: evidence/E3-may-tinh.png
   observed: |

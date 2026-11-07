@@ -117,6 +117,18 @@ for (let i = 0; ; i++) {
 }
 const ck = cookie ?? (await cookieCua("dau-chu-1@mau.quy-hang.test").catch(() => null));
 if (!ck) thoat(2, "hydration: không có phiên của dau-chu-1");
+// Làm nóng: bản dev biên dịch trang lần đầu khi có người gọi — gọi /inventory và một góc nhìn trước để ca đầu không đo
+// lượt biên dịch (lượt chấm 08/11: ca «máy tính · mở đầu» hết 120 giây khi máy tải nặng).
+for (const duong of ["/inventory", "/inventory/views/lam-nong"]) {
+  for (let i = 0; i < 60; i++) {
+    try {
+      if ((await fetch(`${URL_GOC}${duong}`, { headers: { cookie: ck.join("; ") } })).status < 500) break;
+    } catch {
+      // đang biên dịch
+    }
+    await ngu(3000);
+  }
+}
 
 // 4. Các ca. Đối chứng dương: máy tính đọc dòng đếm «N / M căn»; điện thoại đếm thẻ căn ([data-the-can]).
 const LA_HYDRATION = /hydrat|did not match|#418|#423|#425/i;
