@@ -48,3 +48,13 @@ test("rò rỉ: khối báo mẫu hỏng không mang giá trị mồi", () => {
   assert.ok(html.includes("Người giữ"), "khối báo không hiện — ca không đo gì");
   for (const nguoiNhan of NGUOI_NHAN) assert.deepEqual(timRoRi(html, giaTriMoi(canMoi(), nguoiNhan, CAU_HINH_MAC_DINH)), [], `${nguoiNhan}: mồi lọt`);
 });
+
+test("rò rỉ: khối báo không chép giá trị lạ trong mẫu đã lưu", () => {
+  // Dòng ghi thẳng mang chính giá trị nội bộ của căn mồi ở chỗ khoá cột và ở mẫu không đọc được: câu báo phải nêu bằng
+  // lời chung («một cột lạ»), không chép giá trị ấy ra màn.
+  const moi = canMoi();
+  const loi = docMauBang([{ id: "00000000-0000-4000-8000-000000000003", name: "[Tên] B", columns: ["listPrice", String(moi.holderName)] }, String(moi.ownerName)]).loi;
+  assert.ok(loi.some((l) => l.includes(String(moi.holderName))), "đối chứng: dòng lỗi của lõi có mang giá trị mồi — ca đo được");
+  const html = renderToStaticMarkup(h(BangMauBang, { tt: { kieu: "xong", giaTri: [], baoHong: loiMauHong(loi) }, lamMoi: () => {} }));
+  for (const nguoiNhan of NGUOI_NHAN) assert.deepEqual(timRoRi(html, giaTriMoi(moi, nguoiNhan, CAU_HINH_MAC_DINH)), [], `${nguoiNhan}: khối báo chép giá trị mồi`);
+});

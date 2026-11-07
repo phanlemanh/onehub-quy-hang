@@ -113,10 +113,56 @@ test("lời cho người: mọi dạng lỗi lõi phát ra, không khoá kỹ th
 test("không chỗ hỏng thì không báo", () => {
   const ds: MauBang[] = [{ id: ID(1), name: "[Tên] A", columns: ["listPrice"] }];
   const bai: MauBai = { zalo: { opening: "Chào", closing: "" } };
+  const tieuDe = CHU_MAU.hongTieuDe(1).replace(/\d+/, "");
+  const dung = (baoHong: string[] | undefined) => [
+    renderToStaticMarkup(h(BangMauBang, { tt: { kieu: "xong", giaTri: ds, baoHong }, lamMoi: khong })),
+    renderToStaticMarkup(h(BangMauBai, { tt: { kieu: "xong", giaTri: bai, baoHong }, lamMoi: khong })),
+  ];
   for (const baoHong of [[], undefined] as (string[] | undefined)[]) {
-    const a = renderToStaticMarkup(h(BangMauBang, { tt: { kieu: "xong", giaTri: ds, baoHong }, lamMoi: khong }));
-    const b = renderToStaticMarkup(h(BangMauBai, { tt: { kieu: "xong", giaTri: bai, baoHong }, lamMoi: khong }));
-    assert.ok(!a.includes("không đọc được") && !b.includes("không đọc được"), "báo hỏng khi không có chỗ hỏng");
+    for (const html of dung(baoHong)) {
+      assert.ok(!html.includes(CHU_MAU.hongLuuKe) && !html.includes(tieuDe), "báo hỏng khi không có chỗ hỏng");
+      assert.ok(!html.includes('role="status"'), "có khối role=status khi không có chỗ hỏng");
+    }
+  }
+  // Đối chứng dương: cùng tab, baoHong khác rỗng thì khối báo và role=status hiện.
+  for (const html of dung(["Mẫu thứ 2 đã lưu không đọc được."])) {
+    assert.ok(html.includes(CHU_MAU.hongTieuDe(1)) && html.includes(CHU_MAU.hongLuuKe) && html.includes('role="status"'), "đối chứng: khối báo không hiện");
+  }
+});
+
+test("lời cho người: mỗi lý do bỏ mẫu, bỏ lời của khuôn lõi có câu riêng", () => {
+  // Lý do của loiMotMau, loiMotKenh ở lõi (mỗi `return \`${k}…` một lý do). Bảng ghi trước: lý do đến được qua bộ đọc
+  // khoan dung thì sinh bằng docMauBang/docMauBai; lý do bộ đọc lọc trước khi kiểm (cột lạ, cột nội bộ, cột trùng, quá
+  // 15 cột) dựng đúng khuôn dòng lõi phát. Số dòng bảng bằng số `return \`${k}` trong hai hàm — thêm lý do mà quên dòng là đỏ.
+  const BANG: [string, () => string[]][] = [
+    ["mẫu không phải đối tượng", () => [`export.templates[0]: phải là đối tượng { id, name, columns } — bỏ mẫu`]],
+    ["mã sai", () => docMauBang([{ id: "x", name: "A", columns: ["listPrice"] }]).loi],
+    ["tên trống", () => docMauBang([M(1, " ", ["listPrice"])]).loi],
+    ["tên dài", () => docMauBang([M(1, "a".repeat(61), ["listPrice"])]).loi],
+    ["tên trùng", () => docMauBang([M(1, "A", ["listPrice"]), M(2, "a", ["listPrice"])]).loi],
+    ["không cột", () => docMauBang([M(1, "A", [])]).loi],
+    ["quá 15 cột", () => [`export.templates[0].columns: tối đa 15 cột — bỏ mẫu`]],
+    ["cột lạ", () => [`export.templates[0].columns: cột lạ "zzz" — bỏ mẫu`]],
+    ["cột nội bộ", () => [`export.templates[0].columns: holderName là cột nội bộ, không ra ngoài — bỏ mẫu`]],
+    ["cột trùng", () => [`export.templates[0].columns: cột listPrice trùng — bỏ mẫu`]],
+    ["kênh lạ", () => docMauBai({ tiktok: { opening: "a", closing: "" } }).loi],
+    ["kênh không phải đối tượng", () => docMauBai({ zalo: 5 }).loi],
+    ["lời không phải chữ", () => docMauBai({ zalo: { opening: 1, closing: "" } }).loi],
+    ["lời dài", () => docMauBai({ facebook: { opening: "", closing: "a".repeat(501) } }).loi],
+  ];
+  const nguon = readFileSync(new URL("../../../../../../../packages/core/src/export/mau-san.ts", import.meta.url), "utf8");
+  const hai = ["loiMotMau", "loiMotKenh"].map((ten) => {
+    const dau = nguon.indexOf(`function ${ten}(`);
+    return nguon.slice(dau, nguon.indexOf("\n}\n", dau));
+  });
+  const soLyDo = hai.reduce((n, than) => n + (than.match(/return `\$\{k\}/g) ?? []).length, 0);
+  assert.equal(BANG.length, soLyDo, `lõi có ${soLyDo} lý do, bảng có ${BANG.length} dòng — thêm dòng cho lý do mới`);
+  for (const [ca, sinh] of BANG) {
+    const loi = sinh();
+    assert.equal(loi.length, 1, `ca «${ca}»: cần đúng một dòng lỗi, có ${JSON.stringify(loi)}`);
+    const [c] = loiMauHong(loi);
+    assert.notEqual(c, CHU_MAU.hongChung, `ca «${ca}»: dòng «${loi[0]}» rơi về câu chung`);
+    assert.ok(!KHOA_KY_THUAT.test(c!), `ca «${ca}»: câu «${c}» còn khoá kỹ thuật`);
   }
 });
 

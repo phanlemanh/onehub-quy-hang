@@ -5,7 +5,7 @@ import type { MauBai, MauBang } from "@quy-hang/core/export";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { after, test } from "node:test";
-import { CHU_MAU, loiMauHong, thanPutBai, thanPutBang } from "../../../../apps/web/src/app/(app)/settings/templates/mau-san";
+import { CHU_MAU, loiMauHong, thanPutBai, thanPutBang, trangThaiTuDap } from "../../../../apps/web/src/app/(app)/settings/templates/mau-san";
 import { createApi } from "../../src/app";
 import { appPool, BASE_URL, cleanup, cookieOf, identityPool, mail, makeAuth, openCompany, RUN } from "../helpers";
 
@@ -68,6 +68,8 @@ test("lưu mẫu bảng hàng bỏ đúng chỗ đã báo", async () => {
   assert.equal(cau.length, 2, `errors: ${truoc.errors.join(" | ")}`);
   assert.ok(!cau.includes(CHU_MAU.hongChung), `câu chung trên errors thật: ${cau.join(" | ")}`);
   assert.ok(cau.some((x) => x.includes("Người giữ")), `không câu nào nêu Người giữ: ${cau.join(" | ")}`);
+  // Đáp GET thật đi qua đúng hàm trang dùng: trạng thái tab mang câu báo.
+  assert.deepEqual(trangThaiTuDap<MauBang[]>({ ok: true, body: truoc }), { kieu: "xong", giaTri: truoc.templates, baoHong: cau }, "trang vứt errors của đáp thật");
   // Lưu lại mẫu đầu không sửa (như bấm Sửa rồi Lưu ở màn Mẫu).
   assert.equal((await send("PUT", BANG, thanPutBang(truoc.templates, truoc.templates[0]!), s.cookie)).status, 200);
   const sau = (await doc(s, BANG)) as { templates: MauBang[]; errors: string[] };
