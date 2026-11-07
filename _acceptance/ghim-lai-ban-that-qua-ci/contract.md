@@ -5,7 +5,7 @@ slug: ghim-lai-ban-that-qua-ci
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-07-ghim-lai-ban-that-qua-ci-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -89,3 +89,8 @@ thật), job `deploy` của `ci.yml`.
   - Rào chặn: nút chặn nhầm lẫn (khoá ngoài danh sách, lệnh viết thẳng, nhánh định nghĩa lại khoá, hai khoá chạy lệnh của
     kit, cài gói chạy mã nhánh), không chặn một nhánh cố ý sửa nội dung tệp mà lệnh cho phép chạy — mã ấy chạy với chuỗi
     kết nối bản thật trong bước ghim lại (rủi ro đã chấp nhận ở Hỏi-2: kho riêng tư, chỉ chủ kho và máy đẩy nhánh).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-1: Mô tả kết quả mong đợi của E2, E3 còn ghi số ca cũ (12, 8) trong khi phép đo chạy 14 và 10 ca.
+  - Ngoài-5: Bộ quét đếm cả tệp không tồn tại trong dòng «SẠCH n tệp»; bước tải đã báo lỗi khi thiếu tệp nên không lọt.
+  - Ngoài-6: Kỳ vọng của E2, E3 và mã commit trong bằng chứng chưa theo kịp bản sửa cuối (cùng gốc Ngoài-1).
+  - Ngoài-7: Bộ chặn tìm khoá để trống biến bằng mẫu chữ toàn tệp, không gắn với khối feature_loop.
