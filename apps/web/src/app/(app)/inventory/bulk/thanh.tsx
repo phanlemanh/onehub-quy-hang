@@ -5,7 +5,7 @@
  * được một sự kiện qua kho trên máy (hàng 13); căn không đổi được không ghi và được kể tên trước. Logic thuần ở `lo.ts`,
  * `hoan-tac-lo.ts`; ghép từ thành phần đã cài (Checkbox, DropdownMenu, AlertDialog, Select, Sonner).
  */
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, memo, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { StandardStatus, WithdrawnReason } from "@quy-hang/core/listing";
 import { ChevronDownIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -35,12 +35,16 @@ type Tich = { tich: ReadonlySet<string>; dangHien: readonly string[]; doi: (id: 
 const TichContext = createContext<Tich | null>(null);
 export const TichProvider = TichContext.Provider;
 
-/** Ô tích của một dòng căn trong cột «Dòng». */
-export function OTich({ id }: { id: string }) {
+/**
+ * Ô tích của một dòng căn trong cột «Dòng». Lưới vẽ lại mọi dòng đang hiện mỗi khi khoảng cuộn đổi; memo giữ ô tích
+ * (Checkbox Base UI, nặng) khỏi vẽ lại theo dòng — nó chỉ vẽ lại khi tập chọn đổi (va-bang-hang-e11-hieu-nang: thiếu memo
+ * làm Bảng hàng chậm ~2 lần khi cuộn 5.000 căn).
+ */
+export const OTich = memo(function OTich({ id }: { id: string }) {
   const t = useContext(TichContext);
   if (!t) return null;
   return <Checkbox aria-label="Chọn dòng" checked={t.tich.has(id)} onCheckedChange={(co) => t.doi(id, !!co)} onClick={(e) => e.stopPropagation()} />;
-}
+});
 
 /** «Chọn hết» ở đầu cột: tích mọi căn đang hiện sau lọc. */
 export function OTichHet() {
