@@ -163,8 +163,9 @@ export async function lookupPhone(tx: pg.PoolClient, so: string, companyId: stri
 
 /** Hồ sơ một liên hệ; null khi người xem không đọc được. */
 export async function readProfile(tx: pg.PoolClient, id: string, ai: Nguoi, khoa: KhoaSoChu) {
-  const { rows } = await tx.query<{ id: string; full_name: string | null; contact_types: ContactType[]; owner_member_user_id: string | null }>(
-    "select id, full_name, contact_types, owner_member_user_id from contacts where company_id = app.current_company_id() and id = $1",
+  // Hồ sơ là đường DUY NHẤT trả giá trị trường riêng (hàng 47) — luật đọc liên hệ đã lọc người xem (lớp nguồn với liên hệ chủ nhà).
+  const { rows } = await tx.query<{ id: string; full_name: string | null; contact_types: ContactType[]; owner_member_user_id: string | null; custom: Record<string, unknown> }>(
+    "select id, full_name, contact_types, owner_member_user_id, custom from contacts where company_id = app.current_company_id() and id = $1",
     [id],
   );
   const c = rows[0];
@@ -229,7 +230,7 @@ export async function readProfile(tx: pg.PoolClient, id: string, ai: Nguoi, khoa
   }
   tl.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
   return {
-    contact: { id: c.id, name: c.full_name, contactTypes: c.contact_types, status: contactStatus({ hasListing: hang.length > 0, anyFirstCall: leads.some((l) => l.first_called_at !== null) }), holderUserId: c.owner_member_user_id },
+    contact: { id: c.id, name: c.full_name, contactTypes: c.contact_types, status: contactStatus({ hasListing: hang.length > 0, anyFirstCall: leads.some((l) => l.first_called_at !== null) }), holderUserId: c.owner_member_user_id, custom: c.custom },
     phones,
     opportunities,
     listings: hang.map((h) => ({ id: h.id, buildingName: h.building_name, unitNumber: h.unit_number, status: h.standard_status, listPrice: h.list_price === null ? null : Number(h.list_price) })),

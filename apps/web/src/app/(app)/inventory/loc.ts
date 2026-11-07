@@ -5,6 +5,7 @@
 import { parseNumberExpression, type ExpressionResult } from "./bieu-thuc-so";
 import type { TuVung } from "@quy-hang/core/labels";
 import { COT, COT_THEO_ID, STATUS_LABEL, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
+import { laCotRieng } from "./truong-rieng";
 
 export type BoLocCot = Partial<Record<CotId, string>>;
 export type QuySap = { id: string; desc: boolean }[];
@@ -34,12 +35,14 @@ export function locSai(loc: BoLocCot): Set<CotId> {
 
 export function soOLocDangChay(loc: BoLocCot): number {
   const bt = docBieuThuc(loc);
-  return COT.filter((c) => loc[c.id] && (c.kind !== "so" || bt.get(c.id)?.state === "valid")).length;
+  return COT.filter((c) => loc[c.id] && (c.kind !== "so" || bt.get(c.id)?.state === "valid")).length + Object.keys(loc).filter((k) => laCotRieng(k) && loc[k as CotId]).length;
 }
 
 function dieuKien(loc: BoLocCot): ((d: DongBang) => boolean)[] {
   const bt = docBieuThuc(loc);
-  return COT.flatMap((c) => {
+  // Trường riêng (hàng 47): lọc «chọn» trên chữ thô của giá trị.
+  const rieng = Object.entries(loc).flatMap(([k, raw]) => (laCotRieng(k) && raw ? [(d: DongBang) => giaTriChon(d, k) === raw] : []));
+  return [...rieng, ...COT.flatMap((c) => {
     const raw = loc[c.id];
     if (!raw) return [];
     if (c.kind === "so") {
@@ -56,7 +59,7 @@ function dieuKien(loc: BoLocCot): ((d: DongBang) => boolean)[] {
     if (c.kind === "chon") return [(d: DongBang) => giaTriChon(d, c.id) === raw];
     const kim = boDau(raw.trim());
     return [(d: DongBang) => boDau(chuCuaO(d, c.id)).includes(kim)];
-  });
+  })];
 }
 
 export function locDong(dong: readonly DongBang[], loc: BoLocCot): DongBang[] {
@@ -69,7 +72,7 @@ const collator = new Intl.Collator("vi", { numeric: true, sensitivity: "base" })
 /** Sắp theo quy đầu tiên; ô trống luôn xuống cuối. Cột số so số, cột khác so chữ hiện. */
 export function sapDong(dong: DongBang[], sap: QuySap, tv?: TuVung | null): DongBang[] {
   const q = sap[0];
-  const c = q ? COT_THEO_ID.get(q.id as CotId) : undefined;
+  const c = q ? (COT_THEO_ID.get(q.id as CotId) ?? (laCotRieng(q.id) ? ({ id: q.id, kind: "chon" } as const) : undefined)) : undefined;
   if (!q || !c) return dong;
   const huong = q.desc ? -1 : 1;
   return dong

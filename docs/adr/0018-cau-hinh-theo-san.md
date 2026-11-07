@@ -147,6 +147,12 @@ D (hàng 72, PR #45):
      theo ý sàn, trái cách ly lược đồ chung.
    - Khuyến nghị (A). Căn cứ: Kiến trúc §1 đã ghi «trường riêng là một cột linh hoạt kèm bảng định nghĩa theo sàn»;
      bảng hàng đọc từ kho trên máy (hàng 13) nên một cột gói sẵn đi xuống máy không cần ghép.
+   - **Sửa đổi 06/11 (hàng 47, chủ kho duyệt Hỏi-1 ở Cổng Phạm vi):** trường riêng của liên hệ có loại Chủ bán hay Chủ cho
+     thuê mang lớp `source` — giá trị là thông tin chủ nhà (bất biến 2). Check của bảng `custom_fields` (migration 043) cho
+     đúng hai lớp theo một luật: hàng → `custom_field`; liên hệ có loại chủ → `source`; còn lại → `custom_field`; lõi lặp
+     luật ở `lopTruongRieng` và bộ kiểm cách ly chạy cùng ma trận. Giá trị của liên hệ nằm ở `contacts.custom`, đọc theo
+     luật đọc liên hệ (người giữ còn vai Đầu chủ, trưởng nhóm — 036), ghi qua `app.set_contact_custom`; không bao giờ ra
+     ngoài. Trần 20 trường còn sống tính gộp hàng và liên hệ (Hỏi-5).
 9. **Bảng hàng, bộ lọc, ghép cột đọc «bộ trường của sàn», không đọc sổ điểm biến thiên.** Hai sổ khác nhau: sổ điểm
    biến thiên nói sàn chỉnh được gì; **bộ trường của sàn** là một hàm của lõi ghép ba nguồn — trường chuẩn theo loại hình
    (ADR-0016), nhãn riêng (#18), trường riêng (#22) — trả danh sách trường kèm nhãn, kiểu, lựa chọn, lớp. Bảng hàng

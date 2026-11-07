@@ -22,6 +22,8 @@ import {
 import { duocLamVoiHang, lamViecVoiHang, LY_DO_DUA_LEN_DANG_BAN } from "@quy-hang/core/access";
 import { OPEN_STATUSES } from "@quy-hang/core/dedupe";
 import { boNhanTrangThai, kiemNhanSuKien, type NhanTrangThai } from "@quy-hang/core/statuses";
+import { kiemGiaTriTruong } from "@quy-hang/core/custom-fields";
+import { docBoTruong } from "../custom-fields/store";
 import { canRead, factsFromEvents, type Viewer, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -64,6 +66,7 @@ export const STATE_COLUMNS: Readonly<Record<keyof ListingState, string>> = {
   unitNumber: "unit_number",
   standardStatus: "standard_status",
   statusLabel: "status_label",
+  custom: "custom",
   listPrice: "list_price",
   feeInclusion: "fee_inclusion",
   furnished: "furnished",
@@ -261,6 +264,12 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
           : { error: API_ERRORS.missingRequirement, missing: kq.missing };
       }
     }
+  }
+
+  if (type === "custom_changed") {
+    // Trường riêng (hàng 47): mỗi mã là trường của hàng còn sống của sàn, giá trị đúng kiểu — lỗi nêu mã.
+    const gt = kiemGiaTriTruong(await docBoTruong(tx), "listing", null, payload);
+    if (!gt.ok) return { error: API_ERRORS.invalidPayload, details: [{ path: "custom", reason: gt.loi }], reason: gt.loi };
   }
 
   if (type === "unit_number_assigned") {
