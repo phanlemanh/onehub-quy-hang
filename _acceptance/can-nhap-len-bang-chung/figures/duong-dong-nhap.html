@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đường của dòng nhập</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1184px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+    }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Sơ đồ luồng · Dòng nhập ghi «Đang bán»</p>
+    <h1>Dòng file ghi «Đang bán» đi đâu: căn mới xét ở cửa nhập, căn có sẵn giữ nguyên</h1>
+
+    <svg viewBox="0 0 1184 624" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dòng file ghi Đang bán rẽ hai nhánh. Căn mới: xét điều kiện ở cửa nhập, bỏ qua pháp lý và tình trạng sử dụng, vẫn đòi mã căn, giá kèm phí, ảnh; đủ thì lên Đang bán và có việc Thiếu thông tin ở Hôm nay, thiếu giá, phí, mã hay ảnh thì ở Chưa đủ để rao kèm lý do. Căn có sẵn: giữ trạng thái hiện tại theo khuyến nghị của Hỏi-1; lối khác bằng nét đứt là đưa lên Đang bán.">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Mũi tên (vẽ trước nút) -->
+      <!-- Dòng file → rẽ 1 -->
+      <line x1="224" y1="304" x2="272" y2="304" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 1: căn mới (lên rồi phải) -->
+      <path d="M336 240 V136 A8 8 0 0 1 344 128 H464" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 1: căn có sẵn (xuống rồi phải) -->
+      <path d="M336 368 V472 A8 8 0 0 0 344 480 H464" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Xét điều kiện → rẽ 2 -->
+      <line x1="720" y1="128" x2="768" y2="128" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Rẽ 2: đủ (phải) -->
+      <line x1="896" y1="128" x2="960" y2="128" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <!-- Rẽ 2: thiếu (xuống) -->
+      <line x1="832" y1="192" x2="832" y2="256" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Căn có sẵn: lối khác (nét đứt) -->
+      <line x1="720" y1="480" x2="960" y2="480" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+      <!-- Nhãn mũi tên -->
+      <rect x="372" y="104" width="64" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="404" y="114" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CĂN MỚI</text>
+
+      <rect x="360" y="456" width="88" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="404" y="466" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CĂN CÓ SẴN</text>
+
+      <rect x="912" y="104" width="32" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="928" y="114" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ĐỦ</text>
+
+      <rect x="840" y="212" width="112" height="28" rx="2" fill="#f5f5f5"/>
+      <text x="844" y="222" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">THIẾU GIÁ, PHÍ,</text>
+      <text x="844" y="236" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">MÃ HAY ẢNH</text>
+
+      <rect x="784" y="456" width="112" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="840" y="466" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LỐI KHÁC</text>
+
+      <!-- Dòng file ghi Đang bán -->
+      <rect x="32" y="272" width="192" height="64" rx="20" fill="#f5f5f5"/>
+      <rect x="32" y="272" width="192" height="64" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="128" y="300" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dòng file ghi</text>
+      <text x="128" y="318" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">«Đang bán»</text>
+
+      <!-- Rẽ 1 -->
+      <polygon points="336,240 400,304 336,368 272,304" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="336" y="300" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Căn mới hay</text>
+      <text x="336" y="316" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">có sẵn?</text>
+
+      <!-- Xét điều kiện ở cửa nhập -->
+      <rect x="464" y="72" width="256" height="112" rx="6" fill="#f5f5f5"/>
+      <rect x="464" y="72" width="256" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="592" y="100" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Xét điều kiện ở cửa nhập</text>
+      <text x="592" y="124" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">bỏ qua: pháp lý, tình trạng sử dụng</text>
+      <text x="592" y="142" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">vẫn đòi: mã căn, giá kèm phí, ảnh</text>
+      <text x="592" y="168" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-2 · AC-4</text>
+
+      <!-- Rẽ 2 -->
+      <polygon points="832,64 896,128 832,192 768,128" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="832" y="124" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Đủ điều</text>
+      <text x="832" y="140" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">kiện?</text>
+
+      <!-- Kết cục: Đang bán (tâm điểm) -->
+      <rect x="960" y="64" width="192" height="128" rx="20" fill="#f5f5f5"/>
+      <rect x="960" y="64" width="192" height="128" rx="20" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="1056" y="96" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lên «Đang bán»</text>
+      <text x="1056" y="120" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">kèm việc «Thiếu thông tin»</text>
+      <text x="1056" y="136" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">ở Hôm nay của người giữ căn</text>
+      <text x="1056" y="168" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-2 · AC-7</text>
+
+      <!-- Kết cục: Chưa đủ để rao -->
+      <rect x="736" y="256" width="192" height="96" rx="20" fill="#f5f5f5"/>
+      <rect x="736" y="256" width="192" height="96" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="832" y="284" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">«Chưa đủ để rao»</text>
+      <text x="832" y="304" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">kèm lý do phần còn thiếu,</text>
+      <text x="832" y="320" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">như hôm nay</text>
+      <text x="832" y="340" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">AC-4</text>
+
+      <!-- Căn có sẵn: giữ trạng thái (khuyến nghị Hỏi-1) -->
+      <rect x="464" y="432" width="256" height="96" rx="20" fill="#f5f5f5"/>
+      <rect x="464" y="432" width="256" height="96" rx="20" fill="rgba(45,49,66,0.03)" stroke="#2d3142" stroke-width="1.2"/>
+      <rect x="476" y="440" width="44" height="14" rx="2" fill="transparent" stroke="#eb6c36" stroke-width="0.8"/>
+      <text x="498" y="450" fill="#ba4513" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-1</text>
+      <text x="592" y="476" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Giữ trạng thái hiện tại</text>
+      <text x="592" y="496" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">khuyến nghị · không tự lên «Đang bán»</text>
+
+      <!-- Lối khác -->
+      <rect x="960" y="432" width="192" height="96" rx="20" fill="#f5f5f5"/>
+      <rect x="960" y="432" width="192" height="96" rx="20" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="1056" y="472" fill="#4f5d75" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Lối khác</text>
+      <text x="1056" y="492" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">đưa lên «Đang bán»</text>
+
+      <!-- Chú giải -->
+      <line x1="32" y1="568" x2="1152" y2="568" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="32" y="596" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.18em">CHÚ GIẢI</text>
+
+      <rect x="124" y="588" width="24" height="12" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="156" y="598" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Dòng vào, kết cục</text>
+
+      <polygon points="292,594 304,588 316,594 304,600" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="324" y="598" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Chỗ rẽ</text>
+
+      <rect x="396" y="588" width="24" height="12" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="428" y="598" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Kết cục mới của hàng này</text>
+
+      <line x1="604" y1="594" x2="644" y2="594" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4"/>
+      <text x="652" y="598" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Lối không chọn, chờ chủ kho ở Hỏi-1</text>
+    </svg>
+  </div>
+</body>
+</html>
