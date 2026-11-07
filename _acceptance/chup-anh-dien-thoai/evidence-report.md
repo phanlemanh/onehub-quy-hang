@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: faab389136d828e05923101cf6b2d734a56e4f28
+verified_commit: 2d16ce378514870478bd68c1f6b5c1ba9b1bb8bf
 human_signoff: Manh Phan 2026-11-07
 ---
 
@@ -281,3 +281,7 @@ none — every multi-run eval is uniform
 
 Round 7: mọi eval (E1–E19) và bốn lệnh suite đều PASS trên commit faab3891; không eval nào lỗi. Lịch sử các round trước xem run-log.jsonl.
 
+
+### Re-pin lần 1 — 2026-11-07, do ghim lại sau khi gộp nhánh chính
+run_id: repin-20261107T030752Z-79916
+sha: 2d16ce378514870478bd68c1f6b5c1ba9b1bb8bf · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E12, E13, E14, E15, E16, E18, E19 · diff chạm vật đo ngoài làn máy: E12, E13, E16, E19 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-10
