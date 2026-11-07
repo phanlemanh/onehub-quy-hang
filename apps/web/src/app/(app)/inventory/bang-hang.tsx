@@ -55,6 +55,8 @@ import { ChonCot, ChonNhom, HopGocNhin, MenuGocNhin, type CheDoHop } from "./tha
 import { COT_SUA, useSuaTrenO } from "./cell-edit/tren-o";
 import { OTich, OTichHet, TichProvider, useSuaHangLoat } from "./bulk/thanh";
 import { HopThoaiXuat, type MoXuat } from "./phat-hang/hop-thoai";
+import { docMauXuat } from "./mau-xuat-san";
+import { goiFetch } from "@/lib/sync/goi-fetch";
 import { tapCanXuat } from "./phat-hang/tap-can";
 
 // Dán, xoá, kéo điền nhiều ô là hàng sau (hàng 16 chỉ tích căn): lưới gửi lô ghi thì bỏ qua — chỉ trình sửa trên ô ghi.
@@ -374,7 +376,9 @@ export function BangHang({
   const [moXuat, setMoXuat] = useState<MoXuat | null>(null);
   const moHopXuat = useCallback(() => {
     if (tapXuat.tat) return;
-    setMoXuat({ dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "", tuVung: tv });
+    // Mẫu của sàn (hàng mau-bang-hang-va-bai) đọc một lần lúc mở hộp; đọc lỗi thì hộp vẫn mở, theo góc nhìn.
+    const coDinh = { dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "", tuVung: tv };
+    void docMauXuat((duong) => goiFetch("GET", duong)).then((mauSan) => setMoXuat({ ...coDinh, mauSan }));
   }, [tapXuat, cot, tenSan, setMoXuat, tv]);
   // Menu Tạo trỏ `/exports/new` → `/inventory?phat-hang=1`: mở hộp thoại một lần với cách xem đang có.
   const q = useSearchParams();

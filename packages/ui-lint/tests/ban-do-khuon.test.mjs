@@ -217,7 +217,8 @@ const CHO_TRANG_THAI = [
   ...Array(3).fill(`${W}/app/(app)/inventory/cards/bang-the.tsx`),
   `${W}/app/(app)/inventory/khung.tsx`,
   // Hộp thoại Xuất bảng hàng (hàng 43): «Cột không ra ngoài», lỗi dựng, đã chép/tải, chưa ghi, lỗi chép/tải.
-  ...Array(5).fill(`${W}/app/(app)/inventory/phat-hang/hop-thoai.tsx`),
+  // Hộp Xuất: thêm câu báo đọc mẫu của sàn lỗi ở ô «Cột theo» (hàng mau-bang-hang-va-bai).
+  ...Array(6).fill(`${W}/app/(app)/inventory/phat-hang/hop-thoai.tsx`),
   // Lead của tôi (hàng 27): lỗi và trống của vùng Lead đã nhập.
   ...Array(2).fill(`${W}/app/(app)/leads/mine/lead-da-nhap.tsx`),
   ...Array(6).fill(`${W}/app/(app)/leads/new/o-lead.tsx`),
@@ -496,7 +497,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 2 tệp theo khuôn · 26 ngoại lệ · 0 lệch",
-      "trang-thai: 156 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 157 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);
