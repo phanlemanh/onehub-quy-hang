@@ -31,7 +31,15 @@ fi
 mot() { # $1 cây · $2 nhãn → in "tỷ_lệ<TAB>p95"
   QH_D_GOC_DO="$1" QH_D_NHAN="$2" node "$DO" --khong-build >/dev/null 2>&1 || true
   local J=$RA/so-do-cuon-$2.json
-  if [ -f "$J" ]; then jq -r '[(.trung_vi.ty_le_cham // "-"), (.trung_vi.p95 // "-")] | @tsv' "$J"; rm -f "$J"; else printf -- '-\t-\n'; fi
+  # Kết luận của máy đo cuộn vào phán quyết: thiếu lượt hiệu chuẩn hợp lệ, không cuộn tới căn cuối, hay đối chứng bận
+  # không phân biệt được → cặp không đo được («-»), lý do vào nhật ký (vượt ngưỡng tỷ lệ/p95 thì vẫn là số đo).
+  if [ -f "$J" ]; then
+    local KL; KL=$(jq -r '.ket_luan // ""' "$J")
+    if printf '%s' "$KL" | grep -qE 'hiệu chuẩn hợp lệ|không tới căn cuối|không phân biệt'; then
+      echo "$2: cặp loại — $KL" >> "$RA/cap-loai.log"; printf -- '-\t-\n'
+    else jq -r '[(.trung_vi.ty_le_cham // "-"), (.trung_vi.p95 // "-")] | @tsv' "$J"; fi
+    rm -f "$J"
+  else echo "$2: máy đo cuộn không ra tệp số" >> "$RA/cap-loai.log"; printf -- '-\t-\n'; fi
 }
 for i in $(seq 1 "$CAP"); do
   TAI=$(sysctl -n vm.loadavg | awk '{print $2}')

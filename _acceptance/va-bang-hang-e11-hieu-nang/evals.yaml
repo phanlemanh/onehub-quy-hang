@@ -5,6 +5,7 @@ evals:
     criterion: AC-1
     executor: script
     cmd: bash _acceptance/va-bang-hang-e11-hieu-nang/thu/kiem-e11.sh
+    long_running: 150
     paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/components/reui/**", "_acceptance/va-bang-hang-e11-hieu-nang/thu/**"]
     expected: "exit 0; dòng cuối «E11 cặp ĐẠT»; dòng trên in ba tỉ số, trung vị ≤ 1,2 và khung > 50 ms bản xét trung vị ≤ 1%. Đỏ in «E11 cặp ĐỎ: tỉ số trung vị <x> > 1,2» hay «E11 cặp ĐỎ: khung > 50 ms <y>% > 1%»; cặp không đo được in «chỉ <k>/3 cặp đo được» (exit 2). Chiều đỏ của cùng lệnh ở E2."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -13,6 +14,7 @@ evals:
     criterion: AC-2
     executor: script
     cmd: E11_SHA=fbdad5ad519a5c154a0385f0c8d7f81ab4a59454 bash _acceptance/va-bang-hang-e11-hieu-nang/thu/kiem-e11.sh
+    long_running: 150
     expected_exit: 1
     paths: ["_acceptance/va-bang-hang-e11-hieu-nang/thu/**"]
     expected: "exit 1 với «E11 cặp ĐỎ: tỉ số trung vị <x> > 1,2» (x ≈ 1,9 theo chia đôi) — cùng lệnh, cùng máy đo với E1, chỉ đổi bản xét về nhánh chính trước vòng; exit 0 nghĩa là thước không phân biệt được bản chậm."
@@ -22,6 +24,7 @@ evals:
     criterion: AC-2
     executor: script
     cmd: E11_SHA=028f56366fb9e425239b7642b861e7ec0e35c078 bash _acceptance/va-bang-hang-e11-hieu-nang/thu/kiem-e11.sh
+    long_running: 150
     paths: ["_acceptance/va-bang-hang-e11-hieu-nang/thu/**"]
     expected: "exit 0 với «E11 cặp ĐẠT» — đối chứng A/A: bản tốt so với chính nó, trung vị tỉ số trong 0,8–1,2 (gap-probe P1: thước không đỏ oan bản tốt). Đỏ ở đây nghĩa là ngưỡng nằm trong vùng nhiễu, không phải bản vòng chậm."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -32,7 +35,7 @@ evals:
     layer: ui-observed
     paths: ["apps/web/src/app/(app)/inventory/**"]
     steps:
-      - "DỰNG D: bash _acceptance/va-bang-hang-e11-hieu-nang/thu/dung-e3.sh (chờ khoá đo nếu lệnh đo cặp đang chạy). Khổ 1440x900. Đăng nhập do-cuon@mau.quy-hang.test ở http://localhost:3585 (mã: grep \"[ma-dang-nhap] do-cuon@mau.quy-hang.test\" .acceptance-runs/va-bang-hang-e11-hieu-nang/web-d.log | tail -1), mở /inventory, chờ lưới; ghi N ở ô đếm «N / tổng căn»."
+      - "DỰNG D: bash _acceptance/va-bang-hang-e11-hieu-nang/thu/dung-e3.sh (chờ khoá đo nếu lệnh đo cặp đang chạy; bật máy chủ dev của CHÍNH cây đang chấm, in dòng «cây <sha>» và bảng người ↔ số hàng — do-cuon phải thấy 5000). Khổ 1440x900. Đăng nhập do-cuon@mau.quy-hang.test ở http://localhost:3585 (mã: grep \"[ma-dang-nhap] do-cuon@mau.quy-hang.test\" .acceptance-runs/va-bang-hang-e11-hieu-nang/web-d.log | tail -1), mở /inventory, chờ lưới; ghi N ở ô đếm «N / tổng căn»."
       - "Tích ô của dòng đầu → chụp evidence/E3-1-tich.png; ghi số căn thanh hành động hiện"
       - "Cuộn lưới xuống quá 300 dòng rồi cuộn về đầu → chụp evidence/E3-2-cuon-ve.png; ghi dòng đầu còn tích không"
       - "Bỏ tích dòng đầu → chụp evidence/E3-3-bo-tich.png; ghi thanh hành động còn không và số"

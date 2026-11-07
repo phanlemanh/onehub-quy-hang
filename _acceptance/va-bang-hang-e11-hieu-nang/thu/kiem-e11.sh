@@ -26,7 +26,9 @@ done
 trap 'rmdir "$KHOA" 2>/dev/null || true' EXIT
 
 if ! docker exec quy-hang-db-dkn-D psql -U postgres -d e11 -qtAc 'select 1' >/dev/null 2>&1; then
-  (cd "$GOC" && node "$DAY/dung-d.mjs") >"$RA/dung-d.log" 2>&1 || { echo "E11 cặp: không dựng được Postgres dãy D — xem $RA/dung-d.log"; exit 2; }
+  (cd "$GOC" && node "$DAY/dung-d.mjs" --nhan 5000) >"$RA/dung-d.log" 2>&1 || { echo "E11 cặp: không dựng được Postgres dãy D — xem $RA/dung-d.log"; exit 2; }
+  # dung-d bật máy chủ dev 3585 để nạp hàng qua API — tắt ngay, lượt đo dùng bản build riêng ở 3575.
+  (cd "$GOC" && node "$DAY/dung-d.mjs" --tat) >>"$RA/dung-d.log" 2>&1 || true
 fi
 # Cơ sở dữ liệu theo kịp migration của bản xét (chỉ thêm; bản tốt chạy được trên lược đồ mới hơn).
 (cd "$GOC" && DATABASE_URL=postgres://postgres:quyhang@localhost:5575/e11 npm run db:migrate >"$RA/migrate.log" 2>&1) || { echo "E11 cặp: migrate lỗi — xem $RA/migrate.log"; exit 2; }
@@ -54,6 +56,7 @@ if [ "$CAP" = 3 ] && awk -v t="$TV3" 'BEGIN{exit !(t>=1.1 && t<=1.3)}'; then
   RA_CAP="$RA_CAP"$'\n'"$(bash "$DAY/do-cap.sh" "$WT_TOT" "$WT_XET" "$XET_SHA" 2)"
 fi
 echo "$RA_CAP"
+[ -s "$RA/cap-loai.log" ] && { echo "cặp bị loại (máy đo cuộn tự báo):"; tail -5 "$RA/cap-loai.log"; }
 node - "$RA_CAP" <<'JS'
 const dong = process.argv[2].trim().split("\n").map((l) => l.split("\t"));
 const tv = (xs) => { const s = [...xs].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
