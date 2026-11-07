@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c80530f0e534cf79816f1d6e201def3a91c7431e
+verified_commit: c9454756566683c685e396d19f875f0a93e9f67b
 human_signoff:
 ---
 
@@ -22,68 +22,68 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-dong-duong-gui-ma-song-song-E1-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-E1-r2
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
   output: |
     {"ca":"song-song","ok":true,"loi":[]}
 
 - eval: E2
-  run_id: minted-va-dong-duong-gui-ma-song-song-E2-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-E2-r2
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
   output: |
     {"ca":"dang-ky-tao","ok":true,"loi":[]}
 
 - eval: E3
-  run_id: minted-va-dong-duong-gui-ma-song-song-E3-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-E3-r2
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
   output: |
     {"ca":"that","ok":true,"loi":[]}
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-test_hooks-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-typecheck-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 - cmd: npm run lint
-  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-lint-r1
+  run_id: minted-va-dong-duong-gui-ma-song-song-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-07T10:03:20Z
+  verified_at: 2026-11-07T10:07:44Z
 
 ## Known limits
 
@@ -93,8 +93,9 @@ human_signoff:
 
 none — moi eval feature deu red tren baseline (co phan biet)
 
-Baseline khong do
+Ghi chú: không eval nào được đo baseline (ccả ba đều n-a), nên câu trên chỉ nói không có eval nào bị xác định là xanh trên cả hai phía.
 
+Baseline khong do:
 - node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --song-song: bo qua baseline: tep _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs co o cay dang kiem nhung chua co o merge-base 987c78c6726ac5e54f8dcfe0f51b259567adb02a — eval moi, chay tren code cu khong phan biet gi
 - node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --dang-ky-tao: bo qua baseline: tep _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs co o cay dang kiem nhung chua co o merge-base 987c78c6726ac5e54f8dcfe0f51b259567adb02a — eval moi, chay tren code cu khong phan biet gi
 - node _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs --that: bo qua baseline: tep _acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs co o cay dang kiem nhung chua co o merge-base 987c78c6726ac5e54f8dcfe0f51b259567adb02a — eval moi, chay tren code cu khong phan biet gi
@@ -105,4 +106,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E1, E2, E3 passed; suite commands all passed. No failed evals.
+Round 1: lượt chấm 1 có finding về E3 (ghim khẳng định phải nằm trong thân ca) — đã sửa ở commit c9454756.
+Round 2: E1, E2, E3 đạt; các lệnh suite hồi quy đạt. Không có mục judgment nên không có panel nào cần người chốt.

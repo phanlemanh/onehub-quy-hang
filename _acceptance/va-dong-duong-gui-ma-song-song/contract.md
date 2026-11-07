@@ -5,7 +5,7 @@ slug: va-dong-duong-gui-ma-song-song
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-07-va-dong-duong-gui-ma-song-song-design.md
 approved_by:
 approved_at:
@@ -60,3 +60,5 @@ cây}. Ô có nghĩa: (không ai, cây) → AC-3 · (email khác, cây) → AC-1
 - Đổi bảng xếp loại đường lõi, đổi `--test-concurrency` hay cấu hình bộ kiểm API.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Phép kiểm nghiệm thu chỉ chứng minh dòng kiểm tra còn nằm trong tệp, chưa chứng minh nó còn chạy. Nếu sau này ai đó vô tình tắt dòng ấy bằng chú thích, phép kiểm vẫn báo xanh. — `_acceptance/va-dong-duong-gui-ma-song-song/thu/kiem-song-song.mjs`
