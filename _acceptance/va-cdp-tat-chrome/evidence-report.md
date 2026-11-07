@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 93f003b9769b4bf4c3ecbbc1f17a1c75ee900b9c
+verified_commit: 10f279a8a4de36efa8163ce27948e3923daaeb68
 human_signoff:
 ---
 
@@ -155,3 +155,7 @@ Round 3: E1–E7 và toàn bộ lệnh suite đều xanh trên commit fb4c1b29; 
 ### Re-pin lần 1 — 2026-11-06, do gộp nhánh chính sau lượt chấm 3
 run_id: repin-20261106T074746Z-16460
 sha: 93f003b9769b4bf4c3ecbbc1f17a1c75ee900b9c · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng
+
+### Re-pin lần 2 — 2026-11-07, do gộp nhánh chính vào #165 (E11 đạt trên main; DB dãy B đã migrate 051–052)
+run_id: repin-20261107T212837Z-78382
+sha: 10f279a8a4de36efa8163ce27948e3923daaeb68 · suites: 7 lệnh exit 0 · evals: 7/7 eval máy đạt kỳ vọng
