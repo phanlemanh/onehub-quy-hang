@@ -1,7 +1,9 @@
 // Phép nhìn E7 của hàng vá luat-chia-lead-cap-han-hong trên chỗ thử dãy D của hàng 48 (dung-d.mjs của luat-chia-lead:
 // Postgres 5575 nạp sàn mẫu, máy dev 3495 chạy từ chính cây này, phiên quản trị sàn mẫu). Mỗi khung in một dòng JSON và
 // chụp ảnh vào --ra. Dòng «có từ trước» chèn thẳng bằng kết nối chủ; sau mỗi khung dọn hai dòng hạn. Lời gọi PATCH của trang
-// đi qua lớp bọc fetch đặt trước khi tải: sửa thân đi ra (400 thật của máy chủ), hay trả phản hồi 200 giả còn lỗi.
+// đi qua lớp bọc fetch đặt trước khi tải: sửa thân đi ra và ghi lại phản hồi THẬT của máy chủ (status + thân). Khung 3 dựng
+// «còn lỗi» bằng phản hồi thật (va-e7-loi-that-cap-han): không còn phản hồi giả viết tay, nên chữ lỗi của máy chủ đổi thì
+// phép nhìn đỏ theo.
 //   node _acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs --ra <thư mục>
 import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -31,12 +33,14 @@ await db.connect();
 const BOC = `(() => { try { Object.defineProperty(navigator, "serviceWorker", { get: () => undefined }); } catch {}
   if (window.__boc) return; window.__boc = true; window.__patch = []; const f = window.fetch;
   window.fetch = async (u, o) => { const s = String(u && u.url ? u.url : u); const m = (o && o.method) || "GET";
-    if (s.includes("/api/v1/company/settings") && m === "PATCH") {
-      window.__patch.push(o.body);
-      if (window.__traGia) return new Response(window.__traGia, { status: 200, headers: { "content-type": "application/json" } });
+    const laPatch = s.includes("/api/v1/company/settings") && m === "PATCH";
+    if (laPatch) {
       if (window.__suaThan) o = { ...o, body: window.__suaThan };
+      window.__patch.push(o.body);
     }
-    return f(u, o); }; })()`;
+    const r = await f(u, o);
+    if (laPatch) { try { window.__phanHoi = { status: r.status, than: await r.clone().text() }; } catch {} }
+    return r; }; })()`;
 
 // Đóng hẳn tab và Chrome của chính lượt này (luật đợt 8: chỉ kill PID mình đã ghi).
 const chrome = await moChrome();
@@ -162,20 +166,28 @@ try {
   in1({ ca: "cap-400", patch: await t.tinh("window.__patch"), bao: await baoDau(t), loiDongGoi: loi2, toast: toast2, apiNhan: (await api()).items.find((x) => x.key === NHAN)?.value });
   t.dong();
 
-  // Khung 3: phản hồi 200 còn lỗi ở khoá vừa lưu → báo «chưa áp», không «Đã lưu».
+  // Khung 3: phản hồi 200 THẬT còn lỗi ở khoá vừa lưu → báo «chưa áp», không «Đã lưu». Hạn nhận 60 có từ trước (dòng hỏng,
+  // đang chạy theo mặc định 15), lần lưu chỉ gửi Hạn gọi lần đầu 45: máy chủ nhận (45 ≥ hạn nhận đang áp 15) và trả cấu hình
+  // mới — cặp đã lưu 60/45 trái luật nên errors nêu chính khoá vừa lưu. Không có phản hồi giả nào.
   await don();
+  await chenNhan60();
   t = await mo();
-  const that = await api();
-  await t.tinh(
-    `window.__traGia = ${JSON.stringify(JSON.stringify({ items: that.items, errors: [`${GOI} 10 không nhỏ hơn ${NHAN} 15 — cặp về mặc định`] }))}`,
-  );
   await go(t, GOI, "45");
+  await t.tinh(`window.__suaThan = JSON.stringify({ "${GOI}": 45 })`);
   await bamLuu(t);
+  await t.cho(`!!window.__phanHoi`, 20000).catch(() => {});
   await ngu(1500);
+  const ph3 = await t.tinh("window.__phanHoi");
+  let errors3 = null;
+  try {
+    errors3 = JSON.parse(ph3?.than ?? "null")?.errors ?? null;
+  } catch {
+    errors3 = null;
+  }
   const bao3 = await baoDau(t);
   const toast3 = await toast(t);
   await chup(t, "E7-cap-con-loi");
-  in1({ ca: "cap-con-loi", baoDauKhung: bao3, toast: toast3 });
+  in1({ ca: "cap-con-loi", patch: await t.tinh("window.__patch"), phanHoiThat: { status: ph3?.status ?? null, errors: errors3 }, baoDauKhung: bao3, toast: toast3 });
   t.dong();
 } finally {
   await don();
