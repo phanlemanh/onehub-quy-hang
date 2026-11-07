@@ -32,8 +32,8 @@ export function BangMauBai({ tt, lamMoi, guiPut }: { tt: TrangThaiMauSan<MauBai>
 }
 
 function KhoiKenh({ kenh, mau, lamMoi, guiPut }: { kenh: KenhBai; mau: MauBai; lamMoi: () => void; guiPut?: (than: unknown) => void }) {
-  const [dau, setDau] = useState(mau[kenh]?.dau ?? "");
-  const [cuoi, setCuoi] = useState(mau[kenh]?.cuoi ?? "");
+  const [dau, setDau] = useState(mau[kenh]?.opening ?? "");
+  const [cuoi, setCuoi] = useState(mau[kenh]?.closing ?? "");
   const [bao, setBao] = useState<{ ok: boolean; cau: string } | null>(null);
   const [dangLuu, setDangLuu] = useState(false);
   const loiDau = loiO(dau);
@@ -75,10 +75,10 @@ function KhoiKenh({ kenh, mau, lamMoi, guiPut }: { kenh: KenhBai; mau: MauBai; l
       </Field>
       <Field>
         <FieldLabel>{CHU_MAU.xemTruoc}</FieldLabel>
-        <pre className="whitespace-pre-wrap rounded-md bg-muted p-3 text-sm">{xemTruocBai(kenh, { dau, cuoi })}</pre>
+        <pre className="whitespace-pre-wrap rounded-md bg-muted p-3 text-sm">{xemTruocBai(kenh, { opening: dau, closing: cuoi })}</pre>
       </Field>
       <div className="flex gap-2">
-        <Button onClick={() => void ghi({ dau, cuoi })} disabled={dangLuu || loiDau !== null || loiCuoi !== null}>
+        <Button onClick={() => void ghi({ opening: dau, closing: cuoi })} disabled={dangLuu || loiDau !== null || loiCuoi !== null}>
           {CHU_MAU.luu}
         </Button>
         <Button variant="outline" onClick={() => void ghi(null)} disabled={dangLuu}>

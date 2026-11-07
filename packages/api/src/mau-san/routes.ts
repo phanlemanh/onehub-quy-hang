@@ -10,7 +10,8 @@ import { readExportTemplates, readPostTemplates, writeExportTemplates, writePost
 
 /**
  * Mẫu của sàn (hàng mau-bang-hang-va-bai): `GET` — mọi vai của sàn đọc để xuất và gửi; `PUT` — Quản trị ghi nguyên khối.
- * Mẫu bảng hàng chỉ mang cột có khoá ra; bảng và bài dựng theo mẫu vẫn qua luật ẩn ở lõi.
+ * Mẫu bảng hàng chỉ mang cột có khoá ra; bảng và bài dựng theo mẫu vẫn qua luật ẩn ở lõi. Tên trường tiếng Anh (hàng
+ * mau-api-ten-truong-tieng-anh): `PUT` mang tên cũ bị từ chối, `GET` đọc được cả dòng lưu dạng cũ.
  */
 const ApiError = z.object({ error: z.string(), reason: z.string().optional() });
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
@@ -21,8 +22,8 @@ const loi = {
   403: err("Chưa thuộc sàn nào, hay (PUT) không phải quản trị sàn"),
   409: err("Thuộc nhiều sàn, chưa chọn"),
 };
-const MauBang = z.object({ id: z.string(), ten: z.string(), cot: z.array(z.string()) });
-const LoiMauBai = z.object({ dau: z.string(), cuoi: z.string() });
+const MauBang = z.object({ id: z.string(), name: z.string(), columns: z.array(z.string()) });
+const LoiMauBai = z.object({ opening: z.string(), closing: z.string() });
 const ExportTemplates = z.object({ templates: z.array(MauBang), errors: z.array(z.string()) }).openapi("ExportTemplates");
 const PostTemplates = z
   .object({ templates: z.object({ zalo: LoiMauBai.optional(), facebook: LoiMauBai.optional() }), errors: z.array(z.string()) })

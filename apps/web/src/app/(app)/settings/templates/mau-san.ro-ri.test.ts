@@ -25,8 +25,8 @@ test("rò rỉ: mã nguồn màn Mẫu không đọc trường nội bộ", () =
 
 test("rò rỉ: hai tab dựng ra không mang giá trị mồi", () => {
   const html = [
-    renderToStaticMarkup(h(BangMauBang, { tt: { kieu: "xong", giaTri: [{ id: "00000000-0000-4000-8000-000000000001", ten: "[Tên] gửi đội", cot: ["unitNumber", "listPrice"] }] }, lamMoi: () => {} })),
-    renderToStaticMarkup(h(BangMauBai, { tt: { kieu: "xong", giaTri: { zalo: { dau: "Chào nhóm", cuoi: "Gọi em" } } }, lamMoi: () => {} })),
+    renderToStaticMarkup(h(BangMauBang, { tt: { kieu: "xong", giaTri: [{ id: "00000000-0000-4000-8000-000000000001", name: "[Tên] gửi đội", columns: ["unitNumber", "listPrice"] }] }, lamMoi: () => {} })),
+    renderToStaticMarkup(h(BangMauBai, { tt: { kieu: "xong", giaTri: { zalo: { opening: "Chào nhóm", closing: "Gọi em" } } }, lamMoi: () => {} })),
   ].join("\n");
   let o = 0;
   for (const nguoiNhan of NGUOI_NHAN) {
