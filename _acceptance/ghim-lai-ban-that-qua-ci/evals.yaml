@@ -1,0 +1,41 @@
+# Bộ đo của hàng ghim-lai-ban-that-qua-ci. Chỉ đọc cây kho; bản sao và kho tạm ở thư mục tạm của hệ điều hành.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --tinh
+    paths: [".github/workflows/ghim-lai-ban-that.yml", ".github/workflows/ci.yml", "_acceptance/ghim-lai-ban-that-qua-ci/thu/**"]
+    expected: "exit 0; «ĐẠT luồng ghim lại: 12/12 vế gác ĐẠT»; vế hỏng in «HỎNG luồng ghim lại: <n>/12 … — hỏng: <vế>»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --pha
+    paths: [".github/workflows/ghim-lai-ban-that.yml", ".github/workflows/ci.yml", "_acceptance/ghim-lai-ban-that-qua-ci/thu/**"]
+    expected: "exit 0; ma trận viết trước mười hai ca, mỗi vế một ca, mỗi dòng «ĐẠT phá thử «<ca>» → hỏng đúng vế «<vế>»» (hỏng sai vế hay hỏng thêm vế in «HỎNG … (hỏng: <danh sách>)»; chuỗi tìm lệch in «ca phá thử lệch luồng»), «ma trận phá thử chạy đủ 12/12 ca, mỗi vế một ca», đối chứng dương «luồng không sửa thì mười hai vế đều ĐẠT»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --chan
+    paths: [".github/scripts/chan-ghim-ban-that.mjs", "_acceptance/config.yaml", "_acceptance/moi-truong-that/evals.yaml", "_acceptance/ghim-lai-ban-that-qua-ci/thu/**"]
+    expected: "exit 0; bốn dòng «ĐẠT bộ chặn «<ca>» → thoát <mã>, «<chữ ghim>»»: E3 khai không chạy → 0 «CHO CHẠY moi-truong-that»; E3 còn chạy bộ kiểm cách ly → 1 «CHẶN E3: chạy bộ kiểm ghi trên bản thật»; thiếu khoá để trống → 1 «CHẶN feature_loop.repin_ci_blank_env không để trống DATABASE_URL»; eval trỏ khoá không có → 1 «CHẶN E7: không giải được …». Vật thật lệch (E3 không còn trỏ cach_ly_that) in «vật thật lệch»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --trong
+    paths: ["_acceptance/config.yaml", ".github/workflows/ci.yml", "_acceptance/ghim-lai-ban-that-qua-ci/thu/**"]
+    expected: "exit 0; «ĐẠT làn ghim lại của kit <KIT_TAG của ci.yml>: bộ kiểm chung thấy DATABASE_URL trống (exit 0: true), eval thấy đủ (exit 0: true), làn xanh (thoát 0)» và đối chứng «gỡ khoá để trống thì bộ kiểm chung thấy chuỗi kết nối, làn đỏ»; kho thiếu khoá in «config.yaml của kho thiếu feature_loop.repin_ci_blank_env»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/ghim-lai-ban-that-qua-ci/thu/kiem-nut.mjs --quet
+    paths: [".github/scripts/quet-bi-mat.mjs", "_acceptance/ghim-lai-ban-that-qua-ci/thu/**"]
+    expected: "exit 0; ba dòng «ĐẠT bộ quét «<ca>» → thoát <mã>, «<chữ ghim>», không in giá trị»: nhật ký sạch → 0 «SẠCH 2 tệp»; mang nguyên chuỗi kết nối → 1 «CHẶN tệp mang bí mật»; chỉ mang mật khẩu → 1 «CHẶN tệp mang bí mật»; đầu ra có chuỗi mật khẩu giả thì HỎNG."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

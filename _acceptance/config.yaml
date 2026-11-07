@@ -78,6 +78,9 @@ feature_loop:
   # Bộ kiểm chạy ở đường nền S1 và lượt S4 của mọi hàng (giám sát đợt nen-dau 30/10). Không gồm
   # test.isolation (cần Postgres riêng từng dãy — luật 2 của đợt và job isolation của CI vẫn gác) và
   # script.product_map (cần CLAUDE_PLUGIN_ROOT).
+  # ghim-lai-ban-that-qua-ci: bộ kiểm chung của làn ghim lại chạy với biến bản thật ĐỂ TRỐNG — nút «Ghim lại hồ sơ cần bản
+  # thật» chỉ cho eval của hồ sơ thấy chuỗi kết nối; bộ kiểm chung không cần cơ sở dữ liệu.
+  repin_ci_blank_env: [DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL]
   suite_keys:
     - executors.test.core
     - executors.test.api
