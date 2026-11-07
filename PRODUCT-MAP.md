@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>117 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>118 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -99,6 +99,7 @@ flowchart TD
 - Đầu khách chọn căn, xem trước đúng trang khách sẽ thấy, rồi mở bảng chia sẻ của điện thoại với link, ảnh và tin soạn sẵn; người tự bấm gửi trong Zalo (`luong-gui`)
 - Số điện thoại chủ nhà nằm trong cơ sở dữ liệu ở dạng mã hoá; chỉ cửa «Mở số» giải ra số cho người được thấy, đọc thẳng bảng hay bản sao lưu không ra số (`ma-hoa-so-chu`)
 - Đầu chủ và trưởng nhóm mở màn Liên hệ, tìm một người bằng tên hay số, thấy đủ cơ hội và căn của người ấy, mở số và gọi trong tối đa ba chạm (`man-lien-he`)
+- Màn Mẫu của Cài đặt › Sàn báo cho Quản trị khi mẫu bảng hàng hay mẫu bài đã lưu có chỗ không đọc được, nói rõ chỗ nào; lần lưu kế không lặng lẽ xoá các chỗ ấy mà Quản trị biết trước điều sẽ xảy ra (`man-mau-bao-mau-hong`)
 - Màn Nhập Excel (65b): Đầu chủ — hay Trưởng nhóm nhập hộ — chọn tệp bảng hàng cũ, màn đọc tệp trong trình duyệt, ghép cột, cho thấy từng ô sẽ ghi gì, cho sửa ô và bỏ dòng, xem thử trên máy chủ từng dòng thành gì, rồi ghi qua đường ghi lần nhập của hàng 65a (`man-nhap-excel`)
 - Đường API mẫu bảng hàng và mẫu bài của sàn (/api/v1/company/templates/export, /posts) và dữ liệu mẫu đã lưu dùng tên trường tiếng Anh; mẫu sàn đã lưu bằng tên cũ vẫn đọc và xuất được, lần lưu kế ghi tên mới (`mau-api-ten-truong-tieng-anh`)
 - Quản trị sàn xem và sửa mẫu bảng hàng (cột và thứ tự khi xuất) và mẫu bài theo kênh trong màn Mẫu của Cài đặt › Sàn; sửa hay xoá một mẫu thì lần xuất và lần gửi kế dùng bản mới, lần đã xong không đổi (`mau-bang-hang-va-bai`)

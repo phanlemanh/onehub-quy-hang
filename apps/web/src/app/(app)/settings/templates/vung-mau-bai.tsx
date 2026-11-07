@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 
+import { BaoHong } from "./bao-hong";
 import { CHU_MAU, loiO, sauKhiLuuMau, thanPutBai, xemTruocBai, type TrangThaiMauSan } from "./mau-san";
 
 /** Vùng của tab trong vỏ: làm mới bằng router của app. */
@@ -24,6 +25,7 @@ export function BangMauBai({ tt, lamMoi, guiPut }: { tt: TrangThaiMauSan<MauBai>
     return <TrangThai kind="error" title={CHU_MAU.loiDoc} hanhDong={<Button variant="outline" onClick={() => lamMoi()}>{CHU_MAU.thuLai}</Button>} />;
   return (
     <div className="flex flex-col gap-6">
+      <BaoHong cau={tt.baoHong} />
       {KENH_BAI.map((k) => (
         <KhoiKenh key={k} kenh={k} mau={tt.giaTri} lamMoi={lamMoi} guiPut={guiPut} />
       ))}

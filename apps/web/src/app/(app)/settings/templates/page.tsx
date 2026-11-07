@@ -8,7 +8,7 @@ import { getApi, readMe } from "@/lib/api";
 import { chanMucSan } from "../cai-dat";
 import { MucCaiDat } from "../khung";
 import { type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
-import { CHU_MAU, type TrangThaiMauSan } from "./mau-san";
+import { CHU_MAU, trangThaiTuDap } from "./mau-san";
 import { VungMauBai } from "./vung-mau-bai";
 import { VungMauBang } from "./vung-mau-bang";
 import { VungMauNhap } from "./vung-mau-nhap";
@@ -31,8 +31,10 @@ export default async function Mau() {
   const doc = (duong: string) => Promise.resolve(getApi().request(`http://quy-hang.local${duong}`, { headers: { cookie } })).catch(() => null);
   const [nhap, bang, bai] = await Promise.all([doc("/api/v1/company/import-templates"), doc("/api/v1/company/templates/export"), doc("/api/v1/company/templates/posts")]);
   const ttNhap: TrangThaiMau = nhap && nhap.ok ? { kieu: "xong", ds: (await nhap.json()) as CotMauNhap[] } : { kieu: "loi" };
-  const ttBang: TrangThaiMauSan<MauBang[]> = bang && bang.ok ? { kieu: "xong", giaTri: ((await bang.json()) as { templates: MauBang[] }).templates } : { kieu: "loi" };
-  const ttBai: TrangThaiMauSan<MauBai> = bai && bai.ok ? { kieu: "xong", giaTri: ((await bai.json()) as { templates: MauBai }).templates } : { kieu: "loi" };
+  // Mẫu bảng hàng, mẫu bài: giữ `errors` của đáp thành khối báo mẫu hỏng (hàng man-mau-bao-mau-hong).
+  const dap = async (r: Response | null) => (r ? { ok: r.ok, body: r.ok ? await r.json().catch(() => null) : null } : null);
+  const ttBang = trangThaiTuDap<MauBang[]>(await dap(bang));
+  const ttBai = trangThaiTuDap<MauBai>(await dap(bai));
   return (
     <MucCaiDat title="Mẫu" description={MO_TA}>
       <Tabs defaultValue="nhap">

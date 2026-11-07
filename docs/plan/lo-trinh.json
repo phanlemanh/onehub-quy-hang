@@ -2898,6 +2898,19 @@
         "packages/core/src/sharing/**",
         "apps/web/src/app/(app)/settings/templates/**"
       ]
+    },
+    {
+      "ma": "man-mau-bao-mau-hong",
+      "cau_giao": "Màn Mẫu của Cài đặt › Sàn báo cho Quản trị khi mẫu bảng hàng hay mẫu bài đã lưu có chỗ không đọc được, nói rõ chỗ nào; lần lưu kế không lặng lẽ xoá các chỗ ấy mà Quản trị biết trước điều sẽ xảy ra.",
+      "slug": "man-mau-bao-mau-hong",
+      "vi_sao": "Ngoài-9 của mau-bang-hang-va-bai (#191): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 07/11 (sổ d-20261107T114018Z-46). Hàng không mã — đã quyết.",
+      "sau": [
+        "mau-api-ten-truong-tieng-anh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/settings/templates/**",
+        "packages/api/src/mau-san/**"
+      ]
     }
   ],
   "chan_troi": [
