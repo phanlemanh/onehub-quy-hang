@@ -2843,7 +2843,7 @@
       "slug": "va-thuoc-ci-ho-so-moi-truong-that",
       "vi_sao": "Ngoài-3 của hàng va-deploy-csdl-tam (PR #176): thước kiem_ci và cach_ly_that của hồ sơ đã ký moi-truong-that, bat-rang-buoc-ban-ma còn đòi bộ cách ly chạy trên bản thật; chủ kho chọn mở hợp đồng mới ở Cổng Bằng chứng 06/11.",
       "hang": "T2",
-      "bat_khi": "Lưới trước gộp của bat-rang-buoc-ban-ma và kiem-nhanh-rang-buoc-ban-ma xanh trên main sau hàng; eval thứ tự deploy cũ của bat-rang-buoc-ban-ma khai không chạy, trỏ kiem-nhanh-rang-buoc-ban-ma#AC-1",
+      "bat_khi": "Lưới trước gộp của bat-rang-buoc-ban-ma và va-deploy-csdl-tam xanh trên main sau hàng; eval thứ tự deploy cũ của bat-rang-buoc-ban-ma khai không chạy, trỏ va-deploy-csdl-tam#AC-3",
       "vung": [
         "_acceptance/moi-truong-that/**",
         "_acceptance/bat-rang-buoc-ban-ma/**"
@@ -2859,6 +2859,17 @@
       "vung": [
         "_acceptance/moi-truong-that/**",
         "docs/superpowers/specs/2026-11-06-va-deploy-csdl-tam-design.md"
+      ]
+    },
+    {
+      "ma": "kiem-tan-dinh-bac-ninh",
+      "cau_giao": "Bài kiểm ca «Tân Định, Tỉnh Bắc Ninh» của bộ đọc địa chỉ ghim kết quả dương (tên xã vào «chưa có trong danh mục», trạng thái cụ thể) và có phá thử riêng chứng nó đỏ khi bộ đọc lui về so bỏ dấu — thay phép kiểm âm tính đứng một mình.",
+      "slug": "kiem-tan-dinh-bac-ninh",
+      "vi_sao": "Ngoài-1 của doc-xa-thieu-mot-phan-dau: ca «Tân Định, Tỉnh Bắc Ninh» chỉ kiểm âm tính. Chủ kho ký Cổng Bằng chứng 07/11 và chọn «mở hợp đồng mới» (d-20261107T011616Z-10); giám sát duyệt X-12. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Ca «Tân Định, Tỉnh Bắc Ninh» đỏ khi bộ đọc trả rỗng, trả sai xã hay lui về so bỏ dấu; xanh trên bộ đọc hiện tại với kết quả dương ghim tường minh",
+      "vung": [
+        "packages/core/src/address/**"
       ]
     }
   ],

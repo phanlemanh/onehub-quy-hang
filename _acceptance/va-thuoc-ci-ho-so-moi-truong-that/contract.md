@@ -5,7 +5,7 @@ slug: va-thuoc-ci-ho-so-moi-truong-that
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ci, config]
-status: implemented
+status: verified
 approved_by: Manh Phan
 approved_at: 2026-11-07
 design_doc: docs/superpowers/specs/2026-11-07-va-thuoc-ci-ho-so-moi-truong-that-design.md

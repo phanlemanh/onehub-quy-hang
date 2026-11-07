@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3ae8d9849db1b2cb6e0af9b4d46092cacd27cb3b
+verified_commit: f30611b04d46f95129b498b7e9eb68e8e3faf659
 human_signoff:
 ---
 
@@ -22,68 +22,68 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-E1-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-E1-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
   output: |
     KẾT: ĐẠT
 
 - eval: E2
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-E2-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-E2-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
   output: |
     KẾT: ĐẠT
 
 - eval: E3
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-E3-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-E3-r3
   exit_code: 0
   baseline: n-a
   verifier: _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
   output: |
     KẾT: ĐẠT
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-test_hooks-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_ui_lint-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-npm_test_w_quy_hang_ui_lint-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-typecheck-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 - cmd: npm run lint
-  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-lint-r2
+  run_id: minted-va-thuoc-ci-ho-so-moi-truong-that-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-07T08:21:40Z
+  verified_at: 2026-11-07T08:26:01Z
 
 ## Known limits
 
@@ -91,10 +91,9 @@ human_signoff:
 
 ## Analyst
 
-none — moi eval feature deu red tren baseline (co phan biet) không áp dụng: cả ba eval đều là eval mới nên baseline không đo được (xem mục dưới). Không có eval nào được xác nhận là xanh ở cả hai phía.
+none — moi eval feature deu red tren baseline (co phan biet) không đo được: cả ba eval đều là eval mới nên baseline là n-a, xem mục dưới.
 
-### Baseline khong do
-
+Baseline khong do
 - node _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs: bo qua baseline: tep _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs co o cay dang kiem nhung chua co o merge-base 82020df4a6cef8d345c63fc4225ead4010fd839b — eval moi, chay tren code cu khong phan biet gi
 - node _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs --luoi: bo qua baseline: tep _acceptance/va-thuoc-ci-ho-so-moi-truong-that/thu/kiem-thay.mjs co o cay dang kiem nhung chua co o merge-base 82020df4a6cef8d345c63fc4225ead4010fd839b — eval moi, chay tren code cu khong phan biet gi
 
@@ -104,5 +103,6 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: hồ sơ được sửa ở S4-r1 (commit e104653e): tách phần moi-truong-that sang hàng sau, sửa đối chứng. Quay lại triển khai.
-Round 2: E1, E2, E3 đạt; bảy lệnh suite hồi quy đạt.
+Round 1: lịch sử không có trong đầu vào của round này — xem các round cũ.
+Round 2: lịch sử không có trong đầu vào của round này — xem các round cũ.
+Round 3: E1, E2, E3 đều đạt; bảy lệnh suite xanh. Không eval nào cần người chốt.
