@@ -1,9 +1,10 @@
 // Phép nhìn E7 của hàng vá luat-chia-lead-cap-han-hong trên chỗ thử dãy D của hàng 48 (dung-d.mjs của luat-chia-lead:
 // Postgres 5575 nạp sàn mẫu, máy dev 3495 chạy từ chính cây này, phiên quản trị sàn mẫu). Mỗi khung in một dòng JSON và
 // chụp ảnh vào --ra. Dòng «có từ trước» chèn thẳng bằng kết nối chủ; sau mỗi khung dọn hai dòng hạn. Lời gọi PATCH của trang
-// đi qua lớp bọc fetch đặt trước khi tải: sửa thân đi ra và ghi lại phản hồi THẬT của máy chủ (status + thân). Khung 3 dựng
-// «còn lỗi» bằng phản hồi thật (va-e7-loi-that-cap-han): không còn phản hồi giả viết tay, nên chữ lỗi của máy chủ đổi thì
-// phép nhìn đỏ theo.
+// đi qua lớp bọc fetch đặt trước khi tải: sửa thân đi ra, ghi lại phản hồi thật (status + thân), hay thay phản hồi bằng một
+// thân DỰNG TỪ GET THẬT của máy chủ. Khung 3 (va-e7-loi-that-cap-han): máy chủ tự sửa cặp hạn khi lưu một nửa (06/11), nên
+// không lần lưu thật nào trả 200 còn lỗi ở khoá vừa lưu — khung 3 lấy nguyên `items` và `errors` của GET thật khi cặp đang
+// hỏng làm thân phản hồi PATCH: không còn câu lỗi gõ tay, chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo.
 //   node _acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs --ra <thư mục>
 import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -38,6 +39,7 @@ const BOC = `(() => { try { Object.defineProperty(navigator, "serviceWorker", { 
       if (window.__suaThan) o = { ...o, body: window.__suaThan };
       window.__patch.push(o.body);
     }
+    if (laPatch && window.__thanTuGet) return new Response(window.__thanTuGet, { status: 200, headers: { "content-type": "application/json" } });
     const r = await f(u, o);
     if (laPatch) { try { window.__phanHoi = { status: r.status, than: await r.clone().text() }; } catch {} }
     return r; }; })()`;
@@ -166,28 +168,21 @@ try {
   in1({ ca: "cap-400", patch: await t.tinh("window.__patch"), bao: await baoDau(t), loiDongGoi: loi2, toast: toast2, apiNhan: (await api()).items.find((x) => x.key === NHAN)?.value });
   t.dong();
 
-  // Khung 3: phản hồi 200 THẬT còn lỗi ở khoá vừa lưu → báo «chưa áp», không «Đã lưu». Hạn nhận 60 có từ trước (dòng hỏng,
-  // đang chạy theo mặc định 15), lần lưu chỉ gửi Hạn gọi lần đầu 45: máy chủ nhận (45 ≥ hạn nhận đang áp 15) và trả cấu hình
-  // mới — cặp đã lưu 60/45 trái luật nên errors nêu chính khoá vừa lưu. Không có phản hồi giả nào.
+  // Khung 3: phản hồi 200 còn lỗi ở khoá vừa lưu → báo «chưa áp», không «Đã lưu». Hạn nhận 60 có từ trước (cặp hỏng, đang
+  // chạy theo mặc định): GET thật của máy chủ trả `errors` nêu khoá của cặp; thân ấy, nguyên văn, là phản hồi của lần lưu.
   await don();
   await chenNhan60();
   t = await mo();
+  const getThat = await api();
+  const coLoiGoi = (getThat.errors ?? []).some((e) => e.includes(GOI));
+  await t.tinh(`window.__thanTuGet = ${JSON.stringify(JSON.stringify({ items: getThat.items, errors: getThat.errors }))}`);
   await go(t, GOI, "45");
-  await t.tinh(`window.__suaThan = JSON.stringify({ "${GOI}": 45 })`);
   await bamLuu(t);
-  await t.cho(`!!window.__phanHoi`, 20000).catch(() => {});
   await ngu(1500);
-  const ph3 = await t.tinh("window.__phanHoi");
-  let errors3 = null;
-  try {
-    errors3 = JSON.parse(ph3?.than ?? "null")?.errors ?? null;
-  } catch {
-    errors3 = null;
-  }
   const bao3 = await baoDau(t);
   const toast3 = await toast(t);
   await chup(t, "E7-cap-con-loi");
-  in1({ ca: "cap-con-loi", patch: await t.tinh("window.__patch"), phanHoiThat: { status: ph3?.status ?? null, errors: errors3 }, baoDauKhung: bao3, toast: toast3 });
+  in1({ ca: "cap-con-loi", errorsTuGetThat: getThat.errors, errorsNeuKhoaGoi: coLoiGoi, baoDauKhung: bao3, toast: toast3 });
   t.dong();
 } finally {
   await don();
