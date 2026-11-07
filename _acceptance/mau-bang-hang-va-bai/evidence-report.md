@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 5cf35f21f81126d582dc03fcca8d0412d3e6748f
+verified_commit: 1b7ebc1fa89bf36ff3215a639ab1e44cdfb4b2d7
 human_signoff: Manh Phan 2026-11-07
 ---
 
@@ -277,3 +277,7 @@ Round 1: chạy lần đầu, nhật ký ở run-log.jsonl.
 Round 2: chạy toàn bộ eval; mười tám eval trong bảng mang từ vòng này.
 Round 3: mang các eval không bị delta chạm từ round 2.
 Round 4: chạy lại E4b, E10c, E8, E10b cùng bảy lệnh suite — tất cả đạt; mười tám eval còn lại mang từ round 2.
+
+### Re-pin lần 1 — 2026-11-07, do gộp main + chữ ký
+run_id: repin-20261107T114128Z-54089
+sha: 1b7ebc1fa89bf36ff3215a639ab1e44cdfb4b2d7 · suites: 7 lệnh exit 0 · evals: 22/22 eval máy đạt kỳ vọng
