@@ -14,17 +14,23 @@ bao phí.
 
 ## Luật mới
 
-Trong MỘT tập đóng, **tên đang hiện** của mỗi giá trị sau khi lưu = tên riêng gửi lên, vắng thì tên mặc định. Bộ tên
-đang hiện của một tập phải đôi một khác nhau. So khớp bỏ hoa thường và dấu cách thừa (cùng cách so của nhãn trạng thái
-hàng 46, Hỏi-7 đã duyệt). Vi phạm → máy chủ từ chối cả bộ (400, nguyên khối như cũ); câu lỗi nêu tên trùng và giá trị
-kia.
+Trong MỘT tập đóng, **tên đang hiện** của mỗi giá trị sau khi lưu = tên riêng gửi lên, vắng thì tên mặc định. Tên riêng
+gửi lên của một giá trị bị chặn khi trùng (bỏ hoa thường và dấu cách thừa — cùng cách so nhãn trạng thái hàng 46,
+Hỏi-7 đã duyệt) với:
 
-- Một hàm lõi `trungTenGiaTri(truong, tenRieng)` trả mọi cặp trùng của một tập; `dungDongNhan` (máy chủ) và màn Cách
-  gọi cùng gọi nó — màn khoá «Lưu» đúng khi máy chủ sẽ từ chối.
+1. tên đang hiện của giá trị khác cùng tập (riêng, hay mặc định khi giá trị kia chưa đặt), hoặc
+2. tên mặc định của giá trị khác cùng tập, kể cả khi giá trị kia đã đổi tên — chặn đổi chéo «Bao phí» ↔ «Không bao
+   phí» (**Hỏi-1**, khuyến nghị; như Hỏi-7 hàng 46).
+
+Vi phạm → máy chủ từ chối cả bộ (400, nguyên khối như cũ); câu lỗi nêu tên mặc định của giá trị kia:
+`Trùng tên của «<tên mặc định của giá trị kia>»`.
+
+- Một hàm lõi `trungTenGiaTri(truong, tenRieng)` trả, với mỗi giá trị có tên riêng bị trùng, giá trị anh em nó trùng;
+  `dungDongNhan` (máy chủ) và màn Cách gọi cùng gọi nó — màn khoá «Lưu» đúng khi máy chủ sẽ từ chối.
 - Gõ đúng tên mặc định của chính giá trị ấy vẫn là «dùng mặc định» (như cũ).
-- Đổi chéo tên hai giá trị (A lấy tên mặc định của B, B lấy tên mặc định của A) vẫn lưu được: bộ tên đang hiện không có
-  hai chữ trùng. Mục tiêu của hàng là «không hai lựa chọn khác nghĩa cùng một chữ», không phải cấm tên gây hiểu nhầm.
 - Hai tập khác nhau được trùng chữ (mỗi tập là một ô lọc riêng).
+- Dữ liệu đã lưu trùng từ trước (**Hỏi-2**, khuyến nghị): màn hiện lỗi ở ô ngay khi mở và khoá «Lưu»; máy chủ chặn cả
+  lượt lưu tới khi quản trị sửa ô trùng.
 
 ## Đối chiếu ngành
 
@@ -34,15 +40,15 @@ kia.
 
 ## Màn Cách gọi
 
-Không đổi bố cục. Ô có chữ mà chữ ấy trùng tên đang hiện của giá trị khác cùng tập → `FieldError` sẵn có của ô hiện
-«Trùng tên đang hiện của «<tên mặc định của giá trị kia>»», nút «Lưu» khoá. Cả hai ô cùng có chữ trùng nhau thì cả hai
+Không đổi bố cục. Ô có chữ bị chặn theo luật trên → `FieldError` sẵn có của ô hiện «Trùng tên của «<tên mặc định của
+giá trị kia>»», nút «Lưu» khoá — tính cả lúc mở màn từ dữ liệu đã lưu. Cả hai ô cùng có chữ trùng nhau thì cả hai
 hiện lỗi. Ô trống (dùng mặc định) không hiện lỗi — lỗi nằm ở ô có chữ, là ô quản trị đang sửa.
 
 ## Ngoài phạm vi
 
 - Tên trường trùng nhau (hai cột cùng tên) — câu giao chỉ nói giá trị.
 - Nhãn trạng thái (hàng 46 đã có kiểm trùng riêng).
-- Dữ liệu đã lưu trùng từ trước không tự sửa: màn hiện lỗi ở ô ngay khi mở, lượt lưu kế bị chặn tới khi quản trị sửa.
+- Tự sửa dữ liệu đã lưu trùng từ trước.
 
 ## Đặc tả UX
 

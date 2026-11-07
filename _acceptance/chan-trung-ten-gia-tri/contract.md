@@ -24,24 +24,26 @@ frontmatter.
 
 - **AC-1** Given sàn A, giá trị `included` của «Điều kiện phí» chưa đặt tên riêng (đang hiện «Bao phí»)
   When quản trị lưu tên riêng «Bao phí» cho `excluded`
-  Then máy chủ trả 400, lý do nêu chữ «Bao phí» trùng tên đang hiện của giá trị kia; không khoá nhãn nào của sàn đổi
-  (nguyên khối). Cùng luật cho mọi cặp giá trị của mọi tập đóng (`feeInclusion`, `withdrawnReason`).
+  Then máy chủ trả 400, lý do đúng câu «Trùng tên của «<tên mặc định của giá trị kia>»» (ở đây «Bao phí»); không khoá
+  nhãn nào của sàn đổi (nguyên khối). Cùng luật cho mọi cặp giá trị của mọi tập đóng lõi khai báo.
 - **AC-2** Given hai giá trị cùng tập
   When quản trị gửi hai tên riêng cùng chữ cho chúng
-  Then máy chủ trả 400 như AC-1 (luật cũ giữ nguyên).
+  Then máy chủ trả 400; lý do nêu tên mặc định của đúng giá trị anh em.
 - **AC-3** Given tên trùng chỉ khác hoa thường hay dấu cách thừa (vd «bao   PHÍ»)
   When lưu
   Then bị chặn như trùng hẳn.
-- **AC-4** Given bộ tên không trùng
-  When lưu — kể cả gõ đúng tên mặc định của chính giá trị ấy, hay đổi chéo tên hai giá trị
+- **AC-4** Given bộ tên không trùng — kể cả gõ đúng tên mặc định của chính giá trị ấy
+  When lưu
   Then lưu được như cũ (200), bảng đọc lại đúng tên đã lưu; gõ đúng tên mặc định của chính nó vẫn là dùng mặc định.
+  Còn đổi chéo (A lấy tên mặc định của B, B lấy tên mặc định của A) thì bị chặn như AC-1 (Hỏi-1, khuyến nghị).
 - **AC-5** Given chữ trùng giữa hai tập khác nhau (một giá trị «Lý do ngừng» lấy tên «Bao phí»)
   When lưu
   Then lưu được — chặn chỉ trong cùng tập.
 - **AC-6** Given quản trị trên màn Cách gọi
   When gõ vào ô giá trị một chữ trùng tên đang hiện của giá trị khác cùng tập
-  Then chính ô đó hiện câu lỗi nêu giá trị kia và nút «Lưu» khoá; sửa hết trùng thì câu lỗi mất và «Lưu» mở. Hai ô có
-  chữ trùng nhau thì cả hai hiện lỗi; ô trống không hiện lỗi.
+  Then chính ô đó hiện câu lỗi nêu tên mặc định của giá trị kia và nút «Lưu» khoá; sửa hết trùng thì câu lỗi mất và
+  «Lưu» mở. Hai ô có chữ trùng nhau thì mỗi ô nêu giá trị anh em của nó; ô trống không hiện lỗi. Mở màn từ dữ liệu đã
+  lưu có trùng (từ trước luật này) thì lỗi và khoá «Lưu» hiện ngay, chưa cần gõ (Hỏi-2, khuyến nghị).
 - **AC-7** Given màn và máy chủ
   When cùng một bộ tên
   Then màn khoá «Lưu» đúng khi và chỉ khi máy chủ từ chối vì trùng — cả hai gọi chung một hàm lõi.
@@ -54,15 +56,15 @@ frontmatter.
 Bỏ quét bằng skill — không gian nhỏ, kê tay (sổ: dòng «bỏ coverage-scan»). Trục:
 - Tập: `feeInclusion` (2 giá trị) · `withdrawnReason` (3 giá trị) → ma trận đủ cặp ở E1 (AC-1).
 - Kiểu trùng: riêng–mặc định anh em (AC-1) · riêng–riêng (AC-2) · khác hoa thường/dấu cách (AC-3) · khác tập (AC-5).
-- Đối chứng: không trùng · đúng mặc định của chính nó · đổi chéo (AC-4).
+- Đối chứng: không trùng · đúng mặc định của chính nó (AC-4); đổi chéo bị chặn (AC-4, Hỏi-1).
+- Trạng thái màn: sau khi gõ · lúc mở từ dữ liệu đã lưu trùng (AC-6, Hỏi-2).
 - Lớp: lõi (E1) · API trên Postgres (E2) · màn thuần (E3) · màn chạy thật (E4) · đồng luật màn–máy chủ (E5).
 
 ## Out of scope
 
 - Tên trường trùng nhau (hai cột cùng tên) — câu giao chỉ nói giá trị.
 - Nhãn trạng thái — hàng 46 đã có kiểm trùng riêng.
-- Tự sửa dữ liệu đã lưu trùng từ trước: màn hiện lỗi ở ô khi mở; lượt lưu kế bị chặn tới khi quản trị sửa.
-- Tên đổi chéo gây hiểu nhầm (A lấy tên mặc định của B và ngược lại) — không phải hai lựa chọn cùng chữ.
+- Tự sửa dữ liệu đã lưu trùng từ trước — chữ của sàn chỉ quản trị đổi.
 
 ## Notes
 

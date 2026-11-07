@@ -7,14 +7,14 @@ evals:
     layer: unit
     cmd: config:executors.test.core
     paths: ["packages/core/src/labels/**"]
-    expected: "exit 0; ca «trùng tên đang hiện» trong packages/core/src/labels/labels.test.ts: ma trận viết trước mọi cặp có thứ tự (giá trị đặt tên, giá trị anh em chưa đặt) của feeInclusion (2 cặp) và withdrawnReason (6 cặp) — mỗi ô dungDongNhan trả ok:false, lỗi chứa chữ trùng và tên mặc định của giá trị kia; số ô đếm bằng 8. Đối chứng dương cùng bộ: đổi tên đó sang chữ không trùng → ok:true. Chiều đỏ: bỏ phép so với tên mặc định trong trungTenGiaTri → 8 ô đỏ, thông điệp nêu cặp."
+    expected: "exit 0; ca «trùng tên đang hiện» trong packages/core/src/labels/labels.test.ts: ma trận SINH từ TAP_DONG của lõi — mọi cặp có thứ tự (giá trị đặt tên, giá trị anh em chưa đặt) của mọi tập đóng; ca khẳng định danh sách tập bằng đúng {feeInclusion, withdrawnReason} và số ô bằng tổng n×(n−1) = 8 (tập mới chưa vào thì đỏ). Mỗi ô gõ tên mặc định của anh em viết khác hoa thường/dấu cách (vd «bao   PHÍ») → dungDongNhan ok:false, lỗi chứa đúng câu «Trùng tên của «<tên mặc định của anh em, viết chuẩn>»». Đối chứng dương cùng bộ: chữ không trùng → ok:true. Chiều đỏ: bỏ phép so với tên mặc định → 8 ô đỏ, thông điệp nêu cặp; câu lỗi chỉ lặp chữ gõ vào → ô đỏ."
   - id: E1b
     criterion: AC-2
     executor: test
     layer: unit
     cmd: config:executors.test.core
     paths: ["packages/core/src/labels/**"]
-    expected: "exit 0; hai tên riêng cùng chữ trong một tập (feeInclusion, withdrawnReason) → ok:false, lỗi nêu tên trùng; đối chứng hai tên khác chữ → ok:true. Chiều đỏ: bỏ phép so riêng–riêng → ca đỏ nêu tập."
+    expected: "exit 0; hai giá trị withdrawnReason cùng một chữ lạ («Mất liên lạc») → ok:false, lỗi nêu đúng tên mặc định của giá trị anh em (không phải chữ trùng); feeInclusion tương tự; đối chứng hai tên khác chữ → ok:true. Chiều đỏ: bỏ phép so riêng–riêng → ca đỏ nêu tập."
   - id: E1c
     criterion: AC-3
     executor: test
@@ -28,7 +28,7 @@ evals:
     layer: unit
     cmd: config:executors.test.core
     paths: ["packages/core/src/labels/**"]
-    expected: "exit 0; ba ca đối chứng: (a) tên không trùng → ok, dòng đúng tên; (b) gõ đúng tên mặc định của chính giá trị → ok, không dòng nào cho giá trị ấy; (c) đổi chéo (included «Không bao phí», excluded «Bao phí») → ok, dòng mang cả hai tên. Chiều đỏ: tính tên đang hiện bằng tên mặc định cho mọi giá trị (bỏ tên riêng gửi lên) → ca (c) đỏ."
+    expected: "exit 0; ba ca: (a) tên không trùng → ok, dòng đúng tên; (b) gõ đúng tên mặc định của chính giá trị → ok, không dòng nào cho giá trị ấy; (c) đổi chéo (included «Không bao phí», excluded «Bao phí») → ok:false, lỗi «Trùng tên của «Không bao phí»» hoặc «Trùng tên của «Bao phí»» (Hỏi-1). Chiều đỏ: chỉ so tên đang hiện (bỏ so với tên mặc định của giá trị đã đổi) → ca (c) đỏ."
   - id: E1e
     criterion: AC-5
     executor: test
@@ -49,14 +49,14 @@ evals:
     layer: backend-effect
     cmd: config:executors.test.api_db
     paths: ["packages/core/src/labels/**", "packages/api/src/labels/**", "packages/api/test-db/chan-trung-ten-gia-tri/**"]
-    expected: "exit 0; trên Postgres: PUT đổi chéo (included «Không bao phí», excluded «Bao phí») → 200, GET trả đúng hai tên; PUT riêng–riêng trùng (hai lý do ngừng cùng «Mất liên lạc») → 400. Chiều đỏ: chặn đổi chéo → ca 200 đỏ."
+    expected: "exit 0; trên Postgres: PUT đổi chéo (included «Không bao phí», excluded «Bao phí») → 400, reason chứa «Trùng tên của»; PUT riêng–riêng trùng (hai lý do ngừng cùng «Mất liên lạc») → 400; đọc lại GET y như trước mỗi PUT. Đối chứng: PUT không trùng → 200. Chiều đỏ: cho đổi chéo → ca 400 đỏ."
   - id: E3
     criterion: AC-6
     executor: test
     layer: unit
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/settings/labels/**", "packages/core/src/labels/**"]
-    expected: "exit 0; apps/web/src/app/(app)/settings/labels/cach-goi.test.ts: bảng viết trước trên bộ thật bangNhan(TU_VUNG_RONG): ô v:feeInclusion:excluded gõ «Bao phí» → loiCuaO nêu «Bao phí» (tên mặc định của giá trị kia), coTheLuu false; ô v:feeInclusion:included trống → không lỗi; hai ô withdrawnReason cùng «Mất liên lạc» → cả hai ô lỗi; sửa ô thành «Phí ngoài» → không lỗi, coTheLuu true. Chiều đỏ: loiCuaO bỏ kiểm trùng → ca đầu đỏ nêu ô."
+    expected: "exit 0; apps/web/src/app/(app)/settings/labels/cach-goi.test.ts: bảng viết trước trên bộ thật bangNhan: (a) từ bangNhan(TU_VUNG_RONG), ô v:feeInclusion:excluded gõ «bao   phí» → loiCuaO đúng câu «Trùng tên của «Bao phí»», coTheLuu false; ô v:feeInclusion:included trống → không lỗi; (b) hai ô withdrawnReason cùng «Mất liên lạc» → mỗi ô nêu tên mặc định của đúng ô anh em; (c) sửa ô thành «Phí ngoài» → không lỗi, coTheLuu true; (d) trạng thái nạp: oBanDau(bangNhan(tuVung đã lưu excluded «Bao phí»)) chưa gõ gì → ô ấy lỗi «Trùng tên của «Bao phí»», coTheLuu false; đối chứng tuVung không trùng → không lỗi. Chiều đỏ: loiCuaO bỏ kiểm trùng → (a) và (d) đỏ nêu ô."
   - id: E4
     criterion: AC-6
     executor: ui-check
