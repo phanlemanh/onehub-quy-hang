@@ -16,6 +16,9 @@ export const EVENT_TYPES = [
   // Gỡ hàng do lần nhập tạo khi hoàn tác cả lần nhập (ADR-0011 quyết định 8): cờ khi gấp, không phải trạng thái thứ bảy;
   // chỉ đường hoàn tác lần nhập ghi được.
   "voided",
+  // Giá trị trường riêng của sàn (hàng 47, ADR-0018 quyết định 8): khoá là mã trường, giá trị có / không, mã lựa chọn hay
+  // `null` (xoá). Mã có trong bộ trường của sàn hay không là việc của lệnh (`kiemGiaTriTruong`), khuôn chỉ kiểm hình.
+  "custom_changed",
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 
@@ -67,7 +70,29 @@ const KHUON: Record<EventType, Record<string, [boolean, Kiem]>> = {
   owner_confirmed: { confirmedAt: [false, ngay] },
   unit_number_assigned: { unitNumber: [true, maCan] },
   voided: {},
+  custom_changed: {},
 };
+
+const MA_TRUONG_RIENG_RE = /^[a-z][a-z0-9_]{0,31}$/;
+
+/** Khuôn `custom_changed`: object phẳng, ≥1 khoá khuôn mã; giá trị `boolean`, chuỗi khuôn mã hay `null`. */
+function kiemTruongRiengPayload(payload: Record<string, unknown>): PayloadError[] {
+  const out: PayloadError[] = [];
+  const khoa = Object.keys(payload);
+  if (khoa.length === 0) return [{ path: "payload", reason: "không có trường nào đổi" }];
+  for (const k of khoa) {
+    const v = payload[k];
+    if ((SOURCE_KEYS as readonly string[]).includes(k)) out.push({ path: k, reason: "thông tin chủ nhà không vào hàng" });
+    else if (!MA_TRUONG_RIENG_RE.test(k)) out.push({ path: k, reason: "cần mã trường riêng" });
+    if (v !== null && typeof v === "object") {
+      out.push({ path: k, reason: "không nhận khối lồng" });
+      khoaLong(v, k, out);
+    } else if (!(v === null || typeof v === "boolean" || (typeof v === "string" && MA_TRUONG_RIENG_RE.test(v)))) {
+      out.push({ path: k, reason: "cần có / không, mã lựa chọn hay null" });
+    }
+  }
+  return out;
+}
 
 export type PayloadError = { path: string; reason: string };
 
@@ -82,6 +107,7 @@ function khoaLong(v: unknown, path: string, out: PayloadError[]) {
 export function validatePayload(type: unknown, payload: unknown, opts: { today?: string } = {}): PayloadError[] {
   if (typeof type !== "string" || !(EVENT_TYPES as readonly string[]).includes(type)) return [{ path: "type", reason: "loại sự kiện lạ" }];
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return [{ path: "payload", reason: "cần một đối tượng" }];
+  if (type === "custom_changed") return kiemTruongRiengPayload(payload as Record<string, unknown>);
   const khuon = KHUON[type as EventType];
   const out: PayloadError[] = [];
   for (const [k, v] of Object.entries(payload)) {

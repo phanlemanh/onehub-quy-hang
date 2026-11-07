@@ -4,7 +4,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import pg from "pg";
 
-import { chay, moGiaoDich, soi, xet } from "../scripts/kiem-nhanh.mjs";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+
+import { CAP_BAN_MA, chay, dongBanMa, ketQuaCli, moGiaoDich, soi, xet } from "../scripts/kiem-nhanh.mjs";
 
 const url = process.env.DATABASE_URL;
 if (!url && process.env.CI) throw new Error("Bài kiểm nhanh cần DATABASE_URL trên CI.");
@@ -165,4 +168,133 @@ test("kiểm nhanh: đường chạy thật chỉ đọc, đúng một kết n�
   } finally {
     await quan.end();
   }
+});
+
+// ---- Bất biến 2: ràng buộc bản mã (hàng kiem-nhanh-rang-buoc-ban-ma) ----
+
+// Ma trận viết trước 12 dòng: bảng × số rõ {0, 3} × ràng buộc {bật, chưa bật, vắng}. Cột: bảng, số rõ, bat (null = vắng),
+// tập vế lỗi mong đợi, mảnh dòng báo mong đợi.
+const LO = "listing_owners", LO_RB = "listing_owners_phone_chi_ban_ma", LE = "leads", LE_RB = "leads_phone_chi_ban_ma";
+const MA_TRAN_BAN_MA = [
+  [LO, LO_RB, 0, true, [], "listing_owners bật"],
+  [LO, LO_RB, 0, false, ["bảng sạch mà ràng buộc chưa bật"], "listing_owners chưa bật"],
+  [LO, LO_RB, 0, null, ["thiếu ràng buộc"], "listing_owners thiếu listing_owners_phone_chi_ban_ma"],
+  [LO, LO_RB, 3, true, ["ràng buộc bật mà còn số rõ"], "listing_owners bật"],
+  [LO, LO_RB, 3, false, [], "listing_owners còn 3 số rõ (chưa bật — chờ mã hoá lại)"],
+  [LO, LO_RB, 3, null, ["thiếu ràng buộc"], "listing_owners thiếu listing_owners_phone_chi_ban_ma"],
+  [LE, LE_RB, 0, true, [], "leads bật"],
+  [LE, LE_RB, 0, false, ["bảng sạch mà ràng buộc chưa bật"], "leads chưa bật"],
+  [LE, LE_RB, 0, null, ["thiếu ràng buộc"], "leads thiếu leads_phone_chi_ban_ma"],
+  [LE, LE_RB, 3, true, ["ràng buộc bật mà còn số rõ"], "leads bật"],
+  [LE, LE_RB, 3, false, [], "leads còn 3 số rõ (chưa bật — chờ mã hoá lại)"],
+  [LE, LE_RB, 3, null, ["thiếu ràng buộc"], "leads thiếu leads_phone_chi_ban_ma"],
+];
+const VAI_LANH = { ton_tai: true, bypassrls: false, superuser: false };
+
+test("kiểm nhanh: ma trận ràng buộc bản mã 12 dòng", () => {
+  assert.equal(MA_TRAN_BAN_MA.length, 12, "ma trận phải đủ 12 dòng");
+  assert.equal(new Set(MA_TRAN_BAN_MA.map((r) => r.slice(0, 4).join("|"))).size, 12, "12 dòng phải khác nhau");
+  for (const [bang, rangBuoc, conSo, bat, mong, bao] of MA_TRAN_BAN_MA) {
+    const banMa = [{ bang, rangBuoc, conSo, bat }];
+    const { loi } = xet({ bang: [], vai: VAI_LANH, banMa, vaiKetNoi: { ten: "postgres", thayHet: true } });
+    assert.deepEqual(loi.map((l) => l.ve), mong, `dòng ${bang} ${conSo} ${bat}`);
+    for (const l of loi) assert.equal(l.rangBuoc, rangBuoc);
+    assert.ok(dongBanMa(banMa).includes(bao), `báo ${bang} ${conSo} ${bat}: ${dongBanMa(banMa)}`);
+  }
+  assert.equal(CAP_BAN_MA.length, 2);
+});
+
+test("kiểm nhanh: vai chịu luật theo dòng thì không suy bảng sạch (xét thuần)", () => {
+  const banMa = [{ bang: LO, rangBuoc: LO_RB, conSo: 0, bat: false }];
+  assert.deepEqual(xet({ bang: [], vai: VAI_LANH, banMa, vaiKetNoi: { ten: "quy_hang_app", thayHet: false } }).loi, [
+    { ve: "vai kết nối chịu luật theo dòng", ten: "quy_hang_app" },
+  ]);
+  assert.deepEqual(xet({ bang: [], vai: VAI_LANH, banMa, vaiKetNoi: { ten: "postgres", thayHet: true } }).loi.map((l) => l.ve), [
+    "bảng sạch mà ràng buộc chưa bật",
+  ]);
+});
+
+/** Gỡ ràng buộc rồi dựng lại ở dạng not valid (chưa bật). */
+const veChuaBat = (c, bang, rb) =>
+  c.query(`alter table public.${bang} drop constraint ${rb}; alter table public.${bang} add constraint ${rb} check (owner_phone is null) not valid`);
+
+test("kiểm nhanh: bảng sạch mà ràng buộc bản mã chưa bật thì lỗi", { skip }, async () => {
+  for (const [bang, rb] of CAP_BAN_MA) {
+    await trongGiaoDich(async (c) => {
+      await veChuaBat(c, bang, rb);
+      const kq = await soi(c);
+      assert.deepEqual(kq.loi, [{ ve: "bảng sạch mà ràng buộc chưa bật", ten: bang, rangBuoc: rb }]);
+      const cli = ketQuaCli(kq);
+      assert.equal(cli.ma, 1);
+      assert.ok(cli.dong.some((d) => d.includes(bang) && d.includes(rb) && d.includes("bảng sạch mà ràng buộc chưa bật")), cli.dong.join("\n"));
+      await c.query(`alter table public.${bang} validate constraint ${rb}`);
+      const sau = await soi(c);
+      assert.deepEqual(sau.loi, [], "đối chứng dương: validate lại thì hết lỗi");
+      assert.equal(ketQuaCli(sau).ma, 0);
+    });
+  }
+});
+
+test("kiểm nhanh: bảng còn số rõ thì chỉ báo", { skip }, async () => {
+  await trongGiaoDich(async (c) => {
+    await c.query(`alter table public.listing_owners drop constraint ${LO_RB}`);
+    await c.query("set local session_replication_role = replica");
+    await c.query(
+      "insert into public.listing_owners (company_id, listing_id, updated_by, owner_phone) values (gen_random_uuid(), gen_random_uuid(), '[Tên]', '0900000061')",
+    );
+    await c.query("set local session_replication_role = origin");
+    await c.query(`alter table public.listing_owners add constraint ${LO_RB} check (owner_phone is null) not valid`);
+    const kq = await soi(c);
+    assert.deepEqual(kq.loi, []);
+    assert.ok(dongBanMa(kq.banMa).includes("listing_owners còn 1 số rõ (chưa bật — chờ mã hoá lại)"), dongBanMa(kq.banMa));
+  });
+});
+
+test("kiểm nhanh: ràng buộc vắng thì lỗi", { skip }, async () => {
+  await trongGiaoDich(async (c) => {
+    await c.query(`alter table public.leads drop constraint ${LE_RB}`);
+    assert.deepEqual((await soi(c)).loi, [{ ve: "thiếu ràng buộc", ten: "leads", rangBuoc: LE_RB }]);
+  });
+});
+
+test("kiểm nhanh: vai chịu luật theo dòng thì không đếm", { skip }, async () => {
+  await trongGiaoDich(async (c) => {
+    await veChuaBat(c, "listing_owners", LO_RB);
+    await c.query("set local role quy_hang_app");
+    const ve = (await soi(c)).loi.map((l) => l.ve);
+    assert.ok(ve.includes("vai kết nối chịu luật theo dòng"), JSON.stringify(ve));
+    assert.ok(!ve.includes("bảng sạch mà ràng buộc chưa bật"), "không suy bảng sạch từ số đếm của vai chịu luật");
+  });
+  const ve = (await trongGiaoDich((c) => soi(c))).loi.map((l) => l.ve);
+  assert.ok(!ve.includes("vai kết nối chịu luật theo dòng"), "đối chứng dương: vai postgres thấy hết");
+});
+
+/** Câu nào chạm bảng chủ nhà hay lead mà trả khác đúng một cột int8 thì là vi phạm. */
+const viPham = (ghi) =>
+  ghi.filter((g) => /\b(listing_owners|leads)\b/.test(g.sql) && /from public\./.test(g.sql)).filter((g) => !(g.fields.length === 1 && g.fields[0].dataTypeID === 20));
+
+test("kiểm nhanh: không đọc giá trị số", { skip }, async () => {
+  assert.equal(viPham([{ sql: "select count(*), max(owner_phone) from public.leads", fields: [{ dataTypeID: 20 }, { dataTypeID: 25 }] }]).length, 1, "đối chứng đỏ: hai cột phải bị bắt");
+  await trongGiaoDich(async (c) => {
+    const ghi = [];
+    const goc = c.query.bind(c);
+    c.query = async (sql, ...rest) => {
+      const r = await goc(sql, ...rest);
+      ghi.push({ sql: String(sql), fields: r.fields ?? [] });
+      return r;
+    };
+    await soi(c);
+    assert.ok(ghi.filter((g) => /from public\.(listing_owners|leads)/.test(g.sql)).length === 2, "phải đếm cả hai bảng");
+    assert.deepEqual(viPham(ghi), []);
+  });
+});
+
+test("kiểm nhanh: dòng xanh nêu ràng buộc bản mã", { skip }, () => {
+  const r = spawnSync(process.execPath, [fileURLToPath(new URL("../scripts/kiem-nhanh.mjs", import.meta.url))], {
+    env: { PATH: process.env.PATH, DATABASE_URL: url },
+    encoding: "utf8",
+  });
+  assert.equal(r.status, 0, r.stderr);
+  assert.ok(r.stdout.includes("ràng buộc bản mã: listing_owners bật · leads bật"), r.stdout);
+  assert.equal(dongBanMa([{ bang: "leads", rangBuoc: LE_RB, conSo: 2, bat: false }]), "ràng buộc bản mã: leads còn 2 số rõ (chưa bật — chờ mã hoá lại)");
 });

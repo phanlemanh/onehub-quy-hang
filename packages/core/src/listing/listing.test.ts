@@ -109,6 +109,7 @@ test("payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ ch
     owner_confirmed: {},
     unit_number_assigned: { unitNumber: "A-12.05" },
     voided: {},
+    custom_changed: { can_goc: true },
   };
   for (const [type, p] of Object.entries(LANH)) {
     assert.deepEqual(validatePayload(type, p), [], `đối chứng: ${type} lành phải qua`);
@@ -128,7 +129,7 @@ test("payload theo khuôn chặt: khoá lạ và khoá lớp source bị từ ch
       so++;
     }
   }
-  assert.equal(so, 7 * KHOA_CHU_NHA.length * 2, "số lần thử phải bằng ma trận viết trước (bảy loại sự kiện)");
+  assert.equal(so, 8 * KHOA_CHU_NHA.length * 2, "số lần thử phải bằng ma trận viết trước (tám loại sự kiện — hàng 47 thêm custom_changed)");
   assert.deepEqual(validatePayload("deleted", {}).map((e) => e.path), ["type"], "loại sự kiện lạ");
 });
 

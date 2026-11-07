@@ -2818,6 +2818,35 @@
         "packages/core/src/listing/**",
         "apps/web/src/app/(app)/today/**"
       ]
+    },
+    {
+      "ma": "kiem-nhanh-rang-buoc-ban-ma",
+      "cau_giao": "Kiểm nhanh chỉ đọc của bước triển khai trên bản thật thêm vế bất biến 2: bảng chủ nhà và bảng lead không còn số điện thoại để rõ thì ràng buộc chặn số rõ phải đã bật — bảng sạch mà ràng buộc chưa bật làm bước triển khai đỏ trước khi gọi Vercel, gọi đúng tên bảng và ràng buộc; bảng còn số rõ thì chỉ báo, không chặn; vẫn một kết nối, giao dịch chỉ đọc (Ngoài-2 của hàng va-deploy-csdl-tam, chủ kho mở hợp đồng mới 06/11).",
+      "slug": "kiem-nhanh-rang-buoc-ban-ma",
+      "vi_sao": "Ngoài-2 của hàng va-deploy-csdl-tam (PR #176): bỏ bộ cách ly trên bản thật cũng bỏ ca chỉ đọc «bảng sạch số rõ thì ràng buộc bản mã phải đã bật» của packages/db/tests/bat-rang-buoc.test.mjs; chủ kho chọn mở hợp đồng mới ở Cổng Bằng chứng 06/11, giám sát xếp ưu tiên nhất của dãy Q (bất biến 2).",
+      "hang": "T3",
+      "bat_khi": "Job deploy trên main xanh ở lần gộp đầu sau hàng này với dòng kiểm nhanh nêu trạng thái ràng buộc bản mã của bảng chủ nhà và bảng lead; bảng sạch mà ràng buộc chưa bật làm kiểm nhanh đỏ trước khi gọi Vercel; vẫn một kết nối, chỉ đọc",
+      "vung": [
+        "packages/db/scripts/**",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "ma": "va-bang-hang-cuon-so-lon",
+      "cau_giao": "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập («Không mở được màn này», React #185 — vòng cập nhật vô hạn resizeItem → measureElement → onChange của bộ cuộn ảo), ở 1366×768 và 1920×1080; một bài kiểm đơn vị khoá vòng ấy.",
+      "slug": "va-bang-hang-cuon-so-lon",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-06"
+    },
+    {
+      "ma": "kiem-tan-dinh-bac-ninh",
+      "cau_giao": "Bài kiểm ca «Tân Định, Tỉnh Bắc Ninh» của bộ đọc địa chỉ ghim kết quả dương (tên xã vào «chưa có trong danh mục», trạng thái cụ thể) và có phá thử riêng chứng nó đỏ khi bộ đọc lui về so bỏ dấu — thay phép kiểm âm tính đứng một mình.",
+      "slug": "kiem-tan-dinh-bac-ninh",
+      "vi_sao": "Ngoài-1 của doc-xa-thieu-mot-phan-dau: ca «Tân Định, Tỉnh Bắc Ninh» chỉ kiểm âm tính. Chủ kho ký Cổng Bằng chứng 07/11 và chọn «mở hợp đồng mới» (d-20261107T011616Z-10); giám sát duyệt X-12. Hàng không mã: đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Ca «Tân Định, Tỉnh Bắc Ninh» đỏ khi bộ đọc trả rỗng, trả sai xã hay lui về so bỏ dấu; xanh trên bộ đọc hiện tại với kết quả dương ghim tường minh",
+      "vung": [
+        "packages/core/src/address/**"
+      ]
     }
   ],
   "chan_troi": [

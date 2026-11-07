@@ -30,10 +30,15 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     return { userId: user.id, companyId: r.active.id };
   }
 
-  /** Một lệnh trong giao dịch của sàn đang làm; bị từ chối thì huỷ giao dịch. */
-  async function chay<T extends object>(c: Context, fn: (tx: pg.PoolClient, ctx: { companyId: string }, kho: KhoAnh) => Promise<T | Refusal>, ra: (c: Context, kq: T) => Response = (c, kq) => c.json(kq, 200)) {
+  /**
+   * Một lệnh trong giao dịch của sàn đang làm; bị từ chối thì huỷ giao dịch. `sanGoi`: sàn mà lời gọi tự khai (ảnh chờ của
+   * hàng 41 mang sàn lúc chụp) — khác sàn của phiên thì từ chối `select-company` TRƯỚC khi chạm dữ liệu, để ảnh chụp ở sàn
+   * này không bao giờ ghi vào căn trùng toà + mã của sàn khác, dù máy khách lệch sàn với cookie (bất biến 2).
+   */
+  async function chay<T extends object>(c: Context, fn: (tx: pg.PoolClient, ctx: { companyId: string }, kho: KhoAnh) => Promise<T | Refusal>, ra: (c: Context, kq: T) => Response = (c, kq) => c.json(kq, 200), sanGoi?: string) {
     const ctx = await vao(c);
     if ("code" in ctx) return c.json({ error: ctx.code }, ctx.status as 400);
+    if (sanGoi !== undefined && sanGoi !== ctx.companyId) return c.json({ error: API_ERRORS.selectCompany.code }, API_ERRORS.selectCompany.status as 409);
     if (kho.ten === "vang") return c.json({ error: API_ERRORS.photoStorageMissing.code }, 503);
     const k = kho;
     const kq = await withCompany(appPool, ctx, async (tx) => {
@@ -52,10 +57,11 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     const toa = c.req.query("toa")?.trim() ?? "";
     const ma = c.req.query("ma")?.trim() ?? "";
     if (!toa || !ma) return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
+    const san = c.req.query("companyId");
     return chay(c, (tx) => listPhotos(tx, toa, ma), (c, kq) => {
       c.header("Cache-Control", "private, no-store");
       return c.json(kq, 200);
-    });
+    }, san);
   });
 
   api.post(`${BASE}/upload-url`, async (c) => {
@@ -63,8 +69,10 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     if (!b || typeof b.toa !== "string" || typeof b.ma !== "string" || !b.toa.trim() || !b.ma.trim() || typeof b.contentType !== "string" || typeof b.byteSize !== "number") {
       return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
     }
-    const v = { toa: b.toa.trim(), ma: b.ma.trim(), contentType: b.contentType, byteSize: b.byteSize };
-    return chay(c, (tx, ctx, k) => uploadUrl(tx, k, ctx.companyId, v));
+    if (b.photoId !== undefined && typeof b.photoId !== "string") return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
+    if (b.companyId !== undefined && typeof b.companyId !== "string") return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
+    const v = { toa: b.toa.trim(), ma: b.ma.trim(), contentType: b.contentType, byteSize: b.byteSize, ...(typeof b.photoId === "string" ? { photoId: b.photoId } : {}) };
+    return chay(c, (tx, ctx, k) => uploadUrl(tx, k, ctx.companyId, v), undefined, b.companyId as string | undefined);
   });
 
   api.post(BASE, async (c) => {
@@ -75,14 +83,18 @@ export function registerPhotoRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps
     const takenAt = typeof f?.takenAt === "string" && NGAY.test(f.takenAt) ? f.takenAt : null;
     const w = Number(f?.width), h = Number(f?.height);
     const photoId = typeof f?.photoId === "string" ? f.photoId : null;
+    const sanGoi = typeof f?.companyId === "string" ? f.companyId : undefined;
     if ((!(original instanceof File) && !photoId) || !(thumb instanceof File) || !(COMPARTMENTS as readonly string[]).includes(ngan) || !(w > 0) || !(h > 0)
       || typeof f?.toa !== "string" || typeof f?.ma !== "string" || !f.toa.trim() || !f.ma.trim()) {
       return c.json({ error: API_ERRORS.invalidPayload.code }, 400);
     }
     const chung = { toa: f.toa.trim(), ma: f.ma.trim(), ngan: ngan as Compartment, takenAt, width: Math.round(w), height: Math.round(h), thumb: Buffer.from(await thumb.arrayBuffer()) };
-    // Có mã ảnh: bản gốc đã tải thẳng lên kho (bản Storage); không thì bản gốc đi trong thân yêu cầu.
-    const t: TepVao = photoId ? { ...chung, photoId } : { ...chung, original: Buffer.from(await (original as File).arrayBuffer()) };
-    return chay(c, (tx, ctx, k) => addPhoto(tx, k, ctx.companyId, t), (c, kq) => c.json(kq, 201));
+    // Có bản gốc trong thân (bản Postgres): mã ảnh, nếu có, là mã máy khách tạo lúc chụp (hàng 41). Không có bản gốc: bản gốc
+    // đã tải thẳng lên kho bằng link ký (bản Storage), mã là mã của link ấy.
+    const t: TepVao = original instanceof File
+      ? { ...chung, original: Buffer.from(await original.arrayBuffer()), ...(photoId ? { photoId } : {}) }
+      : { ...chung, photoId: photoId! };
+    return chay(c, (tx, ctx, k) => addPhoto(tx, k, ctx.companyId, t), (c, kq) => c.json(kq, 201), sanGoi);
   });
 
   api.patch(`${BASE}/:id`, async (c) => {

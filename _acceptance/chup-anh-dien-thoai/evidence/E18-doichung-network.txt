@@ -1,0 +1,119 @@
+REQ GET http://localhost:3496/units/A-13.03
+RES 200 http://localhost:3496/units/A-13.03
+REQ GET http://localhost:3496/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793975453761
+REQ GET http://localhost:3496/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793975453761
+REQ GET http://localhost:3496/_next/static/css/app/layout.css?v=1793975453761
+REQ GET http://localhost:3496/_next/static/chunks/webpack.js?v=1793975453761
+REQ GET http://localhost:3496/_next/static/chunks/main-app.js?v=1793975453761
+REQ GET http://localhost:3496/_next/static/chunks/app-pages-internals.js
+REQ GET http://localhost:3496/_next/static/chunks/app/error.js
+REQ GET http://localhost:3496/_next/static/chunks/app/(app)/error.js
+REQ GET http://localhost:3496/_next/static/chunks/app/layout.js
+REQ GET http://localhost:3496/_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
+REQ GET http://localhost:3496/_next/static/chunks/app/(app)/not-found.js
+REQ GET http://localhost:3496/_next/static/chunks/app/global-error.js
+REQ GET http://localhost:3496/_next/static/css/app/global-error.css?v=1793975453761
+REQ GET http://localhost:3496/manifest.webmanifest
+RES 200 http://localhost:3496/_next/static/css/app/layout.css?v=1793975453761
+RES 200 http://localhost:3496/_next/static/css/app/global-error.css?v=1793975453761
+RES 200 http://localhost:3496/_next/static/media/b66cf8e69499582a-s.p.woff2?v=1793975453761
+RES 200 http://localhost:3496/_next/static/media/22a5144ee8d83bca-s.p.woff2?v=1793975453761
+RES 200 http://localhost:3496/_next/static/chunks/webpack.js?v=1793975453761
+REQ GET http://localhost:3496/_next/static/media/22a5144ee8d83bca-s.p.woff2
+RES 200 http://localhost:3496/_next/static/media/22a5144ee8d83bca-s.p.woff2
+REQ GET http://localhost:3496/_next/static/media/aa016aab0e6d1295-s.woff2
+REQ GET http://localhost:3496/_next/static/media/b66cf8e69499582a-s.p.woff2
+RES 200 http://localhost:3496/_next/static/chunks/app-pages-internals.js
+RES 200 http://localhost:3496/_next/static/media/aa016aab0e6d1295-s.woff2
+RES 200 http://localhost:3496/_next/static/media/b66cf8e69499582a-s.p.woff2
+RES 200 http://localhost:3496/_next/static/chunks/app/layout.js
+RES 200 http://localhost:3496/_next/static/chunks/app/(app)/error.js
+RES 200 http://localhost:3496/_next/static/chunks/app/error.js
+RES 200 http://localhost:3496/_next/static/chunks/app/(app)/not-found.js
+RES 200 http://localhost:3496/_next/static/chunks/app/(app)/units/%5Bcode%5D/page.js
+RES 200 http://localhost:3496/_next/static/chunks/app/global-error.js
+RES 200 http://localhost:3496/_next/static/chunks/main-app.js?v=1793975453761
+REQ GET http://localhost:3496/_next/static/chunks/app/(app)/layout.js
+RES 200 http://localhost:3496/_next/static/chunks/app/(app)/layout.js
+REQ GET http://localhost:3496/favicon.ico
+RES 404 http://localhost:3496/favicon.ico
+REQ GET http://localhost:3496/api/v1/catalog
+REQ GET http://localhost:3496/api/v1/catalog
+REQ GET http://localhost:3496/api/v1/listings
+REQ GET http://localhost:3496/__nextjs_font/geist-latin.woff2
+RES 200 http://localhost:3496/__nextjs_font/geist-latin.woff2
+REQ GET http://localhost:3496/_next/static/webpack/ab7de09adaca2d92.webpack.hot-update.json
+RES 200 http://localhost:3496/_next/static/webpack/ab7de09adaca2d92.webpack.hot-update.json
+REQ GET http://localhost:3496/_next/static/webpack/app/layout.ab7de09adaca2d92.hot-update.js
+REQ GET http://localhost:3496/_next/static/webpack/app/global-error.ab7de09adaca2d92.hot-update.js
+REQ GET http://localhost:3496/_next/static/webpack/webpack.ab7de09adaca2d92.hot-update.js
+RES 200 http://localhost:3496/_next/static/webpack/app/layout.ab7de09adaca2d92.hot-update.js
+RES 200 http://localhost:3496/_next/static/webpack/app/global-error.ab7de09adaca2d92.hot-update.js
+RES 200 http://localhost:3496/_next/static/webpack/webpack.ab7de09adaca2d92.hot-update.js
+REQ GET http://localhost:3496/units/A-13.03?_rsc=vjDYh93o0HefVMCN
+RES 200 http://localhost:3496/manifest.webmanifest
+REQ GET http://localhost:3496/icons/icon-192.png
+RES 200 http://localhost:3496/icons/icon-192.png
+RES 200 http://localhost:3496/units/A-13.03?_rsc=vjDYh93o0HefVMCN
+REQ GET http://localhost:3496/_next/static/css/app/layout.css?v=1793975457124
+RES 200 http://localhost:3496/_next/static/css/app/layout.css?v=1793975457124
+RES 200 http://localhost:3496/api/v1/catalog
+RES 200 http://localhost:3496/api/v1/catalog
+RES 200 http://localhost:3496/api/v1/listings
+REQ GET http://localhost:3496/manifest.webmanifest
+RES 200 http://localhost:3496/manifest.webmanifest
+REQ GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03
+REQ GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03
+REQ GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03
+REQ GET http://localhost:3496/icons/icon-192.png
+REQ GET http://localhost:3496/api/v1/listings/7997666f-cd3e-49bf-bdcd-6dbdfbc64385
+RES 200 http://localhost:3496/icons/icon-192.png
+RES 200 http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03
+REQ GET http://localhost:3496/api/v1/units/photos/76e198a3-7ec7-4ac1-bea2-83d9227677b1/thumb
+RES 200 http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03
+RES 200 http://localhost:3496/api/v1/listings/7997666f-cd3e-49bf-bdcd-6dbdfbc64385
+RES 200 http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03
+REQ GET http://localhost:3496/api/v1/units/photos/76e198a3-7ec7-4ac1-bea2-83d9227677b1/original
+RES 200 http://localhost:3496/api/v1/units/photos/76e198a3-7ec7-4ac1-bea2-83d9227677b1/thumb
+RES 200 http://localhost:3496/api/v1/units/photos/76e198a3-7ec7-4ac1-bea2-83d9227677b1/original
+REQ POST http://localhost:3496/api/v1/units/photos/upload-url  [trong luc chan]
+REQ GET blob:http://localhost:3496/e609bee3-1c6f-409a-abb2-bf40e54ce1e4  [trong luc chan]
+RES 200 blob:http://localhost:3496/e609bee3-1c6f-409a-abb2-bf40e54ce1e4
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/units/photos/upload-url  [CHU Y: do buoc chan mang cua eval]
+REQ GET http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7  [trong luc chan]
+REQ GET blob:http://localhost:3496/0fd2681e-3aa1-4441-b765-ace67e93aeac  [trong luc chan]
+RES 200 blob:http://localhost:3496/0fd2681e-3aa1-4441-b765-ace67e93aeac
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/units/photos?toa=To%C3%A0%20A&ma=A-13.03&companyId=e2ed987c-1e31-4f48-9601-a726b1ff5ae7  [CHU Y: do buoc chan mang cua eval]
+REQ GET http://localhost:3496/api/v1/listings  [trong luc chan]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/listings  [CHU Y: do buoc chan mang cua eval]
+REQ GET http://localhost:3496/today?_rsc=Adpis2yDBg2Ph_w6  [trong luc chan]
+REQ GET http://localhost:3496/_next/static/webpack/aa862bef58943301.webpack.hot-update.json  [trong luc chan]
+RES 200 http://localhost:3496/today?_rsc=Adpis2yDBg2Ph_w6
+RES 200 http://localhost:3496/_next/static/webpack/aa862bef58943301.webpack.hot-update.json
+REQ GET http://localhost:3496/_next/static/webpack/webpack.aa862bef58943301.hot-update.js  [trong luc chan]
+RES 200 http://localhost:3496/_next/static/webpack/webpack.aa862bef58943301.hot-update.js
+REQ GET http://localhost:3496/manifest.webmanifest  [trong luc chan]
+RES 200 http://localhost:3496/manifest.webmanifest
+REQ GET http://localhost:3496/icons/icon-192.png  [trong luc chan]
+RES 200 http://localhost:3496/icons/icon-192.png
+REQ GET http://localhost:3496/_next/static/chunks/app/(app)/today/page.js  [trong luc chan]
+RES 200 http://localhost:3496/_next/static/chunks/app/(app)/today/page.js
+REQ GET http://localhost:3496/api/v1/catalog  [trong luc chan]
+REQ GET http://localhost:3496/api/v1/company/settings/queue  [trong luc chan]
+REQ GET http://localhost:3496/api/v1/leads/assigned  [trong luc chan]
+REQ GET http://localhost:3496/api/v1/catalog  [trong luc chan]
+REQ GET http://localhost:3496/api/v1/company/settings/queue  [trong luc chan]
+REQ GET http://localhost:3496/api/v1/leads/assigned  [trong luc chan]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/catalog  [CHU Y: do buoc chan mang cua eval]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/company/settings/queue  [CHU Y: do buoc chan mang cua eval]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/leads/assigned  [CHU Y: do buoc chan mang cua eval]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/catalog  [CHU Y: do buoc chan mang cua eval]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/company/settings/queue  [CHU Y: do buoc chan mang cua eval]
+FAIL net::ERR_INTERNET_DISCONNECTED http://localhost:3496/api/v1/leads/assigned  [CHU Y: do buoc chan mang cua eval]
+REQ GET http://localhost:3496/api/v1/listings
+RES 200 http://localhost:3496/api/v1/listings
+REQ POST http://localhost:3496/api/v1/sync/offline-sessions
+RES 201 http://localhost:3496/api/v1/sync/offline-sessions
+
+--- console error/warning/exception ---
+

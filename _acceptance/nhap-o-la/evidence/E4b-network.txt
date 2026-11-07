@@ -1,0 +1,1 @@
+Driver: script CDP chup-o-la.mjs, khong co read_network_requests. Chi co danh sach loi goi app (khong co status): /api/v1/imports/ai, /api/v1/imports/ai/cells. networkObserved=n-a (driver)
