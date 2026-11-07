@@ -1,12 +1,1 @@
-{"feature_plain":"Mỗi lần phát hành, kiểm nhanh trên bản thật soi thêm bảng chủ nhà và bảng lead: hết số điện thoại để rõ mà ràng buộc mã hoá chưa bật thì dừng phát hành trước khi gọi Vercel; còn số rõ thì chỉ báo.",
-"will_do":[
-{"id":"AC-1","p":"Sẽ dừng phát hành khi bảng chủ nhà hay bảng lead đã sạch số rõ mà ràng buộc mã hoá chưa bật, gọi đúng tên bảng và ràng buộc."},
-{"id":"AC-2","p":"Sẽ chỉ báo, không dừng, khi bảng còn số rõ chờ mã hoá lại."},
-{"id":"AC-4","p":"Sẽ in trạng thái ràng buộc mã hoá của cả hai bảng trong dòng kiểm nhanh mỗi lần phát hành."},
-{"id":"AC-5","p":"Sẽ chỉ đếm dòng, không đọc giá trị số điện thoại; vẫn một kết nối, chỉ đọc."},
-{"id":"AC-6","p":"Sẽ dừng và báo rõ nếu vai kết nối không thấy được mọi dòng, thay vì tin nhầm là bảng sạch."}],
-"wont_do":[
-{"id":"AC-3","p":"Chặn khi ràng buộc đã bật mà vẫn còn số rõ (trạng thái không thể có) hoặc ràng buộc không tồn tại."},
-{"id":"OOS-1","p":"KHÔNG sửa chú thích cũ của bài ràng buộc bản mã — ghi việc theo sau."},
-{"id":"OOS-2","p":"KHÔNG mã hoá lại số rõ còn lại, không đổi migration."},
-{"id":"OOS-3","p":"KHÔNG đọc hay in giá trị số điện thoại."}]}
+{"feature_plain":"Mỗi lần phát hành, kiểm nhanh trên bản thật soi bảng chủ nhà và bảng lead: hết số rõ mà ràng buộc mã hoá chưa bật thì dừng trước khi gọi Vercel; còn số rõ thì chỉ báo; chỉ đếm, không đọc số."}
