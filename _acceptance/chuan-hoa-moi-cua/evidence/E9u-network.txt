@@ -1,1 +1,6 @@
-Driver: Chrome headless qua CDP (script ngoai cay kho). Khong doc duoc network/console; API goi qua fetch trong trang: POST proposals 3x201; duyet bang nut Duyet.
+E9u network (Claude_Browser, localhost:3460, 196 requests, doc 100 cuoi da doc)
+App-scope: POST /api/v1/auth/sign-out 200 x2, send-verification-otp 200 x2, sign-in/email-otp 200 x2,
+POST /api/v1/company/value-aliases/proposals 201 x3, PUT /api/v1/company/value-aliases/<id> 200,
+GET /api/v1/listings 200, GET /settings/dictionary 200.
+Note-only: GET /settings/dictionary?_rsc=... ERR_ABORTED (dieu huong bi huy khi tai lai trang, khong phai loi server).
+Console: chi info React DevTools va log HMR; khong co error.
