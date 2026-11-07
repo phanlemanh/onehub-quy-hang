@@ -19,7 +19,9 @@ evals:
     criterion: AC-3
     executor: script
     cmd: config:executors.script.cach_ly_that
-    expected: "exit 0; mọi ca của isolation.test.mjs pass, 0 fail — DATABASE_URL trỏ cơ sở dữ liệu thật"
+    status: not-run
+    superseded_by: va-deploy-csdl-tam#AC-2
+    expected: "Không chạy (hàng va-thuoc-ci-moi-truong-that-ban-that, ADR-0009 «Sửa đổi 06/11»): bộ kiểm cách ly không chạy trên bản thật nữa — nó chạy trọn ở job isolation trên Postgres tạm dựng từ migration của đúng commit và chặn triển khai khi đỏ; va-deploy-csdl-tam#AC-2 đo lại điều ấy."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E4
@@ -47,14 +49,14 @@ evals:
     criterion: AC-7
     executor: script
     cmd: config:executors.script.kiem_ci
-    expected: "exit 0; tám dòng ĐẠT, «KẾT: ĐẠT»"
+    expected: "exit 0; «KẾT: ĐẠT» với đúng tám dòng ĐẠT nguyên văn: «ĐẠT chỉ chạy khi push main» · «ĐẠT chờ check, isolation (bộ kiểm cách ly trên Postgres tạm), secrets, gate, ro-ri» · «ĐẠT bí mật ở environment production; chuỗi kết nối bản thật chỉ ở bước migrate và bước kiểm nhanh» · «ĐẠT thứ tự: migration → kiểm nhanh chỉ đọc → deploy hook» · «ĐẠT không chạy bộ kiểm ghi nào (cách ly, API) trên cơ sở dữ liệu thật» · «ĐẠT deploy không nằm trong ci-ok» · «ĐẠT vercel.json tắt tự deploy main» · «ĐẠT vercel.json ghim vùng sin1» (ADR-0009 «Sửa đổi 06/11»). Chiều đỏ: ma trận phá thử năm ca của hàng va-thuoc-ci-moi-truong-that-ban-that (E2) — vế lệch in «HỎNG <vế>»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E8
     criterion: AC-8
     executor: script
-    cmd: config:executors.script.suc_khoe_xem_truoc
-    expected: "exit 0; «ĐẠT GET /api/v1/health trả 200» — in JSON {\"ok\":true,…}; APP_URL là bản xem trước của nhánh ở commit được chấm"
+    cmd: config:executors.script.suc_khoe_that
+    expected: "exit 0; «ĐẠT GET /api/v1/health trả 200» — in JSON {\"ok\":true,…}; APP_URL là bản thật (tên miền chính) — sửa đổi 07/11: bản xem trước không dựng được API khi thiếu OWNER_PHONE_KEY"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E9

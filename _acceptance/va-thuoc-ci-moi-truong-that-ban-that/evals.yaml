@@ -1,0 +1,25 @@
+# Bộ đo của hàng va-thuoc-ci-moi-truong-that-ban-that. Chỉ đọc cây kho; bản sao ở thư mục tạm của hệ điều hành.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/kiem-thuoc.mjs --thuoc
+    paths: [".github/workflows/ci.yml", "apps/web/vercel.json", "_acceptance/moi-truong-that/thu/kiem-ci.mjs", "_acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/**"]
+    expected: "exit 0; «ĐẠT thước CI của moi-truong-that: 8/8 vế ĐẠT trên ci.yml của cây» — đếm đúng tám dòng «ĐẠT » của thước và «KẾT: ĐẠT»; thiếu hay thước đỏ in «HỎNG thước CI của moi-truong-that: <n>/8 …»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/kiem-thuoc.mjs --pha
+    paths: [".github/workflows/ci.yml", "_acceptance/moi-truong-that/thu/kiem-ci.mjs", "_acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/**"]
+    expected: "exit 0; ma trận viết trước mười ca (tám qua --ci: deploy chạy test:isolation, test:db, db:test; bỏ isolation khỏi needs; bỏ kiểm nhanh; gọi Vercel trước migration; chuỗi kết nối ở mức job; chuỗi kết nối ở bước gọi Vercel — hai qua --vercel: bật lại tự deploy main; đổi vùng khỏi sin1), mỗi ca một dòng «ĐẠT phá thử «<ca>» → thước đỏ ở vế «<vế ghim>»» (thước xanh in «(thước vẫn xanh)»; chuỗi tìm không có in «ca phá thử lệch ci.yml»), «ma trận phá thử chạy đủ 10/10 ca», và đối chứng dương «bản sao ci.yml và vercel.json không sửa qua cùng đường --ci, --vercel thì thước xanh»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/kiem-thuoc.mjs --thay
+    paths: ["_acceptance/moi-truong-that/evals.yaml", "docs/superpowers/specs/2026-11-06-va-deploy-csdl-tam-design.md", "_acceptance/va-thuoc-ci-moi-truong-that-ban-that/thu/**"]
+    expected: "exit 0; ba đối chứng trên bản sao tạm đỏ đúng điều kiện của kit (ac-thay-vang, thay-khong-nhan với thẻ moi-truong-that/E3a, ho-so-thay-chua-ky), đối chứng dương nhận con trỏ, «làn ghim lại bỏ E3 — ô duy nhất trỏ cach_ly_that» (machineEvalIdsSkipped của kit trả E3) kèm đối chứng dương «gỡ «status: not-run» thì làn chọn E3», và «moi-truong-that/E3 không chạy → va-deploy-csdl-tam#AC-2, không xung đột với báo cáo đã ký»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
