@@ -1,5 +1,5 @@
 {
-  "feature_plain": "Một nút trên GitHub thay anh chạy lệnh ghim lại hồ sơ cần bản thật — bản sửa: bộ chặn giờ chỉ cho chạy năm lệnh chỉ đọc đã định sẵn, theo đúng anh chọn ở Cổng Bằng chứng.",
+  "feature_plain": "Một nút trên GitHub thay anh chạy lệnh ghim lại hồ sơ cần bản thật; rào chặn nhầm lẫn, không chặn nhánh cố ý (giới hạn anh đã chọn).",
   "will_do": [
     {
       "id": "AC-1",
