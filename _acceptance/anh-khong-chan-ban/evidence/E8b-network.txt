@@ -1,0 +1,1 @@
+E8b: driver la chup.mjs qua CDP rieng, khong co read_network_requests/read_console_messages. networkObserved = n-a (driver).

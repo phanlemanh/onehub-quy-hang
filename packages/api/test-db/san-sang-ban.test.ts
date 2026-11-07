@@ -80,8 +80,10 @@ const datToiThieu = (companyId: string, userId: string, n: number) =>
     [companyId, JSON.stringify(n), userId],
   );
 
-test("E2 máy chủ đòi ảnh thật: bốn ca không ảnh thật bị từ chối, một ảnh thật thì lên", async () => {
+test("E2 máy chủ đòi ảnh thật khi sàn đặt tối thiểu 1: bốn ca không ảnh thật bị từ chối, một ảnh thật thì lên", async () => {
   const s = await san("e2");
+  // Từ hàng anh-khong-chan-ban mặc định là 0; luật cũ áp khi sàn đặt 1.
+  await datToiThieu(s.companyId, s.a.userId, 1);
   // [ca, dựng ảnh cho căn]
   const CA: [string, (ma: string) => Promise<void>][] = [
     ["không ảnh", async () => {}],
@@ -115,7 +117,7 @@ test("E2 máy chủ đòi ảnh thật: bốn ca không ảnh thật bị từ c
   assert.equal(lenh.rowCount, 1, "đúng một sự kiện lên Đang bán");
 });
 
-test("E2 cấu hình số ảnh tối thiểu của sàn: đặt 2 thì một ảnh bị từ chối, sàn khác vẫn mặc định 1", async () => {
+test("E2 cấu hình số ảnh tối thiểu của sàn: đặt 2 thì một ảnh bị từ chối, sàn khác theo mặc định 0", async () => {
   const s = await san("e2c");
   const khac = await san("e2k");
   await datToiThieu(s.companyId, s.a.userId, 2);
@@ -126,8 +128,7 @@ test("E2 cấu hình số ảnh tối thiểu của sàn: đặt 2 thì một �
   await themAnh(s, h.ma);
   assert.equal((await lenDangBan(s, h)).status, 200, "tối thiểu 2, có 2");
   const hk = await hangDu(khac, "C-11.01");
-  await themAnh(khac, hk.ma);
-  assert.equal((await lenDangBan(khac, hk)).status, 200, "sàn không đặt khoá, một ảnh");
+  assert.equal((await lenDangBan(khac, hk)).status, 200, "sàn không đặt khoá, không ảnh (mặc định 0)");
 });
 
 test("E3 lên Toàn sàn sau Sẵn sàng bán; sàn khác không đọc được", async () => {

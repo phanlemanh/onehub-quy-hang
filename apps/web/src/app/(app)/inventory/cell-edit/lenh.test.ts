@@ -158,8 +158,9 @@ test("đối chứng đỏ: bộ viết làm tròn hai số lẻ thì chỗ đ�
 test("E7 hàng 23: nhãn thiếu đủ điều — «ảnh thật», «mã căn»; Bảng hàng không có số ảnh thì không báo ảnh", async () => {
   const { nhanThieu } = await import("./lenh");
   const du = { ...HANG, listPrice: 3_500_000_000, feeInclusion: "excluded", legalStatus: "pink_book", occupantType: "vacant", standardStatus: "Incomplete" as const };
-  // Ngữ cảnh có số ảnh (như hồ sơ căn đưa) → báo đúng nhãn.
-  const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active", {}, true);
+  // Ngữ cảnh có số ảnh và sàn đặt tối thiểu 1 → báo đúng nhãn; mặc định 0 (anh-khong-chan-ban) thì 0 ảnh không thiếu.
+  assert.equal(dungLenhTrangThai({ ...du, realPhotoCount: 0 } as HangSua, "Active", {}, true).ok, true, "mặc định 0: 0 ảnh lên được");
+  const coSo = dungLenhTrangThai({ ...du, realPhotoCount: 0, minRealPhotos: 1 } as HangSua, "Active", {}, true);
   assert.deepEqual(coSo, { ok: false, loi: "Chưa lên Đang bán được: thiếu ảnh thật" });
   const khongMa = dungLenhTrangThai({ ...du, unitNumber: null }, "Active", {}, true);
   assert.deepEqual(khongMa, { ok: false, loi: "Chưa lên Đang bán được: thiếu mã căn" });

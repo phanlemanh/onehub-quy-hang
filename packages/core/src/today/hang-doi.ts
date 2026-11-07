@@ -45,6 +45,9 @@ export function dungVoiCan(d: Condition, c: DuKienCan, nguoi: string, bayGio: st
     }
     case "missing_info":
       return c.missing.length > 0;
+    case "missing_photo":
+      // Chỉ khi máy chủ đã đếm: bản trên máy đời trước (vắng số) không bị coi là 0 ảnh.
+      return c.photosCount === 0;
     case "changed_by_other": {
       const tu = dauNgayVn(bayGio, d.since === "yesterday" ? 1 : 0);
       return [c.lastPriceChange, c.lastStatusChange].some((l) => !!l && l.byUserId !== nguoi && Date.parse(l.at) >= tu);

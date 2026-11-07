@@ -2,8 +2,8 @@ import { khoangCua } from "../config/giai";
 import { MAC_DINH_ANH_THAT_TOI_THIEU } from "./status";
 
 /**
- * Cấu hình «Sẵn sàng bán» của sàn (hàng 23, Sổ điểm biến thiên): số ảnh thật tối thiểu để vào Đang bán. Sàn nâng được,
- * không bỏ được — khoảng bắt đầu từ 1 giữ nghĩa «Đang bán» của điều khoá K7.
+ * Cấu hình «Sẵn sàng bán» của sàn (hàng 23, Sổ điểm biến thiên): số ảnh thật tối thiểu để vào Đang bán. Từ hàng
+ * anh-khong-chan-ban (Tham chiếu §12, 06/11) mặc định 0 — thiếu ảnh không chặn bán; sàn đặt 1–20 thì luật cũ áp lại.
  */
 export const KHOA_ANH_THAT_TOI_THIEU = "listing.ready_min_real_photos";
 export const KHOANG_ANH_THAT_TOI_THIEU = khoangCua(KHOA_ANH_THAT_TOI_THIEU);

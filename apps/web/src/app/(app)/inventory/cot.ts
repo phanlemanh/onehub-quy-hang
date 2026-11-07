@@ -30,8 +30,12 @@ export type DongBang = {
   /** Số ngày từ lần xác nhận với chủ nhà; chưa từng xác nhận là `null`. */
   confirmedAgeDays: number | null;
   needsCallBack: boolean;
-  /** Số mục đã có trên năm mục của danh sách hỏi. */
+  /** Số mục đã có của mức đủ: năm mục của danh sách hỏi, cộng mục ảnh khi bản xem mang số ảnh (anh-khong-chan-ban). */
   completeness: number | null;
+  /** Tổng mục của mức đủ khi khác năm (6: có mục ảnh) — vắng là năm. */
+  mucDuTong?: number;
+  /** Căn chưa có ảnh thật gửi được — dấu «thiếu ảnh thật» ở ô Mức đủ (anh-khong-chan-ban). */
+  thieuAnh?: boolean;
   visibility: "Private" | "Company" | null;
   closePrice: number | null;
   closeDate: string | null;
@@ -177,7 +181,7 @@ export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
     case "confirmedAgeDays":
       return v === 0 ? "Hôm nay" : `${v} ngày trước`;
     case "completeness":
-      return `${v}/5`;
+      return `${v}/${d.mucDuTong ?? 5}${d.thieuAnh ? " · thiếu ảnh thật" : ""}`;
     default:
       return String(v);
   }

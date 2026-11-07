@@ -23,6 +23,7 @@ import {
 } from "@quy-hang/core/import";
 import type { CatalogData } from "@quy-hang/core";
 import { canRead } from "@quy-hang/core/visibility";
+import { nhanDieuKien } from "@quy-hang/core/listing";
 import type pg from "pg";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { ghiLead } from "../leads/store";
@@ -383,7 +384,8 @@ async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportR
     for (const to of tt === "Pending" ? ["Active", "Pending"] : [tt]) {
       const r = await lenh("status_changed", { to });
       if (laTuChoi(r)) {
-        const thieu = r.missing?.map((m) => (typeof m === "string" ? m : JSON.stringify(m))).join(", ");
+        // Nhãn của lõi («ảnh thật», «pháp lý»…), không mã thô (anh-khong-chan-ban, AC-2).
+        const thieu = r.missing?.map((m) => (typeof m === "string" ? nhanDieuKien(m) : JSON.stringify(m))).join(", ");
         ghiChu.push(`ở Chưa đủ để rao — ${thieu ? `thiếu ${thieu}` : (r.reason ?? r.error.code)}`);
         break;
       }

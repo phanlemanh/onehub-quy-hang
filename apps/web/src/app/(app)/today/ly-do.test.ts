@@ -118,3 +118,19 @@ test("loại hình qua ghép danh mục", () => {
     "nhóm nhà phố nhận đúng căn Townhouse; căn hộ và căn ngoài danh mục không",
   );
 });
+
+test("Bổ sung ảnh cho căn mình giữ (anh-khong-chan-ban E6b)", () => {
+  const idx = chiMuc(goi.danhMuc as unknown as CatalogData);
+  const dm = goi.danhMuc as unknown as { subdivisions: { buildings: { buildingName: string; units: { unitNumber: string }[] }[] }[] };
+  const toa = dm.subdivisions[0]!.buildings[0]!;
+  const ma = String(toa.units[0]!.unitNumber);
+  const goc = view("x", toa.buildingName, ma);
+  // Căn vừa xác nhận, vừa đổi giá, đủ năm mục — không khớp nhóm đứng trước.
+  const tuoi: ListingView = { ...goc, lastConfirmedAt: BAY_GIO, priceChangeTimestamp: BAY_GIO, furnished: "full", legalStatus: "pink_book", financing: "cash", occupantType: "vacant", listAgentKey: TOI };
+  const nhomCua = (l: ListingView) => chiaNhom(BO_NHOM_MAC_DINH, [canHomNay(l, idx)], TOI, BAY_GIO).filter((x) => x.cans.length > 0).map((x) => x.nhom.code);
+  assert.deepEqual(nhomCua({ ...tuoi, photosCount: 0 }), ["add_photos"], "căn mình giữ, Đang bán, 0 ảnh");
+  assert.deepEqual(nhomCua({ ...tuoi, photosCount: 1 }), [], "có ảnh");
+  assert.deepEqual(nhomCua({ ...tuoi, photosCount: 0, listAgentKey: "u-khac" }), [], "căn đầu chủ khác giữ");
+  assert.deepEqual(nhomCua({ ...tuoi, photosCount: 0, standardStatus: "Closed" }), [], "đã bán");
+  assert.ok(!nhomCua({ ...tuoi, photosCount: 0 }).includes("missing_info"), "đủ năm mục thì không vào Thiếu thông tin");
+});

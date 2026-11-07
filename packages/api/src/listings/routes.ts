@@ -3,6 +3,7 @@ import { completeness, foldListing, freshness, type ListingState } from "@quy-ha
 import { lamViecVoiHang } from "@quy-hang/core/access";
 import { canRead, visibilityOf, type VisibilityFacts } from "@quy-hang/core/visibility";
 import type { Context } from "hono";
+import type pg from "pg";
 import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "../app";
 import { resolveCompany } from "../auth/company";
@@ -10,7 +11,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { NO_QUEUE_FACTS, readQueueFacts } from "./lan-doi";
-import { applyCommand, createListing, docThietBi, FACTS_SQL, factsOf, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
+import { applyCommand, createListing, demAnhThatTheoCan, docThietBi, FACTS_SQL, khoaAnh, factsOf, isRefusal, loadEvents, STATE_COLUMNS, viewerOf, type Ctx, type Refusal } from "./store";
 
 /**
  * Hàng và lệnh đổi hàng (ADR-0008). Trục ai thấy hàng (hàng 12): hàng «Chỉ tôi» chỉ người tạo đọc và gửi lệnh được, người
@@ -52,13 +53,20 @@ const Command = z
 
 const homNay = () => new Date().toISOString().slice(0, 10);
 /** Hàng như API trả: bản tính + độ tươi, mức đủ tính lúc đọc (phụ thuộc «hôm nay») + nấc của trục ai thấy hàng. */
-const view = (id: string, s: ListingState, facts: VisibilityFacts) => ({
+const view = (id: string, s: ListingState, facts: VisibilityFacts, photosCount: number) => ({
   id,
   ...s,
   freshness: freshness(s.lastConfirmedAt, homNay()),
-  completeness: completeness(s),
+  // Số ảnh thật gửi được (RESO `PhotosCount`, anh-khong-chan-ban) — cùng điều kiện với bước xét Đang bán; mức đủ có mục ảnh.
+  photosCount,
+  completeness: completeness(s, { photosCount }),
   visibility: visibilityOf(facts),
 });
+
+/** Số ảnh thật của một căn — cùng hàm đếm với danh sách. */
+async function soAnh(tx: pg.PoolClient, s: ListingState): Promise<number> {
+  return (await demAnhThatTheoCan(tx, [s])).get(khoaAnh(s.buildingName, s.unitNumber)) ?? 0;
+}
 
 export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps) {
   async function vao(c: Context): Promise<Ctx | ApiErrorEntry> {
@@ -83,8 +91,11 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
     async (c) => {
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
-      const kq = await withCompany(appPool, ctx, (tx) => createListing(tx, c.req.valid("json"), { device: docThietBi(c.req.header("x-quy-hang-device")), madeOffline: false }));
-      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts), 201);
+      const kq = await withCompany(appPool, ctx, async (tx) => {
+        const r = await createListing(tx, c.req.valid("json"), { device: docThietBi(c.req.header("x-quy-hang-device")), madeOffline: false });
+        return isRefusal(r) ? r : { ...r, anh: await soAnh(tx, r.state) };
+      });
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts, kq.anh), 201);
     },
   );
 
@@ -105,12 +116,12 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const kq = await withCompany(appPool, ctx, async (tx) => {
         const r = await applyCommand(tx, await viewerOf(tx, ctx.userId), listingId, c.req.valid("json"), docThietBi(c.req.header("x-quy-hang-device")));
         if (isRefusal(r)) throw r;
-        return r;
+        return { ...r, anh: await soAnh(tx, r.state) };
       }).catch((e: unknown) => {
         if (e && typeof e === "object" && "error" in e) return e as Refusal;
         throw e;
       });
-      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts), 200);
+      return isRefusal(kq) ? tuChoi(c, kq) : c.json(view(kq.listingId, kq.state, kq.facts, kq.anh), 200);
     },
   );
 
@@ -135,6 +146,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
         const nguoiXem = await viewerOf(tx, ctx.userId);
         // Người giữ và lần đổi cuối (hàng 22) — tính lúc đọc từ bảng gán và bảng sự kiện.
         const hangDoi = await readQueueFacts(tx);
+        const anh = await demAnhThatTheoCan(tx, rows.map((r: Record<string, unknown>) => ({ buildingName: String(r.buildingName), unitNumber: (r.unitNumber as string | null) ?? null })));
         return rows.flatMap((r: Record<string, unknown>) => {
           const { id, creatorUserId, statusesReached, listingAgentUserId, ...s } = r;
           const facts: VisibilityFacts = {
@@ -144,7 +156,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
           };
           if (!canRead(nguoiXem, facts)) return [];
           const st = { ...s, lastConfirmedAt: s.lastConfirmedAt instanceof Date ? s.lastConfirmedAt.toISOString() : null } as ListingState;
-          return [{ ...view(String(id), st, facts), ...(hangDoi.get(String(id)) ?? NO_QUEUE_FACTS) }];
+          return [{ ...view(String(id), st, facts, anh.get(khoaAnh(st.buildingName, st.unitNumber)) ?? 0), ...(hangDoi.get(String(id)) ?? NO_QUEUE_FACTS) }];
         });
       });
       return c.json(ds, 200);
@@ -172,6 +184,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
           facts: events.length ? await factsOf(tx, listingId, events) : null,
           nguoiXem: await viewerOf(tx, ctx.userId),
           hangDoi: (await readQueueFacts(tx, [listingId])).get(listingId) ?? NO_QUEUE_FACTS,
+          anh: events.length ? await soAnh(tx, foldListing(events)) : 0,
         };
       });
       // Người không có Bảng hàng; hàng đã gỡ khi hoàn tác lần nhập (hàng 66) — như hàng không có.
@@ -180,7 +193,7 @@ export function registerListingRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       const facts = kq.facts;
       // «Chỉ tôi» của người khác: cùng câu trả lời với hàng không có (AC-4).
       if (!canRead(kq.nguoiXem, facts)) return tra(c, API_ERRORS.notFound);
-      return c.json({ ...view(listingId, foldListing(kq.events), facts), ...kq.hangDoi, events: kq.events }, 200);
+      return c.json({ ...view(listingId, foldListing(kq.events), facts, kq.anh), ...kq.hangDoi, events: kq.events }, 200);
     },
   );
 }

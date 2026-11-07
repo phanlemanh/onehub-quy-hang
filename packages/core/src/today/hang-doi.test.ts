@@ -39,10 +39,10 @@ function canTheo(epGia: boolean, goiLai: boolean, thieuTin: boolean, moiDoi: boo
   });
 }
 
-describe("bộ mặc định: năm nhóm đúng thứ tự", () => {
+describe("bộ mặc định: sáu nhóm đúng thứ tự", () => {
   it("mã, nhãn, ngưỡng", () => {
-    assert.equal(BO_NHOM_MAC_DINH.length, 5);
-    assert.deepEqual(BO_NHOM_MAC_DINH.map((n) => n.code), ["new_lead", "price_adjustment", "call_back", "missing_info", "recent_change"]);
+    assert.equal(BO_NHOM_MAC_DINH.length, 6);
+    assert.deepEqual(BO_NHOM_MAC_DINH.map((n) => n.code), ["new_lead", "price_adjustment", "call_back", "missing_info", "add_photos", "recent_change"]);
     assert.equal(BO_NHOM_MAC_DINH[1]!.label, "Nên gọi điều chỉnh giá");
     assert.deepEqual(BO_NHOM_MAC_DINH[1]!.conditions[1], { kind: "days_since", anchor: "price_or_confirmed", days: 10 });
     assert.deepEqual(BO_NHOM_MAC_DINH[2]!.conditions[0], { kind: "days_since", anchor: "confirmed", days: 14 });
@@ -198,7 +198,7 @@ describe("bộ của sàn: ghi đè trọn bộ", () => {
     { code: "townhouse_stale", label: "Nhà phố lâu chưa gọi", subject: "listing", enabled: true, conditions: [{ kind: "property_sub_type_in", in: ["Townhouse"] }, { kind: "days_since", anchor: "confirmed", days: 7 }], actions: ["owner_confirmed", "open_record"] },
     BO_NHOM_MAC_DINH[0]!,
     { ...BO_NHOM_MAC_DINH[1]!, conditions: [{ kind: "status_in", in: ["Active"] }, { kind: "days_since", anchor: "price_or_confirmed", days: 7 }] },
-    BO_NHOM_MAC_DINH[4]!,
+    BO_NHOM_MAC_DINH.find((n) => n.code === "recent_change")!,
     { ...BO_NHOM_MAC_DINH[2]!, label: "Gọi xác nhận" },
     { ...BO_NHOM_MAC_DINH[3]!, enabled: false },
   ];
@@ -261,5 +261,41 @@ describe("nhóm lead", () => {
     assert.equal(nhomCuaLead(BO_NHOM_MAC_DINH, { stage: "sent" })?.code, "new_lead");
     assert.equal(nhomCuaLead(BO_NHOM_MAC_DINH, { stage: "accepted" })?.code, "new_lead");
     for (const stage of ["called", "returned", "discarded", "on_board"] as const) assert.equal(nhomCuaLead(BO_NHOM_MAC_DINH, { stage }), null);
+  });
+});
+
+describe("Bổ sung ảnh (anh-khong-chan-ban, E6)", () => {
+  it("nhóm mặc định add_photos", () => {
+    const n = BO_NHOM_MAC_DINH.find((x) => x.code === "add_photos")!;
+    assert.equal(n.label, "Bổ sung ảnh");
+    assert.equal(n.subject, "listing");
+    assert.deepEqual(n.conditions, [{ kind: "missing_photo" }]);
+    assert.deepEqual(n.actions, ["open_record"]);
+  });
+  it("ma trận trạng thái × số ảnh, viết trước", () => {
+    // [trạng thái, số ảnh, mong] — căn không khớp nhóm đứng trước (vừa xác nhận, vừa đổi giá, đủ năm mục).
+    const BANG: [DuKienCan["standardStatus"], number, string | null][] = [
+      ["Incomplete", 0, "add_photos"], ["Incomplete", 1, null],
+      ["Active", 0, "add_photos"], ["Active", 1, null],
+      ["Pending", 0, "add_photos"], ["Pending", 1, null],
+      ["Hold", 0, "add_photos"], ["Hold", 1, null],
+      ["Closed", 0, null], ["Closed", 1, null],
+      ["Withdrawn", 0, null], ["Withdrawn", 1, null],
+    ];
+    for (const [tt, anh, mong] of BANG) assert.equal(ma(BO_NHOM_MAC_DINH, can({ standardStatus: tt, photosCount: anh })), mong, `${tt}, ${anh} ảnh: cần ${mong}`);
+  });
+  it("chỉ thiếu ảnh thì không vào Thiếu thông tin; vắng số ảnh không tính là 0", () => {
+    assert.equal(ma(BO_NHOM_MAC_DINH, can({ photosCount: 0, missing: [] })), "add_photos");
+    assert.equal(ma(BO_NHOM_MAC_DINH, can({ photosCount: 0, missing: ["legalStatus"] })), "missing_info", "thiếu tin đứng trước");
+    assert.equal(ma(BO_NHOM_MAC_DINH, can()), null, "bản trên máy đời trước, không số ảnh");
+    assert.equal(ma(BO_NHOM_MAC_DINH, can({ photosCount: 0, listAgentKey: KHAC })), null, "căn người khác giữ");
+  });
+  it("bộ kiểm chấp nhận missing_photo, từ chối khoá lạ; bộ sàn đã lưu giữ nguyên", () => {
+    const bo = BO_NHOM_MAC_DINH.map((n) => ({ ...n }));
+    assert.deepEqual(kiemBoNhom(bo), []);
+    const la = BO_NHOM_MAC_DINH.map((n) => (n.code === "add_photos" ? { ...n, conditions: [{ kind: "missing_photo", x: 1 }] } : n));
+    assert.ok(kiemBoNhom(la).some((l) => /add_photos|x/.test(l)), "khoá lạ trên missing_photo phải bị từ chối");
+    const cu = BO_NHOM_MAC_DINH.filter((n) => n.code !== "add_photos");
+    assert.deepEqual(docBoNhom([{ key: "queue.groups", value: cu }]).bo.map((n) => n.code), cu.map((n) => n.code), "bộ đã lưu không bị thêm nhóm");
   });
 });
