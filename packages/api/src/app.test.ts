@@ -151,6 +151,10 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "PUT /api/v1/company/statuses",
     "GET /api/v1/company/fields",
     "PUT /api/v1/company/fields",
+    // Từ điển của sàn (hàng 70).
+    "GET /api/v1/company/value-aliases",
+    "POST /api/v1/company/value-aliases/proposals",
+    "PUT /api/v1/company/value-aliases/{id}",
   ].sort();
   const thua = thay.filter((x) => !muon.includes(x));
   const thieu = muon.filter((x) => !thay.includes(x));
