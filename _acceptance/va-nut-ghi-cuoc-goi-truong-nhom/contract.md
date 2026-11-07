@@ -5,7 +5,7 @@ slug: va-nut-ghi-cuoc-goi-truong-nhom
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-08-va-nut-ghi-cuoc-goi-truong-nhom-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -76,3 +76,6 @@ Thước đủ: mỗi ô vai × giữ căn là một ô ma trận viết trướ
   theo khuyến nghị.
 
 - Đổi điều đang đúng: không — luật quyền giữ nguyên, chỉ nút thôi lệch với trang.
+- Ngoài-1 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Trang quay số vẫn tự kiểm vai riêng. Hôm nay người dùng không thấy khác gì, nhưng nếu sau này luật vào màn ghi cuộc gọi đổi thì hai trang có thể mở cho hai nhóm người khác nhau. — `apps/web/src/app/(app)/units/call/dial/page.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Hồ sơ căn trên điện thoại hiện đúng, nhưng phép kiểm tự động chưa chắc bắt được nếu sau này ai đó lại viết cách đọc vai theo kiểu khác, nên nút có thể lệch mà không ai báo. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/ho-so-dien-thoai.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-07, đề xuất S4 known-limits): Màn ghi cuộc gọi hiện chặn đúng người, nhưng phép kiểm tự động chưa đảm bảo bắt được nếu sau này điều kiện chặn bị viết ngược, khi đó nút và trang có thể lại lệch nhau. — `apps/web/src/app/(app)/units/call/cua.test.ts`
