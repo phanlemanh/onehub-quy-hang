@@ -1,37 +1,4 @@
 {
-  "feature_plain": "Đầu chủ mở Bảng hàng có cả căn hộ, nhà phố, biệt thự và đất, thấy mỗi dòng đúng loại hình, lọc và nhóm theo loại hình, và cột lẫn hồ sơ căn chỉ hiện trường của loại ấy — đất không có cột tầng.",
-  "will_do": [
-    {"id": "AC-1", "p": "Sẽ cho mỗi dòng trên Bảng hàng mang đúng loại hình của căn — căn hộ theo toà, lô theo dãy, nhà ngoài khu theo căn của sàn — kể cả khi mất mạng."},
-    {"id": "AC-2", "p": "Sẽ chỉ hiện cột của những loại hình đang có trong bảng: lọc còn toàn đất thì mất cột Tầng, Hướng, Loại căn; sàn chỉ có căn hộ thấy bảng y như hôm nay; cột đầu đọc «Toà» hay «Vị trí» theo Hỏi-1."},
-    {"id": "AC-4", "p": "Sẽ cho lọc theo cột Loại hình mới, chữ hiện theo cách gọi riêng của sàn nếu sàn đã đặt."},
-    {"id": "AC-5", "p": "Sẽ thêm hai cách nhóm «Loại hình» và «Loại hình → Toà», mặc định vẫn Toà → Loại căn; góc nhìn đã lưu vẫn mở như cũ."},
-    {"id": "AC-6", "p": "Sẽ mở được hồ sơ của hàng lô và hàng ngoài khu, mục thuộc tính hiện đúng trường của loại hình — đất không có Tầng, Trục."},
-    {"id": "AC-7", "p": "Sẽ để máy chủ trao loại hình của lô và của nhà ngoài khu cho Bảng hàng, mỗi sàn chỉ thấy nhà ngoài khu của mình."},
-    {"id": "AC-8", "p": "Sẽ chứng trên màn đang chạy: lọc Đất mất cột tầng, nhóm theo loại hình có số căn, hồ sơ đất không có Tầng."},
-    {"id": "AC-9", "p": "Sẽ gỡ ngoại lệ có hạn của trang thử đồng bộ để lint của kho không đỏ khi hàng này gộp, theo lối chốt ở Hỏi-2."}
-  ],
-  "wont_do": [
-    {"id": "AC-3", "p": "Sẽ KHÔNG để ô của trường mà loại hình không dùng trông như ô chưa có số: ô không dùng để trống, ô chưa có số vẫn «—»."},
-    {"id": "OOS-1", "p": "Bảng thẻ trên điện thoại chưa theo loại hình (Hỏi-4)."},
-    {"id": "OOS-2", "p": "Chưa nạp lô và nhà thấp tầng mẫu vào cơ sở dữ liệu — lô chỉ chứng ở lớp ghép."},
-    {"id": "OOS-3", "p": "Nhà ngoài khu chưa có chỗ lưu diện tích đất, số tầng, mặt tiền, lộ giới — các ô ấy «—» (Hỏi-4)."},
-    {"id": "OOS-4", "p": "Chưa sửa thuộc tính trên ô, chưa đổi mức đủ theo loại hình."},
-    {"id": "OOS-5", "p": "Chưa ẩn theo loại hình trên trang khách (hàng 80)."}
-  ],
-  "scope_plain": "Sau vòng này người dùng thật thấy: căn hộ như hôm nay thêm cột Loại hình; nhà ngoài khu đúng loại hình và địa chỉ nhưng các ô thấp tầng «—»; hàng lô vẫn «Chưa rõ» tới khi danh mục có dãy thật.",
-  "coverage_plain": [
-    {"i": 0, "p": "Đủ bốn loại hình cộng ca không rõ nguồn — mỗi loại một ca so từng trường của bảng lõi (AC-1, AC-2)."},
-    {"i": 1, "p": "Đủ ba dạng hàng: căn hộ trong toà, lô của khu thấp tầng, nhà ngoài khu (AC-1, AC-6)."},
-    {"i": 2, "p": "Đủ mọi tổ hợp loại hình còn lại sau khi lọc — 15 tổ hợp cộng bảng rỗng (AC-2)."},
-    {"i": 3, "p": "Đủ năm việc trên màn: bộ cột, chữ ô và chép, lọc, nhóm và góc nhìn, hồ sơ (AC-2 tới AC-6)."},
-    {"i": 4, "p": "Đủ ba nguồn: có mạng, mất mạng dùng bản giữ trên máy, và sàn khác không thấy nhà của sàn mình (AC-1, AC-7)."}
-  ],
-  "gap_probe_plain": [
-    {"i": 0, "p": "Việc bỏ bản bấm được trước khi duyệt là gu nhìn của chủ kho, máy không tự quyết được — đã chuyển thành Hỏi-3."},
-    {"i": 1, "p": "Để ngoài điện thoại và chỗ lưu trường của nhà ngoài khu là lựa chọn của chủ kho — đã tách thành Hỏi-4, và hợp đồng nay nói rõ người dùng thật sẽ thấy gì."},
-    {"i": 2, "p": "Nguồn dữ liệu loại hình từng ghi «chỉ một lối» — đã sửa căn cứ theo luật của Bảng hàng (thuộc tính căn ghép từ danh mục giữ trên máy), nêu vì sao hai lối kia trái luật."},
-    {"i": 3, "p": "Cột vị trí chưa có tiêu chí đo — đã thêm vào AC-2 và vào bước nhìn màn."},
-    {"i": 4, "p": "Đường lô chưa đo nối từ máy chủ tới Bảng hàng — đã đo bằng chính hàm đọc lô mà Bảng hàng dùng; lô trên màn đang chạy thì không đo được vì danh mục lô của máy thử rỗng theo chốt của hàng 74."}
-  ],
-  "decisions_plain": []
+  "feature_plain": "Đầu chủ thấy mỗi dòng Bảng hàng đúng loại hình — căn hộ, nhà phố, biệt thự, đất — lọc và nhóm được theo loại hình, cột và hồ sơ căn chỉ hiện trường của loại ấy; đất không có cột tầng.",
+  "scope_plain": "Thu theo lời anh 08/11: chữ cột Loại hình chưa theo cách gọi riêng của sàn — mở hàng sau «loại hình trong Cách gọi»."
 }
