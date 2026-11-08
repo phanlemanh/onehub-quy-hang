@@ -1,0 +1,3 @@
+Origin localhost:3495 (3460 khong chay; dung may dev dung-d.mjs). Playwright MCP.
+Tat ca fetch toi /api/v1/* (listings, catalog, off-compound-units, company/member-names, company/settings/queue, leads/assigned, push/public-key): 200 OK.
+POST /__nextjs_original-stack-frames 200 (dev overlay, ghi chu). Console errors: 0. Failed requests: 0.

@@ -18,7 +18,7 @@ function TaiKhoan({ email, companyName, roles }: { email: string; companyName: s
   return <AccountMenuKhung email={email} companyName={companyName} roles={roles} dangXuat={dangXuat} />;
 }
 
-type Props = Omit<ComponentProps<typeof AppShell>, "chiBao" | "chiBaoGon" | "taiKhoan" | "phuVo" | "mau" | "nhaMau" | "menuTao">;
+type Props = Omit<ComponentProps<typeof AppShell>, "chiBao" | "chiBaoGon" | "taiKhoan" | "phuVo" | "mau" | "diaChiMau" | "menuTao">;
 
 export function AppShellDongBo({ user, ...p }: Props) {
   return (
