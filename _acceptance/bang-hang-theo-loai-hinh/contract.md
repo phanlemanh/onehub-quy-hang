@@ -5,7 +5,7 @@ slug: bang-hang-theo-loai-hinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-08-bang-hang-theo-loai-hinh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -138,3 +138,11 @@ căn ngoài khu. Never: sự kiện tạo hàng mang loại hình (ADR-0016 quy�
   Diện tích đất, Số tầng, Mặt tiền, Lộ giới là «—» (chưa có chỗ lưu); hàng lô vẫn «Chưa rõ» loại hình tới khi danh mục có
   dãy thật (LH11) — danh mục lô của bản thật đang rỗng theo Hỏi-1 hàng 74.
 - Timebox của ô cơ hội để «…» ở Cổng Đáng: ngưỡng chết theo hết timebox chưa đo được — đọc theo hạn xong của giám sát.
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Người không có quyền xem Bảng hàng vẫn bị từ chối đúng, nhưng màn có thể không hiện được câu báo tiếng Việt chuẩn cho trường hợp này. — `packages/api/src/off-compound-units/routes.ts`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bên ngoài đọc danh mục sẽ thấy một trường mang tên tiếng Việt, khác tên của cùng trường ở đường tra lô, nên dễ nhầm khi tích hợp. — `packages/api/src/catalog/doc-ca-danh-muc.ts`
+- Ngoài-6 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu danh mục có một lô sai, mọi căn lô hiện loại hình «Chưa rõ» mà không có lời báo, trông như chưa có trong danh mục. — `apps/web/src/app/(app)/inventory/ghep-danh-muc.ts`
+- Ngoài-8 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Hồ sơ căn lô hiện tên khu hai lần ở đầu cột, và căn ngoài khu không mã có tiêu đề trống. — `apps/web/src/app/(app)/units/ho-so/mo-hinh.ts`
+- Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài thử trên màn nạp sẵn góc nhìn đã lưu thay vì tự bấm lưu, nên có thể bỏ sót lỗi ở đường lưu góc nhìn. — `_acceptance/bang-hang-theo-loai-hinh/thu/chay-ui.mjs`
+- Ngoài-10 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Một vài trường của dòng chưa được bài kiểm so với dữ liệu gốc, nên một lỗi nhỏ ở đó có thể lọt qua. — `apps/web/src/app/(app)/inventory/loai-hinh.test.ts`
+- Ngoài-11 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm dùng danh mục tự ráp thay vì lấy từ máy chủ thật, nên nếu máy chủ đổi dạng trả thì bài kiểm không báo kịp. — `apps/web/src/app/(app)/inventory/loai-hinh.test.ts`
+- Ngoài-12 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chỉ xem diện tích đất có đuôi «m²», không xem số có đúng lô, nên một số sai vẫn lọt qua. — `apps/web/src/app/(app)/units/ho-so/loai-hinh.test.ts`
