@@ -22,7 +22,6 @@ import {
   type LucideIcon,
  SparklesIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
 
 import { SU_KIEN_MO_LUU, useGocNhinCuaToi } from "@/app/(app)/inventory/goc-nhin-react";
 import { cotCaiDat, MUC_SAN } from "@/app/(app)/settings/cai-dat";
@@ -30,6 +29,7 @@ import { mucDangChon, mucHomNay } from "@/app/(app)/today/mo-nhom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useDuongVoDayDu } from "./dia-chi-mau";
 
 // Cột thứ hai theo nhà (§9) — chuyển thể InnerSidebar + InnerSidebarNav của app-shell-8. Mọi nhà có cột, mặc định mở
 // (hàng 91, chủ kho 02/11).
@@ -68,7 +68,7 @@ export function mucLienHeDangChon(qs: URLSearchParams): string {
 }
 
 function ContactsColumn() {
-  const dangChon = mucLienHeDangChon(useSearchParams());
+  const dangChon = mucLienHeDangChon(new URLSearchParams(useDuongVoDayDu().thamSo));
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col gap-0.5 px-2 py-1" aria-label={HOME_LABEL.contacts}>
@@ -121,8 +121,8 @@ function SectionTitle({ children }: { children: string }) {
 }
 
 function NavList({ items }: { items: Item[] }) {
-  const pathname = usePathname();
-  const dangChon = mucDangChon(items, pathname, useSearchParams());
+  const vo = useDuongVoDayDu();
+  const dangChon = mucDangChon(items, vo.duong, vo.thamSo);
   return (
     <div className="flex flex-col gap-0.5 px-2">
       {items.map(({ label, href, icon: Icon }) => {

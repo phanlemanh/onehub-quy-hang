@@ -25,9 +25,10 @@ export const KHOA_BAT_BUOC = Object.keys(KHOA);
  * Khoá thêm của kho: `don_vi` (thiếu thì `man`); `bo_cuc` — bố cục nhóm dựng (hàng 91, ADR-0024); `ngoai_le_han` — màn
  * của hàng đang chạy chưa chuyển sang bố cục, mỗi dòng `{ tep, han: <slug hàng nhận>, ly_do }`; `khe_boc` — `{ <khe>:
  * <Thành phần> }` (hàng khung-ho-so-lien-he): ở nhóm đơn vị màn, khe ấy truyền vào khuôn phải là JSX có gốc là thành phần
- * đã khai (vd cột phụ của Liên hệ bọc trong khung hồ sơ chung).
+ * đã khai (vd cột phụ của Liên hệ bọc trong khung hồ sơ chung); `tru_nhan_dien` — glob trừ khỏi `nhan_dien` (glob không có
+ * phép phủ định; Trang tạm trừ khu bản mẫu).
  */
-export const KHOA_TUY_CHON = ["don_vi", "bo_cuc", "ngoai_le_han", "khe_boc"];
+export const KHOA_TUY_CHON = ["don_vi", "bo_cuc", "ngoai_le_han", "khe_boc", "tru_nhan_dien"];
 
 /** Bảy bố cục đọc thẳng từ ma trận của app (một nguồn với BoCuc), không chép danh sách. */
 export function kieuBoCuc(root) {
@@ -158,6 +159,9 @@ function moiTep(root, thuMuc) {
   di(thuMuc);
   return out;
 }
+
+/** Tệp bị nhóm trừ khỏi `nhan_dien` bằng `tru_nhan_dien`. */
+const biTru = (data, tep) => (data.tru_nhan_dien ?? []).some((g) => globRegex(g).test(tep));
 
 /** Tệp (tương đối gốc kho, sắp) khớp một trong các glob. */
 export function khopGlob(root, globs) {
@@ -328,6 +332,7 @@ export function docBanDo(root) {
     if ("bo_cuc" in data && (typeof data.bo_cuc !== "string" || !kieuBoCuc(root).includes(data.bo_cuc)))
       loiKieu.push(`bo_cuc lạ: «${data.bo_cuc}» không phải một trong bảy bố cục (${kieuBoCuc(root).join(", ")})`);
     if ("ngoai_le_han" in data) kiemNgoaiLeHan(data.ngoai_le_han, loiKieu);
+    if ("tru_nhan_dien" in data && (!Array.isArray(data.tru_nhan_dien) || data.tru_nhan_dien.some((g) => typeof g !== "string"))) loiKieu.push("tru_nhan_dien phải là [\"glob\", …]");
     if ("khe_boc" in data) {
       const kb = data.khe_boc;
       if (!kb || typeof kb !== "object" || Array.isArray(kb)) loiKieu.push("khe_boc phải là { <khe>: <Thành phần> }");
@@ -355,7 +360,7 @@ export function docBanDo(root) {
           if (!ts_?.includes(k)) L(`khe_boc: «${k}» không phải tham số của khuôn ${data.khuon.ten}`);
       }
     }
-    const khop = khopGlob(root, data.nhan_dien);
+    const khop = khopGlob(root, data.nhan_dien).filter((t) => !biTru(data, t));
     const ngoaiLe = new Set(data.ngoai_le.map((x) => x.tep));
     data.ngoai_le.forEach((x, i) => {
       if (!existsSync(join(root, x.tep))) L(`ngoai_le[${i}]: tệp «${x.tep}» không có`);
@@ -478,8 +483,67 @@ export function dongTomTat(nhom, r) {
  */
 export function nhomCuaTep(banDo, tep) {
   return banDo.nhom.filter(
-    (g) => !g.hong && g.khuonTep && tep !== g.khuonTep && !g.ngoaiLe.has(tep) && g.data.nhan_dien.some((gl) => globRegex(gl).test(tep)),
+    (g) => !g.hong && g.khuonTep && tep !== g.khuonTep && !g.ngoaiLe.has(tep) && !biTru(g.data, tep) && g.data.nhan_dien.some((gl) => globRegex(gl).test(tep)),
   );
+}
+
+// ---------- khu bản mẫu (hàng ban-mau-khai-dia-chi) ----------
+
+export const NHOM_KHU = "khu-ban-mau";
+export const KHU_GLOB = `${GOC_WEB}/app/(app)/proto/**/page.tsx`;
+const KHU_RE = globRegex(KHU_GLOB);
+
+/** Đầu đường của các nhà, đọc thẳng từ `homeOfPath` (một nguồn với vỏ), không chép danh sách. */
+function dauDuongNha(root) {
+  const p = join(root, "packages/core/src/navigation.ts");
+  if (!existsSync(p)) return [];
+  const fn = /export function homeOfPath[\s\S]*?\n\}/.exec(readFileSync(p, "utf8"));
+  return fn ? [...fn[0].matchAll(/first === "(\/[^"]+)"/g)].map((x) => x[1]) : [];
+}
+
+/** Giá trị `duong` của `<KhaiDiaChi>` trong tệp: `{ co: false }`, `{ co: true, duong: null, dong }` khi không phải chuỗi cố định. */
+function loiKhai(sf) {
+  let kq = { co: false };
+  const di = (n) => {
+    if ((ts.isJsxSelfClosingElement(n) || ts.isJsxOpeningElement(n)) && n.tagName.getText(sf) === "KhaiDiaChi") {
+      const a = n.attributes.properties.find((p) => ts.isJsxAttribute(p) && p.name.getText(sf) === "duong");
+      const dong = sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1;
+      kq = { co: true, dong, duong: a?.initializer && ts.isStringLiteral(a.initializer) ? a.initializer.text : null };
+    }
+    ts.forEachChild(n, di);
+  };
+  di(sf);
+  return kq;
+}
+
+/** Hồ sơ còn mở (chưa ký, chưa máy thông) thì sổ design-pass của nó phải ghi địa chỉ thật. */
+function soThieuDiaChi(root, tep, duong) {
+  const slug = /\/proto\/([^/]+)\//.exec(tep)?.[1];
+  const so = `_acceptance/${slug}/design-pass.md`;
+  const hopDong = join(root, `_acceptance/${slug}/contract.md`);
+  if (!slug || !existsSync(join(root, so)) || !existsSync(hopDong)) return null;
+  if (/^status:\s*(signed-off|machine-cleared)\s*$/m.test(readFileSync(hopDong, "utf8"))) return null;
+  return readFileSync(join(root, so), "utf8").includes(duong) ? null : so;
+}
+
+/** Mỗi trang trong khu bản mẫu khai một địa chỉ thuộc một nhà; sổ design-pass của hồ sơ đang mở ghi địa chỉ ấy. */
+export function kiemKhuBanMau(root) {
+  const nha = dauDuongNha(root);
+  const coBangNha = existsSync(join(root, "packages/core/src/navigation.ts"));
+  const lech = [];
+  for (const tep of khopGlob(root, [KHU_GLOB])) {
+    const them = (dieu, dong = null) => lech.push({ tep, nhom: NHOM_KHU, dieu, dong });
+    const k = loiKhai(docMa(root, tep));
+    if (!k.co) them("trang bản mẫu chưa khai địa chỉ — đặt <KhaiDiaChi duong=\"/nhà/mục\" />");
+    else if (k.duong === null) them("KhaiDiaChi: duong phải là chuỗi cố định", k.dong);
+    else if (coBangNha && !nha.length) them("không đọc được bảng nhà từ homeOfPath của navigation.ts", k.dong);
+    else if (coBangNha && !nha.includes(`/${k.duong.split("?")[0].split("/")[1] ?? ""}`)) them(`KhaiDiaChi: «${k.duong}» không thuộc nhà nào`, k.dong);
+    else {
+      const so = soThieuDiaChi(root, tep, k.duong);
+      if (so) them(`design-pass chưa ghi địa chỉ thật «${k.duong}»: ${so}`, k.dong);
+    }
+  }
+  return lech;
 }
 
 // ---------- màn ngoài bản đồ (hàng 60) ----------
@@ -501,7 +565,7 @@ export function manNgoaiBanDo(root, banDo) {
   }
   const lech = [];
   for (const tep of khopGlob(root, [MAN_GLOB])) {
-    if (phu.has(tep)) continue;
+    if (phu.has(tep) || KHU_RE.test(tep)) continue;
     const sf = docMa(root, tep);
     const fn = sf.statements.find((s) => ts.isFunctionDeclaration(s) && coXuat(s) && coMacDinh(s));
     if (!fn) continue;
@@ -514,5 +578,5 @@ export function manNgoaiBanDo(root, banDo) {
       dong: sf.getLineAndCharacterOfPosition(fn.getStart()).line + 1,
     });
   }
-  return lech;
+  return [...lech, ...kiemKhuBanMau(root)];
 }

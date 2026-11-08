@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  duongCuaVo,
   type Home,
   homeOfPath,
   isSecondColumnOpen,
@@ -19,6 +20,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AccountMenuKhung } from "./account-menu";
 import { CompanySwitcher } from "./company-switcher";
 import { SECOND_COLUMN_COOKIE } from "./cookie";
+import { NguCanhDiaChi } from "./dia-chi-mau";
 import { HomeRail } from "./home-rail";
 import { MobileHeader, MobileTabBar } from "./mobile-shell";
 import { type LoiMenuTao, MenuTao } from "./menu-tao";
@@ -111,7 +113,7 @@ export function AppShell({
   children,
   mau,
   menuTao,
-  nhaMau,
+  diaChiMau,
   chiBao,
   chiBaoGon,
   taiKhoan,
@@ -122,12 +124,12 @@ export function AppShell({
   /** Cột thứ hai người đã mở/gập ở từng nhà, của đúng người và sàn đang làm. */
   remembered: Partial<Record<Home, boolean>>;
   children: ReactNode;
-  /** Trang mẫu sống (hàng 91): nhà lấy từ `nhaMau`, đầu điện thoại không mở việc thật. */
+  /** Trang mẫu sống (hàng 91): vỏ đọc `diaChiMau`, đầu điện thoại không mở việc thật. */
   mau?: boolean;
   /** Chỉ trang ba lối của menu Tạo đổi lối; vỏ thật dùng lối mặc định. */
   menuTao?: LoiMenuTao;
-  /** Trang mẫu sống: nhà đứng thay cho địa chỉ /mau/… để cột thứ hai và tiêu đề hiện như màn thật. */
-  nhaMau?: Home;
+  /** Trang mẫu sống: địa chỉ đứng thay cho /mau/… để cột thứ hai và tiêu đề hiện như màn thật. */
+  diaChiMau?: string;
   /** Phần của bộ đồng bộ — vỏ thật (`AppShellDongBo`) truyền vào; trang mẫu sống để trống nên không nhập lớp đồng bộ. */
   chiBao?: ReactNode;
   chiBaoGon?: ReactNode;
@@ -135,7 +137,10 @@ export function AppShell({
   phuVo?: ReactNode;
 }) {
   const pathname = usePathname();
-  const home = (mau && nhaMau) || homeOfPath(pathname);
+  const [diaChiKhai, datKhai] = useState<string | null>(null);
+  const khai = mau ? (diaChiMau ?? null) : diaChiKhai;
+  const duongVo = duongCuaVo({ pathname, khai, mau }).duong;
+  const home = homeOfPath(duongVo);
   const [choices, setChoices] = useState(remembered);
   const [jumpOpen, setJumpOpen] = useState(false);
   const openJump = () => setJumpOpen(true);
@@ -152,6 +157,7 @@ export function AppShell({
   }
 
   return (
+    <NguCanhDiaChi.Provider value={{ khai, mau, datKhai }}>
     <SidebarProvider
       className={cn(
         "h-svh",
@@ -170,7 +176,7 @@ export function AppShell({
 
       <SidebarInset className="overflow-hidden shadow-none md:border">
         <DesktopHeader user={user} nav={nav} onJump={openJump} className="hidden md:flex" menuTao={menuTao} chiBao={chiBao} taiKhoan={taiKhoan} />
-        <MobileHeader title={titleOf(pathname, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.mobileActions} />
+        <MobileHeader title={titleOf(duongVo, home)} unitJump={nav.unitJump} onJump={openJump} className="md:hidden" chiBao={chiBaoGon} actions={nav.mobileActions} />
 
         <div className="relative flex min-h-0 flex-1">
           {hasColumn && home && <SecondColumn home={home} open={columnOpen} caiDat={{ roles: user.activeCompany.roles ?? [], tenSan: user.activeCompany.name }} />}
@@ -188,5 +194,6 @@ export function AppShell({
       {nav.unitJump && <UnitJumpDialog open={jumpOpen} onOpenChange={setJumpOpen} homes={nav.homes} />}
       {phuVo}
     </SidebarProvider>
+    </NguCanhDiaChi.Provider>
   );
 }

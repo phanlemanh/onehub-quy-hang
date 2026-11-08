@@ -2,6 +2,7 @@ import { navigationFor } from "@quy-hang/core";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { KhaiDiaChi } from "@/components/shell/dia-chi-mau";
 import { readMe } from "@/lib/api";
 import { TrangThu } from "./trang-thu";
 
@@ -12,5 +13,10 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const me = await readMe((await headers()).get("cookie") ?? "");
   if (!me?.activeCompany || !navigationFor(me.activeCompany.roles).homes.includes("inventory")) notFound();
-  return <TrangThu />;
+  return (
+    <>
+      <KhaiDiaChi duong="/inventory" />
+      <TrangThu />
+    </>
+  );
 }
