@@ -47,13 +47,14 @@ Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`, `[Tên sàn]`.
   khách của sàn đọc danh sách hàng, Then thấy đủ 50 căn ở Đang bán; đầu khách của sàn khác không thấy căn nào. (cross-layer)
 - **AC-7 — Mục thiếu thành việc ở Hôm nay của người giữ căn.** Given căn nhập lên Đang bán thiếu pháp lý, tình trạng sử
   dụng, When đọc mức đủ của căn, Then mục thiếu chứa pháp lý và tình trạng sử dụng; When dựng Hôm nay bằng bộ nhóm mặc định
-  cho đầu chủ giữ căn (người file ghi, hay người nhập khi file không ghi), Then căn ở nhóm «Thiếu thông tin»; đầu chủ khác
-  không thấy căn trong Hôm nay của mình. (cross-layer)
+  cho đầu chủ giữ căn (người file ghi, hay người nhập khi file không ghi), Then căn ở Hôm nay của người ấy: nhóm «Thiếu
+  thông tin» khi file có ngày xác nhận còn mới, nhóm «Cần gọi lại» khi file không có ngày xác nhận (màn cuộc gọi hỏi luôn
+  mục thiếu); đầu chủ khác không thấy căn trong Hôm nay của mình. (cross-layer)
 - **AC-8 — Hoàn tác lần nhập gỡ căn đã lên Đang bán.** Given lần nhập vừa đưa căn lên Đang bán, When hoàn tác cả lần nhập,
   Then căn bị gỡ khỏi danh sách hàng, đầu khách không còn thấy. (cross-layer)
 - **AC-9 — Người dùng thấy trên màn.** Given dãy G chạy bản dev và một lần nhập như AC-2, When đầu chủ mở kết quả lần nhập,
   Hôm nay, hồ sơ căn và Bảng hàng, Then dòng nhập hiện «Đang bán» với lời còn thiếu pháp lý, tình trạng sử dụng; căn nằm
-  trong nhóm «Thiếu thông tin» của Hôm nay; mức đủ hiện hai mục còn thiếu; tóm tắt lần nhập đếm các căn ấy là đã lên Đang
+  trong nhóm «Thiếu thông tin» của Hôm nay (file có ngày xác nhận); mức đủ hiện hai mục còn thiếu; tóm tắt lần nhập đếm các căn ấy là đã lên Đang
   bán, dòng không mang tông lỗi; ở khổ 1440 và 375.
 - **AC-10 — Điền dần mục thiếu không đẩy căn khỏi bảng chung.** Given căn nhập lên Đang bán thiếu pháp lý, tình trạng sử
   dụng, When đầu chủ giữ căn lần lượt điền pháp lý, đổi giá kèm điều kiện phí, rồi điền tình trạng sử dụng, Then mỗi lệnh
