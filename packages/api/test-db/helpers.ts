@@ -29,6 +29,8 @@ export async function openCompany(name: string, email: string) {
   try {
     await c.query("begin");
     const r = await moSan(c, { ten: name, email });
+    // Bộ kiểm dùng «quản trị» là người chỉ cấu hình (một vai); công cụ mở sàn nay trao đủ năm vai (hàng chu-san-du-vai) nên hạ về một vai.
+    await c.query("update company_members set roles = '{company_admin}' where company_id = $1 and user_id = $2", [r.companyId, r.userId]);
     await c.query("commit");
     return r;
   } finally {
