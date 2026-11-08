@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 1a954f66f17ad646551987c72aed3093894c2051
+verified_commit: a0cbba1ee62e7d404ee8eb6ce64f1ad177c252fa
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -186,3 +186,7 @@ Round 1: tất cả eval đạt (E1-E4, E3b đỏ trên baseline nên có phân 
 ### Re-pin lần 1 — 2026-11-06, do gộp nhánh chính sau chữ ký
 run_id: repin-20261106T034838Z-11570
 sha: 1a954f66f17ad646551987c72aed3093894c2051 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E7 (E7 không khai paths)
+
+### Re-pin lần 2 — 2026-11-08, do PR 204 va-e7-loi-that-cap-han sửa chỗ thử chay-ui.mjs và dung-d.mjs của hai hồ sơ
+run_id: repin-20261108T071211Z-38871
+sha: a0cbba1ee62e7d404ee8eb6ce64f1ad177c252fa · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E7 (E7 không khai paths) · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
