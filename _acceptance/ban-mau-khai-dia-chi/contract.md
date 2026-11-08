@@ -5,7 +5,7 @@ slug: ban-mau-khai-dia-chi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-08-ban-mau-khai-dia-chi-design.md
 approved_by:
 approved_at:
@@ -88,3 +88,8 @@ hình thái — xem dòng sổ «bỏ coverage-scan».
 - Bỏ luật đợt 73: `LUAT.md` chỉ giám sát được sửa; thợ báo trong tin xong, giám sát bỏ sau khi gộp.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Người dùng không gặp lỗi nào: nhà vẫn sáng đúng trên màn. Chỉ là cách kiểm tra tự động ghi sai chỗ đọc, nên việc nhà có sáng hay không phải xem bằng ảnh chụp. — `_acceptance/ban-mau-khai-dia-chi/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sổ ghi nhầm địa chỉ khác với địa chỉ trang khai, bộ kiểm tra hiện chưa chắc bắt được. Người dùng cuối không bị ảnh hưởng, chỉ có nguy cơ sổ ghi lệch mà không ai báo. — `packages/ui-lint/tests/khu-ban-mau.test.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Trang mẫu sống có thể sáng nhầm nhà ở một bố cục mà kiểm tra tự động vẫn báo đạt. Hiện chưa thấy lỗi thật, chỉ là lưới kiểm tra chưa chặt. — `_acceptance/ban-mau-khai-dia-chi/evals.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sau này đổi cách tạo liên kết vào mục nhóm của Hôm nay, kiểm tra tự động có thể vẫn xanh trong khi mục sáng bị lệch. Hiện người dùng chưa gặp gì. — `apps/web/src/components/shell/dia-chi-mau.test.ts`
