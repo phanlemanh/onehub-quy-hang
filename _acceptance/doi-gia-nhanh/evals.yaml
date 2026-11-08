@@ -1,0 +1,93 @@
+schema_version: 1
+feature_slug: doi-gia-nhanh
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; cờ suaHang của lopPhuHoSo trên ma trận viết trước đúng các dòng bảng quyền hàng (bang-quyen-hang.json, rút từ chính tệp của lõi — số ô = số dòng của tệp), mỗi ô ghim suaHang = cột sua; chiều đỏ: bản sao suy suaHang = !hoiDauChu → bộ so nêu đúng các dòng đầu khách."
+    paths: ["packages/core/src/access/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hàm thuần của ngăn Đổi giá trên ma trận viết trước 6 ca (giá hợp lệ cùng phí · giá đọc không được · thiếu điều kiện phí · giá đổi 35% · đổi điều kiện phí · giá đổi 10% cùng phí) — mỗi ca ghim kết quả (lệnh price_changed đúng listPrice/feeInclusion · lỗi kèm chữ · hỏi lại kèm phần trăm); «Sửa lại» sau hỏi lại không sinh lệnh; ngăn dựng thật (renderToStaticMarkup) có ô giá, hai lựa chọn bao phí, nút Lưu; chiều đỏ: bản sao bỏ bước hỏi lại → bộ so nêu đúng hai ca «giá đổi 35%» và «đổi điều kiện phí»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; hồ sơ căn Đã bán dựng thật: khối Giá không có lối mở sửa và có đúng chữ «Căn đã bán không đổi giá — giá chốt đã ghi»; hàm ghi giá với căn Đã bán trả lỗi đó, không gọi bộ đồng bộ (bộ đếm lời gọi = 0); đối chứng dương: căn Đang bán có lối sửa và một lời gọi; chiều đỏ: bản sao bỏ kiemDoiGia → bộ so nêu «Đã bán · có lời gọi ghi»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ngăn Đổi trạng thái: danh sách nấc của mỗi trạng thái xuất phát (6 trạng thái chuẩn) × (có · không cờ Sẵn sàng bán) bằng đúng luaChonTrangThai — không ô nào có Đang bán khi không cờ; ma trận viết trước 6 ca ghi (Đã cọc hợp lệ · Đã bán thiếu giá chốt · Đã bán có giá chốt thiếu ngày · Đã bán đủ · Ngừng bán thiếu lý do · Đang bán thiếu điều kiện) — mỗi ca ghim lệnh hay lời lỗi của lõi; chiều đỏ: bản sao bỏ kiểm phần kèm của Đã bán → bộ so nêu «Đã bán thiếu giá chốt · có lệnh»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/app/(app)/inventory/cell-edit/lenh.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.web
+    expected: "exit 0; bộ đồng bộ thật trên kho giả và máy chủ giả (đồ của lib/sync): một lần đổi giá từ ngăn với thiết bị mobile → đúng một op gửi, mang thiết bị mobile; mất mạng lúc lưu → op chờ, có mạng lại gửi đúng một lần (máy chủ đếm 1 sự kiện); máy chủ từ chối → căn vào Cần xem; chiều đỏ: bản sao gửi thẳng không qua hàng đợi → bộ so nêu ô «mất mạng · 0 sự kiện»."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", "apps/web/src/lib/sync/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; sau lần ghi trên bộ đồng bộ giả, mô hình hồ sơ có giá/trạng thái mới; Lịch sử dựng thật có dòng «Đổi giá cũ → mới» và «Đổi trạng thái cũ → mới» kèm người làm và giờ; đối chứng dương: trước lần ghi không có dòng ấy."
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; bộ kiểm giao diện xanh (không Sheet/Drawer trực tiếp, không mã màu thô), bảng viết trước của bản đồ khuôn ghi tệp mới."
+    paths: ["apps/web/src/app/(app)/units/**", "packages/ui-lint/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử dãy H (dev http://localhost:3494, dựng bằng _acceptance/ho-so-dien-thoai-product-detail-5/thu/dung-h.mjs; phiên bằng --phien <email>), 375×812, một căn Đang bán do dau-chu-1 giữ: (1) chạm khối Giá → ngăn Đổi giá (ảnh); (2) gõ giá đổi hơn 20% → khối hỏi lại (ảnh), «Ghi» → khối Giá mới, Lịch sử có dòng «Đổi giá» (ảnh); (3) mở /inventory trên cùng phiên → căn hiện giá mới; mở trang khách /s/<mã> của một link có căn → giá mới; (4) đổi trạng thái sang Đã bán không giá chốt → lời lý do (ảnh), rồi Đã cọc → huy hiệu mới; (5) mở một căn Đã bán → khối Giá không mở sửa, có chữ lý do (ảnh); (6) telesales@mau.quy-hang.test mở cùng căn → không lối sửa (ảnh). Đếm số chạm từ hồ sơ tới «Lưu» (gõ phím không tính): đổi giá không quá 4 chạm, đổi trạng thái không quá 3 chạm — ghi số đếm vào observed. Lịch sử của hồ sơ sau cảnh 2 và cảnh 4 có dòng «Đổi giá cũ → mới» và «Đổi trạng thái cũ → mới» kèm người làm và giờ (ảnh). Ghi E8-network.txt."
+    steps:
+      - "Dựng chỗ thử dãy H; chọn căn Đang bán có mã do dau-chu-1 giữ và một căn Đã bán (docker exec quy-hang-db-dkn-H psql)"
+      - "Làm sáu cảnh trên bằng phiên dau-chu-1 và telesales ở 375×812, chụp mỗi cảnh một ảnh E8-<cảnh>.png"
+      - "Đọc listing_events của căn sau cảnh 2: có sự kiện price_changed mới mang device mobile và actor dau-chu-1"
+      - "Lặp lại cảnh 2 với mạng bị chặn (Network.emulateNetworkConditions offline) lúc Lưu, rồi mở mạng: đếm listing_events price_changed mới của căn đúng +1"
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-1
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    expected: "Trên chỗ thử dãy H, ma trận viết trước 4 người theo bang-quyen-hang.json gọi POST /api/v1/listings/<id>/events đổi giá cùng một căn mẫu do dau-chu-1 giữ: telesales@mau.quy-hang.test → bị từ chối (404 not-found: vai không làm việc với hàng không thấy hàng, như luật của máy chủ) · quan-tri@mau.quy-hang.test (chỉ vai quản trị) → bị từ chối (404) · dau-chu-2 (đầu chủ, người khác giữ) → 2xx · dau-chu-1 (giữ căn) → 2xx; sau mỗi lời gọi đếm listing_events của căn — bị từ chối không đổi, 2xx +1 (đối chứng dương cùng bộ đếm). Trước khi gọi đọc vai của bốn người trên chỗ thử, ghi vào observed. Ghi E10-mang.txt."
+    steps:
+      - "Đọc vai của bốn người (company_members) và đếm listing_events của căn mẫu"
+      - "Gọi lần lượt bằng bốn phiên (dung-h.mjs --phien) trên chỗ thử dãy H (dev http://localhost:3494), đếm sau mỗi lời gọi; mỗi lời gọi dùng expectedVersion mới nhất"
+    paths: ["packages/api/src/listings/**"]
+    evidence_required: [screenshot, observed, verifier, verified_at]

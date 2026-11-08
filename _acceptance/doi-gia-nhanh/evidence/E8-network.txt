@@ -1,0 +1,6 @@
+E8 network (independent verifier, Playwright, origin http://localhost:3494, 375x812)
+Online scenes (dau-chu-1, A-11.02 / A-01.03): all app-origin /api/v1 responses 200 (POST listings/<id>/events 200 x2, GET listings 200, GET catalog 200, public share events 201/200). No status >= 400.
+requestfailed seen (not app errors): ERR_ABORTED on GET /units/A-11.02?_rsc=..., webpack hot-update.js, POST /api/v1/public/shares/<code>/events (navigation aborts when leaving page) - note only.
+Console error (single, all contexts): Next dev "Failed to execute 'measure' on 'Performance': Page cannot have a negative time stamp" - dev tooling, not a request.
+Telesales scene: page rendered "Khong thay trang nay" (listing hidden from role); no write request issued.
+Offline repeat (B-08.02): FAIL POST /api/v1/listings/847e25a6-a424-4c81-b6c9-4195bacd2b43/events net::ERR_INTERNET_DISCONNECTED (deliberate, induced by context.setOffline(true) at Ghi). After setOffline(false): replayed; listing_events price_changed count 1 -> 2 (+1 exactly), seq5 device=mobile made_offline=t.

@@ -1,0 +1,14 @@
+<!doctype html><meta charset=utf-8><title>E10</title><pre>
+== Truoc khi goi: vai cua bon nguoi (company_members) ==
+{"dau-chu-1@mau.quy-hang.test -> ",listing_agent}
+{"dau-chu-2@mau.quy-hang.test -> ",listing_agent}
+{"quan-tri@mau.quy-hang.test -> ",company_admin}
+{"telesales@mau.quy-hang.test -> ",telesales}
+Nguoi giu can: dau-chu-1@mau.quy-hang.test
+Ban dau: events=6 version=6
+telesales@mau.quy-hang.test: expectedVersion=6 -> HTTP 404; listing_events 6 -> 6 (delta 0) body={"error":"not-found"}
+quan-tri@mau.quy-hang.test: expectedVersion=6 -> HTTP 404; listing_events 6 -> 6 (delta 0) body={"error":"not-found"}
+dau-chu-2@mau.quy-hang.test: expectedVersion=6 -> HTTP 200; listing_events 6 -> 7 (delta 1) body={"id":"0daff353-14c5-41c6-8eb4-e7c839cb47a8","buildingName":"Toà A","subdivisionName":null,"blockName"
+dau-chu-1@mau.quy-hang.test: expectedVersion=7 -> HTTP 200; listing_events 7 -> 8 (delta 1) body={"id":"0daff353-14c5-41c6-8eb4-e7c839cb47a8","buildingName":"Toà A","subdivisionName":null,"blockName"
+Cuoi: events=8 version=8
+</pre>
