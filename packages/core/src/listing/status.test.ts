@@ -131,3 +131,27 @@ test("đọc cấu hình số ảnh thật tối thiểu (hàng 23, E1; anh-khon
     assert.match(kq.loi ?? "", /listing\.ready_min_real_photos/, `giá trị ${JSON.stringify(v)} phải báo lỗi nêu khoá`);
   }
 });
+
+test("cửa nhập bỏ pháp lý, tình trạng sử dụng (can-nhap-len-bang-chung E1)", async () => {
+  const { missingFor, checkTransition, MIEN_O_CUA_NHAP } = await import("./status");
+  const goc = { unitNumber: "T-01.01", listPrice: 3_200_000_000, feeInclusion: "included", realPhotoCount: 0, minRealPhotos: 0 };
+  // Ma trận viết trước: pháp lý {có, thiếu} × tình trạng sử dụng {có, thiếu}.
+  const MA_TRAN: [string | null, string | null, string[]][] = [
+    ["pink_book", "vacant", []],
+    ["pink_book", null, ["occupantType"]],
+    [null, "vacant", ["legalStatus"]],
+    [null, null, ["legalStatus", "occupantType"]],
+  ];
+  for (const [legalStatus, occupantType, khongCua] of MA_TRAN) {
+    const ctx = { ...goc, legalStatus, occupantType };
+    assert.deepEqual(missingFor("Active", { ...ctx, cuaVao: "nhap" }), [], `cửa nhập, pháp lý ${legalStatus}, tình trạng ${occupantType}`);
+    assert.deepEqual(missingFor("Active", ctx), khongCua, `không cửa vào, pháp lý ${legalStatus}, tình trạng ${occupantType}`);
+  }
+  const nhap = { ...goc, legalStatus: null, occupantType: null, cuaVao: "nhap" as const };
+  assert.ok(missingFor("Active", { ...nhap, listPrice: null }).includes("listPrice"), "cửa nhập vẫn đòi giá");
+  assert.ok(missingFor("Active", { ...nhap, feeInclusion: null }).includes("feeInclusion"), "cửa nhập vẫn đòi điều kiện phí");
+  assert.ok(missingFor("Active", { ...nhap, unitNumber: null }).includes("unitNumber"), "cửa nhập vẫn đòi mã căn");
+  assert.ok(missingFor("Active", { ...nhap, minRealPhotos: 1 }).includes("realPhoto"), "cửa nhập vẫn đòi ảnh theo tối thiểu");
+  assert.equal(checkTransition("Incomplete", "Active", nhap).ok, true, "Chưa đủ để rao → Đang bán ở cửa nhập");
+  assert.deepEqual([...MIEN_O_CUA_NHAP], ["legalStatus", "occupantType"]);
+});

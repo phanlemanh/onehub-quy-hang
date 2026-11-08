@@ -72,7 +72,15 @@ export type TransitionContext = {
   realPhotoCount?: number;
   /** Số ảnh thật tối thiểu của sàn (`listing.ready_min_real_photos`); vắng là mặc định của lõi. */
   minRealPhotos?: number;
+  /**
+   * Cửa vào của lệnh. «nhap» = đường ghi của lần nhập file — chỉ máy chủ đặt (hàng can-nhap-len-bang-chung, Tham chiếu §12
+   * dòng 06/11): căn file ghi «còn hàng» lên Đang bán dù thiếu pháp lý, tình trạng sử dụng. Vắng = mọi cửa khác, luật đủ.
+   */
+  cuaVao?: "nhap";
 };
+
+/** Điều kiện vào Đang bán mà cửa nhập bỏ qua — phần còn thiếu thành mục của mức đủ và việc «Thiếu thông tin» ở Hôm nay. */
+export const MIEN_O_CUA_NHAP = ["legalStatus", "occupantType"] as const satisfies readonly Requirement[];
 
 export type TransitionCheck =
   | { ok: true }
@@ -103,7 +111,7 @@ export function missingFor(to: StandardStatus, ctx: TransitionContext): Requirem
     if (!khongMa && ctx.realPhotoCount !== undefined && ctx.realPhotoCount < (ctx.minRealPhotos ?? MAC_DINH_ANH_THAT_TOI_THIEU)) thieu.push("realPhoto");
     if (!co(ctx.legalStatus)) thieu.push("legalStatus");
     if (!co(ctx.occupantType)) thieu.push("occupantType");
-    return thieu;
+    return ctx.cuaVao === "nhap" ? thieu.filter((k) => !(MIEN_O_CUA_NHAP as readonly Requirement[]).includes(k)) : thieu;
   }
   return [];
 }
