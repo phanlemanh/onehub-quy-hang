@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fe0911f75095389492ef152e6bcd70e2457d9afb
+verified_commit: e7bddd38e5a4d8c8b25eb636c68b80094efea774
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -133,3 +133,7 @@ Round 3: E1-E5 va bay lenh suite deu dat tren commit 104674c5 (bo chan chay truo
 ### Re-pin lần 1 — 2026-11-07, do ghim lại sau gộp main
 run_id: repin-20261107T220641Z-74975
 sha: fe0911f75095389492ef152e6bcd70e2457d9afb · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 2 — 2026-11-08, do nút ghim lại thêm --ag-root (hàng va-nut-ci-ag-root)
+run_id: repin-20261108T010643Z-47270
+sha: e7bddd38e5a4d8c8b25eb636c68b80094efea774 · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
