@@ -1,0 +1,16 @@
+guard-edits
+  ĐẠT  chặn sửa migration đã commit
+  ĐẠT  cho tạo migration mới
+  ĐẠT  chặn ghi .env.local
+  ĐẠT  cho sửa .env.example
+  ĐẠT  cho sửa mã thường
+  ĐẠT  chặn sửa migration khi thư mục dự án trỏ chỗ khác (worktree)
+  ĐẠT  cho tạo migration mới trong thư mục chưa có (worktree)
+typecheck-changed
+  ĐẠT  chặn kết thúc lượt khi tệp vừa đổi có lỗi kiểu
+  ĐẠT  báo đúng tệp lỗi
+  ĐẠT  chặn theo cwd của phiên khi thư mục dự án trỏ chỗ khác (worktree)
+  ĐẠT  lần dừng thứ hai cho qua
+pre-commit
+  ĐỎ   gitleaks phải có trên CI
+TỔNG: ĐỎ

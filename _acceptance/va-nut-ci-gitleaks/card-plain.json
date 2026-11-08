@@ -1,0 +1,4 @@
+{
+  "feature_plain": "Bấm nút «Ghim lại hồ sơ cần bản thật» trên GitHub sẽ không còn đỏ vì máy chủ thiếu công cụ quét bí mật (gitleaks): nút tự cài đúng bản công cụ mà CI đang dùng, kiểm tệp tải về, rồi mới chạy lượt ghim lại.",
+  "scope_plain": "Ba điều đã chốt bỏ ngoài ở Cổng Phạm vi, giữ nguyên:"
+}

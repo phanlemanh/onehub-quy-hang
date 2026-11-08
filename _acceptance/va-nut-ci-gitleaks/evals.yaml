@@ -1,0 +1,25 @@
+# Bộ đo của hàng va-nut-ci-gitleaks. Chỉ đọc cây kho; tệp tải, HOME rỗng và kho tạm ở thư mục tạm của hệ điều hành.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-nut-ci-gitleaks/thu/kiem-gitleaks.mjs --tinh
+    paths: [".github/workflows/ghim-lai-ban-that.yml", ".github/workflows/ci.yml", "_acceptance/va-nut-ci-gitleaks/thu/**"]
+    expected: "exit 0; «ĐẠT luồng thật: đủ 5 vế của bước cài gitleaks» và chín dòng «ĐẠT phá thử «<ca>» → hỏng đúng <n> vế «<vế>»…» so TẬP vế hỏng với tập viết trước: «bỏ bước cài» (1 vế «có bước «Cài gitleaks» đứng trước «Ghim lại»», 4 vế không áp), «bước cài đứng sau «Ghim lại»» (cùng vế ấy), «bản lệch ci.yml» (vế «bản gitleaks là GITLEAKS_VERSION của ci.yml»), «bỏ dòng kiểm băm», «kiểm băm sau khi giải nén» (vế «tệp tải được kiểm băm sha256 ghim ở luồng trước khi giải nén»), «bỏ dòng GITHUB_PATH» (vế «thư mục cài được đưa vào GITHUB_PATH»), «bước cài mang bí mật», «bí mật ở env của job» (vế «bước cài không mang bí mật»), «phá kép: kiểm băm sau giải nén và bỏ GITHUB_PATH» (đúng 2 vế: kiểm băm + GITHUB_PATH); trên cây trước hàng in «HỎNG luồng thật: hỏng có bước «Cài gitleaks» đứng trước «Ghim lại»», các ca phá thử in «HỎNG … lệch luồng» hoặc HỎNG với tập vế lệch, KẾT: HỎNG."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-nut-ci-gitleaks/thu/kiem-gitleaks.mjs --chay
+    paths: [".github/workflows/ghim-lai-ban-that.yml", "_acceptance/va-nut-ci-gitleaks/thu/**"]
+    expected: "exit 0; «ĐẠT khối run của bước cài chạy như máy chủ GitHub (bash -eo pipefail, HOME rỗng, gitleaks 8.30.1): thoát 0», «ĐẠT GITHUB_PATH trỏ đúng thư mục chứa gitleaks (1 dòng)», «ĐẠT tệp gitleaks là bản linux x64 của máy chủ GitHub (ELF, x86-64)», «ĐẠT đối chứng: băm ghim lệch → bước đỏ, không dòng GITHUB_PATH, không tệp gitleaks (thoát <khác 0>)»; trên cây trước hàng in «HỎNG luồng thiếu bước «Cài gitleaks», GITLEAKS_VERSION hay GITLEAKS_SHA256 ở env của job». Cần mạng tới github.com."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: node _acceptance/va-nut-ci-gitleaks/thu/kiem-gitleaks.mjs --hooks
+    paths: ["package.json", ".claude/hooks/**", ".githooks/**", "_acceptance/va-nut-ci-gitleaks/thu/**"]
+    expected: "exit 0; «ĐẠT máy chủ GitHub (run 42440631323): tập dòng ĐỎ của bài tự kiểm đúng bằng {gitleaks phải có trên CI} (1 dòng ĐỎ / 12 dòng kết luận)», «ĐẠT đối chứng: gitleaks vắng khỏi PATH ở chế độ CI → đủ 12 dòng kết luận trùng từng dòng với run 42440631323, TỔNG: ĐỎ (thoát 1)», «ĐẠT gitleaks tới qua thư mục đặt trước PATH (cách GitHub áp GITHUB_PATH) → 0 dòng ĐỎ, giữ 11 dòng ĐẠT của run, thêm «chặn bí mật đã stage», TỔNG: ĐẠT (thoát 0)»; dòng kết luận của máy chấm lệch khối ghim thì in «lệch: máy chấm […]» và HỎNG; máy chấm không có gitleaks thì in «HỎNG máy chấm thiếu gitleaks …» và thoát 1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
