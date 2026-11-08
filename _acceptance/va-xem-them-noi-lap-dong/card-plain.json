@@ -1,0 +1,25 @@
+{
+  "feature_plain": "Trên màn Liên hệ, sau khi bấm «Xem thêm» rồi gõ và xoá nhanh ô tìm, lần «Xem thêm» kế nối đúng trang sau — không còn hiện lặp cả một trang người đã thấy.",
+  "will_do": [
+    {"id": "AC-2", "p": "Sẽ nối đúng trang kế sau khi gõ-xoá ô tìm: đủ dòng, đúng thứ tự, không dòng nào lặp — kể cả khi bấm «Xem thêm» hai lần liền, hay gõ-xoá đúng lúc một trang đang về."},
+    {"id": "AC-3", "p": "Sẽ cho thấy trên màn Liên hệ thật: lần «Xem thêm» thứ hai xin trang mới, không xin lại trang cũ; chữ và bố cục màn giữ nguyên."}
+  ],
+  "wont_do": [
+    {"id": "AC-1", "p": "Sẽ KHÔNG đưa vị trí «Xem thêm» về trang đầu khi ô tìm trở lại như cũ — giữ các trang người đã mở; chỉ đổi khi máy chủ vừa gửi lại trang mới."},
+    {"id": "OOS-1", "p": "KHÔNG xử lý ca đổi loại hay dấu rồi đổi lại nhanh ở cột thứ hai — ca đó đọc lại ngay, câu giao chỉ nói ô tìm."},
+    {"id": "OOS-2", "p": "KHÔNG báo lỗi khi «Xem thêm» rớt mạng — đã ghi hạn chế đã biết ở hàng Màn Liên hệ."},
+    {"id": "OOS-3", "p": "KHÔNG đổi quyền, cách đọc từ máy chủ hay cơ sở dữ liệu của danh sách liên hệ."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Mọi kiểu lượt vẽ lại của danh sách — mở màn có hay không có trang sẵn, không đọc lại, vẽ lại cùng trang, máy chủ gửi trang mới cùng hay khác bộ lọc — đều có tiêu chí (AC-1 giữ vị trí trang, AC-2 không lặp dòng)."},
+    {"i": 1, "p": "Lúc gõ-xoá, «Xem thêm» đang rảnh hay đang chờ một trang về đều có tiêu chí (AC-2, AC-3 trên màn thật)."},
+    {"i": 2, "p": "Sau gõ-xoá bấm «Xem thêm» một lần hay hai lần liền đều có tiêu chí (AC-2, AC-3)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Lý do bỏ bước quét độ phủ không đứng được, và một ô độ phủ chưa có tiêu chí — đã sửa: quét ngay trong hợp đồng thành ba trục, mọi ô có tiêu chí."},
+    {"i": 1, "p": "Lượt xem trên màn có thể đạt mà không đi qua đúng chỗ lỗi (gõ-xoá quá chậm nên màn đọc lại) — đã sửa: gõ-xoá trong một thao tác có hẹn giờ, màn mà đọc lại thì lượt ấy không kết luận. Không làm đối chứng trên bản cũ vì người chấm không được sửa mã; đối chứng bản cũ đã có ở bài kiểm luật."},
+    {"i": 2, "p": "Chưa có ca bấm «Xem thêm» hai lần liền và ca gõ-xoá lúc một trang đang về — đã thêm cả hai; trang đang về lúc gõ-xoá bị bỏ, lần bấm kế lấy lại nó một lần."},
+    {"i": 3, "p": "Bài kiểm tự đưa vào dấu «máy chủ vừa gửi trang mới» nên có thể xanh oan — đã sửa: bài kiểm nhận trang mới đúng cách màn nhận, và câu hỏi đọc mã hỏi thêm cách màn nhận trang mới."},
+    {"i": 4, "p": "Lượt xem trên màn đếm bằng một con số chưa rõ nghĩa và dữ liệu thử có thể không đủ ba trang — đã sửa: chốt số đếm là số dòng đang hiện, đếm thẳng trên màn, kiểm đủ ít nhất 101 liên hệ trước khi chấm."}
+  ]
+}
