@@ -81,10 +81,26 @@ export function HoSoNguoi({
   /** Đóng hồ sơ (máy tính): nút «Đóng hồ sơ» ở đầu hồ sơ, như hồ sơ căn. */
   onDong?: () => void;
 }) {
-  if (tt.kieu === "dang-tai") return <ChoTai kieu="ho-so" />;
+  // Nút «Đóng hồ sơ» có cả lúc đang tải và lỗi (KH-lh-mot-khung).
+  const nutDong = onDong ? (
+    <div className="flex justify-end px-2 pt-2">
+      <Button variant="ghost" size="icon-sm" aria-label={CHU.dongHoSo} onClick={onDong}>
+        <XIcon aria-hidden="true" />
+      </Button>
+    </div>
+  ) : null;
+  if (tt.kieu === "dang-tai")
+    return (
+      <>
+        {nutDong}
+        <ChoTai kieu="ho-so" />
+      </>
+    );
   if (tt.kieu === "loi")
     return (
-      <TrangThai
+      <>
+        {nutDong}
+        <TrangThai
         kind="error"
         title={CHU.loi}
         hanhDong={
@@ -93,6 +109,7 @@ export function HoSoNguoi({
           </Button>
         }
       />
+      </>
     );
   const { contact: c, phones, opportunities, listings, timeline } = tt.hs;
   const loai = c.contactTypes.map((t) => NHAN_LOAI[t] ?? t).join(" · ");

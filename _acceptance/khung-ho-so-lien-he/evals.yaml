@@ -71,7 +71,7 @@ evals:
     criterion: AC-7
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; bàn đọc của vùng (hàm thuần canDocLan(khoaDau, khoaHienTai, lanDau)) quyết không hỏi lại danh sách ở lượt đầu khi khoá bộ lọc bằng khoá của trang đầu máy chủ đã trao, và hỏi khi khoá khác hay khi không có trang đầu; bảng 4 ca. Chiều đỏ: luôn hỏi lại → ca «lượt đầu cùng khoá» đỏ."
+    expected: "exit 0; bàn đọc của vùng (hàm thuần canDocLan(khoaDauMoi, khoaHienTai, khoaDaCo)) quyết không hỏi máy chủ khi bảng đã đúng bộ lọc (kể cả hiệu ứng chạy lại) hay khi trang máy chủ vừa trao đúng bộ lọc (mở màn, đổi lọc qua URL), và hỏi khi gõ ô tìm hay không có trang máy chủ; bảng 6 ca; vung.tsx gọi đúng hàm ấy. Chiều đỏ: luôn hỏi lại → ca «mở màn» đỏ."
     paths: ["apps/web/src/app/(app)/contacts/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 

@@ -44,8 +44,10 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
   const khoaHienTai = useRef("");
   // Con trỏ trang cuối đã nối (cập nhật cùng lúc nối): trang về lần hai cho cùng con trỏ thì không nối lại.
   const tiepHienTai = useRef<string | null>(null);
-  // Lượt đọc đầu và ô tìm lần trước: chỉ gõ ô tìm mới chờ 250 ms (hàng khung-ho-so-lien-he).
-  const daDoc = useRef(false);
+  // Bộ lọc của dữ liệu bảng đang hiện, trang máy chủ đã dùng, ô tìm lần trước (hàng khung-ho-so-lien-he): chỉ gõ ô tìm mới
+  // chờ 250 ms; không đọc lại khi bảng đã đúng bộ lọc (kể cả khi hiệu ứng chạy hai lần) hay khi máy chủ vừa trao trang mới.
+  const khoaDaCo = useRef<string | null>(dau?.khoa ?? null);
+  const dauDaDung = useRef<TrangDau | null>(dau);
   const qTruoc = useRef(q);
 
   // Danh sách: gõ ô tìm thì chờ 250 ms, mở màn và đổi bộ lọc hỏi ngay; lượt đầu cùng bộ lọc với trang máy chủ đã trao thì
@@ -56,13 +58,20 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
     luotDs.current++;
     const khoaLuot = khoaLoc({ q, type: loai, status: dauLoc, lan });
     khoaHienTai.current = khoaLuot;
-    const lanDau = !daDoc.current;
-    daDoc.current = true;
-    const lyDo = lanDau ? "mo-man" : q !== qTruoc.current ? "go-tim" : "doi-loc";
+    const lyDo = khoaDaCo.current === null ? "mo-man" : q !== qTruoc.current ? "go-tim" : "doi-loc";
     qTruoc.current = q;
-    if (!canDocLan(dau?.khoa ?? null, khoaLuot, lanDau) && dau) {
-      tiepHienTai.current = dau.nextCursor;
-      setTrang({ khoa: khoaLuot, tiep: dau.nextCursor });
+    const dauMoi = dau && dau !== dauDaDung.current ? dau : null;
+    if (!canDocLan(dauMoi?.khoa ?? null, khoaLuot, khoaDaCo.current)) {
+      const trangDung = dauMoi && dauMoi.khoa === khoaLuot ? dauMoi : khoaLuot === dau?.khoa ? dau : null;
+      if (dauMoi && dauMoi.khoa === khoaLuot) {
+        dauDaDung.current = dauMoi;
+        setDs({ kieu: "xong", ds: dauMoi.items, con: dauMoi.nextCursor !== null });
+      }
+      khoaDaCo.current = khoaLuot;
+      if (trangDung) {
+        tiepHienTai.current = trangDung.nextCursor;
+        setTrang({ khoa: khoaLuot, tiep: trangDung.nextCursor });
+      }
       return;
     }
     hen.current = setTimeout(async () => {
@@ -81,15 +90,15 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
       if (huy) return;
       if (!kq) return setDs({ kieu: "loi" });
       setDs({ kieu: "xong", ds: kq.items, con: kq.nextCursor !== null });
+      khoaDaCo.current = khoaLuot;
       tiepHienTai.current = kq.nextCursor;
       setTrang({ khoa: khoaLuot, tiep: kq.nextCursor });
     }, henDoc(lyDo));
     return () => {
       huy = true;
     };
-    // `dau` chỉ dùng ở lượt đầu; không theo nó.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q, loai, dauLoc, lan]);
+  }, [q, loai, dauLoc, lan, dau]);
 
   // Esc đóng hồ sơ đang mở (máy tính), trừ khi phím đã có chỗ dùng (Hỏi-2).
   useEffect(() => {

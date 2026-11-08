@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { createElement as h, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { KEO_CHIA } from "@/components/bo-cuc/cot-keo-chia";
 import { KhungHoSo } from "@/components/khoi/solution-crm-4/ho-so";
 import { KhungHoSoCan } from "../units/ho-so/khung";
 import { DanhSachLienHe, taoCot } from "./danh-sach";
@@ -52,26 +53,33 @@ test("cột phụ liên hệ: cùng khung cột phụ với hồ sơ căn, ba tr
 
 test("đóng hồ sơ: nút Đóng ở đầu hồ sơ và luật Esc", () => {
   assert.ok(cotPhu({ kieu: "xong", hs: HS }).includes(`aria-label="${CHU.dongHoSo}"`), "thiếu nút Đóng hồ sơ");
-  const the = (tagName: string, trong: string | null = null) => ({ tagName, closest: (s: string) => (trong && s.includes(trong) ? {} : null) });
+  // closest giả: chỉ khớp khi bộ chọn của escDong có đúng vai trò của ca — bỏ một vai trò khỏi bộ chọn thì ca ấy đỏ.
+  const the = (tagName: string, trong: string | null = null) => ({ tagName, closest: (s: string) => (trong && s.split(",").includes(`[${trong}]`) ? {} : null) });
   const BANG: [string, Parameters<typeof escDong>[0], boolean, boolean][] = [
     ["Esc khi hồ sơ mở", { key: "Escape", defaultPrevented: false, target: the("BODY") }, true, true],
     ["hồ sơ đóng", { key: "Escape", defaultPrevented: false, target: the("BODY") }, false, false],
     ["đã có chỗ dùng phím", { key: "Escape", defaultPrevented: true, target: the("BODY") }, true, false],
     ["đích là ô nhập", { key: "Escape", defaultPrevented: false, target: the("INPUT") }, true, false],
     ["đích là vùng soạn", { key: "Escape", defaultPrevented: false, target: the("TEXTAREA") }, true, false],
-    ["đích trong menu, listbox, hộp", { key: "Escape", defaultPrevented: false, target: the("DIV", 'role="menu"') }, true, false],
+    ["đích trong menu", { key: "Escape", defaultPrevented: false, target: the("DIV", 'role="menu"') }, true, false],
+    ["đích trong listbox", { key: "Escape", defaultPrevented: false, target: the("DIV", 'role="listbox"') }, true, false],
+    ["đích trong hộp thoại", { key: "Escape", defaultPrevented: false, target: the("DIV", 'role="dialog"') }, true, false],
     ["phím khác", { key: "Enter", defaultPrevented: false, target: the("BODY") }, true, false],
   ];
   for (const [ca, e, mo, mong] of BANG) assert.equal(escDong(e, mo), mong, `Esc — ${ca}`);
-  assert.equal(BANG.length, 7);
+  assert.equal(BANG.length, 9);
+  // Nút Đóng có ở cả ba trạng thái hồ sơ.
+  for (const [ca, tt] of BA) assert.ok(cotPhu(tt).includes(`aria-label="${CHU.dongHoSo}"`), `${ca}: thiếu nút Đóng hồ sơ`);
 });
 
 test("bảng: đủ bốn cột, vừa phần còn lại khi hồ sơ mở 38% ở 1440", () => {
   const cot = taoCot(khong);
   assert.deepEqual(cot.map((c) => c.id), ["ten", "nguoiGiu", "coHoi", "can"], "cột của lưới lệch (cột Loại phải bỏ)");
-  // Bản kiểm 06/11: ở 1440 với cột hồ sơ 38%, phần bảng còn 693 px; trừ lề khung 32 px.
+  // Phần bảng = (1440 − vỏ) × (1 − tỉ lệ cột hồ sơ của bố cục); vỏ 322 px suy từ bản kiểm 06/11 (693 px ở 38%), tỉ lệ đọc
+  // từ KEO_CHIA — đổi tỉ lệ cột thì ngưỡng đổi theo. Trừ lề khung 32 px.
+  const phanBang = (1440 - 322) * (1 - KEO_CHIA.cot.macDinh / 100);
   const tong = cot.reduce((n, c) => n + (c.size ?? 150), 0);
-  assert.ok(tong <= 693 - 32, `tổng bề rộng cột ${tong} > 661`);
+  assert.ok(tong <= phanBang - 32, `tổng bề rộng cột ${tong} > ${phanBang - 32}`);
 });
 
 test("dòng đang mở được tô, lưới cao hết khung", () => {
@@ -114,14 +122,18 @@ test("trang đầu máy chủ và chờ chỉ khi gõ", async () => {
 });
 
 test("không hỏi lại lượt đầu khi trang máy chủ cùng bộ lọc", () => {
-  const BANG: [string | null, string, boolean, boolean][] = [
-    ["k", "k", true, false],
-    ["k", "k2", true, true],
-    [null, "k", true, true],
-    ["k", "k", false, true],
+  // [trang máy chủ mới chưa dùng, bộ lọc hiện tại, bộ lọc bảng đang hiện, có hỏi máy chủ không]
+  const BANG: [string | null, string, string | null, boolean][] = [
+    ["k", "k", null, false], // mở màn, máy chủ đã trao đúng bộ lọc
+    [null, "k", "k", false], // hiệu ứng chạy lại (StrictMode) khi bảng đã đúng bộ lọc
+    ["k2", "k2", "k", false], // đổi bộ lọc qua URL, máy chủ đã trao trang mới
+    [null, "k2", "k", true], // gõ ô tìm: bộ lọc mới, không trang máy chủ
+    [null, "k", null, true], // không có trang máy chủ
+    ["k", "k2", "k", true], // trang máy chủ khác bộ lọc hiện tại
   ];
-  for (const [dau, hien, lanDau, mong] of BANG) assert.equal(canDocLan(dau, hien, lanDau), mong, `canDocLan(${dau}, ${hien}, ${lanDau})`);
+  for (const [dau, hien, daCo, mong] of BANG) assert.equal(canDocLan(dau, hien, daCo), mong, `canDocLan(${dau}, ${hien}, ${daCo})`);
+  assert.equal(BANG.length, 6);
   const vung = readFileSync(new URL("./vung.tsx", import.meta.url), "utf8");
-  assert.match(vung, /canDocLan\(dau\?\.khoa \?\? null, khoaLuot, lanDau\)/, "vùng không dùng canDocLan ở lượt đọc");
+  assert.match(vung, /canDocLan\(dauMoi\?\.khoa \?\? null, khoaLuot, khoaDaCo\.current\)/, "vùng không dùng canDocLan ở lượt đọc");
   assert.match(vung, /henDoc\(lyDo\)/, "vùng không dùng henDoc cho khoảng chờ");
 });

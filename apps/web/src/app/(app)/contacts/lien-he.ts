@@ -126,5 +126,9 @@ export async function trangDauLienHe(loc: { type?: string | null; status?: strin
 /** Chờ trước khi hỏi danh sách: chỉ khi đang gõ ô tìm; mở màn và đổi bộ lọc hỏi ngay. */
 export const henDoc = (lyDo: "mo-man" | "doi-loc" | "go-tim"): number => (lyDo === "go-tim" ? 250 : 0);
 
-/** Lượt đọc này có phải hỏi máy chủ không: lượt đầu cùng bộ lọc với trang đầu máy chủ đã trao thì không. */
-export const canDocLan = (khoaDau: string | null, khoaHienTai: string, lanDau: boolean): boolean => !(lanDau && khoaDau !== null && khoaDau === khoaHienTai);
+/**
+ * Lượt đọc này có phải hỏi máy chủ không. Không, khi bảng đang hiện đúng bộ lọc này (`khoaDaCo`), hay khi trang máy chủ
+ * vừa trao (chưa dùng) đúng bộ lọc này (`khoaDauMoi`) — mở màn và đổi bộ lọc qua URL đều đã có trang máy chủ đọc sẵn.
+ */
+export const canDocLan = (khoaDauMoi: string | null, khoaHienTai: string, khoaDaCo: string | null): boolean =>
+  khoaHienTai !== khoaDaCo && khoaHienTai !== khoaDauMoi;

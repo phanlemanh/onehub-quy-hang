@@ -1,0 +1,4 @@
+E8 network (chrome-devtools, throttled CPU4x + Slow 4G)
+/contacts: GET /api/v1/listings @5682ms, GET /api/v1/contacts @5814ms; load event @4137ms; no user input -> contacts GET after load
+/contacts?type=Buyer: GET /api/v1/listings @5495ms, GET /api/v1/contacts?type=Buyer @5557ms; load @4115ms
+All 200. Console errors/warnings: none.
