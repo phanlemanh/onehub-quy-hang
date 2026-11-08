@@ -43,6 +43,12 @@ const DONG: DongBang[] = goi.hang.map((h, i) => {
     withdrawnReason: h.trangThai === "Withdrawn" ? (i % 2 ? "unreachable" : "owner_changed_mind") : null,
     // Cột «Đầu chủ» (hàng 105): chữ ô đã tính — ba người giữ, căn chưa gán, người đã rời sàn.
     "dau-chu": i % 4 === 0 ? "—" : i % 4 === 1 ? "[Tên] Đầu chủ một" : i % 4 === 2 ? "[Tên] Đầu chủ hai" : "Đã rời sàn",
+    // Hàng 79: trộn loại hình — năm dòng nhà phố, năm dòng đất, trường theo bảng loại hình (trường không dùng là null).
+    ...(i % 8 === 7
+      ? { propertySubType: "Townhouse", floor: null, lotSizeArea: 60 + i, storiesTotal: 3 + (i % 3), frontageLength: 4 + (i % 3), accessRoadWidth: 8 + (i % 5) }
+      : i % 8 === 3
+        ? { propertySubType: "Unimproved Land", unitType: "", livingArea: null, floor: null, directionFaces: null, lotSizeArea: 80 + i, storiesTotal: null, frontageLength: 5 + (i % 2), accessRoadWidth: 10 + (i % 4) }
+        : {}),
   };
 });
 
@@ -71,6 +77,11 @@ const MA_TRAN: [CotId, string, (d: DongBang) => boolean][] = [
   ["closeDate", "2026-10-1", (d) => (d.closeDate ?? "").startsWith("2026-10-1")],
   ["withdrawnReason", "unreachable", (d) => d.withdrawnReason === "unreachable"],
   ["dau-chu", "Đã rời sàn", (d) => d["dau-chu"] === "Đã rời sàn"],
+  ["propertySubType", "Unimproved Land", (d) => d.propertySubType === "Unimproved Land"],
+  ["lotSizeArea", ">90", (d) => (d.lotSizeArea ?? -1) > 90],
+  ["storiesTotal", "4-5", (d) => d.storiesTotal != null && d.storiesTotal >= 4 && d.storiesTotal <= 5],
+  ["frontageLength", ">=5", (d) => (d.frontageLength ?? -1) >= 5],
+  ["accessRoadWidth", ">10", (d) => (d.accessRoadWidth ?? -1) > 10],
 ];
 
 test("lọc: mọi cột của bảng đều có một ca trong ma trận (không cột nào thiếu ô lọc)", () => {
@@ -125,15 +136,15 @@ test("nhóm: Toà → Loại căn, số căn các nhóm con cộng bằng nhóm 
   assert.equal(nhomDong(DONG, "khong").every((d) => d.kind === "can"), true);
 });
 
-test("cột mặc định: mười bảy cột đúng thứ tự, ba cột ẩn", () => {
+test("cột mặc định: hai mươi hai cột đúng thứ tự (năm cột loại hình của hàng 79), ba cột ẩn", () => {
   assert.deepEqual(
     [...COT_MAC_DINH],
-    ["buildingName", "unitNumber", "unitType", "livingArea", "floor", "directionFaces", "standardStatus", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType", "confirmedAgeDays", "dau-chu", "completeness", "visibility"],
+    ["buildingName", "unitNumber", "propertySubType", "unitType", "livingArea", "floor", "directionFaces", "lotSizeArea", "storiesTotal", "frontageLength", "accessRoadWidth", "standardStatus", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType", "confirmedAgeDays", "dau-chu", "completeness", "visibility"],
   );
   assert.deepEqual([...COT_AN_MAC_DINH], ["closePrice", "closeDate", "withdrawnReason"]);
   assert.deepEqual(
     COT.filter((c) => COT_MAC_DINH.includes(c.id)).map((c) => c.label),
-    ["Toà", "Mã căn", "Loại căn", "Diện tích", "Tầng", "Hướng", "Trạng thái", "Giá", "Phí", "Nội thất", "Pháp lý", "Tài chính", "Tình trạng sử dụng", "Xác nhận", "Đầu chủ", "Mức đủ", "Ai thấy"],
+    ["Toà", "Mã căn", "Loại hình", "Loại căn", "Diện tích", "Tầng", "Hướng", "Diện tích đất", "Số tầng", "Mặt tiền", "Lộ giới", "Trạng thái", "Giá", "Phí", "Nội thất", "Pháp lý", "Tài chính", "Tình trạng sử dụng", "Xác nhận", "Đầu chủ", "Mức đủ", "Ai thấy"],
   );
 });
 

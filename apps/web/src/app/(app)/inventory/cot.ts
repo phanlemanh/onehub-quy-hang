@@ -6,6 +6,7 @@ import { nhanGiaTri, nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { StandardStatus } from "@quy-hang/core/listing";
 import { NHAN_TRANG_THAI_MAC_DINH, nhanCuaCan } from "@quy-hang/core/statuses";
 import { MAU_TRANG_THAI, type MauTrangThai } from "@/lib/mau-trang-thai";
+import { laKhongDung, nhanLoaiHinh } from "./loai-hinh";
 import { chuOTruongRieng, cotTruongRieng, laCotRieng, type CotRiengId } from "./truong-rieng";
 
 /** Một dòng của bảng. Không trường nguồn nào: hàng đến từ API không chở lớp `source`. */
@@ -40,8 +41,18 @@ export type DongBang = {
   closePrice: number | null;
   closeDate: string | null;
   withdrawnReason: string | null;
-  /** RESO `PropertySubType` từ danh mục (hàng 22) — không phải cột của bảng. */
+  /**
+   * RESO `PropertySubType` của căn (hàng 22; cột «Loại hình» từ hàng 79): căn hộ từ danh mục toà, lô từ danh mục dãy, căn
+   * ngoài khu từ căn của sàn; `null` khi không thấy nguồn («Chưa rõ»).
+   */
   propertySubType?: string | null;
+  /** Hàng không toà — lô, ngoài khu (hàng 79): hồ sơ mở theo hàng, không theo toà + mã. Không phải cột. */
+  theoHang?: boolean;
+  /** Trường thấp tầng của loại hình (hàng 79, ADR-0016 quyết định 2): diện tích đất, số tầng, mặt tiền, lộ giới. */
+  lotSizeArea?: number | null;
+  storiesTotal?: number | null;
+  frontageLength?: number | null;
+  accessRoadWidth?: number | null;
   /**
    * Cột «Đầu chủ» (hàng 105, nguồn AC-4 hàng 89): chữ ô đã tính từ `listAgentKey` (RESO `ListAgentKey`) của hàng đối với
    * danh bạ đầu chủ của sàn — `chuDauChu`. Chỉ đọc; dòng dựng ngoài Bảng hàng không có khoá này.
@@ -52,7 +63,7 @@ export type DongBang = {
 };
 
 /** Cột chuẩn của bảng. */
-export type CotChuanId = Exclude<keyof DongBang, "id" | "needsCallBack" | "propertySubType" | "statusLabel" | CotRiengId>;
+export type CotChuanId = Exclude<keyof DongBang, "id" | "needsCallBack" | "statusLabel" | "theoHang" | CotRiengId>;
 /** Cột chuẩn hay cột trường riêng của sàn (hàng 47). */
 export type CotId = CotChuanId | CotRiengId;
 /** Kiểu ô lọc của cột: chữ chứa · chọn một giá trị · luật số. */
@@ -88,10 +99,16 @@ const SO_NGUYEN = new Intl.NumberFormat("vi-VN");
 export const COT: readonly Cot[] = [
   { id: "buildingName", label: "Toà", kind: "chon", size: 110, filterHint: "Mọi toà" },
   { id: "unitNumber", label: "Mã căn", kind: "chu", size: 130, filterHint: "Chứa…" },
+  { id: "propertySubType", label: "Loại hình", kind: "chon", size: 120, filterHint: "Mọi loại hình" },
   { id: "unitType", label: "Loại căn", kind: "chon", size: 120, filterHint: "Mọi loại" },
   { id: "livingArea", label: "Diện tích", kind: "so", size: 110, filterHint: ">60" },
   { id: "floor", label: "Tầng", kind: "so", size: 90, filterHint: "5-15" },
   { id: "directionFaces", label: "Hướng", kind: "chu", size: 120, filterHint: "Chứa…" },
+  // Bốn cột thấp tầng (hàng 79): chỉ hiện khi dòng đã lọc có loại hình dùng chúng.
+  { id: "lotSizeArea", label: "Diện tích đất", kind: "so", size: 130, filterHint: ">80" },
+  { id: "storiesTotal", label: "Số tầng", kind: "so", size: 100, filterHint: "3-5" },
+  { id: "frontageLength", label: "Mặt tiền", kind: "so", size: 110, filterHint: ">=5" },
+  { id: "accessRoadWidth", label: "Lộ giới", kind: "so", size: 100, filterHint: ">=12" },
   { id: "standardStatus", label: "Trạng thái", kind: "chon", size: 160, filterHint: "Mọi trạng thái" },
   { id: "listPrice", label: "Giá", kind: "so", size: 120, filterHint: "<=5 (tỷ)", scale: TY },
   { id: "feeInclusion", label: "Phí", kind: "chon", size: 140, filterHint: "Mọi điều kiện" },
@@ -162,6 +179,10 @@ export const nhanCot = (c: Cot, tv?: TuVung | null) => (laCotRieng(c.id) ? c.lab
  */
 export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
   if (laCotRieng(id)) return chuOTruongRieng(d[id], id, tv?.truongRieng) || "—";
+  // Trường loại hình của dòng không dùng: «không có», ô để trống — khác «—» của trường dùng mà chưa có số (hàng 79).
+  if (laKhongDung(d, id)) return "";
+  // Loại hình: tên riêng của sàn qua bộ từ vựng (khi lõi mở tập đóng cho loại hình), vắng thì nhãn mặc định.
+  if (id === "propertySubType") return d.propertySubType ? nhanGiaTri(tv, "propertySubType", d.propertySubType, nhanLoaiHinh(d.propertySubType)) : CHUA_RO;
   const v = d[id];
   if (v === null || v === undefined || v === "") return "—";
   switch (id) {
@@ -177,7 +198,11 @@ export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
     case "closePrice":
       return dinhDangGia(v as number);
     case "livingArea":
+    case "lotSizeArea":
       return `${SO_2.format(v as number)} m²`;
+    case "frontageLength":
+    case "accessRoadWidth":
+      return `${SO_2.format(v as number)} m`;
     case "confirmedAgeDays":
       return v === 0 ? "Hôm nay" : `${v} ngày trước`;
     case "completeness":
@@ -193,6 +218,9 @@ export const mauTrangThai = (d: Pick<DongBang, "standardStatus">): MauTrangThai 
 /** Giá trị của ô chọn: lựa chọn của ô lọc là các giá trị này, chữ hiện qua `chuCuaO`. Cột Trạng thái là trạng thái chuẩn —
  * lọc «Đang giao dịch» gồm cả căn mang nhãn riêng neo vào nó (hàng 46, Hỏi-4). */
 export function giaTriChon(d: DongBang, id: CotId): string {
+  if (laKhongDung(d, id)) return "";
+  // Loại hình chưa rõ lọc được dưới «Chưa rõ» (hàng 79, AC-4).
+  if (id === "propertySubType") return d.propertySubType ?? CHUA_RO;
   const v = d[id];
   return v === null || v === undefined ? "" : String(v);
 }
