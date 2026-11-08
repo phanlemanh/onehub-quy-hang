@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>25 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>123 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>124 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -30,10 +30,6 @@ flowchart TD
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
 
-## Đang làm
-
-- Đầu chủ mở bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và thấy cột, hồ sơ căn đúng trường của từng loại — không cột tầng, trục cho đất (`bang-hang-theo-loai-hinh`)
-
 ## Đã giao — chờ phiên nghiệm thu
 
 - Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy (`anh-can-ba-ngan`)
@@ -45,6 +41,7 @@ flowchart TD
 - Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn (`bang-hang-dang-the`)
 - Đầu chủ mở hồ sơ căn từ Bảng hàng thì hồ sơ là một cột đứng cạnh bảng, ngoài khung bảng, cao từ đỉnh vùng làm việc tới đáy màn, đẩy bảng sang trái và kéo chia 28–50%; thanh trên của vỏ giữ nguyên, nhóm nút Nhóm · Lọc · Cột · Xuất và +Lead không bị che; điện thoại không đổi; Bảng hàng có cột Đầu chủ (`bang-hang-danh-sach-chi-tiet`)
 - Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn (`bang-hang-kieu-sheet`)
+- Đầu chủ mở bảng hàng có cả căn hộ, nhà phố và đất, lọc và nhóm theo loại hình, và thấy cột, hồ sơ căn đúng trường của từng loại — không cột tầng, trục cho đất (`bang-hang-theo-loai-hinh`)
 - Mọi thao tác ghi đọc quyền từ một bảng quyền thao tác × vai ở lõi. Trước hết: chỉ người có nhà Bảng hàng (Đầu chủ, Đầu khách, Trưởng nhóm) đọc và sửa được hàng; Telesales và Quản trị sàn chỉ thấy kết quả lead và cấu hình; đưa hàng lên «Đang bán» theo đúng cờ «Sẵn sàng bán» ở mọi lối; luật theo dòng của hàng và sự kiện hàng xét vai, không chỉ cách ly công ty. (`bang-quyen-theo-vai`)
 - Lệnh chốt bán với ngày bán không có thật (như 30 tháng 2) bị từ chối với lỗi nêu đúng trường ngày bán, không phải lỗi hệ thống (`bao-ro-ngay-ban-sai`)
 - Quản trị sàn đổi tên hiển thị của trường chuẩn và thêm giá trị riêng neo vào giá trị chuẩn; cùng một căn hiện đúng ở bảng hàng, đội khác và trang khách (`cach-goi-rieng`)

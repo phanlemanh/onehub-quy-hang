@@ -5,7 +5,7 @@ slug: bang-hang-theo-loai-hinh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-bang-hang-theo-loai-hinh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -128,6 +128,15 @@ căn ngoài khu. Never: sự kiện tạo hàng mang loại hình (ADR-0016 quy�
 
 ## Notes
 
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-1: người không làm việc với Bảng hàng bị từ chối đúng ở danh sách căn ngoài khu, nhưng mã lỗi chưa nằm trong bảng mã lỗi chung nên màn có thể không có câu báo chuẩn.
+  - Ngoài-2: danh mục công khai gọi nhãn dãy bằng khoá tiếng Việt `nhanSan`, khác tên `blockLabel` ở đường tra lô.
+  - Ngoài-6: danh mục có một lô sai loại hình thì mọi hàng lô hiện «Chưa rõ» mà không báo.
+  - Ngoài-8: đầu cột hồ sơ hàng lô lặp tên khu; hàng ngoài khu không mã có tiêu đề trống.
+  - Ngoài-9: phép nhìn màn đặt góc nhìn đã lưu thẳng vào kho trình duyệt, không qua nút lưu thật.
+  - Ngoài-10: bài kiểm loại hình chưa so loại căn với nguồn và chưa kiểm trường ở hai ca chưa rõ.
+  - Ngoài-11: bài kiểm ráp danh mục giống đường đọc danh mục thay vì lấy từ chính đường ấy.
+  - Ngoài-12: bài kiểm hồ sơ chỉ kiểm diện tích đất có đơn vị «m²», chưa so giá trị.
 - Known limits — chủ kho chọn ở lượt chấm 1, 08/11 (nguyên văn «Thu, mở hàng sau»): chữ cột Loại hình chưa theo cách gọi riêng
   của sàn — tập đóng của Cách gọi (hàng 45) chưa có loại hình; cột đọc qua hàm đặt tên của lõi nên tự nhận tên riêng khi lõi mở.
   Mở hàng sau «loại hình trong Cách gọi».

@@ -6,8 +6,8 @@ failed_evals: []
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b096e06137ddfd66e62c645e4f8da4650d36a8c7
-human_signoff:
+verified_commit: 15e41a2daffcefdb55411b46cef5e956d3012b33
+human_signoff: Manh Phan 2026-11-08
 ---
 
 # Evidence Report: bang-hang-theo-loai-hinh
@@ -238,3 +238,7 @@ none — every multi-run eval is uniform
 
 Round 1: S4 lượt 1 bị REJECT; bằng chứng và sổ đã ghi, trả về dựng lại.
 Round 2: E4, E7a, E8, E9, E14 chạy lại và đạt; các eval còn lại mang từ vòng 1 (delta không chạm paths). Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-08, do gộp main vào nhánh trước chữ ký Cổng Bằng chứng
+run_id: repin-20261108T081423Z-94272
+sha: 15e41a2daffcefdb55411b46cef5e956d3012b33 · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · ngoài làn máy: E8 (E8 không khai paths), E10 (E10 không khai paths) · AC không có chốt máy: AC-10 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
