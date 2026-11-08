@@ -1,0 +1,4 @@
+Origin localhost:3495 (3460 khong chay; dung may dev dung-d.mjs). Playwright MCP, 375x812, phien dau-chu-1.
+200 GET /api/v1/catalog, off-compound-units, company/member-names, units/photos?toa=..., listings (nhieu lan)
+404 GET /api/v1/units/photos/<id>/thumb  (anh thu nho <img>, tai nguyen anh -> chi ghi chu; khong phai fetch/XHR)
+Console errors: 1 ("Failed to load resource: 404") chinh la thumb tren.
