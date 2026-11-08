@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ba lối dựng mã mờ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Lora', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .frame { max-width: 1184px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+    }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">So sánh ba lối · Khuôn xác nhận danh mục · Hỏi-5</p>
+    <h1>Ba lối dựng mã sàn, mã người mờ: hai bên nhận có nối được cùng một sàn không, và xoay khoá thì mất gì</h1>
+
+    <svg viewBox="0 0 1184 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sàn A đi qua bước Quỹ hàng dựng mã mờ, rồi mã gửi tới Bên nhận 1 là Invest và Bên nhận 2 là bên sau này. Ba lối dựng mã. Lối 1, khoá riêng từng bên nhận, máy khuyên: hai bên nhận thấy hai mã khác nhau nên không nối được Sàn A với nhau; xoay khoá thì mọi mã của bên ấy đổi, Invest mất nối lịch sử. Lối 2, khoá chung: hai bên thấy cùng một mã nên nối được với nhau; xoay khoá thì mọi mã của mọi bên đổi một lượt. Lối 3, bảng ánh xạ mã ngẫu nhiên: mỗi bên một mã ngẫu nhiên nên không nối được; xoay không đổi mã, nhưng thêm một bảng giữ nối mã với sàn, hàng 97 dựng. Khó đảo vì cách dựng mã thuộc khuôn v1 mà Invest ghim. AC-7.">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- ===== Luồng chung (mũi tên vẽ trước nút) ===== -->
+      <line x1="232" y1="80" x2="320" y2="80" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M656 64 H752 A8 8 0 0 0 760 56 A8 8 0 0 1 768 48 H864" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M656 96 H752 A8 8 0 0 1 760 104 A8 8 0 0 0 768 112 H864" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Sàn A -->
+      <rect x="40" y="48" width="192" height="64" rx="20" fill="#f5f5f5"/>
+      <rect x="40" y="48" width="192" height="64" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="136" y="76" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Sàn A</text>
+      <text x="136" y="96" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">một công ty và người của sàn</text>
+
+      <!-- Quỹ hàng dựng mã mờ — còn chờ chốt -->
+      <rect x="320" y="40" width="336" height="80" rx="6" fill="#f5f5f5"/>
+      <rect x="320" y="40" width="336" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="488" y="68" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Quỹ hàng dựng mã sàn, mã người mờ</text>
+      <text x="488" y="88" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">thay tên sàn, tên người bằng một mã không đọc được</text>
+      <text x="488" y="104" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">dựng theo một trong ba lối dưới đây — Hỏi-5</text>
+
+      <!-- Bên nhận 1 -->
+      <rect x="864" y="24" width="280" height="48" rx="20" fill="#f5f5f5"/>
+      <rect x="864" y="24" width="280" height="48" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="1004" y="44" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bên nhận 1 (Invest)</text>
+      <text x="1004" y="60" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">nhận mã, không thấy tên</text>
+
+      <!-- Bên nhận 2 -->
+      <rect x="864" y="88" width="280" height="48" rx="20" fill="#f5f5f5"/>
+      <rect x="864" y="88" width="280" height="48" rx="20" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="1004" y="108" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bên nhận 2 (bên sau này)</text>
+      <text x="1004" y="124" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif" text-anchor="middle">một thoả thuận khác</text>
+
+      <!-- ===== Lưới so sánh ===== -->
+      <!-- Vạch hàng chạy suốt (vẽ trước thẻ) -->
+      <line x1="40" y1="240" x2="1144" y2="240" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="40" y1="336" x2="1144" y2="336" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="40" y1="432" x2="1144" y2="432" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <!-- Nhãn hàng -->
+      <text x="40" y="208" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">BA LỐI DỰNG MÃ</text>
+
+      <text x="40" y="280" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Mã mỗi bên nhận thấy</text>
+      <text x="40" y="296" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">cho cùng một Sàn A (ví dụ)</text>
+
+      <text x="40" y="376" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Hai bên nhận có nối được</text>
+      <text x="40" y="392" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Sàn A với nhau?</text>
+
+      <text x="40" y="480" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Xoay khoá thì sao?</text>
+      <text x="40" y="496" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">khi phải thay khoá vì lộ</text>
+
+      <!-- ===== Lối 1 — máy khuyên (tâm điểm) ===== -->
+      <rect x="256" y="168" width="280" height="376" rx="6" fill="#f5f5f5"/>
+      <rect x="256" y="168" width="280" height="376" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <line x1="256" y1="240" x2="536" y2="240" stroke="rgba(235,108,54,0.30)" stroke-width="0.8"/>
+      <line x1="256" y1="336" x2="536" y2="336" stroke="rgba(235,108,54,0.30)" stroke-width="0.8"/>
+      <line x1="256" y1="432" x2="536" y2="432" stroke="rgba(235,108,54,0.30)" stroke-width="0.8"/>
+
+      <text x="272" y="192" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LỐI (1)</text>
+      <rect x="436" y="180" width="84" height="16" rx="2" fill="#ffffff" stroke="#eb6c36" stroke-width="0.8"/>
+      <text x="478" y="191" fill="#ba4513" font-size="8" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.10em">MÁY KHUYÊN</text>
+      <text x="272" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Khoá riêng từng bên nhận</text>
+      <text x="272" y="228" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">mỗi bên nhận một khoá của riêng mình</text>
+
+      <text x="272" y="268" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bên nhận 1 (Invest)</text>
+      <rect x="424" y="254" width="96" height="20" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="472" y="268" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Hx7q…</text>
+      <text x="272" y="300" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bên nhận 2</text>
+      <rect x="424" y="286" width="96" height="20" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="472" y="300" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Rm2d…</text>
+      <text x="272" y="324" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">cùng sàn, cùng bên nhận → luôn cùng mã</text>
+
+      <text x="272" y="368" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif">Không</text>
+      <text x="272" y="392" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">hai bên thấy hai mã khác nhau</text>
+      <text x="272" y="408" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">không giải ngược được khi không có khoá</text>
+
+      <text x="272" y="464" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Mọi mã của bên ấy đổi</text>
+      <text x="272" y="484" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Invest mất nối lịch sử: không rút được</text>
+      <text x="272" y="500" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">«một công ty» qua hai khoá</text>
+      <text x="272" y="520" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">nên khoá sống lâu, chỉ xoay khi lộ</text>
+
+      <!-- ===== Lối 2 ===== -->
+      <rect x="560" y="168" width="280" height="376" rx="6" fill="#f5f5f5"/>
+      <rect x="560" y="168" width="280" height="376" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <line x1="560" y1="240" x2="840" y2="240" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="560" y1="336" x2="840" y2="336" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="560" y1="432" x2="840" y2="432" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <text x="576" y="192" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LỐI (2)</text>
+      <text x="576" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Khoá chung</text>
+      <text x="576" y="228" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">một khoá của Quỹ hàng cho mọi bên nhận</text>
+
+      <text x="576" y="268" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bên nhận 1 (Invest)</text>
+      <rect x="728" y="254" width="96" height="20" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="776" y="268" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Hx7q…</text>
+      <text x="576" y="300" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bên nhận 2</text>
+      <rect x="728" y="286" width="96" height="20" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="776" y="300" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Hx7q…</text>
+      <text x="576" y="324" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">một sàn, một mã ở mọi bên nhận</text>
+
+      <text x="576" y="368" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif">Có</text>
+      <text x="576" y="392" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">hai bên cùng thấy một mã cho Sàn A</text>
+      <text x="576" y="408" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">nên ghép được với nhau</text>
+
+      <text x="576" y="464" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Mọi mã của mọi bên đổi một lượt</text>
+      <text x="576" y="484" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">xoay khoá một lần cho tất cả</text>
+      <text x="576" y="520" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">giữa hai lần xoay, mã ổn định</text>
+
+      <!-- ===== Lối 3 ===== -->
+      <rect x="864" y="168" width="280" height="376" rx="6" fill="#f5f5f5"/>
+      <rect x="864" y="168" width="280" height="376" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <line x1="864" y1="240" x2="1144" y2="240" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="864" y1="336" x2="1144" y2="336" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <line x1="864" y1="432" x2="1144" y2="432" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <text x="880" y="192" fill="#636b80" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LỐI (3)</text>
+      <text x="880" y="212" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Bảng ánh xạ mã ngẫu nhiên</text>
+      <text x="880" y="228" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">bốc mã ngẫu nhiên, Quỹ hàng giữ bảng nối</text>
+
+      <text x="880" y="268" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bên nhận 1 (Invest)</text>
+      <rect x="1032" y="254" width="96" height="20" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="1080" y="268" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">9fTa…</text>
+      <text x="880" y="300" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bên nhận 2</text>
+      <rect x="1032" y="286" width="96" height="20" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="1080" y="300" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Kc4w…</text>
+      <text x="880" y="324" fill="#636b80" font-size="10" font-family="'Geist', sans-serif">mã không suy ra từ sàn, chỉ tra bảng</text>
+
+      <text x="880" y="368" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif">Không</text>
+      <text x="880" y="392" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">mỗi bên một mã ngẫu nhiên</text>
+
+      <text x="880" y="464" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Không đổi mã</text>
+      <text x="880" y="484" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">nhưng thêm một bảng giữ nối mã ↔ sàn</text>
+      <text x="880" y="500" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">hàng 97 dựng, cách ly như mọi bảng</text>
+
+      <!-- Ghi chú khó đảo -->
+      <text x="256" y="572" fill="#636b80" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.06em">KHÓ ĐẢO: CÁCH DỰNG MÃ THUỘC KHUÔN V1 MÀ INVEST GHIM · AC-7</text>
+
+      <!-- ===== Chú giải ===== -->
+      <line x1="40" y1="592" x2="1144" y2="592" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="40" y="620" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" letter-spacing="0.18em">CHÚ GIẢI</text>
+
+      <rect x="132" y="608" width="24" height="16" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+      <text x="164" y="620" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Lối máy khuyên, người chốt</text>
+
+      <rect x="356" y="608" width="24" height="16" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="388" y="620" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Bước còn chờ chốt (Hỏi-5)</text>
+
+      <rect x="568" y="608" width="40" height="16" rx="4" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/>
+      <text x="588" y="620" fill="#2d3142" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Hx7q…</text>
+      <text x="616" y="620" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Mã mờ bên nhận thấy (ví dụ, không phải mã thật)</text>
+    </svg>
+  </div>
+</body>
+</html>
