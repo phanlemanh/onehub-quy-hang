@@ -93,3 +93,11 @@ evals:
     expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «điền dần mục thiếu, căn ở lại Đang bán» có mặt và ok — sau lần nhập như E2 (căn Active, thiếu pháp lý, tình trạng sử dụng), đầu chủ giữ căn gửi lần lượt qua POST /api/v1/listings/{id}/events: details_changed {legalStatus}, price_changed {listPrice, feeInclusion}, details_changed {occupantType}: mỗi lệnh 200 (3 assert), standardStatus vẫn 'Active' sau mỗi bước (3 assert); completeness.missing sau bước một không chứa 'legalStatus' mà chứa 'occupantType' (2 assert), sau bước ba không chứa cả hai (assert). Chiều đỏ: bắt lệnh không đổi trạng thái xét lại missingFor của trạng thái hiện tại → bước một 400, ca đỏ."
     paths: [packages/api/src/listings/**, packages/core/src/listing/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/nhap-excel.md", "design/patterns/hom-nay-dau-chu.md", "design/patterns/bang-hang.md", "apps/web/src/app/(app)/imports/new/**", "apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel, hom-nay-dau-chu và bang-hang."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
