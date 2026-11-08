@@ -79,3 +79,21 @@ export const MOI_SO_VA_CHU: readonly string[] = [
   "0900 000 071",
   "+84900000071",
 ];
+
+/** Danh mục mẫu, căn A-01.01 mang UPI `upi` — để mồi qua được bước tra. */
+export function danhMucDoiUpi(upi: string): CatalogData {
+  const dm = danhMucMau();
+  const can = dm.subdivisions.flatMap((s) => s.buildings).flatMap((b) => b.units).find((u) => u.upi === UPI_MAU);
+  if (!can) throw new Error("danh mục mẫu thiếu căn A-01.01");
+  (can as { upi: string }).upi = upi;
+  return dm;
+}
+
+/** Danh mục mẫu, toà A mang khoá `khoa` — để mồi qua được bước tra. */
+export function danhMucDoiKhoaToa(khoa: string): CatalogData {
+  const dm = danhMucMau();
+  const toa = dm.subdivisions.flatMap((s) => s.buildings).find((b) => b.buildingKey === TOA_MAU);
+  if (!toa) throw new Error("danh mục mẫu thiếu toà A");
+  (toa as { buildingKey: string }).buildingKey = khoa;
+  return dm;
+}

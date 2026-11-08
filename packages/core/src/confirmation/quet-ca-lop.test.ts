@@ -1,37 +1,17 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import type { CatalogData } from "../catalog/types";
 import { dungBaoSai, dungKhungToa, dungThuocTinhCan, type KetQua } from "./dung";
 import {
-  danhMucMau,
+  danhMucDoiKhoaToa,
+  danhMucDoiUpi,
   dauBaoSai,
   dauKhungToa,
   dauThuocTinhCan,
   MOI_SO_VA_CHU,
   nguCanhMau,
-  TOA_MAU,
-  UPI_MAU,
 } from "./nen-thu.fixture";
 
 const loiCua = (kq: KetQua<unknown>) => (kq.ok ? [] : kq.loi);
-
-/** Danh mục mẫu, căn A-01.01 mang UPI `upi` — để mồi qua được bước tra. */
-function danhMucDoiUpi(upi: string): CatalogData {
-  const dm = danhMucMau();
-  const can = dm.subdivisions.flatMap((s) => s.buildings).flatMap((b) => b.units).find((u) => u.upi === UPI_MAU);
-  assert.ok(can, "danh mục mẫu có căn A-01.01");
-  (can as { upi: string }).upi = upi;
-  return dm;
-}
-
-/** Danh mục mẫu, toà A mang khoá `khoa` — để mồi qua được bước tra. */
-function danhMucDoiKhoaToa(khoa: string): CatalogData {
-  const dm = danhMucMau();
-  const toa = dm.subdivisions.flatMap((s) => s.buildings).find((b) => b.buildingKey === TOA_MAU);
-  assert.ok(toa, "danh mục mẫu có toà A");
-  (toa as { buildingKey: string }).buildingKey = khoa;
-  return dm;
-}
 
 test("báo sai: UPI ngoài dạng bị từ chối", () => {
   const maTran = ["urn:onehub:upi:mau/A-01.01", "urn:onehub:upi:mau A 01", "urn:onehub:upi:mau#01"];
