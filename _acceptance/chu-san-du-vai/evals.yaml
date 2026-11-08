@@ -36,6 +36,15 @@ evals:
     expected: "exit 0; trạng thái ô vai sau chuỗi thao tác của hộp (tích Quản trị → bỏ Telesales → lưu) cho đúng mảng vai gửi lên API; mở hộp Sửa mà không tích gì thì mảng không đổi."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
+  - id: E3c
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: node _acceptance/chu-san-du-vai/thu/chay-db.mjs api
+    paths: ["apps/web/src/app/(app)/settings/users/**", "packages/api/src/thanh-vien.ts", "packages/api/test-db/chu-san-du-vai/**", "packages/core/src/access/goi-vai.*", "_acceptance/chu-san-du-vai/thu/**"]
+    expected: "exit 0; ca «chuỗi thao tác của hộp tới cơ sở dữ liệu» của packages/api/test-db/chu-san-du-vai đạt: mảng vai dựng bằng chính hàm của hộp (tích Quản trị → bỏ Telesales; người chỉ Telesales tích Trưởng nhóm; người đủ năm vai bỏ bốn vai) gửi qua API thật, đọc lại trên Postgres đúng từng mảng; đối chứng đỏ: bản giả hàm hộp không gọi kéo theo thì ca hỏng."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
   - id: E4
     criterion: AC-4
     executor: test
@@ -63,6 +72,15 @@ evals:
     paths: ["packages/core/src/navigation.ts", "packages/db/scripts/mo-san.mjs", "packages/core/src/access/goi-vai.*"]
     expected: "Người đầu tiên của sàn mới thấy Hôm nay, Bảng hàng, Đã gửi, Liên hệ, Đội, Cài đặt và các nút «+ Lead», Nhập Excel, Xuất; Bảng hàng mở được; người chỉ mang Quản trị sàn chỉ thấy Cài đặt."
     evidence_required: [screenshot, observed, verified_at]
+
+  - id: E5c
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: node _acceptance/chu-san-du-vai/thu/chay-db.mjs api
+    paths: ["packages/db/scripts/mo-san.mjs", "packages/api/src/me/**", "packages/core/src/navigation.ts", "packages/api/test-db/chu-san-du-vai/**", "_acceptance/chu-san-du-vai/thu/**"]
+    expected: "exit 0; ca «mở sàn rồi đọc lại quyền» của packages/api/test-db/chu-san-du-vai đạt: chạy công cụ mở sàn thật trên Postgres, API /me của người đầu tiên trả đủ năm vai và bảng nhà, nút dựng từ đó có đúng sáu nhà, ba nút tạo; đối chứng: người chỉ company_admin có một nhà Cài đặt, không nút tạo."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E6
     criterion: AC-6
