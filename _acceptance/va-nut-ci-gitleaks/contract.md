@@ -5,7 +5,7 @@ slug: va-nut-ci-gitleaks
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-08-va-nut-ci-gitleaks-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
