@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { agreementErrors, mayFlow, type Agreement } from "./agreements";
 import { CEILING, DATA_CLASSES } from "./data-classes";
 
@@ -174,4 +176,33 @@ test("sáu loại cũ và ai_processing giữ hành vi", async () => {
     dem++;
   }
   assert.equal(dem, CONNECTION_KINDS.length - 1);
+});
+
+/** Các loại trong check `kind in (…)` của `agreements_kind_check` ở một đoạn SQL migration. */
+function rutLoai(sql: string): string[] {
+  const m = sql.match(/add constraint agreements_kind_check\s+check \(kind in \(([^)]*)\)\)/);
+  return m?.[1] ? [...m[1].matchAll(/'([a-z_]+)'/g)].map((x) => x[1] ?? "") : [];
+}
+
+/** Loại có ở một bên mà vắng ở bên kia, mỗi loại một dòng. */
+function lechLoai(sqlLoai: readonly string[], loiLoai: readonly string[]): string[] {
+  return [
+    ...loiLoai.filter((k) => !sqlLoai.includes(k)).map((k) => `thiếu ở cơ sở dữ liệu: ${k}`),
+    ...sqlLoai.filter((k) => !loiLoai.includes(k)).map((k) => `thừa ở cơ sở dữ liệu: ${k}`),
+  ];
+}
+
+test("danh sách loại của ràng buộc cơ sở dữ liệu trùng CONNECTION_KINDS", async () => {
+  const { CONNECTION_KINDS } = await import("./agreements");
+  const thuMuc = fileURLToPath(new URL("../../db/migrations/", import.meta.url));
+  const tep = readdirSync(thuMuc).find((f) => f.startsWith("040_"));
+  assert.ok(tep, "có migration 040");
+  const loai = rutLoai(readFileSync(thuMuc + tep, "utf8"));
+  assert.equal(loai.length, CONNECTION_KINDS.length);
+  assert.equal(loai.length, 8);
+  CONNECTION_KINDS.forEach((k, i) => assert.equal(loai[i], k, `phần tử ${i}`));
+  assert.deepEqual(lechLoai(loai, CONNECTION_KINDS), []);
+  // Đối chứng âm cùng hàm so: SQL thử thiếu catalog_confirmation.
+  const thieu = rutLoai("add constraint agreements_kind_check\n  check (kind in ('catalog_source', 'ai_processing'))");
+  assert.ok(lechLoai(thieu, CONNECTION_KINDS).includes("thiếu ở cơ sở dữ liệu: catalog_confirmation"));
 });
