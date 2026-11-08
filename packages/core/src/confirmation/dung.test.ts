@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { Agreement } from "../agreements";
 import { canMoi } from "../redaction/moi";
-import { timRoRi, type GiaTriMoi } from "../redaction/kiem-ro-ri";
-import { LOP_TRUONG, type KhoaCanNoiBo } from "../redaction/lop-truong";
+import { timRoRi } from "../redaction/kiem-ro-ri";
+import type { KhoaCanNoiBo } from "../redaction/lop-truong";
 import { dungBaoSai, dungKhungToa, dungThuocTinhCan, KHONG_BAO_GIO, type KetQua } from "./dung";
 import { KHOA_RIENG, KHOA_VO, type LoaiSuKien } from "./khuon";
 import {
@@ -15,6 +15,7 @@ import {
   TOA_MAU,
   UPI_MAU,
 } from "./nen-thu.fixture";
+import { moiNgoaiDanhMuc } from "./quet-ro-ri.fixture";
 
 type Dung = (dau: never, nc: ReturnType<typeof nguCanhMau>) => KetQua<unknown>;
 const BA_LOAI: readonly [LoaiSuKien, Dung, () => Record<string, unknown>][] = [
@@ -42,29 +43,6 @@ test("không bao giờ có: hàm dựng từ chối", () => {
   assert.equal(dem, KHONG_BAO_GIO.length * 3);
   assert.equal(dem, 18);
 });
-
-/** Mồi của mọi khoá căn mồi có lớp khác danh mục — chuỗi ≥ 4 ký tự, số ≥ 1.000.000, số điện thoại (như `giaTriMoi`). */
-function moiNgoaiDanhMuc(): GiaTriMoi[] {
-  const can = canMoi();
-  const ra: GiaTriMoi[] = [];
-  const them = (truong: string, v: unknown) => {
-    if (typeof v === "string" && v.length >= 4) ra.push({ truong, giaTri: v, kieu: "chu" });
-    else if (typeof v === "number" && v >= 1_000_000) ra.push({ truong, giaTri: v, kieu: "so_tien" });
-  };
-  for (const k of Object.keys(LOP_TRUONG) as KhoaCanNoiBo[]) {
-    if (LOP_TRUONG[k] === "catalog") continue;
-    if (k === "ownerPhone") ra.push({ truong: k, giaTri: can.ownerPhone ?? "", kieu: "so_dien_thoai" });
-    else if (k === "contacts")
-      can.contacts.forEach((lh, i) => {
-        them(`contacts[${i}].fullName`, lh.fullName);
-        lh.phones.forEach((so, j) => ra.push({ truong: `contacts[${i}].phones[${j}]`, giaTri: so, kieu: "so_dien_thoai" }));
-      });
-    else if (k === "customFields") for (const [ten, v] of Object.entries(can.customFields)) them(`customFields.${ten}`, v);
-    else if (k === "photos") for (const p of can.photos) them(`photos[${p.id}]`, p.id);
-    else them(k, can[k]);
-  }
-  return ra;
-}
 
 test("không bao giờ có: bộ kiểm rò rỉ trên sự kiện từ căn mồi", () => {
   const can = canMoi();
