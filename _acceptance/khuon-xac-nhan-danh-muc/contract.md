@@ -124,5 +124,12 @@ không cần mã đo mới.
 
 - Migration `040_xac_nhan_danh_muc.sql` — số giữ chỗ cho hàng 95 ở luật đợt 74; bộ chạy ghi sổ theo tên nên áp được sau
   052 trên bản thật.
+- Điều kiện của giám sát (trả lời G-0811-7/8, 08/11): 040 chạy SAU 052 trên bản thật nhưng TRƯỚC 041–052 trên cơ sở dữ
+  liệu mới, nên chỉ dựa vào đối tượng có từ ≤ 039 (bảng `agreements` ở 001, ràng buộc `agreements_kind_check` ở 035) và
+  phải giao hoán với 041–052. Phép đo: bộ cách ly trên cơ sở dữ liệu mới (E2 qua `nhap_tac_tu`) cộng một lần áp lại thân
+  040 sau 052 và quét tĩnh migration > 040 (E2).
+- Vùng khai thêm (giám sát duyệt G-0811-8): `packages/core/package.json`, `packages/core/src/agreements.test.ts`,
+  `packages/connect/src/index.ts`, `packages/db/tests/xac-nhan-danh-muc.test.mjs`, tài liệu thiết kế / kế hoạch / ADR-0027,
+  Tham chiếu + Đối chiếu ngành + Sổ điểm biến thiên (chỉ thêm dòng), vẽ lại `PRODUCT-MAP.md`, `LO-TRINH.html` (luật 27).
 - Câu hỏi Cổng Phạm vi: Hỏi-1 mốc ngày hay tuần · Hỏi-2 ô xác minh chủ với sổ · Hỏi-3 toà ngoài danh mục · Hỏi-4 giữ cứng
   danh sách trường báo sai · Hỏi-5 cách sinh mã mờ (khó đảo) (thiết kế §6).
