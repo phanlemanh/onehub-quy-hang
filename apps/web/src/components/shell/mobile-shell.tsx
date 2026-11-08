@@ -4,10 +4,10 @@ import { type Action, activeTab, type Navigation, TAB_PATH } from "@quy-hang/cor
 import { cn } from "cn";
 import { SearchIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useDuongVo } from "./dia-chi-mau";
 import { TAB_LABEL } from "./nav-labels";
 import { MenuTaoDienThoai } from "./menu-tao";
 import { Notifications } from "./notifications";
@@ -49,7 +49,7 @@ export function MobileHeader({
 }
 
 export function MobileTabBar({ nav, className }: { nav: Navigation; className?: string }) {
-  const pathname = usePathname();
+  const pathname = useDuongVo();
   return (
     <nav
       aria-label="Nhà"

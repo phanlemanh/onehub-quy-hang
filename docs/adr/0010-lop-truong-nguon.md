@@ -43,3 +43,8 @@ Toàn sàn» (hàng 12); telesales nhập số ở lead, kiểm trùng chủ nh�
 - Mã hoá số chủ chỉ đổi thân `app.reveal_owner_phone` và cột `owner_phone`; khoá `OWNER_PHONE_KEY` (ADR-0009 §9) sinh ở
   hàng đó.
 - Màn hồ sơ căn đọc `GET …/owner` và gọi «Mở số»; lịch sử của hàng và lịch sử giữ căn, mở số nằm ở ba bảng.
+
+## Sửa đổi 08/11 — cách B, hàng `chu-san-du-vai`
+
+Quyết định 1 không đổi về luật: `canSeeSource` vẫn xét vai Trưởng nhóm và Đầu chủ giữ căn. Trao Quản trị sàn là trao luôn bốn vai làm việc lúc trao, gỡ bớt được; không đổi luật theo dòng (Tham chiếu §12). Người chỉ
+mang Quản trị sàn vẫn đúng như quyết định 1 (không tự thấy chủ nhà); người mang thêm vai làm việc có hợp quyền của các vai ấy.

@@ -2,6 +2,7 @@ import { navigationFor } from "@quy-hang/core";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { KhaiDiaChi } from "@/components/shell/dia-chi-mau";
 import { readMe } from "@/lib/api";
 import { KhungHoSoCan } from "../../units/ho-so/khung";
 import { BaLoi } from "./ba-loi";
@@ -16,6 +17,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ l
   const { loi } = await searchParams;
   return (
     <KhungHoSoCan>
+      <KhaiDiaChi duong="/units/A-01.02" />
       <BaLoi loi={loi === "trong-kho" || loi === "ve-moi" ? loi : "reui"} />
     </KhungHoSoCan>
   );

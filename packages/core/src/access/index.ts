@@ -5,3 +5,4 @@ export * from "./owner-view";
 export * from "./owner-input";
 export * from "./lop-phu-ho-so";
 export * from "./quyen-hang";
+export * from "./goi-vai";

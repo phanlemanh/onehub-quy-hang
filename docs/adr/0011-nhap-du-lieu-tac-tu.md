@@ -170,3 +170,8 @@ Chi phí ước bằng cỡ dữ liệu, chưa đo token thật (máy phiên nà
 - Vercel — [Functions limitations](https://vercel.com/docs/functions/limitations).
 - Google — [Sheets API scopes](https://developers.google.com/workspace/sheets/api/scopes),
   [Drive API scopes](https://developers.google.com/workspace/drive/api/guides/api-specific-auth).
+
+## Sửa đổi 08/11 — cách B, hàng `chu-san-du-vai`
+
+Quyết định về người nhập file không đổi về luật: nhập file vẫn cho Đầu chủ và Trưởng nhóm. Trao Quản trị sàn là trao luôn bốn vai làm việc lúc trao, gỡ bớt được; không đổi luật theo dòng (Tham chiếu §12). Người chỉ
+mang Quản trị sàn vẫn đúng như chỗ ghi «quản trị chỉ quản mẫu file, không tự nhập»; người mang thêm vai làm việc có hợp quyền của các vai ấy.

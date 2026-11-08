@@ -1,5 +1,5 @@
 // Công cụ vận hành mở sàn (Kiến trúc §0: mở công ty mới là việc của đội vận hành, không phải của API).
-// Tạo sàn và tài khoản theo email nếu chưa có, rồi gắn email làm thành viên mang vai quản trị sàn. Một lần mở sàn nhận
+// Tạo sàn và tài khoản theo email nếu chưa có, rồi gắn email làm thành viên mang đủ năm vai. Một lần mở sàn nhận
 // diện bằng cặp (tên, email quản trị): chạy lại không tạo trùng, còn công ty mới trùng tên một sàn đang chạy thì được sàn
 // riêng — không bao giờ gắn người vào sàn của công ty khác (hàng 56, bất biến 1).
 // Chạy bằng tay trên kết nối chủ (vai bỏ qua luật theo dòng); không đường HTTP nào gọi tới tệp này.
@@ -7,6 +7,10 @@
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import pg from "pg";
+import goiVai from "../../core/src/access/goi-vai.json" with { type: "json" };
+
+// Trao Quản trị sàn là trao luôn bốn vai làm việc (cách B, Tham chiếu §12; hàng chu-san-du-vai): một nguồn với màn Người dùng.
+const VAI_NGUOI_DAU_TIEN = ["company_admin", ...goiVai.company_admin];
 
 /**
  * @param {pg.ClientBase} client kết nối chủ, đang ở trong một giao dịch hoặc không
@@ -45,13 +49,14 @@ export async function moSan(client, { ten, email }) {
       [mail],
     );
     const userId = (await client.query('select id from identity."user" where email = $1', [mail])).rows[0].id;
-    // Người được đội vận hành gắn vào sàn là quản trị sàn (hàng 7): từ đó quản trị tự mời người khác.
+    // Người được đội vận hành gắn vào sàn là quản trị sàn (hàng 7) và mang đủ vai làm việc: từ đó quản trị tự mời người khác.
+    // Chạy lại không đổi vai: nhánh on conflict chỉ thêm quyền quản trị khi người đó chưa có, không trao thêm vai làm việc.
     await client.query(
-      `insert into company_members (company_id, user_id, roles) values ($1, $2, '{company_admin}')
+      `insert into company_members (company_id, user_id, roles) values ($1, $2, $3)
        on conflict (company_id, user_id) do update
          set roles = company_members.roles || '{company_admin}'::text[]
          where not ('company_admin' = any (company_members.roles))`,
-      [companyId, userId],
+      [companyId, userId, VAI_NGUOI_DAU_TIEN],
     );
     await client.query("release savepoint mo_san");
     return { companyId, userId, daCo, chayLai };
