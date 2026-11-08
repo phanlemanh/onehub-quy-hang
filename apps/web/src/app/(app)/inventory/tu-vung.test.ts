@@ -75,8 +75,8 @@ test("bảng hàng: lọc và đếm theo giá trị chuẩn", () => {
 });
 
 test("bảng hàng: từ vựng rỗng là mặc định", () => {
-  // Nhãn cột viết trước — đúng chữ trước vòng này.
-  const NHAN = ["Toà", "Mã căn", "Loại căn", "Diện tích", "Tầng", "Hướng", "Trạng thái", "Giá", "Phí", "Nội thất", "Pháp lý", "Tài chính", "Tình trạng sử dụng", "Xác nhận", "Đầu chủ", "Mức đủ", "Ai thấy", "Giá chốt", "Ngày bán", "Lý do ngừng"];
+  // Nhãn cột viết trước — đúng chữ trước vòng này, cộng năm cột loại hình của hàng 79.
+  const NHAN = ["Toà", "Mã căn", "Loại hình", "Loại căn", "Diện tích", "Tầng", "Hướng", "Diện tích đất", "Số tầng", "Mặt tiền", "Lộ giới", "Trạng thái", "Giá", "Phí", "Nội thất", "Pháp lý", "Tài chính", "Tình trạng sử dụng", "Xác nhận", "Đầu chủ", "Mức đủ", "Ai thấy", "Giá chốt", "Ngày bán", "Lý do ngừng"];
   assert.deepEqual(COT.map((c) => nhanCot(c, TU_VUNG_RONG)), NHAN);
   const d = dong("e", "included", { standardStatus: "Withdrawn", withdrawnReason: "unreachable" });
   assert.deepEqual(

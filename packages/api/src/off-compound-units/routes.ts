@@ -8,7 +8,7 @@ import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { isRefusal, viewerOf, type Ctx, type Refusal } from "../listings/store";
-import { docCan, timHayTaoCan } from "./store";
+import { danhSachCan, docCan, timHayTaoCan } from "./store";
 
 /**
  * Căn ngoài khu của sàn (hàng 76 can-ngoai-khu): nhà mặt đường, nhà trong hẻm, đất lẻ — định danh bằng địa chỉ chuẩn. Tạo
@@ -48,6 +48,24 @@ export function registerOffCompoundUnitRoutes(api: OpenAPIHono, { appPool, auth 
       const { can, moi } = kq as Exclude<typeof kq, Refusal>;
       if (moi) return c.json(can, 201);
       return c.json(can, 200);
+    },
+  );
+
+  const DanhSach = z.object({ units: z.array(z.object({ id: z.string(), propertySubType: z.string(), unparsedAddress: z.string() })) });
+  api.openapi(
+    createRoute({
+      method: "get",
+      path: BASE,
+      summary: "Mọi căn ngoài khu của sàn đang làm — mã, loại hình, địa chỉ đã gõ (Bảng hàng ghép loại hình, hàng 79)",
+      responses: { 200: ok("Các căn", DanhSach), ...loi },
+    }),
+    async (c) => {
+      const ctx = await vao(c);
+      if ("code" in ctx) return tra(c, ctx);
+      const units = await withCompany(appPool, ctx, (tx) => danhSachCan(tx));
+      // Người không làm việc với Bảng hàng: 403, không phải danh sách rỗng — rỗng là «sàn chưa có căn ngoài khu nào».
+      if (units === null) return c.json({ error: "forbidden" }, 403 as 400);
+      return c.json({ units }, 200);
     },
   );
 

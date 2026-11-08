@@ -30,6 +30,22 @@ export async function docCan(tx: pg.PoolClient, id: string): Promise<CanNgoaiKhu
   return rows[0] ? raCan(rows[0]) : null;
 }
 
+/** Một dòng của danh sách căn ngoài khu cho Bảng hàng (hàng 79): mã, loại hình, địa chỉ đã gõ — không gì khác. */
+export type DongCanNgoaiKhu = { id: string; propertySubType: string; unparsedAddress: string };
+
+/**
+ * Mọi căn ngoài khu của sàn đang làm (hàng 79 bang-hang-theo-loai-hinh): Bảng hàng ghép loại hình của hàng ngoài khu từ đây,
+ * giữ bản cuối trên máy như danh mục. Luật theo dòng (052) chỉ trả căn của sàn này; người không có Bảng hàng → `null`.
+ */
+export async function danhSachCan(tx: pg.PoolClient): Promise<DongCanNgoaiKhu[] | null> {
+  if (!lamViecVoiHang({ roles: await vaiLucLam(tx) })) return null;
+  const { rows } = await tx.query<DongCanNgoaiKhu>(
+    `select id, property_sub_type as "propertySubType", unparsed_address as "unparsedAddress"
+       from off_compound_units where company_id = app.current_company_id() order by created_at, id`,
+  );
+  return rows.map((r) => ({ id: r.id, propertySubType: r.propertySubType, unparsedAddress: r.unparsedAddress }));
+}
+
 /**
  * Tìm hay tạo căn ngoài khu từ thân `{ address, propertySubType }`: cùng khoá địa chỉ trong sàn → căn đã có (`moi: false`);
  * chưa có, hay căn chưa có số nhà (khoá null — không gộp) → căn mới. Khoá xung đột do hai lệnh cùng lúc: đọc lại căn thắng.

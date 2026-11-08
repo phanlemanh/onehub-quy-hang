@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { Linter } from "eslint";
 import plugin from "../index.mjs";
 import { docBanDo } from "../lib/ban-do.mjs";
-import { docLoTrinh, dongHan, kiemBoCuc, LO_TRINH } from "../lib/bo-cuc.mjs";
+import { docLoTrinh, dongHan, kiemBoCuc, LO_TRINH, vungMienHan } from "../lib/bo-cuc.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const W = "apps/web/src";
@@ -78,7 +78,11 @@ function voi(fn) {
 const lechCua = (d) => kiemBoCuc(d, docBanDo(d)).lech.map((l) => `${l.tep}: ${l.nhom} — ${l.dieu}`);
 const CAI_DAT = "design/patterns/cai-dat-san.md";
 const BANG_HANG = "design/patterns/bang-hang.md";
-const HAN_79 = "han: bang-hang-theo-loai-hinh";
+// Hàng 79 (bang-hang-theo-loai-hinh, Hỏi-2 «chuyển»): trang thử nhanh-tuc-thi rời ngoại lệ có hạn, chịu luật như mọi màn.
+// Cơ chế ngoại lệ có hạn thử trên bản sao: chèn lại đúng dòng ngoại lệ cũ với hạn cần thử.
+const TRANG_THU = `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`;
+const BO_CUC_BH = "\nbo_cuc: danh-sach-chi-tiet";
+const chenHan = (d, han) => sua(d, BANG_HANG, BO_CUC_BH, `${BO_CUC_BH}\nngoai_le_han: [{ tep: "${TRANG_THU}", han: ${han}, ly_do: "Ca thử của bài kiểm." }]`);
 
 describe("răng của hệ bố cục", () => {
   it("răng: ma trận vi phạm", () => {
@@ -95,8 +99,14 @@ describe("răng của hệ bố cục", () => {
   });
 
   it("răng: vùng của màn còn ngoại lệ có hạn được bỏ qua", () => {
-    // Bảng hàng rời ngoại lệ ở hàng 105 (Danh sách – chi tiết) — vùng của nó chịu luật; trang thử nhanh-tuc-thi còn ngoại lệ.
-    assert.deepEqual(loi("no-raw-skeleton", `${W}/app/(app)/proto/nhanh-tuc-thi/trang-thu.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n'), []);
+    // Bảng hàng rời ngoại lệ ở hàng 105, trang thử nhanh-tuc-thi ở hàng 79 — cả hai vùng chịu luật.
+    assert.equal(loi("no-raw-skeleton", `${W}/app/(app)/proto/nhanh-tuc-thi/trang-thu.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n').length, 1);
+    assert.ok(!vungMienHan(docBanDo(ROOT)).includes(`${W}/app/(app)/proto/nhanh-tuc-thi/`), "trang thử còn trong vùng miễn");
+    // Cơ chế: bản đồ mang ngoại lệ có hạn của trang thử thì vùng của nó được miễn.
+    voi((d) => {
+      chenHan(d, "bang-hang-theo-loai-hinh");
+      assert.ok(vungMienHan(docBanDo(d)).includes(`${W}/app/(app)/proto/nhanh-tuc-thi/`), "ngoại lệ chèn lại không miễn vùng");
+    });
     assert.equal(loi("no-raw-skeleton", `${W}/app/(app)/inventory/bang-hang.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n').length, 1);
     assert.equal(loi("no-raw-skeleton", `${W}/app/(app)/shares/page.tsx`, 'import { Skeleton } from "@/components/ui/skeleton";\n').length, 1);
   });
@@ -137,28 +147,36 @@ describe("răng của hệ bố cục", () => {
 
   it("ngoại lệ có hạn", () => {
     const that = kiemBoCuc(ROOT, docBanDo(ROOT));
-    assert.ok(that.han.length > 0);
-    const h = that.han.find((x) => x.tep === `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`);
-    assert.equal(dongHan(h), `ngoại lệ có hạn: ${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx → hàng 79 (bang-hang-theo-loai-hinh)`);
+    // Hàng 79 chuyển trang thử: bản đồ thật không còn ngoại lệ nào trỏ bang-hang-theo-loai-hinh; trang ở chỗ cũ.
+    assert.ok(!that.han.some((x) => x.han === "bang-hang-theo-loai-hinh"), "còn ngoại lệ có hạn trỏ hàng 79");
+    assert.ok(existsSync(join(ROOT, TRANG_THU)), "trang thử phải còn ở chỗ cũ (Hỏi-2: chuyển, không gỡ)");
     // Bảng hàng dựng Danh sách – chi tiết (hàng 105): không còn ngoại lệ có hạn.
     assert.ok(!that.han.some((x) => x.tep.startsWith(`${W}/app/(app)/inventory/`)), "Bảng hàng còn ngoại lệ có hạn");
+    // Ngoại lệ trỏ hàng 79 chèn lại: còn hiệu lực khi 79 chưa gộp, «hạn đã tới» khi 79 đã gộp.
+    const h79 = docLoTrinh(ROOT).get("bang-hang-theo-loai-hinh");
+    voi((d) => {
+      chenHan(d, "bang-hang-theo-loai-hinh");
+      const kq = kiemBoCuc(d, docBanDo(d));
+      if (h79?.daGop) assert.match(lechCua(d).join("\n"), /hạn đã tới — hàng 79 \(bang-hang-theo-loai-hinh\)/);
+      else assert.equal(dongHan(kq.han.find((x) => x.tep === TRANG_THU)), `ngoại lệ có hạn: ${TRANG_THU} → hàng 79 (bang-hang-theo-loai-hinh)`);
+    });
     // Hàng đã gộp chọn từ hồ sơ signed-off thật của lộ trình.
     const daGop = [...docLoTrinh(ROOT).values()].find((x) => x.daGop);
     assert.ok(daGop, "lộ trình phải có ít nhất một hàng đã gộp");
     voi((d) => {
-      sua(d, BANG_HANG, HAN_79, `han: ${daGop.slug}`);
+      chenHan(d, daGop.slug);
       const l = lechCua(d);
       assert.equal(l.length, 1, JSON.stringify(l));
       for (const x of l) assert.match(x, new RegExp(`hạn đã tới — hàng ${daGop.ma} \\(${daGop.slug}\\)`));
     });
     voi((d) => {
-      sua(d, BANG_HANG, HAN_79, "han: hang-khong-co");
+      chenHan(d, "hang-khong-co");
       const l = lechCua(d);
       assert.equal(l.length, 1, JSON.stringify(l));
       for (const x of l) assert.match(x, /hạn lạ «hang-khong-co»/);
     });
     voi((d) => {
-      sua(d, BANG_HANG, HAN_79, "han: he-bo-cuc");
+      chenHan(d, "he-bo-cuc");
       const l = lechCua(d);
       assert.equal(l.length, 1, JSON.stringify(l));
       for (const x of l) assert.match(x, /hạn lạ «he-bo-cuc»/);
