@@ -36,7 +36,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/**"]
-    expected: "exit 0; lọc cột propertySubType theo từng giá trị của bảng trộn bốn loại hình + một chưa rõ giữ đúng dòng của giá trị ấy (5 ca, đếm khớp); chữ hiện Căn hộ · Nhà phố · Biệt thự · Đất khi sàn không đặt cách gọi, và đúng cách gọi riêng khi bộ từ vựng của sàn có nhãn cho propertySubType; chữ «Chưa rõ» cho dòng không nguồn."
+    expected: "exit 0; lọc cột propertySubType theo từng giá trị của bảng trộn bốn loại hình + một chưa rõ giữ đúng dòng của giá trị ấy (5 ca, đếm khớp); chữ hiện Căn hộ · Nhà phố · Biệt thự · Đất; chữ «Chưa rõ» cho dòng không nguồn. (Vế cách gọi riêng của sàn thu ra Known limits — chủ kho 08/11.)"
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E5

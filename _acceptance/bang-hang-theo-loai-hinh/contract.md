@@ -53,8 +53,9 @@ năm dãy LK, SH, BT, DN và 14 căn ngoài khu) — đọc, không sửa.
 - **AC-4** — Lọc theo loại hình.
   Given bảng trộn bốn loại hình và một hàng chưa rõ loại hình,
   When lọc cột Loại hình theo từng giá trị,
-  Then chỉ dòng của giá trị ấy còn lại; lựa chọn là giá trị RESO, chữ hiện là cách gọi riêng của sàn (hàng 45) khi sàn đặt,
-  vắng thì Căn hộ · Nhà phố · Biệt thự · Đất; hàng chưa rõ lọc được dưới «Chưa rõ».
+  Then chỉ dòng của giá trị ấy còn lại; lựa chọn là giá trị RESO, chữ hiện là Căn hộ · Nhà phố · Biệt thự · Đất (đọc qua
+  hàm đặt tên của lõi); hàng chưa rõ lọc được dưới «Chưa rõ». (Vế «cách gọi riêng của sàn» thu ra Known limits — chủ kho
+  08/11.)
 
 - **AC-5** — Nhóm theo loại hình.
   Given bảng trộn bốn loại hình,
@@ -126,6 +127,10 @@ căn ngoài khu. Never: sự kiện tạo hàng mang loại hình (ADR-0016 quy�
 - Luật ẩn theo loại hình trên trang khách (hàng 80).
 
 ## Notes
+
+- Known limits — chủ kho chọn ở lượt chấm 1, 08/11 (nguyên văn «Thu, mở hàng sau»): chữ cột Loại hình chưa theo cách gọi riêng
+  của sàn — tập đóng của Cách gọi (hàng 45) chưa có loại hình; cột đọc qua hàm đặt tên của lõi nên tự nhận tên riêng khi lõi mở.
+  Mở hàng sau «loại hình trong Cách gọi».
 
 - Hỏi-1 (cột vị trí), Hỏi-2 (trang thử), Hỏi-3 (duyệt phần nhìn bằng chữ và hình), Hỏi-4 (để ngoài điện thoại và chỗ lưu
   trường thấp tầng của căn ngoài khu) chờ Cổng Phạm vi; khuyến nghị ở sổ quyết định.
