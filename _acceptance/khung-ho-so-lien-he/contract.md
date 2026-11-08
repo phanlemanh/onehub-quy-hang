@@ -5,7 +5,7 @@ slug: khung-ho-so-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-08-khung-ho-so-lien-he-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
