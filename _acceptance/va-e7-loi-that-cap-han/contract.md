@@ -5,7 +5,7 @@ slug: va-e7-loi-that-cap-han
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/va-e7-loi-that-cap-han/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -56,3 +56,4 @@ Bỏ quét không gian — xem dòng sổ «bỏ coverage-scan». Không gian l�
 - `dung-d.mjs` của hàng 48 tự nạp một căn Đang bán ở Toà A qua API khi sàn mẫu mất hàng (giám sát duyệt D-30; lần chấm
   08/11 đầu tiên in «đã nạp A-01.01 qua API»). Đây là sửa chỗ thử để E7 chạy được, không phải hành vi câu giao đòi.
 - Chấm E7 cần chỗ thử dãy D (5575/postgres, 3495); `--doi-cau` dựng một worktree dưới `.acceptance-runs/` (cài một lần).
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bằng chứng của bài kiểm có một câu mô tả hứa lưu lại phản hồi thật của máy chủ, nhưng thực tế không lưu. Người đọc hồ sơ có thể tưởng có bản ghi đó, còn kết luận đạt hay không đạt thì không bị ảnh hưởng. — `_acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs`

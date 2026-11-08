@@ -1,53 +1,26 @@
-# Review findings: va-e7-loi-that-cap-han (round 1)
+# Review findings: va-e7-loi-that-cap-han (round 2)
 
 ## Trong hợp đồng
 
-- **Chấm E7 không kiểm vế «GET thật nêu lead_routing.first_call_minutes» mà AC-1 đòi**
-  AC: AC-1
-  file: `_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs:82`
+- **Hình dạng 3: kiểm chuỗi có mặt trong khi lời hứa là quan hệ (thân phản hồi khung 3 lấy từ GET thật)**
+  file: `_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs:44`
   severity: medium
-  source: conventions
-  detail: Hợp đồng AC-1 và mục expected của E1 đòi GET thật trả lỗi cặp nêu «lead_routing.first_call_minutes». chay-ui.mjs đã tính sẵn trường `errorsNeuKhoaGoi` (coLoiGoi), nhưng kiem-e7.mjs bỏ qua nó. Thước chỉ kiểm `errorsTuGetThat` khác rỗng (dòng 82) rồi kiểm chữ trên màn. Ở chế độ thường, nếu máy chủ trả lỗi của một khoá khác mà màn vẫn hiện «chưa áp … Hạn gọi lần đầu» nhờ một nguồn khác, thước vẫn chấm ĐẠT dù vế đầu vào của AC-1 chưa được chứng. Nên thêm điều kiện: khi không chạy `--doi-cau` mà `k3.errorsNeuKhoaGoi` khác true thì thoát mã 2 (đối chứng dương hỏng).
-  rationale: AC-1 đòi rõ GET thật trả lỗi nêu khoá lead_routing.first_call_minutes mà thước chấm không kiểm vế này.
-
-- **Hình dạng 3: kiem-e7 không chấm việc lỗi GET nêu khoá vừa lưu, dù E1 hứa điều này**
-  AC: AC-1
-  file: `_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs:81`
-  severity: low
+  AC: AC-3
   source: measurement
-  detail: Lời hứa của E1 ghi «dòng khung 3 có errors từ GET thật nêu «lead_routing.first_call_minutes»», tức một quan hệ: lỗi phải chỉ đúng khoá vừa lưu. chay-ui.mjs có tính `errorsNeuKhoaGoi` (`getThat.errors.some(e => e.includes(GOI))`) và in nó ra dòng JSON, nhưng kiem-e7.mjs chỉ kiểm `Array.isArray(k3.errorsTuGetThat) && k3.errorsTuGetThat.length`, tức là chỉ cần có lỗi. Nó không đọc `errorsNeuKhoaGoi`. Nếu GET trả lỗi của một khoá khác, phần chuẩn bị của khung 3 vẫn được coi là dựng xong. Điều kiện của E1 vì thế chỉ được người đọc output kiểm, không được thước chấm.
-  rationale: Cùng vế với mục trên: AC-1 đòi lỗi GET thật nêu đúng khoá nhưng thước chỉ kiểm có lỗi.
+  detail: AC-3 hứa một quan hệ: thân phản hồi PATCH ở khung 3 phải lấy từ GET thật. Nhánh --nguon chỉ kiểm từng chuỗi riêng lẻ có trong mã nguồn chay-ui.mjs: `/await api\(\)/.test(nguon)` (dòng 45, gọi là đối chứng dương), `/__thanTuGet/.test(nguon)` (dòng 52), cộng một danh sách cấm gồm `__traGia` và chuỗi chứa «— cặp về mặc định» (dòng 44). Không có kiểm nào nối hai thứ lại, tức là không thấy giá trị gán cho `window.__thanTuGet` được dựng từ kết quả `api()`. Đối chứng dương `await api()` đã đúng sẵn nhờ những lời gọi không liên quan ở khung 1 (`const g1 = await api();`, dòng 144 của chay-ui.mjs) và khung 2 (dòng 168). Ví dụ cụ thể: `window.__thanTuGet = JSON.stringify({items: [], errors: ["lead_routing.first_call_minutes 10 không nhỏ hơn …"]})` là câu lỗi gõ tay không chứa «— cặp về mặc định», nhưng vẫn qua --nguon với «nguồn ĐẠT». Lượt chạy thật E1 cũng không bù được: kiem-e7 chấm `k3.errorsTuGetThat`, mà giá trị này do chính chay-ui tự in ra từ biến `getThat` (dòng 187). Không có lần ghi lại nào cái thân thật sự được trả cho trang để so với GET, vì `__phanHoi` không ghi khi `__thanTuGet` được đặt (dòng 42–44 của chay-ui.mjs). Chiều đỏ E3b chỉ đỏ được nhờ tên biến cũ `__traGia`; đổi tên biến là thước này không còn phân biệt được.
+  rationale: AC-3 đòi thân phản hồi khung 3 lấy từ GET thật, mà phép kiểm chỉ dò chuỗi riêng lẻ nên một câu lỗi gõ tay không chứa chuỗi cấm vẫn qua, tức lời hứa quan hệ của AC-3 chưa được chứng minh.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Lỗi bất ngờ thoát mã 1, trùng mã «khung 3 ĐỎ», nên E2 và E3b có thể đạt nhầm**
-  Người dùng thấy gì: Nếu máy chấm tự hỏng giữa chừng (không cài được, thiếu bản mã cũ), hai bài kiểm chiều đỏ vẫn có thể báo đạt dù chưa đo được gì. Người chạy chỉ phân biệt được qua chữ in ra.
-  Căn cứ: Chỉ ảnh hưởng công cụ đo nội bộ, không chạm người dùng cuối; lỗi hạ tầng thường kèm chữ báo rõ nên người chạy tự phát hiện và chạy lại được.
-  file: `_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs`
-  severity: medium
+- **Phản hồi PATCH thật được ghi vào window.__phanHoi trong try/catch rỗng nhưng không chỗ nào đọc lại; comment đầu tệp hứa có bản ghi này**
+  Người dùng thấy gì: Bằng chứng của bài kiểm có một câu mô tả hứa lưu lại phản hồi thật của máy chủ, nhưng thực tế không lưu. Người đọc hồ sơ có thể tưởng có bản ghi đó, còn kết luận đạt hay không đạt thì không bị ảnh hưởng.
+  Căn cứ: Chỉ gây hiểu nhầm nhẹ khi đọc hồ sơ bằng chứng, không làm sai kết luận chấm và không ảnh hưởng người dùng cuối; sửa sau rẻ nhưng không gấp.
+  file: `_acceptance/luat-chia-lead-cap-han-hong/thu/chay-ui.mjs`
+  severity: low
   Đề xuất: known-limits
 
-- **Một lần chạy hỏng cho ra cùng mã thoát 1 với kết quả «ĐỎ» mà E2 và E3b đang chờ, nên hai phép đo này có thể đạt giả**
-  Người dùng thấy gì: Một lần chạy bị hỏng giữa chừng có thể bị tính nhầm là đã bắt được lỗi, làm hai bài kiểm chiều đỏ đạt giả.
-  Căn cứ: Chỉ làm công cụ kiểm nội bộ kém tin cậy trong tình huống hiếm, không mất dữ liệu; chạy lại là thấy, nhưng cần người tinh mắt.
-  file: `_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 4: kiểm âm chỉ ghim mã thoát, mà mã thoát 1 cũng là mã khi script sập (E2, E3b)**
-  Người dùng thấy gì: Hai bài kiểm chiều đỏ chỉ nhìn mã kết quả nên không phân biệt được lỗi đo thật với máy chấm bị sập.
-  Căn cứ: Hậu quả nhẹ và chỉ ở công cụ nội bộ; người chạy tự gỡ được bằng cách xem chữ báo và chạy lại.
-  file: `_acceptance/va-e7-loi-that-cap-han/evals.yaml`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 3: chỉ kiểm chuỗi có mặt (`__thanTuGet`) trong khi lời hứa AC-3 là thân phản hồi bằng đúng GET thật**
-  Người dùng thấy gì: Phép kiểm nguồn có thể bị qua mặt nếu ai đó viết tay một câu lỗi giả có đúng tên biến, nên khung 3 vẫn có thể dựa vào câu lỗi gõ tay mà không bị bắt.
-  Căn cứ: Cần cố ý lách mới xảy ra, chỉ ảnh hưởng công cụ đo, và người đọc mã khi duyệt PR sẽ thấy; sửa sau cũng rẻ.
-  file: `_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs`
-  severity: medium
-  Đề xuất: known-limits
+## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).
