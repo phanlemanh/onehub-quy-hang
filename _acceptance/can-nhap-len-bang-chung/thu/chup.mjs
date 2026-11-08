@@ -55,6 +55,24 @@ async function chup(ten) {
   await ngu(500);
   writeFileSync(path.join(RA, `E9-${ten}-${KHO}.png`), await t.chup());
 }
+/** Chữ của trang với gạch nối chuẩn hoá (thẻ điện thoại có thể dùng gạch nối khác). */
+const CHU_TRANG = `document.body.innerText.replace(/[\\u2010-\\u2015\\u2212]/g, "-")`;
+/**
+ * Một kiểu chờ cho mọi khung (S4 lượt 2, chủ kho chọn «đổi cách chờ»): mở `duong`, chờ tới khi ĐÚNG dữ liệu khung cần đọc
+ * có trên màn — không chờ tiêu đề hay khung trang — quá 2 phút thì tải lại trang một lần rồi chờ thêm 3 phút. Hết giờ là
+ * lỗi có tên, không chụp khung chờ tải.
+ */
+async function moVaCho(duong, dieuKien, ten) {
+  await t.di(duong);
+  await t.cho(dieuKien, 120000).catch(async () => {
+    await t.di(duong);
+    await t.cho(dieuKien, 180000).catch(() => {
+      throw new Error(`khung ${ten}: dữ liệu chưa hiện sau khi tải lại — ${dieuKien}`);
+    });
+  });
+  await ngu(1000);
+}
+const coMa = (ma) => `${CHU_TRANG}.includes(${JSON.stringify(ma)})`;
 /** Vào sàn qua màn chọn sàn như người dùng, rồi tới `duong`. */
 async function vaoSan(ck, duong) {
   await t.datCookie(ck.filter((c) => !c.startsWith("qh_san=")));
@@ -118,37 +136,25 @@ try {
   await chup("ket-qua-nhap");
 
   // Khung 2 — Hôm nay của A.
-  await t.di("/today");
-  await thay("Thiếu thông tin");
-  await thay(ma[0]);
+  await moVaCho("/today", `${coMa(ma[0])} && ${coMa(ma[1])}`, "hom-nay");
   ghiNhan("hom-nay", { nhom: [await nhomCua(ma[0]), await nhomCua(ma[1])], tranNgang: await tran() });
   await chup("hom-nay");
 
   // Khung 3 — hồ sơ căn đầu.
-  await t.di(`/units/${encodeURIComponent(ma[0])}`);
-  // Chờ hồ sơ dựng xong (khối mức đủ có mặt) — không chụp khung chờ tải.
-  const daDung = `!!document.querySelector('[data-slot=ho-so-can] [data-muc=muc-du]')`;
-  // Máy dev chậm có lúc giữ hồ sơ ở khung chờ tải: chờ 2 phút, chưa xong thì tải lại trang một lần rồi chờ tiếp.
-  await t.cho(daDung, 120000).catch(async () => {
-    await t.di(`/units/${encodeURIComponent(ma[0])}`);
-    await t.cho(daDung, 180000);
-  });
-  await ngu(1500);
+  await moVaCho(`/units/${encodeURIComponent(ma[0])}`, `!!document.querySelector('[data-slot=ho-so-can] [data-muc=muc-du]')`, "ho-so");
   const hoSo = await t.tinh(`(() => { const h = document.querySelector('[data-slot=ho-so-can]'); const m = h.querySelector('[data-muc=muc-du]'); const TT = ["Chưa đủ để rao", "Đang bán", "Đang giao dịch", "Tạm ngừng", "Đã bán", "Ngừng bán"]; const b = [...h.querySelectorAll('[data-slot=badge]')].map((x) => x.textContent.trim()).find((x) => TT.includes(x)); return { trangThai: b ?? null, mucDu: m.innerText }; })()`);
   const thieu = hoSo.mucDu.match(/thiếu ([^\n]*)/)?.[1] ?? "";
   ghiNhan("ho-so", { trangThai: hoSo.trangThai, mucDu: hoSo.mucDu.match(/\b\d\/[5-6]\b/)?.[0] ?? null, dongThieu: thieu, thieuPhapLy: /pháp lý/i.test(thieu), thieuTinhTrang: /tình trạng sử dụng/i.test(thieu) });
   await chup("ho-so");
 
   // Khung 4 — Bảng hàng.
-  await t.di("/inventory");
-  // Điện thoại: Bảng hàng là thẻ (khuôn bang-hang) — chờ trang dựng, đọc thẻ có mã nếu đang hiện.
-  await thay(KHO < 768 ? "Bảng hàng" : ma[0]);
-  await ngu(3000);
+  // Điện thoại: Bảng hàng là thẻ (khuôn bang-hang) — vẫn chờ đúng mã căn hiện trên thẻ.
+  await moVaCho("/inventory", coMa(ma[0]), "bang-hang");
   const dongBang = await t.tinh(`(() => { const d = [...document.querySelectorAll("[role=row], tr, article, li")].find((x) => x.innerText.includes(${JSON.stringify(ma[0])})); return d ? d.innerText : null; })()`);
   ghiNhan(
     "bang-hang",
     KHO < 768
-      ? { trangThai: "không có ở thẻ điện thoại (khuôn bang-hang)", coCan: (await chu()).replace(/[\u2010-\u2015\u2212]/g, "-").includes(ma[0]), tranNgang: await tran() }
+      ? { trangThai: "không có ở thẻ điện thoại (khuôn bang-hang)", coCan: await t.tinh(coMa(ma[0])), tranNgang: await tran() }
       : { dangBan: (dongBang ?? "").includes("Đang bán"), tranNgang: await tran() },
   );
   await chup("bang-hang");
@@ -167,7 +173,7 @@ try {
     }
   }
   await vaoSan(cookieCua(B_EMAIL, san), "/today");
-  await thay(maB);
+  await moVaCho("/today", coMa(maB), "hom-nay-b");
   ghiNhan("hom-nay-b", { idB, nhom: await nhomCua(maB), khongThayCuaA: !(await chu()).includes(ma[0]), tranNgang: await tran() });
   await chup("hom-nay-b");
 } finally {
