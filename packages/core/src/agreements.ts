@@ -10,9 +10,25 @@ export const CONNECTION_KINDS = [
   "company_api",
   // Xử lý bằng AI (ADR-0011 qđ 2, hàng 68): chiều ra, bên kia `anthropic`, chỉ `catalog` và `shareable_listing`.
   "ai_processing",
+  // Xác nhận danh mục (hàng 95, ADR-0017 §6 sửa đổi 03/11 của Invest): chiều ra, chỉ lớp danh mục, máy thu Invest kéo về.
+  "catalog_confirmation",
 ] as const;
 
 export type ConnectionKind = (typeof CONNECTION_KINDS)[number];
+
+/** Nhãn trên màn của loại «Xác nhận danh mục» — tới khi CONTEXT.md có mục riêng. */
+export const KIND_LABEL_CATALOG_CONFIRMATION = "Xác nhận danh mục";
+
+/**
+ * Trần theo loại kết nối (hàng 95): loại khai ở đây chỉ được đúng một chiều và một tập lớp, không điều khoản riêng —
+ * hẹp hơn trần của lớp. Kiểm lúc ký (`agreementErrors`) và lúc chảy (`mayFlow`, trước bước điều khoản riêng); ràng
+ * buộc `agreements_xac_nhan_chi_danh_muc` (migration 040) chặn lần nữa ở cơ sở dữ liệu.
+ */
+export const KIND_LIMITS: Readonly<
+  Partial<Record<ConnectionKind, { label: string; direction: Direction; dataClasses: readonly DataClass[]; specialTerms: false }>>
+> = {
+  catalog_confirmation: { label: KIND_LABEL_CATALOG_CONFIRMATION, direction: "outbound", dataClasses: ["catalog"], specialTerms: false },
+};
 
 /** `inbound`: dữ liệu vào công ty · `outbound`: dữ liệu rời công ty. */
 export type Direction = "inbound" | "outbound";
@@ -62,6 +78,15 @@ export function agreementErrors(agreement: Agreement): string[] {
   if (agreement.direction === "outbound" && agreement.dataClasses.includes("company_internal")) {
     errors.push("Lớp «Nội bộ công ty» chỉ ở trong công ty.");
   }
+  const gioiHan = KIND_LIMITS[agreement.kind];
+  if (gioiHan) {
+    const ten = `Thoả thuận «${gioiHan.label}»`;
+    if (agreement.direction !== gioiHan.direction) errors.push(`${ten} chỉ đi chiều ${gioiHan.direction === "outbound" ? "ra" : "vào"}.`);
+    for (const dc of agreement.dataClasses) {
+      if (!gioiHan.dataClasses.includes(dc)) errors.push(`${ten} không mang được lớp «${dc}» — chỉ lớp danh mục.`);
+    }
+    if (agreement.specialTerms) errors.push(`${ten} không có điều khoản riêng.`);
+  }
   if (agreement.validUntil && agreement.validUntil <= agreement.validFrom) {
     errors.push("Ngày hết hiệu lực phải sau ngày bắt đầu.");
   }
@@ -72,6 +97,11 @@ export function agreementErrors(agreement: Agreement): string[] {
 export function mayFlow(agreement: Agreement, dataClass: DataClass, ctx: FlowContext): FlowDecision {
   // Trần đứng trước mọi thứ: thoả thuận sai cấu trúc cũng không mở được lớp «nguồn».
   if (dataClass === "source") return { ok: false, reason: "Lớp «Nguồn» không bao giờ rời công ty." };
+  // Trần theo loại: lớp ngoài tập của loại không chảy, kể cả khi hàng lệch liệt nó và có điều khoản riêng.
+  const gioiHan = KIND_LIMITS[agreement.kind];
+  if (gioiHan && !gioiHan.dataClasses.includes(dataClass)) {
+    return { ok: false, reason: `Thoả thuận «${gioiHan.label}» chỉ mở lớp danh mục.` };
+  }
   // Bên gọi nêu loại và chiều mong đợi: thoả thuận của loại khác không mở được luồng này.
   if (ctx.kind !== undefined && ctx.kind !== agreement.kind) {
     return { ok: false, reason: "Thoả thuận không đúng loại kết nối." };

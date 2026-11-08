@@ -1,0 +1,49 @@
+[
+  {
+    "schemaVersion": 1,
+    "eventType": "building_frame",
+    "officeKey": "Gwt9zQtW6-yaukTTVn-AdOOD7a-Ro-W3Wnz4A135B50",
+    "memberKey": "XGIs3qXMu1OpSvewuL4m3gH5glWsDX9XMC-31U_LW2A",
+    "observedOn": "2026-11-08",
+    "buildingKey": "A",
+    "storiesTotal": 15,
+    "skippedFloors": [
+      4,
+      13
+    ],
+    "stacks": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06"
+    ]
+  },
+  {
+    "schemaVersion": 1,
+    "eventType": "unit_attributes",
+    "officeKey": "Gwt9zQtW6-yaukTTVn-AdOOD7a-Ro-W3Wnz4A135B50",
+    "memberKey": "XGIs3qXMu1OpSvewuL4m3gH5glWsDX9XMC-31U_LW2A",
+    "observedOn": "2026-11-08",
+    "buildingKey": "A",
+    "upi": null,
+    "unitNumber": "A-07.03",
+    "livingArea": 68.5,
+    "bedroomsTotal": 2,
+    "directionFaces": "Northwest",
+    "floor": 7,
+    "stack": "03"
+  },
+  {
+    "schemaVersion": 1,
+    "eventType": "correction",
+    "officeKey": "Gwt9zQtW6-yaukTTVn-AdOOD7a-Ro-W3Wnz4A135B50",
+    "memberKey": "XGIs3qXMu1OpSvewuL4m3gH5glWsDX9XMC-31U_LW2A",
+    "observedOn": "2026-11-08",
+    "buildingKey": "A",
+    "upi": "urn:onehub:upi:mau:A-01.01",
+    "field": "livingArea",
+    "correctValue": 55.1
+  }
+]

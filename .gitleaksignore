@@ -1,0 +1,8 @@
+# Báo nhầm generic-api-key (hàng 95 khuon-xac-nhan-danh-muc, yêu cầu G-32): officeKey/memberKey là tên RESO, giá trị là
+# mã mờ HMAC của khoá bên nhận THỬ trong tệp ví dụ khuôn — không phải bí mật. Chỉ đúng sáu dòng của tệp ấy.
+packages/connect/src/catalog-confirmation.example.json:generic-api-key:5
+packages/connect/src/catalog-confirmation.example.json:generic-api-key:6
+packages/connect/src/catalog-confirmation.example.json:generic-api-key:26
+packages/connect/src/catalog-confirmation.example.json:generic-api-key:27
+packages/connect/src/catalog-confirmation.example.json:generic-api-key:41
+packages/connect/src/catalog-confirmation.example.json:generic-api-key:42
