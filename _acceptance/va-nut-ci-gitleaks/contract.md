@@ -5,7 +5,7 @@ slug: va-nut-ci-gitleaks
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-va-nut-ci-gitleaks-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -83,3 +83,9 @@ exit 0`. Đây không phải AC máy trước gộp, vì `workflow_dispatch` ch�
 - Hai hồ sơ đã ký đo tệp luồng — ghim-lai-ban-that-qua-ci (E1, E2) và va-nut-ci-ag-root (E1, E2) — được ghim lại bằng
   làn của kit trước gộp, không sửa tệp nào của chúng (Hỏi-3). Giám sát đã cấp chạm tệp `run-log.jsonl` và
   `evidence-report.md` của va-nut-ci-ag-root (Q-14, 08/11); hồ sơ ghim-lai-ban-that-qua-ci nằm trong vùng của hàng.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-2: Bộ đo bài tự kiểm lấy lệnh từ bản đang sửa nhưng chạy mã của bản đã lưu; chấm lúc còn sửa dở có thể không phản ánh bản đang có.
+  - Ngoài-3: Còn sửa chưa lưu ở các rào phát hành thì bộ đo bài tự kiểm chấm bản cũ đã lưu mà không cảnh báo.
+  - Ngoài-4: Cùng lớp với Ngoài-3 — bài tự kiểm chạy trên bản đã lưu, không phải cây đang chấm.
+  - Ngoài-6: Trên máy chấm để gitleaks chung thư mục với node, git hay jq, đối chứng của bài tự kiểm có thể đỏ oan (không bao giờ xanh giả).
+  - Ngoài-7: Chưa có ca thử cho trường hợp một bước trước ghi bí mật vào môi trường chung của luồng nút trước bước cài.
