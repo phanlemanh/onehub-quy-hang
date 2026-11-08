@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7c850274918ca897f95650de1d50f11151ee7f7c
+verified_commit: b9995c09687f2c818fb1c49cd301c5360c60844e
 human_signoff:
 ---
 
@@ -213,3 +213,7 @@ none — every multi-run eval is uniform
 Round 1: E1, E2, E3, E4, E5b, E6, E8 đỏ — đo nền chạy chồng trên cùng một Postgres. Returned to implementation.
 Round 2: lượt chấm PASS, máy thông; sau đó thêm E10b đi cặp với bài nhìn màn.
 Round 3: chạy lại E7, E7b, E10b và toàn bộ lệnh suite, PASS; các eval còn lại carry-forward vì delta không chạm paths của chúng.
+
+### Re-pin lần 1 — 2026-11-08, do gộp main sau lượt chấm 3
+run_id: repin-20261108T225231Z-13050
+sha: b9995c09687f2c818fb1c49cd301c5360c60844e · suites: 7 lệnh exit 0 · evals: 13/13 eval máy đạt kỳ vọng · ngoài làn máy: E10 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
