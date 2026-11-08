@@ -52,6 +52,13 @@ evals:
     expected: "exit 0, «không còn nhaMau (đối chứng dương: có diaChiMau)». Thư mục quét được mà còn nhaMau: exit 1 và «còn nhaMau» kèm tệp. Không quét được hay không thấy diaChiMau: exit 2. Chiều đỏ ở E5c."
     paths: ["apps/web/src/**", "_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5c
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs --chieu-do
+    expected: "exit 0, «chiều đỏ ĐẠT: còn nhaMau thì mã 1, nêu tệp». Thước không đỏ trên thư mục còn nhaMau thì exit 1, «chiều đỏ HỎNG»."
+    paths: ["_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E6
     criterion: AC-6
     executor: test
