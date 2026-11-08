@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 587613989f94e7a5e59674d4808aefa4966ef270
+verified_commit: 714fb334d7c3a5fd1dca7e72585c9a0f93b87b57
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -198,3 +198,7 @@ none — every multi-run eval is uniform
 Round 1: E10 và lệnh lint không đạt (E10 mong mã từ chối 403 nhưng máy chủ trả 404 not-found; lint có lỗi bài kiểm). Returned to implementation.
 Round 2: E10 và lint sửa xong, các eval chạy lại đều đạt; E1 mang từ round 1 vì delta không chạm paths của eval.
 
+
+### Re-pin lần 1 — 2026-11-08, do ghim lại sau khi gộp nhánh chính
+run_id: repin-20261108T055338Z-86928
+sha: 714fb334d7c3a5fd1dca7e72585c9a0f93b87b57 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E8, E10 · diff chạm vật đo ngoài làn máy: E8, E10 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-8 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
