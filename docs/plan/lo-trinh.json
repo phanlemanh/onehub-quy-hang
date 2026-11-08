@@ -2924,6 +2924,37 @@
       "cau_giao": "Nút «Ghim lại hồ sơ cần bản thật» truyền --ag-root trỏ kit lấy theo tag cho làn ghim lại, để làn chạy được trên máy chủ GitHub không cài kit; kèm một phép đo chạy làn ghim lại giống CI (không có kit cài sẵn) để lỗi kiểu này không lọt nữa.",
       "slug": "va-nut-ci-ag-root",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
+    },
+    {
+      "ma": "va-xem-them-noi-lap-dong",
+      "cau_giao": "Trên màn Liên hệ, sau khi bấm «Xem thêm» mà gõ rồi xoá nhanh ô tìm, lần «Xem thêm» kế tiếp nối đúng trang sau — không hiện lặp dòng của trang trước, con trỏ trang không quay về trang 1 khi ô tìm trở lại như cũ.",
+      "slug": "va-xem-them-noi-lap-dong",
+      "vi_sao": "Ngoài-1 của khung-ho-so-lien-he (#199): lỗi do lượt sửa 1 gây ra; chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (sổ d-20261108T024501Z-24), dãy L. Hàng không mã — đã quyết.",
+      "hang": "T2",
+      "bat_khi": "Bấm «Xem thêm», gõ rồi xoá một ký tự ô tìm trong 250 ms, bấm «Xem thêm» lần nữa: không dòng nào lặp, các dòng đi đúng thứ tự trang",
+      "sau": [
+        "khung-ho-so-lien-he"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/contacts/**",
+        "_acceptance/va-xem-them-noi-lap-dong/**"
+      ]
+    },
+    {
+      "ma": "va-nut-ci-gitleaks",
+      "cau_giao": "Nút «Ghim lại hồ sơ cần bản thật» trên GitHub cài gitleaks trước khi chạy làn ghim lại, để bài tự kiểm của rào trong làn chạy được trên máy chủ GitHub; lượt bấm lại không còn đỏ vì thiếu gitleaks.",
+      "slug": "va-nut-ci-gitleaks",
+      "vi_sao": "Giám sát thêm 08/11 trước đổi tài khoản: lượt bấm lại nút (run 42440631323) đỏ vì máy chủ GitHub không có gitleaks mà bài tự kiểm của rào cần; #192 va-thuoc-ci-moi-truong-that-ban-that chờ hàng này. Hàng vá kỹ thuật, dãy Q.",
+      "hang": "T3",
+      "bat_khi": "Bấm nút trên một PR thử: bước cài gitleaks chạy và làn ghim lại qua bài tự kiểm của rào; bỏ bước cài thì phép đo đỏ",
+      "sau": [
+        "va-nut-ci-ag-root"
+      ],
+      "vung": [
+        ".github/workflows/ghim-lai-ban-that.yml",
+        "_acceptance/ghim-lai-ban-that-qua-ci/**",
+        "_acceptance/va-nut-ci-gitleaks/**"
+      ]
     }
   ],
   "chan_troi": [
