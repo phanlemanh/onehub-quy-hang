@@ -49,6 +49,7 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
   const khoaDaCo = useRef<string | null>(dau?.khoa ?? null);
   const dauDaDung = useRef<TrangDau | null>(dau);
   const qTruoc = useRef(q);
+  const daChay = useRef(false);
 
   // Danh sách: gõ ô tìm thì chờ 250 ms, mở màn và đổi bộ lọc hỏi ngay; lượt đầu cùng bộ lọc với trang máy chủ đã trao thì
   // không hỏi lại. Chuỗi số từ chín chữ số đi lối tìm theo số (POST, số không vào URL).
@@ -58,7 +59,8 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
     luotDs.current++;
     const khoaLuot = khoaLoc({ q, type: loai, status: dauLoc, lan });
     khoaHienTai.current = khoaLuot;
-    const lyDo = khoaDaCo.current === null ? "mo-man" : q !== qTruoc.current ? "go-tim" : "doi-loc";
+    const lyDo = !daChay.current ? "mo-man" : q !== qTruoc.current ? "go-tim" : "doi-loc";
+    daChay.current = true;
     qTruoc.current = q;
     const dauMoi = dau && dau !== dauDaDung.current ? dau : null;
     if (!canDocLan(dauMoi?.khoa ?? null, khoaLuot, khoaDaCo.current)) {
@@ -75,6 +77,8 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
       return;
     }
     hen.current = setTimeout(async () => {
+      // Bảng thôi hiện dữ liệu của bộ lọc cũ: quay lại bộ lọc ấy thì phải đọc lại (tìm theo số, lỗi, lượt bị bỏ giữa chừng).
+      khoaDaCo.current = null;
       setDs({ kieu: "dang-tai" });
       if (q.trim() && luaTim(q) === "so") {
         const kq = await timSo(q);

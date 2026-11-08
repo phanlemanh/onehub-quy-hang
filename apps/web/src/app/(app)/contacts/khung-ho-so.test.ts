@@ -135,5 +135,8 @@ test("không hỏi lại lượt đầu khi trang máy chủ cùng bộ lọc", 
   assert.equal(BANG.length, 6);
   const vung = readFileSync(new URL("./vung.tsx", import.meta.url), "utf8");
   assert.match(vung, /canDocLan\(dauMoi\?\.khoa \?\? null, khoaLuot, khoaDaCo\.current\)/, "vùng không dùng canDocLan ở lượt đọc");
+  // Bảng sang «đang tải» là thôi hiện dữ liệu của bộ lọc cũ: dấu bộ lọc phải xoá cùng lúc, kẻo quay lại bộ lọc cũ thì kẹt.
+  assert.match(vung, /khoaDaCo\.current = null;\s*setDs\(\{ kieu: "dang-tai" \}\)/, "vùng không xoá dấu bộ lọc khi bảng sang đang tải");
+  assert.match(vung, /<HoSoNguoi[\s\S]*?onDong=\{\(\) => chonNguoi\(null\)\}/, "vùng không truyền onDong cho hồ sơ");
   assert.match(vung, /henDoc\(lyDo\)/, "vùng không dùng henDoc cho khoảng chờ");
 });
