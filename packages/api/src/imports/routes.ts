@@ -1,3 +1,4 @@
+import { STANDARD_STATUSES } from "@quy-hang/core/listing";
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 import type { CatalogData } from "@quy-hang/core";
 import type { Context } from "hono";
@@ -49,7 +50,13 @@ const RowsBody = z
     rows: z.array(z.object({ row: z.number().int().min(0), cells: z.array(O), agentUserId: z.string().optional(), skip: z.boolean().optional() }).strict()),
   })
   .strict();
-const RowResult = z.object({ row: z.number(), action: z.enum(["create", "update", "supplement", "skip"]), reason: z.string(), listingId: z.string().optional() });
+const RowResult = z.object({
+  row: z.number(),
+  action: z.enum(["create", "update", "supplement", "skip"]),
+  reason: z.string(),
+  listingId: z.string().optional(),
+  standardStatus: z.enum(STANDARD_STATUSES).optional(),
+});
 const Summary = z.object({ create: z.number(), update: z.number(), supplement: z.number(), skip: z.number() });
 
 /** Ném để lùi giao dịch của bản xem thử mà vẫn trả kết quả. */
