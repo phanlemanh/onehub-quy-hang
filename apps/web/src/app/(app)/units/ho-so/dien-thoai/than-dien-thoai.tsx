@@ -20,6 +20,8 @@ import { NEO_MUC_ANH } from "../../ready/nut-san-sang";
 import { luc, NHAN_GHI_CUOC_GOI, nutChinh, type HoSoCo, type MoHinhHoSo } from "../mo-hinh";
 import { NutBaoSai } from "../nut-bao-sai";
 import { NutHoiDauChu } from "../nut-hoi-dau-chu";
+import { HuyHieuTrangThai, KhoiGiaSua } from "./ngan-sua-nhanh";
+import { khoaGia } from "./sua-nhanh";
 import { KhongNhieu, LoiTaiDau, NutDong, NutToanMan, PhanLichSu, type HanhDongHoSo, type KheHoSo } from "../than-cot";
 import { CapGiaTri, doiUrl, Muc, ngay } from "../than-chung";
 import { AnhLon, useAnhCan, type TrangThaiAnh } from "./anh-lon";
@@ -109,7 +111,9 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
         </div>
         <div className="flex flex-col gap-1" data-khoi="ten">
           <div className="flex min-h-7 items-center justify-between gap-2">
-            <Badge variant={m.dangXem.dangMo ? "success-light" : "outline"}>{m.dangXem.trangThai}</Badge>
+            <HuyHieuTrangThai hang={can} suaHang={m.co.suaHang} sanSang={m.co.sanSang}>
+              <Badge variant={m.dangXem.dangMo ? "success-light" : "outline"}>{m.dangXem.trangThai}</Badge>
+            </HuyHieuTrangThai>
             <div className="flex gap-1">
               <NutToanMan href={m.moToanMan} />
               <NutDong href={m.dongHref} />
@@ -136,10 +140,12 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
         </div>
         <Separator />
         <div className="flex flex-col gap-2" aria-label="Giá và mức đủ" data-khoi="gia">
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums">{m.gia}</span>
-            {m.phi ? <Badge variant="outline">{m.phi}</Badge> : null}
-          </div>
+          <KhoiGiaSua hang={can} suaHang={m.co.suaHang} khoa={khoaGia(can)}>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-semibold tabular-nums">{m.gia}</span>
+              {m.phi ? <Badge variant="outline">{m.phi}</Badge> : null}
+            </div>
+          </KhoiGiaSua>
           <p className="text-xs text-muted-foreground">{m.xacNhan}</p>
           {m.banTrenMay ? (
             <p className="text-xs text-muted-foreground" data-trang-thai="tren-may">

@@ -11,7 +11,11 @@
 import { canSeeSource, type Viewer } from "./can-see-source";
 import { duocLamVoiHang } from "./quyen-hang";
 
-export type CoHoSo = { noiBo: boolean; sanSang: boolean; suaAnh: boolean; hoiDauChu: boolean; ghiCuocGoi: boolean };
+/**
+ * `suaHang` (hàng 40 doi-gia-nhanh): người được sửa hàng theo bảng quyền (`duocLamVoiHang(…, "sua", …)`) — lối «Đổi giá» và
+ * «Đổi trạng thái» của hồ sơ căn điện thoại đọc cờ này.
+ */
+export type CoHoSo = { noiBo: boolean; sanSang: boolean; suaAnh: boolean; hoiDauChu: boolean; ghiCuocGoi: boolean; suaHang: boolean };
 
 /** Ai vào được màn ghi cuộc gọi (`/units/call`, gọi khai thác và gọi ép giá): người mang vai Đầu chủ. */
 export function vaoManCuocGoi(viewer: Pick<Viewer, "roles">): boolean {
@@ -21,8 +25,9 @@ export function vaoManCuocGoi(viewer: Pick<Viewer, "roles">): boolean {
 export function lopPhuHoSo(viewer: Viewer, listingAgentUserId: string | null): CoHoSo {
   // «Sẵn sàng bán» đọc cùng luật với API và luật theo dòng (bảng quyền của hàng, hàng bang-quyen-theo-vai).
   const sanSang = duocLamVoiHang(viewer, "dua_len_dang_ban", listingAgentUserId);
-  if (canSeeSource(viewer, listingAgentUserId)) return { noiBo: true, sanSang, suaAnh: true, hoiDauChu: false, ghiCuocGoi: vaoManCuocGoi(viewer) };
-  return { noiBo: false, sanSang, suaAnh: false, hoiDauChu: true, ghiCuocGoi: false };
+  const suaHang = duocLamVoiHang(viewer, "sua", listingAgentUserId);
+  if (canSeeSource(viewer, listingAgentUserId)) return { noiBo: true, sanSang, suaAnh: true, hoiDauChu: false, ghiCuocGoi: vaoManCuocGoi(viewer), suaHang };
+  return { noiBo: false, sanSang, suaAnh: false, hoiDauChu: true, ghiCuocGoi: false, suaHang };
 }
 
 /**
