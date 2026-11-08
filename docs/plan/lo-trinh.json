@@ -2988,6 +2988,52 @@
         "packages/connect/src/catalog-confirmation*",
         "_acceptance/va-khuon-xac-nhan-bao-sai-quet-ro-ri/**"
       ]
+    },
+    {
+      "ma": "va-ho-so-lan-rao-hang-lo-ngoai-khu",
+      "cau_giao": "Trong hồ sơ của căn lô hoặc căn ngoài khu, bấm vào một lần rao ở mục «Các lần rao» mở đúng lần rao ấy, không báo «không thấy căn».",
+      "slug": "va-ho-so-lan-rao-hang-lo-ngoai-khu",
+      "vi_sao": "Ngoài của bang-hang-theo-loai-hinh (hàng 79, #208): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (Ngoài-5, sổ d-20261108T081330Z-32). Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Mở hồ sơ một căn lô và một căn ngoài khu, bấm từng lần rao: hồ sơ mở đúng căn, không có «không thấy căn»",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/**",
+        "_acceptance/va-ho-so-lan-rao-hang-lo-ngoai-khu/**"
+      ]
+    },
+    {
+      "ma": "va-bang-hang-cot-thap-tang-khi-loc-rong",
+      "cau_giao": "Khi bộ lọc ở cột của hàng thấp tầng làm Bảng hàng ra rỗng, cột và ô lọc đang gõ vẫn ở nguyên để người dùng sửa, không phải xoá hết mọi bộ lọc.",
+      "slug": "va-bang-hang-cot-thap-tang-khi-loc-rong",
+      "vi_sao": "Ngoài của bang-hang-theo-loai-hinh (hàng 79, #208): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (Ngoài-4, sổ d-20261108T081330Z-31). Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Gõ một giá trị không khớp vào ô lọc cột đất: bảng rỗng, cột và ô lọc còn nguyên, xoá ký tự trong ô thì hàng hiện lại",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/inventory/**",
+        "_acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/**"
+      ]
+    },
+    {
+      "ma": "va-loi-doc-can-ngoai-khu",
+      "cau_giao": "Khi đọc danh sách căn ngoài khu bị lỗi mà máy chưa có bản giữ, Bảng hàng báo lỗi và có nút Thử lại, không âm thầm hiện các căn ngoài khu là «Chưa rõ».",
+      "slug": "va-loi-doc-can-ngoai-khu",
+      "vi_sao": "Ngoài của bang-hang-theo-loai-hinh (hàng 79, #208): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (Ngoài-7, sổ d-20261108T081330Z-34). Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Giả lỗi mạng hay 5xx ở lần đầu trên máy mới: hiện câu báo và nút Thử lại; bấm khi mạng về thì căn ngoài khu hiện đúng",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/inventory/danh-muc.ts",
+        "apps/web/src/app/(app)/inventory/ghep-danh-muc.ts",
+        "_acceptance/va-loi-doc-can-ngoai-khu/**"
+      ]
     }
   ],
   "chan_troi": [
