@@ -265,6 +265,20 @@ nhập thì liệt kê, không gỡ (ADR-0011 quyết định 8).
 **Bài học:** ngành để người ghép hay soát từng lần; chưa thấy sản phẩm nào nhớ cách ghép theo sàn hay che dữ liệu cá nhân
 trước khi xử lý (chưa kiểm). Quỹ hàng nhớ theo sàn (hàng 67) và che trước khi có gì rời trình duyệt (bất biến 2).
 
+## 12. Xác nhận danh mục
+
+Quỹ hàng: lời xác nhận căn của sàn đi sang Invest qua thoả thuận «Xác nhận danh mục» — biểu mẫu đóng, chỉ lớp danh mục,
+mã sàn và mã người mờ, máy thu kéo về (ADR-0027, hàng 95). Tra ngày 08/11.
+
+| Sản phẩm | Cách làm | Cấu hình ở đâu | Nguồn |
+| --- | --- | --- | --- |
+| RESO Web API — EntityEvent (RCP-27) | Nhật ký chỉ thêm; mỗi dòng `EntityEventSequence` (int64 dương, tăng đơn điệu), `ResourceName`, `ResourceRecordKey`; bên nhận kéo bằng `$filter=EntityEventSequence ge n` | **Chuẩn** — bên cung cấp phải có | [RCP-27](https://transport.reso.org/proposals/entity-events.html) |
+| Google Maps — «Suggest an edit» | Sửa trên biểu mẫu theo trường; một người chưa đủ, người khác xác nhận rồi mới lên | **Hãng** đổi biểu mẫu theo loại địa điểm | [TechCrunch 2016](https://techcrunch.com/2016/07/21/google-maps-is-turning-its-over-a-billion-users-into-editors/), [Android Police](https://www.androidpolice.com/2016/06/14/google-maps-starts-using-crowd-sourcing-verify-suggested-edits/) |
+| Waze Map Editor | Đề xuất sửa bản đồ đi qua người biên tập trước khi lên | **Hãng** | [Waze help](https://support.google.com/waze/answer/14324943) |
+
+Chỗ ta viết cứng mà họ cho cấu hình: ba loại sự kiện và sáu trường báo sai cố định trong khuôn v1 — điều khoá K32 (nghĩa
+chuẩn để so giữa các sàn).
+
 ## Sản phẩm Việt Nam
 
 Tra bằng tiếng Việt ngày 01/11. Trang chính thức chỉ liệt kê tính năng ở mức tiếp thị. Không sản phẩm nào công bố gọi theo
