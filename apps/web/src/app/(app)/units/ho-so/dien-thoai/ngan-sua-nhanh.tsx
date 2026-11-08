@@ -175,7 +175,7 @@ export function NganDoiTrangThai({ hang, sanSang, mo, onMo }: { hang: HangSua; s
 }
 
 /** Huy hiệu trạng thái của hồ sơ: người được sửa hàng chạm để mở ngăn Đổi trạng thái (AC-1, AC-4). */
-export function HuyHieuTrangThai({ hang, suaHang, sanSang, children }: { hang: HangSua; suaHang: boolean; sanSang: boolean; children: React.ReactNode }) {
+export function HuyHieuTrangThai({ hang, suaHang, sanSang, children }: { hang: HangSua; suaHang: boolean; sanSang: boolean; children?: React.ReactNode }) {
   const [mo, setMo] = useState(false);
   if (!suaHang) return <>{children}</>;
   return (
@@ -189,7 +189,7 @@ export function HuyHieuTrangThai({ hang, suaHang, sanSang, children }: { hang: H
 }
 
 /** Khối Giá của hồ sơ: người được sửa hàng chạm để mở ngăn Đổi giá; căn Đã bán thì nói lý do, không mở (AC-1, AC-2, AC-3). */
-export function KhoiGiaSua({ hang, suaHang, khoa, children }: { hang: HangSua; suaHang: boolean; khoa: string | null; children: React.ReactNode }) {
+export function KhoiGiaSua({ hang, suaHang, khoa, children }: { hang: HangSua; suaHang: boolean; khoa: string | null; children?: React.ReactNode }) {
   const [mo, setMo] = useState(false);
   if (!suaHang) return <>{children}</>;
   if (khoa)

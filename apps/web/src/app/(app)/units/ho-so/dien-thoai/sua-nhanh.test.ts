@@ -72,18 +72,18 @@ async function soLoiGoi(buoc: typeof buocDoiGia, hang: HangSua): Promise<number>
 
 test("E3 căn Đã bán: khối Giá không mở sửa, nói lý do; lối ghi bị chặn trước khi gọi bộ đồng bộ", async () => {
   assert.equal(khoaGia(DA_BAN), LY_DO_DOI_GIA_DA_BAN);
-  const html = renderToStaticMarkup(createElement(KhoiGiaSua, { hang: DA_BAN, suaHang: true, khoa: khoaGia(DA_BAN), children: createElement("span", null, "3 tỷ") }));
+  const html = renderToStaticMarkup(createElement(KhoiGiaSua, { hang: DA_BAN, suaHang: true, khoa: khoaGia(DA_BAN) }, createElement("span", null, "3 tỷ")));
   assert.ok(html.includes("Căn đã bán không đổi giá — giá chốt đã ghi"));
   assert.ok(!html.includes('data-nut="doi-gia"'), "không có lối mở sửa");
   const b = buocDoiGia(DA_BAN, "3,2 tỷ", "included");
   assert.deepEqual(b, { kind: "loi", chu: LY_DO_DOI_GIA_DA_BAN });
   assert.equal(await soLoiGoi(buocDoiGia, DA_BAN), 0);
   // Đối chứng dương: căn Đang bán có lối sửa và đúng một lời gọi.
-  const htmlMo = renderToStaticMarkup(createElement(KhoiGiaSua, { hang: HANG, suaHang: true, khoa: khoaGia(HANG), children: createElement("span", null, "3 tỷ") }));
+  const htmlMo = renderToStaticMarkup(createElement(KhoiGiaSua, { hang: HANG, suaHang: true, khoa: khoaGia(HANG) }, createElement("span", null, "3 tỷ")));
   assert.ok(htmlMo.includes('data-nut="doi-gia"'));
   assert.equal(await soLoiGoi(buocDoiGia, HANG), 1);
   // Người không được sửa: không lối nào.
-  const htmlKhong = renderToStaticMarkup(createElement(KhoiGiaSua, { hang: HANG, suaHang: false, khoa: null, children: createElement("span", null, "3 tỷ") }));
+  const htmlKhong = renderToStaticMarkup(createElement(KhoiGiaSua, { hang: HANG, suaHang: false, khoa: null }, createElement("span", null, "3 tỷ")));
   assert.ok(!htmlKhong.includes('data-nut="doi-gia"'));
 });
 

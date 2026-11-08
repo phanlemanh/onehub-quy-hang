@@ -1,0 +1,7 @@
+E8 network (Playwright, origin http://localhost:3494, 375x812 mobile contexts)
+Scenes 1-6 (online): no response status >= 400 on app origin; no requestfailed; no console errors captured (dau-chu-1 contexts).
+Offline repeat of scene 2 (setOffline(true) at "Ghi"):
+  FAIL POST http://localhost:3494/api/v1/listings/da39b7d6-865d-4542-8c98-a5f349e27fd4/events net::ERR_INTERNET_DISCONNECTED   (deliberate, induced by the test)
+  CONSOLE Failed to load resource: net::ERR_INTERNET_DISCONNECTED   (same induced failure)
+After setOffline(false): change queued locally replayed; listing_events seq 7 price_changed 12000000000 device=mobile made_offline=t; price_changed count for the listing +1 exactly.
+Telesales context (scene 6): dev overlay badge "1 Issue" visible in screenshot; console not captured for that context (note only).

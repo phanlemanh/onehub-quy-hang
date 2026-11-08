@@ -85,9 +85,9 @@ evals:
     executor: ui-check
     layer: backend-effect
     cmd: config:executors.ui-check
-    expected: "Trên chỗ thử dãy H, ma trận viết trước 4 người theo bang-quyen-hang.json gọi POST /api/v1/listings/<id>/events đổi giá cùng một căn mẫu do dau-chu-1 giữ: telesales@mau.quy-hang.test → 403 · quan-tri@mau.quy-hang.test (chỉ vai quản trị) → 403 · dau-chu-2 (đầu chủ, người khác giữ) → 2xx · dau-chu-1 (giữ căn) → 2xx; sau mỗi lời gọi đếm listing_events của căn — 403 không đổi, 2xx +1 (đối chứng dương cùng bộ đếm). Trước khi gọi đọc vai của bốn người trên chỗ thử, ghi vào observed. Ghi E10-mang.txt."
+    expected: "Trên chỗ thử dãy H, ma trận viết trước 4 người theo bang-quyen-hang.json gọi POST /api/v1/listings/<id>/events đổi giá cùng một căn mẫu do dau-chu-1 giữ: telesales@mau.quy-hang.test → bị từ chối (404 not-found: vai không làm việc với hàng không thấy hàng, như luật của máy chủ) · quan-tri@mau.quy-hang.test (chỉ vai quản trị) → bị từ chối (404) · dau-chu-2 (đầu chủ, người khác giữ) → 2xx · dau-chu-1 (giữ căn) → 2xx; sau mỗi lời gọi đếm listing_events của căn — bị từ chối không đổi, 2xx +1 (đối chứng dương cùng bộ đếm). Trước khi gọi đọc vai của bốn người trên chỗ thử, ghi vào observed. Ghi E10-mang.txt."
     steps:
       - "Đọc vai của bốn người (company_members) và đếm listing_events của căn mẫu"
-      - "Gọi lần lượt bằng bốn phiên (dung-h.mjs --phien), đếm sau mỗi lời gọi; mỗi lời gọi dùng expectedVersion mới nhất"
+      - "Gọi lần lượt bằng bốn phiên (dung-h.mjs --phien) trên chỗ thử dãy H (dev http://localhost:3494), đếm sau mỗi lời gọi; mỗi lời gọi dùng expectedVersion mới nhất"
     paths: ["packages/api/src/listings/**"]
     evidence_required: [screenshot, observed, verifier, verified_at]
