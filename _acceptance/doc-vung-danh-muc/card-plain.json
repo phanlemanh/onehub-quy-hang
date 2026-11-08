@@ -1,0 +1,31 @@
+{
+ "feature_plain": "Khi Invest đẩy danh mục vào Quỹ hàng, đầu chủ gõ mã căn hay mở Bảng hàng sẽ thấy đúng dữ liệu đó thay vì gói mẫu cố định.",
+ "will_do": [
+  {"id":"AC-1","p":"Sẽ ra đúng khu, toà, tầng, diện tích, phòng ngủ, hướng khi gõ một mã căn có trong gói đã nhận."},
+  {"id":"AC-2","p":"Sẽ ghép đúng loại căn và diện tích vào Bảng hàng theo gói đã nhận."},
+  {"id":"AC-3","p":"Sẽ thấy gói mới ngay ở lần đọc kế, không cần khởi động lại, kể cả khi nạp và đọc ở hai máy chủ khác nhau."},
+  {"id":"AC-4","p":"Sẽ giữ đường «ngoài danh mục» như hiện nay với căn chưa có."},
+  {"id":"AC-5","p":"Sẽ dùng gói mẫu khi danh mục dùng chung còn trống, và tắt hẳn gói mẫu khi đã có khu thật (theo khuyến nghị ở Hỏi-1)."},
+  {"id":"AC-6","p":"Sẽ dùng cùng nguồn danh mục cho Nhập Excel và danh sách toà khi nhập lead."},
+  {"id":"AC-7","p":"Sẽ chỉ còn một chỗ duy nhất trong mã biết tới gói mẫu."},
+  {"id":"AC-8","p":"Sẽ chỉ đưa ra thuộc tính danh mục, không lộ thoả thuận hay bên cung cấp; cách ly giữa các sàn giữ nguyên."},
+  {"id":"AC-10","p":"Sẽ hiện đúng gói ở ô Gõ mã căn, Bảng hàng và hồ sơ căn trên màn thật."}
+ ],
+ "wont_do": [
+  {"id":"AC-9","p":"Sẽ KHÔNG bao giờ lấy gói mẫu khi đọc danh mục bị lỗi: đang có bản thật thì trả bản ấy, chưa có thì báo lỗi."},
+  {"id":"OOS-1","p":"KHÔNG xoá căn vắng khỏi gói, KHÔNG từ chối gói cũ hơn."},
+  {"id":"OOS-2","p":"KHÔNG đổi danh mục lô thấp tầng."},
+  {"id":"OOS-3","p":"KHÔNG làm khoá máy để Invest tự đẩy."},
+  {"id":"OOS-4","p":"KHÔNG sửa giao diện Bảng hàng và hồ sơ căn."}
+ ],
+ "coverage_plain": [
+  {"i":0,"p":"Đã xét bốn chỗ đọc danh mục, bốn trạng thái của danh mục (trống, có dữ liệu, đọc lỗi, vừa đổi) và ba loại căn (trong gói, chỉ trong mẫu, không ở đâu)."}
+ ],
+ "gap_probe_plain": [
+  {"i":0,"p":"Hai lựa chọn ghi là «chỉ một lối» trong khi còn lối khác. Đã sửa: nêu rõ vì sao từng lối bị loại, và đọc lỗi đổi sang trả bản thật đang giữ."},
+  {"i":1,"p":"Bài kiểm gói mới gộp nhiều thay đổi nên có thể che lỗi, và chưa thử hai máy chủ. Đã tách ba ca, nạp ở một máy chủ và đọc ở máy khác."},
+  {"i":2,"p":"Bài nhìn màn hình có thể bỏ nửa Bảng hàng và thiếu hồ sơ căn. Đã buộc đủ ba chỗ, gói đi qua cửa nhận thật, mã căn không có trong mẫu."},
+  {"i":3,"p":"Câu hỏi về danh mục trống chưa nói rõ giá phải trả: một sàn nạp một khu là gói mẫu tắt cho mọi sàn và không có đường quay lại. Đã ghi rõ, chủ kho quyết ở cổng này."},
+  {"i":4,"p":"Trạng thái danh mục trống và đọc lỗi chỉ thử trên dữ liệu giả. Đã thêm ca trên cơ sở dữ liệu thật gồm Nhập Excel và danh sách toà, và đo mã lỗi trả về."}
+ ]
+}

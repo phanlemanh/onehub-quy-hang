@@ -1,0 +1,102 @@
+# Bộ đo hàng 99. Chỗ thử dãy D: Postgres 5575/postgres, máy dev 3495.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    expected: "exit 0; packages/api/test-db/catalog/doc-vung.test.ts: nạp gói qua cửa nhận thật rồi tra mã không có trong gói mẫu → found, đủ sáu thuộc tính khớp gói. Chiều đỏ cùng bộ dữ liệu: trước khi nạp cùng mã là not_in_catalog hoặc unreadable."
+    paths: ["packages/api/src/catalog/**", "packages/api/test-db/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    expected: "exit 0; doc-vung.test.ts: GET /api/v1/catalog có căn của gói; hàm ghép của apps/web ghép toà + mã ra đúng loại căn và diện tích. Chiều đỏ: gói khác diện tích thì giá trị ghép khác."
+    paths: ["packages/api/src/catalog/**", "apps/web/src/app/(app)/inventory/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.api_db
+    expected: "exit 0; doc-vung.test.ts ba ca tách: chỉ đổi diện tích một căn, chỉ đổi tên khu, thêm một căn; mỗi ca nạp ở app A rồi đọc ở app B dựng riêng → giá trị mới. Đối chứng dương cho bộ nhớ đệm: dấu không đổi thì số lần dựng không tăng."
+    paths: ["packages/api/src/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.api_db
+    expected: "exit 0; mã đọc được không có trong vùng → not_in_catalog với read đúng khuôn."
+    paths: ["packages/api/src/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; nguon.test.ts: vùng rỗng → found theo gói mẫu; vùng một khu, cùng mã mẫu → not_in_catalog. Hai ca cùng mã."
+    paths: ["packages/api/src/catalog/nguon*"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E5b
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    expected: "exit 0; doc-vung.test.ts trên Postgres thật: vùng rỗng (ca tự kiểm vùng trống, không trống thì đỏ «vùng không rỗng lúc bắt đầu») → tra mã mẫu found, GET danh sách toà có toà mẫu, Nhập Excel ghi được căn mẫu; nạp một khu → cùng mã not_in_catalog."
+    paths: ["packages/api/src/catalog/**", "packages/api/src/imports/routes.ts", "packages/api/src/leads/routes.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    expected: "exit 0; doc-vung.test.ts: lần nhập có căn của gói ghi được; GET danh sách toà của lead có toà của gói. Chiều đỏ: căn không ở vùng không được ghi."
+    paths: ["packages/api/src/catalog/**", "packages/api/src/imports/routes.ts", "packages/api/src/leads/routes.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/doc-vung-danh-muc/thu/kiem-mot-cho-goi-mau.mjs
+    expected: "exit 0, «gói mẫu chỉ ở: catalog/nguon.ts, catalog/sample.ts». Tệp khác dùng thì exit 1 nêu tệp; không quét được exit 2. Chiều đỏ ở E7b."
+    paths: ["packages/api/src/**", "_acceptance/doc-vung-danh-muc/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7b
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/doc-vung-danh-muc/thu/kiem-mot-cho-goi-mau.mjs --chieu-do
+    expected: "exit 0, «chiều đỏ ĐẠT» sau khi tự dựng thư mục có tệp a.ts dùng SAMPLE_CATALOG và đòi mã 1 kèm tên a.ts."
+    paths: ["_acceptance/doc-vung-danh-muc/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.api_db
+    expected: "exit 0; doc-vung.test.ts: sàn khác sàn nạp đọc được căn, thân trả không có khoá agreement_id, provider (quét toàn thân JSON)."
+    paths: ["packages/api/src/catalog/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.isolation
+    expected: "exit 0, bộ kiểm cách ly xanh."
+    paths: ["packages/api/src/catalog/**", "packages/db/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.api
+    expected: "exit 0; nguon.test.ts: bộ đọc ném lỗi khi đang giữ bản thật → trả bản ấy; chưa giữ → ném, không trả gói mẫu. Trên app thật với nguồn ném: GET tra mã trả 500 có mã lỗi, thân không có thuộc tính mẫu. Đối chứng dương: bộ đọc lành trả dữ liệu."
+    paths: ["packages/api/src/catalog/nguon*"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Dựng chỗ thử dãy D trên đúng cây được chấm: node _acceptance/luat-chia-lead/thu/dung-d.mjs. Nạp gói thử qua cửa nhận thật và tạo một căn Đang bán của gói bằng node _acceptance/doc-vung-danh-muc/thu/nap-goi-thu.mjs (in mã căn, thuộc tính; mã không có trong gói mẫu, lệnh đỏ nếu có). Gắn cookie khoá dau-chu-1 trong .acceptance-runs/luat-chia-lead/phien.json, khổ 1440x900."
+      - "Mở ô Gõ mã căn (phím tắt hoặc nút thanh trên), gõ mã căn in ở bước trước, chụp _acceptance/doc-vung-danh-muc/evidence/go-ma.png, ghi các thuộc tính hiện."
+      - "Mở /inventory, tìm hàng của mã đó, chụp _acceptance/doc-vung-danh-muc/evidence/bang-hang.png, ghi loại căn và diện tích."
+      - "Mở hồ sơ căn của mã đó (/units/<mã>), chụp _acceptance/doc-vung-danh-muc/evidence/ho-so.png, ghi các thuộc tính. Xong tắt máy dev: node _acceptance/luat-chia-lead/thu/dung-d.mjs --tat."
+    expected: "Ô Gõ mã và hồ sơ căn hiện đúng khu, toà, tầng, diện tích, phòng ngủ, hướng của gói thử; Bảng hàng có hàng của mã đó với đúng loại căn và diện tích."
+    paths: ["packages/api/src/catalog/**", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/[code]/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
