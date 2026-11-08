@@ -67,3 +67,15 @@ export const dauThuocTinhCan = () => ({
   stack: "03",
 });
 export const dauBaoSai = () => ({ buildingKey: TOA_MAU, upi: UPI_MAU, field: "livingArea" as const, correctValue: 55.1 });
+
+/** Tám mồi của phép quét cả lớp — câu có khoảng trắng và các dáng số điện thoại; số mẫu, không số thật. */
+export const MOI_SO_VA_CHU: readonly string[] = [
+  "gọi chủ nhà nhé",
+  "0900000071",
+  "090.000.0071",
+  "0900-000-071",
+  "090_000_0071",
+  "090/000/0071",
+  "0900 000 071",
+  "+84900000071",
+];
