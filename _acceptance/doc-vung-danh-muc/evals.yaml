@@ -77,7 +77,7 @@ evals:
   - id: E8b
     criterion: AC-8
     executor: test
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     expected: "exit 0, bộ kiểm cách ly xanh."
     paths: ["packages/api/src/catalog/**", "packages/db/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
