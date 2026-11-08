@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 8873cfdb3c0a1bf0f87cd65bcdf3caaf63e6bb85
+verified_commit: 779c5936e66f6908f6844794888522b89cf84a81
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -141,3 +141,7 @@ sha: e7bddd38e5a4d8c8b25eb636c68b80094efea774 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 3 — 2026-11-08, do ghim lại sau gộp main
 run_id: repin-20261108T024608Z-76415
 sha: 8873cfdb3c0a1bf0f87cd65bcdf3caaf63e6bb85 · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 4 — 2026-11-08, do luồng nút thêm bước cài gitleaks (va-nut-ci-gitleaks)
+run_id: repin-20261108T080958Z-94876
+sha: 779c5936e66f6908f6844794888522b89cf84a81 · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
