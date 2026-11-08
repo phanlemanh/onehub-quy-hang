@@ -2249,7 +2249,7 @@
       "cau_giao": "Máy thu của bên kia kéo sự kiện xác nhận danh mục từ hộp thư đi bằng token máy, theo số thứ tự, chỉ của sàn có thoả thuận đang bật; kéo lại không trùng, không sót, và khi máy thu tắt thì sự kiện nằm chờ",
       "vai": "nen",
       "tieu_chi": 10,
-      "vi_sao": "Issue #94 việc 3; ADR-0017 §6 sửa đổi: Invest không nhận webhook và không có cửa vào, nên Quỹ hàng giữ sự kiện và mở API kéo thay vì giao qua webhook như ADR-0017 §4",
+      "vi_sao": "Issue #94 việc 3; ADR-0017 §6 sửa đổi: Invest không nhận webhook và không có cửa vào, nên Quỹ hàng giữ sự kiện và mở API kéo thay vì giao qua webhook như ADR-0017 §4 Known limits của hàng 95 (Ngoài-1, chủ kho 08/11, d-20261108T113141Z-33): hàm dựng chưa kiểm thoả thuận có đúng là của sàn đang dựng; hàng này phải đóng chỗ đó trước khi dữ liệu chảy thật.",
       "hang": "T3",
       "dung_tren": [
         "95",
@@ -2954,6 +2954,105 @@
         ".github/workflows/ghim-lai-ban-that.yml",
         "_acceptance/ghim-lai-ban-that-qua-ci/**",
         "_acceptance/va-nut-ci-gitleaks/**"
+      ]
+    },
+    {
+      "ma": "loai-hinh-trong-cach-goi",
+      "cau_giao": "Quản trị sàn đặt tên riêng cho loại hình (Liền kề, Shophouse…) ở Cài đặt › Cách gọi, neo vào giá trị RESO; cột Loại hình của Bảng hàng và hồ sơ căn hiện tên ấy.",
+      "slug": "loai-hinh-trong-cach-goi",
+      "vi_sao": "Known limits của hàng 79 bang-hang-theo-loai-hinh: vế «chữ cột Loại hình theo cách gọi riêng của sàn» của AC-4 không đo được vì tập đóng của Cách gọi (hàng 45) chưa có loại hình. Chủ kho 08/11 ở phiên X: «Thu, mở hàng sau». Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định",
+      "sau": [
+        "bang-hang-theo-loai-hinh",
+        "cach-goi-rieng"
+      ],
+      "vung": [
+        "packages/core/src/labels/**",
+        "apps/web/src/app/(app)/settings/labels/**",
+        "_acceptance/loai-hinh-trong-cach-goi/**"
+      ]
+    },
+    {
+      "ma": "va-khuon-xac-nhan-bao-sai-quet-ro-ri",
+      "cau_giao": "Sự kiện báo sai của Xác nhận danh mục chỉ dựng được khi mã căn đúng dạng UPI như khuôn; phép quét rò rỉ của sự kiện đỏ được khi hàm dựng làm rò (đối chứng dương trên chính đường dựng); và phép quét cả lớp chuỗi đo được khuôn có chặn chữ tự do và dãy số dáng điện thoại, không chỉ «có khuôn».",
+      "slug": "va-khuon-xac-nhan-bao-sai-quet-ro-ri",
+      "vi_sao": "Ngoài-5, Ngoài-7, Ngoài-8 của khuon-xac-nhan-danh-muc (#206): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (sổ d-20261108T113141Z-37, -39, -40); làm trước hoặc trong hàng 97, khi chưa có đường chảy thật. Hàng không mã — đã quyết. Dãy G.",
+      "hang": "T3",
+      "bat_khi": "Căn mã lạ thì báo sai bị từ chối ngay ở sàn; cấy một trường rò vào hàm dựng thì phép quét rò rỉ đỏ; chuỗi có chữ tự do hay dãy số dáng điện thoại bị phép quét cả lớp bắt",
+      "sau": [
+        "khuon-xac-nhan-danh-muc"
+      ],
+      "vung": [
+        "packages/core/src/confirmation/**",
+        "packages/connect/src/catalog-confirmation*",
+        "_acceptance/va-khuon-xac-nhan-bao-sai-quet-ro-ri/**"
+      ]
+    },
+    {
+      "ma": "va-ho-so-lan-rao-hang-lo-ngoai-khu",
+      "cau_giao": "Trong hồ sơ của căn lô hoặc căn ngoài khu, bấm vào một lần rao ở mục «Các lần rao» mở đúng lần rao ấy, không báo «không thấy căn».",
+      "slug": "va-ho-so-lan-rao-hang-lo-ngoai-khu",
+      "vi_sao": "Ngoài của bang-hang-theo-loai-hinh (hàng 79, #208): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (Ngoài-5, sổ d-20261108T081330Z-32). Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Mở hồ sơ một căn lô và một căn ngoài khu, bấm từng lần rao: hồ sơ mở đúng căn, không có «không thấy căn»",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/ho-so/**",
+        "_acceptance/va-ho-so-lan-rao-hang-lo-ngoai-khu/**"
+      ]
+    },
+    {
+      "ma": "va-bang-hang-cot-thap-tang-khi-loc-rong",
+      "cau_giao": "Khi bộ lọc ở cột của hàng thấp tầng làm Bảng hàng ra rỗng, cột và ô lọc đang gõ vẫn ở nguyên để người dùng sửa, không phải xoá hết mọi bộ lọc.",
+      "slug": "va-bang-hang-cot-thap-tang-khi-loc-rong",
+      "vi_sao": "Ngoài của bang-hang-theo-loai-hinh (hàng 79, #208): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (Ngoài-4, sổ d-20261108T081330Z-31). Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Gõ một giá trị không khớp vào ô lọc cột đất: bảng rỗng, cột và ô lọc còn nguyên, xoá ký tự trong ô thì hàng hiện lại",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/inventory/**",
+        "_acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/**"
+      ]
+    },
+    {
+      "ma": "va-loi-doc-can-ngoai-khu",
+      "cau_giao": "Khi đọc danh sách căn ngoài khu bị lỗi mà máy chưa có bản giữ, Bảng hàng báo lỗi và có nút Thử lại, không âm thầm hiện các căn ngoài khu là «Chưa rõ».",
+      "slug": "va-loi-doc-can-ngoai-khu",
+      "vi_sao": "Ngoài của bang-hang-theo-loai-hinh (hàng 79, #208): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (Ngoài-7, sổ d-20261108T081330Z-34). Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Giả lỗi mạng hay 5xx ở lần đầu trên máy mới: hiện câu báo và nút Thử lại; bấm khi mạng về thì căn ngoài khu hiện đúng",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/inventory/danh-muc.ts",
+        "apps/web/src/app/(app)/inventory/ghep-danh-muc.ts",
+        "_acceptance/va-loi-doc-can-ngoai-khu/**"
+      ]
+    },
+    {
+      "ma": "tao-can-tay",
+      "cau_giao": "Đầu chủ tạo một căn bằng tay từ menu Tạo — gõ toà và mã căn (hay mã lô, địa chỉ), giá kèm điều kiện phí, chủ nhà và số — căn vào «Chỉ tôi» ở Chưa đủ để rao, qua cùng kiểm trùng theo căn và theo chủ nhà như lead và nhập file; căn tạo nhầm gỡ được bằng một sự kiện có người và lý do, không xoá cứng, căn đã gỡ ra khỏi danh sách, kiểm trùng và số đo. Ai được tạo, ai được gỡ, gỡ tới nấc nào chốt ở Cổng Phạm vi.",
+      "slug": "tao-can-tay",
+      "vai": "Đầu chủ",
+      "hang": "T3",
+      "vi_sao": "Chủ kho 06/11 «Mở lại» cửa vào thứ tư (Tham chiếu §3, §12; PR #171; audit sàn mới ngày 0 §8, mục 3b, 4a, 4c); thay chỗ hở G2 của rà soát tạo · xem · sửa · gỡ 05/11 (docs/plan/ra-soat-crud-phan-quyen.md). Dòng lộ trình bị sót sau #171; chủ kho 08/11 đồng ý thêm và giao dãy X.",
+      "bat_khi": "Tạo một căn ngoài danh mục thì căn hiện ở Bảng hàng của người tạo; căn đã có hàng mở của sàn thì chặn và chỉ hàng kia; chủ nhà trùng số thì về đầu chủ đang giữ; số chủ chỉ lưu bản mã; vai không có Bảng hàng không thấy nút; gỡ căn tạo nhầm ghi người và lý do, căn ra khỏi danh sách, kiểm trùng và số đo",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/**",
+        "apps/web/src/components/shell/**",
+        "packages/api/src/listings/**",
+        "packages/api/src/owners/**",
+        "packages/db/migrations/053_*.sql",
+        "_acceptance/tao-can-tay/**"
       ]
     }
   ],

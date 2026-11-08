@@ -1,4 +1,4 @@
-import type { Home } from "@quy-hang/core";
+import { type Home, HOME_PATH } from "@quy-hang/core";
 import Link from "next/link";
 
 import { BO_CUC, type KieuBoCuc, THONG_TIN } from "@/components/bo-cuc/ma-tran";
@@ -46,7 +46,7 @@ export function TrangMau({
 }) {
   if (che === "xem")
     return (
-      <AppShell user={NGUOI_MAU} nav={NAV_MAU} remembered={{}} mau menuTao={menuTao} nhaMau={NHA_CUA[boCuc]}>
+      <AppShell user={NGUOI_MAU} nav={NAV_MAU} remembered={{}} mau menuTao={menuTao} diaChiMau={HOME_PATH[NHA_CUA[boCuc]]}>
         <ManMau kieu={boCuc} trangThai={trangThai} dauMan={dauMan} />
       </AppShell>
     );
