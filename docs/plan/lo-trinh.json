@@ -3034,6 +3034,26 @@
         "apps/web/src/app/(app)/inventory/ghep-danh-muc.ts",
         "_acceptance/va-loi-doc-can-ngoai-khu/**"
       ]
+    },
+    {
+      "ma": "tao-can-tay",
+      "cau_giao": "Đầu chủ tạo một căn bằng tay từ menu Tạo — gõ toà và mã căn (hay mã lô, địa chỉ), giá kèm điều kiện phí, chủ nhà và số — căn vào «Chỉ tôi» ở Chưa đủ để rao, qua cùng kiểm trùng theo căn và theo chủ nhà như lead và nhập file; căn tạo nhầm gỡ được bằng một sự kiện có người và lý do, không xoá cứng, căn đã gỡ ra khỏi danh sách, kiểm trùng và số đo. Ai được tạo, ai được gỡ, gỡ tới nấc nào chốt ở Cổng Phạm vi.",
+      "slug": "tao-can-tay",
+      "vai": "Đầu chủ",
+      "hang": "T3",
+      "vi_sao": "Chủ kho 06/11 «Mở lại» cửa vào thứ tư (Tham chiếu §3, §12; PR #171; audit sàn mới ngày 0 §8, mục 3b, 4a, 4c); thay chỗ hở G2 của rà soát tạo · xem · sửa · gỡ 05/11 (docs/plan/ra-soat-crud-phan-quyen.md). Dòng lộ trình bị sót sau #171; chủ kho 08/11 đồng ý thêm và giao dãy X.",
+      "bat_khi": "Tạo một căn ngoài danh mục thì căn hiện ở Bảng hàng của người tạo; căn đã có hàng mở của sàn thì chặn và chỉ hàng kia; chủ nhà trùng số thì về đầu chủ đang giữ; số chủ chỉ lưu bản mã; vai không có Bảng hàng không thấy nút; gỡ căn tạo nhầm ghi người và lý do, căn ra khỏi danh sách, kiểm trùng và số đo",
+      "sau": [
+        "bang-hang-theo-loai-hinh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/units/**",
+        "apps/web/src/components/shell/**",
+        "packages/api/src/listings/**",
+        "packages/api/src/owners/**",
+        "packages/db/migrations/053_*.sql",
+        "_acceptance/tao-can-tay/**"
+      ]
     }
   ],
   "chan_troi": [
