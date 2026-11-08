@@ -1,0 +1,98 @@
+# Bộ đo của hàng chu-san-du-vai. Lệnh có Postgres dùng Postgres của dãy Q (cổng 5577, mật khẩu thử của AGENTS.md).
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: node --import tsx --test packages/core/src/access/goi-vai.test.ts
+    paths: ["packages/core/src/access/goi-vai.*"]
+    expected: "exit 0; ma trận viết trước đủ năm vai × bật, tắt × đã có, chưa có vai kéo theo đều đạt; đối chứng đỏ: bản sao bảng có mã vai lạ hay thiếu một vai kéo theo của Quản trị sàn thì ca «bảng hợp lệ» hỏng với thông điệp nêu mã."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: node _acceptance/chu-san-du-vai/thu/chay-db.mjs mo-san
+    paths: ["packages/db/scripts/mo-san.mjs", "packages/db/tests/mo-san.test.mjs", "packages/core/src/access/goi-vai.json", "_acceptance/chu-san-du-vai/thu/**"]
+    expected: "exit 0; bộ kiểm packages/db/tests/mo-san.test.mjs đạt: sàn mới đúng năm vai lấy từ goi-vai.json, chạy lại không đổi, người của sàn đang chạy giữ nguyên; đối chứng đỏ: ca chạy với bản bảng thiếu một vai thì so vai hỏng với thông điệp nêu vai thiếu."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    surface: web
+    target: "http://localhost:3497/settings/users"
+    steps: "Đăng nhập bằng quản trị của sàn mẫu trên Postgres dãy Q. Mở Mời người: chụp năm ô vai và dòng mô tả. Tích Quản trị sàn: chụp cả năm ô tích. Bỏ tích Telesales: chụp ô Telesales trống, các ô khác giữ. Mời một email mẫu (…@example.test): chụp dòng người ở danh sách, đọc lại vai bằng node _acceptance/chu-san-du-vai/thu/doc-vai.mjs <email>. Mở Sửa một người chỉ mang Telesales, tích Trưởng nhóm, Lưu: chụp dòng, đọc lại vai. Mở Sửa một người đủ năm vai, bỏ tích bốn vai làm việc, Lưu: chụp dòng, đọc lại vai."
+    paths: ["apps/web/src/app/(app)/settings/users/**", "apps/web/src/components/khoi/solution-users-8/member-dialog.tsx", "packages/core/src/access/goi-vai.*"]
+    expected: "Năm ô vai đúng ba trạng thái ST-hopvai-chua-tich, ST-hopvai-tich-san, ST-hopvai-go-bot của đặc tả UX; dòng mô tả hiện đúng chữ; ở khổ 1440 và 375 không vỡ hộp. doc-vai.mjs đọc từ Postgres in đúng: người mới {listing_agent, buyer_agent, team_lead, company_admin}; người chỉ Telesales thành {telesales, team_lead, listing_agent, buyer_agent}; người đủ năm vai còn {company_admin}; dòng người ở danh sách khớp từng kết quả."
+    evidence_required: [screenshot, observed, verified_at]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: node --import tsx --test "apps/web/src/app/(app)/settings/users/vai-trong-hop.test.ts"
+    paths: ["apps/web/src/app/(app)/settings/users/**", "packages/core/src/access/goi-vai.*"]
+    expected: "exit 0; trạng thái ô vai sau chuỗi thao tác của hộp (tích Quản trị → bỏ Telesales → lưu) cho đúng mảng vai gửi lên API; mở hộp Sửa mà không tích gì thì mảng không đổi."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: node _acceptance/chu-san-du-vai/thu/chay-db.mjs api
+    paths: ["packages/api/src/thanh-vien.ts", "packages/api/test-db/chu-san-du-vai/**", "_acceptance/chu-san-du-vai/thu/**"]
+    expected: "exit 0; ca «lưu đúng mảng đã gửi» của packages/api/test-db/chu-san-du-vai đạt cho POST [company_admin], POST đủ năm vai, và PATCH từ năm vai xuống [company_admin] đọc lại đúng một vai; đối chứng đỏ có thông điệp ghim: bản giả tự thêm vai và bản giả gộp mảng cũ đều làm ca hỏng."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: node --import tsx --test packages/core/src/access/nguoi-du-vai.test.ts
+    paths: ["packages/core/src/navigation.ts", "packages/core/src/access/nguoi-du-vai.test.ts"]
+    expected: "exit 0; người đủ năm vai có đúng sáu nhà và ba nút tạo; người chỉ company_admin chỉ có Cài đặt và không nút tạo."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    surface: web
+    target: "http://localhost:3497/today"
+    steps: "Trên Postgres dãy Q chạy công cụ mở sàn cho sàn «[Thử] đủ vai» với một email mẫu …@example.test. Đăng nhập bằng người đầu tiên của sàn ấy theo đường đăng nhập thử của kho. Chụp cột nhà và menu Tạo; mở Bảng hàng. Đối chứng: đăng nhập người chỉ mang Quản trị sàn, chụp cột nhà."
+    paths: ["packages/core/src/navigation.ts", "packages/db/scripts/mo-san.mjs", "packages/core/src/access/goi-vai.*"]
+    expected: "Người đầu tiên của sàn mới thấy Hôm nay, Bảng hàng, Đã gửi, Liên hệ, Đội, Cài đặt và các nút «+ Lead», Nhập Excel, Xuất; Bảng hàng mở được; người chỉ mang Quản trị sàn chỉ thấy Cài đặt."
+    evidence_required: [screenshot, observed, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: node _acceptance/chu-san-du-vai/thu/chay-db.mjs api
+    paths: ["packages/api/test-db/chu-san-du-vai/**", "packages/core/src/access/can-see-source.ts", "_acceptance/chu-san-du-vai/thu/**"]
+    expected: "exit 0; ca «đủ vai thấy chủ nhà, mỗi lần mở số một vết» và ca «chỉ cấu hình bị từ chối, không vết» của packages/api/test-db/chu-san-du-vai đạt; đếm dòng vết trước và sau mỗi lần mở số; người chỉ cấu hình nhận đúng 404 mã not-found của đường đọc nguồn (đọc lại mã thật khi viết ca, ghim vào assert) và cùng phiên đọc được GET /company/members 200 làm đối chứng dương; đối chứng đỏ: bản giả cho vai ấy xem nguồn thì ca hỏng."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/chu-san-du-vai/thu/kiem-tai-lieu.mjs
+    paths: ["docs/product/tham-chieu.md", "docs/adr/0010-lop-truong-nguon.md", "docs/adr/0011-nhap-du-lieu-tac-tu.md", "packages/db/migrations/**", "_acceptance/chu-san-du-vai/thu/**"]
+    expected: "exit 0; «ĐẠT không có migration mới so nhánh chính», «ĐẠT Tham chiếu không còn ‹chưa dựng› cho Quản trị sàn», «ĐẠT Tham chiếu §12 có dòng dựng hàng chu-san-du-vai», «ĐẠT ADR-0010 có mục sửa đổi cách B», «ĐẠT ADR-0011 có mục sửa đổi cách B»; đối chứng đỏ trên bản sao tài liệu còn chữ cũ và trên diff giả có tệp migration."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/settings/users/**", "apps/web/src/components/khoi/solution-users-8/**"]
+    expected: "exit 0; không có mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
